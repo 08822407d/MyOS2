@@ -1,13 +1,19 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.16)
 
-project(MyOS2)
-ENABLE_LANGUAGE(ASM-ATT C)
+project(MyOS2 ASM C)
+
+set(PROMPT "==>|")
 
 if (CMAKE_HOST_APPLE)
-    message("Working on MAC : ${CMAKE_SYSTEM_PROCESSOR}\n")
+    message("${PROMPT} Working on MAC : ${CMAKE_SYSTEM_PROCESSOR}\n")
     set (CMAKE_C_COMPILER /opt/local/bin/x86_64-elf-gcc)
-    set (CMAKE_ASM-ATT_COMPILER /opt/local/bin/x86_64-elf-as)
+    set (CMAKE_ASM_COMPILER /opt/local/bin/x86_64-elf-as)
     set (CMAKE_C_LINKER /opt/local/bin/x86_64-elf-ld)
+elseif(CMAKE_HOST_UNIX)
+    message("${PROMPT} Working on UNIX : ${CMAKE_SYSTEM_PROCESSOR}\n")
+    # set (CMAKE_C_COMPILER /usr/bin/gcc)
+    # set (CMAKE_ASM_COMPILER /usr/bin/as)
+    # set (CMAKE_C_LINKER usr/bin/ld)
 endif()
 
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
@@ -16,21 +22,22 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
     set(ARCH aarch64)
 endif()
 
-set(CMAKE_SYSROOT "")
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} --64")
-message("ASMFLAGS : ${CMAKE_ASM_FLAGS}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large -fno-builtin -fno-stack-protector -m64")
-message("CFLAGS : ${CMAKE_C_FLAGS}")
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m64")
+message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large \
+                    -fno-builtin -fno-stack-protector \
+                    -nostartfiles -no-pie -ggdb -m64 \
+                    -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
+message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/include
 )
-set(PROJECT_BINARY_DIR ${PROJECT_SOURCE_DIR}/build/bin)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR})
-set(LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-set(ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR})
 
-ADD_SUBDIRECTORY(kernel)
+file(GLOB KERNEL_C_SRCS kernel/*.c)
+file(GLOB KERNEL_ASM_SRCS kernel/*.S)
+
+file(GLOB K_ARCH_C_SRCS kernel/arch/${ARCH}/*.c)
+file(GLOB K_ARCH_ASM_SRCS kernel/arch/${ARCH}/*.S)
+
+add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${KERNEL_C_SRCS})

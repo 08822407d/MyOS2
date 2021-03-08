@@ -1,23 +1,18 @@
 #include "arch/amd64/asm.h"
 
-.text
+.section .headertext
 
 ENTRY(start)
-    mov     %ss, %ax
-    mov     %ax, %ds
-    mov     %ax, %es
-    mov     %ax, %fs
-    mov     %ax, %gs
-    movq    $load_stack_start, %rsp
+    movw    %ss, %ax
+    movw    %ax, %ds
+    movw    %ax, %es
+    movw    %ax, %fs
+    movw    %ax, %gs
+    movq    $0x8000, %rsp
 
-    call    _C_LABEL(pre_init)
+    callq   _C_LABEL(pre_init)
 
-    call    _C_LABEL(kmain)
+    callq   _C_LABEL(kmain)
 
 hang:
 	jmp hang
-
-.data
-load_stack:
-    .fill	512,8,0
-load_stack_start:
