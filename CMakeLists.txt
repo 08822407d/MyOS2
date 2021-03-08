@@ -41,3 +41,7 @@ file(GLOB K_ARCH_C_SRCS kernel/arch/${ARCH}/*.c)
 file(GLOB K_ARCH_ASM_SRCS kernel/arch/${ARCH}/*.S)
 
 add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${KERNEL_C_SRCS})
+
+add_custom_command(OUTPUT kernel.debug
+                    COMMAND objcopy --only-keep-debug system kernel.debug
+                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
