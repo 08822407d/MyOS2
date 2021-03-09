@@ -1,4 +1,4 @@
-#include "arch/amd64/asm.h"
+#include <lib/string.h>
 
 void kmain()
 {

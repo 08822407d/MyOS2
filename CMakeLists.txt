@@ -40,7 +40,11 @@ file(GLOB KERNEL_ASM_SRCS kernel/*.S)
 file(GLOB K_ARCH_C_SRCS kernel/arch/${ARCH}/*.c)
 file(GLOB K_ARCH_ASM_SRCS kernel/arch/${ARCH}/*.S)
 
-add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${KERNEL_C_SRCS})
+file(GLOB LIB_C_SRCS lib/*.c lib/libc/*.c lib/string/*.c)
+file(GLOB LIB_ASM_SRCS lib/*.S lib/libc/*.S lib/string/*.S)
+
+add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${KERNEL_C_SRCS}
+                ${LIB_C_SRCS} ${LIB_ASM_SRCS})
 
 add_custom_command(OUTPUT kernel.debug
                     COMMAND objcopy --only-keep-debug system kernel.debug
