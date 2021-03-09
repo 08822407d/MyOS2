@@ -32,9 +32,9 @@
     #endif
 
     #define _ENTRY(x) \
-        .text; _ALIGN_TEXT; .global x; .type x,@function; x:
+        .text; _ALIGN_TEXT; .globl x; .type x,@function; x:
     #define _LABEL(x) \
-        .global x; x:
+        .globl x; x:
 
     #ifdef GPROF
     #   ifdef __ELF__

@@ -8,7 +8,7 @@ ENTRY(start)
     movw    %ax, %es
     movw    %ax, %fs
     movw    %ax, %gs
-    movq    $0x8000, %rsp
+    movq    stack_top(%rip), %rsp
 
     callq   _C_LABEL(pre_init)
 
@@ -16,3 +16,8 @@ ENTRY(start)
 
 hang:
 	jmp hang
+
+.data
+stack_start:
+    .fill  512,8,0
+stack_top:
