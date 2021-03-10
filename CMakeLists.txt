@@ -7,8 +7,8 @@ set(PROMPT "==>|")
 if (CMAKE_HOST_APPLE)
     message("${PROMPT} Working on MAC : ${CMAKE_SYSTEM_PROCESSOR}\n")
     set (CMAKE_C_COMPILER /opt/local/bin/x86_64-elf-gcc)
-    # set (CMAKE_ASM_COMPILER /opt/local/bin/x86_64-elf-as)
-    set (CMAKE_C_LINKER /opt/local/bin/x86_64-elf-ld)
+    set (CMAKE_ASM_COMPILER /opt/local/bin/x86_64-elf-gcc)
+    set (CMAKE_C_LINKER /opt/local/bin/x86_64-elf-gcc)
 elseif(CMAKE_HOST_UNIX)
     message("${PROMPT} Working on UNIX : ${CMAKE_SYSTEM_PROCESSOR}\n")
     # set (CMAKE_C_COMPILER /usr/bin/gcc)
@@ -27,6 +27,7 @@ message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large \
                     -fno-builtin -fno-stack-protector \
                     -nostartfiles -no-pie -ggdb -m64 \
+                    -D${ARCH} \
                     -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
