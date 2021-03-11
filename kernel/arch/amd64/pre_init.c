@@ -6,5 +6,5 @@ extern char _ebss;
 
 void pre_init()
 {
-	memset((void *)&_bss, 0, 10);
+	memset((void *)&_bss, 0, (void *)&_ebss - (void *)&_bss);
 }

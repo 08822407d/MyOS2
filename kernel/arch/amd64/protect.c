@@ -2,19 +2,51 @@
 #include <lib/assert.h>
 #include <sys/types.h>
 
+#include "include/archconst.h"
+#include "include/archtypes.h"
 #include "../../proto.h"
+
+/* Storage for gdt, idt and tss. */
+segdesc64_s gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
+gatedesc64_s idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+tss64_s tss[CONFIG_MAX_CPUS];
+desctblptr64_s gdt_ptr;
+desctblptr64_s idt_ptr;
+
+void init_gdt()
+{
+	memset(gdt, 0, sizeof(gdt));
+
+	gdt[KERN_CS_INDEX].val		= 0x0020980000000000;
+	gdt[KERN_DS_INDEX].val		= 0x0000920000000000;
+	gdt[USER_CS_INDEX].val		= 0x0020f80000000000;
+	gdt[USER_DS_INDEX].val		= 0x0000f20000000000;
+
+	// gdt[NULL_DESC_INDEX]		= 0x0000000000000000;
+	// gdt[KERN_CS_INDEX]		= 0x0020980000000000;
+	// gdt[KERN_DS_INDEX]		= 0x0000920000000000;
+	// gdt[USER_CS_INDEX]		= 0x0020f80000000000;
+	// gdt[USER_DS_INDEX]		= 0x0000f20000000000;
+
+	// &gdt[TSS_INDEX_FIRST]	= 0x0000000000000000;
+
+	gdt_ptr.base = &gdt[NULL_DESC_INDEX];
+	gdt_ptr.limit = sizeof(gdt) - 1;
+}
+
+void init_idt()
+{
+	memset(gdt, 0, sizeof(idt));
+}
 
 void prot_init(void)
 {
-	// memset(gdt, 0, sizeof(gdt));
-	// memset(idt, 0, sizeof(idt));
+	init_gdt();
+	init_idt();
 
-	// /* Build GDT, IDT, IDT descriptors. */
-	// gdt_desc.base = (u32_t) gdt;
-	// gdt_desc.limit = sizeof(gdt)-1;
-	// idt_desc.base = (u32_t) idt;
-	// idt_desc.limit = sizeof(idt)-1;
-	// tss_init(0, &k_boot_stktop);
+
+	__asm__ __volatile__("lgdt %0": : "m"(gdt_ptr));
+	__asm__ __volatile__("lidt %0": : "m"(idt_ptr));
 
 	// /* Build GDT */
 	// init_param_dataseg(&gdt[LDT_INDEX],
