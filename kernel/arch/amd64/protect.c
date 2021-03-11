@@ -13,14 +13,33 @@ tss64_s tss[CONFIG_MAX_CPUS];
 desctblptr64_s gdt_ptr;
 desctblptr64_s idt_ptr;
 
+void set_codeseg(uint32_t index, uint8_t type, uint8_t privil)
+{
+	segdesc64_s *sd = &(gdt[index]);
+	// fixed bits for codeseg
+	sd->Lflag	= 1;
+	sd->Sflag	= 1;
+	sd->Present	= 1;
+	// changable bits
+	sd->Type	= type;
+	sd->Privil	= privil;
+}
+
+void set_dataseg(uint32_t index, uint8_t type, uint8_t privil)
+{
+	segdesc64_s *sd = &(gdt[index]);
+	// fixed bits for dataseg
+	sd->Lflag	= 0;
+	sd->Sflag	= 1;
+	sd->Present	= 1;
+	// changable bits
+	sd->Type	= type;
+	sd->Privil	= privil;
+}
+
 void init_gdt()
 {
 	memset(gdt, 0, sizeof(gdt));
-
-	gdt[KERN_CS_INDEX].val		= 0x0020980000000000;
-	gdt[KERN_DS_INDEX].val		= 0x0000920000000000;
-	gdt[USER_CS_INDEX].val		= 0x0020f80000000000;
-	gdt[USER_DS_INDEX].val		= 0x0000f20000000000;
 
 	// gdt[NULL_DESC_INDEX]		= 0x0000000000000000;
 	// gdt[KERN_CS_INDEX]		= 0x0020980000000000;

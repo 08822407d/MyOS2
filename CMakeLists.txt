@@ -26,8 +26,7 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m64")
 message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large \
                     -fno-builtin -fno-stack-protector \
-                    -nostartfiles -no-pie -ggdb -m64 \
-                    -D${ARCH} \
+                    -nostartfiles -no-pie -g -m64 \
                     -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 

@@ -4,14 +4,23 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
+enum SegType {	LDTdesc = 2,
+				TSS_AVAIL = 9,
+				TSS_BUSY = 11,
+				CALLGATE = 12,
+				INTGATE = 14,
+				TRAPGATE = 15 };
+
 typedef struct __attribute__((packed)) {/* segment descriptor for protected mode */
-	uint64_t	val;
-	// uint16_t			: 16;
-	// uint32_t			: 24;
-	// uint8_t		type	: 8;
-	// uint8_t				: 5;
-	// uint8_t 	attr	: 2;
-	// uint16_t			: 9;
+	uint16_t			: 16;
+	uint32_t			: 24;
+	uint8_t		Type	: 4;
+	uint8_t		Sflag	: 1;
+	uint8_t		Privil	: 2;
+	uint8_t		Present	: 1;
+	uint8_t				: 6;
+	uint8_t 	Lflag	: 1; // 0=dataseg, 1=codeseg
+	uint16_t			: 9;
 } segdesc64_s;
 
 typedef struct __attribute__((packed)) {
