@@ -30,6 +30,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large \
                     -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
+message("${PROMPT} LDFLAGS : ${CMAKE_EXE_LINKER_FLAGS}")
 
 INCLUDE_DIRECTORIES(
     ${PROJECT_SOURCE_DIR}/include
