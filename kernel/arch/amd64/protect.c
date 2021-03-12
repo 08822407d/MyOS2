@@ -13,7 +13,7 @@ tss64_s tss[CONFIG_MAX_CPUS];
 desctblptr64_s gdt_ptr;
 desctblptr64_s idt_ptr;
 
-void set_codeseg(uint32_t index, uint8_t type, uint8_t privil)
+void set_codeseg(uint32_t index, CommSegType type, uint8_t privil)
 {
 	segdesc64_s *sd = &(gdt[index]);
 	// fixed bits for codeseg
@@ -25,7 +25,7 @@ void set_codeseg(uint32_t index, uint8_t type, uint8_t privil)
 	sd->Privil	= privil;
 }
 
-void set_dataseg(uint32_t index, uint8_t type, uint8_t privil)
+void set_dataseg(uint32_t index, CommSegType type, uint8_t privil)
 {
 	segdesc64_s *sd = &(gdt[index]);
 	// fixed bits for dataseg
@@ -41,11 +41,11 @@ void init_gdt()
 {
 	memset(gdt, 0, sizeof(gdt));
 
-	// gdt[NULL_DESC_INDEX]		= 0x0000000000000000;
-	// gdt[KERN_CS_INDEX]		= 0x0020980000000000;
-	// gdt[KERN_DS_INDEX]		= 0x0000920000000000;
-	// gdt[USER_CS_INDEX]		= 0x0020f80000000000;
-	// gdt[USER_DS_INDEX]		= 0x0000f20000000000;
+	// gdt[0] has been set to 0 by memset
+	set_codeseg(KERN_CS_INDEX, E_CODE, 0);
+	set_dataseg(KERN_DS_INDEX, RW_DATA, 0);
+	set_codeseg(USER_CS_INDEX, E_CODE, 3);
+	set_dataseg(USER_DS_INDEX, RW_DATA, 3);
 
 	// &gdt[TSS_INDEX_FIRST]	= 0x0000000000000000;
 

@@ -4,18 +4,34 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
-enum SegType {	LDTdesc = 2,
-				TSS_AVAIL = 9,
-				TSS_BUSY = 11,
-				CALLGATE = 12,
-				INTGATE = 14,
-				TRAPGATE = 15 };
+typedef enum
+{
+	// R=read, W=write, E=executable, A=accessed
+	R_DATA		= 0,
+	RA_DATA		= 1,
+	RW_DATA		= 2,
+	RWA_DATA	= 3,
+
+	E_CODE		= 8,
+	EA_CODE		= 9,
+	ER_CODE		= 10,
+	ERA_CODE	= 11,
+} CommSegType;
+typedef enum
+{	
+	LDTdesc		= 2,
+	TSS_AVAIL	= 9,
+	TSS_BUSY	= 11,
+	CALLGATE	= 12,
+	INTGATE		= 14,
+	TRAPGATE	= 15
+} SysSegType;
 
 typedef struct __attribute__((packed)) {/* segment descriptor for protected mode */
 	uint16_t			: 16;
 	uint32_t			: 24;
 	uint8_t		Type	: 4;
-	uint8_t		Sflag	: 1;
+	uint8_t		Sflag	: 1; // 0=system seg, 1=common seg
 	uint8_t		Privil	: 2;
 	uint8_t		Present	: 1;
 	uint8_t				: 6;
