@@ -18,4 +18,6 @@ void kmain(void)
     bss_test = 1;
 
     cstart();
+
+    while(1){};
 }
