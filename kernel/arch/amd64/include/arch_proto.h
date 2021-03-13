@@ -2,24 +2,34 @@
 #define _AMD64_PROTO_H_
 
 /* Exception handlers (real or protected mode), in numerical order. */
-void int00(void), divide_error (void);
-void int01(void), single_step_exception (void);
-void int02(void), nmi (void);
-void int03(void), breakpoint_exception (void);
-void int04(void), overflow (void);
-void int05(void), bounds_check (void);
-void int06(void), inval_opcode (void);
-void int07(void), copr_not_available (void);
+void divide_error (void);
+void debug(void);
+void nmi (void);
+void breakpoint_exception (void);
+void overflow (void);
+void bounds_exceed (void);
+void invalid_opcode (void);
+void dev_not_available (void);
 void double_fault(void);
-void copr_seg_overrun(void);
-void inval_tss(void);
+void coproc_seg_overrun(void);
+void invalid_tss(void);
 void segment_not_present(void);
-void stack_exception(void);
+void stack_segfault(void);
 void general_protection(void);
 void page_fault(void);
-void copr_error(void);
+// EXCEPTION 15 INTEL RESERVED
+void x87_fpu_error(void);
 void alignment_check(void);
 void machine_check(void);
 void simd_exception(void);
+void virtualization_exception(void);
+void control_protection_exception(void);
+
+typedef struct {
+	void	(*gate_entry) (void);
+	uint8_t	vec_nr;
+	uint8_t	type;
+	uint8_t	DPL;
+} gate_table_s;
 
 #endif /* _AMD64_PROTO_H_ */
