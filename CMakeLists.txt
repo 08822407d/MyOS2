@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
+set(HAVE_FLAG_SEARCH_PATHS_FIRST 0)
 
 project(MyOS2 ASM C)
 

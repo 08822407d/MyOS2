@@ -19,7 +19,7 @@ void kmain(void)
 
     cstart();
 
-    int i = 1/ 0;
+    int i = 1 / 0;
 
     while(1){};
 }
