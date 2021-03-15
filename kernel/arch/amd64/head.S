@@ -4,7 +4,7 @@
 
 ENTRY(start)
     movw    %ss, %ax
-    movw    %ax, %ds
+    mov     %ax, %ds
     movw    %ax, %es
     movw    %ax, %fs
     movw    %ax, %gs

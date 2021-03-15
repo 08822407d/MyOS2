@@ -37,11 +37,11 @@
 		uint32_t			: 24; // unused
 		uint8_t		Type	: 4;
 		uint8_t		Sflag	: 1; // 0=system seg, 1=common seg
-		uint8_t		Privil	: 2;
-		uint8_t		Present	: 1;
-		uint8_t				: 6; // unused
+		uint8_t		DPL		: 2;
+		uint8_t		Pflag	: 1; // segment present
+		uint8_t				: 5; // unused
 		uint8_t 	Lflag	: 1; // 0=dataseg, 1=codeseg
-		uint16_t			: 9; // unused
+		uint16_t			: 10; // unused
 	} segdesc64_s;
 
 	/* 64bit version segdesc for TSS segment */
@@ -76,8 +76,9 @@
 
 	/* input for 64bit version instruction lgdt and lidt */
 	typedef struct __attribute__((packed)) {
-		uint32_t	limit;
-		segdesc64_s	*base;
+		uint32_t	limit	: 16;
+		uint64_t	base	: 64;
+		uint32_t			: 16;
 	} desctblptr64_s;
 
 	typedef struct {

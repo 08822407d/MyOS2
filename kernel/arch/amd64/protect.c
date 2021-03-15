@@ -10,7 +10,6 @@
 
 /* Storage for gdt, idt and tss. */
 segdesc64_s gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
-uint16_t gdtslctr[GDT_SIZE] __aligned(sizeof(uint16_t));
 gatedesc64_s idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 tss64_s tss[CONFIG_MAX_CPUS];
 desctblptr64_s gdt_ptr;
@@ -49,13 +48,11 @@ void set_commseg(uint32_t index, CommSegType type, uint8_t privil, uint8_t Lflag
 {
 	segdesc64_s *sd = &(gdt[index]);
 	sd->Sflag	= 1;
-	sd->Present	= 1;
+	sd->Pflag	= 1;
 	// changable bits
 	sd->Lflag	= Lflag;
 	sd->Type	= type;
-	sd->Privil	= privil;
-
-	gdtslctr[index] = (index << 3) | privil;
+	sd->DPL		= privil;
 }
 
 void set_codeseg(uint32_t index, CommSegType type, uint8_t privil)
@@ -76,7 +73,6 @@ void set_dataseg(uint32_t index, CommSegType type, uint8_t privil)
 void init_gdt()
 {
 	memset(gdt, 0, sizeof(gdt));
-	memset(gdtslctr, 0, sizeof(gdtslctr));
 
 	// gdt[0] has been set to 0 by memset
 	set_codeseg(KERN_CS_INDEX, E_CODE, 0);
@@ -84,31 +80,31 @@ void init_gdt()
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
 	set_dataseg(USER_DS_INDEX, RW_DATA, 3);
 
-	// &gdt[TSS_INDEX_FIRST]	= 0x0000000000000000;
-
-	gdt_ptr.base = &gdt[NULL_DESC_INDEX];
-	gdt_ptr.limit = sizeof(gdt) - 1;
+	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
+	gdt_ptr.base  = (uint64_t)gdt;
 }
 
 void init_idt()
 {
-	memset(gdt, 0, sizeof(idt));
+	memset(idt, 0, sizeof(idt));
 
 	gate_table_s *gtbl;
-	for ( gtbl = &(idt_init_table[0]); gtbl->gate_entry; gtbl++)
+	for ( gtbl = &(idt_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
 		curr_gate->Present = 1;
-		curr_gate->segslct = gdtslctr[KERN_CS_INDEX];
+		curr_gate->segslct = KERN_CS_SELECTOR;
 		curr_gate->IST 	   = 0;
 		// changable bits
-		curr_gate->offs1 = (uint16_t)(gtbl->gate_entry) & 0xFFFF;
-		curr_gate->offs2 = (uint64_t)(gtbl->gate_entry) >> 16;
+		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
+		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
 		curr_gate->Type  = gtbl->type;
 		curr_gate->DPL   = gtbl->DPL;
 	}
 
+	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
+	idt_ptr.base  = (uint64_t)idt;
 }
 
 void prot_init(void)
@@ -116,18 +112,28 @@ void prot_init(void)
 	init_gdt();
 	init_idt();
 
-
-	__asm__ __volatile__("	lgdt	%0			\n\
-							mov		%1, %%ds	\n\
-							mov		%1, %%es	\n\
-							mov		%1, %%fs	\n\
-							mov		%1, %%gs	\n\
-							mov		%1, %%ss	\n	"
+	__asm__ __volatile__("	lgdt	%0						\n\
+							lidt	%1						\n\
+							mov 	%2, %%ss				\n\
+							mov		$0, %%ax				\n\
+							mov 	%%ax, %%ds				\n\
+							mov 	%%ax, %%es				\n\
+							mov 	%%ax, %%fs				\n\
+							mov 	%%ax, %%gs				\n\
+							xor		%%rax, %%rax			\n\
+							movq	%3, %%rax				\n\
+							pushq	%%rax					\n\
+							leaq	reload_cs(%%rip), %%rax	\n\
+							pushq	%%rax					\n\
+							lretq							\n\
+							reload_cs:						\n	"
 						 :
 						 :	"m"(gdt_ptr),
-						 	"a"(gdtslctr[KERN_DS_INDEX]));
+						 	"m"(idt_ptr),
+						 	"r"(KERN_DS_SELECTOR),
+							"rsi"((uint64_t)KERN_CS_SELECTOR)
+						 :  "rax");
 
-	__asm__ __volatile__("lidt %0": : "m"(idt_ptr));
 
 	// /* Set up a new post-relocate bootstrap pagetable so that
 	// * we can map in VM, and we no longer rely on pre-relocated
