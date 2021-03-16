@@ -1,6 +1,7 @@
 #include <lib/string.h>
 #include <lib/assert.h>
 
+#include "glo.h"
 #include "proto.h"
 #include "arch/amd64/include/arch_proto.h"
 
@@ -19,7 +20,7 @@ void kmain(void)
 
     cstart();
 
-    int *addr = (int *)0x3000000;
+    void *addr = (void *)(framebuffer.FB_base);
 	int i;
 
 	for (i = 0; i < 2048 * 20; i++)
