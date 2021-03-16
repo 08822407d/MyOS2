@@ -20,10 +20,11 @@ void kmain(void)
 
     cstart();
 
-    void *addr = (void *)(framebuffer.FB_base);
+    uint32_t *addr = (uint32_t *)(framebuffer.FB_base);
+	int width = framebuffer.X_Resolution * 20;
 	int i;
 
-	for (i = 0; i < 2048 * 20; i++)
+	for (i = 0; i < width; i++)
 	{
 		*((char *)addr + 0) = (char)0x00;
 		*((char *)addr + 1) = (char)0x00;
@@ -31,7 +32,7 @@ void kmain(void)
 		*((char *)addr + 3) = (char)0x00;
 		addr += 1;
 	}
-	for (i = 0; i < 2048 * 20; i++)
+	for (i = 0; i < width; i++)
 	{
 		*((char *)addr + 0) = (char)0x00;
 		*((char *)addr + 1) = (char)0xff;
@@ -39,7 +40,7 @@ void kmain(void)
 		*((char *)addr + 3) = (char)0x00;
 		addr += 1;
 	}
-	for (i = 0; i < 2048 * 20; i++)
+	for (i = 0; i < width; i++)
 	{
 		*((char *)addr + 0) = (char)0xff;
 		*((char *)addr + 1) = (char)0x00;
@@ -47,7 +48,7 @@ void kmain(void)
 		*((char *)addr + 3) = (char)0x00;
 		addr += 1;
 	}
-	for (i = 0; i < 2048 * 20; i++)
+	for (i = 0; i < width; i++)
 	{
 		*((char *)addr + 0) = (char)0xff;
 		*((char *)addr + 1) = (char)0xff;
@@ -56,7 +57,7 @@ void kmain(void)
 		addr += 1;
 	}
 
-    int k = 1 / 0;
+    // int k = 1 / 0;
 
     while(1){};
 }
