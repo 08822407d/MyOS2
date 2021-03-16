@@ -19,7 +19,43 @@ void kmain(void)
 
     cstart();
 
-    int i = 1 / 0;
+    int *addr = (int *)0x3000000;
+	int i;
+
+	for (i = 0; i < 2048 * 20; i++)
+	{
+		*((char *)addr + 0) = (char)0x00;
+		*((char *)addr + 1) = (char)0x00;
+		*((char *)addr + 2) = (char)0xff;
+		*((char *)addr + 3) = (char)0x00;
+		addr += 1;
+	}
+	for (i = 0; i < 2048 * 20; i++)
+	{
+		*((char *)addr + 0) = (char)0x00;
+		*((char *)addr + 1) = (char)0xff;
+		*((char *)addr + 2) = (char)0x00;
+		*((char *)addr + 3) = (char)0x00;
+		addr += 1;
+	}
+	for (i = 0; i < 2048 * 20; i++)
+	{
+		*((char *)addr + 0) = (char)0xff;
+		*((char *)addr + 1) = (char)0x00;
+		*((char *)addr + 2) = (char)0x00;
+		*((char *)addr + 3) = (char)0x00;
+		addr += 1;
+	}
+	for (i = 0; i < 2048 * 20; i++)
+	{
+		*((char *)addr + 0) = (char)0xff;
+		*((char *)addr + 1) = (char)0xff;
+		*((char *)addr + 2) = (char)0xff;
+		*((char *)addr + 3) = (char)0x00;
+		addr += 1;
+	}
+
+    int k = 1 / 0;
 
     while(1){};
 }

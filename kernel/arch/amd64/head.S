@@ -9,6 +9,11 @@ ENTRY(start)
     movw    %ax, %fs
     movw    %ax, %gs
     movq    stack_top(%rip), %rsp
+    movq    $0, %rbp
+
+    pushq   $0
+    popf
+    pushq   $0
 
     callq   _C_LABEL(pre_init)
 
