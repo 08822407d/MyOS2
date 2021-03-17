@@ -32,4 +32,9 @@ typedef struct {
 	uint8_t	DPL;
 } gate_table_s;
 
+/* pg_util.c */
+void pg_clear(void);
+void pg_mapkernel(void);
+void pg_load(void);
+
 #endif /* _AMD64_PROTO_H_ */

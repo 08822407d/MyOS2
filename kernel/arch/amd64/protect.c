@@ -9,11 +9,12 @@
 #include "../../proto.h"
 
 /* Storage for gdt, idt and tss. */
-segdesc64_s gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
-gatedesc64_s idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
-tss64_s tss[CONFIG_MAX_CPUS];
-desctblptr64_s gdt_ptr;
-desctblptr64_s idt_ptr;
+segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
+gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+tss64_s			tss[CONFIG_MAX_CPUS];
+desctblptr64_s	gdt_ptr;
+desctblptr64_s	idt_ptr;
+
 
 gate_table_s idt_init_table[] = {
 	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE },
@@ -140,10 +141,9 @@ void prot_init(void)
 	// * data.
 	// */
 
-	// pg_clear();
-	// pg_identity(&kinfo); /* Still need 1:1 for lapic and video mem and such. */
-	// pg_mapkernel();
-	// pg_load();
+	pg_clear();
+	pg_mapkernel();
+	pg_load();
 
 	// prot_init_done = 1;
 }

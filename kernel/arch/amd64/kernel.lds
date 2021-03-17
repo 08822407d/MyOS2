@@ -1,10 +1,15 @@
 OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
 ENTRY(start)
+
+_k_phy_start = 0x100000;
+_k_phy_end	 = _end;
+_k_size = _k_phy_end - _k_phy_start;
+
 SECTIONS
 {
 
-	. = 0x100000;
+	. = _k_phy_start;
 	.text :
 	{
 		_text = .;

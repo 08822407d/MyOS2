@@ -4,6 +4,9 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
+/*===========================================================================*
+ *								segment structs								 *
+ *===========================================================================*/
 	/* type field of segdesc, for codeseg and dataseg */
 	typedef enum
 	{
@@ -86,22 +89,58 @@
 
 	/* 64bit version TSS */
 	typedef struct __attribute__((packed)) {
-		uint32_t		: 32; // unused
-		uint64_t rsp0	: 64;
-		uint64_t rsp1	: 64;
-		uint64_t rsp2	: 64;
-		uint64_t		: 64; // unused
-		uint64_t ist1	: 64;
-		uint64_t ist2	: 64;
-		uint64_t ist3	: 64;
-		uint64_t ist4	: 64;
-		uint64_t ist5	: 64;
-		uint64_t ist6	: 64;
-		uint64_t ist7	: 64;
-		uint64_t		: 64; // unused
-		uint32_t		: 32; // unused
-		uint32_t iobm	: 32;
+		uint32_t			: 32; // unused
+		uint64_t	rsp0	: 64;
+		uint64_t	rsp1	: 64;
+		uint64_t	rsp2	: 64;
+		uint64_t			: 64; // unused
+		uint64_t	ist1	: 64;
+		uint64_t	ist2	: 64;
+		uint64_t	ist3	: 64;
+		uint64_t	ist4	: 64;
+		uint64_t	ist5	: 64;
+		uint64_t	ist6	: 64;
+		uint64_t	ist7	: 64;
+		uint64_t			: 64; // unused
+		uint32_t			: 32; // unused
+		uint32_t	iobm	: 32;
 	} tss64_s;
+
+/*===========================================================================*
+ *								page structs								 *
+ *===========================================================================*/
+	typedef struct __attribute__((packed)) {
+		uint8_t		Pflag	: 1;
+		uint8_t		RWflag	: 1;
+		uint8_t		USflag	: 1;
+		uint8_t		PWTflag	: 1;
+		uint8_t		PCDflag	: 1;
+		uint8_t 	Aflag	: 1;
+		uint8_t				: 6;
+		uint64_t	PHYADDR	: 36;
+		uint16_t			: 15;
+		uint8_t		XDflag	: 1;
+	} PML4E;
+	
+	typedef struct __attribute__((packed)) {
+		uint8_t		Pflag	: 1;
+		uint8_t		RWflag	: 1;
+		uint8_t		USflag	: 1;
+		uint8_t		PWTflag	: 1;
+		uint8_t		PCDflag	: 1;
+		uint8_t 	Aflag	: 1;
+		uint8_t		Dflag	: 1;
+		uint8_t		PATflag	: 1;
+		uint8_t		Gflag	: 1;
+		uint8_t				: 3;
+		uint64_t	PHYADDR	: 36;
+		uint16_t			: 15;
+		uint8_t		XDflag	: 1;
+	} PDPTE;
+	typedef PDPTE PDE;
+	typedef PDPTE PTE;
+	
+
 
 	typedef struct {
 	} cpu_info_s ;
