@@ -6,7 +6,7 @@
 #include "include/archtypes.h"
 #include "include/arch_proto.h"
 
-extern size_t _k_size, _k_phy_start, _k_phy_end;
+extern char _end;
 
 /* Storage for PML4, PDPT and PD. */
 PML4E	PML4[PGENT_NR] __aligned(PGENT_SIZE);
@@ -29,7 +29,7 @@ void pg_mapkernel(void)
 	PML4[0].PHYADDR = PML4[PGENT_NR / 2].PHYADDR = ((uint64_t)PDPT >> 12);
 
 	// count how many PDPTE does kernel use, each PDPTE asign 1GB memory
-	uint64_t PDPTE_count = (uint64_t)(_k_phy_end / 0x40000000) + 1;
+	uint64_t PDPTE_count = (uint64_t)((size_t)&_end / 0x40000000) + 1;
 	for (int i = 0; i < PDPTE_count; i++)
 	{
 		PDPT[i].Pflag = PDPT[i].RWflag = 1;
@@ -37,7 +37,7 @@ void pg_mapkernel(void)
 	}
 
 	// count how many PDE does kernel use, each PDE asign 2MB memory
-	uint64_t PDE_count = (uint64_t)(_k_phy_end / 0x200000) + 1;
+	uint64_t PDE_count = (uint64_t)((size_t)&_end / 0x200000) + 1;
 	for (int j = 0; j < PDE_count; j++)
 	{
 		
@@ -48,5 +48,8 @@ void pg_mapkernel(void)
 
 void pg_load(void)
 {
-
+	__asm__ __volatile__("movq %%rax, %%cr3"
+						 :
+						 :"rax"(PML4)
+						 :);
 }

@@ -1,8 +1,14 @@
 /*===========================================================================*
  *				exception				     *
  *===========================================================================*/
-void exception_handler()
+void exception_handler(unsigned long errcode)
 {
+	unsigned long code = errcode;
+	while (1)
+	{
+		/* code */
+	}
+	
 // /* An exception or unexpected interrupt has occurred. */
 //   register struct ex_s *ep;
 //   struct proc *saved_proc;

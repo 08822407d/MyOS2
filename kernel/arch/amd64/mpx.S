@@ -97,7 +97,7 @@ exception_entry:
 	movq	%rdi,	%ds
 	movq	%rdi,	%es
 
-	movq	%rsp,	%rdi
+	; movq	%rsp,	%rdi
 	////GET_CURRENT(%ebx)
 	callq 	exception_handler
 
