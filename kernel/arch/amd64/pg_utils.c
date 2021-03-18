@@ -48,8 +48,8 @@ void pg_mapkernel(void)
 
 void pg_load(void)
 {
-	__asm__ __volatile__("movq %%rax, %%cr3"
-						 :
-						 :"rax"(PML4)
-						 :);
+	// __asm__ __volatile__("movq %%rax, %%cr3"
+	// 					 :
+	// 					 :"rax"(PML4)
+	// 					 :);
 }
