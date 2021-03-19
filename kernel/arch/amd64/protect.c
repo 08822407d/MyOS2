@@ -7,6 +7,7 @@
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "../../proto.h"
+#include "../../include/ktypes.h"
 
 /* Storage for gdt, idt and tss. */
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
@@ -15,6 +16,13 @@ tss64_s			tss[CONFIG_MAX_CPUS];
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
+phy_addr vir2phy(void *vir)
+{
+	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
+	uint64_t offset = (vir_addr) &_k_vir_start -
+						(vir_addr) &_k_phy_start;
+	return (phy_addr)vir - offset;
+}
 
 gate_table_s idt_init_table[] = {
 	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE },

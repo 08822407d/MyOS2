@@ -3,6 +3,7 @@
 #include "include/bootinfo.h"
 #include "../../param.h"
 #include "../../glo.h"
+#include "../../include/ktypes.h"
 
 extern char _bss;
 extern char _ebss;
@@ -31,4 +32,6 @@ void pre_init()
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
+	
+	__asm__ __volatile__("nop");
 }

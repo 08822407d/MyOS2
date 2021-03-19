@@ -1,6 +1,9 @@
 #ifndef _ADM64_PROTO_H_
 #define _AMD64_PROTO_H_
 
+#include <sys/types.h>
+#include "../../../include/ktypes.h"
+
 /* Exception handlers (real or protected mode), in numerical order. */
 void divide_error (void);
 void debug(void);
@@ -31,6 +34,9 @@ typedef struct {
 	uint8_t	type;
 	uint8_t	DPL;
 } gate_table_s;
+
+/* protect.c */
+phy_addr vir2phy(void *);
 
 /* pg_util.c */
 void pg_clear(void);
