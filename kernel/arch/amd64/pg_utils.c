@@ -34,22 +34,25 @@ void pg_mapkernel(void)
 	{
 		PDPT[i].Pflag = PDPT[i].RWflag = 1;
 		PDPT[i].PHYADDR = ((uint64_t)PD >> 12);
-	}
 
 	// count how many PDE does kernel use, each PDE asign 2MB memory
-	uint64_t PDE_count = (uint64_t)((size_t)&_end / 0x200000) + 1;
-	for (int j = 0; j < PDE_count; j++)
-	{
-		
-		PD[j]->Pflag = PD[j]->Pflag = PD[j]->PATflag = 1;
-		PD[j]->PHYADDR = (j * 0x200000) >> 12;
+		uint64_t PDE_count = (uint64_t)((size_t)&_end / 0x200000) + 1;
+		for (int j = 0; j < PDE_count; j++)
+		{
+			
+			PD[i][j].Pflag =
+			PD[i][j].RWflag =
+			PD[i][j].Pflag =
+			PD[i][j].PATflag = 1;
+			PD[i][j].PHYADDR = (j * 0x200000) >> 12;
+		}
 	}
 }
 
 void pg_load(void)
 {
-	// __asm__ __volatile__("movq %%rax, %%cr3"
-	// 					 :
-	// 					 :"rax"(PML4)
-	// 					 :);
+	__asm__ __volatile__("movq %%rax, %%cr3"
+						 :
+						 :"rax"(PML4)
+						 :);
 }
