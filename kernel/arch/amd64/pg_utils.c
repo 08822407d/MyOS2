@@ -45,7 +45,7 @@ void pg_mapkernel(void)
 	for (int i = 0; i < PDPTE_count; i++)
 	{
 		PDPT_phy[i].Pflag = PDPT_phy[i].RWflag = 1;
-		PDPT_phy[i].PHYADDR = ((uint64_t)PD_phy >> 12);
+		PDPT_phy[i].PHYADDR = ((uint64_t)PD_phy[i] >> 12);
 
 	// count how many PDE does kernel use, each PDE asign 2MB memory
 		uint64_t PDE_count = (uint64_t)((phy_addr)vir2phy(&_end) / 0x200000) + 1;
@@ -65,6 +65,6 @@ void pg_load(void)
 {
 	__asm__ __volatile__("movq %%rax, %%cr3"
 						 :
-						 :"rax"(PML4)
+						 :"rax"(PML4_phy)
 						 :);
 }
