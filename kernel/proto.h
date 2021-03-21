@@ -10,6 +10,9 @@
 	/* start.c */
 	void cstart(void);
 
+	/* memory.c */
+	void mem_init(void);
+
 	/* functions defined in architecture-dependent files. */
 	void prot_init(void);
 

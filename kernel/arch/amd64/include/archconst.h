@@ -1,7 +1,12 @@
 #ifndef _AMD64_ACONST_H
 #define _AMD64_ACONST_H 1
 
-	#define CONFIG_MAX_CPUS 8
+#include "../../../include/const.h"
+
+	#define CONFIG_MAX_CPUS		8
+	#define CONFIG_PAGE_SIZE	CONST_2M
+	#define CONFIG_MAX_MEM		(64 * CONST_1G)
+	#define PAGE_NR				(CONFIG_MAX_MEM / CONFIG_PAGE_SIZE)
 
 	/* Constants for protected mode. */
 
@@ -32,7 +37,7 @@
 	#define KERN_PRIVILEGE		0	/* kernel and interrupt handlers */
 	#define USER_PRIVILEGE		3	/* servers and user processes */
 
-	#define	PGENT_SIZE			0x1000
+	#define	PGENT_SIZE			CONST_4K
 	#define	PGENT_NR			(PGENT_SIZE / 8)
 
 #endif /* _AMD64_ACONST_H */

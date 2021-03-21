@@ -20,6 +20,8 @@ void kmain(void)
 
     cstart();
 
+	mem_init();
+
     uint32_t *addr = (uint32_t *)(framebuffer.FB_base);
 	int width = framebuffer.X_Resolution * 20;
 	int i;

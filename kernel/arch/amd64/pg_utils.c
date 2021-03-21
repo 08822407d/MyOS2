@@ -6,6 +6,7 @@
 #include "include/archtypes.h"
 #include "include/arch_proto.h"
 #include "../../include/ktypes.h"
+#include "../../include/const.h"
 
 extern char _end;
 
@@ -18,18 +19,17 @@ static	PML4E	*PML4_phy;
 static	PDPTE	*PDPT_phy;
 static	PDE		*(PD_phy[PGENT_NR]);
 
-
 void pg_clear(void)
 {
 	memset((void *)vir2phy(PML4), 0, sizeof(PML4));
 	memset((void *)vir2phy(PDPT), 0, sizeof(PDPT));
 	memset((void *)vir2phy(PD), 0, sizeof(PD));
 
-	PML4_phy	= vir2phy(PML4);
-	PDPT_phy	= vir2phy(PDPT);
+	PML4_phy	= (PML4E *)vir2phy(PML4);
+	PDPT_phy	= (PDPTE *)vir2phy(PDPT);
 	for (int i = 0; i < PGENT_NR; i++)
 	{
-		PD_phy[i]		= vir2phy(PD[i]);
+		PD_phy[i]		= (PDE *)vir2phy(PD[i]);
 	}
 }
 
