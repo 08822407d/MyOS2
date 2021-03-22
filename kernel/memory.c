@@ -34,8 +34,8 @@ void mem_init()
 			pg_end_idx   = (high_bound + CONFIG_PAGE_SIZE - 1) / CONFIG_PAGE_SIZE;
 		}
 		mem_info.memzones[i].attr = mem_info.mb_memmap[i].type;
-		mem_info.memzones[i].zone_start_addr = (phy_addr)(pg_start_idx * CONFIG_PAGE_SIZE);
-		mem_info.memzones[i].zone_end_addr = (phy_addr)(pg_end_idx * CONFIG_PAGE_SIZE);
+		mem_info.memzones[i].zone_start_addr = low_bound;
+		mem_info.memzones[i].zone_end_addr = high_bound;
 		mem_info.memzones[i].page_group = &mem_info.pages[pg_start_idx];
 		mem_info.memzones[i].page_nr = pg_end_idx - pg_start_idx;
 
