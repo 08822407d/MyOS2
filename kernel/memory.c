@@ -28,7 +28,7 @@ void mem_init()
 		if(mem_info.mb_memmap[i].type != 1 || (pg_end_idx - pg_start_idx) < 1)
 		{
 			if (mem_info.mb_memmap[i].type == 1)
-				mem_info.mb_memmap[i].type == 2;
+				mem_info.mb_memmap[i].type = 2;
 
 			pg_start_idx = low_bound / CONFIG_PAGE_SIZE;
 			pg_end_idx   = (high_bound + CONFIG_PAGE_SIZE - 1) / CONFIG_PAGE_SIZE;
