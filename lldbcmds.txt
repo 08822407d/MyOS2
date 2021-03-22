@@ -1,0 +1,5 @@
+platform select remote-gdb-server
+
+platform connect connect://localhost:1234
+
+file kernel.debug
