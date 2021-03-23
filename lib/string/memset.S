@@ -36,8 +36,8 @@
 // #endif
 
 #ifndef _KERNEL
-/* bzero, %rdi is buffer, %rsi length */
 
+/* bzero, %rdi is buffer, %rsi length */
 ENTRY(bzero)
 	mov	%rsi,%rdx		/* length */
 	xor	%eax,%eax		/* value to write */
@@ -45,7 +45,6 @@ ENTRY(bzero)
 #endif
 
 /* memset, %rdi is buffer, %rsi char to fill, %rdx length */
-
 ENTRY(memset)
 	movzbq	%sil,%rax		/* byte value to fill */
 	mov	%rdx,%rsi		/* copy of length */

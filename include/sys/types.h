@@ -42,5 +42,7 @@
 	#endif
 
 	typedef __UINT64_TYPE__	size_t;
+	typedef __UINT64_TYPE__ bitmap_t;
+	#define BITMAP_UNITSIZE 64
 
 #endif /* !_SYS_TYPES_H_ */

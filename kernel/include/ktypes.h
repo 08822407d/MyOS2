@@ -23,7 +23,7 @@
 
 	typedef struct MemZone
 	{
-		struct Page	*	page_group;
+		struct Page	*	page_zone;
 		unsigned long	page_nr;
 
 		phy_addr		zone_start_addr;
@@ -42,11 +42,11 @@
 		unsigned long	mb_memmap_nr;
 
 		struct Page		pages[PAGE_NR];
-		uint64_t		page_bitmap[PAGE_NR / 64];
+		bitmap_t		page_bitmap[PAGE_NR / BITMAP_UNITSIZE];
 		unsigned long	page_total_nr;
 
 		struct MemZone	memzones[MAXMEMZONE];
-		unsigned long	memgroup_nr;	
+		unsigned long	memzone_total_nr;	
 	} memory_info_s;
 	
 #endif /* _K_TYPES_H_ */

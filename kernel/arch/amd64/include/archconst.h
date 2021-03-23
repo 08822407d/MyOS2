@@ -5,6 +5,8 @@
 
 	#define CONFIG_MAX_CPUS		8
 	#define CONFIG_PAGE_SIZE	CONST_2M
+	#define CONFIG_PAGE_MASKF	MASKF_2M	// align to page low bound
+	#define CONFIG_PAGE_ALIGH	ALIGN_2M	// align to page high bound
 	#define CONFIG_MAX_MEM		(64 * CONST_1G)
 	#define PAGE_NR				(CONFIG_MAX_MEM / CONFIG_PAGE_SIZE)
 
