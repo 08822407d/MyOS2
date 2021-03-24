@@ -7,8 +7,8 @@
 
 	#define MAXMEMZONE		64
 
-	typedef uint64_t phy_addr;
-	typedef uint64_t vir_addr;
+	typedef void*	phy_addr;
+	typedef void*	vir_addr;
 
 	/* for page management */
 	typedef struct Page

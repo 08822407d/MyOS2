@@ -36,7 +36,8 @@ typedef struct {
 } gate_table_s;
 
 /* protect.c */
-phy_addr vir2phy(void *);
+phy_addr vir2phy(vir_addr);
+vir_addr phy2vir(phy_addr);
 
 /* pg_util.c */
 void pg_clear(void);

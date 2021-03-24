@@ -16,12 +16,19 @@ tss64_s			tss[CONFIG_MAX_CPUS];
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
-phy_addr vir2phy(void *vir)
+phy_addr vir2phy(vir_addr vir)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
 	uint64_t offset = (vir_addr) &_k_vir_start -
 						(vir_addr) &_k_phy_start;
 	return (phy_addr)vir - offset;
+}
+vir_addr phy2vir(phy_addr phy)
+{
+	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
+	uint64_t offset = (vir_addr) &_k_vir_start -
+						(vir_addr) &_k_phy_start;
+	return (phy_addr)phy + offset;
 }
 
 gate_table_s idt_init_table[] = {

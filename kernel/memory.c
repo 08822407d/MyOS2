@@ -26,12 +26,12 @@ void mem_init()
 	for(i = 0; i < mem_info.mb_memmap_nr; i++)
 	{
 		multiboot_memory_map_s *mbmap_curr = &mem_info.mb_memmap[i];
-		low_bound = mbmap_curr->addr;
-		high_bound = mbmap_curr->len + low_bound;
+		low_bound = (phy_addr)mbmap_curr->addr;
+		high_bound = (phy_addr)(mbmap_curr->len + low_bound);
 
 
-		pg_start_idx = CONFIG_PAGE_ALIGH(low_bound) / CONFIG_PAGE_SIZE;
-		pg_end_idx   = CONFIG_PAGE_MASKF(high_bound) / CONFIG_PAGE_SIZE;
+		pg_start_idx = CONFIG_PAGE_ALIGH((uint64_t)low_bound) / CONFIG_PAGE_SIZE;
+		pg_end_idx   = CONFIG_PAGE_MASKF((uint64_t)high_bound) / CONFIG_PAGE_SIZE;
 		if(pg_end_idx <= pg_start_idx)
 			continue;
 
@@ -40,8 +40,8 @@ void mem_init()
 		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
 		mz_curr->page_nr			= pg_end_idx - pg_start_idx;
 		mz_curr->page_free_nr		= mz_curr->page_nr;
-		mz_curr->zone_start_addr	= pg_start_idx * CONFIG_PAGE_SIZE;
-		mz_curr->zone_end_addr		= pg_end_idx * CONFIG_PAGE_SIZE;
+		mz_curr->zone_start_addr	= (phy_addr)(pg_start_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_end_addr		= (phy_addr)(pg_end_idx * CONFIG_PAGE_SIZE);
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
