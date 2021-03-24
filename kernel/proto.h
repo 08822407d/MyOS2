@@ -13,6 +13,9 @@
 	/* memory.c */
 	void mem_init(void);
 
+	/* exception.c */
+	void exception_handler(void);
+
 	/* functions defined in architecture-dependent files. */
 	void prot_init(void);
 
