@@ -1,8 +1,8 @@
 #include <lib/string.h>
 #include <lib/assert.h>
 
-#include "glo.h"
-#include "proto.h"
+#include "include/glo.h"
+#include "include/proto.h"
 #include "arch/amd64/include/arch_proto.h"
 
 void cstart(void)
@@ -21,10 +21,10 @@ void kmain(void)
     cstart();
 
 	mem_init();
+	
+	video_init();
 
-	while (1);
-
-    uint32_t *addr = (uint32_t *)(framebuffer.FB_base);
+    uint64_t *addr = (uint64_t *)(framebuffer.FB_virbase);
 	int width = framebuffer.X_Resolution * 20;
 	int i;
 

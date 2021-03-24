@@ -5,9 +5,10 @@
 #include "arch/amd64/include/archconst.h"
 #include "arch/amd64/include/archtypes.h"
 #include "arch/amd64/include/arch_proto.h"
+
 #include "include/ktypes.h"
 #include "include/const.h"
-#include "proto.h"
+#include "include/proto.h"
 
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];

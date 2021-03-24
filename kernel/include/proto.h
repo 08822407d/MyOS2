@@ -13,6 +13,9 @@
 	/* memory.c */
 	void mem_init(void);
 
+	/* video.c */
+	void video_init(void);
+
 	/* exception.c */
 	void exception_handler(unsigned long);
 

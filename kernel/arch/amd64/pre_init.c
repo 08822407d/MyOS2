@@ -1,12 +1,13 @@
 #include <lib/string.h>
 
 #include "include/bootinfo.h"
-#include "../../param.h"
-#include "../../glo.h"
+#include "../../include/param.h"
+#include "../../include/glo.h"
 #include "../../include/ktypes.h"
 
 extern char _bss;
 extern char _ebss;
+extern char _end;
 extern memory_info_s	mem_info;
 
 kinfo_s kparam;
@@ -31,9 +32,11 @@ void pre_init()
 	}
 	mem_info.mb_memmap_nr = i + 1;
 
-	framebuffer.FB_base = bootinfo->Graphics_Info.FrameBufferBase;
+	framebuffer.FB_phybase = (phy_addr)bootinfo->Graphics_Info.FrameBufferBase;
 	framebuffer.FB_size = bootinfo->Graphics_Info.FrameBufferSize;
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
+
+	framebuffer.FB_virbase = (vir_addr)CONFIG_PAGE_ALIGH((uint64_t)&_end);
 }

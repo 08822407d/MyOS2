@@ -16,6 +16,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
     sync
+    sleep 1
     sudo umount /mnt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     echo "Working on MinGW"

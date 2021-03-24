@@ -5,6 +5,7 @@
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		8
 	#define CONFIG_PAGE_SIZE	CONST_2M
+	#define CONFIG_PAGE_SHIFT	SHIFT_2M
 	#define CONFIG_PAGE_MASKF	MASKF_2M	// align to page low bound
 	#define CONFIG_PAGE_ALIGH	ALIGN_2M	// align to page high bound
 	#define CONFIG_MAX_PHYMEM	(64 * CONST_1G)
