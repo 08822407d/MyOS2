@@ -43,10 +43,12 @@ file(GLOB KERNEL_ASM_SRCS kernel/*.S)
 file(GLOB K_ARCH_C_SRCS kernel/arch/${ARCH}/*.c)
 file(GLOB K_ARCH_ASM_SRCS kernel/arch/${ARCH}/*.S)
 
+file(GLOB K_LIB_C_SRCS kernel/klib/*.c)
+
 file(GLOB LIB_C_SRCS lib/*.c lib/utils/*.c lib/string/*.c)
 file(GLOB LIB_ASM_SRCS lib/*.S lib/utils/*.S lib/string/*.S)
 
-add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${KERNEL_C_SRCS}
+add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${K_LIB_C_SRCS} ${KERNEL_C_SRCS}
                 ${LIB_C_SRCS} ${LIB_ASM_SRCS})
 
 add_custom_command(OUTPUT kernel.debug

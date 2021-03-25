@@ -14,13 +14,10 @@
 ***************************************************/
 
 #ifndef __PRINTK_H__
-
 #define __PRINTK_H__
 
 #include <stdarg.h>
-#include "font.h"
-#include "linkage.h"
-#include "spinlock.h"
+#include <lib/font.h>
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */
@@ -34,7 +31,7 @@
 
 #define WHITE 	0x00ffffff		//白
 #define BLACK 	0x00000000		//黑
-#define RED	0x00ff0000		//红
+#define RED		0x00ff0000		//红
 #define ORANGE	0x00ff8000		//橙
 #define YELLOW	0x00ffff00		//黄
 #define GREEN	0x0000ff00		//绿
@@ -61,17 +58,9 @@ struct position
 
 	unsigned int * FB_addr;
 	unsigned long FB_length;
-
-	spinlock_T printk_lock;
 };
 
 extern struct position Pos;
-
-/*
-
-*/
-
-void frame_buffer_init();
 
 /*
 
@@ -89,10 +78,12 @@ int skip_atoi(const char **s);
 
 */
 
-#define do_div(n,base) ({ \
-int __res; \
-__asm__("divq %%rcx":"=a" (n),"=d" (__res):"0" (n),"1" (0),"c" (base)); \
-__res; })
+#define do_div(n,base) ({ 										\
+						int __res; 								\
+						__asm__("divq %%rcx"					\
+								:"=a" (n),"=d" (__res)			\	
+								:"0" (n),"1" (0),"c" (base));	\
+						__res; })
 
 /*
 
