@@ -43,24 +43,20 @@
 
 */
 
-extern unsigned char font_ascii[256][16];
-
-struct position
+typedef struct
 {
-	int XResolution;
-	int YResolution;
-
-	int XPosition;
-	int YPosition;
-
-	int XCharSize;
-	int YCharSize;
+	unsigned int XResolution;
+	unsigned int YResolution;
+	
+	unsigned int XPosition;
+	unsigned int YPosition;
+	
+	unsigned int XCharSize;
+	unsigned int YCharSize;
 
 	unsigned int * FB_addr;
 	unsigned long FB_length;
-};
-
-extern struct position Pos;
+} position_t;
 
 /*
 

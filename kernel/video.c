@@ -1,7 +1,9 @@
 #include <sys/types.h>
+
 #include "include/const.h"
-#include "include/ktypes.h"
 #include "include/param.h"
+#include "include/ktypes.h"
+#include "include/printk.h"
 
 #include "arch/amd64/include/archconst.h"
 #include "arch/amd64/include/archtypes.h"
@@ -9,6 +11,7 @@
 
 extern kinfo_s kparam;
 extern framebuffer_s framebuffer;
+extern position_t Pos;
 
 void video_init()
 {	
@@ -21,4 +24,14 @@ void video_init()
 		vir_pg_base += CONFIG_PAGE_SIZE;
 		phy_pg_base += CONFIG_PAGE_SIZE;
 	}
+
+	Pos.FB_addr = framebuffer.FB_virbase;
+	Pos.FB_length = framebuffer.FB_size;
+	Pos.XResolution = framebuffer.X_Resolution;
+	Pos.YResolution = framebuffer.Y_Resolution;
+
+	Pos.XPosition = 0;
+	Pos.YPosition = 0;
+	Pos.XCharSize = 8;
+	Pos.YCharSize = 16;
 }

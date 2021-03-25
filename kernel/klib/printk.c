@@ -17,18 +17,21 @@
 
 #include <sys/types.h>
 #include <lib/stddef.h>
+#include <lib/string.h>
 
 #include "../include/printk.h"
 #include "../include/param.h"
 
 extern framebuffer_s framebuffer;
-static char buf[4096] = {0};
+extern unsigned char font_ascii[256][16];
 
+static char buf[4096] = {0};
+position_t Pos;
 /*
 
 */
 
-void putchar(unsigned int *fb, int Xsize, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
+void putchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
 {
 	int i = 0, j = 0;
 	unsigned int *addr = NULL;
@@ -38,7 +41,7 @@ void putchar(unsigned int *fb, int Xsize, int x, int y, unsigned int FRcolor, un
 
 	for (i = 0; i < 16; i++)
 	{
-		addr = fb + Xsize * (y + i) + x;
+		addr = fb + Xresol * (y + i) + x;
 		testval = 0x100;
 		for (j = 0; j < 8; j++)
 		{
