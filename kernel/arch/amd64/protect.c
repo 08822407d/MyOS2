@@ -158,7 +158,7 @@ void prot_init(void)
 
 	pg_clear();
 	mem_init();
-	pg_load();
+	pg_load_cr3();
 
 	// prot_init_done = 1;
 }

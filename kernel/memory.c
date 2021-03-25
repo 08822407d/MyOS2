@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <lib/string.h>
 #include <lib/assert.h>
+#include <lib/utils.h>
 
 #include "arch/amd64/include/archconst.h"
 #include "arch/amd64/include/archtypes.h"
@@ -56,8 +57,9 @@ void mem_init()
 			page_s *pg_curr = &mem_info.pages[j];
 			pg_curr->zone_belonged	= mz_curr;
 			pg_curr->page_start_addr = (phy_addr)(j * CONFIG_PAGE_SIZE);
-			mem_info.page_bitmap[page_count / BITMAP_UNITSIZE] &=
-									~(1UL << (j % BITMAP_UNITSIZE));
+			bm_clear_bit(mem_info.page_bitmap, j);
+			// mem_info.page_bitmap[page_count / BITMAP_UNITSIZE] &=
+			// 						~(1UL << (j % BITMAP_UNITSIZE));
 		}
 
 		zone_count++;
@@ -73,21 +75,27 @@ void mem_init()
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_size) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
+		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
 		// map lower mem
 		pg_domap(k_phy_pgbase, k_phy_pgbase, 0);
 		// map higher mem
 		pg_domap(k_vir_pgbase, k_phy_pgbase, 0);
+		// set page struct
+		bm_set_bit(mem_info.page_bitmap, pg_idx);
+		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
 		k_vir_pgbase += CONFIG_PAGE_SIZE;
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
 }
 
-page_s * page_alloc(phy_addr addr)
+page_s * page_alloc(void)
 {
-
+	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, mem_info.page_total_nr);
+	bm_set_bit(mem_info.page_bitmap, freepage_idx);
+	return &mem_info.pages[freepage_idx];
 }
 
-void page_free()
+void page_free(page_s * page)
 {
 
 }

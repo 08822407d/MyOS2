@@ -24,44 +24,22 @@ void pg_clear(void)
 	memset(pd_base, 0, sizeof(PD));
 }
 
-// void pg_mapkernel(void)
-// {
-	// // map low and high part of linear address to same physical address
-	// for (int i = 0; i < PDPT_NR; i++)
-	// {
-	// 	PML4[i].Pflag = PML4[i + PGENT_NR / 2].Pflag =
-	// 	PML4[i].RWflag = PML4[i + PGENT_NR / 2].RWflag = 1;
-	// 	PML4[i].PHYADDR = PML4[i + PGENT_NR / 2].PHYADDR =
-	// 					(uint64_t)vir2phy(&PDPT[i]) >> SHIFT_PTE;
-
-	// 	for (int j = 0; j < PGENT_NR; j++)
-	// 	{
-	// 		PDPT[i][j].Pflag = PDPT[i][j].RWflag = 1;
-	// 		PDPT[i][j].PHYADDR = (uint64_t)vir2phy(&PD[i][j]) >> SHIFT_PTE;
-	// 	}
-	// }
-
-	// map physical pages for kernel
-	// phy_addr k_phy_pgbase = (phy_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_phy_base);
-	// vir_addr k_vir_pgbase = (vir_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_vir_base);
-	// long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_size) / CONFIG_PAGE_SIZE;
-	// for (long i = 0; i < pde_nr; i++)
-	// {
-	// 	// map lower mem
-	// 	pg_domap(k_phy_pgbase, k_phy_pgbase, 0);
-	// 	// map higher mem
-	// 	pg_domap(k_vir_pgbase, k_phy_pgbase, 0);
-	// 	k_vir_pgbase += CONFIG_PAGE_SIZE;
-	// 	k_phy_pgbase += CONFIG_PAGE_SIZE;
-	// }
-// }
-
-void pg_load(void)
+void pg_load_cr3(void)
 {
 	__asm__ __volatile__("movq %%rax, %%cr3"
 						 :
 						 :"rax"(vir2phy(PML4))
 						 :);
+}
+
+void pg_flush_tlb(void)
+{
+	uint64_t tempreg;
+	__asm__ __volatile__("movq %%cr3, %0	\n\
+						  movq %0, %%cr3	"
+						 :"=r"(tempreg)
+						 :
+						 :	);
 }
 
 void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)

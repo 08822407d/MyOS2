@@ -41,8 +41,8 @@ vir_addr phy2vir(phy_addr);
 
 /* pg_util.c */
 void pg_clear(void);
-void pg_mapkernel(void);
-void pg_load(void);
+void pg_load_cr3(void);
+void pg_flush_tlb(void);
 void pg_domap(vir_addr, phy_addr, uint64_t);
 void pg_unmap(vir_addr);
 

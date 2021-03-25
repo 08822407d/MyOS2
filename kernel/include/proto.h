@@ -1,5 +1,7 @@
-#ifndef PROTO_H
-#define PROTO_H
+#ifndef _PROTO_H_
+#define _PROTO_H_
+
+#include "ktypes.h"
 
 	/* main.c */
 	// #ifndef UNPAGED
@@ -12,6 +14,8 @@
 
 	/* memory.c */
 	void mem_init(void);
+	page_s * page_alloc(void);
+	void page_free(page_s *);
 
 	/* video.c */
 	void video_init(void);
@@ -22,4 +26,4 @@
 	/* functions defined in architecture-dependent files. */
 	void prot_init(void);
 
-#endif /* PROTO_H */
+#endif /* _PROTO_H_ */

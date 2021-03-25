@@ -23,6 +23,8 @@ void kmain(void)
 	mem_init();
 	
 	video_init();
+	
+	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 
     char *addr = framebuffer.FB_virbase;
 	int width = framebuffer.X_Resolution * 20;
@@ -56,8 +58,6 @@ void kmain(void)
 		*addr++ = 0xff;
 		*addr++ = 0x00;
 	}
-
-    // int k = 1 / 0;
 
     while(1){};
 }
