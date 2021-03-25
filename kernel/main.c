@@ -24,41 +24,37 @@ void kmain(void)
 	
 	video_init();
 
-    uint64_t *addr = (uint64_t *)(framebuffer.FB_virbase);
+    char *addr = framebuffer.FB_virbase;
 	int width = framebuffer.X_Resolution * 20;
 	int i;
 
 	for (i = 0; i < width; i++)
 	{
-		*((char *)addr + 0) = (char)0x00;
-		*((char *)addr + 1) = (char)0x00;
-		*((char *)addr + 2) = (char)0xff;
-		*((char *)addr + 3) = (char)0x00;
-		addr += 1;
+		*addr++ = 0x00;
+		*addr++ = 0x00;
+		*addr++ = 0xff;
+		*addr++ = 0x00;
 	}
 	for (i = 0; i < width; i++)
 	{
-		*((char *)addr + 0) = (char)0x00;
-		*((char *)addr + 1) = (char)0xff;
-		*((char *)addr + 2) = (char)0x00;
-		*((char *)addr + 3) = (char)0x00;
-		addr += 1;
+		*addr++ = 0x00;
+		*addr++ = 0xff;
+		*addr++ = 0x00;
+		*addr++ = 0x00;
 	}
 	for (i = 0; i < width; i++)
 	{
-		*((char *)addr + 0) = (char)0xff;
-		*((char *)addr + 1) = (char)0x00;
-		*((char *)addr + 2) = (char)0x00;
-		*((char *)addr + 3) = (char)0x00;
-		addr += 1;
+		*addr++ = 0xff;
+		*addr++ = 0x00;
+		*addr++ = 0x00;
+		*addr++ = 0x00;
 	}
 	for (i = 0; i < width; i++)
 	{
-		*((char *)addr + 0) = (char)0xff;
-		*((char *)addr + 1) = (char)0xff;
-		*((char *)addr + 2) = (char)0xff;
-		*((char *)addr + 3) = (char)0x00;
-		addr += 1;
+		*addr++ = 0xff;
+		*addr++ = 0xff;
+		*addr++ = 0xff;
+		*addr++ = 0x00;
 	}
 
     // int k = 1 / 0;
