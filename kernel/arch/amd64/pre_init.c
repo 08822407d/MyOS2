@@ -5,6 +5,9 @@
 #include "../../include/glo.h"
 #include "../../include/ktypes.h"
 
+extern char _k_phy_start;
+extern char _k_vir_start;
+
 extern char _bss;
 extern char _ebss;
 extern char _end;
@@ -18,6 +21,10 @@ void pre_init()
 	memset((void *)&_bss, 0, (void *)&_ebss - (void *)&_bss);
 	memset((void *)&kparam, 0, sizeof(kparam));
 	memset((void *)&mem_info, 0, sizeof(mem_info));
+
+	kparam.kernel_phy_base	= &_k_phy_start;
+	kparam.kernel_vir_base	= &_k_vir_start;
+	kparam.kernel_size		= &_end - &_k_vir_start;
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo =
 		(struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR;

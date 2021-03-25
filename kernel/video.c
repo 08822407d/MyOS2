@@ -17,7 +17,7 @@ void video_init()
 	int fb_pages = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
 	for (int i = 0; i < fb_pages; i++)
 	{
-		pg_domap(vir_pg_base, phy_pg_base);
+		pg_domap(vir_pg_base, phy_pg_base, 0);
 		vir_pg_base += CONFIG_PAGE_SIZE;
 		phy_pg_base += CONFIG_PAGE_SIZE;
 	}

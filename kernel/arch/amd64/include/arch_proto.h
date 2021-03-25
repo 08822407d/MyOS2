@@ -43,7 +43,7 @@ vir_addr phy2vir(phy_addr);
 void pg_clear(void);
 void pg_mapkernel(void);
 void pg_load(void);
-void pg_domap(vir_addr, phy_addr);
+void pg_domap(vir_addr, phy_addr, uint64_t);
 void pg_unmap(vir_addr);
 
 #endif /* _AMD64_PROTO_H_ */

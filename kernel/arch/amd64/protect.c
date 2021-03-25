@@ -157,7 +157,7 @@ void prot_init(void)
 	// */
 
 	pg_clear();
-	pg_mapkernel();
+	mem_init();
 	pg_load();
 
 	// prot_init_done = 1;

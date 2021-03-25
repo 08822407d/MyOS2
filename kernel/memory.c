@@ -6,9 +6,12 @@
 #include "arch/amd64/include/archtypes.h"
 #include "arch/amd64/include/arch_proto.h"
 
+#include "include/param.h"
 #include "include/ktypes.h"
 #include "include/const.h"
 #include "include/proto.h"
+
+extern kinfo_s kparam;
 
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
@@ -36,6 +39,7 @@ void mem_init()
 		if(pg_end_idx <= pg_start_idx)
 			continue;
 
+		// set value of memzone_s members
 		memzone_s *mz_curr = &mem_info.memzones[zone_count];
 		mz_curr->attr				= mem_info.mb_memmap[i].type;
 		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
@@ -46,6 +50,7 @@ void mem_init()
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
+		// set value of page_s members in current zone and corresponding bit in page bit map
 		for( j = pg_start_idx; j < pg_end_idx; j++)
 		{
 			page_s *pg_curr = &mem_info.pages[j];
@@ -60,4 +65,29 @@ void mem_init()
 
 	mem_info.memzone_total_nr	= zone_count;
 	mem_info.page_total_nr		= page_count;
+
+	// set kernel used page_s in right status
+	// map physical pages for kernel
+	phy_addr k_phy_pgbase = (phy_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_phy_base);
+	vir_addr k_vir_pgbase = (vir_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_vir_base);
+	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_size) / CONFIG_PAGE_SIZE;
+	for (long i = 0; i < pde_nr; i++)
+	{
+		// map lower mem
+		pg_domap(k_phy_pgbase, k_phy_pgbase, 0);
+		// map higher mem
+		pg_domap(k_vir_pgbase, k_phy_pgbase, 0);
+		k_vir_pgbase += CONFIG_PAGE_SIZE;
+		k_phy_pgbase += CONFIG_PAGE_SIZE;
+	}
+}
+
+page_s * page_alloc(phy_addr addr)
+{
+
+}
+
+void page_free()
+{
+
 }
