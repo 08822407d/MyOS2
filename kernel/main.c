@@ -18,38 +18,7 @@ void kmain(void)
 	
 	color_printk(RED, BLACK,"Hellow OS\n");
 
-    // char *addr = framebuffer.FB_virbase;
-	// int width = framebuffer.X_Resolution * 20;
-	// int i;
-
-	// for (i = 0; i < width; i++)
-	// {
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0x00;
-	// }
-	// for (i = 0; i < width; i++)
-	// {
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0x00;
-	// }
-	// for (i = 0; i < width; i++)
-	// {
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0x00;
-	// 	*addr++ = 0x00;
-	// }
-	// for (i = 0; i < width; i++)
-	// {
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0xff;
-	// 	*addr++ = 0x00;
-	// }
+	int i = 1 / 0;
 
     while(1){};
 }

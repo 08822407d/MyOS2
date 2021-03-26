@@ -1,10 +1,10 @@
+#include "arch/amd64/include/arch_proto.h"
 #include "include/proto.h"
 /*===========================================================================*
  *				exception				     *
  *===========================================================================*/
-void exception_handler(unsigned long errcode)
+void exception_handler(unsigned int vec_nr)
 {
-	unsigned long code = errcode;
 	while (1)
 	{
 		/* code */

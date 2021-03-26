@@ -24,7 +24,7 @@ void pg_clear(void)
 	memset(pd_base, 0, sizeof(PD));
 }
 
-void pg_load_cr3(void)
+void pg_load_cr3(PML4E * PML4)
 {
 	__asm__ __volatile__("movq %%rax, %%cr3	\n\
 						  nop"

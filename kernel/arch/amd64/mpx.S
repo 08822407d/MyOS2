@@ -26,7 +26,7 @@ RBP	=	0x68
 DS	=	0x70
 ES	=	0x78
 RAX	=	0x80
-FUNC	=	0x88
+VEC_NR	=	0x88
 ERRCODE	=	0x90
 RIP	=	0x98
 CS	=	0xa0
@@ -54,7 +54,7 @@ RESTORE_ALL:
 	popq	%rax;		
 	movq	%rax,	%es;	
 	popq	%rax;		
-	addq	$0x10,	%rsp;	
+	addq	$KERN_DS_SELECTOR,	%rsp;	
 	iretq;
 
 #define GET_CURRENT(reg)	\
@@ -67,19 +67,14 @@ ENTRY(ret_from_intr)
 	jmp	RESTORE_ALL	/*need rewrite*/
 
 exception_entry:
-	pushq	%rax
-	movq	%es,	%rax
-	pushq	%rax
-	movq	%ds,	%rax
-	pushq	%rax
-	xorq	%rax,	%rax
-
-	pushq	%rbp
-	pushq	%rdi
-	pushq	%rsi
+	cld
 	pushq	%rdx
 	pushq	%rcx
 	pushq	%rbx
+	pushq	%rax
+	pushq	%rbp
+	pushq	%rdi
+	pushq	%rsi
 	pushq	%r8
 	pushq	%r9
 	pushq	%r10
@@ -88,18 +83,19 @@ exception_entry:
 	pushq	%r13
 	pushq	%r14
 	pushq	%r15	
-	
-	cld
-	movq	ERRCODE(%rsp),	%rsi
-	movq	FUNC(%rsp),	%rdx	
 
-	movq	$0x10,	%rdi
+	movq	%es,	%rax
+	pushq	%rax
+	movq	%ds,	%rax
+	pushq	%rax
+	xorq	%rax,	%rax
+
+	movq	$KERN_DS_SELECTOR,	%rdi
 	movq	%rdi,	%ds
 	movq	%rdi,	%es
 
-	; movq	%rsp,	%rdi
-	////GET_CURRENT(%ebx)
-	callq 	exception_handler
+	movq	%rsp,	%rdi
+	callq 	amd64_excep_handler
 
 	jmp	ret_from_exception	
 
