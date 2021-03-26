@@ -26,7 +26,8 @@ void pg_clear(void)
 
 void pg_load_cr3(void)
 {
-	__asm__ __volatile__("movq %%rax, %%cr3"
+	__asm__ __volatile__("movq %%rax, %%cr3	\n\
+						  nop"
 						 :
 						 :"rax"(vir2phy(PML4))
 						 :);
@@ -36,7 +37,9 @@ void pg_flush_tlb(void)
 {
 	uint64_t tempreg;
 	__asm__ __volatile__("movq %%cr3, %0	\n\
-						  movq %0, %%cr3	"
+						  nop				\n\
+						  movq %0, %%cr3	\n\
+						  nop				"
 						 :"=r"(tempreg)
 						 :
 						 :	);
@@ -73,6 +76,8 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 		pde_ptr->PATflag = 1;
 		pde_ptr->PHYADDR = (uint64_t)phy >> SHIFT_PTE;
 	}
+
+	pg_flush_tlb();
 }
 
 void pg_unmap(vir_addr vir)

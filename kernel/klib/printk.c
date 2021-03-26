@@ -27,10 +27,11 @@ extern unsigned char font_ascii[256][16];
 
 static char buf[4096] = {0};
 position_t Pos;
+
+
 /*
 
 */
-
 void putchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
 {
 	int i = 0, j = 0;
@@ -59,7 +60,6 @@ void putchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, u
 /*
 
 */
-
 int skip_atoi(const char **s)
 {
 	int i = 0;
@@ -72,7 +72,6 @@ int skip_atoi(const char **s)
 /*
 
 */
-
 static char *number(char *str, long num, int base, int size, int precision, int type)
 {
 	char c, sign, tmp[50];
@@ -139,7 +138,6 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 /*
 
 */
-
 int vsprintf(char *buf, const char *fmt, va_list args)
 {
 	char *str, *s;
@@ -331,7 +329,6 @@ int vsprintf(char *buf, const char *fmt, va_list args)
 /*
 
 */
-
 int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ...)
 {
 	int i = 0;
@@ -396,3 +393,16 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	}
 	return i;
 }
+
+/*
+
+*/
+inline int do_div(int num,int base)
+{
+	int __res;
+	__asm__("divq %%rcx"
+			:"=a" (num),"=d" (__res)
+			:"0" (num),"1" (0),"c" (base));
+	return __res;
+}
+
