@@ -15,7 +15,7 @@ extern kinfo_s kparam;
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 tss64_s			tss[CONFIG_MAX_CPUS];
-// char			stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+char			kstacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
@@ -134,7 +134,6 @@ void prot_init(void)
 	__asm__ __volatile__("	lgdt	%0						\n\
 							lidt	%1						\n\
 							movq	%%rsp, %%rax			\n\
-							addq	%4, %%rax				\n\
 							mov 	%2, %%ss				\n\
 							movq	%%rax, %%rsp			\n\
 							mov		$0, %%ax				\n\
@@ -153,8 +152,7 @@ void prot_init(void)
 						 :	"m"(gdt_ptr),
 						 	"m"(idt_ptr),
 						 	"r"(KERN_DS_SELECTOR),
-							"rsi"((uint64_t)KERN_CS_SELECTOR),
-							"r"(kparam.kernel_vir_base - kparam.kernel_phy_base)
+							"rsi"((uint64_t)KERN_CS_SELECTOR)
 						 :  "rax");
 
 

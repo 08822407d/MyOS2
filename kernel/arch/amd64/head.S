@@ -1,43 +1,47 @@
 #include "arch/amd64/asm.h"
+#include "include/archconst.h"
 
 .text
 
 ENTRY(start)
-    movq    $stack_top, %rax
-    movq    %rax,       %rsp
+    movq    $stack_top,	%rax
+    movq    %rax,		%rsp
 //=======	load GDTR
 	lgdt	GDT_POINTER(%rip)
 //=======	load dummy IDTR
 	lidt	IDT_POINTER(%rip)
 //=======	load cr3
-    movq	$__PML4E,   %rax
-	movq	%rax,	    %cr3
-    // movq    $0xffff800000000000, %rbx
+    movq	$__PML4E,	%rax
+	movq	%rax,		%cr3
     movq    $temp_reload_cs, %rax
-    // addq    %rbx, %rax
     pushq   $0x08
     pushq   %rax
     lretq
 temp_reload_cs:
-    movq    $0x10,  %rax
-    movq    %rax, %ss
-    movq    $stack_top, %rax
-    movq    %rax, %rsp
-    movq    $0, %rbp
+    movq    $stack_top,	%rbx
+    movq    $0x10,		%rax
+    movq    %rax,		%ss
+    movq    %rbx,		%rsp
 
     pushq   $0
     popfq
     pushq   $0
 
     pushq   $ret_from_preinit
-    movabsq $pre_init, %rax
+    movabsq $pre_init,	%rax
     pushq   $0x08
     pushq   %rax
     lretq
 ret_from_preinit:
+// reset stack to the one in c file(in higher half mem)
+	movabsq	$kstacks,	%rbx
+	addq	$CONFIG_KSTACK_SIZE, %rbx
+    movq    $0x10,		%rax
+    movq    %rax,		%ss
+    movq    %rbx,		%rsp
 
     pushq   $ret_from_kmain
-    movabsq $kmain, %rax
+    movabsq $kmain,		%rax
     pushq   $0x08
     pushq   %rax
     lretq
