@@ -29,6 +29,24 @@ void simd_exception(void);
 void virtualization_exception(void);
 void control_protection_exception(void);
 
+/* Hardware interrupt handlers. */
+void hwint00(void);
+void hwint01(void);
+void hwint02(void);
+void hwint03(void);
+void hwint04(void);
+void hwint05(void);
+void hwint06(void);
+void hwint07(void);
+void hwint08(void);
+void hwint09(void);
+void hwint10(void);
+void hwint11(void);
+void hwint12(void);
+void hwint13(void);
+void hwint14(void);
+void hwint15(void);
+
 typedef struct __attribute__((packed)) {
 	reg_t ds;
 	reg_t es;
@@ -56,13 +74,14 @@ typedef struct __attribute__((packed)) {
 	reg_t ss;
 } stack_frame_s;
 
-void amd64_excep_handler(stack_frame_s *);
+void excep_intr_c_entry(stack_frame_s *);
 
 typedef struct {
 	void	(*gate_entry) (void);
 	uint8_t	vec_nr;
 	uint8_t	type;
 	uint8_t	DPL;
+	char	name[16];
 } gate_table_s;
 
 /* protect.c */
@@ -75,5 +94,18 @@ void pg_load_cr3(PML4E *);
 void pg_flush_tlb(void);
 void pg_domap(vir_addr, phy_addr, uint64_t);
 void pg_unmap(vir_addr);
+
+/* i8259.c */
+void init_i8259(void);
+
+/* port_io.c */
+uint64_t inb(uint16_t);
+uint64_t inw(uint16_t);
+uint64_t inl(uint16_t);
+void outb(uint16_t, uint8_t);
+void outw(uint16_t, uint16_t);
+void outl(uint16_t, uint32_t);
+// void intr_disable(void);
+// void intr_enable(void);
 
 #endif /* _AMD64_PROTO_H_ */

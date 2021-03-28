@@ -20,9 +20,6 @@
 	/* video.c */
 	void video_init(void);
 
-	/* exception.c */
-	void exception_handler(unsigned int);
-
 	/* functions defined in architecture-dependent files. */
 	void prot_init(void);
 

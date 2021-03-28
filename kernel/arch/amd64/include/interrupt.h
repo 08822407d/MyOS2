@@ -3,18 +3,7 @@
 #ifndef _INTERRUPT_H_
 #define _INTERRUPT_H_
 
-       /* 8259A interrupt controller ports. */
-       #define INT_CTL             0x20	/* I/O port for interrupt controller */
-       #define INT_CTLMASK         0x21	/* setting bits in this port disables ints */
-       #define INT2_CTL            0xA0	/* I/O port for second interrupt controller */
-       #define INT2_CTLMASK        0xA1	/* setting bits in this port disables ints */
-
-       /* Magic numbers for interrupt controller. */
-       #define END_OF_INT          0x20	/* code used to re-enable after an interrupt */
-
-       #define IRQ0_VEC            0x50   /* nice vectors to relocate IRQ0-7 to */
-       #define IRQ8_VEC            0x70   /* no need to move IRQ8-15 */
-
+// EXCEPTIONS
        /* Interrupt vectors defined/reserved by processor. */
        #define DIVIDE_ERR_VEC	 0	/* divide error */
        #define DEBUG_VEC		 1	/* single step (trace) */
@@ -44,6 +33,31 @@
        #define IPC_VEC_ORIG        33     /* interrupt vector for ipc */
        #define KERN_CALL_VEC_UM    34     /* user-mapped equivalent */
        #define IPC_VEC_UM          35     /* user-mapped equivalent */
+
+// HARDWARE INTERRUPTS
+       /* 8259A interrupt controller ports. */
+       #define INT_CTL             0x20	/* I/O port for interrupt controller */
+       #define INT_CTLMASK         0x21	/* setting bits in this port disables ints */
+       #define INT2_CTL            0xA0	/* I/O port for second interrupt controller */
+       #define INT2_CTLMASK        0xA1	/* setting bits in this port disables ints */
+
+       /* Magic numbers for interrupt controller. */
+       #define END_OF_INT          0x20	/* code used to re-enable after an interrupt */
+
+       #define IRQ0_VEC            0x20   /* nice vectors to relocate IRQ0-7 to */
+       #define IRQ8_VEC            0x28   /* no need to move IRQ8-15 */
+
+       #define ICW1_AT             0x11	/* edge triggered, cascade, need ICW4 */
+       #define ICW1_PC             0x13	/* edge triggered, no cascade, need ICW4 */
+       #define ICW1_PS             0x19	/* level triggered, cascade, need ICW4 */
+       #define ICW4_AT_SLAVE       0x01	/* not SFNM, not buffered, normal EOI, 8086 */
+       #define ICW4_AT_MASTER      0x05	/* not SFNM, not buffered, normal EOI, 8086 */
+       #define ICW4_PC_SLAVE       0x09	/* not SFNM, buffered, normal EOI, 8086 */
+       #define ICW4_PC_MASTER      0x0D	/* not SFNM, buffered, normal EOI, 8086 */
+       #define ICW4_AT_AEOI_SLAVE  0x03   /* not SFNM, not buffered, auto EOI, 8086 */
+       #define ICW4_AT_AEOI_MASTER 0x07   /* not SFNM, not buffered, auto EOI, 8086 */
+       #define ICW4_PC_AEOI_SLAVE  0x0B   /* not SFNM, buffered, auto EOI, 8086 */
+       #define ICW4_PC_AEOI_MASTER 0x0F   /* not SFNM, buffered, auto EOI, 8086 */
 
        /* Hardware interrupt numbers. */
        #ifndef USE_APIC

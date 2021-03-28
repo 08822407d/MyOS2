@@ -16,7 +16,7 @@ void kmain(void)
 	// clear screen
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 	
-	int i = 1 / 0;
+	// int i = 1 / 0;
 
     while(1){};
 }

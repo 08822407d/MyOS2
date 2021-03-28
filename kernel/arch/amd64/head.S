@@ -4,6 +4,7 @@
 .text
 
 ENTRY(start)
+	cli
     movq    $stack_top,	%rax
     movq    %rax,		%rsp
 //=======	load GDTR

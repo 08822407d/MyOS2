@@ -16,8 +16,12 @@ segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 tss64_s			tss[CONFIG_MAX_CPUS];
 char			kstacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+char			ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
+char			tmp_intr_stack[CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+
+char *(intr_name[IDT_SIZE]);
 
 phy_addr vir2phy(vir_addr vir)
 {
@@ -34,29 +38,50 @@ vir_addr phy2vir(phy_addr phy)
 	return (phy_addr)(phy + offset);
 }
 
-gate_table_s idt_init_table[] = {
-	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE },
-	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE },
-	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE },
-	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE },
-	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ coproc_seg_overrun, COPROC_SEG_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE },
+gate_table_s exception_init_table[] = {
+	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#DE" },
+	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, "#DB" },
+	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE, "NMI" },
+	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE, "#BP" },
+	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE, "#OF" },
+	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, "#BR" },
+	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, "#UD" },
+	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, "#NM" },
+	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#DF" },
+	{ coproc_seg_overrun, COPROC_SEG_VEC, TRAPGATE, KERN_PRIVILEGE, "FPU-SO" },
+	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, "#TS" },
+	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, "#NP" },
+	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#SS" },
+	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, "#GP" },
+	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#PF" },
 	// EXCEPTION 15 INTEL RESERVED
-	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE },
-	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE },
+	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#MF" },
+	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#AC" },
+	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#MC" },
+	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#XM" },
+	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#VE" },
+	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#CP" },
+	{ NULL, 0, 0, 0}
+};
+
+
+gate_table_s hwint_init_table[] = {
+	{ hwint00, VECTOR( 0), INTRGATE, KERN_PRIVILEGE, "IRQ-00" },
+	{ hwint01, VECTOR( 1), INTRGATE, KERN_PRIVILEGE, "IRQ-01" },
+	{ hwint02, VECTOR( 2), INTRGATE, KERN_PRIVILEGE, "IRQ-02" },
+	{ hwint03, VECTOR( 3), INTRGATE, KERN_PRIVILEGE, "IRQ-03" },
+	{ hwint04, VECTOR( 4), INTRGATE, KERN_PRIVILEGE, "IRQ-04" },
+	{ hwint05, VECTOR( 5), INTRGATE, KERN_PRIVILEGE, "IRQ-05" },
+	{ hwint06, VECTOR( 6), INTRGATE, KERN_PRIVILEGE, "IRQ-06" },
+	{ hwint07, VECTOR( 7), INTRGATE, KERN_PRIVILEGE, "IRQ-07" },
+	{ hwint08, VECTOR( 8), INTRGATE, KERN_PRIVILEGE, "IRQ-08" },
+	{ hwint09, VECTOR( 9), INTRGATE, KERN_PRIVILEGE, "IRQ-09" },
+	{ hwint10, VECTOR(10), INTRGATE, KERN_PRIVILEGE, "IRQ-10" },
+	{ hwint11, VECTOR(11), INTRGATE, KERN_PRIVILEGE, "IRQ-11" },
+	{ hwint12, VECTOR(12), INTRGATE, KERN_PRIVILEGE, "IRQ-12" },
+	{ hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
+	{ hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
+	{ hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
 	{ NULL, 0, 0, 0}
 };
 /*===========================================================================*
@@ -84,6 +109,35 @@ void set_dataseg(uint32_t index, CommSegType type, uint8_t privil)
 	set_commseg(index, type, privil, 0);
 }	
 
+void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
+{
+	switch (type)
+	{
+		case TSS_AVAIL:
+			{
+				tss64_s * curr_tss = &tss[(index - TSS_INDEX_FIRST) / 2];
+				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
+				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
+				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
+				tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
+				tss_segdesc->Base2	= ((uint64_t)curr_tss >> 24) & 0xFFFFFFFFFF;
+				tss_segdesc->Type	= type;
+				tss_segdesc->DPL	= privil;
+				tss_segdesc->AVL	=
+				tss_segdesc->Pflag	= 1;
+			}
+			break;
+		case INTRGATE:
+		case TRAPGATE:
+			{
+
+			}
+			break;
+
+		default:
+			break;
+	}
+}
 
 /*===========================================================================*
  *								prot_init								     *
@@ -99,6 +153,11 @@ void init_gdt()
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
 	set_dataseg(USER_DS_INDEX, RW_DATA, 3);
 
+	for (int i = 0; i < 1; i++)
+	{
+		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
+	}
+
 	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)gdt;
 }
@@ -108,7 +167,7 @@ void init_idt()
 	memset(idt, 0, sizeof(idt));
 
 	gate_table_s *gtbl;
-	for ( gtbl = &(idt_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
+	for ( gtbl = &(exception_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
@@ -120,16 +179,49 @@ void init_idt()
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
 		curr_gate->Type  = gtbl->type;
 		curr_gate->DPL   = gtbl->DPL;
+
+		intr_name[gtbl->vec_nr] = gtbl->name;
+	}
+	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
+	{
+		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
+		// fixed bits
+		curr_gate->Present = 1;
+		curr_gate->segslct = KERN_CS_SELECTOR;
+		curr_gate->IST 	   = 0;
+		// changable bits
+		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
+		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
+		curr_gate->Type  = gtbl->type;
+		curr_gate->DPL   = gtbl->DPL;
+
+		intr_name[gtbl->vec_nr] = gtbl->name;
 	}
 
 	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
 	idt_ptr.base  = (uint64_t)idt;
 }
 
+void init_tss(unsigned int cpu_idx)
+{
+	tss64_s *curr_tss = &tss[cpu_idx];
+	curr_tss->rsp0 =
+	curr_tss->rsp1 =
+	curr_tss->rsp2 = (uint64_t)&tmp_intr_stack + CONFIG_KSTACK_SIZE;
+	curr_tss->ist1 =
+	curr_tss->ist2 =
+	curr_tss->ist3 =
+	curr_tss->ist4 =
+	curr_tss->ist5 =
+	curr_tss->ist6 =
+	curr_tss->ist7 = (uint64_t)&ist_stacks[cpu_idx] + CONFIG_KSTACK_SIZE;
+}
+
 void prot_init(void)
 {
 	init_gdt();
 	init_idt();
+	init_tss(0);
 
 	__asm__ __volatile__("	lgdt	%0						\n\
 							lidt	%1						\n\
@@ -147,12 +239,16 @@ void prot_init(void)
 							leaq	reload_cs(%%rip), %%rax	\n\
 							pushq	%%rax					\n\
 							lretq							\n\
-							reload_cs:						\n	"
+							reload_cs:						\n\
+							xorq	%%rax, %%rax			\n\
+							mov		%4, %%ax				\n\
+							ltr		%%ax					\n	"
 						 :
 						 :	"m"(gdt_ptr),
 						 	"m"(idt_ptr),
 						 	"r"(KERN_DS_SELECTOR),
-							"rsi"((uint64_t)KERN_CS_SELECTOR)
+							"rsi"((uint64_t)KERN_CS_SELECTOR),
+							"r"((uint16_t)TSS_SELECTOR(0))
 						 :  "rax");
 
 
@@ -167,4 +263,5 @@ void prot_init(void)
 	pg_load_cr3(PML4);
 
 	// prot_init_done = 1;
+	init_i8259();
 }

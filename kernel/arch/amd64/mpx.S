@@ -9,30 +9,30 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
-R15	=	0x00
-R14	=	0x08
-R13	=	0x10
-R12	=	0x18
-R11	=	0x20
-R10	=	0x28
-R9	=	0x30
-R8	=	0x38
-RBX	=	0x40
-RCX	=	0x48
-RDX	=	0x50
-RSI	=	0x58
-RDI	=	0x60
-RBP	=	0x68
-DS	=	0x70
-ES	=	0x78
-RAX	=	0x80
-VEC_NR	=	0x88
-ERRCODE	=	0x90
-RIP	=	0x98
-CS	=	0xa0
-RFLAGS	=	0xa8
-OLDRSP	=	0xb0
-OLDSS	=	0xb8
+// R15	=	0x00
+// R14	=	0x08
+// R13	=	0x10
+// R12	=	0x18
+// R11	=	0x20
+// R10	=	0x28
+// R9	=	0x30
+// R8	=	0x38
+// RBX	=	0x40
+// RCX	=	0x48
+// RDX	=	0x50
+// RSI	=	0x58
+// RDI	=	0x60
+// RBP	=	0x68
+// DS	=	0x70
+// ES	=	0x78
+// RAX	=	0x80
+// VEC_NR	=	0x88
+// ERRCODE	=	0x90
+// RIP	=	0x98
+// CS	=	0xa0
+// RFLAGS	=	0xa8
+// OLDRSP	=	0xb0
+// OLDSS	=	0xb8
 
 RESTORE_ALL:
 	popq	%r15;		
@@ -54,7 +54,7 @@ RESTORE_ALL:
 	popq	%rax;		
 	movq	%rax,	%es;	
 	popq	%rax;		
-	addq	$KERN_DS_SELECTOR,	%rsp;	
+	addq	$0x10,	%rsp;	// skip err-code and vec-nr
 	iretq;
 
 #define GET_CURRENT(reg)	\
@@ -66,8 +66,7 @@ ret_from_exception:
 ENTRY(ret_from_intr)
 	jmp	RESTORE_ALL	/*need rewrite*/
 
-exception_entry:
-	cld
+SAVE_ALL:
 	pushq	%rdx
 	pushq	%rcx
 	pushq	%rbx
@@ -90,22 +89,22 @@ exception_entry:
 	pushq	%rax
 	xorq	%rax,	%rax
 
+	cld
 	movq	$KERN_DS_SELECTOR,	%rdi
 	movq	%rdi,	%ds
 	movq	%rdi,	%es
 
 	movq	%rsp,	%rdi
-	callq 	amd64_excep_handler
+	callq 	excep_intr_c_entry
 
-	jmp	ret_from_exception	
+	jmp		ret_from_exception	
 
 /*===========================================================================*/
 /*				exception handlers			     */
 /*===========================================================================*/
-
 #define EXCEPTION_ERR_CODE(vector)	\
 	pushq	$vector			;\
-	jmp	exception_entry
+	jmp		SAVE_ALL
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
 	pushq	$0		;\
@@ -118,50 +117,9 @@ LABEL(debug)
 	EXCEPTION_NO_ERR_CODE(DEBUG_VEC)
 
 LABEL(nmi)
-// #ifndef USE_WATCHDOG
-// 	EXCEPTION_NO_ERR_CODE(NMI_VEC)
-// #else
-// 	/*
-// 	 * We have to be very careful as this interrupt can occur anytime. On
-// 	 * the other hand, if it interrupts a user process, we will resume the
-// 	 * same process which makes things a little simpler. We know that we are
-// 	 * already on kernel stack whenever it happened and we can be
-// 	 * conservative and save everything as we don't need to be extremely
-// 	 * efficient as the interrupt is infrequent and some overhead is already
-// 	 * expected.
-// 	 */
-
-// 	/*
-// 	 * save the important registers. We don't save %cs and %ss and they are
-// 	 * saved and restored by CPU
-// 	 */
-// 	pushw	%ds
-// 	pushw	%es
-// 	pushw	%fs
-// 	pushw	%gs
-// 	pusha
-
-// 	/*
-// 	 * We cannot be sure about the state of the kernel segment register,
-// 	 * however, we always set %ds and %es to the same as %ss
-// 	 */
-// 	mov	%ss, %si
-// 	mov	%si, %ds
-// 	mov	%si, %es
-
-// 	push	%esp
-// 	call	_C_LABEL(nmi_watchdog_handler)
-// 	add	$4, %esp
-
-// 	/* restore all the important registers as they were before the trap */
-// 	popa
-// 	popw	%gs
-// 	popw	%fs
-// 	popw	%es
-// 	popw	%ds
-
-// 	iret
-// #endif
+//
+//
+//
 
 LABEL(breakpoint_exception)
 	EXCEPTION_NO_ERR_CODE(BREAKPOINT_VEC)
@@ -176,21 +134,9 @@ LABEL(invalid_opcode)
 	EXCEPTION_NO_ERR_CODE(INVAL_OP_VEC)
 
 LABEL(dev_not_available)
-// 	TEST_INT_IN_KERNEL(4, copr_not_available_in_kernel)
-// 	cld			/* set direction flag to a known value */
-// 	SAVE_PROCESS_CTX(0, KTS_INT_HARD)
-// 	/* stop user process cycles */
-// 	push	%ebp
-// 	mov	$0, %ebp
-// 	call	_C_LABEL(context_stop)
-// 	call	_C_LABEL(copr_not_available_handler)
-// 	/* reached upon failure only */
-// 	jmp	_C_LABEL(switch_to_user)
-
-// copr_not_available_in_kernel:
-// 	pushl	$0
-// 	pushl	$DEV_NOT_AVAIL_VEC
-// 	jmp	exception_entry_nested
+//
+//
+//
 
 LABEL(double_fault)
 	EXCEPTION_ERR_CODE(DOUBLE_FAULT_VEC)
@@ -230,3 +176,87 @@ LABEL(virtualization_exception)
 
 LABEL(control_protection_exception)
 	EXCEPTION_ERR_CODE(CTRL_PROT_EXCEP_VEC)
+
+/*===========================================================================*/
+/*				hwint00 - 07				     */
+/*===========================================================================*/
+/* Note this is a macro, it just looks like a subroutine. */
+
+#define hwint_master(irq)	\
+	nop;		\
+	EXCEPTION_NO_ERR_CODE(irq + IRQ0_VEC);
+
+
+/* Each of these entry points is an expansion of the hwint_master macro */
+ENTRY(hwint00)
+/* Interrupt routine for irq 0 (the clock). */
+	hwint_master(0)
+
+ENTRY(hwint01)
+/* Interrupt routine for irq 1 (keyboard) */
+	hwint_master(1)
+
+ENTRY(hwint02)
+/* Interrupt routine for irq 2 (cascade!) */
+	hwint_master(2)
+
+ENTRY(hwint03)
+/* Interrupt routine for irq 3 (second serial) */
+	hwint_master(3)
+
+ENTRY(hwint04)
+/* Interrupt routine for irq 4 (first serial) */
+	hwint_master(4)
+
+ENTRY(hwint05)
+/* Interrupt routine for irq 5 (XT winchester) */
+	hwint_master(5)
+
+ENTRY(hwint06)
+/* Interrupt routine for irq 6 (floppy) */
+	hwint_master(6)
+
+ENTRY(hwint07)
+/* Interrupt routine for irq 7 (printer) */
+	hwint_master(7)
+
+/*===========================================================================*/
+/*				hwint08 - 15				     */
+/*===========================================================================*/
+#define hwint_slave(irq)	\
+	nop;		\
+	EXCEPTION_NO_ERR_CODE(irq + IRQ8_VEC);
+
+
+/* Each of these entry points is an expansion of the hwint_slave macro */
+ENTRY(hwint08)
+/* Interrupt routine for irq 8 (realtime clock) */
+	hwint_slave(8)
+
+ENTRY(hwint09)
+/* Interrupt routine for irq 9 (irq 2 redirected) */
+	hwint_slave(9)
+
+ENTRY(hwint10)
+/* Interrupt routine for irq 10 */
+	hwint_slave(10)
+
+ENTRY(hwint11)
+/* Interrupt routine for irq 11 */
+	hwint_slave(11)
+
+ENTRY(hwint12)
+/* Interrupt routine for irq 12 */
+	hwint_slave(12)
+
+ENTRY(hwint13)
+/* Interrupt routine for irq 13 (FPU exception) */
+	hwint_slave(13)
+
+ENTRY(hwint14)
+/* Interrupt routine for irq 14 (AT winchester) */
+	hwint_slave(14)
+
+ENTRY(hwint15)
+/* Interrupt routine for irq 15 */
+	hwint_slave(15)

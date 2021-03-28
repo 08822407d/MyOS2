@@ -105,7 +105,7 @@ static char *number(char *str, long num, int base, int size, int precision, int 
 		tmp[i++] = '0';
 	else
 		while (num != 0)
-			tmp[i++] = digits[do_div(num, base)];
+			tmp[i++] = digits[do_div(&num, base)];
 	if (i > precision)
 		precision = i;
 	size -= precision;
@@ -397,12 +397,12 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 /*
 
 */
-inline int do_div(int num,int base)
+inline int do_div(long *num,int base)
 {
 	int __res;
 	__asm__("divq %%rcx"
-			:"=a" (num),"=d" (__res)
-			:"0" (num),"1" (0),"c" (base));
+			:"=a" (*num),"=d" (__res)
+			:"0" (*num),"1" (0),"c" (base));
 	return __res;
 }
 

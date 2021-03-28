@@ -54,13 +54,13 @@
 		uint8_t		Type	: 4;
 		uint8_t				: 1; // Sflag must be 0
 		uint8_t		DPL		: 2;
-		uint8_t		Present	: 1;
+		uint8_t		Pflag	: 1;
 		uint8_t		Limit2	: 4;
 		uint8_t		AVL		: 1;
 		uint8_t				: 3; // unused
 		uint64_t	Base2	: 40;
 		uint32_t			: 32; // unused
-	} TSSsegdesc;
+	} TSSsegdesc_s;
 
 	/* 64bit version segdesc for gate */
 	typedef struct __attribute__((packed)) {
