@@ -8,6 +8,7 @@ if [ "$(uname)" == "Darwin" ]; then
     sudo mount -t msdos /dev/disk2s1 /Users/cheyuho/mount
     cp ./kernel.bin ~/mount/kernel.bin
     sync
+    sleep 1
     diskutil unmount ~/mount
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Working on Linux"
