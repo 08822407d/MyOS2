@@ -35,6 +35,10 @@
 // OLDSS	=	0xb8
 
 RESTORE_ALL:
+	popq	%rax;		
+	movq	%rax,	%ds;	
+	popq	%rax;		
+	movq	%rax,	%es;	
 	popq	%r15;		
 	popq	%r14;		
 	popq	%r13;		
@@ -43,17 +47,13 @@ RESTORE_ALL:
 	popq	%r10;		
 	popq	%r9;		
 	popq	%r8;		
-	popq	%rbx;		
-	popq	%rcx;		
-	popq	%rdx;		
 	popq	%rsi;		
 	popq	%rdi;		
 	popq	%rbp;		
 	popq	%rax;		
-	movq	%rax,	%ds;	
-	popq	%rax;		
-	movq	%rax,	%es;	
-	popq	%rax;		
+	popq	%rbx;		
+	popq	%rcx;		
+	popq	%rdx;		
 	addq	$0x10,	%rsp;	// skip err-code and vec-nr
 	iretq;
 
