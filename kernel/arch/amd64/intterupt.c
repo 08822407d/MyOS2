@@ -6,6 +6,9 @@
 
 extern char *(intr_name[IDT_SIZE]);
 
+/*===========================================================================*
+ *								exception handlers							 *
+ *===========================================================================*/
 void excep_inval_tss(stack_frame_s * sf)
 {
 	int error_code = sf->err_code;
@@ -128,13 +131,25 @@ void excep_page_fault(stack_frame_s * sf)
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 }
 
+/*===========================================================================*
+ *								hwint handlers							     *
+ *===========================================================================*/
+void hwint_kbd(stack_frame_s * sf)
+{
+	uint8_t scan_code = inb(0x60);
+	color_printk(GREEN, BLACK, "KBD SCAN CODE = %#04x\n", scan_code);
+}
+
+
+
 void excep_intr_c_entry(stack_frame_s * sf)
 {
-	stack_frame_s * tmp = sf;
-	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s \n", sf->vec_nr, intr_name[sf->vec_nr]);
-	if(sf->vec_nr < 32)
+	int vec = sf->vec_nr;
+	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
+	// exceptions
+	if(vec < 32)
 	{
-		switch (sf->vec_nr)
+		switch (vec)
 		{
 		case INVAL_TSS_VEC:
 			excep_inval_tss(sf);
@@ -151,11 +166,29 @@ void excep_intr_c_entry(stack_frame_s * sf)
 		case PAGE_FAULT_VEC:
 			excep_page_fault(sf);
 			break;
-		
+
 		default:
+			color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
 			break;
 		}
+
 		while (1);
 	}
-	outb(INT_CTL, END_OF_INT);
+	// hardware interrupts
+	else
+	{
+		switch (vec)
+		{
+		case VECTOR(KEYBOARD_IRQ):
+			hwint_kbd(sf);
+			break;
+
+		default:
+			color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
+			break;
+		}
+
+		int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
+		i8259_eoi(irq);
+	}
 }

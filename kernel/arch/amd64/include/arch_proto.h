@@ -97,6 +97,10 @@ void pg_unmap(vir_addr);
 
 /* i8259.c */
 void init_i8259(void);
+void i8259_unmask(const int);
+void i8259_mask(const int);
+void i8259_disable(void);
+void i8259_eoi(int);
 
 /* port_io.c */
 uint64_t inb(uint16_t);
