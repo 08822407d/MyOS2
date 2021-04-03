@@ -1,5 +1,6 @@
 #include "arch/amd64/asm.h"
-#include "include/archconst.h"
+
+#include "../../include/const.h"
 
 .text
 
@@ -34,9 +35,9 @@ temp_reload_cs:
     pushq   %rax
     lretq
 ret_from_preinit:
-// reset stack to the one in c file(in higher half mem)
-	movabsq	$kstacks,	%rbx
-	addq	$CONFIG_KSTACK_SIZE, %rbx
+// reset stack to the stack in proc0_PCB(in higher half mem)
+	movabsq	$proc0_PCB,	%rbx
+	addq	$PSTACK_SIZE	, %rbx
     movq    $0x10,		%rax
     movq    %rax,		%ss
     movq    %rbx,		%rsp
@@ -110,5 +111,5 @@ IDT_BASE:	.quad	IDT_Table
 
 //=======	temp stack
 stack_start:
-    .fill  512,8,0
+    .fill  128,8,0
 stack_top:

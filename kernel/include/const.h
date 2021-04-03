@@ -62,4 +62,8 @@
 	//	shared=1 or single-use=0 
 	#define PG_Shared	(1 << 4)
 
+
+	// process and task consts
+	#define PSTACK_SIZE	(32 * CONST_1K)
+
 #endif /* _CONST_H_ */

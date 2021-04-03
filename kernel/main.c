@@ -3,7 +3,9 @@
 
 #include "include/glo.h"
 #include "include/proto.h"
+#include "include/proc.h"
 #include "include/printk.h"
+
 #include "arch/amd64/include/arch_proto.h"
 
 void kmain(void)

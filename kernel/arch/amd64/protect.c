@@ -15,7 +15,7 @@ extern kinfo_s kparam;
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 tss64_s			tss[CONFIG_MAX_CPUS];
-char			kstacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+// char			kstacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 char			ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
@@ -205,9 +205,9 @@ void init_idt()
 void init_tss(unsigned int cpu_idx)
 {
 	tss64_s *curr_tss = &tss[cpu_idx];
-	curr_tss->rsp0 =
+	curr_tss->rsp0 = 0;
 	curr_tss->rsp1 =
-	curr_tss->rsp2 = (uint64_t)&tmp_intr_stack + CONFIG_KSTACK_SIZE;
+	curr_tss->rsp2 =
 	curr_tss->ist1 =
 	curr_tss->ist2 =
 	curr_tss->ist3 =
