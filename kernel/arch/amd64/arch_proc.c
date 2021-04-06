@@ -14,6 +14,7 @@ extern tss64_s	tss[CONFIG_MAX_CPUS];
 extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
 
 extern PCB_u	proc0_PCB;
+extern PCB_u	proc1_PCB;
 
 inline __always_inline proc_s * get_current()
 {
@@ -78,4 +79,6 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target)
 void arch_init_proc0()
 {
 	proc_s * curr_proc = get_current();
+
+	switch_to(curr_proc, curr_proc);
 }

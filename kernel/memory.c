@@ -58,6 +58,7 @@ void mem_init()
 			pg_curr->zone_belonged	= mz_curr;
 			pg_curr->page_start_addr = (phy_addr)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
+
 			// mem_info.page_bitmap[page_count / BITMAP_UNITSIZE] &=
 			// 						~(1UL << (j % BITMAP_UNITSIZE));
 		}
@@ -83,6 +84,7 @@ void mem_init()
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
+		mem_info.pages[pg_idx].ref_count++;
 		k_vir_pgbase += CONFIG_PAGE_SIZE;
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
@@ -92,7 +94,14 @@ page_s * page_alloc(void)
 {
 	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, mem_info.page_total_nr);
 	bm_set_bit(mem_info.page_bitmap, freepage_idx);
-	return &mem_info.pages[freepage_idx];
+	page_s * ret_page = &mem_info.pages[freepage_idx];
+	ret_page->ref_count++;
+	return ret_page;
+}
+
+void page_ref(page_s * page)
+{
+
 }
 
 void page_free(page_s * page)

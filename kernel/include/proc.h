@@ -28,6 +28,8 @@
 		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];
 	} PCB_u __attribute__((aligned(8)));
 
+	void init_proc0(void);
+
 	void arch_init_proc0(void);
 	proc_s * get_current();
 	void __switch_to(proc_s *, proc_s *);
