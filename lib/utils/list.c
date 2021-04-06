@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/cdefs.h>
 #include <lib/utils.h>
 #include <lib/stddef.h>
 
@@ -8,12 +9,12 @@ void list_init(List_s * current)
 	current->next = current;
 }
 
-inline List_s * get_prev(List_s * current)
+inline __always_inline List_s * get_prev(List_s * current)
 {
 	return current->prev;
 }
 
-inline List_s * get_next(List_s * current)
+inline __always_inline List_s * get_next(List_s * current)
 {
 	return current->next;
 }

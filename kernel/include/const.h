@@ -64,6 +64,6 @@
 
 
 	// process and task consts
-	#define PSTACK_SIZE	(32 * CONST_1K)
+	#define PROC_KSTACK_SIZE	(32 * CONST_1K)
 
 #endif /* _CONST_H_ */

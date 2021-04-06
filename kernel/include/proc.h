@@ -25,9 +25,11 @@
 	typedef union
 	{
 		proc_s		proc;
-		uint64_t	stack[PSTACK_SIZE / sizeof(uint64_t)];
+		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];
 	} PCB_u __attribute__((aligned(8)));
 
+	void arch_init_proc0(void);
+	proc_s * get_current();
 	void __switch_to(proc_s *, proc_s *);
 	void switch_to(proc_s *, proc_s *);
 

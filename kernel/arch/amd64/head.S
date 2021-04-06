@@ -37,7 +37,7 @@ temp_reload_cs:
 ret_from_preinit:
 // reset stack to the stack in proc0_PCB(in higher half mem)
 	movabsq	$proc0_PCB,	%rbx
-	addq	$PSTACK_SIZE	, %rbx
+	addq	$PROC_KSTACK_SIZE	, %rbx
     movq    $0x10,		%rax
     movq    %rax,		%ss
     movq    %rbx,		%rsp

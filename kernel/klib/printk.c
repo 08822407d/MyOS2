@@ -16,6 +16,7 @@
 #include <stdarg.h>
 
 #include <sys/types.h>
+#include <sys/cdefs.h>
 #include <lib/stddef.h>
 #include <lib/string.h>
 
@@ -397,7 +398,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 /*
 
 */
-inline int do_div(long *num,int base)
+inline __always_inline int do_div(long *num,int base)
 {
 	int __res;
 	__asm__("divq %%rcx"

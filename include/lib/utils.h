@@ -7,6 +7,12 @@
 	void bm_clear_bit(bitmap_t *, unsigned long);
 	unsigned long bm_get_freebit_idx(bitmap_t *, unsigned long);
 
+	#define container_of(member_ptr, container_type, member_name)									\
+	({																		\
+		typeof(((container_type *)0)->member_name) * p = (member_ptr);							\
+		(container_type *)((unsigned long)p - (unsigned long)&(((container_type *)0)->member_name));	\
+	})
+
 	// list.c
 	typedef struct List
 	{
