@@ -9,12 +9,16 @@
 #include "include/arch_proc.h"
 
 #include "../../include/proc.h"
+#include "../../include/printk.h"
 
 extern tss64_s	tss[CONFIG_MAX_CPUS];
 extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
 
 extern PCB_u	proc0_PCB;
 extern PCB_u	proc1_PCB;
+
+void test_proc1(void);
+extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
 
 inline __always_inline proc_s * get_current()
 {
@@ -80,5 +84,17 @@ void arch_init_proc0()
 {
 	proc_s * curr_proc = get_current();
 
-	switch_to(curr_proc, curr_proc);
+	proc_s *proc_1 = &proc1_PCB.proc;
+	proc_1->arch_struct.fs =
+	proc_1->arch_struct.gs = KERN_DS_SELECTOR;
+	proc_1->arch_struct.rsp0 = (uint64_t)&proc1_PCB.stack + PROC_KSTACK_SIZE;
+	proc_1->arch_struct.rsp = (uint64_t)&ist_stacks[2][0];
+	proc_1->arch_struct.rip = (uint64_t)test_proc1;
+
+	switch_to(curr_proc, proc_1);
+}
+
+void test_proc1()
+{
+	color_printk(RED, BLACK, "Now in proc 1\n");
 }

@@ -19,5 +19,7 @@ void init_proc0()
 
 	proc_s *next	= container_of(&proc0->PCB_list, proc_s, PCB_list);
 
+	memset(&proc1_PCB.proc, 0, sizeof(proc1_PCB.proc));
+
 	arch_init_proc0();
 }
