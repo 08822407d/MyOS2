@@ -7,9 +7,11 @@
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_proc.h"
+#include "include/arch_proto.h"
 
 #include "../../include/proc.h"
 #include "../../include/printk.h"
+#include "../../include/const.h"
 
 extern tss64_s	tss[CONFIG_MAX_CPUS];
 extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
@@ -80,21 +82,111 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target)
 						 :"memory");
 }
 
+
+
+unsigned long init(unsigned long arg)
+{
+	color_printk(RED,BLACK,"init task is running,arg:%#018lx\n",arg);
+
+	return 1;
+}
+
+
+
+unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size)
+{
+	proc_s *tsk_curr = get_current();
+	proc_s *tsk_new = NULL;
+	
+	tsk_new = &proc1_PCB.proc;
+	// tsk_new = (proc_s *)malloc(sizeof(proc_s));
+	arch_PCB_s *thd = &tsk_new->arch_struct;
+
+	memset(tsk_new, 0, sizeof(proc_s));
+	*tsk_new = *tsk_curr;
+
+	list_init(&tsk_new->PCB_list);
+	list_insert_front(&tsk_curr->PCB_list, &tsk_new->PCB_list);
+	tsk_new->pid++;	
+	tsk_new->state = TASK_UNINTERRUPTABLE;
+
+	memcpy(regs, (void *)((unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s)), sizeof(stack_frame_s));
+
+	thd->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
+	thd->rip = regs->rip;
+	thd->rsp = (unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s);
+
+	if(!(tsk_new->flags & PF_KTHREAD))
+		thd->rip = regs->rip = (unsigned long)ret_from_intr;
+
+	tsk_new->state = TASK_RUNNING;
+
+	return 0;
+}
+
+unsigned long do_exit(unsigned long code)
+{
+	color_printk(RED,BLACK,"exit task is running,arg:%#018lx\n",code);
+	while(1);
+}
+
+extern void kernel_thread_func(void);
+__asm__ (
+"kernel_thread_func:	\n\t"
+"	popq	%rax		\n\t"	
+"	movq	%rax, %ds	\n\t"
+"	popq	%rax		\n\t"
+"	movq	%rax, %es	\n\t"
+"	popq	%r15		\n\t"
+"	popq	%r14		\n\t"	
+"	popq	%r13		\n\t"	
+"	popq	%r12		\n\t"	
+"	popq	%r11		\n\t"	
+"	popq	%r10		\n\t"	
+"	popq	%r9			\n\t"	
+"	popq	%r8			\n\t"	
+"	popq	%rsi		\n\t"	
+"	popq	%rdi		\n\t"	
+"	popq	%rbp		\n\t"	
+"	popq	%rdx		\n\t"	
+"	popq	%rcx		\n\t"	
+"	popq	%rbx		\n\t"	
+"	popq	%rax		\n\t"
+"	addq	$0x38, %rsp	\n\t"
+/////////////////////////////////
+"	movq	%rdx,	%rdi	\n\t"
+"	callq	*%rbx		\n\t"
+"	movq	%rax,	%rdi	\n\t"
+"	callq	do_exit		\n\t"
+);
+
+
+
+int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
+{
+	stack_frame_s regs;
+	memset(&regs,0,sizeof(regs));
+
+	regs.rbx = (unsigned long)fn;
+	regs.rdx = (unsigned long)arg;
+
+	regs.cs = KERN_CS_SELECTOR;
+	regs.ds = KERN_DS_SELECTOR;
+	regs.es = KERN_DS_SELECTOR;
+	regs.ss = KERN_DS_SELECTOR;
+	regs.rflags = (1 << 9);
+	regs.rip = (unsigned long)kernel_thread_func;
+
+	return do_fork(&regs,flags,0,0);
+}
+
 void arch_init_proc0()
 {
 	proc_s * curr_proc = get_current();
-
+	curr_proc->flags = PF_KTHREAD;
 	proc_s *proc_1 = &proc1_PCB.proc;
-	proc_1->arch_struct.fs =
-	proc_1->arch_struct.gs = KERN_DS_SELECTOR;
-	proc_1->arch_struct.rsp0 = (uint64_t)&proc1_PCB.stack + PROC_KSTACK_SIZE;
-	proc_1->arch_struct.rsp = (uint64_t)&ist_stacks[2][0];
-	proc_1->arch_struct.rip = (uint64_t)test_proc1;
+
+	kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
 
 	switch_to(curr_proc, proc_1);
-}
-
-void test_proc1()
-{
-	color_printk(RED, BLACK, "Now in proc 1\n");
 }

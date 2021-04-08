@@ -47,6 +47,9 @@ void hwint13(void);
 void hwint14(void);
 void hwint15(void);
 
+/* syscalls and others about intr */
+void ret_from_intr();
+
 typedef struct __attribute__((packed)) {
 	reg_t ds;
 	reg_t es;
@@ -61,10 +64,10 @@ typedef struct __attribute__((packed)) {
 	reg_t rsi;
 	reg_t rdi;
 	reg_t rbp;
-	reg_t rax;
-	reg_t rbx;
-	reg_t rcx;
 	reg_t rdx;
+	reg_t rcx;
+	reg_t rbx;
+	reg_t rax;
 	reg_t vec_nr;
 	reg_t err_code;
 	reg_t rip;

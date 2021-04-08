@@ -50,10 +50,10 @@ RESTORE_ALL:
 	popq	%rsi;		
 	popq	%rdi;		
 	popq	%rbp;		
-	popq	%rax;		
-	popq	%rbx;		
-	popq	%rcx;		
 	popq	%rdx;		
+	popq	%rcx;		
+	popq	%rbx;		
+	popq	%rax;		
 	addq	$0x10,	%rsp;	// skip err-code and vec-nr
 	iretq;
 
@@ -67,10 +67,10 @@ ENTRY(ret_from_intr)
 	jmp	RESTORE_ALL	/*need rewrite*/
 
 SAVE_ALL:
-	pushq	%rdx
-	pushq	%rcx
-	pushq	%rbx
 	pushq	%rax
+	pushq	%rbx
+	pushq	%rcx
+	pushq	%rdx
 	pushq	%rbp
 	pushq	%rdi
 	pushq	%rsi
