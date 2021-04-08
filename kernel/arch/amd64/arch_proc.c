@@ -110,7 +110,7 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 	tsk_new->pid++;	
 	tsk_new->state = TASK_UNINTERRUPTABLE;
 
-	memcpy(regs, (void *)((unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s)), sizeof(stack_frame_s));
+	memcpy((void *)((unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s)), regs, sizeof(stack_frame_s));
 
 	thd->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
 	thd->rip = regs->rip;
@@ -129,38 +129,6 @@ unsigned long do_exit(unsigned long code)
 	color_printk(RED,BLACK,"exit task is running,arg:%#018lx\n",code);
 	while(1);
 }
-
-extern void kernel_thread_func(void);
-__asm__ (
-"kernel_thread_func:	\n\t"
-"	popq	%rax		\n\t"	
-"	movq	%rax, %ds	\n\t"
-"	popq	%rax		\n\t"
-"	movq	%rax, %es	\n\t"
-"	popq	%r15		\n\t"
-"	popq	%r14		\n\t"	
-"	popq	%r13		\n\t"	
-"	popq	%r12		\n\t"	
-"	popq	%r11		\n\t"	
-"	popq	%r10		\n\t"	
-"	popq	%r9			\n\t"	
-"	popq	%r8			\n\t"	
-"	popq	%rsi		\n\t"	
-"	popq	%rdi		\n\t"	
-"	popq	%rbp		\n\t"	
-"	popq	%rdx		\n\t"	
-"	popq	%rcx		\n\t"	
-"	popq	%rbx		\n\t"	
-"	popq	%rax		\n\t"
-"	addq	$0x38, %rsp	\n\t"
-/////////////////////////////////
-"	movq	%rdx,	%rdi	\n\t"
-"	callq	*%rbx		\n\t"
-"	movq	%rax,	%rdi	\n\t"
-"	callq	do_exit		\n\t"
-);
-
-
 
 int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
 {

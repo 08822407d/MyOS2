@@ -260,3 +260,30 @@ ENTRY(hwint14)
 ENTRY(hwint15)
 /* Interrupt routine for irq 15 */
 	hwint_slave(15)
+
+ENTRY(kernel_thread_func)
+	popq	%rax
+	movq	%rax,	%ds
+	popq	%rax
+	movq	%rax,	%es
+	popq	%r15
+	popq	%r14
+	popq	%r13
+	popq	%r12
+	popq	%r11
+	popq	%r10
+	popq	%r9
+	popq	%r8
+	popq	%rsi
+	popq	%rdi
+	popq	%rbp
+	popq	%rdx
+	popq	%rcx
+	popq	%rbx
+	popq	%rax
+	addq	$0x38,	%rsp
+/////////////////////////////////
+	movq	%rdx,	%rdi
+	callq	*%rbx
+	movq	%rax,	%rdi
+	callq	do_exit

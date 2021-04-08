@@ -48,7 +48,8 @@ void hwint14(void);
 void hwint15(void);
 
 /* syscalls and others about intr */
-void ret_from_intr();
+void ret_from_intr(void);
+void kernel_thread_func(void);
 
 typedef struct __attribute__((packed)) {
 	reg_t ds;
