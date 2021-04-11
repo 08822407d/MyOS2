@@ -22,18 +22,18 @@
 	/* GDT layout (SYSENTER/SYSEXIT compliant) */
 	#define NULL_DESC_INDEX		0
 	#define KERN_CS_INDEX       1
-	#define KERN_DS_INDEX       2
-	#define USER_CS_INDEX       3
-	#define USER_DS_INDEX       4
+	#define KERN_SS_INDEX       2
+	#define USER_SS_INDEX       3
+	#define USER_CS_INDEX       4
 	#define TSS_INDEX_FIRST     5
 	#define TSS_INDEX(cpu)      (TSS_INDEX_FIRST + (cpu * 2))	/* per cpu kernel tss */
 	#define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* LDT descriptor */
 
 	#define SEG_SELECTOR(i)		((i) * 8)
 	#define KERN_CS_SELECTOR	SEG_SELECTOR(KERN_CS_INDEX)
-	#define KERN_DS_SELECTOR	SEG_SELECTOR(KERN_DS_INDEX)
+	#define KERN_SS_SELECTOR	SEG_SELECTOR(KERN_SS_INDEX)
+	#define USER_SS_SELECTOR	(SEG_SELECTOR(USER_SS_INDEX) | USER_PRIVILEGE)
 	#define USER_CS_SELECTOR	(SEG_SELECTOR(USER_CS_INDEX) | USER_PRIVILEGE)
-	#define USER_DS_SELECTOR	(SEG_SELECTOR(USER_DS_INDEX) | USER_PRIVILEGE)
 	#define TSS_SELECTOR(cpu)	SEG_SELECTOR(TSS_INDEX(cpu))
 
 	#define SEGDESC_SIZE		0x08
@@ -51,5 +51,18 @@
 	#define SHIFT_PDPTE			30
 	#define SHIFT_PDE			21
 	#define SHIFT_PTE			12
+
+	/* MSR registers addresses */
+	#define IA32_EFER			0xC0000080
+	#define	MSR_IA32_EFER_SCE	0x00000001
+	#define MSR_IA32_EFER_LME	0x00000100
+	#define MSR_IA32_EFER_LMA	0x00000400
+	#define MSR_IA32_EFER_NXE	0x00000800
+
+	#define MSR_IA32_STAR		0xC0000081
+	#define MSR_IA32_LSTAR		0xC0000082
+	#define MSR_IA32_CSTAR		0xC0000083
+	#define MSR_IA32_FMASK		0xC0000084
+
 
 #endif /* _AMD64_ACONST_H */

@@ -90,7 +90,7 @@ SAVE_ALL:
 	xorq	%rax,	%rax
 
 	cld
-	movq	$KERN_DS_SELECTOR,	%rdi
+	movq	$KERN_SS_SELECTOR,	%rdi
 	movq	%rdi,	%ds
 	movq	%rdi,	%es
 

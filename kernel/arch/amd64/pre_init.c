@@ -1,6 +1,8 @@
 #include <lib/string.h>
 
 #include "include/bootinfo.h"
+#include "include/arch_proto.h"
+#include "include/archconst.h"
 #include "../../include/param.h"
 #include "../../include/glo.h"
 #include "../../include/ktypes.h"
@@ -18,6 +20,12 @@ framebuffer_s framebuffer;
 
 void pre_init()
 {
+	// enalble syscall/sysret machanism
+	uint64_t ia32_efer = rdmsr(IA32_EFER);
+	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
+	wrmsr(IA32_EFER, ia32_efer);
+
+
 	memset((void *)&_bss, 0, (void *)&_ebss - (void *)&_bss);
 	memset((void *)&kparam, 0, sizeof(kparam));
 	memset((void *)&mem_info, 0, sizeof(mem_info));

@@ -107,12 +107,14 @@ void i8259_disable(void);
 void i8259_eoi(int);
 
 /* port_io.c */
-uint64_t inb(uint16_t);
-uint64_t inw(uint16_t);
-uint64_t inl(uint16_t);
-void outb(uint16_t, uint8_t);
-void outw(uint16_t, uint16_t);
-void outl(uint16_t, uint32_t);
+uint64_t inb(uint16_t port);
+uint64_t inw(uint16_t port);
+uint64_t inl(uint16_t port);
+void outb(uint16_t port, uint8_t value);
+void outw(uint16_t port, uint16_t value);
+void outl(uint16_t port, uint32_t value);
+uint64_t rdmsr(uint64_t msr_addr);
+void wrmsr(unsigned long msr_addr,unsigned long value);
 // void intr_disable(void);
 // void intr_enable(void);
 

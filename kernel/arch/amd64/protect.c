@@ -149,9 +149,9 @@ void init_gdt()
 
 	// gdt[0] has been set to 0 by memset
 	set_codeseg(KERN_CS_INDEX, E_CODE, 0);
-	set_dataseg(KERN_DS_INDEX, RW_DATA, 0);
+	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
-	set_dataseg(USER_DS_INDEX, RW_DATA, 3);
+	set_dataseg(USER_SS_INDEX, RW_DATA, 3);
 
 	for (int i = 0; i < 1; i++)
 	{
@@ -246,7 +246,7 @@ void prot_init(void)
 						 :
 						 :	"m"(gdt_ptr),
 						 	"m"(idt_ptr),
-						 	"r"(KERN_DS_SELECTOR),
+						 	"r"(KERN_SS_SELECTOR),
 							"rsi"((uint64_t)KERN_CS_SELECTOR),
 							"r"((uint16_t)TSS_SELECTOR(0))
 						 :  "rax");

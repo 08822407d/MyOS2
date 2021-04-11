@@ -139,9 +139,9 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	regs.rdx = (unsigned long)arg;
 
 	regs.cs = KERN_CS_SELECTOR;
-	regs.ds = KERN_DS_SELECTOR;
-	regs.es = KERN_DS_SELECTOR;
-	regs.ss = KERN_DS_SELECTOR;
+	regs.ds = KERN_SS_SELECTOR;
+	regs.es = KERN_SS_SELECTOR;
+	regs.ss = KERN_SS_SELECTOR;
 	regs.rflags = (1 << 9);
 	regs.rip = (unsigned long)kernel_thread_func;
 

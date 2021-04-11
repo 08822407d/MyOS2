@@ -58,3 +58,22 @@ inline __always_inline void outl(uint16_t port, uint32_t value)
 						 :"a"(value),"d"(port)
 						 :"memory");
 }
+
+inline __always_inline uint64_t rdmsr(uint64_t msr_addr)
+{
+	uint32_t tmp0 = 0;
+	uint32_t tmp1 = 0;
+	__asm__ __volatile__("rdmsr		\n\t"
+						 :"=d"(tmp0),"=a"(tmp1)
+						 :"c"(msr_addr)
+						 :"memory");	
+	return (unsigned long)tmp0<<32 | tmp1;
+}
+
+inline __always_inline void wrmsr(uint64_t msr_addr,uint64_t value)
+{
+	__asm__ __volatile__("wrmsr		\n\t"
+						 :
+						 :"d"(value >> 32),"a"(value & 0xffffffff),"c"(msr_addr)
+						 :"memory");	
+}
