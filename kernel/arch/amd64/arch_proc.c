@@ -143,13 +143,18 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	regs.es = KERN_SS_SELECTOR;
 	regs.ss = KERN_SS_SELECTOR;
 	regs.rflags = (1 << 9);
-	regs.rip = (unsigned long)kernel_thread_func;
+	regs.rip = (unsigned long)ret_from_syscall;
 
 	return do_fork(&regs,flags,0,0);
 }
 
-void arch_init_proc0()
+void arch_init_proc()
 {
+	// init MSR regs related to syscall/sysret
+	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
+	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
+	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
+
 	proc_s * curr_proc = get_current();
 	curr_proc->flags = PF_KTHREAD;
 	proc_s *proc_1 = &proc1_PCB.proc;

@@ -21,5 +21,5 @@ void init_proc0()
 
 	memset(&proc1_PCB.proc, 0, sizeof(proc1_PCB.proc));
 
-	arch_init_proc0();
+	arch_init_proc();
 }

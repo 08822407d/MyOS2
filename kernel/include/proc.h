@@ -42,7 +42,7 @@
 
 	void init_proc0(void);
 
-	void arch_init_proc0(void);
+	void arch_init_proc(void);
 	proc_s * get_current();
 	void __switch_to(proc_s *, proc_s *);
 	void switch_to(proc_s *, proc_s *);

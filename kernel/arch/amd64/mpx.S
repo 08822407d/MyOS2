@@ -9,52 +9,59 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
-// R15	=	0x00
-// R14	=	0x08
-// R13	=	0x10
-// R12	=	0x18
-// R11	=	0x20
-// R10	=	0x28
-// R9	=	0x30
-// R8	=	0x38
-// RBX	=	0x40
-// RCX	=	0x48
-// RDX	=	0x50
-// RSI	=	0x58
-// RDI	=	0x60
-// RBP	=	0x68
-// DS	=	0x70
-// ES	=	0x78
-// RAX	=	0x80
-// VEC_NR	=	0x88
-// ERRCODE	=	0x90
-// RIP	=	0x98
-// CS	=	0xa0
-// RFLAGS	=	0xa8
-// OLDRSP	=	0xb0
-// OLDSS	=	0xb8
+ENTRY(enter_syscall)
+	pushq	%rsp
+
+
+ENTRY(ret_from_syscall)
+	popq	%rax		
+	movq	%rax,	%ds
+	popq	%rax
+	movq	%rax,	%es
+	popq	%r15
+	popq	%r14
+	popq	%r13
+	popq	%r12
+	popq	%r11
+	popq	%r10
+	popq	%r9
+	popq	%r8
+	popq	%rsi
+	popq	%rdi
+	popq	%rbp
+	popq	%rdx
+	popq	%rcx
+	popq	%rbx
+	popq	%rax
+	addq	$0x10,	%rsp	// skip err-code and vec-nr
+	
+	popq	%rcx
+	addq	$0x08,	%rsp	// skip cs
+	popq	%r11
+	popq	%rsp
+	sysretq
 
 RESTORE_ALL:
-	popq	%rax;		
-	movq	%rax,	%ds;	
-	popq	%rax;		
-	movq	%rax,	%es;	
-	popq	%r15;		
-	popq	%r14;		
-	popq	%r13;		
-	popq	%r12;		
-	popq	%r11;		
-	popq	%r10;		
-	popq	%r9;		
-	popq	%r8;		
-	popq	%rsi;		
-	popq	%rdi;		
-	popq	%rbp;		
-	popq	%rdx;		
-	popq	%rcx;		
-	popq	%rbx;		
-	popq	%rax;		
-	addq	$0x10,	%rsp;	// skip err-code and vec-nr
+	popq	%rax		
+	movq	%rax,	%ds
+	popq	%rax
+	movq	%rax,	%es
+	popq	%r15
+	popq	%r14
+	popq	%r13
+	popq	%r12
+	popq	%r11
+	popq	%r10
+	popq	%r9
+	popq	%r8
+	popq	%rsi
+	popq	%rdi
+	popq	%rbp
+	popq	%rdx
+	popq	%rcx
+	popq	%rbx
+	popq	%rax
+	addq	$0x10,	%rsp	// skip err-code and vec-nr
 	iretq;
 
 #define GET_CURRENT(reg)	\
