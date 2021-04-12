@@ -143,7 +143,8 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	regs.es = KERN_SS_SELECTOR;
 	regs.ss = KERN_SS_SELECTOR;
 	regs.rflags = (1 << 9);
-	regs.rip = (unsigned long)ret_from_syscall;
+	regs.rip = (uint64_t)ret_from_syscall;
+	regs.rsp = (uint64_t)(&ist_stacks + 8);
 
 	return do_fork(&regs,flags,0,0);
 }
