@@ -100,7 +100,7 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 	
 	tsk_new = &proc1_PCB.proc;
 	// tsk_new = (proc_s *)malloc(sizeof(proc_s));
-	arch_PCB_s *thd = &tsk_new->arch_struct;
+	arch_PCB_s *arch_tsk = &tsk_new->arch_struct;
 
 	memset(tsk_new, 0, sizeof(proc_s));
 	*tsk_new = *tsk_curr;
@@ -112,12 +112,12 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 
 	memcpy((void *)((unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s)), regs, sizeof(stack_frame_s));
 
-	thd->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
-	thd->rip = regs->rip;
-	thd->rsp = (unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s);
+	arch_tsk->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
+	arch_tsk->rip = regs->rip;
+	arch_tsk->rsp = (unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s);
 
 	if(!(tsk_new->flags & PF_KTHREAD))
-		thd->rip = regs->rip = (unsigned long)ret_from_intr;
+		arch_tsk->rip = regs->rip = (unsigned long)ret_from_intr;
 
 	tsk_new->state = TASK_RUNNING;
 

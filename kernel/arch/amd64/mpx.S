@@ -31,11 +31,11 @@ ENTRY(ret_from_syscall)
 	popq	%rbp
 	popq	%rdx
 	popq	%rcx
-	popq	%rbx
+	popq	%rcx
 	popq	%rax
 	addq	$0x10,	%rsp	// skip err-code and vec-nr
 	
-	popq	%rcx
+	popq	%rbx
 	addq	$0x08,	%rsp	// skip cs
 	popq	%r11
 	popq	%rsp

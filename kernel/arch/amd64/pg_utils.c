@@ -58,14 +58,14 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 		pml4e_idx -= 256;
 	if (*((uint64_t *)pml4e_ptr) == 0)
 	{
-		pml4e_ptr->Pflag = pml4e_ptr->RWflag = 1;
+		pml4e_ptr->Pflag = pml4e_ptr->RWflag = pml4e_ptr->USflag = 1;
 		pml4e_ptr->PHYADDR = (uint64_t)vir2phy(PDPT[pml4e_idx]) >> SHIFT_PTE;
 	}
 
 	PDPTE *pdpte_ptr = (PDPTE *)phy2vir((phy_addr)((uint64_t)pml4e_ptr->PHYADDR << SHIFT_PTE)) + pdpte_idx;
 	if (*((uint64_t *)pdpte_ptr) == 0)
 	{
-		pdpte_ptr->Pflag = pdpte_ptr->RWflag = 1;
+		pdpte_ptr->Pflag = pdpte_ptr->RWflag = pdpte_ptr->USflag = 1;
 		pdpte_ptr->PHYADDR = (uint64_t)vir2phy(PD[pml4e_idx][pdpte_idx]) >> SHIFT_PTE;
 	}
 	PDPTE *pde_ptr = (PDE *)phy2vir((phy_addr)((uint64_t)pdpte_ptr->PHYADDR << SHIFT_PTE)) + pde_idx;
@@ -73,6 +73,7 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 	{
 		pde_ptr->Pflag =
 		pde_ptr->RWflag =
+		pde_ptr->USflag =
 		pde_ptr->PATflag = 1;
 		pde_ptr->PHYADDR = (uint64_t)phy >> SHIFT_PTE;
 	}

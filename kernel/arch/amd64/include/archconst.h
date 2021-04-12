@@ -51,6 +51,15 @@
 	#define SHIFT_PDPTE			30
 	#define SHIFT_PDE			21
 	#define SHIFT_PTE			12
+	#define ARCH_PG_P			(1 << 0ULL)
+	#define ARCH_PG_RW			(1 << 1ULL)
+	#define ARCH_PG_US			(1 << 2ULL)
+	#define ARCH_PG_PWT			(1 << 3ULL)
+	#define ARCH_PG_PCD			(1 << 4ULL)
+	#define ARCH_PG_A			(1 << 5ULL)
+	#define ARCH_PG_D			(1 << 6ULL)
+	#define ARCH_PG_PAT4K		(1 << 7ULL)
+	#define ARCH_PG_G			(1 << 8ULL)
 
 	/* MSR registers addresses */
 	#define IA32_EFER			0xC0000080
