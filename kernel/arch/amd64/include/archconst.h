@@ -85,8 +85,8 @@
 	#define EFL_DF          0x00000400              /* direction */
 	#define EFL_OF          0x00000800              /* overflow */
 	#define EFL_IOPL        0x00003000              /* IO privilege level: */
-	#define EFL_IOPL_KERNEL 0x00000000                      /* kernel */
-	#define EFL_IOPL_USER   0x00003000                      /* user */
+	#define EFL_IOPL_KERNEL 0x00000000              /* kernel */
+	#define EFL_IOPL_USER   0x00003000              /* user */
 	#define EFL_NT          0x00004000              /* nested task */
 	#define EFL_RF          0x00010000              /* resume without tracing */
 	#define EFL_VM          0x00020000              /* virtual 8086 mode */

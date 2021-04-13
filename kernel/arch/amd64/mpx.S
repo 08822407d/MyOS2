@@ -16,7 +16,6 @@
 
 
 ENTRY(enter_syscall)
-	cli
 	GET_CURRENT(%r11)
 	xchgq	%rsp,	%r11
 	subq	$0x10,	%rsp
