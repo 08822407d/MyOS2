@@ -53,5 +53,5 @@ void pre_init()
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
 
-	framebuffer.FB_virbase = (vir_addr)CONFIG_PAGE_ALIGH((uint64_t)&_end);
+	framebuffer.FB_virbase = (vir_addr)CONFIG_PAGE_ALIGH((uint64_t)&_end + CONFIG_PAGE_SIZE);
 }

@@ -9,9 +9,44 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
-ENTRY(enter_syscall)
-	pushq	%rsp
+#define GET_CURRENT(reg)	\
+	movq	$-32768,reg;	\
+	andq	%rsp,	reg
 
+
+
+ENTRY(enter_syscall)
+	cli
+	GET_CURRENT(%r11)
+	xchgq	%rsp,	%r11
+	subq	$0x10,	%rsp
+	pushq	%rcx
+	/////////////////////////////////
+	subq	$0x10,	%rsp
+	/////////////////////////////////
+	pushq	%rax
+	pushq	%rbx
+	pushq	%rcx
+	pushq	%rdx
+	pushq	%rbp
+	pushq	%rdi
+	pushq	%rsi
+	pushq	%r8
+	pushq	%r9
+	pushq	%r10
+	pushq	%r11
+	pushq	%r12
+	pushq	%r13
+	pushq	%r14
+	pushq	%r15
+	
+	movq	%es,	%rax
+	pushq	%rax
+	movq	%ds,	%rax
+	pushq	%rax
+	xorq	%rax,	%rax	
+	callq	do_syscall
+	jmp		ret_from_syscall
 
 ENTRY(ret_from_syscall)
 	popq	%rax		
@@ -31,14 +66,15 @@ ENTRY(ret_from_syscall)
 	popq	%rbp
 	popq	%rdx
 	popq	%rcx
-	popq	%rcx
-	popq	%rax
-	addq	$0x10,	%rsp	// skip err-code and vec-nr
-	
 	popq	%rbx
-	addq	$0x08,	%rsp	// skip cs
-	popq	%r11
+	popq	%rax
+	/////////////////////////////////
+	addq	$0x10,	%rsp	// skip err-code and vec-nr
+	/////////////////////////////////
+	popq	%rcx
+	addq	$0x10,	%rsp	// skip cs
 	popq	%rsp
+	sti
 	sysretq
 
 RESTORE_ALL:
@@ -63,10 +99,6 @@ RESTORE_ALL:
 	popq	%rax
 	addq	$0x10,	%rsp	// skip err-code and vec-nr
 	iretq;
-
-#define GET_CURRENT(reg)	\
-	movq	$-32768,reg;	\
-	andq	%rsp,	reg
 
 ret_from_exception:
 	/*GET_CURRENT(%ebx)	need rewrite*/

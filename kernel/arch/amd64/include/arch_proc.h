@@ -8,10 +8,10 @@
 
 typedef struct
 {
-	reg_t		rsp0;
+	reg_t		tss_rsp0;
 
-	reg_t		rip;
-	reg_t		rsp;
+	reg_t		k_rip;
+	reg_t		k_rsp;
 
 	reg_t		fs;
 	reg_t		gs;

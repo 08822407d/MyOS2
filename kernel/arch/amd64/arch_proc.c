@@ -20,7 +20,14 @@ extern PCB_u	proc0_PCB;
 extern PCB_u	proc1_PCB;
 
 void test_proc1(void);
-extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
+char user_stack[PROC_KSTACK_SIZE];
+
+int user_func()
+{
+	color_printk(GREEN, BLACK, "user function is running... \n");
+	
+	return 0;
+}
 
 inline __always_inline proc_s * get_current()
 {
@@ -41,7 +48,7 @@ stack_frame_s * get_current_stackframe(proc_s *curr_proc)
 
 inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 {
-	tss[0].rsp0 = target->arch_struct.rsp0;
+	tss[0].rsp0 = target->arch_struct.tss_rsp0;
 	tss[0].rsp1 =
 	tss[0].rsp2 =
 	tss[0].ist1 =
@@ -50,7 +57,7 @@ inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 	tss[0].ist4 =
 	tss[0].ist5 =
 	tss[0].ist6 =
-	tss[0].ist7 = (uint64_t)&ist_stacks[0] + CONFIG_KSTACK_SIZE;
+	tss[0].ist7 = (reg_t)&ist_stacks[0] + CONFIG_KSTACK_SIZE;
 
 	__asm__ __volatile__("movq	%%fs,	%0 \n\t"
 						 : "=a"(curr->arch_struct.fs));
@@ -79,10 +86,10 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target)
 						  1:						\n\
 						  popq	%%rax				\n\
 						  popq	%%rbp				\n	"
-						 :"=m"(curr->arch_struct.rsp),
-						  "=m"(curr->arch_struct.rip)
-						 :"m"(target->arch_struct.rsp),
-						  "m"(target->arch_struct.rip),
+						 :"=m"(curr->arch_struct.k_rsp),
+						  "=m"(curr->arch_struct.k_rip)
+						 :"m"(target->arch_struct.k_rsp),
+						  "m"(target->arch_struct.k_rip),
 						  "D"(curr), "S"(target)
 						 :"memory");
 }
@@ -92,14 +99,38 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target)
 unsigned long init(unsigned long arg)
 {
 	color_printk(RED,BLACK,"init task is running, arg:%#018lx\n",arg);
+	proc_s * curr = get_current();
+	stack_frame_s * sf = get_current_stackframe(curr);
+	curr->arch_struct.k_rip = (reg_t)ret_from_syscall;
+	curr->arch_struct.k_rsp = (reg_t)sf;
 
-	__asm__("sti \n");
+	__asm__ __volatile__("movq	%1, %%rsp		\n\
+						  pushq	%2				\n\
+						  jmp	do_execve		\n	"
+						 :
+						 :"D"(sf), "m"(curr->arch_struct.k_rsp), "m"(curr->arch_struct.k_rip)
+						 :"memory");
 
-	while(1);
 	return 1;
 }
 
+void syscall(int syscall_nr)
+{
 
+}
+
+int do_syscall(int syscall_nr)
+{
+	return 0;
+}
+
+unsigned long do_execve(stack_frame_s * sf)
+{
+	sf->rcx =
+	sf->rip = (reg_t)user_func;
+	sf->rsp = (reg_t)user_stack + PROC_KSTACK_SIZE;
+	return 1;
+}
 
 unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size)
 {
@@ -122,12 +153,12 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 
 	memcpy((void *)tsk_new_stackfram, regs, sizeof(stack_frame_s));
 
-	arch_tsk->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
-	arch_tsk->rip = regs->rip;
-	arch_tsk->rsp = (uint64_t)tsk_new_stackfram;
+	arch_tsk->tss_rsp0 = (reg_t)tsk_new + PROC_KSTACK_SIZE;
+	arch_tsk->k_rip = regs->rip;
+	arch_tsk->k_rsp = (reg_t)tsk_new_stackfram;
 
 	if(!(tsk_new->flags & PF_KTHREAD))
-		arch_tsk->rip = regs->rip = (unsigned long)ret_from_syscall;
+		arch_tsk->k_rip = regs->rip = (reg_t)ret_from_syscall;
 
 	tsk_new->state = TASK_RUNNING;
 
@@ -145,16 +176,15 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	stack_frame_s regs;
 	memset(&regs,0,sizeof(regs));
 
-	regs.rbx = (unsigned long)fn;
-	regs.rdx = (unsigned long)arg;
+	regs.rbx = (reg_t)fn;
+	regs.rdx = (reg_t)arg;
 
 	regs.cs = KERN_CS_SELECTOR;
 	regs.ds = KERN_SS_SELECTOR;
 	regs.es = KERN_SS_SELECTOR;
 	regs.ss = KERN_SS_SELECTOR;
 	regs.rflags = (1 << 9);
-	regs.rip = (uint64_t)kernel_thread_func;
-	regs.rsp = (uint64_t)(&ist_stacks + 8);
+	regs.rip = (reg_t)kernel_thread_func;
 
 	return do_fork(&regs,flags,0,0);
 }

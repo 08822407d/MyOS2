@@ -120,4 +120,13 @@ void wrmsr(unsigned long msr_addr,unsigned long value);
 // void intr_disable(void);
 // void intr_enable(void);
 
+/* arch_proc.c */
+unsigned long do_execve(stack_frame_s * sf);
+unsigned long do_fork(stack_frame_s * regs,
+						unsigned long clone_flags,
+						unsigned long stack_start,
+						unsigned long stack_size);
+void syscall(int syscall_nr);
+int do_syscall(int syscall_nr);
+
 #endif /* _AMD64_PROTO_H_ */

@@ -74,6 +74,7 @@ void mem_init()
 	phy_addr k_phy_pgbase = (phy_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_phy_base);
 	vir_addr k_vir_pgbase = (vir_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_vir_base);
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_size) / CONFIG_PAGE_SIZE;
+	pde_nr++;
 	for (long i = 0; i < pde_nr; i++)
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
