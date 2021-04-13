@@ -288,8 +288,8 @@ ENTRY(kernel_thread_func)
 	popq	%rcx
 	popq	%rbx
 	popq	%rax
-	addq	$0x38,	%rsp
-/////////////////////////////////
+	addq	$0x38,	%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
+	/////////////////////////////////
 	movq	%rdx,	%rdi
 	callq	*%rbx
 	movq	%rax,	%rdi

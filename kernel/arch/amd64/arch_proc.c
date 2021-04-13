@@ -34,6 +34,11 @@ inline __always_inline proc_s * get_current()
 	return current;
 }
 
+stack_frame_s * get_current_stackframe(proc_s *curr_proc)
+{
+	return &((PCB_u *)curr_proc)->arch_sf.pcb_sf_top;
+}
+
 inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 {
 	tss[0].rsp0 = target->arch_struct.rsp0;
@@ -86,8 +91,11 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target)
 
 unsigned long init(unsigned long arg)
 {
-	color_printk(RED,BLACK,"init task is running,arg:%#018lx\n",arg);
+	color_printk(RED,BLACK,"init task is running, arg:%#018lx\n",arg);
 
+	__asm__("sti \n");
+
+	while(1);
 	return 1;
 }
 
@@ -97,8 +105,10 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 {
 	proc_s *tsk_curr = get_current();
 	proc_s *tsk_new = NULL;
+	stack_frame_s *tsk_new_stackfram;
 	
 	tsk_new = &proc1_PCB.proc;
+	tsk_new_stackfram = get_current_stackframe(tsk_new);
 	// tsk_new = (proc_s *)malloc(sizeof(proc_s));
 	arch_PCB_s *arch_tsk = &tsk_new->arch_struct;
 
@@ -110,14 +120,14 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 	tsk_new->pid++;	
 	tsk_new->state = TASK_UNINTERRUPTABLE;
 
-	memcpy((void *)((unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s)), regs, sizeof(stack_frame_s));
+	memcpy((void *)tsk_new_stackfram, regs, sizeof(stack_frame_s));
 
 	arch_tsk->rsp0 = (unsigned long)tsk_new + PROC_KSTACK_SIZE;
 	arch_tsk->rip = regs->rip;
-	arch_tsk->rsp = (unsigned long)tsk_new + PROC_KSTACK_SIZE - sizeof(stack_frame_s);
+	arch_tsk->rsp = (uint64_t)tsk_new_stackfram;
 
 	if(!(tsk_new->flags & PF_KTHREAD))
-		arch_tsk->rip = regs->rip = (unsigned long)ret_from_intr;
+		arch_tsk->rip = regs->rip = (unsigned long)ret_from_syscall;
 
 	tsk_new->state = TASK_RUNNING;
 
@@ -143,7 +153,7 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	regs.es = KERN_SS_SELECTOR;
 	regs.ss = KERN_SS_SELECTOR;
 	regs.rflags = (1 << 9);
-	regs.rip = (uint64_t)ret_from_syscall;
+	regs.rip = (uint64_t)kernel_thread_func;
 	regs.rsp = (uint64_t)(&ist_stacks + 8);
 
 	return do_fork(&regs,flags,0,0);

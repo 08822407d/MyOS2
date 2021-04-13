@@ -4,6 +4,8 @@
 #include <sys/types.h>
 #include <lib/utils.h>
 
+#include "arch_proto.h"
+
 typedef struct
 {
 	reg_t		rsp0;
@@ -20,5 +22,12 @@ typedef struct
 
 	reg_t		cr3;
 } arch_PCB_s;
+
+typedef struct
+{
+	uint8_t			skip[PROC_KSTACK_SIZE - sizeof(stack_frame_s)];
+	stack_frame_s	pcb_sf_top;
+} arch_PCB_stackframe_s;
+
 
 #endif /* _ARCH_PROC_H_ */

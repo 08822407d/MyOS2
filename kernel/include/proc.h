@@ -38,6 +38,7 @@
 	{
 		proc_s		proc;
 		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];
+		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
 	void init_proc0(void);

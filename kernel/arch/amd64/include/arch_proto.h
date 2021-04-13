@@ -1,4 +1,4 @@
-#ifndef _ADM64_PROTO_H_
+#ifndef _AMD64_PROTO_H_
 #define _AMD64_PROTO_H_
 
 #include <sys/types.h>

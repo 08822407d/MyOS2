@@ -79,7 +79,7 @@ void excep_stack_segfault(stack_frame_s * sf)
 void excep_gen_prot(stack_frame_s * sf)
 {
 	int error_code = sf->err_code;
-	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx\n",error_code);
+	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf->rip);
 
 	if(error_code & 0x01)
 		color_printk(RED,BLACK,"The exception occurred during delivery of an event external to the program,such as an interrupt or an earlier exception.\n");
