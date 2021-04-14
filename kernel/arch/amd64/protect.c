@@ -15,11 +15,10 @@ extern kinfo_s kparam;
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 tss64_s			tss[CONFIG_MAX_CPUS];
-// char			kstacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+// char			cpu_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 char			ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
-char			tmp_intr_stack[CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 
 char *(intr_name[IDT_SIZE]);
 

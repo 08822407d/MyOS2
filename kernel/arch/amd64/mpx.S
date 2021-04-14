@@ -13,15 +13,19 @@
 	movq	$-32768,reg;	\
 	andq	%rsp,	reg
 
-
-
+/*===========================================================================*/
+/*							syscall and sysret entry						 */
+/*===========================================================================*/
 ENTRY(enter_syscall)
-	GET_CURRENT(%r11)
-	xchgq	%rsp,	%r11
-	subq	$0x10,	%rsp
+	movabsq	$(tss + 4),	%r10
+	movq	(%r10),	%r10
+	xchgq	%rsp,	%r10
+	pushq	%r10			// save user rsp
+	pushq	%r11			// save user rflags
+	subq	$0x08,	%rsp
 	pushq	%rcx
 	/////////////////////////////////
-	subq	$0x10,	%rsp
+	subq	$0x10,	%rsp	// skip vec_nr and err_code
 	/////////////////////////////////
 	pushq	%rax
 	pushq	%rbx
@@ -43,11 +47,11 @@ ENTRY(enter_syscall)
 	pushq	%rax
 	movq	%ds,	%rax
 	pushq	%rax
-	xorq	%rax,	%rax	
+	movq	%rsp,	%rdi
 	callq	do_syscall
-	jmp		ret_from_syscall
 
 ENTRY(ret_from_syscall)
+	movq	%rax,	0x80(%rsp)
 	popq	%rax		
 	movq	%rax,	%ds
 	popq	%rax
@@ -76,6 +80,10 @@ ENTRY(ret_from_syscall)
 	sti
 	sysretq
 
+
+/*===========================================================================*/
+/*								interrupt entry								 */
+/*===========================================================================*/
 RESTORE_ALL:
 	popq	%rax		
 	movq	%rax,	%ds

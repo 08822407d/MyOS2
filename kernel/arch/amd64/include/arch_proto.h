@@ -126,7 +126,7 @@ unsigned long do_fork(stack_frame_s * regs,
 						unsigned long clone_flags,
 						unsigned long stack_start,
 						unsigned long stack_size);
-void syscall(int syscall_nr);
+int sys_call(int syscall_nr);
 int do_syscall(int syscall_nr);
 
 #endif /* _AMD64_PROTO_H_ */

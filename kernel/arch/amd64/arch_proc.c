@@ -26,6 +26,11 @@ int user_func()
 {
 	color_printk(GREEN, BLACK, "user function is running... \n");
 	
+	int syscall_retval = sys_call(0x87654321);
+	color_printk(GREEN, BLACK, "syscall retturn value : %#08lx \n", syscall_retval);
+
+	while (1);
+	
 	return 0;
 }
 
@@ -114,14 +119,25 @@ unsigned long init(unsigned long arg)
 	return 1;
 }
 
-void syscall(int syscall_nr)
+int sys_call(int syscall_nr)
 {
-
+	int ret_val = 0;
+	__asm__ __volatile__("pushq	%%rcx		\n\
+						  pushq	%%r10		\n\
+						  pushq	%%r11		\n\
+						  syscall			\n\
+						  popq	%%r11		\n\
+						  popq	%%r10		\n\
+						  popq	%%rcx		\n	"
+						  :"=a"(ret_val)
+						  :
+						  :);
+	return ret_val;
 }
 
 int do_syscall(int syscall_nr)
 {
-	return 0;
+	return 0x12345678;
 }
 
 unsigned long do_execve(stack_frame_s * sf)
