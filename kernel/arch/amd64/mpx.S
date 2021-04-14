@@ -20,6 +20,7 @@ ENTRY(enter_syscall)
 	movabsq	$(tss + 4),	%r10
 	movq	(%r10),	%r10
 	xchgq	%rsp,	%r10
+	sti
 	pushq	%r10			// save user rsp
 	pushq	%r11			// save user rflags
 	subq	$0x08,	%rsp
@@ -77,7 +78,6 @@ ENTRY(ret_from_syscall)
 	popq	%rcx
 	addq	$0x10,	%rsp	// skip cs
 	popq	%rsp
-	sti
 	sysretq
 
 
