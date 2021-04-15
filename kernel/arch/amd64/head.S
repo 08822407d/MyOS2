@@ -59,14 +59,14 @@ hang:
 
 .org	0x0000
 __PML4E:
-	.quad	0x202003
+	.quad	0x1002003
 	.fill	255,8,0
-	.quad	0x202003
+	.quad	0x1002003
 	.fill	255,8,0
 
 .org	0x1000
 __PDPTE:
-	.quad	0x203003	/* 0x103003 */
+	.quad	0x1003003	/* 0x103003 */
 	.fill	511,8,0
 
 .org	0x2000

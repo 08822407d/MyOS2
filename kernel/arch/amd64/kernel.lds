@@ -2,8 +2,8 @@ OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
 ENTRY(start)
 
-_k_phy_start	= 0x200000;
-_k_vir_start	= 0xffff800000200000;
+_k_phy_start	= 0x1000000;
+_k_vir_start	= 0xffff800001000000;
 _k_offset		= _k_vir_start - _k_phy_start;
 
 __k_unpaged__k_offset		= _k_offset;
