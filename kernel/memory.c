@@ -11,11 +11,14 @@
 #include "include/ktypes.h"
 #include "include/const.h"
 #include "include/proto.h"
+#include "include/slab.h"
 
 extern kinfo_s kparam;
 
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
+
+Slab_Cache_s slab_cache_groups[SLAB_LEVEL];
 
 void mem_init()
 {
@@ -107,5 +110,11 @@ void page_ref(page_s * page)
 
 void page_free(page_s * page)
 {
+	unsigned long page_idx = (unsigned long)page->page_start_addr / CONFIG_PAGE_SIZE;
+	bm_clear_bit(mem_info.page_bitmap, page_idx);
+	page->attr = 0;
+	page->ref_count = 0;
 
+	page->zone_belonged->page_total_ref--;
+	page->zone_belonged->page_free_nr++;
 }
