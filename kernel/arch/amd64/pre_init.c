@@ -32,7 +32,7 @@ void pre_init()
 
 	kparam.kernel_phy_base	= &_k_phy_start;
 	kparam.kernel_vir_base	= &_k_vir_start;
-	kparam.kernel_size		= &_end - &_k_vir_start;
+	kparam.kernel_vir_end	= &_end;
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo =
 		(struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR;
@@ -48,10 +48,9 @@ void pre_init()
 	mem_info.mb_memmap_nr = i + 1;
 
 	framebuffer.FB_phybase = (phy_addr)bootinfo->Graphics_Info.FrameBufferBase;
+	framebuffer.FB_virbase = phy2vir(framebuffer.FB_phybase);
 	framebuffer.FB_size = bootinfo->Graphics_Info.FrameBufferSize;
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
-
-	framebuffer.FB_virbase = (vir_addr)CONFIG_PAGE_ALIGH((uint64_t)&_end + CONFIG_PAGE_SIZE);
 }

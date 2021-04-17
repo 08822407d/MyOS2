@@ -261,6 +261,7 @@ void prot_init(void)
 	extern PML4E PML4[PGENT_NR];
 	pg_load_cr3(PML4);
 
+	slab_init();
 	// prot_init_done = 1;
 	init_i8259();
 }

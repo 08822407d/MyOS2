@@ -14,13 +14,15 @@ typedef struct
 	List_s 			list;
 	unsigned long	total;
 	unsigned long	free;
+	vir_addr		vir_addr;
 	page_s *		page;
 	bitmap_t *		colormap;
 } Slab_s;
 
 typedef struct
 {
-	unsigned long	size;
+	List_s			list;
+	unsigned long	obj_size;
 	Slab_s *		normal_slab;
 	Slab_s *		dma_slab;
 } Slab_Cache_s;

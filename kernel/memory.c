@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <sys/cdefs.h>
 #include <lib/string.h>
 #include <lib/assert.h>
 #include <lib/utils.h>
@@ -18,7 +19,9 @@ extern kinfo_s kparam;
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 
-Slab_Cache_s slab_cache_groups[SLAB_LEVEL];
+Slab_Cache_s	slab_cache_groups[SLAB_LEVEL];
+Slab_s			base_slabs[SLAB_LEVEL];
+uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
 
 void mem_init()
 {
@@ -74,10 +77,9 @@ void mem_init()
 
 	// set kernel used page_s in right status
 	// map physical pages for kernel
-	phy_addr k_phy_pgbase = (phy_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_phy_base);
-	vir_addr k_vir_pgbase = (vir_addr)CONFIG_PAGE_MASKF((uint64_t)kparam.kernel_vir_base);
-	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_size) / CONFIG_PAGE_SIZE;
-	pde_nr++;
+	phy_addr k_phy_pgbase = 0;
+	vir_addr k_vir_pgbase = (vir_addr)phy2vir(0);
+	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
@@ -117,4 +119,38 @@ void page_free(page_s * page)
 
 	page->zone_belonged->page_total_ref--;
 	page->zone_belonged->page_free_nr++;
+}
+
+void slab_init()
+{
+	for (int i = 0; i < SLAB_LEVEL; i++)
+	{
+		Slab_Cache_s * scgp = &slab_cache_groups[i];
+		Slab_s * bsp = &base_slabs[i];
+
+		scgp->obj_size = SLAB_SIZE_BASE << i;
+		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
+		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
+		scgp->normal_slab = bsp;
+		bsp->colormap = (bitmap_t *)(kparam.kernel_vir_end + 0x10);
+		kparam.kernel_vir_end += cm_size + 0x10;
+		bsp->free =
+		bsp->total = obj_nr;
+
+		list_init(&bsp->list);
+		bsp->vir_addr = (vir_addr)base_slab_page[i];
+		int pg_idx = (uint64_t)vir2phy(bsp->vir_addr) / CONFIG_PAGE_SIZE;
+		bsp->page = &mem_info.pages[pg_idx];
+	}
+	kparam.kernel_vir_end += 0x10;
+}
+
+Slab_s * alloc_slab()
+{
+
+}
+
+void free_slab(Slab_s * slab)
+{
+
 }

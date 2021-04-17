@@ -13,7 +13,7 @@
 typedef struct kinfo {
 	phy_addr	kernel_phy_base;
 	vir_addr	kernel_vir_base;
-	uint64_t	kernel_size;
+	vir_addr	kernel_vir_end;
 
 	int		nr_procs;           /* number of user processes */
 	int		nr_tasks;           /* number of kernel tasks */

@@ -14,6 +14,7 @@
 
 	/* memory.c */
 	void mem_init(void);
+	void slab_init();
 	page_s * page_alloc(void);
 	void page_free(page_s *);
 

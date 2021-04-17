@@ -87,7 +87,23 @@ __PDE:
 	.quad	0x1a00083
 	.quad	0x1c00083
 	.quad	0x1e00083
-	.fill	496,8,0
+	.quad	0x2000083
+	.quad	0x2200083
+	.quad	0x2400083
+	.quad	0x2600083
+	.quad	0x2800083
+	.quad	0x2a00083
+	.quad	0x2c00083
+	.quad	0x2e00083
+	.quad	0x3000083
+	.quad	0x3200083
+	.quad	0x3400083
+	.quad	0x3600083
+	.quad	0x3800083
+	.quad	0x3a00083
+	.quad	0x3c00083
+	.quad	0x3e00083
+	.fill	480,8,0
 
 //=======	GDT_Table
 GDT_Table:
