@@ -12,7 +12,7 @@
 #include "include/ktypes.h"
 #include "include/const.h"
 #include "include/proto.h"
-#include "include/slab.h"
+#include "include/printk.h"
 
 extern kinfo_s kparam;
 
@@ -22,6 +22,10 @@ multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 Slab_Cache_s	slab_cache_groups[SLAB_LEVEL];
 Slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
+
+/*===========================================================================*
+ *						fuction relate to physical page						 *
+ *===========================================================================*/
 
 void mem_init()
 {
@@ -57,10 +61,10 @@ void mem_init()
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
-		// set value of page_s members in current zone and corresponding bit in page bit map
+		// set value of Page_s members in current zone and corresponding bit in page bit map
 		for( j = pg_start_idx; j < pg_end_idx; j++)
 		{
-			page_s *pg_curr = &mem_info.pages[j];
+			Page_s *pg_curr = &mem_info.pages[j];
 			pg_curr->zone_belonged	= mz_curr;
 			pg_curr->page_start_addr = (phy_addr)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
@@ -75,7 +79,7 @@ void mem_init()
 	mem_info.memzone_total_nr	= zone_count;
 	mem_info.page_total_nr		= page_count;
 
-	// set kernel used page_s in right status
+	// set kernel used Page_s in right status
 	// map physical pages for kernel
 	phy_addr k_phy_pgbase = 0;
 	vir_addr k_vir_pgbase = (vir_addr)phy2vir(0);
@@ -96,30 +100,29 @@ void mem_init()
 	}
 }
 
-page_s * page_alloc(void)
+Page_s * page_alloc(void)
 {
 	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, mem_info.page_total_nr);
 	bm_set_bit(mem_info.page_bitmap, freepage_idx);
-	page_s * ret_page = &mem_info.pages[freepage_idx];
+	Page_s * ret_page = &mem_info.pages[freepage_idx];
 	ret_page->ref_count++;
 	return ret_page;
 }
 
-void page_ref(page_s * page)
+void page_free(Page_s * page_p)
 {
-
-}
-
-void page_free(page_s * page)
-{
-	unsigned long page_idx = (unsigned long)page->page_start_addr / CONFIG_PAGE_SIZE;
+	unsigned long page_idx = (unsigned long)page_p->page_start_addr / CONFIG_PAGE_SIZE;
 	bm_clear_bit(mem_info.page_bitmap, page_idx);
-	page->attr = 0;
-	page->ref_count = 0;
+	page_p->attr = 0;
+	page_p->ref_count = 0;
 
-	page->zone_belonged->page_total_ref--;
-	page->zone_belonged->page_free_nr++;
+	page_p->zone_belonged->page_total_ref--;
+	page_p->zone_belonged->page_free_nr++;
 }
+
+/*===========================================================================*
+ *					fuction relate to alloc virtual memory					 *
+ *===========================================================================*/
 
 void slab_init()
 {
@@ -131,26 +134,130 @@ void slab_init()
 		scgp->obj_size = SLAB_SIZE_BASE << i;
 		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
+		// init 3 status of slab list
 		scgp->normal_slab = bsp;
+		scgp->nslab_count = 1;
+		scgp->nsobj_free_count = obj_nr;
+
+		scgp->dma_slab = NULL;
+		scgp->dslab_count = 0;
+		scgp->dsobj_free_count = 0;
+
+		// init the basic slab
+		list_init(&bsp->slab_list);
 		bsp->colormap = (bitmap_t *)(kparam.kernel_vir_end + 0x10);
 		kparam.kernel_vir_end += cm_size + 0x10;
+		bsp->slabcache_ptr = scgp;
 		bsp->free =
 		bsp->total = obj_nr;
-
-		list_init(&bsp->list);
 		bsp->vir_addr = (vir_addr)base_slab_page[i];
+		bsp->page->attr |= PG_Slab;
 		int pg_idx = (uint64_t)vir2phy(bsp->vir_addr) / CONFIG_PAGE_SIZE;
 		bsp->page = &mem_info.pages[pg_idx];
+		bsp->page->slab_ptr = bsp;
 	}
 	kparam.kernel_vir_end += 0x10;
 }
 
-Slab_s * alloc_slab()
+Slab_s * slab_alloc(size_t obj_count)
 {
+	Page_s * pg = page_alloc();
+	if (!(pg->attr & PG_PTable_Maped))
+		pg_domap(phy2vir(pg->page_start_addr), pg->page_start_addr, 0);
+	
+	pg->attr |= PG_Slab;
+	Slab_s * sp = (Slab_s *)kmalloc(sizeof(Slab_s));
+	sp->page = pg;
+	pg->slab_ptr = sp;
+	sp->colormap = (bitmap_t *)kmalloc(obj_count / sizeof(bitmap_t));
+	sp->total =
+	sp->free = obj_count;
+	sp->vir_addr = phy2vir(pg->page_start_addr);
+	list_init(&sp->slab_list);
 
+	return sp;
 }
 
-void free_slab(Slab_s * slab)
+void slab_free(Slab_s * slp)
 {
+	kfree(slp->colormap);
+	slp->page->attr &= ~PG_Slab;
+	slp->page->slab_ptr = NULL;
+	list_delete(&slp->slab_list);
 
+	kfree(slp);
+}
+
+void * kmalloc(size_t size)
+{
+	if (size > CONST_1M)
+	{
+		color_printk(RED, WHITE, "Mem required too big\n");
+		while (1);
+	}
+
+	void * ret_val = NULL;
+	// find suitable slab group
+	int sc_idx = 1;
+	while(size >> sc_idx)
+	{
+		sc_idx++;
+	}
+	sc_idx -= 5;
+
+	// find a usable slab
+	Slab_Cache_s * scgp = &slab_cache_groups[sc_idx];
+	Slab_s * slp = scgp->normal_slab;
+	while (slp->free == 0)
+	{
+		List_s * next = list_get_next(&slp->slab_list);
+		slp = container_of(&slp->slab_list, Slab_s, slab_list);
+	}
+	// count the virtual addr of suitable object
+	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, slp->total);
+	size_t offset = scgp->obj_size * obj_idx;
+	ret_val = (void *)((size_t)slp->vir_addr + offset);
+	// refresh status of slab
+	slp->free--;
+	scgp->nsobj_free_count--;
+	bm_set_bit(slp->colormap, obj_idx);
+	// assure usable memory more than one page
+	if (scgp->nsobj_free_count < slp->total)
+	{
+		scgp->nsobj_free_count += slp->total;
+		Slab_s * new_slab = slab_alloc(slp->total);
+		if (new_slab == NULL)
+		{
+			color_printk(RED, WHITE, "Alloc new slab failed!\n");
+			scgp->nsobj_free_count -= slp->total;
+			while (1);
+		}
+		new_slab->slabcache_ptr = scgp;
+		list_insert_back(&new_slab->slab_list, &scgp->normal_slab->slab_list);
+		scgp->nslab_count++;
+		scgp->nsobj_free_count += slp->total;
+	}
+	
+	return ret_val;
+}
+
+void kfree(void * obj_p)
+{
+	phy_addr pg_addr = vir2phy((vir_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
+	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
+	Page_s * pgp = &mem_info.pages[pg_idx];
+	Slab_s * slp = pgp->slab_ptr;
+	Slab_Cache_s * scgp = slp->slabcache_ptr;
+	unsigned long obj_idx = (obj_p - slp->vir_addr) / scgp->obj_size;
+	bm_clear_bit(slp->colormap, obj_idx);
+	slp->free++;
+	scgp->nsobj_free_count++;
+	if ((slp->free == slp->total) &&
+		(scgp->nsobj_free_count >= (slp->total * 3)) &&
+		(slp != scgp->normal_slab))
+	{
+		slab_free(slp);
+		scgp->nslab_count--;
+		scgp->nsobj_free_count -= slp->total;
+	}
 }

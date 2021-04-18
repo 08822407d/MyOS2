@@ -17,7 +17,13 @@ void kmain(void)
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 	
 	// int i = 1 / 0;
-	init_proc0();
+	// init_proc0();
+
+	void * testp = kmalloc(60);
+	unsigned long * atestp = (unsigned long *)testp;
+	*atestp = 0x123456789abcdef;
+	*(atestp + 2) = 0xfedcba987654321;
+	kfree(testp);
 
     while(1){};
 }

@@ -3,9 +3,9 @@
 
 #include <sys/types.h>
 	// bitmap.c
-	void bm_set_bit(bitmap_t *, unsigned long);
-	void bm_clear_bit(bitmap_t *, unsigned long);
-	unsigned long bm_get_freebit_idx(bitmap_t *, unsigned long);
+	void bm_set_bit(bitmap_t *, unsigned long idx);
+	void bm_clear_bit(bitmap_t *, unsigned long idx);
+	unsigned long bm_get_freebit_idx(bitmap_t *, unsigned long limit);
 
 	#define container_of(member_ptr, container_type, member_name)									\
 	({																		\
@@ -19,12 +19,12 @@
 		struct List * prev;
 		struct List * next;
 	} List_s;
-	void list_init(List_s *);
-	List_s * get_prev(List_s *);
-	List_s * get_next(List_s *);
-	void list_insert_front(List_s *, List_s *);
-	void list_insert_back(List_s *, List_s *);
-	void list_delete(List_s *);
+	void list_init(List_s * src);
+	List_s * list_get_prev(List_s * src);
+	List_s * list_get_next(List_s * src);
+	void list_insert_front(List_s * src, List_s * dst);
+	void list_insert_back(List_s * src, List_s * dst);
+	void list_delete(List_s * src);
 	
 
 #endif /* _LIB_UTILS_H_ */

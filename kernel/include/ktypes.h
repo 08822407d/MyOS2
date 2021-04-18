@@ -2,6 +2,9 @@
 #define _K_TYPES_H_
 
 #include <sys/types.h>
+#include <sys/cdefs.h>
+#include <lib/utils.h>
+
 #include "../arch/amd64/include/archconst.h"
 #include "../arch/amd64/include/multiboot2.h"
 
@@ -10,6 +13,8 @@
 	typedef void*	phy_addr;
 	typedef void*	vir_addr;
 
+	struct  Slab;
+	typedef struct Slab Slab_s;
 	/* for page management */
 	typedef struct Page
 	{
@@ -19,7 +24,9 @@
 		unsigned long	attr;
 		unsigned long	ref_count;
 		unsigned long	age;
-	} page_s;
+
+		Slab_s *		slab_ptr;
+	} Page_s;
 
 	typedef struct MemZone
 	{
@@ -48,5 +55,32 @@
 		struct MemZone	memzones[MAXMEMZONE];
 		unsigned long	memzone_total_nr;	
 	} memory_info_s;
+
+	struct Slab_Cache;
+	typedef struct Slab_Cache Slab_Cache_s;
+	typedef struct Slab
+	{
+		List_s 			slab_list;
+		Slab_Cache_s *	slabcache_ptr;
+		unsigned long	total;
+		unsigned long	free;
+		vir_addr		vir_addr;
+		Page_s *		page;
+		bitmap_t *		colormap;
+	} Slab_s;
+
+	typedef struct Slab_Cache
+	{
+		List_s			list;
+		unsigned long	obj_size;
+
+		unsigned long	nslab_count;
+		Slab_s *		normal_slab;
+		unsigned long	nsobj_free_count;
+
+		unsigned long	dslab_count;
+		Slab_s *		dma_slab;
+		unsigned long	dsobj_free_count;
+	} Slab_Cache_s;
 	
 #endif /* _K_TYPES_H_ */

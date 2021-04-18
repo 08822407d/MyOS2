@@ -163,7 +163,7 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 	*tsk_new = *tsk_curr;
 
 	list_init(&tsk_new->PCB_list);
-	list_insert_front(&tsk_curr->PCB_list, &tsk_new->PCB_list);
+	list_insert_front(&tsk_new->PCB_list, &tsk_curr->PCB_list);
 	tsk_new->pid++;	
 	tsk_new->state = TASK_UNINTERRUPTABLE;
 

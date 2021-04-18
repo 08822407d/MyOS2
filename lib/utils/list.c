@@ -3,42 +3,42 @@
 #include <lib/utils.h>
 #include <lib/stddef.h>
 
-void list_init(List_s * current)
+void list_init(List_s * src)
 {
-	current->prev = current;
-	current->next = current;
+	src->prev = src;
+	src->next = src;
 }
 
-inline __always_inline List_s * get_prev(List_s * current)
+inline __always_inline List_s * list_get_prev(List_s * src)
 {
-	return current->prev;
+	return src->prev;
 }
 
-inline __always_inline List_s * get_next(List_s * current)
+inline __always_inline List_s * list_get_next(List_s * src)
 {
-	return current->next;
+	return src->next;
 }
 
-void list_insert_front(List_s * curr, List_s * new)
+void list_insert_front(List_s * src, List_s * dst)
 {
-	new->next = curr;
-	new->prev = curr->prev;
+	src->next = dst;
+	src->prev = dst->prev;
 
-	new->next->prev = new;
-	new->prev->next = new;
+	src->next->prev = src;
+	src->prev->next = src;
 }
 
-void list_insert_back(List_s * curr, List_s * new)
+void list_insert_back(List_s * src, List_s * dst)
 {
-	new->next = curr->next;
-	new->prev = curr;
+	src->next = dst->next;
+	src->prev = dst;
 
-	new->next->prev = new;
-	new->prev->next = new;
+	src->next->prev = src;
+	src->prev->next = src;
 }
 
-void list_delete(List_s * curr)
+void list_delete(List_s * src)
 {
-	curr->prev->next = curr->next;
-	curr->next->prev = curr->prev;
+	src->prev->next = src->next;
+	src->next->prev = src->prev;
 }

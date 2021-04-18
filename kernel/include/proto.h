@@ -15,8 +15,10 @@
 	/* memory.c */
 	void mem_init(void);
 	void slab_init();
-	page_s * page_alloc(void);
-	void page_free(page_s *);
+	Page_s * page_alloc(void);
+	void page_free(Page_s *);
+	void * kmalloc(size_t size);
+	void kfree(void * obj_p);
 
 	/* video.c */
 	void video_init(void);
