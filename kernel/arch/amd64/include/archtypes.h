@@ -36,42 +36,42 @@
 	/* 64bit version segdesc for common segment */
 
 	typedef struct __attribute__((packed)) {
-		uint16_t			: 16; // unused
-		uint32_t			: 24; // unused
-		uint8_t		Type	: 4;
-		uint8_t		Sflag	: 1; // 0=system seg, 1=common seg
-		uint8_t		DPL		: 2;
-		uint8_t		Pflag	: 1; // segment present
-		uint8_t				: 5; // unused
-		uint8_t 	Lflag	: 1; // 0=dataseg, 1=codeseg
-		uint16_t			: 10; // unused
+		uint64_t			: 16, // unused
+							: 24, // unused
+					Type	: 4,
+					Sflag	: 1, // 0=system seg, 1=common seg
+					DPL		: 2,
+					Pflag	: 1, // segment present
+							: 5, // unused
+					Lflag	: 1, // 0=dataseg, 1=codeseg
+							: 10; // unused
 	} segdesc64_s;
 
 	/* 64bit version segdesc for TSS segment */
 	typedef struct  __attribute__((packed)) {
-		uint16_t	Limit1	: 16;
-		uint32_t	Base1	: 24;
-		uint8_t		Type	: 4;
-		uint8_t				: 1; // Sflag must be 0
-		uint8_t		DPL		: 2;
-		uint8_t		Pflag	: 1;
-		uint8_t		Limit2	: 4;
-		uint8_t		AVL		: 1;
-		uint8_t				: 3; // unused
+		uint64_t	Limit1	: 16,
+					Base1	: 24,
+					Type	: 4,
+							: 1, // Sflag must be 0
+					DPL		: 2,
+					Pflag	: 1,
+					Limit2	: 4,
+					AVL		: 1,
+							: 3; // unused
 		uint64_t	Base2	: 40;
 		uint32_t			: 32; // unused
 	} TSSsegdesc_s;
 
 	/* 64bit version segdesc for gate */
 	typedef struct __attribute__((packed)) {
-		uint16_t	offs1	: 16;
-		uint16_t	segslct	: 16;
-		uint8_t		IST		: 3;
-		uint8_t				: 5; // unused
-		uint8_t		Type	: 4;
-		uint8_t				: 1; // Sflag must be 0
-		uint8_t		DPL		: 2;
-		uint8_t		Present	: 1;
+		uint64_t	offs1	: 16,
+					segslct	: 16,
+					IST		: 3,
+							: 5, // unused
+					Type	: 4,
+							: 1, // Sflag must be 0
+					DPL		: 2,
+					Present	: 1;
 		uint64_t	offs2	: 48;
 		uint32_t			: 32; // unused
 	} gatedesc64_s;
@@ -90,36 +90,36 @@
 	/* 64bit version TSS */
 	typedef struct __attribute__((packed)) {
 		uint32_t			: 32; // unused
-		uint64_t	rsp0	: 64;
-		uint64_t	rsp1	: 64;
-		uint64_t	rsp2	: 64;
-		uint64_t			: 64; // unused
-		uint64_t	ist1	: 64;
-		uint64_t	ist2	: 64;
-		uint64_t	ist3	: 64;
-		uint64_t	ist4	: 64;
-		uint64_t	ist5	: 64;
-		uint64_t	ist6	: 64;
-		uint64_t	ist7	: 64;
-		uint64_t			: 64; // unused
-		uint32_t			: 32; // unused
-		uint32_t	iobm	: 32;
+		reg_t		rsp0	: 64;
+		reg_t		rsp1	: 64;
+		reg_t		rsp2	: 64;
+		reg_t				: 64; // unused
+		reg_t		ist1	: 64;
+		reg_t		ist2	: 64;
+		reg_t		ist3	: 64;
+		reg_t		ist4	: 64;
+		reg_t		ist5	: 64;
+		reg_t		ist6	: 64;
+		reg_t		ist7	: 64;
+		reg_t				: 64; // unused
+		uint64_t			: 32, // unused
+					iobm	: 32;
 	} tss64_s;
 
 /*===========================================================================*
  *								page structs								 *
  *===========================================================================*/
 	typedef struct __attribute__((packed)) {
-		uint8_t		Pflag	: 1;
-		uint8_t		RWflag	: 1;
-		uint8_t		USflag	: 1;
-		uint8_t		PWTflag	: 1;
-		uint8_t		PCDflag	: 1;
-		uint8_t 	Aflag	: 1;
-		uint8_t				: 6;
-		uint64_t	PHYADDR	: 36;
-		uint16_t			: 15;
-		uint8_t		XDflag	: 1;
+		uint64_t	Pflag	: 1,
+					RWflag	: 1,
+					USflag	: 1,
+					PWTflag	: 1,
+					PCDflag	: 1,
+					Aflag	: 1,
+							: 6,
+					PHYADDR	: 36,
+							: 15,
+					XDflag	: 1;
 	} PML4E;
 	// typedef struct __attribute__((packed)) {
 	// 	uint8_t		Pflag	: 1;
@@ -147,19 +147,19 @@
 	// } PML4E_u;
 	
 	typedef struct __attribute__((packed)) {
-		uint8_t		Pflag	: 1;
-		uint8_t		RWflag	: 1;
-		uint8_t		USflag	: 1;
-		uint8_t		PWTflag	: 1;
-		uint8_t		PCDflag	: 1;
-		uint8_t 	Aflag	: 1;
-		uint8_t		Dflag	: 1;
-		uint8_t		PATflag	: 1;
-		uint8_t		Gflag	: 1;
-		uint8_t				: 3;
-		uint64_t	PHYADDR	: 36;
-		uint16_t			: 15;
-		uint8_t		XDflag	: 1;
+		uint16_t	Pflag	: 1,
+					RWflag	: 1,
+					USflag	: 1,
+					PWTflag	: 1,
+					PCDflag	: 1,
+				 	Aflag	: 1,
+					Dflag	: 1,
+					PATflag	: 1,
+					Gflag	: 1,
+							: 3;
+		uint64_t	PHYADDR	: 36,
+							: 15,
+					XDflag	: 1;
 	} PDPTE;
 	typedef PDPTE PDE;
 	typedef PDPTE PTE;

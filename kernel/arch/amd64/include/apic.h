@@ -83,7 +83,7 @@
 	LVT
 */
 
-typedef struct APIC_LVT
+typedef struct __attribute__((packed))
 {
 	uint32_t	vector			:8,		//0~7	ALL
 				deliver_mode	:3,		//8~10	      CMCI LINT0 LINT1 PerformCounter ThermalSensor
@@ -95,13 +95,13 @@ typedef struct APIC_LVT
 				mask			:1,		//16	ALL
 				timer_mode		:2,		//17~18	Timer
 				res_2			:13;	//19~31
-} apic_lvt_s __attribute__((packed));
+} apic_lvt_s;
 
 /*
 	ICR
 */
 
-typedef struct INTCMD_reg
+typedef struct __attribute__((packed))
 {
 	uint32_t	vector			:8,		//0~7
 				deliver_mode	:3,		//8~10
@@ -123,13 +123,13 @@ typedef struct INTCMD_reg
 		uint32_t	x2apic_dst;			//32~63
 		} dst;
 		
-} intcmd_reg_s __attribute__((packed));
+} intcmd_reg_s;
 
 /*
 	RTE
 */
 
-typedef struct IOAPIC_retentry
+typedef struct __attribute__((packed))
 {
 	uint32_t	vector			:8,		//0~7
 				deliver_mode	:3,		//8~10
@@ -153,7 +153,7 @@ typedef struct IOAPIC_retentry
 						logical_dest	:8;	//56~63
 			} logical;
 		} dst;
-} ioapic_retentry_s __attribute__((packed));
+} ioapic_retentry_s;
 
 /*
 
@@ -212,7 +212,7 @@ typedef struct IOAPIC_retentry
 #define APIC_IOAPIC_POLARITY_HIGH		0
 #define APIC_IOAPIC_POLARITY_LOW		1
 
-/typedef struct IOAPIC_map
+typedef struct IOAPIC_map
 {
 	phy_addr	phys_addr;
 	vir_addr	virt_idx_addr;

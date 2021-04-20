@@ -1,155 +1,156 @@
-/***************************************************
-*		版权声明
-*
-*	本操作系统名为：MINE
-*	该操作系统未经授权不得以盈利或非盈利为目的进行开发，
-*	只允许个人学习以及公开交流使用
-*
-*	代码最终所有权及解释权归田宇所有；
-*
-*	本模块作者：	田宇
-*	EMail:		345538255@qq.com
-*
-*
-***************************************************/
-#include "include/arch_proto.h"
-#include "include/apic.h"
+// /***************************************************
+// *		版权声明
+// *
+// *	本操作系统名为：MINE
+// *	该操作系统未经授权不得以盈利或非盈利为目的进行开发，
+// *	只允许个人学习以及公开交流使用
+// *
+// *	代码最终所有权及解释权归田宇所有；
+// *
+// *	本模块作者：	田宇
+// *	EMail:		345538255@qq.com
+// *
+// *
+// ***************************************************/
+// #include "include/arch_proto.h"
+// #include "include/apic.h"
 
-#include "../../include/ktypes.h"
+// #include "../../include/ktypes.h"
+// #include "../../include/printk.h"
 
-ioapic_map_s ioapic_map;
-/*
+// ioapic_map_s ioapic_map;
+// /*
 
-*/
+// */
 
-// void IOAPIC_enable(unsigned long irq)
-// {
-// 	unsigned long value = 0;
-// 	value = ioapic_rte_read((irq - 32) * 2 + 0x10);
-// 	value = value & (~0x10000UL); 
-// 	ioapic_rte_write((irq - 32) * 2 + 0x10,value);
-// }
+// // void IOAPIC_enable(unsigned long irq)
+// // {
+// // 	unsigned long value = 0;
+// // 	value = ioapic_rte_read((irq - 32) * 2 + 0x10);
+// // 	value = value & (~0x10000UL); 
+// // 	ioapic_rte_write((irq - 32) * 2 + 0x10,value);
+// // }
 
-// void IOAPIC_disable(unsigned long irq)
-// {
-// 	unsigned long value = 0;
-// 	value = ioapic_rte_read((irq - 32) * 2 + 0x10);
-// 	value = value | 0x10000UL; 
-// 	ioapic_rte_write((irq - 32) * 2 + 0x10,value);
-// }
+// // void IOAPIC_disable(unsigned long irq)
+// // {
+// // 	unsigned long value = 0;
+// // 	value = ioapic_rte_read((irq - 32) * 2 + 0x10);
+// // 	value = value | 0x10000UL; 
+// // 	ioapic_rte_write((irq - 32) * 2 + 0x10,value);
+// // }
 
-// unsigned long IOAPIC_install(unsigned long irq,void * arg)
-// {
-// 	struct IO_APIC_RET_entry *entry = (struct IO_APIC_RET_entry *)arg;
-// 	ioapic_rte_write((irq - 32) * 2 + 0x10,*(unsigned long *)entry);
+// // unsigned long IOAPIC_install(unsigned long irq,void * arg)
+// // {
+// // 	struct IO_APIC_RET_entry *entry = (struct IO_APIC_RET_entry *)arg;
+// // 	ioapic_rte_write((irq - 32) * 2 + 0x10,*(unsigned long *)entry);
 
-// 	return 1;
-// }
+// // 	return 1;
+// // }
 
-// void IOAPIC_uninstall(unsigned long irq)
-// {
-// 	ioapic_rte_write((irq - 32) * 2 + 0x10,0x10000UL);
-// }
+// // void IOAPIC_uninstall(unsigned long irq)
+// // {
+// // 	ioapic_rte_write((irq - 32) * 2 + 0x10,0x10000UL);
+// // }
 
-// void IOAPIC_level_ack(unsigned long irq)
-// {
-// 	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
-// 				"movq	$0x00,	%%rax	\n\t"
-// 				"movq 	$0x80b,	%%rcx	\n\t"
-// 				"wrmsr	\n\t"
-// 				:::"memory");
+// // void IOAPIC_level_ack(unsigned long irq)
+// // {
+// // 	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
+// // 				"movq	$0x00,	%%rax	\n\t"
+// // 				"movq 	$0x80b,	%%rcx	\n\t"
+// // 				"wrmsr	\n\t"
+// // 				:::"memory");
 				
-// 	*ioapic_map.virtual_EOI_address = irq;
-// }
+// // 	*ioapic_map.virtual_EOI_address = irq;
+// // }
 
-// void IOAPIC_edge_ack(unsigned long irq)
-// {
-// 	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
-// 				"movq	$0x00,	%%rax	\n\t"
-// 				"movq 	$0x80b,	%%rcx	\n\t"
-// 				"wrmsr	\n\t"
-// 				:::"memory");
-// }
+// // void IOAPIC_edge_ack(unsigned long irq)
+// // {
+// // 	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
+// // 				"movq	$0x00,	%%rax	\n\t"
+// // 				"movq 	$0x80b,	%%rcx	\n\t"
+// // 				"wrmsr	\n\t"
+// // 				:::"memory");
+// // }
 
-// /*
+// // /*
 
-// */
+// // */
 
-// unsigned long ioapic_rte_read(unsigned char index)
-// {
-// 	unsigned long ret;
+// // unsigned long ioapic_rte_read(unsigned char index)
+// // {
+// // 	unsigned long ret;
 
-// 	*ioapic_map.virtual_index_address = index + 1;
-// 	io_mfence();
-// 	ret = *ioapic_map.virtual_data_address;
-// 	ret <<= 32;
-// 	io_mfence();
+// // 	*ioapic_map.virtual_index_address = index + 1;
+// // 	io_mfence();
+// // 	ret = *ioapic_map.virtual_data_address;
+// // 	ret <<= 32;
+// // 	io_mfence();
 
-// 	*ioapic_map.virtual_index_address = index;		
-// 	io_mfence();
-// 	ret |= *ioapic_map.virtual_data_address;
-// 	io_mfence();
+// // 	*ioapic_map.virtual_index_address = index;		
+// // 	io_mfence();
+// // 	ret |= *ioapic_map.virtual_data_address;
+// // 	io_mfence();
 
-// 	return ret;
-// }
+// // 	return ret;
+// // }
 
-// /*
+// // /*
 
-// */
+// // */
 
-// void ioapic_rte_write(unsigned char index,unsigned long value)
-// {
-// 	*ioapic_map.virtual_index_address = index;
-// 	io_mfence();
-// 	*ioapic_map.virtual_data_address = value & 0xffffffff;
-// 	value >>= 32;
-// 	io_mfence();
+// // void ioapic_rte_write(unsigned char index,unsigned long value)
+// // {
+// // 	*ioapic_map.virtual_index_address = index;
+// // 	io_mfence();
+// // 	*ioapic_map.virtual_data_address = value & 0xffffffff;
+// // 	value >>= 32;
+// // 	io_mfence();
 	
-// 	*ioapic_map.virtual_index_address = index + 1;
-// 	io_mfence();
-// 	*ioapic_map.virtual_data_address = value & 0xffffffff;
-// 	io_mfence();
+// // 	*ioapic_map.virtual_index_address = index + 1;
+// // 	io_mfence();
+// // 	*ioapic_map.virtual_data_address = value & 0xffffffff;
+// // 	io_mfence();
+// // }
+
+// // /*
+
+// // */
+
+// void IOAPIC_pagetable_remap()
+// {
+// 	unsigned long * tmp;
+// 	vir_addr IOAPIC_addr = (size_t *)phy2vir((phy_addr)0xfec00001);
+
+// 	ioapic_map.phys_addr = (phy_addr)0xfec00000;
+// 	ioapic_map.virt_idx_addr = IOAPIC_addr;
+// 	ioapic_map.virt_data_addr = (unsigned int *)(IOAPIC_addr + 0x10);
+// 	ioapic_map.virt_EOI_addr = (unsigned int *)(IOAPIC_addr + 0x40);
+	
+// 	// Global_CR3 = Get_gdt();
+
+// 	// tmp = Phy_To_Virt(Global_CR3 + (((unsigned long)IOAPIC_addr >> PAGE_GDT_SHIFT) & 0x1ff));
+// 	// if (*tmp == 0)
+// 	// {
+// 	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
+// 	// 	set_mpl4t(tmp,mk_mpl4t(Virt_To_Phy(virtual),PAGE_KERNEL_GDT));
+// 	// }
+
+// 	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)IOAPIC_addr >> PAGE_1G_SHIFT) & 0x1ff));
+// 	// if(*tmp == 0)
+// 	// {
+// 	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
+// 	// 	set_pdpt(tmp,mk_pdpt(Virt_To_Phy(virtual),PAGE_KERNEL_Dir));
+// 	// }
+
+// 	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)IOAPIC_addr >> PAGE_2M_SHIFT) & 0x1ff));
+// 	// set_pdt(tmp,mk_pdt(ioapic_map.physical_address,PAGE_KERNEL_Page | PAGE_PWT | PAGE_PCD));
+
+// 	// flush_tlb();
 // }
 
-// /*
+// // /*
 
-// */
-
-void IOAPIC_pagetable_remap()
-{
-	unsigned long * tmp;
-	vir_addr IOAPIC_addr = (size_t *)phy2vir(0xfec00000);
-
-	ioapic_map.phys_addr = (phy_addr)0xfec00000;
-	ioapic_map.virt_idx_addr = IOAPIC_addr;
-	ioapic_map.virt_data_addr = (unsigned int *)(IOAPIC_addr + 0x10);
-	ioapic_map.virt_EOI_addr = (unsigned int *)(IOAPIC_addr + 0x40);
-	
-	Global_CR3 = Get_gdt();
-
-	tmp = Phy_To_Virt(Global_CR3 + (((unsigned long)IOAPIC_addr >> PAGE_GDT_SHIFT) & 0x1ff));
-	if (*tmp == 0)
-	{
-		unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-		set_mpl4t(tmp,mk_mpl4t(Virt_To_Phy(virtual),PAGE_KERNEL_GDT));
-	}
-
-	tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)IOAPIC_addr >> PAGE_1G_SHIFT) & 0x1ff));
-	if(*tmp == 0)
-	{
-		unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-		set_pdpt(tmp,mk_pdpt(Virt_To_Phy(virtual),PAGE_KERNEL_Dir));
-	}
-
-	tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)IOAPIC_addr >> PAGE_2M_SHIFT) & 0x1ff));
-	set_pdt(tmp,mk_pdt(ioapic_map.physical_address,PAGE_KERNEL_Page | PAGE_PWT | PAGE_PCD));
-
-	flush_tlb();
-}
-
-// /*
-
-// */
+// // */
 
 // void Local_APIC_init()
 // {
@@ -299,76 +300,76 @@ void IOAPIC_pagetable_remap()
 // 	color_printk(GREEN,BLACK,"I/O APIC Redirection Table Entries Set Finished.\n");	
 // }
 
-// /*
+// // /*
 
-// */
+// // */
 
-void APIC_IOAPIC_init()
-{
-	//	init trap abort fault
-	int i ;
-	unsigned int x;
-	unsigned int * p;
-
-	IOAPIC_pagetable_remap();
-
-	// for(i = 32;i < 56;i++)
-	// {
-	// 	set_intr_gate(i , 2 , interrupt[i - 32]);
-	// }
-
-	// //mask 8259A
-	// color_printk(GREEN,BLACK,"MASK 8259A\n");
-	// io_out8(0x21,0xff);
-	// io_out8(0xa1,0xff);
-
-	// //enable IMCR
-	// io_out8(0x22,0x70);
-	// io_out8(0x23,0x01);	
-	
-	// //init local apic
-	// Local_APIC_init();
-
-	// //init ioapic
-	// IOAPIC_init();
-
-	// //get RCBA address
-	// io_out32(0xcf8,0x8000f8f0);
-	// x = io_in32(0xcfc);
-	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
-	// x = x & 0xffffc000;
-	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
-
-	// //get OIC address
-	// if(x > 0xfec00000 && x < 0xfee00000)
-	// {
-	// 	p = (unsigned int *)Phy_To_Virt(x + 0x31feUL);
-	// }
-
-	// //enable IOAPIC
-	// x = (*p & 0xffffff00) | 0x100;
-	// io_mfence();
-	// *p = x;
-	// io_mfence();
-
-	// memset(interrupt_desc,0,sizeof(irq_desc_T)*NR_IRQS);
-	
-	// //open IF eflages
-	// sti();
-}
-
-// /*
-
-// */
-
-// void do_IRQ(struct pt_regs * regs,unsigned long nr)	//regs:rsp,nr
+// void APIC_IOAPIC_init()
 // {
-// 	irq_desc_T * irq = &interrupt_desc[nr - 32];
+// 	//	init trap abort fault
+// 	int i ;
+// 	unsigned int x;
+// 	unsigned int * p;
 
-// 	if(irq->handler != NULL)
-// 		irq->handler(nr,irq->parameter,regs);
+// 	IOAPIC_pagetable_remap();
 
-// 	if(irq->controller != NULL && irq->controller->ack != NULL)
-// 		irq->controller->ack(nr);
+// 	// for(i = 32;i < 56;i++)
+// 	// {
+// 	// 	set_intr_gate(i , 2 , interrupt[i - 32]);
+// 	// }
+
+// 	// //mask 8259A
+// 	// color_printk(GREEN,BLACK,"MASK 8259A\n");
+// 	// io_out8(0x21,0xff);
+// 	// io_out8(0xa1,0xff);
+
+// 	// //enable IMCR
+// 	// io_out8(0x22,0x70);
+// 	// io_out8(0x23,0x01);	
+	
+// 	// //init local apic
+// 	// Local_APIC_init();
+
+// 	// //init ioapic
+// 	// IOAPIC_init();
+
+// 	// //get RCBA address
+// 	// io_out32(0xcf8,0x8000f8f0);
+// 	// x = io_in32(0xcfc);
+// 	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
+// 	// x = x & 0xffffc000;
+// 	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
+
+// 	// //get OIC address
+// 	// if(x > 0xfec00000 && x < 0xfee00000)
+// 	// {
+// 	// 	p = (unsigned int *)Phy_To_Virt(x + 0x31feUL);
+// 	// }
+
+// 	// //enable IOAPIC
+// 	// x = (*p & 0xffffff00) | 0x100;
+// 	// io_mfence();
+// 	// *p = x;
+// 	// io_mfence();
+
+// 	// memset(interrupt_desc,0,sizeof(irq_desc_T)*NR_IRQS);
+	
+// 	// //open IF eflages
+// 	// sti();
 // }
+
+// // /*
+
+// // */
+
+// // void do_IRQ(struct pt_regs * regs,unsigned long nr)	//regs:rsp,nr
+// // {
+// // 	irq_desc_T * irq = &interrupt_desc[nr - 32];
+
+// // 	if(irq->handler != NULL)
+// // 		irq->handler(nr,irq->parameter,regs);
+
+// // 	if(irq->controller != NULL && irq->controller->ack != NULL)
+// // 		irq->controller->ack(nr);
+// // }
 
