@@ -77,3 +77,8 @@ inline __always_inline void wrmsr(uint64_t msr_addr,uint64_t value)
 						 :"d"(value >> 32),"a"(value & 0xffffffff),"c"(msr_addr)
 						 :"memory");	
 }
+
+inline __always_inline void io_mfence()
+{
+	__asm__ __volatile__("mfence	\n");
+}

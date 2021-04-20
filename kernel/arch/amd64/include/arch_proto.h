@@ -107,6 +107,19 @@ void i8259_unmask(const int);
 void i8259_mask(const int);
 void i8259_disable(void);
 void i8259_eoi(int);
+/* apic.c */
+unsigned long ioapic_rte_read(unsigned char index);
+void ioapic_rte_write(unsigned char index,unsigned long value);
+void IOAPIC_pagetable_remap(void);
+void APIC_IOAPIC_init(void);
+void Local_APIC_init(void);
+void IOAPIC_init(void);
+void IOAPIC_enable(unsigned long irq);
+void IOAPIC_disable(unsigned long irq);
+unsigned long IOAPIC_install(unsigned long irq,void * arg);
+void IOAPIC_uninstall(unsigned long irq);
+void IOAPIC_level_ack(unsigned long irq);
+void IOAPIC_edge_ack(unsigned long irq);
 
 /* port_io.c */
 uint64_t inb(uint16_t port);
@@ -117,6 +130,7 @@ void outw(uint16_t port, uint16_t value);
 void outl(uint16_t port, uint32_t value);
 uint64_t rdmsr(uint64_t msr_addr);
 void wrmsr(unsigned long msr_addr,unsigned long value);
+void io_mfence(void);
 // void intr_disable(void);
 // void intr_enable(void);
 
