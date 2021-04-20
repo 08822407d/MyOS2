@@ -15,6 +15,8 @@ void kmain(void)
 	video_init();
 	// clear screen
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
+
+	LAPIC_IOAPIC_init();
 	
 	// int i = 1 / 0;
 	init_proc0();

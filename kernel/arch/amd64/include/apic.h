@@ -160,13 +160,13 @@ typedef struct __attribute__((packed))
 */
 
 //delivery mode
-#define	APIC_ICR_IOAPIC_Fixed			0	//LAPIC	IOAPIC 	ICR
+#define	APIC_ICR_IOAPIC_Fixed			0	//	LAPIC	IOAPIC 	ICR
 #define	IOAPIC_ICR_Lowest_Priority		1	//	IOAPIC 	ICR
-#define	APIC_ICR_IOAPIC_SMI				2	//LAPIC	IOAPIC 	ICR
+#define	APIC_ICR_IOAPIC_SMI				2	//	LAPIC	IOAPIC 	ICR
 
-#define	APIC_ICR_IOAPIC_NMI				4	//LAPIC	IOAPIC 	ICR
-#define	APIC_ICR_IOAPIC_INIT			5	//LAPIC	IOAPIC 	ICR
-#define	ICR_Start_up					6	//		ICR
+#define	APIC_ICR_IOAPIC_NMI				4	//	LAPIC	IOAPIC 	ICR
+#define	APIC_ICR_IOAPIC_INIT			5	//	LAPIC	IOAPIC 	ICR
+#define	ICR_Start_up					6	//	ICR
 #define	IOAPIC_ExtINT					7	//	IOAPIC
 
 
@@ -215,7 +215,7 @@ typedef struct __attribute__((packed))
 typedef struct IOAPIC_map
 {
 	phy_addr	phys_addr;
-	vir_addr	virt_idx_addr;
+	uint8_t *	virt_idx_addr;
 	uint32_t *	virt_data_addr;
 	uint32_t *	virt_EOI_addr;
 } ioapic_map_s;

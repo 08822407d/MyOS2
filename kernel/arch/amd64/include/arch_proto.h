@@ -111,7 +111,7 @@ void i8259_eoi(int);
 unsigned long ioapic_rte_read(unsigned char index);
 void ioapic_rte_write(unsigned char index,unsigned long value);
 void IOAPIC_pagetable_remap(void);
-void APIC_IOAPIC_init(void);
+void LAPIC_IOAPIC_init(void);
 void Local_APIC_init(void);
 void IOAPIC_init(void);
 void IOAPIC_enable(unsigned long irq);
@@ -131,6 +131,9 @@ void outl(uint16_t port, uint32_t value);
 uint64_t rdmsr(uint64_t msr_addr);
 void wrmsr(unsigned long msr_addr,unsigned long value);
 void io_mfence(void);
+void get_cpuid(unsigned int Mop,unsigned int Sop,
+			   unsigned int * a,unsigned int * b,
+			   unsigned int * c,unsigned int * d);
 // void intr_disable(void);
 // void intr_enable(void);
 
