@@ -29,6 +29,8 @@ temp_reload_cs:
     popfq
     pushq   $0
 
+	callq	set_temp_PDE
+
     pushq   $ret_from_preinit
     movabsq $pre_init,	%rax
     pushq   $0x08
@@ -52,6 +54,16 @@ ret_from_kmain:
 hang:
     jmp     hang
 
+set_temp_PDE:
+	movq	$0x83,	%rax
+	movq	$__PDE,	%rdi
+	movq	$0x200,	%rcx
+l1:
+	movq	%rax,	(%rdi)
+	addq	$0x200000,	%rax
+	addq	$8,		%rdi
+	loop	l1
+	retq
 
 .data
 //=======	init page
@@ -126,7 +138,6 @@ GDT_Table:
 	.quad	0x0000000000000000			/*0	NULL descriptor		       	00*/
 	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
 	.quad	0x0000920000000000			/*2	KERNEL	Data	64-bit	Segment	10*/
-	.fill	125,8,0
 GDT_END:
 
 GDT_POINTER:
@@ -134,7 +145,7 @@ GDT_LIMIT:	.word	GDT_END - GDT_Table - 1
 GDT_BASE:	.quad	GDT_Table
 //=======	IDT_Table
 IDT_Table:
-	.fill  512,8,0
+	.fill  32,8,0
 IDT_END:
 
 IDT_POINTER:
