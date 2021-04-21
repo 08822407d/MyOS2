@@ -18,10 +18,11 @@ void video_init()
 	phy_addr phy_pg_base = framebuffer.FB_phybase;
 	vir_addr vir_pg_base = framebuffer.FB_virbase;
 
+	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 	int fb_pages = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
 	for (int i = 0; i < fb_pages; i++)
 	{
-		pg_domap(vir_pg_base, phy_pg_base, 0);
+		pg_domap(vir_pg_base, phy_pg_base, page_attr);
 		vir_pg_base += CONFIG_PAGE_SIZE;
 		phy_pg_base += CONFIG_PAGE_SIZE;
 	}

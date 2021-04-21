@@ -295,8 +295,8 @@ void prot_init(void)
 
 	pg_clear();
 	mem_init();
-	extern PML4E PML4[PGENT_NR];
-	pg_load_cr3(PML4);
+	extern PML4E_u KERN_PML4[PGENT_NR];
+	pg_load_cr3(KERN_PML4);
 
 	slab_init();
 	// prot_init_done = 1;

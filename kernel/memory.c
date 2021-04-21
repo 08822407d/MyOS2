@@ -83,14 +83,15 @@ void mem_init()
 	// map physical pages for kernel
 	phy_addr k_phy_pgbase = 0;
 	vir_addr k_vir_pgbase = (vir_addr)phy2vir(0);
+	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
 		// map lower mem
-		pg_domap(k_phy_pgbase, k_phy_pgbase, 0);
+		pg_domap(k_phy_pgbase, k_phy_pgbase, page_attr);
 		// map higher mem
-		pg_domap(k_vir_pgbase, k_phy_pgbase, 0);
+		pg_domap(k_vir_pgbase, k_phy_pgbase, page_attr);
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;

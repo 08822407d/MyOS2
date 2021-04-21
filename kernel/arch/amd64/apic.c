@@ -15,6 +15,7 @@
 #include <lib/string.h>
 
 #include "include/arch_proto.h"
+#include "include/archconst.h"
 #include "include/apic.h"
 
 #include "../../include/ktypes.h"
@@ -128,7 +129,8 @@ void IOAPIC_pagetable_remap()
 	ioapic_map.virt_data_addr = (unsigned int *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (unsigned int *)(IOAPIC_addr + 0x40);
 	
-	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, 0);
+	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
+	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr);
 }
 
 // /*

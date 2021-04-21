@@ -109,6 +109,18 @@
 /*===========================================================================*
  *								page structs								 *
  *===========================================================================*/
+	// typedef struct __attribute__((packed)) {
+	// 	uint64_t	Pflag	: 1,
+	// 				RWflag	: 1,
+	// 				USflag	: 1,
+	// 				PWTflag	: 1,
+	// 				PCDflag	: 1,
+	// 				Aflag	: 1,
+	// 						: 6,
+	// 				PHYADDR	: 36,
+	// 						: 15,
+	// 				XDflag	: 1;
+	// } PML4E;
 	typedef struct __attribute__((packed)) {
 		uint64_t	Pflag	: 1,
 					RWflag	: 1,
@@ -120,32 +132,37 @@
 					PHYADDR	: 36,
 							: 15,
 					XDflag	: 1;
-	} PML4E;
-	// typedef struct __attribute__((packed)) {
-	// 	uint8_t		Pflag	: 1;
-	// 	uint8_t		RWflag	: 1;
-	// 	uint8_t		USflag	: 1;
-	// 	uint8_t		PWTflag	: 1;
-	// 	uint8_t		PCDflag	: 1;
-	// 	uint8_t 	Aflag	: 1;
-	// 	uint8_t				: 6;
-	// 	uint64_t	PHYADDR	: 36;
-	// 	uint16_t			: 15;
-	// 	uint8_t		XDflag	: 1;
-	// } PML4E_defs_s;
-	// typedef struct __attribute__((packed)) {
-	// 	uint8_t		FLAGS	: 6;
-	// 	uint8_t				: 6;
-	// 	uint64_t	PHYADDR	: 36;
-	// 	uint16_t			: 15;
-	// 	uint8_t		XDflag	: 1;
-	// } PML4E_s;
-	// typedef union
-	// {
-	// 	PML4E_s			PML4E;
-	// 	PML4E_defs_s	PML4E_defs;
-	// } PML4E_u;
+	} PML4E_defs_s;
+	typedef struct __attribute__((packed)) {
+		uint64_t	FLAGS	: 6,
+							: 6,
+					PHYADDR	: 36,
+							: 15,
+					XDflag	: 1;
+	} PML4E_s;
+	typedef union
+	{
+		PML4E_s			PML4E;
+		PML4E_defs_s	PML4E_defs;
+	} PML4E_u;
 	
+	// typedef struct __attribute__((packed)) {
+	// 	uint16_t	Pflag	: 1,
+	// 				RWflag	: 1,
+	// 				USflag	: 1,
+	// 				PWTflag	: 1,
+	// 				PCDflag	: 1,
+	// 			 	Aflag	: 1,
+	// 				Dflag	: 1,
+	// 				PATflag	: 1,
+	// 				Gflag	: 1,
+	// 						: 3;
+	// 	uint64_t	PHYADDR	: 36,
+	// 						: 15,
+	// 				XDflag	: 1;
+	// } PDPTE;
+	// typedef PDPTE PDE;
+	// typedef PDPTE PTE;
 	typedef struct __attribute__((packed)) {
 		uint16_t	Pflag	: 1,
 					RWflag	: 1,
@@ -160,50 +177,33 @@
 		uint64_t	PHYADDR	: 36,
 							: 15,
 					XDflag	: 1;
-	} PDPTE;
-	typedef PDPTE PDE;
-	typedef PDPTE PTE;
-	// typedef struct __attribute__((packed)) {
-	// 	uint8_t		Pflag	: 1;
-	// 	uint8_t		RWflag	: 1;
-	// 	uint8_t		USflag	: 1;
-	// 	uint8_t		PWTflag	: 1;
-	// 	uint8_t		PCDflag	: 1;
-	// 	uint8_t 	Aflag	: 1;
-	// 	uint8_t		Dflag	: 1;
-	// 	uint8_t		PATflag	: 1;
-	// 	uint8_t		Gflag	: 1;
-	// 	uint8_t				: 3;
-	// 	uint64_t	PHYADDR	: 36;
-	// 	uint16_t			: 15;
-	// 	uint8_t		XDflag	: 1;
-	// } PDPTE_s;
-	// typedef PDPTE_s PDE_s;
-	// typedef PDPTE_s PTE_s;
-	// typedef struct __attribute__((packed)) {
-	// 	uint16_t	FLAGS	: 9;
-	// 	uint8_t				: 3;
-	// 	uint64_t	PHYADDR	: 36;
-	// 	uint16_t			: 15;
-	// 	uint8_t		XDflag	: 1;
-	// } PDPTE_defs_s;
-	// typedef PDPTE_defs_s PDE_defs_s;
-	// typedef PDPTE_defs_s PTE_defs_s;
-	// typedef union
-	// {
-	// 	PDPTE_s			PDPTE;
-	// 	PDPTE_defs_s	PDPTE_defs;
-	// } PDPTE_u;
-	// typedef union
-	// {
-	// 	PDE_s			PDE;
-	// 	PDE_defs_s		PDE_defs;
-	// } PDE_u;
-	// typedef union
-	// {
-	// 	PTE_s			PTE;
-	// 	PTE_defs_s		PTE_defs;
-	// } PTE_u;
+	} PDPTE_defs_s;
+	typedef PDPTE_defs_s PDE_defs_s;
+	typedef PDPTE_defs_s PTE_defs_s;
+	typedef struct __attribute__((packed)) {
+		uint64_t	FLAGS	: 9,
+							: 3,
+					PHYADDR	: 36,
+							: 15,
+					XDflag	: 1;
+	} PDPTE_s;
+	typedef PDPTE_s PDE_s;
+	typedef PDPTE_s PTE_s;
+	typedef union
+	{
+		PDPTE_s			PDPTE;
+		PDPTE_defs_s	PDPTE_defs;
+	} PDPTE_u;
+	typedef union
+	{
+		PDE_s			PDE;
+		PDE_defs_s		PDE_defs;
+	} PDE_u;
+	typedef union
+	{
+		PTE_s			PTE;
+		PTE_defs_s		PTE_defs;
+	} PTE_u;
 	
 
 
