@@ -177,18 +177,18 @@ void excep_intr_c_entry(stack_frame_s * sf)
 	// hardware interrupts
 	else
 	{
-		switch (vec)
-		{
-		case VECTOR(KEYBOARD_IRQ):
-			hwint_kbd(sf);
-			break;
+		// switch (vec)
+		// {
+		// case VECTOR(KEYBOARD_IRQ):
+		// 	hwint_kbd(sf);
+		// 	break;
 
-		default:
-			color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
-			break;
-		}
+		// default:
+		// 	color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
+		// 	break;
+		// }
 
-		int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
-		i8259_eoi(irq);
+		// int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
+		// i8259_eoi(irq);
 	}
 }

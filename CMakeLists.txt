@@ -23,9 +23,11 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
     set(ARCH aarch64)
 endif()
 
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} -m64")
+set(DEFINATIONS "-DDEBUG -DUSE_APIC")
+
+set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEFINATIONS} -m64")
 message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mcmodel=large \
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFINATIONS} -mcmodel=large \
                     -fno-builtin -fno-stack-protector -Wno-packed-bitfield-compat \
                     -nostartfiles -no-pie -ggdb -m64 -fPIC \
                     -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")

@@ -2,11 +2,13 @@
 #include <lib/assert.h>
 #include <sys/types.h>
 
-#include "../../include/param.h"
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
+#include "include/apic.h"
+
+#include "../../include/param.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
@@ -81,6 +83,34 @@ gate_table_s hwint_init_table[] = {
 	{ hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
 	{ hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
 	{ hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
+	{ NULL, 0, 0, 0}
+};
+
+gate_table_s apic_hwint_init_table[] = {
+	{ apic_hwint0 , VECTOR( 0), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-00" },
+	{ apic_hwint1 , VECTOR( 1), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-01" },
+	{ apic_hwint2 , VECTOR( 2), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-02" },
+	{ apic_hwint3 , VECTOR( 3), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-03" },
+	{ apic_hwint4 , VECTOR( 4), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-04" },
+	{ apic_hwint5 , VECTOR( 5), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-05" },
+	{ apic_hwint6 , VECTOR( 6), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-06" },
+	{ apic_hwint7 , VECTOR( 7), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-07" },
+	{ apic_hwint8 , VECTOR( 8), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-08" },
+	{ apic_hwint9 , VECTOR( 9), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-09" },
+	{ apic_hwint10, VECTOR(10), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-10" },
+	{ apic_hwint11, VECTOR(11), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-11" },
+	{ apic_hwint12, VECTOR(12), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-12" },
+	{ apic_hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-13" },
+	{ apic_hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-14" },
+	{ apic_hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-15" },
+	{ apic_hwint16, VECTOR(16), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-16" },
+	{ apic_hwint17, VECTOR(17), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-17" },
+	{ apic_hwint18, VECTOR(18), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-18" },
+	{ apic_hwint19, VECTOR(19), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-19" },
+	{ apic_hwint20, VECTOR(20), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-20" },
+	{ apic_hwint21, VECTOR(21), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-21" },
+	{ apic_hwint22, VECTOR(22), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-22" },
+	{ apic_hwint23, VECTOR(23), INTRGATE, KERN_PRIVILEGE, "APIC_IRQ-23" },
 	{ NULL, 0, 0, 0}
 };
 /*===========================================================================*
@@ -165,7 +195,7 @@ void init_idt()
 {
 	memset(idt, 0, sizeof(idt));
 
-	gate_table_s *gtbl;
+	gate_table_s * gtbl;
 	for ( gtbl = &(exception_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
@@ -181,7 +211,14 @@ void init_idt()
 
 		intr_name[gtbl->vec_nr] = gtbl->name;
 	}
-	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
+
+	gate_table_s * irq_tbl;
+	#ifndef USE_APIC
+		irq_tbl = &(hwint_init_table[0]);
+	#else
+		irq_tbl = &(apic_hwint_init_table[0]);
+	#endif
+	for ( gtbl = irq_tbl; gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits

@@ -224,12 +224,11 @@ LABEL(control_protection_exception)
 	EXCEPTION_ERR_CODE(CTRL_PROT_EXCEP_VEC)
 
 /*===========================================================================*/
-/*				hwint00 - 07				     */
+/*									hwint00 - 07						     */
 /*===========================================================================*/
 /* Note this is a macro, it just looks like a subroutine. */
 
 #define hwint_master(irq)	\
-	nop;		\
 	EXCEPTION_NO_ERR_CODE(irq + IRQ0_VEC);
 
 
@@ -267,10 +266,9 @@ ENTRY(hwint07)
 	hwint_master(7)
 
 /*===========================================================================*/
-/*				hwint08 - 15				     */
+/*								hwint08 - 15							     */
 /*===========================================================================*/
 #define hwint_slave(irq)	\
-	nop;		\
 	EXCEPTION_NO_ERR_CODE(irq + IRQ8_VEC);
 
 
@@ -306,6 +304,44 @@ ENTRY(hwint14)
 ENTRY(hwint15)
 /* Interrupt routine for irq 15 */
 	hwint_slave(15)
+
+/*===========================================================================*/
+/*									apic hwint							     */
+/*===========================================================================*/
+/* Note this is a macro, it just looks like a subroutine. */
+
+#define apic_hwint(irq)		\
+	ENTRY(apic_hwint##irq)	\
+	EXCEPTION_NO_ERR_CODE(irq + APIC_IRQ0_VEC);
+
+	apic_hwint(0)
+	apic_hwint(1)
+	apic_hwint(2)
+	apic_hwint(3)
+	apic_hwint(4)
+	apic_hwint(5)
+	apic_hwint(6)
+	apic_hwint(7)
+	apic_hwint(8)
+	apic_hwint(9)
+	apic_hwint(10)
+	apic_hwint(11)
+	apic_hwint(12)
+	apic_hwint(13)
+	apic_hwint(14)
+	apic_hwint(15)
+	apic_hwint(16)
+	apic_hwint(17)
+	apic_hwint(18)
+	apic_hwint(19)
+	apic_hwint(20)
+	apic_hwint(21)
+	apic_hwint(22)
+	apic_hwint(23)
+
+/*===========================================================================*/
+/*									thread func							     */
+/*===========================================================================*/
 
 ENTRY(kernel_thread_func)
 	popq	%rax

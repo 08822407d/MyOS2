@@ -18,8 +18,8 @@ void kmain(void)
 
 	LAPIC_IOAPIC_init();
 	
+	// init_proc0();
 	// int i = 1 / 0;
-	init_proc0();
 
 	// void * testp = kmalloc(60);
 	// unsigned long * atestp = (unsigned long *)testp;

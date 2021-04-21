@@ -12,6 +12,8 @@
 *
 *
 ***************************************************/
+#include <lib/string.h>
+
 #include "include/arch_proto.h"
 #include "include/apic.h"
 
@@ -143,14 +145,14 @@ void Local_APIC_init()
 	//void get_cpuid(unsigned int Mop,unsigned int Sop,unsigned int * a,unsigned int * b,unsigned int * c,unsigned int * d)
 
 	if((1<<9) & d)
-		color_printk(WHITE, BLACK, "Platform support APIC&xAPIC\t");
+		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
 	else
-		color_printk(WHITE, BLACK, "Platform NOT support APIC&xAPIC\t");
+		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
 	
 	if((1<<21) & c)
-		color_printk(WHITE, BLACK, "Platform support x2APIC\n");
+		color_printk(WHITE, BLACK, "x2APIC supported\n");
 	else
-		color_printk(WHITE, BLACK, "Platform NOT support x2APIC\n");
+		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
 
 	//enable xAPIC & x2APIC
 	__asm__ __volatile__(	"movq 	$0x1b,	%%rcx	\n\t"
@@ -295,49 +297,41 @@ void LAPIC_IOAPIC_init()
 
 	IOAPIC_pagetable_remap();
 
-	// for(i = 32;i < 56;i++)
-	// {
-	// 	set_intr_gate(i , 2 , interrupt[i - 32]);
-	// }
+	i8259_disable();
 
-	// //mask 8259A
-	// color_printk(GREEN,BLACK,"MASK 8259A\n");
-	// io_out8(0x21,0xff);
-	// io_out8(0xa1,0xff);
-
-	// //enable IMCR
-	// io_out8(0x22,0x70);
-	// io_out8(0x23,0x01);	
+	//enable IMCR
+	outb(0x22,0x70);
+	outb(0x23,0x01);	
 	
-	// //init local apic
-	// Local_APIC_init();
+	//init local apic
+	Local_APIC_init();
 
-	// //init ioapic
-	// IOAPIC_init();
+	//init ioapic
+	IOAPIC_init();
 
-	// //get RCBA address
-	// io_out32(0xcf8,0x8000f8f0);
-	// x = io_in32(0xcfc);
-	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
-	// x = x & 0xffffc000;
-	// color_printk(RED,BLACK,"Get RCBA Address:%#010x\n",x);	
+	//get RCBA address
+	outl(0xcf8,0x8000f8f0);
+	x = inl(0xcfc);
+	color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
+	x = x & 0xffffc000;
+	color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
 
-	// //get OIC address
-	// if(x > 0xfec00000 && x < 0xfee00000)
-	// {
-	// 	p = (unsigned int *)Phy_To_Virt(x + 0x31feUL);
-	// }
+	//get OIC address
+	if(x > 0xfec00000 && x < 0xfee00000)
+	{
+		p = (unsigned int *)phy2vir((phy_addr)(x + 0x31feUL));
+	}
 
-	// //enable IOAPIC
-	// x = (*p & 0xffffff00) | 0x100;
-	// io_mfence();
-	// *p = x;
-	// io_mfence();
-
-	// memset(interrupt_desc,0,sizeof(irq_desc_T)*NR_IRQS);
+	//enable IOAPIC
+	color_printk(BLACK, WHITE, "p = %#016x\n", p);
+	x = (*p & 0xffffff00) | 0x100;
+	color_printk(BLACK, WHITE, "-- %d --\n", __LINE__);
+	io_mfence();
+	*p = x;
+	io_mfence();
 	
-	// //open IF eflages
-	// sti();
+	//open IF eflages
+	__asm__("sti	\n");
 }
 
 // /*
