@@ -2,7 +2,7 @@
 
 if [ "$(uname)" == "Darwin" ]; then
     echo "Working on MAC"
-    # hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount myos_vdisk-flat.vmdk
+    # hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount ../myos_vdisk-flat.vmdk
     x86_64-elf-objcopy --only-keep-debug system kernel.debug
     x86_64-elf-objcopy -S -R ".eh_frame" -R ".comment" -R ".note.gnu.build-id" -I elf64-x86-64 -O binary system kernel.bin
     sudo mount -t msdos /dev/disk2s1 /Users/cheyuho/mount
