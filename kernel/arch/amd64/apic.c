@@ -324,15 +324,15 @@ void LAPIC_IOAPIC_init()
 		p = (unsigned int *)phy2vir((phy_addr)(x + 0x31feUL));
 	}
 
-	//enable IOAPIC
-	color_printk(BLACK, WHITE, "p = %#016x\n", p);
+	// enable IOAPIC
+	color_printk(BLACK, WHITE, "In line: %d, p = %#016x\n", __LINE__, p);
 	x = (*p & 0xffffff00) | 0x100;
 	color_printk(BLACK, WHITE, "-- %d --\n", __LINE__);
 	io_mfence();
 	*p = x;
 	io_mfence();
 	
-	//open IF eflages
+	// open IF eflages
 	__asm__("sti	\n");
 }
 

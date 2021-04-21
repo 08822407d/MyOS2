@@ -1,5 +1,3 @@
-/* Interrupt numbers and hardware vectors. */
-
 #ifndef _INTERRUPT_H_
 #define _INTERRUPT_H_
 
