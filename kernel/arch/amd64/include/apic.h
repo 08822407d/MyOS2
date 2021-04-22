@@ -245,6 +245,9 @@
 	void apic_hwint22(void);
 	void apic_hwint23(void);
 
-	// void do_IRQ(stack_frame_s * regs, unsigned long nr);
+	uint64_t ioapic_rte_read(uint8_t index);
+	void ioapic_rte_write(uint8_t index, uint64_t value);
+	void apic_do_irq(stack_frame_s * sf_regs);
+	// void do_IRQ(stack_frame_s * sf_regs, unsigned long nr);
 
 #endif

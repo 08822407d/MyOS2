@@ -112,12 +112,13 @@ void i8259_unmask(const int);
 void i8259_mask(const int);
 void i8259_disable(void);
 void i8259_eoi(int);
+void i8259_do_irq(stack_frame_s * sf_regs);
 /* apic.c */
 unsigned long ioapic_rte_read(unsigned char index);
 void ioapic_rte_write(unsigned char index,unsigned long value);
 void IOAPIC_pagetable_remap(void);
 void LAPIC_IOAPIC_init(void);
-void Local_APIC_init(void);
+void LAPIC_init(void);
 void IOAPIC_init(void);
 void IOAPIC_enable(unsigned long irq);
 void IOAPIC_disable(unsigned long irq);
@@ -125,6 +126,7 @@ unsigned long IOAPIC_install(unsigned long irq,void * arg);
 void IOAPIC_uninstall(unsigned long irq);
 void IOAPIC_level_ack(unsigned long irq);
 void IOAPIC_edge_ack(unsigned long irq);
+void apic_do_irq(stack_frame_s * sf_regs);
 
 /* port_io.c */
 uint64_t inb(uint16_t port);
@@ -143,8 +145,8 @@ void get_cpuid(unsigned int Mop,unsigned int Sop,
 // void intr_enable(void);
 
 /* arch_proc.c */
-unsigned long do_execve(stack_frame_s * sf);
-unsigned long do_fork(stack_frame_s * regs,
+unsigned long do_execve(stack_frame_s * sf_regs);
+unsigned long do_fork(stack_frame_s * sf_regs,
 						unsigned long clone_flags,
 						unsigned long stack_start,
 						unsigned long stack_size);
@@ -152,7 +154,10 @@ int sys_call(int syscall_nr);
 int do_syscall(int syscall_nr);
 
 /* interrupt.c */
-void do_exception_entry(stack_frame_s * sf);
-void do_hwint_irq_entry(stack_frame_s * sf);
+void do_exception_entry(stack_frame_s * sf_regs);
+void do_hwint_irq_entry(stack_frame_s * sf_regs);
+
+/* keyboard.c */
+void hwint_kbd(stack_frame_s * sf_regs);
 
 #endif /* _AMD64_PROTO_H_ */

@@ -24,16 +24,16 @@ void init_i8259()
 	__asm__ __volatile__("sti	\n");
 }
 
-void i8259_unmask(const int irq)
+void i8259_unmask(const int vec)
 {
-	const unsigned ctl_mask = irq < 8 ? INT_CTLMASK : INT2_CTLMASK;
-	outb(ctl_mask, inb(ctl_mask) & ~(1 << (irq & 0x7)));
+	const unsigned ctl_mask = vec < 8 ? INT_CTLMASK : INT2_CTLMASK;
+	outb(ctl_mask, inb(ctl_mask) & ~(1 << (vec & 0x7)));
 }
 
-void i8259_mask(const int irq)
+void i8259_mask(const int vec)
 {
-	const unsigned ctl_mask = irq < 8 ? INT_CTLMASK : INT2_CTLMASK;
-	outb(ctl_mask, inb(ctl_mask) | (1 << (irq & 0x7)));
+	const unsigned ctl_mask = vec < 8 ? INT_CTLMASK : INT2_CTLMASK;
+	outb(ctl_mask, inb(ctl_mask) | (1 << (vec & 0x7)));
 }
 
 /* Disable 8259 - write 0xFF in OCW1 master and slave. */
@@ -44,9 +44,19 @@ void i8259_disable(void)
 	inb(INT_CTLMASK);
 }
 
-void i8259_eoi(int irq)
+void i8259_eoi(int vec)
 {
 	outb(INT_CTL, END_OF_INT);
-	if (irq >= 8)
+	if (vec >= 8)
 		outb(INT2_CTL, END_OF_INT);
+}
+
+void i8259_do_irq(stack_frame_s * sf_regs)
+{
+	int vec = sf_regs->vec_nr;
+	
+	hwint_kbd(sf_regs);
+
+	int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
+	i8259_eoi(irq);
 }

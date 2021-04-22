@@ -1,5 +1,6 @@
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
+#include "include/apic.h"
 #include "../../include/proto.h"
 
 #include "../../include/printk.h"
@@ -9,9 +10,9 @@ extern char *(intr_name[IDT_SIZE]);
 /*===========================================================================*
  *								exception handlers							 *
  *===========================================================================*/
-void excep_inval_tss(stack_frame_s * sf)
+void excep_inval_tss(stack_frame_s * sf_regs)
 {
-	int error_code = sf->err_code;
+	int error_code = sf_regs->err_code;
 	color_printk(RED,BLACK,"do_invalid_TSS(10),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -32,9 +33,9 @@ void excep_inval_tss(stack_frame_s * sf)
 
 }
 
-void excep_seg_not_pres(stack_frame_s * sf)
+void excep_seg_not_pres(stack_frame_s * sf_regs)
 {
-	int error_code = sf->err_code;
+	int error_code = sf_regs->err_code;
 	color_printk(RED,BLACK,"do_segment_not_present(11),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -54,9 +55,9 @@ void excep_seg_not_pres(stack_frame_s * sf)
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
 }
 
-void excep_stack_segfault(stack_frame_s * sf)
+void excep_stack_segfault(stack_frame_s * sf_regs)
 {
-	int error_code = sf->err_code;
+	int error_code = sf_regs->err_code;
 	color_printk(RED,BLACK,"do_stack_segment_fault(12),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -76,10 +77,10 @@ void excep_stack_segfault(stack_frame_s * sf)
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
 }
 
-void excep_gen_prot(stack_frame_s * sf)
+void excep_gen_prot(stack_frame_s * sf_regs)
 {
-	int error_code = sf->err_code;
-	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf->rip);
+	int error_code = sf_regs->err_code;
+	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf_regs->rip);
 
 	if(error_code & 0x01)
 		color_printk(RED,BLACK,"The exception occurred during delivery of an event external to the program,such as an interrupt or an earlier exception.\n");
@@ -98,14 +99,14 @@ void excep_gen_prot(stack_frame_s * sf)
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
 }
 
-void excep_page_fault(stack_frame_s * sf)
+void excep_page_fault(stack_frame_s * sf_regs)
 {
-	int error_code = sf->err_code;
+	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
 
 	__asm__	__volatile__("movq	%%cr2,	%0":"=r"(cr2)::"memory");
 
-	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE:%#018lx\n",error_code);
+	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
 
 	if(!(error_code & 0x01))
 		color_printk(RED,BLACK,"Page Not-Present,\t");
@@ -126,7 +127,7 @@ void excep_page_fault(stack_frame_s * sf)
 	if(error_code & 0x10)
 		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
 
-	color_printk(RED,BLACK,"\n");
+	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->rip);
 
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 }
@@ -134,36 +135,32 @@ void excep_page_fault(stack_frame_s * sf)
 /*===========================================================================*
  *								hwint handlers							     *
  *===========================================================================*/
-void hwint_kbd(stack_frame_s * sf)
-{
-	uint8_t scan_code = inb(0x60);
-	color_printk(GREEN, BLACK, "KBD SCAN CODE = %#04x\n", scan_code);
-}
+
 
 /*===========================================================================*
  *									entrys									 *
  *===========================================================================*/
-void do_exception_entry(stack_frame_s * sf)
+void do_exception_entry(stack_frame_s * sf_regs)
 {
-	int vec = sf->vec_nr;
+	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
 
 	switch (vec)
 	{
 	case INVAL_TSS_VEC:
-		excep_inval_tss(sf);
+		excep_inval_tss(sf_regs);
 		break;
 	case SEG_NOT_PRES_VEC:
-		excep_seg_not_pres(sf);
+		excep_seg_not_pres(sf_regs);
 		break;
 	case STACK_SEGFAULT_VEC:
-		excep_stack_segfault(sf);
+		excep_stack_segfault(sf_regs);
 		break;
 	case GEN_PROT_VEC:
-		excep_gen_prot(sf);
+		excep_gen_prot(sf_regs);
 		break;
 	case PAGE_FAULT_VEC:
-		excep_page_fault(sf);
+		excep_page_fault(sf_regs);
 		break;
 
 	default:
@@ -174,26 +171,14 @@ void do_exception_entry(stack_frame_s * sf)
 	while (1);
 }
 
-void do_hwint_irq_entry(stack_frame_s * sf)
+void do_hwint_irq_entry(stack_frame_s * sf_regs)
 {
-	int vec = sf->vec_nr;
+	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
 
-	switch (vec)
-	{
 #ifndef USE_APIC
-	case VECTOR(KEYBOARD_IRQ):
-		hwint_kbd(sf);
-		break;
-
-	default:
-		color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
-		break;
+	i8259_do_irq(sf_regs);
 #else
-
+	apic_do_irq(sf_regs);
 #endif
-	}
-
-	int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
-	i8259_eoi(irq);
 }

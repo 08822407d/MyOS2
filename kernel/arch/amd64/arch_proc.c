@@ -105,15 +105,15 @@ unsigned long init(unsigned long arg)
 {
 	color_printk(RED,BLACK,"init task is running, arg:%#018lx\n",arg);
 	proc_s * curr = get_current();
-	stack_frame_s * sf = get_current_stackframe(curr);
+	stack_frame_s * sf_regs = get_current_stackframe(curr);
 	curr->arch_struct.k_rip = (reg_t)ret_from_syscall;
-	curr->arch_struct.k_rsp = (reg_t)sf;
+	curr->arch_struct.k_rsp = (reg_t)sf_regs;
 
 	__asm__ __volatile__("movq	%1, %%rsp		\n\
 						  pushq	%2				\n\
 						  jmp	do_execve		\n	"
 						 :
-						 :"D"(sf), "m"(curr->arch_struct.k_rsp), "m"(curr->arch_struct.k_rip)
+						 :"D"(sf_regs), "m"(curr->arch_struct.k_rsp), "m"(curr->arch_struct.k_rip)
 						 :"memory");
 
 	return 1;
@@ -140,15 +140,15 @@ int do_syscall(int syscall_nr)
 	return 0x12345678;
 }
 
-unsigned long do_execve(stack_frame_s * sf)
+unsigned long do_execve(stack_frame_s * sf_regs)
 {
-	sf->rcx =
-	sf->rip = (reg_t)user_func;
-	sf->rsp = (reg_t)user_stack + PROC_KSTACK_SIZE;
+	sf_regs->rcx =
+	sf_regs->rip = (reg_t)user_func;
+	sf_regs->rsp = (reg_t)user_stack + PROC_KSTACK_SIZE;
 	return 1;
 }
 
-unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size)
+unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size)
 {
 	proc_s *tsk_curr = get_current();
 	proc_s *tsk_new = NULL;
@@ -167,14 +167,14 @@ unsigned long do_fork(stack_frame_s * regs, unsigned long clone_flags, unsigned 
 	tsk_new->pid++;	
 	tsk_new->state = TASK_UNINTERRUPTABLE;
 
-	memcpy((void *)tsk_new_stackfram, regs, sizeof(stack_frame_s));
+	memcpy((void *)tsk_new_stackfram, sf_regs, sizeof(stack_frame_s));
 
 	arch_tsk->tss_rsp0 = (reg_t)tsk_new + PROC_KSTACK_SIZE;
-	arch_tsk->k_rip = regs->rip;
+	arch_tsk->k_rip = sf_regs->rip;
 	arch_tsk->k_rsp = (reg_t)tsk_new_stackfram;
 
 	if(!(tsk_new->flags & PF_KTHREAD))
-		arch_tsk->k_rip = regs->rip = (reg_t)ret_from_syscall;
+		arch_tsk->k_rip = sf_regs->rip = (reg_t)ret_from_syscall;
 
 	tsk_new->state = TASK_RUNNING;
 
@@ -189,25 +189,25 @@ unsigned long do_exit(unsigned long code)
 
 int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
 {
-	stack_frame_s regs;
-	memset(&regs,0,sizeof(regs));
+	stack_frame_s sf_regs;
+	memset(&sf_regs,0,sizeof(sf_regs));
 
-	regs.rbx = (reg_t)fn;
-	regs.rdx = (reg_t)arg;
+	sf_regs.rbx = (reg_t)fn;
+	sf_regs.rdx = (reg_t)arg;
 
-	regs.cs = KERN_CS_SELECTOR;
-	regs.ds = KERN_SS_SELECTOR;
-	regs.es = KERN_SS_SELECTOR;
-	regs.ss = KERN_SS_SELECTOR;
-	regs.rflags = (1 << 9);
-	regs.rip = (reg_t)kernel_thread_func;
+	sf_regs.cs = KERN_CS_SELECTOR;
+	sf_regs.ds = KERN_SS_SELECTOR;
+	sf_regs.es = KERN_SS_SELECTOR;
+	sf_regs.ss = KERN_SS_SELECTOR;
+	sf_regs.rflags = (1 << 9);
+	sf_regs.rip = (reg_t)kernel_thread_func;
 
-	return do_fork(&regs,flags,0,0);
+	return do_fork(&sf_regs,flags,0,0);
 }
 
 void arch_init_proc()
 {
-	// init MSR regs related to syscall/sysret
+	// init MSR sf_regs related to syscall/sysret
 	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
 	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
 	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
