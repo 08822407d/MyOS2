@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <lib/string.h>
 
 #include "include/const.h"
 #include "include/param.h"
@@ -36,4 +37,6 @@ void video_init()
 	Pos.YPosition = 0;
 	Pos.XCharSize = 8;
 	Pos.YCharSize = 16;
+
+	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }

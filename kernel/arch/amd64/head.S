@@ -8,17 +8,19 @@ ENTRY(start)
 	cli
     movq    $stack_top,	%rax
     movq    %rax,		%rsp
-//=======	load GDTR
+//=======load GDTR
 	lgdt	GDT_POINTER(%rip)
-//=======	load dummy IDTR
+//=======load dummy IDTR
 	lidt	IDT_POINTER(%rip)
-//=======	load cr3
+//=======load cr3
+	callq	set_temp_PDE
     movq	$__PML4E,	%rax
 	movq	%rax,		%cr3
     movq    $temp_reload_cs, %rax
     pushq   $0x08
     pushq   %rax
     lretq
+
 temp_reload_cs:
     movq    $stack_top,	%rbx
     movq    $0x10,		%rax
@@ -28,8 +30,6 @@ temp_reload_cs:
     pushq   $0
     popfq
     pushq   $0
-
-	callq	set_temp_PDE
 
     pushq   $ret_from_preinit
     movabsq $pre_init,	%rax
@@ -66,7 +66,7 @@ l1:
 	retq
 
 .data
-//=======	init page
+//=======init page
 .align 8
 
 .org	0x0000
@@ -83,57 +83,9 @@ __PDPTE:
 
 .org	0x2000
 __PDE:
-	.quad	0x000083	
-	.quad	0x200083
-	.quad	0x400083
-	.quad	0x600083
-	.quad	0x800083
-	.quad	0xa00083
-	.quad	0xc00083
-	.quad	0xe00083
-	.quad	0x1000083
-	.quad	0x1200083
-	.quad	0x1400083
-	.quad	0x1600083
-	.quad	0x1800083
-	.quad	0x1a00083
-	.quad	0x1c00083
-	.quad	0x1e00083
-	.quad	0x2000083
-	.quad	0x2200083
-	.quad	0x2400083
-	.quad	0x2600083
-	.quad	0x2800083
-	.quad	0x2a00083
-	.quad	0x2c00083
-	.quad	0x2e00083
-	.quad	0x3000083
-	.quad	0x3200083
-	.quad	0x3400083
-	.quad	0x3600083
-	.quad	0x3800083
-	.quad	0x3a00083
-	.quad	0x3c00083
-	.quad	0x3e00083
-	.quad	0x4000083
-	.quad	0x4200083
-	.quad	0x4400083
-	.quad	0x4600083
-	.quad	0x4800083
-	.quad	0x4a00083
-	.quad	0x4c00083
-	.quad	0x4e00083
-	.quad	0x5000083
-	.quad	0x5200083
-	.quad	0x5400083
-	.quad	0x5600083
-	.quad	0x5800083
-	.quad	0x5a00083
-	.quad	0x5c00083
-	.quad	0x5e00083
-	.fill	464,8,0
+	.fill	512,8,0
 
-//=======	GDT_Table
+//=======GDT_Table
 GDT_Table:
 	.quad	0x0000000000000000			/*0	NULL descriptor		       	00*/
 	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
@@ -143,7 +95,7 @@ GDT_END:
 GDT_POINTER:
 GDT_LIMIT:	.word	GDT_END - GDT_Table - 1
 GDT_BASE:	.quad	GDT_Table
-//=======	IDT_Table
+//=======IDT_Table
 IDT_Table:
 	.fill  32,8,0
 IDT_END:
@@ -152,7 +104,7 @@ IDT_POINTER:
 IDT_LIMIT:	.word	IDT_END - IDT_Table - 1
 IDT_BASE:	.quad	IDT_Table
 
-//=======	temp stack
+//=======temp stack
 stack_start:
     .fill  128,8,0
 stack_top:

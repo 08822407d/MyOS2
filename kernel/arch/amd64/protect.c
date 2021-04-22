@@ -297,8 +297,14 @@ void prot_init(void)
 	mem_init();
 	extern PML4E_u KERN_PML4[PGENT_NR];
 	pg_load_cr3(KERN_PML4);
+	video_init();
 
 	slab_init();
+
 	// prot_init_done = 1;
-	init_i8259();
+	#ifndef USE_APIC
+		init_i8259();
+	#else
+		LAPIC_IOAPIC_init();
+	#endif
 }

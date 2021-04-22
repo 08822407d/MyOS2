@@ -142,7 +142,7 @@
 	} PML4E_s;
 	typedef union
 	{
-		PML4E_s			PML4E;
+		uint64_t		PML4E;
 		PML4E_defs_s	PML4E_defs;
 	} PML4E_u;
 	
@@ -191,17 +191,17 @@
 	typedef PDPTE_s PTE_s;
 	typedef union
 	{
-		PDPTE_s			PDPTE;
+		uint64_t		PDPTE;
 		PDPTE_defs_s	PDPTE_defs;
 	} PDPTE_u;
 	typedef union
 	{
-		PDE_s			PDE;
+		uint64_t		PDE;
 		PDE_defs_s		PDE_defs;
 	} PDE_u;
 	typedef union
 	{
-		PTE_s			PTE;
+		uint64_t		PTE;
 		PTE_defs_s		PTE_defs;
 	} PTE_u;
 	

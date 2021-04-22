@@ -140,55 +140,60 @@ void hwint_kbd(stack_frame_s * sf)
 	color_printk(GREEN, BLACK, "KBD SCAN CODE = %#04x\n", scan_code);
 }
 
-
-
-void excep_intr_c_entry(stack_frame_s * sf)
+/*===========================================================================*
+ *									entrys									 *
+ *===========================================================================*/
+void do_exception_entry(stack_frame_s * sf)
 {
 	int vec = sf->vec_nr;
 	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
-	// exceptions
-	if(vec < 32)
+
+	switch (vec)
 	{
-		switch (vec)
-		{
-		case INVAL_TSS_VEC:
-			excep_inval_tss(sf);
-			break;
-		case SEG_NOT_PRES_VEC:
-			excep_seg_not_pres(sf);
-			break;
-		case STACK_SEGFAULT_VEC:
-			excep_stack_segfault(sf);
-			break;
-		case GEN_PROT_VEC:
-			excep_gen_prot(sf);
-			break;
-		case PAGE_FAULT_VEC:
-			excep_page_fault(sf);
-			break;
+	case INVAL_TSS_VEC:
+		excep_inval_tss(sf);
+		break;
+	case SEG_NOT_PRES_VEC:
+		excep_seg_not_pres(sf);
+		break;
+	case STACK_SEGFAULT_VEC:
+		excep_stack_segfault(sf);
+		break;
+	case GEN_PROT_VEC:
+		excep_gen_prot(sf);
+		break;
+	case PAGE_FAULT_VEC:
+		excep_page_fault(sf);
+		break;
 
-		default:
-			color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
-			break;
-		}
-
-		while (1);
+	default:
+		color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
+		break;
 	}
-	// hardware interrupts
-	else
+
+	while (1);
+}
+
+void do_hwint_irq_entry(stack_frame_s * sf)
+{
+	int vec = sf->vec_nr;
+	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
+
+	switch (vec)
 	{
-		switch (vec)
-		{
-		case VECTOR(KEYBOARD_IRQ):
-			hwint_kbd(sf);
-			break;
+#ifndef USE_APIC
+	case VECTOR(KEYBOARD_IRQ):
+		hwint_kbd(sf);
+		break;
 
-		default:
-			color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
-			break;
-		}
+	default:
+		color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
+		break;
+#else
 
-		int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
-		i8259_eoi(irq);
+#endif
 	}
+
+	int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
+	i8259_eoi(irq);
 }

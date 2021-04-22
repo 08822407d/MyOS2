@@ -46,33 +46,37 @@ void pg_flush_tlb(void)
 
 void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 {
+	attr = ARCH_PGS_ATTR(attr);
 	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDE);
 
+	// get pml4e
 	PML4E_u * pml4e_ptr = KERN_PML4 + pml4e_idx;
 	// so called "Higher Half Kernel" mapping
 	// map higher half memory to lower half
 	if (pml4e_idx > 255)
 		pml4e_idx -= 256;
-	if (*((uint64_t *)pml4e_ptr) == 0)
+	// set pml4e
+	if (pml4e_ptr->PML4E == 0)
 	{
-		pml4e_ptr->PML4E.FLAGS = attr & 0x3F;
-		pml4e_ptr->PML4E.PHYADDR = (uint64_t)vir2phy(KERN_PDPT[pml4e_idx]) >> SHIFT_PTE;
+		pml4e_ptr->PML4E = ARCH_PGS_ADDR((uint64_t)vir2phy(&KERN_PDPT[pml4e_idx])) | ARCH_PGE_NOT_LAST(attr);
 	}
 
-	PDPTE_u * pdpte_ptr = (PDPTE_u *)phy2vir((phy_addr)((uint64_t)pml4e_ptr->PML4E.PHYADDR<< SHIFT_PTE)) + pdpte_idx;
-	if (*((uint64_t *)pdpte_ptr) == 0)
+	// get pdpte
+	PDPTE_u * pdpte_ptr = (PDPTE_u *)phy2vir((phy_addr)ARCH_PGS_ADDR(pml4e_ptr->PML4E)) + pdpte_idx;
+	// set pdpte
+	if (pdpte_ptr->PDPTE == 0)
 	{
-		pdpte_ptr->PDPTE.FLAGS = attr;
-		pdpte_ptr->PDPTE.PHYADDR = (uint64_t)vir2phy(KERN_PD[pml4e_idx][pdpte_idx]) >> SHIFT_PTE;
+		pdpte_ptr->PDPTE = ARCH_PGS_ADDR((uint64_t)vir2phy(KERN_PD[pml4e_idx][pdpte_idx])) | ARCH_PGE_NOT_LAST(attr);
 	}
 
-	PDE_u * pde_ptr = (PDE_u *)phy2vir((phy_addr)((uint64_t)pdpte_ptr->PDPTE.PHYADDR << SHIFT_PTE)) + pde_idx;
+	// get pde
+	PDE_u * pde_ptr = (PDE_u *)phy2vir((phy_addr)ARCH_PGS_ADDR(pdpte_ptr->PDPTE)) + pde_idx;
+	// set pte
 	if (*((uint64_t *)pde_ptr) == 0)
 	{
-		pde_ptr->PDE.FLAGS = attr | ARCH_PG_PAT;
-		pde_ptr->PDE.PHYADDR = (uint64_t)phy >> SHIFT_PTE;
+		pde_ptr->PDE = MASKF_2M((uint64_t)phy) | ARCH_PGE_IS_LAST(attr);
 	}
 
 	pg_flush_tlb();

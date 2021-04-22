@@ -12,12 +12,6 @@ void kmain(void)
 {
     prot_init();
 
-	video_init();
-	
-	// clear screen
-	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
-
-	
 	// init_proc0();
 	// int i = 1 / 0;
 

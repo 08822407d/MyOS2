@@ -311,28 +311,27 @@ void LAPIC_IOAPIC_init()
 	//init ioapic
 	IOAPIC_init();
 
-	//get RCBA address
-	outl(0xcf8,0x8000f8f0);
-	x = inl(0xcfc);
-	color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
-	x = x & 0xffffc000;
-	color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
+	// //get RCBA address
+	// outl(0xcf8,0x8000f8f0);
+	// x = inl(0xcfc);
+	// color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
+	// x = x & 0xffffc000;
+	// color_printk(GREEN, BLACK, "Get RCBA Address:%#010x\n", x);	
 
-	//get OIC address
-	if(x > 0xfec00000 && x < 0xfee00000)
-	{
-		p = (unsigned int *)phy2vir((phy_addr)(x + 0x31feUL));
-	}
+	// //get OIC address
+	// if(x > 0xfec00000 && x < 0xfee00000)
+	// {
+	// 	p = (unsigned int *)phy2vir((phy_addr)(x + 0x31feUL));
+	// }
 
-	// enable IOAPIC
-	color_printk(BLACK, WHITE, "In line: %d, p = %#016x\n", __LINE__, p);
-	x = (*p & 0xffffff00) | 0x100;
-	color_printk(BLACK, WHITE, "-- %d --\n", __LINE__);
-	io_mfence();
-	*p = x;
-	io_mfence();
+	// // enable IOAPIC
+	// color_printk(BLACK, WHITE, "In line: %d, p = %#016x\n", __LINE__, p);
+	// x = (*p & 0xffffff00) | 0x100;
+	// color_printk(BLACK, WHITE, "-- %d --\n", __LINE__);
+	// io_mfence();
+	// *p = x;
+	// io_mfence();
 	
-	// open IF eflages
 	__asm__("sti	\n");
 }
 

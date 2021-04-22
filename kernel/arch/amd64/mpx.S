@@ -141,8 +141,16 @@ SAVE_ALL:
 	movq	%rdi,	%es
 
 	movq	%rsp,	%rdi
-	callq 	excep_intr_c_entry
+	movq	0x88(%rsp),	%rax
 
+	cmpq	$0x20,	%rax
+	jg		hwint_irq_handler
+exception_handler:	
+	callq 	do_exception_entry
+	jmp		ret_point
+hwint_irq_handler:
+	callq	do_hwint_irq_entry
+ret_point:
 	jmp		ret_from_exception	
 
 /*===========================================================================*/

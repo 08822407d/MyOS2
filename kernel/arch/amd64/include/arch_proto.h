@@ -5,6 +5,9 @@
 #include "archtypes.h"
 #include "../../../include/ktypes.h"
 
+/*===========================================================================*
+ *								external symbols							 *
+ *===========================================================================*/
 /* Exception handlers (real or protected mode), in numerical order. */
 void divide_error (void);
 void debug(void);
@@ -28,7 +31,6 @@ void machine_check(void);
 void simd_exception(void);
 void virtualization_exception(void);
 void control_protection_exception(void);
-
 /* Hardware interrupt handlers. */
 void hwint00(void);
 void hwint01(void);
@@ -53,6 +55,10 @@ void kernel_thread_func(void);
 void enter_syscall(void);
 void ret_from_syscall(void);
 
+
+/*===========================================================================*
+ *								internal symbols							 *
+ *===========================================================================*/
 typedef struct __attribute__((packed)) {
 	reg_t ds;
 	reg_t es;
@@ -80,7 +86,6 @@ typedef struct __attribute__((packed)) {
 	reg_t ss;
 } stack_frame_s;
 
-void excep_intr_c_entry(stack_frame_s *);
 
 typedef struct {
 	void	(*gate_entry) (void);
@@ -145,5 +150,9 @@ unsigned long do_fork(stack_frame_s * regs,
 						unsigned long stack_size);
 int sys_call(int syscall_nr);
 int do_syscall(int syscall_nr);
+
+/* interrupt.c */
+void do_exception_entry(stack_frame_s * sf);
+void do_hwint_irq_entry(stack_frame_s * sf);
 
 #endif /* _AMD64_PROTO_H_ */

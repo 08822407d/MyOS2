@@ -61,6 +61,11 @@
 	#define ARCH_PG_PAT			(1 << 7ULL)
 	#define ARCH_PG_GLOBAL		(1 << 8ULL)
 
+	#define ARCH_PGS_ADDR(x)		(MASKF_4K(x) & 0xFFFFFFFFFFFF)
+	#define ARCH_PGS_ATTR(x)		(x & 0x1FF)
+	#define ARCH_PGE_IS_LAST(x)		(x | ARCH_PG_PAT)
+	#define ARCH_PGE_NOT_LAST(x)	(x & 0x3F)
+
 	/* MSR registers addresses */
 	#define IA32_EFER			0xC0000080
 	#define	MSR_IA32_EFER_SCE	0x00000001
