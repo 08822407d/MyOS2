@@ -29,7 +29,7 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEFINATIONS} -m64")
 message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEFINATIONS} -mcmodel=large \
                     -fno-builtin -fno-stack-protector -Wno-packed-bitfield-compat \
-                    -nostartfiles -no-pie -ggdb -m64 -fPIC \
+                    -nostartfiles -static -no-pie -ggdb -m64 -fPIC \
                     -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")

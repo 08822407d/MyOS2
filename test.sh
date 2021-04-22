@@ -4,7 +4,7 @@ if [ "$(uname)" == "Darwin" ]; then
     echo "Working on MAC"
     # hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount ../myos_vdisk-flat.vmdk
     x86_64-elf-objcopy --only-keep-debug system kernel.debug
-    x86_64-elf-objcopy -S -R ".eh_frame" -R ".comment" -R ".note.gnu.build-id" -I elf64-x86-64 -O binary system kernel.bin
+    x86_64-elf-objcopy -s -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
     sudo mount -t msdos /dev/disk2s1 /Users/cheyuho/mount
     cp ./kernel.bin ~/mount/kernel.bin
     sync
@@ -13,7 +13,7 @@ if [ "$(uname)" == "Darwin" ]; then
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Working on Linux"
     objcopy --only-keep-debug system kernel.debug
-    objcopy -S -R ".eh_frame" -R ".comment" -R ".note.gnu.build-id" -I elf64-x86-64 -O binary system kernel.bin
+    objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
     sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
     sync
