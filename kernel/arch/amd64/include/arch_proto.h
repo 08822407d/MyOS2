@@ -49,30 +49,14 @@
 	void hwint14(void);
 	void hwint15(void);
 	/* APIC Hardware interrupt handlers. */
-	void apic_hwint0(void);
-	void apic_hwint1(void);
-	void apic_hwint2(void);
-	void apic_hwint3(void);
-	void apic_hwint4(void);
-	void apic_hwint5(void);
-	void apic_hwint6(void);
-	void apic_hwint7(void);
-	void apic_hwint8(void);
-	void apic_hwint9(void);
-	void apic_hwint10(void);
-	void apic_hwint11(void);
-	void apic_hwint12(void);
-	void apic_hwint13(void);
-	void apic_hwint14(void);
-	void apic_hwint15(void);
-	void apic_hwint16(void);
-	void apic_hwint17(void);
-	void apic_hwint18(void);
-	void apic_hwint19(void);
-	void apic_hwint20(void);
-	void apic_hwint21(void);
-	void apic_hwint22(void);
-	void apic_hwint23(void);
+	void hwint16(void);
+	void hwint17(void);
+	void hwint18(void);
+	void hwint19(void);
+	void hwint20(void);
+	void hwint21(void);
+	void hwint22(void);
+	void hwint23(void);
 
 	/* syscalls and others about intr */
 	void ret_from_intr(void);

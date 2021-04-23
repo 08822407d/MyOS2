@@ -4,16 +4,16 @@
 void init_i8259()
 {
 	//8259A-master	ICW1-4
-	outb(INT_CTL,ICW1_AT);
-	outb(INT_CTLMASK,IRQ0_VEC);
-	outb(INT_CTLMASK,1 << I8259_CASCADE_IRQ);
-	outb(INT_CTLMASK,0x01);
+	outb(INT_CTL, ICW1_AT);
+	outb(INT_CTLMASK, I8259_IRQ0_VEC);
+	outb(INT_CTLMASK, 1 << I8259_CASCADE_IRQ);
+	outb(INT_CTLMASK, 0x01);
 
 	//8259A-slave	ICW1-4
-	outb(INT2_CTL,ICW1_AT);
-	outb(INT2_CTLMASK,IRQ8_VEC);
-	outb(INT2_CTLMASK,I8259_CASCADE_IRQ);
-	outb(INT2_CTLMASK,0x01);
+	outb(INT2_CTL, ICW1_AT);
+	outb(INT2_CTLMASK, I8259_IRQ0_VEC + 0x08);
+	outb(INT2_CTLMASK, I8259_CASCADE_IRQ);
+	outb(INT2_CTLMASK, 0x01);
 
 	//8259A-M/S	OCW1
 	// outb(INT_CTLMASK,~(1 << CASCADE_IRQ));
@@ -57,6 +57,5 @@ void i8259_do_irq(stack_frame_s * sf_regs)
 	
 	hwint_kbd(sf_regs);
 
-	int irq = vec < IRQ8_VEC ? (vec - IRQ0_VEC) : (vec - IRQ8_VEC);
-	i8259_eoi(irq);
+	i8259_eoi(vec - I8259_IRQ0_VEC);
 }

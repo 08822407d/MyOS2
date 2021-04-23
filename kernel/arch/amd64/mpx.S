@@ -144,8 +144,9 @@ SAVE_ALL:
 
 	jmp		ret_from_exception	
 
+
 /*===========================================================================*/
-/*				exception handlers			     */
+/*							exception handler entries					     */
 /*===========================================================================*/
 #define EXCEPTION_ERR_CODE(vector)	\
 	pushq	$vector			;\
@@ -223,125 +224,87 @@ LABEL(control_protection_exception)
 	EXCEPTION_ERR_CODE(CTRL_PROT_EXCEP_VEC)
 
 /*===========================================================================*/
-/*									hwint00 - 07						     */
+/*							hwint handler entries						     */
 /*===========================================================================*/
-/* Note this is a macro, it just looks like a subroutine. */
+#define hwint_entry(irq)	\
+	EXCEPTION_NO_ERR_CODE(irq + HWINT0_VEC);
 
-#define hwint_master(irq)	\
-	EXCEPTION_NO_ERR_CODE(irq + IRQ0_VEC);
+ENTRY(hwint00) /* Interrupt routine for irq 0 (the clock). */
+	hwint_entry(0)
 
+ENTRY(hwint01) /* Interrupt routine for irq 1 (keyboard) */
+	hwint_entry(1)
 
-/* Each of these entry points is an expansion of the hwint_master macro */
-ENTRY(hwint00)
-/* Interrupt routine for irq 0 (the clock). */
-	hwint_master(0)
+ENTRY(hwint02) /* Interrupt routine for irq 2 (cascade!) */
+	hwint_entry(2)
 
-ENTRY(hwint01)
-/* Interrupt routine for irq 1 (keyboard) */
-	hwint_master(1)
+ENTRY(hwint03) /* Interrupt routine for irq 3 (second serial) */
+	hwint_entry(3)
 
-ENTRY(hwint02)
-/* Interrupt routine for irq 2 (cascade!) */
-	hwint_master(2)
+ENTRY(hwint04) /* Interrupt routine for irq 4 (first serial) */
+	hwint_entry(4)
 
-ENTRY(hwint03)
-/* Interrupt routine for irq 3 (second serial) */
-	hwint_master(3)
+ENTRY(hwint05) /* Interrupt routine for irq 5 (XT winchester) */
+	hwint_entry(5)
 
-ENTRY(hwint04)
-/* Interrupt routine for irq 4 (first serial) */
-	hwint_master(4)
+ENTRY(hwint06) /* Interrupt routine for irq 6 (floppy) */
+	hwint_entry(6)
 
-ENTRY(hwint05)
-/* Interrupt routine for irq 5 (XT winchester) */
-	hwint_master(5)
+ENTRY(hwint07) /* Interrupt routine for irq 7 (printer) */
+	hwint_entry(7)
 
-ENTRY(hwint06)
-/* Interrupt routine for irq 6 (floppy) */
-	hwint_master(6)
+ENTRY(hwint08) /* Interrupt routine for irq 8 (realtime clock) */
+	hwint_entry(8)
 
-ENTRY(hwint07)
-/* Interrupt routine for irq 7 (printer) */
-	hwint_master(7)
+ENTRY(hwint09) /* Interrupt routine for irq 9 (irq 2 redirected) */
+	hwint_entry(9)
 
-/*===========================================================================*/
-/*								hwint08 - 15							     */
-/*===========================================================================*/
-#define hwint_slave(irq)	\
-	EXCEPTION_NO_ERR_CODE(irq + IRQ8_VEC);
+ENTRY(hwint10) /* Interrupt routine for irq 10 */
+	hwint_entry(10)
 
+ENTRY(hwint11) /* Interrupt routine for irq 11 */
+	hwint_entry(11)
 
-/* Each of these entry points is an expansion of the hwint_slave macro */
-ENTRY(hwint08)
-/* Interrupt routine for irq 8 (realtime clock) */
-	hwint_slave(8)
+ENTRY(hwint12) /* Interrupt routine for irq 12 */
+	hwint_entry(12)
 
-ENTRY(hwint09)
-/* Interrupt routine for irq 9 (irq 2 redirected) */
-	hwint_slave(9)
+ENTRY(hwint13) /* Interrupt routine for irq 13 (FPU exception) */
+	hwint_entry(13)
 
-ENTRY(hwint10)
-/* Interrupt routine for irq 10 */
-	hwint_slave(10)
+ENTRY(hwint14) /* Interrupt routine for irq 14 (AT winchester) */
+	hwint_entry(14)
 
-ENTRY(hwint11)
-/* Interrupt routine for irq 11 */
-	hwint_slave(11)
+ENTRY(hwint15) /* Interrupt routine for irq 15 */
+	hwint_entry(15)
 
-ENTRY(hwint12)
-/* Interrupt routine for irq 12 */
-	hwint_slave(12)
+ENTRY(hwint16) /* APIC_IRQ */
+	hwint_entry(16)
 
-ENTRY(hwint13)
-/* Interrupt routine for irq 13 (FPU exception) */
-	hwint_slave(13)
+ENTRY(hwint17) /* APIC_IRQ */
+	hwint_entry(17)
 
-ENTRY(hwint14)
-/* Interrupt routine for irq 14 (AT winchester) */
-	hwint_slave(14)
+ENTRY(hwint18) /* APIC_IRQ */
+	hwint_entry(18)
 
-ENTRY(hwint15)
-/* Interrupt routine for irq 15 */
-	hwint_slave(15)
+ENTRY(hwint19) /* APIC_IRQ */
+	hwint_entry(19)
 
-/*===========================================================================*/
-/*									apic hwint							     */
-/*===========================================================================*/
-/* Note this is a macro, it just looks like a subroutine. */
+ENTRY(hwint20) /* APIC_IRQ */
+	hwint_entry(20)
 
-#define apic_hwint(irq)		\
-	ENTRY(apic_hwint##irq)	\
-	EXCEPTION_NO_ERR_CODE(irq + APIC_IRQ0_VEC);
+ENTRY(hwint21) /* APIC_IRQ */
+	hwint_entry(21)
 
-	apic_hwint(0)
-	apic_hwint(1)
-	apic_hwint(2)
-	apic_hwint(3)
-	apic_hwint(4)
-	apic_hwint(5)
-	apic_hwint(6)
-	apic_hwint(7)
-	apic_hwint(8)
-	apic_hwint(9)
-	apic_hwint(10)
-	apic_hwint(11)
-	apic_hwint(12)
-	apic_hwint(13)
-	apic_hwint(14)
-	apic_hwint(15)
-	apic_hwint(16)
-	apic_hwint(17)
-	apic_hwint(18)
-	apic_hwint(19)
-	apic_hwint(20)
-	apic_hwint(21)
-	apic_hwint(22)
-	apic_hwint(23)
+ENTRY(hwint22) /* APIC_IRQ */
+	hwint_entry(22)
+
+ENTRY(hwint23) /* APIC_IRQ */
+	hwint_entry(23)
+
 
 /*===========================================================================*/
 /*									thread func							     */
 /*===========================================================================*/
-
 ENTRY(kernel_thread_func)
 	popq	%rax
 	movq	%rax,	%ds

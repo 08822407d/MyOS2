@@ -144,7 +144,7 @@ void excep_hwint_entry(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
 
-	if (vec < HWINT_VEC)
+	if (vec < HWINT0_VEC)
 		do_exception_handler(sf_regs);
 	else
 		do_hwint_irq_handler(sf_regs);

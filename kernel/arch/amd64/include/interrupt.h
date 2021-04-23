@@ -54,13 +54,13 @@
        #define ICW4_PC_AEOI_MASTER        0x0F   /* not SFNM, buffered, auto EOI, 8086 */
 
        /* Hardware interrupt numbers. */
-       #define IRQ0_VEC                   0x20   /* nice vectors to relocate IRQ0-7 to */
-       #define IRQ8_VEC                   0x28   /* no need to move IRQ8-15 */
+       #define I8259_IRQ0_VEC             0x20   /* nice vectors to relocate IRQ0-7 to */
        #define APIC_IRQ0_VEC              0x20
        #define I8259_CASCADE_IRQ             2	/* cascade enable for 2nd AT controller */
 
        #ifndef USE_APIC       
-              #define HWINT_VEC                  IRQ0_VEC
+              #define HWINT0_VEC                 I8259_IRQ0_VEC
+              #define NR_IRQ_VECS                16
 
               #define CLOCK_IRQ                   0
               #define KEYBOARD_IRQ                1
@@ -76,11 +76,10 @@
               #define FPU_IRQ                    13
               #define SATA_PRIM_IRQ              14	/* at winchester controller 0 */
               #define SATA_SCND_IRQ              15	/* at winchester controller 1 */
-              #define NR_IRQ_VECS                16
-              #define VECTOR(vec)    \
-                     (((vec) < 8 ? IRQ0_VEC : IRQ8_VEC) + ((vec) & 0x07))
+              #define VECTOR(vec)                (vec + I8259_IRQ0_VEC)
        #else
-              #define HWINT_VEC                  APIC_IRQ0_VEC
+              #define HWINT0_VEC                 APIC_IRQ0_VEC
+              #define NR_IRQ_VECS                24
 
               #define APIC_8259A                  0
               #define KEYBOARD_IRQ                1
@@ -106,7 +105,6 @@
               #define APIC_PIRQF                 21
               #define APIC_PIRQG                 22
               #define APIC_PIRQH                 23
-              #define NR_IRQ_VECS                24
               #define VECTOR(vec)                (vec + APIC_IRQ0_VEC)
        #endif
 #endif /* _INTERRUPT_H_ */
