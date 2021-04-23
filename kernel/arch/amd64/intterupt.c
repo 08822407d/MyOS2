@@ -1,11 +1,16 @@
+#include <lib/stddef.h>
+
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
-#include "../../include/proto.h"
+#include "include/device.h"
 
+#include "../../include/proto.h"
 #include "../../include/printk.h"
 
-extern char *(intr_name[IDT_SIZE]);
+extern gate_table_s exception_init_table[];
+
+irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 
 /*===========================================================================*
  *								exception handlers							 *
@@ -132,10 +137,6 @@ void excep_page_fault(stack_frame_s * sf_regs)
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 }
 
-/*===========================================================================*
- *								hwint handlers							     *
- *===========================================================================*/
-
 
 /*===========================================================================*
  *									entrys									 *
@@ -145,15 +146,16 @@ void excep_hwint_entry(stack_frame_s * sf_regs)
 	int vec = sf_regs->vec_nr;
 
 	if (vec < HWINT0_VEC)
-		do_exception_handler(sf_regs);
+		exception_handler(sf_regs);
 	else
-		do_hwint_irq_handler(sf_regs);
+		hwint_irq_handler(sf_regs);
 }
 
-void do_exception_handler(stack_frame_s * sf_regs)
+void exception_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
-	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
+	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ; ",
+					vec, exception_init_table[vec].name);
 
 	switch (vec)
 	{
@@ -181,14 +183,38 @@ void do_exception_handler(stack_frame_s * sf_regs)
 	while (1);
 }
 
-void do_hwint_irq_handler(stack_frame_s * sf_regs)
+void hwint_irq_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
-	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
+	int irq_nr = vec - HWINT0_VEC;
+	irq_desc_s * irq_desc = &irq_descriptors[irq_nr];	
 
-#ifndef USE_APIC
-	i8259_do_irq(sf_regs);
-#else
-	apic_do_irq(sf_regs);
-#endif
+	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ; ", vec, irq_descriptors[irq_nr].irq_name);
+
+	irq_desc_s * irq_d = &irq_descriptors[irq_nr];
+	if(irq_d->handler != NULL)
+		irq_d->handler(irq_d->parameter, sf_regs);
+	if(irq_d->controller != NULL && irq_d->controller->ack != NULL)
+		irq_d->controller->ack(irq_nr);
+}
+
+/*===========================================================================*
+ *								hwint handlers							     *
+ *===========================================================================*/
+int register_irq(unsigned long irq,
+				 void * arg,
+				 char * irq_name,
+				 unsigned long parameter,
+				 hw_int_controller_s * controller,
+				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs))
+{
+	irq_desc_s * p = &irq_descriptors[irq];
+	p->controller = controller;
+	p->irq_name = irq_name;
+	p->parameter = parameter;
+	p->flags = 0;
+	p->handler = handler;
+	// p->controller->install(irq,arg);
+	p->controller->enable(irq);
+	return 1;
 }

@@ -230,9 +230,8 @@
 			} dst;
 	} ioapic_retentry_s;
 
+
 	typedef struct {
 	} cpu_info_s ;
-
-	// typedef u32_t atomic_t;	/* access to an aligned 32bit value is atomic on i386 */
 
 #endif /* #ifndef _AMD64_TYPES_H */

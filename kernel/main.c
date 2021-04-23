@@ -7,11 +7,13 @@
 #include "include/printk.h"
 
 #include "arch/amd64/include/arch_proto.h"
+#include "arch/amd64/include/device.h"
 
 void kmain(void)
 {
     prot_init();
 
+	devices_init();
 	// init_proc0();
 	// int i = 1 / 0;
 

@@ -28,36 +28,36 @@ ioapic_map_s ioapic_map;
 
 */
 
-void IOAPIC_enable(unsigned long irq)
+void IOAPIC_enable(unsigned long irq_nr)
 {
 	unsigned long value = 0;
-	value = ioapic_rte_read((irq - APIC_IRQ0_VEC) * 2 + 0x10);
+	value = ioapic_rte_read(irq_nr * 2 + 0x10);
 	value = value & (~0x10000UL); 
-	ioapic_rte_write((irq - APIC_IRQ0_VEC) * 2 + 0x10,value);
+	ioapic_rte_write(irq_nr * 2 + 0x10,value);
 }
 
-void IOAPIC_disable(unsigned long irq)
+void IOAPIC_disable(unsigned long irq_nr)
 {
 	unsigned long value = 0;
-	value = ioapic_rte_read((irq - APIC_IRQ0_VEC) * 2 + 0x10);
+	value = ioapic_rte_read(irq_nr * 2 + 0x10);
 	value = value | 0x10000UL; 
-	ioapic_rte_write((irq - APIC_IRQ0_VEC) * 2 + 0x10,value);
+	ioapic_rte_write(irq_nr * 2 + 0x10,value);
 }
 
-unsigned long IOAPIC_install(unsigned long irq, void * arg)
+unsigned long IOAPIC_install(unsigned long irq_nr, void * arg)
 {
-	struct IO_APIC_RET_entry *entry = (struct IO_APIC_RET_entry *)arg;
-	ioapic_rte_write((irq - APIC_IRQ0_VEC) * 2 + 0x10,*(unsigned long *)entry);
+	ioapic_retentry_s *entry = (ioapic_retentry_s *)arg;
+	ioapic_rte_write(irq_nr * 2 + 0x10,*(unsigned long *)entry);
 
 	return 1;
 }
 
-void IOAPIC_uninstall(unsigned long irq)
+void IOAPIC_uninstall(unsigned long irq_nr)
 {
-	ioapic_rte_write((irq - APIC_IRQ0_VEC) * 2 + 0x10,0x10000UL);
+	ioapic_rte_write(irq_nr * 2 + 0x10,0x10000UL);
 }
 
-void IOAPIC_level_ack(unsigned long irq)
+void IOAPIC_level_ack(unsigned long irq_nr)
 {
 	__asm__ __volatile__("movq	$0x00,	%%rdx	\n\t"
 						 "movq	$0x00,	%%rax	\n\t"
@@ -65,7 +65,7 @@ void IOAPIC_level_ack(unsigned long irq)
 						 "wrmsr	\n\t"
 						 :::"memory","rax","rcx","rdx");
 				
-	*ioapic_map.virt_EOI_addr = irq;
+	*ioapic_map.virt_EOI_addr = irq_nr;
 }
 
 void IOAPIC_edge_ack(unsigned long irq)
@@ -307,7 +307,6 @@ void IOAPIC_init()
 #ifdef DEBUG
 	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
 #endif
-	IOAPIC_enable(VECTOR(KEYBOARD_IRQ));
 }
 
 // /*
@@ -328,21 +327,3 @@ void LAPIC_IOAPIC_init()
 
 	__asm__("sti	\n");
 }
-
-
-void apic_do_irq(stack_frame_s * sf_regs)
-{
-	int nr = sf_regs->vec_nr;
-
-	hwint_kbd(sf_regs);
-
-	IOAPIC_level_ack(sf_regs->vec_nr - APIC_IRQ0_VEC);
-	// irq_desc_T * irq = &interrupt_desc[nr - 32];
-
-	// if(irq->handler != NULL)
-	// 	irq->handler(nr,irq->parameter,sf_regs);
-
-	// if(irq->controller != NULL && irq->controller->ack != NULL)
-	// 	irq->controller->ack(nr);
-}
-

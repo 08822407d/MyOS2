@@ -8,11 +8,11 @@
 #include "include/interrupt.h"
 #include "include/apic.h"
 
+#include "../../include/glo.h"
 #include "../../include/param.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
-extern kinfo_s kparam;
 /* Storage for gdt, idt and tss. */
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
@@ -21,8 +21,6 @@ tss64_s			tss[CONFIG_MAX_CPUS];
 char			ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
-
-char *(intr_name[IDT_SIZE]);
 
 phy_addr vir2phy(vir_addr vir)
 {
@@ -189,13 +187,9 @@ void init_idt()
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
 		curr_gate->Type  = gtbl->type;
 		curr_gate->DPL   = gtbl->DPL;
-
-		intr_name[gtbl->vec_nr] = gtbl->name;
 	}
 
-	gate_table_s * irq_tbl;
-	irq_tbl = &(hwint_init_table[0]);
-	for ( gtbl = irq_tbl; gtbl->gate_entry != NULL; gtbl++)
+	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
@@ -207,8 +201,6 @@ void init_idt()
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
 		curr_gate->Type  = gtbl->type;
 		curr_gate->DPL   = gtbl->DPL;
-
-		intr_name[gtbl->vec_nr] = gtbl->name;
 	}
 
 	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
@@ -263,12 +255,6 @@ void prot_init(void)
 							"rsi"((uint64_t)KERN_CS_SELECTOR),
 							"r"((uint16_t)TSS_SELECTOR(0))
 						 :  "rax");
-
-
-	// /* Set up a new post-relocate bootstrap pagetable so that
-	// * we can map in VM, and we no longer rely on pre-relocated
-	// * data.
-	// */
 
 	pg_clear();
 	mem_init();

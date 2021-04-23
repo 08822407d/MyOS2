@@ -19,12 +19,12 @@
 #include <sys/cdefs.h>
 #include <lib/stddef.h>
 #include <lib/string.h>
+#include <lib/font.h>
 
+#include "../include/glo.h"
 #include "../include/printk.h"
 #include "../include/param.h"
 
-extern framebuffer_s framebuffer;
-extern unsigned char font_ascii[256][16];
 
 static char buf[4096] = {0};
 position_t Pos;

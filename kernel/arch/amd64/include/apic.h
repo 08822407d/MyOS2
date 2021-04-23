@@ -70,6 +70,7 @@
 	5:	LVT	LINT0
 	6:	LVT	LINT1
 	7:	LVT	Error
+	*/
 
 	//delivery mode
 	#define	APIC_ICR_IOAPIC_Fixed			0	//	LAPIC	IOAPIC 	ICR
@@ -80,7 +81,6 @@
 	#define	APIC_ICR_IOAPIC_INIT			5	//	LAPIC	IOAPIC 	ICR
 	#define	ICR_Start_up					6	//	ICR
 	#define	IOAPIC_ExtINT					7	//	IOAPIC
-	*/
 
 	//timer mode
 	#define APIC_LVT_Timer_One_Shot			0

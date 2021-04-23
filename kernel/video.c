@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <lib/string.h>
 
+#include "include/glo.h"
 #include "include/const.h"
 #include "include/param.h"
 #include "include/ktypes.h"
@@ -10,8 +11,6 @@
 #include "arch/amd64/include/archtypes.h"
 #include "arch/amd64/include/arch_proto.h"
 
-extern kinfo_s kparam;
-extern framebuffer_s framebuffer;
 extern position_t Pos;
 
 void video_init()

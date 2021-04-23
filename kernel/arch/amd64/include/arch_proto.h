@@ -110,6 +110,25 @@
 		uint32_t *	virt_EOI_addr;
 	} ioapic_map_s;
 
+	typedef struct {
+		void (*enable)(unsigned long irq);
+		void (*disable)(unsigned long irq);
+		unsigned long (*install)(unsigned long irq,void * arg);
+		void (*uninstall)(unsigned long irq);
+		void (*ack)(unsigned long irq);
+	} hw_int_controller_s;
+
+	typedef struct {
+		hw_int_controller_s * controller;
+
+		char * 			irq_name;
+		unsigned long	parameter;
+		unsigned long	flags;
+
+		void (*handler)(unsigned long parameter,
+						stack_frame_s * sf_regs);
+	} irq_desc_s;
+
 	/* protect.c */
 	phy_addr vir2phy(vir_addr);
 	vir_addr phy2vir(phy_addr);
@@ -173,10 +192,10 @@
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);
-	void do_exception_handler(stack_frame_s * sf_regs);
-	void do_hwint_irq_handler(stack_frame_s * sf_regs);
-
-	/* keyboard.c */
-	void hwint_kbd(stack_frame_s * sf_regs);
+	void exception_handler(stack_frame_s * sf_regs);
+	void hwint_irq_handler(stack_frame_s * sf_regs);
+	int register_irq(unsigned long irq, void * arg, char * irq_name,
+				 unsigned long parameter, hw_int_controller_s * controller,
+				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 
 #endif /* _AMD64_PROTO_H_ */

@@ -53,6 +53,6 @@ file(GLOB LIB_ASM_SRCS lib/*.S lib/utils/*.S lib/string/*.S)
 add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${K_LIB_C_SRCS} ${KERNEL_C_SRCS}
                 ${LIB_C_SRCS} ${LIB_ASM_SRCS})
 
-add_custom_command(OUTPUT kernel.debug
-                    COMMAND objcopy --only-keep-debug system kernel.debug
-                    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+# add_custom_command(OUTPUT kernel.debug
+#                     COMMAND objcopy --only-keep-debug system kernel.debug
+#                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
