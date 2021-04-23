@@ -140,7 +140,17 @@ void excep_page_fault(stack_frame_s * sf_regs)
 /*===========================================================================*
  *									entrys									 *
  *===========================================================================*/
-void do_exception_entry(stack_frame_s * sf_regs)
+void excep_hwint_entry(stack_frame_s * sf_regs)
+{
+	int vec = sf_regs->vec_nr;
+
+	if (vec < HWINT_VEC)
+		do_exception_handler(sf_regs);
+	else
+		do_hwint_irq_handler(sf_regs);
+}
+
+void do_exception_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);
@@ -171,7 +181,7 @@ void do_exception_entry(stack_frame_s * sf_regs)
 	while (1);
 }
 
-void do_hwint_irq_entry(stack_frame_s * sf_regs)
+void do_hwint_irq_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ;", vec, intr_name[vec]);

@@ -15,6 +15,7 @@
 #include <lib/string.h>
 
 #include "include/arch_proto.h"
+#include "include/archtypes.h"
 #include "include/archconst.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
@@ -306,7 +307,7 @@ void IOAPIC_init()
 #ifdef DEBUG
 	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
 #endif
-	IOAPIC_enable(VECTOR(APIC_KEYBOARD));
+	IOAPIC_enable(VECTOR(KEYBOARD_IRQ));
 }
 
 // /*

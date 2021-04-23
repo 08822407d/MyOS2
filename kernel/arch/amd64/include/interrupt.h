@@ -57,53 +57,56 @@
        #define IRQ0_VEC                   0x20   /* nice vectors to relocate IRQ0-7 to */
        #define IRQ8_VEC                   0x28   /* no need to move IRQ8-15 */
        #define APIC_IRQ0_VEC              0x20
+       #define I8259_CASCADE_IRQ             2	/* cascade enable for 2nd AT controller */
 
-       #define CLOCK_IRQ                   0
-       #define KEYBOARD_IRQ                1
-       #define CASCADE_IRQ                 2	/* cascade enable for 2nd AT controller */
-       #define ETHER_IRQ                   3	/* default ethernet interrupt vector */
-       #define SECONDARY_IRQ               3	/* RS232 interrupt vector for port 2 */
-       #define RS232_IRQ                   4	/* RS232 interrupt vector for port 1 */
-       #define XT_WINI_IRQ                 5	/* xt winchester */
-       #define FLOPPY_IRQ                  6	/* floppy disk */
-       #define PRINTER_IRQ                 7
-       #define SPURIOUS_IRQ                7
-       #define CMOS_CLOCK_IRQ              8
-       #define KBD_AUX_IRQ                12	/* AUX (PS/2 mouse) port in kbd controller */
-       #define AT_WINI_0_IRQ              14	/* at winchester controller 0 */
-       #define AT_WINI_1_IRQ              15	/* at winchester controller 1 */
+       #ifndef USE_APIC       
+              #define HWINT_VEC                  IRQ0_VEC
 
-       #define APIC_8259A                  0
-       #define APIC_KEYBOARD               1
-       #define APIC_8254_TIMER             2
-       #define APIC_SERIAL_A               3
-       #define APIC_SERIAL_B               4
-       #define APIC_PARALLEL_A             5
-       #define APIC_FLOPPY                 6
-       #define APIC_PARALLEL_B             7
-       #define APIC_RTC_TIMER              8
-       #define APIC_GENERIC_1              9
-       #define APIC_GENERIC_2             10
-       #define APIC_HPET_TIMER2           11
-       #define APIC_HPET_TIMER3           12
-       #define APIC_FERR                  13
-       #define APIC_SATA_PRIM             14
-       #define APIC_SATA_SCND             15
-       #define APIC_PIRQA                 16
-       #define APIC_PIRQB                 17
-       #define APIC_PIRQC                 18
-       #define APIC_PIRQD                 19
-       #define APIC_PIRQE                 20
-       #define APIC_PIRQF                 21
-       #define APIC_PIRQG                 22
-       #define APIC_PIRQH                 23
-
-       #ifndef USE_APIC
+              #define CLOCK_IRQ                   0
+              #define KEYBOARD_IRQ                1
+              #define SERIAL_B_IRQ                3	/* default ethernet interrupt vector */
+              #define SERIAL_A_IRQ                4	/* RS232 interrupt vector for port 1 */
+              #define PARALLEL_B_IRQ              5	/* xt winchester */
+              #define FLOPPY_IRQ                  6	/* floppy disk */
+              #define PARALLEL_A_IRQ              7
+              #define RTC_TIMER_IRQ               8
+              #define PRESERVED_1_IRQ            10
+              #define PRESERVED_2_IRQ            11
+              #define PS2_MOUSE_IRQ              12	/* AUX (PS/2 mouse) port in kbd controller */
+              #define FPU_IRQ                    13
+              #define SATA_PRIM_IRQ              14	/* at winchester controller 0 */
+              #define SATA_SCND_IRQ              15	/* at winchester controller 1 */
               #define NR_IRQ_VECS                16
-              #define VECTOR(irq)    \
-              (((irq) < 8 ? IRQ0_VEC : IRQ8_VEC) + ((irq) & 0x07))
+              #define VECTOR(vec)    \
+                     (((vec) < 8 ? IRQ0_VEC : IRQ8_VEC) + ((vec) & 0x07))
        #else
+              #define HWINT_VEC                  APIC_IRQ0_VEC
+
+              #define APIC_8259A                  0
+              #define KEYBOARD_IRQ                1
+              #define CLOCK_IRQ                   2
+              #define SERIAL_A_IRQ                3
+              #define SERIAL_B_IRQ                4
+              #define PARALLEL_A_IRQ              6
+              #define FLOPPY_IRQ                  6
+              #define PARALLEL_B_IRQ              7
+              #define RTC_TIMER_IRQ               8
+              #define GENERIC_1_IRQ               9
+              #define GENERIC_2_IRQ              10
+              #define HPET_TIMER2_IRQ            11
+              #define HPET_TIMER3_IRQ            12
+              #define FERR_IRQ                   13
+              #define SATA_PRIM_IRQ              14
+              #define SATA_SCND_IRQ              15
+              #define APIC_PIRQA                 16
+              #define APIC_PIRQB                 17
+              #define APIC_PIRQC                 18
+              #define APIC_PIRQD                 19
+              #define APIC_PIRQE                 20
+              #define APIC_PIRQF                 21
+              #define APIC_PIRQG                 22
+              #define APIC_PIRQH                 23
               #define NR_IRQ_VECS                24
-              #define VECTOR(irq)         (irq + APIC_IRQ0_VEC)
+              #define VECTOR(vec)                (vec + APIC_IRQ0_VEC)
        #endif
 #endif /* _INTERRUPT_H_ */

@@ -24,7 +24,6 @@
 #include "../../../include/ktypes.h"
 
 	/*
-
 	32  ~   55	I/O APIC
 		32	8259A
 		33	keyboard
@@ -51,7 +50,6 @@
 		54	PIRQG
 		55	PIRQH
 		
-		
 	0x80		system call
 
 	150 ~   200	Local APIC
@@ -65,10 +63,6 @@
 
 	200 ~   255	MP IPI
 
-	*/
-
-	/*
-
 	1:	LVT	CMCI
 	2:	LVT	Timer
 	3:	LVT	Thermal Monitor
@@ -76,88 +70,6 @@
 	5:	LVT	LINT0
 	6:	LVT	LINT1
 	7:	LVT	Error
-
-	*/
-
-	/*
-		LVT
-	*/
-
-	typedef struct __attribute__((packed))
-	{
-		uint32_t	vector			:8,		//0~7	ALL
-					deliver_mode	:3,		//8~10	      CMCI LINT0 LINT1 PerformCounter ThermalSensor
-					res_1			:1,		//11
-					deliver_status	:1,		//12	ALL
-					polarity		:1,		//13	           LINT0 LINT1
-					irr				:1,		//14	           LINT0 LINT1
-					trigger			:1,		//15	           LINT0 LINT1
-					mask			:1,		//16	ALL
-					timer_mode		:2,		//17~18	Timer
-					res_2			:13;	//19~31
-	} apic_lvt_s;
-
-	/*
-		ICR
-	*/
-
-	typedef struct __attribute__((packed))
-	{
-		uint32_t	vector			:8,		//0~7
-					deliver_mode	:3,		//8~10
-					dest_mode		:1,		//11
-					deliver_status	:1,		//12
-					res_1			:1,		//13
-					level			:1,		//14
-					trigger			:1,		//15
-					res_2			:2,		//16~17
-					dest_shorthand	:2,		//18~19
-					res_3			:12;	//20~31
-		
-		union {
-			struct {
-				uint32_t	res_4		:24,//32~55
-							dest_field	:8;	//56~63		
-				} apic_dst;
-				
-			uint32_t	x2apic_dst;			//32~63
-			} dst;
-			
-	} intcmd_reg_s;
-
-	/*
-		RTE
-	*/
-
-	typedef struct __attribute__((packed))
-	{
-		uint32_t	vector			:8,		//0~7
-					deliver_mode	:3,		//8~10
-					dest_mode		:1,		//11
-					deliver_status	:1,		//12
-					polarity		:1,		//13
-					irr				:1,		//14
-					trigger			:1,		//15
-					mask			:1,		//16
-					reserved		:15;	//17~31
-
-		union{
-			struct {
-				uint32_t	reserved1	:24,//32~55
-							phy_dest	:4,	//56~59
-							reserved2	:4;	//60~63
-				} physical;
-
-			struct {
-				uint32_t	reserved1		:24,//32~55
-							logical_dest	:8;	//56~63
-				} logical;
-			} dst;
-	} ioapic_retentry_s;
-
-	/*
-
-	*/
 
 	//delivery mode
 	#define	APIC_ICR_IOAPIC_Fixed			0	//	LAPIC	IOAPIC 	ICR
@@ -168,11 +80,8 @@
 	#define	APIC_ICR_IOAPIC_INIT			5	//	LAPIC	IOAPIC 	ICR
 	#define	ICR_Start_up					6	//	ICR
 	#define	IOAPIC_ExtINT					7	//	IOAPIC
-
-
-	/*
-
 	*/
+
 	//timer mode
 	#define APIC_LVT_Timer_One_Shot			0
 	#define APIC_LVT_Timer_Periodic			1
@@ -211,43 +120,5 @@
 	//pin polarity
 	#define APIC_IOAPIC_POLARITY_HIGH		0
 	#define APIC_IOAPIC_POLARITY_LOW		1
-
-	typedef struct IOAPIC_map
-	{
-		phy_addr	phys_addr;
-		uint8_t *	virt_idx_addr;
-		uint32_t *	virt_data_addr;
-		uint32_t *	virt_EOI_addr;
-	} ioapic_map_s;
-
-	void apic_hwint0(void);
-	void apic_hwint1(void);
-	void apic_hwint2(void);
-	void apic_hwint3(void);
-	void apic_hwint4(void);
-	void apic_hwint5(void);
-	void apic_hwint6(void);
-	void apic_hwint7(void);
-	void apic_hwint8(void);
-	void apic_hwint9(void);
-	void apic_hwint10(void);
-	void apic_hwint11(void);
-	void apic_hwint12(void);
-	void apic_hwint13(void);
-	void apic_hwint14(void);
-	void apic_hwint15(void);
-	void apic_hwint16(void);
-	void apic_hwint17(void);
-	void apic_hwint18(void);
-	void apic_hwint19(void);
-	void apic_hwint20(void);
-	void apic_hwint21(void);
-	void apic_hwint22(void);
-	void apic_hwint23(void);
-
-	uint64_t ioapic_rte_read(uint8_t index);
-	void ioapic_rte_write(uint8_t index, uint64_t value);
-	void apic_do_irq(stack_frame_s * sf_regs);
-	// void do_IRQ(stack_frame_s * sf_regs, unsigned long nr);
 
 #endif
