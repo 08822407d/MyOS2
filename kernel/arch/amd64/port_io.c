@@ -83,6 +83,34 @@ inline __always_inline void io_mfence()
 	__asm__ __volatile__("mfence	\n");
 }
 
+/*===========================================================================*
+ *							x86 asm instructions' warpper					 *
+ *===========================================================================*/
+inline __always_inline void nop()
+{
+	__asm__ __volatile__("nop	\n");
+}
+
+inline __always_inline void std()
+{
+	__asm__ __volatile__("std	\n");
+}
+
+inline __always_inline void cld()
+{
+	__asm__ __volatile__("cld	\n");
+}
+
+inline __always_inline void cli()
+{
+	__asm__ __volatile__("cli	\n");
+}
+
+inline __always_inline void sti()
+{
+	__asm__ __volatile__("sti	\n");
+}
+
 inline __always_inline void get_cpuid(unsigned int Mop,
 									  unsigned int Sop,
 									  unsigned int * a,
@@ -90,8 +118,8 @@ inline __always_inline void get_cpuid(unsigned int Mop,
 									  unsigned int * c,
 									  unsigned int * d)
 {
-	__asm__ __volatile__	(	"cpuid	\n\t"
-					:"=a"(*a),"=b"(*b),"=c"(*c),"=d"(*d)
-					:"0"(Mop),"2"(Sop)
-				);
+	__asm__ __volatile__("cpuid	\n\t"
+						 :"=a"(*a),"=b"(*b),"=c"(*c),"=d"(*d)
+						 :"0"(Mop),"2"(Sop)
+						 :);
 }

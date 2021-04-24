@@ -6,6 +6,7 @@
 #include <lib/utils.h>
 
 #include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/keyboard.h"
 #include "../arch/amd64/include/multiboot2.h"
 
 	#define MAXMEMZONE		64
@@ -83,4 +84,12 @@
 		unsigned long	dsobj_free_count;
 	} Slab_Cache_s;
 	
+	typedef struct keyboard_inputbuffer
+	{
+		unsigned char * p_head;
+		unsigned char * p_tail;
+		int count;
+		unsigned char buf[KB_BUF_SIZE];
+	} kbd_inbuf_s;
+
 #endif /* _K_TYPES_H_ */

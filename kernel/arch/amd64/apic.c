@@ -33,7 +33,7 @@ void IOAPIC_enable(unsigned long irq_nr)
 	unsigned long value = 0;
 	value = ioapic_rte_read(irq_nr * 2 + 0x10);
 	value = value & (~0x10000UL); 
-	ioapic_rte_write(irq_nr * 2 + 0x10,value);
+	ioapic_rte_write(irq_nr * 2 + 0x10, value);
 }
 
 void IOAPIC_disable(unsigned long irq_nr)
@@ -41,13 +41,13 @@ void IOAPIC_disable(unsigned long irq_nr)
 	unsigned long value = 0;
 	value = ioapic_rte_read(irq_nr * 2 + 0x10);
 	value = value | 0x10000UL; 
-	ioapic_rte_write(irq_nr * 2 + 0x10,value);
+	ioapic_rte_write(irq_nr * 2 + 0x10, value);
 }
 
 unsigned long IOAPIC_install(unsigned long irq_nr, void * arg)
 {
 	ioapic_retentry_s *entry = (ioapic_retentry_s *)arg;
-	ioapic_rte_write(irq_nr * 2 + 0x10,*(unsigned long *)entry);
+	ioapic_rte_write(irq_nr * 2 + 0x10, *(unsigned long *)entry);
 
 	return 1;
 }

@@ -175,6 +175,11 @@
 	uint64_t rdmsr(uint64_t msr_addr);
 	void wrmsr(unsigned long msr_addr,unsigned long value);
 	void io_mfence(void);
+	void nop(void);
+	void std(void);
+	void cld(void);
+	void cli(void);
+	void sti(void);
 	void get_cpuid(unsigned int Mop,unsigned int Sop,
 				unsigned int * a,unsigned int * b,
 				unsigned int * c,unsigned int * d);
@@ -197,5 +202,6 @@
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+	int unregister_irq(unsigned long irq);
 
 #endif /* _AMD64_PROTO_H_ */

@@ -23,5 +23,8 @@ void kmain(void)
 	// *(atestp + 2) = 0xfedcba987654321;
 	// kfree(testp);
 
-    while(1){};
+    while(1){
+		if(p_kb->count)
+			analysis_keycode();
+	};
 }

@@ -196,10 +196,10 @@
 			struct {
 				uint32_t	res_4		:24,//32~55
 							dest_field	:8;	//56~63		
-				} apic_dst;
+			} apic_dst;
 				
 			uint32_t	x2apic_dst;			//32~63
-			} dst;
+		} dst;
 			
 	} intcmd_reg_s;
 
@@ -221,13 +221,13 @@
 				uint32_t	reserved1	:24,//32~55
 							phy_dest	:4,	//56~59
 							reserved2	:4;	//60~63
-				} physical;
+			} physical;
 
 			struct {
 				uint32_t	reserved1		:24,//32~55
 							logical_dest	:8;	//56~63
-				} logical;
-			} dst;
+			} logical;
+		} dst;
 	} ioapic_retentry_s;
 
 
