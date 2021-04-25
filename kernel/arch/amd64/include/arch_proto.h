@@ -205,6 +205,7 @@
 	int unregister_irq(unsigned long irq);
 
 	/* smp.c */
-	void SMP_init();
+	void init_cpu(void);
+	void SMP_init(void);
 
 #endif /* _AMD64_PROTO_H_ */

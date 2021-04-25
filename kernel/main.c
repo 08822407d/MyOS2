@@ -23,6 +23,7 @@ void kmain(void)
 	// *(atestp + 2) = 0xfedcba987654321;
 	// kfree(testp);
 	
+	init_cpu();
 	SMP_init();
 
     while(1){
