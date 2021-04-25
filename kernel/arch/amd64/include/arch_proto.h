@@ -180,7 +180,7 @@
 	void cld(void);
 	void cli(void);
 	void sti(void);
-	void get_cpuid(unsigned int Mop,unsigned int Sop,
+	void cpuid(unsigned int Mop,unsigned int Sop,
 				unsigned int * a,unsigned int * b,
 				unsigned int * c,unsigned int * d);
 	// void intr_disable(void);
@@ -203,5 +203,8 @@
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
+
+	/* smp.c */
+	void SMP_init();
 
 #endif /* _AMD64_PROTO_H_ */

@@ -111,7 +111,7 @@ inline __always_inline void sti()
 	__asm__ __volatile__("sti	\n");
 }
 
-inline __always_inline void get_cpuid(unsigned int Mop,
+inline __always_inline void cpuid(unsigned int Mop,
 									  unsigned int Sop,
 									  unsigned int * a,
 									  unsigned int * b,

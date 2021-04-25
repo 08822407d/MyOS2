@@ -142,20 +142,19 @@ void LAPIC_init()
 	unsigned int a,b,c,d;
 
 	//check APIC & x2APIC support
-	get_cpuid(1,0,&a,&b,&c,&d);
-	//void get_cpuid(unsigned int Mop,unsigned int Sop,unsigned int * a,unsigned int * b,unsigned int * c,unsigned int * d)
+	cpuid(1,0,&a,&b,&c,&d);
 
-#ifdef DEBUG
-	if((1<<9) & d)
-		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
-	else
-		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
+// #ifdef DEBUG
+// 	if((1<<9) & d)
+// 		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
+// 	else
+// 		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
 	
-	if((1<<21) & c)
-		color_printk(WHITE, BLACK, "x2APIC supported\n");
-	else
-		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
-#endif
+// 	if((1<<21) & c)
+// 		color_printk(WHITE, BLACK, "x2APIC supported\n");
+// 	else
+// 		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
+// #endif
 
 	//enable xAPIC & x2APIC
 	__asm__ __volatile__("movq 	$0x1b,	%%rcx	\n\t"
@@ -169,11 +168,11 @@ void LAPIC_init()
 						 :
 						 :"memory");
 
-#ifdef DEBUG
-	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\t",x,y);
-	if(x&0xc00)
-		color_printk(WHITE,BLACK,"xAPIC & x2APIC enabled\n");
-#endif
+// #ifdef DEBUG
+// 	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\t",x,y);
+// 	if(x&0xc00)
+// 		color_printk(WHITE,BLACK,"xAPIC & x2APIC enabled\n");
+// #endif
 
 	//enable SVR[8]
 	__asm__ __volatile__("movq 	$0x80f,	%%rcx	\n\t"
@@ -187,13 +186,13 @@ void LAPIC_init()
 						 :
 						 :"memory");
 
-#ifdef DEBUG
-	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\t",x,y);
-	if(x&0x100)
-		color_printk(WHITE,BLACK,"SVR[8] enabled\n");
-	if(x&0x1000)
-		color_printk(WHITE,BLACK,"SVR[12] enabled\n");
-#endif
+// #ifdef DEBUG
+// 	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\t",x,y);
+// 	if(x&0x100)
+// 		color_printk(WHITE,BLACK,"SVR[8] enabled\n");
+// 	if(x&0x1000)
+// 		color_printk(WHITE,BLACK,"SVR[12] enabled\n");
+// #endif
 
 	//get local APIC ID
 	__asm__ __volatile__(	"movq $0x802,	%%rcx	\n\t"
@@ -202,9 +201,9 @@ void LAPIC_init()
 				:
 				:"memory");
 	
-#ifdef DEBUG
-	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\tx2APIC ID:%#010x\n",x,y,x);
-#endif
+// #ifdef DEBUG
+// 	color_printk(WHITE,BLACK,"eax:%#010x,edx:%#010x\tx2APIC ID:%#010x\n",x,y,x);
+// #endif
 	
 	//get local APIC version
 	__asm__ __volatile__(	"movq $0x803,	%%rcx	\n\t"
@@ -216,14 +215,14 @@ void LAPIC_init()
 	int lapic_ver = x & 0xFF;
 	int max_lvt = (x >> 16 & 0xff) + 1;
 	int svr12_support = x >> 24 & 0x1;
-#ifdef DEBUG
-	color_printk(WHITE,BLACK,"local APIC Version:%#010x,Max LVT Entry:%#010x,SVR(Suppress EOI Broadcast):%#04x\t",
-					lapic_ver, max_lvt, svr12_support);
-	if(lapic_ver < 0x10)
-		color_printk(WHITE,BLACK,"82489DX discrete APIC\n");
-	else if( (lapic_ver >= 0x10) && (lapic_ver <= 0x15) )
-		color_printk(WHITE,BLACK,"Integrated APIC\n");
-#endif
+// #ifdef DEBUG
+// 	color_printk(WHITE,BLACK,"local APIC Version:%#010x,Max LVT Entry:%#010x,SVR(Suppress EOI Broadcast):%#04x\t",
+// 					lapic_ver, max_lvt, svr12_support);
+// 	if(lapic_ver < 0x10)
+// 		color_printk(WHITE,BLACK,"82489DX discrete APIC\n");
+// 	else if( (lapic_ver >= 0x10) && (lapic_ver <= 0x15) )
+// 		color_printk(WHITE,BLACK,"Integrated APIC\n");
+// #endif
 
 	__asm__ __volatile__("cmpq	$0x07,	%%rbx	\n\t"	// if max_lvt smaller than 7,it means the paltform does not
 						 "jb	skip_cmci		\n\t"	// support CMCI register,for example bochs, vbox and qemu
@@ -246,9 +245,9 @@ void LAPIC_init()
 						 :"a"(0x10000),"d"(0x00),"b"(max_lvt)
 						 :"memory");
 
-#ifdef DEBUG
-	color_printk(GREEN,BLACK,"Mask ALL LVT\n");
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN,BLACK,"Mask ALL LVT\n");
+// #endif
 
 	//TPR
 	__asm__ __volatile__("movq 	$0x808,	%%rcx	\n\t"
@@ -257,9 +256,9 @@ void LAPIC_init()
 						 :
 						 :"memory");
 
-#ifdef DEBUG
-	color_printk(GREEN,BLACK,"Set LVT TPR:%#010x\t",x);
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN,BLACK,"Set LVT TPR:%#010x\t",x);
+// #endif
 
 	//PPR
 	__asm__ __volatile__("movq 	$0x80a,	%%rcx	\n\t"
@@ -268,9 +267,9 @@ void LAPIC_init()
 						 :
 						 :"memory");
 
-#ifdef DEBUG
-	color_printk(GREEN,BLACK,"Set LVT PPR:%#010x\n",x);
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN,BLACK,"Set LVT PPR:%#010x\n",x);
+// #endif
 }
 
 /*
@@ -286,27 +285,27 @@ void IOAPIC_init()
 	io_mfence();
 	*ioapic_map.virt_data_addr = 0x0f000000;
 	io_mfence();
-#ifdef DEBUG
-	color_printk(GREEN, BLACK, "Get IOAPIC ID REG:%#010x,ID:%#010x\n",
-					*ioapic_map.virt_data_addr, *ioapic_map.virt_data_addr>> 24 & 0xf);
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN, BLACK, "Get IOAPIC ID REG:%#010x,ID:%#010x\n",
+// 					*ioapic_map.virt_data_addr, *ioapic_map.virt_data_addr>> 24 & 0xf);
+// #endif
 	io_mfence();
 
 	//	I/O APIC	Version
 	*ioapic_map.virt_idx_addr = 0x01;
 	io_mfence();
-#ifdef DEBUG
-	color_printk(GREEN, BLACK, "Get IOAPIC Version REG:%#010x,MAX redirection enties:%#08d\n",
-					*ioapic_map.virt_data_addr, ((*ioapic_map.virt_data_addr>> 16) & 0xff) + 1);
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN, BLACK, "Get IOAPIC Version REG:%#010x,MAX redirection enties:%#08d\n",
+// 					*ioapic_map.virt_data_addr, ((*ioapic_map.virt_data_addr>> 16) & 0xff) + 1);
+// #endif
 
 	//RTE	
 	for(i = 0x10;i < 0x40;i += 2)
 		ioapic_rte_write(i, 0x10000 + APIC_IRQ0_VEC + ((i - 0x10) >> 1));
 
-#ifdef DEBUG
-	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
-#endif
+// #ifdef DEBUG
+// 	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
+// #endif
 }
 
 // /*
@@ -325,5 +324,5 @@ void LAPIC_IOAPIC_init()
 	//init ioapic
 	IOAPIC_init();
 
-	__asm__("sti	\n");
+	sti();
 }

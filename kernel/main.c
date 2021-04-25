@@ -22,6 +22,8 @@ void kmain(void)
 	// *atestp = 0x123456789abcdef;
 	// *(atestp + 2) = 0xfedcba987654321;
 	// kfree(testp);
+	
+	SMP_init();
 
     while(1){
 		if(p_kb->count)
