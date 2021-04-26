@@ -17,12 +17,6 @@ void kmain(void)
 	// init_proc0();
 	// int i = 1 / 0;
 
-	// void * testp = kmalloc(60);
-	// unsigned long * atestp = (unsigned long *)testp;
-	// *atestp = 0x123456789abcdef;
-	// *(atestp + 2) = 0xfedcba987654321;
-	// kfree(testp);
-	
 	init_cpu();
 	SMP_init();
 
