@@ -2,68 +2,196 @@
 
 #include "../../include/const.h"
 
+#define ASM_FILE 1
+#include "include/multiboot2.h"
+#define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
+
 .text
 
+.code64
+.balign 4
 ENTRY(start)
+	jmp     code_64_start
+
+/*===========================================================================*
+ *								multiboot2 header                            *
+ *===========================================================================*/
+	/* Align 64 bits boundary. */
+	.align  8
+	/* Multiboot header. */
+multiboot_header:
+	/* magic */
+	.long   MULTIBOOT2_HEADER_MAGIC
+	/* ISA: i386 */
+	.long   GRUB_MULTIBOOT_ARCHITECTURE_I386
+	/* Header length. */
+	.long   multiboot_header_end - multiboot_header
+	/* checksum */
+	.long   -(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
+//===========================================
+	.align  8
+address_tag_start:
+	.short  MULTIBOOT_HEADER_TAG_ADDRESS
+	.short  MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long   address_tag_end - address_tag_start
+	/* header_addr */
+	.long   multiboot_header
+	/* load_addr */
+	.long   _k_phy_start
+	/* load_end_addr */
+	.long   _k_phy_edata
+	/* bss end addr */
+	.long   _k_phy_ebss
+address_tag_end:
+//===========================================
+	.align  8
+entry_address_tag_start:
+	.short  MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
+	.short  MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long   entry_address_tag_end - entry_address_tag_start
+	/* entry addr */
+	.long   multiboot_entry
+entry_address_tag_end:
+//===========================================
+	.align 8
+multiboot_header_tag_end_begin:
+	.short MULTIBOOT_HEADER_TAG_END
+	.short 0
+	.long 8
+multiboot_header_tag_end_end:
+//===========================================
+multiboot_header_end:
+
+/*===========================================================================*
+ *								grub2 boot entry                             *
+ *===========================================================================*/
+.code32
+.balign 4
+multiboot_entry:
+	movl	$0,		%esi
+	lgdt	GDT_POINTER(%esi)
+	jmp		$0x18,	$_switch_cs_32
+_switch_cs_32:
+	movw    $0x20,		%ax
+	movw    %ax,		%ds
+	movw    %ax,		%es
+	movw    %ax,		%fs
+	movw    %ax,		%gs
+	movw    %ax,		%ss
+	leal	stack_top(%esi),	%esp
+	// open PAE
+	call	set_temp_PDE_32
+	movl	%cr4,		%eax
+	bts		$5,			%eax
+	movl	%eax,		%cr4
+
+	movl	$0x01,		boot_from_grub(%esi)
+
+set_tmp_page:
+	// set page table
+	movl	$__PML4E,	%eax
+	movl	%eax,		%cr3
+
+	// enable long mode
+	movl	$0xC0000080,%ecx
+	rdmsr
+
+	bts		$8,			%eax
+	wrmsr
+
+	// enable PE & paging
+	movl	%cr0,		%eax
+	bts		$0,			%eax
+	bts		$31,		%eax
+	movl	%eax,		%cr0
+
+go_to_64_code:
+	jmp		$0x18,		$code_64_start
+
+	hlt
+
+set_temp_PDE_32:
+	movl	$0x83,	%eax
+	movl	$__PDE,	%edi
+	movl	$0x200,	%ecx
+l1:
+	movl	%eax,	(%edi)
+	addl	$0x200000,	%eax
+	addl	$8,		%edi
+	loop	l1
+	retl
+
+/*===========================================================================*
+ *								long mode code                               *
+ *===========================================================================*/
+.code64
+.balign 4
+code_64_start:
 	cli
-    movq    $stack_top,	%rax
-    movq    %rax,		%rsp
+	movq    $stack_top,	%rax
+	movq    %rax,		%rsp
 //=======load GDTR
 	lgdt	GDT_POINTER(%rip)
 //=======load dummy IDTR
 	lidt	IDT_POINTER(%rip)
 //=======load cr3
-	callq	set_temp_PDE
-    movq	$__PML4E,	%rax
+	movq	__PDE,	%rax
+	cmpq	$0,		%rax
+	jne		skip_set_pde
+	
+	callq	set_temp_PDE_64
+skip_set_pde:
+	movq	$__PML4E,	%rax
 	movq	%rax,		%cr3
-    movq    $temp_reload_cs, %rax
-    pushq   $0x08
-    pushq   %rax
-    lretq
+	movq    $temp_reload_cs, %rax
+	pushq   $0x08
+	pushq   %rax
+	lretq
 
 temp_reload_cs:
-    movq    $stack_top,	%rbx
-    movq    $0x10,		%rax
-    movq    %rax,		%ss
-    movq    %rbx,		%rsp
+	movq    $stack_top,	%rbx
+	movq    $0x10,		%rax
+	movq    %rax,		%ss
+	movq    %rbx,		%rsp
 
-    pushq   $0
-    popfq
-    pushq   $0
+	pushq   $0
+	popfq
+	pushq   $0
 
-    pushq   $ret_from_preinit
-    movabsq $pre_init,	%rax
-    pushq   $0x08
-    pushq   %rax
-    lretq
+	pushq   $ret_from_preinit
+	movabsq $pre_init,	%rax
+	pushq   $0x08
+	pushq   %rax
+	lretq
 ret_from_preinit:
-// reset stack to the stack in proc0_PCB(in higher half mem)
+// reset stack to the stack in proc0_PCB(in higher half memory)
 	movabsq	$proc0_PCB,	%rbx
 	addq	$PROC_KSTACK_SIZE	, %rbx
-    movq    $0x10,		%rax
-    movq    %rax,		%ss
-    movq    %rbx,		%rsp
+	movq    $0x10,		%rax
+	movq    %rax,		%ss
+	movq    %rbx,		%rsp
 
-    pushq   $ret_from_kmain
-    movabsq $kmain,		%rax
-    pushq   $0x08
-    pushq   %rax
-    lretq
+	pushq   $ret_from_kmain
+	movabsq $kmain,		%rax
+	pushq   $0x08
+	pushq   %rax
+	lretq
 ret_from_kmain:
 
 hang:
-    jmp     hang
+	jmp     hang
 
-set_temp_PDE:
+set_temp_PDE_64:
 	movq	$0x83,	%rax
 	movq	$__PDE,	%rdi
 	movq	$0x200,	%rcx
-l1:
+l2:
 	movq	%rax,	(%rdi)
 	addq	$0x200000,	%rax
 	addq	$8,		%rdi
-	loop	l1
+	loop	l2
 	retq
+
 
 .data
 //=======init page
@@ -87,9 +215,11 @@ __PDE:
 
 //=======GDT_Table
 GDT_Table:
-	.quad	0x0000000000000000			/*0	NULL descriptor		       	00*/
+	.quad	0x0000000000000000			/*0	NULL descriptor		       		00*/
 	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
 	.quad	0x0000920000000000			/*2	KERNEL	Data	64-bit	Segment	10*/
+	.quad	0x00cf9a000000ffff			/*1	KERNEL	Code	32-bit	Segment	08*/
+	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	10*/
 GDT_END:
 
 GDT_POINTER:
@@ -104,7 +234,16 @@ IDT_POINTER:
 IDT_LIMIT:	.word	IDT_END - IDT_Table - 1
 IDT_BASE:	.quad	IDT_Table
 
+.balign 4
+code64_vector:
+	.long	code_64_start
+	.word	0x8,0
+
+boot_from_grub:
+	.long	0x0
+	.long	0x0
+
 //=======temp stack
 stack_start:
-    .fill  128,8,0
+	.fill  128,8,0
 stack_top:

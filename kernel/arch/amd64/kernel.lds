@@ -5,6 +5,8 @@ ENTRY(start)
 _k_phy_start	= 0x1000000;
 _k_vir_start	= 0xffff800001000000;
 _k_offset		= _k_vir_start - _k_phy_start;
+_k_phy_edata	= _edata - _k_offset;
+_k_phy_ebss		= _ebss - _k_offset;
 
 __k_unpaged__k_offset		= _k_offset;
 __k_unpaged__k_vir_start	= _k_vir_start;
