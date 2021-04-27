@@ -106,7 +106,7 @@ set_tmp_page:
 	movl	%eax,		%cr0
 
 go_to_64_code:
-	jmp		$0x18,		$code_64_start
+	jmp		$0x08,		$code_64_start
 
 	hlt
 
