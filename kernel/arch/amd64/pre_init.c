@@ -24,33 +24,59 @@ extern memory_info_s	mem_info;
 kinfo_s kparam;
 framebuffer_s framebuffer;
 
-void get_multiboot2_info(uint64_t multiboot2_info_base)
+void get_multiboot2_info(size_t multiboot2_info_base)
 {
 	int mb2_tagsize = 0;
 	vir_addr mb2info_start = phy2vir((phy_addr)multiboot2_info_base);
-	vir_addr mb2info_end = (vir_addr)((uint64_t)*((uint32_t *)mb2info_start));
-	vir_addr mb2info_next = mb2info_start + 8;
-	// find e820 tag
+	vir_addr mb2info_end = mb2info_start + *((uint32_t *)mb2info_start);
+	vir_addr mb2info_curr = mb2info_start;
+	vir_addr mb2info_next = mb2info_start + 8;	// the head tag is 8byte long
+	int mb2_tagtype = 0;
 	while (mb2info_next < mb2info_end)
 	{
+		mb2info_curr = mb2info_next;
+		mb2_tagsize  = *(uint32_t *)(mb2info_curr + 4);
+		mb2info_next = mb2info_curr + (size_t)mb2_tagsize;
+		mb2info_next = (vir_addr)(((size_t)mb2info_next + 7) & 0xFFFFFFF8); // tag must start at 8byte addr
+		mb2_tagtype = *(uint32_t *)mb2info_curr;
+		// find e820 tag
+		if (mb2_tagtype == MULTIBOOT_TAG_TYPE_MMAP)
+		{
+			struct multiboot_tag_mmap * mb2_mmap_p = (struct multiboot_tag_mmap *)mb2info_curr;
+			size_t e820_entnum = (mb2_mmap_p->size -16) / mb2_mmap_p->entry_size;
+			struct multiboot_mmap_entry * e820_entry_p = &mb2_mmap_p->entries[0];
 
+			mem_info.mb_memmap_nr = e820_entnum;
+			for (int i = 0; (vir_addr)e820_entry_p < mb2info_next; e820_entry_p++, i++)
+			{
+				mem_info.mb_memmap[i].addr = e820_entry_p->addr;
+				mem_info.mb_memmap[i].len  = e820_entry_p->len;
+				mem_info.mb_memmap[i].type = e820_entry_p->type;
+				mem_info.mb_memmap[i].zero = 0;
+			}
+		}
+		// find framebuffer tag
+		if (mb2_tagtype == MULTIBOOT_TAG_TYPE_FRAMEBUFFER)
+		{
+			struct multiboot_tag_framebuffer_common * mb2_fb_p = (struct multiboot_tag_framebuffer_common *)mb2info_curr;
+			framebuffer.FB_phybase = (phy_addr)mb2_fb_p->framebuffer_addr;
+			framebuffer.FB_size	   = mb2_fb_p->size;
+			framebuffer.X_Resolution = mb2_fb_p->framebuffer_width;
+			framebuffer.Y_Resolution = mb2_fb_p->framebuffer_height;
+			nop();
+		}
 	}
-	// find framebuffer tag
 }
 
-void pre_init(uint64_t mb2info_base)
+void pre_init(size_t mb2info_base)
 {
-	uint64_t tmp = mb2info_base;
-	get_multiboot2_info(mb2info_base);
+
 	// enalble syscall/sysret machanism
 	uint64_t ia32_efer = rdmsr(IA32_EFER);
 	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
 	wrmsr(IA32_EFER, ia32_efer);
 
-
 	memset((void *)&_bss, 0, (void *)&_ebss - (void *)&_bss);
-	memset((void *)&kparam, 0, sizeof(kparam));
-	memset((void *)&mem_info, 0, sizeof(mem_info));
 
 	kparam.kernel_phy_base	= &_k_phy_start;
 	kparam.kernel_vir_base	= &_k_vir_start;
