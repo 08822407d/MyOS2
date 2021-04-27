@@ -9,7 +9,7 @@
 .text
 
 .code64
-.balign 4
+.balign	8
 ENTRY(start)
 	jmp     code_64_start
 
@@ -46,18 +46,42 @@ address_tag_end:
 //===========================================
 	.align  8
 entry_address_tag_start:
-	.short  MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
-	.short  MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long   entry_address_tag_end - entry_address_tag_start
-	/* entry addr */
-	.long   multiboot_entry
+	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	entry_address_tag_end - entry_address_tag_start
+	.long	multiboot_entry
 entry_address_tag_end:
 //===========================================
-	.align 8
+// 	.align	8
+// efi_boot_service_tag_start:
+// 	.short	MULTIBOOT_HEADER_TAG_EFI_BS
+// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+// 	.long	efi_boot_service_tag_end - efi_boot_service_tag_start
+// efi_boot_service_tag_end:
+//===========================================
+// 	.align	8
+// efi_amd64_entry_address_tag_start:
+// 	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS_EFI64
+// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+// 	.long	efi_amd64_entry_address_tag_end - efi_amd64_entry_address_tag_start
+// 	.long	code_64_start
+// efi_amd64_entry_address_tag_end:
+//===========================================
+	.align	8
+framebuffer_tag_start:  
+	.short	MULTIBOOT_HEADER_TAG_FRAMEBUFFER
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	framebuffer_tag_end - framebuffer_tag_start
+	.long	1920
+	.long	1080
+	.long	32
+framebuffer_tag_end:
+//===========================================
+	.align	8
 multiboot_header_tag_end_begin:
-	.short MULTIBOOT_HEADER_TAG_END
-	.short 0
-	.long 8
+	.short	MULTIBOOT_HEADER_TAG_END
+	.short	0
+	.long	8
 multiboot_header_tag_end_end:
 //===========================================
 multiboot_header_end:
@@ -66,9 +90,12 @@ multiboot_header_end:
  *								grub2 boot entry                             *
  *===========================================================================*/
 .code32
-.balign 4
+.balign 8
 multiboot_entry:
 	movl	$0,		%esi
+//	store boot info
+	movl	%ebx,	multiboot2_info_base(%esi)
+//	start initialize
 	lgdt	GDT_POINTER(%esi)
 	jmp		$0x18,	$_switch_cs_32
 _switch_cs_32:
@@ -85,7 +112,7 @@ _switch_cs_32:
 	bts		$5,			%eax
 	movl	%eax,		%cr4
 
-	movl	$0x01,		boot_from_grub(%esi)
+	movl	$0x01,		boot_from_grub2(%esi)
 
 set_tmp_page:
 	// set page table
@@ -125,7 +152,7 @@ l1:
  *								long mode code                               *
  *===========================================================================*/
 .code64
-.balign 4
+.balign 8
 code_64_start:
 	cli
 	movq    $stack_top,	%rax
@@ -135,11 +162,12 @@ code_64_start:
 //=======load dummy IDTR
 	lidt	IDT_POINTER(%rip)
 //=======load cr3
-	movq	__PDE,	%rax
-	cmpq	$0,		%rax
-	jne		skip_set_pde
+	movq	boot_from_grub2,	%rax
+	cmpq	$0x01,		%rax
+	je		skip_set_pde
 	
 	callq	set_temp_PDE_64
+	movq	$0,	boot_from_grub2
 skip_set_pde:
 	movq	$__PML4E,	%rax
 	movq	%rax,		%cr3
@@ -159,6 +187,7 @@ temp_reload_cs:
 	pushq   $0
 
 	pushq   $ret_from_preinit
+	movq	multiboot2_info_base(%rip),	%rdi
 	movabsq $pre_init,	%rax
 	pushq   $0x08
 	pushq   %rax
@@ -235,13 +264,11 @@ IDT_LIMIT:	.word	IDT_END - IDT_Table - 1
 IDT_BASE:	.quad	IDT_Table
 
 .balign 4
-code64_vector:
-	.long	code_64_start
-	.word	0x8,0
+multiboot2_info_base:
+	.quad	0x0
 
-boot_from_grub:
-	.long	0x0
-	.long	0x0
+boot_from_grub2:
+	.quad	0x0
 
 //=======temp stack
 stack_start:

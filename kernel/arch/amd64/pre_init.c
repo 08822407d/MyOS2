@@ -1,8 +1,11 @@
+#include <sys/types.h>
 #include <lib/string.h>
 
 #include "include/bootinfo.h"
 #include "include/arch_proto.h"
 #include "include/archconst.h"
+#include "include/multiboot2.h"
+
 #include "../../include/param.h"
 #include "../../include/glo.h"
 #include "../../include/ktypes.h"
@@ -13,13 +16,32 @@ extern char _k_vir_start;
 extern char _bss;
 extern char _ebss;
 extern char _end;
+
+extern	uint64_t	boot_from_grub2;
+
 extern memory_info_s	mem_info;
 
 kinfo_s kparam;
 framebuffer_s framebuffer;
 
-void pre_init()
+void get_multiboot2_info(uint64_t multiboot2_info_base)
 {
+	int mb2_tagsize = 0;
+	vir_addr mb2info_start = phy2vir((phy_addr)multiboot2_info_base);
+	vir_addr mb2info_end = (vir_addr)((uint64_t)*((uint32_t *)mb2info_start));
+	vir_addr mb2info_next = mb2info_start + 8;
+	// find e820 tag
+	while (mb2info_next < mb2info_end)
+	{
+
+	}
+	// find framebuffer tag
+}
+
+void pre_init(uint64_t mb2info_base)
+{
+	uint64_t tmp = mb2info_base;
+	get_multiboot2_info(mb2info_base);
 	// enalble syscall/sysret machanism
 	uint64_t ia32_efer = rdmsr(IA32_EFER);
 	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
