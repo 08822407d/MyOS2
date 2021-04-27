@@ -91,6 +91,11 @@ inline __always_inline void nop()
 	__asm__ __volatile__("nop	\n");
 }
 
+inline __always_inline void hlt()
+{
+	__asm__ __volatile__("hlt	\n");
+}
+
 inline __always_inline void std()
 {
 	__asm__ __volatile__("std	\n");

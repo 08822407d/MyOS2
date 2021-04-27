@@ -176,6 +176,7 @@
 	void wrmsr(unsigned long msr_addr,unsigned long value);
 	void io_mfence(void);
 	void nop(void);
+	void hlt(void);
 	void std(void);
 	void cld(void);
 	void cli(void);
@@ -207,5 +208,6 @@
 	/* smp.c */
 	void init_cpu(void);
 	void SMP_init(void);
+	void Start_SMP(void);
 
 #endif /* _AMD64_PROTO_H_ */

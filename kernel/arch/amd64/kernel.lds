@@ -50,6 +50,14 @@ SECTIONS
 		*.o(.data .rodata*)
 		_edata = .;
 	}
+
+	.APboot_text ALIGN(0x1000) : AT(ADDR(.APboot_text) - _k_offset)
+	{
+		_APboot_text = .;
+		*/AP_boot.S.o(.text)
+		_APboot_etext = .;
+	}
+	
 	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
 	{
 		_bss = .;
