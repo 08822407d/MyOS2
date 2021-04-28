@@ -15,9 +15,8 @@ void kmain(void)
 {
     prot_init();
 
-	devices_init();
+	// devices_init();
 	// init_proc0();
-	// int i = 1 / 0;
 
 	init_cpu();
 	SMP_init();
@@ -44,7 +43,7 @@ void kmain(void)
 	wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 
     while(1){
-		if(p_kb->count)
-			analysis_keycode();
+		// if(p_kb->count)
+		// 	analysis_keycode();
 	};
 }

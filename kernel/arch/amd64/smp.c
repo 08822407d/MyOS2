@@ -89,8 +89,8 @@ void SMP_init()
 	
 	color_printk(WHITE,BLACK,"x2APIC ID level:%#010x\tx2APIC ID the current logical processor:%#010x\n",c & 0xff,d);
 	
-	extern char * _APboot_text;
-	extern char * _APboot_etext;
+	extern char _APboot_text;
+	extern char _APboot_etext;
 	size_t apbbot_len = &_APboot_etext - &_APboot_text;
 	memcpy(phy2vir((phy_addr)0x20000), (vir_addr)&_APboot_text, apbbot_len);
 }
