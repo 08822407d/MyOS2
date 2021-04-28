@@ -4,7 +4,6 @@
 #include "../../../include/const.h"
 
 	/* Constants for protected mode. */
-	#define CONFIG_MAX_CPUS		8
 	#define CONFIG_KSTACK_SIZE	4096
 	#define CONFIG_PAGE_SIZE	CONST_2M
 	#define CONFIG_PAGE_SHIFT	SHIFT_2M
@@ -27,7 +26,8 @@
 	#define USER_CS_INDEX       4
 	#define TSS_INDEX_FIRST     5
 	#define TSS_INDEX(cpu)      (TSS_INDEX_FIRST + (cpu * 2))	/* per cpu kernel tss */
-	#define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* LDT descriptor */
+	#define GDT_SIZE            (TSS_INDEX(8) + 1)/* LDT descriptor */
+	// #define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* LDT descriptor */
 
 	#define SEG_SELECTOR(i)		((i) * 8)
 	#define KERN_CS_SELECTOR	SEG_SELECTOR(KERN_CS_INDEX)

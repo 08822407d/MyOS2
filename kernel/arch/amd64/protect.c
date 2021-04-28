@@ -16,9 +16,9 @@
 /* Storage for gdt, idt and tss. */
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
-tss64_s			tss[CONFIG_MAX_CPUS];
+tss64_s			tss0;
 // char			cpu_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
-char			ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+char			ist_stack0[CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
@@ -123,7 +123,7 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_s * curr_tss = &tss[(index - TSS_INDEX_FIRST) / 2];
+				tss64_s * curr_tss = &tss0;
 				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
@@ -207,9 +207,9 @@ void init_idt()
 	idt_ptr.base  = (uint64_t)idt;
 }
 
-void init_tss(unsigned int cpu_idx)
+void init_bsp_tss()
 {
-	tss64_s *curr_tss = &tss[cpu_idx];
+	tss64_s *curr_tss = &tss0;
 	curr_tss->rsp0 = 0;
 	curr_tss->rsp1 =
 	curr_tss->rsp2 =
@@ -219,14 +219,14 @@ void init_tss(unsigned int cpu_idx)
 	curr_tss->ist4 =
 	curr_tss->ist5 =
 	curr_tss->ist6 =
-	curr_tss->ist7 = (uint64_t)&ist_stacks[cpu_idx] + CONFIG_KSTACK_SIZE;
+	curr_tss->ist7 = (uint64_t)&ist_stack0 + CONFIG_KSTACK_SIZE;
 }
 
 void prot_init(void)
 {
 	init_gdt();
 	init_idt();
-	init_tss(0);
+	init_bsp_tss();
 
 	__asm__ __volatile__("	lgdt	%0						\n\
 							lidt	%1						\n\

@@ -12,7 +12,7 @@ __k_unpaged__k_offset		= _k_offset;
 __k_unpaged__k_vir_start	= _k_vir_start;
 __k_unpaged__k_phy_start	= _k_phy_start;
 
-_APboot_phy_start			= 0x20000;
+_APboot_phy_start			= 0x4000;
 
 SECTIONS
 {

@@ -208,6 +208,6 @@
 	/* smp.c */
 	void init_cpu(void);
 	void SMP_init(void);
-	void Start_SMP(void);
+	void start_SMP(void);
 
 #endif /* _AMD64_PROTO_H_ */
