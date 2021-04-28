@@ -81,6 +81,9 @@ _AP_code64:
 	movq	%rax,		%gs
 	movq	%rax,		%ss
 
+	movabsq	pml4_base,	%rax
+	movq	%rax,		%cr3
+
 	movabsq $start_SMP,	%rax
 	pushq   $0x08
 	pushq   %rax
