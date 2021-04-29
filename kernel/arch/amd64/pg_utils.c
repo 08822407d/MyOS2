@@ -12,10 +12,11 @@
 PML4E_u	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
 PDPTE_u	KERN_PDPT[PDPT_NR][PGENT_NR] __aligned(PGENT_SIZE);
 PDE_u	KERN_PD[PDPT_NR][PGENT_NR][PGENT_NR] __aligned(PGENT_SIZE);
+phy_addr pml4_base = 0;
 
 void pg_clear(void)
 {
-	phy_addr pml4_base = vir2phy(&KERN_PML4);
+	pml4_base = vir2phy(&KERN_PML4);
 	phy_addr pdpt_base = vir2phy(&KERN_PDPT);
 	phy_addr pd_base = vir2phy(&KERN_PD);
 	memset(pml4_base, 0, sizeof(KERN_PML4));

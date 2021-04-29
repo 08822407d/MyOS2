@@ -13,8 +13,8 @@
 #include "../../include/printk.h"
 #include "../../include/const.h"
 
-extern tss64_s	tss[CONFIG_MAX_CPUS];
-extern char		ist_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE];
+extern tss64_s	tss0;
+extern char		ist_stack0;
 
 extern PCB_u	proc0_PCB;
 extern PCB_u	proc1_PCB;
@@ -53,16 +53,16 @@ stack_frame_s * get_current_stackframe(proc_s *curr_proc)
 
 inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 {
-	tss[0].rsp0 = target->arch_struct.tss_rsp0;
-	tss[0].rsp1 =
-	tss[0].rsp2 =
-	tss[0].ist1 =
-	tss[0].ist2 =
-	tss[0].ist3 =
-	tss[0].ist4 =
-	tss[0].ist5 =
-	tss[0].ist6 =
-	tss[0].ist7 = (reg_t)&ist_stacks[0] + CONFIG_KSTACK_SIZE;
+	tss0.rsp0 = target->arch_struct.tss_rsp0;
+	tss0.rsp1 =
+	tss0.rsp2 =
+	tss0.ist1 =
+	tss0.ist2 =
+	tss0.ist3 =
+	tss0.ist4 =
+	tss0.ist5 =
+	tss0.ist6 =
+	tss0.ist7 = (reg_t)&ist_stack0 + CONFIG_KSTACK_SIZE;
 
 	__asm__ __volatile__("movq	%%fs,	%0 \n\t"
 						 : "=a"(curr->arch_struct.fs));

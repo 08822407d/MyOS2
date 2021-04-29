@@ -12,10 +12,11 @@ __k_unpaged__k_offset		= _k_offset;
 __k_unpaged__k_vir_start	= _k_vir_start;
 __k_unpaged__k_phy_start	= _k_phy_start;
 
+_APboot_phy_start			= 0x4000;
+
 SECTIONS
 {
 	. = _k_phy_start;
-
 	__k_unpaged__kern_unpaged_start = .;
 	unpaged_text :
 	{
@@ -35,6 +36,16 @@ SECTIONS
 	}
 	__k_unpaged__kern_unpaged_end = .;
 
+	apb_start_viraddr = ALIGN(0x1000);
+	. = _APboot_phy_start;
+	.APboot_text ALIGN(0x1000) : AT(apb_start_viraddr)
+	{
+		_APboot_text = apb_start_viraddr - _APboot_phy_start;
+		*/AP_boot.S.o(.text)
+		_APboot_etext = . + apb_start_viraddr - _APboot_phy_start;
+	}
+	. = _APboot_etext;
+
 
 	. += _k_offset;
 	.text ALIGN(0x1000) : AT(ADDR(.text) - _k_offset)
@@ -51,13 +62,6 @@ SECTIONS
 		_edata = .;
 	}
 
-	.APboot_text ALIGN(0x1000) : AT(ADDR(.APboot_text) - _k_offset)
-	{
-		_APboot_text = .;
-		*/AP_boot.S.o(.text)
-		_APboot_etext = .;
-	}
-	
 	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
 	{
 		_bss = .;

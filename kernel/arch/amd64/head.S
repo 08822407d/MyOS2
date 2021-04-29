@@ -11,6 +11,7 @@
 .code64
 .balign	8
 ENTRY(start)
+	cli
 	jmp     code_64_start
 
 /*===========================================================================*
@@ -92,6 +93,7 @@ multiboot_header_end:
 .code32
 .balign 8
 multiboot_entry:
+	cli
 	movl	$0,		%esi
 //	store boot info
 	movl	%ebx,	multiboot2_info_base(%esi)
@@ -139,7 +141,6 @@ l1:
 .code64
 .balign 8
 code_64_start:
-	cli
 	movq    $stack_top,	%rax
 	movq    %rax,		%rsp
 //=======load GDTR
@@ -216,6 +217,7 @@ l2:
 
 .org	0x0000
 __PML4E:
+.globl	__PML4E
 	.quad	__PDPTE + 3
 	.fill	255,8,0
 	.quad	__PDPTE + 3
