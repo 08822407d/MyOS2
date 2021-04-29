@@ -12,6 +12,7 @@ ENTRY(_APboot_start)
 _APboot_base = .
 	cli
 	wbinvd
+	hlt
 	mov		$0,			%ax
 	mov		%ax,		%ss
 	mov		$_APboot_tmp_Stack_top,	%esp
@@ -84,12 +85,11 @@ _AP_code64:
 	movabsq	pml4_base,	%rax
 	movq	%rax,		%cr3
 
-	movabsq $start_SMP,	%rax
-	pushq   $0x08
-	pushq   %rax
-	lretq
+	; movabsq $start_SMP,	%rax
+	; pushq   $0x08
+	; pushq   %rax
+	; lretq
 
-	hlt
 
 
 /*===========================================================================*
