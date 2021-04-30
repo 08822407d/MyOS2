@@ -13,11 +13,14 @@
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
+
 /* Storage for gdt, idt and tss. */
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+
+char **			cpu_stacks;
 tss64_s			tss0;
-// char			cpu_stacks[CONFIG_MAX_CPUS][CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
+tss64_s *		tss_ap;
 char			ist_stack0[CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
@@ -160,11 +163,8 @@ void init_gdt()
 	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
 	set_dataseg(USER_SS_INDEX, RW_DATA, 3);
-
-	for (int i = 0; i < 1; i++)
-	{
-		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
-	}
+	// only init tss for bsp
+	set_sysseg(TSS_INDEX(0), TSS_AVAIL, KERN_PRIVILEGE);
 
 	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)gdt;
@@ -222,6 +222,17 @@ void init_bsp_tss()
 	curr_tss->ist7 = (uint64_t)&ist_stack0 + CONFIG_KSTACK_SIZE;
 }
 
+
+void init_ap_env()
+{
+	// init tss for all logical cpus
+	for (int i = 1; i < kparam.lcpu_nr; i++)
+	{
+		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
+	}
+	cpu_stacks = (char **)kmalloc(kparam.lcpu_nr * CONFIG_KSTACK_SIZE);
+}
+
 void prot_init(void)
 {
 	init_gdt();
@@ -263,6 +274,8 @@ void prot_init(void)
 	video_init();
 
 	slab_init();
+
+	init_ap_env();
 
 	// prot_init_done = 1;
 	#ifndef USE_APIC

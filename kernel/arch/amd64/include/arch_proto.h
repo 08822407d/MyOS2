@@ -136,13 +136,6 @@
 		uint32_t lcpu_stat;
 		uint64_t lcpu_addr;
 	} smp_lcpuinfo_s;
-	typedef struct smp_info
-	{
-		unsigned long	lcpu_total;
-		unsigned long	lcpu_available;
-		smp_lcpuinfo_s	lcpus[CONFIG_MAX_CPUS];	// only take account available lcpus
-	} smp_info_s;
-
 
 	/* protect.c */
 	phy_addr vir2phy(vir_addr);

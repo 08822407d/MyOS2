@@ -8,9 +8,9 @@
 
 	typedef struct EFI_CPU_DESCRIPTOR
 	{
-		uint32_t		pack_id;
-		uint32_t		core_id;
-		uint32_t		thd_id;
+		uint32_t	pack_id;
+		uint32_t	core_id;
+		uint32_t	thd_id;
 		uint32_t	status;
 		uint64_t	proccessor_id;
 	} efi_cpudesc_s;

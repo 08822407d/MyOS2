@@ -17,12 +17,19 @@ extern char _bss;
 extern char _ebss;
 extern char _end;
 
-extern	uint64_t	boot_from_grub2;
+extern uint64_t	boot_from_grub2;
 
 extern memory_info_s	mem_info;
 
-kinfo_s kparam;
-framebuffer_s framebuffer;
+kinfo_s			kparam;
+framebuffer_s	framebuffer;
+
+typedef struct
+{
+	uint64_t	apic_id[CONFIG_MAX_CPUS];
+	uint64_t	cpu_idx[CONFIG_MAX_CPUS];
+} apic_id_map_s;
+apic_id_map_s apic_id_map;
 
 // void get_multiboot2_info(size_t multiboot2_info_base)
 // {
@@ -69,7 +76,6 @@ framebuffer_s framebuffer;
 
 void pre_init(size_t mb2info_base)
 {
-
 	// enalble syscall/sysret machanism
 	uint64_t ia32_efer = rdmsr(IA32_EFER);
 	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
@@ -100,4 +106,17 @@ void pre_init(size_t mb2info_base)
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
+
+	kparam.lcpu_nr = bootinfo->smp_info.core_available;
+	uint64_t lcpu_count = 0;
+	for (i = 0; i < bootinfo->smp_info.core_num; i++)
+	{
+		efi_cpudesc_s * curr_cpu = &bootinfo->smp_info.cpus[i];
+		if ((curr_cpu->status & 0x2) > 0)
+		{
+			apic_id_map.apic_id[lcpu_count] = curr_cpu->proccessor_id;
+			apic_id_map.cpu_idx[lcpu_count] = lcpu_count;
+			lcpu_count++;
+		}
+	}
 }

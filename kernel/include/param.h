@@ -15,6 +15,8 @@ typedef struct kinfo {
 	vir_addr	kernel_vir_base;
 	vir_addr	kernel_vir_end;
 
+	unsigned int	lcpu_nr;
+
 	int		nr_procs;           /* number of user processes */
 	int		nr_tasks;           /* number of kernel tasks */
 	// char	release[6];        /* kernel release number */
