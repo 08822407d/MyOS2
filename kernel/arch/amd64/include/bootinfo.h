@@ -6,34 +6,51 @@
 
 #define BOOTINFO_ADDR 0x60000
 
-struct EFI_GRAPHICS_OUTPUT_INFORMATION
-{
-	uint32_t HorizontalResolution;
-	uint32_t VerticalResolution;
-	uint32_t PixelsPerScanLine;
+	typedef struct EFI_CPU_DESCRIPTOR
+	{
+		uint32_t		pack_id;
+		uint32_t		core_id;
+		uint32_t		thd_id;
+		uint32_t	status;
+		uint64_t	proccessor_id;
+	} efi_cpudesc_s;
 
-	uint64_t FrameBufferBase;
-	uint64_t FrameBufferSize;
-};
+	typedef struct EFI_SMP_INFO
+	{
+		uint32_t	core_num;
+		uint32_t	core_available;
+		efi_cpudesc_s cpus[256];
+	} efi_smpinfo_s;
 
-struct EFI_E820_MEMORY_DESCRIPTOR
-{
-	uint64_t address;
-	uint64_t length;
-	uint32_t  type;
-}__attribute__((packed));
+	typedef struct EFI_GRAPHICS_OUTPUT_INFORMATION
+	{
+		unsigned int HorizontalResolution;
+		unsigned int VerticalResolution;
+		unsigned int PixelsPerScanLine;
 
-struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
-{
-	uint32_t E820_Entry_count;
-	struct EFI_E820_MEMORY_DESCRIPTOR E820_Entry[0];
-};
+		unsigned long FrameBufferBase;
+		unsigned long FrameBufferSize;
+	} efi_vbeinfo_s;
 
-struct KERNEL_BOOT_PARAMETER_INFORMATION
-{
-	struct EFI_GRAPHICS_OUTPUT_INFORMATION Graphics_Info;
-	struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION E820_Info;
-};
+	typedef struct EFI_E820_MEMORY_DESCRIPTOR
+	{
+		unsigned long address;
+		unsigned long length;
+		unsigned int  type;
+	} __attribute__((packed)) efi_e820entry_s;
+
+	typedef struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
+	{
+		unsigned int E820_Entry_count;
+		efi_e820entry_s E820_Entry[0];
+	} efi_meminfo_s;
+
+	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
+	{
+		efi_vbeinfo_s Graphics_Info;
+		efi_meminfo_s E820_Info;
+		efi_smpinfo_s smp_info;
+	} efi_machine_conf_s;
 
 // enum e820_type {
 // 	E820_TYPE_RAM		= 1,

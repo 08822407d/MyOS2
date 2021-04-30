@@ -17,7 +17,6 @@
   UefiApplicationEntryPoint
   UefiLib
   UefiBootServicesTableLib
-  PcdLib
   DebugLib
   UefiRuntimeServicesTableLib
   BaseMemoryLib
@@ -29,11 +28,6 @@
   gEfiUnicodeCollation2ProtocolGuid                       # ALWAYS_CONSUMED
   gEfiMpServiceProtocolGuid
 
-[FeaturePcd]
-
-[Pcd.common]
-  gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultPlatformLang
-  gEfiMdePkgTokenSpaceGuid.PcdUefiVariableDefaultPlatformLangCode
 
 [Guids]
   gEfiFileInfoGuid

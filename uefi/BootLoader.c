@@ -30,6 +30,7 @@
 #define KERNEL_LOADED_ADDR	0x1000000
 
 EFI_STATUS status = EFI_SUCCESS;
+EFI_MP_SERVICES_PROTOCOL* mpp;
 EFI_LOADED_IMAGE        *LoadedImage;
 EFI_PHYSICAL_ADDRESS pages;
 EFI_GRAPHICS_OUTPUT_PROTOCOL* gGraphicsOutput = 0;
@@ -62,6 +63,11 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 
 /////////////////////
 
+    LocateMPP(&mpp);
+    testMPPInfo(machine_info);
+
+/////////////////////
+
 	Print(L"Call ExitBootServices And Jmp to Kernel.\n");
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
 
@@ -80,6 +86,41 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	func();
 
 	return EFI_SUCCESS;
+}
+
+
+EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp)
+{
+    return  gBS->LocateProtocol( &gEfiMpServiceProtocolGuid, NULL, (void**)mpp);
+}
+
+EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
+{
+	EFI_STATUS Status;
+    {
+        UINTN nCores = 0, nRunning = 0;
+        Status = mpp -> GetNumberOfProcessors(mpp, & nCores, &nRunning);
+		machine_info->smp_info.core_num = nCores;
+		machine_info->smp_info.core_available = nRunning;
+        Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
+        {
+           UINTN i = 0;
+           for(i =0; i< nCores; i++){
+               EFI_PROCESSOR_INFORMATION mcpuInfo;
+               Status = mpp -> GetProcessorInfo( mpp, i, &mcpuInfo);
+               Print(L"CORE %d: ;", i);
+               Print(L"  ProcessorId\t:%d ;", mcpuInfo.ProcessorId);
+               Print(L"  StatusFlag\t:%x ;", mcpuInfo.StatusFlag);
+               Print(L"  Location\t:(%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
+			   machine_info->smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
+			   machine_info->smp_info.cpus[i].status = mcpuInfo.StatusFlag;
+			   machine_info->smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
+			   machine_info->smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
+			   machine_info->smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
+           }
+        }
+    }
+	return Status;
 }
 
 EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
@@ -179,7 +220,6 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 		EFI_MEMORY_DESCRIPTOR* MMap = (EFI_MEMORY_DESCRIPTOR*) ((CHAR8*)MemMap + i * DescriptorSize);
 		if(MMap->NumberOfPages == 0)
 			continue;
-//		Print(L"MemoryMap %4d %10d (%16lx<->%16lx) %016lx\n",MMap->Type,MMap->NumberOfPages,MMap->PhysicalStart,MMap->PhysicalStart + (MMap->NumberOfPages << 12),MMap->Attribute);
 		switch(MMap->Type)
 		{
 			case EfiReservedMemoryType:

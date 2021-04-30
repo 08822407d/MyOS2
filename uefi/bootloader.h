@@ -9,6 +9,22 @@
 #include <Protocol/LoadedImage.h>
 #include <Guid/FileInfo.h>
 
+	typedef struct EFI_CPU_DESCRIPTOR
+	{
+		UINT32	pack_id;
+		UINT32	core_id;
+		UINT32	thd_id;
+		UINT32	status;
+		UINT64	proccessor_id;
+	} efi_cpudesc_s;
+
+	typedef struct EFI_SMP_INFO
+	{
+		UINT32	core_num;
+		UINT32	core_available;
+		efi_cpudesc_s cpus[256];
+	} efi_smpinfo_s;
+
 	typedef struct EFI_GRAPHICS_OUTPUT_INFORMATION
 	{
 		unsigned int HorizontalResolution;
@@ -36,8 +52,11 @@
 	{
 		efi_vbeinfo_s Graphics_Info;
 		efi_meminfo_s E820_Info;
+		efi_smpinfo_s smp_info;
 	} efi_machine_conf_s;
 
+	EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
+	EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info);
 	EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle);
 	void get_vbe_info(efi_machine_conf_s * machine_info);
 	void get_machine_memory_info(efi_machine_conf_s * machine_info);
