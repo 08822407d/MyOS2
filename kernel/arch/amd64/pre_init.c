@@ -24,12 +24,7 @@ extern memory_info_s	mem_info;
 kinfo_s			kparam;
 framebuffer_s	framebuffer;
 
-typedef struct
-{
-	uint64_t	apic_id[CONFIG_MAX_CPUS];
-	uint64_t	cpu_idx[CONFIG_MAX_CPUS];
-} apic_id_map_s;
-apic_id_map_s apic_id_map;
+uint64_t	apic_id[CONFIG_MAX_CPUS];
 
 // void get_multiboot2_info(size_t multiboot2_info_base)
 // {
@@ -112,10 +107,9 @@ void pre_init(size_t mb2info_base)
 	for (i = 0; i < bootinfo->smp_info.core_num; i++)
 	{
 		efi_cpudesc_s * curr_cpu = &bootinfo->smp_info.cpus[i];
-		if ((curr_cpu->status & 0x2) > 0)
+		if ((curr_cpu->status & 0x4) > 0)
 		{
-			apic_id_map.apic_id[lcpu_count] = curr_cpu->proccessor_id;
-			apic_id_map.cpu_idx[lcpu_count] = lcpu_count;
+			apic_id[lcpu_count] = curr_cpu->proccessor_id & 0xFF;
 			lcpu_count++;
 		}
 	}

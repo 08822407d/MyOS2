@@ -15,11 +15,10 @@ void kmain(void)
 {
     prot_init();
 
-	// devices_init();
-	// init_proc0();
-
 	init_cpu();
 	SMP_init();
+
+	proc_init();
 
 	wrmsr(0x830,0xc4500);	//INIT IPI
 	wrmsr(0x830,0xc4620);	//Start-up IPI
@@ -44,6 +43,9 @@ void kmain(void)
 	
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
+
+
+	devices_init();
 
     while(1){
 		// if(p_kb->count)

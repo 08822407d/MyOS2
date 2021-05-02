@@ -41,7 +41,7 @@
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
-	void init_proc0(void);
+	void proc_init(void);
 
 	void arch_init_proc(void);
 	proc_s * get_current();

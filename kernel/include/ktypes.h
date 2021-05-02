@@ -78,10 +78,12 @@
 		unsigned long	nslab_count;
 		Slab_s *		normal_slab;
 		unsigned long	nsobj_free_count;
+		unsigned long	nsobj_used_count;
 
 		unsigned long	dslab_count;
 		Slab_s *		dma_slab;
 		unsigned long	dsobj_free_count;
+		unsigned long	dsobj_used_count;
 	} Slab_Cache_s;
 	
 	typedef struct keyboard_inputbuffer

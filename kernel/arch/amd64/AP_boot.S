@@ -84,6 +84,32 @@ _AP_code64:
 	movabsq	pml4_base,	%rax
 	movq	%rax,		%cr3
 
+	// enalble x2apic and get lapic_id
+	movq 	$0x1b,		%rcx
+	rdmsr
+	bts		$10,		%rax
+	bts		$11,		%rax
+	wrmsr
+	movq	$0x802,		%rcx
+	rdmsr
+
+	// compair lapic_id in table to get current AP's index
+	movq	%rax,		%r8
+	movabsq	$apic_id,	%rax
+	movq	$0,			%rbx
+l1:
+	incq	%rbx	//	here is a pre-requisit that BSP's apic_id is 0
+	movq	(%rax, %rbx, 8),	%r9
+	cmpq	%r9,		%r8
+	jne		l1
+
+	// get idle_proc_PCB for current AP and set rsp to proc's kstack
+	movabsq	idle_procs,	%rax
+	movq	(%rax, %rbx, 8),	%rax
+	addq	$PROC_KSTACK_SIZE,	%rax
+	movq	%rax,		%rsp
+
+	movq	%rbx,		%rdi
 	movabsq $start_SMP,	%rax
 	pushq   $0x08
 	pushq   %rax

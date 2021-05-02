@@ -12,15 +12,15 @@
 #include "../../include/param.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
+#include "../../include/proc.h"
 
 
 /* Storage for gdt, idt and tss. */
 segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
-char **			cpu_stacks;
-tss64_s			tss0;
-tss64_s *		tss_ap;
+tss64_s **		tss_ptr_arr = NULL;
+tss64_s			tss_bsp;
 char			ist_stack0[CONFIG_KSTACK_SIZE] __aligned(CONFIG_KSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
@@ -126,7 +126,12 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_s * curr_tss = &tss0;
+				tss64_s * curr_tss;
+				if (tss_ptr_arr != NULL)
+					curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
+				else
+					curr_tss = &tss_bsp;
+				
 				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
@@ -209,7 +214,7 @@ void init_idt()
 
 void init_bsp_tss()
 {
-	tss64_s *curr_tss = &tss0;
+	tss64_s *curr_tss = &tss_bsp;
 	curr_tss->rsp0 = 0;
 	curr_tss->rsp1 =
 	curr_tss->rsp2 =
@@ -225,12 +230,15 @@ void init_bsp_tss()
 
 void init_ap_env()
 {
+	unsigned lcpu_nr = kparam.lcpu_nr;
+	tss_ptr_arr = (tss64_s **)kmalloc(lcpu_nr * sizeof(tss64_s *));
+	tss_ptr_arr[0] = &tss_bsp;
 	// init tss for all logical cpus
 	for (int i = 1; i < kparam.lcpu_nr; i++)
 	{
+		tss_ptr_arr[i] = (tss64_s *)kmalloc(sizeof(tss64_s));
 		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
 	}
-	cpu_stacks = (char **)kmalloc(kparam.lcpu_nr * CONFIG_KSTACK_SIZE);
 }
 
 void prot_init(void)

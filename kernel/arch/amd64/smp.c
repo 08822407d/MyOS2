@@ -96,11 +96,12 @@ void SMP_init()
 	memcpy(phy2vir((phy_addr)&_APboot_phy_start), (vir_addr)&_APboot_text, apbbot_len);
 }
 
-void start_SMP()
+void start_SMP(uint64_t apic_id)
 {
 	unsigned int x,y;
 
-	color_printk(RED,YELLOW,"APU starting......\n");
+	color_printk(RED,YELLOW,"APU starting...... APIC ID: %d\n", apic_id);
+	hlt();
 
 	//enable xAPIC & x2APIC
 	__asm__ __volatile__(	"movq 	$0x1b,	%%rcx	\n\t"
@@ -143,5 +144,4 @@ void start_SMP()
 	
 	color_printk(RED,YELLOW,"x2APIC ID:%#010x\n",x);
 
-	hlt();
 }

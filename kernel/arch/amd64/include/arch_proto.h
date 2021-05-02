@@ -132,9 +132,9 @@
 	/* cpu info */
 	typedef struct smp_lcpuinfo
 	{
-		uint64_t lcpu_id;
-		uint32_t lcpu_stat;
-		uint64_t lcpu_addr;
+		uint64_t	lcpu_id;
+		uint64_t	lcpu_addr;
+		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
 	} smp_lcpuinfo_s;
 
 	/* protect.c */
@@ -216,6 +216,6 @@
 	/* smp.c */
 	void init_cpu(void);
 	void SMP_init(void);
-	void start_SMP(void);
+	void start_SMP(uint64_t apic_id);
 
 #endif /* _AMD64_PROTO_H_ */

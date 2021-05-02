@@ -139,10 +139,12 @@ void slab_init()
 		scgp->normal_slab = bsp;
 		scgp->nslab_count = 1;
 		scgp->nsobj_free_count = obj_nr;
+		scgp->nsobj_used_count = 0;
 
 		scgp->dma_slab = NULL;
 		scgp->dslab_count = 0;
 		scgp->dsobj_free_count = 0;
+		scgp->dsobj_used_count = 0;
 
 		// init the basic slab
 		list_init(&bsp->slab_list);
@@ -199,12 +201,17 @@ void * kmalloc(size_t size)
 
 	void * ret_val = NULL;
 	// find suitable slab group
-	int sc_idx = 1;
-	while(size >> sc_idx)
+	size--;
+	size /= SLAB_SIZE_BASE;
+	int sc_idx = 0;
+	if (size > 0)
 	{
 		sc_idx++;
+		while(size >> sc_idx)
+		{
+			sc_idx++;
+		}
 	}
-	sc_idx -= 5;
 
 	// find a usable slab
 	Slab_Cache_s * scgp = &slab_cache_groups[sc_idx];
@@ -221,6 +228,7 @@ void * kmalloc(size_t size)
 	// refresh status of slab
 	slp->free--;
 	scgp->nsobj_free_count--;
+	scgp->nsobj_used_count++;
 	bm_set_bit(slp->colormap, obj_idx);
 	// assure usable memory more than one page
 	if (scgp->nsobj_free_count < slp->total)
@@ -236,7 +244,6 @@ void * kmalloc(size_t size)
 		new_slab->slabcache_ptr = scgp;
 		list_insert_back(&new_slab->slab_list, &scgp->normal_slab->slab_list);
 		scgp->nslab_count++;
-		scgp->nsobj_free_count += slp->total;
 	}
 	
 	return ret_val;
@@ -253,6 +260,7 @@ void kfree(void * obj_p)
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;
+	scgp->nsobj_used_count--;
 	if ((slp->free == slp->total) &&
 		(scgp->nsobj_free_count >= (slp->total * 3)) &&
 		(slp != scgp->normal_slab))
