@@ -1,5 +1,5 @@
-#ifndef _INTERRUPT_H_
-#define _INTERRUPT_H_
+#ifndef _AMD64_PC_INTERRUPT_H_
+#define _AMD64_PC_INTERRUPT_H_
 
 /* EXCEPTIONS */
 	/* Interrupt vectors defined/reserved by processor. */
@@ -100,4 +100,4 @@
 		#define APIC_PIRQH				23
 	#endif
 
-#endif /* _INTERRUPT_H_ */
+#endif /* _AMD64_PC_INTERRUPT_H_ */

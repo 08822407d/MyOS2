@@ -37,5 +37,7 @@ void video_init()
 	Pos.XCharSize = 8;
 	Pos.YCharSize = 16;
 
+	spin_init(&Pos.printk_lock);
+
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }

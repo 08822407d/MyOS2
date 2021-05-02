@@ -13,8 +13,8 @@
 *
 ***************************************************/
 
-#ifndef __SMP_H__
-#define __SMP_H__
+#ifndef __AMD64_SMP_H__
+#define __AMD64_SMP_H__
 
 
-#endif
+#endif /* __AMD64_SMP_H__ */

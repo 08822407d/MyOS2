@@ -13,8 +13,10 @@
 *
 ***************************************************/
 #include <lib/string.h>
+#include <lib/pthread.h>
 
 #include "include/arch_proto.h"
+#include "include/arch_glo.h"
 #include "include/smp.h"
 
 #include "../../include/printk.h"
@@ -96,52 +98,70 @@ void SMP_init()
 	memcpy(phy2vir((phy_addr)&_APboot_phy_start), (vir_addr)&_APboot_text, apbbot_len);
 }
 
-void start_SMP(uint64_t apic_id)
+void start_SMP(uint64_t aptable_idx)
 {
 	unsigned int x,y;
 
-	color_printk(RED,YELLOW,"APU starting...... APIC ID: %d\n", apic_id);
-	hlt();
+	__asm__ __volatile__("	lgdt	%0						\n\
+							lidt	%1						\n\
+							movq	%%rsp, %%rax			\n\
+							mov 	%2, %%ss				\n\
+							movq	%%rax, %%rsp			\n\
+							mov		$0, %%ax				\n\
+							mov 	%%ax, %%ds				\n\
+							mov 	%%ax, %%es				\n\
+							mov 	%%ax, %%fs				\n\
+							mov 	%%ax, %%gs				\n\
+							xor		%%rax, %%rax			\n\
+							movq	%3, %%rax				\n\
+							pushq	%%rax					\n\
+							leaq	reload_cs(%%rip), %%rax	\n\
+							pushq	%%rax					\n\
+							lretq							\n\
+							reload_cs:						\n\
+							xorq	%%rax, %%rax			\n\
+							mov		%4, %%ax				\n\
+							ltr		%%ax					\n	"
+						 :
+						 :	"m"(gdt_ptr),
+						 	"m"(idt_ptr),
+						 	"r"(KERN_SS_SELECTOR),
+							"rsi"((uint64_t)KERN_CS_SELECTOR),
+							"r"((uint16_t)TSS_SELECTOR(aptable_idx))
+						 :  "rax");
 
 	//enable xAPIC & x2APIC
-	__asm__ __volatile__(	"movq 	$0x1b,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				"bts	$10,	%%rax	\n\t"
-				"bts	$11,	%%rax	\n\t"
-				"wrmsr	\n\t"
-				"movq 	$0x1b,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				:"=a"(x),"=d"(y)
-				:
-				:"memory");
-	
-	if(x&0xc00)
-		color_printk(RED,YELLOW,"xAPIC & x2APIC enabled\n");
+	__asm__ __volatile__("movq 	$0x1b,	%%rcx	\n\t"
+						 "rdmsr					\n\t"
+						 "bts	$10,	%%rax	\n\t"
+						 "bts	$11,	%%rax	\n\t"
+						 "wrmsr					\n\t"
+						 "movq 	$0x1b,	%%rcx	\n\t"
+						 "rdmsr	\n\t"
+						:"=a"(x),"=d"(y)
+						:
+						:"memory");
 
 	//enable SVR[8]
-	__asm__ __volatile__(	"movq 	$0x80f,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				"bts	$8,	%%rax	\n\t"
-//				"bts	$12,	%%rax\n\t"
-				"wrmsr	\n\t"
-				"movq 	$0x80f,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				:"=a"(x),"=d"(y)
-				:
-				:"memory");
-
-	if(x&0x100)
-		color_printk(RED,YELLOW,"SVR[8] enabled\n");
-	if(x&0x1000)
-		color_printk(RED,YELLOW,"SVR[12] enabled\n");
+	__asm__ __volatile__("movq 	$0x80f,	%%rcx	\n\t"
+						 "rdmsr					\n\t"
+						 "bts	$8,		%%rax	\n\t"
+						 "bts	$12,	%%rax	\n\t"
+						 "wrmsr					\n\t"
+						 "movq 	$0x80f,	%%rcx	\n\t"
+						 "rdmsr					\n\t"
+						:"=a"(x),"=d"(y)
+						:
+						:"memory");
 
 	//get local APIC ID
-	__asm__ __volatile__(	"movq $0x802,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				:"=a"(x),"=d"(y)
-				:
-				:"memory");
+	__asm__ __volatile__("movq $0x802,	%%rcx	\n\t"
+						 "rdmsr					\n\t"
+						:"=a"(x),"=d"(y)
+						:
+						:"memory");
 	
-	color_printk(RED,YELLOW,"x2APIC ID:%#010x\n",x);
+	color_printk(RED,YELLOW,"APU starting...... INDEX: %d; x2APIC ID:%#010x\n", aptable_idx, x);
 
+	hlt();
 }

@@ -2,6 +2,7 @@
 #include <lib/assert.h>
 #include <sys/types.h>
 
+#include "include/arch_glo.h"
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_proto.h"

@@ -13,8 +13,8 @@
 *
 ***************************************************/
 
-#ifndef __APIC_H__
-#define __APIC_H__
+#ifndef _AMD64_APIC_H_
+#define _AMD64_APIC_H_
 
 #include <sys/types.h>
 #include <sys/cdefs.h>
@@ -121,4 +121,4 @@
 	#define APIC_IOAPIC_POLARITY_HIGH		0
 	#define APIC_IOAPIC_POLARITY_LOW		1
 
-#endif
+#endif /* _AMD64_APIC_H_ */

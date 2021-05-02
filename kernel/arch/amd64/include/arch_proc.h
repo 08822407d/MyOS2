@@ -1,5 +1,5 @@
-#ifndef _ARCH_PROC_H_
-#define _ARCH_PROC_H_
+#ifndef _AMD64_PROC_H_
+#define _AMD64_PROC_H_
 
 #include <sys/types.h>
 #include <lib/utils.h>
@@ -30,4 +30,4 @@ typedef struct
 } arch_PCB_stackframe_s;
 
 
-#endif /* _ARCH_PROC_H_ */
+#endif /* _AMD64_PROC_H_ */

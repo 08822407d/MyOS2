@@ -1,5 +1,5 @@
-#ifndef _ARCH_DEVICE_H_
-#define _ARCH_DEVICE_H_
+#ifndef _AMD64_PC_DEVICE_H_
+#define _AMD64_PC_DEVICE_H_
 
 #include <sys/types.h>
 
@@ -17,4 +17,4 @@
 	void analysis_keycode(void);
 
 
-#endif /* _ARCH_DEVICE_H_ */
+#endif /* _AMD64_PC_DEVICE_H_ */

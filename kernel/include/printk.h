@@ -18,6 +18,7 @@
 
 #include <stdarg.h>
 #include <lib/font.h>
+#include <lib/pthread.h>
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */
@@ -44,17 +45,19 @@
 */
 typedef struct
 {
-	unsigned int XResolution;
-	unsigned int YResolution;
+	unsigned int	XResolution;
+	unsigned int	YResolution;
 	
-	unsigned int XPosition;
-	unsigned int YPosition;
+	unsigned int	XPosition;
+	unsigned int	YPosition;
 	
-	unsigned int XCharSize;
-	unsigned int YCharSize;
+	unsigned int	XCharSize;
+	unsigned int	YCharSize;
 
-	unsigned int * FB_addr;
-	unsigned long FB_length;
+	unsigned int *	FB_addr;
+	unsigned long	FB_length;
+
+	spinlock_T		printk_lock;
 } position_t;
 
 /*

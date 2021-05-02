@@ -20,6 +20,7 @@
 #include <lib/stddef.h>
 #include <lib/string.h>
 #include <lib/font.h>
+#include <lib/pthread.h>
 
 #include "../include/glo.h"
 #include "../include/printk.h"
@@ -28,7 +29,6 @@
 
 static char buf[4096] = {0};
 position_t Pos;
-
 
 /*
 
@@ -338,6 +338,8 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
+	spin_lock(&Pos.printk_lock);
+
 	i = vsprintf(buf, fmt, args);
 
 	va_end(args);
@@ -392,6 +394,9 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 			Pos.YPosition = 0;
 		}
 	}
+
+	spin_unlock(&Pos.printk_lock);
+
 	return i;
 }
 
