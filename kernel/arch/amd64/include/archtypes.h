@@ -231,7 +231,22 @@
 	} ioapic_retentry_s;
 
 
+/*===========================================================================*
+ *								CPUID										 *
+ *===========================================================================*/
 	typedef struct {
+		char		id_string[13];
+		char		cpu_model[49];
+		uint8_t		family_code;
+		uint8_t		extend_family;
+		uint8_t		model_number;
+		uint8_t		extend_model;
+		uint8_t		processor_type;
+		uint8_t		stepping_id;
+		uint8_t		physical_address_width;
+		uint8_t		linear_address_width;
+		uint32_t	max_basic_opcode;
+		uint32_t	max_extend_opcode;
 	} cpu_info_s ;
 
 #endif /* #ifndef _AMD64_TYPES_H */

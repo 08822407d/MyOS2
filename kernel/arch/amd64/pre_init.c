@@ -22,9 +22,12 @@ extern uint64_t	boot_from_grub2;
 extern memory_info_s	mem_info;
 
 kinfo_s			kparam;
+cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
 uint64_t	apic_id[CONFIG_MAX_CPUS];
+
+void cpuid_info(void);
 
 // void get_multiboot2_info(size_t multiboot2_info_base)
 // {
@@ -60,7 +63,7 @@ uint64_t	apic_id[CONFIG_MAX_CPUS];
 // 		// find framebuffer tag
 // 		if (mb2_tagtype == MULTIBOOT_TAG_TYPE_FRAMEBUFFER)
 // 		{
-// 			struct multiboot_tag_framebuffer_common * mb2_fb_p = (struct multiboot_tag_framebuffer_common *)mb2info_curr;
+// 			struct multiboot_tag_framebuffer_common * mb2_fb_p = (struct multiboot_tag_framebuffer_common *)(mb2info_curr + 16);
 // 			framebuffer.FB_phybase = (phy_addr)mb2_fb_p->framebuffer_addr;
 // 			framebuffer.FB_size	   = mb2_fb_p->size;
 // 			framebuffer.X_Resolution = mb2_fb_p->framebuffer_width;
@@ -113,4 +116,53 @@ void pre_init(size_t mb2info_base)
 			lcpu_count++;
 		}
 	}
+
+	cpuid_info();
+}
+
+void cpuid_info(void)
+{
+	memset(&cpuinfo, 0, sizeof(cpu_info_s));
+
+	unsigned int CpuFacName[4] = {0,0,0,0};
+
+	//vendor_string
+	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+	*(unsigned int*)&cpuinfo.id_string[0] = CpuFacName[1];
+	*(unsigned int*)&cpuinfo.id_string[4] = CpuFacName[3];
+	*(unsigned int*)&cpuinfo.id_string[8] = CpuFacName[2];	
+	cpuinfo.id_string[12] = '\0';
+	
+	//brand_string
+	int i = 0, j = -4;
+	for(i = 0x80000002;i < 0x80000005;i++)
+	{
+		cpuid(i,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[0];
+		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[1];
+		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[2];
+		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[3];
+	}
+	cpuinfo.id_string[j += 4] = '\0';
+
+	//Version Informatin Type,Family,Model,and Stepping ID
+	cpuid(1,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+	cpuinfo.family_code = CpuFacName[0] >> 8 & 0xf;
+	cpuinfo.extend_family = CpuFacName[0] >> 20 & 0xff;
+	cpuinfo.model_number = CpuFacName[0] >> 4 & 0xf;
+	cpuinfo.extend_model = CpuFacName[0] >> 16 & 0xf;
+	cpuinfo.processor_type = CpuFacName[0] >> 12 & 0x3;
+	cpuinfo.stepping_id = CpuFacName[0] & 0xf;
+
+	//get Linear/Physical Address size
+	cpuid(0x80000008,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+	cpuinfo.physical_address_width = CpuFacName[0] & 0xff;
+	cpuinfo.linear_address_width = CpuFacName[0] >> 8 & 0xff;
+
+	//max cpuid operation code
+	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+	cpuinfo.max_basic_opcode = CpuFacName[0];
+
+	cpuid(0x80000000,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
+	cpuinfo.max_extend_opcode = CpuFacName[0];
 }

@@ -20,60 +20,8 @@
 #include "include/smp.h"
 
 #include "../../include/printk.h"
+#include "../../include/proc.h"
 
-void init_cpu(void)
-{
-	int i,j;
-	unsigned int CpuFacName[4] = {0,0,0,0};
-	char	FactoryName[17] = {0};
-
-	//vendor_string
-	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-
-	*(unsigned int*)&FactoryName[0] = CpuFacName[1];
-
-	*(unsigned int*)&FactoryName[4] = CpuFacName[3];
-
-	*(unsigned int*)&FactoryName[8] = CpuFacName[2];	
-
-	FactoryName[12] = '\0';
-	color_printk(YELLOW,BLACK,"%s\t%#010x\t%#010x\t%#010x\n",FactoryName,CpuFacName[1],CpuFacName[3],CpuFacName[2]);
-	
-	//brand_string
-	for(i = 0x80000002;i < 0x80000005;i++)
-	{
-		cpuid(i,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-
-		*(unsigned int*)&FactoryName[0] = CpuFacName[0];
-
-		*(unsigned int*)&FactoryName[4] = CpuFacName[1];
-
-		*(unsigned int*)&FactoryName[8] = CpuFacName[2];
-
-		*(unsigned int*)&FactoryName[12] = CpuFacName[3];
-
-		FactoryName[16] = '\0';
-		color_printk(YELLOW,BLACK,"%s",FactoryName);
-	}
-	color_printk(YELLOW,BLACK,"\n");
-
-	//Version Informatin Type,Family,Model,and Stepping ID
-	cpuid(1,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	color_printk(YELLOW,BLACK,"Family Code:%#010x,Extended Family:%#010x,Model Number:%#010x,Extended Model:%#010x,Processor Type:%#010x,Stepping ID:%#010x\n",(CpuFacName[0] >> 8 & 0xf),(CpuFacName[0] >> 20 & 0xff),(CpuFacName[0] >> 4 & 0xf),(CpuFacName[0] >> 16 & 0xf),(CpuFacName[0] >> 12 & 0x3),(CpuFacName[0] & 0xf));
-
-	//get Linear/Physical Address size
-	cpuid(0x80000008,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	color_printk(YELLOW,BLACK,"Physical Address size:%08d,Linear Address size:%08d\n",(CpuFacName[0] & 0xff),(CpuFacName[0] >> 8 & 0xff));
-
-	//max cpuid operation code
-	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	color_printk(WHITE,BLACK,"MAX Basic Operation Code :%#010x\t",CpuFacName[0]);
-
-	cpuid(0x80000000,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	color_printk(WHITE,BLACK,"MAX Extended Operation Code :%#010x\n",CpuFacName[0]);
-
-
-}
 
 void SMP_init()
 {
@@ -100,8 +48,20 @@ void SMP_init()
 
 void start_SMP(uint64_t aptable_idx)
 {
-	unsigned int x,y;
+	PCB_u * curr_proc = (PCB_u *)get_current();
+	tss64_s * tss_p = tss_ptr_arr[aptable_idx];
+	tss_p->rsp0 = (reg_t)curr_proc + PROC_KSTACK_SIZE;
+	tss_p->rsp1 =
+	tss_p->rsp2 =
+	tss_p->ist1 =
+	tss_p->ist2 =
+	tss_p->ist3 =
+	tss_p->ist4 =
+	tss_p->ist5 =
+	tss_p->ist6 =
+	tss_p->ist7 = 0;
 
+	// load formal gdt and idt and tss
 	__asm__ __volatile__("	lgdt	%0						\n\
 							lidt	%1						\n\
 							movq	%%rsp, %%rax			\n\
@@ -130,6 +90,7 @@ void start_SMP(uint64_t aptable_idx)
 							"r"((uint16_t)TSS_SELECTOR(aptable_idx))
 						 :  "rax");
 
+	unsigned int x,y;
 	//enable xAPIC & x2APIC
 	__asm__ __volatile__("movq 	$0x1b,	%%rcx	\n\t"
 						 "rdmsr					\n\t"
@@ -163,5 +124,8 @@ void start_SMP(uint64_t aptable_idx)
 	
 	color_printk(RED,YELLOW,"APU starting...... INDEX: %d; x2APIC ID:%#010x\n", aptable_idx, x);
 
-	hlt();
+	while (1)
+	{
+		hlt();
+	}
 }

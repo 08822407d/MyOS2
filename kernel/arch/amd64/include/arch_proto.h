@@ -67,6 +67,7 @@
 /*===========================================================================*
 *								internal symbols							 *
 *===========================================================================*/
+// interrupt stack
 	typedef struct __attribute__((packed)) {
 		reg_t ds;
 		reg_t es;
@@ -93,7 +94,7 @@
 		reg_t rsp;
 		reg_t ss;
 	} stack_frame_s;
-
+// intr gate initiate infomation
 	typedef struct {
 		void	(*gate_entry) (void);
 		uint8_t	vec_nr;
@@ -101,7 +102,7 @@
 		uint8_t	DPL;
 		char	name[16];
 	} gate_table_s;
-
+// ioapic information
 	typedef struct IOAPIC_map
 	{
 		phy_addr	phys_addr;
@@ -109,7 +110,7 @@
 		uint32_t *	virt_data_addr;
 		uint32_t *	virt_EOI_addr;
 	} ioapic_map_s;
-
+// irq handler machanism 
 	typedef struct {
 		void (*enable)(unsigned long irq);
 		void (*disable)(unsigned long irq);
@@ -117,7 +118,7 @@
 		void (*uninstall)(unsigned long irq);
 		void (*ack)(unsigned long irq);
 	} hw_int_controller_s;
-
+// irq infomation
 	typedef struct {
 		hw_int_controller_s * controller;
 

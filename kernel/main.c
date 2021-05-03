@@ -15,7 +15,6 @@ void kmain(void)
 {
     prot_init();
 
-	init_cpu();
 	SMP_init();
 
 	proc_init();
