@@ -19,9 +19,12 @@
 	#define CLONE_FILES			(1 << 1)
 	#define CLONE_SIGNAL		(1 << 2)
 
+	struct proc;
+	typedef struct proc proc_s;
 	typedef struct proc
 	{
-		List_s		PCB_list;
+		proc_s *	prev;
+		proc_s *	next;
 		arch_PCB_s	arch_struct;
 
 		volatile long	state;
@@ -34,7 +37,7 @@
 	} proc_s;
 
 
-	typedef union
+	typedef union PCB
 	{
 		proc_s		proc;
 		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];

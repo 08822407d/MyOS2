@@ -5,14 +5,13 @@
 #include <sys/cdefs.h>
 #include <lib/utils.h>
 
+#include "proc.h"
+
 #include "../arch/amd64/include/archconst.h"
 #include "../arch/amd64/include/keyboard.h"
 #include "../arch/amd64/include/multiboot2.h"
 
 	#define MAXMEMZONE		64
-
-	typedef void*	phy_addr;
-	typedef void*	vir_addr;
 
 	struct  Slab;
 	typedef struct Slab Slab_s;
@@ -93,5 +92,6 @@
 		int count;
 		unsigned char buf[KB_BUF_SIZE];
 	} kbd_inbuf_s;
+
 
 #endif /* _K_TYPES_H_ */

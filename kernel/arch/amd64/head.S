@@ -102,6 +102,7 @@ multiboot_entry:
 	call	set_temp_PDE_32
 	movl	%cr4,		%eax
 	bts		$5,			%eax
+	bts		$16,		%eax	// enable fsgsbase instuctions
 	movl	%eax,		%cr4
 
 	movl	$0x01,		boot_from_grub2(%esi)
@@ -151,9 +152,14 @@ code_64_start:
 	movq	boot_from_grub2,	%rax
 	cmpq	$0x01,		%rax
 	je		skip_set_pde
-	
+	// if not boot from grub, need to set pages and cr4[16]
 	callq	set_temp_PDE_64
 	movq	$0,	boot_from_grub2
+
+	movq	%cr4,		%rax
+	bts		$16,		%rax
+	movq	%rax,		%cr4
+
 skip_set_pde:
 	movq	$__PML4E,	%rax
 	movq	%rax,		%cr3

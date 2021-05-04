@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 #include "archtypes.h"
-#include "../../../include/ktypes.h"
+#include "archconst.h"
 
 /*===========================================================================*
 *								external symbols							 *
@@ -68,7 +68,7 @@
 *								internal symbols							 *
 *===========================================================================*/
 // interrupt stack
-	typedef struct __attribute__((packed)) {
+	typedef struct stack_frame {
 		reg_t ds;
 		reg_t es;
 		reg_t r15;
@@ -93,7 +93,7 @@
 		reg_t rflags;
 		reg_t rsp;
 		reg_t ss;
-	} stack_frame_s;
+	} __attribute__((packed)) stack_frame_s;
 // intr gate initiate infomation
 	typedef struct {
 		void	(*gate_entry) (void);
@@ -131,12 +131,34 @@
 	} irq_desc_s;
 
 	/* cpu info */
-	typedef struct smp_lcpuinfo
+	struct cputopo
 	{
-		uint64_t	lcpu_id;
-		uint64_t	lcpu_addr;
+		uint8_t		not_use;
+		uint8_t		pack_id;
+		uint8_t		core_id;
+		uint8_t		thd_id;
+	};
+
+	typedef struct arch_percpu_info
+	{
+		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
-	} smp_lcpuinfo_s;
+		tss64_s *	tss;
+	} arch_percpu_data_s;
+
+	struct proc;
+	typedef struct proc proc_s;
+	typedef struct percpu_info
+	{
+		proc_s *	curr_proc;
+		proc_s *	waiting_proc;
+		proc_s *	finished_proc;
+		size_t		waiting_count;
+		size_t		finished_count;
+		size_t		cpu_idx;
+		arch_percpu_data_s *	arch_info;
+		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
+	} percpu_data_s;
 
 	/* protect.c */
 	phy_addr vir2phy(vir_addr);
@@ -204,6 +226,7 @@
 							unsigned long stack_size);
 	int sys_call(int syscall_nr);
 	int do_syscall(int syscall_nr);
+	void schedule(percpu_data_s * curr_cpu_data);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);

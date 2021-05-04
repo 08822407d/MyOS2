@@ -2,6 +2,7 @@
 #include <lib/string.h>
 
 #include "include/bootinfo.h"
+#include "include/arch_glo.h"
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/multiboot2.h"
@@ -26,6 +27,7 @@ cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
 uint64_t	apic_id[CONFIG_MAX_CPUS];
+struct cputopo	smp_topos[CONFIG_MAX_CPUS];
 
 void cpuid_info(void);
 
@@ -113,6 +115,10 @@ void pre_init(size_t mb2info_base)
 		if ((curr_cpu->status & 0x4) > 0)
 		{
 			apic_id[lcpu_count] = curr_cpu->proccessor_id & 0xFF;
+			smp_topos[lcpu_count].not_use = 0;
+			smp_topos[lcpu_count].pack_id = curr_cpu->pack_id;
+			smp_topos[lcpu_count].core_id = curr_cpu->core_id;
+			smp_topos[lcpu_count].thd_id  = curr_cpu->thd_id;
 			lcpu_count++;
 		}
 	}

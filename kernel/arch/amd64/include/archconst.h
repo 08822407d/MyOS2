@@ -5,7 +5,7 @@
 
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		256
-	#define CONFIG_KSTACK_SIZE	4096
+	#define CONFIG_CPUSTACK_SIZE	4096
 	#define CONFIG_PAGE_SIZE	CONST_2M
 	#define CONFIG_PAGE_SHIFT	SHIFT_2M
 	#define CONFIG_PAGE_MASKF	MASKF_2M	// align to page low bound

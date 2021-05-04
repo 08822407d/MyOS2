@@ -12,6 +12,7 @@
 #include "../../include/proc.h"
 #include "../../include/printk.h"
 #include "../../include/const.h"
+#include "../../klib/data_structure.h"
 
 extern tss64_s	tss_bsp;
 extern char		ist_stack0;
@@ -62,7 +63,7 @@ inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 	tss_bsp.ist4 =
 	tss_bsp.ist5 =
 	tss_bsp.ist6 =
-	tss_bsp.ist7 = (reg_t)&ist_stack0 + CONFIG_KSTACK_SIZE;
+	tss_bsp.ist7 = (reg_t)&ist_stack0 + CONFIG_CPUSTACK_SIZE;
 
 	__asm__ __volatile__("movq	%%fs,	%0 \n\t"
 						 : "=a"(curr->arch_struct.fs));
@@ -152,7 +153,7 @@ unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags, unsign
 {
 	proc_s *tsk_curr = get_current();
 	proc_s *tsk_new = NULL;
-	stack_frame_s *tsk_new_stackfram;
+	stack_frame_s *tsk_new_stackfram = NULL;
 	
 	tsk_new = &proc1_PCB.proc;
 	tsk_new_stackfram = get_current_stackframe(tsk_new);
@@ -162,8 +163,10 @@ unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags, unsign
 	memset(tsk_new, 0, sizeof(proc_s));
 	*tsk_new = *tsk_curr;
 
-	list_init(&tsk_new->PCB_list);
-	list_insert_front(&tsk_new->PCB_list, &tsk_curr->PCB_list);
+	// list_init(&tsk_new->PCB_list);
+	m_list_init(tsk_new);
+	// list_insert_front(&tsk_new->PCB_list, &tsk_curr->PCB_list);
+	m_list_insert_front(tsk_new, tsk_curr);
 	tsk_new->pid++;	
 	tsk_new->state = TASK_UNINTERRUPTABLE;
 
@@ -219,4 +222,34 @@ void arch_init_proc()
 	kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
 
 	// switch_to(curr_proc, proc_1);
+}
+
+void schedule(percpu_data_s * curr_cpu_data)
+{
+	if (curr_cpu_data->waiting_count == 0)
+		return;
+	else
+	{
+		proc_s * curr_proc = curr_cpu_data->curr_proc;
+		proc_s * next_proc = curr_cpu_data->waiting_proc;
+		// move current to finished list
+		curr_cpu_data->curr_proc = NULL;
+		if (curr_cpu_data->finished_proc == NULL)
+			curr_cpu_data->finished_proc = curr_proc;
+		else
+			m_list_insert_back(curr_proc, curr_cpu_data->finished_proc);
+		curr_cpu_data->finished_count++;
+		// move the first in waiting list to current
+		curr_cpu_data->curr_proc = next_proc;
+		if (curr_cpu_data->waiting_count == 1)
+			curr_cpu_data->waiting_proc = NULL;
+		else
+		{
+			curr_cpu_data->waiting_proc = next_proc->next;
+			m_list_delete(next_proc);
+		}
+		curr_cpu_data->waiting_count--;
+		
+		switch_to(curr_proc, next_proc);
+	}
 }
