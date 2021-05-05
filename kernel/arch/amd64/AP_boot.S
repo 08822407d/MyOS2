@@ -92,6 +92,10 @@ _AP_code64:
 	wrmsr
 	movq	$0x802,		%rcx
 	rdmsr
+	// enable fsgsbase instrutctions
+	movq	%cr4,		%rcx
+	bts		$16,		%rcx
+	movq	%rcx,		%cr4
 
 	// compair lapic_id in table to get current AP's index
 	movq	%rax,		%r8

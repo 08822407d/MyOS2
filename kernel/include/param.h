@@ -10,32 +10,41 @@
 
 /* This is used to obtain system information through SYS_GETINFO. */
 
-typedef struct kinfo {
-	phy_addr	kernel_phy_base;
-	vir_addr	kernel_vir_base;
-	vir_addr	kernel_vir_end;
+	typedef struct kinfo {
+		phy_addr	kernel_phy_base;
+		vir_addr	kernel_vir_base;
+		vir_addr	kernel_vir_end;
 
-	unsigned int	lcpu_nr;
+		unsigned int	lcpu_nr;
 
-	int		nr_procs;           /* number of user processes */
-	int		nr_tasks;           /* number of kernel tasks */
-	// char	release[6];        /* kernel release number */
-	// char	version[6];        /* kernel version number */
-	int		vm_allocated_bytes; /* allocated by kernel to load vm */
-	int		kernel_allocated_bytes;		/* used by kernel */
-	int		kernel_allocated_bytes_dynamic;	/* used by kernel (runtime) */
-} kinfo_s;
+		int		nr_procs;           /* number of user processes */
+		int		nr_tasks;           /* number of kernel tasks */
+		// char	release[6];        /* kernel release number */
+		// char	version[6];        /* kernel version number */
+		int		vm_allocated_bytes; /* allocated by kernel to load vm */
+		int		kernel_allocated_bytes;		/* used by kernel */
+		int		kernel_allocated_bytes_dynamic;	/* used by kernel (runtime) */
+	} kinfo_s;
 
-typedef struct framebuffer
-{
-	phy_addr	FB_phybase;
-	vir_addr	FB_virbase;
-	uint64_t	FB_size;
+	typedef struct framebuffer
+	{
+		phy_addr	FB_phybase;
+		vir_addr	FB_virbase;
+		uint64_t	FB_size;
 
-	uint32_t	PixperScanline;
-	uint32_t	X_Resolution;
-	uint32_t	Y_Resolution;
-} framebuffer_s;
+		uint32_t	PixperScanline;
+		uint32_t	X_Resolution;
+		uint32_t	Y_Resolution;
+	} framebuffer_s;
 
+	typedef struct time
+	{
+		int second;	//00
+		int minute;	//02
+		int hour;	//04
+		int day;	//07
+		int month;	//08
+		int year;	//09+32
+	} time_s;
 
 #endif

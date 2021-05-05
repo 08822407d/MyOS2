@@ -72,6 +72,11 @@ void SMP_init()
 		arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[i].not_use;
 		arch_cpuinfo->tss = tss_ptr_arr[i];
 	}
+	// init bsp's gsbase
+	__asm__ __volatile__("wrgsbase	%%rax					\n"
+					:
+					:"a"(smp_info[0])
+					:);
 }
 
 void start_SMP(uint64_t aptable_idx)
@@ -96,11 +101,6 @@ void start_SMP(uint64_t aptable_idx)
 	curr_cpuinfo->curr_proc = curr_proc;
 	curr_cpuinfo->finished_proc =
 	curr_cpuinfo->waiting_proc = NULL;
-
-	__asm__ __volatile__("wrgsbase	%%rax					\n"
-						:
-						:"a"(curr_cpuinfo)
-						:);
 
 	// load formal gdt and idt and tss
 	__asm__ __volatile__("	lgdt	%0						\n\
@@ -163,6 +163,13 @@ void start_SMP(uint64_t aptable_idx)
 						:
 						:"memory");
 	
+	// on Intel platform, write %gs will clean gsbase, so the following
+	// operation should be done after reload segment regs
+	__asm__ __volatile__("wrgsbase	%%rax		\n"
+						:
+						:"a"(curr_cpuinfo)
+						:);
+
 	color_printk(RED,YELLOW,"APU starting...... INDEX: %d; x2APIC ID:%#010x\n", aptable_idx, x);
 
 	int i = 1 / 0;

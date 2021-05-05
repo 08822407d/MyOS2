@@ -3,4 +3,5 @@
 void devices_init()
 {
 	keyboard_init();
+	HPET_init();
 }

@@ -9,6 +9,7 @@
 #include "include/arch_proc.h"
 #include "include/arch_proto.h"
 
+#include "../../include/proto.h"
 #include "../../include/proc.h"
 #include "../../include/printk.h"
 #include "../../include/const.h"
@@ -155,9 +156,8 @@ unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags, unsign
 	proc_s *tsk_new = NULL;
 	stack_frame_s *tsk_new_stackfram = NULL;
 	
-	tsk_new = &proc1_PCB.proc;
 	tsk_new_stackfram = get_current_stackframe(tsk_new);
-	// tsk_new = (proc_s *)malloc(sizeof(proc_s));
+	tsk_new = (proc_s *)kmalloc(sizeof(proc_s));
 	arch_PCB_s *arch_tsk = &tsk_new->arch_struct;
 
 	memset(tsk_new, 0, sizeof(proc_s));
@@ -217,11 +217,8 @@ void arch_init_proc()
 
 	proc_s * curr_proc = get_current();
 	curr_proc->flags = PF_KTHREAD;
-	proc_s *proc_1 = &proc1_PCB.proc;
 
-	kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
-
-	// switch_to(curr_proc, proc_1);
+	// kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
 }
 
 void schedule(percpu_data_s * curr_cpu_data)

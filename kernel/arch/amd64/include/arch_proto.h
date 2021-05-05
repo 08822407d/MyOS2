@@ -229,9 +229,9 @@
 	void schedule(percpu_data_s * curr_cpu_data);
 
 	/* interrupt.c */
-	void excep_hwint_entry(stack_frame_s * sf_regs);
-	void exception_handler(stack_frame_s * sf_regs);
-	void hwint_irq_handler(stack_frame_s * sf_regs);
+	void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata);
+	void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata);
+	void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));

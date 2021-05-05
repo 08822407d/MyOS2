@@ -141,21 +141,21 @@ void excep_page_fault(stack_frame_s * sf_regs)
 /*===========================================================================*
  *									entrys									 *
  *===========================================================================*/
-void excep_hwint_entry(stack_frame_s * sf_regs)
+void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata)
 {
 	int vec = sf_regs->vec_nr;
 
 	if (vec < HWINT0_VEC)
-		exception_handler(sf_regs);
+		exception_handler(sf_regs, cpudata);
 	else
-		hwint_irq_handler(sf_regs);
+		hwint_irq_handler(sf_regs, cpudata);
 }
 
-void exception_handler(stack_frame_s * sf_regs)
+void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata)
 {
 	int vec = sf_regs->vec_nr;
-	color_printk(WHITE, BLUE,"INTR: 0x%02x - %s ; ",
-					vec, exception_init_table[vec].name);
+	color_printk(WHITE, BLUE,"Caused by core-%d, INTR: 0x%02x - %s ; ",
+					cpudata->cpu_idx, vec, exception_init_table[vec].name);
 
 	switch (vec)
 	{
@@ -183,7 +183,7 @@ void exception_handler(stack_frame_s * sf_regs)
 	while (1);
 }
 
-void hwint_irq_handler(stack_frame_s * sf_regs)
+void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata)
 {
 	int vec = sf_regs->vec_nr;
 	int irq_nr = vec - HWINT0_VEC;

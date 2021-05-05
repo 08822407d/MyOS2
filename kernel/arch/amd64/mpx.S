@@ -9,75 +9,75 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
-#define GET_CURRENT(reg)	\
-	movq	$-32768,reg;	\
-	andq	%rsp,	reg
+#define GET_CURRENT(reg)			\
+	movq		$-32768,	reg;	\
+	andq		%rsp,		reg
 
 /*===========================================================================*/
 /*							syscall and sysret entry						 */
 /*===========================================================================*/
 ENTRY(enter_syscall)
 	movabsq	$(tss_bsp + 4),	%r10
-	movq	(%r10),	%r10
-	xchgq	%rsp,	%r10
+	movq		(%r10),		%r10
+	xchgq		%rsp,		%r10
 	sti
-	pushq	%r10			// save user rsp
-	pushq	%r11			// save user rflags
-	subq	$0x08,	%rsp
-	pushq	%rcx
+	pushq		%r10			// save user rsp
+	pushq		%r11			// save user rflags
+	subq		$0x08,		%rsp
+	pushq		%rcx
 	/////////////////////////////////
-	subq	$0x10,	%rsp	// skip vec_nr and err_code
+	subq		$0x10,		%rsp	// skip vec_nr and err_code
 	/////////////////////////////////
-	pushq	%rax
-	pushq	%rbx
-	pushq	%rcx
-	pushq	%rdx
-	pushq	%rbp
-	pushq	%rdi
-	pushq	%rsi
-	pushq	%r8
-	pushq	%r9
-	pushq	%r10
-	pushq	%r11
-	pushq	%r12
-	pushq	%r13
-	pushq	%r14
-	pushq	%r15
+	pushq		%rax
+	pushq		%rbx
+	pushq		%rcx
+	pushq		%rdx
+	pushq		%rbp
+	pushq		%rdi
+	pushq		%rsi
+	pushq		%r8
+	pushq		%r9
+	pushq		%r10
+	pushq		%r11
+	pushq		%r12
+	pushq		%r13
+	pushq		%r14
+	pushq		%r15
 	
-	movq	%es,	%rax
-	pushq	%rax
-	movq	%ds,	%rax
-	pushq	%rax
-	movq	%rsp,	%rdi
-	callq	do_syscall
+	movq		%es,		%rax
+	pushq		%rax
+	movq		%ds,		%rax
+	pushq		%rax
+	movq		%rsp,		%rdi
+	callq		do_syscall
 
 ENTRY(ret_from_syscall)
-	movq	%rax,	0x80(%rsp)
-	popq	%rax		
-	movq	%rax,	%ds
-	popq	%rax
-	movq	%rax,	%es
-	popq	%r15
-	popq	%r14
-	popq	%r13
-	popq	%r12
-	popq	%r11
-	popq	%r10
-	popq	%r9
-	popq	%r8
-	popq	%rsi
-	popq	%rdi
-	popq	%rbp
-	popq	%rdx
-	popq	%rcx
-	popq	%rbx
-	popq	%rax
+	movq		%rax,		0x80(%rsp)
+	popq		%rax		
+	movq		%rax,		%ds
+	popq		%rax
+	movq		%rax,		%es
+	popq		%r15
+	popq		%r14
+	popq		%r13
+	popq		%r12
+	popq		%r11
+	popq		%r10
+	popq		%r9
+	popq		%r8
+	popq		%rsi
+	popq		%rdi
+	popq		%rbp
+	popq		%rdx
+	popq		%rcx
+	popq		%rbx
+	popq		%rax
 	/////////////////////////////////
-	addq	$0x10,	%rsp	// skip err-code and vec-nr
+	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	/////////////////////////////////
-	popq	%rcx
-	addq	$0x10,	%rsp	// skip cs
-	popq	%rsp
+	popq		%rcx
+	addq		$0x10,		%rsp	// skip cs
+	popq		%rsp
 	sysretq
 
 
@@ -85,75 +85,78 @@ ENTRY(ret_from_syscall)
 /*								interrupt entry								 */
 /*===========================================================================*/
 RESTORE_ALL:
-	popq	%rax		
-	movq	%rax,	%ds
-	popq	%rax
-	movq	%rax,	%es
-	popq	%r15
-	popq	%r14
-	popq	%r13
-	popq	%r12
-	popq	%r11
-	popq	%r10
-	popq	%r9
-	popq	%r8
-	popq	%rsi
-	popq	%rdi
-	popq	%rbp
-	popq	%rdx
-	popq	%rcx
-	popq	%rbx
-	popq	%rax
-	addq	$0x10,	%rsp	// skip err-code and vec-nr
+	popq		%rax		
+	movq		%rax,		%ds
+	popq		%rax
+	movq		%rax,		%es
+	popq		%r15
+	popq		%r14
+	popq		%r13
+	popq		%r12
+	popq		%r11
+	popq		%r10
+	popq		%r9
+	popq		%r8
+	popq		%rsi
+	popq		%rdi
+	popq		%rbp
+	popq		%rdx
+	popq		%rcx
+	popq		%rbx
+	popq		%rax
+	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	iretq;
 
 ret_from_exception:
-	/*GET_CURRENT(%ebx)	need rewrite*/
+
 ENTRY(ret_from_intr)
-	jmp	RESTORE_ALL	/*need rewrite*/
+	rdgsbase	%rdi
+	callq		schedule
+	jmp			RESTORE_ALL
 
 SAVE_ALL:
-	pushq	%rax
-	pushq	%rbx
-	pushq	%rcx
-	pushq	%rdx
-	pushq	%rbp
-	pushq	%rdi
-	pushq	%rsi
-	pushq	%r8
-	pushq	%r9
-	pushq	%r10
-	pushq	%r11
-	pushq	%r12
-	pushq	%r13
-	pushq	%r14
-	pushq	%r15	
+	pushq		%rax
+	pushq		%rbx
+	pushq		%rcx
+	pushq		%rdx
+	pushq		%rbp
+	pushq		%rdi
+	pushq		%rsi
+	pushq		%r8
+	pushq		%r9
+	pushq		%r10
+	pushq		%r11
+	pushq		%r12
+	pushq		%r13
+	pushq		%r14
+	pushq		%r15	
 
-	movq	%es,	%rax
-	pushq	%rax
-	movq	%ds,	%rax
-	pushq	%rax
-	xorq	%rax,	%rax
+	movq		%es,		%rax
+	pushq		%rax
+	movq		%ds,		%rax
+	pushq		%rax
+	xorq		%rax,		%rax
 
 	cld
-	movq	$KERN_SS_SELECTOR,	%rdi
-	movq	%rdi,	%ds
-	movq	%rdi,	%es
-	movq	%rsp,	%rdi
-	callq 	excep_hwint_entry
+	movq		$KERN_SS_SELECTOR,	%rdi
+	movq		%rdi,		%ds
+	movq		%rdi,		%es
 
-	jmp		ret_from_exception	
+	movq		%rsp,		%rdi
+	rdgsbase	%rsi
+	callq 		excep_hwint_entry
+	jmp			ret_from_exception	
 
 
 /*===========================================================================*/
 /*							exception handler entries					     */
 /*===========================================================================*/
-#define EXCEPTION_ERR_CODE(vector)	\
-	pushq	$vector			;\
-	jmp		SAVE_ALL
+#define EXCEPTION_ERR_CODE(vector)		\
+	pushq		$vector					;\
+	jmp			SAVE_ALL
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
-	pushq	$0		;\
+	pushq		$0						;\
 	EXCEPTION_ERR_CODE(vector)
 
 LABEL(divide_error)
@@ -306,28 +309,28 @@ ENTRY(hwint23) /* APIC_IRQ */
 /*									thread func							     */
 /*===========================================================================*/
 ENTRY(kernel_thread_func)
-	popq	%rax
-	movq	%rax,	%ds
-	popq	%rax
-	movq	%rax,	%es
-	popq	%r15
-	popq	%r14
-	popq	%r13
-	popq	%r12
-	popq	%r11
-	popq	%r10
-	popq	%r9
-	popq	%r8
-	popq	%rsi
-	popq	%rdi
-	popq	%rbp
-	popq	%rdx
-	popq	%rcx
-	popq	%rbx
-	popq	%rax
-	addq	$0x38,	%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
+	popq		%rax
+	movq		%rax,		%ds
+	popq		%rax
+	movq		%rax,		%es
+	popq		%r15
+	popq		%r14
+	popq		%r13
+	popq		%r12
+	popq		%r11
+	popq		%r10
+	popq		%r9
+	popq		%r8
+	popq		%rsi
+	popq		%rdi
+	popq		%rbp
+	popq		%rdx
+	popq		%rcx
+	popq		%rbx
+	popq		%rax
+	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
 	/////////////////////////////////
-	movq	%rdx,	%rdi
-	callq	*%rbx
-	movq	%rax,	%rdi
-	callq	do_exit
+	movq		%rdx,		%rdi
+	callq		*%rbx
+	movq		%rax,		%rdi
+	callq		do_exit

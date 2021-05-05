@@ -160,6 +160,9 @@ code_64_start:
 	bts		$16,		%rax
 	movq	%rax,		%cr4
 
+	movq	$__PML4E,	%rax
+	wrgsbase			%rax
+
 skip_set_pde:
 	movq	$__PML4E,	%rax
 	movq	%rax,		%cr3
