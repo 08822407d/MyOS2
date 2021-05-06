@@ -1,6 +1,8 @@
 #include <lib/stddef.h>
 #include <lib/utils.h>
 
+#include "arch/amd64/include/interrupt.h"
+
 
 #include "include/printk.h"
 #include "include/proto.h"
@@ -24,9 +26,9 @@ void init_timer(timer_list_s * timer,
 
 void add_timer(timer_list_s * timer)
 {
-	timer_list_s * tmp = timer->next;
+	timer_list_s * tmp = timer_list_head.next;
 
-	if(timer_list_head.next = timer_list_head.prev = NULL)
+	if(timer_list_head.next == NULL && timer_list_head.prev == NULL)
 	{
 		
 	}
@@ -52,12 +54,12 @@ void timer_init()
 {
 	timer_list_s *tmp = NULL;
 	jiffies = 0;
-	init_timer(&timer_list_head,NULL,NULL,-1UL);
-	register_softirq(0, &do_timer, NULL);
+	init_timer(&timer_list_head, NULL, NULL, -1UL);
+	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
 
-	tmp = (timer_list_s *)kmalloc(sizeof(timer_list_s));
-	init_timer(tmp,&test_timer,NULL,5);
-	add_timer(tmp);
+	// tmp = (timer_list_s *)kmalloc(sizeof(timer_list_s));
+	// init_timer(tmp, &test_timer, NULL, 5);
+	// add_timer(tmp);
 }
 
 void do_timer(void * data)
@@ -72,5 +74,5 @@ void do_timer(void * data)
 		tmp = timer_list_head.next;
 	}
 
-	color_printk(RED,WHITE,"(HPET:%ld)",jiffies);
+	// color_printk(RED, WHITE, "(HPET:%ld)\n", jiffies);
 }

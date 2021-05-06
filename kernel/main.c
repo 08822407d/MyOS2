@@ -43,8 +43,8 @@ void kmain(void)
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 
-	timer_init();
 	softirq_init();
+	timer_init();
 
 	devices_init();
 

@@ -70,11 +70,11 @@ void IOAPIC_level_ack(unsigned long irq_nr)
 
 void IOAPIC_edge_ack(unsigned long irq)
 {
-	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
-				"movq	$0x00,	%%rax	\n\t"
-				"movq 	$0x80b,	%%rcx	\n\t"
-				"wrmsr	\n\t"
-				:::"memory");
+	__asm__ __volatile__("movq	$0x00,	%%rdx	\n\t"
+						 "movq	$0x00,	%%rax	\n\t"
+						 "movq 	$0x80b,	%%rcx	\n\t"
+						 "wrmsr	\n\t"
+						:::"memory","rax","rcx","rdx");
 }
 
 // /*

@@ -38,8 +38,8 @@
 			({										\
 				if (dst != NULL)					\
 				{									\
-					src->next = dst->next;			\
 					src->prev = dst;				\
+					src->next = dst->next;			\
 													\
 					src->next->prev = src;			\
 					src->prev->next = src;			\

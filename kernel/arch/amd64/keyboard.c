@@ -82,13 +82,9 @@ void keyboard_exit()
 
 void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 {
-	// uint8_t scan_code = inb(0x60);
-	// color_printk(GREEN, BLACK, "KBD SCAN CODE = %#04x\n", scan_code);
-
 	unsigned char x;
 	x = inb(0x60);
-	color_printk(WHITE,BLACK,"(K:%02x)",x);
-	get_cmos_time(&time);
+	color_printk(WHITE,BLACK,"(K:%02x)\n",x);
 
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;
