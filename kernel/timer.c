@@ -1,7 +1,6 @@
 #include <lib/stddef.h>
 #include <lib/utils.h>
 
-// #include "include/device.h"
 
 #include "include/printk.h"
 #include "include/proto.h"

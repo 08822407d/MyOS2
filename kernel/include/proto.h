@@ -50,11 +50,11 @@
 	void prot_init(void);
 
 	/* softirq.c */
-	void register_softirq(unsigned irq, void (*action)(void * data), void * data);
-	void unregister_softirq(unsigned irq);
-	void set_softirq_status(unsigned irq);
-	uint64_t get_softirq_status();
-	void softirq_init();
+	void register_softirq(unsigned sirq, void (*action)(void * data), void * data);
+	void unregister_softirq(unsigned sirq);
+	void set_softirq_status(unsigned sirq);
+	uint64_t get_softirq_status(void);
+	void softirq_init(void);
 
 	/* timer.c */
 	void init_timer(timer_list_s * timer,void (* func)(void * data),void *data,unsigned long expire_jiffies);

@@ -21,9 +21,9 @@
 uint64_t	softirq_status = 0;
 softirq_s	softirq_vector[64] = {0};
 
-void set_softirq_status(unsigned irq)
+void set_softirq_status(unsigned sirq)
 {
-	softirq_status |= (1 << irq);
+	softirq_status |= (1 << sirq);
 }
 
 uint64_t get_softirq_status()
@@ -31,27 +31,27 @@ uint64_t get_softirq_status()
 	return softirq_status;
 }
 
-void register_softirq(unsigned irq,void (*action)(void * data),void * data)
+void register_softirq(unsigned sirq,void (*action)(void * data),void * data)
 {
-	softirq_vector[irq].action = action;
-	softirq_vector[irq].data = data;
+	softirq_vector[sirq].action = action;
+	softirq_vector[sirq].data = data;
 }
 
-void unregister_softirq(unsigned irq)
+void unregister_softirq(unsigned sirq)
 {
-	softirq_vector[irq].action = NULL;
-	softirq_vector[irq].data = NULL;
+	softirq_vector[sirq].action = NULL;
+	softirq_vector[sirq].data = NULL;
 }
 
 void do_softirq()
 {
-	unsigned irq;
-	for(irq = 0; irq < 64 && softirq_status; irq++)
+	unsigned sirq;
+	for(sirq = 0; sirq < 64 && softirq_status; sirq++)
 	{
-		if(softirq_status & (1 << irq))
+		if(softirq_status & (1 << sirq))
 		{
-			softirq_vector[irq].action(softirq_vector[irq].data);
-			softirq_status &= ~(1 << irq);
+			softirq_vector[sirq].action(softirq_vector[sirq].data);
+			softirq_status &= ~(1 << sirq);
 		}
 	}
 }
