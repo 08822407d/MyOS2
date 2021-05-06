@@ -108,10 +108,18 @@ RESTORE_ALL:
 	iretq;
 
 ret_from_exception:
-
 ENTRY(ret_from_intr)
 	rdgsbase	%rdi
 	callq		schedule
+	movq		$-1,		%rcx
+	testq		softirq_status(%rip),	%rcx	////check softirq	
+	jnz			softirq_hanlder
+	jmp			RESTORE_ALL
+
+softirq_hanlder:
+	sti
+	callq		do_softirq
+	cli
 	jmp			RESTORE_ALL
 
 SAVE_ALL:

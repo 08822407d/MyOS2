@@ -63,7 +63,6 @@
 	#define PARALLEL_B_IRQ				5		/* xt winchester */
 	#define FLOPPY_IRQ					6		/* floppy disk */
 	#define PARALLEL_A_IRQ				7
-	#define RTC_TIMER_IRQ				8
 	#define PS2_MOUSE_IRQ				12		/* AUX (PS/2 mouse) port in kbd controller */
 	#define SATA_MAST_IRQ				14		/* at winchester controller 0 */
 	#define SATA_SLAV_IRQ				15		/* at winchester controller 1 */
@@ -74,7 +73,8 @@
 		#define HWINT0_VEC				I8259_IRQ0_VEC
 		#define VECTOR(irq)				(irq + I8259_IRQ0_VEC)
 
-		#define CLOCK_IRQ				0
+		#define RTC_IRQ					0
+		#define I8254_TIMER_IRQ			8
 		#define PRESERVED_1_IRQ			10
 		#define PRESERVED_2_IRQ			11
 		#define FPU_IRQ					13
@@ -84,7 +84,8 @@
 		#define VECTOR(irq)				(irq + APIC_IRQ0_VEC)
 
 		#define APIC_8259A				0
-		#define CLOCK_IRQ				2
+		#define HPET_TIMER0_IRQ			2
+		#define HPET_TIMER1_IRQ			8
 		#define GENERIC_1_IRQ			9
 		#define GENERIC_2_IRQ			10
 		#define HPET_TIMER2_IRQ			11

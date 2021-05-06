@@ -1,11 +1,12 @@
 #include <lib/stddef.h>
 #include <lib/utils.h>
 
-#include "include/device.h"
+// #include "include/device.h"
 
-#include "../../include/printk.h"
-#include "../../include/glo.h"
-#include "../../klib/data_structure.h"
+#include "include/printk.h"
+#include "include/proto.h"
+#include "include/glo.h"
+#include "klib/data_structure.h"
 
 
 unsigned long volatile jiffies = 0;
@@ -53,9 +54,9 @@ void timer_init()
 	timer_list_s *tmp = NULL;
 	jiffies = 0;
 	init_timer(&timer_list_head,NULL,NULL,-1UL);
-	register_softirq(0,&do_timer,NULL);
+	register_softirq(0, &do_timer, NULL);
 
-	tmp = (struct timer_list_s *)kmalloc(sizeof(timer_list_s),0);
+	tmp = (timer_list_s *)kmalloc(sizeof(timer_list_s));
 	init_timer(tmp,&test_timer,NULL,5);
 	add_timer(tmp);
 }
