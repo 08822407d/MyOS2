@@ -84,10 +84,6 @@ void start_SMP(uint64_t aptable_idx)
 	percpu_data_s * curr_cpuinfo = smp_info[aptable_idx];
 
 	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
-	proc_s * curr_proc = (proc_s *)get_current();
-	m_list_init(curr_proc);
-	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
-	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
 	tss_p->rsp1 =
 	tss_p->rsp2 =
 	tss_p->ist1 =
@@ -96,7 +92,13 @@ void start_SMP(uint64_t aptable_idx)
 	tss_p->ist4 =
 	tss_p->ist5 =
 	tss_p->ist6 =
-	tss_p->ist7 = 0;
+	tss_p->ist7 = (reg_t)(curr_cpuinfo->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
+
+	proc_s * curr_proc = (proc_s *)get_current();
+	m_list_init(curr_proc);
+	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
+	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
+	curr_proc->pid = get_newpid();
 
 	curr_cpuinfo->curr_proc = curr_proc;
 	curr_cpuinfo->finished_proc =

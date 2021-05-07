@@ -25,7 +25,7 @@ void HPET_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
 	jiffies++;
 
-	// if(timer_list_head.next->expire_jiffies <= jiffies)
+	if(timer_list_head.next->expire_jiffies <= jiffies)
 		set_softirq_status(HPET_TIMER0_IRQ);
 	
 	// switch(current->priority)
@@ -84,7 +84,7 @@ void HPET_init()
 	entry.dst.physical.phy_dest = 0;
 	entry.dst.physical.reserved2 = 0;
 
-	register_irq(HPET_TIMER0_IRQ, &entry , "HPET",
+	register_irq(HPET_TIMER0_IRQ, &entry , "HPET0",
 				 NULL, &HPET_int_controller,
 				 &HPET_handler);
 	
@@ -96,7 +96,7 @@ void HPET_init()
 	*(unsigned long *)(HPET_addr + 0x100) = 0x004c;
 	io_mfence();
 
-	//1S
+	//1S qemu may have a different precision so here need a calculate
 	*(unsigned long *)(HPET_addr + 0x108) = 14318179;
 	io_mfence();
 

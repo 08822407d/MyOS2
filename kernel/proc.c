@@ -30,16 +30,17 @@ void proc_init()
 	bsp_cpudata->finished_proc = NULL;
 	bsp_cpudata->curr_proc = proc0;
 
-	creat_idles();
-
 	arch_init_proc();
+
+	creat_idles();
 }
 
 
 void creat_idles()
 {
 	idle_procs = kmalloc(kparam.lcpu_nr * sizeof(PCB_u *));
-	for (int i = 0; i < kparam.lcpu_nr; i++)
+	idle_procs[0] = &proc0_PCB;
+	for (int i = 1; i < kparam.lcpu_nr; i++)
 	{
 		idle_procs[i] = kmalloc(sizeof(PCB_u));
 		memset(idle_procs[i], 0, sizeof(PCB_u));

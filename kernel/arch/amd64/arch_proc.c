@@ -21,20 +21,9 @@ extern char		ist_stack0;
 extern PCB_u	proc0_PCB;
 extern PCB_u	proc1_PCB;
 
-void test_proc1(void);
-char user_stack[PROC_KSTACK_SIZE];
-
-int user_func()
-{
-	color_printk(GREEN, BLACK, "user function is running... \n");
-	
-	int syscall_retval = sys_call(0x87654321);
-	color_printk(GREEN, BLACK, "syscall retturn value : %#08lx \n", syscall_retval);
-
-	while (1);
-	
-	return 0;
-}
+bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
+spinlock_T		newpid_lock;
+unsigned long	curr_pid;
 
 inline __always_inline proc_s * get_current()
 {
@@ -48,23 +37,35 @@ inline __always_inline proc_s * get_current()
 	return current;
 }
 
+unsigned long get_newpid()
+{
+	spin_lock(&newpid_lock);
+	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
+	if (newpid >= MAX_PID || newpid < curr_pid)
+	{
+		newpid = bm_get_freebit_idx(pid_bm, 0, curr_pid);
+		if (newpid >= curr_pid || newpid == 0)
+		{
+			// pid bitmap used out
+			while (1);
+		}
+	}
+	curr_pid = newpid;
+	bm_set_bit(pid_bm, newpid);
+	spin_unlock(&newpid_lock);
+
+	return curr_pid;
+}
+
 stack_frame_s * get_current_stackframe(proc_s *curr_proc)
 {
 	return &((PCB_u *)curr_proc)->arch_sf.pcb_sf_top;
 }
 
-inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
+inline __always_inline void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata)
 {
-	tss_bsp.rsp0 = target->arch_struct.tss_rsp0;
-	tss_bsp.rsp1 =
-	tss_bsp.rsp2 =
-	tss_bsp.ist1 =
-	tss_bsp.ist2 =
-	tss_bsp.ist3 =
-	tss_bsp.ist4 =
-	tss_bsp.ist5 =
-	tss_bsp.ist6 =
-	tss_bsp.ist7 = (reg_t)&ist_stack0 + CONFIG_CPUSTACK_SIZE;
+	tss64_s * curr_tss = cpudata->arch_info->tss;
+	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
 	__asm__ __volatile__("movq	%%fs,	%0 \n\t"
 						 : "=a"(curr->arch_struct.fs));
@@ -80,7 +81,7 @@ inline __always_inline void __switch_to(proc_s * curr, proc_s * target)
 
 }
 
-void inline __always_inline switch_to(proc_s * curr, proc_s * target)
+void inline __always_inline switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata)
 {
 	__asm__ __volatile__("pushq	%%rbp				\n\
 						  pushq %%rax				\n\
@@ -144,9 +145,6 @@ int do_syscall(int syscall_nr)
 
 unsigned long do_execve(stack_frame_s * sf_regs)
 {
-	sf_regs->rcx =
-	sf_regs->rip = (reg_t)user_func;
-	sf_regs->rsp = (reg_t)user_stack + PROC_KSTACK_SIZE;
 	return 1;
 }
 
@@ -215,8 +213,14 @@ void arch_init_proc()
 	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
 	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
 
+	// init pid bitmap
+	memset(&pid_bm, 0, sizeof(pid_bm));
+	curr_pid = 0;
+	spin_init(&newpid_lock);
+
 	proc_s * curr_proc = get_current();
 	curr_proc->flags = PF_KTHREAD;
+	curr_proc->pid = get_newpid();
 
 	// kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
 }
@@ -246,7 +250,7 @@ void schedule(percpu_data_s * curr_cpu_data)
 			m_list_delete(next_proc);
 		}
 		curr_cpu_data->waiting_count--;
-		
-		switch_to(curr_proc, next_proc);
+
+		switch_to(curr_proc, next_proc, curr_cpu_data);
 	}
 }

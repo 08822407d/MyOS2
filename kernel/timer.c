@@ -28,7 +28,8 @@ void add_timer(timer_list_s * timer)
 {
 	timer_list_s * tmp = timer_list_head.next;
 
-	if(timer_list_head.next == NULL && timer_list_head.prev == NULL)
+	if(timer_list_head.next == NULL &&
+		timer_list_head.prev == NULL)
 	{
 		
 	}
@@ -74,5 +75,5 @@ void do_timer(void * data)
 		tmp = timer_list_head.next;
 	}
 
-	// color_printk(RED, WHITE, "(HPET:%ld)\n", jiffies);
+	color_printk(RED, WHITE, "(HPET:%ld)", jiffies);
 }

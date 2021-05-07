@@ -7,6 +7,7 @@
 #include "const.h"
 #include "../arch/amd64/include/arch_proc.h"
 
+	#define MAX_PID					0x8000
 	#define TASK_RUNNING			(1 << 0)
 	#define TASK_INTERRUPTIBLE		(1 << 1)
 	#define	TASK_UNINTERRUPTABLE	(1 << 2)
@@ -47,8 +48,9 @@
 	void proc_init(void);
 
 	void arch_init_proc(void);
-	proc_s * get_current();
-	void __switch_to(proc_s *, proc_s *);
-	void switch_to(proc_s *, proc_s *);
+	proc_s * get_current(void);
+	unsigned long get_newpid(void);
+	void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
+	void switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
 
 #endif /* _PROC_H_ */

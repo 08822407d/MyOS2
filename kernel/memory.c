@@ -103,7 +103,7 @@ void mem_init()
 
 Page_s * page_alloc(void)
 {
-	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, mem_info.page_total_nr);
+	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
 	bm_set_bit(mem_info.page_bitmap, freepage_idx);
 	Page_s * ret_page = &mem_info.pages[freepage_idx];
 	ret_page->ref_count++;
@@ -222,7 +222,7 @@ void * kmalloc(size_t size)
 		slp = container_of(&slp->slab_list, Slab_s, slab_list);
 	}
 	// count the virtual addr of suitable object
-	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, slp->total);
+	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
 	size_t offset = scgp->obj_size * obj_idx;
 	ret_val = (void *)((size_t)slp->vir_addr + offset);
 	// refresh status of slab

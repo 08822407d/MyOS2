@@ -5,7 +5,7 @@
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);
 	void bm_clear_bit(bitmap_t *, unsigned long idx);
-	unsigned long bm_get_freebit_idx(bitmap_t *, unsigned long limit);
+	unsigned long bm_get_freebit_idx(bitmap_t * bm, unsigned long start, unsigned long limit);
 
 	#define container_of(member_ptr, container_type, member_name)										\
 	({																									\
