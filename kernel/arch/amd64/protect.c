@@ -22,7 +22,6 @@ gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
 tss64_s **		tss_ptr_arr = NULL;
 tss64_s			tss_bsp;
-char			ist_stack0[CONFIG_CPUSTACK_SIZE] __aligned(CONFIG_CPUSTACK_SIZE);
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
@@ -225,7 +224,7 @@ void init_bsp_tss()
 	curr_tss->ist4 =
 	curr_tss->ist5 =
 	curr_tss->ist6 =
-	curr_tss->ist7 = (uint64_t)&ist_stack0 + CONFIG_CPUSTACK_SIZE;
+	curr_tss->ist7 = 0;
 }
 
 

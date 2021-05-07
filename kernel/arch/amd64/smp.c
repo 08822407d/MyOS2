@@ -31,20 +31,6 @@ percpu_data_s ** smp_info;
 
 void SMP_init()
 {
-	// int i;
-	// unsigned int a,b,c,d;
-
-	// //get local APIC ID
-	// for(i = 0;;i++)
-	// {
-	// 	cpuid(0xb,i,&a,&b,&c,&d);
-	// 	if((c >> 8 & 0xff) == 0)
-	// 		break;
-	// 	color_printk(WHITE,BLACK,"local APIC ID Package_../Core_2/SMT_1,type(%x) Width:%#010x,num of logical processor(%x)\n",c >> 8 & 0xff,a & 0x1f,b & 0xff);
-	// }
-	
-	// color_printk(WHITE,BLACK,"x2APIC ID level:%#010x\tx2APIC ID the current logical processor:%#010x\n",c & 0xff,d);
-	
 	extern char _APboot_phy_start;
 	extern char _APboot_text;
 	extern char _APboot_etext;
@@ -57,20 +43,32 @@ void SMP_init()
 	for (size_t i = 0; i < kparam.lcpu_nr; i++)
 	{
 		smp_info[i] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
-		memset(smp_info[i], 0, sizeof(percpu_data_s));
-		smp_info[i]->cpu_idx = i;
-		smp_info[i]->cpu_stack_start =
+		percpu_data_s * curr_cpudata = smp_info[i];
+		memset(curr_cpudata, 0, sizeof(percpu_data_s));
+		curr_cpudata->cpu_idx = i;
+		curr_cpudata->cpu_stack_start =
 				(char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
 
-		smp_info[i]->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
-		memset(smp_info[i]->arch_info, 0, sizeof(arch_percpu_data_s));
-		arch_percpu_data_s * arch_cpuinfo = smp_info[i]->arch_info;
+		curr_cpudata->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
+		memset(curr_cpudata->arch_info, 0, sizeof(arch_percpu_data_s));
+		arch_percpu_data_s * arch_cpuinfo = curr_cpudata->arch_info;
 		arch_cpuinfo->lcpu_addr = apic_id[i];
 		arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[i].thd_id;
 		arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[i].core_id;
 		arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[i].pack_id;
 		arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[i].not_use;
 		arch_cpuinfo->tss = tss_ptr_arr[i];
+		// init tss's ists
+		tss64_s * tss_p = tss_ptr_arr[i];
+		tss_p->rsp1 =
+		tss_p->rsp2 =
+		tss_p->ist1 =
+		tss_p->ist2 =
+		tss_p->ist3 =
+		tss_p->ist4 =
+		tss_p->ist5 =
+		tss_p->ist6 =
+		tss_p->ist7 = (reg_t)(curr_cpudata->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
 	}
 	// init bsp's gsbase
 	__asm__ __volatile__("wrgsbase	%%rax					\n"
@@ -84,21 +82,13 @@ void start_SMP(uint64_t aptable_idx)
 	percpu_data_s * curr_cpuinfo = smp_info[aptable_idx];
 
 	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
-	tss_p->rsp1 =
-	tss_p->rsp2 =
-	tss_p->ist1 =
-	tss_p->ist2 =
-	tss_p->ist3 =
-	tss_p->ist4 =
-	tss_p->ist5 =
-	tss_p->ist6 =
-	tss_p->ist7 = (reg_t)(curr_cpuinfo->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
+
 
 	proc_s * curr_proc = (proc_s *)get_current();
-	m_list_init(curr_proc);
+	curr_cpuinfo->proc_jiffies = curr_proc->proc_jiffies;
+
 	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
 	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
-	curr_proc->pid = get_newpid();
 
 	curr_cpuinfo->curr_proc = curr_proc;
 	curr_cpuinfo->finished_proc =

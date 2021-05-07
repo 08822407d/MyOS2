@@ -107,11 +107,11 @@ void pre_init(size_t mb2info_base)
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
 
-	kparam.lcpu_nr = bootinfo->smp_info.core_available;
+	kparam.lcpu_nr = bootinfo->efi_smp_info.core_available;
 	uint64_t lcpu_count = 0;
-	for (i = 0; i < bootinfo->smp_info.core_num; i++)
+	for (i = 0; i < bootinfo->efi_smp_info.core_num; i++)
 	{
-		efi_cpudesc_s * curr_cpu = &bootinfo->smp_info.cpus[i];
+		efi_cpudesc_s * curr_cpu = &bootinfo->efi_smp_info.cpus[i];
 		if ((curr_cpu->status & 0x4) > 0)
 		{
 			apic_id[lcpu_count] = curr_cpu->proccessor_id & 0xFF;

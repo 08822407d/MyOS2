@@ -7,14 +7,16 @@
 #include "const.h"
 #include "../arch/amd64/include/arch_proc.h"
 
-	#define MAX_PID					0x8000
-	#define TASK_RUNNING			(1 << 0)
-	#define TASK_INTERRUPTIBLE		(1 << 1)
-	#define	TASK_UNINTERRUPTABLE	(1 << 2)
-	#define	TASK_ZOMBIE				(1 << 3)	
-	#define	TASK_STOPPED			(1 << 4)
+	#define MAX_PID				0x8000
+	#define PS_RUNNING			(1L << 0)
+	#define PS_INTERRUPTIBLE	(1L << 1)
+	#define	PS_UNINTERRUPTABLE	(1L << 2)
+	#define	PS_ZOMBIE			(1L << 3)	
+	#define	PS_STOPPED			(1L << 4)
 
-	#define PF_KTHREAD			(1 << 0)
+	#define PF_KTHREAD			(1UL << 0)
+	#define PF_NEED_SCHEDULE	(1UL << 1)
+	#define PF_VFORK			(1UL << 2)
 
 	#define CLONE_FS			(1 << 0)
 	#define CLONE_FILES			(1 << 1)
@@ -32,9 +34,10 @@
 		unsigned long	flags;
 
 		long	pid;
-		long	counter;
 		long	signal;
 		long	prior;
+
+		unsigned long	proc_jiffies;
 	} proc_s;
 
 

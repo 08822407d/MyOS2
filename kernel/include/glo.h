@@ -9,6 +9,7 @@
 	extern kbd_inbuf_s * p_kb;
 	extern time_s time;
 	extern unsigned long volatile jiffies;
+	extern proc_s * proc_waiting_list;
 
 
 #endif /* _GLO_H_ */

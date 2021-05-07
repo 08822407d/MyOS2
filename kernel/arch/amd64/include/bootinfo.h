@@ -49,7 +49,7 @@
 	{
 		efi_vbeinfo_s Graphics_Info;
 		efi_meminfo_s E820_Info;
-		efi_smpinfo_s smp_info;
+		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
 
 // enum e820_type {

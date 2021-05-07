@@ -155,7 +155,11 @@
 		proc_s *	finished_proc;
 		size_t		waiting_count;
 		size_t		finished_count;
-		size_t		cpu_idx;
+
+		unsigned long	last_jiffies;
+		unsigned long	proc_jiffies;
+
+		size_t			cpu_idx;
 		arch_percpu_data_s *	arch_info;
 		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
 	} percpu_data_s;

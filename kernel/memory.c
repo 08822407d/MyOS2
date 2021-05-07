@@ -223,34 +223,40 @@ void * kmalloc(size_t size)
 	}
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
-	size_t offset = scgp->obj_size * obj_idx;
-	ret_val = (void *)((size_t)slp->vir_addr + offset);
-	// refresh status of slab
-	slp->free--;
-	scgp->nsobj_free_count--;
-	scgp->nsobj_used_count++;
-	bm_set_bit(slp->colormap, obj_idx);
-	// assure usable memory more than one page
-	if (scgp->nsobj_free_count < slp->total)
+	if (obj_idx < slp->total)
 	{
-		scgp->nsobj_free_count += slp->total;
-		Slab_s * new_slab = slab_alloc(slp->total);
-		if (new_slab == NULL)
+		size_t offset = scgp->obj_size * obj_idx;
+		ret_val = (void *)((size_t)slp->vir_addr + offset);
+		// refresh status of slab
+		slp->free--;
+		scgp->nsobj_free_count--;
+		scgp->nsobj_used_count++;
+		bm_set_bit(slp->colormap, obj_idx);
+		// assure usable memory more than one page
+		if (scgp->nsobj_free_count < slp->total)
 		{
-			color_printk(RED, WHITE, "Alloc new slab failed!\n");
-			scgp->nsobj_free_count -= slp->total;
-			while (1);
+			scgp->nsobj_free_count += slp->total;
+			Slab_s * new_slab = slab_alloc(slp->total);
+			if (new_slab == NULL)
+			{
+				color_printk(RED, WHITE, "Alloc new slab failed!\n");
+				scgp->nsobj_free_count -= slp->total;
+				while (1);
+			}
+			new_slab->slabcache_ptr = scgp;
+			list_insert_back(&new_slab->slab_list, &scgp->normal_slab->slab_list);
+			scgp->nslab_count++;
 		}
-		new_slab->slabcache_ptr = scgp;
-		list_insert_back(&new_slab->slab_list, &scgp->normal_slab->slab_list);
-		scgp->nslab_count++;
 	}
-	
+
 	return ret_val;
 }
 
 void kfree(void * obj_p)
 {
+	if (obj_p == NULL)
+		return;
+
 	phy_addr pg_addr = vir2phy((vir_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];

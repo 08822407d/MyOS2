@@ -9,6 +9,7 @@
 #include "include/arch_proc.h"
 #include "include/arch_proto.h"
 
+#include "../../include/glo.h"
 #include "../../include/proto.h"
 #include "../../include/proc.h"
 #include "../../include/printk.h"
@@ -19,7 +20,6 @@ extern tss64_s	tss_bsp;
 extern char		ist_stack0;
 
 extern PCB_u	proc0_PCB;
-extern PCB_u	proc1_PCB;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
@@ -57,9 +57,10 @@ unsigned long get_newpid()
 	return curr_pid;
 }
 
-stack_frame_s * get_current_stackframe(proc_s *curr_proc)
+stack_frame_s * get_stackframe(proc_s * proc_p)
 {
-	return &((PCB_u *)curr_proc)->arch_sf.pcb_sf_top;
+	PCB_u * pcb_p = container_of(proc_p, PCB_u, proc);
+	return &(pcb_p->arch_sf.pcb_sf_top);
 }
 
 inline __always_inline void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata)
@@ -107,18 +108,6 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target, percpu_dat
 unsigned long init(unsigned long arg)
 {
 	color_printk(RED,BLACK,"init task is running, arg:%#018lx\n",arg);
-	proc_s * curr = get_current();
-	stack_frame_s * sf_regs = get_current_stackframe(curr);
-	curr->arch_struct.k_rip = (reg_t)ret_from_syscall;
-	curr->arch_struct.k_rsp = (reg_t)sf_regs;
-
-	__asm__ __volatile__("movq	%1, %%rsp		\n\
-						  pushq	%2				\n\
-						  jmp	do_execve		\n	"
-						 :
-						 :"D"(sf_regs), "m"(curr->arch_struct.k_rsp), "m"(curr->arch_struct.k_rip)
-						 :"memory");
-
 	return 1;
 }
 
@@ -148,38 +137,55 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 	return 1;
 }
 
-unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags, unsigned long stack_start, unsigned long stack_size)
+void wakeup_proc(proc_s * proc)
 {
-	proc_s *tsk_curr = get_current();
-	proc_s *tsk_new = NULL;
-	stack_frame_s *tsk_new_stackfram = NULL;
-	
-	tsk_new_stackfram = get_current_stackframe(tsk_new);
-	tsk_new = (proc_s *)kmalloc(sizeof(proc_s));
-	arch_PCB_s *arch_tsk = &tsk_new->arch_struct;
+	if (proc_waiting_list == NULL)
+	{
 
-	memset(tsk_new, 0, sizeof(proc_s));
-	*tsk_new = *tsk_curr;
+	}
+	else
+	{
 
-	// list_init(&tsk_new->PCB_list);
-	m_list_init(tsk_new);
-	// list_insert_front(&tsk_new->PCB_list, &tsk_curr->PCB_list);
-	m_list_insert_front(tsk_new, tsk_curr);
-	tsk_new->pid++;	
-	tsk_new->state = TASK_UNINTERRUPTABLE;
+	}
+}
 
-	memcpy((void *)tsk_new_stackfram, sf_regs, sizeof(stack_frame_s));
+unsigned long do_fork(stack_frame_s * sf_regs,
+						unsigned long clone_flags,
+						unsigned long stack_start,
+						unsigned long stack_size)
+{
+	PCB_u * curr_pcb	= container_of(get_current(), PCB_u, proc);
+	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
+	proc_s * curr_proc	= &curr_pcb->proc;
+	proc_s * new_proc	= &new_pcb->proc;
+	if (new_pcb == NULL)
+	{
+		goto alloc_newproc_fail;
+	}
 
-	arch_tsk->tss_rsp0 = (reg_t)tsk_new + PROC_KSTACK_SIZE;
-	arch_tsk->k_rip = sf_regs->rip;
-	arch_tsk->k_rsp = (reg_t)tsk_new_stackfram;
+	memset(new_pcb, 0, sizeof(PCB_u));
+	memcpy(new_proc, curr_pcb, sizeof(proc_s));
 
-	if(!(tsk_new->flags & PF_KTHREAD))
-		arch_tsk->k_rip = sf_regs->rip = (reg_t)ret_from_syscall;
+	m_list_init(new_proc);
+	new_pcb->proc.pid = get_newpid();
+	new_pcb->proc.state = PS_UNINTERRUPTABLE;
 
-	tsk_new->state = TASK_RUNNING;
+	stack_frame_s * new_sf_regs = get_stackframe(new_proc);
+	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
 
-	return 0;
+	new_proc->arch_struct.tss_rsp0 = (reg_t)new_proc + PROC_KSTACK_SIZE;
+	new_proc->arch_struct.k_rip = sf_regs->rip;
+	new_proc->arch_struct.k_rsp = (reg_t)new_sf_regs;
+
+	if(!(new_proc->flags & PF_KTHREAD))
+		new_proc->arch_struct.k_rip = sf_regs->rip = (reg_t)ret_from_syscall;
+
+	new_proc->state = PS_RUNNING;
+
+	alloc_newproc_fail:
+		kfree(new_proc);
+
+	return new_proc->pid;
 }
 
 unsigned long do_exit(unsigned long code)
@@ -203,7 +209,7 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	sf_regs.rflags = (1 << 9);
 	sf_regs.rip = (reg_t)kernel_thread_func;
 
-	return do_fork(&sf_regs,flags,0,0);
+	return do_fork(&sf_regs, flags, 0, 0);
 }
 
 void arch_init_proc()
@@ -218,18 +224,20 @@ void arch_init_proc()
 	curr_pid = 0;
 	spin_init(&newpid_lock);
 
-	proc_s * curr_proc = get_current();
-	curr_proc->flags = PF_KTHREAD;
-	curr_proc->pid = get_newpid();
-
-	// kernel_thread(init, 20, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);
+	// kernel_thread(init, 20, 0);
 }
 
 void schedule(percpu_data_s * curr_cpu_data)
 {
+	unsigned long used_jiffies = jiffies - curr_cpu_data->last_jiffies;
+	if (used_jiffies >= curr_cpu_data->proc_jiffies)
+		curr_cpu_data->curr_proc->flags |= PF_NEED_SCHEDULE;
+
 	if (curr_cpu_data->waiting_count == 0)
+	{
 		return;
-	else
+	}
+	else if (curr_cpu_data->curr_proc->flags & PF_NEED_SCHEDULE)
 	{
 		proc_s * curr_proc = curr_cpu_data->curr_proc;
 		proc_s * next_proc = curr_cpu_data->waiting_proc;
@@ -252,5 +260,7 @@ void schedule(percpu_data_s * curr_cpu_data)
 		curr_cpu_data->waiting_count--;
 
 		switch_to(curr_proc, next_proc, curr_cpu_data);
+		curr_cpu_data->last_jiffies = jiffies;
+		curr_cpu_data->proc_jiffies = curr_proc->proc_jiffies;
 	}
 }
