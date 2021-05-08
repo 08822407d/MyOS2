@@ -52,6 +52,9 @@ entry_address_tag_start:
 	.long	entry_address_tag_end - entry_address_tag_start
 	.long	multiboot_entry
 entry_address_tag_end:
+// use grub2 derectly boot into long mode failed
+// can't find reason why step into fisrt instruction of
+// my code entry will cause cpu reset
 //===========================================
 // 	.align	8
 // efi_boot_service_tag_start:
@@ -195,6 +198,7 @@ ret_from_preinit:
 	movq    %rax,		%ss
 	movq    %rbx,		%rsp
 
+	movq	$0,			%rdi	// BSP has index 0
 	pushq   $ret_from_kmain
 	movabsq $kmain,		%rax
 	pushq   $0x08

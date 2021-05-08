@@ -14,13 +14,15 @@
 #include "include/proto.h"
 #include "include/printk.h"
 
+#include "klib/data_structure.h"
+
 extern kinfo_s kparam;
 
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 
-Slab_Cache_s	slab_cache_groups[SLAB_LEVEL];
-Slab_s			base_slabs[SLAB_LEVEL];
+slab_cache_s	slab_cache_groups[SLAB_LEVEL];
+slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
 
 /*===========================================================================*
@@ -129,8 +131,8 @@ void slab_init()
 {
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
-		Slab_Cache_s * scgp = &slab_cache_groups[i];
-		Slab_s * bsp = &base_slabs[i];
+		slab_cache_s * scgp = &slab_cache_groups[i];
+		slab_s * bsp = &base_slabs[i];
 
 		scgp->obj_size = SLAB_SIZE_BASE << i;
 		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
@@ -141,13 +143,13 @@ void slab_init()
 		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
 
-		scgp->dma_slab = NULL;
-		scgp->dslab_count = 0;
-		scgp->dsobj_free_count = 0;
-		scgp->dsobj_used_count = 0;
+		// scgp->dma_slab = NULL;
+		// scgp->dslab_count = 0;
+		// scgp->dsobj_free_count = 0;
+		// scgp->dsobj_used_count = 0;
 
 		// init the basic slab
-		list_init(&bsp->slab_list);
+		m_list_init(bsp);
 		bsp->colormap = (bitmap_t *)(kparam.kernel_vir_end + 0x10);
 		kparam.kernel_vir_end += cm_size + 0x10;
 		bsp->slabcache_ptr = scgp;
@@ -162,31 +164,31 @@ void slab_init()
 	kparam.kernel_vir_end += 0x10;
 }
 
-Slab_s * slab_alloc(size_t obj_count)
+slab_s * slab_alloc(size_t obj_count)
 {
 	Page_s * pg = page_alloc();
 	if (!(pg->attr & PG_PTable_Maped))
 		pg_domap(phy2vir(pg->page_start_addr), pg->page_start_addr, 0);
 	
 	pg->attr |= PG_Slab;
-	Slab_s * sp = (Slab_s *)kmalloc(sizeof(Slab_s));
+	slab_s * sp = (slab_s *)kmalloc(sizeof(slab_s));
 	sp->page = pg;
 	pg->slab_ptr = sp;
 	sp->colormap = (bitmap_t *)kmalloc(obj_count / sizeof(bitmap_t));
 	sp->total =
 	sp->free = obj_count;
 	sp->vir_addr = phy2vir(pg->page_start_addr);
-	list_init(&sp->slab_list);
+	m_list_init(sp);
 
 	return sp;
 }
 
-void slab_free(Slab_s * slp)
+void slab_free(slab_s * slp)
 {
 	kfree(slp->colormap);
 	slp->page->attr &= ~PG_Slab;
 	slp->page->slab_ptr = NULL;
-	list_delete(&slp->slab_list);
+	m_list_delete(slp);
 
 	kfree(slp);
 }
@@ -214,12 +216,11 @@ void * kmalloc(size_t size)
 	}
 
 	// find a usable slab
-	Slab_Cache_s * scgp = &slab_cache_groups[sc_idx];
-	Slab_s * slp = scgp->normal_slab;
+	slab_cache_s *	scgp = &slab_cache_groups[sc_idx];
+	slab_s *		slp = scgp->normal_slab;
 	while (slp->free == 0)
 	{
-		List_s * next = list_get_next(&slp->slab_list);
-		slp = container_of(&slp->slab_list, Slab_s, slab_list);
+		slp = slp->next;
 	}
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
@@ -236,7 +237,7 @@ void * kmalloc(size_t size)
 		if (scgp->nsobj_free_count < slp->total)
 		{
 			scgp->nsobj_free_count += slp->total;
-			Slab_s * new_slab = slab_alloc(slp->total);
+			slab_s * new_slab = slab_alloc(slp->total);
 			if (new_slab == NULL)
 			{
 				color_printk(RED, WHITE, "Alloc new slab failed!\n");
@@ -244,7 +245,7 @@ void * kmalloc(size_t size)
 				while (1);
 			}
 			new_slab->slabcache_ptr = scgp;
-			list_insert_back(&new_slab->slab_list, &scgp->normal_slab->slab_list);
+			m_list_insert_back(new_slab, scgp->normal_slab);
 			scgp->nslab_count++;
 		}
 	}
@@ -260,8 +261,8 @@ void kfree(void * obj_p)
 	phy_addr pg_addr = vir2phy((vir_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];
-	Slab_s * slp = pgp->slab_ptr;
-	Slab_Cache_s * scgp = slp->slabcache_ptr;
+	slab_s * slp = pgp->slab_ptr;
+	slab_cache_s * scgp = slp->slabcache_ptr;
 	unsigned long obj_idx = (obj_p - slp->vir_addr) / scgp->obj_size;
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;

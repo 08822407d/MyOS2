@@ -13,8 +13,11 @@
 
 	#define MAXMEMZONE		64
 
-	struct  Slab;
-	typedef struct Slab Slab_s;
+	struct  slab;
+	typedef struct slab slab_s;
+
+	struct	slab_cache;
+	typedef struct slab_cache slab_cache_s;
 	/* for page management */
 	typedef struct Page
 	{
@@ -25,7 +28,7 @@
 		unsigned long	ref_count;
 		unsigned long	age;
 
-		Slab_s *		slab_ptr;
+		slab_s *		slab_ptr;
 	} Page_s;
 
 	typedef struct MemZone
@@ -56,34 +59,38 @@
 		unsigned long	memzone_total_nr;	
 	} memory_info_s;
 
-	struct Slab_Cache;
-	typedef struct Slab_Cache Slab_Cache_s;
-	typedef struct Slab
+	typedef struct slab
 	{
-		List_s 			slab_list;
-		Slab_Cache_s *	slabcache_ptr;
+		slab_s *		prev;
+		slab_s *		next;
+
+		slab_cache_s *	slabcache_ptr;
+
 		unsigned long	total;
 		unsigned long	free;
+
 		vir_addr		vir_addr;
 		Page_s *		page;
 		bitmap_t *		colormap;
-	} Slab_s;
+	} slab_s;
 
-	typedef struct Slab_Cache
+	typedef struct slab_cache
 	{
-		List_s			list;
+		slab_cache_s *	prev;
+		slab_cache_s *	next;
+
 		unsigned long	obj_size;
 
 		unsigned long	nslab_count;
-		Slab_s *		normal_slab;
+		slab_s *		normal_slab;
 		unsigned long	nsobj_free_count;
 		unsigned long	nsobj_used_count;
 
-		unsigned long	dslab_count;
-		Slab_s *		dma_slab;
-		unsigned long	dsobj_free_count;
-		unsigned long	dsobj_used_count;
-	} Slab_Cache_s;
+		// unsigned long	dslab_count;
+		// slab_s *		dma_slab;
+		// unsigned long	dsobj_free_count;
+		// unsigned long	dsobj_used_count;
+	} slab_cache_s;
 	
 	typedef struct keyboard_inputbuffer
 	{

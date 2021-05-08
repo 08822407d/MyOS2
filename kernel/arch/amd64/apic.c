@@ -172,7 +172,6 @@ inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
 							"jb		(. + 0xB)		\n\t"	// support CMCI register,for example bochs, vbox and qemu
 							"movq 	$0x82f,	%%rcx	\n\t"	// CMCI
  							"wrmsr					\n\t"
-							// "skip_cmci:				\n\t"
 							"movq 	$0x832,	%%rcx	\n\t"	// Timer
  							"wrmsr					\n\t"
 							"movq 	$0x833,	%%rcx	\n\t"	// Thermal Monitor
@@ -252,38 +251,38 @@ void LAPIC_init()
 
 	unsigned lvt_ppr = get_lvt_ppr();
 
-#ifdef DEBUG
-	if((1<<9) & d)
-		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
-	else
-		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
+// #ifdef DEBUG
+// 	if((1<<9) & d)
+// 		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
+// 	else
+// 		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
 	
-	if((1<<21) & c)
-		color_printk(WHITE, BLACK, "x2APIC supported\n");
-	else
-		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
+// 	if((1<<21) & c)
+// 		color_printk(WHITE, BLACK, "x2APIC supported\n");
+// 	else
+// 		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
 
-	if(x_x2_apic_enabled )
-		color_printk(WHITE,BLACK,"xAPIC & x2APIC enabled\n");
+// 	if(x_x2_apic_enabled )
+// 		color_printk(WHITE,BLACK,"xAPIC & x2APIC enabled\n");
 
-	if(svr8_enabled)
-		color_printk(WHITE,BLACK,"SVR[8] enabled\n");
-	if(svr12_enabled)
-		color_printk(WHITE,BLACK,"SVR[12] enabled\n");
+// 	if(svr8_enabled)
+// 		color_printk(WHITE,BLACK,"SVR[8] enabled\n");
+// 	if(svr12_enabled)
+// 		color_printk(WHITE,BLACK,"SVR[12] enabled\n");
 
-	color_printk(WHITE,BLACK,"x2APIC ID:%#010x\n", x2apic_id);
+// 	color_printk(WHITE,BLACK,"x2APIC ID:%#010x\n", x2apic_id);
 
-	color_printk(WHITE,BLACK,"local APIC Version:%#010x,Max LVT Entry:%#010x,SVR(Suppress EOI Broadcast):%#04x\t",
-					lapic_ver, max_lvt, svr12_support);
-	if(lapic_ver < 0x10)
-		color_printk(WHITE,BLACK,"82489DX discrete APIC\n");
-	else if( (lapic_ver >= 0x10) && (lapic_ver <= 0x15) )
-		color_printk(WHITE,BLACK,"Integrated APIC\n");
-	color_printk(GREEN,BLACK,"Mask ALL LVT\n");
+// 	color_printk(WHITE,BLACK,"local APIC Version:%#010x,Max LVT Entry:%#010x,SVR(Suppress EOI Broadcast):%#04x\t",
+// 					lapic_ver, max_lvt, svr12_support);
+// 	if(lapic_ver < 0x10)
+// 		color_printk(WHITE,BLACK,"82489DX discrete APIC\n");
+// 	else if( (lapic_ver >= 0x10) && (lapic_ver <= 0x15) )
+// 		color_printk(WHITE,BLACK,"Integrated APIC\n");
+// 	color_printk(GREEN,BLACK,"Mask ALL LVT\n");
 
-	color_printk(GREEN,BLACK,"Set LVT TPR:%#010x\t",x);
-	color_printk(GREEN,BLACK,"Set LVT PPR:%#010x\n", lvt_ppr);
-#endif
+// 	color_printk(GREEN,BLACK,"Set LVT TPR:%#010x\t",x);
+// 	color_printk(GREEN,BLACK,"Set LVT PPR:%#010x\n", lvt_ppr);
+// #endif
 }
 
 

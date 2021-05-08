@@ -43,7 +43,7 @@
 
 #include <sys/cdefs.h>
 #include <sys/featuretest.h>
-#include <sys/null.h>
+#include <lib/stddef.h>
 
 #undef assert
 

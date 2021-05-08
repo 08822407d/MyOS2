@@ -87,13 +87,9 @@ void start_SMP(uint64_t aptable_idx)
 	reload_tss(aptable_idx);
 
 	enable_x2apic();
-
 	open_lapic();
-
-	unsigned x2apic_id = get_x2apic_id();
-
-	get_lapic_ver(&lapic_info);
-
+	// unsigned x2apic_id = get_x2apic_id();
+	// get_lapic_ver(&lapic_info);
 	disable_lvt(&lapic_info);
 	
 	// on Intel platform, write %gs will clean gsbase, so the following

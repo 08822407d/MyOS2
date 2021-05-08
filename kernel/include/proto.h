@@ -27,10 +27,7 @@
 
 
 	/* main.c */
-	// #ifndef UNPAGED
-	// #define kmain __k_unpaged_kmain
-	// #endif
-	void kmain(void);
+	void kmain(size_t cpu_idx);
 
 	/* start.c */
 	void cstart(void);

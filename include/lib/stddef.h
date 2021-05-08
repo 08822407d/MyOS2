@@ -3,7 +3,8 @@
 
 #include <sys/types.h>
 
-	#define NULL	0
+	#define	NULL	0
+
 	#define TRUE	1
 	#define FALSE	0
 

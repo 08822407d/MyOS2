@@ -11,7 +11,7 @@
 #include "arch/amd64/include/apic.h"
 #include "arch/amd64/include/device.h"
 
-void kmain(void)
+void kmain(size_t cpu_idx)
 {
     prot_bsp_init();
 

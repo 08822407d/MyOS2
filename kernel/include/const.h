@@ -87,7 +87,7 @@
 	// process and task consts
 	#define PROC_KSTACK_SIZE	(32 * CONST_1K)
 
-	// Slab consts
+	// slab consts
 	#define SLAB_LEVEL			16
 	#define SLAB_SIZE_BASE		32
 
