@@ -111,6 +111,7 @@ unsigned long test_proc_a(unsigned long arg)
 		for (int i = 0; i < 0x2000; i++)
 			for (int j = 0; j < 0x2000; j++)
 				k++;
+
 		color_printk(WHITE, BLACK, "-A- ");
 	}
 }
@@ -260,18 +261,21 @@ void arch_init_proc()
 	spin_init(&newpid_lock);
 
 	// kernel_thread(init, 20, 0);
-	kernel_thread(test_proc_a, 0, 0);
-	kernel_thread(test_proc_b, 0, 0);
-	kernel_thread(test_proc_c, 0, 0);
+	// kernel_thread(test_proc_a, 0, 0);
+	// kernel_thread(test_proc_b, 0, 0);
+	// kernel_thread(test_proc_c, 0, 0);
 }
 
 void reschedule(percpu_data_s * cpudata)
 {
 	unsigned long used_jiffies = jiffies - cpudata->last_jiffies;
+	if (cpudata->waiting_count < 1)
+		return;
+
 	if (used_jiffies >= cpudata->proc_jiffies)
 		cpudata->curr_proc->flags |= PF_NEED_SCHEDULE;
-	if ((cpudata->curr_proc == cpudata->idle_proc) && (cpudata->waiting_count == 0))
-		cpudata->curr_proc->flags &= ~PF_NEED_SCHEDULE;
+	// if ((cpudata->curr_proc == cpudata->idle_proc) && (cpudata->waiting_count == 0))
+	// 	cpudata->curr_proc->flags &= ~PF_NEED_SCHEDULE;
 		
 	if (cpudata->curr_proc->flags & PF_NEED_SCHEDULE)
 	{
@@ -280,18 +284,18 @@ void reschedule(percpu_data_s * cpudata)
 		// move current to finished list
 		// if current is idle. just let current = NULL
 		cpudata->curr_proc = NULL;
-		if (cpudata->curr_proc == cpudata->idle_proc)
-		{
-			if (cpudata->finished_proc == NULL)
-				cpudata->finished_proc = curr_proc;
-			else
-				m_list_insert_back(curr_proc, cpudata->finished_proc);
-			cpudata->finished_count++;
-		}
+		// if (cpudata->curr_proc == cpudata->idle_proc)
+		// {
+			// if (cpudata->finished_proc == NULL)
+			// 	cpudata->finished_proc = curr_proc;
+			// else
+			// 	m_list_insert_back(curr_proc, cpudata->finished_proc);
+			// cpudata->finished_count++;
+		// }
 		// get waiting proc
 		// if no waiting proc, let idle run
-		if (cpudata->waiting_count > 0)
-		{
+		// if (cpudata->waiting_count > 0)
+		// {
 			next_proc = cpudata->waiting_proc;
 			// move the first in waiting list to current
 			cpudata->curr_proc = next_proc;
@@ -303,11 +307,11 @@ void reschedule(percpu_data_s * cpudata)
 				m_list_delete(next_proc);
 			}
 			cpudata->waiting_count--;
-		}
-		else
-		{
-			next_proc = cpudata->idle_proc;
-		}
+		// }
+		// else
+		// {
+		// 	next_proc = cpudata->idle_proc;
+		// }
 		switch_to(curr_proc, next_proc, cpudata);
 		cpudata->last_jiffies = jiffies;
 		cpudata->proc_jiffies = curr_proc->proc_jiffies;
@@ -336,7 +340,7 @@ void schedule()
 	for ( ; waiting_proc_count > 0; waiting_proc_count--)
 	{
 		// pop out waiting proc
-		proc_s * waiting = proc_waiting_list;
+		proc_s * waiting = proc_waiting_list->next;
 		if (waiting_proc_count == 1)
 			proc_waiting_list = NULL;
 		else

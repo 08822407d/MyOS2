@@ -155,7 +155,6 @@
 		unsigned long	waiting_count;
 		unsigned long	finished_count;
 		proc_s *		curr_proc;
-		proc_s *		idle_proc;
 
 		unsigned long	last_jiffies;
 		unsigned long	proc_jiffies;

@@ -339,6 +339,7 @@ ENTRY(kernel_thread_func)
 	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
 	/////////////////////////////////
 	movq		%rdx,		%rdi
+	sti
 	callq		*%rbx
 	movq		%rax,		%rdi
 	callq		do_exit

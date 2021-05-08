@@ -43,13 +43,14 @@ void kmain(void)
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
 
+	schedule();
+
 	softirq_init();
 	timer_init();
 
 	devices_init();
 
     while(1){
-		schedule();
 		// if(p_kb->count)
 		// 	analysis_keycode();
 	};

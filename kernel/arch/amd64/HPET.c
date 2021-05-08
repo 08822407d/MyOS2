@@ -27,24 +27,6 @@ void HPET_handler(unsigned long parameter, stack_frame_s * sf_regs)
 
 	if(timer_list_head.next->expire_jiffies <= jiffies)
 		set_softirq_status(HPET_TIMER0_IRQ);
-	
-	// switch(current->priority)
-	// {
-	// 	case 0:
-	// 	case 1:
-	// 		task_schedule[SMP_cpu_id()].CPU_exec_task_jiffies--;
-	// 		current->vrun_time += 1;
-	// 		break;
-	// 	case 2:
-	// 	default:
-
-	// 		task_schedule[SMP_cpu_id()].CPU_exec_task_jiffies -= 2;
-	// 		current->vrun_time += 2;
-	// 		break;
-	// }
-
-	// if(task_schedule[SMP_cpu_id()].CPU_exec_task_jiffies <= 0)
-	// 	current->flags |= NEED_SCHEDULE;
 }
 	
 void HPET_init()

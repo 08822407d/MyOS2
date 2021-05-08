@@ -25,7 +25,7 @@ void proc_init()
 	proc_s *proc0	= &proc0_PCB.proc;
 	memset(proc0, 0, sizeof(proc_s));
 	m_list_init(proc0);
-	proc0->proc_jiffies = 2;
+	proc0->proc_jiffies = 5;
 	proc0->flags = PF_KTHREAD;
 	proc0->pid = get_newpid();
 
@@ -35,8 +35,7 @@ void proc_init()
 	bsp_cpudata->finished_count = 0;
 	bsp_cpudata->waiting_proc =
 	bsp_cpudata->finished_proc = NULL;
-	bsp_cpudata->curr_proc =
-	bsp_cpudata->idle_proc = proc0;
+	bsp_cpudata->curr_proc = proc0;
 	bsp_cpudata->proc_jiffies = proc0->proc_jiffies;
 
 	creat_idles();
