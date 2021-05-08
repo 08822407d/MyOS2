@@ -174,8 +174,8 @@
 	} percpu_data_s;
 
 	/* protect.c */
-	phys_addr vir2phy(virt_addr);
-	virt_addr phy2vir(phys_addr);
+	phys_addr virt2phys(virt_addr);
+	virt_addr phys2virt(phys_addr);
 	void reload_gdt(desctblptr64_s * gdt_desc);
 	void reload_idt(desctblptr64_s * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
@@ -242,7 +242,7 @@
 	unsigned long do_execve(stack_frame_s * sf_regs);
 	unsigned long do_fork(stack_frame_s * sf_regs,
 							unsigned long clone_flags,
-							unsigned long stack_start,
+							unsigned long tmp_kstack_start,
 							unsigned long stack_size);
 	int sys_call(int syscall_nr);
 	int do_syscall(int syscall_nr);

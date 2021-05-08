@@ -34,7 +34,7 @@ void cpuid_info(void);
 // void get_multiboot2_info(size_t multiboot2_info_base)
 // {
 // 	int mb2_tagsize = 0;
-// 	virt_addr mb2info_start = phy2vir((phys_addr)multiboot2_info_base);
+// 	virt_addr mb2info_start = phys2virt((phys_addr)multiboot2_info_base);
 // 	virt_addr mb2info_end = mb2info_start + *((uint32_t *)mb2info_start);
 // 	virt_addr mb2info_curr = mb2info_start;
 // 	virt_addr mb2info_next = mb2info_start + 8;	// the head tag is 8byte long
@@ -101,7 +101,7 @@ void pre_init(size_t mb2info_base)
 	mem_info.mb_memmap_nr = i + 1;
 
 	framebuffer.FB_phybase = (phys_addr)bootinfo->Graphics_Info.FrameBufferBase;
-	framebuffer.FB_virbase = phy2vir(framebuffer.FB_phybase);
+	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
 	framebuffer.FB_size = bootinfo->Graphics_Info.FrameBufferSize;
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;

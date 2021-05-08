@@ -17,7 +17,7 @@
 /*							syscall and sysret entry						 */
 /*===========================================================================*/
 ENTRY(enter_syscall)
-	movabsq	$(tss_bsp + 4),	%r10
+	movabsq	$(tmp_tss + 4),	%r10
 	movq		(%r10),		%r10
 	xchgq		%rsp,		%r10
 	sti

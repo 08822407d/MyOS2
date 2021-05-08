@@ -15,13 +15,18 @@ void kmain(size_t cpu_idx)
 {
 	if (cpu_idx == 0)
 	{
-
+		init_arch_env();
 	}
 
     // prot_bsp_init();
 	init_video();
 
 	init_slab();
+
+	if (cpu_idx == 0)
+	{
+		init_smp_env();
+	}
 
 	init_smp();
 
@@ -58,7 +63,7 @@ void kmain(size_t cpu_idx)
 
 	devices_init();
 
-	// int i = 1 / 0;
+	int i = 1 / 0;
     while(1){
 		// if(p_kb->count)
 		// 	analysis_keycode();

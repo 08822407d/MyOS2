@@ -84,7 +84,7 @@ void init_page_manage()
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
 	phys_addr k_phy_pgbase = 0;
-	virt_addr k_vir_pgbase = (virt_addr)phy2vir(0);
+	virt_addr k_vir_pgbase = (virt_addr)phys2virt(0);
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
@@ -157,7 +157,7 @@ void init_slab()
 		bsp->total = obj_nr;
 		bsp->virt_addr = (virt_addr)base_slab_page[i];
 		bsp->page->attr |= PG_Slab;
-		int pg_idx = (uint64_t)vir2phy(bsp->virt_addr) / CONFIG_PAGE_SIZE;
+		int pg_idx = (uint64_t)virt2phys(bsp->virt_addr) / CONFIG_PAGE_SIZE;
 		bsp->page = &mem_info.pages[pg_idx];
 		bsp->page->slab_ptr = bsp;
 	}
@@ -168,7 +168,7 @@ slab_s * slab_alloc(size_t obj_count)
 {
 	Page_s * pg = page_alloc();
 	if (!(pg->attr & PG_PTable_Maped))
-		pg_domap(phy2vir(pg->page_start_addr), pg->page_start_addr, 0);
+		pg_domap(phys2virt(pg->page_start_addr), pg->page_start_addr, 0);
 	
 	pg->attr |= PG_Slab;
 	slab_s * sp = (slab_s *)kmalloc(sizeof(slab_s));
@@ -177,7 +177,7 @@ slab_s * slab_alloc(size_t obj_count)
 	sp->colormap = (bitmap_t *)kmalloc(obj_count / sizeof(bitmap_t));
 	sp->total =
 	sp->free = obj_count;
-	sp->virt_addr = phy2vir(pg->page_start_addr);
+	sp->virt_addr = phys2virt(pg->page_start_addr);
 	m_list_init(sp);
 
 	return sp;
@@ -258,7 +258,7 @@ void kfree(void * obj_p)
 	if (obj_p == NULL)
 		return;
 
-	phys_addr pg_addr = vir2phy((virt_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
+	phys_addr pg_addr = virt2phys((virt_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];
 	slab_s * slp = pgp->slab_ptr;

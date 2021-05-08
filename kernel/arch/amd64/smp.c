@@ -21,7 +21,7 @@ void init_smp()
 	extern char _APboot_text;
 	extern char _APboot_etext;
 	size_t apbbot_len = &_APboot_etext - &_APboot_text;
-	memcpy(phy2vir((phys_addr)&_APboot_phy_start), (virt_addr)&_APboot_text, apbbot_len);
+	memcpy(phys2virt((phys_addr)&_APboot_phy_start), (virt_addr)&_APboot_text, apbbot_len);
 
 	// create structs for each logical cpu
 	smp_info = (percpu_data_s **)kmalloc(kparam.lcpu_nr * sizeof(percpu_data_s *));

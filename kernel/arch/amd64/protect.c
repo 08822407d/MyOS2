@@ -21,21 +21,21 @@ segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
 tss64_s **		tss_ptr_arr = NULL;
-tss64_s			tss_bsp;
+tss64_s			tmp_tss;
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
 /*===========================================================================*
  *								global functions							 *
  *===========================================================================*/
-phys_addr vir2phy(virt_addr vir)
+phys_addr virt2phys(virt_addr vir)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
 	uint64_t offset = (virt_addr) &_k_vir_start -
 						(virt_addr) &_k_phy_start;
 	return (phys_addr)(vir - offset);
 }
-virt_addr phy2vir(phys_addr phy)
+virt_addr phys2virt(phys_addr phy)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
 	uint64_t offset = (virt_addr) &_k_vir_start -
@@ -179,7 +179,7 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 				if (tss_ptr_arr != NULL)
 					curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
 				else
-					curr_tss = &tss_bsp;
+					curr_tss = &tmp_tss;
 				
 				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
@@ -261,10 +261,11 @@ void init_idt()
 	idt_ptr.base  = (uint64_t)idt;
 }
 
-void init_bsp_tss()
+void init_tmp_tss()
 {
-	tss64_s *curr_tss = &tss_bsp;
-	curr_tss->rsp0 = 0;
+	extern char tmp_kstack_top;
+	tss64_s *curr_tss = &tmp_tss;
+	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
 	curr_tss->rsp2 =
 	curr_tss->ist1 =
@@ -276,12 +277,11 @@ void init_bsp_tss()
 	curr_tss->ist7 = 0;
 }
 
-
 void init_smp_tss()
 {
 	unsigned lcpu_nr = kparam.lcpu_nr;
 	tss_ptr_arr = (tss64_s **)kmalloc(lcpu_nr * sizeof(tss64_s *));
-	tss_ptr_arr[0] = &tss_bsp;
+	tss_ptr_arr[0] = &tmp_tss;
 	// init tss for all logical cpus
 	for (int i = 1; i < kparam.lcpu_nr; i++)
 	{
@@ -290,51 +290,35 @@ void init_smp_tss()
 	}
 }
 
-void init_smp_env()
+void init_arch_env()
 {
 	// initate global architechture data
 	init_gdt();
 	init_idt();
-	init_bsp_tss();
+	init_tmp_tss();
 	// load those data
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
 	reload_tss(0);
 	// set and load permanent kernel page
 	pg_clear();
+	init_page_manage();
 	extern PML4E_u KERN_PML4[PGENT_NR];
 	pg_load_cr3(KERN_PML4);
+}
+
+void init_smp_env()
+{
+	init_smp_tss();
+
+	#ifndef USE_APIC
+		init_i8259();
+	#else
+		LAPIC_IOAPIC_init();
+	#endif	
 }
 
 void init_lcpu_self()
 {
 
-}
-
-void prot_bsp_init(void)
-{
-	init_gdt();
-	init_idt();
-	init_bsp_tss();
-
-	reload_idt(&idt_ptr);
-	reload_gdt(&gdt_ptr);
-	reload_tss(0);
-
-	pg_clear();
-	init_page_manage();
-	extern PML4E_u KERN_PML4[PGENT_NR];
-	pg_load_cr3(KERN_PML4);
-	init_video();
-
-	init_slab();
-
-	init_smp_tss();
-
-	// prot_init_done = 1;
-	#ifndef USE_APIC
-		init_i8259();
-	#else
-		LAPIC_IOAPIC_init();
-	#endif
 }

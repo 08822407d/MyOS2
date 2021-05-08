@@ -16,9 +16,9 @@ phys_addr pml4_base = 0;
 
 void pg_clear(void)
 {
-	pml4_base = vir2phy(&KERN_PML4);
-	phys_addr pdpt_base = vir2phy(&KERN_PDPT);
-	phys_addr pd_base = vir2phy(&KERN_PD);
+	pml4_base = virt2phys(&KERN_PML4);
+	phys_addr pdpt_base = virt2phys(&KERN_PDPT);
+	phys_addr pd_base = virt2phys(&KERN_PD);
 	memset(pml4_base, 0, sizeof(KERN_PML4));
 	memset(pdpt_base, 0, sizeof(KERN_PDPT));
 	memset(pd_base, 0, sizeof(KERN_PD));
@@ -29,7 +29,7 @@ void pg_load_cr3(PML4E_u * PML4)
 	__asm__ __volatile__("movq %%rax, %%cr3	\n\
 						  nop"
 						 :
-						 :"rax"(vir2phy(PML4))
+						 :"rax"(virt2phys(PML4))
 						 :);
 }
 
@@ -61,19 +61,19 @@ void pg_domap(virt_addr vir, phys_addr phy, uint64_t attr)
 	// set pml4e
 	if (pml4e_ptr->PML4E == 0)
 	{
-		pml4e_ptr->PML4E = ARCH_PGS_ADDR((uint64_t)vir2phy(&KERN_PDPT[pml4e_idx])) | ARCH_PGE_NOT_LAST(attr);
+		pml4e_ptr->PML4E = ARCH_PGS_ADDR((uint64_t)virt2phys(&KERN_PDPT[pml4e_idx])) | ARCH_PGE_NOT_LAST(attr);
 	}
 
 	// get pdpte
-	PDPTE_u * pdpte_ptr = (PDPTE_u *)phy2vir((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->PML4E)) + pdpte_idx;
+	PDPTE_u * pdpte_ptr = (PDPTE_u *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->PML4E)) + pdpte_idx;
 	// set pdpte
 	if (pdpte_ptr->PDPTE == 0)
 	{
-		pdpte_ptr->PDPTE = ARCH_PGS_ADDR((uint64_t)vir2phy(KERN_PD[pml4e_idx][pdpte_idx])) | ARCH_PGE_NOT_LAST(attr);
+		pdpte_ptr->PDPTE = ARCH_PGS_ADDR((uint64_t)virt2phys(KERN_PD[pml4e_idx][pdpte_idx])) | ARCH_PGE_NOT_LAST(attr);
 	}
 
 	// get pde
-	PDE_u * pde_ptr = (PDE_u *)phy2vir((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->PDPTE)) + pde_idx;
+	PDE_u * pde_ptr = (PDE_u *)phys2virt((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->PDPTE)) + pde_idx;
 	// set pte
 	if (*((uint64_t *)pde_ptr) == 0)
 	{

@@ -12,40 +12,40 @@
 .balign	8
 ENTRY(start)
 	cli
-	jmp     code_64_start
+	jmp		code_64_start
 
 /*===========================================================================*
  *								multiboot2 header                            *
  *===========================================================================*/
 	/* Align 64 bits boundary. */
-	.align  8
+	.align	8
 	/* Multiboot header. */
 multiboot_header:
 	/* magic */
-	.long   MULTIBOOT2_HEADER_MAGIC
+	.long	MULTIBOOT2_HEADER_MAGIC
 	/* ISA: i386 */
-	.long   GRUB_MULTIBOOT_ARCHITECTURE_I386
+	.long	GRUB_MULTIBOOT_ARCHITECTURE_I386
 	/* Header length. */
-	.long   multiboot_header_end - multiboot_header
+	.long	multiboot_header_end - multiboot_header
 	/* checksum */
-	.long   -(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
+	.long	-(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
 //===========================================
-	.align  8
+	.align	8
 address_tag_start:
-	.short  MULTIBOOT_HEADER_TAG_ADDRESS
-	.short  MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long   address_tag_end - address_tag_start
+	.short	MULTIBOOT_HEADER_TAG_ADDRESS
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	address_tag_end - address_tag_start
 	/* header_addr */
-	.long   multiboot_header
+	.long	multiboot_header
 	/* load_addr */
-	.long   _k_phy_start
+	.long	_k_phy_start
 	/* load_end_addr */
-	.long   _k_phy_edata
+	.long	_k_phy_edata
 	/* bss end addr */
-	.long   _k_phy_ebss
+	.long	_k_phy_ebss
 address_tag_end:
 //===========================================
-	.align  8
+	.align	8
 entry_address_tag_start:
 	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
@@ -97,9 +97,9 @@ multiboot_header_end:
 .balign 8
 multiboot_entry:
 	cli
-	movl	$0,		%esi
+	movl	$0,			%esi
 //	store boot info
-	movl	%ebx,	multiboot2_info_base(%esi)
+	movl	%ebx,		multiboot2_info_base(%esi)
 //	start initialize
 	// open PAE
 	call	set_temp_PDE_32
@@ -124,18 +124,18 @@ set_tmp_page:
 	bts		$31,		%eax
 	movl	%eax,		%cr0
 go_to_64_code:
-	lgdt	GDT_POINTER(%esi)
+	lgdt	TMP_GDT_PTR(%esi)
 	jmp		$0x08,		$code_64_start
 
 // 32bit fuction
 set_temp_PDE_32:
-	movl	$0x83,	%eax
-	movl	$__PDE,	%edi
-	movl	$0x200,	%ecx
+	movl	$0x83,		%eax
+	movl	$__PDE,		%edi
+	movl	$0x200,		%ecx
 l1:
-	movl	%eax,	(%edi)
+	movl	%eax,		(%edi)
 	addl	$0x200000,	%eax
-	addl	$8,		%edi
+	addl	$8,			%edi
 	loop	l1
 	retl
 
@@ -145,12 +145,12 @@ l1:
 .code64
 .balign 8
 code_64_start:
-	movq    $stack_top,	%rax
+	movq    $tmp_kstack_top,	%rax
 	movq    %rax,		%rsp
 //=======load GDTR
-	lgdt	GDT_POINTER(%rip)
+	lgdt	TMP_GDT_PTR(%rip)
 //=======load dummy IDTR
-	lidt	IDT_POINTER(%rip)
+	lidt	TMP_IDT_PTR(%rip)
 //=======load cr3
 	movq	boot_from_grub2,	%rax
 	cmpq	$0x01,		%rax
@@ -175,7 +175,7 @@ skip_set_pde:
 	lretq
 
 temp_reload_cs:
-	movq    $stack_top,	%rbx
+	movq    $tmp_kstack_top,	%rbx
 	movq    $0x10,		%rax
 	movq    %rax,		%ss
 	movq    %rbx,		%rsp
@@ -210,13 +210,13 @@ hang:
 	jmp     hang
 
 set_temp_PDE_64:
-	movq	$0x83,	%rax
-	movq	$__PDE,	%rdi
-	movq	$0x200,	%rcx
+	movq	$0x83,		%rax
+	movq	$__PDE,		%rdi
+	movq	$0x200,		%rcx
 l2:
-	movq	%rax,	(%rdi)
+	movq	%rax,		(%rdi)
 	addq	$0x200000,	%rax
-	addq	$8,		%rdi
+	addq	$8,			%rdi
 	loop	l2
 	retq
 
@@ -245,8 +245,8 @@ __PDPTE:
 __PDE:
 	.fill	512,8,0
 
-//=======GDT_Table
-GDT_Table:
+//=======temp GDT_table
+TMP_GDT_TBL:
 	.quad	0x0000000000000000			/*0	NULL descriptor		       		00*/
 	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
 	.quad	0x0000920000000000			/*2	KERNEL	Data	64-bit	Segment	10*/
@@ -254,17 +254,13 @@ GDT_Table:
 	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	10*/
 GDT_END:
 
-GDT_POINTER:
-GDT_LIMIT:	.word	GDT_END - GDT_Table - 1
-GDT_BASE:	.quad	GDT_Table
-//=======IDT_Table
-IDT_Table:
-	.fill  32,8,0
-IDT_END:
-
-IDT_POINTER:
-IDT_LIMIT:	.word	IDT_END - IDT_Table - 1
-IDT_BASE:	.quad	IDT_Table
+TMP_GDT_PTR:
+GDT_LIMIT:	.word	GDT_END - TMP_GDT_TBL - 1
+GDT_BASE:	.quad	TMP_GDT_TBL
+//=======temp IDT_ptr
+TMP_IDT_PTR:
+	.word	0
+	.word	0,0
 
 .balign 4
 multiboot2_info_base:
@@ -274,6 +270,7 @@ boot_from_grub2:
 	.quad	0x0
 
 //=======temp stack
-stack_start:
+.align 8
+tmp_kstack_start:
 	.fill  128,8,0
-stack_top:
+LABEL(tmp_kstack_top)

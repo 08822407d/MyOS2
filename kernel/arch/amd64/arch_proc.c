@@ -16,7 +16,7 @@
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
 
-extern tss64_s	tss_bsp;
+extern tss64_s	tmp_tss;
 extern char		ist_stack0;
 
 extern PCB_u	proc0_PCB;
@@ -187,7 +187,7 @@ void wakeup_proc(proc_s * proc)
 
 unsigned long do_fork(stack_frame_s * sf_regs,
 						unsigned long clone_flags,
-						unsigned long stack_start,
+						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
 	PCB_u * curr_pcb	= container_of(get_current(), PCB_u, proc);
