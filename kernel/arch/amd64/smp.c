@@ -1,17 +1,3 @@
-/***************************************************
-*		版权声明
-*
-*	本操作系统名为：MINE
-*	该操作系统未经授权不得以盈利或非盈利为目的进行开发，
-*	只允许个人学习以及公开交流使用
-*
-*	代码最终所有权及解释权归田宇所有；
-*
-*	本模块作者：	田宇
-*	EMail:		345538255@qq.com
-*
-*
-***************************************************/
 #include <lib/string.h>
 #include <lib/pthread.h>
 #include <lib/stddef.h>
@@ -79,6 +65,8 @@ void SMP_init()
 
 void start_SMP(uint64_t aptable_idx)
 {
+	lapic_info_s lapic_info;
+
 	percpu_data_s * curr_cpuinfo = smp_info[aptable_idx];
 
 	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
@@ -94,66 +82,19 @@ void start_SMP(uint64_t aptable_idx)
 	curr_cpuinfo->finished_proc =
 	curr_cpuinfo->waiting_proc = NULL;
 
-	// load formal gdt and idt and tss
-	__asm__ __volatile__("	lgdt	%0						\n\
-							lidt	%1						\n\
-							movq	%%rsp, %%rax			\n\
-							mov 	%2, %%ss				\n\
-							movq	%%rax, %%rsp			\n\
-							mov		$0, %%ax				\n\
-							mov 	%%ax, %%ds				\n\
-							mov 	%%ax, %%es				\n\
-							mov 	%%ax, %%fs				\n\
-							mov 	%%ax, %%gs				\n\
-							xor		%%rax, %%rax			\n\
-							movq	%3, %%rax				\n\
-							pushq	%%rax					\n\
-							leaq	reload_cs(%%rip), %%rax	\n\
-							pushq	%%rax					\n\
-							lretq							\n\
-							reload_cs:						\n\
-							xorq	%%rax, %%rax			\n\
-							mov		%4, %%ax				\n\
-							ltr		%%ax					\n	"
-						 :
-						 :	"m"(gdt_ptr),
-						 	"m"(idt_ptr),
-						 	"r"(KERN_SS_SELECTOR),
-							"rsi"((uint64_t)KERN_CS_SELECTOR),
-							"r"((uint16_t)TSS_SELECTOR(aptable_idx))
-						 :  "rax");
+	reload_idt(&idt_ptr);
+	reload_gdt(&gdt_ptr);
+	reload_tss(aptable_idx);
 
-	unsigned int x,y;
-	//enable xAPIC & x2APIC
-	__asm__ __volatile__("movq 	$0x1b,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 "bts	$10,	%%rax	\n\t"
-						 "bts	$11,	%%rax	\n\t"
-						 "wrmsr					\n\t"
-						 "movq 	$0x1b,	%%rcx	\n\t"
-						 "rdmsr	\n\t"
-						:"=a"(x),"=d"(y)
-						:
-						:"memory");
+	enable_x2apic();
 
-	//enable SVR[8]
-	__asm__ __volatile__("movq 	$0x80f,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 "bts	$8,		%%rax	\n\t"
-						 "bts	$12,	%%rax	\n\t"
-						 "wrmsr					\n\t"
-						 "movq 	$0x80f,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						:"=a"(x),"=d"(y)
-						:
-						:"memory");
+	open_lapic();
 
-	//get local APIC ID
-	__asm__ __volatile__("movq $0x802,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						:"=a"(x),"=d"(y)
-						:
-						:"memory");
+	unsigned x2apic_id = get_x2apic_id();
+
+	get_lapic_ver(&lapic_info);
+
+	disable_lvt(&lapic_info);
 	
 	// on Intel platform, write %gs will clean gsbase, so the following
 	// operation should be done after reload segment regs
@@ -162,8 +103,7 @@ void start_SMP(uint64_t aptable_idx)
 						:"a"(curr_cpuinfo)
 						:);
 
-	color_printk(RED,YELLOW,"APU starting...... INDEX: %d; x2APIC ID:%#010x\n", aptable_idx, x);
-
+	int i = 1 / 0;
 	while (1)
 	{
 		hlt();

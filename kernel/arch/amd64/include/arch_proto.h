@@ -102,6 +102,15 @@
 		uint8_t	DPL;
 		char	name[16];
 	} gate_table_s;
+
+// local apic information
+	typedef struct lapic_info
+	{
+		unsigned lapic_ver;
+		unsigned max_lvt;
+		unsigned svr12_support;
+	} lapic_info_s;
+	
 // ioapic information
 	typedef struct IOAPIC_map
 	{
@@ -167,6 +176,9 @@
 	/* protect.c */
 	phy_addr vir2phy(vir_addr);
 	vir_addr phy2vir(phy_addr);
+	void reload_gdt(desctblptr64_s * gdt_desc);
+	void reload_idt(desctblptr64_s * idt_desc);
+	void reload_tss(uint64_t cpu_idx);
 
 	/* pg_util.c */
 	void pg_clear(void);
@@ -183,8 +195,6 @@
 	void i8259_eoi(int);
 	void i8259_do_irq(stack_frame_s * sf_regs);
 	/* apic.c */
-	unsigned long ioapic_rte_read(unsigned char index);
-	void ioapic_rte_write(unsigned char index,unsigned long value);
 	void IOAPIC_pagetable_remap(void);
 	void LAPIC_IOAPIC_init(void);
 	void LAPIC_init(void);
@@ -195,10 +205,16 @@
 	void IOAPIC_uninstall(unsigned long irq);
 	void IOAPIC_level_ack(unsigned long irq);
 	void IOAPIC_edge_ack(unsigned long irq);
-	void apic_do_irq(stack_frame_s * sf_regs);
 	uint64_t ioapic_rte_read(uint8_t index);
 	void ioapic_rte_write(uint8_t index, uint64_t value);
 	void apic_do_irq(stack_frame_s * sf_regs);
+	void enable_x2apic(void);
+	void open_lapic(void);
+	unsigned get_x2apic_id(void);
+	void get_lapic_ver(lapic_info_s * lapic_info);
+	void disable_lvt(lapic_info_s * lapic_info);
+	unsigned get_lvt_tpr(void);
+	unsigned get_lvt_ppr(void);
 
 	/* port_io.c */
 	uint64_t inb(uint16_t port);

@@ -47,7 +47,7 @@
 	void video_init(void);
 
 	/* functions defined in architecture-dependent files. */
-	void prot_init(void);
+	void prot_bsp_init(void);
 
 	/* softirq.c */
 	void register_softirq(unsigned sirq, void (*action)(void * data), void * data);

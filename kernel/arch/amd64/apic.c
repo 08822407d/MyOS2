@@ -24,10 +24,10 @@
 #include "../../include/printk.h"
 
 ioapic_map_s ioapic_map;
-/*
 
-*/
-
+/*===========================================================================*
+ *							repeatedly use functions						 *
+ *===========================================================================*/
 void IOAPIC_enable(unsigned long irq_nr)
 {
 	unsigned long value = 0;
@@ -77,10 +77,6 @@ void IOAPIC_edge_ack(unsigned long irq)
 						:::"memory","rax","rcx","rdx");
 }
 
-// /*
-
-// */
-
 uint64_t ioapic_rte_read(uint8_t index)
 {
 	uint64_t ret;
@@ -114,10 +110,111 @@ void ioapic_rte_write(uint8_t index, uint64_t value)
 	io_mfence();
 }
 
-// /*
+/*===========================================================================*
+ *								once functions 1							 *
+ *===========================================================================*/
+inline __always_inline void enable_x2apic()
+{
+	//enable xAPIC & x2APIC
+	__asm__ __volatile__(	"movq 	$0x1b,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+							"bts	$10,	%%rax	\n\t"
+							"bts	$11,	%%rax	\n\t"
+							"wrmsr					\n\t"
+							"movq 	$0x1b,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+						:
+						:
+						:	"rcx", "rax", "rdx");
+}
 
-// */
+inline __always_inline void open_lapic()
+{
+	__asm__ __volatile__(	"movq 	$0x80f,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+							"bts	$8,		%%rax	\n\t"
+							"bts	$12,	%%rax	\n\t"
+							"wrmsr					\n\t"
+							"movq 	$0x80f,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+						:
+						:
+						:	"rcx", "rax", "rdx");
+}
 
+inline __always_inline unsigned get_x2apic_id()
+{
+	unsigned ret_val;
+	__asm__ __volatile__(	"movq $0x802,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+						:	"=a"(ret_val)
+						:
+						:	"rcx", "rdx");
+	return ret_val;
+}
+
+inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
+{
+	unsigned x, y;
+	__asm__ __volatile__(	"movq $0x803,	%%rcx	\n\t"
+							"rdmsr	\n\t"
+						:	"=a"(x),"=d"(y)
+						:
+						:	"memory");	
+	lapic_info->lapic_ver = x & 0xFF;
+	lapic_info->max_lvt = (x >> 16 & 0xff) + 1;
+	lapic_info->svr12_support = x >> 24 & 0x1;
+}
+
+inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
+{
+	__asm__ __volatile__(	"cmpq	$0x07,	%%rbx	\n\t"	// if max_lvt smaller than 7,it means the paltform does not
+							"jb		(. + 0xB)		\n\t"	// support CMCI register,for example bochs, vbox and qemu
+							"movq 	$0x82f,	%%rcx	\n\t"	// CMCI
+ 							"wrmsr					\n\t"
+							// "skip_cmci:				\n\t"
+							"movq 	$0x832,	%%rcx	\n\t"	// Timer
+ 							"wrmsr					\n\t"
+							"movq 	$0x833,	%%rcx	\n\t"	// Thermal Monitor
+							"wrmsr					\n\t"
+							"movq 	$0x834,	%%rcx	\n\t"	// Performance Counter
+							"wrmsr					\n\t"
+							"movq 	$0x835,	%%rcx	\n\t"	// LINT0
+							"wrmsr					\n\t"
+							"movq 	$0x836,	%%rcx	\n\t"	// LINT1
+							"wrmsr					\n\t"
+							"movq 	$0x837,	%%rcx	\n\t"	// Error
+							"wrmsr					\n\t"
+						:
+						:	"a"(0x10000),"d"(0x00),"b"(lapic_info->max_lvt)
+						:	"memory");	
+}
+
+inline __always_inline unsigned get_lvt_tpr()
+{
+	unsigned ret_val;
+	__asm__ __volatile__(	"movq 	$0x808,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+						:	"=a"(ret_val)
+						:
+						:	"rcx", "rdx");
+	return ret_val;
+}
+
+inline __always_inline unsigned get_lvt_ppr()
+{
+	unsigned ret_val;
+	__asm__ __volatile__(	"movq 	$0x80a,	%%rcx	\n\t"
+							"rdmsr					\n\t"
+						:	"=a"(ret_val)
+						:
+						:	"rcx", "rdx");
+	return ret_val;
+}
+
+/*===========================================================================*
+ *								once functions 2							 *
+ *===========================================================================*/
 void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
@@ -132,100 +229,28 @@ void IOAPIC_pagetable_remap()
 	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr);
 }
 
-// /*
-
-// */
-
 void LAPIC_init()
 {
+	lapic_info_s lapic_info;
+
 	unsigned int x,y;
 	unsigned int a,b,c,d;
-
 	//check APIC & x2APIC support
 	cpuid(1,0,&a,&b,&c,&d);
 
-	//enable xAPIC & x2APIC
-	__asm__ __volatile__("movq 	$0x1b,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 "bts	$10,	%%rax	\n\t"
-						 "bts	$11,	%%rax	\n\t"
-						 "wrmsr					\n\t"
-						 "movq 	$0x1b,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 :"=a"(x),"=d"(y)
-						 :
-						 :"memory");
-	unsigned x_x2_apic_enabled = x & 0xc00;
+	enable_x2apic();
 
-	//enable SVR[8]
-	__asm__ __volatile__("movq 	$0x80f,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 "bts	$8,		%%rax	\n\t"
-						 "bts	$12,	%%rax	\n\t"
-						 "wrmsr					\n\t"
-						 "movq 	$0x80f,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 :"=a"(x),"=d"(y)
-						 :
-						 :"memory");
-	unsigned svr8_enabled = x & 0x100;
-	unsigned svr12_enabled = x & 0x1000;
+	open_lapic();
 
-	//get local APIC ID
-	__asm__ __volatile__(	"movq $0x802,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				:"=a"(x),"=d"(y)
-				:
-				:"memory");
-	unsigned x2apic_id = x;
-	
-	//get local APIC version
-	__asm__ __volatile__(	"movq $0x803,	%%rcx	\n\t"
-				"rdmsr	\n\t"
-				:"=a"(x),"=d"(y)
-				:
-				:"memory");
+	unsigned x2apic_id = get_x2apic_id();
 
-	unsigned lapic_ver = x & 0xFF;
-	unsigned max_lvt = (x >> 16 & 0xff) + 1;
-	unsigned svr12_support = x >> 24 & 0x1;
+	get_lapic_ver(&lapic_info);
 
-	__asm__ __volatile__("cmpq	$0x07,	%%rbx	\n\t"	// if max_lvt smaller than 7,it means the paltform does not
-						 "jb	skip_cmci		\n\t"	// support CMCI register,for example bochs, vbox and qemu
-						 "movq 	$0x82f,	%%rcx	\n\t"	// CMCI
- 						 "wrmsr	\n\t"
-						 "skip_cmci:"
-						 "movq 	$0x832,	%%rcx	\n\t"	// Timer
- 						 "wrmsr	\n\t"
-						 "movq 	$0x833,	%%rcx	\n\t"	// Thermal Monitor
-						 "wrmsr	\n\t"
-						 "movq 	$0x834,	%%rcx	\n\t"	// Performance Counter
-						 "wrmsr	\n\t"
-						 "movq 	$0x835,	%%rcx	\n\t"	// LINT0
-						 "wrmsr	\n\t"
-						 "movq 	$0x836,	%%rcx	\n\t"	// LINT1
-						 "wrmsr	\n\t"
-						 "movq 	$0x837,	%%rcx	\n\t"	// Error
-						 "wrmsr	\n\t"
-						 :
-						 :"a"(0x10000),"d"(0x00),"b"(max_lvt)
-						 :"memory");
+	disable_lvt(&lapic_info);
 
-	//TPR
-	__asm__ __volatile__("movq 	$0x808,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 :"=a"(x),"=d"(y)
-						 :
-						 :"memory");
-	unsigned lvt_tpr = x;
+	unsigned lvt_tpr = get_lvt_tpr();
 
-	//PPR
-	__asm__ __volatile__("movq 	$0x80a,	%%rcx	\n\t"
-						 "rdmsr					\n\t"
-						 :"=a"(x),"=d"(y)
-						 :
-						 :"memory");
-	unsigned lvt_ppr = x;
+	unsigned lvt_ppr = get_lvt_ppr();
 
 #ifdef DEBUG
 	if((1<<9) & d)
@@ -289,10 +314,6 @@ void IOAPIC_init()
 	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
 #endif
 }
-
-// /*
-
-// */
 
 void LAPIC_IOAPIC_init()
 {

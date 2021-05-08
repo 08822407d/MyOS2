@@ -13,7 +13,7 @@
 
 void kmain(void)
 {
-    prot_init();
+    prot_bsp_init();
 
 	SMP_init();
 
@@ -50,6 +50,7 @@ void kmain(void)
 
 	devices_init();
 
+	// int i = 1 / 0;
     while(1){
 		// if(p_kb->count)
 		// 	analysis_keycode();

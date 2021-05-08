@@ -25,6 +25,9 @@ tss64_s			tss_bsp;
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
+/*===========================================================================*
+ *								global functions							 *
+ *===========================================================================*/
 phy_addr vir2phy(vir_addr vir)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
@@ -40,6 +43,51 @@ vir_addr phy2vir(phy_addr phy)
 	return (phy_addr)(phy + offset);
 }
 
+inline __always_inline void reload_gdt(desctblptr64_s * gdt_desc)
+{
+	__asm__ __volatile__("	lgdt	(%0)					\n\
+							movq	%%rsp, %%rax			\n\
+							mov 	%1, %%ss				\n\
+							movq	%%rax, %%rsp			\n\
+							mov		$0, %%ax				\n\
+							mov 	%%ax, %%ds				\n\
+							mov 	%%ax, %%es				\n\
+							mov 	%%ax, %%fs				\n\
+							mov 	%%ax, %%gs				\n\
+							xor		%%rax, %%rax			\n\
+							leaq	(. + 0xc)(%%rip), %%rax	\n\
+							pushq	%2						\n\
+							pushq	%%rax					\n\
+							lretq							\n\
+							xorq	%%rax, %%rax			\n	"
+						 :
+						 :	"r"(gdt_desc),
+						 	"r"(KERN_SS_SELECTOR),
+							"rsi"((uint64_t)KERN_CS_SELECTOR)
+						 :  "rax");
+}
+
+inline __always_inline void reload_idt(desctblptr64_s * idt_desc)
+{
+	__asm__ __volatile__("	lidt	(%0)					\n	"
+						 :
+						 :	"r"(idt_desc)
+						 :  );
+}
+
+inline __always_inline void reload_tss(uint64_t cpu_idx)
+{
+	__asm__ __volatile__("	xorq	%%rax,	%%rax			\n\
+							mov		%0,		%%ax			\n\
+							ltr		%%ax					\n	"
+						 :
+						 :	"r"((uint16_t)TSS_SELECTOR(cpu_idx))
+						 :	"rax");
+}
+
+/*===========================================================================*
+ *								private datas								 *
+ *===========================================================================*/
 gate_table_s exception_init_table[] = {
 	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#DE" },
 	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, "#DB" },
@@ -95,6 +143,7 @@ gate_table_s hwint_init_table[] = {
 #endif
 	{ NULL, 0, 0, 0}
 };
+
 /*===========================================================================*
  *								initiate segs							     *
  *===========================================================================*/
@@ -156,7 +205,7 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 }
 
 /*===========================================================================*
- *								prot_init								     *
+ *								prot_bsp_init								     *
  *===========================================================================*/
 
 void init_gdt()
@@ -241,39 +290,16 @@ void init_smp_tss()
 	}
 }
 
-void prot_init(void)
+
+void prot_bsp_init(void)
 {
 	init_gdt();
 	init_idt();
 	init_bsp_tss();
 
-	__asm__ __volatile__("	lgdt	%0						\n\
-							lidt	%1						\n\
-							movq	%%rsp, %%rax			\n\
-							mov 	%2, %%ss				\n\
-							movq	%%rax, %%rsp			\n\
-							mov		$0, %%ax				\n\
-							mov 	%%ax, %%ds				\n\
-							mov 	%%ax, %%es				\n\
-							mov 	%%ax, %%fs				\n\
-							mov 	%%ax, %%gs				\n\
-							xor		%%rax, %%rax			\n\
-							movq	%3, %%rax				\n\
-							pushq	%%rax					\n\
-							leaq	reload_cs(%%rip), %%rax	\n\
-							pushq	%%rax					\n\
-							lretq							\n\
-							reload_cs:						\n\
-							xorq	%%rax, %%rax			\n\
-							mov		%4, %%ax				\n\
-							ltr		%%ax					\n	"
-						 :
-						 :	"m"(gdt_ptr),
-						 	"m"(idt_ptr),
-						 	"r"(KERN_SS_SELECTOR),
-							"rsi"((uint64_t)KERN_CS_SELECTOR),
-							"r"((uint16_t)TSS_SELECTOR(0))
-						 :  "rax");
+	reload_idt(&idt_ptr);
+	reload_gdt(&gdt_ptr);
+	reload_tss(0);
 
 	pg_clear();
 	mem_init();
