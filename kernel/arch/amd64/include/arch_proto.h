@@ -179,6 +179,9 @@
 	void reload_gdt(desctblptr64_s * gdt_desc);
 	void reload_idt(desctblptr64_s * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
+	void init_arch_env(void);
+	void init_smp_env(void);
+	void config_lcpu_self(size_t cpu_idx);
 
 	/* pg_util.c */
 	void pg_clear(void);
@@ -261,5 +264,6 @@
 	void init_cpu(void);
 	void init_smp(void);
 	void start_SMP(uint64_t apic_id);
+	void startup_smp(void);
 
 #endif /* _AMD64_PROTO_H_ */

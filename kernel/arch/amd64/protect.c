@@ -175,12 +175,7 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_s * curr_tss;
-				if (tss_ptr_arr != NULL)
-					curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
-				else
-					curr_tss = &tmp_tss;
-				
+				tss64_s * curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
 				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
@@ -217,8 +212,6 @@ void init_gdt()
 	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
 	set_dataseg(USER_SS_INDEX, RW_DATA, 3);
-	// only init tss for bsp
-	set_sysseg(TSS_INDEX(0), TSS_AVAIL, KERN_PRIVILEGE);
 
 	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)gdt;
@@ -275,15 +268,24 @@ void init_tmp_tss()
 	curr_tss->ist5 =
 	curr_tss->ist6 =
 	curr_tss->ist7 = 0;
+	// init bsp's tss by hand
+	TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[TSS_INDEX(0)];
+	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
+	tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
+	tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
+	tss_segdesc->Base2	= ((uint64_t)curr_tss >> 24) & 0xFFFFFFFFFF;
+	tss_segdesc->Type	= TSS_AVAIL;
+	tss_segdesc->DPL	= KERN_PRIVILEGE;
+	tss_segdesc->AVL	=
+	tss_segdesc->Pflag	= 1;
 }
 
 void init_smp_tss()
 {
 	unsigned lcpu_nr = kparam.lcpu_nr;
 	tss_ptr_arr = (tss64_s **)kmalloc(lcpu_nr * sizeof(tss64_s *));
-	tss_ptr_arr[0] = &tmp_tss;
 	// init tss for all logical cpus
-	for (int i = 1; i < kparam.lcpu_nr; i++)
+	for (int i = 0; i < kparam.lcpu_nr; i++)
 	{
 		tss_ptr_arr[i] = (tss64_s *)kmalloc(sizeof(tss64_s));
 		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
@@ -318,7 +320,35 @@ void init_smp_env()
 	#endif	
 }
 
-void init_lcpu_self()
+void config_lcpu_self(size_t cpu_idx)
 {
+	lapic_info_s lapic_info;
 
+	percpu_data_s * curr_cpuinfo = smp_info[cpu_idx];
+
+	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
+
+
+	proc_s * curr_proc = (proc_s *)get_current();
+	curr_cpuinfo->proc_jiffies = curr_proc->proc_jiffies;
+
+	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
+	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
+
+	curr_cpuinfo->curr_proc = curr_proc;
+	curr_cpuinfo->finished_proc =
+	curr_cpuinfo->waiting_proc = NULL;
+
+	reload_idt(&idt_ptr);
+	reload_gdt(&gdt_ptr);
+	reload_tss(cpu_idx);
+
+	LAPIC_init();
+	
+	// on Intel platform, write %gs will clean gsbase, so the following
+	// operation should be done after reload segment regs
+	__asm__ __volatile__("wrgsbase	%%rax		\n"
+						:
+						:"a"(curr_cpuinfo)
+						:);
 }

@@ -250,39 +250,6 @@ void LAPIC_init()
 	unsigned lvt_tpr = get_lvt_tpr();
 
 	unsigned lvt_ppr = get_lvt_ppr();
-
-// #ifdef DEBUG
-// 	if((1<<9) & d)
-// 		color_printk(WHITE, BLACK, "APIC&xAPIC supported;\t");
-// 	else
-// 		color_printk(WHITE, BLACK, "APIC&xAPIC unsupported;\t");
-	
-// 	if((1<<21) & c)
-// 		color_printk(WHITE, BLACK, "x2APIC supported\n");
-// 	else
-// 		color_printk(WHITE, BLACK, "x2APIC unsupported\n");
-
-// 	if(x_x2_apic_enabled )
-// 		color_printk(WHITE,BLACK,"xAPIC & x2APIC enabled\n");
-
-// 	if(svr8_enabled)
-// 		color_printk(WHITE,BLACK,"SVR[8] enabled\n");
-// 	if(svr12_enabled)
-// 		color_printk(WHITE,BLACK,"SVR[12] enabled\n");
-
-// 	color_printk(WHITE,BLACK,"x2APIC ID:%#010x\n", x2apic_id);
-
-// 	color_printk(WHITE,BLACK,"local APIC Version:%#010x,Max LVT Entry:%#010x,SVR(Suppress EOI Broadcast):%#04x\t",
-// 					lapic_ver, max_lvt, svr12_support);
-// 	if(lapic_ver < 0x10)
-// 		color_printk(WHITE,BLACK,"82489DX discrete APIC\n");
-// 	else if( (lapic_ver >= 0x10) && (lapic_ver <= 0x15) )
-// 		color_printk(WHITE,BLACK,"Integrated APIC\n");
-// 	color_printk(GREEN,BLACK,"Mask ALL LVT\n");
-
-// 	color_printk(GREEN,BLACK,"Set LVT TPR:%#010x\t",x);
-// 	color_printk(GREEN,BLACK,"Set LVT PPR:%#010x\n", lvt_ppr);
-// #endif
 }
 
 
@@ -304,27 +271,17 @@ void IOAPIC_init()
 	//RTE	
 	for(i = 0x10;i < 0x40;i += 2)
 		ioapic_rte_write(i, 0x10000 + APIC_IRQ0_VEC + ((i - 0x10) >> 1));
-
-#ifdef DEBUG
-	color_printk(GREEN, BLACK, "Get IOAPIC ID REG:%#010x,ID:%#010x\n",
-					*ioapic_map.virt_data_addr, *ioapic_map.virt_data_addr>> 24 & 0xf);
-	color_printk(GREEN, BLACK, "Get IOAPIC Version REG:%#010x,MAX redirection enties:%#08d\n",
-					*ioapic_map.virt_data_addr, ((*ioapic_map.virt_data_addr>> 16) & 0xff) + 1);
-	color_printk(GREEN, BLACK, "I/O APIC Redirection Table Entries Set Finished.\n");	
-#endif
 }
 
 void LAPIC_IOAPIC_init()
 {
+	//init local apic
+	LAPIC_init();
+
 	IOAPIC_pagetable_remap();
 
 	i8259_disable();
 
-	//init local apic
-	LAPIC_init();
-
 	//init ioapic
 	IOAPIC_init();
-
-	sti();
 }

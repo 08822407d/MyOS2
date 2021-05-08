@@ -13,59 +13,38 @@
 
 void kmain(size_t cpu_idx)
 {
+	// pre init only bsp do these works
+	// prepare an environment and global system data
 	if (cpu_idx == 0)
 	{
 		init_arch_env();
+		init_video();
+		init_slab();
+		init_smp_env();
+		init_smp();
+
+		init_proc();
+		startup_smp();
 	}
 
-    // prot_bsp_init();
-	init_video();
+	config_lcpu_self(cpu_idx);
 
-	init_slab();
-
+	// post init
 	if (cpu_idx == 0)
 	{
-		init_smp_env();
+		// schedule();
+
+		softirq_init();
+		timer_init();
+
+		devices_init();
 	}
 
-	init_smp();
-
-	init_proc();
-
-	wrmsr(0x830,0xc4500);	//INIT IPI
-	wrmsr(0x830,0xc4620);	//Start-up IPI
-
-	// intcmd_reg_s icr_entry;
-	// icr_entry.vector = 0x00;
-	// icr_entry.deliver_mode =  APIC_ICR_IOAPIC_INIT;
-	// icr_entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
-	// icr_entry.deliver_status = APIC_ICR_IOAPIC_Idle;
-	// icr_entry.res_1 = 0;
-	// icr_entry.level = ICR_LEVEL_DE_ASSERT;
-	// icr_entry.trigger = APIC_ICR_IOAPIC_Edge;
-	// icr_entry.res_2 = 0;
-	// icr_entry.dest_shorthand = ICR_ALL_EXCLUDE_Self;
-	// icr_entry.res_3 = 0;
-	// icr_entry.dst.x2apic_dst = 0x00;
-	
-	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//INIT IPI
-
-	// icr_entry.vector = 0x20;
-	// icr_entry.deliver_mode = ICR_Start_up;
-	
-	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
-	// wrmsr(0x830, *(unsigned long *)&icr_entry);	//Start-up IPI
-
-	schedule();
-
-	softirq_init();
-	timer_init();
-
-	devices_init();
+	sti();
 
 	int i = 1 / 0;
-    while(1){
-		// if(p_kb->count)
-		// 	analysis_keycode();
+
+	while(1){
+		hlt();
 	};
 }

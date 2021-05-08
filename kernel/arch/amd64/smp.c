@@ -5,7 +5,6 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/arch_glo.h"
-#include "include/smp.h"
 
 #include "../../include/glo.h"
 #include "../../include/printk.h"
@@ -63,45 +62,8 @@ void init_smp()
 					:);
 }
 
-void start_SMP(uint64_t aptable_idx)
+void startup_smp()
 {
-	lapic_info_s lapic_info;
-
-	percpu_data_s * curr_cpuinfo = smp_info[aptable_idx];
-
-	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
-
-
-	proc_s * curr_proc = (proc_s *)get_current();
-	curr_cpuinfo->proc_jiffies = curr_proc->proc_jiffies;
-
-	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
-	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
-
-	curr_cpuinfo->curr_proc = curr_proc;
-	curr_cpuinfo->finished_proc =
-	curr_cpuinfo->waiting_proc = NULL;
-
-	reload_idt(&idt_ptr);
-	reload_gdt(&gdt_ptr);
-	reload_tss(aptable_idx);
-
-	enable_x2apic();
-	open_lapic();
-	// unsigned x2apic_id = get_x2apic_id();
-	// get_lapic_ver(&lapic_info);
-	disable_lvt(&lapic_info);
-	
-	// on Intel platform, write %gs will clean gsbase, so the following
-	// operation should be done after reload segment regs
-	__asm__ __volatile__("wrgsbase	%%rax		\n"
-						:
-						:"a"(curr_cpuinfo)
-						:);
-
-	int i = 1 / 0;
-	while (1)
-	{
-		hlt();
-	}
+	wrmsr(0x830,0xc4500);	//INIT IPI
+	wrmsr(0x830,0xc4620);	//Start-up IPI
 }
