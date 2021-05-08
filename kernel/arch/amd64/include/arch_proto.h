@@ -114,7 +114,7 @@
 // ioapic information
 	typedef struct IOAPIC_map
 	{
-		phy_addr	phys_addr;
+		phys_addr	phys_addr;
 		uint8_t *	virt_idx_addr;
 		uint32_t *	virt_data_addr;
 		uint32_t *	virt_EOI_addr;
@@ -174,8 +174,8 @@
 	} percpu_data_s;
 
 	/* protect.c */
-	phy_addr vir2phy(vir_addr);
-	vir_addr phy2vir(phy_addr);
+	phys_addr vir2phy(virt_addr);
+	virt_addr phy2vir(phys_addr);
 	void reload_gdt(desctblptr64_s * gdt_desc);
 	void reload_idt(desctblptr64_s * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
@@ -184,8 +184,8 @@
 	void pg_clear(void);
 	void pg_load_cr3(PML4E_u *);
 	void pg_flush_tlb(void);
-	void pg_domap(vir_addr, phy_addr, uint64_t);
-	void pg_unmap(vir_addr);
+	void pg_domap(virt_addr, phys_addr, uint64_t);
+	void pg_unmap(virt_addr);
 
 	/* i8259.c */
 	void init_i8259(void);
@@ -259,7 +259,7 @@
 
 	/* smp.c */
 	void init_cpu(void);
-	void SMP_init(void);
+	void init_smp(void);
 	void start_SMP(uint64_t apic_id);
 
 #endif /* _AMD64_PROTO_H_ */

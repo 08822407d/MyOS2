@@ -11,9 +11,9 @@
 /* This is used to obtain system information through SYS_GETINFO. */
 
 	typedef struct kinfo {
-		phy_addr	kernel_phy_base;
-		vir_addr	kernel_vir_base;
-		vir_addr	kernel_vir_end;
+		phys_addr	kernel_phy_base;
+		virt_addr	kernel_vir_base;
+		virt_addr	kernel_vir_end;
 
 		unsigned int	lcpu_nr;
 
@@ -28,8 +28,8 @@
 
 	typedef struct framebuffer
 	{
-		phy_addr	FB_phybase;
-		vir_addr	FB_virbase;
+		phys_addr	FB_phybase;
+		virt_addr	FB_virbase;
 		uint64_t	FB_size;
 
 		uint32_t	PixperScanline;

@@ -46,7 +46,7 @@
 	typedef __UINT64_TYPE__ bitmap_t;
 	#define BITMAP_UNITSIZE 64
 
-	typedef void*	phy_addr;
-	typedef void*	vir_addr;
+	typedef void*	phys_addr;
+	typedef void*	virt_addr;
 
 #endif /* !_SYS_TYPES_H_ */

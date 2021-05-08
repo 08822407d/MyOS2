@@ -4,6 +4,7 @@
 #include "include/glo.h"
 #include "include/const.h"
 #include "include/param.h"
+#include "include/proto.h"
 #include "include/ktypes.h"
 #include "include/printk.h"
 
@@ -13,10 +14,10 @@
 
 extern position_t Pos;
 
-void video_init()
+void init_video()
 {	
-	phy_addr phy_pg_base = framebuffer.FB_phybase;
-	vir_addr vir_pg_base = framebuffer.FB_virbase;
+	phys_addr phy_pg_base = framebuffer.FB_phybase;
+	virt_addr vir_pg_base = framebuffer.FB_virbase;
 
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 	int fb_pages = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;

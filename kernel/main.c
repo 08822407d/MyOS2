@@ -13,11 +13,19 @@
 
 void kmain(size_t cpu_idx)
 {
-    prot_bsp_init();
+	if (cpu_idx == 0)
+	{
 
-	SMP_init();
+	}
 
-	proc_init();
+    // prot_bsp_init();
+	init_video();
+
+	init_slab();
+
+	init_smp();
+
+	init_proc();
 
 	wrmsr(0x830,0xc4500);	//INIT IPI
 	wrmsr(0x830,0xc4620);	//Start-up IPI

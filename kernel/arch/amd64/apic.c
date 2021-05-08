@@ -217,9 +217,9 @@ inline __always_inline unsigned get_lvt_ppr()
 void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
-	uint8_t * IOAPIC_addr = (uint8_t *)phy2vir((phy_addr)0xfec00000);
+	uint8_t * IOAPIC_addr = (uint8_t *)phy2vir((phys_addr)0xfec00000);
 
-	ioapic_map.phys_addr = (phy_addr)0xfec00000;
+	ioapic_map.phys_addr = (phys_addr)0xfec00000;
 	ioapic_map.virt_idx_addr = IOAPIC_addr;
 	ioapic_map.virt_data_addr = (uint32_t *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);

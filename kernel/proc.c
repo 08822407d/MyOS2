@@ -18,7 +18,7 @@ unsigned long	waiting_proc_count = 0;
 
 void creat_idles(void);
 
-void proc_init()
+void init_proc()
 {
 	arch_init_proc();
 

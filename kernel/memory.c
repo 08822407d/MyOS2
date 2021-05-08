@@ -29,11 +29,11 @@ uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZ
  *						fuction relate to physical page						 *
  *===========================================================================*/
 
-void mem_init()
+void init_page_manage()
 {
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
 
-	phy_addr low_bound = 0, high_bound = 0;
+	phys_addr low_bound = 0, high_bound = 0;
 	uint64_t pg_start_idx = 0, pg_end_idx = 0;
 
 	int i;
@@ -43,8 +43,8 @@ void mem_init()
 	for(i = 0; i < mem_info.mb_memmap_nr; i++)
 	{
 		multiboot_memory_map_s *mbmap_curr = &mem_info.mb_memmap[i];
-		low_bound = (phy_addr)mbmap_curr->addr;
-		high_bound = (phy_addr)(mbmap_curr->len + low_bound);
+		low_bound = (phys_addr)mbmap_curr->addr;
+		high_bound = (phys_addr)(mbmap_curr->len + low_bound);
 
 
 		pg_start_idx = CONFIG_PAGE_ALIGH((uint64_t)low_bound) / CONFIG_PAGE_SIZE;
@@ -58,8 +58,8 @@ void mem_init()
 		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
 		mz_curr->page_nr			= pg_end_idx - pg_start_idx;
 		mz_curr->page_free_nr		= mz_curr->page_nr;
-		mz_curr->zone_start_addr	= (phy_addr)(pg_start_idx * CONFIG_PAGE_SIZE);
-		mz_curr->zone_end_addr		= (phy_addr)(pg_end_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_start_addr	= (phys_addr)(pg_start_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_end_addr		= (phys_addr)(pg_end_idx * CONFIG_PAGE_SIZE);
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
@@ -68,7 +68,7 @@ void mem_init()
 		{
 			Page_s *pg_curr = &mem_info.pages[j];
 			pg_curr->zone_belonged	= mz_curr;
-			pg_curr->page_start_addr = (phy_addr)(j * CONFIG_PAGE_SIZE);
+			pg_curr->page_start_addr = (phys_addr)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
 
 			// mem_info.page_bitmap[page_count / BITMAP_UNITSIZE] &=
@@ -83,8 +83,8 @@ void mem_init()
 
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
-	phy_addr k_phy_pgbase = 0;
-	vir_addr k_vir_pgbase = (vir_addr)phy2vir(0);
+	phys_addr k_phy_pgbase = 0;
+	virt_addr k_vir_pgbase = (virt_addr)phy2vir(0);
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
@@ -127,7 +127,7 @@ void page_free(Page_s * page_p)
  *					fuction relate to alloc virtual memory					 *
  *===========================================================================*/
 
-void slab_init()
+void init_slab()
 {
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
@@ -155,9 +155,9 @@ void slab_init()
 		bsp->slabcache_ptr = scgp;
 		bsp->free =
 		bsp->total = obj_nr;
-		bsp->vir_addr = (vir_addr)base_slab_page[i];
+		bsp->virt_addr = (virt_addr)base_slab_page[i];
 		bsp->page->attr |= PG_Slab;
-		int pg_idx = (uint64_t)vir2phy(bsp->vir_addr) / CONFIG_PAGE_SIZE;
+		int pg_idx = (uint64_t)vir2phy(bsp->virt_addr) / CONFIG_PAGE_SIZE;
 		bsp->page = &mem_info.pages[pg_idx];
 		bsp->page->slab_ptr = bsp;
 	}
@@ -177,7 +177,7 @@ slab_s * slab_alloc(size_t obj_count)
 	sp->colormap = (bitmap_t *)kmalloc(obj_count / sizeof(bitmap_t));
 	sp->total =
 	sp->free = obj_count;
-	sp->vir_addr = phy2vir(pg->page_start_addr);
+	sp->virt_addr = phy2vir(pg->page_start_addr);
 	m_list_init(sp);
 
 	return sp;
@@ -227,7 +227,7 @@ void * kmalloc(size_t size)
 	if (obj_idx < slp->total)
 	{
 		size_t offset = scgp->obj_size * obj_idx;
-		ret_val = (void *)((size_t)slp->vir_addr + offset);
+		ret_val = (void *)((size_t)slp->virt_addr + offset);
 		// refresh status of slab
 		slp->free--;
 		scgp->nsobj_free_count--;
@@ -258,12 +258,12 @@ void kfree(void * obj_p)
 	if (obj_p == NULL)
 		return;
 
-	phy_addr pg_addr = vir2phy((vir_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
+	phys_addr pg_addr = vir2phy((virt_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
-	unsigned long obj_idx = (obj_p - slp->vir_addr) / scgp->obj_size;
+	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;

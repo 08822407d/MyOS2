@@ -12,13 +12,13 @@
 PML4E_u	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
 PDPTE_u	KERN_PDPT[PDPT_NR][PGENT_NR] __aligned(PGENT_SIZE);
 PDE_u	KERN_PD[PDPT_NR][PGENT_NR][PGENT_NR] __aligned(PGENT_SIZE);
-phy_addr pml4_base = 0;
+phys_addr pml4_base = 0;
 
 void pg_clear(void)
 {
 	pml4_base = vir2phy(&KERN_PML4);
-	phy_addr pdpt_base = vir2phy(&KERN_PDPT);
-	phy_addr pd_base = vir2phy(&KERN_PD);
+	phys_addr pdpt_base = vir2phy(&KERN_PDPT);
+	phys_addr pd_base = vir2phy(&KERN_PD);
 	memset(pml4_base, 0, sizeof(KERN_PML4));
 	memset(pdpt_base, 0, sizeof(KERN_PDPT));
 	memset(pd_base, 0, sizeof(KERN_PD));
@@ -45,7 +45,7 @@ void pg_flush_tlb(void)
 						 :	);
 }
 
-void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
+void pg_domap(virt_addr vir, phys_addr phy, uint64_t attr)
 {
 	attr = ARCH_PGS_ATTR(attr);
 	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PML4E);
@@ -65,7 +65,7 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 	}
 
 	// get pdpte
-	PDPTE_u * pdpte_ptr = (PDPTE_u *)phy2vir((phy_addr)ARCH_PGS_ADDR(pml4e_ptr->PML4E)) + pdpte_idx;
+	PDPTE_u * pdpte_ptr = (PDPTE_u *)phy2vir((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->PML4E)) + pdpte_idx;
 	// set pdpte
 	if (pdpte_ptr->PDPTE == 0)
 	{
@@ -73,7 +73,7 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 	}
 
 	// get pde
-	PDE_u * pde_ptr = (PDE_u *)phy2vir((phy_addr)ARCH_PGS_ADDR(pdpte_ptr->PDPTE)) + pde_idx;
+	PDE_u * pde_ptr = (PDE_u *)phy2vir((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->PDPTE)) + pde_idx;
 	// set pte
 	if (*((uint64_t *)pde_ptr) == 0)
 	{
@@ -83,7 +83,7 @@ void pg_domap(vir_addr vir, phy_addr phy, uint64_t attr)
 	pg_flush_tlb();
 }
 
-void pg_unmap(vir_addr vir)
+void pg_unmap(virt_addr vir)
 {
 	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDPTE);

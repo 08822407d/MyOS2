@@ -33,15 +33,15 @@
 	void cstart(void);
 
 	/* memory.c */
-	void mem_init(void);
-	void slab_init();
+	void init_page_manage(void);
+	void init_slab();
 	Page_s * page_alloc(void);
 	void page_free(Page_s *);
 	void * kmalloc(size_t size);
 	void kfree(void * obj_p);
 
 	/* video.c */
-	void video_init(void);
+	void init_video(void);
 
 	/* functions defined in architecture-dependent files. */
 	void prot_bsp_init(void);

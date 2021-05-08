@@ -28,19 +28,19 @@ desctblptr64_s	idt_ptr;
 /*===========================================================================*
  *								global functions							 *
  *===========================================================================*/
-phy_addr vir2phy(vir_addr vir)
+phys_addr vir2phy(virt_addr vir)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
-	uint64_t offset = (vir_addr) &_k_vir_start -
-						(vir_addr) &_k_phy_start;
-	return (phy_addr)(vir - offset);
+	uint64_t offset = (virt_addr) &_k_vir_start -
+						(virt_addr) &_k_phy_start;
+	return (phys_addr)(vir - offset);
 }
-vir_addr phy2vir(phy_addr phy)
+virt_addr phy2vir(phys_addr phy)
 {
 	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
-	uint64_t offset = (vir_addr) &_k_vir_start -
-						(vir_addr) &_k_phy_start;
-	return (phy_addr)(phy + offset);
+	uint64_t offset = (virt_addr) &_k_vir_start -
+						(virt_addr) &_k_phy_start;
+	return (phys_addr)(phy + offset);
 }
 
 inline __always_inline void reload_gdt(desctblptr64_s * gdt_desc)
@@ -290,6 +290,26 @@ void init_smp_tss()
 	}
 }
 
+void init_smp_env()
+{
+	// initate global architechture data
+	init_gdt();
+	init_idt();
+	init_bsp_tss();
+	// load those data
+	reload_idt(&idt_ptr);
+	reload_gdt(&gdt_ptr);
+	reload_tss(0);
+	// set and load permanent kernel page
+	pg_clear();
+	extern PML4E_u KERN_PML4[PGENT_NR];
+	pg_load_cr3(KERN_PML4);
+}
+
+void init_lcpu_self()
+{
+
+}
 
 void prot_bsp_init(void)
 {
@@ -302,12 +322,12 @@ void prot_bsp_init(void)
 	reload_tss(0);
 
 	pg_clear();
-	mem_init();
+	init_page_manage();
 	extern PML4E_u KERN_PML4[PGENT_NR];
 	pg_load_cr3(KERN_PML4);
-	video_init();
+	init_video();
 
-	slab_init();
+	init_slab();
 
 	init_smp_tss();
 
