@@ -99,11 +99,45 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target, percpu_dat
 						  "=m"(curr->arch_struct.k_rip)
 						 :"m"(target->arch_struct.k_rsp),
 						  "m"(target->arch_struct.k_rip),
-						  "D"(curr), "S"(target)
+						  "D"(curr), "S"(target), "d"(cpudata)
 						 :"memory");
 }
 
+unsigned long test_proc_a(unsigned long arg)
+{
+	while (1)
+	{
+		unsigned long k = 0;
+		for (int i = 0; i < 0x2000; i++)
+			for (int j = 0; j < 0x2000; j++)
+				k++;
+		color_printk(WHITE, BLACK, "-A- ");
+	}
+}
 
+unsigned long test_proc_b(unsigned long arg)
+{
+	while (1)
+	{
+		unsigned long k = 0;
+		for (int i = 0; i < 0x2000; i++)
+			for (int j = 0; j < 0x2000; j++)
+				k++;
+		color_printk(WHITE, BLACK, "-B- ");
+	}
+}
+
+unsigned long test_proc_c(unsigned long arg)
+{
+	while (1)
+	{
+		unsigned long k = 0;
+		for (int i = 0; i < 0x2000; i++)
+			for (int j = 0; j < 0x2000; j++)
+				k++;
+		color_printk(WHITE, BLACK, "-C- ");
+	}
+}
 
 unsigned long init(unsigned long arg)
 {
@@ -141,12 +175,13 @@ void wakeup_proc(proc_s * proc)
 {
 	if (proc_waiting_list == NULL)
 	{
-
+		proc_waiting_list = proc;
 	}
 	else
 	{
-
+		m_list_insert_back(proc, proc_waiting_list);
 	}
+	waiting_proc_count++;
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -177,15 +212,15 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 	new_proc->arch_struct.k_rip = sf_regs->rip;
 	new_proc->arch_struct.k_rsp = (reg_t)new_sf_regs;
 
-	if(!(new_proc->flags & PF_KTHREAD))
-		new_proc->arch_struct.k_rip = sf_regs->rip = (reg_t)ret_from_syscall;
-
+	wakeup_proc(new_proc);
 	new_proc->state = PS_RUNNING;
+	goto do_fork_success;
 
 	alloc_newproc_fail:
 		kfree(new_proc);
 
-	return new_proc->pid;
+	do_fork_success:
+		return new_proc->pid;
 }
 
 unsigned long do_exit(unsigned long code)
@@ -225,42 +260,97 @@ void arch_init_proc()
 	spin_init(&newpid_lock);
 
 	// kernel_thread(init, 20, 0);
+	kernel_thread(test_proc_a, 0, 0);
+	kernel_thread(test_proc_b, 0, 0);
+	kernel_thread(test_proc_c, 0, 0);
 }
 
-void schedule(percpu_data_s * curr_cpu_data)
+void reschedule(percpu_data_s * cpudata)
 {
-	unsigned long used_jiffies = jiffies - curr_cpu_data->last_jiffies;
-	if (used_jiffies >= curr_cpu_data->proc_jiffies)
-		curr_cpu_data->curr_proc->flags |= PF_NEED_SCHEDULE;
-
-	if (curr_cpu_data->waiting_count == 0)
+	unsigned long used_jiffies = jiffies - cpudata->last_jiffies;
+	if (used_jiffies >= cpudata->proc_jiffies)
+		cpudata->curr_proc->flags |= PF_NEED_SCHEDULE;
+	if ((cpudata->curr_proc == cpudata->idle_proc) && (cpudata->waiting_count == 0))
+		cpudata->curr_proc->flags &= ~PF_NEED_SCHEDULE;
+		
+	if (cpudata->curr_proc->flags & PF_NEED_SCHEDULE)
 	{
-		return;
-	}
-	else if (curr_cpu_data->curr_proc->flags & PF_NEED_SCHEDULE)
-	{
-		proc_s * curr_proc = curr_cpu_data->curr_proc;
-		proc_s * next_proc = curr_cpu_data->waiting_proc;
+		proc_s * curr_proc = cpudata->curr_proc;
+		proc_s * next_proc = NULL;
 		// move current to finished list
-		curr_cpu_data->curr_proc = NULL;
-		if (curr_cpu_data->finished_proc == NULL)
-			curr_cpu_data->finished_proc = curr_proc;
-		else
-			m_list_insert_back(curr_proc, curr_cpu_data->finished_proc);
-		curr_cpu_data->finished_count++;
-		// move the first in waiting list to current
-		curr_cpu_data->curr_proc = next_proc;
-		if (curr_cpu_data->waiting_count == 1)
-			curr_cpu_data->waiting_proc = NULL;
+		// if current is idle. just let current = NULL
+		cpudata->curr_proc = NULL;
+		if (cpudata->curr_proc == cpudata->idle_proc)
+		{
+			if (cpudata->finished_proc == NULL)
+				cpudata->finished_proc = curr_proc;
+			else
+				m_list_insert_back(curr_proc, cpudata->finished_proc);
+			cpudata->finished_count++;
+		}
+		// get waiting proc
+		// if no waiting proc, let idle run
+		if (cpudata->waiting_count > 0)
+		{
+			next_proc = cpudata->waiting_proc;
+			// move the first in waiting list to current
+			cpudata->curr_proc = next_proc;
+			if (cpudata->waiting_count < 2)
+				cpudata->waiting_proc = NULL;
+			else
+			{
+				cpudata->waiting_proc = next_proc->next;
+				m_list_delete(next_proc);
+			}
+			cpudata->waiting_count--;
+		}
 		else
 		{
-			curr_cpu_data->waiting_proc = next_proc->next;
-			m_list_delete(next_proc);
+			next_proc = cpudata->idle_proc;
 		}
-		curr_cpu_data->waiting_count--;
-
-		switch_to(curr_proc, next_proc, curr_cpu_data);
-		curr_cpu_data->last_jiffies = jiffies;
-		curr_cpu_data->proc_jiffies = curr_proc->proc_jiffies;
+		switch_to(curr_proc, next_proc, cpudata);
+		cpudata->last_jiffies = jiffies;
+		cpudata->proc_jiffies = curr_proc->proc_jiffies;
 	}
+}
+
+void schedule()
+{
+	percpu_data_s * cpudata = smp_info[0];
+	for ( ; cpudata->finished_count > 0; cpudata->finished_count--)
+	{
+		// pop out cpu's finished proc
+		proc_s * finished = cpudata->finished_proc->prev;
+		if (cpudata->finished_count == 1)
+			cpudata->finished_proc = NULL;
+		else
+			m_list_delete(finished);
+		// push finished proc to waiting list
+		if (waiting_proc_count < 1)
+			proc_waiting_list = finished;
+		else
+			m_list_insert_front(finished, proc_waiting_list);
+		
+		waiting_proc_count++;
+	}
+	for ( ; waiting_proc_count > 0; waiting_proc_count--)
+	{
+		// pop out waiting proc
+		proc_s * waiting = proc_waiting_list;
+		if (waiting_proc_count == 1)
+			proc_waiting_list = NULL;
+		else
+			m_list_delete(waiting);
+		//push waiting proc to cpu's waiting list
+		if (cpudata->waiting_count < 1)
+			cpudata->waiting_proc = waiting;
+		else
+			m_list_insert_back(waiting, cpudata->waiting_proc);
+
+		cpudata->waiting_count++;
+	}
+	// insert schedule self to cpu's waiting list end
+	proc_s * current = get_current();
+	current->flags |= PF_NEED_SCHEDULE;
+	reschedule(cpudata);
 }

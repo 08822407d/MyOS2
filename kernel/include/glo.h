@@ -10,6 +10,7 @@
 	extern time_s time;
 	extern unsigned long volatile jiffies;
 	extern proc_s * proc_waiting_list;
+	unsigned long	waiting_proc_count;
 
 
 #endif /* _GLO_H_ */

@@ -55,5 +55,6 @@
 	unsigned long get_newpid(void);
 	void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
 	void switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
+	void schedule(void);
 
 #endif /* _PROC_H_ */

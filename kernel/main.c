@@ -49,6 +49,7 @@ void kmain(void)
 	devices_init();
 
     while(1){
+		schedule();
 		// if(p_kb->count)
 		// 	analysis_keycode();
 	};

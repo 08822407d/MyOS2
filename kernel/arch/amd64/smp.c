@@ -90,7 +90,8 @@ void start_SMP(uint64_t aptable_idx)
 	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
 	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
 
-	curr_cpuinfo->curr_proc = curr_proc;
+	curr_cpuinfo->curr_proc =
+	curr_cpuinfo->idle_proc = curr_proc;
 	curr_cpuinfo->finished_proc =
 	curr_cpuinfo->waiting_proc = NULL;
 
@@ -164,7 +165,6 @@ void start_SMP(uint64_t aptable_idx)
 
 	color_printk(RED,YELLOW,"APU starting...... INDEX: %d; x2APIC ID:%#010x\n", aptable_idx, x);
 
-	int i = 1 / 0;
 	while (1)
 	{
 		hlt();

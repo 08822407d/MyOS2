@@ -150,11 +150,12 @@
 	typedef struct proc proc_s;
 	typedef struct percpu_info
 	{
-		proc_s *	curr_proc;
-		proc_s *	waiting_proc;
-		proc_s *	finished_proc;
-		size_t		waiting_count;
-		size_t		finished_count;
+		proc_s *		waiting_proc;
+		proc_s *		finished_proc;
+		unsigned long	waiting_count;
+		unsigned long	finished_count;
+		proc_s *		curr_proc;
+		proc_s *		idle_proc;
 
 		unsigned long	last_jiffies;
 		unsigned long	proc_jiffies;
@@ -230,7 +231,7 @@
 							unsigned long stack_size);
 	int sys_call(int syscall_nr);
 	int do_syscall(int syscall_nr);
-	void schedule(percpu_data_s * curr_cpu_data);
+	void reschedule(percpu_data_s * curr_cpu_data);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata);

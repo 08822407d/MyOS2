@@ -21,8 +21,9 @@ void get_cmos_time(time_s *time)
 		time->day		= BCD2BIN(CMOS_READ(0x07));	
 		time->hour		= BCD2BIN(CMOS_READ(0x04));	
 		time->minute	= BCD2BIN(CMOS_READ(0x02));
-		time->second	= BCD2BIN(CMOS_READ(0x00));
+		time->second	= CMOS_READ(0x00);
 	}while(time->second != CMOS_READ(0x00));
+	time->second	= BCD2BIN(CMOS_READ(0x00));
 	
 	outb(0x70,0x00); 
 }
