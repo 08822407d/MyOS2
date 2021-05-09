@@ -77,7 +77,7 @@ void init_percpu_arch_data(size_t cpu_idx)
 
 void percpu_self_config(size_t cpu_idx)
 {
-
+	wrgsbase(smp_info[cpu_idx]);
 }
 
 void startup_smp()

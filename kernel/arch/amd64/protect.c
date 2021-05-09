@@ -300,6 +300,4 @@ void refresh_percpu_arch_env(size_t cpu_idx)
 	reload_gdt(&gdt_ptr);
 	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);	// init bsp's gsbase
 	reload_tss(cpu_idx);
-
-	wrgsbase(smp_info[cpu_idx]);
 }
