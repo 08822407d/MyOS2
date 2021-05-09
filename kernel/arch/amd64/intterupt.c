@@ -234,3 +234,16 @@ int unregister_irq(unsigned long irq)
 
 	return 1; 
 }
+
+/*===========================================================================*
+ *									init									 *
+ *===========================================================================*/
+void init_intr()
+{
+	#ifndef USE_APIC
+		init_i8258();
+	#else
+		init_lapic();
+		init_ioapic();
+	#endif
+}

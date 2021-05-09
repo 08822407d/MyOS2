@@ -173,6 +173,8 @@
 		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
 	} percpu_data_s;
 
+	/* pre_init.c */
+	void pre_init(void);
 	/* protect.c */
 	phys_addr virt2phys(virt_addr);
 	virt_addr phys2virt(phys_addr);
@@ -180,14 +182,17 @@
 	void reload_idt(desctblptr64_s * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
 	void init_arch_env(void);
+	void load_arch_data(size_t cpu_idx);
+	void refresh_arch_env(size_t cpu_idx);
 	void init_smp_env(void);
 	void config_lcpu_self(size_t cpu_idx);
 
 	/* pg_util.c */
-	void pg_clear(void);
+	void pg_pre_init(void);
+	void refresh_arch_page(void);
 	void pg_load_cr3(PML4E_u *);
 	void pg_flush_tlb(void);
-	void pg_domap(virt_addr, phys_addr, uint64_t);
+	void pg_domap(virt_addr, phys_addr, uint64_t, PML4E_u * pml4_base);
 	void pg_unmap(virt_addr);
 
 	/* i8259.c */
@@ -199,8 +204,8 @@
 	void i8259_do_irq(stack_frame_s * sf_regs);
 	/* apic.c */
 	void IOAPIC_pagetable_remap(void);
-	void LAPIC_IOAPIC_init(void);
-	void LAPIC_init(void);
+	void init_ioapic(void);
+	void init_lapic(void);
 	void IOAPIC_init(void);
 	void IOAPIC_enable(unsigned long irq);
 	void IOAPIC_disable(unsigned long irq);
@@ -259,6 +264,7 @@
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
+	void init_intr(void);
 
 	/* smp.c */
 	void init_cpu(void);

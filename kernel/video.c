@@ -10,6 +10,7 @@
 
 #include "arch/amd64/include/archconst.h"
 #include "arch/amd64/include/archtypes.h"
+#include "arch/amd64/include/arch_glo.h"
 #include "arch/amd64/include/arch_proto.h"
 
 extern position_t Pos;
@@ -23,7 +24,7 @@ void init_video()
 	int fb_pages = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
 	for (int i = 0; i < fb_pages; i++)
 	{
-		pg_domap(vir_pg_base, phy_pg_base, page_attr);
+		pg_domap(vir_pg_base, phy_pg_base, page_attr, KERN_PML4);
 		vir_pg_base += CONFIG_PAGE_SIZE;
 		phy_pg_base += CONFIG_PAGE_SIZE;
 	}

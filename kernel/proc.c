@@ -11,7 +11,9 @@
 
 PCB_u ** idle_procs;
 
-PCB_u proc0_PCB __aligned(PROC_KSTACK_SIZE);
+// de attention that before entering kmain, rsp had already point to stack of proc0,
+// in pre_init() .bss section will be set 0, so here arrange proc0 in .data section
+PCB_u proc0_PCB __aligned(PROC_KSTACK_SIZE) __attribute__((section(".data")));
 
 proc_s * proc_waiting_list = NULL;
 unsigned long	waiting_proc_count = 0;

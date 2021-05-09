@@ -6,6 +6,7 @@
 
 #include "arch/amd64/include/archconst.h"
 #include "arch/amd64/include/archtypes.h"
+#include "arch/amd64/include/arch_glo.h"
 #include "arch/amd64/include/arch_proto.h"
 
 #include "include/param.h"
@@ -91,9 +92,9 @@ void init_page_manage()
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
 		// map lower mem
-		pg_domap(k_phy_pgbase, k_phy_pgbase, page_attr);
+		pg_domap(k_phy_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
 		// map higher mem
-		pg_domap(k_vir_pgbase, k_phy_pgbase, page_attr);
+		pg_domap(k_vir_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
@@ -132,6 +133,10 @@ void init_slab()
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
 		slab_cache_s * scgp = &slab_cache_groups[i];
+		m_list_init(scgp);
+		if (i > 0)
+			m_list_insert_back(scgp, (scgp - 1));
+
 		slab_s * bsp = &base_slabs[i];
 
 		scgp->obj_size = SLAB_SIZE_BASE << i;
@@ -168,7 +173,7 @@ slab_s * slab_alloc(size_t obj_count)
 {
 	Page_s * pg = page_alloc();
 	if (!(pg->attr & PG_PTable_Maped))
-		pg_domap(phys2virt(pg->page_start_addr), pg->page_start_addr, 0);
+		pg_domap(phys2virt(pg->page_start_addr), pg->page_start_addr, 0, KERN_PML4);
 	
 	pg->attr |= PG_Slab;
 	slab_s * sp = (slab_s *)kmalloc(sizeof(slab_s));

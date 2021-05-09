@@ -298,36 +298,36 @@ void init_arch_env()
 	init_gdt();
 	init_idt();
 	init_tmp_tss();
+	// set and load permanent kernel page
+}
+
+void refresh_arch_env(size_t cpu_idx)
+{
 	// load those data
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
-	reload_tss(0);
-	// set and load permanent kernel page
-	pg_clear();
-	init_page_manage();
-	extern PML4E_u KERN_PML4[PGENT_NR];
-	pg_load_cr3(KERN_PML4);
+	reload_tss(cpu_idx);
 }
 
 void init_smp_env()
 {
 	init_smp_tss();
-
-	#ifndef USE_APIC
-		init_i8259();
-	#else
-		LAPIC_IOAPIC_init();
-	#endif	
+	
 }
 
 void config_lcpu_self(size_t cpu_idx)
 {
+	if (cpu_idx != 0)
+	{
+		refresh_arch_env(cpu_idx);
+		init_lapic();
+	}
+
 	lapic_info_s lapic_info;
 
 	percpu_data_s * curr_cpuinfo = smp_info[cpu_idx];
 
 	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
-
 
 	proc_s * curr_proc = (proc_s *)get_current();
 	curr_cpuinfo->proc_jiffies = curr_proc->proc_jiffies;
@@ -339,12 +339,6 @@ void config_lcpu_self(size_t cpu_idx)
 	curr_cpuinfo->finished_proc =
 	curr_cpuinfo->waiting_proc = NULL;
 
-	reload_idt(&idt_ptr);
-	reload_gdt(&gdt_ptr);
-	reload_tss(cpu_idx);
-
-	LAPIC_init();
-	
 	// on Intel platform, write %gs will clean gsbase, so the following
 	// operation should be done after reload segment regs
 	__asm__ __volatile__("wrgsbase	%%rax		\n"

@@ -17,13 +17,20 @@ void kmain(size_t cpu_idx)
 	// prepare an environment and global system data
 	if (cpu_idx == 0)
 	{
+		pre_init();
 		init_arch_env();
+		refresh_arch_env(cpu_idx);
+		refresh_arch_page();
+
 		init_video();
 		init_slab();
+
 		init_smp_env();
 		init_smp();
 
 		init_proc();
+
+		init_intr();
 		startup_smp();
 	}
 

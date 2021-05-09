@@ -56,10 +56,10 @@ void init_smp()
 		tss_p->ist7 = (reg_t)(curr_cpudata->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
 	}
 	// init bsp's gsbase
-	__asm__ __volatile__("wrgsbase	%%rax					\n"
-					:
-					:"a"(smp_info[0])
-					:);
+	__asm__ __volatile__(	"wrgsbase	%%rax					\n"
+						:
+						:	"a"(smp_info[0])
+						:	);
 }
 
 void startup_smp()

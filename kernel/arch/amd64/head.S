@@ -184,13 +184,6 @@ temp_reload_cs:
 	popfq
 	pushq   $0
 
-	pushq   $ret_from_preinit
-	movq	multiboot2_info_base(%rip),	%rdi
-	movabsq $pre_init,	%rax
-	pushq   $0x08
-	pushq   %rax
-	lretq
-ret_from_preinit:
 // reset stack to the stack in proc0_PCB(in higher half memory)
 	movabsq	$proc0_PCB,	%rbx
 	addq	$PROC_KSTACK_SIZE	, %rbx

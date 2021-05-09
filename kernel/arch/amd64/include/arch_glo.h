@@ -13,5 +13,6 @@
 	extern desctblptr64_s	gdt_ptr;
 	extern desctblptr64_s	idt_ptr;
 	extern tss64_s **		tss_ptr_arr;
+	extern PML4E_u			KERN_PML4[PGENT_NR];
 
 #endif /* _AMD64_GLO_H_ */

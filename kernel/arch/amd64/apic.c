@@ -14,6 +14,7 @@
 ***************************************************/
 #include <lib/string.h>
 
+#include "include/arch_glo.h"
 #include "include/arch_proto.h"
 #include "include/archtypes.h"
 #include "include/archconst.h"
@@ -225,10 +226,10 @@ void IOAPIC_pagetable_remap()
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
 	
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
-	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr);
+	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr, KERN_PML4);
 }
 
-void LAPIC_init()
+void init_lapic()
 {
 	lapic_info_s lapic_info;
 
@@ -273,11 +274,9 @@ void IOAPIC_init()
 		ioapic_rte_write(i, 0x10000 + APIC_IRQ0_VEC + ((i - 0x10) >> 1));
 }
 
-void LAPIC_IOAPIC_init()
+void init_ioapic()
 {
 	//init local apic
-	LAPIC_init();
-
 	IOAPIC_pagetable_remap();
 
 	i8259_disable();
