@@ -59,5 +59,4 @@ void do_softirq()
 void softirq_init()
 {
 	softirq_status = 0;
-	memset(softirq_vector, 0, sizeof(softirq_s) * 64);
 }

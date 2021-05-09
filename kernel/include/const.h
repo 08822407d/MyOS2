@@ -85,7 +85,7 @@
 	#define PG_Slab			(1 << 9)
 
 	// process and task consts
-	#define PROC_KSTACK_SIZE	(32 * CONST_1K)
+	#define TASK_KSTACK_SIZE	(32 * CONST_1K)
 
 	// slab consts
 	#define SLAB_LEVEL			16

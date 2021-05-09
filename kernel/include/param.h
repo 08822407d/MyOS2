@@ -10,7 +10,10 @@
 
 	typedef struct
 	{
-		/* data */
+		int		page_mm;
+		int		slab;
+
+		int		idle_task;
 	} init_flags_s;
 	
 /* This is used to obtain system information through SYS_GETINFO. */

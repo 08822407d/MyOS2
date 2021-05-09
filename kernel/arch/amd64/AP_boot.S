@@ -110,7 +110,7 @@ l1:
 	// get idle_task_PCB for current AP and set rsp to task's kstack
 	movabsq	idle_tasks,	%rax
 	movq	(%rax, %rbx, 8),	%rax
-	addq	$PROC_KSTACK_SIZE,	%rax
+	addq	$TASK_KSTACK_SIZE,	%rax
 	movq	%rax,		%rsp
 
 	movq	%rbx,		%rdi

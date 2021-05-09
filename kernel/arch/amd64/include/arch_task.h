@@ -25,7 +25,7 @@ typedef struct arch_PCB
 
 typedef struct arch_PCB_stackframe
 {
-	uint8_t			skip[PROC_KSTACK_SIZE - sizeof(stack_frame_s)];
+	uint8_t			skip[TASK_KSTACK_SIZE - sizeof(stack_frame_s)];
 	stack_frame_s	pcb_sf_top;
 } arch_PCB_stackframe_s;
 

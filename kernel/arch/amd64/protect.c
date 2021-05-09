@@ -21,7 +21,7 @@ segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
 tss64_s **		tss_ptr_arr = NULL;
-tss64_s			tmp_tss;
+tss64_s			bsp_tmp_tss;
 desctblptr64_s	gdt_ptr;
 desctblptr64_s	idt_ptr;
 
@@ -205,8 +205,6 @@ void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
 
 void init_gdt()
 {
-	memset(gdt, 0, sizeof(gdt));
-
 	// gdt[0] has been set to 0 by memset
 	set_codeseg(KERN_CS_INDEX, E_CODE, 0);
 	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
@@ -219,8 +217,6 @@ void init_gdt()
 
 void init_idt()
 {
-	memset(idt, 0, sizeof(idt));
-
 	gate_table_s * gtbl;
 	for ( gtbl = &(exception_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
@@ -254,10 +250,10 @@ void init_idt()
 	idt_ptr.base  = (uint64_t)idt;
 }
 
-void init_tmp_tss()
+void init_bsp_tss()
 {
 	extern char tmp_kstack_top;
-	tss64_s *curr_tss = &tmp_tss;
+	tss64_s *curr_tss = &bsp_tmp_tss;
 	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
 	curr_tss->rsp2 =
@@ -280,71 +276,30 @@ void init_tmp_tss()
 	tss_segdesc->Pflag	= 1;
 }
 
-void init_arch_env()
+void init_bsp_arch_env()
 {
 	// initate global architechture data
 	init_gdt();
 	init_idt();
-	init_tmp_tss();
-	// set and load permanent kernel page
-}
+	init_bsp_tss();
 
-void refresh_arch_env(size_t cpu_idx)
-{
-	// load those data
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
-	reload_tss(cpu_idx);
+	reload_tss(0);
+
+	kparam.arch_init_flags.init_bsp_arch_data = 1;
+	kparam.arch_init_flags.refresh_bsp_arch_env = 1;
 }
 
 /*===========================================================================*
  *								prot_smp_init								     *
  *===========================================================================*/
-void init_smp_tss()
+void refresh_percpu_arch_env(size_t cpu_idx)
 {
-	unsigned nr_lcpu = kparam.nr_lcpu;
-	tss_ptr_arr = (tss64_s **)kmalloc(nr_lcpu * sizeof(tss64_s *));
-	// init tss for all logical cpus
-	for (int i = 0; i < kparam.nr_lcpu; i++)
-	{
-		tss_ptr_arr[i] = (tss64_s *)kmalloc(sizeof(tss64_s));
-		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
-	}
-}
+	reload_idt(&idt_ptr);
+	reload_gdt(&gdt_ptr);
+	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);	// init bsp's gsbase
+	reload_tss(cpu_idx);
 
-void init_smp_env()
-{
-	init_smp_tss();
-}
-
-void config_percpu_self(size_t cpu_idx)
-{
-	if (cpu_idx != 0)
-	{
-		refresh_arch_env(cpu_idx);
-	}
-
-	lapic_info_s lapic_info;
-
-	percpu_data_s * curr_cpuinfo = smp_info[cpu_idx];
-
-	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
-
-	task_s * curr_task = (task_s *)get_current();
-	curr_cpuinfo->task_jiffies = curr_task->task_jiffies;
-
-	PCB_u * pcbu = container_of(curr_task, PCB_u, task);
-	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
-
-	curr_cpuinfo->curr_task = curr_task;
-	curr_cpuinfo->finished_task =
-	curr_cpuinfo->waiting_task = NULL;
-
-	init_lapic();
-	// on Intel platform, write %gs will clean gsbase, so the following
-	// operation should be done after reload segment regs
-	__asm__ __volatile__("wrgsbase	%%rax		\n"
-						:
-						:"a"(curr_cpuinfo)
-						:);
+	wrgsbase(smp_info[cpu_idx]);
 }

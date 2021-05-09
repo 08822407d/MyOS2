@@ -175,7 +175,15 @@
 
 	typedef struct
 	{
-		/* data */
+		int		get_cpuid;
+		int		memory_layout;
+		int		frame_buffer_info;
+		int		smp_info;
+
+		int		init_bsp_arch_data;
+		int		refresh_bsp_arch_env;
+
+		int		refresh_smp_arch_data;
 	} arch_init_flags_s;
 	
 
@@ -187,11 +195,13 @@
 	void reload_gdt(desctblptr64_s * gdt_desc);
 	void reload_idt(desctblptr64_s * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
-	void init_arch_env(void);
+	void init_bsp_arch_data(void);
 	void load_arch_data(size_t cpu_idx);
-	void refresh_arch_env(size_t cpu_idx);
-	void init_smp_env(void);
-	void config_percpu_self(size_t cpu_idx);
+	void init_bsp_arch_env(void);
+	void refresh_bsp_arch_env(size_t cpu_idx);
+	void init_percpu_arch_data(size_t cpu_idx);
+	void init_percpu_data(size_t cpu_idx);
+	void refresh_percpu_arch_env(size_t cpu_idx);
 
 	/* pg_util.c */
 	void pg_pre_init(void);
@@ -230,7 +240,7 @@
 	unsigned get_lvt_tpr(void);
 	unsigned get_lvt_ppr(void);
 
-	/* port_io.c */
+	/* asm_wrapper.c */
 	uint64_t inb(uint16_t port);
 	uint64_t inw(uint16_t port);
 	uint64_t inl(uint16_t port);
@@ -249,6 +259,8 @@
 	void cpuid(unsigned int Mop,unsigned int Sop,
 				unsigned int * a,unsigned int * b,
 				unsigned int * c,unsigned int * d);
+	void wrgsbase(uint64_t addr);
+	uint64_t rdgsbase(void);
 	// void intr_disable(void);
 	// void intr_enable(void);
 
@@ -277,5 +289,6 @@
 	void init_smp(void);
 	void start_SMP(uint64_t apic_id);
 	void startup_smp(void);
+	void percpu_self_config(size_t cpu_idx);
 
 #endif /* _AMD64_PROTO_H_ */

@@ -3,6 +3,9 @@
 
 #include "include/arch_proto.h"
 
+/*===========================================================================*
+ *						x86 asm i/o instructions' warpper					 *
+ *===========================================================================*/
 inline __always_inline uint64_t inb(uint16_t port)
 {
 	reg_t ret_val = 0;
@@ -84,7 +87,7 @@ inline __always_inline void io_mfence()
 }
 
 /*===========================================================================*
- *							x86 asm instructions' warpper					 *
+ *						x86 asm special instructions' warpper				 *
  *===========================================================================*/
 inline __always_inline void nop()
 {
@@ -127,4 +130,22 @@ inline __always_inline void cpuid(unsigned int Mop,
 						:	"=a"(*a),"=b"(*b),"=c"(*c),"=d"(*d)
 						:	"0"(Mop),"2"(Sop)
 						:	);
+}
+
+inline __always_inline void wrgsbase(uint64_t addr)
+{
+	__asm__ __volatile__(	"wrgsbase	%%rax	\n\t"
+						:
+						:	"a"(addr)
+						:	);
+}
+
+inline __always_inline uint64_t rdgsbase()
+{
+	uint64_t ret_val = 0;
+	__asm__ __volatile__(	"rdgsbase	%0		\n\t"
+						:	"=r"(ret_val)
+						:
+						:	);
+	return ret_val;
 }

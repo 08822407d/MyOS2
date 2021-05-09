@@ -184,9 +184,15 @@ temp_reload_cs:
 	popfq
 	pushq   $0
 
-// reset stack to the stack in proc0_PCB(in higher half memory)
-	movabsq	$proc0_PCB,	%rbx
-	addq	$PROC_KSTACK_SIZE	, %rbx
+	pushq   $ret_from_set_bsp_env
+	movabsq $set_bsp_env,	%rax
+	pushq   $0x08
+	pushq   %rax
+	lretq
+ret_from_set_bsp_env:
+// reset stack to the stack in task0_PCB(in higher half memory)
+	movabsq	$task0_PCB,	%rbx
+	addq	$TASK_KSTACK_SIZE	, %rbx
 	movq    $0x10,		%rax
 	movq    %rax,		%ss
 	movq    %rbx,		%rsp

@@ -16,10 +16,10 @@
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
 
-extern tss64_s	tmp_tss;
+extern tss64_s	bsp_tmp_tss;
 extern char		ist_stack0;
 
-extern PCB_u	proc0_PCB;
+extern PCB_u	task0_PCB;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
@@ -33,7 +33,7 @@ inline __always_inline task_s * get_current()
 	task_s * current = NULL;
 	__asm__ __volatile__("andq %%rsp,%0	\n\t"
 						 : "=r"(current)
-						 : "0"(~(PROC_KSTACK_SIZE - 1)));
+						 : "0"(~(TASK_KSTACK_SIZE - 1)));
 	return current;
 }
 
@@ -209,7 +209,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
 
-	new_task->arch_struct.tss_rsp0 = (reg_t)new_task + PROC_KSTACK_SIZE;
+	new_task->arch_struct.tss_rsp0 = (reg_t)new_task + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = sf_regs->rip;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
 

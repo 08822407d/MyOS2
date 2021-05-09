@@ -13,37 +13,36 @@
 
 void kmain(size_t cpu_idx)
 {
-	// pre init only bsp do these works
-	// prepare an environment and global system data
-	if (cpu_idx == 0)
+	// here an env of bsp had been setup
+	// include the GDT, IDT and a tmp_tss for bsp
+	// or to say kmain running in a simple but usable protect mode
+	int IS_BSP = !cpu_idx;
+	if (IS_BSP)
 	{
-		pre_init();
-		init_arch_env();
-		refresh_arch_env(cpu_idx);
 		refresh_arch_page();
-
 		init_video();
 		init_slab();
-
-		init_smp_env();
-		init_smp();
-
 		init_task();
+		init_smp();
+	}
 
+	init_percpu_arch_data(cpu_idx);
+	init_percpu_data(cpu_idx);
+	refresh_percpu_arch_env(cpu_idx);
+
+	if (IS_BSP)
+	{
 		init_intr();
 		startup_smp();
 	}
 
-	config_percpu_self(cpu_idx);
+	percpu_self_config(cpu_idx);
 
 	// post init
-	if (cpu_idx == 0)
+	if (IS_BSP)
 	{
-		// schedule();
-
 		softirq_init();
 		timer_init();
-
 		devices_init();
 	}
 

@@ -17,6 +17,9 @@ extern position_t Pos;
 
 void init_video()
 {	
+	// make sure have get framebuffer infomation
+	while (!kparam.arch_init_flags.frame_buffer_info);
+
 	phys_addr phy_pg_base = framebuffer.FB_phybase;
 	virt_addr vir_pg_base = framebuffer.FB_virbase;
 
@@ -40,6 +43,6 @@ void init_video()
 	Pos.YCharSize = 16;
 
 	spin_init(&Pos.printk_lock);
-
+	// clean screen
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }

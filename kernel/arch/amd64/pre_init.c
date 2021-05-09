@@ -56,6 +56,7 @@ void pre_init(void)
 		mem_info.mb_memmap[i].zero = 0;
 	}
 	mem_info.mb_memmap_nr = i + 1;
+	kparam.arch_init_flags.memory_layout = 1;
 
 	framebuffer.FB_phybase = (phys_addr)bootinfo->Graphics_Info.FrameBufferBase;
 	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
@@ -63,6 +64,7 @@ void pre_init(void)
 	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
+	kparam.arch_init_flags.frame_buffer_info = 1;
 
 	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;
 	uint64_t lcpu_count = 0;
@@ -79,14 +81,13 @@ void pre_init(void)
 			lcpu_count++;
 		}
 	}
+	kparam.arch_init_flags.smp_info = 1;
 
 	cpuid_info();
 }
 
 void cpuid_info(void)
 {
-	memset(&cpuinfo, 0, sizeof(cpu_info_s));
-
 	unsigned int CpuFacName[4] = {0,0,0,0};
 
 	//vendor_string
@@ -128,6 +129,14 @@ void cpuid_info(void)
 
 	cpuid(0x80000000,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
 	cpuinfo.max_extend_opcode = CpuFacName[0];
+
+	kparam.arch_init_flags.get_cpuid = 1;
+}
+
+void set_bsp_env()
+{
+	pre_init();
+	init_bsp_arch_env();
 }
 
 // void get_multiboot2_info(size_t multiboot2_info_base)

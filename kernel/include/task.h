@@ -44,7 +44,7 @@
 	typedef union PCB
 	{
 		task_s		task;
-		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];
+		uint64_t	stack[TASK_KSTACK_SIZE / sizeof(uint64_t)];
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 

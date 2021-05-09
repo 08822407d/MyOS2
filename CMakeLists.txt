@@ -23,7 +23,7 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
     set(ARCH aarch64)
 endif()
 
-# set(DEBUG "-DDEBUG")
+set(DEBUG "-DDEBUG")
 set(DEFINATIONS "-DUSE_APIC")
 
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")

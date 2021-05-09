@@ -9,6 +9,7 @@
 #include "../../include/glo.h"
 #include "../../include/printk.h"
 #include "../../include/proto.h"
+#include "../../include/const.h"
 #include "../../include/task.h"
 #include "../../klib/data_structure.h"
 
@@ -16,50 +17,67 @@ percpu_data_s ** smp_info;
 
 void init_smp()
 {
+	#ifdef DEBUG
+		// make sure have get smp information
+		while (!kparam.arch_init_flags.smp_info);
+	#endif
+
+	// copy ap_boot entry code to its address
 	extern char _APboot_phy_start;
 	extern char _APboot_text;
 	extern char _APboot_etext;
 	size_t apbbot_len = &_APboot_etext - &_APboot_text;
 	memcpy(phys2virt((phys_addr)&_APboot_phy_start), (virt_addr)&_APboot_text, apbbot_len);
 
-	// create structs for each logical cpu
+	// create pointer array for all percpu_data
+	unsigned nr_lcpu = kparam.nr_lcpu;
+	tss_ptr_arr = (tss64_s **)kmalloc(nr_lcpu * sizeof(tss64_s *));
 	smp_info = (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
-	memset(smp_info, 0 , kparam.nr_lcpu * sizeof(percpu_data_s *));
-	for (size_t i = 0; i < kparam.nr_lcpu; i++)
-	{
-		smp_info[i] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
-		percpu_data_s * curr_cpudata = smp_info[i];
-		memset(curr_cpudata, 0, sizeof(percpu_data_s));
-		curr_cpudata->cpu_idx = i;
-		curr_cpudata->cpu_stack_start =
-				(char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
+}
 
-		curr_cpudata->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
-		memset(curr_cpudata->arch_info, 0, sizeof(arch_percpu_data_s));
-		arch_percpu_data_s * arch_cpuinfo = curr_cpudata->arch_info;
-		arch_cpuinfo->lcpu_addr = apic_id[i];
-		arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[i].thd_id;
-		arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[i].core_id;
-		arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[i].pack_id;
-		arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[i].not_use;
-		arch_cpuinfo->tss = tss_ptr_arr[i];
-		// init tss's ists
-		tss64_s * tss_p = tss_ptr_arr[i];
-		tss_p->rsp1 =
-		tss_p->rsp2 =
-		tss_p->ist1 =
-		tss_p->ist2 =
-		tss_p->ist3 =
-		tss_p->ist4 =
-		tss_p->ist5 =
-		tss_p->ist6 =
-		tss_p->ist7 = (reg_t)(curr_cpudata->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
-	}
-	// init bsp's gsbase
-	__asm__ __volatile__(	"wrgsbase	%%rax					\n"
-						:
-						:	"a"(smp_info[0])
-						:	);
+void init_percpu_data(size_t cpu_idx)
+{
+	// create percpu_data for current lcpu
+	smp_info[cpu_idx] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
+	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	memset(cpudata_p, 0, sizeof(percpu_data_s));
+	cpudata_p->cpu_stack_start = (char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
+	// create architechture part of percpu_data
+	cpudata_p->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
+	memset(cpudata_p->arch_info, 0, sizeof(arch_percpu_data_s));
+	// fill architechture part
+	arch_percpu_data_s * arch_cpuinfo = cpudata_p->arch_info;
+	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
+	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
+	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
+	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
+	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
+	arch_cpuinfo->tss = tss_ptr_arr[cpu_idx];
+	// set percpu_stack to ist
+	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
+	tss_p->rsp1 =
+	tss_p->rsp2 =
+	tss_p->ist1 =
+	tss_p->ist2 =
+	tss_p->ist3 =
+	tss_p->ist4 =
+	tss_p->ist5 =
+	tss_p->ist6 =
+	tss_p->ist7 = (reg_t)(cpudata_p->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
+}
+
+void init_percpu_arch_data(size_t cpu_idx)
+{
+	tss_ptr_arr[cpu_idx] = (tss64_s *)kmalloc(sizeof(tss64_s));
+	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
+	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	memset(tss_p, 0, sizeof(tss64_s));	// init tss's ists
+	tss_p->rsp0 = (size_t)get_current() + TASK_KSTACK_SIZE;
+}
+
+void percpu_self_config(size_t cpu_idx)
+{
+
 }
 
 void startup_smp()

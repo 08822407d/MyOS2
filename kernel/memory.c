@@ -25,6 +25,7 @@ multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
+spinlock_T		slab_spin_lock;
 
 /*===========================================================================*
  *						fuction relate to physical page						 *
@@ -32,6 +33,11 @@ uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZ
 
 void init_page_manage()
 {
+	#ifdef DEBUG
+		// make sure have get memory layout
+		while (!kparam.arch_init_flags.memory_layout);
+	#endif
+
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
 
 	phys_addr low_bound = 0, high_bound = 0;
@@ -102,6 +108,8 @@ void init_page_manage()
 		k_vir_pgbase += CONFIG_PAGE_SIZE;
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
+
+	kparam.init_flags.page_mm = 1;
 }
 
 Page_s * page_alloc(void)
@@ -130,6 +138,13 @@ void page_free(Page_s * page_p)
 
 void init_slab()
 {
+	#ifdef DEBUG
+		// make sure have init page management
+		while (!kparam.init_flags.page_mm);
+	#endif
+
+	spin_init(&slab_spin_lock);
+
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
 		slab_cache_s * scgp = &slab_cache_groups[i];
@@ -167,6 +182,8 @@ void init_slab()
 		bsp->page->slab_ptr = bsp;
 	}
 	kparam.kernel_vir_end += 0x10;
+
+	kparam.init_flags.slab = 1;
 }
 
 slab_s * slab_alloc(size_t obj_count)
@@ -200,6 +217,11 @@ void slab_free(slab_s * slp)
 
 void * kmalloc(size_t size)
 {
+	#ifdef DEBUG
+		// make sure have init slab
+		while (!kparam.init_flags.slab);
+	#endif
+
 	if (size > CONST_1M)
 	{
 		color_printk(RED, WHITE, "Mem required too big\n");
@@ -234,14 +256,18 @@ void * kmalloc(size_t size)
 		size_t offset = scgp->obj_size * obj_idx;
 		ret_val = (void *)((size_t)slp->virt_addr + offset);
 		// refresh status of slab
+		spin_lock(&slab_spin_lock);
 		slp->free--;
 		scgp->nsobj_free_count--;
 		scgp->nsobj_used_count++;
 		bm_set_bit(slp->colormap, obj_idx);
+		spin_unlock(&slab_spin_lock);
 		// assure usable memory more than one page
 		if (scgp->nsobj_free_count < slp->total)
 		{
+			spin_lock(&slab_spin_lock);
 			scgp->nsobj_free_count += slp->total;
+			spin_unlock(&slab_spin_lock);
 			slab_s * new_slab = slab_alloc(slp->total);
 			if (new_slab == NULL)
 			{
@@ -249,17 +275,26 @@ void * kmalloc(size_t size)
 				scgp->nsobj_free_count -= slp->total;
 				while (1);
 			}
+			spin_lock(&slab_spin_lock);
 			new_slab->slabcache_ptr = scgp;
 			m_list_insert_back(new_slab, scgp->normal_slab);
 			scgp->nslab_count++;
+			spin_unlock(&slab_spin_lock);
 		}
 	}
+
 
 	return ret_val;
 }
 
 void kfree(void * obj_p)
 {
+	#ifdef DEBUG
+		// make sure have init slab
+		while (!kparam.init_flags.slab);
+	#endif
+
+
 	if (obj_p == NULL)
 		return;
 
@@ -269,16 +304,21 @@ void kfree(void * obj_p)
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
 	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
+	spin_lock(&slab_spin_lock);
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;
 	scgp->nsobj_used_count--;
+	spin_unlock(&slab_spin_lock);
 	if ((slp->free == slp->total) &&
 		(scgp->nsobj_free_count >= (slp->total * 3)) &&
 		(slp != scgp->normal_slab))
 	{
 		slab_free(slp);
+		spin_lock(&slab_spin_lock);
 		scgp->nslab_count--;
 		scgp->nsobj_free_count -= slp->total;
+		spin_unlock(&slab_spin_lock);
 	}
+
 }
