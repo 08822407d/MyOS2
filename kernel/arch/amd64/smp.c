@@ -71,13 +71,25 @@ void init_percpu_arch_data(size_t cpu_idx)
 	tss_ptr_arr[cpu_idx] = (tss64_s *)kmalloc(sizeof(tss64_s));
 	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
 	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	cpudata_p->cpu_idx = cpu_idx;
 	memset(tss_p, 0, sizeof(tss64_s));	// init tss's ists
 	tss_p->rsp0 = (size_t)get_current() + TASK_KSTACK_SIZE;
 }
 
 void percpu_self_config(size_t cpu_idx)
 {
-	wrgsbase(smp_info[cpu_idx]);
+	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	task_s *	current_task = get_current();
+	wrgsbase((reg_t)cpudata_p);
+	// tasks
+	cpudata_p->curr_task = current_task;
+	cpudata_p->waiting_count =
+	cpudata_p->finished_count = 0;
+	cpudata_p->waiting_task =
+	cpudata_p->finished_task = NULL;
+	cpudata_p->last_jiffies =
+	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
+	// arch data
 }
 
 void startup_smp()

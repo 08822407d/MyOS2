@@ -53,8 +53,8 @@
 	void arch_init_task(void);
 	task_s * get_current(void);
 	unsigned long get_newpid(void);
-	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata);
-	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata);
+	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
+	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
 	void schedule(void);
 
 #endif /* _PROC_H_ */

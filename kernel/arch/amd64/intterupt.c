@@ -141,21 +141,21 @@ void excep_page_fault(stack_frame_s * sf_regs)
 /*===========================================================================*
  *									entrys									 *
  *===========================================================================*/
-void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata)
+void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
 {
 	int vec = sf_regs->vec_nr;
 
 	if (vec < HWINT0_VEC)
-		exception_handler(sf_regs, cpudata);
+		exception_handler(sf_regs, cpudata_p);
 	else
-		hwint_irq_handler(sf_regs, cpudata);
+		hwint_irq_handler(sf_regs, cpudata_p);
 }
 
-void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata)
+void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
 {
 	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"Caused by core-%d INTR: 0x%02x - %s ; ",
-					cpudata->cpu_idx, vec, exception_init_table[vec].name);
+					cpudata_p->cpu_idx, vec, exception_init_table[vec].name);
 
 	switch (vec)
 	{
@@ -183,13 +183,13 @@ void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata)
 	while (1);
 }
 
-void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata)
+void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
 {
 	int vec = sf_regs->vec_nr;
 	int irq_nr = vec - HWINT0_VEC;
 	irq_desc_s * irq_desc = &irq_descriptors[irq_nr];	
 
-	color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
+	color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
 	irq_desc_s * irq_d = &irq_descriptors[irq_nr];
 	if(irq_d->handler != NULL)

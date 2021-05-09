@@ -31,7 +31,7 @@ void init_task()
 	task0->flags = PF_KTHREAD;
 	task0->pid = get_newpid();
 
-	// complete bsp's cpudata
+	// complete bsp's cpudata_p
 	percpu_data_s * bsp_cpudata = smp_info[0];
 	bsp_cpudata->waiting_count = 
 	bsp_cpudata->finished_count = 0;

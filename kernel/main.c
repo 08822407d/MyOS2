@@ -41,6 +41,7 @@ void kmain(size_t cpu_idx)
 	// post init
 	if (IS_BSP)
 	{
+		schedule();
 		softirq_init();
 		timer_init();
 		devices_init();
