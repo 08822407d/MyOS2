@@ -5,7 +5,7 @@
 #include <sys/cdefs.h>
 #include <lib/utils.h>
 
-#include "proc.h"
+#include "task.h"
 
 #include "../arch/amd64/include/archconst.h"
 #include "../arch/amd64/include/keyboard.h"

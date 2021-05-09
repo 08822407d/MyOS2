@@ -6,12 +6,12 @@
 
 #include "include/archconst.h"
 #include "include/archtypes.h"
-#include "include/arch_proc.h"
+#include "include/arch_task.h"
 #include "include/arch_proto.h"
 
 #include "../../include/glo.h"
 #include "../../include/proto.h"
-#include "../../include/proc.h"
+#include "../../include/task.h"
 #include "../../include/printk.h"
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
@@ -25,12 +25,12 @@ bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
 unsigned long	curr_pid;
 
-inline __always_inline proc_s * get_current()
+inline __always_inline task_s * get_current()
 {
 #ifdef current
 #undef current
 #endif
-	proc_s * current = NULL;
+	task_s * current = NULL;
 	__asm__ __volatile__("andq %%rsp,%0	\n\t"
 						 : "=r"(current)
 						 : "0"(~(PROC_KSTACK_SIZE - 1)));
@@ -57,13 +57,13 @@ unsigned long get_newpid()
 	return curr_pid;
 }
 
-stack_frame_s * get_stackframe(proc_s * proc_p)
+stack_frame_s * get_stackframe(task_s * task_p)
 {
-	PCB_u * pcb_p = container_of(proc_p, PCB_u, proc);
+	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
 	return &(pcb_p->arch_sf.pcb_sf_top);
 }
 
-inline __always_inline void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata)
+inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata)
 {
 	tss64_s * curr_tss = cpudata->arch_info->tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
@@ -82,7 +82,7 @@ inline __always_inline void __switch_to(proc_s * curr, proc_s * target, percpu_d
 
 }
 
-void inline __always_inline switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata)
+void inline __always_inline switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata)
 {
 	__asm__ __volatile__("pushq	%%rbp				\n\
 						  pushq %%rax				\n\
@@ -103,7 +103,7 @@ void inline __always_inline switch_to(proc_s * curr, proc_s * target, percpu_dat
 						 :"memory");
 }
 
-unsigned long test_proc_a(unsigned long arg)
+unsigned long test_task_a(unsigned long arg)
 {
 	while (1)
 	{
@@ -116,7 +116,7 @@ unsigned long test_proc_a(unsigned long arg)
 	}
 }
 
-unsigned long test_proc_b(unsigned long arg)
+unsigned long test_task_b(unsigned long arg)
 {
 	while (1)
 	{
@@ -128,7 +128,7 @@ unsigned long test_proc_b(unsigned long arg)
 	}
 }
 
-unsigned long test_proc_c(unsigned long arg)
+unsigned long test_task_c(unsigned long arg)
 {
 	while (1)
 	{
@@ -172,17 +172,17 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 	return 1;
 }
 
-void wakeup_proc(proc_s * proc)
+void wakeup_task(task_s * task)
 {
-	if (proc_waiting_list == NULL)
+	if (task_waiting_list == NULL)
 	{
-		proc_waiting_list = proc;
+		task_waiting_list = task;
 	}
 	else
 	{
-		m_list_insert_back(proc, proc_waiting_list);
+		m_list_insert_back(task, task_waiting_list);
 	}
-	waiting_proc_count++;
+	waiting_task_count++;
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -190,38 +190,38 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
-	PCB_u * curr_pcb	= container_of(get_current(), PCB_u, proc);
+	PCB_u * curr_pcb	= container_of(get_current(), PCB_u, task);
 	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
-	proc_s * curr_proc	= &curr_pcb->proc;
-	proc_s * new_proc	= &new_pcb->proc;
+	task_s * curr_task	= &curr_pcb->task;
+	task_s * new_task	= &new_pcb->task;
 	if (new_pcb == NULL)
 	{
-		goto alloc_newproc_fail;
+		goto alloc_newtask_fail;
 	}
 
 	memset(new_pcb, 0, sizeof(PCB_u));
-	memcpy(new_proc, curr_pcb, sizeof(proc_s));
+	memcpy(new_task, curr_pcb, sizeof(task_s));
 
-	m_list_init(new_proc);
-	new_pcb->proc.pid = get_newpid();
-	new_pcb->proc.state = PS_UNINTERRUPTABLE;
+	m_list_init(new_task);
+	new_pcb->task.pid = get_newpid();
+	new_pcb->task.state = PS_UNINTERRUPTABLE;
 
-	stack_frame_s * new_sf_regs = get_stackframe(new_proc);
+	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
 
-	new_proc->arch_struct.tss_rsp0 = (reg_t)new_proc + PROC_KSTACK_SIZE;
-	new_proc->arch_struct.k_rip = sf_regs->rip;
-	new_proc->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	new_task->arch_struct.tss_rsp0 = (reg_t)new_task + PROC_KSTACK_SIZE;
+	new_task->arch_struct.k_rip = sf_regs->rip;
+	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
 
-	wakeup_proc(new_proc);
-	new_proc->state = PS_RUNNING;
+	wakeup_task(new_task);
+	new_task->state = PS_RUNNING;
 	goto do_fork_success;
 
-	alloc_newproc_fail:
-		kfree(new_proc);
+	alloc_newtask_fail:
+		kfree(new_task);
 
 	do_fork_success:
-		return new_proc->pid;
+		return new_task->pid;
 }
 
 unsigned long do_exit(unsigned long code)
@@ -248,7 +248,7 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	return do_fork(&sf_regs, flags, 0, 0);
 }
 
-void arch_init_proc()
+void arch_init_task()
 {
 	// init MSR sf_regs related to syscall/sysret
 	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
@@ -261,9 +261,9 @@ void arch_init_proc()
 	spin_init(&newpid_lock);
 
 	// kernel_thread(init, 20, 0);
-	// kernel_thread(test_proc_a, 0, 0);
-	// kernel_thread(test_proc_b, 0, 0);
-	// kernel_thread(test_proc_c, 0, 0);
+	// kernel_thread(test_task_a, 0, 0);
+	// kernel_thread(test_task_b, 0, 0);
+	// kernel_thread(test_task_c, 0, 0);
 }
 
 void reschedule(percpu_data_s * cpudata)
@@ -272,49 +272,49 @@ void reschedule(percpu_data_s * cpudata)
 	if (cpudata->waiting_count < 1)
 		return;
 
-	if (used_jiffies >= cpudata->proc_jiffies)
-		cpudata->curr_proc->flags |= PF_NEED_SCHEDULE;
-	// if ((cpudata->curr_proc == cpudata->idle_proc) && (cpudata->waiting_count == 0))
-	// 	cpudata->curr_proc->flags &= ~PF_NEED_SCHEDULE;
+	if (used_jiffies >= cpudata->task_jiffies)
+		cpudata->curr_task->flags |= PF_NEED_SCHEDULE;
+	// if ((cpudata->curr_task == cpudata->idle_task) && (cpudata->waiting_count == 0))
+	// 	cpudata->curr_task->flags &= ~PF_NEED_SCHEDULE;
 		
-	if (cpudata->curr_proc->flags & PF_NEED_SCHEDULE)
+	if (cpudata->curr_task->flags & PF_NEED_SCHEDULE)
 	{
-		proc_s * curr_proc = cpudata->curr_proc;
-		proc_s * next_proc = NULL;
+		task_s * curr_task = cpudata->curr_task;
+		task_s * next_task = NULL;
 		// move current to finished list
 		// if current is idle. just let current = NULL
-		cpudata->curr_proc = NULL;
-		// if (cpudata->curr_proc == cpudata->idle_proc)
+		cpudata->curr_task = NULL;
+		// if (cpudata->curr_task == cpudata->idle_task)
 		// {
-			// if (cpudata->finished_proc == NULL)
-			// 	cpudata->finished_proc = curr_proc;
+			// if (cpudata->finished_task == NULL)
+			// 	cpudata->finished_task = curr_task;
 			// else
-			// 	m_list_insert_back(curr_proc, cpudata->finished_proc);
+			// 	m_list_insert_back(curr_task, cpudata->finished_task);
 			// cpudata->finished_count++;
 		// }
-		// get waiting proc
-		// if no waiting proc, let idle run
+		// get waiting task
+		// if no waiting task, let idle run
 		// if (cpudata->waiting_count > 0)
 		// {
-			next_proc = cpudata->waiting_proc;
+			next_task = cpudata->waiting_task;
 			// move the first in waiting list to current
-			cpudata->curr_proc = next_proc;
+			cpudata->curr_task = next_task;
 			if (cpudata->waiting_count < 2)
-				cpudata->waiting_proc = NULL;
+				cpudata->waiting_task = NULL;
 			else
 			{
-				cpudata->waiting_proc = next_proc->next;
-				m_list_delete(next_proc);
+				cpudata->waiting_task = next_task->next;
+				m_list_delete(next_task);
 			}
 			cpudata->waiting_count--;
 		// }
 		// else
 		// {
-		// 	next_proc = cpudata->idle_proc;
+		// 	next_task = cpudata->idle_task;
 		// }
-		switch_to(curr_proc, next_proc, cpudata);
+		switch_to(curr_task, next_task, cpudata);
 		cpudata->last_jiffies = jiffies;
-		cpudata->proc_jiffies = curr_proc->proc_jiffies;
+		cpudata->task_jiffies = curr_task->task_jiffies;
 	}
 }
 
@@ -323,38 +323,38 @@ void schedule()
 	percpu_data_s * cpudata = smp_info[0];
 	for ( ; cpudata->finished_count > 0; cpudata->finished_count--)
 	{
-		// pop out cpu's finished proc
-		proc_s * finished = cpudata->finished_proc->prev;
+		// pop out cpu's finished task
+		task_s * finished = cpudata->finished_task->prev;
 		if (cpudata->finished_count == 1)
-			cpudata->finished_proc = NULL;
+			cpudata->finished_task = NULL;
 		else
 			m_list_delete(finished);
-		// push finished proc to waiting list
-		if (waiting_proc_count < 1)
-			proc_waiting_list = finished;
+		// push finished task to waiting list
+		if (waiting_task_count < 1)
+			task_waiting_list = finished;
 		else
-			m_list_insert_front(finished, proc_waiting_list);
+			m_list_insert_front(finished, task_waiting_list);
 		
-		waiting_proc_count++;
+		waiting_task_count++;
 	}
-	for ( ; waiting_proc_count > 0; waiting_proc_count--)
+	for ( ; waiting_task_count > 0; waiting_task_count--)
 	{
-		// pop out waiting proc
-		proc_s * waiting = proc_waiting_list->next;
-		if (waiting_proc_count == 1)
-			proc_waiting_list = NULL;
+		// pop out waiting task
+		task_s * waiting = task_waiting_list->next;
+		if (waiting_task_count == 1)
+			task_waiting_list = NULL;
 		else
 			m_list_delete(waiting);
-		//push waiting proc to cpu's waiting list
+		//push waiting task to cpu's waiting list
 		if (cpudata->waiting_count < 1)
-			cpudata->waiting_proc = waiting;
+			cpudata->waiting_task = waiting;
 		else
-			m_list_insert_back(waiting, cpudata->waiting_proc);
+			m_list_insert_back(waiting, cpudata->waiting_task);
 
 		cpudata->waiting_count++;
 	}
 	// insert schedule self to cpu's waiting list end
-	proc_s * current = get_current();
+	task_s * current = get_current();
 	current->flags |= PF_NEED_SCHEDULE;
 	reschedule(cpudata);
 }

@@ -64,7 +64,7 @@ void pre_init(void)
 	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
 	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
 
-	kparam.lcpu_nr = bootinfo->efi_smp_info.core_available;
+	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;
 	uint64_t lcpu_count = 0;
 	for (i = 0; i < bootinfo->efi_smp_info.core_num; i++)
 	{

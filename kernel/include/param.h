@@ -8,6 +8,11 @@
 /* Number of processes contained in the system image. */
 #define NR_BOOT_PROCS   (NR_TASKS + LAST_SPECIAL_PROC_NR + 1)
 
+	typedef struct
+	{
+		/* data */
+	} init_flags_s;
+	
 /* This is used to obtain system information through SYS_GETINFO. */
 
 	typedef struct kinfo {
@@ -15,15 +20,15 @@
 		virt_addr	kernel_vir_base;
 		virt_addr	kernel_vir_end;
 
-		unsigned int	lcpu_nr;
+		unsigned	nr_lcpu;
+		unsigned	nr_task;           /* number of kernel tasks */
 
-		int		nr_procs;           /* number of user processes */
-		int		nr_tasks;           /* number of kernel tasks */
-		// char	release[6];        /* kernel release number */
-		// char	version[6];        /* kernel version number */
 		int		vm_allocated_bytes; /* allocated by kernel to load vm */
 		int		kernel_allocated_bytes;		/* used by kernel */
 		int		kernel_allocated_bytes_dynamic;	/* used by kernel (runtime) */
+		
+		init_flags_s	init_flags;
+		arch_init_flags_s	arch_init_flags;
 	} kinfo_s;
 
 	typedef struct framebuffer

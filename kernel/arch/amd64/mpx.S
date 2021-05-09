@@ -198,8 +198,8 @@ LABEL(dev_not_available)
 LABEL(double_fault)
 	EXCEPTION_ERR_CODE(DOUBLE_FAULT_VEC)
 
-LABEL(coproc_seg_overrun)
-	EXCEPTION_NO_ERR_CODE(COPROC_SEG_VEC)
+LABEL(cotask_seg_overrun)
+	EXCEPTION_NO_ERR_CODE(COtask_sEG_VEC)
 
 LABEL(invalid_tss)
 	EXCEPTION_ERR_CODE(INVAL_TSS_VEC)

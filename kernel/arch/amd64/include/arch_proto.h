@@ -18,7 +18,7 @@
 	void invalid_opcode (void);
 	void dev_not_available (void);
 	void double_fault(void);
-	void coproc_seg_overrun(void);
+	void cotask_seg_overrun(void);
 	void invalid_tss(void);
 	void segment_not_present(void);
 	void stack_segfault(void);
@@ -155,23 +155,29 @@
 		tss64_s *	tss;
 	} arch_percpu_data_s;
 
-	struct proc;
-	typedef struct proc proc_s;
+	struct task;
+	typedef struct task task_s;
 	typedef struct percpu_info
 	{
-		proc_s *		waiting_proc;
-		proc_s *		finished_proc;
+		task_s *		waiting_task;
+		task_s *		finished_task;
 		unsigned long	waiting_count;
 		unsigned long	finished_count;
-		proc_s *		curr_proc;
+		task_s *		curr_task;
 
 		unsigned long	last_jiffies;
-		unsigned long	proc_jiffies;
+		unsigned long	task_jiffies;
 
 		size_t			cpu_idx;
 		arch_percpu_data_s *	arch_info;
 		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
 	} percpu_data_s;
+
+	typedef struct
+	{
+		/* data */
+	} arch_init_flags_s;
+	
 
 	/* pre_init.c */
 	void pre_init(void);
@@ -185,7 +191,7 @@
 	void load_arch_data(size_t cpu_idx);
 	void refresh_arch_env(size_t cpu_idx);
 	void init_smp_env(void);
-	void config_lcpu_self(size_t cpu_idx);
+	void config_percpu_self(size_t cpu_idx);
 
 	/* pg_util.c */
 	void pg_pre_init(void);
@@ -246,7 +252,7 @@
 	// void intr_disable(void);
 	// void intr_enable(void);
 
-	/* arch_proc.c */
+	/* arch_task.c */
 	unsigned long do_execve(stack_frame_s * sf_regs);
 	unsigned long do_fork(stack_frame_s * sf_regs,
 							unsigned long clone_flags,

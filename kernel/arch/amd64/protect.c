@@ -13,7 +13,7 @@
 #include "../../include/param.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
-#include "../../include/proc.h"
+#include "../../include/task.h"
 
 
 /* Storage for gdt, idt and tss. */
@@ -98,7 +98,7 @@ gate_table_s exception_init_table[] = {
 	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, "#UD" },
 	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, "#NM" },
 	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#DF" },
-	{ coproc_seg_overrun, COPROC_SEG_VEC, TRAPGATE, KERN_PRIVILEGE, "FPU-SO" },
+	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, "FPU-SO" },
 	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, "#TS" },
 	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, "#NP" },
 	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#SS" },
@@ -280,18 +280,6 @@ void init_tmp_tss()
 	tss_segdesc->Pflag	= 1;
 }
 
-void init_smp_tss()
-{
-	unsigned lcpu_nr = kparam.lcpu_nr;
-	tss_ptr_arr = (tss64_s **)kmalloc(lcpu_nr * sizeof(tss64_s *));
-	// init tss for all logical cpus
-	for (int i = 0; i < kparam.lcpu_nr; i++)
-	{
-		tss_ptr_arr[i] = (tss64_s *)kmalloc(sizeof(tss64_s));
-		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
-	}
-}
-
 void init_arch_env()
 {
 	// initate global architechture data
@@ -309,18 +297,31 @@ void refresh_arch_env(size_t cpu_idx)
 	reload_tss(cpu_idx);
 }
 
+/*===========================================================================*
+ *								prot_smp_init								     *
+ *===========================================================================*/
+void init_smp_tss()
+{
+	unsigned nr_lcpu = kparam.nr_lcpu;
+	tss_ptr_arr = (tss64_s **)kmalloc(nr_lcpu * sizeof(tss64_s *));
+	// init tss for all logical cpus
+	for (int i = 0; i < kparam.nr_lcpu; i++)
+	{
+		tss_ptr_arr[i] = (tss64_s *)kmalloc(sizeof(tss64_s));
+		set_sysseg(TSS_INDEX(i), TSS_AVAIL, KERN_PRIVILEGE);
+	}
+}
+
 void init_smp_env()
 {
 	init_smp_tss();
-	
 }
 
-void config_lcpu_self(size_t cpu_idx)
+void config_percpu_self(size_t cpu_idx)
 {
 	if (cpu_idx != 0)
 	{
 		refresh_arch_env(cpu_idx);
-		init_lapic();
 	}
 
 	lapic_info_s lapic_info;
@@ -329,16 +330,17 @@ void config_lcpu_self(size_t cpu_idx)
 
 	tss64_s * tss_p = curr_cpuinfo->arch_info->tss;
 
-	proc_s * curr_proc = (proc_s *)get_current();
-	curr_cpuinfo->proc_jiffies = curr_proc->proc_jiffies;
+	task_s * curr_task = (task_s *)get_current();
+	curr_cpuinfo->task_jiffies = curr_task->task_jiffies;
 
-	PCB_u * pcbu = container_of(curr_proc, PCB_u, proc);
+	PCB_u * pcbu = container_of(curr_task, PCB_u, task);
 	tss_p->rsp0 = (reg_t)pcbu + PROC_KSTACK_SIZE;
 
-	curr_cpuinfo->curr_proc = curr_proc;
-	curr_cpuinfo->finished_proc =
-	curr_cpuinfo->waiting_proc = NULL;
+	curr_cpuinfo->curr_task = curr_task;
+	curr_cpuinfo->finished_task =
+	curr_cpuinfo->waiting_task = NULL;
 
+	init_lapic();
 	// on Intel platform, write %gs will clean gsbase, so the following
 	// operation should be done after reload segment regs
 	__asm__ __volatile__("wrgsbase	%%rax		\n"

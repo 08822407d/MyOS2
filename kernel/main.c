@@ -3,7 +3,7 @@
 
 #include "include/glo.h"
 #include "include/proto.h"
-#include "include/proc.h"
+#include "include/task.h"
 #include "include/printk.h"
 
 #include "arch/amd64/include/arch_proto.h"
@@ -28,13 +28,13 @@ void kmain(size_t cpu_idx)
 		init_smp_env();
 		init_smp();
 
-		init_proc();
+		init_task();
 
 		init_intr();
 		startup_smp();
 	}
 
-	config_lcpu_self(cpu_idx);
+	config_percpu_self(cpu_idx);
 
 	// post init
 	if (cpu_idx == 0)

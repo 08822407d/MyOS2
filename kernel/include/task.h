@@ -5,7 +5,7 @@
 #include <lib/utils.h>
 
 #include "const.h"
-#include "../arch/amd64/include/arch_proc.h"
+#include "../arch/amd64/include/arch_task.h"
 
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)
@@ -22,12 +22,12 @@
 	#define CLONE_FILES			(1 << 1)
 	#define CLONE_SIGNAL		(1 << 2)
 
-	struct proc;
-	typedef struct proc proc_s;
-	typedef struct proc
+	struct task;
+	typedef struct task task_s;
+	typedef struct task
 	{
-		proc_s *	prev;
-		proc_s *	next;
+		task_s *	prev;
+		task_s *	next;
 		arch_PCB_s	arch_struct;
 
 		volatile long	state;
@@ -37,24 +37,24 @@
 		long	signal;
 		long	prior;
 
-		unsigned long	proc_jiffies;
-	} proc_s;
+		unsigned long	task_jiffies;
+	} task_s;
 
 
 	typedef union PCB
 	{
-		proc_s		proc;
+		task_s		task;
 		uint64_t	stack[PROC_KSTACK_SIZE / sizeof(uint64_t)];
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
-	void init_proc(void);
+	void init_task(void);
 
-	void arch_init_proc(void);
-	proc_s * get_current(void);
+	void arch_init_task(void);
+	task_s * get_current(void);
 	unsigned long get_newpid(void);
-	void __switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
-	void switch_to(proc_s * curr, proc_s * target, percpu_data_s * cpudata);
+	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata);
+	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata);
 	void schedule(void);
 
 #endif /* _PROC_H_ */

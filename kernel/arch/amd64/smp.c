@@ -9,7 +9,7 @@
 #include "../../include/glo.h"
 #include "../../include/printk.h"
 #include "../../include/proto.h"
-#include "../../include/proc.h"
+#include "../../include/task.h"
 #include "../../klib/data_structure.h"
 
 percpu_data_s ** smp_info;
@@ -23,9 +23,9 @@ void init_smp()
 	memcpy(phys2virt((phys_addr)&_APboot_phy_start), (virt_addr)&_APboot_text, apbbot_len);
 
 	// create structs for each logical cpu
-	smp_info = (percpu_data_s **)kmalloc(kparam.lcpu_nr * sizeof(percpu_data_s *));
-	memset(smp_info, 0 , kparam.lcpu_nr * sizeof(percpu_data_s *));
-	for (size_t i = 0; i < kparam.lcpu_nr; i++)
+	smp_info = (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
+	memset(smp_info, 0 , kparam.nr_lcpu * sizeof(percpu_data_s *));
+	for (size_t i = 0; i < kparam.nr_lcpu; i++)
 	{
 		smp_info[i] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
 		percpu_data_s * curr_cpudata = smp_info[i];

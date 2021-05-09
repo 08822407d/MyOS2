@@ -112,7 +112,7 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
                Print(L"  ProcessorId\t:%d ;", mcpuInfo.ProcessorId);
                Print(L"  StatusFlag\t:%x ;", mcpuInfo.StatusFlag);
                Print(L"  Location\t:(%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
-			   machine_info->smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
+			   machine_info->smp_info.cpus[i].taskcessor_id = mcpuInfo.ProcessorId;
 			   machine_info->smp_info.cpus[i].status = mcpuInfo.StatusFlag;
 			   machine_info->smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
 			   machine_info->smp_info.cpus[i].core_id = mcpuInfo.Location.Core;

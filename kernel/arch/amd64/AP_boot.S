@@ -107,8 +107,8 @@ l1:
 	cmpq	%r9,		%r8
 	jne		l1
 
-	// get idle_proc_PCB for current AP and set rsp to proc's kstack
-	movabsq	idle_procs,	%rax
+	// get idle_task_PCB for current AP and set rsp to task's kstack
+	movabsq	idle_tasks,	%rax
 	movq	(%rax, %rbx, 8),	%rax
 	addq	$PROC_KSTACK_SIZE,	%rax
 	movq	%rax,		%rsp

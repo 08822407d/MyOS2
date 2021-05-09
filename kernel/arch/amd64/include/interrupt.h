@@ -12,7 +12,7 @@
 	#define INVAL_OP_VEC				6		/*invalid opcode */
 	#define DEV_NOT_AVAIL_VEC			7		/* coprocessor not available */
 	#define DOUBLE_FAULT_VEC			8
-	#define COPROC_SEG_VEC				9		/* coprocessor segment overrun */
+	#define COtask_sEG_VEC				9		/* coprocessor segment overrun */
 	#define INVAL_TSS_VEC				10		/* invalid TSS */
 	#define SEG_NOT_PRES_VEC			11		/* segment not present */
 	#define STACK_SEGFAULT_VEC			12		/* stack exception */
