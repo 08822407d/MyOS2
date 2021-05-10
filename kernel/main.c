@@ -19,7 +19,7 @@ void kmain(size_t cpu_idx)
 	int IS_BSP = !cpu_idx;
 	if (IS_BSP)
 	{
-		refresh_page();
+		init_page_manage();
 		init_video();
 		init_slab();
 		init_task();
@@ -28,7 +28,7 @@ void kmain(size_t cpu_idx)
 
 	init_percpu_arch_data(cpu_idx);
 	init_percpu_data(cpu_idx);
-	refresh_percpu_arch_env(cpu_idx);
+	reload_percpu_arch_env(cpu_idx);
 
 	if (IS_BSP)
 	{

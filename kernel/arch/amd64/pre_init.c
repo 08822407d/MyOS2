@@ -136,7 +136,13 @@ void cpuid_info(void)
 void set_bsp_env()
 {
 	pre_init();
-	init_bsp_arch_env();
+
+	init_bsp_arch_data();
+	kparam.arch_init_flags.init_bsp_arch_data = 1;
+	reload_bsp_arch_data();
+	kparam.arch_init_flags.reload_bsp_arch_env = 1;
+
+	reload_arch_page();
 }
 
 // void get_multiboot2_info(size_t multiboot2_info_base)

@@ -77,31 +77,22 @@ void init_page_manage()
 			pg_curr->page_start_addr = (phys_addr)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
 		}
-
 		zone_count++;
 	}
-
 	mem_info.memzone_total_nr	= zone_count;
 	mem_info.page_total_nr		= page_count;
 
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
 	phys_addr k_phy_pgbase = 0;
-	virt_addr k_vir_pgbase = (virt_addr)phys2virt(0);
-	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
-	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
+	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - (virt_addr)phys2virt(0)) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
-		// map lower mem
-		arch_page_domap(k_phy_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
-		// map higher mem
-		arch_page_domap(k_vir_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
 		mem_info.pages[pg_idx].ref_count++;
-		k_vir_pgbase += CONFIG_PAGE_SIZE;
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
 

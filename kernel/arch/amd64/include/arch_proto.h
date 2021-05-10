@@ -181,7 +181,7 @@
 		int		smp_info;
 
 		int		init_bsp_arch_data;
-		int		refresh_bsp_arch_env;
+		int		reload_bsp_arch_env;
 
 		int		refresh_smp_arch_data;
 	} arch_init_flags_s;
@@ -197,16 +197,15 @@
 	void reload_tss(uint64_t cpu_idx);
 	void init_bsp_arch_data(void);
 	void load_arch_data(size_t cpu_idx);
-	void init_bsp_arch_env(void);
-	void refresh_bsp_arch_env(size_t cpu_idx);
+	void init_bsp_arch_data(void);
+	void reload_bsp_arch_data(void);
 	void init_percpu_arch_data(size_t cpu_idx);
 	void init_percpu_data(size_t cpu_idx);
-	void refresh_percpu_arch_env(size_t cpu_idx);
+	void reload_percpu_arch_env(size_t cpu_idx);
 
 	/* arch_page_util. */
-	void refresh_page(void);
 	void arch_page_preinit(void);
-	void refresh_arch_page(void);
+	void reload_arch_page(void);
 	void pg_load_cr3(PML4E_u *);
 	void refresh_arch_page(void);
 	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_u * pml4_base);

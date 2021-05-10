@@ -276,25 +276,25 @@ void init_bsp_tss()
 	tss_segdesc->Pflag	= 1;
 }
 
-void init_bsp_arch_env()
+void init_bsp_arch_data()
 {
 	// initate global architechture data
 	init_gdt();
 	init_idt();
 	init_bsp_tss();
+}
 
+void reload_bsp_arch_data()
+{
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
 	reload_tss(0);
-
-	kparam.arch_init_flags.init_bsp_arch_data = 1;
-	kparam.arch_init_flags.refresh_bsp_arch_env = 1;
 }
 
 /*===========================================================================*
  *								prot_smp_init								     *
  *===========================================================================*/
-void refresh_percpu_arch_env(size_t cpu_idx)
+void reload_percpu_arch_env(size_t cpu_idx)
 {
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
