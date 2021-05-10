@@ -84,11 +84,11 @@ void init_page_manage()
 
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
-	phys_addr k_phy_pgbase = 0;
+	size_t k_phy_pgbase = 0;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - (virt_addr)phys2virt(0)) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
-		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
+		unsigned long pg_idx = k_phy_pgbase / CONFIG_PAGE_SIZE;
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;

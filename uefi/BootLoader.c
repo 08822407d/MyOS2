@@ -54,12 +54,11 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 
 	pages = MACHINE_CONF_ADDR;
 	gBS->AllocatePages(AllocateAddress,EfiLoaderData,1,&pages);
-	gBS->SetMem((void*)machine_info,0x1000,0);
+	gBS->SetMem((void*)machine_info, 0x4000, 0);
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 
-	get_vbe_info(machine_info);
-
 	get_machine_memory_info(machine_info);
+	get_vbe_info(machine_info);
 
 /////////////////////
 
@@ -100,8 +99,8 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
     {
         UINTN nCores = 0, nRunning = 0;
         Status = mpp -> GetNumberOfProcessors(mpp, & nCores, &nRunning);
-		machine_info->smp_info.core_num = nCores;
-		machine_info->smp_info.core_available = nRunning;
+		machine_info->efi_smp_info.core_num = nCores;
+		machine_info->efi_smp_info.core_available = nRunning;
         Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
         {
            UINTN i = 0;
@@ -112,11 +111,11 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
                Print(L"  ProcessorId\t:%d ;", mcpuInfo.ProcessorId);
                Print(L"  StatusFlag\t:%x ;", mcpuInfo.StatusFlag);
                Print(L"  Location\t:(%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
-			   machine_info->smp_info.cpus[i].taskcessor_id = mcpuInfo.ProcessorId;
-			   machine_info->smp_info.cpus[i].status = mcpuInfo.StatusFlag;
-			   machine_info->smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
-			   machine_info->smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
-			   machine_info->smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
+			   machine_info->efi_smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
+			   machine_info->efi_smp_info.cpus[i].status = mcpuInfo.StatusFlag;
+			   machine_info->efi_smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
+			   machine_info->efi_smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
+			   machine_info->efi_smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
            }
         }
     }
@@ -189,11 +188,11 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
 	Print(L"Current Mode:%02d,Version:%x,Format:%d,Horizontal:%d,Vertical:%d,ScanLine:%d,FrameBufferBase:%018lx,FrameBufferSize:%018lx\n",gGraphicsOutput->Mode->Mode,gGraphicsOutput->Mode->Info->Version,gGraphicsOutput->Mode->Info->PixelFormat,gGraphicsOutput->Mode->Info->HorizontalResolution,gGraphicsOutput->Mode->Info->VerticalResolution,gGraphicsOutput->Mode->Info->PixelsPerScanLine,gGraphicsOutput->Mode->FrameBufferBase,gGraphicsOutput->Mode->FrameBufferSize);
 
-	machine_info->Graphics_Info.HorizontalResolution = gGraphicsOutput->Mode->Info->HorizontalResolution;
-	machine_info->Graphics_Info.VerticalResolution = gGraphicsOutput->Mode->Info->VerticalResolution;
-	machine_info->Graphics_Info.PixelsPerScanLine = gGraphicsOutput->Mode->Info->PixelsPerScanLine;
-	machine_info->Graphics_Info.FrameBufferBase = gGraphicsOutput->Mode->FrameBufferBase;
-	machine_info->Graphics_Info.FrameBufferSize = gGraphicsOutput->Mode->FrameBufferSize;
+	machine_info->efi_graphics_info.HorizontalResolution = gGraphicsOutput->Mode->Info->HorizontalResolution;
+	machine_info->efi_graphics_info.VerticalResolution = gGraphicsOutput->Mode->Info->VerticalResolution;
+	machine_info->efi_graphics_info.PixelsPerScanLine = gGraphicsOutput->Mode->Info->PixelsPerScanLine;
+	machine_info->efi_graphics_info.FrameBufferBase = gGraphicsOutput->Mode->FrameBufferBase;
+	machine_info->efi_graphics_info.FrameBufferSize = gGraphicsOutput->Mode->FrameBufferSize;
 }
 
 void get_machine_memory_info(efi_machine_conf_s * machine_info)
@@ -204,7 +203,7 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 	efi_e820entry_s *E820p = NULL;
 	efi_e820entry_s *LastE820 = NULL;
 
-	E820p = machine_info->E820_Info.E820_Entry;
+	E820p = machine_info->efi_e820_info.e820_entry;
 
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
 	MemMapSize += DescriptorSize * 5;
@@ -274,8 +273,8 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 		}
 	}
 
-	machine_info->E820_Info.E820_Entry_count = E820Count;
-	LastE820 = machine_info->E820_Info.E820_Entry;
+	machine_info->efi_e820_info.e820_entry_count = E820Count;
+	LastE820 = machine_info->efi_e820_info.e820_entry;
 	int j = 0;
 	for(i = 0; i< E820Count; i++)
 	{
@@ -293,9 +292,9 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 		}
 	}
 
-	LastE820 = machine_info->E820_Info.E820_Entry;
+	LastE820 = machine_info->efi_e820_info.e820_entry;
 
-#ifdef DEBUG
+// #ifdef DEBUG
 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
 	Print(L"Get EFI_MEMORY_DESCRIPTOR Structure:%018lx\n",MemMap);
@@ -304,7 +303,7 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",LastE820->address,LastE820->address+LastE820->length,LastE820->type);
 		LastE820++;
 	}
-#endif
-
+// #endif
+	
 	gBS->FreePool(MemMap);
 }

@@ -48,22 +48,22 @@ void pre_init(void)
 		(struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR;
 
 	int i;
-	for (i = 0; bootinfo->E820_Info.E820_Entry[i].length != 0; i++)
+	for (i = 0; bootinfo->efi_e820_info.e820_entry[i].length != 0; i++)
 	{
-		mem_info.mb_memmap[i].addr = bootinfo->E820_Info.E820_Entry[i].address;
-		mem_info.mb_memmap[i].len  = bootinfo->E820_Info.E820_Entry[i].length;
-		mem_info.mb_memmap[i].type = bootinfo->E820_Info.E820_Entry[i].type;
+		mem_info.mb_memmap[i].addr = bootinfo->efi_e820_info.e820_entry[i].address;
+		mem_info.mb_memmap[i].len  = bootinfo->efi_e820_info.e820_entry[i].length;
+		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
 		mem_info.mb_memmap[i].zero = 0;
 	}
 	mem_info.mb_memmap_nr = i + 1;
 	kparam.arch_init_flags.memory_layout = 1;
 
-	framebuffer.FB_phybase = (phys_addr)bootinfo->Graphics_Info.FrameBufferBase;
+	framebuffer.FB_phybase = (phys_addr)bootinfo->efi_graphics_info.FrameBufferBase;
 	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
-	framebuffer.FB_size = bootinfo->Graphics_Info.FrameBufferSize;
-	framebuffer.X_Resolution = bootinfo->Graphics_Info.HorizontalResolution;
-	framebuffer.Y_Resolution = bootinfo->Graphics_Info.VerticalResolution;
-	framebuffer.PixperScanline = bootinfo->Graphics_Info.PixelsPerScanLine;
+	framebuffer.FB_size = bootinfo->efi_graphics_info.FrameBufferSize;
+	framebuffer.X_Resolution = bootinfo->efi_graphics_info.HorizontalResolution;
+	framebuffer.Y_Resolution = bootinfo->efi_graphics_info.VerticalResolution;
+	framebuffer.PixperScanline = bootinfo->efi_graphics_info.PixelsPerScanLine;
 	kparam.arch_init_flags.frame_buffer_info = 1;
 
 	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;

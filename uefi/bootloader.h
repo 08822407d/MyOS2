@@ -27,32 +27,32 @@
 
 	typedef struct EFI_GRAPHICS_OUTPUT_INFORMATION
 	{
-		unsigned int HorizontalResolution;
-		unsigned int VerticalResolution;
-		unsigned int PixelsPerScanLine;
+		UINT32 HorizontalResolution;
+		UINT32 VerticalResolution;
+		UINT32 PixelsPerScanLine;
 
-		unsigned long FrameBufferBase;
-		unsigned long FrameBufferSize;
+		UINT64 FrameBufferBase;
+		UINT64 FrameBufferSize;
 	} efi_vbeinfo_s;
 
 	typedef struct EFI_E820_MEMORY_DESCRIPTOR
 	{
-		unsigned long address;
-		unsigned long length;
-		unsigned int  type;
-	} __attribute__((packed)) efi_e820entry_s;
+		UINT64 address;
+		UINT64 length;
+		UINT64 type;
+	} efi_e820entry_s;
 
 	typedef struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
 	{
-		unsigned int E820_Entry_count;
-		efi_e820entry_s E820_Entry[0];
+		UINT64 e820_entry_count;
+		efi_e820entry_s e820_entry[256];
 	} efi_meminfo_s;
 
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
 	{
-		efi_vbeinfo_s Graphics_Info;
-		efi_meminfo_s E820_Info;
-		efi_smpinfo_s smp_info;
+		efi_meminfo_s efi_e820_info;
+		efi_vbeinfo_s efi_graphics_info;
+		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
 
 	EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
