@@ -13,6 +13,7 @@
 	#define	PS_UNINTERRUPTABLE	(1L << 2)
 	#define	PS_ZOMBIE			(1L << 3)	
 	#define	PS_STOPPED			(1L << 4)
+	#define PS_WAITING			(1L << 5)
 
 	#define PF_KTHREAD			(1UL << 0)
 	#define PF_NEED_SCHEDULE	(1UL << 1)
@@ -21,6 +22,10 @@
 	#define CLONE_FS			(1 << 0)
 	#define CLONE_FILES			(1 << 1)
 	#define CLONE_SIGNAL		(1 << 2)
+
+	// choose the task list of cpudata
+	#define CPU_WATING			0UL
+	#define CPU_FINISHED		~0UL
 
 	struct task;
 	typedef struct task task_s;
@@ -40,7 +45,6 @@
 		unsigned long	task_jiffies;
 	} task_s;
 
-
 	typedef union PCB
 	{
 		task_s		task;
@@ -51,9 +55,11 @@
 	typedef struct idle_task_queue
 	{
 		task_s **	queue;
-		unsigned	total_nr;
-		unsigned	head;
-		unsigned	tail;
+		task_s *	sched_task;
+		unsigned	nr_max;
+		unsigned	nr_curr;
+		unsigned	head;	// point to the firt non-null unit in queue
+		unsigned	tail;	// point to next unit of the last non-null
 	} idle_task_queue_s;
 
 
@@ -65,5 +71,11 @@
 	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
 	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
 	void schedule(void);
+	void idle_enqueue(task_s * idle);
+	task_s * idle_dequeue(void);
+
+
+	void cpu_list_push_task(percpu_data_s * cpudata_p, task_s * task, unsigned long target_list_flag);
+	task_s * cpu_list_pop_task(percpu_data_s * cpudata_p, unsigned long target_list_flag);
 
 #endif /* _PROC_H_ */

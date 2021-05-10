@@ -35,14 +35,13 @@ void init_task()
 	percpu_data_s * bsp_cpudata = smp_info[0];
 	bsp_cpudata->waiting_count = 
 	bsp_cpudata->finished_count = 0;
-	bsp_cpudata->waiting_task =
-	bsp_cpudata->finished_task = NULL;
+	bsp_cpudata->waiting_tasks =
+	bsp_cpudata->finished_tasks = NULL;
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->task_jiffies = task0->task_jiffies;
 
 	creat_idles();
 }
-
 
 void creat_idles()
 {
@@ -57,8 +56,43 @@ void creat_idles()
 		procidle->pid = get_newpid();
 	}
 
-	idle_queue.total_nr = kparam.nr_lcpu;
+	idle_queue.nr_max = kparam.nr_lcpu;
+	idle_queue.nr_curr = 0;
 	idle_queue.head = 0;
 	idle_queue.tail = 0;
 	idle_queue.queue = (task_s **)idle_tasks;
+	idle_queue.sched_task = &task0_PCB.task;
+}
+
+void idle_enqueue(task_s * idle)
+{
+	if (idle_queue.nr_curr >= idle_queue.nr_max)
+	{
+		return;
+	}
+	// make sure the schedule task always the first in queue
+	else if (idle == idle_queue.sched_task)
+	{
+		idle_queue.head = (idle_queue.head - 1 + idle_queue.nr_max) % idle_queue.nr_max;
+		idle_queue.queue[idle_queue.head] = idle;
+	}
+	else
+	{
+		idle_queue.queue[idle_queue.tail] = idle;
+		idle_queue.tail = (idle_queue.tail + 1) % idle_queue.nr_max;
+	}
+	idle_queue.nr_curr++;
+}
+
+task_s * idle_dequeue()
+{
+	task_s * ret_val = NULL;
+	if (idle_queue.nr_curr > 0)
+	{
+		ret_val = idle_queue.queue[idle_queue.head];
+		idle_queue.head = (idle_queue.head + 1) % idle_queue.nr_max;
+	}
+	idle_queue.nr_curr--;
+
+	return ret_val;
 }

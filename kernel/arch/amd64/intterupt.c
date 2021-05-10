@@ -190,7 +190,7 @@ void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
 	int irq_nr = vec - HWINT0_VEC;
 	irq_desc_s * irq_desc = &irq_descriptors[irq_nr];	
 
-	color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
+	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
 	irq_desc_s * irq_d = &irq_descriptors[irq_nr];
 	if(irq_d->handler != NULL)

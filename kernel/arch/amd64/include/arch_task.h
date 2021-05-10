@@ -8,10 +8,10 @@
 
 typedef struct arch_PCB
 {
-	reg_t		tss_rsp0;
-
-	reg_t		k_rip;
-	reg_t		k_rsp;
+	reg_t		tss_rsp0;	// point to curr-task's kernel stack bottom
+							// current cpu's tss-rsp0 equal to this at switch-time
+	reg_t		k_rip;		// point to curr_task's switch-time rip
+	reg_t		k_rsp;		// point to curr_task's switch-time rsp
 
 	reg_t		fs;
 	reg_t		gs;

@@ -159,11 +159,14 @@
 	typedef struct task task_s;
 	typedef struct percpu_info
 	{
-		task_s *		waiting_task;
-		task_s *		finished_task;
+		task_s *		waiting_tasks;
+		task_s *		finished_tasks;
 		unsigned long	waiting_count;
 		unsigned long	finished_count;
 		task_s *		curr_task;
+
+		unsigned		is_idle_flag;
+		unsigned		scheduleing_flag;
 
 		unsigned long	last_jiffies;
 		unsigned long	task_jiffies;
@@ -272,6 +275,7 @@
 	int sys_call(int syscall_nr);
 	int do_syscall(int syscall_nr);
 	void reschedule(percpu_data_s * curr_cpu_data);
+	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);
