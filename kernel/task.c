@@ -10,7 +10,7 @@
 #include "klib/data_structure.h"
 
 PCB_u **	idle_tasks;
-
+idle_task_queue_s idle_queue;
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u		task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
@@ -56,4 +56,9 @@ void creat_idles()
 		memcpy(procidle, &task0_PCB.task, sizeof(task_s));
 		procidle->pid = get_newpid();
 	}
+
+	idle_queue.total_nr = kparam.nr_lcpu;
+	idle_queue.head = 0;
+	idle_queue.tail = 0;
+	idle_queue.queue = (task_s **)idle_tasks;
 }

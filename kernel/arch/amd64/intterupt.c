@@ -141,8 +141,9 @@ void excep_page_fault(stack_frame_s * sf_regs)
 /*===========================================================================*
  *									entrys									 *
  *===========================================================================*/
-void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
+void excep_hwint_entry(stack_frame_s * sf_regs)
 {
+	percpu_data_s * cpudata_p = (percpu_data_s *)rdgsbase();
 	int vec = sf_regs->vec_nr;
 
 	if (vec < HWINT0_VEC)
@@ -238,12 +239,18 @@ int unregister_irq(unsigned long irq)
 /*===========================================================================*
  *									init									 *
  *===========================================================================*/
-void init_intr()
+void init_bsp_intr()
 {
-	#ifndef USE_APIC
-		init_i8258();
-	#else
-		init_lapic();
-		init_ioapic();
-	#endif
+	//init local apic
+	IOAPIC_pagetable_remap();
+
+	i8259_disable();
+
+	//init ioapic
+	IOAPIC_init();
+}
+
+void init_percpu_intr()
+{
+	init_lapic();
 }

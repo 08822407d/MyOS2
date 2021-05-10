@@ -151,7 +151,6 @@ SAVE_ALL:
 	movq		%rdi,		%es
 
 	movq		%rsp,		%rdi
-	rdgsbase	%rsi
 	callq 		excep_hwint_entry
 	jmp			ret_from_exception	
 

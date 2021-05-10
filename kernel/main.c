@@ -29,10 +29,11 @@ void kmain(size_t cpu_idx)
 	init_percpu_arch_data(cpu_idx);
 	init_percpu_data(cpu_idx);
 	reload_percpu_arch_env(cpu_idx);
+	init_percpu_intr();
 
 	if (IS_BSP)
 	{
-		init_intr();
+		init_bsp_intr();
 		startup_smp();
 	}
 
@@ -41,13 +42,16 @@ void kmain(size_t cpu_idx)
 	// post init
 	if (IS_BSP)
 	{
-		schedule();
 		softirq_init();
 		timer_init();
 		devices_init();
 	}
 
 	sti();
+	if (IS_BSP)
+	{
+		schedule();
+	}
 
 	int i = 1 / 0;
 

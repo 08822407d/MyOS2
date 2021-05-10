@@ -260,10 +260,9 @@ void arch_init_task()
 	curr_pid = 0;
 	spin_init(&newpid_lock);
 
-	// kernel_thread(init, 20, 0);
-	// kernel_thread(test_task_a, 0, 0);
-	// kernel_thread(test_task_b, 0, 0);
-	// kernel_thread(test_task_c, 0, 0);
+	kernel_thread(test_task_a, 0, 0);
+	kernel_thread(test_task_b, 0, 0);
+	kernel_thread(test_task_c, 0, 0);
 }
 
 void reschedule(percpu_data_s * cpudata_p)

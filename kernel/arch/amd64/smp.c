@@ -89,7 +89,8 @@ void percpu_self_config(size_t cpu_idx)
 	cpudata_p->finished_task = NULL;
 	cpudata_p->last_jiffies =
 	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
-	// arch data
+	// now percpu is running in idle_task, so clean out of the queue
+	// idle_queue.queue[cpu_idx] = NULL;
 }
 
 void startup_smp()

@@ -48,6 +48,15 @@
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
+	typedef struct idle_task_queue
+	{
+		task_s **	queue;
+		unsigned	total_nr;
+		unsigned	head;
+		unsigned	tail;
+	} idle_task_queue_s;
+
+
 	void init_task(void);
 
 	void arch_init_task(void);

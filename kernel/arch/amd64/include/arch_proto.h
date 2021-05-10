@@ -220,7 +220,6 @@
 	void i8259_do_irq(stack_frame_s * sf_regs);
 	/* apic.c */
 	void IOAPIC_pagetable_remap(void);
-	void init_ioapic(void);
 	void init_lapic(void);
 	void IOAPIC_init(void);
 	void IOAPIC_enable(unsigned long irq);
@@ -282,7 +281,8 @@
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
-	void init_intr(void);
+	void init_bsp_intr(void);
+	void init_percpu_intr(void);
 
 	/* smp.c */
 	void init_cpu(void);

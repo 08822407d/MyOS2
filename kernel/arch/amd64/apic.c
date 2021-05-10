@@ -273,14 +273,3 @@ void IOAPIC_init()
 	for(i = 0x10;i < 0x40;i += 2)
 		ioapic_rte_write(i, 0x10000 + APIC_IRQ0_VEC + ((i - 0x10) >> 1));
 }
-
-void init_ioapic()
-{
-	//init local apic
-	IOAPIC_pagetable_remap();
-
-	i8259_disable();
-
-	//init ioapic
-	IOAPIC_init();
-}
