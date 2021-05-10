@@ -232,6 +232,7 @@ void * kmalloc(size_t size)
 	// find a usable slab
 	slab_cache_s *	scgp = &slab_cache_groups[sc_idx];
 	slab_s *		slp = scgp->normal_slab;
+	spin_lock(&slab_spin_lock);
 	while (slp->free == 0)
 	{
 		slp = slp->next;
@@ -243,34 +244,30 @@ void * kmalloc(size_t size)
 		size_t offset = scgp->obj_size * obj_idx;
 		ret_val = (void *)((size_t)slp->virt_addr + offset);
 		// refresh status of slab
-		spin_lock(&slab_spin_lock);
 		slp->free--;
 		scgp->nsobj_free_count--;
 		scgp->nsobj_used_count++;
 		bm_set_bit(slp->colormap, obj_idx);
-		spin_unlock(&slab_spin_lock);
 		// assure usable memory more than one page
 		if (scgp->nsobj_free_count < slp->total)
 		{
-			spin_lock(&slab_spin_lock);
 			scgp->nsobj_free_count += slp->total;
 			spin_unlock(&slab_spin_lock);
 			slab_s * new_slab = slab_alloc(slp->total);
+			spin_lock(&slab_spin_lock);
 			if (new_slab == NULL)
 			{
 				color_printk(RED, WHITE, "Alloc new slab failed!\n");
 				scgp->nsobj_free_count -= slp->total;
 				while (1);
 			}
-			spin_lock(&slab_spin_lock);
 			new_slab->slabcache_ptr = scgp;
 			m_list_insert_back(new_slab, scgp->normal_slab);
 			scgp->nslab_count++;
-			spin_unlock(&slab_spin_lock);
 		}
 	}
 
-
+	spin_unlock(&slab_spin_lock);
 	return ret_val;
 }
 
@@ -296,16 +293,15 @@ void kfree(void * obj_p)
 	slp->free++;
 	scgp->nsobj_free_count++;
 	scgp->nsobj_used_count--;
-	spin_unlock(&slab_spin_lock);
 	if ((slp->free == slp->total) &&
 		(scgp->nsobj_free_count >= (slp->total * 3)) &&
 		(slp != scgp->normal_slab))
 	{
+		spin_unlock(&slab_spin_lock);
 		slab_free(slp);
 		spin_lock(&slab_spin_lock);
 		scgp->nslab_count--;
 		scgp->nsobj_free_count -= slp->total;
-		spin_unlock(&slab_spin_lock);
 	}
-
+	spin_unlock(&slab_spin_lock);
 }

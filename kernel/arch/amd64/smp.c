@@ -41,6 +41,7 @@ void init_percpu_data(size_t cpu_idx)
 	smp_info[cpu_idx] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
 	percpu_data_s * cpudata_p = smp_info[cpu_idx];
 	memset(cpudata_p, 0, sizeof(percpu_data_s));
+	cpudata_p->cpu_idx = cpu_idx;
 	cpudata_p->cpu_stack_start = (char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
 	// create architechture part of percpu_data
 	cpudata_p->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
@@ -70,8 +71,6 @@ void init_percpu_arch_data(size_t cpu_idx)
 {
 	tss_ptr_arr[cpu_idx] = (tss64_s *)kmalloc(sizeof(tss64_s));
 	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
-	percpu_data_s * cpudata_p = smp_info[cpu_idx];
-	cpudata_p->cpu_idx = cpu_idx;
 	memset(tss_p, 0, sizeof(tss64_s));	// init tss's ists
 	tss_p->rsp0 = (size_t)get_current() + TASK_KSTACK_SIZE;
 }
@@ -89,8 +88,6 @@ void percpu_self_config(size_t cpu_idx)
 	cpudata_p->finished_task = NULL;
 	cpudata_p->last_jiffies =
 	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
-	// now percpu is running in idle_task, so clean out of the queue
-	// idle_queue.queue[cpu_idx] = NULL;
 }
 
 void startup_smp()

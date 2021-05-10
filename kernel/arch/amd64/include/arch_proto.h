@@ -274,7 +274,7 @@
 	void reschedule(percpu_data_s * curr_cpu_data);
 
 	/* interrupt.c */
-	void excep_hwint_entry(stack_frame_s * sf_regs, percpu_data_s * cpudata_p);
+	void excep_hwint_entry(stack_frame_s * sf_regs);
 	void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p);
 	void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
