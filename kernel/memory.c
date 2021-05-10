@@ -30,7 +30,6 @@ spinlock_T		slab_spin_lock;
 /*===========================================================================*
  *						fuction relate to physical page						 *
  *===========================================================================*/
-
 void init_page_manage()
 {
 	#ifdef DEBUG
@@ -77,9 +76,6 @@ void init_page_manage()
 			pg_curr->zone_belonged	= mz_curr;
 			pg_curr->page_start_addr = (phys_addr)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
-
-			// mem_info.page_bitmap[page_count / BITMAP_UNITSIZE] &=
-			// 						~(1UL << (j % BITMAP_UNITSIZE));
 		}
 
 		zone_count++;
@@ -98,9 +94,9 @@ void init_page_manage()
 	{
 		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
 		// map lower mem
-		pg_domap(k_phy_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
+		arch_page_domap(k_phy_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
 		// map higher mem
-		pg_domap(k_vir_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
+		arch_page_domap(k_vir_pgbase, k_phy_pgbase, page_attr, KERN_PML4);
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
@@ -115,8 +111,8 @@ void init_page_manage()
 Page_s * page_alloc(void)
 {
 	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
-	bm_set_bit(mem_info.page_bitmap, freepage_idx);
 	Page_s * ret_page = &mem_info.pages[freepage_idx];
+	bm_set_bit(mem_info.page_bitmap, freepage_idx);
 	ret_page->ref_count++;
 	return ret_page;
 }
@@ -190,7 +186,7 @@ slab_s * slab_alloc(size_t obj_count)
 {
 	Page_s * pg = page_alloc();
 	if (!(pg->attr & PG_PTable_Maped))
-		pg_domap(phys2virt(pg->page_start_addr), pg->page_start_addr, 0, KERN_PML4);
+		arch_page_domap(phys2virt(pg->page_start_addr), pg->page_start_addr, 0, KERN_PML4);
 	
 	pg->attr |= PG_Slab;
 	slab_s * sp = (slab_s *)kmalloc(sizeof(slab_s));

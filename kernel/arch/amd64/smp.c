@@ -23,11 +23,11 @@ void init_smp()
 	#endif
 
 	// copy ap_boot entry code to its address
-	extern char _APboot_phy_start;
+	extern char _APboot_phys_start;
 	extern char _APboot_text;
 	extern char _APboot_etext;
 	size_t apbbot_len = &_APboot_etext - &_APboot_text;
-	memcpy(phys2virt((phys_addr)&_APboot_phy_start), (virt_addr)&_APboot_text, apbbot_len);
+	memcpy(phys2virt((phys_addr)&_APboot_phys_start), (virt_addr)&_APboot_text, apbbot_len);
 
 	// create pointer array for all percpu_data
 	unsigned nr_lcpu = kparam.nr_lcpu;

@@ -11,8 +11,8 @@
 #include "../../include/glo.h"
 #include "../../include/ktypes.h"
 
-extern char _k_phy_start;
-extern char _k_vir_start;
+extern char _k_phys_start;
+extern char _k_virt_start;
 
 extern char _bss;
 extern char _ebss;
@@ -40,8 +40,8 @@ void pre_init(void)
 
 	memset((virt_addr)&_bss, 0, &_ebss - &_bss);
 
-	kparam.kernel_phy_base	= &_k_phy_start;
-	kparam.kernel_vir_base	= &_k_vir_start;
+	kparam.kernel_phy_base	= &_k_phys_start;
+	kparam.kernel_vir_base	= &_k_virt_start;
 	kparam.kernel_vir_end	= &_end;
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo =

@@ -2,21 +2,21 @@ OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
 ENTRY(start)
 
-_k_phy_start	= 0x1000000;
-_k_vir_start	= 0xffff800001000000;
-_k_offset		= _k_vir_start - _k_phy_start;
-_k_phy_edata	= _edata - _k_offset;
-_k_phy_ebss		= _ebss - _k_offset;
+_k_phys_start	= 0x1000000;
+_k_virt_start	= 0xffff800001000000;
+_k_offset		= _k_virt_start - _k_phys_start;
+_k_phys_edata	= _edata - _k_offset;
+_k_phys_ebss		= _ebss - _k_offset;
 
 __k_unpaged__k_offset		= _k_offset;
-__k_unpaged__k_vir_start	= _k_vir_start;
-__k_unpaged__k_phy_start	= _k_phy_start;
+__k_unpaged__k_virt_start	= _k_virt_start;
+__k_unpaged__k_phys_start	= _k_phys_start;
 
-_APboot_phy_start			= 0x4000;
+_APboot_phys_start			= 0x4000;
 
 SECTIONS
 {
-	. = _k_phy_start;
+	. = _k_phys_start;
 	__k_unpaged__kern_unpaged_start = .;
 	unpaged_text :
 	{
@@ -37,12 +37,12 @@ SECTIONS
 	__k_unpaged__kern_unpaged_end = .;
 
 	apb_start_viraddr = ALIGN(0x1000);
-	. = _APboot_phy_start;
+	. = _APboot_phys_start;
 	.APboot_text ALIGN(0x1000) : AT(apb_start_viraddr)
 	{
-		_APboot_text = apb_start_viraddr - _APboot_phy_start;
+		_APboot_text = apb_start_viraddr - _APboot_phys_start;
 		*/AP_boot.S.o(.text)
-		_APboot_etext = . + apb_start_viraddr - _APboot_phy_start;
+		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
 	}
 	. = _APboot_etext;
 

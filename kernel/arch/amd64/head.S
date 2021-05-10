@@ -38,11 +38,11 @@ address_tag_start:
 	/* header_addr */
 	.long	multiboot_header
 	/* load_addr */
-	.long	_k_phy_start
+	.long	_k_phys_start
 	/* load_end_addr */
-	.long	_k_phy_edata
+	.long	_k_phys_edata
 	/* bss end addr */
-	.long	_k_phy_ebss
+	.long	_k_phys_ebss
 address_tag_end:
 //===========================================
 	.align	8

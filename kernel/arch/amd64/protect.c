@@ -28,19 +28,19 @@ desctblptr64_s	idt_ptr;
 /*===========================================================================*
  *								global functions							 *
  *===========================================================================*/
-phys_addr virt2phys(virt_addr vir)
+phys_addr virt2phys(virt_addr virt)
 {
-	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
-	uint64_t offset = (virt_addr) &_k_vir_start -
-						(virt_addr) &_k_phy_start;
-	return (phys_addr)(vir - offset);
+	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
+	uint64_t offset = (virt_addr) &_k_virt_start -
+						(virt_addr) &_k_phys_start;
+	return (phys_addr)(virt - offset);
 }
-virt_addr phys2virt(phys_addr phy)
+virt_addr phys2virt(phys_addr phys)
 {
-	extern char _k_phy_start, _k_vir_start;	/* in kernel.lds */
-	uint64_t offset = (virt_addr) &_k_vir_start -
-						(virt_addr) &_k_phy_start;
-	return (phys_addr)(phy + offset);
+	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
+	uint64_t offset = (virt_addr) &_k_virt_start -
+						(virt_addr) &_k_phys_start;
+	return (phys_addr)(phys + offset);
 }
 
 inline __always_inline void reload_gdt(desctblptr64_s * gdt_desc)

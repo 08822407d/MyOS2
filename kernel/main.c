@@ -19,7 +19,7 @@ void kmain(size_t cpu_idx)
 	int IS_BSP = !cpu_idx;
 	if (IS_BSP)
 	{
-		refresh_arch_page();
+		refresh_page();
 		init_video();
 		init_slab();
 		init_task();

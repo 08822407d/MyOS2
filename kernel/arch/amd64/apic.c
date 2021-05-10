@@ -226,7 +226,7 @@ void IOAPIC_pagetable_remap()
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
 	
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
-	pg_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr, KERN_PML4);
+	arch_page_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr, page_attr, KERN_PML4);
 }
 
 void init_lapic()

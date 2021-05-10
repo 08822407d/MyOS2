@@ -16,14 +16,14 @@ PDPTE_u	KERN_PDPT[PDPT_NR][PGENT_NR] __aligned(PGENT_SIZE);
 PDE_u	KERN_PD[PDPT_NR][PGENT_NR][PGENT_NR] __aligned(PGENT_SIZE);
 phys_addr pml4_base = 0;
 
-void pg_pre_init(void)
+void arch_page_preinit(void)
 {
 	pml4_base = virt2phys(&KERN_PML4);
 }
 
-void refresh_arch_page()
+void refresh_page()
 {
-	pg_pre_init();
+	arch_page_preinit();
 	init_page_manage();
 	pg_load_cr3(KERN_PML4);
 }
@@ -37,7 +37,7 @@ void pg_load_cr3(PML4E_u * PML4)
 						 :);
 }
 
-void pg_flush_tlb(void)
+void refresh_arch_page(void)
 {
 	uint64_t tempreg;
 	__asm__ __volatile__("movq %%cr3, %0	\n\
@@ -49,12 +49,12 @@ void pg_flush_tlb(void)
 						 :	);
 }
 
-void pg_domap(virt_addr vir, phys_addr phy, uint64_t attr, PML4E_u * pml4_base)
+void arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_u * pml4_base)
 {
 	attr = ARCH_PGS_ATTR(attr);
-	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PML4E);
-	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDPTE);
-	unsigned int pde_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDE);
+	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PML4E);
+	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
+	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
 
 	// get pml4e
 	PML4E_u * pml4e_ptr = pml4_base + pml4e_idx;
@@ -81,15 +81,15 @@ void pg_domap(virt_addr vir, phys_addr phy, uint64_t attr, PML4E_u * pml4_base)
 	// set pte
 	if (*((uint64_t *)pde_ptr) == 0)
 	{
-		pde_ptr->PDE = MASKF_2M((uint64_t)phy) | ARCH_PGE_IS_LAST(attr);
+		pde_ptr->PDE = MASKF_2M((uint64_t)phys) | ARCH_PGE_IS_LAST(attr);
 	}
 
-	pg_flush_tlb();
+	refresh_arch_page();
 }
 
-void pg_unmap(virt_addr vir)
+void pg_unmap(virt_addr virt)
 {
-	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PML4E);
-	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDPTE);
-	unsigned int pde_idx	= GETF_PGENT((uint64_t)vir >> SHIFT_PDE);
+	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PML4E);
+	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
+	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
 }

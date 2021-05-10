@@ -203,12 +203,13 @@
 	void init_percpu_data(size_t cpu_idx);
 	void refresh_percpu_arch_env(size_t cpu_idx);
 
-	/* pg_util.c */
-	void pg_pre_init(void);
+	/* arch_page_util. */
+	void refresh_page(void);
+	void arch_page_preinit(void);
 	void refresh_arch_page(void);
 	void pg_load_cr3(PML4E_u *);
-	void pg_flush_tlb(void);
-	void pg_domap(virt_addr, phys_addr, uint64_t, PML4E_u * pml4_base);
+	void refresh_arch_page(void);
+	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_u * pml4_base);
 	void pg_unmap(virt_addr);
 
 	/* i8259.c */
