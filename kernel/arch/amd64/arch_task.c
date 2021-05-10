@@ -71,17 +71,20 @@ inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_d
 	tss64_s * curr_tss = cpudata_p->arch_info->tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
-	__asm__ __volatile__("movq	%%fs,	%0 \n\t"
-						 : "=a"(curr->arch_struct.fs));
-	__asm__ __volatile__("movq	%%gs,	%0 \n\t"
-						 : "=a"(curr->arch_struct.gs));
+	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset
+	// here need to save and restore them
 
-	__asm__ __volatile__("movq	%0,	%%fs \n\t"
-						 :
-						 :"a"(target->arch_struct.fs));
-	__asm__ __volatile__("movq	%0,	%%gs \n\t"
-						 :
-						 :"a"(target->arch_struct.gs));
+	// __asm__ __volatile__("movq	%%fs,	%0 \n\t"
+	// 					 : "=a"(curr->arch_struct.fs));
+	// __asm__ __volatile__("movq	%%gs,	%0 \n\t"
+	// 					 : "=a"(curr->arch_struct.gs));
+
+	// __asm__ __volatile__("movq	%0,	%%fs \n\t"
+	// 					 :
+	// 					 :"a"(target->arch_struct.fs));
+	// __asm__ __volatile__("movq	%0,	%%gs \n\t"
+	// 					 :
+	// 					 :"a"(target->arch_struct.gs));
 
 }
 
@@ -297,6 +300,7 @@ void reschedule(percpu_data_s * cpudata_p)
 
 	// if case 4, just do nothing
 	if ((cpudata_p->waiting_count < 1 && cpudata_p->is_idle_flag) ||
+			!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
 			cpudata_p->scheduleing_flag)
 		return;
 
@@ -306,27 +310,33 @@ void reschedule(percpu_data_s * cpudata_p)
 		task_s * next_task = NULL;
 		curr_task = cpudata_p->curr_task;
 	// case 1: curr->finished; waiting->curr
-	if (!cpudata_p->is_idle_flag && cpudata_p->waiting_count > 0)
+	if ((!cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_count > 0))
 	{
 		cpu_list_push_task(cpudata_p, curr_task, CPU_FINISHED);
 		next_task =
 		cpudata_p->curr_task = 
 					cpu_list_pop_task(cpudata_p, CPU_WATING);
+		cpudata_p->is_idle_flag = 0;
 	}
 	// case 2: curr->finished; idle_queue->curr
-	if (!cpudata_p->is_idle_flag && cpudata_p->waiting_count < 1)
+	if ((!cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_count < 1))
 	{
 		cpu_list_push_task(cpudata_p, curr_task, CPU_FINISHED);
 		next_task =
 		cpudata_p->curr_task = idle_dequeue();
+		cpudata_p->is_idle_flag = 1;
 	}
 	//case 3: curr->idle_queue; waiting->curr
-	if (cpudata_p->is_idle_flag && cpudata_p->waiting_count > 0)
+	if ((cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_count > 0))
 	{
 		idle_enqueue(curr_task);
 		next_task =
 		cpudata_p->curr_task = 
 					cpu_list_pop_task(cpudata_p, CPU_WATING);
+		cpudata_p->is_idle_flag = 0;
 	}
 
 	// if (cpudata_p->curr_task->flags & PF_NEED_SCHEDULE)
@@ -373,12 +383,16 @@ void reschedule(percpu_data_s * cpudata_p)
 	// 	}
 	// 	next_task = cpudata_p->curr_task;
 
-	switch_to(curr_task, next_task, cpudata_p);
 	curr_task->state &= ~PS_RUNNING;
 	next_task->state &= PS_WAITING;
 	next_task->state |= PS_RUNNING;
 
+	cpudata_p->last_jiffies = jiffies;
+	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
+
 	cpudata_p->scheduleing_flag = 0;
+
+	switch_to(curr_task, next_task, cpudata_p);
 }
 
 void schedule()

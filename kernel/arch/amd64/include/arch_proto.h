@@ -168,8 +168,8 @@
 		unsigned		is_idle_flag;
 		unsigned		scheduleing_flag;
 
-		unsigned long	last_jiffies;
-		unsigned long	task_jiffies;
+		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
+		unsigned long	task_jiffies;	// max jiffies for running of this task
 
 		size_t			cpu_idx;
 		arch_percpu_data_s *	arch_info;

@@ -27,7 +27,7 @@ void init_task()
 	task_s *task0	= &task0_PCB.task;
 	memset(task0, 0, sizeof(task_s));
 	m_list_init(task0);
-	task0->task_jiffies = 5;
+	task0->task_jiffies = 2;
 	task0->flags = PF_KTHREAD;
 	task0->pid = get_newpid();
 
