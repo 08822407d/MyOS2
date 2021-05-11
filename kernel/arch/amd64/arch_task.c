@@ -299,7 +299,7 @@ void reschedule(percpu_data_s * cpudata_p)
 	// 4: current id idle - waiting is null
 
 	// if case 4, just do nothing
-	if ((cpudata_p->waiting_count < 1 && cpudata_p->is_idle_flag) ||
+	if (((cpudata_p->waiting_count < 1) && (cpudata_p->is_idle_flag)) ||
 			!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
 			cpudata_p->scheduleing_flag)
 		return;
