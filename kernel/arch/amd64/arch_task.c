@@ -226,7 +226,6 @@ void arch_init_task()
 /*==============================================================================================*
  *									schedule related functions									*
  *==============================================================================================*/
-
 void reschedule(percpu_data_s * cpudata_p)
 {
 	// if running time out, make the need_schedule flag of current task
@@ -241,8 +240,7 @@ void reschedule(percpu_data_s * cpudata_p)
 	// 4: current id idle - waiting is null
 
 	// if case 4, just do nothing
-	if (((cpudata_p->waiting_tasks.count < 1) && (cpudata_p->is_idle_flag)) ||
-			!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
+	if (!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
 			cpudata_p->scheduleing_flag)
 		return;
 
@@ -261,7 +259,7 @@ void reschedule(percpu_data_s * cpudata_p)
 		cpudata_p->is_idle_flag = 0;
 	}
 	// case 2: curr->finished; idle_queue->curr
-	if ((!cpudata_p->is_idle_flag) &&
+	else if ((!cpudata_p->is_idle_flag) &&
 		(cpudata_p->waiting_tasks.count < 1))
 	{
 		task_list_push(&cpudata_p->finished_tasks, curr_task);
@@ -270,13 +268,18 @@ void reschedule(percpu_data_s * cpudata_p)
 		cpudata_p->is_idle_flag = 1;
 	}
 	//case 3: curr->idle_queue; waiting->curr
-	if ((cpudata_p->is_idle_flag) &&
+	else if ((cpudata_p->is_idle_flag) &&
 		(cpudata_p->waiting_tasks.count > 0))
 	{
 		idle_enqueue(curr_task);
 		next_task =
 		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
 		cpudata_p->is_idle_flag = 0;
+	}
+	else
+	{
+		cpudata_p->is_idle_flag = 1;
+		return;
 	}
 
 	curr_task->state &= ~PS_RUNNING;
