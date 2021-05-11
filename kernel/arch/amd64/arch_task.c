@@ -317,5 +317,5 @@ void schedule()
 	current->flags |= PF_NEED_SCHEDULE;
 	cpudata_p->scheduleing_flag = 0;
 
-	// reschedule(cpudata_p);
+	reschedule(cpudata_p);
 }

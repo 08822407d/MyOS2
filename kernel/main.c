@@ -89,15 +89,9 @@ void kmain(size_t cpu_idx)
 		timer_init();
 		devices_init();
 	}
-
 	sti();
-	if (IS_BSP)
-	{
-		schedule();
-	}
 
 	while(1){
 		schedule();
-		hlt();
 	};
 }
