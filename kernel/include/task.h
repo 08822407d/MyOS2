@@ -52,7 +52,7 @@
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
-	typedef struct idle_task_queue
+	typedef struct task_queue
 	{
 		task_s **	queue;
 		task_s *	sched_task;
@@ -60,8 +60,30 @@
 		unsigned	nr_curr;
 		unsigned	head;	// point to the firt non-null unit in queue
 		unsigned	tail;	// point to next unit of the last non-null
-	} idle_task_queue_s;
+	} task_queue_s;
 
+	typedef struct task_list
+	{
+		task_s *	head_ptr;
+		unsigned	count;
+	} task_list_s;
+
+	typedef struct percpu_info
+	{
+		task_list_s		waiting_tasks;
+		task_list_s		finished_tasks;
+		task_s *		curr_task;
+
+		unsigned		is_idle_flag;
+		unsigned		scheduleing_flag;
+
+		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
+		unsigned long	task_jiffies;	// max jiffies for running of this task
+
+		size_t			cpu_idx;
+		arch_percpu_data_s *	arch_info;
+		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
+	} percpu_data_s;
 
 	void init_task(void);
 
@@ -73,9 +95,7 @@
 	void schedule(void);
 	void idle_enqueue(task_s * idle);
 	task_s * idle_dequeue(void);
-
-
-	void cpu_list_push_task(percpu_data_s * cpudata_p, task_s * task, unsigned long target_list_flag);
-	task_s * cpu_list_pop_task(percpu_data_s * cpudata_p, unsigned long target_list_flag);
+	void task_list_push(task_list_s * list, task_s * task);
+	task_s * task_list_pop(task_list_s * list);
 
 #endif /* _PROC_H_ */

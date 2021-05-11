@@ -25,9 +25,9 @@ bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
 unsigned long	curr_pid;
 
-/*===========================================================================*
- *						*
- *===========================================================================*/
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
 inline __always_inline task_s * get_current()
 {
 #ifdef current
@@ -143,16 +143,8 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 
 void wakeup_task(task_s * task)
 {
-	if (task_waiting_list == NULL)
-	{
-		task_waiting_list = task;
-	}
-	else
-	{
-		m_list_insert_back(task, task_waiting_list);
-	}
-	waiting_task_count++;
 	task->state |= PS_WAITING;
+	task_list_push(&global_waiting_task, task);
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -231,59 +223,9 @@ void arch_init_task()
 	spin_init(&newpid_lock);
 }
 
-/*===========================================================================*
- *						schedule related functions							 *
- *===========================================================================*/
-void cpu_list_push_task(percpu_data_s * cpudata_p, task_s * task, unsigned long target_list_flag)
-{
-	task_s ** target_list = NULL;
-	unsigned long * target_count = 0;
-	if (target_list_flag == CPU_WATING)
-	{
-		target_list = &cpudata_p->waiting_tasks;
-		target_count = &cpudata_p->waiting_count;
-	}
-	else
-	{
-		target_list = &cpudata_p->finished_tasks;
-		target_count = &cpudata_p->finished_count;
-	}
-	
-	if (*target_count == 0)
-		*target_list = task;
-	else
-		m_list_insert_front(task, (*target_list));
-
-	(*target_count)++;
-}
-
-task_s * cpu_list_pop_task(percpu_data_s * cpudata_p, unsigned long target_list_flag)
-{
-	task_s * ret_val = NULL;
-
-	task_s ** target_list = NULL;
-	unsigned long * target_count = 0;
-	if (target_list_flag == CPU_WATING)
-	{
-		target_list = &(cpudata_p->waiting_tasks);
-		target_count = &cpudata_p->waiting_count;
-	}
-	else
-	{
-		target_list = &(cpudata_p->finished_tasks);
-		target_count = &cpudata_p->finished_count;
-	}
-	
-	ret_val = (*target_list)->next;
-	if (*target_count == 1)
-		*target_list = NULL;
-	else
-		m_list_delete(ret_val);
-
-	(*target_count)--;
-
-	return ret_val;
-}
+/*==============================================================================================*
+ *									schedule related functions									*
+ *==============================================================================================*/
 
 void reschedule(percpu_data_s * cpudata_p)
 {
@@ -299,7 +241,7 @@ void reschedule(percpu_data_s * cpudata_p)
 	// 4: current id idle - waiting is null
 
 	// if case 4, just do nothing
-	if (((cpudata_p->waiting_count < 1) && (cpudata_p->is_idle_flag)) ||
+	if (((cpudata_p->waiting_tasks.count < 1) && (cpudata_p->is_idle_flag)) ||
 			!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
 			cpudata_p->scheduleing_flag)
 		return;
@@ -311,77 +253,31 @@ void reschedule(percpu_data_s * cpudata_p)
 		curr_task = cpudata_p->curr_task;
 	// case 1: curr->finished; waiting->curr
 	if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_count > 0))
+		(cpudata_p->waiting_tasks.count > 0))
 	{
-		cpu_list_push_task(cpudata_p, curr_task, CPU_FINISHED);
+		task_list_push(&cpudata_p->finished_tasks, curr_task);
 		next_task =
-		cpudata_p->curr_task = 
-					cpu_list_pop_task(cpudata_p, CPU_WATING);
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
 		cpudata_p->is_idle_flag = 0;
 	}
 	// case 2: curr->finished; idle_queue->curr
 	if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_count < 1))
+		(cpudata_p->waiting_tasks.count < 1))
 	{
-		cpu_list_push_task(cpudata_p, curr_task, CPU_FINISHED);
+		task_list_push(&cpudata_p->finished_tasks, curr_task);
 		next_task =
 		cpudata_p->curr_task = idle_dequeue();
 		cpudata_p->is_idle_flag = 1;
 	}
 	//case 3: curr->idle_queue; waiting->curr
 	if ((cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_count > 0))
+		(cpudata_p->waiting_tasks.count > 0))
 	{
 		idle_enqueue(curr_task);
 		next_task =
-		cpudata_p->curr_task = 
-					cpu_list_pop_task(cpudata_p, CPU_WATING);
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
 		cpudata_p->is_idle_flag = 0;
 	}
-
-	// if (cpudata_p->curr_task->flags & PF_NEED_SCHEDULE)
-	// {
-	// 	task_s * curr_task = NULL;
-	// 	task_s * next_task = NULL;
-
-	// 	curr_task = cpudata_p->curr_task;
-	// 	// if case 3, first push current in idle_queue
-	// 	if (cpudata_p->is_idle_flag)
-	// 	{
-	// 		idle_enqueue(cpudata_p->curr_task);
-	// 		cpudata_p->curr_task = NULL;
-	// 	}
-	// 	// if case 1 or 2, move current to finished list
-	// 	else
-	// 	{
-	// 		if (cpudata_p->finished_count == 0)
-	// 			cpudata_p->waiting_tasks = cpudata_p->curr_task;
-	// 		else
-	// 			m_list_insert_back(cpudata_p->curr_task, cpudata_p->finished_tasks);
-	// 		cpudata_p->finished_count++;
-	// 	}
-
-	// 	// then get next task
-	// 	// if case 2, just pop an idle from idle_queue
-	// 	if (cpudata_p->waiting_count == 0)
-	// 	{
-	// 		cpudata_p->curr_task = idle_dequeue();
-	// 		cpudata_p->is_idle_flag = 1;
-	// 	}
-	// 	// if case 1 or 3, get next from waiting list
-	// 	else
-	// 	{
-	// 		cpudata_p->curr_task = cpudata_p->waiting_tasks;
-	// 		if (cpudata_p->waiting_count == 1)
-	// 			cpudata_p->waiting_tasks = NULL;
-	// 		else
-	// 		{
-	// 			cpudata_p->waiting_tasks = cpudata_p->waiting_tasks->next;
-	// 			m_list_delete(cpudata_p->waiting_tasks);
-	// 		}
-	// 		cpudata_p->waiting_count--;
-	// 	}
-	// 	next_task = cpudata_p->curr_task;
 
 	curr_task->state &= ~PS_RUNNING;
 	next_task->state &= PS_WAITING;
@@ -402,37 +298,16 @@ void schedule()
 		return;
 
 	cpudata_p->scheduleing_flag = 1;
-	for ( ; cpudata_p->finished_count > 0; cpudata_p->finished_count--)
+	// retrieve finished tasks, then assign them back to cpu
+	while (cpudata_p->finished_tasks.count)
 	{
-		// pop out cpu's finished task
-		task_s * finished = cpudata_p->finished_tasks->prev;
-		if (cpudata_p->finished_count == 1)
-			cpudata_p->finished_tasks = NULL;
-		else
-			m_list_delete(finished);
-		// push finished task to waiting list
-		if (waiting_task_count < 1)
-			task_waiting_list = finished;
-		else
-			m_list_insert_front(finished, task_waiting_list);
-		
-		waiting_task_count++;
+		task_s * tmp = task_list_pop(&cpudata_p->finished_tasks);
+		task_list_push(&global_waiting_task, tmp);
 	}
-	for ( ; waiting_task_count > 0; waiting_task_count--)
+	while (global_waiting_task.count)
 	{
-		// pop out waiting task
-		task_s * waiting = task_waiting_list->next;
-		if (waiting_task_count == 1)
-			task_waiting_list = NULL;
-		else
-			m_list_delete(waiting);
-		//push waiting task to cpu's waiting list
-		if (cpudata_p->waiting_count < 1)
-			cpudata_p->waiting_tasks = waiting;
-		else
-			m_list_insert_back(waiting, cpudata_p->waiting_tasks);
-
-		cpudata_p->waiting_count++;
+		task_s * tmp = task_list_pop(&global_waiting_task);
+		task_list_push(&cpudata_p->waiting_tasks, tmp);
 	}
 	// insert schedule self to cpu's waiting list end
 	task_s * current = get_current();

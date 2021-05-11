@@ -5,9 +5,9 @@
 #include "archtypes.h"
 #include "archconst.h"
 
-/*===========================================================================*
-*								external symbols							 *
-*===========================================================================*/
+/*==============================================================================================*
+ *										external symbols							 			*
+ *==============================================================================================*/
 	/* Exception handlers (real or protected mode), in numerical order. */
 	void divide_error (void);
 	void debug(void);
@@ -64,9 +64,9 @@
 	void enter_syscall(void);
 	void ret_from_syscall(void);
 
-/*===========================================================================*
-*								internal symbols							 *
-*===========================================================================*/
+/*==============================================================================================*
+ *										internal symbols										*
+ *==============================================================================================*/
 // interrupt stack
 	typedef struct stack_frame {
 		reg_t ds;
@@ -148,33 +148,15 @@
 		uint8_t		thd_id;
 	};
 
+
+	struct percpu_info;
+	typedef struct percpu_info percpu_data_s;
 	typedef struct arch_percpu_info
 	{
 		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
 		tss64_s *	tss;
 	} arch_percpu_data_s;
-
-	struct task;
-	typedef struct task task_s;
-	typedef struct percpu_info
-	{
-		task_s *		waiting_tasks;
-		task_s *		finished_tasks;
-		unsigned long	waiting_count;
-		unsigned long	finished_count;
-		task_s *		curr_task;
-
-		unsigned		is_idle_flag;
-		unsigned		scheduleing_flag;
-
-		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-		unsigned long	task_jiffies;	// max jiffies for running of this task
-
-		size_t			cpu_idx;
-		arch_percpu_data_s *	arch_info;
-		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
-	} percpu_data_s;
 
 	typedef struct
 	{

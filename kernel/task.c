@@ -10,13 +10,12 @@
 #include "klib/data_structure.h"
 
 PCB_u **	idle_tasks;
-idle_task_queue_s idle_queue;
+task_queue_s idle_queue;
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u		task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 
-task_s *	task_waiting_list = NULL;
-unsigned long	waiting_task_count = 0;
+task_list_s global_waiting_task;
 
 void creat_idles(void);
 
@@ -33,10 +32,10 @@ void init_task()
 
 	// complete bsp's cpudata_p
 	percpu_data_s * bsp_cpudata = smp_info[0];
-	bsp_cpudata->waiting_count = 
-	bsp_cpudata->finished_count = 0;
-	bsp_cpudata->waiting_tasks =
-	bsp_cpudata->finished_tasks = NULL;
+	bsp_cpudata->waiting_tasks.count = 
+	bsp_cpudata->waiting_tasks.count = 0;
+	bsp_cpudata->waiting_tasks.head_ptr =
+	bsp_cpudata->finished_tasks.head_ptr = NULL;
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->task_jiffies = task0->task_jiffies;
 
@@ -64,6 +63,9 @@ void creat_idles()
 	idle_queue.sched_task = &task0_PCB.task;
 }
 
+/*==============================================================================================*
+ *									schedule related functions							 		*                        
+ *==============================================================================================*/
 void idle_enqueue(task_s * idle)
 {
 	if (idle_queue.nr_curr >= idle_queue.nr_max)
@@ -94,5 +96,37 @@ task_s * idle_dequeue()
 	}
 	idle_queue.nr_curr--;
 
+	return ret_val;
+}
+
+void task_list_push(task_list_s * list, task_s * task)
+{
+	if (list == NULL || task == NULL)
+		return;
+	
+	if (list->count == 0)
+		list->head_ptr = task;
+	else
+		m_list_insert_front(task, list->head_ptr);
+
+	list->head_ptr = list->head_ptr->prev;
+	list->count++;
+}
+
+task_s * task_list_pop(task_list_s * list)
+{
+	task_s * ret_val = NULL;
+	if (list != NULL)
+	{
+		ret_val = list->head_ptr;
+		list->head_ptr = list->head_ptr->next;
+
+		if (list->count == 1)
+			list->head_ptr = NULL;
+		else
+			m_list_delete(ret_val);
+
+		list->count--;
+	}
 	return ret_val;
 }

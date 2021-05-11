@@ -82,10 +82,10 @@ void percpu_self_config(size_t cpu_idx)
 	wrgsbase((reg_t)cpudata_p);
 	// tasks
 	cpudata_p->curr_task = current_task;
-	cpudata_p->waiting_count =
-	cpudata_p->finished_count = 0;
-	cpudata_p->waiting_tasks =
-	cpudata_p->finished_tasks = NULL;
+	cpudata_p->waiting_tasks.count =
+	cpudata_p->finished_tasks.count = 0;
+	cpudata_p->waiting_tasks.head_ptr =
+	cpudata_p->finished_tasks.head_ptr = NULL;
 	cpudata_p->last_jiffies = 0;
 	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
 	cpudata_p->is_idle_flag = 1;

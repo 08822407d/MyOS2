@@ -12,8 +12,7 @@
 	extern kbd_inbuf_s *	p_kb;
 	extern time_s 			time;
 
-	extern idle_task_queue_s	idle_queue;
-	extern task_s *			task_waiting_list;
-	extern unsigned long	waiting_task_count;
+	extern task_queue_s	idle_queue;
+	extern task_list_s global_waiting_task;
 
 #endif /* _GLO_H_ */
