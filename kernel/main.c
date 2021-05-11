@@ -92,6 +92,12 @@ void kmain(size_t cpu_idx)
 	sti();
 
 	while(1){
-		schedule();
+		// the idle-tasks run here repeatedly
+		// the IS_BSP flag only conbined with task_0 but not the BSP
+		// once they scheduled, idle will be pushed in idle-queue
+		if (IS_BSP)
+			schedule();
+		else
+			hlt();
 	};
 }
