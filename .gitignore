@@ -14,5 +14,8 @@ _deps
 
 *.fd
 *.efi
+!BootLoader.efi
+!BOOTX64.EFI
+!bootx64.efi
 *.vmdk
 build
