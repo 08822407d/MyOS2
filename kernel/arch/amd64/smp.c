@@ -31,7 +31,7 @@ void init_smp()
 
 	// create pointer array for all percpu_data
 	unsigned nr_lcpu = kparam.nr_lcpu;
-	tss_ptr_arr = (tss64_s **)kmalloc(nr_lcpu * sizeof(tss64_s *));
+	tss_ptr_arr = (tss64_T **)kmalloc(nr_lcpu * sizeof(tss64_T *));
 	smp_info = (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
 }
 
@@ -55,7 +55,7 @@ void init_percpu_data(size_t cpu_idx)
 	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
 	arch_cpuinfo->tss = tss_ptr_arr[cpu_idx];
 	// set percpu_stack to ist
-	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
+	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
 	tss_p->rsp1 =
 	tss_p->rsp2 =
 	tss_p->ist1 =
@@ -69,9 +69,9 @@ void init_percpu_data(size_t cpu_idx)
 
 void init_percpu_arch_data(size_t cpu_idx)
 {
-	tss_ptr_arr[cpu_idx] = (tss64_s *)kmalloc(sizeof(tss64_s));
-	tss64_s * tss_p = tss_ptr_arr[cpu_idx];
-	memset(tss_p, 0, sizeof(tss64_s));	// init tss's ists
+	tss_ptr_arr[cpu_idx] = (tss64_T *)kmalloc(sizeof(tss64_T));
+	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
+	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
 	tss_p->rsp0 = (size_t)get_current() + TASK_KSTACK_SIZE;
 }
 

@@ -16,7 +16,7 @@
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
 
-extern tss64_s	bsp_tmp_tss;
+extern tss64_T	bsp_tmp_tss;
 extern char		ist_stack0;
 
 extern PCB_u	task0_PCB;
@@ -68,7 +68,7 @@ stack_frame_s * get_stackframe(task_s * task_p)
 
 inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p)
 {
-	tss64_s * curr_tss = cpudata_p->arch_info->tss;
+	tss64_T * curr_tss = cpudata_p->arch_info->tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
 	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset

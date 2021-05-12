@@ -30,7 +30,7 @@ hw_int_controller_s keyboard_int_controller =
 
 void keyboard_init()
 {		
-	ioapic_retentry_s entry;
+	ioapic_retentry_T entry;
 	unsigned long i,j;
 
 	p_kb = (kbd_inbuf_s *)kmalloc(sizeof(kbd_inbuf_s));

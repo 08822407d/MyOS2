@@ -47,7 +47,7 @@ void IOAPIC_disable(unsigned long irq_nr)
 
 unsigned long IOAPIC_install(unsigned long irq_nr, void * arg)
 {
-	ioapic_retentry_s *entry = (ioapic_retentry_s *)arg;
+	ioapic_retentry_T *entry = (ioapic_retentry_T *)arg;
 	ioapic_rte_write(irq_nr * 2 + 0x10, *(unsigned long *)entry);
 
 	return 1;

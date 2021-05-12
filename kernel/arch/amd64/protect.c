@@ -17,13 +17,13 @@
 
 
 /* Storage for gdt, idt and tss. */
-segdesc64_s		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
-gatedesc64_s	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
+gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
-tss64_s **		tss_ptr_arr = NULL;
-tss64_s			bsp_tmp_tss;
-desctblptr64_s	gdt_ptr;
-desctblptr64_s	idt_ptr;
+tss64_T **		tss_ptr_arr = NULL;
+tss64_T			bsp_tmp_tss;
+desctblptr64_T	gdt_ptr;
+desctblptr64_T	idt_ptr;
 
 /*==============================================================================================*
  *										global functions							 			*
@@ -43,7 +43,7 @@ virt_addr phys2virt(phys_addr phys)
 	return (phys_addr)(phys + offset);
 }
 
-inline __always_inline void reload_gdt(desctblptr64_s * gdt_desc)
+inline __always_inline void reload_gdt(desctblptr64_T * gdt_desc)
 {
 	__asm__ __volatile__("	lgdt	(%0)					\n\
 							movq	%%rsp, %%rax			\n\
@@ -67,7 +67,7 @@ inline __always_inline void reload_gdt(desctblptr64_s * gdt_desc)
 						 :  "rax");
 }
 
-inline __always_inline void reload_idt(desctblptr64_s * idt_desc)
+inline __always_inline void reload_idt(desctblptr64_T * idt_desc)
 {
 	__asm__ __volatile__("	lidt	(%0)					\n	"
 						 :
@@ -148,9 +148,9 @@ gate_table_s hwint_init_table[] = {
  *										initiate segs							     			*
  *==============================================================================================*/
 
-void set_commseg(uint32_t index, CommSegType type, uint8_t privil, uint8_t Lflag)
+void set_commseg(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
 {
-	segdesc64_s *sd = &(gdt[index]);
+	segdesc64_T *sd = &(gdt[index]);
 	sd->Sflag	= 1;
 	sd->Pflag	= 1;
 	// changable bits
@@ -159,24 +159,24 @@ void set_commseg(uint32_t index, CommSegType type, uint8_t privil, uint8_t Lflag
 	sd->DPL		= privil;
 }
 
-void set_codeseg(uint32_t index, CommSegType type, uint8_t privil)
+void set_codeseg(uint32_t index, CommSegType_E type, uint8_t privil)
 {
 	set_commseg(index, type, privil, 1);
 }
 
-void set_dataseg(uint32_t index, CommSegType type, uint8_t privil)
+void set_dataseg(uint32_t index, CommSegType_E type, uint8_t privil)
 {
 	set_commseg(index, type, privil, 0);
 }	
 
-void set_sysseg(uint32_t index, SysSegType type, uint8_t privil)
+void set_sysseg(uint32_t index, SysSegType_E type, uint8_t privil)
 {
 	switch (type)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_s * curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
-				TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[index];
+				tss64_T * curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
+				TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
 				tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
@@ -220,7 +220,7 @@ void init_idt()
 	gate_table_s * gtbl;
 	for ( gtbl = &(exception_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
-		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
+		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
 		curr_gate->Present = 1;
 		curr_gate->segslct = KERN_CS_SELECTOR;
@@ -234,7 +234,7 @@ void init_idt()
 
 	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
-		gatedesc64_s *curr_gate = &(idt[gtbl->vec_nr]);
+		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
 		curr_gate->Present = 1;
 		curr_gate->segslct = KERN_CS_SELECTOR;
@@ -253,7 +253,7 @@ void init_idt()
 void init_bsp_tss()
 {
 	extern char tmp_kstack_top;
-	tss64_s *curr_tss = &bsp_tmp_tss;
+	tss64_T *curr_tss = &bsp_tmp_tss;
 	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
 	curr_tss->rsp2 =
@@ -265,7 +265,7 @@ void init_bsp_tss()
 	curr_tss->ist6 =
 	curr_tss->ist7 = 0;
 	// init bsp's tss by hand
-	TSSsegdesc_s * tss_segdesc = (TSSsegdesc_s *)&gdt[TSS_INDEX(0)];
+	TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[TSS_INDEX(0)];
 	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 	tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
 	tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;

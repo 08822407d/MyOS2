@@ -10,9 +10,9 @@
 	extern uint64_t	apic_id[CONFIG_MAX_CPUS];
 	extern struct cputopo	smp_topos[CONFIG_MAX_CPUS];
 
-	extern desctblptr64_s	gdt_ptr;
-	extern desctblptr64_s	idt_ptr;
-	extern tss64_s **		tss_ptr_arr;
-	extern PML4E_u			KERN_PML4[PGENT_NR];
+	extern desctblptr64_T	gdt_ptr;
+	extern desctblptr64_T	idt_ptr;
+	extern tss64_T **		tss_ptr_arr;
+	extern PML4E_T			KERN_PML4[PGENT_NR];
 
 #endif /* _AMD64_GLO_H_ */

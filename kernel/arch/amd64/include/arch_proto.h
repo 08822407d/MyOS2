@@ -155,7 +155,7 @@
 	{
 		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
-		tss64_s *	tss;
+		tss64_T *	tss;
 	} arch_percpu_data_s;
 
 	typedef struct
@@ -177,8 +177,8 @@
 	/* protect.c */
 	phys_addr virt2phys(virt_addr);
 	virt_addr phys2virt(phys_addr);
-	void reload_gdt(desctblptr64_s * gdt_desc);
-	void reload_idt(desctblptr64_s * idt_desc);
+	void reload_gdt(desctblptr64_T * gdt_desc);
+	void reload_idt(desctblptr64_T * idt_desc);
 	void reload_tss(uint64_t cpu_idx);
 	void init_bsp_arch_data(void);
 	void load_arch_data(size_t cpu_idx);
@@ -191,9 +191,9 @@
 	/* arch_page_util. */
 	void arch_page_preinit(void);
 	void reload_arch_page(void);
-	void pg_load_cr3(PML4E_u *);
+	void pg_load_cr3(PML4E_T *);
 	void refresh_arch_page(void);
-	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_u * pml4_base);
+	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_T * pml4_base);
 	void pg_unmap(virt_addr);
 
 	/* i8259.c */

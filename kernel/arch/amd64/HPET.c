@@ -35,7 +35,7 @@ void HPET_init()
 	unsigned int x;
 	unsigned int * p = NULL;
 	unsigned char * HPET_addr = (unsigned char *)phys2virt((phys_addr)0xfed00000);
-	ioapic_retentry_s entry;
+	ioapic_retentry_T entry;
 	
 	//get RCBA address
 	outl(0xcf8,0x8000f8f0);

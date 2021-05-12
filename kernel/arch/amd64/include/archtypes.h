@@ -20,7 +20,7 @@
 		EA_CODE		= 9,
 		ER_CODE		= 10,
 		ERA_CODE	= 11,
-	} CommSegType;
+	} CommSegType_E;
 	/* type field of segdesc, for system segment */
 	typedef enum
 	{	
@@ -30,7 +30,7 @@
 		CALLGATE	= 12,
 		INTRGATE	= 14,
 		TRAPGATE	= 15
-	} SysSegType;
+	} SysSegType_E;
 
 
 	/* 64bit version segdesc for common segment */
@@ -45,7 +45,7 @@
 							: 5, // unused
 					Lflag	: 1, // 0=dataseg, 1=codeseg
 							: 10; // unused
-	} segdesc64_s;
+	} segdesc64_T;
 
 	/* 64bit version segdesc for TSS segment */
 	typedef struct  __attribute__((packed)) {
@@ -60,7 +60,7 @@
 							: 3; // unused
 		uint64_t	Base2	: 40;
 		uint32_t			: 32; // unused
-	} TSSsegdesc_s;
+	} TSSsegdesc_T;
 
 	/* 64bit version segdesc for gate */
 	typedef struct __attribute__((packed)) {
@@ -74,18 +74,14 @@
 					Present	: 1;
 		uint64_t	offs2	: 48;
 		uint32_t			: 32; // unused
-	} gatedesc64_s;
-
+	} gatedesc64_T;
 
 	/* input for 64bit version instruction lgdt and lidt */
 	typedef struct __attribute__((packed)) {
 		uint32_t	limit	: 16;
 		uint64_t	base	: 64;
 		uint32_t			: 16;
-	} desctblptr64_s;
-
-	typedef struct {
-	} segframe_s;
+	} desctblptr64_T;
 
 	/* 64bit version TSS */
 	typedef struct __attribute__((packed)) {
@@ -104,7 +100,7 @@
 		reg_t				: 64; // unused
 		uint64_t			: 32, // unused
 					iobm	: 32;
-	} tss64_s;
+	} tss64_T;
 
 /*==============================================================================================*
  *											page structs								 		*
@@ -120,12 +116,12 @@
 					PHYADDR	: 36,
 							: 15,
 					XDflag	: 1;
-	} PML4E_defs_s;
+	} PML4E_defs_T;
 	typedef union
 	{
-		uint64_t		PML4E;
-		PML4E_defs_s	PML4E_defs;
-	} PML4E_u;
+		uint64_t		ENT;
+		PML4E_defs_T	defs;
+	} PML4E_T;
 	
 	typedef struct __attribute__((packed)) {
 		uint16_t	Pflag	: 1,
@@ -146,19 +142,19 @@
 	typedef PDPTE_defs_s PTE_defs_s;
 	typedef union
 	{
-		uint64_t		PDPTE;
-		PDPTE_defs_s	PDPTE_defs;
-	} PDPTE_u;
+		uint64_t		ENT;
+		PDPTE_defs_s	defs;
+	} PDPTE_T;
 	typedef union
 	{
-		uint64_t		PDE;
-		PDE_defs_s		PDE_defs;
-	} PDE_u;
+		uint64_t		ENT;
+		PDE_defs_s		defs;
+	} PDE_T;
 	typedef union
 	{
-		uint64_t		PTE;
-		PTE_defs_s		PTE_defs;
-	} PTE_u;
+		uint64_t		ENT;
+		PTE_defs_s		defs;
+	} PTE_T;
 	
 /*==============================================================================================*
  *											APIC structs								 		*
@@ -176,7 +172,7 @@
 					mask			:1,		//16	ALL
 					timer_mode		:2,		//17~18	Timer
 					res_2			:13;	//19~31
-	} apic_lvt_s;
+	} apic_lvt_T;
 
 	/* ICR */
 	typedef struct __attribute__((packed))
@@ -201,7 +197,7 @@
 			uint32_t	x2apic_dst;			//32~63
 		} dst;
 			
-	} intcmd_reg_s;
+	} intcmd_reg_T;
 
 	/* RTE */
 	typedef struct __attribute__((packed))
@@ -228,8 +224,7 @@
 							logical_dest	:8;	//56~63
 			} logical;
 		} dst;
-	} ioapic_retentry_s;
-
+	} ioapic_retentry_T;
 
 /*==============================================================================================*
  *												CPUID											*
