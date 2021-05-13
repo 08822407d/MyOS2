@@ -106,6 +106,38 @@
 				}															\
 			})
 
+	#define m_remove_from_list(unit)										\
+			({																\
+				if ((unit) != NULL)											\
+				{															\
+					if ((unit)->list_header->count == 1)					\
+						(unit)->list_header->head_p = NULL;					\
+					else if ((unit) == (unit)->list_header->head_p)			\
+						(unit)->list_header->head_p =						\
+								(unit)->list_header->head_p->next;			\
+																			\
+					m_list_delete((unit));									\
+					(unit)->list_header = NULL;								\
+					(unit)->list_header->count--;							\
+				}															\
+			})
+
+	#define m_enqueue m_push_list
+
+	#define m_dequeue(ret_val, list_head)									\
+			({																\
+				if ((list_head) != NULL)									\
+				{															\
+					(ret_val) = (list_head)->head_p->prev;					\
+					if ((list_head)->count == 1)							\
+						(list_head)->head_p = NULL;							\
+																			\
+					m_list_delete((ret_val));								\
+					(ret_val)->list_header = NULL;							\
+					(list_head)->count--;									\
+				}															\
+			})
+
 /*==============================================================================================*
  *											BTREE												*
  *==============================================================================================*/

@@ -13,42 +13,6 @@
 
 #include "klib/data_structure.h"
 
-unsigned long test_task_a(unsigned long arg)
-{
-	while (1)
-	{
-		unsigned long k = 0;
-		for (int i = 0; i < 0x2000; i++)
-			for (int j = 0; j < 0x2000; j++)
-				k++;
-
-		color_printk(WHITE, BLACK, "-A- ");
-	}
-}
-
-unsigned long test_task_b(unsigned long arg)
-{
-	while (1)
-	{
-		unsigned long k = 0;
-		for (int i = 0; i < 0x2000; i++)
-			for (int j = 0; j < 0x2000; j++)
-				k++;
-		color_printk(WHITE, BLACK, "-B- ");
-	}
-}
-
-unsigned long test_task_c(unsigned long arg)
-{
-	while (1)
-	{
-		unsigned long k = 0;
-		for (int i = 0; i < 0x2000; i++)
-			for (int j = 0; j < 0x2000; j++)
-				k++;
-		color_printk(WHITE, BLACK, "-C- ");
-	}
-}
 
 void kmain(size_t cpu_idx)
 {
@@ -78,9 +42,6 @@ void kmain(size_t cpu_idx)
 
 	percpu_self_config(cpu_idx);
 
-	kernel_thread(test_task_a, 0, 0);
-	kernel_thread(test_task_b, 0, 0);
-	kernel_thread(test_task_c, 0, 0);
 
 	// post init
 	if (IS_BSP)
@@ -90,6 +51,8 @@ void kmain(size_t cpu_idx)
 		devices_init();
 	}
 	sti();
+
+	module_test();
 
 	while(1){
 		// the idle-tasks run here repeatedly
