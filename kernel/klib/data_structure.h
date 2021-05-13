@@ -25,6 +25,7 @@
 				{									\
 					(src)->prev = (src);			\
 					(src)->next = (src);			\
+					(src)->list_header = NULL;		\
 				}									\
 			})
 
@@ -84,6 +85,7 @@
 						m_list_insert_front((unit), (list_head)->head_p);	\
 																			\
 					(list_head)->head_p = (list_head)->head_p->prev;		\
+					(unit)->list_header = list_head;						\
 					(list_head)->count++;									\
 				}															\
 			})
@@ -99,6 +101,7 @@
 						(list_head)->head_p = (list_head)->head_p->next;	\
 																			\
 					m_list_delete((ret_val));								\
+					(ret_val)->list_header = NULL;							\
 					(list_head)->count--;									\
 				}															\
 			})

@@ -2,18 +2,26 @@
 #define _PROTO_H_
 
 #include <sys/types.h>
+
 #include "ktypes.h"
+#include "../klib/data_structure.h"
 		
-	struct timer_list;
-	typedef struct timer_list timer_list_s;
-	typedef struct timer_list
+	struct timer;
+	typedef struct timer timer_s;	
+
+	define_list_header(timer);
+
+	typedef struct timer
 	{
-		timer_list_s *	prev;
-		timer_list_s *	next;
+		timer_s *		prev;
+		timer_s *		next;
+		
+		timer_list_s *	list_header;
+
 		unsigned long 	expire_jiffies;
 		void 			(* func)(void * data);
 		void *			data;
-	} timer_list_s;
+	} timer_s;
 
 	typedef struct softirq
 	{
@@ -23,7 +31,7 @@
 
 	extern uint64_t		softirq_status;
 	extern softirq_s	softirq_vector[64];
-	extern timer_list_s timer_list_head;
+	extern timer_s timer_list_head;
 
 
 	/* main.c */
@@ -54,9 +62,9 @@
 	void softirq_init(void);
 
 	/* timer.c */
-	void init_timer(timer_list_s * timer,void (* func)(void * data),void *data,unsigned long expire_jiffies);
-	void add_timer(timer_list_s * timer);
-	void del_timer(timer_list_s * timer);
+	void init_timer(timer_s * timer,void (* func)(void * data),void *data,unsigned long expire_jiffies);
+	void add_timer(timer_s * timer);
+	void del_timer(timer_s * timer);
 	void timer_init(void);
 	void do_timer(void * data);
 

@@ -236,14 +236,11 @@ void * kmalloc(size_t size)
 	slab_s *	slp = NULL;
 	if (scgp->normal_slab_used.count > 0)
 	{
-
+		m_pop_list(slp, &scgp->normal_slab_used);
 		if (slp->free == 1)
-		{
-			m_pop_list(slp, &scgp->normal_slab_used);
 			m_push_list(slp, &scgp->normal_slab_full);
-		}
 		else
-			slp = scgp->normal_slab_used.head_p;
+			m_push_list(slp, &scgp->normal_slab_used);
 	}
 	else if (scgp->normal_slab_free.count > 0)
 	{

@@ -11,9 +11,9 @@
 
 
 unsigned long volatile jiffies = 0;
-timer_list_s timer_list_head;
+timer_s timer_list_head;
 
-void init_timer(timer_list_s * timer,
+void init_timer(timer_s * timer,
 				void (* func)(void * data),
 				void *data,
 				unsigned long expire_jiffies)
@@ -24,9 +24,9 @@ void init_timer(timer_list_s * timer,
 	timer->expire_jiffies = jiffies + expire_jiffies;
 }
 
-void add_timer(timer_list_s * timer)
+void add_timer(timer_s * timer)
 {
-	timer_list_s * tmp = timer_list_head.next;
+	timer_s * tmp = timer_list_head.next;
 
 	if(timer_list_head.next == NULL &&
 		timer_list_head.prev == NULL)
@@ -41,7 +41,7 @@ void add_timer(timer_list_s * timer)
 	m_list_insert_back(timer, tmp);
 }
 
-void del_timer(timer_list_s * timer)
+void del_timer(timer_s * timer)
 {
 	m_list_delete(timer);
 }
@@ -53,19 +53,19 @@ void test_timer(void * data)
 
 void timer_init()
 {
-	timer_list_s *tmp = NULL;
+	timer_s *tmp = NULL;
 	jiffies = 0;
 	init_timer(&timer_list_head, NULL, NULL, -1UL);
 	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
 
-	// tmp = (timer_list_s *)kmalloc(sizeof(timer_list_s));
+	// tmp = (timer_s *)kmalloc(sizeof(timer_s));
 	// init_timer(tmp, &test_timer, NULL, 5);
 	// add_timer(tmp);
 }
 
 void do_timer(void * data)
 {
-	timer_list_s * tmp = timer_list_head.next;
+	timer_s * tmp = timer_list_head.next;
 	while(timer_list_head.prev != NULL &&
 			timer_list_head.next != NULL &&
 			(tmp->expire_jiffies <= jiffies))

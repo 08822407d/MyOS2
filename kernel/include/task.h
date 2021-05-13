@@ -30,19 +30,24 @@
 
 	struct task;
 	typedef struct task task_s;
+
+	define_list_header(task);
+
 	typedef struct task
 	{
-		task_s *	prev;
-		task_s *	next;
-		arch_PCB_s	arch_struct;
+		task_s *		prev;
+		task_s *		next;
+
+		task_list_s *	list_header;
+
+		arch_PCB_s		arch_struct;
 
 		volatile long	state;
 		unsigned long	flags;
 
-		long	pid;
-		long	signal;
-		long	prior;
-
+		unsigned long	pid;
+		unsigned long	signal;
+		unsigned long	prior;
 		unsigned long	task_jiffies;
 	} task_s;
 
@@ -62,8 +67,6 @@
 		unsigned	head;	// point to the firt non-null unit in queue
 		unsigned	tail;	// point to next unit of the last non-null
 	} task_queue_s;
-
-	define_list_header(task);
 
 	typedef struct percpu_info
 	{

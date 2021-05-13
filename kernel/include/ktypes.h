@@ -66,10 +66,14 @@
 /*==============================================================================================*
  *									kernel malloc and slab										*
  *==============================================================================================*/
+	define_list_header(slab);
+
 	typedef struct slab
 	{
 		slab_s *		prev;
 		slab_s *		next;
+
+		slab_list_s *	list_header;
 
 		slab_cache_s *	slabcache_ptr;
 
@@ -81,12 +85,14 @@
 		bitmap_t *		colormap;
 	} slab_s;
 
-	define_list_header(slab);
+	define_list_header(slab_cache);
 
 	typedef struct slab_cache
 	{
 		slab_cache_s *	prev;
 		slab_cache_s *	next;
+
+		slab_cache_list_s *	list_header;
 
 		unsigned long	obj_size;
 
@@ -104,8 +110,6 @@
 		// unsigned long	dsobj_free_count;
 		// unsigned long	dsobj_used_count;
 	} slab_cache_s;
-
-	define_list_header(slab_cache);
 	
 /*==============================================================================================*
  *									data structures for devices									*
