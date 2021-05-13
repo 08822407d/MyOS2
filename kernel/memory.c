@@ -205,6 +205,7 @@ void slab_free(slab_s * slp)
 	slp->page->attr &= ~PG_Slab;
 	slp->page->slab_ptr = NULL;
 	m_list_delete(slp);
+	slp->slabcache_ptr->normal_slab_free.count--;
 
 	kfree(slp);
 }
@@ -224,18 +225,25 @@ void * kmalloc(size_t size)
 
 	void * ret_val = NULL;
 	// find suitable slab group
-	slab_cache_s *	scgp = slab_cache_list.head_p;
+	slab_cache_s *	scgp = &slab_cache_groups[0];
 	while (size > scgp->obj_size)
 		scgp = m_list_get_next(scgp);
 
+	spin_lock(&slab_spin_lock);
+
 	// find a usable slab and if it is in free list, move it to used list
-	// or if it is in used list and has only one slot, move it to full list
+	// or if it is in used list and has only one free slot, move it to full list
 	slab_s *	slp = NULL;
 	if (scgp->normal_slab_used.count > 0)
 	{
-		m_pop_list(slp, &scgp->normal_slab_used);
-		if (slp->free == (slp->total - 1))
+
+		if (slp->free == 1)
+		{
+			m_pop_list(slp, &scgp->normal_slab_used);
 			m_push_list(slp, &scgp->normal_slab_full);
+		}
+		else
+			slp = scgp->normal_slab_used.head_p;
 	}
 	else if (scgp->normal_slab_free.count > 0)
 	{
@@ -244,11 +252,10 @@ void * kmalloc(size_t size)
 	}
 	else
 	{
-		color_printk(WHITE, RED, "Slab %d-byte used out!", scgp->obj_size);
+		color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
 		while (1);
 	}
 		
-	spin_lock(&slab_spin_lock);
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
 	if (obj_idx < slp->total)
@@ -260,23 +267,26 @@ void * kmalloc(size_t size)
 		scgp->nsobj_free_count--;
 		scgp->nsobj_used_count++;
 		bm_set_bit(slp->colormap, obj_idx);
-		// assure usable memory more than one page
-		if (scgp->nsobj_free_count < slp->total)
+
+	}
+	// make sure free slab more than one
+	if (scgp->normal_slab_free.count < 1)
+	{
+		scgp->normal_slab_free.count++;
+		spin_unlock(&slab_spin_lock);
+		slab_s * new_slab = slab_alloc(slp->total);
+		spin_lock(&slab_spin_lock);
+		scgp->normal_slab_free.count--;
+		if (new_slab == NULL)
 		{
-			scgp->nsobj_free_count += slp->total;
-			spin_unlock(&slab_spin_lock);
-			slab_s * new_slab = slab_alloc(slp->total);
-			spin_lock(&slab_spin_lock);
-			if (new_slab == NULL)
-			{
-				color_printk(RED, WHITE, "Alloc new slab failed!\n");
-				scgp->nsobj_free_count -= slp->total;
-				while (1);
-			}
-			new_slab->slabcache_ptr = scgp;
-			m_push_list(new_slab, &scgp->normal_slab_free);
-			scgp->normal_slab_total++;
+			color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
+			while (1);
 		}
+		new_slab->slabcache_ptr = scgp;
+		m_push_list(new_slab, &scgp->normal_slab_free);
+		scgp->normal_slab_total++;
+		scgp->normal_slab_free.count++;
+		scgp->nsobj_free_count += new_slab->total;
 	}
 
 	spin_unlock(&slab_spin_lock);
@@ -290,7 +300,6 @@ void kfree(void * obj_p)
 		while (!kparam.init_flags.slab);
 	#endif
 
-
 	if (obj_p == NULL)
 		return;
 
@@ -299,21 +308,47 @@ void kfree(void * obj_p)
 	Page_s * pgp = &mem_info.pages[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
+	if (slp->free == slp->total)
+	{
+		color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
+		while (1);
+	}
+
 	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
 	spin_lock(&slab_spin_lock);
+	if (bm_get_assigned_bit(slp->colormap, obj_idx));
+	{
+		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
+		while (1);
+	}
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;
 	scgp->nsobj_used_count--;
-	if ((slp->free == slp->total) &&
-		(scgp->nsobj_free_count >= (slp->total * 3)) &&
-		(slp != scgp->normal_slab))
+	// if the correspond slab in full list, move it to used list
+	// or if it is in used list and only use one slot, move it to free list
+	if (slp->free == 1)
 	{
+		m_list_delete(slp);
+		scgp->normal_slab_full.count--;
+		m_push_list(slp, &scgp->normal_slab_used);
+	}
+	else if (slp->free == 0)
+	{
+		m_list_delete(slp);
+		scgp->normal_slab_used.count--;
+		m_push_list(slp, &scgp->normal_slab_free);
+	}
+	// if there is too many free slab, free some of them
+	if (scgp->normal_slab_free.count > 2)
+	{
+		slab_s * tmp_slp = scgp->normal_slab_free.head_p->prev;
 		spin_unlock(&slab_spin_lock);
 		slab_free(slp);
 		spin_lock(&slab_spin_lock);
-		scgp->nslab_count--;
+		scgp->normal_slab_total;
 		scgp->nsobj_free_count -= slp->total;
 	}
+
 	spin_unlock(&slab_spin_lock);
 }
