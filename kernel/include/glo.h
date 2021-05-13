@@ -13,6 +13,7 @@
 	extern time_s 			time;
 
 	extern task_queue_s	idle_queue;
-	extern task_list_s global_waiting_task;
+	extern task_list_s global_ready_task;
+	extern task_list_s global_blocked_task;
 
 #endif /* _GLO_H_ */

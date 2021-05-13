@@ -7,7 +7,6 @@
 #include "include/const.h"
 #include "include/task.h"
 #include "include/proto.h"
-#include "klib/data_structure.h"
 
 PCB_u **	idle_tasks;
 task_queue_s idle_queue;
@@ -15,7 +14,8 @@ task_queue_s idle_queue;
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u		task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 
-task_list_s global_waiting_task;
+task_list_s global_ready_task;
+task_list_s global_blocked_task;
 
 void creat_idles(void);
 
@@ -34,8 +34,8 @@ void init_task()
 	percpu_data_s * bsp_cpudata = smp_info[0];
 	bsp_cpudata->waiting_tasks.count = 
 	bsp_cpudata->waiting_tasks.count = 0;
-	bsp_cpudata->waiting_tasks.head_ptr =
-	bsp_cpudata->finished_tasks.head_ptr = NULL;
+	bsp_cpudata->waiting_tasks.head_p =
+	bsp_cpudata->finished_tasks.head_p = NULL;
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->task_jiffies = task0->task_jiffies;
 
@@ -105,11 +105,11 @@ void task_list_push(task_list_s * list, task_s * task)
 		return;
 	
 	if (list->count == 0)
-		list->head_ptr = task;
+		list->head_p = task;
 	else
-		m_list_insert_front(task, list->head_ptr);
+		m_list_insert_front(task, list->head_p);
 
-	list->head_ptr = list->head_ptr->prev;
+	list->head_p = list->head_p->prev;
 	list->count++;
 }
 
@@ -118,11 +118,11 @@ task_s * task_list_pop(task_list_s * list)
 	task_s * ret_val = NULL;
 	if (list != NULL)
 	{
-		ret_val = list->head_ptr;
-		list->head_ptr = list->head_ptr->next;
+		ret_val = list->head_p;
+		list->head_p = list->head_p->next;
 
 		if (list->count == 1)
-			list->head_ptr = NULL;
+			list->head_p = NULL;
 		else
 			m_list_delete(ret_val);
 

@@ -6,6 +6,7 @@
 
 #include "const.h"
 #include "../arch/amd64/include/arch_task.h"
+#include "../klib/data_structure.h"
 
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)
@@ -62,11 +63,7 @@
 		unsigned	tail;	// point to next unit of the last non-null
 	} task_queue_s;
 
-	typedef struct task_list
-	{
-		task_s *	head_ptr;
-		unsigned	count;
-	} task_list_s;
+	define_list_header(task);
 
 	typedef struct percpu_info
 	{

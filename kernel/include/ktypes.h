@@ -11,6 +11,8 @@
 #include "../arch/amd64/include/keyboard.h"
 #include "../arch/amd64/include/multiboot2.h"
 
+#include "../klib/data_structure.h"
+
 	#define MAXMEMZONE		64
 
 	struct  slab;
@@ -18,7 +20,9 @@
 
 	struct	slab_cache;
 	typedef struct slab_cache slab_cache_s;
-	/* for page management */
+/*==============================================================================================*
+ *									physical page management									*
+ *==============================================================================================*/
 	typedef struct Page
 	{
 		struct MemZone *zone_belonged;
@@ -59,6 +63,9 @@
 		unsigned long	memzone_total_nr;	
 	} memory_info_s;
 
+/*==============================================================================================*
+ *									kernel malloc and slab										*
+ *==============================================================================================*/
 	typedef struct slab
 	{
 		slab_s *		prev;
@@ -74,6 +81,8 @@
 		bitmap_t *		colormap;
 	} slab_s;
 
+	define_list_header(slab);
+
 	typedef struct slab_cache
 	{
 		slab_cache_s *	prev;
@@ -81,17 +90,26 @@
 
 		unsigned long	obj_size;
 
-		unsigned long	nslab_count;
-		slab_s *		normal_slab;
+		unsigned long	normal_slab_total;
+		slab_list_s		normal_slab_free;
+		slab_list_s		normal_slab_used;
+		slab_list_s		normal_slab_full;
 		unsigned long	nsobj_free_count;
 		unsigned long	nsobj_used_count;
 
 		// unsigned long	dslab_count;
-		// slab_s *		dma_slab;
+		// slab_list_s		dma_slab_free;
+		// slab_list_s		dma_slab_used;
+		// slab_list_s		dma_slab_full;
 		// unsigned long	dsobj_free_count;
 		// unsigned long	dsobj_used_count;
 	} slab_cache_s;
+
+	define_list_header(slab_cache);
 	
+/*==============================================================================================*
+ *									data structures for devices									*
+ *==============================================================================================*/
 	typedef struct keyboard_inputbuffer
 	{
 		unsigned char * p_head;

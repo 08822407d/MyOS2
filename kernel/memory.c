@@ -22,6 +22,7 @@ extern kinfo_s kparam;
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 
+slab_cache_list_s slab_cache_list;
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
@@ -31,7 +32,7 @@ spinlock_T		slab_spin_lock;
  *								fuction relate to physical page									*
  *==============================================================================================*/
 void init_page_manage()
-{
+{	
 	#ifdef DEBUG
 		// make sure have get memory layout
 		while (!kparam.arch_init_flags.memory_layout);
@@ -131,13 +132,17 @@ void init_slab()
 	#endif
 
 	spin_init(&slab_spin_lock);
+	init_list_header(&slab_cache_list);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
 		slab_cache_s * scgp = &slab_cache_groups[i];
+		m_push_list(scgp, &slab_cache_list);
+
+		init_list_header(&scgp->normal_slab_free);
+		init_list_header(&scgp->normal_slab_used);
+		init_list_header(&scgp->normal_slab_full);
 		m_list_init(scgp);
-		if (i > 0)
-			m_list_insert_back(scgp, (scgp - 1));
 
 		slab_s * bsp = &base_slabs[i];
 
@@ -145,8 +150,9 @@ void init_slab()
 		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
-		scgp->normal_slab = bsp;
-		scgp->nslab_count = 1;
+		scgp->normal_slab_free.head_p = bsp;
+		scgp->normal_slab_free.count =
+		scgp->normal_slab_total = 1;
 		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
 
@@ -181,13 +187,14 @@ slab_s * slab_alloc(size_t obj_count)
 	
 	pg->attr |= PG_Slab;
 	slab_s * sp = (slab_s *)kmalloc(sizeof(slab_s));
+	m_list_init(sp);
+
 	sp->page = pg;
 	pg->slab_ptr = sp;
 	sp->colormap = (bitmap_t *)kmalloc(obj_count / sizeof(bitmap_t));
 	sp->total =
 	sp->free = obj_count;
 	sp->virt_addr = phys2virt(pg->page_start_addr);
-	m_list_init(sp);
 
 	return sp;
 }
@@ -217,26 +224,31 @@ void * kmalloc(size_t size)
 
 	void * ret_val = NULL;
 	// find suitable slab group
-	size--;
-	size /= SLAB_SIZE_BASE;
-	int sc_idx = 0;
-	if (size > 0)
-	{
-		sc_idx++;
-		while(size >> sc_idx)
-		{
-			sc_idx++;
-		}
-	}
+	slab_cache_s *	scgp = slab_cache_list.head_p;
+	while (size > scgp->obj_size)
+		scgp = m_list_get_next(scgp);
 
-	// find a usable slab
-	slab_cache_s *	scgp = &slab_cache_groups[sc_idx];
-	slab_s *		slp = scgp->normal_slab;
-	spin_lock(&slab_spin_lock);
-	while (slp->free == 0)
+	// find a usable slab and if it is in free list, move it to used list
+	// or if it is in used list and has only one slot, move it to full list
+	slab_s *	slp = NULL;
+	if (scgp->normal_slab_used.count > 0)
 	{
-		slp = slp->next;
+		m_pop_list(slp, &scgp->normal_slab_used);
+		if (slp->free == (slp->total - 1))
+			m_push_list(slp, &scgp->normal_slab_full);
 	}
+	else if (scgp->normal_slab_free.count > 0)
+	{
+		m_pop_list(slp, &scgp->normal_slab_free);
+		m_push_list(slp, &scgp->normal_slab_used);
+	}
+	else
+	{
+		color_printk(WHITE, RED, "Slab %d-byte used out!", scgp->obj_size);
+		while (1);
+	}
+		
+	spin_lock(&slab_spin_lock);
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
 	if (obj_idx < slp->total)
@@ -262,8 +274,8 @@ void * kmalloc(size_t size)
 				while (1);
 			}
 			new_slab->slabcache_ptr = scgp;
-			m_list_insert_back(new_slab, scgp->normal_slab);
-			scgp->nslab_count++;
+			m_push_list(new_slab, &scgp->normal_slab_free);
+			scgp->normal_slab_total++;
 		}
 	}
 

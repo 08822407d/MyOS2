@@ -78,9 +78,9 @@ void kmain(size_t cpu_idx)
 
 	percpu_self_config(cpu_idx);
 
-	// kernel_thread(test_task_a, 0, 0);
-	// kernel_thread(test_task_b, 0, 0);
-	// kernel_thread(test_task_c, 0, 0);
+	kernel_thread(test_task_a, 0, 0);
+	kernel_thread(test_task_b, 0, 0);
+	kernel_thread(test_task_c, 0, 0);
 
 	// post init
 	if (IS_BSP)

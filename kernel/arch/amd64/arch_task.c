@@ -144,7 +144,7 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 void wakeup_task(task_s * task)
 {
 	task->state |= PS_WAITING;
-	task_list_push(&global_waiting_task, task);
+	task_list_push(&global_ready_task, task);
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -305,11 +305,11 @@ void schedule()
 	while (cpudata_p->finished_tasks.count)
 	{
 		task_s * tmp = task_list_pop(&cpudata_p->finished_tasks);
-		task_list_push(&global_waiting_task, tmp);
+		task_list_push(&global_ready_task, tmp);
 	}
-	while (global_waiting_task.count)
+	while (global_ready_task.count)
 	{
-		task_s * tmp = task_list_pop(&global_waiting_task);
+		task_s * tmp = task_list_pop(&global_ready_task);
 		task_list_push(&cpudata_p->waiting_tasks, tmp);
 	}
 	// insert schedule self to cpu's waiting list end
