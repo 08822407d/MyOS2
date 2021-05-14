@@ -18,7 +18,8 @@
 
 #include <stdarg.h>
 #include <lib/font.h>
-#include <lib/pthread.h>
+
+#include "../arch/amd64/include/exclusive.h"
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */

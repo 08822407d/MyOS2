@@ -1,6 +1,5 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
-// #include <lib/utils.h>
 #include <lib/string.h>
 
 #include "include/glo.h"
@@ -8,14 +7,20 @@
 #include "include/task.h"
 #include "include/proto.h"
 
-PCB_u **	idle_tasks;
-task_queue_s idle_queue;
+#include "arch/amd64/include/exclusive.h"
+
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
-PCB_u		task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
+PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 
-task_list_s global_ready_task;
-task_list_s global_blocked_task;
+PCB_u **		idle_tasks;
+task_queue_s	idle_queue;
+spinlock_T		idle_queue_lock;
+
+task_list_s		global_ready_task;
+spinlock_T		global_ready_task_lock;
+task_list_s		global_blocked_task;
+spinlock_T		global_blocked_task_lock;
 
 void creat_idles(void);
 
@@ -44,6 +49,7 @@ void init_task()
 
 void creat_idles()
 {
+	spin_init(&idle_queue_lock);
 	idle_tasks = kmalloc(kparam.nr_lcpu * sizeof(PCB_u *));
 	idle_tasks[0] = &task0_PCB;
 	for (int i = 1; i < kparam.nr_lcpu; i++)
@@ -69,11 +75,11 @@ void creat_idles()
 void idle_enqueue(task_s * idle)
 {
 	if (idle_queue.nr_curr >= idle_queue.nr_max)
-	{
 		return;
-	}
+
+	spin_lock(&idle_queue_lock);
 	// make sure the schedule task always the first in queue
-	else if (idle == idle_queue.sched_task)
+	if (idle == idle_queue.sched_task)
 	{
 		idle_queue.head = (idle_queue.head - 1 + idle_queue.nr_max) % idle_queue.nr_max;
 		idle_queue.queue[idle_queue.head] = idle;
@@ -84,17 +90,20 @@ void idle_enqueue(task_s * idle)
 		idle_queue.tail = (idle_queue.tail + 1) % idle_queue.nr_max;
 	}
 	idle_queue.nr_curr++;
+	spin_unlock(&idle_queue_lock);
 }
 
 task_s * idle_dequeue()
 {
 	task_s * ret_val = NULL;
+	spin_lock(&idle_queue_lock);
 	if (idle_queue.nr_curr > 0)
 	{
 		ret_val = idle_queue.queue[idle_queue.head];
 		idle_queue.head = (idle_queue.head + 1) % idle_queue.nr_max;
 	}
 	idle_queue.nr_curr--;
+	spin_unlock(&idle_queue_lock);
 
 	return ret_val;
 }

@@ -21,12 +21,13 @@ extern kinfo_s kparam;
 
 memory_info_s		mem_info;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
+spinlock_T		page_alloc_lock;
 
 slab_cache_list_s slab_cache_list;
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
-spinlock_T		slab_spin_lock;
+spinlock_T		slab_alloc_lock;
 
 /*==============================================================================================*
  *								fuction relate to physical page									*
@@ -39,6 +40,7 @@ void init_page_manage()
 	#endif
 
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
+	spin_init(&page_alloc_lock);
 
 	phys_addr low_bound = 0, high_bound = 0;
 	uint64_t pg_start_idx = 0, pg_end_idx = 0;
@@ -102,6 +104,7 @@ void init_page_manage()
 
 Page_s * page_alloc(void)
 {
+	spin_lock(&page_alloc_lock);
 	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
 	if (freepage_idx >= mem_info.page_total_nr)
 	{
@@ -110,12 +113,14 @@ Page_s * page_alloc(void)
 	}
 	Page_s * ret_page = &mem_info.pages[freepage_idx];
 	bm_set_bit(mem_info.page_bitmap, freepage_idx);
+	spin_unlock(&page_alloc_lock);
 	ret_page->ref_count++;
 	return ret_page;
 }
 
 void page_free(Page_s * page_p)
 {
+	spin_lock(&page_alloc_lock);
 	unsigned long page_idx = (unsigned long)page_p->page_start_addr / CONFIG_PAGE_SIZE;
 	bm_clear_bit(mem_info.page_bitmap, page_idx);
 	page_p->attr = 0;
@@ -123,6 +128,7 @@ void page_free(Page_s * page_p)
 
 	page_p->zone_belonged->page_total_ref--;
 	page_p->zone_belonged->page_free_nr++;
+	spin_unlock(&page_alloc_lock);
 }
 
 /*==============================================================================================*
@@ -136,7 +142,7 @@ void init_slab()
 		while (!kparam.init_flags.page_mm);
 	#endif
 
-	spin_init(&slab_spin_lock);
+	spin_init(&slab_alloc_lock);
 	init_list_header(&slab_cache_list);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
@@ -157,6 +163,7 @@ void init_slab()
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
 		m_push_list(bslp, &scgp->normal_slab_free);
+		scgp->normal_base_slab = bslp;
 		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
 		scgp->normal_slab_total = 1;
@@ -233,7 +240,7 @@ void * kmalloc(size_t size)
 	while (size > scgp->obj_size)
 		scgp = m_list_get_next(scgp);
 
-	spin_lock(&slab_spin_lock);
+	spin_lock(&slab_alloc_lock);
 
 	// find a usable slab and if it is in free list, move it to used list
 	// or if it is in used list and has only one free slot, move it to full list
@@ -274,9 +281,9 @@ void * kmalloc(size_t size)
 	if (scgp->normal_slab_free.count < 1)
 	{
 		scgp->normal_slab_free.count++;
-		spin_unlock(&slab_spin_lock);
+		spin_unlock(&slab_alloc_lock);
 		slab_s * new_slab = slab_alloc(slp);
-		spin_lock(&slab_spin_lock);
+		spin_lock(&slab_alloc_lock);
 		scgp->normal_slab_free.count--;
 		if (new_slab == NULL)
 		{
@@ -289,7 +296,7 @@ void * kmalloc(size_t size)
 		scgp->nsobj_free_count += new_slab->total;
 	}
 
-	spin_unlock(&slab_spin_lock);
+	spin_unlock(&slab_alloc_lock);
 	return ret_val;
 }
 
@@ -317,7 +324,7 @@ void kfree(void * obj_p)
 	}
 
 	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
-	spin_lock(&slab_spin_lock);
+	spin_lock(&slab_alloc_lock);
 	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
 	{
 		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
@@ -339,19 +346,23 @@ void kfree(void * obj_p)
 	{
 		m_list_delete(slp);
 		scgp->normal_slab_used.count--;
-		m_push_list(slp, &scgp->normal_slab_free);
+		// if slp is base-slab, add it to tail
+		if (slp != scgp->normal_base_slab)
+			m_push_list(slp, &scgp->normal_slab_free);
+		else
+			m_append_to_list(slp, &scgp->normal_slab_free);
 	}
 	// if there is too many free slab, free some of them
 	if (scgp->normal_slab_free.count > 2)
 	{
 		slab_s * tmp_slp = scgp->normal_slab_free.head_p->prev;
 		scgp->normal_slab_free.count--;
-		spin_unlock(&slab_spin_lock);
-		slab_free(slp);
-		spin_lock(&slab_spin_lock);
+		spin_unlock(&slab_alloc_lock);
+		slab_free(scgp->normal_slab_free.head_p);
+		spin_lock(&slab_alloc_lock);
 		scgp->normal_slab_total;
-		scgp->nsobj_free_count -= slp->total;
+		scgp->nsobj_free_count -= scgp->normal_slab_free.head_p->total;
 	}
 
-	spin_unlock(&slab_spin_lock);
+	spin_unlock(&slab_alloc_lock);
 }

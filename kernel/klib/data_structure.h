@@ -122,9 +122,9 @@
 				}															\
 			})
 
-	#define m_enqueue m_push_list
+	#define m_enqueue_list m_push_list
 
-	#define m_dequeue(ret_val, list_head)									\
+	#define m_dequeue_list(ret_val, list_head)								\
 			({																\
 				if ((list_head) != NULL)									\
 				{															\
@@ -135,6 +135,21 @@
 					m_list_delete((ret_val));								\
 					(ret_val)->list_header = NULL;							\
 					(list_head)->count--;									\
+				}															\
+			})
+
+	#define m_append_to_list(unit, list_head)								\
+			({																\
+				if ((unit) != NULL && (list_head) != NULL)					\
+				{															\
+					m_list_init((unit));									\
+					if ((list_head)->count == 0)							\
+						(list_head)->head_p = unit;							\
+					else													\
+						m_list_insert_front((unit), (list_head)->head_p);	\
+																			\
+					(unit)->list_header = list_head;						\
+					(list_head)->count++;									\
 				}															\
 			})
 

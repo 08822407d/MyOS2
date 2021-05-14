@@ -103,6 +103,9 @@
 		unsigned long	nsobj_free_count;
 		unsigned long	nsobj_used_count;
 
+		// the base slab should not be freed
+		slab_s *		normal_base_slab;
+
 		// unsigned long	dslab_count;
 		// slab_list_s		dma_slab_free;
 		// slab_list_s		dma_slab_used;

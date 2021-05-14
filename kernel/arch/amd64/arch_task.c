@@ -233,17 +233,15 @@ void reschedule(percpu_data_s * cpudata_p)
 	if (used_jiffies >= cpudata_p->task_jiffies)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
+	if (!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
+			cpudata_p->scheduleing_flag)
+		return;
+
 	// there are 4 case
 	// 1: current not idle - waiting not null
 	// 2: current not idle - waiting is null
 	// 3: current is idle - waiting not null
 	// 4: current id idle - waiting is null
-
-	// if case 4, just do nothing
-	if (!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
-			cpudata_p->scheduleing_flag)
-		return;
-
 	cpudata_p->scheduleing_flag = 1;
 	// now it must be one of case 1/2/3
 		task_s * curr_task = NULL;
@@ -267,7 +265,7 @@ void reschedule(percpu_data_s * cpudata_p)
 		cpudata_p->curr_task = idle_dequeue();
 		cpudata_p->is_idle_flag = 1;
 	}
-	//case 3: curr->idle_queue; waiting->curr
+	// case 3: curr->idle_queue; waiting->curr
 	else if ((cpudata_p->is_idle_flag) &&
 		(cpudata_p->waiting_tasks.count > 0))
 	{
@@ -276,8 +274,12 @@ void reschedule(percpu_data_s * cpudata_p)
 		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
 		cpudata_p->is_idle_flag = 0;
 	}
+	//case 4: push current idle, then pop an idle from queue
 	else
 	{
+		idle_enqueue(curr_task);
+		next_task =
+		cpudata_p->curr_task = idle_dequeue();
 		cpudata_p->is_idle_flag = 1;
 		return;
 	}

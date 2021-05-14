@@ -20,7 +20,6 @@
 #include <lib/stddef.h>
 #include <lib/string.h>
 #include <lib/font.h>
-#include <lib/pthread.h>
 
 #include "../include/glo.h"
 #include "../include/printk.h"

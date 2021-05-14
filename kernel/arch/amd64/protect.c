@@ -298,6 +298,6 @@ void reload_percpu_arch_env(size_t cpu_idx)
 {
 	reload_idt(&idt_ptr);
 	reload_gdt(&gdt_ptr);
-	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);	// init bsp's gsbase
+	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
 	reload_tss(cpu_idx);
 }

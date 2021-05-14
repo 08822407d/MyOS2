@@ -1,5 +1,6 @@
 #include <sys/cdefs.h>
-#include <lib/pthread.h>
+
+#include "include/exclusive.h"
 
 inline __always_inline void spin_init(spinlock_T * lock)
 {
