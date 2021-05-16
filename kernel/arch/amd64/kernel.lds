@@ -54,21 +54,18 @@ SECTIONS
 		*.o(.text)
 		_etext = .;
 	}
-
 	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
 	{
 		_data = .;
 		*.o(.data .rodata*)
 		_edata = .;
 	}
-
 	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
 	{
 		_bss = .;
 		*.o(.bss COMMON)
 		_ebss = .;
 	}
-
 	.eh_frame ALIGN(0x1000) : AT(ADDR(.eh_frame) - _k_offset)
 	{
 		_eh_frame = .;

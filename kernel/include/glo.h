@@ -7,7 +7,8 @@
 
 	extern kinfo_s 			kparam;
 	extern framebuffer_s	framebuffer;
-	extern percpu_data_s **	smp_info;
+	extern PCB_u **			idle_tasks;
+	extern percpu_data_s **	percpu_data;
 
 	extern kbd_inbuf_s *	p_kb;
 	extern time_s 			time;

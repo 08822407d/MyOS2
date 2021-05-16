@@ -37,6 +37,7 @@ void init_page_manage()
 	#ifdef DEBUG
 		// make sure have get memory layout
 		while (!kparam.arch_init_flags.memory_layout);
+		while (!kparam.arch_init_flags.reload_bsp_arch_page);
 	#endif
 
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
@@ -98,7 +99,7 @@ void init_page_manage()
 		mem_info.pages[pg_idx].ref_count++;
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
-
+	// set init flag
 	kparam.init_flags.page_mm = 1;
 }
 
@@ -186,7 +187,7 @@ void init_slab()
 		bslp->page->slab_ptr = bslp;
 	}
 	kparam.kernel_vir_end += 0x10;
-
+	// set init flag
 	kparam.init_flags.slab = 1;
 }
 

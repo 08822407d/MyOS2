@@ -298,7 +298,7 @@ void reschedule(percpu_data_s * cpudata_p)
 
 void schedule()
 {
-	percpu_data_s * cpudata_p = smp_info[0];
+	percpu_data_s * cpudata_p = percpu_data[0];
 	if (cpudata_p->scheduleing_flag)
 		return;
 

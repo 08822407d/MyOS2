@@ -8,7 +8,7 @@ void module_test(void);
 
 void module_test()
 {
-	kmalloc_kfree_test();
+	// kmalloc_kfree_test();
 
 	kthread_test();
 }

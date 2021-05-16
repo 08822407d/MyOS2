@@ -43,7 +43,7 @@ virt_addr phys2virt(phys_addr phys)
 	return (phys_addr)(phys + offset);
 }
 
-inline __always_inline void reload_gdt(desctblptr64_T * gdt_desc)
+inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
 {
 	__asm__ __volatile__("	lgdt	(%0)					\n\
 							movq	%%rsp, %%rax			\n\
@@ -67,7 +67,7 @@ inline __always_inline void reload_gdt(desctblptr64_T * gdt_desc)
 						 :  "rax");
 }
 
-inline __always_inline void reload_idt(desctblptr64_T * idt_desc)
+inline __always_inline void load_idt(desctblptr64_T * idt_desc)
 {
 	__asm__ __volatile__("	lidt	(%0)					\n	"
 						 :
@@ -75,7 +75,7 @@ inline __always_inline void reload_idt(desctblptr64_T * idt_desc)
 						 :  );
 }
 
-inline __always_inline void reload_tss(uint64_t cpu_idx)
+inline __always_inline void load_tss(uint64_t cpu_idx)
 {
 	__asm__ __volatile__("	xorq	%%rax,	%%rax			\n\
 							mov		%0,		%%ax			\n\
@@ -282,22 +282,26 @@ void init_bsp_arch_data()
 	init_gdt();
 	init_idt();
 	init_bsp_tss();
+	// set init flag
+	kparam.arch_init_flags.init_bsp_arch_data = 1;
 }
 
 void reload_bsp_arch_data()
 {
-	reload_idt(&idt_ptr);
-	reload_gdt(&gdt_ptr);
-	reload_tss(0);
+	load_idt(&idt_ptr);
+	load_gdt(&gdt_ptr);
+	load_tss(0);
+	// set init flag
+	kparam.arch_init_flags.reload_bsp_arch_data = 1;
 }
 
 /*==============================================================================================*
  *										prot_smp_init									    	*
  *==============================================================================================*/
-void reload_percpu_arch_env(size_t cpu_idx)
+void reload_percpu_arch_data(size_t cpu_idx)
 {
-	reload_idt(&idt_ptr);
-	reload_gdt(&gdt_ptr);
+	load_idt(&idt_ptr);
+	load_gdt(&gdt_ptr);
 	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
-	reload_tss(cpu_idx);
+	load_tss(cpu_idx);
 }

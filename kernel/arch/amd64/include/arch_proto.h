@@ -148,7 +148,6 @@
 		uint8_t		thd_id;
 	};
 
-
 	struct percpu_info;
 	typedef struct percpu_info percpu_data_s;
 	typedef struct arch_percpu_info
@@ -163,12 +162,10 @@
 		int		get_cpuid;
 		int		memory_layout;
 		int		frame_buffer_info;
-		int		smp_info;
 
 		int		init_bsp_arch_data;
-		int		reload_bsp_arch_env;
-
-		int		refresh_smp_arch_data;
+		int		reload_bsp_arch_data;
+		int		reload_bsp_arch_page;
 	} arch_init_flags_s;
 	
 
@@ -177,16 +174,14 @@
 	/* protect.c */
 	phys_addr virt2phys(virt_addr);
 	virt_addr phys2virt(phys_addr);
-	void reload_gdt(desctblptr64_T * gdt_desc);
-	void reload_idt(desctblptr64_T * idt_desc);
-	void reload_tss(uint64_t cpu_idx);
+	void load_gdt(desctblptr64_T * gdt_desc);
+	void load_idt(desctblptr64_T * idt_desc);
+	void load_tss(uint64_t cpu_idx);
 	void init_bsp_arch_data(void);
 	void load_arch_data(size_t cpu_idx);
 	void init_bsp_arch_data(void);
 	void reload_bsp_arch_data(void);
-	void init_percpu_arch_data(size_t cpu_idx);
-	void init_percpu_data(size_t cpu_idx);
-	void reload_percpu_arch_env(size_t cpu_idx);
+	void reload_percpu_arch_data(size_t cpu_idx);
 
 	/* arch_page_util. */
 	void arch_page_preinit(void);
@@ -272,7 +267,7 @@
 
 	/* smp.c */
 	void init_cpu(void);
-	void init_smp(void);
+	void init_smp_env(void);
 	void start_SMP(uint64_t apic_id);
 	void startup_smp(void);
 	void percpu_self_config(size_t cpu_idx);

@@ -35,7 +35,7 @@
 
 
 	/* main.c */
-	void kmain(size_t cpu_idx);
+	void kmain(void);
 
 	/* mod_test.c */
 	void module_test(void);

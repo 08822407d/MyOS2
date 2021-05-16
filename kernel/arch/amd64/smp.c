@@ -13,13 +13,18 @@
 #include "../../include/task.h"
 #include "../../klib/data_structure.h"
 
-percpu_data_s ** smp_info;
+extern PCB_u		task0_PCB;
 
-void init_smp()
+percpu_data_s **	percpu_data;
+
+void create_percpu_idle(size_t cpu_idx);
+void init_percpu_data(size_t cpu_idx);
+void init_percpu_arch_data(size_t cpu_idx);
+
+void init_smp_env()
 {
 	#ifdef DEBUG
 		// make sure have get smp information
-		while (!kparam.arch_init_flags.smp_info);
 	#endif
 
 	// copy ap_boot entry code to its address
@@ -29,17 +34,56 @@ void init_smp()
 	size_t apbbot_len = &_APboot_etext - &_APboot_text;
 	memcpy(phys2virt((phys_addr)&_APboot_phys_start), (virt_addr)&_APboot_text, apbbot_len);
 
-	// create pointer array for all percpu_data
+	// init basic data for percpu
 	unsigned nr_lcpu = kparam.nr_lcpu;
-	tss_ptr_arr = (tss64_T **)kmalloc(nr_lcpu * sizeof(tss64_T *));
-	smp_info = (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
+
+	idle_tasks	= (PCB_u **)kmalloc(kparam.nr_lcpu * sizeof(PCB_u *));
+	tss_ptr_arr	= (tss64_T **)kmalloc(nr_lcpu * sizeof(tss64_T *));
+	percpu_data	= (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
+
+	for (int i = 0; i < kparam.nr_lcpu; i++)
+	{
+		create_percpu_idle(i);
+		init_percpu_arch_data(i);
+		init_percpu_data(i);
+	}
+	kfree(idle_tasks[0]);
+	idle_tasks[0] = &task0_PCB;
+
+	idle_queue.nr_max = kparam.nr_lcpu;
+	idle_queue.nr_curr = 0;
+	idle_queue.head = 0;
+	idle_queue.tail = 0;
+	idle_queue.queue = (task_s **)idle_tasks;
+	idle_queue.sched_task = &task0_PCB.task;
+}
+
+void create_percpu_idle(size_t cpu_idx)
+{
+	idle_tasks[cpu_idx] = (PCB_u *)kmalloc(sizeof(PCB_u));
+	PCB_u * idle_pcb = idle_tasks[cpu_idx];
+	task_s * idletask = &(idle_pcb->task);
+	memset(idle_pcb, 0, sizeof(PCB_u));
+	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
+	m_list_init(idletask);
+	idletask->pid = get_newpid();
+}
+
+void init_percpu_arch_data(size_t cpu_idx)
+{
+	PCB_u * idle_pcb = idle_tasks[cpu_idx];
+	tss_ptr_arr[cpu_idx] = (tss64_T *)kmalloc(sizeof(tss64_T));
+	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
+	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
+	tss_p->rsp0 = (size_t)idle_pcb + TASK_KSTACK_SIZE;
+	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
 }
 
 void init_percpu_data(size_t cpu_idx)
 {
 	// create percpu_data for current lcpu
-	smp_info[cpu_idx] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
-	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	percpu_data[cpu_idx] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
+	percpu_data_s * cpudata_p = percpu_data[cpu_idx];
 	memset(cpudata_p, 0, sizeof(percpu_data_s));
 	cpudata_p->cpu_idx = cpu_idx;
 	cpudata_p->cpu_stack_start = (char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
@@ -67,17 +111,9 @@ void init_percpu_data(size_t cpu_idx)
 	tss_p->ist7 = (reg_t)(cpudata_p->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
 }
 
-void init_percpu_arch_data(size_t cpu_idx)
-{
-	tss_ptr_arr[cpu_idx] = (tss64_T *)kmalloc(sizeof(tss64_T));
-	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
-	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
-	tss_p->rsp0 = (size_t)get_current() + TASK_KSTACK_SIZE;
-}
-
 void percpu_self_config(size_t cpu_idx)
 {
-	percpu_data_s * cpudata_p = smp_info[cpu_idx];
+	percpu_data_s * cpudata_p = percpu_data[cpu_idx];
 	task_s *	current_task = get_current();
 	wrgsbase((reg_t)cpudata_p);
 	// tasks

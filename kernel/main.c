@@ -14,53 +14,42 @@
 #include "klib/data_structure.h"
 
 
-void kmain(size_t cpu_idx)
+void kmain()
 {
-	// here an env of bsp had been setup
-	// include the GDT, IDT and a tmp_tss for bsp
-	// or to say kmain running in a simple but usable protect mode
-	int IS_BSP = !cpu_idx;
-	if (IS_BSP)
-	{
-		init_page_manage();
-		init_video();
-		init_slab();
-		init_task();
-		init_smp();
-	}
+	pre_init();
 
-	init_percpu_arch_data(cpu_idx);
-	reload_percpu_arch_env(cpu_idx);
-	init_percpu_data(cpu_idx);
+	init_bsp_arch_data();
+	reload_bsp_arch_data();
+	reload_arch_page();
+
+	init_page_manage();
+	init_video();
+	init_slab();
+	init_task();
+	init_smp_env();
+	
+	// enable bsp's apic
 	init_percpu_intr();
-
-	if (IS_BSP)
-	{
-		init_bsp_intr();
-		startup_smp();
-	}
-
-	percpu_self_config(cpu_idx);
-
+	init_bsp_intr();
+	startup_smp();
 
 	// post init
-	if (IS_BSP)
-	{
-		softirq_init();
-		timer_init();
-		devices_init();
-	}
+	softirq_init();
+	timer_init();
+	devices_init();
 	sti();
+}
+
+void idle(size_t cpu_idx)
+{	
+	reload_percpu_arch_data(cpu_idx);
+	if (cpu_idx != 0)
+		init_percpu_intr();
+	percpu_self_config(cpu_idx);
 
 	module_test();
-
-	while(1){
-		// the idle-tasks run here repeatedly
-		// the IS_BSP flag only conbined with task_0 but not the BSP
-		// once they scheduled, idle will be pushed in idle-queue
-		if (IS_BSP)
-			schedule();
-		else
-			hlt();
-	};
+	while (1)
+	{
+		hlt();
+	}
 }

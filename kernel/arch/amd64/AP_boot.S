@@ -114,7 +114,7 @@ l1:
 	movq	%rax,		%rsp
 
 	movq	%rbx,		%rdi
-	movabsq $kmain,		%rax
+	movabsq $idle,		%rax
 	pushq   $0x08
 	pushq   %rax
 	lretq

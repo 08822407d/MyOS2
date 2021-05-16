@@ -22,7 +22,6 @@ spinlock_T		global_ready_task_lock;
 task_list_s		global_blocked_task;
 spinlock_T		global_blocked_task_lock;
 
-void creat_idles(void);
 
 void init_task()
 {
@@ -36,7 +35,7 @@ void init_task()
 	task0->pid = get_newpid();
 
 	// complete bsp's cpudata_p
-	percpu_data_s * bsp_cpudata = smp_info[0];
+	percpu_data_s * bsp_cpudata = percpu_data[0];
 	bsp_cpudata->waiting_tasks.count = 
 	bsp_cpudata->waiting_tasks.count = 0;
 	bsp_cpudata->waiting_tasks.head_p =
@@ -44,29 +43,7 @@ void init_task()
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->task_jiffies = task0->task_jiffies;
 
-	creat_idles();
-}
-
-void creat_idles()
-{
 	spin_init(&idle_queue_lock);
-	idle_tasks = kmalloc(kparam.nr_lcpu * sizeof(PCB_u *));
-	idle_tasks[0] = &task0_PCB;
-	for (int i = 1; i < kparam.nr_lcpu; i++)
-	{
-		idle_tasks[i] = kmalloc(sizeof(PCB_u));
-		memset(idle_tasks[i], 0, sizeof(PCB_u));
-		task_s * procidle = &idle_tasks[i]->task;
-		memcpy(procidle, &task0_PCB.task, sizeof(task_s));
-		procidle->pid = get_newpid();
-	}
-
-	idle_queue.nr_max = kparam.nr_lcpu;
-	idle_queue.nr_curr = 0;
-	idle_queue.head = 0;
-	idle_queue.tail = 0;
-	idle_queue.queue = (task_s **)idle_tasks;
-	idle_queue.sched_task = &task0_PCB.task;
 }
 
 /*==============================================================================================*

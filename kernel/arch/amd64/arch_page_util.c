@@ -46,6 +46,8 @@ void reload_arch_page()
 	arch_page_preinit();
 	arch_page_init();
 	pg_load_cr3(KERN_PML4);
+	// set init flag
+	kparam.arch_init_flags.reload_bsp_arch_page = 1;
 }
 
 void pg_load_cr3(PML4E_T * PML4)

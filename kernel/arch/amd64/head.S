@@ -1,7 +1,5 @@
 #include "arch/amd64/asm.h"
 
-#include "../../include/const.h"
-
 #define ASM_FILE 1
 #include "include/multiboot2.h"
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
@@ -169,41 +167,11 @@ code_64_start:
 skip_set_pde:
 	movq	$__PML4E,	%rax
 	movq	%rax,		%cr3
-	movq    $temp_reload_cs, %rax
+	// reset cs:rip at same time jump to higher half
+	movabsq	$higher_half_entry,	%rax
 	pushq   $0x08
 	pushq   %rax
 	lretq
-
-temp_reload_cs:
-	movq    $tmp_kstack_top,	%rbx
-	movq    $0x10,		%rax
-	movq    %rax,		%ss
-	movq    %rbx,		%rsp
-
-	pushq   $0
-	popfq
-	pushq   $0
-
-	pushq   $ret_from_set_bsp_env
-	movabsq $set_bsp_env,	%rax
-	pushq   $0x08
-	pushq   %rax
-	lretq
-ret_from_set_bsp_env:
-// reset stack to the stack in task0_PCB(in higher half memory)
-	movabsq	$task0_PCB,	%rbx
-	addq	$TASK_KSTACK_SIZE	, %rbx
-	movq    $0x10,		%rax
-	movq    %rax,		%ss
-	movq    %rbx,		%rsp
-
-	movq	$0,			%rdi	// BSP has index 0
-	pushq   $ret_from_kmain
-	movabsq $kmain,		%rax
-	pushq   $0x08
-	pushq   %rax
-	lretq
-ret_from_kmain:
 
 hang:
 	jmp     hang
@@ -218,7 +186,6 @@ l2:
 	addq	$8,			%rdi
 	loop	l2
 	retq
-
 
 /*==============================================================================================*
  *											data section								 		*
