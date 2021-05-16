@@ -30,7 +30,8 @@ void init_task()
 	task_s *task0	= &task0_PCB.task;
 	memset(task0, 0, sizeof(task_s));
 	m_list_init(task0);
-	task0->task_jiffies = 2;
+	task0->time_slice = 2;
+	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
 	task0->pid = get_newpid();
 
@@ -41,7 +42,7 @@ void init_task()
 	bsp_cpudata->waiting_tasks.head_p =
 	bsp_cpudata->finished_tasks.head_p = NULL;
 	bsp_cpudata->curr_task = task0;
-	bsp_cpudata->task_jiffies = task0->task_jiffies;
+	bsp_cpudata->time_slice = task0->time_slice;
 
 	spin_init(&idle_queue_lock);
 }

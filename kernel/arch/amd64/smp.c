@@ -87,11 +87,8 @@ void init_percpu_data(size_t cpu_idx)
 	memset(cpudata_p, 0, sizeof(percpu_data_s));
 	cpudata_p->cpu_idx = cpu_idx;
 	cpudata_p->cpu_stack_start = (char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
-	// create architechture part of percpu_data
-	cpudata_p->arch_info = (arch_percpu_data_s *)kmalloc(sizeof(arch_percpu_data_s));
-	memset(cpudata_p->arch_info, 0, sizeof(arch_percpu_data_s));
 	// fill architechture part
-	arch_percpu_data_s * arch_cpuinfo = cpudata_p->arch_info;
+	arch_percpu_data_s * arch_cpuinfo = &(cpudata_p->arch_info);
 	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
 	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
@@ -117,17 +114,19 @@ void percpu_self_config(size_t cpu_idx)
 	task_s *	current_task = get_current();
 	wrgsbase((reg_t)cpudata_p);
 	// tasks
+	cpudata_p->idle_task = current_task;
 	cpudata_p->curr_task = current_task;
 	cpudata_p->waiting_tasks.count =
 	cpudata_p->finished_tasks.count = 0;
 	cpudata_p->waiting_tasks.head_p =
 	cpudata_p->finished_tasks.head_p = NULL;
 	cpudata_p->last_jiffies = 0;
-	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
+	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
 	cpudata_p->is_idle_flag = 1;
 	cpudata_p->scheduleing_flag = 0;
 
 	current_task->arch_struct.tss_rsp0 = (reg_t)current_task + TASK_KSTACK_SIZE;
+	current_task->vruntime = -1;
 }
 
 void startup_smp()

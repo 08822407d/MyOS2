@@ -47,8 +47,8 @@
 
 		unsigned long	pid;
 		unsigned long	signal;
-		unsigned long	prior;
-		unsigned long	task_jiffies;
+		unsigned long	time_slice;
+		unsigned long	vruntime;
 	} task_s;
 
 	typedef union PCB
@@ -70,18 +70,20 @@
 
 	typedef struct percpu_info
 	{
+		task_s *		curr_task;
+		task_s *		idle_task;
+
 		task_list_s		waiting_tasks;
 		task_list_s		finished_tasks;
-		task_s *		curr_task;
 
 		unsigned		is_idle_flag;
 		unsigned		scheduleing_flag;
 
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-		unsigned long	task_jiffies;	// max jiffies for running of this task
+		unsigned long	time_slice;	// max jiffies for running of this task
 
 		size_t			cpu_idx;
-		arch_percpu_data_s *	arch_info;
+		arch_percpu_data_s	arch_info;
 		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
 	} percpu_data_s;
 

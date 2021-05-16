@@ -37,7 +37,6 @@ void kmain()
 	softirq_init();
 	timer_init();
 	devices_init();
-	sti();
 }
 
 void idle(size_t cpu_idx)
@@ -47,7 +46,10 @@ void idle(size_t cpu_idx)
 		init_percpu_intr();
 	percpu_self_config(cpu_idx);
 
-	// module_test();
+	module_test();
+
+	sti();
+
 	while (1)
 	{
 		hlt();

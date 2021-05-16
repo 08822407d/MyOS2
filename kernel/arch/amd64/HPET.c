@@ -72,6 +72,8 @@ void HPET_init()
 				 &HPET_handler);
 	
 	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)HPET_addr);
+	uint64_t accuracy = *(uint64_t *)HPET_addr >> 32;
+
 	*(unsigned long *)(HPET_addr + 0x10) = 3;
 	io_mfence();
 
@@ -80,7 +82,7 @@ void HPET_init()
 	io_mfence();
 
 	//1S qemu may have a different precision so here need a calculate
-	*(unsigned long *)(HPET_addr + 0x108) = 14318179;
+	*(unsigned long *)(HPET_addr + 0x108) = 0x38D7EA4C68000 / accuracy;
 	io_mfence();
 
 	//init MAIN_CNT & get CMOS time

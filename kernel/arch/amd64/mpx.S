@@ -109,10 +109,8 @@ RESTORE_ALL:
 
 ret_from_exception:
 ENTRY(ret_from_intr)
-	cli
 	rdgsbase	%rdi
 	callq		reschedule
-	sti
 	movq		$-1,		%rcx
 	testq		softirq_status(%rip),	%rcx	////check softirq	
 	jnz			softirq_hanlder

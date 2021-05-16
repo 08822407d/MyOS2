@@ -68,7 +68,7 @@ stack_frame_s * get_stackframe(task_s * task_p)
 
 inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p)
 {
-	tss64_T * curr_tss = cpudata_p->arch_info->tss;
+	tss64_T * curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
 	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset
@@ -143,8 +143,9 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 
 void wakeup_task(task_s * task)
 {
-	task->state |= PS_WAITING;
-	task_list_push(&global_ready_task, task);
+	percpu_data_s * cpudata_p = (percpu_data_s *)rdgsbase();
+	task->state |= PS_RUNNING;
+	m_push_list(task, &(cpudata_p->waiting_tasks));
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -171,6 +172,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
 
+	new_task->vruntime = 0;
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = sf_regs->rip;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
@@ -229,71 +231,55 @@ void arch_init_task()
 void reschedule(percpu_data_s * cpudata_p)
 {
 	// if running time out, make the need_schedule flag of current task
+	task_s * curr_task = cpudata_p->curr_task;
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
-	if (used_jiffies >= cpudata_p->task_jiffies)
+	if (curr_task != cpudata_p->idle_task)
+		curr_task->vruntime += used_jiffies;
+
+	if (used_jiffies >= cpudata_p->time_slice)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
-	if (!(cpudata_p->curr_task->flags & PF_NEED_SCHEDULE) ||
-			cpudata_p->scheduleing_flag)
+	if (!(curr_task->flags & PF_NEED_SCHEDULE) ||
+		cpudata_p->waiting_tasks.count < 1 ||
+		cpudata_p->scheduleing_flag)
 		return;
 
-	// there are 4 case
-	// 1: current not idle - waiting not null
-	// 2: current not idle - waiting is null
-	// 3: current is idle - waiting not null
-	// 4: current id idle - waiting is null
+	task_s * next_task = NULL;
+
+	cli();
 	cpudata_p->scheduleing_flag = 1;
-	// now it must be one of case 1/2/3
-		task_s * curr_task = NULL;
-		task_s * next_task = NULL;
-		curr_task = cpudata_p->curr_task;
-	// case 1: curr->finished; waiting->curr
-	if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count > 0))
-	{
-		task_list_push(&cpudata_p->finished_tasks, curr_task);
-		next_task =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
-		cpudata_p->is_idle_flag = 0;
-	}
-	// case 2: curr->finished; idle_queue->curr
-	else if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count < 1))
-	{
-		task_list_push(&cpudata_p->finished_tasks, curr_task);
-		next_task =
-		cpudata_p->curr_task = idle_dequeue();
-		cpudata_p->is_idle_flag = 1;
-	}
-	// case 3: curr->idle_queue; waiting->curr
-	else if ((cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count > 0))
-	{
-		idle_enqueue(curr_task);
-		next_task =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
-		cpudata_p->is_idle_flag = 0;
-	}
-	//case 4: push current idle, then pop an idle from queue
+	// get next task
+	// find a suit position for current insertion
+	if (curr_task == cpudata_p->idle_task)
+		m_append_to_list(curr_task, &cpudata_p->waiting_tasks);
 	else
 	{
-		idle_enqueue(curr_task);
-		next_task =
-		cpudata_p->curr_task = idle_dequeue();
-		cpudata_p->is_idle_flag = 1;
-		return;
+		task_s * tail = cpudata_p->waiting_tasks.head_p->prev;
+		task_s * tmp = cpudata_p->waiting_tasks.head_p;
+		while((curr_task->vruntime > tmp->vruntime) &&
+				(tmp != tail))
+			tmp = tmp->next;
+		m_list_insert_front(curr_task, tmp);
+		curr_task->list_header = &cpudata_p->waiting_tasks;
+		cpudata_p->waiting_tasks.count++;
+		if (tmp == cpudata_p->waiting_tasks.head_p)
+			cpudata_p->waiting_tasks.head_p = tmp->prev;
 	}
 
+	m_pop_list(next_task, &cpudata_p->waiting_tasks);
+	cpudata_p->curr_task = next_task;
+
 	curr_task->state &= ~PS_RUNNING;
-	next_task->state &= PS_WAITING;
+	curr_task->state |= PS_WAITING;
 	next_task->state |= PS_RUNNING;
 
 	cpudata_p->last_jiffies = jiffies;
-	cpudata_p->task_jiffies = cpudata_p->curr_task->task_jiffies;
+	cpudata_p->time_slice = next_task->time_slice;
 
 	cpudata_p->scheduleing_flag = 0;
-
 	switch_to(curr_task, next_task, cpudata_p);
+
+	sti();
 }
 
 void schedule()
@@ -320,4 +306,51 @@ void schedule()
 	cpudata_p->scheduleing_flag = 0;
 
 	reschedule(cpudata_p);
+}
+
+void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
+{
+	// there are 4 case
+	// 1: current not idle - waiting not null
+	// 2: current not idle - waiting is null
+	// 3: current is idle - waiting not null
+	// 4: current id idle - waiting is null
+	// now it must be one of case 1/2/3
+	*curr = cpudata_p->curr_task;
+	// case 1: curr->finished; waiting->curr
+	if ((!cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_tasks.count > 0))
+	{
+		task_list_push(&cpudata_p->finished_tasks, *curr);
+		*next =
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
+		cpudata_p->is_idle_flag = 0;
+	}
+	// case 2: curr->finished; idle_queue->curr
+	else if ((!cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_tasks.count < 1))
+	{
+		task_list_push(&cpudata_p->finished_tasks, *curr);
+		*next =
+		cpudata_p->curr_task = idle_dequeue();
+		cpudata_p->is_idle_flag = 1;
+	}
+	// case 3: curr->idle_queue; waiting->curr
+	else if ((cpudata_p->is_idle_flag) &&
+		(cpudata_p->waiting_tasks.count > 0))
+	{
+		idle_enqueue(*curr);
+		*next =
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
+		cpudata_p->is_idle_flag = 0;
+	}
+	//case 4: push current idle, then pop an idle from queue
+	else
+	{
+		idle_enqueue(*curr);
+		*next =
+		cpudata_p->curr_task = idle_dequeue();
+		cpudata_p->is_idle_flag = 1;
+		return;
+	}
 }
