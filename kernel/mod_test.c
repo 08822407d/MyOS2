@@ -55,6 +55,8 @@ void kthread_test()
 	kernel_thread(test_task_a, 0, 0);
 	kernel_thread(test_task_b, 0, 0);
 	kernel_thread(test_task_c, 0, 0);
+	
+	schedule();
 }
 
 void kmalloc_kfree_test()

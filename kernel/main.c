@@ -47,7 +47,7 @@ void idle(size_t cpu_idx)
 		init_percpu_intr();
 	percpu_self_config(cpu_idx);
 
-	module_test();
+	// module_test();
 	while (1)
 	{
 		hlt();
