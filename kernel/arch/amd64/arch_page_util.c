@@ -52,23 +52,25 @@ void reload_arch_page()
 
 void pg_load_cr3(PML4E_T * PML4)
 {
-	__asm__ __volatile__("movq %%rax, %%cr3	\n\
-						  nop"
-						 :
-						 :"rax"(virt2phys(PML4))
-						 :);
+	__asm__ __volatile__(	"movq %%rax, %%cr3	\n\t"
+							"nop				\n\t"
+						:
+						:	"rax"(virt2phys(PML4))
+						:
+						);
 }
 
 void refresh_arch_page(void)
 {
 	uint64_t tempreg;
-	__asm__ __volatile__("movq %%cr3, %0	\n\
-						  nop				\n\
-						  movq %0, %%cr3	\n\
-						  nop				"
-						 :"=r"(tempreg)
-						 :
-						 :	);
+	__asm__ __volatile__(	"movq %%cr3, %0		\n\t"
+							"nop				\n\t"
+							"movq %0, %%cr3		\n\t"
+							"nop				\n\t"
+						:	"=r"(tempreg)
+						:
+						:
+						);
 }
 
 void arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * pml4_base)

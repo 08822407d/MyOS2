@@ -91,32 +91,32 @@ inline __always_inline void io_mfence()
  *==============================================================================================*/
 inline __always_inline void nop()
 {
-	__asm__ __volatile__(	"nop	\n");
+	__asm__ __volatile__(	"nop		\n");
 }
 
 inline __always_inline void hlt()
 {
-	__asm__ __volatile__(	"hlt	\n");
+	__asm__ __volatile__(	"hlt		\n");
 }
 
 inline __always_inline void std()
 {
-	__asm__ __volatile__(	"std	\n");
+	__asm__ __volatile__(	"std		\n");
 }
 
 inline __always_inline void cld()
 {
-	__asm__ __volatile__(	"cld	\n");
+	__asm__ __volatile__(	"cld		\n");
 }
 
 inline __always_inline void cli()
 {
-	__asm__ __volatile__(	"cli	\n");
+	__asm__ __volatile__(	"cli		\n");
 }
 
 inline __always_inline void sti()
 {
-	__asm__ __volatile__(	"sti	\n");
+	__asm__ __volatile__(	"sti		\n");
 }
 
 inline __always_inline void cpuid(unsigned int Mop,
@@ -126,7 +126,7 @@ inline __always_inline void cpuid(unsigned int Mop,
 								  unsigned int * c,
 								  unsigned int * d)
 {
-	__asm__ __volatile__(	"cpuid	\n\t"
+	__asm__ __volatile__(	"cpuid		\n\t"
 						:	"=a"(*a),"=b"(*b),"=c"(*c),"=d"(*d)
 						:	"0"(Mop),"2"(Sop)
 						:	);

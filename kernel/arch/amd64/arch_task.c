@@ -34,15 +34,17 @@ inline __always_inline task_s * get_current_task()
 #undef current
 #endif
 	task_s * current = NULL;
-	__asm__ __volatile__("andq %%rsp,%0	\n\t"
-						 : "=r"(current)
-						 : "0"(~(TASK_KSTACK_SIZE - 1)));
+	__asm__ __volatile__(	"andq 	%%rsp,	%0		\n\t"
+						:	"=r"(current)
+						:	"0"(~(TASK_KSTACK_SIZE - 1))
+						:
+						);
 	return current;
 }
 
 unsigned long get_newpid()
 {
-	spin_lock(&newpid_lock);
+	lock_spinlock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
 	if (newpid >= MAX_PID || newpid < curr_pid)
 	{
@@ -55,7 +57,7 @@ unsigned long get_newpid()
 	}
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
-	spin_unlock(&newpid_lock);
+	unlock_spinlock(&newpid_lock);
 
 	return curr_pid;
 }
@@ -90,23 +92,24 @@ inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_d
 
 void inline __always_inline switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p)
 {
-	__asm__ __volatile__("pushq	%%rbp				\n\
-						  pushq %%rax				\n\
-						  movq	%%rsp, %0			\n\
-						  movq	%2, %%rsp			\n\
-						  leaq	1f(%%rip), %%rax	\n\
-						  movq	%%rax, %1			\n\
-						  pushq	%3					\n\
-						  jmp	__switch_to			\n\
-						  1:						\n\
-						  popq	%%rax				\n\
-						  popq	%%rbp				\n	"
-						 :"=m"(curr->arch_struct.k_rsp),
-						  "=m"(curr->arch_struct.k_rip)
-						 :"m"(target->arch_struct.k_rsp),
-						  "m"(target->arch_struct.k_rip),
-						  "D"(curr), "S"(target), "d"(cpudata_p)
-						 :"memory");
+	__asm__ __volatile__(	"pushq	%%rbp				\n\t"
+							"pushq	%%rax				\n\t"
+							"movq	%%rsp,	%0			\n\t"
+							"movq	%2,		%%rsp		\n\t"
+							"leaq	1f(%%rip),	%%rax	\n\t"
+							"movq	%%rax,	%1			\n\t"
+							"pushq	%3					\n\t"
+							"jmp	__switch_to			\n\t"
+							"1:							\n\t"
+							"popq	%%rax				\n\t"
+							"popq	%%rbp				\n\t"
+						:	"=m"(curr->arch_struct.k_rsp),
+							"=m"(curr->arch_struct.k_rip)
+						:	"m"(target->arch_struct.k_rsp),
+							"m"(target->arch_struct.k_rip),
+							"D"(curr), "S"(target), "d"(cpudata_p)
+						:	"memory"
+						);
 }
 
 unsigned long init(unsigned long arg)
@@ -118,16 +121,17 @@ unsigned long init(unsigned long arg)
 int sys_call(int syscall_nr)
 {
 	int ret_val = 0;
-	__asm__ __volatile__("pushq	%%rcx		\n\
-						  pushq	%%r10		\n\
-						  pushq	%%r11		\n\
-						  syscall			\n\
-						  popq	%%r11		\n\
-						  popq	%%r10		\n\
-						  popq	%%rcx		\n	"
-						  :"=a"(ret_val)
-						  :
-						  :);
+	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
+							"pushq	%%r10		\n\t"
+							"pushq	%%r11		\n\t"
+							"syscall			\n\t"
+							"popq	%%r11		\n\t"
+							"popq	%%r10		\n\t"
+							"popq	%%rcx		\n\t"
+						:	"=a"(ret_val)
+						:
+						:
+						);
 	return ret_val;
 }
 
@@ -222,7 +226,7 @@ void arch_init_task()
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
-	spin_init(&newpid_lock);
+	init_spinlock(&newpid_lock);
 }
 
 /*==============================================================================================*

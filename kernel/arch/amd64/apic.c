@@ -60,22 +60,28 @@ void IOAPIC_uninstall(unsigned long irq_nr)
 
 void IOAPIC_level_ack(unsigned long irq_nr)
 {
-	__asm__ __volatile__("movq	$0x00,	%%rdx	\n\t"
-						 "movq	$0x00,	%%rax	\n\t"
-						 "movq 	$0x80b,	%%rcx	\n\t"
-						 "wrmsr	\n\t"
-						 :::"memory","rax","rcx","rdx");
+	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
+							"movq	$0x00,	%%rax	\n\t"
+							"movq	$0x80b,	%%rcx	\n\t"
+							"wrmsr					\n\t"
+						:
+						:
+						:	"memory","rax","rcx","rdx"
+						);
 				
 	*ioapic_map.virt_EOI_addr = irq_nr;
 }
 
 void IOAPIC_edge_ack(unsigned long irq)
 {
-	__asm__ __volatile__("movq	$0x00,	%%rdx	\n\t"
-						 "movq	$0x00,	%%rax	\n\t"
-						 "movq 	$0x80b,	%%rcx	\n\t"
-						 "wrmsr	\n\t"
-						:::"memory","rax","rcx","rdx");
+	__asm__ __volatile__(	"movq	$0x00,	%%rdx	\n\t"
+							"movq	$0x00,	%%rax	\n\t"
+							"movq	$0x80b,	%%rcx	\n\t"
+							"wrmsr					\n\t"
+						:
+						:
+						:	"memory","rax","rcx","rdx"
+						);
 }
 
 uint64_t ioapic_rte_read(uint8_t index)
@@ -126,7 +132,8 @@ inline __always_inline void enable_x2apic()
 							"rdmsr					\n\t"
 						:
 						:
-						:	"rcx", "rax", "rdx");
+						:	"rcx", "rax", "rdx"
+						);
 }
 
 inline __always_inline void open_lapic()
@@ -140,7 +147,8 @@ inline __always_inline void open_lapic()
 							"rdmsr					\n\t"
 						:
 						:
-						:	"rcx", "rax", "rdx");
+						:	"rcx", "rax", "rdx"
+						);
 }
 
 inline __always_inline unsigned get_x2apic_id()
@@ -150,7 +158,8 @@ inline __always_inline unsigned get_x2apic_id()
 							"rdmsr					\n\t"
 						:	"=a"(ret_val)
 						:
-						:	"rcx", "rdx");
+						:	"rcx", "rdx"
+						);
 	return ret_val;
 }
 
@@ -158,10 +167,11 @@ inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
 {
 	unsigned x, y;
 	__asm__ __volatile__(	"movq $0x803,	%%rcx	\n\t"
-							"rdmsr	\n\t"
+							"rdmsr					\n\t"
 						:	"=a"(x),"=d"(y)
 						:
-						:	"memory");	
+						:	"memory"
+						);	
 	lapic_info->lapic_ver = x & 0xFF;
 	lapic_info->max_lvt = (x >> 16 & 0xff) + 1;
 	lapic_info->svr12_support = x >> 24 & 0x1;
@@ -170,9 +180,10 @@ inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
 inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
 {
 	__asm__ __volatile__(	"cmpq	$0x07,	%%rbx	\n\t"	// if max_lvt smaller than 7,it means the paltform does not
-							"jb		(. + 0xB)		\n\t"	// support CMCI register,for example bochs, vbox and qemu
+							"jb		1f				\n\t"	// support CMCI register,for example bochs, vbox and qemu
 							"movq 	$0x82f,	%%rcx	\n\t"	// CMCI
  							"wrmsr					\n\t"
+							"1:						\n\t"
 							"movq 	$0x832,	%%rcx	\n\t"	// Timer
  							"wrmsr					\n\t"
 							"movq 	$0x833,	%%rcx	\n\t"	// Thermal Monitor
@@ -187,7 +198,8 @@ inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
 							"wrmsr					\n\t"
 						:
 						:	"a"(0x10000),"d"(0x00),"b"(lapic_info->max_lvt)
-						:	"memory");	
+						:	"memory"
+						);	
 }
 
 inline __always_inline unsigned get_lvt_tpr()
@@ -197,7 +209,8 @@ inline __always_inline unsigned get_lvt_tpr()
 							"rdmsr					\n\t"
 						:	"=a"(ret_val)
 						:
-						:	"rcx", "rdx");
+						:	"rcx", "rdx"
+						);
 	return ret_val;
 }
 
@@ -208,7 +221,8 @@ inline __always_inline unsigned get_lvt_ppr()
 							"rdmsr					\n\t"
 						:	"=a"(ret_val)
 						:
-						:	"rcx", "rdx");
+						:	"rcx", "rdx"
+						);
 	return ret_val;
 }
 

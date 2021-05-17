@@ -109,7 +109,11 @@ void excep_page_fault(stack_frame_s * sf_regs)
 	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
 
-	__asm__	__volatile__("movq	%%cr2,	%0":"=r"(cr2)::"memory");
+	__asm__	__volatile__(	"movq	%%cr2,	%0		\n\t"
+						:	"=r"(cr2)
+						:
+						:	"memory"
+						);
 
 	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
 

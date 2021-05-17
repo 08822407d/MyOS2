@@ -45,44 +45,48 @@ virt_addr phys2virt(phys_addr phys)
 
 inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
 {
-	__asm__ __volatile__("	lgdt	(%0)					\n\
-							movq	%%rsp, %%rax			\n\
-							mov 	%1, %%ss				\n\
-							movq	%%rax, %%rsp			\n\
-							mov		$0, %%ax				\n\
-							mov 	%%ax, %%ds				\n\
-							mov 	%%ax, %%es				\n\
-							mov 	%%ax, %%fs				\n\
-							mov 	%%ax, %%gs				\n\
-							xor		%%rax, %%rax			\n\
-							leaq	(. + 0xc)(%%rip), %%rax	\n\
-							pushq	%2						\n\
-							pushq	%%rax					\n\
-							lretq							\n\
-							xorq	%%rax, %%rax			\n	"
-						 :
-						 :	"r"(gdt_desc),
-						 	"r"(KERN_SS_SELECTOR),
+	__asm__ __volatile__(	"lgdt	(%0)					\n\t"
+							"movq	%%rsp,		%%rax		\n\t"
+							"mov 	%1,			%%ss		\n\t"
+							"movq	%%rax,		%%rsp		\n\t"
+							"mov	$0,			%%ax		\n\t"
+							"mov 	%%ax,		%%ds		\n\t"
+							"mov 	%%ax,		%%es		\n\t"
+							"mov 	%%ax,		%%fs		\n\t"
+							"mov 	%%ax,		%%gs		\n\t"
+							"xor	%%rax,		%%rax		\n\t"
+							"leaq	1f(%%rip),	%%rax		\n\t"
+							"pushq	%2						\n\t"
+							"pushq	%%rax					\n\t"
+							"lretq							\n\t"
+							"1:								\n\t"
+							"xorq	%%rax, %%rax			\n\t"
+						:
+						:	"r"(gdt_desc),
+							"r"(KERN_SS_SELECTOR),
 							"rsi"((uint64_t)KERN_CS_SELECTOR)
-						 :  "rax");
+						:	"rax"
+						);
 }
 
 inline __always_inline void load_idt(desctblptr64_T * idt_desc)
 {
-	__asm__ __volatile__("	lidt	(%0)					\n	"
-						 :
-						 :	"r"(idt_desc)
-						 :  );
+	__asm__ __volatile__(	"lidt	(%0)					\n\t"
+						:
+						:	"r"(idt_desc)
+						:
+						);
 }
 
 inline __always_inline void load_tss(uint64_t cpu_idx)
 {
-	__asm__ __volatile__("	xorq	%%rax,	%%rax			\n\
-							mov		%0,		%%ax			\n\
-							ltr		%%ax					\n	"
-						 :
-						 :	"r"((uint16_t)TSS_SELECTOR(cpu_idx))
-						 :	"rax");
+	__asm__ __volatile__(	"xorq	%%rax,	%%rax			\n\t"
+							"mov	%0,		%%ax			\n\t"
+							"ltr	%%ax					\n\t"
+						:
+						:	"r"((uint16_t)TSS_SELECTOR(cpu_idx))
+						:	"rax"
+						);
 }
 
 /*==============================================================================================*

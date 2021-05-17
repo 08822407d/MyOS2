@@ -337,7 +337,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
-	spin_lock(&Pos.printk_lock);
+	lock_spinlock(&Pos.printk_lock);
 
 	i = vsprintf(buf, fmt, args);
 
@@ -394,7 +394,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 		}
 	}
 
-	spin_unlock(&Pos.printk_lock);
+	unlock_spinlock(&Pos.printk_lock);
 
 	return i;
 }
@@ -405,9 +405,11 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 inline __always_inline int do_div(long *num,int base)
 {
 	int __res;
-	__asm__("divq %%rcx"
-			:"=a" (*num),"=d" (__res)
-			:"0" (*num),"1" (0),"c" (base));
+	__asm__ __volatile__(	"divq	%%rcx		\n\t"
+						:	"=a" (*num),"=d" (__res)
+						:	"0" (*num),"1" (0),"c" (base)
+						:
+						);
 	return __res;
 }
 

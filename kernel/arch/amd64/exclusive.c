@@ -2,12 +2,15 @@
 
 #include "include/exclusive.h"
 
-inline __always_inline void spin_init(spinlock_T * lock)
+/*==============================================================================================*
+ *											spin lock											*
+ *==============================================================================================*/
+inline __always_inline void init_spinlock(spinlock_T * lock)
 {
 	lock->lock = 1;
 }
 
-inline __always_inline void spin_lock(spinlock_T * lock)
+inline __always_inline void lock_spinlock(spinlock_T * lock)
 {
 	__asm__	__volatile__(	"1:						\n\t"
 							"lock	decq	%0		\n\t"
@@ -24,10 +27,10 @@ inline __always_inline void spin_lock(spinlock_T * lock)
 						);
 }
 
-inline __always_inline void spin_unlock(spinlock_T * lock)
+inline __always_inline void unlock_spinlock(spinlock_T * lock)
 {
-	if (lock->lock == 1)
-		return;
+	// if (lock->lock == 1)
+	// 	return;
 
 	__asm__	__volatile__(	"movq	$1,		%0		\n\t"
 						:	"=m"(lock->lock)
@@ -36,6 +39,38 @@ inline __always_inline void spin_unlock(spinlock_T * lock)
 						);
 }
 
+/*==============================================================================================*
+ *										recursive spin lock										*
+ *==============================================================================================*/
+inline __always_inline void init_recursivelock(recursive_lock_T * lock)
+{
+	lock->counter.value = 0;
+	lock->owner = NULL;
+}
+
+inline __always_inline void lock_recursivelock(recursive_lock_T * lock)
+{
+	// while (curr_tsk != lock->owner);
+	__asm__ __volatile__(	"1:						\n\t"
+							"pause					\n\t"
+							"cmpq	%1,	%2			\n\t"
+							"jne	1b				\n\t"
+							"lock	incq	%0		\n\t"
+						:	"=m"(lock->counter.value)
+						:	"r"((size_t)curr_tsk),
+							"r"((size_t)lock->owner)
+						:);
+	atomic_inc(&lock->counter);
+}
+
+inline __always_inline void unlock_recursivelock(recursive_lock_T * lock)
+{
+
+}
+
+/*==============================================================================================*
+ *										atomic operations										*
+ *==============================================================================================*/
 inline __always_inline void atomic_add(atomic_T * atomic, long value)
 {
 	__asm__ __volatile__(	"lock	addq	%1,	%0	\n\t"

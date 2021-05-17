@@ -91,7 +91,7 @@
 
 	void arch_init_task(void);
 	task_s * get_current_task(void);
-	#define curr_tsk get_currrent()
+	#define curr_tsk get_current_task()
 	percpu_data_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 	unsigned long get_newpid(void);

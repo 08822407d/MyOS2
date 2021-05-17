@@ -21,7 +21,8 @@ void init_i8259()
 
 	outb(INT_CTLMASK, ~0);
 	outb(INT2_CTLMASK, ~0);
-	__asm__ __volatile__("sti	\n");
+
+	sti();
 }
 
 void i8259_unmask(const int irq_nr)
