@@ -46,7 +46,8 @@ void idle(size_t cpu_idx)
 		init_percpu_intr();
 	percpu_self_config(cpu_idx);
 
-	module_test();
+	// kernel_thread(module_test, 0, 0);
+	module_test(0);
 
 	sti();
 

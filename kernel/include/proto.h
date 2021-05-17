@@ -38,7 +38,7 @@
 	void kmain(void);
 
 	/* mod_test.c */
-	void module_test(void);
+	unsigned long module_test(unsigned long);
 
 	/* start.c */
 	void cstart(void);

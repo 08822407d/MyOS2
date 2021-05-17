@@ -46,26 +46,60 @@ inline __always_inline void init_recursivelock(recursive_lock_T * lock)
 {
 	lock->counter.value = 0;
 	lock->owner = NULL;
+	init_spinlock(&lock->selflock);
 }
 
 inline __always_inline void lock_recursivelock(recursive_lock_T * lock)
 {
-	// while (curr_tsk != lock->owner);
-	__asm__ __volatile__(	"1:						\n\t"
+	task_s * curr = curr_tsk;
+	lock_spinlock(&lock->selflock);
+	__asm__ __volatile__(	"cmpq	$0,	%0			\n\t"
+							"jne	1f				\n\t"
+							"movq	%1,	%2			\n\t"
+							"1:						\n\t"
+						:	"=m"(lock->counter.value)
+						:	"r"((reg_t)curr),
+							"m"((reg_t)lock->owner)
+						:
+						);
+	unlock_spinlock(&lock->selflock);
+	__asm__ __volatile__(	"2:						\n\t"
 							"pause					\n\t"
 							"cmpq	%1,	%2			\n\t"
-							"jne	1b				\n\t"
+							"jne	2b				\n\t"
 							"lock	incq	%0		\n\t"
 						:	"=m"(lock->counter.value)
-						:	"r"((size_t)curr_tsk),
-							"r"((size_t)lock->owner)
-						:);
-	atomic_inc(&lock->counter);
+						:	"r"((reg_t)curr),
+							"m"((reg_t)lock->owner)
+						:
+						);
 }
 
 inline __always_inline void unlock_recursivelock(recursive_lock_T * lock)
 {
-
+	task_s * curr = curr_tsk;
+	__asm__ __volatile__(	"1:						\n\t"
+							"pause					\n\t"
+							"cmpq	%1,	%2			\n\t"
+							"jne	1b				\n\t"
+							"lock	decq	%0		\n\t"
+						:	"=m"(lock->counter.value)
+						:	"r"((reg_t)curr),
+							"m"((reg_t)lock->owner)
+						:
+						);
+	lock_spinlock(&lock->selflock);
+	__asm__ __volatile__(	"cmpq	$0,	%0			\n\t"
+							"jne	2f				\n\t"
+							"movq	%2,	%1			\n\t"
+							"2:						\n\t"
+						:
+						:	"m"(lock->counter.value),
+							"m"((reg_t)lock->owner),
+							"i"(NULL)
+						:
+						);
+	unlock_spinlock(&lock->selflock);
 }
 
 /*==============================================================================================*

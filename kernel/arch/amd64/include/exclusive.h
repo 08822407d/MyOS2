@@ -16,6 +16,7 @@
 	typedef struct
 	{
 		task_s *	owner;
+		spinlock_T	selflock;
 		atomic_T	counter;
 	} recursive_lock_T;
 
@@ -39,6 +40,10 @@
 	void init_spinlock(spinlock_T * lock);
 	void lock_spinlock(spinlock_T * lock);
 	void unlock_spinlock(spinlock_T * lock);
+
+	void init_recursivelock(recursive_lock_T * lock);
+	void lock_recursivelock(recursive_lock_T * lock);
+	void unlock_recursivelock(recursive_lock_T * lock);
 
 	void atomic_add(atomic_T * atomic, long value);
 	void atomic_sub(atomic_T * atomic, long value);

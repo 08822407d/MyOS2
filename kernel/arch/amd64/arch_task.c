@@ -194,7 +194,8 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 
 unsigned long do_exit(unsigned long code)
 {
-	color_printk(RED,BLACK,"exit task is running,arg:%#018lx\n",code);
+	percpu_data_s * cpudata_p = curr_cpu;
+	color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, code);
 	while(1);
 }
 

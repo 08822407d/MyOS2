@@ -4,13 +4,13 @@
 
 void kmalloc_kfree_test(void);
 void kthread_test(void);
-void module_test(void);
+unsigned long module_test(unsigned long flag);
 
-void module_test()
+unsigned long module_test(unsigned long flag)
 {
 	kmalloc_kfree_test();
 
-	kthread_test();
+	// kthread_test();
 }
 
 unsigned long test_task_a(unsigned long arg)
