@@ -39,7 +39,7 @@
 				(src)->prev;						\
 			})
 
-	#define m_list_insert_front(src, dst)			\
+	#define __m_list_insert_front(src, dst)			\
 			({										\
 				if ((dst) != NULL)					\
 				{									\
@@ -51,7 +51,7 @@
 				}									\
 			})
 
-	#define m_list_insert_back(src, dst)			\
+	#define __m_list_insert_back(src, dst)			\
 			({										\
 				if ((dst) != NULL)					\
 				{									\
@@ -82,7 +82,7 @@
 					if ((list_head)->count == 0)							\
 						(list_head)->head_p = unit;							\
 					else													\
-						m_list_insert_front((unit), (list_head)->head_p);	\
+						__m_list_insert_front((unit), (list_head)->head_p);	\
 																			\
 					(list_head)->head_p = (list_head)->head_p->prev;		\
 					(unit)->list_header = list_head;						\
@@ -146,7 +146,7 @@
 					if ((list_head)->count == 0)							\
 						(list_head)->head_p = unit;							\
 					else													\
-						m_list_insert_front((unit), (list_head)->head_p);	\
+						__m_list_insert_front((unit), (list_head)->head_p);	\
 																			\
 					(unit)->list_header = list_head;						\
 					(list_head)->count++;									\

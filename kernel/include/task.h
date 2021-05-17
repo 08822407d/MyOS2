@@ -73,7 +73,7 @@
 		task_s *		curr_task;
 		task_s *		idle_task;
 
-		task_list_s		waiting_tasks;
+		task_list_s		ready_tasks;
 		task_list_s		finished_tasks;
 
 		unsigned		is_idle_flag;
@@ -90,11 +90,14 @@
 	void init_task(void);
 
 	void arch_init_task(void);
-	task_s * get_current(void);
+	task_s * get_current_task(void);
+	#define curr_tsk get_currrent()
+	percpu_data_s * get_current_cpu(void);
+	#define curr_cpu get_current_cpu()
 	unsigned long get_newpid(void);
 	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
 	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
-	void schedule(void);
+	void load_balance(void);
 	void idle_enqueue(task_s * idle);
 	task_s * idle_dequeue(void);
 	void task_list_push(task_list_s * list, task_s * task);

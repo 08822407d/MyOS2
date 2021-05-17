@@ -72,14 +72,14 @@ void pre_init(void)
 	uint64_t lcpu_count = 0;
 	for (i = 0; i < bootinfo->efi_smp_info.core_num; i++)
 	{
-		efi_cpudesc_s * curr_cpu = &bootinfo->efi_smp_info.cpus[i];
-		if ((curr_cpu->status & 0x4) > 0)
+		efi_cpudesc_s * this_cpu = &bootinfo->efi_smp_info.cpus[i];
+		if ((this_cpu->status & 0x4) > 0)
 		{
-			apic_id[lcpu_count] = curr_cpu->proccessor_id & 0xFF;
+			apic_id[lcpu_count] = this_cpu->proccessor_id & 0xFF;
 			smp_topos[lcpu_count].not_use = 0;
-			smp_topos[lcpu_count].pack_id = curr_cpu->pack_id;
-			smp_topos[lcpu_count].core_id = curr_cpu->core_id;
-			smp_topos[lcpu_count].thd_id  = curr_cpu->thd_id;
+			smp_topos[lcpu_count].pack_id = this_cpu->pack_id;
+			smp_topos[lcpu_count].core_id = this_cpu->core_id;
+			smp_topos[lcpu_count].thd_id  = this_cpu->thd_id;
 			lcpu_count++;
 		}
 	}

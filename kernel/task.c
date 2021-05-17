@@ -37,9 +37,9 @@ void init_task()
 
 	// complete bsp's cpudata_p
 	percpu_data_s * bsp_cpudata = percpu_data[0];
-	bsp_cpudata->waiting_tasks.count = 
-	bsp_cpudata->waiting_tasks.count = 0;
-	bsp_cpudata->waiting_tasks.head_p =
+	bsp_cpudata->ready_tasks.count = 
+	bsp_cpudata->ready_tasks.count = 0;
+	bsp_cpudata->ready_tasks.head_p =
 	bsp_cpudata->finished_tasks.head_p = NULL;
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->time_slice = task0->time_slice;
@@ -48,7 +48,7 @@ void init_task()
 }
 
 /*==============================================================================================*
- *									schedule related functions							 		*                        
+ *									load_balance related functions							 		*                        
  *==============================================================================================*/
 void idle_enqueue(task_s * idle)
 {
@@ -56,7 +56,7 @@ void idle_enqueue(task_s * idle)
 		return;
 
 	spin_lock(&idle_queue_lock);
-	// make sure the schedule task always the first in queue
+	// make sure the load_balance task always the first in queue
 	if (idle == idle_queue.sched_task)
 	{
 		idle_queue.head = (idle_queue.head - 1 + idle_queue.nr_max) % idle_queue.nr_max;
@@ -94,7 +94,7 @@ void task_list_push(task_list_s * list, task_s * task)
 	if (list->count == 0)
 		list->head_p = task;
 	else
-		m_list_insert_front(task, list->head_p);
+		__m_list_insert_front(task, list->head_p);
 
 	list->head_p = list->head_p->prev;
 	list->count++;

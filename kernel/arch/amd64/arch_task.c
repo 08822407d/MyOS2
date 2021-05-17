@@ -28,7 +28,7 @@ unsigned long	curr_pid;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-inline __always_inline task_s * get_current()
+inline __always_inline task_s * get_current_task()
 {
 #ifdef current
 #undef current
@@ -145,7 +145,7 @@ void wakeup_task(task_s * task)
 {
 	percpu_data_s * cpudata_p = (percpu_data_s *)rdgsbase();
 	task->state |= PS_RUNNING;
-	m_push_list(task, &(cpudata_p->waiting_tasks));
+	m_push_list(task, &(cpudata_p->ready_tasks));
 }
 
 unsigned long do_fork(stack_frame_s * sf_regs,
@@ -153,7 +153,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
-	PCB_u * curr_pcb	= container_of(get_current(), PCB_u, task);
+	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
 	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
 	task_s * curr_task	= &curr_pcb->task;
 	task_s * new_task	= &new_pcb->task;
@@ -226,9 +226,9 @@ void arch_init_task()
 }
 
 /*==============================================================================================*
- *									schedule related functions									*
+ *									load_balance related functions									*
  *==============================================================================================*/
-void reschedule(percpu_data_s * cpudata_p)
+void schedule(percpu_data_s * cpudata_p)
 {
 	// if running time out, make the need_schedule flag of current task
 	task_s * curr_task = cpudata_p->curr_task;
@@ -240,7 +240,7 @@ void reschedule(percpu_data_s * cpudata_p)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
 	if (!(curr_task->flags & PF_NEED_SCHEDULE) ||
-		cpudata_p->waiting_tasks.count < 1 ||
+		cpudata_p->ready_tasks.count < 1 ||
 		cpudata_p->scheduleing_flag)
 		return;
 
@@ -250,23 +250,26 @@ void reschedule(percpu_data_s * cpudata_p)
 	cpudata_p->scheduleing_flag = 1;
 	// get next task
 	// find a suit position for current insertion
-	if (curr_task == cpudata_p->idle_task)
-		m_append_to_list(curr_task, &cpudata_p->waiting_tasks);
-	else
+	if (curr_task != NULL)
 	{
-		task_s * tail = cpudata_p->waiting_tasks.head_p->prev;
-		task_s * tmp = cpudata_p->waiting_tasks.head_p;
-		while((curr_task->vruntime > tmp->vruntime) &&
-				(tmp != tail))
-			tmp = tmp->next;
-		m_list_insert_front(curr_task, tmp);
-		curr_task->list_header = &cpudata_p->waiting_tasks;
-		cpudata_p->waiting_tasks.count++;
-		if (tmp == cpudata_p->waiting_tasks.head_p)
-			cpudata_p->waiting_tasks.head_p = tmp->prev;
+		if (curr_task == cpudata_p->idle_task)
+			m_append_to_list(curr_task, &cpudata_p->ready_tasks);
+		else
+		{
+			task_s * tail = cpudata_p->ready_tasks.head_p->prev;
+			task_s * tmp = cpudata_p->ready_tasks.head_p;
+			while((curr_task->vruntime > tmp->vruntime) &&
+					(tmp != tail))
+				tmp = tmp->next;
+			__m_list_insert_front(curr_task, tmp);
+			curr_task->list_header = &cpudata_p->ready_tasks;
+			cpudata_p->ready_tasks.count++;
+			if (tmp == cpudata_p->ready_tasks.head_p)
+				cpudata_p->ready_tasks.head_p = tmp->prev;
+		}
 	}
 
-	m_pop_list(next_task, &cpudata_p->waiting_tasks);
+	m_pop_list(next_task, &cpudata_p->ready_tasks);
 	cpudata_p->curr_task = next_task;
 
 	curr_task->state &= ~PS_RUNNING;
@@ -282,7 +285,7 @@ void reschedule(percpu_data_s * cpudata_p)
 	sti();
 }
 
-void schedule()
+void load_balance()
 {
 	percpu_data_s * cpudata_p = percpu_data[0];
 	if (cpudata_p->scheduleing_flag)
@@ -298,16 +301,17 @@ void schedule()
 	while (global_ready_task.count)
 	{
 		task_s * tmp = task_list_pop(&global_ready_task);
-		task_list_push(&cpudata_p->waiting_tasks, tmp);
+		task_list_push(&cpudata_p->ready_tasks, tmp);
 	}
-	// insert schedule self to cpu's waiting list end
-	task_s * current = get_current();
+	// insert load_balance self to cpu's waiting list end
+	task_s * current = get_current_task();
 	current->flags |= PF_NEED_SCHEDULE;
 	cpudata_p->scheduleing_flag = 0;
 
-	reschedule(cpudata_p);
+	schedule(cpudata_p);
 }
 
+/*
 void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
 {
 	// there are 4 case
@@ -319,16 +323,16 @@ void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
 	*curr = cpudata_p->curr_task;
 	// case 1: curr->finished; waiting->curr
 	if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count > 0))
+		(cpudata_p->ready_tasks.count > 0))
 	{
 		task_list_push(&cpudata_p->finished_tasks, *curr);
 		*next =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->ready_tasks);
 		cpudata_p->is_idle_flag = 0;
 	}
 	// case 2: curr->finished; idle_queue->curr
 	else if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count < 1))
+		(cpudata_p->ready_tasks.count < 1))
 	{
 		task_list_push(&cpudata_p->finished_tasks, *curr);
 		*next =
@@ -337,11 +341,11 @@ void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
 	}
 	// case 3: curr->idle_queue; waiting->curr
 	else if ((cpudata_p->is_idle_flag) &&
-		(cpudata_p->waiting_tasks.count > 0))
+		(cpudata_p->ready_tasks.count > 0))
 	{
 		idle_enqueue(*curr);
 		*next =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->waiting_tasks);
+		cpudata_p->curr_task = task_list_pop(&cpudata_p->ready_tasks);
 		cpudata_p->is_idle_flag = 0;
 	}
 	//case 4: push current idle, then pop an idle from queue
@@ -354,3 +358,4 @@ void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
 		return;
 	}
 }
+*/

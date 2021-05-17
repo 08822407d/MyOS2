@@ -38,7 +38,7 @@ void add_timer(timer_s * timer)
 		while(tmp->expire_jiffies < timer->expire_jiffies)
 			tmp = tmp->next;
 	}
-	m_list_insert_back(timer, tmp);
+	__m_list_insert_back(timer, tmp);
 }
 
 void del_timer(timer_s * timer)

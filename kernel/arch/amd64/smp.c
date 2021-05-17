@@ -111,14 +111,14 @@ void init_percpu_data(size_t cpu_idx)
 void percpu_self_config(size_t cpu_idx)
 {
 	percpu_data_s * cpudata_p = percpu_data[cpu_idx];
-	task_s *	current_task = get_current();
+	task_s *	current_task = get_current_task();
 	wrgsbase((reg_t)cpudata_p);
 	// tasks
 	cpudata_p->idle_task = current_task;
 	cpudata_p->curr_task = current_task;
-	cpudata_p->waiting_tasks.count =
+	cpudata_p->ready_tasks.count =
 	cpudata_p->finished_tasks.count = 0;
-	cpudata_p->waiting_tasks.head_p =
+	cpudata_p->ready_tasks.head_p =
 	cpudata_p->finished_tasks.head_p = NULL;
 	cpudata_p->last_jiffies = 0;
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
@@ -133,4 +133,9 @@ void startup_smp()
 {
 	wrmsr(0x830,0xc4500);	//INIT IPI
 	wrmsr(0x830,0xc4620);	//Start-up IPI
+}
+
+inline __always_inline percpu_data_s * get_current_cpu()
+{
+	return (percpu_data_s *)rdgsbase();
 }

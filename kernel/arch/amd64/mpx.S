@@ -110,7 +110,7 @@ RESTORE_ALL:
 ret_from_exception:
 ENTRY(ret_from_intr)
 	rdgsbase	%rdi
-	callq		reschedule
+	callq		schedule
 	movq		$-1,		%rcx
 	testq		softirq_status(%rip),	%rcx	////check softirq	
 	jnz			softirq_hanlder
