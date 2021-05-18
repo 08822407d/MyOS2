@@ -20,14 +20,14 @@
 extern kinfo_s kparam;
 
 memory_info_s		mem_info;
-recursive_lock_T	page_alloc_lock;
+recurs_lock_T	page_alloc_lock;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
 slab_cache_list_s	slab_cache_list;
-recursive_lock_T	slab_alloc_lock;
+recurs_lock_T	slab_alloc_lock;
 
 /*==============================================================================================*
  *								fuction relate to physical page									*
@@ -41,7 +41,7 @@ void init_page_manage()
 	#endif
 
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
-	init_recursivelock(&page_alloc_lock);
+	init_recurs_lock(&page_alloc_lock);
 
 	phys_addr low_bound = 0, high_bound = 0;
 	uint64_t pg_start_idx = 0, pg_end_idx = 0;
@@ -105,7 +105,7 @@ void init_page_manage()
 
 Page_s * page_alloc(void)
 {
-	lock_recursivelock(&page_alloc_lock);
+	lock_recurs_lock(&page_alloc_lock);
 	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
 	if (freepage_idx >= mem_info.page_total_nr)
 	{
@@ -115,13 +115,13 @@ Page_s * page_alloc(void)
 	Page_s * ret_page = &mem_info.pages[freepage_idx];
 	bm_set_bit(mem_info.page_bitmap, freepage_idx);
 	ret_page->ref_count++;
-	unlock_recursivelock(&page_alloc_lock);
+	unlock_recurs_lock(&page_alloc_lock);
 	return ret_page;
 }
 
 void page_free(Page_s * page_p)
 {
-	lock_recursivelock(&page_alloc_lock);
+	lock_recurs_lock(&page_alloc_lock);
 	unsigned long page_idx = (unsigned long)page_p->page_start_addr / CONFIG_PAGE_SIZE;
 	bm_clear_bit(mem_info.page_bitmap, page_idx);
 	page_p->attr = 0;
@@ -129,7 +129,7 @@ void page_free(Page_s * page_p)
 
 	page_p->zone_belonged->page_total_ref--;
 	page_p->zone_belonged->page_free_nr++;
-	unlock_recursivelock(&page_alloc_lock);
+	unlock_recurs_lock(&page_alloc_lock);
 }
 
 /*==============================================================================================*
@@ -143,8 +143,8 @@ void init_slab()
 		while (!kparam.init_flags.page_mm);
 	#endif
 
-	init_recursivelock(&slab_alloc_lock);
-	init_list_header(&slab_cache_list);
+	init_recurs_lock(&slab_alloc_lock);
+	m_init_list_header(&slab_cache_list);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
@@ -152,9 +152,9 @@ void init_slab()
 		m_push_list(scgp, &slab_cache_list);
 		m_list_init(scgp);
 
-		init_list_header(&scgp->normal_slab_free);
-		init_list_header(&scgp->normal_slab_used);
-		init_list_header(&scgp->normal_slab_full);
+		m_init_list_header(&scgp->normal_slab_free);
+		m_init_list_header(&scgp->normal_slab_used);
+		m_init_list_header(&scgp->normal_slab_full);
 
 		slab_s * bslp = &base_slabs[i];
 		m_list_init(bslp);
@@ -241,7 +241,7 @@ void * kmalloc(size_t size)
 	while (size > scgp->obj_size)
 		scgp = m_list_get_next(scgp);
 
-	lock_recursivelock(&slab_alloc_lock);
+	lock_recurs_lock(&slab_alloc_lock);
 	// find a usable slab and if it is in free list, move it to used list
 	// or if it is in used list and has only one free slot, move it to full list
 	slab_s *	slp = NULL;
@@ -294,7 +294,7 @@ void * kmalloc(size_t size)
 		scgp->nsobj_free_count += new_slab->total;
 	}
 
-	unlock_recursivelock(&slab_alloc_lock);
+	unlock_recurs_lock(&slab_alloc_lock);
 	return ret_val;
 }
 
@@ -327,7 +327,7 @@ void kfree(void * obj_p)
 		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
 		while (1);
 	}
-	lock_recursivelock(&slab_alloc_lock);
+	lock_recurs_lock(&slab_alloc_lock);
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;
@@ -360,5 +360,5 @@ void kfree(void * obj_p)
 		scgp->nsobj_free_count -= scgp->normal_slab_free.head_p->total;
 	}
 
-	unlock_recursivelock(&slab_alloc_lock);
+	unlock_recurs_lock(&slab_alloc_lock);
 }

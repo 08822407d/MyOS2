@@ -44,7 +44,7 @@ void init_task()
 	bsp_cpudata->curr_task = task0;
 	bsp_cpudata->time_slice = task0->time_slice;
 
-	init_spinlock(&idle_queue_lock);
+	init_spin_lock(&idle_queue_lock);
 }
 
 /*==============================================================================================*
@@ -55,7 +55,7 @@ void idle_enqueue(task_s * idle)
 	if (idle_queue.nr_curr >= idle_queue.nr_max)
 		return;
 
-	lock_spinlock(&idle_queue_lock);
+	lock_spin_lock(&idle_queue_lock);
 	// make sure the load_balance task always the first in queue
 	if (idle == idle_queue.sched_task)
 	{
@@ -68,20 +68,20 @@ void idle_enqueue(task_s * idle)
 		idle_queue.tail = (idle_queue.tail + 1) % idle_queue.nr_max;
 	}
 	idle_queue.nr_curr++;
-	unlock_spinlock(&idle_queue_lock);
+	unlock_spin_lock(&idle_queue_lock);
 }
 
 task_s * idle_dequeue()
 {
 	task_s * ret_val = NULL;
-	lock_spinlock(&idle_queue_lock);
+	lock_spin_lock(&idle_queue_lock);
 	if (idle_queue.nr_curr > 0)
 	{
 		ret_val = idle_queue.queue[idle_queue.head];
 		idle_queue.head = (idle_queue.head + 1) % idle_queue.nr_max;
 	}
 	idle_queue.nr_curr--;
-	unlock_spinlock(&idle_queue_lock);
+	unlock_spin_lock(&idle_queue_lock);
 
 	return ret_val;
 }

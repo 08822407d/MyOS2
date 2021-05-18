@@ -337,7 +337,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
-	lock_spinlock(&Pos.printk_lock);
+	lock_spin_lock(&Pos.printk_lock);
 
 	i = vsprintf(buf, fmt, args);
 
@@ -394,7 +394,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 		}
 	}
 
-	unlock_spinlock(&Pos.printk_lock);
+	unlock_spin_lock(&Pos.printk_lock);
 
 	return i;
 }

@@ -9,7 +9,7 @@
 	struct timer;
 	typedef struct timer timer_s;	
 
-	define_list_header(timer);
+	m_define_list_header(timer);
 
 	typedef struct timer
 	{

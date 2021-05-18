@@ -31,7 +31,7 @@
 	struct task;
 	typedef struct task task_s;
 
-	define_list_header(task);
+	m_define_list_header(task);
 
 	typedef struct task
 	{
@@ -49,6 +49,9 @@
 		unsigned long	signal;
 		unsigned long	time_slice;
 		unsigned long	vruntime;
+
+		unsigned long	spin_count;
+		unsigned long	semaphore_count;
 	} task_s;
 
 	typedef union PCB
@@ -97,6 +100,7 @@
 	unsigned long get_newpid(void);
 	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
 	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
+	void wakeup_task(task_s * task);
 	void load_balance(void);
 	void idle_enqueue(task_s * idle);
 	task_s * idle_dequeue(void);

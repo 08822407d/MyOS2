@@ -127,6 +127,8 @@ void percpu_self_config(size_t cpu_idx)
 
 	current_task->arch_struct.tss_rsp0 = (reg_t)current_task + TASK_KSTACK_SIZE;
 	current_task->vruntime = -1;
+	current_task->semaphore_count =
+	current_task->spin_count = 0;
 }
 
 void startup_smp()

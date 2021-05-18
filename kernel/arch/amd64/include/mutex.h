@@ -3,6 +3,9 @@
 
 #include "../../../include/task.h"
 
+	struct recurs_wait;
+	typedef struct recurs_wait recurs_wait_s;
+
 	typedef struct 
 	{
 		__volatile__ long value;
@@ -15,40 +18,55 @@
 
 	typedef struct
 	{
-		task_s *	owner;
 		spinlock_T	selflock;
-		unsigned	counter;
-	} recursive_lock_T;
+		task_s *	owner;
+		__volatile__	unsigned	counter;
+	} recurs_lock_T;
 
 	typedef struct
 	{
 		atomic_T	counter;
 		task_list_s	waiting_tasks;
 	} semaphore_T;
+
+	m_define_list_header(recurs_wait)
+	typedef struct recurs_wait
+	{
+		recurs_wait_s *		prev;
+		recurs_wait_s *		next;
+		recurs_wait_list_s *	list_header;
+
+		task_s *	owner;
+		__volatile__	unsigned	counter;
+	} recurs_wait_s;
 	
 	typedef struct
 	{
-		task_s *	owner;
-		atomic_T	counter;
-		task_list_s	waiting_tasks;
-	} recursive_semaphore_T;
+		spinlock_T		selflock;
+		atomic_T		counter;
+		task_list_s		waiting_tasks;
+		recurs_wait_list_s	owner_list_head;
+	} recurs_semaphore_T;
 	
+	void init_spin_lock(spinlock_T * lock);
+	void lock_spin_lock(spinlock_T * lock);
+	void unlock_spin_lock(spinlock_T * lock);
+
+	void init_recurs_lock(recurs_lock_T * lock);
+	void lock_recurs_lock(recurs_lock_T * lock);
+	void unlock_recurs_lock(recurs_lock_T * lock);
+
+	void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr);
+	void lock_recurs_semaphore(recurs_semaphore_T * semaphore);
+	void unlock_recurs_semaphore(recurs_semaphore_T * semaphore);
 
 	#define atomic_read(atomic)	((atomic)->value)
 	#define atomic_set(atomic,val)	(((atomic)->value) = (val))
 
-	void init_spinlock(spinlock_T * lock);
-	void lock_spinlock(spinlock_T * lock);
-	void unlock_spinlock(spinlock_T * lock);
-
-	void init_recursivelock(recursive_lock_T * lock);
-	void lock_recursivelock(recursive_lock_T * lock);
-	void unlock_recursivelock(recursive_lock_T * lock);
-
-	void atomic_add(atomic_T * atomic, long value);
-	void atomic_sub(atomic_T * atomic, long value);
 	void atomic_inc(atomic_T * atomic);
 	void atomic_dec(atomic_T * atomic);
+	void atomic_add(atomic_T * atomic, long value);
+	void atomic_sub(atomic_T * atomic, long value);
 	void atomic_set_mask(atomic_T * atomic, long mask);
 	void atomic_clear_mask(atomic_T * atomic, long mask);
 

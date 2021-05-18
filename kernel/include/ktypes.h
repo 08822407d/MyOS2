@@ -66,7 +66,7 @@
 /*==============================================================================================*
  *									kernel malloc and slab										*
  *==============================================================================================*/
-	define_list_header(slab);
+	m_define_list_header(slab);
 
 	typedef struct slab
 	{
@@ -85,7 +85,7 @@
 		bitmap_t *		colormap;
 	} slab_s;
 
-	define_list_header(slab_cache);
+	m_define_list_header(slab_cache);
 
 	typedef struct slab_cache
 	{

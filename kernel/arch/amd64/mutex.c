@@ -1,16 +1,18 @@
+#include <lib/string.h>
 #include <sys/cdefs.h>
 
 #include "include/mutex.h"
+#include "../../include/proto.h"
 
 /*==============================================================================================*
  *											spin lock											*
  *==============================================================================================*/
-inline __always_inline void init_spinlock(spinlock_T * lock)
+inline __always_inline void init_spin_lock(spinlock_T * lock)
 {
 	lock->lock.value = 1;
 }
 
-inline __always_inline void lock_spinlock(spinlock_T * lock)
+inline __always_inline void lock_spin_lock(spinlock_T * lock)
 {
 	__asm__	__volatile__(	"1:						\n\t"
 							"lock	decq	%0		\n\t"
@@ -25,52 +27,144 @@ inline __always_inline void lock_spinlock(spinlock_T * lock)
 						:
 						:	"memory"
 						);
+	task_s * curr = curr_tsk;
+	curr->spin_count++;
 }
 
-inline __always_inline void unlock_spinlock(spinlock_T * lock)
+inline __always_inline void unlock_spin_lock(spinlock_T * lock)
 {
-	// if (lock->lock == 1)
-	// 	return;
-
 	__asm__	__volatile__(	"movq	$1,		%0		\n\t"
 						:	"=m"(lock->lock.value)
 						:
 						:	"memory"
 						);
+	task_s * curr = curr_tsk;
+	curr->spin_count--;
 }
 
 /*==============================================================================================*
  *										recursive spin lock										*
  *==============================================================================================*/
-inline __always_inline void init_recursivelock(recursive_lock_T * lock)
+inline __always_inline void init_recurs_lock(recurs_lock_T * lock)
 {
 	lock->counter = 0;
 	lock->owner = NULL;
-	init_spinlock(&lock->selflock);
+	init_spin_lock(&lock->selflock);
 }
 
-void lock_recursivelock(recursive_lock_T * lock)
+void lock_recurs_lock(recurs_lock_T * lock)
 {
 	task_s * owner = NULL;
 	task_s * curr = curr_tsk;
 	do
 	{
-		lock_spinlock(&lock->selflock);
+		lock_spin_lock(&lock->selflock);
 		owner = lock->owner;
 		if (lock->owner == NULL)
 			lock->owner = curr;
-		unlock_spinlock(&lock->selflock);
+		unlock_spin_lock(&lock->selflock);
 	} while(owner != curr);
 	lock->counter++;
 }
 
-void unlock_recursivelock(recursive_lock_T * lock)
+void unlock_recurs_lock(recurs_lock_T * lock)
 {
 	task_s * curr = curr_tsk;
 	while (lock->owner != curr);
 	lock->counter--;
 	if (lock->counter == 0)
 		lock->owner = NULL;
+}
+
+/*==============================================================================================*
+ *										recursive semaphore										*
+ *==============================================================================================*/
+recurs_wait_s * find_recurs_waiting_task(task_s * tsk, recurs_wait_list_s * list)
+{
+	recurs_wait_s * ret_val = NULL;
+	recurs_wait_s * tmp = list->head_p;
+	unsigned count = list->count;
+	while (count)
+	{
+		if (tmp->owner = tsk)
+		{
+			ret_val = tmp;
+			break;
+		}
+		tmp = tmp->next;
+		count--;
+	}
+	return ret_val;
+}
+
+inline __always_inline void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr)
+{
+	semaphore->counter.value = max_nr;
+	init_spin_lock(&semaphore->selflock);
+	m_init_list_header(&semaphore->owner_list_head);
+	m_init_list_header(&semaphore->waiting_tasks);
+}
+
+void down_recurs_semaphore(recurs_semaphore_T * semaphore)
+{	
+	task_s * curr = curr_tsk;
+	percpu_data_s * cpudata_p = curr_cpu;
+	lock_spin_lock(&semaphore->selflock);
+	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
+	if (user != NULL)
+	{
+		user->counter++;
+		unlock_spin_lock(&semaphore->selflock);
+	}
+	else if (semaphore->counter.value > 0)
+	{
+		recurs_wait_s * new_user = kmalloc(sizeof(recurs_wait_s));
+		memset(new_user, 0, sizeof(recurs_wait_s));
+		new_user->owner = curr;
+		new_user->counter = 1;
+		m_enqueue_list(new_user, &semaphore->owner_list_head);
+		unlock_spin_lock(&semaphore->selflock);
+	}
+	else
+	{
+		m_enqueue_list(curr, &semaphore->waiting_tasks);
+		cpudata_p->curr_task = NULL;
+		unlock_spin_lock(&semaphore->selflock);
+		schedule();
+	}
+}
+
+void up_recurs_semaphore(recurs_semaphore_T * semaphore)
+{
+	task_s * curr = curr_tsk;
+	percpu_data_s * cpudata_p = curr_cpu;
+	lock_spin_lock(&semaphore->selflock);
+	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
+	if (user == NULL)
+	{
+		// there must be an error
+		while (1);
+	}
+	if (user->counter != 0)
+	{
+		user->counter--;
+		unlock_spin_lock(&semaphore->selflock);
+	}
+	else if (semaphore->waiting_tasks.count == 0)
+	{
+		m_list_delete(user);
+		semaphore->owner_list_head.count--;
+		semaphore->counter.value++;
+		kfree(user);
+		unlock_spin_lock(&semaphore->selflock);
+	}
+	else
+	{
+		m_dequeue_list(user->owner, &semaphore->waiting_tasks);
+		user->counter = 1;
+		unlock_spin_lock(&semaphore->selflock);
+		wakeup_task(user->owner);
+	}
 }
 
 /*==============================================================================================*

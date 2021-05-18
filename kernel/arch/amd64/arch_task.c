@@ -44,7 +44,7 @@ inline __always_inline task_s * get_current_task()
 
 unsigned long get_newpid()
 {
-	lock_spinlock(&newpid_lock);
+	lock_spin_lock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
 	if (newpid >= MAX_PID || newpid < curr_pid)
 	{
@@ -57,7 +57,7 @@ unsigned long get_newpid()
 	}
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
-	unlock_spinlock(&newpid_lock);
+	unlock_spin_lock(&newpid_lock);
 
 	return curr_pid;
 }
@@ -227,14 +227,15 @@ void arch_init_task()
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
-	init_spinlock(&newpid_lock);
+	init_spin_lock(&newpid_lock);
 }
 
 /*==============================================================================================*
  *									load_balance related functions									*
  *==============================================================================================*/
-void schedule(percpu_data_s * cpudata_p)
+void schedule()
 {
+	percpu_data_s * cpudata_p = curr_cpu;
 	// if running time out, make the need_schedule flag of current task
 	task_s * curr_task = cpudata_p->curr_task;
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
@@ -246,7 +247,9 @@ void schedule(percpu_data_s * cpudata_p)
 
 	if (!(curr_task->flags & PF_NEED_SCHEDULE) ||
 		cpudata_p->ready_tasks.count < 1 ||
-		cpudata_p->scheduleing_flag)
+		cpudata_p->scheduleing_flag ||
+		curr_task->spin_count != 0 ||
+		curr_task->semaphore_count != 0)
 		return;
 
 	task_s * next_task = NULL;
@@ -312,8 +315,6 @@ void load_balance()
 	task_s * current = get_current_task();
 	current->flags |= PF_NEED_SCHEDULE;
 	cpudata_p->scheduleing_flag = 0;
-
-	schedule(cpudata_p);
 }
 
 /*

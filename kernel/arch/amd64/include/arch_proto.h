@@ -251,7 +251,7 @@
 							unsigned long stack_size);
 	int sys_call(int syscall_nr);
 	int do_syscall(int syscall_nr);
-	void schedule(percpu_data_s * curr_cpu_data);
+	void schedule(void);
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 
 	/* interrupt.c */

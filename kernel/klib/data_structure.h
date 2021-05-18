@@ -6,14 +6,14 @@
 /*==============================================================================================*
  *											LIST												*
  *==============================================================================================*/
-	#define define_list_header(TYPE)				\
+	#define m_define_list_header(TYPE)				\
 			struct TYPE ## _list;					\
 			typedef struct TYPE ## _list			\
 			{										\
 				unsigned		count;				\
 				TYPE ## _s *	head_p;				\
 			} TYPE ## _list_s;
-	#define init_list_header(lh)					\
+	#define m_init_list_header(lh)					\
 			({										\
 				(lh)->count = 0;					\
 				(lh)->head_p = NULL;				\
@@ -122,7 +122,7 @@
 				}															\
 			})
 
-	#define m_enqueue_list m_push_list
+	#define m_enqueue_list(unit, list_head) m_push_list(unit, list_head)
 
 	#define m_dequeue_list(ret_val, list_head)								\
 			({																\

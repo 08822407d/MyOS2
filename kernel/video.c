@@ -42,7 +42,7 @@ void init_video()
 	Pos.XCharSize = 8;
 	Pos.YCharSize = 16;
 
-	init_spinlock(&Pos.printk_lock);
+	init_spin_lock(&Pos.printk_lock);
 	// clean screen
 	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }
