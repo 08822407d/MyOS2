@@ -10,14 +10,14 @@
 
 	typedef struct
 	{
-		__volatile__ unsigned long lock;
+		atomic_T	lock;
 	} spinlock_T;
 
 	typedef struct
 	{
 		task_s *	owner;
 		spinlock_T	selflock;
-		atomic_T	counter;
+		unsigned	counter;
 	} recursive_lock_T;
 
 	typedef struct

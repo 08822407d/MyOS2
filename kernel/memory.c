@@ -242,7 +242,6 @@ void * kmalloc(size_t size)
 		scgp = m_list_get_next(scgp);
 
 	lock_recursivelock(&slab_alloc_lock);
-
 	// find a usable slab and if it is in free list, move it to used list
 	// or if it is in used list and has only one free slot, move it to full list
 	slab_s *	slp = NULL;
@@ -323,12 +322,12 @@ void kfree(void * obj_p)
 	}
 
 	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
-	lock_recursivelock(&slab_alloc_lock);
 	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
 	{
 		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
 		while (1);
 	}
+	lock_recursivelock(&slab_alloc_lock);
 	bm_clear_bit(slp->colormap, obj_idx);
 	slp->free++;
 	scgp->nsobj_free_count++;

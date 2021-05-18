@@ -4,7 +4,7 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/arch_glo.h"
-#include "include/exclusive.h"
+#include "include/mutex.h"
 
 #include "../../include/glo.h"
 #include "../../include/printk.h"

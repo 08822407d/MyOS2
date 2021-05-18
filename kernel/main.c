@@ -14,6 +14,8 @@
 #include "klib/data_structure.h"
 
 
+atomic_T boot_counter;
+
 void kmain()
 {
 	pre_init();
@@ -31,25 +33,27 @@ void kmain()
 	// enable bsp's apic
 	init_percpu_intr();
 	init_bsp_intr();
-	startup_smp();
 
 	// post init
 	softirq_init();
 	timer_init();
 	devices_init();
+
+	color_printk(BLACK, BLUE, "BSP env initiated.\n");
+
+	startup_smp();
+	atomic_set(&boot_counter, 0);
 }
 
 void idle(size_t cpu_idx)
 {	
 	reload_percpu_arch_data(cpu_idx);
-	if (cpu_idx != 0)
-		init_percpu_intr();
+	init_percpu_intr();
 	percpu_self_config(cpu_idx);
+	sti();
 
 	// kernel_thread(module_test, 0, 0);
-	module_test(0);
-
-	sti();
+	module_test(cpu_idx);
 
 	while (1)
 	{

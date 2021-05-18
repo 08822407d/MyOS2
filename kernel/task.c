@@ -7,7 +7,7 @@
 #include "include/task.h"
 #include "include/proto.h"
 
-#include "arch/amd64/include/exclusive.h"
+#include "arch/amd64/include/mutex.h"
 
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section

@@ -19,7 +19,7 @@
 #include <stdarg.h>
 #include <lib/font.h>
 
-#include "../arch/amd64/include/exclusive.h"
+#include "../arch/amd64/include/mutex.h"
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */
