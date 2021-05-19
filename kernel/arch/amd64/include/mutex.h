@@ -56,9 +56,13 @@
 	void lock_recurs_lock(recurs_lock_T * lock);
 	void unlock_recurs_lock(recurs_lock_T * lock);
 
+	void init_semaphore(semaphore_T * semaphore, long count);
+	void up_semaphore(semaphore_T * semaphore);
+	void down_semaphore(semaphore_T * semaphore);
+
 	void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr);
-	void lock_recurs_semaphore(recurs_semaphore_T * semaphore);
-	void unlock_recurs_semaphore(recurs_semaphore_T * semaphore);
+	void up_recurs_semaphore(recurs_semaphore_T * semaphore);
+	void down_recurs_semaphore(recurs_semaphore_T * semaphore);
 
 	#define atomic_read(atomic)	((atomic)->value)
 	#define atomic_set(atomic,val)	(((atomic)->value) = (val))
