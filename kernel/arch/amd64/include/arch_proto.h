@@ -226,6 +226,8 @@
 	void outb(uint16_t port, uint8_t value);
 	void outw(uint16_t port, uint16_t value);
 	void outl(uint16_t port, uint32_t value);
+	void insw(uint16_t port, uint16_t * buffer, uint64_t nr);
+	void outsw(uint16_t port, uint16_t * buffer, uint64_t nr);
 	uint64_t rdmsr(uint64_t msr_addr);
 	void wrmsr(unsigned long msr_addr,unsigned long value);
 	void io_mfence(void);

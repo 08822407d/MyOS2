@@ -1,3 +1,5 @@
+set architecture i386:x86-64
+
 set print array on
 
 file kernel.debug

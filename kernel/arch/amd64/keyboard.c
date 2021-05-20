@@ -28,7 +28,7 @@ hw_int_controller_s keyboard_int_controller =
 	.ack		= IOAPIC_edge_ack,
 };
 
-void keyboard_init()
+void init_keyboard()
 {		
 	ioapic_retentry_T entry;
 	unsigned long i,j;
@@ -70,8 +70,8 @@ void keyboard_init()
 	alt_r   = 0;
 
 	register_irq(KEYBOARD_IRQ , &entry , "PS/2 keyboard",
-				 (unsigned long)p_kb, &keyboard_int_controller,
-				 &keyboard_handler);
+					(unsigned long)p_kb, &keyboard_int_controller,
+					&keyboard_handler);
 }
 
 void keyboard_exit()
