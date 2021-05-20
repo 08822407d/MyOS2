@@ -62,6 +62,28 @@ inline __always_inline void outl(uint16_t port, uint32_t value)
 						:	"memory");
 }
 
+inline __always_inline void insw(uint16_t port, uint16_t * buffer, uint64_t nr)
+{
+	__asm__ __volatile__(	"cld		\n\t"
+							"rep		\n\t"
+							"insw		\n\t"
+							"mfence		\n\t"
+						:
+						:	"d"(port),"D"(buffer),"c"(nr)
+						:	"memory");
+}
+
+inline __always_inline void outsw(uint16_t port, uint16_t * buffer, uint64_t nr)
+{
+	__asm__ __volatile__(	"cld		\n\t"
+							"rep		\n\t"
+							"outsw		\n\t"
+							"mfence		\n\t"
+						:
+						:	"d"(port),"S"(buffer),"c"(nr)
+						:	"memory");
+}
+
 inline __always_inline uint64_t rdmsr(uint64_t msr_addr)
 {
 	uint32_t tmp0 = 0;
@@ -83,7 +105,7 @@ inline __always_inline void wrmsr(uint64_t msr_addr,uint64_t value)
 
 inline __always_inline void io_mfence()
 {
-	__asm__ __volatile__(	"mfence		\n");
+	__asm__ __volatile__(	"mfence		\n\t");
 }
 
 /*==============================================================================================*

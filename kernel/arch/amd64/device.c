@@ -2,6 +2,7 @@
 
 void devices_init()
 {
-	keyboard_init();
+	init_keyboard();
 	HPET_init();
+	 init_disk();
 }

@@ -14,7 +14,7 @@
 	void devices_init(void);
 
 	/* keyboard.c */
-	void keyboard_init(void);
+	void init_keyboard(void);
 	void keyboard_handler(unsigned long param, stack_frame_s * sf_regs);
 	void analysis_keycode(void);
 
@@ -22,4 +22,6 @@
 	void get_cmos_time(time_s *time);
 	void HPET_init(void);
 
+	/* disk.c */
+	void init_disk(void);
 #endif /* _AMD64_PC_DEVICE_H_ */
