@@ -14,6 +14,7 @@ inline __always_inline uint64_t inb(uint16_t port)
 						:	"=al"(ret_val)
 						:	"d"(port)
 						:	"memory");
+	ret_val &= 0xFF;
 	return ret_val;
 }
 inline __always_inline uint64_t inw(uint16_t port)
@@ -24,6 +25,7 @@ inline __always_inline uint64_t inw(uint16_t port)
 						:	"=ax"(ret_val)
 						:	"d"(port)
 						:	"memory");
+	ret_val &= 0xFFFF;
 	return ret_val;
 }
 inline __always_inline uint64_t inl(uint16_t port)
@@ -34,6 +36,7 @@ inline __always_inline uint64_t inl(uint16_t port)
 						:	"=eax"(ret_val)
 						:	"d"(port)
 						:	"memory");
+	ret_val &= 0xFFFFFFFF;
 	return ret_val;
 }
 
