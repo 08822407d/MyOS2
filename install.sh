@@ -19,6 +19,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     sync
     sleep 1
     sudo umount /mnt
+    objdump -S system > dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     echo "Working on MinGW"
 fi

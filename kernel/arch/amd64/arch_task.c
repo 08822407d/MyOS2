@@ -245,11 +245,12 @@ void schedule()
 	if (used_jiffies >= cpudata_p->time_slice)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
-	if (!(curr_task->flags & PF_NEED_SCHEDULE) ||
+	if ((!(curr_task->flags & PF_NEED_SCHEDULE) ||
 		cpudata_p->ready_tasks.count < 1 ||
 		cpudata_p->scheduleing_flag ||
 		curr_task->spin_count != 0 ||
-		curr_task->semaphore_count != 0)
+		curr_task->semaphore_count != 0) &&
+		(cpudata_p->curr_task != NULL))
 		return;
 
 	task_s * next_task = NULL;
@@ -316,52 +317,3 @@ void load_balance()
 	current->flags |= PF_NEED_SCHEDULE;
 	cpudata_p->scheduleing_flag = 0;
 }
-
-/*
-void outer_loop(percpu_data_s * cpudata_p, task_s ** curr, task_s ** next)
-{
-	// there are 4 case
-	// 1: current not idle - waiting not null
-	// 2: current not idle - waiting is null
-	// 3: current is idle - waiting not null
-	// 4: current id idle - waiting is null
-	// now it must be one of case 1/2/3
-	*curr = cpudata_p->curr_task;
-	// case 1: curr->finished; waiting->curr
-	if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->ready_tasks.count > 0))
-	{
-		task_list_push(&cpudata_p->finished_tasks, *curr);
-		*next =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->ready_tasks);
-		cpudata_p->is_idle_flag = 0;
-	}
-	// case 2: curr->finished; idle_queue->curr
-	else if ((!cpudata_p->is_idle_flag) &&
-		(cpudata_p->ready_tasks.count < 1))
-	{
-		task_list_push(&cpudata_p->finished_tasks, *curr);
-		*next =
-		cpudata_p->curr_task = idle_dequeue();
-		cpudata_p->is_idle_flag = 1;
-	}
-	// case 3: curr->idle_queue; waiting->curr
-	else if ((cpudata_p->is_idle_flag) &&
-		(cpudata_p->ready_tasks.count > 0))
-	{
-		idle_enqueue(*curr);
-		*next =
-		cpudata_p->curr_task = task_list_pop(&cpudata_p->ready_tasks);
-		cpudata_p->is_idle_flag = 0;
-	}
-	//case 4: push current idle, then pop an idle from queue
-	else
-	{
-		idle_enqueue(*curr);
-		*next =
-		cpudata_p->curr_task = idle_dequeue();
-		cpudata_p->is_idle_flag = 1;
-		return;
-	}
-}
-*/

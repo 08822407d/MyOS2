@@ -7,6 +7,7 @@
 #include "include/device.h"
 #include "include/ide.h"
 
+#include "../../include/proto.h"
 #include "../../include/printk.h"
 #include "../../include/block.h"
 #include "../../include/task.h"
@@ -14,6 +15,8 @@
 struct Disk_Identify_Info disk_id;
 
 diskrq_queue_s	disk_require_queue;
+
+char read_test[512];
 
 /*==============================================================================================*
  *																								*
@@ -77,6 +80,52 @@ unsigned char IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
+long cmd_out()
+{
+	blkbuf_node_s * node = NULL;
+	m_dequeue_list(node, &disk_require_queue.waiting_list);
+	disk_require_queue.curr_user = node;
+
+	while(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_BUSY)
+		nop();
+
+	unsigned char status = 0;
+	switch(node->cmd)
+	{
+		case ATA_WRITE_CMD:	
+			status = IDE_write_LBA28(node->LBA, node->count, DISK_MAST_IDX);
+
+			while(status & DISK_STATUS_REQ)
+				nop();
+			outsw(PORT_DISK0_DATA, (uint16_t *)node->buffer,256);
+			break;
+
+		case ATA_READ_CMD:
+			status = IDE_read_LBA28(node->LBA, node->count, DISK_MAST_IDX);
+
+			break;
+			
+		case GET_IDENTIFY_DISK_CMD:
+
+			outb(PORT_DISK0_DEVICE,0xe0);
+			
+			outb(PORT_DISK0_ERR_FEATURE,0);
+			outb(PORT_DISK0_SECTOR_CNT,node->count & 0xff);
+			outb(PORT_DISK0_SECTOR_LOW,node->LBA & 0xff);
+			outb(PORT_DISK0_SECTOR_MID,(node->LBA >> 8) & 0xff);
+			outb(PORT_DISK0_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
+
+			while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_READY))
+				nop();			
+			outb(PORT_DISK0_STATUS_CMD,node->cmd);
+
+		default:
+			color_printk(BLACK,WHITE,"ATA CMD Error\n");
+			break;
+	}
+	return 1;
+}
+
 void end_request(blkbuf_node_s * node)
 {
 	if(node == NULL)
@@ -87,7 +136,7 @@ void end_request(blkbuf_node_s * node)
 	//	node->wait_queue.tsk->flags |= NEED_SCHEDULE;
 	curr_tsk->flags |= PF_NEED_SCHEDULE;
 
-	kfree((unsigned long *)disk_require_queue.curr_user);
+	kfree(disk_require_queue.curr_user);
 	disk_require_queue.curr_user = NULL;
 
 	if(disk_require_queue.waiting_list.count)
@@ -96,69 +145,20 @@ void end_request(blkbuf_node_s * node)
 
 void add_request(blkbuf_node_s * node)
 {
+	percpu_data_s * cpudata_p = curr_cpu;
+	cpudata_p->curr_task = NULL;
 	m_enqueue_list(node, &disk_require_queue.waiting_list);
 }
 
-long cmd_out()
-{
-	blkbuf_node_s * node = NULL;
-	m_dequeue_list(node, &disk_require_queue.waiting_list);
-	disk_require_queue.curr_user = node;
-
-	while(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_BUSY)
-		nop();
-
-	switch(node->cmd)
-	{
-		case ATA_WRITE_CMD:	
-			IDE_write_LBA28(node->LBA, node->count, DISK_MAST_IDX);
-
-			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_READY))
-				nop();
-			outb(PORT_DISK1_STATUS_CMD,node->cmd);
-
-			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_REQ))
-				nop();
-			outsw(PORT_DISK1_DATA,node->buffer,256);
-			break;
-
-		case ATA_READ_CMD:
-			IDE_read_LBA28(node->LBA, node->count, DISK_MAST_IDX);
-
-			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_READY))
-				nop();
-			outb(PORT_DISK1_STATUS_CMD,node->cmd);
-			break;
-			
-		case GET_IDENTIFY_DISK_CMD:
-
-			outb(PORT_DISK1_DEVICE,0xe0);
-			
-			outb(PORT_DISK1_ERR_FEATURE,0);
-			outb(PORT_DISK1_SECTOR_CNT,node->count & 0xff);
-			outb(PORT_DISK1_SECTOR_LOW,node->LBA & 0xff);
-			outb(PORT_DISK1_SECTOR_MID,(node->LBA >> 8) & 0xff);
-			outb(PORT_DISK1_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
-
-			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_READY))
-				nop();			
-			outb(PORT_DISK1_STATUS_CMD,node->cmd);
-
-		default:
-			color_printk(BLACK,WHITE,"ATA CMD Error\n");
-			break;
-	}
-	return 1;
-}
-
-void read_handler(unsigned long nr, unsigned long parameter)
+void read_handler(unsigned long parameter)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	unsigned char status = inb(PORT_DISK0_STATUS_CMD);
 	
-	if(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_ERROR)
-		color_printk(RED,BLACK,"read_handler:%#010x\n",inb(PORT_DISK1_ERR_FEATURE));
+	if(status & DISK_STATUS_ERROR)
+		color_printk(RED,BLACK,"read_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
 	else
-		insw(PORT_DISK1_DATA,node->buffer,256);
+		insw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 
 	node->count--;
 	if(node->count)
@@ -170,39 +170,39 @@ void read_handler(unsigned long nr, unsigned long parameter)
 	end_request(node);
 }
 
-void write_handler(unsigned long nr, unsigned long parameter)
+void write_handler(unsigned long parameter)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
 
-	if(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_ERROR)
-		color_printk(RED,BLACK,"write_handler:%#010x\n",inb(PORT_DISK1_ERR_FEATURE));
+	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
+		color_printk(RED,BLACK,"write_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
 
 	node->count--;
 	if(node->count)
 	{
 		node->buffer += 512;
-		while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_REQ))
+		while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_REQ))
 			nop();
-		outsw(PORT_DISK1_DATA,node->buffer,256);
+		outsw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 		return;
 	}
 
 	end_request(node);
 }
 
-void other_handler(unsigned long nr, unsigned long parameter)
+void other_handler(unsigned long parameter)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
 
-	if(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_ERROR)
-		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK1_ERR_FEATURE));
+	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
+		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
 	else
-		insw(PORT_DISK1_DATA,node->buffer,256);
+		insw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 
 	end_request(node);
 }
 
-blkbuf_node_s * make_request(long cmd, unsigned long blocks, long count, unsigned char * buffer)
+blkbuf_node_s * make_request(long cmd, unsigned long blk_idx, long count, unsigned char * buffer)
 {
 	blkbuf_node_s * node = (blkbuf_node_s *)kmalloc(sizeof(blkbuf_node_s));
 	m_list_init(node);
@@ -227,7 +227,7 @@ blkbuf_node_s * make_request(long cmd, unsigned long blocks, long count, unsigne
 			break;
 	}
 	
-	node->LBA = blocks;
+	node->LBA = blk_idx;
 	node->count = count;
 	node->buffer = buffer;
 
@@ -244,19 +244,20 @@ void submit(blkbuf_node_s * node)
 
 void wait_for_finish()
 {
-	curr_tsk->state = PS_UNINTERRUPTIBLE;
+	task_s * curr = curr_tsk;
+	curr->state = PS_UNINTERRUPTIBLE;
 	schedule();
 }
 
 long IDE_open()
 {
-	color_printk(BLACK,WHITE,"DISK1 Opened\n");
+	color_printk(BLACK,WHITE,"DISK0 Opened\n");
 	return 1;
 }
 
 long IDE_close()
 {
-	color_printk(BLACK,WHITE,"DISK1 Closed\n");
+	color_printk(BLACK,WHITE,"DISK0 Closed\n");
 	return 1;
 }
 
@@ -276,12 +277,12 @@ long IDE_ioctl(long cmd,long arg)
 	}
 }
 
-long IDE_transfer(long cmd,unsigned long blocks,long count,unsigned char * buffer)
+long IDE_transfer(long cmd,unsigned long blk_idx,long count,unsigned char * buffer)
 {
 	blkbuf_node_s * node = NULL;
 	if(cmd == ATA_READ_CMD || cmd == ATA_WRITE_CMD)
 	{
-		node = make_request(cmd,blocks,count,buffer);
+		node = make_request(cmd, blk_idx, count, buffer);
 		submit(node);
 		wait_for_finish();
 		return 1;
@@ -315,6 +316,7 @@ hw_int_controller_s disk_int_controller =
 void disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	// color_printk(WHITE, BLUE, "SATA-0 handler");
 	node->end_handler(parameter);	
 }
 

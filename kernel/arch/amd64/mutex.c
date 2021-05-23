@@ -121,93 +121,93 @@ void up_semaphore(semaphore_T * semaphore)
 /*==============================================================================================*
  *										recursive semaphore										*
  *==============================================================================================*/
-recurs_wait_s * find_recurs_waiting_task(task_s * tsk, recurs_wait_list_s * list)
-{
-	recurs_wait_s * ret_val = NULL;
-	recurs_wait_s * tmp = list->head_p;
-	unsigned count = list->count;
-	while (count)
-	{
-		if (tmp->owner = tsk)
-		{
-			ret_val = tmp;
-			break;
-		}
-		tmp = tmp->next;
-		count--;
-	}
-	return ret_val;
-}
+// recurs_wait_s * find_recurs_waiting_task(task_s * tsk, recurs_wait_list_s * list)
+// {
+// 	recurs_wait_s * ret_val = NULL;
+// 	recurs_wait_s * tmp = list->head_p;
+// 	unsigned count = list->count;
+// 	while (count)
+// 	{
+// 		if (tmp->owner = tsk)
+// 		{
+// 			ret_val = tmp;
+// 			break;
+// 		}
+// 		tmp = tmp->next;
+// 		count--;
+// 	}
+// 	return ret_val;
+// }
 
-inline __always_inline void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr)
-{
-	semaphore->counter.value = max_nr;
-	init_spin_lock(&semaphore->selflock);
-	m_init_list_header(&semaphore->owner_list_head);
-	m_init_list_header(&semaphore->waiting_tasks);
-}
+// inline __always_inline void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr)
+// {
+// 	semaphore->counter.value = max_nr;
+// 	init_spin_lock(&semaphore->selflock);
+// 	m_init_list_header(&semaphore->owner_list_head);
+// 	m_init_list_header(&semaphore->waiting_tasks);
+// }
 
-void down_recurs_semaphore(recurs_semaphore_T * semaphore)
-{	
-	task_s * curr = curr_tsk;
-	percpu_data_s * cpudata_p = curr_cpu;
-	lock_spin_lock(&semaphore->selflock);
-	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
-	if (user != NULL)
-	{
-		user->counter++;
-		unlock_spin_lock(&semaphore->selflock);
-	}
-	else if (semaphore->counter.value > 0)
-	{
-		recurs_wait_s * new_user = kmalloc(sizeof(recurs_wait_s));
-		memset(new_user, 0, sizeof(recurs_wait_s));
-		new_user->owner = curr;
-		new_user->counter = 1;
-		m_enqueue_list(new_user, &semaphore->owner_list_head);
-		unlock_spin_lock(&semaphore->selflock);
-	}
-	else
-	{
-		m_enqueue_list(curr, &semaphore->waiting_tasks);
-		cpudata_p->curr_task = NULL;
-		unlock_spin_lock(&semaphore->selflock);
-		schedule();
-	}
-}
+// void down_recurs_semaphore(recurs_semaphore_T * semaphore)
+// {	
+// 	task_s * curr = curr_tsk;
+// 	percpu_data_s * cpudata_p = curr_cpu;
+// 	lock_spin_lock(&semaphore->selflock);
+// 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
+// 	if (user != NULL)
+// 	{
+// 		user->counter++;
+// 		unlock_spin_lock(&semaphore->selflock);
+// 	}
+// 	else if (semaphore->counter.value > 0)
+// 	{
+// 		recurs_wait_s * new_user = kmalloc(sizeof(recurs_wait_s));
+// 		memset(new_user, 0, sizeof(recurs_wait_s));
+// 		new_user->owner = curr;
+// 		new_user->counter = 1;
+// 		m_enqueue_list(new_user, &semaphore->owner_list_head);
+// 		unlock_spin_lock(&semaphore->selflock);
+// 	}
+// 	else
+// 	{
+// 		m_enqueue_list(curr, &semaphore->waiting_tasks);
+// 		cpudata_p->curr_task = NULL;
+// 		unlock_spin_lock(&semaphore->selflock);
+// 		schedule();
+// 	}
+// }
 
-void up_recurs_semaphore(recurs_semaphore_T * semaphore)
-{
-	task_s * curr = curr_tsk;
-	percpu_data_s * cpudata_p = curr_cpu;
-	lock_spin_lock(&semaphore->selflock);
-	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
-	if (user == NULL)
-	{
-		// there must be an error
-		while (1);
-	}
-	if (user->counter != 0)
-	{
-		user->counter--;
-		unlock_spin_lock(&semaphore->selflock);
-	}
-	else if (semaphore->waiting_tasks.count == 0)
-	{
-		m_list_delete(user);
-		semaphore->owner_list_head.count--;
-		semaphore->counter.value++;
-		kfree(user);
-		unlock_spin_lock(&semaphore->selflock);
-	}
-	else
-	{
-		m_dequeue_list(user->owner, &semaphore->waiting_tasks);
-		user->counter = 1;
-		unlock_spin_lock(&semaphore->selflock);
-		wakeup_task(user->owner);
-	}
-}
+// void up_recurs_semaphore(recurs_semaphore_T * semaphore)
+// {
+// 	task_s * curr = curr_tsk;
+// 	percpu_data_s * cpudata_p = curr_cpu;
+// 	lock_spin_lock(&semaphore->selflock);
+// 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
+// 	if (user == NULL)
+// 	{
+// 		// there must be an error
+// 		while (1);
+// 	}
+// 	if (user->counter != 0)
+// 	{
+// 		user->counter--;
+// 		unlock_spin_lock(&semaphore->selflock);
+// 	}
+// 	else if (semaphore->waiting_tasks.count == 0)
+// 	{
+// 		m_list_delete(user);
+// 		semaphore->owner_list_head.count--;
+// 		semaphore->counter.value++;
+// 		kfree(user);
+// 		unlock_spin_lock(&semaphore->selflock);
+// 	}
+// 	else
+// 	{
+// 		m_dequeue_list(user->owner, &semaphore->waiting_tasks);
+// 		user->counter = 1;
+// 		unlock_spin_lock(&semaphore->selflock);
+// 		wakeup_task(user->owner);
+// 	}
+// }
 
 /*==============================================================================================*
  *										atomic operations										*

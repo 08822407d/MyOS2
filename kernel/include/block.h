@@ -23,7 +23,7 @@ typedef struct blkdev_ops
 	long (* ioctl)(long cmd,
 					long arg);
 	long (* transfer)(long cmd,
-						unsigned long blocks,
+						unsigned long blk_idx,
 						long count,
 						unsigned char * buffer);
 } blkdev_ops_s;

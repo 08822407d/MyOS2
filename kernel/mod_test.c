@@ -1,11 +1,17 @@
-#include "include/proto.h"
+#include <lib/string.h>
 
+#include "include/proto.h"
 #include "include/printk.h"
+
+#include "arch/amd64/include/device.h"
+#include "arch/amd64/include/ide.h"
 
 extern atomic_T boot_counter;
 
 void kmalloc_kfree_test(void);
 void kthread_test(void);
+void disk_drv_test(void);
+
 unsigned long module_test(unsigned long flag);
 
 unsigned long module_test(unsigned long flag)
@@ -22,7 +28,9 @@ unsigned long module_test(unsigned long flag)
 		color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
 	}
 
-	kthread_test();
+	// kthread_test();
+
+	disk_drv_test();
 }
 
 unsigned long test_task_a(unsigned long arg)
@@ -62,6 +70,17 @@ unsigned long test_task_c(unsigned long arg)
 	}
 }
 
+unsigned long ide_read_test(unsigned long arg)
+{
+	char * disk_test = (char *)kmalloc(512);
+	memset(disk_test, 0, 512);
+	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);
+	color_printk(ORANGE, WHITE, "------ ");	
+	for(int i = 0;i<512;i++)
+		color_printk(ORANGE, BLACK,"%02x ", disk_test[i]);	
+	color_printk(ORANGE, WHITE, "------ ");	
+}
+
 void kthread_test()
 {
 	kernel_thread(test_task_a, 0, 0);
@@ -88,4 +107,9 @@ void kmalloc_kfree_test()
 	kfree(test5);
 	kfree(test7);
 	kfree(test8);
+}
+
+void disk_drv_test()
+{
+	kernel_thread(ide_read_test, 0, 0);
 }
