@@ -11,7 +11,7 @@
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)
 	#define PS_INTERRUPTIBLE	(1L << 1)
-	#define	PS_UNINTERRUPTABLE	(1L << 2)
+	#define	PS_UNINTERRUPTIBLE	(1L << 2)
 	#define	PS_ZOMBIE			(1L << 3)	
 	#define	PS_STOPPED			(1L << 4)
 	#define PS_WAITING			(1L << 5)

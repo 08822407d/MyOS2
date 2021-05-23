@@ -4,5 +4,5 @@ void devices_init()
 {
 	init_keyboard();
 	HPET_init();
-	// init_disk();
+	init_disk();
 }

@@ -171,7 +171,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 
 	m_list_init(new_task);
 	new_pcb->task.pid = get_newpid();
-	new_pcb->task.state = PS_UNINTERRUPTABLE;
+	new_pcb->task.state = PS_UNINTERRUPTIBLE;
 
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));

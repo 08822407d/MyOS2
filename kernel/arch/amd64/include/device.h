@@ -7,6 +7,7 @@
 #include "interrupt.h"
 
 #include "../../../include/param.h"
+#include "../../../include/block.h"
 
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 
@@ -24,4 +25,5 @@
 
 	/* disk.c */
 	void init_disk(void);
+	extern blkdev_ops_s IDE_device_operation;
 #endif /* _AMD64_PC_DEVICE_H_ */
