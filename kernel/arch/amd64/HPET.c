@@ -27,7 +27,7 @@ void HPET_handler(unsigned long parameter, stack_frame_s * sf_regs)
 
 	if(timer_list_head.next->expire_jiffies <= jiffies)
 		set_softirq_status(HPET_TIMER0_IRQ);
-	color_printk(WHITE, BLUE, "(HPET: %d) ", jiffies);
+	// color_printk(WHITE, BLUE, "(HPET: %d) ", jiffies);
 }
 	
 void HPET_init()

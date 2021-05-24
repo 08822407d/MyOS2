@@ -129,6 +129,7 @@ void percpu_self_config(size_t cpu_idx)
 	current_task->vruntime = -1;
 	current_task->semaphore_count =
 	current_task->spin_count = 0;
+	current_task->state = PS_RUNNING;
 }
 
 void startup_smp()

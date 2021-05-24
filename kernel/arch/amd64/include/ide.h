@@ -77,6 +77,7 @@
 
 		unsigned int count;
 		unsigned char cmd;
+		// unsigned char finished_flag;
 		unsigned long LBA;
 		unsigned char * buffer;
 		void(* end_handler)(unsigned long parameter);

@@ -98,8 +98,8 @@
 	percpu_data_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 	unsigned long get_newpid(void);
-	void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
-	void switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p);
+	void __switch_to(task_s * curr, task_s * target);
+	void switch_to(task_s * curr, task_s * target);
 	void wakeup_task(task_s * task);
 	void load_balance(void);
 	void idle_enqueue(task_s * idle);

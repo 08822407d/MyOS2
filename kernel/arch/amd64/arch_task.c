@@ -68,8 +68,9 @@ stack_frame_s * get_stackframe(task_s * task_p)
 	return &(pcb_p->arch_sf.pcb_sf_top);
 }
 
-inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p)
+inline __always_inline void __switch_to(task_s * curr, task_s * target)
 {
+	percpu_data_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
@@ -90,7 +91,7 @@ inline __always_inline void __switch_to(task_s * curr, task_s * target, percpu_d
 
 }
 
-void inline __always_inline switch_to(task_s * curr, task_s * target, percpu_data_s * cpudata_p)
+void inline __always_inline switch_to(task_s * curr, task_s * target)
 {
 	__asm__ __volatile__(	"pushq	%%rbp				\n\t"
 							"pushq	%%rax				\n\t"
@@ -107,7 +108,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target, percpu_dat
 							"=m"(curr->arch_struct.k_rip)
 						:	"m"(target->arch_struct.k_rsp),
 							"m"(target->arch_struct.k_rip),
-							"D"(curr), "S"(target), "d"(cpudata_p)
+							"D"(curr), "S"(target)
 						:	"memory"
 						);
 }
@@ -171,7 +172,6 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 
 	m_list_init(new_task);
 	new_pcb->task.pid = get_newpid();
-	new_pcb->task.state = PS_UNINTERRUPTIBLE;
 
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
@@ -231,34 +231,11 @@ void arch_init_task()
 }
 
 /*==============================================================================================*
- *									load_balance related functions									*
+ *									load_balance related functions								*
  *==============================================================================================*/
-void schedule()
+void insert_running_list(percpu_data_s * cpudata_p)
 {
-	percpu_data_s * cpudata_p = curr_cpu;
-	// if running time out, make the need_schedule flag of current task
 	task_s * curr_task = cpudata_p->curr_task;
-	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
-	if (curr_task != cpudata_p->idle_task)
-		curr_task->vruntime += used_jiffies;
-
-	if (used_jiffies >= cpudata_p->time_slice)
-		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
-
-	if ((!(curr_task->flags & PF_NEED_SCHEDULE) ||
-		cpudata_p->ready_tasks.count < 1 ||
-		cpudata_p->scheduleing_flag ||
-		curr_task->spin_count != 0 ||
-		curr_task->semaphore_count != 0) &&
-		(cpudata_p->curr_task != NULL))
-		return;
-
-	task_s * next_task = NULL;
-
-	cli();
-	cpudata_p->scheduleing_flag = 1;
-	// get next task
-	// find a suit position for current insertion
 	if (curr_task != NULL)
 	{
 		if (curr_task == cpudata_p->idle_task)
@@ -277,19 +254,45 @@ void schedule()
 				cpudata_p->ready_tasks.head_p = tmp->prev;
 		}
 	}
+}
+
+void schedule()
+{
+	percpu_data_s *	cpudata_p = curr_cpu;
+	task_s *		next_task = NULL;
+	task_s *		curr_task = cpudata_p->curr_task;
+
+	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
+	if (curr_task != cpudata_p->idle_task)
+		curr_task->vruntime += used_jiffies;
+	// if running time out, make the need_schedule flag of current task
+	if (used_jiffies >= cpudata_p->time_slice)
+		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
+
+	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)) ||
+		((curr_task == cpudata_p->idle_task) && (cpudata_p->ready_tasks.count == 0)))
+	{
+		return;
+	}
+	else if (curr_task->state == PS_RUNNING &&
+			(curr_task->flags & PF_NEED_SCHEDULE))
+	{
+		// normal schedule
+		insert_running_list(cpudata_p);
+	}
+
+	cpudata_p->scheduleing_flag = 1;
+	// get next task
+	// find a suit position for current insertion
 
 	m_pop_list(next_task, &cpudata_p->ready_tasks);
 	cpudata_p->curr_task = next_task;
-
-	curr_task->state &= ~PS_RUNNING;
-	curr_task->state |= PS_WAITING;
-	next_task->state |= PS_RUNNING;
 
 	cpudata_p->last_jiffies = jiffies;
 	cpudata_p->time_slice = next_task->time_slice;
 
 	cpudata_p->scheduleing_flag = 0;
-	switch_to(curr_task, next_task, cpudata_p);
+	switch_to(curr_task, next_task);
 
 	sti();
 }

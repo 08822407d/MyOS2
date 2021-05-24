@@ -146,7 +146,6 @@ void end_request(blkbuf_node_s * node)
 void add_request(blkbuf_node_s * node)
 {
 	percpu_data_s * cpudata_p = curr_cpu;
-	cpudata_p->curr_task = NULL;
 	m_enqueue_list(node, &disk_require_queue.waiting_list);
 }
 
@@ -244,9 +243,12 @@ void submit(blkbuf_node_s * node)
 
 void wait_for_finish()
 {
-	task_s * curr = curr_tsk;
-	curr->state = PS_UNINTERRUPTIBLE;
-	schedule();
+	if (disk_require_queue.curr_user != NULL)
+	{
+		task_s * curr = curr_tsk;
+		curr->state = PS_UNINTERRUPTIBLE;
+		schedule();
+	}
 }
 
 long IDE_open()
