@@ -75,7 +75,7 @@ int do_div(long *,int);
 /*
 
 */
-static char * number(char * str, long num, int base, int size, int precision ,int type);
+char * number(char * str, long num, int base, int size, int precision, int type);
 
 /*
 

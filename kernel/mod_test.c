@@ -73,12 +73,21 @@ unsigned long test_task_c(unsigned long arg)
 unsigned long ide_read_test(unsigned long arg)
 {
 	char * disk_test = (char *)kmalloc(512);
+	char * buf = (char *)kmalloc(512 * 3 + 1);
 	memset(disk_test, 0, 512);
+	memset(disk_test, 0, 512 * 3 + 1);
+
 	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);
 	color_printk(ORANGE, WHITE, "------\n");	
 	for(int i = 0; i < 512; i++)
-		color_printk(ORANGE, BLACK,"%02x ", disk_test[i]);	
-	color_printk(ORANGE, WHITE, "------\n");	
+	{
+		number(&buf[i * 3], (long)disk_test[i], 16, 2, -1, 65);
+		buf[i * 3 + 2] = ' ';
+	}
+
+	color_printk(ORANGE, BLACK, "%s", buf);
+	color_printk(ORANGE, WHITE, "------\n");
+	kfree(disk_test);
 }
 
 void kthread_test()

@@ -72,7 +72,7 @@ int skip_atoi(const char **s)
 /*
 
 */
-static char *number(char *str, long num, int base, int size, int precision, int type)
+char *number(char *str, long num, int base, int size, int precision, int type)
 {
 	char c, sign, tmp[50];
 	const char *digits = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
