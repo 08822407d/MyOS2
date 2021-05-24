@@ -270,7 +270,9 @@ void schedule()
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
 	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)) ||
-		((curr_task == cpudata_p->idle_task) && (cpudata_p->ready_tasks.count == 0)))
+		((curr_task == cpudata_p->idle_task) && (cpudata_p->ready_tasks.count == 0)) ||
+		(curr_task->spin_count != 0) ||
+		(curr_task->semaphore_count != 0))
 	{
 		return;
 	}
