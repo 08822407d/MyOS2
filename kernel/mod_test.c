@@ -16,7 +16,6 @@ unsigned long module_test(unsigned long flag);
 
 unsigned long module_test(unsigned long flag)
 {
-	// kmalloc_kfree_test();
 
 	atomic_inc(&boot_counter);
 
@@ -28,9 +27,11 @@ unsigned long module_test(unsigned long flag)
 		color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
 	}
 
-	// kthread_test();
+	kmalloc_kfree_test();
 
-	disk_drv_test();
+	kthread_test();
+
+	// disk_drv_test();
 }
 
 unsigned long test_task_a(unsigned long arg)

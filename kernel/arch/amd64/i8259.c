@@ -21,8 +21,6 @@ void init_i8259()
 
 	outb(INT_CTLMASK, ~0);
 	outb(INT2_CTLMASK, ~0);
-
-	sti();
 }
 
 void i8259_unmask(const int irq_nr)

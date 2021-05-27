@@ -85,6 +85,7 @@ ENTRY(ret_from_syscall)
 /*										interrupt entry								 			*/
 /*==============================================================================================*/
 RESTORE_ALL:
+	cli
 	popq		%rax		
 	movq		%rax,		%ds
 	popq		%rax
@@ -109,7 +110,9 @@ RESTORE_ALL:
 
 ret_from_exception:
 ENTRY(ret_from_intr)
+	cli
 	callq		schedule
+	sti
 	movq		$-1,		%rcx
 	testq		softirq_status(%rip),	%rcx	////check softirq	
 	jnz			softirq_hanlder

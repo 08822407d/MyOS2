@@ -295,8 +295,6 @@ void schedule()
 
 	cpudata_p->scheduleing_flag = 0;
 	switch_to(curr_task, next_task);
-
-	sti();
 }
 
 void load_balance()

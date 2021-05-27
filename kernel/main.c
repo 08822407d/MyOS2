@@ -5,6 +5,7 @@
 #include "include/proto.h"
 #include "include/task.h"
 #include "include/printk.h"
+#include "include/fs.h"
 
 #include "arch/amd64/include/arch_proto.h"
 #include "arch/amd64/include/archtypes.h"
@@ -43,6 +44,7 @@ void kmain()
 
 	startup_smp();
 	atomic_set(&boot_counter, 0);
+
 }
 
 void idle(size_t cpu_idx)
@@ -53,7 +55,9 @@ void idle(size_t cpu_idx)
 	sti();
 
 	// kernel_thread(module_test, 0, 0);
-	module_test(cpu_idx);
+	// module_test(cpu_idx);
+	if (cpu_idx == 0)
+		kernel_thread(load_fs, 0, 0);
 
 	while (1)
 	{
