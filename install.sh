@@ -14,7 +14,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Working on Linux"
     objcopy --only-keep-debug system kernel.debug
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
-    sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
+    sudo mount /dev/dm-1 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
     sync
     sleep 1
