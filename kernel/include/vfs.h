@@ -1,7 +1,11 @@
-#ifndef _FS_H_
-#define _FS_H_
+#ifndef _VFS_H_
+#define _VFS_H_
 
-	#define ROOT_FS_IDX	1
+#include "MBR.h"
+#include "GPT.h"
+
+	#define BOOT_FS_IDX	1
+	#define ROOT_FS_IDX	2
 
 	struct fs_type;
 	typedef struct fs_type fs_type_s;
@@ -31,17 +35,11 @@
 	typedef struct file_ops file_ops_s;
 
 
-	unsigned long init_vfs(unsigned long param);
-	superblock_s * mount_fs(char * name, struct Disk_Partition_Table_Entry * DPTE, void * buf);
-	unsigned long register_filesystem(fs_type_s * fs);
-	unsigned long unregister_filesystem(fs_type_s * fs);
-
-
 	typedef struct fs_type
 	{
 		char *	name;
 		int		fs_flags;
-		superblock_s *	(*read_superblock)(struct Disk_Partition_Table_Entry * DPTE, void * buf);
+		superblock_s *	(*read_superblock)(GPT_PE_s * DPTE, void * buf);
 		fs_type_s *		next;
 	} fs_type_s;
 
@@ -74,8 +72,8 @@
 		char *	name;
 		int		name_length;
 
-		struct List child_node;
-		struct List subdirs_list;
+		dirent_s *	child_node;
+		dirent_s *	subdirs_list;
 
 		inode_s *	dir_inode;
 		dirent_s *	parent;
@@ -135,8 +133,18 @@
 		long (*readdir)(file_s * filp, void * dirent, filldir_t filler);
 	} file_ops_s;
 
-	dirent_s * path_walk(char * name, unsigned long flags);
-	int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
-	extern superblock_s * root_sb;
+	// dirent_s * path_walk(char * name, unsigned long flags);
+	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
+	// extern superblock_s * root_sb;
+
+	extern inode_ops_s	FAT32_inode_ops;
+	extern file_ops_s	FAT32_file_ops;
+	extern dirent_ops_s	FAT32_dentry_ops;
+	extern sb_ops_s		FAT32_sb_ops;
+
+	unsigned long init_vfs(unsigned long param);
+	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
+	unsigned long register_filesystem(fs_type_s * fs);
+	unsigned long unregister_filesystem(fs_type_s * fs);
 
 #endif /* _FS_H_ */

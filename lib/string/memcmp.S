@@ -15,23 +15,23 @@ ENTRY(memcmp)
 	shrq	$3,%rcx
 	repe
 	cmpsq
-	jne	L5			/* do we match so far? */
+	jne	L5					/* do we match so far? */
 
 	movq	%rdx,%rcx		/* compare remainder by bytes */
 	andq	$7,%rcx
 	repe
 	cmpsb
-	jne	L6			/* do we match? */
+	jne	L6					/* do we match? */
 
-	xorl	%eax,%eax		/* we match, return zero	*/
+	xorl	%eax,%eax		/* we match, return zero */
 	ret
 
 L5:	movl	$8,%ecx			/* We know that one of the next	*/
 	subq	%rcx,%rdi		/* eight pairs of bytes do not	*/
-	subq	%rcx,%rsi		/* match.			*/
+	subq	%rcx,%rsi		/* match. 						*/
 	repe
 	cmpsb
-L6:	xorl	%eax,%eax		/* Perform unsigned comparison	*/
+L6:	xorl	%eax,%eax		/* Perform unsigned comparison */
 	movb	-1(%rdi),%al
 	xorl	%edx,%edx
 	movb	-1(%rsi),%dl

@@ -5,7 +5,7 @@
 #include "include/proto.h"
 #include "include/task.h"
 #include "include/printk.h"
-#include "include/fs.h"
+#include "include/vfs.h"
 
 #include "arch/amd64/include/arch_proto.h"
 #include "arch/amd64/include/archtypes.h"
