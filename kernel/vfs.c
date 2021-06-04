@@ -21,11 +21,9 @@ FAT32_BS_s *fat32_bs;
 
 unsigned long init_vfs(unsigned long param)
 {
-	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
-	gpt_hdr = (GPT_H_s *)kmalloc(sizeof(MBR_s));
-	memset(boot_sec, 0, sizeof(MBR_s));
-	memset(gpt_hdr, 0, sizeof(MBR_s));
 	// load the boot sector
+	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
+	memset(boot_sec, 0, sizeof(MBR_s));
 	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, (unsigned char *)boot_sec);
 	
 	// check partition type, only support GPT
@@ -35,14 +33,15 @@ unsigned long init_vfs(unsigned long param)
 		while (1);
 	}
 	// load the gpt_hdr
+	gpt_hdr = (GPT_H_s *)boot_sec;
+	memset(gpt_hdr, 0, sizeof(MBR_s));
 	IDE_device_operation.transfer(ATA_READ_CMD, 1, 1, (unsigned char *)gpt_hdr);
-	unsigned ent_fisrt_idx = gpt_hdr->PartitionEntryLBA;
+	// load all the gpt_entries
 	unsigned gptent_nr = gpt_hdr->NumberOfPartitionEntries;
 	gpt_pes = (GPT_PE_s *)kmalloc(gptent_nr * sizeof(GPT_PE_s));
 	memset(gpt_pes, 0, gptent_nr * sizeof(GPT_PE_s));
-	// load all the gpt_entries
-	IDE_device_operation.transfer(ATA_READ_CMD, ent_fisrt_idx, gptent_nr / 4, (unsigned char *)gpt_pes);
-	gpt_boot_pe = &gpt_pes[BOOT_FS_IDX];
+	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
+									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
 	init_FAT32_FS();
 	init_EXT2_FS();
