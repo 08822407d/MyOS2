@@ -15,9 +15,6 @@
 MBR_s *		boot_sec;
 GPT_H_s *	gpt_hdr;
 GPT_PE_s *	gpt_pes;
-GPT_PE_s *	gpt_boot_pe;
-
-FAT32_BS_s *fat32_bs;
 
 unsigned long init_vfs(unsigned long param)
 {
@@ -43,8 +40,40 @@ unsigned long init_vfs(unsigned long param)
 	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
 									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
-	init_FAT32_FS();
-	init_EXT2_FS();
+	// init_FAT32_FS();
+	// init_EXT2_FS();
+	// mount partitions
+	FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
+	IDE_device_operation.transfer(ATA_READ_CMD, gpt_pes[1].StartingLBA,
+									1, (unsigned char *)fat32_sb);
+	//
+	GPT_PE_s *	gpt_pe = NULL;
+	for (int i = 0; gpt_pes[i].PartitionTypeGUID != 0; i++)
+	{
+		gpt_pe = &gpt_pes[i];
+		uint64_t * puid_p = gpt_pe->PartitionTypeGUID;
+		switch (*puid_p)
+		{
+		case EFIBOOT_PART_GUID_LOW:
+			if (*(puid_p + 1) == EFIBOOT_PART_GUID_HIGH)
+			{
+				// mount_fs("FAT32", gpt_pe, );
+			}
+			break;
+		
+		case EXT4_PART_GUID_LOW:
+			if (*(puid_p + 1) == EXT4_PART_GUID_HIGH)
+			{
+
+			}
+			break;
+		
+		default:
+			break;
+		}
+
+	}
+	
 }
 
 // dirent_s * path_walk(char * name,unsigned long flags)

@@ -715,52 +715,52 @@ long FAT32_close(inode_s * inode, file_s * file_p)
 // };
 
 
-// void fat32_write_superblock(superblock_s * sb){}
+void fat32_write_superblock(superblock_s * sbp){}
 
-// void fat32_put_superblock(superblock_s * sb)
-// {
-// 	kfree(sb->private_sb_info);
-// 	kfree(sb->root->dir_inode->private_index_info);
-// 	kfree(sb->root->dir_inode);
-// 	kfree(sb->root);
-// 	kfree(sb);
-// }
+void fat32_put_superblock(superblock_s * sbp)
+{
+	kfree(sbp->private_sb_info);
+	kfree(sbp->root->dir_inode->private_index_info);
+	kfree(sbp->root->dir_inode);
+	kfree(sbp->root);
+	kfree(sbp);
+}
 
-// void fat32_write_inode(inode_s * inode)
-// {
-// 	FAT32_dir_s * fdentry = NULL;
-// 	FAT32_dir_s * buf = NULL;
-// 	FAT32_inode_info_s * finode = inode->private_index_info;
-// 	FAT32_SBinfo_s * fsbi = inode->sb->private_sb_info;
-// 	unsigned long sector = 0;
+void fat32_write_inode(inode_s * inode)
+{
+	FAT32_dir_s * fdentry = NULL;
+	FAT32_dir_s * buf = NULL;
+	FAT32_inode_info_s * finode = inode->private_index_info;
+	FAT32_SBinfo_s * fsbi = inode->sb->private_sb_info;
+	unsigned long sector = 0;
 
-// 	if(finode->dentry_location == 0)
-// 	{
-// 		color_printk(RED,BLACK,"FS ERROR:write root inode!\n");	
-// 		return ;
-// 	}
+	if(finode->dentry_location == 0)
+	{
+		color_printk(RED,BLACK,"FS ERROR:write root inode!\n");	
+		return ;
+	}
 
-// 	sector = fsbi->Data_firstsector + (finode->dentry_location - 2) * fsbi->sector_per_cluster;
-// 	buf = (FAT32_dir_s *)kmalloc(fsbi->bytes_per_cluster);
-// 	memset(buf, 0, fsbi->bytes_per_cluster);
-// 	IDE_device_operation.transfer(ATA_READ_CMD, sector, fsbi->sector_per_cluster, (unsigned char *)buf);
-// 	fdentry = buf+finode->dentry_position;
+	sector = fsbi->Data_firstsector + (finode->dentry_location - 2) * fsbi->sector_per_cluster;
+	buf = (FAT32_dir_s *)kmalloc(fsbi->bytes_per_cluster);
+	memset(buf, 0, fsbi->bytes_per_cluster);
+	IDE_device_operation.transfer(ATA_READ_CMD, sector, fsbi->sector_per_cluster, (unsigned char *)buf);
+	fdentry = buf+finode->dentry_position;
 
-// 	////alert fat32 dentry data
-// 	fdentry->DIR_FileSize = inode->file_size;
-// 	fdentry->DIR_FstClusLO = finode->first_cluster & 0xffff;
-// 	fdentry->DIR_FstClusHI = (fdentry->DIR_FstClusHI & 0xf000) | (finode->first_cluster >> 16);
+	////alert fat32 dentry data
+	fdentry->DIR_FileSize = inode->file_size;
+	fdentry->DIR_FstClusLO = finode->first_cluster & 0xffff;
+	fdentry->DIR_FstClusHI = (fdentry->DIR_FstClusHI & 0xf000) | (finode->first_cluster >> 16);
 
-// 	IDE_device_operation.transfer(ATA_WRITE_CMD, sector, fsbi->sector_per_cluster, (unsigned char *)buf);
-// 	kfree(buf);
-// }
+	IDE_device_operation.transfer(ATA_WRITE_CMD, sector, fsbi->sector_per_cluster, (unsigned char *)buf);
+	kfree(buf);
+}
 
-// sb_ops_s FAT32_sb_ops = 
-// {
-// 	.write_superblock = fat32_write_superblock,
-// 	.put_superblock = fat32_put_superblock,
-// 	.write_inode = fat32_write_inode,
-// };
+sb_ops_s FAT32_sb_ops = 
+{
+	.write_superblock = fat32_write_superblock,
+	.put_superblock = fat32_put_superblock,
+	.write_inode = fat32_write_inode,
+};
 
 superblock_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 {
@@ -769,41 +769,42 @@ superblock_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	FAT32_BS_s * fbs = NULL;
 	FAT32_SBinfo_s * fsbi = NULL;
 
-	////super block
+	//super block
 	sbp = (superblock_s *)kmalloc(sizeof(superblock_s));
 	memset(sbp, 0, sizeof(superblock_s));
 
-	// sbp->sb_ops = &FAT32_sb_ops;
-	// sbp->private_sb_info = (FAT32_SBinfo_s *)kmalloc(sizeof(FAT32_SBinfo_s));
-	// memset(sbp->private_sb_info, 0, sizeof(FAT32_SBinfo_s));
+	sbp->sb_ops = &FAT32_sb_ops;
+	sbp->private_sb_info = (FAT32_SBinfo_s *)kmalloc(sizeof(FAT32_SBinfo_s));
+	memset(sbp->private_sb_info, 0, sizeof(FAT32_SBinfo_s));
 
-	////fat32 boot sector
-	// fbs = (struct FAT32_BootSector *)buf;
-	// fsbi = sbp->private_sb_info;	
-	// fsbi->start_sector = DPTE->start_LBA;
-	// fsbi->sector_count = DPTE->sectors_limit;
-	// fsbi->sector_per_cluster = fbs->BPB_SecPerClus;
-	// fsbi->bytes_per_cluster = fbs->BPB_SecPerClus * fbs->BPB_BytesPerSec;
-	// fsbi->bytes_per_sector = fbs->BPB_BytesPerSec;
-	// fsbi->Data_firstsector = DPTE->start_LBA + fbs->BPB_RsvdSecCnt + fbs->BPB_FATSz32 * fbs->BPB_NumFATs;
-	// fsbi->FAT1_firstsector = DPTE->start_LBA + fbs->BPB_RsvdSecCnt;
-	// fsbi->sector_per_FAT = fbs->BPB_FATSz32;
-	// fsbi->NumFATs = fbs->BPB_NumFATs;
-	// fsbi->fsinfo_sector_infat = fbs->BPB_FSInfo;
-	// fsbi->bootsector_bk_infat = fbs->BPB_BkBootSec;	
+	//fat32 boot sector
+	fbs = (FAT32_BS_s *)buf;
+	fsbi = sbp->private_sb_info;	
+	fsbi->start_sector = DPTE->StartingLBA;
+	fsbi->sector_count = DPTE->EndingLBA - DPTE->StartingLBA;
+	fsbi->sector_per_cluster = fbs->BPB_SecPerClus;
+	fsbi->bytes_per_cluster = fbs->BPB_SecPerClus * fbs->BPB_BytesPerSec;
+	fsbi->bytes_per_sector = fbs->BPB_BytesPerSec;
+	fsbi->Data_firstsector = DPTE->StartingLBA + fbs->BPB_RsvdSecCnt + fbs->BPB_FATSz32 * fbs->BPB_NumFATs;
+	fsbi->FAT1_firstsector = DPTE->StartingLBA + fbs->BPB_RsvdSecCnt;
+	fsbi->sector_per_FAT = fbs->BPB_FATSz32;
+	fsbi->NumFATs = fbs->BPB_NumFATs;
+	fsbi->fsinfo_sector_infat = fbs->BPB_FSInfo;
+	fsbi->bootsector_bk_infat = fbs->BPB_BkBootSec;	
 	
-	// color_printk(BLUE,BLACK,"FAT32 Boot Sector\n\tBPB_FSInfo:%#018lx\n\tBPB_BkBootSec:%#018lx\n\tBPB_TotSec32:%#018lx\n",fbs->BPB_FSInfo,fbs->BPB_BkBootSec,fbs->BPB_TotSec32);
+	color_printk(BLUE,BLACK,"FAT32 Boot Sector\n\tBPB_FSInfo:%#018lx\n\tBPB_BkBootSec:%#018lx\n\tBPB_TotSec32:%#018lx\n",fbs->BPB_FSInfo,fbs->BPB_BkBootSec,fbs->BPB_TotSec32);
 	
-	// ////fat32 fsinfo sector
-	// fsbi->fat_fsinfo = (FAT32_FSinfo_s *)kmalloc(sizeof(FAT32_FSinfo_s));
-	// memset(fsbi->fat_fsinfo, 0, 512);
-	// IDE_device_operation.transfer(ATA_READ_CMD,DPTE->start_LBA + fbs->BPB_FSInfo,1,(unsigned char *)fsbi->fat_fsinfo);
+	//fat32 fsinfo sector
+	fsbi->fat_fsinfo = (FAT32_FSinfo_s *)kmalloc(sizeof(FAT32_FSinfo_s));
+	memset(fsbi->fat_fsinfo, 0, 512);
+	IDE_device_operation.transfer(ATA_READ_CMD,DPTE->StartingLBA + fbs->BPB_FSInfo,
+									1, (unsigned char *)fsbi->fat_fsinfo);
 	
-	// color_printk(BLUE,BLACK,"FAT32 FSInfo\n\tFSI_LeadSig:%#018lx\n\tFSI_StrucSig:%#018lx\n\tFSI_Free_Count:%#018lx\n",fsbi->fat_fsinfo->FSI_LeadSig,fsbi->fat_fsinfo->FSI_StrucSig,fsbi->fat_fsinfo->FSI_Free_Count);
+	color_printk(BLUE,BLACK,"FAT32 FSInfo\n\tFSI_LeadSig:%#018lx\n\tFSI_StrucSig:%#018lx\n\tFSI_Free_Count:%#018lx\n",fsbi->fat_fsinfo->FSI_LeadSig,fsbi->fat_fsinfo->FSI_StrucSig,fsbi->fat_fsinfo->FSI_Free_Count);
 	
-	// ////directory entry
-	// sbp->root = (dirent_s *)kmalloc(sizeof(dirent_s));
-	// memset(sbp->root, 0, sizeof(dirent_s));
+	//directory entry
+	sbp->root = (dirent_s *)kmalloc(sizeof(dirent_s));
+	memset(sbp->root, 0, sizeof(dirent_s));
 
 	// list_init(&sbp->root->child_node);
 	// list_init(&sbp->root->subdirs_list);

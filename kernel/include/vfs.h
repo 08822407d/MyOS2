@@ -97,7 +97,7 @@
 		void	(*write_superblock)(superblock_s * sb);
 		void	(*put_superblock)(superblock_s * sb);
 
-		void	(*write_inode)(superblock_s * inode);
+		void	(*write_inode)(inode_s * inode);
 	} sb_ops_s;
 
 	typedef struct inode_ops
