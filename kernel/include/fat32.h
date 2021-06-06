@@ -33,7 +33,7 @@
 		uint16_t	BPB_NumHeads;
 		uint32_t	BPB_HiddSec;
 		uint32_t	BPB_TotSec32;
-		
+
 		uint32_t	BPB_FATSz32;
 		uint16_t	BPB_ExtFlags;
 		uint16_t	BPB_FSVer;
@@ -111,19 +111,19 @@
 	{
 		uint64_t	start_sector;
 		uint64_t	sector_count;
-		
+
 		uint64_t	sector_per_cluster;
 		uint64_t	bytes_per_cluster;
 		uint64_t	bytes_per_sector;
-		
+
 		uint64_t	Data_firstsector;
 		uint64_t	FAT1_firstsector;
 		uint64_t	sector_per_FAT;
 		uint64_t	NumFATs;
-		
+
 		uint64_t	fsinfo_sector_infat;
 		uint64_t	bootsector_bk_infat;
-		
+
 		FAT32_FSinfo_s *	fat_fsinfo;
 	} FAT32_SBinfo_s;
 

@@ -22,7 +22,7 @@ unsigned long init_vfs(unsigned long param)
 	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
 	memset(boot_sec, 0, sizeof(MBR_s));
 	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, (unsigned char *)boot_sec);
-	
+
 	// check partition type, only support GPT
 	if (boot_sec->DPTE[0].type != 0xee &&
 		boot_sec->DPTE[0].type != 0xef)
@@ -60,20 +60,20 @@ unsigned long init_vfs(unsigned long param)
 				mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
 			break;
-		
+
 		case EXT4_PART_GUID_LOW:
 			if (*(puid_p + 1) == EXT4_PART_GUID_HIGH)
 			{
 
 			}
 			break;
-		
+
 		default:
 			break;
 		}
 
 	}
-	
+
 }
 
 dirent_s * path_walk(char * name,unsigned long flags)
@@ -118,7 +118,7 @@ dirent_s * path_walk(char * name,unsigned long flags)
 		m_init_list_header(path->subdirs_list);
 		path->parent = parent;
 		// list_add_to_behind(&parent->subdirs_list,&path->child_node);
-		m_append_to_list();
+		// m_append_to_list();
 
 		if(!*name)
 			goto last_component;
