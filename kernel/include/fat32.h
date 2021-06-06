@@ -141,8 +141,8 @@
 	} FAT32_inode_info_s;
 
 	void init_FAT32_FS(void);
-	uint32_t DISK1_FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t	fat_entry);
-	uint64_t DISK1_FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value);
+	uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t	fat_entry);
+	uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value);
 	uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
 
 #endif /* _FAT32_H_ */

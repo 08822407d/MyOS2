@@ -40,13 +40,9 @@ unsigned long init_vfs(unsigned long param)
 	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
 									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
-	// init_FAT32_FS();
-	// init_EXT2_FS();
-	// mount partitions
-	FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
-	IDE_device_operation.transfer(ATA_READ_CMD, gpt_pes[1].StartingLBA,
-									1, (unsigned char *)fat32_sb);
-	//
+	init_FAT32_FS();
+	init_EXT2_FS();
+
 	GPT_PE_s *	gpt_pe = NULL;
 	for (int i = 0; gpt_pes[i].PartitionTypeGUID != 0; i++)
 	{
@@ -57,7 +53,11 @@ unsigned long init_vfs(unsigned long param)
 		case EFIBOOT_PART_GUID_LOW:
 			if (*(puid_p + 1) == EFIBOOT_PART_GUID_HIGH)
 			{
-				// mount_fs("FAT32", gpt_pe, );
+				// mount partitions
+				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
+				IDE_device_operation.transfer(ATA_READ_CMD, gpt_pes[i].StartingLBA,
+												1, (unsigned char *)fat32_sb);
+				mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
 			break;
 		
@@ -76,83 +76,84 @@ unsigned long init_vfs(unsigned long param)
 	
 }
 
-// dirent_s * path_walk(char * name,unsigned long flags)
-// {
-// 	char * tmpname = NULL;
-// 	int tmpnamelen = 0;
-// 	dirent_s * parent = root_sb->root;
-// 	dirent_s * path = NULL;
+dirent_s * path_walk(char * name,unsigned long flags)
+{
+	char * tmpname = NULL;
+	int tmpnamelen = 0;
+	dirent_s * parent = root_sb->root;
+	dirent_s * path = NULL;
 
-// 	while(*name == '/')
-// 		name++;
+	while(*name == '/')
+		name++;
 
-// 	if(!*name)
-// 	{
-// 		return parent;
-// 	}
+	if(!*name)
+	{
+		return parent;
+	}
 
-// 	for(;;)
-// 	{
-// 		tmpname = name;
-// 		while(*name && (*name != '/'))
-// 			name++;
-// 		tmpnamelen = name - tmpname;
+	for(;;)
+	{
+		tmpname = name;
+		while(*name && (*name != '/'))
+			name++;
+		tmpnamelen = name - tmpname;
 
-// 		path = (dirent_s *)kmalloc(sizeof(dirent_s));
-// 		memset(path, 0, sizeof(dirent_s));
+		path = (dirent_s *)kmalloc(sizeof(dirent_s));
+		memset(path, 0, sizeof(dirent_s));
 
-// 		path->name = kmalloc(tmpnamelen+1);
-// 		memset(path->name,0,tmpnamelen+1);
-// 		memcpy(tmpname,path->name,tmpnamelen);
-// 		path->name_length = tmpnamelen;
+		path->name = kmalloc(tmpnamelen+1);
+		memset(path->name,0,tmpnamelen+1);
+		memcpy(tmpname,path->name,tmpnamelen);
+		path->name_length = tmpnamelen;
 
-// 		if(parent->dir_inode->inode_ops->lookup(parent->dir_inode,path) == NULL)
-// 		{
-// 			color_printk(RED, WHITE, "can not find file or dir:%s\n", path->name);
-// 			kfree(path->name);
-// 			kfree(path);
-// 			return NULL;
-// 		}
+		if(parent->dir_inode->inode_ops->lookup(parent->dir_inode,path) == NULL)
+		{
+			color_printk(RED, WHITE, "can not find file or dir:%s\n", path->name);
+			kfree(path->name);
+			kfree(path);
+			return NULL;
+		}
 
-// 		list_init(&path->child_node);
-// 		list_init(&path->subdirs_list);
-// 		path->parent = parent;
-// 		list_add_to_behind(&parent->subdirs_list,&path->child_node);
+		m_init_list_header(path->child_list);
+		m_init_list_header(path->subdirs_list);
+		path->parent = parent;
+		// list_add_to_behind(&parent->subdirs_list,&path->child_node);
+		m_append_to_list();
 
-// 		if(!*name)
-// 			goto last_component;
-// 		while(*name == '/')
-// 			name++;
-// 		if(!*name)
-// 			goto last_slash;
+		if(!*name)
+			goto last_component;
+		while(*name == '/')
+			name++;
+		if(!*name)
+			goto last_slash;
 
-// 		parent = path;
-// 	}
+		parent = path;
+	}
 
-// last_slash:
-// last_component:
+last_slash:
+last_component:
 
-// 	if(flags & 1)
-// 	{
-// 		return parent;
-// 	}
+	if(flags & 1)
+	{
+		return parent;
+	}
 
-// 	return path;
-// }
+	return path;
+}
 
-// int fill_dentry(void *buf,char *name, long namelen,long type,long offset)
-// {
-// 	// struct dirent* dent = (struct dirent*)buf;
+int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
+{
+	// struct dirent* dent = (struct dirent*)buf;
 	
-// 	// if((unsigned long)buf < TASK_SIZE && !verify_area(buf,sizeof(struct dirent) + namelen))
-// 	// 	return -EFAULT;
+	// if((unsigned long)buf < TASK_SIZE && !verify_area(buf,sizeof(struct dirent) + namelen))
+	// 	return -EFAULT;
 	
-// 	// memcpy(name,dent->d_name,namelen);
-// 	// dent->d_namelen = namelen;
-// 	// dent->d_type = type;
-// 	// dent->d_offset = offset;
-// 	// return sizeof(struct dirent) + namelen;
-// }
+	// memcpy(name,dent->d_name,namelen);
+	// dent->d_namelen = namelen;
+	// dent->d_type = type;
+	// dent->d_offset = offset;
+	// return sizeof(struct dirent) + namelen;
+}
 
 superblock_s * root_sb = NULL;
 fs_type_s filesystem = {"filesystem", 0};

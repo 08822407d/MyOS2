@@ -4,6 +4,8 @@
 #include "MBR.h"
 #include "GPT.h"
 
+#include "../klib/data_structure.h"
+
 	#define BOOT_FS_IDX	1
 	#define ROOT_FS_IDX	2
 
@@ -60,20 +62,21 @@
 		file_ops_s *	f_ops;
 		inode_ops_s *	inode_ops;
 
-		void * private_index_info;
+		void * private_idx_info;
 	} inode_s;
 
 	#define FS_ATTR_FILE	(1UL << 0)
 	#define FS_ATTR_DIR		(1UL << 1)
 	#define	FS_ATTR_DEVICE	(1UL << 2)
 
+	m_define_list_header(dirent);
 	typedef struct dirent
 	{
+		dirent_list_s *	child_list;
+		dirent_list_s *	subdirs_list;
+
 		char *	name;
 		int		name_length;
-
-		dirent_s *	child_node;
-		dirent_s *	subdirs_list;
 
 		inode_s *	dir_inode;
 		dirent_s *	parent;
