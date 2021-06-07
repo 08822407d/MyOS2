@@ -72,8 +72,8 @@
 	m_define_list_header(dirent);
 	typedef struct dirent
 	{
-		dirent_list_s *	child_list;
-		dirent_list_s *	subdirs_list;
+		dirent_list_s	child_list;
+		dirent_list_s	subdirs_list;
 
 		char *	name;
 		int		name_length;

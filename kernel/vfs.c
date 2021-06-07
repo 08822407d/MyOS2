@@ -16,6 +16,10 @@ MBR_s *		boot_sec;
 GPT_H_s *	gpt_hdr;
 GPT_PE_s *	gpt_pes;
 
+superblock_s * root_sb = NULL;
+fs_type_s filesystem = {"filesystem", 0};
+
+
 unsigned long init_vfs(unsigned long param)
 {
 	// load the boot sector
@@ -57,7 +61,8 @@ unsigned long init_vfs(unsigned long param)
 				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
 				IDE_device_operation.transfer(ATA_READ_CMD, gpt_pes[i].StartingLBA,
 												1, (unsigned char *)fat32_sb);
-				mount_fs("FAT32", gpt_pe, fat32_sb);
+				if (i = BOOT_FS_IDX)
+					root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
 			break;
 
@@ -103,10 +108,10 @@ dirent_s * path_walk(char * name,unsigned long flags)
 
 		path->name = kmalloc(tmpnamelen+1);
 		memset(path->name,0,tmpnamelen+1);
-		memcpy(tmpname,path->name,tmpnamelen);
+		memcpy(path->name, tmpname, tmpnamelen);
 		path->name_length = tmpnamelen;
 
-		if(parent->dir_inode->inode_ops->lookup(parent->dir_inode,path) == NULL)
+		if(parent->dir_inode->inode_ops->lookup(parent->dir_inode, path) == NULL)
 		{
 			color_printk(RED, WHITE, "can not find file or dir:%s\n", path->name);
 			kfree(path->name);
@@ -114,8 +119,8 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			return NULL;
 		}
 
-		m_init_list_header(path->child_list);
-		m_init_list_header(path->subdirs_list);
+		m_init_list_header(&path->child_list);
+		m_init_list_header(&path->subdirs_list);
 		path->parent = parent;
 		// list_add_to_behind(&parent->subdirs_list,&path->child_node);
 		// m_append_to_list();
@@ -154,9 +159,6 @@ int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
 	// dent->d_offset = offset;
 	// return sizeof(struct dirent) + namelen;
 }
-
-superblock_s * root_sb = NULL;
-fs_type_s filesystem = {"filesystem", 0};
 
 superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 {

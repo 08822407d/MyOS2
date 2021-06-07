@@ -130,8 +130,8 @@
 	typedef struct FAT32_inode_info
 	{
 		uint64_t	first_cluster;
-		uint64_t	dentry_location;	////dentry struct in cluster(0 is root,1 is invalid)
-		uint64_t	dentry_position;	////dentry struct offset in cluster
+		uint64_t	dentry_location;	// dentry struct in cluster(0 is root,1 is invalid)
+		uint64_t	dentry_position;	// dentry struct offset in cluster
 
 		uint16_t	create_date;
 		uint16_t	create_time;
@@ -141,7 +141,7 @@
 	} FAT32_inode_info_s;
 
 	void init_FAT32_FS(void);
-	uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t	fat_entry);
+	uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry);
 	uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value);
 	uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
 
