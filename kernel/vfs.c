@@ -48,7 +48,7 @@ unsigned long init_vfs(unsigned long param)
 	init_EXT2_FS();
 
 	GPT_PE_s *	gpt_pe = NULL;
-	for (int i = 0; gpt_pes[i].PartitionTypeGUID != 0; i++)
+	for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)
 	{
 		gpt_pe = &gpt_pes[i];
 		uint64_t * puid_p = gpt_pe->PartitionTypeGUID;
@@ -78,7 +78,10 @@ unsigned long init_vfs(unsigned long param)
 		}
 
 	}
+	dirent_s * kernel_bin = 
+		path_walk("/kernel.bin", 0);
 
+	// kernel_bin->dir_inode->
 }
 
 dirent_s * path_walk(char * name,unsigned long flags)
@@ -120,10 +123,8 @@ dirent_s * path_walk(char * name,unsigned long flags)
 		}
 
 		m_init_list_header(&path->child_list);
-		m_init_list_header(&path->subdirs_list);
 		path->parent = parent;
-		// list_add_to_behind(&parent->subdirs_list,&path->child_node);
-		// m_append_to_list();
+		m_append_to_list(path, &parent->child_list);
 
 		if(!*name)
 			goto last_component;

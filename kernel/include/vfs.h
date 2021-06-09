@@ -72,8 +72,9 @@
 	m_define_list_header(dirent);
 	typedef struct dirent
 	{
-		dirent_list_s	child_list;
-		dirent_list_s	subdirs_list;
+		dirent_s *	prev;
+		dirent_s *	next;
+		dirent_list_s *	list_header;
 
 		char *	name;
 		int		name_length;
@@ -81,6 +82,7 @@
 		inode_s *	dir_inode;
 		dirent_s *	parent;
 
+		dirent_list_s	child_list;
 		dirent_ops_s *	dir_ops;
 	} dirent_s;
 
@@ -146,6 +148,7 @@
 	extern sb_ops_s		FAT32_sb_ops;
 
 	unsigned long init_vfs(unsigned long param);
+	dirent_s * path_walk(char * name,unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
