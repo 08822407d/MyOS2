@@ -13,9 +13,9 @@
 #include "../../include/task.h"
 #include "../../klib/data_structure.h"
 
-extern PCB_u		task0_PCB;
+extern PCB_u	task0_PCB;
 
-percpu_data_s **	percpu_data;
+cpudata_u **	percpu_data;
 
 void create_percpu_idle(size_t cpu_idx);
 void init_percpu_data(size_t cpu_idx);
@@ -39,7 +39,7 @@ void init_smp_env()
 
 	idle_tasks	= (PCB_u **)kmalloc(kparam.nr_lcpu * sizeof(PCB_u *));
 	tss_ptr_arr	= (tss64_T **)kmalloc(nr_lcpu * sizeof(tss64_T *));
-	percpu_data	= (percpu_data_s **)kmalloc(kparam.nr_lcpu * sizeof(percpu_data_s *));
+	percpu_data	= (cpudata_u **)kmalloc(kparam.nr_lcpu * sizeof(cpudata_u *));
 
 	for (int i = 0; i < kparam.nr_lcpu; i++)
 	{
@@ -82,13 +82,13 @@ void init_percpu_arch_data(size_t cpu_idx)
 void init_percpu_data(size_t cpu_idx)
 {
 	// create percpu_data for current lcpu
-	percpu_data[cpu_idx] = (percpu_data_s *)kmalloc(sizeof(percpu_data_s));
-	percpu_data_s * cpudata_p = percpu_data[cpu_idx];
-	memset(cpudata_p, 0, sizeof(percpu_data_s));
+	percpu_data[cpu_idx] = (cpudata_u *)kmalloc(sizeof(cpudata_u));
+	cpudata_u * cpudata_u_p = percpu_data[cpu_idx];
+	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
+	memset(cpudata_u_p, 0, sizeof(cpudata_u));
 	cpudata_p->cpu_idx = cpu_idx;
-	cpudata_p->cpu_stack_start = (char (*)[CONFIG_CPUSTACK_SIZE])kmalloc(sizeof(char [CONFIG_CPUSTACK_SIZE]));
 	// fill architechture part
-	arch_percpu_data_s * arch_cpuinfo = &(cpudata_p->arch_info);
+	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
 	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
 	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
@@ -105,14 +105,15 @@ void init_percpu_data(size_t cpu_idx)
 	tss_p->ist4 =
 	tss_p->ist5 =
 	tss_p->ist6 =
-	tss_p->ist7 = (reg_t)(cpudata_p->cpu_stack_start) + CONFIG_CPUSTACK_SIZE;
+	tss_p->ist7 = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
 }
 
 void percpu_self_config(size_t cpu_idx)
 {
-	percpu_data_s * cpudata_p = percpu_data[cpu_idx];
+	cpudata_u * cpudata_u_p = percpu_data[cpu_idx];
+	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
 	task_s *	current_task = get_current_task();
-	wrgsbase((reg_t)cpudata_p);
+	wrgsbase((reg_t)cpudata_u_p);
 	// tasks
 	cpudata_p->idle_task = current_task;
 	cpudata_p->curr_task = current_task;
@@ -138,7 +139,8 @@ void startup_smp()
 	wrmsr(0x830,0xc4620);	//Start-up IPI
 }
 
-inline __always_inline percpu_data_s * get_current_cpu()
+inline __always_inline per_cpudata_s * get_current_cpu()
 {
-	return (percpu_data_s *)rdgsbase();
+	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
+	return &(cpudata_u_p->cpudata);
 }

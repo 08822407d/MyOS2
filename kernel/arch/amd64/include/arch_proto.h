@@ -148,14 +148,12 @@
 		uint8_t		thd_id;
 	};
 
-	struct percpu_info;
-	typedef struct percpu_info percpu_data_s;
 	typedef struct arch_percpu_info
 	{
 		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
 		tss64_T *	tss;
-	} arch_percpu_data_s;
+	} arch_cpudata_s;
 
 	typedef struct
 	{
@@ -258,8 +256,8 @@
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);
-	void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p);
-	void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p);
+	void exception_handler(stack_frame_s * sf_regs);
+	void hwint_irq_handler(stack_frame_s * sf_regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));

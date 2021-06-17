@@ -88,7 +88,7 @@ inline __always_inline void init_semaphore(semaphore_T * semaphore, long count)
 void down_semaphore(semaphore_T * semaphore)
 {
 	task_s * curr = curr_tsk;
-	percpu_data_s * cpudata_p = curr_cpu;
+	per_cpudata_s * cpudata_p = curr_cpu;
 	if (atomic_read(&semaphore->counter) > 0)
 	{
 		atomic_dec(&semaphore->counter);
@@ -105,7 +105,7 @@ void down_semaphore(semaphore_T * semaphore)
 void up_semaphore(semaphore_T * semaphore)
 {
 	task_s * next = NULL;
-	percpu_data_s * cpudata_p = curr_cpu;
+	per_cpudata_s * cpudata_p = curr_cpu;
 	if (semaphore->waiting_tasks.count == 0)
 	{
 		atomic_inc(&semaphore->counter);
@@ -150,7 +150,7 @@ void up_semaphore(semaphore_T * semaphore)
 // void down_recurs_semaphore(recurs_semaphore_T * semaphore)
 // {	
 // 	task_s * curr = curr_tsk;
-// 	percpu_data_s * cpudata_p = curr_cpu;
+// 	cpudata_s * cpudata_p = curr_cpu;
 // 	lock_spin_lock(&semaphore->selflock);
 // 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
 // 	if (user != NULL)
@@ -179,7 +179,7 @@ void up_semaphore(semaphore_T * semaphore)
 // void up_recurs_semaphore(recurs_semaphore_T * semaphore)
 // {
 // 	task_s * curr = curr_tsk;
-// 	percpu_data_s * cpudata_p = curr_cpu;
+// 	cpudata_s * cpudata_p = curr_cpu;
 // 	lock_spin_lock(&semaphore->selflock);
 // 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
 // 	if (user == NULL)

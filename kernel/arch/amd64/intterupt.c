@@ -147,17 +147,17 @@ void excep_page_fault(stack_frame_s * sf_regs)
  *==============================================================================================*/
 void excep_hwint_entry(stack_frame_s * sf_regs)
 {
-	percpu_data_s * cpudata_p = (percpu_data_s *)rdgsbase();
 	int vec = sf_regs->vec_nr;
 
 	if (vec < HWINT0_VEC)
-		exception_handler(sf_regs, cpudata_p);
+		exception_handler(sf_regs);
 	else
-		hwint_irq_handler(sf_regs, cpudata_p);
+		hwint_irq_handler(sf_regs);
 }
 
-void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
+void exception_handler(stack_frame_s * sf_regs)
 {
+	per_cpudata_s * cpudata_p = curr_cpu;
 	int vec = sf_regs->vec_nr;
 	color_printk(WHITE, BLUE,"Caused by core-%d INTR: 0x%02x - %s ; ",
 					cpudata_p->cpu_idx, vec, exception_init_table[vec].name);
@@ -188,7 +188,7 @@ void exception_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
 	while (1);
 }
 
-void hwint_irq_handler(stack_frame_s * sf_regs, percpu_data_s * cpudata_p)
+void hwint_irq_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
 	int irq_nr = vec - HWINT0_VEC;

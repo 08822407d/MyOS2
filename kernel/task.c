@@ -36,13 +36,14 @@ void init_task()
 	task0->pid = get_newpid();
 
 	// complete bsp's cpudata_p
-	percpu_data_s * bsp_cpudata = percpu_data[0];
-	bsp_cpudata->ready_tasks.count = 
-	bsp_cpudata->ready_tasks.count = 0;
-	bsp_cpudata->ready_tasks.head_p =
-	bsp_cpudata->finished_tasks.head_p = NULL;
-	bsp_cpudata->curr_task = task0;
-	bsp_cpudata->time_slice = task0->time_slice;
+	cpudata_u * bsp_cpudata_u_p = percpu_data[0];
+	per_cpudata_s * bsp_cpudata_p = &(bsp_cpudata_u_p->cpudata);
+	bsp_cpudata_p->ready_tasks.count = 
+	bsp_cpudata_p->ready_tasks.count = 0;
+	bsp_cpudata_p->ready_tasks.head_p =
+	bsp_cpudata_p->finished_tasks.head_p = NULL;
+	bsp_cpudata_p->curr_task = task0;
+	bsp_cpudata_p->time_slice = task0->time_slice;
 
 	init_spin_lock(&idle_queue_lock);
 }

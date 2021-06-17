@@ -70,7 +70,7 @@ stack_frame_s * get_stackframe(task_s * task_p)
 
 inline __always_inline void __switch_to(task_s * curr, task_s * target)
 {
-	percpu_data_s * cpudata_p = curr_cpu;
+	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
 
@@ -122,6 +122,8 @@ unsigned long init(unsigned long arg)
 int sys_call(int syscall_nr)
 {
 	int ret_val = 0;
+	// amd64 syscall will save rip to rcx, rflags to r11
+	// and user rsp will be saved to r10 by hand
 	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
 							"pushq	%%r10		\n\t"
 							"pushq	%%r11		\n\t"
@@ -148,7 +150,7 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 
 void wakeup_task(task_s * task)
 {
-	percpu_data_s * cpudata_p = (percpu_data_s *)rdgsbase();
+	per_cpudata_s * cpudata_p = curr_cpu;
 	task->state |= PS_RUNNING;
 	m_push_list(task, &(cpudata_p->ready_tasks));
 }
@@ -194,7 +196,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 
 unsigned long do_exit(unsigned long code)
 {
-	percpu_data_s * cpudata_p = curr_cpu;
+	per_cpudata_s * cpudata_p = curr_cpu;
 	color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, code);
 	while(1);
 }
@@ -233,7 +235,7 @@ void arch_init_task()
 /*==============================================================================================*
  *									load_balance related functions								*
  *==============================================================================================*/
-void insert_running_list(percpu_data_s * cpudata_p)
+void insert_running_list(per_cpudata_s * cpudata_p)
 {
 	task_s * curr_task = cpudata_p->curr_task;
 	if (curr_task != NULL)
@@ -258,7 +260,7 @@ void insert_running_list(percpu_data_s * cpudata_p)
 
 void schedule()
 {
-	percpu_data_s *	cpudata_p = curr_cpu;
+	per_cpudata_s *	cpudata_p = curr_cpu;
 	task_s *		next_task = NULL;
 	task_s *		curr_task = cpudata_p->curr_task;
 
@@ -299,7 +301,7 @@ void schedule()
 
 void load_balance()
 {
-	percpu_data_s * cpudata_p = percpu_data[0];
+	per_cpudata_s * cpudata_p = &percpu_data[0]->cpudata;
 	if (cpudata_p->scheduleing_flag)
 		return;
 

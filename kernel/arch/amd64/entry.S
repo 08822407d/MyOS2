@@ -17,12 +17,11 @@
 /*									syscall and sysret entry						 			*/
 /*==============================================================================================*/
 ENTRY(enter_syscall)
-	movabsq	$(bsp_tmp_tss + 4),	%r10
-	movq		(%r10),		%r10
+	swapgs
 	xchgq		%rsp,		%r10
 	sti
-	pushq		%r10			// save user rsp
-	pushq		%r11			// save user rflags
+	pushq		%r10				// save user rsp
+	pushq		%r11				// save user rflags
 	subq		$0x08,		%rsp
 	pushq		%rcx
 	/////////////////////////////////
@@ -75,9 +74,11 @@ ENTRY(ret_from_syscall)
 	/////////////////////////////////
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	/////////////////////////////////
+	// now user rip already in rcx, rflags in r11
 	popq		%rcx
 	addq		$0x10,		%rsp	// skip cs
 	popq		%rsp
+	swapgs
 	sysretq
 
 

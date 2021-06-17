@@ -71,31 +71,35 @@
 		unsigned	tail;	// point to next unit of the last non-null
 	} task_queue_s;
 
-	typedef struct percpu_info
+	typedef struct per_cpudata
 	{
-		task_s *		curr_task;
-		task_s *		idle_task;
+		task_s *	curr_task;
+		task_s *	idle_task;
 
-		task_list_s		ready_tasks;
-		task_list_s		finished_tasks;
+		task_list_s	ready_tasks;
+		task_list_s	finished_tasks;
 
-		unsigned		is_idle_flag;
-		unsigned		scheduleing_flag;
+		unsigned long	is_idle_flag;
+		unsigned long	scheduleing_flag;
 
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-		unsigned long	time_slice;	// max jiffies for running of this task
+		unsigned long	time_slice;		// max jiffies for running of this task
 
 		size_t			cpu_idx;
-		arch_percpu_data_s	arch_info;
-		char 		(* cpu_stack_start)[CONFIG_CPUSTACK_SIZE];
-	} percpu_data_s;
+		arch_cpudata_s	arch_info;
+	} per_cpudata_s;
+
+	typedef union cpudata
+	{
+		per_cpudata_s	cpudata;
+		char	 		cpu_stack[CONFIG_CPUSTACK_SIZE];
+	} cpudata_u;
 
 	void init_task(void);
-
 	void arch_init_task(void);
 	task_s * get_current_task(void);
 	#define curr_tsk get_current_task()
-	percpu_data_s * get_current_cpu(void);
+	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 	unsigned long get_newpid(void);
 	void __switch_to(task_s * curr, task_s * target);

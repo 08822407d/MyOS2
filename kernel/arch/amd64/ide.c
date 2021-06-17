@@ -145,7 +145,7 @@ void end_request(blkbuf_node_s * node)
 
 void add_request(blkbuf_node_s * node)
 {
-	percpu_data_s * cpudata_p = curr_cpu;
+	per_cpudata_s * cpudata_p = curr_cpu;
 	m_enqueue_list(node, &disk_require_queue.waiting_list);
 }
 

@@ -8,13 +8,13 @@
 	extern kinfo_s 			kparam;
 	extern framebuffer_s	framebuffer;
 	extern PCB_u **			idle_tasks;
-	extern percpu_data_s **	percpu_data;
+	extern cpudata_u **		percpu_data;
 
 	extern kbd_inbuf_s *	p_kb;
 	extern time_s 			time;
 
-	extern task_queue_s	idle_queue;
-	extern task_list_s global_ready_task;
-	extern task_list_s global_blocked_task;
+	extern task_queue_s		idle_queue;
+	extern task_list_s		global_ready_task;
+	extern task_list_s		global_blocked_task;
 
 #endif /* _GLO_H_ */
