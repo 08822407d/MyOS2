@@ -86,6 +86,7 @@
 		unsigned long	time_slice;		// max jiffies for running of this task
 
 		size_t			cpu_idx;
+		reg_t			cpustack_p;
 		arch_cpudata_s	arch_info;
 	} per_cpudata_s;
 

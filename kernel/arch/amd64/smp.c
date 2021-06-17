@@ -125,6 +125,7 @@ void percpu_self_config(size_t cpu_idx)
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
 	cpudata_p->is_idle_flag = 1;
 	cpudata_p->scheduleing_flag = 0;
+	cpudata_p->cpustack_p = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
 
 	current_task->arch_struct.tss_rsp0 = (reg_t)current_task + TASK_KSTACK_SIZE;
 	current_task->vruntime = -1;
