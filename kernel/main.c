@@ -54,10 +54,11 @@ void idle(size_t cpu_idx)
 	percpu_self_config(cpu_idx);
 	sti();
 
-	__asm__ __volatile__(	"movq	%%gs:0x78,	%%rax	\n\t"
-						:
-						:
-						:	"rax");
+	// __asm__ __volatile__(	"movq	%0,				%%rax	\n\t"
+	// 						"movq	%%gs:(%%rax),	%%rax	\n\t"
+	// 					:
+	// 					:	"m"(cpustack_off)
+	// 					:	"rax");
 
 	// kernel_thread(module_test, 0, 0);
 	// module_test(cpu_idx);

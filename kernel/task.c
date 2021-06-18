@@ -13,6 +13,8 @@
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 
+size_t			cpustack_off;
+
 PCB_u **		idle_tasks;
 task_queue_s	idle_queue;
 spinlock_T		idle_queue_lock;
@@ -22,9 +24,13 @@ spinlock_T		global_ready_task_lock;
 task_list_s		global_blocked_task;
 spinlock_T		global_blocked_task_lock;
 
+void compute_consts(void);
+
 
 void init_task()
 {
+	compute_consts();
+
 	arch_init_task();
 
 	task_s *task0	= &task0_PCB.task;
@@ -46,6 +52,12 @@ void init_task()
 	bsp_cpudata_p->time_slice = task0->time_slice;
 
 	init_spin_lock(&idle_queue_lock);
+}
+
+void compute_consts()
+{
+	cpudata_u * base_p = 0;
+	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
 }
 
 /*==============================================================================================*

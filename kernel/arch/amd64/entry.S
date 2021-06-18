@@ -18,7 +18,9 @@
 /*==============================================================================================*/
 ENTRY(enter_syscall)
 	swapgs
-	// leaq		%gs:CONFIG_CPUSTACK_SIZE,	%r10
+	movabsq		$cpustack_off,	%r10
+	movq		(%r10),		%r10
+	movq		%gs:(%r10),	%r10
 	xchgq		%rsp,		%r10
 	sti
 	pushq		%r10				// save user rsp
