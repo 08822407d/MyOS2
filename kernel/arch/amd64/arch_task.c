@@ -254,11 +254,13 @@ void userthd_test()
 {
 	// set userthd stack_frame and addr space
 	virt_addr user_code = (virt_addr)0x8000000;
-	virt_addr user_stack = user_code + 0x1000;
+	virt_addr user_stack = user_code + CONFIG_PAGE_SIZE;
 
 	Page_s *user_page = page_alloc();
 	arch_page_domap(user_code, user_page->page_start_addr, ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, KERN_PML4);
 	memcpy(user_code, user_func, 1024);
+	KERN_PML4[0].defs.USflag = 1;
+	KERN_PDPT[0][0].defs.USflag = 1;
 
 	stack_frame_s sf_regs;
 	memset(&sf_regs,0,sizeof(sf_regs));
