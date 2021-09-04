@@ -253,6 +253,8 @@
 	int do_syscall(int syscall_nr);
 	void schedule(void);
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
+	void userthd_test();
+	void enter_userthd(void);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);

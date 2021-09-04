@@ -68,6 +68,15 @@ stack_frame_s * get_stackframe(task_s * task_p)
 	return &(pcb_p->arch_sf.pcb_sf_top);
 }
 
+inline __always_inline void switch_mm(task_s * curr, task_s * target)
+{
+	__asm__ __volatile__(	"movq	%0,	%%cr3		\n\t"
+						:
+						:	"r"(target->arch_struct.cr3)
+						:	"memory"
+						);
+}
+
 inline __always_inline void __switch_to(task_s * curr, task_s * target)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
@@ -136,6 +145,14 @@ int sys_call(int syscall_nr)
 						:
 						);
 	return ret_val;
+}
+
+void user_func()
+{
+	int i = 0x123456;
+	while (1);
+	
+	sys_call(0);
 }
 
 int do_syscall(int syscall_nr)
@@ -232,6 +249,60 @@ void arch_init_task()
 	init_spin_lock(&newpid_lock);
 }
 
+#include "include/arch_glo.h"
+void userthd_test()
+{
+	// set userthd stack_frame and addr space
+	virt_addr user_code = (virt_addr)0x8000000;
+	virt_addr user_stack = user_code + 0x1000;
+
+	Page_s *user_page = page_alloc();
+	arch_page_domap(user_code, user_page->page_start_addr, ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, KERN_PML4);
+	memcpy(user_code, user_func, 1024);
+
+	stack_frame_s sf_regs;
+	memset(&sf_regs,0,sizeof(sf_regs));
+
+	sf_regs.cs = USER_CS_SELECTOR;
+	sf_regs.ss = USER_SS_SELECTOR;
+	sf_regs.rflags = (1 << 9);
+	sf_regs.rip = (reg_t)user_code;
+	sf_regs.rsp = (reg_t)user_stack;
+
+	// set userthd PCB members
+	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
+	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
+	task_s * curr_task	= &curr_pcb->task;
+	task_s * new_task	= &new_pcb->task;
+	if (new_pcb == NULL)
+	{
+		goto alloc_newtask_fail;
+	}
+
+	memset(new_pcb, 0, sizeof(PCB_u));
+	memcpy(new_task, curr_pcb, sizeof(task_s));
+
+	m_list_init(new_task);
+	new_pcb->task.pid = get_newpid();
+
+	stack_frame_s * new_sf_regs = get_stackframe(new_task);
+	memcpy(new_sf_regs, &sf_regs, sizeof(stack_frame_s));
+
+	new_task->vruntime = 0;
+	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
+	new_task->arch_struct.k_rip = (reg_t)enter_userthd;
+	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+
+	wakeup_task(new_task);
+
+	return;
+
+	alloc_newtask_fail:
+		kfree(new_task);
+}
+
+
 /*==============================================================================================*
  *									load_balance related functions								*
  *==============================================================================================*/
@@ -296,6 +367,7 @@ void schedule()
 	cpudata_p->time_slice = next_task->time_slice;
 
 	cpudata_p->scheduleing_flag = 0;
+	switch_mm(curr_task, next_task);
 	switch_to(curr_task, next_task);
 }
 

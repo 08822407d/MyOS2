@@ -64,6 +64,7 @@ void idle(size_t cpu_idx)
 	// module_test(cpu_idx);
 	// if (cpu_idx == 0)
 		// kernel_thread(init_vfs, 0, 0);
+	userthd_test();
 
 	while (1)
 	{
