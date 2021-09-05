@@ -16,6 +16,14 @@
 /*==============================================================================================*/
 /*									syscall and sysret entry						 			*/
 /*==============================================================================================*/
+// user Rflags -> R11
+// user RIP -> RCX
+// kernel CS = IA32_STAR[47:32]
+// kernel SS = IA32_STAR[47:32] + 8
+// kernel RIP = IA32_LSTAR
+// kernel Rflags &= IA32_FMASK
+// !!! user RSP should be store by hand !!!
+// !!! kernel RSP should be load by hand !!!
 ENTRY(enter_syscall)
 	swapgs
 	movabsq		$cpustack_off,	%r10
@@ -53,8 +61,14 @@ ENTRY(enter_syscall)
 	movq		%rsp,		%rdi
 	callq		do_syscall
 
+// R11 -> user Rflags
+// RCX -> user RIP
+// user CS = IA32_STAR[63:48] + 16
+// user SS = IA32_STAR[63:48] + 8
+// !!! user RSP should be restore by hand !!!
+// !!! kernel RSP should be store by hand !!!
 ENTRY(ret_from_syscall)
-	movq		%rax,		0x80(%rsp)
+	movq		%rax,		0x80(%rsp)	// save return value to stack
 	popq		%rax		
 	movq		%rax,		%ds
 	popq		%rax

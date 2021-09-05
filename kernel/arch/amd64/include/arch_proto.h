@@ -254,6 +254,7 @@
 	void schedule(void);
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	void userthd_test();
+	void userthd_test2();
 	void enter_userthd(void);
 
 	/* interrupt.c */

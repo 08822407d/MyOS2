@@ -38,6 +38,8 @@ void pre_init(void)
 	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
 	wrmsr(IA32_EFER, ia32_efer);
 
+	uint64_t EFER = rdmsr(IA32_EFER);
+
 	memset((virt_addr)&_bss, 0, &_ebss - &_bss);
 
 	kparam.kernel_phy_base	= &_k_phys_start;

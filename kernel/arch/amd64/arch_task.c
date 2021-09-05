@@ -150,9 +150,10 @@ int sys_call(int syscall_nr)
 void user_func()
 {
 	int i = 0x123456;
-	while (1);
 	
-	sys_call(0);
+	i = sys_call(0);
+
+	while (1);
 }
 
 int do_syscall(int syscall_nr)
@@ -240,7 +241,7 @@ void arch_init_task()
 {
 	// init MSR sf_regs related to syscall/sysret
 	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
-	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
+	wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
 	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
 
 	// init pid bitmap
@@ -304,6 +305,48 @@ void userthd_test()
 		kfree(new_task);
 }
 
+void userthd_test2()
+{
+	uint64_t star = rdmsr(MSR_IA32_STAR);
+	// set userthd PCB members
+	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
+	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
+	task_s * curr_task	= &curr_pcb->task;
+	task_s * new_task	= &new_pcb->task;
+	if (new_pcb == NULL)
+	{
+		goto alloc_newtask_fail;
+	}
+
+	memset(new_pcb, 0, sizeof(PCB_u));
+	memcpy(new_task, curr_pcb, sizeof(task_s));
+
+	m_list_init(new_task);
+	new_pcb->task.pid = get_newpid();
+
+	stack_frame_s * new_sf_regs = get_stackframe(new_task);
+	// set user task kernel data
+	new_task->vruntime = 0;
+	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
+	new_task->arch_struct.k_rip = (reg_t)ret_from_syscall;
+	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	// set user task context
+	new_sf_regs->cs = USER_CS_SELECTOR;
+	new_sf_regs->ss = USER_SS_SELECTOR;
+	new_sf_regs->r11 =
+	new_sf_regs->rflags = (1 << 9);
+	new_sf_regs->rcx =
+	new_sf_regs->rip = (reg_t)user_func;
+	new_sf_regs->rsp = (reg_t)kmalloc(0x1000) + 0x1000;
+
+	wakeup_task(new_task);
+
+	return;
+
+	alloc_newtask_fail:
+		kfree(new_task);
+}
 
 /*==============================================================================================*
  *									load_balance related functions								*

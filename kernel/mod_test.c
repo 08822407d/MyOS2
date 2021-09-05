@@ -17,21 +17,33 @@ unsigned long module_test(unsigned long flag);
 unsigned long module_test(unsigned long flag)
 {
 
-	atomic_inc(&boot_counter);
+	// atomic_inc(&boot_counter);
 
-	if (flag == 0)
-	{
-		long long i = 0;
-		for ( ; i < 0xFFFFFFF; i++);
-		long val = boot_counter.value;
-		color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
-	}
+	// if (flag == 0)
+	// {
+	// 	long long i = 0;
+	// 	for ( ; i < 0xFFFFFFF; i++);
+	// 	long val = boot_counter.value;
+	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
+	// }
 
-	kmalloc_kfree_test();
+	// kmalloc_kfree_test();
 
 	kthread_test();
 
+	userthd_test2();
+
 	// disk_drv_test();
+
+	per_cpudata_s * cpudata_p = curr_cpu;
+	uint64_t star = rdmsr(MSR_IA32_STAR);
+	uint32_t eax = 0;
+	uint32_t ebx = 0;
+	uint32_t ecx = 0;
+	uint32_t edx = 0;
+	cpuid(0x80000001, 0, &eax, &ebx, &ecx, &edx);
+
+	color_printk(YELLOW, BLACK, "task module_test finished......");
 }
 
 unsigned long test_task_a(unsigned long arg)
