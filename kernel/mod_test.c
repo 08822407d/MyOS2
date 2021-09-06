@@ -29,7 +29,7 @@ unsigned long module_test(unsigned long flag)
 
 	// kmalloc_kfree_test();
 
-	kthread_test();
+	// kthread_test();
 
 	userthd_test2();
 

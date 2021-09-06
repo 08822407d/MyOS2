@@ -214,6 +214,8 @@ void init_gdt()
 	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
 	set_codeseg(USER_CS_INDEX, E_CODE, 3);
 	set_dataseg(USER_SS_INDEX, RW_DATA, 3);
+	set_codeseg(USER_CS_INDEX_DUP, E_CODE, 3);
+	set_dataseg(USER_SS_INDEX_DUP, RW_DATA, 3);
 
 	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)gdt;

@@ -16,6 +16,69 @@
 /*==============================================================================================*/
 /*									syscall and sysret entry						 			*/
 /*==============================================================================================*/
+ENTRY(enter_sysenter)
+	sti
+	subq	$0x38,	%rsp	// skip cs:rip,rflags, ss:rsp, err_code and vec_nr
+	cld
+
+	pushq		%rax
+	pushq		%rbx
+	pushq		%rcx
+	pushq		%rdx
+	pushq		%rbp
+	pushq		%rdi
+	pushq		%rsi
+	pushq		%r8
+	pushq		%r9
+	pushq		%r10
+	pushq		%r11
+	pushq		%r12
+	pushq		%r13
+	pushq		%r14
+	pushq		%r15
+	
+	movq		%es,		%rax
+	pushq		%rax
+	movq		%ds,		%rax
+	pushq		%rax
+	movq		%rsp,		%rdi
+	callq		do_syscall
+
+
+ENTRY(ret_from_sysenter)
+	movq		%rax,		0x80(%rsp)	// save return value to stack
+	popq		%rax		
+	movq		%rax,		%ds
+	popq		%rax
+	movq		%rax,		%es
+	popq		%r15
+	popq		%r14
+	popq		%r13
+	popq		%r12
+	popq		%r11
+	popq		%r10
+	popq		%r9
+	popq		%r8
+	popq		%rsi
+	popq		%rdi
+	popq		%rbp
+	popq		%rdx
+	popq		%rcx
+	popq		%rbx
+	popq		%rax
+
+	addq	$0x38,	%rsp	// skip cs:rip,rflags, ss:rsp, err_code and vec_nr
+
+	// xchgq	%rdx,	%r10
+	// xchgq	%rcx,	%r11
+
+	sti
+	.byte	0x48
+	sysexit
+
+/*==============================================================================================*/
+/*									syscall and sysret entry						 			*/
+/*==============================================================================================*/
 // user Rflags -> R11
 // user RIP -> RCX
 // kernel CS = IA32_STAR[47:32]
