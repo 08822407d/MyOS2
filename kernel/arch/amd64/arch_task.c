@@ -151,14 +151,26 @@ int sys_call(int syscall_nr)
 void user_func()
 {
 	int i = 0x123456;
-	
-	i = sys_call(0);
+
+	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
+							"pushq	%%r10		\n\t"
+							"pushq	%%r11		\n\t"
+							// "sysenter			\n\t"
+							"syscall			\n\t"
+							"popq	%%r11		\n\t"
+							"popq	%%r10		\n\t"
+							"popq	%%rcx		\n\t"
+						:	"=m"(i)
+						:
+						:
+						);
 
 	while (1);
 }
 
 int do_syscall(int syscall_nr)
 {
+	color_printk(GREEN, BLACK, "enter syscall function");
 	return 0x12345678;
 }
 
@@ -250,7 +262,7 @@ void arch_init_task()
 void userthd_test()
 {
 	// set userthd stack_frame and addr space
-	virt_addr user_code = (virt_addr)0x8000000;
+	virt_addr user_code = (virt_addr)0x6000000;
 	virt_addr user_stack = user_code + CONFIG_PAGE_SIZE;
 
 	Page_s *user_page = page_alloc();
@@ -258,15 +270,6 @@ void userthd_test()
 	memcpy(user_code, user_func, 1024);
 	KERN_PML4[0].defs.USflag = 1;
 	KERN_PDPT[0][0].defs.USflag = 1;
-
-	stack_frame_s sf_regs;
-	memset(&sf_regs,0,sizeof(sf_regs));
-
-	sf_regs.cs = USER_CS_SELECTOR;
-	sf_regs.ss = USER_SS_SELECTOR;
-	sf_regs.rflags = (1 << 9);
-	sf_regs.rip = (reg_t)user_code;
-	sf_regs.rsp = (reg_t)user_stack;
 
 	// set userthd PCB members
 	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
@@ -285,13 +288,33 @@ void userthd_test()
 	new_pcb->task.pid = get_newpid();
 
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
-	memcpy(new_sf_regs, &sf_regs, sizeof(stack_frame_s));
 
+	// set user task kernel data
 	new_task->vruntime = 0;
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
-	new_task->arch_struct.k_rip = (reg_t)enter_userthd;
+	new_task->arch_struct.k_rip = (reg_t)ret_from_syscall;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
 	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	// set user task context
+	new_sf_regs->r11 =
+	new_sf_regs->rflags = (1 << 9);
+	new_sf_regs->rcx =
+	new_sf_regs->rip = (reg_t)user_code	;
+	new_sf_regs->rsp = (reg_t)user_stack;
+
+	// // set user task kernel data
+	// new_task->vruntime = 0;
+	// new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
+	// new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	// new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	// new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	// // set user task context
+	// new_sf_regs->r11 =
+	// new_sf_regs->rflags = (1 << 9);
+	// new_sf_regs->rdx =
+	// new_sf_regs->rip = (reg_t)user_code;
+	// new_sf_regs->rcx =
+	// new_sf_regs->rsp = (reg_t)user_stack;
 
 	wakeup_task(new_task);
 

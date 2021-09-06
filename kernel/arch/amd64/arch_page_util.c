@@ -26,7 +26,8 @@ void arch_page_init(void)
 {
 	phys_addr k_phy_pgbase = 0;
 	virt_addr k_vir_pgbase = (virt_addr)phys2virt(0);
-	uint64_t arch_page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
+	// uint64_t arch_page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
+	uint64_t arch_page_attr = ARCH_PG_PRESENT | ARCH_PG_RW;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{

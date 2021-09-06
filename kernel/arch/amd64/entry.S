@@ -84,12 +84,12 @@ ENTRY(ret_from_sysenter)
 // !!! user RSP should be store by hand !!!
 // !!! kernel RSP should be load by hand !!!
 ENTRY(enter_syscall)
+	cli
 	swapgs
 	movabsq		$cpustack_off,	%r10
 	movq		(%r10),		%r10
 	movq		%gs:(%r10),	%r10
 	xchgq		%rsp,		%r10
-	sti
 	pushq		%r10				// save user rsp
 	pushq		%r11				// save user rflags
 	subq		$0x08,		%rsp
@@ -155,13 +155,15 @@ ENTRY(ret_from_syscall)
 	addq		$0x10,		%rsp	// skip cs
 	popq		%rsp
 	swapgs
+	sti
+	// .byte	0x48
 	sysretq
 
 
 /*==============================================================================================*/
 /*										interrupt entry								 			*/
 /*==============================================================================================*/
-ENTRY(enter_userthd)
+// ENTRY(enter_userthd)
 RESTORE_ALL:
 	cli
 	popq		%rax		

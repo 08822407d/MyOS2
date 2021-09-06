@@ -31,7 +31,7 @@ unsigned long module_test(unsigned long flag)
 
 	// kthread_test();
 
-	userthd_test2();
+	userthd_test();
 
 	// disk_drv_test();
 
