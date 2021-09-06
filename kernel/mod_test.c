@@ -37,11 +37,14 @@ unsigned long module_test(unsigned long flag)
 
 	per_cpudata_s * cpudata_p = curr_cpu;
 	uint64_t star = rdmsr(MSR_IA32_STAR);
+	uint64_t lstar = rdmsr(MSR_IA32_LSTAR);
 	uint32_t eax = 0;
 	uint32_t ebx = 0;
 	uint32_t ecx = 0;
 	uint32_t edx = 0;
 	cpuid(0x80000001, 0, &eax, &ebx, &ecx, &edx);
+	uint64_t ia32_efer = rdmsr(IA32_EFER);
+	ia32_efer &= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
 
 	color_printk(YELLOW, BLACK, "task module_test finished......");
 }

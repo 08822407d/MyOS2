@@ -21,6 +21,7 @@
 		ER_CODE		= 10,
 		ERA_CODE	= 11,
 	} CommSegType_E;
+
 	/* type field of segdesc, for system segment */
 	typedef enum
 	{	
@@ -32,9 +33,7 @@
 		TRAPGATE	= 15
 	} SysSegType_E;
 
-
 	/* 64bit version segdesc for common segment */
-
 	typedef struct __attribute__((packed)) {
 		uint64_t			: 16, // unused
 							: 24, // unused

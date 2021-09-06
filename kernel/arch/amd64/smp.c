@@ -17,6 +17,8 @@ extern PCB_u	task0_PCB;
 
 cpudata_u **	percpu_data;
 
+char			bsp_ist[7][1024];
+
 void create_percpu_idle(size_t cpu_idx);
 void init_percpu_data(size_t cpu_idx);
 void init_percpu_arch_data(size_t cpu_idx);
@@ -108,6 +110,8 @@ void init_percpu_data(size_t cpu_idx)
 	tss_p->ist5 =
 	tss_p->ist6 =
 	tss_p->ist7 = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
+	// tss_p->ist1 = (reg_t)&bsp_ist[0];
+	// tss_p->ist2 = (reg_t)&bsp_ist[1];
 }
 
 void percpu_self_config(size_t cpu_idx)

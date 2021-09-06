@@ -68,12 +68,8 @@ ENTRY(ret_from_sysenter)
 	popq		%rax
 
 	addq	$0x38,	%rsp	// skip cs:rip,rflags, ss:rsp, err_code and vec_nr
-
-	// xchgq	%rdx,	%r10
-	// xchgq	%rcx,	%r11
-
 	sti
-	.byte	0x48
+	.byte	0x48			// !!!CAUTION!!! with this prefix can sysexit return to 64bit mode
 	sysexit
 
 /*==============================================================================================*/

@@ -25,6 +25,7 @@ tss64_T			bsp_tmp_tss;
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 
+
 /*==============================================================================================*
  *										global functions							 			*
  *==============================================================================================*/
@@ -93,59 +94,59 @@ inline __always_inline void load_tss(uint64_t cpu_idx)
  *										private datas									 		*
  *==============================================================================================*/
 gate_table_s exception_init_table[] = {
-	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#DE" },
-	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, "#DB" },
-	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE, "NMI" },
-	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE, "#BP" },
-	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE, "#OF" },
-	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, "#BR" },
-	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, "#UD" },
-	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, "#NM" },
-	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#DF" },
-	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, "FPU-SO" },
-	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, "#TS" },
-	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, "#NP" },
-	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#SS" },
-	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, "#GP" },
-	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#PF" },
+	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DE" },
+	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DB" },
+	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE, 0, "NMI" },
+	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#BP" },
+	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#OF" },
+	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#BR" },
+	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#UD" },
+	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#NM" },
+	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DF" },
+	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "FPU-SO" },
+	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#TS" },
+	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#NP" },
+	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#SS" },
+	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#GP" },
+	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#PF" },
 	// EXCEPTION 15 INTEL RESERVED
-	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#MF" },
-	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#AC" },
-	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#MC" },
-	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#XM" },
-	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#VE" },
-	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#CP" },
-	{ NULL, 0, 0, 0}
+	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#MF" },
+	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#AC" },
+	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#MC" },
+	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#XM" },
+	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#VE" },
+	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#CP" },
+	{ NULL, 0, 0, 0, 0}
 };
 
 gate_table_s hwint_init_table[] = {
-	{ hwint00, VECTOR( 0), INTRGATE, KERN_PRIVILEGE, "IRQ-00" },
-	{ hwint01, VECTOR( 1), INTRGATE, KERN_PRIVILEGE, "IRQ-01" },
-	{ hwint02, VECTOR( 2), INTRGATE, KERN_PRIVILEGE, "IRQ-02" },
-	{ hwint03, VECTOR( 3), INTRGATE, KERN_PRIVILEGE, "IRQ-03" },
-	{ hwint04, VECTOR( 4), INTRGATE, KERN_PRIVILEGE, "IRQ-04" },
-	{ hwint05, VECTOR( 5), INTRGATE, KERN_PRIVILEGE, "IRQ-05" },
-	{ hwint06, VECTOR( 6), INTRGATE, KERN_PRIVILEGE, "IRQ-06" },
-	{ hwint07, VECTOR( 7), INTRGATE, KERN_PRIVILEGE, "IRQ-07" },
-	{ hwint08, VECTOR( 8), INTRGATE, KERN_PRIVILEGE, "IRQ-08" },
-	{ hwint09, VECTOR( 9), INTRGATE, KERN_PRIVILEGE, "IRQ-09" },
-	{ hwint10, VECTOR(10), INTRGATE, KERN_PRIVILEGE, "IRQ-10" },
-	{ hwint11, VECTOR(11), INTRGATE, KERN_PRIVILEGE, "IRQ-11" },
-	{ hwint12, VECTOR(12), INTRGATE, KERN_PRIVILEGE, "IRQ-12" },
-	{ hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
-	{ hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
-	{ hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
+	{ hwint00, VECTOR( 0), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-00" },
+	{ hwint01, VECTOR( 1), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-01" },
+	{ hwint02, VECTOR( 2), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-02" },
+	{ hwint03, VECTOR( 3), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-03" },
+	{ hwint04, VECTOR( 4), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-04" },
+	{ hwint05, VECTOR( 5), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-05" },
+	{ hwint06, VECTOR( 6), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-06" },
+	{ hwint07, VECTOR( 7), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-07" },
+	{ hwint08, VECTOR( 8), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-08" },
+	{ hwint09, VECTOR( 9), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-09" },
+	{ hwint10, VECTOR(10), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-10" },
+	{ hwint11, VECTOR(11), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-11" },
+	{ hwint12, VECTOR(12), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-12" },
+	{ hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-13" },
+	{ hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-14" },
+	{ hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-15" },
 #ifdef USE_APIC
-	{ hwint16, VECTOR(16), INTRGATE, KERN_PRIVILEGE, "IRQ-16" },
-	{ hwint17, VECTOR(17), INTRGATE, KERN_PRIVILEGE, "IRQ-17" },
-	{ hwint18, VECTOR(18), INTRGATE, KERN_PRIVILEGE, "IRQ-18" },
-	{ hwint19, VECTOR(19), INTRGATE, KERN_PRIVILEGE, "IRQ-19" },
-	{ hwint20, VECTOR(20), INTRGATE, KERN_PRIVILEGE, "IRQ-20" },
-	{ hwint21, VECTOR(21), INTRGATE, KERN_PRIVILEGE, "IRQ-21" },
-	{ hwint22, VECTOR(22), INTRGATE, KERN_PRIVILEGE, "IRQ-22" },
-	{ hwint23, VECTOR(23), INTRGATE, KERN_PRIVILEGE, "IRQ-23" },
+	{ hwint16, VECTOR(16), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-16" },
+	{ hwint17, VECTOR(17), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-17" },
+	{ hwint18, VECTOR(18), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-18" },
+	{ hwint19, VECTOR(19), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-19" },
+	{ hwint20, VECTOR(20), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-20" },
+	{ hwint21, VECTOR(21), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-21" },
+	{ hwint22, VECTOR(22), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-22" },
+	{ hwint23, VECTOR(23), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-23" },
 #endif
-	{ NULL, 0, 0, 0}
+	{ NULL, 0, 0, 0, 0}
 };
 
 /*==============================================================================================*
@@ -230,12 +231,12 @@ void init_idt()
 		// fixed bits
 		curr_gate->Present = 1;
 		curr_gate->segslct = KERN_CS_SELECTOR;
-		curr_gate->IST 	   = 0;
+		curr_gate->IST 	   = gtbl->IST & 0x7;
 		// changable bits
 		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
-		curr_gate->Type  = gtbl->type;
-		curr_gate->DPL   = gtbl->DPL;
+		curr_gate->Type  = gtbl->type & 0xF;
+		curr_gate->DPL   = gtbl->DPL & 0x3;
 	}
 
 	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
@@ -310,4 +311,23 @@ void reload_percpu_arch_data(size_t cpu_idx)
 	load_gdt(&gdt_ptr);
 	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
 	load_tss(cpu_idx);
+}
+
+/*==============================================================================================*
+ *									systemcall mechanism env initiate							*
+ *==============================================================================================*/
+void arch_system_call_init()
+{
+	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
+	// init MSR sf_regs related to sysenter/sysexit
+	wrmsr(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
+	wrmsr(MSR_IA32_SYSENTER_EIP, (uint64_t)enter_sysenter);
+	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)&cpudata_u_p->cpu_stack);
+	uint64_t kstack = rdmsr(MSR_IA32_SYSENTER_ESP);
+	// init MSR sf_regs related to syscall/sysret
+	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
+	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
+
+	// wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
+	wrmsr(MSR_IA32_FMASK, 2);
 }

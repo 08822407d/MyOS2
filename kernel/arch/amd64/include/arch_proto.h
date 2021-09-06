@@ -96,12 +96,14 @@
 		reg_t rsp;
 		reg_t ss;
 	} __attribute__((packed)) stack_frame_s;
+
 // intr gate initiate infomation
 	typedef struct {
 		void	(*gate_entry) (void);
 		uint8_t	vec_nr;
 		uint8_t	type;
 		uint8_t	DPL;
+		uint8_t IST;
 		char	name[16];
 	} gate_table_s;
 
@@ -182,6 +184,7 @@
 	void init_bsp_arch_data(void);
 	void reload_bsp_arch_data(void);
 	void reload_percpu_arch_data(size_t cpu_idx);
+	void arch_system_call_init(void);
 
 	/* arch_page_util. */
 	void arch_page_preinit(void);

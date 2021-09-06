@@ -136,6 +136,7 @@ int sys_call(int syscall_nr)
 	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
 							"pushq	%%r10		\n\t"
 							"pushq	%%r11		\n\t"
+							// "sysenter			\n\t"
 							"syscall			\n\t"
 							"popq	%%r11		\n\t"
 							"popq	%%r10		\n\t"
@@ -151,9 +152,9 @@ void user_func()
 {
 	int i = 0x123456;
 	
-	while (1);
 	i = sys_call(0);
 
+	while (1);
 }
 
 int do_syscall(int syscall_nr)
@@ -239,16 +240,6 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 
 void arch_init_task()
 {
-	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
-	// init MSR sf_regs related to sysenter/sysexit
-	wrmsr(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
-	wrmsr(MSR_IA32_SYSENTER_EIP, (uint64_t)enter_sysenter);
-	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)cpudata_u_p->cpu_stack);
-	// init MSR sf_regs related to syscall/sysret
-	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
-	wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
-	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
-
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
