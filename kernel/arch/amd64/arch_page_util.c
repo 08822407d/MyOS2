@@ -112,6 +112,37 @@ void arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * pm
 	refresh_arch_page();
 }
 
+// void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr)
+// {
+// 	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)vaddr >> SHIFT_PML4E);
+// 	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)vaddr >> SHIFT_PDPTE);
+// 	unsigned int pde_idx	= GETF_PGENT((uint64_t)vaddr >> SHIFT_PDE);
+
+// 	// get pml4e
+// 	PML4E_T * pml4e_ptr = mm->pml4 + pml4e_idx;
+// 	// set pml4e
+// 	if (pml4e_ptr->ENT == 0)
+// 	{
+// 		pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(&KERN_PDPT[pml4e_idx])) | ARCH_PGE_NOT_LAST(attr);
+// 	}
+
+// 	// get pdpte
+// 	PDPTE_T * pdpte_ptr = (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT)) + pdpte_idx;
+// 	// set pdpte
+// 	if (pdpte_ptr->ENT == 0)
+// 	{
+// 		pdpte_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(KERN_PD[pml4e_idx][pdpte_idx])) | ARCH_PGE_NOT_LAST(attr);
+// 	}
+
+// 	// get pde
+// 	PDE_T * pde_ptr = (PDE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->ENT)) + pde_idx;
+// 	// set pte
+// 	if (*((uint64_t *)pde_ptr) == 0)
+// 	{
+// 		pde_ptr->ENT = MASKF_2M((uint64_t)phys) | ARCH_PGE_IS_LAST(attr);
+// 	}
+// }
+
 void pg_unmap(virt_addr virt)
 {
 	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PML4E);

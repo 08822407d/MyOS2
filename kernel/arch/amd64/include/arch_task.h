@@ -19,15 +19,27 @@ typedef struct arch_PCB
 	reg_t		cr2;
 	uint64_t	intr_vec;
 	uint64_t	err_code;
-
-	reg_t		cr3;
 } arch_PCB_s;
 
 typedef struct arch_PCB_stackframe
 {
-	uint8_t			skip[TASK_KSTACK_SIZE - sizeof(stack_frame_s)];
+	reg_t			skip[(TASK_KSTACK_SIZE - sizeof(stack_frame_s)) / sizeof(reg_t)];
 	stack_frame_s	pcb_sf_top;
 } arch_PCB_stackframe_s;
+
+typedef struct mm
+{
+	PML4E_T	*	pml4;
+	PDPTE_T **	pdpt;
+	PDE_T	***	pd;
+
+	uint64_t	start_code,end_code;
+	uint64_t	start_rodata,end_rodata;
+	uint64_t	start_data,end_data;
+	uint64_t	start_bss,end_bss;
+	uint64_t	start_brk,end_brk;
+	uint64_t	start_stack;
+} mm_s;
 
 
 #endif /* _AMD64_PROC_H_ */

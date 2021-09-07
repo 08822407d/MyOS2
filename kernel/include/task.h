@@ -42,6 +42,8 @@
 
 		arch_PCB_s		arch_struct;
 
+		mm_s			mm_struct;
+
 		volatile long	state;
 		unsigned long	flags;
 
@@ -57,7 +59,7 @@
 	typedef union PCB
 	{
 		task_s		task;
-		uint64_t	stack[TASK_KSTACK_SIZE / sizeof(uint64_t)];
+		reg_t		stack[TASK_KSTACK_SIZE / sizeof(reg_t)];
 		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
@@ -93,7 +95,7 @@
 	typedef union cpudata
 	{
 		per_cpudata_s	cpudata;
-		char	 		cpu_stack[CONFIG_CPUSTACK_SIZE];
+		reg_t			cpu_stack[CONFIG_CPUSTACK_SIZE / sizeof(reg_t)];
 	} cpudata_u;
 
 	void init_task(void);

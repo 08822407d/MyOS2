@@ -5,6 +5,7 @@
 
 	extern unsigned long volatile	jiffies;
 
+	extern PCB_u			task0_PCB;
 	extern kinfo_s 			kparam;
 	extern framebuffer_s	framebuffer;
 	extern PCB_u **			idle_tasks;

@@ -51,7 +51,6 @@ void init_smp_env()
 	}
 	kfree(idle_tasks[0]);
 	idle_tasks[0] = &task0_PCB;
-	task0_PCB.task.arch_struct.cr3 = (reg_t)virt2phys(KERN_PML4);
 
 	idle_queue.nr_max = kparam.nr_lcpu;
 	idle_queue.nr_curr = 0;
@@ -79,8 +78,10 @@ void init_percpu_arch_data(size_t cpu_idx)
 	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
 	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
 	tss_p->rsp0 = (size_t)idle_pcb + TASK_KSTACK_SIZE;
-	idle_pcb->task.arch_struct.cr3 = (reg_t)virt2phys(KERN_PML4);
 	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
+	idle_pcb->task.mm_struct.pml4 = (PML4E_T *)virt2phys(KERN_PML4);
+	idle_pcb->task.mm_struct.start_stack = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
+	idle_pcb->task.mm_struct = task0_PCB.task.mm_struct;
 }
 
 void init_percpu_data(size_t cpu_idx)

@@ -16,6 +16,8 @@
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
 
+#define	USER_CODE_ADDR 0x6000000
+
 extern tss64_T	bsp_tmp_tss;
 extern char		ist_stack0;
 
@@ -72,7 +74,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	__asm__ __volatile__(	"movq	%0,	%%cr3		\n\t"
 						:
-						:	"r"(target->arch_struct.cr3)
+						:	"r"(target->mm_struct.pml4)
 						:	"memory"
 						);
 }
@@ -150,7 +152,7 @@ int sys_call(int syscall_nr)
 	return ret_val;
 }
 
-void __attribute__((section(".data"))) user_func()
+void user_func()
 {
 	int sc_nr = 0x987654;
 	int i = 0;
@@ -188,6 +190,26 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
+PML4E_T * create_userpage()
+{
+	int user_page_nr = 4;
+	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+	PML4E_T	* user_pml4 = (PML4E_T *)kmalloc(PGENT_SIZE);
+	memset(user_pml4, 0, PGENT_SIZE);
+	PDPTE_T	* user_pdpt = (PDPTE_T *)kmalloc(1 * PGENT_SIZE);
+	memset(user_pdpt, 0, PGENT_SIZE);
+	PDE_T	* user_pd	= (PDE_T *)kmalloc(1 * 1 * PGENT_SIZE);
+	memset(user_pd, 0, PGENT_SIZE);
+
+	user_pml4[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pdpt)) | ARCH_PGE_NOT_LAST(attr);
+	user_pdpt[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pd)) | ARCH_PGE_NOT_LAST(attr);
+	for (int i = 0; i < user_page_nr; i ++)
+	{
+		Page_s * pg = page_alloc();
+		user_pd[i].ENT = MASKF_2M((uint64_t)pg->page_start_addr) | ARCH_PGE_IS_LAST(attr);
+	}
+}
+
 unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 { 
 	if(clone_flags & CLONE_VM)
@@ -206,7 +228,8 @@ unsigned long exit_files(task_s * new_tsk)
 
 unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
-	
+	new_tsk->mm_struct = curr_tsk->mm_struct;
+	new_tsk->mm_struct.pml4 = create_userpage();
 }
 unsigned long exit_mm(task_s * new_tsk)
 {
@@ -302,7 +325,7 @@ void arch_init_task()
 void userthd_test()
 {
 	// set userthd stack_frame and addr space
-	virt_addr user_code = (virt_addr)0x6000000;
+	virt_addr user_code = (virt_addr)USER_CODE_ADDR;
 	virt_addr user_stack = user_code + CONFIG_PAGE_SIZE;
 
 	Page_s *user_page = page_alloc();
@@ -334,7 +357,7 @@ void userthd_test()
 	// new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	// new_task->arch_struct.k_rip = (reg_t)ret_from_syscall;
 	// new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	// new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	// new_task->arch_struct.pml4 = curr_task->arch_struct.pml4;
 	// // set user task context
 	// new_sf_regs->r11 =
 	// new_sf_regs->rflags = (1 << 9);
@@ -347,7 +370,7 @@ void userthd_test()
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	new_task->mm_struct.pml4 = curr_task->mm_struct.pml4;
 	// set user task context
 	new_sf_regs->rflags = (1 << 9);
 	new_sf_regs->r10 =
@@ -388,7 +411,7 @@ void userthd_test2()
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	new_task->mm_struct.pml4 = curr_task->mm_struct.pml4;
 	// set user task context
 	new_sf_regs->cs = USER_CS_SELECTOR;
 	new_sf_regs->ss = USER_SS_SELECTOR;

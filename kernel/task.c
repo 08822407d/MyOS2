@@ -7,6 +7,7 @@
 #include "include/task.h"
 #include "include/proto.h"
 
+#include "arch/amd64/include/arch_glo.h"
 #include "arch/amd64/include/mutex.h"
 
 // de attention that before entering kmain, rsp had already point to stack of task0,
@@ -24,6 +25,15 @@ spinlock_T		global_ready_task_lock;
 task_list_s		global_blocked_task;
 spinlock_T		global_blocked_task_lock;
 
+extern char _text;
+extern char _etext;
+extern char _rodata;
+extern char _erodata;
+extern char _data;
+extern char _edata;
+extern char _bss;
+extern char _ebss;
+
 void compute_consts(void);
 
 
@@ -40,6 +50,18 @@ void init_task()
 	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
 	task0->pid = get_newpid();
+
+	mm_s * task0_mm_p = &task0_PCB.task.mm_struct;
+	task0_mm_p->start_code		= (reg_t)&_text;
+	task0_mm_p->end_code		= (reg_t)&_etext;
+	task0_mm_p->start_rodata	= (reg_t)&_rodata;
+	task0_mm_p->end_rodata		= (reg_t)&_erodata;
+	task0_mm_p->start_data		= (reg_t)&_data;
+	task0_mm_p->end_data		= (reg_t)&_edata;
+	task0_mm_p->start_bss		= (reg_t)&_bss;
+	task0_mm_p->end_bss			= (reg_t)&_bss;
+	task0_mm_p->start_stack		= (reg_t)&task0_PCB + TASK_KSTACK_SIZE;
+	task0_PCB.task.mm_struct.pml4	= (PML4E_T *)virt2phys(KERN_PML4);
 
 	// complete bsp's cpudata_p
 	cpudata_u * bsp_cpudata_u_p = percpu_data[0];
