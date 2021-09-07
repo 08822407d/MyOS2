@@ -131,37 +131,43 @@ unsigned long init(unsigned long arg)
 int sys_call(int syscall_nr)
 {
 	int ret_val = 0;
-	// amd64 syscall will save rip to rcx, rflags to r11
-	// and user rsp will be saved to r10 by hand
-	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
-							"pushq	%%r10		\n\t"
-							"pushq	%%r11		\n\t"
-							// "sysenter			\n\t"
-							"syscall			\n\t"
-							"popq	%%r11		\n\t"
-							"popq	%%r10		\n\t"
-							"popq	%%rcx		\n\t"
-						:	"=a"(ret_val)
-						:
-						:
-						);
+	// __asm__ __volatile__(	"pushq	%%rcx				\n\t"
+	// 						"pushq	%%rdx				\n\t"
+	// 						"pushq	%%r10				\n\t"
+	// 						"pushq	%%r11				\n\t"
+	// 						"movq	serp(%%rip), %%rdx	\n\t"
+	// 						"movq	%%rsp,	%%rcx		\n\t"
+	// 						"sysenter					\n\t"
+	// 						"serp:						\n\t"
+	// 						"popq	%%r11				\n\t"
+	// 						"popq	%%r10				\n\t"
+	// 						"popq	%%rdx				\n\t"
+	// 						"popq	%%rcx				\n\t"
+	// 					:	"=a"(ret_val)
+	// 					:	"a"(syscall_nr)
+	// 					:
+	// 					);
 	return ret_val;
 }
 
 void user_func()
 {
-	int i = 0x123456;
+	int sc_nr = 0x987654;
+	int i = 0;
 
-	__asm__ __volatile__(	"pushq	%%rcx		\n\t"
-							"pushq	%%r10		\n\t"
-							"pushq	%%r11		\n\t"
-							// "sysenter			\n\t"
-							"syscall			\n\t"
-							"popq	%%r11		\n\t"
-							"popq	%%r10		\n\t"
-							"popq	%%rcx		\n\t"
-						:	"=m"(i)
-						:
+	// i = sys_call(sc_nr);
+	__asm__ __volatile__(	"pushq	%%r10				\n\t"
+							"pushq	%%r11				\n\t"
+							"leaq	serp(%%rip), %%r10	\n\t"
+							"movq	%%rsp,	%%r11		\n\t"
+							"sysenter					\n\t"
+							"serp:						\n\t"
+							"xchgq	%%rdx,	%%r10		\n\t"
+							"xchgq	%%rcx,	%%r11		\n\t"
+							"popq	%%r11				\n\t"
+							"popq	%%r10				\n\t"
+						:	"=a"(i)
+						:	"a"(sc_nr)
 						:
 						);
 
@@ -170,7 +176,7 @@ void user_func()
 
 int do_syscall(int syscall_nr)
 {
-	color_printk(GREEN, BLACK, "enter syscall function");
+	color_printk(GREEN, BLACK, "enter syscall function, SC_NR = %#08lx", syscall_nr);
 	return 0x12345678;
 }
 
@@ -289,32 +295,31 @@ void userthd_test()
 
 	stack_frame_s * new_sf_regs = get_stackframe(new_task);
 
-	// set user task kernel data
-	new_task->vruntime = 0;
-	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
-	new_task->arch_struct.k_rip = (reg_t)ret_from_syscall;
-	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
-	// set user task context
-	new_sf_regs->r11 =
-	new_sf_regs->rflags = (1 << 9);
-	new_sf_regs->rcx =
-	new_sf_regs->rip = (reg_t)user_code	;
-	new_sf_regs->rsp = (reg_t)user_stack;
-
 	// // set user task kernel data
 	// new_task->vruntime = 0;
 	// new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
-	// new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	// new_task->arch_struct.k_rip = (reg_t)ret_from_syscall;
 	// new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
 	// new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
 	// // set user task context
 	// new_sf_regs->r11 =
 	// new_sf_regs->rflags = (1 << 9);
-	// new_sf_regs->rdx =
-	// new_sf_regs->rip = (reg_t)user_code;
 	// new_sf_regs->rcx =
+	// new_sf_regs->rip = (reg_t)user_code	;
 	// new_sf_regs->rsp = (reg_t)user_stack;
+
+	// set user task kernel data
+	new_task->vruntime = 0;
+	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
+	new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	new_task->arch_struct.cr3 = curr_task->arch_struct.cr3;
+	// set user task context
+	new_sf_regs->rflags = (1 << 9);
+	new_sf_regs->r10 =
+	new_sf_regs->rip = (reg_t)user_code;
+	new_sf_regs->r11 =
+	new_sf_regs->rsp = (reg_t)user_stack;
 
 	wakeup_task(new_task);
 

@@ -16,10 +16,15 @@
 /*==============================================================================================*/
 /*									syscall and sysret entry						 			*/
 /*==============================================================================================*/
+// user RSP -> RCX
+// user RIP -> RDX
+// kernel CS = IA32_SYSENTER_CS
+// kernel SS = IA32_SYSENTER_CS + 8
+// kernel RIP = IA32_SYSENTER_EIP
+// kernel RSP = IA32_SYSENTER_ESP
 ENTRY(enter_sysenter)
-	sti
-	subq	$0x38,	%rsp	// skip cs:rip,rflags, ss:rsp, err_code and vec_nr
-	cld
+	cli
+	subq		$0x38,		%rsp
 
 	pushq		%rax
 	pushq		%rbx
@@ -41,10 +46,15 @@ ENTRY(enter_sysenter)
 	pushq		%rax
 	movq		%ds,		%rax
 	pushq		%rax
-	movq		%rsp,		%rdi
+	movq		0x80(%rsp),	%rax		// get sc_nr from stack
+	movq		%rax,		%rdi
 	callq		do_syscall
 
 
+// RDX -> user RSP
+// RCX -> user RIP
+// user CS = IA32_SYSENTER_CS + 32
+// user SS = IA32_SYSENTER_CS + 40
 ENTRY(ret_from_sysenter)
 	movq		%rax,		0x80(%rsp)	// save return value to stack
 	popq		%rax		
@@ -67,7 +77,9 @@ ENTRY(ret_from_sysenter)
 	popq		%rbx
 	popq		%rax
 
-	addq	$0x38,	%rsp	// skip cs:rip,rflags, ss:rsp, err_code and vec_nr
+	addq		$0x38,		%rsp
+	xchgq		%r10,		%rdx
+	xchgq		%r11,		%rcx
 	sti
 	.byte	0x48			// !!!CAUTION!!! with this prefix can sysexit return to 64bit mode
 	sysexit
