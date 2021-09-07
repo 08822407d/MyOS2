@@ -332,7 +332,7 @@ void userthd_test()
 	arch_page_domap(user_code, user_page->page_start_addr, ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, KERN_PML4);
 	memcpy(user_code, user_func, 1024);
 	KERN_PML4[0].defs.USflag = 1;
-	KERN_PDPT[0][0].defs.USflag = 1;
+	KERN_PDPT[0 * 0].defs.USflag = 1;
 
 	// set userthd PCB members
 	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
