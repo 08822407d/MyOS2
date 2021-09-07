@@ -150,7 +150,7 @@ int sys_call(int syscall_nr)
 	return ret_val;
 }
 
-void user_func()
+void __attribute__((section(".data"))) user_func()
 {
 	int sc_nr = 0x987654;
 	int i = 0;
@@ -185,6 +185,37 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 	return 1;
 }
 
+/*==============================================================================================*
+ *									subcopy & exit funcstions									*
+ *==============================================================================================*/
+unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
+{ 
+	if(clone_flags & CLONE_VM)
+		new_tsk->flags |= PF_VFORK;
+	return 0;
+}
+
+unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
+{
+
+}
+unsigned long exit_files(task_s * new_tsk)
+{
+
+}
+
+unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
+{
+	
+}
+unsigned long exit_mm(task_s * new_tsk)
+{
+
+}
+
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
 void wakeup_task(task_s * task)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
@@ -264,6 +295,9 @@ void arch_init_task()
 	init_spin_lock(&newpid_lock);
 }
 
+/*==============================================================================================*
+ *										test threads											*
+ *==============================================================================================*/
 #include "include/arch_glo.h"
 void userthd_test()
 {

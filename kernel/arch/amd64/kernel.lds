@@ -54,6 +54,15 @@ SECTIONS
 		*.o(.text)
 		_etext = .;
 	}
+	high_half = .;
+	. = 0x6000000;
+	.user_sec ALIGN(0x400) : AT(ADDR(.user_sec) - _k_offset)
+	{
+		*/arch_task.c.o(.user_sec);
+		_e_usertext = .;
+	}
+	. = high_half + _e_usertext - 0x6000000;
+	
 	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
 	{
 		_data = .;

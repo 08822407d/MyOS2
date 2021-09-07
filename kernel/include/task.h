@@ -20,9 +20,9 @@
 	#define PF_NEED_SCHEDULE	(1UL << 1)
 	#define PF_VFORK			(1UL << 2)
 
-	#define CLONE_FS			(1 << 0)
-	#define CLONE_FILES			(1 << 1)
-	#define CLONE_SIGNAL		(1 << 2)
+	#define CLONE_VM			(1 << 0)	/* shared Virtual Memory between processes */
+	#define CLONE_FS			(1 << 1)	/* shared fs info between processes */
+	#define CLONE_SIGNAL		(1 << 2)	/* shared signal between processes */
 
 	// choose the task list of cpudata
 	#define CPU_WATING			0UL
