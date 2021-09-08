@@ -44,7 +44,6 @@ void kmain()
 
 	startup_smp();
 	atomic_set(&boot_counter, 0);
-
 }
 
 void idle(size_t cpu_idx)
@@ -55,12 +54,6 @@ void idle(size_t cpu_idx)
 	arch_system_call_init();
 
 	sti();
-
-	// __asm__ __volatile__(	"movq	%0,				%%rax	\n\t"
-	// 						"movq	%%gs:(%%rax),	%%rax	\n\t"
-	// 					:
-	// 					:	"m"(cpustack_off)
-	// 					:	"rax");
 
 	kernel_thread(module_test, 0, 0);
 	// module_test(cpu_idx);

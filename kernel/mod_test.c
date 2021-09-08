@@ -1,5 +1,6 @@
 #include <lib/string.h>
 
+#include "include/glo.h"
 #include "include/proto.h"
 #include "include/printk.h"
 
@@ -17,23 +18,25 @@ unsigned long module_test(unsigned long flag);
 unsigned long module_test(unsigned long flag)
 {
 
-	// atomic_inc(&boot_counter);
+	atomic_inc(&boot_counter);
 
-	// if (flag == 0)
-	// {
-	// 	long long i = 0;
-	// 	for ( ; i < 0xFFFFFFF; i++);
-	// 	long val = boot_counter.value;
-	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
-	// }
+	if (flag == 0)
+	{
+		long long i = 0;
+		for ( ; i < 0xFFFFFFF; i++);
+		long val = boot_counter.value;
+		color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
+	}
 
-	// kmalloc_kfree_test();
+	kmalloc_kfree_test();
 
 	// kthread_test();
 
 	// userthd_test();
 
 	// disk_drv_test();
+
+	// pg_creat_hierarchy(&task0_PCB.task.mm_struct, (virt_addr)module_test, 0x7);
 
 	per_cpudata_s * cpudata_p = curr_cpu;
 	uint64_t star = rdmsr(MSR_IA32_STAR);

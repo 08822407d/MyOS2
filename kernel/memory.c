@@ -229,72 +229,74 @@ void * kmalloc(size_t size)
 		while (!kparam.init_flags.slab);
 	#endif
 
+	void * ret_val = NULL;
 	if (size > CONST_1M)
 	{
 		color_printk(RED, WHITE, "Mem required too big\n");
-		while (1);
-	}
-
-	void * ret_val = NULL;
-	// find suitable slab group
-	slab_cache_s *	scgp = &slab_cache_groups[0];
-	while (size > scgp->obj_size)
-		scgp = m_list_get_next(scgp);
-
-	lock_recurs_lock(&slab_alloc_lock);
-	// find a usable slab and if it is in free list, move it to used list
-	// or if it is in used list and has only one free slot, move it to full list
-	slab_s *	slp = NULL;
-	if (scgp->normal_slab_used.count > 0)
-	{
-		m_pop_list(slp, &scgp->normal_slab_used);
-		if (slp->free == 1)
-			m_push_list(slp, &scgp->normal_slab_full);
-		else
-			m_push_list(slp, &scgp->normal_slab_used);
-	}
-	else if (scgp->normal_slab_free.count > 0)
-	{
-		m_pop_list(slp, &scgp->normal_slab_free);
-		m_push_list(slp, &scgp->normal_slab_used);
 	}
 	else
 	{
-		color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
-		while (1);
-	}
-		
-	// count the virtual addr of suitable object
-	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
-	if (obj_idx < slp->total)
-	{
-		size_t offset = scgp->obj_size * obj_idx;
-		ret_val = (void *)((size_t)slp->virt_addr + offset);
-		// refresh status of slab
-		slp->free--;
-		scgp->nsobj_free_count--;
-		scgp->nsobj_used_count++;
-		bm_set_bit(slp->colormap, obj_idx);
-	}
+		// find suitable slab group
+		slab_cache_s *	scgp = &slab_cache_groups[0];
+		while (size > scgp->obj_size)
+			scgp = m_list_get_next(scgp);
 
-	// make sure free slab more than one
-	if (scgp->normal_slab_free.count < 1)
-	{
-		scgp->normal_slab_free.count++;
-		slab_s * new_slab = slab_alloc(slp);
-		scgp->normal_slab_free.count--;
-		if (new_slab == NULL)
+		lock_recurs_lock(&slab_alloc_lock);
+		// find a usable slab and if it is in free list, move it to used list
+		// or if it is in used list and has only one free slot, move it to full list
+		slab_s *	slp = NULL;
+		if (scgp->normal_slab_used.count > 0)
 		{
-			color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
+			m_pop_list(slp, &scgp->normal_slab_used);
+			if (slp->free == 1)
+				m_push_list(slp, &scgp->normal_slab_full);
+			else
+				m_push_list(slp, &scgp->normal_slab_used);
+		}
+		else if (scgp->normal_slab_free.count > 0)
+		{
+			m_pop_list(slp, &scgp->normal_slab_free);
+			m_push_list(slp, &scgp->normal_slab_used);
+		}
+		else
+		{
+			color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
 			while (1);
 		}
-		new_slab->slabcache_ptr = scgp;
-		m_push_list(new_slab, &scgp->normal_slab_free);
-		scgp->normal_slab_total++;
-		scgp->nsobj_free_count += new_slab->total;
+			
+		// count the virtual addr of suitable object
+		unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
+		if (obj_idx < slp->total)
+		{
+			size_t offset = scgp->obj_size * obj_idx;
+			ret_val = (void *)((size_t)slp->virt_addr + offset);
+			// refresh status of slab
+			slp->free--;
+			scgp->nsobj_free_count--;
+			scgp->nsobj_used_count++;
+			bm_set_bit(slp->colormap, obj_idx);
+		}
+
+		// make sure free slab more than one
+		if (scgp->normal_slab_free.count < 1)
+		{
+			scgp->normal_slab_free.count++;
+			slab_s * new_slab = slab_alloc(slp);
+			scgp->normal_slab_free.count--;
+			if (new_slab == NULL)
+			{
+				color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
+				while (1);
+			}
+			new_slab->slabcache_ptr = scgp;
+			m_push_list(new_slab, &scgp->normal_slab_free);
+			scgp->normal_slab_total++;
+			scgp->nsobj_free_count += new_slab->total;
+		}
+
+		unlock_recurs_lock(&slab_alloc_lock);
 	}
 
-	unlock_recurs_lock(&slab_alloc_lock);
 	return ret_val;
 }
 

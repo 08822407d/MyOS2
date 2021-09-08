@@ -131,12 +131,12 @@ void arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * ke
 
 void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr)
 {
-	unsigned int pml4e_idx	= (uint64_t)vaddr >> SHIFT_PML4E;
-	unsigned int pdpte_idx	= (uint64_t)vaddr >> SHIFT_PDPTE;
-	unsigned int pde_idx	= (uint64_t)vaddr >> SHIFT_PDE;
+	unsigned int pml4e_idx	= GET_PGENT_IDX((uint64_t)vaddr >> SHIFT_PML4E);
+	unsigned int pdpte_idx	= GET_PGENT_IDX((uint64_t)vaddr >> SHIFT_PDPTE);
+	unsigned int pde_idx	= GET_PGENT_IDX((uint64_t)vaddr >> SHIFT_PDE);
 
 	// get pml4e
-	PML4E_T * pml4e_ptr = *(mm->pml4_arr_ptr) + pml4e_idx;
+	PML4E_T * pml4e_ptr = *mm->pml4_arr_ptr + pml4e_idx;
 	// set pml4e
 	if (pml4e_ptr->ENT == 0)
 	{
@@ -144,7 +144,7 @@ void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr)
 	}
 
 	// get pdpte
-	PDPTE_T * pdpte_ptr = (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT)) + pdpte_idx;
+	PDPTE_T * pdpte_ptr = (*mm->pdpt_arr_ptr)[pml4e_idx] + pdpte_idx;
 	// set pdpte
 	if (pdpte_ptr->ENT == 0)
 	{
