@@ -79,9 +79,8 @@ void init_percpu_arch_data(size_t cpu_idx)
 	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
 	tss_p->rsp0 = (size_t)idle_pcb + TASK_KSTACK_SIZE;
 	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
-	idle_pcb->task.mm_struct.pml4 = (PML4E_T *)virt2phys(KERN_PML4);
-	idle_pcb->task.mm_struct.start_stack = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
 	idle_pcb->task.mm_struct = task0_PCB.task.mm_struct;
+	idle_pcb->task.mm_struct.start_stack = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
 }
 
 void init_percpu_data(size_t cpu_idx)

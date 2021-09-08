@@ -191,7 +191,7 @@
 	void reload_arch_page(void);
 	void pg_load_cr3(PML4E_T *);
 	void refresh_arch_page(void);
-	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_T * pml4_base);
+	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_T * kernel_cr3);
 	void pg_unmap(virt_addr);
 
 	/* i8259.c */

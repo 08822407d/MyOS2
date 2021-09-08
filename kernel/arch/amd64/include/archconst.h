@@ -11,7 +11,7 @@
 	#define CONFIG_PAGE_MASKF	MASKF_2M	// align to page low bound
 	#define CONFIG_PAGE_ALIGH	ALIGN_2M	// align to page high bound
 	#define CONFIG_MAX_PHYMEM	(64 * CONST_1G)
-	#define CONFIG_MAX_VIRMEM	(512 * CONST_1G)
+	#define CONFIG_MAX_VIRMEM	(512 * CONST_1G * 2)
 	#define PAGE_NR				(CONFIG_MAX_PHYMEM / CONFIG_PAGE_SIZE)
 	#define PDPT_NR				((CONFIG_MAX_VIRMEM + (1ULL << SHIFT_PML4E) -1) >> SHIFT_PML4E)
 
@@ -51,7 +51,6 @@
 	/* AMD64 page */
 	#define	PGENT_SIZE			CONST_4K
 	#define	PGENT_NR			(PGENT_SIZE / 8)
-	#define GETF_PGENT(val)		((PGENT_NR - 1) & val)
 	#define SHIFT_PML4E			39
 	#define SHIFT_PDPTE			30
 	#define SHIFT_PDE			21

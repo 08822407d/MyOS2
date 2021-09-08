@@ -74,7 +74,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	__asm__ __volatile__(	"movq	%0,	%%cr3		\n\t"
 						:
-						:	"r"(target->mm_struct.pml4)
+						:	"r"(target->mm_struct.cr3)
 						:	"memory"
 						);
 }
@@ -229,7 +229,6 @@ unsigned long exit_files(task_s * new_tsk)
 unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	new_tsk->mm_struct = curr_tsk->mm_struct;
-	new_tsk->mm_struct.pml4 = create_userpage();
 }
 unsigned long exit_mm(task_s * new_tsk)
 {
@@ -331,8 +330,8 @@ void userthd_test()
 	Page_s *user_page = page_alloc();
 	arch_page_domap(user_code, user_page->page_start_addr, ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, KERN_PML4);
 	memcpy(user_code, user_func, 1024);
-	KERN_PML4[0].defs.USflag = 1;
-	KERN_PDPT[0 * 0].defs.USflag = 1;
+	(*task0_PCB.task.mm_struct.pml4_arr_ptr)[0].defs.USflag = 1;
+	(*task0_PCB.task.mm_struct.pdpt_arr_ptr)[0 * 0]->defs.USflag = 1;
 
 	// set userthd PCB members
 	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
@@ -370,7 +369,7 @@ void userthd_test()
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	new_task->mm_struct.pml4 = curr_task->mm_struct.pml4;
+	new_task->mm_struct.cr3 = curr_task->mm_struct.cr3;
 	// set user task context
 	new_sf_regs->rflags = (1 << 9);
 	new_sf_regs->r10 =
@@ -411,7 +410,7 @@ void userthd_test2()
 	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
 	new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	new_task->mm_struct.pml4 = curr_task->mm_struct.pml4;
+	new_task->mm_struct.pml4_arr_ptr = curr_task->mm_struct.pml4_arr_ptr;
 	// set user task context
 	new_sf_regs->cs = USER_CS_SELECTOR;
 	new_sf_regs->ss = USER_SS_SELECTOR;

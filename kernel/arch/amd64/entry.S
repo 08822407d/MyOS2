@@ -24,6 +24,7 @@
 // kernel RSP = IA32_SYSENTER_ESP
 ENTRY(enter_sysenter)
 	cli
+	swapgs
 	subq		$0x38,		%rsp
 
 	pushq		%rax
@@ -80,6 +81,7 @@ ENTRY(ret_from_sysenter)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
+	swapgs
 	sti
 	.byte	0x48			// !!!CAUTION!!! with this prefix can sysexit return to 64bit mode
 	sysexit
@@ -168,7 +170,7 @@ ENTRY(ret_from_syscall)
 	popq		%rsp
 	swapgs
 	sti
-	// .byte	0x48
+
 	sysretq
 
 

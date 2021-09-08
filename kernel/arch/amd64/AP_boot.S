@@ -81,7 +81,7 @@ _AP_code64:
 	movq	%rax,		%gs
 	movq	%rax,		%ss
 
-	movabsq	pml4_base,	%rax
+	movabsq	kernel_cr3,	%rax
 	movq	%rax,		%cr3
 
 	// enalble x2apic and get lapic_id

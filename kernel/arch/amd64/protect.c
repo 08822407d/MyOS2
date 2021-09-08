@@ -326,7 +326,7 @@ void arch_system_call_init()
 	uint64_t kstack = rdmsr(MSR_IA32_SYSENTER_ESP);
 	// init MSR sf_regs related to syscall/sysret
 	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
-	wrmsr(MSR_IA32_STAR, ((uint64_t)KERN_SS_SELECTOR << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
+	wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
 
 	// wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
 	wrmsr(MSR_IA32_FMASK, 2);
