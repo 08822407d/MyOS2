@@ -83,7 +83,7 @@ ENTRY(ret_from_sysenter)
 	xchgq		%r11,		%rcx
 	swapgs
 	sti
-	.byte	0x48			// !!!CAUTION!!! with this prefix can sysexit return to 64bit mode
+	.byte	0x48
 	sysexit
 
 /*==============================================================================================*/
