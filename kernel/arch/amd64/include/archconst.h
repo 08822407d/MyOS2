@@ -12,7 +12,8 @@
 	#define CONFIG_PAGE_ALIGH	ALIGN_2M	// align to page high bound
 	#define CONFIG_MAX_PHYMEM	(64 * CONST_1G)
 	#define CONFIG_MAX_VIRMEM	(512 * CONST_1G)
-	#define PAGE_NR				(CONFIG_MAX_PHYMEM / CONFIG_PAGE_SIZE)
+	#define PDPTE_NR			(CONFIG_MAX_VIRMEM >> SHIFT_PDPTE)
+	#define PDE_NR				(CONFIG_MAX_VIRMEM >> SHIFT_PDE)
 
 
 	/* Table sizes. */

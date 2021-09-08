@@ -55,8 +55,8 @@
 		multiboot_memory_map_s	mb_memmap[MAXMEMZONE];
 		unsigned long	mb_memmap_nr;
 
-		struct Page		pages[PAGE_NR];
-		bitmap_t		page_bitmap[PAGE_NR / BITMAP_UNITSIZE];
+		struct Page		pages[PDE_NR];
+		bitmap_t		page_bitmap[PDE_NR / BITMAP_UNITSIZE];
 		unsigned long	page_total_nr;
 
 		struct MemZone	memzones[MAXMEMZONE];
