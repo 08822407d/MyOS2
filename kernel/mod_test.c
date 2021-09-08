@@ -18,19 +18,19 @@ unsigned long module_test(unsigned long flag);
 unsigned long module_test(unsigned long flag)
 {
 
-	atomic_inc(&boot_counter);
+	// atomic_inc(&boot_counter);
 
-	if (flag == 0)
-	{
-		long long i = 0;
-		for ( ; i < 0xFFFFFFF; i++);
-		long val = boot_counter.value;
-		color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
-	}
+	// if (flag == 0)
+	// {
+	// 	long long i = 0;
+	// 	for ( ; i < 0xFFFFFFF; i++);
+	// 	long val = boot_counter.value;
+	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
+	// }
 
-	kmalloc_kfree_test();
+	// kmalloc_kfree_test();
 
-	// kthread_test();
+	kthread_test();
 
 	// userthd_test();
 

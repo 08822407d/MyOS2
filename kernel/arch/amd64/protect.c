@@ -310,7 +310,6 @@ void reload_percpu_arch_data(size_t cpu_idx)
 	load_gdt(&gdt_ptr);
 	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
 	load_tss(cpu_idx);
-<<<<<<< HEAD
 }
 
 /*==============================================================================================*
@@ -330,6 +329,4 @@ void arch_system_call_init()
 
 	// wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
 	wrmsr(MSR_IA32_FMASK, 2);
-=======
->>>>>>> parent of f098068... amd syscall instruction now can enter the entry
 }

@@ -30,9 +30,9 @@ typedef struct arch_PCB_stackframe
 typedef struct mm
 {
 	PML4E_T	*	cr3;
-	PML4E_T		(*pml4_arr_ptr)[PGENT_NR];
-	PDPTE_T *	(*pdpt_arr_ptr)[PDPT_NR];
-	PDE_T	*	(*pd_arr_ptr)[PDPT_NR * PGENT_NR];
+	PML4E_T	*	pml4_arr_ptr;
+	PDPTE_T **	pdpt_arr_ptr;
+	PDE_T	**	pd_arr_ptr;
 
 	uint64_t	start_code,end_code;
 	uint64_t	start_rodata,end_rodata;

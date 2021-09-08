@@ -25,10 +25,6 @@ spinlock_T		global_ready_task_lock;
 task_list_s		global_blocked_task;
 spinlock_T		global_blocked_task_lock;
 
-extern PML4E_T		(*kmpl4_ptr)[PGENT_NR];
-extern PDPTE_T	*	kpdpt_ptr[PDPT_NR];
-extern PDE_T *		kpd_ptr[PDPT_NR * PGENT_NR];
-
 extern char _text;
 extern char _etext;
 extern char _rodata;
@@ -58,9 +54,9 @@ void init_task()
 	// set arch struct in mm_s
 	mm_s * task0_mm_p = &task0_PCB.task.mm_struct;
 	task0_mm_p->cr3	= (PML4E_T *)virt2phys(KERN_PML4);
-	task0_mm_p->pml4_arr_ptr = kmpl4_ptr;
-	task0_mm_p->pdpt_arr_ptr = &kpdpt_ptr;
-	task0_mm_p->pd_arr_ptr = &kpd_ptr;
+	// task0_mm_p->pml4_arr_ptr = kmpl4_ptr;
+	// task0_mm_p->pdpt_arr_ptr = &kpdpt_ptr;
+	// task0_mm_p->pd_arr_ptr = &kpd_ptr;
 	task0_mm_p->start_code		= (reg_t)&_text;
 	task0_mm_p->end_code		= (reg_t)&_etext;
 	task0_mm_p->start_rodata	= (reg_t)&_rodata;
