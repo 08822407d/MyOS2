@@ -67,7 +67,8 @@
 	#define ARCH_PG_PAT			(1 << 7ULL)
 	#define ARCH_PG_GLOBAL		(1 << 8ULL)
 
-	#define ARCH_PGS_ADDR(x)		(MASKF_4K(x) & 0xFFFFFFFFFFFF)
+	#define CANONICAL_ADDR(x)		((x) & 0xFFFFFFFFFFFF)
+	#define ARCH_PGS_ADDR(x)		(MASKF_4K(CANONICAL_ADDR(x)))
 	#define ARCH_PGS_ATTR(x)		(x & 0x1FF)
 	#define ARCH_PGE_IS_LAST(x)		(x | ARCH_PG_PAT)
 	#define ARCH_PGE_NOT_LAST(x)	(x & 0x3F)

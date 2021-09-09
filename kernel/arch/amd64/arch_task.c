@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
+#include <sys/errno.h>
 #include <lib/string.h>
 #include <lib/utils.h>
 #include <lib/stddef.h>
@@ -219,19 +220,23 @@ unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
 
+	return 0;
 }
 unsigned long exit_files(task_s * new_tsk)
 {
 
+	return 0;
 }
 
 unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	new_tsk->mm_struct = curr_tsk->mm_struct;
+	return 0;
 }
 unsigned long exit_mm(task_s * new_tsk)
 {
 
+	return 0;
 }
 
 /*==============================================================================================*
@@ -249,12 +254,14 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
+	long ret_val = 0;
 	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
 	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
 	task_s * curr_task	= &curr_pcb->task;
 	task_s * new_task	= &new_pcb->task;
 	if (new_pcb == NULL)
 	{
+		ret_val = -EAGAIN;
 		goto alloc_newtask_fail;
 	}
 
@@ -272,15 +279,39 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 	new_task->arch_struct.k_rip = sf_regs->rip;
 	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
 
-	wakeup_task(new_task);
+	ret_val = -ENOMEM;
+	//	copy flags
+	if(copy_flags(clone_flags, new_task))
+		goto copy_flags_fail;
 
+	//	copy mm struct
+	if(copy_mm(clone_flags, new_task))
+		goto copy_mm_fail;
+
+	//	copy file struct
+	if(copy_files(clone_flags, new_task))
+		goto copy_files_fail;
+
+// //	copy thread struct
+// 	// if(copy_thread(clone_flags, stack_size, new_task, regs))
+// 		goto copy_thread_fail;
+
+	ret_val = new_task->pid;
+	wakeup_task(new_task);
 	goto do_fork_success;
 
+	copy_thread_fail:
+		// exit_thread(new_task);
+	copy_files_fail:
+		exit_files(new_task);
+	copy_mm_fail:
+		exit_mm(new_task);
+	copy_flags_fail:
 	alloc_newtask_fail:
 		kfree(new_task);
 
 	do_fork_success:
-		return new_task->pid;
+		return ret_val;
 }
 
 unsigned long do_exit(unsigned long code)
@@ -305,21 +336,11 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	sf_regs.rflags = (1 << 9);
 	sf_regs.rip = (reg_t)kernel_thread_func;
 
-	return do_fork(&sf_regs, flags, 0, 0);
+	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
 }
 
 void arch_init_task()
 {
-	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
-	// init MSR sf_regs related to sysenter/sysexit
-	wrmsr(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
-	wrmsr(MSR_IA32_SYSENTER_EIP, (uint64_t)enter_sysenter);
-	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)cpudata_u_p->cpu_stack);
-	// init MSR sf_regs related to syscall/sysret
-	wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
-	wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
-	wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
-
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;

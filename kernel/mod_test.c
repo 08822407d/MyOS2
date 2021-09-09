@@ -10,7 +10,7 @@
 extern atomic_T boot_counter;
 
 void kmalloc_kfree_test(void);
-void kthread_test(void);
+void kernthd_test(void);
 void disk_drv_test(void);
 
 unsigned long module_test(unsigned long flag);
@@ -30,7 +30,7 @@ unsigned long module_test(unsigned long flag)
 
 	// kmalloc_kfree_test();
 
-	kthread_test();
+	kernthd_test();
 
 	// userthd_test();
 
@@ -106,7 +106,7 @@ unsigned long ide_read_test(unsigned long arg)
 	kfree(disk_test);
 }
 
-void kthread_test()
+void kernthd_test()
 {
 	kernel_thread(test_task_a, 0, 0);
 	kernel_thread(test_task_b, 0, 0);

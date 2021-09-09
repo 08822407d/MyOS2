@@ -70,7 +70,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 	unsigned long cluster = finode->first_cluster;
 	unsigned long sector = 0;
 	int i,length = 0;
-	long retval = 0;
+	long ret_val = 0;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
 	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster);
@@ -93,7 +93,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 											(unsigned char *)buffer))
 		{
 			color_printk(RED,BLACK,"FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
-			retval = -EIO;
+			ret_val = -EIO;
 			break;
 		}
 
@@ -112,8 +112,8 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 
 	kfree(buffer);
 	if(!index)
-		retval = count;
-	return retval;
+		ret_val = count;
+	return ret_val;
 }
 
 unsigned long FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
@@ -149,7 +149,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 	unsigned long next_cluster = 0;
 	unsigned long sector = 0;
 	int i,length = 0;
-	long retval = 0;
+	long ret_val = 0;
 	long flags = 0;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
@@ -189,7 +189,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 												(unsigned char *)buffer))
 			{
 				color_printk(RED,BLACK,"FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
-				retval = -EIO;
+				ret_val = -EIO;
 				break;
 			}
 		}
@@ -205,7 +205,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 											(unsigned char *)buffer))
 		{
 			color_printk(RED,BLACK,"FAT32 FS(write) write disk ERROR!!!!!!!!!!\n");
-			retval = -EIO;
+			ret_val = -EIO;
 			break;
 		}
 
@@ -244,8 +244,8 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 
 	kfree(buffer);
 	if(!index)
-		retval = count;
-	return retval;
+		ret_val = count;
+	return ret_val;
 }
 
 long FAT32_lseek(file_s * filp, long offset, long origin)

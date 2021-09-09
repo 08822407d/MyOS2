@@ -136,46 +136,9 @@ void creat_fixed_kernel_pgmap()
 		fill_pdpte(&KERN_PDPT[i], &KERN_PD[i * PGENT_NR], attr);
 }
 
-void arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * pdpt_ptr)
+unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3)
 {
-	attr = ARCH_PGS_ATTR(attr);
-	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PML4E);
-	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
-	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
-
-	// get pml4e
-	PML4E_T * pml4e_ptr = pdpt_ptr + pml4e_idx;
-	// so called "Higher Half Kernel" mapping
-	// map higher half memory to lower half
-	if (pml4e_idx > 255)
-		pml4e_idx -= 256;
-	// set pml4e
-	if (pml4e_ptr->ENT == 0)
-	{
-		fill_pml4e(pml4e_ptr, &KERN_PDPT[pml4e_idx * PGENT_NR], attr);
-	}
-
-	// get pdpte
-	PDPTE_T * pdpte_ptr = (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT)) + pdpte_idx;
-	// set pdpte
-	if (pdpte_ptr->ENT == 0)
-	{
-		fill_pdpte(pdpte_ptr, &KERN_PD[pml4e_idx * PGENT_NR * PGENT_NR + pdpte_idx * PGENT_NR], attr);
-	}
-
-	// get pde
-	PDE_T * pde_ptr = (PDE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->ENT)) + pde_idx;
-	// set pte
-	if (*((uint64_t *)pde_ptr) == 0)
-	{
-		fill_pde(pde_ptr, phys, attr);
-	}
-
-	refresh_arch_page();
-}
-
-void arch_page_domap2(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3)
-{
+	unsigned long rev_val = 1;
 	if (kparam.init_flags.slab == 0)
 	{
 		color_printk(BLACK, ORANGE, "Slab not init yet.(arch_pg_domap())");
@@ -195,36 +158,37 @@ void arch_page_domap2(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * k
 		PDPTE_T * pdpt_ptr = (PDPTE_T *)kmalloc(PGENT_SIZE);
 		if (pdpt_ptr != NULL)
 			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pdpt_ptr)) | ARCH_PGE_NOT_LAST(attr);
+		else
+			rev_val = 0;
 	}
 	else
 	{
 		pml4e_ptr->ENT | ARCH_PGE_NOT_LAST(attr);
 	}
 	// set pml4e
-	PDPTE_T *	PDPT_ptr 		= (PDPTE_T *)phys2virt((phys_addr)(pml4e_ptr->ENT<<SHIFT_4K));
+	PDPTE_T *	PDPT_ptr 		= (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT));
 	PDPTE_T *	pdpte_ptr		= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
-		PDE_T * pde_ptr = (PDE_T *)kmalloc(PGENT_SIZE);
-		if (pde_ptr != NULL)
-			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pde_ptr)) | ARCH_PGE_NOT_LAST(attr);
+		PDE_T * pd_ptr = (PDE_T *)kmalloc(PGENT_SIZE);
+		if (pd_ptr != NULL)
+			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pd_ptr)) | ARCH_PGE_NOT_LAST(attr);
+		else
+			rev_val = 0;
 	}
 	else
 	{
 		pdpte_ptr->ENT | ARCH_PGE_NOT_LAST(attr);
 	}
 	// set pte
-	PDE_T *		PD_ptr			= (PDE_T *)phys2virt((phys_addr)(pdpte_ptr->ENT<<SHIFT_4K));	
+	PDE_T *		PD_ptr			= (PDE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->ENT));	
 	PDE_T *		pde_ptr			= PD_ptr + pde_idx;
-	if (*((uint64_t *)pde_ptr) == 0)
+	if (pde_ptr->ENT == 0)
 	{
 		pde_ptr->ENT = MASKF_2M((uint64_t)phys) | ARCH_PGE_IS_LAST(attr);
 	}
 
 	refresh_arch_page();
-}
 
-void pg_unmap(virt_addr virt)
-{
-
+	return rev_val;
 }

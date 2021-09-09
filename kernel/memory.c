@@ -195,7 +195,8 @@ slab_s * slab_alloc(slab_s * cslp)
 {
 	Page_s * pgp = page_alloc();
 	if (!(pgp->attr & PG_PTable_Maped))
-		arch_page_domap(phys2virt(pgp->page_start_addr), pgp->page_start_addr, 0, KERN_PML4);
+		arch_page_domap(phys2virt(pgp->page_start_addr), pgp->page_start_addr,
+									ARCH_PG_RW | ARCH_PG_PRESENT, curr_tsk->mm_struct.cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
 	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s));
