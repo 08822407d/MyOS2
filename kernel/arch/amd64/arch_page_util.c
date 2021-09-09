@@ -157,7 +157,10 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 	{
 		PDPTE_T * pdpt_ptr = (PDPTE_T *)kmalloc(PGENT_SIZE);
 		if (pdpt_ptr != NULL)
+		{
+			memset(pdpt_ptr, 0, PGENT_SIZE);
 			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pdpt_ptr)) | ARCH_PGE_NOT_LAST(attr);
+		}
 		else
 			rev_val = 0;
 	}
@@ -172,7 +175,10 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 	{
 		PDE_T * pd_ptr = (PDE_T *)kmalloc(PGENT_SIZE);
 		if (pd_ptr != NULL)
+		{
+			memset(pd_ptr, 0, PGENT_SIZE);
 			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pd_ptr)) | ARCH_PGE_NOT_LAST(attr);
+		}
 		else
 			rev_val = 0;
 	}

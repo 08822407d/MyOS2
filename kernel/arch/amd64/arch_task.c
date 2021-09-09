@@ -17,7 +17,8 @@
 #include "../../include/const.h"
 #include "../../klib/data_structure.h"
 
-#define	USER_CODE_ADDR 0x6000000
+#define	USER_CODE_ADDR		0x6000000
+#define USER_MEM_LENGTH		0x800000
 
 extern tss64_T	bsp_tmp_tss;
 extern char		ist_stack0;
@@ -131,25 +132,25 @@ unsigned long init(unsigned long arg)
 	return 1;
 }
 
-int sys_call(int syscall_nr)
+inline __always_inline int sys_call(int syscall_nr)
 {
 	int ret_val = 0;
-	// __asm__ __volatile__(	"pushq	%%rcx				\n\t"
-	// 						"pushq	%%rdx				\n\t"
-	// 						"pushq	%%r10				\n\t"
-	// 						"pushq	%%r11				\n\t"
-	// 						"movq	serp(%%rip), %%rdx	\n\t"
-	// 						"movq	%%rsp,	%%rcx		\n\t"
-	// 						"sysenter					\n\t"
-	// 						"serp:						\n\t"
-	// 						"popq	%%r11				\n\t"
-	// 						"popq	%%r10				\n\t"
-	// 						"popq	%%rdx				\n\t"
-	// 						"popq	%%rcx				\n\t"
-	// 					:	"=a"(ret_val)
-	// 					:	"a"(syscall_nr)
-	// 					:
-	// 					);
+	__asm__ __volatile__(	"pushq	%%rcx				\n\t"
+							"pushq	%%rdx				\n\t"
+							"pushq	%%r10				\n\t"
+							"pushq	%%r11				\n\t"
+							"movq	serp(%%rip), %%rdx	\n\t"
+							"movq	%%rsp,	%%rcx		\n\t"
+							"sysenter					\n\t"
+							"serp:						\n\t"
+							"popq	%%r11				\n\t"
+							"popq	%%r10				\n\t"
+							"popq	%%rdx				\n\t"
+							"popq	%%rcx				\n\t"
+						:	"=a"(ret_val)
+						:	"a"(syscall_nr)
+						:
+						);
 	return ret_val;
 }
 
@@ -161,10 +162,10 @@ void user_func()
 	// i = sys_call(sc_nr);
 	__asm__ __volatile__(	"pushq	%%r10				\n\t"
 							"pushq	%%r11				\n\t"
-							"leaq	serp(%%rip), %%r10	\n\t"
+							"leaq	serptmp(%%rip), %%r10	\n\t"
 							"movq	%%rsp,	%%r11		\n\t"
 							"sysenter					\n\t"
-							"serp:						\n\t"
+							"serptmp:						\n\t"
 							"xchgq	%%rdx,	%%r10		\n\t"
 							"xchgq	%%rcx,	%%r11		\n\t"
 							"popq	%%r11				\n\t"
@@ -219,23 +220,41 @@ unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 
 unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
-
 	return 0;
 }
 unsigned long exit_files(task_s * new_tsk)
 {
-
 	return 0;
 }
 
 unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
-	new_tsk->mm_struct = curr_tsk->mm_struct;
-	return 0;
+	int error = 0;
+	Page_s * page = NULL;
+	PML4E_T * new_cr3 = NULL;
+	if(clone_flags & CLONE_VM)
+	{
+		new_tsk->mm_struct = curr_tsk->mm_struct;
+		goto exit_cpmm;
+	}
+
+	new_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
+	if (new_cr3 == NULL)
+	{
+		error = -ENOMEM;
+		goto exit_cpmm;
+	}
+	memset(new_cr3, 0, PGENT_SIZE);
+	page = page_alloc();
+	new_tsk->mm_struct.cr3 = (PML4E_T *)virt2phys((virt_addr)new_cr3);
+	arch_page_domap((virt_addr)USER_CODE_ADDR, page->page_start_addr,
+					ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, new_cr3);
+
+exit_cpmm:
+	return error;
 }
 unsigned long exit_mm(task_s * new_tsk)
 {
-
 	return 0;
 }
 
