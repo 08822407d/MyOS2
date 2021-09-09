@@ -258,6 +258,32 @@ unsigned long exit_mm(task_s * new_tsk)
 	return 0;
 }
 
+unsigned long copy_thread(unsigned long clone_flags,unsigned long stack_start, task_s * new_task,stack_frame_s * sf_regs)
+{
+	sf_regs->rax = 0;
+	// memcpy(regs,childregs,sizeof(struct pt_regs));
+	// childregs->rsp = stack_start;
+
+	// thd->rsp0 = (unsigned long)tsk + STACK_SIZE;
+	// thd->rsp = (unsigned long)childregs;
+	// thd->fs = current->thread->fs;
+	// thd->gs = current->thread->gs;
+
+	// if(tsk->flags & PF_KTHREAD)
+	// 	thd->rip = (unsigned long)kernel_thread_func;
+	// else
+	// 	thd->rip = (unsigned long)ret_system_call; 
+
+	// color_printk(WHITE,BLACK,"current user ret addr:%#018lx,rsp:%#018lx\n",regs->r10,regs->r11);
+	// color_printk(WHITE,BLACK,"new user ret addr:%#018lx,rsp:%#018lx\n",childregs->r10,childregs->r11);
+
+	return 0;
+}
+void exit_thread(task_s * new_task)
+{
+
+}
+
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
@@ -311,9 +337,9 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 	if(copy_files(clone_flags, new_task))
 		goto copy_files_fail;
 
-// //	copy thread struct
-// 	// if(copy_thread(clone_flags, stack_size, new_task, regs))
-// 		goto copy_thread_fail;
+	// copy thread struct
+	if(copy_thread(clone_flags, stack_size, new_task, new_sf_regs))
+		goto copy_thread_fail;
 
 	ret_val = new_task->pid;
 	wakeup_task(new_task);
