@@ -19,7 +19,7 @@
 
 extern kinfo_s kparam;
 
-memory_info_s		mem_info;
+memory_info_s	mem_info;
 recurs_lock_T	page_alloc_lock;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 

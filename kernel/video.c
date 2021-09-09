@@ -20,18 +20,6 @@ void init_video()
 	// make sure have get framebuffer infomation
 	while (!kparam.arch_init_flags.frame_buffer_info);
 
-	phys_addr phy_pg_base = framebuffer.FB_phybase;
-	virt_addr vir_pg_base = framebuffer.FB_virbase;
-
-	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
-	int fb_pages = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
-	for (int i = 0; i < fb_pages; i++)
-	{
-		arch_page_domap(vir_pg_base, phy_pg_base, page_attr, KERN_PML4);
-		vir_pg_base += CONFIG_PAGE_SIZE;
-		phy_pg_base += CONFIG_PAGE_SIZE;
-	}
-
 	Pos.FB_addr = framebuffer.FB_virbase;
 	Pos.FB_length = framebuffer.FB_size;
 	Pos.XResolution = framebuffer.X_Resolution;

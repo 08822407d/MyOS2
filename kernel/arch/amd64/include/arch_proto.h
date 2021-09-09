@@ -193,6 +193,13 @@
 	void arch_page_domap(virt_addr, phys_addr, uint64_t, PML4E_T * kernel_cr3);
 	void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr);
 	void pg_unmap(virt_addr);
+	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
+	void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr);
+	void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr);
+	PML4E_T * get_cr3(PML4E_T * pmlt4_ptr);
+	PDPTE_T * get_pdpt(PML4E_T * pml4_ptr, uint64_t pml4e_idx);
+	PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx);
+	phys_addr get_pgpaddr(PDE_T * pd_ptr, uint64_t pde_idx);
 
 	/* i8259.c */
 	void init_i8259(void);

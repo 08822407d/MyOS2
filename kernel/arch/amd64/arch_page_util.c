@@ -18,22 +18,27 @@ PDE_T	KERN_PD[PDE_NR] __aligned(PGENT_SIZE);
 
 phys_addr kernel_cr3 = 0;
 
-PML4E_T * get_cr3(PML4E_T * pmlt4_ptr);
-void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
-void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr);
-void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr);
 void creat_fixed_kernel_pgmap();
 
 void map_fix_kernel_pages()
 {
+	// map kernel software used pages
 	phys_addr k_phy_pgbase = 0;
 	virt_addr k_vir_pgbase = (virt_addr)phys2virt(0);
 	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
-		unsigned long pg_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
 		fill_pde(&KERN_PD[i], k_phy_pgbase, attr);
+		k_phy_pgbase += CONFIG_PAGE_SIZE;
+	}
+	//map video used pages
+	k_phy_pgbase = framebuffer.FB_phybase;
+	pde_nr = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
+	unsigned long start_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
+	for (long i = start_idx; i < pde_nr + start_idx; i++)
+	{
+		fill_pde(&KERN_PD[i], k_phy_pgbase, attr | ARCH_PG_USER);
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
 }
@@ -110,11 +115,11 @@ inline void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr)
 {
 	pde_ptr->ENT = MASKF_2M((uint64_t)paddr) | ARCH_PGE_IS_LAST(attr);
 }
-Page_s * get_physpg(PDE_T * pd_ptr, uint64_t pde_idx)
+phys_addr get_pgpaddr(PDE_T * pd_ptr, uint64_t pde_idx)
 {
-	Page_s * ret_val = NULL;
+	phys_addr ret_val = NULL;
 	if (pde_idx < PGENT_NR)
-		ret_val = (Page_s *)phys2virt((phys_addr)((uint64_t)pd_ptr[pde_idx].defs.PHYADDR << 12));
+		ret_val = (phys_addr)((uint64_t)pd_ptr[pde_idx].defs.PHYADDR << 12);
 	return ret_val;
 }
 
