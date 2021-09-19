@@ -42,7 +42,7 @@
 
 		arch_PCB_s		arch_struct;
 
-		mm_s			mm_struct;
+		mm_s *			mm_struct;
 
 		volatile long	state;
 		unsigned long	flags;

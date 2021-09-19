@@ -13,6 +13,7 @@
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
+mm_s			task0_mm;
 
 size_t			cpustack_off;
 
@@ -50,9 +51,10 @@ void init_task()
 	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
 	task0->pid = get_newpid();
+	task0->mm_struct = &task0_mm;
 
 	// set arch struct in mm_s
-	mm_s * task0_mm_p = &task0_PCB.task.mm_struct;
+	mm_s * task0_mm_p = task0_PCB.task.mm_struct;
 	task0_mm_p->cr3	= (PML4E_T *)virt2phys(KERN_PML4);
 	task0_mm_p->start_code		= (reg_t)&_text;
 	task0_mm_p->end_code		= (reg_t)&_etext;

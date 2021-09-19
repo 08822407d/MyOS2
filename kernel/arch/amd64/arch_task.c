@@ -76,7 +76,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	__asm__ __volatile__(	"movq	%0,	%%cr3		\n\t"
 						:
-						:	"r"(target->mm_struct.cr3)
+						:	"r"(target->mm_struct->cr3)
 						:	"memory"
 						);
 }
@@ -246,7 +246,7 @@ unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	}
 	memset(new_cr3, 0, PGENT_SIZE);
 	page = page_alloc();
-	new_tsk->mm_struct.cr3 = (PML4E_T *)virt2phys((virt_addr)new_cr3);
+	new_tsk->mm_struct->cr3 = (PML4E_T *)virt2phys((virt_addr)new_cr3);
 	arch_page_domap((virt_addr)USER_CODE_ADDR, page->page_start_addr,
 					ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, new_cr3);
 
