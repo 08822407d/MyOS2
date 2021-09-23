@@ -28,10 +28,10 @@ unsigned long init_vfs(unsigned long param)
 	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, (unsigned char *)boot_sec);
 
 	// check partition type, only support GPT
-	if (boot_sec->DPTE[0].type != 0xee &&
+	while (boot_sec->DPTE[0].type != 0xee &&
 		boot_sec->DPTE[0].type != 0xef)
 	{
-		while (1);
+		hlt();
 	}
 	// load the gpt_hdr
 	gpt_hdr = (GPT_H_s *)boot_sec;
@@ -78,10 +78,8 @@ unsigned long init_vfs(unsigned long param)
 		}
 
 	}
-	dirent_s * kernel_bin = 
-		path_walk("/kernel.bin", 0);
 
-	// kernel_bin->dir_inode->
+	dirent_s * testd = path_walk("/EFI/BOOT/BOOTX64.EFI", 0);
 }
 
 dirent_s * path_walk(char * name,unsigned long flags)

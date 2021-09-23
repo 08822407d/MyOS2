@@ -54,9 +54,9 @@ void idle(size_t cpu_idx)
 	sti();
 
 	kernel_thread(module_test, 0, 0);
-	// module_test(cpu_idx);
+
 	// if (cpu_idx == 0)
-		// kernel_thread(init_vfs, 0, 0);
+	// 	kernel_thread(init_vfs, 0, 0);
 
 	while (1)
 	{

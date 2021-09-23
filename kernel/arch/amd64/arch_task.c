@@ -466,24 +466,24 @@ void schedule()
 
 void load_balance()
 {
-	per_cpudata_s * cpudata_p = &percpu_data[0]->cpudata;
-	if (cpudata_p->scheduleing_flag)
-		return;
+	// per_cpudata_s * cpudata_p = &percpu_data[0]->cpudata;
+	// if (cpudata_p->scheduleing_flag)
+	// 	return;
 
-	cpudata_p->scheduleing_flag = 1;
-	// retrieve finished tasks, then assign them back to cpu
-	while (cpudata_p->finished_tasks.count)
-	{
-		task_s * tmp = task_list_pop(&cpudata_p->finished_tasks);
-		task_list_push(&global_ready_task, tmp);
-	}
-	while (global_ready_task.count)
-	{
-		task_s * tmp = task_list_pop(&global_ready_task);
-		task_list_push(&cpudata_p->ready_tasks, tmp);
-	}
-	// insert load_balance self to cpu's waiting list end
-	task_s * current = get_current_task();
-	current->flags |= PF_NEED_SCHEDULE;
-	cpudata_p->scheduleing_flag = 0;
+	// cpudata_p->scheduleing_flag = 1;
+	// // retrieve finished tasks, then assign them back to cpu
+	// while (cpudata_p->finished_tasks.count)
+	// {
+	// 	task_s * tmp = task_list_pop(&cpudata_p->finished_tasks);
+	// 	task_list_push(&global_ready_task, tmp);
+	// }
+	// while (global_ready_task.count)
+	// {
+	// 	task_s * tmp = task_list_pop(&global_ready_task);
+	// 	task_list_push(&cpudata_p->ready_tasks, tmp);
+	// }
+	// // insert load_balance self to cpu's waiting list end
+	// task_s * current = get_current_task();
+	// current->flags |= PF_NEED_SCHEDULE;
+	// cpudata_p->scheduleing_flag = 0;
 }

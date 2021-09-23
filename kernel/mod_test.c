@@ -2,6 +2,7 @@
 
 #include "include/glo.h"
 #include "include/proto.h"
+#include "include/vfs.h"
 #include "include/printk.h"
 
 #include "arch/amd64/include/device.h"
@@ -34,17 +35,7 @@ unsigned long module_test(unsigned long flag)
 
 	// userthd_test();
 
-	// disk_drv_test();
-
-	// pg_creat_hierarchy(&task0_PCB.task.mm_struct, (virt_addr)module_test, 0x7);
-
-	per_cpudata_s * cpudata_p = curr_cpu;
-	uint64_t star = rdmsr(MSR_IA32_STAR);
-	uint32_t eax = 0;
-	uint32_t ebx = 0;
-	uint32_t ecx = 0;
-	uint32_t edx = 0;
-	cpuid(0x80000001, 0, &eax, &ebx, &ecx, &edx);
+	disk_drv_test();
 
 	color_printk(YELLOW, BLACK, "task module_test finished......");
 }
@@ -88,22 +79,28 @@ unsigned long test_task_c(unsigned long arg)
 
 unsigned long ide_read_test(unsigned long arg)
 {
+	per_cpudata_s * cpudata_p = curr_cpu;
+	task_s * curr = curr_tsk;
+
 	char * disk_test = (char *)kmalloc(512);
 	char * buf = (char *)kmalloc(512 * 3 + 1);
 	memset(disk_test, 0, 512);
 	memset(disk_test, 0, 512 * 3 + 1);
 
-	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);
-	color_printk(ORANGE, WHITE, "------\n");	
-	for(int i = 0; i < 512; i++)
-	{
-		number(&buf[i * 3], (long)disk_test[i], 16, 2, -1, 65);
-		buf[i * 3 + 2] = ' ';
-	}
+	struct Disk_Identify_Info ide_id;
+	IDE_device_operation.ioctl(GET_IDENTIFY_DISK_CMD, (long)&ide_id);
 
-	color_printk(ORANGE, BLACK, "%s", buf);
+	// IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);
+	color_printk(ORANGE, WHITE, "------\n");	
+	// for(int i = 0; i < 512; i++)
+	// {
+	// 	number(&buf[i * 3], (long)disk_test[i], 16, 2, -1, 65);
+	// 	buf[i * 3 + 2] = ' ';
+	// }
+
+	// color_printk(ORANGE, BLACK, "%s", buf);
 	color_printk(ORANGE, WHITE, "------\n");
-	kfree(disk_test);
+	// kfree(buf);
 }
 
 void kernthd_test()

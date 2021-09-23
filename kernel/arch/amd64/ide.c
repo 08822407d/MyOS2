@@ -107,17 +107,18 @@ long cmd_out()
 			
 		case GET_IDENTIFY_DISK_CMD:
 
-			outb(PORT_DISK0_DEVICE,0xe0);
+			outb(PORT_DISK1_DEVICE,0xe0);
 			
-			outb(PORT_DISK0_ERR_FEATURE,0);
-			outb(PORT_DISK0_SECTOR_CNT,node->count & 0xff);
-			outb(PORT_DISK0_SECTOR_LOW,node->LBA & 0xff);
-			outb(PORT_DISK0_SECTOR_MID,(node->LBA >> 8) & 0xff);
-			outb(PORT_DISK0_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
+			outb(PORT_DISK1_ERR_FEATURE,0);
+			outb(PORT_DISK1_SECTOR_CNT,node->count & 0xff);
+			outb(PORT_DISK1_SECTOR_LOW,node->LBA & 0xff);
+			outb(PORT_DISK1_SECTOR_MID,(node->LBA >> 8) & 0xff);
+			outb(PORT_DISK1_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
 
-			while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_READY))
+			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_READY))
 				nop();			
-			outb(PORT_DISK0_STATUS_CMD,node->cmd);
+			outb(PORT_DISK1_STATUS_CMD,node->cmd);
+			break;
 
 		default:
 			color_printk(BLACK,WHITE,"ATA CMD Error\n");
@@ -193,8 +194,8 @@ void other_handler(unsigned long parameter)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
 
-	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
-		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
+	if(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_ERROR)
+		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK1_ERR_FEATURE));
 	else
 		insw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 
@@ -318,7 +319,7 @@ hw_int_controller_s disk_int_controller =
 void disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
-	// color_printk(WHITE, BLUE, "SATA-0 handler");
+	color_printk(WHITE, BLACK, "SATA-0 handler");
 	node->end_handler(parameter);	
 }
 
