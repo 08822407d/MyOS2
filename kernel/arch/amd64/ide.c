@@ -12,6 +12,9 @@
 #include "../../include/block.h"
 #include "../../include/task.h"
 
+#define IDE_IDX		0
+#define DISK_IDX	1
+
 struct Disk_Identify_Info disk_id;
 
 diskrq_queue_s	disk_require_queue;
@@ -93,7 +96,7 @@ long cmd_out()
 	switch(node->cmd)
 	{
 		case ATA_WRITE_CMD:	
-			status = IDE_write_LBA28(node->LBA, node->count, DISK_MAST_IDX);
+			status = IDE_write_LBA28(node->LBA, node->count, DISK_IDX);
 
 			while(status & DISK_STATUS_REQ)
 				nop();
@@ -101,23 +104,24 @@ long cmd_out()
 			break;
 
 		case ATA_READ_CMD:
-			status = IDE_read_LBA28(node->LBA, node->count, DISK_MAST_IDX);
+			status = IDE_read_LBA28(node->LBA, node->count, DISK_IDX);
 
 			break;
 			
 		case GET_IDENTIFY_DISK_CMD:
 
-			outb(PORT_DISK1_DEVICE,0xe0);
+			outb(PORT_DISK0_DEVICE,0xe0 | DISK_IDX);
 			
-			outb(PORT_DISK1_ERR_FEATURE,0);
-			outb(PORT_DISK1_SECTOR_CNT,node->count & 0xff);
-			outb(PORT_DISK1_SECTOR_LOW,node->LBA & 0xff);
-			outb(PORT_DISK1_SECTOR_MID,(node->LBA >> 8) & 0xff);
-			outb(PORT_DISK1_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
+			outb(PORT_DISK0_ERR_FEATURE,0);
+			outb(PORT_DISK0_SECTOR_CNT,node->count & 0xff);
+			outb(PORT_DISK0_SECTOR_LOW,node->LBA & 0xff);
+			outb(PORT_DISK0_SECTOR_MID,(node->LBA >> 8) & 0xff);
+			outb(PORT_DISK0_SECTOR_HIGH,(node->LBA >> 16) & 0xff);
 
-			while(!(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_READY))
+			while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_READY))
 				nop();			
-			outb(PORT_DISK1_STATUS_CMD,node->cmd);
+			outb(PORT_DISK0_STATUS_CMD,node->cmd);
+			
 			break;
 
 		default:
@@ -194,8 +198,8 @@ void other_handler(unsigned long parameter)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
 
-	if(inb(PORT_DISK1_STATUS_CMD) & DISK_STATUS_ERROR)
-		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK1_ERR_FEATURE));
+	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
+		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
 	else
 		insw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 
@@ -319,7 +323,6 @@ hw_int_controller_s disk_int_controller =
 void disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
 	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
-	color_printk(WHITE, BLACK, "SATA-0 handler");
 	node->end_handler(parameter);	
 }
 

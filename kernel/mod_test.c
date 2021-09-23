@@ -33,9 +33,7 @@ unsigned long module_test(unsigned long flag)
 
 	kernthd_test();
 
-	// userthd_test();
-
-	disk_drv_test();
+	// disk_drv_test();
 
 	color_printk(YELLOW, BLACK, "task module_test finished......");
 }

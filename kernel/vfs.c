@@ -28,10 +28,11 @@ unsigned long init_vfs(unsigned long param)
 	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, (unsigned char *)boot_sec);
 
 	// check partition type, only support GPT
-	while (boot_sec->DPTE[0].type != 0xee &&
+	if (boot_sec->DPTE[0].type != 0xee &&
 		boot_sec->DPTE[0].type != 0xef)
 	{
-		hlt();
+		color_printk(RED, BLACK, "Read MBR failed!\n");
+		while (1);
 	}
 	// load the gpt_hdr
 	gpt_hdr = (GPT_H_s *)boot_sec;
