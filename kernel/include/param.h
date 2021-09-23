@@ -14,6 +14,7 @@
 		int		slab;
 
 		int		idle_task;
+		int		vfs;
 	} init_flags_s;
 	
 /* This is used to obtain system information through SYS_GETINFO. */

@@ -3,6 +3,7 @@
 #include "include/printk.h"
 #include "include/proto.h"
 
+#include "include/glo.h"
 #include "include/fat32.h"
 #include "include/ext2.h"
 #include "include/vfs.h"
@@ -22,6 +23,7 @@ fs_type_s filesystem = {"filesystem", 0};
 
 unsigned long init_vfs(unsigned long param)
 {
+	kparam.init_flags.vfs = 0;
 	// load the boot sector
 	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
 	memset(boot_sec, 0, sizeof(MBR_s));
@@ -77,10 +79,8 @@ unsigned long init_vfs(unsigned long param)
 		default:
 			break;
 		}
-
 	}
-
-	dirent_s * testd = path_walk("/EFI/BOOT/BOOTX64.EFI", 0);
+	kparam.init_flags.vfs = 1;
 }
 
 dirent_s * path_walk(char * name,unsigned long flags)

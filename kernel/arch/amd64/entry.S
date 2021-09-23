@@ -200,6 +200,7 @@ RESTORE_ALL:
 	popq		%rbx
 	popq		%rax
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
+	sti
 	iretq;
 
 ret_from_exception:
@@ -219,6 +220,7 @@ softirq_hanlder:
 	jmp			RESTORE_ALL
 
 SAVE_ALL:
+	cli
 	pushq		%rax
 	pushq		%rbx
 	pushq		%rcx
@@ -248,6 +250,7 @@ SAVE_ALL:
 
 	movq		%rsp,		%rdi
 	callq 		excep_hwint_entry
+	sti
 	jmp			ret_from_exception	
 
 
@@ -412,6 +415,7 @@ ENTRY(hwint23) /* APIC_IRQ */
 /*											thread func							     			*/
 /*==============================================================================================*/
 ENTRY(kernel_thread_func)
+	cli
 	popq		%rax
 	movq		%rax,		%ds
 	popq		%rax
@@ -435,6 +439,10 @@ ENTRY(kernel_thread_func)
 	/////////////////////////////////
 	movq		%rdx,		%rdi
 	sti
+	pushq		%rbx
 	callq		*%rbx
+	popq		%rbx
 	movq		%rax,		%rdi
+	movq		%rbx,		%rsi
+	sti
 	callq		do_exit

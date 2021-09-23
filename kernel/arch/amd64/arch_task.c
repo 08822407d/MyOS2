@@ -15,6 +15,8 @@
 #include "../../include/task.h"
 #include "../../include/printk.h"
 #include "../../include/const.h"
+#include "../../include/vfs.h"
+#include "../../include/fcntl.h"
 #include "../../klib/data_structure.h"
 
 #define	USER_CODE_ADDR		0x6000000
@@ -181,6 +183,31 @@ int do_syscall(int syscall_nr)
 {
 	color_printk(GREEN, BLACK, "enter syscall function, SC_NR = %#08lx", syscall_nr);
 	return 0x12345678;
+}
+
+file_s * open_exec_file(char * path)
+{
+	dirent_s * dentry = NULL;
+	file_s * filp = NULL;
+
+	dentry = path_walk(path,0);
+
+	if(dentry == NULL)
+		return (void *)-ENOENT;
+	if(dentry->dir_inode->attribute == FS_ATTR_DIR)
+		return (void *)-ENOTDIR;
+
+	filp = (struct file *)kmalloc(sizeof(file_s));
+	if(filp == NULL)
+		return (void *)-ENOMEM;
+
+	filp->position = 0;
+	filp->mode = 0;
+	filp->dentry = dentry;
+	filp->mode = O_RDONLY;
+	filp->f_ops = dentry->dir_inode->f_ops;
+
+	return filp;
 }
 
 unsigned long do_execve(stack_frame_s * sf_regs)
@@ -359,7 +386,7 @@ unsigned long do_fork(stack_frame_s * sf_regs,
 		return ret_val;
 }
 
-unsigned long do_exit(unsigned long code)
+unsigned long do_exit(unsigned long code, unsigned long rbx)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, code);

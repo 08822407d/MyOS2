@@ -5,6 +5,8 @@
 #include "archtypes.h"
 #include "archconst.h"
 
+#include "../../../include/vfs.h"
+
 /*==============================================================================================*
  *										external symbols							 			*
  *==============================================================================================*/
@@ -267,6 +269,7 @@
 	void userthd_test();
 	void userthd_test2();
 	void enter_userthd(void);
+	file_s * open_exec_file(char * path);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);
