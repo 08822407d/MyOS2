@@ -34,7 +34,6 @@
 	{
 		recurs_wait_s *		prev;
 		recurs_wait_s *		next;
-		recurs_wait_list_s *	list_header;
 
 		task_s *	owner;
 		__volatile__	unsigned	counter;

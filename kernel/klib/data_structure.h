@@ -25,7 +25,6 @@
 				{									\
 					(src)->prev = (src);			\
 					(src)->next = (src);			\
-					(src)->list_header = NULL;		\
 				}									\
 			})
 

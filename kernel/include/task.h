@@ -38,6 +38,7 @@
 		task_s *		prev;
 		task_s *		next;
 
+		task_s *		parent;
 		task_list_s *	list_header;
 
 		arch_PCB_s		arch_struct;
@@ -51,6 +52,8 @@
 		unsigned long	signal;
 		unsigned long	time_slice;
 		unsigned long	vruntime;
+
+		long			exit_code;
 
 		unsigned long	spin_count;
 		unsigned long	semaphore_count;

@@ -16,8 +16,6 @@
 		timer_s *		prev;
 		timer_s *		next;
 		
-		timer_list_s *	list_header;
-
 		unsigned long 	expire_jiffies;
 		void 			(* func)(void * data);
 		void *			data;

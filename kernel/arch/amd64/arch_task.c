@@ -218,25 +218,25 @@ unsigned long do_execve(stack_frame_s * sf_regs)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-PML4E_T * create_userpage()
-{
-	int user_page_nr = 4;
-	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
-	PML4E_T	* user_pml4 = (PML4E_T *)kmalloc(PGENT_SIZE);
-	memset(user_pml4, 0, PGENT_SIZE);
-	PDPTE_T	* user_pdpt = (PDPTE_T *)kmalloc(1 * PGENT_SIZE);
-	memset(user_pdpt, 0, PGENT_SIZE);
-	PDE_T	* user_pd	= (PDE_T *)kmalloc(1 * 1 * PGENT_SIZE);
-	memset(user_pd, 0, PGENT_SIZE);
+// PML4E_T * create_userpage()
+// {
+// 	int user_page_nr = 4;
+// 	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+// 	PML4E_T	* user_pml4 = (PML4E_T *)kmalloc(PGENT_SIZE);
+// 	memset(user_pml4, 0, PGENT_SIZE);
+// 	PDPTE_T	* user_pdpt = (PDPTE_T *)kmalloc(1 * PGENT_SIZE);
+// 	memset(user_pdpt, 0, PGENT_SIZE);
+// 	PDE_T	* user_pd	= (PDE_T *)kmalloc(1 * 1 * PGENT_SIZE);
+// 	memset(user_pd, 0, PGENT_SIZE);
 
-	user_pml4[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pdpt)) | ARCH_PGE_NOT_LAST(attr);
-	user_pdpt[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pd)) | ARCH_PGE_NOT_LAST(attr);
-	for (int i = 0; i < user_page_nr; i ++)
-	{
-		Page_s * pg = page_alloc();
-		user_pd[i].ENT = MASKF_2M((uint64_t)pg->page_start_addr) | ARCH_PGE_IS_LAST(attr);
-	}
-}
+// 	user_pml4[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pdpt)) | ARCH_PGE_NOT_LAST(attr);
+// 	user_pdpt[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pd)) | ARCH_PGE_NOT_LAST(attr);
+// 	for (int i = 0; i < user_page_nr; i ++)
+// 	{
+// 		Page_s * pg = page_alloc();
+// 		user_pd[i].ENT = MASKF_2M((uint64_t)pg->page_start_addr) | ARCH_PGE_IS_LAST(attr);
+// 	}
+// }
 
 unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 { 
@@ -315,7 +315,7 @@ void exit_thread(task_s * new_task)
 void wakeup_task(task_s * task)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	task->state |= PS_RUNNING;
+	task->state = PS_RUNNING;
 	m_push_list(task, &(cpudata_p->ready_tasks));
 }
 
@@ -338,8 +338,10 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	memset(child_PCB, 0, sizeof(PCB_u));
 	memcpy(child_task, parent_task, sizeof(task_s));
 
+	child_task->state = PS_UNINTERRUPTIBLE;
 	child_task->pid = get_newpid();
 	child_task->vruntime = 0;
+	child_task->parent = parent_task;
 	m_list_init(child_task);
 
 	ret_val = -ENOMEM;
@@ -376,11 +378,30 @@ unsigned long do_fork(stack_frame_s * parent_context,
 		return ret_val;
 }
 
-unsigned long do_exit(unsigned long code, unsigned long rbx)
+void exit_notify(void)
+{
+	// wakeup(&current->parent->wait_childexit,TASK_INTERRUPTIBLE);
+}
+
+unsigned long do_exit(unsigned long exit_code, unsigned long rbx)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, code);
-	while(1);
+	task_s * curr = curr_tsk;
+	// color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, exit_code);
+
+do_exit_again:
+	cli();
+	curr->state = PS_ZOMBIE;
+	curr->exit_code = exit_code;
+	exit_thread(curr);
+	exit_files(curr);
+	sti();
+
+	exit_notify();
+	schedule();
+
+	goto do_exit_again;
+	return 0;
 }
 
 int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
