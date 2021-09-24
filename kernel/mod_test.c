@@ -32,18 +32,19 @@ unsigned long module_test(unsigned long flag)
 
 	// kmalloc_kfree_test();
 
-	// kernthd_test();
+	kernthd_test();
 
 	// disk_drv_test();
-	while (!kparam.init_flags.vfs);
-	
-	char * testfname = "/EFI/BOOT/BOOTX64.EFI";
-	char testf_buf[512];
-	long pos = 0;
-	file_s * testf_fp = open_exec_file(testfname);
-	int retval = testf_fp->f_ops->read(testf_fp, testf_buf, 512, &pos);
 
-	color_printk(YELLOW, BLACK, "task module_test finished......");
+	// while (!kparam.init_flags.vfs);
+	
+	// char * testfname = "/EFI/BOOT/BOOTX64.EFI";
+	// char testf_buf[512];
+	// long pos = 0;
+	// file_s * testf_fp = open_exec_file(testfname);
+	// int retval = testf_fp->f_ops->read(testf_fp, testf_buf, 512, &pos);
+
+	// color_printk(YELLOW, BLACK, "task module_test finished......");
 }
 
 unsigned long test_task_a(unsigned long arg)

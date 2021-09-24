@@ -285,24 +285,22 @@ unsigned long exit_mm(task_s * new_tsk)
 	return 0;
 }
 
-unsigned long copy_thread(unsigned long clone_flags,unsigned long stack_start, task_s * new_task,stack_frame_s * sf_regs)
+unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
+							task_s * child_task, 	stack_frame_s * parent_context)
 {
-	sf_regs->rax = 0;
-	// memcpy(regs,childregs,sizeof(struct pt_regs));
-	// childregs->rsp = stack_start;
+	stack_frame_s * child_context = get_stackframe(child_task);
+	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
 
-	// thd->rsp0 = (unsigned long)tsk + STACK_SIZE;
-	// thd->rsp = (unsigned long)childregs;
-	// thd->fs = current->thread->fs;
-	// thd->gs = current->thread->gs;
+	child_context->rsp = stack_start;
+	child_context->rax = 0;
 
-	// if(tsk->flags & PF_KTHREAD)
-	// 	thd->rip = (unsigned long)kernel_thread_func;
-	// else
-	// 	thd->rip = (unsigned long)ret_system_call; 
+	child_task->arch_struct.tss_rsp0 = (reg_t)child_task + TASK_KSTACK_SIZE;
+	child_task->arch_struct.k_rsp = (reg_t)child_context;
 
-	// color_printk(WHITE,BLACK,"current user ret addr:%#018lx,rsp:%#018lx\n",regs->r10,regs->r11);
-	// color_printk(WHITE,BLACK,"new user ret addr:%#018lx,rsp:%#018lx\n",childregs->r10,childregs->r11);
+	if(child_task->flags & PF_KTHREAD)
+		child_task->arch_struct.k_rip = (unsigned long)kernel_thread_func;
+	else
+		child_task->arch_struct.k_rip = (unsigned long)ret_from_sysenter;
 
 	return 0;
 }
@@ -321,66 +319,58 @@ void wakeup_task(task_s * task)
 	m_push_list(task, &(cpudata_p->ready_tasks));
 }
 
-unsigned long do_fork(stack_frame_s * sf_regs,
+unsigned long do_fork(stack_frame_s * parent_context,
 						unsigned long clone_flags,
 						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
 	long ret_val = 0;
-	PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
-	PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
-	task_s * curr_task	= &curr_pcb->task;
-	task_s * new_task	= &new_pcb->task;
-	if (new_pcb == NULL)
+	PCB_u * parent_PCB = container_of(get_current_task(), PCB_u, task);
+	PCB_u * child_PCB = (PCB_u *)kmalloc(sizeof(PCB_u));
+	task_s * parent_task = &parent_PCB->task;
+	task_s * child_task = &child_PCB->task;
+	if (child_PCB == NULL)
 	{
 		ret_val = -EAGAIN;
 		goto alloc_newtask_fail;
 	}
 
-	memset(new_pcb, 0, sizeof(PCB_u));
-	memcpy(new_task, curr_pcb, sizeof(task_s));
+	memset(child_PCB, 0, sizeof(PCB_u));
+	memcpy(child_task, parent_task, sizeof(task_s));
 
-	m_list_init(new_task);
-	new_pcb->task.pid = get_newpid();
-
-	stack_frame_s * new_sf_regs = get_stackframe(new_task);
-	memcpy(new_sf_regs, sf_regs, sizeof(stack_frame_s));
-
-	new_task->vruntime = 0;
-	new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
-	new_task->arch_struct.k_rip = sf_regs->rip;
-	new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	child_task->pid = get_newpid();
+	child_task->vruntime = 0;
+	m_list_init(child_task);
 
 	ret_val = -ENOMEM;
 	//	copy flags
-	if(copy_flags(clone_flags, new_task))
+	if(copy_flags(clone_flags, child_task))
 		goto copy_flags_fail;
-
 	//	copy mm struct
-	if(copy_mm(clone_flags, new_task))
+	if(copy_mm(clone_flags, child_task))
 		goto copy_mm_fail;
-
 	//	copy file struct
-	if(copy_files(clone_flags, new_task))
+	if(copy_files(clone_flags, child_task))
 		goto copy_files_fail;
-
 	// copy thread struct
-	if(copy_thread(clone_flags, stack_size, new_task, new_sf_regs))
+	if(copy_thread(clone_flags, stack_size, child_task, parent_context))
 		goto copy_thread_fail;
 
-	ret_val = new_task->pid;
-	wakeup_task(new_task);
+	// do_fork successed
+	ret_val = child_task->pid;
+	wakeup_task(child_task);
 	goto do_fork_success;
 
+	// if failed clean memory
 	copy_thread_fail:
-		// exit_thread(new_task);
+		exit_thread(child_task);
 	copy_files_fail:
-		exit_files(new_task);
+		exit_files(child_task);
 	copy_mm_fail:
-		exit_mm(new_task);
+		exit_mm(child_task);
 	copy_flags_fail:
 	alloc_newtask_fail:
-		kfree(new_task);
+		kfree(child_task);
 
 	do_fork_success:
 		return ret_val;
