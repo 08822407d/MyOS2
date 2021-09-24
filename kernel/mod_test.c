@@ -32,7 +32,7 @@ unsigned long module_test(unsigned long flag)
 
 	// kmalloc_kfree_test();
 
-	kernthd_test();
+	// kernthd_test();
 
 	// disk_drv_test();
 	while (!kparam.init_flags.vfs);

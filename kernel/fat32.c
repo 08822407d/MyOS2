@@ -102,7 +102,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 		// if((unsigned long)buf < TASK_SIZE)
 		// 	copy_to_user(buffer + offset,buf,length);
 		// else
-			memcpy(buffer + offset, buf, length);
+			memcpy(buf, buffer + offset, length);
 
 		index -= length;
 		buf += length;
@@ -199,7 +199,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		// if((unsigned long)buf < TASK_SIZE)
 		// 	copy_from_user(buf,buffer + offset,length);
 		// else
-			memcpy(buf, buffer + offset, length);
+			memcpy(buffer + offset, buf, length);
 
 		if(!IDE_device_operation.transfer(ATA_WRITE_CMD, sector, fsbi->sector_per_cluster,
 											(unsigned char *)buffer))
