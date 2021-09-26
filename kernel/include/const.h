@@ -91,4 +91,7 @@
 	#define SLAB_LEVEL			16
 	#define SLAB_SIZE_BASE		32
 
+	// sysconfigs
+	#define MAX_FILE_NR			32
+
 #endif /* _CONST_H_ */

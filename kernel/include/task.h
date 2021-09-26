@@ -43,6 +43,7 @@
 
 		arch_PCB_s		arch_struct;
 
+		file_s *		filps[MAX_FILE_NR];
 		mm_s *			mm_struct;
 
 		volatile long	state;

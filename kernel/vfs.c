@@ -21,7 +21,7 @@ superblock_s * root_sb = NULL;
 fs_type_s filesystem = {"filesystem", 0};
 
 
-unsigned long init_vfs(unsigned long param)
+unsigned long init_vfs()
 {
 	kparam.init_flags.vfs = 0;
 	// load the boot sector

@@ -128,12 +128,6 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
-unsigned long init(unsigned long arg)
-{
-	color_printk(RED,BLACK,"init task is running, arg:%#018lx\n",arg);
-	return 1;
-}
-
 inline __always_inline int sys_call(int syscall_nr)
 {
 	int ret_val = 0;
@@ -197,7 +191,7 @@ file_s * open_exec_file(char * path)
 	if(dentry->dir_inode->attribute == FS_ATTR_DIR)
 		return (void *)-ENOTDIR;
 
-	filp = (struct file *)kmalloc(sizeof(file_s));
+	filp = (file_s *)kmalloc(sizeof(file_s));
 	if(filp == NULL)
 		return (void *)-ENOMEM;
 
@@ -210,9 +204,11 @@ file_s * open_exec_file(char * path)
 	return filp;
 }
 
-unsigned long do_execve(stack_frame_s * sf_regs)
+void wakeup_task(task_s * task)
 {
-	return 1;
+	per_cpudata_s * cpudata_p = curr_cpu;
+	task->state = PS_RUNNING;
+	m_push_list(task, &(cpudata_p->ready_tasks));
 }
 
 /*==============================================================================================*
@@ -247,7 +243,20 @@ unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 
 unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
-	return 0;
+	task_s * curr = curr_tsk;
+	int error = 0;
+	int i = 0;
+	if(clone_flags & CLONE_FS)
+		goto out;
+	
+	for(i = 0; i < MAX_FILE_NR; i++)
+		if(curr->filps[i] != NULL)
+		{
+			new_tsk->filps[i] = (file_s *)kmalloc(sizeof(file_s));
+			memcpy(new_tsk->filps[i], curr->filps[i], sizeof(file_s));
+		}
+out:
+	return error;
 }
 unsigned long exit_files(task_s * new_tsk)
 {
@@ -304,21 +313,14 @@ unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
 
 	return 0;
 }
-void exit_thread(task_s * new_task)
+unsigned long exit_thread(task_s * new_task)
 {
-
+	return 0;
 }
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void wakeup_task(task_s * task)
-{
-	per_cpudata_s * cpudata_p = curr_cpu;
-	task->state = PS_RUNNING;
-	m_push_list(task, &(cpudata_p->ready_tasks));
-}
-
 unsigned long do_fork(stack_frame_s * parent_context,
 						unsigned long clone_flags,
 						unsigned long tmp_kstack_start,
@@ -378,6 +380,27 @@ unsigned long do_fork(stack_frame_s * parent_context,
 		return ret_val;
 }
 
+unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], char *envp[])
+{
+	task_s * curr = curr_tsk;
+	exit_files(curr);
+	if (curr->state & PF_VFORK)
+	{
+		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		memset(&curr->mm_struct, 0, sizeof(mm_s));
+
+		curr->mm_struct->cr3 = (PML4E_T *)virt2phys(kmalloc(PGENT_SIZE));
+		memset(phys2virt(&curr->mm_struct->cr3), 0, PGENT_SIZE / 2);
+		memcpy(phys2virt(curr->mm_struct->cr3) + PGENT_NR / 2,
+				phys2virt(task0_PCB.task.mm_struct->cr3) + PGENT_NR / 2,
+				PGENT_SIZE / 2);
+	}
+
+	file_s * fp = open_exec_file(name);
+
+	return 1;
+}
+
 void exit_notify(void)
 {
 	// wakeup(&current->parent->wait_childexit,TASK_INTERRUPTIBLE);
@@ -431,8 +454,32 @@ void arch_init_task()
 }
 
 /*==============================================================================================*
- *										test threads											*
+ *										*
  *==============================================================================================*/
+unsigned long init(unsigned long arg)
+{
+	init_vfs();
+
+	color_printk(GREEN, BLACK, "VFS initiated.\n");
+
+	task_s * curr = curr_tsk;
+	stack_frame_s * curr_sfp = get_stackframe(curr);
+	curr->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
+	curr->flags &= ~PF_VFORK;
+
+	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
+							"pushq	%2			\n\t"
+							"jmp	do_execve	\n\t"
+						:
+						:	"D"(curr->arch_struct.k_rsp),"m"(curr->arch_struct.k_rsp),
+							"m"(curr->arch_struct.k_rip),"S"("/init.bin"),"d"(NULL),"c"(NULL)
+						:	"memory"
+						);
+
+	return 1;
+}
+
 
 /*==============================================================================================*
  *									load_balance related functions								*
