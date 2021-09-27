@@ -43,7 +43,7 @@ void map_fix_kernel_pages()
 	// map kernel software used pages
 	phys_addr k_phy_pgbase = 0;
 	virt_addr k_vir_pgbase = (virt_addr)phys2virt(0);
-	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
+	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
 	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - k_vir_pgbase) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{

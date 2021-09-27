@@ -150,7 +150,7 @@ inline __always_inline int sys_call(int syscall_nr)
 	return ret_val;
 }
 
-void user_func()
+unsigned long user_func(unsigned long arg)
 {
 	int sc_nr = 0x987654;
 	int i = 0;
@@ -170,7 +170,7 @@ void user_func()
 						:	"a"(sc_nr)
 						:
 						);
-
+	return 0;
 }
 
 int do_syscall(int syscall_nr)
@@ -550,6 +550,48 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	sf_regs.rip = (reg_t)kernel_thread_func;
 
 	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
+}
+
+int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
+{
+	// uint64_t star = rdmsr(MSR_IA32_STAR);
+	// // set userthd PCB members
+	// PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
+	// PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
+	// task_s * curr_task	= &curr_pcb->task;
+	// task_s * new_task	= &new_pcb->task;
+	// if (new_pcb == NULL)
+	// {
+	// 	goto alloc_newtask_fail;
+	// }
+
+	// memset(new_pcb, 0, sizeof(PCB_u));
+	// memcpy(new_task, curr_pcb, sizeof(task_s));
+
+	// m_list_init(new_task);
+	// new_pcb->task.pid = get_newpid();
+
+	// stack_frame_s * new_sf_regs = get_stackframe(new_task);
+	// // set user task kernel data
+	// new_task->vruntime = 0;
+	// new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
+	// new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	// new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
+	// new_task->mm_struct->cr3 = curr_task->mm_struct->cr3;
+	// // set user task context
+	// new_sf_regs->cs = USER_CS_SELECTOR;
+	// new_sf_regs->ss = USER_SS_SELECTOR;
+	// new_sf_regs->r11 =
+	// new_sf_regs->rflags = (1 << 9);
+	// new_sf_regs->rdx =
+	// new_sf_regs->rip = (reg_t)user_func;
+	// new_sf_regs->rcx =
+	// new_sf_regs->rsp = (reg_t)kmalloc(0x1000) + 0x1000;
+
+	// wakeup_task(new_task);
+
+	// alloc_newtask_fail:
+	// 	kfree(new_task);
 }
 
 void arch_init_task()

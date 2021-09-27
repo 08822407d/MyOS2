@@ -184,6 +184,7 @@
 	void init_bsp_arch_data(void);
 	void reload_bsp_arch_data(void);
 	void reload_percpu_arch_data(size_t cpu_idx);
+	void arch_system_call_init(void);
 
 	/* arch_page_util. */
 	struct mm;
@@ -269,6 +270,8 @@
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long init(unsigned long arg);
 	file_s * open_exec_file(char * path);
+	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
+	unsigned long user_func(unsigned long arg);
 
 	/* interrupt.c */
 	void excep_hwint_entry(stack_frame_s * sf_regs);
