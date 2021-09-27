@@ -17,6 +17,11 @@ elseif(CMAKE_HOST_UNIX)
     # set (CMAKE_C_LINKER usr/bin/ld)
 endif()
 
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
+
+#===============================================================================================#
+#                                   global options                                              #
+#===============================================================================================#
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
     set(ARCH amd64)
 elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
@@ -26,34 +31,26 @@ endif()
 set(DEBUG "-DDEBUG")
 set(DEFINATIONS "-DUSE_APIC")
 
+#===============================================================================================#
+#                                   compile options                                             #
+#===============================================================================================#
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
-message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
+# message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
+
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
                     -fno-builtin -fno-stack-protector -Wno-packed-bitfield-compat \
-                    -nostartfiles -static -no-pie -ggdb -m64 -fPIC \
-                    -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
-message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
+                    -nostartfiles -static -ggdb -m64 -fPIC")
+# message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
+
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
-message("${PROMPT} LDFLAGS : ${CMAKE_EXE_LINKER_FLAGS}")
+# message("${PROMPT} LDFLAGS : ${CMAKE_EXE_LINKER_FLAGS}")
 
-INCLUDE_DIRECTORIES(
-    ${PROJECT_SOURCE_DIR}/include
-)
+#===============================================================================================#
+#                                       kernel.bin                                              #
+#===============================================================================================#
+add_subdirectory(kernel)
 
-file(GLOB KERNEL_C_SRCS kernel/*.c)
-file(GLOB KERNEL_ASM_SRCS kernel/*.S)
-
-file(GLOB K_ARCH_C_SRCS kernel/arch/${ARCH}/*.c)
-file(GLOB K_ARCH_ASM_SRCS kernel/arch/${ARCH}/*.S)
-
-file(GLOB K_LIB_C_SRCS kernel/klib/*.c)
-
-file(GLOB LIB_C_SRCS lib/*.c lib/utils/*.c lib/string/*.c)
-file(GLOB LIB_ASM_SRCS lib/*.S lib/utils/*.S lib/string/*.S)
-
-add_executable(system ${K_ARCH_ASM_SRCS} ${K_ARCH_C_SRCS} ${KERNEL_ASM_SRCS} ${K_LIB_C_SRCS} ${KERNEL_C_SRCS}
-                ${LIB_C_SRCS} ${LIB_ASM_SRCS})
-
-# add_custom_command(OUTPUT kernel.debug
-#                     COMMAND objcopy --only-keep-debug system kernel.debug
-#                     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+#===============================================================================================#
+#                                       init.bin                                                #
+#===============================================================================================#
+add_subdirectory(user)

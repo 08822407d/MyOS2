@@ -389,7 +389,7 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
 		memset(curr->mm_struct, 0, sizeof(mm_s));
 
-		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(sizeof(PGENT_SIZE));
+		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
 		curr->mm_struct->cr3 = (PML4E_T *)virt2phys(virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				phys2virt(task0_PCB.task.mm_struct->cr3 + PGENT_NR / 2),

@@ -12,14 +12,21 @@ if [ "$(uname)" == "Darwin" ]; then
     diskutil unmount ~/mount
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Working on Linux"
+    # generate kernel debug file and bin
     objcopy --only-keep-debug system kernel.debug
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
+    # generate init debug file and bin
+    objcopy --only-keep-debug init init.debug
+    objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary init init.bin
+    # copy files
     sudo mount /dev/dm-1 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
+    cp ./init.bin /mnt/init.bin
     sync
     sleep 1
     sudo umount /mnt
-    objdump -S system > dasm.txt
+    objdump -S system > k_dasm.txt
+    objdump -S init > u_dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     echo "Working on MinGW"
 fi
