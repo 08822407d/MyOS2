@@ -186,7 +186,7 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 		if (pd_ptr != NULL)
 		{
 			memset(pd_ptr, 0, PGENT_SIZE);
-			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pd_ptr)) | ARCH_PGE_NOT_LAST(attr);
+			pdpte_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pd_ptr)) | ARCH_PGE_NOT_LAST(attr);
 		}
 		else
 			rev_val = 0;

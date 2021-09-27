@@ -204,6 +204,74 @@ file_s * open_exec_file(char * path)
 	return filp;
 }
 
+int read_exec_mm(file_s * fp, task_s * curr)
+{
+	mm_s * mm = curr->mm_struct;
+
+	mm->start_code = USER_CODE_ADDR;
+	mm->start_rodata =
+	mm->end_code = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 1;
+	mm->start_data =
+	mm->end_rodata = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 2;
+	mm->start_bss =
+	mm->end_data = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 3;
+	mm->start_brk =
+	mm->end_bss = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 4;
+	mm->end_brk = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 5;
+	mm->start_stack = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 6;
+}
+
+int creat_exec_addrspace(task_s * curr)
+{
+	mm_s * mm = curr->mm_struct;
+	PML4E_T * pml4 = mm->cr3;
+	unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+	reg_t code_len = (mm->end_code - mm->start_code) / CONFIG_PAGE_SIZE;
+	reg_t rodata_len = (mm->end_rodata - mm->start_rodata) / CONFIG_PAGE_SIZE;
+	reg_t data_len = (mm->end_data - mm->start_data) / CONFIG_PAGE_SIZE;
+	reg_t bss_len = (mm->end_bss - mm->start_bss) / CONFIG_PAGE_SIZE;
+	reg_t brk_len = 0;
+	reg_t stack_len = 1;
+
+	int i;
+	for ( i = 0; i < code_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_code + i * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+	for ( i = 0; i < rodata_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_rodata + i * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+	for ( i = 0; i < data_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_data + i * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+	for ( i = 0; i < bss_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_bss + i * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+	for ( i = 0; i < brk_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_brk + i * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+	for ( i = 0; i < stack_len; i++)
+	{
+		Page_s * phys_pg = page_alloc();
+		arch_page_domap((virt_addr)(mm->start_stack - (i + 1) * CONFIG_PAGE_SIZE),
+							phys_pg->page_start_addr, attr, pml4);
+	}
+}
+
 void wakeup_task(task_s * task)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
@@ -382,8 +450,12 @@ unsigned long do_fork(stack_frame_s * parent_context,
 
 unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], char *envp[])
 {
+	int ret_val = 0;
+
 	task_s * curr = curr_tsk;
 	exit_files(curr);
+	file_s * fp = open_exec_file(name);
+
 	if (curr->flags & PF_VFORK)
 	{
 		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
@@ -395,14 +467,45 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 				phys2virt(task0_PCB.task.mm_struct->cr3 + PGENT_NR / 2),
 				PGENT_SIZE / 2);
 		memset(virt_cr3, 0, PGENT_SIZE / 2);
-
-		pg_load_cr3(curr->mm_struct->cr3);
 	}
+	read_exec_mm(fp, curr);
+	creat_exec_addrspace(curr);
+	pg_load_cr3(curr->mm_struct->cr3);
+	curr->flags &= ~PF_VFORK;
 
-	file_s * fp = open_exec_file(name);
-	
-	while (1);
-	return 1;
+	// if(argv != NULL)
+	// {
+	// 	int argc = 0;
+	// 	int len = 0;
+	// 	int i = 0;
+	// 	char ** dargv = (char **)(stack_start_addr - 10 * sizeof(char *));
+	// 	pos = (unsigned long)dargv;
+
+	// 	for(i = 0;i<10 && argv[i] != NULL;i++)
+	// 	{
+	// 		len = strnlen_user(argv[i],1024) + 1;
+	// 		strcpy((char *)(pos - len),argv[i]);
+	// 		dargv[i] = (char *)(pos - len);
+	// 		pos -= len;
+	// 	}
+	// 	stack_start_addr = pos - 10;
+	// 	regs->rdi = i;	//argc
+	// 	regs->rsi = (unsigned long)dargv;	//argv
+	// }
+
+	memset((virt_addr)curr->mm_struct->start_code, 0, 0x600000);
+	long pos = 0;
+	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->dir_inode->file_size, &pos);
+
+	curr_context->ds =
+	curr_context->es =
+	curr_context->ss = USER_SS_SELECTOR;
+	curr_context->cs = USER_CS_SELECTOR;
+	curr_context->r10 = curr->mm_struct->start_code;
+	curr_context->r11 = curr->mm_struct->start_stack;
+	curr_context->rax = 1;
+
+	return ret_val;
 }
 
 void exit_notify(void)
