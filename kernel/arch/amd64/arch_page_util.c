@@ -21,6 +21,22 @@ PDE_T	KERN_PD[PDE_NR] __aligned(PGENT_SIZE);
 phys_addr kernel_cr3 = 0;
 
 void creat_fixed_kernel_pgmap();
+void map_fix_kernel_pages();
+
+void reload_arch_page()
+{
+	int pdpte_nr = PDPTE_NR;
+	int pde_nr = PDE_NR;
+
+	kernel_cr3 = virt2phys(&KERN_PML4);
+
+	creat_fixed_kernel_pgmap();
+	map_fix_kernel_pages();
+
+	pg_load_cr3(kernel_cr3);
+	// set init flag
+	kparam.arch_init_flags.reload_bsp_arch_page = 1;
+}
 
 void map_fix_kernel_pages()
 {
@@ -45,27 +61,12 @@ void map_fix_kernel_pages()
 	}
 }
 
-void reload_arch_page()
+void pg_load_cr3(PML4E_T * pml4)
 {
-	int pdpte_nr = PDPTE_NR;
-	int pde_nr = PDE_NR;
-
-	kernel_cr3 = virt2phys(&KERN_PML4);
-
-	creat_fixed_kernel_pgmap();
-	map_fix_kernel_pages();
-
-	pg_load_cr3(KERN_PML4);
-	// set init flag
-	kparam.arch_init_flags.reload_bsp_arch_page = 1;
-}
-
-void pg_load_cr3(PML4E_T * PML4)
-{
-	__asm__ __volatile__(	"movq %%rax, %%cr3	\n\t"
+	__asm__ __volatile__(	"movq %0, %%cr3		\n\t"
 							"nop				\n\t"
 						:
-						:	"rax"(virt2phys(PML4))
+						:	"r"(pml4)
 						:
 						);
 }
@@ -136,6 +137,14 @@ void creat_fixed_kernel_pgmap()
 		fill_pdpte(&KERN_PDPT[i], &KERN_PD[i * PGENT_NR], attr);
 }
 
+void unmap_kernel_lowhalf()
+{
+	memset(KERN_PML4, 0, PGENT_SIZE / 2);
+}
+
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
 unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3)
 {
 	unsigned long rev_val = 1;

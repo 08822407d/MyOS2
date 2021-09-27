@@ -17,7 +17,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     sudo mount /dev/dm-1 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
     sync
-    sleep 2
+    sleep 1
     sudo umount /mnt
     objdump -S system > dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then

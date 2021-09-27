@@ -192,6 +192,7 @@
 	void reload_arch_page(void);
 	void pg_load_cr3(PML4E_T *);
 	void refresh_arch_page(void);
+	void unmap_kernel_lowhalf(void);
 	unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3);
 	void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr);
 	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);

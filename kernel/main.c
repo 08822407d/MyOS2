@@ -53,8 +53,6 @@ void idle(size_t cpu_idx)
 	percpu_self_config(cpu_idx);
 	sti();
 
-	// kernel_thread(module_test, 0, 0);
-
 	if (cpu_idx == 0)
 		kernel_thread(init, 0, 0);
 

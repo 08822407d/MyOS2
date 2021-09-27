@@ -134,6 +134,9 @@ void percpu_self_config(size_t cpu_idx)
 	current_task->semaphore_count =
 	current_task->spin_count = 0;
 	current_task->state = PS_RUNNING;
+
+	unmap_kernel_lowhalf();
+	refresh_arch_page();
 }
 
 void startup_smp()

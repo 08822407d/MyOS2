@@ -384,20 +384,24 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 {
 	task_s * curr = curr_tsk;
 	exit_files(curr);
-	if (curr->state & PF_VFORK)
+	if (curr->flags & PF_VFORK)
 	{
 		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
-		memset(&curr->mm_struct, 0, sizeof(mm_s));
+		memset(curr->mm_struct, 0, sizeof(mm_s));
 
-		curr->mm_struct->cr3 = (PML4E_T *)virt2phys(kmalloc(PGENT_SIZE));
-		memset(phys2virt(&curr->mm_struct->cr3), 0, PGENT_SIZE / 2);
-		memcpy(phys2virt(curr->mm_struct->cr3) + PGENT_NR / 2,
-				phys2virt(task0_PCB.task.mm_struct->cr3) + PGENT_NR / 2,
+		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(sizeof(PGENT_SIZE));
+		curr->mm_struct->cr3 = (PML4E_T *)virt2phys(virt_cr3);
+		memcpy(virt_cr3 + PGENT_NR / 2,
+				phys2virt(task0_PCB.task.mm_struct->cr3 + PGENT_NR / 2),
 				PGENT_SIZE / 2);
+		memset(virt_cr3, 0, PGENT_SIZE / 2);
+
+		pg_load_cr3(curr->mm_struct->cr3);
 	}
 
 	file_s * fp = open_exec_file(name);
-
+	
+	while (1);
 	return 1;
 }
 
@@ -466,7 +470,7 @@ unsigned long init(unsigned long arg)
 	stack_frame_s * curr_sfp = get_stackframe(curr);
 	curr->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
-	curr->flags &= ~PF_VFORK;
+	curr->flags &= ~PF_KTHREAD;
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
