@@ -7,6 +7,6 @@
 *
 ***************************************************/
 
-#include "errno.h"
+#include <sys/errno.h>
 
 int errno = 0;

@@ -107,5 +107,6 @@
 #define	EWOULDBLOCK		80		/* Operation would block */
 #define	EXDEV			81		/* Improper link */
 
+extern int errno;
 
 #endif

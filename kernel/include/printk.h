@@ -69,12 +69,6 @@ void putchar(unsigned int * fb,int Xsize,int x,int y,unsigned int FRcolor,unsign
 /*
 
 */
-int skip_atoi(const char **s);
-
-int do_div(long *,int);
-/*
-
-*/
 char * number(char * str, long num, int base, int size, int precision, int type);
 
 /*
