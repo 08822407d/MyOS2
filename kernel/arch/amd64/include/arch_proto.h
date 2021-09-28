@@ -292,4 +292,11 @@
 	void startup_smp(void);
 	void percpu_self_config(size_t cpu_idx);
 
+	/* utils.c */
+	long verify_area(unsigned char* addr, unsigned long size);
+	long copy_from_user(void * from, void * to, unsigned long size);
+	long copy_to_user(void * from, void * to, unsigned long size);
+	long strncpy_from_user(void * from, void * to, unsigned long size);
+	long strnlen_user(void * src, unsigned long maxlen);
+
 #endif /* _AMD64_PROTO_H_ */
