@@ -259,17 +259,18 @@
 	// void intr_enable(void);
 
 	/* arch_task.c */
-	unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], char *envp[]);
 	unsigned long do_fork(stack_frame_s * sf_regs,
 							unsigned long clone_flags,
 							unsigned long tmp_kstack_start,
 							unsigned long stack_size);
-	int sys_call(int syscall_nr);
-	int do_syscall(int syscall_nr);
+	unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], char *envp[]);
+	unsigned long do_exit(unsigned long exit_code);
 	void schedule(void);
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long init(unsigned long arg);
 	file_s * open_exec_file(char * path);
+	int sys_call(int syscall_nr);
+	int do_syscall(int syscall_nr);
 	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long user_func(unsigned long arg);
 

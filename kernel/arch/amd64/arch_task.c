@@ -513,7 +513,7 @@ void exit_notify(void)
 	// wakeup(&current->parent->wait_childexit,TASK_INTERRUPTIBLE);
 }
 
-unsigned long do_exit(unsigned long exit_code, unsigned long rbx)
+unsigned long do_exit(unsigned long exit_code)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	task_s * curr = curr_tsk;
