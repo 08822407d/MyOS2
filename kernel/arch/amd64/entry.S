@@ -24,7 +24,7 @@
 // kernel RSP = IA32_SYSENTER_ESP
 ENTRY(enter_sysenter)
 	cli
-	swapgs
+	// swapgs
 	subq		$0x38,		%rsp
 
 	pushq		%rax
@@ -81,110 +81,110 @@ ENTRY(ret_from_sysenter)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
-	swapgs
+	// swapgs
 	sti
 	.byte	0x48
 	sysexit
 
-/*==============================================================================================*/
-/*									syscall and sysret entry						 			*/
-/*==============================================================================================*/
-// user Rflags -> R11
-// user RIP -> RCX
-// kernel CS = IA32_STAR[47:32]
-// kernel SS = IA32_STAR[47:32] + 8
-// kernel RIP = IA32_LSTAR
-// kernel Rflags &= IA32_FMASK
-// !!! user RSP should be store by hand !!!
-// !!! kernel RSP should be load by hand !!!
-ENTRY(enter_syscall)
-	cli
-	swapgs
-	movabsq		$cpustack_off,	%r10
-	movq		(%r10),		%r10
-	movq		%gs:(%r10),	%r10
-	xchgq		%rsp,		%r10
-	pushq		%r10				// save user rsp
-	pushq		%r11				// save user rflags
-	subq		$0x08,		%rsp
-	pushq		%rcx
-	/////////////////////////////////
-	subq		$0x10,		%rsp	// skip vec_nr and err_code
-	/////////////////////////////////
-	pushq		%rax
-	pushq		%rbx
-	pushq		%rcx
-	pushq		%rdx
-	pushq		%rbp
-	pushq		%rdi
-	pushq		%rsi
-	pushq		%r8
-	pushq		%r9
-	pushq		%r10
-	pushq		%r11
-	pushq		%r12
-	pushq		%r13
-	pushq		%r14
-	pushq		%r15
+// /*==============================================================================================*/
+// /*									syscall and sysret entry						 			*/
+// /*==============================================================================================*/
+// // user Rflags -> R11
+// // user RIP -> RCX
+// // kernel CS = IA32_STAR[47:32]
+// // kernel SS = IA32_STAR[47:32] + 8
+// // kernel RIP = IA32_LSTAR
+// // kernel Rflags &= IA32_FMASK
+// // !!! user RSP should be store by hand !!!
+// // !!! kernel RSP should be load by hand !!!
+// ENTRY(enter_syscall)
+// 	cli
+// 	swapgs
+// 	movabsq		$cpustack_off,	%r10
+// 	movq		(%r10),		%r10
+// 	movq		%gs:(%r10),	%r10
+// 	xchgq		%rsp,		%r10
+// 	pushq		%r10				// save user rsp
+// 	pushq		%r11				// save user rflags
+// 	subq		$0x08,		%rsp
+// 	pushq		%rcx
+// 	/////////////////////////////////
+// 	subq		$0x10,		%rsp	// skip vec_nr and err_code
+// 	/////////////////////////////////
+// 	pushq		%rax
+// 	pushq		%rbx
+// 	pushq		%rcx
+// 	pushq		%rdx
+// 	pushq		%rbp
+// 	pushq		%rdi
+// 	pushq		%rsi
+// 	pushq		%r8
+// 	pushq		%r9
+// 	pushq		%r10
+// 	pushq		%r11
+// 	pushq		%r12
+// 	pushq		%r13
+// 	pushq		%r14
+// 	pushq		%r15
 	
-	movq		%es,		%rax
-	pushq		%rax
-	movq		%ds,		%rax
-	pushq		%rax
-	movq		%rsp,		%rdi
-	callq		do_syscall
+// 	movq		%es,		%rax
+// 	pushq		%rax
+// 	movq		%ds,		%rax
+// 	pushq		%rax
+// 	movq		%rsp,		%rdi
+// 	callq		do_syscall
 
-// R11 -> user Rflags
-// RCX -> user RIP
-// user CS = IA32_STAR[63:48] + 16
-// user SS = IA32_STAR[63:48] + 8
-// !!! user RSP should be restore by hand !!!
-// !!! kernel RSP should be store by hand !!!
-ENTRY(ret_from_syscall)
-	movq		%rax,		0x80(%rsp)	// save return value to stack
-	popq		%rax		
-	movq		%rax,		%ds
-	popq		%rax
-	movq		%rax,		%es
-	popq		%r15
-	popq		%r14
-	popq		%r13
-	popq		%r12
-	popq		%r11
-	popq		%r10
-	popq		%r9
-	popq		%r8
-	popq		%rsi
-	popq		%rdi
-	popq		%rbp
-	popq		%rdx
-	popq		%rcx
-	popq		%rbx
-	popq		%rax
-	/////////////////////////////////
-	addq		$0x10,		%rsp	// skip err-code and vec-nr
-	/////////////////////////////////
-	// now user rip already in rcx, rflags in r11
-	popq		%rcx
-	addq		$0x10,		%rsp	// skip cs
-	popq		%rsp
-	swapgs
-	sti
+// // R11 -> user Rflags
+// // RCX -> user RIP
+// // user CS = IA32_STAR[63:48] + 16
+// // user SS = IA32_STAR[63:48] + 8
+// // !!! user RSP should be restore by hand !!!
+// // !!! kernel RSP should be store by hand !!!
+// ENTRY(ret_from_syscall)
+// 	movq		%rax,		0x80(%rsp)	// save return value to stack
+// 	popq		%rax		
+// 	movq		%rax,		%ds
+// 	popq		%rax
+// 	movq		%rax,		%es
+// 	popq		%r15
+// 	popq		%r14
+// 	popq		%r13
+// 	popq		%r12
+// 	popq		%r11
+// 	popq		%r10
+// 	popq		%r9
+// 	popq		%r8
+// 	popq		%rsi
+// 	popq		%rdi
+// 	popq		%rbp
+// 	popq		%rdx
+// 	popq		%rcx
+// 	popq		%rbx
+// 	popq		%rax
+// 	/////////////////////////////////
+// 	addq		$0x10,		%rsp	// skip err-code and vec-nr
+// 	/////////////////////////////////
+// 	// now user rip already in rcx, rflags in r11
+// 	popq		%rcx
+// 	addq		$0x10,		%rsp	// skip cs
+// 	popq		%rsp
+// 	swapgs
+// 	sti
 
-	sysretq
+// 	sysretq
 
 
 /*==============================================================================================*/
 /*										interrupt entry								 			*/
 /*==============================================================================================*/
 RESTORE_ALL:
-	// if entered from user task, do swapgs
-	movq		0x98(%rsp),	%r10
-	movq		$USERADDR_LIMIT,	%r11
-	cmpq		%r11,		%r10
-	jl			ret_skip_swapgs
-	swapgs
-ret_skip_swapgs:
+// 	// if entered from user task, do swapgs
+// 	movq		0xa0(%rsp),	%r10
+// 	andq		$~0x2,		%r10
+// 	cmpq		$0,			%r10
+// 	jg			ret_skip_swapgs
+// 	swapgs
+// ret_skip_swapgs:
 	cli
 	popq		%rax		
 	movq		%rax,		%ds
@@ -247,14 +247,14 @@ SAVE_ALL:
 	movq		%ds,		%rax
 	pushq		%rax
 	xorq		%rax,		%rax
-	// if entered from user task, do swapgs
-	movq		0x98(%rsp),	%r10
-	movq		$USERADDR_LIMIT,	%r11
-	cmpq		%r11,		%r10
-	jl			enter_skip_swapgs
-	swapgs
+// 	// if entered from user task, do swapgs
+// 	movq		0xa0(%rsp),	%r10
+// 	andq		$~0x2,		%r10
+// 	cmpq		$0,			%r10
+// 	jg			enter_skip_swapgs
+// 	swapgs
 
-enter_skip_swapgs:
+// enter_skip_swapgs:
 	cld
 	movq		$KERN_SS_SELECTOR,	%rdi
 	movq		%rdi,		%ds
