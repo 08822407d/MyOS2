@@ -178,6 +178,13 @@ ENTRY(ret_from_syscall)
 /*										interrupt entry								 			*/
 /*==============================================================================================*/
 RESTORE_ALL:
+	// if entered from user task, do swapgs
+	movq		0x98(%rsp),	%r10
+	movq		$USERADDR_LIMIT,	%r11
+	cmpq		%r11,		%r10
+	jl			ret_skip_swapgs
+	swapgs
+ret_skip_swapgs:
 	cli
 	popq		%rax		
 	movq		%rax,		%ds
@@ -235,13 +242,19 @@ SAVE_ALL:
 	pushq		%r13
 	pushq		%r14
 	pushq		%r15	
-
 	movq		%es,		%rax
 	pushq		%rax
 	movq		%ds,		%rax
 	pushq		%rax
 	xorq		%rax,		%rax
+	// if entered from user task, do swapgs
+	movq		0x98(%rsp),	%r10
+	movq		$USERADDR_LIMIT,	%r11
+	cmpq		%r11,		%r10
+	jl			enter_skip_swapgs
+	swapgs
 
+enter_skip_swapgs:
 	cld
 	movq		$KERN_SS_SELECTOR,	%rdi
 	movq		%rdi,		%ds

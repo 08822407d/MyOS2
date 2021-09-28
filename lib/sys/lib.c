@@ -10,18 +10,22 @@
 #include "syscall.h"
 
 
-#define SYSFUNC_DEF(name)	_SYSFUNC_DEF_(name,__NR_##name)
-#define _SYSFUNC_DEF_(name,nr)	__SYSFUNC_DEF__(name,nr)
-#define __SYSFUNC_DEF__(name,nr)	\
-__asm__	(		\
-".global "#name"	\n\t"	\
-".type	"#name",	@function \n\t"	\
-#name":		\n\t"	\
-"pushq   %rbp	\n\t"	\
-"movq    %rsp,	%rbp	\n\t"	\
-"movq	$"#nr",	%rax	\n\t"	\
-"jmp	LABEL_SYSCALL	\n\t"	\
-);
+#define SYSFUNC_DEF(name)						\
+			_SYSFUNC_DEF_(name, __NR_##name)
+
+#define _SYSFUNC_DEF_(name, nr)					\
+			__SYSFUNC_DEF__(name, nr)
+
+#define __SYSFUNC_DEF__(name, nr)							\
+			__asm__	(										\
+				".global	"#name"					\n\t"	\
+				".type		"#name",	@function	\n\t"	\
+				#name":								\n\t"	\
+				"pushq	%rbp						\n\t"	\
+				"movq	%rsp,	%rbp				\n\t"	\
+				"movq	$"#nr",	%rax				\n\t"	\
+				"jmp	LABEL_SYSCALL				\n\t"	\
+			);
 
 
 SYSFUNC_DEF(putstring)

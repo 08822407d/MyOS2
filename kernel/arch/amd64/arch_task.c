@@ -505,6 +505,11 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	curr_context->r11 = curr->mm_struct->start_stack;
 	curr_context->rax = 1;
 
+	module_test(0);
+	sti();
+	while (1);
+	
+
 	return ret_val;
 }
 
