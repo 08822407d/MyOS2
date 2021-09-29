@@ -128,49 +128,26 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
-inline __always_inline int sys_call(int syscall_nr)
-{
-	int ret_val = 0;
-	__asm__ __volatile__(	"pushq	%%rcx				\n\t"
-							"pushq	%%rdx				\n\t"
-							"pushq	%%r10				\n\t"
-							"pushq	%%r11				\n\t"
-							"movq	serp(%%rip), %%rdx	\n\t"
-							"movq	%%rsp,	%%rcx		\n\t"
-							"sysenter					\n\t"
-							"serp:						\n\t"
-							"popq	%%r11				\n\t"
-							"popq	%%r10				\n\t"
-							"popq	%%rdx				\n\t"
-							"popq	%%rcx				\n\t"
-						:	"=a"(ret_val)
-						:	"a"(syscall_nr)
-						:
-						);
-	return ret_val;
-}
-
 unsigned long user_func(unsigned long arg)
 {
-	int sc_nr = 0x987654;
-	int i = 0;
+	// int sc_nr = 0x987654;
+	// int i = 0;
 
-	// i = sys_call(sc_nr);
-	__asm__ __volatile__(	"pushq	%%r10				\n\t"
-							"pushq	%%r11				\n\t"
-							"leaq	serptmp(%%rip), %%r10	\n\t"
-							"movq	%%rsp,	%%r11		\n\t"
-							"sysenter					\n\t"
-							"serptmp:						\n\t"
-							"xchgq	%%rdx,	%%r10		\n\t"
-							"xchgq	%%rcx,	%%r11		\n\t"
-							"popq	%%r11				\n\t"
-							"popq	%%r10				\n\t"
-						:	"=a"(i)
-						:	"a"(sc_nr)
-						:
-						);
-	return 0;
+	// __asm__ __volatile__(	"pushq	%%r10				\n\t"
+	// 						"pushq	%%r11				\n\t"
+	// 						"leaq	serptmp(%%rip), %%r10	\n\t"
+	// 						"movq	%%rsp,	%%r11		\n\t"
+	// 						"sysenter					\n\t"
+	// 						"serptmp:						\n\t"
+	// 						"xchgq	%%rdx,	%%r10		\n\t"
+	// 						"xchgq	%%rcx,	%%r11		\n\t"
+	// 						"popq	%%r11				\n\t"
+	// 						"popq	%%r10				\n\t"
+	// 					:	"=a"(i)
+	// 					:	"a"(sc_nr)
+	// 					:
+	// 					);
+	// return 0;
 }
 
 int do_syscall(int syscall_nr)

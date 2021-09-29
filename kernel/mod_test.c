@@ -33,7 +33,6 @@ unsigned long module_test(unsigned long flag)
 	// kmalloc_kfree_test();
 
 	kernthd_test();
-	user_thread_test(user_func, 0, 0);
 
 	// disk_drv_test();
 

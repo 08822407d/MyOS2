@@ -9,6 +9,18 @@
 #include "../../include/printk.h"
 
 
+unsigned long no_system_call(void)
+{
+	color_printk(RED,BLACK,"no_system_call is calling\n");
+	return -ENOSYS;
+}
+
+unsigned long sys_putstring(char *string)
+{
+	color_printk(ORANGE,WHITE,string);
+	return 0;
+}
+
 unsigned long sys_fork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
