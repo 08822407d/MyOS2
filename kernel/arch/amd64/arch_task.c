@@ -126,6 +126,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 							"D"(curr), "S"(target)
 						:	"memory"
 						);
+	// wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
 }
 
 unsigned long user_func(unsigned long arg)
@@ -161,7 +162,7 @@ file_s * open_exec_file(char * path)
 	dirent_s * dentry = NULL;
 	file_s * filp = NULL;
 
-	dentry = path_walk(path,0);
+	dentry = path_walk(path, 0);
 
 	if(dentry == NULL)
 		return (void *)-ENOENT;

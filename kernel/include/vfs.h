@@ -155,4 +155,7 @@
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
 
+	//
+	#include "block.h"
+	extern blkdev_ops_s IDE_device_operation;
 #endif /* _FS_H_ */

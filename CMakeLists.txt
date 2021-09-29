@@ -38,8 +38,8 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
 # message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
-                    -fno-builtin -fno-stack-protector -Wno-packed-bitfield-compat \
-                    -nostartfiles -static -ggdb -m64 -fPIC")
+    -fno-builtin -fno-stack-protector -Wno-packed-bitfield-compat \
+    -nostartfiles -static -ggdb -m64 -fPIC")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
@@ -60,4 +60,4 @@ add_subdirectory(kernel)
 #===============================================================================================#
 #                                       init.bin                                                #
 #===============================================================================================#
-add_subdirectory(user)
+add_subdirectory(initd)

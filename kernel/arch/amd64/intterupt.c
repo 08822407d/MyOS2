@@ -104,7 +104,7 @@ void excep_gen_prot(stack_frame_s * sf_regs)
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
 }
 
-void excep_page_fault(stack_frame_s * sf_regs)
+void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
 {
 	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
@@ -177,7 +177,7 @@ void exception_handler(stack_frame_s * sf_regs)
 		excep_gen_prot(sf_regs);
 		break;
 	case PAGE_FAULT_VEC:
-		excep_page_fault(sf_regs);
+		excep_page_fault(sf_regs, cpudata_p);
 		break;
 
 	default:
