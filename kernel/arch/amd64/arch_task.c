@@ -4,6 +4,7 @@
 #include <lib/string.h>
 #include <lib/utils.h>
 #include <lib/stddef.h>
+#include <lib/fcntl.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"
@@ -16,7 +17,6 @@
 #include "../../include/printk.h"
 #include "../../include/const.h"
 #include "../../include/vfs.h"
-#include "../../include/fcntl.h"
 #include "../../klib/data_structure.h"
 
 #define	USER_CODE_ADDR		0x6000000
@@ -295,10 +295,10 @@ unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 		goto out;
 	
 	for(i = 0; i < MAX_FILE_NR; i++)
-		if(curr->filps[i] != NULL)
+		if(curr->fps[i] != NULL)
 		{
-			new_tsk->filps[i] = (file_s *)kmalloc(sizeof(file_s));
-			memcpy(new_tsk->filps[i], curr->filps[i], sizeof(file_s));
+			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s));
+			memcpy(new_tsk->fps[i], curr->fps[i], sizeof(file_s));
 		}
 out:
 	return error;

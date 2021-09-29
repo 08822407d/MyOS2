@@ -22,7 +22,7 @@ SYSCALL_COMMON(0,no_system_call)
 typedef unsigned long (* system_call_t)(void);
 
 
-system_call_t system_call_table[MAX_SYSTEM_CALL_NR] = 
+system_call_t syscall_table[MAX_SYSTEM_CALL_NR] = 
 {
 	[0 ... MAX_SYSTEM_CALL_NR-1] = no_system_call,
 #include "syscall_table.h"

@@ -48,8 +48,8 @@ ENTRY(enter_sysenter)
 	movq		%ds,		%rax
 	pushq		%rax
 	movq		0x80(%rsp),	%rax		// get sc_nr from stack
-	movq		%rax,		%rdi
-	callq		do_syscall
+	leaq		syscall_table(%rip),	%rbx
+	callq		*(%rbx,%rax,8)
 
 
 // RDX -> user RSP

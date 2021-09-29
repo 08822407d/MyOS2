@@ -20,7 +20,7 @@
 
 	#define NR_SCAN_CODES 	0x80
 	#define MAP_COLS		2
-	#define KB_BUF_SIZE		100
+	#define KB_BUF_SIZE		0x80
 
 	#define PAUSEBREAK		1
 	#define PRINTSCREEN		2

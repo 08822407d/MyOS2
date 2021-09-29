@@ -147,6 +147,8 @@
 	extern dirent_ops_s	FAT32_dentry_ops;
 	extern sb_ops_s		FAT32_sb_ops;
 
+	extern file_ops_s	keyboard_fops;
+
 	unsigned long init_vfs();
 	dirent_s * path_walk(char * name,unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
