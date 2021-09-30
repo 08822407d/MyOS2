@@ -12,7 +12,7 @@ int main(int argc,char *argv[])
 	int rv = printf("Message from init.bin.\n");
 
 	char buf[512];
-	int test_fd = open("/EFI/BOOT/BOOTX64.EFI", O_RDONLY);
+	int test_fd = open("/kernel.bin", O_RDONLY);
 	if (test_fd >= 0)
 	{
 		read(test_fd, buf, 512);

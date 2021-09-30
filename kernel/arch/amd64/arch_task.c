@@ -81,6 +81,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 						:	"r"(target->mm_struct->cr3)
 						:	"memory"
 						);
+	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
 }
 
 inline __always_inline void __switch_to(task_s * curr, task_s * target)
@@ -126,7 +127,6 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 							"D"(curr), "S"(target)
 						:	"memory"
 						);
-	// wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
 }
 
 unsigned long user_func(unsigned long arg)
