@@ -151,12 +151,6 @@ unsigned long user_func(unsigned long arg)
 	// return 0;
 }
 
-int do_syscall(int syscall_nr)
-{
-	color_printk(GREEN, BLACK, "enter syscall function, SC_NR = %#08lx", syscall_nr);
-	return 0x12345678;
-}
-
 file_s * open_exec_file(char * path)
 {
 	dirent_s * dentry = NULL;

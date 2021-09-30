@@ -12,6 +12,7 @@
 
 	int		strlen(char * str);
 	int		strcmp(char * str1, char * str2);
+	int		strncmp(char * str1, char * str2, long count);
 	char *	strcpy(char * dst, char * src);
 	char *	strncpy(char * dst, char * src, long count);
 

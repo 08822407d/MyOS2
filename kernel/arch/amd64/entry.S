@@ -132,7 +132,6 @@ ENTRY(ret_from_sysenter)
 // 	movq		%ds,		%rax
 // 	pushq		%rax
 // 	movq		%rsp,		%rdi
-// 	callq		do_syscall
 
 // // R11 -> user Rflags
 // // RCX -> user RIP

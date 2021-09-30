@@ -269,7 +269,6 @@
 	int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long init(unsigned long arg);
 	file_s * open_exec_file(char * path);
-	int do_syscall(int syscall_nr);
 	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long user_func(unsigned long arg);
 

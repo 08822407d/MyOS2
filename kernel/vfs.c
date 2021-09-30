@@ -105,6 +105,25 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			name++;
 		tmpnamelen = name - tmpname;
 
+		int finded = FALSE;
+		dirent_s * dir_p = parent->child_list.head_p;
+		do
+		{
+			if (dir_p == NULL)
+				break;
+
+			if (strncmp(tmpname, dir_p->name, tmpnamelen))
+			{
+				parent = dir_p;
+				finded = TRUE;
+				break;
+			}
+			else
+				dir_p = dir_p->next;
+		} while (dir_p != parent->child_list.head_p);
+		if (finded)
+			continue;
+		
 		path = (dirent_s *)kmalloc(sizeof(dirent_s));
 		memset(path, 0, sizeof(dirent_s));
 
