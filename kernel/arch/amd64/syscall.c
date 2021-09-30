@@ -29,6 +29,9 @@ unsigned long sys_putstring(char *string)
 	return 0;
 }
 
+/*==============================================================================================*
+ *										file operations											*
+ *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
 	task_s * curr = curr_tsk;
@@ -242,4 +245,17 @@ unsigned long sys_exit(int exit_code)
 {
 	// color_printk(GREEN,BLACK,"sys_exit\n");
 	return do_exit(exit_code);
+}
+
+/*==============================================================================================*
+ *									get task infomation											*
+ *==============================================================================================*/
+unsigned long sys_getpid()
+{
+	return curr_tsk->pid;
+}
+
+unsigned long sys_getppid()
+{
+	return curr_tsk->parent->pid;
 }

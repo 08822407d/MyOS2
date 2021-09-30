@@ -129,28 +129,6 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
-unsigned long user_func(unsigned long arg)
-{
-	// int sc_nr = 0x987654;
-	// int i = 0;
-
-	// __asm__ __volatile__(	"pushq	%%r10				\n\t"
-	// 						"pushq	%%r11				\n\t"
-	// 						"leaq	serptmp(%%rip), %%r10	\n\t"
-	// 						"movq	%%rsp,	%%r11		\n\t"
-	// 						"sysenter					\n\t"
-	// 						"serptmp:						\n\t"
-	// 						"xchgq	%%rdx,	%%r10		\n\t"
-	// 						"xchgq	%%rcx,	%%r11		\n\t"
-	// 						"popq	%%r11				\n\t"
-	// 						"popq	%%r10				\n\t"
-	// 					:	"=a"(i)
-	// 					:	"a"(sc_nr)
-	// 					:
-	// 					);
-	// return 0;
-}
-
 file_s * open_exec_file(char * path)
 {
 	dirent_s * dentry = NULL;
@@ -254,26 +232,6 @@ void wakeup_task(task_s * task)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-// PML4E_T * create_userpage()
-// {
-// 	int user_page_nr = 4;
-// 	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
-// 	PML4E_T	* user_pml4 = (PML4E_T *)kmalloc(PGENT_SIZE);
-// 	memset(user_pml4, 0, PGENT_SIZE);
-// 	PDPTE_T	* user_pdpt = (PDPTE_T *)kmalloc(1 * PGENT_SIZE);
-// 	memset(user_pdpt, 0, PGENT_SIZE);
-// 	PDE_T	* user_pd	= (PDE_T *)kmalloc(1 * 1 * PGENT_SIZE);
-// 	memset(user_pd, 0, PGENT_SIZE);
-
-// 	user_pml4[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pdpt)) | ARCH_PGE_NOT_LAST(attr);
-// 	user_pdpt[0].ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(user_pd)) | ARCH_PGE_NOT_LAST(attr);
-// 	for (int i = 0; i < user_page_nr; i ++)
-// 	{
-// 		Page_s * pg = page_alloc();
-// 		user_pd[i].ENT = MASKF_2M((uint64_t)pg->page_start_addr) | ARCH_PGE_IS_LAST(attr);
-// 	}
-// }
-
 unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 { 
 	if(clone_flags & CLONE_VM)
@@ -298,40 +256,53 @@ unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 out:
 	return error;
 }
-unsigned long exit_files(task_s * new_tsk)
+void exit_files(task_s * new_tsk)
 {
-	return 0;
+	int i = 0;
+	if(new_tsk->flags & PF_VFORK)
+		;
+	else
+		for(i = 0; i < MAX_FILE_NR; i++)
+			if(new_tsk->fps[i] != NULL)
+			{
+				kfree(new_tsk->fps[i]);
+			}
+
+	memset(new_tsk->fps, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
 }
 
 unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int error = 0;
+
 	Page_s * page = NULL;
 	PML4E_T * new_cr3 = NULL;
+	task_s * curr = curr_tsk;
+	reg_t curr_endstack = get_stackframe(curr)->rsp;
+
 	if(clone_flags & CLONE_VM)
 	{
-		new_tsk->mm_struct = curr_tsk->mm_struct;
+		new_tsk->mm_struct = curr->mm_struct;
 		goto exit_cpmm;
 	}
-
-	new_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
-	if (new_cr3 == NULL)
+	else
 	{
-		error = -ENOMEM;
-		goto exit_cpmm;
+		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		memcpy(new_tsk->mm_struct, curr->mm_struct, sizeof(mm_s));
 	}
-	memset(new_cr3, 0, PGENT_SIZE);
-	page = page_alloc();
-	new_tsk->mm_struct->cr3 = (PML4E_T *)virt2phys((virt_addr)new_cr3);
-	arch_page_domap((virt_addr)USER_CODE_ADDR, page->page_start_addr,
-					ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW, new_cr3);
+	creat_exec_addrspace(new_tsk);
+
+	mm_s * new_mm = new_tsk->mm_struct;
+	mm_s * curr_mm = curr->mm_struct;
+	// memcpy(new_mm->start_code, curr_mm->start_code, curr_mm->end_data - curr_mm->start_code);
 
 exit_cpmm:
 	return error;
 }
-unsigned long exit_mm(task_s * new_tsk)
+void exit_mm(task_s * new_tsk)
 {
-	return 0;
+	if(new_tsk->flags & PF_VFORK)
+		return;
 }
 
 unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
@@ -445,29 +416,30 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	pg_load_cr3(curr->mm_struct->cr3);
 	curr->flags &= ~PF_VFORK;
 
-	// if(argv != NULL)
-	// {
-	// 	int argc = 0;
-	// 	int len = 0;
-	// 	int i = 0;
-	// 	char ** dargv = (char **)(stack_start_addr - 10 * sizeof(char *));
-	// 	pos = (unsigned long)dargv;
+	long argv_pos = 0;
+	if(argv != NULL)
+	{
+		int argc = 0;
+		int len = 0;
+		int i = 0;
+		char ** dargv = (char **)(curr->mm_struct->start_stack - 10 * sizeof(char *));
+		argv_pos = (unsigned long)dargv;
 
-	// 	for(i = 0;i<10 && argv[i] != NULL;i++)
-	// 	{
-	// 		len = strnlen_user(argv[i],1024) + 1;
-	// 		strcpy((char *)(pos - len),argv[i]);
-	// 		dargv[i] = (char *)(pos - len);
-	// 		pos -= len;
-	// 	}
-	// 	stack_start_addr = pos - 10;
-	// 	regs->rdi = i;	//argc
-	// 	regs->rsi = (unsigned long)dargv;	//argv
-	// }
+		for(i = 0; i < 10 && argv[i] != NULL; i++)
+		{
+			len = strnlen_user(argv[i], 1024) + 1;
+			strcpy((char *)(argv_pos - len), argv[i]);
+			dargv[i] = (char *)(argv_pos - len);
+			argv_pos -= len;
+		}
+		curr->mm_struct->start_stack = argv_pos - 10;
+		curr_context->rdi = i;	//argc
+		curr_context->rsi = (unsigned long)dargv;	//argv
+	}
 
-	memset((virt_addr)curr->mm_struct->start_code, 0, 0x600000);
-	long pos = 0;
-	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->dir_inode->file_size, &pos);
+	memset((virt_addr)curr->mm_struct->start_code, 0, curr->mm_struct->end_data - curr->mm_struct->start_code);
+	long fp_pos = 0;
+	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 
 	curr_context->ds =
 	curr_context->es =
@@ -476,6 +448,9 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	curr_context->r10 = curr->mm_struct->start_code;
 	curr_context->r11 = curr->mm_struct->start_stack;
 	curr_context->rax = 1;
+
+	phys_addr tpa = 0;
+	get_paddr(curr->mm_struct->cr3, (virt_addr)0x6000000, &tpa);
 
 	return ret_val;
 }
@@ -524,48 +499,6 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
 }
 
-int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
-{
-	// uint64_t star = rdmsr(MSR_IA32_STAR);
-	// // set userthd PCB members
-	// PCB_u * curr_pcb	= container_of(get_current_task(), PCB_u, task);
-	// PCB_u * new_pcb		= (PCB_u *)kmalloc(sizeof(PCB_u));
-	// task_s * curr_task	= &curr_pcb->task;
-	// task_s * new_task	= &new_pcb->task;
-	// if (new_pcb == NULL)
-	// {
-	// 	goto alloc_newtask_fail;
-	// }
-
-	// memset(new_pcb, 0, sizeof(PCB_u));
-	// memcpy(new_task, curr_pcb, sizeof(task_s));
-
-	// m_list_init(new_task);
-	// new_pcb->task.pid = get_newpid();
-
-	// stack_frame_s * new_sf_regs = get_stackframe(new_task);
-	// // set user task kernel data
-	// new_task->vruntime = 0;
-	// new_task->arch_struct.tss_rsp0 = (reg_t)new_pcb + TASK_KSTACK_SIZE;
-	// new_task->arch_struct.k_rip = (reg_t)ret_from_sysenter;
-	// new_task->arch_struct.k_rsp = (reg_t)new_sf_regs;
-	// new_task->mm_struct->cr3 = curr_task->mm_struct->cr3;
-	// // set user task context
-	// new_sf_regs->cs = USER_CS_SELECTOR;
-	// new_sf_regs->ss = USER_SS_SELECTOR;
-	// new_sf_regs->r11 =
-	// new_sf_regs->rflags = (1 << 9);
-	// new_sf_regs->rdx =
-	// new_sf_regs->rip = (reg_t)user_func;
-	// new_sf_regs->rcx =
-	// new_sf_regs->rsp = (reg_t)kmalloc(0x1000) + 0x1000;
-
-	// wakeup_task(new_task);
-
-	// alloc_newtask_fail:
-	// 	kfree(new_task);
-}
-
 void arch_init_task()
 {
 	// init pid bitmap
@@ -588,6 +521,7 @@ unsigned long init(unsigned long arg)
 	curr->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
+
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
@@ -672,24 +606,5 @@ void schedule()
 
 void load_balance()
 {
-	// per_cpudata_s * cpudata_p = &percpu_data[0]->cpudata;
-	// if (cpudata_p->scheduleing_flag)
-	// 	return;
 
-	// cpudata_p->scheduleing_flag = 1;
-	// // retrieve finished tasks, then assign them back to cpu
-	// while (cpudata_p->finished_tasks.count)
-	// {
-	// 	task_s * tmp = task_list_pop(&cpudata_p->finished_tasks);
-	// 	task_list_push(&global_ready_task, tmp);
-	// }
-	// while (global_ready_task.count)
-	// {
-	// 	task_s * tmp = task_list_pop(&global_ready_task);
-	// 	task_list_push(&cpudata_p->ready_tasks, tmp);
-	// }
-	// // insert load_balance self to cpu's waiting list end
-	// task_s * current = get_current_task();
-	// current->flags |= PF_NEED_SCHEDULE;
-	// cpudata_p->scheduleing_flag = 0;
 }

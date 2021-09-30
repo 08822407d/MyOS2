@@ -53,6 +53,8 @@ SYSFUNC_DEF(fstat)
 SYSFUNC_DEF(init_module)
 SYSFUNC_DEF(delete_module)
 
+SYSFUNC_DEF(getpid)
+SYSFUNC_DEF(getppid)
 
 __asm__	(
 	"LABEL_SYSCALL:							\n\t"

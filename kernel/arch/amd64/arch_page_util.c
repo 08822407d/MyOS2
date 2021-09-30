@@ -118,13 +118,7 @@ inline void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr)
 {
 	pde_ptr->ENT = MASKF_2M((uint64_t)paddr) | ARCH_PGE_IS_LAST(attr);
 }
-phys_addr get_pgpaddr(PDE_T * pd_ptr, uint64_t pde_idx)
-{
-	phys_addr ret_val = NULL;
-	if (pde_idx < PGENT_NR)
-		ret_val = (phys_addr)((uint64_t)pd_ptr[pde_idx].defs.PHYADDR << 12);
-	return ret_val;
-}
+
 
 //
 void creat_fixed_kernel_pgmap()
@@ -145,7 +139,7 @@ void unmap_kernel_lowhalf()
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3)
+unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * cr3)
 {
 	unsigned long rev_val = 1;
 	if (kparam.init_flags.slab == 0)
@@ -159,8 +153,8 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
 
-	// set pdpte
-	PML4E_T *	PML4_ptr		= (PML4E_T *)phys2virt(kernel_cr3);
+	// set pml4e
+	PML4E_T *	PML4_ptr		= (PML4E_T *)phys2virt(cr3);
 	PML4E_T *	pml4e_ptr		= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->ENT == 0)
 	{
@@ -177,7 +171,7 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 	{
 		pml4e_ptr->ENT | ARCH_PGE_NOT_LAST(attr);
 	}
-	// set pml4e
+	// set pdpte
 	PDPTE_T *	PDPT_ptr 		= (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT));
 	PDPTE_T *	pdpte_ptr		= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
@@ -206,4 +200,44 @@ unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML
 	refresh_arch_page();
 
 	return rev_val;
+}
+
+// ret_val = 0 : success
+int get_paddr(PML4E_T * cr3, virt_addr virt, phys_addr *ret_phys)
+{
+	int ret_val = 0;
+
+	unsigned int pml4e_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PML4E);
+	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
+	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
+
+	// get pml4e
+	PML4E_T *	PML4_ptr		= (PML4E_T *)phys2virt(cr3);
+	PML4E_T *	pml4e_ptr		= PML4_ptr + pml4e_idx;
+	if (pml4e_ptr->ENT == 0)
+	{
+		ret_val = 4;
+		goto just_return;
+	}
+	// get pdpte
+	PDPTE_T *	PDPT_ptr 		= (PDPTE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	pdpte_ptr		= PDPT_ptr + pdpte_idx;
+	if (pdpte_ptr->ENT == 0)
+	{
+		ret_val = 3;
+		goto just_return;
+	}
+	// get pte
+	PDE_T *		PD_ptr			= (PDE_T *)phys2virt((phys_addr)ARCH_PGS_ADDR(pdpte_ptr->ENT));	
+	PDE_T *		pde_ptr			= PD_ptr + pde_idx;
+	if (pde_ptr->ENT == 0)
+	{
+		ret_val = 2;
+		goto just_return;
+	}
+
+	*ret_phys = (phys_addr)((uint64_t)pde_ptr->defs.PHYADDR << 12);
+
+just_return:
+	return ret_val;
 }

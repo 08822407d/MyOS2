@@ -22,5 +22,8 @@ int		fork(void);
 int 	vfork(void);
 int 	execve(const char *path, char *const argv[], char *const envp[]);
 
+int		getpid(void);
+int		getppid(void);
+
 
 #endif

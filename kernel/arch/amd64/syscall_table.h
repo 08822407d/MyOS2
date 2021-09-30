@@ -33,3 +33,6 @@ SYSCALL_COMMON(__NR_exit,sys_exit)
 // SYSCALL_COMMON(__NR_init_module,sys_init_module)
 // SYSCALL_COMMON(__NR_delete_module,sys_delete_module)
 
+
+SYSCALL_COMMON(__NR_getpid, sys_getpid)
+SYSCALL_COMMON(__NR_getppid, sys_getppid)

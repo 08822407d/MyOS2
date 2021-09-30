@@ -35,4 +35,7 @@
 	#define	__NR_init_module	17
 	#define	__NR_delete_module	18
 
+	#define __NR_getpid			19
+	#define __NR_getppid		20
+
 #endif /* __SYSCALL_H__ */
