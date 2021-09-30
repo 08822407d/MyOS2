@@ -295,8 +295,8 @@
 	} __attribute__((packed));
 
 	unsigned char IDE_read_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx);
-	unsigned char IDE_write_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx);
+	void IDE_write_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx);
 	unsigned char IDE_read_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx);
-	unsigned char IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx);
+	void IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx);
 
 #endif /* _DISK_H_ */

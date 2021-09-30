@@ -169,7 +169,7 @@ unsigned long sys_write(int fd,void * buf,long count)
 
 	fp = curr->fps[fd];
 	if(fp->f_ops && fp->f_ops->write)
-		ret = fp->f_ops->write(fp,buf,count,&fp->position);
+		ret = fp->f_ops->write(fp, buf, count, &fp->position);
 	return ret;
 }
 

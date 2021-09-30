@@ -52,32 +52,30 @@ unsigned char IDE_read_LBA28(unsigned long lba, unsigned short count, unsigned d
 {
 	IDE_set_LBA28(lba, count);
 	outb(PORT_DISK0_DEVICE, 0xE0 | (drv_idx << 4) | (lba >> 24) & 0x0F);
-	outb(PORT_DISK0_STATUS_CMD,0x20);
+	outb(PORT_DISK0_STATUS_CMD, 0x20);
 	return inb(PORT_DISK0_STATUS_CMD);
 }
 
-unsigned char IDE_write_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx)
+void IDE_write_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx)
 {
 	IDE_set_LBA28(lba, count);
 	outb(PORT_DISK0_DEVICE, 0xE0 | (drv_idx << 4) | (lba >> 24) & 0x0F);
-	outb(PORT_DISK0_STATUS_CMD,0x30);
-	return inb(PORT_DISK0_STATUS_CMD);
+	outb(PORT_DISK0_STATUS_CMD, 0x30);
 }
 
 unsigned char IDE_read_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx)
 {
 	IDE_set_LBA48(lba, count);
 	outb(PORT_DISK0_DEVICE, 0x40 | (drv_idx << 4));
-	outb(PORT_DISK0_STATUS_CMD,0x24);
+	outb(PORT_DISK0_STATUS_CMD, 0x24);
 	return inb(PORT_DISK0_STATUS_CMD);
 }
 
-unsigned char IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx)
+void IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx)
 {
 	IDE_set_LBA48(lba, count);
 	outb(PORT_DISK0_DEVICE, 0x40 | (drv_idx << 4));
-	outb(PORT_DISK0_STATUS_CMD,0x34);
-	return inb(PORT_DISK0_STATUS_CMD);
+	outb(PORT_DISK0_STATUS_CMD, 0x34);
 }
 
 /*==============================================================================================*
@@ -96,11 +94,15 @@ long cmd_out()
 	switch(node->cmd)
 	{
 		case ATA_WRITE_CMD:	
-			status = IDE_write_LBA28(node->LBA, node->count, DISK_IDX);
+			IDE_write_LBA28(node->LBA, node->count, DISK_IDX);
 
-			while(status & DISK_STATUS_REQ)
+			while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_READY))
 				nop();
-			outsw(PORT_DISK0_DATA, (uint16_t *)node->buffer,256);
+			outb(PORT_DISK0_STATUS_CMD, node->cmd);
+
+			while(!(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_REQ))
+				nop();
+			outsw(PORT_DISK0_DATA, (uint16_t *)node->buffer, 256);
 			break;
 
 		case ATA_READ_CMD:
@@ -274,7 +276,7 @@ long IDE_ioctl(long cmd,long arg)
 	blkbuf_node_s * node = NULL;
 	if(cmd == GET_IDENTIFY_DISK_CMD)
 	{
-		node = make_request(cmd,0,0,(unsigned char *)arg);
+		node = make_request(cmd, 0, 0, (unsigned char *)arg);
 		submit(node);
 		wait_for_finish();
 		return 1;

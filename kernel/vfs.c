@@ -112,7 +112,7 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			if (dir_p == NULL)
 				break;
 
-			if (strncmp(tmpname, dir_p->name, tmpnamelen))
+			if (!strncmp(tmpname, dir_p->name, tmpnamelen))
 			{
 				parent = dir_p;
 				finded = TRUE;
@@ -121,28 +121,31 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			else
 				dir_p = dir_p->next;
 		} while (dir_p != parent->child_list.head_p);
-		if (finded)
-			continue;
-		
-		path = (dirent_s *)kmalloc(sizeof(dirent_s));
-		memset(path, 0, sizeof(dirent_s));
 
-		path->name = kmalloc(tmpnamelen+1);
-		memset(path->name,0,tmpnamelen+1);
-		memcpy(path->name, tmpname, tmpnamelen);
-		path->name_length = tmpnamelen;
-
-		if(parent->dir_inode->inode_ops->lookup(parent->dir_inode, path) == NULL)
+		if (!finded)
 		{
-			color_printk(RED, WHITE, "can not find file or dir:%s\n", path->name);
-			kfree(path->name);
-			kfree(path);
-			return NULL;
-		}
+			path = (dirent_s *)kmalloc(sizeof(dirent_s));
+			memset(path, 0, sizeof(dirent_s));
 
-		m_init_list_header(&path->child_list);
-		path->parent = parent;
-		m_append_to_list(path, &parent->child_list);
+			path->name = kmalloc(tmpnamelen+1);
+			memset(path->name,0,tmpnamelen+1);
+			memcpy(path->name, tmpname, tmpnamelen);
+			path->name_length = tmpnamelen;
+
+			if(parent->dir_inode->inode_ops->lookup(parent->dir_inode, path) == NULL)
+			{
+				color_printk(RED, WHITE, "can not find file or dir:%s\n", path->name);
+				kfree(path->name);
+				kfree(path);
+				return NULL;
+			}
+
+			m_init_list_header(&path->child_list);
+			path->parent = parent;
+			m_append_to_list(path, &parent->child_list);
+
+			parent = path;
+		}
 
 		if(!*name)
 			goto last_component;
@@ -150,8 +153,6 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			name++;
 		if(!*name)
 			goto last_slash;
-
-		parent = path;
 	}
 
 last_slash:

@@ -1,7 +1,8 @@
 #include <lib/stdio.h>
 #include <lib/stdlib.h>
-#include <lib/fcntl.h>
+#include <lib/string.h>
 
+#include <lib/fcntl.h>
 #include <lib/unistd.h>
 
 int main(int argc,char *argv[])
@@ -17,7 +18,12 @@ int main(int argc,char *argv[])
 	{
 		read(test_fd1, buf, 512);
 	}
-	int test_fd2 = open("/EFI/BOOT/test.txt", O_RDONLY);
+	close(test_fd1);
+
+	char buf2[] = {"write test success."};
+	int test_fd2 = open("/EFI/BOOT/test.txt", O_RDWR | O_APPEND);
+	write(test_fd2, buf2, strlen(buf2));
+	close(test_fd2);
 
 	while (1);
 
