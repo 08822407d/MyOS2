@@ -74,6 +74,19 @@
 	#define ARCH_PGE_IS_LAST(x)		(x | ARCH_PG_PAT)
 	#define ARCH_PGE_NOT_LAST(x)	(x & 0x3F)
 
+	/* CRn registers bits */
+	#define IA32_CR0_PE			(1 << 0)
+	#define IA32_CR0_MP			(1 << 1)
+	#define IA32_CR0_EM			(1 << 2)
+	#define IA32_CR0_TS			(1 << 3)
+	#define IA32_CR0_ET			(1 << 4)
+	#define IA32_CR0_NE			(1 << 5)
+	#define IA32_CR0_WP			(1 << 16)
+	#define IA32_CR0_AM			(1 << 18)
+	#define IA32_CR0_NW			(1 << 29)
+	#define IA32_CR0_CD			(1 << 30)
+	#define IA32_CR0_PG			(1 << 31)
+
 	/* MSR registers addresses */
 	#define IA32_EFER			0xC0000080
 	#define	MSR_IA32_EFER_SCE	0x00000001

@@ -10,8 +10,9 @@ int main(int argc,char *argv[])
 {
 	int ret_val = 123;
 	int testi = 0x12345678;
+	int rv = 0;
 
-	// int rv = printf("Message from init.bin.\n");
+	rv = printf("Message from init.bin.\n");
 
 	// char buf[512];
 	// int test_fd1 = open("/EFI/BOOT/BOOTX64.EFI", O_RDONLY);
@@ -31,8 +32,8 @@ int main(int argc,char *argv[])
 
 	// int pid = getpid();
 
-	int rv = fork();
-	printf("message after fork : %d", rv);
+	rv = fork();
+	printf("message after fork, from taks-%d", rv);
 
 	while (1);
 

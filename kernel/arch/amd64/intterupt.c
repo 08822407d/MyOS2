@@ -36,6 +36,8 @@ void excep_inval_tss(stack_frame_s * sf_regs)
 
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
 
+
+	while (1);
 }
 
 void excep_seg_not_pres(stack_frame_s * sf_regs)
@@ -58,6 +60,8 @@ void excep_seg_not_pres(stack_frame_s * sf_regs)
 			color_printk(RED,BLACK,"Refers to a descriptor in the current GDT;\n");
 
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
+
+	while (1);
 }
 
 void excep_stack_segfault(stack_frame_s * sf_regs)
@@ -80,6 +84,8 @@ void excep_stack_segfault(stack_frame_s * sf_regs)
 			color_printk(RED,BLACK,"Refers to a descriptor in the current GDT;\n");
 
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
+
+	while (1);
 }
 
 void excep_gen_prot(stack_frame_s * sf_regs)
@@ -102,6 +108,8 @@ void excep_gen_prot(stack_frame_s * sf_regs)
 			color_printk(RED,BLACK,"Refers to a descriptor in the current GDT;\n");
 
 	color_printk(RED,BLACK,"Segment Selector Index:%#010x\n",error_code & 0xfff8);
+
+	while (1);
 }
 
 void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
@@ -139,6 +147,8 @@ void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
 	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->rip);
 
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
+
+	while (1);
 }
 
 
@@ -184,8 +194,6 @@ void exception_handler(stack_frame_s * sf_regs)
 		color_printk(GREEN, BLACK, "Handler not yet implemented!\n");
 		break;
 	}
-
-	while (1);
 }
 
 void hwint_irq_handler(stack_frame_s * sf_regs)

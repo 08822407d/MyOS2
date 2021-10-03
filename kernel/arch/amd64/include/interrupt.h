@@ -101,4 +101,11 @@
 		#define APIC_PIRQH				23
 	#endif
 
+	/* EXCEPTIONS ERROR CODES */
+	#define ARCH_PF_EC_P				(1 << 0)
+	#define ARCH_PF_EC_WR				(1 << 1)
+	#define ARCH_PF_EC_US				(1 << 2)
+	#define ARCH_PF_EC_RSVD				(1 << 3)
+	#define ARCH_PF_EC_ID				(1 << 4)
+
 #endif /* _AMD64_PC_INTERRUPT_H_ */

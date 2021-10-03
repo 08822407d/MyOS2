@@ -289,12 +289,21 @@ unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
 		memcpy(new_tsk->mm_struct, curr->mm_struct, sizeof(mm_s));
+		set_allpage_readonly(curr);
 	}
-	creat_exec_addrspace(new_tsk);
 
-	mm_s * new_mm = new_tsk->mm_struct;
-	mm_s * curr_mm = curr->mm_struct;
-	// memcpy(new_mm->start_code, curr_mm->start_code, curr_mm->end_data - curr_mm->start_code);
+	// mm_s * new_mm = new_tsk->mm_struct;
+	// mm_s * curr_mm = curr->mm_struct;
+	// phys_addr curr_paddr = 0;
+	// phys_addr new_paddr = 0;
+	// // copy rw data pages
+	// get_paddr(curr_mm->cr3, (virt_addr)curr_mm->start_data, &curr_paddr);
+	// get_paddr(new_mm->cr3, new_mm->start_data, &new_paddr);
+	// memcpy(phys2virt(curr_paddr), phys2virt(new_paddr), CONFIG_PAGE_SIZE);
+	// // copy stack pages
+	// get_paddr(curr_mm->cr3, (virt_addr)CONFIG_PAGE_MASKF(curr_endstack), &curr_paddr);
+	// get_paddr(new_mm->cr3, (virt_addr)CONFIG_PAGE_MASKF(curr_endstack), &new_paddr);
+	// memcpy(phys2virt(curr_paddr), phys2virt(new_paddr), CONFIG_PAGE_SIZE);
 
 exit_cpmm:
 	return error;
@@ -448,9 +457,6 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	curr_context->r10 = curr->mm_struct->start_code;
 	curr_context->r11 = curr->mm_struct->start_stack;
 	curr_context->rax = 1;
-
-	phys_addr tpa = 0;
-	get_paddr(curr->mm_struct->cr3, (virt_addr)0x6000000, &tpa);
 
 	return ret_val;
 }

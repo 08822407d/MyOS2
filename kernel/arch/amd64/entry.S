@@ -16,8 +16,8 @@
 /*==============================================================================================*/
 /*									syscall and sysret entry						 			*/
 /*==============================================================================================*/
-// user RSP -> RCX
-// user RIP -> RDX
+// user RSP -> R11 by hand
+// user RIP -> R10 by hand
 // kernel CS = IA32_SYSENTER_CS
 // kernel SS = IA32_SYSENTER_CS + 8
 // kernel RIP = IA32_SYSENTER_EIP
@@ -25,7 +25,13 @@
 ENTRY(enter_sysenter)
 	cli
 	// swapgs
-	subq		$0x38,		%rsp
+	subq		$0x08,		%rsp
+	pushq		%r11
+	pushfq
+	subq		$0x08,		%rsp
+	pushq		%r10
+	subq		$0x08,		%rsp
+	pushq		%rax
 
 	pushq		%rax
 	pushq		%rbx

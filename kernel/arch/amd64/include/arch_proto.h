@@ -195,6 +195,8 @@
 	void refresh_arch_page(void);
 	void unmap_kernel_lowhalf(void);
 	unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3);
+	int arch_page_setattr(virt_addr virt, uint64_t attr, PML4E_T * cr3);
+	int arch_page_clearattr(virt_addr virt, uint64_t attr, PML4E_T * cr3);
 	int get_paddr(PML4E_T * cr3, virt_addr virt, phys_addr *ret_phys);
 	void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr);
 	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
@@ -259,6 +261,9 @@
 	// void intr_enable(void);
 
 	/* arch_task.c */
+	struct task;
+	typedef struct task task_s;
+	stack_frame_s * get_stackframe(task_s * task_p);
 	unsigned long do_fork(stack_frame_s * sf_regs,
 							unsigned long clone_flags,
 							unsigned long tmp_kstack_start,
@@ -296,5 +301,8 @@
 	long copy_to_user(void * from, void * to, unsigned long size);
 	long strncpy_from_user(void * from, void * to, unsigned long size);
 	long strnlen_user(void * src, unsigned long maxlen);
+
+	/*  mm.c */
+	void set_allpage_readonly(task_s * task);
 
 #endif /* _AMD64_PROTO_H_ */

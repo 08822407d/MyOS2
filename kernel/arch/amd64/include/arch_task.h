@@ -31,12 +31,12 @@ typedef struct mm
 {
 	PML4E_T	*	cr3;
 
-	uint64_t	start_code,end_code;
-	uint64_t	start_rodata,end_rodata;
-	uint64_t	start_data,end_data;
-	uint64_t	start_bss,end_bss;
-	uint64_t	start_brk,end_brk;
-	uint64_t	start_stack;
+	reg_t	start_code,end_code;
+	reg_t	start_rodata,end_rodata;
+	reg_t	start_data,end_data;
+	reg_t	start_bss,end_bss;
+	reg_t	start_brk,end_brk;
+	reg_t	start_stack;
 } mm_s;
 
 
