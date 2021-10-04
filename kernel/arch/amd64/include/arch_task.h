@@ -29,7 +29,7 @@ typedef struct arch_PCB_stackframe
 
 typedef struct mm
 {
-	PML4E_T	*	cr3;
+	reg_t	cr3;
 
 	reg_t	start_code,end_code;
 	reg_t	start_rodata,end_rodata;

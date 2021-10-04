@@ -29,6 +29,7 @@ uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZ
 slab_cache_list_s	slab_cache_list;
 recurs_lock_T	slab_alloc_lock;
 
+
 /*==============================================================================================*
  *								fuction relate to physical page									*
  *==============================================================================================*/
@@ -132,6 +133,12 @@ void page_free(Page_s * page_p)
 	unlock_recurs_lock(&page_alloc_lock);
 }
 
+Page_s * get_page(phys_addr paddr)
+{
+	long pg_idx = CONFIG_PAGE_ALIGH((uint64_t)paddr) / CONFIG_PAGE_SIZE;
+	return &mem_info.pages[pg_idx];
+}
+
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
@@ -196,7 +203,7 @@ slab_s * slab_alloc(slab_s * cslp)
 	Page_s * pgp = page_alloc();
 	if (!(pgp->attr & PG_PTable_Maped))
 		arch_page_domap(phys2virt(pgp->page_start_addr), pgp->page_start_addr,
-									ARCH_PG_RW | ARCH_PG_PRESENT, curr_tsk->mm_struct->cr3);
+									ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
 	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s));

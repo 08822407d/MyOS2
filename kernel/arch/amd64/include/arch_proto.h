@@ -191,18 +191,19 @@
 	typedef struct mm mm_s;
 	void arch_page_preinit(void);
 	void reload_arch_page(void);
-	void pg_load_cr3(PML4E_T *);
+	reg_t read_cr3(void);
+	void pg_load_cr3(reg_t cr3);
 	void refresh_arch_page(void);
 	void unmap_kernel_lowhalf(void);
-	unsigned long arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, PML4E_T * kernel_cr3);
-	int arch_page_setattr(virt_addr virt, uint64_t attr, PML4E_T * cr3);
-	int arch_page_clearattr(virt_addr virt, uint64_t attr, PML4E_T * cr3);
-	int get_paddr(PML4E_T * cr3, virt_addr virt, phys_addr *ret_phys);
+	int arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, reg_t * kernel_cr3);
+	int arch_page_setattr(virt_addr virt, uint64_t attr, reg_t * cr3);
+	int arch_page_clearattr(virt_addr virt, uint64_t attr, reg_t * cr3);
+	int arch_page_duplicate(virt_addr virt, phys_addr phys, reg_t orig_cr3, reg_t * ret_cr3);
+	int get_paddr(reg_t cr3, virt_addr virt, phys_addr *ret_phys);
 	void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr);
 	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
 	void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr);
 	void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr);
-	PML4E_T * get_cr3(PML4E_T * pmlt4_ptr);
 	PDPTE_T * get_pdpt(PML4E_T * pml4_ptr, uint64_t pml4e_idx);
 	PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx);
 
@@ -303,6 +304,9 @@
 	long strnlen_user(void * src, unsigned long maxlen);
 
 	/*  mm.c */
-	void set_allpage_readonly(task_s * task);
+	void creat_exec_addrspace(task_s * task);
+	void prepair_COW(task_s * task);
+	int do_COW(task_s * task, virt_addr vaddr);
+	int check_addr_writable(reg_t cr2, task_s * task);
 
 #endif /* _AMD64_PROTO_H_ */

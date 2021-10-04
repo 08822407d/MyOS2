@@ -71,8 +71,6 @@
 	#define CANONICAL_ADDR(x)		((x) & 0xFFFFFFFFFFFF)
 	#define ARCH_PGS_ADDR(x)		(MASKF_4K(CANONICAL_ADDR(x)))
 	#define ARCH_PGS_ATTR(x)		(x & 0x1FF)
-	#define ARCH_PGE_IS_LAST(x)		(x | ARCH_PG_PAT)
-	#define ARCH_PGE_NOT_LAST(x)	(x & 0x3F)
 
 	/* CRn registers bits */
 	#define IA32_CR0_PE			(1 << 0)

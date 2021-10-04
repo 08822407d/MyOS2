@@ -55,7 +55,7 @@ void init_task()
 
 	// set arch struct in mm_s
 	mm_s * task0_mm_p = task0_PCB.task.mm_struct;
-	task0_mm_p->cr3	= (PML4E_T *)virt2phys(KERN_PML4);
+	task0_mm_p->cr3	= (reg_t)virt2phys(KERN_PML4);
 	task0_mm_p->start_code		= (reg_t)&_text;
 	task0_mm_p->end_code		= (reg_t)&_etext;
 	task0_mm_p->start_rodata	= (reg_t)&_rodata;

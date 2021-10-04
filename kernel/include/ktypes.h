@@ -30,6 +30,7 @@
 		
 		unsigned long	attr;
 		unsigned long	ref_count;
+		unsigned long	map_count;
 		unsigned long	age;
 
 		slab_s *		slab_ptr;
@@ -55,11 +56,11 @@
 		multiboot_memory_map_s	mb_memmap[MAXMEMZONE];
 		unsigned long	mb_memmap_nr;
 
-		struct Page		pages[PDE_NR];
+		Page_s			pages[PDE_NR];
 		bitmap_t		page_bitmap[PDE_NR / BITMAP_UNITSIZE];
 		unsigned long	page_total_nr;
 
-		struct MemZone	memzones[MAXMEMZONE];
+		memzone_s		memzones[MAXMEMZONE];
 		unsigned long	memzone_total_nr;	
 	} memory_info_s;
 

@@ -10,6 +10,7 @@
 #include "include/archtypes.h"
 #include "include/arch_task.h"
 #include "include/arch_proto.h"
+#include "include/arch_glo.h"
 
 #include "../../include/glo.h"
 #include "../../include/proto.h"
@@ -171,57 +172,6 @@ int read_exec_mm(file_s * fp, task_s * curr)
 	mm->start_stack = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 6;
 }
 
-int creat_exec_addrspace(task_s * curr)
-{
-	mm_s * mm = curr->mm_struct;
-	PML4E_T * pml4 = mm->cr3;
-	unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
-	reg_t code_len = (mm->end_code - mm->start_code) / CONFIG_PAGE_SIZE;
-	reg_t rodata_len = (mm->end_rodata - mm->start_rodata) / CONFIG_PAGE_SIZE;
-	reg_t data_len = (mm->end_data - mm->start_data) / CONFIG_PAGE_SIZE;
-	reg_t bss_len = (mm->end_bss - mm->start_bss) / CONFIG_PAGE_SIZE;
-	reg_t brk_len = 0;
-	reg_t stack_len = 1;
-
-	int i;
-	for ( i = 0; i < code_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_code + i * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-	for ( i = 0; i < rodata_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_rodata + i * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-	for ( i = 0; i < data_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_data + i * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-	for ( i = 0; i < bss_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_bss + i * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-	for ( i = 0; i < brk_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_brk + i * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-	for ( i = 0; i < stack_len; i++)
-	{
-		Page_s * phys_pg = page_alloc();
-		arch_page_domap((virt_addr)(mm->start_stack - (i + 1) * CONFIG_PAGE_SIZE),
-							phys_pg->page_start_addr, attr, pml4);
-	}
-}
-
 void wakeup_task(task_s * task)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
@@ -289,21 +239,8 @@ unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
 		memcpy(new_tsk->mm_struct, curr->mm_struct, sizeof(mm_s));
-		set_allpage_readonly(curr);
+		prepair_COW(curr);
 	}
-
-	// mm_s * new_mm = new_tsk->mm_struct;
-	// mm_s * curr_mm = curr->mm_struct;
-	// phys_addr curr_paddr = 0;
-	// phys_addr new_paddr = 0;
-	// // copy rw data pages
-	// get_paddr(curr_mm->cr3, (virt_addr)curr_mm->start_data, &curr_paddr);
-	// get_paddr(new_mm->cr3, new_mm->start_data, &new_paddr);
-	// memcpy(phys2virt(curr_paddr), phys2virt(new_paddr), CONFIG_PAGE_SIZE);
-	// // copy stack pages
-	// get_paddr(curr_mm->cr3, (virt_addr)CONFIG_PAGE_MASKF(curr_endstack), &curr_paddr);
-	// get_paddr(new_mm->cr3, (virt_addr)CONFIG_PAGE_MASKF(curr_endstack), &new_paddr);
-	// memcpy(phys2virt(curr_paddr), phys2virt(new_paddr), CONFIG_PAGE_SIZE);
 
 exit_cpmm:
 	return error;
@@ -414,9 +351,9 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 		memset(curr->mm_struct, 0, sizeof(mm_s));
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
-		curr->mm_struct->cr3 = (PML4E_T *)virt2phys(virt_cr3);
+		curr->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
-				phys2virt(task0_PCB.task.mm_struct->cr3 + PGENT_NR / 2),
+				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);
 		memset(virt_cr3, 0, PGENT_SIZE / 2);
 	}

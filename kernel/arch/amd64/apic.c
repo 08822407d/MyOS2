@@ -241,7 +241,7 @@ void IOAPIC_pagetable_remap()
 	
 	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
 	arch_page_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr,
-					page_attr, curr_tsk->mm_struct->cr3);
+					page_attr, &curr_tsk->mm_struct->cr3);
 }
 
 void init_lapic()

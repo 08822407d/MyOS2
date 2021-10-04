@@ -114,14 +114,21 @@ void excep_gen_prot(stack_frame_s * sf_regs)
 
 void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
 {
+	mm_s * mm = curr_tsk->mm_struct;
 	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
-
 	__asm__	__volatile__(	"movq	%%cr2,	%0		\n\t"
 						:	"=r"(cr2)
 						:
 						:	"memory"
 						);
+
+	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
+		check_addr_writable(cr2, curr_tsk))
+	{
+		do_COW(curr_tsk, (virt_addr)cr2);
+		return;
+	}
 
 	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
 
