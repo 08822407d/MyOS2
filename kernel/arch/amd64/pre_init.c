@@ -57,6 +57,7 @@ void pre_init(void)
 		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
 		mem_info.mb_memmap[i].zero = 0;
 	}
+	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
 	mem_info.mb_memmap_nr = i + 1;
 	// set init flag
 	kparam.arch_init_flags.memory_layout = 1;

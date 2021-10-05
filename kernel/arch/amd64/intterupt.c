@@ -156,6 +156,10 @@ void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 
 	while (1);
+
+PF_finish:
+	refresh_arch_page();
+	return;
 }
 
 

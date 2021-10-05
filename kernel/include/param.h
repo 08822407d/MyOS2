@@ -27,6 +27,8 @@
 		unsigned	nr_lcpu;
 		unsigned	nr_task;           /* number of kernel tasks */
 
+		reg_t		max_phys_mem;
+
 		int		vm_allocated_bytes; /* allocated by kernel to load vm */
 		int		kernel_allocated_bytes;		/* used by kernel */
 		int		kernel_allocated_bytes_dynamic;	/* used by kernel (runtime) */

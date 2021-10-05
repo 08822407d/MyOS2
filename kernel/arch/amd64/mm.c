@@ -98,12 +98,21 @@ int do_COW(task_s * task, virt_addr virt)
 	if (new_pgp != NULL)
 	{
 		new_pgp->attr = PG_PTable_Maped | PG_Referenced;
-		if (arch_page_duplicate(virt, new_pgp->page_start_addr, orig_cr3, &new_cr3))
+		if (!arch_page_duplicate(virt, new_pgp->page_start_addr, orig_cr3, &new_cr3))
 		{
-			arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
-			arch_page_setattr(virt, ARCH_PG_RW, &new_cr3);
 			new_pgp->map_count++;
+			arch_page_setattr(virt, ARCH_PG_RW, &new_cr3);
+
 			orig_pgp->map_count--;
+			if (orig_pgp->map_count < 2)
+				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
+
+			virt_addr orig_pg_vaddr = (virt_addr)phys2virt(orig_pgp->page_start_addr);
+			virt_addr new_pg_vaddr = (virt_addr)phys2virt(new_pgp->page_start_addr);
+			memcpy(new_pg_vaddr, orig_pg_vaddr, PGENT_SIZE);
+
+			pg_load_cr3(new_cr3);
+			task->mm_struct->cr3 = new_cr3;
 		}
 	}
 
