@@ -68,7 +68,8 @@
 	#define SATA_SLAV_IRQ				15		/* at winchester controller 1 */
 	/* different irqs in i8259 and apic */
 	#define I8259_CASCADE_IRQ			2		/* casade enable for 2nd AT controller */
-	#ifndef USE_APIC       
+
+	#ifndef USE_APIC	// Then use i8259a
 		#define NR_IRQ_VECS				16
 		#define HWINT0_VEC				I8259_IRQ0_VEC
 		#define VECTOR(irq)				(irq + I8259_IRQ0_VEC)
@@ -78,7 +79,7 @@
 		#define PRESERVED_1_IRQ			10
 		#define PRESERVED_2_IRQ			11
 		#define FPU_IRQ					13
-	#else
+	#else	// Then use APIC
 		#define NR_IRQ_VECS				24
 		#define HWINT0_VEC				APIC_IRQ0_VEC
 		#define VECTOR(irq)				(irq + APIC_IRQ0_VEC)
@@ -99,6 +100,8 @@
 		#define APIC_PIRQF				21
 		#define APIC_PIRQG				22
 		#define APIC_PIRQH				23
+		// lapic vectors
+		#define LAPIC_TIMER_IRQ			0xC8
 	#endif
 
 	/* EXCEPTIONS ERROR CODES */
