@@ -333,7 +333,7 @@ void init_disk()
 {
 	ioapic_retentry_T entry;
 
-	entry.vector = VECTOR(SATA_MAST_IRQ);
+	entry.vector = VECTOR_IRQ(SATA_MAST_IRQ);
 	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
 	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
 	entry.deliver_status = APIC_ICR_IOAPIC_Idle;

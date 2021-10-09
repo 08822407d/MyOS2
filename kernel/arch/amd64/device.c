@@ -3,6 +3,11 @@
 void devices_init()
 {
 	init_keyboard();
-	HPET_init();
+
+	#ifdef USE_APIC
+		HPET_init();
+		LVT_timer_init();
+	#endif
+
 	init_disk();
 }

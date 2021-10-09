@@ -23,6 +23,9 @@
 	void get_cmos_time(time_s *time);
 	void HPET_init(void);
 
+	/* apic_timer.c */
+	void LVT_timer_init(void);
+
 	/* disk.c */
 	void init_disk(void);
 	extern blkdev_ops_s IDE_device_operation;

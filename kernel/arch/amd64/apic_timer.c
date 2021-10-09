@@ -12,39 +12,34 @@
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
-hw_int_controller_s LA_TMR_int_controller = 
+void LVT_timer_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
-	.enable		= NULL,
-	.disable	= NULL,
-	.install	= NULL,
-	.uninstall	= NULL,
-	.ack		= NULL,
-};
-
-void LA_TMR_handler(unsigned long parameter, stack_frame_s * sf_regs)
-{
-	color_printk(WHITE, BLUE, "(LVT_TMR) ");
+	color_printk(WHITE, BLUE, "(LVT_timer) ");
 }
 
-void LA_TMR_init()
+void LVT_timer_init()
 {
 	ioapic_retentry_T entry;
 	
 	// set LVT
-	apic_lvt_T LA_TMR_lvt;
-	LA_TMR_lvt.deliver_mode =
-	LA_TMR_lvt.deliver_status =
-	LA_TMR_lvt.irr =
-	LA_TMR_lvt.polarity =
-	LA_TMR_lvt.res_1 =
-	LA_TMR_lvt.res_2 =
-	LA_TMR_lvt.trigger =
-	LA_TMR_lvt.mask = 0;
-	LA_TMR_lvt.timer_mode = APIC_LVT_Timer_Periodic;
-	LA_TMR_lvt.vector = VECTOR(LAPIC_LVT_TIMER_IRQ);
+	apic_lvt_u LVT_timer;
+	LVT_timer.def.deliver_mode =
+	LVT_timer.def.deliver_status =
+	LVT_timer.def.irr =
+	LVT_timer.def.polarity =
+	LVT_timer.def.res_1 =
+	LVT_timer.def.res_2 =
+	LVT_timer.def.trigger =
+	LVT_timer.def.mask = 0;
+	LVT_timer.def.timer_mode = APIC_LVT_Timer_Periodic;
+	LVT_timer.def.vector = VECTOR_IPI(LAPIC_LVT_TIMER_IRQ);
 
-	register_irq(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_TMR",
-				 NULL, &LA_TMR_int_controller,
-				 &LA_TMR_handler);
+	register_IPI(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_timer",
+				 NULL, NULL,
+				 &LVT_timer_handler);
+
+	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0x10);
+	wrmsr(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
+	wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, 0x03);
 	
 }

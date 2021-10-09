@@ -11,6 +11,7 @@
 extern gate_table_s exception_init_table[];
 
 irq_desc_s	irq_descriptors[NR_IRQ_VECS];
+irq_desc_s	ipi_descriptors[NR_LAPIC_IPI_VECS];
 
 /*==============================================================================================*
  *										exception handlers								 		*
@@ -210,8 +211,18 @@ void exception_handler(stack_frame_s * sf_regs)
 void hwint_irq_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
-	int irq_nr = vec - HWINT0_VEC;
-	irq_desc_s * irq_desc = &irq_descriptors[irq_nr];	
+	int irq_nr = 0;
+	irq_desc_s * irq_desc = NULL;
+	if (vec < APIC_IPI0_VEC)
+	{
+		irq_nr = vec - HWINT0_VEC;
+		irq_desc = &irq_descriptors[irq_nr];	
+	}
+	else
+	{
+		irq_nr = vec - APIC_IPI0_VEC;
+		irq_desc = &ipi_descriptors[irq_nr];	
+	}
 
 	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
@@ -249,6 +260,39 @@ int unregister_irq(unsigned long irq)
 
 	p->controller->disable(irq);
 	p->controller->uninstall(irq);
+
+	p->controller = NULL;
+	p->irq_name = NULL;
+	p->parameter = NULL;
+	p->flags = 0;
+	p->handler = NULL;
+
+	return 1; 
+}
+
+/*==============================================================================================*
+ *											hwint handlers							    		*
+ *==============================================================================================*/
+int register_IPI(unsigned long irq,
+				 void * arg,
+				 char * irq_name,
+				 unsigned long parameter,
+				 hw_int_controller_s * controller,
+				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs))
+{
+	irq_desc_s * p = &ipi_descriptors[irq];
+
+	p->controller = controller;
+	p->irq_name = irq_name;
+	p->parameter = parameter;
+	p->flags = 0;
+	p->handler = handler;
+	return 1;
+}
+
+int unregister_IPI(unsigned long irq)
+{
+	irq_desc_s * p = &ipi_descriptors[irq];
 
 	p->controller = NULL;
 	p->irq_name = NULL;

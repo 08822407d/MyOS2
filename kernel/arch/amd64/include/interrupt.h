@@ -56,6 +56,7 @@
 	/* Hardware interrupt numbers. */
 	#define I8259_IRQ0_VEC				0x20	/* nice vectors to relocate IRQ0-7 to */
 	#define APIC_IRQ0_VEC				0x20
+	#define APIC_IPI0_VEC				0xC8
 	/* same irqs in i8259 and apic */
 	#define KEYBOARD_IRQ				1
 	#define SERIAL_2_4_IRQ				3		/* default ethernet interrupt vector */
@@ -72,7 +73,7 @@
 	#ifndef USE_APIC	// Then use i8259a
 		#define NR_IRQ_VECS				16
 		#define HWINT0_VEC				I8259_IRQ0_VEC
-		#define VECTOR(irq)				(irq + I8259_IRQ0_VEC)
+		#define VECTOR_IRQ(irq)			(irq + I8259_IRQ0_VEC)
 
 		#define RTC_IRQ					0
 		#define I8254_TIMER_IRQ			8
@@ -82,7 +83,7 @@
 	#else	// Then use APIC
 		#define NR_IRQ_VECS				24
 		#define HWINT0_VEC				APIC_IRQ0_VEC
-		#define VECTOR(irq)				(irq + APIC_IRQ0_VEC)
+		#define VECTOR_IRQ(irq)			(irq + APIC_IRQ0_VEC)
 
 		#define APIC_8259A				0
 		#define HPET_TIMER0_IRQ			2
@@ -100,9 +101,17 @@
 		#define APIC_PIRQF				21
 		#define APIC_PIRQG				22
 		#define APIC_PIRQH				23
-		// lapic vectors
-		#define LAPIC_LVT_TIMER_IRQ		0xC8
 	#endif
+	// lapic vectors
+	#define NR_LAPIC_IPI_VECS			0x07
+	#define VECTOR_IPI(irq)				(irq + APIC_IPI0_VEC)
+	#define LAPIC_LVT_CMCI_IRQ			0
+	#define LAPIC_LVT_TIMER_IRQ			1
+	#define LAPIC_LVT_THERMAL_IRQ		2
+	#define LAPIC_LVT_PERFORM_IRQ		3
+	#define LAPIC_LVT_LINT0_IRQ			4
+	#define LAPIC_LVT_LINT1_IRQ			5
+	#define LAPIC_LVT_ERROR_IRQ			6
 
 	/* EXCEPTIONS ERROR CODES */
 	#define ARCH_PF_EC_P				(1 << 0)

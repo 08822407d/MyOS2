@@ -40,7 +40,7 @@ void init_keyboard()
 	p_kb->count  = 0;
 	memset(p_kb->buf, 0, KB_BUF_SIZE);
 
-	entry.vector = VECTOR(KEYBOARD_IRQ);
+	entry.vector = VECTOR_IRQ(KEYBOARD_IRQ);
 	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
 	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
 	entry.deliver_status = APIC_ICR_IOAPIC_Idle;

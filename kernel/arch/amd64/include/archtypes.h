@@ -173,6 +173,12 @@
 					timer_mode		:2,		//17~18	Timer
 					res_2			:13;	//19~31
 	} apic_lvt_T;
+	typedef union
+	{
+		apic_lvt_T	def;
+		uint32_t	value;
+	} apic_lvt_u;
+	
 
 	/* ICR */
 	typedef struct __attribute__((packed))

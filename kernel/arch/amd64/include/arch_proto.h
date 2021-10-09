@@ -59,6 +59,14 @@
 	void hwint21(void);
 	void hwint22(void);
 	void hwint23(void);
+	/* LAPIC IPI handlers. */
+	void lapic_ipi00(void);
+	void lapic_ipi01(void);
+	void lapic_ipi02(void);
+	void lapic_ipi03(void);
+	void lapic_ipi04(void);
+	void lapic_ipi05(void);
+	void lapic_ipi06(void);
 
 	/* syscalls and others about intr */
 	void ret_from_intr(void);
@@ -286,6 +294,10 @@
 				 unsigned long parameter, hw_int_controller_s * controller,
 				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
+	int register_IPI(unsigned long irq, void * arg, char * irq_name,
+				 unsigned long parameter, hw_int_controller_s * controller,
+				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+	int unregister_IPI(unsigned long irq);
 	void init_bsp_intr(void);
 	void init_percpu_intr(void);
 

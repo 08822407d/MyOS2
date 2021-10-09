@@ -119,35 +119,45 @@ gate_table_s exception_init_table[] = {
 };
 
 gate_table_s hwint_init_table[] = {
-	{ hwint00, VECTOR( 0), INTRGATE, KERN_PRIVILEGE, "IRQ-00" },
-	{ hwint01, VECTOR( 1), INTRGATE, KERN_PRIVILEGE, "IRQ-01" },
-	{ hwint02, VECTOR( 2), INTRGATE, KERN_PRIVILEGE, "IRQ-02" },
-	{ hwint03, VECTOR( 3), INTRGATE, KERN_PRIVILEGE, "IRQ-03" },
-	{ hwint04, VECTOR( 4), INTRGATE, KERN_PRIVILEGE, "IRQ-04" },
-	{ hwint05, VECTOR( 5), INTRGATE, KERN_PRIVILEGE, "IRQ-05" },
-	{ hwint06, VECTOR( 6), INTRGATE, KERN_PRIVILEGE, "IRQ-06" },
-	{ hwint07, VECTOR( 7), INTRGATE, KERN_PRIVILEGE, "IRQ-07" },
-	{ hwint08, VECTOR( 8), INTRGATE, KERN_PRIVILEGE, "IRQ-08" },
-	{ hwint09, VECTOR( 9), INTRGATE, KERN_PRIVILEGE, "IRQ-09" },
-	{ hwint10, VECTOR(10), INTRGATE, KERN_PRIVILEGE, "IRQ-10" },
-	{ hwint11, VECTOR(11), INTRGATE, KERN_PRIVILEGE, "IRQ-11" },
-	{ hwint12, VECTOR(12), INTRGATE, KERN_PRIVILEGE, "IRQ-12" },
-	{ hwint13, VECTOR(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
-	{ hwint14, VECTOR(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
-	{ hwint15, VECTOR(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
+	{ hwint00, VECTOR_IRQ( 0), INTRGATE, KERN_PRIVILEGE, "IRQ-00" },
+	{ hwint01, VECTOR_IRQ( 1), INTRGATE, KERN_PRIVILEGE, "IRQ-01" },
+	{ hwint02, VECTOR_IRQ( 2), INTRGATE, KERN_PRIVILEGE, "IRQ-02" },
+	{ hwint03, VECTOR_IRQ( 3), INTRGATE, KERN_PRIVILEGE, "IRQ-03" },
+	{ hwint04, VECTOR_IRQ( 4), INTRGATE, KERN_PRIVILEGE, "IRQ-04" },
+	{ hwint05, VECTOR_IRQ( 5), INTRGATE, KERN_PRIVILEGE, "IRQ-05" },
+	{ hwint06, VECTOR_IRQ( 6), INTRGATE, KERN_PRIVILEGE, "IRQ-06" },
+	{ hwint07, VECTOR_IRQ( 7), INTRGATE, KERN_PRIVILEGE, "IRQ-07" },
+	{ hwint08, VECTOR_IRQ( 8), INTRGATE, KERN_PRIVILEGE, "IRQ-08" },
+	{ hwint09, VECTOR_IRQ( 9), INTRGATE, KERN_PRIVILEGE, "IRQ-09" },
+	{ hwint10, VECTOR_IRQ(10), INTRGATE, KERN_PRIVILEGE, "IRQ-10" },
+	{ hwint11, VECTOR_IRQ(11), INTRGATE, KERN_PRIVILEGE, "IRQ-11" },
+	{ hwint12, VECTOR_IRQ(12), INTRGATE, KERN_PRIVILEGE, "IRQ-12" },
+	{ hwint13, VECTOR_IRQ(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
+	{ hwint14, VECTOR_IRQ(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
+	{ hwint15, VECTOR_IRQ(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
 #ifdef USE_APIC
-	{ hwint16, VECTOR(16), INTRGATE, KERN_PRIVILEGE, "IRQ-16" },
-	{ hwint17, VECTOR(17), INTRGATE, KERN_PRIVILEGE, "IRQ-17" },
-	{ hwint18, VECTOR(18), INTRGATE, KERN_PRIVILEGE, "IRQ-18" },
-	{ hwint19, VECTOR(19), INTRGATE, KERN_PRIVILEGE, "IRQ-19" },
-	{ hwint20, VECTOR(20), INTRGATE, KERN_PRIVILEGE, "IRQ-20" },
-	{ hwint21, VECTOR(21), INTRGATE, KERN_PRIVILEGE, "IRQ-21" },
-	{ hwint22, VECTOR(22), INTRGATE, KERN_PRIVILEGE, "IRQ-22" },
-	{ hwint23, VECTOR(23), INTRGATE, KERN_PRIVILEGE, "IRQ-23" },
+	{ hwint16, VECTOR_IRQ(16), INTRGATE, KERN_PRIVILEGE, "IRQ-16" },
+	{ hwint17, VECTOR_IRQ(17), INTRGATE, KERN_PRIVILEGE, "IRQ-17" },
+	{ hwint18, VECTOR_IRQ(18), INTRGATE, KERN_PRIVILEGE, "IRQ-18" },
+	{ hwint19, VECTOR_IRQ(19), INTRGATE, KERN_PRIVILEGE, "IRQ-19" },
+	{ hwint20, VECTOR_IRQ(20), INTRGATE, KERN_PRIVILEGE, "IRQ-20" },
+	{ hwint21, VECTOR_IRQ(21), INTRGATE, KERN_PRIVILEGE, "IRQ-21" },
+	{ hwint22, VECTOR_IRQ(22), INTRGATE, KERN_PRIVILEGE, "IRQ-22" },
+	{ hwint23, VECTOR_IRQ(23), INTRGATE, KERN_PRIVILEGE, "IRQ-23" },
 #endif
 	{ NULL, 0, 0, 0}
 };
 
+gate_table_s lapic_ipi_init_table[] = {
+	{ lapic_ipi00, VECTOR_IPI( 0), INTRGATE, KERN_PRIVILEGE, "IPI-00"},
+	{ lapic_ipi01, VECTOR_IPI( 1), INTRGATE, KERN_PRIVILEGE, "IPI-01"},
+	{ lapic_ipi02, VECTOR_IPI( 2), INTRGATE, KERN_PRIVILEGE, "IPI-02"},
+	{ lapic_ipi03, VECTOR_IPI( 3), INTRGATE, KERN_PRIVILEGE, "IPI-03"},
+	{ lapic_ipi04, VECTOR_IPI( 4), INTRGATE, KERN_PRIVILEGE, "IPI-04"},
+	{ lapic_ipi05, VECTOR_IPI( 5), INTRGATE, KERN_PRIVILEGE, "IPI-05"},
+	{ lapic_ipi06, VECTOR_IPI( 6), INTRGATE, KERN_PRIVILEGE, "IPI-06"},
+	{ NULL, 0, 0, 0}
+};
 /*==============================================================================================*
  *										initiate segs							     			*
  *==============================================================================================*/
@@ -239,6 +249,20 @@ void init_idt()
 	}
 
 	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
+	{
+		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
+		// fixed bits
+		curr_gate->Present = 1;
+		curr_gate->segslct = KERN_CS_SELECTOR;
+		curr_gate->IST 	   = 0;
+		// changable bits
+		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
+		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
+		curr_gate->Type  = gtbl->type;
+		curr_gate->DPL   = gtbl->DPL;
+	}
+
+	for ( gtbl = &(lapic_ipi_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
 	{
 		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits

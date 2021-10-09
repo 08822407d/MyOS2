@@ -53,7 +53,7 @@ void HPET_init()
 	io_mfence();
 
 	//init I/O APIC IRQ2 => HPET Timer 0
-	entry.vector = VECTOR(HPET_TIMER0_IRQ);
+	entry.vector = VECTOR_IRQ(HPET_TIMER0_IRQ);
 	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
 	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
 	entry.deliver_status = APIC_ICR_IOAPIC_Idle;

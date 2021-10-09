@@ -200,8 +200,8 @@ inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
 						:	"a"(0x10000),"d"(0x00),"b"(lapic_info->max_lvt),
 							"i"(LAPIC_LVT_CMCI_REG_MSR),
 							"i"(LAPIC_LVT_TIMER_REG_MSR),
-							"i"(LAPIC_LVT_THERM_SENS_REG_MSR),
-							"i"(LAPIC_LVT_PERF_MONI_REG_MSR),
+							"i"(LAPIC_LVT_THERMAL_REG_MSR),
+							"i"(LAPIC_LVT_PERFORM_REG_MSR),
 							"i"(LAPIC_LVT_LINT0_REG_MSR),
 							"i"(LAPIC_LVT_LINT1_REG_MSR),
 							"i"(LAPIC_LVT_ERROR_REG_MSR)
