@@ -156,6 +156,7 @@ gate_table_s lapic_ipi_init_table[] = {
 	{ lapic_ipi04, VECTOR_IPI( 4), INTRGATE, KERN_PRIVILEGE, "IPI-04"},
 	{ lapic_ipi05, VECTOR_IPI( 5), INTRGATE, KERN_PRIVILEGE, "IPI-05"},
 	{ lapic_ipi06, VECTOR_IPI( 6), INTRGATE, KERN_PRIVILEGE, "IPI-06"},
+	{ lapic_ipi07, VECTOR_IPI( 7), INTRGATE, KERN_PRIVILEGE, "IPI-07"},
 	{ NULL, 0, 0, 0}
 };
 /*==============================================================================================*

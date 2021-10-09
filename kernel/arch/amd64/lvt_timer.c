@@ -14,11 +14,11 @@
 
 hw_int_controller_s LVT_timer_int_controller = 
 {
-	.enable		= IOAPIC_enable,
-	.disable	= IOAPIC_disable,
-	.install	= IOAPIC_install,
-	.uninstall	= IOAPIC_uninstall,
-	.ack		= IOAPIC_edge_ack,
+	.enable		= NULL,
+	.disable	= NULL,
+	.install	= NULL,
+	.uninstall	= NULL,
+	.ack		= LVT_ack,
 };
 
 void LVT_timer_handler(unsigned long parameter, stack_frame_s * sf_regs)
@@ -44,11 +44,10 @@ void LVT_timer_init()
 	LVT_timer.def.vector = VECTOR_IPI(LAPIC_LVT_TIMER_IRQ);
 
 	register_IPI(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_timer",
-				 NULL, &LVT_timer_int_controller,
+				 LVT_timer.value, &LVT_timer_int_controller,
 				 &LVT_timer_handler);
 
 	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0x10);
 	wrmsr(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
 	wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, 0x03);
-	
 }

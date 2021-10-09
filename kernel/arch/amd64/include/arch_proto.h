@@ -67,6 +67,7 @@
 	void lapic_ipi04(void);
 	void lapic_ipi05(void);
 	void lapic_ipi06(void);
+	void lapic_ipi07(void);
 
 	/* syscalls and others about intr */
 	void ret_from_intr(void);
@@ -225,6 +226,7 @@
 	/* apic.c */
 	void IOAPIC_pagetable_remap(void);
 	void init_lapic(void);
+	void LVT_ack(unsigned long lvt_nr);
 	void IOAPIC_init(void);
 	void IOAPIC_enable(unsigned long irq);
 	void IOAPIC_disable(unsigned long irq);

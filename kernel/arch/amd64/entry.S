@@ -436,23 +436,26 @@ ENTRY(hwint23) /* APIC_IRQ */
 ENTRY(lapic_ipi00) /* IPI routine for irq 0 (LVT CMCI). */
 	lapic_ipi_entry(0)
 
-ENTRY(lapic_ipi01) /* IPI routine for irq 1 (LVT timer) */
+ENTRY(lapic_ipi01) /* IPI routine for irq 1 (ICR). */
 	lapic_ipi_entry(1)
 
-ENTRY(lapic_ipi02) /* IPI routine for irq 2 (LVT thermal sensor) */
+ENTRY(lapic_ipi02) /* IPI routine for irq 1 (LVT timer) */
 	lapic_ipi_entry(2)
 
-ENTRY(lapic_ipi03) /* IPI routine for irq 3 (LVT performance counter) */
+ENTRY(lapic_ipi03) /* IPI routine for irq 2 (LVT thermal sensor) */
 	lapic_ipi_entry(3)
 
-ENTRY(lapic_ipi04) /* IPI routine for irq 4 (LVT lint0) */
+ENTRY(lapic_ipi04) /* IPI routine for irq 3 (LVT performance counter) */
 	lapic_ipi_entry(4)
 
-ENTRY(lapic_ipi05) /* IPI routine for irq 5 (LVT lint1) */
+ENTRY(lapic_ipi05) /* IPI routine for irq 4 (LVT lint0) */
 	lapic_ipi_entry(5)
 
-ENTRY(lapic_ipi06) /* IPI routine for irq 6 (LVT error) */
+ENTRY(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
 	lapic_ipi_entry(6)
+
+ENTRY(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
+	lapic_ipi_entry(7)
 
 /*==============================================================================================*/
 /*											thread func							     			*/

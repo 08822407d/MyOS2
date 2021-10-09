@@ -106,12 +106,13 @@
 	#define NR_LAPIC_IPI_VECS			0x07
 	#define VECTOR_IPI(irq)				(irq + APIC_IPI0_VEC)
 	#define LAPIC_LVT_CMCI_IRQ			0
-	#define LAPIC_LVT_TIMER_IRQ			1
-	#define LAPIC_LVT_THERMAL_IRQ		2
-	#define LAPIC_LVT_PERFORM_IRQ		3
-	#define LAPIC_LVT_LINT0_IRQ			4
-	#define LAPIC_LVT_LINT1_IRQ			5
-	#define LAPIC_LVT_ERROR_IRQ			6
+	// skip ICR
+	#define LAPIC_LVT_TIMER_IRQ			2
+	#define LAPIC_LVT_THERMAL_IRQ		3
+	#define LAPIC_LVT_PERFORM_IRQ		4
+	#define LAPIC_LVT_LINT0_IRQ			5
+	#define LAPIC_LVT_LINT1_IRQ			6
+	#define LAPIC_LVT_ERROR_IRQ			7
 
 	/* EXCEPTIONS ERROR CODES */
 	#define ARCH_PF_EC_P				(1 << 0)
