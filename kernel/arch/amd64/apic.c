@@ -29,12 +29,6 @@ ioapic_map_s ioapic_map;
 /*==============================================================================================*
  *									repeatedly use functions									*
  *==============================================================================================*/
-void LVT_ack(unsigned long lvt_nr)
-{
-	reg_t val = rdmsr(APIC_IPI0_VEC + lvt_nr);
-	wrmsr(APIC_IPI0_VEC + lvt_nr, VECTOR_IPI(lvt_nr) | val);
-	IOAPIC_edge_ack(lvt_nr);
-}
 
 void IOAPIC_enable(unsigned long irq_nr)
 {
