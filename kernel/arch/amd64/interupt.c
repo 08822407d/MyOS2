@@ -212,21 +212,20 @@ void hwint_irq_handler(stack_frame_s * sf_regs)
 {
 	int vec = sf_regs->vec_nr;
 	int irq_nr = 0;
-	irq_desc_s * irq_desc = NULL;
+	irq_desc_s * irq_d = NULL;
 	if (vec < APIC_IPI0_VEC)
 	{
 		irq_nr = vec - HWINT0_VEC;
-		irq_desc = &irq_descriptors[irq_nr];	
+		irq_d = &irq_descriptors[irq_nr];	
 	}
 	else
 	{
 		irq_nr = vec - APIC_IPI0_VEC;
-		irq_desc = &ipi_descriptors[irq_nr];	
+		irq_d = &ipi_descriptors[irq_nr];	
 	}
 
 	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
-	irq_desc_s * irq_d = &irq_descriptors[irq_nr];
 	if(irq_d->handler != NULL)
 		irq_d->handler(irq_d->parameter, sf_regs);
 	if(irq_d->controller != NULL && irq_d->controller->ack != NULL)

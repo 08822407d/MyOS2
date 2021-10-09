@@ -12,9 +12,18 @@
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
+hw_int_controller_s LVT_timer_int_controller = 
+{
+	.enable		= IOAPIC_enable,
+	.disable	= IOAPIC_disable,
+	.install	= IOAPIC_install,
+	.uninstall	= IOAPIC_uninstall,
+	.ack		= IOAPIC_edge_ack,
+};
+
 void LVT_timer_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
-	color_printk(WHITE, BLUE, "(LVT_timer) ");
+	color_printk(WHITE, BLUE, "(LVT_timer)");
 }
 
 void LVT_timer_init()
@@ -35,7 +44,7 @@ void LVT_timer_init()
 	LVT_timer.def.vector = VECTOR_IPI(LAPIC_LVT_TIMER_IRQ);
 
 	register_IPI(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_timer",
-				 NULL, NULL,
+				 NULL, &LVT_timer_int_controller,
 				 &LVT_timer_handler);
 
 	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0x10);
