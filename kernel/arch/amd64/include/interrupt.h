@@ -101,7 +101,7 @@
 		#define APIC_PIRQG				22
 		#define APIC_PIRQH				23
 		// lapic vectors
-		#define LAPIC_TIMER_IRQ			0xC8
+		#define LAPIC_LVT_TIMER_IRQ		0xC8
 	#endif
 
 	/* EXCEPTIONS ERROR CODES */

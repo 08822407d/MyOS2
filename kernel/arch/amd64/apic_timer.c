@@ -14,16 +14,16 @@
 
 hw_int_controller_s LA_TMR_int_controller = 
 {
-	.enable		= IOAPIC_enable,
-	.disable	= IOAPIC_disable,
-	.install	= IOAPIC_install,
-	.uninstall	= IOAPIC_uninstall,
-	.ack		= IOAPIC_edge_ack,
+	.enable		= NULL,
+	.disable	= NULL,
+	.install	= NULL,
+	.uninstall	= NULL,
+	.ack		= NULL,
 };
 
 void LA_TMR_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
-	color_printk(WHITE, BLUE, "(LA_TMR) ");
+	color_printk(WHITE, BLUE, "(LVT_TMR) ");
 }
 
 void LA_TMR_init()
@@ -40,10 +40,10 @@ void LA_TMR_init()
 	LA_TMR_lvt.res_2 =
 	LA_TMR_lvt.trigger =
 	LA_TMR_lvt.mask = 0;
-	LA_TMR_lvt.timer_mode = 0x01;
-	LA_TMR_lvt.vector = VECTOR(LAPIC_TIMER_IRQ);
+	LA_TMR_lvt.timer_mode = APIC_LVT_Timer_Periodic;
+	LA_TMR_lvt.vector = VECTOR(LAPIC_LVT_TIMER_IRQ);
 
-	register_irq(LAPIC_TIMER_IRQ, &entry , "LA_TMR",
+	register_irq(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_TMR",
 				 NULL, &LA_TMR_int_controller,
 				 &LA_TMR_handler);
 	
