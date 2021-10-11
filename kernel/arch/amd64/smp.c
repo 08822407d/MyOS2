@@ -65,7 +65,6 @@ void create_percpu_idle(size_t cpu_idx)
 	task_s * idletask = &(idle_pcb->task);
 	memset(idle_pcb, 0, sizeof(PCB_u));
 	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
-	m_list_init(idletask);
 	list_init(&idletask->schedule_list, idletask);
 	list_hdr_init(&idletask->child_lhdr);
 	idletask->pid = gen_newpid();
@@ -121,10 +120,6 @@ void percpu_self_config(size_t cpu_idx)
 	// tasks
 	cpudata_p->idle_task = current_task;
 	cpudata_p->curr_task = current_task;
-	cpudata_p->ready_tasks.count =
-	cpudata_p->finished_tasks.count = 0;
-	cpudata_p->ready_tasks.head_p =
-	cpudata_p->finished_tasks.head_p = NULL;
 	cpudata_p->last_jiffies = 0;
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
 	cpudata_p->is_idle_flag = 1;

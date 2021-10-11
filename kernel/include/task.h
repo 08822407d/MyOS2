@@ -46,10 +46,6 @@
 		file_s *		fps[MAX_FILE_NR];
 		mm_s *			mm_struct;
 
-		task_s *		prev;
-		task_s *		next;
-		task_list_s	*	list_header;
-
 		volatile long	state;
 		unsigned long	flags;
 
@@ -86,8 +82,6 @@
 		task_s *	idle_task;
 
 		List_hdr_s	ruuning_lhdr;
-		task_list_s	ready_tasks;
-		task_list_s	finished_tasks;
 
 		unsigned long	is_idle_flag;
 		unsigned long	scheduleing_flag;
@@ -119,7 +113,5 @@
 	void load_balance(void);
 	void idle_enqueue(task_s * idle);
 	task_s * idle_dequeue(void);
-	void task_list_push(task_list_s * list, task_s * task);
-	task_s * task_list_pop(task_list_s * list);
 
 #endif /* _PROC_H_ */

@@ -75,44 +75,44 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 /*==============================================================================================*
  *											semaphore											*
  *==============================================================================================*/
-inline __always_inline void init_semaphore(semaphore_T * semaphore, long count)
-{
-	semaphore->counter.value = count;
-	m_init_list_header(&semaphore->waiting_tasks);
-}
+// inline __always_inline void init_semaphore(semaphore_T * semaphore, long count)
+// {
+// 	semaphore->counter.value = count;
+// 	m_init_list_header(&semaphore->waiting_tasks);
+// }
 
-void down_semaphore(semaphore_T * semaphore)
-{
-	per_cpudata_s * cpudata_p = curr_cpu;
-	if (atomic_read(&semaphore->counter) > 0)
-	{
-		atomic_dec(&semaphore->counter);
-		return;
-	}
-	else
-	{
-		curr_cpu->curr_task == NULL;
-		m_enqueue_list(curr_tsk, &semaphore->waiting_tasks);
-		schedule();
-	}
-}
+// void down_semaphore(semaphore_T * semaphore)
+// {
+// 	per_cpudata_s * cpudata_p = curr_cpu;
+// 	if (atomic_read(&semaphore->counter) > 0)
+// 	{
+// 		atomic_dec(&semaphore->counter);
+// 		return;
+// 	}
+// 	else
+// 	{
+// 		curr_cpu->curr_task == NULL;
+// 		m_enqueue_list(curr_tsk, &semaphore->waiting_tasks);
+// 		schedule();
+// 	}
+// }
 
-void up_semaphore(semaphore_T * semaphore)
-{
-	task_s * next = NULL;
-	per_cpudata_s * cpudata_p = curr_cpu;
-	if (semaphore->waiting_tasks.count == 0)
-	{
-		atomic_inc(&semaphore->counter);
-		return;
-	}
-	else
-	{
-		m_dequeue_list(next, &semaphore->waiting_tasks);
-		m_push_list(next, &cpudata_p->ready_tasks);
-		schedule();
-	}
-}
+// void up_semaphore(semaphore_T * semaphore)
+// {
+// 	task_s * next = NULL;
+// 	per_cpudata_s * cpudata_p = curr_cpu;
+// 	if (semaphore->waiting_tasks.count == 0)
+// 	{
+// 		atomic_inc(&semaphore->counter);
+// 		return;
+// 	}
+// 	else
+// 	{
+// 		m_dequeue_list(next, &semaphore->waiting_tasks);
+// 		m_push_list(next, &cpudata_p->ready_tasks);
+// 		schedule();
+// 	}
+// }
 /*==============================================================================================*
  *										recursive semaphore										*
  *==============================================================================================*/

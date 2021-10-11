@@ -6,11 +6,11 @@
 /*==============================================================================================*/
 /*										list operations											*/
 /*==============================================================================================*/
-void list_init(List_s * src, void * container_p)
+void list_init(List_s * src, void * owner_p)
 {
 	src->prev = src;
 	src->next = src;
-	src->container_p = container_p;
+	src->owner_p = owner_p;
 }
 
 inline __always_inline List_s * list_get_prev(List_s * src)
@@ -47,7 +47,7 @@ void list_delete(List_s * src)
 {
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
-	src->container_p = NULL;
+	src->owner_p = NULL;
 }
 
 /*==============================================================================================*/

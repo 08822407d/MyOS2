@@ -72,12 +72,9 @@ void init_task()
 	// complete bsp's cpudata_p
 	cpudata_u * bsp_cpudata_u_p = percpu_data[0];
 	per_cpudata_s * bsp_cpudata_p = &(bsp_cpudata_u_p->cpudata);
-	bsp_cpudata_p->ready_tasks.count = 
-	bsp_cpudata_p->ready_tasks.count = 0;
-	bsp_cpudata_p->ready_tasks.head_p =
-	bsp_cpudata_p->finished_tasks.head_p = NULL;
 	bsp_cpudata_p->curr_task = task0;
 	bsp_cpudata_p->time_slice = task0->time_slice;
+	list_hdr_init(&bsp_cpudata_p->ruuning_lhdr);
 
 	init_spin_lock(&idle_queue_lock);
 }
@@ -124,37 +121,5 @@ task_s * idle_dequeue()
 	idle_queue.nr_curr--;
 	unlock_spin_lock(&idle_queue_lock);
 
-	return ret_val;
-}
-
-void task_list_push(task_list_s * list, task_s * task)
-{
-	if (list == NULL || task == NULL)
-		return;
-	
-	if (list->count == 0)
-		list->head_p = task;
-	else
-		__m_list_insert_front(task, list->head_p);
-
-	list->head_p = list->head_p->prev;
-	list->count++;
-}
-
-task_s * task_list_pop(task_list_s * list)
-{
-	task_s * ret_val = NULL;
-	if (list != NULL)
-	{
-		ret_val = list->head_p;
-		list->head_p = list->head_p->next;
-
-		if (list->count == 1)
-			list->head_p = NULL;
-		else
-			m_list_delete(ret_val);
-
-		list->count--;
-	}
 	return ret_val;
 }

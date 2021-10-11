@@ -21,7 +21,7 @@
 	{
 		List_s *	prev;
 		List_s *	next;
-		void *		container_p;
+		void *		owner_p;
 	} List_s;
 
 	typedef struct List_hdr
@@ -31,7 +31,7 @@
 	} List_hdr_s;
 	
 
-	void list_init(List_s * src, void * container_p);
+	void list_init(List_s * src, void * owner_p);
 	List_s * list_get_prev(List_s * src);
 	List_s * list_get_next(List_s * src);
 	void list_insert_prev(List_s * src, List_s * dst);
