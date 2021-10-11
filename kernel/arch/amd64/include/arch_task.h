@@ -6,7 +6,7 @@
 
 #include "arch_proto.h"
 
-typedef struct arch_PCB
+typedef struct arch_task
 {
 	reg_t		tss_rsp0;	// point to curr-task's kernel stack bottom
 							// current cpu's tss-rsp0 equal to this at switch-time
@@ -19,13 +19,7 @@ typedef struct arch_PCB
 	reg_t		cr2;
 	uint64_t	intr_vec;
 	uint64_t	err_code;
-} arch_PCB_s;
-
-typedef struct arch_PCB_stackframe
-{
-	reg_t			skip[(TASK_KSTACK_SIZE - sizeof(stack_frame_s)) / sizeof(reg_t)];
-	stack_frame_s	pcb_sf_top;
-} arch_PCB_stackframe_s;
+} arch_task_s;
 
 typedef struct mm
 {

@@ -30,9 +30,9 @@ unsigned long module_test(unsigned long flag)
 	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
 	// }
 
-	// kmalloc_kfree_test();
+	kmalloc_kfree_test();
 
-	kernthd_test();
+	// kernthd_test();
 
 	// disk_drv_test();
 
@@ -87,7 +87,6 @@ unsigned long test_task_c(unsigned long arg)
 unsigned long ide_read_test(unsigned long arg)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	task_s * curr = curr_tsk;
 
 	char * disk_test = (char *)kmalloc(512);
 	char * buf = (char *)kmalloc(512 * 3 + 1);
@@ -136,6 +135,7 @@ void kmalloc_kfree_test()
 	kfree(test5);
 	kfree(test7);
 	kfree(test8);
+	color_printk(WHITE, BLACK, "kmalloc test finished.\n");
 }
 
 void disk_drv_test()

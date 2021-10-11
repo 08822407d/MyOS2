@@ -66,7 +66,7 @@ void create_percpu_idle(size_t cpu_idx)
 	memset(idle_pcb, 0, sizeof(PCB_u));
 	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
 	m_list_init(idletask);
-	list_init(&idletask->running_list, idletask);
+	list_init(&idletask->schedule_list, idletask);
 	list_hdr_init(&idletask->child_lhdr);
 	idletask->pid = gen_newpid();
 }

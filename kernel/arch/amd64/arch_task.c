@@ -165,17 +165,16 @@ unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
 
 unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
-	task_s * curr = curr_tsk;
 	int error = 0;
 	int i = 0;
 	if(clone_flags & CLONE_FS)
 		goto out;
 	
 	for(i = 0; i < MAX_FILE_NR; i++)
-		if(curr->fps[i] != NULL)
+		if(curr_tsk->fps[i] != NULL)
 		{
 			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s));
-			memcpy(new_tsk->fps[i], curr->fps[i], sizeof(file_s));
+			memcpy(new_tsk->fps[i], curr_tsk->fps[i], sizeof(file_s));
 		}
 out:
 	return error;
@@ -201,19 +200,18 @@ unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 	Page_s * page = NULL;
 	PML4E_T * new_cr3 = NULL;
-	task_s * curr = curr_tsk;
-	reg_t curr_endstack = get_stackframe(curr)->rsp;
+	reg_t curr_endstack = get_stackframe(curr_tsk)->rsp;
 
 	if(clone_flags & CLONE_VM)
 	{
-		new_tsk->mm_struct = curr->mm_struct;
+		new_tsk->mm_struct = curr_tsk->mm_struct;
 		goto exit_cpmm;
 	}
 	else
 	{
 		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
-		memcpy(new_tsk->mm_struct, curr->mm_struct, sizeof(mm_s));
-		prepair_COW(curr);
+		memcpy(new_tsk->mm_struct, curr_tsk->mm_struct, sizeof(mm_s));
+		prepair_COW(curr_tsk);
 	}
 
 exit_cpmm:
@@ -271,11 +269,14 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	memset(child_PCB, 0, sizeof(PCB_u));
 	memcpy(child_task, parent_task, sizeof(task_s));
 
+	list_init(&child_task->schedule_list, child_task);
+	list_init(&child_task->child_list, child_task);
+	list_hdr_init(&child_task->child_lhdr);
 	child_task->state = PS_UNINTERRUPTIBLE;
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
-	m_list_init(child_task);
+	list_hdr_append(&parent_task->child_lhdr, &child_task->child_list);
 
 	ret_val = -ENOMEM;
 	//	copy flags
@@ -315,26 +316,25 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 {
 	int ret_val = 0;
 
-	task_s * curr = curr_tsk;
-	exit_files(curr);
+	exit_files(curr_tsk);
 	file_s * fp = open_exec_file(name);
 
-	if (curr->flags & PF_VFORK)
+	if (curr_tsk->flags & PF_VFORK)
 	{
-		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
-		memset(curr->mm_struct, 0, sizeof(mm_s));
+		curr_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		memset(curr_tsk->mm_struct, 0, sizeof(mm_s));
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
-		curr->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
+		curr_tsk->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);
 		memset(virt_cr3, 0, PGENT_SIZE / 2);
 	}
-	read_exec_mm(fp, curr);
-	creat_exec_addrspace(curr);
-	pg_load_cr3(curr->mm_struct->cr3);
-	curr->flags &= ~PF_VFORK;
+	read_exec_mm(fp, curr_tsk);
+	creat_exec_addrspace(curr_tsk);
+	pg_load_cr3(curr_tsk->mm_struct->cr3);
+	curr_tsk->flags &= ~PF_VFORK;
 
 	long argv_pos = 0;
 	if(argv != NULL)
@@ -342,7 +342,7 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 		int argc = 0;
 		int len = 0;
 		int i = 0;
-		char ** dargv = (char **)(curr->mm_struct->start_stack - 10 * sizeof(char *));
+		char ** dargv = (char **)(curr_tsk->mm_struct->start_stack - 10 * sizeof(char *));
 		argv_pos = (unsigned long)dargv;
 
 		for(i = 0; i < 10 && argv[i] != NULL; i++)
@@ -352,21 +352,21 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 			dargv[i] = (char *)(argv_pos - len);
 			argv_pos -= len;
 		}
-		curr->mm_struct->start_stack = argv_pos - 10;
+		curr_tsk->mm_struct->start_stack = argv_pos - 10;
 		curr_context->rdi = i;	//argc
 		curr_context->rsi = (unsigned long)dargv;	//argv
 	}
 
-	memset((virt_addr)curr->mm_struct->start_code, 0, curr->mm_struct->end_data - curr->mm_struct->start_code);
+	memset((virt_addr)curr_tsk->mm_struct->start_code, 0, curr_tsk->mm_struct->end_data - curr_tsk->mm_struct->start_code);
 	long fp_pos = 0;
-	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
+	ret_val = fp->f_ops->read(fp, (void *)curr_tsk->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 
 	curr_context->ds =
 	curr_context->es =
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
-	curr_context->r10 = curr->mm_struct->start_code;
-	curr_context->r11 = curr->mm_struct->start_stack;
+	curr_context->r10 = curr_tsk->mm_struct->start_code;
+	curr_context->r11 = curr_tsk->mm_struct->start_stack;
 	curr_context->rax = 1;
 
 	return ret_val;
@@ -380,15 +380,14 @@ void exit_notify(void)
 unsigned long do_exit(unsigned long exit_code)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	task_s * curr = curr_tsk;
 	// color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, exit_code);
 
 do_exit_again:
 	cli();
-	curr->state = PS_ZOMBIE;
-	curr->exit_code = exit_code;
-	exit_thread(curr);
-	exit_files(curr);
+	curr_tsk->state = PS_ZOMBIE;
+	curr_tsk->exit_code = exit_code;
+	exit_thread(curr_tsk);
+	exit_files(curr_tsk);
 	sti();
 
 	exit_notify();
@@ -433,8 +432,7 @@ unsigned long init(unsigned long arg)
 
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 
-	task_s * curr = curr_tsk;
-	stack_frame_s * curr_sfp = get_stackframe(curr);
+	stack_frame_s * curr_sfp = get_stackframe(curr_tsk);
 	curr->arch_struct.k_rip = (reg_t)ret_from_sysenter;
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
@@ -453,7 +451,7 @@ unsigned long init(unsigned long arg)
 }
 
 /*==============================================================================================*
- *									load_balance related functions								*
+ *									schedule functions											*
  *==============================================================================================*/
 inline __always_inline task_s * get_current_task()
 {
@@ -472,47 +470,34 @@ inline __always_inline task_s * get_current_task()
 stack_frame_s * get_stackframe(task_s * task_p)
 {
 	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
-	return &(pcb_p->arch_sf.pcb_sf_top);
+	return (stack_frame_s *)(pcb_p + 1) - 1;
 }
 
 void wakeup_task(task_s * task)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	task->state = PS_RUNNING;
-	m_push_list(task, &(cpudata_p->ready_tasks));
 	list_hdr_push(&cpudata_p->ruuning_lhdr, &task->schedule_list);
 }
 
-void insert_running_list(per_cpudata_s * cpudata_p)
+void reinsert_to_running_list(per_cpudata_s * cpudata_p)
 {
 	task_s * curr_task = cpudata_p->curr_task;
 	if (curr_task != NULL)
 	{
 		if (curr_task == cpudata_p->idle_task)
 		{
-			m_append_to_list(curr_task, &cpudata_p->ready_tasks);
 			list_hdr_enqueue(&cpudata_p->ruuning_lhdr, &curr_task->schedule_list);
 		}
 		else
 		{
-			task_s * tail = cpudata_p->ready_tasks.head_p->prev;
-			task_s * tmp = cpudata_p->ready_tasks.head_p;
 			List_s * tmp_list = cpudata_p->ruuning_lhdr.header.next;
-			while((curr_task->vruntime > tmp->vruntime) &&
-					(tmp != tail))
-				tmp = tmp->next;
 			while ((curr_task->vruntime > container_of(tmp_list, task_s, schedule_list)->vruntime) &&
 					tmp_list != &cpudata_p->ruuning_lhdr.header)
 			{
 				tmp_list = tmp_list->next;
 			}
 			list_insert_prev(tmp_list, &curr_task->schedule_list);
-			
-			__m_list_insert_front(curr_task, tmp);
-			curr_task->list_header = &cpudata_p->ready_tasks;
-			cpudata_p->ready_tasks.count++;
-			if (tmp == cpudata_p->ready_tasks.head_p)
-				cpudata_p->ready_tasks.head_p = tmp->prev;
 		}
 	}
 }
@@ -531,7 +516,7 @@ void schedule()
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
 	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)) ||
-		((curr_task == cpudata_p->idle_task) && (cpudata_p->ready_tasks.count == 0)) ||
+		((curr_task == cpudata_p->idle_task) && (cpudata_p->ruuning_lhdr.count == 0)) ||
 		(curr_task->spin_count != 0) ||
 		(curr_task->semaphore_count != 0))
 	{
@@ -541,14 +526,12 @@ void schedule()
 			(curr_task->flags & PF_NEED_SCHEDULE))
 	{
 		// normal schedule
-		insert_running_list(cpudata_p);
+		reinsert_to_running_list(cpudata_p);
 	}
 
 	cpudata_p->scheduleing_flag = 1;
 	// get next task
 	// find a suit position for current insertion
-
-	m_pop_list(next_task, &cpudata_p->ready_tasks);
 	next_task = container_of(list_hdr_pop(&cpudata_p->ruuning_lhdr), task_s, schedule_list);
 	cpudata_p->curr_task = next_task;
 

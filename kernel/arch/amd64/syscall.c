@@ -34,8 +34,6 @@ unsigned long sys_putstring(char *string)
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
-	task_s * curr = curr_tsk;
-
 	char * path = NULL;
 	long pathlen = 0;
 	long error = 0;
@@ -100,7 +98,7 @@ unsigned long sys_open(char *filename, int flags)
 		fp->position = fp->dentry->dir_inode->file_size;
 	}
 
-	f = curr->fps;
+	f = curr_tsk->fps;
 	for(i = 0;i < MAX_FILE_NR;i++)
 		if(f[i] == NULL)
 		{
@@ -140,8 +138,6 @@ unsigned long sys_close(int fd)
 
 unsigned long sys_read(int fd,void * buf, long count)
 {
-	task_s * curr = curr_tsk;
-
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -151,7 +147,7 @@ unsigned long sys_read(int fd,void * buf, long count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = curr->fps[fd];
+	fp = curr_tsk->fps[fd];
 	if(fp->f_ops && fp->f_ops->read)
 		ret = fp->f_ops->read(fp,buf,count,&fp->position);
 	return ret;
@@ -159,8 +155,6 @@ unsigned long sys_read(int fd,void * buf, long count)
 
 unsigned long sys_write(int fd,void * buf,long count)
 {
-	task_s * curr = curr_tsk;
-
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -170,7 +164,7 @@ unsigned long sys_write(int fd,void * buf,long count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = curr->fps[fd];
+	fp = curr_tsk->fps[fd];
 	if(fp->f_ops && fp->f_ops->write)
 		ret = fp->f_ops->write(fp, buf, count, &fp->position);
 	return ret;
@@ -179,8 +173,6 @@ unsigned long sys_write(int fd,void * buf,long count)
 
 unsigned long sys_lseek(int filds,long offset,int whence)
 {
-	task_s * curr = curr_tsk;
-
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -190,7 +182,7 @@ unsigned long sys_lseek(int filds,long offset,int whence)
 	if(whence < 0 || whence >= SEEK_MAX)
 		return -EINVAL;
 
-	fp = curr->fps[filds];
+	fp = curr_tsk->fps[filds];
 	if(fp->f_ops && fp->f_ops->lseek)
 		ret = fp->f_ops->lseek(fp,offset,whence);
 	return ret;
@@ -199,14 +191,12 @@ unsigned long sys_lseek(int filds,long offset,int whence)
 unsigned long sys_fork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
-	// color_printk(GREEN,BLACK,"sys_fork\n");
 	return do_fork(curr_context, 0, curr_context->rsp, 0);	
 }
 
 unsigned long sys_vfork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
-	// color_printk(GREEN,BLACK,"sys_vfork\n");
 	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGNAL, curr_context->rsp, 0);
 }
 
@@ -243,7 +233,6 @@ unsigned long sys_execve()
 
 unsigned long sys_exit(int exit_code)
 {
-	// color_printk(GREEN,BLACK,"sys_exit\n");
 	return do_exit(exit_code);
 }
 

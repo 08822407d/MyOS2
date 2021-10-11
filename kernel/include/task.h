@@ -36,17 +36,19 @@
 	typedef struct task
 	{
 		List_s			schedule_list;
-		task_s *		prev;
-		task_s *		next;
 
 		task_s *		parent;
+		List_s			child_list;
 		List_hdr_s		child_lhdr;
-		task_list_s *	list_header;
 
-		arch_PCB_s		arch_struct;
+		arch_task_s		arch_struct;
 
 		file_s *		fps[MAX_FILE_NR];
 		mm_s *			mm_struct;
+
+		task_s *		prev;
+		task_s *		next;
+		task_list_s	*	list_header;
 
 		volatile long	state;
 		unsigned long	flags;
@@ -66,7 +68,6 @@
 	{
 		task_s		task;
 		reg_t		stack[TASK_KSTACK_SIZE / sizeof(reg_t)];
-		arch_PCB_stackframe_s	arch_sf;
 	} PCB_u __attribute__((aligned(8)));
 
 	typedef struct task_queue

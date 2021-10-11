@@ -46,8 +46,9 @@ void init_task()
 
 	task_s *task0 = &task0_PCB.task;
 	memset(task0, 0, sizeof(task_s));
-	m_list_init(task0);
-	list_init(&task0->running_list, task0);
+	task0->parent = task0;
+	list_init(&task0->schedule_list, task0);
+	list_init(&task0->child_list, task0);
 	list_hdr_init(&task0->child_lhdr);
 	task0->time_slice = 2;
 	task0->vruntime = -1;

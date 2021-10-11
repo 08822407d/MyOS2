@@ -6,7 +6,7 @@ void devices_init()
 
 	#ifdef USE_APIC
 		HPET_init();
-		LVT_timer_init();
+		// LVT_timer_init();
 	#endif
 
 	init_disk();

@@ -63,7 +63,6 @@ long FAT32_close(inode_s * inode, file_s * file_p)
 
 long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 {
-	task_s * current = curr_tsk;
 	FAT32_inode_info_s * finode = filp->dentry->dir_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->dentry->dir_inode->sb->private_sb_info;
 

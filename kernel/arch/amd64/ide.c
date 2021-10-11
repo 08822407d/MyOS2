@@ -253,8 +253,7 @@ void wait_for_finish()
 	if (disk_require_queue.curr_user != NULL)
 	{
 		per_cpudata_s *	cpudata_p = curr_cpu;
-		task_s * curr = curr_tsk;
-		curr->state = PS_UNINTERRUPTIBLE;
+		curr_tsk->state = PS_UNINTERRUPTIBLE;
 		schedule();
 	}
 }
