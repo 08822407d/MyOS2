@@ -433,17 +433,17 @@ unsigned long init(unsigned long arg)
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 
 	stack_frame_s * curr_sfp = get_stackframe(curr_tsk);
-	curr->arch_struct.k_rip = (reg_t)ret_from_sysenter;
-	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
-	curr->flags &= ~PF_KTHREAD;
+	curr_tsk->arch_struct.k_rip = (reg_t)ret_from_sysenter;
+	curr_tsk->arch_struct.k_rsp = (reg_t)curr_sfp;
+	curr_tsk->flags &= ~PF_KTHREAD;
 
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
 							"jmp	do_execve	\n\t"
 						:
-						:	"D"(curr->arch_struct.k_rsp),"m"(curr->arch_struct.k_rsp),
-							"m"(curr->arch_struct.k_rip),"S"("/init.bin"),"d"(NULL),"c"(NULL)
+						:	"D"(curr_tsk->arch_struct.k_rsp),"m"(curr_tsk->arch_struct.k_rsp),
+							"m"(curr_tsk->arch_struct.k_rip),"S"("/init.bin"),"d"(NULL),"c"(NULL)
 						:	"memory"
 						);
 
