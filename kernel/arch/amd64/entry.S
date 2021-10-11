@@ -9,6 +9,7 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
+#define SAVEALL_SIZE		0x70
 #define GET_CURRENT(reg)			\
 	movq		$-32768,	reg;	\
 	andq		%rsp,		reg
@@ -58,7 +59,7 @@ ENTRY(enter_sysenter)
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
 ENTRY(ret_from_sysenter)
-	movq		%rax,		0x70(%rsp)	// save return value to stack
+	movq		%rax,		SAVEALL_SIZE(%rsp)	// save return value to stack
 ENTRY(dofork_child_ret)
 	popq		%r15
 	popq		%r14
@@ -244,10 +245,6 @@ SAVE_ALL:
 
 // enter_skip_swapgs:
 	cld
-	movq		$KERN_SS_SELECTOR,	%rdi
-	movq		%rdi,		%ds
-	movq		%rdi,		%es
-
 	movq		%rsp,		%rdi
 	callq 		excep_hwint_entry
 	sti

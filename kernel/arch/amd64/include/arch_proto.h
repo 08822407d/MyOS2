@@ -83,28 +83,29 @@
  *==============================================================================================*/
 // interrupt stack
 	typedef struct stack_frame {
-		reg_t r15;
-		reg_t r14;
-		reg_t r13;
-		reg_t r12;
-		reg_t r11;
-		reg_t r10;
-		reg_t r9;
-		reg_t r8;
-		reg_t rsi;
-		reg_t rdi;
-		reg_t rbp;
-		reg_t rdx;
-		reg_t rcx;
-		reg_t rbx;
-		reg_t rax;
-		reg_t vec_nr;
-		reg_t err_code;
-		reg_t rip;
-		reg_t cs;
-		reg_t rflags;
-		reg_t rsp;
-		reg_t ss;
+		// reg_t	ret_addr;
+		reg_t	r15;
+		reg_t	r14;
+		reg_t	r13;
+		reg_t	r12;
+		reg_t	r11;
+		reg_t	r10;
+		reg_t	r9;
+		reg_t	r8;
+		reg_t	rsi;
+		reg_t	rdi;
+		reg_t	rbp;
+		reg_t	rdx;
+		reg_t	rcx;
+		reg_t	rbx;
+		reg_t	rax;
+		reg_t	vec_nr;
+		reg_t	err_code;
+		reg_t	rip;
+		reg_t	cs;
+		reg_t	rflags;
+		reg_t	rsp;
+		reg_t	ss;
 	} __attribute__((packed)) stack_frame_s;
 // intr gate initiate infomation
 	typedef struct {
