@@ -10,7 +10,6 @@
 #include "../../include/proto.h"
 #include "../../include/printk.h"
 
-
 unsigned long no_system_call(void)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
@@ -20,12 +19,6 @@ unsigned long no_system_call(void)
 unsigned long sys_putstring(char *string)
 {
 	color_printk(WHITE, BLACK, string);
-
-	// per_cpudata_s *	cpudata_p = curr_cpu;
-	// char * buf = (char *)kmalloc(4096);
-	// memset(buf, 0, 4096);
-	// long rv = IDE_device_operation.transfer(0x24, 0x802010, 8,(unsigned char *)buf);
-
 	return 0;
 }
 

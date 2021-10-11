@@ -74,6 +74,7 @@
 	void kernel_thread_func(void);
 	void enter_sysenter(void);
 	void ret_from_sysenter(void);
+	void dofork_child_ret(void);
 	void enter_syscall(void);
 	void ret_from_syscall(void);
 
@@ -82,8 +83,6 @@
  *==============================================================================================*/
 // interrupt stack
 	typedef struct stack_frame {
-		reg_t ds;
-		reg_t es;
 		reg_t r15;
 		reg_t r14;
 		reg_t r13;

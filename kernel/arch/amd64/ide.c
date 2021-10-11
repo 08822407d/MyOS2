@@ -9,7 +9,7 @@
 
 #include "../../include/proto.h"
 #include "../../include/printk.h"
-#include "../../include/block.h"
+#include "../../include/block_dev.h"
 #include "../../include/task.h"
 
 #define IDE_IDX		0

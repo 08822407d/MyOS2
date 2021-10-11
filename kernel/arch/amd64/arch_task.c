@@ -238,7 +238,7 @@ unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	if(child_task->flags & PF_KTHREAD)
 		child_task->arch_struct.k_rip = (unsigned long)kernel_thread_func;
 	else
-		child_task->arch_struct.k_rip = (unsigned long)ret_from_sysenter;
+		child_task->arch_struct.k_rip = (unsigned long)dofork_child_ret;
 
 	return 0;
 }
@@ -361,8 +361,8 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	long fp_pos = 0;
 	ret_val = fp->f_ops->read(fp, (void *)curr_tsk->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 
-	curr_context->ds =
-	curr_context->es =
+	// curr_context->ds =
+	// curr_context->es =
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr_tsk->mm_struct->start_code;
@@ -406,8 +406,8 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	sf_regs.rdx = (reg_t)arg;
 
 	sf_regs.cs = KERN_CS_SELECTOR;
-	sf_regs.ds = KERN_SS_SELECTOR;
-	sf_regs.es = KERN_SS_SELECTOR;
+	// sf_regs.ds = KERN_SS_SELECTOR;
+	// sf_regs.es = KERN_SS_SELECTOR;
 	sf_regs.ss = KERN_SS_SELECTOR;
 	sf_regs.rflags = (1 << 9);
 	sf_regs.rip = (reg_t)kernel_thread_func;

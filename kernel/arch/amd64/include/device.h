@@ -7,7 +7,7 @@
 #include "interrupt.h"
 
 #include "../../../include/param.h"
-#include "../../../include/block.h"
+#include "../../../include/block_dev.h"
 
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 

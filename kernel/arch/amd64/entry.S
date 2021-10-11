@@ -49,11 +49,6 @@ ENTRY(enter_sysenter)
 	pushq		%r14
 	pushq		%r15
 	
-	movq		%es,		%rax
-	pushq		%rax
-	movq		%ds,		%rax
-	pushq		%rax
-	movq		0x80(%rsp),	%rax		// get sc_nr from stack
 	leaq		syscall_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
 
@@ -63,11 +58,8 @@ ENTRY(enter_sysenter)
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
 ENTRY(ret_from_sysenter)
-	movq		%rax,		0x80(%rsp)	// save return value to stack
-	popq		%rax		
-	movq		%rax,		%ds
-	popq		%rax
-	movq		%rax,		%es
+	movq		%rax,		0x70(%rsp)	// save return value to stack
+ENTRY(dofork_child_ret)
 	popq		%r15
 	popq		%r14
 	popq		%r13
@@ -191,10 +183,6 @@ RESTORE_ALL:
 // 	swapgs
 // ret_skip_swapgs:
 	cli
-	popq		%rax		
-	movq		%rax,		%ds
-	popq		%rax
-	movq		%rax,		%es
 	popq		%r15
 	popq		%r14
 	popq		%r13
@@ -247,11 +235,6 @@ SAVE_ALL:
 	pushq		%r13
 	pushq		%r14
 	pushq		%r15	
-	movq		%es,		%rax
-	pushq		%rax
-	movq		%ds,		%rax
-	pushq		%rax
-	xorq		%rax,		%rax
 // 	// if entered from user task, do swapgs
 // 	movq		0xa0(%rsp),	%r10
 // 	andq		$~0x2,		%r10
@@ -461,11 +444,11 @@ ENTRY(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
 /*											thread func							     			*/
 /*==============================================================================================*/
 ENTRY(kernel_thread_func)
-	cli
-	popq		%rax
-	movq		%rax,		%ds
-	popq		%rax
-	movq		%rax,		%es
+	// cli
+	// popq		%rax
+	// movq		%rax,		%ds
+	// popq		%rax
+	// movq		%rax,		%es
 	popq		%r15
 	popq		%r14
 	popq		%r13

@@ -33,7 +33,7 @@ int main(int argc,char *argv[])
 	// int pid = getpid();
 
 	rv = fork();
-	printf("message after fork, from task-%d, pid() = %d", rv, getpid());
+	printf("message after fork, ret_val = %d, pid():%d\n", rv, getpid());
 
 	while (1);
 
