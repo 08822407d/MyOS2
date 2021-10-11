@@ -39,7 +39,7 @@ hw_int_controller_s LVT_timer_int_controller =
 
 void LVT_timer_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
-	color_printk(WHITE, BLUE, "(LVT_timer)");
+	// color_printk(WHITE, BLUE, "(LVT_timer)");
 }
 
 void LVT_timer_init()
@@ -49,10 +49,6 @@ void LVT_timer_init()
 	register_IPI(LAPIC_LVT_TIMER_IRQ, &entry , "LVT_timer",
 				 LVT_timer.value, &LVT_timer_int_controller,
 				 &LVT_timer_handler);
-
-	// wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0x10);
-	// wrmsr(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
-	// wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, 0x03);
 
 	LVT_timer_ack(0);
 }

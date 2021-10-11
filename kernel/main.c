@@ -54,8 +54,9 @@ void idle(size_t cpu_idx)
 	arch_system_call_init();
 	sti();
 
-	if (cpu_idx == 0)
-		kernel_thread(init, 0, 0);
+	kernel_thread(module_test, 0, 0);
+	// if (cpu_idx == 0)
+	// 	kernel_thread(init, 0, 0);
 
 	while (1)
 	{

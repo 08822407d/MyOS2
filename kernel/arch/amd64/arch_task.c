@@ -35,21 +35,7 @@ unsigned long	curr_pid;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-inline __always_inline task_s * get_current_task()
-{
-#ifdef current
-#undef current
-#endif
-	task_s * current = NULL;
-	__asm__ __volatile__(	"andq 	%%rsp,	%0		\n\t"
-						:	"=r"(current)
-						:	"0"(~(TASK_KSTACK_SIZE - 1))
-						:
-						);
-	return current;
-}
-
-unsigned long get_newpid()
+unsigned long gen_newpid()
 {
 	lock_spin_lock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
@@ -67,12 +53,6 @@ unsigned long get_newpid()
 	unlock_spin_lock(&newpid_lock);
 
 	return curr_pid;
-}
-
-stack_frame_s * get_stackframe(task_s * task_p)
-{
-	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
-	return &(pcb_p->arch_sf.pcb_sf_top);
 }
 
 inline __always_inline void switch_mm(task_s * curr, task_s * target)
@@ -172,12 +152,6 @@ int read_exec_mm(file_s * fp, task_s * curr)
 	mm->start_stack = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 6;
 }
 
-void wakeup_task(task_s * task)
-{
-	per_cpudata_s * cpudata_p = curr_cpu;
-	task->state = PS_RUNNING;
-	m_push_list(task, &(cpudata_p->ready_tasks));
-}
 
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
@@ -298,7 +272,7 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	memcpy(child_task, parent_task, sizeof(task_s));
 
 	child_task->state = PS_UNINTERRUPTIBLE;
-	child_task->pid = get_newpid();
+	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
 	m_list_init(child_task);
@@ -478,24 +452,62 @@ unsigned long init(unsigned long arg)
 	return 1;
 }
 
-
 /*==============================================================================================*
  *									load_balance related functions								*
  *==============================================================================================*/
+inline __always_inline task_s * get_current_task()
+{
+#ifdef current
+#undef current
+#endif
+	task_s * current = NULL;
+	__asm__ __volatile__(	"andq 	%%rsp,	%0		\n\t"
+						:	"=r"(current)
+						:	"0"(~(TASK_KSTACK_SIZE - 1))
+						:
+						);
+	return current;
+}
+
+stack_frame_s * get_stackframe(task_s * task_p)
+{
+	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
+	return &(pcb_p->arch_sf.pcb_sf_top);
+}
+
+void wakeup_task(task_s * task)
+{
+	per_cpudata_s * cpudata_p = curr_cpu;
+	task->state = PS_RUNNING;
+	m_push_list(task, &(cpudata_p->ready_tasks));
+	list_hdr_push(&cpudata_p->ruuning_lhdr, &task->schedule_list);
+}
+
 void insert_running_list(per_cpudata_s * cpudata_p)
 {
 	task_s * curr_task = cpudata_p->curr_task;
 	if (curr_task != NULL)
 	{
 		if (curr_task == cpudata_p->idle_task)
+		{
 			m_append_to_list(curr_task, &cpudata_p->ready_tasks);
+			list_hdr_enqueue(&cpudata_p->ruuning_lhdr, &curr_task->schedule_list);
+		}
 		else
 		{
 			task_s * tail = cpudata_p->ready_tasks.head_p->prev;
 			task_s * tmp = cpudata_p->ready_tasks.head_p;
+			List_s * tmp_list = cpudata_p->ruuning_lhdr.header.next;
 			while((curr_task->vruntime > tmp->vruntime) &&
 					(tmp != tail))
 				tmp = tmp->next;
+			while ((curr_task->vruntime > container_of(tmp_list, task_s, schedule_list)->vruntime) &&
+					tmp_list != &cpudata_p->ruuning_lhdr.header)
+			{
+				tmp_list = tmp_list->next;
+			}
+			list_insert_prev(tmp_list, &curr_task->schedule_list);
+			
 			__m_list_insert_front(curr_task, tmp);
 			curr_task->list_header = &cpudata_p->ready_tasks;
 			cpudata_p->ready_tasks.count++;
@@ -537,6 +549,7 @@ void schedule()
 	// find a suit position for current insertion
 
 	m_pop_list(next_task, &cpudata_p->ready_tasks);
+	next_task = container_of(list_hdr_pop(&cpudata_p->ruuning_lhdr), task_s, schedule_list);
 	cpudata_p->curr_task = next_task;
 
 	cpudata_p->last_jiffies = jiffies;

@@ -44,13 +44,15 @@ void init_task()
 
 	arch_init_task();
 
-	task_s *task0	= &task0_PCB.task;
+	task_s *task0 = &task0_PCB.task;
 	memset(task0, 0, sizeof(task_s));
 	m_list_init(task0);
+	list_init(&task0->running_list, task0);
+	list_hdr_init(&task0->child_lhdr);
 	task0->time_slice = 2;
 	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
-	task0->pid = get_newpid();
+	task0->pid = gen_newpid();
 	task0->mm_struct = &task0_mm;
 
 	// set arch struct in mm_s

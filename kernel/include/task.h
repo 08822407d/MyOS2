@@ -35,10 +35,12 @@
 
 	typedef struct task
 	{
+		List_s			schedule_list;
 		task_s *		prev;
 		task_s *		next;
 
 		task_s *		parent;
+		List_hdr_s		child_lhdr;
 		task_list_s *	list_header;
 
 		arch_PCB_s		arch_struct;
@@ -82,6 +84,7 @@
 		task_s *	curr_task;
 		task_s *	idle_task;
 
+		List_hdr_s	ruuning_lhdr;
 		task_list_s	ready_tasks;
 		task_list_s	finished_tasks;
 
@@ -108,7 +111,7 @@
 	#define curr_tsk get_current_task()
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
-	unsigned long get_newpid(void);
+	unsigned long gen_newpid(void);
 	void __switch_to(task_s * curr, task_s * target);
 	void switch_to(task_s * curr, task_s * target);
 	void wakeup_task(task_s * task);
