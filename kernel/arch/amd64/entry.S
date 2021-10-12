@@ -9,7 +9,34 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
+SAVE_ALL:
+	pushq		%rax
+	pushq		%rbx
+	pushq		%rcx
+	pushq		%rdx
+	pushq		%rbp
+	pushq		%rdi
+	pushq		%rsi
+	pushq		%r8
+	pushq		%r9
+	pushq		%r10
+	pushq		%r11
+	pushq		%r12
+	pushq		%r13
+	pushq		%r14
+	pushq		%r15	
+	subq		$0x08,		%rsp
+	retq
+
 #define SAVEALL_SIZE		0x70
+#define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
+#define	DO_SAVE_ALL(ret_p)							\
+	pushq		%rax;								\
+	leaq		ret_p(%rip),	%rax;				\
+	movq		%rax,		-SAVEALL_RETP(%rsp);	\
+	popq		%rax;								\
+	jmp			SAVE_ALL
+
 #define GET_CURRENT(reg)			\
 	movq		$-32768,	reg;	\
 	andq		%rsp,		reg
@@ -31,28 +58,13 @@ ENTRY(enter_sysenter)
 	pushfq
 	subq		$0x08,		%rsp
 	pushq		%r10
-	subq		$0x08,		%rsp
-	pushq		%rax
-
-	pushq		%rax
-	pushq		%rbx
-	pushq		%rcx
-	pushq		%rdx
-	pushq		%rbp
-	pushq		%rdi
-	pushq		%rsi
-	pushq		%r8
-	pushq		%r9
-	pushq		%r10
-	pushq		%r11
-	pushq		%r12
-	pushq		%r13
-	pushq		%r14
-	pushq		%r15
+	subq		$0x08,		%rsp	// skip error No.
+	pushq		%rax				// store as vec No.
 	
+	DO_SAVE_ALL(sysenter_retp)
+sysenter_retp:
 	leaq		syscall_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
-
 
 // RDX -> user RSP
 // RCX -> user RIP
@@ -219,23 +231,6 @@ softirq_hanlder:
 	cli
 	jmp			RESTORE_ALL
 
-SAVE_ALL:
-	cli
-	pushq		%rax
-	pushq		%rbx
-	pushq		%rcx
-	pushq		%rdx
-	pushq		%rbp
-	pushq		%rdi
-	pushq		%rsi
-	pushq		%r8
-	pushq		%r9
-	pushq		%r10
-	pushq		%r11
-	pushq		%r12
-	pushq		%r13
-	pushq		%r14
-	pushq		%r15	
 // 	// if entered from user task, do swapgs
 // 	movq		0xa0(%rsp),	%r10
 // 	andq		$~0x2,		%r10
@@ -244,6 +239,7 @@ SAVE_ALL:
 // 	swapgs
 
 // enter_skip_swapgs:
+intr_retp:
 	cld
 	movq		%rsp,		%rdi
 	callq 		excep_hwint_entry
@@ -255,8 +251,9 @@ SAVE_ALL:
 /*									exception handler entries					     			*/
 /*==============================================================================================*/
 #define EXCEPTION_ERR_CODE(vector)		\
+	cli									;\
 	pushq		$vector					;\
-	jmp			SAVE_ALL
+	DO_SAVE_ALL(intr_retp)
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
 	pushq		$0						;\
