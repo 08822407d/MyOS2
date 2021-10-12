@@ -70,13 +70,12 @@
 	void lapic_ipi07(void);
 
 	/* syscalls and others about intr */
-	void ret_from_intr(void);
-	void kernel_thread_func(void);
-	void enter_sysenter(void);
-	void ret_from_sysenter(void);
-	void dofork_child_ret(void);
-	void enter_syscall(void);
-	void ret_from_syscall(void);
+	void sysenter_entp(void);
+	void sysexit_entp(void);
+	void dofork_child_entp(void);
+	void ra_sysex_retp(void);
+	void entp_kernel_thread(void);
+	void ra_kthd_retp(void);
 
 /*==============================================================================================*
  *										internal symbols										*
@@ -98,7 +97,7 @@
 		reg_t	rcx;
 		reg_t	rbx;
 		reg_t	rax;
-		// reg_t	restore_retp;
+		reg_t	restore_retp;
 		reg_t	vec_nr;
 		reg_t	err_code;
 		reg_t	rip;

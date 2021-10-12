@@ -100,12 +100,14 @@
 		reg_t			cpu_stack[CONFIG_CPUSTACK_SIZE / sizeof(reg_t)];
 	} cpudata_u;
 
-	void init_task(void);
-	void arch_init_task(void);
+
 	task_s * get_current_task(void);
 	#define curr_tsk get_current_task()
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
+
+	void init_task(void);
+	void arch_init_task(void);
 	unsigned long gen_newpid(void);
 	void __switch_to(task_s * curr, task_s * target);
 	void switch_to(task_s * curr, task_s * target);

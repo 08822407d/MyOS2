@@ -247,9 +247,15 @@ unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	child_task->arch_struct.k_rsp = (reg_t)child_context;
 
 	if(child_task->flags & PF_KTHREAD)
-		child_task->arch_struct.k_rip = (unsigned long)kernel_thread_func;
+	{
+		child_task->arch_struct.k_rip = (unsigned long)entp_kernel_thread;
+		child_context->restore_retp = (reg_t)ra_kthd_retp;
+	}
 	else
-		child_task->arch_struct.k_rip = (unsigned long)dofork_child_ret;
+	{
+		child_task->arch_struct.k_rip = (unsigned long)dofork_child_entp;
+		child_context->restore_retp = (reg_t)ra_sysex_retp;
+	}
 
 	return 0;
 }
@@ -372,8 +378,6 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 	long fp_pos = 0;
 	ret_val = fp->f_ops->read(fp, (void *)curr_tsk->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 
-	// curr_context->ds =
-	// curr_context->es =
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr_tsk->mm_struct->start_code;
@@ -417,37 +421,40 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	sf_regs.rdx = (reg_t)arg;
 
 	sf_regs.cs = KERN_CS_SELECTOR;
-	// sf_regs.ds = KERN_SS_SELECTOR;
-	// sf_regs.es = KERN_SS_SELECTOR;
 	sf_regs.ss = KERN_SS_SELECTOR;
 	sf_regs.rflags = (1 << 9);
-	sf_regs.rip = (reg_t)kernel_thread_func;
+	sf_regs.rip = (reg_t)entp_kernel_thread;
 
 	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
 }
 
 
 /*==============================================================================================*
- *										*
+ *										task2 -- init()											*
  *==============================================================================================*/
 unsigned long init(unsigned long arg)
 {
 	init_vfs();
-
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 
-	stack_frame_s * curr_sfp = get_stackframe(curr_tsk);
-	curr_tsk->arch_struct.k_rip = (reg_t)ret_from_sysenter;
-	curr_tsk->arch_struct.k_rsp = (reg_t)curr_sfp;
-	curr_tsk->flags &= ~PF_KTHREAD;
+	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
+	task_s * curr = curr_tsk;
+	stack_frame_s * curr_sfp = get_stackframe(curr);
+	curr_sfp->restore_retp = (reg_t)ra_sysex_retp;
 
+	reg_t ctx_rip =
+	curr->arch_struct.k_rip = (reg_t)sysexit_entp;
+	reg_t ctx_rsp =
+	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
+	curr->flags &= ~PF_KTHREAD;
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
 							"jmp	do_execve	\n\t"
 						:
-						:	"D"(curr_tsk->arch_struct.k_rsp),"m"(curr_tsk->arch_struct.k_rsp),
-							"m"(curr_tsk->arch_struct.k_rip),"S"("/init.bin"),"d"(NULL),"c"(NULL)
+						:	"D"(ctx_rsp), "m"(ctx_rsp),
+							"m"(ctx_rip), "S"("/init.bin"),
+							"d"(NULL), "c"(NULL)
 						:	"memory"
 						);
 
@@ -459,16 +466,13 @@ unsigned long init(unsigned long arg)
  *==============================================================================================*/
 inline __always_inline task_s * get_current_task()
 {
-#ifdef current
-#undef current
-#endif
-	task_s * current = NULL;
-	__asm__ __volatile__(	"andq 	%%rsp,	%0		\n\t"
-						:	"=r"(current)
+	task_s * curr_task = NULL;
+	__asm__ __volatile__(	"andq 	%%rsp,	%1		\n\t"
+						:	"=r"(curr_task)
 						:	"0"(~(TASK_KSTACK_SIZE - 1))
 						:
 						);
-	return current;
+	return curr_task;
 }
 
 stack_frame_s * get_stackframe(task_s * task_p)

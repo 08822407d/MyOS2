@@ -9,7 +9,9 @@
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
+#define SAVEALL_SIZE		0x70
 SAVE_ALL:
+	cli
 	pushq		%rax
 	pushq		%rbx
 	pushq		%rcx
@@ -28,51 +30,8 @@ SAVE_ALL:
 	subq		$0x08,		%rsp
 	retq
 
-#define SAVEALL_SIZE		0x70
-#define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
-#define	DO_SAVE_ALL(ret_p)							\
-	pushq		%rax;								\
-	leaq		ret_p(%rip),	%rax;				\
-	movq		%rax,		-SAVEALL_RETP(%rsp);	\
-	popq		%rax;								\
-	jmp			SAVE_ALL
-
-#define GET_CURRENT(reg)			\
-	movq		$-32768,	reg;	\
-	andq		%rsp,		reg
-
-/*==============================================================================================*/
-/*									syscall and sysret entry						 			*/
-/*==============================================================================================*/
-// user RSP -> R11 by hand
-// user RIP -> R10 by hand
-// kernel CS = IA32_SYSENTER_CS
-// kernel SS = IA32_SYSENTER_CS + 8
-// kernel RIP = IA32_SYSENTER_EIP
-// kernel RSP = IA32_SYSENTER_ESP
-ENTRY(enter_sysenter)
+RESTORE_ALL:
 	cli
-	// swapgs
-	subq		$0x08,		%rsp
-	pushq		%r11
-	pushfq
-	subq		$0x08,		%rsp
-	pushq		%r10
-	subq		$0x08,		%rsp	// skip error No.
-	pushq		%rax				// store as vec No.
-	
-	DO_SAVE_ALL(sysenter_retp)
-sysenter_retp:
-	leaq		syscall_table(%rip),	%rbx
-	callq		*(%rbx,%rax,8)
-
-// RDX -> user RSP
-// RCX -> user RIP
-// user CS = IA32_SYSENTER_CS + 32
-// user SS = IA32_SYSENTER_CS + 40
-ENTRY(ret_from_sysenter)
-	movq		%rax,		SAVEALL_SIZE(%rsp)	// save return value to stack
-ENTRY(dofork_child_ret)
 	popq		%r15
 	popq		%r14
 	popq		%r13
@@ -88,7 +47,62 @@ ENTRY(dofork_child_ret)
 	popq		%rcx
 	popq		%rbx
 	popq		%rax
+	retq
 
+#define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
+#define	SET_RET_POINTS(ent_rp, ex_rp)				\
+	subq		$0x08,			%RSP				;\
+	pushq		%rax								;\
+	leaq		ex_rp(%rip),	%rax				;\
+	movq		%rax,			0x08(%rsp)			;\
+	leaq		ent_rp(%rip),	%rax				;\
+	movq		%rax,			-SAVEALL_RETP(%rsp)	;\
+	popq		%rax								;\
+
+/*==============================================================================================*/
+/*									kernel thread func							     			*/
+/*==============================================================================================*/
+ENTRY(entp_kernel_thread)
+	jmp			RESTORE_ALL
+ENTRY(ra_kthd_retp)
+	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
+	/////////////////////////////////
+	movq		%rdx,		%rdi
+	sti
+	pushq		%rbx
+	callq		*%rbx
+	popq		%rbx
+	movq		%rax,		%rdi
+	movq		%rbx,		%rsi
+	sti
+	callq		do_exit
+
+/*==============================================================================================*/
+/*									syscenter and sysexit entry						 			*/
+/*==============================================================================================*/
+// user RSP -> R11 by hand
+// user RIP -> R10 by hand
+// kernel CS = IA32_SYSENTER_CS
+// kernel SS = IA32_SYSENTER_CS + 8
+// kernel RIP = IA32_SYSENTER_EIP
+// kernel RSP = IA32_SYSENTER_ESP
+ENTRY(sysenter_entp)
+	subq		$0x38,		%rsp
+	SET_RET_POINTS(sa_sysent_retp, ra_sysex_retp)
+	jmp			SAVE_ALL
+sa_sysent_retp:
+	leaq		syscall_table(%rip),	%rbx
+	callq		*(%rbx,%rax,8)
+
+// RDX -> user RSP
+// RCX -> user RIP
+// user CS = IA32_SYSENTER_CS + 32
+// user SS = IA32_SYSENTER_CS + 40
+ENTRY(sysexit_entp)
+	movq		%rax,		SAVEALL_SIZE(%rsp)	// save return value to stack
+ENTRY(dofork_child_entp)
+	jmp			RESTORE_ALL
+ENTRY(ra_sysex_retp)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
@@ -122,26 +136,7 @@ ENTRY(dofork_child_ret)
 // 	/////////////////////////////////
 // 	subq		$0x10,		%rsp	// skip vec_nr and err_code
 // 	/////////////////////////////////
-// 	pushq		%rax
-// 	pushq		%rbx
-// 	pushq		%rcx
-// 	pushq		%rdx
-// 	pushq		%rbp
-// 	pushq		%rdi
-// 	pushq		%rsi
-// 	pushq		%r8
-// 	pushq		%r9
-// 	pushq		%r10
-// 	pushq		%r11
-// 	pushq		%r12
-// 	pushq		%r13
-// 	pushq		%r14
-// 	pushq		%r15
-	
-// 	movq		%es,		%rax
-// 	pushq		%rax
-// 	movq		%ds,		%rax
-// 	pushq		%rax
+
 // 	movq		%rsp,		%rdi
 
 // // R11 -> user Rflags
@@ -151,26 +146,7 @@ ENTRY(dofork_child_ret)
 // // !!! user RSP should be restore by hand !!!
 // // !!! kernel RSP should be store by hand !!!
 // ENTRY(ret_from_syscall)
-// 	movq		%rax,		0x80(%rsp)	// save return value to stack
-// 	popq		%rax		
-// 	movq		%rax,		%ds
-// 	popq		%rax
-// 	movq		%rax,		%es
-// 	popq		%r15
-// 	popq		%r14
-// 	popq		%r13
-// 	popq		%r12
-// 	popq		%r11
-// 	popq		%r10
-// 	popq		%r9
-// 	popq		%r8
-// 	popq		%rsi
-// 	popq		%rdi
-// 	popq		%rbp
-// 	popq		%rdx
-// 	popq		%rcx
-// 	popq		%rbx
-// 	popq		%rax
+
 // 	/////////////////////////////////
 // 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 // 	/////////////////////////////////
@@ -183,77 +159,34 @@ ENTRY(dofork_child_ret)
 
 // 	sysretq
 
-
 /*==============================================================================================*/
 /*										interrupt entry								 			*/
 /*==============================================================================================*/
-RESTORE_ALL:
-// 	// if entered from user task, do swapgs
-// 	movq		0xa0(%rsp),	%r10
-// 	andq		$~0x2,		%r10
-// 	cmpq		$0,			%r10
-// 	jg			ret_skip_swapgs
-// 	swapgs
-// ret_skip_swapgs:
-	cli
-	popq		%r15
-	popq		%r14
-	popq		%r13
-	popq		%r12
-	popq		%r11
-	popq		%r10
-	popq		%r9
-	popq		%r8
-	popq		%rsi
-	popq		%rdi
-	popq		%rbp
-	popq		%rdx
-	popq		%rcx
-	popq		%rbx
-	popq		%rax
-	addq		$0x10,		%rsp	// skip err-code and vec-nr
-	sti
-	iretq;
-
-ret_from_exception:
-ENTRY(ret_from_intr)
-	cli
+sa_entintr_retp:
+	cld
+	movq		%rsp,		%rdi
+	callq 		excep_hwint_entry
 	callq		schedule
 	sti
 	movq		$-1,		%rcx
 	testq		softirq_status(%rip),	%rcx	////check softirq	
-	jnz			softirq_hanlder
-	jmp			RESTORE_ALL
-
-softirq_hanlder:
-	sti
 	callq		do_softirq
 	cli
+
 	jmp			RESTORE_ALL
-
-// 	// if entered from user task, do swapgs
-// 	movq		0xa0(%rsp),	%r10
-// 	andq		$~0x2,		%r10
-// 	cmpq		$0,			%r10
-// 	jg			enter_skip_swapgs
-// 	swapgs
-
-// enter_skip_swapgs:
-intr_retp:
-	cld
-	movq		%rsp,		%rdi
-	callq 		excep_hwint_entry
+ra_exintr_retp:
+	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
-	jmp			ret_from_exception	
-
+	iretq;
 
 /*==============================================================================================*/
 /*									exception handler entries					     			*/
 /*==============================================================================================*/
-#define EXCEPTION_ERR_CODE(vector)		\
-	cli									;\
-	pushq		$vector					;\
-	DO_SAVE_ALL(intr_retp)
+#define EXCEPTION_ERR_CODE(vector)				\
+	cli											;\
+	pushq		$vector							;\
+	SET_RET_POINTS(sa_entintr_retp, ra_exintr_retp)	;\
+	jmp			SAVE_ALL
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
 	pushq		$0						;\
@@ -433,39 +366,3 @@ ENTRY(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
 
 ENTRY(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
 	lapic_ipi_entry(7)
-
-/*==============================================================================================*/
-/*											thread func							     			*/
-/*==============================================================================================*/
-ENTRY(kernel_thread_func)
-	// cli
-	// popq		%rax
-	// movq		%rax,		%ds
-	// popq		%rax
-	// movq		%rax,		%es
-	popq		%r15
-	popq		%r14
-	popq		%r13
-	popq		%r12
-	popq		%r11
-	popq		%r10
-	popq		%r9
-	popq		%r8
-	popq		%rsi
-	popq		%rdi
-	popq		%rbp
-	popq		%rdx
-	popq		%rcx
-	popq		%rbx
-	popq		%rax
-	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
-	/////////////////////////////////
-	movq		%rdx,		%rdi
-	sti
-	pushq		%rbx
-	callq		*%rbx
-	popq		%rbx
-	movq		%rax,		%rdi
-	movq		%rbx,		%rsi
-	sti
-	callq		do_exit
