@@ -83,7 +83,6 @@
  *==============================================================================================*/
 // interrupt stack
 	typedef struct stack_frame {
-		// reg_t	ret_addr;
 		reg_t	r15;
 		reg_t	r14;
 		reg_t	r13;
@@ -99,6 +98,7 @@
 		reg_t	rcx;
 		reg_t	rbx;
 		reg_t	rax;
+		// reg_t	restore_retp;
 		reg_t	vec_nr;
 		reg_t	err_code;
 		reg_t	rip;

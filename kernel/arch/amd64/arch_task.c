@@ -35,6 +35,17 @@ unsigned long	curr_pid;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
+void arch_init_task()
+{
+	// init pid bitmap
+	memset(&pid_bm, 0, sizeof(pid_bm));
+	curr_pid = 0;
+	init_spin_lock(&newpid_lock);
+}
+
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
 unsigned long gen_newpid()
 {
 	lock_spin_lock(&newpid_lock);
@@ -415,13 +426,6 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
 }
 
-void arch_init_task()
-{
-	// init pid bitmap
-	memset(&pid_bm, 0, sizeof(pid_bm));
-	curr_pid = 0;
-	init_spin_lock(&newpid_lock);
-}
 
 /*==============================================================================================*
  *										*
