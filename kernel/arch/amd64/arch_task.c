@@ -469,7 +469,7 @@ inline __always_inline task_s * get_current_task()
 	task_s * curr_task = NULL;
 	__asm__ __volatile__(	"andq 	%%rsp,	%1		\n\t"
 						:	"=r"(curr_task)
-						:	"0"(~(TASK_KSTACK_SIZE - 1))
+						:	"r"(~(TASK_KSTACK_SIZE - 1))
 						:
 						);
 	return curr_task;
