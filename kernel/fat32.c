@@ -791,8 +791,8 @@ superblock_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	sbp->root = (dirent_s *)kmalloc(sizeof(dirent_s));
 	memset(sbp->root, 0, sizeof(dirent_s));
 
-	m_list_init(sbp->root);
-	m_init_list_header(&sbp->root->child_list);
+	list_init(&sbp->root->dirent_list, sbp->root);
+	list_hdr_init(&sbp->root->childdir_lhdr);
 	sbp->root->parent = sbp->root;
 	sbp->root->dir_ops = &FAT32_dentry_ops;
 	sbp->root->name = (char *)kmalloc(2);

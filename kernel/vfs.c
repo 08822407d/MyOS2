@@ -1,4 +1,5 @@
 #include <lib/string.h>
+#include <sys/errno.h>
 
 #include "include/printk.h"
 #include "include/proto.h"
@@ -105,24 +106,21 @@ dirent_s * path_walk(char * name,unsigned long flags)
 			name++;
 		tmpnamelen = name - tmpname;
 
-		int finded = FALSE;
-		dirent_s * dir_p = parent->child_list.head_p;
-		do
+		dirent_s * dir_p;
+		List_s * dir_lp;
+		for (dir_lp = parent->childdir_lhdr.header.next;
+				dir_lp != &parent->childdir_lhdr.header;
+				dir_lp = dir_lp->next)
 		{
-			if (dir_p == NULL)
-				break;
-
-			if (!strncmp(tmpname, dir_p->name, tmpnamelen))
+			if ((dir_p = dir_lp->owner_p) != NULL &&
+					!strncmp(tmpname, dir_p->name, tmpnamelen))
 			{
-				parent = dir_p;
-				finded = TRUE;
+				path = dir_p;
 				break;
 			}
-			else
-				dir_p = dir_p->next;
-		} while (dir_p != parent->child_list.head_p);
+		}
 
-		if (!finded)
+		if (dir_lp == &parent->childdir_lhdr.header)
 		{
 			path = (dirent_s *)kmalloc(sizeof(dirent_s));
 			memset(path, 0, sizeof(dirent_s));
@@ -140,12 +138,13 @@ dirent_s * path_walk(char * name,unsigned long flags)
 				return NULL;
 			}
 
-			m_init_list_header(&path->child_list);
+			list_init(&path->dirent_list, path);
+			list_hdr_init(&path->childdir_lhdr);
+			list_hdr_append(&parent->childdir_lhdr, &path->dirent_list);
 			path->parent = parent;
-			m_append_to_list(path, &parent->child_list);
-
-			parent = path;
 		}
+
+		parent = path;
 
 		if(!*name)
 			goto last_component;
@@ -168,9 +167,9 @@ last_component:
 
 int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
 {
-	// struct dirent* dent = (struct dirent*)buf;
+	// dirent_s * dent = (dirent_s *)buf;
 	
-	// if((unsigned long)buf < TASK_SIZE && !verify_area(buf,sizeof(struct dirent) + namelen))
+	// if((unsigned long)buf < CONST_4K && !verify_area(buf, sizeof(dirent_s) + namelen))
 	// 	return -EFAULT;
 	
 	// memcpy(name,dent->d_name,namelen);
