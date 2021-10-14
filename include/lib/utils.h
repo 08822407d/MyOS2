@@ -45,5 +45,14 @@
 	void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
 	List_s * list_hdr_dequeue(List_hdr_s * lhdr_p);
 
+	typedef int(* list_traverse_do)(List_s * curr, List_s * target);
+	typedef	list_traverse_do	list_traverse_check;
+	typedef	list_traverse_do	list_traverse_end;
+	void list_foreach_do(List_hdr_s * lhdr, List_s * target,
+						list_traverse_do do_hdlr);
+	void list_search_and_do(List_hdr_s * lhdr, List_s * target,
+						list_traverse_check chk_hdlr,
+						list_traverse_do do_hdlr,
+						list_traverse_end end_hdlr);
 
 #endif /* _LIB_UTILS_H_ */

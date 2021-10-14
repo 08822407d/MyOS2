@@ -91,3 +91,42 @@ List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
 	lhdr_p->count--;
 	return ret_val;
 }
+
+void list_foreach_do(List_hdr_s * lhdr, List_s * target,
+						list_traverse_do do_hdlr)
+{
+	if (do_hdlr == NULL)
+	{
+		while (1);
+	}
+
+	List_s * tmp;
+	for (tmp = lhdr->header.next; tmp != &lhdr->header; tmp = tmp->next)
+	{
+		do_hdlr(tmp, target);
+	}
+}
+
+void list_search_and_do(List_hdr_s * lhdr, List_s * target,
+					list_traverse_check chk_hdlr,
+					list_traverse_do do_hdlr,
+					list_traverse_end end_hdlr)
+{
+	if (chk_hdlr == NULL || do_hdlr == NULL)
+	{
+		while (1);
+	}
+
+	List_s * tmp;
+	for (tmp = lhdr->header.next; tmp != &lhdr->header; tmp = tmp->next)
+	{
+		int rv = chk_hdlr(tmp, target);
+		if (rv != 0)
+		{
+			do_hdlr(tmp, target);
+			break;
+		}
+	}
+	if (end_hdlr != NULL)
+			end_hdlr(tmp, target);
+}

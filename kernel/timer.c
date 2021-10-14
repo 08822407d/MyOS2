@@ -22,19 +22,32 @@ void init_timer(timer_s * timer,
 	timer->expire_jiffies = jiffies + expire_jiffies;
 }
 
+int add_timer_chk(List_s * curr_lp, List_s * tartget_lp)
+{
+	timer_s * ct_p = (timer_s *)curr_lp->owner_p;
+	timer_s * pt_p = (timer_s *)curr_lp->prev->owner_p;
+	timer_s * tt_p = (timer_s *)tartget_lp->owner_p;
+
+	int rv = 0;
+	if ((tt_p->expire_jiffies > pt_p->expire_jiffies || curr_lp->prev == &timer_lhdr.header) &&
+		(tt_p->expire_jiffies < ct_p->expire_jiffies))
+	{
+		rv = 1;
+	}
+	return rv;
+}
+int add_timer_do(List_s * curr_lp, List_s * tartget_lp)
+{
+	list_insert_prev(curr_lp, tartget_lp);
+}
+int add_timer_end(List_s * curr_lp, List_s * tartget_lp)
+{
+	add_timer_do(curr_lp, tartget_lp);
+}
 void add_timer(timer_s * timer)
 {
-	if (timer_lhdr.count == 0)
-		list_hdr_push(&timer_lhdr, &timer->tmr_list);
-	else
-	{
-		timer_s * tmp = timer_lhdr.header.next->owner_p;
-
-		while(tmp != NULL &&
-				tmp->expire_jiffies < timer->expire_jiffies)
-			tmp = tmp->tmr_list.next->owner_p;
-		list_insert_prev(&timer->tmr_list, &tmp->tmr_list);
-	}
+	list_search_and_do(&timer_lhdr, &timer->tmr_list,
+						add_timer_chk, add_timer_do, add_timer_end);
 }
 
 void del_timer(timer_s * timer)
