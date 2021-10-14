@@ -31,8 +31,6 @@
 	struct task;
 	typedef struct task task_s;
 
-	m_define_list_header(task);
-
 	typedef struct task
 	{
 		List_s			schedule_list;

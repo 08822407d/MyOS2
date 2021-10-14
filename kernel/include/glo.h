@@ -16,7 +16,5 @@
 
 	extern size_t			cpustack_off;
 	extern task_queue_s		idle_queue;
-	extern task_list_s		global_ready_task;
-	extern task_list_s		global_blocked_task;
 
 #endif /* _GLO_H_ */

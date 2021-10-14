@@ -21,9 +21,7 @@ PCB_u **		idle_tasks;
 task_queue_s	idle_queue;
 spinlock_T		idle_queue_lock;
 
-task_list_s		global_ready_task;
 spinlock_T		global_ready_task_lock;
-task_list_s		global_blocked_task;
 spinlock_T		global_blocked_task_lock;
 
 extern char _text;

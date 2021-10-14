@@ -113,7 +113,7 @@ dirent_s * path_walk(char * name,unsigned long flags)
 				dir_lp = dir_lp->next)
 		{
 			if ((dir_p = dir_lp->owner_p) != NULL &&
-					!strncmp(tmpname, dir_p->name, tmpnamelen))
+				!strncmp(tmpname, dir_p->name, tmpnamelen))
 			{
 				path = dir_p;
 				break;
