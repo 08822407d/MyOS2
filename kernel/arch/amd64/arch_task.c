@@ -11,6 +11,7 @@
 #include "include/arch_task.h"
 #include "include/arch_proto.h"
 #include "include/arch_glo.h"
+#include "include/device.h"
 
 #include "../../include/glo.h"
 #include "../../include/proto.h"
@@ -436,6 +437,7 @@ unsigned long init(unsigned long arg)
 {
 	init_vfs();
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
+	creat_dev_file();
 
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;

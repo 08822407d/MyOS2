@@ -9,7 +9,6 @@
 #include "include/device.h"
 
 #include "../../include/glo.h"
-#include "../../include/vfs.h"
 #include "../../include/printk.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
@@ -384,95 +383,4 @@ unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x7d*/	0,			0,
 /*0x7e*/	0,			0,
 /*0x7f*/	0,			0,
-};
-
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/
-long keyboard_open(inode_s * inode, file_s * fp)
-{
-	fp->private_data = p_kb;
-
-	p_kb->p_head = p_kb->buf;
-	p_kb->p_tail = p_kb->buf;
-	p_kb->count  = 0;
-	memset(p_kb->buf, 0, KB_BUF_SIZE);
-
-	return 1;
-}
-
-long keyboard_close(inode_s * inode,file_s * fp)
-{
-	fp->private_data = NULL;
-
-	p_kb->p_head = p_kb->buf;
-	p_kb->p_tail = p_kb->buf;
-	p_kb->count  = 0;
-	memset(p_kb->buf, 0, KB_BUF_SIZE);
-
-	return 1;
-}
-
-#define	KEY_CMD_RESET_BUFFER	0
-
-long keyboard_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
-{
-	switch(cmd)
-	{
-
-		case KEY_CMD_RESET_BUFFER:
-			p_kb->p_head = p_kb->buf;
-			p_kb->p_tail = p_kb->buf;
-			p_kb->count  = 0;
-			memset(p_kb->buf,0,KB_BUF_SIZE);
-		break;
-
-		default:
-		break;
-	}
-
-	return 0;
-}
-
-long keyboard_read(file_s * fp, char * buf, unsigned long count, long * position)
-{
-	long counter  = 0;
-	unsigned char * tail = NULL;
-	
-
-	// if(p_kb->count == 0)
-	// 	sleep_on(&keyboard_wait_queue);
-
-	counter = p_kb->count >= count? count:p_kb->count;
-	tail = p_kb->p_tail;
-	
-	if(counter <= (p_kb->buf + KB_BUF_SIZE - tail))
-	{
-		copy_to_user(tail,buf,counter);
-		p_kb->p_tail += counter;
-	}
-	else
-	{
-		copy_to_user(tail,buf,(p_kb->buf + KB_BUF_SIZE - tail));
-		copy_to_user(p_kb->p_head,buf,counter - (p_kb->buf + KB_BUF_SIZE - tail));
-		p_kb->p_tail = p_kb->p_head + (counter - (p_kb->buf + KB_BUF_SIZE - tail));
-	}
-	p_kb->count -= counter;
-
-	return counter;	
-}
-
-long keyboard_write(file_s * fp, char * buf, unsigned long count, long * position)
-{
-	return 0;
-}
-
-
-file_ops_s keyboard_fops = 
-{
-	.open = keyboard_open,
-	.close = keyboard_close,
-	.ioctl = keyboard_ioctl,
-	.read = keyboard_read,
-	.write = keyboard_write,
 };
