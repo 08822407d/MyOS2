@@ -47,7 +47,7 @@ void list_delete(List_s * src)
 {
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
-	src->owner_p = NULL;
+	list_init(src, src->owner_p);
 }
 
 /*==============================================================================================*/

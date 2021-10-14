@@ -16,16 +16,37 @@
 #ifndef _BLOCK_H_
 #define _BLOCK_H_
 
-typedef struct blkdev_ops
-{
-	long (* open)();
-	long (* close)();
-	long (* ioctl)(long cmd,
-					long arg);
-	long (* transfer)(long cmd,
-						unsigned long blk_idx,
-						long count,
-						unsigned char * buffer);
-} blkdev_ops_s;
+#include "wait_queue.h"
+
+	typedef struct blkdev_ops
+	{
+		long (* open)();
+		long (* close)();
+		long (* ioctl)(long cmd,
+						long arg);
+		long (* transfer)(long cmd,
+							unsigned long blk_idx,
+							long count,
+							unsigned char * buffer);
+	} blkdev_ops_s;
+
+	struct blkbuf_node;
+	typedef struct blkbuf_node blkbuf_node_s;
+	typedef struct blkbuf_node
+	{
+		wait_queue_T	wq;
+		unsigned int	count;
+		unsigned char	cmd;
+		// unsigned char finished_flag;
+		unsigned long	LBA;
+		unsigned char *	buffer;
+		void			(*end_handler)(unsigned long parameter);
+	} blkbuf_node_s;
+
+	typedef struct bdev_req_queue
+	{
+		wait_queue_hdr_s	bdev_wqhdr;
+		blkbuf_node_s *		in_using;
+	} bdev_req_queue_T;
 
 #endif /* _BLOCK_H_ */

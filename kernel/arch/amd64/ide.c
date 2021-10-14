@@ -17,7 +17,7 @@
 
 struct Disk_Identify_Info disk_id;
 
-diskrq_queue_s	disk_require_queue;
+bdev_req_queue_T IDE_req_queue;
 
 char read_test[512];
 
@@ -83,9 +83,9 @@ void IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx)
  *==============================================================================================*/
 long cmd_out()
 {
-	blkbuf_node_s * node = NULL;
-	m_dequeue_list(node, &disk_require_queue.waiting_list);
-	disk_require_queue.curr_user = node;
+	List_s * wq_l = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
+	blkbuf_node_s * node = container_of(wq_l->owner_p, blkbuf_node_s, wq);
+	IDE_req_queue.in_using = node;
 
 	while(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_BUSY)
 		nop();
@@ -138,27 +138,27 @@ void end_request(blkbuf_node_s * node)
 	if(node == NULL)
 		color_printk(RED,BLACK,"end_request error\n");
 
-	node->requestor->state = PS_RUNNING;
-	wakeup_task(node->requestor);
+	node->wq.task->state = PS_RUNNING;
+	wakeup_task(node->wq.task);
 	//	node->wait_queue.tsk->flags |= NEED_SCHEDULE;
 	curr_tsk->flags |= PF_NEED_SCHEDULE;
 
-	kfree(disk_require_queue.curr_user);
-	disk_require_queue.curr_user = NULL;
+	kfree(node);
+	IDE_req_queue.in_using = NULL;
 
-	if(disk_require_queue.waiting_list.count)
+	if(IDE_req_queue.bdev_wqhdr.count != 0)
 		cmd_out();
 }
 
 void add_request(blkbuf_node_s * node)
 {
 	// per_cpudata_s * cpudata_p = curr_cpu;
-	m_enqueue_list(node, &disk_require_queue.waiting_list);
+	list_hdr_append(&IDE_req_queue.bdev_wqhdr, &node->wq.wq_list);
 }
 
 void read_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
 	unsigned char status = inb(PORT_DISK0_STATUS_CMD);
 	
 	if(status & DISK_STATUS_ERROR)
@@ -178,7 +178,7 @@ void read_handler(unsigned long parameter)
 
 void write_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
 
 	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
 		color_printk(RED,BLACK,"write_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
@@ -198,7 +198,7 @@ void write_handler(unsigned long parameter)
 
 void other_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
 
 	if(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_ERROR)
 		color_printk(RED,BLACK,"other_handler:%#010x\n",inb(PORT_DISK0_ERR_FEATURE));
@@ -211,8 +211,7 @@ void other_handler(unsigned long parameter)
 blkbuf_node_s * make_request(long cmd, unsigned long blk_idx, long count, unsigned char * buffer)
 {
 	blkbuf_node_s * node = (blkbuf_node_s *)kmalloc(sizeof(blkbuf_node_s));
-	m_list_init(node);
-	node->requestor = curr_tsk;
+	wq_init(&node->wq, curr_tsk);
 	node->buffer = buffer;
 
 	switch(cmd)
@@ -244,15 +243,15 @@ void submit(blkbuf_node_s * node)
 {	
 	add_request(node);
 	
-	if(disk_require_queue.curr_user == NULL)
+	if(IDE_req_queue.in_using == NULL)
 		cmd_out();
 }
 
 void wait_for_finish()
 {
-	if (disk_require_queue.curr_user != NULL)
+	if (IDE_req_queue.in_using != NULL)
 	{
-		per_cpudata_s *	cpudata_p = curr_cpu;
+		// per_cpudata_s *	cpudata_p = curr_cpu;
 		curr_tsk->state = PS_UNINTERRUPTIBLE;
 		schedule();
 	}
@@ -324,7 +323,7 @@ hw_int_controller_s disk_int_controller =
 
 void disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 {
-	blkbuf_node_s * node = ((diskrq_queue_s *)parameter)->curr_user;
+	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
 	node->end_handler(parameter);	
 }
 
@@ -347,13 +346,12 @@ void init_disk()
 	entry.dst.physical.reserved2 = 0;
 
 	register_irq(SATA_MAST_IRQ, &entry , "disk0",
-				(unsigned long)&disk_require_queue, &disk_int_controller,
+				(unsigned long)&IDE_req_queue, &disk_int_controller,
 				&disk_handler);
 
 	outb(PORT_DISK0_ALT_STA_CTL, 0);
-	
-	disk_require_queue.curr_user = NULL;
-	m_init_list_header(&disk_require_queue.waiting_list);
+	IDE_req_queue.in_using = NULL;
+	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
 }
 
 void disk_exit()

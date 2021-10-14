@@ -19,6 +19,7 @@
 
 #include "mutex.h"
 
+#include "../../../include/block_dev.h"
 #include "../../../klib/data_structure.h"
 
 	#define PORT_DISK0_DATA			0x1f0
@@ -55,33 +56,6 @@
 	#define ATA_READ_CMD			0x24
 	#define ATA_WRITE_CMD			0x34
 	#define GET_IDENTIFY_DISK_CMD	0xEC
-
-	struct blkbuf_node;
-	typedef struct blkbuf_node blkbuf_node_s;
-
-	m_define_list_header(blkbuf_node);
-
-	typedef struct diskrq_queue
-	{
-		blkbuf_node_list_s	waiting_list;
-		blkbuf_node_s	*	curr_user;
-	} diskrq_queue_s;
-
-	typedef struct blkbuf_node
-	{
-		blkbuf_node_s *	prev;
-		blkbuf_node_s *	next;
-		blkbuf_node_list_s * list_header;
-
-		task_s *		requestor;
-
-		unsigned int count;
-		unsigned char cmd;
-		// unsigned char finished_flag;
-		unsigned long LBA;
-		unsigned char * buffer;
-		void(* end_handler)(unsigned long parameter);
-	} blkbuf_node_s;
 
 	struct Disk_Identify_Info
 	{
