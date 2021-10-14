@@ -3,22 +3,20 @@
 
 #include "arch/amd64/include/interrupt.h"
 
-
 #include "include/printk.h"
 #include "include/proto.h"
 #include "include/glo.h"
 #include "klib/data_structure.h"
 
-
 unsigned long volatile jiffies = 0;
-timer_s timer_list_head;
+List_hdr_s	timer_lhdr;
 
 void init_timer(timer_s * timer,
 				void (* func)(void * data),
 				void *data,
 				unsigned long expire_jiffies)
 {
-	m_list_init(timer);
+	list_init(&timer->tmr_list, timer);
 	timer->func = func;
 	timer->data = data;
 	timer->expire_jiffies = jiffies + expire_jiffies;
@@ -26,24 +24,26 @@ void init_timer(timer_s * timer,
 
 void add_timer(timer_s * timer)
 {
-	timer_s * tmp = timer_list_head.next;
-
-	if(timer_list_head.next == NULL &&
-		timer_list_head.prev == NULL)
-	{
-		
-	}
+	if (timer_lhdr.count == 0)
+		list_hdr_push(&timer_lhdr, &timer->tmr_list);
 	else
 	{
-		while(tmp->expire_jiffies < timer->expire_jiffies)
-			tmp = tmp->next;
+		timer_s * tmp = timer_lhdr.header.next->owner_p;
+
+		while(tmp != NULL &&
+				tmp->expire_jiffies < timer->expire_jiffies)
+			tmp = tmp->tmr_list.next->owner_p;
+		list_insert_prev(&timer->tmr_list, &tmp->tmr_list);
 	}
-	__m_list_insert_back(timer, tmp);
 }
 
 void del_timer(timer_s * timer)
 {
-	m_list_delete(timer);
+	if (timer->tmr_list.next != &timer_lhdr.header)
+	{
+		list_delete(&timer->tmr_list);
+		timer_lhdr.count--;
+	}
 }
 
 void test_timer(void * data)
@@ -53,9 +53,11 @@ void test_timer(void * data)
 
 void timer_init()
 {
-	timer_s *tmp = NULL;
 	jiffies = 0;
-	init_timer(&timer_list_head, NULL, NULL, -1UL);
+	list_hdr_init(&timer_lhdr);
+	timer_s * tmr = kmalloc(sizeof(timer_s));
+	init_timer(tmr, NULL, NULL, ~(reg_t)0);
+	add_timer(tmr);
 	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
 
 	// tmp = (timer_s *)kmalloc(sizeof(timer_s));
@@ -65,14 +67,13 @@ void timer_init()
 
 void do_timer(void * data)
 {
-	timer_s * tmp = timer_list_head.next;
-	while(timer_list_head.prev != NULL &&
-			timer_list_head.next != NULL &&
+	timer_s * tmp = timer_lhdr.header.next->owner_p;
+	while (tmp->tmr_list.next != &timer_lhdr.header &&
 			(tmp->expire_jiffies <= jiffies))
 	{
 		del_timer(tmp);
 		tmp->func(tmp->data);
-		tmp = timer_list_head.next;
+		tmp = timer_lhdr.header.next->owner_p;
 	}
 
 	color_printk(RED, WHITE, "(HPET:%ld)", jiffies);

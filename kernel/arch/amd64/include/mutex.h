@@ -3,9 +3,6 @@
 
 #include "../../../include/task.h"
 
-	struct recurs_wait;
-	typedef struct recurs_wait recurs_wait_s;
-
 	typedef struct 
 	{
 		__volatile__ long value;
@@ -29,15 +26,15 @@
 	// 	task_list_s	waiting_tasks;
 	// } semaphore_T;
 
-	m_define_list_header(recurs_wait)
-	typedef struct recurs_wait
-	{
-		recurs_wait_s *		prev;
-		recurs_wait_s *		next;
+	// m_define_list_header(recurs_wait)
+	// typedef struct recurs_wait
+	// {
+	// 	recurs_wait_s *		prev;
+	// 	recurs_wait_s *		next;
 
-		task_s *	owner;
-		__volatile__	unsigned	counter;
-	} recurs_wait_s;
+	// 	task_s *	owner;
+	// 	__volatile__	unsigned	counter;
+	// } recurs_wait_s;
 	
 	// typedef struct
 	// {
