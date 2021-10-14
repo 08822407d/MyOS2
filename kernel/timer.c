@@ -39,6 +39,7 @@ int add_timer_chk(List_s * curr_lp, List_s * tartget_lp)
 int add_timer_do(List_s * curr_lp, List_s * tartget_lp)
 {
 	list_insert_prev(curr_lp, tartget_lp);
+	timer_lhdr.count++;
 }
 int add_timer_end(List_s * curr_lp, List_s * tartget_lp)
 {
@@ -73,9 +74,9 @@ void timer_init()
 	add_timer(tmr);
 	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
 
-	// tmp = (timer_s *)kmalloc(sizeof(timer_s));
-	// init_timer(tmp, &test_timer, NULL, 5);
-	// add_timer(tmp);
+	timer_s * tmp = (timer_s *)kmalloc(sizeof(timer_s));
+	init_timer(tmp, &test_timer, NULL, 3);
+	add_timer(tmp);
 }
 
 void do_timer(void * data)

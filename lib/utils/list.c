@@ -127,6 +127,6 @@ void list_search_and_do(List_hdr_s * lhdr, List_s * target,
 			break;
 		}
 	}
-	if (end_hdlr != NULL)
+	if (end_hdlr != NULL && tmp == &lhdr->header)
 			end_hdlr(tmp, target);
 }
