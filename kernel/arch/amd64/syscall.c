@@ -71,7 +71,7 @@ unsigned long sys_open(char *filename, int flags)
 	fp->mode = flags;
 
 	if(dentry->dir_inode->attribute & FS_ATTR_DEVICE)
-		fp->f_ops = &keyboard_fops;	//////	find device file operation function
+		fp->f_ops = &tty_fops;	//////	find device file operation function
 	else
 		fp->f_ops = dentry->dir_inode->f_ops;
 	if(fp->f_ops && fp->f_ops->open)
