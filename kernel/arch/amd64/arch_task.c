@@ -433,16 +433,11 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 /*==============================================================================================*
  *										task2 -- init()											*
  *==============================================================================================*/
-unsigned long sys_open(char *filename, int flags);
-unsigned long sys_read(int fd,void * buf, long count);
 unsigned long init(unsigned long arg)
 {
 	init_vfs();
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();
-	char * buf[10];
-	int tty_fd = sys_open("/dev/tty0", 0);
-	sys_read(tty_fd, buf, 9);
 
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;
