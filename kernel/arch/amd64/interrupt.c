@@ -181,8 +181,8 @@ void exception_handler(stack_frame_s * sf_regs)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	int vec = sf_regs->vec_nr;
-	color_printk(WHITE, BLUE,"Caused by core-%d INTR: 0x%02x - %s ; ",
-					cpudata_p->cpu_idx, vec, exception_init_table[vec].name);
+	// color_printk(WHITE, BLUE,"Caused by core-%d INTR: 0x%02x - %s ; ",
+	// 				cpudata_p->cpu_idx, vec, exception_init_table[vec].name);
 
 	switch (vec)
 	{

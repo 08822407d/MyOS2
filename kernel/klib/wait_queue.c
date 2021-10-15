@@ -34,4 +34,16 @@ void wq_wakeup(wait_queue_hdr_s * wqhdr)
 {
 	if (wqhdr->count == 0)
 		return;
+
+	List_s * wq_lp = list_hdr_pop(wqhdr);
+	wait_queue_T * the_wait = container_of(wq_lp, wait_queue_T, wq_list);
+
+	if (the_wait->task->state & PS_UNINTERRUPTIBLE)
+	{
+		wakeup_task(the_wait->task);
+	}
+	else
+	{
+		list_hdr_push(wqhdr, wq_lp);
+	}
 }

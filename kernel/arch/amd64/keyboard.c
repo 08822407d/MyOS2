@@ -12,6 +12,9 @@
 #include "../../include/printk.h"
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
+#include "../../include/wait_queue.h"
+
+extern wait_queue_hdr_s kbd_wqhdr;
 
 kbd_inbuf_s * p_kb = NULL;
 static int shift_l,shift_r,ctrl_l,ctrl_r,alt_l,alt_r;
@@ -72,6 +75,8 @@ void init_keyboard()
 	register_irq(KEYBOARD_IRQ , &entry , "PS/2 keyboard",
 					(unsigned long)p_kb, &keyboard_int_controller,
 					&keyboard_handler);
+
+	list_hdr_init(&kbd_wqhdr);
 }
 
 void keyboard_exit()
@@ -84,7 +89,7 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 {
 	unsigned char x;
 	x = inb(0x60);
-	color_printk(WHITE,BLACK,"(K:%02x) ",x);
+	// color_printk(WHITE,BLACK,"(K:%02x) ",x);
 
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;
@@ -92,6 +97,8 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 	*p_kb->p_head = x;
 	p_kb->count++;
 	p_kb->p_head ++;	
+
+	wq_wakeup(&kbd_wqhdr);
 }
 
 /*==============================================================================================*

@@ -6,6 +6,9 @@
 
 #include "../../include/vfs.h"
 #include "../../include/proto.h"
+#include "../../include/wait_queue.h"
+
+wait_queue_hdr_s kbd_wqhdr;
 
 /*==============================================================================================*
  *																								*
@@ -59,10 +62,9 @@ long keyboard_read(file_s * fp, char * buf, unsigned long count, long * position
 {
 	long counter  = 0;
 	unsigned char * tail = NULL;
-	
 
-	// if(p_kb->count == 0)
-	// 	sleep_on(&keyboard_wait_queue);
+	if(p_kb->count == 0)
+		wq_sleep_on(&kbd_wqhdr);
 
 	counter = p_kb->count >= count? count:p_kb->count;
 	tail = p_kb->p_tail;
@@ -82,12 +84,6 @@ long keyboard_read(file_s * fp, char * buf, unsigned long count, long * position
 
 	return counter;	
 }
-
-long keyboard_write(file_s * fp, char * buf, unsigned long count, long * position)
-{
-	return 0;
-}
-
 
 file_ops_s tty_fops = 
 {

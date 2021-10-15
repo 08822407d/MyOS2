@@ -70,10 +70,10 @@ unsigned long sys_open(char *filename, int flags)
 	fp->dentry = dentry;
 	fp->mode = flags;
 
-	if(dentry->dir_inode->attribute & FS_ATTR_DEVICE)
-		fp->f_ops = &tty_fops;	//////	find device file operation function
-	else
-		fp->f_ops = dentry->dir_inode->f_ops;
+	// if(dentry->dir_inode->attribute & FS_ATTR_DEVICE)
+	// 	fp->f_ops = &tty_fops;	//////	find device file operation function
+	// else
+	fp->f_ops = dentry->dir_inode->f_ops;
 	if(fp->f_ops && fp->f_ops->open)
 		error = fp->f_ops->open(dentry->dir_inode,fp);
 	if(error != 1)
