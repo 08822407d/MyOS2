@@ -21,9 +21,19 @@
 	typedef struct char_dev
 	{
 		List_s			cdev_list;
+		char *			dev_name;
 		dev_t			dev_nr;
 		file_ops_s *	f_ops;
 	} cdev_s;
+
+	typedef struct block_dev
+	{
+		List_s			bdev_list;
+		char *			dev_name;
+		dev_t			dev_nr;
+		file_ops_s *	f_ops;
+	} bdev_s;
+
 
 	/* device.c */
 	void devices_init(void);

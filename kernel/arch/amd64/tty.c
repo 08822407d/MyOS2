@@ -5,6 +5,7 @@
 #include "include/device.h"
 
 #include "../../include/vfs.h"
+#include "../../include/proto.h"
 
 /*==============================================================================================*
  *																								*
@@ -88,11 +89,21 @@ long keyboard_write(file_s * fp, char * buf, unsigned long count, long * positio
 }
 
 
-file_ops_s keyboard_fops = 
+file_ops_s tty_fops = 
 {
 	.open = keyboard_open,
 	.close = keyboard_close,
 	.ioctl = keyboard_ioctl,
 	.read = keyboard_read,
-	.write = keyboard_write,
+	.write = NULL,
 };
+
+cdev_s * find_tty()
+{
+	cdev_s * cd_tty = kmalloc(sizeof(cdev_s));
+	list_init(&cd_tty->cdev_list, cd_tty);
+	cd_tty->dev_name = "tty0";
+	cd_tty->dev_nr.main = 0;
+	cd_tty->dev_nr.sub = 0;
+	cd_tty->f_ops = &tty_fops;
+}
