@@ -261,7 +261,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 	{
 		wq_sleep_on_intrable(&child->wait_childexit);
 	}
-	copy_to_user(&child->exit_code, status, sizeof(long));
+	copy_to_user(&child->exit_code, status, sizeof(int));
 	exit_mm(child);
 	list_delete(&child->child_list);
 	kfree(child);
