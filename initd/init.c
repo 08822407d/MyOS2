@@ -51,16 +51,16 @@ int main(int argc, const char *argv[])
 
 	rv = fork();
 	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
-	rv = fork();
-	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
-	// if (rv != 0)
-	// 	while (1);
-	// else
-	// {
-	// 	rv = fork();
-	// 	if ( rv == 0)
-	// 		while (1);
-	// }
+	if (rv != 0)
+		while (1);
+	else
+	{
+		rv = fork();
+		if ( rv == 0)
+			while (1);
+	}
+
+	int pid = getpid();
 
 	return ret_val;
 }

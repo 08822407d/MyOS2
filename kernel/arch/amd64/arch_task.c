@@ -408,13 +408,13 @@ unsigned long do_exit(unsigned long exit_code)
 
 do_exit_again:
 	cli();
-	curr_tsk->state = PS_ZOMBIE;
 	curr_tsk->exit_code = exit_code;
 	exit_thread(curr_tsk);
 	exit_files(curr_tsk);
+	exit_notify();
 	sti();
 
-	exit_notify();
+	curr_tsk->state = PS_ZOMBIE;
 	schedule();
 
 	goto do_exit_again;
