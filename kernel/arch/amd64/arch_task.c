@@ -28,6 +28,7 @@ extern tss64_T	bsp_tmp_tss;
 extern char		ist_stack0;
 
 extern PCB_u	task0_PCB;
+task_s * task_init = NULL;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
@@ -390,12 +391,19 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 
 void exit_notify(void)
 {
-	// wakeup(&current->parent->wait_childexit,TASK_INTERRUPTIBLE);
+	task_s * curr = curr_tsk;
+	while (curr->child_lhdr.count != 0)
+	{
+		List_s * child_lp = list_hdr_pop(&curr->child_lhdr);
+		list_hdr_append(&task_init->child_lhdr, child_lp);
+	}
+	// wq_wakeup(&curr_tsk->parent->wait_childexit,TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
+	task_s * curr = curr_tsk;
 	// color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, exit_code);
 
 do_exit_again:
@@ -441,6 +449,7 @@ unsigned long init(unsigned long arg)
 
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;
+	task_init = curr;
 	stack_frame_s * curr_sfp = get_stackframe(curr);
 	curr_sfp->restore_retp = (reg_t)ra_sysex_retp;
 

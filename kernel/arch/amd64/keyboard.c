@@ -98,7 +98,7 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 	p_kb->count++;
 	p_kb->p_head ++;	
 
-	wq_wakeup(&kbd_wqhdr);
+	wq_wakeup(&kbd_wqhdr, PS_UNINTERRUPTIBLE);
 }
 
 /*==============================================================================================*

@@ -51,6 +51,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
 include_directories(${PROJECT_SOURCE_DIR}/include)
 file(GLOB LIB_C_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.c ${PROJECT_SOURCE_DIR}/lib/utils/*.c ${PROJECT_SOURCE_DIR}/lib/string/*.c)
 file(GLOB LIB_ASM_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.S ${PROJECT_SOURCE_DIR}/lib/utils/*.S ${PROJECT_SOURCE_DIR}/lib/string/*.S)
+file(GLOB USER_LIB_S_SRCS ${PROJECT_SOURCE_DIR}/lib/user_only/*.c)
 
 #===============================================================================================#
 #                                       kernel.bin                                              #

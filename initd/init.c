@@ -6,9 +6,9 @@
 #include <lib/fcntl.h>
 #include <lib/unistd.h>
 
-int main(int argc,char *argv[])
+int main(int argc, const char *argv[])
 {
-	int ret_val = 123;
+	int ret_val = 0;
 	int testi = 0x12345678;
 	int rv = 0;
 
@@ -43,15 +43,24 @@ int main(int argc,char *argv[])
 
 	// int pid = getpid();
 
-	char buf3[10];
-	int tty_fd = open("/dev/tty0", O_RDONLY);
-	read(tty_fd, buf3, 9);
-	printf("Read kbd : %s \n", buf3);
+	// char buf3[10];
+	// int tty_fd = open("/dev/tty0", O_RDONLY);
+	// read(tty_fd, buf3, 9);
+	// printf("Read kbd : %s \n", buf3);
+	// close(tty_fd);
 
 	rv = fork();
-	printf("message after fork, ret_val = %d, pid():%d\n", rv, getpid());
-
-	while (1);
+	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
+	rv = fork();
+	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
+	// if (rv != 0)
+	// 	while (1);
+	// else
+	// {
+	// 	rv = fork();
+	// 	if ( rv == 0)
+	// 		while (1);
+	// }
 
 	return ret_val;
 }

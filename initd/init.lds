@@ -9,14 +9,14 @@
 
 OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
-ENTRY(main)
+ENTRY(_start)
 SECTIONS
 {
 	. = 0x6000000;
 	.text ALIGN(0x200000) :
 	{
 		_text = .;
-		*/init.c.o(.text);
+		*/start.c.o(.text);
 		*(.text)
 		_etext = .;
 	}

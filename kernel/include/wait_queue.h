@@ -17,7 +17,7 @@
 	void wq_init(wait_queue_T * wq, task_s * tsk);
 	void wq_sleep_on(wait_queue_hdr_s * wqhdr);
 	void wq_sleep_on_intrable(wait_queue_hdr_s * wqhdr);
-	void wq_wakeup(wait_queue_hdr_s * wqhdr);
+	void wq_wakeup(wait_queue_hdr_s * wqhdr, unsigned long pstate);
 
 
 #endif /* _WAIT_QUEUE_H_ */

@@ -30,7 +30,7 @@ void wq_sleep_on_intrable(wait_queue_hdr_s * wqhdr)
 	schedule();
 }
 
-void wq_wakeup(wait_queue_hdr_s * wqhdr)
+void wq_wakeup(wait_queue_hdr_s * wqhdr, unsigned long pstate)
 {
 	if (wqhdr->count == 0)
 		return;
@@ -38,7 +38,7 @@ void wq_wakeup(wait_queue_hdr_s * wqhdr)
 	List_s * wq_lp = list_hdr_pop(wqhdr);
 	wait_queue_T * the_wait = container_of(wq_lp, wait_queue_T, wq_list);
 
-	if (the_wait->task->state & PS_UNINTERRUPTIBLE)
+	if (the_wait->task->state & pstate)
 	{
 		wakeup_task(the_wait->task);
 	}
