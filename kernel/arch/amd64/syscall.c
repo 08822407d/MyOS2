@@ -10,6 +10,7 @@
 #include "../../include/proto.h"
 #include "../../include/printk.h"
 
+
 unsigned long no_system_call(void)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
@@ -21,6 +22,7 @@ unsigned long sys_putstring(char *string)
 	color_printk(WHITE, BLACK, string);
 	return 0;
 }
+
 
 /*==============================================================================================*
  *										file operations											*
@@ -229,6 +231,44 @@ unsigned long sys_exit(int exit_code)
 	return do_exit(exit_code);
 }
 
+void exit_mm(task_s * new_tsk);
+unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusage)
+{
+	long retval = 0;
+	task_s * child = NULL;
+	task_s * tsk = NULL;
+
+	color_printk(GREEN,BLACK,"sys_wait4\n");
+	List_s * child_lp;
+	for (child_lp = curr_tsk->child_lhdr.header.next;
+			child_lp != &curr_tsk->child_lhdr.header;
+			child_lp = child_lp->next)
+	{
+		task_s * child_p = container_of(child_lp, task_s, child_list);
+		if (child_p->pid == pid)
+		{
+			child = child_p;
+			break;
+		}
+	}
+
+	if(child == NULL)
+		return -ECHILD;
+	if(options != 0)
+		return -EINVAL;
+
+	if(child->state != PS_ZOMBIE)
+	{
+		wq_sleep_on_intrable(&child->wait_childexit);
+	}
+	copy_to_user(&child->exit_code, status, sizeof(long));
+	exit_mm(child);
+	list_delete(&child->child_list);
+	kfree(child);
+	return retval;
+}
+
+
 /*==============================================================================================*
  *									get task infomation											*
  *==============================================================================================*/
@@ -240,4 +280,28 @@ unsigned long sys_getpid()
 unsigned long sys_getppid()
 {
 	return curr_tsk->parent->pid;
+}
+
+
+/*==============================================================================================*
+ *									special functions											*
+ *==============================================================================================*/
+unsigned long sys_reboot(unsigned long cmd,void * arg)
+{
+	color_printk(GREEN,BLACK,"sys_reboot\n");
+	switch(cmd)
+	{
+		case SYSTEM_REBOOT:
+			outb(0x64, 0xFE);
+			break;
+
+		case SYSTEM_POWEROFF:
+			color_printk(RED,BLACK, "sys_reboot cmd SYSTEM_POWEROFF\n");
+			break;
+
+		default:
+			color_printk(RED,BLACK, "sys_reboot cmd ERROR!\n");
+			break;
+	}
+	return 0;
 }

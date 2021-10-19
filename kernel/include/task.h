@@ -56,6 +56,8 @@
 
 		unsigned long	spin_count;
 		unsigned long	semaphore_count;
+
+		wait_queue_hdr_s	wait_childexit;
 	} task_s;
 
 	typedef union PCB

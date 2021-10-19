@@ -75,7 +75,7 @@ void init_intr_dev()
 {
 	#ifdef USE_APIC
 		HPET_init();
-		LVT_timer_init();
+		// LVT_timer_init();
 	#endif
 }
 

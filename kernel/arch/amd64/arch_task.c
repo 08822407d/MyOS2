@@ -291,6 +291,7 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	list_init(&child_task->schedule_list, child_task);
 	list_init(&child_task->child_list, child_task);
 	list_hdr_init(&child_task->child_lhdr);
+	list_hdr_init(&child_task->wait_childexit);
 	child_task->state = PS_UNINTERRUPTIBLE;
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
@@ -397,14 +398,14 @@ void exit_notify(void)
 		List_s * child_lp = list_hdr_pop(&curr->child_lhdr);
 		list_hdr_append(&task_init->child_lhdr, child_lp);
 	}
-	// wq_wakeup(&curr_tsk->parent->wait_childexit,TASK_INTERRUPTIBLE);
+	wq_wakeup(&curr_tsk->wait_childexit, PS_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	task_s * curr = curr_tsk;
-	// color_printk(RED,WHITE,"Core-%d:exit task is running,arg:%#018lx\n", cpudata_p->cpu_idx, exit_code);
+	color_printk(RED, WHITE, "Core-%d: task:%d exited.\n", cpudata_p->cpu_idx, curr->pid);
 
 do_exit_again:
 	cli();

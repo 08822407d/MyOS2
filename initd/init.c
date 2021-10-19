@@ -6,13 +6,17 @@
 #include <lib/fcntl.h>
 #include <lib/unistd.h>
 
+#include <sys/wait.h>
+
+#include <lib/reboot.h>
+
 int main(int argc, const char *argv[])
 {
 	int ret_val = 0;
 	int testi = 0x12345678;
 	int rv = 0;
 
-	rv = printf("Message from init.bin.\n");
+	printf("Message from init.bin.\n");
 
 	// char buf[512];
 	// memset(buf, 0, 512);
@@ -49,18 +53,23 @@ int main(int argc, const char *argv[])
 	// printf("Read kbd : %s \n", buf3);
 	// close(tty_fd);
 
-	rv = fork();
-	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
-	if (rv != 0)
+	if ((rv = fork()) != 0)
+	{
+		int tmp = rv;
+		printf("message after fork, ret_val = %d, self:%d\n", tmp, getpid());
+		int status = 0;
+		waitpid(rv, &status, 0);
+		printf("child - %d exited, status : %d\n", tmp, status);
 		while (1);
+	}
 	else
 	{
+		printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
 		rv = fork();
 		if ( rv == 0)
 			while (1);
 	}
 
-	int pid = getpid();
-
+	ret_val = 0x123;
 	return ret_val;
 }
