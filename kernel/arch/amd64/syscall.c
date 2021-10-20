@@ -238,7 +238,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 	task_s * child = NULL;
 	task_s * tsk = NULL;
 
-	color_printk(GREEN,BLACK,"sys_wait4\n");
+	// color_printk(GREEN,BLACK,"sys_wait4\n");
 	List_s * child_lp;
 	for (child_lp = curr_tsk->child_lhdr.header.next;
 			child_lp != &curr_tsk->child_lhdr.header;

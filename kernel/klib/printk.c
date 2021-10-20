@@ -26,46 +26,14 @@
 #include "../include/printk.h"
 #include "../include/param.h"
 
-
-static char buf[4096] = {0};
-position_t Pos;
-
-/*
-
-*/
-void putchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
-{
-	int i = 0, j = 0;
-	unsigned int *addr = NULL;
-	unsigned char *fontp = NULL;
-	int testval = 0;
-	fontp = font_ascii[font];
-
-	for (i = 0; i < 16; i++)
-	{
-		addr = fb + Xresol * (y + i) + x;
-		testval = 0x100;
-		for (j = 0; j < 8; j++)
-		{
-			testval = testval >> 1;
-			if (*fontp & testval)
-				*addr = FRcolor;
-			else
-				*addr = BKcolor;
-			addr++;
-		}
-		fontp++;
-	}
-}
-
+#include "../arch/amd64/include/tty.h"
 
 /*
 
 */
 int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ...)
 {
-	lock_spin_lock(&Pos.printk_lock);
-
+	static char buf[4096] = {0};
 	int i = 0;
 	int count = 0;
 	int line = 0;
@@ -76,58 +44,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 
 	va_end(args);
 
-	for (count = 0; count < i || line; count++)
-	{
-		////	add \n \b \t
-		if (line > 0)
-		{
-			count--;
-			goto Label_tab;
-		}
-		if ((unsigned char)*(buf + count) == '\n')
-		{
-			Pos.YPosition++;
-			Pos.XPosition = 0;
-		}
-		else if ((unsigned char)*(buf + count) == '\b')
-		{
-			Pos.XPosition--;
-			if (Pos.XPosition < 0)
-			{
-				Pos.XPosition = Pos.XResolution / Pos.XCharSize - 1;
-				Pos.YPosition--;
-				if (Pos.YPosition < 0)
-					Pos.YPosition = Pos.YResolution / Pos.YCharSize - 1;
-			}
-			putchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
-		}
-		else if ((unsigned char)*(buf + count) == '\t')
-		{
-			line = ((Pos.XPosition + 8) & ~(8 - 1)) - Pos.XPosition;
-
-		Label_tab:
-			line--;
-			putchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
-			Pos.XPosition++;
-		}
-		else
-		{
-			putchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, (unsigned char)*(buf + count));
-			Pos.XPosition++;
-		}
-
-		if (Pos.XPosition >= (Pos.XResolution / Pos.XCharSize))
-		{
-			Pos.YPosition++;
-			Pos.XPosition = 0;
-		}
-		if (Pos.YPosition >= (Pos.YResolution / Pos.YCharSize))
-		{
-			Pos.YPosition = 0;
-		}
-	}
-
-	unlock_spin_lock(&Pos.printk_lock);
+	tty_write_color(buf, i, FRcolor, BKcolor);
 
 	return i;
 }

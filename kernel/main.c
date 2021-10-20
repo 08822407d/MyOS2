@@ -40,7 +40,7 @@ void kmain()
 	timer_init();
 	devices_init();
 
-	color_printk(BLACK, BLUE, "BSP env initiated.\n");
+	// color_printk(BLACK, BLUE, "BSP env initiated.\n");
 
 	startup_smp();
 	atomic_set(&boot_counter, 0);

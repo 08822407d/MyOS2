@@ -47,10 +47,12 @@ int main(int argc, const char *argv[])
 
 	// int pid = getpid();
 
+	// int tty_fd = open("/dev/tty0", O_RDWR);
 	// char buf3[10];
-	// int tty_fd = open("/dev/tty0", O_RDONLY);
+	// char buf4[] = "tty_write() test.";
+	// write(tty_fd, buf4, strlen(buf4));
 	// read(tty_fd, buf3, 9);
-	// printf("Read kbd : %s \n", buf3);
+	// printf("tty_read() test, waiting kbd input : %s \n", buf3);
 	// close(tty_fd);
 
 	if ((rv = fork()) != 0)
