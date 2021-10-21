@@ -52,13 +52,18 @@ void idle(size_t cpu_idx)
 	init_percpu_intr();
 	percpu_self_config(cpu_idx);
 	arch_system_call_init();
-	color_printk(BLUE, WHITE, "CPU - %d\n", cpu_idx);
+
+	atomic_inc(&boot_counter);
+	while (boot_counter.value != kparam.nr_lcpu);
+	unmap_kernel_lowhalf();
+	refresh_arch_page();
+
 	sti();
 
 	if (cpu_idx == 0)
 	{
 		// kernel_thread(module_test, 0, 0);
-		// kernel_thread(init, 0, 0);
+		kernel_thread(init, 0, 0);
 	}
 
 	while (1)

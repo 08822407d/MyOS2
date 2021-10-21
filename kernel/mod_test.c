@@ -19,9 +19,6 @@ unsigned long module_test(unsigned long flag);
 
 unsigned long module_test(unsigned long flag)
 {
-
-	// atomic_inc(&boot_counter);
-
 	// if (flag == 0)
 	// {
 	// 	long long i = 0;

@@ -23,11 +23,11 @@ void devices_init()
 {
 	init_intr_dev();
 
-	// enum_char_dev();
-	// enum_block_dev();
+	enum_char_dev();
+	enum_block_dev();
 
-	// init_char_dev();
-	// init_block_dev();
+	init_char_dev();
+	init_block_dev();
 }
 
 void creat_dev_file()

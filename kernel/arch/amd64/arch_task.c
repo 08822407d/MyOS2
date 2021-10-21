@@ -515,11 +515,10 @@ void wakeup_task(task_s * task)
 {
 	int target_cpu_idx = load_balance();
 	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx]->cpudata;
-	// per_cpudata_s * cpudata_p = curr_cpu;
 	task->state = PS_RUNNING;
-	// list_hdr_push(&cpudata_p->ruuning_lhdr, &task->schedule_list);
 	list_hdr_push(&target_cpu_p->ruuning_lhdr, &task->schedule_list);
-	color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
+
+	// color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
 }
 
 void reinsert_to_running_list(per_cpudata_s * cpudata_p)

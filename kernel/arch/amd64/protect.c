@@ -103,13 +103,13 @@ gate_table_s exception_init_table[] = {
 	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#BR" },
 	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#UD" },
 	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#NM" },
-	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 1, "#DF" },
-	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, 6, "FPU-SO" },
-	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, 5, "#TS" },
-	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, 4, "#NP" },
-	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 3, "#SS" },
-	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, 2, "#GP" },
-	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 7, "#PF" },
+	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DF" },
+	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "FPU-SO" },
+	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#TS" },
+	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#NP" },
+	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#SS" },
+	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#GP" },
+	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#PF" },
 	// EXCEPTION 15 INTEL RESERVED
 	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#MF" },
 	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#AC" },
@@ -290,14 +290,20 @@ void init_bsp_tss()
 	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
 	curr_tss->rsp2 = 0;
-	curr_tss->ist1 = (reg_t)&ist_cpu0[1];
-	curr_tss->ist2 = (reg_t)&ist_cpu0[2];
-	curr_tss->ist3 = (reg_t)&ist_cpu0[3];
-	curr_tss->ist4 = (reg_t)&ist_cpu0[4];
-	curr_tss->ist5 = (reg_t)&ist_cpu0[5];
-	curr_tss->ist6 = (reg_t)&ist_cpu0[6];
-	curr_tss->ist7 = (reg_t)&ist_cpu0[7];
-	// curr_tss->ist7 = 0;
+	// curr_tss->ist1 = (reg_t)&ist_cpu0[1];
+	// curr_tss->ist2 = (reg_t)&ist_cpu0[2];
+	// curr_tss->ist3 = (reg_t)&ist_cpu0[3];
+	// curr_tss->ist4 = (reg_t)&ist_cpu0[4];
+	// curr_tss->ist5 = (reg_t)&ist_cpu0[5];
+	// curr_tss->ist6 = (reg_t)&ist_cpu0[6];
+	// curr_tss->ist7 = (reg_t)&ist_cpu0[7];
+	curr_tss->ist1 = 0;
+	curr_tss->ist2 = 0;
+	curr_tss->ist3 = 0;
+	curr_tss->ist4 = 0;
+	curr_tss->ist5 = 0;
+	curr_tss->ist6 = 0;
+	curr_tss->ist7 = 0;
 	// init bsp's tss by hand
 	TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[TSS_INDEX(0)];
 	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
