@@ -104,7 +104,7 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned char get_scancode()
+unsigned char kbd_get_scancode()
 {
 	unsigned char ret  = 0;
 
@@ -122,20 +122,20 @@ unsigned char get_scancode()
 	return ret;
 }
 
-void analysis_keycode()
+void kbd_parse_scancode()
 {
 	unsigned char x = 0;
 	int i;	
 	int key = 0;	
 	int make = 0;
 
-	x = get_scancode();
+	x = kbd_get_scancode();
 	
 	if(x == 0xE1)	//pause break;
 	{
 		key = PAUSEBREAK;
 		for(i = 1;i<6;i++)
-			if(get_scancode() != pausebreak_scode[i])
+			if(kbd_get_scancode() != pausebreak_scode[i])
 			{
 				key = 0;
 				break;
@@ -143,14 +143,14 @@ void analysis_keycode()
 	}	
 	else if(x == 0xE0) //print screen
 	{
-		x = get_scancode();
+		x = kbd_get_scancode();
 
 		switch(x)
 		{
 			case 0x2A: // press printscreen
 		
-				if(get_scancode() == 0xE0)
-					if(get_scancode() == 0x37)
+				if(kbd_get_scancode() == 0xE0)
+					if(kbd_get_scancode() == 0x37)
 					{
 						key = PRINTSCREEN;
 						make = 1;
@@ -159,8 +159,8 @@ void analysis_keycode()
 
 			case 0xB7: // UNpress printscreen
 		
-				if(get_scancode() == 0xE0)
-					if(get_scancode() == 0xAA)
+				if(kbd_get_scancode() == 0xE0)
+					if(kbd_get_scancode() == 0xAA)
 					{
 						key = PRINTSCREEN;
 						make = 0;

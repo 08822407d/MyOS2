@@ -112,6 +112,7 @@
 		uint8_t	vec_nr;
 		uint8_t	type;
 		uint8_t	DPL;
+		uint8_t	ist;
 		char	name[16];
 	} gate_table_s;
 
@@ -243,6 +244,8 @@
 	void disable_lvt(lapic_info_s * lapic_info);
 	unsigned get_lvt_tpr(void);
 	unsigned get_lvt_ppr(void);
+	/* apic_timer.c */
+	void LVT_timer_init(void);
 
 	/* asm_wrapper.c */
 	uint64_t inb(uint16_t port);

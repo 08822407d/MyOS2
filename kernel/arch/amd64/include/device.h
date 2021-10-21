@@ -42,14 +42,12 @@
 	/* keyboard.c */
 	void init_keyboard(void);
 	void keyboard_handler(unsigned long param, stack_frame_s * sf_regs);
-	void analysis_keycode(void);
+	void kbd_parse_scancode(void);
 
 	/* clock.c, HPET.c */
 	void get_cmos_time(time_s *time);
 	void HPET_init(void);
 
-	/* apic_timer.c */
-	void LVT_timer_init(void);
 
 	/* disk.c */
 	void init_disk(void);

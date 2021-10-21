@@ -12,6 +12,15 @@
 #include "../../include/proto.h"
 #include "../../include/ktypes.h"
 
+#define DIVISOR_2	0x00
+#define DIVISOR_4	0x01
+#define DIVISOR_8	0x02
+#define DIVISOR_16	0x03
+#define DIVISOR_32	0x08
+#define DIVISOR_64	0x09
+#define DIVISOR_128	0x0A
+#define DIVISOR_1	0x0B
+
 void LVT_timer_ack(unsigned long param);
 
 // set LVT
@@ -55,9 +64,9 @@ void LVT_timer_init()
 
 void LVT_timer_ack(unsigned long param)
 {
-	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0x10);
+	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0xAFF);
 	wrmsr(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
-	wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, 0x03);
+	wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, DIVISOR_128);
 
 	IOAPIC_edge_ack(param);
 }

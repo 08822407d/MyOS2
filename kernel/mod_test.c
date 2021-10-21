@@ -30,9 +30,9 @@ unsigned long module_test(unsigned long flag)
 	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
 	// }
 
-	kmalloc_kfree_test();
+	// kmalloc_kfree_test();
 
-	// kernthd_test();
+	kernthd_test();
 
 	// disk_drv_test();
 
@@ -45,6 +45,7 @@ unsigned long module_test(unsigned long flag)
 	// int retval = testf_fp->f_ops->read(testf_fp, testf_buf, 512, &pos);
 
 	// color_printk(YELLOW, BLACK, "task module_test finished......");
+	while (1);
 }
 
 unsigned long test_task_a(unsigned long arg)

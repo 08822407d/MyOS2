@@ -494,11 +494,32 @@ stack_frame_s * get_stackframe(task_s * task_p)
 	return (stack_frame_s *)(pcb_p + 1) - 1;
 }
 
+int load_balance()
+{
+	int i;
+	int min_load = 99999999;
+	int min_idx = 0;
+	for (i = 0; i < kparam.nr_lcpu; i++)
+	{
+		per_cpudata_s * cpu_p = &percpu_data[i]->cpudata;
+		if (cpu_p->ruuning_lhdr.count < min_load)
+		{
+			min_load = cpu_p->ruuning_lhdr.count;
+			min_idx = i;
+		}
+	}
+	return min_idx;
+}
+
 void wakeup_task(task_s * task)
 {
-	per_cpudata_s * cpudata_p = curr_cpu;
+	int target_cpu_idx = load_balance();
+	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx]->cpudata;
+	// per_cpudata_s * cpudata_p = curr_cpu;
 	task->state = PS_RUNNING;
-	list_hdr_push(&cpudata_p->ruuning_lhdr, &task->schedule_list);
+	// list_hdr_push(&cpudata_p->ruuning_lhdr, &task->schedule_list);
+	list_hdr_push(&target_cpu_p->ruuning_lhdr, &task->schedule_list);
+	color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
 }
 
 void reinsert_to_running_list(per_cpudata_s * cpudata_p)
@@ -562,9 +583,4 @@ void schedule()
 	cpudata_p->scheduleing_flag = 0;
 	switch_mm(curr_task, next_task);
 	switch_to(curr_task, next_task);
-}
-
-void load_balance()
-{
-
 }

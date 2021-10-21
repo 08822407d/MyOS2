@@ -15,6 +15,8 @@
 
 extern PCB_u	task0_PCB;
 
+char ist_cpu1[7][CONFIG_CPUSTACK_SIZE];
+
 cpudata_u **	percpu_data;
 
 void create_percpu_idle(size_t cpu_idx);
@@ -101,14 +103,15 @@ void init_percpu_data(size_t cpu_idx)
 	// set percpu_stack to ist
 	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
 	tss_p->rsp1 =
-	tss_p->rsp2 =
-	tss_p->ist1 =
-	tss_p->ist2 =
-	tss_p->ist3 =
-	tss_p->ist4 =
-	tss_p->ist5 =
-	tss_p->ist6 =
-	tss_p->ist7 = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
+	tss_p->rsp2 = 0;
+	tss_p->ist1 = (reg_t)&ist_cpu1[1];
+	tss_p->ist2 = (reg_t)&ist_cpu1[2];
+	tss_p->ist3 = (reg_t)&ist_cpu1[3];
+	tss_p->ist4 = (reg_t)&ist_cpu1[4];
+	tss_p->ist5 = (reg_t)&ist_cpu1[5];
+	tss_p->ist6 = (reg_t)&ist_cpu1[6];
+	tss_p->ist7 = (reg_t)&ist_cpu1[7];
+	// tss_p->ist7 = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
 }
 
 void percpu_self_config(size_t cpu_idx)
@@ -133,7 +136,7 @@ void percpu_self_config(size_t cpu_idx)
 	current_task->spin_count = 0;
 	current_task->state = PS_RUNNING;
 
-	unmap_kernel_lowhalf();
+	// unmap_kernel_lowhalf();
 	refresh_arch_page();
 }
 

@@ -106,14 +106,14 @@
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 
-	void init_task(void);
-	void arch_init_task(void);
+	void	init_task(void);
+	void	arch_init_task(void);
 	unsigned long gen_newpid(void);
-	void __switch_to(task_s * curr, task_s * target);
-	void switch_to(task_s * curr, task_s * target);
-	void wakeup_task(task_s * task);
-	void load_balance(void);
-	void idle_enqueue(task_s * idle);
+	void	__switch_to(task_s * curr, task_s * target);
+	void	switch_to(task_s * curr, task_s * target);
+	void	wakeup_task(task_s * task);
+	int		load_balance(void);
+	void	idle_enqueue(task_s * idle);
 	task_s * idle_dequeue(void);
 
 #endif /* _PROC_H_ */

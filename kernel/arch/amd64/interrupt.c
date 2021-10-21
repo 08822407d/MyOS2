@@ -319,4 +319,5 @@ void init_bsp_intr()
 void init_percpu_intr()
 {
 	init_lapic();
+	LVT_timer_init();
 }

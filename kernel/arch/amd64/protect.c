@@ -20,6 +20,8 @@
 segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
+char ist_cpu0[7][CONFIG_CPUSTACK_SIZE];
+
 tss64_T **		tss_ptr_arr = NULL;
 tss64_T			bsp_tmp_tss;
 desctblptr64_T	gdt_ptr;
@@ -93,70 +95,70 @@ inline __always_inline void load_tss(uint64_t cpu_idx)
  *										private datas									 		*
  *==============================================================================================*/
 gate_table_s exception_init_table[] = {
-	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#DE" },
-	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, "#DB" },
-	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE, "NMI" },
-	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE, "#BP" },
-	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE, "#OF" },
-	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, "#BR" },
-	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, "#UD" },
-	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, "#NM" },
-	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#DF" },
-	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, "FPU-SO" },
-	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, "#TS" },
-	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, "#NP" },
-	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#SS" },
-	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, "#GP" },
-	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, "#PF" },
+	{ divide_error, DIVIDE_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DE" },
+	{ debug, DEBUG_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#DB" },
+	{ nmi, NMI_VEC, INTRGATE, KERN_PRIVILEGE, 0, "NMI" },
+	{ breakpoint_exception, BREAKPOINT_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#BP" },
+	{ overflow, OVERFLOW_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#OF" },
+	{ bounds_exceed, BOUNDS_VEC, TRAPGATE, USER_PRIVILEGE, 0, "#BR" },
+	{ invalid_opcode, INVAL_OP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#UD" },
+	{ dev_not_available, DEV_NOT_AVAIL_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#NM" },
+	{ double_fault, DOUBLE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 1, "#DF" },
+	{ cotask_seg_overrun, COtask_sEG_VEC, TRAPGATE, KERN_PRIVILEGE, 6, "FPU-SO" },
+	{ invalid_tss, INVAL_TSS_VEC, TRAPGATE, KERN_PRIVILEGE, 5, "#TS" },
+	{ segment_not_present, SEG_NOT_PRES_VEC, TRAPGATE, KERN_PRIVILEGE, 4, "#NP" },
+	{ stack_segfault, STACK_SEGFAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 3, "#SS" },
+	{ general_protection, GEN_PROT_VEC, TRAPGATE, KERN_PRIVILEGE, 2, "#GP" },
+	{ page_fault, PAGE_FAULT_VEC, TRAPGATE, KERN_PRIVILEGE, 7, "#PF" },
 	// EXCEPTION 15 INTEL RESERVED
-	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, "#MF" },
-	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#AC" },
-	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, "#MC" },
-	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#XM" },
-	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#VE" },
-	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, "#CP" },
+	{ x87_fpu_error, X87_FPU_ERR_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#MF" },
+	{ alignment_check, ALIGNMENT_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#AC" },
+	{ machine_check, MACHINE_CHECK_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#MC" },
+	{ simd_exception, SIMD_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#XM" },
+	{ virtualization_exception, VIRTUAL_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#VE" },
+	{ control_protection_exception, CTRL_PROT_EXCEP_VEC, TRAPGATE, KERN_PRIVILEGE, 0, "#CP" },
 	{ NULL, 0, 0, 0}
 };
 
 gate_table_s hwint_init_table[] = {
-	{ hwint00, VECTOR_IRQ( 0), INTRGATE, KERN_PRIVILEGE, "IRQ-00" },
-	{ hwint01, VECTOR_IRQ( 1), INTRGATE, KERN_PRIVILEGE, "IRQ-01" },
-	{ hwint02, VECTOR_IRQ( 2), INTRGATE, KERN_PRIVILEGE, "IRQ-02" },
-	{ hwint03, VECTOR_IRQ( 3), INTRGATE, KERN_PRIVILEGE, "IRQ-03" },
-	{ hwint04, VECTOR_IRQ( 4), INTRGATE, KERN_PRIVILEGE, "IRQ-04" },
-	{ hwint05, VECTOR_IRQ( 5), INTRGATE, KERN_PRIVILEGE, "IRQ-05" },
-	{ hwint06, VECTOR_IRQ( 6), INTRGATE, KERN_PRIVILEGE, "IRQ-06" },
-	{ hwint07, VECTOR_IRQ( 7), INTRGATE, KERN_PRIVILEGE, "IRQ-07" },
-	{ hwint08, VECTOR_IRQ( 8), INTRGATE, KERN_PRIVILEGE, "IRQ-08" },
-	{ hwint09, VECTOR_IRQ( 9), INTRGATE, KERN_PRIVILEGE, "IRQ-09" },
-	{ hwint10, VECTOR_IRQ(10), INTRGATE, KERN_PRIVILEGE, "IRQ-10" },
-	{ hwint11, VECTOR_IRQ(11), INTRGATE, KERN_PRIVILEGE, "IRQ-11" },
-	{ hwint12, VECTOR_IRQ(12), INTRGATE, KERN_PRIVILEGE, "IRQ-12" },
-	{ hwint13, VECTOR_IRQ(13), INTRGATE, KERN_PRIVILEGE, "IRQ-13" },
-	{ hwint14, VECTOR_IRQ(14), INTRGATE, KERN_PRIVILEGE, "IRQ-14" },
-	{ hwint15, VECTOR_IRQ(15), INTRGATE, KERN_PRIVILEGE, "IRQ-15" },
+	{ hwint00, VECTOR_IRQ( 0), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-00" },
+	{ hwint01, VECTOR_IRQ( 1), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-01" },
+	{ hwint02, VECTOR_IRQ( 2), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-02" },
+	{ hwint03, VECTOR_IRQ( 3), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-03" },
+	{ hwint04, VECTOR_IRQ( 4), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-04" },
+	{ hwint05, VECTOR_IRQ( 5), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-05" },
+	{ hwint06, VECTOR_IRQ( 6), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-06" },
+	{ hwint07, VECTOR_IRQ( 7), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-07" },
+	{ hwint08, VECTOR_IRQ( 8), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-08" },
+	{ hwint09, VECTOR_IRQ( 9), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-09" },
+	{ hwint10, VECTOR_IRQ(10), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-10" },
+	{ hwint11, VECTOR_IRQ(11), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-11" },
+	{ hwint12, VECTOR_IRQ(12), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-12" },
+	{ hwint13, VECTOR_IRQ(13), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-13" },
+	{ hwint14, VECTOR_IRQ(14), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-14" },
+	{ hwint15, VECTOR_IRQ(15), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-15" },
 #ifdef USE_APIC
-	{ hwint16, VECTOR_IRQ(16), INTRGATE, KERN_PRIVILEGE, "IRQ-16" },
-	{ hwint17, VECTOR_IRQ(17), INTRGATE, KERN_PRIVILEGE, "IRQ-17" },
-	{ hwint18, VECTOR_IRQ(18), INTRGATE, KERN_PRIVILEGE, "IRQ-18" },
-	{ hwint19, VECTOR_IRQ(19), INTRGATE, KERN_PRIVILEGE, "IRQ-19" },
-	{ hwint20, VECTOR_IRQ(20), INTRGATE, KERN_PRIVILEGE, "IRQ-20" },
-	{ hwint21, VECTOR_IRQ(21), INTRGATE, KERN_PRIVILEGE, "IRQ-21" },
-	{ hwint22, VECTOR_IRQ(22), INTRGATE, KERN_PRIVILEGE, "IRQ-22" },
-	{ hwint23, VECTOR_IRQ(23), INTRGATE, KERN_PRIVILEGE, "IRQ-23" },
+	{ hwint16, VECTOR_IRQ(16), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-16" },
+	{ hwint17, VECTOR_IRQ(17), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-17" },
+	{ hwint18, VECTOR_IRQ(18), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-18" },
+	{ hwint19, VECTOR_IRQ(19), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-19" },
+	{ hwint20, VECTOR_IRQ(20), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-20" },
+	{ hwint21, VECTOR_IRQ(21), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-21" },
+	{ hwint22, VECTOR_IRQ(22), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-22" },
+	{ hwint23, VECTOR_IRQ(23), INTRGATE, KERN_PRIVILEGE, 0, "IRQ-23" },
 #endif
 	{ NULL, 0, 0, 0}
 };
 
 gate_table_s lapic_ipi_init_table[] = {
-	{ lapic_ipi00, VECTOR_IPI( 0), INTRGATE, KERN_PRIVILEGE, "IPI-00"},
-	{ lapic_ipi01, VECTOR_IPI( 1), INTRGATE, KERN_PRIVILEGE, "IPI-01"},
-	{ lapic_ipi02, VECTOR_IPI( 2), INTRGATE, KERN_PRIVILEGE, "IPI-02"},
-	{ lapic_ipi03, VECTOR_IPI( 3), INTRGATE, KERN_PRIVILEGE, "IPI-03"},
-	{ lapic_ipi04, VECTOR_IPI( 4), INTRGATE, KERN_PRIVILEGE, "IPI-04"},
-	{ lapic_ipi05, VECTOR_IPI( 5), INTRGATE, KERN_PRIVILEGE, "IPI-05"},
-	{ lapic_ipi06, VECTOR_IPI( 6), INTRGATE, KERN_PRIVILEGE, "IPI-06"},
-	{ lapic_ipi07, VECTOR_IPI( 7), INTRGATE, KERN_PRIVILEGE, "IPI-07"},
+	{ lapic_ipi00, VECTOR_IPI( 0), INTRGATE, KERN_PRIVILEGE, 0, "IPI-00"},
+	{ lapic_ipi01, VECTOR_IPI( 1), INTRGATE, KERN_PRIVILEGE, 0, "IPI-01"},
+	{ lapic_ipi02, VECTOR_IPI( 2), INTRGATE, KERN_PRIVILEGE, 0, "IPI-02"},
+	{ lapic_ipi03, VECTOR_IPI( 3), INTRGATE, KERN_PRIVILEGE, 0, "IPI-03"},
+	{ lapic_ipi04, VECTOR_IPI( 4), INTRGATE, KERN_PRIVILEGE, 0, "IPI-04"},
+	{ lapic_ipi05, VECTOR_IPI( 5), INTRGATE, KERN_PRIVILEGE, 0, "IPI-05"},
+	{ lapic_ipi06, VECTOR_IPI( 6), INTRGATE, KERN_PRIVILEGE, 0, "IPI-06"},
+	{ lapic_ipi07, VECTOR_IPI( 7), INTRGATE, KERN_PRIVILEGE, 0, "IPI-07"},
 	{ NULL, 0, 0, 0}
 };
 /*==============================================================================================*
@@ -241,7 +243,7 @@ void init_idt()
 		// fixed bits
 		curr_gate->Present = 1;
 		curr_gate->segslct = KERN_CS_SELECTOR;
-		curr_gate->IST 	   = 0;
+		curr_gate->IST 	   = gtbl->ist;
 		// changable bits
 		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
@@ -287,14 +289,15 @@ void init_bsp_tss()
 	tss64_T *curr_tss = &bsp_tmp_tss;
 	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
-	curr_tss->rsp2 =
-	curr_tss->ist1 =
-	curr_tss->ist2 =
-	curr_tss->ist3 =
-	curr_tss->ist4 =
-	curr_tss->ist5 =
-	curr_tss->ist6 =
-	curr_tss->ist7 = 0;
+	curr_tss->rsp2 = 0;
+	curr_tss->ist1 = (reg_t)&ist_cpu0[1];
+	curr_tss->ist2 = (reg_t)&ist_cpu0[2];
+	curr_tss->ist3 = (reg_t)&ist_cpu0[3];
+	curr_tss->ist4 = (reg_t)&ist_cpu0[4];
+	curr_tss->ist5 = (reg_t)&ist_cpu0[5];
+	curr_tss->ist6 = (reg_t)&ist_cpu0[6];
+	curr_tss->ist7 = (reg_t)&ist_cpu0[7];
+	// curr_tss->ist7 = 0;
 	// init bsp's tss by hand
 	TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[TSS_INDEX(0)];
 	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
