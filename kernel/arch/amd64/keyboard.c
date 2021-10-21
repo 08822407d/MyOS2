@@ -109,8 +109,7 @@ unsigned char kbd_get_scancode()
 	unsigned char ret  = 0;
 
 	if(p_kb->count == 0)
-		while(!p_kb->count)
-			nop();
+		wq_sleep_on(&kbd_wqhdr);
 	
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	
 		p_kb->p_tail = p_kb->buf;
@@ -122,11 +121,11 @@ unsigned char kbd_get_scancode()
 	return ret;
 }
 
-void kbd_parse_scancode()
+char kbd_parse_scancode()
 {
 	unsigned char x = 0;
 	int i;	
-	int key = 0;	
+	char key = 0;	
 	int make = 0;
 
 	x = kbd_get_scancode();
@@ -148,7 +147,6 @@ void kbd_parse_scancode()
 		switch(x)
 		{
 			case 0x2A: // press printscreen
-		
 				if(kbd_get_scancode() == 0xE0)
 					if(kbd_get_scancode() == 0x37)
 					{
@@ -158,7 +156,6 @@ void kbd_parse_scancode()
 				break;
 
 			case 0xB7: // UNpress printscreen
-		
 				if(kbd_get_scancode() == 0xE0)
 					if(kbd_get_scancode() == 0xAA)
 					{
@@ -168,25 +165,21 @@ void kbd_parse_scancode()
 				break;
 
 			case 0x1d: // press right ctrl
-		
 				ctrl_r = 1;
 				key = OTHERKEY;
 				break;
 
 			case 0x9d: // UNpress right ctrl
-		
 				ctrl_r = 0;
 				key = OTHERKEY;
 				break;
 			
 			case 0x38: // press right alt
-		
 				alt_r = 1;
 				key = OTHERKEY;
 				break;
 
 			case 0xb8: // UNpress right alt
-		
 				alt_r = 0;
 				key = OTHERKEY;
 				break;		
@@ -195,12 +188,11 @@ void kbd_parse_scancode()
 				key = OTHERKEY;
 				break;
 		}
-		
 	}
 	
 	if(key == 0)
 	{
-		unsigned int * keyrow = NULL;
+		unsigned char * keyrow = NULL;
 		int column = 0;
 
 		make = (x & FLAG_BREAK ? 0:1);
@@ -239,19 +231,15 @@ void kbd_parse_scancode()
 					key = 0;
 				break;
 		}			
-
-		if(key)
-			color_printk(RED,YELLOW,"-%c-",key);
-
-		color_printk(BLACK, BLACK, "\n");
 	}
+	return key;
 }
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
 unsigned char pausebreak_scode[]={0xE1,0x1D,0x45,0xE1,0x9D,0xC5};
-unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
+unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 {
 /*scan-code	unShift		Shift		*/
 /*--------------------------------------------------------------*/
@@ -269,8 +257,10 @@ unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x0b*/	'0',		')',
 /*0x0c*/	'-',		'_',
 /*0x0d*/	'=',		'+',
-/*0x0e*/	0,			0,		//BACKSPACE	
-/*0x0f*/	0,			0,		//TAB
+/*0x0e*/	'\b',		'\b',		//BACKSPACE	
+/*0x0f*/	'\t',		'\t',		//TAB
+// /*0x0e*/	0,			0,		//BACKSPACE	
+// /*0x0f*/	0,			0,		//TAB
 
 /*0x10*/	'q',		'Q',
 /*0x11*/	'w',		'W',
@@ -284,7 +274,8 @@ unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x19*/	'p',		'P',
 /*0x1a*/	'[',		'{',
 /*0x1b*/	']',		'}',
-/*0x1c*/	0,			0,		//ENTER
+/*0x1c*/	'\n',		'\n',		//ENTER
+// /*0x1c*/	0,			0,		//ENTER
 /*0x1d*/	0x1d,		0x1d,		//CTRL Left
 /*0x1e*/	'a',		'A',
 /*0x1f*/	's',		'S',
@@ -315,7 +306,7 @@ unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x36*/	0x36,		0x36,		//SHIFT Right
 /*0x37*/	'*',		'*',
 /*0x38*/	0x38,		0x38,		//ALT Left
-/*0x39*/	' ',		' ',
+/*0x39*/	' ',		' ',		//SPACE
 /*0x3a*/	0,			0,		//CAPS LOCK
 /*0x3b*/	0,			0,		//F1
 /*0x3c*/	0,			0,		//F2

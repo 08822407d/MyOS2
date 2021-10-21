@@ -32,7 +32,7 @@ inline __always_inline long copy_from_user(void * from, void * to, unsigned long
 	return size;
 }
 
-inline __always_inline long copy_to_user(void * from, void * to, unsigned long size)
+inline __always_inline long copy_to_user(void * to, void * from, unsigned long size)
 {
 	unsigned long d0,d1;
 	if(!verify_area(to,size))

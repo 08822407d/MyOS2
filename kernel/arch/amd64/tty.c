@@ -65,26 +65,19 @@ long tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg
 long tty_read(file_s * fp, char * buf, unsigned long count, long * position)
 {
 	long counter  = 0;
-	unsigned char * tail = NULL;
-
-	if(p_kb->count == 0)
-		wq_sleep_on(&kbd_wqhdr);
-
-	counter = p_kb->count >= count? count:p_kb->count;
-	tail = p_kb->p_tail;
-	
-	if(counter <= (p_kb->buf + KB_BUF_SIZE - tail))
+	char * tmpbuf = kmalloc(count);
+	memset(tmpbuf, 0, count);
+	while (counter < count + 1)
 	{
-		copy_to_user(tail,buf,counter);
-		p_kb->p_tail += counter;
+		char key = kbd_parse_scancode();
+		if (key != 0)
+		{
+			tmpbuf[counter] = key;
+			counter++;
+		}
 	}
-	else
-	{
-		copy_to_user(tail,buf,(p_kb->buf + KB_BUF_SIZE - tail));
-		copy_to_user(p_kb->p_head,buf,counter - (p_kb->buf + KB_BUF_SIZE - tail));
-		p_kb->p_tail = p_kb->p_head + (counter - (p_kb->buf + KB_BUF_SIZE - tail));
-	}
-	p_kb->count -= counter;
+	copy_to_user(buf, tmpbuf, counter);
+	kfree(tmpbuf);
 
 	return counter;	
 }

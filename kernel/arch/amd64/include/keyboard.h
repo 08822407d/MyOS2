@@ -43,6 +43,6 @@
 	#define  wait_KB_read()		while(inb(PORT_KB_STATUS) & KBSTATUS_OBF)
 
 	extern unsigned char pausebreak_scode[];
-	extern unsigned int keycode_map_normal[NR_SCAN_CODES * MAP_COLS];
+	extern unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS];
 
 #endif /* __KEYBOARD_H__ */

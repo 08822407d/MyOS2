@@ -42,7 +42,7 @@
 	/* keyboard.c */
 	void init_keyboard(void);
 	void keyboard_handler(unsigned long param, stack_frame_s * sf_regs);
-	void kbd_parse_scancode(void);
+	char kbd_parse_scancode(void);
 
 	/* clock.c, HPET.c */
 	void get_cmos_time(time_s *time);

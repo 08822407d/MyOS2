@@ -99,7 +99,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		// if((unsigned long)buf < TASK_SIZE)
-		// 	copy_to_user(buffer + offset,buf,length);
+		// 	copy_to_user(buf,buffer + offset,length);
 		// else
 			memcpy(buf, buffer + offset, length);
 
