@@ -1,8 +1,8 @@
-#include <stdio.h>
-#include <lib/string.h>
-#include <lib/fcntl.h>
-
 #include <sys/errno.h>
+
+#include <stdio.h>
+#include <string.h>
+#include <lib/fcntl.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"

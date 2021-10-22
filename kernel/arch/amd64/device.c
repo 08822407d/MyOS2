@@ -1,5 +1,6 @@
-#include <lib/string.h>
 #include <sys/_null.h>
+
+#include <string.h>
 
 #include "include/device.h"
 #include "include/tty.h"

@@ -1,5 +1,6 @@
 #include <sys/_null.h>
-#include <lib/string.h>
+
+#include <string.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"

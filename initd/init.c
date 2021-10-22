@@ -1,12 +1,12 @@
+#include <sys/wait.h>
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <lib/string.h>
+#include <string.h>
 #include <stddef.h>
+#include <unistd.h>
 
 #include <lib/fcntl.h>
-#include <lib/unistd.h>
-
-#include <sys/wait.h>
 
 #include <lib/reboot.h>
 

@@ -12,14 +12,13 @@
 *
 *
 ***************************************************/
-
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
 #include <stdarg.h>
 #include <stddef.h>
-#include <lib/string.h>
-#include <lib/printf.h>
+#include <string.h>
+#include <printf.h>
 #include <lib/font.h>
 
 #include "../include/glo.h"

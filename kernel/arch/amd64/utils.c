@@ -1,6 +1,7 @@
-#include <lib/string.h>
 #include <sys/types.h>
 #include <sys/cdefs.h>
+
+#include <string.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

@@ -1,7 +1,7 @@
-#include <lib/string.h>
-#include <stddef.h>
-
 #include <sys/_null.h>
+
+#include <string.h>
+#include <stddef.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

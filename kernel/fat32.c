@@ -12,9 +12,10 @@
 *
 *
 ***************************************************/
-#include <stdio.h>
-#include <lib/string.h>
 #include <sys/errno.h>
+
+#include <stdio.h>
+#include <string.h>
 
 #include "include/vfs.h"
 #include "include/fat32.h"

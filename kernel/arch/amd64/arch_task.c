@@ -2,7 +2,8 @@
 #include <sys/cdefs.h>
 #include <sys/_null.h>
 #include <sys/errno.h>
-#include <lib/string.h>
+
+#include <string.h>
 #include <lib/utils.h>
 #include <lib/fcntl.h>
 

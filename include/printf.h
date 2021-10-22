@@ -34,6 +34,22 @@
 #include <stdio.h>
 #include <wchar.h>
 
+	/*
+	 *	definations from MyOS2
+	 */
+	#define ZEROPAD		1		/* pad with zero */
+	#define SIGN		2		/* unsigned/signed long */
+	#define PLUS		4		/* show plus */
+	#define SPACE		8		/* space if plus */
+	#define LEFT		16		/* left justified */
+	#define SPECIAL		32		/* 0x */
+	#define SMALL		64		/* use 'abcdef' instead of 'ABCDEF' */
+
+	#define is_digit(c)	((c) >= '0' && (c) <= '9')
+
+	int skip_atoi(const char **s);
+	int do_div(long *num,int base);
+
 /*
  * The API defined by glibc allows a renderer to take multiple arguments
  * This is obviously usable for things like (ptr+len) pairs etc.

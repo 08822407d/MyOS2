@@ -1,6 +1,7 @@
 #include <sys/types.h>
 #include <sys/_null.h>
-#include <lib/string.h>
+
+#include <string.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

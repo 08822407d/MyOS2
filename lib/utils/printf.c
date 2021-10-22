@@ -8,8 +8,8 @@
 ***************************************************/
 
 #include <stdarg.h>
-#include <lib/printf.h>
-#include <lib/string.h>
+#include <printf.h>
+#include <string.h>
 #include <stdio.h>
 
 /*

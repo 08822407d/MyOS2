@@ -12,9 +12,10 @@
 *
 *
 ***************************************************/
-#include <lib/string.h>
-#include <stddef.h>
 #include <sys/types.h>
+
+#include <string.h>
+#include <stddef.h>
 
 #include "include/proto.h"
 

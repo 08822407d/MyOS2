@@ -100,7 +100,7 @@ extern const _RuneLocale *_CurrentRuneLocale;
 // 	return _CurrentRuneLocale;
 // }
 // #endif /*__RUNETYPE_INTERNAL */
-#define _CurrentRuneLocale (__getCurrentRuneLocale())
+// #define _CurrentRuneLocale (__getCurrentRuneLocale())
 __END_DECLS
 
 #endif	/* !_RUNETYPE_H_ */

@@ -1,4 +1,4 @@
-#include <lib/string.h>
+#include <string.h>
 #include <stddef.h>
 
 #include "include/arch_proto.h"

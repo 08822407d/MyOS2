@@ -1,6 +1,7 @@
-#include <lib/string.h>
-#include <lib/font.h>
 #include <sys/_null.h>
+
+#include <string.h>
+#include <lib/font.h>
 
 #include "include/tty.h"
 #include "include/keyboard.h"

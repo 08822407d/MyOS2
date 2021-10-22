@@ -148,7 +148,7 @@ __NULLABILITY_PRAGMA_PUSH
 		long long
 			llabs(long long) __pure2;
 		/* LONGLONG */
-		lldiv_t	 lldiv(long long, long long) __pure2;
+		lldiv_t	lldiv(long long, long long) __pure2;
 		/* LONGLONG */
 		long long
 			strtoll(const char * __restrict, char ** __restrict, int);
@@ -164,37 +164,37 @@ __NULLABILITY_PRAGMA_PUSH
 	* If we're in a mode greater than C99, expose C11 functions.
 	*/
 	#if __ISO_C_VISIBLE >= 2011 || __cplusplus >= 201103L
-	void *	aligned_alloc(size_t, size_t) __malloc_like __alloc_align(1)
-			__alloc_size(2);
-	int	at_quick_exit(void (*)(void));
-	_Noreturn void
-		quick_exit(int);
+		void *	aligned_alloc(size_t, size_t) __malloc_like __alloc_align(1)
+						__alloc_size(2);
+		int		at_quick_exit(void (*)(void));
+		_Noreturn void
+				quick_exit(int);
 	#endif /* __ISO_C_VISIBLE >= 2011 */
 	/*
 	* Extensions made by POSIX relative to C.
 	*/
 	#if __POSIX_VISIBLE >= 199506 || __XSI_VISIBLE
-	char	*realpath(const char * __restrict, char * __restrict);
+		char *	realpath(const char * __restrict, char * __restrict);
 	#endif
 	#if __POSIX_VISIBLE >= 199506
-	int	 rand_r(unsigned *);			/* (TSF) */
+		int		rand_r(unsigned *);			/* (TSF) */
 	#endif
 	#if __POSIX_VISIBLE >= 200112
-	int	 posix_memalign(void **, size_t, size_t); /* (ADV) */
-	int	 setenv(const char *, const char *, int);
-	int	 unsetenv(const char *);
+		int		posix_memalign(void **, size_t, size_t); /* (ADV) */
+		int		setenv(const char *, const char *, int);
+		int		unsetenv(const char *);
 	#endif
 
 	#if __POSIX_VISIBLE >= 200809 || __XSI_VISIBLE
-	int	 getsubopt(char **, char *const *, char **);
-	#ifndef _MKDTEMP_DECLARED
-	char	*mkdtemp(char *);
-	#define	_MKDTEMP_DECLARED
-	#endif
-	#ifndef _MKSTEMP_DECLARED
-	int	 mkstemp(char *);
-	#define	_MKSTEMP_DECLARED
-	#endif
+		int		getsubopt(char **, char *const *, char **);
+		#ifndef _MKDTEMP_DECLARED
+			char *	mkdtemp(char *);
+			#define	_MKDTEMP_DECLARED
+		#endif
+		#ifndef _MKSTEMP_DECLARED
+			int		mkstemp(char *);
+			#define	_MKSTEMP_DECLARED
+		#endif
 	#endif /* __POSIX_VISIBLE >= 200809 || __XSI_VISIBLE */
 
 	/*
@@ -204,160 +204,160 @@ __NULLABILITY_PRAGMA_PUSH
 	* FreeBSD also does not have, and mktemp(), are to be deleted.
 	*/
 	#if __XSI_VISIBLE
-	/* XXX XSI requires pollution from <sys/wait.h> here.  We'd rather not. */
-	long	 a64l(const char *);
-	double	 drand48(void);
-	/* char	*ecvt(double, int, int * __restrict, int * __restrict); */
-	double	 erand48(unsigned short[3]);
-	/* char	*fcvt(double, int, int * __restrict, int * __restrict); */
-	/* char	*gcvt(double, int, int * __restrict, int * __restrict); */
-	char	*initstate(unsigned int, char *, size_t);
-	long	 jrand48(unsigned short[3]);
-	char	*l64a(long);
-	void	 lcong48(unsigned short[7]);
-	long	 lrand48(void);
-	#if !defined(_MKTEMP_DECLARED) && (__BSD_VISIBLE || __XSI_VISIBLE <= 600)
-	char	*mktemp(char *);
-	#define	_MKTEMP_DECLARED
-	#endif
-	long	 mrand48(void);
-	long	 nrand48(unsigned short[3]);
-	int	 putenv(char *);
-	long	 random(void);
-	unsigned short
-		*seed48(unsigned short[3]);
-	char	*setstate(/* const */ char *);
-	void	 srand48(long);
-	void	 srandom(unsigned int);
+		/* XXX XSI requires pollution from <sys/wait.h> here.  We'd rather not. */
+		long	a64l(const char *);
+		double	drand48(void);
+		/* char	*ecvt(double, int, int * __restrict, int * __restrict); */
+		double	erand48(unsigned short[3]);
+		/* char	*fcvt(double, int, int * __restrict, int * __restrict); */
+		/* char	*gcvt(double, int, int * __restrict, int * __restrict); */
+		char *	initstate(unsigned int, char *, size_t);
+		long	jrand48(unsigned short[3]);
+		char *	l64a(long);
+		void	lcong48(unsigned short[7]);
+		long	lrand48(void);
+		#if !defined(_MKTEMP_DECLARED) && (__BSD_VISIBLE || __XSI_VISIBLE <= 600)
+			char	*mktemp(char *);
+			#define	_MKTEMP_DECLARED
+		#endif
+		long	mrand48(void);
+		long	nrand48(unsigned short[3]);
+		int		putenv(char *);
+		long	random(void);
+		unsigned short *
+				seed48(unsigned short[3]);
+		char *	setstate(/* const */ char *);
+		void	srand48(long);
+		void	srandom(unsigned int);
 	#endif /* __XSI_VISIBLE */
 
 	#if __XSI_VISIBLE
-	int	 grantpt(int);
-	int	 posix_openpt(int);
-	char	*ptsname(int);
-	int	 unlockpt(int);
+		int		grantpt(int);
+		int		posix_openpt(int);
+		char *	ptsname(int);
+		int		unlockpt(int);
 	#endif /* __XSI_VISIBLE */
 	#if __BSD_VISIBLE
-	/* ptsname_r will be included in POSIX issue 8 */
-	int	 ptsname_r(int, char *, size_t);
+		/* ptsname_r will be included in POSIX issue 8 */
+		int		ptsname_r(int, char *, size_t);
 	#endif
 
 	#if __BSD_VISIBLE
-	extern const char *malloc_conf;
-	extern void (*malloc_message)(void *, const char *);
+		extern const char *	malloc_conf;
+		extern void		(*	malloc_message)(void *, const char *);
 
-	/*
-	* The alloca() function can't be implemented in C, and on some
-	* platforms it can't be implemented at all as a callable function.
-	* The GNU C compiler provides a built-in alloca() which we can use.
-	* On platforms where alloca() is not in libc, programs which use it
-	* will fail to link when compiled with non-GNU compilers.
-	*/
-	#if __GNUC__ >= 2
-	#undef  alloca	/* some GNU bits try to get cute and define this on their own */
-	#define alloca(sz) __builtin_alloca(sz)
-	#endif
+		/*
+		* The alloca() function can't be implemented in C, and on some
+		* platforms it can't be implemented at all as a callable function.
+		* The GNU C compiler provides a built-in alloca() which we can use.
+		* On platforms where alloca() is not in libc, programs which use it
+		* will fail to link when compiled with non-GNU compilers.
+		*/
+		#if __GNUC__ >= 2
+			#undef  alloca	/* some GNU bits try to get cute and define this on their own */
+			#define alloca(sz) __builtin_alloca(sz)
+		#endif
 
-	void	 abort2(const char *, int, void **) __dead2;
-	__uint32_t
-		arc4random(void);
-	void	 arc4random_buf(void *, size_t);
-	__uint32_t 
-		arc4random_uniform(__uint32_t);
+		void	abort2(const char *, int, void **) __dead2;
+		__uint32_t
+				arc4random(void);
+		void	arc4random_buf(void *, size_t);
+		__uint32_t 
+				arc4random_uniform(__uint32_t);
 
-	#ifdef __BLOCKS__
-	int	 atexit_b(void (^ _Nonnull)(void));
-	void	*bsearch_b(const void *, const void *, size_t,
-			size_t, int (^ _Nonnull)(const void *, const void *));
-	#endif
-	char	*getbsize(int *, long *);
-						/* getcap(3) functions */
-	char	*cgetcap(char *, const char *, int);
-	int	 cgetclose(void);
-	int	 cgetent(char **, char **, const char *);
-	int	 cgetfirst(char **, char **);
-	int	 cgetmatch(const char *, const char *);
-	int	 cgetnext(char **, char **);
-	int	 cgetnum(char *, const char *, long *);
-	int	 cgetset(const char *);
-	int	 cgetstr(char *, const char *, char **);
-	int	 cgetustr(char *, const char *, char **);
+		#ifdef __BLOCKS__
+			int		atexit_b(void (^ _Nonnull)(void));
+			void *	bsearch_b(const void *, const void *, size_t,
+							size_t, int (^ _Nonnull)(const void *, const void *));
+		#endif
+		char *	getbsize(int *, long *);
+							/* getcap(3) functions */
+		char *	cgetcap(char *, const char *, int);
+		int		cgetclose(void);
+		int		cgetent(char **, char **, const char *);
+		int		cgetfirst(char **, char **);
+		int		cgetmatch(const char *, const char *);
+		int		cgetnext(char **, char **);
+		int		cgetnum(char *, const char *, long *);
+		int		cgetset(const char *);
+		int		cgetstr(char *, const char *, char **);
+		int		cgetustr(char *, const char *, char **);
 
-	int	 daemon(int, int);
-	int	 daemonfd(int, int);
-	char	*devname(__dev_t, __mode_t);
-	char	*devname_r(__dev_t, __mode_t, char *, int);
-	char	*fdevname(int);
-	char	*fdevname_r(int, char *, int);
-	int	 getloadavg(double [], int);
-	const char *
-		getprogname(void);
+		int		daemon(int, int);
+		int		daemonfd(int, int);
+		char *	devname(__dev_t, __mode_t);
+		char *	devname_r(__dev_t, __mode_t, char *, int);
+		char *	fdevname(int);
+		char *	fdevname_r(int, char *, int);
+		int		getloadavg(double [], int);
+		const char *
+				getprogname(void);
 
-	int	 heapsort(void *, size_t, size_t,
-			int (* _Nonnull)(const void *, const void *));
-	#ifdef __BLOCKS__
-	int	 heapsort_b(void *, size_t, size_t,
-			int (^ _Nonnull)(const void *, const void *));
-	void	 qsort_b(void *, size_t, size_t,
-			int (^ _Nonnull)(const void *, const void *));
-	#endif
-	int	 l64a_r(long, char *, int);
-	int	 mergesort(void *, size_t, size_t, int (*)(const void *, const void *));
-	#ifdef __BLOCKS__
-	int	 mergesort_b(void *, size_t, size_t, int (^)(const void *, const void *));
-	#endif
-	int	 mkostemp(char *, int);
-	int	 mkostemps(char *, int, int);
-	int	 mkostempsat(int, char *, int, int);
-	void	 qsort_r(void *, size_t, size_t, void *,
-			int (*)(void *, const void *, const void *));
-	int	 radixsort(const unsigned char **, int, const unsigned char *,
-			unsigned);
-	void	*reallocarray(void *, size_t, size_t) __result_use_check
-			__alloc_size2(2, 3);
-	void	*reallocf(void *, size_t) __result_use_check __alloc_size(2);
-	int	 rpmatch(const char *);
-	void	 setprogname(const char *);
-	int	 sradixsort(const unsigned char **, int, const unsigned char *,
-			unsigned);
-	void	 srandomdev(void);
-	long long
-		strtonum(const char *, long long, long long, const char **);
+		int		heapsort(void *, size_t, size_t,
+						int (* _Nonnull)(const void *, const void *));
+		#ifdef __BLOCKS__
+			int		heapsort_b(void *, size_t, size_t,
+							int (^ _Nonnull)(const void *, const void *));
+			void	qsort_b(void *, size_t, size_t,
+							int (^ _Nonnull)(const void *, const void *));
+		#endif
+		int		l64a_r(long, char *, int);
+		int		mergesort(void *, size_t, size_t, int (*)(const void *, const void *));
+		#ifdef __BLOCKS__
+			int		mergesort_b(void *, size_t, size_t, int (^)(const void *, const void *));
+		#endif
+		int		mkostemp(char *, int);
+		int		mkostemps(char *, int, int);
+		int		mkostempsat(int, char *, int, int);
+		void	qsort_r(void *, size_t, size_t, void *,
+						int (*)(void *, const void *, const void *));
+		int		radixsort(const unsigned char **, int, const unsigned char *,
+						unsigned);
+		void *	reallocarray(void *, size_t, size_t) __result_use_check
+						__alloc_size2(2, 3);
+		void *	reallocf(void *, size_t) __result_use_check __alloc_size(2);
+		int		rpmatch(const char *);
+		void	setprogname(const char *);
+		int		sradixsort(const unsigned char **, int, const unsigned char *,
+						unsigned);
+		void	srandomdev(void);
+		long long
+				strtonum(const char *, long long, long long, const char **);
 
-	/* Deprecated interfaces, to be removed. */
-	__int64_t
-		strtoq(const char *, char **, int);
-	__uint64_t
-		strtouq(const char *, char **, int);
+		/* Deprecated interfaces, to be removed. */
+		__int64_t
+				strtoq(const char *, char **, int);
+		__uint64_t
+				strtouq(const char *, char **, int);
 
-	extern char *suboptarg;			/* getsubopt(3) external variable */
+		extern char *suboptarg;			/* getsubopt(3) external variable */
 	#endif /* __BSD_VISIBLE */
 
 	#if __EXT1_VISIBLE
 
-	#ifndef _RSIZE_T_DEFINED
-	#define _RSIZE_T_DEFINED
-	typedef size_t rsize_t;
-	#endif
+		#ifndef _RSIZE_T_DEFINED
+			#define _RSIZE_T_DEFINED
+			typedef size_t	rsize_t;
+		#endif
 
-	#ifndef _ERRNO_T_DEFINED
-	#define _ERRNO_T_DEFINED
-	typedef int errno_t;
-	#endif
+		#ifndef _ERRNO_T_DEFINED
+			#define _ERRNO_T_DEFINED
+			typedef int		errno_t;
+		#endif
 
-	/* K.3.6 */
-	typedef void (*constraint_handler_t)(const char * __restrict,
-		void * __restrict, errno_t);
-	/* K.3.6.1.1 */
-	constraint_handler_t set_constraint_handler_s(constraint_handler_t handler);
-	/* K.3.6.1.2 */
-	_Noreturn void abort_handler_s(const char * __restrict, void * __restrict,
-		errno_t);
-	/* K3.6.1.3 */
-	void ignore_handler_s(const char * __restrict, void * __restrict, errno_t);
-	/* K.3.6.3.2 */
-	errno_t	 qsort_s(void *, rsize_t, rsize_t,
-		int (*)(const void *, const void *, void *), void *);
+		/* K.3.6 */
+		typedef void (*	constraint_handler_t)(const char * __restrict,
+								void * __restrict, errno_t);
+		/* K.3.6.1.1 */
+		constraint_handler_t	set_constraint_handler_s(constraint_handler_t handler);
+		/* K.3.6.1.2 */
+		_Noreturn void	abort_handler_s(const char * __restrict, void * __restrict,
+			errno_t);
+		/* K3.6.1.3 */
+		void	ignore_handler_s(const char * __restrict, void * __restrict, errno_t);
+		/* K.3.6.3.2 */
+		errno_t	qsort_s(void *, rsize_t, rsize_t,
+						int (*)(const void *, const void *, void *), void *);
 	#endif /* __EXT1_VISIBLE */
 
 	__END_DECLS

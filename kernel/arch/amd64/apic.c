@@ -12,7 +12,7 @@
 *
 *
 ***************************************************/
-#include <lib/string.h>
+#include <string.h>
 
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"

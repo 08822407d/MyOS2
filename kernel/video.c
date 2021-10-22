@@ -1,5 +1,6 @@
 #include <sys/types.h>
-#include <lib/string.h>
+
+#include <string.h>
 
 #include "include/glo.h"
 #include "include/const.h"

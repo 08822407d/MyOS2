@@ -1,4 +1,4 @@
-#include <lib/string.h>
+#include <string.h>
 
 #include "include/glo.h"
 #include "include/proto.h"
