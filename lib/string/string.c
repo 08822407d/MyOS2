@@ -22,7 +22,7 @@
 // 	return res;
 // }
 
-char * strcpy(char * dst, char * src)
+char * strcpy(char * dst, const char * src)
 {
 	__asm__	__volatile__(	"cld					\n\t"
 							"1:						\n\t"
@@ -41,7 +41,7 @@ char * strcpy(char * dst, char * src)
 		string copy number bytes
 */
 
-char * strncpy(char * dst, char * src, long count)
+char * strncpy(char * dst, const char * src, size_t count)
 {
 	__asm__	__volatile__(	"cld					\n\t"
 							"1:						\n\t"
@@ -65,7 +65,7 @@ char * strncpy(char * dst, char * src, long count)
 		string cat Dest + Src
 */
 
-char * strcat(char * dst, char * src)
+char * strcat(char * dst, const char * src)
 {
 	__asm__	__volatile__(	"cld					\n\t"
 							"repne					\n\t"
@@ -90,7 +90,7 @@ char * strcat(char * dst, char * src)
 		FirstPart < SecondPart => -1
 */
 
-int strcmp(char * str1, char * str2)
+int strcmp(const char * str1, const char * str2)
 {
 	register int __res;
 	__asm__	__volatile__(	"cld					\n\t"
@@ -121,7 +121,7 @@ int strcmp(char * str1, char * str2)
 		FirstPart < SecondPart => -1
 */
 
-int strncmp(char * str1, char * str2, long count)
+int strncmp(const char * str1, const char * str2, size_t count)
 {	
 	register int __res;
 	__asm__	__volatile__(	"cld					\n\t"
@@ -152,7 +152,7 @@ int strncmp(char * str1, char * str2, long count)
 
 */
 
-int strlen(char * str)
+size_t strlen(const char * str)
 {
 	register int __res;
 	__asm__	__volatile__(	"cld			\n\t"

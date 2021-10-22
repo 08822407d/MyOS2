@@ -237,7 +237,7 @@ size_t	wcslcpy(wchar_t *, const wchar_t *, size_t);
 #endif
 
 // #if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
-// #include <xlocale/_wchar.h>
+#include <xlocale/_wchar.h>
 // #endif
 __END_DECLS
 
