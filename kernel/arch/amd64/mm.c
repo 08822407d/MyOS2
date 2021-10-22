@@ -1,5 +1,6 @@
 #include <lib/string.h>
-#include <lib/stddef.h>
+#include <stddef.h>
+
 #include <sys/_null.h>
 
 #include "include/arch_proto.h"

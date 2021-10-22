@@ -1,4 +1,4 @@
-#include <lib/stddef.h>
+#include <stddef.h>
 #include <lib/utils.h>
 
 #include "arch/amd64/include/interrupt.h"

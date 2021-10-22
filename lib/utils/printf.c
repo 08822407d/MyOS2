@@ -10,7 +10,7 @@
 #include <stdarg.h>
 #include <lib/printf.h>
 #include <lib/string.h>
-#include <lib/stdio.h>
+#include <stdio.h>
 
 /*
 

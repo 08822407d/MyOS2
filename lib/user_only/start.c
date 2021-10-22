@@ -1,4 +1,4 @@
-#include "lib/stdlib.h"
+#include "stdlib.h"
 
 extern int main(int, const char **);
 

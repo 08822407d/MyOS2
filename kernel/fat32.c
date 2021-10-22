@@ -12,7 +12,7 @@
 *
 *
 ***************************************************/
-#include <lib/stdio.h>
+#include <stdio.h>
 #include <lib/string.h>
 #include <sys/errno.h>
 

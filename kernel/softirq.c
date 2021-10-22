@@ -13,7 +13,7 @@
 *
 ***************************************************/
 #include <lib/string.h>
-#include <lib/stddef.h>
+#include <stddef.h>
 #include <sys/types.h>
 
 #include "include/proto.h"

@@ -47,7 +47,7 @@
 #include "amd64/include/endian.h"
 #include <sys/_types.h>
 
-// #include <sys/_pthreadtypes.h>
+#include <sys/_pthreadtypes.h>
 
 	/*
 	 *	definations for MyOS2

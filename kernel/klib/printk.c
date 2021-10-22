@@ -13,11 +13,11 @@
 *
 ***************************************************/
 
-#include <stdarg.h>
-
 #include <sys/types.h>
 #include <sys/cdefs.h>
-#include <lib/stddef.h>
+
+#include <stdarg.h>
+#include <stddef.h>
 #include <lib/string.h>
 #include <lib/printf.h>
 #include <lib/font.h>

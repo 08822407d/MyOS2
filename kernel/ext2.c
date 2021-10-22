@@ -1,4 +1,5 @@
-#include <lib/stdio.h>
+#include <stdio.h>
+
 #include <sys/errno.h>
 
 #include "include/vfs.h"

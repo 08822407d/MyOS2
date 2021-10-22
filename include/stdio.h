@@ -534,8 +534,8 @@ int		__swbuf(int, FILE *);
 		#define	getc_unlocked(fp)		__sgetc(fp)
 		#define	putc_unlocked(x, fp)	__sputc(x, fp)
 
-		#define	getchar_unlocked()	getc_unlocked(stdin)
-		#define	putchar_unlocked(x)	putc_unlocked(x, stdout)
+		#define	getchar_unlocked()		getc_unlocked(stdin)
+		#define	putchar_unlocked(x)		putc_unlocked(x, stdout)
 	#endif
 #endif /* __cplusplus */
 
