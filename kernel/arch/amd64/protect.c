@@ -1,6 +1,6 @@
 #include <lib/string.h>
-#include <lib/assert.h>
 #include <sys/types.h>
+#include <sys/_null.h>
 
 #include "include/arch_glo.h"
 #include "include/archconst.h"

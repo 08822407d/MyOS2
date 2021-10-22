@@ -1,6 +1,7 @@
-/*	$NetBSD: cdefs.h,v 1.126 2015/08/30 08:46:44 mlelstv Exp $	*/
-
-/* * Copyright (c) 1991, 1993
+/*-
+ * SPDX-License-Identifier: BSD-3-Clause
+ *
+ * Copyright (c) 1991, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
  * This code is derived from software contributed to Berkeley by
@@ -31,81 +32,134 @@
  * SUCH DAMAGE.
  *
  *	@(#)cdefs.h	8.8 (Berkeley) 1/9/95
+ * $FreeBSD$
  */
 
 #ifndef	_SYS_CDEFS_H_
 #define	_SYS_CDEFS_H_
 
-#ifdef _KERNEL_OPT
-#include "opt_diagnostic.h"
+#if defined(_KERNEL) && defined(_STANDALONE)
+#error "_KERNEL and _STANDALONE are mutually exclusive"
 #endif
 
 /*
- * Macro to test if we're using a GNU C compiler of a specific vintage
- * or later, for e.g. features that appeared in a particular version
- * of GNU C.  Usage:
- *
- *	#if __GNUC_PREREQ__(major, minor)
- *	...cool feature...
- *	#else
- *	...delete feature...
- *	#endif
+ * Testing against Clang-specific extensions.
  */
-#ifdef __GNUC__
-#define	__GNUC_PREREQ__(x, y)						\
-	((__GNUC__ == (x) && __GNUC_MINOR__ >= (y)) ||			\
-	 (__GNUC__ > (x)))
-#else
-#define	__GNUC_PREREQ__(x, y)	0
+#ifndef	__has_attribute
+#define	__has_attribute(x)	0
+#endif
+#ifndef	__has_extension
+#define	__has_extension		__has_feature
+#endif
+#ifndef	__has_feature
+#define	__has_feature(x)	0
+#endif
+#ifndef	__has_include
+#define	__has_include(x)	0
+#endif
+#ifndef	__has_builtin
+#define	__has_builtin(x)	0
 #endif
 
-#include <arch/amd64/cdefs.h>
-#ifdef __ELF__
-#include <sys/cdefs_elf.h>
+#if defined(__cplusplus)
+#define	__BEGIN_DECLS	extern "C" {
+#define	__END_DECLS	}
 #else
-#include <sys/cdefs_aout.h>
-#endif
-
-#ifdef __GNUC__
-#define	__strict_weak_alias(alias,sym)					\
-	__unused static __typeof__(alias) *__weak_alias_##alias = &sym;	\
-	__weak_alias(alias,sym)
-#else
-#define	__strict_weak_alias(alias,sym) __weak_alias(alias,sym)
+#define	__BEGIN_DECLS
+#define	__END_DECLS
 #endif
 
 /*
- * Optional marker for size-optimised MD calling convention.
+ * This code has been put in place to help reduce the addition of
+ * compiler specific defines in FreeBSD code.  It helps to aid in
+ * having a compiler-agnostic source tree.
  */
-#ifndef __compactcall
-#define	__compactcall
+
+#if defined(__GNUC__)
+
+#if __GNUC__ >= 3
+#define	__GNUCLIKE_ASM 3
+#define	__GNUCLIKE_MATH_BUILTIN_CONSTANTS
+#else
+#define	__GNUCLIKE_ASM 2
+#endif
+#define	__GNUCLIKE___TYPEOF 1
+#define	__GNUCLIKE___SECTION 1
+
+#define	__GNUCLIKE_CTOR_SECTION_HANDLING 1
+
+#define	__GNUCLIKE_BUILTIN_CONSTANT_P 1
+
+#if (__GNUC_MINOR__ > 95 || __GNUC__ >= 3)
+#define	__GNUCLIKE_BUILTIN_VARARGS 1
+#define	__GNUCLIKE_BUILTIN_STDARG 1
+#define	__GNUCLIKE_BUILTIN_VAALIST 1
+#endif
+
+#define	__GNUC_VA_LIST_COMPATIBILITY 1
+
+/*
+ * Compiler memory barriers, specific to gcc and clang.
+ */
+#define	__compiler_membar()	__asm __volatile(" " : : : "memory")
+
+#define	__GNUCLIKE_BUILTIN_NEXT_ARG 1
+#define	__GNUCLIKE_MATH_BUILTIN_RELOPS
+
+#define	__GNUCLIKE_BUILTIN_MEMCPY 1
+
+/* XXX: if __GNUC__ >= 2: not tested everywhere originally, where replaced */
+#define	__CC_SUPPORTS_INLINE 1
+#define	__CC_SUPPORTS___INLINE 1
+#define	__CC_SUPPORTS___INLINE__ 1
+
+#define	__CC_SUPPORTS___FUNC__ 1
+#define	__CC_SUPPORTS_WARNING 1
+
+#define	__CC_SUPPORTS_VARADIC_XXX 1 /* see varargs.h */
+
+#define	__CC_SUPPORTS_DYNAMIC_ARRAY_INIT 1
+
+#endif /* __GNUC__ */
+
+/*
+ * Macro to test if we're using a specific version of gcc or later.
+ */
+#if defined(__GNUC__)
+#define	__GNUC_PREREQ__(ma, mi)	\
+	(__GNUC__ > (ma) || __GNUC__ == (ma) && __GNUC_MINOR__ >= (mi))
+#else
+#define	__GNUC_PREREQ__(ma, mi)	0
 #endif
 
 /*
  * The __CONCAT macro is used to concatenate parts of symbol names, e.g.
  * with "#define OLD(foo) __CONCAT(old,foo)", OLD(foo) produces oldfoo.
- * The __CONCAT macro is a bit tricky -- make sure you don't put spaces
- * in between its arguments.  __CONCAT can also concatenate double-quoted
- * strings produced by the __STRING macro, but this only works with ANSI C.
+ * The __CONCAT macro is a bit tricky to use if it must work in non-ANSI
+ * mode -- there must be no spaces between its arguments, and for nested
+ * __CONCAT's, all the __CONCAT's must be at the left.  __CONCAT can also
+ * concatenate double-quoted strings produced by the __STRING macro, but
+ * this only works with ANSI C.
+ *
+ * __XSTRING is like __STRING, but it expands any macros in its argument
+ * first.  It is only available with ANSI C.
  */
-
-#define	___STRING(x)	__STRING(x)
-#define	___CONCAT(x,y)	__CONCAT(x,y)
-
-#if __STDC__ || defined(__cplusplus)
+#if defined(__STDC__) || defined(__cplusplus)
 #define	__P(protos)	protos		/* full-blown ANSI C */
-#define	__CONCAT(x,y)	x ## y
-#define	__STRING(x)	#x
+#define	__CONCAT1(x,y)	x ## y
+#define	__CONCAT(x,y)	__CONCAT1(x,y)
+#define	__STRING(x)	#x		/* stringify without expanding x */
+#define	__XSTRING(x)	__STRING(x)	/* expand x, then stringify */
 
 #define	__const		const		/* define reserved names to standard */
 #define	__signed	signed
 #define	__volatile	volatile
-#if defined(__cplusplus) || defined(__PCC__)
-#define	__inline	inline		/* convert to C++/C99 keyword */
+#if defined(__cplusplus)
+#define	__inline	inline		/* convert to C++ keyword */
 #else
-#if !defined(__GNUC__) && !defined(__lint__)
+#if !(defined(__CC_SUPPORTS___INLINE))
 #define	__inline			/* delete GCC keyword */
-#endif /* !__GNUC__  && !__lint__ */
+#endif /* ! __CC_SUPPORTS___INLINE */
 #endif /* !__cplusplus */
 
 #else	/* !(__STDC__ || __cplusplus) */
@@ -113,324 +167,250 @@
 #define	__CONCAT(x,y)	x/**/y
 #define	__STRING(x)	"x"
 
-#ifndef __GNUC__
+#if !defined(__CC_SUPPORTS___INLINE)
 #define	__const				/* delete pseudo-ANSI C keywords */
 #define	__inline
 #define	__signed
 #define	__volatile
-#endif	/* !__GNUC__ */
-
 /*
  * In non-ANSI C environments, new programs will want ANSI-only C keywords
  * deleted from the program and old programs will want them left alone.
- * Programs using the ANSI C keywords const, inline etc. as normal
- * identifiers should define -DNO_ANSI_KEYWORDS.
+ * When using a compiler other than gcc, programs using the ANSI C keywords
+ * const, inline etc. as normal identifiers should define -DNO_ANSI_KEYWORDS.
+ * When using "gcc -traditional", we assume that this is the intent; if
+ * __GNUC__ is defined but __STDC__ is not, we leave the new keywords alone.
  */
 #ifndef	NO_ANSI_KEYWORDS
-#define	const		__const		/* convert ANSI C keywords */
-#define	inline		__inline
-#define	signed		__signed
-#define	volatile	__volatile
-#endif /* !NO_ANSI_KEYWORDS */
+#define	const				/* delete ANSI C keywords */
+#define	inline
+#define	signed
+#define	volatile
+#endif	/* !NO_ANSI_KEYWORDS */
+#endif	/* !__CC_SUPPORTS___INLINE */
 #endif	/* !(__STDC__ || __cplusplus) */
 
 /*
- * Used for internal auditing of the NetBSD source tree.
+ * Compiler-dependent macros to help declare dead (non-returning) and
+ * pure (no side effects) functions, and unused variables.  They are
+ * null except for versions of gcc that are known to support the features
+ * properly (old versions of gcc-2 supported the dead and pure features
+ * in a different (wrong) way).  If we do not provide an implementation
+ * for a given compiler, let the compile fail if it is told to use
+ * a feature that we cannot live without.
  */
-#ifdef __AUDIT__
-#define	__aconst	__const
+#define	__weak_symbol	__attribute__((__weak__))
+#if !__GNUC_PREREQ__(2, 5)
+#define	__dead2
+#define	__pure2
+#define	__unused
+#endif
+#if __GNUC__ == 2 && __GNUC_MINOR__ >= 5 && __GNUC_MINOR__ < 7
+#define	__dead2		__attribute__((__noreturn__))
+#define	__pure2		__attribute__((__const__))
+#define	__unused
+/* XXX Find out what to do for __packed, __aligned and __section */
+#endif
+#if __GNUC_PREREQ__(2, 7)
+#define	__dead2		__attribute__((__noreturn__))
+#define	__pure2		__attribute__((__const__))
+#define	__unused	__attribute__((__unused__))
+#define	__used		__attribute__((__used__))
+#define	__packed	__attribute__((__packed__))
+#define	__aligned(x)	__attribute__((__aligned__(x)))
+#define	__section(x)	__attribute__((__section__(x)))
+#endif
+#if __GNUC_PREREQ__(4, 3) || __has_attribute(__alloc_size__)
+#define	__alloc_size(x)	__attribute__((__alloc_size__(x)))
+#define	__alloc_size2(n, x)	__attribute__((__alloc_size__(n, x)))
 #else
-#define	__aconst
+#define	__alloc_size(x)
+#define	__alloc_size2(n, x)
 #endif
-
-/*
- * Compile Time Assertion.
- */
-#ifdef __COUNTER__
-#define	__CTASSERT(x)		__CTASSERT0(x, __ctassert, __COUNTER__)
+#if __GNUC_PREREQ__(4, 9) || __has_attribute(__alloc_align__)
+#define	__alloc_align(x)	__attribute__((__alloc_align__(x)))
 #else
-#define	__CTASSERT(x)		__CTASSERT99(x, __INCLUDE_LEVEL__, __LINE__)
-#define	__CTASSERT99(x, a, b)	__CTASSERT0(x, __CONCAT(__ctassert,a), \
-					       __CONCAT(_,b))
+#define	__alloc_align(x)
 #endif
-#define	__CTASSERT0(x, y, z)	__CTASSERT1(x, y, z) 
-#define	__CTASSERT1(x, y, z)	typedef char y ## z[/*CONSTCOND*/(x) ? 1 : -1] __unused
 
-/*
- * The following macro is used to remove const cast-away warnings
- * from gcc -Wcast-qual; it should be used with caution because it
- * can hide valid errors; in particular most valid uses are in
- * situations where the API requires it, not to cast away string
- * constants. We don't use *intptr_t on purpose here and we are
- * explicit about unsigned long so that we don't have additional
- * dependencies.
- */
-#define __UNCONST(a)	((void *)(unsigned long)(const void *)(a))
-
-/*
- * The following macro is used to remove the volatile cast-away warnings
- * from gcc -Wcast-qual; as above it should be used with caution
- * because it can hide valid errors or warnings.  Valid uses include
- * making it possible to pass a volatile pointer to memset().
- * For the same reasons as above, we use unsigned long and not intptr_t.
- */
-#define __UNVOLATILE(a)	((void *)(unsigned long)(volatile void *)(a))
-
-/*
- * GCC2 provides __extension__ to suppress warnings for various GNU C
- * language extensions under "-ansi -pedantic".
- */
-#if !__GNUC_PREREQ__(2, 0)
-#define	__extension__		/* delete __extension__ if non-gcc or gcc1 */
+#if !__GNUC_PREREQ__(2, 95)
+#define	__alignof(x)	__offsetof(struct { char __a; x __b; }, __b)
 #endif
 
 /*
- * GCC1 and some versions of GCC2 declare dead (non-returning) and
- * pure (no side effects) functions using "volatile" and "const";
- * unfortunately, these then cause warnings under "-ansi -pedantic".
- * GCC2 uses a new, peculiar __attribute__((attrs)) style.  All of
- * these work for GNU C++ (modulo a slight glitch in the C++ grammar
- * in the distribution version of 2.5.5).
- *
- * GCC defines a pure function as depending only on its arguments and
- * global variables.  Typical examples are strlen and sqrt.
- *
- * GCC defines a const function as depending only on its arguments.
- * Therefore calling a const function again with identical arguments
- * will always produce the same result.
- *
- * Rounding modes for floating point operations are considered global
- * variables and prevent sqrt from being a const function.
- *
- * Calls to const functions can be optimised away and moved around
- * without limitations.
+ * Keywords added in C11.
  */
-#if !__GNUC_PREREQ__(2, 0)
-#define __attribute__(x)
-#endif
 
-#if __GNUC_PREREQ__(2, 5)
-#define	__dead		__attribute__((__noreturn__))
-#elif defined(__GNUC__)
-#define	__dead		__volatile
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 201112L
+
+#if !__has_extension(c_alignas)
+#if (defined(__cplusplus) && __cplusplus >= 201103L) || \
+    __has_extension(cxx_alignas)
+#define	_Alignas(x)		alignas(x)
 #else
-#define	__dead
+/* XXX: Only emulates _Alignas(constant-expression); not _Alignas(type-name). */
+#define	_Alignas(x)		__aligned(x)
+#endif
+#endif
+
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#define	_Alignof(x)		alignof(x)
+#else
+#define	_Alignof(x)		__alignof(x)
+#endif
+
+#if !defined(__cplusplus) && !__has_extension(c_atomic) && \
+	!__has_extension(cxx_atomic) && !__GNUC_PREREQ__(4, 7)
+/*
+ * No native support for _Atomic(). Place object in structure to prevent
+ * most forms of direct non-atomic access.
+ */
+#define	_Atomic(T)		struct { T volatile __val; }
+#endif
+
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#define	_Noreturn		[[noreturn]]
+#else
+#define	_Noreturn		__dead2
+#endif
+
+#if !__has_extension(c_static_assert)
+#if (defined(__cplusplus) && __cplusplus >= 201103L) || \
+    __has_extension(cxx_static_assert)
+#define	_Static_assert(x, y)	static_assert(x, y)
+#elif __GNUC_PREREQ__(4,6) && !defined(__cplusplus)
+/* Nothing, gcc 4.6 and higher has _Static_assert built-in */
+#elif defined(__COUNTER__)
+#define	_Static_assert(x, y)	__Static_assert(x, __COUNTER__)
+#define	__Static_assert(x, y)	___Static_assert(x, y)
+#define	___Static_assert(x, y)	typedef char __assert_ ## y[(x) ? 1 : -1] \
+				__unused
+#else
+#define	_Static_assert(x, y)	struct __hack
+#endif
+#endif
+
+#if !__has_extension(c_thread_local)
+/*
+ * XXX: Some compilers (Clang 3.3, GCC 4.7) falsely announce C++11 mode
+ * without actually supporting the thread_local keyword. Don't check for
+ * the presence of C++11 when defining _Thread_local.
+ */
+#if /* (defined(__cplusplus) && __cplusplus >= 201103L) || */ \
+    __has_extension(cxx_thread_local)
+#define	_Thread_local		thread_local
+#else
+#define	_Thread_local		__thread
+#endif
+#endif
+
+#endif /* __STDC_VERSION__ || __STDC_VERSION__ < 201112L */
+
+/*
+ * Emulation of C11 _Generic().  Unlike the previously defined C11
+ * keywords, it is not possible to implement this using exactly the same
+ * syntax.  Therefore implement something similar under the name
+ * __generic().  Unlike _Generic(), this macro can only distinguish
+ * between a single type, so it requires nested invocations to
+ * distinguish multiple cases.
+ */
+
+#if (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L) || \
+    __has_extension(c_generic_selections)
+#define	__generic(expr, t, yes, no)					\
+	_Generic(expr, t: yes, default: no)
+#elif __GNUC_PREREQ__(3, 1) && !defined(__cplusplus)
+#define	__generic(expr, t, yes, no)					\
+	__builtin_choose_expr(						\
+	    __builtin_types_compatible_p(__typeof(expr), t), yes, no)
+#endif
+
+/*
+ * C99 Static array indices in function parameter declarations.  Syntax such as:
+ * void bar(int myArray[static 10]);
+ * is allowed in C99 but not in C++.  Define __min_size appropriately so
+ * headers using it can be compiled in either language.  Use like this:
+ * void bar(int myArray[__min_size(10)]);
+ */
+#if !defined(__cplusplus) && \
+    (defined(__clang__) || __GNUC_PREREQ__(4, 6)) && \
+    (!defined(__STDC_VERSION__) || (__STDC_VERSION__ >= 199901))
+#define __min_size(x)	static (x)
+#else
+#define __min_size(x)	(x)
 #endif
 
 #if __GNUC_PREREQ__(2, 96)
+#define	__malloc_like	__attribute__((__malloc__))
 #define	__pure		__attribute__((__pure__))
-#elif defined(__GNUC__)
-#define	__pure		__const
 #else
+#define	__malloc_like
 #define	__pure
 #endif
 
-#if __GNUC_PREREQ__(2, 5)
-#define	__constfunc	__attribute__((__const__))
-#else
-#define	__constfunc
-#endif
-
-#if __GNUC_PREREQ__(3, 0)
-#define	__noinline	__attribute__((__noinline__))
-#else
-#define	__noinline	/* nothing */
-#endif
-
-#if __GNUC_PREREQ__(3, 0)
+#if __GNUC_PREREQ__(3, 1)
 #define	__always_inline	__attribute__((__always_inline__))
 #else
-#define	__always_inline	/* nothing */
+#define	__always_inline
+#endif
+
+#if __GNUC_PREREQ__(3, 1)
+#define	__noinline	__attribute__ ((__noinline__))
+#else
+#define	__noinline
+#endif
+
+#if __GNUC_PREREQ__(3, 4)
+#define	__fastcall	__attribute__((__fastcall__))
+#define	__result_use_check	__attribute__((__warn_unused_result__))
+#else
+#define	__fastcall
+#define	__result_use_check
 #endif
 
 #if __GNUC_PREREQ__(4, 1)
 #define	__returns_twice	__attribute__((__returns_twice__))
 #else
-#define	__returns_twice	/* nothing */
+#define	__returns_twice
 #endif
 
-#if __GNUC_PREREQ__(4, 5)
-#define	__noclone	__attribute__((__noclone__))
-#else
-#define	__noclone	/* nothing */
-#endif
-
-/*
- * __unused: Note that item or function might be unused.
- */
-#if __GNUC_PREREQ__(2, 7)
-#define	__unused	__attribute__((__unused__))
-#else
-#define	__unused	/* delete */
-#endif
-
-/*
- * __used: Note that item is needed, even if it appears to be unused.
- */
-#if __GNUC_PREREQ__(3, 1)
-#define	__used		__attribute__((__used__))
-#else
-#define	__used		__unused
-#endif
-
-/*
- * __diagused: Note that item is used in diagnostic code, but may be
- * unused in non-diagnostic code.
- */
-#if (defined(_KERNEL) && defined(DIAGNOSTIC)) \
- || (!defined(_KERNEL) && !defined(NDEBUG))
-#define	__diagused	/* empty */
-#else
-#define	__diagused	__unused
-#endif
-
-/*
- * __debugused: Note that item is used in debug code, but may be
- * unused in non-debug code.
- */
-#if defined(DEBUG)
-#define	__debugused	/* empty */
-#else
-#define	__debugused	__unused
-#endif
-
-#if __GNUC_PREREQ__(3, 1)
-#define	__noprofile	__attribute__((__no_instrument_function__))
-#else
-#define	__noprofile	/* nothing */
-#endif
-
-#if __GNUC_PREREQ__(4, 6) || defined(__clang__)
+#if __GNUC_PREREQ__(4, 6) || __has_builtin(__builtin_unreachable)
 #define	__unreachable()	__builtin_unreachable()
 #else
-#define	__unreachable()	do {} while (/*CONSTCOND*/0)
+#define	__unreachable()	((void)0)
 #endif
 
-#if defined(__cplusplus)
-#define	__BEGIN_EXTERN_C	extern "C" {
-#define	__END_EXTERN_C		}
-#define	__static_cast(x,y)	static_cast<x>(y)
-#else
-#define	__BEGIN_EXTERN_C
-#define	__END_EXTERN_C
-#define	__static_cast(x,y)	(x)y
+/* XXX: should use `#if __STDC_VERSION__ < 199901'. */
+#if !__GNUC_PREREQ__(2, 7)
+#define	__func__	NULL
 #endif
 
-#if __GNUC_PREREQ__(4, 0)
-#  define __dso_public	__attribute__((__visibility__("default")))
-#  define __dso_hidden	__attribute__((__visibility__("hidden")))
-#  define __BEGIN_PUBLIC_DECLS	\
-	_Pragma("GCC visibility push(default)") __BEGIN_EXTERN_C
-#  define __END_PUBLIC_DECLS	__END_EXTERN_C _Pragma("GCC visibility pop")
-#  define __BEGIN_HIDDEN_DECLS	\
-	_Pragma("GCC visibility push(hidden)") __BEGIN_EXTERN_C
-#  define __END_HIDDEN_DECLS	__END_EXTERN_C _Pragma("GCC visibility pop")
-#else
-#  define __dso_public
-#  define __dso_hidden
-#  define __BEGIN_PUBLIC_DECLS	__BEGIN_EXTERN_C
-#  define __END_PUBLIC_DECLS	__END_EXTERN_C
-#  define __BEGIN_HIDDEN_DECLS	__BEGIN_EXTERN_C
-#  define __END_HIDDEN_DECLS	__END_EXTERN_C
-#endif
-#if __GNUC_PREREQ__(4, 2)
-#  define __dso_protected	__attribute__((__visibility__("protected")))
-#else
-#  define __dso_protected
+#if (defined(__GNUC__) && __GNUC__ >= 2) && !defined(__STRICT_ANSI__) || __STDC_VERSION__ >= 199901
+#define	__LONG_LONG_SUPPORTED
 #endif
 
-#define	__BEGIN_DECLS		__BEGIN_PUBLIC_DECLS
-#define	__END_DECLS		__END_PUBLIC_DECLS
-
-/*
- * Non-static C99 inline functions are optional bodies.  They don't
- * create global symbols if not used, but can be replaced if desirable.
- * This differs from the behavior of GCC before version 4.3.  The nearest
- * equivalent for older GCC is `extern inline'.  For newer GCC, use the
- * gnu_inline attribute additionally to get the old behavior.
- *
- * For C99 compilers other than GCC, the C99 behavior is expected.
- */
-#if defined(__GNUC__) && defined(__GNUC_STDC_INLINE__)
-#define	__c99inline	extern __attribute__((__gnu_inline__)) __inline
-#elif defined(__GNUC__)
-#define	__c99inline	extern __inline
-#elif defined(__STDC_VERSION__)
-#define	__c99inline	__inline
+/* C++11 exposes a load of C99 stuff */
+#if defined(__cplusplus) && __cplusplus >= 201103L
+#define	__LONG_LONG_SUPPORTED
+#ifndef	__STDC_LIMIT_MACROS
+#define	__STDC_LIMIT_MACROS
 #endif
-
-#if defined(__lint__)
-#define	__packed	__packed
-#define	__aligned(x)	/* delete */
-#define	__section(x)	/* delete */
-#elif __GNUC_PREREQ__(2, 7) || defined(__PCC__)
-#define	__packed	__attribute__((__packed__))
-#define	__aligned(x)	__attribute__((__aligned__(x)))
-#define	__section(x)	__attribute__((__section__(x)))
-#elif defined(_MSC_VER)
-#define	__packed	/* ignore */
-#else
-#define	__packed	error: no __packed for this compiler
-#define	__aligned(x)	error: no __aligned for this compiler
-#define	__section(x)	error: no __section for this compiler
+#ifndef	__STDC_CONSTANT_MACROS
+#define	__STDC_CONSTANT_MACROS
+#endif
 #endif
 
 /*
- * C99 defines the restrict type qualifier keyword, which was made available
- * in GCC 2.92.
+ * GCC 2.95 provides `__restrict' as an extension to C90 to support the
+ * C99-specific `restrict' type qualifier.  We happen to use `__restrict' as
+ * a way to define the `restrict' type qualifier without disturbing older
+ * software that is unaware of C99 keywords.
  */
-#if defined(__lint__)
-#define	__restrict	/* delete __restrict when not supported */
-#elif __STDC_VERSION__ >= 199901L
+#if !(__GNUC__ == 2 && __GNUC_MINOR__ == 95)
+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 199901
+#define	__restrict
+#else
 #define	__restrict	restrict
-#elif __GNUC_PREREQ__(2, 92)
-#define	__restrict	__restrict__
-#else
-#define	__restrict	/* delete __restrict when not supported */
 #endif
-
-/*
- * C99 defines __func__ predefined identifier, which was made available
- * in GCC 2.95.
- */
-#if !(__STDC_VERSION__ >= 199901L)
-#if __GNUC_PREREQ__(2, 6)
-#define	__func__	__PRETTY_FUNCTION__
-#elif __GNUC_PREREQ__(2, 4)
-#define	__func__	__FUNCTION__
-#else
-#define	__func__	""
-#endif
-#endif /* !(__STDC_VERSION__ >= 199901L) */
-
-#if defined(_KERNEL)
-#if defined(NO_KERNEL_RCSIDS)
-#undef __KERNEL_RCSID
-#define	__KERNEL_RCSID(_n, _s)		/* nothing */
-#endif /* NO_KERNEL_RCSIDS */
-#endif /* _KERNEL */
-
-#if !defined(_STANDALONE) && !defined(_KERNEL)
-#if defined(__GNUC__) || defined(__PCC__)
-#define	__RENAME(x)	___RENAME(x)
-#elif defined(__lint__)
-#define	__RENAME(x)	__symbolrename(x)
-#else
-#error "No function renaming possible"
-#endif /* __GNUC__ */
-#else /* _STANDALONE || _KERNEL */
-#define	__RENAME(x)	no renaming in kernel/standalone environment
-#endif
-
-/*
- * A barrier to stop the optimizer from moving code or assume live
- * register values. This is gcc specific, the version is more or less
- * arbitrary, might work with older compilers.
- */
-#if __GNUC_PREREQ__(2, 95)
-#define	__insn_barrier()	__asm __volatile("":::"memory")
-#else
-#define	__insn_barrier()	/* */
 #endif
 
 /*
@@ -439,7 +419,7 @@
  * code blocks can be reordered such that the predicted path
  * sees a more linear flow, thus improving cache behavior, etc.
  *
- * The following two macros provide us with a way to use this
+ * The following two macros provide us with a way to utilize this
  * compiler feature.  Use __predict_true() if you expect the expression
  * to evaluate to true, and __predict_false() if you expect the
  * expression to evaluate to false.
@@ -462,11 +442,57 @@
  *	  larger code.
  */
 #if __GNUC_PREREQ__(2, 96)
-#define	__predict_true(exp)	__builtin_expect((exp) != 0, 1)
-#define	__predict_false(exp)	__builtin_expect((exp) != 0, 0)
+#define	__predict_true(exp)     __builtin_expect((exp), 1)
+#define	__predict_false(exp)    __builtin_expect((exp), 0)
 #else
-#define	__predict_true(exp)	(exp)
-#define	__predict_false(exp)	(exp)
+#define	__predict_true(exp)     (exp)
+#define	__predict_false(exp)    (exp)
+#endif
+
+#if __GNUC_PREREQ__(4, 0)
+#define	__null_sentinel	__attribute__((__sentinel__))
+#define	__exported	__attribute__((__visibility__("default")))
+#define	__hidden	__attribute__((__visibility__("hidden")))
+#else
+#define	__null_sentinel
+#define	__exported
+#define	__hidden
+#endif
+
+/*
+ * We define this here since <stddef.h>, <sys/queue.h>, and <sys/types.h>
+ * require it.
+ */
+#if __GNUC_PREREQ__(4, 1)
+#define	__offsetof(type, field)	 __builtin_offsetof(type, field)
+#else
+#ifndef __cplusplus
+#define	__offsetof(type, field) \
+	((__size_t)(__uintptr_t)((const volatile void *)&((type *)0)->field))
+#else
+#define	__offsetof(type, field)					\
+  (__offsetof__ (reinterpret_cast <__size_t>			\
+                 (&reinterpret_cast <const volatile char &>	\
+                  (static_cast<type *> (0)->field))))
+#endif
+#endif
+#define	__rangeof(type, start, end) \
+	(__offsetof(type, end) - __offsetof(type, start))
+
+/*
+ * Given the pointer x to the member m of the struct s, return
+ * a pointer to the containing structure.  When using GCC, we first
+ * assign pointer x to a local variable, to check that its type is
+ * compatible with member m.
+ */
+#if __GNUC_PREREQ__(3, 1)
+#define	__containerof(x, s, m) ({					\
+	const volatile __typeof(((s *)0)->m) *__x = (x);		\
+	__DEQUALIFY(s *, (const volatile char *)__x - __offsetof(s, m));\
+})
+#else
+#define	__containerof(x, s, m)						\
+	__DEQUALIFY(s *, (const volatile char *)(x) - __offsetof(s, m))
 #endif
 
 /*
@@ -475,154 +501,414 @@
  * that are known to support the features properly (old versions of gcc-2
  * didn't permit keeping the keywords out of the application namespace).
  */
-#if __GNUC_PREREQ__(2, 7)
-#define __printflike(fmtarg, firstvararg)	\
+#if !__GNUC_PREREQ__(2, 7)
+#define	__printflike(fmtarg, firstvararg)
+#define	__scanflike(fmtarg, firstvararg)
+#define	__format_arg(fmtarg)
+#define	__strfmonlike(fmtarg, firstvararg)
+#define	__strftimelike(fmtarg, firstvararg)
+#else
+#define	__printflike(fmtarg, firstvararg) \
 	    __attribute__((__format__ (__printf__, fmtarg, firstvararg)))
-#define __scanflike(fmtarg, firstvararg)	\
+#define	__scanflike(fmtarg, firstvararg) \
 	    __attribute__((__format__ (__scanf__, fmtarg, firstvararg)))
-#define __format_arg(fmtarg)    __attribute__((__format_arg__ (fmtarg)))
+#define	__format_arg(fmtarg)	__attribute__((__format_arg__ (fmtarg)))
+#define	__strfmonlike(fmtarg, firstvararg) \
+	    __attribute__((__format__ (__strfmon__, fmtarg, firstvararg)))
+#define	__strftimelike(fmtarg, firstvararg) \
+	    __attribute__((__format__ (__strftime__, fmtarg, firstvararg)))
+#endif
+
+/* Compiler-dependent macros that rely on FreeBSD-specific extensions. */
+#if defined(__FreeBSD_cc_version) && __FreeBSD_cc_version >= 300001 && \
+    defined(__GNUC__)
+#define	__printf0like(fmtarg, firstvararg) \
+	    __attribute__((__format__ (__printf0__, fmtarg, firstvararg)))
 #else
-#define __printflike(fmtarg, firstvararg)	/* nothing */
-#define __scanflike(fmtarg, firstvararg)	/* nothing */
-#define __format_arg(fmtarg)			/* nothing */
+#define	__printf0like(fmtarg, firstvararg)
+#endif
+
+#if defined(__GNUC__)
+#define	__strong_reference(sym,aliassym)	\
+	extern __typeof (sym) aliassym __attribute__ ((__alias__ (#sym)))
+#ifdef __STDC__
+#define	__weak_reference(sym,alias)	\
+	__asm__(".weak " #alias);	\
+	__asm__(".equ "  #alias ", " #sym)
+#define	__warn_references(sym,msg)	\
+	__asm__(".section .gnu.warning." #sym);	\
+	__asm__(".asciz \"" msg "\"");	\
+	__asm__(".previous")
+#define	__sym_compat(sym,impl,verid)	\
+	__asm__(".symver " #impl ", " #sym "@" #verid)
+#define	__sym_default(sym,impl,verid)	\
+	__asm__(".symver " #impl ", " #sym "@@@" #verid)
+#else
+#define	__weak_reference(sym,alias)	\
+	__asm__(".weak alias");		\
+	__asm__(".equ alias, sym")
+#define	__warn_references(sym,msg)	\
+	__asm__(".section .gnu.warning.sym"); \
+	__asm__(".asciz \"msg\"");	\
+	__asm__(".previous")
+#define	__sym_compat(sym,impl,verid)	\
+	__asm__(".symver impl, sym@verid")
+#define	__sym_default(impl,sym,verid)	\
+	__asm__(".symver impl, sym@@@verid")
+#endif	/* __STDC__ */
+#endif	/* __GNUC__ */
+
+#define	__GLOBL(sym)	__asm__(".globl " __XSTRING(sym))
+#define	__WEAK(sym)	__asm__(".weak " __XSTRING(sym))
+
+#if defined(__GNUC__)
+#define	__IDSTRING(name,string)	__asm__(".ident\t\"" string "\"")
+#else
+/*
+ * The following definition might not work well if used in header files,
+ * but it should be better than nothing.  If you want a "do nothing"
+ * version, then it should generate some harmless declaration, such as:
+ *    #define	__IDSTRING(name,string)	struct __hack
+ */
+#define	__IDSTRING(name,string)	static const char name[] __unused = string
 #endif
 
 /*
- * Macros for manipulating "link sets".  Link sets are arrays of pointers
- * to objects, which are gathered up by the linker.
- *
- * Object format-specific code has provided us with the following macros:
- *
- *	__link_set_add_text(set, sym)
- *		Add a reference to the .text symbol `sym' to `set'.
- *
- *	__link_set_add_rodata(set, sym)
- *		Add a reference to the .rodata symbol `sym' to `set'.
- *
- *	__link_set_add_data(set, sym)
- *		Add a reference to the .data symbol `sym' to `set'.
- *
- *	__link_set_add_bss(set, sym)
- *		Add a reference to the .bss symbol `sym' to `set'.
- *
- *	__link_set_decl(set, ptype)
- *		Provide an extern declaration of the set `set', which
- *		contains an array of pointers to type `ptype'.  This
- *		macro must be used by any code which wishes to reference
- *		the elements of a link set.
- *
- *	__link_set_start(set)
- *		This points to the first slot in the link set.
- *
- *	__link_set_end(set)
- *		This points to the (non-existent) slot after the last
- *		entry in the link set.
- *
- *	__link_set_count(set)
- *		Count the number of entries in link set `set'.
- *
- * In addition, we provide the following macros for accessing link sets:
- *
- *	__link_set_foreach(pvar, set)
- *		Iterate over the link set `set'.  Because a link set is
- *		an array of pointers, pvar must be declared as "type **pvar",
- *		and the actual entry accessed as "*pvar".
- *
- *	__link_set_entry(set, idx)
- *		Access the link set entry at index `idx' from set `set'.
+ * Embed the rcs id of a source file in the resulting library.  Note that in
+ * more recent ELF binutils, we use .ident allowing the ID to be stripped.
+ * Usage:
+ *	__FBSDID("$FreeBSD$");
  */
-#define	__link_set_foreach(pvar, set)					\
-	for (pvar = __link_set_start(set); pvar < __link_set_end(set); pvar++)
-
-#define	__link_set_entry(set, idx)	(__link_set_start(set)[idx])
-
-/*
- * Return the natural alignment in bytes for the given type
- */
-#if __GNUC_PREREQ__(4, 1)
-#define	__alignof(__t)  __alignof__(__t)
+#ifndef	__FBSDID
+#if !defined(STRIP_FBSDID)
+#define	__FBSDID(s)	__IDSTRING(__CONCAT(__rcsid_,__LINE__),s)
 #else
-#define __alignof(__t) (sizeof(struct { char __x; __t __y; }) - sizeof(__t))
+#define	__FBSDID(s)	struct __hack
+#endif
+#endif
+
+#ifndef	__RCSID
+#ifndef	NO__RCSID
+#define	__RCSID(s)	__IDSTRING(__CONCAT(__rcsid_,__LINE__),s)
+#else
+#define	__RCSID(s)	struct __hack
+#endif
+#endif
+
+#ifndef	__RCSID_SOURCE
+#ifndef	NO__RCSID_SOURCE
+#define	__RCSID_SOURCE(s)	__IDSTRING(__CONCAT(__rcsid_source_,__LINE__),s)
+#else
+#define	__RCSID_SOURCE(s)	struct __hack
+#endif
+#endif
+
+#ifndef	__SCCSID
+#ifndef	NO__SCCSID
+#define	__SCCSID(s)	__IDSTRING(__CONCAT(__sccsid_,__LINE__),s)
+#else
+#define	__SCCSID(s)	struct __hack
+#endif
+#endif
+
+#ifndef	__COPYRIGHT
+#ifndef	NO__COPYRIGHT
+#define	__COPYRIGHT(s)	__IDSTRING(__CONCAT(__copyright_,__LINE__),s)
+#else
+#define	__COPYRIGHT(s)	struct __hack
+#endif
+#endif
+
+#ifndef	__DECONST
+#define	__DECONST(type, var)	((type)(__uintptr_t)(const void *)(var))
+#endif
+
+#ifndef	__DEVOLATILE
+#define	__DEVOLATILE(type, var)	((type)(__uintptr_t)(volatile void *)(var))
+#endif
+
+#ifndef	__DEQUALIFY
+#define	__DEQUALIFY(type, var)	((type)(__uintptr_t)(const volatile void *)(var))
+#endif
+
+/*-
+ * The following definitions are an extension of the behavior originally
+ * implemented in <sys/_posix.h>, but with a different level of granularity.
+ * POSIX.1 requires that the macros we test be defined before any standard
+ * header file is included.
+ *
+ * Here's a quick run-down of the versions:
+ *  defined(_POSIX_SOURCE)		1003.1-1988
+ *  _POSIX_C_SOURCE == 1		1003.1-1990
+ *  _POSIX_C_SOURCE == 2		1003.2-1992 C Language Binding Option
+ *  _POSIX_C_SOURCE == 199309		1003.1b-1993
+ *  _POSIX_C_SOURCE == 199506		1003.1c-1995, 1003.1i-1995,
+ *					and the omnibus ISO/IEC 9945-1: 1996
+ *  _POSIX_C_SOURCE == 200112		1003.1-2001
+ *  _POSIX_C_SOURCE == 200809		1003.1-2008
+ *
+ * In addition, the X/Open Portability Guide, which is now the Single UNIX
+ * Specification, defines a feature-test macro which indicates the version of
+ * that specification, and which subsumes _POSIX_C_SOURCE.
+ *
+ * Our macros begin with two underscores to avoid namespace screwage.
+ */
+
+/* Deal with IEEE Std. 1003.1-1990, in which _POSIX_C_SOURCE == 1. */
+#if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE == 1
+#undef _POSIX_C_SOURCE		/* Probably illegal, but beyond caring now. */
+#define	_POSIX_C_SOURCE		199009
+#endif
+
+/* Deal with IEEE Std. 1003.2-1992, in which _POSIX_C_SOURCE == 2. */
+#if defined(_POSIX_C_SOURCE) && _POSIX_C_SOURCE == 2
+#undef _POSIX_C_SOURCE
+#define	_POSIX_C_SOURCE		199209
+#endif
+
+/* Deal with various X/Open Portability Guides and Single UNIX Spec. */
+#ifdef _XOPEN_SOURCE
+#if _XOPEN_SOURCE - 0 >= 700
+#define	__XSI_VISIBLE		700
+#undef _POSIX_C_SOURCE
+#define	_POSIX_C_SOURCE		200809
+#elif _XOPEN_SOURCE - 0 >= 600
+#define	__XSI_VISIBLE		600
+#undef _POSIX_C_SOURCE
+#define	_POSIX_C_SOURCE		200112
+#elif _XOPEN_SOURCE - 0 >= 500
+#define	__XSI_VISIBLE		500
+#undef _POSIX_C_SOURCE
+#define	_POSIX_C_SOURCE		199506
+#endif
 #endif
 
 /*
- * Return the number of elements in a statically-allocated array,
- * __x.
+ * Deal with all versions of POSIX.  The ordering relative to the tests above is
+ * important.
  */
-#define	__arraycount(__x)	(sizeof(__x) / sizeof(__x[0]))
-
-#ifndef __ASSEMBLER__
-/* __BIT(n): nth bit, where __BIT(0) == 0x1. */
-#define	__BIT(__n)	\
-    (((uintmax_t)(__n) >= NBBY * sizeof(uintmax_t)) ? 0 : ((uintmax_t)1 << (uintmax_t)((__n) & (NBBY * sizeof(uintmax_t) - 1))))
-
-/* __BITS(m, n): bits m through n, m < n. */
-#define	__BITS(__m, __n)	\
-	((__BIT(MAX((__m), (__n)) + 1) - 1) ^ (__BIT(MIN((__m), (__n))) - 1))
-#endif /* !__ASSEMBLER__ */
-
-/* find least significant bit that is set */
-#define	__LOWEST_SET_BIT(__mask) ((((__mask) - 1) & (__mask)) ^ (__mask))
-
-#define	__PRIuBIT	PRIuMAX
-#define	__PRIuBITS	__PRIuBIT
-
-#define	__PRIxBIT	PRIxMAX
-#define	__PRIxBITS	__PRIxBIT
-
-#define	__SHIFTOUT(__x, __mask)	(((__x) & (__mask)) / __LOWEST_SET_BIT(__mask))
-#define	__SHIFTIN(__x, __mask) ((__x) * __LOWEST_SET_BIT(__mask))
-#define	__SHIFTOUT_MASK(__mask) __SHIFTOUT((__mask), (__mask))
-
-/*
- * Only to be used in other headers that are included from both c or c++
- * NOT to be used in code.
- */
-#ifdef __cplusplus
-#define __CAST(__dt, __st)	static_cast<__dt>(__st)
+#if defined(_POSIX_SOURCE) && !defined(_POSIX_C_SOURCE)
+#define	_POSIX_C_SOURCE		198808
+#endif
+#ifdef _POSIX_C_SOURCE
+#if _POSIX_C_SOURCE >= 200809
+#define	__POSIX_VISIBLE		200809
+#define	__ISO_C_VISIBLE		1999
+#elif _POSIX_C_SOURCE >= 200112
+#define	__POSIX_VISIBLE		200112
+#define	__ISO_C_VISIBLE		1999
+#elif _POSIX_C_SOURCE >= 199506
+#define	__POSIX_VISIBLE		199506
+#define	__ISO_C_VISIBLE		1990
+#elif _POSIX_C_SOURCE >= 199309
+#define	__POSIX_VISIBLE		199309
+#define	__ISO_C_VISIBLE		1990
+#elif _POSIX_C_SOURCE >= 199209
+#define	__POSIX_VISIBLE		199209
+#define	__ISO_C_VISIBLE		1990
+#elif _POSIX_C_SOURCE >= 199009
+#define	__POSIX_VISIBLE		199009
+#define	__ISO_C_VISIBLE		1990
 #else
-#define __CAST(__dt, __st)	((__dt)(__st))
+#define	__POSIX_VISIBLE		198808
+#define	__ISO_C_VISIBLE		0
+#endif /* _POSIX_C_SOURCE */
+/*
+ * Both glibc and OpenBSD enable c11 features when _ISOC11_SOURCE is defined, or
+ * when compiling with -stdc=c11. A strict reading of the standard would suggest
+ * doing it only for the former. However, a strict reading also requires C99
+ * mode only, so building with C11 is already undefined. Follow glibc's and
+ * OpenBSD's lead for this non-standard configuration for maximum compatibility.
+ */
+#if _ISOC11_SOURCE || (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L)
+#undef __ISO_C_VISIBLE
+#define __ISO_C_VISIBLE		2011
+#endif
+#else
+/*-
+ * Deal with _ANSI_SOURCE:
+ * If it is defined, and no other compilation environment is explicitly
+ * requested, then define our internal feature-test macros to zero.  This
+ * makes no difference to the preprocessor (undefined symbols in preprocessing
+ * expressions are defined to have value zero), but makes it more convenient for
+ * a test program to print out the values.
+ *
+ * If a program mistakenly defines _ANSI_SOURCE and some other macro such as
+ * _POSIX_C_SOURCE, we will assume that it wants the broader compilation
+ * environment (and in fact we will never get here).
+ */
+#if defined(_ANSI_SOURCE)	/* Hide almost everything. */
+#define	__POSIX_VISIBLE		0
+#define	__XSI_VISIBLE		0
+#define	__BSD_VISIBLE		0
+#define	__ISO_C_VISIBLE		1990
+#define	__EXT1_VISIBLE		0
+#elif defined(_C99_SOURCE)	/* Localism to specify strict C99 env. */
+#define	__POSIX_VISIBLE		0
+#define	__XSI_VISIBLE		0
+#define	__BSD_VISIBLE		0
+#define	__ISO_C_VISIBLE		1999
+#define	__EXT1_VISIBLE		0
+#elif defined(_C11_SOURCE)	/* Localism to specify strict C11 env. */
+#define	__POSIX_VISIBLE		0
+#define	__XSI_VISIBLE		0
+#define	__BSD_VISIBLE		0
+#define	__ISO_C_VISIBLE		2011
+#define	__EXT1_VISIBLE		0
+#else				/* Default environment: show everything. */
+#define	__POSIX_VISIBLE		200809
+#define	__XSI_VISIBLE		700
+#define	__BSD_VISIBLE		1
+#define	__ISO_C_VISIBLE		2011
+#define	__EXT1_VISIBLE		1
+#endif
 #endif
 
-#define __CASTV(__dt, __st)	__CAST(__dt, __CAST(void *, __st))
-#define __CASTCV(__dt, __st)	__CAST(__dt, __CAST(const void *, __st))
-
-#define __USE(a) ((void)(a))
-
-#define __type_mask(t) (/*LINTED*/sizeof(t) < sizeof(intmax_t) ? \
-    (~((1ULL << (sizeof(t) * NBBY)) - 1)) : 0ULL)
-
-#ifndef __ASSEMBLER__
-static __inline long long __zeroll(void) { return 0; }
-static __inline unsigned long long __zeroull(void) { return 0; }
+/* User override __EXT1_VISIBLE */
+#if defined(__STDC_WANT_LIB_EXT1__)
+#undef	__EXT1_VISIBLE
+#if __STDC_WANT_LIB_EXT1__
+#define	__EXT1_VISIBLE		1
 #else
-#define __zeroll() (0LL)
-#define __zeroull() (0ULL)
+#define	__EXT1_VISIBLE		0
 #endif
-
-#define __negative_p(x) (!((x) > 0) && ((x) != 0))
-
-#define __type_min_s(t) ((t)((1ULL << (sizeof(t) * NBBY - 1))))
-#define __type_max_s(t) ((t)~((1ULL << (sizeof(t) * NBBY - 1))))
-#define __type_min_u(t) ((t)0ULL)
-#define __type_max_u(t) ((t)~0ULL)
-#define __type_is_signed(t) (/*LINTED*/__type_min_s(t) + (t)1 < (t)1)
-#define __type_min(t) (__type_is_signed(t) ? __type_min_s(t) : __type_min_u(t))
-#define __type_max(t) (__type_is_signed(t) ? __type_max_s(t) : __type_max_u(t))
-
-
-#define __type_fit_u(t, a) (/*LINTED*/!__negative_p(a) && \
-    (uintmax_t)((a) + __zeroull()) <= (uintmax_t)__type_max_u(t))
-
-#define __type_fit_s(t, a) (/*LINTED*/__negative_p(a) ? \
-    ((intmax_t)((a) + __zeroll()) >= (intmax_t)__type_min_s(t)) : \
-    ((intmax_t)((a) + __zeroll()) >= (intmax_t)0 && \
-     (intmax_t)((a) + __zeroll()) <= (intmax_t)__type_max_s(t)))
+#endif /* __STDC_WANT_LIB_EXT1__ */
 
 /*
- * return true if value 'a' fits in type 't'
+ * Old versions of GCC use non-standard ARM arch symbols; acle-compat.h
+ * translates them to __ARM_ARCH and the modern feature symbols defined by ARM.
  */
-#define __type_fit(t, a) (__type_is_signed(t) ? \
-    __type_fit_s(t, a) : __type_fit_u(t, a))
+#if defined(__arm__) && !defined(__ARM_ARCH)
+#include <machine/acle-compat.h>
+#endif
+
+/*
+ * Nullability qualifiers: currently only supported by Clang.
+ */
+#if !(defined(__clang__) && __has_feature(nullability))
+#define	_Nonnull
+#define	_Nullable
+#define	_Null_unspecified
+#define	__NULLABILITY_PRAGMA_PUSH
+#define	__NULLABILITY_PRAGMA_POP
+#else
+#define	__NULLABILITY_PRAGMA_PUSH _Pragma("clang diagnostic push")	\
+	_Pragma("clang diagnostic ignored \"-Wnullability-completeness\"")
+#define	__NULLABILITY_PRAGMA_POP _Pragma("clang diagnostic pop")
+#endif
+
+/*
+ * Type Safety Checking
+ *
+ * Clang provides additional attributes to enable checking type safety
+ * properties that cannot be enforced by the C type system. 
+ */
+
+#if __has_attribute(__argument_with_type_tag__) && \
+    __has_attribute(__type_tag_for_datatype__)
+#define	__arg_type_tag(arg_kind, arg_idx, type_tag_idx) \
+	    __attribute__((__argument_with_type_tag__(arg_kind, arg_idx, type_tag_idx)))
+#define	__datatype_type_tag(kind, type) \
+	    __attribute__((__type_tag_for_datatype__(kind, type)))
+#else
+#define	__arg_type_tag(arg_kind, arg_idx, type_tag_idx)
+#define	__datatype_type_tag(kind, type)
+#endif
+
+/*
+ * Lock annotations.
+ *
+ * Clang provides support for doing basic thread-safety tests at
+ * compile-time, by marking which locks will/should be held when
+ * entering/leaving a functions.
+ *
+ * Furthermore, it is also possible to annotate variables and structure
+ * members to enforce that they are only accessed when certain locks are
+ * held.
+ */
+
+#if __has_extension(c_thread_safety_attributes)
+#define	__lock_annotate(x)	__attribute__((x))
+#else
+#define	__lock_annotate(x)
+#endif
+
+/* Structure implements a lock. */
+#define	__lockable		__lock_annotate(lockable)
+
+/* Function acquires an exclusive or shared lock. */
+#define	__locks_exclusive(...) \
+	__lock_annotate(exclusive_lock_function(__VA_ARGS__))
+#define	__locks_shared(...) \
+	__lock_annotate(shared_lock_function(__VA_ARGS__))
+
+/* Function attempts to acquire an exclusive or shared lock. */
+#define	__trylocks_exclusive(...) \
+	__lock_annotate(exclusive_trylock_function(__VA_ARGS__))
+#define	__trylocks_shared(...) \
+	__lock_annotate(shared_trylock_function(__VA_ARGS__))
+
+/* Function releases a lock. */
+#define	__unlocks(...)		__lock_annotate(unlock_function(__VA_ARGS__))
+
+/* Function asserts that an exclusive or shared lock is held. */
+#define	__asserts_exclusive(...) \
+	__lock_annotate(assert_exclusive_lock(__VA_ARGS__))
+#define	__asserts_shared(...) \
+	__lock_annotate(assert_shared_lock(__VA_ARGS__))
+
+/* Function requires that an exclusive or shared lock is or is not held. */
+#define	__requires_exclusive(...) \
+	__lock_annotate(exclusive_locks_required(__VA_ARGS__))
+#define	__requires_shared(...) \
+	__lock_annotate(shared_locks_required(__VA_ARGS__))
+#define	__requires_unlocked(...) \
+	__lock_annotate(locks_excluded(__VA_ARGS__))
+
+/* Function should not be analyzed. */
+#define	__no_lock_analysis	__lock_annotate(no_thread_safety_analysis)
+
+/*
+ * Function or variable should not be sanitized, e.g., by AddressSanitizer.
+ * GCC has the nosanitize attribute, but as a function attribute only, and
+ * warns on use as a variable attribute.
+ */
+#if __has_attribute(no_sanitize) && defined(__clang__)
+#ifdef _KERNEL
+#define __nosanitizeaddress	__attribute__((no_sanitize("kernel-address")))
+#define __nosanitizememory	__attribute__((no_sanitize("kernel-memory")))
+#else
+#define __nosanitizeaddress	__attribute__((no_sanitize("address")))
+#define __nosanitizememory	__attribute__((no_sanitize("memory")))
+#endif
+#define __nosanitizethread	__attribute__((no_sanitize("thread")))
+#else
+#define __nosanitizeaddress
+#define __nosanitizememory
+#define __nosanitizethread
+#endif
+
+/* Guard variables and structure members by lock. */
+#define	__guarded_by(x)		__lock_annotate(guarded_by(x))
+#define	__pt_guarded_by(x)	__lock_annotate(pt_guarded_by(x))
+
+/* Alignment builtins for better type checking and improved code generation. */
+/* Provide fallback versions for other compilers (GCC/Clang < 10): */
+#if !__has_builtin(__builtin_is_aligned)
+#define __builtin_is_aligned(x, align)	\
+	(((__uintptr_t)x & ((align) - 1)) == 0)
+#endif
+#if !__has_builtin(__builtin_align_up)
+#define __builtin_align_up(x, align)	\
+	((__typeof__(x))(((__uintptr_t)(x)+((align)-1))&(~((align)-1))))
+#endif
+#if !__has_builtin(__builtin_align_down)
+#define __builtin_align_down(x, align)	\
+	((__typeof__(x))((x)&(~((align)-1))))
+#endif
+
+#define __align_up(x, y) __builtin_align_up(x, y)
+#define __align_down(x, y) __builtin_align_down(x, y)
+#define __is_aligned(x, y) __builtin_is_aligned(x, y)
 
 #endif /* !_SYS_CDEFS_H_ */

@@ -1,4 +1,4 @@
-#include <lib/stddef.h>
+#include <sys/_null.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
@@ -260,11 +260,11 @@ int unregister_irq(unsigned long irq)
 	p->controller->disable(irq);
 	p->controller->uninstall(irq);
 
-	p->controller = NULL;
-	p->irq_name = NULL;
-	p->parameter = NULL;
+	p->controller = 0;
+	p->irq_name = 0;
+	p->parameter = 0;
 	p->flags = 0;
-	p->handler = NULL;
+	p->handler = 0;
 
 	return 1; 
 }
@@ -293,11 +293,11 @@ int unregister_IPI(unsigned long irq)
 {
 	irq_desc_s * p = &ipi_descriptors[irq];
 
-	p->controller = NULL;
-	p->irq_name = NULL;
-	p->parameter = NULL;
+	p->controller = 0;
+	p->irq_name = 0;
+	p->parameter = 0;
 	p->flags = 0;
-	p->handler = NULL;
+	p->handler = 0;
 
 	return 1; 
 }

@@ -309,7 +309,7 @@ long FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
 		if(cluster > 0x0ffffff7)
 		{
 			color_printk(RED,BLACK,"FAT32 FS(readdir) cluster didn`t exist\n");
-			return NULL;
+			return 0;
 		}
 	}
 
@@ -319,7 +319,7 @@ next_cluster:
 	{
 		color_printk(RED,BLACK,"FAT32 FS(readdir) read disk ERROR!!!!!!!!!!\n");
 		kfree(buf);
-		return NULL;
+		return 0;
 	}
 
 	tmpdentry = (FAT32_dir_s *)(buf + filp->position%fsbi->bytes_per_cluster);
@@ -405,7 +405,7 @@ next_cluster:
 		goto next_cluster;
 
 	kfree(buf);
-	return NULL;
+	return 0;
 
 find_lookup_success:
 

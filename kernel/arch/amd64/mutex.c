@@ -1,5 +1,5 @@
 #include <lib/string.h>
-#include <sys/cdefs.h>
+#include <sys/_null.h>
 
 #include "include/mutex.h"
 #include "../../include/proto.h"

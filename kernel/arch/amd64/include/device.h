@@ -12,11 +12,14 @@
 
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 
-	typedef struct dev_nr
-	{
-		unsigned short	main	: 16;
-		unsigned long	sub		: 48;
-	} dev_t;
+	// #ifdef dev_t
+	// 	#undef dev_t
+	// #endif
+	// typedef struct dev_nr
+	// {
+	// 	unsigned short	main	: 16;
+	// 	unsigned long	sub		: 48;
+	// } dev_t;
 	
 	typedef struct char_dev
 	{

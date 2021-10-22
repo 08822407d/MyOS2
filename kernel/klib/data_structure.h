@@ -1,7 +1,7 @@
 #ifndef _KLIB_DATA_STRUCTURE_
 #define _KLIB_DATA_STRUCTURE_
 
-#include <lib/stddef.h>
+#include <sys/_null.h>
 
 /*==============================================================================================*
  *											LIST												*

@@ -1,9 +1,9 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
+#include <sys/_null.h>
 #include <sys/errno.h>
 #include <lib/string.h>
 #include <lib/utils.h>
-#include <lib/stddef.h>
 #include <lib/fcntl.h>
 
 #include "include/archconst.h"

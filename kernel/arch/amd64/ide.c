@@ -1,4 +1,4 @@
-
+#include <sys/_null.h>
 #include <lib/string.h>
 
 #include "include/arch_proto.h"
@@ -346,8 +346,8 @@ void init_disk()
 	entry.dst.physical.reserved2 = 0;
 
 	register_irq(SATA_MAST_IRQ, &entry , "disk0",
-				(unsigned long)&IDE_req_queue, &disk_int_controller,
-				&disk_handler);
+				 (unsigned long)&IDE_req_queue, &disk_int_controller,
+				 &disk_handler);
 
 	outb(PORT_DISK0_ALT_STA_CTL, 0);
 	IDE_req_queue.in_using = NULL;

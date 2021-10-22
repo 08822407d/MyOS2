@@ -295,12 +295,12 @@
 	void exception_handler(stack_frame_s * sf_regs);
 	void hwint_irq_handler(stack_frame_s * sf_regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
-				 unsigned long parameter, hw_int_controller_s * controller,
-				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+					 unsigned long parameter, hw_int_controller_s * controller,
+					 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
 	int register_IPI(unsigned long irq, void * arg, char * irq_name,
-				 unsigned long parameter, hw_int_controller_s * controller,
-				 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+					 unsigned long parameter, hw_int_controller_s * controller,
+					 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_IPI(unsigned long irq);
 	void init_bsp_intr(void);
 	void init_percpu_intr(void);

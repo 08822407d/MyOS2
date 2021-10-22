@@ -1,5 +1,4 @@
 #include <lib/string.h>
-#include <lib/assert.h>
 
 #include "include/glo.h"
 #include "include/proto.h"

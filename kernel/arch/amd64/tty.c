@@ -1,5 +1,6 @@
 #include <lib/string.h>
 #include <lib/font.h>
+#include <sys/_null.h>
 
 #include "include/tty.h"
 #include "include/keyboard.h"
@@ -187,7 +188,6 @@ cdev_s * find_tty()
 	cdev_s * cd_tty = kmalloc(sizeof(cdev_s));
 	list_init(&cd_tty->cdev_list, cd_tty);
 	cd_tty->dev_name = "tty0";
-	cd_tty->dev_nr.main = 0;
-	cd_tty->dev_nr.sub = 0;
+	cd_tty->dev_nr = 0;
 	cd_tty->f_ops = &tty_fops;
 }

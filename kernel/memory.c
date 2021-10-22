@@ -1,7 +1,6 @@
 #include <sys/types.h>
 #include <sys/cdefs.h>
 #include <lib/string.h>
-#include <lib/assert.h>
 #include <lib/utils.h>
 
 #include "arch/amd64/include/archconst.h"

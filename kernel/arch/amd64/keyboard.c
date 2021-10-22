@@ -1,6 +1,6 @@
 #include <lib/string.h>
 #include <sys/cdefs.h>
-#include <lib/stddef.h>
+#include <sys/_null.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
@@ -73,8 +73,8 @@ void init_keyboard()
 	alt_r   = 0;
 
 	register_irq(KEYBOARD_IRQ , &entry , "PS/2 keyboard",
-					(unsigned long)p_kb, &keyboard_int_controller,
-					&keyboard_handler);
+				 (unsigned long)p_kb, &keyboard_int_controller,
+				 &keyboard_handler);
 
 	list_hdr_init(&kbd_wqhdr);
 }

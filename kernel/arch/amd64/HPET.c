@@ -1,6 +1,6 @@
 #include <lib/string.h>
 #include <sys/cdefs.h>
-#include <lib/stddef.h>
+#include <sys/_null.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
@@ -69,7 +69,7 @@ void HPET_init()
 	entry.dst.physical.reserved2 = 0;
 
 	register_irq(HPET_TIMER0_IRQ, &entry , "HPET0",
-				 NULL, &HPET_int_controller,
+				 0, &HPET_int_controller,
 				 &HPET_handler);
 	
 	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)HPET_addr);
