@@ -1,8 +1,13 @@
 /*-
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * Copyright (c) 1990, 1993
+ * Copyright (c) 1992, 1993
  *	The Regents of the University of California.  All rights reserved.
+ * (c) UNIX System Laboratories, Inc.
+ * All or some portions of this file are derived from material licensed
+ * to the University of California by American Telephone and Telegraph
+ * Co. or Unix System Laboratories, Inc. and are reproduced herein with
+ * the permission of UNIX System Laboratories, Inc.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,58 +33,48 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)stddef.h	8.1 (Berkeley) 6/2/93
- *
+ *	@(#)assert.h	8.2 (Berkeley) 1/21/94
  * $FreeBSD$
  */
 
-#ifndef _STDDEF_H_
-#define _STDDEF_H_
-
 #include <sys/cdefs.h>
-#include <sys/_null.h>
-#include <sys/_types.h>
 
-	#ifndef _PTRDIFF_T_DECLARED
-	typedef	__ptrdiff_t	ptrdiff_t;
-	#define	_PTRDIFF_T_DECLARED
-	#endif
+/*
+ * Unlike other ANSI header files, <assert.h> may usefully be included
+ * multiple times, with and without NDEBUG defined.
+ */
 
-	#if __BSD_VISIBLE
-	#ifndef _RUNE_T_DECLARED
-	typedef	__rune_t	rune_t;
-	#define	_RUNE_T_DECLARED
-	#endif
-	#endif
+#undef assert
+#undef _assert
 
-	#ifndef _SIZE_T_DECLARED
-	typedef	__size_t	size_t;
-	#define	_SIZE_T_DECLARED
-	#endif
+#ifdef NDEBUG
+#define	assert(e)	((void)0)
+#define	_assert(e)	((void)0)
+#else
+#define	_assert(e)	assert(e)
 
-	#ifndef	__cplusplus
-	#ifndef _WCHAR_T_DECLARED
-	typedef	___wchar_t	wchar_t;
-	#define	_WCHAR_T_DECLARED
-	#endif
-	#endif
+#define	assert(e)	((e) ? (void)0 : __assert(__func__, __FILE__, \
+			    __LINE__, #e))
+#endif /* NDEBUG */
 
-	#if __ISO_C_VISIBLE >= 2011 || __cplusplus >= 201103L
-	#ifndef __CLANG_MAX_ALIGN_T_DEFINED
-	typedef	__max_align_t	max_align_t;
-	#define __CLANG_MAX_ALIGN_T_DEFINED
-	#define _GCC_MAX_ALIGN_T
-	#endif
-	#endif
+#ifndef _ASSERT_H_
+#define _ASSERT_H_
 
-	#define	offsetof(type, field)	__offsetof(type, field)
+/*
+ * Static assertions.  In principle we could define static_assert for
+ * C++ older than C++11, but this breaks if _Static_assert is
+ * implemented as a macro.
+ *
+ * C++ template parameters may contain commas, even if not enclosed in
+ * parentheses, causing the _Static_assert macro to be invoked with more
+ * than two parameters.
+ */
+#if __ISO_C_VISIBLE >= 2011 && !defined(__cplusplus)
+#define	static_assert	_Static_assert
+#endif
 
-	#if __EXT1_VISIBLE
-	/* ISO/IEC 9899:2011 K.3.3.2 */
-	#ifndef _RSIZE_T_DEFINED
-	#define _RSIZE_T_DEFINED
-	typedef size_t rsize_t;
-	#endif
-	#endif /* __EXT1_VISIBLE */
+__BEGIN_DECLS
+void __assert(const char *, const char *, int, const char *) __dead2;
+__END_DECLS
 
-#endif /* _STDDEF_H_ */
+#endif /* !_ASSERT_H_ */

@@ -1,7 +1,7 @@
 #include <sys/_null.h>
 
 #include <string.h>
-#include <stddef.h>
+#include <stdbool.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"
@@ -124,7 +124,7 @@ int do_COW(task_s * task, virt_addr virt)
 
 int check_addr_writable(reg_t cr2, task_s * task)
 {
-	int ret_val = FALSE;
+	int ret_val = false;
 	mm_s * mm = task->mm_struct;
 	reg_t rsp = get_stackframe(task)->rsp;
 
@@ -132,7 +132,7 @@ int check_addr_writable(reg_t cr2, task_s * task)
 		(cr2 > mm->start_bss && cr2 < mm->end_bss) ||
 		(cr2 > mm->start_brk && cr2 < mm->end_brk) ||
 		(cr2 > rsp && cr2 < mm->start_stack))
-		ret_val = TRUE;
+		ret_val = true;
 
 	return ret_val;
 }

@@ -44,11 +44,10 @@
 	#define LEFT		16		/* left justified */
 	#define SPECIAL		32		/* 0x */
 	#define SMALL		64		/* use 'abcdef' instead of 'ABCDEF' */
-
 	#define is_digit(c)	((c) >= '0' && (c) <= '9')
-
 	int skip_atoi(const char **s);
 	int do_div(long *num,int base);
+	//
 
 /*
  * The API defined by glibc allows a renderer to take multiple arguments

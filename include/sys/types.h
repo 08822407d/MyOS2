@@ -44,7 +44,7 @@
 
 /* Machine type dependent parameters. */
 // #include <machine/endian.h>
-#include "amd64/include/endian.h"
+#include <sys/amd64/include/endian.h>
 #include <sys/_types.h>
 
 #include <sys/_pthreadtypes.h>

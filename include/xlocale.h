@@ -1,8 +1,11 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
  *
- * Copyright (c) 2002 Mike Barcroft <mike@FreeBSD.org>
+ * Copyright (c) 2011, 2012 The FreeBSD Foundation
  * All rights reserved.
+ *
+ * This software was developed by David Chisnall under sponsorship from
+ * the FreeBSD Foundation.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,46 +31,57 @@
  * $FreeBSD$
  */
 
-#ifndef _STRINGS_H_
-#define	_STRINGS_H_
+#ifndef _XLOCALE_H_
+#define _XLOCALE_H_
 
-#include <sys/cdefs.h>
-#include <sys/_types.h>
+#include <locale.h>
+__BEGIN_DECLS
+#include <xlocale/_locale.h>
 
-	#ifndef _SIZE_T_DECLARED
-		typedef	__size_t	size_t;
-		#define	_SIZE_T_DECLARED
-	#endif
+#ifdef _STRING_H_
+#include <xlocale/_string.h>
+#endif
 
-	__BEGIN_DECLS
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		int		bcmp(const void *, const void *, size_t) __pure;	/* LEGACY */
-		void	bcopy(const void *, void *, size_t);			/* LEGACY */
-		void	bzero(void *, size_t);					/* LEGACY */
-	#endif
-	#if __BSD_VISIBLE
-		void	explicit_bzero(void *, size_t);
-	#endif
-	#if __XSI_VISIBLE
-		int		ffs(int) __pure2;
-	#endif
-	#if __BSD_VISIBLE
-		int		ffsl(long) __pure2;
-		int		ffsll(long long) __pure2;
-		int		fls(int) __pure2;
-		int		flsl(long) __pure2;
-		int		flsll(long long) __pure2;
-	#endif
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		char *	index(const char *, int) __pure;			/* LEGACY */
-		char *	rindex(const char *, int) __pure;			/* LEGACY */
-	#endif
-	int		strcasecmp(const char *, const char *) __pure;
-	int		strncasecmp(const char *, const char *, size_t) __pure;
+#ifdef _INTTYPES_H_
+#include <xlocale/_inttypes.h>
+#endif
 
-	#if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
-		#include <xlocale/_strings.h>
-	#endif
-	__END_DECLS
+#ifdef _MONETARY_H_
+#include <xlocale/_monetary.h>
+#endif
 
-#endif /* _STRINGS_H_ */
+#ifdef _STDLIB_H_
+#include <xlocale/_stdlib.h>
+#endif
+
+#ifdef _TIME_H_
+#include <xlocale/_time.h>
+#endif
+
+#ifdef _LANGINFO_H_
+#include <xlocale/_langinfo.h>
+#endif
+
+#ifdef _CTYPE_H_
+#include <xlocale/_ctype.h>
+#endif
+
+#ifdef _WCTYPE_H_
+#define _XLOCALE_WCTYPES 1
+#include <xlocale/_ctype.h>
+#endif
+
+#ifdef _STDIO_H_
+#include <xlocale/_stdio.h>
+#endif
+
+#ifdef _WCHAR_H_
+#include <xlocale/_wchar.h>
+#endif
+
+
+
+struct lconv	*localeconv_l(locale_t);
+__END_DECLS
+
+#endif

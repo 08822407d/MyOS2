@@ -1,7 +1,7 @@
 /*-
  * SPDX-License-Identifier: BSD-3-Clause
  *
- * Copyright (c) 1990, 1993
+ * Copyright (c) 1983, 1993
  *	The Regents of the University of California.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -28,58 +28,56 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- *	@(#)stddef.h	8.1 (Berkeley) 6/2/93
- *
+ *	@(#)tftp.h	8.1 (Berkeley) 6/2/93
  * $FreeBSD$
  */
 
-#ifndef _STDDEF_H_
-#define _STDDEF_H_
+#ifndef _ARPA_TFTP_H_
+#define	_ARPA_TFTP_H_
 
 #include <sys/cdefs.h>
-#include <sys/_null.h>
-#include <sys/_types.h>
 
-	#ifndef _PTRDIFF_T_DECLARED
-	typedef	__ptrdiff_t	ptrdiff_t;
-	#define	_PTRDIFF_T_DECLARED
-	#endif
+/*
+ * Trivial File Transfer Protocol (IEN-133)
+ */
+#define	SEGSIZE		512		/* data segment size */
 
-	#if __BSD_VISIBLE
-	#ifndef _RUNE_T_DECLARED
-	typedef	__rune_t	rune_t;
-	#define	_RUNE_T_DECLARED
-	#endif
-	#endif
+/*
+ * Packet types.
+ */
+#define	RRQ	01			/* read request */
+#define	WRQ	02			/* write request */
+#define	DATA	03			/* data packet */
+#define	ACK	04			/* acknowledgement */
+#define	ERROR	05			/* error code */
+#define	OACK	06			/* option acknowledgement */
 
-	#ifndef _SIZE_T_DECLARED
-	typedef	__size_t	size_t;
-	#define	_SIZE_T_DECLARED
-	#endif
+struct tftphdr {
+	unsigned short	th_opcode;		/* packet type */
+	union {
+		unsigned short	tu_block;	/* block # */
+		unsigned short	tu_code;	/* error code */
+		char	tu_stuff[1];	/* request packet stuff */
+	} __packed th_u;
+	char	th_data[1];		/* data or error string */
+} __packed;
 
-	#ifndef	__cplusplus
-	#ifndef _WCHAR_T_DECLARED
-	typedef	___wchar_t	wchar_t;
-	#define	_WCHAR_T_DECLARED
-	#endif
-	#endif
+#define	th_block	th_u.tu_block
+#define	th_code		th_u.tu_code
+#define	th_stuff	th_u.tu_stuff
+#define	th_msg		th_data
 
-	#if __ISO_C_VISIBLE >= 2011 || __cplusplus >= 201103L
-	#ifndef __CLANG_MAX_ALIGN_T_DEFINED
-	typedef	__max_align_t	max_align_t;
-	#define __CLANG_MAX_ALIGN_T_DEFINED
-	#define _GCC_MAX_ALIGN_T
-	#endif
-	#endif
+/*
+ * Error codes.
+ */
+#define	EUNDEF		0		/* not defined */
+#define	ENOTFOUND	1		/* file not found */
+#define	EACCESS		2		/* access violation */
+#define	ENOSPACE	3		/* disk full or allocation exceeded */
+#define	EBADOP		4		/* illegal TFTP operation */
+#define	EBADID		5		/* unknown transfer ID */
+#define	EEXISTS		6		/* file already exists */
+#define	ENOUSER		7		/* no such user */
+#define	EOPTNEG		8		/* option negotiation failed */
 
-	#define	offsetof(type, field)	__offsetof(type, field)
-
-	#if __EXT1_VISIBLE
-	/* ISO/IEC 9899:2011 K.3.3.2 */
-	#ifndef _RSIZE_T_DEFINED
-	#define _RSIZE_T_DEFINED
-	typedef size_t rsize_t;
-	#endif
-	#endif /* __EXT1_VISIBLE */
-
-#endif /* _STDDEF_H_ */
+#endif /* !_TFTP_H_ */

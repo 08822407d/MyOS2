@@ -1,8 +1,11 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
  *
- * Copyright (c) 2002 Mike Barcroft <mike@FreeBSD.org>
+ * Copyright (c) 2011, 2012 The FreeBSD Foundation
  * All rights reserved.
+ *
+ * This software was developed by David Chisnall under sponsorship from
+ * the FreeBSD Foundation.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,46 +31,31 @@
  * $FreeBSD$
  */
 
-#ifndef _STRINGS_H_
-#define	_STRINGS_H_
+/*
+ * Extended locale versions of the locale-aware functions from stdlib.h.
+ *
+ * Include <stdlib.h> before <xlocale.h> to expose these.
+ */
+double			 atof_l(const char *, locale_t);
+int			 atoi_l(const char *, locale_t);
+long			 atol_l(const char *, locale_t);
+long long		 atoll_l(const char *, locale_t);
+int			 mblen_l(const char *, size_t, locale_t);
+size_t			 mbstowcs_l(wchar_t * __restrict,
+			    const char * __restrict, size_t, locale_t);
+int			 mbtowc_l(wchar_t * __restrict,
+			    const char * __restrict, size_t, locale_t);
+double			 strtod_l(const char *, char **, locale_t);
+float			 strtof_l(const char *, char **, locale_t);
+long			 strtol_l(const char *, char **, int, locale_t);
+long double		 strtold_l(const char *, char **, locale_t);
+long long		 strtoll_l(const char *, char **, int, locale_t);
+unsigned long		 strtoul_l(const char *, char **, int, locale_t);
+unsigned long long	 strtoull_l(const char *, char **, int, locale_t);
+size_t			 wcstombs_l(char * __restrict,
+			    const wchar_t * __restrict, size_t, locale_t);
+int			 wctomb_l(char *, wchar_t, locale_t);
 
-#include <sys/cdefs.h>
-#include <sys/_types.h>
+int			 ___mb_cur_max_l(locale_t);
+#define MB_CUR_MAX_L(x) ((size_t)___mb_cur_max_l(x))
 
-	#ifndef _SIZE_T_DECLARED
-		typedef	__size_t	size_t;
-		#define	_SIZE_T_DECLARED
-	#endif
-
-	__BEGIN_DECLS
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		int		bcmp(const void *, const void *, size_t) __pure;	/* LEGACY */
-		void	bcopy(const void *, void *, size_t);			/* LEGACY */
-		void	bzero(void *, size_t);					/* LEGACY */
-	#endif
-	#if __BSD_VISIBLE
-		void	explicit_bzero(void *, size_t);
-	#endif
-	#if __XSI_VISIBLE
-		int		ffs(int) __pure2;
-	#endif
-	#if __BSD_VISIBLE
-		int		ffsl(long) __pure2;
-		int		ffsll(long long) __pure2;
-		int		fls(int) __pure2;
-		int		flsl(long) __pure2;
-		int		flsll(long long) __pure2;
-	#endif
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		char *	index(const char *, int) __pure;			/* LEGACY */
-		char *	rindex(const char *, int) __pure;			/* LEGACY */
-	#endif
-	int		strcasecmp(const char *, const char *) __pure;
-	int		strncasecmp(const char *, const char *, size_t) __pure;
-
-	#if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
-		#include <xlocale/_strings.h>
-	#endif
-	__END_DECLS
-
-#endif /* _STRINGS_H_ */

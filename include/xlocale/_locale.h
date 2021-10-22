@@ -1,8 +1,11 @@
 /*-
  * SPDX-License-Identifier: BSD-2-Clause-FreeBSD
  *
- * Copyright (c) 2002 Mike Barcroft <mike@FreeBSD.org>
+ * Copyright (c) 2011, 2012 The FreeBSD Foundation
  * All rights reserved.
+ *
+ * This software was developed by David Chisnall under sponsorship from
+ * the FreeBSD Foundation.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -28,46 +31,30 @@
  * $FreeBSD$
  */
 
-#ifndef _STRINGS_H_
-#define	_STRINGS_H_
+#ifndef _XLOCALE_LOCALE_H
+#define _XLOCALE_LOCALE_H
 
-#include <sys/cdefs.h>
-#include <sys/_types.h>
+/* Bit shifting order of LC_*_MASK should match XLC_* and LC_* order. */
+#define LC_COLLATE_MASK  (1<<0)
+#define LC_CTYPE_MASK    (1<<1)
+#define LC_MONETARY_MASK (1<<2)
+#define LC_NUMERIC_MASK  (1<<3)
+#define LC_TIME_MASK     (1<<4)
+#define LC_MESSAGES_MASK (1<<5)
+#define LC_ALL_MASK      (LC_COLLATE_MASK | LC_CTYPE_MASK | LC_MESSAGES_MASK | \
+			  LC_MONETARY_MASK | LC_NUMERIC_MASK | LC_TIME_MASK)
+#define LC_VERSION_MASK  (1<<6)
+#define LC_GLOBAL_LOCALE ((locale_t)-1)
 
-	#ifndef _SIZE_T_DECLARED
-		typedef	__size_t	size_t;
-		#define	_SIZE_T_DECLARED
-	#endif
+#ifndef _LOCALE_T_DEFINED
+#define _LOCALE_T_DEFINED
+typedef struct	_xlocale *locale_t;
+#endif
 
-	__BEGIN_DECLS
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		int		bcmp(const void *, const void *, size_t) __pure;	/* LEGACY */
-		void	bcopy(const void *, void *, size_t);			/* LEGACY */
-		void	bzero(void *, size_t);					/* LEGACY */
-	#endif
-	#if __BSD_VISIBLE
-		void	explicit_bzero(void *, size_t);
-	#endif
-	#if __XSI_VISIBLE
-		int		ffs(int) __pure2;
-	#endif
-	#if __BSD_VISIBLE
-		int		ffsl(long) __pure2;
-		int		ffsll(long long) __pure2;
-		int		fls(int) __pure2;
-		int		flsl(long) __pure2;
-		int		flsll(long long) __pure2;
-	#endif
-	#if __BSD_VISIBLE || __POSIX_VISIBLE <= 200112
-		char *	index(const char *, int) __pure;			/* LEGACY */
-		char *	rindex(const char *, int) __pure;			/* LEGACY */
-	#endif
-	int		strcasecmp(const char *, const char *) __pure;
-	int		strncasecmp(const char *, const char *, size_t) __pure;
+locale_t	 duplocale(locale_t base);
+void		 freelocale(locale_t loc);
+locale_t	 newlocale(int mask, const char *locale, locale_t base);
+const char	*querylocale(int mask, locale_t loc);
+locale_t	 uselocale(locale_t loc);
 
-	#if __POSIX_VISIBLE >= 200809 || defined(_XLOCALE_H_)
-		#include <xlocale/_strings.h>
-	#endif
-	__END_DECLS
-
-#endif /* _STRINGS_H_ */
+#endif /* _XLOCALE_LOCALE_H */

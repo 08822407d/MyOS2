@@ -8,8 +8,6 @@
 
 #include <lib/fcntl.h>
 
-#include <lib/reboot.h>
-
 int main(int argc, const char *argv[])
 {
 	int ret_val = 0;
