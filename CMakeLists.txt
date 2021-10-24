@@ -48,7 +48,9 @@ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
 #===============================================================================================#
 #                                       global files                                            #
 #===============================================================================================#
-include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/kernel)
+include_directories(${PROJECT_SOURCE_DIR}/include 
+                    ${PROJECT_SOURCE_DIR}/kernel 
+                    ${PROJECT_SOURCE_DIR}/sys)
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 #===============================================================================================#

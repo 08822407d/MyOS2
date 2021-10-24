@@ -44,7 +44,6 @@
 	/*
 	 *	definations from MyOS2
 	 */
-	int		open(char *filename, int flags);
 	int		close(int fd);
 	long	lseek(int fd, long offset, int whence);
 	int		fork(void);
