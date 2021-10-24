@@ -4,12 +4,12 @@
 #include <string.h>
 #include <lib/fcntl.h>
 
+#include <include/proto.h>
+#include <include/printk.h>
+
 #include "include/archconst.h"
 #include "include/arch_proto.h"
 #include "include/syscall.h"
-
-#include "../../include/proto.h"
-#include "../../include/printk.h"
 
 
 unsigned long no_system_call(void)

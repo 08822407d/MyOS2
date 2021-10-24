@@ -1,4 +1,4 @@
-#include "../../include/glo.h"
+#include <include/glo.h>
 
 #include "include/arch_proto.h"
 #include "include/device.h"

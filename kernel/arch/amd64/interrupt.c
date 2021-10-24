@@ -1,12 +1,12 @@
 #include <sys/_null.h>
 
+#include <include/proto.h>
+#include <include/printk.h>
+
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
 #include "include/device.h"
-
-#include "../../include/proto.h"
-#include "../../include/printk.h"
 
 extern gate_table_s exception_init_table[];
 

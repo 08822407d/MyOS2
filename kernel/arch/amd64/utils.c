@@ -3,10 +3,10 @@
 
 #include <string.h>
 
+#include <include/printk.h>
+
 #include "include/arch_proto.h"
 #include "include/archconst.h"
-
-#include "../../include/printk.h"
 
 inline __always_inline long verify_area(unsigned char* addr, unsigned long size)
 {

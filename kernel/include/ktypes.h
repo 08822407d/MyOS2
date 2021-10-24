@@ -7,11 +7,9 @@
 
 #include "task.h"
 
-#include "../arch/amd64/include/archconst.h"
-#include "../arch/amd64/include/keyboard.h"
-#include "../arch/amd64/include/multiboot2.h"
-
-#include "../klib/data_structure.h"
+#include <arch/amd64/include/archconst.h>
+#include <arch/amd64/include/keyboard.h>
+#include <arch/amd64/include/multiboot2.h>
 
 	#define MAXMEMZONE		64
 

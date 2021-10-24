@@ -2,10 +2,10 @@
 
 #include <string.h>
 
+#include <include/proto.h>
+
 #include "include/device.h"
 #include "include/tty.h"
-
-#include "../../include/proto.h"
 
 List_hdr_s cdev_lhdr;
 List_hdr_s bdev_lhdr;

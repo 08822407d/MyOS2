@@ -5,7 +5,6 @@
 #include <lib/utils.h>
 
 #include "ktypes.h"
-#include "../klib/data_structure.h"
 		
 	struct timer;
 	typedef struct timer timer_s;	

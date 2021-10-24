@@ -3,15 +3,15 @@
 
 #include <string.h>
 
+#include <include/glo.h>
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/ktypes.h>
+
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
 #include "include/device.h"
-
-#include "../../include/glo.h"
-#include "../../include/printk.h"
-#include "../../include/proto.h"
-#include "../../include/ktypes.h"
 
 #define DIVISOR_2	0x00
 #define DIVISOR_4	0x01

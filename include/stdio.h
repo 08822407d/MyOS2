@@ -141,10 +141,10 @@
 
 		/* operations */
 		void	*_cookie;	/* (*) cookie passed to io functions */
-		// int	(* _Nullable _close)(void *);
-		// int	(* _Nullable _read)(void *, char *, int);
-		// fpos_t	(* _Nullable _seek)(void *, fpos_t, int);
-		// int	(* _Nullable _write)(void *, const char *, int);
+		int	(* _Nullable _close)(void *);
+		int	(* _Nullable _read)(void *, char *, int);
+		fpos_t	(* _Nullable _seek)(void *, fpos_t, int);
+		int	(* _Nullable _write)(void *, const char *, int);
 
 		/* separate buffer for long sequences of ungetc() */
 		struct	__sbuf	_ub;	/* ungetc buffer */

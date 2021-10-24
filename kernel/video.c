@@ -2,17 +2,17 @@
 
 #include <string.h>
 
-#include "include/glo.h"
-#include "include/const.h"
-#include "include/param.h"
-#include "include/proto.h"
-#include "include/ktypes.h"
-#include "include/printk.h"
+#include <include/glo.h>
+#include <include/const.h>
+#include <include/param.h>
+#include <include/proto.h>
+#include <include/ktypes.h>
+#include <include/printk.h>
 
-#include "arch/amd64/include/archconst.h"
-#include "arch/amd64/include/archtypes.h"
-#include "arch/amd64/include/arch_glo.h"
-#include "arch/amd64/include/arch_proto.h"
+#include <arch/amd64/include/archconst.h>
+#include <arch/amd64/include/archtypes.h>
+#include <arch/amd64/include/arch_glo.h>
+#include <arch/amd64/include/arch_proto.h>
 
 extern position_t Pos;
 

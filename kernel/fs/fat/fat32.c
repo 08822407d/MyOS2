@@ -17,12 +17,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "include/vfs.h"
-#include "include/fat32.h"
-#include "include/printk.h"
-#include "include/proto.h"
-
-#include "klib/data_structure.h"
+#include <include/vfs.h>
+#include <include/fat32.h>
+#include <include/printk.h>
+#include <include/proto.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

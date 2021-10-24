@@ -2,8 +2,9 @@
 
 #include <string.h>
 
+#include <include/proto.h>
+
 #include "include/mutex.h"
-#include "../../include/proto.h"
 
 /*==============================================================================================*
  *											spin lock											*

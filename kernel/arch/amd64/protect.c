@@ -3,18 +3,18 @@
 
 #include <string.h>
 
+#include <include/glo.h>
+#include <include/param.h>
+#include <include/proto.h>
+#include <include/ktypes.h>
+#include <include/task.h>
+
 #include "include/arch_glo.h"
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
-
-#include "../../include/glo.h"
-#include "../../include/param.h"
-#include "../../include/proto.h"
-#include "../../include/ktypes.h"
-#include "../../include/task.h"
 
 
 /* Storage for gdt, idt and tss. */

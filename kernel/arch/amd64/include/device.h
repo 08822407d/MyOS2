@@ -3,12 +3,12 @@
 
 #include <sys/types.h>
 
+#include <include/param.h>
+#include <include/vfs.h>
+#include <include/block_dev.h>
+
 #include "arch_proto.h"
 #include "interrupt.h"
-
-#include "../../../include/param.h"
-#include "../../../include/vfs.h"
-#include "../../../include/block_dev.h"
 
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 

@@ -3,17 +3,17 @@
 
 #include <string.h>
 
+#include <include/glo.h>
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/ktypes.h>
+#include <include/wait_queue.h>
+
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
 #include "include/keyboard.h"
 #include "include/device.h"
-
-#include "../../include/glo.h"
-#include "../../include/printk.h"
-#include "../../include/proto.h"
-#include "../../include/ktypes.h"
-#include "../../include/wait_queue.h"
 
 extern wait_queue_hdr_s kbd_wqhdr;
 

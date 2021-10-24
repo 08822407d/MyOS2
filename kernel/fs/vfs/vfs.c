@@ -2,15 +2,14 @@
 
 #include <string.h>
 
-#include "include/printk.h"
-#include "include/proto.h"
-
-#include "include/glo.h"
-#include "include/fat32.h"
-#include "include/ext2.h"
-#include "include/vfs.h"
-#include "include/MBR.h"
-#include "include/GPT.h"
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/glo.h>
+#include <include/fat32.h>
+#include <include/ext2.h>
+#include <include/vfs.h>
+#include <include/MBR.h>
+#include <include/GPT.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

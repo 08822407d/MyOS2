@@ -1,13 +1,13 @@
 #include <string.h>
 
-#include "include/glo.h"
-#include "include/proto.h"
-#include "include/vfs.h"
-#include "include/printk.h"
+#include <include/glo.h>
+#include <include/proto.h>
+#include <include/vfs.h>
+#include <include/printk.h>
 
-#include "arch/amd64/include/arch_proto.h"
-#include "arch/amd64/include/device.h"
-#include "arch/amd64/include/ide.h"
+#include <arch/amd64/include/arch_proto.h>
+#include <arch/amd64/include/device.h>
+#include <arch/amd64/include/ide.h>
 
 extern atomic_T boot_counter;
 

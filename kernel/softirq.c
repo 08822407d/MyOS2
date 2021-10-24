@@ -17,7 +17,7 @@
 #include <string.h>
 #include <stddef.h>
 
-#include "include/proto.h"
+#include <include/proto.h>
 
 uint64_t	softirq_status = 0;
 softirq_s	softirq_vector[64] = {0};

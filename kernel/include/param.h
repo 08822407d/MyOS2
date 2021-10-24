@@ -3,7 +3,8 @@
 #define _OS_PARAM_H 1
 
 #include "ktypes.h"
-#include "../arch/amd64/include/multiboot2.h"
+
+#include <arch/amd64/include/multiboot2.h>
 
 /* Number of processes contained in the system image. */
 #define NR_BOOT_PROCS   (NR_TASKS + LAST_SPECIAL_PROC_NR + 1)

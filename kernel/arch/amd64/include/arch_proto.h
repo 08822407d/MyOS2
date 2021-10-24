@@ -2,10 +2,11 @@
 #define _AMD64_PROTO_H_
 
 #include <sys/types.h>
+
+#include "include/vfs.h"
+
 #include "archtypes.h"
 #include "archconst.h"
-
-#include "../../../include/vfs.h"
 
 /*==============================================================================================*
  *										external symbols							 			*

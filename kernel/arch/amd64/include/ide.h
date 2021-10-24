@@ -17,10 +17,9 @@
 
 #include <sys/types.h>
 
-#include "mutex.h"
+#include <include/block_dev.h>
 
-#include "../../../include/block_dev.h"
-#include "../../../klib/data_structure.h"
+#include "mutex.h"
 
 	#define PORT_DISK0_DATA			0x1f0
 	#define	PORT_DISK0_ERR_FEATURE	0x1f1

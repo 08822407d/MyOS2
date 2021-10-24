@@ -1,18 +1,15 @@
 #include <string.h>
 
-#include "include/glo.h"
-#include "include/proto.h"
-#include "include/task.h"
-#include "include/printk.h"
-#include "include/vfs.h"
+#include <include/glo.h>
+#include <include/proto.h>
+#include <include/task.h>
+#include <include/printk.h>
+#include <include/vfs.h>
 
-#include "arch/amd64/include/arch_proto.h"
-#include "arch/amd64/include/archtypes.h"
-#include "arch/amd64/include/apic.h"
-#include "arch/amd64/include/device.h"
-
-#include "klib/data_structure.h"
-
+#include <arch/amd64/include/arch_proto.h>
+#include <arch/amd64/include/archtypes.h>
+#include <arch/amd64/include/apic.h>
+#include <arch/amd64/include/device.h>
 
 atomic_T boot_counter;
 

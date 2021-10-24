@@ -70,7 +70,7 @@
 	/* different irqs in i8259 and apic */
 	#define I8259_CASCADE_IRQ			2		/* casade enable for 2nd AT controller */
 
-	#ifndef USE_APIC	// Then use i8259a
+	#ifdef USE_I8259	// Then use i8259a
 		#define NR_IRQ_VECS				16
 		#define HWINT0_VEC				I8259_IRQ0_VEC
 		#define VECTOR_IRQ(irq)			(irq + I8259_IRQ0_VEC)

@@ -1,6 +1,6 @@
-#include "arch/amd64/asm.h"
+#include <arch/amd64/asm.h>
 
-#include "../../include/const.h"
+#include <include/const.h>
 
 .code64
 .balign 8

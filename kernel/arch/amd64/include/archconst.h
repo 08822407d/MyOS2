@@ -1,7 +1,7 @@
 #ifndef _AMD64_ACONST_H_
 #define _AMD64_ACONST_H_ 1
 
-#include "../../../include/const.h"
+#include <include/const.h>
 
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		256

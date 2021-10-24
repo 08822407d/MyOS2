@@ -1,5 +1,6 @@
-#include "arch/amd64/asm.h"
-#include "../../include/const.h"
+#include <arch/amd64/asm.h>
+
+#include <include/const.h>
 
 .balign	0x1000
 .text

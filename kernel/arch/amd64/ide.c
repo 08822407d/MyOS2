@@ -2,16 +2,16 @@
 
 #include <string.h>
 
+#include <include/proto.h>
+#include <include/printk.h>
+#include <include/block_dev.h>
+#include <include/task.h>
+
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
 #include "include/apic.h"
 #include "include/device.h"
 #include "include/ide.h"
-
-#include "../../include/proto.h"
-#include "../../include/printk.h"
-#include "../../include/block_dev.h"
-#include "../../include/task.h"
 
 #define IDE_IDX		0
 #define DISK_IDX	1

@@ -3,15 +3,15 @@
 #include <string.h>
 #include <lib/font.h>
 
+#include <include/vfs.h>
+#include <include/proto.h>
+#include <include/wait_queue.h>
+#include <include/printk.h>
+
 #include "include/tty.h"
 #include "include/keyboard.h"
 #include "include/device.h"
 #include "include/mutex.h"
-
-#include "../../include/vfs.h"
-#include "../../include/proto.h"
-#include "../../include/wait_queue.h"
-#include "../../include/printk.h"
 
 position_t Pos;
 wait_queue_hdr_s kbd_wqhdr;

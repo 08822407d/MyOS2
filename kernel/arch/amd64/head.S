@@ -1,4 +1,4 @@
-#include "arch/amd64/asm.h"
+#include <arch/amd64/asm.h>
 
 #define ASM_FILE 1
 #include "include/multiboot2.h"

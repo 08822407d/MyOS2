@@ -12,16 +12,17 @@
 *
 *
 ***************************************************/
-
 #ifndef _AMD64_APIC_H_
 #define _AMD64_APIC_H_
 
 #include <sys/types.h>
 #include <sys/cdefs.h>
+
 #include <lib/utils.h>
 
-#include "archtypes.h"
-#include "../../../include/ktypes.h"
+#include <include/ktypes.h>
+
+#include "archconst.h"
 
 	/*
 	32  ~   55	I/O APIC

@@ -2,15 +2,15 @@
 
 #include <string.h>
 
+#include <include/param.h>
+#include <include/glo.h>
+#include <include/ktypes.h>
+
 #include "include/bootinfo.h"
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/multiboot2.h"
-
-#include "../../include/param.h"
-#include "../../include/glo.h"
-#include "../../include/ktypes.h"
 
 extern char _k_phys_start;
 extern char _k_virt_start;

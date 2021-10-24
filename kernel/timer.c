@@ -1,12 +1,11 @@
 #include <stddef.h>
 #include <lib/utils.h>
 
-#include "arch/amd64/include/interrupt.h"
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/glo.h>
 
-#include "include/printk.h"
-#include "include/proto.h"
-#include "include/glo.h"
-#include "klib/data_structure.h"
+#include <arch/amd64/include/interrupt.h>
 
 unsigned long volatile jiffies = 0;
 List_hdr_s	timer_lhdr;

@@ -5,8 +5,8 @@
 #include <lib/utils.h>
 
 #include "const.h"
-#include "../arch/amd64/include/arch_task.h"
-#include "../klib/data_structure.h"
+
+#include <arch/amd64/include/arch_task.h>
 
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)

@@ -1,17 +1,16 @@
 #include <string.h>
 #include <stddef.h>
 
+#include <include/glo.h>
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/const.h>
+#include <include/task.h>
+
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/arch_glo.h"
 #include "include/mutex.h"
-
-#include "../../include/glo.h"
-#include "../../include/printk.h"
-#include "../../include/proto.h"
-#include "../../include/const.h"
-#include "../../include/task.h"
-#include "../../klib/data_structure.h"
 
 extern PCB_u	task0_PCB;
 

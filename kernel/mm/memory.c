@@ -4,18 +4,18 @@
 #include <string.h>
 #include <lib/utils.h>
 
-#include "arch/amd64/include/archconst.h"
-#include "arch/amd64/include/archtypes.h"
-#include "arch/amd64/include/arch_glo.h"
-#include "arch/amd64/include/arch_proto.h"
+#include <arch/amd64/include/archconst.h>
+#include <arch/amd64/include/archtypes.h>
+#include <arch/amd64/include/arch_glo.h>
+#include <arch/amd64/include/arch_proto.h>
 
-#include "include/param.h"
-#include "include/ktypes.h"
-#include "include/const.h"
-#include "include/proto.h"
-#include "include/printk.h"
+#include <include/param.h>
+#include <include/ktypes.h>
+#include <include/const.h>
+#include <include/proto.h>
+#include <include/printk.h>
 
-#include "klib/data_structure.h"
+#include <klib/data_structure.h>
 
 extern kinfo_s kparam;
 

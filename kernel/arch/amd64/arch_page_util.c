@@ -3,17 +3,17 @@
 
 #include <string.h>
 
+#include <include/glo.h>
+#include <include/proto.h>
+#include <include/param.h>
+#include <include/ktypes.h>
+#include <include/const.h>
+#include <include/printk.h>
+
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"
-
-#include "../../include/glo.h"
-#include "../../include/proto.h"
-#include "../../include/param.h"
-#include "../../include/ktypes.h"
-#include "../../include/const.h"
-#include "../../include/printk.h"
 
 /* Storage for PML4, PDPT and PD. */
 PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
