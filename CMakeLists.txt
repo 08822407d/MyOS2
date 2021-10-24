@@ -18,6 +18,7 @@ elseif(CMAKE_HOST_UNIX)
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
 
 #===============================================================================================#
 #                                   global options                                              #
@@ -48,16 +49,24 @@ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
 #                                       global files                                            #
 #===============================================================================================#
 include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/kernel)
-file(GLOB LIB_C_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.c ${PROJECT_SOURCE_DIR}/lib/utils/*.c ${PROJECT_SOURCE_DIR}/lib/string/*.c)
-file(GLOB LIB_ASM_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.S ${PROJECT_SOURCE_DIR}/lib/utils/*.S ${PROJECT_SOURCE_DIR}/lib/string/*.S)
-file(GLOB USER_LIB_S_SRCS ${PROJECT_SOURCE_DIR}/lib/user_only/*.c)
+link_directories(${LIBRARY_OUTPUT_PATH})
+# file(GLOB LIB_C_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.c ${PROJECT_SOURCE_DIR}/lib/utils/*.c ${PROJECT_SOURCE_DIR}/lib/string/*.c)
+# file(GLOB LIB_ASM_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.S ${PROJECT_SOURCE_DIR}/lib/utils/*.S ${PROJECT_SOURCE_DIR}/lib/string/*.S)
+# file(GLOB USER_LIB_S_SRCS ${PROJECT_SOURCE_DIR}/lib/user_only/*.c)
+
+#===============================================================================================#
+#                                       libc.a                                                  #
+#===============================================================================================#
+add_subdirectory(lib)
 
 #===============================================================================================#
 #                                       kernel.bin                                              #
 #===============================================================================================#
 add_subdirectory(kernel)
+target_link_libraries(kernel mylibc)
 
 #===============================================================================================#
 #                                       init.bin                                                #
 #===============================================================================================#
 add_subdirectory(initd)
+target_link_libraries(init mylibc)

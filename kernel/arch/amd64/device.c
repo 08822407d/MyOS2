@@ -75,9 +75,7 @@ dirent_s * creat_append_devdirent(char * name, dirent_s * parent)
 
 void init_intr_dev()
 {
-	#ifdef USE_APIC
-		HPET_init();
-	#endif
+	HPET_init();
 }
 
 void init_char_dev()

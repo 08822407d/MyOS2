@@ -3,8 +3,8 @@
 if [ "$(uname)" == "Darwin" ]; then
     echo "Working on MAC"
     # hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount ../myos_vdisk-flat.vmdk
-    x86_64-elf-objcopy --only-keep-debug system kernel.debug
-    x86_64-elf-objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
+    x86_64-elf-objcopy --only-keep-debug kernel kernel.debug
+    x86_64-elf-objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
     sudo mount -t msdos /dev/disk2s1 /Users/cheyuho/mount
     cp ./kernel.bin ~/mount/kernel.bin
     sync
@@ -13,8 +13,8 @@ if [ "$(uname)" == "Darwin" ]; then
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     echo "Working on Linux"
     # generate kernel debug file and bin
-    objcopy --only-keep-debug system kernel.debug
-    objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary system kernel.bin
+    objcopy --only-keep-debug kernel kernel.debug
+    objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
     # generate init debug file and bin
     objcopy --only-keep-debug init init.debug
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary init init.bin
@@ -25,7 +25,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     sync
     sleep 1
     sudo umount /mnt
-    objdump -S system > k_dasm.txt
+    objdump -S kernel > k_dasm.txt
     objdump -S init > u_dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     echo "Working on MinGW"

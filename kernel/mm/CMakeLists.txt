@@ -1,2 +1,2 @@
 file(GLOB MM_C_SRCS *.c)
-target_sources(system PRIVATE ${MM_C_SRCS})
+target_sources(kernel PRIVATE ${MM_C_SRCS})
