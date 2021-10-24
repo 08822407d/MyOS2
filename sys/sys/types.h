@@ -47,7 +47,7 @@
 #include <sys/amd64/include/endian.h>
 #include <sys/_types.h>
 
-#include <sys/_pthreadtypes.h>
+// #include <sys/_pthreadtypes.h>
 
 	/*
 	 *	definations for MyOS2
@@ -384,7 +384,7 @@ __bitcount64(__uint64_t _x)
 
 #if __BSD_VISIBLE
 
-#include <sys/select.h>
+// #include <sys/select.h>
 
 /*
  * The major and minor numbers are encoded in dev_t as MMMmmmMm (where

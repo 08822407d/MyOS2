@@ -573,7 +573,7 @@
 	int	 ruserok(const char *, int, const char *, const char *);
 	#ifndef _SELECT_DECLARED
 	#define	_SELECT_DECLARED
-	int	 select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
+	// int	 select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 	#endif
 	int	 setdomainname(const char *, int);
 	int	 setgroups(int, const gid_t *);

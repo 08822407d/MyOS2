@@ -32,7 +32,7 @@
 #define _PRINTF_H_
 
 #include <stdio.h>
-#include <wchar.h>
+// #include <wchar.h>
 
 	/*
 	 *	definations from MyOS2
@@ -64,7 +64,7 @@
 		/* GLIBC compatible */
 		int			prec;
 		int			width;
-		wchar_t		spec;
+		// wchar_t		spec;
 		unsigned	is_long_double;
 		unsigned	is_char;
 		unsigned	is_short;
@@ -76,7 +76,7 @@
 		unsigned	group;
 		unsigned	extra;
 		unsigned	wide;
-		wchar_t		pad;
+		// wchar_t		pad;
 
 		/* FreeBSD extensions */
 		unsigned	is_quad;

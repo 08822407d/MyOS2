@@ -6,8 +6,6 @@ file(GLOB KERNEL_ASM_SRCS *.S)
 add_executable(kern)
 target_sources(kern PRIVATE ${KERNEL_C_SRCS})
 target_sources(kern PRIVATE ${KERNEL_ASM_SRCS})
-target_sources(kern PRIVATE ${LIB_C_SRCS})
-target_sources(kern PRIVATE ${LIB_ASM_SRCS})
 
 add_subdirectory(arch)
 add_subdirectory(mm)
