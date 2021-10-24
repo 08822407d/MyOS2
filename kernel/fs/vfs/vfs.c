@@ -1,5 +1,3 @@
-#include <sys/errno.h>
-
 #include <string.h>
 
 #include <include/printk.h>

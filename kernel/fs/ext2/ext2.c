@@ -1,7 +1,5 @@
 #include <stdio.h>
 
-#include <sys/errno.h>
-
 #include <include/vfs.h>
 #include <include/ext2.h>
 #include <include/printk.h>

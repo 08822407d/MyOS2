@@ -50,9 +50,6 @@ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
 #===============================================================================================#
 include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/kernel)
 link_directories(${LIBRARY_OUTPUT_PATH})
-file(GLOB LIB_C_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.c ${PROJECT_SOURCE_DIR}/lib/utils/*.c ${PROJECT_SOURCE_DIR}/lib/string/*.c)
-file(GLOB LIB_ASM_SRCS ${PROJECT_SOURCE_DIR}/lib/sys/*.S ${PROJECT_SOURCE_DIR}/lib/utils/*.S ${PROJECT_SOURCE_DIR}/lib/string/*.S)
-file(GLOB USER_LIB_S_SRCS ${PROJECT_SOURCE_DIR}/lib/user_only/*.c)
 
 #===============================================================================================#
 #                                       libc.a                                                  #
@@ -69,4 +66,4 @@ target_link_libraries(kern mylibc)
 #                                       init.bin                                                #
 #===============================================================================================#
 add_subdirectory(initd)
-target_link_libraries(init mylibc)
+target_link_libraries(init mylibc mycrt)
