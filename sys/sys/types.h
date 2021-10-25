@@ -48,16 +48,6 @@
 
 // #include <sys/_pthreadtypes.h>
 
-	/*
-	 *	definations for MyOS2
-	 */
-	typedef __UINT64_TYPE__ reg_t;
-	typedef __UINT64_TYPE__ bitmap_t;
-	#define BITMAP_UNITSIZE 64
-	typedef void*	phys_addr;
-	typedef void*	virt_addr;
-
-
 #if __BSD_VISIBLE
 typedef	unsigned char	u_char;
 typedef	unsigned short	u_short;

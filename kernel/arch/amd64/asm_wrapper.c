@@ -1,4 +1,4 @@
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
 
 #include "include/arch_proto.h"
@@ -98,7 +98,7 @@ inline __always_inline uint64_t rdmsr(uint64_t msr_addr)
 	return (unsigned long)tmp0<<32 | tmp1;
 }
 
-inline __always_inline void wrmsr(uint64_t msr_addr,uint64_t value)
+inline __always_inline void wrmsr(uint64_t msr_addr, uint64_t value)
 {
 	__asm__ __volatile__(	"wrmsr		\n\t"
 						:

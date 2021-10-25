@@ -9,7 +9,7 @@
 #ifndef _MRB_H_
 #define _MRB_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 
 typedef struct Disk_Partition_Table_Entry
 {

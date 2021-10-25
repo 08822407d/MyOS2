@@ -1,3 +1,0 @@
-file(GLOB LIBC_GEN_C_SRCS *.c)
-file(GLOB LIBC_GEN_ASM_SRCS *.S)
-target_sources(mylibc PUBLIC ${LIBC_GEN_C_SRCS} ${LIBC_GEN_ASM_SRCS})

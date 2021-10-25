@@ -7,7 +7,7 @@
 *
 ***************************************************/
 #include <sys/syscall.h>
-#include <sys/errno.h>
+#include <errno.h>
 
 #define SYSFUNC_DEF(name)						\
 			_SYSFUNC_DEF_(name, __NR_##name)
@@ -69,7 +69,7 @@ __asm__	(
 	"popq	%r10							\n\t"
 	"cmpq	$-0x1000,	%rax				\n\t"
 	"jb	LABEL_SYSCALL_RET					\n\t"
-	"movq	%rax,	errno(%rip)				\n\t"
+	// "movq	%rax,	errno(%rip)				\n\t"
 	"orq	$-1,	%rax					\n\t"
 	"LABEL_SYSCALL_RET:						\n\t"
 	"leaveq									\n\t"

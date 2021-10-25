@@ -1,7 +1,7 @@
 #ifndef _AMD64_PC_DEVICE_H_
 #define _AMD64_PC_DEVICE_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 
 #include <include/param.h>
 #include <include/vfs.h>

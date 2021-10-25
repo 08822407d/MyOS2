@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #include "../include/task.h"
 
 #include "../include/wait_queue.h"

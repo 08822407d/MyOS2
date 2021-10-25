@@ -1,5 +1,3 @@
-#include <string.h>
-
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/task.h>

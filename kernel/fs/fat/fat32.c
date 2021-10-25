@@ -12,7 +12,7 @@
 *
 *
 ***************************************************/
-#include <sys/errno.h>
+#include <errno.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -25,7 +25,7 @@
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
 
-unsigned int FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, unsigned int fat_entry)
+uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 {
 	unsigned int buf[128];
 	memset(buf, 0, 512);
@@ -34,7 +34,7 @@ unsigned int FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, unsigned int fat_entry)
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
 
-unsigned long FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, unsigned int fat_entry, unsigned int value)
+uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value)
 {
 	unsigned int buf[128];
 	int i;
@@ -114,7 +114,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 	return ret_val;
 }
 
-unsigned long FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
+uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 {
 	int i,j;
 	int fat_entry;

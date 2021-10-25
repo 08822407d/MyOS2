@@ -1,9 +1,10 @@
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
 #include <sys/_null.h>
-#include <sys/errno.h>
+#include <errno.h>
 
 #include <string.h>
+#include <stddef.h>
 #include <lib/utils.h>
 #include <lib/fcntl.h>
 

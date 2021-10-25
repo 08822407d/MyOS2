@@ -36,7 +36,7 @@
 #define	_UNISTD_H_
 
 #include <sys/cdefs.h>
-#include <sys/types.h>			/* XXX adds too much pollution. */
+#include <stdint.h>			/* XXX adds too much pollution. */
 #include <sys/unistd.h>
 #include <sys/_null.h>
 #include <sys/_types.h>

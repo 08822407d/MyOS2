@@ -153,7 +153,7 @@
 
 // #ifndef _KERNEL
 
-#include <sys/types.h>
+#include <stdint.h>
 
 __BEGIN_DECLS
 struct __siginfo;

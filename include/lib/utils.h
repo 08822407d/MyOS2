@@ -1,7 +1,7 @@
 #ifndef _LIB_UTILS_H_
 #define _LIB_UTILS_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);
 	void bm_clear_bit(bitmap_t *, unsigned long idx);
@@ -9,12 +9,6 @@
 	unsigned bm_get_assigned_bit(bitmap_t * bm, unsigned long idx);
 
 	// list.c
-	#define container_of(member_ptr, container_type, member_name)										\
-	({																									\
-		typeof(((container_type *)0)->member_name) * p = (member_ptr);									\
-		(container_type *)((unsigned long)p - (unsigned long)&(((container_type *)0)->member_name));	\
-	})
-
 	struct List;
 	typedef struct List List_s;
 	typedef struct List

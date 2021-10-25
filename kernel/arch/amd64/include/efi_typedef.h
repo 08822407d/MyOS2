@@ -1,7 +1,7 @@
 #ifndef _EFI_TYPEDEF_H_
 #define _EFI_TYPEDEF_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 
 	typedef uint32_t	UINT32;
 	typedef uint64_t	UINT64;

@@ -1,4 +1,4 @@
-#include <sys/errno.h>
+#include <errno.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -10,7 +10,6 @@
 #include "include/archconst.h"
 #include "include/arch_proto.h"
 #include "include/syscall.h"
-
 
 unsigned long no_system_call(void)
 {
@@ -167,7 +166,7 @@ unsigned long sys_write(int fd,void * buf,long count)
 }
 
 
-unsigned long sys_lseek(int filds,long offset,int whence)
+unsigned long sys_lseek(int filds, long offset, int whence)
 {
 	struct file * fp = NULL;
 	unsigned long ret = 0;

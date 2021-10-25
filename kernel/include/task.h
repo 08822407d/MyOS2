@@ -1,7 +1,7 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 #include <lib/utils.h>
 
 #include "const.h"

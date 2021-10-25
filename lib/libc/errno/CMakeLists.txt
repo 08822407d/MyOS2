@@ -1,0 +1,3 @@
+file(GLOB LIBC_ERRNO_C_SRCS *.c)
+file(GLOB LIBC_ERRNO_ASM_SRCS *.S)
+target_sources(mylibc PUBLIC ${LIBC_ERRNO_C_SRCS} ${LIBC_ERRNO_ASM_SRCS})

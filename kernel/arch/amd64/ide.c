@@ -1,6 +1,7 @@
 #include <sys/_null.h>
 
 #include <string.h>
+#include <stddef.h>
 
 #include <include/proto.h>
 #include <include/printk.h>

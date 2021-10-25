@@ -1,7 +1,7 @@
 #ifndef _AMD64_PROTO_H_
 #define _AMD64_PROTO_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 
 #include "include/vfs.h"
 
@@ -258,7 +258,7 @@
 	void insw(uint16_t port, uint16_t * buffer, uint64_t nr);
 	void outsw(uint16_t port, uint16_t * buffer, uint64_t nr);
 	uint64_t rdmsr(uint64_t msr_addr);
-	void wrmsr(unsigned long msr_addr,unsigned long value);
+	void wrmsr(uint64_t msr_addr, uint64_t value);
 	void io_mfence(void);
 	void nop(void);
 	void hlt(void);

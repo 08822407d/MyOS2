@@ -1,7 +1,7 @@
 #ifndef _BOOTINFO_H_
 #define _BOOTINFO_H_
 
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/cdefs.h>
 
 #include "efi_typedef.h"
