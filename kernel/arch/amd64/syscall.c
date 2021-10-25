@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <lib/fcntl.h>
+#include <sys/fcntl.h>
 
 #include <include/proto.h>
 #include <include/printk.h>

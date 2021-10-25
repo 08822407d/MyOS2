@@ -5,27 +5,28 @@
 extern "C" {
 #endif
 
-#include <arch/amd64/spinlock.h>
+// #include <arch/amd64/spinlock.h>
+#include <arch/amd64/types.h>
 
-struct fifo_t {
-	unsigned char * buffer;
-	unsigned int size;
-	unsigned int in;
-	unsigned int out;
-	spinlock_t lock;
-};
+	struct fifo_t {
+		unsigned char * buffer;
+		unsigned int size;
+		unsigned int in;
+		unsigned int out;
+		spinlock_t lock;
+	};
 
-void __fifo_reset(struct fifo_t * f);
-unsigned int __fifo_len(struct fifo_t * f);
-unsigned int __fifo_put(struct fifo_t * f, unsigned char * buf, unsigned int len);
-unsigned int __fifo_get(struct fifo_t * f, unsigned char * buf, unsigned int len);
+	void __fifo_reset(struct fifo_t * f);
+	unsigned int __fifo_len(struct fifo_t * f);
+	unsigned int __fifo_put(struct fifo_t * f, unsigned char * buf, unsigned int len);
+	unsigned int __fifo_get(struct fifo_t * f, unsigned char * buf, unsigned int len);
 
-struct fifo_t * fifo_alloc(unsigned int size);
-void fifo_free(struct fifo_t * f);
-void fifo_reset(struct fifo_t * f);
-unsigned int fifo_len(struct fifo_t * f);
-unsigned int fifo_put(struct fifo_t * f, unsigned char * buf, unsigned int len);
-unsigned int fifo_get(struct fifo_t * f, unsigned char * buf, unsigned int len);
+	struct fifo_t * fifo_alloc(unsigned int size);
+	void fifo_free(struct fifo_t * f);
+	void fifo_reset(struct fifo_t * f);
+	unsigned int fifo_len(struct fifo_t * f);
+	unsigned int fifo_put(struct fifo_t * f, unsigned char * buf, unsigned int len);
+	unsigned int fifo_get(struct fifo_t * f, unsigned char * buf, unsigned int len);
 
 #ifdef __cplusplus
 }

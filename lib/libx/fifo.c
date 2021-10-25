@@ -2,10 +2,10 @@
  * libx/fifo.c
  */
 
+// #include <arch/amd64/spinlock.h>
 #include <arch/amd64/barrier.h>
-#include <arch/amd64/spinlock.h>
 #include <stddef.h>
-#include <log2.h>
+// #include <log2.h>
 #include <string.h>
 #include <malloc.h>
 #include <fifo.h>
@@ -54,8 +54,8 @@ struct fifo_t * fifo_alloc(unsigned int size)
 {
 	struct fifo_t * f;
 
-	if(size & (size - 1))
-		size = roundup_pow_of_two(size);
+	// if(size & (size - 1))
+	// 	size = roundup_pow_of_two(size);
 
 	f = malloc(sizeof(struct fifo_t));
 	if(!f)
@@ -70,7 +70,7 @@ struct fifo_t * fifo_alloc(unsigned int size)
 	f->size = size;
 	f->in = 0;
 	f->out = 0;
-	spin_lock_init(&f->lock);
+	// spin_lock_init(&f->lock);
 
 	return f;
 }
@@ -88,9 +88,9 @@ void fifo_reset(struct fifo_t * f)
 {
 	irq_flags_t flags;
 
-	spin_lock_irqsave(&f->lock, flags);
+	// spin_lock_irqsave(&f->lock, flags);
 	__fifo_reset(f);
-	spin_unlock_irqrestore(&f->lock, flags);
+	// spin_unlock_irqrestore(&f->lock, flags);
 }
 
 unsigned int fifo_len(struct fifo_t * f)
@@ -98,9 +98,9 @@ unsigned int fifo_len(struct fifo_t * f)
 	irq_flags_t flags;
 	unsigned int ret;
 
-	spin_lock_irqsave(&f->lock, flags);
+	// spin_lock_irqsave(&f->lock, flags);
 	ret = __fifo_len(f);
-	spin_unlock_irqrestore(&f->lock, flags);
+	// spin_unlock_irqrestore(&f->lock, flags);
 
 	return ret;
 }
@@ -110,9 +110,9 @@ unsigned int fifo_put(struct fifo_t * f, unsigned char * buf, unsigned int len)
 	irq_flags_t flags;
 	unsigned int ret;
 
-	spin_lock_irqsave(&f->lock, flags);
+	// spin_lock_irqsave(&f->lock, flags);
 	ret = __fifo_put(f, buf, len);
-	spin_unlock_irqrestore(&f->lock, flags);
+	// spin_unlock_irqrestore(&f->lock, flags);
 
 	return ret;
 }
@@ -122,11 +122,11 @@ unsigned int fifo_get(struct fifo_t * f, unsigned char * buf, unsigned int len)
 	irq_flags_t flags;
 	unsigned int ret;
 
-	spin_lock_irqsave(&f->lock, flags);
+	// spin_lock_irqsave(&f->lock, flags);
 	ret = __fifo_get(f, buf, len);
 	if(f->in == f->out)
 		f->in = f->out = 0;
-	spin_unlock_irqrestore(&f->lock, flags);
+	// spin_unlock_irqrestore(&f->lock, flags);
 
 	return ret;
 }

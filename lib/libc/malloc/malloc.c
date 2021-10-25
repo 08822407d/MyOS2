@@ -2,7 +2,7 @@
  * lib/libc/malloc/malloc.c
  */
 
-#include <arch/amd64/spinlock.h>
+// #include <arch/amd64/spinlock.h>
 #include <xconfigs.h>
 #include <assert.h>
 #include <string.h>
@@ -816,7 +816,7 @@ void mm_info(void * mm, size_t * mused, size_t * mfree)
 }
 
 static void * __heap_pool = NULL;
-static spinlock_t __heap_lock = SPIN_LOCK_INIT();
+// static spinlock_t __heap_lock = SPIN_LOCK_INIT();
 
 static void * __malloc(size_t size)
 {
@@ -824,9 +824,9 @@ static void * __malloc(size_t size)
 
 	if(__heap_pool)
 	{
-		spin_lock(&__heap_lock);
+		// spin_lock(&__heap_lock);
 		m = tlsf_malloc(__heap_pool, size);
-		spin_unlock(&__heap_lock);
+		// spin_unlock(&__heap_lock);
 		return m;
 	}
 	return NULL;
@@ -839,9 +839,9 @@ static void * __memalign(size_t align, size_t size)
 
 	if(__heap_pool)
 	{
-		spin_lock(&__heap_lock);
+		// spin_lock(&__heap_lock);
 		m = tlsf_memalign(__heap_pool, align, size);
-		spin_unlock(&__heap_lock);
+		// spin_unlock(&__heap_lock);
 		return m;
 	}
 	return NULL;
@@ -854,9 +854,9 @@ static void * __realloc(void * ptr, size_t size)
 
 	if(__heap_pool)
 	{
-		spin_lock(&__heap_lock);
+		// spin_lock(&__heap_lock);
 		m = tlsf_realloc(__heap_pool, ptr, size);
-		spin_unlock(&__heap_lock);
+		// spin_unlock(&__heap_lock);
 		return m;
 	}
 	return NULL;
@@ -877,9 +877,9 @@ static void __free(void * ptr)
 {
 	if(__heap_pool)
 	{
-		spin_lock(&__heap_lock);
+		// spin_lock(&__heap_lock);
 		tlsf_free(__heap_pool, ptr);
-		spin_unlock(&__heap_lock);
+		// spin_unlock(&__heap_lock);
 	}
 }
 extern __typeof(__free) free __attribute__((weak, alias("__free")));

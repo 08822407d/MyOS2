@@ -6,7 +6,7 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <lib/fcntl.h>
+#include <sys/fcntl.h>
 
 int main(int argc, const char *argv[])
 {
