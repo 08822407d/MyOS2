@@ -37,7 +37,6 @@
 
 #include <sys/cdefs.h>
 #include <stdint.h>			/* XXX adds too much pollution. */
-#include <sys/unistd.h>
 #include <sys/_null.h>
 #include <sys/_types.h>
 
@@ -519,7 +518,7 @@
 		int		exect(const char *, char * const *, char * const *);
 		int		execvP(const char *, const char *, char * const *);
 		int		feature_present(const char *);
-		char *	fflagstostr(u_long);
+		// char *	fflagstostr(u_long);
 		int		getdomainname(char *, int);
 		int		getentropy(void *, size_t);
 		int		getgrouplist(const char *, gid_t, gid_t *, int *);

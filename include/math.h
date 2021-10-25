@@ -6,10 +6,10 @@ extern "C" {
 #endif
 
 #include <arch/amd64/endian.h>
+#include <arch/amd64/limits.h>
 
 #include <stdint.h>
-#include <float.h>
-#include <limits.h>
+// #include <float.h>
 
 typedef float					float_t;
 typedef double					double_t;

@@ -3,17 +3,18 @@
  */
 
 #include <stdarg.h>
-#include <limits.h>
 #include <stdio.h>
+
+#include <sizes.h>
 
 int printf(const char * fmt, ...)
 {
 	va_list ap;
-	char buf[_POSIX_ARG_MAX];
+	char buf[SZ_4K];
 	int rv;
 
 	va_start(ap, fmt);
-	rv = vsnprintf(buf, _POSIX_ARG_MAX, fmt, ap);
+	rv = vsnprintf(buf, SZ_4K, fmt, ap);
 	va_end(ap);
 
 	rv = (fputs(buf, stdout) < 0) ? 0 : rv;
