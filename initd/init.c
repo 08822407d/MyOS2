@@ -1,3 +1,4 @@
+#include <sys/fcntl.h>
 #include <sys/wait.h>
 
 #include <stdio.h>
@@ -6,7 +7,6 @@
 #include <stddef.h>
 #include <unistd.h>
 
-#include <sys/fcntl.h>
 
 int main(int argc, const char *argv[])
 {
@@ -45,14 +45,14 @@ int main(int argc, const char *argv[])
 
 	// int pid = getpid();
 
-	int tty_fd = open("/dev/tty0", O_RDWR);
-	char buf3[10];
-	char buf4[] = "tty_write() test.\n";
-	write(tty_fd, buf4, strlen(buf4));
-	printf("tty_read() test, waiting kbd input :");
-	read(tty_fd, buf3, 9);
-	printf(" %s \n", buf3);
-	close(tty_fd);
+	// int tty_fd = open("/dev/tty0", O_RDWR);
+	// char buf3[10];
+	// char buf4[] = "tty_write() test.\n";
+	// write(tty_fd, buf4, strlen(buf4));
+	// printf("tty_read() test, waiting kbd input :");
+	// read(tty_fd, buf3, 9);
+	// printf(" %s \n", buf3);
+	// close(tty_fd);
 
 	// if ((rv = fork()) != 0)
 	// {

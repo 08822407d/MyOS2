@@ -1,8 +1,8 @@
-#include "stdlib.h"
+#include <stdlib.h>
 
 extern int main(int, const char **);
 
-void _start(int argc, const char * argv[])
+__attribute__((section(".crt1.text"))) void _start(int argc, const char * argv[])
 {
 	exit(main(argc, argv));
 }

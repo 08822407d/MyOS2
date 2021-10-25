@@ -6,5 +6,5 @@
 
 int ferror(FILE * f)
 {
-	return f->error;
+	// return f->error;
 }

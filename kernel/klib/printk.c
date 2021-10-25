@@ -39,7 +39,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
-	i = vsprintf(buf, fmt, args);
+	i = vsnprintf(buf, SZ_4K, fmt, args);
 
 	va_end(args);
 

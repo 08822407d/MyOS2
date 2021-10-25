@@ -38,8 +38,9 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
 # message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
-    -fno-builtin -nostdinc -fno-stack-protector -Wno-packed-bitfield-compat \
-    -nostartfiles -static -ggdb -m64 -fPIC")
+    -fno-builtin -nostdinc -ffreestanding -fno-stack-protector -nostdlib \
+    -Wno-unused-command-line-argument -fno-exceptions -fno-unwind-tables \
+    -Wno-packed-bitfield-compat -nostartfiles -static -ggdb -m64 -fPIC")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")

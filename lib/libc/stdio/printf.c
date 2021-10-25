@@ -17,7 +17,7 @@ int printf(const char * fmt, ...)
 	rv = vsnprintf(buf, SZ_4K, fmt, ap);
 	va_end(ap);
 
-	rv = (fputs(buf, stdout) < 0) ? 0 : rv;
-	fflush(stdout);
+	// rv = (fputs(buf, stdout) < 0) ? 0 : rv;
+	// fflush(stdout);
 	return rv;
 }

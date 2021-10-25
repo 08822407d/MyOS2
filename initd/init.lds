@@ -16,7 +16,7 @@ SECTIONS
 	.text ALIGN(0x200000) :
 	{
 		_text = .;
-		*/start.c.o(.text);
+		*(.crt1.text);
 		*(.text)
 		_etext = .;
 	}
