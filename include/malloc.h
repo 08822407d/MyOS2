@@ -18,11 +18,7 @@ extern "C" {
 	void	mm_free(void * mm, void * ptr);
 	void	mm_info(void * mm, size_t * mused, size_t * mfree);
 
-	void *	malloc(size_t size);
 	void *	memalign(size_t align, size_t size);
-	void *	realloc(void * ptr, size_t size);
-	void *	calloc(size_t nmemb, size_t size);
-	void	free(void * ptr);
 	void	meminfo(size_t * mused, size_t * mfree);
 
 	void	do_init_mem(void);

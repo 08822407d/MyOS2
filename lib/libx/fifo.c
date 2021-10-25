@@ -4,10 +4,10 @@
 
 // #include <arch/amd64/spinlock.h>
 #include <arch/amd64/barrier.h>
+#include <stdlib.h>
 #include <stddef.h>
 // #include <log2.h>
 #include <string.h>
-#include <malloc.h>
 #include <fifo.h>
 
 void __fifo_reset(struct fifo_t * f)

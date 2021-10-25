@@ -23,6 +23,11 @@ extern "C" {
 	typedef struct { long quot, rem; } ldiv_t;
 	typedef struct { long long quot, rem; } lldiv_t;
 
+	void *	malloc(size_t size);
+	void *	realloc(void * ptr, size_t size);
+	void *	calloc(size_t nmemb, size_t size);
+	void	free(void * ptr);
+
 	int rand(void);
 	void srand(unsigned int seed);
 
