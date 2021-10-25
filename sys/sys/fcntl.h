@@ -374,7 +374,6 @@ struct spacectl_range {
 
 #ifndef _KERNEL
 __BEGIN_DECLS
-int	open(const char *, int, ...);
 int	creat(const char *, mode_t);
 int	fcntl(int, int, ...);
 #if __BSD_VISIBLE

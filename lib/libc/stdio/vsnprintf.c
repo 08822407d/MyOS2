@@ -836,6 +836,7 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 				}
 					break;
 
+#ifdef FPU_ENABLE
 				case 'E':
 				case 'G':
 				case 'e':
@@ -845,6 +846,7 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 					q += sz;
 					o += sz;
 					break;
+#endif
 
 				default:		/* Anything else, including % */
 					EMIT(ch);

@@ -45,32 +45,32 @@ int main(int argc, const char *argv[])
 
 	// int pid = getpid();
 
-	// int tty_fd = open("/dev/tty0", O_RDWR);
-	// char buf3[10];
-	// char buf4[] = "tty_write() test.\n";
-	// write(tty_fd, buf4, strlen(buf4));
-	// printf("tty_read() test, waiting kbd input :");
-	// read(tty_fd, buf3, 9);
-	// printf(" %s \n", buf3);
-	// close(tty_fd);
+	int tty_fd = open("/dev/tty0", O_RDWR);
+	char buf3[10];
+	char buf4[] = "tty_write() test.\n";
+	write(tty_fd, buf4, strlen(buf4));
+	printf("tty_read() test, waiting kbd input :");
+	read(tty_fd, buf3, 9);
+	printf(" %s \n", buf3);
+	close(tty_fd);
 
-	if ((rv = fork()) != 0)
-	{
-		int tmp = rv;
-		printf("message after fork, ret_val = %d, self:%d\n", tmp, getpid());
-		int status = 0;
-		waitpid(rv, &status, 0);
-		printf("child - %d exited, status : %d\n", tmp, status);
-		while (1);
-	}
-	else
-	{
-		printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
-		rv = fork();
-		if ( rv == 0)
-			while (1);
-	}
-	ret_val = 0x123;
+	// if ((rv = fork()) != 0)
+	// {
+	// 	int tmp = rv;
+	// 	printf("message after fork, ret_val = %d, self:%d\n", tmp, getpid());
+	// 	int status = 0;
+	// 	waitpid(rv, &status, 0);
+	// 	printf("child - %d exited, status : %d\n", tmp, status);
+	// 	while (1);
+	// }
+	// else
+	// {
+	// 	printf("message after fork, ret_val = %d, self:%d\n", rv, getpid());
+	// 	rv = fork();
+	// 	if ( rv == 0)
+	// 		while (1);
+	// }
+	// ret_val = 0x123;
 
 	return ret_val;
 }
