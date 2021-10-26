@@ -1,3 +1,4 @@
+#include <stddef.h>
 #include <stdint.h>
 #include <sys/cdefs.h>
 
@@ -23,10 +24,10 @@ memory_info_s	mem_info;
 recurs_lock_T	page_alloc_lock;
 multiboot_memory_map_s	mem_distribution[MAXMEMZONE];
 
+List_hdr_s		slabcache_lhdr;
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
 uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
-slab_cache_list_s	slab_cache_list;
 recurs_lock_T	slab_alloc_lock;
 
 
@@ -151,13 +152,13 @@ void init_slab()
 	#endif
 
 	init_recurs_lock(&slab_alloc_lock);
-	m_init_list_header(&slab_cache_list);
+	list_hdr_init(&slabcache_lhdr);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
 		slab_cache_s * scgp = &slab_cache_groups[i];
-		m_push_list(scgp, &slab_cache_list);
-		m_list_init(scgp);
+		list_init(&scgp->slabcache_list, scgp);
+		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
 		m_init_list_header(&scgp->normal_slab_free);
 		m_init_list_header(&scgp->normal_slab_used);
@@ -176,12 +177,6 @@ void init_slab()
 		scgp->nsobj_used_count = 0;
 		scgp->normal_slab_total = 1;
 
-		// scgp->dma_slab = NULL;
-		// scgp->dslab_count = 0;
-		// scgp->dsobj_free_count = 0;
-		// scgp->dsobj_used_count = 0;
-
-		// init the basic slab
 		bslp->colormap = (bitmap_t *)(kparam.kernel_vir_end + 0x10);
 		kparam.kernel_vir_end += cm_size + 0x10;
 		bslp->slabcache_ptr = scgp;
@@ -247,7 +242,7 @@ void * kmalloc(size_t size)
 		// find suitable slab group
 		slab_cache_s *	scgp = &slab_cache_groups[0];
 		while (size > scgp->obj_size)
-			scgp = m_list_get_next(scgp);
+			scgp = container_of(list_get_next(&scgp->slabcache_list), slab_cache_s, slabcache_list);
 
 		lock_recurs_lock(&slab_alloc_lock);
 		// find a usable slab and if it is in free list, move it to used list

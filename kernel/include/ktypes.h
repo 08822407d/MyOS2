@@ -89,9 +89,7 @@
 
 	typedef struct slab_cache
 	{
-		slab_cache_s *	prev;
-		slab_cache_s *	next;
-
+		List_s			slabcache_list;
 		slab_cache_list_s *	list_header;
 
 		unsigned long	obj_size;
@@ -105,13 +103,6 @@
 
 		// the base slab should not be freed
 		slab_s *		normal_base_slab;
-
-		// unsigned long	dslab_count;
-		// slab_list_s		dma_slab_free;
-		// slab_list_s		dma_slab_used;
-		// slab_list_s		dma_slab_full;
-		// unsigned long	dsobj_free_count;
-		// unsigned long	dsobj_used_count;
 	} slab_cache_s;
 	
 /*==============================================================================================*
