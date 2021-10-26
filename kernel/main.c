@@ -26,7 +26,6 @@ void kmain()
 	init_smp_env();
 	
 	// enable bsp's apic
-	init_percpu_intr();
 	init_bsp_intr();
 
 	// post init
@@ -56,7 +55,7 @@ void idle(size_t cpu_idx)
 
 	if (cpu_idx == 0)
 	{
-		// kernel_thread(module_test, 0, 0);
+		kernel_thread(module_test, 0, 0);
 		kernel_thread(init, 0, 0);
 	}
 

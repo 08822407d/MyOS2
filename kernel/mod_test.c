@@ -53,8 +53,11 @@ unsigned long test_task_a(unsigned long arg)
 		for (int i = 0; i < 0x2000; i++)
 			for (int j = 0; j < 0x2000; j++)
 				k++;
-
-		color_printk(WHITE, BLACK, "-A- ");
+		{
+			color_printk(WHITE, BLACK, "-");
+			color_printk(BLACK, RED, " ");
+			color_printk(WHITE, BLACK, "-");
+		}
 	}
 }
 
@@ -66,7 +69,11 @@ unsigned long test_task_b(unsigned long arg)
 		for (int i = 0; i < 0x2000; i++)
 			for (int j = 0; j < 0x2000; j++)
 				k++;
-		color_printk(WHITE, BLACK, "-B- ");
+		{
+			color_printk(WHITE, BLACK, "-");
+			color_printk(BLACK, GREEN, " ");
+			color_printk(WHITE, BLACK, "-");
+		}
 	}
 }
 
@@ -78,7 +85,27 @@ unsigned long test_task_c(unsigned long arg)
 		for (int i = 0; i < 0x2000; i++)
 			for (int j = 0; j < 0x2000; j++)
 				k++;
-		color_printk(WHITE, BLACK, "-C- ");
+		{
+			color_printk(WHITE, BLACK, "-");
+			color_printk(BLACK, YELLOW, " ");
+			color_printk(WHITE, BLACK, "-");
+		}
+	}
+}
+
+unsigned long test_task_d(unsigned long arg)
+{
+	while (1)
+	{
+		unsigned long k = 0;
+		for (int i = 0; i < 0x2000; i++)
+			for (int j = 0; j < 0x2000; j++)
+				k++;
+		{
+			color_printk(WHITE, BLACK, "-");
+			color_printk(BLACK, BLUE, " ");
+			color_printk(WHITE, BLACK, "-");
+		}
 	}
 }
 
@@ -112,6 +139,7 @@ void kernthd_test()
 	kernel_thread(test_task_a, 0, 0);
 	kernel_thread(test_task_b, 0, 0);
 	kernel_thread(test_task_c, 0, 0);
+	kernel_thread(test_task_d, 0, 0);
 }
 
 void kmalloc_kfree_test()

@@ -307,6 +307,7 @@ int unregister_IPI(unsigned long irq)
  *==============================================================================================*/
 void init_bsp_intr()
 {
+	init_lapic();
 	//init local apic
 	IOAPIC_pagetable_remap();
 

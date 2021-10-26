@@ -25,6 +25,7 @@ inline __always_inline void lock_spin_lock(spinlock_T * lock)
 							"jle	2b				\n\t"
 							"jmp	1b				\n\t"
 							"3:						\n\t"
+							// "cli					\n\t"
 						:	"=m"(lock->lock.value)
 						:
 						:	"memory"
@@ -35,6 +36,7 @@ inline __always_inline void lock_spin_lock(spinlock_T * lock)
 inline __always_inline void unlock_spin_lock(spinlock_T * lock)
 {
 	__asm__	__volatile__(	"movq	$1,		%0		\n\t"
+							// "sti					\n\t"
 						:	"=m"(lock->lock.value)
 						:
 						:	"memory"
