@@ -7,7 +7,7 @@
 #include <include/proto.h>
 #include <include/param.h>
 #include <include/ktypes.h>
-#include <include/const.h>
+#include <include/memory.h>
 #include <include/printk.h>
 
 #include "include/archconst.h"

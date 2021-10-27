@@ -12,7 +12,7 @@
 #include <include/proto.h>
 #include <include/task.h>
 #include <include/printk.h>
-#include <include/const.h>
+#include <include/memory.h>
 #include <include/vfs.h>
 
 #include "include/archconst.h"

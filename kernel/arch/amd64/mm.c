@@ -136,3 +136,16 @@ int check_addr_writable(reg_t cr2, task_s * task)
 
 	return ret_val;
 }
+
+reg_t do_brk(reg_t start, reg_t length)
+{
+	reg_t new_end = start + length;
+	for (reg_t vaddr = start; vaddr < new_end; vaddr += CONFIG_PAGE_SIZE)
+	{
+		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
+		Page_s * pg_p = page_alloc();
+		arch_page_domap((virt_addr)vaddr, pg_p->page_start_addr, attr, &curr_tsk->mm_struct->cr3);
+	}
+	curr_tsk->mm_struct->end_brk = new_end;
+	return new_end;
+}

@@ -4,7 +4,7 @@
 #include <include/glo.h>
 #include <include/printk.h>
 #include <include/proto.h>
-#include <include/const.h>
+#include <include/memory.h>
 #include <include/task.h>
 
 #include "include/arch_proto.h"

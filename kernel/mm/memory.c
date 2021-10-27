@@ -12,7 +12,7 @@
 
 #include <include/param.h>
 #include <include/ktypes.h>
-#include <include/const.h>
+#include <include/memory.h>
 #include <include/proto.h>
 #include <include/printk.h>
 

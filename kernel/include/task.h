@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <lib/utils.h>
 
-#include "const.h"
+#include "memory.h"
 
 #include <arch/amd64/include/arch_task.h>
 

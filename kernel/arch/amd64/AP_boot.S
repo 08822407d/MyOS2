@@ -1,6 +1,6 @@
 #include <arch/amd64/asm.h>
 
-#include <include/const.h>
+#include <include/memory.h>
 
 .balign	0x1000
 .text
