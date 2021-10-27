@@ -1,9 +1,10 @@
 #ifndef _AMD64_PC_DEVICE_H_
 #define _AMD64_PC_DEVICE_H_
 
+#include <sys/param.h>
+
 #include <stdint.h>
 
-#include <include/param.h>
 #include <include/vfs.h>
 #include <include/block_dev.h>
 

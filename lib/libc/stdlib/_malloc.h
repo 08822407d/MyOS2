@@ -7,6 +7,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
+	// uslab consts
+	#define USLAB_LEVEL			16
+	#define USLAB_SIZE_BASE		32
+
 	struct  uslab;
 	typedef struct uslab uslab_s;
 

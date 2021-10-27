@@ -12,20 +12,19 @@
 *
 *
 ***************************************************/
-#include <stdint.h>
 #include <sys/cdefs.h>
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdint.h>
 #include <lib/font.h>
 
-#include "../include/glo.h"
-#include "../include/printk.h"
-#include "../include/param.h"
+#include <include/glo.h>
+#include <include/printk.h>
 
-#include "../arch/amd64/include/tty.h"
+#include <arch/amd64/include/tty.h>
 
 /*
 

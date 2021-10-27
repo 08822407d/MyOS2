@@ -1,8 +1,8 @@
-#include <stdint.h>
+#include <sys/param.h>
 
+#include <stdint.h>
 #include <string.h>
 
-#include <include/param.h>
 #include <include/glo.h>
 #include <include/ktypes.h>
 

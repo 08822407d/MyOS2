@@ -1,8 +1,10 @@
-#include <stddef.h>
-#include <stdint.h>
 #include <sys/cdefs.h>
+#include <sys/param.h>
 
 #include <string.h>
+#include <stddef.h>
+#include <stdint.h>
+
 #include <lib/utils.h>
 
 #include <arch/amd64/include/archconst.h>
@@ -10,7 +12,6 @@
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/arch_proto.h>
 
-#include <include/param.h>
 #include <include/ktypes.h>
 #include <include/memory.h>
 #include <include/proto.h>
@@ -204,7 +205,7 @@ slab_s * slab_alloc(slab_s * cslp)
 
 	nslp->page = pgp;
 	pgp->slab_ptr = nslp;
-	nslp->colormap = (bitmap_t *)kmalloc( cslp->total / sizeof(bitmap_t));
+	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
 	nslp->total =
 	nslp->free = cslp->total;
 	nslp->virt_addr = phys2virt(pgp->page_start_addr);

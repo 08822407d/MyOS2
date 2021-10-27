@@ -51,6 +51,7 @@
 	int 	execve(const char *path, char *const argv[], char *const envp[]);
 	int		getpid(void);
 	int		getppid(void);
+	size_t	brk(const void *);
 	//
 
 
@@ -480,7 +481,6 @@
 	#endif /* __XSI_VISIBLE */
 
 	#if (__XSI_VISIBLE && __XSI_VISIBLE <= 500) || __BSD_VISIBLE
-		int		brk(const void *);
 		int		chroot(const char *);
 		int		getdtablesize(void);
 		int		getpagesize(void) __pure2;

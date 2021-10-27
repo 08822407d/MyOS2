@@ -1,7 +1,7 @@
 #ifndef _GLO_H_
 #define _GLO_H_
 
-#include "param.h"
+#include <sys/param.h>
 
 	extern unsigned long volatile	jiffies;
 

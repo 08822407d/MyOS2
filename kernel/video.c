@@ -1,10 +1,10 @@
-#include <stdint.h>
+#include <sys/param.h>
 
+#include <stdint.h>
 #include <string.h>
 
 #include <include/glo.h>
 #include <include/memory.h>
-#include <include/param.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/printk.h>

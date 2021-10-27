@@ -1,4 +1,5 @@
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -no-pie -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -no-pie -fdata-sections -ffunction-sections \
+					-T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 
 file(GLOB KERNEL_C_SRCS *.c)
 file(GLOB KERNEL_ASM_SRCS *.S)
