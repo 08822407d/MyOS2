@@ -161,9 +161,9 @@ int read_exec_mm(file_s * fp, task_s * curr)
 	mm->start_bss =
 	mm->end_data = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 3;
 	mm->start_brk =
-	mm->end_bss = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 4;
-	mm->end_brk = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 5;
-	mm->start_stack = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 6;
+	mm->end_bss = 
+	mm->end_brk = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 4;
+	mm->start_stack = USERADDR_LIMIT + 1 - CONFIG_PAGE_SIZE;
 }
 
 

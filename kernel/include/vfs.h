@@ -6,8 +6,6 @@
 #include "MBR.h"
 #include "GPT.h"
 
-#include <klib/data_structure.h>
-
 	#define BOOT_FS_IDX	1
 	#define ROOT_FS_IDX	2
 

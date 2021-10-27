@@ -16,8 +16,6 @@
 #include <include/proto.h>
 #include <include/printk.h>
 
-#include <klib/data_structure.h>
-
 extern kinfo_s kparam;
 
 memory_info_s	mem_info;

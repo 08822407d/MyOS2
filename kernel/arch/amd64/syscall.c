@@ -72,9 +72,6 @@ unsigned long sys_open(char *filename, int flags)
 	fp->dentry = dentry;
 	fp->mode = flags;
 
-	// if(dentry->dir_inode->attribute & FS_ATTR_DEVICE)
-	// 	fp->f_ops = &tty_fops;	//////	find device file operation function
-	// else
 	fp->f_ops = dentry->dir_inode->f_ops;
 	if(fp->f_ops && fp->f_ops->open)
 		error = fp->f_ops->open(dentry->dir_inode,fp);
@@ -103,7 +100,7 @@ unsigned long sys_open(char *filename, int flags)
 	if(i == MAX_FILE_NR)
 	{
 		kfree(fp);
-		//// reclaim struct index_node & struct dir_entry
+		// reclaim struct index_node & struct dir_entry
 		return -EMFILE;
 	}
 	f[fd] = fp;
