@@ -160,18 +160,18 @@ void init_slab()
 		list_init(&scgp->slabcache_list, scgp);
 		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
-		m_init_list_header(&scgp->normal_slab_free);
-		m_init_list_header(&scgp->normal_slab_used);
-		m_init_list_header(&scgp->normal_slab_full);
+		list_hdr_init(&scgp->normal_slab_free);
+		list_hdr_init(&scgp->normal_slab_used);
+		list_hdr_init(&scgp->normal_slab_full);
 
 		slab_s * bslp = &base_slabs[i];
-		m_list_init(bslp);
+		list_init(&bslp->slab_list, bslp);
 
 		scgp->obj_size = SLAB_SIZE_BASE << i;
 		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
-		m_push_list(bslp, &scgp->normal_slab_free);
+		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
 		scgp->normal_base_slab = bslp;
 		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
@@ -202,7 +202,7 @@ slab_s * slab_alloc(slab_s * cslp)
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
 	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s));
-	m_list_init(nslp);
+	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = pgp;
 	pgp->slab_ptr = nslp;
@@ -219,7 +219,7 @@ void slab_free(slab_s * slp)
 	kfree(slp->colormap);
 	slp->page->attr &= ~PG_Slab;
 	slp->page->slab_ptr = NULL;
-	m_remove_from_list(slp);
+	list_delete(&slp->slab_list);
 	slp->slabcache_ptr->normal_slab_free.count--;
 
 	kfree(slp);
@@ -250,16 +250,16 @@ void * kmalloc(size_t size)
 		slab_s *	slp = NULL;
 		if (scgp->normal_slab_used.count > 0)
 		{
-			m_pop_list(slp, &scgp->normal_slab_used);
+			slp = container_of(list_hdr_pop(&scgp->normal_slab_used), slab_s, slab_list);
 			if (slp->free == 1)
-				m_push_list(slp, &scgp->normal_slab_full);
+				list_hdr_push(&scgp->normal_slab_full, &slp->slab_list);
 			else
-				m_push_list(slp, &scgp->normal_slab_used);
+				list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 		}
 		else if (scgp->normal_slab_free.count > 0)
 		{
-			m_pop_list(slp, &scgp->normal_slab_free);
-			m_push_list(slp, &scgp->normal_slab_used);
+			slp = container_of(list_hdr_pop(&scgp->normal_slab_free), slab_s, slab_list);
+			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 		}
 		else
 		{
@@ -292,7 +292,7 @@ void * kmalloc(size_t size)
 				while (1);
 			}
 			new_slab->slabcache_ptr = scgp;
-			m_push_list(new_slab, &scgp->normal_slab_free);
+			list_hdr_push(&scgp->normal_slab_free, &new_slab->slab_list);
 			scgp->normal_slab_total++;
 			scgp->nsobj_free_count += new_slab->total;
 		}
@@ -341,28 +341,28 @@ void kfree(void * obj_p)
 	// or if it is in used list and only use one slot, move it to free list
 	if (slp->free == 1)
 	{
-		m_list_delete(slp);
+		list_delete(&slp->slab_list);
 		scgp->normal_slab_full.count--;
-		m_push_list(slp, &scgp->normal_slab_used);
+		list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 	}
 	else if (slp->free == 0)
 	{
-		m_list_delete(slp);
+		list_delete(&slp->slab_list);
 		scgp->normal_slab_used.count--;
 		// if slp is base-slab, add it to tail
 		if (slp != scgp->normal_base_slab)
-			m_push_list(slp, &scgp->normal_slab_free);
+			list_hdr_push(&scgp->normal_slab_free, &slp->slab_list);
 		else
-			m_append_to_list(slp, &scgp->normal_slab_free);
+			list_hdr_append(&scgp->normal_slab_free, &slp->slab_list);
 	}
 	// if there is too many free slab, free some of them
 	if (scgp->normal_slab_free.count > 2)
 	{
-		slab_s * tmp_slp = scgp->normal_slab_free.head_p->prev;
+		slab_s * tmp_slp = container_of(scgp->normal_slab_free.header.prev, slab_s, slab_list);
 		scgp->normal_slab_free.count--;
-		slab_free(scgp->normal_slab_free.head_p);
+		slab_free(tmp_slp);
 		scgp->normal_slab_total;
-		scgp->nsobj_free_count -= scgp->normal_slab_free.head_p->total;
+		scgp->nsobj_free_count -= tmp_slp->total;
 	}
 
 	unlock_recurs_lock(&slab_alloc_lock);

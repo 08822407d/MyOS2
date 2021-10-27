@@ -66,15 +66,9 @@
 /*==============================================================================================*
  *									kernel malloc and slab										*
  *==============================================================================================*/
-	m_define_list_header(slab);
-
 	typedef struct slab
 	{
-		slab_s *		prev;
-		slab_s *		next;
-
-		slab_list_s *	list_header;
-
+		List_s			slab_list;
 		slab_cache_s *	slabcache_ptr;
 
 		unsigned long	total;
@@ -85,19 +79,16 @@
 		bitmap_t *		colormap;
 	} slab_s;
 
-	m_define_list_header(slab_cache);
-
 	typedef struct slab_cache
 	{
 		List_s			slabcache_list;
-		slab_cache_list_s *	list_header;
 
 		unsigned long	obj_size;
 
 		unsigned long	normal_slab_total;
-		slab_list_s		normal_slab_free;
-		slab_list_s		normal_slab_used;
-		slab_list_s		normal_slab_full;
+		List_hdr_s		normal_slab_free;
+		List_hdr_s		normal_slab_used;
+		List_hdr_s		normal_slab_full;
 		unsigned long	nsobj_free_count;
 		unsigned long	nsobj_used_count;
 

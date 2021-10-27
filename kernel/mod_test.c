@@ -161,6 +161,7 @@ void kmalloc_kfree_test()
 	kfree(test5);
 	kfree(test7);
 	kfree(test8);
+
 	color_printk(WHITE, BLACK, "kmalloc test finished.\n");
 }
 
