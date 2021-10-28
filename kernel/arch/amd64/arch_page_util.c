@@ -2,7 +2,7 @@
 #include <sys/param.h>
 
 #include <string.h>
-#include <stdint.h>
+#include <sys/types.h>
 
 #include <include/glo.h>
 #include <include/proto.h>

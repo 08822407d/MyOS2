@@ -3,6 +3,7 @@
  */
 
 #include <sys/vfs.h>
+#include <sys/types.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -83,6 +84,7 @@ FILE * __file_alloc(int fd)
 	if(fd == 0)
 	{
 		f->fd = fd;
+		// f->fd = vfs_open("/dev/tty0", 0, O_RDONLY);
 
 		f->read = __tty_stdin_read;
 		f->write = __tty_null_write;
@@ -104,6 +106,7 @@ FILE * __file_alloc(int fd)
 	else if(fd == 1)
 	{
 		f->fd = fd;
+		// f->fd = vfs_open("/dev/tty0", 0, O_WRONLY);
 
 		f->read = __tty_null_read;
 		f->write = __tty_stdout_write;
@@ -125,6 +128,7 @@ FILE * __file_alloc(int fd)
 	else if(fd == 2)
 	{
 		f->fd = fd;
+		// f->fd = vfs_open("/dev/tty0", 0, O_WRONLY);
 
 		f->read = __tty_null_read;
 		f->write = __tty_stderr_write;

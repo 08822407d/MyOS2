@@ -460,7 +460,7 @@
 #endif
 
 /*
- * We define this here since <stddef.h>, <sys/queue.h>, and <stdint.h>
+ * We define this here since <stddef.h>, <sys/queue.h>, and <sys/types.h>
  * require it.
  */
 #if __GNUC_PREREQ__(4, 1)

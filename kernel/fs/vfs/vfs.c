@@ -83,7 +83,7 @@ unsigned long init_vfs()
 	kparam.init_flags.vfs = 1;
 }
 
-dirent_s * path_walk(char * name,unsigned long flags)
+dirent_s * path_walk(char * name, unsigned long flags)
 {
 	char * tmpname = NULL;
 	int tmpnamelen = 0;

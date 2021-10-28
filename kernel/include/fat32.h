@@ -15,7 +15,7 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 	typedef struct FAT32_BS
 	{

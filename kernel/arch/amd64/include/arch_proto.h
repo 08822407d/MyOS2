@@ -1,7 +1,7 @@
 #ifndef _AMD64_PROTO_H_
 #define _AMD64_PROTO_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 #include "include/vfs.h"
 
@@ -319,6 +319,7 @@
 	long copy_to_user(void * from, void * to, unsigned long size);
 	long strncpy_from_user(void * from, void * to, unsigned long size);
 	long strnlen_user(void * src, unsigned long maxlen);
+	unsigned long kopen(char *filename, int flags);
 
 	/*  mm.c */
 	void creat_exec_addrspace(task_s * task);

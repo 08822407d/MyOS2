@@ -1,7 +1,7 @@
 #ifndef _LIB_UTILS_H_
 #define _LIB_UTILS_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);
 	void bm_clear_bit(bitmap_t *, unsigned long idx);

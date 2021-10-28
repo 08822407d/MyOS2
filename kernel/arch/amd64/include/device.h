@@ -3,7 +3,7 @@
 
 #include <sys/param.h>
 
-#include <stdint.h>
+#include <sys/types.h>
 
 #include <include/vfs.h>
 #include <include/block_dev.h>

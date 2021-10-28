@@ -18,7 +18,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
-#include <stdint.h>
+#include <sys/types.h>
 #include <lib/font.h>
 
 #include <include/glo.h>

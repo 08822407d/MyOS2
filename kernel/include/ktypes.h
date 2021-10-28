@@ -1,7 +1,7 @@
 #ifndef _K_TYPES_H_
 #define _K_TYPES_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 #include <sys/cdefs.h>
 #include <lib/utils.h>

@@ -9,7 +9,7 @@
 #ifndef _GPT_H_
 #define _GPT_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 #include "MBR.h"
 

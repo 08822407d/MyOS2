@@ -1,5 +1,5 @@
 #include <stddef.h>
-#include <stdint.h>
+#include <sys/types.h>
 #include <sys/cdefs.h>
 
 #include <string.h>

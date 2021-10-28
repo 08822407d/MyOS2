@@ -36,7 +36,7 @@
 #define	_UNISTD_H_
 
 #include <sys/cdefs.h>
-#include <stdint.h>			/* XXX adds too much pollution. */
+#include <sys/types.h>			/* XXX adds too much pollution. */
 #include <sys/_null.h>
 #include <sys/_types.h>
 
@@ -70,15 +70,15 @@
 		#define	_PID_T_DECLARED
 	#endif
 
-	// #ifndef _SIZE_T_DECLARED
-	// 	typedef	__size_t	size_t;
-	// 	#define	_SIZE_T_DECLARED
-	// #endif
+	#ifndef _SIZE_T_DECLARED
+		typedef	__size_t	size_t;
+		#define	_SIZE_T_DECLARED
+	#endif
 
-	// #ifndef _SSIZE_T_DECLARED
-	// 	typedef	__ssize_t	ssize_t;
-	// 	#define	_SSIZE_T_DECLARED
-	// #endif
+	#ifndef _SSIZE_T_DECLARED
+		typedef	__ssize_t	ssize_t;
+		#define	_SSIZE_T_DECLARED
+	#endif
 
 	#ifndef _UID_T_DECLARED
 		typedef	__uid_t		uid_t;

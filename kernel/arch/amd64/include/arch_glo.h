@@ -1,7 +1,7 @@
 #ifndef _AMD64_GLO_H_
 #define _AMD64_GLO_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 
 #include "archconst.h"
 #include "archtypes.h"

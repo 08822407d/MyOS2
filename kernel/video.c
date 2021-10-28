@@ -1,6 +1,6 @@
 #include <sys/param.h>
 
-#include <stdint.h>
+#include <sys/types.h>
 #include <string.h>
 
 #include <include/glo.h>

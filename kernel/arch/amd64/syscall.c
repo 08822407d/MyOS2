@@ -23,12 +23,12 @@ unsigned long sys_putstring(char *string)
 	return 0;
 }
 
-
 /*==============================================================================================*
  *										file operations											*
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
+	task_s * curr = curr_tsk;
 	char * path = NULL;
 	long pathlen = 0;
 	long error = 0;
@@ -74,7 +74,7 @@ unsigned long sys_open(char *filename, int flags)
 
 	fp->f_ops = dentry->dir_inode->f_ops;
 	if(fp->f_ops && fp->f_ops->open)
-		error = fp->f_ops->open(dentry->dir_inode,fp);
+		error = fp->f_ops->open(dentry->dir_inode, fp);
 	if(error != 1)
 	{
 		kfree(fp);
@@ -120,7 +120,7 @@ unsigned long sys_close(int fd)
 
 	fp = curr->fps[fd];
 	if(fp->f_ops && fp->f_ops->close)
-		fp->f_ops->close(fp->dentry->dir_inode,fp);
+		fp->f_ops->close(fp->dentry->dir_inode, fp);
 
 	kfree(fp);
 	curr->fps[fd] = NULL;
@@ -128,8 +128,9 @@ unsigned long sys_close(int fd)
 	return 0;
 }
 
-unsigned long sys_read(int fd,void * buf, long count)
+unsigned long sys_read(int fd, void * buf, long count)
 {
+	task_s * curr = curr_tsk;
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -141,12 +142,13 @@ unsigned long sys_read(int fd,void * buf, long count)
 
 	fp = curr_tsk->fps[fd];
 	if(fp->f_ops && fp->f_ops->read)
-		ret = fp->f_ops->read(fp,buf,count,&fp->position);
+		ret = fp->f_ops->read(fp, buf, count, &fp->position);
 	return ret;
 }
 
 unsigned long sys_write(int fd,void * buf,long count)
 {
+	task_s * curr = curr_tsk;
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -176,7 +178,7 @@ unsigned long sys_lseek(int filds, long offset, int whence)
 
 	fp = curr_tsk->fps[filds];
 	if(fp->f_ops && fp->f_ops->lseek)
-		ret = fp->f_ops->lseek(fp,offset,whence);
+		ret = fp->f_ops->lseek(fp, offset, whence);
 	return ret;
 }
 
@@ -303,7 +305,7 @@ unsigned long sys_getppid()
 /*==============================================================================================*
  *									special functions											*
  *==============================================================================================*/
-unsigned long sys_reboot(unsigned long cmd,void * arg)
+unsigned long sys_reboot(unsigned long cmd, void * arg)
 {
 	color_printk(GREEN,BLACK,"sys_reboot\n");
 	switch(cmd)

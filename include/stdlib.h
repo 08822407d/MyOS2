@@ -5,9 +5,9 @@
 extern "C" {
 #endif
 
+#include <sys/types.h>
+
 #include <arch/amd64/types.h>
-#include <stddef.h>
-#include <malloc.h>
 
 #define RAND_MAX (0x7fffffff)
 

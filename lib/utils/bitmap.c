@@ -1,3 +1,5 @@
+#include <sys/types.h>
+
 #include <lib/utils.h>
 
 unsigned bm_get_assigned_bit(bitmap_t * bm, unsigned long idx)

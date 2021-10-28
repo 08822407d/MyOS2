@@ -5,7 +5,7 @@
 #include <lib/utils.h>
 
 #include <stddef.h>
-#include <stdint.h>
+#include <sys/types.h>
 
 	// uslab consts
 	#define USLAB_LEVEL			16

@@ -1,7 +1,7 @@
 #ifndef _PROTO_H_
 #define _PROTO_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 #include <lib/utils.h>
 
 #include "ktypes.h"

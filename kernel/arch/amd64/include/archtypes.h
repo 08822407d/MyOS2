@@ -1,7 +1,7 @@
 #ifndef _AMD64_TYPES_H
 #define _AMD64_TYPES_H
 
-#include <stdint.h>
+#include <sys/types.h>
 #include <sys/cdefs.h>
 
 /*==============================================================================================*

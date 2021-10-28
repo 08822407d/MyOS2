@@ -146,7 +146,7 @@
 	extern file_ops_s	tty_fops;
 
 	unsigned long init_vfs();
-	dirent_s * path_walk(char * name,unsigned long flags);
+	dirent_s * path_walk(char * name, unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);

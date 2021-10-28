@@ -1,7 +1,7 @@
 #ifndef _AMD64_PROC_H_
 #define _AMD64_PROC_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 #include <lib/utils.h>
 
 #include "arch_proto.h"

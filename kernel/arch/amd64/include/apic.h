@@ -15,7 +15,7 @@
 #ifndef _AMD64_APIC_H_
 #define _AMD64_APIC_H_
 
-#include <stdint.h>
+#include <sys/types.h>
 #include <sys/cdefs.h>
 
 #include <lib/utils.h>

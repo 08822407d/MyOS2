@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include <sys/vfs.h>
 
 #include <unistd.h>

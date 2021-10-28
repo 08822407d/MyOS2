@@ -5,9 +5,10 @@
 extern "C" {
 #endif
 
+#include <sys/types.h>
+
 #include <arch/amd64/limits.h>
 
-#include <stdint.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <sizes.h>

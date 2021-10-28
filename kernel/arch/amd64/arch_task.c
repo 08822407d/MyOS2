@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <sys/types.h>
 #include <sys/cdefs.h>
 #include <sys/_null.h>
 #include <errno.h>
@@ -461,6 +461,14 @@ unsigned long init(unsigned long arg)
 	reg_t ctx_rsp =
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
+
+	// open the 3 std streams
+	while (curr->fps[0] != NULL ||
+			curr->fps[1] != NULL ||
+			curr->fps[2] != NULL);
+	kopen("/dev/tty0", O_RDONLY);
+	kopen("/dev/tty0", O_WRONLY);
+	kopen("/dev/tty0", O_WRONLY);
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"

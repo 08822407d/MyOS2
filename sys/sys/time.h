@@ -36,7 +36,7 @@
 #define	_SYS_TIME_H_
 
 #include <sys/_timeval.h>
-#include <stdint.h>
+#include <sys/types.h>
 #include <sys/timespec.h>
 #include <sys/_clock_id.h>
 
