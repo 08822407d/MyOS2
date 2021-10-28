@@ -13,7 +13,7 @@ void malloc_free_test(void);
 
 int main(int argc, const char *argv[])
 {
-	printf("Welcome to MyOS2\n");
+	printf("Welcome to MyOS2\n\n");
 
 	while (1)
 	{
@@ -31,8 +31,7 @@ int read_line(char *buf)
 
 	while(1)
 	{
-		// key = fgetc(stdin);
-		read(0, &key, 1);
+		key = fgetc(stdin);
 		if(key == '\n')
 		{
 			return count;
@@ -40,8 +39,7 @@ int read_line(char *buf)
 		else if(key)
 		{
 			buf[count++] = key;
-			// printf("%c", key);
-			write(1, &key, 1);
+			printf("%c", key);
 		}			
 		else
 			continue;
