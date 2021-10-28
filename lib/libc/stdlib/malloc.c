@@ -104,7 +104,7 @@ uPage_s * upage_search(virt_addr vaddr)
 		 upg_lp = upg_lp->next)
 	{
 		uPage_s * upgp = container_of(upg_lp, uPage_s, upage_list);
-		if (upgp->vaddr = vaddr)
+		if (upgp->vaddr == vaddr)
 		{
 			ret_val = upgp;
 			break;
