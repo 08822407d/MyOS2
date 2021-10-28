@@ -84,7 +84,7 @@ void HPET_init()
 	io_mfence();
 
 	//1S qemu may have a different precision so here need a calculate
-	*(unsigned long *)(HPET_addr + 0x108) = 0x38D7EA4C68000 / accuracy;
+	*(unsigned long *)(HPET_addr + 0x108) = 0x38D7EA4C680 / accuracy;
 	io_mfence();
 
 	//init MAIN_CNT & get CMOS time

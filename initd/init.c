@@ -18,19 +18,21 @@ int main(int argc, const char *argv[])
 	while (1)
 	{
 		printf("$ ");
-		char buf[SZ_4K];
+		char buf[SZ_1K];
 		read_line(buf);
+		printf(" \n");
 	}
 }
 
 int read_line(char *buf)
 {
-	int key = 0;
+	char key = 0;
 	int count = 0;
 
 	while(1)
 	{
-		key = fgetc(stdin);
+		// key = fgetc(stdin);
+		read(0, &key, 1);
 		if(key == '\n')
 		{
 			return count;
@@ -38,7 +40,8 @@ int read_line(char *buf)
 		else if(key)
 		{
 			buf[count++] = key;
-			printf("%c",key);
+			// printf("%c", key);
+			write(1, &key, 1);
 		}			
 		else
 			continue;

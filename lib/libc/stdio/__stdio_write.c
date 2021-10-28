@@ -41,37 +41,74 @@ ssize_t __stdio_write(FILE * f, const unsigned char * buf, size_t size)
 
 	switch (f->mode)
 	{
-	case _IONBF:
-	{
-		bytes = __unbuffered_write(f, p, size);
-		f->pos += bytes;
-		return bytes;
-	}
-
-	case _IOLBF:
-	{
-		for(i = size; i > 0; i--)
+		case _IONBF:
 		{
-			if(p[i - 1] == '\n')
+			bytes = __unbuffered_write(f, p, size);
+			f->pos += bytes;
+			return bytes;
+		}
+
+		case _IOLBF:
+		{
+			for(i = size; i > 0; i--)
 			{
-				ret = __stdio_write_flush(f);
-				if(ret != 0)
-					return cnt;
+				if(p[i - 1] == '\n')
+				{
+					ret = __stdio_write_flush(f);
+					if(ret != 0)
+						return cnt;
 
-				bytes = __unbuffered_write(f, p, i);
-				if(bytes <= 0)
-					return cnt;
+					bytes = __unbuffered_write(f, p, i);
+					if(bytes <= 0)
+						return cnt;
 
+					size -= bytes;
+					cnt = bytes;
+					f->pos += bytes;
+					p += bytes;
+
+					break;
+				}
+			}
+
+			if(size > 0)
+			{
+				bufsz = f->fifo_write->size;
+
+				if(fifo_len(f->fifo_write) + size > bufsz)
+				{
+					ret = __stdio_write_flush(f);
+					if(ret != 0)
+						return cnt;
+
+					while(size > bufsz)
+					{
+						bytes = f->write(f, p, size);
+						if(bytes < 0)
+						{
+							f->error = 1;
+							return cnt;
+						}
+
+						size -= bytes;
+						cnt += bytes;
+						f->pos += bytes;
+						p += bytes;
+					}
+				}
+
+				bytes = fifo_put(f->fifo_write, (uint8_t *)p, size);
 				size -= bytes;
-				cnt = bytes;
+				cnt += bytes;
 				f->pos += bytes;
 				p += bytes;
 
-				break;
+				f->rwflush = &__stdio_write_flush;
 			}
+			break;
 		}
 
-		if(size > 0)
+		case _IOFBF:
 		{
 			bufsz = f->fifo_write->size;
 
@@ -104,46 +141,9 @@ ssize_t __stdio_write(FILE * f, const unsigned char * buf, size_t size)
 			p += bytes;
 
 			f->rwflush = &__stdio_write_flush;
+
+			break;
 		}
-		break;
-	}
-
-	case _IOFBF:
-	{
-		bufsz = f->fifo_write->size;
-
-		if(fifo_len(f->fifo_write) + size > bufsz)
-		{
-			ret = __stdio_write_flush(f);
-			if(ret != 0)
-				return cnt;
-
-			while(size > bufsz)
-			{
-				bytes = f->write(f, p, size);
-				if(bytes < 0)
-				{
-					f->error = 1;
-					return cnt;
-				}
-
-				size -= bytes;
-				cnt += bytes;
-				f->pos += bytes;
-				p += bytes;
-			}
-		}
-
-		bytes = fifo_put(f->fifo_write, (uint8_t *)p, size);
-		size -= bytes;
-		cnt += bytes;
-		f->pos += bytes;
-		p += bytes;
-
-		f->rwflush = &__stdio_write_flush;
-
-		break;
-	}
 	}
 
 	return cnt;

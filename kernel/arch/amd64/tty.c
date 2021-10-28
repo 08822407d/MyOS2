@@ -69,7 +69,7 @@ long tty_read(file_s * fp, char * buf, unsigned long count, long * position)
 	long counter  = 0;
 	char * tmpbuf = kmalloc(count);
 	memset(tmpbuf, 0, count);
-	while (counter < count + 1)
+	while (counter < count)
 	{
 		char key = kbd_parse_scancode();
 		if (key != 0)

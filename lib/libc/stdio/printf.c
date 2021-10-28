@@ -17,7 +17,9 @@ int printf(const char * fmt, ...)
 	rv = vsnprintf(buf, SZ_4K, fmt, ap);
 	va_end(ap);
 
-	rv = (fputs(buf, stdout) < 0) ? 0 : rv;
-	fflush(stdout);
+	// buffered IO has unsolved bug, so derectly use the write() function
+	stdout->write(stdout, buf, rv);
+	// rv = (fputs(buf, stdout) < 0) ? 0 : rv;
+	// fflush(stdout);
 	return rv;
 }
