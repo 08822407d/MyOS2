@@ -40,6 +40,7 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
     -fno-builtin -nostdinc -ffreestanding -fno-stack-protector -nostdlib \
     -Wno-unused-command-line-argument -fno-exceptions -fno-unwind-tables \
+    -no-pie -fdata-sections -ffunction-sections \
     -Wno-packed-bitfield-compat -nostartfiles -static -ggdb -m64 -fPIC")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 

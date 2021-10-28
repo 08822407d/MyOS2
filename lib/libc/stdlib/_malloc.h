@@ -20,21 +20,29 @@
 /*==============================================================================================*
  *									kernel malloc and slab										*
  *==============================================================================================*/
+	typedef struct uPage
+	{
+		List_s			upage_list;
+		virt_addr		vaddr;
+		uslab_s *		uslab_p;
+	} uPage_s;
+
 	typedef struct uslab
 	{
-		List_s			slab_list;
-		uslab_cache_s *	slabcache_ptr;
+		List_s			uslab_list;
+		uslab_cache_s *	uslabcache_p;
 
 		unsigned long	total;
 		unsigned long	free;
 
+		uPage_s *		upage_p;
 		virt_addr		virt_addr;
 		bitmap_t *		colormap;
 	} uslab_s;
 
 	typedef struct uslab_cache
 	{
-		List_s			slabcache_list;
+		List_s			uslabcache_list;
 
 		unsigned long	obj_size;
 
@@ -46,7 +54,7 @@
 		unsigned long	nsobj_used_count;
 
 		// the base slab should not be freed
-		uslab_s *		normal_base_slab;
+		uslab_s *		normal_base_slab_p;
 	} uslab_cache_s;
 
 

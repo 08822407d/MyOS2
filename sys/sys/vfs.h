@@ -195,8 +195,8 @@ extern "C" {
 	int vfs_mount_count(void);
 	int vfs_open(const char * path, u32_t flags, u32_t mode);
 	int vfs_close(int fd);
-	u64_t vfs_read(int fd, void * buf, u64_t len);
-	u64_t vfs_write(int fd, void * buf, u64_t len);
+	u64_t vfs_read(int fd, const void * buf, u64_t len);
+	u64_t vfs_write(int fd, const void * buf, u64_t len);
 	s64_t vfs_lseek(int fd, s64_t off, int whence);
 	int vfs_fsync(int fd);
 	int vfs_fchmod(int fd, u32_t mode);

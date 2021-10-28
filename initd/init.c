@@ -7,12 +7,15 @@
 #include <stddef.h>
 #include <unistd.h>
 
+void malloc_free_test(void);
 
 int main(int argc, const char *argv[])
 {
 	int ret_val = 0;
 	int testi = 0x12345678;
 	int rv = 0;
+
+	malloc_free_test();
 
 	printf("Message from init.bin.\n");
 
@@ -73,4 +76,25 @@ int main(int argc, const char *argv[])
 	// ret_val = 0x123;
 
 	return ret_val;
+}
+
+void malloc_free_test()
+{
+	unsigned char * test1 = (char *)malloc(0x100);
+	unsigned char * test2 = (char *)malloc(0x1000);
+	unsigned char * test3 = (char *)malloc(0x10000);
+	unsigned char * test4 = (char *)malloc(0x100000);
+
+	free(test2);
+	free(test3);
+	free(test4);
+	unsigned char * test5 = (char *)malloc(0x1);
+	unsigned char * test6 = (char *)malloc(0x10);
+	free(test1);
+	free(test6);
+	unsigned char * test7 = (char *)malloc(0x10);
+	unsigned char * test8 = (char *)malloc(0x1);
+	free(test5);
+	free(test7);
+	free(test8);
 }

@@ -51,7 +51,7 @@
 	int 	execve(const char *path, char *const argv[], char *const envp[]);
 	int		getpid(void);
 	int		getppid(void);
-	size_t	brk(const void *);
+	virt_addr	brk(const void *);
 	//
 
 
@@ -370,7 +370,7 @@
 	long	pathconf(const char *, int);
 	int		pause(void);
 	int		pipe(int *);
-	ssize_t	read(int, void *, size_t);
+	ssize_t	read(int, const void *, size_t);
 	int		rmdir(const char *);
 	int		setgid(gid_t);
 	int		setpgid(pid_t, pid_t);

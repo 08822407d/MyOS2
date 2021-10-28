@@ -14,16 +14,19 @@ static FILE * __stderr = NULL;
 static ssize_t __tty_stdin_read(FILE * f, unsigned char * buf, size_t size)
 {
 	// return console_stdin_read(buf, size);
+	return vfs_read(f->fd, buf, size);
 }
 
 static ssize_t __tty_stdout_write(FILE * f, const unsigned char * buf, size_t size)
 {
 	// return console_stdout_write(buf, size);
+	return vfs_write(f->fd, buf, size);
 }
 
 static ssize_t __tty_stderr_write(FILE * f, const unsigned char * buf, size_t size)
 {
 	// return console_stderr_write(buf, size);
+	return vfs_write(f->fd, buf, size);
 }
 
 static ssize_t __tty_null_read(FILE * f, unsigned char * buf, size_t size)
