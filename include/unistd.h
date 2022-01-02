@@ -51,7 +51,7 @@
 	int 	execve(const char *path, char *const argv[], char *const envp[]);
 	int		getpid(void);
 	int		getppid(void);
-	virt_addr	brk(const void *);
+	virt_addr_t	brk(const void *);
 	//
 
 

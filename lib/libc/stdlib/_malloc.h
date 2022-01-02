@@ -23,7 +23,7 @@
 	typedef struct uPage
 	{
 		List_s			upage_list;
-		virt_addr		vaddr;
+		virt_addr_t		vaddr;
 		uslab_s *		uslab_p;
 	} uPage_s;
 
@@ -36,7 +36,7 @@
 		unsigned long	free;
 
 		uPage_s *		upage_p;
-		virt_addr		virt_addr;
+		virt_addr_t		virt_addr;
 		bitmap_t *		colormap;
 	} uslab_s;
 

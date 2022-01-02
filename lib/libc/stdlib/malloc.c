@@ -9,7 +9,7 @@
 
 bool initiated = false;
 
-virt_addr brk_end = NULL;
+virt_addr_t brk_end = NULL;
 
 List_hdr_s		uslabcache_lhdr;
 uslab_cache_s	uslab_cache_groups[USLAB_LEVEL];
@@ -68,7 +68,7 @@ uPage_s * upage_alloc()
 	else
 	{
 		uPage_s * upgp = malloc(sizeof(uPage_s));
-		virt_addr pg_vaddr = brk(brk_end + CONFIG_PAGE_SIZE);
+		virt_addr_t pg_vaddr = brk(brk_end + CONFIG_PAGE_SIZE);
 		if (pg_vaddr != NULL)
 		{
 			brk_end += CONFIG_PAGE_SIZE;
@@ -94,10 +94,10 @@ void upage_free(uPage_s * upgp)
 	upgp->uslab_p = NULL;
 }
 
-uPage_s * upage_search(virt_addr vaddr)
+uPage_s * upage_search(virt_addr_t vaddr)
 {
 	uPage_s * ret_val = NULL;
-	vaddr = (virt_addr)CONFIG_PAGE_MASKF((size_t)vaddr);
+	vaddr = (virt_addr_t)CONFIG_PAGE_MASKF((size_t)vaddr);
 	List_s * upg_lp;
 	for (upg_lp = used_upage_lhdr.header.next;
 		 upg_lp != &used_upage_lhdr.header;
@@ -156,7 +156,7 @@ void init_uslab()
 		uPage_s * upgp = &base_upages[i];
 		list_init(&upgp->upage_list, upgp);
 		upgp->vaddr =
-		brk_end = brk((virt_addr)((size_t)brk_end + CONFIG_PAGE_SIZE));
+		brk_end = brk((virt_addr_t)((size_t)brk_end + CONFIG_PAGE_SIZE));
 		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
 
 		bslp->upage_p = upage_alloc();

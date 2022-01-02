@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/task.h>
@@ -19,8 +21,8 @@ void kmain()
 	reload_bsp_arch_data();
 	reload_arch_page();
 
-	init_page_manage();
 	init_video();
+	init_page_manage();
 	init_slab();
 	init_task();
 	init_smp_env();

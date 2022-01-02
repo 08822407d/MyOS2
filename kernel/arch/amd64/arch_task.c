@@ -378,7 +378,7 @@ unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], 
 		curr_context->rsi = (unsigned long)dargv;	//argv
 	}
 
-	memset((virt_addr)curr_tsk->mm_struct->start_code, 0, curr_tsk->mm_struct->end_data - curr_tsk->mm_struct->start_code);
+	memset((virt_addr_t)curr_tsk->mm_struct->start_code, 0, curr_tsk->mm_struct->end_data - curr_tsk->mm_struct->start_code);
 	long fp_pos = 0;
 	ret_val = fp->f_ops->read(fp, (void *)curr_tsk->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 

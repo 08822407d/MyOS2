@@ -16,7 +16,7 @@
 
 typedef struct mm_pair
 {
-	virt_addr	startp;
+	virt_addr_t	startp;
 	long		pgnr;
 } mmpr_s;
 
@@ -27,17 +27,17 @@ mmpr_s * get_seginfo(task_s * task)
 	mm_s * mm = task->mm_struct;
 	reg_t user_rsp = get_stackframe(task)->rsp;
 
-	virt_addr codepg_p = mmpr[0].startp = (virt_addr)CONFIG_PAGE_MASKF(mm->start_code);
+	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_code);
 	long codepg_nr = mmpr[0].pgnr = (CONFIG_PAGE_ALIGH(mm->end_code) - (reg_t)codepg_p) / CONFIG_PAGE_SIZE;
-	virt_addr rodatapg_p = mmpr[1].startp = (virt_addr)CONFIG_PAGE_MASKF(mm->start_rodata);
+	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_rodata);
 	long rodatapg_nr = mmpr[1].pgnr = (CONFIG_PAGE_ALIGH(mm->end_rodata) - (reg_t)rodatapg_p) / CONFIG_PAGE_SIZE;
-	virt_addr datapg_p = mmpr[2].startp = (virt_addr)CONFIG_PAGE_MASKF(mm->start_data);
+	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_data);
 	long datapg_nr = mmpr[2].pgnr = (CONFIG_PAGE_ALIGH(mm->end_data) - (reg_t)datapg_p) / CONFIG_PAGE_SIZE;
-	virt_addr bsspg_p = mmpr[3].startp = (virt_addr)CONFIG_PAGE_MASKF(mm->start_bss);
+	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_bss);
 	long bsspg_nr = mmpr[3].pgnr = (CONFIG_PAGE_ALIGH(mm->end_bss) - (reg_t)bsspg_p) / CONFIG_PAGE_SIZE;
-	virt_addr brkpg_p = mmpr[4].startp = (virt_addr)CONFIG_PAGE_MASKF(mm->start_brk);
+	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_brk);
 	long brkpg_nr = mmpr[4].pgnr = (CONFIG_PAGE_ALIGH(mm->end_brk) - (reg_t)brkpg_p) / CONFIG_PAGE_SIZE;
-	virt_addr stackpg_p = mmpr[5].startp = (virt_addr)CONFIG_PAGE_MASKF(user_rsp);
+	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)CONFIG_PAGE_MASKF(user_rsp);
 	long stackpg_nr = mmpr[5].pgnr = (CONFIG_PAGE_ALIGH(mm->start_stack) - (reg_t)stackpg_p) / CONFIG_PAGE_SIZE;
 }
 
@@ -74,7 +74,7 @@ void prepair_COW(task_s * task)
 			// set all pages to read-only
 			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * CONFIG_PAGE_SIZE,
 								ARCH_PG_RW, &mm->cr3);
-			phys_addr paddr = 0;
+			phys_addr_t paddr = 0;
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
 						mmpr[seg_idx].startp + pgnr * CONFIG_PAGE_SIZE, &paddr);
 			Page_s * pgp = get_page(paddr);
@@ -85,7 +85,7 @@ void prepair_COW(task_s * task)
 	refresh_arch_page();
 }
 
-int do_COW(task_s * task, virt_addr virt)
+int do_COW(task_s * task, virt_addr_t virt)
 {
 	int ret_val = 0;
 	mm_s * mm = task->mm_struct;
@@ -93,7 +93,7 @@ int do_COW(task_s * task, virt_addr virt)
 
 	reg_t orig_cr3 = read_cr3();
 	reg_t new_cr3 = 0;
-	phys_addr orig_paddr = 0;
+	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
 	Page_s * orig_pgp = get_page(orig_paddr);
 	Page_s * new_pgp = page_alloc();
@@ -110,8 +110,8 @@ int do_COW(task_s * task, virt_addr virt)
 			if (orig_pgp->map_count < 2)
 				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
 
-			virt_addr orig_pg_vaddr = (virt_addr)phys2virt(orig_pgp->page_start_addr);
-			virt_addr new_pg_vaddr = (virt_addr)phys2virt(new_pgp->page_start_addr);
+			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(orig_pgp->page_start_addr);
+			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(new_pgp->page_start_addr);
 			memcpy(new_pg_vaddr, orig_pg_vaddr, CONFIG_PAGE_SIZE);
 
 			pg_load_cr3(new_cr3);
@@ -144,7 +144,7 @@ reg_t do_brk(reg_t start, reg_t length)
 	{
 		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 		Page_s * pg_p = page_alloc();
-		arch_page_domap((virt_addr)vaddr, pg_p->page_start_addr, attr, &curr_tsk->mm_struct->cr3);
+		arch_page_domap((virt_addr_t)vaddr, pg_p->page_start_addr, attr, &curr_tsk->mm_struct->cr3);
 	}
 	curr_tsk->mm_struct->end_brk = new_end;
 	return new_end;

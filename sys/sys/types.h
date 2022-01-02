@@ -51,8 +51,8 @@
 	typedef __UINT64_TYPE__ reg_t;
 	typedef __UINT64_TYPE__ bitmap_t;
 	#define BITMAP_UNITSIZE 64
-	typedef void*	phys_addr;
-	typedef void*	virt_addr;
+	typedef void*	phys_addr_t;
+	typedef void*	virt_addr_t;
 
 
 #if __BSD_VISIBLE

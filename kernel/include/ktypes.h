@@ -25,7 +25,7 @@
 	typedef struct Page
 	{
 		struct MemZone *zone_belonged;
-		phys_addr		page_start_addr;
+		phys_addr_t		page_start_addr;
 		
 		unsigned long	attr;
 		unsigned long	ref_count;
@@ -40,8 +40,8 @@
 		struct Page	*	page_zone;
 		unsigned long	page_nr;
 
-		phys_addr		zone_start_addr;
-		phys_addr		zone_end_addr;
+		phys_addr_t		zone_start_addr;
+		phys_addr_t		zone_end_addr;
 		size_t			zone_size;
 
 		unsigned long	attr;
@@ -74,7 +74,7 @@
 		unsigned long	total;
 		unsigned long	free;
 
-		virt_addr		virt_addr;
+		virt_addr_t		virt_addr;
 		Page_s *		page;
 		bitmap_t *		colormap;
 	} slab_s;

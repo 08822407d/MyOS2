@@ -128,7 +128,7 @@
 // ioapic information
 	typedef struct IOAPIC_map
 	{
-		phys_addr	phys_addr;
+		phys_addr_t	phys_addr;
 		uint8_t *	virt_idx_addr;
 		uint32_t *	virt_data_addr;
 		uint32_t *	virt_EOI_addr;
@@ -184,8 +184,8 @@
 	/* pre_init.c */
 	void pre_init(void);
 	/* protect.c */
-	phys_addr virt2phys(virt_addr);
-	virt_addr phys2virt(phys_addr);
+	phys_addr_t virt2phys(virt_addr_t);
+	virt_addr_t phys2virt(phys_addr_t);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
@@ -205,15 +205,15 @@
 	void pg_load_cr3(reg_t cr3);
 	void refresh_arch_page(void);
 	void unmap_kernel_lowhalf(void);
-	int arch_page_domap(virt_addr virt, phys_addr phys, uint64_t attr, reg_t * kernel_cr3);
-	int arch_page_setattr(virt_addr virt, uint64_t attr, reg_t * cr3);
-	int arch_page_clearattr(virt_addr virt, uint64_t attr, reg_t * cr3);
-	int arch_page_duplicate(virt_addr virt, phys_addr phys, reg_t orig_cr3, reg_t * ret_cr3);
-	int get_paddr(reg_t cr3, virt_addr virt, phys_addr *ret_phys);
-	void pg_creat_hierarchy(mm_s * mm, virt_addr vaddr, uint64_t attr);
+	int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
+	int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
+	int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
+	int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_t * ret_cr3);
+	int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys);
+	void pg_creat_hierarchy(mm_s * mm, virt_addr_t vaddr, uint64_t attr);
 	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
 	void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr);
-	void fill_pde(PDE_T * pde_ptr, phys_addr paddr, uint64_t attr);
+	void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr);
 	PDPTE_T * get_pdpt(PML4E_T * pml4_ptr, uint64_t pml4e_idx);
 	PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx);
 
@@ -324,7 +324,7 @@
 	/*  mm.c */
 	void creat_exec_addrspace(task_s * task);
 	void prepair_COW(task_s * task);
-	int do_COW(task_s * task, virt_addr vaddr);
+	int do_COW(task_s * task, virt_addr_t vaddr);
 	int check_addr_writable(reg_t cr2, task_s * task);
 	reg_t do_brk(reg_t start, reg_t length);
 

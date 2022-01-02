@@ -40,7 +40,7 @@
 	void init_page_manage(void);
 	void init_slab();
 	Page_s * page_alloc(void);
-	Page_s * get_page(phys_addr paddr);
+	Page_s * get_page(phys_addr_t paddr);
 	void page_free(Page_s *);
 	void * kmalloc(size_t size);
 	void kfree(void * obj_p);

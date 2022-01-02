@@ -127,7 +127,7 @@ void excep_page_fault(stack_frame_s * sf_regs, per_cpudata_s * cpudata_p)
 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
 		check_addr_writable(cr2, curr_tsk))
 	{
-		do_COW(curr_tsk, (virt_addr)cr2);
+		do_COW(curr_tsk, (virt_addr_t)cr2);
 		return;
 	}
 

@@ -57,9 +57,10 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->SetMem((void*)machine_info, 0x4000, 0);
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 
-	get_machine_memory_info(machine_info);
 	get_vbe_info(machine_info);
 
+	get_machine_memory_info(machine_info);
+	
 /////////////////////
 
     LocateMPP(&mpp);
@@ -67,21 +68,25 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 
 /////////////////////
 
-	Print(L"Call ExitBootServices And Jmp to Kernel.\n");
+	Print(L"Call ExitBootServices.\n");
+	Print(L"Jmp to Kernel.\n");
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
 
 	gBS->CloseProtocol(LoadedImage->DeviceHandle,&gEfiSimpleFileSystemProtocolGuid,ImageHandle,NULL);
 	gBS->CloseProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,ImageHandle,NULL);
 
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
+
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
 
 	if(EFI_ERROR(status))
 	{
 		Print(L"ExitBootServices: Failed, Memory Map has Changed.\n");
+		while (1);
 		return EFI_INVALID_PARAMETER;
 	}
 	func = (void *)KERNEL_LOADED_ADDR;
+
 	func();
 
 	return EFI_SUCCESS;
@@ -108,9 +113,9 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
                EFI_PROCESSOR_INFORMATION mcpuInfo;
                Status = mpp -> GetProcessorInfo( mpp, i, &mcpuInfo);
                Print(L"CORE %d: ;", i);
-               Print(L"  ProcessorId\t:%d ;", mcpuInfo.ProcessorId);
-               Print(L"  StatusFlag\t:%x ;", mcpuInfo.StatusFlag);
-               Print(L"  Location\t:(%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
+               Print(L"  ProcessorId : %d ;", mcpuInfo.ProcessorId);
+               Print(L"  StatusFlag : %x ;", mcpuInfo.StatusFlag);
+               Print(L"  Location : (%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
 			   machine_info->efi_smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
 			   machine_info->efi_smp_info.cpus[i].status = mcpuInfo.StatusFlag;
 			   machine_info->efi_smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
@@ -184,9 +189,9 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 		gBS->FreePool(Info);
 	}
 
-	gGraphicsOutput->SetMode(gGraphicsOutput, MaxResolutionMode);
+	gGraphicsOutput->SetMode(gGraphicsOutput,MaxResolutionMode);
 	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
-	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d,
+	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, \
 			Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
 			gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
 			gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,

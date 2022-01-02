@@ -44,7 +44,7 @@ void init_page_manage()
 	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
 	init_recurs_lock(&page_alloc_lock);
 
-	phys_addr low_bound = 0, high_bound = 0;
+	phys_addr_t low_bound = 0, high_bound = 0;
 	uint64_t pg_start_idx = 0, pg_end_idx = 0;
 
 	int i;
@@ -54,8 +54,8 @@ void init_page_manage()
 	for(i = 0; i < mem_info.mb_memmap_nr; i++)
 	{
 		multiboot_memory_map_s *mbmap_curr = &mem_info.mb_memmap[i];
-		low_bound = (phys_addr)mbmap_curr->addr;
-		high_bound = (phys_addr)(mbmap_curr->len + low_bound);
+		low_bound = (phys_addr_t)mbmap_curr->addr;
+		high_bound = (phys_addr_t)(mbmap_curr->len + low_bound);
 
 
 		pg_start_idx = CONFIG_PAGE_ALIGH((uint64_t)low_bound) / CONFIG_PAGE_SIZE;
@@ -69,8 +69,8 @@ void init_page_manage()
 		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
 		mz_curr->page_nr			= pg_end_idx - pg_start_idx;
 		mz_curr->page_free_nr		= mz_curr->page_nr;
-		mz_curr->zone_start_addr	= (phys_addr)(pg_start_idx * CONFIG_PAGE_SIZE);
-		mz_curr->zone_end_addr		= (phys_addr)(pg_end_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_start_addr	= (phys_addr_t)(pg_start_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_end_addr		= (phys_addr_t)(pg_end_idx * CONFIG_PAGE_SIZE);
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
@@ -79,7 +79,7 @@ void init_page_manage()
 		{
 			Page_s *pg_curr = &mem_info.pages[j];
 			pg_curr->zone_belonged	= mz_curr;
-			pg_curr->page_start_addr = (phys_addr)(j * CONFIG_PAGE_SIZE);
+			pg_curr->page_start_addr = (phys_addr_t)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
 		}
 		zone_count++;
@@ -90,7 +90,7 @@ void init_page_manage()
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
 	size_t k_phy_pgbase = 0;
-	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - (virt_addr)phys2virt(0)) / CONFIG_PAGE_SIZE;
+	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - (virt_addr_t)phys2virt(0)) / CONFIG_PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
 		unsigned long pg_idx = k_phy_pgbase / CONFIG_PAGE_SIZE;
@@ -133,7 +133,7 @@ void page_free(Page_s * page_p)
 	unlock_recurs_lock(&page_alloc_lock);
 }
 
-Page_s * get_page(phys_addr paddr)
+Page_s * get_page(phys_addr_t paddr)
 {
 	long pg_idx = CONFIG_PAGE_ALIGH((uint64_t)paddr) / CONFIG_PAGE_SIZE;
 	return &mem_info.pages[pg_idx];
@@ -181,7 +181,7 @@ void init_slab()
 		bslp->slabcache_ptr = scgp;
 		bslp->free =
 		bslp->total = obj_nr;
-		bslp->virt_addr = (virt_addr)base_slab_page[i];
+		bslp->virt_addr = (virt_addr_t)base_slab_page[i];
 		bslp->page->attr |= PG_Slab;
 		int pg_idx = (uint64_t)virt2phys(bslp->virt_addr) / CONFIG_PAGE_SIZE;
 		bslp->page = &mem_info.pages[pg_idx];
@@ -313,7 +313,7 @@ void kfree(void * obj_p)
 		return;
 
 	// find which slab does the pointer belonged to
-	phys_addr pg_addr = virt2phys((virt_addr)CONFIG_PAGE_MASKF((size_t)obj_p));
+	phys_addr_t pg_addr = virt2phys((virt_addr_t)CONFIG_PAGE_MASKF((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
