@@ -35,6 +35,10 @@
 #ifndef	_MACHINE__LIMITS_H_
 #define	_MACHINE__LIMITS_H_
 
+// copied from linux-5.14
+#define SIZE_MAX		(~(size_t)0)
+#define PHYS_ADDR_MAX	SIZE_MAX
+
 /*
  * According to ANSI (section 2.2.4.2), the values below must be usable by
  * #if preprocessing directives.  Additionally, the expression must have the
