@@ -60,7 +60,7 @@
 	typedef struct memblock_region {
 		phys_addr_t	base;
 		size_t		size;
-		enum memblock_flags flags;
+		// enum memblock_flags flags;
 	// #ifdef CONFIG_NUMA
 	// 	int nid;
 	// #endif
@@ -95,5 +95,13 @@
 		struct memblock_type memory;
 		struct memblock_type reserved;
 	} memblock_s;
+
+	extern memblock_s memblock;
+
+
+	int memblock_add(phys_addr_t base, size_t size);
+	int memblock_remove(phys_addr_t base, size_t size);
+	int memblock_free(phys_addr_t base, size_t size);
+	int memblock_reserve(phys_addr_t base, size_t size);
 
 #endif /* _LINUX_MEMBLOCK_H_ */

@@ -5,6 +5,7 @@
 #include <errno.h>
 
 #include <include/memblock.h>
+#include <include/kutils.h>
 
 #define INIT_MEMBLOCK_REGIONS			128
 #define INIT_PHYSMEM_REGIONS			4
@@ -13,17 +14,19 @@
 # define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
 #endif
 
-static memblock_region_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS];
-static memblock_region_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS];
+static memblock_region_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] = 
+	{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0}};
+static memblock_region_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] =
+	{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0}};
 
 memblock_s memblock = {
 	.memory.regions		= memblock_memory_init_regions,
-	.memory.cnt			= 1,	/* empty dummy entry */
+	.memory.cnt			= 0,	/* empty dummy entry */
 	.memory.max			= INIT_MEMBLOCK_REGIONS,
 	.memory.name		= "memory",
 
 	.reserved.regions	= memblock_reserved_init_regions,
-	.reserved.cnt		= 1,	/* empty dummy entry */
+	.reserved.cnt		= 0,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
 	.reserved.name		= "reserved",
 
@@ -32,10 +35,10 @@ memblock_s memblock = {
 };
 
 
-#define for_each_memblock_type(i, memblock_type, rgn)		\
-		for (i = 0, rgn = &memblock_type->regions[0];		\
-			i < memblock_type->cnt;							\
-			i++, rgn = &memblock_type->regions[i])
+#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)		\
+		for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
+			rgn_idx < memblock_type->cnt + 1;						\
+			rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
 
 /* adjust *@size so that (@base + *@size) doesn't overflow, return new size */
 static inline size_t memblock_cap_size(phys_addr_t base, size_t *size)
@@ -78,14 +81,12 @@ static void memblock_merge_regions(memblock_type_s *type)
 
 	/* cnt never goes below 1 */
 	while (i < type->cnt - 1) {
-		struct memblock_region *this = &type->regions[i];
-		struct memblock_region *next = &type->regions[i + 1];
+		memblock_region_s *this = &type->regions[i];
+		memblock_region_s *next = &type->regions[i + 1];
 
-		if (this->base + this->size != next->base ||
-		    memblock_get_region_node(this) !=
-		    memblock_get_region_node(next) ||
-		    this->flags != next->flags) {
-			BUG_ON(this->base + this->size > next->base);
+		if (this->base + this->size != next->base) {
+			// BUG_ON(this->base + this->size > next->base);
+			while (this->base + this->size > next->base);
 			i++;
 			continue;
 		}
@@ -103,7 +104,6 @@ static void memblock_merge_regions(memblock_type_s *type)
  * @idx:	index for the insertion point
  * @base:	base address of the new region
  * @size:	size of the new region
- * @nid:	node id of the new region
  * @flags:	flags of the new region
  *
  * Insert new memblock region [@base, @base + @size) into @type at @idx.
@@ -121,7 +121,6 @@ static void memblock_insert_region(	memblock_type_s *type,
 	memmove(rgn + 1, rgn, (type->cnt - idx) * sizeof(*rgn));
 	rgn->base = base;
 	rgn->size = size;
-	rgn->flags = flags;
 	// memblock_set_region_node(rgn, nid);
 	type->cnt++;
 	type->total_size += size;
@@ -147,84 +146,41 @@ static int memblock_add_range(	memblock_type_s *type,
 								phys_addr_t base, size_t size,
 								enum memblock_flags flags)
 {
-	bool insert = false;
-	phys_addr_t obase = base;
 	phys_addr_t end = base + memblock_cap_size(base, &size);
-	int idx, nr_new;
+	int idx;
 	memblock_region_s *rgn;
 
 	if (!size)
-		return 0;
+		return ENOERR;
 
-	/* special case for empty array */
-	if (type->regions[0].size == 0) {
-		WARN_ON(type->cnt != 1 || type->total_size);
-		type->regions[0].base = base;
-		type->regions[0].size = size;
-		type->regions[0].flags = flags;
-		// memblock_set_region_node(&type->regions[0], nid);
-		type->total_size = size;
-		return 0;
-	}
-repeat:
+	if (type->cnt + 2 > type->max)
+		return -ENOMEM;
+
 	/*
-	 * The following is executed twice.  Once with %false @insert and
-	 * then with %true.  The first counts the number of regions needed
-	 * to accommodate the new area.  The second actually inserts them.
+	 * 
 	 */
-	base = obase;
-	nr_new = 0;
-
 	for_each_memblock_type(idx, type, rgn) {
 		phys_addr_t rbase = rgn->base;
 		phys_addr_t rend = rbase + rgn->size;
 
-		if (rbase >= end)
-			break;
 		if (rend <= base)
 			continue;
-		/*
-		 * @rgn overlaps.  If it separates the lower part of new
-		 * area, insert that portion.
-		 */
-		if (rbase > base) {
-#ifdef CONFIG_NUMA
-			WARN_ON(nid != memblock_get_region_node(rgn));
-#endif
-			// WARN_ON(flags != rgn->flags);
-			nr_new++;
-			if (insert)
-				memblock_insert_region(type, idx++, base,
-						       rbase - base, flags);
-		}
-		/* area below @rend is dealt with, forget about it */
-		base = min(rend, end);
-	}
-
-	/* insert the remaining portion */
-	if (base < end) {
-		nr_new++;
-		if (insert)
+		if (rbase >= end || rgn->size == 0)
+		{
 			memblock_insert_region(type, idx, base, end - base, flags);
+			break;
+		}
+		if (rbase > base) {
+			memblock_insert_region(type, idx, base, rbase - base, flags);
+			idx++;
+			base = min(end, rend);
+			if (base = end)
+				break;
+		}
 	}
 
-	if (!nr_new)
-		return 0;
-
-	/*
-	 * If this was the first round, resize array and repeat for actual
-	 * insertions; otherwise, merge and return.
-	 */
-	if (!insert) {
-		while (type->cnt + nr_new > type->max)
-			if (memblock_double_array(type, obase, size) < 0)
-				return -ENOMEM;
-		insert = true;
-		goto repeat;
-	} else {
-		memblock_merge_regions(type);
-		return 0;
-	}
+	memblock_merge_regions(type);
+	return ENOERR;
 }
 
 /**
@@ -240,7 +196,5 @@ repeat:
  */
 int memblock_add(phys_addr_t base, size_t size)
 {
-	phys_addr_t end = base + size - 1;
-
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }

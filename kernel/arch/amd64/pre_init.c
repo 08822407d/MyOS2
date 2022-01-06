@@ -11,6 +11,7 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/multiboot2.h"
+#include "include/memblock.h"
 
 extern char _k_phys_start;
 extern char _k_virt_start;
@@ -57,6 +58,10 @@ void pre_init(void)
 		mem_info.mb_memmap[i].len  = bootinfo->efi_e820_info.e820_entry[i].length;
 		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
 		mem_info.mb_memmap[i].zero = 0;
+		if (mem_info.mb_memmap[i].type == 1 && mem_info.mb_memmap[i].len != 0)
+		{
+			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
+		}
 	}
 	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
 	mem_info.mb_memmap_nr = i + 1;
