@@ -98,10 +98,55 @@
 
 	extern memblock_s memblock;
 
-
 	int memblock_add(phys_addr_t base, size_t size);
 	int memblock_remove(phys_addr_t base, size_t size);
 	int memblock_free(phys_addr_t base, size_t size);
 	int memblock_reserve(phys_addr_t base, size_t size);
+
+	void * memblock_alloc_try(size_t size, phys_addr_t align,
+					phys_addr_t min_addr, phys_addr_t max_addr);
+
+	void * memblock_alloc(size_t size, phys_addr_t align);
+
+	/* Low level functions */
+	void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *type_b,
+							phys_addr_t *out_start, phys_addr_t *out_end);
+
+	/**
+	 * __for_each_mem_range - iterate through memblock areas from type_a and not
+	 * included in type_b. Or just type_a if type_b is NULL.
+	 * @i: u64 used as loop variable
+	 * @type_a: ptr to memblock_type to iterate
+	 * @type_b: ptr to memblock_type which excludes from the iteration
+	 * @nid: node selector, %NUMA_NO_NODE for all nodes
+	 * @flags: pick from blocks based on memory attributes
+	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+	 * @p_nid: ptr to int for nid of the range, can be %NULL
+	 */
+	#define __for_each_mem_range(i, type_a, type_b,			\
+									p_start, p_end)			\
+		for (i = 0, __next_mem_range(&i, type_a, type_b,	\
+										p_start, p_end);	\
+				i != (uint64_t)ULLONG_MAX;					\
+				__next_mem_range(&i, type_a, type_b,		\
+									p_start, p_end))
+
+	/**
+	 * for_each_free_mem_range - iterate through free memblock areas
+	 * @i: u64 used as loop variable
+	 * @nid: node selector, %NUMA_NO_NODE for all nodes
+	 * @flags: pick from blocks based on memory attributes
+	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+	 * @p_nid: ptr to int for nid of the range, can be %NULL
+	 *
+	 * Walks over free (memory && !reserved) areas of memblock.  Available as
+	 * soon as memblock is initialized.
+	 */
+	#define for_each_free_mem_range(i, p_start, p_end)			\
+		__for_each_mem_range(i, &memblock.memory, &memblock.reserved,	\
+								p_start, p_end)
+
 
 #endif /* _LINUX_MEMBLOCK_H_ */
