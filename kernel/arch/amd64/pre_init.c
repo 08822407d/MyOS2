@@ -63,7 +63,6 @@ void pre_init(void)
 			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
 		}
 	}
-	memblock_alloc(65535, 1);
 
 	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
 	mem_info.mb_memmap_nr = i + 1;

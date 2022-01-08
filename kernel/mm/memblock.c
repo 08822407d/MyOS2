@@ -93,7 +93,7 @@ bool memblock_overlaps_region(	memblock_type_s *type,
  */
 static phys_addr_t __memblock_find_range_bottom_up(
 				phys_addr_t start, phys_addr_t end,
-				size_t size, phys_addr_t align)
+				size_t size, size_t align)
 {
 	phys_addr_t this_start, this_end, cand;
 	uint64_t i;
@@ -126,7 +126,7 @@ static phys_addr_t __memblock_find_range_bottom_up(
  * Found address on success, 0 on failure.
  */
 static phys_addr_t memblock_find_in_range(
-				size_t size, phys_addr_t align,
+				size_t size, size_t align,
 				phys_addr_t start, phys_addr_t end)
 {
 	/* pump up @end */
@@ -393,7 +393,7 @@ void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *t
  * Return:
  * Physical address of allocated memory block on success, %0 on failure.
  */
-phys_addr_t memblock_alloc_range(size_t size, phys_addr_t align,
+phys_addr_t memblock_alloc_range(size_t size, size_t align,
 					    phys_addr_t start, phys_addr_t end)
 {
 	phys_addr_t found;
@@ -425,7 +425,7 @@ phys_addr_t memblock_alloc_range(size_t size, phys_addr_t align,
  * Return:
  * Virtual address of allocated memory block on success, NULL on failure.
  */
-static void * memblock_alloc_internal(size_t size, phys_addr_t align,
+static void * memblock_alloc_internal(size_t size, size_t align,
 					    phys_addr_t min_addr, phys_addr_t max_addr)
 {
 	phys_addr_t alloc;
@@ -470,7 +470,7 @@ static void * memblock_alloc_internal(size_t size, phys_addr_t align,
  * Return:
  * Virtual address of allocated memory block on success, NULL on failure.
  */
-void * memblock_alloc_try(size_t size, phys_addr_t align,
+void * memblock_alloc_try(size_t size, size_t align,
 				    phys_addr_t min_addr, phys_addr_t max_addr)
 {
 	void *ptr;
@@ -482,7 +482,7 @@ void * memblock_alloc_try(size_t size, phys_addr_t align,
 	return ptr;
 }
 
-inline __always_inline void * memblock_alloc(size_t size, phys_addr_t align)
+inline __always_inline void * memblock_alloc(size_t size, size_t align)
 {
 	return memblock_alloc_try(size, align, MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
 }

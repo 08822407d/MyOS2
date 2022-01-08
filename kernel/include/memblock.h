@@ -103,10 +103,10 @@
 	int memblock_free(phys_addr_t base, size_t size);
 	int memblock_reserve(phys_addr_t base, size_t size);
 
-	void * memblock_alloc_try(size_t size, phys_addr_t align,
+	void * memblock_alloc_try(size_t size, size_t align,
 					phys_addr_t min_addr, phys_addr_t max_addr);
 
-	void * memblock_alloc(size_t size, phys_addr_t align);
+	void * memblock_alloc(size_t size, size_t align);
 
 	/* Low level functions */
 	void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *type_b,
