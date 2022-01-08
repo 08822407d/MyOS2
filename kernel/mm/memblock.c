@@ -125,7 +125,7 @@ static phys_addr_t __memblock_find_range_bottom_up(
  * Return:
  * Found address on success, 0 on failure.
  */
-static phys_addr_t memblock_find_in_range_node(
+static phys_addr_t memblock_find_in_range(
 				size_t size, phys_addr_t align,
 				phys_addr_t start, phys_addr_t end)
 {
@@ -398,25 +398,11 @@ phys_addr_t memblock_alloc_range(size_t size, phys_addr_t align,
 {
 	phys_addr_t found;
 
-again:
-	found = memblock_find_in_range_node(size, align, start, end);
+	found = memblock_find_in_range(size, align, start, end);
 	if (found && !memblock_reserve(found, size))
-		goto done;
-
-	return 0;
-
-done:
-	/* Skip kmemleak for kasan_init() due to high volume. */
-	if (end != (phys_addr_t)MEMBLOCK_ALLOC_KASAN)
-		/*
-		 * The min_count is set to 0 so that memblock allocated
-		 * blocks are never reported as leaks. This is because many
-		 * of these blocks are only referred via the physical
-		 * address which is not looked up by kmemleak.
-		 */
-		kmemleak_alloc_phys(found, size, 0, 0);
-
-	return found;
+		return found;
+	else
+		return 0;
 }
 
 /**
