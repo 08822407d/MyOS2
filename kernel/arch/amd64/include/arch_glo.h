@@ -7,6 +7,8 @@
 #include "archtypes.h"
 #include "arch_proto.h"
 
+	extern memory_info_s	mem_info;
+	
 	extern uint64_t	apic_id[CONFIG_MAX_CPUS];
 	extern struct cputopo	smp_topos[CONFIG_MAX_CPUS];
 
