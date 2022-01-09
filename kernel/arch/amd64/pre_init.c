@@ -12,6 +12,7 @@
 #include "include/archconst.h"
 #include "include/multiboot2.h"
 #include "include/memblock.h"
+#include <include/math.h>
 
 extern char _k_phys_start;
 extern char _k_virt_start;
@@ -107,9 +108,10 @@ void pre_init(void)
 			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
 		}
 	}
-
 	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
+	kparam.phys_page_nr = round_up(kparam.max_phys_mem, CONFIG_PAGE_SIZE) / CONFIG_PAGE_SIZE;
 	mem_info.mb_memmap_nr = i + 1;
+
 	// set init flag
 	kparam.arch_init_flags.memory_layout = 1;
 
@@ -140,5 +142,11 @@ void pre_init(void)
 	}
 
 	cpuid_info();
+
+	// some part of memmory space is reserved
+	memblock_reserve(0, 16 * CONST_1M);
+	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, CONFIG_PAGE_SIZE),
+					round_up((size_t)kparam.kernel_vir_end, CONFIG_PAGE_SIZE) -
+					round_down((size_t)kparam.kernel_vir_base, CONFIG_PAGE_SIZE));
 }
 

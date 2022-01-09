@@ -78,7 +78,7 @@
 		unsigned long	cnt;
 		unsigned long	max;
 		size_t			total_size;
-		struct memblock_region *regions;
+		memblock_region_s *	regions;
 		char *name;
 	} memblock_type_s;
 
@@ -92,8 +92,8 @@
 	typedef struct memblock {
 		bool bottom_up;  /* is bottom up direction? */
 		phys_addr_t current_limit;
-		struct memblock_type memory;
-		struct memblock_type reserved;
+		memblock_type_s memory;
+		memblock_type_s reserved;
 	} memblock_s;
 
 	extern memblock_s memblock;

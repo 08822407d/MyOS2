@@ -29,11 +29,13 @@ memblock_s memblock = {
 	.memory.regions		= memblock_memory_init_regions,
 	.memory.cnt			= 0,	/* empty dummy entry */
 	.memory.max			= INIT_MEMBLOCK_REGIONS,
+	.memory.total_size	= 0,
 	.memory.name		= "memory",
 
 	.reserved.regions	= memblock_reserved_init_regions,
 	.reserved.cnt		= 0,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
+	.reserved.total_size= 0,
 	.reserved.name		= "reserved",
 
 	.bottom_up			= false,
@@ -165,7 +167,7 @@ static void memblock_merge_regions(memblock_type_s *type)
 
 		this->size += next->size;
 		/* move forward from next + 1, index of which is i + 2 */
-		memmove(next, next + 1, (type->cnt - (i + 2)) * sizeof(*next));
+		memmove(next, next + 1, (type->cnt - (i + 1)) * sizeof(*next));
 		type->cnt--;
 	}
 }
@@ -310,7 +312,7 @@ void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *t
 	int idx_b = *idx >> 32;
 
 	for (; idx_a < type_a->cnt; idx_a++) {
-		struct memblock_region *m = &type_a->regions[idx_a];
+		memblock_region_s *m = &type_a->regions[idx_a];
 
 		phys_addr_t m_start = m->base;
 		phys_addr_t m_end = m->base + m->size;
@@ -330,7 +332,7 @@ void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *t
 
 		/* scan areas before each reservation */
 		for (; idx_b < type_b->cnt + 1; idx_b++) {
-			struct memblock_region *r;
+			memblock_region_s *r;
 			phys_addr_t r_start;
 			phys_addr_t r_end;
 

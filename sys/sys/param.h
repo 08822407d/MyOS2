@@ -23,7 +23,8 @@
 		virt_addr_t	kernel_vir_end;
 
 		unsigned	nr_lcpu;
-		unsigned	nr_task;           /* number of kernel tasks */
+		
+		size_t		phys_page_nr;
 
 		reg_t		max_phys_mem;
 

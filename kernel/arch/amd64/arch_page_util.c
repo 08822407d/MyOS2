@@ -9,6 +9,8 @@
 #include <include/ktypes.h>
 #include <include/memory.h>
 #include <include/printk.h>
+#include <include/memblock.h>
+#include <include/math.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"
@@ -16,53 +18,76 @@
 #include "include/arch_proto.h"
 
 /* Storage for PML4, PDPT and PD. */
-PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
-PDPTE_T	KERN_PDPT[PGENT_NR] __aligned(PGENT_SIZE);
-PDE_T	KERN_PD[PDE_NR] __aligned(PGENT_SIZE);
+// PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
+// PDPTE_T	KERN_PDPT[PGENT_NR] __aligned(PGENT_SIZE);
+// PDE_T	KERN_PD[PDE_NR] __aligned(PGENT_SIZE);
+PML4E_T	*	KERN_PML4;
+PDPTE_T	*	KERN_PDPT;
+PDE_T	*	KERN_PD;
 
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
 
-void creat_fixed_kernel_pgmap();
-void map_fix_kernel_pages();
+static void init_fixed_kernel_pgmap();
 
 void reload_arch_page()
 {
 	int pdpte_nr = PDPTE_NR;
 	int pde_nr = PDE_NR;
 
-	kernel_cr3 = virt2phys(&KERN_PML4);
+	init_fixed_kernel_pgmap();
 
-	creat_fixed_kernel_pgmap();
-	map_fix_kernel_pages();
-
+	kernel_cr3 = virt2phys(KERN_PML4);
 	pg_load_cr3((reg_t)kernel_cr3);
 	// set init flag
 	kparam.arch_init_flags.reload_bsp_arch_page = 1;
 }
 
-void map_fix_kernel_pages()
+static void init_fixed_kernel_pgmap()
 {
-	// map kernel software used pages
+	size_t pg_nr	= kparam.phys_page_nr;
+	size_t pd_nr	= round_up(kparam.phys_page_nr, PGENT_NR) / PGENT_NR;
+	size_t pdpt_nr	= round_up(pd_nr, PGENT_NR) / PGENT_NR;
+	size_t pml4_nr	= 1;
+	KERN_PML4	= (PML4E_T *)memblock_alloc(pml4_nr * PGENT_SIZE, PGENT_SIZE);
+	KERN_PDPT	= (PDPTE_T *)memblock_alloc(pdpt_nr * PGENT_SIZE, PGENT_SIZE);
+	KERN_PD		= (PDE_T *)memblock_alloc(pd_nr * PGENT_SIZE, PGENT_SIZE);
+	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
+	// fill PML4 by hand with so called higher half
+	for (int i = 0; i < pdpt_nr; i++)
+	{
+		fill_pml4e(KERN_PML4 + 0 + i, KERN_PDPT + i * PGENT_NR, attr);
+		fill_pml4e(KERN_PML4 + 256 + i, KERN_PDPT + i * PGENT_NR, attr);
+	}
+	// fill PDPTs by hand
+	for (int i = 0; i < pd_nr; i++)
+		fill_pdpte(KERN_PDPT + i, KERN_PD + i * PGENT_NR, attr);
+	// fill PDs by hand
 	phys_addr_t k_phy_pgbase = 0;
 	virt_addr_t k_vir_pgbase = (virt_addr_t)phys2virt(0);
-	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
-	long pde_nr   = CONFIG_PAGE_MASKF(kparam.max_phys_mem) / CONFIG_PAGE_SIZE;
-	for (long i = 0; i < pde_nr; i++)
+	attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+	for (long i = 0; i < pg_nr; i++)
 	{
-		fill_pde(&KERN_PD[i], k_phy_pgbase, attr);
+		fill_pde(KERN_PD + i, k_phy_pgbase, attr);
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
+
 	//map video used pages
 	k_phy_pgbase = framebuffer.FB_phybase;
-	pde_nr = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
+	long vbe_pg_nr = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
 	unsigned long start_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
-	for (long i = start_idx; i < pde_nr + start_idx; i++)
+	for (long i = start_idx; i < vbe_pg_nr + start_idx; i++)
 	{
 		fill_pde(&KERN_PD[i], k_phy_pgbase, attr | ARCH_PG_USER);
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
 }
+
+void unmap_kernel_lowhalf()
+{
+	memset(KERN_PML4, 0, PGENT_SIZE / 2);
+}
+
 
 reg_t read_cr3()
 {
@@ -129,22 +154,6 @@ inline void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr)
 	pde_ptr->ENT = MASKF_2M((uint64_t)paddr) | ARCH_PGS_ATTR(attr) | ARCH_PG_PAT;
 }
 
-
-//
-void creat_fixed_kernel_pgmap()
-{
-	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
-	fill_pml4e(&KERN_PML4[0], KERN_PDPT, attr);
-	fill_pml4e(&KERN_PML4[256], KERN_PDPT, attr);
-
-	for (int i = 0; i < PDPTE_NR; i++)
-		fill_pdpte(&KERN_PDPT[i], &KERN_PD[i * PGENT_NR], attr);
-}
-
-void unmap_kernel_lowhalf()
-{
-	memset(KERN_PML4, 0, PGENT_SIZE / 2);
-}
 
 /*==============================================================================================*
  *																								*
