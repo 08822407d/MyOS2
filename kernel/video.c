@@ -18,7 +18,6 @@ extern position_t Pos;
 
 void init_video()
 {	
-
 	// make sure have get framebuffer infomation
 	while (!kparam.arch_init_flags.frame_buffer_info);
 

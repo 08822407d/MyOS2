@@ -17,10 +17,6 @@
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"
 
-/* Storage for PML4, PDPT and PD. */
-// PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
-// PDPTE_T	KERN_PDPT[PGENT_NR] __aligned(PGENT_SIZE);
-// PDE_T	KERN_PD[PDE_NR] __aligned(PGENT_SIZE);
 PML4E_T	*	KERN_PML4;
 PDPTE_T	*	KERN_PDPT;
 PDE_T	*	KERN_PD;
@@ -32,9 +28,6 @@ static void init_fixed_kernel_pgmap();
 
 void reload_arch_page()
 {
-	int pdpte_nr = PDPTE_NR;
-	int pde_nr = PDE_NR;
-
 	init_fixed_kernel_pgmap();
 
 	kernel_cr3 = virt2phys(KERN_PML4);
@@ -52,33 +45,25 @@ static void init_fixed_kernel_pgmap()
 	KERN_PML4	= (PML4E_T *)memblock_alloc(pml4_nr * PGENT_SIZE, PGENT_SIZE);
 	KERN_PDPT	= (PDPTE_T *)memblock_alloc(pdpt_nr * PGENT_SIZE, PGENT_SIZE);
 	KERN_PD		= (PDE_T *)memblock_alloc(pd_nr * PGENT_SIZE, PGENT_SIZE);
+
 	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
-	// fill PML4 by hand with so called higher half
+	// fill PML4 by hand
 	for (int i = 0; i < pdpt_nr; i++)
 	{
 		fill_pml4e(KERN_PML4 + 0 + i, KERN_PDPT + i * PGENT_NR, attr);
+		// so called higher half
 		fill_pml4e(KERN_PML4 + 256 + i, KERN_PDPT + i * PGENT_NR, attr);
 	}
 	// fill PDPTs by hand
 	for (int i = 0; i < pd_nr; i++)
 		fill_pdpte(KERN_PDPT + i, KERN_PD + i * PGENT_NR, attr);
 	// fill PDs by hand
+	// here framebuffer mem had already been included in kparam.max_phys_mem
 	phys_addr_t k_phy_pgbase = 0;
-	virt_addr_t k_vir_pgbase = (virt_addr_t)phys2virt(0);
 	attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
 	for (long i = 0; i < pg_nr; i++)
 	{
 		fill_pde(KERN_PD + i, k_phy_pgbase, attr);
-		k_phy_pgbase += CONFIG_PAGE_SIZE;
-	}
-
-	//map video used pages
-	k_phy_pgbase = framebuffer.FB_phybase;
-	long vbe_pg_nr = CONFIG_PAGE_ALIGH(framebuffer.FB_size) / CONFIG_PAGE_SIZE;
-	unsigned long start_idx = (unsigned long)k_phy_pgbase / CONFIG_PAGE_SIZE;
-	for (long i = start_idx; i < vbe_pg_nr + start_idx; i++)
-	{
-		fill_pde(&KERN_PD[i], k_phy_pgbase, attr | ARCH_PG_USER);
 		k_phy_pgbase += CONFIG_PAGE_SIZE;
 	}
 }
@@ -87,7 +72,6 @@ void unmap_kernel_lowhalf()
 {
 	memset(KERN_PML4, 0, PGENT_SIZE / 2);
 }
-
 
 reg_t read_cr3()
 {

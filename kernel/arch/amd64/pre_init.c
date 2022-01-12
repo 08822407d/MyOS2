@@ -31,6 +31,80 @@ uint64_t	apic_id[CONFIG_MAX_CPUS];
 struct cputopo	smp_topos[CONFIG_MAX_CPUS];
 
 
+static void enable_AMD_syscall()
+{
+	// enalble syscall/sysret machanism
+	uint64_t ia32_efer = rdmsr(IA32_EFER);
+	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
+	wrmsr(IA32_EFER, ia32_efer);
+}
+
+static void get_VBE_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+{
+	framebuffer.FB_phybase = (phys_addr_t)bootinfo->efi_graphics_info.FrameBufferBase;
+	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
+	framebuffer.FB_size = bootinfo->efi_graphics_info.FrameBufferSize;
+	// framebuffer.X_Resolution = bootinfo->efi_graphics_info.HorizontalResolution;
+	framebuffer.X_Resolution = bootinfo->efi_graphics_info.PixelsPerScanLine;
+	framebuffer.Y_Resolution = bootinfo->efi_graphics_info.VerticalResolution;
+	framebuffer.PixperScanline = bootinfo->efi_graphics_info.PixelsPerScanLine;
+	// set init flag
+	kparam.arch_init_flags.frame_buffer_info = 1;
+}
+
+static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+{
+	kparam.kernel_phy_base	= &_k_phys_start;
+	kparam.kernel_vir_base	= &_k_virt_start;
+	kparam.kernel_vir_end	= &_end;
+
+	int i;
+	for (i = 0; bootinfo->efi_e820_info.e820_entry[i].length != 0; i++)
+	{
+		mem_info.mb_memmap[i].addr = bootinfo->efi_e820_info.e820_entry[i].address;
+		mem_info.mb_memmap[i].len  = bootinfo->efi_e820_info.e820_entry[i].length;
+		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
+		mem_info.mb_memmap[i].zero = 0;
+		if (mem_info.mb_memmap[i].type == 1 && mem_info.mb_memmap[i].len != 0)
+		{
+			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
+		}
+	}
+	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
+	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
+		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
+	kparam.phys_page_nr = round_up(kparam.max_phys_mem, CONFIG_PAGE_SIZE) / CONFIG_PAGE_SIZE;
+	mem_info.mb_memmap_nr = i + 1;
+
+	// set init flag
+	kparam.arch_init_flags.memory_layout = 1;
+
+	// some part of memmory space is reserved
+	memblock_reserve(0, 16 * CONST_1M);
+	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, CONFIG_PAGE_SIZE),
+					round_up((size_t)kparam.kernel_vir_end, CONFIG_PAGE_SIZE) -
+					round_down((size_t)kparam.kernel_vir_base, CONFIG_PAGE_SIZE));
+}
+
+static void get_SMP_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+{
+	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;
+	uint64_t lcpu_count = 0;
+	for (int i = 0; i < bootinfo->efi_smp_info.core_num; i++)
+	{
+		efi_cpudesc_s * this_cpu = &bootinfo->efi_smp_info.cpus[i];
+		if ((this_cpu->status & 0x4) > 0)
+		{
+			apic_id[lcpu_count] = this_cpu->proccessor_id & 0xFF;
+			smp_topos[lcpu_count].not_use = 0;
+			smp_topos[lcpu_count].pack_id = this_cpu->pack_id;
+			smp_topos[lcpu_count].core_id = this_cpu->core_id;
+			smp_topos[lcpu_count].thd_id  = this_cpu->thd_id;
+			lcpu_count++;
+		}
+	}
+}
+
 static void cpuid_info(void)
 {
 	unsigned int CpuFacName[4] = {0,0,0,0};
@@ -80,73 +154,13 @@ static void cpuid_info(void)
 
 void pre_init(void)
 {
-	// enalble syscall/sysret machanism
-	uint64_t ia32_efer = rdmsr(IA32_EFER);
-	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
-	wrmsr(IA32_EFER, ia32_efer);
-
-	uint64_t EFER = rdmsr(IA32_EFER);
-
 	memset((virt_addr_t)&_bss, 0, &_ebss - &_bss);
 
-	kparam.kernel_phy_base	= &_k_phys_start;
-	kparam.kernel_vir_base	= &_k_virt_start;
-	kparam.kernel_vir_end	= &_end;
-
-	struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo =
-		(struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR;
-
-	int i;
-	for (i = 0; bootinfo->efi_e820_info.e820_entry[i].length != 0; i++)
-	{
-		mem_info.mb_memmap[i].addr = bootinfo->efi_e820_info.e820_entry[i].address;
-		mem_info.mb_memmap[i].len  = bootinfo->efi_e820_info.e820_entry[i].length;
-		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
-		mem_info.mb_memmap[i].zero = 0;
-		if (mem_info.mb_memmap[i].type == 1 && mem_info.mb_memmap[i].len != 0)
-		{
-			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
-		}
-	}
-	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
-	kparam.phys_page_nr = round_up(kparam.max_phys_mem, CONFIG_PAGE_SIZE) / CONFIG_PAGE_SIZE;
-	mem_info.mb_memmap_nr = i + 1;
-
-	// set init flag
-	kparam.arch_init_flags.memory_layout = 1;
-
-	framebuffer.FB_phybase = (phys_addr_t)bootinfo->efi_graphics_info.FrameBufferBase;
-	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
-	framebuffer.FB_size = bootinfo->efi_graphics_info.FrameBufferSize;
-	// framebuffer.X_Resolution = bootinfo->efi_graphics_info.HorizontalResolution;
-	framebuffer.X_Resolution = bootinfo->efi_graphics_info.PixelsPerScanLine;
-	framebuffer.Y_Resolution = bootinfo->efi_graphics_info.VerticalResolution;
-	framebuffer.PixperScanline = bootinfo->efi_graphics_info.PixelsPerScanLine;
-	// set init flag
-	kparam.arch_init_flags.frame_buffer_info = 1;
-
-	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;
-	uint64_t lcpu_count = 0;
-	for (i = 0; i < bootinfo->efi_smp_info.core_num; i++)
-	{
-		efi_cpudesc_s * this_cpu = &bootinfo->efi_smp_info.cpus[i];
-		if ((this_cpu->status & 0x4) > 0)
-		{
-			apic_id[lcpu_count] = this_cpu->proccessor_id & 0xFF;
-			smp_topos[lcpu_count].not_use = 0;
-			smp_topos[lcpu_count].pack_id = this_cpu->pack_id;
-			smp_topos[lcpu_count].core_id = this_cpu->core_id;
-			smp_topos[lcpu_count].thd_id  = this_cpu->thd_id;
-			lcpu_count++;
-		}
-	}
+	enable_AMD_syscall();
+	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
+	get_memory_layout((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
+	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
 
 	cpuid_info();
-
-	// some part of memmory space is reserved
-	memblock_reserve(0, 16 * CONST_1M);
-	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, CONFIG_PAGE_SIZE),
-					round_up((size_t)kparam.kernel_vir_end, CONFIG_PAGE_SIZE) -
-					round_down((size_t)kparam.kernel_vir_base, CONFIG_PAGE_SIZE));
 }
 

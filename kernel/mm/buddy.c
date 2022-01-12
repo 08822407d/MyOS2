@@ -12,6 +12,7 @@
 #include <include/memory.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
+#include <include/mmzone.h>
 
 memory_info_s	mem_info;
 recurs_lock_T	page_alloc_lock;
@@ -88,6 +89,11 @@ void init_page_manage()
 	}
 	// set init flag
 	kparam.init_flags.page_mm = 1;
+}
+
+void init_page()
+{
+
 }
 
 Page_s * page_alloc(void)
