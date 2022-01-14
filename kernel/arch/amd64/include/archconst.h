@@ -5,6 +5,7 @@
 
 #include <include/mm.h>
 
+	#define CONFIG_X86_64
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		256
 	#define CONFIG_CPUSTACK_SIZE	4096

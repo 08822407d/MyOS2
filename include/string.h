@@ -6,8 +6,7 @@ extern "C" {
 #endif
 
 #include <sys/types.h>
-
-#include <sys/types.h>
+#include <sys/cdefs.h>
 
 	/*
 	* String manipulation
@@ -55,7 +54,7 @@ extern "C" {
 	/*
 	* ffs - find first (least-significant) bit set
 	*/
-	static inline __attribute__((always_inline)) int ffs(int x)
+	static inline __always_inline int ffs(int x)
 	{
 		return __builtin_ffs(x);
 	}
@@ -64,7 +63,7 @@ extern "C" {
 	* fls - find last (most-significant) bit set
 	* Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
 	*/
-	static inline __attribute__((always_inline)) int fls(int x)
+	static inline __always_inline int fls(int x)
 	{
 		return x ? sizeof(x) * 8 - __builtin_clz(x) : 0;
 	}
@@ -73,7 +72,7 @@ extern "C" {
 	* __ffs - find first bit in word.
 	* Undefined if no bit exists, so code should check against 0 first.
 	*/
-	static inline __attribute__((always_inline)) unsigned long __ffs(unsigned long word)
+	static inline __always_inline unsigned long __ffs(unsigned long word)
 	{
 		return __builtin_ctzl(word);
 	}
@@ -82,7 +81,7 @@ extern "C" {
 	* __fls - find last (most-significant) set bit in a long word
 	* Undefined if no set bit exists, so code should check against 0 first.
 	*/
-	static inline __attribute__((always_inline)) unsigned long __fls(unsigned long word)
+	static inline __always_inline unsigned long __fls(unsigned long word)
 	{
 		return (sizeof(word) * 8) - 1 - __builtin_clzl(word);
 	}

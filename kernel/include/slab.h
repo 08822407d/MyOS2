@@ -1,6 +1,8 @@
 #ifndef _SLAB_H_
 #define _SLAB_H_
 
+#include <lib/utils.h>
+
 #include <sys/types.h>
 
 	struct  slab;

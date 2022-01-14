@@ -68,7 +68,6 @@ void init_page_manage()
 		for( j = pg_start_idx; j < pg_end_idx; j++)
 		{
 			Page_s *pg_curr = &mem_info.pages[j];
-			pg_curr->zone_belonged	= mz_curr;
 			pg_curr->page_start_addr = (phys_addr_t)(j * CONFIG_PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
 		}
@@ -94,14 +93,28 @@ void init_page_manage()
 	kparam.init_flags.page_mm = 1;
 }
 
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
 void init_page()
 {
 	memset(&pg_list, 0, sizeof(pg_list));
 
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	pg_list.node_mem_map = memblock_alloc(sizeof(Page_s) * kparam.phys_page_nr, 1);
+
+	memblock_free_all();
 }
 
+void memblock_free_pages(Page_s * page, unsigned long pfn,
+							unsigned int order)
+{
+	// add_to_free_list(page, zone, order);
+}
+
+/*==============================================================================================*
+ *									core fuctions for buddy system								*
+ *==============================================================================================*/
 Page_s * page_alloc(void)
 {
 	lock_recurs_lock(&page_alloc_lock);
@@ -124,6 +137,51 @@ Page_s * get_page(phys_addr_t paddr)
 	return &mem_info.pages[pg_idx];
 }
 
+/* Used for pages not on another list */
+static inline void add_to_free_list(Page_s * page,
+		zone_s * zone, unsigned int order)
+{
+	struct free_area *area = &zone->free_area[order];
+
+	// list_add(&page->lru, &area->free_list[migratetype]);
+	// area->nr_free++;
+}
+
+// /* Used for pages not on another list */
+// static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
+// 					 unsigned int order, int migratetype)
+// {
+// 	struct free_area *area = &zone->free_area[order];
+
+// 	list_add_tail(&page->lru, &area->free_list[migratetype]);
+// 	area->nr_free++;
+// }
+
+// /*
+//  * Used for pages which are on another list. Move the pages to the tail
+//  * of the list - so the moved pages won't immediately be considered for
+//  * allocation again (e.g., optimization for memory onlining).
+//  */
+// static inline void move_to_free_list(struct page *page, struct zone *zone,
+// 				     unsigned int order, int migratetype)
+// {
+// 	struct free_area *area = &zone->free_area[order];
+
+// 	list_move_tail(&page->lru, &area->free_list[migratetype]);
+// }
+
+// static inline void del_page_from_free_list(struct page *page, struct zone *zone,
+// 					   unsigned int order)
+// {
+// 	/* clear reported state and update reported page count */
+// 	if (page_reported(page))
+// 		__ClearPageReported(page);
+
+// 	list_del(&page->lru);
+// 	__ClearPageBuddy(page);
+// 	set_page_private(page, 0);
+// 	zone->free_area[order].nr_free--;
+// }
 
 /*
  * Locate the struct page for both the matching buddy in our
@@ -257,7 +315,7 @@ continue_merging:
 
 done_merging:
 	set_buddy_order(page, order);
-	add_to_free_list(page, zone, order, migratetype);
+	add_to_free_list(page, zone, order);
 }
 
 static void free_one_page(zone_s *zone,

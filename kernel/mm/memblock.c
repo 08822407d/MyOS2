@@ -10,6 +10,8 @@
 #include <include/minmax.h>
 #include <include/math.h>
 #include <include/mm.h>
+#include <include/mmzone.h>
+#include <include/page.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
@@ -18,7 +20,7 @@
 #define INIT_PHYSMEM_REGIONS			4
 
 #ifndef INIT_MEMBLOCK_RESERVED_REGIONS
-# define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
+#define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
 #endif
 
 static memblock_region_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] = 
@@ -44,6 +46,9 @@ memblock_s memblock = {
 };
 
 
+/*==============================================================================================*
+ *									core fuctions for buddy system								*
+ *==============================================================================================*/
 #define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)		\
 		for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
 			rgn_idx < memblock_type->cnt + 1;						\
@@ -491,6 +496,25 @@ inline __always_inline void * memblock_alloc(size_t size, size_t align)
 }
 
 
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
+static void __free_pages_memory(unsigned long start, unsigned long end)
+{
+	int order;
+
+	while (start < end) {
+		order = min(MAX_ORDER - 1UL, __ffs(start));
+
+		while (start + (1UL << order) > end)
+			order--;
+
+		memblock_free_pages(pfn_to_page(start), start, order);
+
+		start += (1UL << order);
+	}
+}
+
 static unsigned long __free_memory_core(phys_addr_t start, phys_addr_t end)
 {
 	unsigned long start_pfn = PFN_UP(start);
@@ -528,6 +552,6 @@ static unsigned long free_low_memory_core_early(void)
 void memblock_free_all(void)
 {
 	unsigned long pages;
-
-
+	pages = free_low_memory_core_early();
+	// totalram_pages_add(pages);
 }
