@@ -6,34 +6,14 @@
 #include <sys/cdefs.h>
 #include <lib/utils.h>
 
-#include "task.h"
+#include <include/task.h>
+#include <include/page.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>
 #include <arch/amd64/include/multiboot2.h>
 
 	#define MAXMEMZONE		64
-
-	struct  slab;
-	typedef struct slab slab_s;
-
-	struct	slab_cache;
-	typedef struct slab_cache slab_cache_s;
-/*==============================================================================================*
- *									physical page management									*
- *==============================================================================================*/
-	typedef struct Page
-	{
-		struct MemZone *zone_belonged;
-		phys_addr_t		page_start_addr;
-		
-		unsigned long	attr;
-		unsigned long	ref_count;
-		unsigned long	map_count;
-		unsigned long	age;
-
-		slab_s *		slab_ptr;
-	} Page_s;
 
 	typedef struct MemZone
 	{
@@ -63,38 +43,6 @@
 		unsigned long	memzone_total_nr;	
 	} memory_info_s;
 
-/*==============================================================================================*
- *									kernel malloc and slab										*
- *==============================================================================================*/
-	typedef struct slab
-	{
-		List_s			slab_list;
-		slab_cache_s *	slabcache_ptr;
-
-		unsigned long	total;
-		unsigned long	free;
-
-		virt_addr_t		virt_addr;
-		Page_s *		page;
-		bitmap_t *		colormap;
-	} slab_s;
-
-	typedef struct slab_cache
-	{
-		List_s			slabcache_list;
-
-		unsigned long	obj_size;
-
-		unsigned long	normal_slab_total;
-		List_hdr_s		normal_slab_free;
-		List_hdr_s		normal_slab_used;
-		List_hdr_s		normal_slab_full;
-		unsigned long	nsobj_free_count;
-		unsigned long	nsobj_used_count;
-
-		// the base slab should not be freed
-		slab_s *		normal_base_slab;
-	} slab_cache_s;
 	
 /*==============================================================================================*
  *									data structures for devices									*

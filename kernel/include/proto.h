@@ -38,6 +38,7 @@
 
 	/* memory.c */
 	void init_page_manage(void);
+	void init_page(void);
 	void init_slab();
 	Page_s * page_alloc(void);
 	Page_s * get_page(phys_addr_t paddr);

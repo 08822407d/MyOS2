@@ -23,6 +23,7 @@ void kmain()
 
 	init_video();
 	init_page_manage();
+	init_page();
 	init_slab();
 	init_task();
 	init_smp_env();

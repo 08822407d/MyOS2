@@ -13,8 +13,8 @@
 #include <arch/amd64/include/arch_proto.h>
 
 #include <include/glo.h>
-#include <include/ktypes.h>
-#include <include/memory.h>
+#include <include/slab.h>
+#include <include/mm.h>
 #include <include/proto.h>
 #include <include/printk.h>
 

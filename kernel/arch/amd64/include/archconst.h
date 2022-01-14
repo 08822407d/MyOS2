@@ -3,7 +3,7 @@
 
 #include <const.h>
 
-#include <include/memory.h>
+#include <include/mm.h>
 
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		256

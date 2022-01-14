@@ -9,6 +9,7 @@
 #include <include/kutils.h>
 #include <include/minmax.h>
 #include <include/math.h>
+#include <include/mm.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
@@ -487,4 +488,46 @@ void * memblock_alloc_try(size_t size, size_t align,
 inline __always_inline void * memblock_alloc(size_t size, size_t align)
 {
 	return memblock_alloc_try(size, align, MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
+}
+
+
+static unsigned long __free_memory_core(phys_addr_t start, phys_addr_t end)
+{
+	unsigned long start_pfn = PFN_UP(start);
+	// unsigned long end_pfn = min(PFN_DOWN(end), max_low_pfn);
+	unsigned long end_pfn = PFN_DOWN(end);
+
+	if (start_pfn >= end_pfn)
+		return 0;
+
+	__free_pages_memory(start_pfn, end_pfn);
+
+	return end_pfn - start_pfn;
+}
+
+static unsigned long free_low_memory_core_early(void)
+{
+	unsigned long count = 0;
+	phys_addr_t start, end;
+	uint64_t i;
+
+	/*
+	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
+	 *  because in some case like Node0 doesn't have RAM installed
+	 *  low ram will be on Node1
+	 */
+	for_each_free_mem_range (i, &start, &end)
+		count += __free_memory_core(start, end);
+
+	return count;
+}
+
+/**
+ * memblock_free_all - release free pages to the buddy allocator
+ */
+void memblock_free_all(void)
+{
+	unsigned long pages;
+
+
 }

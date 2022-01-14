@@ -4,12 +4,16 @@
 #include <lib/utils.h>
 
 #define MAX_ORDER 11
+#define MAX_NR_ZONES 2 /* __MAX_NR_ZONES */
 
+
+struct pglist_data;
+typedef struct pglist_data pglist_data_s;
 
 typedef struct zone {
 	/* Read-mostly fields */
 
-	struct pglist_data	*zone_pgdat;
+	pglist_data_s	*zone_pgdat;
 	// struct per_cpu_pages	__percpu *per_cpu_pageset;
 	// struct per_cpu_zonestat	__percpu *per_cpu_zonestats;
 	// /*
@@ -94,5 +98,53 @@ typedef struct zone {
 	// atomic_long_t		vm_stat[NR_VM_ZONE_STAT_ITEMS];
 	// atomic_long_t		vm_numa_event[NR_VM_NUMA_EVENT_ITEMS];
 } zone_s;
+
+typedef struct pglist_data {
+	/*
+	 * node_zones contains just the zones for THIS node. Not all of the
+	 * zones may be populated, but it is the full list. It is referenced by
+	 * this node's node_zonelists as well as other node's node_zonelists.
+	 */
+	zone_s node_zones[MAX_NR_ZONES];
+
+	int nr_zones; /* number of populated zones in this node */
+	struct page *node_mem_map;
+
+	unsigned long node_start_pfn;
+	unsigned long node_present_pages; /* total number of physical pages */
+	unsigned long node_spanned_pages; /* total size of physical page
+					     range, including holes */
+	int node_id;
+
+	// wait_queue_head_t kswapd_wait;
+	// wait_queue_head_t pfmemalloc_wait;
+	// struct task_struct *kswapd;	/* Protected by
+	// 				   mem_hotplug_begin/end() */
+	// int kswapd_order;
+	// enum zone_type kswapd_highest_zoneidx;
+
+	// int kswapd_failures;		/* Number of 'reclaimed == 0' runs */
+
+	/*
+	 * This is a per-node reserve of pages that are not available
+	 * to userspace allocations.
+	 */
+	unsigned long		totalreserve_pages;
+
+	/* Fields commonly accessed by the page reclaim scanner */
+
+	/*
+	 * NOTE: THIS IS UNUSED IF MEMCG IS ENABLED.
+	 *
+	 * Use mem_cgroup_lruvec() to look up lruvecs.
+	 */
+	// struct lruvec		__lruvec;
+
+	unsigned long		flags;
+
+	/* Per-node vmstats */
+	// struct per_cpu_nodestat __percpu *per_cpu_nodestats;
+	// atomic_long_t		vm_stat[NR_VM_NODE_STAT_ITEMS];
+} pg_data_s;
 
 #endif /* _LINUX_MMZONE_H_ */

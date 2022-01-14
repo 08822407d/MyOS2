@@ -1,6 +1,6 @@
 #include <arch/amd64/asm.h>
 
-#include <include/memory.h>
+#include <include/mm.h>
 
 .code64
 .balign 8

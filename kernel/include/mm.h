@@ -1,7 +1,9 @@
-#ifndef _MEMORY_H_
-#define _MEMORY_H_
+#ifndef _LINUX_MM_H_
+#define _LINUX_MM_H_
 
 #include <const.h>
+
+#include <arch/amd64/include/archconst.h>
 
 	////alloc_pages zone_select
 	//
@@ -55,4 +57,14 @@
 	// sysconfigs
 	#define MAX_FILE_NR			32
 
-#endif /* _MEMORY_H_ */
+
+	#define page_to_pfn(page)	((unsigned long)(page) / CONFIG_PAGE_SIZE)
+	#define pfn_to_page(pfn)	(void *)((pfn) * CONFIG_PAGE_SIZE)
+
+	#define PFN_ALIGN(x)	(((unsigned long)(x) + (CONFIG_PAGE_SIZE - 1)) & PAGE_MASK)
+	#define PFN_UP(x)		(((size_t)(x) + CONFIG_PAGE_SIZE-1) >> CONFIG_PAGE_SHIFT)
+	#define PFN_DOWN(x)		((size_t)(x) >> CONFIG_PAGE_SHIFT)
+	#define PFN_PHYS(x)		((phys_addr_t)(x) << CONFIG_PAGE_SHIFT)
+	#define PHYS_PFN(x)		((unsigned long)((x) >> CONFIG_PAGE_SHIFT))
+
+#endif /* _LINUX_MM_H_ */

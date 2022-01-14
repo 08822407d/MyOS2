@@ -9,13 +9,16 @@
 #include <arch/amd64/include/mutex.h>
 
 #include <include/glo.h>
-#include <include/memory.h>
+#include <include/mm.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
+#include <include/memblock.h>
 #include <include/mmzone.h>
 
 memory_info_s	mem_info;
 recurs_lock_T	page_alloc_lock;
+
+pglist_data_s	pg_list;
 
 /*==============================================================================================*
  *								fuction relate to physical page									*
@@ -93,7 +96,10 @@ void init_page_manage()
 
 void init_page()
 {
+	memset(&pg_list, 0, sizeof(pg_list));
 
+	pg_list.node_spanned_pages = kparam.phys_page_nr;
+	pg_list.node_mem_map = memblock_alloc(sizeof(Page_s) * kparam.phys_page_nr, 1);
 }
 
 Page_s * page_alloc(void)
@@ -112,21 +118,152 @@ Page_s * page_alloc(void)
 	return ret_page;
 }
 
-void page_free(Page_s * page_p)
-{
-	lock_recurs_lock(&page_alloc_lock);
-	unsigned long page_idx = (unsigned long)page_p->page_start_addr / CONFIG_PAGE_SIZE;
-	bm_clear_bit(mem_info.page_bitmap, page_idx);
-	page_p->attr = 0;
-	page_p->ref_count = 0;
-
-	page_p->zone_belonged->page_total_ref--;
-	page_p->zone_belonged->page_free_nr++;
-	unlock_recurs_lock(&page_alloc_lock);
-}
-
 Page_s * get_page(phys_addr_t paddr)
 {
 	long pg_idx = CONFIG_PAGE_ALIGH((uint64_t)paddr) / CONFIG_PAGE_SIZE;
 	return &mem_info.pages[pg_idx];
+}
+
+
+/*
+ * Locate the struct page for both the matching buddy in our
+ * pair (buddy1) and the combined O(n+1) page they form (page).
+ *
+ * 1) Any buddy B1 will have an order O twin B2 which satisfies
+ * the following equation:
+ *     B2 = B1 ^ (1 << O)
+ * For example, if the starting buddy (buddy2) is #8 its order
+ * 1 buddy is #10:
+ *     B2 = 8 ^ (1 << 1) = 8 ^ 2 = 10
+ *
+ * 2) Any buddy B will have an order O+1 parent P which
+ * satisfies the following equation:
+ *     P = B & ~(1 << O)
+ *
+ * Assumption: *_mem_map is contiguous at least up to MAX_ORDER
+ */
+static inline unsigned long
+__find_buddy_pfn(unsigned long page_pfn, unsigned int order)
+{
+	return page_pfn ^ (1 << order);
+}
+
+/*
+ * This function checks whether a page is free && is the buddy
+ * we can coalesce a page and its buddy if
+ * (a) the buddy is not in a hole (check before calling!) &&
+ * (b) the buddy is in the buddy system &&
+ * (c) a page and its buddy have the same order &&
+ * (d) a page and its buddy are in the same zone.
+ *
+ * For recording whether a page is in the buddy system, we set PageBuddy.
+ * Setting, clearing, and testing PageBuddy is serialized by zone->lock.
+ *
+ * For recording page's order, we use page_private(page).
+ */
+static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order)
+{
+	if (!page_is_guard(buddy) && !PageBuddy(buddy))
+		return false;
+
+	if (buddy_order(buddy) != order)
+		return false;
+
+	/*
+	 * zone check is done late to avoid uselessly calculating
+	 * zone/node ids for pages that could never merge.
+	 */
+	if (page_zone_id(page) != page_zone_id(buddy))
+		return false;
+
+	return true;
+}
+
+/*
+ * Freeing function for a buddy system allocator.
+ *
+ * The concept of a buddy system is to maintain direct-mapped table
+ * (containing bit values) for memory blocks of various "orders".
+ * The bottom level table contains the map for the smallest allocatable
+ * units of memory (here, pages), and each level above it describes
+ * pairs of units from the levels below, hence, "buddies".
+ * At a high level, all that happens here is marking the table entry
+ * at the bottom level available, and propagating the changes upward
+ * as necessary, plus some accounting needed to play nicely with other
+ * parts of the VM system.
+ * At each level, we keep a list of pages, which are heads of continuous
+ * free pages of length of (1 << order) and marked with PageBuddy.
+ * Page's order is recorded in page_private(page) field.
+ * So when we are allocating or freeing one, we can derive the state of the
+ * other.  That is, if we allocate a small block, and both were
+ * free, the remainder of the region must be split into blocks.
+ * If a block is freed, and its buddy is also free, then this
+ * triggers coalescing into a block of larger size.
+ *
+ * -- nyc
+ */
+static inline void __free_one_page(Page_s *page, unsigned long pfn,
+		zone_s *zone, unsigned int order, int migratetype)
+{
+	struct capture_control *capc = task_capc(zone);
+	unsigned long buddy_pfn;
+	unsigned long combined_pfn;
+	Page_s * buddy;
+	bool to_tail;
+
+continue_merging:
+	while (order < MAX_ORDER) {
+		buddy_pfn = __find_buddy_pfn(pfn, order);
+		buddy = page + (buddy_pfn - pfn);
+
+		if (!page_is_buddy(page, buddy, order))
+			goto done_merging;
+		/*
+		 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
+		 * merge with it and move up one order.
+		 */
+		if (page_is_guard(buddy))
+			clear_page_guard(zone, buddy, order, migratetype);
+		else
+			del_page_from_free_list(buddy, zone, order);
+		combined_pfn = buddy_pfn & pfn;
+		page = page + (combined_pfn - pfn);
+		pfn = combined_pfn;
+		order++;
+	}
+	if (order < MAX_ORDER - 1) {
+		/* If we are here, it means order is >= pageblock_order.
+		 * We want to prevent merge between freepages on isolate
+		 * pageblock and normal pageblock. Without this, pageblock
+		 * isolation could cause incorrect freepage or CMA accounting.
+		 *
+		 * We don't want to hit this code for the more frequent
+		 * low-order merging.
+		 */
+		if (unlikely(has_isolate_pageblock(zone))) {
+			int buddy_mt;
+
+			buddy_pfn = __find_buddy_pfn(pfn, order);
+			buddy = page + (buddy_pfn - pfn);
+			buddy_mt = get_pageblock_migratetype(buddy);
+
+			if (migratetype != buddy_mt
+					&& (is_migrate_isolate(migratetype) ||
+						is_migrate_isolate(buddy_mt)))
+				goto done_merging;
+		}
+		goto continue_merging;
+	}
+
+done_merging:
+	set_buddy_order(page, order);
+	add_to_free_list(page, zone, order, migratetype);
+}
+
+static void free_one_page(zone_s *zone,
+				Page_s *page, unsigned long pfn,
+				unsigned int order,
+				int migratetype)
+{
+	__free_one_page(page, pfn, zone, order, migratetype);
 }

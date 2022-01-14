@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include <include/glo.h>
-#include <include/memory.h>
+#include <include/mm.h>
 #include <include/task.h>
 #include <include/proto.h>
 
