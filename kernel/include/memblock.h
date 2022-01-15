@@ -35,6 +35,9 @@
 	#endif
 
 
+	extern unsigned long max_low_pfn;
+	extern unsigned long min_low_pfn;
+
 	/**
 	 * enum memblock_flags - definition of memory region attributes
 	 * @MEMBLOCK_NONE: no special request

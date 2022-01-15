@@ -6,6 +6,8 @@
 #include <include/math.h>
 
 	#define CONFIG_X86_64
+	#define CONFIG_ZONE_DMA
+
 	/* Constants for protected mode. */
 	#define CONFIG_MAX_CPUS		256
 	#define CPUSTACK_SIZE		4096
@@ -16,5 +18,11 @@
 
 	#define CONFIG_MAX_VIRMEM	(512 * CONST_1G)
 	#define PDE_NR				(CONFIG_MAX_VIRMEM >> SHIFT_PDE)
+
+	/* 16MB ISA DMA zone */
+	#define MAX_DMA_PFN   ((16 * CONST_1M) >> PAGE_SHIFT)
+
+	/* 4GB broken PCI/AGP hardware bus master zone */
+	#define MAX_DMA32_PFN (1UL << (32 - PAGE_SHIFT))
 
 #endif /* _ARCH_CONFIG_H_ */

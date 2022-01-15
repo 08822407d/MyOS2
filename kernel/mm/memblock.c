@@ -23,6 +23,9 @@
 #define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
 #endif
 
+unsigned long max_low_pfn;
+unsigned long min_low_pfn;
+
 static memblock_region_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] = 
 	{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0}};
 static memblock_region_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] =

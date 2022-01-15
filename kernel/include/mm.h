@@ -3,27 +3,9 @@
 
 #include <const.h>
 
+#include <include/mmzone.h>
+
 #include <arch/amd64/include/archconst.h>
-
-	////alloc_pages zone_select
-	//
-	#define ZONE_DMA		(1 << 0)
-	//
-	#define ZONE_NORMAL		(1 << 1)
-	//
-	#define ZONE_UNMAPED	(1 << 2)
-
-	// ////struct page attribute
-	// //	mapped=1 or un-mapped=0 
-	// #define PG_PTable_Maped	(1 << 0)
-	// //	init-code=1 or normal-code/data=0
-	// #define PG_Kernel_Init	(1 << 1)
-	// //	device=1 or memory=0
-	// #define PG_Device	(1 << 2)
-	// //	kernel=1 or user=0
-	// #define PG_Kernel	(1 << 3)
-	// //	shared=1 or single-use=0 
-	// #define PG_Shared	(1 << 4)
 
 	////struct page attribute (alloc_pages flags)
 	//
@@ -47,9 +29,6 @@
 	//
 	#define PG_Slab			(1 << 9)
 
-	// process and task consts
-	#define TASK_KSTACK_SIZE	(32 * CONST_1K)
-
 	// slab consts
 	#define SLAB_LEVEL			16
 	#define SLAB_SIZE_BASE		32
@@ -57,6 +36,8 @@
 	// sysconfigs
 	#define MAX_FILE_NR			32
 
+	extern pglist_data_s 	pg_list;
+	extern Page_s *			mem_map;
 
 	#define page_to_pfn(page)	((unsigned long)(page) / PAGE_SIZE)
 	#define pfn_to_page(pfn)	(void *)((pfn) * PAGE_SIZE)
@@ -67,4 +48,15 @@
 	#define PFN_PHYS(x)		((phys_addr_t)(x) << PAGE_SHIFT)
 	#define PHYS_PFN(x)		((unsigned long)((x) >> PAGE_SHIFT))
 
+	static inline zone_s *page_zone(const Page_s * page)
+	{
+		unsigned long pfn = page_to_pfn(page);
+		for (int i = 0 ; i < MAX_NR_ZONES; i ++)
+		{
+			zone_s * zone = &pg_list.node_zones[i];
+			if (pfn >= zone->zone_start_pfn && 
+				pfn < (zone->zone_start_pfn + zone->spanned_pages))
+				return zone;
+		}
+	}
 #endif /* _LINUX_MM_H_ */

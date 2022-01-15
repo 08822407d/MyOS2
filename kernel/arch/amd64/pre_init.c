@@ -11,7 +11,8 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/multiboot2.h"
-#include "include/memblock.h"
+
+#include <include/memblock.h>
 #include <include/math.h>
 
 extern char _k_phys_start;
@@ -59,20 +60,25 @@ static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo
 	kparam.kernel_vir_end	= &_end;
 
 	int i;
+	multiboot_memory_map_s * mb_mmap;
 	for (i = 0; bootinfo->efi_e820_info.e820_entry[i].length != 0; i++)
 	{
-		mem_info.mb_memmap[i].addr = bootinfo->efi_e820_info.e820_entry[i].address;
-		mem_info.mb_memmap[i].len  = bootinfo->efi_e820_info.e820_entry[i].length;
-		mem_info.mb_memmap[i].type = bootinfo->efi_e820_info.e820_entry[i].type;
-		mem_info.mb_memmap[i].zero = 0;
-		if (mem_info.mb_memmap[i].type == 1 && mem_info.mb_memmap[i].len != 0)
+		efi_e820entry_s * efi_e820 = &bootinfo->efi_e820_info.e820_entry[i];
+		mb_mmap = &mem_info.mb_memmap[i];
+
+		mb_mmap->addr = efi_e820->address;
+		mb_mmap->len  = efi_e820->length;
+		mb_mmap->type = efi_e820->type;
+		mb_mmap->zero = 0;
+		if (mb_mmap->type == 1 && mb_mmap->len != 0)
 		{
-			memblock_add((phys_addr_t)mem_info.mb_memmap[i].addr, mem_info.mb_memmap[i].len);
+			memblock_add((phys_addr_t)mb_mmap->addr, mb_mmap->len);
 		}
 	}
-	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
+	kparam.max_phys_mem = mb_mmap->addr + mb_mmap->len;
 	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
 		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
+	max_low_pfn =
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 	mem_info.mb_memmap_nr = i + 1;
 

@@ -5,14 +5,16 @@
 
 #include <sys/types.h>
 
-#include <include/mmzone.h>
 
+	struct zone;
+	typedef struct zone zone_s;
+	
 	struct  slab;
 	typedef struct slab slab_s;
 
 	typedef struct Page
 	{
-		List_s *		free_list;
+		List_s 			free_list;
 		zone_s *		zone;
 		phys_addr_t		page_start_addr;
 		

@@ -3,13 +3,13 @@
 
 #include <const.h>
 
-#include <include/mm.h>
 #include <include/math.h>
 
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF
 
 	/* Table sizes. */
 	#define IDT_SIZE			256	// the table is set to it's maximal size
+
 
 	/* GDT layout (SYSENTER/SYSEXIT compliant) */ // partial copied from minix3
 	#define NULL_DESC_INDEX		0
@@ -114,5 +114,8 @@
 		#define EFL_VIP         0x00100000              /* virtual interrupt pending */
 		#define EFL_ID          0x00200000              /* cpuID instruction */
 	#endif
+
+	// process and task consts
+	#define TASK_KSTACK_SIZE	(32 * CONST_1K)
 
 #endif /* _AMD64_ACONST_H_ */
