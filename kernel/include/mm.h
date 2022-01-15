@@ -58,13 +58,13 @@
 	#define MAX_FILE_NR			32
 
 
-	#define page_to_pfn(page)	((unsigned long)(page) / CONFIG_PAGE_SIZE)
-	#define pfn_to_page(pfn)	(void *)((pfn) * CONFIG_PAGE_SIZE)
+	#define page_to_pfn(page)	((unsigned long)(page) / PAGE_SIZE)
+	#define pfn_to_page(pfn)	(void *)((pfn) * PAGE_SIZE)
 
-	#define PFN_ALIGN(x)	(((unsigned long)(x) + (CONFIG_PAGE_SIZE - 1)) & PAGE_MASK)
-	#define PFN_UP(x)		(((size_t)(x) + CONFIG_PAGE_SIZE-1) >> CONFIG_PAGE_SHIFT)
-	#define PFN_DOWN(x)		((size_t)(x) >> CONFIG_PAGE_SHIFT)
-	#define PFN_PHYS(x)		((phys_addr_t)(x) << CONFIG_PAGE_SHIFT)
-	#define PHYS_PFN(x)		((unsigned long)((x) >> CONFIG_PAGE_SHIFT))
+	#define PFN_ALIGN(x)	(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
+	#define PFN_UP(x)		(((size_t)(x) + PAGE_SIZE-1) >> PAGE_SHIFT)
+	#define PFN_DOWN(x)		((size_t)(x) >> PAGE_SHIFT)
+	#define PFN_PHYS(x)		((phys_addr_t)(x) << PAGE_SHIFT)
+	#define PHYS_PFN(x)		((unsigned long)((x) >> PAGE_SHIFT))
 
 #endif /* _LINUX_MM_H_ */

@@ -48,8 +48,8 @@ void init_page_manage()
 		high_bound = (phys_addr_t)(mbmap_curr->len + low_bound);
 
 
-		pg_start_idx = CONFIG_PAGE_ALIGH((uint64_t)low_bound) / CONFIG_PAGE_SIZE;
-		pg_end_idx   = CONFIG_PAGE_MASKF((uint64_t)high_bound) / CONFIG_PAGE_SIZE;
+		pg_start_idx = PAGE_ROUND_UP((uint64_t)low_bound) / PAGE_SIZE;
+		pg_end_idx   = PAGE_ROUND_DOWN((uint64_t)high_bound) / PAGE_SIZE;
 		if(pg_end_idx <= pg_start_idx)
 			continue;
 
@@ -59,8 +59,8 @@ void init_page_manage()
 		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
 		mz_curr->page_nr			= pg_end_idx - pg_start_idx;
 		mz_curr->page_free_nr		= mz_curr->page_nr;
-		mz_curr->zone_start_addr	= (phys_addr_t)(pg_start_idx * CONFIG_PAGE_SIZE);
-		mz_curr->zone_end_addr		= (phys_addr_t)(pg_end_idx * CONFIG_PAGE_SIZE);
+		mz_curr->zone_start_addr	= (phys_addr_t)(pg_start_idx * PAGE_SIZE);
+		mz_curr->zone_end_addr		= (phys_addr_t)(pg_end_idx * PAGE_SIZE);
 		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
 		page_count 					+= mz_curr->page_nr;
 
@@ -68,7 +68,7 @@ void init_page_manage()
 		for( j = pg_start_idx; j < pg_end_idx; j++)
 		{
 			Page_s *pg_curr = &mem_info.pages[j];
-			pg_curr->page_start_addr = (phys_addr_t)(j * CONFIG_PAGE_SIZE);
+			pg_curr->page_start_addr = (phys_addr_t)(j * PAGE_SIZE);
 			bm_clear_bit(mem_info.page_bitmap, j);
 		}
 		zone_count++;
@@ -79,15 +79,15 @@ void init_page_manage()
 	// set kernel used Page_s in right status
 	// map physical pages for kernel
 	size_t k_phy_pgbase = 0;
-	long pde_nr   = CONFIG_PAGE_ALIGH(kparam.kernel_vir_end - (virt_addr_t)phys2virt(0)) / CONFIG_PAGE_SIZE;
+	long pde_nr   = PAGE_ROUND_UP(kparam.kernel_vir_end - (virt_addr_t)phys2virt(0)) / PAGE_SIZE;
 	for (long i = 0; i < pde_nr; i++)
 	{
-		unsigned long pg_idx = k_phy_pgbase / CONFIG_PAGE_SIZE;
+		unsigned long pg_idx = k_phy_pgbase / PAGE_SIZE;
 		// set page struct
 		bm_set_bit(mem_info.page_bitmap, pg_idx);
 		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
 		mem_info.pages[pg_idx].ref_count++;
-		k_phy_pgbase += CONFIG_PAGE_SIZE;
+		k_phy_pgbase += PAGE_SIZE;
 	}
 	// set init flag
 	kparam.init_flags.page_mm = 1;
@@ -133,7 +133,7 @@ Page_s * page_alloc(void)
 
 Page_s * get_page(phys_addr_t paddr)
 {
-	long pg_idx = CONFIG_PAGE_ALIGH((uint64_t)paddr) / CONFIG_PAGE_SIZE;
+	long pg_idx = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
 	return &mem_info.pages[pg_idx];
 }
 

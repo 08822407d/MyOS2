@@ -68,10 +68,10 @@ uPage_s * upage_alloc()
 	else
 	{
 		uPage_s * upgp = malloc(sizeof(uPage_s));
-		virt_addr_t pg_vaddr = brk(brk_end + CONFIG_PAGE_SIZE);
+		virt_addr_t pg_vaddr = brk(brk_end + PAGE_SIZE);
 		if (pg_vaddr != NULL)
 		{
-			brk_end += CONFIG_PAGE_SIZE;
+			brk_end += PAGE_SIZE;
 			upgp->vaddr = pg_vaddr;
 			list_init(&upgp->upage_list, upgp);
 			list_hdr_append(&used_upage_lhdr, &upgp->upage_list);
@@ -97,7 +97,7 @@ void upage_free(uPage_s * upgp)
 uPage_s * upage_search(virt_addr_t vaddr)
 {
 	uPage_s * ret_val = NULL;
-	vaddr = (virt_addr_t)CONFIG_PAGE_MASKF((size_t)vaddr);
+	vaddr = (virt_addr_t)PAGE_ROUND_DOWN((size_t)vaddr);
 	List_s * upg_lp;
 	for (upg_lp = used_upage_lhdr.header.next;
 		 upg_lp != &used_upage_lhdr.header;
@@ -138,7 +138,7 @@ void init_uslab()
 		list_init(&bslp->uslab_list, bslp);
 
 		scgp->obj_size = USLAB_SIZE_BASE << i;
-		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
+		unsigned long obj_nr = PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
 		list_hdr_append(&scgp->normal_slab_free, &bslp->uslab_list);
@@ -156,7 +156,7 @@ void init_uslab()
 		uPage_s * upgp = &base_upages[i];
 		list_init(&upgp->upage_list, upgp);
 		upgp->vaddr =
-		brk_end = brk((virt_addr_t)((size_t)brk_end + CONFIG_PAGE_SIZE));
+		brk_end = brk((virt_addr_t)((size_t)brk_end + PAGE_SIZE));
 		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
 
 		bslp->upage_p = upage_alloc();

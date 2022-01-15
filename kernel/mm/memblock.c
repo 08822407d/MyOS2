@@ -13,7 +13,7 @@
 #include <include/mmzone.h>
 #include <include/page.h>
 
-#include <arch/amd64/include/archconst.h>
+#include <arch/amd64/include/arch_config.h>
 #include <arch/amd64/include/arch_proto.h>
 
 #define INIT_MEMBLOCK_REGIONS			128
@@ -142,8 +142,8 @@ static phys_addr_t memblock_find_in_range(
 		end = memblock.current_limit;
 
 	/* avoid allocating the first page */
-	// start = max_t(phys_addr_t, start, CONFIG_PAGE_SIZE);
-	start = max(start, (phys_addr_t)CONFIG_PAGE_SIZE);
+	// start = max_t(phys_addr_t, start, PAGE_SIZE);
+	start = max(start, (phys_addr_t)PAGE_SIZE);
 	end = max(start, end);
 
 	return __memblock_find_range_bottom_up(start, end, size, align);

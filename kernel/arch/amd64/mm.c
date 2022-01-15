@@ -27,25 +27,25 @@ mmpr_s * get_seginfo(task_s * task)
 	mm_s * mm = task->mm_struct;
 	reg_t user_rsp = get_stackframe(task)->rsp;
 
-	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_code);
-	long codepg_nr = mmpr[0].pgnr = (CONFIG_PAGE_ALIGH(mm->end_code) - (reg_t)codepg_p) / CONFIG_PAGE_SIZE;
-	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_rodata);
-	long rodatapg_nr = mmpr[1].pgnr = (CONFIG_PAGE_ALIGH(mm->end_rodata) - (reg_t)rodatapg_p) / CONFIG_PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_data);
-	long datapg_nr = mmpr[2].pgnr = (CONFIG_PAGE_ALIGH(mm->end_data) - (reg_t)datapg_p) / CONFIG_PAGE_SIZE;
-	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_bss);
-	long bsspg_nr = mmpr[3].pgnr = (CONFIG_PAGE_ALIGH(mm->end_bss) - (reg_t)bsspg_p) / CONFIG_PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)CONFIG_PAGE_MASKF(mm->start_brk);
-	long brkpg_nr = mmpr[4].pgnr = (CONFIG_PAGE_ALIGH(mm->end_brk) - (reg_t)brkpg_p) / CONFIG_PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)CONFIG_PAGE_MASKF(user_rsp);
-	long stackpg_nr = mmpr[5].pgnr = (CONFIG_PAGE_ALIGH(mm->start_stack) - (reg_t)stackpg_p) / CONFIG_PAGE_SIZE;
+	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_code);
+	long codepg_nr = mmpr[0].pgnr = (PAGE_ROUND_UP(mm->end_code) - (reg_t)codepg_p) / PAGE_SIZE;
+	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_rodata);
+	long rodatapg_nr = mmpr[1].pgnr = (PAGE_ROUND_UP(mm->end_rodata) - (reg_t)rodatapg_p) / PAGE_SIZE;
+	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_data);
+	long datapg_nr = mmpr[2].pgnr = (PAGE_ROUND_UP(mm->end_data) - (reg_t)datapg_p) / PAGE_SIZE;
+	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_bss);
+	long bsspg_nr = mmpr[3].pgnr = (PAGE_ROUND_UP(mm->end_bss) - (reg_t)bsspg_p) / PAGE_SIZE;
+	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_brk);
+	long brkpg_nr = mmpr[4].pgnr = (PAGE_ROUND_UP(mm->end_brk) - (reg_t)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)PAGE_ROUND_DOWN(user_rsp);
+	long stackpg_nr = mmpr[5].pgnr = (PAGE_ROUND_UP(mm->start_stack) - (reg_t)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
 {
 	stack_frame_s * context = get_stackframe(task);
 	mm_s * mm = task->mm_struct;
-	context->rsp = CONFIG_PAGE_MASKF(mm->start_stack) - CONFIG_PAGE_SIZE;
+	context->rsp = PAGE_ROUND_DOWN(mm->start_stack) - PAGE_SIZE;
 	get_seginfo(task);
 	unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
 
@@ -56,7 +56,7 @@ void creat_exec_addrspace(task_s * task)
 			Page_s * pgp = page_alloc();
 			pgp->map_count++;
 			pgp->attr = PG_PTable_Maped;
-			arch_page_domap(mmpr[seg_idx].startp + pgnr * CONFIG_PAGE_SIZE,
+			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 							pgp->page_start_addr, attr, &mm->cr3);
 		}
 	}
@@ -72,11 +72,11 @@ void prepair_COW(task_s * task)
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
 			// set all pages to read-only
-			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * CONFIG_PAGE_SIZE,
+			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 								ARCH_PG_RW, &mm->cr3);
 			phys_addr_t paddr = 0;
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
-						mmpr[seg_idx].startp + pgnr * CONFIG_PAGE_SIZE, &paddr);
+						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
 			Page_s * pgp = get_page(paddr);
 			pgp->map_count++;
 		}
@@ -112,7 +112,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 
 			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(orig_pgp->page_start_addr);
 			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(new_pgp->page_start_addr);
-			memcpy(new_pg_vaddr, orig_pg_vaddr, CONFIG_PAGE_SIZE);
+			memcpy(new_pg_vaddr, orig_pg_vaddr, PAGE_SIZE);
 
 			pg_load_cr3(new_cr3);
 			task->mm_struct->cr3 = new_cr3;
@@ -140,7 +140,7 @@ int check_addr_writable(reg_t cr2, task_s * task)
 reg_t do_brk(reg_t start, reg_t length)
 {
 	reg_t new_end = start + length;
-	for (reg_t vaddr = start; vaddr < new_end; vaddr += CONFIG_PAGE_SIZE)
+	for (reg_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
 		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 		Page_s * pg_p = page_alloc();

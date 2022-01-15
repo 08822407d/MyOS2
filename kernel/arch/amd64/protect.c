@@ -21,7 +21,7 @@
 segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
-char ist_cpu0[7][CONFIG_CPUSTACK_SIZE];
+char ist_cpu0[7][CPUSTACK_SIZE];
 
 tss64_T **		tss_ptr_arr = NULL;
 tss64_T			bsp_tmp_tss;

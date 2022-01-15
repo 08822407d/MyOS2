@@ -21,7 +21,7 @@
 List_hdr_s		slabcache_lhdr;
 slab_cache_s	slab_cache_groups[SLAB_LEVEL];
 slab_s			base_slabs[SLAB_LEVEL];
-uint8_t			base_slab_page[SLAB_LEVEL][CONFIG_PAGE_SIZE] __aligned(CONFIG_PAGE_SIZE);
+uint8_t			base_slab_page[SLAB_LEVEL][PAGE_SIZE] __aligned(PAGE_SIZE);
 recurs_lock_T	slab_alloc_lock;
 
 /*==============================================================================================*
@@ -52,7 +52,7 @@ void init_slab()
 		list_init(&bslp->slab_list, bslp);
 
 		scgp->obj_size = SLAB_SIZE_BASE << i;
-		unsigned long obj_nr = CONFIG_PAGE_SIZE / scgp->obj_size;
+		unsigned long obj_nr = PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
 		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
@@ -68,7 +68,7 @@ void init_slab()
 		bslp->total = obj_nr;
 		bslp->virt_addr = (virt_addr_t)base_slab_page[i];
 		bslp->page->attr |= PG_Slab;
-		int pg_idx = (uint64_t)virt2phys(bslp->virt_addr) / CONFIG_PAGE_SIZE;
+		int pg_idx = (uint64_t)virt2phys(bslp->virt_addr) / PAGE_SIZE;
 		bslp->page = &mem_info.pages[pg_idx];
 		bslp->page->slab_ptr = bslp;
 	}
@@ -198,8 +198,8 @@ void kfree(void * obj_p)
 		return;
 
 	// find which slab does the pointer belonged to
-	phys_addr_t pg_addr = virt2phys((virt_addr_t)CONFIG_PAGE_MASKF((size_t)obj_p));
-	unsigned long pg_idx = (size_t)pg_addr / CONFIG_PAGE_SIZE;
+	phys_addr_t pg_addr = virt2phys((virt_addr_t)PAGE_ROUND_DOWN((size_t)obj_p));
+	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
 	Page_s * pgp = &mem_info.pages[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;

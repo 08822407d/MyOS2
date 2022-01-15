@@ -155,15 +155,15 @@ int read_exec_mm(file_s * fp, task_s * curr)
 
 	mm->start_code = USER_CODE_ADDR;
 	mm->start_rodata =
-	mm->end_code = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 1;
+	mm->end_code = USER_CODE_ADDR + PAGE_SIZE * 1;
 	mm->start_data =
-	mm->end_rodata = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 2;
+	mm->end_rodata = USER_CODE_ADDR + PAGE_SIZE * 2;
 	mm->start_bss =
-	mm->end_data = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 3;
+	mm->end_data = USER_CODE_ADDR + PAGE_SIZE * 3;
 	mm->start_brk =
 	mm->end_bss = 
-	mm->end_brk = USER_CODE_ADDR + CONFIG_PAGE_SIZE * 4;
-	mm->start_stack = USERADDR_LIMIT + 1 - CONFIG_PAGE_SIZE;
+	mm->end_brk = USER_CODE_ADDR + PAGE_SIZE * 4;
+	mm->start_stack = USERADDR_LIMIT + 1 - PAGE_SIZE;
 }
 
 

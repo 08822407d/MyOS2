@@ -7,6 +7,7 @@
 #include "mm.h"
 
 #include <arch/amd64/include/arch_task.h>
+#include <arch/amd64/include/arch_config.h>
 
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)
@@ -97,7 +98,7 @@
 	typedef union cpudata
 	{
 		per_cpudata_s	cpudata;
-		reg_t			cpu_stack[CONFIG_CPUSTACK_SIZE / sizeof(reg_t)];
+		reg_t			cpu_stack[CPUSTACK_SIZE / sizeof(reg_t)];
 	} cpudata_u;
 
 

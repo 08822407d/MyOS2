@@ -73,7 +73,7 @@ static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo
 	kparam.max_phys_mem = mem_info.mb_memmap[i - 1].addr + mem_info.mb_memmap[i - 1].len;
 	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
 		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
-	kparam.phys_page_nr = round_up(kparam.max_phys_mem, CONFIG_PAGE_SIZE) / CONFIG_PAGE_SIZE;
+	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 	mem_info.mb_memmap_nr = i + 1;
 
 	// set init flag
@@ -81,9 +81,9 @@ static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo
 
 	// some part of memmory space is reserved
 	memblock_reserve(0, 16 * CONST_1M);
-	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, CONFIG_PAGE_SIZE),
-					round_up((size_t)kparam.kernel_vir_end, CONFIG_PAGE_SIZE) -
-					round_down((size_t)kparam.kernel_vir_base, CONFIG_PAGE_SIZE));
+	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
+					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
+					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
 }
 
 static void get_SMP_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)

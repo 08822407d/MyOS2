@@ -14,7 +14,7 @@
 
 extern PCB_u	task0_PCB;
 
-char ist_cpu1[7][CONFIG_CPUSTACK_SIZE];
+char ist_cpu1[7][CPUSTACK_SIZE];
 
 cpudata_u **	percpu_data;
 
@@ -117,7 +117,7 @@ void init_percpu_data(size_t cpu_idx)
 	tss_p->ist5 = 0;
 	tss_p->ist6 = 0;
 	tss_p->ist7 = 0;
-	// tss_p->ist7 = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
+	// tss_p->ist7 = (reg_t)cpudata_u_p + CPUSTACK_SIZE;
 }
 
 void percpu_self_config(size_t cpu_idx)
@@ -133,7 +133,7 @@ void percpu_self_config(size_t cpu_idx)
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
 	cpudata_p->is_idle_flag = 1;
 	cpudata_p->scheduleing_flag = 0;
-	cpudata_p->cpustack_p = (reg_t)cpudata_u_p + CONFIG_CPUSTACK_SIZE;
+	cpudata_p->cpustack_p = (reg_t)cpudata_u_p + CPUSTACK_SIZE;
 	list_hdr_init(&cpudata_p->ruuning_lhdr);
 
 	current_task->arch_struct.tss_rsp0 = (reg_t)current_task + TASK_KSTACK_SIZE;

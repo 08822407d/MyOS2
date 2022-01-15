@@ -64,7 +64,7 @@ static void init_fixed_kernel_pgmap()
 	for (long i = 0; i < pg_nr; i++)
 	{
 		fill_pde(KERN_PD + i, k_phy_pgbase, attr);
-		k_phy_pgbase += CONFIG_PAGE_SIZE;
+		k_phy_pgbase += PAGE_SIZE;
 	}
 }
 
@@ -135,7 +135,7 @@ PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx)
 
 inline void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr)
 {
-	pde_ptr->ENT = MASKF_2M((uint64_t)paddr) | ARCH_PGS_ATTR(attr) | ARCH_PG_PAT;
+	pde_ptr->ENT = PAGE_ROUND_DOWN((uint64_t)paddr) | ARCH_PGS_ATTR(attr) | ARCH_PG_PAT;
 }
 
 
@@ -175,7 +175,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		if (pdpt_ptr != NULL)
 		{
 			memset(pdpt_ptr, 0, PGENT_SIZE);
-			pml4e_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pdpt_ptr)) | attr;
+			pml4e_ptr->ENT = ARCH_PGS_ADDR((size_t)virt2phys(pdpt_ptr)) | attr;
 		}
 		else
 		{
@@ -196,7 +196,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		if (pd_ptr != NULL)
 		{
 			memset(pd_ptr, 0, PGENT_SIZE);
-			pdpte_ptr->ENT = ARCH_PGS_ADDR((uint64_t)virt2phys(pd_ptr)) | attr;
+			pdpte_ptr->ENT = ARCH_PGS_ADDR((size_t)virt2phys(pd_ptr)) | attr;
 		}
 		else
 		{
@@ -213,7 +213,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	PDE_T *		pde_ptr			= PD_ptr + pde_idx;
 	if (pde_ptr->ENT == 0)
 	{
-		pde_ptr->ENT = MASKF_2M((uint64_t)phys) | attr | ARCH_PG_PAT;
+		pde_ptr->ENT = PAGE_ROUND_DOWN((size_t)phys) | attr | ARCH_PG_PAT;
 	}
 
 	refresh_arch_page();

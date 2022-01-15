@@ -272,7 +272,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
  *==============================================================================================*/
 virt_addr_t sys_brk(const void * brk)
 {
-	unsigned long new_brk = CONFIG_PAGE_ALIGH((reg_t)brk);
+	unsigned long new_brk = PAGE_ROUND_UP((reg_t)brk);
 
 //	color_printk(GREEN,BLACK,"sys_brk\n");
 //	color_printk(RED,BLACK,"brk:%#018lx,new_brk:%#018lx,current->mm->end_brk:%#018lx\n",brk,new_brk,current->mm->end_brk);

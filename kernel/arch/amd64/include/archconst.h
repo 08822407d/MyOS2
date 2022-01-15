@@ -4,21 +4,9 @@
 #include <const.h>
 
 #include <include/mm.h>
+#include <include/math.h>
 
-	#define CONFIG_X86_64
-	/* Constants for protected mode. */
-	#define CONFIG_MAX_CPUS		256
-	#define CONFIG_CPUSTACK_SIZE	4096
-	#define CONFIG_PAGE_SIZE	CONST_2M
-	#define CONFIG_PAGE_SHIFT	SHIFT_2M
-	#define CONFIG_PAGE_MASKF	MASKF_2M	// align to page low bound
-	#define CONFIG_PAGE_ALIGH	ALIGN_2M	// align to page high bound
-	#define CONFIG_MAX_PHYMEM	(64 * CONST_1G)
-	#define CONFIG_MAX_VIRMEM	(512 * CONST_1G)
-	#define PDPTE_NR			(CONFIG_MAX_VIRMEM >> SHIFT_PDPTE)
-	#define PDE_NR				(CONFIG_MAX_VIRMEM >> SHIFT_PDE)
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF
-
 
 	/* Table sizes. */
 	#define IDT_SIZE			256	// the table is set to it's maximal size
@@ -72,7 +60,7 @@
 	#define ARCH_PG_GLOBAL		(1 << 8ULL)
 
 	#define CANONICAL_ADDR(x)		((x) & 0xFFFFFFFFFFFF)
-	#define ARCH_PGS_ADDR(x)		(MASKF_4K(CANONICAL_ADDR(x)))
+	#define ARCH_PGS_ADDR(x)		round_down((CANONICAL_ADDR(x)), CONST_4K)
 	#define ARCH_PGS_ATTR(x)		(x & 0x1FF)
 
 	/* CRn registers bits */
