@@ -56,6 +56,9 @@ static void free_area_init(unsigned long *max_zone_pfn)
 		zone->name = zone_names[i];
 		zone->zone_pgdat = &pg_list;
 
+		for (int j = 0; j < MAX_ORDER; j++)
+			list_hdr_init(&zone->free_area[j]);
+
 		start_pfn = end_pfn;
 	}
 }

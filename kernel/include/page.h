@@ -22,6 +22,8 @@
 		unsigned long	ref_count;
 		unsigned long	map_count;
 
+		unsigned long	buddy_order;
+
 		slab_s *		slab_ptr;
 	} Page_s;
 

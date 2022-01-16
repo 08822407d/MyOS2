@@ -121,7 +121,24 @@ Page_s * get_page(phys_addr_t paddr)
 }
 
 
+/*
+ * This function returns the order of a free page in the buddy system. In
+ * general, page_zone(page)->lock must be held by the caller to prevent the
+ * page from being allocated in parallel and returning garbage as the order.
+ * If a caller does not hold page_zone(page)->lock, it must guarantee that the
+ * page cannot be allocated or merged in parallel. Alternatively, it must
+ * handle invalid values gracefully, and use buddy_order_unsafe() below.
+ */
+static inline unsigned long buddy_order(Page_s * page)
+{
+	/* PageBuddy() must be checked by the caller */
+	return page->buddy_order;
+}
 
+static inline void set_buddy_order(Page_s * page, unsigned int order)
+{
+	page->buddy_order = order;
+}
 
 /* Used for pages not on another list */
 static inline void add_to_free_list(Page_s * page,
@@ -132,15 +149,14 @@ static inline void add_to_free_list(Page_s * page,
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
 
-// /* Used for pages not on another list */
-// static inline void add_to_free_list_tail(struct page *page, struct zone *zone,
-// 					 unsigned int order, int migratetype)
-// {
-// 	struct free_area *area = &zone->free_area[order];
-
-// 	list_add_tail(&page->lru, &area->free_list[migratetype]);
-// 	area->nr_free++;
-// }
+/* Used for pages not on another list */
+static inline void add_to_free_list_tail(Page_s * page,
+		zone_s * zone, unsigned int order)
+{
+	List_hdr_s * fa_lhdr = &zone->free_area[order];
+	list_hdr_append(fa_lhdr, &page->free_list);
+	zone->zone_pgdat->node_present_pages += 1 << order;
+}
 
 // /*
 //  * Used for pages which are on another list. Move the pages to the tail
@@ -155,18 +171,12 @@ static inline void add_to_free_list(Page_s * page,
 // 	list_move_tail(&page->lru, &area->free_list[migratetype]);
 // }
 
-// static inline void del_page_from_free_list(struct page *page, struct zone *zone,
-// 					   unsigned int order)
-// {
-// 	/* clear reported state and update reported page count */
-// 	if (page_reported(page))
-// 		__ClearPageReported(page);
-
-// 	list_del(&page->lru);
-// 	__ClearPageBuddy(page);
-// 	set_page_private(page, 0);
-// 	zone->free_area[order].nr_free--;
-// }
+static inline void del_page_from_free_list(Page_s * page,
+		zone_s * zone, unsigned int order)
+{
+	list_delete(&page->free_list);
+	zone->free_area[order].count--;
+}
 
 /*
  * Locate the struct page for both the matching buddy in our
@@ -216,6 +226,7 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
 	// if (page_zone_id(page) != page_zone_id(buddy))
 	// 	return false;
 	if (page_zone(page) != page_zone(buddy))
+		return false;
 
 	return true;
 }
@@ -246,59 +257,51 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
 static inline void __free_one_page(Page_s *page, unsigned long pfn,
 		zone_s *zone, unsigned int order, int migratetype)
 {
-// 	struct capture_control *capc = task_capc(zone);
-// 	unsigned long buddy_pfn;
-// 	unsigned long combined_pfn;
-// 	Page_s * buddy;
-// 	bool to_tail;
+	unsigned long buddy_pfn;
+	unsigned long combined_pfn;
+	Page_s * buddy;
 
-// continue_merging:
-// 	while (order < MAX_ORDER) {
-// 		buddy_pfn = __find_buddy_pfn(pfn, order);
-// 		buddy = page + (buddy_pfn - pfn);
+continue_merging:
+	while (order < MAX_ORDER) {
+		buddy_pfn = __find_buddy_pfn(pfn, order);
+		buddy = page + (buddy_pfn - pfn);
 
-// 		if (!page_is_buddy(page, buddy, order))
-// 			goto done_merging;
-// 		/*
-// 		 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
-// 		 * merge with it and move up one order.
-// 		 */
-// 		if (page_is_guard(buddy))
-// 			clear_page_guard(zone, buddy, order, migratetype);
-// 		else
-// 			del_page_from_free_list(buddy, zone, order);
-// 		combined_pfn = buddy_pfn & pfn;
-// 		page = page + (combined_pfn - pfn);
-// 		pfn = combined_pfn;
-// 		order++;
-// 	}
-// 	if (order < MAX_ORDER - 1) {
-// 		/* If we are here, it means order is >= pageblock_order.
-// 		 * We want to prevent merge between freepages on isolate
-// 		 * pageblock and normal pageblock. Without this, pageblock
-// 		 * isolation could cause incorrect freepage or CMA accounting.
-// 		 *
-// 		 * We don't want to hit this code for the more frequent
-// 		 * low-order merging.
-// 		 */
-// 		if (unlikely(has_isolate_pageblock(zone))) {
-// 			int buddy_mt;
+		if (!page_is_buddy(page, buddy, order))
+			goto done_merging;
 
-// 			buddy_pfn = __find_buddy_pfn(pfn, order);
-// 			buddy = page + (buddy_pfn - pfn);
-// 			buddy_mt = get_pageblock_migratetype(buddy);
+		del_page_from_free_list(buddy, zone, order);
+		combined_pfn = buddy_pfn & pfn;
+		page = page + (combined_pfn - pfn);
+		pfn = combined_pfn;
+		order++;
+	}
+	// if (order < MAX_ORDER - 1) {
+	// 	/* If we are here, it means order is >= pageblock_order.
+	// 	 * We want to prevent merge between freepages on isolate
+	// 	 * pageblock and normal pageblock. Without this, pageblock
+	// 	 * isolation could cause incorrect freepage or CMA accounting.
+	// 	 *
+	// 	 * We don't want to hit this code for the more frequent
+	// 	 * low-order merging.
+	// 	 */
+	// 	if (unlikely(has_isolate_pageblock(zone))) {
+	// 		int buddy_mt;
 
-// 			if (migratetype != buddy_mt
-// 					&& (is_migrate_isolate(migratetype) ||
-// 						is_migrate_isolate(buddy_mt)))
-// 				goto done_merging;
-// 		}
-// 		goto continue_merging;
-// 	}
+	// 		buddy_pfn = __find_buddy_pfn(pfn, order);
+	// 		buddy = page + (buddy_pfn - pfn);
+	// 		buddy_mt = get_pageblock_migratetype(buddy);
 
-// done_merging:
-// 	set_buddy_order(page, order);
-// 	add_to_free_list(page, zone, order);
+	// 		if (migratetype != buddy_mt
+	// 				&& (is_migrate_isolate(migratetype) ||
+	// 					is_migrate_isolate(buddy_mt)))
+	// 			goto done_merging;
+	// 	}
+	// 	goto continue_merging;
+	// }
+
+done_merging:
+	set_buddy_order(page, order);
+	add_to_free_list(page, zone, order);
 }
 
 static void free_one_page(zone_s *zone,
@@ -307,6 +310,42 @@ static void free_one_page(zone_s *zone,
 				int migratetype)
 {
 	__free_one_page(page, pfn, zone, order, migratetype);
+}
+
+/**
+ * __free_pages - Free pages allocated with alloc_pages().
+ * @page: The page pointer returned from alloc_pages().
+ * @order: The order of the allocation.
+ *
+ * This function can free multi-page allocations that are not compound
+ * pages.  It does not check that the @order passed in matches that of
+ * the allocation, so it is easy to leak memory.  Freeing more memory
+ * than was allocated will probably emit a warning.
+ *
+ * If the last reference to this page is speculative, it will be released
+ * by put_page() which only frees the first page of a non-compound
+ * allocation.  To prevent the remaining pages from being leaked, we free
+ * the subsequent pages here.  If you want to use the page's reference
+ * count to decide when to free the allocation, you should allocate a
+ * compound page, and use put_page() instead of __free_pages().
+ *
+ * Context: May be called in interrupt context or while holding a normal
+ * spinlock, but not in NMI context or while holding a raw spinlock.
+ */
+void __free_pages(Page_s * page, unsigned int order)
+{
+	// if (put_page_testzero(page))
+	// 	free_the_page(page, order);
+	// else if (!PageHead(page))
+	// 	while (order-- > 0)
+	// 		free_the_page(page + (1 << order), order);
+}
+
+void free_pages(unsigned long addr, unsigned int order)
+{
+	// if (addr != 0) {
+	// 	__free_pages(virt_to_page((void *)addr), order);
+	// }
 }
 
 
@@ -332,6 +371,7 @@ void memblock_free_pages(Page_s * page, unsigned long pfn,
 							unsigned int order)
 {
 	zone_s * zone = page_zone(page);
+	set_buddy_order(page, order);
 	add_to_free_list(page, zone, order);
 }
 
