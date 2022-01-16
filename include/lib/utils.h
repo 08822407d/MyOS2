@@ -38,6 +38,7 @@
 	void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p);
 	void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
 	List_s * list_hdr_dequeue(List_hdr_s * lhdr_p);
+	List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p);
 
 	typedef int(* list_traverse_do)(List_s * curr, List_s * target);
 	typedef	list_traverse_do	list_traverse_check;

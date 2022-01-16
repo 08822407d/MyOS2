@@ -68,10 +68,15 @@ void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p)
 
 List_s * list_hdr_pop(List_hdr_s * lhdr_p)
 {
-	List_s * ret_val = list_get_next(&lhdr_p->header);
-	list_delete(ret_val);
-	lhdr_p->count--;
-	return ret_val;
+	if (lhdr_p->count > 0)
+	{
+		List_s * ret_val = list_get_next(&lhdr_p->header);
+		list_delete(ret_val);
+		lhdr_p->count--;
+		return ret_val;
+	}
+
+	return NULL;
 }
 
 void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p)
@@ -87,10 +92,34 @@ inline __always_inline void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
 
 List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
 {
-	List_s * ret_val = list_get_prev(&lhdr_p->header);
-	list_delete(ret_val);
-	lhdr_p->count--;
-	return ret_val;
+	if (lhdr_p->count > 0)
+	{
+		List_s * ret_val = list_get_prev(&lhdr_p->header);
+		list_delete(ret_val);
+		lhdr_p->count--;
+		return ret_val;
+	}
+
+	return NULL;
+}
+
+List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p)
+{
+	if (lhdr_p->count > 0)
+	{
+		List_s * next = lhdr_p->header.next;
+		while (next != &lhdr_p->header)
+		{
+			if (next == l_p)
+			{
+				list_delete(l_p);
+				lhdr_p->count--;
+				return next;
+			}
+		}
+	}
+
+	return NULL;
 }
 
 void list_foreach_do(List_hdr_s * lhdr, List_s * target,

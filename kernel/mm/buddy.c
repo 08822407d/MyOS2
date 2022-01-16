@@ -3,6 +3,7 @@
 #include <sys/types.h>
 
 #include <string.h>
+#include <stddef.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
@@ -171,11 +172,127 @@ static inline void add_to_free_list_tail(Page_s * page,
 // 	list_move_tail(&page->lru, &area->free_list[migratetype]);
 // }
 
-static inline void del_page_from_free_list(Page_s * page,
+static inline Page_s * del_page_from_free_list(Page_s * page,
 		zone_s * zone, unsigned int order)
 {
-	list_delete(&page->free_list);
-	zone->free_area[order].count--;
+	return (Page_s *)list_hdr_delete(&zone->free_area[order], &page->free_list)->owner_p;
+}
+
+
+/*
+ * The order of subdivision here is critical for the IO subsystem.
+ * Please do not alter this order without good reasons and regression
+ * testing. Specifically, as large blocks of memory are subdivided,
+ * the order in which smaller blocks are delivered depends on the order
+ * they're subdivided in this function. This is the primary factor
+ * influencing the order in which pages are delivered to the IO
+ * subsystem according to empirical testing, and this is also justified
+ * by considering the behavior of a buddy system containing a single
+ * large block of memory acted on by a series of small allocations.
+ * This behavior is a critical factor in sglist merging's success.
+ *
+ * -- nyc
+ */
+static inline void expand(zone_s * zone, Page_s * page, int low, int high)
+{
+	unsigned long size = 1 << high;
+
+	while (high > low) {
+		high--;
+		size >>= 1;
+
+		add_to_free_list(&page[size], zone, high);
+		set_buddy_order(&page[size], high);
+	}
+}
+
+/*
+ * Go through the free lists for the given migratetype and remove
+ * the smallest available page from the freelists
+ */
+static inline 
+Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
+{
+	unsigned int current_order;
+	Page_s * page;
+
+	/* Find a page of the appropriate size in the preferred list */
+	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
+		page = get_page_from_free_area(&zone->free_area[order]);
+		if (!page)
+			continue;
+		expand(zone, page, order, current_order);
+		return page;
+	}
+
+	return NULL;
+}
+
+/*
+ * Do the hard work of removing an element from the buddy allocator.
+ * Call me with the zone->lock already held.
+ */
+static inline Page_s *
+__rmqueue(zone_s * zone, unsigned int order, unsigned int alloc_flags)
+{
+	Page_s * page;
+
+// retry:
+	page = __rmqueue_smallest(zone, order);
+// 	if (unlikely(!page)) {
+// 		if (alloc_flags & ALLOC_CMA)
+// 			page = __rmqueue_cma_fallback(zone, order);
+
+// 		if (!page && __rmqueue_fallback(zone, order, migratetype,
+// 								alloc_flags))
+// 			goto retry;
+// 	}
+// out:
+// 	if (page)
+// 		trace_mm_page_alloc_zone_locked(page, order, migratetype);
+	return page;
+}
+
+/*
+ * This is the 'heart' of the zoned buddy allocator.
+ */
+Page_s * __alloc_pages(unsigned int gfp, unsigned int order)
+{
+	Page_s * page;
+	zone_s * zone = &pg_list.node_zones[gfp];
+
+	/*
+	 * There are several places where we assume that the order value is sane
+	 * so bail out early if the request is out of bound.
+	 */
+	while (order >= MAX_ORDER);
+
+	page = __rmqueue(zone, order, gfp);
+
+	return page;
+}
+
+/**
+ * alloc_pages - Allocate pages.
+ * @gfp: GFP flags.
+ * @order: Power of two of number of pages to allocate.
+ *
+ * Allocate 1 << @order contiguous pages.  The physical address of the
+ * first page is naturally aligned (eg an order-3 allocation will be aligned
+ * to a multiple of 8 * PAGE_SIZE bytes).  The NUMA policy of the current
+ * process is honoured when in process context.
+ *
+ * Context: Can be called from any context, providing the appropriate GFP
+ * flags are used.
+ * Return: The page on success or NULL if allocation fails.
+ */
+Page_s * alloc_pages(unsigned int gfp, unsigned order)
+{
+	Page_s * page;
+
+	page = __alloc_pages(gfp, order);
+
+	return page;
 }
 
 /*
@@ -255,61 +372,36 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
  * -- nyc
  */
 static inline void __free_one_page(Page_s *page, unsigned long pfn,
-		zone_s *zone, unsigned int order, int migratetype)
+		zone_s *zone, unsigned int order)
 {
 	unsigned long buddy_pfn;
 	unsigned long combined_pfn;
 	Page_s * buddy;
 
-continue_merging:
 	while (order < MAX_ORDER) {
 		buddy_pfn = __find_buddy_pfn(pfn, order);
 		buddy = page + (buddy_pfn - pfn);
 
-		if (!page_is_buddy(page, buddy, order))
-			goto done_merging;
+		if (!page_is_buddy(page, buddy, order) ||
+			!del_page_from_free_list(buddy, zone, order))
+			break;
 
-		del_page_from_free_list(buddy, zone, order);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;
 		order++;
 	}
-	// if (order < MAX_ORDER - 1) {
-	// 	/* If we are here, it means order is >= pageblock_order.
-	// 	 * We want to prevent merge between freepages on isolate
-	// 	 * pageblock and normal pageblock. Without this, pageblock
-	// 	 * isolation could cause incorrect freepage or CMA accounting.
-	// 	 *
-	// 	 * We don't want to hit this code for the more frequent
-	// 	 * low-order merging.
-	// 	 */
-	// 	if (unlikely(has_isolate_pageblock(zone))) {
-	// 		int buddy_mt;
 
-	// 		buddy_pfn = __find_buddy_pfn(pfn, order);
-	// 		buddy = page + (buddy_pfn - pfn);
-	// 		buddy_mt = get_pageblock_migratetype(buddy);
-
-	// 		if (migratetype != buddy_mt
-	// 				&& (is_migrate_isolate(migratetype) ||
-	// 					is_migrate_isolate(buddy_mt)))
-	// 			goto done_merging;
-	// 	}
-	// 	goto continue_merging;
-	// }
-
-done_merging:
 	set_buddy_order(page, order);
 	add_to_free_list(page, zone, order);
 }
 
-static void free_one_page(zone_s *zone,
-				Page_s *page, unsigned long pfn,
-				unsigned int order,
-				int migratetype)
+static void free_one_page(Page_s *page,
+		unsigned int order)
 {
-	__free_one_page(page, pfn, zone, order, migratetype);
+	unsigned long pfn = page_to_pfn(page);
+	zone_s * zone = page_zone(page);
+	__free_one_page(page, pfn, zone, order);
 }
 
 /**
@@ -364,6 +456,14 @@ void init_page()
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	mem_map =
 	pg_list.node_mem_map = (Page_s *)memblock_alloc(sizeof(Page_s) * kparam.phys_page_nr, 1);
+	for (int i = 0; i < kparam.phys_page_nr; i++)
+	{
+		Page_s * page = &pg_list.node_mem_map[i];
+		page->free_list.owner_p = page;
+	}
+
+	Page_s * pg1 = alloc_pages(ZONE_NORMAL, 1);
+	Page_s * pg2 = alloc_pages(ZONE_NORMAL, 1);
 
 }
 
