@@ -22,26 +22,8 @@ pglist_data_s	pg_list;
 Page_s *		mem_map;
 
 /*==============================================================================================*
- *									core fuctions for buddy system								*
+ *								private fuctions for buddy system								*
  *==============================================================================================*/
-Page_s * page_alloc(void)
-{
-	return alloc_pages(ZONE_NORMAL, 0);
-}
-
-Page_s * paddr_to_page(phys_addr_t paddr)
-{
-	unsigned long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
-	// return &mem_info.pages[pg_idx];
-	return pfn_to_page(pfn);
-}
-
-phys_addr_t page_to_paddr(Page_s * page)
-{
-	unsigned long pfn = page_to_pfn(page);
-	return (phys_addr_t)(pfn * PAGE_SIZE);
-}
-
 /*
  * This function returns the order of a free page in the buddy system. In
  * general, page_zone(page)->lock must be held by the caller to prevent the
@@ -79,12 +61,24 @@ static inline void add_to_free_list_tail(Page_s * page,
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
 
+static inline Page_s * get_page_from_free_area(List_hdr_s * area)
+{
+	List_s * pg_lp = list_hdr_pop(area);
+	if (pg_lp == NULL)
+		return NULL;
+	else
+		return pg_lp->owner_p;
+}
+
 static inline Page_s * del_page_from_free_list(Page_s * page,
 		zone_s * zone, unsigned int order)
 {
-	return (Page_s *)list_hdr_delete(&zone->free_area[order], &page->free_list)->owner_p;
+	List_s * pg_lp = list_hdr_delete(&zone->free_area[order], &page->free_list);
+	if (pg_lp == NULL)
+		return NULL;
+	else
+		return pg_lp->owner_p;
 }
-
 
 /*
  * The order of subdivision here is critical for the IO subsystem.
@@ -111,87 +105,6 @@ static inline void expand(zone_s * zone, Page_s * page, int low, int high)
 		add_to_free_list(&page[size], zone, high);
 		set_buddy_order(&page[size], high);
 	}
-}
-
-/*
- * Go through the free lists for the given migratetype and remove
- * the smallest available page from the freelists
- */
-static inline 
-Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
-{
-	unsigned int current_order;
-	Page_s * page;
-
-	/* Find a page of the appropriate size in the preferred list */
-	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
-		page = get_page_from_free_area(&zone->free_area[current_order]);
-		if (!page)
-			continue;
-		expand(zone, page, order, current_order);
-		for (int i = 0; i < (1 << order); i++)
-			page[i].ref_count++;
-
-		return page;
-	}
-
-	return NULL;
-}
-
-/*
- * Do the hard work of removing an element from the buddy allocator.
- * Call me with the zone->lock already held.
- */
-static inline Page_s *
-__rmqueue(zone_s * zone, unsigned int order, unsigned int alloc_flags)
-{
-	Page_s * page;
-
-	page = __rmqueue_smallest(zone, order);
-
-	return page;
-}
-
-/*
- * This is the 'heart' of the zoned buddy allocator.
- */
-Page_s * __alloc_pages(unsigned int gfp, unsigned int order)
-{
-	Page_s * page;
-	zone_s * zone = &pg_list.node_zones[gfp];
-
-	/*
-	 * There are several places where we assume that the order value is sane
-	 * so bail out early if the request is out of bound.
-	 */
-	while (order >= MAX_ORDER);
-
-	page = __rmqueue(zone, order, gfp);
-
-	return page;
-}
-
-/**
- * alloc_pages - Allocate pages.
- * @gfp: GFP flags.
- * @order: Power of two of number of pages to allocate.
- *
- * Allocate 1 << @order contiguous pages.  The physical address of the
- * first page is naturally aligned (eg an order-3 allocation will be aligned
- * to a multiple of 8 * PAGE_SIZE bytes).  The NUMA policy of the current
- * process is honoured when in process context.
- *
- * Context: Can be called from any context, providing the appropriate GFP
- * flags are used.
- * Return: The page on success or NULL if allocation fails.
- */
-Page_s * alloc_pages(unsigned int gfp, unsigned order)
-{
-	Page_s * page;
-
-	page = __alloc_pages(gfp, order);
-
-	return page;
 }
 
 /*
@@ -242,6 +155,38 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
 }
 
 /*
+ * Go through the free lists for the given migratetype and remove
+ * the smallest available page from the freelists
+ */
+// Linux function proto :
+// static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
+//					unsigned int order, int migratetype)
+static inline 
+Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
+{
+	unsigned int current_order;
+	Page_s * page;
+
+	/* Find a page of the appropriate size in the preferred list */
+	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
+		if (zone->free_area[current_order].count == 0)
+			continue;
+
+		List_s * page_lp = list_hdr_pop(&zone->free_area[current_order]);
+		while (page_lp == NULL);
+
+		page = page_lp->owner_p;
+		expand(zone, page, order, current_order);
+		for (int i = 0; i < (1 << order); i++)
+			page[i].ref_count++;
+
+		return page;
+	}
+
+	return NULL;
+}
+
+/*
  * Freeing function for a buddy system allocator.
  *
  * The concept of a buddy system is to maintain direct-mapped table
@@ -264,6 +209,10 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
  *
  * -- nyc
  */
+// Linux function proto :
+// static inline void __free_one_page(struct page *page, unsigned long pfn,
+//					struct zone *zone, unsigned int order, int migratetype,
+//					fpi_t fpi_flags)
 static inline void __free_one_page(Page_s *page, unsigned long pfn,
 		zone_s *zone, unsigned int order)
 {
@@ -275,10 +224,11 @@ static inline void __free_one_page(Page_s *page, unsigned long pfn,
 		buddy_pfn = __find_buddy_pfn(pfn, order);
 		buddy = page + (buddy_pfn - pfn);
 
-		if (!page_is_buddy(page, buddy, order) ||
-			!del_page_from_free_list(buddy, zone, order))
+		if (page_is_buddy(page, buddy, order) == false ||
+			!list_in_lhdr(&zone->free_area[order], &page->free_list))
 			break;
 
+		list_hdr_delete(&zone->free_area[order], &page->free_list);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;
@@ -289,12 +239,48 @@ static inline void __free_one_page(Page_s *page, unsigned long pfn,
 	add_to_free_list(page, zone, order);
 }
 
-static void free_one_page(Page_s *page,
-		unsigned int order)
+/*===========================================3yy===================================================*
+ *									public fuctions for buddy system							*
+ *==============================================================================================*/
+/**
+ * alloc_pages - Allocate pages.
+ * @gfp: GFP flags.
+ * @order: Power of two of number of pages to allocate.
+ *
+ * Allocate 1 << @order contiguous pages.  The physical address of the
+ * first page is naturally aligned (eg an order-3 allocation will be aligned
+ * to a multiple of 8 * PAGE_SIZE bytes).  The NUMA policy of the current
+ * process is honoured when in process context.
+ *
+ * Context: Can be called from any context, providing the appropriate GFP
+ * flags are used.
+ * Return: The page on success or NULL if allocation fails.
+ */
+// Linux function proto :
+// struct page *alloc_pages(gfp_t gfp, unsigned order)
+Page_s * alloc_pages(unsigned int gfp, unsigned int order)
 {
-	unsigned long pfn = page_to_pfn(page);
-	zone_s * zone = page_zone(page);
-	__free_one_page(page, pfn, zone, order);
+	// linux call stack :
+	// struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+	//					nodemask_t *nodemask)
+	//								||
+	//								\/
+	// static struct page * get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
+	//					int alloc_flags, const struct alloc_context *ac)
+	//								||
+	//								\/
+	// static inline struct page *rmqueue(struct zone *preferred_zone, struct zone *zone,
+	//					unsigned int order, gfp_t gfp_flags, unsigned int alloc_flags,
+	// 					int migratetype)
+	//								||
+	//								\/
+	// static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
+	//					unsigned int order, int migratetype)
+
+	Page_s * page;
+	zone_s * zone = &pg_list.node_zones[gfp];
+	page = __rmqueue_smallest(zone, order);
+	return page;
 }
 
 /**
@@ -317,24 +303,51 @@ static void free_one_page(Page_s *page,
  * Context: May be called in interrupt context or while holding a normal
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
-// void __free_pages(Page_s * page, unsigned int order)
-// {
-// 	if (put_page_testzero(page))
-// 		free_the_page(page, order);
-// 	else if (!PageHead(page))
-// 		while (order-- > 0)
-// 			free_the_page(page + (1 << order), order);
-// }
-
+// Linux function proto :
+// void free_pages(unsigned long addr, unsigned int order)
 void free_pages(Page_s * page, unsigned int order)
 {
-	free_one_page(page, order);
+	// linux call stack :
+	// void __free_pages(struct page *page, unsigned int order)
+	//								||
+	//								\/
+	// static inline void free_the_page(struct page *page, unsigned int order)
+	//								||
+	//								\/
+	// static void __free_pages_ok(struct page *page, unsigned int order, fpi_t fpi_flags)
+	//								||
+	//								\/
+	// static inline void __free_one_page(struct page *page, unsigned long pfn,
+	//					struct zone *zone, unsigned int order, int migratetype,
+	//					fpi_t fpi_flags)
+
+	unsigned long pfn = page_to_pfn(page);
+	zone_s * zone = page_zone(page);
+	__free_one_page(page, pfn, zone, order);
+}
+
+Page_s * paddr_to_page(phys_addr_t paddr)
+{
+	unsigned long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
+	// return &mem_info.pages[pg_idx];
+	return pfn_to_page(pfn);
+}
+
+phys_addr_t page_to_paddr(Page_s * page)
+{
+	unsigned long pfn = page_to_pfn(page);
+	return (phys_addr_t)(pfn * PAGE_SIZE);
 }
 
 
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
+void pre_init_page()
+{
+
+}
+
 void init_page()
 {
 	memset(&pg_list, 0, sizeof(pg_list));
@@ -359,15 +372,6 @@ void init_page()
 
 	// set init flag
 	kparam.init_flags.page_mm = 1;
-
-	// Page_s * pg1 = alloc_pages(ZONE_NORMAL, 1);
-	// Page_s * pg2 = alloc_pages(ZONE_NORMAL, 1);
-	// Page_s * pg3 = alloc_pages(ZONE_NORMAL, 1);
-
-	// free_one_page(pg1, 1);
-	// free_one_page(pg2, 1);
-	// free_one_page(pg3, 1);
-
 }
 
 void memblock_free_pages(Page_s * page, unsigned long pfn,

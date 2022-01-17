@@ -75,9 +75,6 @@ static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo
 	max_low_pfn =
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 
-	// set init flag
-	kparam.arch_init_flags.memory_layout = 1;
-
 	// some part of memmory space is reserved
 	memblock_reserve(0, 16 * CONST_1M);
 	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
@@ -147,8 +144,6 @@ static void cpuid_info(void)
 
 	cpuid(0x80000000,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
 	cpuinfo.max_extend_opcode = CpuFacName[0];
-
-	kparam.arch_init_flags.get_cpuid = 1;
 }
 
 void pre_init(void)

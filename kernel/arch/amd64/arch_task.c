@@ -397,6 +397,8 @@ void exit_notify(void)
 	while (curr->child_lhdr.count != 0)
 	{
 		List_s * child_lp = list_hdr_pop(&curr->child_lhdr);
+		while (child_lp == 0);
+		
 		list_hdr_append(&task_init->child_lhdr, child_lp);
 	}
 	wq_wakeup(&curr_tsk->wait_childexit, PS_INTERRUPTIBLE);
@@ -585,7 +587,10 @@ void schedule()
 	cpudata_p->scheduleing_flag = 1;
 	// get next task
 	// find a suit position for current insertion
-	next_task = container_of(list_hdr_pop(&cpudata_p->ruuning_lhdr), task_s, schedule_list);
+	List_s * next_lp = list_hdr_pop(&cpudata_p->ruuning_lhdr);
+	while (next_lp == 0);
+	
+	next_task = container_of(next_lp, task_s, schedule_list);
 	cpudata_p->curr_task = next_task;
 
 	cpudata_p->last_jiffies = jiffies;

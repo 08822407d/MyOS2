@@ -85,8 +85,10 @@ void IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx)
  *==============================================================================================*/
 long cmd_out()
 {
-	List_s * wq_l = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
-	blkbuf_node_s * node = container_of(wq_l->owner_p, blkbuf_node_s, wq);
+	List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
+	while (!wq_lp);
+	
+	blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
 	IDE_req_queue.in_using = node;
 
 	while(inb(PORT_DISK0_STATUS_CMD) & DISK_STATUS_BUSY)

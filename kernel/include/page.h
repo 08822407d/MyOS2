@@ -29,8 +29,4 @@
 
 	void memblock_free_pages(Page_s * page, unsigned long pfn, unsigned int order);
 
-	Page_s * alloc_pages(unsigned int gfp, unsigned order);
-	void free_pages(Page_s * page, unsigned int order);
-
-
 #endif /* _PAGE_H_ */

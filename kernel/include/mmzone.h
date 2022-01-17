@@ -190,13 +190,5 @@
 
 	void zone_sizes_init(void);
 
-	static inline Page_s * get_page_from_free_area(List_hdr_s * area)
-	{
-		List_s * lp = list_hdr_pop(area);
-		if (lp == NULL)
-			return NULL;
-		else
-			return lp->owner_p;
-	}
 
 #endif /* _LINUX_MMZONE_H_ */

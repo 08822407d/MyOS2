@@ -4,6 +4,8 @@
 #include <sys/_null.h>
 #include <lib/utils.h>
 
+#include <stdbool.h>
+
 /*==============================================================================================*/
 /*										list operations											*/
 /*==============================================================================================*/
@@ -49,6 +51,24 @@ void list_delete(List_s * src)
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
 	list_init(src, src->owner_p);
+}
+
+bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
+{
+	if (lhdr_p->count > 0)
+	{
+		List_s * next = lhdr_p->header.next;
+		while (next != &lhdr_p->header)
+		{
+			if (next == l_p)
+			{
+				return true;
+			}
+			next = next->next;
+		}
+	}
+
+	return false;
 }
 
 /*==============================================================================================*/
@@ -105,19 +125,11 @@ List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
 
 List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p)
 {
-	if (lhdr_p->count > 0)
+	if (list_in_lhdr(lhdr_p, l_p))
 	{
-		List_s * next = lhdr_p->header.next;
-		while (next != &lhdr_p->header)
-		{
-			if (next == l_p)
-			{
-				list_delete(l_p);
-				lhdr_p->count--;
-				return next;
-			}
-			next = next->next;
-		}
+		list_delete(l_p);
+		lhdr_p->count--;
+		return l_p;
 	}
 
 	return NULL;

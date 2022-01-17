@@ -38,6 +38,8 @@ void wq_wakeup(wait_queue_hdr_s * wqhdr, unsigned long pstate)
 		return;
 
 	List_s * wq_lp = list_hdr_pop(wqhdr);
+	while (!wq_lp);
+
 	wait_queue_T * the_wait = container_of(wq_lp, wait_queue_T, wq_list);
 
 	if (the_wait->task->state & pstate)

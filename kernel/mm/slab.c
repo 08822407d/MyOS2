@@ -79,7 +79,7 @@ void init_slab()
 
 slab_s * slab_alloc(slab_s * cslp)
 {
-	Page_s * pgp = page_alloc();
+	Page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
 	phys_addr_t page_paddr = page_to_paddr(pgp);
 	if (!(pgp->attr & PG_PTable_Maped))
 		arch_page_domap(phys2virt(page_paddr), page_paddr,
@@ -135,7 +135,10 @@ void * kmalloc(size_t size)
 		slab_s *	slp = NULL;
 		if (scgp->normal_slab_used.count > 0)
 		{
-			slp = container_of(list_hdr_pop(&scgp->normal_slab_used), slab_s, slab_list);
+			List_s * slp_lp = list_hdr_pop(&scgp->normal_slab_used);
+			while (slp_lp == 0);
+			
+			slp = container_of(slp_lp, slab_s, slab_list);
 			if (slp->free == 1)
 				list_hdr_push(&scgp->normal_slab_full, &slp->slab_list);
 			else
@@ -143,7 +146,10 @@ void * kmalloc(size_t size)
 		}
 		else if (scgp->normal_slab_free.count > 0)
 		{
-			slp = container_of(list_hdr_pop(&scgp->normal_slab_free), slab_s, slab_list);
+			List_s * slp_lp = list_hdr_pop(&scgp->normal_slab_free);
+			while (slp_lp == 0);
+
+			slp = container_of(slp_lp, slab_s, slab_list);
 			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 		}
 		else

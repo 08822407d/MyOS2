@@ -53,7 +53,7 @@ void creat_exec_addrspace(task_s * task)
 	{
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
-			Page_s * pgp = page_alloc();
+			Page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
 			pgp->map_count++;
 			pgp->attr = PG_PTable_Maped;
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
@@ -96,7 +96,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
 	Page_s * orig_pgp = paddr_to_page(orig_paddr);
-	Page_s * new_pgp = page_alloc();
+	Page_s * new_pgp = alloc_pages(ZONE_NORMAL, 0);
 
 	if (new_pgp != NULL)
 	{
@@ -143,7 +143,7 @@ reg_t do_brk(reg_t start, reg_t length)
 	for (reg_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
 		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
-		Page_s * pg_p = page_alloc();
+		Page_s * pg_p = alloc_pages(ZONE_NORMAL, 0);
 		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p), attr, &curr_tsk->mm_struct->cr3);
 	}
 	curr_tsk->mm_struct->end_brk = new_end;

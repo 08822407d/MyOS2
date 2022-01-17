@@ -62,7 +62,10 @@ uPage_s * upage_alloc()
 	uPage_s * ret_val = NULL;
 	if (free_upage_lhdr.count > 0)
 	{
-		ret_val = container_of(list_hdr_pop(&free_upage_lhdr), uPage_s, upage_list);
+		List_s * upg_lp = list_hdr_pop(&free_upage_lhdr);
+		while (upg_lp == 0);
+		
+		ret_val = container_of(upg_lp, uPage_s, upage_list);
 		list_hdr_push(&used_upage_lhdr, &ret_val->upage_list);
 	}
 	else
@@ -216,7 +219,10 @@ void * malloc(size_t size)
 		uslab_s *	uslp = NULL;
 		if (uscgp->normal_slab_used.count > 0)
 		{
-			uslp = container_of(list_hdr_pop(&uscgp->normal_slab_used), uslab_s, uslab_list);
+			List_s * uslp_lp = list_hdr_pop(&uscgp->normal_slab_used);
+			while (uslp_lp == 0);
+			
+			uslp = container_of(uslp_lp, uslab_s, uslab_list);
 			if (uslp->free == 1)
 				list_hdr_push(&uscgp->normal_slab_full, &uslp->uslab_list);
 			else
@@ -224,7 +230,10 @@ void * malloc(size_t size)
 		}
 		else if (uscgp->normal_slab_free.count > 0)
 		{
-			uslp = container_of(list_hdr_pop(&uscgp->normal_slab_free), uslab_s, uslab_list);
+			List_s * uslp_lp = list_hdr_pop(&uscgp->normal_slab_free);
+			while (uslp_lp == 0);
+			
+			uslp = container_of(uslp_lp, uslab_s, uslab_list);
 			list_hdr_push(&uscgp->normal_slab_used, &uslp->uslab_list);
 		}
 		else

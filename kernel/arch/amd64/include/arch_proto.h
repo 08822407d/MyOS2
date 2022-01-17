@@ -171,8 +171,6 @@
 
 	typedef struct
 	{
-		int		get_cpuid;
-		int		memory_layout;
 		int		frame_buffer_info;
 
 		int		init_bsp_arch_data;

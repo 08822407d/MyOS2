@@ -40,7 +40,8 @@
 	void init_page_manage(void);
 	void init_page(void);
 	void init_slab();
-	Page_s * page_alloc(void);
+	Page_s * alloc_pages(enum zone_type ,unsigned int order);
+	void free_pages(Page_s * page, unsigned int order);
 	Page_s * paddr_to_page(phys_addr_t paddr);
 	phys_addr_t page_to_paddr(Page_s * page);
 	void page_free(Page_s *);

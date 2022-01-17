@@ -2,6 +2,9 @@
 #define _LIB_UTILS_H_
 
 #include <sys/types.h>
+
+#include <stdbool.h>
+
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);
 	void bm_clear_bit(bitmap_t *, unsigned long idx);
@@ -32,6 +35,7 @@
 	void list_insert_next(List_s * src, List_s * dst);
 	void list_delete(List_s * src);
 	
+	bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p);
 	void list_hdr_init(List_hdr_s * lh_p);
 	void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p);
 	List_s * list_hdr_pop(List_hdr_s * lhdr_p);
