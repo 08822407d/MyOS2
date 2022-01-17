@@ -113,7 +113,7 @@ Page_s * page_alloc(void)
 	// ret_page->ref_count++;
 	// unlock_recurs_lock(&page_alloc_lock);
 	// return ret_page;
-	alloc_pages(ZONE_NORMAL, 0);
+	return alloc_pages(ZONE_NORMAL, 0);
 }
 
 Page_s * paddr_to_page(phys_addr_t paddr)
@@ -165,19 +165,6 @@ static inline void add_to_free_list_tail(Page_s * page,
 	list_hdr_append(fa_lhdr, &page->free_list);
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
-
-// /*
-//  * Used for pages which are on another list. Move the pages to the tail
-//  * of the list - so the moved pages won't immediately be considered for
-//  * allocation again (e.g., optimization for memory onlining).
-//  */
-// static inline void move_to_free_list(struct page *page, struct zone *zone,
-// 				     unsigned int order, int migratetype)
-// {
-// 	struct free_area *area = &zone->free_area[order];
-
-// 	list_move_tail(&page->lru, &area->free_list[migratetype]);
-// }
 
 static inline Page_s * del_page_from_free_list(Page_s * page,
 		zone_s * zone, unsigned int order)

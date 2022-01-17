@@ -1,6 +1,8 @@
 #ifndef _LINUX_MMZONE_H_
 #define _LINUX_MMZONE_H_
 
+#include <stddef.h>
+
 #include <lib/utils.h>
 
 #include <include/page.h>
@@ -190,7 +192,11 @@
 
 	static inline Page_s * get_page_from_free_area(List_hdr_s * area)
 	{
-		return list_hdr_pop(area)->owner_p;
+		List_s * lp = list_hdr_pop(area);
+		if (lp == NULL)
+			return NULL;
+		else
+			return lp->owner_p;
 	}
 
 #endif /* _LINUX_MMZONE_H_ */
