@@ -69,7 +69,7 @@ void init_slab()
 		bslp->virt_addr = (virt_addr_t)base_slab_page[i];
 		bslp->page->attr |= PG_Slab;
 		int pg_idx = (uint64_t)virt2phys(bslp->virt_addr) / PAGE_SIZE;
-		bslp->page = &mem_info.pages[pg_idx];
+		bslp->page = &mem_map[pg_idx];
 		bslp->page->slab_ptr = bslp;
 	}
 	kparam.kernel_vir_end += 0x10;
@@ -201,7 +201,7 @@ void kfree(void * obj_p)
 	// find which slab does the pointer belonged to
 	phys_addr_t pg_addr = virt2phys((virt_addr_t)PAGE_ROUND_DOWN((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
-	Page_s * pgp = &mem_info.pages[pg_idx];
+	Page_s * pgp = &mem_map[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
 	// of coures it should not in an empty-slab
