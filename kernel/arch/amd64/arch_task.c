@@ -445,10 +445,11 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
  *==============================================================================================*/
 unsigned long init(unsigned long arg)
 {
+	color_printk(GREEN, BLACK, "Enter task init.\n");
 	init_vfs();
-	// color_printk(GREEN, BLACK, "VFS initiated.\n");
+	color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();
-	// color_printk(GREEN, BLACK, "Device files created.\n");
+	color_printk(GREEN, BLACK, "Device files created.\n");
 
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;

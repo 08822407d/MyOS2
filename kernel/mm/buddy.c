@@ -27,72 +27,72 @@ Page_s *		mem_map;
  *==============================================================================================*/
 void init_page_manage()
 {	
-	#ifdef DEBUG
-		// make sure have get memory layout
-		while (!kparam.arch_init_flags.memory_layout);
-		while (!kparam.arch_init_flags.reload_bsp_arch_page);
-	#endif
+	// #ifdef DEBUG
+	// 	// make sure have get memory layout
+	// 	while (!kparam.arch_init_flags.memory_layout);
+	// 	while (!kparam.arch_init_flags.reload_bsp_arch_page);
+	// #endif
 
-	memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
-	init_recurs_lock(&page_alloc_lock);
+	// memset(&mem_info.page_bitmap, ~0, sizeof(mem_info.page_bitmap));
+	// init_recurs_lock(&page_alloc_lock);
 
-	phys_addr_t low_bound = 0, high_bound = 0;
-	uint64_t pg_start_idx = 0, pg_end_idx = 0;
+	// phys_addr_t low_bound = 0, high_bound = 0;
+	// uint64_t pg_start_idx = 0, pg_end_idx = 0;
 
-	int i;
-	int j;
-	int page_count;
-	int zone_count = 0;
-	for(i = 0; i < mem_info.mb_memmap_nr; i++)
-	{
-		multiboot_memory_map_s *mbmap_curr = &mem_info.mb_memmap[i];
-		low_bound = (phys_addr_t)mbmap_curr->addr;
-		high_bound = (phys_addr_t)(mbmap_curr->len + low_bound);
+	// int i;
+	// int j;
+	// int page_count;
+	// int zone_count = 0;
+	// for(i = 0; i < mem_info.mb_memmap_nr; i++)
+	// {
+	// 	multiboot_memory_map_s *mbmap_curr = &mem_info.mb_memmap[i];
+	// 	low_bound = (phys_addr_t)mbmap_curr->addr;
+	// 	high_bound = (phys_addr_t)(mbmap_curr->len + low_bound);
 
 
-		pg_start_idx = PAGE_ROUND_UP((uint64_t)low_bound) / PAGE_SIZE;
-		pg_end_idx   = PAGE_ROUND_DOWN((uint64_t)high_bound) / PAGE_SIZE;
-		if(pg_end_idx <= pg_start_idx)
-			continue;
+	// 	pg_start_idx = PAGE_ROUND_UP((uint64_t)low_bound) / PAGE_SIZE;
+	// 	pg_end_idx   = PAGE_ROUND_DOWN((uint64_t)high_bound) / PAGE_SIZE;
+	// 	if(pg_end_idx <= pg_start_idx)
+	// 		continue;
 
-		// set value of memzone_s members
-		memzone_s *mz_curr = &mem_info.memzones[zone_count];
-		mz_curr->attr				= mem_info.mb_memmap[i].type;
-		mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
-		mz_curr->page_nr			= pg_end_idx - pg_start_idx;
-		mz_curr->page_free_nr		= mz_curr->page_nr;
-		mz_curr->zone_start_addr	= (phys_addr_t)(pg_start_idx * PAGE_SIZE);
-		mz_curr->zone_end_addr		= (phys_addr_t)(pg_end_idx * PAGE_SIZE);
-		mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
-		page_count 					+= mz_curr->page_nr;
+	// 	// set value of memzone_s members
+	// 	memzone_s *mz_curr = &mem_info.memzones[zone_count];
+	// 	mz_curr->attr				= mem_info.mb_memmap[i].type;
+	// 	mz_curr->page_zone			= &mem_info.pages[pg_start_idx];
+	// 	mz_curr->page_nr			= pg_end_idx - pg_start_idx;
+	// 	mz_curr->page_free_nr		= mz_curr->page_nr;
+	// 	mz_curr->zone_start_addr	= (phys_addr_t)(pg_start_idx * PAGE_SIZE);
+	// 	mz_curr->zone_end_addr		= (phys_addr_t)(pg_end_idx * PAGE_SIZE);
+	// 	mz_curr->zone_size			= mz_curr->zone_end_addr - mz_curr->zone_start_addr;
+	// 	page_count 					+= mz_curr->page_nr;
 
-		// set value of Page_s members in current zone and corresponding bit in page bit map
-		for( j = pg_start_idx; j < pg_end_idx; j++)
-		{
-			Page_s *pg_curr = &mem_info.pages[j];
-			pg_curr->page_start_addr = (phys_addr_t)(j * PAGE_SIZE);
-			bm_clear_bit(mem_info.page_bitmap, j);
-		}
-		zone_count++;
-	}
-	mem_info.memzone_total_nr	= zone_count;
-	mem_info.page_total_nr		= page_count;
+	// 	// set value of Page_s members in current zone and corresponding bit in page bit map
+	// 	for( j = pg_start_idx; j < pg_end_idx; j++)
+	// 	{
+	// 		Page_s *pg_curr = &mem_info.pages[j];
+	// 		pg_curr->page_start_addr = (phys_addr_t)(j * PAGE_SIZE);
+	// 		bm_clear_bit(mem_info.page_bitmap, j);
+	// 	}
+	// 	zone_count++;
+	// }
+	// mem_info.memzone_total_nr	= zone_count;
+	// mem_info.page_total_nr		= page_count;
 
-	// set kernel used Page_s in right status
-	// map physical pages for kernel
-	size_t k_phy_pgbase = 0;
-	long pde_nr   = PAGE_ROUND_UP(kparam.kernel_vir_end - (virt_addr_t)phys2virt(0)) / PAGE_SIZE;
-	for (long i = 0; i < pde_nr; i++)
-	{
-		unsigned long pg_idx = k_phy_pgbase / PAGE_SIZE;
-		// set page struct
-		bm_set_bit(mem_info.page_bitmap, pg_idx);
-		mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
-		mem_info.pages[pg_idx].ref_count++;
-		k_phy_pgbase += PAGE_SIZE;
-	}
-	// set init flag
-	kparam.init_flags.page_mm = 1;
+	// // set kernel used Page_s in right status
+	// // map physical pages for kernel
+	// size_t k_phy_pgbase = 0;
+	// long pde_nr   = PAGE_ROUND_UP(kparam.kernel_vir_end - (virt_addr_t)phys2virt(0)) / PAGE_SIZE;
+	// for (long i = 0; i < pde_nr; i++)
+	// {
+	// 	unsigned long pg_idx = k_phy_pgbase / PAGE_SIZE;
+	// 	// set page struct
+	// 	bm_set_bit(mem_info.page_bitmap, pg_idx);
+	// 	mem_info.pages[pg_idx].attr = PG_Kernel | PG_Kernel_Init | PG_PTable_Maped;
+	// 	mem_info.pages[pg_idx].ref_count++;
+	// 	k_phy_pgbase += PAGE_SIZE;
+	// }
+	// // set init flag
+	// kparam.init_flags.page_mm = 1;
 }
 
 
@@ -101,24 +101,26 @@ void init_page_manage()
  *==============================================================================================*/
 Page_s * page_alloc(void)
 {
-	lock_recurs_lock(&page_alloc_lock);
-	unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
-	if (freepage_idx >= mem_info.page_total_nr)
-	{
-		color_printk(WHITE, RED, "PAGE ALLOC FAILED!\n");
-		while (1);
-	}
-	Page_s * ret_page = &mem_info.pages[freepage_idx];
-	bm_set_bit(mem_info.page_bitmap, freepage_idx);
-	ret_page->ref_count++;
-	unlock_recurs_lock(&page_alloc_lock);
-	return ret_page;
+	// lock_recurs_lock(&page_alloc_lock);
+	// unsigned long freepage_idx = bm_get_freebit_idx(mem_info.page_bitmap, 0, mem_info.page_total_nr);
+	// if (freepage_idx >= mem_info.page_total_nr)
+	// {
+	// 	color_printk(WHITE, RED, "PAGE ALLOC FAILED!\n");
+	// 	while (1);
+	// }
+	// Page_s * ret_page = &mem_info.pages[freepage_idx];
+	// bm_set_bit(mem_info.page_bitmap, freepage_idx);
+	// ret_page->ref_count++;
+	// unlock_recurs_lock(&page_alloc_lock);
+	// return ret_page;
+	alloc_pages(ZONE_NORMAL, 0);
 }
 
 Page_s * get_page(phys_addr_t paddr)
 {
-	long pg_idx = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
-	return &mem_info.pages[pg_idx];
+	long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
+	// return &mem_info.pages[pg_idx];
+	return pfn_to_page(pfn);
 }
 
 
@@ -218,10 +220,13 @@ Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
 
 	/* Find a page of the appropriate size in the preferred list */
 	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
-		page = get_page_from_free_area(&zone->free_area[order]);
+		page = get_page_from_free_area(&zone->free_area[current_order]);
 		if (!page)
 			continue;
 		expand(zone, page, order, current_order);
+		for (int i = 0; i < (1 << order); i++)
+			page[i].ref_count++;
+
 		return page;
 	}
 
@@ -237,19 +242,8 @@ __rmqueue(zone_s * zone, unsigned int order, unsigned int alloc_flags)
 {
 	Page_s * page;
 
-// retry:
 	page = __rmqueue_smallest(zone, order);
-// 	if (unlikely(!page)) {
-// 		if (alloc_flags & ALLOC_CMA)
-// 			page = __rmqueue_cma_fallback(zone, order);
 
-// 		if (!page && __rmqueue_fallback(zone, order, migratetype,
-// 								alloc_flags))
-// 			goto retry;
-// 	}
-// out:
-// 	if (page)
-// 		trace_mm_page_alloc_zone_locked(page, order, migratetype);
 	return page;
 }
 
@@ -336,12 +330,6 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
 	if (buddy_order(buddy) != order)
 		return false;
 
-	/*
-	 * zone check is done late to avoid uselessly calculating
-	 * zone/node ids for pages that could never merge.
-	 */
-	// if (page_zone_id(page) != page_zone_id(buddy))
-	// 	return false;
 	if (page_zone(page) != page_zone(buddy))
 		return false;
 
@@ -424,20 +412,18 @@ static void free_one_page(Page_s *page,
  * Context: May be called in interrupt context or while holding a normal
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
-void __free_pages(Page_s * page, unsigned int order)
-{
-	// if (put_page_testzero(page))
-	// 	free_the_page(page, order);
-	// else if (!PageHead(page))
-	// 	while (order-- > 0)
-	// 		free_the_page(page + (1 << order), order);
-}
+// void __free_pages(Page_s * page, unsigned int order)
+// {
+// 	if (put_page_testzero(page))
+// 		free_the_page(page, order);
+// 	else if (!PageHead(page))
+// 		while (order-- > 0)
+// 			free_the_page(page + (1 << order), order);
+// }
 
-void free_pages(unsigned long addr, unsigned int order)
+void free_pages(Page_s * page, unsigned int order)
 {
-	// if (addr != 0) {
-	// 	__free_pages(virt_to_page((void *)addr), order);
-	// }
+	free_one_page(page, order);
 }
 
 
@@ -449,21 +435,32 @@ void init_page()
 	memset(&pg_list, 0, sizeof(pg_list));
 
 	zone_sizes_init();
-	memblock_free_all();
 
 	pg_list.nr_zones = MAX_NR_ZONES;
 	pg_list.node_start_pfn = pg_list.node_zones[0].zone_start_pfn;
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	mem_map =
-	pg_list.node_mem_map = (Page_s *)memblock_alloc(sizeof(Page_s) * kparam.phys_page_nr, 1);
+	pg_list.node_mem_map = memblock_alloc(sizeof(Page_s) * pg_list.node_spanned_pages,
+								sizeof(size_t));
+	memset(mem_map, 0, sizeof(Page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < kparam.phys_page_nr; i++)
 	{
 		Page_s * page = &pg_list.node_mem_map[i];
-		page->free_list.owner_p = page;
+		list_init(&page->free_list, page);
 	}
 
-	Page_s * pg1 = alloc_pages(ZONE_NORMAL, 1);
-	Page_s * pg2 = alloc_pages(ZONE_NORMAL, 1);
+	memblock_free_all();
+
+	// set init flag
+	kparam.init_flags.page_mm = 1;
+
+	// Page_s * pg1 = alloc_pages(ZONE_NORMAL, 1);
+	// Page_s * pg2 = alloc_pages(ZONE_NORMAL, 1);
+	// Page_s * pg3 = alloc_pages(ZONE_NORMAL, 1);
+
+	// free_one_page(pg1, 1);
+	// free_one_page(pg2, 1);
+	// free_one_page(pg3, 1);
 
 }
 

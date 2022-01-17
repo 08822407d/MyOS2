@@ -116,6 +116,7 @@ List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p)
 				lhdr_p->count--;
 				return next;
 			}
+			next = next->next;
 		}
 	}
 

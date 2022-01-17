@@ -39,8 +39,8 @@
 	extern pglist_data_s 	pg_list;
 	extern Page_s *			mem_map;
 
-	#define page_to_pfn(page)	((unsigned long)(page) / PAGE_SIZE)
-	#define pfn_to_page(pfn)	(void *)((pfn) * PAGE_SIZE)
+	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
+	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
 	#define PFN_ALIGN(x)	(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
 	#define PFN_UP(x)		(((size_t)(x) + PAGE_SIZE-1) >> PAGE_SHIFT)

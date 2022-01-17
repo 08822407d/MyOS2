@@ -23,6 +23,7 @@ fs_type_s filesystem = {"filesystem", 0};
 
 unsigned long init_vfs()
 {
+	int test = kparam.init_flags.vfs;
 	kparam.init_flags.vfs = 0;
 	// load the boot sector
 	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));

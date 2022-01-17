@@ -22,7 +22,6 @@ void kmain()
 	reload_arch_page();
 
 	init_video();
-	init_page_manage();
 	init_page();
 	init_slab();
 	init_task();
