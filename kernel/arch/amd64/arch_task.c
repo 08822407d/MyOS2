@@ -538,6 +538,7 @@ void reinsert_to_running_list(per_cpudata_s * cpudata_p)
 	{
 		if (curr_task == cpudata_p->idle_task)
 		{
+			// insert idle task to cpu's running-list tail
 			list_hdr_enqueue(&cpudata_p->ruuning_lhdr, &curr_task->schedule_list);
 		}
 		else
@@ -549,6 +550,7 @@ void reinsert_to_running_list(per_cpudata_s * cpudata_p)
 				tmp_list = tmp_list->next;
 			}
 			list_insert_prev(tmp_list, &curr_task->schedule_list);
+			cpudata_p->ruuning_lhdr.count++;
 		}
 	}
 }
