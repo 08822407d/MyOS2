@@ -80,8 +80,9 @@ void init_slab()
 slab_s * slab_alloc(slab_s * cslp)
 {
 	Page_s * pgp = page_alloc();
+	phys_addr_t page_paddr = page_to_paddr(pgp);
 	if (!(pgp->attr & PG_PTable_Maped))
-		arch_page_domap(phys2virt(pgp->page_start_addr), pgp->page_start_addr,
+		arch_page_domap(phys2virt(page_paddr), page_paddr,
 									ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
@@ -93,7 +94,7 @@ slab_s * slab_alloc(slab_s * cslp)
 	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
 	nslp->total =
 	nslp->free = cslp->total;
-	nslp->virt_addr = phys2virt(pgp->page_start_addr);
+	nslp->virt_addr = phys2virt(page_paddr);
 
 	return nslp;
 }

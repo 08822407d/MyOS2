@@ -116,13 +116,18 @@ Page_s * page_alloc(void)
 	alloc_pages(ZONE_NORMAL, 0);
 }
 
-Page_s * get_page(phys_addr_t paddr)
+Page_s * paddr_to_page(phys_addr_t paddr)
 {
-	long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
+	unsigned long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
 	// return &mem_info.pages[pg_idx];
 	return pfn_to_page(pfn);
 }
 
+phys_addr_t page_to_paddr(Page_s * page)
+{
+	unsigned long pfn = page_to_pfn(page);
+	return (phys_addr_t)(pfn * PAGE_SIZE);
+}
 
 /*
  * This function returns the order of a free page in the buddy system. In
@@ -443,10 +448,11 @@ void init_page()
 	pg_list.node_mem_map = memblock_alloc(sizeof(Page_s) * pg_list.node_spanned_pages,
 								sizeof(size_t));
 	memset(mem_map, 0, sizeof(Page_s) * pg_list.node_spanned_pages);
-	for (int i = 0; i < kparam.phys_page_nr; i++)
+	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{
 		Page_s * page = &pg_list.node_mem_map[i];
 		list_init(&page->free_list, page);
+		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
 	}
 
 	memblock_free_all();

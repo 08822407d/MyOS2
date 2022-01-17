@@ -57,7 +57,7 @@ void creat_exec_addrspace(task_s * task)
 			pgp->map_count++;
 			pgp->attr = PG_PTable_Maped;
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-							pgp->page_start_addr, attr, &mm->cr3);
+							page_to_paddr(pgp), attr, &mm->cr3);
 		}
 	}
 }
@@ -77,7 +77,7 @@ void prepair_COW(task_s * task)
 			phys_addr_t paddr = 0;
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
-			Page_s * pgp = get_page(paddr);
+			Page_s * pgp = paddr_to_page(paddr);
 			pgp->map_count++;
 		}
 	}
@@ -95,13 +95,13 @@ int do_COW(task_s * task, virt_addr_t virt)
 	reg_t new_cr3 = 0;
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
-	Page_s * orig_pgp = get_page(orig_paddr);
+	Page_s * orig_pgp = paddr_to_page(orig_paddr);
 	Page_s * new_pgp = page_alloc();
 
 	if (new_pgp != NULL)
 	{
 		new_pgp->attr = PG_PTable_Maped | PG_Referenced;
-		if (!arch_page_duplicate(virt, new_pgp->page_start_addr, orig_cr3, &new_cr3))
+		if (!arch_page_duplicate(virt, page_to_paddr(new_pgp), orig_cr3, &new_cr3))
 		{
 			new_pgp->map_count++;
 			arch_page_setattr(virt, ARCH_PG_RW, &new_cr3);
@@ -110,8 +110,8 @@ int do_COW(task_s * task, virt_addr_t virt)
 			if (orig_pgp->map_count < 2)
 				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
 
-			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(orig_pgp->page_start_addr);
-			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(new_pgp->page_start_addr);
+			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(orig_pgp));
+			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(new_pgp));
 			memcpy(new_pg_vaddr, orig_pg_vaddr, PAGE_SIZE);
 
 			pg_load_cr3(new_cr3);
@@ -144,7 +144,7 @@ reg_t do_brk(reg_t start, reg_t length)
 	{
 		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
 		Page_s * pg_p = page_alloc();
-		arch_page_domap((virt_addr_t)vaddr, pg_p->page_start_addr, attr, &curr_tsk->mm_struct->cr3);
+		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p), attr, &curr_tsk->mm_struct->cr3);
 	}
 	curr_tsk->mm_struct->end_brk = new_end;
 	return new_end;
