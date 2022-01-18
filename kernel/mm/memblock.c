@@ -556,5 +556,4 @@ void memblock_free_all(void)
 {
 	unsigned long pages;
 	pages = free_low_memory_core_early();
-	// totalram_pages_add(pages);
 }

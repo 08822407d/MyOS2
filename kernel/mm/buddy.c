@@ -345,14 +345,7 @@ phys_addr_t page_to_paddr(Page_s * page)
  *==============================================================================================*/
 void pre_init_page()
 {
-
-}
-
-void init_page()
-{
 	memset(&pg_list, 0, sizeof(pg_list));
-
-	zone_sizes_init();
 
 	pg_list.nr_zones = MAX_NR_ZONES;
 	pg_list.node_start_pfn = pg_list.node_zones[0].zone_start_pfn;
@@ -367,7 +360,11 @@ void init_page()
 		list_init(&page->free_list, page);
 		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
 	}
+}
 
+void init_page()
+{
+	zone_sizes_init();
 	memblock_free_all();
 
 	// set init flag

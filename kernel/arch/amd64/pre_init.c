@@ -12,6 +12,7 @@
 #include "include/archconst.h"
 #include "include/multiboot2.h"
 
+#include <include/proto.h>
 #include <include/memblock.h>
 #include <include/math.h>
 
@@ -154,6 +155,8 @@ void pre_init(void)
 	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
 	get_memory_layout((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
 	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
+
+	pre_init_page();
 
 	cpuid_info();
 }

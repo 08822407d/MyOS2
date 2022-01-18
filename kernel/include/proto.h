@@ -37,7 +37,7 @@
 	void cstart(void);
 
 	/* memory.c */
-	void init_page_manage(void);
+	void pre_init_page(void);
 	void init_page(void);
 	void init_slab();
 	Page_s * alloc_pages(enum zone_type ,unsigned int order);
