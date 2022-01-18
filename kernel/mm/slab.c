@@ -15,18 +15,37 @@
 #include <include/glo.h>
 #include <include/slab.h>
 #include <include/mm.h>
+#include <include/memblock.h>
 #include <include/proto.h>
 #include <include/printk.h>
 
 List_hdr_s		slabcache_lhdr;
-slab_cache_s	slab_cache_groups[SLAB_LEVEL];
-slab_s			base_slabs[SLAB_LEVEL];
-uint8_t			base_slab_page[SLAB_LEVEL][PAGE_SIZE] __aligned(PAGE_SIZE);
 recurs_lock_T	slab_alloc_lock;
+
+slab_cache_s *	slab_cache_groups_p;
+slab_s *		base_slabs_p;
+uint8_t	*		base_slab_pages_p;
 
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
+void pre_init_slab()
+{
+	slab_cache_groups_p = memblock_alloc(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
+	base_slabs_p = memblock_alloc(sizeof(slab_s) * SLAB_LEVEL, 1);
+	base_slab_pages_p = memblock_alloc(SLAB_LEVEL * PAGE_SIZE, PAGE_SIZE);
+
+	for (int i = 0; i < SLAB_LEVEL; i++)
+	{
+		int obj_size = SLAB_SIZE_BASE << i;
+		int obj_nr = PAGE_SIZE / obj_size;
+		int bm_size = round_up(obj_nr, BITMAP_UNITSIZE) / BITMAP_UNITSIZE;
+
+		slab_s * bslp = base_slabs_p + i;
+		bslp->total = obj_nr;
+		bslp->colormap = memblock_alloc(bm_size * sizeof(bitmap_t), 8);
+	}
+}
 
 void init_slab()
 {
@@ -40,7 +59,7 @@ void init_slab()
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
-		slab_cache_s * scgp = &slab_cache_groups[i];
+		slab_cache_s * scgp = slab_cache_groups_p + i;
 		list_init(&scgp->slabcache_list, scgp);
 		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
@@ -48,31 +67,23 @@ void init_slab()
 		list_hdr_init(&scgp->normal_slab_used);
 		list_hdr_init(&scgp->normal_slab_full);
 
-		slab_s * bslp = &base_slabs[i];
+		slab_s * bslp = base_slabs_p + i;
 		list_init(&bslp->slab_list, bslp);
 
-		scgp->obj_size = SLAB_SIZE_BASE << i;
-		unsigned long obj_nr = PAGE_SIZE / scgp->obj_size;
-		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
 		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
 		scgp->normal_base_slab = bslp;
-		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
 		scgp->normal_slab_total = 1;
+		scgp->obj_size = SLAB_SIZE_BASE << i;
 
-		bslp->colormap = (bitmap_t *)(kparam.kernel_vir_end + 0x10);
-		kparam.kernel_vir_end += cm_size + 0x10;
 		bslp->slabcache_ptr = scgp;
-		bslp->free =
-		bslp->total = obj_nr;
-		bslp->virt_addr = (virt_addr_t)base_slab_page[i];
+		bslp->free = bslp->total;
+		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
 		bslp->page->attr |= PG_Slab;
-		int pg_idx = (uint64_t)virt2phys(bslp->virt_addr) / PAGE_SIZE;
-		bslp->page = &mem_map[pg_idx];
+		bslp->page = paddr_to_page(virt2phys(bslp->virt_addr));;
 		bslp->page->slab_ptr = bslp;
 	}
-	kparam.kernel_vir_end += 0x10;
 	// set init flag
 	kparam.init_flags.slab = 1;
 }
@@ -83,7 +94,7 @@ slab_s * slab_alloc(slab_s * cslp)
 	phys_addr_t page_paddr = page_to_paddr(pgp);
 	if (!(pgp->attr & PG_PTable_Maped))
 		arch_page_domap(phys2virt(page_paddr), page_paddr,
-									ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
+				ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
 	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s));
@@ -125,7 +136,7 @@ void * kmalloc(size_t size)
 	else
 	{
 		// find suitable slab group
-		slab_cache_s *	scgp = &slab_cache_groups[0];
+		slab_cache_s *	scgp = slab_cache_groups_p;
 		while (size > scgp->obj_size)
 			scgp = container_of(list_get_next(&scgp->slabcache_list), slab_cache_s, slabcache_list);
 

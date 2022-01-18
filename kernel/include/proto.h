@@ -37,9 +37,8 @@
 	void cstart(void);
 
 	/* memory.c */
-	void pre_init_page(void);
-	void init_page(void);
-	void init_slab();
+	void pre_init_mm(void);
+	void init_mm(void);
 	Page_s * alloc_pages(enum zone_type ,unsigned int order);
 	void free_pages(Page_s * page, unsigned int order);
 	Page_s * paddr_to_page(phys_addr_t paddr);

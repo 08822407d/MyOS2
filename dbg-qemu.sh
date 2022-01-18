@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-qemu-system-x86_64 -s -S -bios ~/vmware/grub2-test/OVMF.fd -hdb ~/vmware/grub2-test/grub2-test-flat.vmdk -M pc -m 4096 -smp threads=1,cores=1,sockets=1 -vga virtio -name UEFI -boot order=dc -net none -nographic
+qemu-system-x86_64 -s -S -bios ~/vmware/grub2-test/OVMF.fd -hdb ~/vmware/grub2-test/grub2-test-flat.vmdk -M pc -m 8192 -smp threads=1,cores=1,sockets=1 -vga virtio -name UEFI -boot order=dc -net none -nographic

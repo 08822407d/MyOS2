@@ -21,9 +21,12 @@ void kmain()
 	reload_bsp_arch_data();
 	reload_arch_page();
 
+	pre_init_mm();
+
 	init_video();
-	init_page();
-	init_slab();
+
+	init_mm();
+
 	init_task();
 	init_smp_env();
 	

@@ -54,7 +54,7 @@ static void get_VBE_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 	kparam.arch_init_flags.frame_buffer_info = 1;
 }
 
-static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 {
 	kparam.kernel_phy_base	= &_k_phys_start;
 	kparam.kernel_vir_base	= &_k_virt_start;
@@ -71,6 +71,35 @@ static void get_memory_layout(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo
 		}
 	}
 	kparam.max_phys_mem = efi_e820->address + efi_e820->length;
+	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
+		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
+	max_low_pfn =
+	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
+
+	// some part of memmory space is reserved
+	memblock_reserve(0, 16 * CONST_1M);
+	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
+					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
+					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
+}
+
+static void init_memblock1(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+{
+	kparam.kernel_phy_base	= &_k_phys_start;
+	kparam.kernel_vir_base	= &_k_virt_start;
+	kparam.kernel_vir_end	= &_end;
+
+	int i;
+	multiboot_memory_map_s * mb_mmap_ent;
+	for (i = 0; bootinfo->efi_e820_info.mb_mmap[i].len != 0; i++)
+	{
+		mb_mmap_ent = &bootinfo->efi_e820_info.mb_mmap[i];
+		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
+		{
+			memblock_add((phys_addr_t)mb_mmap_ent->addr, mb_mmap_ent->len);
+		}
+	}
+	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
 	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
 		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
 	max_low_pfn =
@@ -153,10 +182,8 @@ void pre_init(void)
 
 	enable_AMD_syscall();
 	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
-	get_memory_layout((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
+	init_memblock((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
 	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
-
-	pre_init_page();
 
 	cpuid_info();
 }

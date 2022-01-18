@@ -67,7 +67,7 @@ static inline Page_s * get_page_from_free_area(List_hdr_s * area)
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return pg_lp->owner_p;
+		return container_of(pg_lp, Page_s, free_list);
 }
 
 static inline Page_s * del_page_from_free_list(Page_s * page,
@@ -77,7 +77,7 @@ static inline Page_s * del_page_from_free_list(Page_s * page,
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return pg_lp->owner_p;
+		return container_of(pg_lp, Page_s, free_list);
 }
 
 /*
@@ -175,7 +175,7 @@ Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
 		List_s * page_lp = list_hdr_pop(&zone->free_area[current_order]);
 		while (page_lp == NULL);
 
-		page = page_lp->owner_p;
+		page = container_of(page_lp, Page_s, free_list);
 		expand(zone, page, order, current_order);
 		for (int i = 0; i < (1 << order); i++)
 			page[i].ref_count++;
@@ -365,6 +365,7 @@ void pre_init_page()
 void init_page()
 {
 	zone_sizes_init();
+
 	memblock_free_all();
 
 	// set init flag

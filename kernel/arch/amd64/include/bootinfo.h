@@ -44,7 +44,8 @@
 	typedef struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
 	{
 		UINT64 e820_entry_count;
-		efi_e820entry_s e820_entry[256];
+		efi_e820entry_s e820_entry[32];
+		multiboot_memory_map_s mb_mmap[32];
 	} efi_meminfo_s;
 
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION

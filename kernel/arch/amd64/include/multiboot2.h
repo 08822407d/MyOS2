@@ -89,10 +89,17 @@
 
 #ifndef ASM_FILE
 
-typedef unsigned char           multiboot_uint8_t;
-typedef unsigned short          multiboot_uint16_t;
-typedef unsigned int            multiboot_uint32_t;
-typedef unsigned long long      multiboot_uint64_t;
+#ifdef __PI_UEFI_H__
+  typedef UINT8           multiboot_uint8_t;
+  typedef UINT16          multiboot_uint16_t;
+  typedef UINT32          multiboot_uint32_t;
+  typedef UINT64          multiboot_uint64_t;
+#else
+  typedef uint8_t         multiboot_uint8_t;
+  typedef uint16_t        multiboot_uint16_t;
+  typedef uint32_t        multiboot_uint32_t;
+  typedef uint64_t        multiboot_uint64_t;
+#endif
 
 struct multiboot_header
 {

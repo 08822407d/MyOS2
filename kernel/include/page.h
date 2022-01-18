@@ -28,5 +28,7 @@
 	} Page_s;
 
 	void memblock_free_pages(Page_s * page, unsigned long pfn, unsigned int order);
+	void pre_init_page(void);
+	void init_page(void);
 
 #endif /* _PAGE_H_ */

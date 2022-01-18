@@ -50,7 +50,7 @@
 	 */
 	typedef __UINT64_TYPE__ reg_t;
 	typedef __UINT64_TYPE__ bitmap_t;
-	#define BITMAP_UNITSIZE 64
+	#define BITMAP_UNITSIZE (sizeof(bitmap_t) * 8)
 	typedef void*	phys_addr_t;
 	typedef void*	virt_addr_t;
 

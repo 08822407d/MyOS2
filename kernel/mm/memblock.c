@@ -493,8 +493,10 @@ void * memblock_alloc_try(size_t size, size_t align,
 	return ptr;
 }
 
-inline __always_inline void * memblock_alloc(size_t size, size_t align)
+inline void * memblock_alloc(size_t size, size_t align)
 {
+	while (align == 0);
+
 	return memblock_alloc_try(size, align, MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
 }
 
