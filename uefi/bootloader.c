@@ -47,15 +47,14 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	void (*func)(void);
 //////////////////////
 
-	pages = KERNEL_LOADED_ADDR;
 	status = load_kernel_image(ImageHandle);
 
 ///////////////////
 
 	pages = MACHINE_CONF_ADDR;
-	gBS->AllocatePages(AllocateAddress,EfiLoaderData,1,&pages);
-	gBS->SetMem((void*)machine_info, 0x4000, 0);
-	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
+	gBS->AllocatePages(AllocateAddress, EfiLoaderData, 4, &pages);
+	gBS->SetMem((void*)pages, 0x4000, 0);
+	machine_info = (efi_machine_conf_s *)pages;
 
 	get_vbe_info(machine_info);
 
@@ -70,21 +69,12 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 
 	Print(L"Call ExitBootServices.\n");
 	Print(L"Jmp to Kernel.\n");
-	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
 
 	gBS->CloseProtocol(LoadedImage->DeviceHandle,&gEfiSimpleFileSystemProtocolGuid,ImageHandle,NULL);
 	gBS->CloseProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,ImageHandle,NULL);
-
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
-
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
 
-	if(EFI_ERROR(status))
-	{
-		Print(L"ExitBootServices: Failed, Memory Map has Changed.\n");
-		while (1);
-		return EFI_INVALID_PARAMETER;
-	}
 	func = (void *)KERNEL_LOADED_ADDR;
 
 	func();
@@ -133,10 +123,12 @@ EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
 	EFI_FILE_HANDLE         RootFs;
 	EFI_FILE_HANDLE         FileHandle;
 
-	gBS->HandleProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,(VOID*)&LoadedImage);
-	gBS->HandleProtocol(LoadedImage->DeviceHandle,&gEfiSimpleFileSystemProtocolGuid,(VOID*)&Vol);
+	EFI_PHYSICAL_ADDRESS	kernel_load_addr = KERNEL_LOADED_ADDR;
+
+	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
+	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
 	Vol->OpenVolume(Vol,&RootFs);
-	status = RootFs->Open(RootFs,&FileHandle,(CHAR16*)L"kernel.bin",EFI_FILE_MODE_READ,0);
+	status = RootFs->Open(RootFs, &FileHandle, (CHAR16*)L"kernel.bin", EFI_FILE_MODE_READ, 0);
 	if(EFI_ERROR(status))
 	{
 		Print(L"Open kernel.bin Failed.\n");
@@ -147,12 +139,12 @@ EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
 	UINTN BufferSize = 0;
 
 	BufferSize = sizeof(EFI_FILE_INFO) + sizeof(CHAR16) * 100;
-	gBS->AllocatePool(EfiRuntimeServicesData,BufferSize,(VOID**)&FileInfo); 
-	FileHandle->GetInfo(FileHandle,&gEfiFileInfoGuid,&BufferSize,FileInfo);
+	gBS->AllocatePool(EfiRuntimeServicesData, BufferSize, (VOID**)&FileInfo); 
+	FileHandle->GetInfo(FileHandle, &gEfiFileInfoGuid, &BufferSize, FileInfo);
 
-	gBS->AllocatePages(AllocateAddress,EfiLoaderData,(FileInfo->FileSize + 0x1000 - 1) / 0x1000,&pages);
+	gBS->AllocatePages(AllocateAddress,EfiLoaderData,(FileInfo->FileSize + 0x1000 - 1) / 0x1000, &kernel_load_addr);
 	BufferSize = FileInfo->FileSize;
-	FileHandle->Read(FileHandle,&BufferSize,(VOID*)pages);
+	FileHandle->Read(FileHandle, &BufferSize, (VOID*)kernel_load_addr);
 
 #ifdef DEBUG
 	Print(L"\tFileName:%s\t Size:%d\t FileSize:%d\t Physical Size:%d\n",FileInfo->FileName,FileInfo->Size,FileInfo->FileSize,FileInfo->PhysicalSize);
@@ -191,8 +183,7 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 
 	gGraphicsOutput->SetMode(gGraphicsOutput,MaxResolutionMode);
 	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
-	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, \
-			Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
+	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
 			gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
 			gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,
 			gGraphicsOutput->Mode->Info->VerticalResolution, gGraphicsOutput->Mode->Info->PixelsPerScanLine,
@@ -208,24 +199,28 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 void get_machine_memory_info(efi_machine_conf_s * machine_info)
 {
 	int i;
-	int E820Count = 0;
-	unsigned long LastEndAddr = 0;
-	efi_e820entry_s *E820p = NULL;
-	efi_e820entry_s *LastE820 = NULL;
+	int e820_nr = 0;
+	unsigned long last_end = 0;
+	multiboot_memory_map_s *mb_mmap = NULL;
+	multiboot_memory_map_s *last_mb_mmap = NULL;
 
-	E820p = machine_info->efi_e820_info.e820_entry;
+	mb_mmap = machine_info->efi_e820_info.mb_mmap;
 
+	// 计算缓冲区大小
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
 	MemMapSize += DescriptorSize * 5;
+	// 申请缓冲区
 	gBS->AllocatePool(EfiRuntimeServicesData,MemMapSize,(VOID**)&MemMap);
 	gBS->SetMem((void*)MemMap,MemMapSize,0);
-	status = gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
+	// 重新获取内存分布
+	status = gBS->GetMemoryMap(&MemMapSize, MemMap, &MapKey, &DescriptorSize, &DesVersion);
 	if(EFI_ERROR(status))
 		Print(L"status:%018lx\n",status);
 
 	for(i = 0;i < MemMapSize / DescriptorSize;i++)
 	{
 		int MemType = 0;
+		// EFI_MEMORY_DESCRIPTOR的大小不一定等于DescriptorSize
 		EFI_MEMORY_DESCRIPTOR* MMap = (EFI_MEMORY_DESCRIPTOR*) ((CHAR8*)MemMap + i * DescriptorSize);
 		if(MMap->NumberOfPages == 0)
 			continue;
@@ -266,52 +261,57 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 				continue;
 		}
 
-		if((LastE820 != NULL) && (LastE820->type == MemType) && (MMap->PhysicalStart == LastEndAddr))
+		// check if same type
+		if((last_mb_mmap != NULL) && (last_mb_mmap->type == MemType) && 
+		// and address contiguous
+			(MMap->PhysicalStart == last_end))
 		{
-			LastE820->length += MMap->NumberOfPages << 12;
-			LastEndAddr += MMap->NumberOfPages << 12;
+			last_mb_mmap->len += MMap->NumberOfPages << 12;
+			last_end += MMap->NumberOfPages << 12;
 		}
 		else
 		{
-			E820p->address = MMap->PhysicalStart;
-			E820p->length = MMap->NumberOfPages << 12;
-			E820p->type = MemType;
-			LastEndAddr = MMap->PhysicalStart + (MMap->NumberOfPages << 12);
-			LastE820 = E820p;
-			E820p++;
-			E820Count++;			
+			mb_mmap->addr = MMap->PhysicalStart;
+			mb_mmap->len = MMap->NumberOfPages << 12;
+			mb_mmap->type = MemType;
+
+			last_mb_mmap = mb_mmap;
+			mb_mmap++;
+
+			last_end = MMap->PhysicalStart + (MMap->NumberOfPages << 12);
+			e820_nr++;			
 		}
 	}
 
-	machine_info->efi_e820_info.e820_entry_count = E820Count;
-	LastE820 = machine_info->efi_e820_info.e820_entry;
+	machine_info->efi_e820_info.e820_entry_count = e820_nr;
+
+	last_mb_mmap = machine_info->efi_e820_info.mb_mmap;
 	int j = 0;
-	for(i = 0; i< E820Count; i++)
+	for(i = 0; i< e820_nr; i++)
 	{
-		efi_e820entry_s * e820i = LastE820 + i;
-		efi_e820entry_s MemMap;
-		for(j = i + 1; j< E820Count; j++)
+		multiboot_memory_map_s * e820i = last_mb_mmap + i;
+		multiboot_memory_map_s mmap_ent;
+		for(j = i + 1; j < e820_nr; j++)
 		{
-			efi_e820entry_s * e820j = LastE820 + j;
-			if(e820i->address > e820j->address)
+			multiboot_memory_map_s * e820j = last_mb_mmap + j;
+			if(e820i->addr > e820j->addr)
 			{
-				MemMap = *e820i;
+				mmap_ent = *e820i;
 				*e820i = *e820j;
-				*e820j = MemMap;
+				*e820j = mmap_ent;
 			}
 		}
 	}
-
-	LastE820 = machine_info->efi_e820_info.e820_entry;
+	last_mb_mmap = machine_info->efi_e820_info.mb_mmap;
 
 // #ifdef DEBUG
 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
 	Print(L"Get EFI_MEMORY_DESCRIPTOR Structure:%018lx\n",MemMap);
-	for(i = 0;i < E820Count;i++)
+	for(i = 0;i < e820_nr;i++)
 	{
-		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",LastE820->address,LastE820->address+LastE820->length,LastE820->type);
-		LastE820++;
+		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",last_mb_mmap->addr,last_mb_mmap->addr+last_mb_mmap->len,last_mb_mmap->type);
+		last_mb_mmap++;
 	}
 // #endif
 	

@@ -61,34 +61,6 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 	kparam.kernel_vir_end	= &_end;
 
 	int i;
-	efi_e820entry_s * efi_e820;
-	for (i = 0; bootinfo->efi_e820_info.e820_entry[i].length != 0; i++)
-	{
-		efi_e820 = &bootinfo->efi_e820_info.e820_entry[i];
-		if (efi_e820->type == 1 && efi_e820->length != 0)
-		{
-			memblock_add((phys_addr_t)efi_e820->address, efi_e820->length);
-		}
-	}
-	kparam.max_phys_mem = efi_e820->address + efi_e820->length;
-	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
-		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
-	max_low_pfn =
-	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
-
-	// some part of memmory space is reserved
-	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
-					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
-					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
-}
-
-static void init_memblock1(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
-{
-	kparam.kernel_phy_base	= &_k_phys_start;
-	kparam.kernel_vir_base	= &_k_virt_start;
-	kparam.kernel_vir_end	= &_end;
-
-	int i;
 	multiboot_memory_map_s * mb_mmap_ent;
 	for (i = 0; bootinfo->efi_e820_info.mb_mmap[i].len != 0; i++)
 	{

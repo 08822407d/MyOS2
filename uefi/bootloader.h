@@ -9,6 +9,8 @@
 #include <Protocol/LoadedImage.h>
 #include <Guid/FileInfo.h>
 
+#include "multiboot2.h"
+
 	typedef struct EFI_CPU_DESCRIPTOR
 	{
 		UINT32	pack_id;
@@ -45,7 +47,8 @@
 	typedef struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
 	{
 		UINT64 e820_entry_count;
-		efi_e820entry_s e820_entry[256];
+		efi_e820entry_s e820_entry[16];
+		multiboot_memory_map_s mb_mmap[16];
 	} efi_meminfo_s;
 
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
@@ -60,5 +63,6 @@
 	EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle);
 	void get_vbe_info(efi_machine_conf_s * machine_info);
 	void get_machine_memory_info(efi_machine_conf_s * machine_info);
+	void get_machine_memory_info2(efi_machine_conf_s * machine_info);
 
 #endif /* _BOOTLOADER_H_ */
