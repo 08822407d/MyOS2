@@ -42,9 +42,9 @@ static void init_fixed_kernel_pgmap()
 	size_t pd_nr	= round_up(kparam.phys_page_nr, PGENT_NR) / PGENT_NR;
 	size_t pdpt_nr	= round_up(pd_nr, PGENT_NR) / PGENT_NR;
 	size_t pml4_nr	= 1;
-	KERN_PML4	= (PML4E_T *)memblock_alloc(pml4_nr * PGENT_SIZE, PGENT_SIZE);
-	KERN_PDPT	= (PDPTE_T *)memblock_alloc(pdpt_nr * PGENT_SIZE, PGENT_SIZE);
-	KERN_PD		= (PDE_T *)memblock_alloc(pd_nr * PGENT_SIZE, PGENT_SIZE);
+	KERN_PML4	= (PML4E_T *)memblock_alloc_normal(pml4_nr * PGENT_SIZE, PGENT_SIZE);
+	KERN_PDPT	= (PDPTE_T *)memblock_alloc_normal(pdpt_nr * PGENT_SIZE, PGENT_SIZE);
+	KERN_PD		= (PDE_T *)memblock_alloc_normal(pd_nr * PGENT_SIZE, PGENT_SIZE);
 
 	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
 	// fill PML4 by hand

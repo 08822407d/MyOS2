@@ -287,7 +287,6 @@ int memblock_reserve(phys_addr_t base, size_t size)
 	return memblock_add_range(&memblock.reserved, base, size, 0);
 }
 
-
 /**
  * __next_mem_range - next function for for_each_free_mem_range() etc.
  * @idx: pointer to u64 loop variable
@@ -481,25 +480,75 @@ static void * memblock_alloc_internal(size_t size, size_t align,
  * Return:
  * Virtual address of allocated memory block on success, NULL on failure.
  */
-void * memblock_alloc_try(size_t size, size_t align,
-				    phys_addr_t min_addr, phys_addr_t max_addr)
+// Linux function proto :
+// void *__init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
+//			    phys_addr_t min_addr, phys_addr_t max_addr, int nid)
+inline void * memblock_alloc(size_t size, size_t align)
 {
+	while (align == 0);
+
+	// linux call stack :
+	// void *__init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
+	//					phys_addr_t min_addr, phys_addr_t max_addr, int nid)
+	//								||
+	//								\/
+	// static void *__init memblock_alloc_internal(phys_addr_t size, phys_addr_t align,
+	//					phys_addr_t min_addr, phys_addr_t max_addr, int nid, bool exact_nid)
+	//								||
+	//								\/
+	// phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
+	//				    phys_addr_t start, phys_addr_t end, int nid, bool exact_nid)
+	//								||
+	//								\/
+	// static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
+	//					phys_addr_t align, phys_addr_t start, phys_addr_t end,
+	//					int nid, enum memblock_flags flags)
+	//								||
+	//								\/
+	// static phys_addr_t __init_memblock __memblock_find_range_bottom_up(phys_addr_t start,
+	//					phys_addr_t end, phys_addr_t size, phys_addr_t align,
+	//					int nid, enum memblock_flags flags)
+	//								||
+	//								\/
+	// #define __for_each_mem_range(i, type_a, type_b, nid, flags, p_start, p_end, p_nid)
+	//								||
+	//								\/
+	// void __next_mem_range(u64 *idx, int nid, enum memblock_flags flags, struct memblock_type *type_a,
+	//	      struct memblock_type *type_b, phys_addr_t *out_start, phys_addr_t *out_end, int *out_nid)
+
 	void *ptr;
 
-	ptr = memblock_alloc_internal(size, align, min_addr, max_addr);
+	ptr = memblock_alloc_internal(size, align, MEMBLOCK_LOW_LIMIT,
+					MEMBLOCK_ALLOC_ACCESSIBLE);
 	if (ptr)
 		memset(ptr, 0, size);
 
 	return ptr;
 }
 
-inline void * memblock_alloc(size_t size, size_t align)
+void * memblock_alloc_DMA(size_t size, size_t align)
 {
-	while (align == 0);
+	void *ptr;
 
-	return memblock_alloc_try(size, align, MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
+	ptr = memblock_alloc_internal(size, align, MEMBLOCK_LOW_LIMIT,
+					(phys_addr_t)MAX_DMA_ADDR);
+	if (ptr)
+		memset(ptr, 0, size);
+
+	return ptr;
 }
 
+void * memblock_alloc_normal(size_t size, size_t align)
+{
+	void *ptr;
+
+	ptr = memblock_alloc_internal(size, align, (phys_addr_t)MAX_DMA_ADDR,
+					MEMBLOCK_ALLOC_ACCESSIBLE);
+	if (ptr)
+		memset(ptr, 0, size);
+
+	return ptr;
+}
 
 /*==============================================================================================*
  *								early init fuctions for buddy system							*

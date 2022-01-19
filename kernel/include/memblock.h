@@ -109,7 +109,11 @@
 	void * memblock_alloc_try(size_t size, size_t align,
 					phys_addr_t min_addr, phys_addr_t max_addr);
 	void * memblock_alloc(size_t size, size_t align);
+	phys_addr_t memblock_alloc_range(size_t size, size_t align,
+					phys_addr_t start, phys_addr_t end);
 	void memblock_free_all(void);
+	void * memblock_alloc_DMA(size_t size, size_t align);
+	void * memblock_alloc_normal(size_t size, size_t align);
 
 	/* Low level functions */
 	void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *type_b,

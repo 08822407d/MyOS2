@@ -77,7 +77,6 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 
 	// some part of memmory space is reserved
-	memblock_reserve(0, 16 * CONST_1M);
 	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
 					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
 					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
@@ -106,7 +105,6 @@ static void init_memblock1(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 
 	// some part of memmory space is reserved
-	memblock_reserve(0, 16 * CONST_1M);
 	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
 					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
 					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
