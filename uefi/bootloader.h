@@ -44,16 +44,9 @@
 		UINT64 type;
 	} efi_e820entry_s;
 
-	typedef struct EFI_E820_MEMORY_DESCRIPTOR_INFORMATION
-	{
-		UINT64 e820_entry_count;
-		efi_e820entry_s e820_entry[16];
-		multiboot_memory_map_s mb_mmap[16];
-	} efi_meminfo_s;
-
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
 	{
-		efi_meminfo_s efi_e820_info;
+		multiboot_memory_map_s mb_mmap[32];
 		efi_vbeinfo_s efi_graphics_info;
 		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
@@ -61,8 +54,8 @@
 	EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
 	EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info);
 	EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle);
+	EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle);
 	void get_vbe_info(efi_machine_conf_s * machine_info);
-	void get_machine_memory_info(efi_machine_conf_s * machine_info);
-	void get_machine_memory_info2(efi_machine_conf_s * machine_info);
+	void get_machine_memory_info(multiboot_memory_map_s * mb_memmap);
 
 #endif /* _BOOTLOADER_H_ */

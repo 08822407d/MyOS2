@@ -29,13 +29,12 @@
 #define MACHINE_CONF_ADDR 0x60000
 #define KERNEL_LOADED_ADDR	0x1000000
 
+EFI_PHYSICAL_ADDRESS	kernel_load_addr = KERNEL_LOADED_ADDR;
 EFI_STATUS status = EFI_SUCCESS;
 EFI_MP_SERVICES_PROTOCOL* mpp;
 EFI_LOADED_IMAGE        *LoadedImage;
 EFI_PHYSICAL_ADDRESS pages;
 EFI_GRAPHICS_OUTPUT_PROTOCOL* gGraphicsOutput = 0;
-UINTN MemMapSize = 0;
-EFI_MEMORY_DESCRIPTOR* MemMap = 0;
 UINTN MapKey = 0;
 UINTN DescriptorSize = 0;
 UINT32 DesVersion = 0;
@@ -46,7 +45,7 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	efi_machine_conf_s * machine_info = NULL;
 	void (*func)(void);
 //////////////////////
-
+	// status = read_mb2head(ImageHandle);
 	status = load_kernel_image(ImageHandle);
 
 ///////////////////
@@ -58,7 +57,7 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 
 	get_vbe_info(machine_info);
 
-	get_machine_memory_info(machine_info);
+	get_machine_memory_info(machine_info->mb_mmap);
 	
 /////////////////////
 
@@ -75,6 +74,8 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
 
+	// while (1);
+
 	func = (void *)KERNEL_LOADED_ADDR;
 
 	func();
@@ -82,6 +83,39 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	return EFI_SUCCESS;
 }
 
+EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle)
+{
+	EFI_FILE_IO_INTERFACE   *Vol;
+	EFI_FILE_HANDLE         RootFs;
+	EFI_FILE_HANDLE         FileHandle;
+
+	// open kernel file
+	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
+	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
+	Vol->OpenVolume(Vol,&RootFs);
+	status = RootFs->Open(RootFs, &FileHandle, (CHAR16*)L"kernel.bin", EFI_FILE_MODE_READ, 0);
+	if(EFI_ERROR(status))
+	{
+		Print(L"Open kernel.bin Failed.\n");
+		return status;
+	}
+
+	UINT64	bufsize = 0x2000;
+	gBS->AllocatePages(AllocateAddress,EfiLoaderData, bufsize / 0x1000, &kernel_load_addr);
+	FileHandle->Read(FileHandle, &bufsize, (VOID*)kernel_load_addr);
+
+	for (INT64 i = 0; i < 32; i++)
+	{
+		Print(L" %X ", *((UINT64 *)kernel_load_addr + i));
+		if (!(i % 4))
+			Print(L"\n");
+	}
+
+	FileHandle->Close(FileHandle);
+	RootFs->Close(RootFs);
+
+	return EFI_SUCCESS;
+}
 
 EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp)
 {
@@ -123,7 +157,6 @@ EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
 	EFI_FILE_HANDLE         RootFs;
 	EFI_FILE_HANDLE         FileHandle;
 
-	EFI_PHYSICAL_ADDRESS	kernel_load_addr = KERNEL_LOADED_ADDR;
 
 	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
 	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
@@ -196,15 +229,16 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	machine_info->efi_graphics_info.FrameBufferSize = gGraphicsOutput->Mode->FrameBufferSize;
 }
 
-void get_machine_memory_info(efi_machine_conf_s * machine_info)
+void get_machine_memory_info(multiboot_memory_map_s * mb_memmap)
 {
+	UINTN MemMapSize = 0;
+	EFI_MEMORY_DESCRIPTOR* MemMap = 0;
+
 	int i;
 	int e820_nr = 0;
 	unsigned long last_end = 0;
-	multiboot_memory_map_s *mb_mmap = NULL;
 	multiboot_memory_map_s *last_mb_mmap = NULL;
-
-	mb_mmap = machine_info->efi_e820_info.mb_mmap;
+	multiboot_memory_map_s *mb_mmap = mb_memmap;
 
 	// 计算缓冲区大小
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
@@ -283,9 +317,7 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 		}
 	}
 
-	machine_info->efi_e820_info.e820_entry_count = e820_nr;
-
-	last_mb_mmap = machine_info->efi_e820_info.mb_mmap;
+	last_mb_mmap = mb_memmap;
 	int j = 0;
 	for(i = 0; i< e820_nr; i++)
 	{
@@ -302,7 +334,7 @@ void get_machine_memory_info(efi_machine_conf_s * machine_info)
 			}
 		}
 	}
-	last_mb_mmap = machine_info->efi_e820_info.mb_mmap;
+	last_mb_mmap = mb_memmap;
 
 // #ifdef DEBUG
 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);

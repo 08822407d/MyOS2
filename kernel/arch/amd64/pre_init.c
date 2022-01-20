@@ -62,9 +62,9 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 
 	int i;
 	multiboot_memory_map_s * mb_mmap_ent;
-	for (i = 0; bootinfo->efi_e820_info.mb_mmap[i].len != 0; i++)
+	for (i = 0; bootinfo->mb_mmap[i].len != 0; i++)
 	{
-		mb_mmap_ent = &bootinfo->efi_e820_info.mb_mmap[i];
+		mb_mmap_ent = &bootinfo->mb_mmap[i];
 		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
 		{
 			memblock_add((phys_addr_t)mb_mmap_ent->addr, mb_mmap_ent->len);
