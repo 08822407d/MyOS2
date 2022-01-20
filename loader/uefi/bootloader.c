@@ -34,7 +34,6 @@ PHYSICAL_ADDRESS k_load_addr;
 EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *SystemTable)
 {
 	efi_machine_conf_s * machine_info = NULL;
-	void (*func)(void);
 //////////////////////
 
 	status = read_mb2head(ImageHandle);
@@ -67,8 +66,14 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
 
+	void (*func)(void);
 	func = (void *)k_load_addr;
 
+	__asm__ __volatile__("movq	%0, %%rbx"
+						:
+						:"rbx"(func)
+						:
+						);
 
 	func();
 
