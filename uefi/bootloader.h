@@ -46,7 +46,7 @@
 
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
 	{
-		multiboot_memory_map_s mb_mmap[32];
+		mb_memmap_s mb_mmap[32];
 		efi_vbeinfo_s efi_graphics_info;
 		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
@@ -56,6 +56,6 @@
 	EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle);
 	EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle);
 	void get_vbe_info(efi_machine_conf_s * machine_info);
-	void get_machine_memory_info(multiboot_memory_map_s * mb_memmap);
+	void get_machine_memory_info(mb_memmap_s * mb_memmap);
 
 #endif /* _BOOTLOADER_H_ */

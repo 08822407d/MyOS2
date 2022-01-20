@@ -6,7 +6,7 @@
 #include <include/glo.h>
 #include <include/ktypes.h>
 
-#include "include/bootinfo.h"
+#include "include/bootloader.h"
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"
 #include "include/archconst.h"
@@ -61,7 +61,7 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 	kparam.kernel_vir_end	= &_end;
 
 	int i;
-	multiboot_memory_map_s * mb_mmap_ent;
+	mb_memmap_s * mb_mmap_ent;
 	for (i = 0; bootinfo->mb_mmap[i].len != 0; i++)
 	{
 		mb_mmap_ent = &bootinfo->mb_mmap[i];
@@ -151,9 +151,9 @@ void pre_init(void)
 	memset((virt_addr_t)&_bss, 0, &_ebss - &_bss);
 
 	enable_AMD_syscall();
-	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
-	init_memblock((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
-	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)BOOTINFO_ADDR);
+	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
+	init_memblock((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
+	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
 
 	cpuid_info();
 }

@@ -229,7 +229,7 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	machine_info->efi_graphics_info.FrameBufferSize = gGraphicsOutput->Mode->FrameBufferSize;
 }
 
-void get_machine_memory_info(multiboot_memory_map_s * mb_memmap)
+void get_machine_memory_info(mb_memmap_s * mb_memmap)
 {
 	UINTN MemMapSize = 0;
 	EFI_MEMORY_DESCRIPTOR* MemMap = 0;
@@ -237,8 +237,8 @@ void get_machine_memory_info(multiboot_memory_map_s * mb_memmap)
 	int i;
 	int e820_nr = 0;
 	unsigned long last_end = 0;
-	multiboot_memory_map_s *last_mb_mmap = NULL;
-	multiboot_memory_map_s *mb_mmap = mb_memmap;
+	mb_memmap_s *last_mb_mmap = NULL;
+	mb_memmap_s *mb_mmap = mb_memmap;
 
 	// 计算缓冲区大小
 	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
@@ -321,11 +321,11 @@ void get_machine_memory_info(multiboot_memory_map_s * mb_memmap)
 	int j = 0;
 	for(i = 0; i< e820_nr; i++)
 	{
-		multiboot_memory_map_s * e820i = last_mb_mmap + i;
-		multiboot_memory_map_s mmap_ent;
+		mb_memmap_s * e820i = last_mb_mmap + i;
+		mb_memmap_s mmap_ent;
 		for(j = i + 1; j < e820_nr; j++)
 		{
-			multiboot_memory_map_s * e820j = last_mb_mmap + j;
+			mb_memmap_s * e820j = last_mb_mmap + j;
 			if(e820i->addr > e820j->addr)
 			{
 				mmap_ent = *e820i;
