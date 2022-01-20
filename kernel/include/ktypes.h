@@ -11,7 +11,6 @@
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>
-#include <arch/amd64/include/multiboot2.h>
 
 /*==============================================================================================*
  *									data structures for devices									*

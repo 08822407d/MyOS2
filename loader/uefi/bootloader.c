@@ -19,7 +19,6 @@
 #include "multiboot2.h"
 
 
-EFI_PHYSICAL_ADDRESS	kernel_load_addr = KERNEL_LOADED_ADDR;
 EFI_STATUS status = EFI_SUCCESS;
 EFI_MP_SERVICES_PROTOCOL* mpp;
 EFI_LOADED_IMAGE        *LoadedImage;
@@ -29,13 +28,18 @@ UINTN MapKey = 0;
 UINTN DescriptorSize = 0;
 UINT32 DesVersion = 0;
 
+PHYSICAL_ADDRESS k_load_addr;
+
 
 EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *SystemTable)
 {
 	efi_machine_conf_s * machine_info = NULL;
 	void (*func)(void);
 //////////////////////
-	// status = read_mb2head(ImageHandle);
+
+	status = read_mb2head(ImageHandle);
+	// while (1);
+	
 	status = load_kernel_image(ImageHandle);
 
 ///////////////////
@@ -46,7 +50,6 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	machine_info = (efi_machine_conf_s *)pages;
 
 	get_vbe_info(machine_info);
-
 	get_machine_memory_info(machine_info->mb_mmap);
 	
 /////////////////////
@@ -64,7 +67,8 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
 
-	func = (void *)KERNEL_LOADED_ADDR;
+	func = (void *)k_load_addr;
+
 
 	func();
 
@@ -88,16 +92,12 @@ EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle)
 		return status;
 	}
 
-	UINT64	bufsize = 0x2000;
-	gBS->AllocatePages(AllocateAddress,EfiLoaderData, bufsize / 0x1000, &kernel_load_addr);
-	FileHandle->Read(FileHandle, &bufsize, (VOID*)kernel_load_addr);
+	UINT64	bufsize = MULTIBOOT_SEARCH;
+	PHYSICAL_ADDRESS	mb2_load_addr = 0x1000000;
+	gBS->AllocatePages(AllocateAddress,EfiLoaderData, bufsize / 0x1000, &mb2_load_addr);
+	FileHandle->Read(FileHandle, &bufsize, (VOID*)mb2_load_addr);
 
-	for (INT64 i = 0; i < 32; i++)
-	{
-		Print(L" %X ", *((UINT64 *)kernel_load_addr + i));
-		if (!(i % 4))
-			Print(L"\n");
-	}
+	parse_multiboot2(mb2_load_addr);
 
 	FileHandle->Close(FileHandle);
 	RootFs->Close(RootFs);
@@ -118,21 +118,22 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
         Status = mpp -> GetNumberOfProcessors(mpp, & nCores, &nRunning);
 		machine_info->efi_smp_info.core_num = nCores;
 		machine_info->efi_smp_info.core_available = nRunning;
-        Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
+        // Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
         {
            UINTN i = 0;
            for(i =0; i< nCores; i++){
                EFI_PROCESSOR_INFORMATION mcpuInfo;
                Status = mpp -> GetProcessorInfo( mpp, i, &mcpuInfo);
-               Print(L"CORE %d: ;", i);
-               Print(L"  ProcessorId : %d ;", mcpuInfo.ProcessorId);
-               Print(L"  StatusFlag : %x ;", mcpuInfo.StatusFlag);
-               Print(L"  Location : (%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
 			   machine_info->efi_smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
 			   machine_info->efi_smp_info.cpus[i].status = mcpuInfo.StatusFlag;
 			   machine_info->efi_smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
 			   machine_info->efi_smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
 			   machine_info->efi_smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
+
+            //    Print(L"CORE %d: ;", i);
+            //    Print(L"  ProcessorId : %d ;", mcpuInfo.ProcessorId);
+            //    Print(L"  StatusFlag : %x ;", mcpuInfo.StatusFlag);
+            //    Print(L"  Location : (%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
            }
         }
     }
@@ -144,7 +145,7 @@ EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
 	EFI_FILE_IO_INTERFACE   *Vol;
 	EFI_FILE_HANDLE         RootFs;
 	EFI_FILE_HANDLE         FileHandle;
-
+	k_load_addr = (PHYSICAL_ADDRESS)mb2_kaddr_p->load_addr;
 
 	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
 	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
@@ -163,14 +164,16 @@ EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
 	gBS->AllocatePool(EfiRuntimeServicesData, BufferSize, (VOID**)&FileInfo); 
 	FileHandle->GetInfo(FileHandle, &gEfiFileInfoGuid, &BufferSize, FileInfo);
 
-	gBS->AllocatePages(AllocateAddress,EfiLoaderData,(FileInfo->FileSize + 0x1000 - 1) / 0x1000, &kernel_load_addr);
+	gBS->AllocatePages(AllocateAddress, EfiLoaderData,
+					(FileInfo->FileSize + 0x1000 - 1) / 0x1000,
+					&k_load_addr);
 	BufferSize = FileInfo->FileSize;
-	FileHandle->Read(FileHandle, &BufferSize, (VOID*)kernel_load_addr);
+	FileHandle->Read(FileHandle, &BufferSize, (VOID*)k_load_addr);
 
-#ifdef DEBUG
-	Print(L"\tFileName:%s\t Size:%d\t FileSize:%d\t Physical Size:%d\n",FileInfo->FileName,FileInfo->Size,FileInfo->FileSize,FileInfo->PhysicalSize);
-	Print(L"Read Kernel File to Memory Address:%018lx\n",pages);
-#endif
+// // #ifdef DEBUG
+// 	Print(L"\tFileName:%s\t Size:%d\t FileSize:%d\t Physical Size:%d\n",FileInfo->FileName,FileInfo->Size,FileInfo->FileSize,FileInfo->PhysicalSize);
+// 	Print(L"Read Kernel File to Memory Address:%018lx\n",pages);
+// // #endif
 
 	gBS->FreePool(FileInfo);
 	FileHandle->Close(FileHandle);
@@ -190,7 +193,7 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 
 	long H_V_Resolution = gGraphicsOutput->Mode->Info->HorizontalResolution * gGraphicsOutput->Mode->Info->VerticalResolution;
 	int MaxResolutionMode = gGraphicsOutput->Mode->Mode;
-
+	// 选择最大分辨率
 	for(i = 0;i < gGraphicsOutput->Mode->MaxMode;i++)
 	{
 		gGraphicsOutput->QueryMode(gGraphicsOutput,i,&InfoSize,&Info);
@@ -213,11 +216,11 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	machine_info->mb_fb_common.framebuffer_type = MaxResolutionMode;
 	machine_info->mb_fb_common.type = gGraphicsOutput->Mode->Mode;
 
-	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
-			gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
-			gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,
-			gGraphicsOutput->Mode->Info->VerticalResolution, gGraphicsOutput->Mode->Info->PixelsPerScanLine,
-			gGraphicsOutput->Mode->FrameBufferBase, gGraphicsOutput->Mode->FrameBufferSize);
+	// Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
+	// 		gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
+	// 		gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,
+	// 		gGraphicsOutput->Mode->Info->VerticalResolution, gGraphicsOutput->Mode->Info->PixelsPerScanLine,
+	// 		gGraphicsOutput->Mode->FrameBufferBase, gGraphicsOutput->Mode->FrameBufferSize);
 }
 
 void get_machine_memory_info(mb_memmap_s * mb_memmap)
@@ -327,16 +330,16 @@ void get_machine_memory_info(mb_memmap_s * mb_memmap)
 	}
 	last_mb_mmap = mb_memmap;
 
-// #ifdef DEBUG
-	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
-	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
-	Print(L"Get EFI_MEMORY_DESCRIPTOR Structure:%018lx\n",MemMap);
-	for(i = 0;i < e820_nr;i++)
-	{
-		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",last_mb_mmap->addr,last_mb_mmap->addr+last_mb_mmap->len,last_mb_mmap->type);
-		last_mb_mmap++;
-	}
-// #endif
+// // #ifdef DEBUG
+// 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
+// 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
+// 	Print(L"Get EFI_MEMORY_DESCRIPTOR Structure:%018lx\n",MemMap);
+// 	for(i = 0;i < e820_nr;i++)
+// 	{
+// 		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",last_mb_mmap->addr,last_mb_mmap->addr+last_mb_mmap->len,last_mb_mmap->type);
+// 		last_mb_mmap++;
+// 	}
+// // #endif
 	
 	gBS->FreePool(MemMap);
 }
