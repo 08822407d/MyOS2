@@ -56,7 +56,6 @@
 	{
 		mb_memmap_s mb_mmap[32];
 		mb_fb_common_s mb_fb_common;
-		efi_vbeinfo_s efi_graphics_info;
 		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
 

@@ -14,20 +14,10 @@
 ***************************************************/
 
 #include <Uefi.h>
-#include <Library/UefiLib.h>
-#include <Library/UefiBootServicesTableLib.h>
-#include <Library/UefiRuntimeServicesTableLib.h>
-#include <Protocol/SimpleFileSystem.h>
-#include <Protocol/LoadedImage.h>
-#include <Guid/FileInfo.h>
-#include "Pi/PiDxeCis.h"
-#include "Protocol/MpService.h"
 
 #include "bootloader.h"
 #include "multiboot2.h"
 
-#define MACHINE_CONF_ADDR 0x60000
-#define KERNEL_LOADED_ADDR	0x1000000
 
 EFI_PHYSICAL_ADDRESS	kernel_load_addr = KERNEL_LOADED_ADDR;
 EFI_STATUS status = EFI_SUCCESS;
@@ -73,8 +63,6 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->CloseProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,ImageHandle,NULL);
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
 	status = gBS->ExitBootServices(ImageHandle,MapKey);
-
-	// while (1);
 
 	func = (void *)KERNEL_LOADED_ADDR;
 
@@ -216,17 +204,20 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 
 	gGraphicsOutput->SetMode(gGraphicsOutput,MaxResolutionMode);
 	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
+
+	machine_info->mb_fb_common.framebuffer_width = gGraphicsOutput->Mode->Info->HorizontalResolution;
+	machine_info->mb_fb_common.framebuffer_height = gGraphicsOutput->Mode->Info->VerticalResolution;
+	machine_info->mb_fb_common.framebuffer_pitch = gGraphicsOutput->Mode->Info->PixelsPerScanLine;
+	machine_info->mb_fb_common.framebuffer_addr = gGraphicsOutput->Mode->FrameBufferBase;
+	machine_info->mb_fb_common.size = gGraphicsOutput->Mode->FrameBufferSize;
+	machine_info->mb_fb_common.framebuffer_type = MaxResolutionMode;
+	machine_info->mb_fb_common.type = gGraphicsOutput->Mode->Mode;
+
 	Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
 			gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
 			gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,
 			gGraphicsOutput->Mode->Info->VerticalResolution, gGraphicsOutput->Mode->Info->PixelsPerScanLine,
 			gGraphicsOutput->Mode->FrameBufferBase, gGraphicsOutput->Mode->FrameBufferSize);
-
-	machine_info->efi_graphics_info.HorizontalResolution = gGraphicsOutput->Mode->Info->HorizontalResolution;
-	machine_info->efi_graphics_info.VerticalResolution = gGraphicsOutput->Mode->Info->VerticalResolution;
-	machine_info->efi_graphics_info.PixelsPerScanLine = gGraphicsOutput->Mode->Info->PixelsPerScanLine;
-	machine_info->efi_graphics_info.FrameBufferBase = gGraphicsOutput->Mode->FrameBufferBase;
-	machine_info->efi_graphics_info.FrameBufferSize = gGraphicsOutput->Mode->FrameBufferSize;
 }
 
 void get_machine_memory_info(mb_memmap_s * mb_memmap)

@@ -41,20 +41,20 @@ static void enable_AMD_syscall()
 	wrmsr(IA32_EFER, ia32_efer);
 }
 
-static void get_VBE_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+static void get_VBE_info(mb_fb_common_s * vbe_info)
 {
-	framebuffer.FB_phybase = (phys_addr_t)bootinfo->efi_graphics_info.FrameBufferBase;
+	framebuffer.FB_phybase = (phys_addr_t)vbe_info->framebuffer_addr;
 	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
-	framebuffer.FB_size = bootinfo->efi_graphics_info.FrameBufferSize;
-	// framebuffer.X_Resolution = bootinfo->efi_graphics_info.HorizontalResolution;
-	framebuffer.X_Resolution = bootinfo->efi_graphics_info.PixelsPerScanLine;
-	framebuffer.Y_Resolution = bootinfo->efi_graphics_info.VerticalResolution;
-	framebuffer.PixperScanline = bootinfo->efi_graphics_info.PixelsPerScanLine;
+	framebuffer.FB_size = vbe_info->size;
+	framebuffer.X_Resolution = vbe_info->framebuffer_pitch;
+	framebuffer.X_Resolution = vbe_info->framebuffer_width;
+	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
+	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
 	// set init flag
 	kparam.arch_init_flags.frame_buffer_info = 1;
 }
 
-static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+static void init_memblock(mb_memmap_s * e820_info)
 {
 	kparam.kernel_phy_base	= &_k_phys_start;
 	kparam.kernel_vir_base	= &_k_virt_start;
@@ -62,9 +62,9 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 
 	int i;
 	mb_memmap_s * mb_mmap_ent;
-	for (i = 0; bootinfo->mb_mmap[i].len != 0; i++)
+	for (i = 0; e820_info[i].len != 0; i++)
 	{
-		mb_mmap_ent = &bootinfo->mb_mmap[i];
+		mb_mmap_ent = &e820_info[i];
 		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
 		{
 			memblock_add((phys_addr_t)mb_mmap_ent->addr, mb_mmap_ent->len);
@@ -82,13 +82,13 @@ static void init_memblock(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
 					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
 }
 
-static void get_SMP_info(struct KERNEL_BOOT_PARAMETER_INFORMATION *bootinfo)
+static void get_SMP_info(efi_smpinfo_s * smp_info)
 {
-	kparam.nr_lcpu = bootinfo->efi_smp_info.core_available;
+	kparam.nr_lcpu = smp_info->core_available;
 	uint64_t lcpu_count = 0;
-	for (int i = 0; i < bootinfo->efi_smp_info.core_num; i++)
+	for (int i = 0; i < smp_info->core_num; i++)
 	{
-		efi_cpudesc_s * this_cpu = &bootinfo->efi_smp_info.cpus[i];
+		efi_cpudesc_s * this_cpu = &smp_info->cpus[i];
 		if ((this_cpu->status & 0x4) > 0)
 		{
 			apic_id[lcpu_count] = this_cpu->proccessor_id & 0xFF;
@@ -149,11 +149,13 @@ static void cpuid_info(void)
 void pre_init(void)
 {
 	memset((virt_addr_t)&_bss, 0, &_ebss - &_bss);
-
 	enable_AMD_syscall();
-	get_VBE_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
-	init_memblock((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
-	get_SMP_info((struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR);
+
+	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =
+			(struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR;
+	get_VBE_info(&machine_info->mb_fb_common);
+	init_memblock(machine_info->mb_mmap);
+	get_SMP_info(&machine_info->efi_smp_info);
 
 	cpuid_info();
 }
