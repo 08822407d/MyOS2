@@ -70,16 +70,6 @@ entry_address_tag_end:
 // efi_amd64_entry_address_tag_end:
 //===========================================
 	.align	8
-framebuffer_tag_start:  
-	.short	MULTIBOOT_HEADER_TAG_FRAMEBUFFER
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	framebuffer_tag_end - framebuffer_tag_start
-	.long	1920
-	.long	1080
-	.long	32
-framebuffer_tag_end:
-//===========================================
-	.align	8
 multiboot_header_tag_end_begin:
 	.short	MULTIBOOT_HEADER_TAG_END
 	.short	0

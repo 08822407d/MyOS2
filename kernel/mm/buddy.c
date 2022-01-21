@@ -32,7 +32,7 @@ Page_s *		mem_map;
  * page cannot be allocated or merged in parallel. Alternatively, it must
  * handle invalid values gracefully, and use buddy_order_unsafe() below.
  */
-static inline unsigned long buddy_order(Page_s * page)
+static inline unsigned long get_buddy_order(Page_s * page)
 {
 	/* PageBuddy() must be checked by the caller */
 	return page->buddy_order;
@@ -145,7 +145,7 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order)
  */
 static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order)
 {
-	if (buddy_order(buddy) != order)
+	if (get_buddy_order(buddy) != order)
 		return false;
 
 	if (page_zone(page) != page_zone(buddy))
