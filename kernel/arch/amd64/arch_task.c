@@ -25,7 +25,6 @@
 #define	USER_CODE_ADDR		0x6000000
 #define USER_MEM_LENGTH		0x800000
 
-extern tss64_T	bsp_tmp_tss;
 extern char		ist_stack0;
 
 extern PCB_u	task0_PCB;

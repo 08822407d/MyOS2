@@ -15,6 +15,5 @@
 	extern time_s 			time;
 
 	extern size_t			cpustack_off;
-	extern task_queue_s		idle_queue;
 
 #endif /* _GLO_H_ */

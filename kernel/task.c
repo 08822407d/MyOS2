@@ -20,7 +20,6 @@ mm_s			task0_mm;
 size_t			cpustack_off;
 
 PCB_u **		idle_tasks;
-task_queue_s	idle_queue;
 spinlock_T		idle_queue_lock;
 
 spinlock_T		global_ready_task_lock;
@@ -83,43 +82,4 @@ void compute_consts()
 {
 	cpudata_u * base_p = 0;
 	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
-}
-
-/*==============================================================================================*
- *									load_balance related functions							 		*                        
- *==============================================================================================*/
-void idle_enqueue(task_s * idle)
-{
-	if (idle_queue.nr_curr >= idle_queue.nr_max)
-		return;
-
-	lock_spin_lock(&idle_queue_lock);
-	// make sure the load_balance task always the first in queue
-	if (idle == idle_queue.sched_task)
-	{
-		idle_queue.head = (idle_queue.head - 1 + idle_queue.nr_max) % idle_queue.nr_max;
-		idle_queue.queue[idle_queue.head] = idle;
-	}
-	else
-	{
-		idle_queue.queue[idle_queue.tail] = idle;
-		idle_queue.tail = (idle_queue.tail + 1) % idle_queue.nr_max;
-	}
-	idle_queue.nr_curr++;
-	unlock_spin_lock(&idle_queue_lock);
-}
-
-task_s * idle_dequeue()
-{
-	task_s * ret_val = NULL;
-	lock_spin_lock(&idle_queue_lock);
-	if (idle_queue.nr_curr > 0)
-	{
-		ret_val = idle_queue.queue[idle_queue.head];
-		idle_queue.head = (idle_queue.head + 1) % idle_queue.nr_max;
-	}
-	idle_queue.nr_curr--;
-	unlock_spin_lock(&idle_queue_lock);
-
-	return ret_val;
 }

@@ -50,13 +50,6 @@ void init_smp_env()
 	}
 	kfree(idle_tasks[0]);
 	idle_tasks[0] = &task0_PCB;
-
-	idle_queue.nr_max = kparam.nr_lcpu;
-	idle_queue.nr_curr = 0;
-	idle_queue.head = 0;
-	idle_queue.tail = 0;
-	idle_queue.queue = (task_s **)idle_tasks;
-	idle_queue.sched_task = &task0_PCB.task;
 }
 
 void create_percpu_idle(size_t cpu_idx)

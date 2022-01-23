@@ -27,7 +27,7 @@ unsigned long module_test(unsigned long flag)
 	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
 	// }
 
-	kmalloc_kfree_test();
+	// kmalloc_kfree_test();
 
 	kernthd_test();
 
