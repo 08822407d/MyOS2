@@ -142,11 +142,6 @@ _AP_tmp_GDT:
 	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	20*/
 _AP_tmp_GDT_end:
 
-// .balign 4
-// _AP_code32_vector:
-// 	.long	_AP_code32 - _APboot_base
-// 	.word	0x18,0
-
 .balign 4
 _APboot_tmp_Stack_start:
 	.org	0x400

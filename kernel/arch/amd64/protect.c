@@ -21,12 +21,12 @@
 /* Storage for gdt, idt and tss. */
 segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+desctblptr64_T	gdt_ptr;
+desctblptr64_T	idt_ptr;
 
 char ist_cpu0[7][CPUSTACK_SIZE];
 
 tss64_T *		tss_ptr_arr = NULL;
-desctblptr64_T	gdt_ptr;
-desctblptr64_T	idt_ptr;
 
 /*==============================================================================================*
  *										global functions							 			*
@@ -166,7 +166,7 @@ gate_table_s lapic_ipi_init_table[] = {
  *										initiate segs							     			*
  *==============================================================================================*/
 
-void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
+static void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
 {
 	segdesc64_T *sd = &(gdt[index]);
 	sd->Sflag	= 1;
@@ -177,24 +177,25 @@ void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_
 	sd->DPL		= privil;
 }
 
-void set_codeseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
+static void set_codeseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
 {
 	set_commseg_desc(index, type, privil, 1);
 }
 
-void set_dataseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
+static void set_dataseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
 {
 	set_commseg_desc(index, type, privil, 0);
 }	
 
-void set_sysseg_desc(uint32_t index, SysSegType_E type, uint8_t privil)
+static void set_TSSseg_desc(size_t cpu_idx, SysSegType_E type, uint8_t privil)
 {
+	size_t gdt_idx = TSS_INDEX(cpu_idx);
 	switch (type)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_T * curr_tss = tss_ptr_arr + (index - TSS_INDEX(0)) / 2;
-				TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[index];
+				tss64_T * curr_tss = tss_ptr_arr + cpu_idx;
+				TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[gdt_idx];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
 				tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
@@ -220,8 +221,7 @@ void set_sysseg_desc(uint32_t index, SysSegType_E type, uint8_t privil)
 /*==============================================================================================*
  *											prot_bsp_init								     	*
  *==============================================================================================*/
-
-void init_gdt()
+static void init_gdt()
 {
 	// gdt[0] has been set to 0 by memset
 	set_codeseg_desc(KERN_CS_INDEX, E_CODE, 0);
@@ -235,10 +235,9 @@ void init_gdt()
 	gdt_ptr.base  = (uint64_t)gdt;
 }
 
-void init_idt()
+static void init_idt_inner(gate_table_s * gtbl)
 {
-	gate_table_s * gtbl;
-	for ( gtbl = &(exception_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
+	while (gtbl->gate_entry != NULL)
 	{
 		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
 		// fixed bits
@@ -250,35 +249,16 @@ void init_idt()
 		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
 		curr_gate->Type  = gtbl->type;
 		curr_gate->DPL   = gtbl->DPL;
+		
+		gtbl++;
 	}
+}
 
-	for ( gtbl = &(hwint_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
-	{
-		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
-		// fixed bits
-		curr_gate->Present = 1;
-		curr_gate->segslct = KERN_CS_SELECTOR;
-		curr_gate->IST 	   = 0;
-		// changable bits
-		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
-		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
-		curr_gate->Type  = gtbl->type;
-		curr_gate->DPL   = gtbl->DPL;
-	}
-
-	for ( gtbl = &(lapic_ipi_init_table[0]); gtbl->gate_entry != NULL; gtbl++)
-	{
-		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
-		// fixed bits
-		curr_gate->Present = 1;
-		curr_gate->segslct = KERN_CS_SELECTOR;
-		curr_gate->IST 	   = 0;
-		// changable bits
-		curr_gate->offs1 = (size_t)(gtbl->gate_entry) & 0xFFFF;
-		curr_gate->offs2 = ((size_t)(gtbl->gate_entry) >> 16) & 0xFFFFFFFFFFFF;
-		curr_gate->Type  = gtbl->type;
-		curr_gate->DPL   = gtbl->DPL;
-	}
+static void init_idt()
+{
+	init_idt_inner(exception_init_table);
+	init_idt_inner(hwint_init_table);
+	init_idt_inner(lapic_ipi_init_table);
 
 	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
 	idt_ptr.base  = (uint64_t)idt;
@@ -286,57 +266,31 @@ void init_idt()
 
 void init_tss(size_t cpu_idx)
 {
-	extern char tmp_kstack_top;
-	tss64_T *curr_tss = tss_ptr_arr + cpu_idx;
-
 	// init TSS
-	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
-	curr_tss->rsp1 =
-	curr_tss->rsp2 = 0;
-	// curr_tss->ist1 = (reg_t)&ist_cpu0[1];
-	// curr_tss->ist2 = (reg_t)&ist_cpu0[2];
-	// curr_tss->ist3 = (reg_t)&ist_cpu0[3];
-	// curr_tss->ist4 = (reg_t)&ist_cpu0[4];
-	// curr_tss->ist5 = (reg_t)&ist_cpu0[5];
-	// curr_tss->ist6 = (reg_t)&ist_cpu0[6];
-	// curr_tss->ist7 = (reg_t)&ist_cpu0[7];
-	curr_tss->ist1 = 0;
-	curr_tss->ist2 = 0;
-	curr_tss->ist3 = 0;
-	curr_tss->ist4 = 0;
-	curr_tss->ist5 = 0;
-	curr_tss->ist6 = 0;
-	curr_tss->ist7 = 0;
+	tss64_T *curr_tss = tss_ptr_arr + cpu_idx;
+	curr_tss->rsp0 = (reg_t)(idle_tasks[cpu_idx] + 1);
 
-	// init TSS-desc in GDT
-	TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[TSS_INDEX(0)];
-	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
-	tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
-	tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
-	tss_segdesc->Base2	= ((uint64_t)curr_tss >> 24) & 0xFFFFFFFFFF;
-	tss_segdesc->Type	= TSS_AVAIL;
-	tss_segdesc->DPL	= KERN_PRIVILEGE;
-	tss_segdesc->AVL	=
-	tss_segdesc->Pflag	= 1;
+	// set TSS-desc in GDT
+	set_TSSseg_desc(cpu_idx, TSS_AVAIL, KERN_PRIVILEGE);
 }
 
-static void init_bsp_arch_data(size_t cpu_idx)
+static void init_arch_data(size_t cpu_idx)
 {
 	// initate global architechture data
 	init_gdt();
 	init_idt();
-	init_tss(cpu_idx);
 	// set init flag
-	kparam.arch_init_flags.init_bsp_arch_data = 1;
+	kparam.arch_init_flags.init_arch_data = 1;
 }
 
-static void reload_bsp_arch_data(size_t cpu_idx)
+void reload_arch_data(size_t cpu_idx)
 {
 	load_idt(&idt_ptr);
 	load_gdt(&gdt_ptr);
+	init_tss(cpu_idx);
 	load_tss(cpu_idx);
 	// set init flag
-	kparam.arch_init_flags.reload_bsp_arch_data = 1;
+	kparam.arch_init_flags.reload_arch_data = 1;
 }
 
 void pre_init_arch_data(size_t lcpu_nr)
@@ -346,19 +300,8 @@ void pre_init_arch_data(size_t lcpu_nr)
 
 void init_arch(size_t cpu_idx)
 {
-	init_bsp_arch_data(cpu_idx);
-	reload_bsp_arch_data(cpu_idx);
-}
-
-/*==============================================================================================*
- *										prot_smp_init									    	*
- *==============================================================================================*/
-void reload_percpu_arch_data(size_t cpu_idx)
-{
-	load_idt(&idt_ptr);
-	load_gdt(&gdt_ptr);
-	set_sysseg_desc(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
-	load_tss(cpu_idx);
+	init_arch_data(cpu_idx);
+	reload_arch_data(cpu_idx);
 }
 
 /*==============================================================================================*

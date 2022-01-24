@@ -173,8 +173,8 @@
 	{
 		int		frame_buffer_info;
 
-		int		init_bsp_arch_data;
-		int		reload_bsp_arch_data;
+		int		init_arch_data;
+		int		reload_arch_data;
 		int		reload_bsp_arch_page;
 	} arch_init_flags_s;
 	
@@ -189,15 +189,14 @@
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
 	void init_arch(size_t cpu_idx);
-	void load_arch_data(size_t cpu_idx);
-	void reload_percpu_arch_data(size_t cpu_idx);
+	void reload_arch_data(size_t cpu_idx);
 	void arch_system_call_init(void);
 
 	/* arch_page_util. */
 	struct mm;
 	typedef struct mm mm_s;
 	void arch_page_preinit(void);
-	void reload_arch_page(void);
+	void init_arch_page(void);
 	reg_t read_cr3(void);
 	void pg_load_cr3(reg_t cr3);
 	void refresh_arch_page(void);

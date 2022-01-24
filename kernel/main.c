@@ -20,13 +20,13 @@ void kmain()
 	pre_init();
 
 	pre_init_arch_data(kparam.nr_lcpu);
+	pre_init_task(kparam.nr_lcpu);
+
 	init_arch(cpu_idx);
 
-	reload_arch_page();
+	init_arch_page();
 
 	init_video();
-
-	pre_init_task(kparam.nr_lcpu);
 
 	pre_init_mm();
 	init_mm();
@@ -50,7 +50,7 @@ void kmain()
 
 void idle(size_t cpu_idx)
 {	
-	reload_percpu_arch_data(cpu_idx);
+	reload_arch_data(cpu_idx);
 	init_percpu_intr();
 	percpu_self_config(cpu_idx);
 	arch_system_call_init();
@@ -64,8 +64,8 @@ void idle(size_t cpu_idx)
 
 	if (cpu_idx == 0)
 	{
-		kernel_thread(module_test, 0, 0);
-		// kernel_thread(init, 0, 0);
+		// kernel_thread(module_test, 0, 0);
+		kernel_thread(init, 0, 0);
 	}
 
 	while (1)

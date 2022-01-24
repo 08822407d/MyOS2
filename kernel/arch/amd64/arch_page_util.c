@@ -26,7 +26,7 @@ phys_addr_t kernel_cr3 = 0;
 
 static void init_fixed_kernel_pgmap();
 
-void reload_arch_page()
+void init_arch_page()
 {
 	init_fixed_kernel_pgmap();
 
