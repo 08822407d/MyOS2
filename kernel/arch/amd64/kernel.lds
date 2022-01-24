@@ -6,7 +6,7 @@ _k_phys_start	= 0x1000000;
 _k_virt_start	= 0xffff800001000000;
 _k_offset		= _k_virt_start - _k_phys_start;
 _k_phys_edata	= _edata - _k_offset;
-_k_phys_ebss		= _ebss - _k_offset;
+_k_phys_ebss	= _ebss - _k_offset;
 
 __k_unpaged__k_offset		= _k_offset;
 __k_unpaged__k_virt_start	= _k_virt_start;

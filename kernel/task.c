@@ -13,14 +13,13 @@
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/mutex.h>
 
+PCB_u **		idle_tasks;
 // de attention that before entering kmain, rsp had already point to stack of task0,
 // in pre_init() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 mm_s			task0_mm;
 
 size_t			cpustack_off;
-
-PCB_u **		idle_tasks;
 
 extern char _text;
 extern char _etext;

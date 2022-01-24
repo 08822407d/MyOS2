@@ -269,9 +269,6 @@ void init_tss(size_t cpu_idx)
 	// init TSS
 	tss64_T *curr_tss = tss_ptr_arr + cpu_idx;
 	curr_tss->rsp0 = (reg_t)(idle_tasks[cpu_idx] + 1);
-
-	// set TSS-desc in GDT
-	set_TSSseg_desc(cpu_idx, TSS_AVAIL, KERN_PRIVILEGE);
 }
 
 static void init_arch_data(size_t cpu_idx)
@@ -287,8 +284,11 @@ void reload_arch_data(size_t cpu_idx)
 {
 	load_idt(&idt_ptr);
 	load_gdt(&gdt_ptr);
-	init_tss(cpu_idx);
+
+	// set TSS-desc in GDT
+	set_TSSseg_desc(cpu_idx, TSS_AVAIL, KERN_PRIVILEGE);
 	load_tss(cpu_idx);
+
 	// set init flag
 	kparam.arch_init_flags.reload_arch_data = 1;
 }
@@ -296,6 +296,8 @@ void reload_arch_data(size_t cpu_idx)
 void pre_init_arch_data(size_t lcpu_nr)
 {
 	tss_ptr_arr = memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
+	for (int i = 0; i < lcpu_nr; i++)
+		init_tss(i);
 }
 
 void init_arch(size_t cpu_idx)
@@ -315,6 +317,7 @@ void arch_system_call_init()
 	wrmsr(MSR_IA32_SYSENTER_EIP, (uint64_t)sysenter_entp);
 	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)task0_PCB.task.arch_struct.tss_rsp0);
 	uint64_t kstack = rdmsr(MSR_IA32_SYSENTER_ESP);
+
 	// // init MSR sf_regs related to syscall/sysret
 	// wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
 	// wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
