@@ -38,26 +38,22 @@ void init_smp_env()
 	// init basic data for percpu
 	unsigned nr_lcpu = kparam.nr_lcpu;
 
-	idle_tasks	= (PCB_u **)kmalloc(kparam.nr_lcpu * sizeof(PCB_u *));
-	tss_ptr_arr	= (tss64_T **)kmalloc(nr_lcpu * sizeof(tss64_T *));
 	percpu_data	= (cpudata_u **)kmalloc(kparam.nr_lcpu * sizeof(cpudata_u *));
 
 	for (int i = 0; i < kparam.nr_lcpu; i++)
 	{
-		create_percpu_idle(i);
+		if (i != 0)
+			create_percpu_idle(i);
+
 		init_percpu_arch_data(i);
 		init_percpu_data(i);
 	}
-	kfree(idle_tasks[0]);
-	idle_tasks[0] = &task0_PCB;
 }
 
 void create_percpu_idle(size_t cpu_idx)
 {
-	idle_tasks[cpu_idx] = (PCB_u *)kmalloc(sizeof(PCB_u));
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	task_s * idletask = &(idle_pcb->task);
-	memset(idle_pcb, 0, sizeof(PCB_u));
 	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
 	list_init(&idletask->schedule_list, idletask);
 	list_hdr_init(&idletask->child_lhdr);
@@ -67,8 +63,7 @@ void create_percpu_idle(size_t cpu_idx)
 void init_percpu_arch_data(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
-	tss_ptr_arr[cpu_idx] = (tss64_T *)kmalloc(sizeof(tss64_T));
-	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
+	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
 	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
 	tss_p->rsp0 = (size_t)idle_pcb + TASK_KSTACK_SIZE;
 	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
@@ -91,9 +86,9 @@ void init_percpu_data(size_t cpu_idx)
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
 	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
 	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
-	arch_cpuinfo->tss = tss_ptr_arr[cpu_idx];
+	arch_cpuinfo->tss = tss_ptr_arr + cpu_idx;
 	// set percpu_stack to ist
-	tss64_T * tss_p = tss_ptr_arr[cpu_idx];
+	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
 	tss_p->rsp1 =
 	tss_p->rsp2 = 0;
 	// tss_p->ist1 = (reg_t)&ist_cpu1[1];

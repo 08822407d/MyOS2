@@ -6,6 +6,7 @@
 
 #include <include/glo.h>
 #include <include/mm.h>
+#include <include/memblock.h>
 #include <include/task.h>
 #include <include/proto.h>
 
@@ -20,10 +21,6 @@ mm_s			task0_mm;
 size_t			cpustack_off;
 
 PCB_u **		idle_tasks;
-spinlock_T		idle_queue_lock;
-
-spinlock_T		global_ready_task_lock;
-spinlock_T		global_blocked_task_lock;
 
 extern char _text;
 extern char _etext;
@@ -35,7 +32,6 @@ extern char _bss;
 extern char _ebss;
 
 void compute_consts(void);
-
 
 void init_task()
 {
@@ -74,12 +70,20 @@ void init_task()
 	bsp_cpudata_p->curr_task = task0;
 	bsp_cpudata_p->time_slice = task0->time_slice;
 	list_hdr_init(&bsp_cpudata_p->ruuning_lhdr);
-
-	init_spin_lock(&idle_queue_lock);
 }
 
 void compute_consts()
 {
 	cpudata_u * base_p = 0;
 	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
+}
+
+void pre_init_task(size_t lcpu_nr)
+{
+	idle_tasks = memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
+	idle_tasks[0] = &task0_PCB;
+	for (int i = 1; i < lcpu_nr; i++)
+	{
+		idle_tasks[i] = memblock_alloc_normal(sizeof(PCB_u), sizeof(PCB_u));
+	}
 }

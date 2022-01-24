@@ -15,16 +15,20 @@ atomic_T boot_counter;
 
 void kmain()
 {
+	size_t cpu_idx = 0;
+
 	pre_init();
 
-	init_bsp_arch_data();
-	reload_bsp_arch_data();
-	reload_arch_page();
+	pre_init_arch_data(kparam.nr_lcpu);
+	init_arch(cpu_idx);
 
-	pre_init_mm();
+	reload_arch_page();
 
 	init_video();
 
+	pre_init_task(kparam.nr_lcpu);
+
+	pre_init_mm();
 	init_mm();
 
 	init_task();

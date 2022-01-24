@@ -21,8 +21,7 @@
 	#define USER_SS_INDEX_DUP   6
 	#define TSS_INDEX_FIRST     7
 	#define TSS_INDEX(cpu)      (TSS_INDEX_FIRST + (cpu * 2))	/* per cpu kernel tss */
-	#define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* LDT descriptor */
-	// #define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* LDT descriptor */
+	#define GDT_SIZE            (TSS_INDEX(CONFIG_MAX_CPUS) + 1)/* GDT descriptor */
 
 	#define SEG_SELECTOR(i)		((i) * 8)
 	#define KERN_CS_SELECTOR	SEG_SELECTOR(KERN_CS_INDEX)

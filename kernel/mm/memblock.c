@@ -483,7 +483,7 @@ static void * memblock_alloc_internal(size_t size, size_t align,
 // Linux function proto :
 // void *__init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
 //			    phys_addr_t min_addr, phys_addr_t max_addr, int nid)
-inline void * memblock_alloc(size_t size, size_t align)
+static inline void * memblock_alloc(size_t size, size_t align)
 {
 	while (align == 0);
 

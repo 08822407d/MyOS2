@@ -108,7 +108,6 @@
 	int memblock_reserve(phys_addr_t base, size_t size);
 	void * memblock_alloc_try(size_t size, size_t align,
 					phys_addr_t min_addr, phys_addr_t max_addr);
-	void * memblock_alloc(size_t size, size_t align);
 	phys_addr_t memblock_alloc_range(size_t size, size_t align,
 					phys_addr_t start, phys_addr_t end);
 	void memblock_free_all(void);

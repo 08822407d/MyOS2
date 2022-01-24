@@ -8,6 +8,7 @@
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/task.h>
+#include <include/memblock.h>
 
 #include "include/arch_glo.h"
 #include "include/archconst.h"
@@ -23,8 +24,7 @@ gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 
 char ist_cpu0[7][CPUSTACK_SIZE];
 
-tss64_T **		tss_ptr_arr = NULL;
-tss64_T			bsp_tmp_tss;
+tss64_T *		tss_ptr_arr = NULL;
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 
@@ -166,7 +166,7 @@ gate_table_s lapic_ipi_init_table[] = {
  *										initiate segs							     			*
  *==============================================================================================*/
 
-void set_commseg(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
+void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
 {
 	segdesc64_T *sd = &(gdt[index]);
 	sd->Sflag	= 1;
@@ -177,23 +177,23 @@ void set_commseg(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lfl
 	sd->DPL		= privil;
 }
 
-void set_codeseg(uint32_t index, CommSegType_E type, uint8_t privil)
+void set_codeseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
 {
-	set_commseg(index, type, privil, 1);
+	set_commseg_desc(index, type, privil, 1);
 }
 
-void set_dataseg(uint32_t index, CommSegType_E type, uint8_t privil)
+void set_dataseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
 {
-	set_commseg(index, type, privil, 0);
+	set_commseg_desc(index, type, privil, 0);
 }	
 
-void set_sysseg(uint32_t index, SysSegType_E type, uint8_t privil)
+void set_sysseg_desc(uint32_t index, SysSegType_E type, uint8_t privil)
 {
 	switch (type)
 	{
 		case TSS_AVAIL:
 			{
-				tss64_T * curr_tss = tss_ptr_arr[(index - TSS_INDEX(0)) / 2];
+				tss64_T * curr_tss = tss_ptr_arr + (index - TSS_INDEX(0)) / 2;
 				TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[index];
 				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
@@ -224,12 +224,12 @@ void set_sysseg(uint32_t index, SysSegType_E type, uint8_t privil)
 void init_gdt()
 {
 	// gdt[0] has been set to 0 by memset
-	set_codeseg(KERN_CS_INDEX, E_CODE, 0);
-	set_dataseg(KERN_SS_INDEX, RW_DATA, 0);
-	set_codeseg(USER_CS_INDEX, E_CODE, 3);
-	set_dataseg(USER_SS_INDEX, RW_DATA, 3);
-	set_codeseg(USER_CS_INDEX_DUP, E_CODE, 3);
-	set_dataseg(USER_SS_INDEX_DUP, RW_DATA, 3);
+	set_codeseg_desc(KERN_CS_INDEX, E_CODE, 0);
+	set_dataseg_desc(KERN_SS_INDEX, RW_DATA, 0);
+	set_codeseg_desc(USER_CS_INDEX, E_CODE, 3);
+	set_dataseg_desc(USER_SS_INDEX, RW_DATA, 3);
+	set_codeseg_desc(USER_CS_INDEX_DUP, E_CODE, 3);
+	set_dataseg_desc(USER_SS_INDEX_DUP, RW_DATA, 3);
 
 	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)gdt;
@@ -284,10 +284,12 @@ void init_idt()
 	idt_ptr.base  = (uint64_t)idt;
 }
 
-void init_bsp_tss()
+void init_tss(size_t cpu_idx)
 {
 	extern char tmp_kstack_top;
-	tss64_T *curr_tss = &bsp_tmp_tss;
+	tss64_T *curr_tss = tss_ptr_arr + cpu_idx;
+
+	// init TSS
 	curr_tss->rsp0 = (reg_t)phys2virt(&tmp_kstack_top);
 	curr_tss->rsp1 =
 	curr_tss->rsp2 = 0;
@@ -305,7 +307,8 @@ void init_bsp_tss()
 	curr_tss->ist5 = 0;
 	curr_tss->ist6 = 0;
 	curr_tss->ist7 = 0;
-	// init bsp's tss by hand
+
+	// init TSS-desc in GDT
 	TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[TSS_INDEX(0)];
 	tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
 	tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
@@ -317,23 +320,34 @@ void init_bsp_tss()
 	tss_segdesc->Pflag	= 1;
 }
 
-void init_bsp_arch_data()
+static void init_bsp_arch_data(size_t cpu_idx)
 {
 	// initate global architechture data
 	init_gdt();
 	init_idt();
-	init_bsp_tss();
+	init_tss(cpu_idx);
 	// set init flag
 	kparam.arch_init_flags.init_bsp_arch_data = 1;
 }
 
-void reload_bsp_arch_data()
+static void reload_bsp_arch_data(size_t cpu_idx)
 {
 	load_idt(&idt_ptr);
 	load_gdt(&gdt_ptr);
-	load_tss(0);
+	load_tss(cpu_idx);
 	// set init flag
 	kparam.arch_init_flags.reload_bsp_arch_data = 1;
+}
+
+void pre_init_arch_data(size_t lcpu_nr)
+{
+	tss_ptr_arr = memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
+}
+
+void init_arch(size_t cpu_idx)
+{
+	init_bsp_arch_data(cpu_idx);
+	reload_bsp_arch_data(cpu_idx);
 }
 
 /*==============================================================================================*
@@ -343,7 +357,7 @@ void reload_percpu_arch_data(size_t cpu_idx)
 {
 	load_idt(&idt_ptr);
 	load_gdt(&gdt_ptr);
-	set_sysseg(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
+	set_sysseg_desc(TSS_INDEX(cpu_idx), TSS_AVAIL, KERN_PRIVILEGE);
 	load_tss(cpu_idx);
 }
 

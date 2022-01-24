@@ -107,6 +107,7 @@
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 
+	void pre_init_task(size_t lcpu_nr);
 	void	init_task(void);
 	void	arch_init_task(void);
 	unsigned long gen_newpid(void);

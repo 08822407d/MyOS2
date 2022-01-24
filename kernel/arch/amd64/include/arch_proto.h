@@ -184,13 +184,12 @@
 	/* protect.c */
 	phys_addr_t virt2phys(virt_addr_t);
 	virt_addr_t phys2virt(phys_addr_t);
+	void pre_init_arch_data(size_t lcpu_nr);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
-	void init_bsp_arch_data(void);
+	void init_arch(size_t cpu_idx);
 	void load_arch_data(size_t cpu_idx);
-	void init_bsp_arch_data(void);
-	void reload_bsp_arch_data(void);
 	void reload_percpu_arch_data(size_t cpu_idx);
 	void arch_system_call_init(void);
 
