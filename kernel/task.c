@@ -32,23 +32,33 @@ extern char _ebss;
 
 void compute_consts(void);
 
-void init_task()
+static void create_percpu_idle(size_t cpu_idx)
+{
+	PCB_u * idle_pcb = idle_tasks[cpu_idx];
+	task_s * idletask = &(idle_pcb->task);
+	idletask->parent = idletask;
+	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
+	list_init(&idletask->schedule_list, idletask);
+	list_init(&idletask->child_list, idletask);
+	list_hdr_init(&idletask->child_lhdr);
+	idletask->pid = gen_newpid();
+}
+
+void init_task(size_t lcpu_nr)
 {
 	compute_consts();
 
 	arch_init_task();
 
 	task_s *task0 = &task0_PCB.task;
-	memset(task0, 0, sizeof(task_s));
-	task0->parent = task0;
-	list_init(&task0->schedule_list, task0);
-	list_init(&task0->child_list, task0);
-	list_hdr_init(&task0->child_lhdr);
 	task0->time_slice = 2;
 	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
-	task0->pid = gen_newpid();
 	task0->mm_struct = &task0_mm;
+	for (int i = 0; i < lcpu_nr; i++)
+	{
+		create_percpu_idle(i);
+	}
 
 	// set arch struct in mm_s
 	mm_s * task0_mm_p = task0_PCB.task.mm_struct;

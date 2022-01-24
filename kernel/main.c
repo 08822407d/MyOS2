@@ -31,7 +31,7 @@ void kmain()
 	pre_init_mm();
 	init_mm();
 
-	init_task();
+	init_task(kparam.nr_lcpu);
 	init_smp_env();
 	
 	// enable bsp's apic

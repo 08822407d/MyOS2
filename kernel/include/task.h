@@ -108,7 +108,7 @@
 	#define curr_cpu get_current_cpu()
 
 	void pre_init_task(size_t lcpu_nr);
-	void	init_task(void);
+	void	init_task(size_t lcpu_nr);
 	void	arch_init_task(void);
 	unsigned long gen_newpid(void);
 	void	__switch_to(task_s * curr, task_s * target);

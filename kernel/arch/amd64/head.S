@@ -1,6 +1,7 @@
+#define ASM_FILE 1
+
 #include <arch/amd64/asm.h>
 
-#define ASM_FILE 1
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
