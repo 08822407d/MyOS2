@@ -32,8 +32,8 @@ void init_smp_env()
 	extern char _APboot_phys_start;
 	extern char _APboot_text;
 	extern char _APboot_etext;
-	size_t apbbot_len = &_APboot_etext - &_APboot_text;
-	memcpy(phys2virt((phys_addr_t)&_APboot_phys_start), (virt_addr_t)&_APboot_text, apbbot_len);
+	size_t apboot_len = &_APboot_etext - &_APboot_text;
+	memcpy(phys2virt((phys_addr_t)&_APboot_phys_start), (virt_addr_t)&_APboot_text, apboot_len);
 
 	// init basic data for percpu
 	unsigned nr_lcpu = kparam.nr_lcpu;
