@@ -44,7 +44,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
     -Wno-packed-bitfield-compat -nostartfiles -static -ggdb -m64 -fPIC")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none")
+set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 # message("${PROMPT} LDFLAGS : ${CMAKE_EXE_LINKER_FLAGS}")
 
 #===============================================================================================#

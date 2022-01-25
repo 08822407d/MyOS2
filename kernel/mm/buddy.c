@@ -343,7 +343,7 @@ phys_addr_t page_to_paddr(Page_s * page)
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
-void pre_init_page()
+void preinit_page()
 {
 	memset(&pg_list, 0, sizeof(pg_list));
 

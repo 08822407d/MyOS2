@@ -29,7 +29,7 @@ uint8_t	*		base_slab_pages_p;
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
-void pre_init_slab()
+void preinit_slab()
 {
 	slab_cache_groups_p = memblock_alloc_normal(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
 	base_slabs_p = memblock_alloc_normal(sizeof(slab_s) * SLAB_LEVEL, 1);

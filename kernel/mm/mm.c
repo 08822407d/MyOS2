@@ -2,10 +2,10 @@
 #include <include/page.h>
 #include <include/slab.h>
 
-void pre_init_mm()
+void preinit_mm()
 {
-	pre_init_page();
-	pre_init_slab();
+	preinit_page();
+	preinit_slab();
 }
 
 void init_mm()

@@ -5,6 +5,7 @@
 #include <include/printk.h>
 #include <include/proto.h>
 #include <include/mm.h>
+#include <include/memblock.h>
 #include <include/task.h>
 
 #include "include/arch_proto.h"
@@ -12,22 +13,17 @@
 #include "include/arch_glo.h"
 #include "include/mutex.h"
 
-extern PCB_u	task0_PCB;
-
-char ist_cpu1[7][CPUSTACK_SIZE];
-
 cpudata_u **	percpu_data;
 
-void create_percpu_idle(size_t cpu_idx);
 void init_percpu_data(size_t cpu_idx);
-void init_percpu_arch_data(size_t cpu_idx);
 
-void init_smp_env()
+void preinit_smp(size_t lcpu_nr)
 {
-	#ifdef DEBUG
-		// make sure have get smp information
-	#endif
+	percpu_data	= memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u *), sizeof(cpudata_u *));
+}
 
+void init_smp(size_t lcpu_nr)
+{
 	// copy ap_boot entry code to its address
 	extern char _APboot_phys_start;
 	extern char _APboot_text;
@@ -36,26 +32,10 @@ void init_smp_env()
 	memcpy(phys2virt((phys_addr_t)&_APboot_phys_start), (virt_addr_t)&_APboot_text, apboot_len);
 
 	// init basic data for percpu
-	unsigned nr_lcpu = kparam.nr_lcpu;
-
-	percpu_data	= (cpudata_u **)kmalloc(kparam.nr_lcpu * sizeof(cpudata_u *));
-
-	for (int i = 0; i < kparam.nr_lcpu; i++)
+	for (int i = 0; i < lcpu_nr; i++)
 	{
-		init_percpu_arch_data(i);
 		init_percpu_data(i);
 	}
-}
-
-void init_percpu_arch_data(size_t cpu_idx)
-{
-	PCB_u * idle_pcb = idle_tasks[cpu_idx];
-	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	memset(tss_p, 0, sizeof(tss64_T));	// init tss's ists
-	tss_p->rsp0 = (size_t)idle_pcb + TASK_KSTACK_SIZE;
-	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
-	idle_pcb->task.mm_struct = task0_PCB.task.mm_struct;
-	idle_pcb->task.mm_struct->start_stack = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
 }
 
 void init_percpu_data(size_t cpu_idx)

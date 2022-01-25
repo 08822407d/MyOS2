@@ -32,7 +32,7 @@ extern char _ebss;
 
 void compute_consts(void);
 
-static void create_percpu_idle(size_t cpu_idx)
+static void create_smp_idles(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	task_s * idletask = &(idle_pcb->task);
@@ -48,16 +48,18 @@ void init_task(size_t lcpu_nr)
 {
 	compute_consts();
 
-	arch_init_task();
+	preinit_arch_task();
 
 	task_s *task0 = &task0_PCB.task;
 	task0->time_slice = 2;
 	task0->vruntime = -1;
 	task0->flags = PF_KTHREAD;
 	task0->mm_struct = &task0_mm;
+
 	for (int i = 0; i < lcpu_nr; i++)
 	{
-		create_percpu_idle(i);
+		create_smp_idles(i);
+		init_arch_task(i);
 	}
 
 	// set arch struct in mm_s
@@ -71,7 +73,7 @@ void init_task(size_t lcpu_nr)
 	task0_mm_p->end_data		= (reg_t)&_edata;
 	task0_mm_p->start_bss		= (reg_t)&_bss;
 	task0_mm_p->end_bss			= (reg_t)&_bss;
-	task0_mm_p->start_stack		= (reg_t)&task0_PCB + TASK_KSTACK_SIZE;
+	task0_mm_p->start_stack		= 0;
 
 	// complete bsp's cpudata_p
 	cpudata_u * bsp_cpudata_u_p = percpu_data[0];
@@ -87,7 +89,7 @@ void compute_consts()
 	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
 }
 
-void pre_init_task(size_t lcpu_nr)
+void preinit_task(size_t lcpu_nr)
 {
 	idle_tasks = memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
 	idle_tasks[0] = &task0_PCB;

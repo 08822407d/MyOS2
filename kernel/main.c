@@ -19,20 +19,20 @@ void kmain()
 
 	pre_init();
 
-	pre_init_arch_data(kparam.nr_lcpu);
-	pre_init_task(kparam.nr_lcpu);
+	preinit_arch_data(kparam.nr_lcpu);
+	preinit_task(kparam.nr_lcpu);
+	preinit_smp(kparam.nr_lcpu);
 
 	init_arch(cpu_idx);
-
 	init_arch_page();
 
 	init_video();
 
-	pre_init_mm();
+	preinit_mm();
 	init_mm();
 
 	init_task(kparam.nr_lcpu);
-	init_smp_env();
+	init_smp(kparam.nr_lcpu);
 	
 	// enable bsp's apic
 	init_bsp_intr();
@@ -64,8 +64,8 @@ void idle(size_t cpu_idx)
 
 	if (cpu_idx == 0)
 	{
-		// kernel_thread(module_test, 0, 0);
-		kernel_thread(init, 0, 0);
+		kernel_thread(module_test, 0, 0);
+		// kernel_thread(init, 0, 0);
 	}
 
 	while (1)

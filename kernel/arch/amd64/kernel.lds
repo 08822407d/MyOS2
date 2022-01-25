@@ -41,7 +41,7 @@ SECTIONS
 	.APboot_text ALIGN(0x1000) : AT(apb_start_viraddr)
 	{
 		_APboot_text = apb_start_viraddr - _APboot_phys_start;
-		*/AP_boot.S.o(.text);
+		KEEP(*/AP_boot.S.o(.text));
 		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
 	}
 	. = _APboot_etext;

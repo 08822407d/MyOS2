@@ -37,12 +37,19 @@ unsigned long	curr_pid;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void arch_init_task()
+void preinit_arch_task()
 {
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
 	init_spin_lock(&newpid_lock);
+}
+
+void init_arch_task(size_t cpu_idx)
+{
+	PCB_u * idle_pcb = idle_tasks[cpu_idx];
+	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
+	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
 }
 
 /*==============================================================================================*
