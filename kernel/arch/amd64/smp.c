@@ -2,9 +2,7 @@
 #include <stddef.h>
 
 #include <include/glo.h>
-#include <include/printk.h>
 #include <include/proto.h>
-#include <include/mm.h>
 #include <include/memblock.h>
 #include <include/task.h>
 
@@ -13,13 +11,35 @@
 #include "include/arch_glo.h"
 #include "include/mutex.h"
 
-cpudata_u **	percpu_data;
-
-void init_percpu_data(size_t cpu_idx);
+cpudata_u *	percpu_data;
 
 void preinit_smp(size_t lcpu_nr)
 {
-	percpu_data	= memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u *), sizeof(cpudata_u *));
+	percpu_data	= memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
+}
+
+static void init_percpu_data(size_t cpu_idx)
+{
+	// create percpu_data for current lcpu
+	per_cpudata_s * cpudata_p = &(percpu_data + cpu_idx)->cpudata;
+	cpudata_p->cpu_idx = cpu_idx;
+	cpudata_p->last_jiffies = 0;
+	cpudata_p->is_idle_flag = 1;
+	cpudata_p->scheduleing_flag = 0;
+	cpudata_p->curr_task =
+	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
+	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
+	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + CPUSTACK_SIZE;
+	list_hdr_init(&cpudata_p->ruuning_lhdr);
+
+	// fill architechture part
+	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
+	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
+	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
+	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
+	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
+	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
+	arch_cpuinfo->tss = tss_ptr_arr + cpu_idx;
 }
 
 void init_smp(size_t lcpu_nr)
@@ -38,48 +58,13 @@ void init_smp(size_t lcpu_nr)
 	}
 }
 
-void init_percpu_data(size_t cpu_idx)
-{
-	// create percpu_data for current lcpu
-	percpu_data[cpu_idx] = (cpudata_u *)kmalloc(sizeof(cpudata_u));
-	cpudata_u * cpudata_u_p = percpu_data[cpu_idx];
-	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
-	memset(cpudata_u_p, 0, sizeof(cpudata_u));
-	cpudata_p->cpu_idx = cpu_idx;
-	// fill architechture part
-	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
-	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
-	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
-	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
-	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
-	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
-	arch_cpuinfo->tss = tss_ptr_arr + cpu_idx;
-	// set percpu_stack to ist
-	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	// tss_p->ist7 = (reg_t)cpudata_u_p + CPUSTACK_SIZE;
-}
-
 void percpu_self_config(size_t cpu_idx)
 {
-	cpudata_u * cpudata_u_p = percpu_data[cpu_idx];
+	cpudata_u * cpudata_u_p = percpu_data + cpu_idx;
 	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
 	task_s *	current_task = get_current_task();
 	wrgsbase((reg_t)cpudata_u_p);
 	// tasks
-	cpudata_p->idle_task = current_task;
-	cpudata_p->curr_task = current_task;
-	cpudata_p->last_jiffies = 0;
-	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
-	cpudata_p->is_idle_flag = 1;
-	cpudata_p->scheduleing_flag = 0;
-	cpudata_p->cpustack_p = (reg_t)cpudata_u_p + CPUSTACK_SIZE;
-	list_hdr_init(&cpudata_p->ruuning_lhdr);
-
-	current_task->arch_struct.tss_rsp0 = (reg_t)current_task + TASK_KSTACK_SIZE;
-	current_task->vruntime = -1;
-	current_task->semaphore_count =
-	current_task->spin_count = 0;
-	current_task->state = PS_RUNNING;
 
 	refresh_arch_page();
 }

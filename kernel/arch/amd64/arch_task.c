@@ -49,7 +49,7 @@ void init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	idle_pcb->task.arch_struct.tss_rsp0 = tss_p->rsp0;
+	idle_pcb->task.arch_struct.tss_rsp0 = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
 }
 
 /*==============================================================================================*
@@ -519,7 +519,7 @@ int load_balance()
 	int min_idx = 0;
 	for (i = 0; i < kparam.nr_lcpu; i++)
 	{
-		per_cpudata_s * cpu_p = &percpu_data[i]->cpudata;
+		per_cpudata_s * cpu_p = &percpu_data[i].cpudata;
 		if (cpu_p->ruuning_lhdr.count < min_load)
 		{
 			min_load = cpu_p->ruuning_lhdr.count;
@@ -532,7 +532,7 @@ int load_balance()
 void wakeup_task(task_s * task)
 {
 	int target_cpu_idx = load_balance();
-	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx]->cpudata;
+	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
 	task->state = PS_RUNNING;
 	list_hdr_push(&target_cpu_p->ruuning_lhdr, &task->schedule_list);
 

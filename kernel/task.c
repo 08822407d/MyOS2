@@ -53,6 +53,9 @@ void init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	task0->time_slice = 2;
 	task0->vruntime = -1;
+	task0->semaphore_count =
+	task0->spin_count = 0;
+	task0->state = PS_RUNNING;
 	task0->flags = PF_KTHREAD;
 	task0->mm_struct = &task0_mm;
 
@@ -74,13 +77,6 @@ void init_task(size_t lcpu_nr)
 	task0_mm_p->start_bss		= (reg_t)&_bss;
 	task0_mm_p->end_bss			= (reg_t)&_bss;
 	task0_mm_p->start_stack		= 0;
-
-	// complete bsp's cpudata_p
-	cpudata_u * bsp_cpudata_u_p = percpu_data[0];
-	per_cpudata_s * bsp_cpudata_p = &(bsp_cpudata_u_p->cpudata);
-	bsp_cpudata_p->curr_task = task0;
-	bsp_cpudata_p->time_slice = task0->time_slice;
-	list_hdr_init(&bsp_cpudata_p->ruuning_lhdr);
 }
 
 void compute_consts()
