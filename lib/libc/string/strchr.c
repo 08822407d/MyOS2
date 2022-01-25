@@ -28,13 +28,11 @@ __FBSDID("$FreeBSD$");
 #include <string.h>
 #include <stddef.h>
 
-char *__strchrnul(const char *, int);
+// char *__strchrnul(const char *, int);
 
-char *
-strchr(const char *s, int c)
-{
-	char *r = __strchrnul(s, c);
-	return *(unsigned char *)r == (unsigned char)c ? r : NULL;
-}
-
-__weak_reference(strchr, index);
+// char *
+// strchr(const char *s, int c)
+// {
+// 	char *r = __strchrnul(s, c);
+// 	return *(unsigned char *)r == (unsigned char)c ? r : NULL;
+// }

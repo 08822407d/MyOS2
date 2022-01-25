@@ -18,7 +18,7 @@ SECTIONS
 {
 	. = _k_phys_start;
 	__k_unpaged__kern_unpaged_start = .;
-	unpaged_text :
+	.unpaged_text :
 	{
 		*/head.S.o(.text);
 	}

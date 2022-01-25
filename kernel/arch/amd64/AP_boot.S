@@ -110,6 +110,7 @@ l1:
 	cmpq	%r9,		%r8
 	jne		l1
 
+ENTRY(AP_DEBUG)
 	// get idle_task_PCB for current AP and set rsp to task's kstack
 	movabsq	idle_tasks,	%rax
 	movq	(%rax, %rbx, 8),	%rax
