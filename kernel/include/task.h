@@ -107,7 +107,7 @@
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()
 
-	void preinit_task(size_t lcpu_nr);
+	void prepare_init_task(size_t lcpu_nr);
 	void	init_task(size_t lcpu_nr);
 	void	preinit_arch_task(void);
 	void init_arch_task(size_t cpu_idx);

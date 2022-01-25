@@ -180,11 +180,11 @@
 	
 
 	/* pre_init.c */
-	void pre_init(void);
+	void pre_init_sytem(void);
 	/* protect.c */
 	phys_addr_t virt2phys(virt_addr_t);
 	virt_addr_t phys2virt(phys_addr_t);
-	void preinit_arch_data(size_t lcpu_nr);
+	void prepare_init_arch_data(size_t lcpu_nr);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
@@ -304,7 +304,7 @@
 
 	/* smp.c */
 	void init_cpu(void);
-	void preinit_smp(size_t lcpu_nr);
+	void prepare_init_smp(size_t lcpu_nr);
 	void init_smp(size_t lcpu_nr);
 	void start_SMP(uint64_t apic_id);
 	void startup_smp(void);

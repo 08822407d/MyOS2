@@ -13,7 +13,7 @@
 
 cpudata_u *	percpu_data;
 
-void preinit_smp(size_t lcpu_nr)
+void prepare_init_smp(size_t lcpu_nr)
 {
 	percpu_data	= memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
 }

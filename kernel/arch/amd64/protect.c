@@ -293,7 +293,7 @@ void reload_arch_data(size_t cpu_idx)
 	kparam.arch_init_flags.reload_arch_data = 1;
 }
 
-void preinit_arch_data(size_t lcpu_nr)
+void prepare_init_arch_data(size_t lcpu_nr)
 {
 	tss_ptr_arr = memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
 	for (int i = 0; i < lcpu_nr; i++)

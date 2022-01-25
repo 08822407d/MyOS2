@@ -37,7 +37,7 @@
 	void cstart(void);
 
 	/* memory.c */
-	void preinit_mm(void);
+	void prepare_init_mm(void);
 	void init_mm(void);
 	Page_s * alloc_pages(enum zone_type ,unsigned int order);
 	void free_pages(Page_s * page, unsigned int order);

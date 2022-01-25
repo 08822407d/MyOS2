@@ -17,18 +17,18 @@ void kmain()
 {
 	size_t cpu_idx = 0;
 
-	pre_init();
+	pre_init_sytem();
 
-	preinit_arch_data(kparam.nr_lcpu);
-	preinit_task(kparam.nr_lcpu);
-	preinit_smp(kparam.nr_lcpu);
+	prepare_init_arch_data(kparam.nr_lcpu);
+	prepare_init_task(kparam.nr_lcpu);
+	prepare_init_smp(kparam.nr_lcpu);
 
 	init_arch(cpu_idx);
 	init_arch_page();
 
 	init_video();
 
-	preinit_mm();
+	prepare_init_mm();
 	init_mm();
 
 	init_task(kparam.nr_lcpu);
@@ -64,8 +64,8 @@ void idle(size_t cpu_idx)
 
 	if (cpu_idx == 0)
 	{
-		kernel_thread(module_test, 0, 0);
-		// kernel_thread(init, 0, 0);
+		// kernel_thread(module_test, 0, 0);
+		kernel_thread(init, 0, 0);
 	}
 
 	while (1)
