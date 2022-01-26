@@ -5,6 +5,7 @@
 #include <stddef.h>
 #include <errno.h>
 
+#include <include/glo.h>
 #include <include/memblock.h>
 #include <include/kutils.h>
 #include <include/minmax.h>
@@ -279,11 +280,21 @@ static int memblock_add_range(	memblock_type_s *type,
  */
 int memblock_add(phys_addr_t base, size_t size)
 {
+	while (!kparam.init_flags.memblock)
+	{
+		// only can be used while buddy-system not setup
+	}
+
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
 int memblock_reserve(phys_addr_t base, size_t size)
 {
+	while (!kparam.init_flags.memblock)
+	{
+		// only can be used while buddy-system not setup
+	}
+
 	return memblock_add_range(&memblock.reserved, base, size, 0);
 }
 
@@ -438,6 +449,11 @@ phys_addr_t memblock_alloc_range(size_t size, size_t align,
 static void * memblock_alloc_internal(size_t size, size_t align,
 					    phys_addr_t min_addr, phys_addr_t max_addr)
 {
+	while (!kparam.init_flags.memblock)
+	{
+		// only can be used while buddy-system not setup
+	}
+	
 	phys_addr_t alloc;
 
 	/*
@@ -607,4 +623,6 @@ void memblock_free_all(void)
 {
 	unsigned long pages;
 	pages = free_low_memory_core_early();
+	
+	kparam.init_flags.memblock = 0;
 }

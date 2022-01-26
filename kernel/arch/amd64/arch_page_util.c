@@ -1,5 +1,4 @@
 #include <sys/_null.h>
-#include <sys/param.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -28,12 +27,17 @@ static void init_fixed_kernel_pgmap();
 
 void init_arch_page()
 {
+	while (!kparam.arch_init_flags.arch_data)
+	{
+		// before init x86 page, GDT IDT TSS must be initiated
+	}
+	
 	init_fixed_kernel_pgmap();
 
 	kernel_cr3 = virt2phys(KERN_PML4);
 	pg_load_cr3((reg_t)kernel_cr3);
 	// set init flag
-	kparam.arch_init_flags.reload_bsp_arch_page = 1;
+	kparam.arch_init_flags.arch_page = 1;
 }
 
 static void init_fixed_kernel_pgmap()

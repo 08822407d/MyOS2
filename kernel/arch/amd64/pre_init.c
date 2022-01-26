@@ -1,12 +1,6 @@
-#include <sys/param.h>
-
 #include <sys/types.h>
 #include <string.h>
 
-#include <include/glo.h>
-#include <include/ktypes.h>
-
-#include "include/arch_glo.h"
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 
@@ -30,7 +24,7 @@ kinfo_s			kparam;
 cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
-uint64_t	apic_id[CONFIG_MAX_CPUS];
+uint64_t		apic_id[CONFIG_MAX_CPUS];
 struct cputopo	smp_topos[CONFIG_MAX_CPUS];
 
 
@@ -52,7 +46,7 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
 	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
 	// set init flag
-	kparam.arch_init_flags.frame_buffer_info = 1;
+	kparam.arch_init_flags.framebuffer = 1;
 }
 
 static void init_memblock(mb_memmap_s * e820_info)
@@ -60,6 +54,7 @@ static void init_memblock(mb_memmap_s * e820_info)
 	kparam.kernel_phy_base	= &_k_phys_start;
 	kparam.kernel_vir_base	= &_k_virt_start;
 	kparam.kernel_vir_end	= &_end;
+	kparam.init_flags.memblock = 1;
 
 	int i;
 	mb_memmap_s * mb_mmap_ent;
@@ -81,6 +76,8 @@ static void init_memblock(mb_memmap_s * e820_info)
 	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
 					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
 					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
+
+	kparam.init_flags.memblock = 1;
 }
 
 static void get_SMP_info(efi_smpinfo_s * smp_info)

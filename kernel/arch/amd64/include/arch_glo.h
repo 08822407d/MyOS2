@@ -6,6 +6,7 @@
 #include "archconst.h"
 #include "archtypes.h"
 #include "arch_proto.h"
+#include "arch_config.h"
 
 	extern uint64_t	apic_id[CONFIG_MAX_CPUS];
 	extern struct cputopo	smp_topos[CONFIG_MAX_CPUS];

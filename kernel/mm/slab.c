@@ -1,5 +1,4 @@
 #include <sys/cdefs.h>
-#include <sys/param.h>
 
 #include <string.h>
 #include <stddef.h>
@@ -51,7 +50,7 @@ void init_slab()
 {
 	#ifdef DEBUG
 		// make sure have init page management
-		while (!kparam.init_flags.page_mm);
+		while (!kparam.init_flags.buddy);
 	#endif
 
 	init_recurs_lock(&slab_alloc_lock);

@@ -1,5 +1,3 @@
-#include <sys/param.h>
-
 #include <sys/types.h>
 #include <string.h>
 
@@ -19,7 +17,7 @@ extern position_t Pos;
 void init_video()
 {	
 	// make sure have get framebuffer infomation
-	while (!kparam.arch_init_flags.frame_buffer_info);
+	while (!kparam.arch_init_flags.framebuffer);
 
 	Pos.FB_addr = framebuffer.FB_virbase;
 	Pos.FB_length = framebuffer.FB_size;

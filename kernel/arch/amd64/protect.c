@@ -1,5 +1,4 @@
 #include <sys/_null.h>
-#include <sys/param.h>
 
 #include <string.h>
 #include <sys/types.h>
@@ -276,8 +275,6 @@ static void init_arch_data(size_t cpu_idx)
 	// initate global architechture data
 	init_gdt();
 	init_idt();
-	// set init flag
-	kparam.arch_init_flags.init_arch_data = 1;
 }
 
 void reload_arch_data(size_t cpu_idx)
@@ -290,7 +287,7 @@ void reload_arch_data(size_t cpu_idx)
 	load_tss(cpu_idx);
 
 	// set init flag
-	kparam.arch_init_flags.reload_arch_data = 1;
+	kparam.arch_init_flags.arch_data = 1;
 }
 
 void prepare_init_arch_data(size_t lcpu_nr)

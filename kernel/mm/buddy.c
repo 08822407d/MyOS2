@@ -1,5 +1,4 @@
 #include <sys/cdefs.h>
-#include <sys/param.h>
 #include <sys/types.h>
 
 #include <string.h>
@@ -369,7 +368,7 @@ void init_page()
 	memblock_free_all();
 
 	// set init flag
-	kparam.init_flags.page_mm = 1;
+	kparam.init_flags.buddy = 1;
 }
 
 void memblock_free_pages(Page_s * page, unsigned long pfn,

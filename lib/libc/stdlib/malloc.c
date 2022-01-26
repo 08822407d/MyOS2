@@ -1,9 +1,9 @@
+#include <arch/amd64/include/arch_config.h>
+
 #include <stdlib.h>
 #include <unistd.h>
 #include <const.h>
 #include <stdbool.h>
-
-#include <sys/param.h>
 
 #include "_malloc.h"
 

@@ -171,11 +171,9 @@
 
 	typedef struct
 	{
-		int		frame_buffer_info;
-
-		int		init_arch_data;
-		int		reload_arch_data;
-		int		reload_bsp_arch_page;
+		int		framebuffer;
+		int		arch_data;
+		int		arch_page;
 	} arch_init_flags_s;
 	
 
