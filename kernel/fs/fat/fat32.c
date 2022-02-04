@@ -27,7 +27,7 @@
 
 uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 {
-	unsigned int buf[128];
+	uint32_t buf[128];
 	memset(buf, 0, 512);
 	IDE_device_operation.transfer(ATA_READ_CMD, fsbi->FAT1_firstsector + (fat_entry >> 7),
 									1, (unsigned char *)buf);
@@ -36,7 +36,7 @@ uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 
 uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value)
 {
-	unsigned int buf[128];
+	uint32_t buf[128];
 	int i;
 
 	memset(buf,0,512);
