@@ -18,6 +18,7 @@ PCB_u **		idle_tasks;
 // in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 mm_s			task0_mm;
+taskfs_s		task0_fs;
 
 size_t			cpustack_off;
 
@@ -58,6 +59,7 @@ void init_task(size_t lcpu_nr)
 	task0->state = PS_RUNNING;
 	task0->flags = PF_KTHREAD;
 	task0->mm_struct = &task0_mm;
+	task0->task_fs = &task0_fs;
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{
@@ -66,7 +68,7 @@ void init_task(size_t lcpu_nr)
 	}
 
 	// set arch struct in mm_s
-	mm_s * task0_mm_p = task0_PCB.task.mm_struct;
+	mm_s * task0_mm_p = task0->mm_struct;
 	task0_mm_p->cr3	= (reg_t)virt2phys(KERN_PML4);
 	task0_mm_p->start_code		= (reg_t)&_text;
 	task0_mm_p->end_code		= (reg_t)&_etext;

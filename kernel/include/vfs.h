@@ -94,6 +94,25 @@
 		void * 			private_data;
 	} file_s;
 
+	typedef struct vfsmount {
+		dirent_s *		mnt_root;	/* root of the mounted tree */
+		superblock_s *	mnt_sb;	/* pointer to superblock */
+		int				mnt_flags;
+	} vfsmount_s;
+
+	typedef struct path {
+		vfsmount_s *	mnt;
+		dirent_s *		dentry;
+	} path_s;
+
+	typedef struct taskfs {
+		int users;
+		int umask;
+		int in_exec;
+		path_s root, pwd;
+	} taskfs_s;
+
+
 	typedef struct sb_ops
 	{
 		void	(*write_superblock)(superblock_s * sb);

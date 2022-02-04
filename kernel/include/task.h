@@ -45,6 +45,8 @@
 		file_s *		fps[MAX_FILE_NR];
 		mm_s *			mm_struct;
 
+		taskfs_s *		task_fs;
+
 		volatile long	state;
 		unsigned long	flags;
 

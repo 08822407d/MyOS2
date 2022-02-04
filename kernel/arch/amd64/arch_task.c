@@ -303,6 +303,7 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
+	child_task->task_fs = parent_task->task_fs;
 	list_hdr_append(&parent_task->child_lhdr, &child_task->child_list);
 
 	ret_val = -ENOMEM;
@@ -470,6 +471,10 @@ unsigned long init(unsigned long arg)
 	reg_t ctx_rsp =
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
+	// set cwd and root-dir of task1
+	taskfs_s * taskfs_p = curr->task_fs;
+	taskfs_p->pwd.dentry = root_sb->root;
+	taskfs_p->root.dentry = root_sb->root;
 
 	// open the 3 std streams
 	while (curr->fps[0] != NULL ||
