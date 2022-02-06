@@ -13,9 +13,19 @@ static struct file *path_openat(struct nameidata *nd,
 //						||
 //						\/
 //	路径解析核心， fs/namei.c
+//	大循环里分解跟踪路径的每一段
 static int link_path_walk(const char *name, struct nameidata *nd);
 //						||
 //						\/
 static const char *walk_component(struct nameidata *nd, int flags);
 //						||
 //						\/
+// {
+	//	在 nd->path 里查询 nd->last 子目录
+	static struct dentry *lookup_fast(struct nameidata *nd,
+					struct inode **inode, unsigned *seqp);
+	//					---------->
+	//	进入子目录，设置 nd->path 为子目录
+	static const char *step_into(struct nameidata *nd, int flags,
+				struct dentry *dentry, struct inode *inode, unsigned seq);
+// }
