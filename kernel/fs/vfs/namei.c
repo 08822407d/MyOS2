@@ -69,8 +69,7 @@ static const char *step_into(struct nameidata *nd, int flags,
 }
 
 static struct dentry *lookup_fast(struct nameidata *nd,
-				  struct inode **inode,
-			          unsigned *seqp)
+				  struct inode **inode, unsigned *seqp)
 {
 	struct dentry *dentry, *parent = nd->path.dentry;
 	int status = 1;
@@ -131,10 +130,25 @@ static struct dentry *lookup_fast(struct nameidata *nd,
 	return dentry;
 }
 
-// only handle dotdot, directly return when it is a single dot
-static const char *handle_dots(struct nameidata *nd, int type)
+static const char *walk_component(struct nameidata *nd, int flags)
 {
-	if (type == LAST_DOTDOT) {
+	struct dentry *dentry;
+	struct inode *inode;
+	unsigned seq;
+	/*
+	 * "." and ".." are special - ".." especially so because it has
+	 * to be able to know about the current root directory and
+	 * parent relationships.
+	 */
+	if (nd->last_type == LAST_DOT)
+	{
+		return NULL;
+	}
+	else if (nd->last_type == LAST_DOTDOT)
+	{
+//						||
+//						\/
+//	static const char *handle_dots(struct nameidata *nd, int type)
 		const char *error = NULL;
 		struct dentry *parent;
 		struct inode *inode;
@@ -167,28 +181,12 @@ static const char *handle_dots(struct nameidata *nd, int type)
 			 * above nd->root (and so userspace should retry or use
 			 * some fallback).
 			 */
-			smp_rmb();
-			if (unlikely(__read_seqcount_retry(&mount_lock.seqcount, nd->m_seq)))
-				return ERR_PTR(-EAGAIN);
-			if (unlikely(__read_seqcount_retry(&rename_lock.seqcount, nd->r_seq)))
-				return ERR_PTR(-EAGAIN);
+			// smp_rmb();
+			// if (unlikely(__read_seqcount_retry(&mount_lock.seqcount, nd->m_seq)))
+			// 	return ERR_PTR(-EAGAIN);
+			// if (unlikely(__read_seqcount_retry(&rename_lock.seqcount, nd->r_seq)))
+			// 	return ERR_PTR(-EAGAIN);
 		}
-	}
-	return NULL;
-}
-
-static const char *walk_component(struct nameidata *nd, int flags)
-{
-	struct dentry *dentry;
-	struct inode *inode;
-	unsigned seq;
-	/*
-	 * "." and ".." are special - ".." especially so because it has
-	 * to be able to know about the current root directory and
-	 * parent relationships.
-	 */
-	if (nd->last_type != LAST_NORM) {
-		return handle_dots(nd, nd->last_type);
 	}
 	dentry = lookup_fast(nd, &inode, &seq);
 
@@ -250,13 +248,7 @@ static int link_path_walk(const char *name, nameidata_s * nd)
 		do {
 			name++;
 		} while (*name == '/');
-		if (!*name) {
 OK:
-			/* last component of nested symlink */
-			link = walk_component(nd, 0);
-		} else {
-			/* not the last component */
-			link = walk_component(nd, WALK_MORE);
-		}
+		link = walk_component(nd, 0);
 	}
 }
