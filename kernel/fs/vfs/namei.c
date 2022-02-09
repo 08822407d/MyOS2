@@ -35,106 +35,62 @@ enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
  * so we keep a cache of "no, this doesn't need follow_link"
  * for the common case.
  */
-static const char *step_into(struct nameidata *nd, int flags,
-		     struct dentry *dentry, struct inode *inode, unsigned seq)
+static const char *step_into(nameidata_s *nd, int flags, dirent_s * dentry, inode_s *inode)
 {
-	struct path path;
-	int err = handle_mounts(nd, dentry, &path, &inode, &seq);
+	path_s path;
+	int err = handle_mounts(nd, dentry, &path, &inode);
 
 	if (err < 0)
 		return ERR_PTR(err);
-	if (likely(!d_is_symlink(path.dentry)) ||
-	   ((flags & WALK_TRAILING) && !(nd->flags & LOOKUP_FOLLOW)) ||
-	   (flags & WALK_NOFOLLOW)) {
-		/* not a symlink or should not follow */
-		if (!(nd->flags & LOOKUP_RCU)) {
-			dput(nd->path.dentry);
-			if (nd->path.mnt != path.mnt)
-				mntput(nd->path.mnt);
-		}
-		nd->path = path;
-		nd->inode = inode;
-		nd->seq = seq;
-		return NULL;
+
+	/* not a symlink or should not follow */
+	if (!(nd->flags & LOOKUP_RCU)) {
+		dput(nd->path.dentry);
+		if (nd->path.mnt != path.mnt)
+			mntput(nd->path.mnt);
 	}
-	if (nd->flags & LOOKUP_RCU) {
-		/* make sure that d_is_symlink above matches inode */
-		if (read_seqcount_retry(&path.dentry->d_seq, seq))
-			return ERR_PTR(-ECHILD);
-	} else {
-		if (path.mnt == nd->path.mnt)
-			mntget(path.mnt);
-	}
-	return pick_link(nd, &path, inode, seq, flags);
+	nd->path = path;
+	nd->inode = inode;
+
+	return NULL;
 }
 
-static struct dentry *lookup_fast(struct nameidata *nd,
-				  struct inode **inode, unsigned *seqp)
+// search nd->last_name through dirent cache
+static dirent_s * lookup_fast(nameidata_s * nd, inode_s ** inode)
 {
-	struct dentry *dentry, *parent = nd->path.dentry;
-	int status = 1;
-
-	/*
-	 * Rename seqlock is not required here because in the off chance
-	 * of a false negative due to a concurrent rename, the caller is
-	 * going to fall back to non-racy lookup.
-	 */
-	if (nd->flags & LOOKUP_RCU) {
-		unsigned seq;
-		dentry = __d_lookup_rcu(parent, &nd->last, &seq);
-		if (unlikely(!dentry)) {
-			if (!try_to_unlazy(nd))
-				return ERR_PTR(-ECHILD);
-			return NULL;
+	dirent_s *	dentry = NULL,
+			 *	parent = nd->path.dentry;
+	
+		dirent_s * dir_p;
+		List_s * dir_lp;
+		for (dir_lp = parent->childdir_lhdr.header.next;
+				dir_lp != &parent->childdir_lhdr.header;
+				dir_lp = dir_lp->next)
+		{
+			if ((dir_p = dir_lp->owner_p) != NULL &&
+				!strncmp(nd->last_name, dir_p->name, nd->last_len))
+			{
+				dentry = dir_p;
+				break;
+			}
 		}
 
-		/*
-		 * This sequence count validates that the inode matches
-		 * the dentry name information from lookup.
-		 */
-		*inode = d_backing_inode(dentry);
-		if (unlikely(read_seqcount_retry(&dentry->d_seq, seq)))
-			return ERR_PTR(-ECHILD);
-
-		/*
-		 * This sequence count validates that the parent had no
-		 * changes while we did the lookup of the dentry above.
-		 *
-		 * The memory barrier in read_seqcount_begin of child is
-		 *  enough, we can use __read_seqcount_retry here.
-		 */
-		if (unlikely(__read_seqcount_retry(&parent->d_seq, nd->seq)))
-			return ERR_PTR(-ECHILD);
-
-		*seqp = seq;
-		status = d_revalidate(dentry, nd->flags);
-		if (likely(status > 0))
-			return dentry;
-		if (!try_to_unlazy_next(nd, dentry, seq))
-			return ERR_PTR(-ECHILD);
-		if (status == -ECHILD)
-			/* we'd been told to redo it in non-rcu mode */
-			status = d_revalidate(dentry, nd->flags);
-	} else {
-		dentry = __d_lookup(parent, &nd->last);
-		if (unlikely(!dentry))
-			return NULL;
-		status = d_revalidate(dentry, nd->flags);
-	}
-	if (unlikely(status <= 0)) {
-		if (!status)
-			d_invalidate(dentry);
-		dput(dentry);
-		return ERR_PTR(status);
-	}
 	return dentry;
 }
 
-static const char *walk_component(struct nameidata *nd, int flags)
+// search nd->last_name on disk
+static dirent_s * lookup_slow(nameidata_s * nd, inode_s ** inode)
 {
-	struct dentry *dentry;
-	struct inode *inode;
-	unsigned seq;
+	dirent_s *	dentry = NULL,
+			 *	parent = nd->path.dentry;
+
+	return dentry;
+}
+
+static const char *walk_component(nameidata_s *nd, int flags)
+{
+	dirent_s * dentry;
+	inode_s * inode;
 	/*
 	 * "." and ".." are special - ".." especially so because it has
 	 * to be able to know about the current root directory and
@@ -146,51 +102,36 @@ static const char *walk_component(struct nameidata *nd, int flags)
 	}
 	else if (nd->last_type == LAST_DOTDOT)
 	{
-//						||
-//						\/
-//	static const char *handle_dots(struct nameidata *nd, int type)
+	//						||
+	//						\/
+	//	static const char *handle_dots(struct nameidata *nd, int type)
 		const char *error = NULL;
-		struct dentry *parent;
-		struct inode *inode;
-		unsigned seq;
+		dirent_s * parent;
 
 		if (!nd->root.mnt) {
 			error = ERR_PTR(set_root(nd));
 			if (error)
 				return error;
 		}
-		if (nd->flags & LOOKUP_RCU)
-			parent = follow_dotdot_rcu(nd, &inode, &seq);
-		else
-			parent = follow_dotdot(nd, &inode, &seq);
+
+		parent = follow_dotdot(nd, &inode, &seq);
 		if (IS_ERR(parent))
 			return ERR_CAST(parent);
 		if (unlikely(!parent))
 			error = step_into(nd, WALK_NOFOLLOW,
-					 nd->path.dentry, nd->inode, nd->seq);
+					 nd->path.dentry, nd->inode);
 		else
 			error = step_into(nd, WALK_NOFOLLOW,
-					 parent, inode, seq);
+					 parent, inode);
 		if (unlikely(error))
 			return error;
-
-		if (unlikely(nd->flags & LOOKUP_IS_SCOPED)) {
-			/*
-			 * If there was a racing rename or mount along our
-			 * path, then we can't be sure that ".." hasn't jumped
-			 * above nd->root (and so userspace should retry or use
-			 * some fallback).
-			 */
-			// smp_rmb();
-			// if (unlikely(__read_seqcount_retry(&mount_lock.seqcount, nd->m_seq)))
-			// 	return ERR_PTR(-EAGAIN);
-			// if (unlikely(__read_seqcount_retry(&rename_lock.seqcount, nd->r_seq)))
-			// 	return ERR_PTR(-EAGAIN);
-		}
 	}
-	dentry = lookup_fast(nd, &inode, &seq);
 
-	return step_into(nd, flags, dentry, inode, seq);
+	dentry = lookup_fast(nd, &inode);
+	if (dentry == NULL)
+		dentry = lookup_slow(nd, &inode);
+
+	return step_into(nd, flags, dentry, inode);
 }
 
 /*
@@ -215,14 +156,13 @@ static int link_path_walk(const char *name, nameidata_s * nd)
 
 	/* At this point we know we have a real path component. */
 	for(;;) {
-		const char *link;
 		int type;
 
 		type = LAST_NORM;
+		// compute length of current dirname
 		int i = 0;
 		while (name[i] != 0 || name[i] != '/')
 			i++;
-		nd->last_len = i++;
 		// detect . and .. dir
 		if (name[0] == '.') switch (nd->last_len) {
 			case 2:
@@ -249,6 +189,6 @@ static int link_path_walk(const char *name, nameidata_s * nd)
 			name++;
 		} while (*name == '/');
 OK:
-		link = walk_component(nd, 0);
+		walk_component(nd, 0);
 	}
 }
