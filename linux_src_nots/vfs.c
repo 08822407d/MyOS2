@@ -22,8 +22,20 @@ static const char *walk_component(struct nameidata *nd, int flags);
 //						\/
 // {
 	//	在 nd->path 里查询 nd->last 子目录
+	//	lookup_fast()核心是在rcu和dcache里查找
 	static struct dentry *lookup_fast(struct nameidata *nd,
 					struct inode **inode, unsigned *seqp);
+	//						||
+	//						\/
+	//	fs/dcache.c
+	struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name);
+	//	lookup_fast()查找失败则需要在设备上查找
+	static struct dentry *lookup_slow(const struct qstr *name,
+				  struct dentry *dir, unsigned int flags)
+	//						||
+	//						\/
+	static struct dentry *__lookup_slow(const struct qstr *name,
+				    struct dentry *dir, unsigned int flags)
 	//					---------->
 	//	进入子目录，设置 nd->path 为子目录
 	static const char *step_into(struct nameidata *nd, int flags,
