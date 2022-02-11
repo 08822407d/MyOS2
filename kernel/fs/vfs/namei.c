@@ -7,6 +7,10 @@
 #include <include/namei.h>
 #include <include/dcache.h>
 
+
+/*==============================================================================================*
+ *								private fuctions for path walk									*
+ *==============================================================================================*/
 /*
  * Do we need to follow links? We _really_ want to be able
  * to do this check without having to look at inode->i_op,
@@ -19,16 +23,8 @@
 static const char * step_into(nameidata_s * nd, dirent_s * dentry)
 {
 	path_s path;
-	// int err = handle_mounts(nd, dentry, &path, &inode);
 
-	// /* not a symlink or should not follow */
-	// if (!(nd->flags & LOOKUP_RCU)) {
-	// 	dput(nd->path.dentry);
-	// 	if (nd->path.mnt != path.mnt)
-	// 		mntput(nd->path.mnt);
-	// }
-	// nd->path = path;
-	// nd->inode = inode;
+	nd->path.dentry = dentry;
 
 	return NULL;
 }
@@ -66,32 +62,30 @@ static dirent_s * __lookup_slow(nameidata_s * nd)
 }
 
 // Linux function proto:
+// static struct dentry *follow_dotdot(struct nameidata *nd,
+//				 struct inode **inodep, unsigned *seqp)
+static dirent_s * follow_dotdot(nameidata_s * nd)
+{
+	dirent_s * parent;
+
+	parent = nd->path.dentry->parent;
+
+	return parent;
+}
+
+// Linux function proto:
 // static const char *handle_dots(struct nameidata *nd, int type)
 static const char * handle_dots(nameidata_s *nd)
 {
+	char * ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
 	{
-		// const char *error = NULL;
-		// dirent_s * parent;
+		dirent_s * parent;
 
-		// if (!nd->root.mnt) {
-		// 	error = ERR_PTR(set_root(nd));
-		// 	if (error)
-		// 		return error;
-		// }
-
-		// parent = follow_dotdot(nd, &inode, &seq);
-		// if (IS_ERR(parent))
-		// 	return ERR_CAST(parent);
-		// if (unlikely(!parent))
-		// 	error = step_into(nd, WALK_NOFOLLOW,
-		// 			 nd->path.dentry, nd->inode);
-		// else
-		// 	error = step_into(nd, WALK_NOFOLLOW,
-		// 			 parent, inode);
-		// if (unlikely(error))
-		// 	return error;
+		parent = follow_dotdot(nd);
+		ret_val = step_into(nd, parent);
 	}
+	return ret_val;
 }
 
 // Linux function proto:
@@ -144,7 +138,6 @@ static const char * walk_component(nameidata_s * nd)
 static int link_path_walk(const char * name, nameidata_s * nd)
 {
 	nd->last_type = LAST_ROOT;
-	nd->flags |= LOOKUP_PARENT;
 
 	while (*name=='/')
 		name++;
@@ -187,4 +180,33 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 
 		walk_component(nd);
 	}
+}
+
+/*==============================================================================================*
+ *								private fuctions for path walk									*
+ *==============================================================================================*/
+// Linux function proto:
+// struct file *do_filp_open(int dfd, struct filename *pathname,
+//			const struct open_flags *op)
+file_s * do_filp_open(int dfd, const char * pathname)
+{
+	nameidata_s nd;
+	file_s * filp;
+	int error;
+
+	set_nameidata(&nd, dfd, pathname, NULL);
+
+	// Linux call stack:
+	// static struct file *path_openat(struct nameidata *nd,
+	//		const struct open_flags *op, unsigned flags)
+	// {
+	const char *s = path_init(nd);
+	while (!(error = link_path_walk(s, &nd)) &&
+			(s = open_last_lookups(nd, filp)) != NULL)
+		;
+	if (!error)
+		error = do_open(nd, filp);
+	// }
+
+	return filp;
 }
