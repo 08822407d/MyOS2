@@ -3,6 +3,11 @@
 #define _LINUX_NAMEI_H
 
 	enum { MAX_NESTED_LINKS = 8 };
+	enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
+
+	#define ND_ROOT_PRESET 1
+	#define ND_ROOT_GRABBED 2
+	#define ND_JUMPED 4
 
 	#define MAXSYMLINKS 40
 
@@ -40,5 +45,23 @@
 	#define LOOKUP_CACHED		0x200000 /* Only do cached lookup */
 	/* LOOKUP_* flags which do scope-related checks based on the dirfd. */
 	#define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)	
+
+	typedef struct nameidata {
+		path_s		path;
+		path_s		root;
+		inode_s	*	inode; /* path.dentry.d_inode */
+
+		size_t		last_len;
+		const char *last_name;
+		int			last_type;
+		unsigned	flags, state;
+		unsigned	depth;
+		int			total_link_count;
+
+		// struct filename	*name;
+		// struct nameidata *saved;
+		unsigned	root_seq;
+		int			dfd;
+	} nameidata_s;
 
 #endif /* _LINUX_NAMEI_H */
