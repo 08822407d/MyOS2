@@ -41,6 +41,7 @@ static dirent_s * __lookup_slow(nameidata_s * nd)
 	dirent_s *	dentry = NULL,
 			 *	parent = nd->path.dentry;
 	
+	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
 	//			const struct qstr *name, wait_queue_head_t *wq)
 	//					||
@@ -93,6 +94,8 @@ static const char * handle_dots(nameidata_s *nd)
 	}
 }
 
+// Linux function proto:
+// static const char *walk_component(struct nameidata *nd, int flags)
 static const char * walk_component(nameidata_s * nd)
 {
 	dirent_s * dentry;
@@ -108,6 +111,7 @@ static const char * walk_component(nameidata_s * nd)
 		return handle_dots(nd);
 	}
 
+	// linux call stack :
 	//	static struct dentry *lookup_fast(struct nameidata *nd,
 	//				  struct inode **inode, unsigned *seqp)
 	//					||
@@ -116,6 +120,7 @@ static const char * walk_component(nameidata_s * nd)
 
 	if (dentry == NULL)
 	{
+		// linux call stack :
 		//	static struct dentry *lookup_slow(const struct qstr *name,
 		//			  struct dentry *dir, unsigned int flags)
 		//					||

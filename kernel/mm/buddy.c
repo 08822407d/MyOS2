@@ -259,6 +259,9 @@ static inline void __free_one_page(Page_s *page, unsigned long pfn,
 // struct page *alloc_pages(gfp_t gfp, unsigned order)
 Page_s * alloc_pages(unsigned int gfp, unsigned int order)
 {
+	Page_s * page;
+	zone_s * zone = &pg_list.node_zones[gfp];
+
 	// linux call stack :
 	// struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
 	//					nodemask_t *nodemask)
@@ -276,8 +279,6 @@ Page_s * alloc_pages(unsigned int gfp, unsigned int order)
 	// static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
 	//					unsigned int order, int migratetype)
 
-	Page_s * page;
-	zone_s * zone = &pg_list.node_zones[gfp];
 	page = __rmqueue_smallest(zone, order);
 	return page;
 }
@@ -306,6 +307,9 @@ Page_s * alloc_pages(unsigned int gfp, unsigned int order)
 // void free_pages(unsigned long addr, unsigned int order)
 void free_pages(Page_s * page, unsigned int order)
 {
+	unsigned long pfn = page_to_pfn(page);
+	zone_s * zone = page_zone(page);
+
 	// linux call stack :
 	// void __free_pages(struct page *page, unsigned int order)
 	//								||
@@ -320,8 +324,6 @@ void free_pages(Page_s * page, unsigned int order)
 	//					struct zone *zone, unsigned int order, int migratetype,
 	//					fpi_t fpi_flags)
 
-	unsigned long pfn = page_to_pfn(page);
-	zone_s * zone = page_zone(page);
 	__free_one_page(page, pfn, zone, order);
 }
 
