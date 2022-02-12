@@ -98,7 +98,7 @@
 		reg_t	rcx;
 		reg_t	rbx;
 		reg_t	rax;
-		reg_t	restore_retp;
+		virt_addr_t		restore_retp;
 		reg_t	vec_nr;
 		reg_t	err_code;
 		reg_t	rip;

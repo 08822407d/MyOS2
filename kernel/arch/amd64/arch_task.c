@@ -262,12 +262,12 @@ unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	if(child_task->flags & PF_KTHREAD)
 	{
 		child_task->arch_struct.k_rip = (unsigned long)entp_kernel_thread;
-		child_context->restore_retp = (reg_t)ra_kthd_retp;
+		child_context->restore_retp = ra_kthd_retp;
 	}
 	else
 	{
 		child_task->arch_struct.k_rip = (unsigned long)dofork_child_entp;
-		child_context->restore_retp = (reg_t)ra_sysex_retp;
+		child_context->restore_retp = ra_sysex_retp;
 	}
 
 	return 0;
@@ -456,10 +456,22 @@ int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsign
 /*==============================================================================================*
  *										task2 -- init()											*
  *==============================================================================================*/
+static void set_init_taskfs()
+{
+	task_s * curr = curr_tsk;
+	// set cwd and root-dir of task1
+	taskfs_s * taskfs_p = curr->task_fs;
+	taskfs_p->pwd.dentry = root_sb->root;
+	taskfs_p->root.dentry = root_sb->root;
+
+	memcpy(task0_PCB.task.task_fs, taskfs_p, sizeof(taskfs_s));
+}
+
 unsigned long init(unsigned long arg)
 {
 	color_printk(GREEN, BLACK, "Enter task init.\n");
 	init_vfs();
+	set_init_taskfs();
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();
 	color_printk(GREEN, BLACK, "Device files created.\n");
@@ -468,17 +480,13 @@ unsigned long init(unsigned long arg)
 	task_s * curr = curr_tsk;
 	task_init = curr;
 	stack_frame_s * curr_sfp = get_stackframe(curr);
-	curr_sfp->restore_retp = (reg_t)ra_sysex_retp;
+	curr_sfp->restore_retp = ra_sysex_retp;
 
 	reg_t ctx_rip =
 	curr->arch_struct.k_rip = (reg_t)sysexit_entp;
 	reg_t ctx_rsp =
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
-	// set cwd and root-dir of task1
-	taskfs_s * taskfs_p = curr->task_fs;
-	taskfs_p->pwd.dentry = root_sb->root;
-	taskfs_p->root.dentry = root_sb->root;
 
 	// open the 3 std streams
 	while (curr->fps[0] != NULL ||
@@ -488,7 +496,7 @@ unsigned long init(unsigned long arg)
 	kopen("/dev/tty0", O_WRONLY);
 	kopen("/dev/tty0", O_WRONLY);
 
-	// do_filp_open(0, "/EFI/BOOT/.");
+	do_filp_open(0, "/EFI/BOOT/.");
 
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
