@@ -19,8 +19,8 @@ void kmain()
 
 	pre_init_sytem();
 
-	prepare_init_arch_data(kparam.nr_lcpu);
 	prepare_init_task(kparam.nr_lcpu);
+	prepare_init_arch_data(kparam.nr_lcpu);
 	prepare_init_smp(kparam.nr_lcpu);
 
 	init_arch(cpu_idx);

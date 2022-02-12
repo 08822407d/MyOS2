@@ -196,6 +196,10 @@ unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s));
 			memcpy(new_tsk->fps[i], curr_tsk->fps[i], sizeof(file_s));
 		}
+
+	new_tsk->task_fs = kmalloc(sizeof(taskfs_s));
+	memcpy(new_tsk->task_fs, curr_tsk->task_fs, sizeof(taskfs_s));
+
 out:
 	return error;
 }
@@ -472,9 +476,9 @@ unsigned long init(unsigned long arg)
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
 	// set cwd and root-dir of task1
-	taskfs_s * taskfs_p = curr->task_fs;
-	taskfs_p->pwd.dentry = root_sb->root;
-	taskfs_p->root.dentry = root_sb->root;
+	// taskfs_s * taskfs_p = curr->task_fs;
+	// taskfs_p->pwd.dentry = root_sb->root;
+	// taskfs_p->root.dentry = root_sb->root;
 
 	// open the 3 std streams
 	while (curr->fps[0] != NULL ||

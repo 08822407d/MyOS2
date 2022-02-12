@@ -49,6 +49,6 @@ typedef struct GPT_Partition_Entry
 	uint64_t	EndingLBA;
 	uint64_t	Attributes;
 	uint16_t	PartitionName[36];
-}__attribute__((packed)) GPT_PE_s;
+} GPT_PE_s;
 
 #endif /* _GPT_H_ */

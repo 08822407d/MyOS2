@@ -13,15 +13,6 @@
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/mutex.h>
 
-PCB_u **		idle_tasks;
-// de attention that before entering kmain, rsp had already point to stack of task0,
-// in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
-PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
-mm_s			task0_mm;
-taskfs_s		task0_fs;
-
-size_t			cpustack_off;
-
 extern char _text;
 extern char _etext;
 extern char _rodata;
@@ -30,6 +21,33 @@ extern char _data;
 extern char _edata;
 extern char _bss;
 extern char _ebss;
+
+
+size_t			cpustack_off;
+PCB_u **		idle_tasks;
+// de attention that before entering kmain, rsp had already point to stack of task0,
+// in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
+PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
+mm_s			task0_mm = 
+{
+	.start_code		= (reg_t)&_text,
+	.end_code		= (reg_t)&_etext,
+	.start_rodata	= (reg_t)&_rodata,
+	.end_rodata		= (reg_t)&_erodata,
+	.start_data		= (reg_t)&_data,
+	.end_data		= (reg_t)&_edata,
+	.start_bss		= (reg_t)&_bss,
+	.end_bss		= (reg_t)&_bss,
+	.start_stack	= 0,
+};
+taskfs_s		task0_fs =
+{
+	.in_exec		= 0,
+	.umask			= 0,
+	.users			= 0,
+	.pwd.mnt		= NULL,
+	.root.mnt		= NULL,
+};
 
 void compute_consts(void);
 
@@ -52,6 +70,10 @@ void init_task(size_t lcpu_nr)
 	preinit_arch_task();
 
 	task_s *task0 = &task0_PCB.task;
+	
+	// set arch struct in mm_s
+	task0_mm.cr3			= (reg_t)virt2phys(KERN_PML4);
+
 	task0->time_slice = 2;
 	task0->vruntime = -1;
 	task0->semaphore_count =
@@ -66,19 +88,6 @@ void init_task(size_t lcpu_nr)
 		create_smp_idles(i);
 		init_arch_task(i);
 	}
-
-	// set arch struct in mm_s
-	mm_s * task0_mm_p = task0->mm_struct;
-	task0_mm_p->cr3	= (reg_t)virt2phys(KERN_PML4);
-	task0_mm_p->start_code		= (reg_t)&_text;
-	task0_mm_p->end_code		= (reg_t)&_etext;
-	task0_mm_p->start_rodata	= (reg_t)&_rodata;
-	task0_mm_p->end_rodata		= (reg_t)&_erodata;
-	task0_mm_p->start_data		= (reg_t)&_data;
-	task0_mm_p->end_data		= (reg_t)&_edata;
-	task0_mm_p->start_bss		= (reg_t)&_bss;
-	task0_mm_p->end_bss			= (reg_t)&_bss;
-	task0_mm_p->start_stack		= 0;
 }
 
 void compute_consts()

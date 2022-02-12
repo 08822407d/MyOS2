@@ -18,7 +18,8 @@
 
 
 /* Storage for gdt, idt and tss. */
-segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
+// segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
+segdesc64_T *	gdt;
 gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
@@ -51,11 +52,11 @@ inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
 							"movq	%%rsp,		%%rax		\n\t"
 							"mov 	%1,			%%ss		\n\t"
 							"movq	%%rax,		%%rsp		\n\t"
-							"mov	$0,			%%ax		\n\t"
-							"mov 	%%ax,		%%ds		\n\t"
-							"mov 	%%ax,		%%es		\n\t"
-							"mov 	%%ax,		%%fs		\n\t"
-							"mov 	%%ax,		%%gs		\n\t"
+							// "mov	$0,			%%ax		\n\t"
+							// "mov 	%%ax,		%%ds		\n\t"
+							// "mov 	%%ax,		%%es		\n\t"
+							// "mov 	%%ax,		%%fs		\n\t"
+							// "mov 	%%ax,		%%gs		\n\t"
 							"xor	%%rax,		%%rax		\n\t"
 							"leaq	1f(%%rip),	%%rax		\n\t"
 							"pushq	%2						\n\t"
@@ -229,9 +230,6 @@ static void init_gdt()
 	set_dataseg_desc(USER_SS_INDEX, RW_DATA, 3);
 	set_codeseg_desc(USER_CS_INDEX_DUP, E_CODE, 3);
 	set_dataseg_desc(USER_SS_INDEX_DUP, RW_DATA, 3);
-
-	gdt_ptr.limit = (uint16_t)sizeof(gdt) - 1;
-	gdt_ptr.base  = (uint64_t)gdt;
 }
 
 static void init_idt_inner(gate_table_s * gtbl)
@@ -292,6 +290,11 @@ void reload_arch_data(size_t cpu_idx)
 
 void prepare_init_arch_data(size_t lcpu_nr)
 {
+	size_t gdt_size = GDT_SIZE(lcpu_nr)* sizeof(segdesc64_T);
+	gdt = memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));
+	gdt_ptr.limit = gdt_size - 1;
+	gdt_ptr.base  = (uint64_t)gdt;
+
 	tss_ptr_arr = memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
 	for (int i = 0; i < lcpu_nr; i++)
 		init_tss(i);
