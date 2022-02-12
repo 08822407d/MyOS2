@@ -1,3 +1,4 @@
+#include <string.h>
 #include <stddef.h>
 #include <errno.h>
 
@@ -77,7 +78,7 @@ static dirent_s * follow_dotdot(nameidata_s * nd)
 // static const char *handle_dots(struct nameidata *nd, int type)
 static const char * handle_dots(nameidata_s *nd)
 {
-	char * ret_val = NULL;
+	const char * ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
 	{
 		dirent_s * parent;
@@ -151,12 +152,12 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 
 		// compute length of current dirname
 		int i = 0;
-		while (name[i] != 0 || name[i] != '/')
+		while (name[i] != 0 && name[i] != '/')
 			i++;
 
 		type = LAST_NORM;
 		// detect . and .. dir
-		if (name[0] == '.') switch (nd->last_len) {
+		if (name[0] == '.') switch (i) {
 			case 2:
 				if (name[1] == '.') {
 					type = LAST_DOTDOT;
@@ -166,6 +167,7 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 				type = LAST_DOT;
 		}
 
+		nd->last_len = i;
 		nd->last_name = name;
 		nd->last_type = type;
 
@@ -174,17 +176,54 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 		 * If it wasn't NUL, we know it was '/'. Skip that
 		 * slash, and continue until no more slashes.
 		 */
-		do {
+		while (*name != 0 && *name == '/')
 			name++;
-		} while (*name == '/');
 
-		walk_component(nd);
+		if (*name == 0)
+			return 0;
+		else
+			walk_component(nd);
 	}
 }
 
 /*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/
+// Linux function proto:
+// static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+static void __set_nameidata(nameidata_s * p, int dfd, const char * name)
+{
+	memset(p, 0, sizeof(nameidata_s));
+
+	p->last_name = name;
+	p->dfd = dfd;
+}
+
+static void terminate_walk(nameidata_s * nd)
+{
+
+}
+
+/* must be paired with terminate_walk() */
+// Linux function proto:
+// static const char *path_init(struct nameidata *nd, unsigned flags)
+static const char *path_init(nameidata_s * nd)
+{
+	nd->root = curr_tsk->task_fs->root;
+	if (nd->last_name[0] == '/')
+		nd->path = nd->root;
+	else
+		nd->path = curr_tsk->task_fs->pwd;
+}
+
+// Linux function proto:
+// static const char *open_last_lookups(struct nameidata *nd,
+//			struct file *file, const struct open_flags *op)
+static const char *open_last_lookups(nameidata_s * nd, file_s * file)
+{
+
+}
+
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
@@ -194,18 +233,19 @@ file_s * do_filp_open(int dfd, const char * pathname)
 	file_s * filp;
 	int error;
 
-	set_nameidata(&nd, dfd, pathname, NULL);
+	__set_nameidata(&nd, dfd, pathname);
 
 	// Linux call stack:
 	// static struct file *path_openat(struct nameidata *nd,
 	//		const struct open_flags *op, unsigned flags)
+	//					||
+	//					\/
 	// {
-	const char *s = path_init(nd);
-	while (!(error = link_path_walk(s, &nd)) &&
-			(s = open_last_lookups(nd, filp)) != NULL)
-		;
-	if (!error)
-		error = do_open(nd, filp);
+	const char *s = path_init(&nd);
+	link_path_walk(pathname, &nd);
+	// if (!error)
+	// 	error = do_open(&nd, filp);
+	terminate_walk(&nd);
 	// }
 
 	return filp;

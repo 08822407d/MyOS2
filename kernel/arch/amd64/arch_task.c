@@ -484,6 +484,8 @@ unsigned long init(unsigned long arg)
 	kopen("/dev/tty0", O_WRONLY);
 	kopen("/dev/tty0", O_WRONLY);
 
+	// do_filp_open(0, "/EFI/BOOT/.");
+
 	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
 							"pushq	%2			\n\t"
 							"jmp	do_execve	\n\t"

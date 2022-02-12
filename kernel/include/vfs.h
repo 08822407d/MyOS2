@@ -169,6 +169,7 @@
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
+	file_s * do_filp_open(int dfd, const char * pathname);
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
