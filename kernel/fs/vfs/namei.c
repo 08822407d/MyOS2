@@ -10,44 +10,63 @@
 
 #include <arch/amd64/include/arch_proto.h>
 
+typedef struct nameidata {
+	path_s		path;
+	qstr_s		last;
+	path_s		root;
+	inode_s	*	inode; /* path.dentry.d_inode */
+
+	int			last_type;
+	unsigned	flags, state;
+	unsigned	depth;
+	int			total_link_count;
+	filename_s *name;
+
+	// struct filename	*name;
+	// struct nameidata *saved;
+	unsigned	root_seq;
+	int			dfd;
+} nameidata_s;
+
 /*==============================================================================================*
  *								relative fuctions for vfs										*
  *==============================================================================================*/
 // Linux function proto:
 // struct filename * getname(const char __user * filename)
-unsigned long getname(const char ** k_filename, const char * u_filename)
+unsigned long getname(filename_s * name, const char * u_filename)
 {
 	// Linux call stack:
 	// struct filename * getname_flags(const char __user *filename,
 	//					int flags, int *empty)
 	//					||
 	//					\/
-	size_t pathlen = strnlen_user((void *)u_filename, CONST_4K);
-	if (pathlen < 0)
+	size_t len = strnlen_user((void *)u_filename, CONST_4K);
+	if (len < 0)
 	{
 		return -EFAULT;
 	}
-	else if (pathlen > CONST_4K -1)
+	else if (len > CONST_4K -1)
 	{
 		return -ENAMETOOLONG;
 	}
 
-	*k_filename = kmalloc(pathlen + 1);
-	if (*k_filename == NULL)
+	name->len = len;
+	name->name = kmalloc(len + 1);
+	if (name->name == NULL)
 	{
 		return -ENOMEM;
 	}
-	memset((void *)*k_filename, 0, pathlen + 1);
-	strncpy_from_user((void *)*k_filename, (void *)u_filename, pathlen);
+	memset((void *)name->name, 0, len + 1);
+	strncpy_from_user((void *)name->name, (void *)u_filename, len);
 
 	return ENOERR;
 }
 
 // Linxu function proto:
 // void putname(struct filename *name)
-void putname(const char * name)
+void putname(filename_s * name)
 {
-	kfree((void *)name);
+	kfree((void *)name->name);
 }
 /*==============================================================================================*
  *								private fuctions for path walk									*
@@ -73,10 +92,9 @@ static const char * step_into(nameidata_s * nd, dirent_s * dentry)
 // Linux function proto:
 // static struct dentry *__lookup_slow(const struct qstr *name,
 //				    struct dentry *dir, unsigned int flags)
-static dirent_s * __lookup_slow(nameidata_s * nd)
+static dirent_s * __lookup_slow(qstr_s * name, dirent_s * dir)
 {
-	dirent_s *	dentry = NULL,
-			 *	parent = nd->path.dentry;
+	dirent_s *	dentry = NULL;
 	
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
@@ -86,9 +104,9 @@ static dirent_s * __lookup_slow(nameidata_s * nd)
 	// struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
 	//					||
 	//					\/
-	dentry = __d_alloc(nd->last_name, nd->last_len);
+	dentry = __d_alloc(name);
 
-	if(parent->dir_inode->inode_ops->lookup(parent->dir_inode, dentry) == NULL)
+	if(dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
 	{
 		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->name);
 		kfree(dentry->name);
@@ -96,8 +114,8 @@ static dirent_s * __lookup_slow(nameidata_s * nd)
 		return NULL;
 	}
 
-	list_hdr_append(&parent->childdir_lhdr, &dentry->dirent_list);
-	dentry->parent = parent;
+	list_hdr_append(&dir->childdir_lhdr, &dentry->dirent_list);
+	dentry->parent = dir;
 
 	return dentry;
 }
@@ -133,7 +151,7 @@ static const char * handle_dots(nameidata_s *nd)
 // static const char *walk_component(struct nameidata *nd, int flags)
 static const char * walk_component(nameidata_s * nd)
 {
-	dirent_s * dentry;
+	dirent_s * dentry, * parent = nd->path.dentry;
 	inode_s * inode;
 
 	/*
@@ -151,7 +169,7 @@ static const char * walk_component(nameidata_s * nd)
 	//				  struct inode **inode, unsigned *seqp)
 	//					||
 	//					\/
-	dentry = __d_lookup(nd);
+	dentry = __d_lookup(parent, &nd->last);
 
 	if (dentry == NULL)
 	{
@@ -160,7 +178,7 @@ static const char * walk_component(nameidata_s * nd)
 		//			  struct dentry *dir, unsigned int flags)
 		//					||
 		//					\/
-		dentry = __lookup_slow(nd);
+		dentry = __lookup_slow(&nd->last, parent);
 	}
 
 	return step_into(nd, dentry);
@@ -207,11 +225,11 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 				type = LAST_DOT;
 		}
 
-		nd->last_len = i;
-		nd->last_name = name;
+		nd->last.len = i;
+		nd->last.name = name;
 		nd->last_type = type;
 
-		name += nd->last_len;
+		name += nd->last.len;
 		/*
 		 * If it wasn't NUL, we know it was '/'. Skip that
 		 * slash, and continue until no more slashes.
@@ -231,11 +249,11 @@ static int link_path_walk(const char * name, nameidata_s * nd)
  *==============================================================================================*/
 // Linux function proto:
 // static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
-static void __set_nameidata(nameidata_s * p, int dfd, const char * name)
+static void __set_nameidata(nameidata_s * p, int dfd, filename_s * name)
 {
 	memset(p, 0, sizeof(nameidata_s));
 
-	p->last_name = name;
+	p->name = name;
 	p->dfd = dfd;
 }
 
@@ -249,11 +267,14 @@ static void terminate_walk(nameidata_s * nd)
 // static const char *path_init(struct nameidata *nd, unsigned flags)
 static const char *path_init(nameidata_s * nd)
 {
+	const char * s = nd->name->name;
 	nd->root = curr_tsk->task_fs->root;
-	if (nd->last_name[0] == '/')
+	if (s[0] == '/')
 		nd->path = nd->root;
 	else
 		nd->path = curr_tsk->task_fs->pwd;
+	
+	return s;
 }
 
 // Linux function proto:
@@ -267,13 +288,13 @@ static const char *open_last_lookups(nameidata_s * nd, file_s * file)
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
-file_s * do_filp_open(int dfd, const char * pathname)
+file_s * do_filp_open(int dfd, filename_s * name)
 {
 	nameidata_s nd;
 	file_s * filp;
 	int error;
 
-	__set_nameidata(&nd, dfd, pathname);
+	__set_nameidata(&nd, dfd, name);
 
 	// Linux call stack:
 	// static struct file *path_openat(struct nameidata *nd,
@@ -282,7 +303,7 @@ file_s * do_filp_open(int dfd, const char * pathname)
 	//					\/
 	// {
 	const char *s = path_init(&nd);
-	link_path_walk(pathname, &nd);
+	link_path_walk(s, &nd);
 	// if (!error)
 	// 	error = do_open(&nd, filp);
 	terminate_walk(&nd);

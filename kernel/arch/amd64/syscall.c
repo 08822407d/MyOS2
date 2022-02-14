@@ -30,20 +30,20 @@ unsigned long sys_putstring(char *string)
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
-	const char * path = NULL;
+	filename_s name;
 	long error = 0;
 	dirent_s * dentry = NULL;
 	file_s * fp = NULL;
 	int fd = -1;
 
 //	color_printk(GREEN,BLACK,"sys_open\n");
-	unsigned long err = getname(&path, filename);
+	unsigned long err = getname(&name, filename);
 	if (err != ENOERR)
 		return err;
 
-	dentry = path_walk(path, 0);
+	dentry = path_walk(name.name, 0);
 
-	putname(path);
+	putname(&name);
 
 	if(dentry == NULL)
 		return -ENOENT;

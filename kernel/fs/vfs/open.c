@@ -10,14 +10,14 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	//					\/
 	// static long do_sys_openat2(int dfd, const char __user *filename,
 	//				   struct open_how *how)
+	filename_s name;
 	int fd;
 
-	const char * k_filename;
-	unsigned long err = getname(&k_filename, filename);
+	unsigned long err = getname(&name, filename);
 	fd = get_unused_fd_flags(0);
 	if (fd >=0)
 	{
-		file_s * fp = do_filp_open(dfd, k_filename);
+		file_s * fp = do_filp_open(dfd, &name);
 		if (fp == NULL)
 		{
 

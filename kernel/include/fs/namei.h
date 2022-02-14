@@ -46,26 +46,7 @@
 	/* LOOKUP_* flags which do scope-related checks based on the dirfd. */
 	#define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)	
 
-	typedef struct nameidata {
-		path_s		path;
-		path_s		root;
-		inode_s	*	inode; /* path.dentry.d_inode */
-
-		size_t		last_len;
-		const char *last_name;
-		int			last_type;
-		unsigned	flags, state;
-		unsigned	depth;
-		int			total_link_count;
-
-		// struct filename	*name;
-		// struct nameidata *saved;
-		unsigned	root_seq;
-		int			dfd;
-	} nameidata_s;
-
-
-	unsigned long getname(const char ** k_filename, const char * u_filename);
-	void putname(const char * name);
+	unsigned long getname(filename_s * name, const char * u_filename);
+	void putname(filename_s * name);
 
 #endif /* _LINUX_NAMEI_H */

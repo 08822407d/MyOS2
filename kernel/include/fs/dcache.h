@@ -2,9 +2,20 @@
 #define _LINUX_DCACHE_H_
 
 #include <include/fs/vfs.h>
-#include <include/fs/namei.h>
 
-	dirent_s * __d_lookup(nameidata_s * nd);
-	dirent_s * __d_alloc(const char * name, size_t name_len);
+	/*
+	* "quick string" -- eases parameter passing, but more importantly
+	* saves "metadata" about the string (ie length and the hash).
+	*
+	* hash comes first so it snuggles against d_parent in the
+	* dentry.
+	*/
+	typedef struct qstr {
+		size_t len;
+		const unsigned char *name;
+	} qstr_s;
+
+	dirent_s * __d_lookup(dirent_s * parent, qstr_s * name);
+	dirent_s * __d_alloc(qstr_s * name);
 
 #endif /* _LINUX_DCACHE_H_ */
