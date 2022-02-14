@@ -7,6 +7,7 @@
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/fs/file.h>
+#include <include/fs/namei.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"
@@ -29,34 +30,20 @@ unsigned long sys_putstring(char *string)
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
-	char * path = NULL;
-	long pathlen = 0;
+	const char * path = NULL;
 	long error = 0;
 	dirent_s * dentry = NULL;
 	file_s * fp = NULL;
 	int fd = -1;
-	int i;
 
 //	color_printk(GREEN,BLACK,"sys_open\n");
-	path = (char *)kmalloc(CONST_4K);
-	if(path == NULL)
-		return -ENOMEM;
-	memset(path, 0, CONST_4K);
-	pathlen = strnlen_user(filename, CONST_4K);
-	if(pathlen <= 0)
-	{
-		kfree(path);
-		return -EFAULT;
-	}	
-	else if(pathlen >= CONST_4K)
-	{
-		kfree(path);
-		return -ENAMETOOLONG;
-	}
-	strncpy_from_user(filename, path, pathlen);
+	unsigned long err = getname(&path, filename);
+	if (err != ENOERR)
+		return err;
 
 	dentry = path_walk(path, 0);
-	kfree(path);
+
+	putname(path);
 
 	if(dentry == NULL)
 		return -ENOENT;
@@ -210,7 +197,7 @@ unsigned long sys_execve()
 		kfree(pathname);
 		return -ENAMETOOLONG;
 	}
-	strncpy_from_user((char *)curr_context->rdi, pathname, pathlen);
+	strncpy_from_user(pathname, (void *)curr_context->rdi, pathlen);
 	
 	error = do_execve(curr_context, pathname, (char **)curr_context->rsi, NULL);
 

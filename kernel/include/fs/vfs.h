@@ -157,6 +157,14 @@
 		long	(*readdir)(file_s * filp, void * dirent, filldir_t filler);
 	} file_ops_s;
 
+	typedef struct filename {
+		const char *	name;	/* pointer to actual string */
+		const char *	uptr;	/* original userland pointer */
+		int				refcnt;
+		size_t			len;
+		// struct audit_names	*aname;
+		// const char		iname[];
+	} filename_s;
 
 	extern superblock_s * root_sb;
 
@@ -168,7 +176,7 @@
 	extern file_ops_s	tty_fops;
 
 	unsigned long init_vfs();
-	dirent_s * path_walk(char * name, unsigned long flags);
+	dirent_s * path_walk(const char * name, unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);

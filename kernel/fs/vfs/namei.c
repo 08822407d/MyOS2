@@ -8,7 +8,47 @@
 #include <include/fs/namei.h>
 #include <include/fs/dcache.h>
 
+#include <arch/amd64/include/arch_proto.h>
 
+/*==============================================================================================*
+ *								relative fuctions for vfs										*
+ *==============================================================================================*/
+// Linux function proto:
+// struct filename * getname(const char __user * filename)
+unsigned long getname(const char ** k_filename, const char * u_filename)
+{
+	// Linux call stack:
+	// struct filename * getname_flags(const char __user *filename,
+	//					int flags, int *empty)
+	//					||
+	//					\/
+	size_t pathlen = strnlen_user((void *)u_filename, CONST_4K);
+	if (pathlen < 0)
+	{
+		return -EFAULT;
+	}
+	else if (pathlen > CONST_4K -1)
+	{
+		return -ENAMETOOLONG;
+	}
+
+	*k_filename = kmalloc(pathlen + 1);
+	if (*k_filename == NULL)
+	{
+		return -ENOMEM;
+	}
+	memset((void *)*k_filename, 0, pathlen + 1);
+	strncpy_from_user((void *)*k_filename, (void *)u_filename, pathlen);
+
+	return ENOERR;
+}
+
+// Linxu function proto:
+// void putname(struct filename *name)
+void putname(const char * name)
+{
+	kfree((void *)name);
+}
 /*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/

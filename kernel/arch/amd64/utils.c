@@ -116,7 +116,7 @@ inline __always_inline long copy_to_user(void * to, void * from, unsigned long s
 	return size;
 }
 
-inline __always_inline long strncpy_from_user(void * from, void * to, unsigned long size)
+inline __always_inline long strncpy_from_user(void * to, void * from, unsigned long size)
 {
 	if(!verify_area(from, size))
 		return 0;

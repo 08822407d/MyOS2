@@ -84,9 +84,9 @@ unsigned long init_vfs()
 	kparam.init_flags.vfs = 1;
 }
 
-dirent_s * path_walk(char * name, unsigned long flags)
+dirent_s * path_walk(const char * name, unsigned long flags)
 {
-	char * tmpname = NULL;
+	const char * tmpname = NULL;
 	int tmpnamelen = 0;
 	dirent_s * parent = root_sb->root;
 	dirent_s * path = NULL;
