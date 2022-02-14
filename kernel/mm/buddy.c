@@ -9,11 +9,11 @@
 #include <arch/amd64/include/mutex.h>
 
 #include <include/glo.h>
-#include <include/mm.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
-#include <include/memblock.h>
-#include <include/mmzone.h>
+#include <include/mm/mm.h>
+#include <include/mm/memblock.h>
+#include <include/mm/mmzone.h>
 
 recurs_lock_T	page_alloc_lock;
 

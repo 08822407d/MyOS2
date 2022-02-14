@@ -7,7 +7,7 @@
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/task.h>
-#include <include/memblock.h>
+#include <include/mm/memblock.h>
 
 #include "include/arch_glo.h"
 #include "include/archconst.h"

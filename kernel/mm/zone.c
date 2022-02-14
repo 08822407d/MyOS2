@@ -1,8 +1,8 @@
 #include <string.h>
 #include <stddef.h>
 
-#include <include/memblock.h>
-#include <include/mmzone.h>
+#include <include/mm/memblock.h>
+#include <include/mm/mmzone.h>
 
 #include <arch/amd64/include/arch_config.h>
 

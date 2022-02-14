@@ -5,7 +5,7 @@
 #include "include/archconst.h"
 
 #include <include/proto.h>
-#include <include/memblock.h>
+#include <include/mm/memblock.h>
 #include <include/math.h>
 
 #include <uefi/multiboot2.h>

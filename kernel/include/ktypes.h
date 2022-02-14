@@ -7,7 +7,7 @@
 #include <lib/utils.h>
 
 #include <include/task.h>
-#include <include/page.h>
+#include <include/mm/page.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>

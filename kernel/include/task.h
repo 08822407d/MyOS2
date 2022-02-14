@@ -4,7 +4,7 @@
 #include <sys/types.h>
 #include <lib/utils.h>
 
-#include "mm.h"
+#include <include/mm/mm.h>
 
 #include <arch/amd64/include/arch_task.h>
 #include <arch/amd64/include/arch_config.h>

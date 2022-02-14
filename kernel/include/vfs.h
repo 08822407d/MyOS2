@@ -6,8 +6,11 @@
 #include "MBR.h"
 #include "GPT.h"
 
-	#define BOOT_FS_IDX	1
-	#define ROOT_FS_IDX	2
+	// sysconfigs
+	#define MAX_FILE_NR		32
+
+	#define BOOT_FS_IDX		1
+	#define ROOT_FS_IDX		2
 
 	struct fs_type;
 	typedef struct fs_type fs_type_s;

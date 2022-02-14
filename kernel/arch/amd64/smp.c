@@ -3,7 +3,7 @@
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <include/memblock.h>
+#include <include/mm/memblock.h>
 #include <include/task.h>
 
 #include "include/arch_proto.h"

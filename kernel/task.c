@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include <include/glo.h>
-#include <include/mm.h>
-#include <include/memblock.h>
+#include <include/mm/mm.h>
+#include <include/mm/memblock.h>
 #include <include/task.h>
 #include <include/proto.h>
 

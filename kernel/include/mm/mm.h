@@ -3,7 +3,8 @@
 
 #include <const.h>
 
-#include <include/mmzone.h>
+#include <include/mm/mmzone.h>
+#include <include/block_dev.h>
 
 #include <arch/amd64/include/archconst.h>
 
@@ -32,9 +33,6 @@
 	// slab consts
 	#define SLAB_LEVEL			16
 	#define SLAB_SIZE_BASE		32
-
-	// sysconfigs
-	#define MAX_FILE_NR			32
 
 	extern pglist_data_s 	pg_list;
 	extern Page_s *			mem_map;

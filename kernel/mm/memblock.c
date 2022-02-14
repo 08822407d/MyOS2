@@ -6,13 +6,13 @@
 #include <errno.h>
 
 #include <include/glo.h>
-#include <include/memblock.h>
 #include <include/kutils.h>
 #include <include/minmax.h>
 #include <include/math.h>
-#include <include/mm.h>
-#include <include/mmzone.h>
-#include <include/page.h>
+#include <include/mm/mm.h>
+#include <include/mm/memblock.h>
+#include <include/mm/mmzone.h>
+#include <include/mm/page.h>
 
 #include <arch/amd64/include/arch_config.h>
 #include <arch/amd64/include/arch_proto.h>

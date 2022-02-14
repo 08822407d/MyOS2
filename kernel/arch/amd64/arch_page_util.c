@@ -6,9 +6,9 @@
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
-#include <include/mm.h>
 #include <include/printk.h>
-#include <include/memblock.h>
+#include <include/mm/mm.h>
+#include <include/mm/memblock.h>
 #include <include/math.h>
 
 #include "include/archconst.h"

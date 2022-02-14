@@ -1,6 +1,6 @@
 #include <include/proto.h>
-#include <include/page.h>
-#include <include/slab.h>
+#include <include/mm/page.h>
+#include <include/mm/slab.h>
 
 void prepare_init_mm()
 {
