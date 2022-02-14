@@ -2,6 +2,8 @@
 #include <stddef.h>
 #include <errno.h>
 
+#include <sys/fcntl.h>
+
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/fs/vfs.h>
@@ -280,20 +282,46 @@ static const char *path_init(nameidata_s * nd)
 // Linux function proto:
 // static const char *open_last_lookups(struct nameidata *nd,
 //			struct file *file, const struct open_flags *op)
-static const char *open_last_lookups(nameidata_s * nd, file_s * file)
+static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_flag)
 {
+	dirent_s * dentry, * dir = nd->path.dentry;
 
+	if (nd->last_type != LAST_NORM) {
+		if (nd->depth)
+		return handle_dots(nd);
+	}
+
+	if (!(open_flag & O_CREAT))
+	{
+		dentry = __d_lookup(dir, &nd->last);
+	}
+
+
+	return step_into(nd, dentry);
+}
+
+/*
+ * Handle the last step of open()
+ */
+// Linux function proto:
+// static int do_open(struct nameidata *nd,
+//		   struct file *file, const struct open_flags *op)
+static int do_open(nameidata_s *nd, file_s *file, int open_flag)
+{
+	vfs_open(&nd->path, file);
 }
 
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
-file_s * do_filp_open(int dfd, filename_s * name)
+file_s * do_filp_open(int dfd, filename_s * name, int flags)
 {
 	nameidata_s nd;
 	file_s * filp;
 	int error;
 
+	filp = kmalloc(sizeof(file_s));
+	memset(filp, 0, sizeof(file_s));
 	__set_nameidata(&nd, dfd, name);
 
 	// Linux call stack:
@@ -304,8 +332,9 @@ file_s * do_filp_open(int dfd, filename_s * name)
 	// {
 	const char *s = path_init(&nd);
 	link_path_walk(s, &nd);
-	// if (!error)
-	// 	error = do_open(&nd, filp);
+	open_last_lookups(&nd, filp, flags);
+	if (!error)
+		error = do_open(&nd, filp, flags);
 	terminate_walk(&nd);
 	// }
 

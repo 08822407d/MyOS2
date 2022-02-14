@@ -181,6 +181,7 @@
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
 	file_s * do_filp_open(int dfd, filename_s * name);
+	int vfs_open(const path_s * path, file_s * file);
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
