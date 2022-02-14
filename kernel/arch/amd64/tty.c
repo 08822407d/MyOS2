@@ -3,10 +3,10 @@
 #include <string.h>
 #include <lib/font.h>
 
-#include <include/vfs.h>
 #include <include/proto.h>
 #include <include/wait_queue.h>
 #include <include/printk.h>
+#include <include/fs/vfs.h>
 
 #include "include/tty.h"
 #include "include/keyboard.h"

@@ -4,11 +4,11 @@
 #include <include/printk.h>
 #include <include/proto.h>
 #include <include/glo.h>
-#include <include/fat32.h>
-#include <include/ext2.h>
-#include <include/vfs.h>
-#include <include/MBR.h>
-#include <include/GPT.h>
+#include <include/fs/vfs.h>
+#include <include/fs/MBR.h>
+#include <include/fs/GPT.h>
+#include <include/fs/fat32.h>
+#include <include/fs/ext2.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

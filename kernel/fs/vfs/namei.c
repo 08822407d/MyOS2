@@ -4,9 +4,9 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/vfs.h>
-#include <include/namei.h>
-#include <include/dcache.h>
+#include <include/fs/vfs.h>
+#include <include/fs/namei.h>
+#include <include/fs/dcache.h>
 
 
 /*==============================================================================================*

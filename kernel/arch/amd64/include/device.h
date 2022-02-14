@@ -4,7 +4,7 @@
 #include <sys/types.h>
 
 #include <include/ktypes.h>
-#include <include/vfs.h>
+#include <include/fs/vfs.h>
 #include <include/block_dev.h>
 
 #include "arch_proto.h"

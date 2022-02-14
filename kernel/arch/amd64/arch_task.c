@@ -13,7 +13,7 @@
 #include <include/task.h>
 #include <include/printk.h>
 #include <include/mm/mm.h>
-#include <include/vfs.h>
+#include <include/fs/vfs.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

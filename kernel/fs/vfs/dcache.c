@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <include/proto.h>
-#include <include/dcache.h>
+#include <include/fs/dcache.h>
 
 // Linux function proto:
 // struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)

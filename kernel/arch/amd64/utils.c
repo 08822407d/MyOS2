@@ -6,9 +6,9 @@
 #include <stddef.h>
 #include <errno.h>
 
-#include <include/vfs.h>
 #include <include/proto.h>
 #include <include/printk.h>
+#include <include/fs/vfs.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

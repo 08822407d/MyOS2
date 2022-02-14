@@ -6,6 +6,7 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
+#include <include/fs/file.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"
@@ -28,13 +29,11 @@ unsigned long sys_putstring(char *string)
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
-	task_s * curr = curr_tsk;
 	char * path = NULL;
 	long pathlen = 0;
 	long error = 0;
 	dirent_s * dentry = NULL;
 	file_s * fp = NULL;
-	file_s ** f = NULL;
 	int fd = -1;
 	int i;
 
@@ -90,20 +89,14 @@ unsigned long sys_open(char *filename, int flags)
 		fp->position = fp->dentry->dir_inode->file_size;
 	}
 
-	f = curr_tsk->fps;
-	for(i = 0;i < MAX_FILE_NR;i++)
-		if(f[i] == NULL)
-		{
-			fd = i;
-			break;
-		}
-	if(i == MAX_FILE_NR)
+	fd = get_unused_fd_flags(0);
+	if(fd == -1)
 	{
 		kfree(fp);
 		// reclaim struct index_node & struct dir_entry
 		return -EMFILE;
 	}
-	f[fd] = fp;
+	fd_install(fd, fp);
 
 	return fd;
 }

@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 
-#include "include/vfs.h"
+#include <include/fs/vfs.h>
 
 #include "archtypes.h"
 #include "archconst.h"

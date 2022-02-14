@@ -1,8 +1,8 @@
 #include <stdio.h>
 
-#include <include/vfs.h>
-#include <include/ext2.h>
 #include <include/printk.h>
+#include <include/fs/vfs.h>
+#include <include/fs/ext2.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

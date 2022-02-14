@@ -3,8 +3,8 @@
 
 #include <lib/utils.h>
 
-#include "MBR.h"
-#include "GPT.h"
+#include <include/fs/MBR.h>
+#include <include/fs/GPT.h>
 
 	// sysconfigs
 	#define MAX_FILE_NR		32
@@ -176,6 +176,6 @@
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
-	#include "block_dev.h"
+	#include <include/block_dev.h>
 	extern blkdev_ops_s IDE_device_operation;
 #endif /* _FS_H_ */
