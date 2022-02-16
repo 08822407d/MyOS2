@@ -175,13 +175,15 @@
 
 	extern file_ops_s	tty_fops;
 
+	long do_sys_open(int dfd, const char * filename, int flags);
 	unsigned long init_vfs();
 	dirent_s * path_walk(const char * name, unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
-	file_s * do_filp_open(int dfd, filename_s * name);
-	int vfs_open(const path_s * path, file_s * file);
+	file_s * do_filp_open(int dfd, filename_s * name, int flags);
+	int __vfs_open(const path_s * path, file_s * file);
+	long kopen(const char * filename, int flags);
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 

@@ -13,67 +13,6 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 
-unsigned long kopen(char *filename, int flags)
-{
-	task_s * curr = curr_tsk;
-	long error = 0;
-	dirent_s * dentry = NULL;
-	file_s * fp = NULL;
-	file_s ** f = NULL;
-	int fd = -1;
-	int i;
-
-	dentry = path_walk(filename, 0);
-
-	if(dentry == NULL)
-		return -ENOENT;
-
-	if((flags & O_DIRECTORY) && (dentry->dir_inode->attribute != FS_ATTR_DIR))
-		return -ENOTDIR;
-	if(!(flags & O_DIRECTORY) && (dentry->dir_inode->attribute == FS_ATTR_DIR))
-		return -EISDIR;
-
-	fp = (file_s *)kmalloc(sizeof(file_s));
-	memset(fp, 0, sizeof(struct file));
-	fp->dentry = dentry;
-	fp->mode = flags;
-
-	fp->f_ops = dentry->dir_inode->f_ops;
-	if(fp->f_ops && fp->f_ops->open)
-		error = fp->f_ops->open(dentry->dir_inode, fp);
-	if(error != 1)
-	{
-		kfree(fp);
-		return -EFAULT;
-	}
-
-	if(fp->mode & O_TRUNC)
-	{
-		fp->dentry->dir_inode->file_size = 0;
-	}
-	if(fp->mode & O_APPEND)
-	{
-		fp->position = fp->dentry->dir_inode->file_size;
-	}
-
-	f = curr_tsk->fps;
-	for(i = 0;i < MAX_FILE_NR;i++)
-		if(f[i] == NULL)
-		{
-			fd = i;
-			break;
-		}
-	if(i == MAX_FILE_NR)
-	{
-		kfree(fp);
-		// reclaim struct index_node & struct dir_entry
-		return -EMFILE;
-	}
-	f[fd] = fp;
-
-	return fd;
-}
-
 inline __always_inline long verify_area(unsigned char* addr, unsigned long size)
 {
 	if(((unsigned long)addr + size) <= (unsigned long)USERADDR_LIMIT)

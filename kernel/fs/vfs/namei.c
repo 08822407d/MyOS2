@@ -308,7 +308,7 @@ static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_f
 //		   struct file *file, const struct open_flags *op)
 static int do_open(nameidata_s *nd, file_s *file, int open_flag)
 {
-	vfs_open(&nd->path, file);
+	__vfs_open(&nd->path, file);
 }
 
 // Linux function proto:
@@ -333,7 +333,7 @@ file_s * do_filp_open(int dfd, filename_s * name, int flags)
 	const char *s = path_init(&nd);
 	link_path_walk(s, &nd);
 	open_last_lookups(&nd, filp, flags);
-	if (!error)
+	// if (!error)
 		error = do_open(&nd, filp, flags);
 	terminate_walk(&nd);
 	// }

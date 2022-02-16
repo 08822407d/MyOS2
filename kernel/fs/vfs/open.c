@@ -1,5 +1,6 @@
 #include <sys/fcntl.h>
 
+#include <string.h>
 #include <errno.h>
 
 #include <include/fs/file.h>
@@ -36,13 +37,42 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	// static long do_sys_openat2(int dfd, const char __user *filename,
 	//				   struct open_how *how)
 	filename_s name;
-	int fd;
+	int fd = -1;
+	long err = 0;
 
-	unsigned long err = getname(&name, filename);
+	err = getname(&name, filename);
 	fd = get_unused_fd_flags(0);
 	if (fd >=0)
 	{
-		file_s * fp = do_filp_open(dfd, &name);
+		file_s * fp = do_filp_open(dfd, &name, flags);
+		if (fp == NULL)
+		{
+			err = -ENFILE;
+		}
+		else
+		{
+			fd_install(fd, fp);
+		}
+	}
+	else
+	{
+		err = -ENFILE;
+	}
+	
+	return -fd;
+}
+
+long kopen(const char * filename, int flags)
+{
+	filename_s name;
+	int fd;
+
+	name.name = filename;
+	name.len = strlen(filename);
+	fd = get_unused_fd_flags(0);
+	if (fd >=0)
+	{
+		file_s * fp = do_filp_open(0, &name, flags);
 		if (fp == NULL)
 		{
 
@@ -66,7 +96,7 @@ long do_sys_open(int dfd, const char * filename, int flags)
  * @file: newly allocated file with f_flag initialized
  * @cred: credentials to use
  */
-int vfs_open(const path_s * path, file_s * file)
+int __vfs_open(const path_s * path, file_s * file)
 {
 	file->dentry = path->dentry;
 	return do_dentry_open(file, path->dentry->dir_inode);

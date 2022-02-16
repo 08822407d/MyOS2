@@ -30,62 +30,7 @@ unsigned long sys_putstring(char *string)
  *==============================================================================================*/
 unsigned long sys_open(char *filename, int flags)
 {
-	filename_s name;
-	long error = 0;
-	dirent_s * dentry = NULL;
-	file_s * fp = NULL;
-	int fd = -1;
-
-//	color_printk(GREEN,BLACK,"sys_open\n");
-	unsigned long err = getname(&name, filename);
-	if (err != ENOERR)
-		return err;
-
-	dentry = path_walk(name.name, 0);
-
-	putname(&name);
-
-	if(dentry == NULL)
-		return -ENOENT;
-
-	if((flags & O_DIRECTORY) && (dentry->dir_inode->attribute != FS_ATTR_DIR))
-		return -ENOTDIR;
-	if(!(flags & O_DIRECTORY) && (dentry->dir_inode->attribute == FS_ATTR_DIR))
-		return -EISDIR;
-
-	fp = (file_s *)kmalloc(sizeof(file_s));
-	memset(fp, 0, sizeof(struct file));
-	fp->dentry = dentry;
-	fp->mode = flags;
-
-	fp->f_ops = dentry->dir_inode->f_ops;
-	if(fp->f_ops && fp->f_ops->open)
-		error = fp->f_ops->open(dentry->dir_inode, fp);
-	if(error != 1)
-	{
-		kfree(fp);
-		return -EFAULT;
-	}
-
-	if(fp->mode & O_TRUNC)
-	{
-		fp->dentry->dir_inode->file_size = 0;
-	}
-	if(fp->mode & O_APPEND)
-	{
-		fp->position = fp->dentry->dir_inode->file_size;
-	}
-
-	fd = get_unused_fd_flags(0);
-	if(fd == -1)
-	{
-		kfree(fp);
-		// reclaim struct index_node & struct dir_entry
-		return -EMFILE;
-	}
-	fd_install(fd, fp);
-
-	return fd;
+	return do_sys_open(0, filename, flags);
 }
 
 unsigned long sys_close(int fd)

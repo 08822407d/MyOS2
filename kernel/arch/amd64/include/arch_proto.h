@@ -314,7 +314,6 @@
 	long copy_to_user(void * from, void * to, unsigned long size);
 	long strncpy_from_user(void * to, void * from, unsigned long size);
 	long strnlen_user(void * src, unsigned long maxlen);
-	unsigned long kopen(char *filename, int flags);
 
 	/*  mm.c */
 	void creat_exec_addrspace(task_s * task);
