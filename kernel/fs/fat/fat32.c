@@ -424,10 +424,10 @@ file_ops_s FAT32_file_ops =
 	.readdir = FAT32_readdir,
 };
 
-long FAT32_create(inode_s * inode, dirent_s * dentry, int mode)
+long FAT32_create(inode_s * inode, dentry_s * dentry, int mode)
 {}
 
-dirent_s * FAT32_lookup(inode_s * parent_inode, dirent_s * dest_dentry)
+dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry)
 {
 	FAT32_inode_info_s * finode = parent_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = parent_inode->sb->private_sb_info;
@@ -662,20 +662,20 @@ find_lookup_success:
 	return dest_dentry;	
 }
 
-long FAT32_mkdir(inode_s * inode, dirent_s * dentry, int mode)
+long FAT32_mkdir(inode_s * inode, dentry_s * dentry, int mode)
 {}
 
 
-long FAT32_rmdir(inode_s * inode, dirent_s * dentry)
+long FAT32_rmdir(inode_s * inode, dentry_s * dentry)
 {}
 
-long FAT32_rename(inode_s * old_inode, dirent_s * old_dentry, inode_s * new_inode, dirent_s * new_dentry)
+long FAT32_rename(inode_s * old_inode, dentry_s * old_dentry, inode_s * new_inode, dentry_s * new_dentry)
 {}
 
-long FAT32_getattr(dirent_s * dentry, unsigned long * attr)
+long FAT32_getattr(dentry_s * dentry, unsigned long * attr)
 {}
 
-long FAT32_setattr(dirent_s * dentry, unsigned long * attr)
+long FAT32_setattr(dentry_s * dentry, unsigned long * attr)
 {}
 
 inode_ops_s FAT32_inode_ops = 
@@ -690,10 +690,10 @@ inode_ops_s FAT32_inode_ops =
 };
 
 // these operation need cache and list
-long FAT32_compare(dirent_s * parent_dentry, char * source_filename, char * destination_filename){}
-long FAT32_hash(dirent_s * dentry,char * filename){}
-long FAT32_release(dirent_s * dentry){}
-long FAT32_iput(dirent_s * dentry, inode_s * inode){}
+long FAT32_compare(dentry_s * parent_dentry, char * source_filename, char * destination_filename){}
+long FAT32_hash(dentry_s * dentry,char * filename){}
+long FAT32_release(dentry_s * dentry){}
+long FAT32_iput(dentry_s * dentry, inode_s * inode){}
 
 dirent_ops_s FAT32_dentry_ops = 
 {
@@ -787,8 +787,8 @@ superblock_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 									1, (unsigned char *)fsbi->fat_fsinfo);
 	
 	//directory entry
-	sbp->root = (dirent_s *)kmalloc(sizeof(dirent_s));
-	memset(sbp->root, 0, sizeof(dirent_s));
+	sbp->root = (dentry_s *)kmalloc(sizeof(dentry_s));
+	memset(sbp->root, 0, sizeof(dentry_s));
 
 	list_init(&sbp->root->dirent_list, sbp->root);
 	list_hdr_init(&sbp->root->childdir_lhdr);

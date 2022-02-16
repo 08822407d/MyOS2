@@ -21,8 +21,8 @@
 	struct inode;
 	typedef struct inode inode_s;
 
-	struct dirent;
-	typedef struct dirent dirent_s;
+	struct dentry;
+	typedef struct dentry dentry_s;
 
 	struct file;
 	typedef struct file file_s;
@@ -50,7 +50,7 @@
 
 	typedef struct superblock
 	{
-		dirent_s *	root;
+		dentry_s *	root;
 		sb_ops_s *	sb_ops;
 		void *		private_sb_info;
 	} superblock_s;
@@ -72,40 +72,40 @@
 	#define FS_ATTR_DIR		(1UL << 1)
 	#define	FS_ATTR_DEVICE	(1UL << 2)
 
-	typedef struct dirent
+	typedef struct dentry
 	{
 		List_s		dirent_list;
 
 		char *		name;
 		int			name_length;
 
-		dirent_s *	parent;
+		dentry_s *	parent;
 		List_hdr_s	childdir_lhdr;
 
 		inode_s *		dir_inode;
 		dirent_ops_s *	dir_ops;
-	} dirent_s;
+	} dentry_s;
 
 	typedef struct file
 	{
 		long			position;
 		unsigned long	mode;
 
-		dirent_s *		dentry;
+		dentry_s *		dentry;
 		file_ops_s *	f_ops;
 
 		void * 			private_data;
 	} file_s;
 
 	typedef struct vfsmount {
-		dirent_s *		mnt_root;	/* root of the mounted tree */
+		dentry_s *		mnt_root;	/* root of the mounted tree */
 		superblock_s *	mnt_sb;	/* pointer to superblock */
 		int				mnt_flags;
 	} vfsmount_s;
 
 	typedef struct path {
 		vfsmount_s *	mnt;
-		dirent_s *		dentry;
+		dentry_s *		dentry;
 	} path_s;
 
 	typedef struct taskfs {
@@ -126,21 +126,21 @@
 
 	typedef struct inode_ops
 	{
-		dirent_s *	(*lookup)(inode_s * parent_inode, dirent_s * dest_dentry);
-		long		(*create)(inode_s * inode, dirent_s * dentry, int mode);
-		long		(*mkdir)(inode_s * inode, dirent_s * dentry, int mode);
-		long		(*rmdir)(inode_s * inode, dirent_s * dentry);
-		long		(*rename)(inode_s * old_inode, dirent_s * old_dentry, inode_s * new_inode, dirent_s * new_dentry);
-		long		(*getattr)(dirent_s * dentry, unsigned long * attr);
-		long		(*setattr)(dirent_s * dentry, unsigned long * attr);
+		dentry_s *	(*lookup)(inode_s * parent_inode, dentry_s * dest_dentry);
+		long		(*create)(inode_s * inode, dentry_s * dentry, int mode);
+		long		(*mkdir)(inode_s * inode, dentry_s * dentry, int mode);
+		long		(*rmdir)(inode_s * inode, dentry_s * dentry);
+		long		(*rename)(inode_s * old_inode, dentry_s * old_dentry, inode_s * new_inode, dentry_s * new_dentry);
+		long		(*getattr)(dentry_s * dentry, unsigned long * attr);
+		long		(*setattr)(dentry_s * dentry, unsigned long * attr);
 	} inode_ops_s;
 
 	typedef struct dirent_ops
 	{
-		long	(*compare)(dirent_s * parent_dentry, char * source_filename, char * destination_filename);
-		long	(*hash)(dirent_s * dentry, char * filename);
-		long	(*release)(dirent_s * dentry);
-		long	(*iput)(dirent_s * dentry, inode_s * inode);
+		long	(*compare)(dentry_s * parent_dentry, char * source_filename, char * destination_filename);
+		long	(*hash)(dentry_s * dentry, char * filename);
+		long	(*release)(dentry_s * dentry);
+		long	(*iput)(dentry_s * dentry, inode_s * inode);
 	} dirent_ops_s;
 
 	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
@@ -177,7 +177,7 @@
 
 	long do_sys_open(int dfd, const char * filename, int flags);
 	unsigned long init_vfs();
-	dirent_s * path_walk(const char * name, unsigned long flags);
+	dentry_s * path_walk(const char * name, unsigned long flags);
 	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);

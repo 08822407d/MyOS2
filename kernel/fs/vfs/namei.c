@@ -82,7 +82,7 @@ void putname(filename_s * name)
 // Linux function proto:
 // static const char *step_into(struct nameidata *nd, int flags,
 //		     struct dentry *dentry, struct inode *inode, unsigned seq)
-static const char * step_into(nameidata_s * nd, dirent_s * dentry)
+static const char * step_into(nameidata_s * nd, dentry_s * dentry)
 {
 	path_s path;
 
@@ -94,9 +94,9 @@ static const char * step_into(nameidata_s * nd, dirent_s * dentry)
 // Linux function proto:
 // static struct dentry *__lookup_slow(const struct qstr *name,
 //				    struct dentry *dir, unsigned int flags)
-static dirent_s * __lookup_slow(qstr_s * name, dirent_s * dir)
+static dentry_s * __lookup_slow(qstr_s * name, dentry_s * dir)
 {
-	dirent_s *	dentry = NULL;
+	dentry_s *	dentry = NULL;
 	
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
@@ -125,9 +125,9 @@ static dirent_s * __lookup_slow(qstr_s * name, dirent_s * dir)
 // Linux function proto:
 // static struct dentry *follow_dotdot(struct nameidata *nd,
 //				 struct inode **inodep, unsigned *seqp)
-static dirent_s * follow_dotdot(nameidata_s * nd)
+static dentry_s * follow_dotdot(nameidata_s * nd)
 {
-	dirent_s * parent;
+	dentry_s * parent;
 
 	parent = nd->path.dentry->parent;
 
@@ -141,7 +141,7 @@ static const char * handle_dots(nameidata_s *nd)
 	const char * ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
 	{
-		dirent_s * parent;
+		dentry_s * parent;
 
 		parent = follow_dotdot(nd);
 		ret_val = step_into(nd, parent);
@@ -153,7 +153,7 @@ static const char * handle_dots(nameidata_s *nd)
 // static const char *walk_component(struct nameidata *nd, int flags)
 static const char * walk_component(nameidata_s * nd)
 {
-	dirent_s * dentry, * parent = nd->path.dentry;
+	dentry_s * dentry, * parent = nd->path.dentry;
 	inode_s * inode;
 
 	/*
@@ -284,7 +284,7 @@ static const char *path_init(nameidata_s * nd)
 //			struct file *file, const struct open_flags *op)
 static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_flag)
 {
-	dirent_s * dentry, * dir = nd->path.dentry;
+	dentry_s * dentry, * dir = nd->path.dentry;
 
 	if (nd->last_type != LAST_NORM) {
 		if (nd->depth)

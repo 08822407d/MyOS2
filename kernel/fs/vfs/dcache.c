@@ -6,11 +6,11 @@
 
 // Linux function proto:
 // struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
-dirent_s * __d_lookup(dirent_s * parent, qstr_s * name)
+dentry_s * __d_lookup(dentry_s * parent, qstr_s * name)
 {
-	dirent_s *	dentry = NULL;
+	dentry_s *	dentry = NULL;
 
-	dirent_s * dir_p;
+	dentry_s * dir_p;
 	List_s * dir_lp;
 	for (dir_lp = parent->childdir_lhdr.header.next;
 			dir_lp != &parent->childdir_lhdr.header;
@@ -37,9 +37,9 @@ dirent_s * __d_lookup(dirent_s * parent, qstr_s * name)
  */
 // Linux function proto:
 // static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
-dirent_s * __d_alloc(qstr_s * name)
+dentry_s * __d_alloc(qstr_s * name)
 {
-	dirent_s * dentry = kmalloc(sizeof(dirent_s));
+	dentry_s * dentry = kmalloc(sizeof(dentry_s));
 
 	dentry->name = kmalloc(name->len + 1);
 	memset(dentry->name, 0, name->len + 1);

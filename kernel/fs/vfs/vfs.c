@@ -84,12 +84,12 @@ unsigned long init_vfs()
 	kparam.init_flags.vfs = 1;
 }
 
-dirent_s * path_walk(const char * name, unsigned long flags)
+dentry_s * path_walk(const char * name, unsigned long flags)
 {
 	const char * tmpname = NULL;
 	int tmpnamelen = 0;
-	dirent_s * parent = root_sb->root;
-	dirent_s * path = NULL;
+	dentry_s * parent = root_sb->root;
+	dentry_s * path = NULL;
 
 	while(*name == '/')
 		name++;
@@ -106,7 +106,7 @@ dirent_s * path_walk(const char * name, unsigned long flags)
 			name++;
 		tmpnamelen = name - tmpname;
 
-		dirent_s * dir_p;
+		dentry_s * dir_p;
 		List_s * dir_lp;
 		for (dir_lp = parent->childdir_lhdr.header.next;
 				dir_lp != &parent->childdir_lhdr.header;
@@ -122,8 +122,8 @@ dirent_s * path_walk(const char * name, unsigned long flags)
 
 		if (dir_lp == &parent->childdir_lhdr.header)
 		{
-			path = (dirent_s *)kmalloc(sizeof(dirent_s));
-			memset(path, 0, sizeof(dirent_s));
+			path = (dentry_s *)kmalloc(sizeof(dentry_s));
+			memset(path, 0, sizeof(dentry_s));
 
 			path->name = kmalloc(tmpnamelen+1);
 			memset(path->name,0,tmpnamelen+1);
@@ -167,16 +167,16 @@ last_component:
 
 int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
 {
-	// dirent_s * dent = (dirent_s *)buf;
+	// dentry_s * dent = (dentry_s *)buf;
 	
-	// if((unsigned long)buf < CONST_4K && !verify_area(buf, sizeof(dirent_s) + namelen))
+	// if((unsigned long)buf < CONST_4K && !verify_area(buf, sizeof(dentry_s) + namelen))
 	// 	return -EFAULT;
 	
 	// memcpy(name,dent->d_name,namelen);
 	// dent->d_namelen = namelen;
 	// dent->d_type = type;
 	// dent->d_offset = offset;
-	// return sizeof(struct dirent) + namelen;
+	// return sizeof(struct dentry) + namelen;
 }
 
 superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)

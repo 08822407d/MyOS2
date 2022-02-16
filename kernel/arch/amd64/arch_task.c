@@ -132,7 +132,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 
 file_s * open_exec_file(char * path)
 {
-	dirent_s * dentry = NULL;
+	dentry_s * dentry = NULL;
 	file_s * filp = NULL;
 
 	dentry = path_walk(path, 0);

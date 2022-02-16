@@ -15,7 +15,7 @@
 		const unsigned char *name;
 	} qstr_s;
 
-	dirent_s * __d_lookup(dirent_s * parent, qstr_s * name);
-	dirent_s * __d_alloc(qstr_s * name);
+	dentry_s * __d_lookup(dentry_s * parent, qstr_s * name);
+	dentry_s * __d_alloc(qstr_s * name);
 
 #endif /* _LINUX_DCACHE_H_ */
