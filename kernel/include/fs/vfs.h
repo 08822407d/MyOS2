@@ -3,6 +3,7 @@
 
 #include <lib/utils.h>
 
+#include <include/fs/dcache.h>
 #include <include/fs/MBR.h>
 #include <include/fs/GPT.h>
 
@@ -18,12 +19,6 @@
 	struct superblock;
 	typedef struct superblock superblock_s;
 
-	struct inode;
-	typedef struct inode inode_s;
-
-	struct dentry;
-	typedef struct dentry dentry_s;
-
 	struct file;
 	typedef struct file file_s;
 
@@ -32,9 +27,6 @@
 
 	struct inode_ops;
 	typedef struct inode_ops inode_ops_s;
-
-	struct dirent_ops;
-	typedef struct dirent_ops dirent_ops_s;
 
 	struct file_ops;
 	typedef struct file_ops file_ops_s;
@@ -71,20 +63,6 @@
 	#define FS_ATTR_FILE	(1UL << 0)
 	#define FS_ATTR_DIR		(1UL << 1)
 	#define	FS_ATTR_DEVICE	(1UL << 2)
-
-	typedef struct dentry
-	{
-		List_s		dirent_list;
-
-		char *		name;
-		int			name_length;
-
-		dentry_s *	parent;
-		List_hdr_s	childdir_lhdr;
-
-		inode_s *		dir_inode;
-		dirent_ops_s *	dir_ops;
-	} dentry_s;
 
 	typedef struct file
 	{

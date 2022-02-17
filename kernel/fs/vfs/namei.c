@@ -294,8 +294,11 @@ static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_f
 	if (!(open_flag & O_CREAT))
 	{
 		dentry = __d_lookup(dir, &nd->last);
+		if (dentry == NULL)
+		{
+			dentry = __lookup_slow(&nd->last, dir);
+		}
 	}
-
 
 	return step_into(nd, dentry);
 }

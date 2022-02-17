@@ -14,6 +14,8 @@ void malloc_free_test(void);
 int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
+	
+	// file_io_test();
 
 	while (1)
 	{
