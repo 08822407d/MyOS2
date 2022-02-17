@@ -17,7 +17,7 @@ MBR_s *		boot_sec;
 GPT_H_s *	gpt_hdr;
 GPT_PE_s *	gpt_pes;
 
-superblock_s * root_sb = NULL;
+super_block_s * root_sb = NULL;
 fs_type_s filesystem = {"filesystem", 0};
 
 
@@ -179,7 +179,7 @@ int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
 	// return sizeof(struct dentry) + namelen;
 }
 
-superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
+super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 {
 	fs_type_s * p = NULL;
 	for(p = &filesystem; p; p = p->next)

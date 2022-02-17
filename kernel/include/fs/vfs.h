@@ -7,45 +7,28 @@
 #include <include/fs/MBR.h>
 #include <include/fs/GPT.h>
 
+#include "vfs_s_defs.h"
+
 	// sysconfigs
 	#define MAX_FILE_NR		32
 
 	#define BOOT_FS_IDX		1
 	#define ROOT_FS_IDX		2
 
-	struct fs_type;
-	typedef struct fs_type fs_type_s;
-
-	struct superblock;
-	typedef struct superblock superblock_s;
-
-	struct file;
-	typedef struct file file_s;
-
-	struct sb_ops;
-	typedef struct sb_ops sb_ops_s;
-
-	struct inode_ops;
-	typedef struct inode_ops inode_ops_s;
-
-	struct file_ops;
-	typedef struct file_ops file_ops_s;
-
-
 	typedef struct fs_type
 	{
 		char *	name;
 		int		fs_flags;
-		superblock_s *	(*read_superblock)(GPT_PE_s * DPTE, void * buf);
+		super_block_s *	(*read_superblock)(GPT_PE_s * DPTE, void * buf);
 		fs_type_s *		next;
 	} fs_type_s;
 
-	typedef struct superblock
+	typedef struct super_block
 	{
 		dentry_s *	root;
 		sb_ops_s *	sb_ops;
 		void *		private_sb_info;
-	} superblock_s;
+	} super_block_s;
 
 	typedef struct inode
 	{
@@ -53,7 +36,7 @@
 		unsigned long	blocks;
 		unsigned long	attribute;
 
-		superblock_s *	sb;
+		super_block_s *	sb;
 		file_ops_s *	f_ops;
 		inode_ops_s *	inode_ops;
 
@@ -77,7 +60,7 @@
 
 	typedef struct vfsmount {
 		dentry_s *		mnt_root;	/* root of the mounted tree */
-		superblock_s *	mnt_sb;	/* pointer to superblock */
+		super_block_s *	mnt_sb;	/* pointer to superblock */
 		int				mnt_flags;
 	} vfsmount_s;
 
@@ -96,8 +79,8 @@
 
 	typedef struct sb_ops
 	{
-		void	(*write_superblock)(superblock_s * sb);
-		void	(*put_superblock)(superblock_s * sb);
+		void	(*write_superblock)(super_block_s * sb);
+		void	(*put_superblock)(super_block_s * sb);
 
 		void	(*write_inode)(inode_s * inode);
 	} sb_ops_s;
@@ -113,13 +96,13 @@
 		long		(*setattr)(dentry_s * dentry, unsigned long * attr);
 	} inode_ops_s;
 
-	typedef struct dirent_ops
+	typedef struct dentry_ops
 	{
 		long	(*compare)(dentry_s * parent_dentry, char * source_filename, char * destination_filename);
 		long	(*hash)(dentry_s * dentry, char * filename);
 		long	(*release)(dentry_s * dentry);
 		long	(*iput)(dentry_s * dentry, inode_s * inode);
-	} dirent_ops_s;
+	} dentry_ops_s;
 
 	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
 
@@ -144,11 +127,11 @@
 		// const char		iname[];
 	} filename_s;
 
-	extern superblock_s * root_sb;
+	extern super_block_s * root_sb;
 
 	extern inode_ops_s	FAT32_inode_ops;
 	extern file_ops_s	FAT32_file_ops;
-	extern dirent_ops_s	FAT32_dentry_ops;
+	extern dentry_ops_s	FAT32_dentry_ops;
 	extern sb_ops_s		FAT32_sb_ops;
 
 	extern file_ops_s	tty_fops;
@@ -156,7 +139,7 @@
 	long do_sys_open(int dfd, const char * filename, int flags);
 	unsigned long init_vfs();
 	dentry_s * path_walk(const char * name, unsigned long flags);
-	superblock_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
+	super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 	unsigned long register_filesystem(fs_type_s * fs);
 	unsigned long unregister_filesystem(fs_type_s * fs);
 	file_s * do_filp_open(int dfd, filename_s * name, int flags);

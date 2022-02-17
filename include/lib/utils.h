@@ -12,7 +12,7 @@
 	unsigned bm_get_assigned_bit(bitmap_t * bm, unsigned long idx);
 
 	// list.c
-	struct List;
+	// struct List;
 	typedef struct List List_s;
 	typedef struct List
 	{

@@ -7,7 +7,7 @@
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
 
-superblock_s * read_ext2_superblock(GPT_PE_s * DPTE, void * buf)
+super_block_s * read_ext2_superblock(GPT_PE_s * DPTE, void * buf)
 {
 
 }

@@ -4,14 +4,7 @@
 #include <stddef.h>
 #include <lib/utils.h>
 
-	struct dentry;
-	typedef struct dentry dentry_s;
-
-	struct inode;
-	typedef struct inode inode_s;
-
-	struct dirent_ops;
-	typedef struct dirent_ops dirent_ops_s;
+#include "vfs_s_defs.h"
 
 	/*
 	* "quick string" -- eases parameter passing, but more importantly
@@ -36,7 +29,7 @@
 		List_hdr_s	childdir_lhdr;
 
 		inode_s *		dir_inode;
-		dirent_ops_s *	dir_ops;
+		dentry_ops_s *	dir_ops;
 	} dentry_s;
 
 	dentry_s * __d_lookup(dentry_s * parent, qstr_s * name);

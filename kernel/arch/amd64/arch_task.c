@@ -130,31 +130,6 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
-file_s * open_exec_file(char * path)
-{
-	dentry_s * dentry = NULL;
-	file_s * filp = NULL;
-
-	dentry = path_walk(path, 0);
-
-	if(dentry == NULL)
-		return (void *)-ENOENT;
-	if(dentry->dir_inode->attribute == FS_ATTR_DIR)
-		return (void *)-ENOTDIR;
-
-	filp = (file_s *)kmalloc(sizeof(file_s));
-	if(filp == NULL)
-		return (void *)-ENOMEM;
-
-	filp->position = 0;
-	filp->mode = 0;
-	filp->dentry = dentry;
-	filp->mode = O_RDONLY;
-	filp->f_ops = dentry->dir_inode->f_ops;
-
-	return filp;
-}
-
 int read_exec_mm(file_s * fp, task_s * curr)
 {
 	mm_s * mm = curr->mm_struct;
@@ -344,12 +319,16 @@ unsigned long do_fork(stack_frame_s * parent_context,
 		return ret_val;
 }
 
-unsigned long do_execve(stack_frame_s * curr_context, char *name, char *argv[], char *envp[])
+unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
 
 	exit_files(curr_tsk);
-	file_s * fp = open_exec_file(name);
+	// file_s * fp = open_exec_file(name);
+	filename_s name;
+	name.name = exec_filename;
+	name.len = strlen(exec_filename);
+	file_s * fp = do_filp_open(0, &name, O_RDONLY);
 
 	if (curr_tsk->flags & PF_VFORK)
 	{

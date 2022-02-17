@@ -695,7 +695,7 @@ long FAT32_hash(dentry_s * dentry,char * filename){}
 long FAT32_release(dentry_s * dentry){}
 long FAT32_iput(dentry_s * dentry, inode_s * inode){}
 
-dirent_ops_s FAT32_dentry_ops = 
+dentry_ops_s FAT32_dentry_ops = 
 {
 	.compare = FAT32_compare,
 	.hash = FAT32_hash,
@@ -703,9 +703,9 @@ dirent_ops_s FAT32_dentry_ops =
 	.iput = FAT32_iput,
 };
 
-void fat32_write_superblock(superblock_s * sbp){}
+void fat32_write_superblock(super_block_s * sbp){}
 
-void fat32_put_superblock(superblock_s * sbp)
+void fat32_put_superblock(super_block_s * sbp)
 {
 	kfree(sbp->private_sb_info);
 	kfree(sbp->root->dir_inode->private_idx_info);
@@ -750,16 +750,16 @@ sb_ops_s FAT32_sb_ops =
 	.write_inode = fat32_write_inode,
 };
 
-superblock_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
+super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 {
-	superblock_s * sbp = NULL;
+	super_block_s * sbp = NULL;
 	FAT32_inode_info_s * finode = NULL;
 	FAT32_BS_s * fbs = NULL;
 	FAT32_SBinfo_s * fsbi = NULL;
 
 	//super block
-	sbp = (superblock_s *)kmalloc(sizeof(superblock_s));
-	memset(sbp, 0, sizeof(superblock_s));
+	sbp = (super_block_s *)kmalloc(sizeof(super_block_s));
+	memset(sbp, 0, sizeof(super_block_s));
 
 	sbp->sb_ops = &FAT32_sb_ops;
 	sbp->private_sb_info = (FAT32_SBinfo_s *)kmalloc(sizeof(FAT32_SBinfo_s));
