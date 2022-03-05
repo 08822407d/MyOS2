@@ -21,3 +21,8 @@ mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
 	}
 	return NULL;
 }
+
+void init_mount()
+{
+	list_hdr_init(&mount_lhdr);
+}
