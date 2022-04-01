@@ -4,6 +4,7 @@
 #include <lib/utils.h>
 
 #include <include/fs/dcache.h>
+#include <include/fs/mount.h>
 #include <include/fs/MBR.h>
 #include <include/fs/GPT.h>
 
@@ -57,12 +58,6 @@
 
 		void * 			private_data;
 	} file_s;
-
-	typedef struct vfsmount {
-		dentry_s *		mnt_root;	/* root of the mounted tree */
-		super_block_s *	mnt_sb;	/* pointer to superblock */
-		int				mnt_flags;
-	} vfsmount_s;
 
 	typedef struct path {
 		vfsmount_s *	mnt;

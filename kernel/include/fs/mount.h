@@ -7,7 +7,7 @@
 
 	typedef struct vfsmount {
 		dentry_s *		mnt_root;	/* root of the mounted tree */
-		super_block_s *	mnt_sb;	/* pointer to superblock */
+		super_block_s *	mnt_sb;		/* pointer to superblock */
 		int 			mnt_flags;
 	} vfsmount_s;
 

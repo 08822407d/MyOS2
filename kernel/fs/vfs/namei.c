@@ -70,6 +70,7 @@ void putname(filename_s * name)
 {
 	kfree((void *)name->name);
 }
+
 /*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/
@@ -315,31 +316,92 @@ static int do_open(nameidata_s *nd, file_s *file, int open_flag)
 }
 
 // Linux function proto:
+// static struct file *path_openat(struct nameidata *nd,
+// 			const struct open_flags *op, unsigned flags)
+static file_s * path_openat(nameidata_s * nd, unsigned flags)
+{
+	file_s * file;
+	int err;
+
+	file = kmalloc(sizeof(file_s));
+	memset(file, 0, sizeof(file_s));
+	const char *s = path_init(nd);
+	while (!( err = link_path_walk(s, nd)) &&
+			(s = open_last_lookups(nd, file, flags)) != NULL)
+		;
+	if (!err)
+		err = do_open(nd, file, flags);
+	terminate_walk(nd);
+
+	return file;
+}
+
+// Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
 file_s * do_filp_open(int dfd, filename_s * name, int flags)
 {
 	nameidata_s nd;
 	file_s * filp;
-	int error;
 
-	filp = kmalloc(sizeof(file_s));
-	memset(filp, 0, sizeof(file_s));
 	__set_nameidata(&nd, dfd, name);
-
-	// Linux call stack:
-	// static struct file *path_openat(struct nameidata *nd,
-	//		const struct open_flags *op, unsigned flags)
-	//					||
-	//					\/
-	// {
-	const char *s = path_init(&nd);
-	link_path_walk(s, &nd);
-	open_last_lookups(&nd, filp, flags);
-	// if (!error)
-		error = do_open(&nd, filp, flags);
-	terminate_walk(&nd);
-	// }
+	filp = path_openat(&nd, flags);
 
 	return filp;
 }
+
+// Linux function proto:
+// static inline const char *lookup_last(struct nameidata *nd)
+static inline const char * lookup_last(nameidata_s * nd)
+{
+	return walk_component(nd);
+}
+
+// Linux function proto:
+/* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
+// static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path)
+static int path_lookupat(nameidata_s * nd, unsigned flags, path_s * path)
+{
+	const char *s = path_init(nd);
+	int err;
+
+	while (!(err = link_path_walk(s, nd)) &&
+	       (s = lookup_last(nd)) != NULL)
+		;
+
+	// if (!err && nd->flags & LOOKUP_DIRECTORY)
+		// if (!d_can_lookup(nd->path.dentry))
+		// 	err = -ENOTDIR;
+	if (!err) {
+		*path = nd->path;
+		nd->path.mnt = NULL;
+		nd->path.dentry = NULL;
+	}
+	terminate_walk(nd);
+	return err;
+}
+
+// Linux function proto:
+// int filename_lookup(int dfd, struct filename *name, unsigned flags,
+// 		    struct path *path, struct path *root)
+int filename_lookup(int dfd, filename_s * name, unsigned flags, path_s * path)
+{
+	int retval;
+	nameidata_s nd;
+
+	__set_nameidata(&nd, dfd, name);
+	retval = path_lookupat(&nd, flags, path);
+
+	return retval;
+}
+
+// Linux function proto:
+// static inline int user_path_at(int dfd, const char __user *name, unsigned flags,
+//		 struct path *path)
+int user_path_at(int dfd, const char * name, unsigned flags, path_s * path)
+{
+	filename_s fn;
+	getname(&fn, name);
+	return filename_lookup(dfd, &fn, flags, path);
+}
+
