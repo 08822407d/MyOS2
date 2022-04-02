@@ -35,7 +35,7 @@ typedef struct nameidata {
  *==============================================================================================*/
 // Linux function proto:
 // struct filename * getname(const char __user * filename)
-unsigned long getname(filename_s * name, const char * u_filename)
+filename_s * getname(const char * u_filename)
 {
 	// Linux call stack:
 	// struct filename * getname_flags(const char __user *filename,
@@ -43,25 +43,38 @@ unsigned long getname(filename_s * name, const char * u_filename)
 	//					||
 	//					\/
 	size_t len = strnlen_user((void *)u_filename, CONST_4K);
-	if (len < 0)
-	{
-		return -EFAULT;
-	}
-	else if (len > CONST_4K -1)
-	{
-		return -ENAMETOOLONG;
-	}
-
+	filename_s * name = kmalloc(sizeof(filename_s));
 	name->len = len;
 	name->name = kmalloc(len + 1);
-	if (name->name == NULL)
+	if (name->name != NULL)
 	{
-		return -ENOMEM;
+		memset((void *)name->name, 0, len + 1);
+		strncpy_from_user((void *)name->name, (void *)u_filename, len);
 	}
-	memset((void *)name->name, 0, len + 1);
-	strncpy_from_user((void *)name->name, (void *)u_filename, len);
 
-	return ENOERR;
+	return name;
+}
+
+// Linux function proto:
+// struct filename * getname_kernel(const char __user * filename)
+filename_s * getname_kernel(const char * k_filename)
+{
+	// Linux call stack:
+	// struct filename * getname_flags(const char __user *filename,
+	//					int flags, int *empty)
+	//					||
+	//					\/
+	size_t len = strnlen((void *)k_filename, CONST_4K);
+	filename_s * name = kmalloc(sizeof(filename_s));
+	name->len = len;
+	name->name = kmalloc(len + 1);
+	if (name->name != NULL)
+	{
+		memset((void *)name->name, 0, len + 1);
+		strncpy((void *)name->name, (void *)k_filename, len);
+	}
+
+	return name;
 }
 
 // Linxu function proto:
@@ -69,6 +82,7 @@ unsigned long getname(filename_s * name, const char * u_filename)
 void putname(filename_s * name)
 {
 	kfree((void *)name->name);
+	kfree((void *)name);
 }
 
 /*==============================================================================================*
@@ -137,7 +151,7 @@ static dentry_s * follow_dotdot(nameidata_s * nd)
 
 // Linux function proto:
 // static const char *handle_dots(struct nameidata *nd, int type)
-static const char * handle_dots(nameidata_s *nd)
+static const char * handle_dots(nameidata_s * nd)
 {
 	const char * ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
@@ -395,13 +409,36 @@ int filename_lookup(int dfd, filename_s * name, unsigned flags, path_s * path)
 	return retval;
 }
 
+int kern_path(const char * name, unsigned int flags, path_s * path)
+{
+	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
+}
+
+/**
+ * vfs_path_lookup - lookup a file path relative to a dentry-vfsmount pair
+ * @dentry:  pointer to dentry of the base directory
+ * @mnt: pointer to vfs mount of the base directory
+ * @name: pointer to file name
+ * @flags: lookup flags
+ * @path: pointer to struct path to fill
+ */
+// Linux function proto:
+// int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
+// 		    const char *name, unsigned int flags,
+// 		    struct path *path)
+int vfs_path_lookup(dentry_s * dentry, vfsmount_s * mnt,
+		    const char * name, unsigned int flags, path_s * path)
+{
+	/* the first argument of filename_lookup() is ignored with root */
+	return filename_lookup(AT_FDCWD, getname_kernel(name), flags , path);
+}
+
 // Linux function proto:
 // static inline int user_path_at(int dfd, const char __user *name, unsigned flags,
 //		 struct path *path)
 int user_path_at(int dfd, const char * name, unsigned flags, path_s * path)
 {
-	filename_s fn;
-	getname(&fn, name);
-	return filename_lookup(dfd, &fn, flags, path);
+	filename_s * fn = getname(name);
+	return filename_lookup(dfd, fn, flags, path);
 }
 

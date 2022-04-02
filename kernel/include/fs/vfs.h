@@ -140,6 +140,7 @@
 	file_s * do_filp_open(int dfd, filename_s * name, int flags);
 	int __vfs_open(const path_s * path, file_s * file);
 	long kopen(const char * filename, int flags);
+	int path_mount(const char * dev_name, path_s * path, unsigned long flags);
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 

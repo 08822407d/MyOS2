@@ -46,7 +46,8 @@
 	/* LOOKUP_* flags which do scope-related checks based on the dirfd. */
 	#define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)	
 
-	unsigned long getname(filename_s * name, const char * u_filename);
+	filename_s * getname(const char * u_filename);
+	filename_s * getname_kernel(const char * k_filename);
 	int user_path_at(int dfd, const char * name, unsigned flags, path_s * path);
 	void putname(filename_s * name);
 

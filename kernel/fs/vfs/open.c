@@ -36,15 +36,14 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	//					\/
 	// static long do_sys_openat2(int dfd, const char __user *filename,
 	//				   struct open_how *how)
-	filename_s name;
 	int fd = -1;
 	long err = 0;
 
-	err = getname(&name, filename);
+	filename_s * name = getname(filename);
 	fd = get_unused_fd_flags(0);
 	if (fd >=0)
 	{
-		file_s * fp = do_filp_open(dfd, &name, flags);
+		file_s * fp = do_filp_open(dfd, name, flags);
 		if (fp == NULL)
 		{
 			err = -ENFILE;
@@ -58,6 +57,7 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	{
 		err = -ENFILE;
 	}
+	putname(name);
 	
 	return -fd;
 }

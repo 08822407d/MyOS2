@@ -2,6 +2,7 @@
 #define _LINUX_MOUNT_H_
 
 #include <lib/utils.h>
+#include <uapi/mount.h>
 
 #include "vfs_s_defs.h"
 
