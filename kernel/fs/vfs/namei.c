@@ -266,12 +266,19 @@ static int link_path_walk(const char * name, nameidata_s * nd)
  *==============================================================================================*/
 // Linux function proto:
 // static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
-static void __set_nameidata(nameidata_s * p, int dfd, filename_s * name)
+static void __set_nameidata(nameidata_s * p, int dfd, filename_s * name, path_s * root)
 {
 	memset(p, 0, sizeof(nameidata_s));
 
 	p->name = name;
 	p->dfd = dfd;
+	p->path.mnt = NULL;
+	p->path.dentry = NULL;
+
+	if (root != NULL)
+	{
+		p->root = *root;
+	}
 }
 
 static void terminate_walk(nameidata_s * nd)
@@ -358,7 +365,7 @@ file_s * do_filp_open(int dfd, filename_s * name, int flags)
 	nameidata_s nd;
 	file_s * filp;
 
-	__set_nameidata(&nd, dfd, name);
+	__set_nameidata(&nd, dfd, name, NULL);
 	filp = path_openat(&nd, flags);
 
 	return filp;
@@ -403,7 +410,7 @@ int filename_lookup(int dfd, filename_s * name, unsigned flags, path_s * path)
 	int retval;
 	nameidata_s nd;
 
-	__set_nameidata(&nd, dfd, name);
+	__set_nameidata(&nd, dfd, name, NULL);
 	retval = path_lookupat(&nd, flags, path);
 
 	return retval;
