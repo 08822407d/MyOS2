@@ -9,6 +9,8 @@
 #include <include/fs/vfs.h>
 #include <include/fs/namei.h>
 #include <include/fs/dcache.h>
+#include <include/fs/namespace.h>
+#include <include/fs/mount.h>
 
 #include <arch/amd64/include/arch_proto.h>
 
@@ -86,6 +88,64 @@ void putname(filename_s * name)
 }
 
 /*==============================================================================================*
+ *								private fuctions due with mount									*
+ *==============================================================================================*/
+// static bool choose_mountpoint(struct mount *m, const struct path *root,
+// 			      struct path *path)
+static bool choose_mountpoint(mount_s * m, const path_s * root, path_s * path)
+{
+	while (mnt_has_parent(m)) {
+		dentry_s * mountpoint = m->mnt_mountpoint;
+
+		m = m->mnt_parent;
+		if (root->dentry == mountpoint &&
+			     root->mnt == &m->mnt)
+			break;
+		if (mountpoint != m->mnt.mnt_root) {
+			path->mnt = &m->mnt;
+			path->dentry = mountpoint;
+			return true;
+		}
+	}
+	return false;
+}
+
+// Linux function proto:
+// static inline int traverse_mounts(struct path *path, bool *jumped,
+// 				  int *count, unsigned lookup_flags)
+static inline int traverse_mounts(path_s * path)
+{
+	int ret_val = -ENOERR;
+	// linux call stack :
+	// __traverse_mounts(path, flags, jumped, count, lookup_flags);
+	// {
+	for (;;)
+	{
+		vfsmount_s * mounted = lookup_mnt(path);
+		if (mounted)	// ... in our namespace
+		{
+			path->mnt = mounted;
+			path->dentry = mounted->mnt_root;
+			// here we know it's positive
+			continue;
+		}
+		return ret_val;
+	}
+	// }
+}
+
+// Linux function proto:
+// static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
+// 			  struct path *path, struct inode **inode,
+// 			  unsigned int *seqp)
+static inline int handle_mounts(nameidata_s * nd, dentry_s * dentry, path_s * path)
+{
+	path->mnt = nd->path.mnt;
+	path->dentry = dentry;
+	return traverse_mounts(path);
+}
+
+/*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/
 /*
@@ -101,7 +161,8 @@ static const char * step_into(nameidata_s * nd, dentry_s * dentry)
 {
 	path_s path;
 
-	nd->path.dentry = dentry;
+	handle_mounts(nd, dentry, &path);
+	nd->path = path;
 
 	return NULL;
 }
@@ -142,11 +203,23 @@ static dentry_s * __lookup_slow(qstr_s * name, dentry_s * dir)
 //				 struct inode **inodep, unsigned *seqp)
 static dentry_s * follow_dotdot(nameidata_s * nd)
 {
-	dentry_s * parent;
+	dentry_s * parent, * old;
 
-	parent = nd->path.dentry->parent;
+	if (nd->path.dentry == nd->path.mnt->mnt_root) {
+		path_s path;
+		if (!choose_mountpoint(
+				real_mount(nd->path.mnt), &nd->root, &path))
+			goto in_root;
+		// here the "path" point to mountpoint of nd->path.mnt
+		nd->path = path;
+		/* we know that mountpoint was pinned */
+	}
+	old = nd->path.dentry;
+	parent = old->parent;
 
 	return parent;
+in_root:
+	return NULL;
 }
 
 // Linux function proto:

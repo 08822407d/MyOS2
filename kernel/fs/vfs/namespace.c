@@ -7,7 +7,7 @@
 #include <include/fs/namei.h>
 #include <include/fs/mount.h>
 
-List_hdr_s mount_lhdr;
+mount_s root_mnt;
 
 /*
  * find the first mount at @dentry on vfsmount @mnt.
@@ -15,16 +15,43 @@ List_hdr_s mount_lhdr;
  */
 mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
 {
-	mount_s *p;
+	mount_s * p = container_of(mnt, mount_s, mnt);
+	List_hdr_s * child_lhdr = &p->mnt_mounts;
 
 	List_s * mnt_lp;
-	for (mnt_lp = mount_lhdr.header.next; mnt_lp != &mount_lhdr.header; mnt_lp = mnt_lp->next)
+	for (mnt_lp = child_lhdr->header.next; mnt_lp != &child_lhdr->header; mnt_lp = mnt_lp->next)
 	{
 		p = container_of(mnt_lp, mount_s, mnt_list);
 		if (&p->mnt_parent->mnt == mnt && p->mnt_mountpoint == dentry)
 			return p;
 	}
 	return NULL;
+}
+/*
+ * lookup_mnt - Return the first child mount mounted at path
+ *
+ * "First" means first mounted chronologically.  If you create the
+ * following mounts:
+ *
+ * mount /dev/sda1 /mnt
+ * mount /dev/sda2 /mnt
+ * mount /dev/sda3 /mnt
+ *
+ * Then lookup_mnt() on the base /mnt dentry in the root mount will
+ * return successively the root dentry and vfsmount of /dev/sda1, then
+ * /dev/sda2, then /dev/sda3, then NULL.
+ *
+ * lookup_mnt takes a reference to the found vfsmount.
+ */
+vfsmount_s * lookup_mnt(const path_s * path)
+{
+	mount_s * child_mnt;
+	vfsmount_s * m = NULL;
+	child_mnt = __lookup_mnt(path->mnt, path->dentry);
+	if (child_mnt != NULL)
+		m = &child_mnt->mnt;
+
+	return m;
 }
 
 /*
@@ -201,5 +228,13 @@ long do_mount(const char * dev_name, const char * dir_name, unsigned long flags)
 
 void init_mount()
 {
-	list_hdr_init(&mount_lhdr);
+	list_hdr_init(&root_mnt.mnt_mounts);
+	list_init(&root_mnt.mnt_child, &root_mnt);
+	list_init(&root_mnt.mnt_list, &root_mnt);
+
+	root_mnt.mnt.mnt_sb = root_sb;
+	root_mnt.mnt_parent = &root_mnt;
+	root_mnt.mnt_mountpoint =
+	root_mnt.mnt.mnt_root = root_sb->root;
+	root_mnt.mnt_mp = NULL;
 }

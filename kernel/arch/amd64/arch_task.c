@@ -14,6 +14,7 @@
 #include <include/printk.h>
 #include <include/mm/mm.h>
 #include <include/fs/vfs.h>
+#include <include/fs/namespace.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"
@@ -440,8 +441,10 @@ static void set_init_taskfs()
 	task_s * curr = curr_tsk;
 	// set cwd and root-dir of task1
 	taskfs_s * taskfs_p = curr->task_fs;
-	taskfs_p->pwd.dentry = root_sb->root;
+	taskfs_p->pwd.dentry = 
 	taskfs_p->root.dentry = root_sb->root;
+	taskfs_p->pwd.mnt = 
+	taskfs_p->root.mnt = &root_mnt.mnt;
 
 	memcpy(task0_PCB.task.task_fs, taskfs_p, sizeof(taskfs_s));
 }
@@ -450,6 +453,7 @@ unsigned long init(unsigned long arg)
 {
 	color_printk(GREEN, BLACK, "Enter task init.\n");
 	init_vfs();
+	init_mount();
 	set_init_taskfs();
 	color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();

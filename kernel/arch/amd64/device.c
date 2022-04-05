@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include <include/proto.h>
+#include <include/fs/namei.h>
 
 #include "include/device.h"
 #include "include/tty.h"
@@ -35,7 +36,10 @@ void devices_init()
 
 void creat_dev_file()
 {
-	dentry_s * root_dir = path_walk("/", 0);
+	path_s root_path;
+	kern_path("/", 0, &root_path);
+	
+	dentry_s * root_dir = root_path.dentry;
 	dentry_s * dev_dir = creat_append_devdirent("dev", root_dir);
 
 	List_s * cd_lp;

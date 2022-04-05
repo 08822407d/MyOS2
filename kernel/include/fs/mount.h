@@ -19,7 +19,7 @@
 
 	typedef struct mount
 	{
-		List_s		mnt_list;	// used for search in MyOS2, instead of Linux hlist_head
+		List_s		mnt_list;	// in Linux it is hlist_head
 		mount_s *	mnt_parent;
 		dentry_s *	mnt_mountpoint;
 		vfsmount_s	mnt;
@@ -28,5 +28,15 @@
 		List_s		mnt_child;	/* and going through their mnt_child */
 		mountpoint_s *	mnt_mp;	/* where is it mounted */
 	} mount_s;
+
+	static inline mount_s * real_mount(vfsmount_s * mnt)
+	{
+		return container_of(mnt, mount_s, mnt);
+	}
+
+	static inline int mnt_has_parent(mount_s * mnt)
+	{
+		return mnt != mnt->mnt_parent;
+	}
 
 #endif /* _LINUX_MOUNT_H_ */

@@ -50,5 +50,6 @@
 	filename_s * getname_kernel(const char * k_filename);
 	int user_path_at(int dfd, const char * name, unsigned flags, path_s * path);
 	void putname(filename_s * name);
+	int kern_path(const char * name, unsigned int flags, path_s * path);
 
 #endif /* _LINUX_NAMEI_H */
