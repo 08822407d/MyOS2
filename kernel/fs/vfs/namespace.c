@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <errno.h>
 
+#include <include/proto.h>
 #include <include/fs/vfs.h>
 #include <include/fs/namei.h>
 #include <include/fs/mount.h>
@@ -27,6 +28,7 @@ mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
 	}
 	return NULL;
 }
+
 /*
  * lookup_mnt - Return the first child mount mounted at path
  *
@@ -52,6 +54,115 @@ vfsmount_s * lookup_mnt(const path_s * path)
 		m = &child_mnt->mnt;
 
 	return m;
+}
+
+// Linux function proto:
+// static struct mountpoint *get_mountpoint(struct dentry *dentry) 
+static mountpoint_s * get_mountpoint(dentry_s * dentry)
+{
+	mountpoint_s * mp, * new = NULL;
+	int ret;
+
+	new = kmalloc(sizeof(mountpoint_s));
+	if (new == NULL)
+		goto done;
+
+	/* Add the new mountpoint to the hash table */
+	new->m_dentry = dentry;
+	// new->m_count = 1;
+
+	mp = new;
+	new = NULL;
+done:
+	return mp;
+}
+
+// Linux function proto:
+// static struct mountpoint *lock_mount(struct path *path)
+static mountpoint_s * lock_mount(path_s * path)
+{
+	vfsmount_s * mnt;
+	dentry_s * dentry = path->dentry;
+retry:
+	mnt = lookup_mnt(path);
+	if (mnt == NULL) {
+		mountpoint_s * mp = get_mountpoint(dentry);
+		return mp;
+	}
+	path->mnt = mnt;
+	dentry = path->dentry = mnt->mnt_root;
+	goto retry;
+}
+
+// static int graft_tree(struct mount *mnt, struct mount *p, struct mountpoint *mp)
+static int graft_tree(mount_s * mnt, mount_s * p, mountpoint_s * mp)
+{
+	if (d_is_dir(mp->m_dentry) !=
+	      d_is_dir(mnt->mnt.mnt_root))
+		return -ENOTDIR;
+
+	return attach_recursive_mnt(mnt, p, mp, false);
+}
+
+static mount_s *__do_loopback(path_s * old_path)
+{
+	// struct mount *mnt = ERR_PTR(-EINVAL), *old = real_mount(old_path->mnt);
+
+	// if (IS_MNT_UNBINDABLE(old))
+	// 	return mnt;
+
+	// if (!check_mnt(old) && old_path->dentry->d_op != &ns_dentry_operations)
+	// 	return mnt;
+
+	// if (!recurse && has_locked_children(old, old_path->dentry))
+	// 	return mnt;
+
+	// if (recurse)
+	// 	mnt = copy_tree(old, old_path->dentry, CL_COPY_MNT_NS_FILE);
+	// else
+	// 	mnt = clone_mnt(old, old_path->dentry, 0);
+
+	// if (!IS_ERR(mnt))
+	// 	mnt->mnt.mnt_flags &= ~MNT_LOCKED;
+
+	// return mnt;
+}
+
+/*
+ * do loopback mount.
+ */
+static int do_loopback(IN path_s * path, const char * old_name, int recurse)
+{
+	path_s old_path;
+	mount_s * mnt = NULL, * parent;
+	mountpoint_s * mp;
+	int err;
+	if (!old_name || !*old_name)
+		return -EINVAL;
+
+	err = kern_path(old_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
+	if (err)
+		goto out;
+
+	parent = real_mount(path->mnt);
+	mp = lock_mount(path);
+	if (mp == NULL)
+	{
+		err = -ENOMEM;
+		goto out;
+	}
+
+	mnt = __do_loopback(&old_path);
+// 	if (IS_ERR(mnt)) {
+// 		err = PTR_ERR(mnt);
+// 		goto out2;
+// 	}
+	err = graft_tree(mnt, parent, mp);
+
+// out2:
+// 	unlock_mount(mp);
+out:
+	return err;
 }
 
 /*
@@ -107,71 +218,6 @@ static int do_new_mount(path_s * path, int sb_flags, int mnt_flags, const char *
 
 	// put_fs_context(fc);
 	return err;
-}
-
-static mount_s *__do_loopback(path_s * old_path, int recurse)
-{
-	// struct mount *mnt = ERR_PTR(-EINVAL), *old = real_mount(old_path->mnt);
-
-	// if (IS_MNT_UNBINDABLE(old))
-	// 	return mnt;
-
-	// if (!check_mnt(old) && old_path->dentry->d_op != &ns_dentry_operations)
-	// 	return mnt;
-
-	// if (!recurse && has_locked_children(old, old_path->dentry))
-	// 	return mnt;
-
-	// if (recurse)
-	// 	mnt = copy_tree(old, old_path->dentry, CL_COPY_MNT_NS_FILE);
-	// else
-	// 	mnt = clone_mnt(old, old_path->dentry, 0);
-
-	// if (!IS_ERR(mnt))
-	// 	mnt->mnt.mnt_flags &= ~MNT_LOCKED;
-
-	// return mnt;
-}
-
-/*
- * do loopback mount.
- */
-static int do_loopback(IN path_s * path, const char * old_name, int recurse)
-{
-	path_s old_path;
-	mount_s * mnt = NULL, * parent;
-	mountpoint_s * mp;
-	int err;
-	if (!old_name || !*old_name)
-		return -EINVAL;
-	err = kern_path(old_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
-	if (err)
-		return err;
-
-// 	err = -EINVAL;
-// 	if (mnt_ns_loop(old_path.dentry))
-// 		goto out;
-
-// 	mp = lock_mount(path);
-// 	if (IS_ERR(mp)) {
-// 		err = PTR_ERR(mp);
-// 		goto out;
-// 	}
-
-// 	parent = real_mount(path->mnt);
-// 	if (!check_mnt(parent))
-// 		goto out2;
-
-// 	mnt = __do_loopback(&old_path, recurse);
-// 	if (IS_ERR(mnt)) {
-// 		err = PTR_ERR(mnt);
-// 		goto out2;
-// 	}
-
-// out2:
-// 	unlock_mount(mp);
-// out:
-// 	return err;
 }
 
 /*
