@@ -40,6 +40,11 @@
 #include <sys/_null.h>
 #include <sys/_types.h>
 
+	// indicate the param for input
+	#define IN
+	// indicate the param for output
+	#define OUT
+
 	#ifndef _PTRDIFF_T_DECLARED
 	typedef	__ptrdiff_t	ptrdiff_t;
 	#define	_PTRDIFF_T_DECLARED

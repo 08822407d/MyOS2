@@ -136,7 +136,7 @@ static mount_s *__do_loopback(path_s * old_path, int recurse)
 /*
  * do loopback mount.
  */
-static int do_loopback(path_s * path, const char * old_name, int recurse)
+static int do_loopback(IN path_s * path, const char * old_name, int recurse)
 {
 	path_s old_path;
 	mount_s * mnt = NULL, * parent;
@@ -144,9 +144,9 @@ static int do_loopback(path_s * path, const char * old_name, int recurse)
 	int err;
 	if (!old_name || !*old_name)
 		return -EINVAL;
-// 	err = kern_path(old_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
-// 	if (err)
-// 		return err;
+	err = kern_path(old_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
+	if (err)
+		return err;
 
 // 	err = -EINVAL;
 // 	if (mnt_ns_loop(old_path.dentry))
@@ -191,7 +191,7 @@ static int do_loopback(path_s * path, const char * old_name, int recurse)
 // Linux function proto:
 // int path_mount(const char *dev_name, struct path *path,
 // 		const char *type_page, unsigned long flags, void *data_page)
-int path_mount(const char * dev_name, path_s * path, unsigned long flags)
+int path_mount(const char * dev_name, IN path_s * path, unsigned long flags)
 {
 	unsigned int mnt_flags = 0, sb_flags;
 	int ret;

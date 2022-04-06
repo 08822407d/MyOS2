@@ -14,22 +14,23 @@
 
 #include <arch/amd64/include/arch_proto.h>
 
-typedef struct nameidata {
-	path_s		path;
-	qstr_s		last;
-	path_s		root;
-	inode_s	*	inode; /* path.dentry.d_inode */
+typedef struct nameidata
+{
+	path_s path;
+	qstr_s last;
+	path_s root;
+	inode_s *inode; /* path.dentry.d_inode */
 
-	int			last_type;
-	unsigned	flags, state;
-	unsigned	depth;
-	int			total_link_count;
+	int last_type;
+	unsigned flags, state;
+	unsigned depth;
+	int total_link_count;
 	filename_s *name;
 
 	// struct filename	*name;
 	// struct nameidata *saved;
-	unsigned	root_seq;
-	int			dfd;
+	unsigned root_seq;
+	int dfd;
 } nameidata_s;
 
 /*==============================================================================================*
@@ -37,7 +38,7 @@ typedef struct nameidata {
  *==============================================================================================*/
 // Linux function proto:
 // struct filename * getname(const char __user * filename)
-filename_s * getname(const char * u_filename)
+filename_s *getname(const char *u_filename)
 {
 	// Linux call stack:
 	// struct filename * getname_flags(const char __user *filename,
@@ -45,7 +46,7 @@ filename_s * getname(const char * u_filename)
 	//					||
 	//					\/
 	size_t len = strnlen_user((void *)u_filename, CONST_4K);
-	filename_s * name = kmalloc(sizeof(filename_s));
+	filename_s *name = kmalloc(sizeof(filename_s));
 	name->len = len;
 	name->name = kmalloc(len + 1);
 	if (name->name != NULL)
@@ -59,7 +60,7 @@ filename_s * getname(const char * u_filename)
 
 // Linux function proto:
 // struct filename * getname_kernel(const char __user * filename)
-filename_s * getname_kernel(const char * k_filename)
+filename_s *getname_kernel(const char *k_filename)
 {
 	// Linux call stack:
 	// struct filename * getname_flags(const char __user *filename,
@@ -67,7 +68,7 @@ filename_s * getname_kernel(const char * k_filename)
 	//					||
 	//					\/
 	size_t len = strnlen((void *)k_filename, CONST_4K);
-	filename_s * name = kmalloc(sizeof(filename_s));
+	filename_s *name = kmalloc(sizeof(filename_s));
 	name->len = len;
 	name->name = kmalloc(len + 1);
 	if (name->name != NULL)
@@ -81,7 +82,7 @@ filename_s * getname_kernel(const char * k_filename)
 
 // Linxu function proto:
 // void putname(struct filename *name)
-void putname(filename_s * name)
+void putname(filename_s *name)
 {
 	kfree((void *)name->name);
 	kfree((void *)name);
@@ -92,16 +93,18 @@ void putname(filename_s * name)
  *==============================================================================================*/
 // static bool choose_mountpoint(struct mount *m, const struct path *root,
 // 			      struct path *path)
-static bool choose_mountpoint(mount_s * m, const path_s * root, path_s * path)
+static bool choose_mountpoint(IN mount_s *m, IN const path_s *root, OUT path_s *path)
 {
-	while (mnt_has_parent(m)) {
-		dentry_s * mountpoint = m->mnt_mountpoint;
+	while (mnt_has_parent(m))
+	{
+		dentry_s *mountpoint = m->mnt_mountpoint;
 
 		m = m->mnt_parent;
 		if (root->dentry == mountpoint &&
-			     root->mnt == &m->mnt)
+			root->mnt == &m->mnt)
 			break;
-		if (mountpoint != m->mnt.mnt_root) {
+		if (mountpoint != m->mnt.mnt_root)
+		{
 			path->mnt = &m->mnt;
 			path->dentry = mountpoint;
 			return true;
@@ -113,7 +116,7 @@ static bool choose_mountpoint(mount_s * m, const path_s * root, path_s * path)
 // Linux function proto:
 // static inline int traverse_mounts(struct path *path, bool *jumped,
 // 				  int *count, unsigned lookup_flags)
-static inline int traverse_mounts(path_s * path)
+static inline int traverse_mounts(IN OUT path_s *path)
 {
 	int ret_val = -ENOERR;
 	// linux call stack :
@@ -121,8 +124,8 @@ static inline int traverse_mounts(path_s * path)
 	// {
 	for (;;)
 	{
-		vfsmount_s * mounted = lookup_mnt(path);
-		if (mounted)	// ... in our namespace
+		vfsmount_s *mounted = lookup_mnt(path);
+		if (mounted) // ... in our namespace
 		{
 			path->mnt = mounted;
 			path->dentry = mounted->mnt_root;
@@ -138,7 +141,7 @@ static inline int traverse_mounts(path_s * path)
 // static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
 // 			  struct path *path, struct inode **inode,
 // 			  unsigned int *seqp)
-static inline int handle_mounts(nameidata_s * nd, dentry_s * dentry, path_s * path)
+static inline int handle_mounts(IN nameidata_s *nd, IN dentry_s *dentry, OUT path_s *path)
 {
 	path->mnt = nd->path.mnt;
 	path->dentry = dentry;
@@ -157,7 +160,7 @@ static inline int handle_mounts(nameidata_s * nd, dentry_s * dentry, path_s * pa
 // Linux function proto:
 // static const char *step_into(struct nameidata *nd, int flags,
 //		     struct dentry *dentry, struct inode *inode, unsigned seq)
-static const char * step_into(nameidata_s * nd, dentry_s * dentry)
+static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 {
 	path_s path;
 
@@ -170,10 +173,10 @@ static const char * step_into(nameidata_s * nd, dentry_s * dentry)
 // Linux function proto:
 // static struct dentry *__lookup_slow(const struct qstr *name,
 //				    struct dentry *dir, unsigned int flags)
-static dentry_s * __lookup_slow(qstr_s * name, dentry_s * dir)
+static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
 {
-	dentry_s *	dentry = NULL;
-	
+	dentry_s *dentry = NULL;
+
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
 	//			const struct qstr *name, wait_queue_head_t *wq)
@@ -184,7 +187,7 @@ static dentry_s * __lookup_slow(qstr_s * name, dentry_s * dir)
 	//					\/
 	dentry = __d_alloc(name);
 
-	if(dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
+	if (dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
 	{
 		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->name);
 		kfree(dentry->name);
@@ -201,11 +204,12 @@ static dentry_s * __lookup_slow(qstr_s * name, dentry_s * dir)
 // Linux function proto:
 // static struct dentry *follow_dotdot(struct nameidata *nd,
 //				 struct inode **inodep, unsigned *seqp)
-static dentry_s * follow_dotdot(nameidata_s * nd)
+static dentry_s *follow_dotdot(IN OUT nameidata_s *nd)
 {
-	dentry_s * parent, * old;
+	dentry_s *parent, *old;
 
-	if (nd->path.dentry == nd->path.mnt->mnt_root) {
+	if (nd->path.dentry == nd->path.mnt->mnt_root)
+	{
 		path_s path;
 		if (!choose_mountpoint(
 				real_mount(nd->path.mnt), &nd->root, &path))
@@ -224,12 +228,12 @@ in_root:
 
 // Linux function proto:
 // static const char *handle_dots(struct nameidata *nd, int type)
-static const char * handle_dots(nameidata_s * nd)
+static const char *handle_dots(IN nameidata_s *nd)
 {
-	const char * ret_val = NULL;
+	const char *ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
 	{
-		dentry_s * parent;
+		dentry_s *parent;
 
 		parent = follow_dotdot(nd);
 		ret_val = step_into(nd, parent);
@@ -239,10 +243,10 @@ static const char * handle_dots(nameidata_s * nd)
 
 // Linux function proto:
 // static const char *walk_component(struct nameidata *nd, int flags)
-static const char * walk_component(nameidata_s * nd)
+static const char *walk_component(IN nameidata_s *nd)
 {
-	dentry_s * dentry, * parent = nd->path.dentry;
-	inode_s * inode;
+	dentry_s *dentry, *parent = nd->path.dentry;
+	inode_s *inode;
 
 	/*
 	 * "." and ".." are special - ".." especially so because it has
@@ -284,18 +288,20 @@ static const char * walk_component(nameidata_s * nd)
  */
 // Linux function proto:
 // static int link_path_walk(const char *name, struct nameidata *nd)
-static int link_path_walk(const char * name, nameidata_s * nd)
+static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 {
 	nd->last_type = LAST_ROOT;
 
-	while (*name=='/')
+	while (*name == '/')
 		name++;
-	if (!*name) {
+	if (!*name)
+	{
 		return 0;
 	}
 
 	/* At this point we know we have a real path component. */
-	for(;;) {
+	for (;;)
+	{
 		int type;
 
 		// compute length of current dirname
@@ -305,15 +311,18 @@ static int link_path_walk(const char * name, nameidata_s * nd)
 
 		type = LAST_NORM;
 		// detect . and .. dir
-		if (name[0] == '.') switch (i) {
+		if (name[0] == '.')
+			switch (i)
+			{
 			case 2:
-				if (name[1] == '.') {
+				if (name[1] == '.')
+				{
 					type = LAST_DOTDOT;
 				}
 				break;
 			case 1:
 				type = LAST_DOT;
-		}
+			}
 
 		nd->last.len = i;
 		nd->last.name = name;
@@ -339,7 +348,7 @@ static int link_path_walk(const char * name, nameidata_s * nd)
  *==============================================================================================*/
 // Linux function proto:
 // static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
-static void __set_nameidata(nameidata_s * p, int dfd, filename_s * name, path_s * root)
+static void __set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN path_s *root)
 {
 	memset(p, 0, sizeof(nameidata_s));
 
@@ -354,36 +363,36 @@ static void __set_nameidata(nameidata_s * p, int dfd, filename_s * name, path_s 
 	}
 }
 
-static void terminate_walk(nameidata_s * nd)
+static void terminate_walk(OUT nameidata_s *nd)
 {
-
 }
 
 /* must be paired with terminate_walk() */
 // Linux function proto:
 // static const char *path_init(struct nameidata *nd, unsigned flags)
-static const char *path_init(nameidata_s * nd)
+static const char *path_init(OUT nameidata_s *nd)
 {
-	const char * s = nd->name->name;
+	const char *s = nd->name->name;
 	nd->root = curr_tsk->task_fs->root;
 	if (s[0] == '/')
 		nd->path = nd->root;
 	else
 		nd->path = curr_tsk->task_fs->pwd;
-	
+
 	return s;
 }
 
 // Linux function proto:
 // static const char *open_last_lookups(struct nameidata *nd,
 //			struct file *file, const struct open_flags *op)
-static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_flag)
+static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
 {
-	dentry_s * dentry, * dir = nd->path.dentry;
+	dentry_s *dentry, *dir = nd->path.dentry;
 
-	if (nd->last_type != LAST_NORM) {
+	if (nd->last_type != LAST_NORM)
+	{
 		if (nd->depth)
-		return handle_dots(nd);
+			return handle_dots(nd);
 	}
 
 	if (!(open_flag & O_CREAT))
@@ -404,7 +413,7 @@ static const char *open_last_lookups(nameidata_s * nd, file_s * file, int open_f
 // Linux function proto:
 // static int do_open(struct nameidata *nd,
 //		   struct file *file, const struct open_flags *op)
-static int do_open(nameidata_s *nd, file_s *file, int open_flag)
+static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 {
 	__vfs_open(&nd->path, file);
 }
@@ -412,16 +421,16 @@ static int do_open(nameidata_s *nd, file_s *file, int open_flag)
 // Linux function proto:
 // static struct file *path_openat(struct nameidata *nd,
 // 			const struct open_flags *op, unsigned flags)
-static file_s * path_openat(nameidata_s * nd, unsigned flags)
+static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
 {
-	file_s * file;
+	file_s *file;
 	int err;
 
 	file = kmalloc(sizeof(file_s));
 	memset(file, 0, sizeof(file_s));
 	const char *s = path_init(nd);
-	while (!( err = link_path_walk(s, nd)) &&
-			(s = open_last_lookups(nd, file, flags)) != NULL)
+	while (!(err = link_path_walk(s, nd)) &&
+		   (s = open_last_lookups(nd, flags)) != NULL)
 		;
 	if (!err)
 		err = do_open(nd, file, flags);
@@ -433,10 +442,10 @@ static file_s * path_openat(nameidata_s * nd, unsigned flags)
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
-file_s * do_filp_open(int dfd, filename_s * name, int flags)
+file_s *do_filp_open(int dfd, IN filename_s * name, int flags)
 {
 	nameidata_s nd;
-	file_s * filp;
+	file_s *filp;
 
 	__set_nameidata(&nd, dfd, name, NULL);
 	filp = path_openat(&nd, flags);
@@ -446,7 +455,7 @@ file_s * do_filp_open(int dfd, filename_s * name, int flags)
 
 // Linux function proto:
 // static inline const char *lookup_last(struct nameidata *nd)
-static inline const char * lookup_last(nameidata_s * nd)
+static inline const char *lookup_last(IN nameidata_s *nd)
 {
 	return walk_component(nd);
 }
@@ -454,19 +463,20 @@ static inline const char * lookup_last(nameidata_s * nd)
 // Linux function proto:
 /* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
 // static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path)
-static int path_lookupat(nameidata_s * nd, unsigned flags, path_s * path)
+static int path_lookupat(IN nameidata_s *nd, unsigned flags, OUT path_s *path)
 {
 	const char *s = path_init(nd);
 	int err;
 
 	while (!(err = link_path_walk(s, nd)) &&
-	       (s = lookup_last(nd)) != NULL)
+		   (s = lookup_last(nd)) != NULL)
 		;
 
 	// if (!err && nd->flags & LOOKUP_DIRECTORY)
-		// if (!d_can_lookup(nd->path.dentry))
-		// 	err = -ENOTDIR;
-	if (!err) {
+	// if (!d_can_lookup(nd->path.dentry))
+	// 	err = -ENOTDIR;
+	if (!err)
+	{
 		*path = nd->path;
 		nd->path.mnt = NULL;
 		nd->path.dentry = NULL;
@@ -478,7 +488,7 @@ static int path_lookupat(nameidata_s * nd, unsigned flags, path_s * path)
 // Linux function proto:
 // int filename_lookup(int dfd, struct filename *name, unsigned flags,
 // 		    struct path *path, struct path *root)
-int filename_lookup(int dfd, filename_s * name, unsigned flags, path_s * path)
+int filename_lookup(int dfd, IN filename_s *name, unsigned flags, OUT path_s *path)
 {
 	int retval;
 	nameidata_s nd;
@@ -489,7 +499,7 @@ int filename_lookup(int dfd, filename_s * name, unsigned flags, path_s * path)
 	return retval;
 }
 
-int kern_path(const char * name, unsigned int flags, path_s * path)
+int kern_path(const char *name, unsigned int flags, OUT path_s *path)
 {
 	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
 }
@@ -506,19 +516,18 @@ int kern_path(const char * name, unsigned int flags, path_s * path)
 // int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
 // 		    const char *name, unsigned int flags,
 // 		    struct path *path)
-int vfs_path_lookup(dentry_s * dentry, vfsmount_s * mnt,
-		    const char * name, unsigned int flags, path_s * path)
+int vfs_path_lookup(dentry_s *dentry, vfsmount_s *mnt,
+					const char *name, unsigned int flags, path_s *path)
 {
 	/* the first argument of filename_lookup() is ignored with root */
-	return filename_lookup(AT_FDCWD, getname_kernel(name), flags , path);
+	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
 }
 
 // Linux function proto:
 // static inline int user_path_at(int dfd, const char __user *name, unsigned flags,
 //		 struct path *path)
-int user_path_at(int dfd, const char * name, unsigned flags, path_s * path)
+int user_path_at(int dfd, const char *name, unsigned flags, OUT path_s *path)
 {
-	filename_s * fn = getname(name);
+	filename_s *fn = getname(name);
 	return filename_lookup(dfd, fn, flags, path);
 }
-
