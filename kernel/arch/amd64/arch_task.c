@@ -131,7 +131,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
-int read_exec_mm(file_s * fp, task_s * curr)
+static errno_t read_exec_mm(file_s * fp, task_s * curr)
 {
 	mm_s * mm = curr->mm_struct;
 
@@ -152,16 +152,19 @@ int read_exec_mm(file_s * fp, task_s * curr)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-unsigned long copy_flags(unsigned long clone_flags, task_s * new_tsk)
+static errno_t copy_flags(unsigned long clone_flags, task_s * new_tsk)
 { 
+	errno_t err = -ENOERR;
+
 	if(clone_flags & CLONE_VM)
 		new_tsk->flags |= PF_VFORK;
-	return 0;
+
+	return err;
 }
 
-unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
+static errno_t copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
-	int error = 0;
+	errno_t err = -ENOERR;
 	int i = 0;
 	if(clone_flags & CLONE_FS)
 		goto out;
@@ -177,9 +180,9 @@ unsigned long copy_files(unsigned long clone_flags, task_s * new_tsk)
 	memcpy(new_tsk->task_fs, curr_tsk->task_fs, sizeof(taskfs_s));
 
 out:
-	return error;
+	return err;
 }
-void exit_files(task_s * new_tsk)
+static void exit_files(task_s * new_tsk)
 {
 	int i = 0;
 	if(new_tsk->flags & PF_VFORK)
@@ -194,9 +197,9 @@ void exit_files(task_s * new_tsk)
 	memset(new_tsk->fps, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
 }
 
-unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
+static errno_t copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
-	int error = 0;
+	errno_t err = -ENOERR;
 
 	Page_s * page = NULL;
 	PML4E_T * new_cr3 = NULL;
@@ -215,17 +218,23 @@ unsigned long copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	}
 
 exit_cpmm:
-	return error;
+	return err;
 }
-void exit_mm(task_s * new_tsk)
+errno_t exit_mm(task_s * new_tsk)
 {
+	errno_t err = -ENOERR;
+
 	if(new_tsk->flags & PF_VFORK)
-		return;
+		err = -ENOERR;
+
+	return err;
 }
 
-unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
+static errno_t copy_thread(unsigned long clone_flags, unsigned long stack_start,
 							task_s * child_task, 	stack_frame_s * parent_context)
 {
+	errno_t err = -ENOERR;
+
 	stack_frame_s * child_context = get_stackframe(child_task);
 	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
 
@@ -246,11 +255,13 @@ unsigned long copy_thread(unsigned long clone_flags, unsigned long stack_start,
 		child_context->restore_retp = ra_sysex_retp;
 	}
 
-	return 0;
+	return err;
 }
-unsigned long exit_thread(task_s * new_task)
+static errno_t exit_thread(task_s * new_task)
 {
-	return 0;
+	errno_t err = -ENOERR;
+
+	return err;
 }
 
 /*==============================================================================================*
@@ -382,7 +393,7 @@ unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char 
 	return ret_val;
 }
 
-void exit_notify(void)
+static void exit_notify(void)
 {
 	task_s * curr = curr_tsk;
 	while (curr->child_lhdr.count != 0)
@@ -416,7 +427,7 @@ do_exit_again:
 	return 0;
 }
 
-int kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
+unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
 {
 	stack_frame_s sf_regs;
 	memset(&sf_regs,0,sizeof(sf_regs));
@@ -539,7 +550,7 @@ void wakeup_task(task_s * task)
 	// color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
 }
 
-void reinsert_to_running_list(per_cpudata_s * cpudata_p)
+static void reinsert_to_running_list(per_cpudata_s * cpudata_p)
 {
 	task_s * curr_task = cpudata_p->curr_task;
 	if (curr_task != NULL)
@@ -586,7 +597,7 @@ void schedule()
 	else if (curr_task->state == PS_RUNNING &&
 			(curr_task->flags & PF_NEED_SCHEDULE))
 	{
-		// normal schedule
+		// normal sched
 		reinsert_to_running_list(cpudata_p);
 	}
 

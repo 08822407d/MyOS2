@@ -155,7 +155,7 @@ unsigned long sys_exit(int exit_code)
 	return do_exit(exit_code);
 }
 
-void exit_mm(task_s * new_tsk);
+errno_t exit_mm(task_s * new_tsk);
 unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusage)
 {
 	long retval = 0;

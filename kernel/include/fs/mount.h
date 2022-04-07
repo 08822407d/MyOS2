@@ -19,7 +19,7 @@
 
 	typedef struct mount
 	{
-		List_s		mnt_list;	// in Linux it is hlist_head
+		// List_s		mnt_list;	// in Linux it is hlist_head
 		mount_s *	mnt_parent;
 		dentry_s *	mnt_mountpoint;
 		vfsmount_s	mnt;

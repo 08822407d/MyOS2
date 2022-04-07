@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+	typedef int errno_t;
+
 	enum {
 		ENOERR			= 0,
 		EPERM			= 1,		/* Operation not permitted */
@@ -160,7 +162,7 @@ extern "C" {
 	/*
 	* Returns a string containing a message derived from an error code
 	*/
-	char * strerror(int e);
+	char * strerror(errno_t e);
 
 #ifdef __cplusplus
 }

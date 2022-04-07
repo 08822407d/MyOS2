@@ -64,9 +64,10 @@ extern "C" {
 		size_t bufsz;
 		int (*rwflush)(FILE *);
 
-		fpos_t pos;
-		int mode;
-		int eof, error;
+		fpos_t	pos;
+		int		mode;
+		int		eof;
+		errno_t	error;
 	};
 
 	#define stdin		(__stdio_get_stdin())

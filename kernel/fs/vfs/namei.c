@@ -4,6 +4,7 @@
 
 #include <sys/fcntl.h>
 
+#include <include/err.h>
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/fs/vfs.h>
@@ -47,13 +48,16 @@ filename_s *getname(const char *u_filename)
 	//					\/
 	size_t len = strnlen_user((void *)u_filename, CONST_4K);
 	filename_s *name = kmalloc(sizeof(filename_s));
+	if (name == NULL)
+		return ERR_PTR(-ENOMEM);
+
 	name->len = len;
 	name->name = kmalloc(len + 1);
-	if (name->name != NULL)
-	{
-		memset((void *)name->name, 0, len + 1);
-		strncpy_from_user((void *)name->name, (void *)u_filename, len);
-	}
+	if (name->name == NULL)
+		return ERR_PTR(-ENOMEM);
+
+	memset((void *)name->name, 0, len + 1);
+	strncpy_from_user((void *)name->name, (void *)u_filename, len);
 
 	return name;
 }

@@ -22,7 +22,7 @@ mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
 	List_s * mnt_lp;
 	for (mnt_lp = child_lhdr->header.next; mnt_lp != &child_lhdr->header; mnt_lp = mnt_lp->next)
 	{
-		p = container_of(mnt_lp, mount_s, mnt_list);
+		p = container_of(mnt_lp, mount_s, mnt_child);
 		if (&p->mnt_parent->mnt == mnt && p->mnt_mountpoint == dentry)
 			return p;
 	}
@@ -58,7 +58,7 @@ vfsmount_s * lookup_mnt(const path_s * path)
 
 // Linux function proto:
 // static struct mountpoint *get_mountpoint(struct dentry *dentry) 
-static mountpoint_s * get_mountpoint(dentry_s * dentry)
+static mountpoint_s * get_mountpoint(IN dentry_s * dentry)
 {
 	mountpoint_s * mp, * new = NULL;
 	int ret;
@@ -94,19 +94,159 @@ retry:
 	goto retry;
 }
 
+/*
+ *  @source_mnt : mount tree to be attached
+ *  @nd         : place the mount tree @source_mnt is attached
+ *  @parent_nd  : if non-null, detach the source_mnt from its parent and
+ *  		   store the parent mount and mountpoint dentry.
+ *  		   (done when source_mnt is moved)
+ *
+ *  NOTE: in the table below explains the semantics when a source mount
+ *  of a given type is attached to a destination mount of a given type.
+ * ---------------------------------------------------------------------------
+ * |         BIND MOUNT OPERATION                                            |
+ * |**************************************************************************
+ * | source-->| shared        |       private  |       slave    | unbindable |
+ * | dest     |               |                |                |            |
+ * |   |      |               |                |                |            |
+ * |   v      |               |                |                |            |
+ * |**************************************************************************
+ * |  shared  | shared (++)   |     shared (+) |     shared(+++)|  invalid   |
+ * |          |               |                |                |            |
+ * |non-shared| shared (+)    |      private   |      slave (*) |  invalid   |
+ * ***************************************************************************
+ * A bind operation clones the source mount and mounts the clone on the
+ * destination mount.
+ *
+ * (++)  the cloned mount is propagated to all the mounts in the propagation
+ * 	 tree of the destination mount and the cloned mount is added to
+ * 	 the peer group of the source mount.
+ * (+)   the cloned mount is created under the destination mount and is marked
+ *       as shared. The cloned mount is added to the peer group of the source
+ *       mount.
+ * (+++) the mount is propagated to all the mounts in the propagation tree
+ *       of the destination mount and the cloned mount is made slave
+ *       of the same master as that of the source mount. The cloned mount
+ *       is marked as 'shared and slave'.
+ * (*)   the cloned mount is made a slave of the same master as that of the
+ * 	 source mount.
+ *
+ * ---------------------------------------------------------------------------
+ * |         		MOVE MOUNT OPERATION                                 |
+ * |**************************************************************************
+ * | source-->| shared        |       private  |       slave    | unbindable |
+ * | dest     |               |                |                |            |
+ * |   |      |               |                |                |            |
+ * |   v      |               |                |                |            |
+ * |**************************************************************************
+ * |  shared  | shared (+)    |     shared (+) |    shared(+++) |  invalid   |
+ * |          |               |                |                |            |
+ * |non-shared| shared (+*)   |      private   |    slave (*)   | unbindable |
+ * ***************************************************************************
+ *
+ * (+)  the mount is moved to the destination. And is then propagated to
+ * 	all the mounts in the propagation tree of the destination mount.
+ * (+*)  the mount is moved to the destination.
+ * (+++)  the mount is moved to the destination and is then propagated to
+ * 	all the mounts belonging to the destination mount's propagation tree.
+ * 	the mount is marked as 'shared and slave'.
+ * (*)	the mount continues to be a slave at the new location.
+ *
+ * if the source mount is a tree, the operations explained above is
+ * applied to each mount in the tree.
+ * Must be called without spinlocks held, since this function can sleep
+ * in allocations.
+ */
+// 1static int attach_recursive_mnt(struct mount *source_mnt,
+// 1			struct mount *dest_mnt,
+// 1			struct mountpoint *dest_mp,
+// 1			bool moving)
+static int attach_recursive_mnt(mount_s * source_mnt,
+			mount_s * dest_mnt, mountpoint_s * dest_mp)
+{
+	mountpoint_s *smp;
+	mount_s *child, *p;
+	int err;
+
+	/* Preallocate a mountpoint in case the new mounts need
+	 * to be tucked under other mounts.
+	 */
+	smp = get_mountpoint(source_mnt->mnt.mnt_root);
+	// if (IS_ERR(smp))
+	// 	return PTR_ERR(smp);
+
+// 	hlist_for_each_entry_safe(child, n, &tree_list, mnt_hash) {
+// 		struct mount *q;
+// 		hlist_del_init(&child->mnt_hash);
+// 		q = __lookup_mnt(&child->mnt_parent->mnt,
+// 				 child->mnt_mountpoint);
+// 		if (q)
+// 			mnt_change_mountpoint(child, smp, q);
+// 		/* Notice when we are propagating across user namespaces */
+// 		if (child->mnt_parent->mnt_ns->user_ns != user_ns)
+// 			lock_mnt_tree(child);
+// 		child->mnt.mnt_flags &= ~MNT_LOCKED;
+// 		commit_tree(child);
+// 	}
+// 	put_mountpoint(smp);
+// 	unlock_mount_hash();
+
+// 	return 0;
+
+//  out_cleanup_ids:
+// 	while (!hlist_empty(&tree_list)) {
+// 		child = hlist_entry(tree_list.first, struct mount, mnt_hash);
+// 		child->mnt_parent->mnt_ns->pending_mounts = 0;
+// 		umount_tree(child, UMOUNT_SYNC);
+// 	}
+// 	unlock_mount_hash();
+// 	cleanup_group_ids(source_mnt, NULL);
+//  out:
+// 	ns->pending_mounts = 0;
+
+// 	read_seqlock_excl(&mount_lock);
+// 	put_mountpoint(smp);
+// 	read_sequnlock_excl(&mount_lock);
+
+	return err;
+}
+
+// Linux function proto:
 // static int graft_tree(struct mount *mnt, struct mount *p, struct mountpoint *mp)
 static int graft_tree(mount_s * mnt, mount_s * p, mountpoint_s * mp)
 {
-	if (d_is_dir(mp->m_dentry) !=
-	      d_is_dir(mnt->mnt.mnt_root))
-		return -ENOTDIR;
+	// if (d_is_dir(mp->m_dentry) !=
+	//       d_is_dir(mnt->mnt.mnt_root))
+	// 	return -ENOTDIR;
 
-	return attach_recursive_mnt(mnt, p, mp, false);
+	return attach_recursive_mnt(mnt, p, mp);
 }
 
-static mount_s *__do_loopback(path_s * old_path)
+// Linux function proto:
+// static struct mount *clone_mnt(struct mount *old, struct dentry *root, int flag)
+static mount_s * clone_mnt(IN mount_s * old, IN dentry_s * root)
 {
-	// struct mount *mnt = ERR_PTR(-EINVAL), *old = real_mount(old_path->mnt);
+	super_block_s * sb = old->mnt.mnt_sb;
+	mount_s * mnt;
+	int err;
+
+	mnt = kmalloc((sizeof(mount_s)));
+	// if (!mnt)
+	// 	return ERR_PTR(-ENOMEM);
+
+	list_hdr_init(&mnt->mnt_mounts);
+	list_init(&mnt->mnt_child, mnt);
+	mnt->mnt.mnt_sb = sb;
+	mnt->mnt.mnt_root = root;
+	mnt->mnt_mountpoint = mnt->mnt.mnt_root;
+	mnt->mnt_parent = mnt;
+
+	return mnt;
+}
+
+static mount_s *__do_loopback(IN path_s * old_path)
+{
+	mount_s * mnt, * old = real_mount(old_path->mnt);
 
 	// if (IS_MNT_UNBINDABLE(old))
 	// 	return mnt;
@@ -120,12 +260,12 @@ static mount_s *__do_loopback(path_s * old_path)
 	// if (recurse)
 	// 	mnt = copy_tree(old, old_path->dentry, CL_COPY_MNT_NS_FILE);
 	// else
-	// 	mnt = clone_mnt(old, old_path->dentry, 0);
+		mnt = clone_mnt(old, old_path->dentry);
 
 	// if (!IS_ERR(mnt))
 	// 	mnt->mnt.mnt_flags &= ~MNT_LOCKED;
 
-	// return mnt;
+	return mnt;
 }
 
 /*
@@ -276,7 +416,6 @@ void init_mount()
 {
 	list_hdr_init(&root_mnt.mnt_mounts);
 	list_init(&root_mnt.mnt_child, &root_mnt);
-	list_init(&root_mnt.mnt_list, &root_mnt);
 
 	root_mnt.mnt.mnt_sb = root_sb;
 	root_mnt.mnt_parent = &root_mnt;
