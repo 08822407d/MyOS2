@@ -471,27 +471,27 @@ next_cluster:
 		{
 			for(x=0;x<5;x++)
 			{
-				if(j>dest_dentry->name_length && tmpldentry->LDIR_Name1[x] == 0xffff)
+				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name1[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->name_length || tmpldentry->LDIR_Name1[x] != (unsigned short)(dest_dentry->name[j++]))
+				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name1[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
 			for(x=0;x<6;x++)
 			{
-				if(j>dest_dentry->name_length && tmpldentry->LDIR_Name2[x] == 0xffff)
+				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name2[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->name_length || tmpldentry->LDIR_Name2[x] != (unsigned short)(dest_dentry->name[j++]))
+				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name2[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
 			for(x=0;x<2;x++)
 			{
-				if(j>dest_dentry->name_length && tmpldentry->LDIR_Name3[x] == 0xffff)
+				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name3[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->name_length || tmpldentry->LDIR_Name3[x] != (unsigned short)(dest_dentry->name[j++]))
+				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name3[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
 
-			if(j >= dest_dentry->name_length)
+			if(j >= dest_dentry->d_name.len)
 			{
 				goto find_lookup_success;
 			}
@@ -508,9 +508,9 @@ next_cluster:
 				case ' ':
 					if(!(tmpdentry->DIR_Attr & ATTR_DIRECTORY))
 					{
-						if(dest_dentry->name[j]=='.')
+						if(dest_dentry->d_name.name[j]=='.')
 							continue;
-						else if(tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+						else if(tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -520,12 +520,12 @@ next_cluster:
 					}
 					else
 					{
-						if(j < dest_dentry->name_length && tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
 						}
-						else if(j == dest_dentry->name_length)
+						else if(j == dest_dentry->d_name.len)
 							continue;
 						else
 							goto continue_cmp_fail;
@@ -534,7 +534,7 @@ next_cluster:
 				case 'A' ... 'Z':
 				case 'a' ... 'z':
 					if(tmpdentry->DIR_NTRes & LOWERCASE_BASE)
-						if(j < dest_dentry->name_length && tmpdentry->DIR_Name[x] + 32 == dest_dentry->name[j])
+						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] + 32 == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -543,7 +543,7 @@ next_cluster:
 							goto continue_cmp_fail;
 					else
 					{
-						if(j < dest_dentry->name_length && tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -553,7 +553,7 @@ next_cluster:
 					}
 
 				case '0' ... '9':
-					if(j < dest_dentry->name_length && tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+					if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 					{
 						j++;
 						break;
@@ -577,7 +577,7 @@ next_cluster:
 					case 'A' ... 'Z':
 					case 'a' ... 'z':
 						if(tmpdentry->DIR_NTRes & LOWERCASE_EXT)
-							if(tmpdentry->DIR_Name[x] + 32 == dest_dentry->name[j])
+							if(tmpdentry->DIR_Name[x] + 32 == dest_dentry->d_name.name[j])
 							{
 								j++;
 								break;
@@ -586,7 +586,7 @@ next_cluster:
 								goto continue_cmp_fail;
 						else
 						{
-							if(tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+							if(tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 							{
 								j++;
 								break;
@@ -596,7 +596,7 @@ next_cluster:
 						}
 
 					case '0' ... '9':
-						if(tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+						if(tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -605,7 +605,7 @@ next_cluster:
 							goto continue_cmp_fail;
 
 					case ' ':
-						if(tmpdentry->DIR_Name[x] == dest_dentry->name[j])
+						if(tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -792,12 +792,12 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 
 	list_init(&sbp->root->dirent_list, sbp->root);
 	list_hdr_init(&sbp->root->childdir_lhdr);
-	sbp->root->parent = sbp->root;
+	sbp->root->d_parent = sbp->root;
 	sbp->root->dir_ops = &FAT32_dentry_ops;
-	sbp->root->name = (char *)kmalloc(2);
-	sbp->root->name[0] = '/';
-	sbp->root->name[1] = 0;
-	sbp->root->name_length = 1;
+	sbp->root->d_name.name = (char *)kmalloc(2);
+	((char *)sbp->root->d_name.name)[0] = '/';
+	((char *)sbp->root->d_name.name)[1] = 0;
+	sbp->root->d_name.len = 1;
 
 	//index node
 	sbp->root->dir_inode = (inode_s*)kmalloc(sizeof(inode_s));

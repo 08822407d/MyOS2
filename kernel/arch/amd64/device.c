@@ -65,9 +65,9 @@ dentry_s * creat_append_devdirent(char * name, dentry_s * parent)
 	dentry_s * dir = kmalloc(sizeof(dentry_s));
 	list_init(&dir->dirent_list, dir);
 	list_hdr_init(&dir->childdir_lhdr);
-	dir->name = name;
-	dir->name_length = strlen(dir->name);
-	dir->parent = parent;
+	dir->d_name.name = name;
+	dir->d_name.len = strlen(dir->d_name.name);
+	dir->d_parent = parent;
 	dir->dir_ops = NULL;
 	inode_s * ino = kmalloc(sizeof(inode_s));
 	memset(ino, 0, sizeof(inode_s));

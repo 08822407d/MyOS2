@@ -17,7 +17,7 @@ dentry_s * __d_lookup(dentry_s * parent, qstr_s * name)
 			dir_lp = dir_lp->next)
 	{
 		if ((dir_p = dir_lp->owner_p) != NULL &&
-			!strncmp(name->name, dir_p->name, name->len))
+			!strncmp(name->name, dir_p->d_name.name, name->len))
 		{
 			dentry = dir_p;
 			break;
@@ -43,16 +43,16 @@ dentry_s * __d_alloc(qstr_s * name)
 	if (dentry == NULL)
 		return NULL;
 
-	dentry->name = kmalloc(name->len + 1);
-	if (dentry->name == NULL)
+	dentry->d_name.name = kmalloc(name->len + 1);
+	if (dentry->d_name.name == NULL)
 	{
 		kfree(dentry);
 		return NULL;
 	}
 
-	memset(dentry->name, 0, name->len + 1);
-	memcpy(dentry->name, name->name, name->len);
-	dentry->name_length = name->len;
+	memset((void *)dentry->d_name.name, 0, name->len + 1);
+	memcpy((void *)dentry->d_name.name, name->name, name->len);
+	dentry->d_name = *name;
 
 	list_init(&dentry->dirent_list, dentry);
 	list_hdr_init(&dentry->childdir_lhdr);

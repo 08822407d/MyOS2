@@ -265,14 +265,14 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
 
 	if (dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
 	{
-		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->name);
-		kfree(dentry->name);
+		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->d_name);
+		kfree((void *)dentry->d_name.name);
 		kfree(dentry);
 		return ERR_PTR(-ENOENT);
 	}
 
 	list_hdr_append(&dir->childdir_lhdr, &dentry->dirent_list);
-	dentry->parent = dir;
+	dentry->d_parent = dir;
 
 	return dentry;
 }
@@ -295,7 +295,7 @@ static dentry_s *follow_dotdot(IN OUT nameidata_s *nd)
 		/* we know that mountpoint was pinned */
 	}
 	old = nd->path.dentry;
-	parent = old->parent;
+	parent = old->d_parent;
 
 	return parent;
 in_root:
@@ -590,6 +590,10 @@ finish_lookup:
 //		   struct file *file, const struct open_flags *op)
 static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 {
+
+	if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
+		return -ENOTDIR;
+
 	__vfs_open(&nd->path, file);
 }
 
