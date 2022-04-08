@@ -40,8 +40,16 @@ dentry_s * __d_lookup(dentry_s * parent, qstr_s * name)
 dentry_s * __d_alloc(qstr_s * name)
 {
 	dentry_s * dentry = kmalloc(sizeof(dentry_s));
+	if (dentry == NULL)
+		return NULL;
 
 	dentry->name = kmalloc(name->len + 1);
+	if (dentry->name == NULL)
+	{
+		kfree(dentry);
+		return NULL;
+	}
+
 	memset(dentry->name, 0, name->len + 1);
 	memcpy(dentry->name, name->name, name->len);
 	dentry->name_length = name->len;

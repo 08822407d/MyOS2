@@ -37,48 +37,75 @@ typedef struct nameidata
 /*==============================================================================================*
  *								relative fuctions for vfs										*
  *==============================================================================================*/
-// Linux function proto:
-// struct filename * getname(const char __user * filename)
-filename_s *getname(const char *u_filename)
+inline filename_s *__getname()
 {
-	// Linux call stack:
-	// struct filename * getname_flags(const char __user *filename,
-	//					int flags, int *empty)
-	//					||
-	//					\/
-	size_t len = strnlen_user((void *)u_filename, CONST_4K);
 	filename_s *name = kmalloc(sizeof(filename_s));
 	if (name == NULL)
 		return ERR_PTR(-ENOMEM);
+	else
+		return name;
+}
+
+// Linux function proto:
+// struct filename *getname(const char __user * filename)
+filename_s *getname(const char *u_filename)
+{
+	size_t len = strlen_user((void *)u_filename);
+	if (len > CONST_4K)
+		return ERR_PTR(-ENAMETOOLONG);
+
+	// Linux call stack:
+	// struct filename *getname_flags(const char __user *filename,
+	//					int flags, int *empty)
+	// {
+		filename_s *name = __getname();
+	// }
 
 	name->len = len;
 	name->name = kmalloc(len + 1);
 	if (name->name == NULL)
+	{
+		kfree(name);
 		return ERR_PTR(-ENOMEM);
+	}
 
 	memset((void *)name->name, 0, len + 1);
-	strncpy_from_user((void *)name->name, (void *)u_filename, len);
+	len = strncpy_from_user((void *)name->name, (void *)u_filename, len);
+	if (len < 0)
+	{
+		kfree((void *)name->name);
+		kfree(name);
+		return ERR_PTR(len);
+	}
 
 	return name;
 }
 
 // Linux function proto:
-// struct filename * getname_kernel(const char __user * filename)
+// struct filename *getname_kernel(const char __user *filename)
 filename_s *getname_kernel(const char *k_filename)
 {
-	// Linux call stack:
-	// struct filename * getname_flags(const char __user *filename,
-	//					int flags, int *empty)
-	//					||
-	//					\/
-	size_t len = strnlen((void *)k_filename, CONST_4K);
-	filename_s *name = kmalloc(sizeof(filename_s));
+	filename_s *name = __getname();
+
+	size_t len = strlen((void *)k_filename);
+	if (len > CONST_4K)
+		return ERR_PTR(-ENAMETOOLONG);
 	name->len = len;
+
 	name->name = kmalloc(len + 1);
-	if (name->name != NULL)
+	if (name->name == NULL)
 	{
-		memset((void *)name->name, 0, len + 1);
-		strncpy((void *)name->name, (void *)k_filename, len);
+		kfree(name);
+		return ERR_PTR(-ENOMEM);
+	}
+
+	memset((void *)name->name, 0, len + 1);
+	char * dest = strncpy((void *)name->name, (void *)k_filename, len);
+	if (dest != name->name)
+	{
+		kfree((void *)name->name);
+		kfree(name);
+		return ERR_PTR(len);
 	}
 
 	return name;
@@ -90,6 +117,46 @@ void putname(filename_s *name)
 {
 	kfree((void *)name->name);
 	kfree((void *)name);
+}
+
+// Linux function proto:
+// static inline void set_nameidata(struct nameidata *p, int dfd, struct filename *name,
+// 			  const struct path *root)
+static void set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN path_s *root)
+{
+	// linux call stack :
+	// static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+	// {
+		memset(p, 0, sizeof(nameidata_s));
+
+		p->name = name;
+		p->dfd = dfd;
+		p->path.mnt = NULL;
+		p->path.dentry = NULL;
+
+		if (root != NULL)
+		{
+			p->root = *root;
+		}
+	// }
+}
+
+static void terminate_walk(nameidata_s *nd)
+{
+}
+
+/**
+ * complete_walk - successful completion of path walk
+ * @nd:  pointer nameidata
+ *
+ * If we had been in RCU mode, drop out of it and legitimize nd->path.
+ * Revalidate the final result, unless we'd already done that during
+ * the path walk or the filesystem doesn't ask for it.  Return 0 on
+ * success, -error on failure.  In case of failure caller does not
+ * need to drop nd->path.
+ */
+static int complete_walk(nameidata_s *nd)
+{
 }
 
 /*==============================================================================================*
@@ -149,6 +216,7 @@ static inline int handle_mounts(IN nameidata_s *nd, IN dentry_s *dentry, OUT pat
 {
 	path->mnt = nd->path.mnt;
 	path->dentry = dentry;
+
 	return traverse_mounts(path);
 }
 
@@ -167,11 +235,13 @@ static inline int handle_mounts(IN nameidata_s *nd, IN dentry_s *dentry, OUT pat
 static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 {
 	path_s path;
+	int err = handle_mounts(nd, dentry, &path);
+	if (err < 0)
+		return ERR_PTR(err);
 
-	handle_mounts(nd, dentry, &path);
 	nd->path = path;
 
-	return NULL;
+	return ERR_PTR(-ENOERR);
 }
 
 // Linux function proto:
@@ -179,7 +249,7 @@ static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 //				    struct dentry *dir, unsigned int flags)
 static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
 {
-	dentry_s *dentry = NULL;
+	dentry_s *dentry;
 
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
@@ -190,13 +260,15 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
 	//					||
 	//					\/
 	dentry = __d_alloc(name);
+	if (IS_ERR(dentry))
+		return dentry;
 
 	if (dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
 	{
 		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->name);
 		kfree(dentry->name);
 		kfree(dentry);
-		return NULL;
+		return ERR_PTR(-ENOENT);
 	}
 
 	list_hdr_append(&dir->childdir_lhdr, &dentry->dirent_list);
@@ -234,15 +306,20 @@ in_root:
 // static const char *handle_dots(struct nameidata *nd, int type)
 static const char *handle_dots(IN nameidata_s *nd)
 {
-	const char *ret_val = NULL;
 	if (nd->last_type == LAST_DOTDOT)
 	{
+		const char *error = NULL;
 		dentry_s *parent;
 
 		parent = follow_dotdot(nd);
-		ret_val = step_into(nd, parent);
+		if (IS_ERR(parent))
+			return ERR_CAST(parent);
+
+		error = step_into(nd, parent);
+		if (error)
+			return error;
 	}
-	return ret_val;
+	return NULL;
 }
 
 // Linux function proto:
@@ -265,18 +342,22 @@ static const char *walk_component(IN nameidata_s *nd)
 	// linux call stack :
 	//	static struct dentry *lookup_fast(struct nameidata *nd,
 	//				  struct inode **inode, unsigned *seqp)
-	//					||
-	//					\/
-	dentry = __d_lookup(parent, &nd->last);
+	// {
+		dentry = __d_lookup(parent, &nd->last);
+	// }
+	if (IS_ERR(dentry))
+		return ERR_CAST(dentry);
 
 	if (dentry == NULL)
 	{
 		// linux call stack :
 		//	static struct dentry *lookup_slow(const struct qstr *name,
 		//			  struct dentry *dir, unsigned int flags)
-		//					||
-		//					\/
-		dentry = __lookup_slow(&nd->last, parent);
+		// {
+			dentry = __lookup_slow(&nd->last, parent);
+		// }
+		if (IS_ERR(dentry))
+			return ERR_CAST(dentry);
 	}
 
 	return step_into(nd, dentry);
@@ -295,7 +376,10 @@ static const char *walk_component(IN nameidata_s *nd)
 static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 {
 	nd->last_type = LAST_ROOT;
+	int err;
 
+	if (IS_ERR(name))
+		return PTR_ERR(name);
 	while (*name == '/')
 		name++;
 	if (!*name)
@@ -350,33 +434,13 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 /*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/
-// Linux function proto:
-// static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
-static void __set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN path_s *root)
-{
-	memset(p, 0, sizeof(nameidata_s));
-
-	p->name = name;
-	p->dfd = dfd;
-	p->path.mnt = NULL;
-	p->path.dentry = NULL;
-
-	if (root != NULL)
-	{
-		p->root = *root;
-	}
-}
-
-static void terminate_walk(OUT nameidata_s *nd)
-{
-}
-
 /* must be paired with terminate_walk() */
 // Linux function proto:
 // static const char *path_init(struct nameidata *nd, unsigned flags)
 static const char *path_init(OUT nameidata_s *nd)
 {
 	const char *s = nd->name->name;
+
 	nd->root = curr_tsk->task_fs->root;
 	if (s[0] == '/')
 		nd->path = nd->root;
@@ -384,77 +448,6 @@ static const char *path_init(OUT nameidata_s *nd)
 		nd->path = curr_tsk->task_fs->pwd;
 
 	return s;
-}
-
-// Linux function proto:
-// static const char *open_last_lookups(struct nameidata *nd,
-//			struct file *file, const struct open_flags *op)
-static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
-{
-	dentry_s *dentry, *dir = nd->path.dentry;
-
-	if (nd->last_type != LAST_NORM)
-	{
-		if (nd->depth)
-			return handle_dots(nd);
-	}
-
-	if (!(open_flag & O_CREAT))
-	{
-		dentry = __d_lookup(dir, &nd->last);
-		if (dentry == NULL)
-		{
-			dentry = __lookup_slow(&nd->last, dir);
-		}
-	}
-
-	return step_into(nd, dentry);
-}
-
-/*
- * Handle the last step of open()
- */
-// Linux function proto:
-// static int do_open(struct nameidata *nd,
-//		   struct file *file, const struct open_flags *op)
-static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
-{
-	__vfs_open(&nd->path, file);
-}
-
-// Linux function proto:
-// static struct file *path_openat(struct nameidata *nd,
-// 			const struct open_flags *op, unsigned flags)
-static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
-{
-	file_s *file;
-	int err;
-
-	file = kmalloc(sizeof(file_s));
-	memset(file, 0, sizeof(file_s));
-	const char *s = path_init(nd);
-	while (!(err = link_path_walk(s, nd)) &&
-		   (s = open_last_lookups(nd, flags)) != NULL)
-		;
-	if (!err)
-		err = do_open(nd, file, flags);
-	terminate_walk(nd);
-
-	return file;
-}
-
-// Linux function proto:
-// struct file *do_filp_open(int dfd, struct filename *pathname,
-//			const struct open_flags *op)
-file_s *do_filp_open(int dfd, IN filename_s * name, int flags)
-{
-	nameidata_s nd;
-	file_s *filp;
-
-	__set_nameidata(&nd, dfd, name, NULL);
-	filp = path_openat(&nd, flags);
-
-	return filp;
 }
 
 // Linux function proto:
@@ -476,9 +469,9 @@ static int path_lookupat(IN nameidata_s *nd, unsigned flags, OUT path_s *path)
 		   (s = lookup_last(nd)) != NULL)
 		;
 
-	// if (!err && nd->flags & LOOKUP_DIRECTORY)
-	// if (!d_can_lookup(nd->path.dentry))
-	// 	err = -ENOTDIR;
+	// if (!err)
+	// 	err = complete_walk(nd);
+
 	if (!err)
 	{
 		*path = nd->path;
@@ -496,11 +489,60 @@ int filename_lookup(int dfd, IN filename_s *name, unsigned flags, OUT path_s *pa
 {
 	int retval;
 	nameidata_s nd;
+	if (IS_ERR(name))
+		return PTR_ERR(name);
 
-	__set_nameidata(&nd, dfd, name, NULL);
+	set_nameidata(&nd, dfd, name, NULL);
 	retval = path_lookupat(&nd, flags, path);
+	// if (unlikely(retval == -ECHILD))
+	//	 retval = path_lookupat(&nd, flags, path);
+	// if (unlikely(retval == -ESTALE))
+	//	 retval = path_lookupat(&nd, flags | LOOKUP_REVAL, path);
 
+	putname(name);
 	return retval;
+}
+
+/* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
+static int path_parentat(nameidata_s *nd, path_s *parent)
+{
+	const char *s = path_init(nd);
+	int err = link_path_walk(s, nd);
+	// if (!err)
+	// 	err = complete_walk(nd);
+	if (!err) {
+		*parent = nd->path;
+		nd->path.mnt = NULL;
+		nd->path.dentry = NULL;
+	}
+	terminate_walk(nd);
+	return err;
+}
+
+static filename_s *filename_parentat(int dfd, filename_s *name,
+				unsigned int flags, path_s *parent, qstr_s *last)
+{
+	int retval;
+	nameidata_s nd;
+
+	if (IS_ERR(name))
+		return name;
+	set_nameidata(&nd, dfd, name, NULL);
+	retval = path_parentat(&nd, parent);
+	if (retval == -ECHILD)
+		retval = path_parentat(&nd, parent);
+	// if (retval == -ESTALE)
+	// 	retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
+	if (!retval) {
+		*last = nd.last;
+		// *type = nd.last_type;
+		// audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
+	} else {
+		putname(name);
+		name = ERR_PTR(retval);
+	}
+	// restore_nameidata();
+	return name;
 }
 
 int kern_path(const char *name, unsigned int flags, OUT path_s *path)
@@ -508,29 +550,95 @@ int kern_path(const char *name, unsigned int flags, OUT path_s *path)
 	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
 }
 
-/**
- * vfs_path_lookup - lookup a file path relative to a dentry-vfsmount pair
- * @dentry:  pointer to dentry of the base directory
- * @mnt: pointer to vfs mount of the base directory
- * @name: pointer to file name
- * @flags: lookup flags
- * @path: pointer to struct path to fill
+// Linux function proto:
+// static const char *open_last_lookups(struct nameidata *nd,
+//			struct file *file, const struct open_flags *op)
+static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
+{
+	dentry_s *dentry, *dir = nd->path.dentry;
+	const char *res;
+
+	if (nd->last_type != LAST_NORM)
+	{
+		return handle_dots(nd);
+	}
+
+	if (!(open_flag & O_CREAT))
+	{
+		dentry = __d_lookup(dir, &nd->last);
+		if (dentry == NULL)
+		{
+			dentry = __lookup_slow(&nd->last, dir);
+		}
+
+		if (IS_ERR(dentry))
+			return ERR_CAST(dentry);
+		if (likely(dentry))
+			goto finish_lookup;
+	}
+
+finish_lookup:
+	res = step_into(nd, dentry);
+	return res;
+}
+
+/*
+ * Handle the last step of open()
  */
 // Linux function proto:
-// int vfs_path_lookup(struct dentry *dentry, struct vfsmount *mnt,
-// 		    const char *name, unsigned int flags,
-// 		    struct path *path)
-int vfs_path_lookup(dentry_s *dentry, vfsmount_s *mnt,
-					const char *name, unsigned int flags, path_s *path)
+// static int do_open(struct nameidata *nd,
+//		   struct file *file, const struct open_flags *op)
+static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 {
-	/* the first argument of filename_lookup() is ignored with root */
-	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
+	__vfs_open(&nd->path, file);
 }
 
 // Linux function proto:
-// static inline int user_path_at(int dfd, const char __user *name, unsigned flags,
-//		 struct path *path)
-int user_path_at(int dfd, const char *name, unsigned flags, OUT path_s *path)
+// static struct file *path_openat(struct nameidata *nd,
+// 			const struct open_flags *op, unsigned flags)
+static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
+{
+	file_s *file;
+	int error;
+
+	file = kmalloc(sizeof(file_s));
+	if (IS_ERR(file))
+		return file;
+
+	memset(file, 0, sizeof(file_s));
+	const char *s = path_init(nd);
+	while (!(error = link_path_walk(s, nd)) &&
+		   (s = open_last_lookups(nd, flags)) != NULL)
+		;
+	if (!error)
+		error = do_open(nd, file, flags);
+	terminate_walk(nd);
+
+	return file;
+}
+
+// Linux function proto:
+// struct file *do_filp_open(int dfd, struct filename *pathname,
+//			const struct open_flags *op)
+file_s *do_filp_open(int dfd, IN filename_s * name, int flags)
+{
+	nameidata_s nd;
+	file_s *filp;
+
+	set_nameidata(&nd, dfd, name, NULL);
+	filp = path_openat(&nd, flags);
+	// if (unlikely(filp == ERR_PTR(-ECHILD)))
+	// 	filp = path_openat(&nd, op, flags);
+	// if (unlikely(filp == ERR_PTR(-ESTALE)))
+	// 	filp = path_openat(&nd, op, flags | LOOKUP_REVAL);
+	// restore_nameidata();
+	return filp;
+}
+
+// Linux function proto:
+// int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
+// 		 struct path *path, int *empty)
+int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *path)
 {
 	filename_s *fn = getname(name);
 	return filename_lookup(dfd, fn, flags, path);

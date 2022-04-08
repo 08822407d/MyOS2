@@ -145,6 +145,9 @@
 
 	// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
+	filename_s *__getname(void);
+
 	#include <include/block_dev.h>
 	extern blkdev_ops_s IDE_device_operation;
+
 #endif /* _FS_H_ */

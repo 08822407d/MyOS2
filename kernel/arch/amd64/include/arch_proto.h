@@ -308,10 +308,11 @@
 	void percpu_self_config(size_t cpu_idx);
 
 	/* utils.c */
-	long verify_area(unsigned char* addr, unsigned long size);
+	bool verify_area(unsigned char* addr, unsigned long size);
 	long copy_from_user(void * from, void * to, unsigned long size);
 	long copy_to_user(void * from, void * to, unsigned long size);
 	long strncpy_from_user(void * to, void * from, unsigned long size);
+	long strlen_user(void * src);
 	long strnlen_user(void * src, unsigned long maxlen);
 
 	/*  mm.c */

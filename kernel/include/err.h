@@ -3,6 +3,7 @@
 #define _LINUX_ERR_H_
 
 #include <stddef.h>
+#include <stdbool.h>
 #include <errno.h>
 
 	/*

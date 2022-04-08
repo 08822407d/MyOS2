@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <errno.h>
 
+#include <include/err.h>
 #include <include/proto.h>
 #include <include/fs/vfs.h>
 #include <include/fs/namei.h>
@@ -14,12 +15,12 @@ mount_s root_mnt;
  * find the first mount at @dentry on vfsmount @mnt.
  * call under rcu_read_lock()
  */
-mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
+mount_s *__lookup_mnt(IN vfsmount_s *mnt, IN dentry_s *dentry)
 {
-	mount_s * p = container_of(mnt, mount_s, mnt);
-	List_hdr_s * child_lhdr = &p->mnt_mounts;
+	mount_s *p = container_of(mnt, mount_s, mnt);
+	List_hdr_s *child_lhdr = &p->mnt_mounts;
 
-	List_s * mnt_lp;
+	List_s *mnt_lp;
 	for (mnt_lp = child_lhdr->header.next; mnt_lp != &child_lhdr->header; mnt_lp = mnt_lp->next)
 	{
 		p = container_of(mnt_lp, mount_s, mnt_child);
@@ -45,9 +46,9 @@ mount_s *__lookup_mnt(vfsmount_s * mnt, dentry_s * dentry)
  *
  * lookup_mnt takes a reference to the found vfsmount.
  */
-vfsmount_s * lookup_mnt(const path_s * path)
+vfsmount_s *lookup_mnt(IN const path_s *path)
 {
-	mount_s * child_mnt;
+	mount_s *child_mnt;
 	vfsmount_s * m = NULL;
 	child_mnt = __lookup_mnt(path->mnt, path->dentry);
 	if (child_mnt != NULL)
@@ -58,28 +59,28 @@ vfsmount_s * lookup_mnt(const path_s * path)
 
 // Linux function proto:
 // static struct mountpoint *get_mountpoint(struct dentry *dentry) 
-static mountpoint_s * get_mountpoint(IN dentry_s * dentry)
+static mountpoint_s *get_mountpoint(IN dentry_s *dentry)
 {
-	mountpoint_s * mp, * new = NULL;
+	mountpoint_s *mp, *new = NULL;
 	int ret;
 
 	new = kmalloc(sizeof(mountpoint_s));
 	if (new == NULL)
-		goto done;
+		return ERR_PTR(-ENOMEM);
 
 	/* Add the new mountpoint to the hash table */
 	new->m_dentry = dentry;
 	// new->m_count = 1;
 
 	mp = new;
-	new = NULL;
+
 done:
 	return mp;
 }
 
 // Linux function proto:
 // static struct mountpoint *lock_mount(struct path *path)
-static mountpoint_s * lock_mount(path_s * path)
+static mountpoint_s *lock_mount(IN path_s *path)
 {
 	vfsmount_s * mnt;
 	dentry_s * dentry = path->dentry;
@@ -161,8 +162,8 @@ retry:
 // 1			struct mount *dest_mnt,
 // 1			struct mountpoint *dest_mp,
 // 1			bool moving)
-static int attach_recursive_mnt(mount_s * source_mnt,
-			mount_s * dest_mnt, mountpoint_s * dest_mp)
+static int attach_recursive_mnt(mount_s *source_mnt,
+			mount_s *dest_mnt, mountpoint_s *dest_mp)
 {
 	mountpoint_s *smp;
 	mount_s *child, *p;
@@ -211,9 +212,21 @@ static int attach_recursive_mnt(mount_s * source_mnt,
 	return err;
 }
 
+static void unlock_mount(mountpoint_s *where)
+{
+	// dentry_s *dentry = where->m_dentry;
+
+	// read_seqlock_excl(&mount_lock);
+	// put_mountpoint(where);
+	// read_sequnlock_excl(&mount_lock);
+
+	// namespace_unlock();
+	// inode_unlock(dentry->d_inode);
+}
+
 // Linux function proto:
 // static int graft_tree(struct mount *mnt, struct mount *p, struct mountpoint *mp)
-static int graft_tree(mount_s * mnt, mount_s * p, mountpoint_s * mp)
+static int graft_tree(IN mount_s *mnt, IN mount_s *p, IN mountpoint_s *mp)
 {
 	// if (d_is_dir(mp->m_dentry) !=
 	//       d_is_dir(mnt->mnt.mnt_root))
@@ -224,15 +237,15 @@ static int graft_tree(mount_s * mnt, mount_s * p, mountpoint_s * mp)
 
 // Linux function proto:
 // static struct mount *clone_mnt(struct mount *old, struct dentry *root, int flag)
-static mount_s * clone_mnt(IN mount_s * old, IN dentry_s * root)
+static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 {
 	super_block_s * sb = old->mnt.mnt_sb;
 	mount_s * mnt;
 	int err;
 
 	mnt = kmalloc((sizeof(mount_s)));
-	// if (!mnt)
-	// 	return ERR_PTR(-ENOMEM);
+	if (mnt == NULL)
+		return ERR_PTR(-ENOMEM);
 
 	list_hdr_init(&mnt->mnt_mounts);
 	list_init(&mnt->mnt_child, mnt);
@@ -244,9 +257,10 @@ static mount_s * clone_mnt(IN mount_s * old, IN dentry_s * root)
 	return mnt;
 }
 
-static mount_s *__do_loopback(IN path_s * old_path)
+static mount_s *__do_loopback(IN path_s *old_path)
 {
-	mount_s * mnt, * old = real_mount(old_path->mnt);
+	mount_s *mnt = ERR_PTR(-EINVAL),
+			*old = real_mount(old_path->mnt);
 
 	// if (IS_MNT_UNBINDABLE(old))
 	// 	return mnt;
@@ -271,36 +285,39 @@ static mount_s *__do_loopback(IN path_s * old_path)
 /*
  * do loopback mount.
  */
-static int do_loopback(IN path_s * path, const char * old_name, int recurse)
+static int do_loopback(IN path_s *path, const char *old_name)
 {
 	path_s old_path;
-	mount_s * mnt = NULL, * parent;
-	mountpoint_s * mp;
+	mount_s *mnt = NULL, *parent;
+	mountpoint_s *mp;
 	int err;
 	if (!old_name || !*old_name)
 		return -EINVAL;
 
 	err = kern_path(old_name, LOOKUP_FOLLOW|LOOKUP_AUTOMOUNT, &old_path);
 	if (err)
-		goto out;
+	return err;
 
-	parent = real_mount(path->mnt);
 	mp = lock_mount(path);
-	if (mp == NULL)
+	if (IS_ERR(mp))
 	{
-		err = -ENOMEM;
+		err = PTR_ERR(mp);
 		goto out;
 	}
 
+	parent = real_mount(path->mnt);
+	// if (!check_mnt(parent))
+	// 	goto out2;
+
 	mnt = __do_loopback(&old_path);
-// 	if (IS_ERR(mnt)) {
-// 		err = PTR_ERR(mnt);
-// 		goto out2;
-// 	}
+	if (IS_ERR(mnt)) {
+		err = PTR_ERR(mnt);
+		goto out2;
+	}
 	err = graft_tree(mnt, parent, mp);
 
-// out2:
-// 	unlock_mount(mp);
+out2:
+	unlock_mount(mp);
 out:
 	return err;
 }
@@ -312,7 +329,7 @@ out:
 // Linux function proto:
 // static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
 // 			int mnt_flags, const char *name, void *data)
-static int do_new_mount(path_s * path, int sb_flags, int mnt_flags, const char * name)
+static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char *name)
 {
 	struct file_system_type *type;
 	struct fs_context *fc;
@@ -377,7 +394,7 @@ static int do_new_mount(path_s * path, int sb_flags, int mnt_flags, const char *
 // Linux function proto:
 // int path_mount(const char *dev_name, struct path *path,
 // 		const char *type_page, unsigned long flags, void *data_page)
-int path_mount(const char * dev_name, IN path_s * path, unsigned long flags)
+int path_mount(const char *dev_name, IN path_s *path, unsigned long flags)
 {
 	unsigned int mnt_flags = 0, sb_flags;
 	int ret;
@@ -387,7 +404,7 @@ int path_mount(const char * dev_name, IN path_s * path, unsigned long flags)
 	// if (flags & MS_REMOUNT)
 	// 	return do_remount(path, flags, sb_flags, mnt_flags, data_page);
 	if (flags & MS_BIND)
-		return do_loopback(path, dev_name, flags & MS_REC);
+		return do_loopback(path, dev_name);
 	// if (flags & (MS_SHARED | MS_PRIVATE | MS_SLAVE | MS_UNBINDABLE))
 	// 	return do_change_type(path, flags);
 	// if (flags & MS_MOVE)
@@ -404,7 +421,6 @@ long do_mount(const char * dev_name, const char * dir_name, unsigned long flags)
 	path_s path;
 	int ret;
 
-	// ret = user_path_at(AT_FDCWD, dir_name, LOOKUP_FOLLOW, &path);
 	ret = user_path_at(AT_FDCWD, dir_name, flags, &path);
 	if (ret)
 		return ret;

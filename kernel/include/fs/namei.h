@@ -5,11 +5,11 @@
 	enum { MAX_NESTED_LINKS = 8 };
 	enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
 
-	#define ND_ROOT_PRESET 1
-	#define ND_ROOT_GRABBED 2
-	#define ND_JUMPED 4
+	#define ND_ROOT_PRESET	1
+	#define ND_ROOT_GRABBED	2
+	#define ND_JUMPED		4
 
-	#define MAXSYMLINKS 40
+	#define MAXSYMLINKS		40
 
 	/*
 	* Type of the last component on LOOKUP_PARENT
@@ -48,8 +48,13 @@
 
 	filename_s * getname(const char * u_filename);
 	filename_s * getname_kernel(const char * k_filename);
-	int user_path_at(int dfd, const char * name, unsigned flags, path_s * path);
+	int user_path_at_empty(int dfd, const char * name, unsigned flags, path_s * path);
 	void putname(filename_s * name);
 	int kern_path(const char * name, unsigned int flags, path_s * path);
+
+	static inline int user_path_at(int dfd, const char *name, unsigned flags, path_s *path)
+	{
+		return user_path_at_empty(dfd, name, flags, path);
+	}
 
 #endif /* _LINUX_NAMEI_H */

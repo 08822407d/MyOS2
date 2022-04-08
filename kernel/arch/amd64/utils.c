@@ -13,19 +13,19 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 
-inline __always_inline long verify_area(unsigned char* addr, unsigned long size)
+inline __always_inline bool verify_area(unsigned char* addr, unsigned long size)
 {
 	if(((unsigned long)addr + size) <= (unsigned long)USERADDR_LIMIT)
-		return 1;
+		return true;
 	else
-		return 0;
+		return false;
 }
 
 inline __always_inline long copy_from_user(void * from, void * to, unsigned long size)
 {
 	unsigned long d0,d1;
 	if(!verify_area(from,size))
-		return 0;
+		return -EFAULT;
 	__asm__ __volatile__(	"rep			\n\t"
 							"movsq			\n\t"
 							"movq	%3,	%0	\n\t"
@@ -42,7 +42,7 @@ inline __always_inline long copy_to_user(void * to, void * from, unsigned long s
 {
 	unsigned long d0,d1;
 	if(!verify_area(to,size))
-		return 0;
+		return -EFAULT;
 	__asm__ __volatile__(	"rep			\n\t"
 							"movsq			\n\t"
 							"movq	%3,	%0	\n\t"
@@ -58,17 +58,26 @@ inline __always_inline long copy_to_user(void * to, void * from, unsigned long s
 inline __always_inline long strncpy_from_user(void * to, void * from, unsigned long size)
 {
 	if(!verify_area(from, size))
-		return 0;
+		return -EFAULT;
 
 	strncpy(to, from, size);
 	return	size;
+}
+
+inline __always_inline long strlen_user(void * src)
+{
+	unsigned long size = strlen(src);
+	if(!verify_area(src, size))
+		return -EFAULT;
+
+	return size;
 }
 
 inline __always_inline long strnlen_user(void * src, unsigned long maxlen)
 {
 	unsigned long size = strlen(src);
 	if(!verify_area(src, size))
-		return 0;
+		return -EFAULT;
 
 	return size <= maxlen ? size : maxlen;
 }
