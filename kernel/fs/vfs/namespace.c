@@ -78,6 +78,18 @@ done:
 	return mp;
 }
 
+/*
+ * vfsmount lock must be held for write
+ */
+void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
+			mount_s *child_mnt)
+{
+	child_mnt->mnt_mountpoint = mp->m_dentry;
+	child_mnt->mnt_parent = parent_mnt;
+	child_mnt->mnt_mp = mp;
+	list_hdr_append(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
+}
+
 // Linux function proto:
 // static struct mountpoint *lock_mount(struct path *path)
 static mountpoint_s *lock_mount(IN path_s *path)
@@ -173,43 +185,23 @@ static int attach_recursive_mnt(mount_s *source_mnt,
 	 * to be tucked under other mounts.
 	 */
 	smp = get_mountpoint(source_mnt->mnt.mnt_root);
-	// if (IS_ERR(smp))
-	// 	return PTR_ERR(smp);
+	if (IS_ERR(smp))
+		return PTR_ERR(smp);
 
-// 	hlist_for_each_entry_safe(child, n, &tree_list, mnt_hash) {
-// 		struct mount *q;
-// 		hlist_del_init(&child->mnt_hash);
-// 		q = __lookup_mnt(&child->mnt_parent->mnt,
-// 				 child->mnt_mountpoint);
-// 		if (q)
-// 			mnt_change_mountpoint(child, smp, q);
-// 		/* Notice when we are propagating across user namespaces */
-// 		if (child->mnt_parent->mnt_ns->user_ns != user_ns)
-// 			lock_mnt_tree(child);
-// 		child->mnt.mnt_flags &= ~MNT_LOCKED;
-// 		commit_tree(child);
-// 	}
-// 	put_mountpoint(smp);
-// 	unlock_mount_hash();
+	// if (moving) {
+	// 	unhash_mnt(source_mnt);
+	// 	attach_mnt(source_mnt, dest_mnt, dest_mp);
+	// 	touch_mnt_namespace(source_mnt->mnt_ns);
+	// } else {
+	// 	if (source_mnt->mnt_ns) {
+	// 		/* move from anon - the caller will destroy */
+	// 		list_del_init(&source_mnt->mnt_ns->list);
+	// 	}
+		mnt_set_mountpoint(dest_mnt, dest_mp, source_mnt);
+	// 	commit_tree(source_mnt);
+	// }
 
-// 	return 0;
-
-//  out_cleanup_ids:
-// 	while (!hlist_empty(&tree_list)) {
-// 		child = hlist_entry(tree_list.first, struct mount, mnt_hash);
-// 		child->mnt_parent->mnt_ns->pending_mounts = 0;
-// 		umount_tree(child, UMOUNT_SYNC);
-// 	}
-// 	unlock_mount_hash();
-// 	cleanup_group_ids(source_mnt, NULL);
-//  out:
-// 	ns->pending_mounts = 0;
-
-// 	read_seqlock_excl(&mount_lock);
-// 	put_mountpoint(smp);
-// 	read_sequnlock_excl(&mount_lock);
-
-	return err;
+	return -ENOERR;
 }
 
 static void unlock_mount(mountpoint_s *where)
