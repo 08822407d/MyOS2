@@ -378,7 +378,7 @@ int	futimens(int fd, const struct timespec times[2]);
 int	utimensat(int fd, const char *path, const struct timespec times[2],
 		int flag);
 #endif
-int	fstat(int, struct stat *);
+int	newfstat(int, struct stat *);
 #if __BSD_VISIBLE
 int	lchflags(const char *, unsigned long);
 int	lchmod(const char *, mode_t);

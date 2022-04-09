@@ -26,14 +26,18 @@
 				"jmp	LABEL_SYSCALL				\n\t"	\
 			);
 
-
-SYSFUNC_DEF(putstring)
-
 SYSFUNC_DEF(open)
 SYSFUNC_DEF(close)
 SYSFUNC_DEF(read)
 SYSFUNC_DEF(write)
+
+SYSFUNC_DEF(newfstat)
+
 SYSFUNC_DEF(lseek)
+
+SYSFUNC_DEF(brk)
+
+SYSFUNC_DEF(getpid)
 
 SYSFUNC_DEF(fork)
 SYSFUNC_DEF(vfork)
@@ -41,19 +45,17 @@ SYSFUNC_DEF(execve)
 SYSFUNC_DEF(exit)
 SYSFUNC_DEF(wait4)
 
-SYSFUNC_DEF(brk)
-SYSFUNC_DEF(reboot)
-
-SYSFUNC_DEF(chdir)
 SYSFUNC_DEF(getdents)
+SYSFUNC_DEF(chdir)
 
-SYSFUNC_DEF(fstat)
+SYSFUNC_DEF(getppid)
+
+SYSFUNC_DEF(reboot)
 
 SYSFUNC_DEF(init_module)
 SYSFUNC_DEF(delete_module)
 
-SYSFUNC_DEF(getpid)
-SYSFUNC_DEF(getppid)
+SYSFUNC_DEF(putstring)
 
 __asm__	(
 	"LABEL_SYSCALL:							\n\t"

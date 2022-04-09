@@ -62,6 +62,29 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	return -fd;
 }
 
+long sys_chdir(const char *filename)
+{
+	path_s path;
+	task_s *curr = curr_tsk;
+	int error;
+	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
+retry:
+	error = user_path_at(AT_FDCWD, filename, lookup_flags, &path);
+	if (error)
+		goto out;
+
+	curr->task_fs->pwd = path;
+
+// dput_and_out:
+// 	path_put(&path);
+// 	if (retry_estale(error, lookup_flags)) {
+// 		lookup_flags |= LOOKUP_REVAL;
+// 		goto retry;
+// 	}
+out:
+	return error;
+}
+
 long kopen(const char * filename, int flags)
 {
 	filename_s name;

@@ -16,6 +16,7 @@ int main(int argc, const char *argv[])
 	printf("Welcome to MyOS2\n\n");
 	
 	// file_io_test();
+	chdir("/EFI");
 
 	while (1)
 	{
