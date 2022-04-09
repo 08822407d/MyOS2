@@ -176,8 +176,8 @@ static errno_t copy_files(unsigned long clone_flags, task_s * new_tsk)
 			memcpy(new_tsk->fps[i], curr_tsk->fps[i], sizeof(file_s));
 		}
 
-	new_tsk->task_fs = kmalloc(sizeof(taskfs_s));
-	memcpy(new_tsk->task_fs, curr_tsk->task_fs, sizeof(taskfs_s));
+	new_tsk->fs = kmalloc(sizeof(taskfs_s));
+	memcpy(new_tsk->fs, curr_tsk->fs, sizeof(taskfs_s));
 
 out:
 	return err;
@@ -294,7 +294,7 @@ unsigned long do_fork(stack_frame_s * parent_context,
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
-	child_task->task_fs = parent_task->task_fs;
+	child_task->fs = parent_task->fs;
 	list_hdr_append(&parent_task->child_lhdr, &child_task->child_list);
 
 	ret_val = -ENOMEM;
@@ -451,13 +451,13 @@ static void set_init_taskfs()
 {
 	task_s * curr = curr_tsk;
 	// set cwd and root-dir of task1
-	taskfs_s * taskfs_p = curr->task_fs;
+	taskfs_s * taskfs_p = curr->fs;
 	taskfs_p->pwd.dentry = 
 	taskfs_p->root.dentry = root_sb->root;
 	taskfs_p->pwd.mnt = 
 	taskfs_p->root.mnt = &root_mnt.mnt;
 
-	memcpy(task0_PCB.task.task_fs, taskfs_p, sizeof(taskfs_s));
+	memcpy(task0_PCB.task.fs, taskfs_p, sizeof(taskfs_s));
 }
 
 unsigned long init(unsigned long arg)

@@ -73,7 +73,7 @@ retry:
 	if (error)
 		goto out;
 
-	curr->task_fs->pwd = path;
+	curr->fs->pwd = path;
 
 // dput_and_out:
 // 	path_put(&path);

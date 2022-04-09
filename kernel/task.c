@@ -81,7 +81,7 @@ void init_task(size_t lcpu_nr)
 	task0->state = PS_RUNNING;
 	task0->flags = PF_KTHREAD;
 	task0->mm_struct = &task0_mm;
-	task0->task_fs = &task0_fs;
+	task0->fs = &task0_fs;
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{

@@ -441,11 +441,11 @@ static const char *path_init(OUT nameidata_s *nd)
 {
 	const char *s = nd->name->name;
 
-	nd->root = curr_tsk->task_fs->root;
+	nd->root = curr_tsk->fs->root;
 	if (s[0] == '/')
 		nd->path = nd->root;
 	else
-		nd->path = curr_tsk->task_fs->pwd;
+		nd->path = curr_tsk->fs->pwd;
 
 	return s;
 }

@@ -46,6 +46,7 @@ SYSFUNC_DEF(exit)
 SYSFUNC_DEF(wait4)
 
 SYSFUNC_DEF(getdents)
+SYSFUNC_DEF(getcwd)
 SYSFUNC_DEF(chdir)
 
 SYSFUNC_DEF(getppid)

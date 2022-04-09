@@ -28,6 +28,7 @@ SYSCALL_COMMON(__NR_exit,sys_exit)
 SYSCALL_COMMON(__NR_wait4,sys_wait4)
 
 // SYSCALL_COMMON(__NR_getdents,sys_getdents)
+SYSCALL_COMMON(__NR_getcwd,sys_getcwd)
 SYSCALL_COMMON(__NR_chdir,sys_chdir)
 
 SYSCALL_COMMON(__NR_getppid, sys_getppid)

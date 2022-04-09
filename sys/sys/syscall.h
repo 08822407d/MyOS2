@@ -31,6 +31,7 @@
 	#define	__NR_wait4			61
 
 	#define	__NR_getdents		78
+	#define	__NR_getcwd			79
 	#define	__NR_chdir			80
 
 	#define __NR_getppid		110
