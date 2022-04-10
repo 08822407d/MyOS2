@@ -7,16 +7,19 @@
 #include <stddef.h>
 #include <unistd.h>
 
+#include <uapi/limits.h>
+
 int read_line(char *buf);
 void file_io_test(void);
 void malloc_free_test(void);
+void dirtest(void);
 
 int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
 	
 	// file_io_test();
-	chdir("/EFI");
+	// dirtest();
 
 	while (1)
 	{
@@ -104,4 +107,14 @@ void malloc_free_test()
 	free(test5);
 	free(test7);
 	free(test8);
+}
+
+void dirtest()
+{
+	char pwd[PATH_MAX];
+	getcwd(pwd, PATH_MAX - 1);
+	printf("%s\n", pwd);
+	chdir("/EFI/BOOT");
+	getcwd(pwd, PATH_MAX - 1);
+	printf("%s\n", pwd);
 }
