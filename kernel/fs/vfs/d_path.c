@@ -190,7 +190,7 @@ long sys_getcwd(char *buf, unsigned long size)
 		else if (copy_to_user(buf, b.buf, len))
 			error = -EFAULT;
 		else
-			error = len;
+			error = (long)buf;
 	// }
 	// __putname(page);
 	kfree(bufhead);

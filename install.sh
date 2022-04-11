@@ -27,7 +27,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     cp ./init.bin /mnt/init.bin
     cp ./shell.bin /mnt/shell.bin
     sync
-    sleep 2
+    sleep 1
     sudo umount /mnt
     objdump -S kern > k_dasm.txt
     objdump -S init > init_dasm.txt

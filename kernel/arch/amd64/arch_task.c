@@ -207,6 +207,7 @@ static errno_t copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 	if(clone_flags & CLONE_VM)
 	{
+		// if vfork(), share the mm_struct
 		new_tsk->mm_struct = curr_tsk->mm_struct;
 		goto exit_cpmm;
 	}
@@ -462,13 +463,13 @@ static void set_init_taskfs()
 
 unsigned long init(unsigned long arg)
 {
-	color_printk(GREEN, BLACK, "Enter task init.\n");
+	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	init_vfs();
 	init_mount();
 	set_init_taskfs();
-	color_printk(GREEN, BLACK, "VFS initiated.\n");
+	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();
-	color_printk(GREEN, BLACK, "Device files created.\n");
+	// color_printk(GREEN, BLACK, "Device files created.\n");
 
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;

@@ -10,7 +10,6 @@
 
 #include <uapi/limits.h>
 
-// int read_line(char *buf);
 void file_io_test(void);
 void malloc_free_test(void);
 void dirtest(void);
@@ -19,40 +18,19 @@ int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
 	
-	int pid = fork();
-	if (pid != 0)
-	{
-		// file_io_test();
-		dirtest();
-	}
-	else
-	{
-		// while (1);
-		// execve("/shell.bin", NULL, NULL);
-	}
+	// int pid = fork();
+	// if (pid != 0)
+	// {
+	// 	file_io_test();
+	// 	// dirtest();
+	// 	while (1);
+	// }
+	// else
+	// {
+		execve("/shell.bin", NULL, NULL);
+	// 	while (1);
+	// }
 }
-
-// int read_line(char *buf)
-// {
-// 	char key = 0;
-// 	int count = 0;
-
-// 	while(1)
-// 	{
-// 		key = fgetc(stdin);
-// 		if(key == '\n')
-// 		{
-// 			return count;
-// 		}
-// 		else if(key)
-// 		{
-// 			buf[count++] = key;
-// 			printf("%c", key);
-// 		}			
-// 		else
-// 			continue;
-// 	}
-// }
 
 void file_io_test()
 {
@@ -63,8 +41,8 @@ void file_io_test()
 	{
 		read(test_fd1, buf, 512);
 	}
-	printf("Read test 1 : %s\n", buf);
 	close(test_fd1);
+	printf("Read test 1 : %s\n", buf);
 
 	memset(buf, 0, 512);
 	int test_fd2 = open("/EFI/BOOT/test.txt", O_RDONLY);
@@ -72,21 +50,21 @@ void file_io_test()
 	{
 		read(test_fd2, buf, 512);
 	}
-	printf("Read test 2 : %s\n", buf);
 	close(test_fd2);
+	printf("Read test 2 : %s\n", buf);
 
-	char buf2[] = {"write test success."};
-	int test_fd3 = open("/EFI/BOOT/test.txt", O_RDWR | O_APPEND);
-	write(test_fd3, buf2, strlen(buf2));
-	close(test_fd3);
+	// char buf2[] = {"write test success."};
+	// int test_fd3 = open("/EFI/BOOT/test.txt", O_RDWR | O_APPEND);
+	// write(test_fd3, buf2, strlen(buf2));
+	// close(test_fd3);
 
 	int tty_fd = open("/dev/tty0", O_RDWR);
 	char buf3[10];
 	char buf4[] = "tty_write() test.\n";
 	write(tty_fd, buf4, strlen(buf4));
-	printf("tty_read() test, waiting kbd input :");
-	read(tty_fd, buf3, 9);
-	printf(" %s \n", buf3);
+	// printf("tty_read() test, waiting kbd input :");
+	// read(tty_fd, buf3, 9);
+	// printf(" %s \n", buf3);
 	close(tty_fd);
 }
 
