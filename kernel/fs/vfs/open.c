@@ -59,7 +59,7 @@ long do_sys_open(int dfd, const char * filename, int flags)
 	}
 	putname(name);
 	
-	return -fd;
+	return fd;
 }
 
 long sys_chdir(const char *filename)

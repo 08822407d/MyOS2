@@ -72,3 +72,9 @@ target_link_libraries(kern mylibc)
 #===============================================================================================#
 add_subdirectory(initd)
 target_link_libraries(init mylibc mycrt)
+
+#===============================================================================================#
+#                                       shell.bin                                               #
+#===============================================================================================#
+add_subdirectory(myshell)
+target_link_libraries(shell mylibc mycrt)

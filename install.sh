@@ -18,15 +18,20 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     # generate init debug file and bin
     objcopy --only-keep-debug init init.debug
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary init init.bin
+    # generate init debug file and bin
+    objcopy --only-keep-debug shell shell.debug
+    objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shell shell.bin
     # copy files
     sudo mount /dev/dm-1 /mnt -o uid=$USER,gid=$USER
     cp ./kernel.bin /mnt/kernel.bin
     cp ./init.bin /mnt/init.bin
+    cp ./shell.bin /mnt/shell.bin
     sync
-    sleep 1
+    sleep 2
     sudo umount /mnt
     objdump -S kern > k_dasm.txt
-    objdump -S init > u_dasm.txt
+    objdump -S init > init_dasm.txt
+    objdump -S shell > sh_dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
     echo "Working on MinGW"
 fi

@@ -6,10 +6,11 @@
 #include <string.h>
 #include <stddef.h>
 #include <unistd.h>
+#include <dirent.h>
 
 #include <uapi/limits.h>
 
-int read_line(char *buf);
+// int read_line(char *buf);
 void file_io_test(void);
 void malloc_free_test(void);
 void dirtest(void);
@@ -18,39 +19,40 @@ int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
 	
-	// file_io_test();
-	// dirtest();
-
-	while (1)
+	int pid = fork();
+	if (pid != 0)
 	{
-		printf("$ ");
-		char buf[SZ_1K];
-		read_line(buf);
-		printf(" \n");
+		// file_io_test();
+		dirtest();
+	}
+	else
+	{
+		// while (1);
+		// execve("/shell.bin", NULL, NULL);
 	}
 }
 
-int read_line(char *buf)
-{
-	char key = 0;
-	int count = 0;
+// int read_line(char *buf)
+// {
+// 	char key = 0;
+// 	int count = 0;
 
-	while(1)
-	{
-		key = fgetc(stdin);
-		if(key == '\n')
-		{
-			return count;
-		}
-		else if(key)
-		{
-			buf[count++] = key;
-			printf("%c", key);
-		}			
-		else
-			continue;
-	}
-}
+// 	while(1)
+// 	{
+// 		key = fgetc(stdin);
+// 		if(key == '\n')
+// 		{
+// 			return count;
+// 		}
+// 		else if(key)
+// 		{
+// 			buf[count++] = key;
+// 			printf("%c", key);
+// 		}			
+// 		else
+// 			continue;
+// 	}
+// }
 
 void file_io_test()
 {
@@ -117,4 +119,15 @@ void dirtest()
 	chdir("/EFI/BOOT");
 	getcwd(pwd, PATH_MAX - 1);
 	printf("%s\n", pwd);
+
+	DIR *dir = opendir("/EFI");
+	for (; ; )
+	{
+		dirent_s *dirent = readdir(dir);
+		if (dirent == NULL)
+			break;
+
+		printf("%s\n",dirent->d_name);
+	}
+	closedir(dir);
 }
