@@ -51,3 +51,11 @@ void fd_install(unsigned int fd, file_s *file)
 		while (1);
 	}
 }
+
+fd_s fdget_pos(int fd)
+{
+	task_s *curr = curr_tsk;
+	file_s *fp = curr->fps[fd];
+	
+	return (fd_s){.file = fp, .flags = 0};
+}

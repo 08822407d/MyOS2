@@ -305,7 +305,7 @@ long FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
 
 	cluster = finode->first_cluster;
 
-	j = filp->position/fsbi->bytes_per_cluster;
+	j = filp->position / fsbi->bytes_per_cluster;
 	
 	for(i = 0; i < j; i++)
 	{
@@ -429,7 +429,10 @@ next_cluster:
 find_lookup_success:
 
 	filp->position += 32;
-	return filler(dirent, name, namelen, 0, 0);
+	if (filler != NULL)
+		return filler(dirent, name, namelen, 0, 0);
+	else
+		return 0;
 }
 
 file_ops_s FAT32_file_ops = 

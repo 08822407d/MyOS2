@@ -84,20 +84,6 @@ unsigned long init_vfs()
 	kparam.init_flags.vfs = 1;
 }
 
-int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
-{
-	// dentry_s * dent = (dentry_s *)buf;
-	
-	// if((unsigned long)buf < CONST_4K && !verify_area(buf, sizeof(dentry_s) + namelen))
-	// 	return -EFAULT;
-	
-	// memcpy(name,dent->d_name,namelen);
-	// dent->d_namelen = namelen;
-	// dent->d_type = type;
-	// dent->d_offset = offset;
-	// return sizeof(struct dentry) + namelen;
-}
-
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 {
 	fs_type_s * p = NULL;

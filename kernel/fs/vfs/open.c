@@ -110,7 +110,7 @@ long kopen(const char * filename, int flags)
 		return -ENFILE;
 	}
 	
-	return -ENOERR;
+	return fd;
 }
 
 /**
