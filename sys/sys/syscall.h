@@ -41,6 +41,8 @@
 	#define	__NR_init_module	175
 	#define	__NR_delete_module	176
 
+	#define __NR_getdents64		217
+
 	#define	__NR_putstring		511
 
 #endif /* __SYSCALL_H__ */

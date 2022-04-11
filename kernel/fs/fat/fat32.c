@@ -45,8 +45,9 @@ uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32
 	buf[fat_entry & 0x7f] = (buf[fat_entry & 0x7f] & 0xf0000000) | (value & 0x0fffffff);
 
 	for(i = 0; i < fsbi->NumFATs; i++)
-		IDE_device_operation.transfer(ATA_WRITE_CMD, fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
-										1, (unsigned char *)buf);
+		IDE_device_operation.transfer(ATA_WRITE_CMD,
+				fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
+				1, (unsigned char *)buf);
 	return 1;	
 }
 
@@ -67,7 +68,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 
 	unsigned long cluster = finode->first_cluster;
 	unsigned long sector = 0;
-	int i,length = 0;
+	int i, length = 0;
 	long ret_val = 0;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
@@ -87,10 +88,11 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 	{
 		memset(buffer, 0, fsbi->bytes_per_cluster);
 		sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-		if(!IDE_device_operation.transfer(ATA_READ_CMD, sector, fsbi->sector_per_cluster,
-											(unsigned char *)buffer))
+		if(!IDE_device_operation.transfer(ATA_READ_CMD,
+					sector, fsbi->sector_per_cluster,
+					(unsigned char *)buffer))
 		{
-			color_printk(RED,BLACK,"FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
+			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
 			ret_val = -EIO;
 			break;
 		}
@@ -98,7 +100,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < USERADDR_LIMIT)
-			copy_to_user(buf,buffer + offset,length);
+			copy_to_user(buf, buffer + offset, length);
 		else
 			memcpy(buf, buffer + offset, length);
 
@@ -116,7 +118,7 @@ long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
 
 uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 {
-	int i,j;
+	int i, j;
 	int fat_entry;
 	unsigned long sector_per_fat = fsbi->sector_per_FAT;
 	unsigned int buf[128];
@@ -126,8 +128,9 @@ uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 	for(i = 0; i < sector_per_fat; i++)
 	{
 		memset(buf, 0, 512);
-		IDE_device_operation.transfer(ATA_READ_CMD, fsbi->FAT1_firstsector + i,
-										1, (unsigned char *)buf);
+		IDE_device_operation.transfer(ATA_READ_CMD,
+				fsbi->FAT1_firstsector + i,
+				1, (unsigned char *)buf);
 
 		for(j = 0; j < 128; j++)
 		{
@@ -159,7 +162,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		flags = 1;
 	}
 	else
-		for(i = 0;i < index;i++)
+		for(i = 0; i < index; i++)
 			cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 
 	if(!cluster)
@@ -183,10 +186,11 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		{
 			memset(buffer, 0, fsbi->bytes_per_cluster);
 			sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-			if(!IDE_device_operation.transfer(ATA_READ_CMD, sector, fsbi->sector_per_cluster,
-												(unsigned char *)buffer))
+			if(!IDE_device_operation.transfer(ATA_READ_CMD,
+						sector, fsbi->sector_per_cluster,
+						(unsigned char *)buffer))
 			{
-				color_printk(RED,BLACK,"FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
+				color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
 				ret_val = -EIO;
 				break;
 			}
@@ -195,14 +199,15 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < USERADDR_LIMIT)
-			copy_from_user(buf,buffer + offset,length);
+			copy_from_user(buf, buffer + offset, length);
 		else
 			memcpy(buffer + offset, buf, length);
 
-		if(!IDE_device_operation.transfer(ATA_WRITE_CMD, sector, fsbi->sector_per_cluster,
-											(unsigned char *)buffer))
+		if(!IDE_device_operation.transfer(ATA_WRITE_CMD,
+					sector, fsbi->sector_per_cluster,
+					(unsigned char *)buffer))
 		{
-			color_printk(RED,BLACK,"FAT32 FS(write) write disk ERROR!!!!!!!!!!\n");
+			color_printk(RED, BLACK, "FAT32 FS(write) write disk ERROR!!!!!!!!!!\n");
 			ret_val = -EIO;
 			break;
 		}
@@ -292,7 +297,7 @@ long FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
 	unsigned char * buf =NULL; 
 	char *name = NULL;
 	int namelen = 0;
-	int i = 0,j = 0,x = 0,y = 0;
+	int i = 0, j = 0, x = 0, y = 0;
 	FAT32_dir_s * tmpdentry = NULL;
 	FAT32_ldir_s * tmpldentry = NULL;
 
@@ -302,42 +307,54 @@ long FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
 
 	j = filp->position/fsbi->bytes_per_cluster;
 	
-	for(i = 0;i<j;i++)
+	for(i = 0; i < j; i++)
 	{
-		cluster = FAT32_read_FAT_Entry(fsbi,cluster);
+		cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 		if(cluster > 0x0ffffff7)
 		{
-			color_printk(RED,BLACK,"FAT32 FS(readdir) cluster didn`t exist\n");
+			color_printk(RED, BLACK, "FAT32 FS(readdir) cluster didn`t exist\n");
 			return 0;
 		}
 	}
 
 next_cluster:
 	sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-	if(!IDE_device_operation.transfer(ATA_READ_CMD,sector,fsbi->sector_per_cluster,(unsigned char *)buf))
+	if(!IDE_device_operation.transfer(ATA_READ_CMD,
+				sector, fsbi->sector_per_cluster,
+				(unsigned char *)buf))
 	{
-		color_printk(RED,BLACK,"FAT32 FS(readdir) read disk ERROR!!!!!!!!!!\n");
+		color_printk(RED, BLACK, "FAT32 FS(readdir) read disk ERROR!!!!!!!!!!\n");
 		kfree(buf);
 		return 0;
 	}
 
 	tmpdentry = (FAT32_dir_s *)(buf + filp->position%fsbi->bytes_per_cluster);
 
-	for(i = filp->position%fsbi->bytes_per_cluster;i < fsbi->bytes_per_cluster;i += 32,tmpdentry++,filp->position += 32)
+	for(i = filp->position%fsbi->bytes_per_cluster;
+		i < fsbi->bytes_per_cluster;
+		i += 32, tmpdentry++, filp->position += 32)
 	{
 		if(tmpdentry->DIR_Attr == ATTR_LONG_NAME)
 			continue;
-		if(tmpdentry->DIR_Name[0] == 0xe5 || tmpdentry->DIR_Name[0] == 0x00 || tmpdentry->DIR_Name[0] == 0x05)
+		if(tmpdentry->DIR_Name[0] == 0xe5 ||
+			tmpdentry->DIR_Name[0] == 0x00 ||
+			tmpdentry->DIR_Name[0] == 0x05)
 			continue;
 
 		namelen = 0;
-		tmpldentry = (FAT32_ldir_s *)tmpdentry-1;
+		tmpldentry = (FAT32_ldir_s *)tmpdentry - 1;
 
-		if(tmpldentry->LDIR_Attr == ATTR_LONG_NAME && tmpldentry->LDIR_Ord != 0xe5 && tmpldentry->LDIR_Ord != 0x00 && tmpldentry->LDIR_Ord != 0x05)
+		if(tmpldentry->LDIR_Attr == ATTR_LONG_NAME &&
+			tmpldentry->LDIR_Ord != 0xe5 &&
+			tmpldentry->LDIR_Ord != 0x00 &&
+			tmpldentry->LDIR_Ord != 0x05)
 		{
 			j = 0;
 			//long file/dir name read
-			while(tmpldentry->LDIR_Attr == ATTR_LONG_NAME  && tmpldentry->LDIR_Ord != 0xe5 && tmpldentry->LDIR_Ord != 0x00 && tmpldentry->LDIR_Ord != 0x05)
+			while(tmpldentry->LDIR_Attr == ATTR_LONG_NAME &&
+					tmpldentry->LDIR_Ord != 0xe5 &&
+					tmpldentry->LDIR_Ord != 0x00 &&
+					tmpldentry->LDIR_Ord != 0x05)
 			{
 				j++;
 				if(tmpldentry->LDIR_Ord & 0x40)
@@ -349,18 +366,21 @@ next_cluster:
 			memset(name, 0, j * 13+1);
 			tmpldentry = (FAT32_ldir_s *)tmpdentry-1;
 
-			for(x = 0;x<j;x++,tmpldentry --)
+			for(x = 0; x < j; x++, tmpldentry--)
 			{
-				for(y = 0;y<5;y++)
-					if(tmpldentry->LDIR_Name1[y] != 0xffff && tmpldentry->LDIR_Name1[y] != 0x0000)
+				for(y = 0; y < 5; y++)
+					if(tmpldentry->LDIR_Name1[y] != 0xffff &&
+						tmpldentry->LDIR_Name1[y] != 0x0000)
 						name[namelen++] = (char)tmpldentry->LDIR_Name1[y];
 
-				for(y = 0;y<6;y++)
-					if(tmpldentry->LDIR_Name2[y] != 0xffff && tmpldentry->LDIR_Name2[y] != 0x0000)
+				for(y = 0; y < 6; y++)
+					if(tmpldentry->LDIR_Name2[y] != 0xffff &&
+						tmpldentry->LDIR_Name2[y] != 0x0000)
 						name[namelen++] = (char)tmpldentry->LDIR_Name2[y];
 
-				for(y = 0;y<2;y++)
-					if(tmpldentry->LDIR_Name3[y] != 0xffff && tmpldentry->LDIR_Name3[y] != 0x0000)
+				for(y = 0; y < 2; y++)
+					if(tmpldentry->LDIR_Name3[y] != 0xffff &&
+						tmpldentry->LDIR_Name3[y] != 0x0000)
 						name[namelen++] = (char)tmpldentry->LDIR_Name3[y];
 			}
 			goto find_lookup_success;
@@ -369,7 +389,7 @@ next_cluster:
 		name = kmalloc(15);
 		memset(name, 0, 15);
 		//short file/dir base name compare
-		for(x=0;x<8;x++)
+		for(x=0; x < 8; x++)
 		{
 			if(tmpdentry->DIR_Name[x] == ' ')
 				break;
@@ -385,7 +405,7 @@ next_cluster:
 		name[namelen++] = '.';
 
 		//short file ext name compare
-		for(x=8;x<11;x++)
+		for(x=8; x < 11; x++)
 		{
 			if(tmpdentry->DIR_Name[x] == ' ')
 				break;
@@ -399,7 +419,7 @@ next_cluster:
 		goto find_lookup_success;
 	}
 	
-	cluster = FAT32_read_FAT_Entry(fsbi,cluster);
+	cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 	if(cluster < 0x0ffffff7)
 		goto next_cluster;
 
@@ -409,7 +429,7 @@ next_cluster:
 find_lookup_success:
 
 	filp->position += 32;
-	return filler(dirent,name,namelen,0,0);
+	return filler(dirent, name, namelen, 0, 0);
 }
 
 file_ops_s FAT32_file_ops = 
@@ -447,47 +467,58 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry)
 next_cluster:
 	sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
 	// color_printk(BLUE,BLACK,"lookup cluster:%#010x,sector:%#018lx\n",cluster,sector);
-	if(!IDE_device_operation.transfer(ATA_READ_CMD,sector,fsbi->sector_per_cluster,(unsigned char *)buf))
+	if(!IDE_device_operation.transfer(ATA_READ_CMD,
+				sector,fsbi->sector_per_cluster,
+				(unsigned char *)buf))
 	{
-		color_printk(RED,BLACK,"FAT32 FS(lookup) read disk ERROR!!!!!!!!!!\n");
+		color_printk(RED, BLACK, "FAT32 FS(lookup) read disk ERROR!!!!!!!!!!\n");
 		kfree(buf);
 		return NULL;
 	}
 
 	tmpdentry = (FAT32_dir_s *)buf;
 
-	for(i = 0;i < fsbi->bytes_per_cluster;i+= 32,tmpdentry++)
+	for(i = 0; i < fsbi->bytes_per_cluster; i+= 32,tmpdentry++)
 	{
 		if(tmpdentry->DIR_Attr == ATTR_LONG_NAME)
 			continue;
-		if(tmpdentry->DIR_Name[0] == 0xe5 || tmpdentry->DIR_Name[0] == 0x00 || tmpdentry->DIR_Name[0] == 0x05)
+		if(tmpdentry->DIR_Name[0] == 0xe5 ||
+			tmpdentry->DIR_Name[0] == 0x00 ||
+			tmpdentry->DIR_Name[0] == 0x05)
 			continue;
 
 		tmpldentry = (FAT32_ldir_s *)tmpdentry-1;
 		j = 0;
 
 		//long file/dir name compare
-		while(tmpldentry->LDIR_Attr == ATTR_LONG_NAME && tmpldentry->LDIR_Ord != 0xe5)
+		while(tmpldentry->LDIR_Attr == ATTR_LONG_NAME &&
+				tmpldentry->LDIR_Ord != 0xe5)
 		{
-			for(x=0;x<5;x++)
+			for(x=0; x<5; x++)
 			{
-				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name1[x] == 0xffff)
+				if(j>dest_dentry->d_name.len &&
+					tmpldentry->LDIR_Name1[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name1[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+				else if(j>dest_dentry->d_name.len ||
+						tmpldentry->LDIR_Name1[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
-			for(x=0;x<6;x++)
+			for(x=0; x<6; x++)
 			{
-				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name2[x] == 0xffff)
+				if(j>dest_dentry->d_name.len &&
+					tmpldentry->LDIR_Name2[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name2[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+				else if(j>dest_dentry->d_name.len ||
+						tmpldentry->LDIR_Name2[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
-			for(x=0;x<2;x++)
+			for(x=0; x<2; x++)
 			{
-				if(j>dest_dentry->d_name.len && tmpldentry->LDIR_Name3[x] == 0xffff)
+				if(j>dest_dentry->d_name.len &&
+					tmpldentry->LDIR_Name3[x] == 0xffff)
 					continue;
-				else if(j>dest_dentry->d_name.len || tmpldentry->LDIR_Name3[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+				else if(j>dest_dentry->d_name.len ||
+						tmpldentry->LDIR_Name3[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
 					goto continue_cmp_fail;
 			}
 
@@ -501,7 +532,7 @@ next_cluster:
 
 		//short file/dir base name compare
 		j = 0;
-		for(x=0;x<8;x++)
+		for(x=0; x<8; x++)
 		{
 			switch(tmpdentry->DIR_Name[x])
 			{
@@ -520,7 +551,8 @@ next_cluster:
 					}
 					else
 					{
-						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
+						if(j < dest_dentry->d_name.len &&
+							tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -534,7 +566,8 @@ next_cluster:
 				case 'A' ... 'Z':
 				case 'a' ... 'z':
 					if(tmpdentry->DIR_NTRes & LOWERCASE_BASE)
-						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] + 32 == dest_dentry->d_name.name[j])
+						if(j < dest_dentry->d_name.len &&
+							tmpdentry->DIR_Name[x] + 32 == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -543,7 +576,8 @@ next_cluster:
 							goto continue_cmp_fail;
 					else
 					{
-						if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
+						if(j < dest_dentry->d_name.len &&
+							tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 						{
 							j++;
 							break;
@@ -553,7 +587,8 @@ next_cluster:
 					}
 
 				case '0' ... '9':
-					if(j < dest_dentry->d_name.len && tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
+					if(j < dest_dentry->d_name.len &&
+						tmpdentry->DIR_Name[x] == dest_dentry->d_name.name[j])
 					{
 						j++;
 						break;
@@ -570,7 +605,7 @@ next_cluster:
 		if(!(tmpdentry->DIR_Attr & ATTR_DIRECTORY))
 		{
 			j++;
-			for(x=8;x<11;x++)
+			for(x=8; x<11; x++)
 			{
 				switch(tmpdentry->DIR_Name[x])
 				{
@@ -623,7 +658,7 @@ next_cluster:
 continue_cmp_fail:;
 	}
 	
-	cluster = FAT32_read_FAT_Entry(fsbi,cluster);
+	cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 	if(cluster < 0x0ffffff7)
 		goto next_cluster;
 

@@ -6,7 +6,8 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
-
+// Linux file name :
+//./arch/x86/include/generated/asm/syscalls_64.h
 
 SYSCALL_COMMON(__NR_open,sys_open)
 SYSCALL_COMMON(__NR_close,sys_close)
@@ -37,5 +38,7 @@ SYSCALL_COMMON(__NR_reboot,sys_reboot)
 
 // SYSCALL_COMMON(__NR_init_module,sys_init_module)
 // SYSCALL_COMMON(__NR_delete_module,sys_delete_module)
+
+SYSCALL_COMMON(__NR_getdents64,sys_getdents64)
 
 SYSCALL_COMMON(__NR_putstring,sys_putstring)

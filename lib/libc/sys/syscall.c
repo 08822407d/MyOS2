@@ -56,6 +56,8 @@ SYSFUNC_DEF(reboot)
 SYSFUNC_DEF(init_module)
 SYSFUNC_DEF(delete_module)
 
+SYSFUNC_DEF(getdents64)
+
 SYSFUNC_DEF(putstring)
 
 __asm__	(

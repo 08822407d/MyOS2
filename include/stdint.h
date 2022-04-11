@@ -1,6 +1,8 @@
 #ifndef __STDINT_H__
 #define __STDINT_H__
 
+#include <sys/types.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -9,6 +9,11 @@
 #include <include/task.h>
 #include <include/fs/vfs.h>
 
+	typedef struct fd {
+		file_s *file;
+		unsigned int flags;
+	} fd_s;
+
 	int get_unused_fd_flags(unsigned flags);
 	void fd_install(unsigned int fd, file_s *file);
 
