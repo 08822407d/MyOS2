@@ -17,6 +17,7 @@ void dirtest(void);
 int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
+	// malloc_free_test();
 	
 	// int pid = fork();
 	// if (pid != 0)

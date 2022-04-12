@@ -42,9 +42,10 @@ int read_line(char *buf);
 int parse_command(char * buf,int * argc,char ***argv);
 void run_cmd(int index, int argc, char **argv);
 
-int main(/* int argc, const char *argv[] */)
+int main(int argc, const char *argv[])
 {
 	// reader_loop();
+
 	memset(current_dir, 0, PATH_MAX);
 	getcwd(current_dir, PATH_MAX);
 
@@ -58,13 +59,13 @@ int main(/* int argc, const char *argv[] */)
 		read_line(buf);
 		printf(" \n");
 
-		int argc = 0;
-		char ** argv = NULL;
-		index = parse_command(buf, &argc, &argv);
+		int __argc = 0;
+		char ** __argv = NULL;
+		index = parse_command(buf, &__argc, &__argv);
 		if(index < 0)
-			printf("Input Error,No Command Found!\n");
+			printf("Input Error, No Command Found!\n");
 		else
-			run_cmd(index, argc, argv);	//argc,argv
+			run_cmd(index, __argc, __argv);	//argc,argv
 	}
 }
 
@@ -92,7 +93,6 @@ int read_line(char *buf)
 
 void run_cmd(int index, int argc, char **argv)
 {
-	// printf("run_command %s\n", shell_internal_cmd[index].name);
 	shell_internal_cmd[index].function(argc, argv);
 }
 
@@ -120,13 +120,11 @@ int parse_command(char * buf,int * argc,char ***argv)
 		if(buf[i] != ' ' && (buf[i+1] == ' ' || buf[i+1] == '\0'))
 			(*argc)++;
 	}
-	// printf("parse_command argc:%d\n",*argc);
 	if(!*argc)
 		return -1;
 
 	*argv = (char **)malloc(sizeof(char **) * (*argc + 1));
 	memset(*argv,0,sizeof(char **) * (*argc + 1));
-	// printf("parse_command argv\n");	
 	for(i = 0; i < *argc && j < 256; i++)
 	{
 		*((*argv)+i) = &buf[j];
@@ -136,7 +134,6 @@ int parse_command(char * buf,int * argc,char ***argv)
 		buf[j++] = '\0';
 		while(buf[j] == ' ')
 			j++;
-		// printf("%s\n",(*argv)[i]);
 	}
 
 	return find_cmd(**argv);
@@ -152,29 +149,6 @@ int cd_command(int argc, char **argv)
 	if(!strcmp(".", argv[1]))
 		return 1;
 
-	////..
-	// if(!strcmp("..", argv[1]))
-	// {
-	// 	if(!strcmp("/", current_dir))
-	// 		return 1;
-	// 	for(i = len-1;i > 1;i--)
-	// 		if(current_dir[i] == '/')
-	// 			break;
-	// 	current_dir[i] = '\0';
-	// 	// printf("pwd switch to %s\n", current_dir);
-	// 	return 1;
-	// }
-
-	////others
-	// i = len + strlen(argv[1]);
-	// path = malloc(i + 2);
-	// memset(path,0,i + 2);
-	// strcpy(path,current_dir);
-	// if(len > 1)	
-	// 	path[len] = '/';
-	// strcat(path,argv[1]);
-	// printf("cd_command :%s\n", path);
-
 	i = chdir(argv[1]);
 	if(!i)
 	{
@@ -182,29 +156,30 @@ int cd_command(int argc, char **argv)
 		getcwd(current_dir, PATH_MAX);
 	}
 	else
-		printf("Can`t Goto Dir %s\n",argv[1]);
-	// printf("pwd switch to %s\n",current_dir);
+		printf("cd: %s: %s\n", strerror(i), argv[1]);
 	return 1;
 }
 
 int ls_command(int argc, char **argv)
 {
-	// struct DIR* dir = NULL;
-	// struct dirent * buf = NULL;
+	DIR* dir = NULL;
+	linux_dirent64_s * buf = NULL;
 
-	// dir = opendir(current_dir);
-	// printf("ls_command opendir:%d\n",dir->fd);
+	dir = opendir(current_dir);
 
-	// buf = (struct dirent *)malloc(256);
-	// while(1)
-	// {
-	// 	buf = readdir(dir);
-	// 	if(buf == NULL)
-	// 		break;
-	// 	printf("ls_command readdir len:%d,name:%s\n",buf->d_namelen,buf->d_name);
-	// }
-	// closedir(dir);
-	// return 1;
+	buf = (linux_dirent64_s *)malloc(256);
+	while(1)
+	{
+		buf = readdir(dir);
+		if(buf == NULL)
+			break;
+		if (strcmp(buf->d_name, ".") != 0 &&
+			strcmp(buf->d_name, "..") != 0)
+			printf("%s\t", buf->d_name);
+	}
+	printf("\n");
+	closedir(dir);
+	return 1;
 }
 
 int pwd_command(int argc, char **argv)

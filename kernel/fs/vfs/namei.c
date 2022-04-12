@@ -62,7 +62,7 @@ filename_s *getname(const char *u_filename)
 	// }
 
 	name->len = len;
-	name->name = kmalloc(len + 1);
+	name->name = kmalloc(len + 16);
 	if (name->name == NULL)
 	{
 		kfree(name);
@@ -265,8 +265,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
 
 	if (dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
 	{
-		color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->d_name);
-		kfree((void *)dentry->d_name.name);
+		// color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->d_name);
 		kfree(dentry);
 		return ERR_PTR(-ENOENT);
 	}
@@ -391,6 +390,7 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 	for (;;)
 	{
 		int type;
+		const char *link;
 
 		// compute length of current dirname
 		int i = 0;
@@ -425,9 +425,13 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 			name++;
 
 		if (*name == 0)
-			return 0;
+			return -ENOERR;
 		else
-			walk_component(nd);
+		{
+			link = walk_component(nd);
+			if (IS_ERR(link))
+				return PTR_ERR(link);
+		}
 	}
 }
 
