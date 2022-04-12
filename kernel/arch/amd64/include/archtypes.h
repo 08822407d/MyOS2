@@ -39,11 +39,11 @@
 		uint64_t			: 16, // unused
 							: 24, // unused
 					Type	: 4,
-					Sflag	: 1, // 0=system seg, 1=common seg
+					S		: 1, // 0=system seg, 1=common seg
 					DPL		: 2,
-					Pflag	: 1, // segment present
+					P		: 1, // segment present
 							: 5, // unused
-					Lflag	: 1, // 0=dataseg, 1=codeseg
+					L		: 1, // 0=dataseg, 1=codeseg
 							: 10; // unused
 	} segdesc64_T;
 
@@ -54,7 +54,7 @@
 					Type	: 4,
 							: 1, // Sflag must be 0
 					DPL		: 2,
-					Pflag	: 1,
+					P		: 1,
 					Limit2	: 4,
 					AVL		: 1,
 							: 3; // unused
@@ -106,16 +106,16 @@
  *											page structs								 		*
  *==============================================================================================*/
 	typedef struct __attribute__((packed)) {
-		uint64_t	Pflag	: 1,
-					RWflag	: 1,
-					USflag	: 1,
-					PWTflag	: 1,
-					PCDflag	: 1,
-					Aflag	: 1,
+		uint64_t	P		: 1,
+					RW		: 1,
+					US		: 1,
+					PWT		: 1,
+					PCD		: 1,
+					A		: 1,
 							: 6,
 					PHYADDR	: 36,
 							: 15,
-					XDflag	: 1;
+					XD		: 1;
 	} PML4E_defs_T;
 	typedef union
 	{
@@ -124,19 +124,19 @@
 	} PML4E_T;
 	
 	typedef struct __attribute__((packed)) {
-		uint16_t	Pflag	: 1,
-					RWflag	: 1,
-					USflag	: 1,
-					PWTflag	: 1,
-					PCDflag	: 1,
-				 	Aflag	: 1,
-					Dflag	: 1,
-					PATflag	: 1,
-					Gflag	: 1,
+		uint16_t	P		: 1,
+					RW		: 1,
+					US		: 1,
+					PWT		: 1,
+					PCD		: 1,
+				 	A		: 1,
+					D		: 1,
+					PAT		: 1,
+					G		: 1,
 							: 3;
 		uint64_t	PHYADDR	: 36,
 							: 15,
-					XDflag	: 1;
+					XD		: 1;
 	} PDPTE_defs_s;
 	typedef PDPTE_defs_s PDE_defs_s;
 	typedef PDPTE_defs_s PTE_defs_s;

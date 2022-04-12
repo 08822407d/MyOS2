@@ -51,6 +51,7 @@ RESTORE_ALL:
 	retq
 
 #define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
+// set the ret_point when return from SAVE_ALL and RESTORE_ALL
 #define	SET_RET_POINTS(ent_rp, ex_rp)				\
 	subq		$0x08,			%RSP				;\
 	pushq		%rax								;\
@@ -94,14 +95,13 @@ ENTRY(sysenter_entp)
 sa_sysent_retp:
 	leaq		syscall_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
+	movq		%rax,					SAVEALL_SIZE(%rsp)	// save return value to stack
 
 // RDX -> user RSP
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
 ENTRY(sysexit_entp)
-	movq		%rax,		SAVEALL_SIZE(%rsp)	// save return value to stack
-ENTRY(dofork_child_entp)
 	jmp			RESTORE_ALL
 ENTRY(ra_sysex_retp)
 	addq		$0x38,		%rsp

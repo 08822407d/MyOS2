@@ -16,21 +16,20 @@ void dirtest(void);
 
 int main(int argc, const char *argv[])
 {
-	printf("Welcome to MyOS2\n\n");
-	// malloc_free_test();
+	// printf("Welcome to MyOS2\n\n");
 	
-	// int pid = fork();
-	// if (pid != 0)
-	// {
-	// 	file_io_test();
-	// 	// dirtest();
-	// 	while (1);
-	// }
-	// else
-	// {
+	int rv = fork();
+	if (rv != 0)
+	{
 		execve("/shell.bin", NULL, NULL);
-	// 	while (1);
-	// }
+	}
+	else
+	{
+		// malloc_free_test();
+		// file_io_test();
+		// dirtest();
+		while (1);
+	}
 }
 
 void file_io_test()
@@ -109,4 +108,6 @@ void dirtest()
 		printf("%s\n",dirent->d_name);
 	}
 	closedir(dir);
+
+	chdir("/");
 }

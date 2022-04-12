@@ -10,6 +10,7 @@
 #include <include/mm/mm.h>
 #include <include/mm/memblock.h>
 #include <include/math.h>
+#include <include/dbg_utils.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"
@@ -70,6 +71,10 @@ static void init_fixed_kernel_pgmap()
 		fill_pde(KERN_PD + i, k_phy_pgbase, attr);
 		k_phy_pgbase += PAGE_SIZE;
 	}
+
+	pgmapset_s dbg = DBG_get_pgmapset((reg_t)KERN_PML4, (virt_addr_t)0x1000000);
+	
+	int e = 0;
 }
 
 void unmap_kernel_lowhalf()

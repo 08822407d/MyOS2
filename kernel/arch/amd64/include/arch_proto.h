@@ -73,7 +73,6 @@
 	/* syscalls and others about intr */
 	void sysenter_entp(void);
 	void sysexit_entp(void);
-	void dofork_child_entp(void);
 	void ra_sysex_retp(void);
 	void entp_kernel_thread(void);
 	void ra_kthd_retp(void);

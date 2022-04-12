@@ -169,10 +169,10 @@ gate_table_s lapic_ipi_init_table[] = {
 static void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
 {
 	segdesc64_T *sd = &(gdt[index]);
-	sd->Sflag	= 1;
-	sd->Pflag	= 1;
+	sd->S		= 1;
+	sd->P		= 1;
 	// changable bits
-	sd->Lflag	= Lflag;
+	sd->L		= Lflag;
 	sd->Type	= type;
 	sd->DPL		= privil;
 }
@@ -203,7 +203,7 @@ static void set_TSSseg_desc(size_t cpu_idx, SysSegType_E type, uint8_t privil)
 				tss_segdesc->Type	= type;
 				tss_segdesc->DPL	= privil;
 				tss_segdesc->AVL	=
-				tss_segdesc->Pflag	= 1;
+				tss_segdesc->P		= 1;
 			}
 			break;
 		case INTRGATE:

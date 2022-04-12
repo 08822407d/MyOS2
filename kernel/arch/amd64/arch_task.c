@@ -131,6 +131,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 						);
 }
 
+// read memory distribution of the executive
 static errno_t read_exec_mm(file_s * fp, task_s * curr)
 {
 	mm_s * mm = curr->mm_struct;
@@ -252,7 +253,7 @@ static errno_t copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	}
 	else
 	{
-		child_task->arch_struct.k_rip = (unsigned long)dofork_child_entp;
+		child_task->arch_struct.k_rip = (unsigned long)sysexit_entp;
 		child_context->restore_retp = ra_sysex_retp;
 	}
 
@@ -268,16 +269,16 @@ static errno_t exit_thread(task_s * new_task)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long do_fork(stack_frame_s * parent_context,
+unsigned long do_fork(stack_frame_s *parent_context,
 						unsigned long clone_flags,
 						unsigned long tmp_kstack_start,
 						unsigned long stack_size)
 {
 	long ret_val = 0;
-	PCB_u * parent_PCB = container_of(get_current_task(), PCB_u, task);
-	PCB_u * child_PCB = (PCB_u *)kmalloc(sizeof(PCB_u));
-	task_s * parent_task = &parent_PCB->task;
-	task_s * child_task = &child_PCB->task;
+	PCB_u *parent_PCB = container_of(get_current_task(), PCB_u, task);
+	PCB_u *child_PCB = (PCB_u *)kmalloc(sizeof(PCB_u));
+	task_s *parent_task = &parent_PCB->task;
+	task_s *child_task = &child_PCB->task;
 	if (child_PCB == NULL)
 	{
 		ret_val = -EAGAIN;
@@ -332,33 +333,33 @@ unsigned long do_fork(stack_frame_s * parent_context,
 		return ret_val;
 }
 
-unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[])
+unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
+	task_s *curr = curr_tsk;
 
-	exit_files(curr_tsk);
-	// file_s * fp = open_exec_file(name);
+	exit_files(curr);
 	filename_s name;
 	name.name = exec_filename;
 	name.len = strlen(exec_filename);
-	file_s * fp = do_filp_open(0, &name, O_RDONLY);
+	file_s *fp = do_filp_open(0, &name, O_RDONLY);
 
-	if (curr_tsk->flags & PF_VFORK)
+	if (curr->flags & PF_VFORK)
 	{
-		curr_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
-		memset(curr_tsk->mm_struct, 0, sizeof(mm_s));
+		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		memset(curr->mm_struct, 0, sizeof(mm_s));
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
-		curr_tsk->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
+		curr->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);
 		memset(virt_cr3, 0, PGENT_SIZE / 2);
 	}
-	read_exec_mm(fp, curr_tsk);
-	creat_exec_addrspace(curr_tsk);
-	pg_load_cr3(curr_tsk->mm_struct->cr3);
-	curr_tsk->flags &= ~PF_VFORK;
+	read_exec_mm(fp, curr);
+	creat_exec_addrspace(curr);
+	pg_load_cr3(curr->mm_struct->cr3);
+	curr->flags &= ~PF_VFORK;
 
 	long argv_pos = 0;
 	if(argv != NULL)
@@ -366,7 +367,7 @@ unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char 
 		int argc = 0;
 		int len = 0;
 		int i = 0;
-		char ** dargv = (char **)(curr_tsk->mm_struct->start_stack - 10 * sizeof(char *));
+		char ** dargv = (char **)(curr->mm_struct->start_stack - 10 * sizeof(char *));
 		argv_pos = (unsigned long)dargv;
 
 		for(i = 0; i < 10 && argv[i] != NULL; i++)
@@ -376,19 +377,20 @@ unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char 
 			dargv[i] = (char *)(argv_pos - len);
 			argv_pos -= len;
 		}
-		curr_tsk->mm_struct->start_stack = argv_pos - 10;
+		curr->mm_struct->start_stack = argv_pos - 10;
 		curr_context->rdi = i;	//argc
 		curr_context->rsi = (unsigned long)dargv;	//argv
 	}
 
-	memset((virt_addr_t)curr_tsk->mm_struct->start_code, 0, curr_tsk->mm_struct->end_data - curr_tsk->mm_struct->start_code);
+	memset((virt_addr_t)curr->mm_struct->start_code, 0,
+			curr->mm_struct->end_data - curr->mm_struct->start_code);
 	long fp_pos = 0;
-	ret_val = fp->f_ops->read(fp, (void *)curr_tsk->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
+	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->dir_inode->file_size, &fp_pos);
 
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
-	curr_context->r10 = curr_tsk->mm_struct->start_code;
-	curr_context->r11 = curr_tsk->mm_struct->start_stack;
+	curr_context->r10 = curr->mm_struct->start_code;
+	curr_context->r11 = curr->mm_struct->start_stack;
 	curr_context->rax = 1;
 
 	return ret_val;

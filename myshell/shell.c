@@ -44,6 +44,10 @@ void run_cmd(int index, int argc, char **argv);
 
 int main(int argc, const char *argv[])
 {
+	printf("Welcome to MyOS2!\n");
+	printf("This is MyShell v0.01.\n");
+	printf("You are login as root.\n\n");
+
 	// reader_loop();
 
 	memset(current_dir, 0, PATH_MAX);

@@ -128,10 +128,12 @@ int check_addr_writable(reg_t cr2, task_s * task)
 	mm_s * mm = task->mm_struct;
 	reg_t rsp = get_stackframe(task)->rsp;
 
-	if ((cr2 > mm->start_data && cr2 < mm->end_data) ||
-		(cr2 > mm->start_bss && cr2 < mm->end_bss) ||
-		(cr2 > mm->start_brk && cr2 < mm->end_brk) ||
-		(cr2 > rsp && cr2 < mm->start_stack))
+	if ((cr2 >= mm->start_code && cr2 < mm->end_code) ||
+		(cr2 >= mm->start_rodata && cr2 < mm->end_rodata) ||
+		(cr2 >= mm->start_data && cr2 < mm->end_data) ||
+		(cr2 >= mm->start_bss && cr2 < mm->end_bss) ||
+		(cr2 >= mm->start_brk && cr2 < mm->end_brk) ||
+		(cr2 >= rsp && cr2 < mm->start_stack))
 		ret_val = true;
 
 	return ret_val;
