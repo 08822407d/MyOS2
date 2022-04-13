@@ -21,7 +21,7 @@ ENTRY(higher_half_entry)
 	pushq   $0
 
 	// here init single core ia32-e environment
-	callq	kmain
+	callq	start_kernel
 
 	// here is the idle task for all cores
 	movq	$0,			%rdi

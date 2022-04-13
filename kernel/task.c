@@ -25,7 +25,7 @@ extern char _ebss;
 
 size_t			cpustack_off;
 PCB_u **		idle_tasks;
-// de attention that before entering kmain, rsp had already point to stack of task0,
+// de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
 mm_s			task0_mm = 

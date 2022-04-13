@@ -313,8 +313,8 @@ static const char *handle_dots(IN nameidata_s *nd)
 		parent = follow_dotdot(nd);
 		if (IS_ERR(parent))
 			return ERR_CAST(parent);
-
-		error = step_into(nd, parent);
+		if (parent == NULL)
+			error = step_into(nd, nd->path.dentry);
 		if (error)
 			return error;
 	}

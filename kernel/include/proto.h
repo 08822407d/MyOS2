@@ -28,7 +28,7 @@
 	extern List_hdr_s	timer_lhdr;
 
 	/* main.c */
-	void kmain(void);
+	void start_kernel(void);
 
 	/* mod_test.c */
 	unsigned long module_test(unsigned long);

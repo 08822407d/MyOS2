@@ -13,7 +13,7 @@
 
 atomic_T boot_counter;
 
-void kmain()
+void start_kernel()
 {
 	size_t cpu_idx = 0;
 

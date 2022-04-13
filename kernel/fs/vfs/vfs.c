@@ -13,11 +13,11 @@
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
 
-MBR_s *		boot_sec;
-GPT_H_s *	gpt_hdr;
-GPT_PE_s *	gpt_pes;
+MBR_s		*boot_sec;
+GPT_H_s		*gpt_hdr;
+GPT_PE_s	*gpt_pes;
 
-super_block_s * root_sb = NULL;
+super_block_s *root_sb = NULL;
 fs_type_s filesystem = {"filesystem", 0};
 
 
@@ -51,7 +51,7 @@ unsigned long init_vfs()
 	init_FAT32_FS();
 	init_EXT2_FS();
 
-	GPT_PE_s *	gpt_pe = NULL;
+	GPT_PE_s *gpt_pe = NULL;
 	for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)
 	{
 		gpt_pe = &gpt_pes[i];
