@@ -71,7 +71,7 @@ unsigned long sys_read(int fd, void * buf, long count)
 	return ret;
 }
 
-unsigned long sys_write(int fd,void * buf,long count)
+unsigned long sys_write(int fd, void *buf, long count)
 {
 	task_s * curr = curr_tsk;
 	struct file * fp = NULL;

@@ -62,8 +62,8 @@ int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
 		!verify_area(buf,sizeof(linux_dirent64_s) + namelen))
 		return -EFAULT;
 
-	// copy_to_user(dent->d_name, name, namelen);
-	memcpy(dent->d_name, name, namelen);
+	copy_to_user(dent->d_name, name, namelen);
+	// memcpy(dent->d_name, name, namelen);
 	dent->d_reclen = namelen;
 	dent->d_type = type;
 	dent->d_off = offset;

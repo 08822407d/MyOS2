@@ -199,7 +199,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < USERADDR_LIMIT)
-			copy_from_user(buf, buffer + offset, length);
+			copy_from_user(buffer + offset, buf, length);
 		else
 			memcpy(buffer + offset, buf, length);
 

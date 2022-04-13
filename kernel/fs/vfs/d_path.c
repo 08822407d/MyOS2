@@ -176,6 +176,7 @@ long sys_getcwd(char *buf, unsigned long size)
 		unsigned len;
 		b.len = PATH_MAX;
 		bufhead = kmalloc(b.len);
+		memset(bufhead, 0, b.len);
 		b.buf = bufhead + PATH_MAX;
 
 		prepend(&b, "", 1);

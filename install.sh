@@ -22,7 +22,8 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     objcopy --only-keep-debug shell shell.debug
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shell shell.bin
     # copy files
-    sudo mount /dev/dm-1 /mnt -o uid=$USER,gid=$USER
+    sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
+    cp ../bootloader.efi /mnt/EFI/BOOT/BOOTX64.EFI
     cp ./kernel.bin /mnt/kernel.bin
     cp ./init.bin /mnt/init.bin
     cp ./shell.bin /mnt/shell.bin
