@@ -50,7 +50,7 @@ int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2!\n");
 	printf("This is MyShell v0.01.\n");
-	printf("You are login as root.\n\n");
+	printf("You are login as root.\n");
 
 	// reader_loop();
 
@@ -62,10 +62,11 @@ int main(int argc, const char *argv[])
 
 	while (1)
 	{
+		printf("\n");
 		printf("$ ");
 		memset(buf, 0, SZ_1K);
 		read_line(buf);
-		printf(" \n");
+		printf("\n");
 
 		int __argc = 0;
 		char ** __argv = NULL;
@@ -95,8 +96,11 @@ int read_line(char *buf)
 			return count;
 		
 		case '\b':
-			buf[--count] = 0;
-			printf("\b");
+			if (count > 0)
+			{
+				buf[--count] = 0;
+				printf("\b");
+			}
 			break;
 
 		default:
@@ -225,15 +229,16 @@ int cat_command(int argc, char **argv)
 	if(len > 1)
 		filename[len] = '/';
 	strcat(filename, argv[1]);
-	printf("cat_command filename:%s\n", filename);
+	// printf("cat_command filename:%s\n", filename);
 
-	fd = open(filename, 0);	
+	fd = open(filename, O_RDONLY);	
 	i = lseek(fd, 0, SEEK_END);
 	lseek(fd, 0, SEEK_SET);
 	buf = malloc(i + 1);
 	memset(buf, 0, i + 1);
 	len = read(fd, buf, i);
-	printf("length:%d\t%s\n", len, buf);
+	// printf("length:%d\t%s\n", len, buf);
+	printf("%s\n", buf);
 
 	close(fd);
 	return 1;
@@ -241,39 +246,39 @@ int cat_command(int argc, char **argv)
 
 int exec_command(int argc, char **argv)
 {
-	int err = 0;
-	int retval = 0;
-	int len = 0;
-	char * filename = NULL;
-	int i = 0;
+	// int err = 0;
+	// int retval = 0;
+	// int len = 0;
+	// char * filename = NULL;
+	// int i = 0;
 
-	err = fork();
-	if(err == 0)
-	{
-		printf("child process\n");
-		len = strlen(current_dir);
-		i = len + strlen(argv[1]);
-		filename = malloc(i+2);
-		memset(filename, 0, i + 2);
-		strcpy(filename, current_dir);
-		if(len > 1)
-			filename[len] = '/';
-		strcat(filename, argv[1]);
+	// err = fork();
+	// if(err == 0)
+	// {
+	// 	printf("child process\n");
+	// 	len = strlen(current_dir);
+	// 	i = len + strlen(argv[1]);
+	// 	filename = malloc(i+2);
+	// 	memset(filename, 0, i + 2);
+	// 	strcpy(filename, current_dir);
+	// 	if(len > 1)
+	// 		filename[len] = '/';
+	// 	strcat(filename, argv[1]);
 
-		printf("exec_command filename:%s\n", filename);
-		for(i = 0; i < argc; i++)
-			printf("argv[%d]:%s\n", i, argv[i]);
+	// 	printf("exec_command filename:%s\n", filename);
+	// 	for(i = 0; i < argc; i++)
+	// 		printf("argv[%d]:%s\n", i, argv[i]);
 
-		execve(filename, argv, NULL);
-		exit(0);
-	}
-	else
-	{
-		printf("parent process childpid:%#d\n", err);
-		waitpid(errno, &retval, 0);
-		printf("parent process waitpid:%#018lx\n", retval);
-	}
-	return 1;
+	// 	execve(filename, argv, NULL);
+	// 	exit(0);
+	// }
+	// else
+	// {
+	// 	printf("parent process childpid:%#d\n", err);
+	// 	waitpid(errno, &retval, 0);
+	// 	printf("parent process waitpid:%#018lx\n", retval);
+	// }
+	// return 1;
 }
 
 int reboot_command(int argc, char **argv)

@@ -279,7 +279,7 @@ long FAT32_lseek(file_s * filp, long offset, long origin)
 		return -EOVERFLOW;
 
 	filp->position = pos;
-	color_printk(GREEN, BLACK, "FAT32 FS(lseek) alert position:%d\n", filp->position);
+	// color_printk(GREEN, BLACK, "FAT32 FS(lseek) alert position:%d\n", filp->position);
 
 	return pos;
 }

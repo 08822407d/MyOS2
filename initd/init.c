@@ -54,10 +54,10 @@ void file_io_test()
 	close(test_fd2);
 	printf("Read test 2 : %s\n", buf);
 
-	// char buf2[] = {"write test success."};
-	// int test_fd3 = open("/EFI/test/test.txt", O_RDWR | O_APPEND);
-	// write(test_fd3, buf2, strlen(buf2));
-	// close(test_fd3);
+	char buf2[] = {"write test success."};
+	int test_fd3 = open("/EFI/test/test.txt", O_RDWR | O_APPEND);
+	write(test_fd3, buf2, strlen(buf2));
+	close(test_fd3);
 
 	// int tty_fd = open("/dev/tty0", O_RDWR);
 	// char buf3[10];
