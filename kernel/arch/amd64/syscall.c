@@ -1,8 +1,9 @@
-#include <errno.h>
+#include <sys/fcntl.h>
+#include <uapi/sysreboot.h>
 
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
-#include <sys/fcntl.h>
 
 #include <include/proto.h>
 #include <include/printk.h>

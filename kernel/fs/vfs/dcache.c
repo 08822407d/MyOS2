@@ -43,16 +43,16 @@ dentry_s * __d_alloc(qstr_s * name)
 	if (dentry == NULL)
 		return NULL;
 
-	dentry->d_name.name = kmalloc(name->len + 1);
+	dentry->d_name.name = kmalloc(name->len);
 	if (dentry->d_name.name == NULL)
 	{
 		kfree(dentry);
 		return NULL;
 	}
 
-	memset((void *)dentry->d_name.name, 0, name->len + 1);
+	memset((void *)dentry->d_name.name, 0, name->len);
+	dentry->d_name.len = name->len;
 	memcpy((void *)dentry->d_name.name, name->name, name->len);
-	dentry->d_name = *name;
 
 	list_init(&dentry->dirent_list, dentry);
 	list_hdr_init(&dentry->childdir_lhdr);

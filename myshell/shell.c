@@ -1,5 +1,6 @@
 #include <sys/fcntl.h>
 #include <sys/wait.h>
+#include <uapi/sysreboot.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,19 +22,22 @@ typedef struct builtincmd
 int cd_command(int argc, char **argv);
 int ls_command(int argc, char **argv);
 int pwd_command(int argc, char **argv);
+int cat_command(int argc, char **argv);
+int exec_command(int argc, char **argv);
+int reboot_command(int argc, char **argv);
 
 builtincmd_s shell_internal_cmd[] = 
 {
 	{"cd",		cd_command},
 	{"ls",		ls_command},
 	{"pwd",		pwd_command},
-	// {"cat",		cat_command},
+	{"cat",		cat_command},
 	// {"touch",	touch_command},
 	// {"rm",		rm_command},
 	// {"mkdir",	mkdir_command},
 	// {"rmdir",	rmdir_command},
-	// {"exec",	exec_command},
-	// {"reboot",	reboot_command},
+	{"exec",	exec_command},
+	{"reboot",	reboot_command},
 };
 
 char current_dir[PATH_MAX];
@@ -109,7 +113,7 @@ int find_cmd(char *cmd)
 	return -1;
 }
 
-int parse_command(char * buf,int * argc,char ***argv)
+int parse_command(char *buf, int *argc, char ***argv)
 {
 	int i = 0;
 	int j = 0;
@@ -128,7 +132,7 @@ int parse_command(char * buf,int * argc,char ***argv)
 		return -1;
 
 	*argv = (char **)malloc(sizeof(char **) * (*argc + 1));
-	memset(*argv,0,sizeof(char **) * (*argc + 1));
+	memset(*argv, 0, sizeof(char **) * (*argc + 1));
 	for(i = 0; i < *argc && j < 256; i++)
 	{
 		*((*argv)+i) = &buf[j];
@@ -188,7 +192,84 @@ int ls_command(int argc, char **argv)
 
 int pwd_command(int argc, char **argv)
 {
+	// char cwd[PATH_MAX];
+	// memset(cwd, 0, PATH_MAX);
+	// getcwd(cwd, PATH_MAX - 1);
+	// printf("%s\n", cwd);
 	if(current_dir)
 		printf("%s\n", current_dir);
+	return 1;
+}
+
+int cat_command(int argc, char **argv)
+{
+	int len = 0;
+	char *filename = NULL;
+	int fd = 0;
+	char *buf = NULL;
+	int i = 0;
+
+	len = strlen(current_dir);
+	i = len + strlen(argv[1]);
+	filename = malloc(i + 2);
+	memset(filename, 0, i + 2);
+	strcpy(filename, current_dir);
+	if(len > 1)
+		filename[len] = '/';
+	strcat(filename, argv[1]);
+	printf("cat_command filename:%s\n", filename);
+
+	fd = open(filename, 0);	
+	i = lseek(fd, 0, SEEK_END);
+	lseek(fd, 0, SEEK_SET);
+	buf = malloc(i + 1);
+	memset(buf, 0, i + 1);
+	len = read(fd, buf, i);
+	printf("length:%d\t%s\n", len, buf);
+
+	close(fd);
+	return 1;
+}
+
+int exec_command(int argc, char **argv)
+{
+	int err = 0;
+	int retval = 0;
+	int len = 0;
+	char * filename = NULL;
+	int i = 0;
+
+	err = fork();
+	if(err == 0)
+	{
+		printf("child process\n");
+		len = strlen(current_dir);
+		i = len + strlen(argv[1]);
+		filename = malloc(i+2);
+		memset(filename, 0, i + 2);
+		strcpy(filename, current_dir);
+		if(len > 1)
+			filename[len] = '/';
+		strcat(filename, argv[1]);
+
+		printf("exec_command filename:%s\n", filename);
+		for(i = 0; i < argc; i++)
+			printf("argv[%d]:%s\n", i, argv[i]);
+
+		execve(filename, argv, NULL);
+		exit(0);
+	}
+	else
+	{
+		printf("parent process childpid:%#d\n", err);
+		waitpid(errno, &retval, 0);
+		printf("parent process waitpid:%#018lx\n", retval);
+	}
+	return 1;
+}
+
+int reboot_command(int argc, char **argv)
+{
+	reboot(SYSTEM_REBOOT);
 	return 1;
 }

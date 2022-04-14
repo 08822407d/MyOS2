@@ -245,7 +245,7 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*scan-code	unShift		Shift		*/
 /*--------------------------------------------------------------*/
 /*0x00*/	0,			0,
-/*0x01*/	0,			0,		//ESC
+/*0x01*/	0,			0,		// ESC
 /*0x02*/	'1',		'!',
 /*0x03*/	'2',		'@',
 /*0x04*/	'3',		'#',
@@ -258,10 +258,10 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x0b*/	'0',		')',
 /*0x0c*/	'-',		'_',
 /*0x0d*/	'=',		'+',
-/*0x0e*/	'\b',		'\b',		//BACKSPACE	
-/*0x0f*/	'\t',		'\t',		//TAB
-// /*0x0e*/	0,			0,		//BACKSPACE	
-// /*0x0f*/	0,			0,		//TAB
+/*0x0e*/	'\b',		'\b',	// BACKSPACE	
+/*0x0f*/	'\t',		'\t',	// TAB
+// /*0x0e*/	0,			0,		// BACKSPACE	
+// /*0x0f*/	0,			0,		// TAB
 
 /*0x10*/	'q',		'Q',
 /*0x11*/	'w',		'W',
@@ -275,9 +275,9 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x19*/	'p',		'P',
 /*0x1a*/	'[',		'{',
 /*0x1b*/	']',		'}',
-/*0x1c*/	'\n',		'\n',		//ENTER
-// /*0x1c*/	0,			0,		//ENTER
-/*0x1d*/	0x1d,		0x1d,		//CTRL Left
+/*0x1c*/	'\n',		'\n',	// ENTER
+// /*0x1c*/	0,			0,		// ENTER
+/*0x1d*/	0x1d,		0x1d,	// CTRL Left
 /*0x1e*/	'a',		'A',
 /*0x1f*/	's',		'S',
 
@@ -291,7 +291,7 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x27*/	';',		':',
 /*0x28*/	'\'',		'"',
 /*0x29*/	'`',		'~',
-/*0x2a*/	0x2a,		0x2a,		//SHIFT Left
+/*0x2a*/	0x2a,		0x2a,	// SHIFT Left
 /*0x2b*/	'\\',		'|',
 /*0x2c*/	'z',		'Z',
 /*0x2d*/	'x',		'X',
@@ -304,38 +304,38 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x33*/	',',		'<',
 /*0x34*/	'.',		'>',
 /*0x35*/	'/',		'?',
-/*0x36*/	0x36,		0x36,		//SHIFT Right
+/*0x36*/	0x36,		0x36,	// SHIFT Right
 /*0x37*/	'*',		'*',
-/*0x38*/	0x38,		0x38,		//ALT Left
-/*0x39*/	' ',		' ',		//SPACE
-/*0x3a*/	0,			0,		//CAPS LOCK
-/*0x3b*/	0,			0,		//F1
-/*0x3c*/	0,			0,		//F2
-/*0x3d*/	0,			0,		//F3
-/*0x3e*/	0,			0,		//F4
-/*0x3f*/	0,			0,		//F5
+/*0x38*/	0x38,		0x38,	// ALT Left
+/*0x39*/	' ',		' ',	// SPACE
+/*0x3a*/	0,			0,		// CAPS LOCK
+/*0x3b*/	0,			0,		// F1
+/*0x3c*/	0,			0,		// F2
+/*0x3d*/	0,			0,		// F3
+/*0x3e*/	0,			0,		// F4
+/*0x3f*/	0,			0,		// F5
 
-/*0x40*/	0,			0,		//F6
-/*0x41*/	0,			0,		//F7
-/*0x42*/	0,			0,		//F8
-/*0x43*/	0,			0,		//F9
-/*0x44*/	0,			0,		//F10
-/*0x45*/	0,			0,		//NUM LOCK
-/*0x46*/	0,			0,		//SCROLL LOCK
-/*0x47*/	'7',		0,		/*PAD HONE*/
-/*0x48*/	'8',		0,		/*PAD UP*/
-/*0x49*/	'9',		0,		/*PAD PAGEUP*/
-/*0x4a*/	'-',		0,		/*PAD MINUS*/
-/*0x4b*/	'4',		0,		/*PAD LEFT*/
-/*0x4c*/	'5',		0,		/*PAD MID*/
-/*0x4d*/	'6',		0,		/*PAD RIGHT*/
-/*0x4e*/	'+',		0,		/*PAD PLUS*/
-/*0x4f*/	'1',		0,		/*PAD END*/
+/*0x40*/	0,			0,		// F6
+/*0x41*/	0,			0,		// F7
+/*0x42*/	0,			0,		// F8
+/*0x43*/	0,			0,		// F9
+/*0x44*/	0,			0,		// F10
+/*0x45*/	0,			0,		// NUM LOCK
+/*0x46*/	0,			0,		// SCROLL LOCK
+/*0x47*/	'7',		0,		/* PAD HONE */
+/*0x48*/	'8',		0,		/* PAD UP */
+/*0x49*/	'9',		0,		/* PAD PAGEUP */
+/*0x4a*/	'-',		0,		/* PAD MINUS */
+/*0x4b*/	'4',		0,		/* PAD LEFT */
+/*0x4c*/	'5',		0,		/* PAD MID */
+/*0x4d*/	'6',		0,		/* PAD RIGHT */
+/*0x4e*/	'+',		0,		/* PAD PLUS */
+/*0x4f*/	'1',		0,		/* PAD END */
 
-/*0x50*/	'2',		0,		/*PAD DOWN*/
-/*0x51*/	'3',		0,		/*PAD PAGEDOWN*/
-/*0x52*/	'0',		0,		/*PAD INS*/
-/*0x53*/	'.',		0,		/*PAD DOT*/
+/*0x50*/	'2',		0,		/* PAD DOWN */
+/*0x51*/	'3',		0,		/* PAD PAGEDOWN */
+/*0x52*/	'0',		0,		/* PAD INS */
+/*0x53*/	'.',		0,		/* PAD DOT */
 /*0x54*/	0,			0,
 /*0x55*/	0,			0,
 /*0x56*/	0,			0,

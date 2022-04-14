@@ -10,9 +10,6 @@
 #ifndef __SYS_H__
 #define __SYS_H__
 
-	#define	SYSTEM_REBOOT	(1UL << 0)
-	#define	SYSTEM_POWEROFF	(1UL << 1)
-
 	#define MAX_SYSTEM_CALL_NR 512
 	typedef unsigned long (* system_call_t)(void);
 	extern	system_call_t syscall_table[MAX_SYSTEM_CALL_NR ];
