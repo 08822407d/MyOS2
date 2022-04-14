@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <string.h>
 
+#include <include/err.h>
 #include <include/proto.h>
 #include <include/fs/dcache.h>
 
@@ -41,16 +42,16 @@ dentry_s * __d_alloc(qstr_s * name)
 {
 	dentry_s * dentry = kmalloc(sizeof(dentry_s));
 	if (dentry == NULL)
-		return NULL;
+		return ERR_PTR(-ENOMEM);
 
-	dentry->d_name.name = kmalloc(name->len);
+	dentry->d_name.name = kmalloc(name->len + 1);
 	if (dentry->d_name.name == NULL)
 	{
 		kfree(dentry);
-		return NULL;
+		return ERR_PTR(-ENOMEM);
 	}
 
-	memset((void *)dentry->d_name.name, 0, name->len);
+	memset((void *)dentry->d_name.name, 0, name->len + 1);
 	dentry->d_name.len = name->len;
 	memcpy((void *)dentry->d_name.name, name->name, name->len);
 
