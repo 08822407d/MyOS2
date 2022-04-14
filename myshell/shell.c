@@ -85,17 +85,25 @@ int read_line(char *buf)
 	while(1)
 	{
 		key = fgetc(stdin);
-		if(key == '\n')
+
+		switch (key)
 		{
+		case 0:
+			continue;
+		
+		case '\n':
 			return count;
-		}
-		else if(key)
-		{
+		
+		case '\b':
+			buf[--count] = 0;
+			printf("\b");
+			break;
+
+		default:
 			buf[count++] = key;
 			printf("%c", key);
-		}			
-		else
-			continue;
+			break;
+		}
 	}
 }
 

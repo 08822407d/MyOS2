@@ -28,7 +28,7 @@ int main(int argc, const char *argv[])
 		// malloc_free_test();
 		// file_io_test();
 		// dirtest();
-		while (1);
+		// while (1);
 	}
 }
 
