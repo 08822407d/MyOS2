@@ -199,7 +199,7 @@ static errno_t copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	errno_t err = -ENOERR;
 
-	Page_s * page = NULL;
+	page_s * page = NULL;
 	PML4E_T * new_cr3 = NULL;
 	reg_t curr_endstack = get_stackframe(curr_tsk)->rsp;
 

@@ -190,8 +190,13 @@ int ls_command(int argc, char **argv)
 {
 	DIR* dir = NULL;
 	linux_dirent64_s * buf = NULL;
+	char *path = NULL;
+	if (argc <=1)
+		path = current_dir;
+	else
+		path = argv[1];
 
-	dir = opendir(current_dir);
+	dir = opendir(path);
 
 	buf = (linux_dirent64_s *)malloc(256);
 	while(1)

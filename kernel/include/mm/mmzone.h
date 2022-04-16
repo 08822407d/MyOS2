@@ -172,7 +172,7 @@
 		zone_s			node_zones[MAX_NR_ZONES];
 
 		int				nr_zones; 			/* number of populated zones in this node */
-		Page_s *		node_mem_map;
+		page_s *		node_mem_map;
 
 		unsigned long	node_start_pfn;
 		unsigned long	node_present_pages; /* total number of physical pages */

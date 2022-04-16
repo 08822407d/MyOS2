@@ -12,7 +12,7 @@
 	struct  slab;
 	typedef struct slab slab_s;
 
-	typedef struct Page
+	typedef struct page
 	{
 		List_s 			free_list;
 		zone_s *		zone;
@@ -25,9 +25,9 @@
 		unsigned long	buddy_order;
 
 		slab_s *		slab_ptr;
-	} Page_s;
+	} page_s;
 
-	void memblock_free_pages(Page_s * page, unsigned long pfn, unsigned int order);
+	void memblock_free_pages(page_s * page, unsigned long pfn, unsigned int order);
 	void preinit_page(void);
 	void init_page(void);
 

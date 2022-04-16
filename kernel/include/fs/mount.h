@@ -4,7 +4,7 @@
 #include <lib/utils.h>
 #include <uapi/mount.h>
 
-#include "vfs_s_defs.h"
+// #include "vfs_s_defs.h"
 
 	typedef struct vfsmount {
 		dentry_s *		mnt_root;	/* root of the mounted tree */

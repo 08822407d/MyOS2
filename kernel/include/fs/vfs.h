@@ -4,12 +4,11 @@
 #include <uapi/fcntl.h>
 #include <lib/utils.h>
 
+#include <include/fs/internels.h>
 #include <include/fs/dcache.h>
 #include <include/fs/mount.h>
 #include <include/fs/MBR.h>
 #include <include/fs/GPT.h>
-
-#include "vfs_s_defs.h"
 
 	// sysconfigs
 	#define MAX_FILE_NR		32
@@ -122,15 +121,6 @@
 		// struct audit_names	*aname;
 		// const char		iname[];
 	} filename_s;
-
-	// internels
-	typedef struct open_flags {
-		int open_flag;
-		umode_t mode;
-		int acc_mode;
-		int intent;
-		int lookup_flags;
-	} open_flags_s;
 
 	extern super_block_s * root_sb;
 	extern mount_s root_mnt;
@@ -276,9 +266,7 @@
 		return file_open_root(&(path_s){.mnt = mnt, .dentry = mnt->mnt_root},
 						filename, flags, mode);
 	}
-	file_s * do_filp_open(int dfd, filename_s * name, open_flags_s *op);
 	int __vfs_open(const path_s * path, file_s * file);
-	int path_mount(const char * dev_name, path_s * path, unsigned long flags);
 
 	filename_s *getname(const char *u_filename);
 	filename_s *getname_kernel(const char *k_filename);

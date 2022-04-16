@@ -35,7 +35,7 @@
 	#define SLAB_SIZE_BASE		32
 
 	extern pglist_data_s 	pg_list;
-	extern Page_s *			mem_map;
+	extern page_s *			mem_map;
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
@@ -46,7 +46,7 @@
 	#define PFN_PHYS(x)		((phys_addr_t)(x) << PAGE_SHIFT)
 	#define PHYS_PFN(x)		((unsigned long)((x) >> PAGE_SHIFT))
 
-	static inline zone_s *page_zone(const Page_s * page)
+	static inline zone_s *page_zone(const page_s * page)
 	{
 		unsigned long pfn = page_to_pfn(page);
 		for (int i = 0 ; i < MAX_NR_ZONES; i ++)

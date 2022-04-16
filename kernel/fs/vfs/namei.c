@@ -316,8 +316,10 @@ static const char *handle_dots(IN nameidata_s *nd)
 		parent = follow_dotdot(nd);
 		if (IS_ERR(parent))
 			return ERR_CAST(parent);
-		if (parent == NULL)
-			error = step_into(nd, nd->path.dentry);
+		if (parent != NULL)
+			error = step_into(nd, parent);
+		else
+			return ERR_PTR(-ENOENT);
 		if (error)
 			return error;
 	}
@@ -492,7 +494,8 @@ static int path_lookupat(IN nameidata_s *nd, unsigned flags, OUT path_s *path)
 // Linux function proto:
 // int filename_lookup(int dfd, struct filename *name, unsigned flags,
 // 		    struct path *path, struct path *root)
-int filename_lookup(int dfd, IN filename_s *name, unsigned flags, OUT path_s *path)
+int filename_lookup(int dfd, IN filename_s *name, unsigned flags,
+				OUT path_s *path, IN path_s *root)
 {
 	int retval;
 	nameidata_s nd;
@@ -554,7 +557,8 @@ static filename_s *filename_parentat(int dfd, filename_s *name,
 
 int kern_path(const char *name, unsigned int flags, OUT path_s *path)
 {
-	return filename_lookup(AT_FDCWD, getname_kernel(name), flags, path);
+	return filename_lookup(AT_FDCWD, getname_kernel(name),
+					flags, path, NULL);
 }
 
 // Linux function proto:
@@ -608,7 +612,8 @@ static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 // static struct file *path_openat(struct nameidata *nd,
 // 			const struct open_flags *op, unsigned flags)
 // open the path in nd->name
-static file_s *path_openat(IN nameidata_s *nd,  open_flags_s *op, unsigned flags)
+static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
+				unsigned flags)
 {
 	file_s *file;
 	int error;
@@ -632,7 +637,7 @@ static file_s *path_openat(IN nameidata_s *nd,  open_flags_s *op, unsigned flags
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
-file_s *do_filp_open(int dfd, IN filename_s * name, open_flags_s *op)
+file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
 {
 	nameidata_s nd;
 	int flags = op->lookup_flags;
@@ -654,5 +659,5 @@ file_s *do_filp_open(int dfd, IN filename_s * name, open_flags_s *op)
 int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *path)
 {
 	filename_s *fn = getname(name);
-	return filename_lookup(dfd, fn, flags, path);
+	return filename_lookup(dfd, fn, flags, path, NULL);
 }

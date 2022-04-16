@@ -18,7 +18,7 @@
 recurs_lock_T	page_alloc_lock;
 
 pglist_data_s	pg_list;
-Page_s *		mem_map;
+page_s *		mem_map;
 
 /*==============================================================================================*
  *								private fuctions for buddy system								*
@@ -31,19 +31,19 @@ Page_s *		mem_map;
  * page cannot be allocated or merged in parallel. Alternatively, it must
  * handle invalid values gracefully, and use buddy_order_unsafe() below.
  */
-static inline unsigned long get_buddy_order(Page_s * page)
+static inline unsigned long get_buddy_order(page_s * page)
 {
 	/* PageBuddy() must be checked by the caller */
 	return page->buddy_order;
 }
 
-static inline void set_buddy_order(Page_s * page, unsigned int order)
+static inline void set_buddy_order(page_s * page, unsigned int order)
 {
 	page->buddy_order = order;
 }
 
 /* Used for pages not on another list */
-static inline void add_to_free_list(Page_s * page,
+static inline void add_to_free_list(page_s * page,
 		zone_s * zone, unsigned int order)
 {
 	List_hdr_s * fa_lhdr = &zone->free_area[order];
@@ -52,7 +52,7 @@ static inline void add_to_free_list(Page_s * page,
 }
 
 /* Used for pages not on another list */
-static inline void add_to_free_list_tail(Page_s * page,
+static inline void add_to_free_list_tail(page_s * page,
 		zone_s * zone, unsigned int order)
 {
 	List_hdr_s * fa_lhdr = &zone->free_area[order];
@@ -60,23 +60,23 @@ static inline void add_to_free_list_tail(Page_s * page,
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
 
-static inline Page_s * get_page_from_free_area(List_hdr_s * area)
+static inline page_s * get_page_from_free_area(List_hdr_s * area)
 {
 	List_s * pg_lp = list_hdr_pop(area);
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return container_of(pg_lp, Page_s, free_list);
+		return container_of(pg_lp, page_s, free_list);
 }
 
-static inline Page_s * del_page_from_free_list(Page_s * page,
+static inline page_s * del_page_from_free_list(page_s * page,
 		zone_s * zone, unsigned int order)
 {
 	List_s * pg_lp = list_hdr_delete(&zone->free_area[order], &page->free_list);
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return container_of(pg_lp, Page_s, free_list);
+		return container_of(pg_lp, page_s, free_list);
 }
 
 /*
@@ -93,7 +93,7 @@ static inline Page_s * del_page_from_free_list(Page_s * page,
  *
  * -- nyc
  */
-static inline void expand(zone_s * zone, Page_s * page, int low, int high)
+static inline void expand(zone_s * zone, page_s * page, int low, int high)
 {
 	unsigned long size = 1 << high;
 
@@ -142,7 +142,7 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order)
  *
  * For recording page's order, we use page_private(page).
  */
-static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order)
+static inline bool page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
 {
 	if (get_buddy_order(buddy) != order)
 		return false;
@@ -161,10 +161,10 @@ static inline bool page_is_buddy(Page_s *page, Page_s *buddy, unsigned int order
 // static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
 //					unsigned int order, int migratetype)
 static inline 
-Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
+page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
 {
 	unsigned int current_order;
-	Page_s * page;
+	page_s * page;
 
 	/* Find a page of the appropriate size in the preferred list */
 	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
@@ -174,7 +174,7 @@ Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
 		List_s * page_lp = list_hdr_pop(&zone->free_area[current_order]);
 		while (page_lp == NULL);
 
-		page = container_of(page_lp, Page_s, free_list);
+		page = container_of(page_lp, page_s, free_list);
 		expand(zone, page, order, current_order);
 		for (int i = 0; i < (1 << order); i++)
 			page[i].ref_count++;
@@ -212,12 +212,12 @@ Page_s * __rmqueue_smallest(zone_s * zone, unsigned int order)
 // static inline void __free_one_page(struct page *page, unsigned long pfn,
 //					struct zone *zone, unsigned int order, int migratetype,
 //					fpi_t fpi_flags)
-static inline void __free_one_page(Page_s *page, unsigned long pfn,
+static inline void __free_one_page(page_s *page, unsigned long pfn,
 		zone_s *zone, unsigned int order)
 {
 	unsigned long buddy_pfn;
 	unsigned long combined_pfn;
-	Page_s * buddy;
+	page_s * buddy;
 
 	while (order < MAX_ORDER) {
 		buddy_pfn = __find_buddy_pfn(pfn, order);
@@ -257,9 +257,9 @@ static inline void __free_one_page(Page_s *page, unsigned long pfn,
  */
 // Linux function proto :
 // struct page *alloc_pages(gfp_t gfp, unsigned order)
-Page_s * alloc_pages(unsigned int gfp, unsigned int order)
+page_s * alloc_pages(unsigned int gfp, unsigned int order)
 {
-	Page_s * page;
+	page_s * page;
 	zone_s * zone = &pg_list.node_zones[gfp];
 
 	// linux call stack :
@@ -305,7 +305,7 @@ Page_s * alloc_pages(unsigned int gfp, unsigned int order)
  */
 // Linux function proto :
 // void free_pages(unsigned long addr, unsigned int order)
-void free_pages(Page_s * page, unsigned int order)
+void free_pages(page_s * page, unsigned int order)
 {
 	unsigned long pfn = page_to_pfn(page);
 	zone_s * zone = page_zone(page);
@@ -327,14 +327,14 @@ void free_pages(Page_s * page, unsigned int order)
 	__free_one_page(page, pfn, zone, order);
 }
 
-Page_s * paddr_to_page(phys_addr_t paddr)
+page_s * paddr_to_page(phys_addr_t paddr)
 {
 	unsigned long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
 	// return &mem_info.pages[pg_idx];
 	return pfn_to_page(pfn);
 }
 
-phys_addr_t page_to_paddr(Page_s * page)
+phys_addr_t page_to_paddr(page_s * page)
 {
 	unsigned long pfn = page_to_pfn(page);
 	return (phys_addr_t)(pfn * PAGE_SIZE);
@@ -352,12 +352,12 @@ void preinit_page()
 	pg_list.node_start_pfn = pg_list.node_zones[0].zone_start_pfn;
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	mem_map =
-	pg_list.node_mem_map = phys2virt(memblock_alloc_range(sizeof(Page_s) * pg_list.node_spanned_pages,
+	pg_list.node_mem_map = phys2virt(memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
 								sizeof(size_t), (phys_addr_t)MAX_DMA_PFN, NULL));
-	memset(mem_map, 0, sizeof(Page_s) * pg_list.node_spanned_pages);
+	memset(mem_map, 0, sizeof(page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{
-		Page_s * page = &pg_list.node_mem_map[i];
+		page_s * page = &pg_list.node_mem_map[i];
 		list_init(&page->free_list, page);
 		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
 	}
@@ -373,7 +373,7 @@ void init_page()
 	kparam.init_flags.buddy = 1;
 }
 
-void memblock_free_pages(Page_s * page, unsigned long pfn,
+void memblock_free_pages(page_s * page, unsigned long pfn,
 							unsigned int order)
 {
 	zone_s * zone = page_zone(page);

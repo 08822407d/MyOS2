@@ -89,7 +89,7 @@ void init_slab()
 
 slab_s * slab_alloc(slab_s * cslp)
 {
-	Page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
+	page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
 	phys_addr_t page_paddr = page_to_paddr(pgp);
 	if (!(pgp->attr & PG_PTable_Maped))
 		arch_page_domap(phys2virt(page_paddr), page_paddr,
@@ -217,7 +217,7 @@ void kfree(void * obj_p)
 	// find which slab does the pointer belonged to
 	phys_addr_t pg_addr = virt2phys((virt_addr_t)PAGE_ROUND_DOWN((size_t)obj_p));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
-	Page_s * pgp = &mem_map[pg_idx];
+	page_s * pgp = &mem_map[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
 	// of coures it should not in an empty-slab

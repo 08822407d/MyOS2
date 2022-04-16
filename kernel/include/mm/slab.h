@@ -20,7 +20,7 @@
 		unsigned long	free;
 
 		virt_addr_t		virt_addr;
-		Page_s *		page;
+		page_s *		page;
 		bitmap_t *		colormap;
 	} slab_s;
 
