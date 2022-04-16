@@ -626,13 +626,13 @@ static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
 // Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
-file_s *do_filp_open(int dfd, IN filename_s * name, int flags)
+file_s *do_filp_open(int dfd, IN filename_s * name, open_flags_s *op)
 {
 	nameidata_s nd;
 	file_s *filp;
 
 	set_nameidata(&nd, dfd, name, NULL);
-	filp = path_openat(&nd, flags);
+	filp = path_openat(&nd, 0);
 	// if (unlikely(filp == ERR_PTR(-ECHILD)))
 	// 	filp = path_openat(&nd, op, flags);
 	// if (unlikely(filp == ERR_PTR(-ESTALE)))

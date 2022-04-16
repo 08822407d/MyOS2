@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 
+#include <include/err.h>
 #include <include/fs/file.h>
 #include <include/fs/namei.h>
 #include <include/fs/openat2.h>
@@ -31,7 +32,7 @@ static int do_dentry_open(file_s * f, inode_s * inode)
 	}
 }
 
-inline int build_open_flags(const open_how_s *how, open_flags_s *op)
+int build_open_flags(const open_how_s *how, open_flags_s *op)
 {
 	uint64_t flags = how->flags;
 	uint64_t strip = FMODE_NONOTIFY | O_CLOEXEC;
@@ -147,31 +148,33 @@ inline int build_open_flags(const open_how_s *how, open_flags_s *op)
 	return 0;
 }
 
+/*==============================================================================================*
+ *									syscall apis for open										*
+ *==============================================================================================*/
 static long do_sys_openat2(int dfd, const char *filename, open_how_s *how)
 {
-	int fd = -1;
-	long err = 0;
+	open_flags_s op;
+	int fd = build_open_flags(how, &op);
+	filename_s *tmp;
 
-	filename_s * name = getname(filename);
-	fd = get_unused_fd_flags(0);
+	tmp = getname(filename);
+	if (IS_ERR(tmp))
+		return PTR_ERR(tmp);
+
+	fd = get_unused_fd_flags(how->flags);
 	if (fd >=0)
 	{
-		file_s * fp = do_filp_open(dfd, name, 0);
-		if (fp == NULL)
+		file_s * f = do_filp_open(dfd, tmp, &op);
+		if (IS_ERR(f))
 		{
-			err = -ENFILE;
+			fd = PTR_ERR(f);
 		}
 		else
 		{
-			fd_install(fd, fp);
+			fd_install(fd, f);
 		}
 	}
-	else
-	{
-		err = -ENFILE;
-	}
-	putname(name);
-	
+	putname(tmp);
 	return fd;
 }
 
@@ -214,34 +217,6 @@ retry:
 // 	}
 out:
 	return error;
-}
-
-long kopen(const char * filename, int flags)
-{
-	filename_s name;
-	int fd;
-
-	name.name = filename;
-	name.len = strlen(filename);
-	fd = get_unused_fd_flags(0);
-	if (fd >=0)
-	{
-		file_s * fp = do_filp_open(0, &name, flags);
-		if (fp == NULL)
-		{
-
-		}
-		else
-		{
-			fd_install(fd, fp);
-		}
-	}
-	else
-	{
-		return -ENFILE;
-	}
-	
-	return fd;
 }
 
 /**
