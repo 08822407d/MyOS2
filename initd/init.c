@@ -46,7 +46,7 @@ void file_io_test()
 	// printf("Read test 1 : %s\n", buf);
 
 	memset(buf, 0, 512);
-	int test_fd2 = open("/EFI/test/test.txt", O_RDONLY);
+	int test_fd2 = open("/EFI/test/test.txt", O_RDONLY, 0);
 	if (test_fd2 >= 0)
 	{
 		read(test_fd2, buf, 512);
@@ -55,7 +55,7 @@ void file_io_test()
 	printf("Read test 2 : %s\n", buf);
 
 	char buf2[] = {"write test success."};
-	int test_fd3 = open("/EFI/test/test.txt", O_RDWR | O_APPEND);
+	int test_fd3 = open("/EFI/test/test.txt", O_RDWR | O_APPEND, 0);
 	write(test_fd3, buf2, strlen(buf2));
 	close(test_fd3);
 

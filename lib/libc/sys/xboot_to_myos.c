@@ -5,7 +5,7 @@
 
 int vfs_open(const char * path, uint32_t flags, uint32_t mode)
 {
-	return open(path, flags);
+	return open(path, flags, mode);
 }
 
 int vfs_close(int fd)

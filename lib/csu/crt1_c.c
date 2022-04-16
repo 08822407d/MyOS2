@@ -9,9 +9,9 @@ extern void init_uslab(void);
 
 __attribute__((section(".crt1.text"))) void _start(int argc, const char * argv[])
 {
-	open("/dev/tty0", O_RDONLY);
-	open("/dev/tty0", O_WRONLY);
-	open("/dev/tty0", O_WRONLY);
+	open("/dev/tty0", O_RDONLY, 0);
+	open("/dev/tty0", O_WRONLY, 0);
+	open("/dev/tty0", O_WRONLY, 0);
 
 	stdin;
 	stdout;

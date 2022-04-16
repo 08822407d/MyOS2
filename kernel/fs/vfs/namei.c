@@ -2,8 +2,6 @@
 #include <stddef.h>
 #include <errno.h>
 
-#include <sys/fcntl.h>
-
 #include <include/err.h>
 #include <include/proto.h>
 #include <include/printk.h>

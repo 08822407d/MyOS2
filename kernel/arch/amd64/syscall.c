@@ -29,9 +29,9 @@ unsigned long sys_putstring(char *string)
 /*==============================================================================================*
  *										file operations											*
  *==============================================================================================*/
-unsigned long sys_open(char *filename, int flags)
+unsigned long sys_open(char *filename, int flags, umode_t mode)
 {
-	return do_sys_open(0, filename, flags);
+	return do_sys_open(0, filename, flags, mode);
 }
 
 unsigned long sys_close(int fd)

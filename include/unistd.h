@@ -43,7 +43,7 @@
 	/*
 	 *	definations from MyOS2
 	 */
-	int		open(const char * path, int flags);
+	int		open(const char * path, int flags, umode_t mode);
 	int		close(int fd);
 	long	lseek(int fd, long offset, int whence);
 	int		fork(void);
@@ -523,7 +523,7 @@
 		int		getentropy(void *, size_t);
 		int		getgrouplist(const char *, gid_t, gid_t *, int *);
 		int		getloginclass(char *, size_t);
-		// mode_t	 getmode(const void *, mode_t);
+		mode_t	 getmode(const void *, mode_t);
 		int		getosreldate(void);
 		int		getpeereid(int, uid_t *, gid_t *);
 		int		getresgid(gid_t *, gid_t *, gid_t *);
@@ -540,7 +540,7 @@
 			#define	_MKDTEMP_DECLARED
 		#endif
 		#ifndef	_MKNOD_DECLARED
-			// int	 mknod(const char *, mode_t, dev_t);
+			int	 mknod(const char *, mode_t, dev_t);
 			#define	_MKNOD_DECLARED
 		#endif
 		#ifndef _MKSTEMP_DECLARED

@@ -231,7 +231,7 @@ int cat_command(int argc, char **argv)
 	strcat(filename, argv[1]);
 	// printf("cat_command filename:%s\n", filename);
 
-	fd = open(filename, O_RDONLY);	
+	fd = open(filename, O_RDONLY, 0);	
 	i = lseek(fd, 0, SEEK_END);
 	lseek(fd, 0, SEEK_SET);
 	buf = malloc(i + 1);

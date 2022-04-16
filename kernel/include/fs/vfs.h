@@ -1,6 +1,7 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
+#include <uapi/fcntl.h>
 #include <lib/utils.h>
 
 #include <include/fs/dcache.h>
@@ -122,6 +123,15 @@
 		// const char		iname[];
 	} filename_s;
 
+	// internels
+	typedef struct open_flags {
+		int open_flag;
+		umode_t mode;
+		int acc_mode;
+		int intent;
+		int lookup_flags;
+	} open_flags_s;
+
 	extern super_block_s * root_sb;
 	extern mount_s root_mnt;
 
@@ -132,7 +142,123 @@
 
 	extern file_ops_s	tty_fops;
 
-	long do_sys_open(int dfd, const char * filename, int flags);
+	#define MAY_EXEC		0x00000001
+	#define MAY_WRITE		0x00000002
+	#define MAY_READ		0x00000004
+	#define MAY_APPEND		0x00000008
+	#define MAY_ACCESS		0x00000010
+	#define MAY_OPEN		0x00000020
+	#define MAY_CHDIR		0x00000040
+	/* called from RCU mode, don't block */
+	#define MAY_NOT_BLOCK	0x00000080
+
+	/*
+	* flags in file.f_mode.  Note that FMODE_READ and FMODE_WRITE must correspond
+	* to O_WRONLY and O_RDWR via the strange trick in do_dentry_open()
+	*/
+
+	/* file is open for reading */
+	#define FMODE_READ				((fmode_t)0x1)
+	/* file is open for writing */
+	#define FMODE_WRITE				((fmode_t)0x2)
+	/* file is seekable */
+	#define FMODE_LSEEK				((fmode_t)0x4)
+	/* file can be accessed using pread */
+	#define FMODE_PREAD				((fmode_t)0x8)
+	/* file can be accessed using pwrite */
+	#define FMODE_PWRITE			((fmode_t)0x10)
+	/* File is opened for execution with sys_execve / sys_uselib */
+	#define FMODE_EXEC				((fmode_t)0x20)
+	/* File is opened with O_NDELAY (only set for block devices) */
+	#define FMODE_NDELAY			((fmode_t)0x40)
+	/* File is opened with O_EXCL (only set for block devices) */
+	#define FMODE_EXCL				((fmode_t)0x80)
+	/* File is opened using open(.., 3, ..) and is writeable only for ioctls
+	(specialy hack for floppy.c) */
+	#define FMODE_WRITE_IOCTL		((fmode_t)0x100)
+	/* 32bit hashes as llseek() offset (for directories) */
+	#define FMODE_32BITHASH			((fmode_t)0x200)
+	/* 64bit hashes as llseek() offset (for directories) */
+	#define FMODE_64BITHASH			((fmode_t)0x400)
+
+	/*
+	* Don't update ctime and mtime.
+	*
+	* Currently a special hack for the XFS open_by_handle ioctl, but we'll
+	* hopefully graduate it to a proper O_CMTIME flag supported by open(2) soon.
+	*/
+	#define FMODE_NOCMTIME			((fmode_t)0x800)
+
+	/* Expect random access pattern */
+	#define FMODE_RANDOM			((fmode_t)0x1000)
+
+	/* File is huge (eg. /dev/mem): treat loff_t as unsigned */
+	#define FMODE_UNSIGNED_OFFSET	((fmode_t)0x2000)
+
+	/* File is opened with O_PATH; almost nothing can be done with it */
+	#define FMODE_PATH				((fmode_t)0x4000)
+
+	/* File needs atomic accesses to f_pos */
+	#define FMODE_ATOMIC_POS		((fmode_t)0x8000)
+	/* Write access to underlying fs */
+	#define FMODE_WRITER			((fmode_t)0x10000)
+	/* Has read method(s) */
+	#define FMODE_CAN_READ			((fmode_t)0x20000)
+	/* Has write method(s) */
+	#define FMODE_CAN_WRITE			((fmode_t)0x40000)
+
+	#define FMODE_OPENED			((fmode_t)0x80000)
+	#define FMODE_CREATED			((fmode_t)0x100000)
+
+	/* File is stream-like */
+	#define FMODE_STREAM			((fmode_t)0x200000)
+
+	/* File was opened by fanotify and shouldn't generate fanotify events */
+	#define FMODE_NONOTIFY			((fmode_t)0x4000000)
+
+	/* File is capable of returning -EAGAIN if I/O will block */
+	#define FMODE_NOWAIT			((fmode_t)0x8000000)
+
+	/* File represents mount that needs unmounting */
+	#define FMODE_NEED_UNMOUNT		((fmode_t)0x10000000)
+
+	/* File does not contribute to nr_files count */
+	#define FMODE_NOACCOUNT			((fmode_t)0x20000000)
+
+	/* File supports async buffered reads */
+	#define FMODE_BUF_RASYNC		((fmode_t)0x40000000)
+
+	/*
+	* Attribute flags.  These should be or-ed together to figure out what
+	* has been changed!
+	*/
+	#define ATTR_MODE		(1 << 0)
+	#define ATTR_UID		(1 << 1)
+	#define ATTR_GID		(1 << 2)
+	#define ATTR_SIZE		(1 << 3)
+	#define ATTR_ATIME		(1 << 4)
+	#define ATTR_MTIME		(1 << 5)
+	#define ATTR_CTIME		(1 << 6)
+	#define ATTR_ATIME_SET	(1 << 7)
+	#define ATTR_MTIME_SET	(1 << 8)
+	#define ATTR_FORCE		(1 << 9)	/* Not a change, but a change it */
+	#define ATTR_KILL_SUID	(1 << 11)
+	#define ATTR_KILL_SGID	(1 << 12)
+	#define ATTR_FILE		(1 << 13)
+	#define ATTR_KILL_PRIV	(1 << 14)
+	#define ATTR_OPEN		(1 << 15)	/* Truncating from open(O_TRUNC) */
+	#define ATTR_TIMES_SET	(1 << 16)
+	#define ATTR_TOUCH		(1 << 17)
+
+	/*
+	* Whiteout is represented by a char device.  The following constants define the
+	* mode and device number to use.
+	*/
+	#define WHITEOUT_MODE 0
+	#define WHITEOUT_DEV 0
+
+
+	long do_sys_open(int dfd, const char * filename, int flags, umode_t mode);
 	unsigned long init_vfs(void);
 	void init_mount(void);
 	super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
@@ -149,5 +275,12 @@
 
 	#include <include/block_dev.h>
 	extern blkdev_ops_s IDE_device_operation;
+
+	#define __FMODE_EXEC		((int) FMODE_EXEC)
+	#define __FMODE_NONOTIFY	((int) FMODE_NONOTIFY)
+
+	#define ACC_MODE(x) ("\004\002\006\006"[(x)&O_ACCMODE])
+	#define OPEN_FMODE(flag) ((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
+							(flag & __FMODE_NONOTIFY)))
 
 #endif /* _FS_H_ */

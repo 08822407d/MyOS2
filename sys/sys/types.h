@@ -165,6 +165,8 @@ typedef	__lwpid_t	lwpid_t;	/* Thread ID (a.k.a. LWP) */
 
 #ifndef _MODE_T_DECLARED
 typedef	__mode_t	mode_t;		/* permissions */
+typedef unsigned short	umode_t;
+typedef unsigned int	fmode_t;
 #define	_MODE_T_DECLARED
 #endif
 

@@ -10,7 +10,7 @@ DIR* opendir(const char *path)
 	int fd = 0;
 	DIR* dir = NULL;
 
-	fd = open(path, O_DIRECTORY);
+	fd = open(path, O_DIRECTORY, 0);
 
 	if(fd >= 0)
 	{
