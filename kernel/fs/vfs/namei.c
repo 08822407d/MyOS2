@@ -1,8 +1,9 @@
+#include <sys/err.h>
+
 #include <string.h>
 #include <stddef.h>
 #include <errno.h>
 
-#include <include/err.h>
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/fs/vfs.h>
@@ -35,7 +36,7 @@ typedef struct nameidata
 /*==============================================================================================*
  *								relative fuctions for vfs										*
  *==============================================================================================*/
-inline filename_s *__getname()
+static inline filename_s *__getname()
 {
 	filename_s *name = kmalloc(sizeof(filename_s));
 	if (name == NULL)
@@ -54,6 +55,7 @@ filename_s *getname(const char *u_filename)
 
 	// Linux call stack:
 	// struct filename *getname_flags(const char __user *filename,
+	
 	//					int flags, int *empty)
 	// {
 		filename_s *name = __getname();
@@ -120,6 +122,7 @@ void putname(filename_s *name)
 // Linux function proto:
 // static inline void set_nameidata(struct nameidata *p, int dfd, struct filename *name,
 // 			  const struct path *root)
+// fill three params into name
 static void set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN path_s *root)
 {
 	// linux call stack :
@@ -141,6 +144,7 @@ static void set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN p
 
 static void terminate_walk(nameidata_s *nd)
 {
+
 }
 
 /**
@@ -155,6 +159,7 @@ static void terminate_walk(nameidata_s *nd)
  */
 static int complete_walk(nameidata_s *nd)
 {
+
 }
 
 /*==============================================================================================*
@@ -602,7 +607,8 @@ static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 // Linux function proto:
 // static struct file *path_openat(struct nameidata *nd,
 // 			const struct open_flags *op, unsigned flags)
-static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
+// open the path in nd->name
+static file_s *path_openat(IN nameidata_s *nd,  open_flags_s *op, unsigned flags)
 {
 	file_s *file;
 	int error;
@@ -629,10 +635,11 @@ static file_s *path_openat(IN nameidata_s *nd, unsigned flags)
 file_s *do_filp_open(int dfd, IN filename_s * name, open_flags_s *op)
 {
 	nameidata_s nd;
+	int flags = op->lookup_flags;
 	file_s *filp;
 
 	set_nameidata(&nd, dfd, name, NULL);
-	filp = path_openat(&nd, 0);
+	filp = path_openat(&nd, op, flags);
 	// if (unlikely(filp == ERR_PTR(-ECHILD)))
 	// 	filp = path_openat(&nd, op, flags);
 	// if (unlikely(filp == ERR_PTR(-ESTALE)))

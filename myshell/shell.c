@@ -40,6 +40,7 @@ builtincmd_s shell_internal_cmd[] =
 	{"reboot",	reboot_command},
 };
 
+char *homedir = "/";
 char current_dir[PATH_MAX];
 
 int read_line(char *buf);
@@ -165,18 +166,23 @@ int cd_command(int argc, char **argv)
 	int len = 0;
 	int i = 0;
 
+	if (argc <= 1)
+		path = homedir;
+	else
+		path = argv[1];
+
 	/////.
-	if(!strcmp(".", argv[1]))
+	if(!strcmp(".", path))
 		return 1;
 
-	i = chdir(argv[1]);
+	i = chdir(path);
 	if(!i)
 	{
 		memset(current_dir, 0, PATH_MAX);
 		getcwd(current_dir, PATH_MAX);
 	}
 	else
-		printf("cd: %s: %s\n", strerror(i), argv[1]);
+		printf("cd: %s: %s\n", strerror(i), path);
 	return 1;
 }
 
@@ -204,10 +210,6 @@ int ls_command(int argc, char **argv)
 
 int pwd_command(int argc, char **argv)
 {
-	// char cwd[PATH_MAX];
-	// memset(cwd, 0, PATH_MAX);
-	// getcwd(cwd, PATH_MAX - 1);
-	// printf("%s\n", cwd);
 	if(current_dir)
 		printf("%s\n", current_dir);
 	return 1;

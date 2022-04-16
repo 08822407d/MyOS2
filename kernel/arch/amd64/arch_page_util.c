@@ -9,7 +9,7 @@
 #include <include/printk.h>
 #include <include/mm/mm.h>
 #include <include/mm/memblock.h>
-#include <include/math.h>
+#include <sys/math.h>
 #include <include/dbg_utils.h>
 
 #include "include/archconst.h"

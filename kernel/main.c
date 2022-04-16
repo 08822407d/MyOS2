@@ -2,8 +2,8 @@
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <include/task.h>
 #include <include/printk.h>
+#include <include/task/task.h>
 #include <include/fs/vfs.h>
 
 #include <arch/amd64/include/arch_proto.h>

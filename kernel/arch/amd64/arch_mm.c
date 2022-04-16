@@ -1,16 +1,15 @@
-#include <sys/_null.h>
-
+#include <stddef.h>
 #include <string.h>
 #include <stdbool.h>
 
-#include <include/task.h>
+#include <include/ktypes.h>
 #include <include/proto.h>
+#include <include/task/task.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/archtypes.h"
 #include "include/arch_task.h"
-#include <include/ktypes.h>
 
 #define SEG_NR	6
 

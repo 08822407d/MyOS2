@@ -1,17 +1,14 @@
-#include <sys/types.h>
-#include <sys/cdefs.h>
-#include <sys/_null.h>
-#include <errno.h>
+#include <sys/fcntl.h>
 
 #include <string.h>
 #include <stddef.h>
+#include <errno.h>
 #include <lib/utils.h>
-#include <sys/fcntl.h>
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <include/task.h>
 #include <include/printk.h>
+#include <include/task/task.h>
 #include <include/mm/mm.h>
 #include <include/fs/vfs.h>
 #include <include/fs/namespace.h>
@@ -339,10 +336,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	task_s *curr = curr_tsk;
 
 	exit_files(curr);
-	filename_s name;
-	name.name = exec_filename;
-	name.len = strlen(exec_filename);
-	file_s *fp = do_filp_open(0, &name, O_RDONLY);
+	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
 
 	if (curr->flags & PF_VFORK)
 	{

@@ -1,9 +1,9 @@
+#include <sys/err.h>
 #include <sys/stat.h>
 
 #include <string.h>
 #include <errno.h>
 
-#include <include/err.h>
 #include <include/fs/file.h>
 #include <include/fs/namei.h>
 #include <include/fs/openat2.h>
@@ -11,6 +11,22 @@
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
 #define O_PATH_FLAGS		(O_DIRECTORY | O_NOFOLLOW | O_PATH | O_CLOEXEC)
 
+
+open_how_s build_open_how(int flags, umode_t mode)
+{
+	struct open_how how = {
+		.flags = flags & VALID_OPEN_FLAGS,
+		.mode = mode & S_IALLUGO,
+	};
+
+	/* O_PATH beats everything else. */
+	if (how.flags & O_PATH)
+		how.flags &= O_PATH_FLAGS;
+	/* Modes should only be set for create-like flags. */
+	if (!WILL_CREATE(how.flags))
+		how.mode = 0;
+	return how;
+}
 
 // Linux function proto:
 // static int do_dentry_open(struct file *f, struct inode *inode,
@@ -151,6 +167,61 @@ int build_open_flags(const open_how_s *how, open_flags_s *op)
 /*==============================================================================================*
  *									syscall apis for open										*
  *==============================================================================================*/
+/**
+ * file_open_name - open file and return file pointer
+ *
+ * @name:	struct filename containing path to open
+ * @flags:	open flags as per the open(2) second argument
+ * @mode:	mode for the new file if O_CREAT is set, else ignored
+ *
+ * This is the helper to open a file from kernelspace if you really
+ * have to.  But in generally you should not do this, so please move
+ * along, nothing to see here..
+ */
+file_s *file_open_name(filename_s *name, int flags, umode_t mode)
+{
+	open_flags_s op;
+	open_how_s how = build_open_how(flags, mode);
+	int err = build_open_flags(&how, &op);
+	if (err)
+		return ERR_PTR(err);
+	return do_filp_open(AT_FDCWD, name, &op);
+}
+
+/**
+ * filp_open - open file and return file pointer
+ *
+ * @filename:	path to open
+ * @flags:	open flags as per the open(2) second argument
+ * @mode:	mode for the new file if O_CREAT is set, else ignored
+ *
+ * This is the helper to open a file from kernelspace if you really
+ * have to.  But in generally you should not do this, so please move
+ * along, nothing to see here..
+ */
+file_s *filp_open(const char *filename, int flags, umode_t mode)
+{
+	filename_s *name = getname_kernel(filename);
+	file_s *file = ERR_CAST(name);
+	
+	if (!IS_ERR(name)) {
+		file = file_open_name(name, flags, mode);
+		putname(name);
+	}
+	return file;
+}
+
+file_s *file_open_root(const path_s *root, const char *filename,
+				int flags, umode_t mode)
+{
+	// open_flags_s op;
+	// open_how_s how = build_open_how(flags, mode);
+	// int err = build_open_flags(&how, &op);
+	// if (err)
+	// 	return ERR_PTR(err);
+	// return do_file_open_root(root, filename, &op);
+}
+
 static long do_sys_openat2(int dfd, const char *filename, open_how_s *how)
 {
 	open_flags_s op;
@@ -166,13 +237,9 @@ static long do_sys_openat2(int dfd, const char *filename, open_how_s *how)
 	{
 		file_s * f = do_filp_open(dfd, tmp, &op);
 		if (IS_ERR(f))
-		{
 			fd = PTR_ERR(f);
-		}
 		else
-		{
 			fd_install(fd, f);
-		}
 	}
 	putname(tmp);
 	return fd;
@@ -182,17 +249,7 @@ static long do_sys_openat2(int dfd, const char *filename, open_how_s *how)
 // long do_sys_open(int dfd, const char __user *filename, int flags, umode_t mode)
 long do_sys_open(int dfd, const char * filename, int flags, umode_t mode)
 {
-	open_how_s how = {
-		.flags = flags & VALID_OPEN_FLAGS,
-		.mode = mode & S_IALLUGO,
-	};
-	/* O_PATH beats everything else. */
-	if (how.flags & O_PATH)
-		how.flags &= O_PATH_FLAGS;
-	/* Modes should only be set for create-like flags. */
-	if (!WILL_CREATE(how.flags))
-		how.mode = 0;
-
+	open_how_s how = build_open_how(flags, mode);
 	return do_sys_openat2(dfd, filename, &how);
 }
 

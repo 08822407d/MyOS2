@@ -258,7 +258,6 @@
 	#define WHITEOUT_DEV 0
 
 
-	long do_sys_open(int dfd, const char * filename, int flags, umode_t mode);
 	unsigned long init_vfs(void);
 	void init_mount(void);
 	super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
@@ -266,11 +265,23 @@
 	unsigned long unregister_filesystem(fs_type_s * fs);
 	int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
+	extern long do_sys_open(int dfd, const char * filename, int flags, umode_t mode);
+	extern file_s *file_open_name(filename_s *name, int flags, umode_t mode);
+	extern file_s *filp_open(const char *filename, int flags, umode_t mode);
+	extern file_s *file_open_root(const path_s *root, const char *filename,
+					int flage, umode_t mode);
+	static inline file_s *file_open_root_mnt(vfsmount_s *mnt,
+					const char *filename, int flags, umode_t mode)
+	{
+		return file_open_root(&(path_s){.mnt = mnt, .dentry = mnt->mnt_root},
+						filename, flags, mode);
+	}
 	file_s * do_filp_open(int dfd, filename_s * name, open_flags_s *op);
 	int __vfs_open(const path_s * path, file_s * file);
 	int path_mount(const char * dev_name, path_s * path, unsigned long flags);
 
-	filename_s *__getname(void);
+	filename_s *getname(const char *u_filename);
+	filename_s *getname_kernel(const char *k_filename);
 
 	#include <include/block_dev.h>
 	extern blkdev_ops_s IDE_device_operation;

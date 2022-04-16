@@ -3,7 +3,7 @@
 
 #include <const.h>
 
-#include <include/math.h>
+#include <sys/math.h>
 
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF
 

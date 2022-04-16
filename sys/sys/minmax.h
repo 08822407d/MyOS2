@@ -2,7 +2,7 @@
 #ifndef _LINUX_MINMAX_H
 #define _LINUX_MINMAX_H
 
-#include <include/kutils.h>
+#include <sys/const.h>
 
 	/*
 	* min()/max()/clamp() macros must accomplish three things:

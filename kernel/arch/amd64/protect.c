@@ -1,12 +1,10 @@
-#include <sys/_null.h>
-
+#include <stddef.h>
 #include <string.h>
-#include <sys/types.h>
 
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
-#include <include/task.h>
+#include <include/task/task.h>
 #include <include/mm/memblock.h>
 
 #include "include/arch_glo.h"

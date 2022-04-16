@@ -3,7 +3,7 @@
 
 #include <const.h>
 
-#include <include/math.h>
+#include <sys/math.h>
 
 	#define CONFIG_X86_64
 	#define CONFIG_ZONE_DMA

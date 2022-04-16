@@ -1,14 +1,14 @@
-#include <stddef.h>
 #include <sys/types.h>
 #include <sys/cdefs.h>
 
+#include <stddef.h>
 #include <string.h>
 
 #include <include/glo.h>
+#include <include/proto.h>
+#include <include/task/task.h>
 #include <include/mm/mm.h>
 #include <include/mm/memblock.h>
-#include <include/task.h>
-#include <include/proto.h>
 
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/mutex.h>

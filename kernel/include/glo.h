@@ -1,8 +1,8 @@
 #ifndef _GLO_H_
 #define _GLO_H_
 
-#include <include/task.h>
 #include <include/ktypes.h>
+#include <include/task/task.h>
 
 	extern unsigned long volatile	jiffies;
 

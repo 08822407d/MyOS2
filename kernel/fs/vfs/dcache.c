@@ -1,7 +1,8 @@
+#include <sys/err.h>
+
 #include <stddef.h>
 #include <string.h>
 
-#include <include/err.h>
 #include <include/proto.h>
 #include <include/fs/dcache.h>
 
