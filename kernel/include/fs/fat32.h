@@ -67,8 +67,8 @@
 	}__attribute__((packed)) FAT32_FSinfo_s;
 
 	#define	ATTR_READ_ONLY	(1 << 0)
-	#define ATTR_HIDDEN	(1 << 1)
-	#define ATTR_SYSTEM	(1 << 2)
+	#define ATTR_HIDDEN		(1 << 1)
+	#define ATTR_SYSTEM		(1 << 2)
 	#define ATTR_VOLUME_ID	(1 << 3)
 	#define ATTR_DIRECTORY	(1 << 4)
 	#define ATTR_ARCHIVE	(1 << 5)
