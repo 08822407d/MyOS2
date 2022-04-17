@@ -46,7 +46,7 @@ unsigned long sys_close(int fd)
 
 	fp = curr->fps[fd];
 	if(fp->f_ops && fp->f_ops->close)
-		fp->f_ops->close(fp->dentry->dir_inode, fp);
+		fp->f_ops->close(fp->dentry->d_inode, fp);
 
 	kfree(fp);
 	curr->fps[fd] = NULL;
@@ -68,7 +68,7 @@ unsigned long sys_read(int fd, void * buf, long count)
 
 	fp = curr_tsk->fps[fd];
 	if(fp->f_ops && fp->f_ops->read)
-		ret = fp->f_ops->read(fp, buf, count, &fp->position);
+		ret = fp->f_ops->read(fp, buf, count, &fp->f_pos);
 	return ret;
 }
 
@@ -86,7 +86,7 @@ unsigned long sys_write(int fd, void *buf, long count)
 
 	fp = curr_tsk->fps[fd];
 	if(fp->f_ops && fp->f_ops->write)
-		ret = fp->f_ops->write(fp, buf, count, &fp->position);
+		ret = fp->f_ops->write(fp, buf, count, &fp->f_pos);
 	return ret;
 }
 

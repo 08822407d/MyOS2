@@ -28,7 +28,7 @@
 		dentry_s *		d_parent;
 		List_hdr_s		childdir_lhdr;
 
-		inode_s *		dir_inode;
+		inode_s *		d_inode;
 		dentry_ops_s *	dir_ops;
 	} dentry_s;
 

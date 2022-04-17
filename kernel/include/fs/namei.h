@@ -25,7 +25,7 @@
 	#define LOOKUP_MOUNTPOINT		0x0080	/* follow mounts in the end */
 
 	#define LOOKUP_REVAL			0x0020	/* tell ->d_revalidate() to trust no cache */
-	#define LOOKUP_RCU				0x0040	/* RCU pathwalk mode; semi-internal */
+	// #define LOOKUP_RCU				0x0040	/* RCU pathwalk mode; semi-internal */
 
 	/* These tell filesystem methods that we are dealing with the final component... */
 	#define LOOKUP_OPEN				0x0100	/* ... in open */

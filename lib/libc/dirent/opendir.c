@@ -1,6 +1,8 @@
 #include <dirent.h>
 #include <string.h>
 #include <stdlib.h>
+#include <errno.h>
+
 #include <dirent.h>
 
 #include <sys/fcntl.h>
@@ -18,16 +20,15 @@ DIR* opendir(const char *path)
 		if (dir == NULL)
 		{
 			close(fd);
-			return NULL;
+			return (DIR *)-ENOMEM;
 		}
+		memset(dir, 0, sizeof(DIR));
+		dir->fd = fd;
+		dir->buf_pos = 0;
+		dir->buf_end = 256;
+
+		return dir;
 	}
 	else
 		return NULL;
-
-	memset(dir, 0, sizeof(DIR));
-	dir->fd = fd;
-	dir->buf_pos = 0;
-	dir->buf_end = 256;
-	
-	return dir;
 }

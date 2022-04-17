@@ -9,6 +9,8 @@
 #include <include/task/task.h>
 #include <include/fs/vfs.h>
 
+	void fput(file_s *file);
+
 	typedef struct fd {
 		file_s *file;
 		unsigned int flags;

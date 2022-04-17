@@ -192,11 +192,16 @@ int ls_command(int argc, char **argv)
 	linux_dirent64_s * buf = NULL;
 	char *path = NULL;
 	if (argc <=1)
-		path = current_dir;
+		path = ".";
 	else
 		path = argv[1];
 
 	dir = opendir(path);
+	if (dir == NULL)
+	{
+		printf("ls: %s: %s\n", strerror(-ENOENT), path);
+		return -1;
+	}
 
 	buf = (linux_dirent64_s *)malloc(256);
 	while(1)

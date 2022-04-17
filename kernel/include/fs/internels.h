@@ -8,6 +8,9 @@
 #ifndef _LINUX_FS_INTERNELS_H_
 #define _LINUX_FS_INTERNELS_H_
 
+#include <stddef.h>
+#include <stdbool.h>
+
 #include <include/fs/vfs_s_defs.h>
 
 	// /*
@@ -96,8 +99,8 @@
 	/*
 	* file_table.c
 	*/
-	// extern file_s *alloc_empty_file(int, const struct cred *);
-	// extern file_s *alloc_empty_file_noaccount(int, const struct cred *);
+	extern file_s *alloc_empty_file(int);
+	extern file_s *alloc_empty_file_noaccount(int);
 
 	/*
 	* super.c

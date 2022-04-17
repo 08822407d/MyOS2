@@ -48,21 +48,28 @@
 	#define FS_ATTR_DIR		(1UL << 1)
 	#define	FS_ATTR_DEVICE	(1UL << 2)
 
-	typedef struct file
-	{
-		long			position;
-		unsigned long	mode;
-
-		dentry_s *		dentry;
-		file_ops_s *	f_ops;
-
-		void * 			private_data;
-	} file_s;
-
 	typedef struct path {
 		vfsmount_s *	mnt;
 		dentry_s *		dentry;
 	} path_s;
+
+	typedef struct file
+	{
+		path_s			f_path;
+		inode_s			*f_inode;
+		file_ops_s		*f_ops;
+		dentry_s *		dentry;
+
+		/*
+		* Protects f_ep, f_flags.
+		* Must not be taken from IRQ context.
+		*/
+		unsigned int	f_flags;
+		fmode_t			f_mode;
+		long			f_pos;
+
+		void * 			private_data;
+	} file_s;
 
 	typedef struct taskfs {
 		int users;
@@ -278,7 +285,7 @@
 	#define __FMODE_NONOTIFY	((int) FMODE_NONOTIFY)
 
 	#define ACC_MODE(x) ("\004\002\006\006"[(x)&O_ACCMODE])
-	#define OPEN_FMODE(flag) ((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
+	#define OPEN_FMODE(flag) ((fmode_t)(((flag + 1) & O_ACCMODE) | \
 							(flag & __FMODE_NONOTIFY)))
 
 #endif /* _FS_H_ */

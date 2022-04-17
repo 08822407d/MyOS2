@@ -36,15 +36,15 @@ static int do_dentry_open(file_s * f, inode_s * inode)
 	unsigned long error = -ENOERR;
 	f->f_ops = inode->f_ops;
 	if(f->f_ops && f->f_ops->open)
-		error = f->f_ops->open(f->dentry->dir_inode, f);
+		error = f->f_ops->open(f->dentry->d_inode, f);
 
-	if(f->mode & O_TRUNC)
+	if(f->f_mode & O_TRUNC)
 	{
-		f->dentry->dir_inode->file_size = 0;
+		f->dentry->d_inode->file_size = 0;
 	}
-	if(f->mode & O_APPEND)
+	if(f->f_mode & O_APPEND)
 	{
-		f->position = f->dentry->dir_inode->file_size;
+		f->f_pos = f->dentry->d_inode->file_size;
 	}
 }
 
@@ -285,5 +285,5 @@ out:
 int __vfs_open(const path_s * path, file_s * file)
 {
 	file->dentry = path->dentry;
-	return do_dentry_open(file, path->dentry->dir_inode);
+	return do_dentry_open(file, path->dentry->d_inode);
 }

@@ -11,6 +11,7 @@
 #include <include/fs/dcache.h>
 #include <include/fs/namespace.h>
 #include <include/fs/mount.h>
+#include <include/fs/file.h>
 
 #include <arch/amd64/include/arch_proto.h>
 
@@ -250,23 +251,23 @@ static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 // Linux function proto:
 // static struct dentry *__lookup_slow(const struct qstr *name,
 //				    struct dentry *dir, unsigned int flags)
-static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir)
+static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags)
 {
 	dentry_s *dentry;
 
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
 	//			const struct qstr *name, wait_queue_head_t *wq)
-	//					||
-	//					\/
-	// struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
-	//					||
-	//					\/
-	dentry = __d_alloc(name);
+	// {
+	//		struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
+	//		{
+				dentry = __d_alloc(name);
+	//		}
+	// }
 	if (IS_ERR(dentry))
 		return dentry;
 
-	if (dir->dir_inode->inode_ops->lookup(dir->dir_inode, dentry) == NULL)
+	if (dir->d_inode->inode_ops->lookup(dir->d_inode, dentry) == NULL)
 	{
 		// color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->d_name);
 		kfree(dentry);
@@ -316,10 +317,10 @@ static const char *handle_dots(IN nameidata_s *nd)
 		parent = follow_dotdot(nd);
 		if (IS_ERR(parent))
 			return ERR_CAST(parent);
-		if (parent != NULL)
-			error = step_into(nd, parent);
+		if (parent == NULL)
+			error = step_into(nd, nd->path.dentry);
 		else
-			return ERR_PTR(-ENOENT);
+			error = step_into(nd, parent);
 		if (error)
 			return error;
 	}
@@ -358,7 +359,7 @@ static const char *walk_component(IN nameidata_s *nd)
 		//	static struct dentry *lookup_slow(const struct qstr *name,
 		//			  struct dentry *dir, unsigned int flags)
 		// {
-			dentry = __lookup_slow(&nd->last, parent);
+			dentry = __lookup_slow(&nd->last, parent, nd->flags);
 		// }
 		if (IS_ERR(dentry))
 			return ERR_CAST(dentry);
@@ -379,9 +380,9 @@ static const char *walk_component(IN nameidata_s *nd)
 // static int link_path_walk(const char *name, struct nameidata *nd)
 static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 {
-	nd->last_type = LAST_ROOT;
 	int err;
 
+	nd->last_type = LAST_ROOT;
 	if (IS_ERR(name))
 		return PTR_ERR(name);
 	while (*name == '/')
@@ -426,7 +427,7 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 		 * If it wasn't NUL, we know it was '/'. Skip that
 		 * slash, and continue until no more slashes.
 		 */
-		while (*name != 0 && *name == '/')
+		while (*name == '/')
 			name++;
 
 		if (*name == 0)
@@ -446,9 +447,11 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 /* must be paired with terminate_walk() */
 // Linux function proto:
 // static const char *path_init(struct nameidata *nd, unsigned flags)
-static const char *path_init(OUT nameidata_s *nd)
+static const char *path_init(OUT nameidata_s *nd, unsigned flags)
 {
 	const char *s = nd->name->name;
+
+	nd->flags = flags;
 
 	nd->root = curr_tsk->fs->root;
 	if (s[0] == '/')
@@ -471,7 +474,7 @@ static inline const char *lookup_last(IN nameidata_s *nd)
 // static int path_lookupat(struct nameidata *nd, unsigned flags, struct path *path)
 static int path_lookupat(IN nameidata_s *nd, unsigned flags, OUT path_s *path)
 {
-	const char *s = path_init(nd);
+	const char *s = path_init(nd, flags);
 	int err;
 
 	while (!(err = link_path_walk(s, nd)) &&
@@ -514,9 +517,9 @@ int filename_lookup(int dfd, IN filename_s *name, unsigned flags,
 }
 
 /* Returns 0 and nd will be valid on success; Retuns error, otherwise. */
-static int path_parentat(nameidata_s *nd, path_s *parent)
+static int path_parentat(nameidata_s *nd, unsigned flags, path_s *parent)
 {
-	const char *s = path_init(nd);
+	const char *s = path_init(nd, flags);
 	int err = link_path_walk(s, nd);
 	// if (!err)
 	// 	err = complete_walk(nd);
@@ -538,9 +541,9 @@ static filename_s *filename_parentat(int dfd, filename_s *name,
 	if (IS_ERR(name))
 		return name;
 	set_nameidata(&nd, dfd, name, NULL);
-	retval = path_parentat(&nd, parent);
+	retval = path_parentat(&nd, flags, parent);
 	if (retval == -ECHILD)
-		retval = path_parentat(&nd, parent);
+		retval = path_parentat(&nd, flags, parent);
 	// if (retval == -ESTALE)
 	// 	retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
 	if (!retval) {
@@ -579,7 +582,7 @@ static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
 		dentry = __d_lookup(dir, &nd->last);
 		if (dentry == NULL)
 		{
-			dentry = __lookup_slow(&nd->last, dir);
+			dentry = __lookup_slow(&nd->last, dir, nd->flags);
 		}
 
 		if (IS_ERR(dentry))
@@ -601,9 +604,8 @@ finish_lookup:
 //		   struct file *file, const struct open_flags *op)
 static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 {
-
-	if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
-		return -ENOTDIR;
+	// if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
+	// 	return -ENOTDIR;
 
 	__vfs_open(&nd->path, file);
 }
@@ -618,20 +620,31 @@ static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
 	file_s *file;
 	int error;
 
-	file = kmalloc(sizeof(file_s));
+	file = alloc_empty_file(op->open_flag);
 	if (IS_ERR(file))
 		return file;
 
-	memset(file, 0, sizeof(file_s));
-	const char *s = path_init(nd);
-	while (!(error = link_path_walk(s, nd)) &&
-		   (s = open_last_lookups(nd, flags)) != NULL)
-		;
+	// if (unlikely(file->f_flags & __O_TMPFILE)) {
+	// 	error = do_tmpfile(nd, flags, op, file);
+	// } else if (unlikely(file->f_flags & O_PATH)) {
+	// 	error = do_o_path(nd, flags, file);
+	// } else {
+		const char *s = path_init(nd, flags);
+		while (!(error = link_path_walk(s, nd)) &&
+			(s = open_last_lookups(nd, flags)) != NULL)
+			;
+		if (!error)
+			error = do_open(nd, file, flags);
+		terminate_walk(nd);
+	// }
 	if (!error)
-		error = do_open(nd, file, flags);
-	terminate_walk(nd);
-
-	return file;
+	{
+		// if (file->f_mode & FMODE_OPENED)
+			return file;
+		// error = -EINVAL;
+	}
+	fput(file);
+	return ERR_PTR(error);
 }
 
 // Linux function proto:
