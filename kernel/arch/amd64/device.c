@@ -48,7 +48,7 @@ void creat_dev_file()
 		cdev_s * cd_p = container_of(cd_lp, cdev_s, cdev_list);
 		dentry_s * cddrnt = creat_append_devdirent(cd_p->dev_name, dev_dir);
 		inode_s * cdino = cddrnt->d_inode;
-		cdino->f_ops = cd_p->f_ops;
+		cdino->i_fop = cd_p->f_ops;
 	}
 
 	List_s * bd_lp;
@@ -57,7 +57,7 @@ void creat_dev_file()
 		bdev_s * bd_p = container_of(bd_lp, bdev_s, bdev_list);
 		dentry_s * bddrnt = creat_append_devdirent(bd_p->dev_name, dev_dir);
 		inode_s * bdino = bddrnt->d_inode;
-		bdino->f_ops = bd_p->f_ops;
+		bdino->i_fop = bd_p->f_ops;
 	}
 }
 dentry_s * creat_append_devdirent(char * name, dentry_s * parent)

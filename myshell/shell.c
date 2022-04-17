@@ -244,6 +244,11 @@ int cat_command(int argc, char **argv)
 	// printf("cat_command filename:%s\n", filename);
 
 	fd = open(filename, O_RDONLY, 0);	
+	if (fd < 0)
+	{
+		printf("ls: %s: %s\n", strerror(fd), filename);
+		return -1;
+	}
 	i = lseek(fd, 0, SEEK_END);
 	lseek(fd, 0, SEEK_SET);
 	buf = malloc(i + 1);

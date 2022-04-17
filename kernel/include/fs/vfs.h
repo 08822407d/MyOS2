@@ -33,15 +33,20 @@
 
 	typedef struct inode
 	{
-		unsigned long	file_size;
-		unsigned long	blocks;
+		umode_t			i_mode;
+		unsigned int	i_flags;
+
+		inode_ops_s		*i_op;
+		super_block_s	*i_sb;
+		/* Stat data, not accessed from path walking */
+		unsigned long	i_ino;
+
+		unsigned long	i_size;
+		unsigned long	i_blocks;
 		unsigned long	attribute;
 
-		super_block_s *	sb;
-		file_ops_s *	f_ops;
-		inode_ops_s *	inode_ops;
-
-		void * private_idx_info;
+		file_ops_s		*i_fop;
+		void			*private_idx_info;
 	} inode_s;
 
 	#define FS_ATTR_FILE	(1UL << 0)

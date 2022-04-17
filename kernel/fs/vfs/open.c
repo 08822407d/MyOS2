@@ -34,17 +34,17 @@ open_how_s build_open_how(int flags, umode_t mode)
 static int do_dentry_open(file_s * f, inode_s * inode)
 {
 	unsigned long error = -ENOERR;
-	f->f_ops = inode->f_ops;
+	f->f_ops = inode->i_fop;
 	if(f->f_ops && f->f_ops->open)
 		error = f->f_ops->open(f->dentry->d_inode, f);
 
 	if(f->f_mode & O_TRUNC)
 	{
-		f->dentry->d_inode->file_size = 0;
+		f->dentry->d_inode->i_size = 0;
 	}
 	if(f->f_mode & O_APPEND)
 	{
-		f->f_pos = f->dentry->d_inode->file_size;
+		f->f_pos = f->dentry->d_inode->i_size;
 	}
 }
 
