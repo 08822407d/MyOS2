@@ -12,6 +12,7 @@
 *
 *
 ***************************************************/
+#include <uapi/msdos_fs.h>
 #include <errno.h>
 
 #include <stdio.h>
@@ -174,7 +175,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 	if(flags)
 	{
 		finode->first_cluster = cluster;
-		filp->dentry->d_inode->i_sb->sb_ops->write_inode(filp->dentry->d_inode);
+		filp->dentry->d_inode->i_sb->s_op->write_inode(filp->dentry->d_inode);
 		FAT32_write_FAT_Entry(fsbi, cluster, 0x0ffffff8);
 	}
 
@@ -242,7 +243,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 	if(*position > filp->dentry->d_inode->i_size)
 	{
 		filp->dentry->d_inode->i_size = *position;
-		filp->dentry->d_inode->i_sb->sb_ops->write_inode(filp->dentry->d_inode);
+		filp->dentry->d_inode->i_sb->s_op->write_inode(filp->dentry->d_inode);
 	}
 
 	kfree(buffer);
@@ -746,9 +747,9 @@ void fat32_write_superblock(super_block_s * sbp){}
 void fat32_put_superblock(super_block_s * sbp)
 {
 	kfree(sbp->private_sb_info);
-	kfree(sbp->root->d_inode->private_idx_info);
-	kfree(sbp->root->d_inode);
-	kfree(sbp->root);
+	kfree(sbp->s_root->d_inode->private_idx_info);
+	kfree(sbp->s_root->d_inode);
+	kfree(sbp->s_root);
 	kfree(sbp);
 }
 
@@ -799,7 +800,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	sbp = (super_block_s *)kmalloc(sizeof(super_block_s));
 	memset(sbp, 0, sizeof(super_block_s));
 
-	sbp->sb_ops = &FAT32_sb_ops;
+	sbp->s_op = &FAT32_sb_ops;
 	sbp->private_sb_info = (FAT32_SBinfo_s *)kmalloc(sizeof(FAT32_SBinfo_s));
 	memset(sbp->private_sb_info, 0, sizeof(FAT32_SBinfo_s));
 
@@ -825,33 +826,33 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 									1, (unsigned char *)fsbi->fat_fsinfo);
 	
 	//directory entry
-	sbp->root = (dentry_s *)kmalloc(sizeof(dentry_s));
-	memset(sbp->root, 0, sizeof(dentry_s));
+	sbp->s_root = (dentry_s *)kmalloc(sizeof(dentry_s));
+	memset(sbp->s_root, 0, sizeof(dentry_s));
 
-	list_init(&sbp->root->dirent_list, sbp->root);
-	list_hdr_init(&sbp->root->childdir_lhdr);
-	sbp->root->d_parent = sbp->root;
-	sbp->root->dir_ops = &FAT32_dentry_ops;
-	sbp->root->d_name.name = (char *)kmalloc(2);
-	((char *)sbp->root->d_name.name)[0] = '/';
-	((char *)sbp->root->d_name.name)[1] = 0;
-	sbp->root->d_name.len = 1;
+	list_init(&sbp->s_root->dirent_list, sbp->s_root);
+	list_hdr_init(&sbp->s_root->childdir_lhdr);
+	sbp->s_root->d_parent = sbp->s_root;
+	sbp->s_root->dir_ops = &FAT32_dentry_ops;
+	sbp->s_root->d_name.name = (char *)kmalloc(2);
+	((char *)sbp->s_root->d_name.name)[0] = '/';
+	((char *)sbp->s_root->d_name.name)[1] = 0;
+	sbp->s_root->d_name.len = 1;
 
 	//index node
-	sbp->root->d_inode = (inode_s*)kmalloc(sizeof(inode_s));
-	memset(sbp->root->d_inode, 0, sizeof(inode_s));
-	sbp->root->d_inode->i_op = &FAT32_inode_ops;
-	sbp->root->d_inode->i_fop = &FAT32_file_ops;
-	sbp->root->d_inode->i_size = 0;
-	sbp->root->d_inode->i_blocks = (sbp->root->d_inode->i_size + fsbi->bytes_per_cluster - 1) /
+	sbp->s_root->d_inode = (inode_s*)kmalloc(sizeof(inode_s));
+	memset(sbp->s_root->d_inode, 0, sizeof(inode_s));
+	sbp->s_root->d_inode->i_op = &FAT32_inode_ops;
+	sbp->s_root->d_inode->i_fop = &FAT32_file_ops;
+	sbp->s_root->d_inode->i_size = 0;
+	sbp->s_root->d_inode->i_blocks = (sbp->s_root->d_inode->i_size + fsbi->bytes_per_cluster - 1) /
 										fsbi->bytes_per_sector;
-	sbp->root->d_inode->attribute = FS_ATTR_DIR;
-	sbp->root->d_inode->i_sb = sbp;
+	sbp->s_root->d_inode->attribute = FS_ATTR_DIR;
+	sbp->s_root->d_inode->i_sb = sbp;
 
 	//fat32 root inode
-	sbp->root->d_inode->private_idx_info = (FAT32_inode_info_s *)kmalloc(sizeof(FAT32_inode_info_s));
-	memset(sbp->root->d_inode->private_idx_info, 0, sizeof(FAT32_inode_info_s));
-	finode = (FAT32_inode_info_s *)sbp->root->d_inode->private_idx_info;
+	sbp->s_root->d_inode->private_idx_info = (FAT32_inode_info_s *)kmalloc(sizeof(FAT32_inode_info_s));
+	memset(sbp->s_root->d_inode->private_idx_info, 0, sizeof(FAT32_inode_info_s));
+	finode = (FAT32_inode_info_s *)sbp->s_root->d_inode->private_idx_info;
 	finode->first_cluster = fbs->BPB_RootClus;
 	finode->dentry_location = 0;
 	finode->dentry_position = 0; 

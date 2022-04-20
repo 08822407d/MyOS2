@@ -323,7 +323,7 @@ out:
 // 			int mnt_flags, const char *name, void *data)
 static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char *name)
 {
-	struct file_system_type *type;
+	fs_type_s	*type;
 	struct fs_context *fc;
 	const char *subtype = NULL;
 	int err = 0;
@@ -428,6 +428,6 @@ void init_mount()
 	root_mnt.mnt.mnt_sb = root_sb;
 	root_mnt.mnt_parent = &root_mnt;
 	root_mnt.mnt_mountpoint =
-	root_mnt.mnt.mnt_root = root_sb->root;
+	root_mnt.mnt.mnt_root = root_sb->s_root;
 	root_mnt.mnt_mp = NULL;
 }

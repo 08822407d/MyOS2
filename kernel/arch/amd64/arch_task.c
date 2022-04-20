@@ -450,7 +450,7 @@ static void set_init_taskfs()
 	// set cwd and root-dir of task1
 	taskfs_s * taskfs_p = curr->fs;
 	taskfs_p->pwd.dentry = 
-	taskfs_p->root.dentry = root_sb->root;
+	taskfs_p->root.dentry = root_sb->s_root;
 	taskfs_p->pwd.mnt = 
 	taskfs_p->root.mnt = &root_mnt.mnt;
 

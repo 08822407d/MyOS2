@@ -26,15 +26,35 @@
 
 	typedef struct super_block
 	{
-		dentry_s *	root;
-		sb_ops_s *	sb_ops;
-		void *		private_sb_info;
+		List_s			s_list;		/* Keep this first */
+		dev_t			s_dev;		/* search index; _not_ kdev_t */
+		unsigned char	s_blocksize_bits;
+		unsigned long	s_blocksize;
+		loff_t			s_maxbytes;	/* Max file size */
+		fs_type_s		*s_type;
+		unsigned long	s_flags;
+		unsigned long	s_iflags;	/* internal SB_I_* flags */
+		unsigned long	s_magic;
+		sb_ops_s		*s_op;
+
+		dentry_s		*s_root;
+		int				s_count;
+
+		/*
+		* Keep s_fs_info, s_time_gran, s_fsnotify_mask, and
+		* s_fsnotify_marks together for cache efficiency. They are frequently
+		* accessed and rarely modified.
+		*/
+		void			*s_fs_info;	/* Filesystem private info */
+
+		void			*private_sb_info;
 	} super_block_s;
 
 	typedef struct inode
 	{
 		umode_t			i_mode;
 		unsigned int	i_flags;
+		unsigned short	i_opflags;
 
 		inode_ops_s		*i_op;
 		super_block_s	*i_sb;
