@@ -114,13 +114,35 @@
 
 	typedef struct inode_ops
 	{
-		dentry_s *	(*lookup)(inode_s * parent_inode, dentry_s * dest_dentry);
-		long		(*create)(inode_s * inode, dentry_s * dentry, int mode);
-		long		(*mkdir)(inode_s * inode, dentry_s * dentry, int mode);
-		long		(*rmdir)(inode_s * inode, dentry_s * dentry);
-		long		(*rename)(inode_s * old_inode, dentry_s * old_dentry, inode_s * new_inode, dentry_s * new_dentry);
-		long		(*getattr)(dentry_s * dentry, unsigned long * attr);
-		long		(*setattr)(dentry_s * dentry, unsigned long * attr);
+		dentry_s * (*lookup) (inode_s *, dentry_s *, unsigned int);
+		// const char * (*get_link) (dentry_s *, inode_s *, delayed_call_s *);
+		int (*permission) (inode_s *, int);
+		// posix_acl_s * (*get_acl)(inode_s *, int);
+
+		int (*readlink) (dentry_s *, char *, int);
+
+		int (*create) (inode_s *, dentry_s *, umode_t, bool);
+		int (*link) (dentry_s *, inode_s *, dentry_s *);
+		int (*unlink) (inode_s *, dentry_s *);
+		int (*symlink) (inode_s *, dentry_s *, const char *);
+		int (*mkdir) (inode_s *, dentry_s *, umode_t);
+		int (*rmdir) (inode_s *, dentry_s *);
+		int (*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
+		int (*rename) (inode_s *, dentry_s *, inode_s *,
+						dentry_s *, unsigned int);
+		// int (*setattr) (dentry_s *, iattr_s *);
+		// int (*getattr) (const path_s *, kstat_s *, uint33_t,
+		//				unsigned int);
+		ssize_t (*listxattr) (dentry_s *, char *, size_t);
+		// int (*fiemap)(inode_s *, fiemap_extent_info_s *, uint64_t start,
+		// 				uint64_t len);
+		// int (*update_time)(inode_s *, timespec64_s *, int);
+		int (*atomic_open)(inode_s *, dentry_s *, file_s *,
+						unsigned open_flag, umode_t create_mode);
+		int (*tmpfile) (inode_s *, dentry_s *, umode_t);
+		// int (*set_acl)(inode_s *, posix_acl_s *, int);
+		// int (*fileattr_set)(dentry_s *dentry, fileattr_s *fa);
+		// int (*fileattr_get)(dentry_s *dentry, fileattr_s *fa);
 	} inode_ops_s;
 
 	typedef struct dentry_ops
@@ -157,12 +179,11 @@
 	extern super_block_s * root_sb;
 	extern mount_s root_mnt;
 
-	extern inode_ops_s	FAT32_inode_ops;
-	extern file_ops_s	FAT32_file_ops;
-	extern dentry_ops_s	FAT32_dentry_ops;
-	extern sb_ops_s		FAT32_sb_ops;
+	extern file_ops_s		FAT32_file_ops;
+	extern dentry_ops_s		FAT32_dentry_ops;
+	extern sb_ops_s			FAT32_sb_ops;
 
-	extern file_ops_s	tty_fops;
+	extern file_ops_s		tty_fops;
 
 	#define MAY_EXEC		0x00000001
 	#define MAY_WRITE		0x00000002
@@ -276,8 +297,147 @@
 	* Whiteout is represented by a char device.  The following constants define the
 	* mode and device number to use.
 	*/
-	#define WHITEOUT_MODE 0
-	#define WHITEOUT_DEV 0
+	#define WHITEOUT_MODE	0
+	#define WHITEOUT_DEV	0
+
+	/*
+	* sb->s_flags.  Note that these mirror the equivalent MS_* flags where
+	* represented in both.
+	*/
+	#define SB_RDONLY		1		/* Mount read-only */
+	#define SB_NOSUID		2		/* Ignore suid and sgid bits */
+	#define SB_NODEV		4		/* Disallow access to device special files */
+	#define SB_NOEXEC		8		/* Disallow program execution */
+	#define SB_SYNCHRONOUS	16		/* Writes are synced at once */
+	#define SB_MANDLOCK		64		/* Allow mandatory locks on an FS */
+	#define SB_DIRSYNC		128		/* Directory modifications are synchronous */
+	#define SB_NOATIME		1024	/* Do not update access times. */
+	#define SB_NODIRATIME	2048	/* Do not update directory access times */
+	#define SB_SILENT		32768
+	#define SB_POSIXACL		(1<<16)	/* VFS does not apply the umask */
+	#define SB_INLINECRYPT	(1<<17)	/* Use blk-crypto for encrypted files */
+	#define SB_KERNMOUNT	(1<<22) /* this is a kern_mount call */
+	#define SB_I_VERSION	(1<<23) /* Update inode I_version field */
+	#define SB_LAZYTIME		(1<<25) /* Update the on-disk [acm]times lazily */
+
+	/* These sb flags are internal to the kernel */
+	#define SB_SUBMOUNT		(1<<26)
+	#define SB_FORCE		(1<<27)
+	#define SB_NOSEC		(1<<28)
+	#define SB_BORN			(1<<29)
+	#define SB_ACTIVE		(1<<30)
+	#define SB_NOUSER		(1<<31)
+
+	/* These flags relate to encoding and casefolding */
+	#define SB_ENC_STRICT_MODE_FL	(1 << 0)
+
+	#define sb_has_strict_encoding(sb) \
+				(sb->s_encoding_flags & SB_ENC_STRICT_MODE_FL)
+
+	/*
+	*	Umount options
+	*/
+
+	#define MNT_FORCE			0x00000001	/* Attempt to forcibily umount */
+	#define MNT_DETACH			0x00000002	/* Just detach from the tree */
+	#define MNT_EXPIRE			0x00000004	/* Mark for expiry */
+	#define UMOUNT_NOFOLLOW		0x00000008	/* Don't follow symlink on umount */
+	#define UMOUNT_UNUSED		0x80000000	/* Flag guaranteed to be unused */
+
+	/* sb->s_iflags */
+	#define SB_I_CGROUPWB		0x00000001	/* cgroup-aware writeback enabled */
+	#define SB_I_NOEXEC			0x00000002	/* Ignore executables on this fs */
+	#define SB_I_NODEV			0x00000004	/* Ignore devices on this fs */
+	#define SB_I_STABLE_WRITES	0x00000008	/* don't modify blks until WB is done */
+
+	/* sb->s_iflags to limit user namespace mounts */
+	#define SB_I_USERNS_VISIBLE				0x00000010 /* fstype already mounted */
+	#define SB_I_IMA_UNVERIFIABLE_SIGNATURE	0x00000020
+	#define SB_I_UNTRUSTED_MOUNTER			0x00000040
+
+	#define SB_I_SKIP_SYNC		0x00000100	/* Skip superblock at global sync */
+
+	/* Possible states of 'frozen' field */
+	enum {
+		SB_UNFROZEN			= 0,	/* FS is unfrozen */
+		SB_FREEZE_WRITE		= 1,	/* Writes, dir ops, ioctls frozen */
+		SB_FREEZE_PAGEFAULT	= 2,	/* Page faults stopped as well */
+		SB_FREEZE_FS		= 3,	/* For internal FS use (e.g. to stop
+										* internal threads if needed) */
+		SB_FREEZE_COMPLETE	= 4,	/* ->freeze_fs finished successfully */
+	};
+
+	#define SB_FREEZE_LEVELS (SB_FREEZE_COMPLETE - 1)
+
+	/*
+	* Inode flags - they have no relation to superblock flags now
+	*/
+	#define S_SYNC			(1 << 0)  /* Writes are synced at once */
+	#define S_NOATIME		(1 << 1)  /* Do not update access times */
+	#define S_APPEND		(1 << 2)  /* Append-only file */
+	#define S_IMMUTABLE		(1 << 3)  /* Immutable file */
+	#define S_DEAD			(1 << 4)  /* removed, but still open directory */
+	#define S_NOQUOTA		(1 << 5)  /* Inode is not counted to quota */
+	#define S_DIRSYNC		(1 << 6)  /* Directory modifications are synchronous */
+	#define S_NOCMTIME		(1 << 7)  /* Do not update file c/mtime */
+	#define S_SWAPFILE		(1 << 8)  /* Do not truncate: swapon got its bmaps */
+	#define S_PRIVATE		(1 << 9)  /* Inode is fs-internal */
+	#define S_IMA			(1 << 10) /* Inode has an associated IMA struct */
+	#define S_AUTOMOUNT		(1 << 11) /* Automount/referral quasi-directory */
+	#define S_NOSEC			(1 << 12) /* no suid or xattr security attributes */
+	#ifdef CONFIG_FS_DAX
+		#define S_DAX			(1 << 13) /* Direct Access, avoiding the page cache */
+	#else
+		#define S_DAX			0	  /* Make all the DAX code disappear */
+	#endif
+	#define S_ENCRYPTED		(1 << 14) /* Encrypted file (using fs/crypto/) */
+	#define S_CASEFOLD		(1 << 15) /* Casefolded file */
+	#define S_VERITY		(1 << 16) /* Verity file (using fs/verity/) */
+
+	/*
+	* Note that nosuid etc flags are inode-specific: setting some file-system
+	* flags just means all the inodes inherit those flags by default. It might be
+	* possible to override it selectively if you really wanted to with some
+	* ioctl() that is not currently implemented.
+	*
+	* Exception: SB_RDONLY is always applied to the entire file system.
+	*
+	* Unfortunately, it is possible to change a filesystems flags with it mounted
+	* with files in use.  This means that all of the inodes will not have their
+	* i_flags updated.  Hence, i_flags no longer inherit the superblock mount
+	* flags, so these have to be checked separately. -- rmk@arm.uk.linux.org
+	*/
+	#define __IS_FLG(inode, flg)((inode)->i_sb->s_flags & (flg))
+
+	// static inline bool sb_rdonly(const struct super_block *sb) { return sb->s_flags & SB_RDONLY; }
+	// #define IS_RDONLY(inode)	sb_rdonly((inode)->i_sb)
+	#define IS_SYNC(inode)		(__IS_FLG(inode, SB_SYNCHRONOUS) || \
+										((inode)->i_flags & S_SYNC))
+	#define IS_DIRSYNC(inode)	(__IS_FLG(inode, SB_SYNCHRONOUS|SB_DIRSYNC) || \
+										((inode)->i_flags & (S_SYNC|S_DIRSYNC)))
+	#define IS_MANDLOCK(inode)	__IS_FLG(inode, SB_MANDLOCK)
+	#define IS_NOATIME(inode)	__IS_FLG(inode, SB_RDONLY|SB_NOATIME)
+	#define IS_I_VERSION(inode)	__IS_FLG(inode, SB_I_VERSION)
+
+	#define IS_NOQUOTA(inode)	((inode)->i_flags & S_NOQUOTA)
+	#define IS_APPEND(inode)	((inode)->i_flags & S_APPEND)
+	#define IS_IMMUTABLE(inode)	((inode)->i_flags & S_IMMUTABLE)
+	#define IS_POSIXACL(inode)	__IS_FLG(inode, SB_POSIXACL)
+
+	#define IS_DEADDIR(inode)	((inode)->i_flags & S_DEAD)
+	#define IS_NOCMTIME(inode)	((inode)->i_flags & S_NOCMTIME)
+	#define IS_SWAPFILE(inode)	((inode)->i_flags & S_SWAPFILE)
+	#define IS_PRIVATE(inode)	((inode)->i_flags & S_PRIVATE)
+	#define IS_IMA(inode)		((inode)->i_flags & S_IMA)
+	#define IS_AUTOMOUNT(inode)	((inode)->i_flags & S_AUTOMOUNT)
+	#define IS_NOSEC(inode)		((inode)->i_flags & S_NOSEC)
+	#define IS_DAX(inode)		((inode)->i_flags & S_DAX)
+	#define IS_ENCRYPTED(inode)	((inode)->i_flags & S_ENCRYPTED)
+	#define IS_CASEFOLDED(inode)((inode)->i_flags & S_CASEFOLD)
+	#define IS_VERITY(inode)	((inode)->i_flags & S_VERITY)
+
+	#define IS_WHITEOUT(inode)	(S_ISCHR(inode->i_mode) && \
+										(inode)->i_rdev == WHITEOUT_DEV)	
 
 
 	unsigned long init_vfs(void);
@@ -312,5 +472,46 @@
 	#define ACC_MODE(x) ("\004\002\006\006"[(x)&O_ACCMODE])
 	#define OPEN_FMODE(flag) ((fmode_t)(((flag + 1) & O_ACCMODE) | \
 							(flag & __FMODE_NONOTIFY)))
+
+	/*
+	* Userspace may rely on the the inode number being non-zero. For example, glibc
+	* simply ignores files with zero i_ino in unlink() and other places.
+	*
+	* As an additional complication, if userspace was compiled with
+	* _FILE_OFFSET_BITS=32 on a 64-bit kernel we'll only end up reading out the
+	* lower 32 bits, so we need to check that those aren't zero explicitly. With
+	* _FILE_OFFSET_BITS=64, this may cause some harmless false-negatives, but
+	* better safe than sorry.
+	*/
+	// static inline bool is_zero_ino(ino_t ino)
+	// {
+	// 	return (uint32_t)ino == 0;
+	// }
+
+	// extern void __iget(struct inode * inode);
+	// extern void iget_failed(struct inode *);
+	// extern void clear_inode(struct inode *);
+	// extern void __destroy_inode(struct inode *);
+	// extern inode_s *new_inode_pseudo(struct super_block *sb);
+	extern inode_s *new_inode(super_block_s *sb);
+	extern void iput(inode_s *);
+	// extern void free_inode_nonrcu(struct inode *inode);
+	// extern int should_remove_suid(struct dentry *);
+	// extern int file_remove_privs(struct file *);
+
+	// extern void __insert_inode_hash(struct inode *, unsigned long hashval);
+	// static inline void insert_inode_hash(struct inode *inode)
+	// {
+	// 	__insert_inode_hash(inode, inode->i_ino);
+	// }
+
+	// extern void __remove_inode_hash(struct inode *);
+	// static inline void remove_inode_hash(struct inode *inode)
+	// {
+	// 	if (!inode_unhashed(inode) && !hlist_fake(&inode->i_hash))
+	// 		__remove_inode_hash(inode);
+	// }
+
+	// extern void inode_sb_list_add(struct inode *inode);
 
 #endif /* _FS_H_ */

@@ -267,7 +267,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags
 	if (IS_ERR(dentry))
 		return dentry;
 
-	if (dir->d_inode->i_op->lookup(dir->d_inode, dentry) == NULL)
+	if (dir->d_inode->i_op->lookup(dir->d_inode, dentry, flags) == NULL)
 	{
 		// color_printk(RED, WHITE, "can not find file or dir:%s\n", dentry->d_name);
 		kfree(dentry);

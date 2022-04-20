@@ -91,8 +91,8 @@
 
 		int fatent_shift;
 		// const fatent_operations_s *fatent_ops;
-		inode_s *fat_inode;
-		inode_s *fsinfo_inode;
+		inode_s			*fat_inode;
+		inode_s			*fsinfo_inode;
 
 		// struct ratelimit_state ratelimit;
 
@@ -286,16 +286,16 @@
 	static inline int fat_get_start(msdos_sb_info_s *sbi,
 					const msdos_dir_entry_s *de)
 	{
-		int cluster = le16_to_cpu(de->start);
+		int cluster = de->start;
 		if (is_fat32(sbi))
-			cluster |= (le16_to_cpu(de->starthi) << 16);
+			cluster |= (de->starthi << 16);
 		return cluster;
 	}
 
 	static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
 	{
-		de->start   = cpu_to_le16(cluster);
-		de->starthi = cpu_to_le16(cluster >> 16);
+		de->start   = cluster;
+		de->starthi = cluster >> 16;
 	}
 
 	static inline void fatwchar_to16(uint8_t *dst, const wchar_t *src, size_t len)
@@ -397,13 +397,10 @@
 	/* fat/file.c */
 	extern long fat_generic_ioctl(file_s *filp, unsigned int cmd,
 					unsigned long arg);
-	// extern const file_operations_s fat_file_operations;
-	// extern const inode_operations_s fat_file_inode_operations;
-	// extern int fat_setattr(user_namespace_s *mnt_userns, dentry_s *dentry,
+	// extern int fat_setattr(dentry_s *dentry,
 	// 				iattr_s *attr);
 	extern void fat_truncate_blocks(struct inode *inode, loff_t offset);
-	// extern int fat_getattr(user_namespace_s *mnt_userns,
-	// 				const path_s *path, kstat_s *stat,
+	// extern int fat_getattr(const path_s *path, kstat_s *stat,
 	// 				uint32_t request_mask, unsigned int flags);
 	extern int fat_file_fsync(file_s *file, loff_t start, loff_t end,
 					int datasync);
@@ -463,5 +460,7 @@
 
 	/* helper for printk */
 	typedef unsigned long long	llu;
+
+	extern inode_ops_s vfat_dir_inode_operations;
 
 #endif /* !_FAT_H_ */
