@@ -495,10 +495,10 @@ void fat32_write_inode(inode_s * inode)
 	kfree(buf);
 }
 
-sb_ops_s FAT32_sb_ops = 
+super_ops_s FAT32_sb_ops = 
 {
-	.write_superblock = fat32_write_superblock,
-	.put_superblock = fat32_put_superblock,
+	.write_super = fat32_write_superblock,
+	.put_super = fat32_put_superblock,
 	.write_inode = fat32_write_inode,
 };
 

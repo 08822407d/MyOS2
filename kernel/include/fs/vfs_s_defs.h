@@ -5,8 +5,8 @@ typedef struct dentry_ops dentry_ops_s;
 
 struct super_block;
 typedef struct super_block super_block_s;
-struct sb_ops;
-typedef struct sb_ops sb_ops_s;
+struct super_ops;
+typedef struct super_ops super_ops_s;
 
 struct mount;
 typedef struct mount mount_s;

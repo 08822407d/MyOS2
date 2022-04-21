@@ -1,6 +1,7 @@
 #include <sys/err.h>
 
 #include <uapi/stat.h>
+#include <uapi/magic.h>
 #include <uapi/msdos_fs.h>
 
 #include <string.h>
@@ -152,4 +153,355 @@ inode_s *fat_build_inode(super_block_s *sb,
 	// fat_attach(inode, i_pos);
 out:
 	return inode;
+}
+
+
+static void fat_put_super(super_block_s *sb)
+{
+	msdos_sb_info_s *sbi = MSDOS_SB(sb);
+
+	// fat_set_state(sb, 0, 0);
+	iput(sbi->fsinfo_inode);
+	iput(sbi->fat_inode);
+}
+
+static inode_s *fat_alloc_inode(super_block_s *sb)
+{
+	msdos_inode_info_s *ei;
+	ei = kmalloc(sizeof(msdos_inode_info_s));
+	if (!ei)
+		return NULL;
+
+	/* Zeroing to allow iput() even if partial initialized inode. */
+	ei->mmu_private = 0;
+	ei->i_start = 0;
+	ei->i_logstart = 0;
+	ei->i_attrs = 0;
+	ei->i_pos = 0;
+
+	return &ei->vfs_inode;
+}
+
+static void fat_free_inode(inode_s *inode)
+{
+	kfree(MSDOS_I(inode));
+}
+
+static int fat_write_inode(inode_s *inode)
+{
+	int err;
+
+	// static int __fat_write_inode(inode_s *inode)
+	// {
+	// 	super_block_s *sb = inode->i_sb;
+	// 	msdos_sb_info_s *sbi = MSDOS_SB(sb);
+	// 	// buffer_head_s *bh;
+	// 	msdos_dir_entry_s *raw_entry;
+	// 	loff_t i_pos;
+	// 	sector_t blocknr;
+	// 	int err, offset;
+
+	// 	if (inode->i_ino == MSDOS_ROOT_INO)
+	// 		return 0;
+
+	// retry:
+	// 	i_pos = fat_i_pos_read(sbi, inode);
+	// 	if (!i_pos)
+	// 		return 0;
+
+	// 	fat_get_blknr_offset(sbi, i_pos, &blocknr, &offset);
+	// 	bh = sb_bread(sb, blocknr);
+	// 	if (!bh) {
+	// 		return -EIO;
+	// 	}
+	// 	if (i_pos != MSDOS_I(inode)->i_pos) {
+	// 		goto retry;
+	// 	}
+
+	// 	raw_entry = &((msdos_dir_entry_s *) (bh->b_data))[offset];
+	// 	if (S_ISDIR(inode->i_mode))
+	// 		raw_entry->size = 0;
+	// 	else
+	// 		raw_entry->size = inode->i_size;
+	// 	raw_entry->attr = fat_make_attrs(inode);
+	// 	fat_set_start(raw_entry, MSDOS_I(inode)->i_logstart);
+	// 	mark_buffer_dirty(bh);
+	// 	err = 0;
+	// 	brelse(bh);
+	// }
+	return err;
+}
+
+static const super_ops_s fat_sops = {
+	.alloc_inode	= fat_alloc_inode,
+	.free_inode		= fat_free_inode,
+	.write_inode	= fat_write_inode,
+	// .evict_inode	= fat_evict_inode,
+	.put_super		= fat_put_super,
+	// .statfs			= fat_statfs,
+	// .remount_fs		= fat_remount,
+
+	// .show_options	= fat_show_options,
+};
+
+static int fat_read_root(inode_s *inode)
+{
+	msdos_sb_info_s *sbi = MSDOS_SB(inode->i_sb);
+	int error;
+
+	MSDOS_I(inode)->i_pos = MSDOS_ROOT_INO;
+	inode->i_uid = sbi->options.fs_uid;
+	inode->i_gid = sbi->options.fs_gid;
+	inode_inc_iversion(inode);
+	inode->i_mode = fat_make_mode(sbi, ATTR_DIR, S_IRWXUGO);
+	inode->i_op = sbi->dir_ops;
+	inode->i_fop = &fat_dir_operations;
+	if (is_fat32(sbi)) {
+		MSDOS_I(inode)->i_start = sbi->root_cluster;
+		error = fat_calc_dir_size(inode);
+		if (error < 0)
+			return error;
+	} else {
+		MSDOS_I(inode)->i_start = 0;
+		inode->i_size = sbi->dir_entries * sizeof(struct msdos_dir_entry);
+	}
+	inode->i_blocks = ((inode->i_size + (sbi->cluster_size - 1))
+			   & ~((loff_t)sbi->cluster_size - 1)) >> 9;
+	MSDOS_I(inode)->i_logstart = 0;
+	MSDOS_I(inode)->mmu_private = inode->i_size;
+
+	fat_save_attrs(inode, ATTR_DIR);
+	set_nlink(inode, fat_subdirs(inode)+2);
+
+	return 0;
+}
+
+/*
+ * Read the super block of an MS-DOS FS.
+ */
+int fat_fill_super(super_block_s *sb, void *data, int silent, int isvfat,
+		   void (*setup)(super_block_s *))
+{
+	inode_s *root_inode = NULL, *fat_inode = NULL;
+	inode_s *fsinfo_inode = NULL;
+	// struct buffer_head *bh;
+	// struct fat_bios_param_block bpb;
+	msdos_sb_info_s *sbi;
+	uint16_t logical_sector_size;
+	uint32_t total_sectors, total_clusters, fat_clusters, rootdir_sectors;
+	int debug;
+	long error;
+	char buf[50];
+	timespec64_s ts;
+
+	/*
+	 * GFP_KERNEL is ok here, because while we do hold the
+	 * superblock lock, memory pressure can't call back into
+	 * the filesystem, since we're only just about to mount
+	 * it and have no inodes etc active!
+	 */
+	sbi = kmalloc(sizeof(msdos_sb_info_s));
+	if (!sbi)
+		return -ENOMEM;
+	sb->s_fs_info = sbi;
+
+	sb->s_flags |= SB_NODIRATIME;
+	sb->s_magic = MSDOS_SUPER_MAGIC;
+	sb->s_op = &fat_sops;
+
+	setup(sb); /* flavour-specific stuff that needs options */
+
+	error = -EIO;
+	sb_min_blocksize(sb, 512);
+	bh = sb_bread(sb, 0);
+	if (bh == NULL)
+		goto out_fail;
+
+	error = fat_read_bpb(sb, (struct fat_boot_sector *)bh->b_data, silent,
+		&bpb);
+	if (error == -EINVAL && sbi->options.dos1xfloppy)
+		error = fat_read_static_bpb(sb,
+			(struct fat_boot_sector *)bh->b_data, silent, &bpb);
+	brelse(bh);
+
+	if (error == -EINVAL)
+		goto out_invalid;
+	else if (error)
+		goto out_fail;
+
+	logical_sector_size = bpb.fat_sector_size;
+	sbi->sec_per_clus = bpb.fat_sec_per_clus;
+
+	error = -EIO;
+	if (logical_sector_size < sb->s_blocksize)
+		goto out_fail;
+
+	if (logical_sector_size > sb->s_blocksize) {
+		struct buffer_head *bh_resize;
+
+		if (!sb_set_blocksize(sb, logical_sector_size))
+			goto out_fail;
+
+		/* Verify that the larger boot sector is fully readable */
+		bh_resize = sb_bread(sb, 0);
+		if (bh_resize == NULL)
+			goto out_fail;
+		brelse(bh_resize);
+	}
+
+	sbi->cluster_size = sb->s_blocksize * sbi->sec_per_clus;
+	sbi->cluster_bits = ffs(sbi->cluster_size) - 1;
+	sbi->fats = bpb.fat_fats;
+	sbi->fat_bits = 0;		/* Don't know yet */
+	sbi->fat_start = bpb.fat_reserved;
+	sbi->fat_length = bpb.fat_fat_length;
+	sbi->root_cluster = 0;
+	sbi->free_clusters = -1;	/* Don't know yet */
+	sbi->free_clus_valid = 0;
+	sbi->prev_free = FAT_START_ENT;
+	sb->s_maxbytes = 0xffffffff;
+
+	if (!sbi->fat_length && bpb.fat32_length) {
+		struct fat_boot_fsinfo *fsinfo;
+		struct buffer_head *fsinfo_bh;
+
+		/* Must be FAT32 */
+		sbi->fat_bits = 32;
+		sbi->fat_length = bpb.fat32_length;
+		sbi->root_cluster = bpb.fat32_root_cluster;
+
+		/* MC - if info_sector is 0, don't multiply by 0 */
+		sbi->fsinfo_sector = bpb.fat32_info_sector;
+		if (sbi->fsinfo_sector == 0)
+			sbi->fsinfo_sector = 1;
+
+		fsinfo_bh = sb_bread(sb, sbi->fsinfo_sector);
+		if (fsinfo_bh == NULL)
+			goto out_fail;
+
+		fsinfo = (struct fat_boot_fsinfo *)fsinfo_bh->b_data;
+		if (IS_FSINFO(fsinfo)) {
+			if (sbi->options.usefree)
+				sbi->free_clus_valid = 1;
+			sbi->free_clusters = fsinfo->free_clusters;
+			sbi->prev_free = fsinfo->next_cluster;
+		}
+
+		brelse(fsinfo_bh);
+	}
+
+	/* interpret volume ID as a little endian 32 bit integer */
+	if (is_fat32(sbi))
+		sbi->vol_id = bpb.fat32_vol_id;
+	else /* fat 16 or 12 */
+		sbi->vol_id = bpb.fat16_vol_id;
+
+	sbi->dir_per_block = sb->s_blocksize / sizeof(struct msdos_dir_entry);
+	sbi->dir_per_block_bits = ffs(sbi->dir_per_block) - 1;
+
+	sbi->dir_start = sbi->fat_start + sbi->fats * sbi->fat_length;
+	sbi->dir_entries = bpb.fat_dir_entries;
+	if (sbi->dir_entries & (sbi->dir_per_block - 1))
+		goto out_invalid;
+
+	rootdir_sectors = sbi->dir_entries
+		* sizeof(struct msdos_dir_entry) / sb->s_blocksize;
+	sbi->data_start = sbi->dir_start + rootdir_sectors;
+	total_sectors = bpb.fat_sectors;
+	if (total_sectors == 0)
+		total_sectors = bpb.fat_total_sect;
+
+	total_clusters = (total_sectors - sbi->data_start) / sbi->sec_per_clus;
+
+	if (!is_fat32(sbi))
+		sbi->fat_bits = (total_clusters > MAX_FAT12) ? 16 : 12;
+
+	/* some OSes set FAT_STATE_DIRTY and clean it on unmount. */
+	if (is_fat32(sbi))
+		sbi->dirty = bpb.fat32_state & FAT_STATE_DIRTY;
+	else /* fat 16 or 12 */
+		sbi->dirty = bpb.fat16_state & FAT_STATE_DIRTY;
+
+	/* check that FAT table does not overflow */
+	fat_clusters = calc_fat_clusters(sb);
+	total_clusters = min(total_clusters, fat_clusters - FAT_START_ENT);
+	if (total_clusters > max_fat(sb))
+		goto out_invalid;
+
+	sbi->max_cluster = total_clusters + FAT_START_ENT;
+	/* check the free_clusters, it's not necessarily correct */
+	if (sbi->free_clusters != -1 && sbi->free_clusters > total_clusters)
+		sbi->free_clusters = -1;
+	/* check the prev_free, it's not necessarily correct */
+	sbi->prev_free %= sbi->max_cluster;
+	if (sbi->prev_free < FAT_START_ENT)
+		sbi->prev_free = FAT_START_ENT;
+
+	/* set up enough so that it can read an inode */
+	fat_hash_init(sb);
+	dir_hash_init(sb);
+	fat_ent_access_init(sb);
+
+	/*
+	 * The low byte of the first FAT entry must have the same value as
+	 * the media field of the boot sector. But in real world, too many
+	 * devices are writing wrong values. So, removed that validity check.
+	 *
+	 * The removed check compared the first FAT entry to a value dependent
+	 * on the media field like this:
+	 * == (0x0F00 | media), for FAT12
+	 * == (0XFF00 | media), for FAT16
+	 * == (0x0FFFFF | media), for FAT32
+	 */
+
+	error = -EINVAL;
+
+	/* FIXME: utf8 is using iocharset for upper/lower conversion */
+	if (sbi->options.isvfat)
+		goto out_fail;
+
+	error = -ENOMEM;
+	fat_inode = new_inode(sb);
+	if (!fat_inode)
+		goto out_fail;
+	sbi->fat_inode = fat_inode;
+
+	fsinfo_inode = new_inode(sb);
+	if (!fsinfo_inode)
+		goto out_fail;
+	fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
+	sbi->fsinfo_inode = fsinfo_inode;
+	insert_inode_hash(fsinfo_inode);
+
+	root_inode = new_inode(sb);
+	if (!root_inode)
+		goto out_fail;
+	root_inode->i_ino = MSDOS_ROOT_INO;
+	inode_set_iversion(root_inode, 1);
+	error = fat_read_root(root_inode);
+	if (error < 0) {
+		iput(root_inode);
+		goto out_fail;
+	}
+	error = -ENOMEM;
+	insert_inode_hash(root_inode);
+	fat_attach(root_inode, 0);
+	sb->s_root = d_make_root(root_inode);
+	if (!sb->s_root)
+		goto out_fail;
+
+	fat_set_state(sb, 1, 0);
+	return 0;
+
+out_invalid:
+	error = -EINVAL;
+
+out_fail:
+	if (fsinfo_inode)
+		iput(fsinfo_inode);
+	if (fat_inode)
+		iput(fat_inode);
+	sb->s_fs_info = NULL;
+	kfree(sbi);
+	return error;
 }

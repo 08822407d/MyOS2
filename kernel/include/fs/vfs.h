@@ -50,7 +50,7 @@
 		unsigned long	s_flags;
 		unsigned long	s_iflags;	/* internal SB_I_* flags */
 		unsigned long	s_magic;
-		sb_ops_s		*s_op;
+		super_ops_s		*s_op;
 
 		dentry_s		*s_root;
 		int				s_count;
@@ -82,8 +82,10 @@
 	typedef struct inode
 	{
 		umode_t			i_mode;
-		unsigned int	i_flags;
 		unsigned short	i_opflags;
+		kuid_t			i_uid;
+		kgid_t			i_gid;
+		unsigned int	i_flags;
 
 		inode_ops_s		*i_op;
 		super_block_s	*i_sb;
@@ -133,40 +135,64 @@
 	} taskfs_s;
 
 
-	typedef struct sb_ops
+	typedef struct super_ops
 	{
-		void	(*write_superblock)(super_block_s * sb);
-		void	(*put_superblock)(super_block_s * sb);
-
+		void	(*write_super)(super_block_s * sb);
 		void	(*write_inode)(inode_s * inode);
-	} sb_ops_s;
+
+		inode_s	*(*alloc_inode)(super_block_s *sb);
+		void	(*destroy_inode)(inode_s *);
+		void	(*free_inode)(inode_s *);
+
+		void	(*dirty_inode) (inode_s *, int flags);
+		// int		(*write_inode) (inode_s *, writeback_control_s *wbc);
+		int		(*drop_inode) (inode_s *);
+		void	(*evict_inode) (inode_s *);
+		void	(*put_super) (super_block_s *);
+		int		(*sync_fs)(super_block_s *sb, int wait);
+		int		(*freeze_super) (super_block_s *);
+		int		(*freeze_fs) (super_block_s *);
+		int		(*thaw_super) (super_block_s *);
+		int		(*unfreeze_fs) (super_block_s *);
+		// int		(*statfs) (dentry_s *, kstatfs_s *);
+		int		(*remount_fs) (super_block_s *, int *, char *);
+		void	(*umount_begin) (super_block_s *);
+
+		// int		(*show_options)(seq_file_s *, dentry_s *);
+		// int		(*show_devname)(seq_file_s *, dentry_s *);
+		// int		(*show_path)(seq_file_s *, dentry_s *);
+		// int		(*show_stats)(seq_file_s *, dentry_s *);
+
+		// long (*nr_cached_objects)(super_block_s *, shrink_control_s *);
+		// long (*free_cached_objects)(super_block_s *, shrink_control_s *);
+	} super_ops_s;
 
 	typedef struct inode_ops
 	{
-		dentry_s * (*lookup) (inode_s *, dentry_s *, unsigned int);
-		int (*permission) (inode_s *, int);
+		dentry_s*(*lookup) (inode_s *, dentry_s *, unsigned int);
+		int		(*permission) (inode_s *, int);
 
-		int (*readlink) (dentry_s *, char *, int);
+		int		(*readlink) (dentry_s *, char *, int);
 
-		int (*create) (inode_s *, dentry_s *, umode_t, bool);
-		int (*link) (dentry_s *, inode_s *, dentry_s *);
-		int (*unlink) (inode_s *, dentry_s *);
-		int (*symlink) (inode_s *, dentry_s *, const char *);
-		int (*mkdir) (inode_s *, dentry_s *, umode_t);
-		int (*rmdir) (inode_s *, dentry_s *);
-		int (*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
-		int (*rename) (inode_s *, dentry_s *, inode_s *,
+		int		(*create) (inode_s *, dentry_s *, umode_t, bool);
+		int		(*link) (dentry_s *, inode_s *, dentry_s *);
+		int		(*unlink) (inode_s *, dentry_s *);
+		int		(*symlink) (inode_s *, dentry_s *, const char *);
+		int		(*mkdir) (inode_s *, dentry_s *, umode_t);
+		int		(*rmdir) (inode_s *, dentry_s *);
+		int		(*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
+		int		(*rename) (inode_s *, dentry_s *, inode_s *,
 						dentry_s *, unsigned int);
-		int (*setattr) (dentry_s *, iattr_s *);
-		int (*getattr) (const path_s *, kstat_s *, uint32_t,
+		int		(*setattr) (dentry_s *, iattr_s *);
+		int		(*getattr) (const path_s *, kstat_s *, uint32_t,
 						unsigned int);
-		ssize_t (*listxattr) (dentry_s *, char *, size_t);
+		ssize_t	(*listxattr) (dentry_s *, char *, size_t);
 		// int (*fiemap)(inode_s *, fiemap_extent_info_s *, uint64_t start,
 		// 				uint64_t len);
 		// int (*update_time)(inode_s *, timespec64_s *, int);
-		int (*atomic_open)(inode_s *, dentry_s *, file_s *,
+		int		(*atomic_open)(inode_s *, dentry_s *, file_s *,
 						unsigned open_flag, umode_t create_mode);
-		int (*tmpfile) (inode_s *, dentry_s *, umode_t);
+		int		(*tmpfile) (inode_s *, dentry_s *, umode_t);
 		// int (*set_acl)(inode_s *, posix_acl_s *, int);
 		// int (*fileattr_set)(dentry_s *dentry, fileattr_s *fa);
 		// int (*fileattr_get)(dentry_s *dentry, fileattr_s *fa);
@@ -174,20 +200,20 @@
 
 	typedef struct dentry_ops
 	{
-		int (*d_revalidate)(dentry_s *, unsigned int);
-		int (*d_weak_revalidate)(dentry_s *, unsigned int);
-		int (*d_hash)(const dentry_s *, qstr_s *);
-		int (*d_compare)(const dentry_s *dir, unsigned int len,
+		int		(*d_revalidate)(dentry_s *, unsigned int);
+		int		(*d_weak_revalidate)(dentry_s *, unsigned int);
+		int		(*d_hash)(const dentry_s *, qstr_s *);
+		int		(*d_compare)(const dentry_s *dir, unsigned int len,
 						const char *str, const qstr_s * name);
-		int (*d_delete)(const dentry_s *);
-		int (*d_init)(dentry_s *);
-		void (*d_release)(dentry_s *);
-		void (*d_prune)(dentry_s *);
-		void (*d_iput)(dentry_s *, inode_s *);
-		char *(*d_dname)(dentry_s *, char *, int);
-		vfsmount_s *(*d_automount)(path_s *);
-		int (*d_manage)(const path_s *, bool);
-		dentry_s *(*d_real)(dentry_s *, const inode_s *);
+		int		(*d_delete)(const dentry_s *);
+		int		(*d_init)(dentry_s *);
+		void	(*d_release)(dentry_s *);
+		void	(*d_prune)(dentry_s *);
+		void	(*d_iput)(dentry_s *, inode_s *);
+		char	*(*d_dname)(dentry_s *, char *, int);
+		int		(*d_manage)(const path_s *, bool);
+		dentry_s*(*d_real)(dentry_s *, const inode_s *);
+		vfsmount_s	*(*d_automount)(path_s *);
 	} dentry_ops_s;
 
 	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
@@ -240,11 +266,11 @@
 		file_s			*ia_file;
 	} iattr_s;
 
-	extern super_block_s * root_sb;
-	extern mount_s root_mnt;
+	extern super_block_s	*root_sb;
+	extern mount_s			root_mnt;
 
 	extern file_ops_s		FAT32_file_ops;
-	extern sb_ops_s			FAT32_sb_ops;
+	extern super_ops_s		FAT32_sb_ops;
 
 	extern file_ops_s		tty_fops;
 
