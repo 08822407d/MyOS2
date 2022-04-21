@@ -35,10 +35,8 @@
 #ifndef _SYS_TIME_H_
 #define	_SYS_TIME_H_
 
-#include <sys/_timeval.h>
 #include <sys/types.h>
-#include <sys/timespec.h>
-#include <sys/_clock_id.h>
+#include <sys/_timespec.h>
 
 struct timezone {
 	int	tz_minuteswest;	/* minutes west of Greenwich */

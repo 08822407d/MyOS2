@@ -12,62 +12,12 @@
 
 void fat_attach(inode_s *inode, loff_t i_pos)
 {
-	// struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
 
-	// if (inode->i_ino != MSDOS_ROOT_INO) {
-	// 	struct hlist_head *head =   sbi->inode_hashtable
-	// 				  + fat_hash(i_pos);
-
-	// 	spin_lock(&sbi->inode_hash_lock);
-	// 	MSDOS_I(inode)->i_pos = i_pos;
-	// 	hlist_add_head(&MSDOS_I(inode)->i_fat_hash, head);
-	// 	spin_unlock(&sbi->inode_hash_lock);
-	// }
-
-	// /* If NFS support is enabled, cache the mapping of start cluster
-	//  * to directory inode. This is used during reconnection of
-	//  * dentries to the filesystem root.
-	//  */
-	// if (S_ISDIR(inode->i_mode) && sbi->options.nfs) {
-	// 	struct hlist_head *d_head = sbi->dir_hashtable;
-	// 	d_head += fat_dir_hash(MSDOS_I(inode)->i_logstart);
-
-	// 	spin_lock(&sbi->dir_hash_lock);
-	// 	hlist_add_head(&MSDOS_I(inode)->i_dir_hash, d_head);
-	// 	spin_unlock(&sbi->dir_hash_lock);
-	// }
 }
 
 void fat_detach(inode_s *inode)
 {
-	// struct msdos_sb_info *sbi = MSDOS_SB(inode->i_sb);
-	// spin_lock(&sbi->inode_hash_lock);
-	// MSDOS_I(inode)->i_pos = 0;
-	// hlist_del_init(&MSDOS_I(inode)->i_fat_hash);
-	// spin_unlock(&sbi->inode_hash_lock);
 
-	// if (S_ISDIR(inode->i_mode) && sbi->options.nfs) {
-	// 	spin_lock(&sbi->dir_hash_lock);
-	// 	hlist_del_init(&MSDOS_I(inode)->i_dir_hash);
-	// 	spin_unlock(&sbi->dir_hash_lock);
-	// }
-}
-
-inode_s *fat_iget(super_block_s *sb, loff_t i_pos)
-{
-	// msdos_sb_info_s *sbi = MSDOS_SB(sb);
-	// msdos_inode_info_s *i;
-	// inode_s *inode = NULL;
-
-	// hlist_for_each_entry(i, head, i_fat_hash) {
-	// 	if (i->i_pos != i_pos)
-	// 		continue;
-	// 	inode = igrab(&i->vfs_inode);
-	// 	if (inode)
-	// 		break;
-	// }
-	// spin_unlock(&sbi->inode_hash_lock);
-	// return inode;
 }
 
 static int is_exec(unsigned char *extension)
@@ -187,9 +137,6 @@ inode_s *fat_build_inode(super_block_s *sb,
 	inode_s *inode;
 	int err;
 
-	// inode = fat_iget(sb, i_pos);
-	// if (inode)
-	// 	goto out;
 	inode = new_inode(sb);
 	if (!inode) {
 		inode = ERR_PTR(-ENOMEM);

@@ -461,6 +461,7 @@
 	/* helper for printk */
 	typedef unsigned long long	llu;
 
-	extern inode_ops_s vfat_dir_inode_operations;
+	extern inode_ops_s	vfat_dir_inode_operations;
+	extern dentry_ops_s vfat_dentry_ops;
 
 #endif /* !_FAT_H_ */

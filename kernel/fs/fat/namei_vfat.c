@@ -13,6 +13,54 @@
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
 
+
+static int vfat_revalidate(dentry_s *dentry, unsigned int flags)
+{
+	// if (flags & LOOKUP_RCU)
+	// 	return -ECHILD;
+
+	// /* This is not negative dentry. Always valid. */
+	// if (d_really_is_positive(dentry))
+	// 	return 1;
+	// return vfat_revalidate_shortname(dentry);
+}
+
+/*
+ * Compute the hash for the vfat name corresponding to the dentry.
+ * Note: if the name is invalid, we leave the hash code unchanged so
+ * that the existing dentry can be used. The vfat fs routines will
+ * return ENOENT or EINVAL as appropriate.
+ */
+static int vfat_hash(const dentry_s *dentry, qstr_s *qstr)
+{
+	// qstr->hash = full_name_hash(dentry, qstr->name, vfat_striptail_len(qstr));
+	return 0;
+}
+
+/*
+ * Case sensitive compare of two vfat names.
+ */
+static int vfat_cmp(const dentry_s *dentry, unsigned int len,
+				const char *str, const qstr_s *name)
+{
+	unsigned int alen, blen;
+
+	// /* A filename cannot end in '.' or we treat it like it has none */
+	// alen = vfat_striptail_len(name);
+	// blen = __vfat_striptail_len(len, str);
+	// if (alen == blen) {
+	// 	if (strncmp(name->name, str, alen) == 0)
+	// 		return 0;
+	// }
+	return 1;
+}
+
+dentry_ops_s vfat_dentry_ops = {
+	.d_revalidate	= vfat_revalidate,
+	.d_hash			= vfat_hash,
+	.d_compare		= vfat_cmp,
+};
+
 static int vfat_find(inode_s *dir, const qstr_s *qname,
 				fat_slot_info_s *sinfo)
 {
@@ -351,15 +399,32 @@ inode_ops_s vfat_dir_inode_operations =
 	.mkdir = FAT32_mkdir,
 	.rmdir = FAT32_rmdir,
 	.rename = FAT32_rename,
-	// .getattr = FAT32_getattr,
-	// .setattr = FAT32_setattr,
+	.getattr = FAT32_getattr,
+	.setattr = FAT32_setattr,
 };
 
-static void setup(struct super_block *sb)
+static void setup(super_block_s *sb)
 {
-	// MSDOS_SB(sb)->dir_ops = &vfat_dir_inode_operations;
+	MSDOS_SB(sb)->dir_ops = &vfat_dir_inode_operations;
 	// if (MSDOS_SB(sb)->options.name_check != 's')
 	// 	sb->s_d_op = &vfat_ci_dentry_ops;
 	// else
-	// 	sb->s_d_op = &vfat_dentry_ops;
+		sb->s_d_op = &vfat_dentry_ops;
 }
+
+static int vfat_fill_super(super_block_s *sb, void *data, int silent)
+{
+	return fat_fill_super(sb, data, silent, 1, setup);
+}
+
+static dentry_s *vfat_mount(fs_type_s *fs_type, int flags,
+				const char *dev_name, void *data)
+{
+	return mount_bdev(fs_type, flags, dev_name, data, vfat_fill_super);
+}
+
+static fs_type_s vfat_fs_type = {
+	.name		= "vfat",
+	.mount		= vfat_mount,
+	.fs_flags	= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
+};

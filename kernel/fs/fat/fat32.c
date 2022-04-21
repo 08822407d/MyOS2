@@ -455,14 +455,6 @@ long FAT32_hash(dentry_s * dentry,char * filename){}
 long FAT32_release(dentry_s * dentry){}
 long FAT32_iput(dentry_s * dentry, inode_s * inode){}
 
-dentry_ops_s FAT32_dentry_ops = 
-{
-	.compare = FAT32_compare,
-	.hash = FAT32_hash,
-	.release = FAT32_release,
-	.iput = FAT32_iput,
-};
-
 void fat32_write_superblock(super_block_s * sbp){}
 
 void fat32_put_superblock(super_block_s * sbp)
@@ -553,7 +545,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	list_init(&sbp->s_root->dirent_list, sbp->s_root);
 	list_hdr_init(&sbp->s_root->childdir_lhdr);
 	sbp->s_root->d_parent = sbp->s_root;
-	sbp->s_root->dir_ops = &FAT32_dentry_ops;
+	sbp->s_root->dir_ops = &vfat_dentry_ops;
 	sbp->s_root->d_name.name = (char *)kmalloc(2);
 	((char *)sbp->s_root->d_name.name)[0] = '/';
 	((char *)sbp->s_root->d_name.name)[1] = 0;

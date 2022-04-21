@@ -35,3 +35,6 @@ typedef struct qstr qstr_s;
 
 struct filename;
 typedef struct filename filename_s;
+
+struct iattr;
+typedef struct iattr iattr_s;

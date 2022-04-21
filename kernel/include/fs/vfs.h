@@ -1,6 +1,10 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
+#include <sys/stat.h>
+#include <sys/uidgid.h>
+#include <sys/time64.h>
+
 #include <uapi/fcntl.h>
 #include <lib/utils.h>
 
@@ -18,8 +22,19 @@
 
 	typedef struct fs_type
 	{
-		char *	name;
-		int		fs_flags;
+		const char	*name;
+		int			fs_flags;
+	#define FS_REQUIRES_DEV			1 
+	#define FS_BINARY_MOUNTDATA		2
+	#define FS_HAS_SUBTYPE			4
+	#define FS_USERNS_MOUNT			8		/* Can be mounted by userns root */
+	#define FS_DISALLOW_NOTIFY_PERM	16		/* Disable fanotify permission events */
+	#define FS_ALLOW_IDMAP			32      /* FS has been updated to handle vfs idmappings. */
+	#define FS_THP_SUPPORT			8192	/* Remove once all fs converted */
+	#define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+		dentry_s *(*mount) (fs_type_s *, int,
+						const char *, void *);
+		void (*kill_sb) (super_block_s *);
 		super_block_s *	(*read_superblock)(GPT_PE_s * DPTE, void * buf);
 		fs_type_s *		next;
 	} fs_type_s;
@@ -46,6 +61,20 @@
 		* accessed and rarely modified.
 		*/
 		void			*s_fs_info;	/* Filesystem private info */
+
+
+		char			s_id[32];	/* Informational name */
+		// uuid_t			s_uuid;		/* UUID */
+
+		unsigned int	s_max_links;
+		fmode_t			s_mode;
+		/*
+		* Filesystem subtype.  If non-empty the filesystem type field
+		* in /proc/mounts will be "type.subtype"
+		*/
+		const char		*s_subtype;
+
+		const dentry_ops_s	*s_d_op; /* default d_op for dentries */
 
 		void			*private_sb_info;
 	} super_block_s;
@@ -115,9 +144,7 @@
 	typedef struct inode_ops
 	{
 		dentry_s * (*lookup) (inode_s *, dentry_s *, unsigned int);
-		// const char * (*get_link) (dentry_s *, inode_s *, delayed_call_s *);
 		int (*permission) (inode_s *, int);
-		// posix_acl_s * (*get_acl)(inode_s *, int);
 
 		int (*readlink) (dentry_s *, char *, int);
 
@@ -130,9 +157,9 @@
 		int (*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
 		int (*rename) (inode_s *, dentry_s *, inode_s *,
 						dentry_s *, unsigned int);
-		// int (*setattr) (dentry_s *, iattr_s *);
-		// int (*getattr) (const path_s *, kstat_s *, uint33_t,
-		//				unsigned int);
+		int (*setattr) (dentry_s *, iattr_s *);
+		int (*getattr) (const path_s *, kstat_s *, uint32_t,
+						unsigned int);
 		ssize_t (*listxattr) (dentry_s *, char *, size_t);
 		// int (*fiemap)(inode_s *, fiemap_extent_info_s *, uint64_t start,
 		// 				uint64_t len);
@@ -147,10 +174,20 @@
 
 	typedef struct dentry_ops
 	{
-		long	(*compare)(dentry_s * parent_dentry, char * source_filename, char * destination_filename);
-		long	(*hash)(dentry_s * dentry, char * filename);
-		long	(*release)(dentry_s * dentry);
-		long	(*iput)(dentry_s * dentry, inode_s * inode);
+		int (*d_revalidate)(dentry_s *, unsigned int);
+		int (*d_weak_revalidate)(dentry_s *, unsigned int);
+		int (*d_hash)(const dentry_s *, qstr_s *);
+		int (*d_compare)(const dentry_s *dir, unsigned int len,
+						const char *str, const qstr_s * name);
+		int (*d_delete)(const dentry_s *);
+		int (*d_init)(dentry_s *);
+		void (*d_release)(dentry_s *);
+		void (*d_prune)(dentry_s *);
+		void (*d_iput)(dentry_s *, inode_s *);
+		char *(*d_dname)(dentry_s *, char *, int);
+		vfsmount_s *(*d_automount)(path_s *);
+		int (*d_manage)(const path_s *, bool);
+		dentry_s *(*d_real)(dentry_s *, const inode_s *);
 	} dentry_ops_s;
 
 	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
@@ -176,11 +213,37 @@
 		// const char		iname[];
 	} filename_s;
 
+	/*
+	* This is the Inode Attributes structure, used for notify_change().  It
+	* uses the above definitions as flags, to know which values have changed.
+	* Also, in this manner, a Filesystem can look at only the values it cares
+	* about.  Basically, these are the attributes that the VFS layer can
+	* request to change from the FS layer.
+	*
+	* Derek Atkins <warlord@MIT.EDU> 94-10-20
+	*/
+	typedef struct iattr {
+		unsigned int	ia_valid;
+		umode_t			ia_mode;
+		kuid_t			ia_uid;
+		kgid_t			ia_gid;
+		loff_t			ia_size;
+		timespec64_s	ia_atime;
+		timespec64_s	ia_mtime;
+		timespec64_s	ia_ctime;
+
+		/*
+		* Not an attribute, but an auxiliary info for filesystems wanting to
+		* implement an ftruncate() like method.  NOTE: filesystem should
+		* check for (ia_valid & ATTR_FILE), and not for (ia_file != NULL).
+		*/
+		file_s			*ia_file;
+	} iattr_s;
+
 	extern super_block_s * root_sb;
 	extern mount_s root_mnt;
 
 	extern file_ops_s		FAT32_file_ops;
-	extern dentry_ops_s		FAT32_dentry_ops;
 	extern sb_ops_s			FAT32_sb_ops;
 
 	extern file_ops_s		tty_fops;
