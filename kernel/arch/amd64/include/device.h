@@ -29,15 +29,6 @@
 		file_ops_s *	f_ops;
 	} cdev_s;
 
-	typedef struct block_device
-	{
-		List_s			bdev_list;
-		char *			dev_name;
-		dev_t			dev_nr;
-		file_ops_s *	f_ops;
-	} block_device_s;
-
-
 	/* device.c */
 	void devices_init(void);
 	void creat_dev_file(void);

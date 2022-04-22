@@ -60,9 +60,9 @@
 	* for backward compatibility reasons (e.g. submit_bh).
 	*/
 	typedef struct buffer_head {
-		unsigned long	b_state;		/* buffer state bitmap (see above) */
-		buffer_head_s	*b_this_page;	/* circular list of page's buffers */
-		page_s			*b_page;		/* the page this bh is mapped to */
+		// unsigned long	b_state;		/* buffer state bitmap (see above) */
+		// buffer_head_s	*b_this_page;	/* circular list of page's buffers */
+		// page_s			*b_page;		/* the page this bh is mapped to */
 
 		sector_t		b_blocknr;		/* start block number */
 		size_t			b_size;			/* size of mapping */
@@ -70,7 +70,7 @@
 
 		block_device_s *b_bdev;
 		// bh_end_io_t *b_end_io;		/* I/O completion */
-		void *b_private;				/* reserved for b_end_io */
+		// void *b_private;				/* reserved for b_end_io */
 		// struct list_head b_assoc_buffers; /* associated with another mapping */
 		// struct address_space *b_assoc_map;	/* mapping this buffer is
 		// 					associated with */
@@ -186,15 +186,13 @@
 	// wait_queue_head_t *bh_waitq_head(struct buffer_head *bh);
 	// struct buffer_head *__find_get_block(struct block_device *bdev, sector_t block,
 	// 			unsigned size);
-	// struct buffer_head *__getblk_gfp(struct block_device *bdev, sector_t block,
-	// 				unsigned size, gfp_t gfp);
-	// void __brelse(struct buffer_head *);
+	buffer_head_s *__getblk_gfp(block_device_s *bdev, sector_t block, unsigned size);
+	void __brelse(buffer_head_s *);
 	// void __bforget(struct buffer_head *);
 	// void __breadahead(struct block_device *, sector_t block, unsigned int size);
 	// void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
 	// 		gfp_t gfp);
-	// struct buffer_head *__bread_gfp(struct block_device *,
-	// 				sector_t block, unsigned size, gfp_t gfp);
+	buffer_head_s *__bread_gfp(block_device_s *, sector_t block, unsigned size);
 	// void invalidate_bh_lrus(void);
 	// void invalidate_bh_lrus_cpu(int cpu);
 	// bool has_bh_in_lru(int cpu, void *dummy);
@@ -287,11 +285,11 @@
 	// 		atomic_dec(&bh->b_count);
 	// }
 
-	// static inline void brelse(struct buffer_head *bh)
-	// {
-	// 	if (bh)
-	// 		__brelse(bh);
-	// }
+	static inline void brelse(buffer_head_s *bh)
+	{
+		if (bh)
+			__brelse(bh);
+	}
 
 	// static inline void bforget(struct buffer_head *bh)
 	// {
@@ -299,11 +297,11 @@
 	// 		__bforget(bh);
 	// }
 
-	// static inline struct buffer_head *
-	// sb_bread(struct super_block *sb, sector_t block)
-	// {
-	// 	return __bread_gfp(sb->s_bdev, block, sb->s_blocksize, __GFP_MOVABLE);
-	// }
+	static inline buffer_head_s *
+	sb_bread(super_block_s *sb, sector_t block)
+	{
+		return __bread_gfp(sb->s_bdev, block, sb->s_blocksize);
+	}
 
 	// static inline struct buffer_head *
 	// sb_bread_unmovable(struct super_block *sb, sector_t block)

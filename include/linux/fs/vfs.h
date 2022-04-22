@@ -4,6 +4,7 @@
 #include <linux/kernel/stat.h>
 #include <linux/kernel/uidgid.h>
 #include <linux/kernel/time64.h>
+#include <linux/kernel/blk_types.h>
 #include <uapi/fcntl.h>
 
 #include <lib/utils.h>
@@ -53,8 +54,9 @@
 		super_ops_s		*s_op;
 
 		dentry_s		*s_root;
+		List_hdr_s		s_mounts;	/* list of mounts; _not_ for fs use */
 		int				s_count;
-
+		block_device_s	*s_bdev;
 		/*
 		* Keep s_fs_info, s_time_gran, s_fsnotify_mask, and
 		* s_fsnotify_marks together for cache efficiency. They are frequently
