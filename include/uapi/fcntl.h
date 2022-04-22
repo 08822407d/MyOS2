@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_FCNTL_H
 #define _UAPI_LINUX_FCNTL_H
 
-#include <sys/fcntl.h>
+#include <linux/kernel/fcntl.h>
 
 #include <include/fs/openat2.h>
 

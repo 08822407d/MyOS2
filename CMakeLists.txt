@@ -51,6 +51,7 @@ set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 #                                       global files                                            #
 #===============================================================================================#
 include_directories(${PROJECT_SOURCE_DIR}/include 
+                    ${PROJECT_SOURCE_DIR}/include/clib
                     ${PROJECT_SOURCE_DIR}/kernel 
                     ${PROJECT_SOURCE_DIR}/sys
                     ${PROJECT_SOURCE_DIR}/loader)

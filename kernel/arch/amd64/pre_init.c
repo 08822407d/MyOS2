@@ -6,7 +6,7 @@
 
 #include <include/proto.h>
 #include <include/mm/memblock.h>
-#include <sys/math.h>
+#include <linux/kernel/math.h>
 
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>

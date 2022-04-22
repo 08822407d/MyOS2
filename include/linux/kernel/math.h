@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_MATH_H_
-#define _LINUX_MATH_H_
+#ifndef _LINUX_MATH_H
+#define _LINUX_MATH_H
 
 // #include <asm/div64.h>
 // #include <uapi/linux/kernel.h>
@@ -174,4 +174,4 @@
 	// }
 	// #endif
 
-#endif	/* _LINUX_MATH_H_ */
+#endif	/* _LINUX_MATH_H */

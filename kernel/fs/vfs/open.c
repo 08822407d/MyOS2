@@ -1,5 +1,5 @@
-#include <sys/err.h>
-#include <sys/stat.h>
+#include <linux/kernel/err.h>
+#include <linux/kernel/stat.h>
 
 #include <string.h>
 #include <errno.h>

@@ -1,11 +1,11 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
-#include <sys/stat.h>
-#include <sys/uidgid.h>
-#include <sys/time64.h>
-
+#include <linux/kernel/stat.h>
+#include <linux/kernel/uidgid.h>
+#include <linux/kernel/time64.h>
 #include <uapi/fcntl.h>
+
 #include <lib/utils.h>
 
 #include <include/fs/internels.h>
@@ -62,7 +62,6 @@
 		*/
 		void			*s_fs_info;	/* Filesystem private info */
 
-
 		char			s_id[32];	/* Informational name */
 		// uuid_t			s_uuid;		/* UUID */
 
@@ -73,7 +72,6 @@
 		* in /proc/mounts will be "type.subtype"
 		*/
 		const char		*s_subtype;
-
 		const dentry_ops_s	*s_d_op; /* default d_op for dentries */
 
 		void			*private_sb_info;
@@ -169,23 +167,27 @@
 
 	typedef struct inode_ops
 	{
-		dentry_s*(*lookup) (inode_s *, dentry_s *, unsigned int);
+		dentry_s*(*lookup) (inode_s *dir, dentry_s *dentry,
+						unsigned int flags);
 		int		(*permission) (inode_s *, int);
 
 		int		(*readlink) (dentry_s *, char *, int);
 
-		int		(*create) (inode_s *, dentry_s *, umode_t, bool);
+		int		(*create) (inode_s *dir, dentry_s *dnetry,
+						umode_t mode, bool excl);
 		int		(*link) (dentry_s *, inode_s *, dentry_s *);
-		int		(*unlink) (inode_s *, dentry_s *);
+		int		(*unlink) (inode_s *dir, dentry_s *dentry);
 		int		(*symlink) (inode_s *, dentry_s *, const char *);
-		int		(*mkdir) (inode_s *, dentry_s *, umode_t);
-		int		(*rmdir) (inode_s *, dentry_s *);
+		int		(*mkdir) (inode_s *dir, dentry_s *dentry,
+						umode_t mode);
+		int		(*rmdir) (inode_s *dir, dentry_s *dentry);
 		int		(*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
-		int		(*rename) (inode_s *, dentry_s *, inode_s *,
-						dentry_s *, unsigned int);
-		int		(*setattr) (dentry_s *, iattr_s *);
-		int		(*getattr) (const path_s *, kstat_s *, uint32_t,
-						unsigned int);
+		int		(*rename) (inode_s *old_dir, dentry_s *old_dentry,
+						inode_s *new_dir, dentry_s *new_dentry,
+						unsigned int flags);
+		int		(*setattr) (dentry_s *dentry, iattr_s *attr);
+		int		(*getattr) (const path_s *path, kstat_s *stat,
+						uint32_t request_mask, unsigned int flags);
 		ssize_t	(*listxattr) (dentry_s *, char *, size_t);
 		// int (*fiemap)(inode_s *, fiemap_extent_info_s *, uint64_t start,
 		// 				uint64_t len);

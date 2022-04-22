@@ -1,9 +1,9 @@
 #ifndef _ARCH_CONFIG_H_
 #define _ARCH_CONFIG_H_
 
-#include <const.h>
+#include <linux/kernel/math.h>
 
-#include <sys/math.h>
+#include <const.h>
 
 	#define CONFIG_X86_64
 	#define CONFIG_ZONE_DMA

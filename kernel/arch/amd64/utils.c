@@ -1,5 +1,5 @@
 #include <sys/cdefs.h>
-#include <sys/fcntl.h>
+#include <linux/kernel/fcntl.h>
 
 #include <sys/types.h>
 #include <string.h>

@@ -1,8 +1,7 @@
-#include <sys/err.h>
+#include <linux/kernel/err.h>
+#include <uapi/msdos_fs.h>
 
 #include <errno.h>
-
-#include <uapi/msdos_fs.h>
 
 #include <include/proto.h>
 #include <include/printk.h>
@@ -386,10 +385,11 @@ int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 				unsigned int flags)
 {}
 
-int FAT32_getattr(dentry_s * dentry, unsigned long * attr)
+int FAT32_getattr(const path_s *path, kstat_s *stat,
+				uint32_t request_mask, unsigned int flags)
 {}
 
-int FAT32_setattr(dentry_s * dentry, unsigned long * attr)
+int FAT32_setattr(dentry_s *dentry, iattr_s *attr)
 {}
 
 inode_ops_s vfat_dir_inode_operations = 
@@ -420,7 +420,7 @@ static int vfat_fill_super(super_block_s *sb, void *data, int silent)
 static dentry_s *vfat_mount(fs_type_s *fs_type, int flags,
 				const char *dev_name, void *data)
 {
-	return mount_bdev(fs_type, flags, dev_name, data, vfat_fill_super);
+	// return mount_bdev(fs_type, flags, dev_name, data, vfat_fill_super);
 }
 
 static fs_type_s vfat_fs_type = {

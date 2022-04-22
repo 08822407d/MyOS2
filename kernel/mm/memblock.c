@@ -1,13 +1,13 @@
 #include <sys/types.h>
 #include <sys/limits.h>
-#include <sys/minmax.h>
+#include <linux/kernel/minmax.h>
 
 #include <string.h>
 #include <stddef.h>
 #include <errno.h>
 
 #include <include/glo.h>
-#include <sys/math.h>
+#include <linux/kernel/math.h>
 #include <include/mm/mm.h>
 #include <include/mm/memblock.h>
 #include <include/mm/mmzone.h>

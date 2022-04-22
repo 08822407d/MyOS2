@@ -1,5 +1,5 @@
-#include <sys/fcntl.h>
-#include <sys/err.h>
+#include <linux/kernel/fcntl.h>
+#include <linux/kernel/err.h>
 
 #include <stddef.h>
 #include <errno.h>

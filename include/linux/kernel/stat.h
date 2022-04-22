@@ -15,8 +15,9 @@
 	#define UTIME_OMIT	((1l << 30) - 2l)
 
 #include <sys/types.h>
-#include <sys/time64.h>
-#include <sys/uidgid.h>
+
+#include <linux/kernel/time64.h>
+#include <linux/kernel/uidgid.h>
 
 	typedef struct kstat {
 		uint32_t		result_mask;	/* What fields the user got */

@@ -2,8 +2,8 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
-#include <sys/stat.h>
-#include <sys/uidgid.h>
+#include <linux/kernel/stat.h>
+#include <linux/kernel/uidgid.h>
 
 #include <uapi/msdos_fs.h>
 
@@ -442,9 +442,9 @@
 	// extern int fat_clusters_flush(struct super_block *sb);
 	// extern int fat_chain_add(struct inode *inode, int new_dclus, int nr_cluster);
 	// extern void fat_time_fat2unix(struct msdos_sb_info *sbi, struct timespec64 *ts,
-	// 				__le16 __time, __le16 __date, u8 time_cs);
+	// 				uint16_t __time, uint16_t __date, uint8_t time_cs);
 	// extern void fat_time_unix2fat(struct msdos_sb_info *sbi, struct timespec64 *ts,
-	// 				__le16 *time, __le16 *date, u8 *time_cs);
+	// 				uint16_t *time, uint16_t *date, uint8_t *time_cs);
 	// extern int fat_truncate_time(struct inode *inode, struct timespec64 *now,
 	// 				int flags);
 	// extern int fat_update_time(struct inode *inode, struct timespec64 *now,

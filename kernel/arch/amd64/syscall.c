@@ -1,4 +1,4 @@
-#include <sys/fcntl.h>
+#include <linux/kernel/fcntl.h>
 #include <uapi/sysreboot.h>
 
 #include <errno.h>
