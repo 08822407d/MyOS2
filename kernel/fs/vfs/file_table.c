@@ -4,7 +4,7 @@
 #include <errno.h>
 
 #include <include/proto.h>
-#include <include/fs/vfs.h>
+#include <linux/fs/vfs.h>
 
 /* Find an unused file structure and return a pointer to it.
  * Returns an error pointer if some error happend e.g. we over file

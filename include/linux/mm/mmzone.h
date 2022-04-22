@@ -5,7 +5,7 @@
 
 #include <lib/utils.h>
 
-#include <include/mm/page.h>
+#include <linux/mm/page.h>
 
 #include <arch/amd64/include/arch_config.h>
 

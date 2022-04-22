@@ -7,8 +7,8 @@
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
-#include <include/mm/mm.h>
-#include <include/mm/memblock.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
 #include <linux/kernel/math.h>
 #include <include/dbg_utils.h>
 

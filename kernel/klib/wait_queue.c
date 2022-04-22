@@ -1,6 +1,6 @@
 #include <stddef.h>
 
-#include <include/task/task.h>
+#include <linux/kernel/sched/task.h>
 #include <include/wait_queue.h>
 
 void wq_init(wait_queue_T * wq, task_s * tsk)

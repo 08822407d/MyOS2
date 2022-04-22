@@ -8,10 +8,10 @@
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/task/task.h>
-#include <include/mm/mm.h>
-#include <include/fs/vfs.h>
-#include <include/fs/namespace.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/mm.h>
+#include <linux/fs/vfs.h>
+#include <linux/fs/namespace.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

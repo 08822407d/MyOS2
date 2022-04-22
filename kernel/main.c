@@ -3,8 +3,8 @@
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/task/task.h>
-#include <include/fs/vfs.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/fs/vfs.h>
 
 #include <arch/amd64/include/arch_proto.h>
 #include <arch/amd64/include/archtypes.h>

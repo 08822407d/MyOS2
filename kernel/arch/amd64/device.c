@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 #include <include/proto.h>
-#include <include/fs/namei.h>
+#include <linux/fs/namei.h>
 
 #include "include/device.h"
 #include "include/tty.h"

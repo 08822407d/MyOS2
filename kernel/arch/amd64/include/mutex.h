@@ -1,7 +1,7 @@
 #ifndef _POSIX_THREAD_H_
 #define _POSIX_THREAD_H_
 
-#include <include/task/task.h>
+#include <linux/kernel/sched/task.h>
 
 	typedef struct 
 	{

@@ -8,10 +8,10 @@
 
 #include <include/glo.h>
 #include <linux/kernel/math.h>
-#include <include/mm/mm.h>
-#include <include/mm/memblock.h>
-#include <include/mm/mmzone.h>
-#include <include/mm/page.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/mmzone.h>
+#include <linux/mm/page.h>
 
 #include <arch/amd64/include/arch_config.h>
 #include <arch/amd64/include/arch_proto.h>

@@ -4,7 +4,7 @@
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/block_dev.h>
-#include <include/task/task.h>
+#include <linux/kernel/sched/task.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"

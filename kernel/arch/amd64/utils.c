@@ -8,7 +8,7 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/fs/vfs.h>
+#include <linux/fs/vfs.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

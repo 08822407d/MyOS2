@@ -6,8 +6,8 @@
 #ifndef __LINUX_FILE_H_
 #define __LINUX_FILE_H_
 
-#include <include/task/task.h>
-#include <include/fs/vfs.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/fs/vfs.h>
 
 	void fput(file_s *file);
 

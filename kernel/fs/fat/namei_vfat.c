@@ -5,9 +5,9 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/fs/vfs.h>
-#include <include/fs/fat.h>
-#include <include/fs/fat32.h>
+#include <linux/fs/vfs.h>
+#include <linux/fs/fat.h>
+#include <linux/fs/fat32.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

@@ -6,12 +6,12 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/fs/vfs.h>
-#include <include/fs/namei.h>
-#include <include/fs/dcache.h>
-#include <include/fs/namespace.h>
-#include <include/fs/mount.h>
-#include <include/fs/file.h>
+#include <linux/fs/vfs.h>
+#include <linux/fs/namei.h>
+#include <linux/fs/dcache.h>
+#include <linux/fs/namespace.h>
+#include <linux/fs/mount.h>
+#include <linux/fs/file.h>
 
 #include <arch/amd64/include/arch_proto.h>
 

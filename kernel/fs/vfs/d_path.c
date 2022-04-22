@@ -7,9 +7,9 @@
 #include <errno.h>
 
 #include <include/proto.h>
-#include <include/task/task.h>
-#include <include/fs/vfs.h>
-#include <include/fs/dcache.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/fs/vfs.h>
+#include <linux/fs/dcache.h>
 
 typedef struct prepend_buffer
 {

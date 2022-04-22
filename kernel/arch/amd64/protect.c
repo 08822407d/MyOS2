@@ -4,8 +4,8 @@
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
-#include <include/task/task.h>
-#include <include/mm/memblock.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/memblock.h>
 
 #include "include/arch_glo.h"
 #include "include/archconst.h"

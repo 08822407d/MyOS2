@@ -4,9 +4,9 @@
 #include <string.h>
 #include <errno.h>
 
-#include <include/fs/file.h>
-#include <include/fs/namei.h>
-#include <include/fs/openat2.h>
+#include <linux/fs/file.h>
+#include <linux/fs/namei.h>
+#include <linux/fs/openat2.h>
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
 #define O_PATH_FLAGS		(O_DIRECTORY | O_NOFOLLOW | O_PATH | O_CLOEXEC)

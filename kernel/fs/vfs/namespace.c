@@ -5,9 +5,9 @@
 #include <errno.h>
 
 #include <include/proto.h>
-#include <include/fs/vfs.h>
-#include <include/fs/namei.h>
-#include <include/fs/mount.h>
+#include <linux/fs/vfs.h>
+#include <linux/fs/namei.h>
+#include <linux/fs/mount.h>
 
 mount_s root_mnt;
 

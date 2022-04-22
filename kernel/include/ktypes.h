@@ -6,8 +6,8 @@
 #include <sys/cdefs.h>
 #include <lib/utils.h>
 
-#include <include/task/task.h>
-#include <include/mm/page.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/page.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>

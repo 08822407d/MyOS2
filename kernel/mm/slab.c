@@ -12,9 +12,9 @@
 #include <arch/amd64/include/arch_proto.h>
 
 #include <include/glo.h>
-#include <include/mm/mm.h>
-#include <include/mm/memblock.h>
-#include <include/mm/slab.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/slab.h>
 #include <include/proto.h>
 #include <include/printk.h>
 

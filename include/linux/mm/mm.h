@@ -3,7 +3,7 @@
 
 #include <const.h>
 
-#include <include/mm/mmzone.h>
+#include <linux/mm/mmzone.h>
 #include <include/block_dev.h>
 
 #include <arch/amd64/include/archconst.h>

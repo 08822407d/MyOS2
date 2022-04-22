@@ -8,11 +8,11 @@
 
 #include <lib/utils.h>
 
-#include <include/fs/internels.h>
-#include <include/fs/dcache.h>
-#include <include/fs/mount.h>
-#include <include/fs/MBR.h>
-#include <include/fs/GPT.h>
+#include <linux/fs/internels.h>
+#include <linux/fs/dcache.h>
+#include <linux/fs/mount.h>
+#include <linux/fs/MBR.h>
+#include <linux/fs/GPT.h>
 
 	// sysconfigs
 	#define MAX_FILE_NR		32

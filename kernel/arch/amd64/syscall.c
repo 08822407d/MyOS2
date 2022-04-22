@@ -7,8 +7,8 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <include/fs/file.h>
-#include <include/fs/namei.h>
+#include <linux/fs/file.h>
+#include <linux/fs/namei.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"

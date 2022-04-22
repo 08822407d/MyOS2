@@ -11,9 +11,9 @@
 #include <include/glo.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
-#include <include/mm/mm.h>
-#include <include/mm/memblock.h>
-#include <include/mm/mmzone.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/mmzone.h>
 
 recurs_lock_T	page_alloc_lock;
 

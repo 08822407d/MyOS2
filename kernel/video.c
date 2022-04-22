@@ -2,7 +2,7 @@
 #include <string.h>
 
 #include <include/glo.h>
-#include <include/mm/mm.h>
+#include <linux/mm/mm.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
