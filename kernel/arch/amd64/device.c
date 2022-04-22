@@ -54,7 +54,7 @@ void creat_dev_file()
 	List_s * bd_lp;
 	for (bd_lp = bdev_lhdr.header.next; bd_lp != &bdev_lhdr.header; bd_lp = bd_lp->next)
 	{
-		bdev_s * bd_p = container_of(bd_lp, bdev_s, bdev_list);
+		block_device_s * bd_p = container_of(bd_lp, block_device_s, bdev_list);
 		dentry_s * bddrnt = creat_append_devdirent(bd_p->dev_name, dev_dir);
 		inode_s * bdino = bddrnt->d_inode;
 		bdino->i_fop = bd_p->f_ops;

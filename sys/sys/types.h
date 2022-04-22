@@ -51,7 +51,6 @@
 	typedef __UINT64_TYPE__ reg_t;
 	typedef __UINT64_TYPE__ bitmap_t;
 	#define BITMAP_UNITSIZE (sizeof(bitmap_t) * 8)
-	typedef long		off_t;
 	typedef long long	loff_t;
 	typedef void*	phys_addr_t;
 	typedef void*	virt_addr_t;
@@ -167,7 +166,6 @@ typedef	__lwpid_t	lwpid_t;	/* Thread ID (a.k.a. LWP) */
 
 #ifndef _MODE_T_DECLARED
 typedef	__mode_t	mode_t;		/* permissions */
-typedef unsigned short	umode_t;
 typedef unsigned int	fmode_t;
 #define	_MODE_T_DECLARED
 #endif
@@ -444,5 +442,7 @@ __END_DECLS
 #endif /* !_KERNEL */
 
 #endif /* __BSD_VISIBLE */
+
+
 
 #endif /* !_SYS_TYPES_H_ */

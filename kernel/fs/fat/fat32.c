@@ -466,7 +466,7 @@ void fat32_put_superblock(super_block_s * sbp)
 	kfree(sbp);
 }
 
-void fat32_write_inode(inode_s * inode)
+int fat32_write_inode(inode_s * inode)
 {
 	FAT32_dir_s * fdentry = NULL;
 	FAT32_dir_s * buf = NULL;
@@ -477,7 +477,7 @@ void fat32_write_inode(inode_s * inode)
 	if(finode->dentry_location == 0)
 	{
 		color_printk(RED,BLACK,"FS ERROR:write root inode!\n");	
-		return ;
+		return -1;
 	}
 
 	sector = fsbi->Data_firstsector + (finode->dentry_location - 2) * fsbi->sector_per_cluster;

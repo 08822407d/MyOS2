@@ -136,7 +136,7 @@
 	typedef struct super_ops
 	{
 		void	(*write_super)(super_block_s * sb);
-		void	(*write_inode)(inode_s * inode);
+		int		(*write_inode)(inode_s * inode);
 
 		inode_s	*(*alloc_inode)(super_block_s *sb);
 		void	(*destroy_inode)(inode_s *);

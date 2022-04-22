@@ -29,13 +29,13 @@
 		file_ops_s *	f_ops;
 	} cdev_s;
 
-	typedef struct block_dev
+	typedef struct block_device
 	{
 		List_s			bdev_list;
 		char *			dev_name;
 		dev_t			dev_nr;
 		file_ops_s *	f_ops;
-	} bdev_s;
+	} block_device_s;
 
 
 	/* device.c */

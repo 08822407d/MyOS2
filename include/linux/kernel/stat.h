@@ -16,6 +16,7 @@
 
 #include <sys/types.h>
 
+#include <linux/kernel/types.h>
 #include <linux/kernel/time64.h>
 #include <linux/kernel/uidgid.h>
 

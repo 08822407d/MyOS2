@@ -323,7 +323,7 @@
 	// 			unsigned long *mapped_blocks, int create, bool from_bmap);
 
 	/* fat/dir.c */
-	extern const struct file_operations fat_dir_operations;
+	extern const file_ops_s fat_dir_operations;
 	extern int fat_search_long(inode_s *inode, const unsigned char *name,
 					int name_len, fat_slot_info_s *sinfo);
 	extern int fat_dir_empty(inode_s *dir);
@@ -413,7 +413,7 @@
 	extern inode_s *fat_build_inode(super_block_s *sb,
 					msdos_dir_entry_s *de, loff_t i_pos);
 	extern int fat_sync_inode(inode_s *inode);
-	extern int fat_fill_super(super_block_s *sb, void *data, int silent,
+	extern int fat_fill_super(super_block_s *sb, void *data,
 					int isvfat, void (*setup)(super_block_s *));
 	extern int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de);
 

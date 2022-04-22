@@ -43,7 +43,7 @@
 	/*
 	 *	definations from MyOS2
 	 */
-	int		open(const char * path, int flags, umode_t mode);
+	int		open(const char * path, int flags, uint32_t mode);
 	int		close(int fd);
 	long	lseek(int fd, long offset, int whence);
 	int		fork(void);

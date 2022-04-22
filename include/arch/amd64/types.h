@@ -16,10 +16,6 @@ extern "C" {
 	typedef unsigned long long		physical_size_t;
 
 	typedef struct {
-		volatile int counter;
-	} atomic_t;
-
-	typedef struct {
 		volatile int lock;
 	} spinlock_t;
 

@@ -88,7 +88,7 @@ extern "C" {
 	struct vfs_node_t {
 		// struct list_head v_link;
 		struct vfs_mount_t * v_mount;
-		atomic_t v_refcnt;
+		// atomic_t v_refcnt;
 		char v_path[VFS_MAX_PATH];
 		enum vfs_node_flag_t v_flags;
 		enum vfs_node_type_t v_type;
@@ -113,7 +113,7 @@ extern "C" {
 		void * m_dev;
 		char m_path[VFS_MAX_PATH];
 		uint32_t m_flags;
-		atomic_t m_refcnt;
+		// atomic_t m_refcnt;
 		struct vfs_node_t * m_root;
 		struct vfs_node_t * m_covered;
 		// struct mutex_t m_lock;

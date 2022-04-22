@@ -414,7 +414,7 @@ static void setup(super_block_s *sb)
 
 static int vfat_fill_super(super_block_s *sb, void *data, int silent)
 {
-	return fat_fill_super(sb, data, silent, 1, setup);
+	return fat_fill_super(sb, data, 1, setup);
 }
 
 static dentry_s *vfat_mount(fs_type_s *fs_type, int flags,

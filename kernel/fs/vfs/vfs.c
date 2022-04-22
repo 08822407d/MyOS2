@@ -21,6 +21,7 @@ super_block_s *root_sb = NULL;
 fs_type_s filesystem = {"filesystem", 0};
 
 
+#include <linux/fs/fat.h>
 unsigned long init_vfs()
 {
 	int test = kparam.init_flags.vfs;

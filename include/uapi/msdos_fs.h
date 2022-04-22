@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_MSDOS_FS_H_
 #define _UAPI_LINUX_MSDOS_FS_H_
 
-#include <uapi/posix_typeds.h>
+#include <uapi/posix_types.h>
 #include <stdint.h>
 
 	/*
@@ -108,12 +108,12 @@
 		uint8_t		ignored[3];		/* Boot strap short or near jump */
 		uint8_t		system_id[8];	/* Name - can be used to special case
 										partition manager volumes */
-		uint8_t		sector_size[2];	/* bytes per logical sector */
+		uint16_t	sector_size;	/* bytes per logical sector */
 		uint8_t		sec_per_clus;	/* sectors/cluster */
 		uint16_t	reserved;		/* reserved sectors */
 		uint8_t		fats;			/* number of FATs */
-		uint8_t		dir_entries[2];	/* root directory entries */
-		uint8_t		sectors[2];		/* number of sectors */
+		uint16_t	dir_entries;	/* root directory entries */
+		uint16_t	sectors;		/* number of sectors */
 		uint8_t		media;			/* media code */
 		uint16_t	fat_length;		/* sectors/FAT */
 		uint16_t	secs_track;		/* sectors per track */
