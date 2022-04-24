@@ -1,15 +1,13 @@
 #include <arch/amd64/include/arch_config.h>
 
 #include <stdlib.h>
-#include <unistd.h>
-#include <const.h>
-#include <stdbool.h>
+// #include <stdbool.h>
 
+#include <const.h>
 #include "_malloc.h"
 
 bool initiated = false;
-
-virt_addr_t brk_end = NULL;
+void *brk_end = NULL;
 
 List_hdr_s		uslabcache_lhdr;
 uslab_cache_s	uslab_cache_groups[USLAB_LEVEL];
@@ -57,9 +55,9 @@ bitmap_t *		base_colormaps[USLAB_LEVEL] = {
 /*==============================================================================================*
  *								fuction relate to alloc user page								*
  *==============================================================================================*/
-uPage_s * upage_alloc()
+uPage_s *upage_alloc()
 {
-	uPage_s * ret_val = NULL;
+	uPage_s *ret_val = NULL;
 	if (free_upage_lhdr.count > 0)
 	{
 		List_s * upg_lp = list_hdr_pop(&free_upage_lhdr);
@@ -70,8 +68,8 @@ uPage_s * upage_alloc()
 	}
 	else
 	{
-		uPage_s * upgp = malloc(sizeof(uPage_s));
-		virt_addr_t pg_vaddr = brk(brk_end + PAGE_SIZE);
+		uPage_s *upgp = malloc(sizeof(uPage_s));
+		void *pg_vaddr = brk(brk_end + PAGE_SIZE);
 		if (pg_vaddr != NULL)
 		{
 			brk_end += PAGE_SIZE;
@@ -97,10 +95,10 @@ void upage_free(uPage_s * upgp)
 	upgp->uslab_p = NULL;
 }
 
-uPage_s * upage_search(virt_addr_t vaddr)
+uPage_s * upage_search(void * vaddr)
 {
 	uPage_s * ret_val = NULL;
-	vaddr = (virt_addr_t)PAGE_ROUND_DOWN((size_t)vaddr);
+	vaddr = (void *)PAGE_ROUND_DOWN((size_t)vaddr);
 	List_s * upg_lp;
 	for (upg_lp = used_upage_lhdr.header.next;
 		 upg_lp != &used_upage_lhdr.header;
@@ -159,7 +157,7 @@ void init_uslab()
 		uPage_s * upgp = &base_upages[i];
 		list_init(&upgp->upage_list, upgp);
 		upgp->vaddr =
-		brk_end = brk((virt_addr_t)((size_t)brk_end + PAGE_SIZE));
+		brk_end = brk((void *)((size_t)brk_end + PAGE_SIZE));
 		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
 
 		bslp->upage_p = upage_alloc();

@@ -1,8 +1,7 @@
 #ifndef	_DIRENT_H
 #define	_DIRENT_H
 
-#include <stddef.h>
-#include <unistd.h>
+#include <linux/kernel/types.h>
 
 #include <uapi/dirent.h>
 

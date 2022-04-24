@@ -5,12 +5,12 @@
 extern "C" {
 #endif
 
-#include <sys/types.h>
 
+#include <linux/kernel/types.h>
+#include <linux/kernel/fcntl.h>
 #include <arch/amd64/limits.h>
 
 #include <stdarg.h>
-#include <stddef.h>
 #include <sizes.h>
 #include <errno.h>
 #include <fifo.h>

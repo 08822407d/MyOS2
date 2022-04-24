@@ -36,59 +36,45 @@
 #define	_UNISTD_H_
 
 #include <sys/cdefs.h>
-#include <sys/types.h>			/* XXX adds too much pollution. */
+// #include <sys/types.h>			/* XXX adds too much pollution. */
+#include <linux/kernel/types.h>
 #include <sys/_null.h>
 #include <sys/_types.h>
 
-	/*
-	 *	definations from MyOS2
-	 */
-	int		open(const char * path, int flags, uint32_t mode);
-	int		close(int fd);
-	long	lseek(int fd, long offset, int whence);
-	int		fork(void);
-	int 	vfork(void);
-	int 	execve(const char *path, char *const argv[], char *const envp[]);
-	int		getpid(void);
-	int		getppid(void);
-	virt_addr_t	brk(const void *);
-	//
+	// #ifndef _GID_T_DECLARED
+	// 	typedef	__gid_t		gid_t;
+	// 	#define	_GID_T_DECLARED
+	// #endif
 
+	// #ifndef _OFF_T_DECLARED
+	// 	typedef	__off_t		off_t;
+	// 	#define	_OFF_T_DECLARED
+	// #endif
 
-	#ifndef _GID_T_DECLARED
-		typedef	__gid_t		gid_t;
-		#define	_GID_T_DECLARED
-	#endif
+	// #ifndef _PID_T_DECLARED
+	// 	typedef	__pid_t		pid_t;
+	// 	#define	_PID_T_DECLARED
+	// #endif
 
-	#ifndef _OFF_T_DECLARED
-		typedef	__off_t		off_t;
-		#define	_OFF_T_DECLARED
-	#endif
+	// #ifndef _SIZE_T_DECLARED
+	// 	typedef	__size_t	size_t;
+	// 	#define	_SIZE_T_DECLARED
+	// #endif
 
-	#ifndef _PID_T_DECLARED
-		typedef	__pid_t		pid_t;
-		#define	_PID_T_DECLARED
-	#endif
+	// #ifndef _SSIZE_T_DECLARED
+	// 	typedef	__ssize_t	ssize_t;
+	// 	#define	_SSIZE_T_DECLARED
+	// #endif
 
-	#ifndef _SIZE_T_DECLARED
-		typedef	__size_t	size_t;
-		#define	_SIZE_T_DECLARED
-	#endif
+	// #ifndef _UID_T_DECLARED
+	// 	typedef	__uid_t		uid_t;
+	// 	#define	_UID_T_DECLARED
+	// #endif
 
-	#ifndef _SSIZE_T_DECLARED
-		typedef	__ssize_t	ssize_t;
-		#define	_SSIZE_T_DECLARED
-	#endif
-
-	#ifndef _UID_T_DECLARED
-		typedef	__uid_t		uid_t;
-		#define	_UID_T_DECLARED
-	#endif
-
-	#ifndef _USECONDS_T_DECLARED
-		typedef	__useconds_t	useconds_t;
-		#define	_USECONDS_T_DECLARED
-	#endif
+	// #ifndef _USECONDS_T_DECLARED
+	// 	typedef	__useconds_t	useconds_t;
+	// 	#define	_USECONDS_T_DECLARED
+	// #endif
 
 	#define	STDIN_FILENO	0	/* standard input file descriptor */
 	#define	STDOUT_FILENO	1	/* standard output file descriptor */
@@ -485,13 +471,13 @@
 		int		getdtablesize(void);
 		int		getpagesize(void) __pure2;
 		char *	getpass(const char *);
-		void *	sbrk(intptr_t);
+		// void *	sbrk(intptr_t);
 	#endif
 
 	#if (__XSI_VISIBLE && __XSI_VISIBLE <= 600) || __BSD_VISIBLE
 		char *	getwd(char *);			/* obsoleted by getcwd() */
-		useconds_t	ualarm(useconds_t, useconds_t);
-		int		usleep(useconds_t);
+		// useconds_t	ualarm(useconds_t, useconds_t);
+		// int		usleep(useconds_t);
 		pid_t	vfork(void) __returns_twice;
 	#endif
 

@@ -13,6 +13,9 @@
 
 		#include <uapi/posix_types.h>
 
+		#ifndef NULL
+			#define NULL ((void *)0)
+		#endif
 
 		/*
 		* Below are truly Linux-specific types that should never collide with

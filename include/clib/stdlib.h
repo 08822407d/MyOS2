@@ -5,9 +5,23 @@
 extern "C" {
 #endif
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 #include <arch/amd64/types.h>
+
+	/*
+	 *	definations from MyOS2
+	 */
+	int		open(const char * path, int flags, uint32_t mode);
+	int		close(int fd);
+	long	lseek(int fd, long offset, int whence);
+	int		fork(void);
+	int 	vfork(void);
+	int 	execve(const char *path, char *const argv[], char *const envp[]);
+	int		getpid(void);
+	int		getppid(void);
+	void	*brk(const void *);
+	//
 
 #define RAND_MAX (0x7fffffff)
 
@@ -50,10 +64,10 @@ extern "C" {
 	unsigned long long strtoull(const char * nptr, char ** endptr, int base);
 	double strtod(const char * nptr, char ** endptr);
 
-	intmax_t strtoimax(const char * nptr, char ** endptr, int base);
-	uintmax_t strtoumax(const char * nptr, char ** endptr, int base);
-	intmax_t strntoimax(const char * nptr, char ** endptr, int base, size_t n);
-	uintmax_t strntoumax(const char * nptr, char ** endptr, int base, size_t n);
+	// intmax_t strtoimax(const char * nptr, char ** endptr, int base);
+	// uintmax_t strtoumax(const char * nptr, char ** endptr, int base);
+	// intmax_t strntoimax(const char * nptr, char ** endptr, int base, size_t n);
+	// uintmax_t strntoumax(const char * nptr, char ** endptr, int base, size_t n);
 
 	void * bsearch(const void * key, const void * base, size_t nmemb, size_t size,
 			int (*compar)(const void *, const void *));

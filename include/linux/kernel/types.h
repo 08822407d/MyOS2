@@ -7,6 +7,14 @@
 
 	#ifndef __ASSEMBLY__
 
+		/*
+		*	definations for MyOS2
+		*/
+		typedef __UINT64_TYPE__ reg_t;
+		typedef __UINT64_TYPE__ bitmap_t;
+		#define BITMAP_UNITSIZE (sizeof(bitmap_t) * 8)
+
+
 		#define DECLARE_BITMAP(name,bits) \
 				unsigned long name[BITS_TO_LONGS(bits)]
 
@@ -139,21 +147,23 @@
 		* but drivers do memory-mapped I/O to ioremapped kernel virtual addresses,
 		* so they don't care about the size of the actual bus addresses.
 		*/
-		#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+		// #ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
 			typedef u64		dma_addr_t;
-		#else
-			typedef u32		dma_addr_t;
-		#endif
+		// #else
+		// 	typedef u32		dma_addr_t;
+		// #endif
 
 		typedef unsigned int	__bitwise gfp_t;
 		typedef unsigned int	__bitwise slab_flags_t;
 		typedef unsigned int	__bitwise fmode_t;
 
-		#ifdef CONFIG_PHYS_ADDR_T_64BIT
-			typedef u64		phys_addr_t;
-		#else
-			typedef u32		phys_addr_t;
-		#endif
+		// #ifdef CONFIG_PHYS_ADDR_T_64BIT
+		// 	typedef u64		phys_addr_t;
+		// #else
+		// 	typedef u32		phys_addr_t;
+		// #endif
+		typedef void	*phys_addr_t;
+		typedef void	*virt_addr_t;
 
 		typedef phys_addr_t	resource_size_t;
 

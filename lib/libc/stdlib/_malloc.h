@@ -1,11 +1,10 @@
 #ifndef _MALLOC_H_
 #define _MALLOC_H_
 
-#include <sys/cdefs.h>
 #include <lib/utils.h>
+#include <sys/cdefs.h>
 
-#include <stddef.h>
-#include <sys/types.h>
+// #include <stddef.h>
 
 	// uslab consts
 	#define USLAB_LEVEL			16
@@ -22,22 +21,22 @@
  *==============================================================================================*/
 	typedef struct uPage
 	{
-		List_s			upage_list;
-		virt_addr_t		vaddr;
-		uslab_s *		uslab_p;
+		List_s	upage_list;
+		void	*vaddr;
+		uslab_s *uslab_p;
 	} uPage_s;
 
 	typedef struct uslab
 	{
 		List_s			uslab_list;
-		uslab_cache_s *	uslabcache_p;
+		uslab_cache_s	*uslabcache_p;
 
 		unsigned long	total;
 		unsigned long	free;
 
-		uPage_s *		upage_p;
-		virt_addr_t		virt_addr;
-		bitmap_t *		colormap;
+		uPage_s			*upage_p;
+		void			*virt_addr;
+		bitmap_t		*colormap;
 	} uslab_s;
 
 	typedef struct uslab_cache
@@ -54,7 +53,7 @@
 		unsigned long	nsobj_used_count;
 
 		// the base slab should not be freed
-		uslab_s *		normal_base_slab_p;
+		uslab_s			*normal_base_slab_p;
 	} uslab_cache_s;
 
 

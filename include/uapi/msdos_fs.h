@@ -2,8 +2,8 @@
 #ifndef _UAPI_LINUX_MSDOS_FS_H_
 #define _UAPI_LINUX_MSDOS_FS_H_
 
+#include <linux/kernel/types.h>
 #include <uapi/posix_types.h>
-#include <stdint.h>
 
 	/*
 	* The MS-DOS filesystem constants/structures

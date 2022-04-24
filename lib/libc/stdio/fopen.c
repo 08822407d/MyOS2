@@ -4,9 +4,10 @@
 
 #include <linux/kernel/fcntl.h>
 
+#include <stdlib.h>
+#include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
-#include <unistd.h>
 
 FILE * fopen(const char * path, const char * mode)
 {

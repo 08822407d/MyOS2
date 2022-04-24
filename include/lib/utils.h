@@ -5,6 +5,16 @@
 
 #include <stdbool.h>
 
+	#ifndef _CONTAINER_OF
+	#define _CONTAINER_OF
+		#define container_of(member_ptr, container_type, member_name)										\
+		({																									\
+			typeof(((container_type *)0)->member_name) * p = (member_ptr);									\
+			(container_type *)((unsigned long)p - (unsigned long)&(((container_type *)0)->member_name));	\
+		})
+	#endif /* _CONTAINER_OF */
+
+
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);
 	void bm_clear_bit(bitmap_t *, unsigned long idx);

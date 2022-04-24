@@ -2,8 +2,8 @@
 #ifndef _LINUX_ERR_H
 #define _LINUX_ERR_H
 
-#include <stddef.h>
-#include <stdbool.h>
+#include <linux/kernel/types.h>
+
 #include <errno.h>
 
 	/*

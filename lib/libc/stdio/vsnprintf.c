@@ -1,8 +1,7 @@
 /*
  * libc/stdio/vsnprintf.c
  */
-#include <linux/kernel/types.h>
-
+#include <linux/kernel/fcntl.h>
 // #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -37,7 +36,7 @@ enum ranks {
 
 #define EMIT(x)			({ if(o<n) {*q++ = (x);} o++; })
 
-static size_t format_int(char * q, size_t n, uintmax_t val, enum flags flags,
+static size_t format_int(char * q, size_t n, size_t val, enum flags flags,
 		int base, int width, int prec)
 {
 	char * qq;
@@ -45,7 +44,7 @@ static size_t format_int(char * q, size_t n, uintmax_t val, enum flags flags,
 	static const char lcdigits[] = "0123456789abcdef";
 	static const char ucdigits[] = "0123456789ABCDEF";
 	const char * digits;
-	uintmax_t tmpval;
+	size_t tmpval;
 	int minus = 0;
 	int ndigits = 0, nchars;
 	int tickskip, b4tick;
@@ -58,10 +57,10 @@ static size_t format_int(char * q, size_t n, uintmax_t val, enum flags flags,
 	/*
 	 * If signed, separate out the minus
 	 */
-	if ((flags & FL_SIGNED) && ((intmax_t)val < 0))
+	if ((flags & FL_SIGNED) && ((ssize_t)val < 0))
 	{
 		minus = 1;
-		val = (uintmax_t)(-(intmax_t)val);
+		val = (size_t)(-(ssize_t)val);
 	}
 
 	/*
@@ -533,7 +532,7 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 	char ch;
 	char *q = buf;
 	size_t o = 0;			/* Number of characters output */
-	uintmax_t val = 0;
+	size_t val = 0;
 	int rank = rank_int;	/* Default rank */
 	int width = 0;
 	int prec = -1;
@@ -690,7 +689,7 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 					base = 16;
 					prec = (8 * sizeof(void *) + 3) / 4;
 					flags |= FL_HASH;
-					val = (uintmax_t)(uintptr_t)
+					val = (size_t)(uintptr_t)
 					va_arg(ap, void *);
 					goto is_integer;
 
@@ -702,25 +701,25 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 					{
 					case rank_char:
 						/* Yes, all these casts are needed */
-						val = (uintmax_t)(intmax_t)
+						val = (size_t)(ssize_t)
 						(signed char)
 						va_arg(ap, signed int);
 						break;
 					case rank_short:
-						val = (uintmax_t)(intmax_t)
+						val = (size_t)(ssize_t)
 						(signed short)
 						va_arg(ap, signed int);
 						break;
 					case rank_int:
-						val = (uintmax_t)(intmax_t)
+						val = (size_t)(ssize_t)
 						va_arg(ap, signed int);
 						break;
 					case rank_long:
-						val = (uintmax_t)(intmax_t)
+						val = (size_t)(ssize_t)
 						va_arg(ap, signed long);
 						break;
 					case rank_longlong:
-						val = (uintmax_t)(intmax_t)
+						val = (size_t)(ssize_t)
 						va_arg(ap,
 								signed long long);
 						break;
@@ -743,25 +742,25 @@ int vsnprintf(char * buf, size_t n, const char * fmt, va_list ap)
 					is_unsigned: switch (rank)
 					{
 					case rank_char:
-						val = (uintmax_t)
+						val = (size_t)
 						(unsigned char)
 						va_arg(ap, unsigned int);
 						break;
 					case rank_short:
-						val = (uintmax_t)
+						val = (size_t)
 						(unsigned short)
 						va_arg(ap, unsigned	int);
 						break;
 					case rank_int:
-						val = (uintmax_t)
+						val = (size_t)
 						va_arg(ap, unsigned	int);
 						break;
 					case rank_long:
-						val = (uintmax_t)
+						val = (size_t)
 						va_arg(ap, unsigned	long);
 						break;
 					case rank_longlong:
-						val = (uintmax_t)
+						val = (size_t)
 						va_arg(ap, unsigned	long long);
 						break;
 					}
