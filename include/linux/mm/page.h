@@ -3,8 +3,7 @@
 
 #include <lib/utils.h>
 
-#include <sys/types.h>
-
+#include <linux/kernel/types.h>
 
 	struct zone;
 	typedef struct zone zone_s;

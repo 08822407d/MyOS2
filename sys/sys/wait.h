@@ -153,7 +153,8 @@
 
 // #ifndef _KERNEL
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+// #include <sys/types.h>
 
 __BEGIN_DECLS
 struct __siginfo;

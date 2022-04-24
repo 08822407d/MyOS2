@@ -1,5 +1,9 @@
+#include <linux/kernel/types.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/mmzone.h>
+
 #include <sys/cdefs.h>
-#include <sys/types.h>
 
 #include <string.h>
 #include <stddef.h>
@@ -11,9 +15,6 @@
 #include <include/glo.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
-#include <linux/mm/mmzone.h>
 
 recurs_lock_T	page_alloc_lock;
 

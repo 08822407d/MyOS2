@@ -1,12 +1,13 @@
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+#include <linux/kernel/math.h>
+#include <linux/mm/memblock.h>
+
 #include <string.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 
 #include <include/proto.h>
-#include <linux/mm/memblock.h>
-#include <linux/kernel/math.h>
 
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>

@@ -1,8 +1,7 @@
 #ifndef _UAPI_LINUX_MOUNT_H
 #define _UAPI_LINUX_MOUNT_H
 
-#include <sys/types.h>
-
+#include <linux/kernel/types.h>
 	/*
 	* These are the fs-independent mount-flags: up to 32 flags are supported
 	*

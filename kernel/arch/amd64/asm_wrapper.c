@@ -1,4 +1,5 @@
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+
 #include <sys/cdefs.h>
 
 #include "include/arch_proto.h"

@@ -1,7 +1,8 @@
-#include <sys/cdefs.h>
+#include <linux/kernel/types.h>
 #include <linux/kernel/fcntl.h>
 
-#include <sys/types.h>
+#include <sys/cdefs.h>
+
 #include <string.h>
 #include <stddef.h>
 #include <errno.h>

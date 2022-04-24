@@ -1,7 +1,7 @@
 #ifndef _AMD64_PC_DEVICE_H_
 #define _AMD64_PC_DEVICE_H_
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 #include <include/ktypes.h>
 #include <linux/fs/fs.h>

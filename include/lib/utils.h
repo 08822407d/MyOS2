@@ -1,7 +1,7 @@
 #ifndef _LIB_UTILS_H_
 #define _LIB_UTILS_H_
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 #include <stdbool.h>
 

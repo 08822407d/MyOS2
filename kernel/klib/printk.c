@@ -12,13 +12,14 @@
 *
 *
 ***************************************************/
+#include <linux/kernel/types.h>
+
 #include <sys/cdefs.h>
 
 #include <stdio.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
-#include <sys/types.h>
 #include <lib/font.h>
 
 #include <include/glo.h>

@@ -2,7 +2,7 @@
 #ifndef _LINUX_TIME64_H
 #define _LINUX_TIME64_H
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 	typedef int64_t		time64_t;
 	typedef uint64_t	timeu64_t;

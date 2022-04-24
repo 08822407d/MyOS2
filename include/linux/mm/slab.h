@@ -3,7 +3,7 @@
 
 #include <lib/utils.h>
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 	struct  slab;
 	typedef struct slab slab_s;

@@ -15,7 +15,7 @@
 #ifndef _DISK_H_
 #define _DISK_H_
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 #include <include/block_dev.h>
 

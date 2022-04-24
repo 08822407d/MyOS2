@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_TIME_H_
 #define _UAPI_LINUX_TIME_H_
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 	#ifndef __KERNEL__
 		#ifndef _STRUCT_TIMESPEC

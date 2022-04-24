@@ -1,4 +1,4 @@
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -D__KERNEL__ -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 
 file(GLOB KERNEL_C_SRCS *.c)
 

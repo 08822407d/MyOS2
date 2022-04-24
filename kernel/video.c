@@ -1,8 +1,9 @@
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+#include <linux/mm/mm.h>
+
 #include <string.h>
 
 #include <include/glo.h>
-#include <linux/mm/mm.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/printk.h>

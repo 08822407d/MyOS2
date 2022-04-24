@@ -1,17 +1,18 @@
-#include <sys/types.h>
-#include <sys/limits.h>
+#include <linux/kernel/types.h>
 #include <linux/kernel/minmax.h>
+#include <linux/kernel/math.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/mmzone.h>
+#include <linux/mm/page.h>
+
+#include <sys/limits.h>
 
 #include <string.h>
 #include <stddef.h>
 #include <errno.h>
 
 #include <include/glo.h>
-#include <linux/kernel/math.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
-#include <linux/mm/mmzone.h>
-#include <linux/mm/page.h>
 
 #include <arch/amd64/include/arch_config.h>
 #include <arch/amd64/include/arch_proto.h>

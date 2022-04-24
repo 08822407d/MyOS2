@@ -1,7 +1,7 @@
 /*
  * libc/stdio/vsnprintf.c
  */
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 // #include <math.h>
 #include <string.h>

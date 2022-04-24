@@ -1,15 +1,16 @@
+#include <linux/kernel/types.h>
+#include <linux/kernel/math.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+
 #include <sys/_null.h>
 
 #include <string.h>
-#include <sys/types.h>
 
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/ktypes.h>
 #include <include/printk.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
-#include <linux/kernel/math.h>
 #include <include/dbg_utils.h>
 
 #include "include/archconst.h"

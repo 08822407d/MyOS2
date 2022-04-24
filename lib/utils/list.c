@@ -1,4 +1,4 @@
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 #include <sys/cdefs.h>
 #include <sys/_null.h>

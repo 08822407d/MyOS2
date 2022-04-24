@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_STAT_H
 #define _UAPI_LINUX_STAT_H
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
 
 	#if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
 

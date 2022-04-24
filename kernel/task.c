@@ -1,4 +1,8 @@
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+
 #include <sys/cdefs.h>
 
 #include <stddef.h>
@@ -6,9 +10,6 @@
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <linux/kernel/sched/task.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
 
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/mutex.h>

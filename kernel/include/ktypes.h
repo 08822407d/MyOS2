@@ -1,13 +1,12 @@
 #ifndef _K_TYPES_H_
 #define _K_TYPES_H_
 
-#include <sys/types.h>
+#include <linux/kernel/types.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/page.h>
 
 #include <sys/cdefs.h>
 #include <lib/utils.h>
-
-#include <linux/kernel/sched/task.h>
-#include <linux/mm/page.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>

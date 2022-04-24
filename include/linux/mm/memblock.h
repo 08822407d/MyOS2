@@ -2,8 +2,8 @@
 #ifndef _LINUX_MEMBLOCK_H_
 #define _LINUX_MEMBLOCK_H_
 
-#include <sys/types.h>
 
+#include <linux/kernel/types.h>
 	/*
 	* Logical memory blocks.
 	*

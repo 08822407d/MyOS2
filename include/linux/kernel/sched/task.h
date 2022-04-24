@@ -1,9 +1,9 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
-#include <sys/types.h>
 #include <lib/utils.h>
 
+#include <linux/kernel/types.h>
 #include <linux/mm/mm.h>
 
 #include <arch/amd64/include/arch_task.h>

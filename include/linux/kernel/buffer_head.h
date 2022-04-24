@@ -8,7 +8,6 @@
 #ifndef _LINUX_BUFFER_HEAD_H
 #define _LINUX_BUFFER_HEAD_H
 
-#include <sys/types.h>
 #include <linux/kernel/types.h>
 #include <linux/fs/fs.h>
 #include <linux/mm/page.h>

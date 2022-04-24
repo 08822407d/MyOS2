@@ -1,8 +1,12 @@
+#include <linux/kernel/types.h>
+#include <linux/mm/mm.h>
+#include <linux/mm/memblock.h>
+#include <linux/mm/slab.h>
+
 #include <sys/cdefs.h>
 
 #include <string.h>
 #include <stddef.h>
-#include <sys/types.h>
 
 #include <lib/utils.h>
 
@@ -12,9 +16,6 @@
 #include <arch/amd64/include/arch_proto.h>
 
 #include <include/glo.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
-#include <linux/mm/slab.h>
 #include <include/proto.h>
 #include <include/printk.h>
 
