@@ -6,7 +6,7 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
-#include <sys/syscall.h>
+#include <uapi/syscall.h>
 #include <errno.h>
 
 #define SYSFUNC_DEF(name)						\

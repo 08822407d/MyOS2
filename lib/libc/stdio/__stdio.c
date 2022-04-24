@@ -2,10 +2,11 @@
  * libc/stdio/__stdio.c
  */
 
-#include <sys/vfs.h>
+#include <linux/kernel/fcntl.h>
 #include <sys/types.h>
 
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 
 static FILE * __stdin = NULL;
@@ -15,19 +16,19 @@ static FILE * __stderr = NULL;
 static ssize_t __tty_stdin_read(FILE * f, unsigned char * buf, size_t size)
 {
 	// return console_stdin_read(buf, size);
-	return vfs_read(f->fd, buf, size);
+	return read(f->fd, buf, size);
 }
 
 static ssize_t __tty_stdout_write(FILE * f, const unsigned char * buf, size_t size)
 {
 	// return console_stdout_write(buf, size);
-	return vfs_write(f->fd, buf, size);
+	return write(f->fd, buf, size);
 }
 
 static ssize_t __tty_stderr_write(FILE * f, const unsigned char * buf, size_t size)
 {
 	// return console_stderr_write(buf, size);
-	return vfs_write(f->fd, buf, size);
+	return write(f->fd, buf, size);
 }
 
 static ssize_t __tty_null_read(FILE * f, unsigned char * buf, size_t size)
@@ -52,22 +53,22 @@ static int __tty_null_close(FILE * f)
 
 static ssize_t __file_read(FILE * f, unsigned char * buf, size_t size)
 {
-	return vfs_read(f->fd, (void *)buf, size);
+	return read(f->fd, (void *)buf, size);
 }
 
 static ssize_t __file_write(FILE * f, const unsigned char * buf, size_t size)
 {
-	return vfs_write(f->fd, (void *)buf, size);
+	return write(f->fd, (void *)buf, size);
 }
 
 static fpos_t __file_seek(FILE * f, fpos_t off, int whence)
 {
-	return vfs_lseek(f->fd, off, whence);
+	return lseek(f->fd, off, whence);
 }
 
 static int __file_close(FILE * f)
 {
-	return vfs_close(f->fd);
+	return close(f->fd);
 }
 
 /*

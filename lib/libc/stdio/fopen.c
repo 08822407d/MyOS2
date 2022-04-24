@@ -2,10 +2,11 @@
  * libc/stdio/fopen.c
  */
 
-#include <sys/vfs.h>
+#include <linux/kernel/fcntl.h>
 
 #include <errno.h>
 #include <stdio.h>
+#include <unistd.h>
 
 FILE * fopen(const char * path, const char * mode)
 {
@@ -42,17 +43,17 @@ FILE * fopen(const char * path, const char * mode)
 	if(plus)
 		flags = (flags & ~(O_RDONLY | O_WRONLY)) | O_RDWR;
 
-	fd = vfs_open(path, flags, 0644);
+	fd = open(path, flags, 0644);
 	if(fd < 0)
 		return NULL;
 
 	f = __file_alloc(fd);
 	if(!f)
 	{
-		vfs_close(fd);
+		close(fd);
 		return NULL;
 	}
-	f->pos = vfs_lseek(f->fd, 0, VFS_SEEK_CUR);
+	f->pos = lseek(f->fd, 0, SEEK_CUR);
 
 	return f;
 }

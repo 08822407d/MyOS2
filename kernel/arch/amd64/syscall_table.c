@@ -7,7 +7,7 @@
 *
 ***************************************************/
 
-#include <sys/syscall.h>
+#include <uapi/syscall.h>
 
 #include "include/syscall.h"
 
