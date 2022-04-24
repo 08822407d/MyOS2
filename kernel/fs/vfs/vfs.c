@@ -4,7 +4,7 @@
 #include <include/printk.h>
 #include <include/proto.h>
 #include <include/glo.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
 #include <linux/fs/fat32.h>
@@ -49,8 +49,9 @@ unsigned long init_vfs()
 	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
 									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
-	init_FAT32_FS();
-	init_EXT2_FS();
+	init_ext2_fs();
+	init_fat32_fs();
+	init_vfat_fs();
 
 	GPT_PE_s *gpt_pe = NULL;
 	for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)
@@ -96,7 +97,7 @@ super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 	return 0;
 }
 
-unsigned long register_filesystem(fs_type_s * fs)
+int register_filesystem(fs_type_s * fs)
 {
 	fs_type_s * p = NULL;
 	for(p = &filesystem; p; p = p->next)
@@ -108,7 +109,7 @@ unsigned long register_filesystem(fs_type_s * fs)
 	return 1;
 }
 
-unsigned long unregister_filesystem(fs_type_s * fs)
+int unregister_filesystem(fs_type_s * fs)
 {
 	fs_type_s * p = &filesystem;
 	while(p->next)

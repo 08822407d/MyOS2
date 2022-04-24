@@ -8,7 +8,7 @@
 
 #include <include/proto.h>
 #include <linux/kernel/sched/task.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/dcache.h>
 
 typedef struct prepend_buffer

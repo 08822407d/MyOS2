@@ -3,7 +3,7 @@
 
 #include <sys/types.h>
 
-
-	void init_EXT2_FS(void);
+	int init_ext2_fs(void);
+	void exit_ext2_fs(void);
 
 #endif /* _EXT2_H_ */

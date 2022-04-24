@@ -5,7 +5,7 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/fs/fat32.h>
 
@@ -417,14 +417,25 @@ static int vfat_fill_super(super_block_s *sb, void *data, int silent)
 	return fat_fill_super(sb, data, 1, setup);
 }
 
+extern fs_type_s vfat_fs_type;
 static dentry_s *vfat_mount(fs_type_s *fs_type, int flags,
 				const char *dev_name, void *data)
 {
-	// return mount_bdev(fs_type, flags, dev_name, data, vfat_fill_super);
+	return mount_bdev(&vfat_fs_type, flags, dev_name, data, vfat_fill_super);
 }
 
-static fs_type_s vfat_fs_type = {
+fs_type_s vfat_fs_type = {
 	.name		= "vfat",
 	.mount		= vfat_mount,
 	.fs_flags	= FS_REQUIRES_DEV | FS_ALLOW_IDMAP,
 };
+
+int init_vfat_fs(void)
+{
+	return register_filesystem(&vfat_fs_type);
+}
+
+void exit_vfat_fs(void)
+{
+	unregister_filesystem(&vfat_fs_type);
+}

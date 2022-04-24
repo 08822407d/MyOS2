@@ -4,7 +4,7 @@
 #include <uapi/dirent.h>
 
 #include <include/proto.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/file.h>
 
 #include <arch/amd64/include/archconst.h>

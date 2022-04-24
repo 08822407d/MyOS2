@@ -10,7 +10,7 @@
 
 #include <sys/types.h>
 #include <linux/kernel/types.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/mm/page.h>
 // #include <linux/linkage.h>
 // #include <linux/pagemap.h>

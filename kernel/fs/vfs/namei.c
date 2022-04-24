@@ -6,7 +6,7 @@
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/dcache.h>
 #include <linux/fs/namespace.h>

@@ -7,7 +7,7 @@
 #define __LINUX_FILE_H_
 
 #include <linux/kernel/sched/task.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 
 	void fput(file_s *file);
 

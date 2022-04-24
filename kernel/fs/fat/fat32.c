@@ -20,7 +20,7 @@
 
 #include <include/printk.h>
 #include <include/proto.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/fs/fat32.h>
 
@@ -585,7 +585,7 @@ fs_type_s FAT32_fs_type=
 	.next = NULL,
 };
 
-void init_FAT32_FS()
+void init_fat32_fs()
 {
 	register_filesystem(&FAT32_fs_type);
 } 

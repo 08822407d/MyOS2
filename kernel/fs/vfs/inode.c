@@ -1,5 +1,5 @@
 #include <include/proto.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 
 /**
  *	new_inode 	- obtain an inode

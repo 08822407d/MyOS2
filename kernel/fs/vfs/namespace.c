@@ -5,7 +5,7 @@
 #include <errno.h>
 
 #include <include/proto.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/mount.h>
 

@@ -464,4 +464,7 @@
 	extern inode_ops_s	vfat_dir_inode_operations;
 	extern dentry_ops_s vfat_dentry_ops;
 
+	int init_vfat_fs(void);
+	void exit_vfat_fs(void);
+
 #endif /* !_FAT_H_ */

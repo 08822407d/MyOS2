@@ -6,7 +6,7 @@
 #include <include/proto.h>
 #include <include/wait_queue.h>
 #include <include/printk.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 
 #include "include/tty.h"
 #include "include/keyboard.h"

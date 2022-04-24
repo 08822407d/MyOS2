@@ -79,6 +79,77 @@
 		void			*private_sb_info;
 	} super_block_s;
 
+	#define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
+
+	extern dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
+			const char *dev_name, void *data,
+			int (*fill_super)(super_block_s *, void *, int));
+	extern dentry_s *mount_single(fs_type_s *fs_type, int flags,
+			void *data, int (*fill_super)(super_block_s *, void *, int));
+	extern dentry_s *mount_nodev(fs_type_s *fs_type, int flags,
+			void *data, int (*fill_super)(super_block_s *, void *, int));
+	extern dentry_s *mount_subtree(vfsmount_s *mnt, const char *path);
+	void generic_shutdown_super(super_block_s *sb);
+	void kill_block_super(super_block_s *sb);
+	void kill_anon_super(super_block_s *sb);
+	void kill_litter_super(super_block_s *sb);
+	void deactivate_super(super_block_s *sb);
+	void deactivate_locked_super(super_block_s *sb);
+	int set_anon_super(super_block_s *s, void *data);
+	// int set_anon_super_fc(super_block_s *s, fs_context_s *fc);
+	int get_anon_bdev(dev_t *);
+	void free_anon_bdev(dev_t);
+	// super_block_s *sget_fc(fs_context_s *fc,
+	// 		int (*test)(super_block_s *, fs_context_s *),
+	// 		int (*set)(super_block_s *, fs_context_s *));
+	super_block_s *sget(fs_type_s *type, int (*test)(super_block_s *,void *),
+			int (*set)(super_block_s *,void *), int flags, void *data);
+
+	/* Alas, no aliases. Too much hassle with bringing module.h everywhere */
+	#define fops_get(fops) \
+			(((fops) && try_module_get((fops)->owner) ? (fops) : NULL))
+	#define fops_put(fops) \
+			do { if (fops) module_put((fops)->owner); } while(0)
+	/*
+	* This one is to be used *ONLY* from ->open() instances.
+	* fops must be non-NULL, pinned down *and* module dependencies
+	* should be sufficient to pin the caller down as well.
+	*/
+	#define replace_fops(f, fops) \
+		do {	\
+			struct file *__file = (f); \
+			fops_put(__file->f_op); \
+			BUG_ON(!(__file->f_op = (fops))); \
+		} while(0)
+
+	extern int register_filesystem(fs_type_s *);
+	extern int unregister_filesystem(fs_type_s *);
+	extern vfsmount_s *kern_mount(fs_type_s *);
+	extern void kern_unmount(vfsmount_s *mnt);
+	extern int may_umount_tree(vfsmount_s *);
+	extern int may_umount(vfsmount_s *);
+	extern long do_mount(const char *, const char *, unsigned long);
+	extern vfsmount_s *collect_mounts(const path_s *);
+	extern void drop_collected_mounts(vfsmount_s *);
+	extern int iterate_mounts(int (*)(vfsmount_s *, void *), void *,
+				vfsmount_s *);
+	// extern int vfs_statfs(const path_s *, kstatfs_s *);
+	// extern int user_statfs(const char *, kstatfs_s *);
+	// extern int fd_statfs(int, kstatfs_s *);
+	extern int freeze_super(super_block_s *super);
+	extern int thaw_super(super_block_s *super);
+	extern bool our_mnt(vfsmount_s *mnt);
+	// extern __printf(2, 3)
+	int super_setup_bdi_name(super_block_s *sb, char *fmt, ...);
+	extern int super_setup_bdi(super_block_s *sb);
+
+	extern int current_umask(void);
+
+	extern void ihold(inode_s * inode);
+	extern void iput(inode_s *);
+	extern int generic_update_time(inode_s *, timespec64_s *, int);
+
+
 	typedef struct inode
 	{
 		umode_t			i_mode;
@@ -536,8 +607,6 @@
 	unsigned long init_vfs(void);
 	void init_mount(void);
 	super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
-	unsigned long register_filesystem(fs_type_s * fs);
-	unsigned long unregister_filesystem(fs_type_s * fs);
 	int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
 
 	extern long do_sys_open(int dfd, const char * filename, int flags, umode_t mode);

@@ -10,7 +10,7 @@
 #include <include/printk.h>
 #include <linux/kernel/sched/task.h>
 #include <linux/mm/mm.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/namespace.h>
 
 #include "include/archconst.h"

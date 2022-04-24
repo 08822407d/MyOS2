@@ -2,7 +2,7 @@
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 #include <include/printk.h>
 
 #include <arch/amd64/include/arch_proto.h>

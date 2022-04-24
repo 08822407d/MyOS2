@@ -1,4 +1,4 @@
-#include <linux/fs/vfs.h>
+#include <linux/fs/fs.h>
 
 #include <linux/kernel/buffer_head.h>
 #include <linux/kernel/blk_types.h>
