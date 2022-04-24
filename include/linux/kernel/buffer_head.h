@@ -174,7 +174,7 @@
 	// void invalidate_inode_buffers(struct inode *);
 	// int remove_inode_buffers(struct inode *inode);
 	// int sync_mapping_buffers(struct address_space *mapping);
-	// void clean_bdev_aliases(struct block_device *bdev, sector_t block,
+	// void clean_bdev_aliases(block_device_s *bdev, sector_t block,
 	// 			sector_t len);
 	// static inline void clean_bdev_bh_alias(struct buffer_head *bh)
 	// {
@@ -184,13 +184,13 @@
 	// void mark_buffer_async_write(struct buffer_head *bh);
 	// void __wait_on_buffer(struct buffer_head *);
 	// wait_queue_head_t *bh_waitq_head(struct buffer_head *bh);
-	// struct buffer_head *__find_get_block(struct block_device *bdev, sector_t block,
+	// struct buffer_head *__find_get_block(block_device_s *bdev, sector_t block,
 	// 			unsigned size);
 	buffer_head_s *__getblk_gfp(block_device_s *bdev, sector_t block, unsigned size);
 	void __brelse(buffer_head_s *);
 	// void __bforget(struct buffer_head *);
-	// void __breadahead(struct block_device *, sector_t block, unsigned int size);
-	// void __breadahead_gfp(struct block_device *, sector_t block, unsigned int size,
+	// void __breadahead(block_device_s *, sector_t block, unsigned int size);
+	// void __breadahead_gfp(block_device_s *, sector_t block, unsigned int size,
 	// 		gfp_t gfp);
 	buffer_head_s *__bread_gfp(block_device_s *, sector_t block, unsigned size);
 	// void invalidate_bh_lrus(void);
@@ -205,7 +205,7 @@
 	// int __sync_dirty_buffer(struct buffer_head *bh, int op_flags);
 	// void write_dirty_buffer(struct buffer_head *bh, int op_flags);
 	// int submit_bh(int, int, struct buffer_head *);
-	// void write_boundary_block(struct block_device *bdev,
+	// void write_boundary_block(block_device_s *bdev,
 	// 			sector_t bblock, unsigned blocksize);
 	// int bh_uptodate_or_lock(struct buffer_head *bh);
 	// int bh_submit_read(struct buffer_head *bh);
@@ -368,14 +368,14 @@
 	// 		__lock_buffer(bh);
 	// }
 
-	// static inline struct buffer_head *getblk_unmovable(struct block_device *bdev,
+	// static inline struct buffer_head *getblk_unmovable(block_device_s *bdev,
 	// 						sector_t block,
 	// 						unsigned size)
 	// {
 	// 	return __getblk_gfp(bdev, block, size, 0);
 	// }
 
-	// static inline struct buffer_head *__getblk(struct block_device *bdev,
+	// static inline struct buffer_head *__getblk(block_device_s *bdev,
 	// 					sector_t block,
 	// 					unsigned size)
 	// {
@@ -393,7 +393,7 @@
 	//  *  It returns NULL if the block was unreadable.
 	//  */
 	// static inline struct buffer_head *
-	// __bread(struct block_device *bdev, sector_t block, unsigned size)
+	// __bread(block_device_s *bdev, sector_t block, unsigned size)
 	// {
 	// 	return __bread_gfp(bdev, block, size, __GFP_MOVABLE);
 	// }

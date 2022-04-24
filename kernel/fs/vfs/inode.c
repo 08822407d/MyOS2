@@ -1,6 +1,33 @@
 #include <include/proto.h>
 #include <linux/fs/fs.h>
 
+static inode_s *alloc_inode(super_block_s *sb)
+{
+	const super_ops_s *ops = sb->s_op;
+	inode_s *inode;
+
+	if (ops->alloc_inode != NULL)
+		inode = ops->alloc_inode(sb);
+	else
+		inode = kmalloc(sizeof(inode_s));
+
+	if (!inode)
+		return NULL;
+
+	// if (unlikely(inode_init_always(sb, inode))) {
+	// 	if (ops->destroy_inode) {
+	// 		ops->destroy_inode(inode);
+	// 		if (!ops->free_inode)
+	// 			return NULL;
+	// 	}
+	// 	inode->free_inode = ops->free_inode;
+	// 	i_callback(&inode->i_rcu);
+	// 	return NULL;
+	// }
+
+	return inode;
+}
+
 /**
  *	new_inode 	- obtain an inode
  *	@sb: superblock
@@ -15,10 +42,10 @@
  */
 inode_s *new_inode(super_block_s *sb)
 {
-	inode_s *inode;
+	inode_s *inode = alloc_inode(sb);
+
 	// struct inode *new_inode_pseudo(struct super_block *sb)
 	// {
-		inode = kmalloc(sizeof(inode_s));
 		if (inode != NULL)
 			inode->i_sb = sb;
 	// }

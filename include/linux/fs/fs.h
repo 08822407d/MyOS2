@@ -1,6 +1,7 @@
 #ifndef _VFS_H_
 #define _VFS_H_
 
+#include <linux/kernel/types.h>
 #include <linux/kernel/stat.h>
 #include <linux/kernel/uidgid.h>
 #include <linux/kernel/time64.h>
@@ -162,9 +163,16 @@
 		super_block_s	*i_sb;
 		/* Stat data, not accessed from path walking */
 		unsigned long	i_ino;
+		dev_t			i_rdev;
+		loff_t			i_size;
+		timespec64_s	i_atime;
+		timespec64_s	i_mtime;
+		timespec64_s	i_ctime;
+		unsigned short	i_bytes;
+		uint8_t			i_blkbits;
+		uint8_t			i_write_hint;
+		blkcnt_t		i_blocks;
 
-		unsigned long	i_size;
-		unsigned long	i_blocks;
 		unsigned long	attribute;
 
 		file_ops_s		*i_fop;

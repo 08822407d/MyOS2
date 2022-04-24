@@ -1,5 +1,72 @@
 #include <linux/fs/fs.h>
 
+#include <errno.h>
+
+/**
+ * get_anon_bdev - Allocate a block device for filesystems which don't have one.
+ * @p: Pointer to a dev_t.
+ *
+ * Filesystems which don't use real block devices can call this function
+ * to allocate a virtual block device.
+ *
+ * Context: Any context.  Frequently called while holding sb_lock.
+ * Return: 0 on success, -EMFILE if there are no anonymous bdevs left
+ * or -ENOMEM if memory allocation failed.
+ */
+int get_anon_bdev(dev_t *p)
+{
+	int dev;
+
+	/*
+	 * Many userspace utilities consider an FSID of 0 invalid.
+	 * Always return at least 1 from get_anon_bdev.
+	 */
+	// dev = ida_alloc_range(&unnamed_dev_ida, 1, (1 << MINORBITS) - 1,
+	// 		GFP_ATOMIC);
+	if (dev == -ENOSPC)
+		dev = -EMFILE;
+	if (dev < 0)
+		return dev;
+
+	// *p = MKDEV(0, dev);
+	return 0;
+}
+
+void free_anon_bdev(dev_t dev)
+{
+	// ida_free(&unnamed_dev_ida, MINOR(dev));
+}
+
+int set_anon_super(super_block_s *s, void *data)
+{
+	return get_anon_bdev(&s->s_dev);
+}
+
+void kill_anon_super(super_block_s *sb)
+{
+	dev_t dev = sb->s_dev;
+	// generic_shutdown_super(sb);
+	free_anon_bdev(dev);
+}
+
+void kill_litter_super(struct super_block *sb)
+{
+	// if (sb->s_root)
+	// 	d_genocide(sb->s_root);
+	kill_anon_super(sb);
+}
+
+static int set_bdev_super(super_block_s *s, void *data)
+{
+	s->s_bdev = data;
+	s->s_dev = s->s_bdev->bd_dev;
+	// s->s_bdi = bdi_get(s->s_bdev->bd_disk->bdi);
+
+	// if (blk_queue_stable_writes(s->s_bdev->bd_disk->queue))
+	// 	s->s_iflags |= SB_I_STABLE_WRITES;
+	return 0;
+}
+
 static int test_bdev_super(super_block_s *s, void *data)
 {
 	return (void *)s->s_bdev == data;

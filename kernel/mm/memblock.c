@@ -299,7 +299,7 @@ int memblock_reserve(phys_addr_t base, size_t size)
 
 /**
  * __next_mem_range - next function for for_each_free_mem_range() etc.
- * @idx: pointer to u64 loop variable
+ * @idx: pointer to uint64_t loop variable
  * @nid: node selector, %NUMA_NO_NODE for all nodes
  * @flags: pick from blocks based on memory attributes
  * @type_a: pointer to memblock_type from where the range is taken
@@ -528,7 +528,7 @@ static inline void * memblock_alloc(size_t size, size_t align)
 	// #define __for_each_mem_range(i, type_a, type_b, nid, flags, p_start, p_end, p_nid)
 	//								||
 	//								\/
-	// void __next_mem_range(u64 *idx, int nid, enum memblock_flags flags, struct memblock_type *type_a,
+	// void __next_mem_range(uint64_t *idx, int nid, enum memblock_flags flags, struct memblock_type *type_a,
 	//	      struct memblock_type *type_b, phys_addr_t *out_start, phys_addr_t *out_end, int *out_nid)
 
 	void *ptr;

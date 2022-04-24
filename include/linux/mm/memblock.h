@@ -121,7 +121,7 @@
 	/**
 	 * __for_each_mem_range - iterate through memblock areas from type_a and not
 	 * included in type_b. Or just type_a if type_b is NULL.
-	 * @i: u64 used as loop variable
+	 * @i: uint64_t used as loop variable
 	 * @type_a: ptr to memblock_type to iterate
 	 * @type_b: ptr to memblock_type which excludes from the iteration
 	 * @nid: node selector, %NUMA_NO_NODE for all nodes
@@ -140,7 +140,7 @@
 
 	/**
 	 * for_each_free_mem_range - iterate through free memblock areas
-	 * @i: u64 used as loop variable
+	 * @i: uint64_t used as loop variable
 	 * @nid: node selector, %NUMA_NO_NODE for all nodes
 	 * @flags: pick from blocks based on memory attributes
 	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL

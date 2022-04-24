@@ -46,7 +46,7 @@
 	// 	struct list_head	bd_holder_disks;
 	// #endif
 	// 	struct kobject		*bd_holder_dir;
-	// 	uint8_t			bd_partno;
+		uint8_t			bd_partno;
 	// 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
 	// 	gendisk_s 		*bd_disk;
 	// 	backing_dev_info_s	*bd_bdi;
@@ -67,7 +67,7 @@
 	// 	((_bdev)->bd_disk->part0)
 
 	// #define dev_to_bdev(device) \
-	// 	container_of((device), struct block_device, bd_device)
+	// 	container_of((device), block_device_s, bd_device)
 
 	// #define bdev_kobj(_bdev) \
 	// 	(&((_bdev)->bd_device.kobj))
@@ -77,9 +77,9 @@
 	// * Alpha cannot write a byte atomically, so we need to use 32-bit value.
 	// */
 	// #if defined(CONFIG_ALPHA) && !defined(__alpha_bwx__)
-	// typedef u32 __bitwise blk_status_t;
+	// typedef uint32_t __bitwise blk_status_t;
 	// #else
-	// typedef u8 __bitwise blk_status_t;
+	// typedef uint8_t __bitwise blk_status_t;
 	// #endif
 	// #define	BLK_STS_OK 0
 	// #define BLK_STS_NOTSUPP		((__force blk_status_t)1)
@@ -193,15 +193,15 @@
 	// #define BIO_ISSUE_THROTL_SKIP_LATENCY (1ULL << 63)
 
 	// struct bio_issue {
-	// 	u64 value;
+	// 	uint64_t value;
 	// };
 
-	// static inline u64 __bio_issue_time(u64 time)
+	// static inline uint64_t __bio_issue_time(uint64_t time)
 	// {
 	// 	return time & BIO_ISSUE_TIME_MASK;
 	// }
 
-	// static inline u64 bio_issue_time(struct bio_issue *issue)
+	// static inline uint64_t bio_issue_time(struct bio_issue *issue)
 	// {
 	// 	return __bio_issue_time(issue->value);
 	// }
@@ -217,7 +217,7 @@
 	// 	size &= (1ULL << BIO_ISSUE_SIZE_BITS) - 1;
 	// 	issue->value = ((issue->value & BIO_ISSUE_RES_MASK) |
 	// 			(ktime_get_ns() & BIO_ISSUE_TIME_MASK) |
-	// 			((u64)size << BIO_ISSUE_SIZE_SHIFT));
+	// 			((uint64_t)size << BIO_ISSUE_SIZE_SHIFT));
 	// }
 
 	// /*
@@ -226,7 +226,7 @@
 	// */
 	// struct bio {
 	// 	struct bio		*bi_next;	/* request queue link */
-	// 	struct block_device	*bi_bdev;
+	// 	block_device_s	*bi_bdev;
 	// 	unsigned int		bi_opf;		/* bottom bits req flags,
 	// 						* top bits REQ_OP. Use
 	// 						* accessors.
@@ -252,7 +252,7 @@
 	// 	struct blkcg_gq		*bi_blkg;
 	// 	struct bio_issue	bi_issue;
 	// #ifdef CONFIG_BLK_CGROUP_IOCOST
-	// 	u64			bi_iocost_cost;
+	// 	uint64_t			bi_iocost_cost;
 	// #endif
 	// #endif
 
@@ -533,11 +533,11 @@
 	// }
 
 	// struct blk_rq_stat {
-	// 	u64 mean;
-	// 	u64 min;
-	// 	u64 max;
-	// 	u32 nr_samples;
-	// 	u64 batch;
+	// 	uint64_t mean;
+	// 	uint64_t min;
+	// 	uint64_t max;
+	// 	uint32_t nr_samples;
+	// 	uint64_t batch;
 	// };
 
 #endif /* __LINUX_BLK_TYPES_H */
