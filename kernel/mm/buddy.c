@@ -6,7 +6,6 @@
 #include <sys/cdefs.h>
 
 #include <string.h>
-#include <stddef.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>

@@ -1,13 +1,14 @@
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/err.h>
-
-#include <stddef.h>
-#include <errno.h>
-
-#include <include/proto.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/mount.h>
+
+#include <uapi/mount.h>
+
+#include <errno.h>
+
+#include <include/proto.h>
 
 mount_s root_mnt;
 

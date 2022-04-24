@@ -1,14 +1,15 @@
 #include <linux/kernel/err.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/fs/fs.h>
+#include <linux/fs/mount.h>
+#include <linux/fs/dcache.h>
+
 #include <uapi/limits.h>
 
 #include <string.h>
-#include <stddef.h>
 #include <errno.h>
 
 #include <include/proto.h>
-#include <linux/kernel/sched/task.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/dcache.h>
 
 typedef struct prepend_buffer
 {
@@ -43,7 +44,7 @@ static bool prepend_name(prpndbuf_s *p, const qstr_s *name)
 	char *s;
 
 	p->len -= dlen + 1;
-	if (unlikely(p->len < 0))
+	if (p->len < 0)
 		return false;
 	s = p->buf -= dlen + 1;
 	*s++ = '/';

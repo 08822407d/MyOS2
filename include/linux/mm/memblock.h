@@ -4,6 +4,7 @@
 
 
 #include <linux/kernel/types.h>
+#include <linux/kernel/limits.h>
 	/*
 	* Logical memory blocks.
 	*

@@ -542,10 +542,10 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	sbp->s_root = (dentry_s *)kmalloc(sizeof(dentry_s));
 	memset(sbp->s_root, 0, sizeof(dentry_s));
 
-	list_init(&sbp->s_root->dirent_list, sbp->s_root);
-	list_hdr_init(&sbp->s_root->childdir_lhdr);
+	list_init(&sbp->s_root->d_child, sbp->s_root);
+	list_hdr_init(&sbp->s_root->d_subdirs);
 	sbp->s_root->d_parent = sbp->s_root;
-	sbp->s_root->dir_ops = &vfat_dentry_ops;
+	sbp->s_root->d_op = &vfat_dentry_ops;
 	sbp->s_root->d_name.name = (char *)kmalloc(2);
 	((char *)sbp->s_root->d_name.name)[0] = '/';
 	((char *)sbp->s_root->d_name.name)[1] = 0;

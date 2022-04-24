@@ -13,23 +13,23 @@
 
 typedef struct Disk_Partition_Table_Entry
 {
-	uint8_t		flags;
-	uint8_t		start_head;
-	uint16_t	start_sector	:6,		//0~5
-				start_cylinder	:10;	//6~15
-	uint8_t		type;
-	uint8_t		end_head;
-	uint16_t	end_sector		:6,		//0~5
-				end_cylinder	:10;	//6~15
-	uint32_t	start_LBA;
-	uint32_t	sectors_limit;
+	u8	flags;
+	u8	start_head;
+	u16	start_sector	:6,		//0~5
+		start_cylinder	:10;	//6~15
+	u8	type;
+	u8	end_head;
+	u16	end_sector		:6,		//0~5
+		end_cylinder	:10;	//6~15
+	u32	start_LBA;
+	u32	sectors_limit;
 } __attribute__((packed)) legacy_DPTE_s;
 
 typedef struct Disk_Partition_Table
 {
-	uint8_t			BS_Reserved[446];
+	u8	BS_Reserved[446];
 	legacy_DPTE_s	DPTE[4];
-	uint16_t		BS_TrailSig;
+	u16	BS_TrailSig;
 } __attribute__((packed)) MBR_s;
 
 #endif /* _MRB_H_ */

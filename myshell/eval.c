@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stddef.h>
 
 #include "externs.h"
 #include "command.h"

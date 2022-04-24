@@ -8,7 +8,6 @@
 #include <uapi/msdos_fs.h>
 
 #include <string.h>
-#include <stddef.h>
 
 	/*
 	* vfat shortname flags
@@ -164,13 +163,13 @@
 	}
 
 	/* Maximum number of clusters */
-	static inline uint32_t max_fat(super_block_s *sb)
-	{
-		msdos_sb_info_s *sbi = MSDOS_SB(sb);
+	// static inline u32 max_fat(super_block_s *sb)
+	// {
+	// 	msdos_sb_info_s *sbi = MSDOS_SB(sb);
 
-		return is_fat32(sbi) ? MAX_FAT32 :
-				is_fat16(sbi) ? MAX_FAT16 : MAX_FAT12;
-	}
+	// 	return is_fat32(sbi) ? MAX_FAT32 :
+	// 			is_fat16(sbi) ? MAX_FAT16 : MAX_FAT12;
+	// }
 
 	static inline msdos_inode_info_s *MSDOS_I(inode_s *inode)
 	{
@@ -203,7 +202,7 @@
 
 	/* Convert attribute bits and a mask to the UNIX mode. */
 	static inline umode_t fat_make_mode(msdos_sb_info_s *sbi,
-					uint8_t attrs, umode_t mode)
+					u8 attrs, umode_t mode)
 	{
 		if (attrs & ATTR_RO && !((attrs & ATTR_DIR) && !sbi->options.rodir))
 			mode &= ~S_IWUGO;
@@ -215,17 +214,17 @@
 	}
 
 	/* Return the FAT attribute byte for this inode */
-	static inline uint8_t fat_make_attrs(inode_s *inode)
-	{
-		uint8_t attrs = MSDOS_I(inode)->i_attrs;
-		if (S_ISDIR(inode->i_mode))
-			attrs |= ATTR_DIR;
-		if (fat_mode_can_hold_ro(inode) && !(inode->i_mode & S_IWUGO))
-			attrs |= ATTR_RO;
-		return attrs;
-	}
+	// static inline u8 fat_make_attrs(inode_s *inode)
+	// {
+	// 	u8 attrs = MSDOS_I(inode)->i_attrs;
+	// 	if (S_ISDIR(inode->i_mode))
+	// 		attrs |= ATTR_DIR;
+	// 	if (fat_mode_can_hold_ro(inode) && !(inode->i_mode & S_IWUGO))
+	// 		attrs |= ATTR_RO;
+	// 	return attrs;
+	// }
 
-	static inline void fat_save_attrs(inode_s *inode, uint8_t attrs)
+	static inline void fat_save_attrs(inode_s *inode, u8 attrs)
 	{
 		if (fat_mode_can_hold_ro(inode))
 			MSDOS_I(inode)->i_attrs = attrs & ATTR_UNUSED;
@@ -233,16 +232,16 @@
 			MSDOS_I(inode)->i_attrs = attrs & (ATTR_UNUSED | ATTR_RO);
 	}
 
-	static inline unsigned char fat_checksum(const uint8_t *name)
-	{
-		unsigned char s = name[0];
-		s = (s<<7) + (s>>1) + name[1];	s = (s<<7) + (s>>1) + name[2];
-		s = (s<<7) + (s>>1) + name[3];	s = (s<<7) + (s>>1) + name[4];
-		s = (s<<7) + (s>>1) + name[5];	s = (s<<7) + (s>>1) + name[6];
-		s = (s<<7) + (s>>1) + name[7];	s = (s<<7) + (s>>1) + name[8];
-		s = (s<<7) + (s>>1) + name[9];	s = (s<<7) + (s>>1) + name[10];
-		return s;
-	}
+	// static inline unsigned char fat_checksum(const u8 *name)
+	// {
+	// 	unsigned char s = name[0];
+	// 	s = (s<<7) + (s>>1) + name[1];	s = (s<<7) + (s>>1) + name[2];
+	// 	s = (s<<7) + (s>>1) + name[3];	s = (s<<7) + (s>>1) + name[4];
+	// 	s = (s<<7) + (s>>1) + name[5];	s = (s<<7) + (s>>1) + name[6];
+	// 	s = (s<<7) + (s>>1) + name[7];	s = (s<<7) + (s>>1) + name[8];
+	// 	s = (s<<7) + (s>>1) + name[9];	s = (s<<7) + (s>>1) + name[10];
+	// 	return s;
+	// }
 
 	// static inline sector_t fat_clus_to_blknr(struct msdos_sb_info *sbi, int clus)
 	// {
@@ -257,65 +256,65 @@
 	// 	*offset = i_pos & (sbi->dir_per_block - 1);
 	// }
 
-	static inline loff_t fat_i_pos_read(msdos_sb_info_s *sbi,
-						inode_s *inode)
-	{
-		loff_t i_pos;
-	#if BITS_PER_LONG == 32
-		spin_lock(&sbi->inode_hash_lock);
-	#endif
-		i_pos = MSDOS_I(inode)->i_pos;
-	#if BITS_PER_LONG == 32
-		spin_unlock(&sbi->inode_hash_lock);
-	#endif
-		return i_pos;
-	}
+	// static inline loff_t fat_i_pos_read(msdos_sb_info_s *sbi,
+	// 					inode_s *inode)
+	// {
+	// 	loff_t i_pos;
+	// #if BITS_PER_LONG == 32
+	// 	spin_lock(&sbi->inode_hash_lock);
+	// #endif
+	// 	i_pos = MSDOS_I(inode)->i_pos;
+	// #if BITS_PER_LONG == 32
+	// 	spin_unlock(&sbi->inode_hash_lock);
+	// #endif
+	// 	return i_pos;
+	// }
 
-	static inline void fat16_towchar(wchar_t *dst, const uint8_t *src, size_t len)
-	{
-	#ifdef __BIG_ENDIAN
-		while (len--) {
-			*dst++ = src[0] | (src[1] << 8);
-			src += 2;
-		}
-	#else
-		memcpy(dst, src, len * 2);
-	#endif
-	}
+	// static inline void fat16_towchar(wchar_t *dst, const u8 *src, size_t len)
+	// {
+	// #ifdef __BIG_ENDIAN
+	// 	while (len--) {
+	// 		*dst++ = src[0] | (src[1] << 8);
+	// 		src += 2;
+	// 	}
+	// #else
+	// 	memcpy(dst, src, len * 2);
+	// #endif
+	// }
 
-	static inline int fat_get_start(msdos_sb_info_s *sbi,
-					const msdos_dir_entry_s *de)
-	{
-		int cluster = de->start;
-		if (is_fat32(sbi))
-			cluster |= (de->starthi << 16);
-		return cluster;
-	}
+	// static inline int fat_get_start(msdos_sb_info_s *sbi,
+	// 				const msdos_dir_entry_s *de)
+	// {
+	// 	int cluster = de->start;
+	// 	if (is_fat32(sbi))
+	// 		cluster |= (de->starthi << 16);
+	// 	return cluster;
+	// }
 
-	static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
-	{
-		de->start   = cluster;
-		de->starthi = cluster >> 16;
-	}
+	// static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
+	// {
+	// 	de->start   = cluster;
+	// 	de->starthi = cluster >> 16;
+	// }
 
-	static inline void fatwchar_to16(uint8_t *dst, const wchar_t *src, size_t len)
-	{
-	#ifdef __BIG_ENDIAN
-		while (len--) {
-			dst[0] = *src & 0x00FF;
-			dst[1] = (*src & 0xFF00) >> 8;
-			dst += 2;
-			src++;
-		}
-	#else
-		memcpy(dst, src, len * 2);
-	#endif
-	}
+	// static inline void fatwchar_to16(u8 *dst, const wchar_t *src, size_t len)
+	// {
+	// #ifdef __BIG_ENDIAN
+	// 	while (len--) {
+	// 		dst[0] = *src & 0x00FF;
+	// 		dst[1] = (*src & 0xFF00) >> 8;
+	// 		dst += 2;
+	// 		src++;
+	// 	}
+	// #else
+	// 	memcpy(dst, src, len * 2);
+	// #endif
+	// }
 
 	/* fat/cache.c */
-	extern void fat_cache_inval_inode(inode_s *inode);
-	extern int fat_get_cluster(inode_s *inode, int cluster,
-					int *fclus, int *dclus);
+	// extern void fat_cache_inval_inode(inode_s *inode);
+	// extern int fat_get_cluster(inode_s *inode, int cluster,
+	// 				int *fclus, int *dclus);
 	// extern int fat_get_mapped_cluster(struct inode *inode, sector_t sector,
 	// 				sector_t last_block,
 	// 				unsigned long *mapped_blocks, sector_t *bmap);
@@ -324,28 +323,28 @@
 
 	/* fat/dir.c */
 	extern const file_ops_s fat_dir_operations;
-	extern int fat_search_long(inode_s *inode, const unsigned char *name,
-					int name_len, fat_slot_info_s *sinfo);
-	extern int fat_dir_empty(inode_s *dir);
-	extern int fat_subdirs(inode_s *dir);
-	extern int fat_scan(inode_s *dir, const unsigned char *name,
-					fat_slot_info_s *sinfo);
-	extern int fat_scan_logstart(inode_s *dir, int i_logstart,
-					fat_slot_info_s *sinfo);
+	// extern int fat_search_long(inode_s *inode, const unsigned char *name,
+	// 				int name_len, fat_slot_info_s *sinfo);
+	// extern int fat_dir_empty(inode_s *dir);
+	// extern int fat_subdirs(inode_s *dir);
+	// extern int fat_scan(inode_s *dir, const unsigned char *name,
+	// 				fat_slot_info_s *sinfo);
+	// extern int fat_scan_logstart(inode_s *dir, int i_logstart,
+	// 				fat_slot_info_s *sinfo);
 	// extern int fat_get_dotdot_entry(inode_s *dir, buffer_head_s **bh,
 	// 				msdos_dir_entry_s **de);
 	// extern int fat_alloc_new_dir(inode_s *dir, timespec64_s *ts);
-	extern int fat_add_entries(inode_s *dir, void *slots, int nr_slots,
-					fat_slot_info_s *sinfo);
-	extern int fat_remove_entries(inode_s *dir, fat_slot_info_s *sinfo);
+	// extern int fat_add_entries(inode_s *dir, void *slots, int nr_slots,
+	// 				fat_slot_info_s *sinfo);
+	// extern int fat_remove_entries(inode_s *dir, fat_slot_info_s *sinfo);
 
 	/* fat/fatent.c */
 	typedef struct fat_entry {
 		int entry;
 		union {
-			uint8_t		*ent12_p[2];
-			uint16_t	*ent16_p;
-			uint32_t	*ent32_p;
+			u8		*ent12_p[2];
+			u16	*ent16_p;
+			u32	*ent32_p;
 		} u;
 		int		nr_bhs;
 		// buffer_head_s *bhs[2];
@@ -383,47 +382,47 @@
 		return FAT_START_ENT <= entry && entry < sbi->max_cluster;
 	}
 
-	extern void fat_ent_access_init(super_block_s *sb);
-	extern int fat_ent_read(inode_s *inode, fat_entry_s *fatent,
-					int entry);
-	extern int fat_ent_write(inode_s *inode, fat_entry_s *fatent,
-					int new, int wait);
-	extern int fat_alloc_clusters(inode_s *inode, int *cluster,
-					int nr_cluster);
-	extern int fat_free_clusters(inode_s *inode, int cluster);
-	extern int fat_count_free_clusters(super_block_s *sb);
+	// extern void fat_ent_access_init(super_block_s *sb);
+	// extern int fat_ent_read(inode_s *inode, fat_entry_s *fatent,
+	// 				int entry);
+	// extern int fat_ent_write(inode_s *inode, fat_entry_s *fatent,
+	// 				int new, int wait);
+	// extern int fat_alloc_clusters(inode_s *inode, int *cluster,
+	// 				int nr_cluster);
+	// extern int fat_free_clusters(inode_s *inode, int cluster);
+	// extern int fat_count_free_clusters(super_block_s *sb);
 	// extern int fat_trim_fs(inode_s *inode, fstrim_range_s *range);
 
 	/* fat/file.c */
-	extern long fat_generic_ioctl(file_s *filp, unsigned int cmd,
-					unsigned long arg);
+	// extern long fat_generic_ioctl(file_s *filp, unsigned int cmd,
+	// 				unsigned long arg);
 	// extern int fat_setattr(dentry_s *dentry,
 	// 				iattr_s *attr);
-	extern void fat_truncate_blocks(struct inode *inode, loff_t offset);
+	// extern void fat_truncate_blocks(struct inode *inode, loff_t offset);
 	// extern int fat_getattr(const path_s *path, kstat_s *stat,
-	// 				uint32_t request_mask, unsigned int flags);
-	extern int fat_file_fsync(file_s *file, loff_t start, loff_t end,
-					int datasync);
+	// 				u32 request_mask, unsigned int flags);
+	// extern int fat_file_fsync(file_s *file, loff_t start, loff_t end,
+	// 				int datasync);
 
 	/* fat/inode.c */
-	extern int fat_block_truncate_page(inode_s *inode, loff_t from);
-	extern void fat_attach(inode_s *inode, loff_t i_pos);
-	extern void fat_detach(inode_s *inode);
-	extern inode_s *fat_iget(super_block_s *sb, loff_t i_pos);
+	// extern int fat_block_truncate_page(inode_s *inode, loff_t from);
+	// extern void fat_attach(inode_s *inode, loff_t i_pos);
+	// extern void fat_detach(inode_s *inode);
+	// extern inode_s *fat_iget(super_block_s *sb, loff_t i_pos);
 	extern inode_s *fat_build_inode(super_block_s *sb,
 					msdos_dir_entry_s *de, loff_t i_pos);
-	extern int fat_sync_inode(inode_s *inode);
+	// extern int fat_sync_inode(inode_s *inode);
 	extern int fat_fill_super(super_block_s *sb, void *data,
 					int isvfat, void (*setup)(super_block_s *));
-	extern int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de);
+	// extern int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de);
 
-	extern int fat_flush_inodes(super_block_s *sb, inode_s *i1,
-					inode_s *i2);
+	// extern int fat_flush_inodes(super_block_s *sb, inode_s *i1,
+	// 				inode_s *i2);
 	// static inline unsigned long fat_dir_hash(int logstart)
 	// {
 	// 	return hash_32(logstart, FAT_HASH_BITS);
 	// }
-	extern int fat_add_cluster(inode_s *inode);
+	// extern int fat_add_cluster(inode_s *inode);
 
 	/* fat/misc.c */
 	// extern __printf(3, 4) __cold
@@ -442,9 +441,9 @@
 	// extern int fat_clusters_flush(struct super_block *sb);
 	// extern int fat_chain_add(struct inode *inode, int new_dclus, int nr_cluster);
 	// extern void fat_time_fat2unix(struct msdos_sb_info *sbi, struct timespec64 *ts,
-	// 				uint16_t __time, uint16_t __date, uint8_t time_cs);
+	// 				u16 __time, u16 __date, u8 time_cs);
 	// extern void fat_time_unix2fat(struct msdos_sb_info *sbi, struct timespec64 *ts,
-	// 				uint16_t *time, uint16_t *date, uint8_t *time_cs);
+	// 				u16 *time, u16 *date, u8 *time_cs);
 	// extern int fat_truncate_time(struct inode *inode, struct timespec64 *now,
 	// 				int flags);
 	// extern int fat_update_time(struct inode *inode, struct timespec64 *now,

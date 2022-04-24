@@ -1,8 +1,6 @@
 #ifndef _LINUX_MMZONE_H_
 #define _LINUX_MMZONE_H_
 
-#include <stddef.h>
-
 #include <lib/utils.h>
 
 #include <linux/mm/page.h>

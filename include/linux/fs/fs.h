@@ -2,17 +2,20 @@
 #define _VFS_H_
 
 #include <linux/kernel/types.h>
+#include <linux/kernel/mount.h>
 #include <linux/kernel/stat.h>
 #include <linux/kernel/uidgid.h>
 #include <linux/kernel/time64.h>
 #include <linux/kernel/blk_types.h>
+
 #include <uapi/fcntl.h>
+#include <uapi/fs.h>
 
 #include <lib/utils.h>
 
 #include <linux/fs/internels.h>
+#include <linux/fs/path.h>
 #include <linux/fs/dcache.h>
-#include <linux/fs/mount.h>
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
 
@@ -183,27 +186,22 @@
 	#define FS_ATTR_DIR		(1UL << 1)
 	#define	FS_ATTR_DEVICE	(1UL << 2)
 
-	typedef struct path {
-		vfsmount_s *	mnt;
-		dentry_s *		dentry;
-	} path_s;
-
 	typedef struct file
 	{
-		path_s			f_path;
-		inode_s			*f_inode;
-		file_ops_s		*f_ops;
-		dentry_s *		dentry;
+		path_s		f_path;
+		inode_s		*f_inode;
+		file_ops_s	*f_ops;
+		dentry_s *	dentry;
 
 		/*
 		* Protects f_ep, f_flags.
 		* Must not be taken from IRQ context.
 		*/
 		unsigned int	f_flags;
-		fmode_t			f_mode;
-		long			f_pos;
+		fmode_t		f_mode;
+		long		f_pos;
 
-		void * 			private_data;
+		void * 		private_data;
 	} file_s;
 
 	typedef struct taskfs {
@@ -280,24 +278,6 @@
 		// int (*fileattr_set)(dentry_s *dentry, fileattr_s *fa);
 		// int (*fileattr_get)(dentry_s *dentry, fileattr_s *fa);
 	} inode_ops_s;
-
-	typedef struct dentry_ops
-	{
-		int		(*d_revalidate)(dentry_s *, unsigned int);
-		int		(*d_weak_revalidate)(dentry_s *, unsigned int);
-		int		(*d_hash)(const dentry_s *, qstr_s *);
-		int		(*d_compare)(const dentry_s *dir, unsigned int len,
-						const char *str, const qstr_s * name);
-		int		(*d_delete)(const dentry_s *);
-		int		(*d_init)(dentry_s *);
-		void	(*d_release)(dentry_s *);
-		void	(*d_prune)(dentry_s *);
-		void	(*d_iput)(dentry_s *, inode_s *);
-		char	*(*d_dname)(dentry_s *, char *, int);
-		int		(*d_manage)(const path_s *, bool);
-		dentry_s*(*d_real)(dentry_s *, const inode_s *);
-		vfsmount_s	*(*d_automount)(path_s *);
-	} dentry_ops_s;
 
 	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
 
@@ -681,6 +661,8 @@
 	// 	if (!inode_unhashed(inode) && !hlist_fake(&inode->i_hash))
 	// 		__remove_inode_hash(inode);
 	// }
+
+	void putname(filename_s * name);
 
 	// extern void inode_sb_list_add(struct inode *inode);
 

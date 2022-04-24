@@ -1,12 +1,14 @@
+#include <linux/kernel/sched/task.h>
 #include <linux/kernel/err.h>
 #include <linux/kernel/stat.h>
+#include <linux/fs/file.h>
+#include <linux/fs/namei.h>
+
+#include <uapi/openat2.h>
 
 #include <string.h>
 #include <errno.h>
 
-#include <linux/fs/file.h>
-#include <linux/fs/namei.h>
-#include <linux/fs/openat2.h>
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
 #define O_PATH_FLAGS		(O_DIRECTORY | O_NOFOLLOW | O_PATH | O_CLOEXEC)

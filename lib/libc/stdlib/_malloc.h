@@ -4,8 +4,6 @@
 #include <lib/utils.h>
 #include <sys/cdefs.h>
 
-// #include <stddef.h>
-
 	// uslab consts
 	#define USLAB_LEVEL			16
 	#define USLAB_SIZE_BASE		32

@@ -1,6 +1,6 @@
 #include <string.h>
-#include <stddef.h>
 
+#include <linux/kernel/minmax.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
 

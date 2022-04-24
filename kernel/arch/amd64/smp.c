@@ -1,5 +1,4 @@
 #include <string.h>
-#include <stddef.h>
 
 #include <include/glo.h>
 #include <include/proto.h>

@@ -6,7 +6,6 @@
 #include <sys/cdefs.h>
 
 #include <string.h>
-#include <stddef.h>
 
 #include <lib/utils.h>
 

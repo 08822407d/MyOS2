@@ -1,6 +1,5 @@
 #include <linux/kernel/err.h>
 
-#include <stddef.h>
 #include <string.h>
 
 #include <include/proto.h>
@@ -8,14 +7,14 @@
 
 // Linux function proto:
 // struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
-dentry_s * __d_lookup(dentry_s * parent, qstr_s * name)
+dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
 {
 	dentry_s *	dentry = NULL;
 
 	dentry_s * dir_p;
 	List_s * dir_lp;
-	for (dir_lp = parent->childdir_lhdr.header.next;
-			dir_lp != &parent->childdir_lhdr.header;
+	for (dir_lp = parent->d_subdirs.header.next;
+			dir_lp != &parent->d_subdirs.header;
 			dir_lp = dir_lp->next)
 	{
 		if ((dir_p = dir_lp->owner_p) != NULL &&
@@ -56,8 +55,8 @@ dentry_s * __d_alloc(qstr_s * name)
 	dentry->d_name.len = name->len;
 	memcpy((void *)dentry->d_name.name, name->name, name->len);
 
-	list_init(&dentry->dirent_list, dentry);
-	list_hdr_init(&dentry->childdir_lhdr);
+	list_init(&dentry->d_child, dentry);
+	list_hdr_init(&dentry->d_subdirs);
 
 	return dentry;
 }

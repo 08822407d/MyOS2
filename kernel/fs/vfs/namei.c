@@ -1,15 +1,14 @@
 #include <linux/kernel/err.h>
 
 #include <string.h>
-#include <stddef.h>
 #include <errno.h>
 
 #include <include/proto.h>
 #include <include/printk.h>
 #include <linux/fs/fs.h>
+#include <linux/fs/internels.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/dcache.h>
-#include <linux/fs/namespace.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/file.h>
 
@@ -274,7 +273,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags
 		return ERR_PTR(-ENOENT);
 	}
 
-	list_hdr_append(&dir->childdir_lhdr, &dentry->dirent_list);
+	list_hdr_append(&dir->d_subdirs, &dentry->d_child);
 	dentry->d_parent = dir;
 
 	return dentry;
@@ -587,7 +586,7 @@ static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
 
 		if (IS_ERR(dentry))
 			return ERR_CAST(dentry);
-		if (likely(dentry))
+		if (dentry)
 			goto finish_lookup;
 	}
 

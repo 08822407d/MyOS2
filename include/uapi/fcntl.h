@@ -4,7 +4,7 @@
 
 #include <linux/kernel/fcntl.h>
 
-#include <linux/fs/openat2.h>
+#include <uapi/openat2.h>
 
 	#define F_SETLEASE		(F_LINUX_SPECIFIC_BASE + 0)
 	#define F_GETLEASE		(F_LINUX_SPECIFIC_BASE + 1)

@@ -5,13 +5,51 @@
  * Written by David Howells (dhowells@redhat.com)
  */
 
-#ifndef _LINUX_FS_INTERNELS_H_
-#define _LINUX_FS_INTERNELS_H_
+#ifndef _LINUX_FS_INTERNELS_H
+#define _LINUX_FS_INTERNELS_H
 
-#include <stddef.h>
 #include <stdbool.h>
 
-#include <linux/fs/vfs_s_defs.h>
+	struct dentry;
+	typedef struct dentry dentry_s;
+	struct dentry_ops;
+	typedef struct dentry_ops dentry_ops_s;
+
+	struct super_block;
+	typedef struct super_block super_block_s;
+	struct super_ops;
+	typedef struct super_ops super_ops_s;
+
+	struct mount;
+	typedef struct mount mount_s;
+
+	struct vfsmount;
+	typedef struct vfsmount vfsmount_s;
+
+	struct inode;
+	typedef struct inode inode_s;
+	struct inode_ops;
+	typedef struct inode_ops inode_ops_s;
+
+	struct fs_type;
+	typedef struct fs_type fs_type_s;
+
+	struct file;
+	typedef struct file file_s;
+	struct file_ops;
+	typedef struct file_ops file_ops_s;
+
+	struct path;
+	typedef struct path path_s;
+
+	struct qstr;
+	typedef struct qstr qstr_s;
+
+	struct filename;
+	typedef struct filename filename_s;
+
+	struct iattr;
+	typedef struct iattr iattr_s;
 
 	// /*
 	// * block_dev.c
@@ -198,4 +236,4 @@
 	// 			loff_t *offset,
 	// 			size_t len, unsigned int flags);
 
-#endif /* _LINUX_FS_INTERNELS_H_ */
+#endif /* _LINUX_FS_INTERNELS_H */

@@ -3,8 +3,6 @@
 
 #include <uapi/stat.h>
 
-#include <stddef.h>
-
 #include <include/proto.h>
 
 typedef struct bdev_inode {

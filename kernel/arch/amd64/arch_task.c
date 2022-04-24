@@ -1,17 +1,16 @@
 #include <linux/kernel/fcntl.h>
+#include <linux/kernel/sched/task.h>
+#include <linux/mm/mm.h>
+#include <linux/fs/fs.h>
+#include <linux/fs/mount.h>
 
 #include <string.h>
-#include <stddef.h>
 #include <errno.h>
 #include <lib/utils.h>
 
 #include <include/glo.h>
 #include <include/proto.h>
 #include <include/printk.h>
-#include <linux/kernel/sched/task.h>
-#include <linux/mm/mm.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/namespace.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

@@ -15,7 +15,6 @@
 #include <linux/kernel/types.h>
 
 #include <string.h>
-#include <stddef.h>
 
 #include <include/proto.h>
 

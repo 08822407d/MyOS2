@@ -1,10 +1,11 @@
+#include <linux/fs/namei.h>
+#include <linux/fs/dcache.h>
+
 #include <sys/_null.h>
 
 #include <string.h>
-#include <stddef.h>
 
 #include <include/proto.h>
-#include <linux/fs/namei.h>
 
 #include "include/device.h"
 #include "include/tty.h"
@@ -63,17 +64,17 @@ void creat_dev_file()
 dentry_s * creat_append_devdirent(char * name, dentry_s * parent)
 {
 	dentry_s * dir = kmalloc(sizeof(dentry_s));
-	list_init(&dir->dirent_list, dir);
-	list_hdr_init(&dir->childdir_lhdr);
+	list_init(&dir->d_child, dir);
+	list_hdr_init(&dir->d_subdirs);
 	dir->d_name.name = name;
 	dir->d_name.len = strlen(dir->d_name.name);
 	dir->d_parent = parent;
-	dir->dir_ops = NULL;
+	dir->d_op = NULL;
 	inode_s * ino = kmalloc(sizeof(inode_s));
 	memset(ino, 0, sizeof(inode_s));
 	dir->d_inode = ino;
 
-	list_hdr_append(&parent->childdir_lhdr, &dir->dirent_list);
+	list_hdr_append(&parent->d_subdirs, &dir->d_child);
 
 	return dir;
 }

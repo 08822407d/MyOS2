@@ -9,7 +9,7 @@
 #include <lib/utils.h>
 
 #include <linux/kernel/types.h>
-#include <linux/fs/vfs_s_defs.h>
+#include <linux/fs/internels.h>
 
 #include <stdbool.h>
 
@@ -44,7 +44,7 @@
 	// 	struct list_head	bd_holder_disks;
 	// #endif
 	// 	struct kobject		*bd_holder_dir;
-		uint8_t			bd_partno;
+		u8			bd_partno;
 	// 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
 	// 	gendisk_s 		*bd_disk;
 	// 	backing_dev_info_s	*bd_bdi;
@@ -75,9 +75,9 @@
 	// * Alpha cannot write a byte atomically, so we need to use 32-bit value.
 	// */
 	// #if defined(CONFIG_ALPHA) && !defined(__alpha_bwx__)
-	// typedef uint32_t __bitwise blk_status_t;
+	// typedef u32 __bitwise blk_status_t;
 	// #else
-	// typedef uint8_t __bitwise blk_status_t;
+	// typedef u8 __bitwise blk_status_t;
 	// #endif
 	// #define	BLK_STS_OK 0
 	// #define BLK_STS_NOTSUPP		((__force blk_status_t)1)
@@ -191,15 +191,15 @@
 	// #define BIO_ISSUE_THROTL_SKIP_LATENCY (1ULL << 63)
 
 	// struct bio_issue {
-	// 	uint64_t value;
+	// 	u64 value;
 	// };
 
-	// static inline uint64_t __bio_issue_time(uint64_t time)
+	// static inline u64 __bio_issue_time(u64 time)
 	// {
 	// 	return time & BIO_ISSUE_TIME_MASK;
 	// }
 
-	// static inline uint64_t bio_issue_time(struct bio_issue *issue)
+	// static inline u64 bio_issue_time(struct bio_issue *issue)
 	// {
 	// 	return __bio_issue_time(issue->value);
 	// }
@@ -215,7 +215,7 @@
 	// 	size &= (1ULL << BIO_ISSUE_SIZE_BITS) - 1;
 	// 	issue->value = ((issue->value & BIO_ISSUE_RES_MASK) |
 	// 			(ktime_get_ns() & BIO_ISSUE_TIME_MASK) |
-	// 			((uint64_t)size << BIO_ISSUE_SIZE_SHIFT));
+	// 			((u64)size << BIO_ISSUE_SIZE_SHIFT));
 	// }
 
 	// /*
@@ -250,7 +250,7 @@
 	// 	struct blkcg_gq		*bi_blkg;
 	// 	struct bio_issue	bi_issue;
 	// #ifdef CONFIG_BLK_CGROUP_IOCOST
-	// 	uint64_t			bi_iocost_cost;
+	// 	u64			bi_iocost_cost;
 	// #endif
 	// #endif
 
@@ -531,11 +531,11 @@
 	// }
 
 	// struct blk_rq_stat {
-	// 	uint64_t mean;
-	// 	uint64_t min;
-	// 	uint64_t max;
-	// 	uint32_t nr_samples;
-	// 	uint64_t batch;
+	// 	u64 mean;
+	// 	u64 min;
+	// 	u64 max;
+	// 	u32 nr_samples;
+	// 	u64 batch;
 	// };
 
 #endif /* __LINUX_BLK_TYPES_H */

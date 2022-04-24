@@ -1,5 +1,3 @@
-#include <stddef.h>
-
 #include <linux/kernel/sched/task.h>
 #include <include/wait_queue.h>
 

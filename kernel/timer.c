@@ -1,4 +1,3 @@
-#include <stddef.h>
 #include <lib/utils.h>
 
 #include <include/printk.h>

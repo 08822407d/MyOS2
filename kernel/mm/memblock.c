@@ -6,10 +6,7 @@
 #include <linux/mm/mmzone.h>
 #include <linux/mm/page.h>
 
-#include <sys/limits.h>
-
 #include <string.h>
-#include <stddef.h>
 #include <errno.h>
 
 #include <include/glo.h>

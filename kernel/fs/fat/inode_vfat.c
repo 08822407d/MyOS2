@@ -7,7 +7,6 @@
 #include <uapi/msdos_fs.h>
 
 #include <string.h>
-#include <stddef.h>
 #include <errno.h>
 
 #include <include/proto.h>
