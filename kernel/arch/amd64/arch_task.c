@@ -1,5 +1,6 @@
+#include <linux/kernel/sched/sched.h>
 #include <linux/kernel/fcntl.h>
-#include <linux/kernel/sched/task.h>
+#include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
@@ -377,8 +378,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 
 	memset((virt_addr_t)curr->mm_struct->start_code, 0,
 			curr->mm_struct->end_data - curr->mm_struct->start_code);
-	long fp_pos = 0;
-	ret_val = fp->f_ops->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->d_inode->i_size, &fp_pos);
+	loff_t fp_pos = 0;
+	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->d_inode->i_size, &fp_pos);
 
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;

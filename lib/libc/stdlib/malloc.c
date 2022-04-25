@@ -1,10 +1,9 @@
-#include <arch/amd64/include/arch_config.h>
-
 #include <stdlib.h>
-// #include <stdbool.h>
 
 #include <const.h>
 #include "_malloc.h"
+
+#include <arch/amd64/include/arch_config.h>
 
 bool initiated = false;
 void *brk_end = NULL;

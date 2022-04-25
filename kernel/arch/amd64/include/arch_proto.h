@@ -2,8 +2,7 @@
 #define _AMD64_PROTO_H_
 
 #include <linux/kernel/types.h>
-
-#include <linux/fs/fs.h>
+#include <linux/kernel/sched/sched.h>
 
 #include "archtypes.h"
 #include "archconst.h"
@@ -174,7 +173,6 @@
 		int		arch_data;
 		int		arch_page;
 	} arch_init_flags_s;
-	
 
 	/* pre_init.c */
 	void pre_init_sytem(void);

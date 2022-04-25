@@ -2,7 +2,6 @@
 #define _MALLOC_H_
 
 #include <lib/utils.h>
-#include <sys/cdefs.h>
 
 	// uslab consts
 	#define USLAB_LEVEL			16

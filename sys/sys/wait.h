@@ -35,8 +35,8 @@
 #ifndef _SYS_WAIT_H_
 #define _SYS_WAIT_H_
 
-#include <sys/cdefs.h>
-
+#include <linux/kernel/types.h>
+#include <linux/kernel/stddef.h>
 // /*
 //  * This file holds definitions relevant to the wait4 system call and the
 //  * alternate interfaces that use it (wait, wait3, waitpid).
@@ -156,23 +156,23 @@
 #include <linux/kernel/types.h>
 // #include <sys/types.h>
 
-__BEGIN_DECLS
-struct __siginfo;
+// __BEGIN_DECLS
+// struct __siginfo;
 pid_t	wait(int *);
 pid_t	waitpid(pid_t, int *, int);
 // #if __POSIX_VISIBLE >= 200112
 // int	waitid(idtype_t, id_t, struct __siginfo *, int);
 // #endif
 
-#if __BSD_VISIBLE
+// #if __BSD_VISIBLE
 struct rusage;
 struct __wrusage;
 pid_t	wait4(pid_t, int *, int, struct rusage *);
 pid_t	wait3(int *, int, struct rusage *);
 // pid_t	wait6(idtype_t, id_t, int *, int, struct __wrusage *,
 // 	    struct __siginfo *);
-#endif
-__END_DECLS
+// #endif
+// __END_DECLS
 // #endif /* !_KERNEL */
 
 #endif /* !_SYS_WAIT_H_ */

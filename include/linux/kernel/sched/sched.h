@@ -3,6 +3,7 @@
 
 #include <lib/utils.h>
 
+#include <linux/kernel/sched/fs_struct.h>
 #include <linux/kernel/types.h>
 #include <linux/mm/mm.h>
 
@@ -32,6 +33,7 @@
 	struct task;
 	typedef struct task task_s;
 
+	#define MAX_FILE_NR 256
 	typedef struct task
 	{
 		List_s			schedule_list;
@@ -63,14 +65,12 @@
 		wait_queue_hdr_s	wait_childexit;
 	} task_s;
 
-	typedef union PCB
-	{
+	typedef union PCB {
 		task_s		task;
 		reg_t		stack[TASK_KSTACK_SIZE / sizeof(reg_t)];
 	} PCB_u __attribute__((aligned(8)));
 
-	typedef struct task_queue
-	{
+	typedef struct task_queue {
 		task_s **	queue;
 		task_s *	sched_task;
 		unsigned	nr_max;
@@ -79,35 +79,8 @@
 		unsigned	tail;	// point to next unit of the last non-null
 	} task_queue_s;
 
-	typedef struct per_cpudata
-	{
-		task_s *	curr_task;
-		task_s *	idle_task;
-
-		List_hdr_s	ruuning_lhdr;
-
-		unsigned long	is_idle_flag;
-		unsigned long	scheduleing_flag;
-
-		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-		unsigned long	time_slice;		// max jiffies for running of this task
-
-		size_t			cpu_idx;
-		reg_t			cpustack_p;
-		arch_cpudata_s	arch_info;
-	} per_cpudata_s;
-
-	typedef union cpudata
-	{
-		per_cpudata_s	cpudata;
-		reg_t			cpu_stack[CPUSTACK_SIZE / sizeof(reg_t)];
-	} cpudata_u;
-
-
 	task_s * get_current_task(void);
 	#define curr_tsk get_current_task()
-	per_cpudata_s * get_current_cpu(void);
-	#define curr_cpu get_current_cpu()
 
 	void prepare_init_task(size_t lcpu_nr);
 	void	init_task(size_t lcpu_nr);

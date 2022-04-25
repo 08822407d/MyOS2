@@ -8,8 +8,6 @@
 #ifndef _LINUX_FS_INTERNELS_H
 #define _LINUX_FS_INTERNELS_H
 
-#include <stdbool.h>
-
 	struct dentry;
 	typedef struct dentry dentry_s;
 	struct dentry_ops;
@@ -50,6 +48,14 @@
 
 	struct iattr;
 	typedef struct iattr iattr_s;
+
+	struct buffer_head;
+	typedef struct buffer_head buffer_head_s;
+
+	struct block_device;
+	typedef struct block_device block_device_s;
+
+#include <linux/kernel/types.h>
 
 	// /*
 	// * block_dev.c

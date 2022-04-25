@@ -38,15 +38,15 @@ unsigned long sys_close(int fd)
 {
 	task_s * curr = curr_tsk;
 
-	struct file * fp = NULL;
+	file_s * fp = NULL;
 
 //	color_printk(GREEN,BLACK,"sys_close:%d\n",fd);
 	if(fd < 0 || fd >= MAX_FILE_NR)
 		return -EBADF;
 
 	fp = curr->fps[fd];
-	if(fp->f_ops && fp->f_ops->close)
-		fp->f_ops->close(fp->dentry->d_inode, fp);
+	if(fp->f_op && fp->f_op->close)
+		fp->f_op->close(fp->dentry->d_inode, fp);
 
 	kfree(fp);
 	curr->fps[fd] = NULL;
@@ -67,8 +67,8 @@ unsigned long sys_read(int fd, void * buf, long count)
 		return -EINVAL;
 
 	fp = curr_tsk->fps[fd];
-	if(fp->f_ops && fp->f_ops->read)
-		ret = fp->f_ops->read(fp, buf, count, &fp->f_pos);
+	if(fp->f_op && fp->f_op->read)
+		ret = fp->f_op->read(fp, buf, count, &fp->f_pos);
 	return ret;
 }
 
@@ -85,8 +85,8 @@ unsigned long sys_write(int fd, void *buf, long count)
 		return -EINVAL;
 
 	fp = curr_tsk->fps[fd];
-	if(fp->f_ops && fp->f_ops->write)
-		ret = fp->f_ops->write(fp, buf, count, &fp->f_pos);
+	if(fp->f_op && fp->f_op->write)
+		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
 	return ret;
 }
 
@@ -103,8 +103,8 @@ unsigned long sys_lseek(int filds, long offset, int whence)
 		return -EINVAL;
 
 	fp = curr_tsk->fps[filds];
-	if(fp->f_ops && fp->f_ops->lseek)
-		ret = fp->f_ops->lseek(fp, offset, whence);
+	if(fp->f_op && fp->f_op->llseek)
+		ret = fp->f_op->llseek(fp, offset, whence);
 	return ret;
 }
 

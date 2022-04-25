@@ -2,18 +2,7 @@
 #define _LIB_UTILS_H_
 
 #include <linux/kernel/types.h>
-
-#include <stdbool.h>
-
-	#ifndef _CONTAINER_OF
-	#define _CONTAINER_OF
-		#define container_of(member_ptr, container_type, member_name)										\
-		({																									\
-			typeof(((container_type *)0)->member_name) * p = (member_ptr);									\
-			(container_type *)((unsigned long)p - (unsigned long)&(((container_type *)0)->member_name));	\
-		})
-	#endif /* _CONTAINER_OF */
-
+#include <linux/kernel/stddef.h>
 
 	// bitmap.c
 	void bm_set_bit(bitmap_t *, unsigned long idx);

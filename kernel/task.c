@@ -1,9 +1,8 @@
+#include <linux/kernel/sched/sched.h>
 #include <linux/kernel/types.h>
-#include <linux/kernel/sched/task.h>
+#include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
-
-#include <sys/cdefs.h>
 
 #include <string.h>
 
@@ -27,7 +26,7 @@ size_t			cpustack_off;
 PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
-PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __attribute__((section(".data")));
+PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
 mm_s			task0_mm = 
 {
 	.start_code		= (reg_t)&_text,

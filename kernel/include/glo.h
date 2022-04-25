@@ -2,7 +2,6 @@
 #define _GLO_H_
 
 #include <include/ktypes.h>
-#include <linux/kernel/sched/task.h>
 
 	extern unsigned long volatile	jiffies;
 

@@ -9,7 +9,6 @@
 #define _LINUX_BUFFER_HEAD_H
 
 #include <linux/kernel/types.h>
-#include <linux/fs/fs.h>
 #include <linux/mm/page.h>
 // #include <linux/linkage.h>
 // #include <linux/pagemap.h>
@@ -44,10 +43,7 @@
 
 	#define MAX_BUF_PER_PAGE	(PAGE_SIZE / 512)
 
-	struct buffer_head;
-	typedef struct buffer_head buffer_head_s;
-	struct address_space;
-	// typedef void (bh_end_io_t)(struct buffer_head *bh, int uptodate);
+	typedef void (bh_end_io_t)(struct buffer_head *bh, int uptodate);
 
 	/*
 	* Historically, a buffer_head was used to map a single block
@@ -60,8 +56,8 @@
 	*/
 	typedef struct buffer_head {
 		// unsigned long	b_state;		/* buffer state bitmap (see above) */
-		// buffer_head_s	*b_this_page;	/* circular list of page's buffers */
-		// page_s			*b_page;		/* the page this bh is mapped to */
+		buffer_head_s	*b_this_page;	/* circular list of page's buffers */
+		page_s			*b_page;		/* the page this bh is mapped to */
 
 		sector_t		b_blocknr;		/* start block number */
 		size_t			b_size;			/* size of mapping */
@@ -71,7 +67,7 @@
 		// bh_end_io_t *b_end_io;		/* I/O completion */
 		// void *b_private;				/* reserved for b_end_io */
 		// struct list_head b_assoc_buffers; /* associated with another mapping */
-		// struct address_space *b_assoc_map;	/* mapping this buffer is
+		// addr_space_s *b_assoc_map;	/* mapping this buffer is
 		// 					associated with */
 		// atomic_t b_count;		/* users using this buffer_head */
 		// spinlock_t b_uptodate_lock;	/* Used by the first bh in a page, to
@@ -172,7 +168,7 @@
 	// int inode_has_buffers(struct inode *);
 	// void invalidate_inode_buffers(struct inode *);
 	// int remove_inode_buffers(struct inode *inode);
-	// int sync_mapping_buffers(struct address_space *mapping);
+	// int sync_mapping_buffers(addr_space_s *mapping);
 	// void clean_bdev_aliases(block_device_s *bdev, sector_t block,
 	// 			sector_t len);
 	// static inline void clean_bdev_bh_alias(struct buffer_head *bh)
@@ -225,19 +221,19 @@
 	// int block_read_full_page(struct page*, get_block_t*);
 	// int block_is_partially_uptodate(struct page *page, unsigned long from,
 	// 				unsigned long count);
-	// int block_write_begin(struct address_space *mapping, loff_t pos, unsigned len,
+	// int block_write_begin(addr_space_s *mapping, loff_t pos, unsigned len,
 	// 		unsigned flags, struct page **pagep, get_block_t *get_block);
 	// int __block_write_begin(struct page *page, loff_t pos, unsigned len,
 	// 		get_block_t *get_block);
-	// int block_write_end(struct file *, struct address_space *,
+	// int block_write_end(struct file *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
-	// int generic_write_end(struct file *, struct address_space *,
+	// int generic_write_end(struct file *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
 	// void page_zero_new_buffers(struct page *page, unsigned from, unsigned to);
 	// void clean_page_buffers(struct page *page);
-	// int cont_write_begin(struct file *, struct address_space *, loff_t,
+	// int cont_write_begin(struct file *, addr_space_s *, loff_t,
 	// 			unsigned, unsigned, struct page **, void **,
 	// 			get_block_t *, loff_t *);
 	// int generic_cont_expand_simple(struct inode *inode, loff_t size);
@@ -256,14 +252,14 @@
 	// 	/* -ENOSPC, -EDQUOT, -EIO ... */
 	// 	return VM_FAULT_SIGBUS;
 	// }
-	// sector_t generic_block_bmap(struct address_space *, sector_t, get_block_t *);
-	// int block_truncate_page(struct address_space *, loff_t, get_block_t *);
-	// int nobh_write_begin(struct address_space *, loff_t, unsigned, unsigned,
+	// sector_t generic_block_bmap(addr_space_s *, sector_t, get_block_t *);
+	// int block_truncate_page(addr_space_s *, loff_t, get_block_t *);
+	// int nobh_write_begin(addr_space_s *, loff_t, unsigned, unsigned,
 	// 				struct page **, void **, get_block_t*);
-	// int nobh_write_end(struct file *, struct address_space *,
+	// int nobh_write_end(struct file *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
-	// int nobh_truncate_page(struct address_space *, loff_t, get_block_t *);
+	// int nobh_truncate_page(addr_space_s *, loff_t, get_block_t *);
 	// int nobh_writepage(struct page *page, get_block_t *get_block,
 	// 						struct writeback_control *wbc);
 
@@ -406,7 +402,7 @@
 	// static inline int inode_has_buffers(struct inode *inode) { return 0; }
 	// static inline void invalidate_inode_buffers(struct inode *inode) {}
 	// static inline int remove_inode_buffers(struct inode *inode) { return 1; }
-	// static inline int sync_mapping_buffers(struct address_space *mapping) { return 0; }
+	// static inline int sync_mapping_buffers(addr_space_s *mapping) { return 0; }
 	// static inline void invalidate_bh_lrus_cpu(int cpu) {}
 	// static inline bool has_bh_in_lru(int cpu, void *dummy) { return 0; }
 	// #define buffer_heads_over_limit 0

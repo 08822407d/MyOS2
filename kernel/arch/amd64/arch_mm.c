@@ -3,7 +3,7 @@
 
 #include <include/ktypes.h>
 #include <include/proto.h>
-#include <linux/kernel/sched/task.h>
+#include <linux/kernel/sched/sched.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

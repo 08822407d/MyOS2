@@ -1,5 +1,5 @@
 #include <linux/kernel/err.h>
-#include <linux/kernel/sched/task.h>
+#include <linux/kernel/sched/sched.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/dcache.h>

@@ -1,5 +1,4 @@
-#include <sys/cdefs.h>
-#include <sys/_null.h>
+#include <linux/kernel/stddef.h>
 
 #include <string.h>
 

@@ -2,7 +2,7 @@
 
 #include <include/glo.h>
 #include <include/proto.h>
-#include <linux/kernel/sched/task.h>
+#include <linux/kernel/sched/sched.h>
 #include <linux/mm/memblock.h>
 
 #include "include/arch_proto.h"

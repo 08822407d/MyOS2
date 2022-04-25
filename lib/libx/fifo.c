@@ -2,10 +2,11 @@
  * libx/fifo.c
  */
 
+#include <linux/kernel/stddef.h>
+#include <linux/kernel/minmax.h>
 // #include <arch/amd64/spinlock.h>
 #include <arch/amd64/barrier.h>
 #include <stdlib.h>
-#include <stddef.h>
 // #include <log2.h>
 #include <string.h>
 #include <fifo.h>

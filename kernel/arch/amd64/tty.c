@@ -1,4 +1,4 @@
-#include <sys/_null.h>
+#include <linux/kernel/stddef.h>
 
 #include <string.h>
 #include <lib/font.h>
@@ -19,7 +19,7 @@ wait_queue_hdr_s kbd_wqhdr;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-long tty_open(inode_s * inode, file_s * fp)
+int tty_open(inode_s * inode, file_s * fp)
 {
 	fp->private_data = p_kb;
 
@@ -31,7 +31,7 @@ long tty_open(inode_s * inode, file_s * fp)
 	return 1;
 }
 
-long tty_close(inode_s * inode,file_s * fp)
+int tty_close(inode_s * inode,file_s * fp)
 {
 	fp->private_data = NULL;
 
@@ -45,7 +45,7 @@ long tty_close(inode_s * inode,file_s * fp)
 
 #define	KEY_CMD_RESET_BUFFER	0
 
-long tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
+int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 {
 	switch(cmd)
 	{
@@ -64,7 +64,7 @@ long tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg
 	return 0;
 }
 
-long tty_read(file_s * fp, char * buf, unsigned long count, long * position)
+int tty_read(file_s * fp, char * buf, unsigned long count, long * position)
 {
 	long counter  = 0;
 	char * tmpbuf = kmalloc(count);
@@ -168,7 +168,7 @@ void tty_write_color(char * buf, unsigned long length, unsigned int FRcolor, uns
 	unlock_spin_lock(&Pos.printk_lock);
 }
 
-long tty_write(file_s * filp, char * buf, unsigned long length, long * position)
+int tty_write(file_s * filp, char * buf, unsigned long length, long * position)
 {
 	long ret_val = 0;
 	tty_write_color(buf, length, GREEN, BLACK);
