@@ -1,8 +1,8 @@
-#include <stdio.h>
+#include <linux/fs/fs.h>
+#include <linux/fs/GPT.h>
+#include <linux/fs/ext2.h>
 
 #include <include/printk.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/ext2.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
@@ -16,7 +16,7 @@ fs_type_s ext2_fs_type=
 {
 	.name = "EXT2",
 	.fs_flags = 0,
-	.read_superblock = read_ext2_superblock,
+	.read_super = read_ext2_superblock,
 	.next = NULL,
 };
 

@@ -363,9 +363,9 @@ find_lookup_success:
 	finode->write_date		= tmpdentry->time;
 	finode->write_time		= tmpdentry->date;
 
-	if((tmpdentry->starthi >> 12) && (p->attribute & FS_ATTR_FILE))
+	if((tmpdentry->starthi >> 12) && (p->i_mode & S_IFMT))
 	{
-		p->attribute |= FS_ATTR_DEVICE;
+		p->i_mode |= S_IFBLK;
 	}
 
 	dest_dentry->d_inode = p;

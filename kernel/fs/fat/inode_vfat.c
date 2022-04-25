@@ -13,6 +13,9 @@
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 
+extern file_ops_s FAT32_file_ops;
+
+
 #define KB_IN_SECTORS 2
 
 /* DOS dates from 1980/1/1 through 2107/12/31 */

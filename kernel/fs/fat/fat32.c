@@ -12,17 +12,17 @@
 *
 *
 ***************************************************/
+#include <linux/fs/fs.h>
+#include <linux/fs/fat.h>
+#include <linux/fs/fat32.h>
 #include <uapi/msdos_fs.h>
+
 #include <errno.h>
 
-#include <stdio.h>
 #include <string.h>
 
 #include <include/printk.h>
 #include <include/proto.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/fat.h>
-#include <linux/fs/fat32.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
@@ -53,17 +53,17 @@ uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32
 	return 1;	
 }
 
-long FAT32_open(inode_s * inode, file_s * file_p)
+int FAT32_open(inode_s *inode, file_s *file_p)
 {
 	return 1;
 }
 
-long FAT32_close(inode_s * inode, file_s * file_p)
+int FAT32_close(inode_s *inode, file_s *file_p)
 {
 	return 1;
 }
 
-long FAT32_read(file_s * filp, char * buf, unsigned long count, long * position)
+ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 {
 	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
@@ -143,7 +143,7 @@ uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 	return 0;
 }
 
-long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position)
+ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *position)
 {
 	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
@@ -201,7 +201,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < USERADDR_LIMIT)
-			copy_from_user(buffer + offset, buf, length);
+			copy_from_user(buffer + offset, (void *)buf, length);
 		else
 			memcpy(buffer + offset, buf, length);
 
@@ -253,7 +253,7 @@ long FAT32_write(file_s * filp, char * buf, unsigned long count, long * position
 	return ret_val;
 }
 
-long FAT32_lseek(file_s * filp, long offset, long origin)
+loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 {
 	inode_s *inode = filp->dentry->d_inode;
 	long pos = 0;
@@ -286,10 +286,10 @@ long FAT32_lseek(file_s * filp, long offset, long origin)
 	return pos;
 }
 
-long FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long arg)
+int FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long arg)
 {}
 
-long FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
+size_t FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
 {
 	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
@@ -443,7 +443,7 @@ file_ops_s FAT32_file_ops =
 	.close = FAT32_close,
 	.read = FAT32_read,
 	.write = FAT32_write,
-	.lseek = FAT32_lseek,
+	.llseek = FAT32_lseek,
 	.ioctl = FAT32_ioctl,
 
 	.readdir = FAT32_readdir,
@@ -559,7 +559,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	sbp->s_root->d_inode->i_size = 0;
 	sbp->s_root->d_inode->i_blocks = (sbp->s_root->d_inode->i_size + fsbi->bytes_per_cluster - 1) /
 										fsbi->bytes_per_sector;
-	sbp->s_root->d_inode->attribute = FS_ATTR_DIR;
+	sbp->s_root->d_inode->i_mode = S_IFDIR;
 	sbp->s_root->d_inode->i_sb = sbp;
 
 	//fat32 root inode
@@ -581,7 +581,7 @@ fs_type_s FAT32_fs_type=
 {
 	.name = "FAT32",
 	.fs_flags = 0,
-	.read_superblock = read_fat32_superblock,
+	.read_super = read_fat32_superblock,
 	.next = NULL,
 };
 

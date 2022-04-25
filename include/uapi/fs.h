@@ -38,7 +38,7 @@
 	#define INR_OPEN_MAX	4096	/* Hard limit for nfile rlimits */
 
 	#define BLOCK_SIZE_BITS	10
-	#define BLOCK_SIZE (1<<BLOCK_SIZE_BITS)
+	#define BLOCK_SIZE		(1<<BLOCK_SIZE_BITS)
 
 	#define SEEK_SET		0		/* seek relative to beginning of file */
 	#define SEEK_CUR		1		/* seek relative to current file position */

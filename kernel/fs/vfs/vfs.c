@@ -12,12 +12,17 @@
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
 
+
+#define BOOT_FS_IDX 1
+
+super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
+
 MBR_s		*boot_sec;
 GPT_H_s		*gpt_hdr;
 GPT_PE_s	*gpt_pes;
 
 super_block_s *root_sb = NULL;
-fs_type_s filesystem = {"filesystem", 0};
+fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 
 
 #include <linux/fs/fat.h>
@@ -91,7 +96,7 @@ super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 	for(p = &filesystem; p; p = p->next)
 		if(!strcmp(p->name, name))
 		{
-			return p->read_superblock(DPTE, buf);
+			return p->read_super(DPTE, buf);
 		}
 	return 0;
 }

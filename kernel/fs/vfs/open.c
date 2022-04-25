@@ -4,6 +4,7 @@
 #include <linux/fs/file.h>
 #include <linux/fs/namei.h>
 
+#include <uapi/fcntl.h>
 #include <uapi/openat2.h>
 
 #include <string.h>
@@ -36,9 +37,9 @@ open_how_s build_open_how(int flags, umode_t mode)
 static int do_dentry_open(file_s * f, inode_s * inode)
 {
 	unsigned long error = -ENOERR;
-	f->f_ops = inode->i_fop;
-	if(f->f_ops && f->f_ops->open)
-		error = f->f_ops->open(f->dentry->d_inode, f);
+	f->f_op = inode->i_fop;
+	if(f->f_op && f->f_op->open)
+		error = f->f_op->open(f->dentry->d_inode, f);
 
 	if(f->f_mode & O_TRUNC)
 	{
@@ -284,7 +285,7 @@ out:
  * @file: newly allocated file with f_flag initialized
  * @cred: credentials to use
  */
-int __vfs_open(const path_s * path, file_s * file)
+int vfs_open(const path_s * path, file_s * file)
 {
 	file->dentry = path->dentry;
 	return do_dentry_open(file, path->dentry->d_inode);

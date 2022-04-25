@@ -25,7 +25,7 @@
 	typedef struct block_device {
 		char			*dev_name;
 		List_s			bdev_list;
-		file_ops_s		*f_ops;
+		file_ops_s		*f_op;
 
 		sector_t		bd_start_sect;
 		// disk_stats_s	__percpu *bd_stats;

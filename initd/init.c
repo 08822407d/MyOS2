@@ -1,7 +1,6 @@
 #include <linux/kernel/fcntl.h>
 #include <sys/wait.h>
 
-#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,6 +11,12 @@
 void file_io_test(void);
 void malloc_free_test(void);
 void dirtest(void);
+
+	char *	getcwd(char *, size_t);
+	int		chdir(const char *);
+	ssize_t	read(int, const void *, size_t);
+	int		reboot(int);
+	ssize_t	write(int, const void *, size_t);
 
 int main(int argc, const char *argv[])
 {

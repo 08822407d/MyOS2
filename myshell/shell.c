@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <dirent.h>
 
 #include <uapi/limits.h>
@@ -24,6 +23,12 @@ int pwd_command(int argc, char **argv);
 int cat_command(int argc, char **argv);
 int exec_command(int argc, char **argv);
 int reboot_command(int argc, char **argv);
+ 
+	char *	getcwd(char *, size_t);
+	int		chdir(const char *);
+	ssize_t	read(int, const void *, size_t);
+	int		reboot(int);
+
 
 builtincmd_s shell_internal_cmd[] = 
 {

@@ -39,7 +39,7 @@ unsigned long module_test(unsigned long flag)
 	// char testf_buf[512];
 	// long pos = 0;
 	// file_s * testf_fp = open_exec_file(testfname);
-	// int retval = testf_fp->f_ops->read(testf_fp, testf_buf, 512, &pos);
+	// int retval = testf_fp->f_op->read(testf_fp, testf_buf, 512, &pos);
 
 	// color_printk(YELLOW, BLACK, "task module_test finished......");
 	while (1);

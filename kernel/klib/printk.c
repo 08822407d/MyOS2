@@ -13,8 +13,7 @@
 *
 ***************************************************/
 #include <linux/kernel/types.h>
-
-#include <sys/cdefs.h>
+#include <linux/kernel/stddef.h>
 
 #include <stdio.h>
 #include <stdarg.h>

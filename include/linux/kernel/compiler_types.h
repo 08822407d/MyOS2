@@ -21,10 +21,11 @@
 	// 		# define __release(x)	__context__(x,-1)
 	// 		# define __cond_lock(x,c)	((c) ? ({ __acquire(x); 1; }) : 0)
 	// 		/* other */
-	// 		# define __force	__attribute__((force))
-	// 		# define __nocast	__attribute__((nocast))
-	// 		# define __safe		__attribute__((safe))
-	// 		# define __private	__attribute__((noderef))
+			// # define __force	__attribute__((force))
+			# define __force
+			# define __nocast	__attribute__((nocast))
+			# define __safe		__attribute__((safe))
+			# define __private	__attribute__((noderef))
 	// 		# define ACCESS_PRIVATE(p, member) (*((typeof((p)->member) __force *) &(p)->member))
 	// 	#else /* __CHECKER__ */
 	// 		/* address spaces */

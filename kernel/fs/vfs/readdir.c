@@ -10,6 +10,8 @@
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
 
+int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
+
 // long sys_getdents64(unsigned int fd,
 // 		linux_dirent64_s *dirent, unsigned int count)
 // {
@@ -47,9 +49,9 @@ long sys_getdents64(unsigned int fd,
 {
 	long ret_val = 0;
 	fd_s f = fdget_pos(fd);
-	if (f.file->f_ops != NULL &&
-		f.file->f_ops->readdir != NULL)
-		ret_val = f.file->f_ops->readdir(f.file, dirent, fill_dentry);
+	if (f.file->f_op != NULL &&
+		f.file->f_op->readdir != NULL)
+		ret_val = f.file->f_op->readdir(f.file, dirent, fill_dentry);
 
 	return ret_val;
 }

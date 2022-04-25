@@ -1,7 +1,6 @@
 #include <linux/kernel/types.h>
+#include <linux/kernel/stddef.h>
 #include <linux/kernel/fcntl.h>
-
-#include <sys/cdefs.h>
 
 #include <string.h>
 #include <errno.h>

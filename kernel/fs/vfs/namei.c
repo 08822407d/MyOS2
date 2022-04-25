@@ -1,16 +1,18 @@
 #include <linux/kernel/err.h>
-
-#include <string.h>
-#include <errno.h>
-
-#include <include/proto.h>
-#include <include/printk.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/internels.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/dcache.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/file.h>
+
+#include <uapi/fcntl.h>
+
+#include <string.h>
+#include <errno.h>
+
+#include <include/proto.h>
+#include <include/printk.h>
 
 #include <arch/amd64/include/arch_proto.h>
 
@@ -606,7 +608,7 @@ static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 	// if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
 	// 	return -ENOTDIR;
 
-	__vfs_open(&nd->path, file);
+	vfs_open(&nd->path, file);
 }
 
 // Linux function proto:

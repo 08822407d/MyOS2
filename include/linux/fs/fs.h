@@ -583,6 +583,7 @@
 	*/
 	typedef struct inode {
 		file_ops_s		*i_fop;
+		void			*private_idx_info;
 
 
 		umode_t			i_mode;
@@ -1428,6 +1429,9 @@
 	// };
 
 	typedef struct super_block {
+		void				*private_sb_info;
+
+
 		// list_head_s			s_list;		/* Keep this first */
 		dev_t				s_dev;		/* search index; _not_ kdev_t */
 		unsigned char		s_blocksize_bits;
@@ -1902,8 +1906,8 @@
 	// * to have different dirent layouts depending on the binary type.
 	// */
 	// struct dir_context;
-	// typedef int (*filldir_t)(struct dir_context *, const char *, int, loff_t, u64,
-	// 			unsigned);
+	// typedef int (*filldir_t)(const char *, int, loff_t, u64, unsigned);
+	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
 
 	// struct dir_context {
 	// 	filldir_t actor;
@@ -1952,11 +1956,12 @@
 	typedef struct file_ops {
 		int			(*ioctl)(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
 		int			(*close)(inode_s * inode, file_s * file_p);
+		size_t		(*readdir)(file_s * filp, void * dirent, filldir_t filler);
 
 		// module_s	*owner;
-		loff_t		(*llseek) (file_s *, loff_t, int);
-		ssize_t		(*read) (file_s *, char *, size_t, loff_t *);
-		ssize_t		(*write) (file_s *, const char *, size_t, loff_t *);
+		loff_t		(*llseek) (file_s *file, loff_t pos, int);
+		ssize_t		(*read) (file_s *file, char *buf, size_t size, loff_t *pos);
+		ssize_t		(*write) (file_s *file, const char *buf, size_t size, loff_t *pos);
 		// ssize_t		(*read_iter) (struct kiocb *, struct iov_iter *);
 		// ssize_t		(*write_iter) (struct kiocb *, struct iov_iter *);
 		// int			(*iopoll)(struct kiocb *kiocb, struct io_comp_batch *,
@@ -2069,12 +2074,15 @@
 
 
 	typedef struct super_ops {
+		void (*write_super)(super_block_s * sb);
+
+
 		inode_s	*(*alloc_inode)(super_block_s *sb);
 		void	(*destroy_inode)(inode_s *);
 		void	(*free_inode)(inode_s *);
 
 		void	(*dirty_inode) (inode_s *, int flags);
-		// int		(*write_inode) (inode_s *, writeback_control_s *wbc);
+		int		(*write_inode) (inode_s *);
 		int		(*drop_inode) (inode_s *);
 		void	(*evict_inode) (inode_s *);
 		void	(*put_super) (super_block_s *);
@@ -2390,7 +2398,10 @@
 
 	// int sync_inode_metadata(inode_s *inode, int wait);
 
-	typedef struct fs_type{
+#include <linux/fs/GPT.h>
+	typedef struct fs_type {
+		super_block_s	*(*read_super)(GPT_PE_s * DPTE, void * buf);
+
 		const char		*name;
 		int				fs_flags;
 	#define FS_REQUIRES_DEV			1
@@ -2421,19 +2432,19 @@
 
 	// #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
 
-	// extern dentry_s *mount_bdev(file_s_system_type *fs_type,
-	// 	int flags, const char *dev_name, void *data,
-	// 	int (*fill_super)(super_block_s *, void *, int));
-	// extern dentry_s *mount_single(file_s_system_type *fs_type,
+	extern dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
+					const char *dev_name, void *data,
+					int (*fill_super)(super_block_s *, void *, int));
+	// extern dentry_s *mount_single(fs_type_s *fs_type,
 	// 	int flags, void *data,
 	// 	int (*fill_super)(super_block_s *, void *, int));
-	// extern dentry_s *mount_nodev(file_s_system_type *fs_type,
+	// extern dentry_s *mount_nodev(fs_type_s *fs_type,
 	// 	int flags, void *data,
 	// 	int (*fill_super)(super_block_s *, void *, int));
 	// extern dentry_s *mount_subtree(vfsmount_s *mnt, const char *path);
 	// void generic_shutdown_super(super_block_s *sb);
 	// void kill_block_super(super_block_s *sb);
-	// void kill_anon_super(super_block_s *sb);
+	void kill_anon_super(super_block_s *sb);
 	// void kill_litter_super(super_block_s *sb);
 	// void deactivate_super(super_block_s *sb);
 	// void deactivate_locked_super(super_block_s *sb);
@@ -2444,7 +2455,7 @@
 	// super_block_s *sget_fc(struct fs_context *fc,
 	// 				int (*test)(super_block_s *, struct fs_context *),
 	// 				int (*set)(super_block_s *, struct fs_context *));
-	// super_block_s *sget(file_s_system_type *type,
+	// super_block_s *sget(fs_type_s *type,
 	// 			int (*test)(super_block_s *,void *),
 	// 			int (*set)(super_block_s *,void *),
 	// 			int flags, void *data);
@@ -2466,9 +2477,9 @@
 	// 		BUG_ON(!(__file->f_op = (fops))); \
 	// 	} while(0)
 
-	// extern int register_filesystem(file_s_system_type *);
-	// extern int unregister_filesystem(file_s_system_type *);
-	// extern vfsmount_s *kern_mount(file_s_system_type *);
+	extern int register_filesystem(fs_type_s *);
+	extern int unregister_filesystem(fs_type_s *);
+	extern vfsmount_s *kern_mount(fs_type_s *);
 	// extern void kern_unmount(vfsmount_s *mnt);
 	// extern int may_umount_tree(vfsmount_s *);
 	// extern int may_umount(vfsmount_s *);
@@ -2491,7 +2502,7 @@
 	// extern int current_umask(void);
 
 	// extern void ihold(inode_s * inode);
-	// extern void iput(inode_s *);
+	extern void iput(inode_s *);
 	// extern int generic_update_time(inode_s *, timespec64_s *, int);
 
 	// /* /sys/fs */
@@ -2591,14 +2602,15 @@
 
 	// /* fs/open.c */
 	// struct audit_names;
-	// file_sname {
-	// 	const char		*name;	/* pointer to actual string */
-	// 	const __user char	*uptr;	/* original userland pointer */
-	// 	int			refcnt;
-	// 	struct audit_names	*aname;
-	// 	const char		iname[];
-	// };
-	// static_assert(offsetof(file_sname, iname) % sizeof(long) == 0);
+	typedef struct filename {
+		const char	*name;	/* pointer to actual string */
+		const char	*uptr;	/* original userland pointer */
+		int			len;
+		// int			refcnt;
+		// audit_names_s	*aname;
+		// const char	iname[];
+	} filename_s;
+	// static_assert(offsetof(filename_s, iname) % sizeof(long) == 0);
 
 	// static inline user_namespace_s *file_mnt_user_ns(file_s *file)
 	// {
@@ -2625,7 +2637,7 @@
 	// extern int vfs_fallocate(file_s *file, int mode, loff_t offset,
 	// 			loff_t len);
 	extern long do_sys_open(int dfd, const char *filename, int flags, umode_t mode);
-	// extern file_s *file_open_name(file_sname *, int, umode_t);
+	// extern file_s *file_open_name(filename_s *, int, umode_t);
 	extern file_s *filp_open(const char *, int, umode_t);
 	// extern file_s *file_open_root(const path_s *,
 	// 				const char *, int, umode_t);
@@ -2644,11 +2656,11 @@
 	// }
 	// extern int filp_close(file_s *, fl_owner_t id);
 
-	// extern file_sname *getname_flags(const char __user *, int, int *);
-	// extern file_sname *getname_uflags(const char __user *, int);
-	// extern file_sname *getname(const char __user *);
-	// extern file_sname *getname_kernel(const char *);
-	// extern void putname(file_sname *name);
+	// extern filename_s *getname_flags(const char __user *, int, int *);
+	// extern filename_s *getname_uflags(const char __user *, int);
+	extern filename_s *getname(const char *);
+	extern filename_s *getname_kernel(const char *);
+	extern void putname(filename_s *name);
 
 	// extern int finish_open(file_s *file, dentry_s *dentry,
 	// 			int (*open)(inode_s *, file_s *));
@@ -3066,7 +3078,7 @@
 	// extern void clear_inode(inode_s *);
 	// extern void __destroy_inode(inode_s *);
 	// extern inode_s *new_inode_pseudo(super_block_s *sb);
-	// extern inode_s *new_inode(super_block_s *sb);
+	extern inode_s *new_inode(super_block_s *sb);
 	// extern void free_inode_nonrcu(inode_s *inode);
 	// extern int should_remove_suid(dentry_s *);
 	// extern int file_remove_privs(file_s *);
@@ -3253,15 +3265,15 @@
 	// extern const char *vfs_get_link(dentry_s *, struct delayed_call *);
 	// extern int vfs_readlink(dentry_s *, char __user *, int);
 
-	// extern file_s_system_type *get_filesystem(file_s_system_type *fs);
-	// extern void put_filesystem(file_s_system_type *fs);
-	// extern file_s_system_type *get_fs_type(const char *name);
+	// extern fs_type_s *get_filesystem(fs_type_s *fs);
+	// extern void put_filesystem(fs_type_s *fs);
+	// extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);
 	// extern super_block_s *get_active_super(struct block_device *bdev);
 	// extern void drop_super(super_block_s *sb);
 	// extern void drop_super_exclusive(super_block_s *sb);
 	// extern void iterate_supers(void (*)(super_block_s *, void *), void *);
-	// extern void iterate_supers_type(file_s_system_type *,
+	// extern void iterate_supers_type(fs_type_s *,
 	// 					void (*)(super_block_s *, void *), void *);
 
 	// extern int dcache_dir_open(inode_s *, file_s *);
@@ -3308,7 +3320,7 @@
 	// dentry_s *d_alloc_name(dentry_s *, const char *);
 	// extern int simple_fill_super(super_block_s *, unsigned long,
 	// 				const struct tree_descr *);
-	// extern int simple_pin_fs(file_s_system_type *, vfsmount_s **mount, int *count);
+	// extern int simple_pin_fs(fs_type_s *, vfsmount_s **mount, int *count);
 	// extern void simple_release_fs(vfsmount_s **mount, int *count);
 
 	// extern ssize_t simple_read_from_buffer(void __user *to, size_t count,
@@ -3486,12 +3498,12 @@
 	// struct ctl_table;
 	// int __init list_bdev_fs_names(char *buf, size_t size);
 
-	// #define __FMODE_EXEC		((__force int) FMODE_EXEC)
-	// #define __FMODE_NONOTIFY	((__force int) FMODE_NONOTIFY)
+	#define __FMODE_EXEC		((__force int) FMODE_EXEC)
+	#define __FMODE_NONOTIFY	((__force int) FMODE_NONOTIFY)
 
-	// #define ACC_MODE(x) ("\004\002\006\006"[(x)&O_ACCMODE])
-	// #define OPEN_FMODE(flag) ((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
-	// 						(flag & __FMODE_NONOTIFY)))
+	#define ACC_MODE(x)			("\004\002\006\006"[(x)&O_ACCMODE])
+	#define OPEN_FMODE(flag)	((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
+									(flag & __FMODE_NONOTIFY)))
 
 	// static inline bool is_sxid(umode_t mode)
 	// {
@@ -3585,7 +3597,7 @@
 	extern super_block_s *root_sb;
 	extern mount_s root_mnt;
 
-	void init_vfs(void);
+	unsigned long init_vfs(void);
 	void init_mount(void);
 
 #endif /* _LINUX_FS_H */

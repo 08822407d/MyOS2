@@ -4,6 +4,7 @@
 #include <linux/fs/namei.h>
 #include <linux/fs/mount.h>
 
+#include <uapi/fcntl.h>
 #include <uapi/mount.h>
 
 #include <errno.h>

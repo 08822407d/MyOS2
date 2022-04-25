@@ -1,4 +1,5 @@
 #include <linux/fs/fs.h>
+#include <linux/kernel/blk_types.h>
 
 #include <errno.h>
 
@@ -49,7 +50,7 @@ void kill_anon_super(super_block_s *sb)
 	free_anon_bdev(dev);
 }
 
-void kill_litter_super(struct super_block *sb)
+void kill_litter_super(super_block_s *sb)
 {
 	// if (sb->s_root)
 	// 	d_genocide(sb->s_root);

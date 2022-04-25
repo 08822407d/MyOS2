@@ -26,7 +26,7 @@
 		List_s			cdev_list;
 		char *			dev_name;
 		dev_t			dev_nr;
-		file_ops_s *	f_ops;
+		file_ops_s *	f_op;
 	} cdev_s;
 
 	/* device.c */

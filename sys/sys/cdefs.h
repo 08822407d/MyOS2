@@ -347,17 +347,17 @@
 #define	__pure
 #endif
 
-#if __GNUC_PREREQ__(3, 1)
-#define	__always_inline	__attribute__((__always_inline__))
-#else
-#define	__always_inline
-#endif
+// #if __GNUC_PREREQ__(3, 1)
+// #define	__always_inline	__attribute__((__always_inline__))
+// #else
+// #define	__always_inline
+// #endif
 
-#if __GNUC_PREREQ__(3, 1)
-#define	__noinline	__attribute__ ((__noinline__))
-#else
-#define	__noinline
-#endif
+// #if __GNUC_PREREQ__(3, 1)
+// #define	__noinline	__attribute__ ((__noinline__))
+// #else
+// #define	__noinline
+// #endif
 
 #if __GNUC_PREREQ__(3, 4)
 #define	__fastcall	__attribute__((__fastcall__))

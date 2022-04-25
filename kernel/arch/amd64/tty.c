@@ -64,10 +64,10 @@ int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 	return 0;
 }
 
-int tty_read(file_s * fp, char * buf, unsigned long count, long * position)
+ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {
 	long counter  = 0;
-	char * tmpbuf = kmalloc(count);
+	char *tmpbuf = kmalloc(count);
 	memset(tmpbuf, 0, count);
 	while (counter < count)
 	{
@@ -109,7 +109,7 @@ void kputchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, 
 	}
 }
 
-void tty_write_color(char * buf, unsigned long length, unsigned int FRcolor, unsigned int BKcolor)
+void tty_write_color(const char *buf, size_t length, unsigned int FRcolor, unsigned int BKcolor)
 {
 	int count = 0;
 	int line = 0;
@@ -168,7 +168,7 @@ void tty_write_color(char * buf, unsigned long length, unsigned int FRcolor, uns
 	unlock_spin_lock(&Pos.printk_lock);
 }
 
-int tty_write(file_s * filp, char * buf, unsigned long length, long * position)
+ssize_t tty_write(file_s * filp, const char *buf, size_t length, loff_t *position)
 {
 	long ret_val = 0;
 	tty_write_color(buf, length, GREEN, BLACK);
@@ -190,5 +190,5 @@ cdev_s * find_tty()
 	list_init(&cd_tty->cdev_list, cd_tty);
 	cd_tty->dev_name = "tty0";
 	cd_tty->dev_nr = 0;
-	cd_tty->f_ops = &tty_fops;
+	cd_tty->f_op = &tty_fops;
 }

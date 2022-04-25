@@ -1,9 +1,8 @@
 #include <linux/kernel/types.h>
+#include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
-
-#include <sys/cdefs.h>
 
 #include <string.h>
 

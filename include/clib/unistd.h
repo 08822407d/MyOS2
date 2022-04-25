@@ -35,11 +35,10 @@
 #ifndef _UNISTD_H_
 #define	_UNISTD_H_
 
-#include <sys/cdefs.h>
-// #include <sys/types.h>			/* XXX adds too much pollution. */
-#include <linux/kernel/types.h>
 #include <sys/_null.h>
 #include <sys/_types.h>
+// #include <sys/types.h>			/* XXX adds too much pollution. */
+#include <linux/kernel/types.h>
 
 	// #ifndef _GID_T_DECLARED
 	// 	typedef	__gid_t		gid_t;
