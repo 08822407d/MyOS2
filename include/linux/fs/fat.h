@@ -2,11 +2,15 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
+#include <linux/kernel/buffer_head.h>
+// #include <linux/nls.h>
+// #include <linux/hash.h>
+// #include <linux/ratelimit.h>
+#include <linux/fs/msdos_fs.h>
+
+
 #include <linux/kernel/stat.h>
 #include <linux/kernel/uidgid.h>
-
-#include <uapi/msdos_fs.h>
-
 #include <string.h>
 
 	/*
