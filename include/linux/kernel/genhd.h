@@ -33,7 +33,7 @@
 
 	// struct partition_meta_info {
 	// 	char uuid[PARTITION_META_INFO_UUIDLTH];
-	// 	uint8_t volname[PARTITION_META_INFO_VOLNAMELTH];
+	// 	__u8 volname[PARTITION_META_INFO_VOLNAMELTH];
 	// };
 
 	// /**
@@ -131,7 +131,7 @@
 	// 	int node_id;
 	// 	struct badblocks *bb;
 	// 	struct lockdep_map lockdep_map;
-	// 	uint64_t diskseq;
+	// 	__u64 diskseq;
 	} gendisk_s;
 
 	// static inline bool disk_live(gendisk_s *disk)
@@ -215,7 +215,7 @@
 	// 	return bdev_nr_sectors(disk->part0);
 	// }
 
-	// static inline uint64_t sb_bdev_nr_blocks(struct super_block *sb)
+	// static inline __u64 sb_bdev_nr_blocks(struct super_block *sb)
 	// {
 	// 	return bdev_nr_sectors(sb->s_bdev) >>
 	// 		(sb->s_blocksize_bits - SECTOR_SHIFT);
@@ -276,7 +276,7 @@
 	// }
 	// #endif /* CONFIG_BLOCK_HOLDER_DEPRECATED */
 
-	// dev_t part_devt(gendisk_s *disk, uint8_t partno);
+	// dev_t part_devt(gendisk_s *disk, __u8 partno);
 	// void inc_diskseq(gendisk_s *disk);
 	// dev_t blk_lookup_devt(const char *name, int partno);
 	// void blk_request_module(dev_t devt);

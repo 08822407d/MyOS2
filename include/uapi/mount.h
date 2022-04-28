@@ -124,12 +124,12 @@
 	/*
 	* mount_setattr()
 	*/
-	struct mount_attr {
-		uint64_t attr_set;
-		uint64_t attr_clr;
-		uint64_t propagation;
-		uint64_t userns_fd;
-	};
+	typedef struct mount_attr {
+		__u64 attr_set;
+		__u64 attr_clr;
+		__u64 propagation;
+		__u64 userns_fd;
+	} mount_attr_s;
 
 	/* List of all mount_attr versions. */
 	#define MOUNT_ATTR_SIZE_VER0	32 /* sizeof first published struct */

@@ -45,10 +45,10 @@
 	/* bits that are used by the Windows 95/Windows NT extended FAT */
 	#define ATTR_EXT			(ATTR_RO | ATTR_HIDDEN | ATTR_SYS | ATTR_VOLUME)
 
-	#define CASE_LOWER_BASE		8				/* base is lower case */
-	#define CASE_LOWER_EXT		16				/* extension is lower case */
+	#define CASE_LOWER_BASE		8			/* base is lower case */
+	#define CASE_LOWER_EXT		16			/* extension is lower case */
 
-	#define DELETED_FLAG		0xe5			/* marks file as deleted when in name[0] */
+	#define DELETED_FLAG		0xe5		/* marks file as deleted when in name[0] */
 	#define IS_FREE(n)	(!*(n) || *(n) == DELETED_FLAG)
 
 	#define FAT_LFN_LEN			255				/* maximum long name length */
@@ -99,98 +99,98 @@
 	// #define VFAT_IOCTL_READDIR_BOTH		_IOR('r', 1, struct __fat_dirent[2])
 	// #define VFAT_IOCTL_READDIR_SHORT	_IOR('r', 2, struct __fat_dirent[2])
 	// /* <linux/videotext.h> has used 0x72 ('r') in collision, so skip a few */
-	// #define FAT_IOCTL_GET_ATTRIBUTES	_IOR('r', 0x10, uint32_t)
-	// #define FAT_IOCTL_SET_ATTRIBUTES	_IOW('r', 0x11, uint32_t)
+	// #define FAT_IOCTL_GET_ATTRIBUTES	_IOR('r', 0x10, __u32)
+	// #define FAT_IOCTL_SET_ATTRIBUTES	_IOW('r', 0x11, __u32)
 	// /*Android kernel has used 0x12, so we use 0x13*/
-	// #define FAT_IOCTL_GET_VOLUME_ID		_IOR('r', 0x13, uint32_t)
+	// #define FAT_IOCTL_GET_VOLUME_ID		_IOR('r', 0x13, __u32)
 
 	typedef struct fat_boot_sector {
-		uint8_t		ignored[3];		/* Boot strap short or near jump */
-		uint8_t		system_id[8];	/* Name - can be used to special case
+		__u8		ignored[3];		/* Boot strap short or near jump */
+		__u8		system_id[8];	/* Name - can be used to special case
 										partition manager volumes */
-		uint16_t	sector_size;	/* bytes per logical sector */
-		uint8_t		sec_per_clus;	/* sectors/cluster */
-		uint16_t	reserved;		/* reserved sectors */
-		uint8_t		fats;			/* number of FATs */
-		uint16_t	dir_entries;	/* root directory entries */
-		uint16_t	sectors;		/* number of sectors */
-		uint8_t		media;			/* media code */
-		uint16_t	fat_length;		/* sectors/FAT */
-		uint16_t	secs_track;		/* sectors per track */
-		uint16_t	heads;			/* number of heads */
-		uint32_t	hidden;			/* hidden sectors (unused) */
-		uint32_t	total_sect;		/* number of sectors (if sectors == 0) */
+		__u16	sector_size;		/* bytes per logical sector */
+		__u8		sec_per_clus;	/* sectors/cluster */
+		__u16	reserved;			/* reserved sectors */
+		__u8		fats;			/* number of FATs */
+		__u16	dir_entries;		/* root directory entries */
+		__u16	sectors;			/* number of sectors */
+		__u8		media;			/* media code */
+		__u16	fat_length;			/* sectors/FAT */
+		__u16	secs_track;			/* sectors per track */
+		__u16	heads;				/* number of heads */
+		__u32	hidden;				/* hidden sectors (unused) */
+		__u32	total_sect;			/* number of sectors (if sectors == 0) */
 
 		union {
 			struct {
 				/*  Extended BPB Fields for FAT16 */
-				uint8_t	drive_number;	/* Physical drive number */
-				uint8_t	state;			/* undocumented, but used
-											for mount state. */
-				uint8_t	signature;		/* extended boot signature */
-				uint8_t	vol_id[4];		/* volume ID */
-				uint8_t	vol_label[MSDOS_NAME];	/* volume label */
-				uint8_t	fs_type[8];		/* file system type */
+				__u8	drive_number;			/* Physical drive number */
+				__u8	state;					/* undocumented, but used
+													for mount state. */
+				__u8	signature;				/* extended boot signature */
+				__u8	vol_id[4];				/* volume ID */
+				__u8	vol_label[MSDOS_NAME];	/* volume label */
+				__u8	fs_type[8];				/* file system type */
 				/* other fields are not added here */
 			}__attribute__((packed)) fat16;
 
 			struct {
 				/* only used by FAT32 */
-				uint32_t	length;			/* sectors/FAT */
-				uint16_t	flags;			/* bit 8: fat mirroring,
+				__u32	length;				/* sectors/FAT */
+				__u16	flags;				/* bit 8: fat mirroring,
 												low 4: active fat */
-				uint8_t		version[2];		/* major, minor filesystem
+				__u8		version[2];		/* major, minor filesystem
 												version */
-				uint32_t	root_cluster;	/* first cluster in
+				__u32	root_cluster;		/* first cluster in
 												root directory */
-				uint16_t	info_sector;	/* filesystem info sector */
-				uint16_t	backup_boot;	/* backup boot sector */
-				uint16_t	reserved2[6];	/* Unused */
+				__u16	info_sector;		/* filesystem info sector */
+				__u16	backup_boot;		/* backup boot sector */
+				__u16	reserved2[6];		/* Unused */
 				/* Extended BPB Fields for FAT32 */
-				uint8_t		drive_number;	/* Physical drive number */
-				uint8_t		state;			/* undocumented, but used
+				__u8		drive_number;	/* Physical drive number */
+				__u8		state;			/* undocumented, but used
 												for mount state. */
-				uint8_t		signature;		/* extended boot signature */
-				uint8_t		vol_id[4];		/* volume ID */
-				uint8_t		vol_label[MSDOS_NAME];	/* volume label */
-				uint8_t		fs_type[8];		/* file system type */
+				__u8		signature;		/* extended boot signature */
+				__u8		vol_id[4];		/* volume ID */
+				__u8		vol_label[MSDOS_NAME];	/* volume label */
+				__u8		fs_type[8];		/* file system type */
 				/* other fields are not added here */
 			}__attribute__((packed)) fat32;
 		};
 	}__attribute__((packed)) fat_boot_sector_s;
 
 	typedef struct fat_boot_fsinfo {
-		uint32_t   signature1;		/* 0x41615252L */
-		uint32_t   reserved1[120];	/* Nothing as far as I can tell */
-		uint32_t   signature2;		/* 0x61417272L */
-		uint32_t   free_clusters;	/* Free cluster count.  -1 if unknown */
-		uint32_t   next_cluster;	/* Most recently allocated cluster */
-		uint32_t   reserved2[4];
+		__le32   signature1;		/* 0x41615252L */
+		__le32   reserved1[120];	/* Nothing as far as I can tell */
+		__le32   signature2;		/* 0x61417272L */
+		__le32   free_clusters;		/* Free cluster count.  -1 if unknown */
+		__le32   next_cluster;		/* Most recently allocated cluster */
+		__le32   reserved2[4];
 	} fat_boot_fsinfo_s;
 
 	typedef struct msdos_dir_entry {
-		uint8_t		name[MSDOS_NAME];	/* name and extension */
-		uint8_t		attr;				/* attribute bits */
-		uint8_t		lcase;				/* Case for base and extension */
-		uint8_t		ctime_cs;			/* Creation time, centiseconds (0-199) */
-		uint16_t	ctime;				/* Creation time */
-		uint16_t	cdate;				/* Creation date */
-		uint16_t	adate;				/* Last access date */
-		uint16_t	starthi;			/* High 16 bits of cluster in FAT32 */
-		uint16_t	time,date,start;	/* time, date and first cluster */
-		uint32_t	size;				/* file size (in bytes) */
+		__u8	name[MSDOS_NAME];	/* name and extension */
+		__u8	attr;				/* attribute bits */
+		__u8	lcase;				/* Case for base and extension */
+		__u8	ctime_cs;			/* Creation time, centiseconds (0-199) */
+		__le16	ctime;				/* Creation time */
+		__le16	cdate;				/* Creation date */
+		__le16	adate;				/* Last access date */
+		__le16	starthi;			/* High 16 bits of cluster in FAT32 */
+		__le16	time,date,start;	/* time, date and first cluster */
+		__le32	size;				/* file size (in bytes) */
 	}__attribute__((packed)) msdos_dir_entry_s;
 
 	/* Up to 13 characters of the name */
 	typedef struct msdos_dir_slot {
-		uint8_t		id;					/* sequence number for slot */
-		uint8_t		name0_4[10];		/* first 5 characters in name */
-		uint8_t		attr;				/* attribute byte */
-		uint8_t		reserved;			/* always 0 */
-		uint8_t		alias_checksum;		/* checksum for 8.3 alias */
-		uint8_t		name5_10[12];		/* 6 more characters in name */
-		uint16_t	start;				/* starting cluster number, 0 in long slots */
-		uint8_t		name11_12[4];		/* last 2 characters in name */
+		__u8	id;					/* sequence number for slot */
+		__u8	name0_4[10];		/* first 5 characters in name */
+		__u8	attr;				/* attribute byte */
+		__u8	reserved;			/* always 0 */
+		__u8	alias_checksum;		/* checksum for 8.3 alias */
+		__u8	name5_10[12];		/* 6 more characters in name */
+		__le16	start;				/* starting cluster number, 0 in long slots */
+		__u8	name11_12[4];		/* last 2 characters in name */
 	}__attribute__((packed)) msdos_dir_slot_s;
 
 #endif /* _UAPI_LINUX_MSDOS_FS_H_ */

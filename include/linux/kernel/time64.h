@@ -4,8 +4,8 @@
 
 #include <linux/kernel/types.h>
 
-	typedef int64_t		time64_t;
-	typedef uint64_t	timeu64_t;
+	typedef __s64	time64_t;
+	typedef __u64	timeu64_t;
 
 #include <uapi/time.h>
 
@@ -20,10 +20,10 @@
 	} itimerspec64_s;
 
 	/* Located here for timespec[64]_valid_strict */
-	#define TIME64_MAX			((s64)~((uint64_t)1 << 63))
+	#define TIME64_MAX			((s64)~((__u64)1 << 63))
 	#define TIME64_MIN			(-TIME64_MAX - 1)
 
-	#define KTIME_MAX			((s64)~((uint64_t)1 << 63))
+	#define KTIME_MAX			((s64)~((__u64)1 << 63))
 	#define KTIME_SEC_MAX		(KTIME_MAX / NSEC_PER_SEC)
 
 	/*
@@ -146,7 +146,7 @@
 	//  * This must always be inlined because its used from the x86-64 vdso,
 	//  * which cannot call other kernel functions.
 	//  */
-	// static __always_inline void timespec64_add_ns(struct timespec64 *a, uint64_t ns)
+	// static __always_inline void timespec64_add_ns(struct timespec64 *a, __u64 ns)
 	// {
 	// 	a->tv_sec += __iter_div_u64_rem(a->tv_nsec + ns, NSEC_PER_SEC, &ns);
 	// 	a->tv_nsec = ns;

@@ -2,14 +2,14 @@
 #ifndef _LINUX_DIRENT_H
 #define _LINUX_DIRENT_H
 
-#include <stdint.h>
+#include <linux/kernel/types.h>
 
 	typedef struct linux_dirent64 {
-		uint64_t	d_ino;
-		int64_t		d_off;
+		u64		d_ino;
+		s64		d_off;
 		unsigned short	d_reclen;
 		unsigned char	d_type;
-		char		d_name[];
+		char	d_name[];
 	} linux_dirent64_s;
 
 #endif

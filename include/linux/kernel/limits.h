@@ -2,10 +2,9 @@
 #ifndef _LINUX_LIMITS_H
 #define _LINUX_LIMITS_H
 
-#include <linux/kernel/types.h>
-#include <linux/kernel/vsdo/limits.h>
 #include <uapi/limits.h>
-// #include <vdso/limits.h>
+#include <linux/kernel/types.h>
+#include <linux/vsdo/limits.h>
 
 	#define SIZE_MAX		(~(size_t)0)
 	// #define PHYS_ADDR_MAX	(~(phys_addr_t)0)

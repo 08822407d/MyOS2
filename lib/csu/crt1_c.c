@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <linux/kernel/fcntl.h>
+#include <uapi/fcntl.h>
 
 extern int main(int, const char **);
 

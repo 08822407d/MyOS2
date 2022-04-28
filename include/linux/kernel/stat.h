@@ -2,7 +2,7 @@
 #ifndef _LINUX_STAT_H
 #define _LINUX_STAT_H
 
-// #include <asm/stat.h>
+#include <uapi/asm-generic/stat.h>
 #include <uapi/stat.h>
 
 	#define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
@@ -19,12 +19,12 @@
 #include <linux/kernel/uidgid.h>
 
 	typedef struct kstat {
-		uint32_t		result_mask;	/* What fields the user got */
-		umode_t			mode;
+		u32			result_mask;	/* What fields the user got */
+		umode_t		mode;
+		u32			blksize;		/* Preferred I/O size */
+		u64			attributes;
+		u64			attributes_mask;
 		unsigned int	nlink;
-		uint32_t		blksize;/* Preferred I/O size */
-		uint64_t		attributes;
-		uint64_t		attributes_mask;
 	#define KSTAT_ATTR_FS_IOC_FLAGS				\
 				(STATX_ATTR_COMPRESSED |		\
 				STATX_ATTR_IMMUTABLE |			\
@@ -33,18 +33,18 @@
 				STATX_ATTR_ENCRYPTED |			\
 				STATX_ATTR_VERITY				\
 				)				/* Attrs corresponding to FS_*_FL flags */
-		uint64_t		ino;
-		dev_t			dev;
-		dev_t			rdev;
-		kuid_t			uid;
-		kgid_t			gid;
-		loff_t			size;
+		u64			ino;
+		dev_t		dev;
+		dev_t		rdev;
+		kuid_t		uid;
+		kgid_t		gid;
+		loff_t		size;
+		u64			blocks;
+		u64			mnt_id;
 		timespec64_s	atime;
 		timespec64_s	mtime;
 		timespec64_s	ctime;
 		timespec64_s	btime;	/* File creation time */
-		uint64_t		blocks;
-		uint64_t		mnt_id;
 	} kstat_s;
 
 #endif

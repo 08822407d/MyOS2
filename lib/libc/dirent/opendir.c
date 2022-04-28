@@ -5,7 +5,7 @@
 
 #include <dirent.h>
 
-#include <linux/kernel/fcntl.h>
+#include <uapi/fcntl.h>
 
 DIR* opendir(const char *path)
 {

@@ -367,7 +367,7 @@
 	// 	bool			mq_sysfs_init_done;
 
 	// #define BLK_MAX_WRITE_HINTS	5
-	// 	uint64_t			write_hints[BLK_MAX_WRITE_HINTS];
+	// 	u64			write_hints[BLK_MAX_WRITE_HINTS];
 
 	// 	/*
 	// 	* Independent sector access ranges. This is always NULL for
@@ -1217,7 +1217,7 @@
 	// 			unsigned int nr_zones, report_zones_cb cb, void *data);
 	// 	char *(*devnode)(gendisk_s *disk, umode_t *mode);
 	// 	/* returns the length of the identifier or a negative errno: */
-	// 	int (*get_unique_id)(gendisk_s *disk, uint8_t id[16],
+	// 	int (*get_unique_id)(gendisk_s *disk, u8 id[16],
 	// 			enum blk_unique_id id_type);
 	// 	struct module *owner;
 	// 	const struct pr_ops *pr_ops;
@@ -1301,7 +1301,7 @@
 	// block_device_s *blkdev_get_no_open(dev_t dev);
 	// void blkdev_put_no_open(block_device_s *bdev);
 
-	block_device_s *bdev_alloc(gendisk_s *disk, uint8_t partno);
+	block_device_s *bdev_alloc(gendisk_s *disk, u8 partno);
 	void bdev_add(block_device_s *bdev, dev_t dev);
 	block_device_s *I_BDEV(inode_s *inode);
 	// int truncate_bdev_range(block_device_s *bdev, fmode_t mode, loff_t lstart,

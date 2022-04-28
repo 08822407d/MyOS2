@@ -53,11 +53,11 @@
 	*
 	* __reserved is held in case we need a yet finer resolution.
 	*/
-	struct statx_timestamp {
-		int64_t	tv_sec;
-		uint32_t tv_nsec;
-		int32_t	__reserved;
-	};
+	typedef struct statx_timestamp {
+		int64_t		tv_sec;
+		uint32_t	tv_nsec;
+		int32_t		__reserved;
+	} statx_timestamp_s;
 
 	/*
 	* Structures for the extended file attribute retrieval system call
@@ -96,39 +96,39 @@
 	* will have values installed for compatibility purposes so that stat() and
 	* co. can be emulated in userspace.
 	*/
-	// struct statx {
-	// 	/* 0x00 */
-	// 	uin32_t	stx_mask;	/* What results were written [uncond] */
-	// 	uin32_t	stx_blksize;	/* Preferred general I/O size [uncond] */
-	// 	uin64_t	stx_attributes;	/* Flags conveying information about the file [uncond] */
-	// 	/* 0x10 */
-	// 	uin32_t	stx_nlink;	/* Number of hard links */
-	// 	uin32_t	stx_uid;	/* User ID of owner */
-	// 	uin32_t	stx_gid;	/* Group ID of owner */
-	// 	uin16_t	stx_mode;	/* File mode */
-	// 	uin16_t	__spare0[1];
-	// 	/* 0x20 */
-	// 	uin64_t	stx_ino;	/* Inode number */
-	// 	uin64_t	stx_size;	/* File size */
-	// 	uin64_t	stx_blocks;	/* Number of 512-byte blocks allocated */
-	// 	uin64_t	stx_attributes_mask; /* Mask to show what's supported in stx_attributes */
-	// 	/* 0x40 */
-	// 	struct statx_timestamp	stx_atime;	/* Last access time */
-	// 	struct statx_timestamp	stx_btime;	/* File creation time */
-	// 	struct statx_timestamp	stx_ctime;	/* Last attribute change time */
-	// 	struct statx_timestamp	stx_mtime;	/* Last data modification time */
-	// 	/* 0x80 */
-	// 	uin32_t	stx_rdev_major;	/* Device ID of special file [if bdev/cdev] */
-	// 	uin32_t	stx_rdev_minor;
-	// 	uin32_t	stx_dev_major;	/* ID of device containing file [uncond] */
-	// 	uin32_t	stx_dev_minor;
-	// 	/* 0x90 */
-	// 	uin64_t	stx_mnt_id;
-	// 	uin64_t	__spare2;
-	// 	/* 0xa0 */
-	// 	uin64_t	__spare3[12];	/* Spare space for future expansion */
-	// 	/* 0x100 */
-	// };
+	struct statx {
+		/* 0x00 */
+		__u32	stx_mask;	/* What results were written [uncond] */
+		__u32	stx_blksize;	/* Preferred general I/O size [uncond] */
+		__u64	stx_attributes;	/* Flags conveying information about the file [uncond] */
+		/* 0x10 */
+		__u32	stx_nlink;	/* Number of hard links */
+		__u32	stx_uid;	/* User ID of owner */
+		__u32	stx_gid;	/* Group ID of owner */
+		__u16	stx_mode;	/* File mode */
+		__u16	__spare0[1];
+		/* 0x20 */
+		__u64	stx_ino;	/* Inode number */
+		__u64	stx_size;	/* File size */
+		__u64	stx_blocks;	/* Number of 512-byte blocks allocated */
+		__u64	stx_attributes_mask; /* Mask to show what's supported in stx_attributes */
+		/* 0x40 */
+		statx_timestamp_s	stx_atime;	/* Last access time */
+		statx_timestamp_s	stx_btime;	/* File creation time */
+		statx_timestamp_s	stx_ctime;	/* Last attribute change time */
+		statx_timestamp_s	stx_mtime;	/* Last data modification time */
+		/* 0x80 */
+		__u32	stx_rdev_major;	/* Device ID of special file [if bdev/cdev] */
+		__u32	stx_rdev_minor;
+		__u32	stx_dev_major;	/* ID of device containing file [uncond] */
+		__u32	stx_dev_minor;
+		/* 0x90 */
+		__u64	stx_mnt_id;
+		__u64	__spare2;
+		/* 0xa0 */
+		__u64	__spare3[12];	/* Spare space for future expansion */
+		/* 0x100 */
+	};
 
 	/*
 	* Flags to be stx_mask
