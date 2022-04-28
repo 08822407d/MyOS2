@@ -1,10 +1,41 @@
-#include <linux/kernel/err.h>
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/fs/file_table.c
+ *
+ *  Copyright (C) 1991, 1992  Linus Torvalds
+ *  Copyright (C) 1997 David S. Miller (davem@caip.rutgers.edu)
+ */
 
+// #include <linux/string.h>
+// #include <linux/slab.h>
+#include <linux/fs/file.h>
+// #include <linux/fdtable.h>
+// #include <linux/init.h>
+// #include <linux/module.h>
+#include <linux/fs/fs.h>
+// #include <linux/security.h>
+// #include <linux/cred.h>
+// #include <linux/eventpoll.h>
+// #include <linux/rcupdate.h>
+#include <linux/kernel/mount.h>
+// #include <linux/capability.h>
+// #include <linux/cdev.h>
+// #include <linux/fsnotify.h>
+// #include <linux/sysctl.h>
+// #include <linux/percpu_counter.h>
+// #include <linux/percpu.h>
+// #include <linux/task_work.h>
+// #include <linux/ima.h>
+// #include <linux/swap.h>
+// #include <linux/kmemleak.h>
+#include <linux/fs/internals.h>
+// #include <linux/atomic.h>
+
+
+#include <linux/kernel/err.h>
 #include <string.h>
 #include <errno.h>
-
 #include <include/proto.h>
-#include <linux/fs/fs.h>
 
 /* Find an unused file structure and return a pointer to it.
  * Returns an error pointer if some error happend e.g. we over file

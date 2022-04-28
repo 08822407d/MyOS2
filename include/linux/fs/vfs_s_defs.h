@@ -38,3 +38,9 @@ typedef struct filename filename_s;
 
 struct iattr;
 typedef struct iattr iattr_s;
+
+struct buffer_head;
+typedef struct buffer_head buffer_head_s;
+
+struct block_device;
+typedef struct block_device block_device_s;

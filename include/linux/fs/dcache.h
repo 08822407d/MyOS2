@@ -1,7 +1,8 @@
 #ifndef _LINUX_DCACHE_H_
 #define _LINUX_DCACHE_H_
 
-#include <linux/fs/internels.h>
+#include <linux/fs/vfs_s_defs.h>
+
 #include <lib/utils.h>
 
 /*

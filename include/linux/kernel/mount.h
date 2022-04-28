@@ -17,7 +17,7 @@
 // #include <linux/seqlock.h>
 // #include <linux/atomic.h>
 
-#include <linux/fs/internels.h>
+#include <linux/fs/vfs_s_defs.h>
 
 	#define MNT_NOSUID		0x01
 	#define MNT_NODEV		0x02

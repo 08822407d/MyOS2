@@ -6,7 +6,7 @@
 #include <uapi/magic.h>
 #include <uapi/msdos_fs.h>
 
-#include <string.h>
+#include <string.h> /// need replace
 #include <errno.h>
 
 #include <include/proto.h>

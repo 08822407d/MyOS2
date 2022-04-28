@@ -1,19 +1,53 @@
-#include <linux/kernel/err.h>
+// SPDX-License-Identifier: GPL-2.0
+/*
+ *  linux/fs/namei.c
+ *
+ *  Copyright (C) 1991, 1992  Linus Torvalds
+ */
+
+/*
+ * Some corrections by tytso.
+ */
+
+/* [Feb 1997 T. Schoebel-Theuer] Complete rewrite of the pathname
+ * lookup logic.
+ */
+/* [Feb-Apr 2000, AV] Rewrite to the new namespace architecture.
+ */
+
+// #include <linux/init.h>
+// #include <linux/export.h>
+#include <linux/kernel/kernel.h>
+// #include <linux/slab.h>
 #include <linux/fs/fs.h>
-#include <linux/fs/internels.h>
 #include <linux/fs/namei.h>
-#include <linux/fs/dcache.h>
-#include <linux/fs/mount.h>
+// #include <linux/pagemap.h>
+// #include <linux/fsnotify.h>
+// #include <linux/personality.h>
+// #include <linux/security.h>
+// #include <linux/ima.h>
+// #include <linux/syscalls.h>
+#include <linux/kernel/mount.h>
+// #include <linux/audit.h>
+// #include <linux/capability.h>
 #include <linux/fs/file.h>
+#include <linux/kernel/fcntl.h>
+// #include <linux/device_cgroup.h>
+// #include <linux/fs_struct.h>
+// #include <linux/posix_acl.h>
+// #include <linux/hash.h>
+// #include <linux/bitops.h>
+// #include <linux/init_task.h>
+// #include <linux/uaccess.h>
+#include <linux/fs/internals.h>
+#include <linux/fs/mount.h>
 
-#include <uapi/fcntl.h>
 
+#include <linux/kernel/err.h>
 #include <string.h>
 #include <errno.h>
-
 #include <include/proto.h>
 #include <include/printk.h>
-
 #include <arch/amd64/include/arch_proto.h>
 
 typedef struct nameidata

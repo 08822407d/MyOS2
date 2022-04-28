@@ -4,7 +4,7 @@
 
 #include <uapi/limits.h>
 #include <linux/kernel/types.h>
-#include <linux/vsdo/limits.h>
+#include <linux/vdso/limits.h>
 
 	#define SIZE_MAX		(~(size_t)0)
 	// #define PHYS_ADDR_MAX	(~(phys_addr_t)0)

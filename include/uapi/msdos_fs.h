@@ -86,12 +86,12 @@
 
 	#define FAT_STATE_DIRTY 0x01
 
-	struct __fat_dirent {
+	typedef struct __fat_dirent {
 		long			d_ino;
 		__kernel_off_t	d_off;
 		unsigned short	d_reclen;
 		char			d_name[256]; /* We must not include limits.h! */
-	};
+	} __fat_dirent_s;
 
 	// /*
 	// * ioctl commands
@@ -105,21 +105,21 @@
 	// #define FAT_IOCTL_GET_VOLUME_ID		_IOR('r', 0x13, __u32)
 
 	typedef struct fat_boot_sector {
-		__u8		ignored[3];		/* Boot strap short or near jump */
-		__u8		system_id[8];	/* Name - can be used to special case
-										partition manager volumes */
-		__u16	sector_size;		/* bytes per logical sector */
-		__u8		sec_per_clus;	/* sectors/cluster */
-		__u16	reserved;			/* reserved sectors */
-		__u8		fats;			/* number of FATs */
-		__u16	dir_entries;		/* root directory entries */
-		__u16	sectors;			/* number of sectors */
-		__u8		media;			/* media code */
-		__u16	fat_length;			/* sectors/FAT */
-		__u16	secs_track;			/* sectors per track */
-		__u16	heads;				/* number of heads */
-		__u32	hidden;				/* hidden sectors (unused) */
-		__u32	total_sect;			/* number of sectors (if sectors == 0) */
+		__u8	ignored[3];		/* Boot strap short or near jump */
+		__u8	system_id[8];	/* Name - can be used to special case
+									partition manager volumes */
+		__u16	sector_size;	/* bytes per logical sector */
+		__u8	sec_per_clus;	/* sectors/cluster */
+		__u16	reserved;		/* reserved sectors */
+		__u8	fats;			/* number of FATs */
+		__u16	dir_entries;	/* root directory entries */
+		__u16	sectors;		/* number of sectors */
+		__u8	media;			/* media code */
+		__u16	fat_length;		/* sectors/FAT */
+		__u16	secs_track;		/* sectors per track */
+		__u16	heads;			/* number of heads */
+		__u32	hidden;			/* hidden sectors (unused) */
+		__u32	total_sect;		/* number of sectors (if sectors == 0) */
 
 		union {
 			struct {
@@ -136,24 +136,24 @@
 
 			struct {
 				/* only used by FAT32 */
-				__u32	length;				/* sectors/FAT */
-				__u16	flags;				/* bit 8: fat mirroring,
-												low 4: active fat */
-				__u8		version[2];		/* major, minor filesystem
-												version */
-				__u32	root_cluster;		/* first cluster in
-												root directory */
-				__u16	info_sector;		/* filesystem info sector */
+				__u32	length;			/* sectors/FAT */
+				__u16	flags;			/* bit 8: fat mirroring,
+											low 4: active fat */
+				__u8	version[2];		/* major, minor filesystem
+											version */
+				__u32	root_cluster;	/* first cluster in
+											root directory */
+				__u16	info_sector;	/* filesystem info sector */
 				__u16	backup_boot;		/* backup boot sector */
 				__u16	reserved2[6];		/* Unused */
 				/* Extended BPB Fields for FAT32 */
-				__u8		drive_number;	/* Physical drive number */
-				__u8		state;			/* undocumented, but used
-												for mount state. */
-				__u8		signature;		/* extended boot signature */
-				__u8		vol_id[4];		/* volume ID */
-				__u8		vol_label[MSDOS_NAME];	/* volume label */
-				__u8		fs_type[8];		/* file system type */
+				__u8	drive_number;	/* Physical drive number */
+				__u8	state;			/* undocumented, but used
+											for mount state. */
+				__u8	signature;		/* extended boot signature */
+				__u8	vol_id[4];		/* volume ID */
+				__u8	vol_label[MSDOS_NAME];	/* volume label */
+				__u8	fs_type[8];		/* file system type */
 				/* other fields are not added here */
 			}__attribute__((packed)) fat32;
 		};

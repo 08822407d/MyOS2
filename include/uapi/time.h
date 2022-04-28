@@ -3,6 +3,7 @@
 #define _UAPI_LINUX_TIME_H_
 
 #include <linux/kernel/types.h>
+#include <uapi/time_types.h>
 
 	#ifndef __KERNEL__
 		#ifndef _STRUCT_TIMESPEC

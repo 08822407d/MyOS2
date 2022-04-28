@@ -1,14 +1,17 @@
-#include <linux/kernel/err.h>
-#include <linux/kernel/sched/sched.h>
+/* SPDX-License-Identifier: GPL-2.0 */
+// #include <linux/syscalls.h>
+// #include <linux/export.h>
+// #include <linux/uaccess.h>
+// #include <linux/fs_struct.h>
 #include <linux/fs/fs.h>
+// #include <linux/slab.h>
+// #include <linux/prefetch.h>
 #include <linux/fs/mount.h>
-#include <linux/fs/dcache.h>
 
-#include <uapi/limits.h>
 
+#include <linux/kernel/sched/sched.h>
 #include <string.h>
 #include <errno.h>
-
 #include <include/proto.h>
 
 typedef struct prepend_buffer

@@ -5,84 +5,21 @@
  * Written by David Howells (dhowells@redhat.com)
  */
 
-#ifndef _LINUX_FS_INTERNELS_H
-#define _LINUX_FS_INTERNELS_H
-
-	struct dentry;
-	typedef struct dentry dentry_s;
-	struct dentry_ops;
-	typedef struct dentry_ops dentry_ops_s;
-
-	struct super_block;
-	typedef struct super_block super_block_s;
-	struct super_ops;
-	typedef struct super_ops super_ops_s;
-
-	struct mount;
-	typedef struct mount mount_s;
-
-	struct vfsmount;
-	typedef struct vfsmount vfsmount_s;
-
-	struct inode;
-	typedef struct inode inode_s;
-	struct inode_ops;
-	typedef struct inode_ops inode_ops_s;
-
-	struct fs_type;
-	typedef struct fs_type fs_type_s;
-
-	struct file;
-	typedef struct file file_s;
-	struct file_ops;
-	typedef struct file_ops file_ops_s;
-
-	struct path;
-	typedef struct path path_s;
-
-	struct qstr;
-	typedef struct qstr qstr_s;
-
-	struct filename;
-	typedef struct filename filename_s;
-
-	struct iattr;
-	typedef struct iattr iattr_s;
-
-	struct buffer_head;
-	typedef struct buffer_head buffer_head_s;
-
-	struct block_device;
-	typedef struct block_device block_device_s;
-
-#include <linux/kernel/types.h>
-
 	// /*
-	// * block_dev.c
+	// * block/bdev.c
 	// */
 	// #ifdef CONFIG_BLOCK
-	// 	extern void __init bdev_cache_init(void);
+	// extern void __init bdev_cache_init(void);
 
-	// 	extern int __sync_blockdev(block_device_s *bdev, int wait);
-	// 	void iterate_bdevs(void (*)(block_device_s *, void *), void *);
-	// 	void emergency_thaw_bdev(super_block_s *sb);
+	// void emergency_thaw_bdev(struct super_block *sb);
 	// #else
-	// 	static inline void bdev_cache_init(void)
-	// 	{
-	// 	}
-
-	// 	static inline int __sync_blockdev(block_device_s *bdev, int wait)
-	// 	{
-	// 		return 0;
-	// 	}
-	// 	static inline void iterate_bdevs(void (*f)(block_device_s *, void *),
-	// 			void *arg)
-	// 	{
-	// 	}
-	// 	static inline int emergency_thaw_bdev(super_block_s *sb)
-	// 	{
-	// 		return 0;
-	// 	}
+	// static inline void bdev_cache_init(void)
+	// {
+	// }
+	// static inline int emergency_thaw_bdev(struct super_block *sb)
+	// {
+	// 	return 0;
+	// }
 	// #endif /* CONFIG_BLOCK */
 
 	/*
@@ -241,5 +178,3 @@
 	// 			struct pipe_inode_info *opipe,
 	// 			loff_t *offset,
 	// 			size_t len, unsigned int flags);
-
-#endif /* _LINUX_FS_INTERNELS_H */

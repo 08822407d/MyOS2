@@ -1,5 +1,30 @@
-#include <linux/kernel/sched/sched.h>
+// SPDX-License-Identifier: GPL-2.0
+/*
+ *  linux/fs/file.c
+ *
+ *  Copyright (C) 1998-1999, Stephen Tweedie and Bill Hawes
+ *
+ *  Manage the dynamic fd arrays in the process files_struct.
+ */
+
+// #include <linux/syscalls.h>
+// #include <linux/export.h>
+#include <linux/fs/fs.h>
+#include <linux/kernel/kernel.h>
+// #include <linux/mm.h>
+// #include <linux/sched/signal.h>
+// #include <linux/slab.h>
 #include <linux/fs/file.h>
+// #include <linux/fdtable.h>
+// #include <linux/bitops.h>
+// #include <linux/spinlock.h>
+// #include <linux/rcupdate.h>
+// #include <linux/close_range.h>
+// #include <net/sock.h>
+#include <linux/fs/internals.h>
+
+
+#include <linux/kernel/sched/sched.h>
 
 /*
  * allocate a file descriptor, mark it busy.

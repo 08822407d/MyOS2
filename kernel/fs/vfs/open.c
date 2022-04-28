@@ -1,12 +1,44 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/fs/open.c
+ *
+ *  Copyright (C) 1991, 1992  Linus Torvalds
+ */
+
+// #include <linux/string.h>
+// #include <linux/mm.h>
+#include <linux/fs/file.h>
+// #include <linux/fdtable.h>
+// #include <linux/fsnotify.h>
+// #include <linux/module.h>
+// #include <linux/tty.h>
+#include <linux/fs/namei.h>
+// #include <linux/backing-dev.h>
+// #include <linux/capability.h>
+// #include <linux/securebits.h>
+// #include <linux/security.h>
+#include <linux/kernel/mount.h>
+#include <linux/kernel/fcntl.h>
+// #include <linux/slab.h>
+// #include <linux/uaccess.h>
+#include <linux/fs/fs.h>
+// #include <linux/personality.h>
+// #include <linux/pagemap.h>
+// #include <linux/syscalls.h>
+// #include <linux/rcupdate.h>
+// #include <linux/audit.h>
+// #include <linux/falloc.h>
+// #include <linux/fs_struct.h>
+// #include <linux/ima.h>
+// #include <linux/dnotify.h>
+// #include <linux/compat.h>
+// #include <linux/mnt_idmapping.h>
+#include <linux/fs/internals.h>
+
+
 #include <linux/kernel/sched/sched.h>
 #include <linux/kernel/err.h>
-#include <linux/kernel/stat.h>
-#include <linux/fs/file.h>
-#include <linux/fs/namei.h>
-
-#include <uapi/fcntl.h>
 #include <uapi/openat2.h>
-
 #include <string.h>
 #include <errno.h>
 

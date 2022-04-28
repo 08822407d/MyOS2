@@ -9,7 +9,7 @@
 #include <lib/utils.h>
 
 #include <linux/kernel/types.h>
-#include <linux/fs/internels.h>
+#include <linux/fs/vfs_s_defs.h>
 
 #include <stdbool.h>
 

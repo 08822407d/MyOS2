@@ -1,12 +1,33 @@
+// SPDX-License-Identifier: GPL-2.0
+/*
+ *  linux/fs/readdir.c
+ *
+ *  Copyright (C) 1995  Linus Torvalds
+ */
+
+#include <linux/kernel/stddef.h>
+#include <linux/kernel/kernel.h>
+// #include <linux/export.h>
+#include <linux/kernel/time.h>
+// #include <linux/mm.h>
+// #include <linux/errno.h>
+#include <linux/kernel/stat.h>
+#include <linux/fs/file.h>
+#include <linux/fs/fs.h>
+// #include <linux/fsnotify.h>
+#include <uapi/dirent.h>
+// #include <linux/security.h>
+// #include <linux/syscalls.h>
+// #include <linux/unistd.h>
+// #include <linux/compat.h>
+// #include <linux/uaccess.h>
+
+// #include <asm/unaligned.h>
+
+
 #include <string.h>
 #include <errno.h>
-
-#include <uapi/dirent.h>
-
 #include <include/proto.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/file.h>
-
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
 

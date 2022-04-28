@@ -6,9 +6,12 @@
 #ifndef __LINUX_FILE_H_
 #define __LINUX_FILE_H_
 
+// #include <linux/kernel/compiler.h>
 #include <linux/kernel/types.h>
-#include <linux/fs/internels.h>
+#include <uapi/posix_types.h>
+// #include <linux/errno.h>
 
+#include <linux/fs/vfs_s_defs.h>
 #include <errno.h>
 
 	extern void fput(file_s *file);

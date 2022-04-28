@@ -54,9 +54,9 @@
 	* __reserved is held in case we need a yet finer resolution.
 	*/
 	typedef struct statx_timestamp {
-		int64_t		tv_sec;
-		uint32_t	tv_nsec;
-		int32_t		__reserved;
+		__s64	tv_sec;
+		__u32	tv_nsec;
+		__s32	__reserved;
 	} statx_timestamp_s;
 
 	/*
@@ -96,7 +96,7 @@
 	* will have values installed for compatibility purposes so that stat() and
 	* co. can be emulated in userspace.
 	*/
-	struct statx {
+	typedef struct statx {
 		/* 0x00 */
 		__u32	stx_mask;	/* What results were written [uncond] */
 		__u32	stx_blksize;	/* Preferred general I/O size [uncond] */
@@ -128,7 +128,7 @@
 		/* 0xa0 */
 		__u64	__spare3[12];	/* Spare space for future expansion */
 		/* 0x100 */
-	};
+	} statx_s;
 
 	/*
 	* Flags to be stx_mask

@@ -1,9 +1,58 @@
-#include <linux/fs/fs.h>
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/fs/buffer.c
+ *
+ *  Copyright (C) 1991, 1992, 2002  Linus Torvalds
+ */
 
+/*
+ * Start bdflush() with kernel_thread not syscall - Paul Gortmaker, 12/95
+ *
+ * Removed a lot of unnecessary code and simplified things now that
+ * the buffer cache isn't our primary cache - Andrew Tridgell 12/96
+ *
+ * Speed up hash, lru, and free list operations.  Use gfp() for allocating
+ * hash table, use SLAB cache for buffer heads. SMP threading.  -DaveM
+ *
+ * Added 32k buffer block sizes - these are required older ARM systems. - RMK
+ *
+ * async buffer flushing, 1999 Andrea Arcangeli <andrea@suse.de>
+ */
+
+#include <linux/kernel/kernel.h>
+// #include <linux/sched/signal.h>
+// #include <linux/syscalls.h>
+#include <linux/fs/fs.h>
+// #include <linux/iomap.h>
+// #include <linux/mm.h>
+// #include <linux/percpu.h>
+// #include <linux/slab.h>
+// #include <linux/capability.h>
+// #include <linux/blkdev.h>
+// #include <linux/file.h>
+// #include <linux/quotaops.h>
+// #include <linux/highmem.h>
+// #include <linux/export.h>
+// #include <linux/backing-dev.h>
+// #include <linux/writeback.h>
+// #include <linux/hash.h>
+// #include <linux/suspend.h>
 #include <linux/kernel/buffer_head.h>
-#include <linux/kernel/blk_types.h>
+// #include <linux/task_io_accounting_ops.h>
+// #include <linux/bio.h>
+// #include <linux/cpu.h>
+// #include <linux/bitops.h>
+// #include <linux/mpage.h>
+// #include <linux/bit_spinlock.h>
+// #include <linux/pagevec.h>
+// #include <linux/sched/mm.h>
+// #include <trace/events/block.h>
+// #include <linux/fscrypt.h>
+#include <linux/fs/internals.h>
+
 
 #include <include/proto.h>
+
 
 /*
  * __getblk_gfp() will locate (and, if necessary, create) the buffer_head
