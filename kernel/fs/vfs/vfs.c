@@ -24,6 +24,7 @@ GPT_PE_s	*gpt_pes;
 
 super_block_s *root_sb = NULL;
 fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
+extern fs_type_s *file_systems;
 
 
 #include <linux/fs/fat.h>
@@ -95,37 +96,10 @@ unsigned long init_vfs()
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
 {
 	fs_type_s * p = NULL;
-	for(p = &filesystem; p; p = p->next)
+	for(p = file_systems; p; p = p->next)
 		if(!strcmp(p->name, name))
 		{
 			return p->read_super(DPTE, buf);
 		}
-	return 0;
-}
-
-int register_filesystem(fs_type_s * fs)
-{
-	fs_type_s * p = NULL;
-	for(p = &filesystem; p; p = p->next)
-		if(!strcmp(fs->name, p->name))
-			return 0;
-
-	fs->next = filesystem.next;
-	filesystem.next = fs;
-	return 1;
-}
-
-int unregister_filesystem(fs_type_s * fs)
-{
-	fs_type_s * p = &filesystem;
-	while(p->next)
-		if(p->next == fs)
-		{
-			p->next = p->next->next;
-			fs->next = NULL;
-			return 1;
-		}
-		else
-			p = p->next;
 	return 0;
 }
