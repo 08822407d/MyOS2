@@ -1,3 +1,5 @@
 add_subdirectory(vfs)
+add_subdirectory(sysfs)
+add_subdirectory(kernfs)
 add_subdirectory(fat)
 add_subdirectory(ext2)

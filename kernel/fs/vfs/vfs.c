@@ -8,6 +8,7 @@
 #include <linux/fs/GPT.h>
 #include <linux/fs/fat32.h>
 #include <linux/fs/ext2.h>
+#include <linux/fs/sysfs.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
@@ -28,6 +29,7 @@ fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 #include <linux/fs/fat.h>
 unsigned long init_vfs()
 {
+	sysfs_init();
 	int test = kparam.init_flags.vfs;
 	kparam.init_flags.vfs = 0;
 	// load the boot sector
