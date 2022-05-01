@@ -37,7 +37,7 @@
 // #include <linux/user_namespace.h>
 // #include <linux/fs_context.h>
 #include <uapi/mount.h>
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 
 #include <linux/fs/fs.h>
 #include <errno.h>

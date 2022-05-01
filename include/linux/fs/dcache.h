@@ -95,7 +95,7 @@
 		List_hdr_s			d_subdirs;		/* our children */
 	} dentry_s;
 
-	typedef struct dentry_ops
+	typedef struct dentry_operations
 	{
 		int		(*d_revalidate)(dentry_s *, unsigned int);
 		int		(*d_weak_revalidate)(dentry_s *, unsigned int);

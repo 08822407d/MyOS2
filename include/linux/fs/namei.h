@@ -63,8 +63,8 @@
 	}
 	int kern_path(const char * name, unsigned int flags, path_s * path);
 
-	// extern dentry_s *kern_path_create(int, const char *, path_s *, unsigned int);
-	// extern dentry_s *user_path_create(int, const char *, path_s *, unsigned int);
+	extern dentry_s *kern_path_create(int, const char *, path_s *, unsigned int);
+	extern dentry_s *user_path_create(int, const char *, path_s *, unsigned int);
 	// extern void done_path_create(path_s *, dentry_s *);
 	// extern dentry_s *kern_path_locked(const char *, path_s *);
 

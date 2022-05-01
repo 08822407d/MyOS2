@@ -48,7 +48,7 @@
 // #include <linux/sched/mm.h>
 // #include <trace/events/block.h>
 // #include <linux/fscrypt.h>
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 
 
 #include <include/proto.h>

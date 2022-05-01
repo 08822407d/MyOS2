@@ -39,7 +39,7 @@
 // #include <linux/bitops.h>
 // #include <linux/init_task.h>
 // #include <linux/uaccess.h>
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 #include <linux/fs/mount.h>
 
 
@@ -176,6 +176,17 @@ static void set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN p
 			p->root = *root;
 		}
 	// }
+}
+
+static void restore_nameidata(void)
+{
+	// nameidata_s *now = current->nameidata, *old = now->saved;
+
+	// current->nameidata = old;
+	// if (old)
+	// 	old->total_link_count = now->total_link_count;
+	// if (now->stack != now->internal)
+	// 	kfree(now->stack);
 }
 
 static void terminate_walk(nameidata_s *nd)
@@ -567,14 +578,15 @@ static int path_parentat(nameidata_s *nd, unsigned flags, path_s *parent)
 	return err;
 }
 
-static filename_s *filename_parentat(int dfd, filename_s *name,
-				unsigned int flags, path_s *parent, qstr_s *last)
+static int filename_parentat(int dfd, filename_s *name,
+				unsigned int flags, path_s *parent, qstr_s *last,
+				int *type)
 {
 	int retval;
 	nameidata_s nd;
 
 	if (IS_ERR(name))
-		return name;
+		return PTR_ERR(name);
 	set_nameidata(&nd, dfd, name, NULL);
 	retval = path_parentat(&nd, flags, parent);
 	if (retval == -ECHILD)
@@ -583,14 +595,11 @@ static filename_s *filename_parentat(int dfd, filename_s *name,
 	// 	retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
 	if (!retval) {
 		*last = nd.last;
-		// *type = nd.last_type;
+		*type = nd.last_type;
 		// audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
-	} else {
-		putname(name);
-		name = ERR_PTR(retval);
 	}
-	// restore_nameidata();
-	return name;
+	restore_nameidata();
+	return retval;
 }
 
 int kern_path(const char *name, unsigned int flags, OUT path_s *path)
@@ -683,6 +692,15 @@ static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
 }
 
 // Linux function proto:
+// int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
+// 		 struct path *path, int *empty)
+int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *path)
+{
+	filename_s *fn = getname(name);
+	return filename_lookup(dfd, fn, flags, path, NULL);
+}
+
+// Linux function proto:
 // struct file *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
 file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
@@ -701,11 +719,97 @@ file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
 	return filp;
 }
 
-// Linux function proto:
-// int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
-// 		 struct path *path, int *empty)
-int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *path)
+static dentry_s *filename_create(int dfd, filename_s *name,
+				path_s *path, unsigned int lookup_flags)
 {
-	filename_s *fn = getname(name);
-	return filename_lookup(dfd, fn, flags, path, NULL);
+	dentry_s *dentry = ERR_PTR(-EEXIST);
+	qstr_s last;
+	int type;
+	int err2;
+	int error;
+	bool is_dir = (lookup_flags & LOOKUP_DIRECTORY);
+
+	/*
+	 * Note that only LOOKUP_REVAL and LOOKUP_DIRECTORY matter here. Any
+	 * other flags passed in are ignored!
+	 */
+	lookup_flags &= LOOKUP_REVAL;
+
+	error = filename_parentat(dfd, name, lookup_flags, path, &last, &type);
+	if (error)
+		return ERR_PTR(error);
+
+// 	/*
+// 	 * Yucky last component or no last component at all?
+// 	 * (foo/., foo/.., /////)
+// 	 */
+// 	if (type != LAST_NORM)
+// 		goto out;
+
+// 	/* don't fail immediately if it's r/o, at least try to report other errors */
+// 	err2 = mnt_want_write(path->mnt);
+// 	/*
+// 	 * Do the final lookup.
+// 	 */
+// 	lookup_flags |= LOOKUP_CREATE | LOOKUP_EXCL;
+// 	dentry = __lookup_hash(&last, path->dentry, lookup_flags);
+// 	if (IS_ERR(dentry))
+// 		goto unlock;
+
+// 	error = -EEXIST;
+// 	if (d_is_positive(dentry))
+// 		goto fail;
+
+// 	/*
+// 	 * Special case - lookup gave negative, but... we had foo/bar/
+// 	 * From the vfs_mknod() POV we just have a negative dentry -
+// 	 * all is fine. Let's be bastards - you had / on the end, you've
+// 	 * been asking for (non-existent) directory. -ENOENT for you.
+// 	 */
+// 	if (!is_dir && last.name[last.len]) {
+// 		error = -ENOENT;
+// 		goto fail;
+// 	}
+// 	if (err2) {
+// 		error = err2;
+// 		goto fail;
+// 	}
+// 	return dentry;
+// fail:
+// 	dput(dentry);
+// 	dentry = ERR_PTR(error);
+// unlock:
+// 	if (!err2)
+// 		mnt_drop_write(path->mnt);
+// out:
+// 	path_put(path);
+// 	return dentry;
 }
+
+dentry_s *kern_path_create(int dfd, const char *pathname,
+				path_s *path, unsigned int lookup_flags)
+{
+	filename_s *filename = getname_kernel(pathname);
+	dentry_s *res = filename_create(dfd, filename, path, lookup_flags);
+
+	putname(filename);
+	return res;
+}
+
+void done_path_create(path_s *path, dentry_s *dentry)
+{
+	// dput(dentry);
+	// mnt_drop_write(path->mnt);
+	// path_put(path);
+}
+
+inline dentry_s *user_path_create(int dfd, const char *pathname,
+				path_s *path, unsigned int lookup_flags)
+{
+	filename_s *filename = getname(pathname);
+	dentry_s *res = filename_create(dfd, filename, path, lookup_flags);
+
+	putname(filename);
+	return res;
+}
+

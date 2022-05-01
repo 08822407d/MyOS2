@@ -529,7 +529,7 @@
 
 	// static inline void kernfs_kill_sb(struct super_block *sb) { }
 
-	// static inline void kernfs_init(void) { }
+	static inline void kernfs_init(void) { }
 
 	// #endif	/* CONFIG_KERNFS */
 

@@ -28,7 +28,7 @@
 // #include <linux/ima.h>
 // #include <linux/swap.h>
 // #include <linux/kmemleak.h>
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 // #include <linux/atomic.h>
 
 

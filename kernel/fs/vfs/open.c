@@ -33,7 +33,7 @@
 // #include <linux/dnotify.h>
 // #include <linux/compat.h>
 // #include <linux/mnt_idmapping.h>
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 
 
 #include <linux/kernel/sched/sched.h>

@@ -30,19 +30,22 @@
 // #include <linux/sched/task.h>
 #include <uapi/mount.h>
 // #include <linux/fs_context.h>
-// #include <linux/shmem_fs.h>
+#include <linux/mm/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>
 // #include "pnode.h"
-#include <linux/fs/internals.h>
+#include <linux/fs/internal.h>
 
 
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/err.h>
+#include <linux/kernel/kernfs.h>
+#include <linux/kernel/sysfs.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <uapi/fcntl.h>
 #include <errno.h>
 #include <include/proto.h>
+#include <include/printk.h>
 
 mount_s root_mnt;
 
@@ -114,6 +117,24 @@ done:
 }
 
 /*
+ * vfsmount lock must be held.  Additionally, the caller is responsible
+ * for serializing calls for given disposal list.
+ */
+/* called with namespace_lock and vfsmount lock */
+static void put_mountpoint(mountpoint_s *mp)
+{
+	// static void __put_mountpoint(struct mountpoint *mp, struct list_head *list)
+	// {
+		if (!--mp->m_count) {
+			dentry_s *dentry = mp->m_dentry;
+			dentry->d_flags &= ~DCACHE_MOUNTED;
+			// dput_to_list(dentry, list);
+			kfree(mp);
+		}
+	// }
+}
+
+/*
  * vfsmount lock must be held for write
  */
 void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
@@ -124,6 +145,30 @@ void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
 	child_mnt->mnt_mp = mp;
 	list_hdr_append(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
 }
+
+vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
+				const char *name, void *data)
+{
+	vfsmount_s *mnt;
+	int ret = 0;
+
+	if (!type)
+		return ERR_PTR(-EINVAL);
+
+	if (name)
+		ret = vfs_parse_fs_string(fc, "source",
+					  name, strlen(name));
+	// if (!ret)
+	// 	ret = parse_monolithic_mount_data(fc, data);
+	// if (!ret)
+	// 	mnt = fc_mount(fc);
+	// else
+	// 	mnt = ERR_PTR(ret);
+
+	// put_fs_context(fc);
+	// return mnt;
+}
+
 
 // Linux function proto:
 // static struct mountpoint *lock_mount(struct path *path)
@@ -465,4 +510,33 @@ void init_mount()
 	root_mnt.mnt_mountpoint =
 	root_mnt.mnt.mnt_root = root_sb->s_root;
 	root_mnt.mnt_mp = NULL;
+}
+
+void mnt_init(void)
+{
+	int err;
+
+	kernfs_init();
+
+	err = sysfs_init();
+	if (err)
+		color_printk(RED, BLACK, "sysfs_init error: %d\n", err);
+	shmem_init();
+	// init_rootfs();
+	// init_mount_tree();
+}
+
+vfsmount_s *kern_mount(fs_type_s *type)
+{
+	vfsmount_s *mnt;
+	mnt = vfs_kern_mount(type, SB_KERNMOUNT, type->name, NULL);
+	return mnt;
+}
+
+void kern_unmount(vfsmount_s *mnt)
+{
+	/* release long term mount so mount point can be released */
+	if (!IS_ERR_OR_NULL(mnt)) {
+		mntput(mnt);
+	}
 }

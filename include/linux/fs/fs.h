@@ -1953,7 +1953,7 @@
 	// */
 	// #define REMAP_FILE_ADVISORY		(REMAP_FILE_CAN_SHORTEN)
 
-	typedef struct file_ops {
+	typedef struct file_operations {
 		int			(*ioctl)(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
 		int			(*close)(inode_s * inode, file_s * file_p);
 		size_t		(*readdir)(file_s * filp, void * dirent, filldir_t filler);
@@ -2000,7 +2000,7 @@
 	// 	int			(*fadvise)(file_s *, loff_t, loff_t, int);
 	} file_ops_s;
 
-	typedef struct inode_ops {
+	typedef struct inode_operations {
 		dentry_s	*(*lookup) (inode_s *, dentry_s *, unsigned int);
 		// const char	*(*get_link) (dentry_s *, inode_s *, struct delayed_call *);
 		// int			(*permission) (user_namespace_s *, inode_s *, int);
@@ -2073,7 +2073,7 @@
 	// 					loff_t len, unsigned int remap_flags);
 
 
-	typedef struct super_ops {
+	typedef struct super_operations {
 		void (*write_super)(super_block_s * sb);
 
 
@@ -2399,7 +2399,7 @@
 	// int sync_inode_metadata(inode_s *inode, int wait);
 
 #include <linux/fs/GPT.h>
-	typedef struct fs_type {
+	typedef struct file_system_type {
 		super_block_s	*(*read_super)(GPT_PE_s * DPTE, void * buf);
 
 		const char		*name;

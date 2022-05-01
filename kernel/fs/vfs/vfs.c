@@ -9,6 +9,7 @@
 #include <linux/fs/fat32.h>
 #include <linux/fs/ext2.h>
 #include <linux/fs/sysfs.h>
+#include <linux/fs/internal.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
@@ -30,7 +31,7 @@ extern fs_type_s *file_systems;
 #include <linux/fs/fat.h>
 unsigned long init_vfs()
 {
-	sysfs_init();
+	mnt_init();
 	int test = kparam.init_flags.vfs;
 	kparam.init_flags.vfs = 0;
 	// load the boot sector
