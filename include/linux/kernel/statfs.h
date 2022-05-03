@@ -5,7 +5,7 @@
 // #include <asm/statfs.h>
 // #include <asm/byteorder.h>
 
-	struct kstatfs {
+	typedef struct kstatfs {
 		long f_type;
 		long f_bsize;
 		u64 f_blocks;
@@ -18,7 +18,7 @@
 		long f_frsize;
 		long f_flags;
 		long f_spare[4];
-	};
+	} kstatfs_s;
 
 	/*
 	* Definitions for the flag in f_flag.

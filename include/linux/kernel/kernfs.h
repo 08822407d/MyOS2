@@ -28,7 +28,7 @@
 	// struct super_block;
 	// struct file_system_type;
 	// struct poll_table_struct;
-	// struct fs_context;
+	// fs_ctxt_s;
 
 	// struct kernfs_fs_context;
 	// struct kernfs_open_node;
@@ -410,8 +410,8 @@
 	// 			const void *value, size_t size, int flags);
 
 	// const void *kernfs_super_ns(struct super_block *sb);
-	// int kernfs_get_tree(struct fs_context *fc);
-	// void kernfs_free_fs_context(struct fs_context *fc);
+	// int kernfs_get_tree(fs_ctxt_s *fc);
+	// void kernfs_free_fs_context(fs_ctxt_s *fc);
 	// void kernfs_kill_sb(struct super_block *sb);
 
 	// void kernfs_init(void);
@@ -522,10 +522,10 @@
 	// static inline const void *kernfs_super_ns(struct super_block *sb)
 	// { return NULL; }
 
-	// static inline int kernfs_get_tree(struct fs_context *fc)
+	// static inline int kernfs_get_tree(fs_ctxt_s *fc)
 	// { return -ENOSYS; }
 
-	// static inline void kernfs_free_fs_context(struct fs_context *fc) { }
+	// static inline void kernfs_free_fs_context(fs_ctxt_s *fc) { }
 
 	// static inline void kernfs_kill_sb(struct super_block *sb) { }
 

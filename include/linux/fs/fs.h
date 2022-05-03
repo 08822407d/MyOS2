@@ -2411,10 +2411,10 @@
 	#define FS_DISALLOW_NOTIFY_PERM	16		/* Disable fanotify permission events */
 	#define FS_ALLOW_IDMAP			32		/* FS has been updated to handle vfs idmappings. */
 	#define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+		int				(*init_fs_context)(fs_ctxt_s *);
 		dentry_s		*(*mount) (fs_type_s *, int, const char *, void *);
 		void			(*kill_sb) (super_block_s *);
 		fs_type_s		*next;
-		// int				(*init_fs_context)(fs_context_s *);
 		// const fs_parameter_spec_s	*parameters;
 		// module_s			*owner;
 		// hlist_head_s		fs_supers;
@@ -2449,12 +2449,12 @@
 	// void deactivate_super(super_block_s *sb);
 	// void deactivate_locked_super(super_block_s *sb);
 	// int set_anon_super(super_block_s *s, void *data);
-	// int set_anon_super_fc(super_block_s *s, struct fs_context *fc);
+	// int set_anon_super_fc(super_block_s *s, fs_ctxt_s *fc);
 	// int get_anon_bdev(dev_t *);
 	// void free_anon_bdev(dev_t);
-	// super_block_s *sget_fc(struct fs_context *fc,
-	// 				int (*test)(super_block_s *, struct fs_context *),
-	// 				int (*set)(super_block_s *, struct fs_context *));
+	// super_block_s *sget_fc(fs_ctxt_s *fc,
+	// 				int (*test)(super_block_s *, fs_ctxt_s *),
+	// 				int (*set)(super_block_s *, fs_ctxt_s *));
 	// super_block_s *sget(fs_type_s *type,
 	// 			int (*test)(super_block_s *,void *),
 	// 			int (*set)(super_block_s *,void *),
@@ -3265,8 +3265,8 @@
 	// extern const char *vfs_get_link(dentry_s *, struct delayed_call *);
 	// extern int vfs_readlink(dentry_s *, char __user *, int);
 
-	// extern fs_type_s *get_filesystem(fs_type_s *fs);
-	// extern void put_filesystem(fs_type_s *fs);
+	extern fs_type_s *get_filesystem(fs_type_s *fs);
+	extern void put_filesystem(fs_type_s *fs);
 	// extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);
 	// extern super_block_s *get_active_super(struct block_device *bdev);
@@ -3310,7 +3310,7 @@
 	// extern int simple_nosetlease(file_s *, long, file_s_lock **, void **);
 	// extern const dentry_s_operations simple_dentry_operations;
 
-	// extern dentry_s *simple_lookup(inode_s *, dentry_s *, unsigned int flags);
+	extern dentry_s *simple_lookup(inode_s *, dentry_s *, unsigned int flags);
 	// extern ssize_t generic_read_dir(file_s *, char __user *, size_t, loff_t *);
 	// extern const file_ops_s simple_dir_operations;
 	// extern const inode_ops_s simple_dir_inode_operations;

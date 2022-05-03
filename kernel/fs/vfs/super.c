@@ -35,7 +35,7 @@
 // #include <linux/fsnotify.h>
 // #include <linux/lockdep.h>
 // #include <linux/user_namespace.h>
-// #include <linux/fs_context.h>
+#include <linux/fs/fs_context.h>
 #include <uapi/mount.h>
 #include <linux/fs/internal.h>
 
@@ -94,6 +94,92 @@ void kill_litter_super(super_block_s *sb)
 	// if (sb->s_root)
 	// 	d_genocide(sb->s_root);
 	kill_anon_super(sb);
+}
+
+/**
+ * vfs_get_super - Get a superblock with a search key set in s_fs_info.
+ * @fc: The filesystem context holding the parameters
+ * @keying: How to distinguish superblocks
+ * @fill_super: Helper to initialise a new superblock
+ *
+ * Search for a superblock and create a new one if not found.  The search
+ * criterion is controlled by @keying.  If the search fails, a new superblock
+ * is created and @fill_super() is called to initialise it.
+ *
+ * @keying can take one of a number of values:
+ *
+ * (1) vfs_get_single_super - Only one superblock of this type may exist on the
+ *     system.  This is typically used for special system filesystems.
+ *
+ * (2) vfs_get_keyed_super - Multiple superblocks may exist, but they must have
+ *     distinct keys (where the key is in s_fs_info).  Searching for the same
+ *     key again will turn up the superblock for that key.
+ *
+ * (3) vfs_get_independent_super - Multiple superblocks may exist and are
+ *     unkeyed.  Each call will get a new superblock.
+ *
+ * A permissions check is made by sget_fc() unless we're getting a superblock
+ * for a kernel-internal mount or a submount.
+ */
+int vfs_get_super(fs_ctxt_s *fc,
+				enum vfs_get_super_keying keying,
+				int (*fill_super)(super_block_s *sb,
+						fs_ctxt_s *fc))
+{
+	// int (*test)(super_block_s *, fs_ctxt_s *);
+	// super_block_s *sb;
+	// int err;
+
+	// switch (keying) {
+	// case vfs_get_single_super:
+	// case vfs_get_single_reconf_super:
+	// 	test = test_single_super;
+	// 	break;
+	// case vfs_get_keyed_super:
+	// 	test = test_keyed_super;
+	// 	break;
+	// case vfs_get_independent_super:
+	// 	test = NULL;
+	// 	break;
+	// default:
+	// 	BUG();
+	// }
+
+// 	sb = sget_fc(fc, test, set_anon_super_fc);
+// 	if (IS_ERR(sb))
+// 		return PTR_ERR(sb);
+
+// 	if (!sb->s_root) {
+// 		err = fill_super(sb, fc);
+// 		if (err)
+// 			goto error;
+
+// 		sb->s_flags |= SB_ACTIVE;
+// 		fc->root = dget(sb->s_root);
+// 	} else {
+// 		fc->root = dget(sb->s_root);
+// 		if (keying == vfs_get_single_reconf_super) {
+// 			err = reconfigure_super(fc);
+// 			if (err < 0) {
+// 				dput(fc->root);
+// 				fc->root = NULL;
+// 				goto error;
+// 			}
+// 		}
+// 	}
+
+// 	return 0;
+
+// error:
+// 	deactivate_locked_super(sb);
+// 	return err;
+}
+
+int get_tree_nodev(fs_ctxt_s *fc,
+				int (*fill_super)(super_block_s *sb,
+						fs_ctxt_s *fc))
+{
+	return vfs_get_super(fc, vfs_get_independent_super, fill_super);
 }
 
 static int set_bdev_super(super_block_s *s, void *data)

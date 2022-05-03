@@ -10,41 +10,44 @@
 // #include <linux/xattr.h>
 // #include <linux/fs_parser.h>
 
-	// /* inode in-kernel data */
 
-	// struct shmem_inode_info {
-	// 	spinlock_t		lock;
-	// 	unsigned int		seals;		/* shmem seals */
-	// 	unsigned long		flags;
-	// 	unsigned long		alloced;	/* data pages alloced to file */
-	// 	unsigned long		swapped;	/* subtotal assigned to swap */
-	// 	pgoff_t			fallocend;	/* highest fallocate endindex */
-	// 	struct list_head        shrinklist;     /* shrinkable hpage inodes */
-	// 	struct list_head	swaplist;	/* chain of maybes on swap */
-	// 	struct shared_policy	policy;		/* NUMA memory alloc policy */
-	// 	struct simple_xattrs	xattrs;		/* list of xattrs */
-	// 	atomic_t		stop_eviction;	/* hold when working on inode */
-	// 	struct inode		vfs_inode;
-	// };
+#include <linux/fs/vfs_s_defs.h>
 
-	// struct shmem_sb_info {
-	// 	unsigned long max_blocks;   /* How many blocks are allowed */
-	// 	struct percpu_counter used_blocks;  /* How many are allocated */
-	// 	unsigned long max_inodes;   /* How many inodes are allowed */
-	// 	unsigned long free_inodes;  /* How many are left for allocation */
-	// 	raw_spinlock_t stat_lock;   /* Serialize shmem_sb_info changes */
-	// 	umode_t mode;		    /* Mount mode for root directory */
-	// 	unsigned char huge;	    /* Whether to try for hugepages */
-	// 	kuid_t uid;		    /* Mount uid for root directory */
-	// 	kgid_t gid;		    /* Mount gid for root directory */
-	// 	bool full_inums;	    /* If i_ino should be uint or ino_t */
-	// 	ino_t next_ino;		    /* The next per-sb inode number to use */
-	// 	ino_t __percpu *ino_batch;  /* The next per-cpu inode number to use */
-	// 	struct mempolicy *mpol;     /* default memory policy for mappings */
-	// 	spinlock_t shrinklist_lock;   /* Protects shrinklist */
-	// 	struct list_head shrinklist;  /* List of shinkable inodes */
-	// 	unsigned long shrinklist_len; /* Length of shrinklist */
-	// };
+	/* inode in-kernel data */
+
+	typedef struct shmem_inode_info {
+		// spinlock_t		lock;
+		unsigned int	seals;				/* shmem seals */
+		unsigned long	flags;
+		unsigned long	alloced;			/* data pages alloced to file */
+		unsigned long	swapped;			/* subtotal assigned to swap */
+		pgoff_t			fallocend;			/* highest fallocate endindex */
+		// struct list_head	shrinklist;		/* shrinkable hpage inodes */
+		// struct list_head	swaplist;		/* chain of maybes on swap */
+		// struct shared_policy	policy;		/* NUMA memory alloc policy */
+		// struct simple_xattrs	xattrs;		/* list of xattrs */
+		// atomic_t		stop_eviction;		/* hold when working on inode */
+		inode_s			vfs_inode;
+	} shmem_inode_info_s;
+
+	typedef struct shmem_sb_info {
+		unsigned long	max_blocks;			/* How many blocks are allowed */
+		// struct percpu_counter	used_blocks;/* How many are allocated */
+		unsigned long	max_inodes;			/* How many inodes are allowed */
+		unsigned long	free_inodes;		/* How many are left for allocation */
+		// raw_spinlock_t	stat_lock;			/* Serialize shmem_sb_info changes */
+		umode_t			mode;				/* Mount mode for root directory */
+		unsigned char	huge;				/* Whether to try for hugepages */
+		kuid_t			uid;				/* Mount uid for root directory */
+		kgid_t			gid;				/* Mount gid for root directory */
+		bool			full_inums;			/* If i_ino should be uint or ino_t */
+		ino_t			next_ino;			/* The next per-sb inode number to use */
+		// ino_t			*ino_batch;			/* The next per-cpu inode number to use */
+		// struct mempolicy	*mpol;			/* default memory policy for mappings */
+		// spinlock_t		shrinklist_lock;	/* Protects shrinklist */
+		// struct list_head shrinklist; 		/* List of shinkable inodes */
+		// unsigned long	shrinklist_len;		/* Length of shrinklist */
+	} shmem_sb_info_s;
 
 	// static inline struct shmem_inode_info *SHMEM_I(struct inode *inode)
 	// {
@@ -56,7 +59,7 @@
 	// */
 	// extern const struct fs_parameter_spec shmem_fs_parameters[];
 	extern int shmem_init(void);
-	// extern int shmem_init_fs_context(struct fs_context *fc);
+	// extern int shmem_init_fs_context(fs_ctxt_s *fc);
 	// extern struct file *shmem_file_setup(const char *name,
 	// 					loff_t size, unsigned long flags);
 	// extern struct file *shmem_kernel_file_setup(const char *name, loff_t size,

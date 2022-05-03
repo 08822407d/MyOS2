@@ -44,3 +44,8 @@ typedef struct buffer_head buffer_head_s;
 
 struct block_device;
 typedef struct block_device block_device_s;
+
+struct fs_context;
+typedef struct fs_context fs_ctxt_s;
+struct fs_context_operations;
+typedef struct fs_context_operations fs_ctxt_ops_s;

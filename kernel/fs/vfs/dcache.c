@@ -77,6 +77,54 @@
  * arbitrary, since it's serialized on rename_lock
  */
 
+/* 
+ * This is dput
+ *
+ * This is complicated by the fact that we do not want to put
+ * dentries that are no longer on any hash chain on the unused
+ * list: we'd much rather just get rid of them immediately.
+ *
+ * However, that implies that we have to traverse the dentry
+ * tree upwards to the parents which might _also_ now be
+ * scheduled for deletion (it may have been only waiting for
+ * its last child to go away).
+ *
+ * This tail recursion is done by hand as we don't want to depend
+ * on the compiler to always get this right (gcc generally doesn't).
+ * Real recursion would eat up our stack space.
+ */
+
+/*
+ * dput - release a dentry
+ * @dentry: dentry to release 
+ *
+ * Release a dentry. This will drop the usage count and if appropriate
+ * call the dentry unlink method as well as removing it from the queues and
+ * releasing its resources. If the parent dentries were scheduled for release
+ * they too may now get deleted.
+ */
+void dput(dentry_s *dentry)
+{
+	// while (dentry) {
+	// 	might_sleep();
+
+	// 	rcu_read_lock();
+	// 	if (likely(fast_dput(dentry))) {
+	// 		rcu_read_unlock();
+	// 		return;
+	// 	}
+
+	// 	/* Slow case: now with the dentry lock held */
+	// 	rcu_read_unlock();
+
+	// 	if (likely(retain_dentry(dentry))) {
+	// 		spin_unlock(&dentry->d_lock);
+	// 		return;
+	// 	}
+
+	// 	dentry = dentry_kill(dentry);
+	// }
+}
 
 // Linux function proto:
 // struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
@@ -132,4 +180,26 @@ dentry_s * __d_alloc(qstr_s * name)
 	list_hdr_init(&dentry->d_subdirs);
 
 	return dentry;
+}
+
+
+void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op)
+{
+	dentry->d_op = op;
+	if (!op)
+		return;
+	if (op->d_hash)
+		dentry->d_flags |= DCACHE_OP_HASH;
+	if (op->d_compare)
+		dentry->d_flags |= DCACHE_OP_COMPARE;
+	if (op->d_revalidate)
+		dentry->d_flags |= DCACHE_OP_REVALIDATE;
+	if (op->d_weak_revalidate)
+		dentry->d_flags |= DCACHE_OP_WEAK_REVALIDATE;
+	if (op->d_delete)
+		dentry->d_flags |= DCACHE_OP_DELETE;
+	if (op->d_prune)
+		dentry->d_flags |= DCACHE_OP_PRUNE;
+	if (op->d_real)
+		dentry->d_flags |= DCACHE_OP_REAL;
 }

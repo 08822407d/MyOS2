@@ -29,7 +29,7 @@
 // #include <linux/task_work.h>
 // #include <linux/sched/task.h>
 #include <uapi/mount.h>
-// #include <linux/fs_context.h>
+#include <linux/fs/fs_context.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>
 // #include "pnode.h"
@@ -149,15 +149,20 @@ void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
 vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 				const char *name, void *data)
 {
+	fs_ctxt_s *fc;
 	vfsmount_s *mnt;
 	int ret = 0;
 
 	if (!type)
 		return ERR_PTR(-EINVAL);
 
+	fc = fs_context_for_mount(type, flags);
+	if (IS_ERR(fc))
+		return ERR_CAST(fc);
+
 	if (name)
 		ret = vfs_parse_fs_string(fc, "source",
-					  name, strlen(name));
+						name, strlen(name));
 	// if (!ret)
 	// 	ret = parse_monolithic_mount_data(fc, data);
 	// if (!ret)
@@ -404,7 +409,7 @@ out:
 static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char *name)
 {
 	fs_type_s	*type;
-	struct fs_context *fc;
+	fs_ctxt_s *fc;
 	const char *subtype = NULL;
 	int err = 0;
 

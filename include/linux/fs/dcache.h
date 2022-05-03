@@ -196,7 +196,7 @@
 	// extern void __d_drop(dentry_s *dentry);
 	// extern void d_drop(dentry_s *dentry);
 	// extern void d_delete(dentry_s *);
-	// extern void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op);
+	extern void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op);
 
 	// /* allocate/de-allocate */
 	// extern dentry_s *d_alloc(dentry_s *, const qstr_s *);
@@ -284,12 +284,12 @@
 	// 	return dentry;
 	// }
 
-	// static inline dentry_s *dget(dentry_s *dentry)
-	// {
-	// 	if (dentry)
-	// 		lockref_get(&dentry->d_lockref);
-	// 	return dentry;
-	// }
+	static inline dentry_s *dget(dentry_s *dentry)
+	{
+		// if (dentry)
+		// 	lockref_get(&dentry->d_lockref);
+		return dentry;
+	}
 
 	// extern dentry_s *dget_parent(dentry_s *dentry);
 
@@ -338,7 +338,7 @@
 	// 	}
 	// }
 
-	// extern void dput(dentry_s *);
+	extern void dput(dentry_s *);
 
 	// static inline bool d_managed(const dentry_s *dentry)
 	// {

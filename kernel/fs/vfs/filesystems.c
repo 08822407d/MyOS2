@@ -39,6 +39,11 @@ static fs_type_s tmp = {.name = "filesystems", .next = NULL, .fs_flags = 0};
 fs_type_s *file_systems = &tmp;
 // static DEFINE_RWLOCK(file_systems_lock);
 
+void put_filesystem(fs_type_s *fs)
+{
+
+}
+
 static fs_type_s **find_filesystem(const char *name, unsigned len)
 {
 	fs_type_s **p;

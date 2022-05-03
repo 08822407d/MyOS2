@@ -37,9 +37,9 @@
 	* fs_context.c
 	*/
 	// extern const struct fs_context_operations legacy_fs_context_ops;
-	// extern int parse_monolithic_mount_data(struct fs_context *, void *);
-	// extern void vfs_clean_context(struct fs_context *fc);
-	// extern int finish_clean_context(struct fs_context *fc);
+	// extern int parse_monolithic_mount_data(fs_ctxt_s *, void *);
+	// extern void vfs_clean_context(fs_ctxt_s *fc);
+	// extern int finish_clean_context(fs_ctxt_s *fc);
 
 	/*
 	* namei.c
@@ -86,11 +86,11 @@
 	/*
 	* super.c
 	*/
-	// extern int reconfigure_super(struct fs_context *);
+	// extern int reconfigure_super(fs_ctxt_s *);
 	extern bool trylock_super(super_block_s *sb);
 	super_block_s *user_get_super(dev_t, bool excl);
 	void put_super(super_block_s *sb);
-	// extern bool mount_capable(struct fs_context *);
+	// extern bool mount_capable(fs_ctxt_s *);
 
 	/*
 	* open.c
