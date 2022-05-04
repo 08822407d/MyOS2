@@ -146,6 +146,56 @@ void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
 	list_hdr_append(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
 }
 
+/**
+ * vfs_create_mount - Create a mount for a configured superblock
+ * @fc: The configuration context with the superblock attached
+ *
+ * Create a mount to an already configured superblock.  If necessary, the
+ * caller should invoke vfs_get_tree() before calling this.
+ *
+ * Note that this does not attach the mount to anything.
+ */
+vfsmount_s *vfs_create_mount(fs_ctxt_s *fc)
+{
+	// struct mount *mnt;
+	// struct user_namespace *fs_userns;
+
+	// if (!fc->root)
+	// 	return ERR_PTR(-EINVAL);
+
+	// mnt = alloc_vfsmnt(fc->source ?: "none");
+	// if (!mnt)
+	// 	return ERR_PTR(-ENOMEM);
+
+	// if (fc->sb_flags & SB_KERNMOUNT)
+	// 	mnt->mnt.mnt_flags = MNT_INTERNAL;
+
+	// atomic_inc(&fc->root->d_sb->s_active);
+	// mnt->mnt.mnt_sb		= fc->root->d_sb;
+	// mnt->mnt.mnt_root	= dget(fc->root);
+	// mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
+	// mnt->mnt_parent		= mnt;
+
+	// fs_userns = mnt->mnt.mnt_sb->s_user_ns;
+	// if (!initial_idmapping(fs_userns))
+	// 	mnt->mnt.mnt_userns = get_user_ns(fs_userns);
+
+	// lock_mount_hash();
+	// list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
+	// unlock_mount_hash();
+	// return &mnt->mnt;
+}
+
+vfsmount_s *fc_mount(fs_ctxt_s *fc)
+{
+	int err = vfs_get_tree(fc);
+	if (!err) {
+		// up_write(&fc->root->d_sb->s_umount);
+		// return vfs_create_mount(fc);
+	}
+	return ERR_PTR(err);
+}
+
 vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 				const char *name, void *data)
 {
@@ -159,16 +209,10 @@ vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 	fc = fs_context_for_mount(type, flags);
 	if (IS_ERR(fc))
 		return ERR_CAST(fc);
-
-	if (name)
-		ret = vfs_parse_fs_string(fc, "source",
-						name, strlen(name));
-	// if (!ret)
-	// 	ret = parse_monolithic_mount_data(fc, data);
-	// if (!ret)
-	// 	mnt = fc_mount(fc);
-	// else
-	// 	mnt = ERR_PTR(ret);
+	if (!ret)
+		mnt = fc_mount(fc);
+	else
+		mnt = ERR_PTR(ret);
 
 	// put_fs_context(fc);
 	// return mnt;

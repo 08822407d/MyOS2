@@ -91,7 +91,7 @@
 	extern int __mnt_want_write(vfsmount_s *);
 	extern void __mnt_drop_write(vfsmount_s *);
 
-	// extern vfsmount_s *fc_mount(fs_context_s *fc);
+	extern vfsmount_s *fc_mount(fs_ctxt_s *fc);
 	// extern vfsmount_s *vfs_create_mount(fs_context_s *fc);
 	extern vfsmount_s *vfs_kern_mount(fs_type_s *type,
 					int flags, const char *name, void *data);

@@ -533,7 +533,7 @@ int shmem_init(void)
 		goto out2;
 	}
 
-	tmp_shmemfs_mount();
+	// tmp_shmemfs_mount();
 
 	shm_mnt = kern_mount(&shmem_fs_type);
 	if (IS_ERR(shm_mnt)) {

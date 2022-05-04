@@ -127,10 +127,10 @@
 
 	// extern fs_ctxt_s *vfs_dup_fs_context(fs_ctxt_s *fc);
 	// extern int vfs_parse_fs_param(fs_ctxt_s *fc, fs_param_s *param);
-	extern int vfs_parse_fs_string(fs_ctxt_s *fc, const char *key,
-					const char *value, size_t v_size);
+	// extern int vfs_parse_fs_string(fs_ctxt_s *fc, const char *key,
+	// 				const char *value, size_t v_size);
 	// extern int generic_parse_monolithic(fs_ctxt_s *fc, void *data);
-	// extern int vfs_get_tree(fs_ctxt_s *fc);
+	extern int vfs_get_tree(fs_ctxt_s *fc);
 	extern void put_fs_context(fs_ctxt_s *fc);
 	// extern int vfs_parse_fs_param_source(fs_ctxt_s *fc,
 	// 					fs_param_s *param);

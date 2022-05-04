@@ -39,6 +39,8 @@
 #include <uapi/mount.h>
 #include <linux/fs/internal.h>
 
+
+#include <include/printk.h>
 #include <linux/fs/fs.h>
 #include <errno.h>
 
@@ -270,4 +272,52 @@ dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
 // 	blkdev_put(bdev, mode);
 // error:
 // 	return ERR_PTR(error);
+}
+
+/**
+ * vfs_get_tree - Get the mountable root
+ * @fc: The superblock configuration context.
+ *
+ * The filesystem is invoked to get or create a superblock which can then later
+ * be used for mounting.  The filesystem places a pointer to the root to be
+ * used for mounting in @fc->root.
+ */
+int vfs_get_tree(fs_ctxt_s *fc)
+{
+	super_block_s *sb;
+	int error;
+
+	if (fc->root)
+		return -EBUSY;
+
+	/* Get the mountable root in fc->root, with a ref on the root and a ref
+	 * on the superblock.
+	 */
+	error = fc->ops->get_tree(fc);
+	if (error < 0)
+		return error;
+
+	if (!fc->root) {
+		color_printk(RED, BLACK, "Filesystem %s get_tree() didn't set fc->root\n",
+		       fc->fs_type->name);
+		/* We don't know what the locking state of the superblock is -
+		 * if there is a superblock.
+		 */
+	}
+
+	sb = fc->root->d_sb;
+	/*
+	 * Write barrier is for super_cache_count(). We place it before setting
+	 * SB_BORN as the data dependency between the two functions is the
+	 * superblock structure contents that we just set up, not the SB_BORN
+	 * flag.
+	 */
+	sb->s_flags |= SB_BORN;
+
+	// error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
+	// if (unlikely(error)) {
+	// 	fc_drop_locked(fc);
+	// 	return error;
+	// }
+	return 0;
 }

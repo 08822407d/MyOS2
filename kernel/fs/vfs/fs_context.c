@@ -46,34 +46,6 @@ typedef struct legacy_fs_context {
 static int legacy_init_fs_context(fs_ctxt_s *fc);
 
 /**
- * vfs_parse_fs_string - Convenience function to just parse a string.
- */
-int vfs_parse_fs_string(fs_ctxt_s *fc, const char *key,
-				const char *value, size_t v_size)
-{
-	int ret;
-
-	fs_param_s param = {
-		.key	= key,
-		.type	= fs_value_is_flag,
-		.size	= v_size,
-	};
-
-	if (value) {
-		param.string = kmalloc(v_size + 1);
-		memcpy(param.string, value, v_size);
-		param.string[v_size] = '\0';
-		if (!param.string)
-			return -ENOMEM;
-		param.type = fs_value_is_string;
-	}
-
-	// ret = vfs_parse_fs_param(fc, &param);
-	kfree(param.string);
-	return ret;
-}
-
-/**
  * alloc_fs_context - Create a filesystem context.
  * @fs_type: The filesystem type.
  * @reference: The dentry from which this one derives (or NULL)
