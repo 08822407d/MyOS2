@@ -307,7 +307,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags
 	// {
 	//		struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
 	//		{
-				dentry = __d_alloc(name);
+				dentry = __d_alloc(dir->d_sb, name);
 	//		}
 	// }
 	if (IS_ERR(dentry))

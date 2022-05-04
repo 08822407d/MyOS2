@@ -101,7 +101,6 @@ static vfsmount_s *shm_mnt;
  * a time): we would prefer not to enlarge the shmem inode just for that.
  */
 typedef struct shmem_falloc {
-	// wait_queue_head_t *waitq; /* faults into hole wait for punch to end */
 	pgoff_t		start;		/* start of range currently being fallocated */
 	pgoff_t		next;		/* the next page offset to be fallocated */
 	pgoff_t		nr_falloced;	/* how many new pages have been fallocated */
@@ -111,7 +110,6 @@ typedef struct shmem_falloc {
 typedef struct shmem_options {
 	unsigned long long	blocks;
 	unsigned long long	inodes;
-	// struct mempolicy *mpol;
 	kuid_t	uid;
 	kgid_t	gid;
 	umode_t	mode;
@@ -124,37 +122,44 @@ typedef struct shmem_options {
 #define SHMEM_SEEN_INUMS 8
 } shmem_opts_s;
 
+static inline shmem_sb_info_s *SHMEM_SB(super_block_s *sb)
+{
+	return sb->s_fs_info;
+}
+
 static const super_ops_s	shmem_ops;
-// const struct address_space_operations shmem_aops;
 static const file_ops_s		shmem_file_operations;
 static const inode_ops_s	shmem_inode_operations;
 static const inode_ops_s	shmem_dir_inode_operations;
 static const inode_ops_s	shmem_special_inode_operations;
-// static const struct vm_operations_struct shmem_vm_ops;
 static fs_type_s			shmem_fs_type;
+
+
+static void shmem_free_inode(super_block_s *sb)
+{
+	shmem_sb_info_s *sbinfo = SHMEM_SB(sb);
+	if (sbinfo->max_inodes) {
+		sbinfo->free_inodes++;
+	}
+}
 
 static int shmem_statfs(dentry_s *dentry, kstatfs_s *buf)
 {
-	// struct shmem_sb_info *sbinfo = SHMEM_SB(dentry->d_sb);
+	shmem_sb_info_s *sbinfo = SHMEM_SB(dentry->d_sb);
 
-	// buf->f_type = TMPFS_MAGIC;
-	// buf->f_bsize = PAGE_SIZE;
-	// buf->f_namelen = NAME_MAX;
-	// if (sbinfo->max_blocks) {
-	// 	buf->f_blocks = sbinfo->max_blocks;
-	// 	buf->f_bavail =
-	// 	buf->f_bfree  = sbinfo->max_blocks -
-	// 			percpu_counter_sum(&sbinfo->used_blocks);
-	// }
-	// if (sbinfo->max_inodes) {
-	// 	buf->f_files = sbinfo->max_inodes;
-	// 	buf->f_ffree = sbinfo->free_inodes;
-	// }
-	// /* else leave those fields 0 like simple_statfs */
+	buf->f_type = TMPFS_MAGIC;
+	buf->f_bsize = PAGE_SIZE;
+	buf->f_namelen = NAME_MAX;
+	if (sbinfo->max_blocks) {
+		buf->f_blocks = sbinfo->max_blocks;
+	}
+	if (sbinfo->max_inodes) {
+		buf->f_files = sbinfo->max_inodes;
+		buf->f_ffree = sbinfo->free_inodes;
+	}
+	/* else leave those fields 0 like simple_statfs */
 
-	// buf->f_fsid = uuid_to_fsid(dentry->d_sb->s_uuid.b);
-
-	// return 0;
+	return 0;
 }
 
 /*
@@ -292,20 +297,51 @@ static int shmem_rename2(inode_s *old_dir, dentry_s *old_dentry,
 	// return 0;
 }
 
+static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
+				umode_t mode, dev_t dev, unsigned long flags)
+{
+	inode_s *inode;
+	shmem_inode_info_s *info;
+	shmem_sb_info_s *sbinfo = SHMEM_SB(sb);
+
+	inode = new_inode(sb);
+	if (inode) {
+		inode->i_mode = mode;
+		inode->i_blocks = 0;
+		info = SHMEM_I(inode);
+		memset(info, 0, (char *)inode - (char *)info);
+		info->seals = F_SEAL_SEAL;
+		info->flags = flags & VM_NORESERVE;
+
+		switch (mode & S_IFMT) {
+		default:
+			inode->i_op = &shmem_special_inode_operations;
+			break;
+		case S_IFREG:
+			inode->i_op = &shmem_inode_operations;
+			inode->i_fop = &shmem_file_operations;
+			break;
+		case S_IFDIR:
+			/* Some things misbehave if size == 0 on a directory */
+			inode->i_size = 2 * BOGO_DIRENT_SIZE;
+			inode->i_op = &shmem_dir_inode_operations;
+			inode->i_fop = &simple_dir_operations;
+			break;
+		}
+	} else
+		shmem_free_inode(sb);
+	return inode;
+}
+
 static void shmem_put_super(super_block_s *sb)
 {
-	// struct shmem_sb_info *sbinfo = SHMEM_SB(sb);
-
-	// free_percpu(sbinfo->ino_batch);
-	// percpu_counter_destroy(&sbinfo->used_blocks);
-	// mpol_put(sbinfo->mpol);
-	// kfree(sbinfo);
-	// sb->s_fs_info = NULL;
+	shmem_sb_info_s *sbinfo = SHMEM_SB(sb);
+	kfree(sbinfo);
+	sb->s_fs_info = NULL;
 }
 
 static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 {
-// 	struct shmem_options *ctx = fc->fs_private;
 	inode_s *inode;
 	shmem_sb_info_s *sbinfo;
 
@@ -314,65 +350,15 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 	if (!sbinfo)
 		return -ENOMEM;
 
-	sb->s_fs_info = sbinfo;
-
-// #ifdef CONFIG_TMPFS
-// 	/*
-// 	 * Per default we only allow half of the physical ram per
-// 	 * tmpfs instance, limiting inodes to one per page of lowmem;
-// 	 * but the internal instance is left unlimited.
-// 	 */
-// 	if (!(sb->s_flags & SB_KERNMOUNT)) {
-// 		if (!(ctx->seen & SHMEM_SEEN_BLOCKS))
-// 			ctx->blocks = shmem_default_max_blocks();
-// 		if (!(ctx->seen & SHMEM_SEEN_INODES))
-// 			ctx->inodes = shmem_default_max_inodes();
-// 		if (!(ctx->seen & SHMEM_SEEN_INUMS))
-// 			ctx->full_inums = IS_ENABLED(CONFIG_TMPFS_INODE64);
-// 	} else {
-		sb->s_flags |= SB_NOUSER;
-// 	}
-	// sb->s_export_op = &shmem_export_ops;
-	sb->s_flags |= SB_NOSEC;
-// #else
-// 	sb->s_flags |= SB_NOUSER;
-// #endif
-	// sbinfo->max_blocks = ctx->blocks;
-	// sbinfo->free_inodes = sbinfo->max_inodes = ctx->inodes;
-	// if (sb->s_flags & SB_KERNMOUNT) {
-	// 	sbinfo->ino_batch = alloc_percpu(ino_t);
-	// 	if (!sbinfo->ino_batch)
-	// 		goto failed;
-	// }
-	// sbinfo->uid = ctx->uid;
-	// sbinfo->gid = ctx->gid;
 	sbinfo->uid = KUIDT_INIT(0);
 	sbinfo->gid = KGIDT_INIT(0);
-	// sbinfo->full_inums = ctx->full_inums;
-	// sbinfo->mode = ctx->mode;
-	// sbinfo->huge = ctx->huge;
-	// sbinfo->mpol = ctx->mpol;
-// 	ctx->mpol = NULL;
-
-// 	raw_spin_lock_init(&sbinfo->stat_lock);
-// 	if (percpu_counter_init(&sbinfo->used_blocks, 0, GFP_KERNEL))
-// 		goto failed;
-// 	spin_lock_init(&sbinfo->shrinklist_lock);
-// 	INIT_LIST_HEAD(&sbinfo->shrinklist);
-
+	sb->s_fs_info = sbinfo;
+	sb->s_flags |= SB_NOUSER;
+	sb->s_flags |= SB_NOSEC;
 	sb->s_maxbytes = MAX_LFS_FILESIZE;
 	sb->s_blocksize = PAGE_SIZE;
-	sb->s_blocksize_bits = PAGE_SHIFT;
 	sb->s_magic = TMPFS_MAGIC;
 	sb->s_op = &shmem_ops;
-	sb->s_time_gran = 1;
-// #ifdef CONFIG_TMPFS_XATTR
-// 	sb->s_xattr = shmem_xattr_handlers;
-// #endif
-// #ifdef CONFIG_TMPFS_POSIX_ACL
-// 	sb->s_flags |= SB_POSIXACL;
-// #endif
-// 	uuid_gen(&sb->s_uuid);
 
 	inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
 	if (!inode)
@@ -426,51 +412,6 @@ static const fs_ctxt_ops_s shmem_fs_context_ops = {
 // #endif
 // 	.error_remove_page = shmem_error_remove_page,
 // };
-
-static const file_ops_s shmem_file_operations = {
-// 	.mmap		= shmem_mmap,
-// 	.get_unmapped_area = shmem_get_unmapped_area,
-// #ifdef CONFIG_TMPFS
-// 	.llseek		= shmem_file_llseek,
-// 	.read_iter	= shmem_file_read_iter,
-// 	.write_iter	= generic_file_write_iter,
-// 	.fsync		= noop_fsync,
-// 	.splice_read	= generic_file_splice_read,
-// 	.splice_write	= iter_file_splice_write,
-// 	.fallocate	= shmem_fallocate,
-// #endif
-};
-
-static const inode_ops_s shmem_inode_operations = {
-// 	.getattr	= shmem_getattr,
-// 	.setattr	= shmem_setattr,
-// #ifdef CONFIG_TMPFS_XATTR
-// 	.listxattr	= shmem_listxattr,
-// 	.set_acl	= simple_set_acl,
-// #endif
-};
-
-static const inode_ops_s shmem_dir_inode_operations = {
-// #ifdef CONFIG_TMPFS
-// 	.create		= shmem_create,
-// 	.lookup		= simple_lookup,
-// 	.link		= shmem_link,
-// 	.unlink		= shmem_unlink,
-// 	.symlink	= shmem_symlink,
-// 	.mkdir		= shmem_mkdir,
-// 	.rmdir		= shmem_rmdir,
-// 	.mknod		= shmem_mknod,
-// 	.rename		= shmem_rename2,
-// 	.tmpfile	= shmem_tmpfile,
-// #endif
-// #ifdef CONFIG_TMPFS_XATTR
-// 	.listxattr	= shmem_listxattr,
-// #endif
-// #ifdef CONFIG_TMPFS_POSIX_ACL
-// 	.setattr	= shmem_setattr,
-// 	.set_acl	= simple_set_acl,
-// #endif
-};
 
 static const inode_ops_s shmem_special_inode_operations = {
 // #ifdef CONFIG_TMPFS_XATTR
@@ -581,6 +522,8 @@ static fs_type_s shmem_fs_type = {
 // 	.fs_flags	= FS_USERNS_MOUNT,
 };
 
+
+int tmp_shmemfs_mount(void);
 int shmem_init(void)
 {
 	int error;
@@ -589,6 +532,8 @@ int shmem_init(void)
 	if (error) {
 		goto out2;
 	}
+
+	tmp_shmemfs_mount();
 
 	shm_mnt = kern_mount(&shmem_fs_type);
 	if (IS_ERR(shm_mnt)) {
@@ -610,4 +555,43 @@ out2:
 	// shmem_destroy_inodecache();
 	shm_mnt = ERR_PTR(error);
 	return error;
+}
+
+int tmp_shmemfs_mount()
+{
+	inode_s *inode;
+	super_block_s *sb;
+	shmem_sb_info_s *sbinfo;
+
+	/* Round up to L1_CACHE_BYTES to resist false sharing */
+	sb = kmalloc(sizeof(super_block_s));
+	if (!sb)
+		return -ENOMEM;
+	sbinfo = kmalloc(sizeof(shmem_sb_info_s));
+	if (!sbinfo)
+		return -ENOMEM;
+
+	sbinfo->uid = KUIDT_INIT(0);
+	sbinfo->gid = KGIDT_INIT(0);
+	sb->s_fs_info = sbinfo;
+	sb->s_flags |= SB_NOUSER;
+	sb->s_flags |= SB_NOSEC;
+	sb->s_maxbytes = MAX_LFS_FILESIZE;
+	sb->s_blocksize = PAGE_SIZE;
+	sb->s_magic = TMPFS_MAGIC;
+	sb->s_op = &shmem_ops;
+
+	inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
+	if (!inode)
+		goto failed;
+	inode->i_uid = sbinfo->uid;
+	inode->i_gid = sbinfo->gid;
+	sb->s_root = d_make_root(inode);
+	if (!sb->s_root)
+		goto failed;
+	return 0;
+
+failed:
+	shmem_put_super(sb);
+	return -ENOMEM;
 }

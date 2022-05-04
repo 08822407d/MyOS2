@@ -12,6 +12,7 @@
 
 
 #include <linux/fs/vfs_s_defs.h>
+#include <uapi/stddef.h>
 
 	/* inode in-kernel data */
 
@@ -49,10 +50,10 @@
 		// unsigned long	shrinklist_len;		/* Length of shrinklist */
 	} shmem_sb_info_s;
 
-	// static inline struct shmem_inode_info *SHMEM_I(struct inode *inode)
-	// {
-	// 	return container_of(inode, struct shmem_inode_info, vfs_inode);
-	// }
+	static inline shmem_inode_info_s *SHMEM_I(inode_s *inode)
+	{
+		return container_of(inode, shmem_inode_info_s, vfs_inode);
+	}
 
 	// /*
 	// * Functions in mm/shmem.c called directly from elsewhere:

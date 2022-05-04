@@ -159,7 +159,7 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
  */
 // Linux function proto:
 // static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
-dentry_s * __d_alloc(qstr_s * name)
+dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
 {
 	dentry_s * dentry = kmalloc(sizeof(dentry_s));
 	if (dentry == NULL)
@@ -176,12 +176,93 @@ dentry_s * __d_alloc(qstr_s * name)
 	dentry->d_name.len = name->len;
 	memcpy((void *)dentry->d_name.name, name->name, name->len);
 
+	dentry->d_flags = 0;
+	dentry->d_inode = NULL;
+	dentry->d_parent = dentry;
+	dentry->d_sb = sb;
+	dentry->d_op = NULL;
+	dentry->d_fsdata = NULL;
+
 	list_init(&dentry->d_child, dentry);
 	list_hdr_init(&dentry->d_subdirs);
+
+	// d_set_d_op(dentry, dentry->d_sb->s_d_op);
 
 	return dentry;
 }
 
+/**
+ * d_alloc	-	allocate a dcache entry
+ * @parent: parent of entry to allocate
+ * @name: qstr of the name
+ *
+ * Allocates a dentry. It returns %NULL if there is insufficient memory
+ * available. On a success the dentry is returned. The name passed in is
+ * copied and the copy passed in may be reused after this call.
+ */
+dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
+{
+	dentry_s *dentry = __d_alloc(parent->d_sb, name);
+	if (!dentry)
+		return NULL;
+	/*
+	 * don't need child lock because it is not subject
+	 * to concurrency here
+	 */
+	// __dget_dlock(parent);
+	// dentry->d_parent = parent;
+	// list_add(&dentry->d_child, &parent->d_subdirs);
+
+	return dentry;
+}
+
+dentry_s *d_alloc_anon(super_block_s *sb)
+{
+	qstr_s q = {.name = "/", .len = 1};
+	return __d_alloc(sb, &q);
+}
+
+dentry_s *d_alloc_cursor(dentry_s * parent)
+{
+	dentry_s *dentry = d_alloc_anon(parent->d_sb);
+	if (dentry) {
+		dentry->d_flags |= DCACHE_DENTRY_CURSOR;
+		dentry->d_parent = dget(parent);
+	}
+	return dentry;
+}
+
+/**
+ * d_alloc_pseudo - allocate a dentry (for lookup-less filesystems)
+ * @sb: the superblock
+ * @name: qstr of the name
+ *
+ * For a filesystem that just pins its dentries in memory and never
+ * performs lookups at all, return an unhashed IS_ROOT dentry.
+ * This is used for pipes, sockets et.al. - the stuff that should
+ * never be anyone's children or parents.  Unlike all other
+ * dentries, these will not have RCU delay between dropping the
+ * last reference and freeing them.
+ *
+ * The only user is alloc_file_pseudo() and that's what should
+ * be considered a public interface.  Don't use directly.
+ */
+dentry_s *d_alloc_pseudo(super_block_s *sb, const qstr_s *name)
+{
+	dentry_s *dentry = __d_alloc(sb, name);
+	if (dentry)
+		dentry->d_flags |= DCACHE_NORCU;
+	return dentry;
+}
+
+dentry_s *d_alloc_name(dentry_s *parent, const char *name)
+{
+	qstr_s q;
+
+	q.name = name;
+	q.len = strlen(name);
+	return d_alloc(parent, &q);
+}
 
 void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op)
 {
@@ -202,4 +283,89 @@ void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op)
 		dentry->d_flags |= DCACHE_OP_PRUNE;
 	if (op->d_real)
 		dentry->d_flags |= DCACHE_OP_REAL;
+}
+
+static inline void __d_set_inode_and_type(dentry_s *dentry,
+				inode_s *inode, unsigned type_flags)
+{
+	unsigned flags;
+
+	dentry->d_inode = inode;
+	flags = dentry->d_flags;
+	flags &= ~(DCACHE_ENTRY_TYPE | DCACHE_FALLTHRU);
+	flags |= type_flags;
+	dentry->d_flags = flags;
+}
+
+static unsigned d_flags_for_inode(inode_s *inode)
+{
+	unsigned add_flags = DCACHE_REGULAR_TYPE;
+
+	if (!inode)
+		return DCACHE_MISS_TYPE;
+
+	if (S_ISDIR(inode->i_mode)) {
+		add_flags = DCACHE_DIRECTORY_TYPE;
+		if (!(inode->i_opflags & IOP_LOOKUP)) {
+			if (!inode->i_op->lookup)
+				add_flags = DCACHE_AUTODIR_TYPE;
+			else
+				inode->i_opflags |= IOP_LOOKUP;
+		}
+		goto type_determined;
+	}
+
+	if (!(inode->i_opflags & IOP_NOFOLLOW)) {
+		inode->i_opflags |= IOP_NOFOLLOW;
+	}
+
+	if (!S_ISREG(inode->i_mode))
+		add_flags = DCACHE_SPECIAL_TYPE;
+
+type_determined:
+	if (IS_AUTOMOUNT(inode))
+		add_flags |= DCACHE_NEED_AUTOMOUNT;
+	return add_flags;
+}
+
+static void __d_instantiate(dentry_s *dentry, inode_s *inode)
+{
+	unsigned add_flags = d_flags_for_inode(inode);
+	__d_set_inode_and_type(dentry, inode, add_flags);
+}
+
+/**
+ * d_instantiate - fill in inode information for a dentry
+ * @entry: dentry to complete
+ * @inode: inode to attach to this dentry
+ *
+ * Fill in inode information in the entry.
+ *
+ * This turns negative dentries into productive full members
+ * of society.
+ *
+ * NOTE! This assumes that the inode count has been incremented
+ * (or otherwise set) by the caller to indicate that it is now
+ * in use by the dcache.
+ */
+ 
+void d_instantiate(dentry_s *entry, inode_s * inode)
+{
+	if (inode) {
+		__d_instantiate(entry, inode);
+	}
+}
+
+dentry_s *d_make_root(inode_s *root_inode)
+{
+	dentry_s *res = NULL;
+
+	if (root_inode) {
+		res = d_alloc_anon(root_inode->i_sb);
+		if (res)
+			d_instantiate(res, root_inode);
+		else
+			iput(root_inode);
+	}
+	return res;
 }

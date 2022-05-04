@@ -568,11 +568,11 @@
 	// 	return (long)acl & 1;
 	// }
 
-	// #define IOP_FASTPERM			0x0001
-	// #define IOP_LOOKUP				0x0002
-	// #define IOP_NOFOLLOW			0x0004
-	// #define IOP_XATTR				0x0008
-	// #define IOP_DEFAULT_READLINK	0x0010
+	#define IOP_FASTPERM			0x0001
+	#define IOP_LOOKUP				0x0002
+	#define IOP_NOFOLLOW			0x0004
+	#define IOP_XATTR				0x0008
+	#define IOP_DEFAULT_READLINK	0x0010
 
 	// struct fsnotify_mark_connector;
 
@@ -582,7 +582,7 @@
 	* of the 'inode_s'
 	*/
 	typedef struct inode {
-		file_ops_s		*i_fop;
+		const file_ops_s*i_fop;
 		void			*private_idx_info;
 
 
@@ -620,13 +620,13 @@
 		// };
 		dev_t			i_rdev;
 		loff_t			i_size;
-		timespec64_s	i_atime;
-		timespec64_s	i_mtime;
-		timespec64_s	i_ctime;
+		// timespec64_s	i_atime;
+		// timespec64_s	i_mtime;
+		// timespec64_s	i_ctime;
 		// spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
-		unsigned short	i_bytes;
-		u8				i_blkbits;
-		u8				i_write_hint;
+		// unsigned short	i_bytes;
+		// u8				i_blkbits;
+		// u8				i_write_hint;
 		blkcnt_t		i_blocks;
 
 	// #ifdef __NEED_I_SIZE_ORDERED
@@ -634,11 +634,11 @@
 	// #endif
 
 		/* Misc */
-		unsigned long	i_state;
+		// unsigned long	i_state;
 		// rw_semaphore_s	i_rwsem;
 
-		unsigned long	dirtied_when;	/* jiffies of first dirtying */
-		unsigned long	dirtied_time_when;
+		// unsigned long	dirtied_when;	/* jiffies of first dirtying */
+		// unsigned long	dirtied_time_when;
 
 		// hlist_node_s	i_hash;
 		// list_head_s	i_io_list;	/* backing dev IO list */
@@ -1434,7 +1434,7 @@
 
 		// list_head_s			s_list;		/* Keep this first */
 		dev_t				s_dev;		/* search index; _not_ kdev_t */
-		unsigned char		s_blocksize_bits;
+		// unsigned char		s_blocksize_bits;
 		unsigned long		s_blocksize;
 		loff_t				s_maxbytes;	/* Max file size */
 		fs_type_s			*s_type;
@@ -1482,11 +1482,11 @@
 		*/
 		void			*s_fs_info;	/* Filesystem private info */
 
-		/* Granularity of c/m/atime in ns (cannot be worse than a second) */
-		u32				s_time_gran;
-		/* Time limits for c/m/atime in seconds */
-		time64_t		s_time_min;
-		time64_t		s_time_max;
+		// /* Granularity of c/m/atime in ns (cannot be worse than a second) */
+		// u32				s_time_gran;
+		// /* Time limits for c/m/atime in seconds */
+		// time64_t		s_time_min;
+		// time64_t		s_time_max;
 	// #ifdef CONFIG_FSNOTIFY
 	// 	__u32			s_fsnotify_mask;
 	// 	struct fsnotify_mark_connector __rcu	*s_fsnotify_marks;
@@ -1495,7 +1495,7 @@
 		char			s_id[32];	/* Informational name */
 		uuid_t			s_uuid;		/* UUID */
 
-		unsigned int	s_max_links;
+		// unsigned int	s_max_links;
 		fmode_t			s_mode;
 
 		/*
@@ -1508,7 +1508,7 @@
 		* Filesystem subtype.  If non-empty the filesystem type field
 		* in /proc/mounts will be "type.subtype"
 		*/
-		const char		*s_subtype;
+		// const char		*s_subtype;
 
 		const dentry_ops_s	*s_d_op; /* default d_op for dentries */
 
@@ -3312,8 +3312,8 @@
 
 	extern dentry_s *simple_lookup(inode_s *, dentry_s *, unsigned int flags);
 	// extern ssize_t generic_read_dir(file_s *, char __user *, size_t, loff_t *);
-	// extern const file_ops_s simple_dir_operations;
-	// extern const inode_ops_s simple_dir_inode_operations;
+	extern const file_ops_s simple_dir_operations;
+	extern const inode_ops_s simple_dir_inode_operations;
 	// extern void make_empty_dir_inode(inode_s *inode);
 	// extern bool is_empty_dir_inode(inode_s *inode);
 	// struct tree_descr { const char *name; const file_ops_s *ops; int mode; };

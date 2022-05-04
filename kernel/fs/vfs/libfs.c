@@ -54,3 +54,16 @@ dentry_s *simple_lookup(inode_s *dir, dentry_s *dentry, unsigned int flags)
 	// d_add(dentry, NULL);
 	return NULL;
 }
+
+const file_ops_s simple_dir_operations = {
+	// .open		= dcache_dir_open,
+	// .release	= dcache_dir_close,
+	// .llseek		= dcache_dir_lseek,
+	// .read		= generic_read_dir,
+	// .iterate_shared	= dcache_readdir,
+	// .fsync		= noop_fsync,
+};
+
+const inode_ops_s simple_dir_inode_operations = {
+	.lookup		= simple_lookup,
+};

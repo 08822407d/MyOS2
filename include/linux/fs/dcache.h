@@ -186,10 +186,10 @@
 
 	// extern seqlock_t rename_lock;
 
-	// /*
-	// * These are the low-level FS interfaces to the dcache..
-	// */
-	// extern void d_instantiate(dentry_s *, inode_s *);
+	/*
+	* These are the low-level FS interfaces to the dcache..
+	*/
+	extern void d_instantiate(dentry_s *, inode_s *);
 	// extern void d_instantiate_new(dentry_s *, inode_s *);
 	// extern dentry_s *d_instantiate_unique(dentry_s *, inode_s *);
 	// extern dentry_s *d_instantiate_anon(dentry_s *, inode_s *);
@@ -199,7 +199,7 @@
 	extern void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op);
 
 	// /* allocate/de-allocate */
-	// extern dentry_s *d_alloc(dentry_s *, const qstr_s *);
+	extern dentry_s *d_alloc(dentry_s *, const qstr_s *);
 	// extern dentry_s *d_alloc_anon(struct super_block *);
 	// extern dentry_s *d_alloc_parallel(dentry_s *, const qstr_s *,
 	// 					wait_queue_head_t *);
@@ -215,7 +215,7 @@
 	// extern void d_invalidate(dentry_s *);
 
 	// /* only used at mount-time */
-	// extern dentry_s *d_make_root(inode_s *);
+	extern dentry_s *d_make_root(inode_s *);
 
 	// /* <clickety>-<click> the ramfs-type tree */
 	// extern void d_genocide(dentry_s *);
@@ -246,7 +246,7 @@
 	// extern dentry_s *d_lookup(const dentry_s *, const qstr_s *);
 	// extern dentry_s *d_hash_and_lookup(dentry_s *, qstr_s *);
 	extern dentry_s *__d_lookup(const dentry_s *, const qstr_s *);
-	extern dentry_s *__d_alloc(qstr_s * name);
+	extern dentry_s *__d_alloc(super_block_s *sb, const qstr_s * name);
 	// extern dentry_s *__d_lookup_rcu(const dentry_s *parent,
 	// 				const qstr_s *name, unsigned *seq);
 
