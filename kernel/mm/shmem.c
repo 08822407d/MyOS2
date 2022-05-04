@@ -22,7 +22,7 @@
  */
 
 #include <linux/fs/fs.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/kernel/statfs.h>
 #include <linux/kernel/mount.h>
 // #include <linux/ramfs.h>
@@ -518,7 +518,7 @@ static fs_type_s shmem_fs_type = {
 // #ifdef CONFIG_TMPFS
 // 	.parameters	= shmem_fs_parameters,
 // #endif
-// 	.kill_sb	= kill_litter_super,
+	.kill_sb	= kill_litter_super,
 // 	.fs_flags	= FS_USERNS_MOUNT,
 };
 

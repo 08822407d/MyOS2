@@ -22,7 +22,7 @@
 // #include <linux/fscrypt.h>
 // #include <linux/fsnotify.h>
 // #include <linux/slab.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/hash.h>
 // #include <linux/cache.h>
 // #include <linux/export.h>

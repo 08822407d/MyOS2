@@ -12,7 +12,7 @@
 #include <linux/fs/fs.h>
 // #include <linux/magic.h>
 #include <linux/kernel/mount.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/slab.h>
 // #include <linux/user_namespace.h>
 // #include <linux/fs_context.h>

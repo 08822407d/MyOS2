@@ -9,7 +9,7 @@
 #define _LINUX_CRED_H
 
 // #include <linux/capability.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/key.h>
 // #include <linux/atomic.h>
 #include <linux/kernel/uidgid.h>

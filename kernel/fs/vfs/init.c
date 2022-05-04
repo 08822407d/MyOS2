@@ -3,7 +3,7 @@
  * Routines that mimic syscalls, but don't use the user address space or file
  * descriptors.  Only for init/ and related early init code.
  */
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/kernel/mount.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/fs.h>

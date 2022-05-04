@@ -17,7 +17,7 @@
 // #include <linux/security.h>
 // #include <linux/cred.h>
 // #include <linux/idr.h>
-// #include <linux/init.h>		/* init_rootfs */
+#include <linux/init/init.h>		/* init_rootfs */
 // #include <linux/fs_struct.h>	/* get_fs_root et.al. */
 // #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/fs/file.h>
@@ -582,6 +582,28 @@ void init_mount()
 	root_mnt.mnt_mp = NULL;
 }
 
+static void init_mount_tree(void)
+{
+	vfsmount_s *mnt;
+	mount_s *m;
+	path_s root;
+	task_s *curr= curr_tsk;
+
+	mnt = vfs_kern_mount(&rootfs_fs_type, 0, "rootfs", NULL);
+	if (IS_ERR(mnt))
+	{
+		color_printk(RED, BLACK, "Can't create rootfs");
+		while (1);
+	}
+
+	root.mnt = mnt;
+	root.dentry = mnt->mnt_root;
+	mnt->mnt_flags |= MNT_LOCKED;
+
+	set_fs_pwd(curr->fs, &root);
+	set_fs_root(curr->fs, &root);
+}
+
 void mnt_init(void)
 {
 	int err;
@@ -593,7 +615,7 @@ void mnt_init(void)
 		color_printk(RED, BLACK, "sysfs_init error: %d\n", err);
 	shmem_init();
 	// init_rootfs();
-	// init_mount_tree();
+	init_mount_tree();
 }
 
 vfsmount_s *kern_mount(fs_type_s *type)

@@ -10,7 +10,7 @@
 // #include <linux/slab.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/module.h>
 #include <linux/fs/fs.h>
 // #include <linux/security.h>

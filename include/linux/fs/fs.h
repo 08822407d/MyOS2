@@ -15,7 +15,7 @@
 // #include <linux/radix-tree.h>
 // #include <linux/xarray.h>
 // #include <linux/rbtree.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/pid.h>
 // #include <linux/bug.h>
 // #include <linux/mutex.h>
@@ -2447,7 +2447,7 @@
 	// void generic_shutdown_super(super_block_s *sb);
 	// void kill_block_super(super_block_s *sb);
 	void kill_anon_super(super_block_s *sb);
-	// void kill_litter_super(super_block_s *sb);
+	void kill_litter_super(super_block_s *sb);
 	// void deactivate_super(super_block_s *sb);
 	// void deactivate_locked_super(super_block_s *sb);
 	// int set_anon_super(super_block_s *s, void *data);

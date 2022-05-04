@@ -15,7 +15,7 @@
 /* [Feb-Apr 2000, AV] Rewrite to the new namespace architecture.
  */
 
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/export.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/slab.h>
