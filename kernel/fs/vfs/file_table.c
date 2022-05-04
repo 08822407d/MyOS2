@@ -55,7 +55,7 @@ file_s *alloc_empty_file(int flags)
 	// static struct file *__alloc_file(int flags, const struct cred *cred)
 	// {
 		f = kmalloc(sizeof(file_s));
-		if (!f)
+		if (f == NULL)
 			return ERR_PTR(-ENOMEM);
 
 		memset(f, 0, sizeof(file_s));

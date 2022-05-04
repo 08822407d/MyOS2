@@ -67,7 +67,7 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type, dentry_s *reference,
 	int ret = -ENOMEM;
 
 	fc = kmalloc(sizeof(fs_ctxt_s));
-	if (!fc)
+	if (fc == NULL)
 		return ERR_PTR(-ENOMEM);
 
 	fc->purpose			= purpose;
@@ -90,7 +90,7 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type, dentry_s *reference,
 
 	/* TODO: Make all filesystems support this unconditionally */
 	init_fs_context = fc->fs_type->init_fs_context;
-	if (!init_fs_context)
+	if (init_fs_context == NULL)
 		init_fs_context = legacy_init_fs_context;
 
 	ret = init_fs_context(fc);
@@ -144,7 +144,7 @@ const fs_ctxt_ops_s legacy_fs_context_ops = {
 static int legacy_init_fs_context(fs_ctxt_s *fc)
 {
 	fc->fs_private = kmalloc(sizeof(legacy_fs_ctx_s));
-	if (!fc->fs_private)
+	if (fc->fs_private == NULL)
 		return -ENOMEM;
 	fc->ops = &legacy_fs_context_ops;
 	return 0;

@@ -49,6 +49,36 @@
 
 mount_s root_mnt;
 
+
+static mount_s *alloc_vfsmnt(const char *name)
+{
+	mount_s *mnt = kmalloc(sizeof(mount_s));
+	if (mnt == NULL)
+		goto out;
+
+	if (name) {
+		size_t len = strlen(name);
+		mnt->mnt_devname = kmalloc(len + 1);
+		if (mnt->mnt_devname == NULL)
+			goto out_free_cache;
+
+		((char *)mnt->mnt_devname)[len] = '\0';
+		memcpy((char *)mnt->mnt_devname, name, len);
+	}
+
+	list_hdr_init(&mnt->mnt_mounts);
+	list_init(&mnt->mnt_child, mnt);
+
+	return mnt;
+
+out_free_name:
+	kfree((char *)mnt->mnt_devname);
+out_free_cache:
+	kfree(mnt);
+out:
+	return ERR_PTR(-ENOMEM);
+}
+
 /*
  * find the first mount at @dentry on vfsmount @mnt.
  * call under rcu_read_lock()
@@ -108,7 +138,7 @@ static mountpoint_s *get_mountpoint(IN dentry_s *dentry)
 
 	/* Add the new mountpoint to the hash table */
 	new->m_dentry = dentry;
-	// new->m_count = 1;
+	new->m_count = 1;
 
 	mp = new;
 
@@ -125,7 +155,7 @@ static void put_mountpoint(mountpoint_s *mp)
 {
 	// static void __put_mountpoint(struct mountpoint *mp, struct list_head *list)
 	// {
-		if (!--mp->m_count) {
+		if (--mp->m_count == 0) {
 			dentry_s *dentry = mp->m_dentry;
 			dentry->d_flags &= ~DCACHE_MOUNTED;
 			// dput_to_list(dentry, list);
@@ -157,41 +187,32 @@ void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
  */
 vfsmount_s *vfs_create_mount(fs_ctxt_s *fc)
 {
-	// struct mount *mnt;
-	// struct user_namespace *fs_userns;
+	mount_s *mnt;
 
-	// if (!fc->root)
-	// 	return ERR_PTR(-EINVAL);
+	if (fc->root == NULL)
+		return ERR_PTR(-EINVAL);
 
-	// mnt = alloc_vfsmnt(fc->source ?: "none");
-	// if (!mnt)
-	// 	return ERR_PTR(-ENOMEM);
+	mnt = alloc_vfsmnt(fc->source ?: "none");
+	if (mnt == NULL)
+		return ERR_PTR(-ENOMEM);
 
-	// if (fc->sb_flags & SB_KERNMOUNT)
-	// 	mnt->mnt.mnt_flags = MNT_INTERNAL;
+	if (fc->sb_flags & SB_KERNMOUNT)
+		mnt->mnt.mnt_flags = MNT_INTERNAL;
 
-	// atomic_inc(&fc->root->d_sb->s_active);
-	// mnt->mnt.mnt_sb		= fc->root->d_sb;
-	// mnt->mnt.mnt_root	= dget(fc->root);
-	// mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
-	// mnt->mnt_parent		= mnt;
+	mnt->mnt.mnt_sb		= fc->root->d_sb;
+	mnt->mnt.mnt_root	= dget(fc->root);
+	mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
+	mnt->mnt_parent		= mnt;
 
-	// fs_userns = mnt->mnt.mnt_sb->s_user_ns;
-	// if (!initial_idmapping(fs_userns))
-	// 	mnt->mnt.mnt_userns = get_user_ns(fs_userns);
-
-	// lock_mount_hash();
 	// list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
-	// unlock_mount_hash();
-	// return &mnt->mnt;
+	return &mnt->mnt;
 }
 
 vfsmount_s *fc_mount(fs_ctxt_s *fc)
 {
 	int err = vfs_get_tree(fc);
-	if (!err) {
-		// up_write(&fc->root->d_sb->s_umount);
-		// return vfs_create_mount(fc);
+	if (err == 0) {
+		return vfs_create_mount(fc);
 	}
 	return ERR_PTR(err);
 }
@@ -201,21 +222,21 @@ vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 {
 	fs_ctxt_s *fc;
 	vfsmount_s *mnt;
-	int ret = 0;
+	// int ret = 0;
 
-	if (!type)
+	if (type == NULL)
 		return ERR_PTR(-EINVAL);
 
 	fc = fs_context_for_mount(type, flags);
 	if (IS_ERR(fc))
 		return ERR_CAST(fc);
-	if (!ret)
+	// if (ret == 0)
 		mnt = fc_mount(fc);
-	else
-		mnt = ERR_PTR(ret);
+	// else
+	// 	mnt = ERR_PTR(ret);
 
-	// put_fs_context(fc);
-	// return mnt;
+	put_fs_context(fc);
+	return mnt;
 }
 
 

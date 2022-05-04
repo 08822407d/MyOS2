@@ -347,11 +347,11 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 
 	/* Round up to L1_CACHE_BYTES to resist false sharing */
 	sbinfo = kmalloc(sizeof(shmem_sb_info_s));
-	if (!sbinfo)
+	if (sbinfo == NULL)
 		return -ENOMEM;
 
-	sbinfo->uid = KUIDT_INIT(0);
-	sbinfo->gid = KGIDT_INIT(0);
+	// sbinfo->uid = KUIDT_INIT(0);
+	// sbinfo->gid = KGIDT_INIT(0);
 	sb->s_fs_info = sbinfo;
 	sb->s_flags |= SB_NOUSER;
 	sb->s_flags |= SB_NOSEC;
@@ -361,12 +361,12 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 	sb->s_op = &shmem_ops;
 
 	inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
-	if (!inode)
+	if (inode == NULL)
 		goto failed;
-	inode->i_uid = sbinfo->uid;
-	inode->i_gid = sbinfo->gid;
+	// inode->i_uid = sbinfo->uid;
+	// inode->i_gid = sbinfo->gid;
 	sb->s_root = d_make_root(inode);
-	if (!sb->s_root)
+	if (sb->s_root == NULL)
 		goto failed;
 	return 0;
 
@@ -499,7 +499,7 @@ int shmem_init_fs_context(fs_ctxt_s *fc)
 	shmem_opts_s *ctx;
 
 	ctx = kmalloc(sizeof(shmem_opts_s));
-	if (!ctx)
+	if (ctx == NULL)
 		return -ENOMEM;
 
 	ctx->mode = 0777 | S_ISVTX;
@@ -523,7 +523,6 @@ static fs_type_s shmem_fs_type = {
 };
 
 
-int tmp_shmemfs_mount(void);
 int shmem_init(void)
 {
 	int error;
@@ -533,21 +532,12 @@ int shmem_init(void)
 		goto out2;
 	}
 
-	// tmp_shmemfs_mount();
-
 	shm_mnt = kern_mount(&shmem_fs_type);
 	if (IS_ERR(shm_mnt)) {
 		error = PTR_ERR(shm_mnt);
 		goto out1;
 	}
-
-// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-// 	if (has_transparent_hugepage() && shmem_huge > SHMEM_HUGE_DENY)
-// 		SHMEM_SB(shm_mnt->mnt_sb)->huge = shmem_huge;
-// 	else
-// 		shmem_huge = SHMEM_HUGE_NEVER; /* just in case it was patched */
-// #endif
-// 	return 0;
+	return 0;
 
 out1:
 	unregister_filesystem(&shmem_fs_type);
@@ -555,43 +545,4 @@ out2:
 	// shmem_destroy_inodecache();
 	shm_mnt = ERR_PTR(error);
 	return error;
-}
-
-int tmp_shmemfs_mount()
-{
-	inode_s *inode;
-	super_block_s *sb;
-	shmem_sb_info_s *sbinfo;
-
-	/* Round up to L1_CACHE_BYTES to resist false sharing */
-	sb = kmalloc(sizeof(super_block_s));
-	if (!sb)
-		return -ENOMEM;
-	sbinfo = kmalloc(sizeof(shmem_sb_info_s));
-	if (!sbinfo)
-		return -ENOMEM;
-
-	sbinfo->uid = KUIDT_INIT(0);
-	sbinfo->gid = KGIDT_INIT(0);
-	sb->s_fs_info = sbinfo;
-	sb->s_flags |= SB_NOUSER;
-	sb->s_flags |= SB_NOSEC;
-	sb->s_maxbytes = MAX_LFS_FILESIZE;
-	sb->s_blocksize = PAGE_SIZE;
-	sb->s_magic = TMPFS_MAGIC;
-	sb->s_op = &shmem_ops;
-
-	inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
-	if (!inode)
-		goto failed;
-	inode->i_uid = sbinfo->uid;
-	inode->i_gid = sbinfo->gid;
-	sb->s_root = d_make_root(inode);
-	if (!sb->s_root)
-		goto failed;
-	return 0;
-
-failed:
-	shmem_put_super(sb);
-	return -ENOMEM;
 }

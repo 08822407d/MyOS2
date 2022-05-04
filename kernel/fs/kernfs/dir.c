@@ -29,7 +29,7 @@ static kernfs_node_s *__kernfs_new_node(kernfs_root_s *root,
 	kernfs_node_s *kn;
 
 	kn = kmalloc(sizeof(kernfs_node_s));
-	if (!kn)
+	if (kn == NULL)
 	return ERR_PTR(-ENOMEM);
 
 	kn->name = name;
@@ -67,14 +67,14 @@ kernfs_root_s *kernfs_create_root(kernfs_syscall_ops_s *scops,
 	kernfs_node_s *kn;
 
 	root = kmalloc(sizeof(kernfs_root_s));
-	if (!root)
+	if (root == NULL)
 		return ERR_PTR(-ENOMEM);
 
 	kn = __kernfs_new_node(root, NULL, "",
 					S_IFDIR | S_IRUGO | S_IXUGO,
 					GLOBAL_ROOT_UID, GLOBAL_ROOT_GID,
 					KERNFS_DIR);
-	if (!kn) {
+	if (kn == NULL) {
 		kfree(root);
 		return ERR_PTR(-ENOMEM);
 	}

@@ -67,7 +67,7 @@ static inode_s *alloc_inode(super_block_s *sb)
 	else
 		inode = kmalloc(sizeof(inode_s));
 
-	if (!inode)
+	if (inode == NULL)
 		return NULL;
 
 	// if (unlikely(inode_init_always(sb, inode))) {
@@ -119,7 +119,7 @@ inode_s *new_inode(super_block_s *sb)
  */
 void iput(inode_s *inode)
 {
-	if (!inode)
+	if (inode == NULL)
 		return;
 
 	// input_final()

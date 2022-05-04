@@ -433,7 +433,7 @@ static int link_path_walk(IN const char *name, IN OUT nameidata_s *nd)
 		return PTR_ERR(name);
 	while (*name == '/')
 		name++;
-	if (!*name)
+	if (*name == '\0')
 	{
 		return 0;
 	}
@@ -527,10 +527,10 @@ static int path_lookupat(IN nameidata_s *nd, unsigned flags, OUT path_s *path)
 		   (s = lookup_last(nd)) != NULL)
 		;
 
-	// if (!err)
-	// 	err = complete_walk(nd);
+	if (err == 0)
+		err = complete_walk(nd);
 
-	if (!err)
+	if (err == 0)
 	{
 		*path = nd->path;
 		nd->path.mnt = NULL;
@@ -567,9 +567,9 @@ static int path_parentat(nameidata_s *nd, unsigned flags, path_s *parent)
 {
 	const char *s = path_init(nd, flags);
 	int err = link_path_walk(s, nd);
-	// if (!err)
-	// 	err = complete_walk(nd);
-	if (!err) {
+	if (err == 0)
+		err = complete_walk(nd);
+	if (err == 0) {
 		*parent = nd->path;
 		nd->path.mnt = NULL;
 		nd->path.dentry = NULL;
@@ -593,7 +593,7 @@ static int filename_parentat(int dfd, filename_s *name,
 		retval = path_parentat(&nd, flags, parent);
 	// if (retval == -ESTALE)
 	// 	retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
-	if (!retval) {
+	if (retval == 0) {
 		*last = nd.last;
 		*type = nd.last_type;
 		// audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
@@ -668,20 +668,14 @@ static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
 	if (IS_ERR(file))
 		return file;
 
-	// if (unlikely(file->f_flags & __O_TMPFILE)) {
-	// 	error = do_tmpfile(nd, flags, op, file);
-	// } else if (unlikely(file->f_flags & O_PATH)) {
-	// 	error = do_o_path(nd, flags, file);
-	// } else {
-		const char *s = path_init(nd, flags);
-		while (!(error = link_path_walk(s, nd)) &&
-			(s = open_last_lookups(nd, flags)) != NULL)
-			;
-		if (!error)
-			error = do_open(nd, file, flags);
-		terminate_walk(nd);
-	// }
-	if (!error)
+	const char *s = path_init(nd, flags);
+	while (!(error = link_path_walk(s, nd)) &&
+		(s = open_last_lookups(nd, flags)) != NULL)
+		;
+	if (error == 0)
+		error = do_open(nd, file, flags);
+	terminate_walk(nd);
+	if (error == 0)
 	{
 		// if (file->f_mode & FMODE_OPENED)
 			return file;

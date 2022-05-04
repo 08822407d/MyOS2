@@ -181,7 +181,6 @@ dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
 	dentry->d_parent = dentry;
 	dentry->d_sb = sb;
 	dentry->d_op = NULL;
-	dentry->d_fsdata = NULL;
 
 	list_init(&dentry->d_child, dentry);
 	list_hdr_init(&dentry->d_subdirs);
@@ -203,7 +202,7 @@ dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
 dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 {
 	dentry_s *dentry = __d_alloc(parent->d_sb, name);
-	if (!dentry)
+	if (dentry == NULL)
 		return NULL;
 	/*
 	 * don't need child lock because it is not subject
@@ -267,7 +266,7 @@ dentry_s *d_alloc_name(dentry_s *parent, const char *name)
 void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op)
 {
 	dentry->d_op = op;
-	if (!op)
+	if (op == NULL)
 		return;
 	if (op->d_hash)
 		dentry->d_flags |= DCACHE_OP_HASH;
@@ -301,13 +300,13 @@ static unsigned d_flags_for_inode(inode_s *inode)
 {
 	unsigned add_flags = DCACHE_REGULAR_TYPE;
 
-	if (!inode)
+	if (inode == NULL)
 		return DCACHE_MISS_TYPE;
 
 	if (S_ISDIR(inode->i_mode)) {
 		add_flags = DCACHE_DIRECTORY_TYPE;
 		if (!(inode->i_opflags & IOP_LOOKUP)) {
-			if (!inode->i_op->lookup)
+			if (inode->i_op->lookup == NULL)
 				add_flags = DCACHE_AUTODIR_TYPE;
 			else
 				inode->i_opflags |= IOP_LOOKUP;

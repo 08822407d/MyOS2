@@ -49,7 +49,7 @@ dentry_s *simple_lookup(inode_s *dir, dentry_s *dentry, unsigned int flags)
 {
 	if (dentry->d_name.len > NAME_MAX)
 		return ERR_PTR(-ENAMETOOLONG);
-	if (!dentry->d_sb->s_d_op)
+	if (dentry->d_sb->s_d_op == NULL)
 		d_set_d_op(dentry, &simple_dentry_operations);
 	// d_add(dentry, NULL);
 	return NULL;

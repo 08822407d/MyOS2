@@ -588,8 +588,8 @@
 
 		umode_t			i_mode;
 		unsigned short	i_opflags;
-		kuid_t			i_uid;
-		kgid_t			i_gid;
+		// kuid_t			i_uid;
+		// kgid_t			i_gid;
 		unsigned int	i_flags;
 
 	// #ifdef CONFIG_FS_POSIX_ACL
@@ -606,7 +606,7 @@
 	// #endif
 
 		/* Stat data, not accessed from path walking */
-		unsigned long		i_ino;
+		// unsigned long		i_ino;
 		/*
 		* Filesystems may only read i_nlink directly.  They shall use the
 		* following functions for modification:
@@ -930,6 +930,7 @@
 	typedef struct file {
 		dentry_s			*dentry;
 
+
 		// union {
 		// 	llist_node_s	fu_llist;
 		// 	struct rcu_head fu_rcuhead;
@@ -953,7 +954,7 @@
 		// const cred_s		*f_cred;
 		// file_s_ra_state		f_ra;
 
-		u64			f_version;
+		// u64			f_version;
 	// #ifdef CONFIG_SECURITY
 	// 	void			*f_security;
 	// #endif
@@ -987,7 +988,7 @@
 	// #define get_file_rcu(x) get_file_rcu_many((x), 1)
 	// #define file_count(x)	atomic_long_read(&(x)->f_count)
 
-	// #define	MAX_NON_LFS	((1UL<<31) - 1)
+	#define	MAX_NON_LFS	((1UL<<31) - 1)
 
 	/* Page cache limit. The filesystems should put that into their s_maxbytes 
 	limits, otherwise bad things can happen in VM. */ 
@@ -1492,7 +1493,7 @@
 	// 	struct fsnotify_mark_connector __rcu	*s_fsnotify_marks;
 	// #endif
 
-		char			s_id[32];	/* Informational name */
+		// char			s_id[32];	/* Informational name */
 		uuid_t			s_uuid;		/* UUID */
 
 		// unsigned int	s_max_links;
@@ -2402,6 +2403,7 @@
 	typedef struct file_system_type {
 		super_block_s	*(*read_super)(GPT_PE_s * DPTE, void * buf);
 
+
 		const char		*name;
 		int				fs_flags;
 	#define FS_REQUIRES_DEV			1
@@ -3265,7 +3267,7 @@
 	// extern const char *vfs_get_link(dentry_s *, struct delayed_call *);
 	// extern int vfs_readlink(dentry_s *, char __user *, int);
 
-	extern fs_type_s *get_filesystem(fs_type_s *fs);
+	// extern fs_type_s *get_filesystem(fs_type_s *fs);
 	extern void put_filesystem(fs_type_s *fs);
 	// extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);

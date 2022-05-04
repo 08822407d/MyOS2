@@ -62,7 +62,7 @@ block_device_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
 	inode_s *inode;
 
 	inode = new_inode(blockdev_superblock);
-	if (!inode)
+	if (inode == NULL)
 		return NULL;
 	inode->i_mode = S_IFBLK;
 	inode->i_rdev = 0;

@@ -40,6 +40,7 @@
 #include <linux/fs/internal.h>
 
 
+#include <include/proto.h>
 #include <include/printk.h>
 #include <linux/fs/fs.h>
 #include <errno.h>
@@ -99,6 +100,103 @@ void kill_litter_super(super_block_s *sb)
 }
 
 /**
+ *	alloc_super	-	create new superblock
+ *	@type:	filesystem type superblock should belong to
+ *	@flags: the mount flags
+ *	@user_ns: User namespace for the super_block
+ *
+ *	Allocates and initializes a new &struct super_block.  alloc_super()
+ *	returns a pointer new superblock or %NULL if allocation had failed.
+ */
+static super_block_s *alloc_super(fs_type_s *type, int flags)
+{
+	super_block_s *s = kmalloc(sizeof(super_block_s));
+	if (s == NULL)
+		return ERR_PTR(-ENOMEM);
+	static const super_ops_s default_op;
+	int i;
+
+	s->s_flags = flags;
+	s->s_count = 1;
+	s->s_maxbytes = MAX_NON_LFS;
+	s->s_op = &default_op;
+	// s->s_time_gran = 1000000000;
+	// s->s_time_min = TIME64_MIN;
+	// s->s_time_max = TIME64_MAX;
+
+	return s;
+}
+
+/* Superblock refcounting  */
+
+/*
+ * Drop a superblock's refcount.  The caller must hold sb_lock.
+ */
+static void __put_super(super_block_s *s)
+{
+	// if (!--s->s_count) {
+	// 	list_del_init(&s->s_list);
+	// 	WARN_ON(s->s_dentry_lru.node);
+	// 	WARN_ON(s->s_inode_lru.node);
+	// 	WARN_ON(!list_empty(&s->s_mounts));
+	// 	security_sb_free(s);
+	// 	fscrypt_sb_free(s);
+	// 	put_user_ns(s->s_user_ns);
+	// 	kfree(s->s_subtype);
+	// 	call_rcu(&s->rcu, destroy_super_rcu);
+	// }
+}
+
+/**
+ *	put_super	-	drop a temporary reference to superblock
+ *	@sb: superblock in question
+ *
+ *	Drops a temporary reference, frees superblock if there's no
+ *	references left.
+ */
+void put_super(super_block_s *sb)
+{
+	__put_super(sb);
+}
+
+/**
+ * sget_fc - Find or create a superblock
+ * @fc:	Filesystem context.
+ * @test: Comparison callback
+ * @set: Setup callback
+ *
+ * Find or create a superblock using the parameters stored in the filesystem
+ * context and the two callback functions.
+ *
+ * If an extant superblock is matched, then that will be returned with an
+ * elevated reference count that the caller must transfer or discard.
+ *
+ * If no match is made, a new superblock will be allocated and basic
+ * initialisation will be performed (s_type, s_fs_info and s_id will be set and
+ * the set() callback will be invoked), the superblock will be published and it
+ * will be returned in a partially constructed state with SB_BORN and SB_ACTIVE
+ * as yet unset.
+ */
+super_block_s *sget_fc(fs_ctxt_s *fc)
+{
+	super_block_s *s = NULL;
+	super_block_s *old;
+
+	s = alloc_super(fc->fs_type, fc->sb_flags);
+	if (s == NULL)
+		return ERR_PTR(-ENOMEM);
+
+	s->s_fs_info = fc->s_fs_info;
+	fc->s_fs_info = NULL;
+	s->s_type = fc->fs_type;
+	s->s_iflags |= fc->s_iflags;
+	// list_add_tail(&s->s_list, &super_blocks);
+	// hlist_add_head(&s->s_instances, &s->s_type->fs_supers);
+	// get_filesystem(s->s_type);
+	return s;
+}
+
+/**
  * vfs_get_super - Get a superblock with a search key set in s_fs_info.
  * @fc: The filesystem context holding the parameters
  * @keying: How to distinguish superblocks
@@ -129,52 +227,27 @@ int vfs_get_super(fs_ctxt_s *fc,
 						fs_ctxt_s *fc))
 {
 	// int (*test)(super_block_s *, fs_ctxt_s *);
-	// super_block_s *sb;
-	// int err;
+	super_block_s *sb;
+	int err;
 
-	// switch (keying) {
-	// case vfs_get_single_super:
-	// case vfs_get_single_reconf_super:
-	// 	test = test_single_super;
-	// 	break;
-	// case vfs_get_keyed_super:
-	// 	test = test_keyed_super;
-	// 	break;
-	// case vfs_get_independent_super:
-	// 	test = NULL;
-	// 	break;
-	// default:
-	// 	BUG();
-	// }
+	sb = sget_fc(fc);
+	if (IS_ERR(sb))
+		return PTR_ERR(sb);
 
-// 	sb = sget_fc(fc, test, set_anon_super_fc);
-// 	if (IS_ERR(sb))
-// 		return PTR_ERR(sb);
+	if (sb->s_root == NULL) {
+		err = fill_super(sb, fc);
+		if (err)
+			goto error;
 
-// 	if (!sb->s_root) {
-// 		err = fill_super(sb, fc);
-// 		if (err)
-// 			goto error;
+		sb->s_flags |= SB_ACTIVE;
+		fc->root = dget(sb->s_root);
+	}
 
-// 		sb->s_flags |= SB_ACTIVE;
-// 		fc->root = dget(sb->s_root);
-// 	} else {
-// 		fc->root = dget(sb->s_root);
-// 		if (keying == vfs_get_single_reconf_super) {
-// 			err = reconfigure_super(fc);
-// 			if (err < 0) {
-// 				dput(fc->root);
-// 				fc->root = NULL;
-// 				goto error;
-// 			}
-// 		}
-// 	}
+	return 0;
 
-// 	return 0;
-
-// error:
+error:
 // 	deactivate_locked_super(sb);
-// 	return err;
+	return err;
 }
 
 int get_tree_nodev(fs_ctxt_s *fc,
@@ -297,7 +370,7 @@ int vfs_get_tree(fs_ctxt_s *fc)
 	if (error < 0)
 		return error;
 
-	if (!fc->root) {
+	if (fc->root == NULL) {
 		color_printk(RED, BLACK, "Filesystem %s get_tree() didn't set fc->root\n",
 		       fc->fs_type->name);
 		/* We don't know what the locking state of the superblock is -

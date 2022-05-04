@@ -47,12 +47,12 @@ typedef struct mount {
 	// 	struct rcu_head mnt_rcu;
 	// 	struct llist_node mnt_llist;
 	// };
-#ifdef CONFIG_SMP
-	struct mnt_pcp __percpu *mnt_pcp;
-#else
-	int			mnt_count;
-	int			mnt_writers;
-#endif
+// #ifdef CONFIG_SMP
+// 	struct mnt_pcp __percpu *mnt_pcp;
+// #else
+// 	int			mnt_count;
+// 	int			mnt_writers;
+// #endif
 	List_hdr_s	mnt_mounts;		/* list of children, anchored here */
 	List_s		mnt_child;		/* and going through their mnt_child */
 	// list_head_s	mnt_instance;	/* mount instance on sb->s_mounts */
@@ -62,7 +62,7 @@ typedef struct mount {
 	// list_head_s mnt_share;		/* circular list of shared mounts */
 	// list_head_s mnt_slave_list;	/* list of slave mounts */
 	// list_head_s mnt_slave;		/* slave list entry */
-	mount_s		*mnt_master;		/* slave is on master->mnt_slave_list */
+	// mount_s		*mnt_master;		/* slave is on master->mnt_slave_list */
 	// mnt_namespace_s *mnt_ns;		/* containing namespace */
 	mountpoint_s	*mnt_mp;	/* where is it mounted */
 	// union {
@@ -70,13 +70,13 @@ typedef struct mount {
 	// 	hlist_node_s mnt_umount;
 	// };
 	// list_head_s mnt_umounting; 	/* list entry for umount propagation */
-#ifdef CONFIG_FSNOTIFY
-	// struct fsnotify_mark_connector __rcu *mnt_fsnotify_marks;
-	// __u32 mnt_fsnotify_mask;
-#endif
-	int mnt_id;					/* mount identifier */
-	int mnt_group_id;			/* peer group identifier */
-	int mnt_expiry_mark;		/* true if marked for expiry */
+// #ifdef CONFIG_FSNOTIFY
+// 	// struct fsnotify_mark_connector __rcu *mnt_fsnotify_marks;
+// 	// __u32 mnt_fsnotify_mask;
+// #endif
+	// int mnt_id;					/* mount identifier */
+	// int mnt_group_id;			/* peer group identifier */
+	// int mnt_expiry_mark;		/* true if marked for expiry */
 	// hlist_head_s mnt_pins;
 	// hlist_head_s mnt_stuck_children;
 } mount_s;

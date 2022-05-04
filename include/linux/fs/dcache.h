@@ -82,14 +82,14 @@
 		qstr_s				d_name;
 		inode_s				*d_inode;		/* Where the name belongs to - NULL is
 											* negative */
-		unsigned char		d_iname[DNAME_INLINE_LEN];	/* small names */
+		// unsigned char		d_iname[DNAME_INLINE_LEN];	/* small names */
 
 		/* Ref lookup also touches following */
 		// lockref_s		d_lockref;			/* per-dentry lock and refcount */
 		const dentry_ops_s	*d_op;
 		super_block_s		*d_sb;			/* The root of the dentry tree */
-		unsigned long		d_time;			/* used by d_revalidate */
-		void				*d_fsdata;		/* fs-specific data */
+		// unsigned long		d_time;			/* used by d_revalidate */
+		// void				*d_fsdata;		/* fs-specific data */
 
 		List_s				d_child;		/* child of parent list */
 		List_hdr_s			d_subdirs;		/* our children */

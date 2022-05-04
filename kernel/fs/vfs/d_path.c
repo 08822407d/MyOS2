@@ -53,7 +53,7 @@ static bool prepend_name(prpndbuf_s *p, const qstr_s *name)
 	*s++ = '/';
 	while (dlen--) {
 		char c = *dname++;
-		if (!c)
+		if (c == '\0')
 			break;
 		*s++ = c;
 	}

@@ -116,7 +116,7 @@ static dentry_s *vfat_lookup(inode_s *dir, dentry_s *dentry,
 // 		dput(alias);
 
 out:
-	if (!inode)
+	if (inode == NULL)
 		// vfat_d_version_set(dentry, inode_query_iversion(dir));
 	// return d_splice_alias(inode, dentry);
 error:

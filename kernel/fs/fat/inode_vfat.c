@@ -63,7 +63,7 @@ static int is_exec(unsigned char *extension)
 	unsigned char exe_extensions[] = "EXECOMBAT", *walk;
 
 	for (walk = exe_extensions; *walk; walk += 3)
-		if (!strncmp(extension, walk, 3))
+		if (strncmp(extension, walk, 3) == 0)
 			return 1;
 	return 0;
 }
@@ -176,7 +176,7 @@ inode_s *fat_build_inode(super_block_s *sb,
 	int err;
 
 	inode = new_inode(sb);
-	if (!inode) {
+	if (inode == NULL) {
 		inode = ERR_PTR(-ENOMEM);
 		goto out;
 	}
@@ -206,7 +206,7 @@ static inode_s *fat_alloc_inode(super_block_s *sb)
 {
 	msdos_inode_info_s *ei;
 	ei = kmalloc(sizeof(msdos_inode_info_s));
-	if (!ei)
+	if (ei == NULL)
 		return NULL;
 
 	/* Zeroing to allow iput() even if partial initialized inode. */
@@ -287,8 +287,8 @@ static int fat_read_root(inode_s *inode)
 	int error;
 
 	MSDOS_I(inode)->i_pos = MSDOS_ROOT_INO;
-	inode->i_uid = sbi->options.fs_uid;
-	inode->i_gid = sbi->options.fs_gid;
+	// inode->i_uid = sbi->options.fs_uid;
+	// inode->i_gid = sbi->options.fs_gid;
 	inode->i_mode = fat_make_mode(sbi, ATTR_DIR, S_IRWXUGO);
 	inode->i_op = (inode_ops_s *)sbi->dir_ops;
 	inode->i_fop = (file_ops_s *)&fat_dir_operations;
@@ -337,9 +337,9 @@ static int fat_read_bpb(fat_boot_sector_s *b,
 	bpb->fat32_vol_id		= *((uint32_t *)b->fat32.vol_id);
 
 	/* Validate this looks like a FAT filesystem BPB */
-	if (!bpb->fat_reserved)
+	if (bpb->fat_reserved == 0)
 		goto out;
-	if (!bpb->fat_fats)
+	if (bpb->fat_fats == 0)
 		goto out;
 
 	/*
