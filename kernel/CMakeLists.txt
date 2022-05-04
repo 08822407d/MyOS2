@@ -6,7 +6,12 @@ add_executable(kern)
 target_sources(kern PRIVATE ${KERNEL_C_SRCS})
 
 add_subdirectory(arch)
+add_subdirectory(init)
+add_subdirectory(sched)
 add_subdirectory(mm)
 add_subdirectory(fs)
 add_subdirectory(block)
+add_subdirectory(device)
+
 add_subdirectory(klib)
+add_subdirectory(test)

@@ -206,7 +206,7 @@ static void terminate_walk(nameidata_s *nd)
  */
 static int complete_walk(nameidata_s *nd)
 {
-
+	return 0;
 }
 
 /*==============================================================================================*
