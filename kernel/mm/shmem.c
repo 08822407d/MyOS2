@@ -131,7 +131,6 @@ static const super_ops_s	shmem_ops;
 static const file_ops_s		shmem_file_operations;
 static const inode_ops_s	shmem_inode_operations;
 static const inode_ops_s	shmem_dir_inode_operations;
-static const inode_ops_s	shmem_special_inode_operations;
 static fs_type_s			shmem_fs_type;
 
 
@@ -161,7 +160,7 @@ static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
 
 		switch (mode & S_IFMT) {
 		default:
-			inode->i_op = &shmem_special_inode_operations;
+			// inode->i_op = &shmem_special_inode_operations;
 			break;
 		case S_IFREG:
 			inode->i_op = &shmem_inode_operations;
@@ -221,10 +220,9 @@ out_iput:
 	return error;
 }
 
-// static int
-// shmem_tmpfile(struct user_namespace *mnt_userns, inode_s *dir,
-// 	      dentry_s *dentry, umode_t mode)
-// {
+static int
+shmem_tmpfile(inode_s *dir, dentry_s *dentry, umode_t mode)
+{
 // 	inode_s *inode;
 // 	int error = -ENOSPC;
 
@@ -244,7 +242,7 @@ out_iput:
 // out_iput:
 // 	iput(inode);
 // 	return error;
-// }
+}
 
 static int shmem_mkdir(inode_s *dir, dentry_s *dentry,
 				umode_t mode)
@@ -336,8 +334,6 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 	if (sbinfo == NULL)
 		return -ENOMEM;
 
-	// sbinfo->uid = KUIDT_INIT(0);
-	// sbinfo->gid = KGIDT_INIT(0);
 	sb->s_fs_info = sbinfo;
 	sb->s_flags |= SB_NOUSER;
 	sb->s_flags |= SB_NOSEC;
@@ -349,8 +345,6 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 	inode = shmem_get_inode(sb, NULL, S_IFDIR | sbinfo->mode, 0, VM_NORESERVE);
 	if (inode == NULL)
 		goto failed;
-	// inode->i_uid = sbinfo->uid;
-	// inode->i_gid = sbinfo->gid;
 	sb->s_root = d_make_root(inode);
 	if (sb->s_root == NULL)
 		goto failed;
@@ -377,107 +371,70 @@ static void shmem_free_fc(fs_ctxt_s *fc)
 }
 
 static const fs_ctxt_ops_s shmem_fs_context_ops = {
-// 	.free			= shmem_free_fc,
-	.get_tree		= shmem_get_tree,
-// #ifdef CONFIG_TMPFS
-// 	.parse_monolithic	= shmem_parse_options,
-// 	.parse_param		= shmem_parse_one,
-// 	.reconfigure		= shmem_reconfigure,
-// #endif
+	.free				= shmem_free_fc,
+	.get_tree			= shmem_get_tree,
+	// .parse_monolithic	= shmem_parse_options,
+	// .parse_param		= shmem_parse_one,
+	// .reconfigure		= shmem_reconfigure,
 };
 
-// const struct address_space_operations shmem_aops = {
-// 	.writepage	= shmem_writepage,
-// 	.set_page_dirty	= __set_page_dirty_no_writeback,
-// #ifdef CONFIG_TMPFS
-// 	.write_begin	= shmem_write_begin,
-// 	.write_end	= shmem_write_end,
-// #endif
-// #ifdef CONFIG_MIGRATION
-// 	.migratepage	= migrate_page,
-// #endif
-// 	.error_remove_page = shmem_error_remove_page,
-// };
+static inode_s *shmem_alloc_inode(super_block_s *sb)
+{
+	shmem_inode_info_s *info;
+	info = kmalloc(sizeof(shmem_inode_info_s));
+	if (info == NULL)
+		return ERR_PTR(-ENOMEM);
+	return &info->vfs_inode;
+}
 
-static const inode_ops_s shmem_special_inode_operations = {
-// #ifdef CONFIG_TMPFS_XATTR
-// 	.listxattr	= shmem_listxattr,
-// #endif
-// #ifdef CONFIG_TMPFS_POSIX_ACL
-// 	.setattr	= shmem_setattr,
-// 	.set_acl	= simple_set_acl,
-// #endif
-};
+static void shmem_destroy_inode(inode_s *inode)
+{
+	// if (S_ISREG(inode->i_mode))
+	// 	mpol_free_shared_policy(&SHMEM_I(inode)->policy);
+}
 
-static const super_ops_s shmem_ops = {
-// 	.alloc_inode	= shmem_alloc_inode,
-// 	.free_inode	= shmem_free_in_core_inode,
-// 	.destroy_inode	= shmem_destroy_inode,
-// #ifdef CONFIG_TMPFS
-// 	.statfs		= shmem_statfs,
-// 	.show_options	= shmem_show_options,
-// #endif
-// 	.evict_inode	= shmem_evict_inode,
-// 	.drop_inode	= generic_delete_inode,
-// 	.put_super	= shmem_put_super,
-// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-// 	.nr_cached_objects	= shmem_unused_huge_count,
-// 	.free_cached_objects	= shmem_unused_huge_scan,
-// #endif
-};
-
-// static const struct vm_operations_struct shmem_vm_ops = {
-// 	.fault		= shmem_fault,
-// 	.map_pages	= filemap_map_pages,
-// #ifdef CONFIG_NUMA
-// 	.set_policy     = shmem_set_policy,
-// 	.get_policy     = shmem_get_policy,
-// #endif
-// };
+static void shmem_init_inode(void *foo)
+{
+	shmem_inode_info_s *info = foo;
+	inode_init_once(&info->vfs_inode);
+}
 
 static const file_ops_s shmem_file_operations = {
-// 	.mmap				= shmem_mmap,
-// 	.get_unmapped_area	= shmem_get_unmapped_area,
-// #ifdef CONFIG_TMPFS
-// 	.llseek				= shmem_file_llseek,
-// 	.read_iter			= shmem_file_read_iter,
-// 	.write_iter			= generic_file_write_iter,
-// 	.fsync				= noop_fsync,
-// 	.splice_read		= generic_file_splice_read,
-// 	.splice_write		= iter_file_splice_write,
-// 	.fallocate			= shmem_fallocate,
-// #endif
+	// .mmap				= shmem_mmap,
+	// .get_unmapped_area	= shmem_get_unmapped_area,
+	// .llseek				= shmem_file_llseek,
+	// .read_iter			= shmem_file_read_iter,
+	// .write_iter			= generic_file_write_iter,
+	// .fsync				= noop_fsync,
+	// .splice_read		= generic_file_splice_read,
+	// .splice_write		= iter_file_splice_write,
+	// .fallocate			= shmem_fallocate,
 };
 
 static const inode_ops_s shmem_inode_operations = {
-// 	.getattr	= shmem_getattr,
-// 	.setattr	= shmem_setattr,
-// #ifdef CONFIG_TMPFS_XATTR
-// 	.listxattr	= shmem_listxattr,
-// 	.set_acl	= simple_set_acl,
-// #endif
+	// .getattr	= shmem_getattr,
+	// .setattr	= shmem_setattr,
 };
 
 static const inode_ops_s shmem_dir_inode_operations = {
-// #ifdef CONFIG_TMPFS
 	.create		= shmem_create,
 	.lookup		= simple_lookup,
-// 	.link		= shmem_link,
-// 	.unlink		= shmem_unlink,
-// 	.symlink	= shmem_symlink,
 	.mkdir		= shmem_mkdir,
 	.rmdir		= shmem_rmdir,
 	.mknod		= shmem_mknod,
 	.rename		= shmem_rename2,
-// 	.tmpfile	= shmem_tmpfile,
-// #endif
-// #ifdef CONFIG_TMPFS_XATTR
-// 	.listxattr	= shmem_listxattr,
-// #endif
-// #ifdef CONFIG_TMPFS_POSIX_ACL
-// 	.setattr	= shmem_setattr,
-// 	.set_acl	= simple_set_acl,
-// #endif
+	.tmpfile	= shmem_tmpfile,
+};
+
+static const super_ops_s shmem_ops = {
+	.alloc_inode	= shmem_alloc_inode,
+	// .free_inode		= shmem_free_in_core_inode,
+	.destroy_inode	= shmem_destroy_inode,
+	.statfs			= shmem_statfs,
+	// .show_options	= shmem_show_options,
+	// .evict_inode	= shmem_evict_inode,
+	// .drop_inode		= generic_delete_inode,
+	.put_super		= shmem_put_super,
 };
 
 int shmem_init_fs_context(fs_ctxt_s *fc)
@@ -489,23 +446,17 @@ int shmem_init_fs_context(fs_ctxt_s *fc)
 		return -ENOMEM;
 
 	ctx->mode = 0777 | S_ISVTX;
-	// ctx->uid = current_fsuid();
-	// ctx->gid = current_fsgid();
-
 	fc->fs_private = ctx;
 	fc->ops = &shmem_fs_context_ops;
 	return 0;
 }
 
 static fs_type_s shmem_fs_type = {
-// 	.owner		= THIS_MODULE,
+	// .owner		= THIS_MODULE,
 	.name		= "tmpfs",
 	.init_fs_context = shmem_init_fs_context,
-// #ifdef CONFIG_TMPFS
-// 	.parameters	= shmem_fs_parameters,
-// #endif
 	.kill_sb	= kill_litter_super,
-// 	.fs_flags	= FS_USERNS_MOUNT,
+	.fs_flags	= FS_USERNS_MOUNT,
 };
 
 

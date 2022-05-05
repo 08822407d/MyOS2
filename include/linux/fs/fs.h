@@ -42,9 +42,11 @@
 #include <linux/kernel/mount.h>
 // #include <linux/cred.h>
 // #include <linux/mnt_idmapping.h>
-
 // #include <asm/byteorder.h>
 #include <uapi/fs.h>
+
+
+#include <linux/kernel/statfs.h>
 
 	extern void inode_init(void);
 	extern void inode_init_early(void);
@@ -2026,7 +2028,7 @@
 		// int			(*update_time)(inode_s *, timespec64_s *, int);
 		// int			(*atomic_open)(inode_s *, dentry_s *, file_s *,
 		// 					unsigned open_flag, umode_t create_mode);
-		// int			(*tmpfile) (inode_s *, dentry_s *, umode_t);
+		int			(*tmpfile) (inode_s *, dentry_s *, umode_t);
 		// int			(*set_acl)(inode_s *, posix_acl_s *, int);
 		// int			(*fileattr_set)(dentry_s *dentry, file_sattr *fa);
 		// int			(*fileattr_get)(dentry_s *dentry, file_sattr *fa);
@@ -2091,7 +2093,7 @@
 		int		(*freeze_fs) (super_block_s *);
 		int		(*thaw_super) (super_block_s *);
 		int		(*unfreeze_fs) (super_block_s *);
-		// int		(*statfs) (dentry_s *, kstatfs_s *);
+		int		(*statfs) (dentry_s *, kstatfs_s *);
 		int		(*remount_fs) (super_block_s *, int *, char *);
 		void	(*umount_begin) (super_block_s *);
 
@@ -3013,7 +3015,7 @@
 	// extern loff_t vfs_llseek(file_s *file, loff_t offset, int whence);
 
 	// extern int inode_init_always(super_block_s *, inode_s *);
-	// extern void inode_init_once(inode_s *);
+	extern void inode_init_once(inode_s *);
 	// extern void address_space_init_once(addr_space_s *mapping);
 	// extern inode_s * igrab(inode_s *);
 	// extern ino_t iunique(super_block_s *, ino_t);

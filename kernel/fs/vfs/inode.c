@@ -84,6 +84,16 @@ static inode_s *alloc_inode(super_block_s *sb)
 	return inode;
 }
 
+/*
+ * These are initializations that only need to be done
+ * once, because the fields are idempotent across use
+ * of the inode, so let the slab aware of that.
+ */
+void inode_init_once(inode_s *inode)
+{
+	memset(inode, 0, sizeof(inode_s));
+}
+
 /**
  *	new_inode 	- obtain an inode
  *	@sb: superblock

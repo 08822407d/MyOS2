@@ -614,8 +614,6 @@ int filename_lookup(int dfd, IN filename_s *name, unsigned flags,
 	retval = path_lookupat(&nd, flags, path);
 	// if (unlikely(retval == -ECHILD))
 	//	 retval = path_lookupat(&nd, flags, path);
-	// if (unlikely(retval == -ESTALE))
-	//	 retval = path_lookupat(&nd, flags | LOOKUP_REVAL, path);
 
 	putname(name);
 	return retval;
@@ -650,12 +648,9 @@ static int filename_parentat(int dfd, filename_s *name,
 	retval = path_parentat(&nd, flags, parent);
 	if (retval == -ECHILD)
 		retval = path_parentat(&nd, flags, parent);
-	// if (retval == -ESTALE)
-	// 	retval = path_parentat(&nd, flags | LOOKUP_REVAL, parent);
 	if (retval == 0) {
 		*last = nd.last;
 		*type = nd.last_type;
-		// audit_inode(name, parent->dentry, AUDIT_INODE_PARENT);
 	}
 	restore_nameidata();
 	return retval;
@@ -769,8 +764,6 @@ file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
 	filp = path_openat(&nd, op, flags);
 	// if (unlikely(filp == ERR_PTR(-ECHILD)))
 	// 	filp = path_openat(&nd, op, flags);
-	// if (unlikely(filp == ERR_PTR(-ESTALE)))
-	// 	filp = path_openat(&nd, op, flags | LOOKUP_REVAL);
 	restore_nameidata();
 	return filp;
 }
@@ -846,7 +839,6 @@ dentry_s *kern_path_create(int dfd, const char *pathname,
 void done_path_create(path_s *path, dentry_s *dentry)
 {
 	dput(dentry);
-	// mnt_drop_write(path->mnt);
 	path_put(path);
 }
 
