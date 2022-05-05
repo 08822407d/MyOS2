@@ -273,6 +273,30 @@ static inline int handle_mounts(IN nameidata_s *nd, IN dentry_s *dentry, OUT pat
 /*==============================================================================================*
  *								private fuctions for path walk									*
  *==============================================================================================*/
+/**
+ * path_get - get a reference to a path
+ * @path: path to get the reference to
+ *
+ * Given a path increment the reference count to the dentry and the vfsmount.
+ */
+void path_get(const path_s *path)
+{
+	// mntget(path->mnt);
+	dget(path->dentry);
+}
+
+/**
+ * path_put - put a reference to a path
+ * @path: path to put the reference to
+ *
+ * Given a path decrement the reference count to the dentry and the vfsmount.
+ */
+void path_put(const path_s *path)
+{
+	dput(path->dentry);
+	// mntput(path->mnt);
+}
+
 /*
  * Do we need to follow links? We _really_ want to be able
  * to do this check without having to look at inode->i_op,
@@ -323,6 +347,41 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags
 	list_hdr_append(&dir->d_subdirs, &dentry->d_child);
 	dentry->d_parent = dir;
 
+	return dentry;
+}
+
+/*
+ * Parent directory has inode locked exclusive.  This is one
+ * and only case when ->lookup() gets called on non in-lookup
+ * dentries - as the matter of fact, this only gets called
+ * when directory is guaranteed to have no in-lookup children
+ * at all.
+ */
+static dentry_s *__lookup_hash(const qstr_s *name,
+				dentry_s *base, unsigned int flags)
+{
+	dentry_s *dentry = __d_lookup(base, name);
+	dentry_s *old;
+	inode_s *dir = base->d_inode;
+
+	if (dentry)
+		return dentry;
+
+	/* Don't create child dentry for a dead directory. */
+	if (IS_DEADDIR(dir))
+		return ERR_PTR(-ENOENT);
+
+	dentry = __d_alloc(base->d_sb, name);
+	if (!dentry)
+		return ERR_PTR(-ENOMEM);
+	dentry->d_parent = base;
+	list_hdr_append(&base->d_subdirs, &dentry->d_child);
+
+	old = dir->i_op->lookup(dir, dentry, flags);
+	if (old) {
+		dput(dentry);
+		dentry = old;
+	}
 	return dentry;
 }
 
@@ -608,6 +667,9 @@ int kern_path(const char *name, unsigned int flags, OUT path_s *path)
 					flags, path, NULL);
 }
 
+/*==============================================================================================*
+ *									fuctions for open											*
+ *==============================================================================================*/
 // Linux function proto:
 // static const char *open_last_lookups(struct nameidata *nd,
 //			struct file *file, const struct open_flags *op)
@@ -709,10 +771,13 @@ file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
 	// 	filp = path_openat(&nd, op, flags);
 	// if (unlikely(filp == ERR_PTR(-ESTALE)))
 	// 	filp = path_openat(&nd, op, flags | LOOKUP_REVAL);
-	// restore_nameidata();
+	restore_nameidata();
 	return filp;
 }
 
+/*==============================================================================================*
+ *									fuctions for file create									*
+ *==============================================================================================*/
 static dentry_s *filename_create(int dfd, filename_s *name,
 				path_s *path, unsigned int lookup_flags)
 {
@@ -733,51 +798,39 @@ static dentry_s *filename_create(int dfd, filename_s *name,
 	if (error)
 		return ERR_PTR(error);
 
-// 	/*
-// 	 * Yucky last component or no last component at all?
-// 	 * (foo/., foo/.., /////)
-// 	 */
-// 	if (type != LAST_NORM)
-// 		goto out;
+	/*
+	 * Yucky last component or no last component at all?
+	 * (foo/., foo/.., /////)
+	 */
+	if (type != LAST_NORM)
+		goto out;
 
-// 	/* don't fail immediately if it's r/o, at least try to report other errors */
-// 	err2 = mnt_want_write(path->mnt);
-// 	/*
-// 	 * Do the final lookup.
-// 	 */
-// 	lookup_flags |= LOOKUP_CREATE | LOOKUP_EXCL;
-// 	dentry = __lookup_hash(&last, path->dentry, lookup_flags);
-// 	if (IS_ERR(dentry))
-// 		goto unlock;
+	/*
+	 * Do the final lookup.
+	 */
+	lookup_flags |= LOOKUP_CREATE | LOOKUP_EXCL;
+	dentry = __lookup_hash(&last, path->dentry, lookup_flags);
+	if (IS_ERR(dentry))
+		goto out;
 
-// 	error = -EEXIST;
-// 	if (d_is_positive(dentry))
-// 		goto fail;
+	/*
+	 * Special case - lookup gave negative, but... we had foo/bar/
+	 * From the vfs_mknod() POV we just have a negative dentry -
+	 * all is fine. Let's be bastards - you had / on the end, you've
+	 * been asking for (non-existent) directory. -ENOENT for you.
+	 */
+	if (!is_dir && last.name[last.len] != '\0') {
+		error = -ENOENT;
+		goto fail;
+	}
+	return dentry;
 
-// 	/*
-// 	 * Special case - lookup gave negative, but... we had foo/bar/
-// 	 * From the vfs_mknod() POV we just have a negative dentry -
-// 	 * all is fine. Let's be bastards - you had / on the end, you've
-// 	 * been asking for (non-existent) directory. -ENOENT for you.
-// 	 */
-// 	if (!is_dir && last.name[last.len]) {
-// 		error = -ENOENT;
-// 		goto fail;
-// 	}
-// 	if (err2) {
-// 		error = err2;
-// 		goto fail;
-// 	}
-// 	return dentry;
-// fail:
-// 	dput(dentry);
-// 	dentry = ERR_PTR(error);
-// unlock:
-// 	if (!err2)
-// 		mnt_drop_write(path->mnt);
-// out:
-// 	path_put(path);
-// 	return dentry;
+fail:
+	dput(dentry);
+	dentry = ERR_PTR(error);
+out:
+	path_put(path);
+	return dentry;
 }
 
 dentry_s *kern_path_create(int dfd, const char *pathname,
@@ -792,9 +845,9 @@ dentry_s *kern_path_create(int dfd, const char *pathname,
 
 void done_path_create(path_s *path, dentry_s *dentry)
 {
-	// dput(dentry);
+	dput(dentry);
 	// mnt_drop_write(path->mnt);
-	// path_put(path);
+	path_put(path);
 }
 
 inline dentry_s *user_path_create(int dfd, const char *pathname,
@@ -807,3 +860,63 @@ inline dentry_s *user_path_create(int dfd, const char *pathname,
 	return res;
 }
 
+/*==============================================================================================*
+ *										fuctions for mkdir										*
+ *==============================================================================================*/
+/**
+ * vfs_mkdir - create directory
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dir:	inode of @dentry
+ * @dentry:	pointer to dentry of the base directory
+ * @mode:	mode of the new directory
+ *
+ * Create a directory.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
+{
+	int error = -ENOENT;
+	if (!dir->i_op->mkdir)
+		return -EPERM;
+
+	mode &= (S_IRWXUGO|S_ISVTX);
+	error = dir->i_op->mkdir(dir, dentry, mode);
+	return error;
+}
+
+int do_mkdirat(int dfd, filename_s *name, umode_t mode)
+{
+// 	struct dentry *dentry;
+// 	struct path path;
+// 	int error;
+// 	unsigned int lookup_flags = LOOKUP_DIRECTORY;
+
+// retry:
+// 	dentry = filename_create(dfd, name, &path, lookup_flags);
+// 	error = PTR_ERR(dentry);
+// 	if (IS_ERR(dentry))
+// 		goto out_putname;
+
+// 	if (!IS_POSIXACL(path.dentry->d_inode))
+// 		mode &= ~current_umask();
+// 	error = security_path_mkdir(&path, dentry, mode);
+// 	if (!error) {
+// 		struct user_namespace *mnt_userns;
+// 		mnt_userns = mnt_user_ns(path.mnt);
+// 		error = vfs_mkdir(mnt_userns, path.dentry->d_inode, dentry,
+// 				  mode);
+// 	}
+// 	done_path_create(&path, dentry);
+// 	if (retry_estale(error, lookup_flags)) {
+// 		lookup_flags |= LOOKUP_REVAL;
+// 		goto retry;
+// 	}
+// out_putname:
+// 	putname(name);
+// 	return error;
+}

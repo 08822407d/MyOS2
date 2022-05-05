@@ -143,6 +143,42 @@ static void shmem_free_inode(super_block_s *sb)
 	}
 }
 
+static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
+				umode_t mode, dev_t dev, unsigned long flags)
+{
+	inode_s *inode;
+	shmem_inode_info_s *info;
+	shmem_sb_info_s *sbinfo = SHMEM_SB(sb);
+
+	inode = new_inode(sb);
+	if (inode) {
+		inode->i_mode = mode;
+		inode->i_blocks = 0;
+		info = SHMEM_I(inode);
+		memset(info, 0, (char *)inode - (char *)info);
+		info->seals = F_SEAL_SEAL;
+		info->flags = flags & VM_NORESERVE;
+
+		switch (mode & S_IFMT) {
+		default:
+			inode->i_op = &shmem_special_inode_operations;
+			break;
+		case S_IFREG:
+			inode->i_op = &shmem_inode_operations;
+			inode->i_fop = &shmem_file_operations;
+			break;
+		case S_IFDIR:
+			/* Some things misbehave if size == 0 on a directory */
+			inode->i_size = 2 * BOGO_DIRENT_SIZE;
+			inode->i_op = &shmem_dir_inode_operations;
+			inode->i_fop = &simple_dir_operations;
+			break;
+		}
+	} else
+		shmem_free_inode(sb);
+	return inode;
+}
+
 static int shmem_statfs(dentry_s *dentry, kstatfs_s *buf)
 {
 	shmem_sb_info_s *sbinfo = SHMEM_SB(dentry->d_sb);
@@ -166,33 +202,23 @@ static int shmem_statfs(dentry_s *dentry, kstatfs_s *buf)
  * File creation. Allocate an inode, and we're done..
  */
 static int
-shmem_mknod(inode_s *dir, dentry_s *dentry,
-				umode_t mode, dev_t dev)
+shmem_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
 {
-// 	inode_s *inode;
-// 	int error = -ENOSPC;
+	inode_s *inode;
+	int error = -ENOSPC;
 
-// 	inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE);
-// 	if (inode) {
-// 		error = simple_acl_create(dir, inode);
-// 		if (error)
-// 			goto out_iput;
-// 		error = security_inode_init_security(inode, dir,
-// 						     &dentry->d_name,
-// 						     shmem_initxattrs, NULL);
-// 		if (error && error != -EOPNOTSUPP)
-// 			goto out_iput;
-
-// 		error = 0;
-// 		dir->i_size += BOGO_DIRENT_SIZE;
-// 		dir->i_ctime = dir->i_mtime = current_time(dir);
-// 		d_instantiate(dentry, inode);
-// 		dget(dentry); /* Extra count - pin the dentry in core */
-// 	}
-// 	return error;
-// out_iput:
-// 	iput(inode);
-// 	return error;
+	inode = shmem_get_inode(dir->i_sb, dir, mode, dev, VM_NORESERVE);
+	if (inode) {
+		error = 0;
+		dir->i_size += BOGO_DIRENT_SIZE;
+		// dir->i_ctime = dir->i_mtime = current_time(dir);
+		d_instantiate(dentry, inode);
+		dget(dentry); /* Extra count - pin the dentry in core */
+	}
+	return error;
+out_iput:
+	iput(inode);
+	return error;
 }
 
 // static int
@@ -223,19 +249,15 @@ shmem_mknod(inode_s *dir, dentry_s *dentry,
 static int shmem_mkdir(inode_s *dir, dentry_s *dentry,
 				umode_t mode)
 {
-	// int error;
-
-	// if ((error = shmem_mknod(&init_user_ns, dir, dentry,
-	// 			 mode | S_IFDIR, 0)))
-	// 	return error;
-	// inc_nlink(dir);
-	// return 0;
+	int error;
+	error = shmem_mknod(dir, dentry, mode | S_IFDIR, 0);
+	return error;
 }
 
 static int shmem_create(inode_s *dir, dentry_s *dentry,
 				umode_t mode, bool excl)
 {
-	// return shmem_mknod(&init_user_ns, dir, dentry, mode | S_IFREG, 0);
+	return shmem_mknod(dir, dentry, mode | S_IFREG, 0);
 }
 
 static int shmem_rmdir(inode_s *dir, dentry_s *dentry)
@@ -295,42 +317,6 @@ static int shmem_rename2(inode_s *old_dir, dentry_s *old_dentry,
 	// new_dir->i_ctime = new_dir->i_mtime =
 	// inode->i_ctime = current_time(old_dir);
 	// return 0;
-}
-
-static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
-				umode_t mode, dev_t dev, unsigned long flags)
-{
-	inode_s *inode;
-	shmem_inode_info_s *info;
-	shmem_sb_info_s *sbinfo = SHMEM_SB(sb);
-
-	inode = new_inode(sb);
-	if (inode) {
-		inode->i_mode = mode;
-		inode->i_blocks = 0;
-		info = SHMEM_I(inode);
-		memset(info, 0, (char *)inode - (char *)info);
-		info->seals = F_SEAL_SEAL;
-		info->flags = flags & VM_NORESERVE;
-
-		switch (mode & S_IFMT) {
-		default:
-			inode->i_op = &shmem_special_inode_operations;
-			break;
-		case S_IFREG:
-			inode->i_op = &shmem_inode_operations;
-			inode->i_fop = &shmem_file_operations;
-			break;
-		case S_IFDIR:
-			/* Some things misbehave if size == 0 on a directory */
-			inode->i_size = 2 * BOGO_DIRENT_SIZE;
-			inode->i_op = &shmem_dir_inode_operations;
-			inode->i_fop = &simple_dir_operations;
-			break;
-		}
-	} else
-		shmem_free_inode(sb);
-	return inode;
 }
 
 static void shmem_put_super(super_block_s *sb)

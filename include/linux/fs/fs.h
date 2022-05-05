@@ -1825,13 +1825,12 @@
 	// bool inode_owner_or_capable(user_namespace_s *mnt_userns,
 	// 				const inode_s *inode);
 
-	// /*
-	// * VFS helper functions..
-	// */
+	/*
+	* VFS helper functions..
+	*/
 	// int vfs_create(user_namespace_s *, inode_s *,
 	// 		dentry_s *, umode_t, bool);
-	// int vfs_mkdir(user_namespace_s *, inode_s *,
-	// 		dentry_s *, umode_t);
+	int vfs_mkdir(inode_s *, dentry_s *, umode_t);
 	// int vfs_mknod(user_namespace_s *, inode_s *, dentry_s *,
 	// 			umode_t, dev_t);
 	// int vfs_symlink(user_namespace_s *, inode_s *,

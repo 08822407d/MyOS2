@@ -65,7 +65,7 @@
 
 	extern dentry_s *kern_path_create(int, const char *, path_s *, unsigned int);
 	extern dentry_s *user_path_create(int, const char *, path_s *, unsigned int);
-	// extern void done_path_create(path_s *, dentry_s *);
+	extern void done_path_create(path_s *, dentry_s *);
 	// extern dentry_s *kern_path_locked(const char *, path_s *);
 
 	// extern dentry_s *try_lookup_one_len(const char *, dentry_s *, int);

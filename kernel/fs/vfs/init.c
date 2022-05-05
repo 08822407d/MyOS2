@@ -26,12 +26,9 @@ int init_mkdir(const char *pathname, umode_t mode)
 	dentry = kern_path_create(AT_FDCWD, pathname, &path, LOOKUP_DIRECTORY);
 	if (IS_ERR(dentry))
 		return PTR_ERR(dentry);
-	// error = security_path_mkdir(&path, dentry, mode);
-	// if (!error)
-	// 	error = vfs_mkdir(mnt_user_ns(path.mnt), path.dentry->d_inode,
-	// 			  dentry, mode);
-	// done_path_create(&path, dentry);
-	// return error;
+	error = vfs_mkdir(path.dentry->d_inode, dentry, mode);
+	done_path_create(&path, dentry);
+	return error;
 }
 
 void do_name(void)
