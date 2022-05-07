@@ -28,15 +28,18 @@ super_block_s *root_sb = NULL;
 fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 extern fs_type_s *file_systems;
 
-extern void do_name(void);
-
 #include <linux/fs/fat.h>
-unsigned long init_vfs()
-{
-	mnt_init();
-	do_name();
-	bdev_cache_init();
 
+
+void register_diskfs(void)
+{
+	init_ext2_fs();
+	init_fat32_fs();
+	init_vfat_fs();
+}
+
+unsigned long switch_to_root_disk()
+{
 	int test = kparam.init_flags.vfs;
 	kparam.init_flags.vfs = 0;
 	// load the boot sector
@@ -62,9 +65,6 @@ unsigned long init_vfs()
 	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
 									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
-	init_ext2_fs();
-	init_fat32_fs();
-	init_vfat_fs();
 
 	GPT_PE_s *gpt_pe = NULL;
 	for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)

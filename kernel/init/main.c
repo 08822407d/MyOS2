@@ -13,6 +13,10 @@
 
 atomic_T boot_counter;
 
+extern void kjmp_to_doexecve();
+extern void do_name(void);
+
+
 void start_kernel()
 {
 	size_t cpu_idx = 0;
@@ -45,9 +49,15 @@ void start_kernel()
 	// color_printk(BLACK, BLUE, "BSP env initiated.\n");
 
 	startup_smp();
+
+	vfs_caches_init();
+
 	atomic_set(&boot_counter, 0);
 }
 
+/*==============================================================================================*
+ *										task0 -- idle()											*
+ *==============================================================================================*/
 void idle(size_t cpu_idx)
 {	
 	reload_arch_data(cpu_idx);
@@ -63,13 +73,49 @@ void idle(size_t cpu_idx)
 	sti();
 
 	if (cpu_idx == 0)
-	{
-		// kernel_thread(module_test, 0, 0);
-		kernel_thread(init, 0, 0);
-	}
+		kernel_thread(kernel_init, 0, 0);
 
 	while (1)
-	{
 		hlt();
-	}
+}
+
+/*==============================================================================================*
+ *										task2 -- init()											*
+ *==============================================================================================*/
+static void do_initcalls(void)
+{
+	register_diskfs();
+}
+
+/*
+ * Ok, the machine is now initialized. None of the devices
+ * have been touched yet, but the CPU subsystem is up and
+ * running, and memory and process management works.
+ *
+ * Now we can finally start doing some real work..
+ */
+static void do_basic_setup(void)
+{
+	// cpuset_init_smp();
+	// driver_init();
+	// init_irq_proc();
+	// do_ctors();
+	do_initcalls();
+}
+
+unsigned long kernel_init(unsigned long arg)
+{
+	do_basic_setup();
+	do_name();
+
+	// color_printk(GREEN, BLACK, "Enter task init.\n");
+	switch_to_root_disk();
+	init_mount();
+	set_init_taskfs();
+	// color_printk(GREEN, BLACK, "VFS initiated.\n");
+	creat_dev_file();
+	// color_printk(GREEN, BLACK, "Device files created.\n");
+	kjmp_to_doexecve();
+
+	return 1;
 }

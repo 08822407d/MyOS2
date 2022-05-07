@@ -368,3 +368,16 @@ dentry_s *d_make_root(inode_s *root_inode)
 	}
 	return res;
 }
+
+
+
+void vfs_caches_init(void)
+{
+	// dcache_init();
+	// inode_init();
+	// files_init();
+	// files_maxfiles_init();
+	mnt_init();
+	bdev_cache_init();
+	// chrdev_init();
+}

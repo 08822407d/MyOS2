@@ -138,6 +138,6 @@ block_device_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
 	// 	iput(inode);
 	// 	return NULL;
 	// }
-	// bdev->bd_disk = disk;
+	bdev->bd_disk = disk;
 	return bdev;
 }

@@ -390,6 +390,31 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	return ret_val;
 }
 
+void kjmp_to_doexecve()
+{
+	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
+	task_s * curr = curr_tsk;
+	task_init = curr;
+	stack_frame_s * curr_sfp = get_stackframe(curr);
+	curr_sfp->restore_retp = ra_sysex_retp;
+
+	reg_t ctx_rip =
+	curr->arch_struct.k_rip = (reg_t)sysexit_entp;
+	reg_t ctx_rsp =
+	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
+	curr->flags &= ~PF_KTHREAD;
+
+	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
+							"pushq	%2			\n\t"
+							"jmp	do_execve	\n\t"
+						:
+						:	"D"(ctx_rsp), "m"(ctx_rsp),
+							"m"(ctx_rip), "S"("/init.bin"),
+							"d"(NULL), "c"(NULL)
+						:	"memory"
+						);
+}
+
 static void exit_notify(void)
 {
 	task_s * curr = curr_tsk;
@@ -438,58 +463,6 @@ unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long a
 	sf_regs.rip = (reg_t)entp_kernel_thread;
 
 	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
-}
-
-
-/*==============================================================================================*
- *										task2 -- init()											*
- *==============================================================================================*/
-static void set_init_taskfs()
-{
-	task_s * curr = curr_tsk;
-	// set cwd and root-dir of task1
-	taskfs_s * taskfs_p = curr->fs;
-	taskfs_p->pwd.dentry = 
-	taskfs_p->root.dentry = root_sb->s_root;
-	taskfs_p->pwd.mnt = 
-	taskfs_p->root.mnt = &root_mnt.mnt;
-
-	memcpy(task0_PCB.task.fs, taskfs_p, sizeof(taskfs_s));
-}
-
-unsigned long init(unsigned long arg)
-{
-	// color_printk(GREEN, BLACK, "Enter task init.\n");
-	init_vfs();
-	init_mount();
-	set_init_taskfs();
-	// color_printk(GREEN, BLACK, "VFS initiated.\n");
-	creat_dev_file();
-	// color_printk(GREEN, BLACK, "Device files created.\n");
-
-	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
-	task_s * curr = curr_tsk;
-	task_init = curr;
-	stack_frame_s * curr_sfp = get_stackframe(curr);
-	curr_sfp->restore_retp = ra_sysex_retp;
-
-	reg_t ctx_rip =
-	curr->arch_struct.k_rip = (reg_t)sysexit_entp;
-	reg_t ctx_rsp =
-	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
-	curr->flags &= ~PF_KTHREAD;
-
-	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
-							"pushq	%2			\n\t"
-							"jmp	do_execve	\n\t"
-						:
-						:	"D"(ctx_rsp), "m"(ctx_rsp),
-							"m"(ctx_rip), "S"("/init.bin"),
-							"d"(NULL), "c"(NULL)
-						:	"memory"
-						);
-
-	return 1;
 }
 
 /*==============================================================================================*

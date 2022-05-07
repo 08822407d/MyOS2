@@ -16,4 +16,6 @@
 
 	extern size_t			cpustack_off;
 
+	extern task_s * task_init;
+
 #endif /* _GLO_H_ */
