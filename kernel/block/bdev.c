@@ -1,4 +1,4 @@
-#include <linux/kernel/blkdev.h>
+#include <linux/block/blkdev.h>
 #include <linux/fs/fs.h>
 
 #include <uapi/stat.h>
@@ -71,7 +71,7 @@ block_device_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
 	bdev = I_BDEV(inode);
 	bdev->bd_partno = partno;
 	bdev->bd_inode = inode;
-	// bdev->bd_queue = disk->queue;
+	bdev->bd_queue = disk->queue;
 	// bdev->bd_stats = alloc_percpu(struct disk_stats);
 	// if (!bdev->bd_stats) {
 	// 	iput(inode);

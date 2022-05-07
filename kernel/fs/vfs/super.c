@@ -23,7 +23,7 @@
 
 // #include <linux/export.h>
 // #include <linux/slab.h>
-#include <linux/kernel/blkdev.h>
+#include <linux/block/blkdev.h>
 #include <linux/kernel/mount.h>
 // #include <linux/security.h>
 // #include <linux/writeback.h>		/* for the emergency remount stuff */

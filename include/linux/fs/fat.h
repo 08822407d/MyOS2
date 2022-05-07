@@ -2,7 +2,7 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
-#include <linux/kernel/buffer_head.h>
+#include <linux/block/buffer_head.h>
 // #include <linux/nls.h>
 // #include <linux/hash.h>
 // #include <linux/ratelimit.h>

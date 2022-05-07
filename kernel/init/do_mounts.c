@@ -8,7 +8,7 @@
 // #include <linux/root_dev.h>
 // #include <linux/security.h>
 // #include <linux/delay.h>
-#include <linux/kernel/genhd.h>
+#include <linux/block/genhd.h>
 #include <linux/kernel/mount.h>
 // #include <linux/device.h>
 #include <linux/init/init.h>

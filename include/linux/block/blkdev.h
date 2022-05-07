@@ -3,7 +3,7 @@
 #define _LINUX_BLKDEV_H
 
 // #include <linux/sched.h>
-#include <linux/kernel/genhd.h>
+#include <linux/block/genhd.h>
 // #include <linux/list.h>
 // #include <linux/llist.h>
 #include <linux/kernel/minmax.h>
@@ -17,21 +17,6 @@
 // #include <linux/blkzoned.h>
 // #include <linux/sbitmap.h>
 // #include <linux/srcu.h>
-
-	// struct module;
-	// request_queue_s;
-	// struct elevator_queue;
-	// struct blk_trace;
-	// struct request;
-	// struct sg_io_hdr;
-	// struct blkcg_gq;
-	// struct blk_flush_queue;
-	// struct kiocb;
-	// struct pr_ops;
-	// struct rq_qos;
-	// struct blk_queue_stats;
-	// struct blk_stat_callback;
-	// struct blk_crypto_profile;
 
 	// /* Must be consistent with blk_mq_poll_stats_bkt() */
 	// #define BLK_MQ_POLL_STATS_BKTS 16
@@ -117,40 +102,40 @@
 	// typedef int (*report_zones_cb)(struct blk_zone *zone, unsigned int idx,
 	// 				void *data);
 
-	// void blk_queue_set_zoned(gendisk_s *disk, enum blk_zoned_model model);
+	// void blk_queue_set_zoned(struct gendisk *disk, enum blk_zoned_model model);
 
 	// #ifdef CONFIG_BLK_DEV_ZONED
 
 	// #define BLK_ALL_ZONES  ((unsigned int)-1)
-	// int blkdev_report_zones(block_device_s *bdev, sector_t sector,
+	// int blkdev_report_zones(struct block_device *bdev, sector_t sector,
 	// 			unsigned int nr_zones, report_zones_cb cb, void *data);
-	// unsigned int blkdev_nr_zones(gendisk_s *disk);
-	// extern int blkdev_zone_mgmt(block_device_s *bdev, enum req_opf op,
+	// unsigned int blkdev_nr_zones(struct gendisk *disk);
+	// extern int blkdev_zone_mgmt(struct block_device *bdev, enum req_opf op,
 	// 				sector_t sectors, sector_t nr_sectors,
 	// 				gfp_t gfp_mask);
-	// int blk_revalidate_disk_zones(gendisk_s *disk,
-	// 				void (*update_driver_data)(gendisk_s *disk));
+	// int blk_revalidate_disk_zones(struct gendisk *disk,
+	// 				void (*update_driver_data)(struct gendisk *disk));
 
-	// extern int blkdev_report_zones_ioctl(block_device_s *bdev, fmode_t mode,
+	// extern int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
 	// 					unsigned int cmd, unsigned long arg);
-	// extern int blkdev_zone_mgmt_ioctl(block_device_s *bdev, fmode_t mode,
+	// extern int blkdev_zone_mgmt_ioctl(struct block_device *bdev, fmode_t mode,
 	// 				unsigned int cmd, unsigned long arg);
 
 	// #else /* CONFIG_BLK_DEV_ZONED */
 
-	// static inline unsigned int blkdev_nr_zones(gendisk_s *disk)
+	// static inline unsigned int blkdev_nr_zones(struct gendisk *disk)
 	// {
 	// 	return 0;
 	// }
 
-	// static inline int blkdev_report_zones_ioctl(block_device_s *bdev,
+	// static inline int blkdev_report_zones_ioctl(struct block_device *bdev,
 	// 						fmode_t mode, unsigned int cmd,
 	// 						unsigned long arg)
 	// {
 	// 	return -ENOTTY;
 	// }
 
-	// static inline int blkdev_zone_mgmt_ioctl(block_device_s *bdev,
+	// static inline int blkdev_zone_mgmt_ioctl(struct block_device *bdev,
 	// 					fmode_t mode, unsigned int cmd,
 	// 					unsigned long arg)
 	// {
@@ -175,7 +160,7 @@
 	// */
 	// struct blk_independent_access_range {
 	// 	struct kobject		kobj;
-	// 	request_queue_s	*queue;
+	// 	struct request_queue	*queue;
 	// 	sector_t		sector;
 	// 	sector_t		nr_sectors;
 	// };
@@ -187,7 +172,7 @@
 	// 	struct blk_independent_access_range	ia_range[];
 	// };
 
-	// request_queue_s {
+	typedef struct request_queue {
 	// 	struct request		*last_merge;
 	// 	struct elevator_queue	*elevator;
 
@@ -231,7 +216,7 @@
 
 	// 	spinlock_t		queue_lock;
 
-	// 	gendisk_s		*disk;
+	// 	struct gendisk		*disk;
 
 	// 	/*
 	// 	* queue kobject
@@ -380,46 +365,46 @@
 	// 	 * is blocking (BLK_MQ_F_BLOCKING). Must be the last member
 	// 	 */
 	// 	struct srcu_struct	srcu[];
-	// };
+	} request_queue_s;
 
-	// /* Keep blk_queue_flag_name[] in sync with the definitions below */
-	// #define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
-	// #define QUEUE_FLAG_DYING	1	/* queue being torn down */
-	// #define QUEUE_FLAG_HAS_SRCU	2	/* SRCU is allocated */
-	// #define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
-	// #define QUEUE_FLAG_SAME_COMP	4	/* complete on same CPU-group */
-	// #define QUEUE_FLAG_FAIL_IO	5	/* fake timeout */
-	// #define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
-	// #define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
-	// #define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
-	// #define QUEUE_FLAG_DISCARD	8	/* supports DISCARD */
-	// #define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
-	// #define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
-	// #define QUEUE_FLAG_SECERASE	11	/* supports secure erase */
-	// #define QUEUE_FLAG_SAME_FORCE	12	/* force complete on same CPU */
-	// #define QUEUE_FLAG_DEAD		13	/* queue tear-down finished */
-	// #define QUEUE_FLAG_INIT_DONE	14	/* queue is initialized */
-	// #define QUEUE_FLAG_STABLE_WRITES 15	/* don't modify blks until WB is done */
-	// #define QUEUE_FLAG_POLL		16	/* IO polling enabled if set */
-	// #define QUEUE_FLAG_WC		17	/* Write back caching */
-	// #define QUEUE_FLAG_FUA		18	/* device supports FUA writes */
-	// #define QUEUE_FLAG_DAX		19	/* device supports DAX */
-	// #define QUEUE_FLAG_STATS	20	/* track IO start and completion times */
-	// #define QUEUE_FLAG_REGISTERED	22	/* queue has been registered to a disk */
-	// #define QUEUE_FLAG_QUIESCED	24	/* queue has been quiesced */
-	// #define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
-	// #define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
-	// #define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
-	// #define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
-	// #define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+	/* Keep blk_queue_flag_name[] in sync with the definitions below */
+	#define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
+	#define QUEUE_FLAG_DYING	1	/* queue being torn down */
+	#define QUEUE_FLAG_HAS_SRCU	2	/* SRCU is allocated */
+	#define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
+	#define QUEUE_FLAG_SAME_COMP	4	/* complete on same CPU-group */
+	#define QUEUE_FLAG_FAIL_IO	5	/* fake timeout */
+	#define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
+	#define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
+	#define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
+	#define QUEUE_FLAG_DISCARD	8	/* supports DISCARD */
+	#define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
+	#define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
+	#define QUEUE_FLAG_SECERASE	11	/* supports secure erase */
+	#define QUEUE_FLAG_SAME_FORCE	12	/* force complete on same CPU */
+	#define QUEUE_FLAG_DEAD		13	/* queue tear-down finished */
+	#define QUEUE_FLAG_INIT_DONE	14	/* queue is initialized */
+	#define QUEUE_FLAG_STABLE_WRITES 15	/* don't modify blks until WB is done */
+	#define QUEUE_FLAG_POLL		16	/* IO polling enabled if set */
+	#define QUEUE_FLAG_WC		17	/* Write back caching */
+	#define QUEUE_FLAG_FUA		18	/* device supports FUA writes */
+	#define QUEUE_FLAG_DAX		19	/* device supports DAX */
+	#define QUEUE_FLAG_STATS	20	/* track IO start and completion times */
+	#define QUEUE_FLAG_REGISTERED	22	/* queue has been registered to a disk */
+	#define QUEUE_FLAG_QUIESCED	24	/* queue has been quiesced */
+	#define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
+	#define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
+	#define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
+	#define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
+	#define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
 
-	// #define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
-	// 				(1 << QUEUE_FLAG_SAME_COMP) |		\
-	// 				(1 << QUEUE_FLAG_NOWAIT))
+	#define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
+					(1 << QUEUE_FLAG_SAME_COMP) |		\
+					(1 << QUEUE_FLAG_NOWAIT))
 
-	// void blk_queue_flag_set(unsigned int flag, request_queue_s *q);
-	// void blk_queue_flag_clear(unsigned int flag, request_queue_s *q);
-	// bool blk_queue_flag_test_and_set(unsigned int flag, request_queue_s *q);
+	// void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
+	// void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);
+	// bool blk_queue_flag_test_and_set(unsigned int flag, struct request_queue *q);
 
 	// #define blk_queue_stopped(q)	test_bit(QUEUE_FLAG_STOPPED, &(q)->queue_flags)
 	// #define blk_queue_dying(q)	test_bit(QUEUE_FLAG_DYING, &(q)->queue_flags)
@@ -458,8 +443,8 @@
 	// #define blk_queue_registered(q)	test_bit(QUEUE_FLAG_REGISTERED, &(q)->queue_flags)
 	// #define blk_queue_nowait(q)	test_bit(QUEUE_FLAG_NOWAIT, &(q)->queue_flags)
 
-	// extern void blk_set_pm_only(request_queue_s *q);
-	// extern void blk_clear_pm_only(request_queue_s *q);
+	// extern void blk_set_pm_only(struct request_queue *q);
+	// extern void blk_clear_pm_only(struct request_queue *q);
 
 	// #define list_entry_rq(ptr)	list_entry((ptr), struct request, queuelist)
 
@@ -467,32 +452,32 @@
 	// 	dma_map_page_attrs(dev, (bv)->bv_page, (bv)->bv_offset, (bv)->bv_len, \
 	// 	(dir), (attrs))
 
-	// static inline bool queue_is_mq(request_queue_s *q)
+	// static inline bool queue_is_mq(struct request_queue *q)
 	// {
 	// 	return q->mq_ops;
 	// }
 
 	// #ifdef CONFIG_PM
-	// static inline enum rpm_status queue_rpm_status(request_queue_s *q)
+	// static inline enum rpm_status queue_rpm_status(struct request_queue *q)
 	// {
 	// 	return q->rpm_status;
 	// }
 	// #else
-	// static inline enum rpm_status queue_rpm_status(request_queue_s *q)
+	// static inline enum rpm_status queue_rpm_status(struct request_queue *q)
 	// {
 	// 	return RPM_ACTIVE;
 	// }
 	// #endif
 
 	// static inline enum blk_zoned_model
-	// blk_queue_zoned_model(request_queue_s *q)
+	// blk_queue_zoned_model(struct request_queue *q)
 	// {
 	// 	if (IS_ENABLED(CONFIG_BLK_DEV_ZONED))
 	// 		return q->limits.zoned;
 	// 	return BLK_ZONED_NONE;
 	// }
 
-	// static inline bool blk_queue_is_zoned(request_queue_s *q)
+	// static inline bool blk_queue_is_zoned(struct request_queue *q)
 	// {
 	// 	switch (blk_queue_zoned_model(q)) {
 	// 	case BLK_ZONED_HA:
@@ -503,18 +488,18 @@
 	// 	}
 	// }
 
-	// static inline sector_t blk_queue_zone_sectors(request_queue_s *q)
+	// static inline sector_t blk_queue_zone_sectors(struct request_queue *q)
 	// {
 	// 	return blk_queue_is_zoned(q) ? q->limits.chunk_sectors : 0;
 	// }
 
 	// #ifdef CONFIG_BLK_DEV_ZONED
-	// static inline unsigned int blk_queue_nr_zones(request_queue_s *q)
+	// static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
 	// {
 	// 	return blk_queue_is_zoned(q) ? q->nr_zones : 0;
 	// }
 
-	// static inline unsigned int blk_queue_zone_no(request_queue_s *q,
+	// static inline unsigned int blk_queue_zone_no(struct request_queue *q,
 	// 						sector_t sector)
 	// {
 	// 	if (!blk_queue_is_zoned(q))
@@ -522,7 +507,7 @@
 	// 	return sector >> ilog2(q->limits.chunk_sectors);
 	// }
 
-	// static inline bool blk_queue_zone_is_seq(request_queue_s *q,
+	// static inline bool blk_queue_zone_is_seq(struct request_queue *q,
 	// 					sector_t sector)
 	// {
 	// 	if (!blk_queue_is_zoned(q))
@@ -532,53 +517,53 @@
 	// 	return !test_bit(blk_queue_zone_no(q, sector), q->conv_zones_bitmap);
 	// }
 
-	// static inline void blk_queue_max_open_zones(request_queue_s *q,
+	// static inline void blk_queue_max_open_zones(struct request_queue *q,
 	// 		unsigned int max_open_zones)
 	// {
 	// 	q->max_open_zones = max_open_zones;
 	// }
 
-	// static inline unsigned int queue_max_open_zones(const request_queue_s *q)
+	// static inline unsigned int queue_max_open_zones(const struct request_queue *q)
 	// {
 	// 	return q->max_open_zones;
 	// }
 
-	// static inline void blk_queue_max_active_zones(request_queue_s *q,
+	// static inline void blk_queue_max_active_zones(struct request_queue *q,
 	// 		unsigned int max_active_zones)
 	// {
 	// 	q->max_active_zones = max_active_zones;
 	// }
 
-	// static inline unsigned int queue_max_active_zones(const request_queue_s *q)
+	// static inline unsigned int queue_max_active_zones(const struct request_queue *q)
 	// {
 	// 	return q->max_active_zones;
 	// }
 	// #else /* CONFIG_BLK_DEV_ZONED */
-	// static inline unsigned int blk_queue_nr_zones(request_queue_s *q)
+	// static inline unsigned int blk_queue_nr_zones(struct request_queue *q)
 	// {
 	// 	return 0;
 	// }
-	// static inline bool blk_queue_zone_is_seq(request_queue_s *q,
+	// static inline bool blk_queue_zone_is_seq(struct request_queue *q,
 	// 					sector_t sector)
 	// {
 	// 	return false;
 	// }
-	// static inline unsigned int blk_queue_zone_no(request_queue_s *q,
+	// static inline unsigned int blk_queue_zone_no(struct request_queue *q,
 	// 						sector_t sector)
 	// {
 	// 	return 0;
 	// }
-	// static inline unsigned int queue_max_open_zones(const request_queue_s *q)
+	// static inline unsigned int queue_max_open_zones(const struct request_queue *q)
 	// {
 	// 	return 0;
 	// }
-	// static inline unsigned int queue_max_active_zones(const request_queue_s *q)
+	// static inline unsigned int queue_max_active_zones(const struct request_queue *q)
 	// {
 	// 	return 0;
 	// }
 	// #endif /* CONFIG_BLK_DEV_ZONED */
 
-	// static inline unsigned int blk_queue_depth(request_queue_s *q)
+	// static inline unsigned int blk_queue_depth(struct request_queue *q)
 	// {
 	// 	if (q->queue_depth)
 	// 		return q->queue_depth;
@@ -597,15 +582,15 @@
 	// 	for (; _bio; _bio = _bio->bi_next)
 
 
-	// extern int blk_register_queue(gendisk_s *disk);
-	// extern void blk_unregister_queue(gendisk_s *disk);
+	// extern int blk_register_queue(struct gendisk *disk);
+	// extern void blk_unregister_queue(struct gendisk *disk);
 	// void submit_bio_noacct(struct bio *bio);
 
-	// extern int blk_lld_busy(request_queue_s *q);
+	// extern int blk_lld_busy(struct request_queue *q);
 	// extern void blk_queue_split(struct bio **);
-	// extern int blk_queue_enter(request_queue_s *q, blk_mq_req_flags_t flags);
-	// extern void blk_queue_exit(request_queue_s *q);
-	// extern void blk_sync_queue(request_queue_s *q);
+	// extern int blk_queue_enter(struct request_queue *q, blk_mq_req_flags_t flags);
+	// extern void blk_queue_exit(struct request_queue *q);
+	// extern void blk_sync_queue(struct request_queue *q);
 
 	// /* Helper to convert REQ_OP_XXX to its string format XXX */
 	// extern const char *blk_op_str(unsigned int op);
@@ -621,7 +606,7 @@
 	// int iocb_bio_iopoll(struct kiocb *kiocb, struct io_comp_batch *iob,
 	// 			unsigned int flags);
 
-	// static inline request_queue_s *bdev_get_queue(block_device_s *bdev)
+	// static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
 	// {
 	// 	return bdev->bd_queue;	/* this is never NULL */
 	// }
@@ -644,7 +629,7 @@
 	// }
 	// #endif /* CONFIG_BLK_DEV_ZONED */
 
-	// static inline unsigned int blk_queue_get_max_sectors(request_queue_s *q,
+	// static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
 	// 							int op)
 	// {
 	// 	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
@@ -664,7 +649,7 @@
 	// * Return maximum size of a request at given offset. Only valid for
 	// * file system requests.
 	// */
-	// static inline unsigned int blk_max_size_offset(request_queue_s *q,
+	// static inline unsigned int blk_max_size_offset(struct request_queue *q,
 	// 						sector_t offset,
 	// 						unsigned int chunk_sectors)
 	// {
@@ -686,51 +671,51 @@
 	// /*
 	// * Access functions for manipulating queue properties
 	// */
-	// extern void blk_cleanup_queue(request_queue_s *);
-	// void blk_queue_bounce_limit(request_queue_s *q, enum blk_bounce limit);
-	// extern void blk_queue_max_hw_sectors(request_queue_s *, unsigned int);
-	// extern void blk_queue_chunk_sectors(request_queue_s *, unsigned int);
-	// extern void blk_queue_max_segments(request_queue_s *, unsigned short);
-	// extern void blk_queue_max_discard_segments(request_queue_s *,
+	// extern void blk_cleanup_queue(struct request_queue *);
+	// void blk_queue_bounce_limit(struct request_queue *q, enum blk_bounce limit);
+	// extern void blk_queue_max_hw_sectors(struct request_queue *, unsigned int);
+	// extern void blk_queue_chunk_sectors(struct request_queue *, unsigned int);
+	// extern void blk_queue_max_segments(struct request_queue *, unsigned short);
+	// extern void blk_queue_max_discard_segments(struct request_queue *,
 	// 		unsigned short);
-	// extern void blk_queue_max_segment_size(request_queue_s *, unsigned int);
-	// extern void blk_queue_max_discard_sectors(request_queue_s *q,
+	// extern void blk_queue_max_segment_size(struct request_queue *, unsigned int);
+	// extern void blk_queue_max_discard_sectors(struct request_queue *q,
 	// 		unsigned int max_discard_sectors);
-	// extern void blk_queue_max_write_same_sectors(request_queue_s *q,
+	// extern void blk_queue_max_write_same_sectors(struct request_queue *q,
 	// 		unsigned int max_write_same_sectors);
-	// extern void blk_queue_max_write_zeroes_sectors(request_queue_s *q,
+	// extern void blk_queue_max_write_zeroes_sectors(struct request_queue *q,
 	// 		unsigned int max_write_same_sectors);
-	// extern void blk_queue_logical_block_size(request_queue_s *, unsigned int);
-	// extern void blk_queue_max_zone_append_sectors(request_queue_s *q,
+	// extern void blk_queue_logical_block_size(struct request_queue *, unsigned int);
+	// extern void blk_queue_max_zone_append_sectors(struct request_queue *q,
 	// 		unsigned int max_zone_append_sectors);
-	// extern void blk_queue_physical_block_size(request_queue_s *, unsigned int);
-	// void blk_queue_zone_write_granularity(request_queue_s *q,
+	// extern void blk_queue_physical_block_size(struct request_queue *, unsigned int);
+	// void blk_queue_zone_write_granularity(struct request_queue *q,
 	// 					unsigned int size);
-	// extern void blk_queue_alignment_offset(request_queue_s *q,
+	// extern void blk_queue_alignment_offset(struct request_queue *q,
 	// 					unsigned int alignment);
-	// void disk_update_readahead(gendisk_s *disk);
+	// void disk_update_readahead(struct gendisk *disk);
 	// extern void blk_limits_io_min(struct queue_limits *limits, unsigned int min);
-	// extern void blk_queue_io_min(request_queue_s *q, unsigned int min);
+	// extern void blk_queue_io_min(struct request_queue *q, unsigned int min);
 	// extern void blk_limits_io_opt(struct queue_limits *limits, unsigned int opt);
-	// extern void blk_queue_io_opt(request_queue_s *q, unsigned int opt);
-	// extern void blk_set_queue_depth(request_queue_s *q, unsigned int depth);
+	// extern void blk_queue_io_opt(struct request_queue *q, unsigned int opt);
+	// extern void blk_set_queue_depth(struct request_queue *q, unsigned int depth);
 	// extern void blk_set_default_limits(struct queue_limits *lim);
 	// extern void blk_set_stacking_limits(struct queue_limits *lim);
 	// extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
 	// 				sector_t offset);
-	// extern void disk_stack_limits(gendisk_s *disk, block_device_s *bdev,
+	// extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
 	// 				sector_t offset);
-	// extern void blk_queue_update_dma_pad(request_queue_s *, unsigned int);
-	// extern void blk_queue_segment_boundary(request_queue_s *, unsigned long);
-	// extern void blk_queue_virt_boundary(request_queue_s *, unsigned long);
-	// extern void blk_queue_dma_alignment(request_queue_s *, int);
-	// extern void blk_queue_update_dma_alignment(request_queue_s *, int);
-	// extern void blk_queue_rq_timeout(request_queue_s *, unsigned int);
-	// extern void blk_queue_write_cache(request_queue_s *q, bool enabled, bool fua);
+	// extern void blk_queue_update_dma_pad(struct request_queue *, unsigned int);
+	// extern void blk_queue_segment_boundary(struct request_queue *, unsigned long);
+	// extern void blk_queue_virt_boundary(struct request_queue *, unsigned long);
+	// extern void blk_queue_dma_alignment(struct request_queue *, int);
+	// extern void blk_queue_update_dma_alignment(struct request_queue *, int);
+	// extern void blk_queue_rq_timeout(struct request_queue *, unsigned int);
+	// extern void blk_queue_write_cache(struct request_queue *q, bool enabled, bool fua);
 
 	// struct blk_independent_access_ranges *
-	// disk_alloc_independent_access_ranges(gendisk_s *disk, int nr_ia_ranges);
-	// void disk_set_independent_access_ranges(gendisk_s *disk,
+	// disk_alloc_independent_access_ranges(struct gendisk *disk, int nr_ia_ranges);
+	// void disk_set_independent_access_ranges(struct gendisk *disk,
 	// 				struct blk_independent_access_ranges *iars);
 
 	// /*
@@ -741,15 +726,15 @@
 	// /* Supports scheduling on multiple hardware queues */
 	// #define ELEVATOR_F_MQ_AWARE		(1U << 1)
 
-	// extern void blk_queue_required_elevator_features(request_queue_s *q,
+	// extern void blk_queue_required_elevator_features(struct request_queue *q,
 	// 						unsigned int features);
-	// extern bool blk_queue_can_use_dma_map_merging(request_queue_s *q,
+	// extern bool blk_queue_can_use_dma_map_merging(struct request_queue *q,
 	// 						struct device *dev);
 
-	// bool __must_check blk_get_queue(request_queue_s *);
-	// extern void blk_put_queue(request_queue_s *);
+	// bool __must_check blk_get_queue(struct request_queue *);
+	// extern void blk_put_queue(struct request_queue *);
 
-	// void blk_mark_disk_dead(gendisk_s *disk);
+	// void blk_mark_disk_dead(struct gendisk *disk);
 
 	// #ifdef CONFIG_BLOCK
 	// /*
@@ -802,7 +787,7 @@
 	// 		(plug->mq_list || !list_empty(&plug->cb_list));
 	// }
 
-	// int blkdev_issue_flush(block_device_s *bdev);
+	// int blkdev_issue_flush(struct block_device *bdev);
 	// long nr_blockdev_pages(void);
 	// #else /* CONFIG_BLOCK */
 	// struct blk_plug {
@@ -830,7 +815,7 @@
 	// 	return false;
 	// }
 
-	// static inline int blkdev_issue_flush(block_device_s *bdev)
+	// static inline int blkdev_issue_flush(struct block_device *bdev)
 	// {
 	// 	return 0;
 	// }
@@ -843,24 +828,24 @@
 
 	// extern void blk_io_schedule(void);
 
-	// extern int blkdev_issue_write_same(block_device_s *bdev, sector_t sector,
+	// extern int blkdev_issue_write_same(struct block_device *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, struct page *page);
 
 	// #define BLKDEV_DISCARD_SECURE	(1 << 0)	/* issue a secure erase */
 
-	// extern int blkdev_issue_discard(block_device_s *bdev, sector_t sector,
+	// extern int blkdev_issue_discard(struct block_device *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, unsigned long flags);
-	// extern int __blkdev_issue_discard(block_device_s *bdev, sector_t sector,
+	// extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, int flags,
 	// 		struct bio **biop);
 
 	// #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
 	// #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
 
-	// extern int __blkdev_issue_zeroout(block_device_s *bdev, sector_t sector,
+	// extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
 	// 		unsigned flags);
-	// extern int blkdev_issue_zeroout(block_device_s *bdev, sector_t sector,
+	// extern int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, unsigned flags);
 
 	// static inline int sb_issue_discard(struct super_block *sb, sector_t block,
@@ -884,7 +869,7 @@
 	// 					gfp_mask, 0);
 	// }
 
-	// static inline bool bdev_is_partition(block_device_s *bdev)
+	// static inline bool bdev_is_partition(struct block_device *bdev)
 	// {
 	// 	return bdev->bd_partno;
 	// }
@@ -897,47 +882,47 @@
 	// 	BLK_SEG_BOUNDARY_MASK	= 0xFFFFFFFFUL,
 	// };
 
-	// static inline unsigned long queue_segment_boundary(const request_queue_s *q)
+	// static inline unsigned long queue_segment_boundary(const struct request_queue *q)
 	// {
 	// 	return q->limits.seg_boundary_mask;
 	// }
 
-	// static inline unsigned long queue_virt_boundary(const request_queue_s *q)
+	// static inline unsigned long queue_virt_boundary(const struct request_queue *q)
 	// {
 	// 	return q->limits.virt_boundary_mask;
 	// }
 
-	// static inline unsigned int queue_max_sectors(const request_queue_s *q)
+	// static inline unsigned int queue_max_sectors(const struct request_queue *q)
 	// {
 	// 	return q->limits.max_sectors;
 	// }
 
-	// static inline unsigned int queue_max_bytes(request_queue_s *q)
+	// static inline unsigned int queue_max_bytes(struct request_queue *q)
 	// {
 	// 	return min_t(unsigned int, queue_max_sectors(q), INT_MAX >> 9) << 9;
 	// }
 
-	// static inline unsigned int queue_max_hw_sectors(const request_queue_s *q)
+	// static inline unsigned int queue_max_hw_sectors(const struct request_queue *q)
 	// {
 	// 	return q->limits.max_hw_sectors;
 	// }
 
-	// static inline unsigned short queue_max_segments(const request_queue_s *q)
+	// static inline unsigned short queue_max_segments(const struct request_queue *q)
 	// {
 	// 	return q->limits.max_segments;
 	// }
 
-	// static inline unsigned short queue_max_discard_segments(const request_queue_s *q)
+	// static inline unsigned short queue_max_discard_segments(const struct request_queue *q)
 	// {
 	// 	return q->limits.max_discard_segments;
 	// }
 
-	// static inline unsigned int queue_max_segment_size(const request_queue_s *q)
+	// static inline unsigned int queue_max_segment_size(const struct request_queue *q)
 	// {
 	// 	return q->limits.max_segment_size;
 	// }
 
-	// static inline unsigned int queue_max_zone_append_sectors(const request_queue_s *q)
+	// static inline unsigned int queue_max_zone_append_sectors(const struct request_queue *q)
 	// {
 
 	// 	const struct queue_limits *l = &q->limits;
@@ -945,7 +930,7 @@
 	// 	return min(l->max_zone_append_sectors, l->max_sectors);
 	// }
 
-	// static inline unsigned queue_logical_block_size(const request_queue_s *q)
+	// static inline unsigned queue_logical_block_size(const struct request_queue *q)
 	// {
 	// 	int retval = 512;
 
@@ -955,54 +940,54 @@
 	// 	return retval;
 	// }
 
-	// static inline unsigned int bdev_logical_block_size(block_device_s *bdev)
+	// static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
 	// {
 	// 	return queue_logical_block_size(bdev_get_queue(bdev));
 	// }
 
-	// static inline unsigned int queue_physical_block_size(const request_queue_s *q)
+	// static inline unsigned int queue_physical_block_size(const struct request_queue *q)
 	// {
 	// 	return q->limits.physical_block_size;
 	// }
 
-	// static inline unsigned int bdev_physical_block_size(block_device_s *bdev)
+	// static inline unsigned int bdev_physical_block_size(struct block_device *bdev)
 	// {
 	// 	return queue_physical_block_size(bdev_get_queue(bdev));
 	// }
 
-	// static inline unsigned int queue_io_min(const request_queue_s *q)
+	// static inline unsigned int queue_io_min(const struct request_queue *q)
 	// {
 	// 	return q->limits.io_min;
 	// }
 
-	// static inline int bdev_io_min(block_device_s *bdev)
+	// static inline int bdev_io_min(struct block_device *bdev)
 	// {
 	// 	return queue_io_min(bdev_get_queue(bdev));
 	// }
 
-	// static inline unsigned int queue_io_opt(const request_queue_s *q)
+	// static inline unsigned int queue_io_opt(const struct request_queue *q)
 	// {
 	// 	return q->limits.io_opt;
 	// }
 
-	// static inline int bdev_io_opt(block_device_s *bdev)
+	// static inline int bdev_io_opt(struct block_device *bdev)
 	// {
 	// 	return queue_io_opt(bdev_get_queue(bdev));
 	// }
 
 	// static inline unsigned int
-	// queue_zone_write_granularity(const request_queue_s *q)
+	// queue_zone_write_granularity(const struct request_queue *q)
 	// {
 	// 	return q->limits.zone_write_granularity;
 	// }
 
 	// static inline unsigned int
-	// bdev_zone_write_granularity(block_device_s *bdev)
+	// bdev_zone_write_granularity(struct block_device *bdev)
 	// {
 	// 	return queue_zone_write_granularity(bdev_get_queue(bdev));
 	// }
 
-	// static inline int queue_alignment_offset(const request_queue_s *q)
+	// static inline int queue_alignment_offset(const struct request_queue *q)
 	// {
 	// 	if (q->limits.misaligned)
 	// 		return -1;
@@ -1019,9 +1004,9 @@
 	// 	return (granularity + lim->alignment_offset - alignment) % granularity;
 	// }
 
-	// static inline int bdev_alignment_offset(block_device_s *bdev)
+	// static inline int bdev_alignment_offset(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q->limits.misaligned)
 	// 		return -1;
@@ -1031,7 +1016,7 @@
 	// 	return q->limits.alignment_offset;
 	// }
 
-	// static inline int queue_discard_alignment(const request_queue_s *q)
+	// static inline int queue_discard_alignment(const struct request_queue *q)
 	// {
 	// 	if (q->limits.discard_misaligned)
 	// 		return -1;
@@ -1062,9 +1047,9 @@
 	// 	return offset << SECTOR_SHIFT;
 	// }
 
-	// static inline int bdev_discard_alignment(block_device_s *bdev)
+	// static inline int bdev_discard_alignment(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (bdev_is_partition(bdev))
 	// 		return queue_limit_discard_alignment(&q->limits,
@@ -1072,9 +1057,9 @@
 	// 	return q->limits.discard_alignment;
 	// }
 
-	// static inline unsigned int bdev_write_same(block_device_s *bdev)
+	// static inline unsigned int bdev_write_same(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return q->limits.max_write_same_sectors;
@@ -1082,9 +1067,9 @@
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_write_zeroes_sectors(block_device_s *bdev)
+	// static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return q->limits.max_write_zeroes_sectors;
@@ -1092,9 +1077,9 @@
 	// 	return 0;
 	// }
 
-	// static inline enum blk_zoned_model bdev_zoned_model(block_device_s *bdev)
+	// static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return blk_queue_zoned_model(q);
@@ -1102,9 +1087,9 @@
 	// 	return BLK_ZONED_NONE;
 	// }
 
-	// static inline bool bdev_is_zoned(block_device_s *bdev)
+	// static inline bool bdev_is_zoned(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return blk_queue_is_zoned(q);
@@ -1112,39 +1097,39 @@
 	// 	return false;
 	// }
 
-	// static inline sector_t bdev_zone_sectors(block_device_s *bdev)
+	// static inline sector_t bdev_zone_sectors(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return blk_queue_zone_sectors(q);
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_max_open_zones(block_device_s *bdev)
+	// static inline unsigned int bdev_max_open_zones(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return queue_max_open_zones(q);
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_max_active_zones(block_device_s *bdev)
+	// static inline unsigned int bdev_max_active_zones(struct block_device *bdev)
 	// {
-	// 	request_queue_s *q = bdev_get_queue(bdev);
+	// 	struct request_queue *q = bdev_get_queue(bdev);
 
 	// 	if (q)
 	// 		return queue_max_active_zones(q);
 	// 	return 0;
 	// }
 
-	// static inline int queue_dma_alignment(const request_queue_s *q)
+	// static inline int queue_dma_alignment(const struct request_queue *q)
 	// {
 	// 	return q ? q->dma_alignment : 511;
 	// }
 
-	// static inline int blk_rq_aligned(request_queue_s *q, unsigned long addr,
+	// static inline int blk_rq_aligned(struct request_queue *q, unsigned long addr,
 	// 				unsigned int len)
 	// {
 	// 	unsigned int alignment = queue_dma_alignment(q) | q->dma_pad_mask;
@@ -1162,7 +1147,7 @@
 	// 	return bits;
 	// }
 
-	// static inline unsigned int block_size(block_device_s *bdev)
+	// static inline unsigned int block_size(struct block_device *bdev)
 	// {
 	// 	return 1 << bdev->bd_inode->i_blkbits;
 	// }
@@ -1178,12 +1163,12 @@
 	// #ifdef CONFIG_BLK_INLINE_ENCRYPTION
 
 	// bool blk_crypto_register(struct blk_crypto_profile *profile,
-	// 			request_queue_s *q);
+	// 			struct request_queue *q);
 
 	// #else /* CONFIG_BLK_INLINE_ENCRYPTION */
 
 	// static inline bool blk_crypto_register(struct blk_crypto_profile *profile,
-	// 					request_queue_s *q)
+	// 					struct request_queue *q)
 	// {
 	// 	return true;
 	// }
@@ -1199,25 +1184,25 @@
 
 	// #define NFL4_UFLG_MASK			0x0000003F
 
-	// block_device_s_operations {
+	// struct block_device_operations {
 	// 	void (*submit_bio)(struct bio *bio);
-	// 	int (*open) (block_device_s *, fmode_t);
-	// 	void (*release) (gendisk_s *, fmode_t);
-	// 	int (*rw_page)(block_device_s *, sector_t, struct page *, unsigned int);
-	// 	int (*ioctl) (block_device_s *, fmode_t, unsigned, unsigned long);
-	// 	int (*compat_ioctl) (block_device_s *, fmode_t, unsigned, unsigned long);
-	// 	unsigned int (*check_events) (gendisk_s *disk,
+	// 	int (*open) (struct block_device *, fmode_t);
+	// 	void (*release) (struct gendisk *, fmode_t);
+	// 	int (*rw_page)(struct block_device *, sector_t, struct page *, unsigned int);
+	// 	int (*ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+	// 	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+	// 	unsigned int (*check_events) (struct gendisk *disk,
 	// 					unsigned int clearing);
-	// 	void (*unlock_native_capacity) (gendisk_s *);
-	// 	int (*getgeo)(block_device_s *, struct hd_geometry *);
-	// 	int (*set_read_only)(block_device_s *bdev, bool ro);
+	// 	void (*unlock_native_capacity) (struct gendisk *);
+	// 	int (*getgeo)(struct block_device *, struct hd_geometry *);
+	// 	int (*set_read_only)(struct block_device *bdev, bool ro);
 	// 	/* this callback is with swap_lock and sometimes page table lock held */
-	// 	void (*swap_slot_free_notify) (block_device_s *, unsigned long);
-	// 	int (*report_zones)(gendisk_s *, sector_t sector,
+	// 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+	// 	int (*report_zones)(struct gendisk *, sector_t sector,
 	// 			unsigned int nr_zones, report_zones_cb cb, void *data);
-	// 	char *(*devnode)(gendisk_s *disk, umode_t *mode);
+	// 	char *(*devnode)(struct gendisk *disk, umode_t *mode);
 	// 	/* returns the length of the identifier or a negative errno: */
-	// 	int (*get_unique_id)(gendisk_s *disk, u8 id[16],
+	// 	int (*get_unique_id)(struct gendisk *disk, u8 id[16],
 	// 			enum blk_unique_id id_type);
 	// 	struct module *owner;
 	// 	const struct pr_ops *pr_ops;
@@ -1227,18 +1212,18 @@
 	// 	* Needed by Android devices, used by GPT scanner and MMC blk
 	// 	* driver.
 	// 	*/
-	// 	int (*alternative_gpt_sector)(gendisk_s *disk, sector_t *sector);
+	// 	int (*alternative_gpt_sector)(struct gendisk *disk, sector_t *sector);
 	// };
 
 	// #ifdef CONFIG_COMPAT
-	// extern int blkdev_compat_ptr_ioctl(block_device_s *, fmode_t,
+	// extern int blkdev_compat_ptr_ioctl(struct block_device *, fmode_t,
 	// 					unsigned int, unsigned long);
 	// #else
 	// #define blkdev_compat_ptr_ioctl NULL
 	// #endif
 
-	// extern int bdev_read_page(block_device_s *, sector_t, struct page *);
-	// extern int bdev_write_page(block_device_s *, sector_t, struct page *,
+	// extern int bdev_read_page(struct block_device *, sector_t, struct page *);
+	// extern int bdev_write_page(struct block_device *, sector_t, struct page *,
 	// 						struct writeback_control *);
 
 	// static inline void blk_wake_io_task(struct task_struct *waiter)
@@ -1254,15 +1239,15 @@
 	// 		wake_up_process(waiter);
 	// }
 
-	// unsigned long disk_start_io_acct(gendisk_s *disk, unsigned int sectors,
+	// unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,
 	// 		unsigned int op);
-	// void disk_end_io_acct(gendisk_s *disk, unsigned int op,
+	// void disk_end_io_acct(struct gendisk *disk, unsigned int op,
 	// 		unsigned long start_time);
 
 	// void bio_start_io_acct_time(struct bio *bio, unsigned long start_time);
 	// unsigned long bio_start_io_acct(struct bio *bio);
 	// void bio_end_io_acct_remapped(struct bio *bio, unsigned long start_time,
-	// 		block_device_s *orig_bdev);
+	// 		struct block_device *orig_bdev);
 
 	// /**
 	//  * bio_end_io_acct - end I/O accounting for bio based drivers
@@ -1274,10 +1259,10 @@
 	// 	return bio_end_io_acct_remapped(bio, start_time, bio->bi_bdev);
 	// }
 
-	// int bdev_read_only(block_device_s *bdev);
-	// int set_blocksize(block_device_s *bdev, int size);
+	// int bdev_read_only(struct block_device *bdev);
+	// int set_blocksize(struct block_device *bdev, int size);
 
-	// const char *bdevname(block_device_s *bdev, char *buffer);
+	// const char *bdevname(struct block_device *bdev, char *buffer);
 	// int lookup_bdev(const char *pathname, dev_t *dev);
 
 	// void blkdev_show(struct seq_file *seqf, off_t offset);
@@ -1290,37 +1275,37 @@
 	// #define BLKDEV_MAJOR_MAX	0
 	// #endif
 
-	// block_device_s *blkdev_get_by_path(const char *path, fmode_t mode,
+	// struct block_device *blkdev_get_by_path(const char *path, fmode_t mode,
 	// 		void *holder);
-	// block_device_s *blkdev_get_by_dev(dev_t dev, fmode_t mode, void *holder);
-	// int bd_prepare_to_claim(block_device_s *bdev, void *holder);
-	// void bd_abort_claiming(block_device_s *bdev, void *holder);
-	// void blkdev_put(block_device_s *bdev, fmode_t mode);
+	// struct block_device *blkdev_get_by_dev(dev_t dev, fmode_t mode, void *holder);
+	// int bd_prepare_to_claim(struct block_device *bdev, void *holder);
+	// void bd_abort_claiming(struct block_device *bdev, void *holder);
+	// void blkdev_put(struct block_device *bdev, fmode_t mode);
 
 	// /* just for blk-cgroup, don't use elsewhere */
-	// block_device_s *blkdev_get_no_open(dev_t dev);
-	// void blkdev_put_no_open(block_device_s *bdev);
+	// struct block_device *blkdev_get_no_open(dev_t dev);
+	// void blkdev_put_no_open(struct block_device *bdev);
 
 	block_device_s *bdev_alloc(gendisk_s *disk, u8 partno);
-	void bdev_add(block_device_s *bdev, dev_t dev);
-	block_device_s *I_BDEV(inode_s *inode);
-	// int truncate_bdev_range(block_device_s *bdev, fmode_t mode, loff_t lstart,
+	// void bdev_add(struct block_device *bdev, dev_t dev);
+	// struct block_device *I_BDEV(struct inode *inode);
+	// int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,
 	// 		loff_t lend);
 
 	// #ifdef CONFIG_BLOCK
-	// void invalidate_bdev(block_device_s *bdev);
-	// int sync_blockdev(block_device_s *bdev);
-	// int sync_blockdev_nowait(block_device_s *bdev);
+	// void invalidate_bdev(struct block_device *bdev);
+	// int sync_blockdev(struct block_device *bdev);
+	// int sync_blockdev_nowait(struct block_device *bdev);
 	// void sync_bdevs(bool wait);
 	// #else
-	// static inline void invalidate_bdev(block_device_s *bdev)
+	// static inline void invalidate_bdev(struct block_device *bdev)
 	// {
 	// }
-	// static inline int sync_blockdev(block_device_s *bdev)
+	// static inline int sync_blockdev(struct block_device *bdev)
 	// {
 	// 	return 0;
 	// }
-	// static inline int sync_blockdev_nowait(block_device_s *bdev)
+	// static inline int sync_blockdev_nowait(struct block_device *bdev)
 	// {
 	// 	return 0;
 	// }
@@ -1328,10 +1313,10 @@
 	// {
 	// }
 	// #endif
-	// int fsync_bdev(block_device_s *bdev);
+	// int fsync_bdev(struct block_device *bdev);
 
-	// int freeze_bdev(block_device_s *bdev);
-	// int thaw_bdev(block_device_s *bdev);
+	// int freeze_bdev(struct block_device *bdev);
+	// int thaw_bdev(struct block_device *bdev);
 
 	// struct io_comp_batch {
 	// 	struct request *req_list;

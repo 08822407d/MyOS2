@@ -4,7 +4,7 @@
  *	Library for filesystems writers.
  */
 
-#include <linux/kernel/blkdev.h>
+#include <linux/block/blkdev.h>
 // #include <linux/export.h>
 // #include <linux/pagemap.h>
 // #include <linux/slab.h>
@@ -16,7 +16,7 @@
 #include <linux/fs/namei.h>
 // #include <linux/exportfs.h>
 // #include <linux/writeback.h>
-#include <linux/kernel/buffer_head.h> /* sync_mapping_buffers */
+#include <linux/block/buffer_head.h> /* sync_mapping_buffers */
 #include <linux/fs/fs_context.h>
 // #include <linux/pseudo_fs.h>
 // #include <linux/fsnotify.h>

@@ -15,10 +15,10 @@
 #define DISK_IDX	1
 
 struct Disk_Identify_Info disk_id;
-
 bdev_req_queue_T IDE_req_queue;
-
 char read_test[512];
+
+extern int sd_probe();
 
 /*==============================================================================================*
  *																								*
@@ -353,6 +353,8 @@ void init_disk()
 	outb(PORT_DISK0_ALT_STA_CTL, 0);
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
+
+	sd_probe();
 }
 
 void disk_exit()

@@ -12,6 +12,7 @@ add_subdirectory(mm)
 add_subdirectory(fs)
 add_subdirectory(block)
 add_subdirectory(device)
+add_subdirectory(drivers)
 
 add_subdirectory(klib)
 add_subdirectory(test)

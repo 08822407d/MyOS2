@@ -13,9 +13,12 @@
 #include <linux/kernel/types.h>
 // #include <linux/kdev_t.h>
 // #include <linux/uuid.h>
-#include <linux/kernel/blk_types.h>
+#include <linux/block/blk_types.h>
 // #include <linux/device.h>
 // #include <linux/xarray.h>
+
+
+#include <linux/block/block_s_defs.h>
 
 	// extern const struct device_type disk_type;
 	// extern struct device_type part_type;
@@ -94,28 +97,28 @@
 
 		char disk_name[DISK_NAME_LEN];	/* name of major driver */
 
-		unsigned short events;		/* supported events */
-		unsigned short event_flags;	/* flags related to event processing */
+		// unsigned short events;		/* supported events */
+		// unsigned short event_flags;	/* flags related to event processing */
 
 		// struct xarray part_tbl;
 		block_device_s *part0;
 
 		// const block_device_operations_s *fops;
-		// request_queue_s *queue;
+		request_queue_s *queue;
 		void *private_data;
 
-		int flags;
-		unsigned long state;
-	#define GD_NEED_PART_SCAN		0
-	#define GD_READ_ONLY			1
-	#define GD_DEAD					2
-	#define GD_NATIVE_CAPACITY		3
+		// int flags;
+		// unsigned long state;
+	// #define GD_NEED_PART_SCAN		0
+	// #define GD_READ_ONLY			1
+	// #define GD_DEAD					2
+	// #define GD_NATIVE_CAPACITY		3
 
-	// 	struct mutex open_mutex;	/* open/close mutex */
-	// 	unsigned open_partitions;	/* number of open partitions */
+		// struct mutex open_mutex;	/* open/close mutex */
+		// unsigned open_partitions;	/* number of open partitions */
 
-	// 	struct backing_dev_info	*bdi;
-	// 	struct kobject *slave_dir;
+		// struct backing_dev_info	*bdi;
+		// struct kobject *slave_dir;
 	// #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
 	// 	struct list_head slave_bdevs;
 	// #endif
@@ -128,10 +131,10 @@
 	// #if IS_ENABLED(CONFIG_CDROM)
 	// 	struct cdrom_device_info *cdi;
 	// #endif
-	// 	int node_id;
-	// 	struct badblocks *bb;
-	// 	struct lockdep_map lockdep_map;
-	// 	__u64 diskseq;
+		// int node_id;
+		// struct badblocks *bb;
+		// struct lockdep_map lockdep_map;
+		// __u64 diskseq;
 	} gendisk_s;
 
 	// static inline bool disk_live(gendisk_s *disk)
@@ -224,8 +227,7 @@
 	// int bdev_disk_changed(gendisk_s *disk, bool invalidate);
 	// void blk_drop_partitions(gendisk_s *disk);
 
-	// gendisk_s *__alloc_disk_node(request_queue_s *q, int node_id,
-	// 		struct lock_class_key *lkclass);
+	gendisk_s *__alloc_disk_node(request_queue_s *q);
 	// extern void put_disk(gendisk_s *disk);
 	// gendisk_s *__blk_alloc_disk(int node, struct lock_class_key *lkclass);
 

@@ -1,4 +1,4 @@
-#include <linux/kernel/buffer_head.h>
+#include <linux/block/buffer_head.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/err.h>
 

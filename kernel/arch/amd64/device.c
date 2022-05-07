@@ -1,5 +1,5 @@
 #include <linux/kernel/stddef.h>
-#include <linux/kernel/blk_types.h>
+#include <linux/block/blk_types.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/dcache.h>
 

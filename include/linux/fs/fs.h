@@ -46,6 +46,7 @@
 #include <uapi/fs.h>
 
 
+#include <linux/block/block_s_defs.h>
 #include <linux/kernel/statfs.h>
 
 	extern void inode_init(void);

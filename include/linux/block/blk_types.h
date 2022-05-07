@@ -10,8 +10,7 @@
 
 #include <linux/kernel/types.h>
 #include <linux/fs/vfs_s_defs.h>
-
-#include <stdbool.h>
+#include <linux/block/block_s_defs.h>
 
 	// struct bio_set;
 	// struct bio;
@@ -44,9 +43,10 @@
 	// 	struct list_head	bd_holder_disks;
 	// #endif
 	// 	struct kobject		*bd_holder_dir;
-		u8			bd_partno;
+		u8				bd_partno;
 	// 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
-	// 	gendisk_s 		*bd_disk;
+		gendisk_s 		*bd_disk;
+		request_queue_s	*bd_queue;
 	// 	backing_dev_info_s	*bd_bdi;
 
 	// 	/* The counter of freeze processes */
