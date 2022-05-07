@@ -1,9 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  Copyright (C) 1991, 1992  Linus Torvalds
+ *  Copyright (C) 2001  Andrea Arcangeli <andrea@suse.de> SuSE
+ *  Copyright (C) 2016 - 2020 Christoph Hellwig
+ */
+
+#include <linux/init/init.h>
+#include <linux/mm/mm.h>
+// #include <linux/slab.h>
+// #include <linux/kmod.h>
+// #include <linux/major.h>
+// #include <linux/device_cgroup.h>
 #include <linux/block/blkdev.h>
+// #include <linux/blk-integrity.h>
+// #include <linux/backing-dev.h>
+// #include <linux/module.h>
+// #include <linux/blkpg.h>
+// #include <linux/magic.h>
+#include <linux/block/buffer_head.h>
+// #include <linux/swap.h>
+// #include <linux/writeback.h>
+// #include <linux/mount.h>
+#include <linux/fs/pseudo_fs.h>
+// #include <linux/uio.h>
+#include <linux/fs/namei.h>
+// #include <linux/part_stat.h>
+// #include <linux/uaccess.h>
+// #include "../fs/internal.h"
+// #include "blk.h"
+
+
 #include <linux/fs/fs.h>
-
 #include <uapi/stat.h>
-
+#include <uapi/magic.h>
 #include <include/proto.h>
+#include <include/printk.h>
 
 typedef struct bdev_inode {
 	block_device_s bdev;
@@ -20,19 +51,53 @@ block_device_s *I_BDEV(inode_s *inode)
 	return &BDEV_I(inode)->bdev;
 }
 
-// static int bd_init_fs_context(fs_context_s *fc)
-// {
-// 	struct pseudo_fs_context *ctx = init_pseudo(fc, BDEVFS_MAGIC);
-// 	if (!ctx)
-// 		return -ENOMEM;
-// 	fc->s_iflags |= SB_I_CGROUPWB;
-// 	ctx->ops = &bdev_sops;
-// 	return 0;
-// }
+static inode_s *bdev_alloc_inode(super_block_s *sb)
+{
+	bdev_inode_s *ei = kmalloc(sizeof(bdev_inode_s));
+
+	if (!ei)
+		return NULL;
+	memset(&ei->bdev, 0, sizeof(ei->bdev));
+	return &ei->vfs_inode;
+}
+
+static void bdev_free_inode(inode_s *inode)
+{
+	block_device_s *bdev = I_BDEV(inode);
+
+	// if (!bdev_is_partition(bdev)) {
+	// 	if (bdev->bd_disk && bdev->bd_disk->bdi)
+	// 		bdi_put(bdev->bd_disk->bdi);
+	// 	kfree(bdev->bd_disk);
+	// }
+
+	// if (MAJOR(bdev->bd_dev) == BLOCK_EXT_MAJOR)
+	// 	blk_free_ext_minor(MINOR(bdev->bd_dev));
+
+	kfree(BDEV_I(inode));
+}
+
+static const super_ops_s bdev_sops = {
+	// .statfs			= simple_statfs,
+	.alloc_inode	= bdev_alloc_inode,
+	.free_inode		= bdev_free_inode,
+	// .drop_inode		= generic_delete_inode,
+	// .evict_inode	= bdev_evict_inode,
+};
+
+static int bd_init_fs_context(fs_ctxt_s *fc)
+{
+	pseudo_fs_ctxt_s *ctx = init_pseudo(fc, BDEVFS_MAGIC);
+	if (!ctx)
+		return -ENOMEM;
+	fc->s_iflags |= SB_I_CGROUPWB;
+	ctx->ops = &bdev_sops;
+	return 0;
+}
 
 static fs_type_s bd_type = {
 	.name				= "bdev",
-	// .init_fs_context	= bd_init_fs_context,
+	.init_fs_context	= bd_init_fs_context,
 	.kill_sb			= kill_anon_super,
 };
 
@@ -43,16 +108,12 @@ void bdev_cache_init(void)
 	int err;
 	static vfsmount_s *bd_mnt;
 
-	// bdev_cachep = kmem_cache_create("bdev_cache", sizeof(struct bdev_inode),
-	// 		0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
-	// 			SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC),
-	// 		init_once);
 	err = register_filesystem(&bd_type);
-	// if (err)
-	// 	panic("Cannot register bdev pseudo-fs");
+	if (err)
+		color_printk(RED, BLACK, "Cannot register bdev pseudo-fs");
 	bd_mnt = kern_mount(&bd_type);
-	// if (IS_ERR(bd_mnt))
-	// 	panic("Cannot create bdev pseudo-fs");
+	if (IS_ERR(bd_mnt))
+		color_printk(RED, BLACK, "Cannot create bdev pseudo-fs");
 	blockdev_superblock = bd_mnt->mnt_sb;   /* For writeback */
 }
 

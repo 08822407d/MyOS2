@@ -35,6 +35,7 @@ unsigned long init_vfs()
 {
 	mnt_init();
 	do_name();
+	bdev_cache_init();
 
 	int test = kparam.init_flags.vfs;
 	kparam.init_flags.vfs = 0;

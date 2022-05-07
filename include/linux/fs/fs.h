@@ -3015,7 +3015,7 @@
 
 	// extern loff_t vfs_llseek(file_s *file, loff_t offset, int whence);
 
-	// extern int inode_init_always(super_block_s *, inode_s *);
+	extern int inode_init_always(super_block_s *, inode_s *);
 	extern void inode_init_once(inode_s *);
 	// extern void address_space_init_once(addr_space_s *mapping);
 	// extern inode_s * igrab(inode_s *);

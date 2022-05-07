@@ -5,11 +5,11 @@
  * Written by David Howells (dhowells@redhat.com)
  */
 
-	// /*
-	// * block/bdev.c
-	// */
+	/*
+	* block/bdev.c
+	*/
 	// #ifdef CONFIG_BLOCK
-	// extern void __init bdev_cache_init(void);
+	extern void bdev_cache_init(void);
 
 	// void emergency_thaw_bdev(struct super_block *sb);
 	// #else

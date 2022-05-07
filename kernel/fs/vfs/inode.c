@@ -57,6 +57,62 @@
  *   inode_hash_lock
  */
 
+static int no_open(inode_s *inode, file_s *file)
+{
+	return -ENXIO;
+}
+
+/**
+ * inode_init_always - perform inode structure initialisation
+ * @sb: superblock inode belongs to
+ * @inode: inode to initialise
+ *
+ * These are initializations that need to be done on every inode
+ * allocation as the fields are not initialised by slab allocation.
+ */
+int inode_init_always(super_block_s *sb, inode_s *inode)
+{
+	static const inode_ops_s empty_iops;
+	static const file_ops_s no_open_fops = {.open = no_open};
+	// struct address_space *const mapping = &inode->i_data;
+
+	inode->i_sb = sb;
+	// inode->i_blkbits = sb->s_blocksize_bits;
+	inode->i_flags = 0;
+	inode->i_op = &empty_iops;
+	inode->i_fop = &no_open_fops;
+	// inode->i_ino = 0;
+	inode->i_opflags = 0;
+	inode->i_size = 0;
+	inode->i_blocks = 0;
+	// inode->i_bytes = 0;
+	// inode->i_pipe = NULL;
+	// inode->i_cdev = NULL;
+	inode->i_rdev = 0;
+
+	// if (security_inode_alloc(inode))
+	// 	goto out;
+
+// 	mapping->a_ops = &empty_aops;
+// 	mapping->host = inode;
+// 	mapping->flags = 0;
+// 	mapping->wb_err = 0;
+// 	atomic_set(&mapping->i_mmap_writable, 0);
+// #ifdef CONFIG_READ_ONLY_THP_FOR_FS
+// 	atomic_set(&mapping->nr_thps, 0);
+// #endif
+// 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+// 	mapping->private_data = NULL;
+// 	mapping->writeback_index = 0;
+	inode->i_private = NULL;
+// 	inode->i_mapping = mapping;
+// 	INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
+
+	return 0;
+out:
+	return -ENOMEM;
+}
+
 static inode_s *alloc_inode(super_block_s *sb)
 {
 	const super_ops_s *ops = sb->s_op;
@@ -70,16 +126,15 @@ static inode_s *alloc_inode(super_block_s *sb)
 	if (inode == NULL)
 		return NULL;
 
-	// if (unlikely(inode_init_always(sb, inode))) {
-	// 	if (ops->destroy_inode) {
-	// 		ops->destroy_inode(inode);
-	// 		if (!ops->free_inode)
-	// 			return NULL;
-	// 	}
-	// 	inode->free_inode = ops->free_inode;
-	// 	i_callback(&inode->i_rcu);
-	// 	return NULL;
-	// }
+	if (inode_init_always(sb, inode)) {
+		if (ops->destroy_inode) {
+			ops->destroy_inode(inode);
+			if (!ops->free_inode)
+				return NULL;
+		}
+		// inode->free_inode = ops->free_inode;
+		return NULL;
+	}
 
 	return inode;
 }
