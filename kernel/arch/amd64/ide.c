@@ -14,7 +14,7 @@
 #define IDE_IDX		0
 #define DISK_IDX	1
 
-struct Disk_Identify_Info disk_id;
+struct Identify_Device_data disk_id;
 bdev_req_queue_T IDE_req_queue;
 char read_test[512];
 

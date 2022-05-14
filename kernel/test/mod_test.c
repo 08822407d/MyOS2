@@ -118,7 +118,7 @@ unsigned long ide_read_test(unsigned long arg)
 	memset(disk_test, 0, 512);
 	memset(disk_test, 0, 512 * 3 + 1);
 
-	struct Disk_Identify_Info ide_id;
+	struct Identify_Device_data ide_id;
 	IDE_device_operation.ioctl(GET_IDENTIFY_DISK_CMD, (long)&ide_id);
 
 	// IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);

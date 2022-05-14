@@ -70,10 +70,12 @@ void idle(size_t cpu_idx)
 	unmap_kernel_lowhalf();
 	refresh_arch_page();
 
-	sti();
-
 	if (cpu_idx == 0)
 		kernel_thread(kernel_init, 0, 0);
+	
+	per_cpudata_s *	cpudata_p = curr_cpu;
+	jiffies = cpudata_p->time_slice + cpudata_p->last_jiffies;
+	schedule();
 
 	while (1)
 		hlt();
@@ -107,6 +109,8 @@ unsigned long kernel_init(unsigned long arg)
 {
 	do_basic_setup();
 	do_name();
+
+	sti();
 
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	switch_to_root_disk();
