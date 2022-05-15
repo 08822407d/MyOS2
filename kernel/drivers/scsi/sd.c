@@ -96,7 +96,7 @@
  *	Also think about sd_probe() and sd_remove() running coincidentally.
  **/
 // static int sd_probe(struct device *dev)
-int sd_probe()
+int ata_probe()
 {
 	gendisk_s *gd;
 	request_queue_s *rq;

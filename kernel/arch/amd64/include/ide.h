@@ -21,27 +21,27 @@
 
 #include "mutex.h"
 
-	#define PORT_DISK0_DATA			0x1f0
-	#define	PORT_DISK0_ERR_FEATURE	0x1f1
-	#define	PORT_DISK0_SECTOR_CNT	0x1f2
-	#define	PORT_DISK0_SECTOR_LOW	0x1f3
-	#define	PORT_DISK0_SECTOR_MID	0x1f4
-	#define	PORT_DISK0_SECTOR_HIGH	0x1f5
-	#define	PORT_DISK0_DEVICE		0x1f6
+	#define MASTER					0x0
+	#define SLAVE					0x1
+	#define IDE_CTRL_BASE(c)		(0x1F0 - (c) * 0x80)
+
+	#define IDE_PIO_DATA(p)			(IDE_CTRL_BASE(p) + 0)
+	#define IDE_PIO_ERR_STAT(p)		(IDE_CTRL_BASE(p) + 1)
+	#define IDE_PIO_LBA_COUNT(p)	(IDE_CTRL_BASE(p) + 2)
+	#define IDE_PIO_LBA_LOW(p)		(IDE_CTRL_BASE(p) + 3)
+	#define IDE_PIO_LBA_MID(p)		(IDE_CTRL_BASE(p) + 4)
+	#define IDE_PIO_LBA_HIGH(p)		(IDE_CTRL_BASE(p) + 5)
+	#define IDE_PIO_DEV_OPT(p)		(IDE_CTRL_BASE(p) + 6)
+
+	// #define	PORT_DISK0_DEVICE		0x1f6
 	#define	PORT_DISK0_STATUS_CMD	0x1f7
 
 	#define	PORT_DISK0_ALT_STA_CTL	0x3f6
 
-	#define PORT_DISK1_DATA			0x170
-	#define	PORT_DISK1_ERR_FEATURE	0x171
-	#define	PORT_DISK1_SECTOR_CNT	0x172
-	#define	PORT_DISK1_SECTOR_LOW	0x173
-	#define	PORT_DISK1_SECTOR_MID	0x174
-	#define	PORT_DISK1_SECTOR_HIGH	0x175
-	#define	PORT_DISK1_DEVICE		0x176
-	#define	PORT_DISK1_STATUS_CMD	0x177
+	// #define	PORT_DISK1_DEVICE		0x176
+	// #define	PORT_DISK1_STATUS_CMD	0x177
 
-	#define	PORT_DISK1_ALT_STA_CTL	0x376
+	// #define	PORT_DISK1_ALT_STA_CTL	0x376
 
 	#define DISK_MAST_IDX			0x0
 	#define DISK_SLAV_IDX			0x1
@@ -57,7 +57,7 @@
 	#define GET_IDENTIFY_DISK_CMD	0xEC
 
 // the definations should be in ATA-8 spec "Table 45 — IDENTIFY DEVICE data"
-	struct Identify_Device_data
+	typedef struct Identify_Device_data
 	{
 		//	0		General configuration (see 7.12.7.2)
 		//			   15	0 = ATA device
@@ -669,11 +669,6 @@
 		//		15:8	Checksum
 		//		7:0	Checksum Validity Indicator
 		unsigned short Integrity_word;
-	} __attribute__((packed));
-
-	unsigned char IDE_read_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx);
-	void IDE_write_LBA28(unsigned long lba, unsigned short count, unsigned drv_idx);
-	unsigned char IDE_read_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx);
-	void IDE_write_LBA48(unsigned long lba, unsigned short count, unsigned drv_idx);
+	} __attribute__((packed)) IDE_id_dev_data_s;
 
 #endif /* _DISK_H_ */
