@@ -97,7 +97,7 @@ long cmd_out(unsigned controller, unsigned disk)
 	{
 		case ATA_WRITE_CMD:	
 			ATA_write_LBA28(controller, disk, node->LBA, node->count);
-			outsw(IDE_PIO_DATA(MASTER), (uint16_t *)node->buffer, 256);
+			outsw(IDE_PIO_DATA(controller), (uint16_t *)node->buffer, 256);
 			break;
 
 		case ATA_READ_CMD:
@@ -129,8 +129,8 @@ void end_request(blkbuf_node_s * node)
 	{
 		node->wq.task->state = PS_RUNNING;
 		wakeup_task(node->wq.task);
+		curr_tsk->flags |= PF_NEED_SCHEDULE;
 	}
-	curr_tsk->flags |= PF_NEED_SCHEDULE;
 
 	kfree(node);
 	IDE_req_queue.in_using = NULL;
@@ -152,9 +152,9 @@ void read_handler(unsigned long parameter)
 	
 	if(status & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "read_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(MASTER)));
+						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
 	else
-		insw(IDE_PIO_DATA(MASTER), (uint16_t *)node->buffer, 256);
+		insw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
 
 	node->count--;
 	if(node->count)
@@ -172,7 +172,7 @@ void write_handler(unsigned long parameter)
 
 	if(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "write_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(MASTER)));
+						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
 
 	node->count--;
 	if(node->count)
@@ -180,7 +180,7 @@ void write_handler(unsigned long parameter)
 		node->buffer += 512;
 		while(!(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_REQ))
 			nop();
-		outsw(IDE_PIO_DATA(MASTER), (uint16_t *)node->buffer, 256);
+		outsw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
 		return;
 	}
 
@@ -193,9 +193,9 @@ void other_handler(unsigned long parameter)
 
 	if(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "other_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(MASTER)));
+						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
 	else
-		insw(IDE_PIO_DATA(MASTER), (uint16_t *)node->buffer, 256);
+		insw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
 
 	end_request(node);
 }
