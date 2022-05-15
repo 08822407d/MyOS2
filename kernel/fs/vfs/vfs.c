@@ -45,7 +45,8 @@ unsigned long switch_to_root_disk()
 	// load the boot sector
 	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
 	memset(boot_sec, 0, sizeof(MBR_s));
-	IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, (unsigned char *)boot_sec);
+	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+					0, 1, (unsigned char *)boot_sec);
 
 	// check partition type, only support GPT
 	if (boot_sec->DPTE[0].type != 0xee &&
@@ -57,12 +58,13 @@ unsigned long switch_to_root_disk()
 	// load the gpt_hdr
 	gpt_hdr = (GPT_H_s *)boot_sec;
 	memset(gpt_hdr, 0, sizeof(MBR_s));
-	IDE_device_operation.transfer(ATA_READ_CMD, 1, 1, (unsigned char *)gpt_hdr);
+	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+					1, 1, (unsigned char *)gpt_hdr);
 	// load all the gpt_entries
 	unsigned gptent_nr = gpt_hdr->NumberOfPartitionEntries;
 	gpt_pes = (GPT_PE_s *)kmalloc(gptent_nr * sizeof(GPT_PE_s));
 	memset(gpt_pes, 0, gptent_nr * sizeof(GPT_PE_s));
-	IDE_device_operation.transfer(ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
+	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
 									gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
 
@@ -78,8 +80,8 @@ unsigned long switch_to_root_disk()
 			{
 				// mount partitions
 				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
-				IDE_device_operation.transfer(ATA_READ_CMD, gpt_pes[i].StartingLBA,
-												1, (unsigned char *)fat32_sb);
+				ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+								gpt_pes[i].StartingLBA, 1, (unsigned char *)fat32_sb);
 				if (i = BOOT_FS_IDX)
 					root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
 			}

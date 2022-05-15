@@ -119,9 +119,10 @@ unsigned long ide_read_test(unsigned long arg)
 	memset(disk_test, 0, 512 * 3 + 1);
 
 	struct Identify_Device_data ide_id;
-	IDE_device_operation.ioctl(GET_IDENTIFY_DISK_CMD, (long)&ide_id);
+	ATA_master_ops.ioctl(MASTER, SLAVE, GET_IDENTIFY_DISK_CMD,
+					(long)&ide_id);
 
-	// IDE_device_operation.transfer(ATA_READ_CMD, 0, 1, disk_test);
+	// ATA_master_ops.transfer(ATA_READ_CMD, 0, 1, disk_test);
 	color_printk(ORANGE, WHITE, "------\n");	
 	// for(int i = 0; i < 512; i++)
 	// {

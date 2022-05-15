@@ -32,13 +32,12 @@
 	#define IDE_PIO_LBA_MID(p)		(IDE_CTRL_BASE(p) + 4)
 	#define IDE_PIO_LBA_HIGH(p)		(IDE_CTRL_BASE(p) + 5)
 	#define IDE_PIO_DEV_OPT(p)		(IDE_CTRL_BASE(p) + 6)
+	#define IDE_PIO_CMD_STAT(p)		(IDE_CTRL_BASE(p) + 7)
 
-	// #define	PORT_DISK0_DEVICE		0x1f6
-	#define	PORT_DISK0_STATUS_CMD	0x1f7
+	// #define	PORT_DISK0_STATUS_CMD	0x1f7
 
 	#define	PORT_DISK0_ALT_STA_CTL	0x3f6
 
-	// #define	PORT_DISK1_DEVICE		0x176
 	// #define	PORT_DISK1_STATUS_CMD	0x177
 
 	// #define	PORT_DISK1_ALT_STA_CTL	0x376

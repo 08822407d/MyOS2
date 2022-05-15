@@ -45,6 +45,6 @@
 
 	/* disk.c */
 	void init_disk(void);
-	extern blkdev_ops_s IDE_device_operation;
+	extern blkdev_ops_s ATA_master_ops;
 
 #endif /* _AMD64_PC_DEVICE_H_ */

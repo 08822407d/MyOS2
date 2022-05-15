@@ -146,9 +146,8 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 next_cluster:
 	sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
 	// color_printk(BLUE,BLACK,"lookup cluster:%#010x,sector:%#018lx\n",cluster,sector);
-	if(!IDE_device_operation.transfer(ATA_READ_CMD,
-				sector,fsbi->sector_per_cluster,
-				(unsigned char *)buf))
+	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
+					fsbi->sector_per_cluster, (unsigned char *)buf))
 	{
 		color_printk(RED, BLACK, "FAT32 FS(lookup) read disk ERROR!!!!!!!!!!\n");
 		kfree(buf);

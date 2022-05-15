@@ -20,20 +20,22 @@
 
 	typedef struct blkdev_ops
 	{
-		long (* open)();
-		long (* close)();
-		long (* ioctl)(long cmd,
-						long arg);
-		long (* transfer)(long cmd,
-							unsigned long blk_idx,
-							long count,
-							unsigned char * buffer);
+		long (* open)(unsigned controller, unsigned disk);
+		long (* close)(unsigned controller, unsigned disk);
+		long (* ioctl)(unsigned controller, unsigned disk,
+						long cmd, long arg);
+		long (* transfer)(unsigned controller, unsigned disk,
+						long cmd, unsigned long blk_idx,
+						long count, unsigned char * buffer);
 	} blkdev_ops_s;
 
 	struct blkbuf_node;
 	typedef struct blkbuf_node blkbuf_node_s;
 	typedef struct blkbuf_node
 	{
+		unsigned		ATA_controller;
+		unsigned		ATA_disk;
+
 		wait_queue_T	wq;
 		unsigned int	count;
 		unsigned char	cmd;
