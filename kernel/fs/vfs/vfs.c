@@ -40,8 +40,8 @@ void register_diskfs(void)
 
 unsigned long switch_to_root_disk()
 {
-	int test = kparam.init_flags.vfs;
-	kparam.init_flags.vfs = 0;
+	// int test = kparam.init_flags.vfs;
+	// kparam.init_flags.vfs = 0;
 	// load the boot sector
 	boot_sec = (MBR_s *)kmalloc(sizeof(MBR_s));
 	memset(boot_sec, 0, sizeof(MBR_s));

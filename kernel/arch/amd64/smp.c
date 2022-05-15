@@ -29,7 +29,7 @@ static void init_percpu_data(size_t cpu_idx)
 	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
 	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + CPUSTACK_SIZE;
-	list_hdr_init(&cpudata_p->ruuning_lhdr);
+	list_hdr_init(&cpudata_p->running_lhdr);
 
 	// fill architechture part
 	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);

@@ -276,6 +276,7 @@
 	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void schedule(void);
+	void try_sched(void);
 	unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
 	unsigned long kernel_init(unsigned long arg);
 	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);

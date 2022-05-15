@@ -493,9 +493,9 @@ int load_balance()
 	for (i = 0; i < kparam.nr_lcpu; i++)
 	{
 		per_cpudata_s * cpu_p = &percpu_data[i].cpudata;
-		if (cpu_p->ruuning_lhdr.count < min_load)
+		if (cpu_p->running_lhdr.count < min_load)
 		{
-			min_load = cpu_p->ruuning_lhdr.count;
+			min_load = cpu_p->running_lhdr.count;
 			min_idx = i;
 		}
 	}
@@ -507,39 +507,64 @@ void wakeup_task(task_s * task)
 	int target_cpu_idx = load_balance();
 	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
 	task->state = PS_RUNNING;
-	list_hdr_push(&target_cpu_p->ruuning_lhdr, &task->schedule_list);
+	list_hdr_push(&target_cpu_p->running_lhdr, &task->schedule_list);
 
 	// color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
-}
-
-static void reinsert_to_running_list(per_cpudata_s * cpudata_p)
-{
-	task_s * curr_task = cpudata_p->curr_task;
-	if (curr_task != NULL)
-	{
-		if (curr_task == cpudata_p->idle_task)
-		{
-			// insert idle task to cpu's running-list tail
-			list_hdr_enqueue(&cpudata_p->ruuning_lhdr, &curr_task->schedule_list);
-		}
-		else
-		{
-			List_s * tmp_list = cpudata_p->ruuning_lhdr.header.next;
-			while ((curr_task->vruntime > container_of(tmp_list, task_s, schedule_list)->vruntime) &&
-					tmp_list != &cpudata_p->ruuning_lhdr.header)
-			{
-				tmp_list = tmp_list->next;
-			}
-			list_insert_prev(tmp_list, &curr_task->schedule_list);
-			cpudata_p->ruuning_lhdr.count++;
-		}
-	}
 }
 
 void schedule()
 {
 	per_cpudata_s *	cpudata_p = curr_cpu;
+	task_s *		curr_task = cpudata_p->curr_task;
 	task_s *		next_task = NULL;
+	// curr_task must exists
+	while (curr_task == NULL);
+
+	if (cpudata_p->running_lhdr.count > 0)
+	{
+		cpudata_p->scheduleing_flag = 1;
+
+		// fetch a task from running_list
+		List_s * next_lp = list_hdr_pop(&cpudata_p->running_lhdr);
+		while (next_lp == 0);
+
+		// and insert curr_task back to running_list
+		if (curr_task->state == PS_RUNNING)
+		{
+			if (curr_task == cpudata_p->idle_task)
+			{
+				// insert idle task to cpu's running-list tail
+				list_hdr_enqueue(&cpudata_p->running_lhdr, &curr_task->schedule_list);
+			}
+			else
+			{
+				List_s * tmp_list = cpudata_p->running_lhdr.header.next;
+				while ((curr_task->vruntime > container_of(tmp_list, task_s, schedule_list)->vruntime) &&
+						tmp_list != &cpudata_p->running_lhdr.header)
+				{
+					tmp_list = tmp_list->next;
+				}
+				list_insert_prev(tmp_list, &curr_task->schedule_list);
+				cpudata_p->running_lhdr.count++;
+			}
+		}
+
+		next_task = container_of(next_lp, task_s, schedule_list);
+		cpudata_p->curr_task = next_task;
+
+		cpudata_p->last_jiffies = jiffies;
+		cpudata_p->time_slice = next_task->time_slice;
+
+		cpudata_p->scheduleing_flag = 0;
+
+		switch_mm(curr_task, next_task);
+		switch_to(curr_task, next_task);
+	}
+}
+
+void try_sched()
+{
+	per_cpudata_s *	cpudata_p = curr_cpu;
 	task_s *		curr_task = cpudata_p->curr_task;
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
@@ -550,32 +575,13 @@ void schedule()
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
 	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)) ||
-		((curr_task == cpudata_p->idle_task) && (cpudata_p->ruuning_lhdr.count == 0)) ||
+		((curr_task == cpudata_p->idle_task) && (cpudata_p->running_lhdr.count == 0)) ||
 		(curr_task->spin_count != 0) ||
 		(curr_task->semaphore_count != 0))
 	{
 		return;
 	}
-	else if (curr_task->state == PS_RUNNING &&
-			(curr_task->flags & PF_NEED_SCHEDULE))
-	{
-		// normal sched
-		reinsert_to_running_list(cpudata_p);
-	}
-
-	cpudata_p->scheduleing_flag = 1;
-	// get next task
-	// find a suit position for current insertion
-	List_s * next_lp = list_hdr_pop(&cpudata_p->ruuning_lhdr);
-	while (next_lp == 0);
-	
-	next_task = container_of(next_lp, task_s, schedule_list);
-	cpudata_p->curr_task = next_task;
-
-	cpudata_p->last_jiffies = jiffies;
-	cpudata_p->time_slice = next_task->time_slice;
-
-	cpudata_p->scheduleing_flag = 0;
-	switch_mm(curr_task, next_task);
-	switch_to(curr_task, next_task);
+	// normal sched
+	if (curr_task->flags & PF_NEED_SCHEDULE)
+		schedule();
 }

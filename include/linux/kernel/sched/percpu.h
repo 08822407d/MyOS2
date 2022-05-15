@@ -8,7 +8,7 @@
 		task_s *	curr_task;
 		task_s *	idle_task;
 
-		List_hdr_s	ruuning_lhdr;
+		List_hdr_s	running_lhdr;
 
 		unsigned long	is_idle_flag;
 		unsigned long	scheduleing_flag;

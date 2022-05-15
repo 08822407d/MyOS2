@@ -173,7 +173,7 @@
 
 		//	60-61	Total number of user addressable logical sectors for 28-bit commands (DWord)
 		//			(see 7.12.7.22)
-		unsigned short Addressable_Logical_Sectors_for_28[2];
+		unsigned int Addressable_Logical_Sectors_for_28;
 
 		//	62	Obsolete
 		unsigned short Obsolete6;
@@ -507,7 +507,7 @@
 		unsigned short Streaming_Performance_Granularity[2];
 
 		//	100-103	Number of User Addressable Logical Sectors (QWord) (see 7.12.7.53)
-		unsigned short Total_user_LBA_for_48_Address_Feature_set[4];
+		unsigned long Total_user_LBA_for_48_Address_Feature_set;
 
 		//	104		Streaming Transfer Time – PIO (see 7.12.7.54)
 		unsigned short Streaming_Transfer_Time_PIO;

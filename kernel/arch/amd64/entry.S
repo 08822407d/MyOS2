@@ -167,7 +167,7 @@ sa_entintr_retp:
 	cld
 	movq		%rsp,		%rdi
 	callq 		excep_hwint_entry
-	callq		schedule
+	callq		try_sched
 	sti
 	movq		$-1,		%rcx
 	testq		softirq_status(%rip),	%rcx	////check softirq	
