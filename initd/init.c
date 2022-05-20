@@ -21,11 +21,13 @@ void dirtest(void);
 int main(int argc, const char *argv[])
 {
 	// printf("Welcome to MyOS2\n\n");
+	// while (1);
 	
 	int rv = fork();
 	if (rv != 0)
 	{
-		execve("/shell.bin", NULL, NULL);
+		// execve("/shell.bin", NULL, NULL);
+		while (1);
 	}
 	else
 	{

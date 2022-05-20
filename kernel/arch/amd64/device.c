@@ -37,9 +37,6 @@ void devices_init()
 
 void creat_dev_file()
 {
-	path_s p;
-	kern_path("/EFI/BOOT", O_RDONLY, &p);
-
 	path_s root_path;
 	kern_path("/", 0, &root_path);
 	
@@ -64,6 +61,7 @@ void creat_dev_file()
 		bdino->i_fop = bd_p->f_op;
 	}
 }
+
 dentry_s * creat_append_devdirent(char * name, dentry_s * parent)
 {
 	dentry_s * dir = kmalloc(sizeof(dentry_s));
