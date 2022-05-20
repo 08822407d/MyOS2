@@ -119,7 +119,7 @@ unsigned long ide_read_test(unsigned long arg)
 	memset(disk_test, 0, 512 * 3 + 1);
 
 	struct Identify_Device_data ide_id;
-	ATA_master_ops.ioctl(MASTER, SLAVE, GET_IDENTIFY_DISK_CMD,
+	ATA_master_ops.ioctl(MASTER, SLAVE, ATA_INFO_CMD,
 					(long)&ide_id);
 
 	// ATA_master_ops.transfer(ATA_READ_CMD, 0, 1, disk_test);

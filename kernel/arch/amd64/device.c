@@ -37,6 +37,9 @@ void devices_init()
 
 void creat_dev_file()
 {
+	path_s p;
+	kern_path("/EFI/BOOT", O_RDONLY, &p);
+
 	path_s root_path;
 	kern_path("/", 0, &root_path);
 	

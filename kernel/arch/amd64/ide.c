@@ -15,13 +15,17 @@ struct Identify_Device_data disk_id;
 bdev_req_queue_T IDE_req_queue;
 char read_test[512];
 
+bool	ide0_0 = false,
+		ide0_1 = false,
+		ide1_0 = false,
+		ide1_1 = false;
+
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
 static void ATA_set_LBA(unsigned controller,
 				unsigned short count, unsigned long lba)
 {
-	outb(IDE_PIO_ERR_STAT(controller), 0);
 	outb(IDE_PIO_LBA_COUNT(controller), (count >> 0) & 0xFF);
 	outb(IDE_PIO_LBA_LOW(controller), (lba >> 0) & 0xFF);
 	outb(IDE_PIO_LBA_MID(controller), (lba >> 8) & 0xFF);
@@ -40,6 +44,7 @@ static unsigned char ATA_read_LBA28(unsigned controller, unsigned disk,
 static void ATA_write_LBA28(unsigned controller, unsigned disk,
 				unsigned long lba, unsigned short count)
 {
+	outb(IDE_PIO_ERR_STAT(controller), 0);
 	ATA_set_LBA(controller, count, lba);
 	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4) | (lba >> 24) & 0x0F);
 	outb(IDE_PIO_CMD_STAT(controller), 0x30);
@@ -55,6 +60,7 @@ static void ATA_write_LBA28(unsigned controller, unsigned disk,
 static unsigned char ATA_read_LBA48(unsigned controller, unsigned disk,
 				unsigned long lba, unsigned short count)
 {
+	outb(IDE_PIO_ERR_STAT(controller), 0);
 	ATA_set_LBA(controller, count >> 8, lba >> 24);
 	ATA_set_LBA(controller, count, lba);
 	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4));
@@ -71,11 +77,28 @@ static void ATA_write_LBA48(unsigned controller, unsigned disk,
 	outb(IDE_PIO_CMD_STAT(controller), 0x34);
 }
 
-static void ATA_dev_info(unsigned controller, unsigned disk,
-				unsigned long lba, unsigned short count)
+static void ATA_dev_info(unsigned controller, unsigned disk)
 {
+	ATA_set_LBA(controller, 0, 0);
 	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | disk << 4);
-	ATA_set_LBA(controller, count, lba);
+
+	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
+		nop();			
+	outb(IDE_PIO_CMD_STAT(controller), ATA_DISK_IDENTIFY);
+}
+
+static bool ATA_identify(unsigned controller, unsigned disk)
+{
+	ATA_set_LBA(controller, 0, 0);
+	outb(IDE_PIO_CMD_STAT(controller), 0xEC | disk << 4);
+	
+	u64 lba_mid = inb(IDE_PIO_LBA_MID(controller));	
+	u64 lba_high = inb(IDE_PIO_LBA_HIGH(controller));
+	u64 cmd_stat = inb(IDE_PIO_CMD_STAT(controller));
+	if (lba_mid == 0 && lba_high == 0 && cmd_stat != 0)
+		return true;
+	else
+		return false;
 }
 
 /*==============================================================================================*
@@ -104,13 +127,8 @@ long cmd_out(unsigned controller, unsigned disk)
 			status = ATA_read_LBA28(controller, disk, node->LBA, node->count);
 			break;
 			
-		case GET_IDENTIFY_DISK_CMD:
-			ATA_dev_info(controller, disk, node->LBA, node->count);
-
-			while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
-				nop();			
-			outb(IDE_PIO_CMD_STAT(controller), node->cmd);
-			
+		case ATA_INFO_CMD:
+			ATA_dev_info(controller, disk);
 			break;
 
 		default:
@@ -132,7 +150,6 @@ void end_request(blkbuf_node_s * node)
 		curr_tsk->flags |= PF_NEED_SCHEDULE;
 	}
 
-	kfree(node);
 	IDE_req_queue.in_using = NULL;
 
 	if(IDE_req_queue.bdev_wqhdr.count != 0)
@@ -264,16 +281,20 @@ long ATA_disk_close(unsigned controller, unsigned disk)
 	return 1;
 }
 
-long ATA_disk_ioctl(unsigned controller, unsigned disk,
-				long cmd, long arg)
+long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
+				unsigned long blk_idx, long count, unsigned char * buffer)
 {
 	blkbuf_node_s * node = NULL;
-	if(cmd == GET_IDENTIFY_DISK_CMD)
+	if(cmd == ATA_READ_CMD ||
+		cmd == ATA_WRITE_CMD ||
+		cmd == ATA_INFO_CMD)
 	{
 		node = make_request(controller, disk, cmd,
-						0, 0, (unsigned char *)arg);
+						blk_idx, count, buffer);
 		submit(node);
 		wait_for_finish();
+		if (node != NULL)
+			kfree(node);
 		return 1;
 	}
 	else
@@ -282,24 +303,10 @@ long ATA_disk_ioctl(unsigned controller, unsigned disk,
 	}
 }
 
-long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
-				unsigned long blk_idx, long count, unsigned char * buffer)
+long ATA_disk_ioctl(unsigned controller, unsigned disk,
+				long cmd, long arg)
 {
-	blkbuf_node_s * node = NULL;
-	if(cmd == ATA_READ_CMD ||
-		cmd == ATA_WRITE_CMD ||
-		cmd == GET_IDENTIFY_DISK_CMD)
-	{
-		node = make_request(controller, disk, cmd,
-						blk_idx, count, buffer);
-		submit(node);
-		wait_for_finish();
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
+	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
 }
 
 blkdev_ops_s ATA_master_ops = 
@@ -354,8 +361,23 @@ void init_disk()
 	register_irq(SATA_SLAV_IRQ, &entry , "ATA-slave",
 				 (unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
 				 &ATA_disk_handler);
+	
+	outb(IDE_PIO_LBA_LOW(MASTER), 0x88);
+	outb(IDE_PIO_LBA_LOW(SLAVE), 0x88);
+	int ide0_mgc = inb(IDE_PIO_LBA_LOW(MASTER));
+	int ide1_mgc = inb(IDE_PIO_LBA_LOW(SLAVE));
+	if (ide0_mgc == 0x88)
+	{
+		ide0_0 = ATA_identify(MASTER, MASTER);
+		ide0_1 = ATA_identify(MASTER, SLAVE);
+	}
+	if (ide1_mgc == 0x88)
+	{
+		ide1_0 = ATA_identify(SLAVE, MASTER);
+		ide1_1 = ATA_identify(SLAVE, SLAVE);
+	}
 
-	outb(PORT_DISK0_ALT_STA_CTL, 0);
+	outb(IED_PIO_CTRL_BASE(MASTER), 0);
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
 }
@@ -363,14 +385,18 @@ void init_disk()
 void get_ata_info()
 {
 	IDE_id_dev_data_s ide_disk_info[4];
-	ATA_disk_transfer(MASTER, MASTER, GET_IDENTIFY_DISK_CMD,
-					0, 0, (unsigned char *)&ide_disk_info[0]);
-	ATA_disk_transfer(MASTER, SLAVE, GET_IDENTIFY_DISK_CMD,
-					0, 0, (unsigned char *)&ide_disk_info[1]);
-	ATA_disk_transfer(SLAVE, MASTER, GET_IDENTIFY_DISK_CMD,
-					0, 0, (unsigned char *)&ide_disk_info[2]);
-	ATA_disk_transfer(SLAVE, SLAVE, GET_IDENTIFY_DISK_CMD,
-					0, 0, (unsigned char *)&ide_disk_info[3]);
+	if (ide0_0)
+		ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
+						(unsigned char *)&ide_disk_info[0]);
+	if (ide0_1)
+		ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0,
+						(unsigned char *)&ide_disk_info[1]);
+	if (ide1_0)
+		ATA_disk_transfer(SLAVE, MASTER, ATA_INFO_CMD, 0, 0,
+						(unsigned char *)&ide_disk_info[2]);
+	if (ide1_1)
+		ATA_disk_transfer(SLAVE, SLAVE, ATA_INFO_CMD, 0, 0,
+						(unsigned char *)&ide_disk_info[3]);
 }
 
 void disk_exit()

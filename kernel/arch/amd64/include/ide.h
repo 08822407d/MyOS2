@@ -23,27 +23,20 @@
 
 	#define MASTER					0x0
 	#define SLAVE					0x1
-	#define IDE_CTRL_BASE(c)		(0x1F0 - (c) * 0x80)
+	#define IDE_CMD_BASE(c)			(0x1F0 - (c) * 0x80)
 
-	#define IDE_PIO_DATA(p)			(IDE_CTRL_BASE(p) + 0)
-	#define IDE_PIO_ERR_STAT(p)		(IDE_CTRL_BASE(p) + 1)
-	#define IDE_PIO_LBA_COUNT(p)	(IDE_CTRL_BASE(p) + 2)
-	#define IDE_PIO_LBA_LOW(p)		(IDE_CTRL_BASE(p) + 3)
-	#define IDE_PIO_LBA_MID(p)		(IDE_CTRL_BASE(p) + 4)
-	#define IDE_PIO_LBA_HIGH(p)		(IDE_CTRL_BASE(p) + 5)
-	#define IDE_PIO_DEV_OPT(p)		(IDE_CTRL_BASE(p) + 6)
-	#define IDE_PIO_CMD_STAT(p)		(IDE_CTRL_BASE(p) + 7)
+	#define IDE_PIO_DATA(p)			(IDE_CMD_BASE(p) + 0)
+	#define IDE_PIO_ERR_STAT(p)		(IDE_CMD_BASE(p) + 1)
+	#define IDE_PIO_LBA_COUNT(p)	(IDE_CMD_BASE(p) + 2)
+	#define IDE_PIO_LBA_LOW(p)		(IDE_CMD_BASE(p) + 3)
+	#define IDE_PIO_LBA_MID(p)		(IDE_CMD_BASE(p) + 4)
+	#define IDE_PIO_LBA_HIGH(p)		(IDE_CMD_BASE(p) + 5)
+	#define IDE_PIO_DEV_OPT(p)		(IDE_CMD_BASE(p) + 6)
+	#define IDE_PIO_CMD_STAT(p)		(IDE_CMD_BASE(p) + 7)
 
-	// #define	PORT_DISK0_STATUS_CMD	0x1f7
+	#define IED_PIO_CTRL_BASE(c)	(IDE_CMD_BASE(c) + 0x206)
 
 	#define	PORT_DISK0_ALT_STA_CTL	0x3f6
-
-	// #define	PORT_DISK1_STATUS_CMD	0x177
-
-	// #define	PORT_DISK1_ALT_STA_CTL	0x376
-
-	#define DISK_MAST_IDX			0x0
-	#define DISK_SLAV_IDX			0x1
 
 	#define	DISK_STATUS_BUSY		(1 << 7)
 	#define	DISK_STATUS_READY		(1 << 6)
@@ -53,7 +46,8 @@
 
 	#define ATA_READ_CMD			0x24
 	#define ATA_WRITE_CMD			0x34
-	#define GET_IDENTIFY_DISK_CMD	0xEC
+	#define ATA_INFO_CMD			0xE0
+	#define ATA_DISK_IDENTIFY		0xEC
 
 // the definations should be in ATA-8 spec "Table 45 — IDENTIFY DEVICE data"
 	typedef struct Identify_Device_data

@@ -551,8 +551,6 @@ void schedule()
 
 		next_task = container_of(next_lp, task_s, schedule_list);
 		cpudata_p->curr_task = next_task;
-
-		cpudata_p->last_jiffies = jiffies;
 		cpudata_p->time_slice = next_task->time_slice;
 
 		cpudata_p->scheduleing_flag = 0;
@@ -568,6 +566,7 @@ void try_sched()
 	task_s *		curr_task = cpudata_p->curr_task;
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
+	cpudata_p->last_jiffies = jiffies;
 	if (curr_task != cpudata_p->idle_task)
 		curr_task->vruntime += used_jiffies;
 	// if running time out, make the need_schedule flag of current task
