@@ -82,9 +82,10 @@ void HPET_init()
 	*(unsigned long *)(HPET_addr + 0x100) = 0x004c;
 	io_mfence();
 
-	//1S qemu may have a different precision so here need a calculate
+	// 1S qemu may have a different precision so here need a calculate
 	// 0x38D7EA4C680 is hex value of 1*10^15
-	*(unsigned long *)(HPET_addr + 0x108) = 0x38D7EA4C680 / accuracy;
+	unsigned long period = 0x38D7EA4C680 / accuracy;
+	*(unsigned long *)(HPET_addr + 0x108) = period * 100;
 	io_mfence();
 
 	//init MAIN_CNT & get CMOS time

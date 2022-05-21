@@ -82,7 +82,7 @@ dentry_s * creat_append_devdirent(char * name, dentry_s * parent)
 
 void init_intr_dev()
 {
-	HPET_init();
+	// HPET_init();
 }
 
 void init_char_dev()

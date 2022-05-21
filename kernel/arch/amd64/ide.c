@@ -145,7 +145,6 @@ void end_request(blkbuf_node_s * node)
 
 	if (node->wq.task->state == PS_UNINTERRUPTIBLE)
 	{
-		node->wq.task->state = PS_RUNNING;
 		wakeup_task(node->wq.task);
 		curr_tsk->flags |= PF_NEED_SCHEDULE;
 	}
@@ -263,23 +262,22 @@ void wait_for_finish()
 {
 	if (IDE_req_queue.in_using != NULL)
 	{
-		// per_cpudata_s *	cpudata_p = curr_cpu;
 		curr_tsk->state = PS_UNINTERRUPTIBLE;
 		schedule();
 	}
 }
 
-long ATA_disk_open(unsigned controller, unsigned disk)
-{
-	color_printk(BLACK,WHITE,"DISK0 Opened\n");
-	return 1;
-}
+// long ATA_disk_open(unsigned controller, unsigned disk)
+// {
+// 	color_printk(BLACK,WHITE,"DISK0 Opened\n");
+// 	return 1;
+// }
 
-long ATA_disk_close(unsigned controller, unsigned disk)
-{
-	color_printk(BLACK,WHITE,"DISK0 Closed\n");
-	return 1;
-}
+// long ATA_disk_close(unsigned controller, unsigned disk)
+// {
+// 	color_printk(BLACK,WHITE,"DISK0 Closed\n");
+// 	return 1;
+// }
 
 long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 				unsigned long blk_idx, long count, unsigned char * buffer)
@@ -303,17 +301,17 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 	}
 }
 
-long ATA_disk_ioctl(unsigned controller, unsigned disk,
-				long cmd, long arg)
-{
-	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
-}
+// long ATA_disk_ioctl(unsigned controller, unsigned disk,
+// 				long cmd, long arg)
+// {
+// 	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
+// }
 
 blkdev_ops_s ATA_master_ops = 
 {
-	.open	= ATA_disk_open,
-	.close	= ATA_disk_close,
-	.ioctl	= ATA_disk_ioctl,
+	// .open	= ATA_disk_open,
+	// .close	= ATA_disk_close,
+	// .ioctl	= ATA_disk_ioctl,
 	.transfer = ATA_disk_transfer,
 };
 

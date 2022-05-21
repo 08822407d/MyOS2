@@ -558,6 +558,8 @@ void schedule()
 
 		switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task);
+
+		cpudata_p = NULL;
 	}
 }
 
@@ -573,14 +575,19 @@ void try_sched()
 	if (used_jiffies >= cpudata_p->time_slice)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
 
-	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)) ||
-		((curr_task == cpudata_p->idle_task) && (cpudata_p->running_lhdr.count == 0)) ||
-		(curr_task->spin_count != 0) ||
-		(curr_task->semaphore_count != 0))
-	{
+	if ((curr_task == cpudata_p->idle_task) && (cpudata_p->running_lhdr.count == 0))
 		return;
-	}
+
+	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
+		return;
+
+	// if ((curr_task->spin_count != 0) || (curr_task->semaphore_count != 0))
+	// 	return;
+
 	// normal sched
 	if (curr_task->flags & PF_NEED_SCHEDULE)
+	{
 		schedule();
+		cpudata_p = NULL;
+	}
 }
