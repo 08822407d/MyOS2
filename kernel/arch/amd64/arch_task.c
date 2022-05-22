@@ -26,7 +26,9 @@
 extern char		ist_stack0;
 
 extern PCB_u	task0_PCB;
-task_s * task_init = NULL;
+task_s	*task_idle = NULL;
+task_s	*task_init = NULL;
+task_s	*task_shell = NULL;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
@@ -335,6 +337,13 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	int ret_val = 0;
 	task_s *curr = curr_tsk;
 
+	//
+	if (task_idle != NULL && task_init != NULL)
+		task_shell = curr;
+	if (task_idle != NULL && task_init == NULL)
+		task_init = curr;
+	//
+
 	exit_files(curr);
 	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
 
@@ -392,9 +401,9 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 
 void kjmp_to_doexecve()
 {
+	task_idle = &task0_PCB.task;
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;
-	task_init = curr;
 	stack_frame_s * curr_sfp = get_stackframe(curr);
 	curr_sfp->restore_retp = ra_sysex_retp;
 
@@ -555,6 +564,8 @@ void schedule()
 
 		cpudata_p->last_jiffies = jiffies;
 		cpudata_p->scheduleing_flag = 0;
+
+		curr_task->flags &= ~PF_NEED_SCHEDULE;
 
 		switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task);

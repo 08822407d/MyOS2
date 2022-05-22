@@ -11,7 +11,6 @@
 #include "include/device.h"
 #include "include/ide.h"
 
-struct Identify_Device_data disk_id;
 bdev_req_queue_T IDE_req_queue;
 char read_test[512];
 
@@ -19,6 +18,7 @@ bool	ide0_0 = false,
 		ide0_1 = false,
 		ide1_0 = false,
 		ide1_1 = false;
+
 
 /*==============================================================================================*
  *																								*
@@ -104,13 +104,16 @@ static bool ATA_identify(unsigned controller, unsigned disk)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-long cmd_out(unsigned controller, unsigned disk)
+// long cmd_out(unsigned controller, unsigned disk)
+long cmd_out(blkbuf_node_s *node)
 {
-	List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
-	while (!wq_lp);
+	// List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
+	// while (!wq_lp);
 	
-	blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
+	// blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
 	IDE_req_queue.in_using = node;
+	unsigned controller = node->ATA_controller;
+	unsigned disk = node->ATA_disk;
 
 	while(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_BUSY)
 		nop();
@@ -143,21 +146,14 @@ void end_request(blkbuf_node_s * node)
 	if(node == NULL)
 		color_printk(RED,BLACK,"end_request error\n");
 
-	if (node->wq.task->state == PS_UNINTERRUPTIBLE)
-	{
-		wakeup_task(node->wq.task);
-		curr_tsk->flags |= PF_NEED_SCHEDULE;
-	}
+	wakeup_task(node->wq.task);
+	curr_tsk->flags |= PF_NEED_SCHEDULE;
 
 	IDE_req_queue.in_using = NULL;
-
-	if(IDE_req_queue.bdev_wqhdr.count != 0)
-		cmd_out(node->ATA_controller, node->ATA_disk);
 }
 
 void add_request(blkbuf_node_s * node)
 {
-	// per_cpudata_s * cpudata_p = curr_cpu;
 	list_hdr_append(&IDE_req_queue.bdev_wqhdr, &node->wq.wq_list);
 }
 
@@ -253,18 +249,12 @@ blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
 void submit(blkbuf_node_s * node)
 {	
 	add_request(node);
-	
-	if(IDE_req_queue.in_using == NULL)
-		cmd_out(node->ATA_controller, node->ATA_disk);
 }
 
 void wait_for_finish()
 {
-	if (IDE_req_queue.in_using != NULL)
-	{
-		curr_tsk->state = PS_UNINTERRUPTIBLE;
-		schedule();
-	}
+	curr_tsk->state = PS_UNINTERRUPTIBLE;
+	schedule();
 }
 
 // long ATA_disk_open(unsigned controller, unsigned disk)
@@ -376,6 +366,7 @@ void init_disk()
 	}
 
 	outb(IED_PIO_CTRL_BASE(MASTER), 0);
+
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
 }
@@ -400,4 +391,27 @@ void get_ata_info()
 void disk_exit()
 {
 	unregister_irq(SATA_MAST_IRQ);
+}
+
+unsigned long ATArq_deamon(unsigned long param)
+{
+	while (true)
+	{
+		if (IDE_req_queue.in_using == NULL &&
+			IDE_req_queue.bdev_wqhdr.count > 0)
+		{
+			List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
+			while (!wq_lp);
+			blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
+			IDE_req_queue.in_using = node;
+
+			cmd_out(node);
+		}
+
+		task_s	*curr = curr_tsk;
+		curr->flags |= PF_NEED_SCHEDULE;
+		schedule();
+	}
+
+	return 1;
 }

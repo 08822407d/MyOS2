@@ -168,11 +168,11 @@ sa_entintr_retp:
 	movq		%rsp,		%rdi
 	callq 		excep_hwint_entry
 	callq		try_sched
-	sti
-	movq		$-1,		%rcx
-	testq		softirq_status(%rip),	%rcx	////check softirq	
-	callq		do_softirq
-	cli
+	// sti
+	// movq		$-1,		%rcx
+	// testq		softirq_status(%rip),	%rcx	////check softirq	
+	// callq		do_softirq
+	// cli
 
 	jmp			RESTORE_ALL
 ra_exintr_retp:

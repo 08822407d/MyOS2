@@ -106,6 +106,7 @@ static void do_basic_setup(void)
 
 extern int ata_probe();
 extern void get_ata_info(void);
+unsigned long ATArq_deamon(unsigned long);
 unsigned long kernel_init(unsigned long arg)
 {
 	do_basic_setup();
@@ -114,6 +115,7 @@ unsigned long kernel_init(unsigned long arg)
 
 	sti();
 
+	kernel_thread(ATArq_deamon, 0, 0);
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	switch_to_root_disk();
@@ -125,5 +127,7 @@ unsigned long kernel_init(unsigned long arg)
 	// color_printk(GREEN, BLACK, "Device files created.\n");
 	kjmp_to_doexecve();
 
+	while (true);
+	
 	return 1;
 }
