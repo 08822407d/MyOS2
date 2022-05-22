@@ -12,7 +12,6 @@
 #include "include/ide.h"
 
 bdev_req_queue_T IDE_req_queue;
-char read_test[512];
 
 bool	ide0_0 = false,
 		ide0_1 = false,
@@ -408,9 +407,8 @@ unsigned long ATArq_deamon(unsigned long param)
 			cmd_out(node);
 		}
 
-		task_s	*curr = curr_tsk;
-		curr->flags |= PF_NEED_SCHEDULE;
 		schedule();
+		// hlt();
 	}
 
 	return 1;
