@@ -25,6 +25,7 @@
 
 
 #include <include/proto.h>
+#include <include/printk.h>
 
 /*
  * Inode locking rules:
@@ -191,4 +192,23 @@ void iput(inode_s *inode)
 	// {
 		kfree(inode);
 	// }
+}
+
+void init_special_inode(inode_s *inode, umode_t mode, dev_t rdev)
+{
+	inode->i_mode = mode;
+	if (S_ISCHR(mode)) {
+		inode->i_fop = &def_chr_fops;
+		inode->i_rdev = rdev;
+	} else if (S_ISBLK(mode)) {
+		inode->i_fop = &def_blk_fops;
+		inode->i_rdev = rdev;
+	}
+	// } else if (S_ISFIFO(mode))
+	// 	inode->i_fop = &pipefifo_fops;
+	else if (S_ISSOCK(mode))
+		;	/* leave it no_open_fops */
+	else
+		color_printk(RED, BLACK, "init_special_inode: bogus i_mode (%o)"
+						"for inode\n", mode);
 }

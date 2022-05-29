@@ -384,12 +384,12 @@ int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 				unsigned int flags)
 {}
 
-int FAT32_getattr(const path_s *path, kstat_s *stat,
-				uint32_t request_mask, unsigned int flags)
-{}
+// int FAT32_getattr(const path_s *path, kstat_s *stat,
+// 				uint32_t request_mask, unsigned int flags)
+// {}
 
-int FAT32_setattr(dentry_s *dentry, iattr_s *attr)
-{}
+// int FAT32_setattr(dentry_s *dentry, iattr_s *attr)
+// {}
 
 inode_ops_s vfat_dir_inode_operations = 
 {
@@ -398,8 +398,8 @@ inode_ops_s vfat_dir_inode_operations =
 	.mkdir = FAT32_mkdir,
 	.rmdir = FAT32_rmdir,
 	.rename = FAT32_rename,
-	.getattr = FAT32_getattr,
-	.setattr = FAT32_setattr,
+	// .getattr = FAT32_getattr,
+	// .setattr = FAT32_setattr,
 };
 
 static void setup(super_block_s *sb)

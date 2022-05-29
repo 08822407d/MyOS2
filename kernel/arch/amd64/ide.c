@@ -1,9 +1,12 @@
+#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/kdev_t.h>
+#include <uapi/major.h>
+
 #include <string.h>
 
 #include <include/proto.h>
 #include <include/printk.h>
 #include <include/block_dev.h>
-#include <linux/kernel/sched/sched.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"
@@ -370,21 +373,37 @@ void init_disk()
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
 }
 
+extern int handle_create(const char *nodename, umode_t mode, dev_t dev);
 void get_ata_info()
 {
 	IDE_id_dev_data_s ide_disk_info[4];
 	if (ide0_0)
+	{
 		ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 						(unsigned char *)&ide_disk_info[0]);
+		handle_create("sda", S_IFBLK | S_IRUSR | S_IWUSR, MKDEV(IDE0_MAJOR, 1));
+	}
+
 	if (ide0_1)
+	{
 		ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0,
 						(unsigned char *)&ide_disk_info[1]);
+		handle_create("sdb", S_IFBLK | S_IRUSR | S_IWUSR, MKDEV(IDE1_MAJOR, 1));
+	}
+
 	if (ide1_0)
+	{
 		ATA_disk_transfer(SLAVE, MASTER, ATA_INFO_CMD, 0, 0,
 						(unsigned char *)&ide_disk_info[2]);
+		handle_create("sdc", S_IFBLK | S_IRUSR | S_IWUSR, MKDEV(IDE2_MAJOR, 1));
+	}
+
 	if (ide1_1)
+	{
 		ATA_disk_transfer(SLAVE, SLAVE, ATA_INFO_CMD, 0, 0,
 						(unsigned char *)&ide_disk_info[3]);
+		handle_create("sdd", S_IFBLK | S_IRUSR | S_IWUSR, MKDEV(IDE3_MAJOR, 1));
+	}
 }
 
 void disk_exit()

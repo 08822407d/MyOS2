@@ -1834,8 +1834,7 @@
 	// int vfs_create(user_namespace_s *, inode_s *,
 	// 		dentry_s *, umode_t, bool);
 	int vfs_mkdir(inode_s *, dentry_s *, umode_t);
-	// int vfs_mknod(user_namespace_s *, inode_s *, dentry_s *,
-	// 			umode_t, dev_t);
+	int vfs_mknod( inode_s *, dentry_s *, umode_t, dev_t);
 	// int vfs_symlink(user_namespace_s *, inode_s *,
 	// 		dentry_s *, const char *);
 	// int vfs_link(dentry_s *, user_namespace_s *, inode_s *,
@@ -1972,14 +1971,14 @@
 		// int			(*iterate) (file_s *, struct dir_context *);
 		// int			(*iterate_shared) (file_s *, struct dir_context *);
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
-		long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
-		long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
+		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
+		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
 		// int			(*mmap) (file_s *, struct vm_area_struct *);
-		unsigned long	mmap_supported_flags;
+		// unsigned long	mmap_supported_flags;
 		int			(*open) (inode_s *, file_s *);
 		// int			(*flush) (file_s *, fl_owner_t id);
 		int			(*release) (inode_s *, file_s *);
-	// 	int			(*fsync) (file_s *, loff_t, loff_t, int datasync);
+		int			(*fsync) (file_s *, loff_t, loff_t, int datasync);
 	// 	int			(*fasync) (int, file_s *, int);
 	// 	int			(*lock) (file_s *, int, file_s_lock *);
 	// 	ssize_t		(*sendpage) (file_s *, page_s *, int, size_t, loff_t *, int);
@@ -2009,27 +2008,27 @@
 		// int			(*permission) (user_namespace_s *, inode_s *, int);
 		// posix_acl_a	*(*get_acl)(inode_s *, int, bool);
 
-		int			(*readlink) (dentry_s *, char *,int);
+		// int			(*readlink) (dentry_s *, char *,int);
 
 		int			(*create) (inode_s *, dentry_s *, umode_t, bool);
-		int			(*link) (dentry_s *, inode_s *,dentry_s *);
-		int			(*unlink) (inode_s *, dentry_s *);
-		int			(*symlink) (inode_s *, dentry_s *, const char *);
+		// int			(*link) (dentry_s *, inode_s *,dentry_s *);
+		// int			(*unlink) (inode_s *, dentry_s *);
+		// int			(*symlink) (inode_s *, dentry_s *, const char *);
 		int			(*mkdir) (inode_s *, dentry_s *, umode_t);
 		int			(*rmdir) (inode_s *, dentry_s *);
 		int			(*mknod) (inode_s *, dentry_s *, umode_t, dev_t);
 		int			(*rename) (inode_s *, dentry_s *, inode_s *,
 							dentry_s *, unsigned int);
-		int			(*setattr) (dentry_s *, iattr_s *);
-		int			(*getattr) (const path_s *, kstat_s *,
-							u32, unsigned int);
+		// int			(*setattr) (dentry_s *, iattr_s *);
+		// int			(*getattr) (const path_s *, kstat_s *,
+		// 					u32, unsigned int);
 		// ssize_t		(*listxattr) (dentry_s *, char *, size_t);
 		// int			(*fiemap)(inode_s *, struct fiemap_extent_info *,
 		// 					u64 start, u64 len);
 		// int			(*update_time)(inode_s *, timespec64_s *, int);
 		// int			(*atomic_open)(inode_s *, dentry_s *, file_s *,
 		// 					unsigned open_flag, umode_t create_mode);
-		int			(*tmpfile) (inode_s *, dentry_s *, umode_t);
+		// int			(*tmpfile) (inode_s *, dentry_s *, umode_t);
 		// int			(*set_acl)(inode_s *, posix_acl_s *, int);
 		// int			(*fileattr_set)(dentry_s *dentry, file_sattr *fa);
 		// int			(*fileattr_get)(dentry_s *dentry, file_sattr *fa);
@@ -2687,8 +2686,8 @@
 
 	// void emergency_thaw_all(void);
 	// extern int sync_filesystem(super_block_s *);
-	// extern const file_ops_s def_blk_fops;
-	// extern const file_ops_s def_chr_fops;
+	extern const file_ops_s def_blk_fops;
+	extern const file_ops_s def_chr_fops;
 
 	// /* fs/char_dev.c */
 	// #define CHRDEV_MAJOR_MAX 512
@@ -2719,7 +2718,7 @@
 	// 	__unregister_chrdev(major, 0, 256, name);
 	// }
 
-	// extern void init_special_inode(inode_s *, umode_t, dev_t);
+	extern void init_special_inode(inode_s *, umode_t, dev_t);
 
 	// /* Invalid inode operations -- fs/bad_inode.c */
 	// extern void make_bad_inode(inode_s *);
@@ -3142,7 +3141,7 @@
 
 	// extern void
 	// file_ra_state_init(file_s_ra_state *ra, addr_space_s *mapping);
-	// extern loff_t noop_llseek(file_s *file, loff_t offset, int whence);
+	extern loff_t noop_llseek(file_s *file, loff_t offset, int whence);
 	// extern loff_t no_llseek(file_s *file, loff_t offset, int whence);
 	// extern loff_t vfs_setpos(file_s *file, loff_t offset, loff_t maxsize);
 	// extern loff_t generic_file_llseek(file_s *file, loff_t offset, int whence);

@@ -131,6 +131,7 @@ static const super_ops_s	shmem_ops;
 static const file_ops_s		shmem_file_operations;
 static const inode_ops_s	shmem_inode_operations;
 static const inode_ops_s	shmem_dir_inode_operations;
+static const inode_ops_s	shmem_special_inode_operations;
 static fs_type_s			shmem_fs_type;
 
 
@@ -160,7 +161,8 @@ static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
 
 		switch (mode & S_IFMT) {
 		default:
-			// inode->i_op = &shmem_special_inode_operations;
+			inode->i_op = &shmem_special_inode_operations;
+			init_special_inode(inode, mode, dev);
 			break;
 		case S_IFREG:
 			inode->i_op = &shmem_inode_operations;
@@ -218,30 +220,6 @@ shmem_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
 out_iput:
 	iput(inode);
 	return error;
-}
-
-static int
-shmem_tmpfile(inode_s *dir, dentry_s *dentry, umode_t mode)
-{
-// 	inode_s *inode;
-// 	int error = -ENOSPC;
-
-// 	inode = shmem_get_inode(dir->i_sb, dir, mode, 0, VM_NORESERVE);
-// 	if (inode) {
-// 		error = security_inode_init_security(inode, dir,
-// 						     NULL,
-// 						     shmem_initxattrs, NULL);
-// 		if (error && error != -EOPNOTSUPP)
-// 			goto out_iput;
-// 		error = simple_acl_create(dir, inode);
-// 		if (error)
-// 			goto out_iput;
-// 		d_tmpfile(dentry, inode);
-// 	}
-// 	return error;
-// out_iput:
-// 	iput(inode);
-// 	return error;
 }
 
 static int shmem_mkdir(inode_s *dir, dentry_s *dentry,
@@ -423,7 +401,17 @@ static const inode_ops_s shmem_dir_inode_operations = {
 	.rmdir		= shmem_rmdir,
 	.mknod		= shmem_mknod,
 	.rename		= shmem_rename2,
-	.tmpfile	= shmem_tmpfile,
+	// .tmpfile	= shmem_tmpfile,
+};
+
+static const inode_ops_s shmem_special_inode_operations = {
+// #ifdef CONFIG_TMPFS_XATTR
+// 	.listxattr	= shmem_listxattr,
+// #endif
+// #ifdef CONFIG_TMPFS_POSIX_ACL
+// 	.setattr	= shmem_setattr,
+// 	.set_acl	= simple_set_acl,
+// #endif
 };
 
 static const super_ops_s shmem_ops = {
