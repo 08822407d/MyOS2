@@ -4,6 +4,7 @@
 #include <include/proto.h>
 #include <include/printk.h>
 #include <linux/kernel/sched/sched.h>
+#include <linux/kernel/device.h>
 #include <linux/fs/fs.h>
 
 #include <arch/amd64/include/arch_proto.h>
@@ -97,7 +98,7 @@ static void do_initcalls(void)
 static void do_basic_setup(void)
 {
 	// cpuset_init_smp();
-	// driver_init();
+	driver_init();
 	// init_irq_proc();
 	// do_ctors();
 	do_initcalls();

@@ -2420,7 +2420,7 @@
 		fs_type_s		*next;
 		// const fs_parameter_spec_s	*parameters;
 		// module_s			*owner;
-		// hlist_head_s		fs_supers;
+		List_hdr_s		fs_supers;
 
 		// lock_class_key_s	s_lock_key;
 		// lock_class_key_s	s_umount_key;

@@ -27,9 +27,26 @@
 // #include <linux/kthread.h>
 // #include <linux/init_syscalls.h>
 #include <uapi/mount.h>
-// #include "base.h"
+#include <linux/drivers/base.h>
 
 #include <include/proto.h>
+#include <include/printk.h>
+
+static struct vfsmount *mnt;
+
+static dentry_s *public_dev_mount(fs_type_s *fs_type, int flags,
+				const char *dev_name, void *data)
+{
+	super_block_s *s = mnt->mnt_sb;
+	int err;
+
+	return dget(s->s_root);
+}
+
+static fs_type_s dev_fs_type = {
+	.name = "devtmpfs",
+	.mount = public_dev_mount,
+};
 
 // static int handle_create(const char *nodename, umode_t mode, kuid_t uid,
 // 				kgid_t gid, struct device *dev)
@@ -83,7 +100,7 @@ int devtmpfsd(void *p)
 int devtmpfs_init(void)
 {
 	// char opts[] = "mode=0755";
-	// int err;
+	int err;
 
 	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
 	// if (IS_ERR(mnt)) {
@@ -91,12 +108,14 @@ int devtmpfs_init(void)
 	// 			PTR_ERR(mnt));
 	// 	return PTR_ERR(mnt);
 	// }
-	// err = register_filesystem(&dev_fs_type);
-	// if (err) {
-	// 	printk(KERN_ERR "devtmpfs: unable to register devtmpfs "
-	// 	       "type %i\n", err);
-	// 	return err;
-	// }
+
+	list_hdr_init(&dev_fs_type.fs_supers);
+	err = register_filesystem(&dev_fs_type);
+	if (err) {
+		color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
+				"type %i\n", err);
+		return err;
+	}
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
 	// if (!IS_ERR(thread)) {
@@ -106,12 +125,12 @@ int devtmpfs_init(void)
 	// 	thread = NULL;
 	// }
 
-	// if (err) {
-	// 	printk(KERN_ERR "devtmpfs: unable to create devtmpfs %i\n", err);
-	// 	unregister_filesystem(&dev_fs_type);
-	// 	return err;
-	// }
+	if (err) {
+		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
+		unregister_filesystem(&dev_fs_type);
+		return err;
+	}
 
-	// printk(KERN_INFO "devtmpfs: initialized\n");
-	// return 0;
+	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
+	return 0;
 }

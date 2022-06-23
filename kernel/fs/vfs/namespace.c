@@ -168,7 +168,7 @@ static void put_mountpoint(mountpoint_s *mp)
  * vfsmount lock must be held for write
  */
 void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
-			mount_s *child_mnt)
+				mount_s *child_mnt)
 {
 	child_mnt->mnt_mountpoint = mp->m_dentry;
 	child_mnt->mnt_parent = parent_mnt;
@@ -200,7 +200,7 @@ vfsmount_s *vfs_create_mount(fs_ctxt_s *fc)
 		mnt->mnt.mnt_flags = MNT_INTERNAL;
 
 	mnt->mnt.mnt_sb		= fc->root->d_sb;
-	mnt->mnt.mnt_root	= dget(fc->root);
+	mnt->mnt.mnt_root	= fc->root;
 	mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
 	mnt->mnt_parent		= mnt;
 
@@ -320,23 +320,23 @@ retry:
  * Must be called without spinlocks held, since this function can sleep
  * in allocations.
  */
-// 1static int attach_recursive_mnt(struct mount *source_mnt,
-// 1			struct mount *dest_mnt,
-// 1			struct mountpoint *dest_mp,
-// 1			bool moving)
+// static int attach_recursive_mnt(struct mount *source_mnt,
+// 				struct mount *dest_mnt,
+// 				struct mountpoint *dest_mp,
+// 				bool moving)
 static int attach_recursive_mnt(mount_s *source_mnt,
-			mount_s *dest_mnt, mountpoint_s *dest_mp)
+				mount_s *dest_mnt, mountpoint_s *dest_mp)
 {
-	mountpoint_s *smp;
+	// mountpoint_s *smp;
 	mount_s *child, *p;
 	int err;
 
-	/* Preallocate a mountpoint in case the new mounts need
-	 * to be tucked under other mounts.
-	 */
-	smp = get_mountpoint(source_mnt->mnt.mnt_root);
-	if (IS_ERR(smp))
-		return PTR_ERR(smp);
+	// /* Preallocate a mountpoint in case the new mounts need
+	//  * to be tucked under other mounts.
+	//  */
+	// smp = get_mountpoint(source_mnt->mnt.mnt_root);
+	// if (IS_ERR(smp))
+	// 	return PTR_ERR(smp);
 
 	// if (moving) {
 	// 	unhash_mnt(source_mnt);
@@ -367,8 +367,10 @@ static void unlock_mount(mountpoint_s *where)
 }
 
 // Linux function proto:
-// static int graft_tree(struct mount *mnt, struct mount *p, struct mountpoint *mp)
-static int graft_tree(IN mount_s *mnt, IN mount_s *p, IN mountpoint_s *mp)
+// static int graft_tree(struct mount *mnt, struct mount *p,
+//				struct mountpoint *mp)
+static int graft_tree(IN mount_s *mnt, IN mount_s *p,
+				IN mountpoint_s *mp)
 {
 	// if (d_is_dir(mp->m_dentry) !=
 	//       d_is_dir(mnt->mnt.mnt_root))
@@ -378,7 +380,8 @@ static int graft_tree(IN mount_s *mnt, IN mount_s *p, IN mountpoint_s *mp)
 }
 
 // Linux function proto:
-// static struct mount *clone_mnt(struct mount *old, struct dentry *root, int flag)
+// static struct mount *clone_mnt(struct mount *old,
+//				struct dentry *root, int flag)
 static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 {
 	super_block_s * sb = old->mnt.mnt_sb;
