@@ -182,9 +182,18 @@ super_block_s *sget_fc(fs_ctxt_s *fc)
 	super_block_s *s = NULL;
 	super_block_s *old;
 
-	s = alloc_super(fc->fs_type, fc->sb_flags);
+	List_s s_lp = fc->fs_type->fs_supers.header;
+	for (List_s *lp = s_lp.next; lp != &s_lp; lp = lp->next)
+	{
+		// super_block_s *sbp = container_of();
+		break;
+	}
 	if (s == NULL)
-		return ERR_PTR(-ENOMEM);
+	{
+		s = alloc_super(fc->fs_type, fc->sb_flags);
+		if (s == NULL)
+			return ERR_PTR(-ENOMEM);
+	}
 
 	s->s_fs_info = fc->s_fs_info;
 	fc->s_fs_info = NULL;

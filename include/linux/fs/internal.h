@@ -69,7 +69,8 @@
 
 	extern void dissolve_on_fput(vfsmount_s *);
 
-	int path_mount(const char *dev_name, path_s *path, unsigned long flags);
+	int path_mount(const char *dev_name, IN path_s *path,
+			const char *type_page, unsigned long flags);
 	int path_umount(path_s *path, int flags);
 
 	/*

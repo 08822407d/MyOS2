@@ -99,16 +99,7 @@ int devtmpfsd(void *p)
  */
 int devtmpfs_init(void)
 {
-	// char opts[] = "mode=0755";
 	int err;
-
-	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
-	// if (IS_ERR(mnt)) {
-	// 	printk(KERN_ERR "devtmpfs: unable to create devtmpfs %ld\n",
-	// 			PTR_ERR(mnt));
-	// 	return PTR_ERR(mnt);
-	// }
-
 	list_hdr_init(&dev_fs_type.fs_supers);
 	err = register_filesystem(&dev_fs_type);
 	if (err) {
@@ -125,11 +116,11 @@ int devtmpfs_init(void)
 	// 	thread = NULL;
 	// }
 
-	if (err) {
-		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
-		unregister_filesystem(&dev_fs_type);
-		return err;
-	}
+	// if (err) {
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
+	// 	unregister_filesystem(&dev_fs_type);
+	// 	return err;
+	// }
 
 	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
 	return 0;

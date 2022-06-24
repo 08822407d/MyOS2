@@ -474,19 +474,20 @@ out:
 // Linux function proto:
 // static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
 // 			int mnt_flags, const char *name, void *data)
-static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char *name)
+static int do_new_mount(IN path_s *path, const char *fstype, int sb_flags,
+				int mnt_flags, const char *name)
 {
 	fs_type_s	*type;
 	fs_ctxt_s *fc;
 	const char *subtype = NULL;
 	int err = 0;
 
-	// if (!fstype)
-	// 	return -EINVAL;
+	if (!fstype)
+		return -EINVAL;
 
-	// type = get_fs_type(fstype);
-	// if (!type)
-	// 	return -ENODEV;
+	type = get_fs_type(fstype);
+	if (!type)
+		return -ENODEV;
 
 	// if (type->fs_flags & FS_HAS_SUBTYPE) {
 	// 	subtype = strchr(fstype, '.');
@@ -499,10 +500,10 @@ static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char
 	// 	}
 	// }
 
-	// fc = fs_context_for_mount(type, sb_flags);
-	// put_filesystem(type);
-	// if (IS_ERR(fc))
-	// 	return PTR_ERR(fc);
+	fc = fs_context_for_mount(type, sb_flags);
+	put_filesystem(type);
+	if (IS_ERR(fc))
+		return PTR_ERR(fc);
 
 	// if (subtype)
 	// 	err = vfs_parse_fs_string(fc, "subtype",
@@ -513,8 +514,8 @@ static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char
 	// 	err = parse_monolithic_mount_data(fc, data);
 	// if (!err && !mount_capable(fc))
 	// 	err = -EPERM;
-	// if (!err)
-	// 	err = vfs_get_tree(fc);
+	if (!err)
+		err = vfs_get_tree(fc);
 	// if (!err)
 	// 	err = do_new_mount_fc(fc, path, mnt_flags);
 
@@ -539,7 +540,8 @@ static int do_new_mount(IN path_s *path, int sb_flags, int mnt_flags, const char
 // Linux function proto:
 // int path_mount(const char *dev_name, struct path *path,
 // 		const char *type_page, unsigned long flags, void *data_page)
-int path_mount(const char *dev_name, IN path_s *path, unsigned long flags)
+int path_mount(const char *dev_name, IN path_s *path,
+				const char *type_page, unsigned long flags)
 {
 	unsigned int mnt_flags = 0, sb_flags;
 	int ret;
@@ -555,13 +557,14 @@ int path_mount(const char *dev_name, IN path_s *path, unsigned long flags)
 	// if (flags & MS_MOVE)
 	// 	return do_move_mount_old(path, dev_name);
 
-	return do_new_mount(path, sb_flags, mnt_flags, dev_name);
+	return do_new_mount(path, type_page, sb_flags, mnt_flags, dev_name);
 }
 
 // Linux function proto:
 // long do_mount(const char *dev_name, const char __user *dir_name,
 //		const char *type_page, unsigned long flags, void *data_page)
-long do_mount(const char * dev_name, const char * dir_name, unsigned long flags)
+long do_mount(const char * dev_name, const char * dir_name,
+				const char *type_page, unsigned long flags)
 {
 	path_s path;
 	int ret;
@@ -569,7 +572,7 @@ long do_mount(const char * dev_name, const char * dir_name, unsigned long flags)
 	ret = user_path_at(AT_FDCWD, dir_name, flags, &path);
 	if (ret)
 		return ret;
-	ret = path_mount(dev_name, &path, flags);
+	ret = path_mount(dev_name, &path, type_page, flags);
 	return ret;
 }
 

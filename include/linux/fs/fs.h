@@ -3270,7 +3270,7 @@
 
 	// extern fs_type_s *get_filesystem(fs_type_s *fs);
 	extern void put_filesystem(fs_type_s *fs);
-	// extern fs_type_s *get_fs_type(const char *name);
+	extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);
 	// extern super_block_s *get_active_super(struct block_device *bdev);
 	// extern void drop_super(super_block_s *sb);

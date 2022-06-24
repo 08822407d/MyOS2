@@ -110,3 +110,36 @@ int unregister_filesystem(fs_type_s *fs)
 
 	return -EINVAL;
 }
+
+static fs_type_s *__get_fs_type(const char *name, int len)
+{
+	struct file_system_type *fs;
+
+	// read_lock(&file_systems_lock);
+	fs = *(find_filesystem(name, len));
+	// if (fs && !try_module_get(fs->owner))
+	// 	fs = NULL;
+	// read_unlock(&file_systems_lock);
+	return fs;
+}
+
+fs_type_s *get_fs_type(const char *name)
+{
+	struct file_system_type *fs;
+	const char *dot = strchr(name, '.');
+	int len = dot ? dot - name : strlen(name);
+
+	fs = __get_fs_type(name, len);
+	// if (!fs && (request_module("fs-%.*s", len, name) == 0)) {
+	// 	fs = __get_fs_type(name, len);
+	// 	if (!fs)
+	// 		pr_warn_once("request_module fs-%.*s succeeded, but still no fs?\n",
+	// 			     len, name);
+	// }
+
+	// if (dot && fs && !(fs->fs_flags & FS_HAS_SUBTYPE)) {
+	// 	put_filesystem(fs);
+	// 	fs = NULL;
+	// }
+	return fs;
+}
