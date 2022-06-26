@@ -43,7 +43,6 @@ int sysfs_init(void)
 
 	sysfs_root_kn = sysfs_root->kn;
 
-	list_hdr_init(&sysfs_fs_type.fs_supers);
 	err = register_filesystem(&sysfs_fs_type);
 	if (err) {
 		kfree(sysfs_root);

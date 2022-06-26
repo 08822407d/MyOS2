@@ -48,6 +48,5 @@ void init_rootfs(void)
 	// if (IS_ENABLED(CONFIG_TMPFS) && !saved_root_name[0] &&
 	// 	(!root_fs_names || strstr(root_fs_names, "tmpfs")))
 	// 	is_tmpfs = true;
-	list_hdr_init(&rootfs_fs_type.fs_supers);
 	register_filesystem(&rootfs_fs_type);
 }

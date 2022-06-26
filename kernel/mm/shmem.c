@@ -452,7 +452,6 @@ int shmem_init(void)
 {
 	int error;
 
-	list_hdr_init(&shmem_fs_type.fs_supers);
 	error = register_filesystem(&shmem_fs_type);
 	if (error) {
 		goto out2;

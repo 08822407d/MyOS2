@@ -72,6 +72,12 @@ int register_filesystem(fs_type_s *fs)
 	int res = 0;
 	fs_type_s **p;
 
+	List_s *si_hdr = &fs->fs_supers.header;
+	if (fs->fs_supers.count == 0 &&
+		(si_hdr->next != si_hdr ||
+		si_hdr->prev != si_hdr))
+		list_hdr_init(&fs->fs_supers);
+
 	if (fs->next)
 		return -EBUSY;
 	p = find_filesystem(fs->name, strlen(fs->name));
