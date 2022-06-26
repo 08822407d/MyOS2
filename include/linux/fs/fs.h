@@ -1473,7 +1473,7 @@
 		block_device_s		*s_bdev;
 		// backing_dev_info_s	*s_bdi;
 		// mtd_info_s			*s_mtd;
-		// hlist_node_s		s_instances;
+		List_s				s_instances;
 		// unsigned int		s_quota_types;	/* Bitmask of supported quota types */
 		// quota_info_s		s_dquot;	/* Diskquota specific options */
 

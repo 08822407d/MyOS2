@@ -28,7 +28,7 @@
 // #include <linux/ramfs.h>
 // #include <linux/pagemap.h>
 #include <linux/fs/file.h>
-// #include <linux/mm.h>
+#include <linux/mm/mm.h>
 // #include <linux/random.h>
 // #include <linux/sched/signal.h>
 // #include <linux/export.h>
@@ -452,6 +452,7 @@ int shmem_init(void)
 {
 	int error;
 
+	list_hdr_init(&shmem_fs_type.fs_supers);
 	error = register_filesystem(&shmem_fs_type);
 	if (error) {
 		goto out2;

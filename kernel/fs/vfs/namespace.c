@@ -608,7 +608,7 @@ void mnt_init(void)
 	if (err)
 		color_printk(RED, BLACK, "sysfs_init error: %d\n", err);
 	shmem_init();
-	// init_rootfs();
+	init_rootfs();
 	init_mount_tree();
 }
 
