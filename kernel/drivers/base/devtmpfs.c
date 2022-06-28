@@ -25,12 +25,19 @@
 // #include <linux/sched.h>
 // #include <linux/slab.h>
 // #include <linux/kthread.h>
-// #include <linux/init_syscalls.h>
+#include <linux/kernel/init_syscalls.h>
 #include <uapi/mount.h>
 #include <linux/drivers/base.h>
 
 #include <include/proto.h>
 #include <include/printk.h>
+
+
+#ifdef CONFIG_DEVTMPFS_SAFE
+#define DEVTMPFS_MFLAGS       (MS_SILENT | MS_NOEXEC | MS_NOSUID)
+#else
+#define DEVTMPFS_MFLAGS       (MS_SILENT)
+#endif
 
 static struct vfsmount *mnt;
 
@@ -95,14 +102,37 @@ int handle_create(const char *nodename, umode_t mode, dev_t dev)
 	return err;
 }
 
+static noinline int devtmpfs_setup(void *p)
+{
+	int err;
+
+	// err = ksys_unshare(CLONE_NEWNS);
+	// if (err)
+	// 	goto out;
+	err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
+	if (err)
+		goto out;
+// 	init_chdir("/.."); /* will traverse into overmounted root */
+// 	init_chroot(".");
+out:
+	*(int *)p = err;
+	return err;
+}
+
 /*
  * The __ref is because devtmpfs_setup needs to be __init for the routines it
  * calls.  That call is done while devtmpfs_init, which is marked __init,
  * synchronously waits for it to complete.
  */
-int devtmpfsd(void *p)
+static unsigned long devtmpfsd(unsigned long p)
 {
+	// int err = devtmpfs_setup(&p);
 
+	// complete(&setup_done);
+	// if (err)
+	// 	return err;
+	// devtmpfs_work_loop();
+	return 0;
 }
 
 /*
@@ -111,8 +141,8 @@ int devtmpfsd(void *p)
  */
 int devtmpfs_init(void)
 {
-	// char opts[] = "mode=0755";
-	// int err;
+	char opts[] = "mode=0755";
+	int err;
 
 	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
 	// if (IS_ERR(mnt)) {
@@ -129,6 +159,7 @@ int devtmpfs_init(void)
 	// }
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
+	kernel_thread(devtmpfsd, 0, 0);
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);
 	// } else {

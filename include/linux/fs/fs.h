@@ -3602,7 +3602,5 @@
 
 	void register_diskfs(void);
 	unsigned long switch_to_root_disk(void);
-	void init_mount(void);
-	void set_init_taskfs(void);
 
 #endif /* _LINUX_FS_H */

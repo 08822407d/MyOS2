@@ -132,8 +132,9 @@ static fs_type_s *__get_fs_type(const char *name, int len)
 fs_type_s *get_fs_type(const char *name)
 {
 	struct file_system_type *fs;
-	const char *dot = strchr(name, '.');
-	int len = dot ? dot - name : strlen(name);
+	// const char *dot = strchr(name, '.');
+	// int len = dot ? dot - name : strlen(name);
+	int len = strlen(name);
 
 	fs = __get_fs_type(name, len);
 	// if (!fs && (request_module("fs-%.*s", len, name) == 0)) {

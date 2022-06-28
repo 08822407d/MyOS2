@@ -1,8 +1,5 @@
 #include <string.h>
 
-#include <include/printk.h>
-#include <include/proto.h>
-#include <include/glo.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
@@ -12,8 +9,48 @@
 #include <linux/fs/namei.h>
 #include <linux/fs/internal.h>
 
+
+#include <include/printk.h>
+#include <include/proto.h>
+#include <include/glo.h>
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"
+
+
+
+
+
+
+#include <linux/fs/mount.h>
+
+mount_s root_mnt;
+
+void set_init_mount()
+{
+	list_hdr_init(&root_mnt.mnt_mounts);
+	list_init(&root_mnt.mnt_child, &root_mnt);
+
+	root_mnt.mnt.mnt_sb = root_sb;
+	root_mnt.mnt_parent = &root_mnt;
+	root_mnt.mnt_mountpoint =
+	root_mnt.mnt.mnt_root = root_sb->s_root;
+	root_mnt.mnt_mp = NULL;
+}
+
+void set_init_taskfs()
+{
+	task_s * curr = curr_tsk;
+	// set cwd and root-dir of task1
+	taskfs_s * taskfs_p = curr->fs;
+	taskfs_p->pwd.dentry = 
+	taskfs_p->root.dentry = root_sb->s_root;
+	taskfs_p->pwd.mnt = 
+	taskfs_p->root.mnt = &root_mnt.mnt;
+
+	memcpy(task0_PCB.task.fs, taskfs_p, sizeof(taskfs_s));
+}
+
+
 
 
 #define BOOT_FS_IDX 1
@@ -29,7 +66,6 @@ fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 extern fs_type_s *file_systems;
 
 #include <linux/fs/fat.h>
-
 
 void register_diskfs(void)
 {
@@ -99,6 +135,9 @@ unsigned long switch_to_root_disk()
 		}
 	}
 	kparam.init_flags.vfs = 1;
+
+	set_init_mount();
+	set_init_taskfs();
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)

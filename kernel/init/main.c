@@ -120,8 +120,6 @@ unsigned long kernel_init(unsigned long arg)
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	switch_to_root_disk();
-	init_mount();
-	set_init_taskfs();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 	creat_dev_file();
 
