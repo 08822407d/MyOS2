@@ -22,18 +22,18 @@ void start_kernel()
 {
 	size_t cpu_idx = 0;
 
-	pre_init_sytem();
+	early_init_sytem();
 
-	prepare_init_task(kparam.nr_lcpu);
-	prepare_init_arch_data(kparam.nr_lcpu);
-	prepare_init_smp(kparam.nr_lcpu);
+	early_init_task(kparam.nr_lcpu);
+	early_init_arch_data(kparam.nr_lcpu);
+	early_init_smp(kparam.nr_lcpu);
 
 	init_arch(cpu_idx);
 	init_arch_page();
 
 	init_video();
 
-	prepare_init_mm();
+	early_init_mm();
 	init_mm();
 
 	init_task(kparam.nr_lcpu);
@@ -111,7 +111,7 @@ unsigned long ATArq_deamon(unsigned long);
 unsigned long kernel_init(unsigned long arg)
 {
 	do_basic_setup();
-	do_name();
+	// do_name();
 	ata_probe();
 
 	sti();

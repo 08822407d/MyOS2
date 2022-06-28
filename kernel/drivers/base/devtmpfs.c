@@ -43,6 +43,18 @@ static dentry_s *public_dev_mount(fs_type_s *fs_type, int flags,
 	return dget(s->s_root);
 }
 
+static fs_type_s internal_fs_type = {
+	.name = "devtmpfs",
+// #ifdef CONFIG_TMPFS
+	.init_fs_context = shmem_init_fs_context,
+// 	.parameters	= shmem_fs_parameters,
+// #else
+// 	.init_fs_context = ramfs_init_fs_context,
+// 	.parameters	= ramfs_fs_parameters,
+// #endif
+// 	.kill_sb = kill_litter_super,
+};
+
 static fs_type_s dev_fs_type = {
 	.name = "devtmpfs",
 	.mount = public_dev_mount,
@@ -99,14 +111,22 @@ int devtmpfsd(void *p)
  */
 int devtmpfs_init(void)
 {
-	int err;
-	list_hdr_init(&dev_fs_type.fs_supers);
-	err = register_filesystem(&dev_fs_type);
-	if (err) {
-		color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
-				"type %i\n", err);
-		return err;
-	}
+	// char opts[] = "mode=0755";
+	// int err;
+
+	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
+	// if (IS_ERR(mnt)) {
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
+	// 			PTR_ERR(mnt));
+	// 	return PTR_ERR(mnt);
+	// }
+	
+	// err = register_filesystem(&dev_fs_type);
+	// if (err) {
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
+	// 			"type %i\n", err);
+	// 	return err;
+	// }
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
 	// if (!IS_ERR(thread)) {
@@ -124,4 +144,25 @@ int devtmpfs_init(void)
 
 	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
 	return 0;
+}
+
+int devtmpfs_early_init(void)
+{
+	char opts[] = "mode=0755";
+	int err;
+
+	list_hdr_init(&internal_fs_type.fs_supers);
+	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
+	if (IS_ERR(mnt)) {
+		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
+				PTR_ERR(mnt));
+		return PTR_ERR(mnt);
+	}
+	
+	err = register_filesystem(&dev_fs_type);
+	if (err) {
+		color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
+				"type %i\n", err);
+		return err;
+	}
 }

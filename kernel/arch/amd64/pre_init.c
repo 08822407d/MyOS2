@@ -145,7 +145,7 @@ static void cpuid_info(void)
 	cpuinfo.max_extend_opcode = CpuFacName[0];
 }
 
-void pre_init_sytem(void)
+void early_init_sytem(void)
 {
 	memset((virt_addr_t)&_bss, 0, &_ebss - &_bss);
 	enable_AMD_syscall();

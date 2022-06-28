@@ -222,7 +222,7 @@ vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 {
 	fs_ctxt_s *fc;
 	vfsmount_s *mnt;
-	// int ret = 0;
+	int ret = 0;
 
 	if (type == NULL)
 		return ERR_PTR(-EINVAL);
@@ -230,10 +230,10 @@ vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 	fc = fs_context_for_mount(type, flags);
 	if (IS_ERR(fc))
 		return ERR_CAST(fc);
-	// if (ret == 0)
+	if (ret == 0)
 		mnt = fc_mount(fc);
-	// else
-	// 	mnt = ERR_PTR(ret);
+	else
+		mnt = ERR_PTR(ret);
 
 	put_fs_context(fc);
 	return mnt;

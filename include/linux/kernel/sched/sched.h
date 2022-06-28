@@ -82,7 +82,7 @@
 	task_s * get_current_task(void);
 	#define curr_tsk get_current_task()
 
-	void prepare_init_task(size_t lcpu_nr);
+	void early_init_task(size_t lcpu_nr);
 	void	init_task(size_t lcpu_nr);
 	void	preinit_arch_task(void);
 	void init_arch_task(size_t cpu_idx);
