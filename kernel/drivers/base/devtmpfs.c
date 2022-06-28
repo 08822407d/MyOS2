@@ -106,14 +106,11 @@ static noinline int devtmpfs_setup(void *p)
 {
 	int err;
 
-	// err = ksys_unshare(CLONE_NEWNS);
-	// if (err)
-	// 	goto out;
 	err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
 	if (err)
 		goto out;
-// 	init_chdir("/.."); /* will traverse into overmounted root */
-// 	init_chroot(".");
+	init_chdir("/.."); /* will traverse into overmounted root */
+	init_chroot(".");
 out:
 	*(int *)p = err;
 	return err;
@@ -126,7 +123,7 @@ out:
  */
 static unsigned long devtmpfsd(unsigned long p)
 {
-	// int err = devtmpfs_setup(&p);
+	int err = devtmpfs_setup(&p);
 
 	// complete(&setup_done);
 	// if (err)
