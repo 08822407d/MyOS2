@@ -2,7 +2,7 @@
 #include <linux/mm/page.h>
 #include <linux/mm/slab.h>
 
-void prepare_init_mm()
+void early_init_mm()
 {
 	preinit_page();
 	preinit_slab();

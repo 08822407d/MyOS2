@@ -1473,7 +1473,7 @@
 		block_device_s		*s_bdev;
 		// backing_dev_info_s	*s_bdi;
 		// mtd_info_s			*s_mtd;
-		// hlist_node_s		s_instances;
+		List_s				s_instances;
 		// unsigned int		s_quota_types;	/* Bitmask of supported quota types */
 		// quota_info_s		s_dquot;	/* Diskquota specific options */
 
@@ -2420,7 +2420,7 @@
 		fs_type_s		*next;
 		// const fs_parameter_spec_s	*parameters;
 		// module_s			*owner;
-		// hlist_head_s		fs_supers;
+		List_hdr_s		fs_supers;
 
 		// lock_class_key_s	s_lock_key;
 		// lock_class_key_s	s_umount_key;
@@ -3270,7 +3270,7 @@
 
 	// extern fs_type_s *get_filesystem(fs_type_s *fs);
 	extern void put_filesystem(fs_type_s *fs);
-	// extern fs_type_s *get_fs_type(const char *name);
+	extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);
 	// extern super_block_s *get_active_super(struct block_device *bdev);
 	// extern void drop_super(super_block_s *sb);
@@ -3602,7 +3602,5 @@
 
 	void register_diskfs(void);
 	unsigned long switch_to_root_disk(void);
-	void init_mount(void);
-	void set_init_taskfs(void);
 
 #endif /* _LINUX_FS_H */

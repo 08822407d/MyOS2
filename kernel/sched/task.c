@@ -25,7 +25,7 @@ extern char _ebss;
 size_t			cpustack_off;
 PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
-// in pre_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
+// in early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
 mm_s			task0_mm = 
 {
@@ -95,7 +95,7 @@ void compute_consts()
 	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
 }
 
-void prepare_init_task(size_t lcpu_nr)
+void early_init_task(size_t lcpu_nr)
 {
 	idle_tasks = memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
 	idle_tasks[0] = &task0_PCB;

@@ -285,7 +285,7 @@ void reload_arch_data(size_t cpu_idx)
 	kparam.arch_init_flags.arch_data = 1;
 }
 
-void prepare_init_arch_data(size_t lcpu_nr)
+void early_init_arch_data(size_t lcpu_nr)
 {
 	size_t gdt_size = GDT_SIZE(lcpu_nr)* sizeof(segdesc64_T);
 	gdt = memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));

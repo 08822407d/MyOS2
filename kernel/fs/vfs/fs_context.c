@@ -128,12 +128,29 @@ void put_fs_context(fs_ctxt_s *fc)
 }
 
 
+/*
+ * Get a mountable root with the legacy mount command.
+ */
+static int legacy_get_tree(struct fs_context *fc)
+{
+	legacy_fs_ctx_s *ctx = fc->fs_private;
+	dentry_s *root;
+
+	root = fc->fs_type->mount(fc->fs_type, fc->sb_flags,
+				      fc->source, ctx->legacy_data);
+	if (IS_ERR(root))
+		return PTR_ERR(root);
+
+	fc->root = root;
+	return 0;
+}
+
 const fs_ctxt_ops_s legacy_fs_context_ops = {
 	// .free				= legacy_fs_context_free,
 	// .dup				= legacy_fs_context_dup,
 	// .parse_param		= legacy_parse_param,
 	// .parse_monolithic	= legacy_parse_monolithic,
-	// .get_tree			= legacy_get_tree,
+	.get_tree			= legacy_get_tree,
 	// .reconfigure		= legacy_reconfigure,
 };
 

@@ -25,11 +25,47 @@
 // #include <linux/sched.h>
 // #include <linux/slab.h>
 // #include <linux/kthread.h>
-// #include <linux/init_syscalls.h>
+#include <linux/kernel/init_syscalls.h>
 #include <uapi/mount.h>
-// #include "base.h"
+#include <linux/drivers/base.h>
 
 #include <include/proto.h>
+#include <include/printk.h>
+
+
+#ifdef CONFIG_DEVTMPFS_SAFE
+#define DEVTMPFS_MFLAGS       (MS_SILENT | MS_NOEXEC | MS_NOSUID)
+#else
+#define DEVTMPFS_MFLAGS       (MS_SILENT)
+#endif
+
+static struct vfsmount *mnt;
+
+static dentry_s *public_dev_mount(fs_type_s *fs_type, int flags,
+				const char *dev_name, void *data)
+{
+	super_block_s *s = mnt->mnt_sb;
+	int err;
+
+	return dget(s->s_root);
+}
+
+static fs_type_s internal_fs_type = {
+	.name = "devtmpfs",
+// #ifdef CONFIG_TMPFS
+	.init_fs_context = shmem_init_fs_context,
+// 	.parameters	= shmem_fs_parameters,
+// #else
+// 	.init_fs_context = ramfs_init_fs_context,
+// 	.parameters	= ramfs_fs_parameters,
+// #endif
+// 	.kill_sb = kill_litter_super,
+};
+
+static fs_type_s dev_fs_type = {
+	.name = "devtmpfs",
+	.mount = public_dev_mount,
+};
 
 // static int handle_create(const char *nodename, umode_t mode, kuid_t uid,
 // 				kgid_t gid, struct device *dev)
@@ -66,14 +102,34 @@ int handle_create(const char *nodename, umode_t mode, dev_t dev)
 	return err;
 }
 
+static noinline int devtmpfs_setup(void *p)
+{
+	int err;
+
+	err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
+	if (err)
+		goto out;
+	init_chdir("/.."); /* will traverse into overmounted root */
+	init_chroot(".");
+out:
+	*(int *)p = err;
+	return err;
+}
+
 /*
  * The __ref is because devtmpfs_setup needs to be __init for the routines it
  * calls.  That call is done while devtmpfs_init, which is marked __init,
  * synchronously waits for it to complete.
  */
-int devtmpfsd(void *p)
+static unsigned long devtmpfsd(unsigned long p)
 {
+	int err = devtmpfs_setup(&p);
 
+	// complete(&setup_done);
+	// if (err)
+	// 	return err;
+	// devtmpfs_work_loop();
+	return 0;
 }
 
 /*
@@ -82,23 +138,25 @@ int devtmpfsd(void *p)
  */
 int devtmpfs_init(void)
 {
-	// char opts[] = "mode=0755";
-	// int err;
+	char opts[] = "mode=0755";
+	int err;
 
 	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
 	// if (IS_ERR(mnt)) {
-	// 	printk(KERN_ERR "devtmpfs: unable to create devtmpfs %ld\n",
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
 	// 			PTR_ERR(mnt));
 	// 	return PTR_ERR(mnt);
 	// }
+	
 	// err = register_filesystem(&dev_fs_type);
 	// if (err) {
-	// 	printk(KERN_ERR "devtmpfs: unable to register devtmpfs "
-	// 	       "type %i\n", err);
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
+	// 			"type %i\n", err);
 	// 	return err;
 	// }
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
+	kernel_thread(devtmpfsd, 0, 0);
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);
 	// } else {
@@ -107,11 +165,32 @@ int devtmpfs_init(void)
 	// }
 
 	// if (err) {
-	// 	printk(KERN_ERR "devtmpfs: unable to create devtmpfs %i\n", err);
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
 	// 	unregister_filesystem(&dev_fs_type);
 	// 	return err;
 	// }
 
-	// printk(KERN_INFO "devtmpfs: initialized\n");
-	// return 0;
+	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
+	return 0;
+}
+
+int devtmpfs_early_init(void)
+{
+	char opts[] = "mode=0755";
+	int err;
+
+	list_hdr_init(&internal_fs_type.fs_supers);
+	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
+	if (IS_ERR(mnt)) {
+		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
+				PTR_ERR(mnt));
+		return PTR_ERR(mnt);
+	}
+	
+	err = register_filesystem(&dev_fs_type);
+	if (err) {
+		color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
+				"type %i\n", err);
+		return err;
+	}
 }
