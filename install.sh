@@ -23,6 +23,12 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
     objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shell shell.bin
     # copy files
     sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
+    if [ ! -d "/mnt/EFI" ]; then
+        mkdir /mnt/EFI
+    fi
+    if [ ! -d "/mnt/EFI/BOOT" ]; then
+        mkdir /mnt/EFI/BOOT
+    fi
     cp ../bootloader.efi /mnt/EFI/BOOT/BOOTX64.EFI
     cp ./kernel.bin /mnt/kernel.bin
     cp ./init.bin /mnt/init.bin
