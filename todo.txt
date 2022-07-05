@@ -7,3 +7,4 @@
 构建edk2
 make -C BaseTools/
 source edksetup.sh BaseTools 
+build -a X64 -t GCC5 -p ShellPkg/ShellPkg.dsc
