@@ -110,7 +110,7 @@ ENTRY(ra_sysex_retp)
 	// swapgs
 	sti
 	.byte	0x48
-	sysexitq
+	sysexit
 
 // /*==============================================================================================*/
 // /*									syscall and sysret entry						 			*/
