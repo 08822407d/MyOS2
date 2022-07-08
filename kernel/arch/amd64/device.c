@@ -37,11 +37,9 @@ void devices_init()
 
 void creat_dev_file()
 {
-	path_s root_path;
-	kern_path("/", 0, &root_path);
-	
-	dentry_s * root_dir = root_path.dentry;
-	dentry_s * dev_dir = creat_append_devdirent("dev", root_dir);
+	path_s dev_path;
+	kern_path("/dev", O_DIRECTORY, &dev_path);
+	dentry_s * dev_dir = dev_path.dentry;
 
 	List_s * cd_lp;
 	for (cd_lp = cdev_lhdr.header.next; cd_lp != &cdev_lhdr.header; cd_lp = cd_lp->next)

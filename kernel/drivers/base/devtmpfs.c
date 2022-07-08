@@ -102,18 +102,26 @@ int handle_create(const char *nodename, umode_t mode, dev_t dev)
 	return err;
 }
 
-static noinline int devtmpfs_setup(void *p)
-{
-	int err;
 
-	err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
-	if (err)
-		goto out;
-	init_chdir("/.."); /* will traverse into overmounted root */
-	init_chroot(".");
-out:
-	*(int *)p = err;
-	return err;
+static void devtmpfs_work_loop(void)
+{
+	while (1) {
+		// while (requests) {
+		// 	struct req *req = requests;
+		// 	requests = NULL;
+		// 	spin_unlock(&req_lock);
+		// 	while (req) {
+		// 		struct req *next = req->next;
+		// 		req->err = handle(req->name, req->mode,
+		// 				  req->uid, req->gid, req->dev);
+		// 		complete(&req->done);
+		// 		req = next;
+		// 	}
+		// 	spin_lock(&req_lock);
+		// }
+		// __set_current_state(TASK_INTERRUPTIBLE);
+		schedule();
+	}
 }
 
 /*
@@ -123,12 +131,21 @@ out:
  */
 static unsigned long devtmpfsd(unsigned long p)
 {
-	int err = devtmpfs_setup(&p);
+	// int err = devtmpfs_setup(&p);
+	// {
+		int err;
+
+		err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
+		if (err)
+			goto out;
+		// init_chdir("/.."); /* will traverse into overmounted root */
+		// init_chroot(".");
+	out:
+		return err;
+	// }
 
 	// complete(&setup_done);
-	// if (err)
-	// 	return err;
-	// devtmpfs_work_loop();
+	devtmpfs_work_loop();
 	return 0;
 }
 

@@ -17,11 +17,9 @@
 #include "arch/amd64/include/ide.h"
 
 
-
-
-
-
+#include <linux/kernel/init_syscalls.h>
 #include <linux/fs/mount.h>
+#include <uapi/mount.h>
 
 mount_s root_mnt;
 
@@ -138,6 +136,8 @@ unsigned long switch_to_root_disk()
 
 	set_init_mount();
 	set_init_taskfs();
+
+	int err = init_mount("devtmpfs", "/dev", "devtmpfs", MS_SILENT);
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)

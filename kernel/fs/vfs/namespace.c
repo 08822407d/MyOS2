@@ -465,6 +465,51 @@ out:
 	return err;
 }
 
+
+/*
+ * add a mount into a namespace's mount tree
+ */
+static int do_add_mount(mount_s *newmnt, mountpoint_s *mp,
+				path_s *path, int mnt_flags)
+{
+	mount_s *parent = real_mount(path->mnt);
+
+	mnt_flags &= ~MNT_INTERNAL_FLAGS;
+
+	/* Refuse the same filesystem on the same mount point */
+	if (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&
+	    path->mnt->mnt_root == path->dentry)
+		return -EBUSY;
+
+	// if (d_is_symlink(newmnt->mnt.mnt_root))
+	// 	return -EINVAL;
+
+	newmnt->mnt.mnt_flags = mnt_flags;
+	return graft_tree(newmnt, parent, mp);
+}
+
+/*
+ * Create a new mount using a superblock configuration and request it
+ * be added to the namespace tree.
+ */
+static int do_new_mount_fc(fs_ctxt_s *fc, path_s *mountpoint,
+				unsigned int mnt_flags)
+{
+	vfsmount_s *mnt;
+	mountpoint_s *mp;
+	super_block_s *sb = fc->root->d_sb;
+	int error;
+
+	mnt = vfs_create_mount(fc);
+	if (IS_ERR(mnt))
+		return PTR_ERR(mnt);
+
+	error = do_add_mount(real_mount(mnt), mp, mountpoint, mnt_flags);
+	// if (error < 0)
+	// 	mntput(mnt);
+	return error;
+}
+
 /*
  * create a new mount for userspace and request it to be added into the
  * namespace's tree
@@ -514,8 +559,8 @@ static int do_new_mount(IN path_s *path, const char *fstype, int sb_flags,
 	// 	err = -EPERM;
 	if (!err)
 		err = vfs_get_tree(fc);
-	// if (!err)
-	// 	err = do_new_mount_fc(fc, path, mnt_flags);
+	if (!err)
+		err = do_new_mount_fc(fc, path, mnt_flags);
 
 	// put_fs_context(fc);
 	return err;
