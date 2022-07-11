@@ -16,10 +16,8 @@
 
 bdev_req_queue_T IDE_req_queue;
 
-bool	ide0_0 = false,
-		ide0_1 = false,
-		ide1_0 = false,
-		ide1_1 = false;
+bool	ide0_0, ide0_1,
+		ide1_0, ide1_1;
 
 
 /*==============================================================================================*
@@ -352,6 +350,7 @@ void init_disk()
 				 (unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
 				 &ATA_disk_handler);
 	
+	ide0_0 = ide0_1 = ide1_0 = ide1_1 = false;
 	outb(IDE_PIO_LBA_LOW(MASTER), 0x88);
 	outb(IDE_PIO_LBA_LOW(SLAVE), 0x88);
 	int ide0_mgc = inb(IDE_PIO_LBA_LOW(MASTER));
