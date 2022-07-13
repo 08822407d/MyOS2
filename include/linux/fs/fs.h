@@ -1901,20 +1901,21 @@
 	// 			const inode_s *dir, umode_t mode);
 	// extern bool may_open_dev(const path_s *path);
 
-	// /*
-	// * This is the "filldir" function type, used by readdir() to let
-	// * the kernel specify what kind of dirent layout it wants to have.
-	// * This allows the kernel to read directories into kernel space or
-	// * to have different dirent layouts depending on the binary type.
-	// */
-	// struct dir_context;
-	// typedef int (*filldir_t)(const char *, int, loff_t, u64, unsigned);
-	typedef int (*filldir_t)(void *buf, char *name, long namelen, long type, long offset);
+	/*
+	* This is the "filldir" function type, used by readdir() to let
+	* the kernel specify what kind of dirent layout it wants to have.
+	* This allows the kernel to read directories into kernel space or
+	* to have different dirent layouts depending on the binary type.
+	*/
+	struct dir_context;
+	typedef struct dir_context dir_ctxt_s;
+	typedef int (*filldir_t)(dir_ctxt_s* ctx, const char * name, int namelen,
+					loff_t offset, u64 ino, unsigned int d_type);
 
-	// struct dir_context {
-	// 	filldir_t actor;
-	// 	loff_t pos;
-	// };
+	typedef struct dir_context {
+		filldir_t actor;
+		loff_t pos;
+	} dir_ctxt_s;
 
 	// /*
 	// * These flags let !MMU mmap() govern direct device mapping vs immediate
@@ -1958,7 +1959,7 @@
 	typedef struct file_operations {
 		int			(*ioctl)(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
 		int			(*close)(inode_s * inode, file_s * file_p);
-		size_t		(*readdir)(file_s * filp, void * dirent, filldir_t filler);
+		// size_t		(*readdir)(file_s * filp, void * dirent, filldir_t filler);
 
 		// module_s	*owner;
 		loff_t		(*llseek) (file_s *file, loff_t pos, int);
@@ -1968,8 +1969,8 @@
 		// ssize_t		(*write_iter) (struct kiocb *, struct iov_iter *);
 		// int			(*iopoll)(struct kiocb *kiocb, struct io_comp_batch *,
 		// 					unsigned int flags);
-		// int			(*iterate) (file_s *, struct dir_context *);
-		// int			(*iterate_shared) (file_s *, struct dir_context *);
+		int			(*iterate) (file_s *, dir_ctxt_s *);
+		int			(*iterate_shared) (file_s *, dir_ctxt_s *);
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
 		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
 		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);

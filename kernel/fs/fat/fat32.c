@@ -286,7 +286,7 @@ loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 int FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long arg)
 {}
 
-size_t FAT32_readdir(file_s * filp, void * dirent, filldir_t filler)
+int FAT32_readdir(file_s * filp, dir_ctxt_s *ctx)
 {
 	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
@@ -427,8 +427,8 @@ next_cluster:
 find_lookup_success:
 
 	filp->f_pos += 32;
-	if (filler != NULL)
-		return filler(dirent, name, namelen, 0, 0);
+	if (ctx != NULL)
+		return ctx->actor(ctx, name, namelen, 0, 0, 0);
 	else
 		return 0;
 }
@@ -442,7 +442,7 @@ file_ops_s FAT32_file_ops =
 	.llseek = FAT32_lseek,
 	.ioctl = FAT32_ioctl,
 
-	.readdir = FAT32_readdir,
+	.iterate_shared = FAT32_readdir,
 };
 
 // these operation need cache and list

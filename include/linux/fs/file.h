@@ -70,12 +70,12 @@
 	// 	return __to_fd(__fdget_pos(fd));
 	// }
 
-	// static inline void fdput_pos(fd_s f)
-	// {
-	// 	if (f.flags & FDPUT_POS_UNLOCK)
-	// 		__f_unlock_pos(f.file);
-	// 	fdput(f);
-	// }
+	static inline void fdput_pos(fd_s f)
+	{
+		// if (f.flags & FDPUT_POS_UNLOCK)
+		// 	__f_unlock_pos(f.file);
+		// fdput(f);
+	}
 
 	// extern int f_dupfd(unsigned int from, file_s *file, unsigned flags);
 	// extern int replace_fd(unsigned fd, file_s *file, unsigned flags);
