@@ -209,9 +209,8 @@ dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 	 * don't need child lock because it is not subject
 	 * to concurrency here
 	 */
-	// __dget_dlock(parent);
-	// dentry->d_parent = parent;
-	// list_add(&dentry->d_child, &parent->d_subdirs);
+	dentry->d_parent = parent;
+	list_hdr_push(&parent->d_subdirs, &dentry->d_child);
 
 	return dentry;
 }

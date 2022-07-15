@@ -45,11 +45,16 @@ void list_insert_next(List_s * dst, List_s * src)
 	src->prev->next = src;
 }
 
-void list_delete(List_s * src)
+void list_delete(List_s *src)
 {
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
 	list_init(src, src->owner_p);
+}
+
+bool list_is_empty(List_s *l_p)
+{
+	return (l_p == l_p->next);
 }
 
 bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)

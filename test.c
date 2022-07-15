@@ -65,11 +65,11 @@ int main(int argc, char *argv[])
  * This allows the kernel to read directories into kernel space or
  * to have different dirent layouts depending on the binary type.
  */
-struct dir_context;
-typedef int (*filldir_t)(struct dir_context *, const char *, int, loff_t, u64,
+dir_ctxt_s;
+typedef int (*filldir_t)(dir_ctxt_s *, const char *, int, loff_t, u64,
 			 unsigned);
 
-struct dir_context {
+dir_ctxt_s {
 	filldir_t actor;
 	loff_t pos;
 };
@@ -83,7 +83,7 @@ struct linux_dirent64 {
 };
 
 struct getdents_callback64 {
-	struct dir_context ctx;
+	dir_ctxt_s ctx;
 	struct linux_dirent64 __user * current_dir;
 	int prev_reclen;
 	int count;

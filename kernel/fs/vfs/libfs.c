@@ -131,12 +131,158 @@ dentry_s *simple_lookup(inode_s *dir, dentry_s *dentry, unsigned int flags)
 	return NULL;
 }
 
+int dcache_dir_open(inode_s *inode, file_s *file)
+{
+	file->private_data = d_alloc_cursor(file->f_path.dentry);
+
+	return file->private_data ? 0 : -ENOMEM;
+}
+
+int dcache_dir_close(inode_s *inode, file_s *file)
+{
+	dput(file->private_data);
+	return 0;
+}
+
+/* parent is locked at least shared */
+/*
+ * Returns an element of siblings' list.
+ * We are looking for <count>th positive after <p>; if
+ * found, dentry is grabbed and returned to caller.
+ * If no such element exists, NULL is returned.
+ */
+static dentry_s *scan_positives(dentry_s *cursor,
+					struct list_head *p,
+					loff_t count,
+					struct dentry *last)
+{
+	// struct dentry *dentry = cursor->d_parent, *found = NULL;
+
+	// spin_lock(&dentry->d_lock);
+	// while ((p = p->next) != &dentry->d_subdirs) {
+	// 	struct dentry *d = list_entry(p, struct dentry, d_child);
+	// 	// we must at least skip cursors, to avoid livelocks
+	// 	if (d->d_flags & DCACHE_DENTRY_CURSOR)
+	// 		continue;
+	// 	if (simple_positive(d) && !--count) {
+	// 		spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
+	// 		if (simple_positive(d))
+	// 			found = dget_dlock(d);
+	// 		spin_unlock(&d->d_lock);
+	// 		if (likely(found))
+	// 			break;
+	// 		count = 1;
+	// 	}
+	// 	if (need_resched()) {
+	// 		list_move(&cursor->d_child, p);
+	// 		p = &cursor->d_child;
+	// 		spin_unlock(&dentry->d_lock);
+	// 		cond_resched();
+	// 		spin_lock(&dentry->d_lock);
+	// 	}
+	// }
+	// spin_unlock(&dentry->d_lock);
+	// dput(last);
+	// return found;
+}
+
+loff_t dcache_dir_lseek(file_s *file, loff_t offset, int whence)
+{
+	// struct dentry *dentry = file->f_path.dentry;
+	// switch (whence) {
+	// 	case 1:
+	// 		offset += file->f_pos;
+	// 		fallthrough;
+	// 	case 0:
+	// 		if (offset >= 0)
+	// 			break;
+	// 		fallthrough;
+	// 	default:
+	// 		return -EINVAL;
+	// }
+	// if (offset != file->f_pos) {
+	// 	struct dentry *cursor = file->private_data;
+	// 	struct dentry *to = NULL;
+
+	// 	inode_lock_shared(dentry->d_inode);
+
+	// 	if (offset > 2)
+	// 		to = scan_positives(cursor, &dentry->d_subdirs,
+	// 				    offset - 2, NULL);
+	// 	spin_lock(&dentry->d_lock);
+	// 	if (to)
+	// 		list_move(&cursor->d_child, &to->d_child);
+	// 	else
+	// 		list_del_init(&cursor->d_child);
+	// 	spin_unlock(&dentry->d_lock);
+	// 	dput(to);
+
+	// 	file->f_pos = offset;
+
+	// 	inode_unlock_shared(dentry->d_inode);
+	// }
+	// return offset;
+}
+
+/* Relationship between i_mode and the DT_xxx types */
+static inline unsigned char dt_type(inode_s *inode)
+{
+	return (inode->i_mode >> 12) & 15;
+}
+
+/*
+ * Directory is locked and all positive dentries in it are safe, since
+ * for ramfs-type trees they can't go away without unlink() or rmdir(),
+ * both impossible due to the lock on directory.
+ */
+
+int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
+{
+	dentry_s *dentry = file->f_path.dentry;
+	dentry_s *cursor = file->private_data;
+	List_s *anchor = &dentry->d_subdirs.header;
+	dentry_s *next = NULL;
+	List_s *p;
+
+	if (!dir_emit_dots(file, ctx))
+		return 0;
+
+	if (ctx->pos == 2)
+		p = anchor;
+	else if (!list_is_empty(&cursor->d_child))
+		p = &cursor->d_child;
+	else
+		return 0;
+
+	// while ((next = scan_positives(cursor, p, 1, next)) != NULL) {
+	// 	if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
+	// 		      d_inode(next)->i_ino, dt_type(d_inode(next))))
+	// 		break;
+	// 	ctx->pos++;
+	// 	p = &next->d_child;
+	// }
+	// spin_lock(&dentry->d_lock);
+	// if (next)
+	// 	list_move_tail(&cursor->d_child, &next->d_child);
+	// else
+	// 	list_del_init(&cursor->d_child);
+	// spin_unlock(&dentry->d_lock);
+	// dput(next);
+
+	// return 0;
+}
+
+ssize_t generic_read_dir(file_s *filp, char *buf, size_t siz, loff_t *ppos)
+{
+	return -EISDIR;
+}
+
 const file_ops_s simple_dir_operations = {
 	// .open		= dcache_dir_open,
 	// .release	= dcache_dir_close,
-	// .llseek		= dcache_dir_lseek,
-	// .read		= generic_read_dir,
-	// .iterate_shared	= dcache_readdir,
+	.llseek			= dcache_dir_lseek,
+	.read			= generic_read_dir,
+	.iterate_shared	= dcache_readdir,
 	// .fsync		= noop_fsync,
 };
 

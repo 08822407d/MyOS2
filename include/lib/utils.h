@@ -33,6 +33,7 @@
 	void list_insert_prev(List_s * src, List_s * dst);
 	void list_insert_next(List_s * src, List_s * dst);
 	void list_delete(List_s * src);
+	bool list_is_empty(List_s *l_p);
 	
 	bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p);
 	void list_hdr_init(List_hdr_s * lh_p);

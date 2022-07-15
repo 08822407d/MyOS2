@@ -39,6 +39,46 @@ typedef struct getdents_callback64 {
 	int error;
 } getdents_cbk64_s;
 
+int iterate_dir(file_s *file, dir_ctxt_s *ctx)
+{
+// 	struct inode *inode = file_inode(file);
+// 	bool shared = false;
+// 	int res = -ENOTDIR;
+// 	if (file->f_op->iterate_shared)
+// 		shared = true;
+// 	else if (!file->f_op->iterate)
+// 		goto out;
+
+// 	res = security_file_permission(file, MAY_READ);
+// 	if (res)
+// 		goto out;
+
+// 	if (shared)
+// 		res = down_read_killable(&inode->i_rwsem);
+// 	else
+// 		res = down_write_killable(&inode->i_rwsem);
+// 	if (res)
+// 		goto out;
+
+// 	res = -ENOENT;
+// 	if (!IS_DEADDIR(inode)) {
+// 		ctx->pos = file->f_pos;
+// 		if (shared)
+// 			res = file->f_op->iterate_shared(file, ctx);
+// 		else
+// 			res = file->f_op->iterate(file, ctx);
+// 		file->f_pos = ctx->pos;
+// 		fsnotify_access(file);
+// 		file_accessed(file);
+// 	}
+// 	if (shared)
+// 		inode_unlock_shared(inode);
+// 	else
+// 		inode_unlock(inode);
+// out:
+// 	return res;
+}
+
 static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 				loff_t offset, u64 ino, unsigned int d_type)
 {
@@ -99,6 +139,11 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 		return -EBADF;
 
 	// error = iterate_dir(f.file, &buf.ctx);
+	// int iterate_dir(struct file *file, dir_ctxt_s *ctx)
+	// {
+		errno = f.file->f_op->iterate_shared(f.file, &buf.ctx);
+	// }
+
 	// if (error >= 0)
 	// 	error = buf.error;
 	// if (buf.prev_reclen) {

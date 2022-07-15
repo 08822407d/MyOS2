@@ -3251,7 +3251,7 @@
 	// 				struct delayed_call *);
 	// extern const inode_ops_s simple_symlink_inode_operations;
 
-	// extern int iterate_dir(file_s *, struct dir_context *);
+	// extern int iterate_dir(file_s *, dir_ctxt_s *);
 
 	// int vfs_fstatat(int dfd, const char __user *filename, struct kstat *stat,
 	// 		int flags);
@@ -3283,7 +3283,7 @@
 	// extern int dcache_dir_open(inode_s *, file_s *);
 	// extern int dcache_dir_close(inode_s *, file_s *);
 	// extern loff_t dcache_dir_lseek(file_s *, loff_t, int);
-	// extern int dcache_readdir(file_s *, struct dir_context *);
+	// extern int dcache_readdir(file_s *, dir_ctxt_s *);
 	// extern int simple_setattr(user_namespace_s *, dentry_s *,
 	// 			iattr_s *);
 	// extern int simple_getattr(user_namespace_s *, const path_s *,
@@ -3534,36 +3534,34 @@
 	// 	return inode == inode->i_sb->s_root->d_inode;
 	// }
 
-	// static inline bool dir_emit(struct dir_context *ctx,
-	// 				const char *name, int namelen,
-	// 				u64 ino, unsigned type)
-	// {
-	// 	return ctx->actor(ctx, name, namelen, ctx->pos, ino, type) == 0;
-	// }
-	// static inline bool dir_emit_dot(file_s *file, struct dir_context *ctx)
-	// {
-	// 	return ctx->actor(ctx, ".", 1, ctx->pos,
-	// 			file->f_path.dentry->d_inode->i_ino, DT_DIR) == 0;
-	// }
-	// static inline bool dir_emit_dotdot(file_s *file, struct dir_context *ctx)
-	// {
-	// 	return ctx->actor(ctx, "..", 2, ctx->pos,
-	// 			parent_ino(file->f_path.dentry), DT_DIR) == 0;
-	// }
-	// static inline bool dir_emit_dots(file_s *file, struct dir_context *ctx)
-	// {
-	// 	if (ctx->pos == 0) {
-	// 		if (!dir_emit_dot(file, ctx))
-	// 			return false;
-	// 		ctx->pos = 1;
-	// 	}
-	// 	if (ctx->pos == 1) {
-	// 		if (!dir_emit_dotdot(file, ctx))
-	// 			return false;
-	// 		ctx->pos = 2;
-	// 	}
-	// 	return true;
-	// }
+	static inline bool dir_emit(dir_ctxt_s *ctx,
+					const char *name, int namelen,
+					u64 ino, unsigned type)
+	{
+		return ctx->actor(ctx, name, namelen, ctx->pos, ino, type) == 0;
+	}
+	static inline bool dir_emit_dot(file_s *file, dir_ctxt_s *ctx)
+	{
+		return ctx->actor(ctx, ".", 1, ctx->pos, 0, 0) == 0;
+	}
+	static inline bool dir_emit_dotdot(file_s *file, dir_ctxt_s *ctx)
+	{
+		return ctx->actor(ctx, "..", 2, ctx->pos, 0, 0) == 0;
+	}
+	static inline bool dir_emit_dots(file_s *file, dir_ctxt_s *ctx)
+	{
+		if (ctx->pos == 0) {
+			if (!dir_emit_dot(file, ctx))
+				return false;
+			ctx->pos = 1;
+		}
+		if (ctx->pos == 1) {
+			if (!dir_emit_dotdot(file, ctx))
+				return false;
+			ctx->pos = 2;
+		}
+		return true;
+	}
 	// static inline bool dir_relax(inode_s *inode)
 	// {
 	// 	inode_unlock(inode);
