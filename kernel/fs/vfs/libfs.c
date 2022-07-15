@@ -151,39 +151,28 @@ int dcache_dir_close(inode_s *inode, file_s *file)
  * found, dentry is grabbed and returned to caller.
  * If no such element exists, NULL is returned.
  */
+// static struct dentry *scan_positives(struct dentry *cursor,
+//			struct list_head *p, loff_t count, struct dentry *last)
 static dentry_s *scan_positives(dentry_s *cursor,
-					struct list_head *p,
-					loff_t count,
-					struct dentry *last)
+				List_s *p, loff_t count, dentry_s *last)
 {
-	// struct dentry *dentry = cursor->d_parent, *found = NULL;
+	dentry_s *dentry = cursor->d_parent, *found = NULL;
 
-	// spin_lock(&dentry->d_lock);
-	// while ((p = p->next) != &dentry->d_subdirs) {
-	// 	struct dentry *d = list_entry(p, struct dentry, d_child);
-	// 	// we must at least skip cursors, to avoid livelocks
-	// 	if (d->d_flags & DCACHE_DENTRY_CURSOR)
-	// 		continue;
-	// 	if (simple_positive(d) && !--count) {
-	// 		spin_lock_nested(&d->d_lock, DENTRY_D_LOCK_NESTED);
-	// 		if (simple_positive(d))
-	// 			found = dget_dlock(d);
-	// 		spin_unlock(&d->d_lock);
-	// 		if (likely(found))
-	// 			break;
-	// 		count = 1;
-	// 	}
-	// 	if (need_resched()) {
-	// 		list_move(&cursor->d_child, p);
-	// 		p = &cursor->d_child;
-	// 		spin_unlock(&dentry->d_lock);
-	// 		cond_resched();
-	// 		spin_lock(&dentry->d_lock);
-	// 	}
-	// }
-	// spin_unlock(&dentry->d_lock);
-	// dput(last);
-	// return found;
+	while ((p = p->next) != &dentry->d_subdirs) {
+		dentry_s *d = container_of(p, dentry_s, d_child);
+		// we must at least skip cursors, to avoid livelocks
+		if (d->d_flags & DCACHE_DENTRY_CURSOR)
+			continue;
+		if (simple_positive(d) && !--count) {
+			if (simple_positive(d))
+				found = d;
+			if (likely(found))
+				break;
+			count = 1;
+		}
+	}
+	dput(last);
+	return found;
 }
 
 loff_t dcache_dir_lseek(file_s *file, loff_t offset, int whence)
@@ -235,12 +224,10 @@ static inline unsigned char dt_type(inode_s *inode)
  * for ramfs-type trees they can't go away without unlink() or rmdir(),
  * both impossible due to the lock on directory.
  */
-
 int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 {
 	dentry_s *dentry = file->f_path.dentry;
 	dentry_s *cursor = file->private_data;
-	List_s *anchor = &dentry->d_subdirs.header;
 	dentry_s *next = NULL;
 	List_s *p;
 
@@ -248,28 +235,26 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 		return 0;
 
 	if (ctx->pos == 2)
-		p = anchor;
+		p = &dentry->d_subdirs.header;
 	else if (!list_is_empty(&cursor->d_child))
 		p = &cursor->d_child;
 	else
 		return 0;
 
-	// while ((next = scan_positives(cursor, p, 1, next)) != NULL) {
-	// 	if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
-	// 		      d_inode(next)->i_ino, dt_type(d_inode(next))))
-	// 		break;
-	// 	ctx->pos++;
-	// 	p = &next->d_child;
-	// }
-	// spin_lock(&dentry->d_lock);
+	while ((next = scan_positives(cursor, p, 1, next)) != NULL) {
+		// if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
+		// 	      d_inode(next)->i_ino, dt_type(d_inode(next))))
+		// 	break;
+		// ctx->pos++;
+		// p = &next->d_child;
+	}
 	// if (next)
 	// 	list_move_tail(&cursor->d_child, &next->d_child);
 	// else
 	// 	list_del_init(&cursor->d_child);
-	// spin_unlock(&dentry->d_lock);
-	// dput(next);
+	dput(next);
 
-	// return 0;
+	return 0;
 }
 
 ssize_t generic_read_dir(file_s *filp, char *buf, size_t siz, loff_t *ppos)
