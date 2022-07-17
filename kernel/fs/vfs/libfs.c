@@ -158,19 +158,19 @@ static dentry_s *scan_positives(dentry_s *cursor,
 {
 	dentry_s *dentry = cursor->d_parent, *found = NULL;
 
-	while ((p = p->next) != &dentry->d_subdirs) {
-		dentry_s *d = container_of(p, dentry_s, d_child);
-		// we must at least skip cursors, to avoid livelocks
-		if (d->d_flags & DCACHE_DENTRY_CURSOR)
-			continue;
-		if (simple_positive(d) && !--count) {
-			if (simple_positive(d))
-				found = d;
-			if (likely(found))
-				break;
-			count = 1;
-		}
-	}
+	// while ((p = p->next) != &dentry->d_subdirs) {
+	// 	dentry_s *d = container_of(p, dentry_s, d_child);
+	// 	// we must at least skip cursors, to avoid livelocks
+	// 	if (d->d_flags & DCACHE_DENTRY_CURSOR)
+	// 		continue;
+	// 	if (simple_positive(d) && !--count) {
+	// 		if (simple_positive(d))
+	// 			found = d;
+	// 		if (likely(found))
+	// 			break;
+	// 		count = 1;
+	// 	}
+	// }
 	dput(last);
 	return found;
 }
