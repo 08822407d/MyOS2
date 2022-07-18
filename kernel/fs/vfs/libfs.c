@@ -153,25 +153,21 @@ int dcache_dir_close(inode_s *inode, file_s *file)
  */
 // static struct dentry *scan_positives(struct dentry *cursor,
 //			struct list_head *p, loff_t count, struct dentry *last)
-static dentry_s *scan_positives(dentry_s *cursor,
-				List_s *p, loff_t count, dentry_s *last)
+static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 {
 	dentry_s *dentry = cursor->d_parent, *found = NULL;
 
-	// while ((p = p->next) != &dentry->d_subdirs) {
-	// 	dentry_s *d = container_of(p, dentry_s, d_child);
-	// 	// we must at least skip cursors, to avoid livelocks
-	// 	if (d->d_flags & DCACHE_DENTRY_CURSOR)
-	// 		continue;
-	// 	if (simple_positive(d) && !--count) {
-	// 		if (simple_positive(d))
-	// 			found = d;
-	// 		if (likely(found))
-	// 			break;
-	// 		count = 1;
-	// 	}
-	// }
-	dput(last);
+	while ((p = p->next) != &dentry->d_subdirs.header) {
+		dentry_s *d = container_of(p, dentry_s, d_child);
+		// we must at least skip cursors, to avoid livelocks
+		if (d->d_flags & DCACHE_DENTRY_CURSOR)
+			continue;
+		if (d != NULL) {
+			found = d;
+			break;
+		}
+	}
+
 	return found;
 }
 
@@ -226,7 +222,6 @@ static inline unsigned char dt_type(inode_s *inode)
  */
 int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 {
-	dentry_s *dentry = file->f_path.dentry;
 	dentry_s *cursor = file->private_data;
 	dentry_s *next = NULL;
 	List_s *p;
@@ -235,23 +230,23 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 		return 0;
 
 	if (ctx->pos == 2)
-		p = &dentry->d_subdirs.header;
+		p = &file->f_path.dentry->d_subdirs.header;
 	else if (!list_is_empty(&cursor->d_child))
 		p = &cursor->d_child;
 	else
 		return 0;
 
-	while ((next = scan_positives(cursor, p, 1, next)) != NULL) {
-		// if (!dir_emit(ctx, next->d_name.name, next->d_name.len,
-		// 	      d_inode(next)->i_ino, dt_type(d_inode(next))))
-		// 	break;
-		// ctx->pos++;
-		// p = &next->d_child;
+	while ((next = scan_positives(cursor, p)) != NULL) {
+		if (!ctx->actor(ctx, next->d_name.name, next->d_name.len,
+					ctx->pos, 0, 0))
+			break;
+		ctx->pos++;
+		p = &next->d_child;
 	}
-	// if (next)
-	// 	list_move_tail(&cursor->d_child, &next->d_child);
-	// else
-	// 	list_del_init(&cursor->d_child);
+	if (next)
+		list_insert_prev(&next->d_child, &cursor->d_child);
+	else
+		list_delete(&cursor->d_child);
 	dput(next);
 
 	return 0;

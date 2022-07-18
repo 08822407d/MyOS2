@@ -28,6 +28,8 @@ inline __always_inline List_s * list_get_next(List_s * src)
 // insert src to dst->prev
 void list_insert_prev(List_s * dst, List_s * src)
 {
+	list_delete(src);
+
 	src->next = dst;
 	src->prev = dst->prev;
 
@@ -38,6 +40,8 @@ void list_insert_prev(List_s * dst, List_s * src)
 // insert src to dst->next
 void list_insert_next(List_s * dst, List_s * src)
 {
+	list_delete(src);
+
 	src->next = dst->next;
 	src->prev = dst;
 

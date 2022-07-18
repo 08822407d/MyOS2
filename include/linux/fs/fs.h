@@ -3538,7 +3538,8 @@
 					const char *name, int namelen,
 					u64 ino, unsigned type)
 	{
-		return ctx->actor(ctx, name, namelen, ctx->pos, ino, type) == 0;
+		return ctx->actor(ctx, name, namelen,
+				ctx->pos, ino, type) == 0;
 	}
 	static inline bool dir_emit_dot(file_s *file, dir_ctxt_s *ctx)
 	{

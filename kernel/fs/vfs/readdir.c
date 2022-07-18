@@ -41,42 +41,22 @@ typedef struct getdents_callback64 {
 
 int iterate_dir(file_s *file, dir_ctxt_s *ctx)
 {
-// 	struct inode *inode = file_inode(file);
-// 	bool shared = false;
-// 	int res = -ENOTDIR;
-// 	if (file->f_op->iterate_shared)
-// 		shared = true;
-// 	else if (!file->f_op->iterate)
-// 		goto out;
+	bool shared = false;
+	int res = -ENOTDIR;
+	if (file->f_op->iterate_shared)
+		shared = true;
+	else if (!file->f_op->iterate)
+		goto out;
 
-// 	res = security_file_permission(file, MAY_READ);
-// 	if (res)
-// 		goto out;
+	ctx->pos = file->f_pos;
+	if (shared)
+		res = file->f_op->iterate_shared(file, ctx);
+	else
+		res = file->f_op->iterate(file, ctx);
+	file->f_pos = ctx->pos;
 
-// 	if (shared)
-// 		res = down_read_killable(&inode->i_rwsem);
-// 	else
-// 		res = down_write_killable(&inode->i_rwsem);
-// 	if (res)
-// 		goto out;
-
-// 	res = -ENOENT;
-// 	if (!IS_DEADDIR(inode)) {
-// 		ctx->pos = file->f_pos;
-// 		if (shared)
-// 			res = file->f_op->iterate_shared(file, ctx);
-// 		else
-// 			res = file->f_op->iterate(file, ctx);
-// 		file->f_pos = ctx->pos;
-// 		fsnotify_access(file);
-// 		file_accessed(file);
-// 	}
-// 	if (shared)
-// 		inode_unlock_shared(inode);
-// 	else
-// 		inode_unlock(inode);
-// out:
-// 	return res;
+out:
+	return res;
 }
 
 static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
@@ -141,7 +121,9 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	// error = iterate_dir(f.file, &buf.ctx);
 	// int iterate_dir(struct file *file, dir_ctxt_s *ctx)
 	// {
+		buf.ctx.pos = f.file->f_pos;
 		errno = f.file->f_op->iterate_shared(f.file, &buf.ctx);
+		f.file->f_pos = buf.ctx.pos;
 	// }
 
 	// if (error >= 0)
