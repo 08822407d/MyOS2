@@ -73,8 +73,6 @@
 		#endif
 	#endif
 
-	#define	offsetof(type, field)	__offsetof(type, field)
-
 	#if __EXT1_VISIBLE
 		/* ISO/IEC 9899:2011 K.3.3.2 */
 		#ifndef _RSIZE_T_DEFINED

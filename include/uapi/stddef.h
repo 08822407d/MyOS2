@@ -13,6 +13,7 @@
 		})
 	#endif /* _CONTAINER_OF */
 
+	#define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
 
 	#ifndef __always_inline
 		#define __always_inline inline

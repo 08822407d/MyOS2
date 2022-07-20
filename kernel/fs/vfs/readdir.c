@@ -28,6 +28,7 @@
 #include <string.h>
 #include <errno.h>
 #include <include/proto.h>
+#include <linux/kernel/align.h>
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>
 
@@ -59,31 +60,68 @@ out:
 	return res;
 }
 
+/*
+ * POSIX says that a dirent name cannot contain NULL or a '/'.
+ *
+ * It's not 100% clear what we should really do in this case.
+ * The filesystem is clearly corrupted, but returning a hard
+ * error means that you now don't see any of the other names
+ * either, so that isn't a perfect alternative.
+ *
+ * And if you return an error, what error do you use? Several
+ * filesystems seem to have decided on EUCLEAN being the error
+ * code for EFSCORRUPTED, and that may be the error to use. Or
+ * just EIO, which is perhaps more obvious to users.
+ *
+ * In order to see the other file names in the directory, the
+ * caller might want to make this a "soft" error: skip the
+ * entry, and return the error at the end instead.
+ *
+ * Note that this should likely do a "memchr(name, 0, len)"
+ * check too, since that would be filesystem corruption as
+ * well. However, that case can't actually confuse user space,
+ * which has to do a strlen() on the name anyway to find the
+ * filename length, and the above "soft error" worry means
+ * that it's probably better left alone until we have that
+ * issue clarified.
+ *
+ * Note the PATH_MAX check - it's arbitrary but the real
+ * kernel limit on a possible path component, not NAME_MAX,
+ * which is the technical standard limit.
+ */
+static int verify_dirent_name(const char *name, int len)
+{
+	if (len <= 0 || len >= PATH_MAX)
+		return -EIO;
+	if (memchr(name, '/', len))
+		return -EIO;
+	return 0;
+}
+
 static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 				loff_t offset, u64 ino, unsigned int d_type)
 {
-// 	struct linux_dirent64 __user *dirent, *prev;
-// 	struct getdents_callback64 *buf =
-// 		container_of(ctx, struct getdents_callback64, ctx);
-// 	int reclen = ALIGN(offsetof(struct linux_dirent64, d_name) + namlen + 1,
-// 		sizeof(u64));
-// 	int prev_reclen;
+	linux_dirent64_s *dirent, *prev;
+	getdents_cbk64_s *buf =
+			container_of(ctx, getdents_cbk64_s, ctx);
+	int reclen = ALIGN(offsetof(linux_dirent64_s, d_name) + namelen + 1,
+			sizeof(u64));
+	int prev_reclen;
 
-// 	buf->error = verify_dirent_name(name, namlen);
-// 	if (unlikely(buf->error))
-// 		return buf->error;
-// 	buf->error = -EINVAL;	/* only used if we fail.. */
-// 	if (reclen > buf->count)
-// 		return -EINVAL;
-// 	prev_reclen = buf->prev_reclen;
-// 	if (prev_reclen && signal_pending(current))
-// 		return -EINTR;
-// 	dirent = buf->current_dir;
-// 	prev = (void __user *)dirent - prev_reclen;
-// 	if (!user_write_access_begin(prev, reclen + prev_reclen))
-// 		goto efault;
+	buf->error = verify_dirent_name(name, namelen);
+	if (buf->error)
+		return buf->error;
+	buf->error = -EINVAL;	/* only used if we fail.. */
+	if (reclen > buf->count)
+		return -EINVAL;
+	prev_reclen = buf->prev_reclen;
+	dirent = buf->current_dir;
+	prev = (void *)dirent - prev_reclen;
 
-// 	/* This might be 'dirent->d_off', but if so it will get overwritten */
+	// if (!user_write_access_begin(prev, reclen + prev_reclen))
+	// 	goto efault;
+
+	/* This might be 'dirent->d_off', but if so it will get overwritten */
 // 	unsafe_put_user(offset, &prev->d_off, efault_end);
 // 	unsafe_put_user(ino, &dirent->d_ino, efault_end);
 // 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
@@ -91,16 +129,16 @@ static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 // 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
 // 	user_write_access_end();
 
-// 	buf->prev_reclen = reclen;
-// 	buf->current_dir = (void __user *)dirent + reclen;
-// 	buf->count -= reclen;
-// 	return 0;
+	buf->prev_reclen = reclen;
+	buf->current_dir = (void *)dirent + reclen;
+	buf->count -= reclen;
+	return 0;
 
 // efault_end:
 // 	user_write_access_end();
-// efault:
-// 	buf->error = -EFAULT;
-// 	return -EFAULT;
+efault:
+	buf->error = -EFAULT;
+	return -EFAULT;
 }
 
 long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
