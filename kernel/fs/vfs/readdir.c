@@ -122,12 +122,19 @@ static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 	// 	goto efault;
 
 	/* This might be 'dirent->d_off', but if so it will get overwritten */
-// 	unsafe_put_user(offset, &prev->d_off, efault_end);
-// 	unsafe_put_user(ino, &dirent->d_ino, efault_end);
-// 	unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
-// 	unsafe_put_user(d_type, &dirent->d_type, efault_end);
-// 	unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
-// 	user_write_access_end();
+	// unsafe_put_user(offset, &prev->d_off, efault_end);
+	// unsafe_put_user(ino, &dirent->d_ino, efault_end);
+	// unsafe_put_user(reclen, &dirent->d_reclen, efault_end);
+	// unsafe_put_user(d_type, &dirent->d_type, efault_end);
+	// unsafe_copy_dirent_name(dirent->d_name, name, namlen, efault_end);
+	// user_write_access_end();
+
+	prev->d_off = offset;
+	dirent->d_ino = ino;
+	dirent->d_reclen = reclen;
+	dirent->d_type = d_type;
+	copy_to_user(dirent->d_name, (char *)name, namelen);
+	dirent->d_name[namelen - 1] = '\0';
 
 	buf->prev_reclen = reclen;
 	buf->current_dir = (void *)dirent + reclen;
