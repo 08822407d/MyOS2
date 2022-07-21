@@ -504,6 +504,11 @@ static int do_new_mount_fc(fs_ctxt_s *fc, path_s *mountpoint,
 	if (IS_ERR(mnt))
 		return PTR_ERR(mnt);
 
+	mp = lock_mount(mountpoint);
+	if (IS_ERR(mp)) {
+		// mntput(mnt);
+		return PTR_ERR(mp);
+	}
 	error = do_add_mount(real_mount(mnt), mp, mountpoint, mnt_flags);
 	// if (error < 0)
 	// 	mntput(mnt);

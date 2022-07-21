@@ -167,17 +167,17 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	// int iterate_dir(struct file *file, dir_ctxt_s *ctx)
 	// {
 		buf.ctx.pos = f.file->f_pos;
-		errno = f.file->f_op->iterate_shared(f.file, &buf.ctx);
+		error = f.file->f_op->iterate_shared(f.file, &buf.ctx);
 		f.file->f_pos = buf.ctx.pos;
 	// }
 
-	// if (error >= 0)
-	// 	error = buf.error;
+	if (error >= 0)
+		error = buf.error;
 	// if (buf.prev_reclen) {
-	// 	struct linux_dirent64 __user * lastdirent;
+	// 	linux_dirent64_s *lastdirent;
 	// 	typeof(lastdirent->d_off) d_off = buf.ctx.pos;
 
-	// 	lastdirent = (void __user *) buf.current_dir - buf.prev_reclen;
+	// 	lastdirent = (void *) buf.current_dir - buf.prev_reclen;
 	// 	if (put_user(d_off, &lastdirent->d_off))
 	// 		error = -EFAULT;
 	// 	else

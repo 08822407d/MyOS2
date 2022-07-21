@@ -388,7 +388,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	memset((virt_addr_t)curr->mm_struct->start_code, 0,
 			curr->mm_struct->end_data - curr->mm_struct->start_code);
 	loff_t fp_pos = 0;
-	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code, fp->dentry->d_inode->i_size, &fp_pos);
+	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code,
+			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;

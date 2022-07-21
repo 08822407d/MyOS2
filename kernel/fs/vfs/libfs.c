@@ -155,10 +155,11 @@ int dcache_dir_close(inode_s *inode, file_s *file)
 //			struct list_head *p, loff_t count, struct dentry *last)
 static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 {
-	dentry_s *dentry = cursor->d_parent, *found = NULL;
-
-	while ((p = p->next) != &dentry->d_subdirs.header) {
-		dentry_s *d = container_of(p, dentry_s, d_child);
+	dentry_s	*dentry = cursor->d_parent,
+				*found = NULL;
+	List_s *lp = p;
+	while ((lp = lp->next) != &(dentry->d_subdirs.header)) {
+		dentry_s *d = container_of(lp, dentry_s, d_child);
 		// we must at least skip cursors, to avoid livelocks
 		if (d->d_flags & DCACHE_DENTRY_CURSOR)
 			continue;
@@ -258,8 +259,8 @@ ssize_t generic_read_dir(file_s *filp, char *buf, size_t siz, loff_t *ppos)
 }
 
 const file_ops_s simple_dir_operations = {
-	// .open		= dcache_dir_open,
-	// .release	= dcache_dir_close,
+	.open			= dcache_dir_open,
+	.release		= dcache_dir_close,
 	.llseek			= dcache_dir_lseek,
 	.read			= generic_read_dir,
 	.iterate_shared	= dcache_readdir,

@@ -66,8 +66,8 @@ int FAT32_close(inode_s *inode, file_s *file_p)
 
 ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 {
-	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
-	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
+	FAT32_inode_info_s * finode = filp->f_path.dentry->d_inode->private_idx_info;
+	FAT32_SBinfo_s * fsbi = filp->f_path.dentry->d_inode->i_sb->private_sb_info;
 
 	unsigned long cluster = finode->first_cluster;
 	unsigned long sector = 0;
@@ -82,8 +82,8 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	for(i = 0; i < index; i++)
 		cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 
-	if(*position + count > filp->dentry->d_inode->i_size)
-		index = count = filp->dentry->d_inode->i_size - *position;
+	if(*position + count > filp->f_path.dentry->d_inode->i_size)
+		index = count = filp->f_path.dentry->d_inode->i_size - *position;
 	else
 		index = count;
 
@@ -144,8 +144,8 @@ uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 
 ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *position)
 {
-	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
-	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
+	FAT32_inode_info_s * finode = filp->f_path.dentry->d_inode->private_idx_info;
+	FAT32_SBinfo_s * fsbi = filp->f_path.dentry->d_inode->i_sb->private_sb_info;
 
 	unsigned long cluster = finode->first_cluster;
 	unsigned long next_cluster = 0;
@@ -175,7 +175,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 	if(flags)
 	{
 		finode->first_cluster = cluster;
-		filp->dentry->d_inode->i_sb->s_op->write_inode(filp->dentry->d_inode);
+		filp->f_path.dentry->d_inode->i_sb->s_op->write_inode(filp->f_path.dentry->d_inode);
 		FAT32_write_FAT_Entry(fsbi, cluster, 0x0ffffff8);
 	}
 
@@ -238,10 +238,10 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 
 	}while(index);
 
-	if(*position > filp->dentry->d_inode->i_size)
+	if(*position > filp->f_path.dentry->d_inode->i_size)
 	{
-		filp->dentry->d_inode->i_size = *position;
-		filp->dentry->d_inode->i_sb->s_op->write_inode(filp->dentry->d_inode);
+		filp->f_path.dentry->d_inode->i_size = *position;
+		filp->f_path.dentry->d_inode->i_sb->s_op->write_inode(filp->f_path.dentry->d_inode);
 	}
 
 	kfree(buffer);
@@ -252,7 +252,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 
 loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 {
-	inode_s *inode = filp->dentry->d_inode;
+	inode_s *inode = filp->f_path.dentry->d_inode;
 	long pos = 0;
 
 	switch(origin)
@@ -266,7 +266,7 @@ loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 			break;
 
 		case SEEK_END:
-				pos = filp->dentry->d_inode->i_size + offset;
+				pos = filp->f_path.dentry->d_inode->i_size + offset;
 			break;
 
 		default:
@@ -274,7 +274,7 @@ loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 			break;
 	}
 
-	if(pos < 0 || pos > filp->dentry->d_inode->i_size)
+	if(pos < 0 || pos > filp->f_path.dentry->d_inode->i_size)
 		return -EOVERFLOW;
 
 	filp->f_pos = pos;
@@ -288,8 +288,8 @@ int FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long
 
 int FAT32_readdir(file_s * filp, dir_ctxt_s *ctx)
 {
-	FAT32_inode_info_s * finode = filp->dentry->d_inode->private_idx_info;
-	FAT32_SBinfo_s * fsbi = filp->dentry->d_inode->i_sb->private_sb_info;
+	FAT32_inode_info_s * finode = filp->f_path.dentry->d_inode->private_idx_info;
+	FAT32_SBinfo_s * fsbi = filp->f_path.dentry->d_inode->i_sb->private_sb_info;
 
 	unsigned int cluster = 0;
 	unsigned long sector = 0;

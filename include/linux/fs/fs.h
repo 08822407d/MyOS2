@@ -931,9 +931,6 @@
 	// }
 
 	typedef struct file {
-		dentry_s			*dentry;
-
-
 		// union {
 		// 	llist_node_s	fu_llist;
 		// 	struct rcu_head fu_rcuhead;

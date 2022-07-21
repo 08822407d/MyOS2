@@ -46,7 +46,7 @@ unsigned long sys_close(int fd)
 
 	fp = curr->fps[fd];
 	if(fp->f_op && fp->f_op->close)
-		fp->f_op->close(fp->dentry->d_inode, fp);
+		fp->f_op->close(fp->f_path.dentry->d_inode, fp);
 
 	kfree(fp);
 	curr->fps[fd] = NULL;
