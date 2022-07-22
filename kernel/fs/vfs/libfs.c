@@ -238,8 +238,8 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 		return 0;
 
 	while ((next = scan_positives(cursor, p)) != NULL) {
-		if (!ctx->actor(ctx, next->d_name.name, next->d_name.len,
-					ctx->pos, 0, 0))
+		if (ctx->actor(ctx, next->d_name.name, next->d_name.len,
+					ctx->pos, 0, 0) != 0)
 			break;
 		ctx->pos++;
 		p = &next->d_child;

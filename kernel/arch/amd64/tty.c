@@ -184,11 +184,11 @@ file_ops_s tty_fops =
 	.write = tty_write,
 };
 
-cdev_s * find_tty()
+cdev_s * find_tty(char *name)
 {
 	cdev_s * cd_tty = kmalloc(sizeof(cdev_s));
 	list_init(&cd_tty->cdev_list, cd_tty);
-	cd_tty->dev_name = "tty0";
+	cd_tty->dev_name = name;
 	cd_tty->dev_nr = 0;
 	cd_tty->f_op = &tty_fops;
 }

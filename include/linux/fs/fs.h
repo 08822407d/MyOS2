@@ -3531,30 +3531,15 @@
 	// 	return inode == inode->i_sb->s_root->d_inode;
 	// }
 
-	static inline bool dir_emit(dir_ctxt_s *ctx,
-					const char *name, int namelen,
-					u64 ino, unsigned type)
-	{
-		return ctx->actor(ctx, name, namelen,
-				ctx->pos, ino, type) == 0;
-	}
-	static inline bool dir_emit_dot(file_s *file, dir_ctxt_s *ctx)
-	{
-		return ctx->actor(ctx, ".", 1, ctx->pos, 0, 0) == 0;
-	}
-	static inline bool dir_emit_dotdot(file_s *file, dir_ctxt_s *ctx)
-	{
-		return ctx->actor(ctx, "..", 2, ctx->pos, 0, 0) == 0;
-	}
 	static inline bool dir_emit_dots(file_s *file, dir_ctxt_s *ctx)
 	{
 		if (ctx->pos == 0) {
-			if (!dir_emit_dot(file, ctx))
+			if (ctx->actor(ctx, ".", 1, ctx->pos, 0, 0) != 0)
 				return false;
 			ctx->pos = 1;
 		}
 		if (ctx->pos == 1) {
-			if (!dir_emit_dotdot(file, ctx))
+			if (ctx->actor(ctx, "..", 2, ctx->pos, 0, 0) != 0)
 				return false;
 			ctx->pos = 2;
 		}

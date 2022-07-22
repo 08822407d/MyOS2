@@ -96,7 +96,8 @@ void init_block_dev()
 void enum_char_dev()
 {
 	list_hdr_init(&cdev_lhdr);
-	list_hdr_append(&cdev_lhdr, &find_tty()->cdev_list);
+	list_hdr_append(&cdev_lhdr, &find_tty("tty0")->cdev_list);
+	list_hdr_append(&cdev_lhdr, &find_tty("test_getdents64_verylong_name")->cdev_list);
 }
 
 void enum_block_dev()
