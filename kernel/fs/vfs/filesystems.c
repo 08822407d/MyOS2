@@ -19,8 +19,7 @@
 // #include <linux/fs_parser.h>
 
 
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
 
 /*
  * Handling of filesystem drivers list.

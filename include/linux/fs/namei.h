@@ -14,7 +14,7 @@
 // #include <linux/kernel.h>
 #include <linux/kernel/fcntl.h>
 
-#include <errno.h>
+#include <linux/lib/errno.h>
 
 	enum { MAX_NESTED_LINKS = 8 };
 

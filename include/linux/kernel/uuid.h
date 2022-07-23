@@ -10,7 +10,7 @@
 
 #include <uapi/uuid.h>
 
-#include <string.h> /// need replace
+#include <linux/lib/string.h> /// need replace
 
 	#define UUID_SIZE 16
 

@@ -1,8 +1,7 @@
 #include <linux/kernel/sched/sched.h>
 #include <linux/kernel/kdev_t.h>
+#include <linux/lib/string.h>
 #include <uapi/major.h>
-
-#include <string.h>
 
 #include <include/proto.h>
 #include <include/printk.h>

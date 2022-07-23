@@ -4,8 +4,6 @@
 
 #include <linux/kernel/types.h>
 
-#include <errno.h>
-
 	/*
 	* Kernel pointers have redundant information, so we can use a
 	* scheme where we can return either an error code or a normal

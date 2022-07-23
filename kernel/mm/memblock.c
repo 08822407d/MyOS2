@@ -1,13 +1,31 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Procedures for maintaining information about logical memory blocks.
+ *
+ * Peter Bergner, IBM Corp.	June 2001.
+ * Copyright (C) 2001 Peter Bergner.
+ */
+
+// #include <linux/kernel.h>
+// #include <linux/slab.h>
+#include <linux/init/init.h>
+#include <linux/kernel/bitops.h>
+// #include <linux/poison.h>
+// #include <linux/pfn.h>
+// #include <linux/debugfs.h>
+// #include <linux/kmemleak.h>
+// #include <linux/seq_file.h>
+#include <linux/mm/memblock.h>
+
+
 #include <linux/kernel/types.h>
 #include <linux/kernel/minmax.h>
 #include <linux/kernel/math.h>
+#include <linux/kernel/asm-generic/bitops/__ffs.h>
 #include <linux/mm/mm.h>
-#include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
 #include <linux/mm/page.h>
-
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
 
 #include <include/glo.h>
 

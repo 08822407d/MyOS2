@@ -18,7 +18,7 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <include/ktypes.h>
 

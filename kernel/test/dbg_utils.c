@@ -1,6 +1,5 @@
 #include <linux/kernel/types.h>
-
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <include/dbg_utils.h>
 

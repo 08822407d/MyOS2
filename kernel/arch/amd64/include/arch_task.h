@@ -3,7 +3,7 @@
 
 #include <linux/kernel/types.h>
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include "arch_proto.h"
 

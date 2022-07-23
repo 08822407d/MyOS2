@@ -1,7 +1,7 @@
 #ifndef _WAIT_QUEUE_H_
 #define _WAIT_QUEUE_H_
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 	struct task;
 	typedef struct task task_s;

@@ -1,7 +1,7 @@
 #ifndef _PAGE_H_
 #define _PAGE_H_
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <linux/kernel/types.h>
 

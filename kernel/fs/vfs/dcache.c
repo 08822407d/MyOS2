@@ -16,7 +16,7 @@
  */
 
 // #include <linux/ratelimit.h>
-// #include <linux/string.h>
+#include <linux/lib/string.h>
 // #include <linux/mm.h>
 #include <linux/fs/fs.h>
 // #include <linux/fscrypt.h>
@@ -38,7 +38,6 @@
 
 #include <linux/drivers/base.h>
 #include <linux/kernel/err.h>
-#include <string.h>
 #include <include/proto.h>
 
 /*

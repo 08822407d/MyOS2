@@ -2,8 +2,7 @@
 #include <linux/block/blk_types.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/dcache.h>
-
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <include/proto.h>
 

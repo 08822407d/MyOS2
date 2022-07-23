@@ -10,8 +10,8 @@
 
 
 #include <linux/kernel/sched/sched.h>
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
+#include <linux/lib/errno.h>
 #include <include/proto.h>
 
 typedef struct prepend_buffer

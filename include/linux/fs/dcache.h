@@ -16,7 +16,7 @@
 
 
 #include <linux/fs/vfs_s_defs.h>
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 /*
  * linux/include/linux/dcache.h

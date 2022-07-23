@@ -11,7 +11,7 @@
 
 #include <linux/kernel/stat.h>
 #include <linux/kernel/uidgid.h>
-#include <string.h>
+#include <linux/lib/string.h>
 
 	/*
 	* vfat shortname flags

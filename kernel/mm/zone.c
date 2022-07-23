@@ -1,8 +1,7 @@
-#include <string.h>
-
 #include <linux/kernel/minmax.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
+#include <linux/lib/string.h>
 
 #include <arch/amd64/include/arch_config.h>
 

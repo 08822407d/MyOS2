@@ -43,7 +43,7 @@
 #include <include/proto.h>
 #include <include/printk.h>
 #include <linux/fs/fs.h>
-#include <errno.h>
+#include <linux/lib/errno.h>
 
 /**
  * get_anon_bdev - Allocate a block device for filesystems which don't have one.

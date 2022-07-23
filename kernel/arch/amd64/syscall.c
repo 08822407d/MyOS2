@@ -1,14 +1,12 @@
 #include <linux/kernel/fcntl.h>
+#include <linux/fs/file.h>
+#include <linux/fs/namei.h>
+#include <linux/lib/errno.h>
+#include <linux/lib/string.h>
 #include <uapi/sysreboot.h>
-
-#include <errno.h>
-#include <stdio.h>
-#include <string.h>
 
 #include <include/proto.h>
 #include <include/printk.h>
-#include <linux/fs/file.h>
-#include <linux/fs/namei.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"
@@ -156,7 +154,7 @@ unsigned long sys_exit(int exit_code)
 	return do_exit(exit_code);
 }
 
-errno_t exit_mm(task_s * new_tsk);
+int exit_mm(task_s * new_tsk);
 unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusage)
 {
 	long retval = 0;

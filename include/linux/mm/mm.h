@@ -2,7 +2,7 @@
 #ifndef _LINUX_MM_H
 #define _LINUX_MM_H
 
-#include <const.h>
+#include <uapi/const.h>
 
 #include <linux/mm/mmzone.h>
 #include <include/block_dev.h>
@@ -62,8 +62,7 @@
 
 
 
-	// #include <linux/errno.h>
-	#include <errno.h>
+	#include <linux/lib/errno.h>
 
 	#ifdef __KERNEL__
 

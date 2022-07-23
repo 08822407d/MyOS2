@@ -16,8 +16,9 @@
 #ifndef __PRINTK_H__
 #define __PRINTK_H__
 
-#include <stdarg.h>
-#include <lib/font.h>
+#include <linux/lib/stdarg.h>
+
+#include <klib/font.h>
 
 #include <arch/amd64/include/mutex.h>
 

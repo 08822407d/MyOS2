@@ -9,10 +9,9 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/kdev_t.h>
 // #include <linux/slab.h>
-// #include <linux/string.h>
+#include <linux/lib/string.h>
 
 #include <uapi/major.h>
-// #include <linux/errno.h>
 // #include <linux/module.h>
 // #include <linux/seq_file.h>
 
@@ -28,7 +27,6 @@
 
 #include <linux/fs/vfs_s_defs.h>
 #include <include/proto.h>
-#include <errno.h>
 
 /*
  * Called every time a character special file is opened

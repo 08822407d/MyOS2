@@ -4,10 +4,10 @@
 #include <linux/mm/mm.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
+#include <linux/lib/string.h>
+#include <linux/lib/errno.h>
 
-#include <string.h>
-#include <errno.h>
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <include/glo.h>
 #include <include/proto.h>
@@ -131,7 +131,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 }
 
 // read memory distribution of the executive
-static errno_t read_exec_mm(file_s * fp, task_s * curr)
+static int read_exec_mm(file_s * fp, task_s * curr)
 {
 	mm_s * mm = curr->mm_struct;
 
@@ -152,9 +152,9 @@ static errno_t read_exec_mm(file_s * fp, task_s * curr)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-static errno_t copy_flags(unsigned long clone_flags, task_s * new_tsk)
+static int copy_flags(unsigned long clone_flags, task_s * new_tsk)
 { 
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 
 	if(clone_flags & CLONE_VM)
 		new_tsk->flags |= PF_VFORK;
@@ -162,9 +162,9 @@ static errno_t copy_flags(unsigned long clone_flags, task_s * new_tsk)
 	return err;
 }
 
-static errno_t copy_files(unsigned long clone_flags, task_s * new_tsk)
+static int copy_files(unsigned long clone_flags, task_s * new_tsk)
 {
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 	int i = 0;
 	if(clone_flags & CLONE_FS)
 		goto out;
@@ -197,9 +197,9 @@ static void exit_files(task_s * new_tsk)
 	memset(new_tsk->fps, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
 }
 
-static errno_t copy_mm(unsigned long clone_flags, task_s * new_tsk)
+static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 
 	page_s * page = NULL;
 	PML4E_T * new_cr3 = NULL;
@@ -221,9 +221,9 @@ static errno_t copy_mm(unsigned long clone_flags, task_s * new_tsk)
 exit_cpmm:
 	return err;
 }
-errno_t exit_mm(task_s * new_tsk)
+int exit_mm(task_s * new_tsk)
 {
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 
 	if(new_tsk->flags & PF_VFORK)
 		err = -ENOERR;
@@ -231,10 +231,10 @@ errno_t exit_mm(task_s * new_tsk)
 	return err;
 }
 
-static errno_t copy_thread(unsigned long clone_flags, unsigned long stack_start,
+static int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 							task_s * child_task, 	stack_frame_s * parent_context)
 {
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 
 	stack_frame_s * child_context = get_stackframe(child_task);
 	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
@@ -258,9 +258,9 @@ static errno_t copy_thread(unsigned long clone_flags, unsigned long stack_start,
 
 	return err;
 }
-static errno_t exit_thread(task_s * new_task)
+static int exit_thread(task_s * new_task)
 {
-	errno_t err = -ENOERR;
+	int err = -ENOERR;
 
 	return err;
 }

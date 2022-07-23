@@ -6,7 +6,7 @@
  *  Copyright (C) 1997 David S. Miller (davem@caip.rutgers.edu)
  */
 
-// #include <linux/string.h>
+#include <linux/lib/string.h>
 // #include <linux/slab.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
@@ -33,8 +33,6 @@
 
 
 #include <linux/kernel/err.h>
-#include <string.h>
-#include <errno.h>
 #include <include/proto.h>
 
 /* Find an unused file structure and return a pointer to it.

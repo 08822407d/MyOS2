@@ -12,7 +12,7 @@
 *
 *
 ***************************************************/
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <include/ktypes.h>
 #include <include/printk.h>

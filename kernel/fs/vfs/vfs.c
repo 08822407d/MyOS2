@@ -1,4 +1,4 @@
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <linux/fs/fs.h>
 #include <linux/fs/MBR.h>

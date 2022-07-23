@@ -5,7 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/include/clib",
-                "${workspaceFolder}/arch",
+                "${workspaceFolder}/kernel/arch",
                 "${workspaceFolder}/kernel",
                 "${workspaceFolder}/sys",
                 "${workspaceFolder}/loader"

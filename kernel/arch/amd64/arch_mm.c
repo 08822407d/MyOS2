@@ -1,5 +1,6 @@
-#include <string.h>
-#include <stdbool.h>
+#include <linux/lib/string.h>
+
+#include <klib/stdbool.h>
 
 #include <include/ktypes.h>
 #include <include/proto.h>

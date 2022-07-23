@@ -3,10 +3,9 @@
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/slab.h>
+#include <linux/lib/string.h>
 
-#include <string.h>
-
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/archtypes.h>

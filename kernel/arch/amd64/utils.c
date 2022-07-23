@@ -1,9 +1,8 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/fcntl.h>
-
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
+#include <linux/lib/errno.h>
 
 #include <include/proto.h>
 #include <include/printk.h>

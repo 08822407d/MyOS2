@@ -14,11 +14,13 @@
 ***************************************************/
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/kernel.h>
+#include <linux/lib/string.h>
+#include <linux/lib/stdarg.h>
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include <lib/font.h>
+// #include <klib/stdio.h>
+#include <klib/font.h>
+#include <klib/const.h>
 
 #include <include/glo.h>
 #include <include/printk.h>
@@ -37,7 +39,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
-	i = vsnprintf(buf, SZ_4K, fmt, args);
+	i = vsnprintf(buf, CONST_4K, fmt, args);
 
 	va_end(args);
 

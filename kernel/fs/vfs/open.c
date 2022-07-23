@@ -5,8 +5,8 @@
  *  Copyright (C) 1991, 1992  Linus Torvalds
  */
 
-// #include <linux/string.h>
-// #include <linux/mm.h>
+#include <linux/lib/string.h>
+#include <linux/mm/mm.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
 // #include <linux/fsnotify.h>
@@ -39,8 +39,6 @@
 #include <linux/kernel/sched/sched.h>
 #include <linux/kernel/err.h>
 #include <uapi/openat2.h>
-#include <string.h>
-#include <errno.h>
 
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))

@@ -6,7 +6,7 @@
 #ifndef __LINUX_BLK_TYPES_H
 #define __LINUX_BLK_TYPES_H
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <linux/kernel/types.h>
 #include <linux/fs/vfs_s_defs.h>

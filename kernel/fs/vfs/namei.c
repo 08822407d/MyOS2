@@ -44,8 +44,7 @@
 
 
 #include <linux/kernel/err.h>
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
 #include <include/proto.h>
 #include <include/printk.h>
 #include <arch/amd64/include/arch_proto.h>

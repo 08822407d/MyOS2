@@ -6,7 +6,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/mm/page.h>
 
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/keyboard.h>

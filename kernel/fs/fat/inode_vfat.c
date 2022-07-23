@@ -1,13 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/fs/fat/inode.c
+ *
+ *  Written 1992,1993 by Werner Almesberger
+ *  VFAT extensions by Gordon Chaffee, merged with msdos fs by Henrik Storner
+ *  Rewritten for the constant inumbers support by Al Viro
+ *
+ *  Fixes:
+ *
+ *	Max Cohan: Fixed invalid FSINFO offset when info_sector is 0
+ */
+
+// #include <linux/module.h>
+// #include <linux/pagemap.h>
+// #include <linux/mpage.h>
+// #include <linux/vfs.h>
+// #include <linux/seq_file.h>
+// #include <linux/parser.h>
+// #include <linux/uio.h>
+#include <linux/block/blkdev.h>
+// #include <linux/backing-dev.h>
+// #include <asm/unaligned.h>
+// #include <linux/random.h>
+// #include <linux/iversion.h>
+// #include "fat.h"
+
 #include <linux/block/buffer_head.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/err.h>
+#include <linux/kernel/asm-generic/bitops/ffs.h>
+#include <linux/lib/string.h> /// need replace
+#include <linux/lib/errno.h>
 
 #include <uapi/stat.h>
 #include <uapi/magic.h>
 #include <uapi/msdos_fs.h>
-
-#include <string.h> /// need replace
-#include <errno.h>
 
 #include <include/proto.h>
 #include <linux/fs/fs.h>

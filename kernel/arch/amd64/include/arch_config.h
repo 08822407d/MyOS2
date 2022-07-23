@@ -3,7 +3,7 @@
 
 #include <linux/kernel/math.h>
 
-#include <const.h>
+#include <klib/const.h>
 
 	#define CONFIG_X86_64
 	#define CONFIG_ZONE_DMA

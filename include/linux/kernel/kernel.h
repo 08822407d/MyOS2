@@ -11,7 +11,7 @@
 #ifndef _LINUX_KERNEL_H
 #define _LINUX_KERNEL_H
 
-// #include <linux/stdarg.h>
+#include <linux/lib/stdarg.h>
 // #include <linux/align.h>
 #include <linux/kernel/limits.h>
 // #include <linux/linkage.h>
@@ -207,7 +207,7 @@
 	// extern __printf(3, 4)
 	// int snprintf(char *buf, size_t size, const char *fmt, ...);
 	// extern __printf(3, 0)
-	// int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+	int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
 	// extern __printf(3, 4)
 	// int scnprintf(char *buf, size_t size, const char *fmt, ...);
 	// extern __printf(3, 0)

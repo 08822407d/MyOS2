@@ -43,7 +43,7 @@
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <uapi/fcntl.h>
-#include <errno.h>
+#include <linux/lib/errno.h>
 #include <include/proto.h>
 #include <include/printk.h>
 

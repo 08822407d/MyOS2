@@ -9,8 +9,8 @@
 #include <linux/kernel/kernel.h>
 // #include <linux/export.h>
 #include <linux/kernel/time.h>
-// #include <linux/mm.h>
-// #include <linux/errno.h>
+#include <linux/mm/mm.h>
+#include <linux/lib/errno.h>
 #include <linux/kernel/stat.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
@@ -25,8 +25,7 @@
 // #include <asm/unaligned.h>
 
 
-#include <string.h>
-#include <errno.h>
+#include <linux/lib/string.h>
 #include <include/proto.h>
 #include <linux/kernel/align.h>
 #include <arch/amd64/include/archconst.h>

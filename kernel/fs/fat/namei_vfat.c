@@ -1,13 +1,12 @@
 #include <linux/kernel/err.h>
-#include <uapi/msdos_fs.h>
-
-#include <errno.h>
-
-#include <include/proto.h>
-#include <include/printk.h>
+#include <linux/lib/errno.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/fs/fat32.h>
+#include <uapi/msdos_fs.h>
+
+#include <include/proto.h>
+#include <include/printk.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

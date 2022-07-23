@@ -1,8 +1,7 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/math.h>
 #include <linux/mm/memblock.h>
-
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

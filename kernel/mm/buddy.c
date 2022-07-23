@@ -3,8 +3,7 @@
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
-
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>

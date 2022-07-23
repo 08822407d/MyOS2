@@ -3,8 +3,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
-
-#include <string.h>
+#include <linux/lib/string.h>
 
 #include <include/glo.h>
 #include <include/proto.h>

@@ -14,8 +14,6 @@
 ***************************************************/
 #include <linux/kernel/types.h>
 
-#include <string.h>
-
 #include <include/proto.h>
 
 uint64_t	softirq_status = 0;

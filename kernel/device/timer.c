@@ -1,4 +1,4 @@
-#include <lib/utils.h>
+#include <klib/utils.h>
 
 #include <include/printk.h>
 #include <include/proto.h>

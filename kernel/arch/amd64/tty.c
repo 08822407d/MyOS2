@@ -1,7 +1,7 @@
 #include <linux/kernel/stddef.h>
+#include <linux/lib/string.h>
 
-#include <string.h>
-#include <lib/font.h>
+#include <klib/font.h>
 
 #include <include/proto.h>
 #include <include/wait_queue.h>
