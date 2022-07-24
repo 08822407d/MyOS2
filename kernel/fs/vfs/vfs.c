@@ -51,7 +51,7 @@ void set_init_taskfs()
 
 
 
-#define BOOT_FS_IDX 1
+#define BOOT_FS_IDX 0
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 
@@ -95,7 +95,7 @@ unsigned long switch_to_root_disk()
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 					1, 1, (unsigned char *)gpt_hdr);
 	// load all the gpt_entries
-	unsigned gptent_nr = gpt_hdr->NumberOfPartitionEntries;
+	u32 gptent_nr = gpt_hdr->NumberOfPartitionEntries;
 	gpt_pes = (GPT_PE_s *)kmalloc(gptent_nr * sizeof(GPT_PE_s));
 	memset(gpt_pes, 0, gptent_nr * sizeof(GPT_PE_s));
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, gpt_hdr->PartitionEntryLBA,
@@ -116,7 +116,7 @@ unsigned long switch_to_root_disk()
 				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s));
 				ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 								gpt_pes[i].StartingLBA, 1, (unsigned char *)fat32_sb);
-				if (i = BOOT_FS_IDX)
+				if (i == BOOT_FS_IDX)
 					root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
 			break;
