@@ -1,4 +1,5 @@
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -D__KERNEL__ -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
+# message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 file(GLOB KERNEL_C_SRCS *.c)
 

@@ -37,12 +37,38 @@ set(DEBUG "-DDEBUG")
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
 # message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} -mcmodel=large \
-    -fno-builtin -nostdinc -ffreestanding -fno-stack-protector -nostdlib \
-    -Wno-unused-command-line-argument -fno-exceptions -fno-unwind-tables \
-    -no-pie -fdata-sections -ffunction-sections \
-    -Wno-packed-bitfield-compat -nostartfiles -static -ggdb -m64 -fPIC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
+    -m64 -mcmodel=large -fPIC \
+    -ffreestanding -nostartfiles \
+    -nostdinc -nostdlib \
+    -fno-stack-protector \
+    -fno-unwind-tables \
+    -mabi=sysv -static \
+    -fdata-sections -ffunction-sections \
+    -ggdb")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
+# The Compile Options Explaination is in doc/compile_options_explaination.MD
+
+# Compile Options Explainations:
+
+# -mcmodel=large
+#   Generate code for the large model.
+#   This model makes no assumptions about addresses and sizes of sections.
+
+# -ffreestanding
+#   Assert that compilation targets a freestanding environment. This implies -fno-builtin.
+#   A freestanding environment is one in which the standard library may not exist,
+#   and program startup may not necessarily be at main.
+#   The most obvious example is an OS kernel. This is equivalent to -fno-hosted.
+
+# -nostdinc
+#   Do not search the standard system directories for header files.
+#   Only the directories explicitly specified with -I, -iquote, -isystem,
+#   and/or -idirafter options (and the directory of the current file, if appropriate) are searched.
+
+# -nostdinc++
+#   Do not search for header files in the C++-specific standard directories,
+#   but do still search the other standard directories. (This option is used when building the C++ library.)
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 # message("${PROMPT} LDFLAGS : ${CMAKE_EXE_LINKER_FLAGS}")
