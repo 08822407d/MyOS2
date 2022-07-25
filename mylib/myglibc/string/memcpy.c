@@ -54,7 +54,7 @@
 	*/
 	#include <string.h>
 
-	void * memcpy(void *dst0, const void *src0, size_t length)
+	void *memcpy(void *dst0, const void *src0, size_t length)
 	{
 		char *dst = dst0;
 		const char *src = src0;
