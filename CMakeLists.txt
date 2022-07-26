@@ -6,15 +6,15 @@ project(MyOS2 ASM C)
 set(PROMPT "==>|")
 
 if (CMAKE_HOST_APPLE)
-    message("${PROMPT} Working on MAC : ${CMAKE_SYSTEM_PROCESSOR}\n")
-    set (CMAKE_C_COMPILER /opt/local/bin/x86_64-elf-gcc)
-    set (CMAKE_ASM_COMPILER /opt/local/bin/x86_64-elf-gcc)
-    set (CMAKE_C_LINKER /opt/local/bin/x86_64-elf-gcc)
+	message("${PROMPT} Working on MAC : ${CMAKE_SYSTEM_PROCESSOR}\n")
+	set (CMAKE_C_COMPILER /opt/local/bin/x86_64-elf-gcc)
+	set (CMAKE_ASM_COMPILER /opt/local/bin/x86_64-elf-gcc)
+	set (CMAKE_C_LINKER /opt/local/bin/x86_64-elf-gcc)
 elseif(CMAKE_HOST_UNIX)
-    message("${PROMPT} Working on UNIX : ${CMAKE_SYSTEM_PROCESSOR}\n")
-    set (CMAKE_C_COMPILER /usr/bin/gcc)
-    set (CMAKE_ASM_COMPILER /usr/bin/gcc)
-    set (CMAKE_C_LINKER usr/bin/ld)
+	message("${PROMPT} Working on UNIX : ${CMAKE_SYSTEM_PROCESSOR}\n")
+	set (CMAKE_C_COMPILER /usr/bin/gcc)
+	set (CMAKE_ASM_COMPILER /usr/bin/gcc)
+	set (CMAKE_C_LINKER usr/bin/ld)
 endif()
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
@@ -24,9 +24,9 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAK
 #                                   global options                                              #
 #===============================================================================================#
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
-    set(ARCH amd64)
+	set(ARCH amd64)
 elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
-    set(ARCH aarch64)
+	set(ARCH aarch64)
 endif()
 
 set(DEBUG "-DDEBUG")
@@ -38,15 +38,15 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64")
 # message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
-    -m64 -mcmodel=large -fPIC \
-    -ffreestanding -nostartfiles \
-    -nostdinc -nostdlib \
-    -fno-stack-protector \
-    -fno-unwind-tables \
-    -mabi=sysv -mno-red-zone \
-    -static \
-    -fdata-sections -ffunction-sections \
-    -ggdb")
+				-m64 -mcmodel=large -fPIC \
+				-ffreestanding -nostartfiles \
+				-nostdinc -nostdlib \
+				-fno-stack-protector \
+				-fno-unwind-tables \
+				-mabi=sysv \
+				-static \
+				-fdata-sections -ffunction-sections \
+				-ggdb")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 # The Compile Options Explaination is in doc/compile_options_explaination.MD
 

@@ -1,4 +1,5 @@
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D_KERNEL -D__KERNEL__ -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mno-red-zone \
+				-D_KERNEL -D__KERNEL__ -T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 file(GLOB KERNEL_C_SRCS *.c)
@@ -7,7 +8,6 @@ add_executable(kern)
 target_sources(kern PRIVATE ${KERNEL_C_SRCS})
 target_include_directories(kern PRIVATE ${PROJECT_SOURCE_DIR}/include 
 							${PROJECT_SOURCE_DIR}/kernel 
-							${PROJECT_SOURCE_DIR}/sys
 							${PROJECT_SOURCE_DIR}/loader)
 
 add_subdirectory(arch)

@@ -7,5 +7,4 @@ file(GLOB INIT_ASM_SRCS ./*.S)
 add_executable(init ${INIT_C_SRCS} ${INIT_ASM_SRCS})
 target_include_directories(init PRIVATE ${PROJECT_SOURCE_DIR}/include
 							${PROJECT_SOURCE_DIR}/mylib/include
-							${PROJECT_SOURCE_DIR}/kernel 
 							${PROJECT_SOURCE_DIR}/sys)

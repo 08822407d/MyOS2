@@ -1,7 +1,6 @@
 add_library(mylibc STATIC)
 target_include_directories(mylibc PRIVATE ${PROJECT_SOURCE_DIR}/include
                     ${PROJECT_SOURCE_DIR}/mylib/include
-                    ${PROJECT_SOURCE_DIR}/kernel 
                     ${PROJECT_SOURCE_DIR}/sys)
 
 add_subdirectory(sys)
