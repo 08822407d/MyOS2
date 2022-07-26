@@ -136,7 +136,9 @@
 		"genhd.h": "c",
 		"block_s_defs.h": "c",
 		"fs_context.h": "c",
-		"sysfs.h": "c"
+		"sysfs.h": "c",
+		"compiler.h": "c",
+		"ctype.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }
