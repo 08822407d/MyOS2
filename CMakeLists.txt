@@ -43,7 +43,8 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
     -nostdinc -nostdlib \
     -fno-stack-protector \
     -fno-unwind-tables \
-    -mabi=sysv -static \
+    -mabi=sysv -mno-red-zone \
+    -static \
     -fdata-sections -ffunction-sections \
     -ggdb")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")

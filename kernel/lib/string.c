@@ -706,11 +706,14 @@ void *memset(void *s, int c, size_t count)
  * You should not use this function to access IO space, use memcpy_toio()
  * or memcpy_fromio() instead.
  */
-void *memcpy(void register *dest, const void register *src,
-				size_t register count)
+void *memcpy(void *dest, const void *src,
+				size_t count)
 {
+	char *tmp = dest;
+	const char *s = src;
+
 	while (count--)
-		*(char *)dest++ = *(const char*)src++;
+		*tmp++ = *s++;
 	return dest;
 }
 // EXPORT_SYMBOL(memcpy);
