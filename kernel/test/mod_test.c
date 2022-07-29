@@ -1,9 +1,9 @@
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
-#include <include/proto.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/proto.h>
 #include <linux/fs/fs.h>
-#include <include/printk.h>
+#include <include/obsolete/printk.h>
 
 #include <arch/amd64/include/arch_proto.h>
 #include <arch/amd64/include/device.h>

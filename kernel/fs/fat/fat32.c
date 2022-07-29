@@ -19,8 +19,8 @@
 #include <linux/lib/string.h>
 #include <uapi/msdos_fs.h>
 
-#include <include/printk.h>
-#include <include/proto.h>
+#include <include/obsolete/printk.h>
+#include <include/obsolete/proto.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

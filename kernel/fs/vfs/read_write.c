@@ -26,7 +26,7 @@
 // #include <asm/unistd.h>
 
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 
 /**

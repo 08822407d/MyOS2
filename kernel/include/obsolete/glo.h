@@ -1,7 +1,7 @@
 #ifndef _GLO_H_
 #define _GLO_H_
 
-#include <include/ktypes.h>
+#include <include/obsolete/ktypes.h>
 
 	extern unsigned long volatile	jiffies;
 

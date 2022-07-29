@@ -20,7 +20,7 @@
 
 #include <klib/utils.h>
 
-#include <include/ktypes.h>
+#include <include/obsolete/ktypes.h>
 
 #include "archconst.h"
 

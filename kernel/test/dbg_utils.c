@@ -1,7 +1,7 @@
 #include <linux/kernel/types.h>
 #include <linux/lib/string.h>
 
-#include <include/dbg_utils.h>
+#include <include/obsolete/dbg_utils.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/arch_proto.h>

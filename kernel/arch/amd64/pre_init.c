@@ -6,7 +6,7 @@
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>

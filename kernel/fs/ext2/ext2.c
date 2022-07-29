@@ -2,7 +2,7 @@
 #include <linux/fs/GPT.h>
 #include <linux/fs/ext2.h>
 
-#include <include/printk.h>
+#include <include/obsolete/printk.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

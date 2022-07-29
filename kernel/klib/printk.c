@@ -22,8 +22,8 @@
 #include <klib/font.h>
 #include <klib/const.h>
 
-#include <include/glo.h>
-#include <include/printk.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/printk.h>
 
 #include <arch/amd64/include/tty.h>
 

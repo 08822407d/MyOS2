@@ -17,7 +17,7 @@
 #include <linux/fs/kernfs-internal.h>
 
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 static kernfs_node_s *__kernfs_new_node(kernfs_root_s *root,
 				kernfs_node_s *parent,

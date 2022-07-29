@@ -12,7 +12,7 @@
 #include <linux/kernel/sched/sched.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 typedef struct prepend_buffer
 {

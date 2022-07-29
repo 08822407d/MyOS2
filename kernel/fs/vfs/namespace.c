@@ -44,8 +44,8 @@
 #include <linux/fs/mount.h>
 #include <uapi/fcntl.h>
 #include <linux/lib/errno.h>
-#include <include/proto.h>
-#include <include/printk.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/printk.h>
 
 
 static mount_s *alloc_vfsmnt(const char *name)

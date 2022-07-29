@@ -9,9 +9,9 @@
 #include <arch/amd64/include/arch_proto.h>
 #include <arch/amd64/include/mutex.h>
 
-#include <include/glo.h>
-#include <include/ktypes.h>
-#include <include/printk.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/ktypes.h>
+#include <include/obsolete/printk.h>
 
 recurs_lock_T	page_alloc_lock;
 

@@ -1,4 +1,4 @@
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 #include <linux/mm/page.h>
 #include <linux/mm/slab.h>
 

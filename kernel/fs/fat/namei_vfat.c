@@ -5,8 +5,8 @@
 #include <linux/fs/fat32.h>
 #include <uapi/msdos_fs.h>
 
-#include <include/proto.h>
-#include <include/printk.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/printk.h>
 
 #include "arch/amd64/include/device.h"
 #include "arch/amd64/include/ide.h"

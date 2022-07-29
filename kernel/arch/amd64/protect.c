@@ -1,8 +1,8 @@
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
-#include <include/proto.h>
-#include <include/ktypes.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/ktypes.h>
 #include <linux/kernel/sched/sched.h>
 #include <linux/mm/memblock.h>
 

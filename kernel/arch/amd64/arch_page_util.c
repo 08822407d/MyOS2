@@ -5,11 +5,11 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
-#include <include/proto.h>
-#include <include/ktypes.h>
-#include <include/printk.h>
-#include <include/dbg_utils.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/ktypes.h>
+#include <include/obsolete/printk.h>
+#include <include/obsolete/dbg_utils.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

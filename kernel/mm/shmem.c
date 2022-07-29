@@ -84,7 +84,7 @@ static vfsmount_s *shm_mnt;
 
 
 #include <linux/kernel/err.h>
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 #define BLOCKS_PER_PAGE  (PAGE_SIZE/512)
 #define VM_ACCT(size)    (PAGE_ALIGN(size) >> PAGE_SHIFT)

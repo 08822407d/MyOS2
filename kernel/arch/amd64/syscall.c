@@ -5,8 +5,8 @@
 #include <linux/lib/string.h>
 #include <uapi/sysreboot.h>
 
-#include <include/proto.h>
-#include <include/printk.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/printk.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"

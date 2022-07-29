@@ -26,7 +26,7 @@
 
 
 #include <linux/fs/vfs_s_defs.h>
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 /*
  * Called every time a character special file is opened

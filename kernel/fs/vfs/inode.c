@@ -24,8 +24,8 @@
 #include <linux/fs/internal.h>
 
 
-#include <include/proto.h>
-#include <include/printk.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/printk.h>
 
 /*
  * Inode locking rules:

@@ -5,8 +5,8 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
-#include <include/proto.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/proto.h>
 
 #include <arch/amd64/include/arch_glo.h>
 #include <arch/amd64/include/mutex.h>

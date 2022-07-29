@@ -14,8 +14,8 @@
 ***************************************************/
 #include <linux/lib/string.h>
 
-#include <include/ktypes.h>
-#include <include/printk.h>
+#include <include/obsolete/ktypes.h>
+#include <include/obsolete/printk.h>
 
 #include "include/arch_glo.h"
 #include "include/arch_proto.h"

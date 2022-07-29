@@ -29,7 +29,7 @@
 // #include <asm/word-at-a-time.h>
 // #include <asm/page.h>
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 // // #ifndef __HAVE_ARCH_STRNCASECMP
 // /**

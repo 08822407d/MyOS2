@@ -29,8 +29,8 @@
 #include <uapi/mount.h>
 #include <linux/drivers/base.h>
 
-#include <include/proto.h>
-#include <include/printk.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/printk.h>
 
 
 #ifdef CONFIG_DEVTMPFS_SAFE

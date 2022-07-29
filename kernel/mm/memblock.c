@@ -27,7 +27,7 @@
 #include <linux/mm/page.h>
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
+#include <include/obsolete/glo.h>
 
 #include <arch/amd64/include/arch_config.h>
 #include <arch/amd64/include/arch_proto.h>

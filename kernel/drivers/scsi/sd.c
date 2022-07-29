@@ -75,7 +75,7 @@
 
 
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 /**
  *	sd_probe - called during driver initialization and whenever a

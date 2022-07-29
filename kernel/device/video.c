@@ -2,10 +2,10 @@
 #include <linux/mm/mm.h>
 #include <linux/lib/string.h>
 
-#include <include/glo.h>
-#include <include/proto.h>
-#include <include/ktypes.h>
-#include <include/printk.h>
+#include <include/obsolete/glo.h>
+#include <include/obsolete/proto.h>
+#include <include/obsolete/ktypes.h>
+#include <include/obsolete/printk.h>
 
 #include <arch/amd64/include/archconst.h>
 #include <arch/amd64/include/archtypes.h>

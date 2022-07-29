@@ -33,7 +33,7 @@
 
 
 #include <linux/kernel/err.h>
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 /* Find an unused file structure and return a pointer to it.
  * Returns an error pointer if some error happend e.g. we over file

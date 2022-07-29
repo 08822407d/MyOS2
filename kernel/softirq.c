@@ -14,7 +14,7 @@
 ***************************************************/
 #include <linux/kernel/types.h>
 
-#include <include/proto.h>
+#include <include/obsolete/proto.h>
 
 uint64_t	softirq_status = 0;
 softirq_s	softirq_vector[64] = {0};

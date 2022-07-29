@@ -3,9 +3,9 @@
 
 #include <linux/kernel/types.h>
 
-#include <include/ktypes.h>
+#include <include/obsolete/ktypes.h>
 #include <linux/fs/fs.h>
-#include <include/block_dev.h>
+#include <include/obsolete/block_dev.h>
 
 #include "arch_proto.h"
 #include "interrupt.h"
