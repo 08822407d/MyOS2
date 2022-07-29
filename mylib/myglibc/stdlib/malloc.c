@@ -2,6 +2,7 @@
 
 #include <const.h>
 #include "_malloc.h"
+#include <stddef.h>
 
 /*
 * This looks more complex than it should be. But we need to

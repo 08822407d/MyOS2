@@ -1,12 +1,12 @@
-#include <linux/kernel/fcntl.h>
 #include <sys/wait.h>
+#include <sys/limits.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <fcntl.h>
 
-#include <uapi/limits.h>
 
 void file_io_test(void);
 void malloc_free_test(void);

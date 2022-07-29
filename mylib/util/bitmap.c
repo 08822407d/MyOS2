@@ -1,6 +1,5 @@
-#include <linux/kernel/types.h>
-
-#include <klib/utils.h>
+#include <sys/types.h>
+#include <utils.h>
 
 unsigned bm_get_assigned_bit(bitmap_t * bm, unsigned long idx)
 {

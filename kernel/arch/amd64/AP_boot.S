@@ -2,7 +2,7 @@
 
 #include <arch/amd64/asm.h>
 
-#include <arch/amd64/include/archconst.h>
+#include "../arch/amd64/include/archconst.h"
 
 .balign	0x1000
 .text

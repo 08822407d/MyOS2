@@ -1,10 +1,10 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/printk.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/ktypes.h>
+#include <obsolete/glo.h>
+#include <obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/ktypes.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"

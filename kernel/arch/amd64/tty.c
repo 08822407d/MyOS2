@@ -3,9 +3,9 @@
 
 #include <klib/font.h>
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/wait_queue.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/wait_queue.h>
+#include <obsolete/printk.h>
 #include <linux/fs/fs.h>
 
 #include "include/tty.h"

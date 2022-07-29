@@ -51,7 +51,7 @@
 #include <linux/fs/internal.h>
 
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 
 /*

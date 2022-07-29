@@ -45,9 +45,9 @@
 
 #include <linux/kernel/err.h>
 #include <linux/lib/string.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
-#include <arch/amd64/include/arch_proto.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/arch_proto.h"
 
 typedef struct nameidata
 {

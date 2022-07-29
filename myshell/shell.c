@@ -1,15 +1,17 @@
-#include <linux/kernel/fcntl.h>
 #include <sys/wait.h>
-#include <uapi/sysreboot.h>
+#include <sys/limits.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
+#include <fcntl.h>
 
-#include <uapi/limits.h>
 
 #include "externs.h"
+
+#define	SYSTEM_REBOOT	(1UL << 0)
+#define	SYSTEM_POWEROFF	(1UL << 1)
 
 typedef struct builtincmd
 {

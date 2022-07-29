@@ -20,7 +20,7 @@
 #include <linux/fs/sysfs.h>
 
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 static kernfs_root_s *sysfs_root;
 kernfs_node_s *sysfs_root_kn;

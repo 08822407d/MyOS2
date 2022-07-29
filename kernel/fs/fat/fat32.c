@@ -19,11 +19,10 @@
 #include <linux/lib/string.h>
 #include <uapi/msdos_fs.h>
 
-#include <include/obsolete/printk.h>
-#include <include/obsolete/proto.h>
-
-#include "arch/amd64/include/device.h"
-#include "arch/amd64/include/ide.h"
+#include <obsolete/printk.h>
+#include <obsolete/proto.h>
+#include "../../arch/amd64/include/device.h"
+#include "../../arch/amd64/include/ide.h"
 
 uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 {

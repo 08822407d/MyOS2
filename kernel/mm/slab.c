@@ -6,15 +6,13 @@
 #include <linux/lib/string.h>
 
 #include <klib/utils.h>
-
-#include <arch/amd64/include/archconst.h>
-#include <arch/amd64/include/archtypes.h>
-#include <arch/amd64/include/arch_glo.h>
-#include <arch/amd64/include/arch_proto.h>
-
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/archtypes.h"
+#include "../arch/amd64/include/arch_glo.h"
+#include "../arch/amd64/include/arch_proto.h"
 
 List_hdr_s		slabcache_lhdr;
 recurs_lock_T	slab_alloc_lock;

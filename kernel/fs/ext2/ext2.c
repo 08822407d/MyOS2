@@ -2,10 +2,10 @@
 #include <linux/fs/GPT.h>
 #include <linux/fs/ext2.h>
 
-#include <include/obsolete/printk.h>
+#include <obsolete/printk.h>
 
-#include "arch/amd64/include/device.h"
-#include "arch/amd64/include/ide.h"
+#include "../../arch/amd64/include/device.h"
+#include "../../arch/amd64/include/ide.h"
 
 super_block_s * read_ext2_superblock(GPT_PE_s * DPTE, void * buf)
 {

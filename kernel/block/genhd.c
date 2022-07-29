@@ -32,7 +32,7 @@
 // #include "blk-rq-qos.h"
 
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 gendisk_s *__alloc_disk_node(request_queue_s *q)
 {

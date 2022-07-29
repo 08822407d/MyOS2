@@ -6,7 +6,7 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
-#include <uapi/syscall.h>
+#include "syscall.h"
 
 #include <errno.h>
 

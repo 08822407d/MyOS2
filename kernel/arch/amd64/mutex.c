@@ -1,7 +1,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 #include "include/mutex.h"
 

@@ -5,11 +5,10 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
-
-#include <arch/amd64/include/arch_glo.h>
-#include <arch/amd64/include/mutex.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
+#include "../arch/amd64/include/arch_glo.h"
+#include "../arch/amd64/include/mutex.h"
 
 extern char _text;
 extern char _etext;

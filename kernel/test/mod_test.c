@@ -1,13 +1,12 @@
+#include <linux/fs/fs.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
-#include <linux/fs/fs.h>
-#include <include/obsolete/printk.h>
-
-#include <arch/amd64/include/arch_proto.h>
-#include <arch/amd64/include/device.h>
-#include <arch/amd64/include/ide.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/arch_proto.h"
+#include "../arch/amd64/include/device.h"
+#include "../arch/amd64/include/ide.h"
 
 extern atomic_T boot_counter;
 

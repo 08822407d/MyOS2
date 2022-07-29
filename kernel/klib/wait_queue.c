@@ -1,5 +1,5 @@
 #include <linux/kernel/sched/sched.h>
-#include <include/obsolete/wait_queue.h>
+#include <obsolete/wait_queue.h>
 
 void wq_init(wait_queue_T * wq, task_s * tsk)
 {

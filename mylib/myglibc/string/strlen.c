@@ -27,7 +27,7 @@
 
 // __FBSDID("$FreeBSD$");
 
-#include <linux/kernel/types.h>
+#include <sys/types.h>
 #include <string.h>
 
 /*

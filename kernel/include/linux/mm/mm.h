@@ -2,12 +2,11 @@
 #ifndef _LINUX_MM_H
 #define _LINUX_MM_H
 
+#include <linux/mm/mmzone.h>
 #include <uapi/const.h>
 
-#include <linux/mm/mmzone.h>
-#include <include/obsolete/block_dev.h>
-
-#include <arch/amd64/include/archconst.h>
+#include <obsolete/block_dev.h>
+#include "../arch/amd64/include/archconst.h"
 
 	////struct page attribute (alloc_pages flags)
 	//

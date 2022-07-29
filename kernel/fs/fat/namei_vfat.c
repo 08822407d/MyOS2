@@ -5,11 +5,10 @@
 #include <linux/fs/fat32.h>
 #include <uapi/msdos_fs.h>
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
-
-#include "arch/amd64/include/device.h"
-#include "arch/amd64/include/ide.h"
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
+#include "../../arch/amd64/include/device.h"
+#include "../../arch/amd64/include/ide.h"
 
 
 static int vfat_revalidate(dentry_s *dentry, unsigned int flags)

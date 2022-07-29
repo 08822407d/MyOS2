@@ -6,7 +6,7 @@
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/mylib/include",
                 "${workspaceFolder}/kernel/arch",
-                "${workspaceFolder}/kernel",
+                "${workspaceFolder}/kernel/include",
                 "${workspaceFolder}/sys",
                 "${workspaceFolder}/loader"
             ],

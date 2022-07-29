@@ -2,11 +2,10 @@
 #define _AMD64_PC_DEVICE_H_
 
 #include <linux/kernel/types.h>
-
-#include <include/obsolete/ktypes.h>
 #include <linux/fs/fs.h>
-#include <include/obsolete/block_dev.h>
 
+#include <obsolete/ktypes.h>
+#include <obsolete/block_dev.h>
 #include "arch_proto.h"
 #include "interrupt.h"
 

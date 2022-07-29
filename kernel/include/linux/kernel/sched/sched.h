@@ -7,8 +7,8 @@
 #include <linux/kernel/types.h>
 #include <linux/mm/mm.h>
 
-#include <arch/amd64/include/arch_task.h>
-#include <arch/amd64/include/arch_config.h>
+#include "../arch/amd64/include/arch_task.h"
+#include "../arch/amd64/include/arch_config.h"
 
 	#define MAX_PID				0x8000
 	#define PS_RUNNING			(1L << 0)

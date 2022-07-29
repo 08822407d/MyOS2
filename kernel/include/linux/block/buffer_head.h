@@ -15,7 +15,7 @@
 // #include <linux/wait.h>
 // #include <linux/atomic.h>
 
-#include <arch/amd64/include/device.h>
+#include "../arch/amd64/include/device.h"
 
 	enum bh_state_bits {
 		BH_Uptodate,		/* Contains valid data */

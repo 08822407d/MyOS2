@@ -1,5 +1,3 @@
-#include <linux/lib/string.h>
-
 #include <linux/fs/fs.h>
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
@@ -8,13 +6,14 @@
 #include <linux/fs/sysfs.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/internal.h>
+#include <linux/lib/string.h>
 
 
-#include <include/obsolete/printk.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/glo.h>
-#include "arch/amd64/include/device.h"
-#include "arch/amd64/include/ide.h"
+#include <obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/glo.h>
+#include "../../arch/amd64/include/device.h"
+#include "../../arch/amd64/include/ide.h"
 
 
 #include <linux/kernel/init_syscalls.h>

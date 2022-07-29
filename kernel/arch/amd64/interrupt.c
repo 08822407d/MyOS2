@@ -1,7 +1,7 @@
 #include <linux/kernel/stddef.h>
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"

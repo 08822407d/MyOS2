@@ -5,13 +5,12 @@
 #include <linux/mm/mmzone.h>
 #include <linux/lib/string.h>
 
-#include <arch/amd64/include/archconst.h>
-#include <arch/amd64/include/arch_proto.h>
-#include <arch/amd64/include/mutex.h>
-
-#include <include/obsolete/glo.h>
-#include <include/obsolete/ktypes.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/glo.h>
+#include <obsolete/ktypes.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/arch_proto.h"
+#include "../arch/amd64/include/mutex.h"
 
 recurs_lock_T	page_alloc_lock;
 

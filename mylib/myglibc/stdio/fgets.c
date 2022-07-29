@@ -2,8 +2,8 @@
  * libc/stdio/fgets.c
  */
 
-#include <linux/kernel/types.h>
 #include <stdio.h>
+#include <sys/types.h>
 
 char * fgets(char * s, int n, FILE * f)
 {

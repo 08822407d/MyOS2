@@ -2,15 +2,14 @@
 #include <linux/mm/mm.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/ktypes.h>
-#include <include/obsolete/printk.h>
-
-#include <arch/amd64/include/archconst.h>
-#include <arch/amd64/include/archtypes.h>
-#include <arch/amd64/include/arch_glo.h>
-#include <arch/amd64/include/arch_proto.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
+#include <obsolete/ktypes.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/archtypes.h"
+#include "../arch/amd64/include/arch_glo.h"
+#include "../arch/amd64/include/arch_proto.h"
 
 extern position_t Pos;
 

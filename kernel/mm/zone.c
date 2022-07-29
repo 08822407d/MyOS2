@@ -3,7 +3,7 @@
 #include <linux/mm/mmzone.h>
 #include <linux/lib/string.h>
 
-#include <arch/amd64/include/arch_config.h>
+#include "../arch/amd64/include/arch_config.h"
 
 static char * const zone_names[MAX_NR_ZONES] = {
 #ifdef CONFIG_ZONE_DMA

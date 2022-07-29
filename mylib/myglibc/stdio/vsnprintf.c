@@ -1,7 +1,7 @@
 /*
  * libc/stdio/vsnprintf.c
  */
-#include <linux/kernel/fcntl.h>
+#include "fcntl.h"
 // #include <math.h>
 #include <string.h>
 #include <stdio.h>

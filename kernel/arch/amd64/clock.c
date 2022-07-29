@@ -1,4 +1,4 @@
-#include <include/obsolete/glo.h>
+#include <obsolete/glo.h>
 
 #include "include/arch_proto.h"
 #include "include/device.h"

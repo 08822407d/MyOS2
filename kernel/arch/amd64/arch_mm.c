@@ -2,8 +2,8 @@
 
 #include <klib/stdbool.h>
 
-#include <include/obsolete/ktypes.h>
-#include <include/obsolete/proto.h>
+#include <obsolete/ktypes.h>
+#include <obsolete/proto.h>
 #include <linux/kernel/sched/sched.h>
 
 #include "include/arch_proto.h"

@@ -26,10 +26,10 @@
 
 
 #include <linux/lib/string.h>
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 #include <linux/kernel/align.h>
-#include <arch/amd64/include/archconst.h>
-#include <arch/amd64/include/arch_proto.h>
+#include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/arch_proto.h"
 
 typedef struct getdents_callback64 {
 	dir_ctxt_s ctx;

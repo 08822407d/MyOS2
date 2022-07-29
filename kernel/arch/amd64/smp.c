@@ -1,7 +1,7 @@
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
 #include <linux/kernel/sched/sched.h>
 #include <linux/mm/memblock.h>
 

@@ -3,9 +3,9 @@
 #include <linux/lib/string.h>
 #include <uapi/major.h>
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
-#include <include/obsolete/block_dev.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
+#include <obsolete/block_dev.h>
 
 #include "include/arch_proto.h"
 #include "include/interrupt.h"

@@ -1,5 +1,4 @@
-#include <linux/kernel/types.h>
-
+#include <sys/types.h>
 #include <string.h>
 
 int memcmp(const void *x, const void *y, size_t n)

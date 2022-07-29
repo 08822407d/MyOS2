@@ -28,7 +28,7 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/err.h>
 #include <linux/lib/string.h>
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 enum legacy_fs_param {
 	LEGACY_FS_UNSET_PARAMS,

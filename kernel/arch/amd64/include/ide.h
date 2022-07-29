@@ -17,7 +17,7 @@
 
 #include <linux/kernel/types.h>
 
-#include <include/obsolete/block_dev.h>
+#include <obsolete/block_dev.h>
 
 #include "mutex.h"
 

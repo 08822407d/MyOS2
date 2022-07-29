@@ -44,7 +44,7 @@
 
 /* Machine type dependent parameters. */
 #include <sys/_types.h>
-
+#include <sys/_null.h>
 
 
 #if __BSD_VISIBLE

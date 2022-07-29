@@ -2,10 +2,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #include <dirent.h>
 
-#include <uapi/fcntl.h>
+#include <fcntl.h>
 
 DIR *__alloc_dir(int fd, bool close_fd, int flags)
 {

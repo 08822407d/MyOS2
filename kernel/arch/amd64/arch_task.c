@@ -9,9 +9,9 @@
 
 #include <klib/utils.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/glo.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
 
 #include "include/archconst.h"
 #include "include/archtypes.h"

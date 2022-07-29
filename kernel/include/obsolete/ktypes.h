@@ -8,8 +8,8 @@
 
 #include <klib/utils.h>
 
-#include <arch/amd64/include/archconst.h>
-#include <arch/amd64/include/keyboard.h>
+#include "../arch/amd64/include/archconst.h"
+#include "../arch/amd64/include/keyboard.h"
 
 #define NR_BOOT_PROCS   (NR_TASKS + LAST_SPECIAL_PROC_NR + 1)
 

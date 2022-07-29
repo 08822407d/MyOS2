@@ -4,7 +4,7 @@
 #include <linux/fs/dcache.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 
 #include "include/device.h"
 #include "include/tty.h"

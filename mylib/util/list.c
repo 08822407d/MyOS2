@@ -1,8 +1,8 @@
-#include <linux/kernel/types.h>
-#include <linux/kernel/stddef.h>
+#include <sys/types.h>
+#include <stddef.h>
 
-#include <klib/utils.h>
-#include <klib/stdbool.h>
+#include <utils.h>
+#include <stdbool.h>
 
 /*==============================================================================================*/
 /*										list operations											*/
@@ -14,12 +14,12 @@ void list_init(List_s * src, void * owner_p)
 	src->owner_p = owner_p;
 }
 
-inline __always_inline List_s * list_get_prev(List_s * src)
+inline List_s * list_get_prev(List_s * src)
 {
 	return src->prev;
 }
 
-inline __always_inline List_s * list_get_next(List_s * src)
+inline List_s * list_get_next(List_s * src)
 {
 	return src->next;
 }
@@ -112,7 +112,7 @@ void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p)
 	lhdr_p->count++;
 }
 
-inline __always_inline void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
+inline void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	list_hdr_append(lhdr_p, l_p);
 }

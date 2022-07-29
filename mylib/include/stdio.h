@@ -6,8 +6,9 @@ extern "C" {
 #endif
 
 
-#include <linux/kernel/types.h>
-#include <linux/kernel/fcntl.h>
+// #include <linux/kernel/types.h>
+// #include <linux/kernel/fcntl.h>
+#include <sys/types.h>
 
 #include <stdarg.h>
 #include <sizes.h>

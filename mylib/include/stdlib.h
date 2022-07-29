@@ -5,7 +5,8 @@
 extern "C" {
 #endif
 
-#include <linux/kernel/types.h>
+// #include <linux/kernel/types.h>
+#include <sys/types.h>
 
 #include <arch/amd64/types.h>
 

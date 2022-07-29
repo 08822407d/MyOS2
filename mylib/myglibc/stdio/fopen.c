@@ -2,7 +2,7 @@
  * libc/stdio/fopen.c
  */
 
-#include <uapi/fcntl.h>
+#include <fcntl.h>
 
 #include <stdlib.h>
 #include <unistd.h>

@@ -1,11 +1,11 @@
 #ifndef _LINUX_MMZONE_H_
 #define _LINUX_MMZONE_H_
 
-#include <klib/utils.h>
-
 #include <linux/mm/page.h>
 
-#include <arch/amd64/include/arch_config.h>
+
+#include <klib/utils.h>
+#include "../arch/amd64/include/arch_config.h"
 
 	#define MAX_ORDER 11
 	#define MAX_NR_ZONES __MAX_NR_ZONES /* __MAX_NR_ZONES */

@@ -4,8 +4,8 @@
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
 #include <linux/fs/fs.h>
 
 #include "include/arch_proto.h"

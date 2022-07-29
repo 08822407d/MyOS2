@@ -33,8 +33,8 @@
 #include <linux/fs/fs.h>
 #include <uapi/stat.h>
 #include <uapi/magic.h>
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
 
 typedef struct bdev_inode {
 	block_device_s bdev;

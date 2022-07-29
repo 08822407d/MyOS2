@@ -40,8 +40,8 @@
 #include <linux/fs/internal.h>
 
 
-#include <include/obsolete/proto.h>
-#include <include/obsolete/printk.h>
+#include <obsolete/proto.h>
+#include <obsolete/printk.h>
 #include <linux/fs/fs.h>
 #include <linux/lib/errno.h>
 

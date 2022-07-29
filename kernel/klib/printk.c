@@ -22,10 +22,9 @@
 #include <klib/font.h>
 #include <klib/const.h>
 
-#include <include/obsolete/glo.h>
-#include <include/obsolete/printk.h>
-
-#include <arch/amd64/include/tty.h>
+#include <obsolete/glo.h>
+#include <obsolete/printk.h>
+#include "../arch/amd64/include/tty.h"
 
 /*
 

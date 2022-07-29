@@ -27,10 +27,9 @@
 #include <linux/mm/page.h>
 #include <linux/lib/string.h>
 
-#include <include/obsolete/glo.h>
-
-#include <arch/amd64/include/arch_config.h>
-#include <arch/amd64/include/arch_proto.h>
+#include <obsolete/glo.h>
+#include "../arch/amd64/include/arch_config.h"
+#include "../arch/amd64/include/arch_proto.h"
 
 #define INIT_MEMBLOCK_REGIONS			128
 #define INIT_PHYSMEM_REGIONS			4

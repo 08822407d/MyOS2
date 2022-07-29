@@ -36,7 +36,7 @@
 #include <uapi/magic.h>
 #include <uapi/msdos_fs.h>
 
-#include <include/obsolete/proto.h>
+#include <obsolete/proto.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 

@@ -35,8 +35,8 @@
 #ifndef _SYS_WAIT_H_
 #define _SYS_WAIT_H_
 
-#include <linux/kernel/types.h>
-#include <linux/kernel/stddef.h>
+// #include <linux/kernel/types.h>
+// #include <linux/kernel/stddef.h>
 // /*
 //  * This file holds definitions relevant to the wait4 system call and the
 //  * alternate interfaces that use it (wait, wait3, waitpid).
@@ -153,8 +153,8 @@
 
 // #ifndef _KERNEL
 
-#include <linux/kernel/types.h>
-// #include <sys/types.h>
+// #include <linux/kernel/types.h>
+#include <sys/types.h>
 
 // __BEGIN_DECLS
 // struct __siginfo;
