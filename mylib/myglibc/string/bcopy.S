@@ -29,7 +29,7 @@
  * SUCH DAMAGE.
  */
 
-#include <arch/amd64/asm.h>
+#include <asm.h>
 
 // #if defined(LIBC_SCCS)
 // 	RCSID("$NetBSD: bcopy.S,v 1.5 2014/03/22 19:16:34 jakllsch Exp $")

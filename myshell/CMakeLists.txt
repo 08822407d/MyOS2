@@ -5,6 +5,5 @@ file(GLOB SHELL_C_SRCS ./*.c)
 file(GLOB SHELL_ASM_SRCS ./*.S)
 
 add_executable(shell ${SHELL_C_SRCS} ${SHELL_ASM_SRCS})
-target_include_directories(shell PRIVATE ${PROJECT_SOURCE_DIR}/include
-							${PROJECT_SOURCE_DIR}/mylib/include
+target_include_directories(shell PRIVATE ${PROJECT_SOURCE_DIR}/mylib/include
 							${PROJECT_SOURCE_DIR}/sys)

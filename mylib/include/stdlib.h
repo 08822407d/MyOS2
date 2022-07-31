@@ -8,7 +8,7 @@ extern "C" {
 // #include <linux/kernel/types.h>
 #include <sys/types.h>
 
-#include <arch/amd64/types.h>
+#include <asm/types.h>
 
 	/*
 	 *	definations from MyOS2

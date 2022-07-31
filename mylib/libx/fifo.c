@@ -5,7 +5,7 @@
 #include <stddef.h>
 // #include <minmax.h>
 // #include <arch/amd64/spinlock.h>
-#include <arch/amd64/barrier.h>
+#include <asm/barrier.h>
 #include <stdlib.h>
 // #include <log2.h>
 #include <string.h>

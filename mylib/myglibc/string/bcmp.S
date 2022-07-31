@@ -1,4 +1,4 @@
-#include <arch/amd64/asm.h>
+#include <asm.h>
 
 // #if defined(LIBC_SCCS)
 // 	RCSID("$NetBSD: bcmp.S,v 1.3 2014/03/22 19:16:34 jakllsch Exp $")

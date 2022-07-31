@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 // #include <arch/amd64/spinlock.h>
-#include <arch/amd64/types.h>
+#include <asm/types.h>
 
 	struct fifo_t {
 		unsigned char * buffer;

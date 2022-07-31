@@ -29,7 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <arch/amd64/asm.h>
+#include <asm.h>
 
 // #if defined(LIBC_SCCS)
 // 	RCSID("$NetBSD: memset.S,v 1.5 2014/05/22 16:47:31 pooka Exp $")
