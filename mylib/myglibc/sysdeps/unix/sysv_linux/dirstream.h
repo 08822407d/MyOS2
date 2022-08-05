@@ -27,15 +27,15 @@
 
 struct __dirstream
 {
-   int fd; /* File descriptor.  */
+   int      fd; /* File descriptor.  */
 
-   size_t allocation; /* Space allocated for the block.  */
-   size_t size;           /* Total valid data in the block.  */
-   size_t offset;         /* Current offset into the block.  */
+   size_t   allocation; /* Space allocated for the block.  */
+   size_t   size;           /* Total valid data in the block.  */
+   size_t   offset;         /* Current offset into the block.  */
 
-   off_t filepos; /* Position of next entry to read.  */
+   off_t    filepos; /* Position of next entry to read.  */
 
-   int errcode; /* Delayed error code.  */
+   int      errcode; /* Delayed error code.  */
 
    /* Directory block.  We must make sure that this block starts
       at an address that is aligned adequately enough to store
@@ -43,7 +43,7 @@ struct __dirstream
       sufficient because dirents on 32-bit platforms can require
       64-bit alignment.  We use "long double" here to be consistent
       with what malloc uses.  */
-   char data[0] __attribute__((aligned(__alignof__(long double))));
+   char     data[0] __attribute__((aligned(__alignof__(long double))));
 };
 
 #define _DIR_dirfd(dirp) ((dirp)->fd)
