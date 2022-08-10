@@ -1,0 +1,3 @@
+file(GLOB GENERIC_C_SRCS *.c)
+file(GLOB GENERIC_ASM_SRCS *.S)
+target_sources(mylibc PUBLIC ${GENERIC_C_SRCS} ${GENERIC_ASM_SRCS})

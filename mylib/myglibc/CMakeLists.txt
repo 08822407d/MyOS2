@@ -1,5 +1,5 @@
 add_library(mylibc STATIC)
-target_include_directories(mylibc PRIVATE ${PROJECT_SOURCE_DIR}/mylib/include
+target_include_directories(mylibc PUBLIC ${PROJECT_SOURCE_DIR}/mylib/include
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/include
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/stub
                     ${PROJECT_SOURCE_DIR}/sys)

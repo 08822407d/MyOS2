@@ -67,7 +67,7 @@ extern "C" {
 		fpos_t	pos;
 		int		mode;
 		int		eof;
-		errno_t	error;
+		int		error;
 	};
 
 	#define stdin		(__stdio_get_stdin())
