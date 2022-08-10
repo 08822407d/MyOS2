@@ -1,0 +1,3 @@
+file(GLOB LIBC_STDIO_C_SRCS *.c)
+file(GLOB LIBC_STDIO_ASM_SRCS *.S)
+target_sources(mylibc PUBLIC ${LIBC_STDIO_C_SRCS} ${LIBC_STDIO_ASM_SRCS})
