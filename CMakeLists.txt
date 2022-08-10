@@ -46,7 +46,11 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
 				-mabi=sysv \
 				-static \
 				-fdata-sections -ffunction-sections \
-				-ggdb")
+				-ggdb \
+				-v")
+
+set(CC_INC_PATH "$(gcc --print-file-name=include)")
+message("${PROMPT} CC_INC_PATH : ${CC_INC_PATH}")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 # The Compile Options Explaination is in doc/compile_options_explaination.MD
 
