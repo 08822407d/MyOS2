@@ -3,8 +3,8 @@
 
 void *memmove(void *dest, const void *src, size_t n)
 {
-	uint8_t* from = (uint8_t*) src;
-	uint8_t* to = (uint8_t*) dest;
+	u_int8_t* from = (u_int8_t*) src;
+	u_int8_t* to = (u_int8_t*) dest;
 
 	if (from == to || n == 0)
 	{

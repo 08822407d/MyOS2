@@ -1,5 +1,5 @@
-#ifdef USE_IN_LIBIO
-	#include <libio/stdio.h>
-#else
+// #ifdef USE_IN_LIBIO
+// 	#include <libio/stdio.h>
+// #else
 	#include <stdio/stdio.h>
-#endif
+// #endif
