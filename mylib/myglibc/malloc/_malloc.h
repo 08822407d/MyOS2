@@ -1,7 +1,7 @@
 #ifndef _MALLOC_H_
 #define _MALLOC_H_
 
-#include <utils.h>
+#include "../include/utils.h"
 
 	// uslab consts
 	#define USLAB_LEVEL			16

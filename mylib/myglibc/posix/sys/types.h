@@ -28,37 +28,37 @@
 #include <gnu/types.h>
 
 	#ifdef __USE_BSD
-		typedef __u_char u_char;
-		typedef __u_short u_short;
-		typedef __u_int u_int;
-		typedef __u_long u_long;
-		typedef __quad_t quad_t;
-		typedef __u_quad_t u_quad_t;
-		typedef __fsid_t fsid_t;
+		typedef __u_char	u_char;
+		typedef __u_short	u_short;
+		typedef __u_int		u_int;
+		typedef __u_long	u_long;
+		typedef __quad_t	quad_t;
+		typedef __u_quad_t	u_quad_t;
+		typedef __fsid_t	fsid_t;
 	#endif
 
-	typedef __dev_t dev_t;
-	typedef __gid_t gid_t;
-	typedef __ino_t ino_t;
-	typedef __mode_t mode_t;
-	typedef __nlink_t nlink_t;
-	typedef __off_t off_t;
-	typedef __loff_t loff_t;
-	typedef __pid_t pid_t;
-	typedef __uid_t uid_t;
+	typedef __dev_t		dev_t;
+	typedef __gid_t		gid_t;
+	typedef __ino_t		ino_t;
+	typedef __mode_t	mode_t;
+	typedef __nlink_t	nlink_t;
+	typedef __off_t		off_t;
+	typedef __loff_t	loff_t;
+	typedef __pid_t		pid_t;
+	typedef __uid_t		uid_t;
 
 	#ifndef ssize_t
-		typedef __ssize_t ssize_t;
-		#define ssize_t ssize_t
+		typedef __ssize_t	ssize_t;
+		#define ssize_t		ssize_t
 	#endif
 
 	#ifdef __USE_BSD
-		typedef __daddr_t daddr_t;
-		typedef __caddr_t caddr_t;
+		typedef __daddr_t	daddr_t;
+		typedef __caddr_t	caddr_t;
 	#endif
 
 	#if defined __USE_SVID || defined __USE_XOPEN
-		typedef __key_t key_t;
+		typedef __key_t		key_t;
 	#endif
 
 	#define __need_time_t
@@ -69,26 +69,26 @@
 
 	#ifdef __USE_MISC
 		/* Old compatibility names for C types.  */
-		typedef unsigned long int ulong;
-		typedef unsigned short int ushort;
-		typedef unsigned int uint;
+		typedef unsigned long int	ulong;
+		typedef unsigned short int	ushort;
+		typedef unsigned int		uint;
 	#endif
 
 	/* These size-specific names are used by some of the inet code.  */
 
 	#if !defined(__GNUC__) || __GNUC__ < 2 || __GNUC_MINOR__ < 7
 
-		typedef char int8_t;
-		typedef unsigned char u_int8_t;
-		typedef short int int16_t;
-		typedef unsigned short int u_int16_t;
-		typedef int int32_t;
-		typedef unsigned int u_int32_t;
+		typedef char				int8_t;
+		typedef unsigned char		u_int8_t;
+		typedef short int			int16_t;
+		typedef unsigned short int	u_int16_t;
+		typedef int 				int32_t;
+		typedef unsigned int		u_int32_t;
 		#ifdef __GNUC__
-			typedef long long int int64_t;
-			typedef unsigned long long int u_int64_t;
+			typedef long long int			int64_t;
+			typedef unsigned long long int	u_int64_t;
 		#endif
-		typedef int register_t;
+		typedef int		register_t;
 
 	#else
 

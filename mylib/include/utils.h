@@ -6,6 +6,16 @@
 #include <sys/types.h>
 #include <stdbool.h>
 
+	// #define container_of(ptr, type, member)
+	// ({const typeof(((type *)0)->member) *__mptr = (ptr);
+	// (type *)((char *)__mptr - offsetof(type,member));})
+	#define container_of(member_ptr, container_type, member_name)		\
+	({																	\
+		typeof(((container_type *)0)->member_name) * p = (member_ptr);	\
+		(container_type *)((unsigned long)p - 							\
+		(unsigned long)&(((container_type *)0)->member_name));			\
+	})
+
 	typedef __UINT64_TYPE__ bitmap_t;
 	#define BITMAP_UNITSIZE (sizeof(bitmap_t) * 8)
 	// indicate the param for input

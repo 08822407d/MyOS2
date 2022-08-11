@@ -21,7 +21,6 @@ extern "C" {
 	int 	execve(const char *path, char *const argv[], char *const envp[]);
 	int		getpid(void);
 	int		getppid(void);
-	void	*brk(const void *);
 	//
 
 #define RAND_MAX (0x7fffffff)
