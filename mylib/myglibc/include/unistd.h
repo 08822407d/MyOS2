@@ -1,6 +1,6 @@
 #ifndef _UNISTD_H
 
-	// #include <posix/unistd.h>
+	#include <posix/unistd.h>
 
 	#ifndef _ISOMAC
 
@@ -139,7 +139,7 @@
 	// 			attribute_hidden;
 	// 	extern int __ftruncate64(int __fd, __off64_t __length) attribute_hidden;
 	// 	extern int __truncate(const char *path, __off_t __length);
-		extern void *__sbrk(intptr_t __delta);
+	//	extern void *__sbrk(intptr_t __delta);
 	// 	libc_hidden_proto(__sbrk)
 
 	// 	/* This variable is set nonzero at startup if the process's effective
