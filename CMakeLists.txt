@@ -46,6 +46,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
 				-mabi=sysv \
 				-static \
 				-fdata-sections -ffunction-sections \
+				-D__x86_64__ \
 				")
 				# -ggdb \ 
 				# -v")

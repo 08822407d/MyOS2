@@ -107,37 +107,37 @@
 		#define __ssize_t_defined
 	#endif
 
-	#ifdef __USE_MISC
-		#ifndef __daddr_t_defined
-			typedef __daddr_t	daddr_t;
-			typedef __caddr_t	caddr_t;
-			#define __daddr_t_defined
-		#endif
-	#endif
+	// #ifdef __USE_MISC
+	// 	#ifndef __daddr_t_defined
+	// 		typedef __daddr_t	daddr_t;
+	// 		typedef __caddr_t	caddr_t;
+	// 	#define __daddr_t_defined
+	// 	#endif
+	// #endif
 
-	#if (defined __USE_MISC || defined __USE_XOPEN) && \
-		!defined __key_t_defined
-		typedef __key_t		key_t;
-		#define __key_t_defined
-	#endif
+	// #if (defined __USE_MISC || defined __USE_XOPEN) && \
+	// 	!defined __key_t_defined
+	// 	typedef __key_t		key_t;
+	// 	#define __key_t_defined
+	// #endif
 
-	#if defined __USE_XOPEN || defined __USE_XOPEN2K8
-		#include <bits/types/clock_t.h>
-	#endif
-	#include <bits/types/clockid_t.h>
-	#include <bits/types/time_t.h>
-	#include <bits/types/timer_t.h>
+	// #if defined __USE_XOPEN || defined __USE_XOPEN2K8
+	// 	#include <bits/types/clock_t.h>
+	// #endif
+	// #include <bits/types/clockid_t.h>
+	// #include <bits/types/time_t.h>
+	// #include <bits/types/timer_t.h>
 
-	#ifdef __USE_XOPEN
-		#ifndef __useconds_t_defined
-			typedef __useconds_t	useconds_t;
-			#define __useconds_t_defined
-		#endif
-		#ifndef __suseconds_t_defined
-			typedef __suseconds_t	suseconds_t;
-			#define __suseconds_t_defined
-		#endif
-	#endif
+	// #ifdef __USE_XOPEN
+	// 	#ifndef __useconds_t_defined
+	// 		typedef __useconds_t	useconds_t;
+	// 		#define __useconds_t_defined
+	// 	#endif
+	// 	#ifndef __suseconds_t_defined
+	// 		typedef __suseconds_t	suseconds_t;
+	// 		#define __suseconds_t_defined
+	// 	#endif
+	// #endif
 
 	#define __need_size_t
 	#include <stddef.h>
@@ -159,68 +159,67 @@
 	typedef __uint32_t	u_int32_t;
 	typedef __uint64_t	u_int64_t;
 
-	#if __GNUC_PREREQ(2, 7)
-		typedef int		register_t __attribute__((__mode__(__word__)));
-	#else
+	// #if __GNUC_PREREQ(2, 7)
+	// 	typedef int		register_t __attribute__((__mode__(__word__)));
+	// #else
 		typedef int		register_t;
-	#endif
+	// #endif
 
-	/* Some code from BIND tests this macro to see if the types above are
-	defined.  */
-	#define __BIT_TYPES_DEFINED__ 1
+	// /* Some code from BIND tests this macro to see if the types above are
+	// defined.  */
+	// #define __BIT_TYPES_DEFINED__ 1
 
-	#ifdef __USE_MISC
-		/* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
-		#include <endian.h>
+	// #ifdef __USE_MISC
+	// 	/* In BSD <sys/types.h> is expected to define BYTE_ORDER.  */
+	// 	#include <endian.h>
 
-		/* It also defines `fd_set' and the FD_* macros for `select'.  */
-		#include <sys/select.h>
-	#endif /* Use misc.  */
+	// 	/* It also defines `fd_set' and the FD_* macros for `select'.  */
+	// 	#include <sys/select.h>
+	// #endif /* Use misc.  */
 
-	#if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) && \
-		!defined __blksize_t_defined
-		typedef __blksize_t		blksize_t;
-		#define __blksize_t_defined
-	#endif
+	// #if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) && !defined __blksize_t_defined
+	// 	typedef __blksize_t	blksize_t;
+	// 	#define __blksize_t_defined
+	// #endif
 
-	/* Types from the Large File Support interface.  */
-	#ifndef __USE_FILE_OFFSET64
-		#ifndef __blkcnt_t_defined
-		typedef __blkcnt_t		blkcnt_t;		/* Type to count number of disk blocks.  */
-		#define __blkcnt_t_defined
-		#endif
-		#ifndef __fsblkcnt_t_defined
-		typedef __fsblkcnt_t	fsblkcnt_t;		/* Type to count file system blocks.  */
-		#define __fsblkcnt_t_defined
-		#endif
-		#ifndef __fsfilcnt_t_defined
-		typedef __fsfilcnt_t	fsfilcnt_t;		/* Type to count file system inodes.  */
-		#define __fsfilcnt_t_defined
-		#endif
-	#else
-		#ifndef __blkcnt_t_defined
-		typedef __blkcnt64_t	blkcnt_t;		/* Type to count number of disk blocks.  */
-		#define __blkcnt_t_defined
-		#endif
-		#ifndef __fsblkcnt_t_defined
-		typedef __fsblkcnt64_t	fsblkcnt_t;		/* Type to count file system blocks.  */
-		#define __fsblkcnt_t_defined
-		#endif
-		#ifndef __fsfilcnt_t_defined
-		typedef __fsfilcnt64_t	fsfilcnt_t;		/* Type to count file system inodes.  */
-		#define __fsfilcnt_t_defined
-		#endif
-	#endif
+	// /* Types from the Large File Support interface.  */
+	// #ifndef __USE_FILE_OFFSET64
+	// 	#ifndef __blkcnt_t_defined
+	// 		typedef __blkcnt_t		blkcnt_t; /* Type to count number of disk blocks.  */
+	// 		#define __blkcnt_t_defined
+	// 	#endif
+	// 	#ifndef __fsblkcnt_t_defined
+	// 		typedef __fsblkcnt_t	fsblkcnt_t; /* Type to count file system blocks.  */
+	// 		#define __fsblkcnt_t_defined
+	// 	#endif
+	// 	#ifndef __fsfilcnt_t_defined
+	// 		typedef __fsfilcnt_t	fsfilcnt_t; /* Type to count file system inodes.  */
+	// 		#define __fsfilcnt_t_defined
+	// 	#endif
+	// #else
+	// 	#ifndef __blkcnt_t_defined
+	// 		typedef __blkcnt64_t	blkcnt_t;	   /* Type to count number of disk blocks.  */
+	// 		#define __blkcnt_t_defined
+	// 	#endif
+	// 	#ifndef __fsblkcnt_t_defined
+	// 		typedef __fsblkcnt64_t	fsblkcnt_t; /* Type to count file system blocks.  */
+	// 		#define __fsblkcnt_t_defined
+	// 	#endif
+	// 	#ifndef __fsfilcnt_t_defined
+	// 		typedef __fsfilcnt64_t	fsfilcnt_t; /* Type to count file system inodes.  */
+	// 		#define __fsfilcnt_t_defined
+	// 	#endif
+	// #endif
 
-	#ifdef __USE_LARGEFILE64
-		typedef __blkcnt64_t	blkcnt64_t;		/* Type to count number of disk blocks. */
-		typedef __fsblkcnt64_t	fsblkcnt64_t;	/* Type to count file system blocks.  */
-		typedef __fsfilcnt64_t	fsfilcnt64_t;	/* Type to count file system inodes.  */
-	#endif
+	// #ifdef __USE_LARGEFILE64
+	// 	typedef __blkcnt64_t	blkcnt64_t;		/* Type to count number of disk blocks. */
+	// 	typedef __fsblkcnt64_t	fsblkcnt64_t;	/* Type to count file system blocks.  */
+	// 	typedef __fsfilcnt64_t	fsfilcnt64_t;	/* Type to count file system inodes.  */
+	// #endif
 
-	/* Now add the thread types.  */
-	#if defined __USE_POSIX199506 || defined __USE_UNIX98
-		#include <bits/pthreadtypes.h>
-	#endif
+	// /* Now add the thread types.  */
+	// #if defined __USE_POSIX199506 || defined __USE_UNIX98
+	// 	#include <bits/pthreadtypes.h>
+	// #endif
 
 #endif /* sys/types.h */
