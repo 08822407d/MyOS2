@@ -609,10 +609,10 @@
 	// 		extern int sys_nerr;
 	// 		extern const char *const sys_errlist[];
 	// 	#endif
-		#ifdef __USE_GNU
+		// #ifdef __USE_GNU
 			extern int _sys_nerr;
 			extern const char *const _sys_errlist[];
-		#endif
+		// #endif
 
 	// 	#ifdef __USE_POSIX
 	// 		/* Return the system file descriptor for STREAM.  */

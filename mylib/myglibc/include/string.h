@@ -31,9 +31,8 @@
 	#define __need_NULL
 	#include <stddef.h>
 
-	// /* Copy N bytes of SRC to DEST.  */
-	// extern __ptr_t memcpy __P((__ptr_t __dest, __const __ptr_t __src,
-	// 						size_t __n));
+	/* Copy N bytes of SRC to DEST.  */
+	extern __ptr_t memcpy(__ptr_t __dest, __const __ptr_t __src, size_t __n);
 	// /* Copy N bytes of SRC to DEST, guaranteeing
 	// correct behavior for overlapping strings.  */
 	// extern __ptr_t memmove __P((__ptr_t __dest, __const __ptr_t __src,

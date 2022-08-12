@@ -37,7 +37,8 @@ SYSFUNC_DEF(newfstat)
 
 SYSFUNC_DEF(lseek)
 
-SYSFUNC_DEF(brk)
+// SYSFUNC_DEF(brk)
+__SYSFUNC_DEF__(sbrk, __NR_brk)
 
 SYSFUNC_DEF(getpid)
 

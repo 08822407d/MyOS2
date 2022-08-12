@@ -9,7 +9,6 @@ target_include_directories(mylibc PUBLIC
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/generic
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/stub)
 
-add_subdirectory(errno)
 add_subdirectory(stdio)
 add_subdirectory(malloc)
 add_subdirectory(string)
