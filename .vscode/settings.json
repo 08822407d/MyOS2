@@ -138,7 +138,9 @@
 		"fs_context.h": "c",
 		"sysfs.h": "c",
 		"compiler.h": "c",
-		"ctype.h": "c"
+		"ctype.h": "c",
+		"posix_opt.h": "c",
+		"features.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

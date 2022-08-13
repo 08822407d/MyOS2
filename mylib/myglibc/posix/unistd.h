@@ -199,15 +199,15 @@
 
 	#include <bits/posix_opt.h>
 
-	/* Get the environment definitions from Unix98.  */
-	#if defined __USE_UNIX98 || defined __USE_XOPEN2K
-		#include <bits/environments.h>
-	#endif
+	// /* Get the environment definitions from Unix98.  */
+	// #if defined __USE_UNIX98 || defined __USE_XOPEN2K
+	// 	#include <bits/environments.h>
+	// #endif
 
 	/* Standard file descriptors.  */
-	#define STDIN_FILENO 0	/* Standard input.  */
-	#define STDOUT_FILENO 1 /* Standard output.  */
-	#define STDERR_FILENO 2 /* Standard error output.  */
+	#define STDIN_FILENO	0	/* Standard input.  */
+	#define STDOUT_FILENO	1	/* Standard output.  */
+	#define STDERR_FILENO	2	/* Standard error output.  */
 
 	/* All functions that are not declared anywhere else.  */
 

@@ -1,5 +1,5 @@
 add_library(mylibc STATIC)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__USE_GNU -I${CC_INC_PATH}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__USE_GNU -D__USE_XOPEN2K -I${CC_INC_PATH}")
 target_include_directories(mylibc PUBLIC
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/include
@@ -16,3 +16,6 @@ add_subdirectory(exit)
 add_subdirectory(sys)
 add_subdirectory(posix)
 add_subdirectory(sysdeps)
+add_subdirectory(misc)
+add_subdirectory(time)
+add_subdirectory(io)

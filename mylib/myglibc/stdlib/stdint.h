@@ -23,11 +23,11 @@
 
 	#define _STDINT_H 1
 
-	// #define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
+	#define __GLIBC_INTERNAL_STARTING_HEADER_IMPLEMENTATION
 	// #include <bits/libc-header-start.h>
-	// #include <bits/types.h>
+	#include <bits/types.h>
 	// #include <bits/wchar.h>
-	// #include <bits/wordsize.h>
+	#include <bits/wordsize.h>
 
 	/* Exact integral types.  */
 
