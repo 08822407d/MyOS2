@@ -23,22 +23,28 @@
 
 // #include <not-cancel.h>
 
+// enum
+// {
+// 	opendir_oflags = O_RDONLY | O_NDELAY | O_DIRECTORY | O_LARGEFILE | O_CLOEXEC
+// };
+
 enum
 {
-	opendir_oflags = O_RDONLY | O_NDELAY | O_DIRECTORY | O_LARGEFILE | O_CLOEXEC
+	opendir_oflags = O_RDONLY | O_DIRECTORY | O_CLOEXEC
 };
+
 
 static bool
 invalid_name(const char *name)
 {
-// 	if (__glibc_unlikely(name[0] == '\0'))
-// 	{
-// 		/* POSIX.1-1990 says an empty name gets ENOENT;
-// 	 but `open' might like it fine.  */
-// 		__set_errno(ENOENT);
-// 		return true;
-// 	}
-// 	return false;
+	if (name[0] == '\0')
+	{
+		/* POSIX.1-1990 says an empty name gets ENOENT;
+	 but `open' might like it fine.  */
+		// __set_errno(ENOENT);
+		return true;
+	}
+	return false;
 }
 
 static DIR *
@@ -64,25 +70,24 @@ opendir_tail(int fd)
 	// return __alloc_dir(fd, true, 0, &statbuf);
 }
 
-#if IS_IN(libc)
-	DIR *__opendirat(int dfd, const char *name)
-	{
-		// if (__glibc_unlikely(invalid_name(name)))
-		// 	return NULL;
+// #if IS_IN(libc)
+// 	DIR *__opendirat(int dfd, const char *name)
+// 	{
+// 		if (__glibc_unlikely(invalid_name(name)))
+// 			return NULL;
 
-		// return opendir_tail(__openat_nocancel(dfd, name, opendir_oflags));
-	}
-#endif
+// 		return opendir_tail(__openat_nocancel(dfd, name, opendir_oflags));
+// 	}
+// #endif
 
 /* Open a directory stream on NAME.  */
-DIR *__opendir(const char *name)
+DIR *opendir(const char *name)
 {
-	// if (__glibc_unlikely(invalid_name(name)))
-	// 	return NULL;
-
-	// return opendir_tail(__open_nocancel(name, opendir_oflags));
+	if (invalid_name(name))
+		return NULL;
+	
+	return opendir_tail(__open_nocancel(name, opendir_oflags));
 }
-weak_alias(__opendir, opendir)
 
 DIR *__alloc_dir(int fd, bool close_fd, int flags, const struct __stat64_t64 *statp)
 {

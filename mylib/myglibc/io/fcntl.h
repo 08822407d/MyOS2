@@ -198,23 +198,14 @@
 	// #endif
 	// #endif
 
-	// /* Open FILE and return a new file descriptor for it, or -1 on error.
-	// OFLAG determines the type of access used.  If O_CREAT or O_TMPFILE is set
-	// in OFLAG, the third argument is taken as a `mode_t', the mode of the
-	// created file.
+	/* Open FILE and return a new file descriptor for it, or -1 on error.
+	OFLAG determines the type of access used.  If O_CREAT or O_TMPFILE is set
+	in OFLAG, the third argument is taken as a `mode_t', the mode of the
+	created file.
 
-	// This function is a cancellation point and therefore not marked with
-	// __THROW.  */
-	// #ifndef __USE_FILE_OFFSET64
-	// extern int open(const char *__file, int __oflag, ...) __nonnull((1));
-	// #else
-	// #ifdef __REDIRECT
-	// extern int __REDIRECT(open, (const char *__file, int __oflag, ...), open64)
-	// 	__nonnull((1));
-	// #else
-	// #define open open64
-	// #endif
-	// #endif
+	This function is a cancellation point and therefore not marked with
+	__THROW.  */
+	extern int open(const char *__file, int __oflag, __mode_t __mode);
 	// #ifdef __USE_LARGEFILE64
 	// extern int open64(const char *__file, int __oflag, ...) __nonnull((1));
 	// #endif

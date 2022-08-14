@@ -119,16 +119,16 @@
 	// #define DTTOIF(dirtype) ((dirtype) << 12)
 	// #endif
 
-	// /* This is the data type of directory stream objects.
-	// The actual structure is opaque to users.  */
-	// typedef struct __dirstream DIR;
+	/* This is the data type of directory stream objects.
+	The actual structure is opaque to users.  */
+	typedef struct __dirstream DIR;
 
-	// /* Open a directory stream on NAME.
-	// Return a DIR stream on the directory, or NULL if it could not be opened.
+	/* Open a directory stream on NAME.
+	Return a DIR stream on the directory, or NULL if it could not be opened.
 
-	// This function is a possible cancellation point and therefore not
-	// marked with __THROW.  */
-	// extern DIR *opendir(const char *__name) __nonnull((1));
+	This function is a possible cancellation point and therefore not
+	marked with __THROW.  */
+	extern DIR *opendir(const char *__name);
 
 	// #ifdef __USE_XOPEN2K8
 	// /* Same as opendir, but open the stream on the file descriptor FD.

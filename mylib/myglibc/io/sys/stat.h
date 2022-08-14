@@ -27,9 +27,9 @@
 
 	#include <bits/types.h> /* For __mode_t and __dev_t.  */
 
-	#ifdef __USE_XOPEN2K8
-		#include <bits/types/struct_timespec.h>
-	#endif
+	// #ifdef __USE_XOPEN2K8
+	// 	#include <bits/types/struct_timespec.h>
+	// #endif
 
 	#if defined __USE_XOPEN || defined __USE_XOPEN2K
 		/* The Single Unix specification says that some more types are

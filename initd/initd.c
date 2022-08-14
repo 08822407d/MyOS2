@@ -1,12 +1,10 @@
-#include <sys/wait.h>
-#include <sys/limits.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <fcntl.h>
 
+	#define PATH_MAX        4096	/* # chars in a path name including nul */
 
 void file_io_test(void);
 void malloc_free_test(void);
@@ -107,7 +105,7 @@ void dirtest()
 	DIR *dir = opendir("/EFI");
 	for (; ; )
 	{
-		dirent_s *dirent = readdir(dir);
+		struct dirent *dirent = readdir(dir);
 		if (dirent == NULL)
 			break;
 
