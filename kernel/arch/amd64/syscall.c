@@ -194,7 +194,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 /*==============================================================================================*
  *									user memory manage											*
  *==============================================================================================*/
-virt_addr_t sys_brk(const void * brk)
+virt_addr_t sys_sbrk(const void * brk)
 {
 	unsigned long new_brk = PAGE_ROUND_UP((reg_t)brk);
 

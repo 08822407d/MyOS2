@@ -6,10 +6,6 @@ file(GLOB INIT_C_SRCS ./*.c)
 file(GLOB INIT_ASM_SRCS ./*.S)
 
 add_executable(init ${INIT_C_SRCS} ${INIT_ASM_SRCS})
-target_include_directories(init PRIVATE
+target_include_directories(init PUBLIC
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc
-                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/include
-                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sys
-                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/misc
-                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux
-                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux/x86)
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/include)

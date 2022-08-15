@@ -132,12 +132,12 @@
 	// #endif
 	// #endif /* Use misc.  */
 
-	// /* XPG wants the following symbols.   <stdio.h> has the same definitions.  */
-	// #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-	// #define SEEK_SET 0 /* Seek from beginning of file.  */
-	// #define SEEK_CUR 1 /* Seek from current position.  */
-	// #define SEEK_END 2 /* Seek from end of file.  */
-	// #endif			   /* XPG */
+	/* XPG wants the following symbols.   <stdio.h> has the same definitions.  */
+	#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+		#define SEEK_SET 0 /* Seek from beginning of file.  */
+		#define SEEK_CUR 1 /* Seek from current position.  */
+		#define SEEK_END 2 /* Seek from end of file.  */
+	#endif			   /* XPG */
 
 	// /* The constants AT_REMOVEDIR and AT_EACCESS have the same value.  AT_EACCESS
 	// is meaningful only to faccessat, while AT_REMOVEDIR is meaningful only to

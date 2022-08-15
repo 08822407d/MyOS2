@@ -34,24 +34,26 @@ set(DEBUG "-DDEBUG")
 #===============================================================================================#
 #                                   compile options                                             #
 #===============================================================================================#
-set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64 -D__ASSEMBLY__")
+set(CMAKE_ASM_FLAGS
+		"${CMAKE_ASM_FLAGS} ${DEBUG} ${DEFINATIONS} -m64 -D__ASSEMBLY__")
 # message("${PROMPT} ASMFLAGS : ${CMAKE_ASM_FLAGS}")
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
-				-m64 -mcmodel=large -fPIC \
-				-ffreestanding -nostartfiles \
-				-nostdinc -nostdlib \
-				-fno-stack-protector \
-				-fno-unwind-tables \
-				-mabi=sysv \
-				-static \
-				-fdata-sections -ffunction-sections \
-				-D__x86_64__ \
-				")
-				# -ggdb \ 
-				# -v")
+set(CMAKE_C_FLAGS
+		"${CMAKE_C_FLAGS} ${DEBUG} ${DEFINATIONS} \
+		-m64 -mcmodel=large -fPIC \
+		-ffreestanding -nostartfiles \
+		-nostdinc -nostdlib \
+		-fno-stack-protector \
+		-fno-unwind-tables \
+		-mabi=sysv \
+		-static \
+		-fdata-sections -ffunction-sections \
+		-ggdb \
+		-D__x86_64__ \
+		")
+		# -v")
 
-execute_process(COMMAND bash -c "gcc --print-file-name=include"
+execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
 				OUTPUT_VARIABLE CC_INC_PATH)
 
 # message("${PROMPT} CC_INC_PATH : ${CC_INC_PATH}")

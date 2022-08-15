@@ -20,7 +20,7 @@
 
 	#define	__NR_lseek			8
 
-	#define	__NR_brk			12
+	#define	__NR_sbrk			12
 
 	#define __NR_getpid			19
 

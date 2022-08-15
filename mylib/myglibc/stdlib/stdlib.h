@@ -602,6 +602,7 @@
 	// in the reverse of the order in which they were registered,
 	// perform stdio cleanup, and terminate program execution with STATUS.  */
 	// extern void exit(int __status) __THROW __attribute__((__noreturn__));
+	extern void exit(int __status)__attribute__((__noreturn__));
 
 	// #if defined __USE_ISOC11 || defined __USE_ISOCXX11
 	// /* Call all functions registered with `at_quick_exit' in the reverse

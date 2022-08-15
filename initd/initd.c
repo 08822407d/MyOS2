@@ -3,6 +3,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 	#define PATH_MAX        4096	/* # chars in a path name including nul */
 

@@ -47,29 +47,6 @@ invalid_name(const char *name)
 	return false;
 }
 
-static DIR *
-opendir_tail(int fd)
-{
-	// if (__glibc_unlikely(fd < 0))
-	// 	return NULL;
-
-	// /* Now make sure this really is a directory and nothing changed since the
-	//    `stat' call.  The S_ISDIR check is superfluous if O_DIRECTORY works,
-	//    but it's cheap and we need the stat call for st_blksize anyway.  */
-	// struct __stat64_t64 statbuf;
-	// if (__glibc_unlikely(__fstat64_time64(fd, &statbuf) < 0))
-	// 	goto lose;
-	// if (__glibc_unlikely(!S_ISDIR(statbuf.st_mode)))
-	// {
-	// 	__set_errno(ENOTDIR);
-	// lose:
-	// 	__close_nocancel_nostatus(fd);
-	// 	return NULL;
-	// }
-
-	// return __alloc_dir(fd, true, 0, &statbuf);
-}
-
 // #if IS_IN(libc)
 // 	DIR *__opendirat(int dfd, const char *name)
 // 	{
@@ -86,10 +63,12 @@ DIR *opendir(const char *name)
 	if (invalid_name(name))
 		return NULL;
 	
-	return opendir_tail(__open_nocancel(name, opendir_oflags));
+	int fd = open(name, opendir_oflags, O_RDONLY);
+
+	return __alloc_dir(fd, true, 0);
 }
 
-DIR *__alloc_dir(int fd, bool close_fd, int flags, const struct __stat64_t64 *statp)
+DIR *__alloc_dir(int fd, bool close_fd, int flags)
 {
 // 	/* We have to set the close-on-exit flag if the user provided the
 // 	   file descriptor.  */

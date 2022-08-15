@@ -18,7 +18,7 @@ SYSCALL_COMMON(__NR_write,sys_write)
 
 SYSCALL_COMMON(__NR_lseek,sys_lseek)
 
-SYSCALL_COMMON(__NR_brk,sys_brk)
+SYSCALL_COMMON(__NR_sbrk,sys_sbrk)
 
 SYSCALL_COMMON(__NR_getpid, sys_getpid)
 

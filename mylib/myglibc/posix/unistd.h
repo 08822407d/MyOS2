@@ -346,11 +346,11 @@
 	// 	__THROW;
 	// #endif
 
-	// /* Close the file descriptor FD.
+	/* Close the file descriptor FD.
 
-	// This function is a cancellation point and therefore not marked with
-	// __THROW.  */
-	// extern int close(int __fd);
+	This function is a cancellation point and therefore not marked with
+	__THROW.  */
+	extern int close(int __fd);
 
 	// #ifdef __USE_MISC
 	// /* Close all open file descriptors greater than or equal to LOWFD.
@@ -560,6 +560,7 @@
 	// environment ENVP.  ARGV and ENVP are terminated by NULL pointers.  */
 	// extern int execve(const char *__path, char *const __argv[],
 	// 				char *const __envp[]) __THROW __nonnull((1, 2));
+	extern int execve(const char *__path, char *const __argv[], char *const __envp[]);
 
 	// #ifdef __USE_XOPEN2K8
 	// /* Execute the file FD refers to, overlaying the running program image.
@@ -758,6 +759,7 @@
 	// Return -1 for errors, 0 to the new process,
 	// and the process ID of the new process to the old process.  */
 	// extern __pid_t fork(void) __THROWNL;
+	extern __pid_t fork(void);
 
 	// #if (defined __USE_XOPEN_EXTENDED && !defined __USE_XOPEN2K8) || defined __USE_MISC
 	// /* Clone the calling process, but without copying the whole address space.
@@ -1023,14 +1025,12 @@
 	// /* Set the end of accessible data space (aka "the break") to ADDR.
 	// Returns zero on success and -1 for errors (with errno set).  */
 	// extern int brk(void *__addr) __THROW __wur;
-	extern int brk(void *__addr);
 
 	// /* Increase or decrease the end of accessible data space by DELTA bytes.
 	// If successful, returns the address the previous end of data space
 	// (i.e. the beginning of the new space, if DELTA > 0);
 	// returns (void *) -1 for errors (with errno set).  */
 	// extern void *sbrk(intptr_t __delta) __THROW;
-	extern void *sbrk(intptr_t __delta);
 	// #endif
 
 	// #ifdef __USE_MISC

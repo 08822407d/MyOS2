@@ -53,6 +53,7 @@
 		// extern DIR *__alloc_dir(int fd, bool close_fd, int flags,
 		// 						const struct __stat64_t64 *statp)
 		// 	__nonnull(4) attribute_hidden;
+		extern DIR *__alloc_dir(int fd, bool close_fd, int flags);
 		// extern __typeof(rewinddir) __rewinddir;
 		// extern __typeof(seekdir) __seekdir;
 		// extern __typeof(dirfd) __dirfd;

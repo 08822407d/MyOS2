@@ -6,9 +6,9 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
-#include "syscall.h"
-
 #include <errno.h>
+
+#include <syscall.h>
 
 
 #define SYSFUNC_DEF(name)						\
@@ -37,8 +37,7 @@ SYSFUNC_DEF(newfstat)
 
 SYSFUNC_DEF(lseek)
 
-// SYSFUNC_DEF(brk)
-__SYSFUNC_DEF__(sbrk, __NR_brk)
+SYSFUNC_DEF(sbrk)
 
 SYSFUNC_DEF(getpid)
 

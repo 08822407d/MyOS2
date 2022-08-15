@@ -175,6 +175,7 @@
 	// 	extern void *__memcpy_chk(void *__restrict __dest,
 	// 							const void *__restrict __src, size_t __len,
 	// 							size_t __destlen) __THROW;
+	extern void *memcpy(void *__dest, const void *__src, size_t __len);
 	// 	extern void *__memmove_chk(void *__dest, const void *__src, size_t __len,
 	// 							size_t __destlen) __THROW;
 	// 	extern void *__mempcpy_chk(void *__restrict __dest,

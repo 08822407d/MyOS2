@@ -1,14 +1,14 @@
-#include <sys/wait.h>
-#include <sys/limits.h>
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <fcntl.h>
-
+#include <errno.h>
 
 #include "externs.h"
+
+	#define PATH_MAX        4096	/* # chars in a path name including nul */
+	#define SZ_1K			1024
 
 #define	SYSTEM_REBOOT	(1UL << 0)
 #define	SYSTEM_POWEROFF	(1UL << 1)
@@ -87,35 +87,35 @@ int main(int argc, const char *argv[])
 
 int read_line(char *buf)
 {
-	char key = 0;
-	int count = 0;
+	// char key = 0;
+	// int count = 0;
 
-	while(1)
-	{
-		key = fgetc(stdin);
+	// while(1)
+	// {
+	// 	key = fgetc(stdin);
 
-		switch (key)
-		{
-		case 0:
-			continue;
+	// 	switch (key)
+	// 	{
+	// 	case 0:
+	// 		continue;
 		
-		case '\n':
-			return count;
+	// 	case '\n':
+	// 		return count;
 		
-		case '\b':
-			if (count > 0)
-			{
-				buf[--count] = 0;
-				printf("\b");
-			}
-			break;
+	// 	case '\b':
+	// 		if (count > 0)
+	// 		{
+	// 			buf[--count] = 0;
+	// 			printf("\b");
+	// 		}
+	// 		break;
 
-		default:
-			buf[count++] = key;
-			printf("%c", key);
-			break;
-		}
-	}
+	// 	default:
+	// 		buf[count++] = key;
+	// 		printf("%c", key);
+	// 		break;
+	// 	}
+	// }
 }
 
 void run_cmd(int index, int argc, char **argv)
@@ -195,7 +195,7 @@ int cd_command(int argc, char **argv)
 int ls_command(int argc, char **argv)
 {
 	DIR* dir = NULL;
-	linux_dirent64_s * buf = NULL;
+	struct dirent* buf = NULL;
 	char *path = NULL;
 	if (argc <=1)
 		path = ".";
@@ -209,7 +209,7 @@ int ls_command(int argc, char **argv)
 		return -1;
 	}
 
-	buf = (linux_dirent64_s *)malloc(256);
+	buf = (struct dirent*)malloc(256);
 	while(1)
 	{
 		buf = readdir(dir);

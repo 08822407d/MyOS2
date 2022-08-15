@@ -12,7 +12,7 @@
 	// #endif
 	// #endif
 
-	// #include <libio/stdio.h>
+	#include <libio/stdio.h>
 	// #ifndef _ISOMAC
 
 	// #define _LIBC_STDIO_H 1
@@ -67,6 +67,7 @@
 	// extern int __vsnprintf_chk(char *, size_t, int, size_t, const char *,
 	// 						__gnuc_va_list) __THROW;
 	// extern int __printf_chk(int, const char *, ...);
+	extern int printf(const char *, ...);
 	// extern int __fprintf_chk(FILE *, int, const char *, ...);
 	// extern int __vprintf_chk(int, const char *, __gnuc_va_list);
 	// extern int __vfprintf_chk(FILE *, int, const char *, __gnuc_va_list);

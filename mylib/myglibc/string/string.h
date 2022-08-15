@@ -55,6 +55,7 @@
 
 	// /* Set N bytes of S to C.  */
 	// extern void *memset(void *__s, int __c, size_t __n) __THROW __nonnull((1));
+	extern void *memset(void *__s, int __c, size_t __n);
 
 	// /* Compare N bytes of S1 and S2.  */
 	// extern int memcmp(const void *__s1, const void *__s2, size_t __n)
@@ -132,13 +133,15 @@
 	// #endif
 	// #endif
 
-	// /* Copy SRC to DEST.  */
+	/* Copy SRC to DEST.  */
 	// extern char *strcpy(char *__restrict __dest, const char *__restrict __src)
 	// 	__THROW __nonnull((1, 2));
-	// /* Copy no more than N characters of SRC to DEST.  */
+	extern char *strcpy(char * __dest, const char * __src);
+	/* Copy no more than N characters of SRC to DEST.  */
 	// extern char *strncpy(char *__restrict __dest,
 	// 					const char *__restrict __src, size_t __n)
 	// 	__THROW __nonnull((1, 2));
+	extern char *strncpy(char * __dest, const char * __src, size_t __n);
 
 	// /* Append SRC onto DEST.  */
 	// extern char *strcat(char *__restrict __dest, const char *__restrict __src)
@@ -147,12 +150,14 @@
 	// extern char *strncat(char *__restrict __dest, const char *__restrict __src,
 	// 					size_t __n) __THROW __nonnull((1, 2));
 
-	// /* Compare S1 and S2.  */
+	/* Compare S1 and S2.  */
 	// extern int strcmp(const char *__s1, const char *__s2)
 	// 	__THROW __attribute_pure__ __nonnull((1, 2));
-	// /* Compare N characters of S1 and S2.  */
+	extern int strcmp(const char *__s1, const char *__s2);
+	/* Compare N characters of S1 and S2.  */
 	// extern int strncmp(const char *__s1, const char *__s2, size_t __n)
 	// 	__THROW __attribute_pure__ __nonnull((1, 2));
+	extern int strncmp(const char *__s1, const char *__s2, size_t __n);
 
 	// /* Compare the collated forms of S1 and S2.  */
 	// extern int strcoll(const char *__s1, const char *__s2)
@@ -396,6 +401,7 @@
 	// /* Return the length of S.  */
 	// extern size_t strlen(const char *__s)
 	// 	__THROW __attribute_pure__ __nonnull((1));
+	extern size_t strlen(const char *__s);
 
 	// #ifdef __USE_XOPEN2K8
 	// /* Find the length of STRING, but scan at most MAXLEN characters.
