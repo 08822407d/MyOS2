@@ -1,15 +1,16 @@
 #ifndef _STRING_H
 
-	// #ifndef _ISOMAC
+	#ifndef _ISOMAC
 	// 	/* Some of these are defined as macros in the real string.h, so we must
 	// 	prototype them before including it.  */
-	// 	#include <sys/types.h>
+		#include <sys/types.h>
 	// 	#include <locale.h>
 
 	// 	extern void *__memccpy(void *__dest, const void *__src, int __c, size_t __n);
 
 	// 	extern size_t __strnlen(const char *__string, size_t __maxlen)
 	// 			__attribute_pure__;
+	extern size_t __strnlen(const char *__string, size_t __maxlen);
 
 	// 	extern char *__strsep(char **__stringp, const char *__delim);
 	// 	libc_hidden_proto(__strsep)
@@ -198,6 +199,6 @@
 	// 	extern char *__strncat_chk(char *__restrict __dest,
 	// 							const char *__restrict __src,
 	// 							size_t __len, size_t __destlen) __THROW;
-	// #endif
+	#endif
 
 #endif

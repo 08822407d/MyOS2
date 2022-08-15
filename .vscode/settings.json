@@ -141,7 +141,8 @@
 		"ctype.h": "c",
 		"posix_opt.h": "c",
 		"features.h": "c",
-		"memcopy.h": "c"
+		"memcopy.h": "c",
+		"errlist.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

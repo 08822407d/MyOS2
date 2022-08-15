@@ -146,6 +146,7 @@
 	// /* Append SRC onto DEST.  */
 	// extern char *strcat(char *__restrict __dest, const char *__restrict __src)
 	// 	__THROW __nonnull((1, 2));
+	extern char *strcat(char *__dest, const char *__src);
 	// /* Append no more than N characters from SRC onto DEST.  */
 	// extern char *strncat(char *__restrict __dest, const char *__restrict __src,
 	// 					size_t __n) __THROW __nonnull((1, 2));
@@ -407,6 +408,7 @@
 	// /* Find the length of STRING, but scan at most MAXLEN characters.
 	// If no '\0' terminator is found in that many characters, return MAXLEN.  */
 	// extern size_t strnlen(const char *__string, size_t __maxlen)
+	extern size_t strnlen(const char *__string, size_t __maxlen);
 	// 	__THROW __attribute_pure__ __nonnull((1));
 	// #endif
 

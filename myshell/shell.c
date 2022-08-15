@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include "externs.h"
 
@@ -188,7 +189,7 @@ int cd_command(int argc, char **argv)
 		getcwd(current_dir, PATH_MAX);
 	}
 	else
-		printf("cd: %s: %s\n", strerror(i), path);
+		printf("cd: %s: %s\n", __get_errlist(i),path);
 	return 1;
 }
 
@@ -205,7 +206,7 @@ int ls_command(int argc, char **argv)
 	dir = opendir(path);
 	if (dir == NULL)
 	{
-		printf("ls: %s: %s\n", strerror(-ENOENT), path);
+		printf("ls: %s: %s\n", __get_errlist(-ENOENT), path);
 		return -1;
 	}
 
@@ -252,7 +253,7 @@ int cat_command(int argc, char **argv)
 	fd = open(filename, O_RDONLY, 0);	
 	if (fd < 0)
 	{
-		printf("ls: %s: %s\n", strerror(fd), filename);
+		printf("ls: %s: %s\n", __get_errlist(fd), filename);
 		return -1;
 	}
 	i = lseek(fd, 0, SEEK_END);

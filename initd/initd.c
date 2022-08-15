@@ -13,7 +13,6 @@ void dirtest(void);
 
 	char *	getcwd(char *, size_t);
 	int		chdir(const char *);
-	ssize_t	read(int, const void *, size_t);
 	int		reboot(int);
 	ssize_t	write(int, const void *, size_t);
 

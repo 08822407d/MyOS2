@@ -6,11 +6,15 @@ extern int main(int, const char **);
 
 extern void init_uslab(void);
 
+FILE *stdin;
+FILE *stdout;
+FILE *stderr;
+
 __attribute__((section(".crt1.text"))) void _start(int argc, const char * argv[])
 {
-	open("/dev/tty0", O_RDONLY, 0);
-	open("/dev/tty0", O_WRONLY, 0);
-	open("/dev/tty0", O_WRONLY, 0);
+	stdin = fopen("/dev/tty0", "r");
+	stdout = fopen("/dev/tty0", "w");
+	stderr = fopen("/dev/tty0", "W");
 	
 	exit(main(argc, argv));
 }

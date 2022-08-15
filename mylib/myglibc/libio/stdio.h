@@ -39,7 +39,7 @@
 	// #include <bits/types/__fpos64_t.h>
 	// #include <bits/types/__FILE.h>
 	#include <bits/types/FILE.h>
-	// #include <bits/types/struct_FILE.h>
+	#include <bits/types/struct_FILE.h>
 
 	// #ifdef __USE_GNU
 	// #include <bits/types/cookie_io_functions_t.h>
@@ -110,10 +110,10 @@
 		#define SEEK_HOLE 4 /* Seek to next hole.  */
 	#endif
 
-	// #if defined __USE_MISC || defined __USE_XOPEN
-	// /* Default path prefix for `tempnam' and `tmpnam'.  */
-	// #define P_tmpdir "/tmp"
-	// #endif
+	#if defined __USE_MISC || defined __USE_XOPEN
+		/* Default path prefix for `tempnam' and `tmpnam'.  */
+		#define P_tmpdir "/tmp"
+	#endif
 
 	// /* Get the values:
 	// L_tmpnam	How long an array of chars must be to be passed to `tmpnam'.
@@ -126,14 +126,14 @@
 	// FILENAME_MAX	Maximum length of a filename.  */
 	// #include <bits/stdio_lim.h>
 
-	// /* Standard streams.  */
-	// extern FILE *stdin;	 /* Standard input stream.  */
-	// extern FILE *stdout; /* Standard output stream.  */
-	// extern FILE *stderr; /* Standard error output stream.  */
-	// /* C89/C99 say they're macros.  Make them happy.  */
-	// #define stdin stdin
-	// #define stdout stdout
-	// #define stderr stderr
+	/* Standard streams.  */
+	extern FILE *stdin;	 /* Standard input stream.  */
+	extern FILE *stdout; /* Standard output stream.  */
+	extern FILE *stderr; /* Standard error output stream.  */
+	/* C89/C99 say they're macros.  Make them happy.  */
+	#define stdin stdin
+	#define stdout stdout
+	#define stderr stderr
 
 	// /* Remove file FILENAME.  */
 	// extern int remove(const char *__filename) __THROW;
@@ -158,11 +158,11 @@
 	// 					const char *__new, unsigned int __flags) __THROW;
 	// #endif
 
-	// /* Close STREAM.
+	/* Close STREAM.
 
-	// This function is a possible cancellation point and therefore not
-	// marked with __THROW.  */
-	// extern int fclose(FILE *__stream);
+	This function is a possible cancellation point and therefore not
+	marked with __THROW.  */
+	extern int fclose(FILE *__stream);
 
 	// #undef __attr_dealloc_fclose
 	// #define __attr_dealloc_fclose __attr_dealloc(fclose, 1)
@@ -243,6 +243,7 @@
 	// extern FILE *fopen(const char *__restrict __filename,
 	// 				const char *__restrict __modes)
 	// 	__attribute_malloc__ __attr_dealloc_fclose __wur;
+	extern FILE *fopen(const char *__filename, const char *__modes);
 	// /* Open a file, replacing an existing stream with it.
 
 	// This function is a possible cancellation point and therefore not
@@ -363,6 +364,7 @@
 	// extern int vsnprintf(char *__restrict __s, size_t __maxlen,
 	// 					const char *__restrict __format, __gnuc_va_list __arg)
 	// 	__THROWNL __attribute__((__format__(__printf__, 3, 0)));
+	extern int vsnprintf(char *__s, size_t __maxlen, const char *__format, __gnuc_va_list __arg);
 	// #endif
 
 	// #if __GLIBC_USE(LIB_EXT2)

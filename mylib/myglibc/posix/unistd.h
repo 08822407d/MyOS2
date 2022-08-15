@@ -332,6 +332,7 @@
 	// Return the new file position.  */
 	// #ifndef __USE_FILE_OFFSET64
 	// extern __off_t lseek(int __fd, __off_t __offset, int __whence) __THROW;
+	extern __off_t lseek(int __fd, __off_t __offset, int __whence);
 	// #else
 	// #ifdef __REDIRECT_NTH
 	// extern __off64_t __REDIRECT_NTH(lseek,
@@ -365,6 +366,7 @@
 	// __THROW.  */
 	// extern ssize_t read(int __fd, void *__buf, size_t __nbytes) __wur
 	// 	__attr_access((__write_only__, 2, 3));
+	extern ssize_t read(int __fd, void *__buf, size_t __nbytes);
 
 	// /* Write N bytes of BUF to FD.  Return the number written, or -1.
 
@@ -372,6 +374,7 @@
 	// __THROW.  */
 	// extern ssize_t write(int __fd, const void *__buf, size_t __n) __wur
 	// 	__attr_access((__read_only__, 2, 3));
+	extern ssize_t write(int __fd, const void *__buf, size_t __n);
 
 	// #if defined __USE_UNIX98 || defined __USE_XOPEN2K8
 	// #ifndef __USE_FILE_OFFSET64

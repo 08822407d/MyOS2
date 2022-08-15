@@ -6,6 +6,7 @@ target_include_directories(mylibc PUBLIC
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sys
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/misc
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/generic
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/gnu
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux
                     ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux/x86)
 
