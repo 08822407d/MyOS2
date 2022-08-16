@@ -43,94 +43,94 @@
 	// #define __OPEN_NEEDS_MODE(oflag) (((oflag)&O_CREAT) != 0)
 	// #endif
 
-	// /* POSIX.1-2001 specifies that these types are defined by <fcntl.h>.
-	// Earlier POSIX standards permitted any type ending in `_t' to be defined
-	// by any POSIX header, so we don't conditionalize the definitions here.  */
-	// #ifndef __mode_t_defined
-	// typedef __mode_t mode_t;
-	// #define __mode_t_defined
-	// #endif
+	/* POSIX.1-2001 specifies that these types are defined by <fcntl.h>.
+	Earlier POSIX standards permitted any type ending in `_t' to be defined
+	by any POSIX header, so we don't conditionalize the definitions here.  */
+	#ifndef __mode_t_defined
+		typedef __mode_t	mode_t;
+		#define __mode_t_defined
+	#endif
 
-	// #ifndef __off_t_defined
-	// #ifndef __USE_FILE_OFFSET64
-	// typedef __off_t off_t;
-	// #else
-	// typedef __off64_t off_t;
-	// #endif
-	// #define __off_t_defined
-	// #endif
+	#ifndef __off_t_defined
+		#ifndef __USE_FILE_OFFSET64
+			typedef __off_t		off_t;
+		#else
+			typedef __off64_t	off_t;
+		#endif
+		#define __off_t_defined
+	#endif
 
-	// #if defined __USE_LARGEFILE64 && !defined __off64_t_defined
-	// typedef __off64_t off64_t;
-	// #define __off64_t_defined
-	// #endif
+	#if defined __USE_LARGEFILE64 && !defined __off64_t_defined
+		typedef __off64_t	off64_t;
+		#define __off64_t_defined
+	#endif
 
-	// #ifndef __pid_t_defined
-	// typedef __pid_t pid_t;
-	// #define __pid_t_defined
-	// #endif
+	#ifndef __pid_t_defined
+		typedef __pid_t		pid_t;
+		#define __pid_t_defined
+	#endif
 
 	// /* For XPG all symbols from <sys/stat.h> should also be available.  */
 	// #ifdef __USE_XOPEN2K8
 	// #include <bits/types/struct_timespec.h>
 	// #endif
-	// #if defined __USE_XOPEN || defined __USE_XOPEN2K8
-	// #include <bits/stat.h>
+	#if defined __USE_XOPEN || defined __USE_XOPEN2K8
+		#include <bits/stat.h>
 
-	// #define S_IFMT __S_IFMT
-	// #define S_IFDIR __S_IFDIR
-	// #define S_IFCHR __S_IFCHR
-	// #define S_IFBLK __S_IFBLK
-	// #define S_IFREG __S_IFREG
-	// #ifdef __S_IFIFO
-	// #define S_IFIFO __S_IFIFO
-	// #endif
-	// #ifdef __S_IFLNK
-	// #define S_IFLNK __S_IFLNK
-	// #endif
-	// #if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) && defined __S_IFSOCK
-	// #define S_IFSOCK __S_IFSOCK
-	// #endif
+		#define S_IFMT	__S_IFMT
+		#define S_IFDIR	__S_IFDIR
+		#define S_IFCHR	__S_IFCHR
+		#define S_IFBLK	__S_IFBLK
+		#define S_IFREG	__S_IFREG
+		#ifdef __S_IFIFO
+			#define S_IFIFO	__S_IFIFO
+		#endif
+		#ifdef __S_IFLNK
+			#define S_IFLNK	__S_IFLNK
+		#endif
+		#if (defined __USE_UNIX98 || defined __USE_XOPEN2K8) && defined __S_IFSOCK
+			#define S_IFSOCK	__S_IFSOCK
+		#endif
 
-	// /* Protection bits.  */
+		/* Protection bits.  */
 
-	// #define S_ISUID __S_ISUID /* Set user ID on execution.  */
-	// #define S_ISGID __S_ISGID /* Set group ID on execution.  */
+		#define S_ISUID __S_ISUID /* Set user ID on execution.  */
+		#define S_ISGID __S_ISGID /* Set group ID on execution.  */
 
-	// #if defined __USE_MISC || defined __USE_XOPEN
-	// /* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
-	// #define S_ISVTX __S_ISVTX
-	// #endif
+		#if defined __USE_MISC || defined __USE_XOPEN
+			/* Save swapped text after use (sticky bit).  This is pretty well obsolete.  */
+			#define S_ISVTX __S_ISVTX
+		#endif
 
-	// #define S_IRUSR __S_IREAD  /* Read by owner.  */
-	// #define S_IWUSR __S_IWRITE /* Write by owner.  */
-	// #define S_IXUSR __S_IEXEC  /* Execute by owner.  */
-	// /* Read, write, and execute by owner.  */
-	// #define S_IRWXU (__S_IREAD | __S_IWRITE | __S_IEXEC)
+		#define S_IRUSR __S_IREAD  /* Read by owner.  */
+		#define S_IWUSR __S_IWRITE /* Write by owner.  */
+		#define S_IXUSR __S_IEXEC  /* Execute by owner.  */
+		/* Read, write, and execute by owner.  */
+		#define S_IRWXU (__S_IREAD | __S_IWRITE | __S_IEXEC)
 
-	// #define S_IRGRP (S_IRUSR >> 3) /* Read by group.  */
-	// #define S_IWGRP (S_IWUSR >> 3) /* Write by group.  */
-	// #define S_IXGRP (S_IXUSR >> 3) /* Execute by group.  */
-	// /* Read, write, and execute by group.  */
-	// #define S_IRWXG (S_IRWXU >> 3)
+		#define S_IRGRP (S_IRUSR >> 3) /* Read by group.  */
+		#define S_IWGRP (S_IWUSR >> 3) /* Write by group.  */
+		#define S_IXGRP (S_IXUSR >> 3) /* Execute by group.  */
+		/* Read, write, and execute by group.  */
+		#define S_IRWXG (S_IRWXU >> 3)
 
-	// #define S_IROTH (S_IRGRP >> 3) /* Read by others.  */
-	// #define S_IWOTH (S_IWGRP >> 3) /* Write by others.  */
-	// #define S_IXOTH (S_IXGRP >> 3) /* Execute by others.  */
-	// /* Read, write, and execute by others.  */
-	// #define S_IRWXO (S_IRWXG >> 3)
-	// #endif
+		#define S_IROTH (S_IRGRP >> 3) /* Read by others.  */
+		#define S_IWOTH (S_IWGRP >> 3) /* Write by others.  */
+		#define S_IXOTH (S_IXGRP >> 3) /* Execute by others.  */
+		/* Read, write, and execute by others.  */
+		#define S_IRWXO (S_IRWXG >> 3)
+	#endif
 
-	// #ifdef __USE_MISC
-	// #ifndef R_OK /* Verbatim from <unistd.h>.  Ugh.  */
-	// /* Values for the second argument to access.
-	// These may be OR'd together.  */
-	// #define R_OK 4 /* Test for read permission.  */
-	// #define W_OK 2 /* Test for write permission.  */
-	// #define X_OK 1 /* Test for execute permission.  */
-	// #define F_OK 0 /* Test for existence.  */
-	// #endif
-	// #endif /* Use misc.  */
+	#ifdef __USE_MISC
+		#ifndef R_OK /* Verbatim from <unistd.h>.  Ugh.  */
+			/* Values for the second argument to access.
+			These may be OR'd together.  */
+			#define R_OK 4 /* Test for read permission.  */
+			#define W_OK 2 /* Test for write permission.  */
+			#define X_OK 1 /* Test for execute permission.  */
+			#define F_OK 0 /* Test for existence.  */
+		#endif
+	#endif /* Use misc.  */
 
 	/* XPG wants the following symbols.   <stdio.h> has the same definitions.  */
 	#if defined __USE_XOPEN || defined __USE_XOPEN2K8
