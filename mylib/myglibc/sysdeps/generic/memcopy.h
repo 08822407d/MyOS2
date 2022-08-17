@@ -40,7 +40,7 @@
 	// combinations, with and without overlap.  */
 
 	#include <sys/cdefs.h>
-	// #include <endian.h>
+	#include <endian.h>
 	// #include <pagecopy.h>
 
 	/* The macros defined in this file are:
@@ -66,12 +66,12 @@
 	/* Type to use for unaligned operations.  */
 	typedef unsigned char byte;
 
-	// #if __BYTE_ORDER == __LITTLE_ENDIAN
-	// #define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
-	// #endif
-	// #if __BYTE_ORDER == __BIG_ENDIAN
-	// #define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
-	// #endif
+	#if __BYTE_ORDER == __LITTLE_ENDIAN
+	#define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
+	#endif
+	#if __BYTE_ORDER == __BIG_ENDIAN
+	#define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
+	#endif
 
 	/* Copy exactly NBYTES bytes from SRC_BP to DST_BP,
 	without any assumptions about alignment of the pointers.  */

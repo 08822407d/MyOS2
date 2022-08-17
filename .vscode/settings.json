@@ -142,7 +142,8 @@
 		"posix_opt.h": "c",
 		"features.h": "c",
 		"memcopy.h": "c",
-		"errlist.h": "c"
+		"errlist.h": "c",
+		"endianness.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }
