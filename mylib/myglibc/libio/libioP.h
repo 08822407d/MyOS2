@@ -522,6 +522,7 @@
 	// extern void _IO_new_file_finish(FILE *, int);
 	// extern FILE *_IO_new_file_fopen(FILE *, const char *, const char *,
 	// 								int);
+	extern FILE *_IO_new_file_fopen(FILE *, const char *, const char *);
 	// extern void _IO_no_init(FILE *, int, int, struct _IO_wide_data *,
 	// 						const struct _IO_jump_t *) __THROW;
 	// extern void _IO_new_file_init_internal(struct _IO_FILE_plus *)

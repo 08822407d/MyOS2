@@ -146,16 +146,16 @@
 	// extern int closedir(DIR *__dirp) __nonnull((1));
 	extern int closedir(DIR *__dirp);
 
-	// /* Read a directory entry from DIRP.  Return a pointer to a `struct
-	// dirent' describing the entry, or NULL for EOF or error.  The
-	// storage returned may be overwritten by a later readdir call on the
-	// same DIR stream.
+	/* Read a directory entry from DIRP.  Return a pointer to a `struct
+	dirent' describing the entry, or NULL for EOF or error.  The
+	storage returned may be overwritten by a later readdir call on the
+	same DIR stream.
 
-	// If the Large File Support API is selected we have to use the
-	// appropriate interface.
+	If the Large File Support API is selected we have to use the
+	appropriate interface.
 
-	// This function is a possible cancellation point and therefore not
-	// marked with __THROW.  */
+	This function is a possible cancellation point and therefore not
+	marked with __THROW.  */
 	// #ifndef __USE_FILE_OFFSET64
 	// extern struct dirent *readdir(DIR *__dirp) __nonnull((1));
 	extern struct dirent *readdir(DIR *__dirp);

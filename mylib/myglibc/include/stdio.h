@@ -189,8 +189,8 @@
 	// libc_hidden_ldbl_proto(__asprintf)
 
 	// #if IS_IN(libc)
-	// 	extern FILE *_IO_new_fopen(const char *, const char *);
-	// #define fopen(fname, mode) _IO_new_fopen(fname, mode)
+	extern FILE *_IO_new_fopen(const char *, const char *);
+	#define fopen(fname, mode) _IO_new_fopen(fname, mode)
 	// extern FILE *_IO_new_fdopen(int, const char *);
 	// #define fdopen(fd, mode) _IO_new_fdopen(fd, mode)
 	// extern int _IO_new_fclose(FILE *);

@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <unistd.h>
+#include <dirent.h>
 
 #include "externs.h"
 
@@ -29,7 +30,6 @@ int reboot_command(int argc, char **argv);
  
 	char *	getcwd(char *, size_t);
 	int		chdir(const char *);
-	ssize_t	read(int, const void *, size_t);
 	int		reboot(int);
 
 
