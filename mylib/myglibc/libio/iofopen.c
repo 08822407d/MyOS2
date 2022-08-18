@@ -83,6 +83,7 @@ FILE *
 _IO_new_fopen(const char *filename, const char *mode)
 {
 	FILE *new_f = malloc(sizeof(FILE));
+   new_f->_fileno = -1;
 	return _IO_new_file_fopen(new_f, filename, mode);
 }
 

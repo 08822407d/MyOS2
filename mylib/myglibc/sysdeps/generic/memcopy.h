@@ -21,23 +21,23 @@
 
 	#define _MEMCOPY_H 1
 
-	// /* The strategy of the memory functions is:
+	/* The strategy of the memory functions is:
 
-	// 	1. Copy bytes until the destination pointer is aligned.
+		1. Copy bytes until the destination pointer is aligned.
 
-	// 	2. Copy words in unrolled loops.  If the source and destination
-	// 	are not aligned in the same way, use word memory operations,
-	// 	but shift and merge two read words before writing.
+		2. Copy words in unrolled loops.  If the source and destination
+		are not aligned in the same way, use word memory operations,
+		but shift and merge two read words before writing.
 
-	// 	3. Copy the few remaining bytes.
+		3. Copy the few remaining bytes.
 
-	// This is fast on processors that have at least 10 registers for
-	// allocation by GCC, and that can access memory at reg+const in one
-	// instruction.
+	This is fast on processors that have at least 10 registers for
+	allocation by GCC, and that can access memory at reg+const in one
+	instruction.
 
-	// I made an "exhaustive" test of this memmove when I wrote it,
-	// exhaustive in the sense that I tried all alignment and length
-	// combinations, with and without overlap.  */
+	I made an "exhaustive" test of this memmove when I wrote it,
+	exhaustive in the sense that I tried all alignment and length
+	combinations, with and without overlap.  */
 
 	#include <sys/cdefs.h>
 	#include <endian.h>
@@ -67,10 +67,10 @@
 	typedef unsigned char byte;
 
 	#if __BYTE_ORDER == __LITTLE_ENDIAN
-	#define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
+		#define MERGE(w0, sh_1, w1, sh_2) (((w0) >> (sh_1)) | ((w1) << (sh_2)))
 	#endif
 	#if __BYTE_ORDER == __BIG_ENDIAN
-	#define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
+		#define MERGE(w0, sh_1, w1, sh_2) (((w0) << (sh_1)) | ((w1) >> (sh_2)))
 	#endif
 
 	/* Copy exactly NBYTES bytes from SRC_BP to DST_BP,

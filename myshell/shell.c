@@ -86,37 +86,44 @@ int main(int argc, const char *argv[])
 	}
 }
 
+int fgetc(FILE *fp)
+{
+	char c = '\0';
+	read(fp->_fileno, &c, 1);
+	return c;
+}
+
 int read_line(char *buf)
 {
-	// char key = 0;
-	// int count = 0;
+	char key = 0;
+	int count = 0;
 
-	// while(1)
-	// {
-	// 	key = fgetc(stdin);
+	while(1)
+	{
+		key = fgetc(stdin);
 
-	// 	switch (key)
-	// 	{
-	// 	case 0:
-	// 		continue;
+		switch (key)
+		{
+		case 0:
+			continue;
 		
-	// 	case '\n':
-	// 		return count;
+		case '\n':
+			return count;
 		
-	// 	case '\b':
-	// 		if (count > 0)
-	// 		{
-	// 			buf[--count] = 0;
-	// 			printf("\b");
-	// 		}
-	// 		break;
+		case '\b':
+			if (count > 0)
+			{
+				buf[--count] = 0;
+				printf("\b");
+			}
+			break;
 
-	// 	default:
-	// 		buf[count++] = key;
-	// 		printf("%c", key);
-	// 		break;
-	// 	}
-	// }
+		default:
+			buf[count++] = key;
+			printf("%c", key);
+			break;
+		}
+	}
 }
 
 void run_cmd(int index, int argc, char **argv)
