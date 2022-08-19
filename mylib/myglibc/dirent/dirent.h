@@ -138,11 +138,11 @@
 	// extern DIR *fdopendir(int __fd);
 	// #endif
 
-	// /* Close the directory stream DIRP.
-	// Return 0 if successful, -1 if not.
+	/* Close the directory stream DIRP.
+	Return 0 if successful, -1 if not.
 
-	// This function is a possible cancellation point and therefore not
-	// marked with __THROW.  */
+	This function is a possible cancellation point and therefore not
+	marked with __THROW.  */
 	// extern int closedir(DIR *__dirp) __nonnull((1));
 	extern int closedir(DIR *__dirp);
 
@@ -158,7 +158,6 @@
 	marked with __THROW.  */
 	// #ifndef __USE_FILE_OFFSET64
 	// extern struct dirent *readdir(DIR *__dirp) __nonnull((1));
-	extern struct dirent *readdir(DIR *__dirp);
 	// #else
 	// #ifdef __REDIRECT
 	// extern struct dirent *__REDIRECT(readdir, (DIR * __dirp), readdir64)
@@ -170,6 +169,7 @@
 
 	// #ifdef __USE_LARGEFILE64
 	// extern struct dirent64 *readdir64(DIR *__dirp) __nonnull((1));
+	extern struct dirent64 *readdir(DIR *__dirp);
 	// #endif
 
 	// #ifdef __USE_POSIX
@@ -240,8 +240,8 @@
 	// #endif
 	// #endif
 
-	// #define __need_size_t
-	// #include <stddef.h>
+	#define __need_size_t
+	#include <stddef.h>
 
 	// /* Scan the directory DIR, calling SELECTOR on each directory entry.
 	// Entries for which SELECT returns nonzero are individually malloc'd,
@@ -398,6 +398,6 @@
 	// #endif
 	// #endif /* Use GNU.  */
 
-	// #include <bits/dirent_ext.h>
+	#include <bits/dirent_ext.h>
 
 #endif /* dirent.h  */

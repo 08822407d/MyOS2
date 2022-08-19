@@ -103,14 +103,14 @@ void dirtest()
 	printf("%s\n", pwd);
 
 	DIR *dir = opendir("/EFI");
-	for (; ; )
-	{
-		struct dirent *dirent = readdir(dir);
-		if (dirent == NULL)
-			break;
+	// for (; ; )
+	// {
+	// 	struct dirent *dirent = readdir(dir);
+	// 	if (dirent == NULL)
+	// 		break;
 
-		printf("%s\n",dirent->d_name);
-	}
+	// 	printf("%s\n",dirent->d_name);
+	// }
 	closedir(dir);
 
 	chdir("/");

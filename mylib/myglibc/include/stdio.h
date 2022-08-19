@@ -127,8 +127,8 @@
 	// 	extern FILE *__new_tmpfile(void);
 	// extern FILE *__old_tmpfile(void);
 
-	// #define __need_size_t
-	// #include <stddef.h>
+	#define __need_size_t
+	#include <stddef.h>
 
 	// #include <bits/types/wint_t.h>
 
