@@ -21,6 +21,8 @@
 #include <stdio.h>	   /* For BUFSIZ.  */
 #include <sys/param.h> /* For MIN and MAX.  */
 
+#include <stdlib.h>
+
 // #include <not-cancel.h>
 
 // enum
@@ -70,50 +72,50 @@ DIR *opendir(const char *name)
 
 DIR *__alloc_dir(int fd, bool close_fd, int flags)
 {
-// 	/* We have to set the close-on-exit flag if the user provided the
-// 	   file descriptor.  */
-// 	if (!close_fd && __glibc_unlikely(__fcntl64_nocancel(fd, F_SETFD, FD_CLOEXEC) < 0))
-// 		return NULL;
+	// /* We have to set the close-on-exit flag if the user provided the
+	//    file descriptor.  */
+	// if (!close_fd && __glibc_unlikely(__fcntl64_nocancel(fd, F_SETFD, FD_CLOEXEC) < 0))
+	// 	return NULL;
 
-// 	/* The st_blksize value of the directory is used as a hint for the
-// 	   size of the buffer which receives struct dirent values from the
-// 	   kernel.  st_blksize is limited to max_buffer_size, in case the
-// 	   file system provides a bogus value.  */
-// 	enum
-// 	{
-// 		max_buffer_size = 1048576
-// 	};
+	/* The st_blksize value of the directory is used as a hint for the
+	   size of the buffer which receives struct dirent values from the
+	   kernel.  st_blksize is limited to max_buffer_size, in case the
+	   file system provides a bogus value.  */
+	enum
+	{
+		max_buffer_size = 1048576
+	};
 
-// 	enum
-// 	{
-// 		allocation_size = 32768
-// 	};
-// 	_Static_assert(allocation_size >= sizeof(struct dirent64),
-// 				   "allocation_size < sizeof (struct dirent64)");
+	enum
+	{
+		allocation_size = 32768
+	};
+	// _Static_assert(allocation_size >= sizeof(struct dirent64),
+	// 			   "allocation_size < sizeof (struct dirent64)");
 
-// 	/* Increase allocation if requested, but not if the value appears to
-// 	   be bogus.  It will be between 32Kb and 1Mb.  */
-// 	size_t allocation = MIN(MAX((size_t)statp->st_blksize, (size_t)
-// 															   allocation_size),
-// 							(size_t)max_buffer_size);
+	/* Increase allocation if requested, but not if the value appears to
+	   be bogus.  It will be between 32Kb and 1Mb.  */
+	// size_t allocation = MIN(MAX((size_t)statp->st_blksize, (size_t)
+	// 				allocation_size), (size_t)max_buffer_size);
+	size_t allocation = allocation_size;
 
-// 	DIR *dirp = (DIR *)malloc(sizeof(DIR) + allocation);
-// 	if (dirp == NULL)
-// 	{
-// 		if (close_fd)
-// 			__close_nocancel_nostatus(fd);
-// 		return NULL;
-// 	}
+	DIR *dirp = (DIR *)malloc(sizeof(DIR) + allocation);
+	if (dirp == NULL)
+	{
+		// if (close_fd)
+		// 	__close_nocancel_nostatus(fd);
+		return NULL;
+	}
 
-// 	dirp->fd = fd;
+	dirp->fd = fd;
 // #if IS_IN(libc)
 // 	__libc_lock_init(dirp->lock);
 // #endif
-// 	dirp->allocation = allocation;
-// 	dirp->size = 0;
-// 	dirp->offset = 0;
-// 	dirp->filepos = 0;
-// 	dirp->errcode = 0;
+	dirp->allocation = allocation;
+	dirp->size = 0;
+	dirp->offset = 0;
+	dirp->filepos = 0;
+	dirp->errcode = 0;
 
-// 	return dirp;
+	return dirp;
 }
