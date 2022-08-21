@@ -203,7 +203,7 @@ int cd_command(int argc, char **argv)
 int ls_command(int argc, char **argv)
 {
 	DIR* dir = NULL;
-	struct dirent* buf = NULL;
+	struct dirent64* buf = NULL;
 	char *path = NULL;
 	if (argc <=1)
 		path = ".";
@@ -217,7 +217,6 @@ int ls_command(int argc, char **argv)
 		return -1;
 	}
 
-	buf = (struct dirent*)malloc(256);
 	while(1)
 	{
 		buf = readdir(dir);

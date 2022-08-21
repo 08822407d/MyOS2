@@ -31,6 +31,7 @@ struct dirent
 	unsigned short int	d_reclen;
 	unsigned char		d_type;
 	char				d_name[256]; /* We must not include limits.h! */
+	// char				d_name[]; /* We must not include limits.h! */
 };
 
 #ifdef __USE_LARGEFILE64
@@ -41,6 +42,7 @@ struct dirent
 		unsigned short int	d_reclen;
 		unsigned char		d_type;
 		char				d_name[256]; /* We must not include limits.h! */
+		// char				d_name[]; /* We must not include limits.h! */
 	};
 #endif
 

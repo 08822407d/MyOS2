@@ -32,8 +32,8 @@ readdir(DIR *dirp)
 	struct dirent64 *dp;
 // 	int saved_errno = errno;
 
-	do
-	{
+	// do
+	// {
 		size_t reclen;
 
 		if (dirp->offset >= dirp->size)
@@ -58,8 +58,9 @@ readdir(DIR *dirp)
 				// /* Don't modifiy errno when reaching EOF.  */
 				// if (bytes == 0)
 				// 	__set_errno(saved_errno);
-				dp = NULL;
-				break;
+				// dp = NULL;
+				// break;
+				return NULL;
 			}
 			dirp->size = (size_t)bytes;
 
@@ -75,8 +76,8 @@ readdir(DIR *dirp)
 
 		dirp->filepos = dp->d_off;
 
-		/* Skip deleted files.  */
-	} while (dp->d_ino == 0);
+	// 	/* Skip deleted files.  */
+	// } while (dp->d_ino == 0);
 
 	return dp;
 }

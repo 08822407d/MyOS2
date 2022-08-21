@@ -105,7 +105,7 @@ static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 			container_of(ctx, getdents_cbk64_s, ctx);
 	int reclen = ALIGN(offsetof(linux_dirent64_s, d_name) + namelen + 1,
 			sizeof(u64));
-	int prev_reclen;
+	int prev_reclen = 0;
 
 	buf->error = verify_dirent_name(name, namelen);
 	if (buf->error)
@@ -122,7 +122,7 @@ static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
 	dirent->d_reclen = reclen;
 	dirent->d_type = d_type;
 	copy_to_user(dirent->d_name, (char *)name, namelen);
-	dirent->d_name[namelen - 1] = '\0';
+	dirent->d_name[namelen] = '\0';
 
 	buf->prev_reclen = reclen;
 	buf->current_dir = (void *)dirent + reclen;
@@ -161,7 +161,7 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 
 	if (error >= 0)
 		error = buf.error;
-	// if (buf.prev_reclen) {
+	if (buf.prev_reclen) {
 	// 	linux_dirent64_s *lastdirent;
 	// 	typeof(lastdirent->d_off) d_off = buf.ctx.pos;
 
@@ -169,8 +169,8 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	// 	if (put_user(d_off, &lastdirent->d_off))
 	// 		error = -EFAULT;
 	// 	else
-	// 		error = count - buf.count;
-	// }
+			error = count - buf.count;
+	}
 	fdput_pos(f);
 	return error;
 }
