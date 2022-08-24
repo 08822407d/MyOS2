@@ -174,32 +174,3 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	fdput_pos(f);
 	return error;
 }
-
-// int fill_dentry(void *buf, char *name, long namelen, long type, long offset);
-// long sys_getdents64(unsigned int fd,
-// 		linux_dirent64_s *dirent, unsigned int count)
-// {
-// 	long ret_val = 0;
-// 	fd_s f = fdget_pos(fd);
-// 	if (f.file->f_op != NULL &&
-// 		f.file->f_op->iterate_shared != NULL)
-// 		ret_val = f.file->f_op->iterate_shared(f.file, NULL);
-
-// 	return ret_val;
-// }
-
-// int fill_dentry(void *buf, char *name, long namelen, long type, long offset)
-// {
-// 	linux_dirent64_s *dent = (linux_dirent64_s *)buf;
-	
-// 	if((unsigned long)buf < USERADDR_LIMIT &&
-// 		!verify_area(buf,sizeof(linux_dirent64_s) + namelen))
-// 		return -EFAULT;
-
-// 	copy_to_user(dent->d_name, name, namelen);
-// 	// memcpy(dent->d_name, name, namelen);
-// 	dent->d_reclen = namelen;
-// 	dent->d_type = type;
-// 	dent->d_off = offset;
-// 	return sizeof(linux_dirent64_s) + namelen;
-// }
