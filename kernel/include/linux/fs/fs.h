@@ -2010,7 +2010,7 @@
 
 		int			(*create) (inode_s *, dentry_s *, umode_t, bool);
 		// int			(*link) (dentry_s *, inode_s *,dentry_s *);
-		// int			(*unlink) (inode_s *, dentry_s *);
+		int			(*unlink) (inode_s *, dentry_s *);
 		// int			(*symlink) (inode_s *, dentry_s *, const char *);
 		int			(*mkdir) (inode_s *, dentry_s *, umode_t);
 		int			(*rmdir) (inode_s *, dentry_s *);

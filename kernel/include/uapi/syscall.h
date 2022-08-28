@@ -34,6 +34,12 @@
 	#define	__NR_getcwd			79
 	#define	__NR_chdir			80
 
+	#define __NR_mkdir			83
+	#define __NR_rmdir			84
+	#define __NR_creat			85
+	#define __NR_link			86
+	#define __NR_unlink			87
+
 	#define __NR_getppid		110
 
 	#define	__NR_reboot			169

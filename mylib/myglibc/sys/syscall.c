@@ -51,6 +51,12 @@ SYSFUNC_DEF(getdents)
 SYSFUNC_DEF(getcwd)
 SYSFUNC_DEF(chdir)
 
+SYSFUNC_DEF(mkdir)
+SYSFUNC_DEF(rmdir)
+SYSFUNC_DEF(creat)
+SYSFUNC_DEF(link)
+SYSFUNC_DEF(unlink)
+
 SYSFUNC_DEF(getppid)
 
 SYSFUNC_DEF(reboot)

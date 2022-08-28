@@ -880,18 +880,18 @@ int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
 	return error;
 }
 
-int do_mkdirat(int dfd, filename_s *name, umode_t mode)
+long do_mkdirat(int dfd, filename_s *name, umode_t mode)
 {
-// 	struct dentry *dentry;
-// 	struct path path;
-// 	int error;
-// 	unsigned int lookup_flags = LOOKUP_DIRECTORY;
+	dentry_s *dentry;
+	path_s path;
+	int error;
+	unsigned int lookup_flags = LOOKUP_DIRECTORY;
 
-// retry:
-// 	dentry = filename_create(dfd, name, &path, lookup_flags);
-// 	error = PTR_ERR(dentry);
-// 	if (IS_ERR(dentry))
-// 		goto out_putname;
+retry:
+	dentry = filename_create(dfd, name, &path, lookup_flags);
+	error = PTR_ERR(dentry);
+	if (IS_ERR(dentry))
+		goto out_putname;
 
 // 	if (!IS_POSIXACL(path.dentry->d_inode))
 // 		mode &= ~current_umask();
@@ -907,9 +907,134 @@ int do_mkdirat(int dfd, filename_s *name, umode_t mode)
 // 		lookup_flags |= LOOKUP_REVAL;
 // 		goto retry;
 // 	}
-// out_putname:
-// 	putname(name);
+out_putname:
+	putname(name);
+	return error;
+}
+
+long sys_mkdir(const char *pathname, umode_t mode)
+{
+	return do_mkdirat(AT_FDCWD, getname(pathname), mode);
+}
+
+/*==============================================================================================*
+ *										fuctions for rmdir										*
+ *==============================================================================================*/
+/**
+ * vfs_rmdir - remove directory
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dir:	inode of @dentry
+ * @dentry:	pointer to dentry of the base directory
+ *
+ * Remove a directory.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_rmdir(inode_s *dir, dentry_s *dentry)
+{
+// 	int error = may_delete(mnt_userns, dir, dentry, 1);
+
+// 	if (error)
+// 		return error;
+
+// 	if (!dir->i_op->rmdir)
+// 		return -EPERM;
+
+// 	dget(dentry);
+// 	inode_lock(dentry->d_inode);
+
+// 	error = -EBUSY;
+// 	if (is_local_mountpoint(dentry) ||
+// 	    (dentry->d_inode->i_flags & S_KERNEL_FILE))
+// 		goto out;
+
+// 	error = security_inode_rmdir(dir, dentry);
+// 	if (error)
+// 		goto out;
+
+// 	error = dir->i_op->rmdir(dir, dentry);
+// 	if (error)
+// 		goto out;
+
+// 	shrink_dcache_parent(dentry);
+// 	dentry->d_inode->i_flags |= S_DEAD;
+// 	dont_mount(dentry);
+// 	detach_mounts(dentry);
+
+// out:
+// 	inode_unlock(dentry->d_inode);
+// 	dput(dentry);
+// 	if (!error)
+// 		d_delete_notify(dir, dentry);
 // 	return error;
+}
+
+long do_rmdir(int dfd, filename_s *name)
+{
+	int error;
+	dentry_s *dentry;
+	path_s path;
+	qstr_s last;
+	int type;
+	unsigned int lookup_flags = 0;
+retry:
+	error = filename_parentat(dfd, name, lookup_flags, &path, &last, &type);
+	if (error)
+		goto exit1;
+
+	switch (type) {
+	case LAST_DOTDOT:
+		error = -ENOTEMPTY;
+		goto exit2;
+	case LAST_DOT:
+		error = -EINVAL;
+		goto exit2;
+	case LAST_ROOT:
+		error = -EBUSY;
+		goto exit2;
+	}
+
+// 	error = mnt_want_write(path.mnt);
+// 	if (error)
+// 		goto exit2;
+
+// 	inode_lock_nested(path.dentry->d_inode, I_MUTEX_PARENT);
+// 	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
+// 	error = PTR_ERR(dentry);
+// 	if (IS_ERR(dentry))
+// 		goto exit3;
+// 	if (!dentry->d_inode) {
+// 		error = -ENOENT;
+// 		goto exit4;
+// 	}
+// 	error = security_path_rmdir(&path, dentry);
+// 	if (error)
+// 		goto exit4;
+// 	mnt_userns = mnt_user_ns(path.mnt);
+// 	error = vfs_rmdir(mnt_userns, path.dentry->d_inode, dentry);
+// exit4:
+// 	dput(dentry);
+// exit3:
+// 	inode_unlock(path.dentry->d_inode);
+// 	mnt_drop_write(path.mnt);
+exit2:
+	path_put(&path);
+	// if (retry_estale(error, lookup_flags)) {
+	// 	lookup_flags |= LOOKUP_REVAL;
+	// 	goto retry;
+	// }
+exit1:
+	putname(name);
+	return error;
+}
+
+long sys_rmdir(const char *pathname)
+{
+	return do_rmdir(AT_FDCWD, getname(pathname));
 }
 
 /*==============================================================================================*

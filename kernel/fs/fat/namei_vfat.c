@@ -389,6 +389,11 @@ int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 // int FAT32_setattr(dentry_s *dentry, iattr_s *attr)
 // {}
 
+int FAT32_unlink(inode_s *parent, dentry_s *dest)
+{
+
+}
+
 inode_ops_s vfat_dir_inode_operations = 
 {
 	.create = FAT32_create,
@@ -398,6 +403,7 @@ inode_ops_s vfat_dir_inode_operations =
 	.rename = FAT32_rename,
 	// .getattr = FAT32_getattr,
 	// .setattr = FAT32_setattr,
+	.unlink = FAT32_unlink,
 };
 
 static void setup(super_block_s *sb)

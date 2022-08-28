@@ -20,7 +20,7 @@ SYSCALL_COMMON(__NR_lseek,sys_lseek)
 
 SYSCALL_COMMON(__NR_sbrk,sys_sbrk)
 
-SYSCALL_COMMON(__NR_getpid, sys_getpid)
+SYSCALL_COMMON(__NR_getpid,sys_getpid)
 
 SYSCALL_COMMON(__NR_fork,sys_fork)
 SYSCALL_COMMON(__NR_vfork,sys_vfork)
@@ -32,7 +32,13 @@ SYSCALL_COMMON(__NR_wait4,sys_wait4)
 SYSCALL_COMMON(__NR_getcwd,sys_getcwd)
 SYSCALL_COMMON(__NR_chdir,sys_chdir)
 
-SYSCALL_COMMON(__NR_getppid, sys_getppid)
+SYSCALL_COMMON(__NR_chdir,sys_mkdir)
+SYSCALL_COMMON(__NR_chdir,sys_rmdir)
+// SYSCALL_COMMON(__NR_chdir,sys_creat)
+// SYSCALL_COMMON(__NR_chdir,sys_link)
+// SYSCALL_COMMON(__NR_chdir,sys_unlink)
+
+SYSCALL_COMMON(__NR_getppid,sys_getppid)
 
 SYSCALL_COMMON(__NR_reboot,sys_reboot)
 
