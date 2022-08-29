@@ -26,6 +26,7 @@ int ls_command(int argc, char **argv);
 int pwd_command(int argc, char **argv);
 int cat_command(int argc, char **argv);
 int exec_command(int argc, char **argv);
+int mkdir_command(int argc, char **argv);
 int reboot_command(int argc, char **argv);
  
 	char *	getcwd(char *, size_t);
@@ -41,7 +42,7 @@ builtincmd_s shell_internal_cmd[] =
 	{"cat",		cat_command},
 	// {"touch",	touch_command},
 	// {"rm",		rm_command},
-	// {"mkdir",	mkdir_command},
+	{"mkdir",	mkdir_command},
 	// {"rmdir",	rmdir_command},
 	{"exec",	exec_command},
 	{"reboot",	reboot_command},
@@ -309,6 +310,18 @@ int exec_command(int argc, char **argv)
 	// 	printf("parent process waitpid:%#018lx\n", retval);
 	// }
 	// return 1;
+}
+
+int mkdir_command(int argc, char **argv)
+{
+	int err = 0, nmode = 0;
+	if (argc != 2)
+		return -1;
+
+	nmode = (S_IRWXU | S_IRWXG | S_IRWXO);
+	err = mkdir(argv[1], nmode);
+
+	return 0;
 }
 
 int reboot_command(int argc, char **argv)

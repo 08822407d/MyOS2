@@ -371,6 +371,7 @@
 	// /* Create a new directory named PATH, with permission bits MODE.  */
 	// extern int mkdir(const char *__path, __mode_t __mode)
 	// 	__THROW __nonnull((1));
+	extern int mkdir(const char *__path, __mode_t __mode);
 
 	// #ifdef __USE_ATFILE
 	// /* Like mkdir, create a new directory with permission bits MODE.  But

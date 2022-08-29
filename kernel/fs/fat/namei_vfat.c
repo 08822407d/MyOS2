@@ -371,7 +371,9 @@ find_lookup_success:
 }
 
 int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)
-{}
+{
+
+}
 
 
 int FAT32_rmdir(inode_s * inode, dentry_s * dentry)
