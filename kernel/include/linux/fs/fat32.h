@@ -143,6 +143,7 @@
 	void init_fat32_fs(void);
 	u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry);
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
-	u64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
+	s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
+	s64 FAT32_alloc_new_dir(inode_s *dir);
 
 #endif /* _FAT32_H_ */

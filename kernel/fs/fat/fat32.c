@@ -117,7 +117,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	return ret_val;
 }
 
-uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
+s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 {
 	int i, j;
 	int fat_entry;
@@ -139,6 +139,43 @@ uint64_t FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 		}
 	}
 	return 0;
+}
+
+s64 FAT32_alloc_new_dir(inode_s *dir)
+{
+	s64 cluster = 0;
+	s64 sector = 0;
+	char *clus_buf = NULL;
+	FAT32_SBinfo_s *fsbi = NULL;
+	FAT32_inode_info_s * finode;
+	msdos_dir_entry_s *de;
+
+	fsbi = (FAT32_SBinfo_s *)dir->i_sb->private_sb_info;
+	finode = (FAT32_inode_info_s *)dir->private_idx_info;
+	sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
+	clus_buf = kmalloc(fsbi->bytes_per_cluster);
+	if (clus_buf == NULL)
+		return -(ENOMEM);
+	memset(clus_buf, 0, fsbi->bytes_per_cluster);
+
+	de = (msdos_dir_entry_s *)clus_buf;
+	/* filling the new directory slots ("." and ".." entries) */
+	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
+	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
+	de->attr = de[1].attr = ATTR_DIR;
+	de[0].lcase = de[1].lcase = 0;
+	de[0].size = de[1].size = 0;
+	fat_set_start(&de[0], cluster);
+	fat_set_start(&de[1], finode->first_cluster);
+
+	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD, sector,
+					fsbi->sector_per_cluster, (unsigned char *)clus_buf))
+	{
+		color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
+		return -EIO;
+	}
+
+	return cluster;
 }
 
 ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *position)

@@ -247,11 +247,11 @@
 	// 	return s;
 	// }
 
-	// static inline sector_t fat_clus_to_blknr(struct msdos_sb_info *sbi, int clus)
-	// {
-	// 	return ((sector_t)clus - FAT_START_ENT) * sbi->sec_per_clus
-	// 		+ sbi->data_start;
-	// }
+	static inline sector_t fat_clus_to_blknr(msdos_sb_info_s *sbi, int clus)
+	{
+		return ((sector_t)clus - FAT_START_ENT) * sbi->sec_per_clus
+			+ sbi->data_start;
+	}
 
 	// static inline void fat_get_blknr_offset(struct msdos_sb_info *sbi,
 	// 				loff_t i_pos, sector_t *blknr, int *offset)
@@ -295,11 +295,11 @@
 	// 	return cluster;
 	// }
 
-	// static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
-	// {
-	// 	de->start   = cluster;
-	// 	de->starthi = cluster >> 16;
-	// }
+	static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
+	{
+		de->start   = cluster;
+		de->starthi = cluster >> 16;
+	}
 
 	// static inline void fatwchar_to16(u8 *dst, const wchar_t *src, size_t len)
 	// {

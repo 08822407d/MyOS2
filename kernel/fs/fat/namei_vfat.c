@@ -22,6 +22,16 @@ static int vfat_revalidate(dentry_s *dentry, unsigned int flags)
 	// return vfat_revalidate_shortname(dentry);
 }
 
+/* returns the length of a struct qstr, ignoring trailing dots */
+static unsigned int vfat_striptail_len(qstr_s *qname)
+{
+	size_t len = qname->len;
+	const unsigned char *name = qname->name;
+	while (len && name[len - 1] == '.')
+		len--;
+	return len;
+}
+
 /*
  * Compute the hash for the vfat name corresponding to the dentry.
  * Note: if the name is invalid, we leave the hash code unchanged so
@@ -57,6 +67,35 @@ dentry_ops_s vfat_dentry_ops = {
 	.d_hash			= vfat_hash,
 	.d_compare		= vfat_cmp,
 };
+
+// static int vfat_add_entry(struct inode *dir, const struct qstr *qname,
+// 			  int is_dir, int cluster, struct timespec64 *ts,
+// 			  struct fat_slot_info *sinfo)
+static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
+			  int is_dir, int cluster, fat_slot_info_s *sinfo)
+{
+	msdos_dir_entry_s de;
+	unsigned int len;
+	int err, nr_slots;
+
+	memset(&(de.name), 0x20, 11);
+	len = vfat_striptail_len(qname);
+	strncpy(&(de.name), qname->name, len);
+	if (len == 0)
+		return -ENOENT;
+	else if (len > 8)
+	{
+		len = 8;
+		color_printk(RED, BLACK, "file name too long, cast to 8 bytes.\n");
+	}
+	de.attr = is_dir ? ATTR_DIR : ATTR_ARCH;
+	// de.lcase = lcase;
+	fat_set_start(&de, cluster);
+	de.size = 0;
+
+	err = fat_add_entries(dir, &de, nr_slots, sinfo);
+	return err;
+}
 
 static int vfat_find(inode_s *dir, const qstr_s *qname,
 				fat_slot_info_s *sinfo)
@@ -372,7 +411,9 @@ find_lookup_success:
 
 int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)
 {
+	uint64_t cluster = 0;
 
+	cluster = FAT32_alloc_new_dir(inode);
 }
 
 
