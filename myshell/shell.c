@@ -27,6 +27,7 @@ int pwd_command(int argc, char **argv);
 int cat_command(int argc, char **argv);
 int exec_command(int argc, char **argv);
 int mkdir_command(int argc, char **argv);
+int rmdir_command(int argc, char **argv);
 int reboot_command(int argc, char **argv);
  
 	char *	getcwd(char *, size_t);
@@ -43,7 +44,7 @@ builtincmd_s shell_internal_cmd[] =
 	// {"touch",	touch_command},
 	// {"rm",		rm_command},
 	{"mkdir",	mkdir_command},
-	// {"rmdir",	rmdir_command},
+	{"rmdir",	rmdir_command},
 	{"exec",	exec_command},
 	{"reboot",	reboot_command},
 };
@@ -322,6 +323,17 @@ int mkdir_command(int argc, char **argv)
 	err = mkdir(argv[1], nmode);
 
 	return 0;
+}
+
+int rmdir_command(int argc, char **argv)
+{
+	int err = 0;
+	if (argc != 2)
+		return -1;
+
+	err = rmdir(argv[1]);
+
+	return err;
 }
 
 int reboot_command(int argc, char **argv)

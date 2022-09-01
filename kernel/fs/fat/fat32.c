@@ -63,7 +63,10 @@ static List_hdr_s *get_cluster_chain(inode_s *inode)
 char *FAT32_read_entirety(inode_s *inode ,size_t *size)
 {
 	char *ret_val = NULL;
+	size_t bufsize;
 
+	*size = 0;
+	size_t pos = 0;
 	FAT32_inode_info_s * finode = inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
 	size_t clus_size = fsbi->bytes_per_cluster;
@@ -71,34 +74,37 @@ char *FAT32_read_entirety(inode_s *inode ,size_t *size)
 	List_hdr_s *clus_lhdrp = get_cluster_chain(inode);
 	if (clus_lhdrp == NULL)
 	{
-		ret_val = -EIO;
+		ret_val = ERR_PTR(-EIO);
 		goto get_clus_chain_fail;
 	}
-	char *buf = kmalloc(clus_lhdrp->count * clus_size);
+	bufsize = clus_lhdrp->count * clus_size;
+	char *buf = kmalloc(bufsize);
 	if (buf == NULL)
 	{
-		ret_val = -ENOMEM;
+		ret_val = ERR_PTR(-ENOMEM);
 		goto alloc_buf_fail;
 	}
+	memset(buf, 0, bufsize);
 
 	while (clus_lhdrp->count > 0)
 	{
 		size_t offset = 0;
 		List_s *lp = list_hdr_dequeue(clus_lhdrp);
-		clus_list_s *clus_lp = container_of(lp, clus_list_s, cluster);
+		clus_list_s *clus_lp = container_of(lp, clus_list_s, list);
 		u32 cluster = clus_lp->cluster;
 
 		if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 				FAT32_clus_to_blknr(fsbi, cluster),
-				fsbi->sector_per_cluster, (unsigned char *)buf))
+				fsbi->sector_per_cluster, (unsigned char *)buf + pos))
 		{
 			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
-			ret_val = -EIO;
+			ret_val = ERR_PTR(-EIO);
 			goto read_clus_fail;
 		}
-		buf += clus_size;
+		pos += clus_size;
 	}
 	ret_val = buf;
+	*size = bufsize;
 	goto success;
 
 read_clus_fail:
@@ -111,6 +117,36 @@ success:
 	return ret_val;
 }
 
+/* See if directory is empty */
+int FAT32_dir_empty(inode_s *dir)
+{
+	char *buf;
+	FAT32_dir_s *de;
+	int result = ENOERR;
+	size_t pos = 0;
+	size_t bufsize = 0;
+
+	buf = FAT32_read_entirety(dir, &bufsize);
+	
+	while (pos < bufsize)
+	{
+		de = (FAT32_dir_s *)(buf + pos);
+		if (de->DIR_Name[0] != 0xe5 &&
+			de->DIR_Name[0] != 0x00 &&
+			de->DIR_Name[0] != 0x05)
+		{
+			if (strncmp(de->DIR_Name, MSDOS_DOT   , MSDOS_NAME) &&
+				strncmp(de->DIR_Name, MSDOS_DOTDOT, MSDOS_NAME))
+			{
+				result = -ENOTEMPTY;
+				break;
+			}
+		}
+		pos += sizeof(FAT32_dir_s);
+	}
+	kfree(buf);
+	return result;
+}
 
 uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value)
 {
@@ -454,9 +490,9 @@ int FAT32_getdents64(file_s * filp, dir_ctxt_s *ctx)
 			// find the end of current fat32_dir_entry
 			do
 			{
+				tmpdentry = (FAT32_dir_s *)(buf + ctx->pos % cluster_size);
 				ctx->pos += sizeof(FAT32_dir_s);
 				idx += sizeof(FAT32_dir_s);
-				tmpdentry = (FAT32_dir_s *)(buf + ctx->pos % cluster_size);
 			}
 			while (tmpdentry->DIR_Attr == ATTR_LONG_NAME ||
 					tmpdentry->DIR_Name[0] == 0xe5 ||

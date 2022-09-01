@@ -844,8 +844,9 @@
 	// 	__THROW __nonnull((2));
 	// #endif
 
-	// /* Remove the directory PATH.  */
+	/* Remove the directory PATH.  */
 	// extern int rmdir(const char *__path) __THROW __nonnull((1));
+	extern int rmdir(const char *__path);
 
 	// /* Return the foreground process group ID of FD.  */
 	// extern __pid_t tcgetpgrp(int __fd) __THROW;

@@ -417,8 +417,15 @@ int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)
 }
 
 
-int FAT32_rmdir(inode_s * inode, dentry_s * dentry)
-{}
+int FAT32_rmdir(inode_s * parent, dentry_s * dentry)
+{
+	int error = 0;
+	inode_s *inode = dentry->d_inode;
+
+	error = FAT32_dir_empty(inode);
+	if (error != 0)
+		return error;
+}
 
 int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 				inode_s * new_inode, dentry_s * new_dentry,

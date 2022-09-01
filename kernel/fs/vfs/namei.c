@@ -942,41 +942,26 @@ long sys_mkdir(const char *pathname, umode_t mode)
  */
 int vfs_rmdir(inode_s *dir, dentry_s *dentry)
 {
-// 	int error = may_delete(mnt_userns, dir, dentry, 1);
+	int error = 0;
 
-// 	if (error)
-// 		return error;
+	if (!dir->i_op->rmdir)
+		return -EPERM;
 
-// 	if (!dir->i_op->rmdir)
-// 		return -EPERM;
+	dget(dentry);
 
-// 	dget(dentry);
-// 	inode_lock(dentry->d_inode);
-
-// 	error = -EBUSY;
-// 	if (is_local_mountpoint(dentry) ||
-// 	    (dentry->d_inode->i_flags & S_KERNEL_FILE))
-// 		goto out;
-
-// 	error = security_inode_rmdir(dir, dentry);
-// 	if (error)
-// 		goto out;
-
-// 	error = dir->i_op->rmdir(dir, dentry);
-// 	if (error)
-// 		goto out;
+	error = -EBUSY;
+	error = dir->i_op->rmdir(dir, dentry);
+	if (error)
+		goto out;
 
 // 	shrink_dcache_parent(dentry);
-// 	dentry->d_inode->i_flags |= S_DEAD;
+	dentry->d_inode->i_flags |= S_DEAD;
 // 	dont_mount(dentry);
 // 	detach_mounts(dentry);
 
-// out:
-// 	inode_unlock(dentry->d_inode);
-// 	dput(dentry);
-// 	if (!error)
-// 		d_delete_notify(dir, dentry);
-// 	return error;
+out:
+	dput(dentry);
+	return error;
 }
 
 long do_rmdir(int dfd, filename_s *name)
@@ -1004,35 +989,23 @@ retry:
 		goto exit2;
 	}
 
-// 	error = mnt_want_write(path.mnt);
-// 	if (error)
-// 		goto exit2;
+	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
+	error = PTR_ERR(dentry);
+	if (IS_ERR(dentry))
+		goto exit3;
+	if (!dentry->d_inode) {
+		error = -ENOENT;
+		goto exit4;
+	}
 
-// 	inode_lock_nested(path.dentry->d_inode, I_MUTEX_PARENT);
-// 	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
-// 	error = PTR_ERR(dentry);
-// 	if (IS_ERR(dentry))
-// 		goto exit3;
-// 	if (!dentry->d_inode) {
-// 		error = -ENOENT;
-// 		goto exit4;
-// 	}
-// 	error = security_path_rmdir(&path, dentry);
-// 	if (error)
-// 		goto exit4;
-// 	mnt_userns = mnt_user_ns(path.mnt);
-// 	error = vfs_rmdir(mnt_userns, path.dentry->d_inode, dentry);
-// exit4:
-// 	dput(dentry);
-// exit3:
+	error = vfs_rmdir(path.dentry->d_inode, dentry);
+exit4:
+	dput(dentry);
+exit3:
 // 	inode_unlock(path.dentry->d_inode);
 // 	mnt_drop_write(path.mnt);
 exit2:
 	path_put(&path);
-	// if (retry_estale(error, lookup_flags)) {
-	// 	lookup_flags |= LOOKUP_REVAL;
-	// 	goto retry;
-	// }
 exit1:
 	putname(name);
 	return error;

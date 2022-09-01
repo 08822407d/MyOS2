@@ -15,6 +15,8 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
+#include <uapi/msdos_fs.h>
+
 #include <linux/kernel/types.h>
 #include <klib/utils.h>
 
@@ -146,6 +148,7 @@
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
 	s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
 	s64 FAT32_alloc_new_dir(inode_s *dir);
+	int FAT32_dir_empty(inode_s *dir);
 
 	typedef struct cluster_list
 	{
