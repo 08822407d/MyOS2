@@ -117,6 +117,13 @@ inline __always_inline void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
 	list_hdr_append(lhdr_p, l_p);
 }
 
+void list_hdr_dump(List_hdr_s *lhdr_p)
+{
+	List_s *lp;
+	while ((lp = list_hdr_pop(lhdr_p)) != NULL)
+		kfree(lp);
+}
+
 List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)

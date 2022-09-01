@@ -16,6 +16,7 @@
 #define _FAT32_H_
 
 #include <linux/kernel/types.h>
+#include <klib/utils.h>
 
 	typedef struct FAT32_BS
 	{
@@ -145,5 +146,17 @@
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
 	s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
 	s64 FAT32_alloc_new_dir(inode_s *dir);
+
+	typedef struct cluster_list
+	{
+		List_s	list;
+		u32		cluster;
+	} clus_list_s;
+
+	static inline sector_t FAT32_clus_to_blknr(FAT32_SBinfo_s *fsbi, int clus)
+	{
+		return ((sector_t)clus - FAT_START_ENT) * fsbi->sector_per_cluster
+			+ fsbi->Data_firstsector;
+	}
 
 #endif /* _FAT32_H_ */

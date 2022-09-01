@@ -14,17 +14,17 @@
 ***************************************************/
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
-#include <linux/fs/fat32.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
 #include <uapi/msdos_fs.h>
 
+#include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
 #include <obsolete/proto.h>
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
 
-uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
+u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 {
 	uint32_t buf[128];
 	memset(buf, 0, 512);
@@ -32,6 +32,85 @@ uint32_t FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 									1, (unsigned char *)buf);
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
+
+static List_hdr_s *get_cluster_chain(inode_s *inode)
+{
+	FAT32_inode_info_s * finode = inode->private_idx_info;
+	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
+	unsigned long cluster = finode->first_cluster;
+	List_hdr_s *clus_lhdrp = kmalloc(sizeof(List_hdr_s));
+	list_hdr_init(clus_lhdrp);
+
+	do
+	{
+		clus_list_s *clus_sp = kmalloc(sizeof(clus_list_s));
+		list_init(&clus_sp->list, clus_sp);
+
+		clus_sp->cluster = cluster;
+		list_hdr_enqueue(clus_lhdrp, &clus_sp->list);
+	} while ((cluster = FAT32_read_FAT_Entry(fsbi, cluster)) <= MAX_FAT32);
+
+	if (cluster == BAD_FAT32)
+	{
+		list_hdr_dump(clus_lhdrp);
+		kfree(clus_lhdrp);
+		clus_lhdrp = NULL;
+	}
+
+	return clus_lhdrp;
+}
+
+char *FAT32_read_entirety(inode_s *inode ,size_t *size)
+{
+	char *ret_val = NULL;
+
+	FAT32_inode_info_s * finode = inode->private_idx_info;
+	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
+	size_t clus_size = fsbi->bytes_per_cluster;
+
+	List_hdr_s *clus_lhdrp = get_cluster_chain(inode);
+	if (clus_lhdrp == NULL)
+	{
+		ret_val = -EIO;
+		goto get_clus_chain_fail;
+	}
+	char *buf = kmalloc(clus_lhdrp->count * clus_size);
+	if (buf == NULL)
+	{
+		ret_val = -ENOMEM;
+		goto alloc_buf_fail;
+	}
+
+	while (clus_lhdrp->count > 0)
+	{
+		size_t offset = 0;
+		List_s *lp = list_hdr_dequeue(clus_lhdrp);
+		clus_list_s *clus_lp = container_of(lp, clus_list_s, cluster);
+		u32 cluster = clus_lp->cluster;
+
+		if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+				FAT32_clus_to_blknr(fsbi, cluster),
+				fsbi->sector_per_cluster, (unsigned char *)buf))
+		{
+			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
+			ret_val = -EIO;
+			goto read_clus_fail;
+		}
+		buf += clus_size;
+	}
+	ret_val = buf;
+	goto success;
+
+read_clus_fail:
+	kfree(buf);
+alloc_buf_fail:	
+	list_hdr_dump(clus_lhdrp);
+	kfree(clus_lhdrp);
+get_clus_chain_fail:
+success:
+	return ret_val;
+}
+
 
 uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value)
 {

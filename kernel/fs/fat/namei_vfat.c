@@ -2,9 +2,9 @@
 #include <linux/lib/errno.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
-#include <linux/fs/fat32.h>
 #include <uapi/msdos_fs.h>
 
+#include <linux/fs/fat32.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include "../../arch/amd64/include/device.h"
@@ -78,9 +78,9 @@ static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 	unsigned int len;
 	int err, nr_slots;
 
-	memset(&(de.name), 0x20, 11);
-	len = vfat_striptail_len(qname);
-	strncpy(&(de.name), qname->name, len);
+	memset(de.name, 0x20, 11);
+	len = vfat_striptail_len((qstr_s *)qname);
+	strncpy(de.name, qname->name, len);
 	if (len == 0)
 		return -ENOENT;
 	else if (len > 8)
@@ -93,7 +93,7 @@ static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 	fat_set_start(&de, cluster);
 	de.size = 0;
 
-	err = fat_add_entries(dir, &de, nr_slots, sinfo);
+	// err = fat_add_entries(dir, &de, nr_slots, sinfo);
 	return err;
 }
 
