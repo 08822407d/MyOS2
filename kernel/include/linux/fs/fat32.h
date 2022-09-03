@@ -77,37 +77,19 @@
 	#define ATTR_ARCHIVE	(1 << 5)
 	#define ATTR_LONG_NAME	(ATTR_READ_ONLY | ATTR_HIDE | ATTR_SYSTEM | ATTR_VOLUME_ID)
 
-	typedef struct FAT32_dir
-	{
-		u8	DIR_Name[11];
-		u8	DIR_Attr;
-		u8	DIR_NTRes;	// EXT|BASE => 8(BASE).3(EXT)
-								// BASE:LowerCase(8),UpperCase(0)
-								// EXT:LowerCase(16),UpperCase(0)
-		u8	DIR_CrtTimeTenth;
-		u16	DIR_CrtTime;	
-		u16	DIR_CrtDate;
-		u16	DIR_LastAccDate;
-		u16	DIR_FstClusHI;
-		u16	DIR_WrtTime;
-		u16	DIR_WrtDate;
-		u16	DIR_FstClusLO;
-		u32	DIR_FileSize;
-	}__attribute__((packed)) FAT32_dir_s;
-
 	#define LOWERCASE_BASE (8)
 	#define LOWERCASE_EXT (16)
 
 	typedef struct FAT32_ldir
 	{
-		u8	LDIR_Ord;
-		u16	LDIR_Name1[5];
-		u8	LDIR_Attr;
-		u8	LDIR_Type;
-		u8	LDIR_Chksum;
-		u16	LDIR_Name2[6];
-		u16	LDIR_FstClusLO;
-		u16	LDIR_Name3[2];
+		u8	id;
+		u16	name0_4[5];
+		u8	attr;
+		u8	reserved;
+		u8	alias_checksum;
+		u16	name5_10[6];
+		u16	start;
+		u16	name11_12[2];
 	}__attribute__((packed)) FAT32_ldir_s;
 
 	typedef struct FAT32_SBinfo

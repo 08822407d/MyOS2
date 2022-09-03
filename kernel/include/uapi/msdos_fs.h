@@ -169,28 +169,48 @@
 	} fat_boot_fsinfo_s;
 
 	typedef struct msdos_dir_entry {
-		__u8	name[MSDOS_NAME];	/* name and extension */
-		__u8	attr;				/* attribute bits */
-		__u8	lcase;				/* Case for base and extension */
-		__u8	ctime_cs;			/* Creation time, centiseconds (0-199) */
-		__le16	ctime;				/* Creation time */
-		__le16	cdate;				/* Creation date */
-		__le16	adate;				/* Last access date */
-		__le16	starthi;			/* High 16 bits of cluster in FAT32 */
-		__le16	time,date,start;	/* time, date and first cluster */
-		__le32	size;				/* file size (in bytes) */
+		__u8	name[MSDOS_NAME];	/* name and extension 
+										-DIR_Name- */
+		__u8	attr;				/* attribute bits
+										-DIR_Attr- */
+		__u8	lcase;				/* Case for base and extension
+										-DIR_NTRes- */
+		__u8	ctime_cs;			/* Creation time, centiseconds (0-199)
+										-DIR_CrtTimeTenth- */
+		__le16	ctime;				/* Creation time
+										-DIR_CrtTime- */
+		__le16	cdate;				/* Creation date
+										-DIR_CrtDate- */
+		__le16	adate;				/* Last access date
+										-DIR_LastAccDate- */
+		__le16	starthi;			/* High 16 bits of cluster in FAT32
+										-DIR_FstClusHI- */
+		__le16	time,date,start;	/* time, date and first cluster
+										-DIR_WrtTime-
+										-DIR_WrtDate-
+										-DIR_FstClusLO- */
+		__le32	size;				/* file size (in bytes)
+										-DIR_FileSize- */
 	}__attribute__((packed)) msdos_dir_entry_s;
 
 	/* Up to 13 characters of the name */
 	typedef struct msdos_dir_slot {
-		__u8	id;					/* sequence number for slot */
-		__u8	name0_4[10];		/* first 5 characters in name */
-		__u8	attr;				/* attribute byte */
-		__u8	reserved;			/* always 0 */
-		__u8	alias_checksum;		/* checksum for 8.3 alias */
-		__u8	name5_10[12];		/* 6 more characters in name */
-		__le16	start;				/* starting cluster number, 0 in long slots */
-		__u8	name11_12[4];		/* last 2 characters in name */
+		__u8	id;					/* sequence number for slot
+										-LDIR_Ord- */
+		__u8	name0_4[10];		/* first 5 characters in name
+										-LDIR_Name1- */
+		__u8	attr;				/* attribute byte
+										-LDIR_Attr- */
+		__u8	reserved;			/* always 0
+										-LDIR_Type- */
+		__u8	alias_checksum;		/* checksum for 8.3 alias
+										-LDIR_Chksum- */
+		__u8	name5_10[12];		/* 6 more characters in name
+										-LDIR_Name2- */
+		__le16	start;				/* starting cluster number, 0 in long slots
+										-LDIR_FstClusLO- */
+		__u8	name11_12[4];		/* last 2 characters in name
+										-LDIR_Name3- */
 	}__attribute__((packed)) msdos_dir_slot_s;
 
 #endif /* _UAPI_LINUX_MSDOS_FS_H_ */
