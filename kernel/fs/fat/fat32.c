@@ -845,6 +845,8 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 
 	char *buf;
 	int error = 0;
+	int destlen = dest_dentry->d_name.len;
+	const char * destname = dest_dentry->d_name.name;
 	loff_t off = 0;
 	size_t bufsize = 0;
 	msdos_dir_entry_s * tmpde = NULL;
@@ -861,46 +863,22 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 		char *name = NULL;
 		int namelen = 0;
 
-		j = 0;
-		//long file/dir name compare
-		while(tmplde->attr == ATTR_LONG_NAME &&
-				tmplde->id != 0xe5)
+		if (FAT32_ent_empty(tmpde))
+			continue;
+		else if(tmplde->attr == ATTR_LONG_NAME &&
+			!FAT32_ent_empty((msdos_dir_entry_s *)tmplde))
 		{
-			for(x=0; x<5; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name0_4[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name0_4[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
-			for(x=0; x<6; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name5_10[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name5_10[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
-			for(x=0; x<2; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name11_12[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name11_12[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
-
-			if(j >= dest_dentry->d_name.len)
-			{
+			name = FAT32_get_longname(&namelen, tmplde);
+			int len = namelen > destlen ? namelen : destlen;
+			bool equal = !strncmp(name, destname, len);
+			kfree(name);
+			if (equal)
 				goto find_lookup_success;
-			}
-
-			tmplde --;
+			else
+				goto continue_cmp_fail;
 		}
+		else
+			name = FAT32_get_shortname(&namelen, tmpde);
 
 		//short file/dir base name compare
 		j = 0;
