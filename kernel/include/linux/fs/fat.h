@@ -138,7 +138,7 @@
 		loff_t	i_pos;			/* on-disk position of directory entry */
 		loff_t	slot_off;		/* offset for slot or de start */
 		int		nr_slots;		/* number of slots + 1(de) in filename */
-		msdos_dir_entry_s	*de;
+		msdos_dirent_s	*de;
 		// struct buffer_head *bh;
 	} fat_slot_info_s;
 
@@ -295,7 +295,7 @@
 	// 	return cluster;
 	// }
 
-	static inline void fat_set_start(msdos_dir_entry_s *de, int cluster)
+	static inline void fat_set_start(msdos_dirent_s *de, int cluster)
 	{
 		de->start   = cluster;
 		de->starthi = cluster >> 16;
@@ -414,7 +414,7 @@
 	// extern void fat_detach(inode_s *inode);
 	// extern inode_s *fat_iget(super_block_s *sb, loff_t i_pos);
 	extern inode_s *fat_build_inode(super_block_s *sb,
-					msdos_dir_entry_s *de, loff_t i_pos);
+					msdos_dirent_s *de, loff_t i_pos);
 	// extern int fat_sync_inode(inode_s *inode);
 	extern int fat_fill_super(super_block_s *sb, void *data,
 					int isvfat, void (*setup)(super_block_s *));

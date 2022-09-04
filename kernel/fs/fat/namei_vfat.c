@@ -74,7 +74,7 @@ dentry_ops_s vfat_dentry_ops = {
 static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 			  int is_dir, int cluster, fat_slot_info_s *sinfo)
 {
-	msdos_dir_entry_s de;
+	msdos_dirent_s de;
 	unsigned int len;
 	int err, nr_slots;
 

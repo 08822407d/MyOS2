@@ -191,7 +191,7 @@
 										-DIR_FstClusLO- */
 		__le32	size;				/* file size (in bytes)
 										-DIR_FileSize- */
-	}__attribute__((packed)) msdos_dir_entry_s;
+	}__attribute__((packed)) msdos_dirent_s;
 
 	/* Up to 13 characters of the name */
 	typedef struct msdos_dir_slot {
@@ -211,6 +211,6 @@
 										-LDIR_FstClusLO- */
 		__u8	name11_12[4];		/* last 2 characters in name
 										-LDIR_Name3- */
-	}__attribute__((packed)) msdos_dir_slot_s;
+	}__attribute__((packed)) msdos_dirslot_s;
 
 #endif /* _UAPI_LINUX_MSDOS_FS_H_ */

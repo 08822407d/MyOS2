@@ -80,18 +80,6 @@
 	#define LOWERCASE_BASE (8)
 	#define LOWERCASE_EXT (16)
 
-	typedef struct FAT32_ldir
-	{
-		u8	id;
-		u16	name0_4[5];
-		u8	attr;
-		u8	reserved;
-		u8	alias_checksum;
-		u16	name5_10[6];
-		u16	start;
-		u16	name11_12[2];
-	}__attribute__((packed)) FAT32_ldir_s;
-
 	typedef struct FAT32_SBinfo
 	{
 		u64	start_sector;

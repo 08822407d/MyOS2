@@ -24,7 +24,7 @@
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
 
-bool FAT32_ent_empty(msdos_dir_entry_s *de)
+bool FAT32_ent_empty(msdos_dirent_s *de)
 {
 	return (de->name[0] == 0xe5 ||
 			de->name[0] == 0x00 ||
@@ -40,14 +40,14 @@ u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
 
-static msdos_dir_entry_s *FAT32_get_full_ent(char *buf, size_t bufsize, loff_t *pos)
+static msdos_dirent_s *FAT32_get_full_ent(char *buf, size_t bufsize, loff_t *pos)
 {
 	size_t len = 0;
-	msdos_dir_entry_s *ret_val;
+	msdos_dirent_s *ret_val;
 	do
 	{
-		ret_val = (msdos_dir_entry_s *)(buf + *pos);
-		*pos += sizeof(msdos_dir_entry_s);
+		ret_val = (msdos_dirent_s *)(buf + *pos);
+		*pos += sizeof(msdos_dirent_s);
 	}
 	while ((ret_val->attr == ATTR_LONG_NAME ||
 			FAT32_ent_empty(ret_val)) &&
@@ -144,7 +144,7 @@ success:
 int FAT32_dir_empty(inode_s *dir)
 {
 	char *buf;
-	msdos_dir_entry_s *de;
+	msdos_dirent_s *de;
 	int result = ENOERR;
 	size_t pos = 0;
 	size_t bufsize = 0;
@@ -153,7 +153,7 @@ int FAT32_dir_empty(inode_s *dir)
 	
 	while (pos < bufsize)
 	{
-		de = (msdos_dir_entry_s *)(buf + pos);
+		de = (msdos_dirent_s *)(buf + pos);
 		if (!FAT32_ent_empty(de) &&
 			strncmp(de->name, MSDOS_DOT   , MSDOS_NAME) &&
 			strncmp(de->name, MSDOS_DOTDOT, MSDOS_NAME))
@@ -161,7 +161,7 @@ int FAT32_dir_empty(inode_s *dir)
 			result = -ENOTEMPTY;
 			break;
 		}
-		pos += sizeof(msdos_dir_entry_s);
+		pos += sizeof(msdos_dirent_s);
 	}
 	kfree(buf);
 	return result;
@@ -209,7 +209,7 @@ uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32
 	return 1;	
 }
 
-static char *FAT32_get_shortname(int *namelen, msdos_dir_entry_s *de)
+static char *FAT32_get_shortname(int *namelen, msdos_dirent_s *de)
 {
 	int x;
 	*namelen = 0;
@@ -248,13 +248,13 @@ static char *FAT32_get_shortname(int *namelen, msdos_dir_entry_s *de)
 	return ret_val;
 }
 
-static char *FAT32_get_longname(int *namelen, FAT32_ldir_s *lde)
+static char *FAT32_get_longname(int *namelen, msdos_dirslot_s *lde)
 {
 	int i = 0, x, y;
 	char *ret_val;
-	FAT32_ldir_s *lde_cursor = lde;
+	msdos_dirslot_s *lde_cursor = lde;
 	while(lde_cursor->attr == ATTR_LONG_NAME &&
-		!FAT32_ent_empty((msdos_dir_entry_s *)lde_cursor))
+		!FAT32_ent_empty((msdos_dirent_s *)lde_cursor))
 	{
 		i++;
 		if(lde_cursor->id & 0x40)
@@ -267,19 +267,19 @@ static char *FAT32_get_longname(int *namelen, FAT32_ldir_s *lde)
 	memset(ret_val, 0, i * 13 + 1);
 	for(x = 0; x < i; x++, lde--)
 	{
-		for(y = 0; y < 5; y++)
-			if(lde->name0_4[y] != 0xffff &&
-				lde->name0_4[y] != 0x0000)
-				ret_val[(*namelen)++] = (char)lde->name0_4[y];
+		for(y = 0; y < 10; y += 2)
+			if(*(u16 *)(&lde->name0_4[y]) != 0xffff &&
+				*(u16 *)(&lde->name0_4[y]) != 0x0000)
+				ret_val[(*namelen)++] = lde->name0_4[y];
 
-		for(y = 0; y < 6; y++)
-			if(lde->name5_10[y] != 0xffff &&
-				lde->name5_10[y] != 0x0000)
-				ret_val[(*namelen)++] = (char)lde->name5_10[y];
+		for(y = 0; y < 12; y += 2)
+			if(*(u16 *)(&lde->name5_10[y]) != 0xffff &&
+				*(u16 *)(&lde->name5_10[y]) != 0x0000)
+				ret_val[(*namelen)++] = lde->name5_10[y];
 
-		for(y = 0; y < 2; y++)
-			if(lde->name11_12[y] != 0xffff &&
-				lde->name11_12[y] != 0x0000)
+		for(y = 0; y < 4; y += 2)
+			if(*(u16 *)(&lde->name11_12[y]) != 0xffff &&
+				*(u16 *)(&lde->name11_12[y]) != 0x0000)
 				ret_val[(*namelen)++] = (char)lde->name11_12[y];
 	}
 
@@ -293,7 +293,7 @@ s64 FAT32_alloc_new_dir(inode_s *dir)
 	char *clus_buf = NULL;
 	FAT32_SBinfo_s *fsbi = NULL;
 	FAT32_inode_info_s * finode;
-	msdos_dir_entry_s *de;
+	msdos_dirent_s *de;
 
 	fsbi = (FAT32_SBinfo_s *)dir->i_sb->private_sb_info;
 	finode = (FAT32_inode_info_s *)dir->private_idx_info;
@@ -303,7 +303,7 @@ s64 FAT32_alloc_new_dir(inode_s *dir)
 		return -(ENOMEM);
 	memset(clus_buf, 0, fsbi->bytes_per_cluster);
 
-	de = (msdos_dir_entry_s *)clus_buf;
+	de = (msdos_dirent_s *)clus_buf;
 	/* filling the new directory slots ("." and ".." entries) */
 	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
 	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
@@ -541,15 +541,15 @@ int FAT32_getdents64(file_s * filp, dir_ctxt_s *ctx)
 	char *buf;
 	int error = 0;
 	size_t bufsize = 0;
-	msdos_dir_entry_s * tmpde = NULL;
-	FAT32_ldir_s * tmplde = NULL;
+	msdos_dirent_s * tmpde = NULL;
+	msdos_dirslot_s * tmplde = NULL;
 
 	buf = FAT32_read_entirety(filp->f_path.dentry->d_inode, &bufsize);
 	// iterate all fat32 entries in this cluster
 	while (ctx->pos < bufsize)
 	{
 		tmpde = FAT32_get_full_ent(buf, bufsize, &(ctx->pos));
-		tmplde = (FAT32_ldir_s *)tmpde - 1;
+		tmplde = (msdos_dirslot_s *)tmpde - 1;
 		// parse current fat32_dir_entry
 		char *name = NULL;
 		int namelen = 0;
@@ -557,7 +557,7 @@ int FAT32_getdents64(file_s * filp, dir_ctxt_s *ctx)
 		if (FAT32_ent_empty(tmpde))
 			continue;
 		else if(tmplde->attr == ATTR_LONG_NAME &&
-			!FAT32_ent_empty((msdos_dir_entry_s *)tmplde))
+			!FAT32_ent_empty((msdos_dirent_s *)tmplde))
 			name = FAT32_get_longname(&namelen, tmplde);
 		else
 			name = FAT32_get_shortname(&namelen, tmpde);
@@ -601,7 +601,7 @@ int FAT32_create(inode_s * inode, dentry_s * dentry, umode_t mode, bool excl)
 // 	unsigned char * buf =NULL; 
 // 	int i = 0,j = 0,x = 0;
 // 	msdos_dir_entry_s *tmpde = NULL;
-// 	FAT32_ldir_s * tmplde = NULL;
+// 	msdos_dirslot_s * tmplde = NULL;
 // 	inode_s * p = NULL;
 
 // 	buf = kmalloc(fsbi->bytes_per_cluster);
@@ -628,7 +628,7 @@ int FAT32_create(inode_s * inode, dentry_s * dentry, umode_t mode, bool excl)
 // 		if(FAT32_ent_empty(tmpde))
 // 			continue;
 
-// 		tmplde = (FAT32_ldir_s *)tmpde-1;
+// 		tmplde = (msdos_dirslot_s *)tmpde-1;
 // 		j = 0;
 
 // 		//long file/dir name compare
@@ -849,23 +849,23 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 	const char * destname = dest_dentry->d_name.name;
 	loff_t off = 0;
 	size_t bufsize = 0;
-	msdos_dir_entry_s * tmpde = NULL;
-	FAT32_ldir_s * tmplde = NULL;
+	msdos_dirent_s * tmpde = NULL;
+	msdos_dirslot_s * tmplde = NULL;
 
 	buf = FAT32_read_entirety(parent_inode, &bufsize);
-	tmpde = (msdos_dir_entry_s *)buf;
+	tmpde = (msdos_dirent_s *)buf;
 	// iterate all fat32 entries in this cluster
 	while (off < bufsize)
 	{
 		tmpde = FAT32_get_full_ent(buf, bufsize, &off);
-		tmplde = (FAT32_ldir_s *)tmpde - 1;
+		tmplde = (msdos_dirslot_s *)tmpde - 1;
 		char *name = NULL;
 		int namelen = 0;
 
 		if (FAT32_ent_empty(tmpde))
 			continue;
 		else if(tmplde->attr == ATTR_LONG_NAME &&
-			!FAT32_ent_empty((msdos_dir_entry_s *)tmplde))
+			!FAT32_ent_empty((msdos_dirent_s *)tmplde))
 			name = FAT32_get_longname(&namelen, tmplde);
 		else
 			name = FAT32_get_shortname(&namelen, tmpde);
@@ -889,7 +889,7 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 
 	finode->first_cluster	= (tmpde->starthi << 16 | tmpde->start) & 0x0fffffff;
 	// finode->dentry_location	= cluster;
-	finode->dentry_position	= tmpde - (msdos_dir_entry_s *)buf;
+	finode->dentry_position	= tmpde - (msdos_dirent_s *)buf;
 	finode->create_date		= tmpde->ctime;
 	finode->create_time		= tmpde->cdate;
 	finode->write_date		= tmpde->time;
@@ -961,8 +961,8 @@ void fat32_put_superblock(super_block_s * sbp)
 
 int fat32_write_inode(inode_s * inode)
 {
-	msdos_dir_entry_s * fdentry = NULL;
-	msdos_dir_entry_s * buf = NULL;
+	msdos_dirent_s * fdentry = NULL;
+	msdos_dirent_s * buf = NULL;
 	FAT32_inode_info_s * finode = inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
 	unsigned long sector = 0;

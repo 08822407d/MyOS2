@@ -131,7 +131,7 @@ static int fat_validate_dir(inode_s *dir)
 }
 
 /* doesn't deal with root inode */
-int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de)
+int fat_fill_inode(inode_s *inode, msdos_dirent_s *de)
 {
 	// msdos_sb_info_s *sbi = MSDOS_SB(inode->i_sb);
 	int error;
@@ -197,7 +197,7 @@ int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de)
 }
 
 inode_s *fat_build_inode(super_block_s *sb,
-				msdos_dir_entry_s *de, loff_t i_pos)
+				msdos_dirent_s *de, loff_t i_pos)
 {
 	inode_s *inode;
 	int err;
@@ -326,7 +326,7 @@ static int fat_read_root(inode_s *inode)
 			return error;
 	} else {
 		MSDOS_I(inode)->i_start = 0;
-		inode->i_size = sbi->dir_entries * sizeof(msdos_dir_entry_s);
+		inode->i_size = sbi->dir_entries * sizeof(msdos_dirent_s);
 	}
 	inode->i_blocks = ((inode->i_size + (sbi->cluster_size - 1))
 			   & ~((loff_t)sbi->cluster_size - 1)) >> 9;
