@@ -859,7 +859,6 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 	{
 		tmpde = FAT32_get_full_ent(buf, bufsize, &off);
 		tmplde = (FAT32_ldir_s *)tmpde - 1;
-		// parse current fat32_dir_entry
 		char *name = NULL;
 		int namelen = 0;
 
@@ -867,151 +866,17 @@ dentry_s * FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned
 			continue;
 		else if(tmplde->attr == ATTR_LONG_NAME &&
 			!FAT32_ent_empty((msdos_dir_entry_s *)tmplde))
-		{
 			name = FAT32_get_longname(&namelen, tmplde);
-			int len = namelen > destlen ? namelen : destlen;
-			bool equal = !strncmp(name, destname, len);
-			kfree(name);
-			if (equal)
-				goto find_lookup_success;
-			else
-				goto continue_cmp_fail;
-		}
 		else
 			name = FAT32_get_shortname(&namelen, tmpde);
 
-		//short file/dir base name compare
-		j = 0;
-		for(x=0; x<8; x++)
-		{
-			switch(tmpde->name[x])
-			{
-				case ' ':
-					if(!(tmpde->attr & ATTR_DIRECTORY))
-					{
-						if(dest_dentry->d_name.name[j]=='.')
-							continue;
-						else if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					}
-					else
-					{
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else if(j == dest_dentry->d_name.len)
-							continue;
-						else
-							goto continue_cmp_fail;
-					}
-
-				case 'A' ... 'Z':
-				case 'a' ... 'z':
-					if(tmpde->lcase & LOWERCASE_BASE)
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					else
-					{
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					}
-
-				case '0' ... '9':
-					if(j < dest_dentry->d_name.len &&
-						tmpde->name[x] == dest_dentry->d_name.name[j])
-					{
-						j++;
-						break;
-					}
-					else
-						goto continue_cmp_fail;
-
-				default :
-					j++;
-					break;
-			}
-		}
-		//short file ext name compare
-		if(!(tmpde->attr & ATTR_DIRECTORY))
-		{
-			j++;
-			for(x=8; x<11; x++)
-			{
-				switch(tmpde->name [x])
-				{
-					case 'A' ... 'Z':
-					case 'a' ... 'z':
-						if(tmpde->lcase & LOWERCASE_EXT)
-							if(tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
-							{
-								j++;
-								break;
-							}
-							else
-								goto continue_cmp_fail;
-						else
-						{
-							if(tmpde->name[x] == dest_dentry->d_name.name[j])
-							{
-								j++;
-								break;
-							}
-							else
-								goto continue_cmp_fail;
-						}
-
-					case '0' ... '9':
-						if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-
-					case ' ':
-						if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-
-					default :
-						goto continue_cmp_fail;
-				}
-			}
-		}
-		goto find_lookup_success;
-
-continue_cmp_fail:;
+		int len = namelen > destlen ? namelen : destlen;
+		bool equal = !strncmp(name, destname, len);
+		kfree(name);
+		if (equal)
+			break;
 	}
 
-	kfree(buf);
-	return NULL;
-
-find_lookup_success:
 	p = fat_build_inode(parent_inode->i_sb, tmpde, 0);
 	if (IS_ERR(p))
 		return ERR_CAST(p);
