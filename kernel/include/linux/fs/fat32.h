@@ -105,6 +105,8 @@
 		u64	first_cluster;
 		u64	dentry_location;	// dentry struct in cluster(0 is root,1 is invalid)
 		u64	dentry_position;	// dentry struct offset in cluster
+		u64 dentry_start;		// the whole dentry start offset in directory
+		u64 dentry_length;		// the whole dentry length
 
 		u16	create_date;
 		u16	create_time;
