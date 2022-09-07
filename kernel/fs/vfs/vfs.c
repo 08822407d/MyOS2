@@ -68,7 +68,7 @@ void register_diskfs(void)
 {
 	init_ext2_fs();
 	init_fat32_fs();
-	init_vfat_fs();
+	// init_vfat_fs();
 }
 
 unsigned long switch_to_root_disk()

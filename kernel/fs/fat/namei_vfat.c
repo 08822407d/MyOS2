@@ -160,23 +160,6 @@ error:
 	return ERR_PTR(err);
 }
 
-
-extern dentry_s * FAT32_lookup(inode_s * parent_inode, 
-		dentry_s * dest_dentry, unsigned int flags);
-extern int FAT32_rmdir(inode_s * parent, dentry_s * dentry);
-
-inode_ops_s vfat_dir_inode_operations = 
-{
-	// .create = FAT32_create,
-	.lookup = FAT32_lookup,
-	// .mkdir = FAT32_mkdir,
-	.rmdir = FAT32_rmdir,
-	// .rename = FAT32_rename,
-	// .getattr = FAT32_getattr,
-	// .setattr = FAT32_setattr,
-	// .unlink = FAT32_unlink,
-};
-
 static void setup(super_block_s *sb)
 {
 	MSDOS_SB(sb)->dir_ops = &vfat_dir_inode_operations;

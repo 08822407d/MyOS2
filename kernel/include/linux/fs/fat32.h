@@ -116,6 +116,11 @@
 	} FAT32_inode_info_s;
 
 	void init_fat32_fs(void);
+	bool FAT32_ent_empty(msdos_dirent_s *de);
+	msdos_dirent_s *FAT32_get_full_ent(char *buf, size_t bufsize, loff_t *pos);
+	char *FAT32_read_entirety(inode_s *inode ,size_t *size);
+	char *FAT32_get_shortname(int *namelen, msdos_dirent_s *de);
+	char *FAT32_get_longname(int *namelen, msdos_dirslot_s *lde);
 	u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry);
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
 	s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
