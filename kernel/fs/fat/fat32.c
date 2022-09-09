@@ -56,33 +56,8 @@ msdos_dirent_s *FAT32_get_full_ent(char *buf, size_t bufsize, loff_t *pos)
 	return ret_val;
 }
 
-static List_hdr_s *get_cluster_chain(inode_s *inode)
-{
-	FAT32_inode_info_s * finode = inode->private_idx_info;
-	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
-	unsigned long cluster = finode->first_cluster;
-	List_hdr_s *clus_lhdrp = kmalloc(sizeof(List_hdr_s));
-	list_hdr_init(clus_lhdrp);
 
-	do
-	{
-		clus_list_s *clus_sp = kmalloc(sizeof(clus_list_s));
-		list_init(&clus_sp->list, clus_sp);
-
-		clus_sp->cluster = cluster;
-		list_hdr_enqueue(clus_lhdrp, &clus_sp->list);
-	} while ((cluster = FAT32_read_FAT_Entry(fsbi, cluster)) <= MAX_FAT32);
-
-	if (cluster == BAD_FAT32)
-	{
-		list_hdr_dump(clus_lhdrp);
-		kfree(clus_lhdrp);
-		clus_lhdrp = NULL;
-	}
-
-	return clus_lhdrp;
-}
-
+extern List_hdr_s *get_cluster_chain(inode_s *inode);
 char *FAT32_read_entirety(inode_s *inode ,size_t *size)
 {
 	char *ret_val = NULL;

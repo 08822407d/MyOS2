@@ -127,16 +127,29 @@
 	s64 FAT32_alloc_new_dir(inode_s *dir);
 	int FAT32_dir_empty(inode_s *dir);
 
+	static inline sector_t FAT32_clus_to_blknr(FAT32_SBinfo_s *fsbi, int clus)
+	{
+		return ((sector_t)clus - FAT_START_ENT) * fsbi->sector_per_cluster
+			+ fsbi->Data_firstsector;
+	}
+
 	typedef struct cluster_list
 	{
 		List_s	list;
 		u32		cluster;
 	} clus_list_s;
 
-	static inline sector_t FAT32_clus_to_blknr(FAT32_SBinfo_s *fsbi, int clus)
+	typedef struct FAT32_IO_BUFFER
 	{
-		return ((sector_t)clus - FAT_START_ENT) * fsbi->sector_per_cluster
-			+ fsbi->Data_firstsector;
-	}
+		int		buf_nr;
+		size_t	bufsize;
+
+		u32		*clusters;
+		bool	*dirty;
+		bool	*newclus;
+		bool	*deleted;
+		char	**buffers;
+	} FAT32_iobuf_s;
+	
 
 #endif /* _FAT32_H_ */
