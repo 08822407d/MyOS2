@@ -40,22 +40,25 @@ u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
 
-msdos_dirent_s *FAT32_get_full_ent(char *buf, size_t bufsize, loff_t *pos)
+msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf)
 {
 	size_t len = 0;
 	msdos_dirent_s *ret_val;
+	msdos_dirslot_s *tmpval;
 	do
 	{
-		ret_val = (msdos_dirent_s *)(buf + *pos);
-		*pos += sizeof(msdos_dirent_s);
+		ret_val = iobuf->next(iobuf);
+		tmpval = (msdos_dirslot_s *)ret_val;
 	}
 	while ((ret_val->attr == ATTR_LONG_NAME ||
 			FAT32_ent_empty(ret_val)) &&
-			*pos < bufsize);
+			iobuf->iter_cursor > -1);
 	
+	if (iobuf->iter_cursor == -1)
+		ret_val = ERR_PTR(-ENOENT);
+
 	return ret_val;
 }
-
 
 extern List_hdr_s *get_cluster_chain(inode_s *inode);
 char *FAT32_read_entirety(inode_s *inode ,size_t *size)
@@ -99,6 +102,7 @@ char *FAT32_read_entirety(inode_s *inode ,size_t *size)
 			ret_val = ERR_PTR(-EIO);
 			goto read_clus_fail;
 		}
+		kfree(clus_lp);
 		pos += clus_size;
 	}
 	ret_val = buf;
@@ -223,24 +227,30 @@ char *FAT32_get_shortname(int *namelen, msdos_dirent_s *de)
 	return ret_val;
 }
 
-char *FAT32_get_longname(int *namelen, msdos_dirslot_s *lde)
+char *FAT32_get_longname(int *namelen, FAT32_iobuf_s *iobuf)
 {
 	int i = 0, x, y;
 	char *ret_val;
-	msdos_dirslot_s *lde_cursor = lde;
-	while(lde_cursor->attr == ATTR_LONG_NAME &&
-		!FAT32_ent_empty((msdos_dirent_s *)lde_cursor))
+	int entlen = sizeof(msdos_dirent_s);
+	loff_t cursor = iobuf->iter_cursor - entlen * 2;
+	msdos_dirslot_s *lde_tmp = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf, cursor);
+	while(lde_tmp->attr == ATTR_LONG_NAME &&
+		!FAT32_ent_empty((msdos_dirent_s *)lde_tmp) &&
+		cursor >= 0)
 	{
 		i++;
-		if(lde_cursor->id & 0x40)
+		if(lde_tmp->id & 0x40)
 			break;
-		lde_cursor--;
+		cursor -= entlen;
+		lde_tmp = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf, cursor);
 	}
 
 	//long file/dir name read
 	ret_val = kmalloc(i * 13 + 1);
 	memset(ret_val, 0, i * 13 + 1);
-	for(x = 0; x < i; x++, lde--)
+	cursor = iobuf->iter_cursor - entlen * 2;
+	msdos_dirslot_s *lde = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf, cursor);
+	for(x = 0; x < i; x++, cursor -= entlen, lde = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf, cursor))
 	{
 		for(y = 0; y < 10; y += 2)
 			if(*(u16 *)(&lde->name0_4[y]) != 0xffff &&
@@ -508,32 +518,32 @@ loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 int FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long arg)
 {}
 
-int FAT32_getdents64(file_s * filp, dir_ctxt_s *ctx)
+int FAT32_getdents64(file_s *filp, dir_ctxt_s *ctx)
 {
 	if (ctx->pos == -1)
 		return 0;
 
-	char *buf;
 	int error = 0;
-	size_t bufsize = 0;
-	msdos_dirent_s * tmpde = NULL;
-	msdos_dirslot_s * tmplde = NULL;
-
-	buf = FAT32_read_entirety(filp->f_path.dentry->d_inode, &bufsize);
+	msdos_dirent_s *tmpde = NULL;
+	msdos_dirslot_s *tmplde = NULL;
+	inode_s *inode = filp->f_path.dentry->d_inode;
+	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(inode);
+	iobuf->iter_init(iobuf);
 	// iterate all fat32 entries in this cluster
-	while (ctx->pos < bufsize)
+	while (!IS_ERR(tmpde = FAT32_get_full_ent(iobuf)))
 	{
-		tmpde = FAT32_get_full_ent(buf, bufsize, &(ctx->pos));
-		tmplde = (msdos_dirslot_s *)tmpde - 1;
-		// parse current fat32_dir_entry
+		tmplde = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf,
+				iobuf->iter_cursor - 2 * sizeof(msdos_dirent_s));
+
 		char *name = NULL;
 		int namelen = 0;
 
 		if (FAT32_ent_empty(tmpde))
 			continue;
-		else if(tmplde->attr == ATTR_LONG_NAME &&
+		else if(!IS_ERR(tmplde) &&
+			tmplde->attr == ATTR_LONG_NAME &&
 			!FAT32_ent_empty((msdos_dirent_s *)tmplde))
-			name = FAT32_get_longname(&namelen, tmplde);
+			name = FAT32_get_longname(&namelen, iobuf);
 		else
 			name = FAT32_get_shortname(&namelen, tmpde);
 
@@ -547,7 +557,7 @@ int FAT32_getdents64(file_s * filp, dir_ctxt_s *ctx)
 	if (error == 0)
 		ctx->pos = -1;
 	
-	kfree(buf);
+	FAT32_iobuf_release(iobuf);
 	return error;
 }
 
@@ -709,246 +719,246 @@ void init_fat32_fs()
 	register_filesystem(&FAT32_fs_type);
 } 
 
-dentry_s * FAT32_lookup_old(inode_s * parent_inode, dentry_s * dest_dentry, unsigned int flags)
-{
-	FAT32_inode_info_s * finode = parent_inode->private_idx_info;
-	FAT32_SBinfo_s * fsbi = parent_inode->i_sb->private_sb_info;
+// dentry_s * FAT32_lookup_old(inode_s * parent_inode, dentry_s * dest_dentry, unsigned int flags)
+// {
+// 	FAT32_inode_info_s * finode = parent_inode->private_idx_info;
+// 	FAT32_SBinfo_s * fsbi = parent_inode->i_sb->private_sb_info;
 
-	unsigned int cluster = 0;
-	unsigned long sector = 0;
-	unsigned char * buf =NULL; 
-	int i = 0,j = 0,x = 0;
-	msdos_dirent_s *tmpde = NULL;
-	msdos_dirslot_s * tmplde = NULL;
-	inode_s * p = NULL;
+// 	unsigned int cluster = 0;
+// 	unsigned long sector = 0;
+// 	unsigned char * buf =NULL; 
+// 	int i = 0,j = 0,x = 0;
+// 	msdos_dirent_s *tmpde = NULL;
+// 	msdos_dirslot_s * tmplde = NULL;
+// 	inode_s * p = NULL;
 
-	buf = kmalloc(fsbi->bytes_per_cluster);
+// 	buf = kmalloc(fsbi->bytes_per_cluster);
 
-	cluster = finode->first_cluster;
+// 	cluster = finode->first_cluster;
 
-next_cluster:
-	sector = FAT32_clus_to_blknr(fsbi, cluster);
-	// color_printk(BLUE,BLACK,"lookup cluster:%#010x,sector:%#018lx\n",cluster,sector);
-	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
-					fsbi->sector_per_cluster, (unsigned char *)buf))
-	{
-		color_printk(RED, BLACK, "FAT32 FS(lookup) read disk ERROR!!!!!!!!!!\n");
-		kfree(buf);
-		return NULL;
-	}
+// next_cluster:
+// 	sector = FAT32_clus_to_blknr(fsbi, cluster);
+// 	// color_printk(BLUE,BLACK,"lookup cluster:%#010x,sector:%#018lx\n",cluster,sector);
+// 	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
+// 					fsbi->sector_per_cluster, (unsigned char *)buf))
+// 	{
+// 		color_printk(RED, BLACK, "FAT32 FS(lookup) read disk ERROR!!!!!!!!!!\n");
+// 		kfree(buf);
+// 		return NULL;
+// 	}
 
-	tmpde = (msdos_dirent_s *)buf;
+// 	tmpde = (msdos_dirent_s *)buf;
 
-	for(i = 0; i < fsbi->bytes_per_cluster; i+= 32,tmpde++)
-	{
-		if(tmpde->attr== ATTR_LONG_NAME)
-			continue;
-		if(FAT32_ent_empty(tmpde))
-			continue;
+// 	for(i = 0; i < fsbi->bytes_per_cluster; i+= 32,tmpde++)
+// 	{
+// 		if(tmpde->attr== ATTR_LONG_NAME)
+// 			continue;
+// 		if(FAT32_ent_empty(tmpde))
+// 			continue;
 
-		tmplde = (msdos_dirslot_s *)tmpde-1;
-		j = 0;
+// 		tmplde = (msdos_dirslot_s *)tmpde-1;
+// 		j = 0;
 
-		//long file/dir name compare
-		while(tmplde->attr == ATTR_LONG_NAME &&
-				tmplde->id != 0xe5)
-		{
-			for(x=0; x<5; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name0_4[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name0_4[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
-			for(x=0; x<6; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name5_10[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name5_10[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
-			for(x=0; x<2; x++)
-			{
-				if(j>dest_dentry->d_name.len &&
-					tmplde->name11_12[x] == 0xffff)
-					continue;
-				else if(j>dest_dentry->d_name.len ||
-						tmplde->name11_12[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
-					goto continue_cmp_fail;
-			}
+// 		//long file/dir name compare
+// 		while(tmplde->attr == ATTR_LONG_NAME &&
+// 				tmplde->id != 0xe5)
+// 		{
+// 			for(x=0; x<5; x++)
+// 			{
+// 				if(j>dest_dentry->d_name.len &&
+// 					tmplde->name0_4[x] == 0xffff)
+// 					continue;
+// 				else if(j>dest_dentry->d_name.len ||
+// 						tmplde->name0_4[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+// 					goto continue_cmp_fail;
+// 			}
+// 			for(x=0; x<6; x++)
+// 			{
+// 				if(j>dest_dentry->d_name.len &&
+// 					tmplde->name5_10[x] == 0xffff)
+// 					continue;
+// 				else if(j>dest_dentry->d_name.len ||
+// 						tmplde->name5_10[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+// 					goto continue_cmp_fail;
+// 			}
+// 			for(x=0; x<2; x++)
+// 			{
+// 				if(j>dest_dentry->d_name.len &&
+// 					tmplde->name11_12[x] == 0xffff)
+// 					continue;
+// 				else if(j>dest_dentry->d_name.len ||
+// 						tmplde->name11_12[x] != (unsigned short)(dest_dentry->d_name.name[j++]))
+// 					goto continue_cmp_fail;
+// 			}
 
-			if(j >= dest_dentry->d_name.len)
-			{
-				goto find_lookup_success;
-			}
+// 			if(j >= dest_dentry->d_name.len)
+// 			{
+// 				goto find_lookup_success;
+// 			}
 
-			tmplde --;
-		}
+// 			tmplde --;
+// 		}
 
-		//short file/dir base name compare
-		j = 0;
-		for(x=0; x<8; x++)
-		{
-			switch(tmpde->name[x])
-			{
-				case ' ':
-					if(!(tmpde->attr & ATTR_DIRECTORY))
-					{
-						if(dest_dentry->d_name.name[j]=='.')
-							continue;
-						else if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					}
-					else
-					{
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else if(j == dest_dentry->d_name.len)
-							continue;
-						else
-							goto continue_cmp_fail;
-					}
+// 		//short file/dir base name compare
+// 		j = 0;
+// 		for(x=0; x<8; x++)
+// 		{
+// 			switch(tmpde->name[x])
+// 			{
+// 				case ' ':
+// 					if(!(tmpde->attr & ATTR_DIRECTORY))
+// 					{
+// 						if(dest_dentry->d_name.name[j]=='.')
+// 							continue;
+// 						else if(tmpde->name[x] == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else
+// 							goto continue_cmp_fail;
+// 					}
+// 					else
+// 					{
+// 						if(j < dest_dentry->d_name.len &&
+// 							tmpde->name[x] == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else if(j == dest_dentry->d_name.len)
+// 							continue;
+// 						else
+// 							goto continue_cmp_fail;
+// 					}
 
-				case 'A' ... 'Z':
-				case 'a' ... 'z':
-					if(tmpde->lcase & LOWERCASE_BASE)
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					else
-					{
-						if(j < dest_dentry->d_name.len &&
-							tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
-					}
+// 				case 'A' ... 'Z':
+// 				case 'a' ... 'z':
+// 					if(tmpde->lcase & LOWERCASE_BASE)
+// 						if(j < dest_dentry->d_name.len &&
+// 							tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else
+// 							goto continue_cmp_fail;
+// 					else
+// 					{
+// 						if(j < dest_dentry->d_name.len &&
+// 							tmpde->name[x] == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else
+// 							goto continue_cmp_fail;
+// 					}
 
-				case '0' ... '9':
-					if(j < dest_dentry->d_name.len &&
-						tmpde->name[x] == dest_dentry->d_name.name[j])
-					{
-						j++;
-						break;
-					}
-					else
-						goto continue_cmp_fail;
+// 				case '0' ... '9':
+// 					if(j < dest_dentry->d_name.len &&
+// 						tmpde->name[x] == dest_dentry->d_name.name[j])
+// 					{
+// 						j++;
+// 						break;
+// 					}
+// 					else
+// 						goto continue_cmp_fail;
 
-				default :
-					j++;
-					break;
-			}
-		}
-		//short file ext name compare
-		if(!(tmpde->attr & ATTR_DIRECTORY))
-		{
-			j++;
-			for(x=8; x<11; x++)
-			{
-				switch(tmpde->name [x])
-				{
-					case 'A' ... 'Z':
-					case 'a' ... 'z':
-						if(tmpde->lcase & LOWERCASE_EXT)
-							if(tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
-							{
-								j++;
-								break;
-							}
-							else
-								goto continue_cmp_fail;
-						else
-						{
-							if(tmpde->name[x] == dest_dentry->d_name.name[j])
-							{
-								j++;
-								break;
-							}
-							else
-								goto continue_cmp_fail;
-						}
+// 				default :
+// 					j++;
+// 					break;
+// 			}
+// 		}
+// 		//short file ext name compare
+// 		if(!(tmpde->attr & ATTR_DIRECTORY))
+// 		{
+// 			j++;
+// 			for(x=8; x<11; x++)
+// 			{
+// 				switch(tmpde->name [x])
+// 				{
+// 					case 'A' ... 'Z':
+// 					case 'a' ... 'z':
+// 						if(tmpde->lcase & LOWERCASE_EXT)
+// 							if(tmpde->name[x] + 32 == dest_dentry->d_name.name[j])
+// 							{
+// 								j++;
+// 								break;
+// 							}
+// 							else
+// 								goto continue_cmp_fail;
+// 						else
+// 						{
+// 							if(tmpde->name[x] == dest_dentry->d_name.name[j])
+// 							{
+// 								j++;
+// 								break;
+// 							}
+// 							else
+// 								goto continue_cmp_fail;
+// 						}
 
-					case '0' ... '9':
-						if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
+// 					case '0' ... '9':
+// 						if(tmpde->name[x] == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else
+// 							goto continue_cmp_fail;
 
-					case ' ':
-						if(tmpde->name[x] == dest_dentry->d_name.name[j])
-						{
-							j++;
-							break;
-						}
-						else
-							goto continue_cmp_fail;
+// 					case ' ':
+// 						if(tmpde->name[x] == dest_dentry->d_name.name[j])
+// 						{
+// 							j++;
+// 							break;
+// 						}
+// 						else
+// 							goto continue_cmp_fail;
 
-					default :
-						goto continue_cmp_fail;
-				}
-			}
-		}
-		goto find_lookup_success;
+// 					default :
+// 						goto continue_cmp_fail;
+// 				}
+// 			}
+// 		}
+// 		goto find_lookup_success;
 
-continue_cmp_fail:;
-	}
+// continue_cmp_fail:;
+// 	}
 	
-	cluster = FAT32_read_FAT_Entry(fsbi, cluster);
-	if(cluster < 0x0ffffff7)
-		goto next_cluster;
+// 	cluster = FAT32_read_FAT_Entry(fsbi, cluster);
+// 	if(cluster < 0x0ffffff7)
+// 		goto next_cluster;
 
-	kfree(buf);
-	return NULL;
+// 	kfree(buf);
+// 	return NULL;
 
-find_lookup_success:
-	p = fat_build_inode(parent_inode->i_sb, tmpde, 0);
-	if (IS_ERR(p))
-		return ERR_CAST(p);
-	p->i_blocks	= (p->i_size + fsbi->bytes_per_cluster - 1)/fsbi->bytes_per_sector;
+// find_lookup_success:
+// 	p = fat_build_inode(parent_inode->i_sb, tmpde, 0);
+// 	if (IS_ERR(p))
+// 		return ERR_CAST(p);
+// 	p->i_blocks	= (p->i_size + fsbi->bytes_per_cluster - 1)/fsbi->bytes_per_sector;
 
 
-	p->private_idx_info = kmalloc(sizeof(FAT32_inode_info_s));
-	memset(p->private_idx_info,0,sizeof(FAT32_inode_info_s));
-	finode = p->private_idx_info;
+// 	p->private_idx_info = kmalloc(sizeof(FAT32_inode_info_s));
+// 	memset(p->private_idx_info,0,sizeof(FAT32_inode_info_s));
+// 	finode = p->private_idx_info;
 
-	finode->first_cluster	= (tmpde->starthi << 16 | tmpde->start) & 0x0fffffff;
-	finode->dentry_location	= cluster;
-	finode->dentry_position	= tmpde - (msdos_dirent_s *)buf;
-	finode->create_date		= tmpde->ctime;
-	finode->create_time		= tmpde->cdate;
-	finode->write_date		= tmpde->time;
-	finode->write_time		= tmpde->date;
+// 	finode->first_cluster	= (tmpde->starthi << 16 | tmpde->start) & 0x0fffffff;
+// 	finode->dentry_location	= cluster;
+// 	finode->dentry_position	= tmpde - (msdos_dirent_s *)buf;
+// 	finode->create_date		= tmpde->ctime;
+// 	finode->create_time		= tmpde->cdate;
+// 	finode->write_date		= tmpde->time;
+// 	finode->write_time		= tmpde->date;
 
-	if((tmpde->starthi >> 12) && (p->i_mode & S_IFMT))
-	{
-		p->i_mode |= S_IFBLK;
-	}
+// 	if((tmpde->starthi >> 12) && (p->i_mode & S_IFMT))
+// 	{
+// 		p->i_mode |= S_IFBLK;
+// 	}
 
-	dest_dentry->d_inode = p;
-	kfree(buf);
-	return dest_dentry;	
-}
+// 	dest_dentry->d_inode = p;
+// 	kfree(buf);
+// 	return dest_dentry;	
+// }

@@ -936,7 +936,6 @@
 		// 	struct rcu_head fu_rcuhead;
 		// } f_u;
 		path_s				f_path;
-		inode_s				*f_inode;	/* cached value */
 		const file_ops_s	*f_op;
 
 		/*
