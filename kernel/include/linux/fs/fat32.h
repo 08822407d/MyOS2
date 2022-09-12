@@ -119,9 +119,8 @@
 	} FAT32_inode_info_s;
 
 	void init_fat32_fs(void);
-	bool FAT32_ent_empty(msdos_dirent_s *de);
-	char *FAT32_read_entirety(inode_s *inode ,size_t *size);
-	char *FAT32_get_shortname(int *namelen, msdos_dirent_s *de);
+	bool FAT32_ent_empty(const msdos_dirent_s *de);
+	char *FAT32_get_shortname(int *namelen, const msdos_dirent_s *de);
 	u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry);
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
 	s64 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
@@ -134,9 +133,9 @@
 			+ fsbi->Data_firstsector;
 	}
 
-	#define FAT32_IOBUF_DIRTY
-	#define FAT32_IOBUF_DELETE
-	#define FAT32_IOBUF_NEWCLUS
+	#define FAT32_IOBUF_DIRTY		1
+	#define FAT32_IOBUF_DELETE		2
+	#define FAT32_IOBUF_NEWCLUS		3
 
 	typedef struct cluster_list
 	{
@@ -156,14 +155,15 @@
 		loff_t	iter_cursor;
 		FAT32_SBinfo_s	*fsbi;
 
-		int				(*iter_init) (FAT32_iobuf_s *this);
-		msdos_dirent_s	*(*next) (FAT32_iobuf_s *this);
+		int		(*iter_init) (FAT32_iobuf_s *this);
+		const msdos_dirent_s	*(*next) (FAT32_iobuf_s *this);
 	} FAT32_iobuf_s;
 	
 	FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir);
-	msdos_dirent_s *FAT32_iobuf_getent(FAT32_iobuf_s *iobuf, loff_t off);
+	const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off);
+	int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off, char *content, size_t size);
 	void FAT32_iobuf_release(FAT32_iobuf_s *iobuf);
-	msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf);
+	const msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf);
 	char *FAT32_get_longname(int *namelen, FAT32_iobuf_s *iobuf);
 
 #endif /* _FAT32_H_ */

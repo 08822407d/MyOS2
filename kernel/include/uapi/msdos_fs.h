@@ -48,8 +48,8 @@
 	#define CASE_LOWER_BASE		8			/* base is lower case */
 	#define CASE_LOWER_EXT		16			/* extension is lower case */
 
-	#define DELETED_FLAG		0xe5		/* marks file as deleted when in name[0] */
-	#define IS_FREE(n)	(!*(n) || *(n) == DELETED_FLAG)
+	#define FAT32_DELETED_FLAG	0xe5		/* marks file as deleted when in name[0] */
+	#define FAT32_IS_FREE(n)	(!*(n) || *(n) == FAT32_DELETED_FLAG)
 
 	#define FAT_LFN_LEN			255				/* maximum long name length */
 	#define MSDOS_NAME			11				/* maximum name length */

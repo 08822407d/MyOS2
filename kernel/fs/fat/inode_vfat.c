@@ -142,7 +142,7 @@ int fat_fill_inode(inode_s *inode, msdos_dirent_s *de)
 	// inode->i_gid = sbi->options.fs_gid;
 	// inode_inc_iversion(inode);
 
-	if ((de->attr & ATTR_DIR) && !IS_FREE(de->name)) {
+	if ((de->attr & ATTR_DIR) && !FAT32_IS_FREE(de->name)) {
 		// inode->i_mode = fat_make_mode(sbi, de->attr, S_IRWXUGO);
 		inode->i_mode	= S_IFDIR;
 		// inode->i_op = sbi->dir_ops;

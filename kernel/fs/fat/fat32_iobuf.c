@@ -54,13 +54,13 @@ int FAT32_iobuf_iter_init(FAT32_iobuf_s *iobuf)
 	return -ENOERR;
 }
 
-msdos_dirent_s *FAT32_iobuf_getent(FAT32_iobuf_s *iobuf, loff_t off)
+const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off)
 {
 	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
 	if (off >= bufend || off < 0)
 		return ERR_PTR(-ENOENT);
 	int	bufidx = off / iobuf->bufsize;
-	int	offset = off % iobuf->bufsize;
+	int	bufoff = off % iobuf->bufsize;
 	if (iobuf->buffers[bufidx] == NULL)
 	{
 		char *buf = kmalloc(iobuf->bufsize);
@@ -73,13 +73,42 @@ msdos_dirent_s *FAT32_iobuf_getent(FAT32_iobuf_s *iobuf, loff_t off)
 		iobuf->buffers[bufidx] = buf;
 	}
 
-	return (msdos_dirent_s *)&(iobuf->buffers[bufidx][offset]);
+	return (msdos_dirent_s *)&(iobuf->buffers[bufidx][bufoff]);
 }
 
-msdos_dirent_s *FAT32_iobuf_iter_next(FAT32_iobuf_s *iobuf)
+int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off,
+		char *content, size_t size)
 {
 	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
-	msdos_dirent_s *ret_val = FAT32_iobuf_getent(iobuf, iobuf->iter_cursor);
+	if (off >= bufend || off < 0)
+		return -ENOENT;
+	int	bufidx = off / iobuf->bufsize;
+	int	bufoff = off % iobuf->bufsize;
+	if (iobuf->buffers[bufidx] == NULL)
+	{
+		char *buf = kmalloc(iobuf->bufsize);
+		if (buf == NULL)
+			return -ENOMEM;
+
+		ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+				FAT32_clus_to_blknr(iobuf->fsbi, iobuf->clusters[0]),
+				iobuf->fsbi->sector_per_cluster, buf);
+		iobuf->buffers[bufidx] = buf;
+	}
+
+	for (size_t i = 0; i < size; i++)
+	{
+		iobuf->buffers[bufidx][bufoff + i] = content[i];
+		iobuf->flags[bufidx] |= FAT32_IOBUF_DIRTY;
+	}
+	
+	return -ENOERR;
+}
+
+const msdos_dirent_s *FAT32_iobuf_iter_next(FAT32_iobuf_s *iobuf)
+{
+	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
+	const msdos_dirent_s *ret_val = FAT32_iobuf_readent(iobuf, iobuf->iter_cursor);
 
 	iobuf->iter_cursor += sizeof(msdos_dirent_s);
 	if (iobuf->iter_cursor >= bufend)
@@ -162,11 +191,23 @@ void FAT32_iobuf_release(FAT32_iobuf_s *iobuf)
 {
 	if (iobuf->buf_nr > 0)
 	{
+		for (int i = 0; i < iobuf->buf_nr; i++)
+		{
+			u32 cluster = iobuf->clusters[i];
+			u32 flags = iobuf->flags[i];
+			char *bufp = iobuf->buffers[i];
+			if (flags == FAT32_IOBUF_DIRTY &&
+				bufp != NULL)
+			{
+				ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
+					FAT32_clus_to_blknr(iobuf->fsbi, cluster),
+					iobuf->bufsize / iobuf->fsbi->sector_per_cluster, bufp);
+			}
+			if (bufp != NULL)
+				kfree(iobuf->buffers[i]);
+		}
 		kfree(iobuf->clusters);
 		kfree(iobuf->flags);
-		for (int i = 0; i < iobuf->buf_nr; i++)
-			if (iobuf->buffers[i] != NULL)
-				kfree(iobuf->buffers[i]);
 	}
 	kfree(iobuf);
 }

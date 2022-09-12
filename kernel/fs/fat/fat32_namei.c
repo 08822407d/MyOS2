@@ -26,15 +26,15 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	loff_t de_start = 0;
 
 	int entlen = sizeof(msdos_dirent_s);
-	msdos_dirent_s *tmpde = NULL;
-	msdos_dirslot_s *tmplde = NULL;
+	const msdos_dirent_s *tmpde = NULL;
+	const msdos_dirslot_s *tmplde = NULL;
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(parent_inode);
 	iobuf->iter_init(iobuf);
 	// iterate all fat32 entries in this cluster
 	while ((de_start = iobuf->iter_cursor) != -1 &&
 			!IS_ERR(tmpde = FAT32_get_full_ent(iobuf)))
 	{
-		tmplde = (msdos_dirslot_s *)FAT32_iobuf_getent(iobuf,
+		tmplde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf,
 				iobuf->iter_cursor - 2 * entlen);
 		off = iobuf->iter_cursor;
 
@@ -62,7 +62,7 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 		dest_dentry = NULL;
 		goto ent_not_found;
 	}
-	p = fat_build_inode(parent_inode->i_sb, tmpde, 0);
+	p = fat_build_inode(parent_inode->i_sb, (msdos_dirent_s *)tmpde, 0);
 	if (IS_ERR(p))
 	{
 		dest_dentry = NULL;
@@ -75,8 +75,8 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	finode = p->private_idx_info;
 
 	finode->first_cluster	= (tmpde->starthi << 16 | tmpde->start) & 0x0fffffff;
-	// finode->dentry_location	= cluster;
-	finode->dentry_position	= iobuf->iter_cursor - entlen;
+	finode->dentry_location	= iobuf->clusters[de_start / iobuf->bufsize];
+	finode->dentry_position	= de_start;
 	finode->create_date		= tmpde->ctime;
 	finode->create_time		= tmpde->cdate;
 	finode->write_date		= tmpde->time;
@@ -87,7 +87,6 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	{
 		p->i_mode |= S_IFBLK;
 	}
-
 	dest_dentry->d_inode = p;
 
 build_inode_fail:
@@ -107,8 +106,14 @@ static int FAT32_mark_entry_romoved(inode_s *inode, loff_t off, loff_t length)
 {
 	char *buf = NULL;
 	size_t bufsize = 0;
-	buf = FAT32_read_entirety(inode, &bufsize);
-	msdos_dirent_s *de = (msdos_dirent_s *)(buf + off);
+	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(inode);
+	iobuf->iter_init(iobuf);
+	for (size_t i = off; i < off + length; i+=sizeof(msdos_dirent_s))
+	{
+		char c = FAT32_DELETED_FLAG;
+		FAT32_iobuf_write(iobuf, off, &c, 1);
+	}
+	FAT32_iobuf_release(iobuf);
 }
 
 int FAT32_rmdir(inode_s * parent, dentry_s * dentry)
