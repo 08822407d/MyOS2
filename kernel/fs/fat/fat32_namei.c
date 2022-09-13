@@ -102,16 +102,25 @@ int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)
 	cluster = FAT32_alloc_new_dir(inode);
 }
 
+static int FAT32_release_clusters(inode_s *dir)
+{
+	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(dir);
+	for (int i = iobuf->buf_nr - 1; i >= 0; i--)
+		iobuf->flags[i] = FAT32_IOBUF_DELETE;
+
+	FAT32_iobuf_release(iobuf);
+}
+
 static int FAT32_mark_entry_romoved(inode_s *inode, loff_t off, loff_t length)
 {
 	char *buf = NULL;
 	size_t bufsize = 0;
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(inode);
 	iobuf->iter_init(iobuf);
-	for (size_t i = off; i < off + length; i+=sizeof(msdos_dirent_s))
+	for (size_t i = 0; i < length; i+=sizeof(msdos_dirent_s))
 	{
 		char c = FAT32_DELETED_FLAG;
-		FAT32_iobuf_write(iobuf, off, &c, 1);
+		FAT32_iobuf_write(iobuf, i + off, &c, 1);
 	}
 	FAT32_iobuf_release(iobuf);
 }
@@ -126,6 +135,7 @@ int FAT32_rmdir(inode_s * parent, dentry_s * dentry)
 	if (error != 0)
 		return error;
 
+	FAT32_release_clusters(inode);
 	FAT32_mark_entry_romoved(parent, dest_finode->dentry_position,
 			dest_finode->dentry_length);
 }

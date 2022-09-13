@@ -40,7 +40,7 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 		list_hdr_enqueue(clus_lhdrp, &clus_sp->list);
 	} while ((cluster = FAT32_read_FAT_Entry(fsbi, cluster)) <= MAX_FAT32);
 
-	if (cluster == BAD_FAT32)
+	if (cluster == FAT_ENT_BAD)
 	{
 		free_cluster_chain(clus_lhdrp);
 		clus_lhdrp = ERR_PTR(-EIO);
@@ -191,20 +191,30 @@ void FAT32_iobuf_release(FAT32_iobuf_s *iobuf)
 {
 	if (iobuf->buf_nr > 0)
 	{
-		for (int i = 0; i < iobuf->buf_nr; i++)
+		for (int i = iobuf->buf_nr - 1; i >= 0; i--)
 		{
+			bool clus_end_change = false;
 			u32 cluster = iobuf->clusters[i];
 			u32 flags = iobuf->flags[i];
 			char *bufp = iobuf->buffers[i];
-			if (flags == FAT32_IOBUF_DIRTY &&
-				bufp != NULL)
-			{
-				ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
-					FAT32_clus_to_blknr(iobuf->fsbi, cluster),
-					iobuf->bufsize / iobuf->fsbi->sector_per_cluster, bufp);
-			}
 			if (bufp != NULL)
+			{
+				if (flags == FAT32_IOBUF_DIRTY)
+					ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
+						FAT32_clus_to_blknr(iobuf->fsbi, cluster),
+						iobuf->bufsize / iobuf->fsbi->bytes_per_sector, bufp);
 				kfree(iobuf->buffers[i]);
+			}
+			if (flags == FAT32_IOBUF_DELETE)
+			{
+				clus_end_change = true;
+				FAT32_write_FAT_Entry(iobuf->fsbi, cluster, FAT_ENT_FREE);
+			}
+			if (flags != FAT32_IOBUF_DELETE && clus_end_change)
+			{
+				clus_end_change = false;
+				FAT32_write_FAT_Entry(iobuf->fsbi, cluster, FAT_ENT_EOF);
+			}
 		}
 		kfree(iobuf->clusters);
 		kfree(iobuf->flags);
