@@ -34,9 +34,9 @@ SYSCALL_COMMON(__NR_chdir,sys_chdir)
 
 SYSCALL_COMMON(__NR_mkdir,sys_mkdir)
 SYSCALL_COMMON(__NR_rmdir,sys_rmdir)
-// SYSCALL_COMMON(__NR_creat,sys_creat)
+SYSCALL_COMMON(__NR_creat,sys_creat)
 // SYSCALL_COMMON(__NR_link,sys_link)
-// SYSCALL_COMMON(__NR_unlink,sys_unlink)
+SYSCALL_COMMON(__NR_unlink,sys_unlink)
 
 SYSCALL_COMMON(__NR_getppid,sys_getppid)
 

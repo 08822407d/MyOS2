@@ -125,15 +125,32 @@ static int FAT32_mark_entry_romoved(inode_s *inode, loff_t off, loff_t length)
 	FAT32_iobuf_release(iobuf);
 }
 
-int FAT32_rmdir(inode_s * parent, dentry_s * dentry)
+int FAT32_rmdir(inode_s * parent, dentry_s * dest)
 {
 	int error = 0;
-	inode_s *inode = dentry->d_inode;
+	inode_s *inode = dest->d_inode;
 	FAT32_inode_info_s *dest_finode = inode->private_idx_info;
 
 	error = FAT32_dir_empty(inode);
 	if (error != 0)
 		return error;
+	// err = vfat_find(dir, &dentry->d_name, &sinfo);
+	// if (err)
+	// 	goto out;
+
+	FAT32_release_clusters(inode);
+	FAT32_mark_entry_romoved(parent, dest_finode->dentry_position,
+			dest_finode->dentry_length);
+}
+
+int FAT32_unlink(inode_s *parent, dentry_s *dest)
+{
+	int error = 0;
+	inode_s *inode = dest->d_inode;
+	FAT32_inode_info_s *dest_finode = inode->private_idx_info;
+	// err = vfat_find(dir, &dentry->d_name, &sinfo);
+	// if (err)
+	// 	goto out;
 
 	FAT32_release_clusters(inode);
 	FAT32_mark_entry_romoved(parent, dest_finode->dentry_position,
@@ -151,11 +168,6 @@ int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 
 // int FAT32_setattr(dentry_s *dentry, iattr_s *attr)
 // {}
-
-int FAT32_unlink(inode_s *parent, dentry_s *dest)
-{
-
-}
 
 inode_ops_s vfat_dir_inode_operations = 
 {

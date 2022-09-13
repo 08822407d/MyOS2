@@ -1017,6 +1017,164 @@ long sys_rmdir(const char *pathname)
 }
 
 /*==============================================================================================*
+ *										fuctions for unlink										*
+ *==============================================================================================*/
+/**
+ * vfs_unlink - unlink a filesystem object
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dir:	parent directory
+ * @dentry:	victim
+ * @delegated_inode: returns victim inode, if the inode is delegated.
+ *
+ * The caller must hold dir->i_mutex.
+ *
+ * If vfs_unlink discovers a delegation, it will return -EWOULDBLOCK and
+ * return a reference to the inode in delegated_inode.  The caller
+ * should then break the delegation on that inode and retry.  Because
+ * breaking a delegation may take a long time, the caller should drop
+ * dir->i_mutex before doing so.
+ *
+ * Alternatively, a caller may pass NULL for delegated_inode.  This may
+ * be appropriate for callers that expect the underlying filesystem not
+ * to be NFS exported.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_unlink(inode_s *dir, dentry_s *dentry, inode_s **delegated_inode)
+{
+// 	struct inode *target = dentry->d_inode;
+// 	int error = may_delete(mnt_userns, dir, dentry, 0);
+
+// 	if (error)
+// 		return error;
+
+// 	if (!dir->i_op->unlink)
+// 		return -EPERM;
+
+// 	inode_lock(target);
+// 	if (IS_SWAPFILE(target))
+// 		error = -EPERM;
+// 	else if (is_local_mountpoint(dentry))
+// 		error = -EBUSY;
+// 	else {
+// 		error = security_inode_unlink(dir, dentry);
+// 		if (!error) {
+// 			error = try_break_deleg(target, delegated_inode);
+// 			if (error)
+// 				goto out;
+// 			error = dir->i_op->unlink(dir, dentry);
+// 			if (!error) {
+// 				dont_mount(dentry);
+// 				detach_mounts(dentry);
+// 			}
+// 		}
+// 	}
+// out:
+// 	inode_unlock(target);
+
+// 	/* We don't d_delete() NFS sillyrenamed files--they still exist. */
+// 	if (!error && dentry->d_flags & DCACHE_NFSFS_RENAMED) {
+// 		fsnotify_unlink(dir, dentry);
+// 	} else if (!error) {
+// 		fsnotify_link_count(target);
+// 		d_delete_notify(dir, dentry);
+// 	}
+
+// 	return error;
+}
+
+/*
+ * Make sure that the actual truncation of the file will occur outside its
+ * directory's i_mutex.  Truncate can take a long time if there is a lot of
+ * writeout happening, and we don't want to prevent access to the directory
+ * while waiting on the I/O.
+ */
+int do_unlinkat(int dfd, filename_s *name)
+{
+// 	int error;
+// 	struct dentry *dentry;
+// 	struct path path;
+// 	struct qstr last;
+// 	int type;
+// 	struct inode *inode = NULL;
+// 	struct inode *delegated_inode = NULL;
+// 	unsigned int lookup_flags = 0;
+// retry:
+// 	error = filename_parentat(dfd, name, lookup_flags, &path, &last, &type);
+// 	if (error)
+// 		goto exit1;
+
+// 	error = -EISDIR;
+// 	if (type != LAST_NORM)
+// 		goto exit2;
+
+// 	error = mnt_want_write(path.mnt);
+// 	if (error)
+// 		goto exit2;
+// retry_deleg:
+// 	inode_lock_nested(path.dentry->d_inode, I_MUTEX_PARENT);
+// 	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
+// 	error = PTR_ERR(dentry);
+// 	if (!IS_ERR(dentry)) {
+// 		struct user_namespace *mnt_userns;
+
+// 		/* Why not before? Because we want correct error value */
+// 		if (last.name[last.len])
+// 			goto slashes;
+// 		inode = dentry->d_inode;
+// 		if (d_is_negative(dentry))
+// 			goto slashes;
+// 		ihold(inode);
+// 		error = security_path_unlink(&path, dentry);
+// 		if (error)
+// 			goto exit3;
+// 		mnt_userns = mnt_user_ns(path.mnt);
+// 		error = vfs_unlink(mnt_userns, path.dentry->d_inode, dentry,
+// 				   &delegated_inode);
+// exit3:
+// 		dput(dentry);
+// 	}
+// 	inode_unlock(path.dentry->d_inode);
+// 	if (inode)
+// 		iput(inode);	/* truncate the inode here */
+// 	inode = NULL;
+// 	if (delegated_inode) {
+// 		error = break_deleg_wait(&delegated_inode);
+// 		if (!error)
+// 			goto retry_deleg;
+// 	}
+// 	mnt_drop_write(path.mnt);
+// exit2:
+// 	path_put(&path);
+// 	if (retry_estale(error, lookup_flags)) {
+// 		lookup_flags |= LOOKUP_REVAL;
+// 		inode = NULL;
+// 		goto retry;
+// 	}
+// exit1:
+// 	putname(name);
+// 	return error;
+
+// slashes:
+// 	if (d_is_negative(dentry))
+// 		error = -ENOENT;
+// 	else if (d_is_dir(dentry))
+// 		error = -EISDIR;
+// 	else
+// 		error = -ENOTDIR;
+// 	goto exit3;
+}
+
+long sys_unlink(const char * pathname)
+{
+	return do_unlinkat(AT_FDCWD, getname(pathname));
+}
+
+/*==============================================================================================*
  *									fuctions for mknod											*
  *==============================================================================================*/
 /**

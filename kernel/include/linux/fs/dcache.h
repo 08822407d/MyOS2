@@ -350,38 +350,38 @@
 	// 	return dentry->d_flags & DCACHE_MOUNTED;
 	// }
 
-	// /*
-	// * Directory cache entry type accessor functions.
-	// */
-	// static inline unsigned __d_entry_type(const dentry_s *dentry)
-	// {
-	// 	return dentry->d_flags & DCACHE_ENTRY_TYPE;
-	// }
+	/*
+	* Directory cache entry type accessor functions.
+	*/
+	static inline unsigned __d_entry_type(const dentry_s *dentry)
+	{
+		return dentry->d_flags & DCACHE_ENTRY_TYPE;
+	}
 
-	// static inline bool d_is_miss(const dentry_s *dentry)
-	// {
-	// 	return __d_entry_type(dentry) == DCACHE_MISS_TYPE;
-	// }
+	static inline bool d_is_miss(const dentry_s *dentry)
+	{
+		return __d_entry_type(dentry) == DCACHE_MISS_TYPE;
+	}
 
-	// static inline bool d_is_whiteout(const dentry_s *dentry)
-	// {
-	// 	return __d_entry_type(dentry) == DCACHE_WHITEOUT_TYPE;
-	// }
+	static inline bool d_is_whiteout(const dentry_s *dentry)
+	{
+		return __d_entry_type(dentry) == DCACHE_WHITEOUT_TYPE;
+	}
 
-	// static inline bool d_can_lookup(const dentry_s *dentry)
-	// {
-	// 	return __d_entry_type(dentry) == DCACHE_DIRECTORY_TYPE;
-	// }
+	static inline bool d_can_lookup(const dentry_s *dentry)
+	{
+		return __d_entry_type(dentry) == DCACHE_DIRECTORY_TYPE;
+	}
 
-	// static inline bool d_is_autodir(const dentry_s *dentry)
-	// {
-	// 	return __d_entry_type(dentry) == DCACHE_AUTODIR_TYPE;
-	// }
+	static inline bool d_is_autodir(const dentry_s *dentry)
+	{
+		return __d_entry_type(dentry) == DCACHE_AUTODIR_TYPE;
+	}
 
-	// static inline bool d_is_dir(const dentry_s *dentry)
-	// {
-	// 	return d_can_lookup(dentry) || d_is_autodir(dentry);
-	// }
+	static inline bool d_is_dir(const dentry_s *dentry)
+	{
+		return d_can_lookup(dentry) || d_is_autodir(dentry);
+	}
 
 	// static inline bool d_is_symlink(const dentry_s *dentry)
 	// {
