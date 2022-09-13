@@ -171,12 +171,12 @@ int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
 
 inode_ops_s vfat_dir_inode_operations = 
 {
-	// .create = FAT32_create,
+	.create = FAT32_create,
 	.lookup = FAT32_lookup,
-	// .mkdir = FAT32_mkdir,
+	.mkdir = FAT32_mkdir,
 	.rmdir = FAT32_rmdir,
 	// .rename = FAT32_rename,
 	// .getattr = FAT32_getattr,
 	// .setattr = FAT32_setattr,
-	// .unlink = FAT32_unlink,
+	.unlink = FAT32_unlink,
 };

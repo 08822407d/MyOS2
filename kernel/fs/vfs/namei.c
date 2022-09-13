@@ -852,6 +852,51 @@ inline dentry_s *user_path_create(int dfd, const char *pathname,
 }
 
 /*==============================================================================================*
+ *									fuctions for mknod											*
+ *==============================================================================================*/
+/**
+ * vfs_mknod - create device node or file
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dir:	inode of @dentry
+ * @dentry:	pointer to dentry of the base directory
+ * @mode:	mode of the new device node or file
+ * @dev:	device number of device to create
+ *
+ * Create a device node or file.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+int vfs_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
+{
+	bool is_whiteout = S_ISCHR(mode) && dev == WHITEOUT_DEV;
+	int error = 0;
+
+	// if ((S_ISCHR(mode) || S_ISBLK(mode)) && !is_whiteout &&
+	//     !capable(CAP_MKNOD))
+	// 	return -EPERM;
+
+	if (!dir->i_op->mknod)
+		return -EPERM;
+
+	// error = devcgroup_inode_mknod(mode, dev);
+	// if (error)
+	// 	return error;
+
+	// error = security_inode_mknod(dir, dentry, mode, dev);
+	// if (error)
+	// 	return error;
+
+	error = dir->i_op->mknod(dir, dentry, mode, dev);
+	// if (!error)
+	// 	fsnotify_create(dir, dentry);
+	return error;
+}
+
+/*==============================================================================================*
  *										fuctions for mkdir										*
  *==============================================================================================*/
 /**
@@ -1093,7 +1138,7 @@ int vfs_unlink(inode_s *dir, dentry_s *dentry, inode_s **delegated_inode)
  * writeout happening, and we don't want to prevent access to the directory
  * while waiting on the I/O.
  */
-int do_unlinkat(int dfd, filename_s *name)
+long do_unlinkat(int dfd, filename_s *name)
 {
 // 	int error;
 // 	struct dentry *dentry;
@@ -1172,49 +1217,4 @@ int do_unlinkat(int dfd, filename_s *name)
 long sys_unlink(const char * pathname)
 {
 	return do_unlinkat(AT_FDCWD, getname(pathname));
-}
-
-/*==============================================================================================*
- *									fuctions for mknod											*
- *==============================================================================================*/
-/**
- * vfs_mknod - create device node or file
- * @mnt_userns:	user namespace of the mount the inode was found from
- * @dir:	inode of @dentry
- * @dentry:	pointer to dentry of the base directory
- * @mode:	mode of the new device node or file
- * @dev:	device number of device to create
- *
- * Create a device node or file.
- *
- * If the inode has been found through an idmapped mount the user namespace of
- * the vfsmount must be passed through @mnt_userns. This function will then take
- * care to map the inode according to @mnt_userns before checking permissions.
- * On non-idmapped mounts or if permission checking is to be performed on the
- * raw inode simply passs init_user_ns.
- */
-int vfs_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
-{
-	bool is_whiteout = S_ISCHR(mode) && dev == WHITEOUT_DEV;
-	int error = 0;
-
-	// if ((S_ISCHR(mode) || S_ISBLK(mode)) && !is_whiteout &&
-	//     !capable(CAP_MKNOD))
-	// 	return -EPERM;
-
-	if (!dir->i_op->mknod)
-		return -EPERM;
-
-	// error = devcgroup_inode_mknod(mode, dev);
-	// if (error)
-	// 	return error;
-
-	// error = security_inode_mknod(dir, dentry, mode, dev);
-	// if (error)
-	// 	return error;
-
-	error = dir->i_op->mknod(dir, dentry, mode, dev);
-	// if (!error)
-	// 	fsnotify_create(dir, dentry);
-	return error;
 }
