@@ -24,6 +24,8 @@ const char *
 __get_errlist(int errnum)
 {
    // if (mapped >= 0 && mapped < array_length(_sys_errlist_internal))
+   if (errnum < 0)
+      errnum = -errnum;
    return _sys_errlist_internal[errnum];
    // return NULL;
 }

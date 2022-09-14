@@ -835,8 +835,9 @@
 	// 	__THROW __nonnull((2, 3)) __wur __attr_access((__write_only__, 3, 4));
 	// #endif
 
-	// /* Remove the link NAME.  */
+	/* Remove the link NAME.  */
 	// extern int unlink(const char *__name) __THROW __nonnull((1));
+	extern int unlink(const char *__name);
 
 	// #ifdef __USE_ATFILE
 	// /* Remove the link NAME relative to FD.  */

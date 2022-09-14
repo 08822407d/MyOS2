@@ -8,7 +8,7 @@
 ***************************************************/
 #include <errno.h>
 
-#include <syscall.h>
+#include "syscall.h"
 
 
 #define SYSFUNC_DEF(name)						\

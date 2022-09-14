@@ -999,10 +999,7 @@ int vfs_rmdir(inode_s *dir, dentry_s *dentry)
 	if (error)
 		goto out;
 
-// 	shrink_dcache_parent(dentry);
 	dentry->d_inode->i_flags |= S_DEAD;
-// 	dont_mount(dentry);
-// 	detach_mounts(dentry);
 
 out:
 	dput(dentry);
@@ -1042,13 +1039,16 @@ retry:
 		error = -ENOENT;
 		goto exit4;
 	}
+	if (!S_ISDIR(dentry->d_inode->i_mode))
+	{
+		error = -ENOTDIR;
+		goto exit4;
+	}
 
 	error = vfs_rmdir(path.dentry->d_inode, dentry);
 exit4:
 	dput(dentry);
 exit3:
-// 	inode_unlock(path.dentry->d_inode);
-// 	mnt_drop_write(path.mnt);
 exit2:
 	path_put(&path);
 exit1:
@@ -1089,47 +1089,24 @@ long sys_rmdir(const char *pathname)
  * On non-idmapped mounts or if permission checking is to be performed on the
  * raw inode simply passs init_user_ns.
  */
-int vfs_unlink(inode_s *dir, dentry_s *dentry, inode_s **delegated_inode)
+int vfs_unlink(inode_s *dir, dentry_s *dentry)
 {
-// 	struct inode *target = dentry->d_inode;
-// 	int error = may_delete(mnt_userns, dir, dentry, 0);
+	struct inode *target = dentry->d_inode;
+	int error = 0;
 
-// 	if (error)
-// 		return error;
+	if (!dir->i_op->unlink)
+		return -EPERM;
 
-// 	if (!dir->i_op->unlink)
-// 		return -EPERM;
+	// error = security_inode_unlink(dir, dentry);
+	// if (!error) {
+		error = dir->i_op->unlink(dir, dentry);
+	// 	if (!error) {
+	// 		dont_mount(dentry);
+	// 		detach_mounts(dentry);
+	// 	}
+	// }
 
-// 	inode_lock(target);
-// 	if (IS_SWAPFILE(target))
-// 		error = -EPERM;
-// 	else if (is_local_mountpoint(dentry))
-// 		error = -EBUSY;
-// 	else {
-// 		error = security_inode_unlink(dir, dentry);
-// 		if (!error) {
-// 			error = try_break_deleg(target, delegated_inode);
-// 			if (error)
-// 				goto out;
-// 			error = dir->i_op->unlink(dir, dentry);
-// 			if (!error) {
-// 				dont_mount(dentry);
-// 				detach_mounts(dentry);
-// 			}
-// 		}
-// 	}
-// out:
-// 	inode_unlock(target);
-
-// 	/* We don't d_delete() NFS sillyrenamed files--they still exist. */
-// 	if (!error && dentry->d_flags & DCACHE_NFSFS_RENAMED) {
-// 		fsnotify_unlink(dir, dentry);
-// 	} else if (!error) {
-// 		fsnotify_link_count(target);
-// 		d_delete_notify(dir, dentry);
-// 	}
-
-// 	return error;
+	return error;
 }
 
 /*
@@ -1140,78 +1117,48 @@ int vfs_unlink(inode_s *dir, dentry_s *dentry, inode_s **delegated_inode)
  */
 long do_unlinkat(int dfd, filename_s *name)
 {
-// 	int error;
-// 	struct dentry *dentry;
-// 	struct path path;
-// 	struct qstr last;
-// 	int type;
-// 	struct inode *inode = NULL;
-// 	struct inode *delegated_inode = NULL;
-// 	unsigned int lookup_flags = 0;
-// retry:
-// 	error = filename_parentat(dfd, name, lookup_flags, &path, &last, &type);
-// 	if (error)
-// 		goto exit1;
+	int error;
+	dentry_s *dentry;
+	path_s path;
+	qstr_s last;
+	int type;
+	inode_s *inode = NULL;
+	unsigned int lookup_flags = 0;
+retry:
+	error = filename_parentat(dfd, name, lookup_flags, &path, &last, &type);
+	if (error)
+		goto exit1;
 
-// 	error = -EISDIR;
-// 	if (type != LAST_NORM)
-// 		goto exit2;
+	error = -EISDIR;
+	if (type != LAST_NORM)
+		goto exit2;
 
-// 	error = mnt_want_write(path.mnt);
-// 	if (error)
-// 		goto exit2;
-// retry_deleg:
-// 	inode_lock_nested(path.dentry->d_inode, I_MUTEX_PARENT);
-// 	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
-// 	error = PTR_ERR(dentry);
-// 	if (!IS_ERR(dentry)) {
-// 		struct user_namespace *mnt_userns;
-
+	dentry = __lookup_hash(&last, path.dentry, lookup_flags);
+	error = PTR_ERR(dentry);
+	if (!IS_ERR(dentry)) {
 // 		/* Why not before? Because we want correct error value */
 // 		if (last.name[last.len])
 // 			goto slashes;
-// 		inode = dentry->d_inode;
-// 		if (d_is_negative(dentry))
-// 			goto slashes;
-// 		ihold(inode);
-// 		error = security_path_unlink(&path, dentry);
-// 		if (error)
-// 			goto exit3;
-// 		mnt_userns = mnt_user_ns(path.mnt);
-// 		error = vfs_unlink(mnt_userns, path.dentry->d_inode, dentry,
-// 				   &delegated_inode);
-// exit3:
-// 		dput(dentry);
-// 	}
-// 	inode_unlock(path.dentry->d_inode);
-// 	if (inode)
-// 		iput(inode);	/* truncate the inode here */
-// 	inode = NULL;
-// 	if (delegated_inode) {
-// 		error = break_deleg_wait(&delegated_inode);
-// 		if (!error)
-// 			goto retry_deleg;
-// 	}
-// 	mnt_drop_write(path.mnt);
-// exit2:
-// 	path_put(&path);
-// 	if (retry_estale(error, lookup_flags)) {
-// 		lookup_flags |= LOOKUP_REVAL;
-// 		inode = NULL;
-// 		goto retry;
-// 	}
-// exit1:
-// 	putname(name);
-// 	return error;
+		inode = dentry->d_inode;
+		if (S_ISDIR(inode->i_mode))
+		{
+			error = -EISDIR;
+			goto exit3;
+		}
 
-// slashes:
-// 	if (d_is_negative(dentry))
-// 		error = -ENOENT;
-// 	else if (d_is_dir(dentry))
-// 		error = -EISDIR;
-// 	else
-// 		error = -ENOTDIR;
-// 	goto exit3;
+		error = vfs_unlink(path.dentry->d_inode, dentry);
+exit3:
+		dput(dentry);
+	}
+	if (inode)
+		iput(inode);	/* truncate the inode here */
+	inode = NULL;
+
+exit2:
+	path_put(&path);
+exit1:
+	putname(name);
+	return error;
 }
 
 long sys_unlink(const char * pathname)

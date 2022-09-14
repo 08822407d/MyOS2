@@ -17,7 +17,7 @@ add_subdirectory(malloc)
 add_subdirectory(string)
 add_subdirectory(exit)
 
-add_subdirectory(sys)
+add_subdirectory(syscall)
 add_subdirectory(posix)
 add_subdirectory(sysdeps)
 add_subdirectory(misc)

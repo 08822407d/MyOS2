@@ -28,6 +28,7 @@ int cat_command(int argc, char **argv);
 int exec_command(int argc, char **argv);
 int mkdir_command(int argc, char **argv);
 int rmdir_command(int argc, char **argv);
+int rm_command(int argc, char **argv);
 int reboot_command(int argc, char **argv);
  
 	char *	getcwd(char *, size_t);
@@ -42,7 +43,7 @@ builtincmd_s shell_internal_cmd[] =
 	{"pwd",		pwd_command},
 	{"cat",		cat_command},
 	// {"touch",	touch_command},
-	// {"rm",		rm_command},
+	{"rm",		rm_command},
 	{"mkdir",	mkdir_command},
 	{"rmdir",	rmdir_command},
 	{"exec",	exec_command},
@@ -330,8 +331,25 @@ int rmdir_command(int argc, char **argv)
 	int err = 0;
 	if (argc != 2)
 		return -1;
+	
+	char *dirname = argv[1];
+	err = rmdir(dirname);
+	if (err != 0)
+		printf("rmdir: %s: %s\n", __get_errlist(err), dirname);
 
-	err = rmdir(argv[1]);
+	return err;
+}
+
+int rm_command(int argc, char **argv)
+{
+	int err = 0;
+	if (argc != 2)
+		return -1;
+
+	char *filename = argv[1];
+	err = unlink(filename);
+	if (err != 0)
+		printf("rm: %s: %s\n", __get_errlist(err), filename);
 
 	return err;
 }
