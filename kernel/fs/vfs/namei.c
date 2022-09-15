@@ -942,17 +942,12 @@ retry:
 	// if (!IS_POSIXACL(path.dentry->d_inode))
 	// 	mode &= ~current_umask();
 	// error = security_path_mkdir(&path, dentry, mode);
-	// if (!error) {
-	// 	struct user_namespace *mnt_userns;
-	// 	mnt_userns = mnt_user_ns(path.mnt);
-	// 	error = vfs_mkdir(path.dentry->d_inode, dentry, mode);
 		dir = path.dentry->d_inode;
 		error = -ENOENT;
 		if (!dir->i_op->mkdir)
 			return -EPERM;
 		mode &= (S_IRWXUGO|S_ISVTX);
 		error = dir->i_op->mkdir(dir, dentry, mode);
-	// }
 	done_path_create(&path, dentry);
 	// if (retry_estale(error, lookup_flags)) {
 	// 	lookup_flags |= LOOKUP_REVAL;

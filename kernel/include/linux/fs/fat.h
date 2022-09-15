@@ -340,6 +340,7 @@
 	// extern int fat_alloc_new_dir(inode_s *dir, timespec64_s *ts);
 	// extern int fat_add_entries(inode_s *dir, void *slots, int nr_slots,
 	// 				fat_slot_info_s *sinfo);
+	extern int fat_add_entries(inode_s *dir, void *slots, int nr_slots);
 	// extern int fat_remove_entries(inode_s *dir, fat_slot_info_s *sinfo);
 
 	/* fat/fatent.c */
