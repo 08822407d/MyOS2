@@ -141,6 +141,8 @@ int FAT32_rmdir(inode_s * parent, dentry_s * dest)
 	FAT32_release_clusters(inode);
 	FAT32_mark_entry_romoved(parent, dest_finode->dentry_position,
 			dest_finode->dentry_length);
+
+	return error;
 }
 
 int FAT32_unlink(inode_s *parent, dentry_s *dest)
@@ -155,6 +157,8 @@ int FAT32_unlink(inode_s *parent, dentry_s *dest)
 	FAT32_release_clusters(inode);
 	FAT32_mark_entry_romoved(parent, dest_finode->dentry_position,
 			dest_finode->dentry_length);
+
+	return error;
 }
 
 int FAT32_rename(inode_s * old_inode, dentry_s * old_dentry,
