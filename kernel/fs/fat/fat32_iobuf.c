@@ -26,24 +26,28 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 		return ERR_PTR(-ENOMEM);
 	list_hdr_init(clus_lhdrp);
 
-	do
+	if (cluster > 0)
 	{
-		clus_list_s *clus_sp = kmalloc(sizeof(clus_list_s));
-		if (clus_sp == NULL)
+		do
+		{
+			clus_list_s *clus_sp = kmalloc(sizeof(clus_list_s));
+			if (clus_sp == NULL)
+			{
+				free_cluster_chain(clus_lhdrp);
+				return ERR_PTR(-ENOMEM);
+			}
+			list_init(&clus_sp->list, clus_sp);
+
+			clus_sp->cluster = cluster;
+			list_hdr_enqueue(clus_lhdrp, &clus_sp->list);
+			cluster = FAT32_read_FAT_Entry(fsbi, cluster);
+		} while (cluster <= MAX_FAT32 && cluster >= FAT_START_ENT);
+
+		if (cluster == FAT_ENT_BAD)
 		{
 			free_cluster_chain(clus_lhdrp);
-			return ERR_PTR(-ENOMEM);
+			clus_lhdrp = ERR_PTR(-EIO);
 		}
-		list_init(&clus_sp->list, clus_sp);
-
-		clus_sp->cluster = cluster;
-		list_hdr_enqueue(clus_lhdrp, &clus_sp->list);
-	} while ((cluster = FAT32_read_FAT_Entry(fsbi, cluster)) <= MAX_FAT32);
-
-	if (cluster == FAT_ENT_BAD)
-	{
-		free_cluster_chain(clus_lhdrp);
-		clus_lhdrp = ERR_PTR(-EIO);
 	}
 	return clus_lhdrp;
 }
@@ -138,27 +142,30 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 	memset(iobuf, 0, sizeof(FAT32_iobuf_s));
 	iobuf->buf_nr = count;
 	iobuf->bufsize = bufsize;
-	iobuf->buffers = kmalloc(count * sizeof(char *));
-	if (iobuf->buffers == NULL)
+	if (count > 0)
 	{
-		error = -ENOMEM;
-		goto alloc_iobuf_bufps_fail;
+		iobuf->buffers = kmalloc(count * sizeof(char *));
+		if (iobuf->buffers == NULL)
+		{
+			error = -ENOMEM;
+			goto alloc_iobuf_bufps_fail;
+		}
+		iobuf->clusters = kmalloc(count * sizeof(*iobuf->clusters));
+		if (iobuf->clusters == NULL)
+		{
+			error = -ENOMEM;
+			goto alloc_iobuf_clusters_fail;
+		}
+		iobuf->flags = kmalloc(count * sizeof(*iobuf->flags));
+		if (iobuf->flags == NULL)
+		{
+			error = -ENOMEM;
+			goto alloc_iobuf_flags_fail;
+		}
+		memset(iobuf->buffers, 0, count * sizeof(char *));
+		memset(iobuf->clusters, 0, count * sizeof(*iobuf->clusters));
+		memset(iobuf->flags, 0, count * sizeof(*iobuf->flags));
 	}
-	iobuf->clusters = kmalloc(count * sizeof(*iobuf->clusters));
-	if (iobuf->clusters == NULL)
-	{
-		error = -ENOMEM;
-		goto alloc_iobuf_clusters_fail;
-	}
-	iobuf->flags = kmalloc(count * sizeof(*iobuf->flags));
-	if (iobuf->flags == NULL)
-	{
-		error = -ENOMEM;
-		goto alloc_iobuf_flags_fail;
-	}
-	memset(iobuf->buffers, 0, count * sizeof(char *));
-	memset(iobuf->clusters, 0, count * sizeof(*iobuf->clusters));
-	memset(iobuf->flags, 0, count * sizeof(*iobuf->flags));
 
 	int i = 0;
 	while (clus_lhdrp->count > 0)

@@ -27,8 +27,10 @@ unsigned long bm_get_freebit_idx(bitmap_t * bm, unsigned long start, unsigned lo
 	unsigned long 	i;
 	for (i = start; i < limit; i++)
 	{
-		bitmap_t bm_unit = *(bm + (i / BITMAP_UNITSIZE));
-		if ((bm_unit & (1ULL << i % BITMAP_UNITSIZE)) == 0)
+		size_t idx = i / BITMAP_UNITSIZE;
+		size_t off = i % BITMAP_UNITSIZE;
+		bitmap_t bm_unit = *(bm + idx);
+		if ((bm_unit & (1ULL << off)) == 0)
 			break;
 	}
 	return i;
