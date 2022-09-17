@@ -77,51 +77,51 @@
 // // EXPORT_SYMBOL(strcasecmp);
 // // #endif
 
-// #ifndef __HAVE_ARCH_STRCPY
-/**
- * strcpy - Copy a %NUL terminated string
- * @dest: Where to copy the string to
- * @src: Where to copy the string from
- */
-char *strcpy(char *dest, const char *src)
-{
-	char *tmp = dest;
+#ifndef __HAVE_ARCH_STRCPY
+	/**
+	 * strcpy - Copy a %NUL terminated string
+	 * @dest: Where to copy the string to
+	 * @src: Where to copy the string from
+	 */
+	char *strcpy(char *dest, const char *src)
+	{
+		char *tmp = dest;
 
-	while ((*dest++ = *src++) != '\0')
-		/* nothing */;
-	return tmp;
-}
-// EXPORT_SYMBOL(strcpy);
-// #endif
-
-// #ifndef __HAVE_ARCH_STRNCPY
-/**
- * strncpy - Copy a length-limited, C-string
- * @dest: Where to copy the string to
- * @src: Where to copy the string from
- * @count: The maximum number of bytes to copy
- *
- * The result is not %NUL-terminated if the source exceeds
- * @count bytes.
- *
- * In the case where the length of @src is less than  that  of
- * count, the remainder of @dest will be padded with %NUL.
- *
- */
-char *strncpy(char *dest, const char *src, size_t count)
-{
-	char *tmp = dest;
-
-	while (count) {
-		if ((*tmp = *src) != 0)
-			src++;
-		tmp++;
-		count--;
+		while ((*dest++ = *src++) != '\0')
+			/* nothing */;
+		return tmp;
 	}
-	return dest;
-}
+// EXPORT_SYMBOL(strcpy);
+#endif
+
+#ifndef __HAVE_ARCH_STRNCPY
+	/**
+	 * strncpy - Copy a length-limited, C-string
+	 * @dest: Where to copy the string to
+	 * @src: Where to copy the string from
+	 * @count: The maximum number of bytes to copy
+	 *
+	 * The result is not %NUL-terminated if the source exceeds
+	 * @count bytes.
+	 *
+	 * In the case where the length of @src is less than  that  of
+	 * count, the remainder of @dest will be padded with %NUL.
+	 *
+	 */
+	char *strncpy(char *dest, const char *src, size_t count)
+	{
+		char *tmp = dest;
+
+		while (count) {
+			if ((*tmp = *src) != 0)
+				src++;
+			tmp++;
+			count--;
+		}
+		return dest;
+	}
 // EXPORT_SYMBOL(strncpy);
-// #endif
+#endif
 
 // // #ifndef __HAVE_ARCH_STRLCPY
 // /**
@@ -334,72 +334,72 @@ char *strncpy(char *dest, const char *src, size_t count)
 // // EXPORT_SYMBOL(strlcat);
 // // #endif
 
-// #ifndef __HAVE_ARCH_STRCMP
-/**
- * strcmp - Compare two strings
- * @cs: One string
- * @ct: Another string
- */
-int strcmp(const char *cs, const char *ct)
-{
-	unsigned char c1, c2;
+#ifndef __HAVE_ARCH_STRCMP
+	/**
+	 * strcmp - Compare two strings
+	 * @cs: One string
+	 * @ct: Another string
+	 */
+	int strcmp(const char *cs, const char *ct)
+	{
+		unsigned char c1, c2;
 
-	while (1) {
-		c1 = *cs++;
-		c2 = *ct++;
-		if (c1 != c2)
-			return c1 < c2 ? -1 : 1;
-		if (!c1)
-			break;
+		while (1) {
+			c1 = *cs++;
+			c2 = *ct++;
+			if (c1 != c2)
+				return c1 < c2 ? -1 : 1;
+			if (!c1)
+				break;
+		}
+		return 0;
 	}
-	return 0;
-}
 // EXPORT_SYMBOL(strcmp);
-// #endif
+#endif
 
-// #ifndef __HAVE_ARCH_STRNCMP
-/**
- * strncmp - Compare two length-limited strings
- * @cs: One string
- * @ct: Another string
- * @count: The maximum number of bytes to compare
- */
-int strncmp(const char *cs, const char *ct, size_t count)
-{
-	unsigned char c1, c2;
+#ifndef __HAVE_ARCH_STRNCMP
+	/**
+	 * strncmp - Compare two length-limited strings
+	 * @cs: One string
+	 * @ct: Another string
+	 * @count: The maximum number of bytes to compare
+	 */
+	int strncmp(const char *cs, const char *ct, size_t count)
+	{
+		unsigned char c1, c2;
 
-	while (count) {
-		c1 = *cs++;
-		c2 = *ct++;
-		if (c1 != c2)
-			return c1 < c2 ? -1 : 1;
-		if (!c1)
-			break;
-		count--;
+		while (count) {
+			c1 = *cs++;
+			c2 = *ct++;
+			if (c1 != c2)
+				return c1 < c2 ? -1 : 1;
+			if (!c1)
+				break;
+			count--;
+		}
+		return 0;
 	}
-	return 0;
-}
 // EXPORT_SYMBOL(strncmp);
-// #endif
+#endif
 
-// // #ifndef __HAVE_ARCH_STRCHR
-// /**
-//  * strchr - Find the first occurrence of a character in a string
-//  * @s: The string to be searched
-//  * @c: The character to search for
-//  *
-//  * Note that the %NUL-terminator is considered part of the string, and can
-//  * be searched for.
-//  */
-// char *strchr(const char *s, int c)
-// {
-// 	for (; *s != (char)c; ++s)
-// 		if (*s == '\0')
-// 			return NULL;
-// 	return (char *)s;
-// }
-// // EXPORT_SYMBOL(strchr);
-// // #endif
+#ifndef __HAVE_ARCH_STRCHR
+	/**
+	 * strchr - Find the first occurrence of a character in a string
+	 * @s: The string to be searched
+	 * @c: The character to search for
+	 *
+	 * Note that the %NUL-terminator is considered part of the string, and can
+	 * be searched for.
+	 */
+	char *strchr(const char *s, int c)
+	{
+		for (; *s != (char)c; ++s)
+			if (*s == '\0')
+				return NULL;
+		return (char *)s;
+	}
+// EXPORT_SYMBOL(strchr);
+#endif
 
 // // #ifndef __HAVE_ARCH_STRCHRNUL
 // /**
@@ -477,21 +477,21 @@ int strncmp(const char *cs, const char *ct, size_t count)
 // // EXPORT_SYMBOL(strnchr);
 // // #endif
 
-// #ifndef __HAVE_ARCH_STRLEN
-/**
- * strlen - Find the length of a string
- * @s: The string to be sized
- */
-size_t strlen(const char *s)
-{
-	const char *sc;
+#ifndef __HAVE_ARCH_STRLEN
+	/**
+	 * strlen - Find the length of a string
+	 * @s: The string to be sized
+	 */
+	size_t strlen(const char *s)
+	{
+		const char *sc;
 
-	for (sc = s; *sc != '\0'; ++sc)
-		/* nothing */;
-	return sc - s;
-}
+		for (sc = s; *sc != '\0'; ++sc)
+			/* nothing */;
+		return sc - s;
+	}
 // EXPORT_SYMBOL(strlen);
-// #endif
+#endif
 
 // // #ifndef __HAVE_ARCH_STRNLEN
 // /**
@@ -610,25 +610,25 @@ size_t strlen(const char *s)
 // // EXPORT_SYMBOL(strsep);
 // // #endif
 
-// #ifndef __HAVE_ARCH_MEMSET
-/**
- * memset - Fill a region of memory with the given value
- * @s: Pointer to the start of the area.
- * @c: The byte to fill the area with
- * @count: The size of the area.
- *
- * Do not use memset() to access IO space, use memset_io() instead.
- */
-void *memset(void *s, int c, size_t count)
-{
-	char *xs = s;
+#ifndef __HAVE_ARCH_MEMSET
+	/**
+	 * memset - Fill a region of memory with the given value
+	 * @s: Pointer to the start of the area.
+	 * @c: The byte to fill the area with
+	 * @count: The size of the area.
+	 *
+	 * Do not use memset() to access IO space, use memset_io() instead.
+	 */
+	void *memset(void *s, int c, size_t count)
+	{
+		char *xs = s;
 
-	while (count--)
-		*xs++ = c;
-	return s;
-}
+		while (count--)
+			*xs++ = c;
+		return s;
+	}
 // EXPORT_SYMBOL(memset);
-// #endif
+#endif
 
 // // #ifndef __HAVE_ARCH_MEMSET16
 // /**
@@ -696,95 +696,95 @@ void *memset(void *s, int c, size_t count)
 // // EXPORT_SYMBOL(memset64);
 // // #endif
 
-// #ifndef __HAVE_ARCH_MEMCPY
-/**
- * memcpy - Copy one area of memory to another
- * @dest: Where to copy to
- * @src: Where to copy from
- * @count: The size of the area.
- *
- * You should not use this function to access IO space, use memcpy_toio()
- * or memcpy_fromio() instead.
- */
-void *memcpy(void *dest, const void *src, size_t count)
-{
-	char *tmp = dest;
-	const char *s = src;
+#ifndef __HAVE_ARCH_MEMCPY
+	/**
+	 * memcpy - Copy one area of memory to another
+	 * @dest: Where to copy to
+	 * @src: Where to copy from
+	 * @count: The size of the area.
+	 *
+	 * You should not use this function to access IO space, use memcpy_toio()
+	 * or memcpy_fromio() instead.
+	 */
+	void *memcpy(void *dest, const void *src, size_t count)
+	{
+		char *tmp = dest;
+		const char *s = src;
 
-	while (count--)
-		*tmp++ = *s++;
-	return dest;
-}
-// EXPORT_SYMBOL(memcpy);
-// #endif
-
-// #ifndef __HAVE_ARCH_MEMMOVE
-/**
- * memmove - Copy one area of memory to another
- * @dest: Where to copy to
- * @src: Where to copy from
- * @count: The size of the area.
- *
- * Unlike memcpy(), memmove() copes with overlapping areas.
- */
-void *memmove(void *dest, const void *src, size_t count)
-{
-	char *tmp;
-	const char *s;
-
-	if (dest <= src) {
-		tmp = dest;
-		s = src;
 		while (count--)
 			*tmp++ = *s++;
-	} else {
-		tmp = dest;
-		tmp += count;
-		s = src;
-		s += count;
-		while (count--)
-			*--tmp = *--s;
+		return dest;
 	}
-	return dest;
-}
-// EXPORT_SYMBOL(memmove);
-// #endif
-
-// #ifndef __HAVE_ARCH_MEMCMP
-/**
- * memcmp - Compare two areas of memory
- * @cs: One area of memory
- * @ct: Another area of memory
- * @count: The size of the area.
- */
-#undef memcmp
-__visible int memcmp(const void *cs, const void *ct, size_t count)
-{
-	const unsigned char *su1, *su2;
-	int res = 0;
-
-#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-	if (count >= sizeof(unsigned long)) {
-		const unsigned long *u1 = cs;
-		const unsigned long *u2 = ct;
-		do {
-			if (get_unaligned(u1) != get_unaligned(u2))
-				break;
-			u1++;
-			u2++;
-			count -= sizeof(unsigned long);
-		} while (count >= sizeof(unsigned long));
-		cs = u1;
-		ct = u2;
-	}
+// EXPORT_SYMBOL(memcpy);
 #endif
-	for (su1 = cs, su2 = ct; 0 < count; ++su1, ++su2, count--)
-		if ((res = *su1 - *su2) != 0)
-			break;
-	return res;
-}
+
+#ifndef __HAVE_ARCH_MEMMOVE
+	/**
+	 * memmove - Copy one area of memory to another
+	 * @dest: Where to copy to
+	 * @src: Where to copy from
+	 * @count: The size of the area.
+	 *
+	 * Unlike memcpy(), memmove() copes with overlapping areas.
+	 */
+	void *memmove(void *dest, const void *src, size_t count)
+	{
+		char *tmp;
+		const char *s;
+
+		if (dest <= src) {
+			tmp = dest;
+			s = src;
+			while (count--)
+				*tmp++ = *s++;
+		} else {
+			tmp = dest;
+			tmp += count;
+			s = src;
+			s += count;
+			while (count--)
+				*--tmp = *--s;
+		}
+		return dest;
+	}
+// EXPORT_SYMBOL(memmove);
+#endif
+
+#ifndef __HAVE_ARCH_MEMCMP
+	/**
+	 * memcmp - Compare two areas of memory
+	 * @cs: One area of memory
+	 * @ct: Another area of memory
+	 * @count: The size of the area.
+	 */
+	#undef memcmp
+	__visible int memcmp(const void *cs, const void *ct, size_t count)
+	{
+		const unsigned char *su1, *su2;
+		int res = 0;
+
+	#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+		if (count >= sizeof(unsigned long)) {
+			const unsigned long *u1 = cs;
+			const unsigned long *u2 = ct;
+			do {
+				if (get_unaligned(u1) != get_unaligned(u2))
+					break;
+				u1++;
+				u2++;
+				count -= sizeof(unsigned long);
+			} while (count >= sizeof(unsigned long));
+			cs = u1;
+			ct = u2;
+		}
+	#endif
+		for (su1 = cs, su2 = ct; 0 < count; ++su1, ++su2, count--)
+			if ((res = *su1 - *su2) != 0)
+				break;
+		return res;
+	}
 // EXPORT_SYMBOL(memcmp);
-// #endif
+#endif
 
 // // #ifndef __HAVE_ARCH_BCMP
 // /**
@@ -880,28 +880,28 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
 // // EXPORT_SYMBOL(strnstr);
 // // #endif
 
-// #ifndef __HAVE_ARCH_MEMCHR
-/**
- * memchr - Find a character in an area of memory.
- * @s: The memory area
- * @c: The byte to search for
- * @n: The size of the area.
- *
- * returns the address of the first occurrence of @c, or %NULL
- * if @c is not found
- */
-void *memchr(const void *s, int c, size_t n)
-{
-	const unsigned char *p = s;
-	while (n-- != 0) {
-        	if ((unsigned char)c == *p++) {
-			return (void *)(p - 1);
+#ifndef __HAVE_ARCH_MEMCHR
+	/**
+	 * memchr - Find a character in an area of memory.
+	 * @s: The memory area
+	 * @c: The byte to search for
+	 * @n: The size of the area.
+	 *
+	 * returns the address of the first occurrence of @c, or %NULL
+	 * if @c is not found
+	 */
+	void *memchr(const void *s, int c, size_t n)
+	{
+		const unsigned char *p = s;
+		while (n-- != 0) {
+				if ((unsigned char)c == *p++) {
+				return (void *)(p - 1);
+			}
 		}
+		return NULL;
 	}
-	return NULL;
-}
 // EXPORT_SYMBOL(memchr);
-// #endif
+#endif
 
 // static void *check_bytes8(const u8 *start, u8 value, unsigned int bytes)
 // {
