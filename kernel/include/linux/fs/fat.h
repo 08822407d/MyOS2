@@ -236,16 +236,16 @@
 			MSDOS_I(inode)->i_attrs = attrs & (ATTR_UNUSED | ATTR_RO);
 	}
 
-	// static inline unsigned char fat_checksum(const u8 *name)
-	// {
-	// 	unsigned char s = name[0];
-	// 	s = (s<<7) + (s>>1) + name[1];	s = (s<<7) + (s>>1) + name[2];
-	// 	s = (s<<7) + (s>>1) + name[3];	s = (s<<7) + (s>>1) + name[4];
-	// 	s = (s<<7) + (s>>1) + name[5];	s = (s<<7) + (s>>1) + name[6];
-	// 	s = (s<<7) + (s>>1) + name[7];	s = (s<<7) + (s>>1) + name[8];
-	// 	s = (s<<7) + (s>>1) + name[9];	s = (s<<7) + (s>>1) + name[10];
-	// 	return s;
-	// }
+	static inline unsigned char fat_checksum(const u8 *name)
+	{
+		unsigned char s = name[0];
+		s = (s<<7) + (s>>1) + name[1];	s = (s<<7) + (s>>1) + name[2];
+		s = (s<<7) + (s>>1) + name[3];	s = (s<<7) + (s>>1) + name[4];
+		s = (s<<7) + (s>>1) + name[5];	s = (s<<7) + (s>>1) + name[6];
+		s = (s<<7) + (s>>1) + name[7];	s = (s<<7) + (s>>1) + name[8];
+		s = (s<<7) + (s>>1) + name[9];	s = (s<<7) + (s>>1) + name[10];
+		return s;
+	}
 
 	static inline sector_t fat_clus_to_blknr(msdos_sb_info_s *sbi, int clus)
 	{

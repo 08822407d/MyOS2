@@ -10,8 +10,6 @@
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
 
-int FAT32_create(inode_s * inode, dentry_s * dentry, umode_t mode, bool excl)
-{}
 
 dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned int flags)
 {
@@ -93,6 +91,21 @@ build_inode_fail:
 ent_not_found:
 	FAT32_iobuf_release(iobuf);
 	return dest_dentry;	
+}
+
+extern int vfat_add_entry(inode_s *dir, const qstr_s *qname,
+			  int is_dir, int cluster, fat_slot_info_s *sinfo);
+int FAT32_create(inode_s * dir, dentry_s * dentry, umode_t mode, bool excl)
+{
+	int err;
+	fat_slot_info_s sinfo;
+
+	err = vfat_add_entry(dir, &dentry->d_name, 0, 0, &sinfo);
+	if (err)
+		goto out;
+
+	out:
+	return err;
 }
 
 int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)

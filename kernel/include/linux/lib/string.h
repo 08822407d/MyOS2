@@ -57,7 +57,7 @@
 	// 	extern int strncasecmp(const char *s1, const char *s2, size_t n);
 	// #endif
 	#ifndef __HAVE_ARCH_STRCHR
-		extern char * strchr(const char *,int);
+		extern char * strchr(const char *, int);
 	#endif
 	// #ifndef __HAVE_ARCH_STRCHRNUL
 	// 	extern char * strchrnul(const char *,int);
@@ -67,7 +67,7 @@
 	// 	extern char * strnchr(const char *, size_t, int);
 	// #endif
 	// #ifndef __HAVE_ARCH_STRRCHR
-	// 	extern char * strrchr(const char *,int);
+		extern char * strrchr(const char *, int);
 	// #endif
 	// extern char * __must_check skip_spaces(const char *);
 

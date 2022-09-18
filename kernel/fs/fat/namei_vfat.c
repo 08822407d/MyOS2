@@ -1,3 +1,4 @@
+#include <linux/kernel/ctype.h>
 #include <linux/kernel/err.h>
 #include <linux/lib/errno.h>
 #include <linux/fs/fs.h>
@@ -69,6 +70,27 @@ dentry_ops_s vfat_dentry_ops = {
 };
 
 
+static int vfat_create_shortname(const char *name, int len, char *name_res)
+{
+	memset(name_res, ' ', MSDOS_NAME);
+	char *name_upper = kmalloc(len + 1);
+	for (int i = 0; i < len; i++)
+		name_upper[i] = toupper(name[i]);
+	name_upper[len] = '\0';
+
+	loff_t ext_idx = strrchr(name, '.') - name;
+	if (len <= 8)
+		memcpy(name_res, name_upper, len);
+	else
+	{
+		int baselen = ext_idx > 6 ? 6 : ext_idx;
+		memcpy(name_upper, name_res, baselen);
+		memcpy(name_res + 8, name_upper + ext_idx, 3);
+		name_res[6] = '~';
+		name_res[7] = '1';
+	}
+}
+
 static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 				int is_dir, int cluster, msdos_dirslot_s *slots, int *nr_slots)
 {
@@ -81,42 +103,41 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 
 	*nr_slots = 0;
 
-	err = vfat_create_shortname(dir, sbi->nls_disk, uname, ulen,
-				    msdos_name, &lcase);
-	if (err < 0)
-		goto out_free;
-	else if (err == 1) {
-		de = (struct msdos_dir_entry *)slots;
-		err = 0;
-		goto shortname;
-	}
+	err = vfat_create_shortname(name, len, msdos_name);
+// 	if (err < 0)
+// 		goto out_free;
+// 	else if (err == 1) {
+// 		de = (msdos_dirent_s *)slots;
+// 		err = 0;
+// 		goto shortname;
+// 	}
 
-	/* build the entry of long file name */
-	cksum = fat_checksum(msdos_name);
+// 	/* build the entry of long file name */
+// 	cksum = fat_checksum(msdos_name);
 
-	*nr_slots = usize / 13;
-	for (ps = slots, i = *nr_slots; i > 0; i--, ps++) {
-		ps->id = i;
-		ps->attr = ATTR_EXT;
-		ps->reserved = 0;
-		ps->alias_checksum = cksum;
-		ps->start = 0;
-		offset = (i - 1) * 13;
-		fatwchar_to16(ps->name0_4, uname + offset, 5);
-		fatwchar_to16(ps->name5_10, uname + offset + 5, 6);
-		fatwchar_to16(ps->name11_12, uname + offset + 11, 2);
-	}
-	slots[0].id |= 0x40;
-	de = (msdos_dirent_s *)ps;
+// 	*nr_slots = usize / 13;
+// 	for (ps = slots, i = *nr_slots; i > 0; i--, ps++) {
+// 		ps->id = i;
+// 		ps->attr = ATTR_EXT;
+// 		ps->reserved = 0;
+// 		ps->alias_checksum = cksum;
+// 		ps->start = 0;
+// 		offset = (i - 1) * 13;
+// 		fatwchar_to16(ps->name0_4, uname + offset, 5);
+// 		fatwchar_to16(ps->name5_10, uname + offset + 5, 6);
+// 		fatwchar_to16(ps->name11_12, uname + offset + 11, 2);
+// 	}
+// 	slots[0].id |= 0x40;
+// 	de = (msdos_dirent_s *)ps;
 
-shortname:
-	/* build the entry of 8.3 alias name */
-	(*nr_slots)++;
-	memcpy(de->name, msdos_name, MSDOS_NAME);
-	de->attr = is_dir ? ATTR_DIR : ATTR_ARCH;
-	de->lcase = lcase;
-	fat_set_start(de, cluster);
-	de->size = 0;
+// shortname:
+// 	/* build the entry of 8.3 alias name */
+// 	(*nr_slots)++;
+// 	memcpy(de->name, msdos_name, MSDOS_NAME);
+// 	de->attr = is_dir ? ATTR_DIR : ATTR_ARCH;
+// 	de->lcase = lcase;
+// 	fat_set_start(de, cluster);
+// 	de->size = 0;
 out_free:
 	return err;
 }
@@ -124,10 +145,10 @@ out_free:
 // static int vfat_add_entry(struct inode *dir, const struct qstr *qname,
 // 			  int is_dir, int cluster, struct timespec64 *ts,
 // 			  struct fat_slot_info *sinfo)
-static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
+int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 			  int is_dir, int cluster, fat_slot_info_s *sinfo)
 {
-	msdos_dirent_s *slots;
+	msdos_dirslot_s *slots;
 	unsigned int len;
 	int err, nr_slots;
 
@@ -143,7 +164,7 @@ static int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 	if (err)
 		goto cleanup;
 
-	err = fat_add_entries(dir, slots, nr_slots);
+	// err = fat_add_entries(dir, slots, nr_slots);
 
 cleanup:
 	kfree(slots);
