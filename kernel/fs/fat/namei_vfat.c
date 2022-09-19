@@ -73,13 +73,19 @@ dentry_ops_s vfat_dentry_ops = {
 static int vfat_create_shortname(const char *name, int len, char *name_res)
 {
 	int ret_val = 0;
+	loff_t ext_idx;
 	memset(name_res, ' ', MSDOS_NAME);
 	char *name_upper = kmalloc(len + 1);
 	for (int i = 0; i < len; i++)
 		name_upper[i] = toupper(name[i]);
 	name_upper[len] = '\0';
 
-	loff_t ext_idx = strrchr(name, '.') - name;
+	char *last = strrchr(name, '.');
+	if (last == NULL)
+		ext_idx = len;
+	else
+		ext_idx = last - name + 1;
+
 	if (len <= 8)
 	{
 		memcpy(name_res, name_upper, len);
@@ -88,8 +94,9 @@ static int vfat_create_shortname(const char *name, int len, char *name_res)
 	else
 	{
 		int baselen = ext_idx > 6 ? 6 : ext_idx;
-		memcpy(name_upper, name_res, baselen);
-		memcpy(name_res + 8, name_upper + ext_idx, 3);
+		int extlen = len - ext_idx > 3 ? 3 : len - ext_idx;
+		memcpy(name_res, name_upper, baselen);
+		memcpy(name_res + 8, name_upper + ext_idx, extlen);
 		name_res[6] = '~';
 		name_res[7] = '1';
 	}
@@ -130,7 +137,7 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 	/* build the entry of long file name */
 	cksum = fat_checksum(msdos_name);
 
-	*nr_slots = len / 13;
+	*nr_slots = (len + 12) / 13;
 	for (ps = slots, i = *nr_slots; i > 0; i--, ps++) {
 		ps->id = i;
 		ps->attr = ATTR_EXT;

@@ -113,11 +113,11 @@ int FAT32_mkdir(inode_s * dir, dentry_s * dentry, umode_t mode)
 	fat_slot_info_s sinfo;
 	int err, cluster = 0;
 
-	cluster = FAT32_alloc_new_dir(dir);
-	if (cluster < 0) {
-		err = cluster;
-		goto out;
-	}
+	// cluster = FAT32_alloc_new_dir(dir);
+	// if (cluster < 0) {
+	// 	err = cluster;
+	// 	goto out;
+	// }
 	err = vfat_add_entry(dir, &dentry->d_name, 0, 0, &sinfo);
 out:
 	return err;
