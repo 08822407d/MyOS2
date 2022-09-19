@@ -31,7 +31,7 @@ bool FAT32_ent_empty(const msdos_dirent_s *de)
 			de->name[0] == 0x05);
 }
 
-u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry)
+u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry)
 {
 	uint32_t buf[128];
 	memset(buf, 0, 512);
@@ -60,31 +60,6 @@ const msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf)
 	return ret_val;
 }
 
-/* See if directory is empty */
-int FAT32_dir_empty(inode_s *dir)
-{
-	const msdos_dirent_s *de;
-	int result = ENOERR;
-	size_t pos = 0;
-	size_t bufsize = 0;
-	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(dir);
-
-	iobuf->iter_init(iobuf);
-	while (!IS_ERR(de = FAT32_get_full_ent(iobuf)))
-	{
-		if (!FAT32_ent_empty(de) &&
-			strncmp(de->name, MSDOS_DOT   , MSDOS_NAME) &&
-			strncmp(de->name, MSDOS_DOTDOT, MSDOS_NAME))
-		{
-			result = -ENOTEMPTY;
-			break;
-		}
-		pos += sizeof(msdos_dirent_s);
-	}
-	FAT32_iobuf_release(iobuf);
-	return result;
-}
-
 u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 {
 	int i, j;
@@ -109,7 +84,7 @@ u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 	return 0;
 }
 
-uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32_t value)
+uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value)
 {
 	uint32_t buf[128];
 	int i;
@@ -124,126 +99,6 @@ uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, uint32_t fat_entry, uint32
 				fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
 				1, (unsigned char *)buf);
 	return 1;	
-}
-
-char *FAT32_get_shortname(int *namelen, const msdos_dirent_s *de)
-{
-	int x;
-	*namelen = 0;
-	char *ret_val = kmalloc(15);
-	memset(ret_val, 0, 15);
-
-	//short file/dir base name compare
-	for(x=0; x < 8; x++)
-	{
-		if(de->name[x] == ' ')
-			break;
-		if(de->lcase & LOWERCASE_BASE)
-			ret_val[(*namelen)++] = de->name[x] + 32;
-		else
-			ret_val[(*namelen)++] = de->name[x];
-	}
-
-	if(!(de->attr & ATTR_DIRECTORY))
-	{
-		ret_val[(*namelen)++] = '.';
-
-		//short file ext name compare
-		for(x=8; x < 11; x++)
-		{
-			if(de->name[x] == ' ')
-				break;
-			if(de->lcase & LOWERCASE_EXT)
-				ret_val[(*namelen)++] = de->name[x] + 32;
-			else
-				ret_val[(*namelen)++] = de->name[x];
-		}
-		if(x == 8)
-			ret_val[--(*namelen)] = 0;
-	}
-
-	return ret_val;
-}
-
-char *FAT32_get_longname(int *namelen, FAT32_iobuf_s *iobuf)
-{
-	int i = 0, x, y;
-	char *ret_val;
-	int entlen = sizeof(msdos_dirent_s);
-	loff_t cursor = iobuf->iter_cursor - entlen * 2;
-	msdos_dirslot_s *lde_tmp = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor);
-	while(lde_tmp->attr == ATTR_LONG_NAME &&
-		!FAT32_ent_empty((msdos_dirent_s *)lde_tmp) &&
-		cursor >= 0)
-	{
-		i++;
-		if(lde_tmp->id & 0x40)
-			break;
-		cursor -= entlen;
-		lde_tmp = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor);
-	}
-
-	//long file/dir name read
-	ret_val = kmalloc(i * 13 + 1);
-	memset(ret_val, 0, i * 13 + 1);
-	cursor = iobuf->iter_cursor - entlen * 2;
-	msdos_dirslot_s *lde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor);
-	for(x = 0; x < i; x++, cursor -= entlen, lde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor))
-	{
-		for(y = 0; y < 10; y += 2)
-			if(*(u16 *)(&lde->name0_4[y]) != 0xffff &&
-				*(u16 *)(&lde->name0_4[y]) != 0x0000)
-				ret_val[(*namelen)++] = lde->name0_4[y];
-
-		for(y = 0; y < 12; y += 2)
-			if(*(u16 *)(&lde->name5_10[y]) != 0xffff &&
-				*(u16 *)(&lde->name5_10[y]) != 0x0000)
-				ret_val[(*namelen)++] = lde->name5_10[y];
-
-		for(y = 0; y < 4; y += 2)
-			if(*(u16 *)(&lde->name11_12[y]) != 0xffff &&
-				*(u16 *)(&lde->name11_12[y]) != 0x0000)
-				ret_val[(*namelen)++] = (char)lde->name11_12[y];
-	}
-
-	return ret_val;
-}
-
-s64 FAT32_alloc_new_dir(inode_s *dir)
-{
-	s64 cluster = 0;
-	s64 sector = 0;
-	char *clus_buf = NULL;
-	FAT32_SBinfo_s *fsbi = NULL;
-	FAT32_inode_info_s * finode;
-	msdos_dirent_s *de;
-
-	fsbi = (FAT32_SBinfo_s *)dir->i_sb->private_sb_info;
-	finode = (FAT32_inode_info_s *)dir->private_idx_info;
-	sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-	clus_buf = kmalloc(fsbi->bytes_per_cluster);
-	if (clus_buf == NULL)
-		return -(ENOMEM);
-	memset(clus_buf, 0, fsbi->bytes_per_cluster);
-
-	de = (msdos_dirent_s *)clus_buf;
-	/* filling the new directory slots ("." and ".." entries) */
-	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
-	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
-	de->attr = de[1].attr = ATTR_DIR;
-	de[0].lcase = de[1].lcase = 0;
-	de[0].size = de[1].size = 0;
-	fat_set_start(&de[0], cluster);
-	fat_set_start(&de[1], finode->first_cluster);
-
-	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD, sector,
-				fsbi->sector_per_cluster, (unsigned char *)clus_buf))
-	{
-		color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
-		return -EIO;
-	}
-
-	return cluster;
 }
 
 int FAT32_open(inode_s *inode, file_s *file_p)
@@ -481,9 +336,9 @@ int FAT32_getdents64(file_s *filp, dir_ctxt_s *ctx)
 		else if(!IS_ERR(tmplde) &&
 			tmplde->attr == ATTR_LONG_NAME &&
 			!FAT32_ent_empty((msdos_dirent_s *)tmplde))
-			name = FAT32_get_longname(&namelen, iobuf);
+			name = FAT32_parse_long(&namelen, iobuf);
 		else
-			name = FAT32_get_shortname(&namelen, tmpde);
+			name = FAT32_parse_short(&namelen, tmpde);
 
 		error = ctx->actor(ctx, name, namelen, 0, 0, 0);
 

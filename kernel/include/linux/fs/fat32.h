@@ -120,11 +120,11 @@
 
 	void init_fat32_fs(void);
 	bool FAT32_ent_empty(const msdos_dirent_s *de);
-	char *FAT32_get_shortname(int *namelen, const msdos_dirent_s *de);
+	char *FAT32_parse_short(int *namelen, const msdos_dirent_s *de);
 	u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry);
 	u64 FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value);
 	u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi);
-	s64 FAT32_alloc_new_dir(inode_s *dir);
+	u32 FAT32_alloc_new_dir(inode_s *dir);
 	int FAT32_dir_empty(inode_s *dir);
 
 	static inline sector_t FAT32_clus_to_blknr(FAT32_SBinfo_s *fsbi, int clus)
@@ -164,6 +164,6 @@
 	int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off, char *content, size_t size);
 	void FAT32_iobuf_release(FAT32_iobuf_s *iobuf);
 	const msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf);
-	char *FAT32_get_longname(int *namelen, FAT32_iobuf_s *iobuf);
+	char *FAT32_parse_long(int *namelen, FAT32_iobuf_s *iobuf);
 
 #endif /* _FAT32_H_ */

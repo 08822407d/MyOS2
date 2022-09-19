@@ -44,9 +44,9 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 		else if(!IS_ERR(tmplde) &&
 			tmplde->attr == ATTR_LONG_NAME &&
 			!FAT32_ent_empty((msdos_dirent_s *)tmplde))
-			name = FAT32_get_longname(&namelen, iobuf);
+			name = FAT32_parse_long(&namelen, iobuf);
 		else
-			name = FAT32_get_shortname(&namelen, tmpde);
+			name = FAT32_parse_short(&namelen, tmpde);
 
 		int len = namelen > destlen ? namelen : destlen;
 		bool equal = !strncmp(name, destname, len);
@@ -108,11 +108,19 @@ int FAT32_create(inode_s * dir, dentry_s * dentry, umode_t mode, bool excl)
 	return err;
 }
 
-int FAT32_mkdir(inode_s * inode, dentry_s * dentry, umode_t mode)
+int FAT32_mkdir(inode_s * dir, dentry_s * dentry, umode_t mode)
 {
-	uint64_t cluster = 0;
+	fat_slot_info_s sinfo;
+	int err, cluster = 0;
 
-	cluster = FAT32_alloc_new_dir(inode);
+	cluster = FAT32_alloc_new_dir(dir);
+	if (cluster < 0) {
+		err = cluster;
+		goto out;
+	}
+	err = vfat_add_entry(dir, &dentry->d_name, 0, 0, &sinfo);
+out:
+	return err;
 }
 
 static int FAT32_release_clusters(inode_s *dir)
