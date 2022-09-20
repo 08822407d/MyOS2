@@ -55,12 +55,13 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 int FAT32_iobuf_iter_init(FAT32_iobuf_s *iobuf)
 {
 	iobuf->iter_cursor = 0;
+	iobuf->iter_reach_end = false;
 	return -ENOERR;
 }
 
 const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off)
 {
-	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
+	loff_t	bufend = iobuf->nr_clus * iobuf->bufsize;
 	if (off >= bufend || off < 0)
 		return ERR_PTR(-ENOENT);
 	int	bufidx = off / iobuf->bufsize;
@@ -83,7 +84,7 @@ const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off)
 int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off,
 		char *content, size_t size)
 {
-	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
+	loff_t	bufend = iobuf->nr_clus * iobuf->bufsize;
 	if (off >= bufend || off < 0)
 		return -ENOENT;
 	int	bufidx = off / iobuf->bufsize;
@@ -111,14 +112,52 @@ int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off,
 
 const msdos_dirent_s *FAT32_iobuf_iter_next(FAT32_iobuf_s *iobuf)
 {
-	loff_t	bufend = iobuf->buf_nr * iobuf->bufsize;
+	loff_t	bufend = iobuf->nr_clus * iobuf->bufsize;
 	const msdos_dirent_s *ret_val = FAT32_iobuf_readent(iobuf, iobuf->iter_cursor);
 
 	iobuf->iter_cursor += sizeof(msdos_dirent_s);
 	if (iobuf->iter_cursor >= bufend)
-		iobuf->iter_cursor = -1;
+		iobuf->iter_reach_end = true;
 
 	return ret_val;
+}
+
+int FAT32_iobuf_expand(FAT32_iobuf_s *iobuf, size_t nr)
+{
+	u32 cluster = 0;
+	int tmp_nr = iobuf->nr_clus;
+	while (nr >= 0 &&
+		(cluster = FAT32_find_available_cluster(iobuf->fsbi)) > 1)
+	{
+		char *buf = kmalloc(iobuf->bufsize);
+		if (buf == NULL)
+			break;
+		
+		iobuf->buffers[tmp_nr] = buf;
+		iobuf->clusters[tmp_nr] = cluster;
+		iobuf->flags[tmp_nr] = FAT32_IOBUF_NEWCLUS;
+		tmp_nr++;
+		nr--;
+	}
+
+	if (nr > 0)
+	{
+		while (tmp_nr > iobuf->nr_clus)
+		{
+			tmp_nr--;
+			kfree(iobuf->buffers[tmp_nr]);
+			iobuf->clusters[tmp_nr] = 0;
+			iobuf->flags[tmp_nr] = 0;
+		}
+
+		return -EIO;
+	}
+	else
+	{
+		iobuf->nr_clus = tmp_nr;
+		iobuf->iter_reach_end = false;
+		return 0;
+	}
 }
 
 FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
@@ -127,6 +166,7 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 	FAT32_inode_info_s * finode = dir->private_idx_info;
 	FAT32_SBinfo_s * fsbi = dir->i_sb->private_sb_info;
 	size_t bufsize = fsbi->bytes_per_cluster;
+	size_t max_nr = FAT32_MAX_FILE_SIZE / bufsize;
 
 	List_hdr_s *clus_lhdrp = get_cluster_chain(dir);
 	if (clus_lhdrp == NULL)
@@ -140,31 +180,32 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 		goto alloc_iobuf_fail;
 	}
 	memset(iobuf, 0, sizeof(FAT32_iobuf_s));
-	iobuf->buf_nr = count;
+	iobuf->nr_clus = count;
+	iobuf->max_nr_clus = max_nr;
 	iobuf->bufsize = bufsize;
 	if (count > 0)
 	{
-		iobuf->buffers = kmalloc(count * sizeof(char *));
+		iobuf->buffers = kmalloc(max_nr * sizeof(char *));
 		if (iobuf->buffers == NULL)
 		{
 			error = -ENOMEM;
 			goto alloc_iobuf_bufps_fail;
 		}
-		iobuf->clusters = kmalloc(count * sizeof(*iobuf->clusters));
+		iobuf->clusters = kmalloc(max_nr * sizeof(*iobuf->clusters));
 		if (iobuf->clusters == NULL)
 		{
 			error = -ENOMEM;
 			goto alloc_iobuf_clusters_fail;
 		}
-		iobuf->flags = kmalloc(count * sizeof(*iobuf->flags));
+		iobuf->flags = kmalloc(max_nr * sizeof(*iobuf->flags));
 		if (iobuf->flags == NULL)
 		{
 			error = -ENOMEM;
 			goto alloc_iobuf_flags_fail;
 		}
-		memset(iobuf->buffers, 0, count * sizeof(char *));
-		memset(iobuf->clusters, 0, count * sizeof(*iobuf->clusters));
-		memset(iobuf->flags, 0, count * sizeof(*iobuf->flags));
+		memset(iobuf->buffers, 0, max_nr * sizeof(char *));
+		memset(iobuf->clusters, 0, max_nr * sizeof(*iobuf->clusters));
+		memset(iobuf->flags, 0, max_nr * sizeof(*iobuf->flags));
 	}
 
 	int i = 0;
@@ -196,9 +237,9 @@ alloc_iobuf_fail:
 
 void FAT32_iobuf_release(FAT32_iobuf_s *iobuf)
 {
-	if (iobuf->buf_nr > 0)
+	if (iobuf->nr_clus > 0)
 	{
-		for (int i = iobuf->buf_nr - 1; i >= 0; i--)
+		for (int i = iobuf->nr_clus - 1; i >= 0; i--)
 		{
 			bool clus_end_change = false;
 			u32 cluster = iobuf->clusters[i];

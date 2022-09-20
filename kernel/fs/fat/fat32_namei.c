@@ -126,7 +126,7 @@ out:
 static int FAT32_release_clusters(inode_s *dir)
 {
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(dir);
-	for (int i = iobuf->buf_nr - 1; i >= 0; i--)
+	for (int i = iobuf->nr_clus - 1; i >= 0; i--)
 		iobuf->flags[i] = FAT32_IOBUF_DELETE;
 
 	FAT32_iobuf_release(iobuf);

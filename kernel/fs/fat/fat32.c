@@ -54,7 +54,7 @@ const msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf)
 			FAT32_ent_empty(ret_val)) &&
 			iobuf->iter_cursor > -1);
 	
-	if (iobuf->iter_cursor == -1)
+	if (iobuf->iter_reach_end)
 		ret_val = ERR_PTR(-ENOENT);
 
 	return ret_val;
