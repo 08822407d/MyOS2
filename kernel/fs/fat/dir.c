@@ -251,6 +251,7 @@ int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 
 	const msdos_dirent_s *de;
 	const msdos_dirent_s *empty_start;
+	int emtpy_count = 0;
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(dir);
 	iobuf->iter_init(iobuf);
 
@@ -262,51 +263,24 @@ int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 			FAT32_iobuf_expand(iobuf, 1);
 			de = iobuf->next(iobuf);
 		}
+
 		if (FAT32_ent_empty(de))
 		{
-
+			if (empty_start == NULL)
+				empty_start = de;
+			else
+				emtpy_count++;
 		}
+		else
+		{
+			empty_start = NULL;
+			emtpy_count = 0;
+		}
+
+		if (emtpy_count == nr_slots)
+			break;
 	}
 	while (iobuf->iter_cursor < FAT_MAX_DIR_SIZE);
-
-
-	// 	sinfo->nr_slots = nr_slots;
-
-	// 	/* First stage: search free directory entries */
-	// 	free_slots = nr_bhs = 0;
-	// 	bh = prev = NULL;
-	// 	pos = 0;
-	// 	err = -ENOSPC;
-	// 	while (fat_get_entry(dir, &pos, &bh, &de) > -1) {
-	// 		/* check the maximum size of directory */
-	// 		if (pos >= FAT_MAX_DIR_SIZE)
-	// 			goto error;
-
-	// 		if (IS_FREE(de->name)) {
-	// 			if (prev != bh) {
-	// 				get_bh(bh);
-	// 				bhs[nr_bhs] = prev = bh;
-	// 				nr_bhs++;
-	// 			}
-	// 			free_slots++;
-	// 			if (free_slots == nr_slots)
-	// 				goto found;
-	// 		} else {
-	// 			for (i = 0; i < nr_bhs; i++)
-	// 				brelse(bhs[i]);
-	// 			prev = NULL;
-	// 			free_slots = nr_bhs = 0;
-	// 		}
-	// 	}
-	// 	if (dir->i_ino == MSDOS_ROOT_INO) {
-	// 		if (!is_fat32(sbi))
-	// 			goto error;
-	// 	} else if (MSDOS_I(dir)->i_start == 0) {
-	// 		fat_msg(sb, KERN_ERR, "Corrupted directory (i_pos %lld)",
-	// 		       MSDOS_I(dir)->i_pos);
-	// 		err = -EIO;
-	// 		goto error;
-	// 	}
 
 	// found:
 	// 	err = 0;
@@ -391,5 +365,6 @@ int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 	// 	brelse(bh);
 	// 	if (free_slots)
 	// 		__fat_remove_entries(dir, pos, free_slots);
-	// 	return err;
+	FAT32_iobuf_release(iobuf);
+	return 0;
 }

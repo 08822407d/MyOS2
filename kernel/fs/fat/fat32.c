@@ -52,7 +52,7 @@ const msdos_dirent_s *FAT32_get_full_ent(FAT32_iobuf_s *iobuf)
 	}
 	while ((ret_val->attr == ATTR_LONG_NAME ||
 			FAT32_ent_empty(ret_val)) &&
-			iobuf->iter_cursor > -1);
+			!iobuf->iter_reach_end);
 	
 	if (iobuf->iter_reach_end)
 		ret_val = ERR_PTR(-ENOENT);
