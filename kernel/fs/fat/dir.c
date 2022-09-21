@@ -142,7 +142,7 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	/* filling the new directory slots ("." and ".." entries) */
 	memcpy(de[0].name, MSDOS_DOT, MSDOS_NAME);
 	memcpy(de[1].name, MSDOS_DOTDOT, MSDOS_NAME);
-	de->attr = de[1].attr = ATTR_DIR;
+	de[0].attr = de[1].attr = ATTR_DIR;
 	de[0].lcase = de[1].lcase = 0;
 	de[0].size = de[1].size = 0;
 	fat_set_start(&de[0], cluster);
