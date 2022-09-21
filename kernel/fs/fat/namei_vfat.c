@@ -108,8 +108,8 @@ static void ascii_to16(u8 *buf, const char *name, int len)
 {
 	for (int i = 0; i < len; i++)
 	{
-		buf[2 * i] = 0;
-		buf[2 * i + 1] = name[i];
+		buf[2 * i] = name[i];
+		buf[2 * i + 1] = 0;
 	}
 }
 
@@ -181,6 +181,7 @@ int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 	slots = kmalloc(MSDOS_SLOTS * sizeof(msdos_dirent_s));
 	if (slots == NULL)
 		return -ENOMEM;
+	memset(slots, 0, MSDOS_SLOTS * sizeof(msdos_dirent_s));
 
 	err = vfat_build_slots(dir, qname->name, len, is_dir, cluster, slots, &nr_slots);
 	if (err)

@@ -29,7 +29,7 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(parent_inode);
 	iobuf->iter_init(iobuf);
 	// iterate all fat32 entries in this cluster
-	while ((de_start = iobuf->iter_cursor) != -1 &&
+	while ((de_start = iobuf->iter_cursor) < FAT_MAX_DIR_SIZE &&
 			!IS_ERR(tmpde = FAT32_get_full_ent(iobuf)))
 	{
 		tmplde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf,
@@ -100,7 +100,7 @@ int FAT32_create(inode_s * dir, dentry_s * dentry, umode_t mode, bool excl)
 	int err;
 	fat_slot_info_s sinfo;
 
-	err = vfat_add_entry(dir, &dentry->d_name, 0, 0, &sinfo);
+	err = vfat_add_entry(dir, &dentry->d_name, false, 0, &sinfo);
 	if (err)
 		goto out;
 
@@ -113,12 +113,12 @@ int FAT32_mkdir(inode_s * dir, dentry_s * dentry, umode_t mode)
 	fat_slot_info_s sinfo;
 	int err, cluster = 0;
 
-	// cluster = FAT32_alloc_new_dir(dir);
-	// if (cluster < 0) {
-	// 	err = cluster;
-	// 	goto out;
-	// }
-	err = vfat_add_entry(dir, &dentry->d_name, 0, 0, &sinfo);
+	cluster = FAT32_alloc_new_dir(dir);
+	if (cluster < 0) {
+		err = cluster;
+		goto out;
+	}
+	err = vfat_add_entry(dir, &dentry->d_name, true, 0, &sinfo);
 out:
 	return err;
 }

@@ -159,99 +159,12 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	return cluster;
 }
 
-static int fat_add_new_entries(inode_s *dir, void *slots, int nr_slots,
-				int *nr_cluster, msdos_dirent_s **de, loff_t *i_pos)
-{
-// 	struct super_block *sb = dir->i_sb;
-// 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
-// 	struct buffer_head *bhs[MAX_BUF_PER_PAGE];
-// 	sector_t blknr, start_blknr, last_blknr;
-// 	unsigned long size, copy;
-// 	int err, i, n, offset, cluster[2];
-
-// 	/*
-// 	 * The minimum cluster size is 512bytes, and maximum entry
-// 	 * size is 32*slots (672bytes).  So, iff the cluster size is
-// 	 * 512bytes, we may need two clusters.
-// 	 */
-// 	size = nr_slots * sizeof(struct msdos_dir_entry);
-// 	*nr_cluster = (size + (sbi->cluster_size - 1)) >> sbi->cluster_bits;
-// 	BUG_ON(*nr_cluster > 2);
-
-// 	err = fat_alloc_clusters(dir, cluster, *nr_cluster);
-// 	if (err)
-// 		goto error;
-
-// 	/*
-// 	 * First stage: Fill the directory entry.  NOTE: This cluster
-// 	 * is not referenced from any inode yet, so updates order is
-// 	 * not important.
-// 	 */
-// 	i = n = copy = 0;
-// 	do {
-// 		start_blknr = blknr = fat_clus_to_blknr(sbi, cluster[i]);
-// 		last_blknr = start_blknr + sbi->sec_per_clus;
-// 		while (blknr < last_blknr) {
-// 			bhs[n] = sb_getblk(sb, blknr);
-// 			if (!bhs[n]) {
-// 				err = -ENOMEM;
-// 				goto error_nomem;
-// 			}
-
-// 			/* fill the directory entry */
-// 			copy = min(size, sb->s_blocksize);
-// 			/* Avoid race with userspace read via bdev */
-// 			lock_buffer(bhs[n]);
-// 			memcpy(bhs[n]->b_data, slots, copy);
-// 			set_buffer_uptodate(bhs[n]);
-// 			unlock_buffer(bhs[n]);
-// 			mark_buffer_dirty_inode(bhs[n], dir);
-// 			slots += copy;
-// 			size -= copy;
-// 			if (!size)
-// 				break;
-// 			n++;
-// 			blknr++;
-// 		}
-// 	} while (++i < *nr_cluster);
-
-// 	memset(bhs[n]->b_data + copy, 0, sb->s_blocksize - copy);
-// 	offset = copy - sizeof(struct msdos_dir_entry);
-// 	get_bh(bhs[n]);
-// 	*bh = bhs[n];
-// 	*de = (struct msdos_dir_entry *)((*bh)->b_data + offset);
-// 	*i_pos = fat_make_i_pos(sb, *bh, *de);
-
-// 	/* Second stage: clear the rest of cluster, and write outs */
-// 	err = fat_zeroed_cluster(dir, start_blknr, ++n, bhs, MAX_BUF_PER_PAGE);
-// 	if (err)
-// 		goto error_free;
-
-// 	return cluster[0];
-
-// error_free:
-// 	brelse(*bh);
-// 	*bh = NULL;
-// 	n = 0;
-// error_nomem:
-// 	for (i = 0; i < n; i++)
-// 		bforget(bhs[i]);
-// 	fat_free_clusters(dir, cluster[0]);
-// error:
-// 	return err;
-}
-
 int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 {
-	// 	struct super_block *sb = dir->i_sb;
-	// 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
-	// 	struct buffer_head *bh, *prev, *bhs[3]; /* 32*slots (672bytes) */
-	// 	int err, free_slots, i, nr_bhs;
-	// 	loff_t pos, i_pos;
-
-	const msdos_dirent_s *de;
-	const msdos_dirent_s *empty_start;
+	int error = 0;
+	loff_t empty_off = -1;
 	int emtpy_count = 0;
+	const msdos_dirent_s *de = NULL;
 	FAT32_iobuf_s *iobuf = FAT32_iobuf_init(dir);
 	iobuf->iter_init(iobuf);
 
@@ -266,14 +179,14 @@ int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 
 		if (FAT32_ent_empty(de))
 		{
-			if (empty_start == NULL)
-				empty_start = de;
+			if (empty_off == -1)
+				empty_off = iobuf->iter_cursor - sizeof(msdos_dirent_s);
 			else
 				emtpy_count++;
 		}
 		else
 		{
-			empty_start = NULL;
+			empty_off = -1;
 			emtpy_count = 0;
 		}
 
@@ -282,89 +195,18 @@ int fat_add_entries(inode_s *dir, void *slots, int nr_slots)
 	}
 	while (iobuf->iter_cursor < FAT_MAX_DIR_SIZE);
 
-	// found:
-	// 	err = 0;
-	// 	pos -= free_slots * sizeof(*de);
-	// 	nr_slots -= free_slots;
-	// 	if (free_slots) {
-	// 		/*
-	// 		 * Second stage: filling the free entries with new entries.
-	// 		 * NOTE: If this slots has shortname, first, we write
-	// 		 * the long name slots, then write the short name.
-	// 		 */
-	// 		int size = free_slots * sizeof(*de);
-	// 		int offset = pos & (sb->s_blocksize - 1);
-	// 		int long_bhs = nr_bhs - (nr_slots == 0);
+	if (emtpy_count == 0 && empty_off == -1)
+	{
+		error = -ENOENT;
+		goto not_found;
+	}
+	else
+	{
+		FAT32_iobuf_write(iobuf, empty_off, slots,
+				nr_slots * sizeof(msdos_dirent_s));
+	}
 
-	// 		/* Fill the long name slots. */
-	// 		for (i = 0; i < long_bhs; i++) {
-	// 			int copy = min_t(int, sb->s_blocksize - offset, size);
-	// 			memcpy(bhs[i]->b_data + offset, slots, copy);
-	// 			mark_buffer_dirty_inode(bhs[i], dir);
-	// 			offset = 0;
-	// 			slots += copy;
-	// 			size -= copy;
-	// 		}
-	// 		if (long_bhs && IS_DIRSYNC(dir))
-	// 			err = fat_sync_bhs(bhs, long_bhs);
-	// 		if (!err && i < nr_bhs) {
-	// 			/* Fill the short name slot. */
-	// 			int copy = min_t(int, sb->s_blocksize - offset, size);
-	// 			memcpy(bhs[i]->b_data + offset, slots, copy);
-	// 			mark_buffer_dirty_inode(bhs[i], dir);
-	// 			if (IS_DIRSYNC(dir))
-	// 				err = sync_dirty_buffer(bhs[i]);
-	// 		}
-	// 		for (i = 0; i < nr_bhs; i++)
-	// 			brelse(bhs[i]);
-	// 		if (err)
-	// 			goto error_remove;
-	// 	}
-
-	// 	if (nr_slots) {
-	// 		int cluster, nr_cluster;
-
-	// 		/*
-	// 		 * Third stage: allocate the cluster for new entries.
-	// 		 * And initialize the cluster with new entries, then
-	// 		 * add the cluster to dir.
-	// 		 */
-	// 		cluster = fat_add_new_entries(dir, slots, nr_slots, &nr_cluster,
-	// 					      &de, &bh, &i_pos);
-	// 		if (cluster < 0) {
-	// 			err = cluster;
-	// 			goto error_remove;
-	// 		}
-	// 		err = fat_chain_add(dir, cluster, nr_cluster);
-	// 		if (err) {
-	// 			fat_free_clusters(dir, cluster);
-	// 			goto error_remove;
-	// 		}
-	// 		if (dir->i_size & (sbi->cluster_size - 1)) {
-	// 			fat_fs_error(sb, "Odd directory size");
-	// 			dir->i_size = (dir->i_size + sbi->cluster_size - 1)
-	// 				& ~((loff_t)sbi->cluster_size - 1);
-	// 		}
-	// 		dir->i_size += nr_cluster << sbi->cluster_bits;
-	// 		MSDOS_I(dir)->mmu_private += nr_cluster << sbi->cluster_bits;
-	// 	}
-	// 	sinfo->slot_off = pos;
-	// 	sinfo->de = de;
-	// 	sinfo->bh = bh;
-	// 	sinfo->i_pos = fat_make_i_pos(sb, sinfo->bh, sinfo->de);
-
-	// 	return 0;
-
-	// error:
-	// 	brelse(bh);
-	// 	for (i = 0; i < nr_bhs; i++)
-	// 		brelse(bhs[i]);
-	// 	return err;
-
-	// error_remove:
-	// 	brelse(bh);
-	// 	if (free_slots)
-	// 		__fat_remove_entries(dir, pos, free_slots);
+not_found:
 	FAT32_iobuf_release(iobuf);
 	return 0;
 }
