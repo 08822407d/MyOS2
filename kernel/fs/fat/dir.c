@@ -134,8 +134,6 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	cluster = FAT32_find_available_cluster(fsbi);
 	if (cluster < 2)
 		return cluster;
-	sector = FAT32_clus_to_blknr(fsbi, cluster);
-	
 	memset(buf, 0, bufsize);
 
 	de = (msdos_dirent_s *)buf;
@@ -148,6 +146,7 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	fat_set_start(&de[0], cluster);
 	fat_set_start(&de[1], finode->first_cluster);
 
+	sector = FAT32_clus_to_blknr(fsbi, cluster);
 	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
 			sector, 1, (unsigned char *)buf))
 	{
