@@ -68,7 +68,7 @@
 		u32	FSI_StrucSig;
 		u32	FSI_Free_Count;
 		u32	FSI_Nxt_Free;
-		u8		FSI_Reserved2[12];
+		u8	FSI_Reserved2[12];
 		u32	FSI_TrailSig;
 	}__attribute__((packed)) FAT32_FSinfo_s;
 
