@@ -690,6 +690,10 @@ static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
 		if (dentry)
 			goto finish_lookup;
 	}
+	// else
+	// {
+	// 	dentry = lookup_open(nd, file, op);
+	// }
 
 finish_lookup:
 	res = step_into(nd, dentry);
@@ -914,16 +918,83 @@ int vfs_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
  * On non-idmapped mounts or if permission checking is to be performed on the
  * raw inode simply passs init_user_ns.
  */
-int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
-{
-	int error = -ENOENT;
-	if (!dir->i_op->mkdir)
-		return -EPERM;
+// int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
+// {
+// 	int error = -ENOENT;
+// 	if (!dir->i_op->mkdir)
+// 		return -EPERM;
 
-	mode &= (S_IRWXUGO|S_ISVTX);
-	error = dir->i_op->mkdir(dir, dentry, mode);
+// 	mode &= (S_IRWXUGO|S_ISVTX);
+// 	error = dir->i_op->mkdir(dir, dentry, mode);
+// 	return error;
+// }
+
+long do_creatat(int dfd, filename_s *name, umode_t mode)
+{
+	dentry_s *dentry;
+	path_s path;
+	inode_s *dir;
+	int error;
+	unsigned int lookup_flags = LOOKUP_DIRECTORY;
+
+retry:
+	dentry = filename_create(dfd, name, &path, lookup_flags);
+	error = PTR_ERR(dentry);
+	if (IS_ERR(dentry))
+		goto out_putname;
+
+	// if (!IS_POSIXACL(path.dentry->d_inode))
+	// 	mode &= ~current_umask();
+	// error = security_path_mkdir(&path, dentry, mode);
+		dir = path.dentry->d_inode;
+		error = -ENOENT;
+		if (!dir->i_op->create)
+			return -EPERM;
+		mode &= (S_IRWXUGO|S_ISVTX);
+		error = dir->i_op->create(dir, dentry, mode);
+	done_path_create(&path, dentry);
+	// if (retry_estale(error, lookup_flags)) {
+	// 	lookup_flags |= LOOKUP_REVAL;
+	// 	goto retry;
+	// }
+out_putname:
+	putname(name);
 	return error;
 }
+
+long sys_creat(const char *pathname, umode_t mode)
+{
+	return do_creatat(AT_FDCWD, getname(pathname), mode);
+}
+
+/*==============================================================================================*
+ *										fuctions for mkdir										*
+ *==============================================================================================*/
+/**
+ * vfs_mkdir - create directory
+ * @mnt_userns:	user namespace of the mount the inode was found from
+ * @dir:	inode of @dentry
+ * @dentry:	pointer to dentry of the base directory
+ * @mode:	mode of the new directory
+ *
+ * Create a directory.
+ *
+ * If the inode has been found through an idmapped mount the user namespace of
+ * the vfsmount must be passed through @mnt_userns. This function will then take
+ * care to map the inode according to @mnt_userns before checking permissions.
+ * On non-idmapped mounts or if permission checking is to be performed on the
+ * raw inode simply passs init_user_ns.
+ */
+// int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
+// {
+// 	int error = -ENOENT;
+// 	if (!dir->i_op->mkdir)
+// 		return -EPERM;
+
+// 	mode &= (S_IRWXUGO|S_ISVTX);
+// 	error = dir->i_op->mkdir(dir, dentry, mode);
+// 	return error;
+// }
 
 long do_mkdirat(int dfd, filename_s *name, umode_t mode)
 {

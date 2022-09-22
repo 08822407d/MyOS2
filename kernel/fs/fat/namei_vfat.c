@@ -89,7 +89,7 @@ static int vfat_create_shortname(const char *name, int len, char *name_res)
 	if (len <= 8)
 	{
 		memcpy(name_res, name_upper, len);
-		ret_val = 1;
+		// ret_val = 1;
 	}
 	else
 	{
@@ -118,6 +118,7 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 {
 	msdos_dirslot_s *ps;
 	msdos_dirent_s *de;
+	FAT32_inode_info_s *finode = dir->private_idx_info;
 	unsigned char cksum, lcase;
 	unsigned char msdos_name[MSDOS_NAME];
 	int err, i;
@@ -138,6 +139,9 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 	cksum = fat_checksum(msdos_name);
 
 	*nr_slots = (len + 12) / 13;
+	char *namebuf = kmalloc(*nr_slots * 13);
+	memset(namebuf, 0, *nr_slots * 13);
+	memcpy(namebuf, name, len);
 	for (ps = slots, i = *nr_slots; i > 0; i--, ps++) {
 		ps->id = i;
 		ps->attr = ATTR_EXT;
@@ -145,9 +149,9 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 		ps->alias_checksum = cksum;
 		ps->start = 0;
 		offset = (i - 1) * 13;
-		ascii_to16(ps->name0_4, name + offset, 5);
-		ascii_to16(ps->name5_10, name + offset + 5, 6);
-		ascii_to16(ps->name11_12, name + offset + 11, 2);
+		ascii_to16(ps->name0_4, namebuf + offset, 5);
+		ascii_to16(ps->name5_10, namebuf + offset + 5, 6);
+		ascii_to16(ps->name11_12, namebuf + offset + 11, 2);
 	}
 	slots[0].id |= 0x40;
 	de = (msdos_dirent_s *)ps;
@@ -156,8 +160,14 @@ shortname:
 	/* build the entry of 8.3 alias name */
 	(*nr_slots)++;
 	memcpy(de->name, msdos_name, MSDOS_NAME);
-	de->attr = is_dir ? ATTR_DIR : ATTR_ARCH;
-	de->lcase = lcase;
+	de->attr		= is_dir ? ATTR_DIR : ATTR_ARCH;
+	de->lcase		= finode->lcase;
+	de->ctime_cs	= finode->create_time_cs;
+	de->time		= finode->write_time;
+	de->date		= finode->write_date;
+	de->ctime		= finode->create_time;
+	de->cdate		= finode->create_date;
+	de->adate		= finode->access_date;
 	fat_set_start(de, cluster);
 	de->size = 0;
 out_free:

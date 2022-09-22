@@ -75,10 +75,13 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	finode->first_cluster	= (tmpde->starthi << 16 | tmpde->start) & 0x0fffffff;
 	finode->dentry_location	= iobuf->clusters[de_start / iobuf->bufsize];
 	finode->dentry_position	= de_start;
+	finode->lcase			= tmpde->lcase;
+	finode->create_time_cs	= tmpde->ctime_cs;
 	finode->create_date		= tmpde->ctime;
 	finode->create_time		= tmpde->cdate;
 	finode->write_date		= tmpde->time;
 	finode->write_time		= tmpde->date;
+	finode->access_date		= tmpde->adate;
 	finode->dentry_length	= off - de_start;
 
 	if((tmpde->starthi >> 12) && (p->i_mode & S_IFMT))
@@ -95,7 +98,7 @@ ent_not_found:
 
 extern int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 			  int is_dir, int cluster, fat_slot_info_s *sinfo);
-int FAT32_create(inode_s * dir, dentry_s * dentry, umode_t mode, bool excl)
+int FAT32_create(inode_s * dir, dentry_s * dentry, umode_t mode)
 {
 	int err;
 	fat_slot_info_s sinfo;
@@ -118,7 +121,7 @@ int FAT32_mkdir(inode_s * dir, dentry_s * dentry, umode_t mode)
 		err = cluster;
 		goto out;
 	}
-	err = vfat_add_entry(dir, &dentry->d_name, true, 0, &sinfo);
+	err = vfat_add_entry(dir, &dentry->d_name, true, cluster, &sinfo);
 out:
 	return err;
 }

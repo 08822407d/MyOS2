@@ -231,7 +231,7 @@ static int shmem_mkdir(inode_s *dir, dentry_s *dentry,
 }
 
 static int shmem_create(inode_s *dir, dentry_s *dentry,
-				umode_t mode, bool excl)
+				umode_t mode)
 {
 	return shmem_mknod(dir, dentry, mode | S_IFREG, 0);
 }

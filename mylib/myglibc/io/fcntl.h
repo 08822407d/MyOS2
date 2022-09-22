@@ -243,6 +243,7 @@
 	// __THROW.  */
 	// #ifndef __USE_FILE_OFFSET64
 	// extern int creat(const char *__file, mode_t __mode) __nonnull((1));
+	extern int creat(const char *__file, mode_t __mode);
 	// #else
 	// #ifdef __REDIRECT
 	// extern int __REDIRECT(creat, (const char *__file, mode_t __mode),

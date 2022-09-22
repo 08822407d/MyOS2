@@ -111,11 +111,16 @@
 		u64 dentry_start;		// the whole dentry start offset in directory
 		u64 dentry_length;		// the whole dentry length
 
+		u8	lcase;
+
+		u8	create_time_cs;
 		u16	create_date;
 		u16	create_time;
 
 		u16	write_date;
 		u16	write_time;
+
+		u16	access_date;
 	} FAT32_inode_info_s;
 
 	void init_fat32_fs(void);

@@ -26,6 +26,7 @@ int ls_command(int argc, char **argv);
 int pwd_command(int argc, char **argv);
 int cat_command(int argc, char **argv);
 int exec_command(int argc, char **argv);
+int touch_command(int argc, char **argv);
 int mkdir_command(int argc, char **argv);
 int rmdir_command(int argc, char **argv);
 int rm_command(int argc, char **argv);
@@ -42,7 +43,7 @@ builtincmd_s shell_internal_cmd[] =
 	{"ls",		ls_command},
 	{"pwd",		pwd_command},
 	{"cat",		cat_command},
-	// {"touch",	touch_command},
+	{"touch",	touch_command},
 	{"rm",		rm_command},
 	{"mkdir",	mkdir_command},
 	{"rmdir",	rmdir_command},
@@ -312,6 +313,18 @@ int exec_command(int argc, char **argv)
 	// 	printf("parent process waitpid:%#018lx\n", retval);
 	// }
 	// return 1;
+}
+
+int touch_command(int argc, char **argv)
+{
+	int err = 0, nmode = 0;
+	if (argc != 2)
+		return -1;
+
+	nmode = (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
+	err = creat(argv[1], nmode);
+
+	return 0;
 }
 
 int mkdir_command(int argc, char **argv)

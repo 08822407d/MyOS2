@@ -48,8 +48,6 @@ void set_init_taskfs()
 }
 
 
-
-
 #define BOOT_FS_IDX 0
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
