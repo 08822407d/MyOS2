@@ -4,7 +4,7 @@
  * Copyright (c) 2002-3 Open Source Development Labs
  */
 
-#include <linux/kernel/device.h>
+#include <linux/device/driver.h>
 // #include <linux/init.h>
 // #include <linux/memory.h>
 // #include <linux/of.h>

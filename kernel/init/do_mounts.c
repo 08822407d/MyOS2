@@ -10,7 +10,7 @@
 // #include <linux/delay.h>
 #include <linux/block/genhd.h>
 #include <linux/kernel/mount.h>
-// #include <linux/device.h>
+#include <linux/device/device.h>
 #include <linux/init/init.h>
 #include <linux/fs/fs.h>
 // #include <linux/initrd.h>

@@ -1,5 +1,5 @@
 #include <linux/kernel/sched/sched.h>
-#include <linux/kernel/device.h>
+#include <linux/device/driver.h>
 #include <linux/fs/fs.h>
 #include <linux/lib/string.h>
 
