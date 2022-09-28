@@ -36,12 +36,8 @@
 
 	#include <linux/device/dev_s_defs.h>
 
-	// struct device;
 	// struct device_private;
-	// struct device_driver;
 	// struct driver_private;
-	// struct module;
-	// struct class;
 	// struct subsys_private;
 	// struct device_node;
 	// struct fwnode_handle;
@@ -841,8 +837,8 @@
 	// int __must_check device_register(struct device *dev);
 	// void device_unregister(struct device *dev);
 	// void device_initialize(struct device *dev);
-	// int __must_check device_add(struct device *dev);
-	// void device_del(struct device *dev);
+	int device_add(device_s *dev);
+	void device_del(device_s *dev);
 	// int device_for_each_child(struct device *dev, void *data,
 	// 						int (*fn)(struct device *dev, void *data));
 	// int device_for_each_child_reverse(struct device *dev, void *data,

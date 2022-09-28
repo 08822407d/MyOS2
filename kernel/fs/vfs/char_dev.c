@@ -93,3 +93,140 @@ const file_ops_s def_chr_fops = {
 	.open = chrdev_open,
 	.llseek = noop_llseek,
 };
+
+/**
+ * cdev_add() - add a char device to the system
+ * @p: the cdev structure for the device
+ * @dev: the first device number for which this device is responsible
+ * @count: the number of consecutive minor numbers corresponding to this
+ *         device
+ *
+ * cdev_add() adds the device represented by @p to the system, making it
+ * live immediately.  A negative error code is returned on failure.
+ */
+int cdev_add(cdev_s *p, dev_t dev, unsigned count)
+{
+	int error;
+
+	p->dev = dev;
+	p->count = count;
+
+	if (dev == WHITEOUT_DEV)
+		return -EBUSY;
+
+	// error = kobj_map(cdev_map, dev, count, NULL,
+	// 		 exact_match, exact_lock, p);
+	if (error)
+		return error;
+
+	return 0;
+}
+
+/**
+ * cdev_device_add() - add a char device and it's corresponding
+ *	struct device, linkink
+ * @dev: the device structure
+ * @cdev: the cdev structure
+ *
+ * cdev_device_add() adds the char device represented by @cdev to the system,
+ * just as cdev_add does. It then adds @dev to the system using device_add
+ * The dev_t for the char device will be taken from the struct device which
+ * needs to be initialized first. This helper function correctly takes a
+ * reference to the parent device so the parent will not get released until
+ * all references to the cdev are released.
+ *
+ * This helper uses dev->devt for the device number. If it is not set
+ * it will not add the cdev and it will be equivalent to device_add.
+ *
+ * This function should be used whenever the struct cdev and the
+ * struct device are members of the same structure whose lifetime is
+ * managed by the struct device.
+ *
+ * NOTE: Callers must assume that userspace was able to open the cdev and
+ * can call cdev fops callbacks at any time, even if this function fails.
+ */
+int cdev_device_add(cdev_s *cdev, device_s *dev)
+{
+	int rc = 0;
+
+	if (dev->devt) {
+		// cdev_set_parent(cdev, &dev->kobj);
+
+		rc = cdev_add(cdev, dev->devt, 1);
+		if (rc)
+			return rc;
+	}
+
+	rc = device_add(dev);
+	if (rc)
+		cdev_del(cdev);
+
+	return rc;
+}
+
+/**
+ * cdev_device_del() - inverse of cdev_device_add
+ * @dev: the device structure
+ * @cdev: the cdev structure
+ *
+ * cdev_device_del() is a helper function to call cdev_del and device_del.
+ * It should be used whenever cdev_device_add is used.
+ *
+ * If dev->devt is not set it will not remove the cdev and will be equivalent
+ * to device_del.
+ *
+ * NOTE: This guarantees that associated sysfs callbacks are not running
+ * or runnable, however any cdevs already open will remain and their fops
+ * will still be callable even after this function returns.
+ */
+void cdev_device_del(cdev_s *cdev, device_s *dev)
+{
+	device_del(dev);
+	if (dev->devt)
+		cdev_del(cdev);
+}
+
+/**
+ * cdev_del() - remove a cdev from the system
+ * @p: the cdev structure to be removed
+ *
+ * cdev_del() removes @p from the system, possibly freeing the structure
+ * itself.
+ *
+ * NOTE: This guarantees that cdev device will no longer be able to be
+ * opened, however any cdevs already open will remain and their fops will
+ * still be callable even after cdev_del returns.
+ */
+void cdev_del(cdev_s *p)
+{
+	// cdev_unmap(p->dev, p->count);
+}
+
+/**
+ * cdev_alloc() - allocate a cdev structure
+ *
+ * Allocates and returns a cdev structure, or NULL on failure.
+ */
+cdev_s *cdev_alloc(void)
+{
+	cdev_s *p = kmalloc(sizeof(cdev_s));
+	if (p)
+		list_init(&p->list, p);
+
+	return p;
+}
+
+/**
+ * cdev_init() - initialize a cdev structure
+ * @cdev: the structure to initialize
+ * @fops: the file_operations for this device
+ *
+ * Initializes @cdev, remembering @fops, making it ready to add to the
+ * system with cdev_add().
+ */
+void cdev_init(cdev_s *cdev, const file_ops_s *fops)
+{
+	memset(cdev, 0, sizeof(cdev_s));
+	list_init(&cdev->list, cdev);
+	cdev->ops = fops;
+}

@@ -3,36 +3,33 @@
 #define _LINUX_CDEV_H
 
 // #include <linux/kobject.h>
-// #include <linux/kdev_t.h>
+#include <linux/kernel/kdev_t.h>
 // #include <linux/list.h>
-// #include <linux/device.h>
+#include <linux/device/device.h>
 
-	// struct file_operations;
-	// struct inode;
-	// struct module;
 
-	// struct cdev {
+	typedef struct cdev {
 	// 	struct kobject kobj;
 	// 	struct module *owner;
-	// 	const struct file_operations *ops;
-	// 	struct list_head list;
-	// 	dev_t dev;
-	// 	unsigned int count;
-	// } __randomize_layout;
+		const file_ops_s	*ops;
+		List_s				list;
+		dev_t				dev;
+		unsigned int		count;
+	} cdev_s;
 
-	// void cdev_init(struct cdev *, const struct file_operations *);
+	void cdev_init(cdev_s *, const file_ops_s *ops);
 
-	// struct cdev *cdev_alloc(void);
+	cdev_s *cdev_alloc(void);
 
 	// void cdev_put(struct cdev *p);
 
-	// int cdev_add(struct cdev *, dev_t, unsigned);
+	int cdev_add(cdev_s *, dev_t, unsigned);
 
 	// void cdev_set_parent(struct cdev *p, struct kobject *kobj);
 	// int cdev_device_add(struct cdev *cdev, struct device *dev);
 	// void cdev_device_del(struct cdev *cdev, struct device *dev);
 
-	// void cdev_del(struct cdev *);
+	void cdev_del(cdev_s *);
 
 	// void cd_forget(struct inode *);
 

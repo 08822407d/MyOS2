@@ -82,9 +82,13 @@ void idle(size_t cpu_idx)
 /*==============================================================================================*
  *										task2 -- init()											*
  *==============================================================================================*/
+void register_diskfs(void);
+int chr_dev_init(void);
 static void do_initcalls(void)
 {
 	register_diskfs();
+
+	chr_dev_init();
 }
 
 /*

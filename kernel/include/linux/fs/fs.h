@@ -3581,7 +3581,6 @@
 	extern super_block_s *root_sb;
 	extern mount_s root_mnt;
 
-	void register_diskfs(void);
 	unsigned long switch_to_root_disk(void);
 
 #endif /* _LINUX_FS_H */
