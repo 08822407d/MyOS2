@@ -1003,4 +1003,6 @@
 	// #define sysfs_deprecated 0
 	// #endif
 
+	device_s *myos_device_create(dev_t devt, char* devname);
+
 #endif /* _DEVICE_H_ */

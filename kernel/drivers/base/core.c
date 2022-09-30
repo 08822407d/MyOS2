@@ -314,3 +314,9 @@ void device_del(device_s *dev)
 	// memalloc_noio_restore(noio_flag);
 	// put_device(parent);
 }
+
+device_s *myos_device_create(dev_t devt, char* devname)
+{
+	device_s *dev = NULL;
+	int retval = -ENODEV;
+}
