@@ -1,11 +1,12 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_CDEV_H
-#define _LINUX_CDEV_H
 
-// #include <linux/kobject.h>
-#include <linux/kernel/kdev_t.h>
-// #include <linux/list.h>
-#include <linux/device/device.h>
+	#define _LINUX_CDEV_H
+
+	#include <linux/kernel/kobject.h>
+	#include <linux/kernel/kdev_t.h>
+		#include <linux/lib/list.h>
+	#include <linux/device/device.h>
 
 
 	typedef struct cdev {
@@ -32,5 +33,8 @@
 	void cdev_del(cdev_s *);
 
 	// void cd_forget(struct inode *);
+
+
+	int myos_cdev_register(dev_t devt, const file_ops_s *fops);
 
 #endif

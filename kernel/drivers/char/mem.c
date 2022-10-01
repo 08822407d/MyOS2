@@ -36,6 +36,7 @@
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/minmax.h>
 #include <linux/fs/fs.h>
+#include <linux/device/cdev.h>
 #include <obsolete/proto.h>
 
 #ifdef CONFIG_IA64
@@ -200,17 +201,13 @@ int chr_dev_init(void)
 
 	for (minor = 0; minor < arr_size; minor++)
 	{
-		if (!devlist[minor].name)
+		memdev_s memdev = devlist[minor];
+		if (!memdev.name)
 			continue;
 
-		dev_t dev = MKDEV(MEM_MAJOR, minor);
-
-		// /*
-		//  * Create /dev/port?
-		//  */
-		// if ((minor == DEVPORT_MINOR) && !arch_has_dev_port())
-		// 	continue;
-
+		dev_t devt = MKDEV(MEM_MAJOR, minor);
+		myos_cdev_register(devt, memdev.fops);
+		myos_device_create(devt, memdev.name);
 		// device_create(NULL, MKDEV(MEM_MAJOR, minor),
 		// 			  NULL, devlist[minor].name);
 	}

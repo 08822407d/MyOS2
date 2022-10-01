@@ -7,7 +7,7 @@
 #define __LINUX_KERNFS_H
 
 #include <linux/kernel/err.h>
-// #include <linux/list.h>
+	#include <linux/lib/list.h>
 // #include <linux/mutex.h>
 // #include <linux/idr.h>
 // #include <linux/lockdep.h>

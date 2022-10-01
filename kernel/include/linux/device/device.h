@@ -16,9 +16,9 @@
 	// #include <linux/dev_printk.h>
 	// #include <linux/energy_model.h>
 	// #include <linux/ioport.h>
-	// #include <linux/kobject.h>
+	#include <linux/kernel/kobject.h>
 	// #include <linux/klist.h>
-	// #include <linux/list.h>
+		#include <linux/lib/list.h>
 	// #include <linux/lockdep.h>
 	#include <linux/kernel/compiler.h>
 	#include <linux/kernel/types.h>
@@ -494,7 +494,7 @@
 	* a higher-level representation of the device.
 	*/
 	typedef struct device {
-	// 	struct kobject kobj;
+		kobj_s		kobj;
 		device_s	*parent;
 
 	// 	struct device_private *p;
@@ -1003,6 +1003,6 @@
 	// #define sysfs_deprecated 0
 	// #endif
 
-	device_s *myos_device_create(dev_t devt, char* devname);
+	device_s *myos_device_create(dev_t devt, const char* devname);
 
 #endif /* _DEVICE_H_ */

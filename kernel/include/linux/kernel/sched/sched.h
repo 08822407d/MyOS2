@@ -1,8 +1,6 @@
 #ifndef _PROC_H_
 #define _PROC_H_
 
-#include <klib/utils.h>
-
 #include <linux/kernel/sched/fs_struct.h>
 #include <linux/kernel/types.h>
 #include <linux/mm/mm.h>

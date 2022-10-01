@@ -144,7 +144,11 @@
 		"memcopy.h": "c",
 		"errlist.h": "c",
 		"endianness.h": "c",
-		"dev_s_defs.h": "c"
+		"dev_s_defs.h": "c",
+		"kobject.h": "c",
+		"list.h": "c",
+		"kobj_map.h": "c",
+		"cdev.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

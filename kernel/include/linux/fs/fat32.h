@@ -17,8 +17,6 @@
 
 #include <uapi/msdos_fs.h>
 
-#include <linux/kernel/types.h>
-#include <klib/utils.h>
 
 	struct FAT32_IO_BUFFER;
 	typedef struct FAT32_IO_BUFFER FAT32_iobuf_s;

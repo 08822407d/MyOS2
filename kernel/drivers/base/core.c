@@ -35,6 +35,9 @@
 // #include "power/power.h"
 
 
+#include <obsolete/proto.h>
+
+
 /**
  * device_add - add device to device hierarchy.
  * @dev: device.
@@ -315,8 +318,27 @@ void device_del(device_s *dev)
 	// put_device(parent);
 }
 
-device_s *myos_device_create(dev_t devt, char* devname)
+device_s *myos_device_create(dev_t devt, const char* devname)
 {
 	device_s *dev = NULL;
 	int retval = -ENODEV;
+
+	dev = kzalloc(sizeof(device_s));
+	if (!dev) {
+		retval = -ENOMEM;
+		goto error;
+	}
+
+	dev->devt = devt;
+	dev->kobj.name = devname;
+
+	retval = device_add(dev);
+	if (retval)
+		goto error;
+
+	return dev;
+
+error:
+	// put_device(dev);
+	return ERR_PTR(retval);
 }

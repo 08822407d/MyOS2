@@ -1,9 +1,7 @@
 #ifndef _SLAB_H_
 #define _SLAB_H_
 
-#include <klib/utils.h>
-
-#include <linux/kernel/types.h>
+	#include <linux/lib/list.h>
 
 	struct  slab;
 	typedef struct slab slab_s;

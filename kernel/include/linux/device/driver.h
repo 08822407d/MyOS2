@@ -13,13 +13,13 @@
 
 #ifndef _DEVICE_DRIVER_H_
 
-#define _DEVICE_DRIVER_H_
+	#define _DEVICE_DRIVER_H_
 
-// #include <linux/kobject.h>
-// #include <linux/klist.h>
-// #include <linux/pm.h>
-// #include <linux/device/bus.h>
-// #include <linux/module.h>
+	#include <linux/kernel/kobject.h>
+	// #include <linux/klist.h>
+	// #include <linux/pm.h>
+	// #include <linux/device/bus.h>
+	// #include <linux/module.h>
 
 
 	#include <linux/device/dev_s_defs.h>

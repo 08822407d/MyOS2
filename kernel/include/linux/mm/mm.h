@@ -68,7 +68,7 @@
 	// #include <linux/mmdebug.h>
 	// #include <linux/gfp.h>
 	// #include <linux/bug.h>
-	// #include <linux/list.h>
+		#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
 	// #include <linux/atomic.h>

@@ -1,8 +1,6 @@
-#include <linux/kernel/types.h>
-#include <linux/kernel/stddef.h>
+#include <linux/lib/list.h>
 
 #include <obsolete/proto.h>
-#include <klib/utils.h>
 #include <klib/stdbool.h>
 
 /*==============================================================================================*/

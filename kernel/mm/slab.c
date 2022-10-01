@@ -200,6 +200,15 @@ void * kmalloc(size_t size)
 	return ret_val;
 }
 
+void *kzalloc(size_t size)
+{
+	void *ret_val = kmalloc(size);
+	if (ret_val != NULL)
+		memset(ret_val, 0, size);
+	
+	return ret_val;
+}
+
 void kfree(void * obj_p)
 {
 	#ifdef DEBUG

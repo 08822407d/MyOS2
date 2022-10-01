@@ -16,7 +16,7 @@
 #include <linux/kernel/kernfs.h>
 // #include <linux/compiler.h>
 // #include <linux/errno.h>
-// #include <linux/list.h>
+	#include <linux/lib/list.h>
 // #include <linux/lockdep.h>
 // #include <linux/kobject_ns.h>
 #include <linux/kernel/stat.h>

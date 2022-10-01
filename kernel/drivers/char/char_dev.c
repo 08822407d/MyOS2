@@ -15,9 +15,9 @@
 // #include <linux/module.h>
 // #include <linux/seq_file.h>
 
-// #include <linux/kobject.h>
-// #include <linux/kobj_map.h>
-#include <linux/fs/cdev.h>
+#include <linux/kernel/kobject.h>
+#include <linux/kernel/kobj_map.h>
+#include <linux/device/cdev.h>
 // #include <linux/mutex.h>
 // #include <linux/backing-dev.h>
 // #include <linux/tty.h>
@@ -27,6 +27,8 @@
 
 #include <linux/fs/vfs_s_defs.h>
 #include <obsolete/proto.h>
+
+static kobj_map_s *cdev_map;
 
 /*
  * Called every time a character special file is opened
@@ -114,8 +116,7 @@ int cdev_add(cdev_s *p, dev_t dev, unsigned count)
 	if (dev == WHITEOUT_DEV)
 		return -EBUSY;
 
-	// error = kobj_map(cdev_map, dev, count, NULL,
-	// 		 exact_match, exact_lock, p);
+	error = kobj_map(cdev_map, dev, count, p);
 	if (error)
 		return error;
 
@@ -229,4 +230,20 @@ void cdev_init(cdev_s *cdev, const file_ops_s *fops)
 	memset(cdev, 0, sizeof(cdev_s));
 	list_init(&cdev->list, cdev);
 	cdev->ops = fops;
+}
+
+void chrdev_init(void)
+{
+	cdev_map = kobj_map_init();
+}
+
+int myos_cdev_register(dev_t devt, const file_ops_s *fops)
+{
+	cdev_s *cdev;
+	cdev = cdev_alloc();
+	if (cdev == NULL)
+		return -ENOMEM;
+	
+	cdev_init(cdev, fops);
+	cdev_add(cdev, devt, 1);
 }

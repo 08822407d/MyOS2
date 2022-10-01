@@ -3,8 +3,6 @@
 
 #include <linux/kernel/types.h>
 
-#include <klib/utils.h>
-
 #include "ktypes.h"
 		
 	struct timer;
@@ -46,6 +44,7 @@
 	phys_addr_t page_to_paddr(page_s * page);
 	void page_free(page_s *);
 	void * kmalloc(size_t size);
+	void * kzalloc(size_t size);
 	void kfree(void * obj_p);
 
 	/* video.c */

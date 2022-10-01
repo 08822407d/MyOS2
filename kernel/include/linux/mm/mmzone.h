@@ -4,7 +4,6 @@
 #include <linux/mm/page.h>
 
 
-#include <klib/utils.h>
 #include "../arch/amd64/include/arch_config.h"
 
 	#define MAX_ORDER 11

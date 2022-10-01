@@ -6,9 +6,10 @@
 #include <linux/fs/mount.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
+#include <linux/lib/list.h>
+
 
 #include <klib/utils.h>
-
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>

@@ -2,7 +2,7 @@
 #define _LINUX_DCACHE_H_
 
 // #include <linux/atomic.h>
-// #include <linux/list.h>
+#include <linux/lib/list.h>
 #include <linux/kernel/math.h>
 // #include <linux/rculist.h>
 // #include <linux/rculist_bl.h>
@@ -16,7 +16,6 @@
 
 
 #include <linux/fs/vfs_s_defs.h>
-#include <klib/utils.h>
 
 /*
  * linux/include/linux/dcache.h

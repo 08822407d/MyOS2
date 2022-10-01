@@ -1,9 +1,8 @@
 #ifndef _PAGE_H_
 #define _PAGE_H_
 
-#include <klib/utils.h>
-
 #include <linux/kernel/types.h>
+#include <linux/lib/list.h>
 
 	struct zone;
 	typedef struct zone zone_s;

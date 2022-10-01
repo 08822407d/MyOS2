@@ -1,4 +1,4 @@
-#include <klib/utils.h>
+#include <linux/lib/list.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/proto.h>
