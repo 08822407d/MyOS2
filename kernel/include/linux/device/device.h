@@ -499,7 +499,7 @@
 
 	// 	struct device_private *p;
 
-	// 	const char *init_name; /* initial name of the device */
+		const char	*init_name; /* initial name of the device */
 	// 	const struct device_type *type;
 
 	// 	struct bus_type *bus;		  /* type of bus device is on */

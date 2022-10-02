@@ -148,7 +148,8 @@
 		"kobject.h": "c",
 		"list.h": "c",
 		"kobj_map.h": "c",
-		"cdev.h": "c"
+		"cdev.h": "c",
+		"kdev_t.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

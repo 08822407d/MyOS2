@@ -11,23 +11,6 @@
 
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 
-	// #ifdef dev_t
-	// 	#undef dev_t
-	// #endif
-	// typedef struct dev_nr
-	// {
-	// 	unsigned short	main	: 16;
-	// 	unsigned long	sub		: 48;
-	// } dev_t;
-	
-	typedef struct char_dev
-	{
-		List_s			cdev_list;
-		char *			dev_name;
-		dev_t			dev_nr;
-		file_ops_s *	f_op;
-	} cdev_s;
-
 	/* device.c */
 	void devices_init(void);
 	void creat_dev_file(void);

@@ -20,7 +20,7 @@ void enum_block_dev(void);
 void init_char_dev(void);
 void init_block_dev(void);
 
-dentry_s * creat_append_devdirent(char * name, dentry_s * parent);
+dentry_s * creat_append_devdirent(const char * name, dentry_s * parent);
 
 
 void devices_init()
@@ -43,10 +43,10 @@ void creat_dev_file()
 	List_s * cd_lp;
 	for (cd_lp = cdev_lhdr.header.next; cd_lp != &cdev_lhdr.header; cd_lp = cd_lp->next)
 	{
-		cdev_s * cd_p = container_of(cd_lp, cdev_s, cdev_list);
-		dentry_s * cddrnt = creat_append_devdirent(cd_p->dev_name, dev_dir);
+		cdev_s * cd_p = container_of(cd_lp, cdev_s, list);
+		dentry_s * cddrnt = creat_append_devdirent(cd_p->kobj.name, dev_dir);
 		inode_s * cdino = cddrnt->d_inode;
-		cdino->i_fop = cd_p->f_op;
+		cdino->i_fop = cd_p->ops;
 	}
 
 	List_s * bd_lp;
@@ -59,7 +59,7 @@ void creat_dev_file()
 	}
 }
 
-dentry_s * creat_append_devdirent(char * name, dentry_s * parent)
+dentry_s * creat_append_devdirent(const char * name, dentry_s * parent)
 {
 	dentry_s * dir = kmalloc(sizeof(dentry_s));
 	list_init(&dir->d_child, dir);
@@ -95,8 +95,8 @@ void init_block_dev()
 void enum_char_dev()
 {
 	list_hdr_init(&cdev_lhdr);
-	list_hdr_append(&cdev_lhdr, &find_tty("tty0")->cdev_list);
-	list_hdr_append(&cdev_lhdr, &find_tty("test_getdents64_verylong_name")->cdev_list);
+	list_hdr_append(&cdev_lhdr, &find_tty("tty0")->list);
+	list_hdr_append(&cdev_lhdr, &find_tty("test_getdents64_verylong_name")->list);
 }
 
 void enum_block_dev()

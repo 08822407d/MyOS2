@@ -67,55 +67,29 @@
  */
 int device_add(device_s *dev)
 {
-// 	struct device *parent;
-// 	struct kobject *kobj;
-// 	struct class_interface *class_intf;
-// 	int error = -EINVAL;
-// 	struct kobject *glue_dir = NULL;
+	int error = -EINVAL;
+	device_s *parent;
+	kobj_s *kobj;
+	kobj_s *glue_dir = NULL;
 
-// 	dev = get_device(dev);
-// 	if (!dev)
-// 		goto done;
+	/*
+	 * for statically allocated devices, which should all be converted
+	 * some day, we need to initialize the name. We prevent reading back
+	 * the name, and force the use of dev_name()
+	 */
+	if (dev->init_name) {
+		dev->kobj.name = dev->init_name;
+		dev->init_name = NULL;
+	}
 
-// 	if (!dev->p) {
-// 		error = device_private_init(dev);
-// 		if (error)
-// 			goto done;
-// 	}
-
-// 	/*
-// 	 * for statically allocated devices, which should all be converted
-// 	 * some day, we need to initialize the name. We prevent reading back
-// 	 * the name, and force the use of dev_name()
-// 	 */
-// 	if (dev->init_name) {
-// 		dev_set_name(dev, "%s", dev->init_name);
-// 		dev->init_name = NULL;
-// 	}
-
-// 	/* subsystems can specify simple device enumeration */
-// 	if (!dev_name(dev) && dev->bus && dev->bus->dev_name)
-// 		dev_set_name(dev, "%s%u", dev->bus->dev_name, dev->id);
-
-// 	if (!dev_name(dev)) {
-// 		error = -EINVAL;
-// 		goto name_error;
-// 	}
-
-// 	pr_debug("device: '%s': %s\n", dev_name(dev), __func__);
-
-// 	parent = get_device(dev->parent);
-// 	kobj = get_device_parent(dev, parent);
-// 	if (IS_ERR(kobj)) {
-// 		error = PTR_ERR(kobj);
-// 		goto parent_error;
-// 	}
-// 	if (kobj)
-// 		dev->kobj.parent = kobj;
-
-// 	/* use parent numa_node */
-// 	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
-// 		set_dev_node(dev, dev_to_node(parent));
+	parent = dev->parent;
+	kobj = &parent->kobj;
+	if (IS_ERR(kobj)) {
+		error = PTR_ERR(kobj);
+		goto parent_error;
+	}
+	if (kobj)
+		dev->kobj.parent = kobj;
 
 // 	/* first, register with generic layer. */
 // 	/* we require the name to be set before, and pass NULL */
@@ -125,38 +99,17 @@ int device_add(device_s *dev)
 // 		goto Error;
 // 	}
 
-// 	/* notify platform of device entry */
-// 	device_platform_notify(dev);
+	if (MAJOR(dev->devt)) {
+		// error = device_create_file(dev, &dev_attr_dev);
+		// if (error)
+		// 	goto DevAttrError;
 
-// 	error = device_create_file(dev, &dev_attr_uevent);
-// 	if (error)
-// 		goto attrError;
+		// error = device_create_sys_dev_entry(dev);
+		// if (error)
+		// 	goto SysEntryError;
 
-// 	error = device_add_class_symlinks(dev);
-// 	if (error)
-// 		goto SymlinkError;
-// 	error = device_add_attrs(dev);
-// 	if (error)
-// 		goto AttrsError;
-// 	error = bus_add_device(dev);
-// 	if (error)
-// 		goto BusError;
-// 	error = dpm_sysfs_add(dev);
-// 	if (error)
-// 		goto DPMError;
-// 	device_pm_add(dev);
-
-// 	if (MAJOR(dev->devt)) {
-// 		error = device_create_file(dev, &dev_attr_dev);
-// 		if (error)
-// 			goto DevAttrError;
-
-// 		error = device_create_sys_dev_entry(dev);
-// 		if (error)
-// 			goto SysEntryError;
-
-// 		devtmpfs_create_node(dev);
-// 	}
+		devtmpfs_create_node(dev);
+	}
 
 // 	/* Notify clients of device addition.  This call must come
 // 	 * after dpm_sysfs_add() and before kobject_uevent().
@@ -166,25 +119,6 @@ int device_add(device_s *dev)
 // 					     BUS_NOTIFY_ADD_DEVICE, dev);
 
 // 	kobject_uevent(&dev->kobj, KOBJ_ADD);
-
-// 	/*
-// 	 * Check if any of the other devices (consumers) have been waiting for
-// 	 * this device (supplier) to be added so that they can create a device
-// 	 * link to it.
-// 	 *
-// 	 * This needs to happen after device_pm_add() because device_link_add()
-// 	 * requires the supplier be registered before it's called.
-// 	 *
-// 	 * But this also needs to happen before bus_probe_device() to make sure
-// 	 * waiting consumers can link to it before the driver is bound to the
-// 	 * device and the driver sync_state callback is called for this device.
-// 	 */
-// 	if (dev->fwnode && !dev->fwnode->dev) {
-// 		dev->fwnode->dev = dev;
-// 		fw_devlink_link_device(dev);
-// 	}
-
-// 	bus_probe_device(dev);
 
 // 	/*
 // 	 * If all driver registration is done and a newly added device doesn't
@@ -211,36 +145,20 @@ int device_add(device_s *dev)
 // 				class_intf->add_dev(dev, class_intf);
 // 		mutex_unlock(&dev->class->p->mutex);
 // 	}
-// done:
+done:
 // 	put_device(dev);
-// 	return error;
-//  SysEntryError:
+	return error;
+ SysEntryError:
 // 	if (MAJOR(dev->devt))
 // 		device_remove_file(dev, &dev_attr_dev);
-//  DevAttrError:
-// 	device_pm_remove(dev);
-// 	dpm_sysfs_remove(dev);
-//  DPMError:
-// 	bus_remove_device(dev);
-//  BusError:
-// 	device_remove_attrs(dev);
-//  AttrsError:
-// 	device_remove_class_symlinks(dev);
-//  SymlinkError:
-// 	device_remove_file(dev, &dev_attr_uevent);
-//  attrError:
-// 	device_platform_notify_remove(dev);
-// 	kobject_uevent(&dev->kobj, KOBJ_REMOVE);
-// 	glue_dir = get_glue_dir(dev);
-// 	kobject_del(&dev->kobj);
-//  Error:
+ Error:
 // 	cleanup_glue_dir(dev, glue_dir);
-// parent_error:
+parent_error:
 // 	put_device(parent);
-// name_error:
-// 	kfree(dev->p);
-// 	dev->p = NULL;
-// 	goto done;
+name_error:
+	// kfree(dev->p);
+	// dev->p = NULL;
+	goto done;
 }
 
 /**

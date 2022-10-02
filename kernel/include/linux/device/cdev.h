@@ -5,12 +5,12 @@
 
 	#include <linux/kernel/kobject.h>
 	#include <linux/kernel/kdev_t.h>
-		#include <linux/lib/list.h>
 	#include <linux/device/device.h>
+	#include <linux/lib/list.h>
 
 
 	typedef struct cdev {
-	// 	struct kobject kobj;
+		kobj_s				kobj;
 	// 	struct module *owner;
 		const file_ops_s	*ops;
 		List_s				list;
@@ -35,6 +35,6 @@
 	// void cd_forget(struct inode *);
 
 
-	int myos_cdev_register(dev_t devt, const file_ops_s *fops);
+	int myos_cdev_register(dev_t devt, const char *name, const file_ops_s *fops);
 
 #endif

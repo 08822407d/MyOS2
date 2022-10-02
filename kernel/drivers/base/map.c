@@ -30,7 +30,7 @@ typedef struct probe
 	dev_t	dev;
 	unsigned long	range;
 	// struct module *owner;
-	// kobj_probe_t *get;
+	kobj_probe_t *get;
 	// int (*lock)(dev_t, void *);
 	void	*data;
 } probe_s;
@@ -41,7 +41,8 @@ typedef struct kobj_map
 	// struct mutex *lock;
 } kobj_map_s;
 
-int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range, void *data)
+int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range,
+				kobj_probe_t *probe, void *data)
 {
 	unsigned int n = MAJOR(dev + range - 1) - MAJOR(dev) + 1;
 	unsigned int index = MAJOR(dev);
@@ -57,6 +58,7 @@ int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range, void *data)
 
 	for (i = 0; i < n; i++, p++)
 	{
+		p->get = probe;
 		p->dev = dev;
 		p->range = range;
 		p->data = data;
@@ -114,8 +116,7 @@ retry:
 	// mutex_lock(domain->lock);
 	for (p = domain->probes[MAJOR(dev) % 255]; p; p = p->next)
 	{
-		struct kobject *(*probe)(dev_t, int *, void *);
-		struct module *owner;
+		kobj_s *(*probe)(dev_t, int *, void *);
 		void *data;
 
 		if (p->dev > dev || p->dev + p->range - 1 < dev)
@@ -123,14 +124,10 @@ retry:
 		if (p->range - 1 >= best)
 			break;
 		data = p->data;
+		probe = p->get;
 		best = p->range - 1;
 		*index = dev - p->dev;
-		// if (p->lock && p->lock(dev, data) < 0)
-		// {
-		// 	module_put(owner);
-		// 	continue;
-		// }
-		// mutex_unlock(domain->lock);
+
 		kobj = probe(dev, index, data);
 		/* Currently ->owner protects _only_ ->probe() itself. */
 		if (kobj)
@@ -141,9 +138,9 @@ retry:
 	return NULL;
 }
 
-struct kobj_map *kobj_map_init()
+struct kobj_map *kobj_map_init(kobj_probe_t *base_probe)
 {
-	kobj_map_s *p = kmalloc(sizeof(kobj_map_s));
+	kobj_map_s *p = kzalloc(sizeof(kobj_map_s));
 	probe_s *base = kzalloc(sizeof(*base));
 	int i;
 
@@ -156,6 +153,7 @@ struct kobj_map *kobj_map_init()
 
 	base->dev = 1;
 	base->range = ~0;
+	base->get = base_probe;
 	for (i = 0; i < 255; i++)
 		p->probes[i] = base;
 	// p->lock = lock;

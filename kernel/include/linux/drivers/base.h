@@ -12,6 +12,9 @@
  */
 // #include <linux/notifier.h>
 
+
+#include <linux/device/dev_s_defs.h>
+
 // /**
 //  * struct subsys_private - structure to hold the private to the driver core portions of the bus_type/class structure.
 //  *
@@ -197,8 +200,8 @@ extern int devtmpfs_early_init(void);
 // void device_pm_move_to_tail(struct device *dev);
 
 // #ifdef CONFIG_DEVTMPFS
-// int devtmpfs_create_node(struct device *dev);
-// int devtmpfs_delete_node(struct device *dev);
+int devtmpfs_create_node(device_s *dev);
+int devtmpfs_delete_node(device_s *dev);
 // #else
 // static inline int devtmpfs_create_node(struct device *dev) { return 0; }
 // static inline int devtmpfs_delete_node(struct device *dev) { return 0; }

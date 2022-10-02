@@ -25,6 +25,7 @@
 #include <linux/fs/internal.h>
 
 
+#include <linux/kernel/stddef.h>
 #include <linux/fs/vfs_s_defs.h>
 #include <obsolete/proto.h>
 
@@ -35,12 +36,12 @@ static kobj_map_s *cdev_map;
  */
 static int chrdev_open(inode_s *inode, file_s *filp)
 {
-// 	const struct file_operations *fops;
-// 	struct cdev *p;
-// 	struct cdev *new = NULL;
-// 	int ret = 0;
+	const file_ops_s *fops;
+	cdev_s *p;
+	cdev_s *new = NULL;
+	int ret = 0;
 
-// 	spin_lock(&cdev_lock);
+	// spin_lock(&cdev_lock);
 // 	p = inode->i_cdev;
 // 	if (!p) {
 // 		struct kobject *kobj;
@@ -60,7 +61,8 @@ static int chrdev_open(inode_s *inode, file_s *filp)
 // 			new = NULL;
 // 		} else if (!cdev_get(p))
 // 			ret = -ENXIO;
-// 	} else if (!cdev_get(p))
+// 	}
+// 	else if (!cdev_get(p))
 // 		ret = -ENXIO;
 // 	spin_unlock(&cdev_lock);
 // 	cdev_put(new);
@@ -96,6 +98,12 @@ const file_ops_s def_chr_fops = {
 	.llseek = noop_llseek,
 };
 
+static kobj_s *exact_match(dev_t dev, int *part, void *data)
+{
+	cdev_s *p = data;
+	return &p->kobj;
+}
+
 /**
  * cdev_add() - add a char device to the system
  * @p: the cdev structure for the device
@@ -116,7 +124,7 @@ int cdev_add(cdev_s *p, dev_t dev, unsigned count)
 	if (dev == WHITEOUT_DEV)
 		return -EBUSY;
 
-	error = kobj_map(cdev_map, dev, count, p);
+	error = kobj_map(cdev_map, dev, count, exact_match, p);
 	if (error)
 		return error;
 
@@ -232,18 +240,34 @@ void cdev_init(cdev_s *cdev, const file_ops_s *fops)
 	cdev->ops = fops;
 }
 
-void chrdev_init(void)
+static kobj_s *base_probe(dev_t dev, int *part, void *data)
 {
-	cdev_map = kobj_map_init();
+	// if (request_module("char-major-%d-%d", MAJOR(dev), MINOR(dev)) > 0)
+	// 	/* Make old-style 2.4 aliases work */
+	// 	request_module("char-major-%d", MAJOR(dev));
+	return NULL;
 }
 
-int myos_cdev_register(dev_t devt, const file_ops_s *fops)
+void chrdev_init(void)
+{
+	cdev_map = kobj_map_init(base_probe);
+}
+
+int myos_cdev_register(dev_t devt, const char *name, const file_ops_s *fops)
 {
 	cdev_s *cdev;
 	cdev = cdev_alloc();
 	if (cdev == NULL)
 		return -ENOMEM;
 	
+	cdev->kobj.name = name;
 	cdev_init(cdev, fops);
 	cdev_add(cdev, devt, 1);
+}
+
+void cdev_test()
+{
+	int idx = 0;
+	kobj_s *kobj = kobj_lookup(cdev_map, MKDEV(1, 5), &idx);
+	cdev_s *new = container_of(kobj, cdev_s, kobj);
 }

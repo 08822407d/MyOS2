@@ -4,12 +4,12 @@
 
 // #include <linux/linkage.h>
 // #include <linux/wait_bit.h>
-// #include <linux/kdev_t.h>
+#include <linux/kernel/kdev_t.h>
 #include <linux/fs/dcache.h>
 #include <linux/fs/path.h>
 #include <linux/kernel/stat.h>
 // #include <linux/cache.h>
-	#include <linux/lib/list.h>
+#include <linux/lib/list.h>
 // #include <linux/list_lru.h>
 // #include <linux/llist.h>
 // #include <linux/radix-tree.h>
@@ -46,6 +46,7 @@
 #include <uapi/fs.h>
 
 
+#include <linux/device/cdev.h>
 #include <linux/block/block_s_defs.h>
 #include <linux/kernel/statfs.h>
 
@@ -585,7 +586,6 @@
 	* of the 'inode_s'
 	*/
 	typedef struct inode {
-		const file_ops_s*i_fop;
 		void			*private_idx_info;
 
 
@@ -668,19 +668,19 @@
 	// #if defined(CONFIG_IMA) || defined(CONFIG_FILE_LOCKING)
 	// 	atomic_t		i_readcount; /* file_ss open RO */
 	// #endif
-	// 	union {
-	// 		const file_ops_s	*i_fop;	/* former ->i_op->default_file_ops */
-	// 		void				(*free_inode)(inode_s *);
-	// 	};
+		union {
+			const file_ops_s	*i_fop;	/* former ->i_op->default_file_ops */
+			void				(*free_inode)(inode_s *);
+		};
 	// 	file_s_lock_context	*i_flctx;
 	// 	addr_space_s		i_data;
 	// 	list_head_s			i_devices;
-	// 	union {
-	// 		pipe_inode_info_s	*i_pipe;
-	// 		cdev_s				*i_cdev;
-	// 		char				*i_link;
-	// 		unsigned			i_dir_seq;
-	// 	};
+		union {
+			// pipe_inode_info_s	*i_pipe;
+			cdev_s				*i_cdev;
+			char				*i_link;
+			unsigned			i_dir_seq;
+		};
 
 	// 	__u32			i_generation;
 

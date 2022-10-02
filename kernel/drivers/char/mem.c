@@ -206,11 +206,15 @@ int chr_dev_init(void)
 			continue;
 
 		dev_t devt = MKDEV(MEM_MAJOR, minor);
-		myos_cdev_register(devt, memdev.fops);
+		myos_cdev_register(devt, memdev.name, memdev.fops);
 		myos_device_create(devt, memdev.name);
 		// device_create(NULL, MKDEV(MEM_MAJOR, minor),
 		// 			  NULL, devlist[minor].name);
 	}
+
+
+	// extern void cdev_test();
+	// cdev_test();
 
 	// return tty_init();
 }
