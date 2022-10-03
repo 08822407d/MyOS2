@@ -113,12 +113,12 @@ extern void get_ata_info(void);
 unsigned long ATArq_deamon(unsigned long);
 unsigned long kernel_init(unsigned long arg)
 {
+	sti();
+
 	do_basic_setup();
 	// do_name();
-	ata_probe();
+	// ata_probe();
 	kernel_thread(ATArq_deamon, 0, 0);
-
-	sti();
 
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");

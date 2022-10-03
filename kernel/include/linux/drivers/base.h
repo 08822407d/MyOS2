@@ -178,7 +178,6 @@
 
 // #ifdef CONFIG_DEVTMPFS
 extern int devtmpfs_init(void);
-extern int devtmpfs_early_init(void);
 // #else
 // static inline int devtmpfs_init(void) { return 0; }
 // #endif

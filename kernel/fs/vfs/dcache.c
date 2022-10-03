@@ -379,6 +379,4 @@ void vfs_caches_init(void)
 	mnt_init();
 	bdev_cache_init();
 	chrdev_init();
-
-	devtmpfs_early_init();
 }

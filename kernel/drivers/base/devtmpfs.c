@@ -392,7 +392,7 @@ static unsigned long devtmpfsd(unsigned long p)
 	// }
 
 	// complete(&setup_done);
-	// devtmpfs_work_loop();
+	devtmpfs_work_loop();
 out:
 	return err;
 }
@@ -402,44 +402,6 @@ out:
  * nodes here.
  */
 int devtmpfs_init(void)
-{
-	char opts[] = "mode=0755";
-	int err;
-
-	// mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
-	// if (IS_ERR(mnt)) {
-	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
-	// 			PTR_ERR(mnt));
-	// 	return PTR_ERR(mnt);
-	// }
-	
-	// err = register_filesystem(&dev_fs_type);
-	// if (err) {
-	// 	color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
-	// 			"type %i\n", err);
-	// 	return err;
-	// }
-
-	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-	kernel_thread(devtmpfsd, 0, 0);
-	// if (!IS_ERR(thread)) {
-	// 	wait_for_completion(&setup_done);
-	// } else {
-	// 	err = PTR_ERR(thread);
-	// 	thread = NULL;
-	// }
-
-	// if (err) {
-	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
-	// 	unregister_filesystem(&dev_fs_type);
-	// 	return err;
-	// }
-
-	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
-	return 0;
-}
-
-int devtmpfs_early_init(void)
 {
 	char opts[] = "mode=0755";
 	int err;
@@ -458,4 +420,22 @@ int devtmpfs_early_init(void)
 				"type %i\n", err);
 		return err;
 	}
+
+	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
+	kernel_thread(devtmpfsd, 0, 0);
+	// if (!IS_ERR(thread)) {
+	// 	wait_for_completion(&setup_done);
+	// } else {
+	// 	err = PTR_ERR(thread);
+	// 	thread = NULL;
+	// }
+
+	// if (err) {
+	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
+	// 	unregister_filesystem(&dev_fs_type);
+	// 	return err;
+	// }
+
+	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
+	return 0;
 }
