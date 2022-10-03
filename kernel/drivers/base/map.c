@@ -13,7 +13,7 @@
 // #include <linux/slab.h>
 // #include <linux/mutex.h>
 #include <linux/kernel/kdev_t.h>
-// #include <linux/kobject.h>
+#include <linux/kernel/kobject.h>
 #include <linux/kernel/kobj_map.h>
 
 
@@ -76,35 +76,35 @@ int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range,
 	return 0;
 }
 
-// void kobj_unmap(struct kobj_map *domain, dev_t dev, unsigned long range)
-// {
-// 	unsigned int n = MAJOR(dev + range - 1) - MAJOR(dev) + 1;
-// 	unsigned int index = MAJOR(dev);
-// 	unsigned int i;
-// 	struct probe *found = NULL;
+void kobj_unmap(kobj_map_s *domain, dev_t dev, unsigned long range)
+{
+	unsigned int n = MAJOR(dev + range - 1) - MAJOR(dev) + 1;
+	unsigned int index = MAJOR(dev);
+	unsigned int i;
+	probe_s *found = NULL;
 
-// 	if (n > 255)
-// 		n = 255;
+	if (n > 255)
+		n = 255;
 
-// 	mutex_lock(domain->lock);
-// 	for (i = 0; i < n; i++, index++)
-// 	{
-// 		struct probe **s;
-// 		for (s = &domain->probes[index % 255]; *s; s = &(*s)->next)
-// 		{
-// 			struct probe *p = *s;
-// 			if (p->dev == dev && p->range == range)
-// 			{
-// 				*s = p->next;
-// 				if (!found)
-// 					found = p;
-// 				break;
-// 			}
-// 		}
-// 	}
-// 	mutex_unlock(domain->lock);
-// 	kfree(found);
-// }
+	// mutex_lock(domain->lock);
+	for (i = 0; i < n; i++, index++)
+	{
+		probe_s **s;
+		for (s = &domain->probes[index % 255]; *s; s = &(*s)->next)
+		{
+			probe_s *p = *s;
+			if (p->dev == dev && p->range == range)
+			{
+				*s = p->next;
+				if (!found)
+					found = p;
+				break;
+			}
+		}
+	}
+	// mutex_unlock(domain->lock);
+	kfree(found);
+}
 
 kobj_s *kobj_lookup(kobj_map_s *domain, dev_t dev, int *index)
 {

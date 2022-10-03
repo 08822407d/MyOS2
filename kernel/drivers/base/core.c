@@ -70,7 +70,7 @@ int device_add(device_s *dev)
 	int error = -EINVAL;
 	device_s *parent;
 	kobj_s *kobj;
-	kobj_s *glue_dir = NULL;
+	// kobj_s *glue_dir = NULL;
 
 	/*
 	 * for statically allocated devices, which should all be converted
@@ -236,7 +236,7 @@ void device_del(device_s *dev)
 	// put_device(parent);
 }
 
-device_s *myos_device_create(dev_t devt, const char* devname)
+device_s *myos_device_create(class_s *class, dev_t devt, const char* devname)
 {
 	device_s *dev = NULL;
 	int retval = -ENODEV;
@@ -248,6 +248,7 @@ device_s *myos_device_create(dev_t devt, const char* devname)
 	}
 
 	dev->devt = devt;
+	dev->class = class;
 	dev->kobj.name = devname;
 
 	retval = device_add(dev);

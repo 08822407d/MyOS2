@@ -674,7 +674,7 @@
 		};
 	// 	file_s_lock_context	*i_flctx;
 	// 	addr_space_s		i_data;
-	// 	list_head_s			i_devices;
+		List_hdr_s		i_devices;
 		union {
 			// pipe_inode_info_s	*i_pipe;
 			cdev_s				*i_cdev;

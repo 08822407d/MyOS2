@@ -88,10 +88,10 @@
 	// extern __printf(2, 0) int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
 	// 												va_list vargs);
 
-	// static inline const char *kobject_name(const struct kobject *kobj)
-	// {
-	// 	return kobj->name;
-	// }
+	static inline const char *kobject_name(const kobj_s *kobj)
+	{
+		return kobj->name;
+	}
 
 	// extern void kobject_init(struct kobject *kobj, const struct kobj_type *ktype);
 	// extern __printf(3, 4) __must_check

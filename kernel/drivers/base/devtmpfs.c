@@ -85,7 +85,7 @@ static fs_type_s dev_fs_type = {
 
 static inline int is_blockdev(device_s *dev)
 {
-	// return dev->class == &block_class;
+	return dev->class == &block_class;
 }
 
 static int devtmpfs_submit_req(req_s *req, const char *tmp)
@@ -108,25 +108,25 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 int devtmpfs_create_node(device_s *dev)
 {
 	const char *tmp = NULL;
-	req_s req;
+	req_s *req = kzalloc(sizeof(req));
 
-	req.mode = 0;
-	req.uid = GLOBAL_ROOT_UID;
-	req.gid = GLOBAL_ROOT_GID;
-	// req.name = device_get_devnode(dev, &req.mode, &req.uid, &req.gid, &tmp);
-	// if (!req.name)
-	// 	return -ENOMEM;
+	req->mode = 0;
+	req->uid = GLOBAL_ROOT_UID;
+	req->gid = GLOBAL_ROOT_GID;
+	req->name = dev_name(dev);
+	if (!req->name)
+		return -ENOMEM;
 
-	if (req.mode == 0)
-		req.mode = 0600;
+	if (req->mode == 0)
+		req->mode = 0600;
 	if (is_blockdev(dev))
-		req.mode |= S_IFBLK;
+		req->mode |= S_IFBLK;
 	else
-		req.mode |= S_IFCHR;
+		req->mode |= S_IFCHR;
 
-	req.dev = dev;
+	req->dev = dev;
 
-	return devtmpfs_submit_req(&req, tmp);
+	return devtmpfs_submit_req(req, tmp);
 }
 
 int devtmpfs_delete_node(device_s *dev)
@@ -361,6 +361,7 @@ static void devtmpfs_work_loop(void)
 				req->err = handle(req->name, req->mode,
 						req->uid, req->gid, req->dev);
 				// complete(&req->done);
+				kfree(req);
 				req = next;
 			}
 			// spin_lock(&req_lock);
@@ -379,20 +380,21 @@ static unsigned long devtmpfsd(unsigned long p)
 {
 	// int err = devtmpfs_setup(&p);
 	// {
-		int err;
+		int err = 0;
 
 		err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
 		if (err)
 			goto out;
 		// init_chdir("/.."); /* will traverse into overmounted root */
 		// init_chroot(".");
-	out:
-		return err;
+	// out:
+	// 	return err;
 	// }
 
 	// complete(&setup_done);
 	devtmpfs_work_loop();
-	return 0;
+out:
+	return err;
 }
 
 /*

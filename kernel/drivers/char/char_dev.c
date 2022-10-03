@@ -25,6 +25,7 @@
 #include <linux/fs/internal.h>
 
 
+#include <linux/lib/list.h>
 #include <linux/kernel/stddef.h>
 #include <linux/fs/vfs_s_defs.h>
 #include <obsolete/proto.h>
@@ -42,26 +43,27 @@ static int chrdev_open(inode_s *inode, file_s *filp)
 	int ret = 0;
 
 	// spin_lock(&cdev_lock);
-// 	p = inode->i_cdev;
-// 	if (!p) {
-// 		struct kobject *kobj;
-// 		int idx;
-// 		spin_unlock(&cdev_lock);
-// 		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
-// 		if (!kobj)
-// 			return -ENXIO;
-// 		new = container_of(kobj, struct cdev, kobj);
-// 		spin_lock(&cdev_lock);
-// 		/* Check i_cdev again in case somebody beat us to it while
-// 		   we dropped the lock. */
-// 		p = inode->i_cdev;
-// 		if (!p) {
-// 			inode->i_cdev = p = new;
-// 			list_add(&inode->i_devices, &p->list);
-// 			new = NULL;
-// 		} else if (!cdev_get(p))
-// 			ret = -ENXIO;
-// 	}
+	p = inode->i_cdev;
+	if (!p) {
+		kobj_s *kobj;
+		int idx;
+		// spin_unlock(&cdev_lock);
+		kobj = kobj_lookup(cdev_map, inode->i_rdev, &idx);
+		if (!kobj)
+			return -ENXIO;
+		new = container_of(kobj, cdev_s, kobj);
+		// spin_lock(&cdev_lock);
+		/* Check i_cdev again in case somebody beat us to it while
+		   we dropped the lock. */
+		p = inode->i_cdev;
+		if (!p) {
+			inode->i_cdev = p = new;
+			list_hdr_push(&inode->i_devices, &p->list);
+			new = NULL;
+		}
+		// else if (!cdev_get(p))
+		// 	ret = -ENXIO;
+	}
 // 	else if (!cdev_get(p))
 // 		ret = -ENXIO;
 // 	spin_unlock(&cdev_lock);
@@ -263,11 +265,4 @@ int myos_cdev_register(dev_t devt, const char *name, const file_ops_s *fops)
 	cdev->kobj.name = name;
 	cdev_init(cdev, fops);
 	cdev_add(cdev, devt, 1);
-}
-
-void cdev_test()
-{
-	int idx = 0;
-	kobj_s *kobj = kobj_lookup(cdev_map, MKDEV(1, 5), &idx);
-	cdev_s *new = container_of(kobj, cdev_s, kobj);
 }

@@ -29,7 +29,7 @@
 	// #include <linux/gfp.h>
 	// #include <linux/overflow.h>
 	// #include <linux/device/bus.h>
-	// #include <linux/device/class.h>
+	#include <linux/device/class.h>
 	#include <linux/device/driver.h>
 	// #include <asm/device.h>
 
@@ -292,79 +292,79 @@
 	// 	unsigned long segment_boundary_mask;
 	// };
 
-	// /**
-	//  * enum device_link_state - Device link states.
-	//  * @DL_STATE_NONE: The presence of the drivers is not being tracked.
-	//  * @DL_STATE_DORMANT: None of the supplier/consumer drivers is present.
-	//  * @DL_STATE_AVAILABLE: The supplier driver is present, but the consumer is not.
-	//  * @DL_STATE_CONSUMER_PROBE: The consumer is probing (supplier driver present).
-	//  * @DL_STATE_ACTIVE: Both the supplier and consumer drivers are present.
-	//  * @DL_STATE_SUPPLIER_UNBIND: The supplier driver is unbinding.
-	//  */
-	// enum device_link_state
-	// {
-	// 	DL_STATE_NONE = -1,
-	// 	DL_STATE_DORMANT = 0,
-	// 	DL_STATE_AVAILABLE,
-	// 	DL_STATE_CONSUMER_PROBE,
-	// 	DL_STATE_ACTIVE,
-	// 	DL_STATE_SUPPLIER_UNBIND,
-	// };
+	/**
+	 * enum device_link_state - Device link states.
+	 * @DL_STATE_NONE: The presence of the drivers is not being tracked.
+	 * @DL_STATE_DORMANT: None of the supplier/consumer drivers is present.
+	 * @DL_STATE_AVAILABLE: The supplier driver is present, but the consumer is not.
+	 * @DL_STATE_CONSUMER_PROBE: The consumer is probing (supplier driver present).
+	 * @DL_STATE_ACTIVE: Both the supplier and consumer drivers are present.
+	 * @DL_STATE_SUPPLIER_UNBIND: The supplier driver is unbinding.
+	 */
+	enum device_link_state
+	{
+		DL_STATE_NONE = -1,
+		DL_STATE_DORMANT = 0,
+		DL_STATE_AVAILABLE,
+		DL_STATE_CONSUMER_PROBE,
+		DL_STATE_ACTIVE,
+		DL_STATE_SUPPLIER_UNBIND,
+	};
 
-	// /*
-	// * Device link flags.
-	// *
-	// * STATELESS: The core will not remove this link automatically.
-	// * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
-	// * PM_RUNTIME: If set, the runtime PM framework will use this link.
-	// * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
-	// * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
-	// * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
-	// * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
-	// * SYNC_STATE_ONLY: Link only affects sync_state() behavior.
-	// * INFERRED: Inferred from data (eg: firmware) and not from driver actions.
-	// */
-	// #define DL_FLAG_STATELESS BIT(0)
-	// #define DL_FLAG_AUTOREMOVE_CONSUMER BIT(1)
-	// #define DL_FLAG_PM_RUNTIME BIT(2)
-	// #define DL_FLAG_RPM_ACTIVE BIT(3)
-	// #define DL_FLAG_AUTOREMOVE_SUPPLIER BIT(4)
-	// #define DL_FLAG_AUTOPROBE_CONSUMER BIT(5)
-	// #define DL_FLAG_MANAGED BIT(6)
-	// #define DL_FLAG_SYNC_STATE_ONLY BIT(7)
-	// #define DL_FLAG_INFERRED BIT(8)
+	/*
+	* Device link flags.
+	*
+	* STATELESS: The core will not remove this link automatically.
+	* AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
+	* PM_RUNTIME: If set, the runtime PM framework will use this link.
+	* RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
+	* AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
+	* AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
+	* MANAGED: The core tracks presence of supplier/consumer drivers (internal).
+	* SYNC_STATE_ONLY: Link only affects sync_state() behavior.
+	* INFERRED: Inferred from data (eg: firmware) and not from driver actions.
+	*/
+	#define DL_FLAG_STATELESS			BIT(0)
+	#define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
+	#define DL_FLAG_PM_RUNTIME			BIT(2)
+	#define DL_FLAG_RPM_ACTIVE			BIT(3)
+	#define DL_FLAG_AUTOREMOVE_SUPPLIER	BIT(4)
+	#define DL_FLAG_AUTOPROBE_CONSUMER	BIT(5)
+	#define DL_FLAG_MANAGED				BIT(6)
+	#define DL_FLAG_SYNC_STATE_ONLY		BIT(7)
+	#define DL_FLAG_INFERRED			BIT(8)
 
-	// /**
-	//  * enum dl_dev_state - Device driver presence tracking information.
-	//  * @DL_DEV_NO_DRIVER: There is no driver attached to the device.
-	//  * @DL_DEV_PROBING: A driver is probing.
-	//  * @DL_DEV_DRIVER_BOUND: The driver has been bound to the device.
-	//  * @DL_DEV_UNBINDING: The driver is unbinding from the device.
-	//  */
-	// enum dl_dev_state
-	// {
-	// 	DL_DEV_NO_DRIVER = 0,
-	// 	DL_DEV_PROBING,
-	// 	DL_DEV_DRIVER_BOUND,
-	// 	DL_DEV_UNBINDING,
-	// };
+	/**
+	 * enum dl_dev_state - Device driver presence tracking information.
+	 * @DL_DEV_NO_DRIVER: There is no driver attached to the device.
+	 * @DL_DEV_PROBING: A driver is probing.
+	 * @DL_DEV_DRIVER_BOUND: The driver has been bound to the device.
+	 * @DL_DEV_UNBINDING: The driver is unbinding from the device.
+	 */
+	enum dl_dev_state
+	{
+		DL_DEV_NO_DRIVER = 0,
+		DL_DEV_PROBING,
+		DL_DEV_DRIVER_BOUND,
+		DL_DEV_UNBINDING,
+	};
 
-	// /**
-	//  * enum device_removable - Whether the device is removable. The criteria for a
-	//  * device to be classified as removable is determined by its subsystem or bus.
-	//  * @DEVICE_REMOVABLE_NOT_SUPPORTED: This attribute is not supported for this
-	//  *				    device (default).
-	// * @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
-	// * @DEVICE_FIXED: Device is not removable by the user.
-	// * @DEVICE_REMOVABLE: Device is removable by the user.
-	// */
-	// enum device_removable
-	// {
-	// 	DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
-	// 	DEVICE_REMOVABLE_UNKNOWN,
-	// 	DEVICE_FIXED,
-	// 	DEVICE_REMOVABLE,
-	// };
+	/**
+	 * enum device_removable - Whether the device is removable. The criteria for a
+	 * device to be classified as removable is determined by its subsystem or bus.
+	 * @DEVICE_REMOVABLE_NOT_SUPPORTED: This attribute is not supported for this
+	 *				    device (default).
+	* @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
+	* @DEVICE_FIXED: Device is not removable by the user.
+	* @DEVICE_REMOVABLE: Device is removable by the user.
+	*/
+	enum device_removable
+	{
+		DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
+		DEVICE_REMOVABLE_UNKNOWN,
+		DEVICE_FIXED,
+		DEVICE_REMOVABLE,
+	};
 
 	// /**
 	//  * struct dev_links_info - Device data related to device links.
@@ -563,13 +563,13 @@
 	// #ifdef CONFIG_NUMA
 	// 	int numa_node; /* NUMA node this device is close to */
 	// #endif
-		dev_t	devt; 	/* dev_t, creates the sysfs "dev" */
-		u32		id;		/* device instance */
+		dev_t		devt; 	/* dev_t, creates the sysfs "dev" */
+		u32			id;		/* device instance */
 
 	// 	spinlock_t devres_lock;
 	// 	struct list_head devres_head;
 
-	// 	struct class *class;
+		class_s		*class;
 	// 	const struct attribute_group **groups; /* optional groups */
 
 	// 	void (*release)(struct device *dev);
@@ -622,10 +622,10 @@
 	// 	bool supplier_preactivated; /* Owned by consumer probe. */
 	// };
 
-	// static inline struct device *kobj_to_dev(struct kobject *kobj)
-	// {
-	// 	return container_of(kobj, struct device, kobj);
-	// }
+	static inline device_s *kobj_to_dev(kobj_s *kobj)
+	{
+		return container_of(kobj, device_s, kobj);
+	}
 
 	// /**
 	//  * device_iommu_mapped - Returns true when the device DMA is translated
@@ -640,14 +640,14 @@
 	// /* Get the wakeup routines, which depend on struct device */
 	// #include <linux/pm_wakeup.h>
 
-	// static inline const char *dev_name(const struct device *dev)
-	// {
-	// 	/* Use the init name until the kobject becomes available */
-	// 	if (dev->init_name)
-	// 		return dev->init_name;
+	static inline const char *dev_name(const device_s *dev)
+	{
+		/* Use the init name until the kobject becomes available */
+		if (dev->init_name)
+			return dev->init_name;
 
-	// 	return kobject_name(&dev->kobj);
-	// }
+		return kobject_name(&dev->kobj);
+	}
 
 	// /**
 	//  * dev_bus_name - Return a device's bus/class name, if at all possible
@@ -1003,6 +1003,7 @@
 	// #define sysfs_deprecated 0
 	// #endif
 
-	device_s *myos_device_create(dev_t devt, const char* devname);
+
+	device_s *myos_device_create(class_s *class, dev_t devt, const char* devname);
 
 #endif /* _DEVICE_H_ */

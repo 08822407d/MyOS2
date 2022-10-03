@@ -11,10 +11,10 @@
  */
 
 #include <linux/kernel/types.h>
-// #include <linux/kdev_t.h>
-// #include <linux/uuid.h>
+#include <linux/kernel/kdev_t.h>
+#include <linux/kernel/uuid.h>
 #include <linux/block/blk_types.h>
-// #include <linux/device.h>
+#include <linux/device/device.h>
 // #include <linux/xarray.h>
 
 
@@ -22,7 +22,7 @@
 
 	// extern const struct device_type disk_type;
 	// extern struct device_type part_type;
-	// extern struct class block_class;
+	extern class_s block_class;
 
 	#define DISK_MAX_PARTS			256
 	#define DISK_NAME_LEN			32

@@ -194,10 +194,13 @@ memdev_s devlist[] = {
 	// #endif
 };
 
+static class_s *mem_class;
 int chr_dev_init(void)
 {
 	int minor;
 	int arr_size = sizeof(devlist) / sizeof(memdev_s);
+
+	mem_class = class_create("mem");
 
 	for (minor = 0; minor < arr_size; minor++)
 	{
@@ -207,14 +210,8 @@ int chr_dev_init(void)
 
 		dev_t devt = MKDEV(MEM_MAJOR, minor);
 		myos_cdev_register(devt, memdev.name, memdev.fops);
-		myos_device_create(devt, memdev.name);
-		// device_create(NULL, MKDEV(MEM_MAJOR, minor),
-		// 			  NULL, devlist[minor].name);
+		myos_device_create(mem_class, devt, memdev.name);
 	}
-
-
-	// extern void cdev_test();
-	// cdev_test();
 
 	// return tty_init();
 }

@@ -9,7 +9,7 @@
 // #include <linux/ctype.h>
 #include <linux/fs/fs.h>
 #include <linux/block/genhd.h>
-// #include <linux/kdev_t.h>
+#include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kernel.h>
 #include <linux/block/blkdev.h>
 // #include <linux/backing-dev.h>
@@ -33,6 +33,13 @@
 
 
 #include <obsolete/proto.h>
+
+
+class_s block_class = {
+	.name		= "block",
+	// .dev_uevent	= block_uevent,
+};
+
 
 gendisk_s *__alloc_disk_node(request_queue_s *q)
 {
