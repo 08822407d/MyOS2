@@ -38,8 +38,6 @@
 
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/err.h>
-#include <linux/kernel/kernfs.h>
-#include <linux/kernel/sysfs.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <uapi/fcntl.h>
@@ -648,13 +646,6 @@ static void init_mount_tree(void)
 
 void mnt_init(void)
 {
-	int err;
-
-	kernfs_init();
-
-	err = sysfs_init();
-	if (err)
-		color_printk(RED, BLACK, "sysfs_init error: %d\n", err);
 	shmem_init();
 	init_rootfs();
 	init_mount_tree();

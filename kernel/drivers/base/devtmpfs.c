@@ -392,7 +392,7 @@ static unsigned long devtmpfsd(unsigned long p)
 	// }
 
 	// complete(&setup_done);
-	devtmpfs_work_loop();
+	// devtmpfs_work_loop();
 out:
 	return err;
 }

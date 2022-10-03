@@ -3,7 +3,6 @@
 #include <linux/fs/GPT.h>
 #include <linux/fs/fat32.h>
 #include <linux/fs/ext2.h>
-#include <linux/fs/sysfs.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/internal.h>
 #include <linux/lib/string.h>
