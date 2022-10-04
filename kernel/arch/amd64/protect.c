@@ -3,7 +3,7 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/mm/memblock.h>
 
 #include "include/arch_glo.h"

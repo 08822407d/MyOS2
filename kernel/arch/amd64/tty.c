@@ -14,7 +14,7 @@
 #include "include/mutex.h"
 
 position_t Pos;
-wait_queue_hdr_s kbd_wqhdr;
+List_hdr_s kbd_wqhdr;
 
 /*==============================================================================================*
  *																								*

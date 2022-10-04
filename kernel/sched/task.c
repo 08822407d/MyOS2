@@ -1,4 +1,4 @@
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
@@ -76,7 +76,7 @@ void init_task(size_t lcpu_nr)
 	task0->vruntime		= -1;
 	task0->sem_count	=
 	task0->spin_count	= 0;
-	task0->state		= PS_RUNNING;
+	task0->__state		= TASK_RUNNING;
 	task0->flags		= PF_KTHREAD;
 	task0->mm_struct	= &task0_mm;
 	task0->fs			= &task0_fs;

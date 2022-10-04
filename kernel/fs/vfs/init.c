@@ -15,7 +15,7 @@
 
 
 #include <linux/kernel/err.h>
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 
 int init_mount(const char *dev_name, const char *dir_name,
 				const char *type_page, unsigned long flags)

@@ -22,7 +22,7 @@
 #include <linux/fs/fs.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/ramfs.h>
-// #include <linux/sched.h>
+#include <linux/kernel/sched.h>
 // #include <linux/slab.h>
 // #include <linux/kthread.h>
 #include <linux/kernel/init_syscalls.h>
@@ -40,6 +40,8 @@
 #else
 #define DEVTMPFS_MFLAGS       (MS_SILENT)
 #endif
+
+static task_s *thread;
 
 struct req;
 typedef struct req req_s;
@@ -97,7 +99,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 	requests = req;
 	// spin_unlock(&req_lock);
 
-	// wake_up_process(thread);
+	wake_up_process(thread);
 	// wait_for_completion(&req->done);
 
 	kfree((void *)tmp);
@@ -366,7 +368,7 @@ static void devtmpfs_work_loop(void)
 			}
 			// spin_lock(&req_lock);
 		}
-		// __set_current_state(TASK_INTERRUPTIBLE);
+		__set_current_state(TASK_INTERRUPTIBLE);
 		schedule();
 	}
 }
@@ -392,7 +394,7 @@ static unsigned long devtmpfsd(unsigned long p)
 	// }
 
 	// complete(&setup_done);
-	// devtmpfs_work_loop();
+	devtmpfs_work_loop();
 out:
 	return err;
 }
@@ -420,6 +422,8 @@ int devtmpfs_init(void)
 				"type %i\n", err);
 		return err;
 	}
+
+	thread = curr_tsk;
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
 	kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");

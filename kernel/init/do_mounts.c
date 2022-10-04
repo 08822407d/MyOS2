@@ -15,7 +15,7 @@
 #include <linux/fs/fs.h>
 // #include <linux/initrd.h>
 // #include <linux/async.h>
-#include <linux/kernel/sched/fs_struct.h>
+#include <linux/sched/fs_struct.h>
 // #include <linux/slab.h>
 // #include <linux/ramfs.h>
 #include <linux/mm/shmem_fs.h>

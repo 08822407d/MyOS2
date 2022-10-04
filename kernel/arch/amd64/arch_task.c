@@ -1,4 +1,4 @@
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
@@ -23,13 +23,14 @@
 
 #define	USER_CODE_ADDR		0x6000000
 #define USER_MEM_LENGTH		0x800000
+#define MAX_PID 0x8000
 
 extern char		ist_stack0;
 
 extern PCB_u	task0_PCB;
-task_s	*task_idle = NULL;
-task_s	*task_init = NULL;
-task_s	*task_shell = NULL;
+task_s			*task_idle = NULL;
+task_s			*task_init = NULL;
+task_s			*task_shell = NULL;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 spinlock_T		newpid_lock;
@@ -158,7 +159,7 @@ static int copy_flags(unsigned long clone_flags, task_s * new_tsk)
 	int err = -ENOERR;
 
 	if(clone_flags & CLONE_VM)
-		new_tsk->flags |= PF_VFORK;
+		new_tsk->flags |= CLONE_VFORK;
 
 	return err;
 }
@@ -186,7 +187,7 @@ out:
 static void exit_files(task_s * new_tsk)
 {
 	int i = 0;
-	if(new_tsk->flags & PF_VFORK)
+	if(new_tsk->flags & CLONE_VFORK)
 		;
 	else
 		for(i = 0; i < MAX_FILE_NR; i++)
@@ -226,7 +227,7 @@ int exit_mm(task_s * new_tsk)
 {
 	int err = -ENOERR;
 
-	if(new_tsk->flags & PF_VFORK)
+	if(new_tsk->flags & CLONE_VFORK)
 		err = -ENOERR;
 
 	return err;
@@ -292,7 +293,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	list_hdr_init(&child_task->child_lhdr);
 	list_hdr_init(&child_task->wait_childexit);
 	child_task->name = taskname;
-	child_task->state = PS_UNINTERRUPTIBLE;
+	child_task->__state = TASK_UNINTERRUPTIBLE;
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
@@ -315,7 +316,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 
 	// do_fork successed
 	ret_val = child_task->pid;
-	wakeup_task(child_task);
+	wake_up_process(child_task);
 	goto do_fork_success;
 
 	// if failed clean memory
@@ -348,7 +349,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	exit_files(curr);
 	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
 
-	if (curr->flags & PF_VFORK)
+	if (curr->flags & CLONE_VFORK)
 	{
 		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
 		memset(curr->mm_struct, 0, sizeof(mm_s));
@@ -363,7 +364,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
 	pg_load_cr3(curr->mm_struct->cr3);
-	curr->flags &= ~PF_VFORK;
+	curr->flags &= ~CLONE_VFORK;
 
 	long argv_pos = 0;
 	if(argv != NULL)
@@ -438,7 +439,7 @@ static void exit_notify(void)
 		
 		list_hdr_append(&task_init->child_lhdr, child_lp);
 	}
-	wq_wakeup(&curr_tsk->wait_childexit, PS_INTERRUPTIBLE);
+	wq_wakeup(&curr_tsk->wait_childexit, TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)
@@ -455,7 +456,7 @@ do_exit_again:
 	exit_notify();
 	sti();
 
-	curr_tsk->state = PS_ZOMBIE;
+	curr_tsk->__state = EXIT_ZOMBIE;
 	schedule();
 
 	goto do_exit_again;
@@ -499,33 +500,6 @@ stack_frame_s * get_stackframe(task_s * task_p)
 	return (stack_frame_s *)(pcb_p + 1) - 1;
 }
 
-int load_balance()
-{
-	int i;
-	int min_load = 99999999;
-	int min_idx = 0;
-	for (i = 0; i < kparam.nr_lcpu; i++)
-	{
-		per_cpudata_s * cpu_p = &percpu_data[i].cpudata;
-		if (cpu_p->running_lhdr.count < min_load)
-		{
-			min_load = cpu_p->running_lhdr.count;
-			min_idx = i;
-		}
-	}
-	return min_idx;
-}
-
-void wakeup_task(task_s * task)
-{
-	int target_cpu_idx = load_balance();
-	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
-	task->state = PS_RUNNING;
-	list_hdr_push(&target_cpu_p->running_lhdr, &task->schedule_list);
-
-	// color_printk(BLUE, WHITE, "Task-%d inserted to cpu:%d", task->pid, target_cpu_idx);
-}
-
 void schedule()
 {
 	per_cpudata_s *	cpudata_p = curr_cpu;
@@ -543,7 +517,7 @@ void schedule()
 		while (next_lp == 0);
 
 		// and insert curr_task back to running_list
-		if (curr_task->state == PS_RUNNING)
+		if (curr_task->__state == TASK_RUNNING)
 		{
 			if (curr_task == cpudata_p->idle_task)
 			{
@@ -592,7 +566,7 @@ void try_sched()
 	if ((curr_task == cpudata_p->idle_task) && (cpudata_p->running_lhdr.count == 0))
 		return;
 
-	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
+	if (((curr_task->__state == TASK_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
 		return;
 
 	if ((curr_task->spin_count != 0) || (curr_task->sem_count != 0))

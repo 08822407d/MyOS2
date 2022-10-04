@@ -149,7 +149,8 @@
 		"list.h": "c",
 		"kobj_map.h": "c",
 		"cdev.h": "c",
-		"kdev_t.h": "c"
+		"kdev_t.h": "c",
+		"shmem_fs.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

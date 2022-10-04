@@ -1,4 +1,4 @@
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
 #include <uapi/major.h>
@@ -145,7 +145,7 @@ void end_request(blkbuf_node_s * node)
 	if(node == NULL)
 		color_printk(RED,BLACK,"end_request error\n");
 
-	wakeup_task(node->wq.task);
+	wake_up_process(node->wq.task);
 	curr_tsk->flags |= PF_NEED_SCHEDULE;
 
 	IDE_req_queue.in_using = NULL;
@@ -252,7 +252,7 @@ void submit(blkbuf_node_s * node)
 
 void wait_for_finish()
 {
-	curr_tsk->state = PS_UNINTERRUPTIBLE;
+	curr_tsk->__state = TASK_UNINTERRUPTIBLE;
 	schedule();
 }
 

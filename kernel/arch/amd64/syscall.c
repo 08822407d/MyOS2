@@ -115,7 +115,7 @@ unsigned long sys_fork()
 unsigned long sys_vfork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
-	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGNAL, curr_context->rsp, 0, NULL);
+	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, 0, NULL);
 }
 
 unsigned long sys_execve()
@@ -180,7 +180,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 	if(options != 0)
 		return -EINVAL;
 
-	if(child->state != PS_ZOMBIE)
+	if(child->__state != EXIT_ZOMBIE)
 	{
 		wq_sleep_on_intrable(&child->wait_childexit);
 	}

@@ -5,7 +5,7 @@
 #include <linux/fs/fs.h>
 #include <linux/fs/path.h>
 // #include <linux/slab.h>
-#include <linux/kernel/sched/fs_struct.h>
+#include <linux/sched/fs_struct.h>
 #include <linux/fs/internal.h>
 
 /*

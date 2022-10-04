@@ -2,7 +2,7 @@
 #define _AMD64_PROTO_H_
 
 #include <linux/kernel/types.h>
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 
 #include "archtypes.h"
 #include "archconst.h"
@@ -266,8 +266,6 @@
 	// void intr_enable(void);
 
 	/* arch_task.c */
-	struct task;
-	typedef struct task task_s;
 	stack_frame_s * get_stackframe(task_s * task_p);
 	unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags,
 					unsigned long tmp_kstack_start, unsigned long stack_size,

@@ -13,7 +13,7 @@
 #include "include/keyboard.h"
 #include "include/device.h"
 
-extern wait_queue_hdr_s kbd_wqhdr;
+extern List_hdr_s kbd_wqhdr;
 
 kbd_inbuf_s * p_kb = NULL;
 static int shift_l,shift_r,ctrl_l,ctrl_r,alt_l,alt_r;
@@ -97,7 +97,7 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 	p_kb->count++;
 	p_kb->p_head ++;	
 
-	wq_wakeup(&kbd_wqhdr, PS_UNINTERRUPTIBLE);
+	wq_wakeup(&kbd_wqhdr, TASK_UNINTERRUPTIBLE);
 }
 
 /*==============================================================================================*

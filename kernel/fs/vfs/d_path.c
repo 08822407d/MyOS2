@@ -9,7 +9,7 @@
 #include <linux/fs/mount.h>
 
 
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <obsolete/proto.h>

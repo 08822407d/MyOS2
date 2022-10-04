@@ -1,4 +1,4 @@
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 #include <linux/device/driver.h>
 #include <linux/fs/fs.h>
 #include <linux/lib/string.h>

@@ -24,7 +24,7 @@
 #include <linux/fs/internal.h>
 
 
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 
 /*
  * allocate a file descriptor, mark it busy.

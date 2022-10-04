@@ -4,7 +4,7 @@
 
 #include <obsolete/ktypes.h>
 #include <obsolete/proto.h>
-#include <linux/kernel/sched/sched.h>
+#include <linux/kernel/sched.h>
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"

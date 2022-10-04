@@ -47,7 +47,7 @@
 
 	typedef struct bdev_req_queue
 	{
-		wait_queue_hdr_s	bdev_wqhdr;
+		List_hdr_s	bdev_wqhdr;
 		blkbuf_node_s *		in_using;
 	} bdev_req_queue_T;
 
