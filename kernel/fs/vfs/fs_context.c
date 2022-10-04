@@ -66,7 +66,7 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type, dentry_s *reference,
 	fs_ctxt_s *fc;
 	int ret = -ENOMEM;
 
-	fc = kmalloc(sizeof(fs_ctxt_s));
+	fc = kzalloc(sizeof(fs_ctxt_s));
 	if (fc == NULL)
 		return ERR_PTR(-ENOMEM);
 

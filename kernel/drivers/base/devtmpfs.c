@@ -387,8 +387,8 @@ static unsigned long devtmpfsd(unsigned long p)
 		err = init_mount("devtmpfs", "/", "devtmpfs", DEVTMPFS_MFLAGS);
 		if (err)
 			goto out;
-		// init_chdir("/.."); /* will traverse into overmounted root */
-		// init_chroot(".");
+		init_chdir("/.."); /* will traverse into overmounted root */
+		init_chroot(".");
 	// out:
 	// 	return err;
 	// }
