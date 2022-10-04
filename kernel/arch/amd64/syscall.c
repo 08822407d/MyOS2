@@ -109,13 +109,13 @@ unsigned long sys_lseek(int filds, long offset, int whence)
 unsigned long sys_fork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
-	return do_fork(curr_context, 0, curr_context->rsp, 0);	
+	return do_fork(curr_context, 0, curr_context->rsp, 0, NULL);	
 }
 
 unsigned long sys_vfork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
-	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGNAL, curr_context->rsp, 0);
+	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGNAL, curr_context->rsp, 0, NULL);
 }
 
 unsigned long sys_execve()

@@ -35,6 +35,7 @@
 	typedef struct task
 	{
 		List_s			schedule_list;
+		const char		*name;
 
 		task_s *		parent;
 		List_s			child_list;
@@ -58,7 +59,7 @@
 		long			exit_code;
 
 		unsigned long	spin_count;
-		unsigned long	semaphore_count;
+		unsigned long	sem_count;
 
 		wait_queue_hdr_s	wait_childexit;
 	} task_s;

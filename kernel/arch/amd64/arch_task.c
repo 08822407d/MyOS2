@@ -269,10 +269,9 @@ static int exit_thread(task_s * new_task)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long do_fork(stack_frame_s *parent_context,
-						unsigned long clone_flags,
-						unsigned long tmp_kstack_start,
-						unsigned long stack_size)
+unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
+						unsigned long tmp_kstack_start, unsigned long stack_size,
+						const char *taskname)
 {
 	long ret_val = 0;
 	PCB_u *parent_PCB = container_of(get_current_task(), PCB_u, task);
@@ -292,6 +291,7 @@ unsigned long do_fork(stack_frame_s *parent_context,
 	list_init(&child_task->child_list, child_task);
 	list_hdr_init(&child_task->child_lhdr);
 	list_hdr_init(&child_task->wait_childexit);
+	child_task->name = taskname;
 	child_task->state = PS_UNINTERRUPTIBLE;
 	child_task->pid = gen_newpid();
 	child_task->vruntime = 0;
@@ -392,6 +392,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code,
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
+	if (argv != NULL)
+		curr->name = argv[0];
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr->mm_struct->start_code;
@@ -460,7 +462,8 @@ do_exit_again:
 	return 0;
 }
 
-unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags)
+unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
+				unsigned long flags, const char *taskname)
 {
 	stack_frame_s sf_regs;
 	memset(&sf_regs,0,sizeof(sf_regs));
@@ -473,7 +476,7 @@ unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long a
 	sf_regs.rflags = (1 << 9);
 	sf_regs.rip = (reg_t)entp_kernel_thread;
 
-	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0);
+	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0, taskname);
 }
 
 /*==============================================================================================*
@@ -592,7 +595,7 @@ void try_sched()
 	if (((curr_task->state == PS_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
 		return;
 
-	if ((curr_task->spin_count != 0) || (curr_task->semaphore_count != 0))
+	if ((curr_task->spin_count != 0) || (curr_task->sem_count != 0))
 		return;
 
 	// normal sched

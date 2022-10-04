@@ -392,7 +392,7 @@ static unsigned long devtmpfsd(unsigned long p)
 	// }
 
 	// complete(&setup_done);
-	devtmpfs_work_loop();
+	// devtmpfs_work_loop();
 out:
 	return err;
 }
@@ -422,7 +422,7 @@ int devtmpfs_init(void)
 	}
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-	kernel_thread(devtmpfsd, 0, 0);
+	kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);
 	// } else {

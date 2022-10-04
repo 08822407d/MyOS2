@@ -71,7 +71,7 @@ void idle(size_t cpu_idx)
 	refresh_arch_page();
 
 	if (cpu_idx == 0)
-		kernel_thread(kernel_init, 0, 0);
+		kernel_thread(kernel_init, 0, 0, "init");
 	
 	schedule();
 
@@ -118,7 +118,7 @@ unsigned long kernel_init(unsigned long arg)
 	do_basic_setup();
 	// do_name();
 	// ata_probe();
-	kernel_thread(ATArq_deamon, 0, 0);
+	kernel_thread(ATArq_deamon, 0, 0, "ATA_deamon");
 
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
