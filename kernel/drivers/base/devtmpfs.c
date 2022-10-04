@@ -423,10 +423,8 @@ int devtmpfs_init(void)
 		return err;
 	}
 
-	thread = curr_tsk;
-
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-	kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
+	thread = kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);
 	// } else {

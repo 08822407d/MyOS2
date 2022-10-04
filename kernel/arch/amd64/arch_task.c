@@ -272,7 +272,7 @@ static int exit_thread(task_s * new_task)
  *==============================================================================================*/
 unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 						unsigned long tmp_kstack_start, unsigned long stack_size,
-						const char *taskname)
+						const char *taskname, task_s **ret_child)
 {
 	long ret_val = 0;
 	PCB_u *parent_PCB = container_of(get_current_task(), PCB_u, task);
@@ -320,18 +320,20 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	goto do_fork_success;
 
 	// if failed clean memory
-	copy_thread_fail:
-		exit_thread(child_task);
-	copy_files_fail:
-		exit_files(child_task);
-	copy_mm_fail:
-		exit_mm(child_task);
-	copy_flags_fail:
-	alloc_newtask_fail:
-		kfree(child_task);
+copy_thread_fail:
+	exit_thread(child_task);
+copy_files_fail:
+	exit_files(child_task);
+copy_mm_fail:
+	exit_mm(child_task);
+copy_flags_fail:
+alloc_newtask_fail:
+	kfree(child_task);
 
-	do_fork_success:
-		return ret_val;
+do_fork_success:
+	if (ret_child != NULL)
+		*ret_child = child_task;
+	return ret_val;
 }
 
 unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *argv[], char *envp[])
@@ -463,9 +465,10 @@ do_exit_again:
 	return 0;
 }
 
-unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
+task_s *kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
 				unsigned long flags, const char *taskname)
 {
+	task_s *ret_val = NULL;
 	stack_frame_s sf_regs;
 	memset(&sf_regs,0,sizeof(sf_regs));
 
@@ -477,7 +480,8 @@ unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long a
 	sf_regs.rflags = (1 << 9);
 	sf_regs.rip = (reg_t)entp_kernel_thread;
 
-	return do_fork(&sf_regs, flags | CLONE_VM, 0, 0, taskname);
+	do_fork(&sf_regs, flags | CLONE_VM, 0, 0, taskname, &ret_val);
+	return ret_val;
 }
 
 /*==============================================================================================*

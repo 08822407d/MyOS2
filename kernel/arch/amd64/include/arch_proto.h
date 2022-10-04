@@ -269,12 +269,12 @@
 	stack_frame_s * get_stackframe(task_s * task_p);
 	unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags,
 					unsigned long tmp_kstack_start, unsigned long stack_size,
-					const char *taskname);
+					const char *taskname, task_s **ret_child);
 	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void schedule(void);
 	void try_sched(void);
-	unsigned long kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
+	task_s *kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
 					unsigned long flags, const char *taskname);
 	unsigned long kernel_init(unsigned long arg);
 	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);

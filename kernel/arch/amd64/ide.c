@@ -13,6 +13,7 @@
 #include "include/device.h"
 #include "include/ide.h"
 
+static task_s *thread;
 bdev_req_queue_T IDE_req_queue;
 
 bool	ide0_0, ide0_1,
@@ -252,7 +253,7 @@ void submit(blkbuf_node_s * node)
 
 void wait_for_finish()
 {
-	curr_tsk->__state = TASK_UNINTERRUPTIBLE;
+	__set_current_state(TASK_UNINTERRUPTIBLE);
 	schedule();
 }
 
@@ -404,7 +405,7 @@ void disk_exit()
 	unregister_irq(SATA_MAST_IRQ);
 }
 
-unsigned long ATArq_deamon(unsigned long param)
+static unsigned long ATArq_deamon(unsigned long param)
 {
 	while (true)
 	{
@@ -420,8 +421,12 @@ unsigned long ATArq_deamon(unsigned long param)
 		}
 
 		schedule();
-		// hlt();
 	}
 
 	return 1;
+}
+
+void init_ATArqd()
+{
+	thread = kernel_thread(ATArq_deamon, 0, 0, "ATArqd");
 }

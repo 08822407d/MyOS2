@@ -8,6 +8,11 @@ add_executable(kern)
 target_sources(kern PRIVATE ${KERNEL_C_SRCS})
 target_include_directories(kern PRIVATE ${PROJECT_SOURCE_DIR}/kernel/include
 							${PROJECT_SOURCE_DIR}/loader)
+if (${ARCH} STREQUAL "amd64")
+	target_include_directories(kern PRIVATE ${PROJECT_SOURCE_DIR}/kernel/arch/amd64/include)
+	get_target_property(KERN_INCLUDES kern INCLUDE_DIRECTORIES)
+	message("${PROMPT} INCDIRS: ${KERN_INCLUDES}")
+endif()
 
 add_subdirectory(arch)
 add_subdirectory(init)

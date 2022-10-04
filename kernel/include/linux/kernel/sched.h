@@ -10,7 +10,7 @@
 
 	#include <uapi/sched.h>
 
-	// #include <asm/current.h>
+	#include <asm/current.h>
 
 	// #include <linux/pid.h>
 	// #include <linux/sem.h>
@@ -42,6 +42,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/mm/mm.h>
 
+	#include "../arch/amd64/include/asm/current.h"
 	#include "../arch/amd64/include/arch_task.h"
 	#include "../arch/amd64/include/arch_config.h"
 
@@ -234,10 +235,10 @@
 	// 		debug_normal_state_change((state_value));    \
 	// 		WRITE_ONCE(current->__state, (state_value)); \
 	// 	} while (0)
-	#define __set_current_state(state_value)	\
-		do										\
-		{										\
-			curr_tsk->__state, (state_value);	\
+	#define __set_current_state(state_value)             \
+		do                                               \
+		{                                                \
+			curr_tsk->__state = (state_value); \
 		} while (0)
 
 	// #define set_current_state(state_value)                 \
@@ -797,8 +798,6 @@
 		file_s *fps[MAX_FILE_NR];
 		mm_s *mm_struct;
 
-		taskfs_s *fs;
-
 		unsigned long flags;
 
 		unsigned long pid;
@@ -1156,7 +1155,7 @@
 	// 	unsigned long last_switch_time;
 	// #endif
 	// 	/* Filesystem information: */
-	// 	struct fs_struct *fs;
+		taskfs_s	*fs;
 
 	// 	/* Open file information: */
 	// 	struct files_struct *files;
@@ -2487,8 +2486,8 @@
 		unsigned tail; // point to next unit of the last non-null
 	} task_queue_s;
 	
-	task_s *get_current_task(void);
-	#define curr_tsk get_current_task()
+	// task_s *get_current_task(void);
+	// #define curr_tsk get_current_task()
 
 	void early_init_task(size_t lcpu_nr);
 	void init_task(size_t lcpu_nr);

@@ -3,11 +3,10 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/include",
                 "${workspaceFolder}/mylib/include",
                 "${workspaceFolder}/kernel/arch",
+                "${workspaceFolder}/kernel/arch/amd64/include",
                 "${workspaceFolder}/kernel/include",
-                "${workspaceFolder}/sys",
                 "${workspaceFolder}/loader"
             ],
             "defines": [],

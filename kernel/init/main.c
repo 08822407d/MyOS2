@@ -110,7 +110,7 @@ static void do_basic_setup(void)
 
 extern int ata_probe();
 extern void get_ata_info(void);
-unsigned long ATArq_deamon(unsigned long);
+extern void init_ATArqd();
 unsigned long kernel_init(unsigned long arg)
 {
 	sti();
@@ -118,7 +118,7 @@ unsigned long kernel_init(unsigned long arg)
 	do_basic_setup();
 	// do_name();
 	// ata_probe();
-	kernel_thread(ATArq_deamon, 0, 0, "ATA_deamon");
+	init_ATArqd();
 
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
