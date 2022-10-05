@@ -127,7 +127,6 @@ unsigned long kernel_init(unsigned long arg)
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
-	creat_dev_file();
 
 	// color_printk(GREEN, BLACK, "Device files created.\n");
 	kjmp_to_doexecve();

@@ -185,16 +185,16 @@ static cdev_s tty_cdev, console_cdev;
  */
 int tty_init(void)
 {
-	tty_cdev.kobj.name = "tty";
 	cdev_init(&tty_cdev, &tty_fops);
+	tty_cdev.kobj.name = "tty";
 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1))
 		color_printk(RED, BLACK, "Couldn't register /dev/tty driver\n");
 	else
 		myos_device_create(tty_class, MKDEV(TTYAUX_MAJOR, 0), "tty");
 
-	console_cdev.kobj.name = "console";
 	cdev_init(&console_cdev, &console_fops);
-	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1))
+	console_cdev.kobj.name = "console";
+	if (cdev_add(&console_cdev, MKDEV(TTYAUX_MAJOR, 1), 1))
 		color_printk(RED, BLACK, "Couldn't register /dev/console driver\n");
 	else
 		myos_device_create(tty_class, MKDEV(TTYAUX_MAJOR, 1), "console");

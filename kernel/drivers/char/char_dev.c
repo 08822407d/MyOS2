@@ -61,33 +61,33 @@ static int chrdev_open(inode_s *inode, file_s *filp)
 			list_hdr_push(&inode->i_devices, &p->list);
 			new = NULL;
 		}
-		// else if (!cdev_get(p))
-		// 	ret = -ENXIO;
 	}
-// 	else if (!cdev_get(p))
-// 		ret = -ENXIO;
-// 	spin_unlock(&cdev_lock);
-// 	cdev_put(new);
-// 	if (ret)
-// 		return ret;
+	// else if (!cdev_get(p))
+	// 	ret = -ENXIO;
+	// spin_unlock(&cdev_lock);
+	// cdev_put(new);
+	if (ret)
+		return ret;
 
-// 	ret = -ENXIO;
-// 	fops = fops_get(p->ops);
-// 	if (!fops)
-// 		goto out_cdev_put;
+	ret = -ENXIO;
+	// fops = fops_get(p->ops);
+	fops = p->ops;
+	if (!fops)
+		goto out_cdev_put;
 
-// 	replace_fops(filp, fops);
-// 	if (filp->f_op->open) {
-// 		ret = filp->f_op->open(inode, filp);
-// 		if (ret)
-// 			goto out_cdev_put;
-// 	}
+	// replace_fops(filp, fops);
+	filp->f_op = fops;
+	if (filp->f_op->open) {
+		ret = filp->f_op->open(inode, filp);
+		if (ret)
+			goto out_cdev_put;
+	}
 
-// 	return 0;
+	return 0;
 
-//  out_cdev_put:
+out_cdev_put:
 // 	cdev_put(p);
-// 	return ret;
+	return ret;
 }
 
 /*

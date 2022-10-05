@@ -148,6 +148,14 @@ static inode_s *alloc_inode(super_block_s *sb)
 void inode_init_once(inode_s *inode)
 {
 	memset(inode, 0, sizeof(inode_s));
+
+	// INIT_HLIST_NODE(&inode->i_hash);
+	list_hdr_init(&inode->i_devices);
+	// INIT_LIST_HEAD(&inode->i_io_list);
+	// INIT_LIST_HEAD(&inode->i_wb_list);
+	// INIT_LIST_HEAD(&inode->i_lru);
+	// __address_space_init_once(&inode->i_data);
+	// i_size_ordered_init(inode);
 }
 
 /**

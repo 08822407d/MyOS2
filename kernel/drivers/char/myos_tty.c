@@ -174,21 +174,3 @@ ssize_t tty_write(file_s * filp, const char *buf, size_t length, loff_t *positio
 	tty_write_color(buf, length, GREEN, BLACK);
 	return ret_val;
 }
-
-file_ops_s tty_fops = 
-{
-	.open = tty_open,
-	.close = tty_close,
-	.ioctl = tty_ioctl,
-	.read = tty_read,
-	.write = tty_write,
-};
-
-cdev_s * find_tty(char *name)
-{
-	cdev_s * cd_tty = kmalloc(sizeof(cdev_s));
-	list_init(&cd_tty->list, cd_tty);
-	cd_tty->kobj.name = name;
-	cd_tty->dev = 0;
-	cd_tty->ops = &tty_fops;
-}

@@ -12,9 +12,9 @@ FILE *stderr;
 
 __attribute__((section(".crt1.text"))) void _start(int argc, const char * argv[])
 {
-	stdin = fopen("/dev/tty0", "r");
-	stdout = fopen("/dev/tty0", "w");
-	stderr = fopen("/dev/tty0", "w");
+	stdin = fopen("/dev/console", "r");
+	stdout = fopen("/dev/console", "w");
+	stderr = fopen("/dev/console", "w");
 	
 	exit(main(argc, argv));
 }

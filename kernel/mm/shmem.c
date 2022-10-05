@@ -362,6 +362,8 @@ static inode_s *shmem_alloc_inode(super_block_s *sb)
 	info = kmalloc(sizeof(shmem_inode_info_s));
 	if (info == NULL)
 		return ERR_PTR(-ENOMEM);
+	
+	inode_init_once(&info->vfs_inode);
 	return &info->vfs_inode;
 }
 

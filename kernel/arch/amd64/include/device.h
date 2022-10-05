@@ -13,7 +13,6 @@
 
 	/* device.c */
 	void devices_init(void);
-	void creat_dev_file(void);
 
 	/* keyboard.c */
 	void init_keyboard(void);
