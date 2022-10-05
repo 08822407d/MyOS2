@@ -6,7 +6,7 @@
 // #include <linux/unistd.h>
 // #include <linux/slab.h>
 #include <linux/kernel/mount.h>
-// #include <linux/major.h>
+// #include <uapi/major.h>
 // #include <linux/root_dev.h>
 // #include <linux/init_syscalls.h>
 

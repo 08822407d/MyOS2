@@ -7,11 +7,11 @@
 #include <obsolete/wait_queue.h>
 #include <obsolete/printk.h>
 #include <linux/fs/fs.h>
+#include <linux/device/tty.h>
 
-#include "include/tty.h"
-#include "include/keyboard.h"
-#include "include/device.h"
-#include "include/mutex.h"
+#include <keyboard.h>
+#include <device.h>
+#include <mutex.h>
 
 position_t Pos;
 List_hdr_s kbd_wqhdr;
@@ -84,7 +84,7 @@ ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 	return counter;	
 }
 
-void kputchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
+static void kputchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
 {
 	int i = 0, j = 0;
 	unsigned int *addr = NULL;

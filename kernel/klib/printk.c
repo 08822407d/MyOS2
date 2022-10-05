@@ -17,6 +17,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/lib/string.h>
 #include <linux/lib/stdarg.h>
+#include <linux/device/tty.h>
 
 // #include <klib/stdio.h>
 #include <klib/font.h>
@@ -24,7 +25,6 @@
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
-#include "../arch/amd64/include/tty.h"
 
 /*
 

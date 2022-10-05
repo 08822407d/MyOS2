@@ -83,10 +83,13 @@ void idle(size_t cpu_idx)
  *										task2 -- init()											*
  *==============================================================================================*/
 void register_diskfs(void);
+int tty_class_init(void);
 int chr_dev_init(void);
 static void do_initcalls(void)
 {
 	register_diskfs();
+
+	tty_class_init();
 
 	chr_dev_init();
 }

@@ -16,7 +16,7 @@
 // #include <linux/mman.h>
 // #include <linux/random.h>
 // #include <linux/init.h>
-// #include <linux/tty.h>
+#include <linux/device/tty.h>
 // #include <linux/capability.h>
 // #include <linux/ptrace.h>
 #include <linux/device/device.h>
@@ -38,6 +38,7 @@
 #include <linux/fs/fs.h>
 #include <linux/device/cdev.h>
 #include <obsolete/proto.h>
+#include <obsolete/printk.h>
 
 #ifdef CONFIG_IA64
 #include <linux/efi.h>
@@ -175,6 +176,7 @@ typedef struct memdev
 	umode_t		mode;
 	const file_ops_s	*fops;
 	fmode_t		fmode;
+	cdev_s		cdev;
 } memdev_s;
 
 memdev_s devlist[] = {
@@ -208,10 +210,14 @@ int chr_dev_init(void)
 		if (!memdev.name)
 			continue;
 
+		memdev.cdev.kobj.name = memdev.name;
 		dev_t devt = MKDEV(MEM_MAJOR, minor);
-		myos_cdev_register(devt, memdev.name, memdev.fops);
-		myos_device_create(mem_class, devt, memdev.name);
+		cdev_init(&memdev.cdev, memdev.fops);
+		if (cdev_add(&memdev.cdev, devt, 1))
+			color_printk(RED, BLACK, "Couldn't register %s driver\n", memdev.name);
+		else
+			myos_device_create(mem_class, devt, memdev.name);
 	}
 
-	// return tty_init();
+	return tty_init();
 }

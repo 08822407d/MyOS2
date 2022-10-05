@@ -6,6 +6,7 @@
 #include <linux/fs/namei.h>
 #include <linux/fs/internal.h>
 #include <linux/lib/string.h>
+#include <linux/init/init.h>
 
 
 #include <obsolete/printk.h>

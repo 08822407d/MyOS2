@@ -9,7 +9,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/slab.h>
 // #include <linux/kmod.h>
-// #include <linux/major.h>
+// #include <uapi/major.h>
 // #include <linux/device_cgroup.h>
 #include <linux/block/blkdev.h>
 // #include <linux/blk-integrity.h>

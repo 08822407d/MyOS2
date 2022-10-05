@@ -134,70 +134,6 @@ int cdev_add(cdev_s *p, dev_t dev, unsigned count)
 }
 
 /**
- * cdev_device_add() - add a char device and it's corresponding
- *	struct device, linkink
- * @dev: the device structure
- * @cdev: the cdev structure
- *
- * cdev_device_add() adds the char device represented by @cdev to the system,
- * just as cdev_add does. It then adds @dev to the system using device_add
- * The dev_t for the char device will be taken from the struct device which
- * needs to be initialized first. This helper function correctly takes a
- * reference to the parent device so the parent will not get released until
- * all references to the cdev are released.
- *
- * This helper uses dev->devt for the device number. If it is not set
- * it will not add the cdev and it will be equivalent to device_add.
- *
- * This function should be used whenever the struct cdev and the
- * struct device are members of the same structure whose lifetime is
- * managed by the struct device.
- *
- * NOTE: Callers must assume that userspace was able to open the cdev and
- * can call cdev fops callbacks at any time, even if this function fails.
- */
-int cdev_device_add(cdev_s *cdev, device_s *dev)
-{
-	int rc = 0;
-
-	if (dev->devt) {
-		// cdev_set_parent(cdev, &dev->kobj);
-
-		rc = cdev_add(cdev, dev->devt, 1);
-		if (rc)
-			return rc;
-	}
-
-	rc = device_add(dev);
-	if (rc)
-		cdev_del(cdev);
-
-	return rc;
-}
-
-/**
- * cdev_device_del() - inverse of cdev_device_add
- * @dev: the device structure
- * @cdev: the cdev structure
- *
- * cdev_device_del() is a helper function to call cdev_del and device_del.
- * It should be used whenever cdev_device_add is used.
- *
- * If dev->devt is not set it will not remove the cdev and will be equivalent
- * to device_del.
- *
- * NOTE: This guarantees that associated sysfs callbacks are not running
- * or runnable, however any cdevs already open will remain and their fops
- * will still be callable even after this function returns.
- */
-void cdev_device_del(cdev_s *cdev, device_s *dev)
-{
-	device_del(dev);
-	if (dev->devt)
-		cdev_del(cdev);
-}
-
-/**
  * cdev_del() - remove a cdev from the system
  * @p: the cdev structure to be removed
  *
@@ -253,16 +189,4 @@ static kobj_s *base_probe(dev_t dev, int *part, void *data)
 void chrdev_init(void)
 {
 	cdev_map = kobj_map_init(base_probe);
-}
-
-int myos_cdev_register(dev_t devt, const char *name, const file_ops_s *fops)
-{
-	cdev_s *cdev;
-	cdev = cdev_alloc();
-	if (cdev == NULL)
-		return -ENOMEM;
-	
-	cdev->kobj.name = name;
-	cdev_init(cdev, fops);
-	cdev_add(cdev, devt, 1);
 }

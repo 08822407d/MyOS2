@@ -34,7 +34,4 @@
 
 	// void cd_forget(struct inode *);
 
-
-	int myos_cdev_register(dev_t devt, const char *name, const file_ops_s *fops);
-
 #endif

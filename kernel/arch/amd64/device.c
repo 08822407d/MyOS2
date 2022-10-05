@@ -5,17 +5,15 @@
 #include <linux/lib/string.h>
 
 #include <obsolete/proto.h>
+#include <linux/device/tty.h>
 
 #include "include/device.h"
-#include "include/tty.h"
 
 List_hdr_s cdev_lhdr;
-List_hdr_s bdev_lhdr;
 
-void init_intr_dev(void);
+void init_intr(void);
 
 void enum_char_dev(void);
-void enum_block_dev(void);
 
 void init_char_dev(void);
 void init_block_dev(void);
@@ -25,10 +23,9 @@ dentry_s * creat_append_devdirent(const char * name, dentry_s * parent);
 
 void devices_init()
 {
-	init_intr_dev();
+	init_intr();
 
 	enum_char_dev();
-	enum_block_dev();
 
 	init_char_dev();
 	init_block_dev();
@@ -47,15 +44,6 @@ void creat_dev_file()
 		dentry_s * cddrnt = creat_append_devdirent(cd_p->kobj.name, dev_dir);
 		inode_s * cdino = cddrnt->d_inode;
 		cdino->i_fop = cd_p->ops;
-	}
-
-	List_s * bd_lp;
-	for (bd_lp = bdev_lhdr.header.next; bd_lp != &bdev_lhdr.header; bd_lp = bd_lp->next)
-	{
-		block_device_s * bd_p = container_of(bd_lp, block_device_s, bdev_list);
-		dentry_s * bddrnt = creat_append_devdirent(bd_p->dev_name, dev_dir);
-		inode_s * bdino = bddrnt->d_inode;
-		bdino->i_fop = bd_p->f_op;
 	}
 }
 
@@ -77,7 +65,7 @@ dentry_s * creat_append_devdirent(const char * name, dentry_s * parent)
 	return dir;
 }
 
-void init_intr_dev()
+void init_intr()
 {
 	HPET_init();
 }
@@ -96,10 +84,4 @@ void enum_char_dev()
 {
 	list_hdr_init(&cdev_lhdr);
 	list_hdr_append(&cdev_lhdr, &find_tty("tty0")->list);
-	list_hdr_append(&cdev_lhdr, &find_tty("test_getdents64_verylong_name")->list);
-}
-
-void enum_block_dev()
-{
-	list_hdr_init(&bdev_lhdr);
 }

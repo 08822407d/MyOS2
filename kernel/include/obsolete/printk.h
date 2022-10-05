@@ -65,11 +65,6 @@ typedef struct
 /*
 
 */
-void kputchar(unsigned int * fb,int Xsize,int x,int y,unsigned int FRcolor,unsigned int BKcolor,unsigned char font);
-
-/*
-
-*/
 char * number(char * str, long num, int base, int size, int precision, int type);
 
 /*
