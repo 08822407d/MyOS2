@@ -23,6 +23,7 @@
 #include <linux/mm/internal.h>
 
 
+
 #include <linux/kernel/minmax.h>
 #include <linux/kernel/math.h>
 #include <linux/kernel/asm-generic/bitops/__ffs.h>
@@ -30,9 +31,9 @@
 #include <linux/mm/mmzone.h>
 #include <linux/mm/page.h>
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <obsolete/glo.h>
-#include "../arch/amd64/include/arch_config.h"
 #include "../arch/amd64/include/arch_proto.h"
 
 #define INIT_MEMBLOCK_REGIONS			128
@@ -155,12 +156,12 @@ static phys_addr_t __memblock_find_range_bottom_up(
  * Return:
  * Found address on success, 0 on failure.
  */
-static phys_addr_t memblock_find_in_range(
-				size_t size, size_t align,
+static phys_addr_t memblock_find_in_range(size_t size, size_t align,
 				phys_addr_t start, phys_addr_t end)
 {
 	/* pump up @end */
-	if (end == (phys_addr_t)MEMBLOCK_ALLOC_ACCESSIBLE || end == (phys_addr_t)MEMBLOCK_ALLOC_KASAN)
+	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
+		end == MEMBLOCK_ALLOC_NOLEAKTRACE)
 		end = memblock.current_limit;
 
 	/* avoid allocating the first page */
@@ -295,7 +296,7 @@ static int __init memblock_add_range(memblock_type_s *type,
  * Return:
  * 0 on success, -errno on failure.
  */
-int memblock_add(phys_addr_t base, size_t size)
+int memblock_add(phys_addr_t base, phys_addr_t size)
 {
 	while (!kparam.init_flags.memblock)
 	{
@@ -305,7 +306,7 @@ int memblock_add(phys_addr_t base, size_t size)
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
-int __init memblock_reserve(phys_addr_t base, size_t size)
+int __init memblock_reserve(phys_addr_t base, phys_addr_t size)
 {
 	while (!kparam.init_flags.memblock)
 	{
@@ -431,8 +432,8 @@ void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *t
  * Return:
  * Physical address of allocated memory block on success, %0 on failure.
  */
-phys_addr_t memblock_alloc_range(size_t size, size_t align,
-		phys_addr_t start, phys_addr_t end)
+phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
+				phys_addr_t start, phys_addr_t end, int nid, bool exact_nid)
 {
 	phys_addr_t found;
 
@@ -484,11 +485,11 @@ static void * memblock_alloc_internal(size_t size, size_t align,
 	if (max_addr > memblock.current_limit)
 		max_addr = memblock.current_limit;
 
-	alloc = memblock_alloc_range(size, align, min_addr, max_addr);
+	alloc = memblock_alloc_range_nid(size, align, min_addr, max_addr, 0, false);
 
 	/* retry allocation without lower limit */
 	if (!alloc && min_addr)
-		alloc = memblock_alloc_range(size, align, 0, max_addr);
+		alloc = memblock_alloc_range_nid(size, align, 0, max_addr, 0, false);
 
 	if (!alloc)
 		return NULL;
@@ -563,8 +564,8 @@ void * memblock_alloc_DMA(size_t size, size_t align)
 {
 	void *ptr;
 
-	ptr = memblock_alloc_internal(size, align, MEMBLOCK_LOW_LIMIT,
-					(phys_addr_t)MAX_DMA_ADDR);
+	ptr = memblock_alloc_internal(size, align,
+			MEMBLOCK_LOW_LIMIT, MAX_DMA_PFN << PAGE_SHIFT);
 	if (ptr)
 		memset(ptr, 0, size);
 
@@ -575,8 +576,8 @@ void * memblock_alloc_normal(size_t size, size_t align)
 {
 	void *ptr;
 
-	ptr = memblock_alloc_internal(size, align, (phys_addr_t)MAX_DMA_ADDR,
-					MEMBLOCK_ALLOC_ACCESSIBLE);
+	ptr = memblock_alloc_internal(size, align,
+			MAX_DMA_PFN << PAGE_SHIFT, MEMBLOCK_ALLOC_ACCESSIBLE);
 	if (ptr)
 		memset(ptr, 0, size);
 

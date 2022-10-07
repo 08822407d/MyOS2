@@ -44,7 +44,6 @@
 
 	#include "../arch/amd64/include/asm/current.h"
 	#include "../arch/amd64/include/arch_task.h"
-	#include "../arch/amd64/include/arch_config.h"
 
 	#define PF_NEED_SCHEDULE (1UL << 1)
 	#define MAX_FILE_NR 256

@@ -15,14 +15,14 @@
 // #include <linux/vmalloc.h>
 // #include <linux/mman.h>
 // #include <linux/random.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/device/tty.h>
 // #include <linux/capability.h>
 // #include <linux/ptrace.h>
 #include <linux/device/device.h>
 // #include <linux/highmem.h>
 // #include <linux/backing-dev.h>
-// #include <linux/mm/shmem_fs.h>
+#include <linux/mm/shmem_fs.h>
 // #include <linux/splice.h>
 // #include <linux/pfn.h>
 // #include <linux/export.h>
@@ -37,6 +37,7 @@
 #include <linux/kernel/minmax.h>
 #include <linux/fs/fs.h>
 #include <linux/device/cdev.h>
+#include <asm/setup.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 

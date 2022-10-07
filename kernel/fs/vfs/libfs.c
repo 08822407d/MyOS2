@@ -28,6 +28,7 @@
 
 #include <linux/kernel/err.h>
 #include <obsolete/proto.h>
+#include <asm/setup.h>
 
 int simple_statfs(dentry_s *dentry, kstatfs_s *buf)
 {

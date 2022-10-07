@@ -4,6 +4,7 @@
 #include <linux/mm/memblock.h>
 #include <linux/mm/slab.h>
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <klib/utils.h>
 #include <obsolete/glo.h>
@@ -220,7 +221,7 @@ void kfree(void * obj_p)
 		return;
 
 	// find which slab does the pointer belonged to
-	phys_addr_t pg_addr = virt2phys((virt_addr_t)PAGE_ROUND_DOWN((size_t)obj_p));
+	phys_addr_t pg_addr = virt2phys((virt_addr_t)round_down((size_t)obj_p, PAGE_SIZE));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
 	page_s * pgp = &mem_map[pg_idx];
 	slab_s * slp = pgp->slab_ptr;

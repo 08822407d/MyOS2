@@ -5,6 +5,7 @@
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"
+#include "include/arch_config.h"
 
 #include <obsolete/proto.h>
 
@@ -67,15 +68,15 @@ static void init_memblock(mb_memmap_s * e820_info)
 		}
 	}
 	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
-	if (((size_t)framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
-		kparam.max_phys_mem = (size_t)framebuffer.FB_phybase + framebuffer.FB_size;
+	if ((framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
+		kparam.max_phys_mem = framebuffer.FB_phybase + framebuffer.FB_size;
 	max_low_pfn =
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 
 	// some part of memmory space is reserved
-	memblock_reserve((phys_addr_t)round_down((size_t)kparam.kernel_phy_base, PAGE_SIZE),
-					round_up((size_t)kparam.kernel_vir_end, PAGE_SIZE) -
-					round_down((size_t)kparam.kernel_vir_base, PAGE_SIZE));
+	memblock_reserve(round_down(kparam.kernel_phy_base, PAGE_SIZE),
+					round_up(kparam.kernel_vir_end, PAGE_SIZE) -
+					round_down(kparam.kernel_vir_base, PAGE_SIZE));
 
 	kparam.init_flags.memblock = 1;
 }

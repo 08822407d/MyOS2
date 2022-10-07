@@ -1,4 +1,5 @@
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <klib/stdbool.h>
 
@@ -26,25 +27,25 @@ mmpr_s * get_seginfo(task_s * task)
 	mm_s * mm = task->mm_struct;
 	reg_t user_rsp = get_stackframe(task)->rsp;
 
-	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_code);
-	long codepg_nr = mmpr[0].pgnr = (PAGE_ROUND_UP(mm->end_code) - (reg_t)codepg_p) / PAGE_SIZE;
-	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_rodata);
-	long rodatapg_nr = mmpr[1].pgnr = (PAGE_ROUND_UP(mm->end_rodata) - (reg_t)rodatapg_p) / PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_data);
-	long datapg_nr = mmpr[2].pgnr = (PAGE_ROUND_UP(mm->end_data) - (reg_t)datapg_p) / PAGE_SIZE;
-	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_bss);
-	long bsspg_nr = mmpr[3].pgnr = (PAGE_ROUND_UP(mm->end_bss) - (reg_t)bsspg_p) / PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)PAGE_ROUND_DOWN(mm->start_brk);
-	long brkpg_nr = mmpr[4].pgnr = (PAGE_ROUND_UP(mm->end_brk) - (reg_t)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)PAGE_ROUND_DOWN(user_rsp);
-	long stackpg_nr = mmpr[5].pgnr = (PAGE_ROUND_UP(mm->start_stack) - (reg_t)stackpg_p) / PAGE_SIZE;
+	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
+	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (reg_t)codepg_p) / PAGE_SIZE;
+	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_rodata, PAGE_SIZE);
+	long rodatapg_nr = mmpr[1].pgnr = (round_up(mm->end_rodata, PAGE_SIZE) - (reg_t)rodatapg_p) / PAGE_SIZE;
+	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
+	long datapg_nr = mmpr[2].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (reg_t)datapg_p) / PAGE_SIZE;
+	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)round_down(mm->start_bss, PAGE_SIZE);
+	long bsspg_nr = mmpr[3].pgnr = (round_up(mm->end_bss, PAGE_SIZE) - (reg_t)bsspg_p) / PAGE_SIZE;
+	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
+	long brkpg_nr = mmpr[4].pgnr = (round_up(mm->end_brk, PAGE_SIZE) - (reg_t)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)round_down(user_rsp, PAGE_SIZE);
+	long stackpg_nr = mmpr[5].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (reg_t)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
 {
 	stack_frame_s * context = get_stackframe(task);
 	mm_s * mm = task->mm_struct;
-	context->rsp = PAGE_ROUND_DOWN(mm->start_stack) - PAGE_SIZE;
+	context->rsp = round_down(mm->start_stack, PAGE_SIZE) - PAGE_SIZE;
 	get_seginfo(task);
 	unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
 

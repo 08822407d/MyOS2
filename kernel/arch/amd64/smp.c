@@ -1,4 +1,5 @@
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -28,7 +29,7 @@ static void init_percpu_data(size_t cpu_idx)
 	cpudata_p->curr_task =
 	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
 	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
-	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + CPUSTACK_SIZE;
+	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + PAGE_SIZE;
 	list_hdr_init(&cpudata_p->running_lhdr);
 
 	// fill architechture part

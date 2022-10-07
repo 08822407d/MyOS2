@@ -7,6 +7,7 @@
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
+#include <asm/setup.h>
 
 
 #include <klib/utils.h>

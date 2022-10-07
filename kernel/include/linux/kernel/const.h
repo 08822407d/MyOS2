@@ -1,5 +1,8 @@
 #ifndef _LINUX_CONST_H
-#define _LINUX_CONST_H
+
+	#define _LINUX_CONST_H
+
+	#include <uapi/const.h>
 
 	/*
 	* This returns a constant expression while determining if an argument is

@@ -4,6 +4,7 @@
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -143,7 +144,7 @@ PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx)
 
 inline void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr)
 {
-	pde_ptr->ENT = PAGE_ROUND_DOWN(paddr) | ARCH_PGS_ATTR(attr) | ARCH_PG_PAT;
+	pde_ptr->ENT = round_down(paddr, PAGE_SIZE) | ARCH_PGS_ATTR(attr) | ARCH_PG_PAT;
 }
 
 
@@ -221,7 +222,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	PDE_T *		pde_ptr		= PD_ptr + pde_idx;
 	if (pde_ptr->ENT == 0)
 	{
-		pde_ptr->ENT = PAGE_ROUND_DOWN(phys) | attr | ARCH_PG_PAT;
+		pde_ptr->ENT = round_down(phys, PAGE_SIZE) | attr | ARCH_PG_PAT;
 	}
 
 	refresh_arch_page();

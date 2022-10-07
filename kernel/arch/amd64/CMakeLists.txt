@@ -1,4 +1,14 @@
-file(GLOB ARCH_KERNEL_C_SRCS *.c)
-file(GLOB ARCH_KERNEL_ASM_SRCS *.S)
+# machine specific C make flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
+				-DCONFIG_X86_64 -DCONFIG_ZONE_DMA")
 
-target_sources(kern PRIVATE ${ARCH_KERNEL_C_SRCS} ${ARCH_KERNEL_ASM_SRCS})
+# myos tmp machine specific C make flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
+				")
+
+file(GLOB ARCH_C_SRCS *.c)
+file(GLOB ARCH_ASM_SRCS *.S)
+
+target_sources(kern PRIVATE ${ARCH_C_SRCS} ${ARCH_ASM_SRCS})
+
+add_subdirectory(kernel)

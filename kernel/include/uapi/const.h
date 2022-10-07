@@ -4,6 +4,10 @@
 #ifndef _UAPI_LINUX_CONST_H
 #define _UAPI_LINUX_CONST_H
 
+// vdso/const.h
+	#define UL(x)		(_UL(x))
+	#define ULL(x)		(_ULL(x))
+
 /* Some constant macros are used in both assembler and
  * C code.  Therefore we cannot annotate them always with
  * 'UL' and other type specifiers unilaterally.  We

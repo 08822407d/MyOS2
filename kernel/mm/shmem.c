@@ -41,6 +41,7 @@
 
 
 #include <uapi/magic.h>
+#include <asm/setup.h>
 
 static vfsmount_s *shm_mnt;
 

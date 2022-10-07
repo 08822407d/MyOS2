@@ -68,7 +68,7 @@
 	// #include <linux/mmdebug.h>
 	// #include <linux/gfp.h>
 	// #include <linux/bug.h>
-		#include <linux/lib/list.h>
+	#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
 	// #include <linux/atomic.h>
@@ -87,8 +87,8 @@
 	// #include <linux/page_ref.h>
 	// #include <linux/memremap.h>
 	// #include <linux/overflow.h>
-	// #include <linux/sizes.h>
-	// #include <linux/sched.h>
+	#include <linux/kernel/sizes.h>
+	#include <linux/kernel/sched.h>
 	// #include <linux/pgtable.h>
 	// #include <linux/kasan.h>
 

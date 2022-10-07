@@ -1,9 +1,92 @@
-#include <linux/kernel/types.h>
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/mm/page_alloc.c
+ *
+ *  Manages the free list, the system allocates free pages here.
+ *  Note that kmalloc() lives in slab.c
+ *
+ *  Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
+ *  Swap reorganised 29.12.95, Stephen Tweedie
+ *  Support of BIGMEM added by Gerhard Wichert, Siemens AG, July 1999
+ *  Reshaped it to be a zoned allocator, Ingo Molnar, Red Hat, 1999
+ *  Discontiguous memory support, Kanoj Sarcar, SGI, Nov 1999
+ *  Zone balancing, Kanoj Sarcar, SGI, Jan 2000
+ *  Per cpu hot/cold page lists, bulk allocation, Martin J. Bligh, Sept 2002
+ *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
+ */
+
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
+// #include <linux/highmem.h>
+// #include <linux/swap.h>
+// #include <linux/swapops.h>
+// #include <linux/interrupt.h>
+// #include <linux/pagemap.h>
+// #include <linux/jiffies.h>
 #include <linux/mm/memblock.h>
+// #include <linux/compiler.h>
+#include <linux/kernel/kernel.h>
+// #include <linux/kasan.h>
+// #include <linux/module.h>
+// #include <linux/suspend.h>
+// #include <linux/pagevec.h>
+#include <linux/block/blkdev.h>
+// #include <linux/slab.h>
+// #include <linux/ratelimit.h>
+// #include <linux/oom.h>
+// #include <linux/topology.h>
+// #include <linux/sysctl.h>
+// #include <linux/cpu.h>
+// #include <linux/cpuset.h>
+// #include <linux/memory_hotplug.h>
+// #include <linux/nodemask.h>
+// #include <linux/vmalloc.h>
+// #include <linux/vmstat.h>
+// #include <linux/mempolicy.h>
+// #include <linux/memremap.h>
+// #include <linux/stop_machine.h>
+// #include <linux/random.h>
+// #include <linux/sort.h>
+// #include <linux/pfn.h>
+// #include <linux/backing-dev.h>
+// #include <linux/fault-inject.h>
+// #include <linux/page-isolation.h>
+// #include <linux/debugobjects.h>
+// #include <linux/kmemleak.h>
+// #include <linux/compaction.h>
+// #include <trace/events/kmem.h>
+// #include <trace/events/oom.h>
+// #include <linux/prefetch.h>
+// #include <linux/mm_inline.h>
+// #include <linux/mmu_notifier.h>
+// #include <linux/migrate.h>
+// #include <linux/hugetlb.h>
+// #include <linux/sched/rt.h>
+// #include <linux/sched/mm.h>
+// #include <linux/page_owner.h>
+// #include <linux/page_table_check.h>
+// #include <linux/kthread.h>
+// #include <linux/memcontrol.h>
+// #include <linux/ftrace.h>
+// #include <linux/lockdep.h>
+// #include <linux/nmi.h>
+// #include <linux/psi.h>
+// #include <linux/padata.h>
+// #include <linux/khugepaged.h>
+// #include <linux/buffer_head.h>
+// #include <linux/delayacct.h>
+// #include <asm/sections.h>
+// #include <asm/tlbflush.h>
+// #include <asm/div64.h>
+// #include "internal.h"
+// #include "shuffle.h"
+// #include "page_reporting.h"
+
+
+#include <linux/kernel/types.h>
 #include <linux/mm/mmzone.h>
 #include <linux/lib/string.h>
+#include <asm/setup.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/ktypes.h>
@@ -326,7 +409,7 @@ void free_pages(page_s * page, unsigned int order)
 
 page_s * paddr_to_page(phys_addr_t paddr)
 {
-	unsigned long pfn = PAGE_ROUND_UP((uint64_t)paddr) / PAGE_SIZE;
+	unsigned long pfn = round_up((uint64_t)paddr, PAGE_SIZE) / PAGE_SIZE;
 	// return &mem_info.pages[pg_idx];
 	return pfn_to_page(pfn);
 }
@@ -350,8 +433,8 @@ void preinit_page()
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	mem_map =
 	pg_list.node_mem_map = (void *)phys2virt(
-			memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
-								sizeof(size_t), MAX_DMA_PFN, 0));
+			memblock_alloc_range_nid(sizeof(page_s) * pg_list.node_spanned_pages,
+								sizeof(size_t), MAX_DMA_PFN, 0, 0, false));
 	memset(mem_map, 0, sizeof(page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{
