@@ -32,7 +32,6 @@
 // #include <linux/atomic.h>
 
 
-#include <linux/kernel/err.h>
 #include <obsolete/proto.h>
 
 /* Find an unused file structure and return a pointer to it.

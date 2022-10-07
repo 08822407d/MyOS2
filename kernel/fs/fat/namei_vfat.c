@@ -1,5 +1,4 @@
 #include <linux/kernel/ctype.h>
-#include <linux/kernel/err.h>
 #include <linux/lib/errno.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>

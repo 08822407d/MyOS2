@@ -11,7 +11,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/bitops.h>
 // #include <linux/poison.h>
-// #include <linux/pfn.h>
+#include <linux/mm/pfn.h>
 // #include <linux/debugfs.h>
 // #include <linux/kmemleak.h>
 // #include <linux/seq_file.h>

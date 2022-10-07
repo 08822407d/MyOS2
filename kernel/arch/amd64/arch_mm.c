@@ -1,6 +1,7 @@
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 
+#include <linux/mm/myos_page.h>
 #include <klib/stdbool.h>
 
 #include <obsolete/ktypes.h>

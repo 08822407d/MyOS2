@@ -26,7 +26,7 @@
 	// #include <linux/pm.h>
 	// #include <linux/atomic.h>
 	#include <linux/kernel/uidgid.h>
-	// #include <linux/gfp.h>
+	#include <linux/mm/gfp.h>
 	// #include <linux/overflow.h>
 	// #include <linux/device/bus.h>
 	#include <linux/device/class.h>

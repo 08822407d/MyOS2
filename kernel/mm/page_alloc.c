@@ -47,7 +47,7 @@
 // #include <linux/stop_machine.h>
 // #include <linux/random.h>
 // #include <linux/sort.h>
-// #include <linux/pfn.h>
+#include <linux/mm/pfn.h>
 // #include <linux/backing-dev.h>
 // #include <linux/fault-inject.h>
 // #include <linux/page-isolation.h>
@@ -318,7 +318,7 @@ static inline void __free_one_page(page_s *page, unsigned long pfn,
 	add_to_free_list(page, zone, order);
 }
 
-/*===========================================3yy===================================================*
+/*==============================================================================================*
  *									public fuctions for buddy system							*
  *==============================================================================================*/
 /**

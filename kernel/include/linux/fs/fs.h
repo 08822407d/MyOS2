@@ -3004,7 +3004,7 @@
 
 	// extern char *file_path(file_s *, char *, int);
 
-	// #include <linux/kernel/err.h>
+	#include <linux/kernel/err.h>
 
 	// /* needed for stackable file system support */
 	// extern loff_t default_llseek(file_s *file, loff_t offset, int whence);

@@ -155,7 +155,9 @@
 		"kernel.h": "c",
 		"int-ll64.h": "c",
 		"driver.h": "c",
-		"setup.h": "c"
+		"setup.h": "c",
+		"pfn.h": "c",
+		"myos_page.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

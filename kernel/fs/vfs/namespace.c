@@ -37,7 +37,6 @@
 
 
 #include <linux/kernel/fcntl.h>
-#include <linux/kernel/err.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <uapi/fcntl.h>

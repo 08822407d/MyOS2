@@ -37,7 +37,6 @@
 
 
 #include <linux/drivers/base.h>
-#include <linux/kernel/err.h>
 #include <obsolete/proto.h>
 
 /*

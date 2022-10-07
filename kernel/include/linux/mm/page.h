@@ -25,7 +25,7 @@
 		slab_s *		slab_ptr;
 	} page_s;
 
-	void memblock_free_pages(page_s * page, unsigned long pfn, unsigned int order);
+	void memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order);
 	void preinit_page(void);
 	void init_page(void);
 

@@ -14,7 +14,6 @@
 #include <linux/fs/internal.h>
 
 
-#include <linux/kernel/err.h>
 #include <linux/kernel/sched.h>
 
 int init_mount(const char *dev_name, const char *dir_name,

@@ -40,7 +40,6 @@
  
 	#include <linux/sched/fs_struct.h>
 	#include <linux/kernel/types.h>
-	#include <linux/mm/mm.h>
 
 	#include "../arch/amd64/include/asm/current.h"
 	#include "../arch/amd64/include/arch_task.h"
@@ -2467,7 +2466,7 @@
 	
 
 
-
+#include <archconst.h>
 // myos obsolete defines
 	typedef union PCB
 	{

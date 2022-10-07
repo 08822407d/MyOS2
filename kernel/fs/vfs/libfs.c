@@ -26,7 +26,6 @@
 #include <linux/fs/internal.h>
 
 
-#include <linux/kernel/err.h>
 #include <obsolete/proto.h>
 #include <asm/setup.h>
 

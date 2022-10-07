@@ -8,6 +8,7 @@
 
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
+#include <obsolete/wait_queue.h>
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"

@@ -43,7 +43,6 @@
 #include <linux/fs/mount.h>
 
 
-#include <linux/kernel/err.h>
 #include <linux/lib/string.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>

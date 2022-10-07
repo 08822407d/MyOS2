@@ -37,7 +37,6 @@
 
 
 #include <linux/kernel/sched.h>
-#include <linux/kernel/err.h>
 #include <uapi/openat2.h>
 
 

@@ -24,7 +24,7 @@
 // #include <linux/backing-dev.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/splice.h>
-// #include <linux/pfn.h>
+#include <linux/mm/pfn.h>
 // #include <linux/export.h>
 // #include <linux/io.h>
 // #include <linux/uio.h>

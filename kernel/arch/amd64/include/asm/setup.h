@@ -12,7 +12,7 @@
 
 	// #ifdef __i386__
 
-	// #include <linux/pfn.h>
+	#include <linux/mm/pfn.h>
 	// /*
 	// * Reserved space for vmalloc and iomap - defined in asm/page.h
 	// */

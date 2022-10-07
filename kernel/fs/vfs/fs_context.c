@@ -26,7 +26,6 @@
 
 
 #include <linux/fs/fs.h>
-#include <linux/kernel/err.h>
 #include <linux/lib/string.h>
 #include <obsolete/proto.h>
 

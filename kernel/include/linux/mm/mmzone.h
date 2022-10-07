@@ -4,7 +4,6 @@
 
 	#include <linux/mm/page.h>
 
-
 	#define MAX_ORDER 11
 	#define MAX_NR_ZONES __MAX_NR_ZONES /* __MAX_NR_ZONES */
 
