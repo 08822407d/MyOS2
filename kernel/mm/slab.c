@@ -232,7 +232,7 @@ void kfree(void * obj_p)
 		while (1);
 	}
 
-	unsigned long obj_idx = (obj_p - slp->virt_addr) / scgp->obj_size;
+	unsigned long obj_idx = ((virt_addr_t)obj_p - slp->virt_addr) / scgp->obj_size;
 	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
 	{
 		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);

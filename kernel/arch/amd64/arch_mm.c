@@ -111,7 +111,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 
 			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(orig_pgp));
 			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(new_pgp));
-			memcpy(new_pg_vaddr, orig_pg_vaddr, PAGE_SIZE);
+			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			pg_load_cr3(new_cr3);
 			task->mm_struct->cr3 = new_cr3;

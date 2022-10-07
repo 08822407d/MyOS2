@@ -250,12 +250,12 @@ static int copy_thread(unsigned long clone_flags, unsigned long stack_start,
 	if(child_task->flags & PF_KTHREAD)
 	{
 		child_task->arch_struct.k_rip = (unsigned long)entp_kernel_thread;
-		child_context->restore_retp = ra_kthd_retp;
+		child_context->restore_retp = (virt_addr_t)ra_kthd_retp;
 	}
 	else
 	{
 		child_task->arch_struct.k_rip = (unsigned long)sysexit_entp;
-		child_context->restore_retp = ra_sysex_retp;
+		child_context->restore_retp = (virt_addr_t)ra_sysex_retp;
 	}
 
 	return err;
@@ -357,7 +357,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		memset(curr->mm_struct, 0, sizeof(mm_s));
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
-		curr->mm_struct->cr3 = (reg_t)virt2phys(virt_cr3);
+		curr->mm_struct->cr3 = virt2phys((virt_addr_t)virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);
@@ -389,7 +389,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		curr_context->rsi = (unsigned long)dargv;	//argv
 	}
 
-	memset((virt_addr_t)curr->mm_struct->start_code, 0,
+	memset((void *)curr->mm_struct->start_code, 0,
 			curr->mm_struct->end_data - curr->mm_struct->start_code);
 	loff_t fp_pos = 0;
 	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code,
@@ -412,7 +412,7 @@ void kjmp_to_doexecve()
 	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
 	task_s * curr = curr_tsk;
 	stack_frame_s * curr_sfp = get_stackframe(curr);
-	curr_sfp->restore_retp = ra_sysex_retp;
+	curr_sfp->restore_retp = (virt_addr_t)ra_sysex_retp;
 
 	reg_t ctx_rip =
 	curr->arch_struct.k_rip = (reg_t)sysexit_entp;

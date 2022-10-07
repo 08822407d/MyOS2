@@ -18,7 +18,7 @@ void init_video()
 	// make sure have get framebuffer infomation
 	while (!kparam.arch_init_flags.framebuffer);
 
-	Pos.FB_addr = framebuffer.FB_virbase;
+	Pos.FB_addr = (unsigned int *)framebuffer.FB_virbase;
 	Pos.FB_length = framebuffer.FB_size;
 	Pos.XResolution = framebuffer.X_Resolution;
 	Pos.YResolution = framebuffer.Y_Resolution;
@@ -30,5 +30,5 @@ void init_video()
 
 	init_spin_lock(&Pos.printk_lock);
 	// clean screen
-	memset(framebuffer.FB_virbase, 0, framebuffer.FB_size);
+	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }

@@ -151,7 +151,8 @@
 		"cdev.h": "c",
 		"kdev_t.h": "c",
 		"shmem_fs.h": "c",
-		"current.h": "c"
+		"current.h": "c",
+		"kernel.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

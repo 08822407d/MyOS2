@@ -16,8 +16,8 @@
 #include <linux/kernel/limits.h>
 // #include <linux/linkage.h>
 #include <linux/kernel/stddef.h>
-// #include <linux/types.h>
-// #include <linux/compiler.h>
+#include <linux/kernel/types.h>
+#include <linux/kernel/compiler.h>
 // #include <linux/container_of.h>
 // #include <linux/bitops.h>
 // #include <linux/kstrtox.h>

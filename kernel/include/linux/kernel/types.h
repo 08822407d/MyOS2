@@ -162,12 +162,13 @@
 		typedef unsigned int	__bitwise fmode_t;
 
 		// #ifdef CONFIG_PHYS_ADDR_T_64BIT
-		// 	typedef u64		phys_addr_t;
+			typedef u64		phys_addr_t;
+			typedef u64		virt_addr_t;
 		// #else
 		// 	typedef u32		phys_addr_t;
 		// #endif
-		typedef void	*phys_addr_t;
-		typedef void	*virt_addr_t;
+		// typedef void	*phys_addr_t;
+		// typedef void	*virt_addr_t;
 
 		typedef phys_addr_t	resource_size_t;
 

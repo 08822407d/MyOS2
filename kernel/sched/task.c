@@ -69,7 +69,7 @@ void init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0_mm.cr3			= (reg_t)virt2phys(KERN_PML4);
+	task0_mm.cr3		= virt2phys((virt_addr_t)KERN_PML4);
 
 	task0->name			= "cpu0_idel";
 	task0->time_slice	= 2;

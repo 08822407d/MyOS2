@@ -5,34 +5,35 @@
  * Written by David Howells (dhowells@redhat.com)
  */
 #ifndef __MM_INTERNAL_H
-#define __MM_INTERNAL_H
 
-#include <linux/fs/fs.h>
-#include <linux/mm/mm.h>
-// #include <linux/pagemap.h>
-// #include <linux/tracepoint-defs.h>
+	#define __MM_INTERNAL_H
+
+	#include <linux/fs/fs.h>
+	#include <linux/mm/mm.h>
+	// #include <linux/pagemap.h>
+	// #include <linux/tracepoint-defs.h>
 
 	// struct folio_batch;
 
-	// /*
-	// * The set of flags that only affect watermark checking and reclaim
-	// * behaviour. This is used by the MM to obey the caller constraints
-	// * about IO, FS and watermark checking while ignoring placement
-	// * hints such as HIGHMEM usage.
-	// */
-	// #define GFP_RECLAIM_MASK (__GFP_RECLAIM|__GFP_HIGH|__GFP_IO|__GFP_FS|\
-	// 			__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NOFAIL|\
-	// 			__GFP_NORETRY|__GFP_MEMALLOC|__GFP_NOMEMALLOC|\
-	// 			__GFP_ATOMIC|__GFP_NOLOCKDEP)
+	/*
+	* The set of flags that only affect watermark checking and reclaim
+	* behaviour. This is used by the MM to obey the caller constraints
+	* about IO, FS and watermark checking while ignoring placement
+	* hints such as HIGHMEM usage.
+	*/
+	#define GFP_RECLAIM_MASK (__GFP_RECLAIM|__GFP_HIGH|__GFP_IO|__GFP_FS|\
+				__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NOFAIL|\
+				__GFP_NORETRY|__GFP_MEMALLOC|__GFP_NOMEMALLOC|\
+				__GFP_ATOMIC|__GFP_NOLOCKDEP)
 
-	// /* The GFP flags allowed during early boot */
-	// #define GFP_BOOT_MASK (__GFP_BITS_MASK & ~(__GFP_RECLAIM|__GFP_IO|__GFP_FS))
+	/* The GFP flags allowed during early boot */
+	#define GFP_BOOT_MASK (__GFP_BITS_MASK & ~(__GFP_RECLAIM|__GFP_IO|__GFP_FS))
 
-	// /* Control allocation cpuset and node placement constraints */
-	// #define GFP_CONSTRAINT_MASK (__GFP_HARDWALL|__GFP_THISNODE)
+	/* Control allocation cpuset and node placement constraints */
+	#define GFP_CONSTRAINT_MASK (__GFP_HARDWALL|__GFP_THISNODE)
 
-	// /* Do not use these with a slab allocator */
-	// #define GFP_SLAB_BUG_MASK (__GFP_DMA32|__GFP_HIGHMEM|~__GFP_BITS_MASK)
+	/* Do not use these with a slab allocator */
+	#define GFP_SLAB_BUG_MASK (__GFP_DMA32|__GFP_HIGHMEM|~__GFP_BITS_MASK)
 
 	// void page_writeback_init(void);
 

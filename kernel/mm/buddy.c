@@ -349,8 +349,9 @@ void preinit_page()
 	pg_list.node_start_pfn = pg_list.node_zones[0].zone_start_pfn;
 	pg_list.node_spanned_pages = kparam.phys_page_nr;
 	mem_map =
-	pg_list.node_mem_map = phys2virt(memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
-								sizeof(size_t), (phys_addr_t)MAX_DMA_PFN, NULL));
+	pg_list.node_mem_map = (void *)phys2virt(
+			memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
+								sizeof(size_t), MAX_DMA_PFN, 0));
 	memset(mem_map, 0, sizeof(page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{

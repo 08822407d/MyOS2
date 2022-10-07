@@ -38,7 +38,7 @@ static void enable_AMD_syscall()
 
 static void get_VBE_info(mb_fb_common_s * vbe_info)
 {
-	framebuffer.FB_phybase = (phys_addr_t)vbe_info->framebuffer_addr;
+	framebuffer.FB_phybase = vbe_info->framebuffer_addr;
 	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
 	framebuffer.FB_size = vbe_info->size;
 	framebuffer.X_Resolution = vbe_info->framebuffer_pitch;
@@ -51,9 +51,9 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 
 static void init_memblock(mb_memmap_s * e820_info)
 {
-	kparam.kernel_phy_base	= &_k_phys_start;
-	kparam.kernel_vir_base	= &_k_virt_start;
-	kparam.kernel_vir_end	= &_end;
+	kparam.kernel_phy_base	= (phys_addr_t)&_k_phys_start;
+	kparam.kernel_vir_base	= (phys_addr_t)&_k_virt_start;
+	kparam.kernel_vir_end	= (phys_addr_t)&_end;
 	kparam.init_flags.memblock = 1;
 
 	int i;
@@ -63,7 +63,7 @@ static void init_memblock(mb_memmap_s * e820_info)
 		mb_mmap_ent = &e820_info[i];
 		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
 		{
-			memblock_add((phys_addr_t)mb_mmap_ent->addr, mb_mmap_ent->len);
+			memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
 		}
 	}
 	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
@@ -146,7 +146,7 @@ static void cpuid_info(void)
 
 void early_init_sytem(void)
 {
-	memset((virt_addr_t)&_bss, 0, &_ebss - &_bss);
+	memset((void *)&_bss, 0, &_ebss - &_bss);
 	enable_AMD_syscall();
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =

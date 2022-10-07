@@ -239,15 +239,17 @@ inline __always_inline unsigned get_lvt_ppr()
 void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
-	uint8_t * IOAPIC_addr = (uint8_t *)phys2virt((phys_addr_t)0xfec00000);
+	uint8_t *IOAPIC_addr = (uint8_t *)phys2virt((phys_addr_t)0xfec00000);
 
 	ioapic_map.phys_addr = (phys_addr_t)0xfec00000;
 	ioapic_map.virt_idx_addr = IOAPIC_addr;
 	ioapic_map.virt_data_addr = (uint32_t *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
 	
-	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
-	arch_page_domap(ioapic_map.virt_idx_addr, ioapic_map.phys_addr,
+	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW |
+							ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
+	arch_page_domap((virt_addr_t)ioapic_map.virt_idx_addr,
+					(phys_addr_t)ioapic_map.phys_addr,
 					page_attr, &curr_tsk->mm_struct->cr3);
 }
 

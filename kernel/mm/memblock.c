@@ -6,7 +6,7 @@
  * Copyright (C) 2001 Peter Bergner.
  */
 
-// #include <linux/kernel.h>
+#include <linux/kernel/kernel.h>
 // #include <linux/slab.h>
 #include <linux/init/init.h>
 #include <linux/kernel/bitops.h>
@@ -17,8 +17,12 @@
 // #include <linux/seq_file.h>
 #include <linux/mm/memblock.h>
 
+// #include <asm/sections.h>
+// #include <linux/io.h>
 
-#include <linux/kernel/types.h>
+#include <linux/mm/internal.h>
+
+
 #include <linux/kernel/minmax.h>
 #include <linux/kernel/math.h>
 #include <linux/kernel/asm-generic/bitops/__ffs.h>
@@ -240,9 +244,8 @@ static void memblock_insert_region(	memblock_type_s *type,
  * Return:
  * 0 on success, -errno on failure.
  */
-static int memblock_add_range(	memblock_type_s *type,
-								phys_addr_t base, size_t size,
-								enum memblock_flags flags)
+static int __init memblock_add_range(memblock_type_s *type,
+		phys_addr_t base, size_t size, enum memblock_flags flags)
 {
 	phys_addr_t end = base + memblock_cap_size(base, &size);
 	int idx;
@@ -302,7 +305,7 @@ int memblock_add(phys_addr_t base, size_t size)
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
-int memblock_reserve(phys_addr_t base, size_t size)
+int __init memblock_reserve(phys_addr_t base, size_t size)
 {
 	while (!kparam.init_flags.memblock)
 	{
@@ -429,7 +432,7 @@ void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *t
  * Physical address of allocated memory block on success, %0 on failure.
  */
 phys_addr_t memblock_alloc_range(size_t size, size_t align,
-					    phys_addr_t start, phys_addr_t end)
+		phys_addr_t start, phys_addr_t end)
 {
 	phys_addr_t found;
 
@@ -490,7 +493,7 @@ static void * memblock_alloc_internal(size_t size, size_t align,
 	if (!alloc)
 		return NULL;
 
-	return phys2virt(alloc);
+	return (void *)phys2virt(alloc);
 }
 
 /**

@@ -48,7 +48,8 @@ void init_smp(size_t lcpu_nr)
 	extern char _APboot_text;
 	extern char _APboot_etext;
 	size_t apboot_len = &_APboot_etext - &_APboot_text;
-	memcpy(phys2virt((phys_addr_t)&_APboot_phys_start), (virt_addr_t)&_APboot_text, apboot_len);
+	memcpy((void *)phys2virt((phys_addr_t)&_APboot_phys_start),
+			(void *)&_APboot_text, apboot_len);
 
 	// init basic data for percpu
 	for (int i = 0; i < lcpu_nr; i++)
