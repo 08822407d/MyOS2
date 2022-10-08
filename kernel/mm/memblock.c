@@ -27,20 +27,17 @@
 #include <linux/kernel/minmax.h>
 #include <linux/kernel/math.h>
 #include <linux/kernel/asm-generic/bitops/__ffs.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/mmzone.h>
-#include <linux/mm/page.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 
 #include <obsolete/glo.h>
-#include "../arch/amd64/include/arch_proto.h"
+
 
 #define INIT_MEMBLOCK_REGIONS			128
 #define INIT_PHYSMEM_REGIONS			4
 
 #ifndef INIT_MEMBLOCK_RESERVED_REGIONS
-#define INIT_MEMBLOCK_RESERVED_REGIONS		INIT_MEMBLOCK_REGIONS
+#define INIT_MEMBLOCK_RESERVED_REGIONS	INIT_MEMBLOCK_REGIONS
 #endif
 
 unsigned long max_low_pfn;

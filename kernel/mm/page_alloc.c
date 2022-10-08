@@ -15,7 +15,7 @@
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
 
-#include <linux/kernel/stddef.h>
+// #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 // #include <linux/highmem.h>
 // #include <linux/swap.h>
@@ -83,8 +83,6 @@
 // #include "page_reporting.h"
 
 
-#include <linux/kernel/types.h>
-#include <linux/mm/mmzone.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 
@@ -94,6 +92,62 @@
 #include "../arch/amd64/include/archconst.h"
 #include "../arch/amd64/include/arch_proto.h"
 #include "../arch/amd64/include/mutex.h"
+
+
+/*
+ * results with 256, 32 in the lowmem_reserve sysctl:
+ *	1G machine -> (16M dma, 800M-16M normal, 1G-800M high)
+ *	1G machine -> (16M dma, 784M normal, 224M high)
+ *	NORMAL allocation will leave 784M/256 of ram reserved in the ZONE_DMA
+ *	HIGHMEM allocation will leave 224M/32 of ram reserved in ZONE_NORMAL
+ *	HIGHMEM allocation will leave (224M+784M)/256 of ram reserved in ZONE_DMA
+ *
+ * TBD: should special case ZONE_DMA32 machines here - in those we normally
+ * don't need any ZONE_NORMAL reservation
+ */
+int sysctl_lowmem_reserve_ratio[MAX_NR_ZONES] = {
+#ifdef CONFIG_ZONE_DMA
+	[ZONE_DMA] = 256,
+#endif
+#ifdef CONFIG_ZONE_DMA32
+	[ZONE_DMA32] = 256,
+#endif
+	[ZONE_NORMAL] = 32,
+#ifdef CONFIG_HIGHMEM
+	[ZONE_HIGHMEM] = 0,
+#endif
+	[ZONE_MOVABLE] = 0,
+};
+
+static char * const zone_names[MAX_NR_ZONES] = {
+#ifdef CONFIG_ZONE_DMA
+	 "DMA",
+#endif
+#ifdef CONFIG_ZONE_DMA32
+	 "DMA32",
+#endif
+	 "Normal",
+#ifdef CONFIG_HIGHMEM
+	 "HighMem",
+#endif
+	 "Movable",
+#ifdef CONFIG_ZONE_DEVICE
+	 "Device",
+#endif
+};
+
+const char * const migratetype_names[MIGRATE_TYPES] = {
+	"Unmovable",
+	"Movable",
+	"Reclaimable",
+	"HighAtomic",
+#ifdef CONFIG_CMA
+	"CMA",
+#endif
+#ifdef CONFIG_MEMORY_ISOLATION
+	"Isolate",
+#endif
+};
 
 recurs_lock_T	page_alloc_lock;
 
@@ -407,6 +461,59 @@ void free_pages(page_s * page, unsigned int order)
 	__free_one_page(page, pfn, zone, order);
 }
 
+
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
+void __init memblock_free_pages(page_s * page,
+		unsigned long pfn, unsigned int order)
+{
+	zone_s * zone = page_zone(page);
+	set_buddy_order(page, order);
+	add_to_free_list(page, zone, order);
+}
+
+/**
+ * free_area_init - Initialise all pg_data_t and zone data
+ * @max_zone_pfn: an array of max PFNs for each zone
+ *
+ * This will call free_area_init_node() for each active node in the system.
+ * Using the page ranges provided by memblock_set_node(), the size of each
+ * zone in each node and their holes is calculated. If the maximum PFN
+ * between two adjacent zones match, it is assumed that the zone is empty.
+ * For example, if arch_max_dma_pfn == arch_max_dma32_pfn, it is assumed
+ * that arch_max_dma32_pfn has no pages. It is also assumed that a zone
+ * starts where the previous one ended. For example, ZONE_DMA32 starts
+ * at arch_max_dma_pfn.
+ */
+void __init free_area_init(unsigned long *max_zone_pfn)
+{
+	unsigned long start_pfn, end_pfn;
+	start_pfn = 1;
+
+	for (int i = 0; i < MAX_NR_ZONES; i++) {
+		end_pfn = max(max_zone_pfn[i], start_pfn);
+		zone_s * zone = &pg_list.node_zones[i];
+		if (i == ZONE_MOVABLE)
+			continue;
+
+		zone->zone_start_pfn = start_pfn;
+		zone->spanned_pages = end_pfn - start_pfn;
+		zone->present_pages = 0;
+		zone->name = zone_names[i];
+		zone->zone_pgdat = &pg_list;
+
+		for (int j = 0; j < MAX_ORDER; j++)
+			list_hdr_init(&zone->free_area[j]);
+
+		start_pfn = end_pfn;
+	}
+}
+
+
+/*==============================================================================================*
+ *									myos page funcs for buddy system							*
+ *==============================================================================================*/
 page_s * paddr_to_page(phys_addr_t paddr)
 {
 	unsigned long pfn = round_up((uint64_t)paddr, PAGE_SIZE) / PAGE_SIZE;
@@ -422,7 +529,7 @@ phys_addr_t page_to_paddr(page_s * page)
 
 
 /*==============================================================================================*
- *								early init fuctions for buddy system							*
+ *								myos early init fuctions for buddy system						*
  *==============================================================================================*/
 void preinit_page()
 {
@@ -454,11 +561,4 @@ void init_page()
 	kparam.init_flags.buddy = 1;
 }
 
-void memblock_free_pages(page_s * page, unsigned long pfn,
-							unsigned int order)
-{
-	zone_s * zone = page_zone(page);
-	set_buddy_order(page, order);
-	add_to_free_list(page, zone, order);
-}
 

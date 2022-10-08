@@ -157,7 +157,9 @@
 		"driver.h": "c",
 		"setup.h": "c",
 		"pfn.h": "c",
-		"myos_page.h": "c"
+		"myos_page.h": "c",
+		"__ffs.h": "c",
+		"gfp.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

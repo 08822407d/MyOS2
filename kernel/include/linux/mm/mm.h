@@ -2511,23 +2511,23 @@
 	// 	return phys_pages;
 	// }
 
-	// /*
-	// * Using memblock node mappings, an architecture may initialise its
-	// * zones, allocate the backing mem_map and account for memory holes in an
-	// * architecture independent manner.
-	// *
-	// * An architecture is expected to register range of page frames backed by
-	// * physical memory with memblock_add[_node]() before calling
-	// * free_area_init() passing in the PFN each zone ends at. At a basic
-	// * usage, an architecture is expected to do something like
-	// *
-	// * unsigned long max_zone_pfns[MAX_NR_ZONES] = {max_dma, max_normal_pfn,
-	// * 							 max_highmem_pfn};
-	// * for_each_valid_physical_page_range()
-	// *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
-	// * free_area_init(max_zone_pfns);
-	// */
-	// void free_area_init(unsigned long *max_zone_pfn);
+	/*
+	* Using memblock node mappings, an architecture may initialise its
+	* zones, allocate the backing mem_map and account for memory holes in an
+	* architecture independent manner.
+	*
+	* An architecture is expected to register range of page frames backed by
+	* physical memory with memblock_add[_node]() before calling
+	* free_area_init() passing in the PFN each zone ends at. At a basic
+	* usage, an architecture is expected to do something like
+	*
+	* unsigned long max_zone_pfns[MAX_NR_ZONES] = {max_dma, max_normal_pfn,
+	* 							 max_highmem_pfn};
+	* for_each_valid_physical_page_range()
+	*	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
+	* free_area_init(max_zone_pfns);
+	*/
+	void free_area_init(unsigned long *max_zone_pfn);
 	// unsigned long node_map_pfn_alignment(void);
 	// unsigned long __absent_pages_in_range(int nid, unsigned long start_pfn,
 	// 						unsigned long end_pfn);

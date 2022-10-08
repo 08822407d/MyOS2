@@ -5,7 +5,7 @@
 
 #include "include/arch_proto.h"
 #include "include/archconst.h"
-#include "include/arch_config.h"
+#include "include/arch_glo.h"
 
 #include <obsolete/proto.h>
 

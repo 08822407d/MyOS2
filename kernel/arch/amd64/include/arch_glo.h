@@ -1,12 +1,7 @@
 #ifndef _AMD64_GLO_H_
 #define _AMD64_GLO_H_
 
-#include <linux/kernel/types.h>
-
-#include "archconst.h"
 #include "archtypes.h"
-#include "arch_proto.h"
-#include "arch_config.h"
 
 	extern uint64_t	apic_id[CONFIG_MAX_CPUS];
 	extern struct cputopo	smp_topos[CONFIG_MAX_CPUS];

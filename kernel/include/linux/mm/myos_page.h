@@ -35,7 +35,6 @@
 	#define SLAB_SIZE_BASE		32
 
 	extern pglist_data_s 	pg_list;
-	extern page_s *			mem_map;
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)

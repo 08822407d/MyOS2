@@ -1,6 +1,6 @@
 # kernel common C make flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
-				-mno-red-zone -D__KERNEL__ \
+				-mno-red-zone -D__KERNEL__ -DCONFIG_FLATMEM -DCONFIG_MAX_CPUS=256 \
 				-T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
