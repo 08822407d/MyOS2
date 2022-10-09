@@ -23,13 +23,7 @@
 #include <linux/mm/internal.h>
 
 
-
-#include <linux/kernel/minmax.h>
-#include <linux/kernel/math.h>
-#include <linux/kernel/asm-generic/bitops/__ffs.h>
-#include <linux/lib/string.h>
-#include <asm/setup.h>
-
+#include <linux/kernel/asm-generic/bitops.h>
 #include <obsolete/glo.h>
 
 

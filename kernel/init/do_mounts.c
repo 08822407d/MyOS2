@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // #include <linux/module.h>
-// #include <linux/sched.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/sched.h>
+#include <linux/kernel/ctype.h>
 // #include <linux/fd.h>
-// #include <linux/tty.h>
+#include <linux/device/tty.h>
 // #include <linux/suspend.h>
 // #include <linux/root_dev.h>
 // #include <linux/security.h>

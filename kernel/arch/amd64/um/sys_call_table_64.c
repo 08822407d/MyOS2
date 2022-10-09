@@ -7,9 +7,9 @@
 *
 ***************************************************/
 
-#include <uapi/kernel/myos_syscall.h>
+#include <uapi/kernel/unistd.h>
 
-#include "include/syscall.h"
+#include "../include/syscall.h"
 
 #define SYSCALL_COMMON(nr,sym)	extern unsigned long sym(void);
 SYSCALL_COMMON(0,no_system_call)

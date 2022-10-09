@@ -82,7 +82,7 @@
 // #include <linux/perf_event.h>
 // #include <linux/ptrace.h>
 // #include <linux/pti.h>
-// #include <linux/blkdev.h>
+#include <linux/block/blkdev.h>
 // #include <linux/sched/clock.h>
 // #include <linux/sched/task.h>
 // #include <linux/sched/task_stack.h>
@@ -103,7 +103,7 @@
 
 // #include <asm/io.h>
 // #include <asm/bugs.h>
-// #include <asm/setup.h>
+#include <asm/setup.h>
 // #include <asm/sections.h>
 // #include <asm/cacheflush.h>
 

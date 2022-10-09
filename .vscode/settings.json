@@ -160,7 +160,10 @@
 		"myos_page.h": "c",
 		"__ffs.h": "c",
 		"gfp.h": "c",
-		"bitsperlong.h": "c"
+		"bitsperlong.h": "c",
+		"bitops.h": "c",
+		"ffs.h": "c",
+		"bits.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

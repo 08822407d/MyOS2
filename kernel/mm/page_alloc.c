@@ -15,7 +15,7 @@
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
 
-// #include <linux/kernel/stddef.h>
+#include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 // #include <linux/highmem.h>
 // #include <linux/swap.h>
@@ -78,19 +78,12 @@
 // #include <asm/sections.h>
 // #include <asm/tlbflush.h>
 // #include <asm/div64.h>
-// #include "internal.h"
+#include <linux/mm/internal.h>
 // #include "shuffle.h"
 // #include "page_reporting.h"
 
 
-#include <linux/lib/string.h>
-#include <asm/setup.h>
-
 #include <obsolete/glo.h>
-#include <obsolete/ktypes.h>
-#include <obsolete/printk.h>
-#include "../arch/amd64/include/archconst.h"
-#include "../arch/amd64/include/arch_proto.h"
 #include "../arch/amd64/include/mutex.h"
 
 

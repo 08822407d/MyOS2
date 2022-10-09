@@ -12,3 +12,4 @@ file(GLOB ARCH_ASM_SRCS *.S)
 target_sources(kern PRIVATE ${ARCH_C_SRCS} ${ARCH_ASM_SRCS})
 
 add_subdirectory(kernel)
+add_subdirectory(um)

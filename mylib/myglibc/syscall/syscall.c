@@ -8,8 +8,7 @@
 ***************************************************/
 #include <errno.h>
 
-#include "syscall.h"
-
+#include <uapi/kernel/unistd.h>
 
 #define SYSFUNC_DEF(name)						\
 			_SYSFUNC_DEF_(name, __NR_##name)
@@ -33,7 +32,7 @@ SYSFUNC_DEF(close)
 SYSFUNC_DEF(read)
 SYSFUNC_DEF(write)
 
-SYSFUNC_DEF(newfstat)
+SYSFUNC_DEF(fstat)
 
 SYSFUNC_DEF(lseek)
 
@@ -61,8 +60,8 @@ SYSFUNC_DEF(getppid)
 
 SYSFUNC_DEF(reboot)
 
-SYSFUNC_DEF(init_module)
-SYSFUNC_DEF(delete_module)
+// SYSFUNC_DEF(init_module)
+// SYSFUNC_DEF(delete_module)
 
 SYSFUNC_DEF(getdents64)
 

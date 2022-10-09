@@ -18,7 +18,7 @@
 #include <linux/kernel/types.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/kernel.h>
+#include <linux/kernel/kernel.h>
 // #include <linux/export.h>
 // #include <linux/bug.h>
 #include <linux/lib/errno.h>
@@ -28,8 +28,6 @@
 // #include <asm/byteorder.h>
 // #include <asm/word-at-a-time.h>
 // #include <asm/page.h>
-
-#include <obsolete/proto.h>
 
 // // #ifndef __HAVE_ARCH_STRNCASECMP
 // /**
