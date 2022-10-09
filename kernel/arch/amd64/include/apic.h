@@ -15,13 +15,6 @@
 #ifndef _AMD64_APIC_H_
 #define _AMD64_APIC_H_
 
-#include <linux/lib/list.h>
-
-
-#include <obsolete/ktypes.h>
-
-#include "archconst.h"
-
 	/*
 	32  ~   55	I/O APIC
 		32	8259A

@@ -36,13 +36,13 @@
 // #include <uapi/linux/sched/types.h>
 
 // #include <linux/binfmts.h>
-// #include <linux/bitops.h>
+#include <linux/kernel/bitops.h>
 // #include <linux/compat.h>
 // #include <linux/context_tracking.h>
 // #include <linux/cpufreq.h>
 // #include <linux/cpuidle.h>
 // #include <linux/cpuset.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/ctype.h>
 // #include <linux/debugfs.h>
 // #include <linux/delayacct.h>
 // #include <linux/energy_model.h>

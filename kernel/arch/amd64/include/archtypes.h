@@ -2,7 +2,6 @@
 #define _AMD64_TYPES_H
 
 #include <linux/kernel/types.h>
-#include <linux/kernel/stddef.h>
 
 /*==============================================================================================*
  *										segment structs								 			*

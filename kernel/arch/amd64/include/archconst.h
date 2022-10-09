@@ -9,7 +9,6 @@
 	/* Table sizes. */
 	#define IDT_SIZE			256	// the table is set to it's maximal size
 
-
 	/* GDT layout (SYSENTER/SYSEXIT compliant) */ // partial copied from minix3
 	#define NULL_DESC_INDEX		0
 	#define KERN_CS_INDEX       1
@@ -57,9 +56,9 @@
 	#define ARCH_PG_PAT			(1 << 7ULL)
 	#define ARCH_PG_GLOBAL		(1 << 8ULL)
 
-	#define CANONICAL_ADDR(x)		((x) & 0xFFFFFFFFFFFF)
-	#define ARCH_PGS_ADDR(x)		round_down((CANONICAL_ADDR(x)), CONST_4K)
-	#define ARCH_PGS_ATTR(x)		(x & 0x1FF)
+	#define CANONICAL_ADDR(x)	((x) & 0xFFFFFFFFFFFF)
+	#define ARCH_PGS_ADDR(x)	round_down((CANONICAL_ADDR(x)), CONST_4K)
+	#define ARCH_PGS_ATTR(x)	(x & 0x1FF)
 
 	/* CRn registers bits */
 	#define IA32_CR0_PE			(1 << 0)

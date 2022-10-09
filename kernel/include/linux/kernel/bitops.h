@@ -26,11 +26,11 @@
 	// extern unsigned int __sw_hweight32(unsigned int w);
 	// extern unsigned long __sw_hweight64(__u64 w);
 
-	// /*
-	// * Include this here because some architectures need generic_ffs/fls in
-	// * scope
-	// */
-	// #include <asm/bitops.h>
+	/*
+	* Include this here because some architectures need generic_ffs/fls in
+	* scope
+	*/
+	#include <asm/bitops.h>
 
 	// static inline int get_bitmask_order(unsigned int count)
 	// {

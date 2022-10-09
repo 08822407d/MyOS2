@@ -1,10 +1,7 @@
 #ifndef _AMD64_PROC_H_
 #define _AMD64_PROC_H_
 
-#include <linux/lib/list.h>
-
-
-#include "arch_proto.h"
+#include <linux/kernel/types.h>
 
 typedef struct arch_task
 {
@@ -32,6 +29,5 @@ typedef struct mm
 	reg_t	start_brk,end_brk;
 	reg_t	start_stack;
 } mm_s;
-
 
 #endif /* _AMD64_PROC_H_ */

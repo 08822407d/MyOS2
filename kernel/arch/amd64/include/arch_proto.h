@@ -5,7 +5,6 @@
 #include <linux/kernel/sched.h>
 
 #include "archtypes.h"
-#include "archconst.h"
 
 /*==============================================================================================*
  *										external symbols							 			*
@@ -202,8 +201,8 @@
 	int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_t * ret_cr3);
 	int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys);
 	void pg_creat_hierarchy(mm_s * mm, virt_addr_t vaddr, uint64_t attr);
-	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr);
-	void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr);
+	void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[], uint64_t attr);
+	void fill_pdpte(PDPTE_T * pdpte_ptr, PDE_T pd_ptr[], uint64_t attr);
 	void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr);
 	PDPTE_T * get_pdpt(PML4E_T * pml4_ptr, uint64_t pml4e_idx);
 	PDE_T * get_pd(PDPTE_T * pdpt_ptr, uint64_t pdpte_idx);

@@ -93,7 +93,7 @@
 // #include <linux/module.h>
 #include <linux/device/device.h>
 // #include <linux/wait.h>
-// #include <linux/bitops.h>
+#include <linux/kernel/bitops.h>
 // #include <linux/delay.h>
 // #include <linux/seq_file.h>
 // #include <linux/serial.h>

@@ -11,12 +11,12 @@
 // #include <linux/export.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/mm.h>
+#include <linux/mm/mm.h>
 // #include <linux/sched/signal.h>
 // #include <linux/slab.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
-// #include <linux/bitops.h>
+#include <linux/kernel/bitops.h>
 // #include <linux/spinlock.h>
 // #include <linux/rcupdate.h>
 // #include <linux/close_range.h>

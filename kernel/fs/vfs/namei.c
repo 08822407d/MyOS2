@@ -36,7 +36,7 @@
 // #include <linux/fs_struct.h>
 // #include <linux/posix_acl.h>
 // #include <linux/hash.h>
-// #include <linux/bitops.h>
+#include <linux/kernel/bitops.h>
 // #include <linux/init_task.h>
 // #include <linux/uaccess.h>
 #include <linux/fs/internal.h>

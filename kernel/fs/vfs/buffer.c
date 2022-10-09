@@ -24,12 +24,12 @@
 // #include <linux/syscalls.h>
 #include <linux/fs/fs.h>
 // #include <linux/iomap.h>
-// #include <linux/mm.h>
+#include <linux/mm/mm.h>
 // #include <linux/percpu.h>
 // #include <linux/slab.h>
 // #include <linux/capability.h>
-// #include <linux/blkdev.h>
-// #include <linux/file.h>
+#include <linux/block/blkdev.h>
+#include <linux/fs/file.h>
 // #include <linux/quotaops.h>
 // #include <linux/highmem.h>
 // #include <linux/export.h>
@@ -41,7 +41,7 @@
 // #include <linux/task_io_accounting_ops.h>
 // #include <linux/bio.h>
 // #include <linux/cpu.h>
-// #include <linux/bitops.h>
+#include <linux/kernel/bitops.h>
 // #include <linux/mpage.h>
 // #include <linux/bit_spinlock.h>
 // #include <linux/pagevec.h>
