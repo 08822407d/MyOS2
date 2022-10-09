@@ -8,7 +8,7 @@
 	* APIs (schedule(), wakeup variants, etc.)
 	*/
 
-	#include <uapi/sched.h>
+	#include <uapi/kernel/sched.h>
 
 	#include <asm/current.h>
 

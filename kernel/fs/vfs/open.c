@@ -37,7 +37,7 @@
 
 
 #include <linux/kernel/sched.h>
-#include <uapi/openat2.h>
+#include <uapi/kernel/openat2.h>
 
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))

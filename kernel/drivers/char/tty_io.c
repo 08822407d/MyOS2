@@ -66,7 +66,7 @@
  */
 
 #include <linux/kernel/types.h>
-#include <uapi/major.h>
+#include <uapi/kernel/major.h>
 #include <linux/lib/errno.h>
 // #include <linux/signal.h>
 #include <linux/kernel/fcntl.h>

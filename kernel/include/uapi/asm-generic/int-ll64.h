@@ -7,9 +7,10 @@
  */
 
 #ifndef _UAPI_ASM_GENERIC_INT_LL64_H
-#define _UAPI_ASM_GENERIC_INT_LL64_H
 
-// #include <asm/bitsperlong.h>
+	#define _UAPI_ASM_GENERIC_INT_LL64_H
+
+	#include <asm/bitsperlong.h>
 
 	#ifndef __ASSEMBLY__
 		/*

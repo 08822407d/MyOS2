@@ -15,12 +15,6 @@
 #ifndef _DISK_H_
 #define _DISK_H_
 
-#include <linux/kernel/types.h>
-
-#include <obsolete/block_dev.h>
-
-#include "mutex.h"
-
 	#define MASTER					0x0
 	#define SLAVE					0x1
 	#define IDE_CMD_BASE(c)			(0x1F0 - (c) * 0x80)
@@ -659,8 +653,8 @@
 		unsigned short Reserved14[19];
 
 		//	255		Integrity word
-		//		15:8	Checksum
-		//		7:0	Checksum Validity Indicator
+		//			15:8	Checksum
+		//			 7:0	Checksum Validity Indicator
 		unsigned short Integrity_word;
 	} __attribute__((packed)) IDE_id_dev_data_s;
 

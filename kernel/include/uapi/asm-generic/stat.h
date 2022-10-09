@@ -1,23 +1,24 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef __ASM_GENERIC_STAT_H
-#define __ASM_GENERIC_STAT_H
 
-/*
- * Everybody gets this wrong and has to stick with it for all
- * eternity. Hopefully, this version gets used by new architectures
- * so they don't fall into the same traps.
- *
- * stat64 is copied from powerpc64, with explicit padding added.
- * stat is the same structure layout on 64-bit, without the 'long long'
- * types.
- *
- * By convention, 64 bit architectures use the stat interface, while
- * 32 bit architectures use the stat64 interface. Note that we don't
- * provide an __old_kernel_stat here, which new architecture should
- * not have to start with.
- */
+	#define __ASM_GENERIC_STAT_H
 
-// #include <asm/bitsperlong.h>
+	/*
+	* Everybody gets this wrong and has to stick with it for all
+	* eternity. Hopefully, this version gets used by new architectures
+	* so they don't fall into the same traps.
+	*
+	* stat64 is copied from powerpc64, with explicit padding added.
+	* stat is the same structure layout on 64-bit, without the 'long long'
+	* types.
+	*
+	* By convention, 64 bit architectures use the stat interface, while
+	* 32 bit architectures use the stat64 interface. Note that we don't
+	* provide an __old_kernel_stat here, which new architecture should
+	* not have to start with.
+	*/
+
+	#include <asm/bitsperlong.h>
 
 	#define STAT_HAVE_NSEC 1
 

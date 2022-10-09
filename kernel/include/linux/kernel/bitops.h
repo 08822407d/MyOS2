@@ -1,12 +1,13 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_BITOPS_H
-#define _LINUX_BITOPS_H
 
-// #include <asm/types.h>
-// #include <linux/bits.h>
-// #include <linux/typecheck.h>
+	#define _LINUX_BITOPS_H
 
-#include <uapi/kernel.h>
+	// #include <asm/types.h>
+	#include <linux/kernel/bits.h>
+	// #include <linux/typecheck.h>
+
+	#include <uapi/kernel/kernel.h>
 
 	// /* Set bits in the first 'n' bytes when loaded from memory */
 	// #ifdef __LITTLE_ENDIAN

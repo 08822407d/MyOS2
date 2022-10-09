@@ -18,7 +18,7 @@
 
 #include <linux/kernel/init_syscalls.h>
 #include <linux/fs/mount.h>
-#include <uapi/mount.h>
+#include <uapi/kernel/mount.h>
 
 mount_s root_mnt;
 

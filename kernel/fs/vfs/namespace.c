@@ -28,7 +28,7 @@
 // #include <linux/proc_fs.h>
 // #include <linux/task_work.h>
 // #include <linux/sched/task.h>
-#include <uapi/mount.h>
+#include <uapi/kernel/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>
@@ -39,7 +39,7 @@
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
-#include <uapi/fcntl.h>
+#include <uapi/kernel/fcntl.h>
 #include <linux/lib/errno.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>

@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef _ASM_GENERIC_FCNTL_H
-#define _ASM_GENERIC_FCNTL_H
 
-#include <linux/kernel/types.h>
+	#define _ASM_GENERIC_FCNTL_H
+
+	#include <linux/kernel/types.h>
 
 	/*
 	* FMODE_EXEC is 0x20

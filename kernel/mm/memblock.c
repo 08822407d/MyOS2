@@ -75,9 +75,9 @@ memblock_s memblock = {
 			rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
 
 /* adjust *@size so that (@base + *@size) doesn't overflow, return new size */
-static inline size_t memblock_cap_size(phys_addr_t base, size_t *size)
+static inline phys_addr_t memblock_cap_size(phys_addr_t base, phys_addr_t *size)
 {
-	return *size = min(*size, PHYS_ADDR_MAX - (size_t)base);
+	return *size = min(*size, PHYS_ADDR_MAX - base);
 }
 
 /*
@@ -89,8 +89,8 @@ static unsigned long memblock_addrs_overlap(phys_addr_t base1, size_t size1,
 	return ((base1 < (base2 + size2)) && (base2 < (base1 + size1)));
 }
 
-bool memblock_overlaps_region(	memblock_type_s *type,
-								phys_addr_t base, size_t size)
+bool memblock_overlaps_region(memblock_type_s *type,
+				phys_addr_t base, phys_addr_t size)
 {
 	unsigned long i;
 
@@ -243,7 +243,7 @@ static void memblock_insert_region(	memblock_type_s *type,
  * 0 on success, -errno on failure.
  */
 static int __init memblock_add_range(memblock_type_s *type,
-		phys_addr_t base, size_t size, enum memblock_flags flags)
+		phys_addr_t base, phys_addr_t size, enum memblock_flags flags)
 {
 	phys_addr_t end = base + memblock_cap_size(base, &size);
 	int idx;

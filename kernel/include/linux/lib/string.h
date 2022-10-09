@@ -7,7 +7,7 @@
 #include <linux/kernel/stddef.h>	/* for NULL */
 #include <linux/lib/errno.h>	/* for E2BIG */
 #include <linux/lib/stdarg.h>
-#include <uapi/string.h>
+#include <uapi/kernel/string.h>
 
 	// extern char *strndup_user(const char __user *, long);
 	// extern void *memdup_user(const void __user *, size_t);

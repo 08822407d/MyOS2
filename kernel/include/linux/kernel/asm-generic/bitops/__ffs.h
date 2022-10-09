@@ -2,7 +2,7 @@
 #ifndef _ASM_GENERIC_BITOPS___FFS_H_
 #define _ASM_GENERIC_BITOPS___FFS_H_
 
-#include <uapi/types.h>
+#include <uapi/kernel/types.h>
 
 #include <linux/kernel/compiler_attributes.h>
 

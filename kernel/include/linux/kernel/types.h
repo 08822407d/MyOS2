@@ -3,7 +3,7 @@
 #define _LINUX_TYPES_H
 
 	#define __EXPORTED_HEADERS__
-	#include <uapi/types.h>
+	#include <uapi/kernel/types.h>
 
 	#ifndef __ASSEMBLY__
 
@@ -167,8 +167,6 @@
 		// #else
 		// 	typedef u32		phys_addr_t;
 		// #endif
-		// typedef void	*phys_addr_t;
-		// typedef void	*virt_addr_t;
 
 		typedef phys_addr_t	resource_size_t;
 

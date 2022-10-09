@@ -32,7 +32,7 @@
 // #include <linux/instruction_pointer.h>
 // #include <asm/byteorder.h>
 
-#include <uapi/kernel.h>
+#include <uapi/kernel/kernel.h>
 
 	// #define STACK_MAGIC	0xdeadbeef
 

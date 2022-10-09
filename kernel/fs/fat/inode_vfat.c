@@ -31,9 +31,9 @@
 #include <linux/lib/string.h> /// need replace
 #include <linux/lib/errno.h>
 
-#include <uapi/stat.h>
-#include <uapi/magic.h>
-#include <uapi/msdos_fs.h>
+#include <uapi/kernel/stat.h>
+#include <uapi/kernel/magic.h>
+#include <uapi/kernel/msdos_fs.h>
 
 #include <obsolete/proto.h>
 #include <linux/fs/fs.h>

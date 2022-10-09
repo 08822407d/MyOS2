@@ -15,7 +15,7 @@
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
 // #include <linux/fsnotify.h>
-#include <uapi/dirent.h>
+#include <linux/kernel/dirent.h>
 // #include <linux/security.h>
 // #include <linux/syscalls.h>
 // #include <linux/unistd.h>

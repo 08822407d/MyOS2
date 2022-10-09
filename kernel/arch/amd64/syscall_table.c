@@ -7,7 +7,7 @@
 *
 ***************************************************/
 
-#include <uapi/syscall.h>
+#include <uapi/kernel/myos_syscall.h>
 
 #include "include/syscall.h"
 

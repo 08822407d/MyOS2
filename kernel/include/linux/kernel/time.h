@@ -97,6 +97,6 @@
 	//  */
 	// #define time_between32(t, l, h) ((u32)(h) - (u32)(l) >= (u32)(t) - (u32)(l))
 
-	# include <linux/vdso/time.h>
+	#include <uapi/kernel/types.h>
 
 #endif

@@ -8,7 +8,7 @@
 
 // #include <linux/kernel/compiler.h>
 #include <linux/kernel/types.h>
-#include <uapi/posix_types.h>
+#include <uapi/kernel/posix_types.h>
 #include <linux/lib/errno.h>
 
 #include <linux/fs/vfs_s_defs.h>

@@ -12,7 +12,7 @@
 
 
 #include <linux/fs/vfs_s_defs.h>
-#include <uapi/stddef.h>
+#include <uapi/kernel/stddef.h>
 
 	/* inode in-kernel data */
 

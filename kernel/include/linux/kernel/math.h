@@ -3,7 +3,7 @@
 #define _LINUX_MATH_H
 
 // #include <asm/div64.h>
-#include <uapi/kernel.h>
+#include <uapi/kernel/kernel.h>
 
 	/*
 	* This looks more complex than it should be. But we need to

@@ -32,7 +32,7 @@
 // #include <linux/security.h>
 
 
-#include <uapi/major.h>
+#include <uapi/kernel/major.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/minmax.h>
 #include <linux/fs/fs.h>

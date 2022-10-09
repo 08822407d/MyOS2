@@ -159,7 +159,8 @@
 		"pfn.h": "c",
 		"myos_page.h": "c",
 		"__ffs.h": "c",
-		"gfp.h": "c"
+		"gfp.h": "c",
+		"bitsperlong.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

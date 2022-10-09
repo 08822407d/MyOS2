@@ -3,7 +3,7 @@
 #define _MYOS_MM_H
 
 #include <linux/mm/mmzone.h>
-#include <uapi/const.h>
+#include <uapi/kernel/const.h>
 
 #include <obsolete/block_dev.h>
 #include "../arch/amd64/include/archconst.h"

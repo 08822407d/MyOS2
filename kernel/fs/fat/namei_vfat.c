@@ -2,7 +2,7 @@
 #include <linux/lib/errno.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
-#include <uapi/msdos_fs.h>
+#include <uapi/kernel/msdos_fs.h>
 
 #include <linux/fs/fat32.h>
 #include <obsolete/proto.h>

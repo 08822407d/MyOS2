@@ -11,7 +11,7 @@
 			#endif /* __EXPORTED_HEADERS__ */
 		#endif
 
-		#include <uapi/posix_types.h>
+		#include <uapi/kernel/posix_types.h>
 
 		#ifndef NULL
 			#define NULL ((void *)0)
@@ -55,4 +55,11 @@
 		typedef unsigned __bitwise __poll_t;
 
 	#endif /*  __ASSEMBLY__ */
+
+	// <linux/vdso/time.h> contents
+	typedef struct timens_offset {
+		s64	sec;
+		u64	nsec;
+	} timens_offset_s;
+
 #endif /* _UAPI_LINUX_TYPES_H */

@@ -15,7 +15,7 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
-#include <uapi/msdos_fs.h>
+#include <uapi/kernel/msdos_fs.h>
 
 
 	struct FAT32_IO_BUFFER;

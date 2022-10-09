@@ -1,8 +1,9 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef _ASM_GENERIC_ERRNO_H
-#define _ASM_GENERIC_ERRNO_H
 
-#include <uapi/asm-generic/errno-base.h>
+	#define _ASM_GENERIC_ERRNO_H
+
+	#include <uapi/asm-generic/errno-base.h>
 
 	#define	EDEADLK			35	/* Resource deadlock would occur */
 	#define	ENAMETOOLONG	36	/* File name too long */

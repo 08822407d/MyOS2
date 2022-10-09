@@ -9,7 +9,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/slab.h>
 // #include <linux/kmod.h>
-// #include <uapi/major.h>
+// #include <uapi/kernel/major.h>
 // #include <linux/device_cgroup.h>
 #include <linux/block/blkdev.h>
 // #include <linux/blk-integrity.h>
@@ -31,8 +31,8 @@
 
 
 #include <linux/fs/fs.h>
-#include <uapi/stat.h>
-#include <uapi/magic.h>
+#include <uapi/kernel/stat.h>
+#include <uapi/kernel/magic.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
