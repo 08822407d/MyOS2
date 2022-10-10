@@ -178,8 +178,7 @@ long sys_getcwd(char *buf, unsigned long size)
 	// } else {
 		unsigned len;
 		b.len = PATH_MAX;
-		bufhead = myos_kmalloc(b.len);
-		memset(bufhead, 0, b.len);
+		bufhead = kzalloc(b.len, GFP_KERNEL);
 		b.buf = bufhead + PATH_MAX;
 
 		prepend(&b, "", 1);

@@ -6,7 +6,6 @@
 #include <uapi/kernel/msdos_fs.h>
 
 #include <linux/fs/fat32.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
@@ -75,7 +74,7 @@ static int vfat_create_shortname(const char *name, int len, char *name_res)
 	int ret_val = 0;
 	loff_t ext_idx;
 	memset(name_res, ' ', MSDOS_NAME);
-	char *name_upper = myos_kmalloc(len + 1);
+	char *name_upper = kzalloc(len + 1, GFP_KERNEL);
 	for (int i = 0; i < len; i++)
 		name_upper[i] = toupper(name[i]);
 	name_upper[len] = '\0';
@@ -139,8 +138,7 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 	cksum = fat_checksum(msdos_name);
 
 	*nr_slots = (len + 12) / 13;
-	char *namebuf = myos_kmalloc(*nr_slots * 13);
-	memset(namebuf, 0, *nr_slots * 13);
+	char *namebuf = kzalloc(*nr_slots * 13, GFP_KERNEL);
 	memcpy(namebuf, name, len);
 	for (ps = slots, i = *nr_slots; i > 0; i--, ps++) {
 		ps->id = i;
@@ -188,10 +186,9 @@ int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 	if (len == 0)
 		return -ENOENT;
 
-	slots = myos_kmalloc(MSDOS_SLOTS * sizeof(msdos_dirent_s));
+	slots = kzalloc(MSDOS_SLOTS * sizeof(msdos_dirent_s), GFP_KERNEL);
 	if (slots == NULL)
 		return -ENOMEM;
-	memset(slots, 0, MSDOS_SLOTS * sizeof(msdos_dirent_s));
 
 	err = vfat_build_slots(dir, qname->name, len, is_dir, cluster, slots, &nr_slots);
 	if (err)
