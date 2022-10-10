@@ -1,17 +1,12 @@
 #include <linux/kernel/slab.h>
-#include <linux/kernel/types.h>
-#include <linux/kernel/stddef.h>
-#include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/myos_slab.h>
 #include <linux/lib/string.h>
-#include <asm/setup.h>
 
 #include <klib/utils.h>
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include "../arch/amd64/include/arch_glo.h"
 
 List_hdr_s		slabcache_lhdr;
 recurs_lock_T	slab_alloc_lock;
@@ -20,7 +15,6 @@ slab_cache_s *	slab_cache_groups_p;
 slab_s *		base_slabs_p;
 uint8_t	*		base_slab_pages_p;
 
-void * myos_kmalloc(size_t size);
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
@@ -92,12 +86,12 @@ slab_s * slab_alloc(slab_s * cslp)
 				ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
-	slab_s * nslp = (slab_s *)myos_kmalloc(sizeof(slab_s));
+	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
 	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = pgp;
 	pgp->slab_ptr = nslp;
-	nslp->colormap = (bitmap_t *)myos_kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
+	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
 	nslp->total =
 	nslp->free = cslp->total;
 	nslp->virt_addr = phys2virt(page_paddr);
@@ -116,7 +110,7 @@ void slab_free(slab_s * slp)
 	kfree(slp);
 }
 
-void * myos_kmalloc(size_t size)
+void * __kmalloc(size_t size, gfp_t flags)
 {
 	#ifdef DEBUG
 		// make sure have init slab
@@ -195,17 +189,11 @@ void * myos_kmalloc(size_t size)
 		}
 
 		unlock_recurs_lock(&slab_alloc_lock);
+
+		if (flags & __GFP_ZERO)
+			memset(ret_val, 0, size);
 	}
 
-	return ret_val;
-}
-
-void *__kmalloc(size_t size, gfp_t flags)
-{
-	void *ret_val = myos_kmalloc(size);
-	if ((ret_val != NULL) && (flags & __GFP_ZERO))
-		memset(ret_val, 0, size);
-	
 	return ret_val;
 }
 

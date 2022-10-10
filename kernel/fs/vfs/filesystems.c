@@ -14,12 +14,10 @@
 // #include <linux/kmod.h>
 #include <linux/init/init.h>
 // #include <linux/module.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/uaccess.h>
 // #include <linux/fs_parser.h>
 
-
-#include <linux/lib/string.h>
 
 /*
  * Handling of filesystem drivers list.

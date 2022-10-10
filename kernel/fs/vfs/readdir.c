@@ -18,17 +18,14 @@
 #include <linux/kernel/dirent.h>
 // #include <linux/security.h>
 // #include <linux/syscalls.h>
-// #include <linux/unistd.h>
+#include <uapi/kernel/unistd.h>
 // #include <linux/compat.h>
 // #include <linux/uaccess.h>
 
 // #include <asm/unaligned.h>
 
 
-#include <linux/lib/string.h>
-#include <obsolete/proto.h>
 #include <linux/kernel/align.h>
-#include "../arch/amd64/include/archconst.h"
 #include "../arch/amd64/include/arch_proto.h"
 
 typedef struct getdents_callback64 {

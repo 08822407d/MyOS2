@@ -23,21 +23,12 @@
 // #include <asm/unaligned.h>
 // #include <linux/random.h>
 // #include <linux/iversion.h>
-// #include "fat.h"
-
-#include <linux/block/buffer_head.h>
-#include <linux/kernel/types.h>
-#include <linux/kernel/asm-generic/bitops/ffs.h>
-#include <linux/lib/string.h> /// need replace
-#include <linux/lib/errno.h>
-
-#include <uapi/kernel/stat.h>
-#include <uapi/kernel/magic.h>
-#include <uapi/kernel/msdos_fs.h>
-
-#include <linux/kernel/slab.h>
-#include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
+
+
+#include <linux/kernel/asm-generic/bitops.h>
+#include <linux/kernel/slab.h>
+#include <uapi/kernel/magic.h>
 
 extern file_ops_s FAT32_file_ops;
 

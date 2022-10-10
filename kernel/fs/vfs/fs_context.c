@@ -26,9 +26,6 @@
 #include <linux/fs/internal.h>
 
 
-#include <linux/fs/fs.h>
-#include <linux/lib/string.h>
-
 enum legacy_fs_param {
 	LEGACY_FS_UNSET_PARAMS,
 	LEGACY_FS_MONOLITHIC_PARAMS,

@@ -85,7 +85,7 @@
 // #include <linux/kd.h>
 #include <linux/mm/mm.h>
 #include <linux/lib/string.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/poll.h>
 // #include <linux/ppp-ioctl.h>
 // #include <linux/proc_fs.h>
@@ -108,7 +108,7 @@
 
 // #include <linux/kmod.h>
 // #include <linux/nsproxy.h>
-// #include "tty.h"
+#include <linux/device/tty.h>
 
 
 #include <obsolete/printk.h>

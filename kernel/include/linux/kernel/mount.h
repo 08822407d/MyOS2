@@ -8,16 +8,17 @@
  *
  */
 #ifndef _LINUX_MOUNT_H
-#define _LINUX_MOUNT_H
 
-#include <linux/kernel/types.h>
-	#include <linux/lib/list.h>
-// #include <linux/nodemask.h>
-// #include <linux/spinlock.h>
-// #include <linux/seqlock.h>
-// #include <linux/atomic.h>
+	#define _LINUX_MOUNT_H
 
-#include <linux/fs/vfs_s_defs.h>
+	#include <linux/kernel/types.h>
+		#include <linux/lib/list.h>
+	// #include <linux/nodemask.h>
+	// #include <linux/spinlock.h>
+	// #include <linux/seqlock.h>
+	// #include <linux/atomic.h>
+
+	#include <linux/fs/vfs_s_defs.h>
 
 	#define MNT_NOSUID		0x01
 	#define MNT_NODEV		0x02

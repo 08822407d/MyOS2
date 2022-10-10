@@ -2,16 +2,13 @@
 // #include <linux/syscalls.h>
 // #include <linux/export.h>
 // #include <linux/uaccess.h>
-// #include <linux/fs_struct.h>
+#include <linux/sched/fs_struct.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/slab.h>
 // #include <linux/prefetch.h>
 #include <linux/fs/mount.h>
 
 
-#include <linux/kernel/sched.h>
-#include <linux/lib/string.h>
-#include <linux/lib/errno.h>
 #include <obsolete/proto.h>
 
 typedef struct prepend_buffer

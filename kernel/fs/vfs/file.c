@@ -13,7 +13,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
 // #include <linux/sched/signal.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
 #include <linux/kernel/bitops.h>
@@ -23,8 +23,6 @@
 // #include <net/sock.h>
 #include <linux/fs/internal.h>
 
-
-#include <linux/kernel/sched.h>
 
 /*
  * allocate a file descriptor, mark it busy.

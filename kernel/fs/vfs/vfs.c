@@ -3,7 +3,6 @@
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
 #include <linux/fs/fat32.h>
-#include <linux/fs/ext2.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/internal.h>
 #include <linux/lib/string.h>
@@ -64,7 +63,6 @@ extern fs_type_s *file_systems;
 
 void register_diskfs(void)
 {
-	init_ext2_fs();
 	init_fat32_fs();
 	// init_vfat_fs();
 }

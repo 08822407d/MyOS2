@@ -11,7 +11,7 @@
 
 #include <linux/mm/mm.h>
 // #include <linux/miscdevice.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/vmalloc.h>
 // #include <linux/mman.h>
 // #include <linux/random.h>
@@ -32,13 +32,7 @@
 // #include <linux/security.h>
 
 
-#include <uapi/kernel/major.h>
-#include <linux/kernel/kdev_t.h>
 #include <linux/kernel/minmax.h>
-#include <linux/fs/fs.h>
-#include <linux/device/cdev.h>
-#include <asm/setup.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
 #ifdef CONFIG_IA64

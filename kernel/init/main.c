@@ -78,7 +78,7 @@
 // #include <linux/ftrace.h>
 // #include <linux/async.h>
 // #include <linux/shmem_fs.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/perf_event.h>
 // #include <linux/ptrace.h>
 // #include <linux/pti.h>
@@ -114,15 +114,11 @@
 
 
 #include <linux/kernel/sched.h>
-#include <linux/device/driver.h>
-#include <linux/fs/fs.h>
 #include <linux/lib/string.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include "../arch/amd64/include/arch_proto.h"
-#include "../arch/amd64/include/archtypes.h"
 #include "../arch/amd64/include/apic.h"
 #include "../arch/amd64/include/device.h"
 

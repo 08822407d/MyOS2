@@ -23,8 +23,8 @@
 #include <linux/fs/file.h>
 // #include <linux/uaccess.h>
 // #include <linux/proc_ns.h>
-// #include <linux/magic.h>
-// #include <linux/memblock.h>
+#include <uapi/kernel/magic.h>
+#include <linux/mm/memblock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/task_work.h>
 // #include <linux/sched/task.h>
@@ -37,11 +37,7 @@
 
 
 #include <linux/kernel/slab.h>
-#include <linux/kernel/fcntl.h>
-#include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
-#include <uapi/kernel/fcntl.h>
-#include <linux/lib/errno.h>
 #include <obsolete/printk.h>
 
 

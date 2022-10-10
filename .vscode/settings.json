@@ -168,7 +168,10 @@
 		"blk.h": "c",
 		"base.h": "c",
 		"init_syscalls.h": "c",
-		"class.h": "c"
+		"class.h": "c",
+		"myos_slab.h": "c",
+		"magic.h": "c",
+		"ext2.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

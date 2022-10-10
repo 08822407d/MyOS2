@@ -31,7 +31,7 @@
 // #include <linux/suspend.h>
 // #include <linux/pagevec.h>
 #include <linux/block/blkdev.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/ratelimit.h>
 // #include <linux/oom.h>
 // #include <linux/topology.h>

@@ -7,7 +7,7 @@
  */
 
 #include <linux/kernel/kernel.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/init/init.h>
 #include <linux/kernel/bitops.h>
 // #include <linux/poison.h>
@@ -21,6 +21,7 @@
 // #include <linux/io.h>
 
 #include <linux/mm/internal.h>
+
 
 
 #include <linux/kernel/asm-generic/bitops.h>

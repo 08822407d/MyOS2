@@ -1,9 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_FCNTL_H
-#define _LINUX_FCNTL_H
 
-#include <linux/kernel/stat.h>
-#include <uapi/kernel/fcntl.h>
+	#define _LINUX_FCNTL_H
+
+	#include <linux/kernel/stat.h>
+	#include <uapi/kernel/fcntl.h>
 
 	/* List of all valid flags for the open/openat flags argument: */
 	#define VALID_OPEN_FLAGS \

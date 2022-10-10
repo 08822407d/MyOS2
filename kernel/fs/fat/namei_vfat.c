@@ -1,9 +1,30 @@
-#include <linux/kernel/slab.h>
+// SPDX-License-Identifier: GPL-2.0-only
+/*
+ *  linux/fs/vfat/namei.c
+ *
+ *  Written 1992,1993 by Werner Almesberger
+ *
+ *  Windows95/Windows NT compatible extended MSDOS filesystem
+ *    by Gordon Chaffee Copyright (C) 1995.  Send bug reports for the
+ *    VFAT filesystem to <chaffee@cs.berkeley.edu>.  Specify
+ *    what file operation caused you trouble and if you can duplicate
+ *    the problem, send a script that demonstrates it.
+ *
+ *  Short name translation 1999, 2001 by Wolfram Pienkoss <wp@bszh.de>
+ *
+ *  Support Multibyte characters and cleanup by
+ *				OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+ */
+
+// #include <linux/module.h>
 #include <linux/kernel/ctype.h>
-#include <linux/lib/errno.h>
-#include <linux/fs/fs.h>
+#include <linux/kernel/slab.h>
+#include <linux/fs/namei.h>
+#include <linux/kernel/kernel.h>
+// #include <linux/iversion.h>
 #include <linux/fs/fat.h>
-#include <uapi/kernel/msdos_fs.h>
+
+
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>

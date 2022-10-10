@@ -4,14 +4,15 @@
  */
 
 #ifndef __LINUX_FILE_H_
-#define __LINUX_FILE_H_
 
-// #include <linux/kernel/compiler.h>
-#include <linux/kernel/types.h>
-#include <uapi/kernel/posix_types.h>
-#include <linux/lib/errno.h>
+	#define __LINUX_FILE_H_
 
-#include <linux/fs/vfs_s_defs.h>
+	#include <linux/kernel/compiler.h>
+	#include <linux/kernel/types.h>
+	#include <uapi/kernel/posix_types.h>
+	#include <linux/lib/errno.h>
+
+	#include <linux/fs/vfs_s_defs.h>
 
 	extern void fput(file_s *file);
 	extern void fput_many(file_s *, unsigned int);

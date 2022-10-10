@@ -43,7 +43,6 @@
 #include <linux/fs/mount.h>
 
 
-#include <linux/lib/string.h>
 #include <obsolete/printk.h>
 #include "../arch/amd64/include/arch_proto.h"
 

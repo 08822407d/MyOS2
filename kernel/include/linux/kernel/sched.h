@@ -2485,9 +2485,6 @@
 		unsigned tail; // point to next unit of the last non-null
 	} task_queue_s;
 	
-	// task_s *get_current_task(void);
-	// #define curr_tsk get_current_task()
-
 	void early_init_task(size_t lcpu_nr);
 	void init_task(size_t lcpu_nr);
 	void preinit_arch_task(void);

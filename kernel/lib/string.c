@@ -22,7 +22,7 @@
 // #include <linux/export.h>
 // #include <linux/bug.h>
 #include <linux/lib/errno.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 
 // #include <asm/unaligned.h>
 // #include <asm/byteorder.h>

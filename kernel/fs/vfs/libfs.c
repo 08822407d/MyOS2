@@ -26,8 +26,6 @@
 #include <linux/fs/internal.h>
 
 
-#include <asm/setup.h>
-
 int simple_statfs(dentry_s *dentry, kstatfs_s *buf)
 {
 	buf->f_type = dentry->d_sb->s_magic;

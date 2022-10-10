@@ -11,7 +11,7 @@
 // #include <linux/fdtable.h>
 // #include <linux/fsnotify.h>
 // #include <linux/module.h>
-// #include <linux/tty.h>
+#include <linux/device/tty.h>
 #include <linux/fs/namei.h>
 // #include <linux/backing-dev.h>
 // #include <linux/capability.h>
@@ -19,7 +19,7 @@
 // #include <linux/security.h>
 #include <linux/kernel/mount.h>
 #include <linux/kernel/fcntl.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/uaccess.h>
 #include <linux/fs/fs.h>
 // #include <linux/personality.h>
@@ -34,10 +34,6 @@
 // #include <linux/compat.h>
 // #include <linux/mnt_idmapping.h>
 #include <linux/fs/internal.h>
-
-
-#include <linux/kernel/sched.h>
-#include <uapi/kernel/openat2.h>
 
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))

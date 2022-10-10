@@ -1,6 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_NAMEI_H
-#define _LINUX_NAMEI_H
+
+	#define _LINUX_NAMEI_H
 
 	#define ND_ROOT_PRESET	1
 	#define ND_ROOT_GRABBED	2
@@ -9,12 +10,12 @@
 	#define MAXSYMLINKS		40
 	enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
 
-#include <linux/fs/fs.h>
-#include <linux/fs/path.h>
-// #include <linux/kernel.h>
-#include <linux/kernel/fcntl.h>
+	#include <linux/fs/fs.h>
+	#include <linux/fs/path.h>
+	#include <linux/kernel/kernel.h>
+	#include <linux/kernel/fcntl.h>
 
-#include <linux/lib/errno.h>
+	#include <linux/lib/errno.h>
 
 	enum { MAX_NESTED_LINKS = 8 };
 

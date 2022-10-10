@@ -1,4 +1,3 @@
-#include <obsolete/proto.h>
 #include <linux/mm/page.h>
 #include <linux/mm/myos_slab.h>
 

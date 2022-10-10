@@ -51,7 +51,7 @@
 // #include <uapi/kernel/major.h>
 // #include <linux/mutex.h>
 // #include <linux/string_helpers.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/sed-opal.h>
 // #include <linux/pm_runtime.h>
 // #include <linux/pr.h>
@@ -73,9 +73,6 @@
 // #include "scsi_priv.h"
 // #include "scsi_logging.h"
 
-
-
-#include <obsolete/proto.h>
 
 /**
  *	sd_probe - called during driver initialization and whenever a

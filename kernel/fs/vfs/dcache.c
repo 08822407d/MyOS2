@@ -28,15 +28,13 @@
 // #include <linux/export.h>
 // #include <linux/security.h>
 // #include <linux/seqlock.h>
-// #include <linux/memblock.h>
+#include <linux/mm/memblock.h>
 // #include <linux/bit_spinlock.h>
 // #include <linux/rculist_bl.h>
 // #include <linux/list_lru.h>
 #include <linux/fs/internal.h>
 #include <linux/fs/mount.h>
 
-
-#include <linux/drivers/base.h>
 
 /*
  * Usage:
