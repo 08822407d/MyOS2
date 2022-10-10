@@ -19,8 +19,6 @@
 
 #include <linux/lib/errno.h>
 
-#include <obsolete/proto.h>
-
 struct probe;
 typedef struct probe probe_s;
 
@@ -52,7 +50,7 @@ int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range,
 	if (n > 255)
 		n = 255;
 
-	p = myos_kmalloc(n * sizeof(probe_s));
+	p = kmalloc(n * sizeof(probe_s), GFP_KERNEL);
 	if (p == NULL)
 		return -ENOMEM;
 

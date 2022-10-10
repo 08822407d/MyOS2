@@ -30,7 +30,6 @@
 #include <linux/block/blk.h>
 
 
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
 typedef struct bdev_inode {
@@ -50,7 +49,7 @@ block_device_s *I_BDEV(inode_s *inode)
 
 static inode_s *bdev_alloc_inode(super_block_s *sb)
 {
-	bdev_inode_s *ei = myos_kmalloc(sizeof(bdev_inode_s));
+	bdev_inode_s *ei = kmalloc(sizeof(bdev_inode_s), GFP_KERNEL);
 
 	if (!ei)
 		return NULL;

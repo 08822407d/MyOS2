@@ -5,10 +5,10 @@
  *  Copyright (C) 1991, 1992  Linus Torvalds
  */
 
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kdev_t.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 
 #include <uapi/kernel/major.h>
@@ -20,15 +20,10 @@
 #include <linux/device/cdev.h>
 // #include <linux/mutex.h>
 // #include <linux/backing-dev.h>
-// #include <linux/tty.h>
+#include <linux/device/tty.h>
 
 #include <linux/fs/internal.h>
 
-
-#include <linux/lib/list.h>
-#include <linux/kernel/stddef.h>
-#include <linux/fs/vfs_s_defs.h>
-#include <obsolete/proto.h>
 
 static kobj_map_s *cdev_map;
 
@@ -156,7 +151,7 @@ void cdev_del(cdev_s *p)
  */
 cdev_s *cdev_alloc(void)
 {
-	cdev_s *p = myos_kmalloc(sizeof(cdev_s));
+	cdev_s *p = kzalloc(sizeof(cdev_s), GFP_KERNEL);
 	if (p)
 		list_init(&p->list, p);
 

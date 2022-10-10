@@ -32,9 +32,6 @@
 // #include "blk-rq-qos.h"
 
 
-#include <obsolete/proto.h>
-
-
 class_s block_class = {
 	.name		= "block",
 	// .dev_uevent	= block_uevent,
@@ -47,7 +44,7 @@ gendisk_s *__alloc_disk_node(request_queue_s *q)
 	if (q == NULL)
 		return NULL;
 
-	disk = myos_kmalloc(sizeof(gendisk_s));
+	disk = kzalloc(sizeof(gendisk_s), GFP_KERNEL);
 	if (disk == NULL)
 		return ERR_PTR(-ENOMEM);
 
