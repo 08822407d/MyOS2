@@ -5,13 +5,13 @@
  */
 // #include <linux/export.h>
 #include <linux/fs/fs.h>
-// #include <linux/mm.h>
+#include <linux/mm/mm.h>
 // #include <linux/backing-dev.h>
 // #include <linux/hash.h>
 // #include <linux/swap.h>
 // #include <linux/security.h>
 #include <linux/device/cdev.h>
-// #include <linux/memblock.h>
+#include <linux/mm/memblock.h>
 // #include <linux/fsnotify.h>
 #include <linux/kernel/mount.h>
 // #include <linux/posix_acl.h>
@@ -25,7 +25,6 @@
 
 
 #include <linux/kernel/slab.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
 /*
@@ -123,7 +122,7 @@ static inode_s *alloc_inode(super_block_s *sb)
 	if (ops->alloc_inode != NULL)
 		inode = ops->alloc_inode(sb);
 	else
-		inode = myos_kmalloc(sizeof(inode_s));
+		inode = kmalloc(sizeof(inode_s), GFP_KERNEL);
 
 	if (inode == NULL)
 		return NULL;

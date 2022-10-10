@@ -42,19 +42,18 @@
 #include <linux/fs/mount.h>
 #include <uapi/kernel/fcntl.h>
 #include <linux/lib/errno.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
 
 static mount_s *alloc_vfsmnt(const char *name)
 {
-	mount_s *mnt = myos_kmalloc(sizeof(mount_s));
+	mount_s *mnt = kzalloc(sizeof(mount_s), GFP_KERNEL);
 	if (mnt == NULL)
 		goto out;
 
 	if (name) {
 		size_t len = strlen(name);
-		mnt->mnt_devname = myos_kmalloc(len + 1);
+		mnt->mnt_devname = kzalloc(len + 1, GFP_KERNEL);
 		if (mnt->mnt_devname == NULL)
 			goto out_free_cache;
 
@@ -128,7 +127,7 @@ static mountpoint_s *get_mountpoint(IN dentry_s *dentry)
 	mountpoint_s *mp, *new = NULL;
 	int ret;
 
-	new = myos_kmalloc(sizeof(mountpoint_s));
+	new = kzalloc(sizeof(mountpoint_s), GFP_KERNEL);
 	if (new == NULL)
 		return ERR_PTR(-ENOMEM);
 
@@ -384,7 +383,7 @@ static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 	mount_s * mnt;
 	int err;
 
-	mnt = myos_kmalloc((sizeof(mount_s)));
+	mnt = kzalloc(sizeof(mount_s), GFP_KERNEL);
 	if (mnt == NULL)
 		return ERR_PTR(-ENOMEM);
 

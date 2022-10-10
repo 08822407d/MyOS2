@@ -44,7 +44,6 @@
 
 
 #include <linux/lib/string.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include "../arch/amd64/include/arch_proto.h"
 
@@ -72,7 +71,7 @@ typedef struct nameidata
  *==============================================================================================*/
 static inline filename_s *__getname()
 {
-	filename_s *name = myos_kmalloc(sizeof(filename_s));
+	filename_s *name = kmalloc(sizeof(filename_s), GFP_KERNEL);
 	if (name == NULL)
 		return ERR_PTR(-ENOMEM);
 	else
@@ -96,14 +95,13 @@ filename_s *getname(const char *u_filename)
 	// }
 
 	name->len = len;
-	name->name = myos_kmalloc(len + 16);
+	name->name = kzalloc(len + 16, GFP_KERNEL);
 	if (name->name == NULL)
 	{
 		kfree(name);
 		return ERR_PTR(-ENOMEM);
 	}
 
-	memset((void *)name->name, 0, len + 1);
 	len = strncpy_from_user((void *)name->name, (void *)u_filename, len);
 	if (len < 0)
 	{
@@ -126,14 +124,13 @@ filename_s *getname_kernel(const char *k_filename)
 		return ERR_PTR(-ENAMETOOLONG);
 	name->len = len;
 
-	name->name = myos_kmalloc(len + 1);
+	name->name = kzalloc(len + 1, GFP_KERNEL);
 	if (name->name == NULL)
 	{
 		kfree(name);
 		return ERR_PTR(-ENOMEM);
 	}
 
-	memset((void *)name->name, 0, len + 1);
 	char * dest = strncpy((void *)name->name, (void *)k_filename, len);
 	if (dest != name->name)
 	{

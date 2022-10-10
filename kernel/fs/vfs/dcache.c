@@ -37,7 +37,6 @@
 
 
 #include <linux/drivers/base.h>
-#include <obsolete/proto.h>
 
 /*
  * Usage:
@@ -160,18 +159,17 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
 // static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
 {
-	dentry_s * dentry = myos_kmalloc(sizeof(dentry_s));
+	dentry_s * dentry = kzalloc(sizeof(dentry_s), GFP_KERNEL);
 	if (dentry == NULL)
 		return ERR_PTR(-ENOMEM);
 
-	dentry->d_name.name = myos_kmalloc(name->len + 1);
+	dentry->d_name.name = kzalloc(name->len + 1, GFP_KERNEL);
 	if (dentry->d_name.name == NULL)
 	{
 		kfree(dentry);
 		return ERR_PTR(-ENOMEM);
 	}
 
-	memset((void *)dentry->d_name.name, 0, name->len + 1);
 	dentry->d_name.len = name->len;
 	memcpy((void *)dentry->d_name.name, name->name, name->len);
 

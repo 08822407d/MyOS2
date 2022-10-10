@@ -7,6 +7,7 @@
  */
 
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+
 // #include <linux/module.h>
 #include <linux/fs/fs_context.h>
 // #include <linux/fs_parser.h>
@@ -27,7 +28,6 @@
 
 #include <linux/fs/fs.h>
 #include <linux/lib/string.h>
-#include <obsolete/proto.h>
 
 enum legacy_fs_param {
 	LEGACY_FS_UNSET_PARAMS,
@@ -159,7 +159,7 @@ const fs_ctxt_ops_s legacy_fs_context_ops = {
  */
 static int legacy_init_fs_context(fs_ctxt_s *fc)
 {
-	fc->fs_private = myos_kmalloc(sizeof(legacy_fs_ctx_s));
+	fc->fs_private = kmalloc(sizeof(legacy_fs_ctx_s), GFP_KERNEL);
 	if (fc->fs_private == NULL)
 		return -ENOMEM;
 	fc->ops = &legacy_fs_context_ops;

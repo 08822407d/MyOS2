@@ -26,7 +26,6 @@
 #include <linux/fs/internal.h>
 
 
-#include <obsolete/proto.h>
 #include <asm/setup.h>
 
 int simple_statfs(dentry_s *dentry, kstatfs_s *buf)
@@ -93,7 +92,7 @@ pseudo_fs_ctxt_s *init_pseudo(fs_ctxt_s *fc, unsigned long magic)
 {
 	struct pseudo_fs_context *ctx;
 
-	ctx = myos_kmalloc(sizeof(pseudo_fs_ctxt_s));
+	ctx = kzalloc(sizeof(pseudo_fs_ctxt_s), GFP_KERNEL);
 	if (ctx) {
 		ctx->magic = magic;
 		fc->fs_private = ctx;
