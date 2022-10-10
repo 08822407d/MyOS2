@@ -5,7 +5,7 @@
  */
 
 #include <linux/device/driver.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/memory.h>
 // #include <linux/of.h>
 #include <linux/drivers/base.h>

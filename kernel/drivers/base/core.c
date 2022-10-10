@@ -13,7 +13,7 @@
 #include <linux/device/device.h>
 #include <linux/kernel/err.h>
 // #include <linux/fwnode.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 // #include <linux/module.h>
 // #include <linux/slab.h>
 #include <linux/lib/string.h>

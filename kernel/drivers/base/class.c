@@ -11,7 +11,7 @@
 #include <linux/device/class.h>
 #include <linux/device/device.h>
 // #include <linux/module.h>
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/err.h>

@@ -16,7 +16,7 @@
 #include <linux/kernel/kernel.h>
 // #include <linux/syscalls.h>
 #include <linux/kernel/mount.h>
-// #include <linux/device.h>
+#include <linux/device/device.h>
 #include <linux/block/genhd.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/fs.h>
@@ -30,7 +30,6 @@
 #include <linux/drivers/base.h>
 
 
-#include <linux/device/device.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 

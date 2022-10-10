@@ -9,30 +9,27 @@
 #include <linux/mm/mm.h>
 // #include <linux/slab.h>
 // #include <linux/kmod.h>
-// #include <uapi/kernel/major.h>
+#include <uapi/kernel/major.h>
 // #include <linux/device_cgroup.h>
 #include <linux/block/blkdev.h>
 // #include <linux/blk-integrity.h>
 // #include <linux/backing-dev.h>
 // #include <linux/module.h>
 // #include <linux/blkpg.h>
-// #include <linux/magic.h>
+#include <uapi/kernel/magic.h>
 #include <linux/block/buffer_head.h>
 // #include <linux/swap.h>
 // #include <linux/writeback.h>
-// #include <linux/mount.h>
+#include <linux/kernel/mount.h>
 #include <linux/fs/pseudo_fs.h>
 // #include <linux/uio.h>
 #include <linux/fs/namei.h>
 // #include <linux/part_stat.h>
 // #include <linux/uaccess.h>
-// #include "../fs/internal.h"
-// #include "blk.h"
+#include <linux/fs/internal.h>
+#include <linux/block/blk.h>
 
 
-#include <linux/fs/fs.h>
-#include <uapi/kernel/stat.h>
-#include <uapi/kernel/magic.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 

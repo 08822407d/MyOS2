@@ -163,7 +163,10 @@
 		"bitsperlong.h": "c",
 		"bitops.h": "c",
 		"ffs.h": "c",
-		"bits.h": "c"
+		"bits.h": "c",
+		"pseudo_fs.h": "c",
+		"blk.h": "c",
+		"base.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

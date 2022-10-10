@@ -4,7 +4,7 @@
  * Copyright (C) 2001  Andrea Arcangeli <andrea@suse.de> SuSE
  * Copyright (C) 2016 - 2020 Christoph Hellwig
  */
-// #include <linux/init.h>
+#include <linux/init/init.h>
 #include <linux/mm/mm.h>
 #include <linux/block/blkdev.h>
 #include <linux/block/buffer_head.h>
@@ -17,9 +17,6 @@
 #include <linux/fs/fs.h>
 // #include <linux/module.h>
 #include <linux/block/blk.h>
-
-
-#include <linux/fs/vfs_s_defs.h>
 
 /*
  * for a block special file file_inode(file)->i_size is zero

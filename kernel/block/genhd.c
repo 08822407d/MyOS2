@@ -6,7 +6,7 @@
  */
 
 // #include <linux/module.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/ctype.h>
 #include <linux/fs/fs.h>
 #include <linux/block/genhd.h>
 #include <linux/kernel/kdev_t.h>
@@ -27,7 +27,7 @@
 // #include <linux/badblocks.h>
 // #include <linux/part_stat.h>
 
-// #include "blk.h"
+#include <linux/block/blk.h>
 // #include "blk-mq-sched.h"
 // #include "blk-rq-qos.h"
 
