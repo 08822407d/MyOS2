@@ -144,25 +144,25 @@
 
 // void kmalloc_kfree_test()
 // {
-// 	unsigned char * test1 = (char *)myos_kmalloc(0x100);
-// 	unsigned char * test2 = (char *)myos_kmalloc(0x100);
-// 	unsigned char * test3 = (char *)myos_kmalloc(0x100);
-// 	unsigned char * test4 = (char *)myos_kmalloc(0x100);
+// 	unsigned char * test1 = (char *)kmalloc(0x100);
+// 	unsigned char * test2 = (char *)kmalloc(0x100);
+// 	unsigned char * test3 = (char *)kmalloc(0x100);
+// 	unsigned char * test4 = (char *)kmalloc(0x100);
 
 // 	kfree(test2);
 // 	kfree(test3);
 // 	kfree(test4);
-// 	unsigned char * test5 = (char *)myos_kmalloc(0x100);
-// 	unsigned char * test6 = (char *)myos_kmalloc(0x100);
+// 	unsigned char * test5 = (char *)kmalloc(0x100);
+// 	unsigned char * test6 = (char *)kmalloc(0x100);
 // 	kfree(test1);
 // 	kfree(test6);
-// 	unsigned char * test7 = (char *)myos_kmalloc(0x100);
-// 	unsigned char * test8 = (char *)myos_kmalloc(0x100);
+// 	unsigned char * test7 = (char *)kmalloc(0x100);
+// 	unsigned char * test8 = (char *)kmalloc(0x100);
 // 	kfree(test5);
 // 	kfree(test7);
 // 	kfree(test8);
 
-// 	color_printk(WHITE, BLACK, "myos_kmalloc test finished.\n");
+// 	color_printk(WHITE, BLACK, "kmalloc test finished.\n");
 // }
 
 // void disk_drv_test()

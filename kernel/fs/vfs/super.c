@@ -40,10 +40,8 @@
 #include <linux/fs/internal.h>
 
 
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include <linux/fs/fs.h>
-#include <linux/lib/errno.h>
 
 /**
  * get_anon_bdev - Allocate a block device for filesystems which don't have one.
@@ -110,7 +108,7 @@ void kill_litter_super(super_block_s *sb)
  */
 static super_block_s *alloc_super(fs_type_s *type, int flags)
 {
-	super_block_s *s = myos_kmalloc(sizeof(super_block_s));
+	super_block_s *s = kzalloc(sizeof(super_block_s), GFP_KERNEL);
 	if (s == NULL)
 		return ERR_PTR(-ENOMEM);
 	static const super_ops_s default_op;

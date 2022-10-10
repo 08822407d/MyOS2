@@ -44,7 +44,6 @@
 	page_s * paddr_to_page(phys_addr_t paddr);
 	phys_addr_t page_to_paddr(page_s * page);
 	void page_free(page_s *);
-	void * myos_kmalloc(size_t size);
 
 	/* video.c */
 	void init_video(void);

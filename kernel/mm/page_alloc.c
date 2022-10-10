@@ -3,7 +3,7 @@
  *  linux/mm/page_alloc.c
  *
  *  Manages the free list, the system allocates free pages here.
- *  Note that myos_kmalloc() lives in slab.c
+ *  Note that kmalloc() lives in slab.c
  *
  *  Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
  *  Swap reorganised 29.12.95, Stephen Tweedie
@@ -85,7 +85,6 @@
 
 #include <obsolete/glo.h>
 #include "../arch/amd64/include/mutex.h"
-
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:

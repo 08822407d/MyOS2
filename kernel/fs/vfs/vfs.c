@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/MBR.h>
 #include <linux/fs/GPT.h>
@@ -10,7 +11,6 @@
 
 
 #include <obsolete/printk.h>
-#include <obsolete/proto.h>
 #include <obsolete/glo.h>
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
@@ -74,8 +74,7 @@ unsigned long switch_to_root_disk()
 	// int test = kparam.init_flags.vfs;
 	// kparam.init_flags.vfs = 0;
 	// load the boot sector
-	boot_sec = (MBR_s *)myos_kmalloc(sizeof(MBR_s));
-	memset(boot_sec, 0, sizeof(MBR_s));
+	boot_sec = (MBR_s *)kzalloc(sizeof(MBR_s), GFP_KERNEL);
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 			0, 1, (unsigned char *)boot_sec);
 
@@ -93,8 +92,7 @@ unsigned long switch_to_root_disk()
 					1, 1, (unsigned char *)gpt_hdr);
 	// load all the gpt_entries
 	u32 gptent_nr = gpt_hdr->NumberOfPartitionEntries;
-	gpt_pes = (GPT_PE_s *)myos_kmalloc(gptent_nr * sizeof(GPT_PE_s));
-	memset(gpt_pes, 0, gptent_nr * sizeof(GPT_PE_s));
+	gpt_pes = (GPT_PE_s *)kzalloc(gptent_nr * sizeof(GPT_PE_s), GFP_KERNEL);
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 			gpt_hdr->PartitionEntryLBA, gptent_nr / 4, (unsigned char *)gpt_pes);
 	// load all the gpt_entries
@@ -110,7 +108,7 @@ unsigned long switch_to_root_disk()
 			if (*(puid_p + 1) == EFIBOOT_PART_GUID_HIGH)
 			{
 				// mount partitions
-				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)myos_kmalloc(sizeof(FAT32_BS_s));
+				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s), GFP_KERNEL);
 				ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 						gpt_pes[i].StartingLBA, 1, (unsigned char *)fat32_sb);
 				if (i == BOOT_FS_IDX)

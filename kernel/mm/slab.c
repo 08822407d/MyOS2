@@ -20,6 +20,7 @@ slab_cache_s *	slab_cache_groups_p;
 slab_s *		base_slabs_p;
 uint8_t	*		base_slab_pages_p;
 
+void * myos_kmalloc(size_t size);
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
