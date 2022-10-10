@@ -10,7 +10,7 @@
 // #include <linux/hash.h>
 // #include <linux/swap.h>
 // #include <linux/security.h>
-// #include <linux/cdev.h>
+#include <linux/device/cdev.h>
 // #include <linux/memblock.h>
 // #include <linux/fsnotify.h>
 #include <linux/kernel/mount.h>
@@ -24,6 +24,7 @@
 #include <linux/fs/internal.h>
 
 
+#include <linux/kernel/slab.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
@@ -122,7 +123,7 @@ static inode_s *alloc_inode(super_block_s *sb)
 	if (ops->alloc_inode != NULL)
 		inode = ops->alloc_inode(sb);
 	else
-		inode = kmalloc(sizeof(inode_s));
+		inode = myos_kmalloc(sizeof(inode_s));
 
 	if (inode == NULL)
 		return NULL;

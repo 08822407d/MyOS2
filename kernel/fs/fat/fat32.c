@@ -12,6 +12,7 @@
 *
 *
 ***************************************************/
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
@@ -124,7 +125,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	long ret_val = 0;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
-	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster);
+	char * buffer = (char *)myos_kmalloc(fsbi->bytes_per_cluster);
 
 	if(!cluster)
 		return -EFAULT;
@@ -180,7 +181,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 	long flags = 0;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
-	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster);
+	char * buffer = (char *)myos_kmalloc(fsbi->bytes_per_cluster);
 
 	if(!cluster)
 	{
@@ -398,7 +399,7 @@ int fat32_write_inode(inode_s * inode)
 	}
 
 	sector = fsbi->Data_firstsector + (finode->dentry_location - 2) * fsbi->sector_per_cluster;
-	buf = kmalloc(fsbi->bytes_per_cluster);
+	buf = myos_kmalloc(fsbi->bytes_per_cluster);
 	memset(buf, 0, fsbi->bytes_per_cluster);
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 			sector, fsbi->sector_per_cluster, (unsigned char *)buf);
@@ -429,11 +430,11 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	FAT32_SBinfo_s * fsbi = NULL;
 
 	//super block
-	sbp = kmalloc(sizeof(super_block_s));
+	sbp = myos_kmalloc(sizeof(super_block_s));
 	memset(sbp, 0, sizeof(super_block_s));
 
 	sbp->s_op = &FAT32_sb_ops;
-	sbp->private_sb_info = kmalloc(sizeof(FAT32_SBinfo_s));
+	sbp->private_sb_info = myos_kmalloc(sizeof(FAT32_SBinfo_s));
 	memset(sbp->private_sb_info, 0, sizeof(FAT32_SBinfo_s));
 
 	//fat32 boot sector
@@ -453,26 +454,26 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	fsbi->bootsector_bk_infat = fbs->BPB_BkBootSec;	
 	
 	//fat32 fsinfo sector
-	fsbi->fat_fsinfo = kmalloc(sizeof(FAT32_FSinfo_s));
+	fsbi->fat_fsinfo = myos_kmalloc(sizeof(FAT32_FSinfo_s));
 	memset(fsbi->fat_fsinfo, 0, 512);
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 			DPTE->StartingLBA + fbs->BPB_FSInfo, 1, (unsigned char *)fsbi->fat_fsinfo);
 	
 	//directory entry
-	sbp->s_root = kmalloc(sizeof(dentry_s));
+	sbp->s_root = myos_kmalloc(sizeof(dentry_s));
 	memset(sbp->s_root, 0, sizeof(dentry_s));
 
 	list_init(&sbp->s_root->d_child, sbp->s_root);
 	list_hdr_init(&sbp->s_root->d_subdirs);
 	sbp->s_root->d_parent = sbp->s_root;
 	sbp->s_root->d_op = &vfat_dentry_ops;
-	sbp->s_root->d_name.name = (char *)kmalloc(2);
+	sbp->s_root->d_name.name = (char *)myos_kmalloc(2);
 	((char *)sbp->s_root->d_name.name)[0] = '/';
 	((char *)sbp->s_root->d_name.name)[1] = 0;
 	sbp->s_root->d_name.len = 1;
 
 	//index node
-	sbp->s_root->d_inode = (inode_s*)kmalloc(sizeof(inode_s));
+	sbp->s_root->d_inode = (inode_s*)myos_kmalloc(sizeof(inode_s));
 	memset(sbp->s_root->d_inode, 0, sizeof(inode_s));
 	sbp->s_root->d_inode->i_op = &vfat_dir_inode_operations;
 	sbp->s_root->d_inode->i_fop = &FAT32_file_ops;
@@ -484,7 +485,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	sbp->s_root->d_inode->i_sb = sbp;
 
 	//fat32 root inode
-	sbp->s_root->d_inode->private_idx_info = kmalloc(sizeof(FAT32_inode_info_s));
+	sbp->s_root->d_inode->private_idx_info = myos_kmalloc(sizeof(FAT32_inode_info_s));
 	memset(sbp->s_root->d_inode->private_idx_info, 0, sizeof(FAT32_inode_info_s));
 	finode = (FAT32_inode_info_s *)sbp->s_root->d_inode->private_idx_info;
 	finode->first_cluster = fbs->BPB_RootClus;

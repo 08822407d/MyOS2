@@ -56,8 +56,8 @@ static vfsmount_s *shm_mnt;
 // #include <linux/posix_acl.h>
 // #include <linux/posix_acl_xattr.h>
 // #include <linux/mman.h>
-// #include <linux/string.h>
-// #include <linux/slab.h>
+#include <linux/lib/string.h>
+#include <linux/kernel/slab.h>
 // #include <linux/backing-dev.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/writeback.h>
@@ -92,7 +92,7 @@ static vfsmount_s *shm_mnt;
 /* Pretend that each entry is of this size in directory's i_size */
 #define BOGO_DIRENT_SIZE 20
 
-/* Symlink up to this size is kmalloc'ed instead of using a swappable page */
+/* Symlink up to this size is myos_kmalloc'ed instead of using a swappable page */
 #define SHORT_SYMLINK_LEN 128
 
 /*
@@ -308,7 +308,7 @@ static int shmem_fill_super(super_block_s *sb, fs_ctxt_s *fc)
 	shmem_sb_info_s *sbinfo;
 
 	/* Round up to L1_CACHE_BYTES to resist false sharing */
-	sbinfo = kmalloc(sizeof(shmem_sb_info_s));
+	sbinfo = myos_kmalloc(sizeof(shmem_sb_info_s));
 	if (sbinfo == NULL)
 		return -ENOMEM;
 
@@ -359,7 +359,7 @@ static const fs_ctxt_ops_s shmem_fs_context_ops = {
 static inode_s *shmem_alloc_inode(super_block_s *sb)
 {
 	shmem_inode_info_s *info;
-	info = kmalloc(sizeof(shmem_inode_info_s));
+	info = myos_kmalloc(sizeof(shmem_inode_info_s));
 	if (info == NULL)
 		return ERR_PTR(-ENOMEM);
 	
@@ -431,7 +431,7 @@ int shmem_init_fs_context(fs_ctxt_s *fc)
 {
 	shmem_opts_s *ctx;
 
-	ctx = kmalloc(sizeof(shmem_opts_s));
+	ctx = myos_kmalloc(sizeof(shmem_opts_s));
 	if (ctx == NULL)
 		return -ENOMEM;
 

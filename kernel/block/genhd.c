@@ -17,7 +17,7 @@
 // #include <linux/spinlock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/seq_file.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 // #include <uapi/kernel/major.h>
 // #include <linux/mutex.h>
@@ -47,7 +47,7 @@ gendisk_s *__alloc_disk_node(request_queue_s *q)
 	if (q == NULL)
 		return NULL;
 
-	disk = kmalloc(sizeof(gendisk_s));
+	disk = myos_kmalloc(sizeof(gendisk_s));
 	if (disk == NULL)
 		return ERR_PTR(-ENOMEM);
 

@@ -14,7 +14,7 @@ char *FAT32_parse_short(int *namelen, const msdos_dirent_s *de)
 {
 	int x;
 	*namelen = 0;
-	char *ret_val = kmalloc(15);
+	char *ret_val = myos_kmalloc(15);
 	memset(ret_val, 0, 15);
 
 	//short file/dir base name compare
@@ -68,7 +68,7 @@ char *FAT32_parse_long(int *namelen, FAT32_iobuf_s *iobuf)
 	}
 
 	//long file/dir name read
-	ret_val = kmalloc(i * 13 + 1);
+	ret_val = myos_kmalloc(i * 13 + 1);
 	memset(ret_val, 0, i * 13 + 1);
 	cursor = iobuf->iter_cursor - entlen * 2;
 	msdos_dirslot_s *lde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor);
@@ -128,7 +128,7 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	size_t bufsize = fsbi->bytes_per_sector;
 	msdos_dirent_s *de;
 
-	buf = kmalloc(bufsize);
+	buf = myos_kmalloc(bufsize);
 	if (buf == NULL)
 		return -(ENOMEM);
 	cluster = FAT32_find_available_cluster(fsbi);

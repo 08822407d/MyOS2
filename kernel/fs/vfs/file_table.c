@@ -7,7 +7,7 @@
  */
 
 #include <linux/lib/string.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 // #include <linux/fdtable.h>
 #include <linux/init/init.h>
@@ -19,7 +19,7 @@
 // #include <linux/rcupdate.h>
 #include <linux/kernel/mount.h>
 // #include <linux/capability.h>
-// #include <linux/cdev.h>
+#include <linux/device/cdev.h>
 // #include <linux/fsnotify.h>
 // #include <linux/sysctl.h>
 // #include <linux/percpu_counter.h>
@@ -51,7 +51,7 @@ file_s *alloc_empty_file(int flags)
 
 	// static struct file *__alloc_file(int flags, const struct cred *cred)
 	// {
-		f = kmalloc(sizeof(file_s));
+		f = myos_kmalloc(sizeof(file_s));
 		if (f == NULL)
 			return ERR_PTR(-ENOMEM);
 

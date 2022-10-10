@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
@@ -35,7 +36,7 @@ void init_keyboard()
 	ioapic_retentry_T entry;
 	unsigned long i,j;
 
-	p_kb = (kbd_inbuf_s *)kmalloc(sizeof(kbd_inbuf_s));
+	p_kb = (kbd_inbuf_s *)myos_kmalloc(sizeof(kbd_inbuf_s));
 	p_kb->p_head = p_kb->buf;
 	p_kb->p_tail = p_kb->buf;
 	p_kb->count  = 0;

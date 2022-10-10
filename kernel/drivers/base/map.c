@@ -10,7 +10,7 @@
  */
 
 // #include <linux/module.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/mutex.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kobject.h>
@@ -52,7 +52,7 @@ int kobj_map(kobj_map_s *domain, dev_t dev, unsigned long range,
 	if (n > 255)
 		n = 255;
 
-	p = kmalloc(n * sizeof(probe_s));
+	p = myos_kmalloc(n * sizeof(probe_s));
 	if (p == NULL)
 		return -ENOMEM;
 
@@ -140,8 +140,8 @@ retry:
 
 struct kobj_map *kobj_map_init(kobj_probe_t *base_probe)
 {
-	kobj_map_s *p = kzalloc(sizeof(kobj_map_s));
-	probe_s *base = kzalloc(sizeof(*base));
+	kobj_map_s *p = kzalloc(sizeof(kobj_map_s), GFP_KERNEL);
+	probe_s *base = kzalloc(sizeof(*base), GFP_KERNEL);
 	int i;
 
 	if ((p == NULL) || (base == NULL))

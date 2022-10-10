@@ -7,7 +7,7 @@
 #include <linux/block/blkdev.h>
 // #include <linux/export.h>
 // #include <linux/pagemap.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/kernel/cred.h>
 #include <linux/kernel/mount.h>
 // #include <linux/vfs.h>
@@ -93,7 +93,7 @@ pseudo_fs_ctxt_s *init_pseudo(fs_ctxt_s *fc, unsigned long magic)
 {
 	struct pseudo_fs_context *ctx;
 
-	ctx = kmalloc(sizeof(pseudo_fs_ctxt_s));
+	ctx = myos_kmalloc(sizeof(pseudo_fs_ctxt_s));
 	if (ctx) {
 		ctx->magic = magic;
 		fc->fs_private = ctx;

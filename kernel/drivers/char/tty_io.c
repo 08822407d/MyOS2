@@ -61,7 +61,7 @@
  *      -- Russell King <rmk@arm.linux.org.uk>
  *
  * Move do_SAK() into process context.  Less stack use in devfs functions.
- * alloc_tty_struct() always uses kmalloc()
+ * alloc_tty_struct() always uses myos_kmalloc()
  *			 -- Andrew Morton <andrewm@uow.edu.eu> 17Mar01
  */
 

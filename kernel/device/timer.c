@@ -66,12 +66,12 @@ void timer_init()
 {
 	jiffies = 0;
 	list_hdr_init(&timer_lhdr);
-	timer_s * tmr = kmalloc(sizeof(timer_s));
+	timer_s * tmr = myos_kmalloc(sizeof(timer_s));
 	init_timer(tmr, NULL, NULL, ~(reg_t)0);
 	add_timer(tmr);
 	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
 
-	// timer_s * tmp = (timer_s *)kmalloc(sizeof(timer_s));
+	// timer_s * tmp = (timer_s *)myos_kmalloc(sizeof(timer_s));
 	// init_timer(tmp, &test_timer, NULL, 3);
 	// add_timer(tmp);
 }

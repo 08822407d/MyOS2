@@ -1,6 +1,6 @@
 #include <obsolete/proto.h>
 #include <linux/mm/page.h>
-#include <linux/mm/slab.h>
+#include <linux/mm/myos_slab.h>
 
 void early_init_mm()
 {

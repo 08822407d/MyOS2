@@ -15,7 +15,7 @@
 // #include <linux/fwnode.h>
 #include <linux/init/init.h>
 // #include <linux/module.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/kdev_t.h>
 // #include <linux/notifier.h>
@@ -241,7 +241,7 @@ device_s *myos_device_create(class_s *class, dev_t devt, const char* devname)
 	device_s *dev = NULL;
 	int retval = -ENODEV;
 
-	dev = kzalloc(sizeof(device_s));
+	dev = kzalloc(sizeof(device_s), GFP_KERNEL);
 	if (!dev) {
 		retval = -ENOMEM;
 		goto error;

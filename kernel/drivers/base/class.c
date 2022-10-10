@@ -15,7 +15,7 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/err.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/block/genhd.h>
 // #include <linux/mutex.h>
 // #include "base.h"
@@ -45,7 +45,7 @@ class_s *class_create(const char *name)
 	class_s *cls;
 	int retval;
 
-	cls = kzalloc(sizeof(class_s));
+	cls = kzalloc(sizeof(class_s), GFP_KERNEL);
 	if (!cls) {
 		retval = -ENOMEM;
 		goto error;

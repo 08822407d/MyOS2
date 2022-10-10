@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/stddef.h>
@@ -175,11 +176,11 @@ static int copy_files(unsigned long clone_flags, task_s * new_tsk)
 	for(i = 0; i < MAX_FILE_NR; i++)
 		if(curr_tsk->fps[i] != NULL)
 		{
-			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s));
+			new_tsk->fps[i] = (file_s *)myos_kmalloc(sizeof(file_s));
 			memcpy(new_tsk->fps[i], curr_tsk->fps[i], sizeof(file_s));
 		}
 
-	new_tsk->fs = kmalloc(sizeof(taskfs_s));
+	new_tsk->fs = myos_kmalloc(sizeof(taskfs_s));
 	memcpy(new_tsk->fs, curr_tsk->fs, sizeof(taskfs_s));
 
 out:
@@ -216,7 +217,7 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	}
 	else
 	{
-		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		new_tsk->mm_struct = (mm_s *)myos_kmalloc(sizeof(mm_s));
 		memcpy(new_tsk->mm_struct, curr_tsk->mm_struct, sizeof(mm_s));
 		prepair_COW(curr_tsk);
 	}
@@ -277,7 +278,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 {
 	long ret_val = 0;
 	PCB_u *parent_PCB = container_of(get_current_task(), PCB_u, task);
-	PCB_u *child_PCB = (PCB_u *)kmalloc(sizeof(PCB_u));
+	PCB_u *child_PCB = (PCB_u *)myos_kmalloc(sizeof(PCB_u));
 	task_s *parent_task = &parent_PCB->task;
 	task_s *child_task = &child_PCB->task;
 	if (child_PCB == NULL)
@@ -354,10 +355,10 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 
 	if (curr->flags & CLONE_VFORK)
 	{
-		curr->mm_struct = (mm_s *)kmalloc(sizeof(mm_s));
+		curr->mm_struct = (mm_s *)myos_kmalloc(sizeof(mm_s));
 		memset(curr->mm_struct, 0, sizeof(mm_s));
 
-		PML4E_T * virt_cr3 = (PML4E_T *)kmalloc(PGENT_SIZE);
+		PML4E_T * virt_cr3 = (PML4E_T *)myos_kmalloc(PGENT_SIZE);
 		curr->mm_struct->cr3 = virt2phys((virt_addr_t)virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],

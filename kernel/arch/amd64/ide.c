@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
@@ -215,7 +216,7 @@ void other_handler(unsigned long parameter)
 blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
 				unsigned long blk_idx, long count, unsigned char * buffer)
 {
-	blkbuf_node_s * node = (blkbuf_node_s *)kmalloc(sizeof(blkbuf_node_s));
+	blkbuf_node_s * node = (blkbuf_node_s *)myos_kmalloc(sizeof(blkbuf_node_s));
 	wq_init(&node->wq, curr_tsk);
 	node->buffer = buffer;
 

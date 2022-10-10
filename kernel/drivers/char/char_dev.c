@@ -156,7 +156,7 @@ void cdev_del(cdev_s *p)
  */
 cdev_s *cdev_alloc(void)
 {
-	cdev_s *p = kmalloc(sizeof(cdev_s));
+	cdev_s *p = myos_kmalloc(sizeof(cdev_s));
 	if (p)
 		list_init(&p->list, p);
 

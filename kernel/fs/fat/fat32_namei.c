@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
@@ -68,7 +69,7 @@ dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned 
 	}
 	p->i_blocks	= (p->i_size + fsbi->bytes_per_cluster - 1)/fsbi->bytes_per_sector;
 
-	p->private_idx_info = kmalloc(sizeof(FAT32_inode_info_s));
+	p->private_idx_info = myos_kmalloc(sizeof(FAT32_inode_info_s));
 	memset(p->private_idx_info,0,sizeof(FAT32_inode_info_s));
 	finode = p->private_idx_info;
 

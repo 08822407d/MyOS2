@@ -35,6 +35,7 @@
 #include <uapi/kernel/magic.h>
 #include <uapi/kernel/msdos_fs.h>
 
+#include <linux/kernel/slab.h>
 #include <obsolete/proto.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
@@ -231,7 +232,7 @@ static void fat_put_super(super_block_s *sb)
 static inode_s *fat_alloc_inode(super_block_s *sb)
 {
 	msdos_inode_info_s *ei;
-	ei = kmalloc(sizeof(msdos_inode_info_s));
+	ei = myos_kmalloc(sizeof(msdos_inode_info_s));
 	if (ei == NULL)
 		return NULL;
 
@@ -418,7 +419,7 @@ int fat_fill_super(super_block_s *sb, void *data, int isvfat,
 	 * the filesystem, since we're only just about to mount
 	 * it and have no inodes etc active!
 	 */
-	sbi = kmalloc(sizeof(msdos_sb_info_s));
+	sbi = myos_kmalloc(sizeof(msdos_sb_info_s));
 	if (!sbi)
 		return -ENOMEM;
 	sb->s_fs_info = sbi;

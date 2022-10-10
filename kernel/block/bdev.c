@@ -7,7 +7,7 @@
 
 #include <linux/init/init.h>
 #include <linux/mm/mm.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 #include <uapi/kernel/major.h>
 // #include <linux/device_cgroup.h>
@@ -50,7 +50,7 @@ block_device_s *I_BDEV(inode_s *inode)
 
 static inode_s *bdev_alloc_inode(super_block_s *sb)
 {
-	bdev_inode_s *ei = kmalloc(sizeof(bdev_inode_s));
+	bdev_inode_s *ei = myos_kmalloc(sizeof(bdev_inode_s));
 
 	if (!ei)
 		return NULL;

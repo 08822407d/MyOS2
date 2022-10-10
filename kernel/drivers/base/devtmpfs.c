@@ -23,7 +23,7 @@
 #include <linux/mm/shmem_fs.h>
 // #include <linux/ramfs.h>
 #include <linux/kernel/sched.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/kthread.h>
 #include <linux/kernel/init_syscalls.h>
 #include <uapi/kernel/mount.h>
@@ -109,7 +109,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 int devtmpfs_create_node(device_s *dev)
 {
 	const char *tmp = NULL;
-	req_s *req = kzalloc(sizeof(req));
+	req_s *req = kzalloc(sizeof(req), GFP_KERNEL);
 
 	req->mode = 0;
 	req->uid = GLOBAL_ROOT_UID;

@@ -22,7 +22,7 @@
  */
 
 // #include <linux/export.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/mount.h>
 // #include <linux/security.h>
@@ -110,7 +110,7 @@ void kill_litter_super(super_block_s *sb)
  */
 static super_block_s *alloc_super(fs_type_s *type, int flags)
 {
-	super_block_s *s = kmalloc(sizeof(super_block_s));
+	super_block_s *s = myos_kmalloc(sizeof(super_block_s));
 	if (s == NULL)
 		return ERR_PTR(-ENOMEM);
 	static const super_ops_s default_op;

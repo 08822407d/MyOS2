@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/file.h>
 #include <linux/fs/namei.h>
@@ -128,7 +129,7 @@ unsigned long sys_execve()
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 -1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
-	pathname = (char *)kmalloc(CONST_4K);
+	pathname = (char *)myos_kmalloc(CONST_4K);
 	if(pathname == NULL)
 		return -ENOMEM;
 	memset(pathname, 0, CONST_4K);

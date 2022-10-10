@@ -26,7 +26,7 @@
 // #include <linux/iomap.h>
 #include <linux/mm/mm.h>
 // #include <linux/percpu.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/capability.h>
 #include <linux/block/blkdev.h>
 #include <linux/fs/file.h>
@@ -69,7 +69,7 @@ __getblk_gfp(block_device_s *bdev, sector_t block, unsigned size)
 	// if (bh == NULL)
 	// 	bh = __getblk_slow(bdev, block, size);
 	
-	buffer_head_s *bh = kmalloc(sizeof(buffer_head_s));
+	buffer_head_s *bh = myos_kmalloc(sizeof(buffer_head_s));
 
 	return bh;
 }

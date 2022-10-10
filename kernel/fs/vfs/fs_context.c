@@ -13,8 +13,8 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/mount.h>
 // #include <linux/nsproxy.h>
-// #include <linux/slab.h>
-// #include <linux/magic.h>
+#include <linux/kernel/slab.h>
+#include <uapi/kernel/magic.h>
 // #include <linux/security.h>
 // #include <linux/mnt_namespace.h>
 // #include <linux/pid_namespace.h>
@@ -65,7 +65,7 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type, dentry_s *reference,
 	fs_ctxt_s *fc;
 	int ret = -ENOMEM;
 
-	fc = kzalloc(sizeof(fs_ctxt_s));
+	fc = kzalloc(sizeof(fs_ctxt_s), GFP_KERNEL);
 	if (fc == NULL)
 		return ERR_PTR(-ENOMEM);
 
@@ -159,7 +159,7 @@ const fs_ctxt_ops_s legacy_fs_context_ops = {
  */
 static int legacy_init_fs_context(fs_ctxt_s *fc)
 {
-	fc->fs_private = kmalloc(sizeof(legacy_fs_ctx_s));
+	fc->fs_private = myos_kmalloc(sizeof(legacy_fs_ctx_s));
 	if (fc->fs_private == NULL)
 		return -ENOMEM;
 	fc->ops = &legacy_fs_context_ops;

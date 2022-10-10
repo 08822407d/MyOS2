@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
@@ -21,7 +22,7 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 	FAT32_inode_info_s * finode = inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = inode->i_sb->private_sb_info;
 	unsigned long cluster = finode->first_cluster;
-	List_hdr_s *clus_lhdrp = kmalloc(sizeof(List_hdr_s));
+	List_hdr_s *clus_lhdrp = myos_kmalloc(sizeof(List_hdr_s));
 	if (clus_lhdrp == NULL)
 		return ERR_PTR(-ENOMEM);
 	list_hdr_init(clus_lhdrp);
@@ -30,7 +31,7 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 	{
 		do
 		{
-			clus_list_s *clus_sp = kmalloc(sizeof(clus_list_s));
+			clus_list_s *clus_sp = myos_kmalloc(sizeof(clus_list_s));
 			if (clus_sp == NULL)
 			{
 				free_cluster_chain(clus_lhdrp);
@@ -68,7 +69,7 @@ const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off)
 	int	bufoff = off % iobuf->bufsize;
 	if (iobuf->buffers[bufidx] == NULL)
 	{
-		char *buf = kmalloc(iobuf->bufsize);
+		char *buf = myos_kmalloc(iobuf->bufsize);
 		if (buf == NULL)
 			return ERR_PTR(-ENOMEM);
 
@@ -91,7 +92,7 @@ int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off,
 	int	bufoff = off % iobuf->bufsize;
 	if (iobuf->buffers[bufidx] == NULL)
 	{
-		char *buf = kmalloc(iobuf->bufsize);
+		char *buf = myos_kmalloc(iobuf->bufsize);
 		if (buf == NULL)
 			return -ENOMEM;
 
@@ -129,7 +130,7 @@ int FAT32_iobuf_expand(FAT32_iobuf_s *iobuf, size_t nr)
 	while (nr >= 0 &&
 		(cluster = FAT32_find_available_cluster(iobuf->fsbi)) > 1)
 	{
-		char *buf = kmalloc(iobuf->bufsize);
+		char *buf = myos_kmalloc(iobuf->bufsize);
 		if (buf == NULL)
 			break;
 		
@@ -173,7 +174,7 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 		return ERR_PTR(-ENOMEM);
 
 	int count = clus_lhdrp->count;
-	FAT32_iobuf_s *iobuf = kmalloc(sizeof(FAT32_iobuf_s));
+	FAT32_iobuf_s *iobuf = myos_kmalloc(sizeof(FAT32_iobuf_s));
 	if (iobuf == NULL)
 	{
 		error = -ENOMEM;
@@ -185,19 +186,19 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 	iobuf->bufsize = bufsize;
 	if (count > 0)
 	{
-		iobuf->buffers = kmalloc(max_nr * sizeof(char *));
+		iobuf->buffers = myos_kmalloc(max_nr * sizeof(char *));
 		if (iobuf->buffers == NULL)
 		{
 			error = -ENOMEM;
 			goto alloc_iobuf_bufps_fail;
 		}
-		iobuf->clusters = kmalloc(max_nr * sizeof(*iobuf->clusters));
+		iobuf->clusters = myos_kmalloc(max_nr * sizeof(*iobuf->clusters));
 		if (iobuf->clusters == NULL)
 		{
 			error = -ENOMEM;
 			goto alloc_iobuf_clusters_fail;
 		}
-		iobuf->flags = kmalloc(max_nr * sizeof(*iobuf->flags));
+		iobuf->flags = myos_kmalloc(max_nr * sizeof(*iobuf->flags));
 		if (iobuf->flags == NULL)
 		{
 			error = -ENOMEM;

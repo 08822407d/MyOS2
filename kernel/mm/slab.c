@@ -1,8 +1,9 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
-#include <linux/mm/slab.h>
+#include <linux/mm/myos_slab.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 
@@ -10,10 +11,7 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include "../arch/amd64/include/archconst.h"
-#include "../arch/amd64/include/archtypes.h"
 #include "../arch/amd64/include/arch_glo.h"
-#include "../arch/amd64/include/arch_proto.h"
 
 List_hdr_s		slabcache_lhdr;
 recurs_lock_T	slab_alloc_lock;
@@ -93,12 +91,12 @@ slab_s * slab_alloc(slab_s * cslp)
 				ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
 	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
-	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s));
+	slab_s * nslp = (slab_s *)myos_kmalloc(sizeof(slab_s));
 	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = pgp;
 	pgp->slab_ptr = nslp;
-	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
+	nslp->colormap = (bitmap_t *)myos_kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
 	nslp->total =
 	nslp->free = cslp->total;
 	nslp->virt_addr = phys2virt(page_paddr);
@@ -117,7 +115,7 @@ void slab_free(slab_s * slp)
 	kfree(slp);
 }
 
-void * kmalloc(size_t size)
+void * myos_kmalloc(size_t size)
 {
 	#ifdef DEBUG
 		// make sure have init slab
@@ -201,27 +199,27 @@ void * kmalloc(size_t size)
 	return ret_val;
 }
 
-void *kzalloc(size_t size)
+void *__kmalloc(size_t size, gfp_t flags)
 {
-	void *ret_val = kmalloc(size);
-	if (ret_val != NULL)
+	void *ret_val = myos_kmalloc(size);
+	if ((ret_val != NULL) && (flags & __GFP_ZERO))
 		memset(ret_val, 0, size);
 	
 	return ret_val;
 }
 
-void kfree(void * obj_p)
+void kfree(const void * objp)
 {
 	#ifdef DEBUG
 		// make sure have init slab
 		while (!kparam.init_flags.slab);
 	#endif
 
-	if (obj_p == NULL)
+	if (objp == NULL)
 		return;
 
 	// find which slab does the pointer belonged to
-	phys_addr_t pg_addr = virt2phys((virt_addr_t)round_down((size_t)obj_p, PAGE_SIZE));
+	phys_addr_t pg_addr = virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
 	page_s * pgp = &mem_map[pg_idx];
 	slab_s * slp = pgp->slab_ptr;
@@ -233,10 +231,10 @@ void kfree(void * obj_p)
 		while (1);
 	}
 
-	unsigned long obj_idx = ((virt_addr_t)obj_p - slp->virt_addr) / scgp->obj_size;
+	unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
 	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
 	{
-		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
+		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
 		while (1);
 	}
 	lock_recurs_lock(&slab_alloc_lock);

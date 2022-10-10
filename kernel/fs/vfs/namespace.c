@@ -18,7 +18,7 @@
 // #include <linux/cred.h>
 // #include <linux/idr.h>
 #include <linux/init/init.h>		/* init_rootfs */
-// #include <linux/fs_struct.h>	/* get_fs_root et.al. */
+#include <linux/sched/fs_struct.h>	/* get_fs_root et.al. */
 // #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/fs/file.h>
 // #include <linux/uaccess.h>
@@ -36,6 +36,7 @@
 #include <linux/fs/internal.h>
 
 
+#include <linux/kernel/slab.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
@@ -47,13 +48,13 @@
 
 static mount_s *alloc_vfsmnt(const char *name)
 {
-	mount_s *mnt = kmalloc(sizeof(mount_s));
+	mount_s *mnt = myos_kmalloc(sizeof(mount_s));
 	if (mnt == NULL)
 		goto out;
 
 	if (name) {
 		size_t len = strlen(name);
-		mnt->mnt_devname = kmalloc(len + 1);
+		mnt->mnt_devname = myos_kmalloc(len + 1);
 		if (mnt->mnt_devname == NULL)
 			goto out_free_cache;
 
@@ -127,7 +128,7 @@ static mountpoint_s *get_mountpoint(IN dentry_s *dentry)
 	mountpoint_s *mp, *new = NULL;
 	int ret;
 
-	new = kmalloc(sizeof(mountpoint_s));
+	new = myos_kmalloc(sizeof(mountpoint_s));
 	if (new == NULL)
 		return ERR_PTR(-ENOMEM);
 
@@ -383,7 +384,7 @@ static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 	mount_s * mnt;
 	int err;
 
-	mnt = kmalloc((sizeof(mount_s)));
+	mnt = myos_kmalloc((sizeof(mount_s)));
 	if (mnt == NULL)
 		return ERR_PTR(-ENOMEM);
 

@@ -4,7 +4,7 @@
 // #include <linux/uaccess.h>
 // #include <linux/fs_struct.h>
 #include <linux/fs/fs.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/prefetch.h>
 #include <linux/fs/mount.h>
 
@@ -178,7 +178,7 @@ long sys_getcwd(char *buf, unsigned long size)
 	// } else {
 		unsigned len;
 		b.len = PATH_MAX;
-		bufhead = kmalloc(b.len);
+		bufhead = myos_kmalloc(b.len);
 		memset(bufhead, 0, b.len);
 		b.buf = bufhead + PATH_MAX;
 

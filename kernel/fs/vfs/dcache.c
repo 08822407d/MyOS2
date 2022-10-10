@@ -17,11 +17,11 @@
 
 // #include <linux/ratelimit.h>
 #include <linux/lib/string.h>
-// #include <linux/mm.h>
+#include <linux/mm/mm.h>
 #include <linux/fs/fs.h>
 // #include <linux/fscrypt.h>
 // #include <linux/fsnotify.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/init/init.h>
 // #include <linux/hash.h>
 // #include <linux/cache.h>
@@ -160,11 +160,11 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
 // static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
 dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
 {
-	dentry_s * dentry = kmalloc(sizeof(dentry_s));
+	dentry_s * dentry = myos_kmalloc(sizeof(dentry_s));
 	if (dentry == NULL)
 		return ERR_PTR(-ENOMEM);
 
-	dentry->d_name.name = kmalloc(name->len + 1);
+	dentry->d_name.name = myos_kmalloc(name->len + 1);
 	if (dentry->d_name.name == NULL)
 	{
 		kfree(dentry);

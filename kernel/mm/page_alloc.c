@@ -3,7 +3,7 @@
  *  linux/mm/page_alloc.c
  *
  *  Manages the free list, the system allocates free pages here.
- *  Note that kmalloc() lives in slab.c
+ *  Note that myos_kmalloc() lives in slab.c
  *
  *  Copyright (C) 1991, 1992, 1993, 1994  Linus Torvalds
  *  Swap reorganised 29.12.95, Stephen Tweedie
@@ -382,9 +382,7 @@ static inline void __free_one_page(page_s *page, unsigned long pfn,
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
-// Linux function proto :
-// struct page *alloc_pages(gfp_t gfp, unsigned order)
-page_s * alloc_pages(unsigned int gfp, unsigned int order)
+page_s *alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s * page;
 	zone_s * zone = &pg_list.node_zones[gfp];

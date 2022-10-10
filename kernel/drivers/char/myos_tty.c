@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
@@ -67,7 +68,7 @@ int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {
 	long counter  = 0;
-	char *tmpbuf = kmalloc(count);
+	char *tmpbuf = myos_kmalloc(count);
 	memset(tmpbuf, 0, count);
 	while (counter < count)
 	{

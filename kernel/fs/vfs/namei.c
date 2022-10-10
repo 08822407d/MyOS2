@@ -18,7 +18,7 @@
 #include <linux/init/init.h>
 // #include <linux/export.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/slab.h>
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
 // #include <linux/pagemap.h>
@@ -72,7 +72,7 @@ typedef struct nameidata
  *==============================================================================================*/
 static inline filename_s *__getname()
 {
-	filename_s *name = kmalloc(sizeof(filename_s));
+	filename_s *name = myos_kmalloc(sizeof(filename_s));
 	if (name == NULL)
 		return ERR_PTR(-ENOMEM);
 	else
@@ -96,7 +96,7 @@ filename_s *getname(const char *u_filename)
 	// }
 
 	name->len = len;
-	name->name = kmalloc(len + 16);
+	name->name = myos_kmalloc(len + 16);
 	if (name->name == NULL)
 	{
 		kfree(name);
@@ -126,7 +126,7 @@ filename_s *getname_kernel(const char *k_filename)
 		return ERR_PTR(-ENAMETOOLONG);
 	name->len = len;
 
-	name->name = kmalloc(len + 1);
+	name->name = myos_kmalloc(len + 1);
 	if (name->name == NULL)
 	{
 		kfree(name);

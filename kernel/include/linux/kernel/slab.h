@@ -180,7 +180,7 @@
 	// * Common kmalloc functions provided by all allocators
 	// */
 	// void *__must_check krealloc(const void *objp, size_t new_size, gfp_t flags) __alloc_size(2);
-	// void kfree(const void *objp);
+	void kfree(const void *objp);
 	// void kfree_sensitive(const void *objp);
 	// size_t __ksize(const void *objp);
 	// size_t ksize(const void *objp);
@@ -438,6 +438,7 @@
 	// #endif /* !CONFIG_SLOB */
 
 	// void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
+	void *__kmalloc(size_t size, gfp_t flags);
 	// void *kmem_cache_alloc(struct kmem_cache *s, gfp_t flags) __assume_slab_alignment __malloc;
 	// void kmem_cache_free(struct kmem_cache *s, void *objp);
 
@@ -539,62 +540,63 @@
 	// 	return kmalloc_order_trace(size, flags, order);
 	// }
 
-	// /**
-	//  * kmalloc - allocate memory
-	//  * @size: how many bytes of memory are required.
-	//  * @flags: the type of memory to allocate.
-	//  *
-	//  * kmalloc is the normal method of allocating memory
-	//  * for objects smaller than page size in the kernel.
-	//  *
-	//  * The allocated object address is aligned to at least ARCH_KMALLOC_MINALIGN
-	//  * bytes. For @size of power of two bytes, the alignment is also guaranteed
-	//  * to be at least to the size.
-	//  *
-	//  * The @flags argument may be one of the GFP flags defined at
-	//  * include/linux/gfp.h and described at
-	//  * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
-	//  *
-	//  * The recommended usage of the @flags is described at
-	//  * :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
-	//  *
-	//  * Below is a brief outline of the most useful GFP flags
-	//  *
-	//  * %GFP_KERNEL
-	//  *	Allocate normal kernel ram. May sleep.
-	// *
-	// * %GFP_NOWAIT
-	// *	Allocation will not sleep.
-	// *
-	// * %GFP_ATOMIC
-	// *	Allocation will not sleep.  May use emergency pools.
-	// *
-	// * %GFP_HIGHUSER
-	// *	Allocate memory from high memory on behalf of user.
-	// *
-	// * Also it is possible to set different flags by OR'ing
-	// * in one or more of the following additional @flags:
-	// *
-	// * %__GFP_HIGH
-	// *	This allocation has high priority and may use emergency pools.
-	// *
-	// * %__GFP_NOFAIL
-	// *	Indicate that this allocation is in no way allowed to fail
-	// *	(think twice before using).
-	// *
-	// * %__GFP_NORETRY
-	// *	If memory is not immediately available,
-	// *	then give up at once.
-	// *
-	// * %__GFP_NOWARN
-	// *	If allocation fails, don't issue any warnings.
-	// *
-	// * %__GFP_RETRY_MAYFAIL
-	// *	Try really hard to succeed the allocation but fail
-	// *	eventually.
-	// */
+	/**
+	 * kmalloc - allocate memory
+	 * @size: how many bytes of memory are required.
+	 * @flags: the type of memory to allocate.
+	 *
+	 * kmalloc is the normal method of allocating memory
+	 * for objects smaller than page size in the kernel.
+	 *
+	 * The allocated object address is aligned to at least ARCH_KMALLOC_MINALIGN
+	 * bytes. For @size of power of two bytes, the alignment is also guaranteed
+	 * to be at least to the size.
+	 *
+	 * The @flags argument may be one of the GFP flags defined at
+	 * include/linux/gfp.h and described at
+	 * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
+	 *
+	 * The recommended usage of the @flags is described at
+	 * :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
+	 *
+	 * Below is a brief outline of the most useful GFP flags
+	 *
+	 * %GFP_KERNEL
+	 *	Allocate normal kernel ram. May sleep.
+	*
+	* %GFP_NOWAIT
+	*	Allocation will not sleep.
+	*
+	* %GFP_ATOMIC
+	*	Allocation will not sleep.  May use emergency pools.
+	*
+	* %GFP_HIGHUSER
+	*	Allocate memory from high memory on behalf of user.
+	*
+	* Also it is possible to set different flags by OR'ing
+	* in one or more of the following additional @flags:
+	*
+	* %__GFP_HIGH
+	*	This allocation has high priority and may use emergency pools.
+	*
+	* %__GFP_NOFAIL
+	*	Indicate that this allocation is in no way allowed to fail
+	*	(think twice before using).
+	*
+	* %__GFP_NORETRY
+	*	If memory is not immediately available,
+	*	then give up at once.
+	*
+	* %__GFP_NOWARN
+	*	If allocation fails, don't issue any warnings.
+	*
+	* %__GFP_RETRY_MAYFAIL
+	*	Try really hard to succeed the allocation but fail
+	*	eventually.
+	*/
 	// static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
-	// {
+	static __always_inline void *kmalloc(size_t size, gfp_t flags)
+	{
 	// 	if (__builtin_constant_p(size))
 	// 	{
 	// #ifndef CONFIG_SLOB
@@ -613,9 +615,8 @@
 	// 			flags, size);
 	// #endif
 	// 	}
-	// 	return __kmalloc(size, flags);
-	// }
-	void *kmalloc(size_t size, gfp_t flags)
+		return __kmalloc(size, flags);
+	}
 
 	// static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
 	// {
