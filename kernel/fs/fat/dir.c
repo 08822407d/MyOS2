@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
@@ -6,7 +7,6 @@
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
-#include <obsolete/proto.h>
 #include "../../arch/amd64/include/device.h"
 #include "../../arch/amd64/include/ide.h"
 
@@ -14,8 +14,7 @@ char *FAT32_parse_short(int *namelen, const msdos_dirent_s *de)
 {
 	int x;
 	*namelen = 0;
-	char *ret_val = myos_kmalloc(15);
-	memset(ret_val, 0, 15);
+	char *ret_val = kzalloc(15, GFP_KERNEL);
 
 	//short file/dir base name compare
 	for(x=0; x < 8; x++)
@@ -68,8 +67,7 @@ char *FAT32_parse_long(int *namelen, FAT32_iobuf_s *iobuf)
 	}
 
 	//long file/dir name read
-	ret_val = myos_kmalloc(i * 13 + 1);
-	memset(ret_val, 0, i * 13 + 1);
+	ret_val = kzalloc(i * 13 + 1, GFP_KERNEL);
 	cursor = iobuf->iter_cursor - entlen * 2;
 	msdos_dirslot_s *lde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor);
 	for(x = 0; x < i; x++, cursor -= entlen, lde = (msdos_dirslot_s *)FAT32_iobuf_readent(iobuf, cursor))
@@ -128,13 +126,12 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	size_t bufsize = fsbi->bytes_per_sector;
 	msdos_dirent_s *de;
 
-	buf = myos_kmalloc(bufsize);
+	buf = kzalloc(bufsize, GFP_KERNEL);
 	if (buf == NULL)
 		return -(ENOMEM);
 	cluster = FAT32_find_available_cluster(fsbi);
 	if (cluster < 2)
 		return cluster;
-	memset(buf, 0, bufsize);
 
 	de = (msdos_dirent_s *)buf;
 	/* filling the new directory slots ("." and ".." entries) */

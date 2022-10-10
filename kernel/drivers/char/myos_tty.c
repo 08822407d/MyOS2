@@ -4,7 +4,6 @@
 
 #include <klib/font.h>
 
-#include <obsolete/proto.h>
 #include <obsolete/wait_queue.h>
 #include <obsolete/printk.h>
 #include <linux/fs/fs.h>
@@ -68,8 +67,7 @@ int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {
 	long counter  = 0;
-	char *tmpbuf = myos_kmalloc(count);
-	memset(tmpbuf, 0, count);
+	char *tmpbuf = kzalloc(count, GFP_KERNEL);
 	while (counter < count)
 	{
 		char key = kbd_parse_scancode();
