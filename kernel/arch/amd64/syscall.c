@@ -7,7 +7,6 @@
 #include <uapi/kernel/myos_sysreboot.h>
 #include <asm/setup.h>
 
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include <obsolete/wait_queue.h>
 
@@ -129,10 +128,9 @@ unsigned long sys_execve()
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 -1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
-	pathname = (char *)myos_kmalloc(CONST_4K);
+	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);
 	if(pathname == NULL)
 		return -ENOMEM;
-	memset(pathname, 0, CONST_4K);
 	pathlen = strnlen_user((char *)curr_context->rdi, CONST_4K);
 	if(pathlen <= 0)
 	{

@@ -1,3 +1,4 @@
+#include <linux/kernel/slab.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/math.h>
@@ -7,7 +8,6 @@
 #include <asm/setup.h>
 
 #include <obsolete/glo.h>
-#include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 #include <obsolete/dbg_utils.h>
@@ -180,10 +180,9 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	PML4E_T *	pml4e_ptr	= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->ENT == 0)
 	{
-		PDPTE_T * pdpt_ptr = (PDPTE_T *)myos_kmalloc(PGENT_SIZE);
+		PDPTE_T * pdpt_ptr = (PDPTE_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (pdpt_ptr != NULL)
 		{
-			memset(pdpt_ptr, 0, PGENT_SIZE);
 			pml4e_ptr->ENT = ARCH_PGS_ADDR(virt2phys((virt_addr_t)pdpt_ptr)) | attr;
 		}
 		else
@@ -201,10 +200,9 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
-		PDE_T * pd_ptr = (PDE_T *)myos_kmalloc(PGENT_SIZE);
+		PDE_T * pd_ptr = (PDE_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (pd_ptr != NULL)
 		{
-			memset(pd_ptr, 0, PGENT_SIZE);
 			pdpte_ptr->ENT = ARCH_PGS_ADDR(virt2phys((virt_addr_t)pd_ptr)) | attr;
 		}
 		else
@@ -361,10 +359,9 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	virt_addr_t new_pml4_addr	= 0;
 	if (orig_cr3 & ~ARCH_PG_RW)
 	{
-		new_pml4_addr = (virt_addr_t)myos_kmalloc(PGENT_SIZE);
+		new_pml4_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (new_pml4_addr != 0)
 		{
-			memset((void *)new_pml4_addr, 0, PGENT_SIZE);
 			memcpy((void *)new_pml4_addr, (void *)orig_pml4_addr, PGENT_SIZE);
 			tmp_ret_cr3 = virt2phys(new_pml4_addr) | ARCH_PGS_ATTR(orig_cr3);
 		}
@@ -386,10 +383,9 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	virt_addr_t new_pdpt_addr = 0;
 	if (orig_pml4e_ptr->ENT & ~ARCH_PG_RW)
 	{
-		new_pdpt_addr = (virt_addr_t)myos_kmalloc(PGENT_SIZE);
+		new_pdpt_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (new_pdpt_addr != 0)
 		{
-			memset((void *)new_pdpt_addr, 0, PGENT_SIZE);
 			memcpy((void *)new_pdpt_addr, (void *)orig_pdpt_addr, PGENT_SIZE);
 			new_pml4e_ptr->ENT = virt2phys(new_pdpt_addr) | ARCH_PGS_ATTR(orig_pml4e_ptr->ENT);
 		}
@@ -411,10 +407,9 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	virt_addr_t new_pd_addr = 0;
 	if (orig_pdpte_ptr->ENT & ~ARCH_PG_RW)
 	{
-		new_pd_addr = (virt_addr_t)myos_kmalloc(PGENT_SIZE);
+		new_pd_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (new_pd_addr != 0)
 		{
-			memset((void *)new_pd_addr, 0, PGENT_SIZE);
 			memcpy((void *)new_pd_addr, (void *)orig_pd_addr, PGENT_SIZE);
 			new_pdpte_ptr->ENT = virt2phys(new_pd_addr) | ARCH_PGS_ATTR(orig_pdpte_ptr->ENT);
 		}

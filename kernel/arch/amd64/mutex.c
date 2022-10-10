@@ -2,8 +2,6 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
-#include <obsolete/proto.h>
-
 #include "include/mutex.h"
 
 /*==============================================================================================*
@@ -159,7 +157,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 	}
 // 	else if (semaphore->counter.value > 0)
 // 	{
-// 		recurs_wait_s * new_user = myos_kmalloc(sizeof(recurs_wait_s));
+// 		recurs_wait_s * new_user = kmalloc(sizeof(recurs_wait_s));
 // 		memset(new_user, 0, sizeof(recurs_wait_s));
 // 		new_user->owner = curr;
 // 		new_user->counter = 1;

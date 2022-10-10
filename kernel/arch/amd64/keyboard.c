@@ -4,7 +4,6 @@
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
-#include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
 #include <obsolete/wait_queue.h>
 
@@ -36,11 +35,10 @@ void init_keyboard()
 	ioapic_retentry_T entry;
 	unsigned long i,j;
 
-	p_kb = (kbd_inbuf_s *)myos_kmalloc(sizeof(kbd_inbuf_s));
+	p_kb = (kbd_inbuf_s *)kzalloc(sizeof(kbd_inbuf_s), GFP_KERNEL);
 	p_kb->p_head = p_kb->buf;
 	p_kb->p_tail = p_kb->buf;
 	p_kb->count  = 0;
-	memset(p_kb->buf, 0, KB_BUF_SIZE);
 
 	entry.vector = VECTOR_IRQ(KEYBOARD_IRQ);
 	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;

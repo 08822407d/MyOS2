@@ -4,7 +4,6 @@
 #include <linux/lib/string.h>
 #include <uapi/kernel/major.h>
 
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
 #include <obsolete/block_dev.h>
 
@@ -216,7 +215,7 @@ void other_handler(unsigned long parameter)
 blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
 				unsigned long blk_idx, long count, unsigned char * buffer)
 {
-	blkbuf_node_s * node = (blkbuf_node_s *)myos_kmalloc(sizeof(blkbuf_node_s));
+	blkbuf_node_s * node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
 	wq_init(&node->wq, curr_tsk);
 	node->buffer = buffer;
 
