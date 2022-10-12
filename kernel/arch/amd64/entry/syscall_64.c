@@ -13,7 +13,7 @@
 
 #define SYSCALL_COMMON(nr,sym)	extern unsigned long sym(void);
 SYSCALL_COMMON(0,no_system_call)
-#include "syscall_table.h"
+#include <asm/syscalls_64.h>
 #undef	SYSCALL_COMMON
 
 #define SYSCALL_COMMON(nr,sym)	[nr] = sym,
@@ -21,6 +21,6 @@ SYSCALL_COMMON(0,no_system_call)
 system_call_t syscall_table[MAX_SYSTEM_CALL_NR] = 
 {
 	[0 ... MAX_SYSTEM_CALL_NR-1] = no_system_call,
-#include "syscall_table.h"
+#include <asm/syscalls_64.h>
 };
 
