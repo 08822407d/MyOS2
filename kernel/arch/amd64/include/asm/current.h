@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_CURRENT_H
-
-	#define _ASM_X86_CURRENT_H
+#define _ASM_X86_CURRENT_H
 
 	#include <linux/kernel/compiler.h>
 	// #include <asm/percpu.h>
@@ -17,10 +16,9 @@
 		// 	return this_cpu_read_stable(current_task);
 		// }
 
-		// #define current get_current()
+	// #	define current get_current()
 		task_s *get_current_task(void);
-		#define curr_tsk get_current_task()
-
+	#	define curr_tsk get_current_task()
 	#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_X86_CURRENT_H */

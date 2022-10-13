@@ -1,13 +1,12 @@
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 #ifndef _LINUX_MEMBLOCK_H_
-
-	#define _LINUX_MEMBLOCK_H_
+#define _LINUX_MEMBLOCK_H_
 
 	/*
-	* Logical memory blocks.
-	*
-	* Copyright (C) 2001 Peter Bergner, IBM Corp.
-	*/
+	 * Logical memory blocks.
+	 *
+	 * Copyright (C) 2001 Peter Bergner, IBM Corp.
+	 */
 
 	#include <linux/init/init.h>
 	#include <linux/mm/mm.h>
@@ -17,12 +16,12 @@
 	extern unsigned long min_low_pfn;
 
 	/*
-	* highest page
-	*/
+	 * highest page
+	 */
 	extern unsigned long max_pfn;
 	/*
-	* highest possible page
-	*/
+	 * highest possible page
+	 */
 	extern unsigned long long max_possible_pfn;
 
 	/**
@@ -190,12 +189,11 @@
 	// 		i != (u64)ULLONG_MAX;					\
 	// 		__next_mem_range(&i, nid, flags, type_a, type_b,		\
 	// 				p_start, p_end, p_nid))
-	#define __for_each_mem_range(i, type_a, type_b,			\
-									p_start, p_end)			\
-		for (i = 0, __next_mem_range(&i, type_a, type_b,	\
-										p_start, p_end);	\
-				i != (uint64_t)ULLONG_MAX;					\
-				__next_mem_range(&i, type_a, type_b,		\
+	#define __for_each_mem_range(i, type_a, type_b, p_start, p_end)	\
+				for (i = 0, __next_mem_range(&i, type_a, type_b,	\
+					p_start, p_end);								\
+					i != (uint64_t)ULLONG_MAX;						\
+					__next_mem_range(&i, type_a, type_b,			\
 									p_start, p_end))
 
 	// /**
@@ -353,8 +351,9 @@
 	// #define for_each_free_mem_range(i, nid, flags, p_start, p_end, p_nid)	\
 	// 	__for_each_mem_range(i, &memblock.memory, &memblock.reserved,	\
 	// 				nid, flags, p_start, p_end, p_nid)
-	#define for_each_free_mem_range(i, p_start, p_end)			\
-		__for_each_mem_range(i, &memblock.memory, &memblock.reserved,	\
+	#define for_each_free_mem_range(i, p_start, p_end)		\
+				__for_each_mem_range(i, &memblock.memory,	\
+								&memblock.reserved,			\
 								p_start, p_end)
 
 	// /**
@@ -407,7 +406,7 @@
 	#define MEMBLOCK_LOW_LIMIT			0
 
 	#ifndef ARCH_LOW_ADDRESS_LIMIT
-		#define ARCH_LOW_ADDRESS_LIMIT		0xffffffffUL
+	#	define ARCH_LOW_ADDRESS_LIMIT		0xffffffffUL
 	#endif
 
 	// phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
@@ -618,7 +617,7 @@
 
 
 
-	void * memblock_alloc_DMA(size_t size, size_t align);
-	void * memblock_alloc_normal(size_t size, size_t align);
+	void * myos_memblock_alloc_DMA(size_t size, size_t align);
+	void * myos_memblock_alloc_normal(size_t size, size_t align);
 
 #endif /* _LINUX_MEMBLOCK_H_ */

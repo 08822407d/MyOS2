@@ -71,8 +71,8 @@
 		// 	typedef int				__kernel_ptrdiff_t;
 		// #else
 			typedef __kernel_ulong_t	__kernel_size_t;
-			typedef __kernel_long_t	__kernel_ssize_t;
-			typedef __kernel_long_t	__kernel_ptrdiff_t;
+			typedef __kernel_long_t		__kernel_ssize_t;
+			typedef __kernel_long_t		__kernel_ptrdiff_t;
 		// #endif
 	#endif
 

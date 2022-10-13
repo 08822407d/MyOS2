@@ -1,13 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_CDEV_H
-
-	#define _LINUX_CDEV_H
+#define _LINUX_CDEV_H
 
 	#include <linux/kernel/kobject.h>
 	#include <linux/kernel/kdev_t.h>
 	#include <linux/device/device.h>
 	#include <linux/lib/list.h>
-
 
 	typedef struct cdev {
 		kobj_s				kobj;

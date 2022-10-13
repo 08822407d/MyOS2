@@ -1,7 +1,7 @@
 #ifndef _K_TYPES_H_
 #define _K_TYPES_H_
 
-#include <linux/sched/percpu.h>
+#include <linux/sched/myos_percpu.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/page.h>

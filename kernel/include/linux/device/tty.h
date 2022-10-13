@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_TTY_H
-
-	#define _LINUX_TTY_H
+#define _LINUX_TTY_H
 
 	#include <linux/fs/fs.h>
 	#include <uapi/kernel/major.h>
@@ -523,11 +522,12 @@
 	// void tty_set_lock_subclass(struct tty_struct *tty);
 
 
-	int tty_open(inode_s * inode, file_s * fp);
-	int tty_close(inode_s * inode,file_s * fp);
-	int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
-	ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position);
-	ssize_t tty_write(file_s * filp, const char *buf, size_t length, loff_t *position);
-	void tty_write_color(const char * buf, size_t length, unsigned int FRcolor, unsigned int BKcolor);
+
+	int myos_tty_open(inode_s * inode, file_s * fp);
+	int myos_tty_close(inode_s * inode,file_s * fp);
+	int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
+	ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position);
+	ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position);
+	void myos_tty_write_color(const char * buf, size_t length, unsigned int FRcolor, unsigned int BKcolor);
 
 #endif

@@ -5,8 +5,7 @@
  * Written by David Howells (dhowells@redhat.com)
  */
 #ifndef __MM_INTERNAL_H
-
-	#define __MM_INTERNAL_H
+#define __MM_INTERNAL_H
 
 	#include <linux/fs/fs.h>
 	#include <linux/mm/mm.h>
@@ -21,19 +20,19 @@
 	* about IO, FS and watermark checking while ignoring placement
 	* hints such as HIGHMEM usage.
 	*/
-	#define GFP_RECLAIM_MASK (__GFP_RECLAIM|__GFP_HIGH|__GFP_IO|__GFP_FS|\
-				__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NOFAIL|\
-				__GFP_NORETRY|__GFP_MEMALLOC|__GFP_NOMEMALLOC|\
-				__GFP_ATOMIC|__GFP_NOLOCKDEP)
+	#define GFP_RECLAIM_MASK	(__GFP_RECLAIM|__GFP_HIGH|__GFP_IO|__GFP_FS|\
+								__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NOFAIL|\
+								__GFP_NORETRY|__GFP_MEMALLOC|__GFP_NOMEMALLOC|\
+								__GFP_ATOMIC|__GFP_NOLOCKDEP)
 
 	/* The GFP flags allowed during early boot */
-	#define GFP_BOOT_MASK (__GFP_BITS_MASK & ~(__GFP_RECLAIM|__GFP_IO|__GFP_FS))
+	#define GFP_BOOT_MASK		(__GFP_BITS_MASK & ~(__GFP_RECLAIM|__GFP_IO|__GFP_FS))
 
 	/* Control allocation cpuset and node placement constraints */
-	#define GFP_CONSTRAINT_MASK (__GFP_HARDWALL|__GFP_THISNODE)
+	#define GFP_CONSTRAINT_MASK	(__GFP_HARDWALL|__GFP_THISNODE)
 
 	/* Do not use these with a slab allocator */
-	#define GFP_SLAB_BUG_MASK (__GFP_DMA32|__GFP_HIGHMEM|~__GFP_BITS_MASK)
+	#define GFP_SLAB_BUG_MASK	(__GFP_DMA32|__GFP_HIGHMEM|~__GFP_BITS_MASK)
 
 	// void page_writeback_init(void);
 

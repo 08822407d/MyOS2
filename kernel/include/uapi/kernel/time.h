@@ -2,17 +2,17 @@
 #ifndef _UAPI_LINUX_TIME_H_
 #define _UAPI_LINUX_TIME_H_
 
-#include <linux/kernel/types.h>
-#include <uapi/kernel/time_types.h>
+	#include <linux/kernel/types.h>
+	#include <uapi/kernel/time_types.h>
 
 	#ifndef __KERNEL__
-		#ifndef _STRUCT_TIMESPEC
-			#define _STRUCT_TIMESPEC
-			struct timespec {
-				// __kernel_old_time_t	tv_sec;		/* seconds */
-				long			tv_nsec;	/* nanoseconds */
-			};
-		#endif
+	#	ifndef _STRUCT_TIMESPEC
+	#		define _STRUCT_TIMESPEC
+				struct timespec {
+					// __kernel_old_time_t	tv_sec;		/* seconds */
+					long			tv_nsec;	/* nanoseconds */
+				};
+	#	endif
 
 		struct timeval {
 			// __kernel_old_time_t	tv_sec;		/* seconds */

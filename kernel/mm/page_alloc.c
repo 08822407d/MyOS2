@@ -273,7 +273,7 @@ static inline bool page_is_buddy(page_s *page, page_s *buddy, unsigned int order
 	if (get_buddy_order(buddy) != order)
 		return false;
 
-	if (page_zone(page) != page_zone(buddy))
+	if (myos_page_zone(page) != myos_page_zone(buddy))
 		return false;
 
 	return true;
@@ -432,7 +432,7 @@ page_s *alloc_pages(gfp_t gfp, unsigned order)
 void free_pages(page_s * page, unsigned int order)
 {
 	unsigned long pfn = page_to_pfn(page);
-	zone_s * zone = page_zone(page);
+	zone_s * zone = myos_page_zone(page);
 
 	// linux call stack :
 	// void __free_pages(struct page *page, unsigned int order)
@@ -458,7 +458,7 @@ void free_pages(page_s * page, unsigned int order)
 void __init memblock_free_pages(page_s * page,
 		unsigned long pfn, unsigned int order)
 {
-	zone_s * zone = page_zone(page);
+	zone_s * zone = myos_page_zone(page);
 	set_buddy_order(page, order);
 	add_to_free_list(page, zone, order);
 }
@@ -543,7 +543,7 @@ void preinit_page()
 
 void init_page()
 {
-	zone_sizes_init();
+	myos_zone_sizes_init();
 
 	memblock_free_all();
 

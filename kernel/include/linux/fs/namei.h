@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_NAMEI_H
-
-	#define _LINUX_NAMEI_H
+#define _LINUX_NAMEI_H
 
 	#define ND_ROOT_PRESET	1
 	#define ND_ROOT_GRABBED	2

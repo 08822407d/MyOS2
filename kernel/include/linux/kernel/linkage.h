@@ -281,82 +281,82 @@
 
 		/* SYM_CODE_START -- use for non-C (special) functions */
 		#ifndef SYM_CODE_START
-		#	define SYM_CODE_START(name)							\
+		#	define SYM_CODE_START(name) \
 					SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
 		#endif
 
 		/* SYM_CODE_START_NOALIGN -- use for non-C (special) functions, w/o alignment */
 		#ifndef SYM_CODE_START_NOALIGN
-		#	define SYM_CODE_START_NOALIGN(name)					\
+		#	define SYM_CODE_START_NOALIGN(name) \
 					SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
 		#endif
 
-		// /* SYM_CODE_START_LOCAL -- use for local non-C (special) functions */
-		// #ifndef SYM_CODE_START_LOCAL
-		// #define SYM_CODE_START_LOCAL(name) \
-		// 	SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
-		// #endif
+		/* SYM_CODE_START_LOCAL -- use for local non-C (special) functions */
+		#ifndef SYM_CODE_START_LOCAL
+		#	define SYM_CODE_START_LOCAL(name) \
+					SYM_START(name, SYM_L_LOCAL, SYM_A_ALIGN)
+		#endif
 
-		// /*
-		// * SYM_CODE_START_LOCAL_NOALIGN -- use for local non-C (special) functions,
-		// * w/o alignment
-		// */
-		// #ifndef SYM_CODE_START_LOCAL_NOALIGN
-		// #define SYM_CODE_START_LOCAL_NOALIGN(name) \
-		// 	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
-		// #endif
+		/*
+		* SYM_CODE_START_LOCAL_NOALIGN -- use for local non-C (special) functions,
+		* w/o alignment
+		*/
+		#ifndef SYM_CODE_START_LOCAL_NOALIGN
+		#	define SYM_CODE_START_LOCAL_NOALIGN(name) \
+					SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
+		#endif
 
 		/* SYM_CODE_END -- the end of SYM_CODE_START_LOCAL, SYM_CODE_START, ... */
 		#ifndef SYM_CODE_END
-		#	define SYM_CODE_END(name)			\
+		#	define SYM_CODE_END(name) \
 					SYM_END(name, SYM_T_NONE)
 		#endif
 
 		/* === data annotations === */
 
-		// /* SYM_DATA_START -- global data symbol */
-		// #ifndef SYM_DATA_START
-		// #define SYM_DATA_START(name) \
-		// 	SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
-		// #endif
+		/* SYM_DATA_START -- global data symbol */
+		#ifndef SYM_DATA_START
+		#	define SYM_DATA_START(name) \
+					SYM_START(name, SYM_L_GLOBAL, SYM_A_NONE)
+		#endif
 
-		// /* SYM_DATA_START -- local data symbol */
-		// #ifndef SYM_DATA_START_LOCAL
-		// #define SYM_DATA_START_LOCAL(name) \
-		// 	SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
-		// #endif
+		/* SYM_DATA_START -- local data symbol */
+		#ifndef SYM_DATA_START_LOCAL
+		#	define SYM_DATA_START_LOCAL(name) \
+					SYM_START(name, SYM_L_LOCAL, SYM_A_NONE)
+		#endif
 
-		// /* SYM_DATA_END -- the end of SYM_DATA_START symbol */
-		// #ifndef SYM_DATA_END
-		// #define SYM_DATA_END(name) \
-		// 	SYM_END(name, SYM_T_OBJECT)
-		// #endif
+		/* SYM_DATA_END -- the end of SYM_DATA_START symbol */
+		#ifndef SYM_DATA_END
+		#	define SYM_DATA_END(name) \
+					SYM_END(name, SYM_T_OBJECT)
+		#endif
 
-		// /* SYM_DATA_END_LABEL -- the labeled end of SYM_DATA_START symbol */
-		// #ifndef SYM_DATA_END_LABEL
-		// #define SYM_DATA_END_LABEL(name, linkage, label) \
-		// 	linkage(label) ASM_NL                        \
-		// 		.type label SYM_T_OBJECT ASM_NL          \
-		// 			label : SYM_END(name, SYM_T_OBJECT)
-		// #endif
+		/* SYM_DATA_END_LABEL -- the labeled end of SYM_DATA_START symbol */
+		#ifndef SYM_DATA_END_LABEL
+		#	define SYM_DATA_END_LABEL(name, linkage, label)	\
+					linkage(label) ASM_NL					\
+					.type label SYM_T_OBJECT ASM_NL			\
+					label : SYM_END(name, SYM_T_OBJECT)
+		#endif
 
-		// /* SYM_DATA -- start+end wrapper around simple global data */
-		// #ifndef SYM_DATA
-		// #define SYM_DATA(name, data...) \
-		// 	SYM_DATA_START(name)        \
-		// 	ASM_NL                      \
-		// 		data ASM_NL             \
-		// 		SYM_DATA_END(name)
-		// #endif
+		/* SYM_DATA -- start+end wrapper around simple global data */
+		#ifndef SYM_DATA
+		#	define SYM_DATA(name, data...)	\
+					SYM_DATA_START(name)	\
+					ASM_NL					\
+					data ASM_NL				\
+					SYM_DATA_END(name)
+		#endif
 
-		// /* SYM_DATA_LOCAL -- start+end wrapper around simple local data */
-		// #ifndef SYM_DATA_LOCAL
-		// #define SYM_DATA_LOCAL(name, data...) \
-		// 	SYM_DATA_START_LOCAL(name)        \
-		// 	ASM_NL                            \
-		// 		data ASM_NL                   \
-		// 		SYM_DATA_END(name)
-		// #endif
+		/* SYM_DATA_LOCAL -- start+end wrapper around simple local data */
+		#ifndef SYM_DATA_LOCAL
+		#	define SYM_DATA_LOCAL(name, data...)	\
+					SYM_DATA_START_LOCAL(name)		\
+					ASM_NL							\
+					data ASM_NL						\
+					SYM_DATA_END(name)
+		#endif
 
 	#endif /* __ASSEMBLY__ */
 

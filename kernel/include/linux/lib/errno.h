@@ -2,14 +2,14 @@
 #ifndef _LINUX_ERRNO_H
 #define _LINUX_ERRNO_H
 
-#include <uapi/kernel/errno.h>
+	#include <uapi/kernel/errno.h>
 
 	/*
-	* These should never be seen by user programs.  To return one of ERESTART*
-	* codes, signal_pending() MUST be set.  Note that ptrace can observe these
-	* at syscall exit tracing, but they will never be left for the debugged user
-	* process to see.
-	*/
+	 * These should never be seen by user programs.  To return one of ERESTART*
+	 * codes, signal_pending() MUST be set.  Note that ptrace can observe these
+	 * at syscall exit tracing, but they will never be left for the debugged user
+	 * process to see.
+	 */
 	#define ERESTARTSYS				512
 	#define ERESTARTNOINTR			513
 	#define ERESTARTNOHAND			514	/* restart if no handler.. */

@@ -2,53 +2,53 @@
 #ifndef _LINUX_FS_H
 #define _LINUX_FS_H
 
-#include <linux/kernel/linkage.h>
-// #include <linux/wait_bit.h>
-#include <linux/kernel/kdev_t.h>
-#include <linux/fs/dcache.h>
-#include <linux/fs/path.h>
-#include <linux/kernel/stat.h>
-// #include <linux/cache.h>
-#include <linux/lib/list.h>
-// #include <linux/list_lru.h>
-// #include <linux/llist.h>
-// #include <linux/radix-tree.h>
-// #include <linux/xarray.h>
-// #include <linux/rbtree.h>
-#include <linux/init/init.h>
-// #include <linux/pid.h>
-// #include <linux/bug.h>
-// #include <linux/mutex.h>
-// #include <linux/rwsem.h>
-// #include <linux/mm_types.h>
-// #include <linux/capability.h>
-// #include <linux/semaphore.h>
-#include <linux/kernel/fcntl.h>
-// #include <linux/rculist_bl.h>
-// #include <linux/atomic.h>
-// #include <linux/shrinker.h>
-// #include <linux/migrate_mode.h>
-#include <linux/kernel/uidgid.h>
-// #include <linux/lockdep.h>
-// #include <linux/percpu-rwsem.h>
-// #include <linux/workqueue.h>
-// #include <linux/delayed_call.h>
-#include <linux/kernel/uuid.h>
-// #include <linux/errseq.h>
-// #include <linux/ioprio.h>
-// #include <linux/fs_types.h>
-// #include <linux/build_bug.h>
-#include <linux/kernel/stddef.h>
-#include <linux/kernel/mount.h>
-// #include <linux/cred.h>
-// #include <linux/mnt_idmapping.h>
-// #include <asm/byteorder.h>
-#include <uapi/kernel/fs.h>
+	#include <linux/kernel/linkage.h>
+	// #include <linux/wait_bit.h>
+	#include <linux/kernel/kdev_t.h>
+	#include <linux/fs/dcache.h>
+	#include <linux/fs/path.h>
+	#include <linux/kernel/stat.h>
+	// #include <linux/cache.h>
+	#include <linux/lib/list.h>
+	// #include <linux/list_lru.h>
+	// #include <linux/llist.h>
+	// #include <linux/radix-tree.h>
+	// #include <linux/xarray.h>
+	// #include <linux/rbtree.h>
+	#include <linux/init/init.h>
+	// #include <linux/pid.h>
+	// #include <linux/bug.h>
+	// #include <linux/mutex.h>
+	// #include <linux/rwsem.h>
+	// #include <linux/mm_types.h>
+	// #include <linux/capability.h>
+	// #include <linux/semaphore.h>
+	#include <linux/kernel/fcntl.h>
+	// #include <linux/rculist_bl.h>
+	// #include <linux/atomic.h>
+	// #include <linux/shrinker.h>
+	// #include <linux/migrate_mode.h>
+	#include <linux/kernel/uidgid.h>
+	// #include <linux/lockdep.h>
+	// #include <linux/percpu-rwsem.h>
+	// #include <linux/workqueue.h>
+	// #include <linux/delayed_call.h>
+	#include <linux/kernel/uuid.h>
+	// #include <linux/errseq.h>
+	// #include <linux/ioprio.h>
+	// #include <linux/fs_types.h>
+	// #include <linux/build_bug.h>
+	#include <linux/kernel/stddef.h>
+	#include <linux/kernel/mount.h>
+	// #include <linux/cred.h>
+	// #include <linux/mnt_idmapping.h>
+	// #include <asm/byteorder.h>
+	#include <uapi/kernel/fs.h>
 
 
-#include <linux/device/cdev.h>
-#include <linux/block/block_s_defs.h>
-#include <linux/kernel/statfs.h>
+	#include <linux/device/cdev.h>
+	#include <linux/block/block_s_defs.h>
+	#include <linux/kernel/statfs.h>
 
 	extern void inode_init(void);
 	extern void inode_init_early(void);
@@ -990,12 +990,12 @@
 	#define	MAX_NON_LFS	((1UL<<31) - 1)
 
 	/* Page cache limit. The filesystems should put that into their s_maxbytes 
-	limits, otherwise bad things can happen in VM. */ 
-	// #if BITS_PER_LONG==32
-	// #define MAX_LFS_FILESIZE	((loff_t)ULONG_MAX << PAGE_SHIFT)
-	// #elif BITS_PER_LONG==64
-	#define MAX_LFS_FILESIZE 	((loff_t)LLONG_MAX)
-	// #endif
+	   limits, otherwise bad things can happen in VM. */ 
+	#if BITS_PER_LONG==32
+	#	define MAX_LFS_FILESIZE		((loff_t)ULONG_MAX << PAGE_SHIFT)
+	#elif BITS_PER_LONG==64
+	#	define MAX_LFS_FILESIZE 	((loff_t)LLONG_MAX)
+	#endif
 
 	#define FL_POSIX				1
 	#define FL_FLOCK				2
@@ -1014,9 +1014,9 @@
 	#define FL_CLOSE_POSIX			(FL_POSIX | FL_CLOSE)
 
 	/*
-	* Special return value from posix_lock_file() and vfs_lock_file() for
-	* asynchronous locking.
-	*/
+	 * Special return value from posix_lock_file() and vfs_lock_file() for
+	 * asynchronous locking.
+	 */
 	#define FILE_LOCK_DEFERRED		1
 
 	/* legacy typedef, should eventually be removed */
@@ -1120,9 +1120,9 @@
 
 	/* The following constant reflects the upper bound of the file/locking space */
 	#ifndef OFFSET_MAX
-		#define INT_LIMIT(x)	(~((x)1 << (sizeof(x)*8 - 1)))
-		#define OFFSET_MAX		INT_LIMIT(loff_t)
-		#define OFFT_OFFSET_MAX	INT_LIMIT(off_t)
+	#	define INT_LIMIT(x)	(~((x)1 << (sizeof(x)*8 - 1)))
+	#	define OFFSET_MAX		INT_LIMIT(loff_t)
+	#	define OFFT_OFFSET_MAX	INT_LIMIT(off_t)
 	#endif
 
 	// extern void send_sigio(struct fown_struct *fown, int fd, int band);
@@ -1353,9 +1353,9 @@
 	// extern int send_sigurg(struct fown_struct *fown);
 
 	/*
-	* sb->s_flags.  Note that these mirror the equivalent MS_* flags where
-	* represented in both.
-	*/
+	 * sb->s_flags.  Note that these mirror the equivalent MS_* flags where
+	 * represented in both.
+	 */
 	#define SB_RDONLY		1		/* Mount read-only */
 	#define SB_NOSUID		2		/* Ignore suid and sgid bits */
 	#define SB_NODEV		4		/* Disallow access to device special files */
@@ -1387,9 +1387,8 @@
 					(sb->s_encoding_flags & SB_ENC_STRICT_MODE_FL)
 
 	/*
-	*	Umount options
-	*/
-
+	 *	Umount options
+	 */
 	#define MNT_FORCE			0x00000001	/* Attempt to forcibily umount */
 	#define MNT_DETACH			0x00000002	/* Just detach from the tree */
 	#define MNT_EXPIRE			0x00000004	/* Mark for expiry */
@@ -2110,8 +2109,8 @@
 	} super_ops_s;
 
 	/*
-	* Inode flags - they have no relation to superblock flags now
-	*/
+	 * Inode flags - they have no relation to superblock flags now
+	 */
 	#define S_SYNC			(1 << 0)	/* Writes are synced at once */
 	#define S_NOATIME		(1 << 1)	/* Do not update access times */
 	#define S_APPEND		(1 << 2)	/* Append-only file */
@@ -2126,9 +2125,9 @@
 	#define S_AUTOMOUNT		(1 << 11)	/* Automount/referral quasi-directory */
 	#define S_NOSEC			(1 << 12)	/* no suid or xattr security attributes */
 	#ifdef CONFIG_FS_DAX
-		#define S_DAX		(1 << 13)	/* Direct Access, avoiding the page cache */
+	#	define S_DAX		(1 << 13)	/* Direct Access, avoiding the page cache */
 	#else
-		#define S_DAX		0			/* Make all the DAX code disappear */
+	#	define S_DAX		0			/* Make all the DAX code disappear */
 	#endif
 	#define S_ENCRYPTED		(1 << 14)	/* Encrypted file (using fs/crypto/) */
 	#define S_CASEFOLD		(1 << 15)	/* Casefolded file */
@@ -2136,18 +2135,18 @@
 	#define S_KERNEL_FILE	(1 << 17)	/* File is in use by the kernel (eg. fs/cachefiles) */
 
 	/*
-	* Note that nosuid etc flags are inode-specific: setting some file-system
-	* flags just means all the inodes inherit those flags by default. It might be
-	* possible to override it selectively if you really wanted to with some
-	* ioctl() that is not currently implemented.
-	*
-	* Exception: SB_RDONLY is always applied to the entire file system.
-	*
-	* Unfortunately, it is possible to change a filesystems flags with it mounted
-	* with files in use.  This means that all of the inodes will not have their
-	* i_flags updated.  Hence, i_flags no longer inherit the superblock mount
-	* flags, so these have to be checked separately. -- rmk@arm.uk.linux.org
-	*/
+	 * Note that nosuid etc flags are inode-specific: setting some file-system
+	 * flags just means all the inodes inherit those flags by default. It might be
+	 * possible to override it selectively if you really wanted to with some
+	 * ioctl() that is not currently implemented.
+	 *
+	 * Exception: SB_RDONLY is always applied to the entire file system.
+	 *
+	 * Unfortunately, it is possible to change a filesystems flags with it mounted
+	 * with files in use.  This means that all of the inodes will not have their
+	 * i_flags updated.  Hence, i_flags no longer inherit the superblock mount
+	 * flags, so these have to be checked separately. -- rmk@arm.uk.linux.org
+	 */
 	#define __IS_FLG(inode, flg)((inode)->i_sb->s_flags & (flg))
 
 	static inline bool sb_rdonly(const super_block_s *sb) { return sb->s_flags & SB_RDONLY; }
@@ -2229,84 +2228,84 @@
 	// }
 
 	/*
-	* Inode state bits.  Protected by inode->i_lock
-	*
-	* Four bits determine the dirty state of the inode: I_DIRTY_SYNC,
-	* I_DIRTY_DATASYNC, I_DIRTY_PAGES, and I_DIRTY_TIME.
-	*
-	* Four bits define the lifetime of an inode.  Initially, inodes are I_NEW,
-	* until that flag is cleared.  I_WILL_FREE, I_FREEING and I_CLEAR are set at
-	* various stages of removing an inode.
-	*
-	* Two bits are used for locking and completion notification, I_NEW and I_SYNC.
-	*
-	* I_DIRTY_SYNC		Inode is dirty, but doesn't have to be written on
-	*			fdatasync() (unless I_DIRTY_DATASYNC is also set).
-	*			Timestamp updates are the usual cause.
-	* I_DIRTY_DATASYNC	Data-related inode changes pending.  We keep track of
-	*			these changes separately from I_DIRTY_SYNC so that we
-	*			don't have to write inode on fdatasync() when only
-	*			e.g. the timestamps have changed.
-	* I_DIRTY_PAGES	Inode has dirty pages.  Inode itself may be clean.
-	* I_DIRTY_TIME		The inode itself only has dirty timestamps, and the
-	*			lazytime mount option is enabled.  We keep track of this
-	*			separately from I_DIRTY_SYNC in order to implement
-	*			lazytime.  This gets cleared if I_DIRTY_INODE
-	*			(I_DIRTY_SYNC and/or I_DIRTY_DATASYNC) gets set.  I.e.
-	*			either I_DIRTY_TIME *or* I_DIRTY_INODE can be set in
-	*			i_state, but not both.  I_DIRTY_PAGES may still be set.
-	* I_NEW		Serves as both a mutex and completion notification.
-	*			New inodes set I_NEW.  If two processes both create
-	*			the same inode, one of them will release its inode and
-	*			wait for I_NEW to be released before returning.
-	*			Inodes in I_WILL_FREE, I_FREEING or I_CLEAR state can
-	*			also cause waiting on I_NEW, without I_NEW actually
-	*			being set.  find_inode() uses this to prevent returning
-	*			nearly-dead inodes.
-	* I_WILL_FREE		Must be set when calling write_inode_now() if i_count
-	*			is zero.  I_FREEING must be set when I_WILL_FREE is
-	*			cleared.
-	* I_FREEING		Set when inode is about to be freed but still has dirty
-	*			pages or buffers attached or the inode itself is still
-	*			dirty.
-	* I_CLEAR		Added by clear_inode().  In this state the inode is
-	*			clean and can be destroyed.  Inode keeps I_FREEING.
-	*
-	*			Inodes that are I_WILL_FREE, I_FREEING or I_CLEAR are
-	*			prohibited for many purposes.  iget() must wait for
-	*			the inode to be completely released, then create it
-	*			anew.  Other functions will just ignore such inodes,
-	*			if appropriate.  I_NEW is used for waiting.
-	*
-	* I_SYNC		Writeback of inode is running. The bit is set during
-	*			data writeback, and cleared with a wakeup on the bit
-	*			address once it is done. The bit is also used to pin
-	*			the inode in memory for flusher thread.
-	*
-	* I_REFERENCED		Marks the inode as recently references on the LRU list.
-	*
-	* I_DIO_WAKEUP		Never set.  Only used as a key for wait_on_bit().
-	*
-	* I_WB_SWITCH		Cgroup bdi_writeback switching in progress.  Used to
-	*			synchronize competing switching instances and to tell
-	*			wb stat updates to grab the i_pages lock.  See
-	*			inode_switch_wbs_work_fn() for details.
-	*
-	* I_OVL_INUSE		Used by overlayfs to get exclusive ownership on upper
-	*			and work dirs among overlayfs mounts.
-	*
-	* I_CREATING		New object's inode in the middle of setting up.
-	*
-	* I_DONTCACHE		Evict inode as soon as it is not used anymore.
-	*
-	* I_SYNC_QUEUED	Inode is queued in b_io or b_more_io writeback lists.
-	*			Used to detect that mark_inode_dirty() should not move
-	* 			inode between dirty lists.
-	*
-	* I_PINNING_FSCACHE_WB	Inode is pinning an fscache object for writeback.
-	*
-	* Q: What is the difference between I_WILL_FREE and I_FREEING?
-	*/
+	 * Inode state bits.  Protected by inode->i_lock
+	 *
+	 * Four bits determine the dirty state of the inode: I_DIRTY_SYNC,
+	 * I_DIRTY_DATASYNC, I_DIRTY_PAGES, and I_DIRTY_TIME.
+	 *
+	 * Four bits define the lifetime of an inode.  Initially, inodes are I_NEW,
+	 * until that flag is cleared.  I_WILL_FREE, I_FREEING and I_CLEAR are set at
+	 * various stages of removing an inode.
+	 *
+	 * Two bits are used for locking and completion notification, I_NEW and I_SYNC.
+	 *
+	 * I_DIRTY_SYNC		Inode is dirty, but doesn't have to be written on
+	 *			fdatasync() (unless I_DIRTY_DATASYNC is also set).
+	 *			Timestamp updates are the usual cause.
+	 * I_DIRTY_DATASYNC	Data-related inode changes pending.  We keep track of
+	 *			these changes separately from I_DIRTY_SYNC so that we
+	 *			don't have to write inode on fdatasync() when only
+	 *			e.g. the timestamps have changed.
+	 * I_DIRTY_PAGES	Inode has dirty pages.  Inode itself may be clean.
+	 * I_DIRTY_TIME		The inode itself only has dirty timestamps, and the
+	 *			lazytime mount option is enabled.  We keep track of this
+	 *			separately from I_DIRTY_SYNC in order to implement
+	 *			lazytime.  This gets cleared if I_DIRTY_INODE
+	 *			(I_DIRTY_SYNC and/or I_DIRTY_DATASYNC) gets set.  I.e.
+	 *			either I_DIRTY_TIME *or* I_DIRTY_INODE can be set in
+	 *			i_state, but not both.  I_DIRTY_PAGES may still be set.
+	 * I_NEW		Serves as both a mutex and completion notification.
+	 *			New inodes set I_NEW.  If two processes both create
+	 *			the same inode, one of them will release its inode and
+	 *			wait for I_NEW to be released before returning.
+	 *			Inodes in I_WILL_FREE, I_FREEING or I_CLEAR state can
+	 *			also cause waiting on I_NEW, without I_NEW actually
+	 *			being set.  find_inode() uses this to prevent returning
+	 *			nearly-dead inodes.
+	 * I_WILL_FREE		Must be set when calling write_inode_now() if i_count
+	 *			is zero.  I_FREEING must be set when I_WILL_FREE is
+	 *			cleared.
+	 * I_FREEING		Set when inode is about to be freed but still has dirty
+	 *			pages or buffers attached or the inode itself is still
+	 *			dirty.
+	 * I_CLEAR		Added by clear_inode().  In this state the inode is
+	 *			clean and can be destroyed.  Inode keeps I_FREEING.
+	 *
+	 *			Inodes that are I_WILL_FREE, I_FREEING or I_CLEAR are
+	 *			prohibited for many purposes.  iget() must wait for
+	 *			the inode to be completely released, then create it
+	 *			anew.  Other functions will just ignore such inodes,
+	 *			if appropriate.  I_NEW is used for waiting.
+	 *
+	 * I_SYNC		Writeback of inode is running. The bit is set during
+	 *			data writeback, and cleared with a wakeup on the bit
+	 *			address once it is done. The bit is also used to pin
+	 *			the inode in memory for flusher thread.
+	 *
+	 * I_REFERENCED		Marks the inode as recently references on the LRU list.
+	 *
+	 * I_DIO_WAKEUP		Never set.  Only used as a key for wait_on_bit().
+	 *
+	 * I_WB_SWITCH		Cgroup bdi_writeback switching in progress.  Used to
+	 *			synchronize competing switching instances and to tell
+	 *			wb stat updates to grab the i_pages lock.  See
+	 *			inode_switch_wbs_work_fn() for details.
+	 *
+	 * I_OVL_INUSE		Used by overlayfs to get exclusive ownership on upper
+	 *			and work dirs among overlayfs mounts.
+	 *
+	 * I_CREATING		New object's inode in the middle of setting up.
+	 *
+	 * I_DONTCACHE		Evict inode as soon as it is not used anymore.
+	 *
+	 * I_SYNC_QUEUED	Inode is queued in b_io or b_more_io writeback lists.
+	 *			Used to detect that mark_inode_dirty() should not move
+	 * 			inode between dirty lists.
+	 *
+	 * I_PINNING_FSCACHE_WB	Inode is pinning an fscache object for writeback.
+	 *
+	 * Q: What is the difference between I_WILL_FREE and I_FREEING?
+	 */
 	#define I_DIRTY_SYNC		(1 << 0)
 	#define I_DIRTY_DATASYNC	(1 << 1)
 	#define I_DIRTY_PAGES		(1 << 2)
@@ -2397,20 +2396,20 @@
 
 	// int sync_inode_metadata(inode_s *inode, int wait);
 
-#include <linux/fs/GPT.h>
+	#include <linux/fs/GPT.h>
 	typedef struct file_system_type {
 		super_block_s	*(*read_super)(GPT_PE_s * DPTE, void * buf);
 
 
 		const char		*name;
 		int				fs_flags;
-	#define FS_REQUIRES_DEV			1
-	#define FS_BINARY_MOUNTDATA		2
-	#define FS_HAS_SUBTYPE			4
-	#define FS_USERNS_MOUNT			8		/* Can be mounted by userns root */
-	#define FS_DISALLOW_NOTIFY_PERM	16		/* Disable fanotify permission events */
-	#define FS_ALLOW_IDMAP			32		/* FS has been updated to handle vfs idmappings. */
-	#define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
+	#	define FS_REQUIRES_DEV			1
+	#	define FS_BINARY_MOUNTDATA		2
+	#	define FS_HAS_SUBTYPE			4
+	#	define FS_USERNS_MOUNT			8		/* Can be mounted by userns root */
+	#	define FS_DISALLOW_NOTIFY_PERM	16		/* Disable fanotify permission events */
+	#	define FS_ALLOW_IDMAP			32		/* FS has been updated to handle vfs idmappings. */
+	#	define FS_RENAME_DOES_D_MOVE	32768	/* FS will handle d_move() during rename() internally. */
 		int				(*init_fs_context)(fs_ctxt_s *);
 		dentry_s		*(*mount) (fs_type_s *, int, const char *, void *);
 		void			(*kill_sb) (super_block_s *);
@@ -3578,9 +3577,12 @@
 	// 	return filemap_write_and_wait(inode->i_mapping);
 	// }
 
-	extern super_block_s *root_sb;
-	extern mount_s root_mnt;
 
-	unsigned long switch_to_root_disk(void);
+
+
+	extern super_block_s *myos_root_sb;
+	extern mount_s myos_root_mnt;
+
+	unsigned long myos_switch_to_root_disk(void);
 
 #endif /* _LINUX_FS_H */

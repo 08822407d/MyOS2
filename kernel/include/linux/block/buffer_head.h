@@ -8,14 +8,14 @@
 #ifndef _LINUX_BUFFER_HEAD_H
 #define _LINUX_BUFFER_HEAD_H
 
-#include <linux/kernel/types.h>
-#include <linux/mm/page.h>
-#include <linux/kernel/linkage.h>
-// #include <linux/pagemap.h>
-// #include <linux/wait.h>
-// #include <linux/atomic.h>
+	#include <linux/kernel/types.h>
+	#include <linux/mm/page.h>
+	#include <linux/kernel/linkage.h>
+	// #include <linux/pagemap.h>
+	// #include <linux/wait.h>
+	// #include <linux/atomic.h>
 
-#include "../arch/amd64/include/device.h"
+	#include "../arch/amd64/include/device.h"
 
 	enum bh_state_bits {
 		BH_Uptodate,		/* Contains valid data */

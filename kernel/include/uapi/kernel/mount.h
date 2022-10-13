@@ -1,14 +1,14 @@
 #ifndef _UAPI_LINUX_MOUNT_H
 #define _UAPI_LINUX_MOUNT_H
 
-#include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 	/*
-	* These are the fs-independent mount-flags: up to 32 flags are supported
-	*
-	* Usage of these is restricted within the kernel to core mount(2) code and
-	* callers of sys_mount() only.  Filesystems should be using the SB_*
-	* equivalent instead.
-	*/
+	 * These are the fs-independent mount-flags: up to 32 flags are supported
+	 *
+	 * Usage of these is restricted within the kernel to core mount(2) code and
+	 * callers of sys_mount() only.  Filesystems should be using the SB_*
+	 * equivalent instead.
+	 */
 	#define MS_RDONLY		1		/* Mount read-only */
 	#define MS_NOSUID		2		/* Ignore suid and sgid bits */
 	#define MS_NODEV		4		/* Disallow access to device special files */
@@ -46,26 +46,26 @@
 	#define MS_NOUSER		(1<<31)
 
 	/*
-	* Superblock flags that can be altered by MS_REMOUNT
-	*/
+	 * Superblock flags that can be altered by MS_REMOUNT
+	 */
 	#define MS_RMT_MASK	(MS_RDONLY|MS_SYNCHRONOUS|MS_MANDLOCK|\
 							MS_I_VERSION|MS_LAZYTIME)
 
 	/*
-	* Old magic mount flag and mask
-	*/
+	 * Old magic mount flag and mask
+	 */
 	#define MS_MGC_VAL		0xC0ED0000
 	#define MS_MGC_MSK		0xffff0000
 
 	/*
-	* open_tree() flags.
-	*/
+	 * open_tree() flags.
+	 */
 	#define OPEN_TREE_CLONE		1			/* Clone the target tree and attach the clone */
 	#define OPEN_TREE_CLOEXEC	O_CLOEXEC	/* Close the file on execve() */
 
 	/*
-	* move_mount() flags.
-	*/
+	 * move_mount() flags.
+	 */
 	#define MOVE_MOUNT_F_SYMLINKS		0x00000001 /* Follow symlinks on from path */
 	#define MOVE_MOUNT_F_AUTOMOUNTS		0x00000002 /* Follow automounts on from path */
 	#define MOVE_MOUNT_F_EMPTY_PATH		0x00000004 /* Empty from path permitted */
@@ -75,21 +75,21 @@
 	#define MOVE_MOUNT__MASK			0x00000077
 
 	/*
-	* fsopen() flags.
-	*/
+	 * fsopen() flags.
+	 */
 	#define FSOPEN_CLOEXEC			0x00000001
 
 	/*
-	* fspick() flags.
-	*/
+	 * fspick() flags.
+	 */
 	#define FSPICK_CLOEXEC			0x00000001
 	#define FSPICK_SYMLINK_NOFOLLOW	0x00000002
 	#define FSPICK_NO_AUTOMOUNT		0x00000004
 	#define FSPICK_EMPTY_PATH		0x00000008
 
 	/*
-	* The type of fsconfig() call made.
-	*/
+	 * The type of fsconfig() call made.
+	 */
 	enum fsconfig_command {
 		FSCONFIG_SET_FLAG			= 0,	/* Set parameter, supplying no value */
 		FSCONFIG_SET_STRING			= 1,	/* Set parameter, supplying a string value */
@@ -102,13 +102,13 @@
 	};
 
 	/*
-	* fsmount() flags.
-	*/
+	 * fsmount() flags.
+	 */
 	#define FSMOUNT_CLOEXEC			0x00000001
 
 	/*
-	* Mount attributes.
-	*/
+	 * Mount attributes.
+	 */
 	#define MOUNT_ATTR_RDONLY		0x00000001 /* Mount read-only */
 	#define MOUNT_ATTR_NOSUID		0x00000002 /* Ignore suid and sgid bits */
 	#define MOUNT_ATTR_NODEV		0x00000004 /* Disallow access to device special files */
@@ -122,8 +122,8 @@
 	#define MOUNT_ATTR_NOSYMFOLLOW	0x00200000 /* Do not follow symlinks */
 
 	/*
-	* mount_setattr()
-	*/
+	 * mount_setattr()
+	 */
 	typedef struct mount_attr {
 		__u64 attr_set;
 		__u64 attr_clr;

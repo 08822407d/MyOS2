@@ -12,8 +12,7 @@
  */
 
 #ifndef _DEVICE_DRIVER_H_
-
-	#define _DEVICE_DRIVER_H_
+#define _DEVICE_DRIVER_H_
 
 	#include <linux/kernel/kobject.h>
 	// #include <linux/klist.h>

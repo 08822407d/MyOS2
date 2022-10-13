@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_INIT_H
-
-	#define _LINUX_INIT_H
+#define _LINUX_INIT_H
 
 	#include <linux/kernel/compiler.h>
 	#include <linux/kernel/types.h>
@@ -11,9 +10,9 @@
 
 	/* Built-in __init functions needn't be compiled with retpoline */
 	#if defined(__noretpoline) && !defined(MODULE)
-		#define __noinitretpoline __noretpoline
+	#	define __noinitretpoline __noretpoline
 	#else
-		#define __noinitretpoline
+	#	define __noinitretpoline
 	#endif
 
 	/* These macros are used to mark some functions or 
@@ -79,9 +78,9 @@
 	#define __refconst		__section(".ref.rodata")
 
 	#ifdef MODULE
-		#define __exitused
+	#	define __exitused
 	#else
-		#define __exitused		__used
+	#	define __exitused		__used
 	#endif
 
 	#define __exit			__section(".exit.text") __exitused __cold notrace
@@ -115,8 +114,8 @@
 
 	#ifndef __ASSEMBLY__
 		// /*
-		// * Used for initialization calls..
-		// */
+		//  * Used for initialization calls..
+		//  */
 		// typedef int (*initcall_t)(void);
 		// typedef void (*exitcall_t)(void);
 

@@ -10,8 +10,7 @@
  */
 
 #ifndef _DEVICE_H_
-
-	#define _DEVICE_H_
+#define _DEVICE_H_
 
 	// #include <linux/dev_printk.h>
 	// #include <linux/energy_model.h>
@@ -312,18 +311,18 @@
 	};
 
 	/*
-	* Device link flags.
-	*
-	* STATELESS: The core will not remove this link automatically.
-	* AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
-	* PM_RUNTIME: If set, the runtime PM framework will use this link.
-	* RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
-	* AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
-	* AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
-	* MANAGED: The core tracks presence of supplier/consumer drivers (internal).
-	* SYNC_STATE_ONLY: Link only affects sync_state() behavior.
-	* INFERRED: Inferred from data (eg: firmware) and not from driver actions.
-	*/
+	 * Device link flags.
+	 *
+	 * STATELESS: The core will not remove this link automatically.
+	 * AUTOREMOVE_CONSUMER: Remove the link automatically on consumer driver unbind.
+	 * PM_RUNTIME: If set, the runtime PM framework will use this link.
+	 * RPM_ACTIVE: Run pm_runtime_get_sync() on the supplier during link creation.
+	 * AUTOREMOVE_SUPPLIER: Remove the link automatically on supplier driver unbind.
+	 * AUTOPROBE_CONSUMER: Probe consumer driver automatically after supplier binds.
+	 * MANAGED: The core tracks presence of supplier/consumer drivers (internal).
+	 * SYNC_STATE_ONLY: Link only affects sync_state() behavior.
+	 * INFERRED: Inferred from data (eg: firmware) and not from driver actions.
+	 */
 	#define DL_FLAG_STATELESS			BIT(0)
 	#define DL_FLAG_AUTOREMOVE_CONSUMER	BIT(1)
 	#define DL_FLAG_PM_RUNTIME			BIT(2)
@@ -354,10 +353,10 @@
 	 * device to be classified as removable is determined by its subsystem or bus.
 	 * @DEVICE_REMOVABLE_NOT_SUPPORTED: This attribute is not supported for this
 	 *				    device (default).
-	* @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
-	* @DEVICE_FIXED: Device is not removable by the user.
-	* @DEVICE_REMOVABLE: Device is removable by the user.
-	*/
+	 * @DEVICE_REMOVABLE_UNKNOWN:  Device location is Unknown.
+	 * @DEVICE_FIXED: Device is not removable by the user.
+	 * @DEVICE_REMOVABLE: Device is removable by the user.
+	 */
 	enum device_removable
 	{
 		DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
@@ -426,73 +425,73 @@
 	 * @links:	Links to suppliers and consumers of this device.
 	 * @power:	For device power management.
 	 *		See Documentation/driver-api/pm/devices.rst for details.
-	* @pm_domain:	Provide callbacks that are executed during system suspend,
-	* 		hibernation, system resume and during runtime PM transitions
-	* 		along with subsystem-level and driver-level callbacks.
-	* @em_pd:	device's energy model performance domain
-	* @pins:	For device pin management.
-	*		See Documentation/driver-api/pin-control.rst for details.
-	* @msi:	MSI related data
-	* @numa_node:	NUMA node this device is close to.
-	* @dma_ops:    DMA mapping operations for this device.
-	* @dma_mask:	Dma mask (if dma'ble device).
-	* @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-	* 		hardware supports 64-bit addresses for consistent allocations
-	* 		such descriptors.
-	* @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
-	*		DMA limit than the device itself supports.
-	* @dma_range_map: map for DMA memory ranges relative to that of RAM
-	* @dma_parms:	A low level driver may set these to teach IOMMU code about
-	* 		segment limitations.
-	* @dma_pools:	Dma pools (if dma'ble device).
-	* @dma_mem:	Internal for coherent mem override.
-	* @cma_area:	Contiguous memory area for dma allocations
-	* @dma_io_tlb_mem: Pointer to the swiotlb pool used.  Not for driver use.
-	* @archdata:	For arch-specific additions.
-	* @of_node:	Associated device tree node.
-	* @fwnode:	Associated device node supplied by platform firmware.
-	* @devt:	For creating the sysfs "dev".
-	* @id:		device instance
-	* @devres_lock: Spinlock to protect the resource of the device.
-	* @devres_head: The resources list of the device.
-	* @knode_class: The node used to add the device to the class list.
-	* @class:	The class of the device.
-	* @groups:	Optional attribute groups.
-	* @release:	Callback to free the device after all references have
-	* 		gone away. This should be set by the allocator of the
-	* 		device (i.e. the bus driver that discovered the device).
-	* @iommu_group: IOMMU group the device belongs to.
-	* @iommu:	Per device generic IOMMU runtime data
-	* @removable:  Whether the device can be removed from the system. This
-	*              should be set by the subsystem / bus driver that discovered
-	*              the device.
-	*
-	* @offline_disabled: If set, the device is permanently online.
-	* @offline:	Set after successful invocation of bus type's .offline().
-	* @of_node_reused: Set if the device-tree node is shared with an ancestor
-	*              device.
-	* @state_synced: The hardware state of this device has been synced to match
-	*		  the software state of this device by calling the driver/bus
-	*		  sync_state() callback.
-	* @can_match:	The device has matched with a driver at least once or it is in
-	*		a bus (like AMBA) which can't check for matching drivers until
-	*		other devices probe successfully.
-	* @dma_coherent: this particular device is dma coherent, even if the
-	*		architecture supports non-coherent devices.
-	* @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
-	*		streaming DMA operations (->map_* / ->unmap_* / ->sync_*),
-	*		and optionall (if the coherent mask is large enough) also
-	*		for dma allocations.  This flag is managed by the dma ops
-	*		instance from ->dma_supported.
-	*
-	* At the lowest level, every device in a Linux system is represented by an
-	* instance of struct device. The device structure contains the information
-	* that the device model core needs to model the system. Most subsystems,
-	* however, track additional information about the devices they host. As a
-	* result, it is rare for devices to be represented by bare device structures;
-	* instead, that structure, like kobject structures, is usually embedded within
-	* a higher-level representation of the device.
-	*/
+	 * @pm_domain:	Provide callbacks that are executed during system suspend,
+	 * 		hibernation, system resume and during runtime PM transitions
+	 * 		along with subsystem-level and driver-level callbacks.
+	 * @em_pd:	device's energy model performance domain
+	 * @pins:	For device pin management.
+	 *		See Documentation/driver-api/pin-control.rst for details.
+	 * @msi:	MSI related data
+	 * @numa_node:	NUMA node this device is close to.
+	 * @dma_ops:    DMA mapping operations for this device.
+	 * @dma_mask:	Dma mask (if dma'ble device).
+	 * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
+	 * 		hardware supports 64-bit addresses for consistent allocations
+	 * 		such descriptors.
+	 * @bus_dma_limit: Limit of an upstream bridge or bus which imposes a smaller
+	 *		DMA limit than the device itself supports.
+	 * @dma_range_map: map for DMA memory ranges relative to that of RAM
+	 * @dma_parms:	A low level driver may set these to teach IOMMU code about
+	 * 		segment limitations.
+	 * @dma_pools:	Dma pools (if dma'ble device).
+	 * @dma_mem:	Internal for coherent mem override.
+	 * @cma_area:	Contiguous memory area for dma allocations
+	 * @dma_io_tlb_mem: Pointer to the swiotlb pool used.  Not for driver use.
+	 * @archdata:	For arch-specific additions.
+	 * @of_node:	Associated device tree node.
+	 * @fwnode:	Associated device node supplied by platform firmware.
+	 * @devt:	For creating the sysfs "dev".
+	 * @id:		device instance
+	 * @devres_lock: Spinlock to protect the resource of the device.
+	 * @devres_head: The resources list of the device.
+	 * @knode_class: The node used to add the device to the class list.
+	 * @class:	The class of the device.
+	 * @groups:	Optional attribute groups.
+	 * @release:	Callback to free the device after all references have
+	 * 		gone away. This should be set by the allocator of the
+	 * 		device (i.e. the bus driver that discovered the device).
+	 * @iommu_group: IOMMU group the device belongs to.
+	 * @iommu:	Per device generic IOMMU runtime data
+	 * @removable:  Whether the device can be removed from the system. This
+	 *              should be set by the subsystem / bus driver that discovered
+	 *              the device.
+	 *
+	 * @offline_disabled: If set, the device is permanently online.
+	 * @offline:	Set after successful invocation of bus type's .offline().
+	 * @of_node_reused: Set if the device-tree node is shared with an ancestor
+	 *              device.
+	 * @state_synced: The hardware state of this device has been synced to match
+	 *		  the software state of this device by calling the driver/bus
+	 *		  sync_state() callback.
+	 * @can_match:	The device has matched with a driver at least once or it is in
+	 *		a bus (like AMBA) which can't check for matching drivers until
+	 *		other devices probe successfully.
+	 * @dma_coherent: this particular device is dma coherent, even if the
+	 *		architecture supports non-coherent devices.
+	 * @dma_ops_bypass: If set to %true then the dma_ops are bypassed for the
+	 *		streaming DMA operations (->map_* / ->unmap_* / ->sync_*),
+	 *		and optionall (if the coherent mask is large enough) also
+	 *		for dma allocations.  This flag is managed by the dma ops
+	 *		instance from ->dma_supported.
+	 *
+	 * At the lowest level, every device in a Linux system is represented by an
+	 * instance of struct device. The device structure contains the information
+	 * that the device model core needs to model the system. Most subsystems,
+	 * however, track additional information about the devices they host. As a
+	 * result, it is rare for devices to be represented by bare device structures;
+	 * instead, that structure, like kobject structures, is usually embedded within
+	 * a higher-level representation of the device.
+	 */
 	typedef struct device {
 		kobj_s		kobj;
 		device_s	*parent;

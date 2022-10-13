@@ -8,15 +8,14 @@
 #ifndef _LINUX_FS_CONTEXT_H
 #define _LINUX_FS_CONTEXT_H
 
-#include <linux/kernel/kernel.h>
-// #include <linux/refcount.h>
-#include <linux/lib/errno.h>
-// #include <linux/security.h>
-// #include <linux/mutex.h>
+	#include <linux/kernel/kernel.h>
+	// #include <linux/refcount.h>
+	#include <linux/lib/errno.h>
+	// #include <linux/security.h>
+	// #include <linux/mutex.h>
 
 
-#include <linux/fs/vfs_s_defs.h>
-
+	#include <linux/fs/vfs_s_defs.h>
 
 	enum fs_context_purpose {
 		FS_CONTEXT_FOR_MOUNT,		/* New superblock for explicit mount */
@@ -71,14 +70,14 @@
 	// } p_log_s;
 
 	/*
-	* Filesystem context for holding the parameters used in the creation or
-	* reconfiguration of a superblock.
-	*
-	* Superblock creation fills in ->root whereas reconfiguration begins with this
-	* already set.
-	*
-	* See Documentation/filesystems/mount_api.rst
-	*/
+	 * Filesystem context for holding the parameters used in the creation or
+	 * reconfiguration of a superblock.
+	 *
+	 * Superblock creation fills in ->root whereas reconfiguration begins with this
+	 * already set.
+	 *
+	 * See Documentation/filesystems/mount_api.rst
+	 */
 	typedef struct fs_context {
 		const fs_ctxt_ops_s	*ops;
 		// struct mutex	uapi_mutex;		/* Userspace access mutex */
@@ -138,8 +137,8 @@
 	// 			int flags, void *data);
 
 	/*
-	* sget() wrappers to be called from the ->get_tree() op.
-	*/
+	 * sget() wrappers to be called from the ->get_tree() op.
+	 */
 	enum vfs_get_super_keying {
 		vfs_get_single_super,			/* Only one such superblock may exist */
 		vfs_get_single_reconf_super,	/* As above, but reconfigure if it exists */

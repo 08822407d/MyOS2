@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef __LINUX_GFP_H
-
-	#define __LINUX_GFP_H
+#define __LINUX_GFP_H
 
 	// #include <linux/mmdebug.h>
 	#include <linux/mm/mmzone.h>
@@ -57,9 +56,9 @@
 	#define ___GFP_ZEROTAGS				0x800000u
 	#define ___GFP_SKIP_KASAN_POISON	0x1000000u
 	#ifdef CONFIG_LOCKDEP
-			#define ___GFP_NOLOCKDEP		0x2000000u
+	#	define ___GFP_NOLOCKDEP		0x2000000u
 	#else
-			#define ___GFP_NOLOCKDEP		0
+	#	define ___GFP_NOLOCKDEP		0
 	#endif
 	/* If the above are modified, __GFP_BITS_SHIFT may need updating */
 

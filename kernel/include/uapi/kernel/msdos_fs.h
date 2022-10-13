@@ -2,15 +2,15 @@
 #ifndef _UAPI_LINUX_MSDOS_FS_H_
 #define _UAPI_LINUX_MSDOS_FS_H_
 
-#include <linux/kernel/types.h>
-#include <uapi/kernel/posix_types.h>
+	#include <linux/kernel/types.h>
+	#include <uapi/kernel/posix_types.h>
 
 	/*
 	* The MS-DOS filesystem constants/structures
 	*/
 
 	#ifndef SECTOR_SIZE
-		#define SECTOR_SIZE			512			/* sector size (bytes) */
+	#	define SECTOR_SIZE			512			/* sector size (bytes) */
 	#endif
 	#define SECTOR_BITS			9			/* log2(SECTOR_SIZE) */
 	#define MSDOS_DPB			(MSDOS_DPS)	/* dir entries per block */

@@ -2,21 +2,22 @@
 #ifndef _UAPI_LINUX_STDDEF_H
 #define _UAPI_LINUX_STDDEF_H
 
-#include <linux/kernel/compiler_types.h>
+	#include <linux/kernel/compiler_types.h>
 
 	#ifndef _CONTAINER_OF
 	#define _CONTAINER_OF
-		#define container_of(member_ptr, container_type, member_name)										\
-		({																									\
-			typeof(((container_type *)0)->member_name) * p = (member_ptr);									\
-			(container_type *)((unsigned long)p - (unsigned long)&(((container_type *)0)->member_name));	\
-		})
+	#	define container_of(member_ptr, container_type, member_name)				\
+				({																	\
+					typeof(((container_type *)0)->member_name) * p = (member_ptr);	\
+					(container_type *)((unsigned long)p -							\
+					(unsigned long)&(((container_type *)0)->member_name));			\
+				})
 	#endif /* _CONTAINER_OF */
 
 	#define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
 
 	#ifndef __always_inline
-		#define __always_inline inline
+	#	define __always_inline inline
 	#endif
 
 	/**
@@ -34,10 +35,10 @@
 	 * The named struct can also be explicitly tagged for layer reuse, as well
 	 * as both having struct attributes appended.
 	 */
-	#define __struct_group(TAG, NAME, ATTRS, MEMBERS...) \
-				union { \
-					struct { MEMBERS } ATTRS; \
-					struct TAG { MEMBERS } ATTRS NAME; \
+	#define __struct_group(TAG, NAME, ATTRS, MEMBERS...)	\
+				union {										\
+					struct { MEMBERS } ATTRS;				\
+					struct TAG { MEMBERS } ATTRS NAME;		\
 				}
 
 	/**
@@ -50,10 +51,10 @@
 	 * struct, it needs to be wrapped in an anonymous struct with at least 1
 	 * named member, but that member can be empty.
 	 */
-	#define __DECLARE_FLEX_ARRAY(TYPE, NAME)	\
-				struct { \
-					struct { } __empty_ ## NAME; \
-					TYPE NAME[]; \
+	#define __DECLARE_FLEX_ARRAY(TYPE, NAME)		\
+				struct {							\
+					struct { } __empty_ ## NAME;	\
+					TYPE NAME[];					\
 				}
 #endif
 

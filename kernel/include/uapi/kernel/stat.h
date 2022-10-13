@@ -2,45 +2,43 @@
 #ifndef _UAPI_LINUX_STAT_H
 #define _UAPI_LINUX_STAT_H
 
-#include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 
 	#if defined(__KERNEL__) || !defined(__GLIBC__) || (__GLIBC__ < 2)
+	#	define S_IFMT		00170000	// 1111 ---- ---- ---- b
+	#	define S_IFSOCK		0140000		// 11-- ---- ---- ---- b
+	#	define S_IFLNK		0120000		// 1-1- ---- ---- ---- b
+	#	define S_IFREG		0100000		// 1--- ---- ---- ---- b
+	#	define S_IFBLK		0060000		// -11- ---- ---- ---- b
+	#	define S_IFDIR		0040000		// -1-- ---- ---- ---- b
+	#	define S_IFCHR		0020000		// --1- ---- ---- ---- b
+	#	define S_IFIFO		0010000		// ---1 ---- ---- ---- b
+	#	define S_ISUID		0004000		// ---- 1--- ---- ---- b
+	#	define S_ISGID		0002000		// ---- -1-- ---- ---- b
+	#	define S_ISVTX		0001000		// ---- --1- ---- ---- b
 
-		#define S_IFMT  00170000	// 1111 ---- ---- ---- b
-		#define S_IFSOCK 0140000	// 11-- ---- ---- ---- b
-		#define S_IFLNK	 0120000	// 1-1- ---- ---- ---- b
-		#define S_IFREG  0100000	// 1--- ---- ---- ---- b
-		#define S_IFBLK  0060000	// -11- ---- ---- ---- b
-		#define S_IFDIR  0040000	// -1-- ---- ---- ---- b
-		#define S_IFCHR  0020000	// --1- ---- ---- ---- b
-		#define S_IFIFO  0010000	// ---1 ---- ---- ---- b
-		#define S_ISUID  0004000	// ---- 1--- ---- ---- b
-		#define S_ISGID  0002000	// ---- -1-- ---- ---- b
-		#define S_ISVTX  0001000	// ---- --1- ---- ---- b
+	#	define S_ISLNK(m)	(((m) & S_IFMT) == S_IFLNK)
+	#	define S_ISREG(m)	(((m) & S_IFMT) == S_IFREG)
+	#	define S_ISDIR(m)	(((m) & S_IFMT) == S_IFDIR)
+	#	define S_ISCHR(m)	(((m) & S_IFMT) == S_IFCHR)
+	#	define S_ISBLK(m)	(((m) & S_IFMT) == S_IFBLK)
+	#	define S_ISFIFO(m)	(((m) & S_IFMT) == S_IFIFO)
+	#	define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
 
-		#define S_ISLNK(m)	(((m) & S_IFMT) == S_IFLNK)
-		#define S_ISREG(m)	(((m) & S_IFMT) == S_IFREG)
-		#define S_ISDIR(m)	(((m) & S_IFMT) == S_IFDIR)
-		#define S_ISCHR(m)	(((m) & S_IFMT) == S_IFCHR)
-		#define S_ISBLK(m)	(((m) & S_IFMT) == S_IFBLK)
-		#define S_ISFIFO(m)	(((m) & S_IFMT) == S_IFIFO)
-		#define S_ISSOCK(m)	(((m) & S_IFMT) == S_IFSOCK)
+	#	define S_IRWXU		00700		// ---- ---1 11-- ---- b
+	#	define S_IRUSR		00400		// ---- ---1 ---- ---- b
+	#	define S_IWUSR		00200		// ---- ---- 1--- ---- b
+	#	define S_IXUSR		00100		// ---- ---- -1-- ---- b
 
-		#define S_IRWXU 00700		// ---- ---1 11-- ---- b
-		#define S_IRUSR 00400		// ---- ---1 ---- ---- b
-		#define S_IWUSR 00200		// ---- ---- 1--- ---- b
-		#define S_IXUSR 00100		// ---- ---- -1-- ---- b
+	#	define S_IRWXG		00070		// ---- ---- --11 1--- b
+	#	define S_IRGRP		00040		// ---- ---- --1- ---- b
+	#	define S_IWGRP		00020		// ---- ---- ---1 ---- b
+	#	define S_IXGRP		00010		// ---- ---- ---- 1--- b
 
-		#define S_IRWXG 00070		// ---- ---- --11 1--- b
-		#define S_IRGRP 00040		// ---- ---- --1- ---- b
-		#define S_IWGRP 00020		// ---- ---- ---1 ---- b
-		#define S_IXGRP 00010		// ---- ---- ---- 1--- b
-
-		#define S_IRWXO 00007		// ---- ---- ---- -111 b
-		#define S_IROTH 00004		// ---- ---- ---- -1-- b
-		#define S_IWOTH 00002		// ---- ---- ---- --1- b
-		#define S_IXOTH 00001		// ---- ---- ---- ---1 b
-
+	#	define S_IRWXO		00007		// ---- ---- ---- -111 b
+	#	define S_IROTH		00004		// ---- ---- ---- -1-- b
+	#	define S_IWOTH		00002		// ---- ---- ---- --1- b
+	#	define S_IXOTH		00001		// ---- ---- ---- ---1 b
 	#endif
 
 	/*
@@ -60,42 +58,42 @@
 	} statx_timestamp_s;
 
 	/*
-	* Structures for the extended file attribute retrieval system call
-	* (statx()).
-	*
-	* The caller passes a mask of what they're specifically interested in as a
-	* parameter to statx().  What statx() actually got will be indicated in
-	* st_mask upon return.
-	*
-	* For each bit in the mask argument:
-	*
-	* - if the datum is not supported:
-	*
-	*   - the bit will be cleared, and
-	*
-	*   - the datum will be set to an appropriate fabricated value if one is
-	*     available (eg. CIFS can take a default uid and gid), otherwise
-	*
-	*   - the field will be cleared;
-	*
-	* - otherwise, if explicitly requested:
-	*
-	*   - the datum will be synchronised to the server if AT_STATX_FORCE_SYNC is
-	*     set or if the datum is considered out of date, and
-	*
-	*   - the field will be filled in and the bit will be set;
-	*
-	* - otherwise, if not requested, but available in approximate form without any
-	*   effort, it will be filled in anyway, and the bit will be set upon return
-	*   (it might not be up to date, however, and no attempt will be made to
-	*   synchronise the internal state first);
-	*
-	* - otherwise the field and the bit will be cleared before returning.
-	*
-	* Items in STATX_BASIC_STATS may be marked unavailable on return, but they
-	* will have values installed for compatibility purposes so that stat() and
-	* co. can be emulated in userspace.
-	*/
+	 * Structures for the extended file attribute retrieval system call
+	 * (statx()).
+	 *
+	 * The caller passes a mask of what they're specifically interested in as a
+	 * parameter to statx().  What statx() actually got will be indicated in
+	 * st_mask upon return.
+	 *
+	 * For each bit in the mask argument:
+	 *
+	 * - if the datum is not supported:
+	 *
+	 *   - the bit will be cleared, and
+	 *
+	 *   - the datum will be set to an appropriate fabricated value if one is
+	 *     available (eg. CIFS can take a default uid and gid), otherwise
+	 *
+	 *   - the field will be cleared;
+	 *
+	 * - otherwise, if explicitly requested:
+	 *
+	 *   - the datum will be synchronised to the server if AT_STATX_FORCE_SYNC is
+	 *     set or if the datum is considered out of date, and
+	 *
+	 *   - the field will be filled in and the bit will be set;
+	 *
+	 * - otherwise, if not requested, but available in approximate form without any
+	 *   effort, it will be filled in anyway, and the bit will be set upon return
+	 *   (it might not be up to date, however, and no attempt will be made to
+	 *   synchronise the internal state first);
+	 *
+	 * - otherwise the field and the bit will be cleared before returning.
+	 *
+	 * Items in STATX_BASIC_STATS may be marked unavailable on return, but they
+	 * will have values installed for compatibility purposes so that stat() and
+	 * co. can be emulated in userspace.
+	 */
 	typedef struct statx {
 		/* 0x00 */
 		__u32	stx_mask;	/* What results were written [uncond] */
@@ -156,28 +154,28 @@
 	#define STATX__RESERVED		0x80000000U	/* Reserved for future struct statx expansion */
 
 	#ifndef __KERNEL__
-		/*
-		* This is deprecated, and shall remain the same value in the future.  To avoid
-		* confusion please use the equivalent (STATX_BASIC_STATS | STATX_BTIME)
-		* instead.
-		*/
-		#define STATX_ALL		0x00000fffU
+	/*
+	 * This is deprecated, and shall remain the same value in the future.  To avoid
+	 * confusion please use the equivalent (STATX_BASIC_STATS | STATX_BTIME)
+	 * instead.
+	 */
+	#	define STATX_ALL		0x00000fffU
 	#endif
 
 	/*
-	* Attributes to be found in stx_attributes and masked in stx_attributes_mask.
-	*
-	* These give information about the features or the state of a file that might
-	* be of use to ordinary userspace programs such as GUIs or ls rather than
-	* specialised tools.
-	*
-	* Note that the flags marked [I] correspond to the FS_IOC_SETFLAGS flags
-	* semantically.  Where possible, the numerical value is picked to correspond
-	* also.  Note that the DAX attribute indicates that the file is in the CPU
-	* direct access state.  It does not correspond to the per-inode flag that
-	* some filesystems support.
-	*
-	*/
+	 * Attributes to be found in stx_attributes and masked in stx_attributes_mask.
+	 *
+	 * These give information about the features or the state of a file that might
+	 * be of use to ordinary userspace programs such as GUIs or ls rather than
+	 * specialised tools.
+	 *
+	 * Note that the flags marked [I] correspond to the FS_IOC_SETFLAGS flags
+	 * semantically.  Where possible, the numerical value is picked to correspond
+	 * also.  Note that the DAX attribute indicates that the file is in the CPU
+	 * direct access state.  It does not correspond to the per-inode flag that
+	 * some filesystems support.
+	 *
+	 */
 	#define STATX_ATTR_COMPRESSED	0x00000004 /* [I] File is compressed by the fs */
 	#define STATX_ATTR_IMMUTABLE	0x00000010 /* [I] File is marked immutable */
 	#define STATX_ATTR_APPEND		0x00000020 /* [I] File is append-only */
@@ -187,6 +185,5 @@
 	#define STATX_ATTR_MOUNT_ROOT	0x00002000 /* Root of a mount */
 	#define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
 	#define STATX_ATTR_DAX			0x00200000 /* File is currently in DAX state */
-
 
 #endif /* _UAPI_LINUX_STAT_H */

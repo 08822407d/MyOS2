@@ -1,5 +1,6 @@
 {
 	"files.associations": {
+		"*.S": "gas",
 		"asm.h": "c",
 		"interrupt.h": "c",
 		"types.h": "c",
@@ -174,7 +175,8 @@
 		"ext2.h": "c",
 		"syscalls_64.h": "c",
 		"syscalls.h": "c",
-		"unistd_64.h": "c"
+		"unistd_64.h": "c",
+		"page_types.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

@@ -7,8 +7,7 @@
  */
 
 #ifndef _ASM_X86_DMA_H
-
-	#define _ASM_X86_DMA_H
+#define _ASM_X86_DMA_H
 
 	// #include <linux/spinlock.h>	/* And spinlocks */
 	// #include <asm/io.h>		/* need byte IO */
@@ -17,60 +16,60 @@
 	#include <asm/page_types.h>
 
 	// #ifdef HAVE_REALLY_SLOW_DMA_CONTROLLER
-	// 	#define dma_outb	outb_p
+	// #	define dma_outb	outb_p
 	// #else
-	// 	#define dma_outb	outb
+	// #	define dma_outb	outb
 	// #endif
 
 	// #define dma_inb		inb
 
 	/*
-	* NOTES about DMA transfers:
-	*
-	*  controller 1: channels 0-3, byte operations, ports 00-1F
-	*  controller 2: channels 4-7, word operations, ports C0-DF
-	*
-	*  - ALL registers are 8 bits only, regardless of transfer size
-	*  - channel 4 is not used - cascades 1 into 2.
-	*  - channels 0-3 are byte - addresses/counts are for physical bytes
-	*  - channels 5-7 are word - addresses/counts are for physical words
-	*  - transfers must not cross physical 64K (0-3) or 128K (5-7) boundaries
-	*  - transfer count loaded to registers is 1 less than actual count
-	*  - controller 2 offsets are all even (2x offsets for controller 1)
-	*  - page registers for 5-7 don't use data bit 0, represent 128K pages
-	*  - page registers for 0-3 use bit 0, represent 64K pages
-	*
-	* DMA transfers are limited to the lower 16MB of _physical_ memory.
-	* Note that addresses loaded into registers must be _physical_ addresses,
-	* not logical addresses (which may differ if paging is active).
-	*
-	*  Address mapping for channels 0-3:
-	*
-	*   A23 ... A16 A15 ... A8  A7 ... A0    (Physical addresses)
-	*    |  ...  |   |  ... |   |  ... |
-	*    |  ...  |   |  ... |   |  ... |
-	*    |  ...  |   |  ... |   |  ... |
-	*   P7  ...  P0  A7 ... A0  A7 ... A0
-	* |    Page    | Addr MSB | Addr LSB |   (DMA registers)
-	*
-	*  Address mapping for channels 5-7:
-	*
-	*   A23 ... A17 A16 A15 ... A9 A8 A7 ... A1 A0    (Physical addresses)
-	*    |  ...  |   \   \   ... \  \  \  ... \  \
-	*    |  ...  |    \   \   ... \  \  \  ... \  (not used)
-	*    |  ...  |     \   \   ... \  \  \  ... \
-	*   P7  ...  P1 (0) A7 A6  ... A0 A7 A6 ... A0
-	* |      Page      |  Addr MSB   |  Addr LSB  |   (DMA registers)
-	*
-	* Again, channels 5-7 transfer _physical_ words (16 bits), so addresses
-	* and counts _must_ be word-aligned (the lowest address bit is _ignored_ at
-	* the hardware level, so odd-byte transfers aren't possible).
-	*
-	* Transfer count (_not # bytes_) is limited to 64K, represented as actual
-	* count - 1 : 64K => 0xFFFF, 1 => 0x0000.  Thus, count is always 1 or more,
-	* and up to 128K bytes may be transferred on channels 5-7 in one operation.
-	*
-	*/
+	 * NOTES about DMA transfers:
+	 *
+	 *  controller 1: channels 0-3, byte operations, ports 00-1F
+	 *  controller 2: channels 4-7, word operations, ports C0-DF
+	 *
+	 *  - ALL registers are 8 bits only, regardless of transfer size
+	 *  - channel 4 is not used - cascades 1 into 2.
+	 *  - channels 0-3 are byte - addresses/counts are for physical bytes
+	 *  - channels 5-7 are word - addresses/counts are for physical words
+	 *  - transfers must not cross physical 64K (0-3) or 128K (5-7) boundaries
+	 *  - transfer count loaded to registers is 1 less than actual count
+	 *  - controller 2 offsets are all even (2x offsets for controller 1)
+	 *  - page registers for 5-7 don't use data bit 0, represent 128K pages
+	 *  - page registers for 0-3 use bit 0, represent 64K pages
+	 *
+	 * DMA transfers are limited to the lower 16MB of _physical_ memory.
+	 * Note that addresses loaded into registers must be _physical_ addresses,
+	 * not logical addresses (which may differ if paging is active).
+	 *
+	 *  Address mapping for channels 0-3:
+	 *
+	 *   A23 ... A16 A15 ... A8  A7 ... A0    (Physical addresses)
+	 *    |  ...  |   |  ... |   |  ... |
+	 *    |  ...  |   |  ... |   |  ... |
+	 *    |  ...  |   |  ... |   |  ... |
+	 *   P7  ...  P0  A7 ... A0  A7 ... A0
+	 * |    Page    | Addr MSB | Addr LSB |   (DMA registers)
+	 *
+	 *  Address mapping for channels 5-7:
+	 *
+	 *   A23 ... A17 A16 A15 ... A9 A8 A7 ... A1 A0    (Physical addresses)
+	 *    |  ...  |   \   \   ... \  \  \  ... \  \
+	 *    |  ...  |    \   \   ... \  \  \  ... \  (not used)
+	 *    |  ...  |     \   \   ... \  \  \  ... \
+	 *   P7  ...  P1 (0) A7 A6  ... A0 A7 A6 ... A0
+	 * |      Page      |  Addr MSB   |  Addr LSB  |   (DMA registers)
+	 *
+	 * Again, channels 5-7 transfer _physical_ words (16 bits), so addresses
+	 * and counts _must_ be word-aligned (the lowest address bit is _ignored_ at
+	 * the hardware level, so odd-byte transfers aren't possible).
+	 *
+	 * Transfer count (_not # bytes_) is limited to 64K, represented as actual
+	 * count - 1 : 64K => 0xFFFF, 1 => 0x0000.  Thus, count is always 1 or more,
+	 * and up to 128K bytes may be transferred on channels 5-7 in one operation.
+	 *
+	 */
 
 	#define MAX_DMA_CHANNELS	8
 

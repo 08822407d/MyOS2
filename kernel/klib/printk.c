@@ -42,7 +42,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 
 	va_end(args);
 
-	tty_write_color(buf, i, FRcolor, BKcolor);
+	myos_tty_write_color(buf, i, FRcolor, BKcolor);
 
 	return i;
 }

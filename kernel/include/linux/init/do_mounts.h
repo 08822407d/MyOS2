@@ -2,7 +2,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/block/blkdev.h>
 #include <linux/init/init.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <uapi/kernel/unistd.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/mount.h>

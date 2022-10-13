@@ -2,17 +2,16 @@
 #ifndef __SHMEM_FS_H
 #define __SHMEM_FS_H
 
-#include <linux/fs/file.h>
-// #include <linux/swap.h>
-// #include <linux/mempolicy.h>
-// #include <linux/pagemap.h>
-// #include <linux/percpu_counter.h>
-// #include <linux/xattr.h>
-// #include <linux/fs_parser.h>
+	#include <linux/fs/file.h>
+	// #include <linux/swap.h>
+	// #include <linux/mempolicy.h>
+	// #include <linux/pagemap.h>
+	// #include <linux/percpu_counter.h>
+	// #include <linux/xattr.h>
+	// #include <linux/fs_parser.h>
 
 
-#include <linux/fs/vfs_s_defs.h>
-#include <uapi/kernel/stddef.h>
+	#include <linux/fs/vfs_s_defs.h>
 
 	/* inode in-kernel data */
 

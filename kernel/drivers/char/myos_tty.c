@@ -19,7 +19,7 @@ List_hdr_s kbd_wqhdr;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-int tty_open(inode_s * inode, file_s * fp)
+int myos_tty_open(inode_s * inode, file_s * fp)
 {
 	fp->private_data = p_kb;
 
@@ -31,7 +31,7 @@ int tty_open(inode_s * inode, file_s * fp)
 	return 1;
 }
 
-int tty_close(inode_s * inode,file_s * fp)
+int myos_tty_close(inode_s * inode,file_s * fp)
 {
 	fp->private_data = NULL;
 
@@ -45,7 +45,7 @@ int tty_close(inode_s * inode,file_s * fp)
 
 #define	KEY_CMD_RESET_BUFFER	0
 
-int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
+int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 {
 	switch(cmd)
 	{
@@ -64,7 +64,7 @@ int tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
 	return 0;
 }
 
-ssize_t tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
+ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {
 	long counter  = 0;
 	char *tmpbuf = kzalloc(count, GFP_KERNEL);
@@ -108,7 +108,7 @@ static void kputchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FR
 	}
 }
 
-void tty_write_color(const char *buf, size_t length, unsigned int FRcolor, unsigned int BKcolor)
+void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, unsigned int BKcolor)
 {
 	int count = 0;
 	int line = 0;
@@ -167,9 +167,9 @@ void tty_write_color(const char *buf, size_t length, unsigned int FRcolor, unsig
 	unlock_spin_lock(&Pos.printk_lock);
 }
 
-ssize_t tty_write(file_s * filp, const char *buf, size_t length, loff_t *position)
+ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position)
 {
 	long ret_val = 0;
-	tty_write_color(buf, length, GREEN, BLACK);
+	myos_tty_write_color(buf, length, GREEN, BLACK);
 	return ret_val;
 }

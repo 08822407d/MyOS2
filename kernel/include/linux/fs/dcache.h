@@ -1,49 +1,49 @@
 #ifndef _LINUX_DCACHE_H_
 #define _LINUX_DCACHE_H_
 
-// #include <linux/atomic.h>
-#include <linux/lib/list.h>
-#include <linux/kernel/math.h>
-// #include <linux/rculist.h>
-// #include <linux/rculist_bl.h>
-// #include <linux/spinlock.h>
-// #include <linux/seqlock.h>
-// #include <linux/cache.h>
-// #include <linux/rcupdate.h>
-// #include <linux/lockref.h>
-// #include <linux/stringhash.h>
-// #include <linux/wait.h>
+	// #include <linux/atomic.h>
+	#include <linux/lib/list.h>
+	#include <linux/kernel/math.h>
+	// #include <linux/rculist.h>
+	// #include <linux/rculist_bl.h>
+	// #include <linux/spinlock.h>
+	// #include <linux/seqlock.h>
+	// #include <linux/cache.h>
+	// #include <linux/rcupdate.h>
+	// #include <linux/lockref.h>
+	// #include <linux/stringhash.h>
+	// #include <linux/wait.h>
 
 
-#include <linux/fs/vfs_s_defs.h>
+	#include <linux/fs/vfs_s_defs.h>
 
-/*
- * linux/include/linux/dcache.h
- *
- * Dirent cache data structures
- *
- * (C) Copyright 1997 Thomas Schoebel-Theuer,
- * with heavy changes by Linus Torvalds
- */
+	/*
+	 * linux/include/linux/dcache.h
+	 *
+	 * Dirent cache data structures
+	 *
+	 * (C) Copyright 1997 Thomas Schoebel-Theuer,
+	 * with heavy changes by Linus Torvalds
+	 */
 
 	// #define IS_ROOT(x) ((x) == (x)->d_parent)
 
 	// /* The hash is always the low bits of hash_len */
 	// #ifdef __LITTLE_ENDIAN
-	// 	#define HASH_LEN_DECLARE u32 hash; u32 len
-	// 	#define bytemask_from_count(cnt)	(~(~0ul << (cnt)*8))
+	// #	define HASH_LEN_DECLARE u32 hash; u32 len
+	// #	define bytemask_from_count(cnt)	(~(~0ul << (cnt)*8))
 	// #else
-	// 	#define HASH_LEN_DECLARE u32 len; u32 hash
-	// 	#define bytemask_from_count(cnt)	(~(~0ul >> (cnt)*8))
+	// #	define HASH_LEN_DECLARE u32 len; u32 hash
+	// #	define bytemask_from_count(cnt)	(~(~0ul >> (cnt)*8))
 	// #endif
 
 	/*
-	* "quick string" -- eases parameter passing, but more importantly
-	* saves "metadata" about the string (ie length and the hash).
-	*
-	* hash comes first so it snuggles against d_parent in the
-	* dentry.
-	*/
+	 * "quick string" -- eases parameter passing, but more importantly
+	 * saves "metadata" about the string (ie length and the hash).
+	 *
+	 * hash comes first so it snuggles against d_parent in the
+	 * dentry.
+	 */
 	typedef struct qstr {
 		size_t				len;
 		const unsigned char	*name;
@@ -55,18 +55,18 @@
 	// extern const qstr_s	dotdot_name;
 
 	/*
-	* Try to keep dentry_s aligned on 64 byte cachelines (this will
-	* give reasonable cacheline footprint with larger lines without the
-	* large memory footprint increase).
-	*/
+	 * Try to keep dentry_s aligned on 64 byte cachelines (this will
+	 * give reasonable cacheline footprint with larger lines without the
+	 * large memory footprint increase).
+	 */
 	// #ifdef CONFIG_64BIT
-		#define DNAME_INLINE_LEN	32 /* 192 bytes */
+	#	define DNAME_INLINE_LEN	32	/* 192 bytes */
 	// #else
-	// 	#ifdef CONFIG_SMP
-	// 		#define DNAME_INLINE_LEN	36 /* 128 bytes */
-	// 	#else
-	// 		#define DNAME_INLINE_LEN	40 /* 128 bytes */
-	// 	#endif
+	// #	ifdef CONFIG_SMP
+	// #		define DNAME_INLINE_LEN	36	/* 128 bytes */
+	// #	else
+	// #		define DNAME_INLINE_LEN	40	/* 128 bytes */
+	// #	endif
 	// #endif
 
 	// #define d_lock	d_lockref.lock
@@ -113,12 +113,12 @@
 	} dentry_ops_s;
 
 	/*
-	* Locking rules for dentry_operations callbacks are to be found in
-	* Documentation/filesystems/locking.rst. Keep it updated!
-	*
-	* FUrther descriptions are found in Documentation/filesystems/vfs.rst.
-	* Keep it updated too!
-	*/
+	 * Locking rules for dentry_operations callbacks are to be found in
+	 * Documentation/filesystems/locking.rst. Keep it updated!
+	 *
+	 * FUrther descriptions are found in Documentation/filesystems/vfs.rst.
+	 * Keep it updated too!
+	 */
 
 	/* d_flags entries */
 	#define DCACHE_OP_HASH				0x00000001
@@ -161,7 +161,8 @@
 	#define DCACHE_NEED_AUTOMOUNT		0x00020000 /* handle automount on this dir */
 	#define DCACHE_MANAGE_TRANSIT		0x00040000 /* manage transit from this dirent */
 	#define DCACHE_MANAGED_DENTRY \
-		(DCACHE_MOUNTED|DCACHE_NEED_AUTOMOUNT|DCACHE_MANAGE_TRANSIT)
+				(DCACHE_MOUNTED | DCACHE_NEED_AUTOMOUNT | \
+				DCACHE_MANAGE_TRANSIT)
 
 	#define DCACHE_LRU_LIST				0x00080000
 
@@ -186,8 +187,8 @@
 	// extern seqlock_t rename_lock;
 
 	/*
-	* These are the low-level FS interfaces to the dcache..
-	*/
+	 * These are the low-level FS interfaces to the dcache..
+	 */
 	extern void d_instantiate(dentry_s *, inode_s *);
 	// extern void d_instantiate_new(dentry_s *, inode_s *);
 	// extern dentry_s *d_instantiate_unique(dentry_s *, inode_s *);
@@ -350,8 +351,8 @@
 	// }
 
 	/*
-	* Directory cache entry type accessor functions.
-	*/
+	 * Directory cache entry type accessor functions.
+	 */
 	static inline unsigned __d_entry_type(const dentry_s *dentry)
 	{
 		return dentry->d_flags & DCACHE_ENTRY_TYPE;

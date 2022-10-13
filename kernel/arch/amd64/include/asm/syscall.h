@@ -24,14 +24,14 @@
 	extern const sys_call_ptr_t sys_call_table[];
 
 	// #if defined(CONFIG_X86_32)
-	// #define ia32_sys_call_table sys_call_table
+	// #	define ia32_sys_call_table sys_call_table
 	// #else
 	// /*
 	// * These may not exist, but still put the prototypes in so we
 	// * can use IS_ENABLED().
 	// */
-	// extern const sys_call_ptr_t ia32_sys_call_table[];
-	// extern const sys_call_ptr_t x32_sys_call_table[];
+	// 	extern const sys_call_ptr_t ia32_sys_call_table[];
+	// 	extern const sys_call_ptr_t x32_sys_call_table[];
 	// #endif
 
 	// /*
@@ -84,58 +84,58 @@
 
 	// #ifdef CONFIG_X86_32
 
-	// static inline void syscall_get_arguments(struct task_struct *task,
-	// 										struct pt_regs *regs,
-	// 										unsigned long *args)
-	// {
-	// 	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
-	// }
+		// static inline void syscall_get_arguments(struct task_struct *task,
+		// 										struct pt_regs *regs,
+		// 										unsigned long *args)
+		// {
+		// 	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
+		// }
 
-	// static inline int syscall_get_arch(struct task_struct *task)
-	// {
-	// 	return AUDIT_ARCH_I386;
-	// }
+		// static inline int syscall_get_arch(struct task_struct *task)
+		// {
+		// 	return AUDIT_ARCH_I386;
+		// }
 
 	// #else /* CONFIG_X86_64 */
 
-	// static inline void syscall_get_arguments(struct task_struct *task,
-	// 										struct pt_regs *regs,
-	// 										unsigned long *args)
-	// {
-	// #ifdef CONFIG_IA32_EMULATION
-	// 	if (task->thread_info.status & TS_COMPAT)
-	// 	{
-	// 		*args++ = regs->bx;
-	// 		*args++ = regs->cx;
-	// 		*args++ = regs->dx;
-	// 		*args++ = regs->si;
-	// 		*args++ = regs->di;
-	// 		*args = regs->bp;
-	// 	}
-	// 	else
-	// #endif
-	// 	{
-	// 		*args++ = regs->di;
-	// 		*args++ = regs->si;
-	// 		*args++ = regs->dx;
-	// 		*args++ = regs->r10;
-	// 		*args++ = regs->r8;
-	// 		*args = regs->r9;
-	// 	}
-	// }
+		// static inline void syscall_get_arguments(struct task_struct *task,
+		// 										struct pt_regs *regs,
+		// 										unsigned long *args)
+		// {
+		// #ifdef CONFIG_IA32_EMULATION
+		// 	if (task->thread_info.status & TS_COMPAT)
+		// 	{
+		// 		*args++ = regs->bx;
+		// 		*args++ = regs->cx;
+		// 		*args++ = regs->dx;
+		// 		*args++ = regs->si;
+		// 		*args++ = regs->di;
+		// 		*args = regs->bp;
+		// 	}
+		// 	else
+		// #endif
+		// 	{
+		// 		*args++ = regs->di;
+		// 		*args++ = regs->si;
+		// 		*args++ = regs->dx;
+		// 		*args++ = regs->r10;
+		// 		*args++ = regs->r8;
+		// 		*args = regs->r9;
+		// 	}
+		// }
 
-	// static inline int syscall_get_arch(struct task_struct *task)
-	// {
-	// 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
-	// 	return (IS_ENABLED(CONFIG_IA32_EMULATION) &&
-	// 			task->thread_info.status & TS_COMPAT)
-	// 			? AUDIT_ARCH_I386
-	// 			: AUDIT_ARCH_X86_64;
-	// }
+		// static inline int syscall_get_arch(struct task_struct *task)
+		// {
+		// 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
+		// 	return (IS_ENABLED(CONFIG_IA32_EMULATION) &&
+		// 			task->thread_info.status & TS_COMPAT)
+		// 			? AUDIT_ARCH_I386
+		// 			: AUDIT_ARCH_X86_64;
+		// }
 
-	// void do_syscall_64(struct pt_regs *regs, int nr);
-	// void do_int80_syscall_32(struct pt_regs *regs);
-	// long do_fast_syscall_32(struct pt_regs *regs);
+		// void do_syscall_64(struct pt_regs *regs, int nr);
+		// void do_int80_syscall_32(struct pt_regs *regs);
+		// long do_fast_syscall_32(struct pt_regs *regs);
 
 	// #endif /* CONFIG_X86_32 */
 

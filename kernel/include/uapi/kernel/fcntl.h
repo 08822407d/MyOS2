@@ -2,8 +2,8 @@
 #ifndef _UAPI_LINUX_FCNTL_H
 #define _UAPI_LINUX_FCNTL_H
 
-#include <uapi/asm-generic/fcntl.h>
-#include <uapi/kernel/openat2.h>
+	#include <uapi/asm-generic/fcntl.h>
+	#include <uapi/kernel/openat2.h>
 
 	#define F_SETLEASE		(F_LINUX_SPECIFIC_BASE + 0)
 	#define F_GETLEASE		(F_LINUX_SPECIFIC_BASE + 1)
@@ -93,13 +93,13 @@
 	* AT_EACCESS is valid undefined behavior.
 	*/
 	#define AT_FDCWD				-100    /* Special value used to indicate
-												openat should use the current
-												working directory. */
+											   openat should use the current
+											   working directory. */
 	#define AT_SYMLINK_NOFOLLOW		0x100   /* Do not follow symbolic links.  */
 	#define AT_EACCESS				0x200	/* Test access permitted for
-												effective IDs, not real IDs.  */
+											   effective IDs, not real IDs.  */
 	#define AT_REMOVEDIR			0x200   /* Remove directory instead of
-												unlinking file.  */
+											   unlinking file.  */
 	#define AT_SYMLINK_FOLLOW		0x400   /* Follow symbolic links.  */
 	#define AT_NO_AUTOMOUNT			0x800	/* Suppress terminal automount traversal */
 	#define AT_EMPTY_PATH			0x1000	/* Allow empty relative pathname */

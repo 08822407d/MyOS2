@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef _UAPI_LINUX_TTY_H
-
-	#define _UAPI_LINUX_TTY_H
+#define _UAPI_LINUX_TTY_H
 
 	/*
 	* 'tty.h' defines some structures used by tty_io.c and some defines.

@@ -2,12 +2,12 @@
 #ifndef _LINUX_STRING_H_
 #define _LINUX_STRING_H_
 
-#include <linux/kernel/compiler.h>	/* for inline */
-#include <linux/kernel/types.h>	/* for size_t */
-#include <linux/kernel/stddef.h>	/* for NULL */
-#include <linux/lib/errno.h>	/* for E2BIG */
-#include <linux/lib/stdarg.h>
-#include <uapi/kernel/string.h>
+	#include <linux/kernel/compiler.h>	/* for inline */
+	#include <linux/kernel/types.h>	/* for size_t */
+	#include <linux/kernel/stddef.h>	/* for NULL */
+	#include <linux/lib/errno.h>	/* for E2BIG */
+	#include <linux/lib/stdarg.h>
+	#include <uapi/kernel/string.h>
 
 	// extern char *strndup_user(const char __user *, long);
 	// extern void *memdup_user(const void __user *, size_t);
@@ -15,9 +15,8 @@
 	// extern void *memdup_user_nul(const void __user *, size_t);
 
 	/*
-	* Include machine specific inline routines
-	*/
-	#include <uapi/asm-generic/string.h>
+	 * Include machine specific inline routines
+	 */
 
 	#ifndef __HAVE_ARCH_STRCPY
 		extern char * strcpy(char *,const char *);

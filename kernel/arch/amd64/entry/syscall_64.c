@@ -11,7 +11,7 @@
 // #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
 #define __SYSCALL(nr, sym)	extern long sym(void);
 	__SYSCALL(0, no_system_call)
-	#include <asm/syscalls_64.h>
+#	include <asm/syscalls_64.h>
 #undef __SYSCALL
 
 // #define __SYSCALL(nr, sym)	__x64_##sym,

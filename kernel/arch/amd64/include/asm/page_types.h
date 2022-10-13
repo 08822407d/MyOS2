@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_PAGE_DEFS_H
-
-	#define _ASM_X86_PAGE_DEFS_H
+#define _ASM_X86_PAGE_DEFS_H
 
 	#include <linux/kernel/const.h>
 	#include <linux/kernel/types.h>
@@ -54,12 +53,12 @@
 
 	#ifndef __ASSEMBLY__
 
-		#ifdef CONFIG_DYNAMIC_PHYSICAL_MASK
+	#	ifdef CONFIG_DYNAMIC_PHYSICAL_MASK
 			extern phys_addr_t			physical_mask;
-			#define __PHYSICAL_MASK		physical_mask
-		#else
-			#define __PHYSICAL_MASK		((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
-		#endif
+	#		define __PHYSICAL_MASK		physical_mask
+	#	else
+	#		define __PHYSICAL_MASK		((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
+	#	endif
 
 		extern int devmem_is_allowed(unsigned long pagenr);
 

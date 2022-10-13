@@ -19,18 +19,18 @@
 #include <linux/fs/mount.h>
 #include <uapi/kernel/mount.h>
 
-mount_s root_mnt;
+mount_s myos_root_mnt;
 
 void set_init_mount()
 {
-	list_hdr_init(&root_mnt.mnt_mounts);
-	list_init(&root_mnt.mnt_child, &root_mnt);
+	list_hdr_init(&myos_root_mnt.mnt_mounts);
+	list_init(&myos_root_mnt.mnt_child, &myos_root_mnt);
 
-	root_mnt.mnt.mnt_sb = root_sb;
-	root_mnt.mnt_parent = &root_mnt;
-	root_mnt.mnt_mountpoint =
-	root_mnt.mnt.mnt_root = root_sb->s_root;
-	root_mnt.mnt_mp = NULL;
+	myos_root_mnt.mnt.mnt_sb = myos_root_sb;
+	myos_root_mnt.mnt_parent = &myos_root_mnt;
+	myos_root_mnt.mnt_mountpoint =
+	myos_root_mnt.mnt.mnt_root = myos_root_sb->s_root;
+	myos_root_mnt.mnt_mp = NULL;
 }
 
 void set_init_taskfs()
@@ -39,9 +39,9 @@ void set_init_taskfs()
 	// set cwd and root-dir of task1
 	taskfs_s * taskfs_p = curr->fs;
 	taskfs_p->pwd.dentry = 
-	taskfs_p->root.dentry = root_sb->s_root;
+	taskfs_p->root.dentry = myos_root_sb->s_root;
 	taskfs_p->pwd.mnt = 
-	taskfs_p->root.mnt = &root_mnt.mnt;
+	taskfs_p->root.mnt = &myos_root_mnt.mnt;
 
 	memcpy(task0_PCB.task.fs, taskfs_p, sizeof(taskfs_s));
 }
@@ -55,7 +55,7 @@ MBR_s		*boot_sec;
 GPT_H_s		*gpt_hdr;
 GPT_PE_s	*gpt_pes;
 
-super_block_s *root_sb = NULL;
+super_block_s *myos_root_sb = NULL;
 fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 extern fs_type_s *file_systems;
 
@@ -67,7 +67,7 @@ void register_diskfs(void)
 	// init_vfat_fs();
 }
 
-unsigned long switch_to_root_disk()
+unsigned long myos_switch_to_root_disk()
 {
 	// int test = kparam.init_flags.vfs;
 	// kparam.init_flags.vfs = 0;
@@ -110,7 +110,7 @@ unsigned long switch_to_root_disk()
 				ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
 						gpt_pes[i].StartingLBA, 1, (unsigned char *)fat32_sb);
 				if (i == BOOT_FS_IDX)
-					root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
+					myos_root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
 			break;
 

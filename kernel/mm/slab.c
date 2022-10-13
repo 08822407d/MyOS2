@@ -20,9 +20,9 @@ uint8_t	*		base_slab_pages_p;
  *==============================================================================================*/
 void preinit_slab()
 {
-	slab_cache_groups_p = memblock_alloc_normal(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
-	base_slabs_p = memblock_alloc_normal(sizeof(slab_s) * SLAB_LEVEL, 1);
-	base_slab_pages_p = memblock_alloc_normal(SLAB_LEVEL * PAGE_SIZE, PAGE_SIZE);
+	slab_cache_groups_p = myos_memblock_alloc_normal(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
+	base_slabs_p = myos_memblock_alloc_normal(sizeof(slab_s) * SLAB_LEVEL, 1);
+	base_slab_pages_p = myos_memblock_alloc_normal(SLAB_LEVEL * PAGE_SIZE, PAGE_SIZE);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
@@ -32,7 +32,7 @@ void preinit_slab()
 
 		slab_s * bslp = base_slabs_p + i;
 		bslp->total = obj_nr;
-		bslp->colormap = memblock_alloc_normal(bm_size * sizeof(bitmap_t), 8);
+		bslp->colormap = myos_memblock_alloc_normal(bm_size * sizeof(bitmap_t), 8);
 	}
 }
 

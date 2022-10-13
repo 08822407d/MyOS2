@@ -289,11 +289,11 @@ void reload_arch_data(size_t cpu_idx)
 void early_init_arch_data(size_t lcpu_nr)
 {
 	size_t gdt_size = GDT_SIZE(lcpu_nr)* sizeof(segdesc64_T);
-	gdt = memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));
+	gdt = myos_memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));
 	gdt_ptr.limit = gdt_size - 1;
 	gdt_ptr.base  = (uint64_t)gdt;
 
-	tss_ptr_arr = memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
+	tss_ptr_arr = myos_memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
 	for (int i = 0; i < lcpu_nr; i++)
 		init_tss(i);
 }

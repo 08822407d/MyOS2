@@ -127,7 +127,7 @@ atomic_T boot_counter;
 extern void kjmp_to_doexecve();
 extern void do_name(void);
 
-void zone_sizes_init(void)
+void myos_zone_sizes_init(void)
 {
 	unsigned long max_zone_pfns[MAX_NR_ZONES];
 
@@ -259,7 +259,7 @@ unsigned long kernel_init(unsigned long arg)
 
 	get_ata_info();
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
-	switch_to_root_disk();
+	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 
 	// color_printk(GREEN, BLACK, "Device files created.\n");

@@ -2,25 +2,25 @@
 #ifndef _UAPI_LINUX_FS_H
 #define _UAPI_LINUX_FS_H
 
-/*
- * This file has definitions for some important file table structures
- * and constants and structures used by various generic file system
- * ioctl's.  Please do not make any changes in this file before
- * sending patches for review to linux-fsdevel@vger.kernel.org and
- * linux-api@vger.kernel.org.
- */
+	/*
+	* This file has definitions for some important file table structures
+	* and constants and structures used by various generic file system
+	* ioctl's.  Please do not make any changes in this file before
+	* sending patches for review to linux-fsdevel@vger.kernel.org and
+	* linux-api@vger.kernel.org.
+	*/
 
-#include <linux/kernel/limits.h>
-// #include <linux/ioctl.h>
-#include <linux/kernel/types.h>
-// #ifndef __KERNEL__
-// 	#include <linux/fscrypt.h>
-// #endif
+	#include <linux/kernel/limits.h>
+	// #include <linux/ioctl.h>
+	#include <linux/kernel/types.h>
+	// #ifndef __KERNEL__
+	// #	include <linux/fscrypt.h>
+	// #endif
 
-/* Use of MS_* flags within the kernel is restricted to core mount(2) code. */
-#if !defined(__KERNEL__)
-	#include <linux/kernel/mount.h>
-#endif
+	/* Use of MS_* flags within the kernel is restricted to core mount(2) code. */
+	#if !defined(__KERNEL__)
+	#	include <linux/kernel/mount.h>
+	#endif
 
 	/*
 	* It's silly to have NR_OPEN bigger than NR_FILE, but you can change
@@ -73,7 +73,7 @@
 		__s64	dest_fd;		/* in - destination file */
 		__u64	dest_offset;	/* in - start of extent in destination */
 		__u64	bytes_deduped;	/* out - total # of bytes we were able
-					* to dedupe from this file. */
+								 * to dedupe from this file. */
 		/* status of this dedupe operation:
 		* < 0 for error
 		* == FILE_DEDUPE_RANGE_SAME if dedupe succeeds
@@ -107,17 +107,17 @@
 	};
 
 
-	#define NR_FILE  8192	/* this can well be larger on a larger system */
+	#define NR_FILE  8192		/* this can well be larger on a larger system */
 
 	/*
 	* Structure for FS_IOC_FSGETXATTR[A] and FS_IOC_FSSETXATTR.
 	*/
 	struct fsxattr {
-		__u32	fsx_xflags;		/* xflags field value (get/set) */
-		__u32	fsx_extsize;	/* extsize field value (get/set)*/
-		__u32	fsx_nextents;	/* nextents field value (get)	*/
-		__u32	fsx_projid;		/* project identifier (get/set) */
-		__u32	fsx_cowextsize;	/* CoW extsize field value (get/set)*/
+		__u32	fsx_xflags;			/* xflags field value (get/set) */
+		__u32	fsx_extsize;		/* extsize field value (get/set)*/
+		__u32	fsx_nextents;		/* nextents field value (get)	*/
+		__u32	fsx_projid;			/* project identifier (get/set) */
+		__u32	fsx_cowextsize;		/* CoW extsize field value (get/set)*/
 		unsigned char	fsx_pad[8];
 	};
 
@@ -145,18 +145,18 @@
 	/* the read-only stuff doesn't really belong here, but any other place is
 	probably as bad and I don't want to create yet another include file. */
 
-	#define BLKROSET	_IO(0x12,93)	/* set device read-only (0 = read-write) */
-	#define BLKROGET	_IO(0x12,94)	/* get read-only status (0 = read_write) */
-	#define BLKRRPART	_IO(0x12,95)	/* re-read partition table */
-	#define BLKGETSIZE	_IO(0x12,96)	/* return device size /512 (long *arg) */
-	#define BLKFLSBUF	_IO(0x12,97)	/* flush buffer cache */
-	#define BLKRASET	_IO(0x12,98)	/* set read ahead for block device */
-	#define BLKRAGET	_IO(0x12,99)	/* get current read ahead setting */
-	#define BLKFRASET	_IO(0x12,100)	/* set filesystem (mm/filemap.c) read-ahead */
-	#define BLKFRAGET	_IO(0x12,101)	/* get filesystem (mm/filemap.c) read-ahead */
-	#define BLKSECTSET	_IO(0x12,102)	/* set max sectors per request (ll_rw_blk.c) */
-	#define BLKSECTGET	_IO(0x12,103)	/* get max sectors per request (ll_rw_blk.c) */
-	#define BLKSSZGET	_IO(0x12,104)	/* get block device sector size */
+	#define BLKROSET		_IO(0x12,93)	/* set device read-only (0 = read-write) */
+	#define BLKROGET		_IO(0x12,94)	/* get read-only status (0 = read_write) */
+	#define BLKRRPART		_IO(0x12,95)	/* re-read partition table */
+	#define BLKGETSIZE		_IO(0x12,96)	/* return device size /512 (long *arg) */
+	#define BLKFLSBUF		_IO(0x12,97)	/* flush buffer cache */
+	#define BLKRASET		_IO(0x12,98)	/* set read ahead for block device */
+	#define BLKRAGET		_IO(0x12,99)	/* get current read ahead setting */
+	#define BLKFRASET		_IO(0x12,100)	/* set filesystem (mm/filemap.c) read-ahead */
+	#define BLKFRAGET		_IO(0x12,101)	/* get filesystem (mm/filemap.c) read-ahead */
+	#define BLKSECTSET		_IO(0x12,102)	/* set max sectors per request (ll_rw_blk.c) */
+	#define BLKSECTGET		_IO(0x12,103)	/* get max sectors per request (ll_rw_blk.c) */
+	#define BLKSSZGET		_IO(0x12,104)	/* get block device sector size */
 	#if 0
 		#define BLKPG		_IO(0x12,105)	/* See blkpg.h */
 
@@ -186,9 +186,9 @@
 	#define BLKZEROOUT			_IO(0x12,127)
 	#define BLKGETDISKSEQ		_IOR(0x12,128,__u64)
 	/*
-	* A jump here: 130-136 are reserved for zoned block devices
-	* (see uapi/linux/blkzoned.h)
-	*/
+	 * A jump here: 130-136 are reserved for zoned block devices
+	 * (see uapi/linux/blkzoned.h)
+	 */
 
 	#define BMAP_IOCTL		1						/* obsolete - kept for compatibility */
 	#define FIBMAP			_IO(0x00,1)				/* bmap access */
@@ -217,25 +217,25 @@
 	#define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
 
 	/*
-	* Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
-	*
-	* Note: for historical reasons, these flags were originally used and
-	* defined for use by ext2/ext3, and then other file systems started
-	* using these flags so they wouldn't need to write their own version
-	* of chattr/lsattr (which was shipped as part of e2fsprogs).  You
-	* should think twice before trying to use these flags in new
-	* contexts, or trying to assign these flags, since they are used both
-	* as the UAPI and the on-disk encoding for ext2/3/4.  Also, we are
-	* almost out of 32-bit flags.  :-)
-	*
-	* We have recently hoisted FS_IOC_FSGETXATTR / FS_IOC_FSSETXATTR from
-	* XFS to the generic FS level interface.  This uses a structure that
-	* has padding and hence has more room to grow, so it may be more
-	* appropriate for many new use cases.
-	*
-	* Please do not change these flags or interfaces before checking with
-	* linux-fsdevel@vger.kernel.org and linux-api@vger.kernel.org.
-	*/
+	 * Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
+	 *
+	 * Note: for historical reasons, these flags were originally used and
+	 * defined for use by ext2/ext3, and then other file systems started
+	 * using these flags so they wouldn't need to write their own version
+	 * of chattr/lsattr (which was shipped as part of e2fsprogs).  You
+	 * should think twice before trying to use these flags in new
+	 * contexts, or trying to assign these flags, since they are used both
+	 * as the UAPI and the on-disk encoding for ext2/3/4.  Also, we are
+	 * almost out of 32-bit flags.  :-)
+	 *
+	 * We have recently hoisted FS_IOC_FSGETXATTR / FS_IOC_FSSETXATTR from
+	 * XFS to the generic FS level interface.  This uses a structure that
+	 * has padding and hence has more room to grow, so it may be more
+	 * appropriate for many new use cases.
+	 *
+	 * Please do not change these flags or interfaces before checking with
+	 * linux-fsdevel@vger.kernel.org and linux-api@vger.kernel.org.
+	 */
 	#define	FS_SECRM_FL			0x00000001		/* Secure deletion */
 	#define	FS_UNRM_FL			0x00000002		/* Undelete */
 	#define	FS_COMPR_FL			0x00000004		/* Compress file */
@@ -281,8 +281,8 @@
 					SYNC_FILE_RANGE_WAIT_AFTER)
 
 	/*
-	* Flags for preadv2/pwritev2:
-	*/
+	 * Flags for preadv2/pwritev2:
+	 */
 
 	typedef int __bitwise	__kernel_rwf_t;
 
@@ -302,7 +302,7 @@
 	#define RWF_APPEND		((__force __kernel_rwf_t)0x00000010)
 
 	/* mask of flags supported by the kernel */
-	#define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
-				RWF_APPEND)
+	#define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC \
+								| RWF_NOWAIT | RWF_APPEND)
 
 #endif /* _UAPI_LINUX_FS_H */

@@ -15,7 +15,7 @@ cpudata_u *	percpu_data;
 
 void early_init_smp(size_t lcpu_nr)
 {
-	percpu_data	= memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
+	percpu_data	= myos_memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
 }
 
 static void init_percpu_data(size_t cpu_idx)

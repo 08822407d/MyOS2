@@ -4,15 +4,14 @@
  */
 
 #ifndef PAGE_FLAGS_H
-
-	#define PAGE_FLAGS_H
+#define PAGE_FLAGS_H
 
 	#include <linux/kernel/types.h>
-	// #include <linux/bug.h>
-	// #include <linux/mmdebug.h>
+	// #	include <linux/bug.h>
+	// #	include <linux/mmdebug.h>
 	#ifndef __GENERATING_BOUNDS_H
-		// #include <linux/mm_types.h>
-		#include <generated/bounds.h>
+	// #	include <linux/mm_types.h>
+	#	include <generated/bounds.h>
 	#endif /* !__GENERATING_BOUNDS_H */
 
 	// /*

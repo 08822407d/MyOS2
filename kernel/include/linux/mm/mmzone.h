@@ -1,45 +1,42 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_MMZONE_H
-
-	#define _LINUX_MMZONE_H
+#define _LINUX_MMZONE_H
 
 	#ifndef __ASSEMBLY__
+	#	ifndef __GENERATING_BOUNDS_H
+	// #include <linux/spinlock.h>
+	#		include <linux/lib/list.h>
+	// #include <linux/wait.h>
+	#		include <linux/kernel/bitops.h>
+	// #include <linux/cache.h>
+	// #include <linux/threads.h>
+	// #include <linux/numa.h>
+	#		include <linux/init/init.h>
+	// #include <linux/seqlock.h>
+	// #include <linux/nodemask.h>
+	// #include <linux/pageblock-flags.h>
+	// #include <linux/page-flags-layout.h>
+	// #include <linux/atomic.h>
+	#		include <linux/mm/mm_types.h>
+	#		include <linux/mm/page-flags.h>
+	// #include <linux/local_lock.h>
+	#		include <asm/page.h>
 
-		#ifndef __GENERATING_BOUNDS_H
+	/* Free memory management - zoned buddy allocator.  */
+	#		ifndef CONFIG_FORCE_MAX_ZONEORDER
+	#			define MAX_ORDER	11
+	#		else
+	#			define MAX_ORDER	CONFIG_FORCE_MAX_ZONEORDER
+	#		endif
+	#		define MAX_ORDER_NR_PAGES	(1 << (MAX_ORDER - 1))
 
-			// #include <linux/spinlock.h>
-			#include <linux/lib/list.h>
-			// #include <linux/wait.h>
-			#include <linux/kernel/bitops.h>
-			// #include <linux/cache.h>
-			// #include <linux/threads.h>
-			// #include <linux/numa.h>
-			#include <linux/init/init.h>
-			// #include <linux/seqlock.h>
-			// #include <linux/nodemask.h>
-			// #include <linux/pageblock-flags.h>
-			// #include <linux/page-flags-layout.h>
-			// #include <linux/atomic.h>
-			#include <linux/mm/mm_types.h>
-			#include <linux/mm/page-flags.h>
-			// #include <linux/local_lock.h>
-			#include <asm/page.h>
-
-			/* Free memory management - zoned buddy allocator.  */
-			#ifndef CONFIG_FORCE_MAX_ZONEORDER
-				#define MAX_ORDER	11
-			#else
-				#define MAX_ORDER	CONFIG_FORCE_MAX_ZONEORDER
-			#endif
-			#define MAX_ORDER_NR_PAGES	(1 << (MAX_ORDER - 1))
-
-			/*
-			* PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
-			* costly to service.  That is between allocation orders which should
-			* coalesce naturally under reasonable reclaim pressure and those which
-			* will not.
-			*/
-			#define PAGE_ALLOC_COSTLY_ORDER 3
+	/*
+	* PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
+	* costly to service.  That is between allocation orders which should
+	* coalesce naturally under reasonable reclaim pressure and those which
+	* will not.
+	*/
+	#		define PAGE_ALLOC_COSTLY_ORDER 3
 
 			enum migratetype
 			{
@@ -118,20 +115,20 @@
 			struct pglist_data;
 			typedef struct pglist_data pglist_data_s;
 
-			/*
-			* Add a wild amount of padding here to ensure data fall into separate
-			* cachelines.  There are very few zone structures in the machine, so space
-			* consumption is not a concern here.
-			*/
-			#if defined(CONFIG_SMP)
+	/*
+	 * Add a wild amount of padding here to ensure data fall into separate
+	 * cachelines.  There are very few zone structures in the machine, so space
+	 * consumption is not a concern here.
+	 */
+	#		if defined(CONFIG_SMP)
 				struct zone_padding
 				{
 					char x[0];
 				} ____cacheline_internodealigned_in_smp;
-				#define ZONE_PADDING(name) struct zone_padding name;
-			#else
-				#define ZONE_PADDING(name)
-			#endif
+	#			define ZONE_PADDING(name) struct zone_padding name;
+	#		else
+	#			define ZONE_PADDING(name)
+	#		endif
 
 			// #ifdef CONFIG_NUMA
 			// 	enum numa_stat_item
@@ -417,7 +414,7 @@
 			// 	s8 vm_node_stat_diff[NR_VM_NODE_STAT_ITEMS];
 			// };
 
-		#endif /* !__GENERATING_BOUNDS.H */
+	#	endif /* !__GENERATING_BOUNDS.H */
 
 		enum zone_type
 		{
@@ -508,12 +505,10 @@
 			ZONE_DEVICE,
 		#endif
 			__MAX_NR_ZONES
-
 		};
 
-		#ifndef __GENERATING_BOUNDS_H
-
-			#define ASYNC_AND_SYNC 2
+	#	ifndef __GENERATING_BOUNDS_H
+	#		define ASYNC_AND_SYNC 2
 
 			typedef struct zone
 			{
@@ -1630,11 +1625,11 @@
 
 			// #endif /* CONFIG_SPARSEMEM */
 
-		#endif /* !__GENERATING_BOUNDS.H */
+	#	endif /* !__GENERATING_BOUNDS.H */
 
 	#endif /* !__ASSEMBLY__ */
 
 
-	void zone_sizes_init(void);
+	void myos_zone_sizes_init(void);
 
 #endif /* _LINUX_MMZONE_H */

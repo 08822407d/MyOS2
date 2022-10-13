@@ -2,20 +2,16 @@
 #ifndef _FAT_H_
 #define _FAT_H_
 
-#include <linux/block/buffer_head.h>
-// #include <linux/nls.h>
-// #include <linux/hash.h>
-// #include <linux/ratelimit.h>
-#include <linux/fs/msdos_fs.h>
+	#include <linux/block/buffer_head.h>
+	// #include <linux/nls.h>
+	// #include <linux/hash.h>
+	// #include <linux/ratelimit.h>
+	#include <linux/fs/msdos_fs.h>
 
-
-#include <linux/kernel/stat.h>
-#include <linux/kernel/uidgid.h>
-#include <linux/lib/string.h>
 
 	/*
-	* vfat shortname flags
-	*/
+	 * vfat shortname flags
+	 */
 	#define VFAT_SFN_DISPLAY_LOWER	0x0001 /* convert to lowercase for display */
 	#define VFAT_SFN_DISPLAY_WIN95	0x0002 /* emulate win95 rule for display */
 	#define VFAT_SFN_DISPLAY_WINNT	0x0004 /* emulate winnt rule for display */
@@ -63,8 +59,8 @@
 	#define FAT_HASH_SIZE		(1UL << FAT_HASH_BITS)
 
 	/*
-	* MS-DOS file system in-core superblock data
-	*/
+	 * MS-DOS file system in-core superblock data
+	 */
 	typedef struct msdos_sb_info {
 		unsigned short	sec_per_clus;		/* sectors/cluster */
 		unsigned short	cluster_bits;		/* log2(cluster_size) */
@@ -112,8 +108,8 @@
 	#define FAT_CACHE_VALID		0	/* special case for valid cache */
 
 	/*
-	* MS-DOS file system inode data in memory
-	*/
+	 * MS-DOS file system inode data in memory
+	 */
 	typedef struct msdos_inode_info {
 		// spinlock_t cache_lru_lock;
 		// struct list_head cache_lru;
@@ -148,9 +144,9 @@
 	}
 
 	/*
-	* Functions that determine the variant of the FAT file system (i.e.,
-	* whether this is FAT12, FAT16 or FAT32.
-	*/
+	 * Functions that determine the variant of the FAT file system (i.e.,
+	 * whether this is FAT12, FAT16 or FAT32.
+	 */
 	static inline bool is_fat12(const msdos_sb_info_s *sbi)
 	{
 		return sbi->fat_bits == 12;
@@ -181,12 +177,12 @@
 	}
 
 	/*
-	* If ->i_mode can't hold S_IWUGO (i.e. ATTR_RO), we use ->i_attrs to
-	* save ATTR_RO instead of ->i_mode.
-	*
-	* If it's directory and !sbi->options.rodir, ATTR_RO isn't read-only
-	* bit, it's just used as flag for app.
-	*/
+	 * If ->i_mode can't hold S_IWUGO (i.e. ATTR_RO), we use ->i_attrs to
+	 * save ATTR_RO instead of ->i_mode.
+	 *
+	 * If it's directory and !sbi->options.rodir, ATTR_RO isn't read-only
+	 * bit, it's just used as flag for app.
+	 */
 	static inline int fat_mode_can_hold_ro(inode_s *inode)
 	{
 		msdos_sb_info_s *sbi = MSDOS_SB(inode->i_sb);

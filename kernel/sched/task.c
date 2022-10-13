@@ -96,10 +96,10 @@ void compute_consts()
 
 void early_init_task(size_t lcpu_nr)
 {
-	idle_tasks = memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
+	idle_tasks = myos_memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
 	idle_tasks[0] = &task0_PCB;
 	for (int i = 1; i < lcpu_nr; i++)
 	{
-		idle_tasks[i] = memblock_alloc_normal(sizeof(PCB_u), sizeof(PCB_u));
+		idle_tasks[i] = myos_memblock_alloc_normal(sizeof(PCB_u), sizeof(PCB_u));
 	}
 }

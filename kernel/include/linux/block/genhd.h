@@ -2,23 +2,23 @@
 #ifndef _LINUX_GENHD_H
 #define _LINUX_GENHD_H
 
-/*
- * 	genhd.h Copyright (C) 1992 Drew Eckhardt
- *	Generic hard disk header file by  
- * 		Drew Eckhardt
- *
- *		<drew@colorado.edu>
- */
+	/*
+	 * 	genhd.h Copyright (C) 1992 Drew Eckhardt
+	 *	Generic hard disk header file by  
+	 * 		Drew Eckhardt
+	 *
+	 *		<drew@colorado.edu>
+	 */
 
-#include <linux/kernel/types.h>
-#include <linux/kernel/kdev_t.h>
-#include <linux/kernel/uuid.h>
-#include <linux/block/blk_types.h>
-#include <linux/device/device.h>
-// #include <linux/xarray.h>
+	#include <linux/kernel/types.h>
+	#include <linux/kernel/kdev_t.h>
+	#include <linux/kernel/uuid.h>
+	#include <linux/block/blk_types.h>
+	#include <linux/device/device.h>
+	// #include <linux/xarray.h>
 
 
-#include <linux/block/block_s_defs.h>
+	#include <linux/block/block_s_defs.h>
 
 	// extern const struct device_type disk_type;
 	// extern struct device_type part_type;

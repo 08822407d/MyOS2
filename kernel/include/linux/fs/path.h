@@ -2,7 +2,7 @@
 #ifndef _LINUX_PATH_H
 #define _LINUX_PATH_H
 
-#include <linux/fs/vfs_s_defs.h>
+	#include <linux/fs/vfs_s_defs.h>
 
 	typedef struct path {
 		vfsmount_s	*mnt;

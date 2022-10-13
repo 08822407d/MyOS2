@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_LIST_H
-
-	#define _LINUX_LIST_H
+#define _LINUX_LIST_H
 
 	// #include <linux/container_of.h>
 	#include <linux/kernel/types.h>
@@ -49,10 +48,10 @@
 	typedef	list_traverse_do	list_traverse_check;
 	typedef	list_traverse_do	list_traverse_end;
 	void list_foreach_do(List_hdr_s * lhdr, List_s * target,
-						list_traverse_do do_hdlr);
+					list_traverse_do do_hdlr);
 	void list_search_and_do(List_hdr_s * lhdr, List_s * target,
-						list_traverse_check chk_hdlr,
-						list_traverse_do do_hdlr,
-						list_traverse_end end_hdlr);
+					list_traverse_check chk_hdlr,
+					list_traverse_do do_hdlr,
+					list_traverse_end end_hdlr);
 
 #endif /* _LINUX_LIST_H */

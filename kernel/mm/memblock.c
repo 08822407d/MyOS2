@@ -552,7 +552,7 @@ static inline void * memblock_alloc(size_t size, size_t align)
 	return ptr;
 }
 
-void * memblock_alloc_DMA(size_t size, size_t align)
+void * myos_memblock_alloc_DMA(size_t size, size_t align)
 {
 	void *ptr;
 
@@ -564,7 +564,7 @@ void * memblock_alloc_DMA(size_t size, size_t align)
 	return ptr;
 }
 
-void * memblock_alloc_normal(size_t size, size_t align)
+void * myos_memblock_alloc_normal(size_t size, size_t align)
 {
 	void *ptr;
 

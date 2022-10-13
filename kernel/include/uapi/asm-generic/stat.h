@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef __ASM_GENERIC_STAT_H
-
-	#define __ASM_GENERIC_STAT_H
+#define __ASM_GENERIC_STAT_H
 
 	/*
 	* Everybody gets this wrong and has to stick with it for all

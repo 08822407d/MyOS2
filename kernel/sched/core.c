@@ -29,7 +29,7 @@
 
 
 
-#include <linux/sched/percpu.h>
+#include <linux/sched/myos_percpu.h>
 #include <obsolete/glo.h>
 
 /*
