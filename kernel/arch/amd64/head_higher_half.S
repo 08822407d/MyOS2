@@ -7,7 +7,7 @@
 /*==============================================================================================*
  *									higher half text section							 		*
  *==============================================================================================*/
-ENTRY(higher_half_entry)
+SYM_CODE_START(higher_half_entry)
 	movabsq	$task0_PCB,	%rbx
 	addq	$TASK_KSTACK_SIZE,	%rbx
 	movq    $0x10,		%rax

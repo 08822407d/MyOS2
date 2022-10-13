@@ -225,4 +225,4 @@ boot_from_grub2:
 .align 8
 tmp_kstack_start:
 	.fill  128,8,0
-LABEL(tmp_kstack_top)
+SYM_CODE_START(tmp_kstack_top)

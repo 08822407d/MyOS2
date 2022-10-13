@@ -64,9 +64,9 @@ RESTORE_ALL:
 /*==============================================================================================*/
 /*									kernel thread func							     			*/
 /*==============================================================================================*/
-ENTRY(entp_kernel_thread)
+SYM_CODE_START(entp_kernel_thread)
 	jmp			RESTORE_ALL
-ENTRY(ra_kthd_retp)
+SYM_CODE_START(ra_kthd_retp)
 	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
 	/////////////////////////////////
 	movq		%rdx,		%rdi
@@ -88,7 +88,7 @@ ENTRY(ra_kthd_retp)
 // kernel SS = IA32_SYSENTER_CS + 8
 // kernel RIP = IA32_SYSENTER_EIP
 // kernel RSP = IA32_SYSENTER_ESP
-ENTRY(sysenter_entp)
+SYM_CODE_START(sysenter_entp)
 	subq		$0x38,		%rsp
 	SET_RET_POINTS(sa_sysent_retp, ra_sysex_retp)
 	jmp			SAVE_ALL
@@ -101,9 +101,9 @@ sa_sysent_retp:
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
-ENTRY(sysexit_entp)
+SYM_CODE_START(sysexit_entp)
 	jmp			RESTORE_ALL
-ENTRY(ra_sysex_retp)
+SYM_CODE_START(ra_sysex_retp)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
@@ -123,7 +123,7 @@ ENTRY(ra_sysex_retp)
 // // kernel Rflags &= IA32_FMASK
 // // !!! user RSP should be store by hand !!!
 // // !!! kernel RSP should be load by hand !!!
-// ENTRY(enter_syscall)
+// SYM_CODE_START(enter_syscall)
 // 	cli
 // 	swapgs
 // 	movabsq		$cpustack_off,	%r10
@@ -146,7 +146,7 @@ ENTRY(ra_sysex_retp)
 // // user SS = IA32_STAR[63:48] + 8
 // // !!! user RSP should be restore by hand !!!
 // // !!! kernel RSP should be store by hand !!!
-// ENTRY(ret_from_syscall)
+// SYM_CODE_START(ret_from_syscall)
 
 // 	/////////////////////////////////
 // 	addq		$0x10,		%rsp	// skip err-code and vec-nr
@@ -193,71 +193,71 @@ ra_exintr_retp:
 	pushq		$0						;\
 	EXCEPTION_ERR_CODE(vector)
 
-LABEL(divide_error)
+SYM_CODE_START(divide_error)
 	EXCEPTION_NO_ERR_CODE(DIVIDE_ERR_VEC)
 
-LABEL(debug)
+SYM_CODE_START(debug)
 	EXCEPTION_NO_ERR_CODE(DEBUG_VEC)
 
-LABEL(nmi)
+SYM_CODE_START(nmi)
 //
 //
 //
 
-LABEL(breakpoint_exception)
+SYM_CODE_START(breakpoint_exception)
 	EXCEPTION_NO_ERR_CODE(BREAKPOINT_VEC)
 
-LABEL(overflow)
+SYM_CODE_START(overflow)
 	EXCEPTION_NO_ERR_CODE(OVERFLOW_VEC)
 
-LABEL(bounds_exceed)
+SYM_CODE_START(bounds_exceed)
 	EXCEPTION_NO_ERR_CODE(BOUNDS_VEC)
 
-LABEL(invalid_opcode)
+SYM_CODE_START(invalid_opcode)
 	EXCEPTION_NO_ERR_CODE(INVAL_OP_VEC)
 
-LABEL(dev_not_available)
+SYM_CODE_START(dev_not_available)
 //
 //
 //
 
-LABEL(double_fault)
+SYM_CODE_START(double_fault)
 	EXCEPTION_ERR_CODE(DOUBLE_FAULT_VEC)
 
-LABEL(cotask_seg_overrun)
+SYM_CODE_START(cotask_seg_overrun)
 	EXCEPTION_NO_ERR_CODE(COtask_sEG_VEC)
 
-LABEL(invalid_tss)
+SYM_CODE_START(invalid_tss)
 	EXCEPTION_ERR_CODE(INVAL_TSS_VEC)
 
-LABEL(segment_not_present)
+SYM_CODE_START(segment_not_present)
 	EXCEPTION_ERR_CODE(SEG_NOT_PRES_VEC)
 
-LABEL(stack_segfault)
+SYM_CODE_START(stack_segfault)
 	EXCEPTION_ERR_CODE(STACK_SEGFAULT_VEC)
 
-LABEL(general_protection)
+SYM_CODE_START(general_protection)
 	EXCEPTION_ERR_CODE(GEN_PROT_VEC)
 
-LABEL(page_fault)
+SYM_CODE_START(page_fault)
 	EXCEPTION_ERR_CODE(PAGE_FAULT_VEC)
 
-LABEL(x87_fpu_error)
+SYM_CODE_START(x87_fpu_error)
 	EXCEPTION_NO_ERR_CODE(X87_FPU_ERR_VEC)
 
-LABEL(alignment_check)
+SYM_CODE_START(alignment_check)
 	EXCEPTION_NO_ERR_CODE(ALIGNMENT_CHECK_VEC)
 
-LABEL(machine_check)
+SYM_CODE_START(machine_check)
 	EXCEPTION_NO_ERR_CODE(MACHINE_CHECK_VEC)
 
-LABEL(simd_exception)
+SYM_CODE_START(simd_exception)
 	EXCEPTION_NO_ERR_CODE(SIMD_EXCEP_VEC)
 
-LABEL(virtualization_exception)
+SYM_CODE_START(virtualization_exception)
 	EXCEPTION_NO_ERR_CODE(VIRTUAL_EXCEP_VEC)
 
-LABEL(control_protection_exception)
+SYM_CODE_START(control_protection_exception)
 	EXCEPTION_ERR_CODE(CTRL_PROT_EXCEP_VEC)
 
 /*==============================================================================================*/
@@ -266,76 +266,76 @@ LABEL(control_protection_exception)
 #define hwint_entry(irq)	\
 	EXCEPTION_NO_ERR_CODE(irq + HWINT0_VEC);
 
-ENTRY(hwint00) /* Interrupt routine for irq 0 (the clock). */
+SYM_CODE_START(hwint00) /* Interrupt routine for irq 0 (the clock). */
 	hwint_entry(0)
 
-ENTRY(hwint01) /* Interrupt routine for irq 1 (keyboard) */
+SYM_CODE_START(hwint01) /* Interrupt routine for irq 1 (keyboard) */
 	hwint_entry(1)
 
-ENTRY(hwint02) /* Interrupt routine for irq 2 (cascade!) */
+SYM_CODE_START(hwint02) /* Interrupt routine for irq 2 (cascade!) */
 	hwint_entry(2)
 
-ENTRY(hwint03) /* Interrupt routine for irq 3 (second serial) */
+SYM_CODE_START(hwint03) /* Interrupt routine for irq 3 (second serial) */
 	hwint_entry(3)
 
-ENTRY(hwint04) /* Interrupt routine for irq 4 (first serial) */
+SYM_CODE_START(hwint04) /* Interrupt routine for irq 4 (first serial) */
 	hwint_entry(4)
 
-ENTRY(hwint05) /* Interrupt routine for irq 5 (XT winchester) */
+SYM_CODE_START(hwint05) /* Interrupt routine for irq 5 (XT winchester) */
 	hwint_entry(5)
 
-ENTRY(hwint06) /* Interrupt routine for irq 6 (floppy) */
+SYM_CODE_START(hwint06) /* Interrupt routine for irq 6 (floppy) */
 	hwint_entry(6)
 
-ENTRY(hwint07) /* Interrupt routine for irq 7 (printer) */
+SYM_CODE_START(hwint07) /* Interrupt routine for irq 7 (printer) */
 	hwint_entry(7)
 
-ENTRY(hwint08) /* Interrupt routine for irq 8 (realtime clock) */
+SYM_CODE_START(hwint08) /* Interrupt routine for irq 8 (realtime clock) */
 	hwint_entry(8)
 
-ENTRY(hwint09) /* Interrupt routine for irq 9 (irq 2 redirected) */
+SYM_CODE_START(hwint09) /* Interrupt routine for irq 9 (irq 2 redirected) */
 	hwint_entry(9)
 
-ENTRY(hwint10) /* Interrupt routine for irq 10 */
+SYM_CODE_START(hwint10) /* Interrupt routine for irq 10 */
 	hwint_entry(10)
 
-ENTRY(hwint11) /* Interrupt routine for irq 11 */
+SYM_CODE_START(hwint11) /* Interrupt routine for irq 11 */
 	hwint_entry(11)
 
-ENTRY(hwint12) /* Interrupt routine for irq 12 */
+SYM_CODE_START(hwint12) /* Interrupt routine for irq 12 */
 	hwint_entry(12)
 
-ENTRY(hwint13) /* Interrupt routine for irq 13 (FPU exception) */
+SYM_CODE_START(hwint13) /* Interrupt routine for irq 13 (FPU exception) */
 	hwint_entry(13)
 
-ENTRY(hwint14) /* Interrupt routine for irq 14 (AT winchester) */
+SYM_CODE_START(hwint14) /* Interrupt routine for irq 14 (AT winchester) */
 	hwint_entry(14)
 
-ENTRY(hwint15) /* Interrupt routine for irq 15 */
+SYM_CODE_START(hwint15) /* Interrupt routine for irq 15 */
 	hwint_entry(15)
 
-ENTRY(hwint16) /* APIC_IRQ */
+SYM_CODE_START(hwint16) /* APIC_IRQ */
 	hwint_entry(16)
 
-ENTRY(hwint17) /* APIC_IRQ */
+SYM_CODE_START(hwint17) /* APIC_IRQ */
 	hwint_entry(17)
 
-ENTRY(hwint18) /* APIC_IRQ */
+SYM_CODE_START(hwint18) /* APIC_IRQ */
 	hwint_entry(18)
 
-ENTRY(hwint19) /* APIC_IRQ */
+SYM_CODE_START(hwint19) /* APIC_IRQ */
 	hwint_entry(19)
 
-ENTRY(hwint20) /* APIC_IRQ */
+SYM_CODE_START(hwint20) /* APIC_IRQ */
 	hwint_entry(20)
 
-ENTRY(hwint21) /* APIC_IRQ */
+SYM_CODE_START(hwint21) /* APIC_IRQ */
 	hwint_entry(21)
 
-ENTRY(hwint22) /* APIC_IRQ */
+SYM_CODE_START(hwint22) /* APIC_IRQ */
 	hwint_entry(22)
 
-ENTRY(hwint23) /* APIC_IRQ */
+SYM_CODE_START(hwint23) /* APIC_IRQ */
 	hwint_entry(23)
 
 /*==============================================================================================*/
@@ -344,26 +344,26 @@ ENTRY(hwint23) /* APIC_IRQ */
 #define lapic_ipi_entry(irq)	\
 	EXCEPTION_NO_ERR_CODE(irq + APIC_IPI0_VEC);
 
-ENTRY(lapic_ipi00) /* IPI routine for irq 0 (LVT CMCI). */
+SYM_CODE_START(lapic_ipi00) /* IPI routine for irq 0 (LVT CMCI). */
 	lapic_ipi_entry(0)
 
-ENTRY(lapic_ipi01) /* IPI routine for irq 1 (ICR). */
+SYM_CODE_START(lapic_ipi01) /* IPI routine for irq 1 (ICR). */
 	lapic_ipi_entry(1)
 
-ENTRY(lapic_ipi02) /* IPI routine for irq 1 (LVT timer) */
+SYM_CODE_START(lapic_ipi02) /* IPI routine for irq 1 (LVT timer) */
 	lapic_ipi_entry(2)
 
-ENTRY(lapic_ipi03) /* IPI routine for irq 2 (LVT thermal sensor) */
+SYM_CODE_START(lapic_ipi03) /* IPI routine for irq 2 (LVT thermal sensor) */
 	lapic_ipi_entry(3)
 
-ENTRY(lapic_ipi04) /* IPI routine for irq 3 (LVT performance counter) */
+SYM_CODE_START(lapic_ipi04) /* IPI routine for irq 3 (LVT performance counter) */
 	lapic_ipi_entry(4)
 
-ENTRY(lapic_ipi05) /* IPI routine for irq 4 (LVT lint0) */
+SYM_CODE_START(lapic_ipi05) /* IPI routine for irq 4 (LVT lint0) */
 	lapic_ipi_entry(5)
 
-ENTRY(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
+SYM_CODE_START(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
 	lapic_ipi_entry(6)
 
-ENTRY(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
+SYM_CODE_START(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
 	lapic_ipi_entry(7)

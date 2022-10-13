@@ -9,7 +9,7 @@
  *										real mode code                              			*
  *==============================================================================================*/
 .code16
-ENTRY(_APboot_start)
+SYM_CODE_START(_APboot_start)
 _APboot_base = .
 	cli
 	wbinvd
@@ -108,7 +108,7 @@ l1:
 	cmpq	%r9,		%r8
 	jne		l1
 
-ENTRY(AP_DEBUG)
+SYM_CODE_START(AP_DEBUG)
 	// get idle_task_PCB for current AP and set rsp to task's kstack
 	movabsq	idle_tasks,	%rax
 	movq	(%rax, %rbx, 8),	%rax
