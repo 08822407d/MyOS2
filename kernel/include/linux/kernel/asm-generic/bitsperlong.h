@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef __ASM_GENERIC_BITS_PER_LONG
-
-	#define __ASM_GENERIC_BITS_PER_LONG
+#define __ASM_GENERIC_BITS_PER_LONG
 
 	#include <uapi/asm-generic/bitsperlong.h>
 
@@ -16,12 +15,12 @@
 	// * temporarily disabled. Please fix x86-64 and reenable
 	// */
 	// #if 0 && BITS_PER_LONG != __BITS_PER_LONG
-	// 	#error Inconsistent word size. Check asm/bitsperlong.h
+	// #	error Inconsistent word size. Check asm/bitsperlong.h
 	// #endif
 
-	// #ifndef BITS_PER_LONG_LONG
-	// 	#define BITS_PER_LONG_LONG	64
-	// #endif
+	#ifndef BITS_PER_LONG_LONG
+	#	define BITS_PER_LONG_LONG	64
+	#endif
 
 	// /*
 	// * small_const_nbits(n) is true precisely when it is known at compile-time

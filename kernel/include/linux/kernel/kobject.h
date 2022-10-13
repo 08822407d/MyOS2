@@ -13,8 +13,7 @@
  */
 
 #ifndef _KOBJECT_H_
-
-	#define _KOBJECT_H_
+#define _KOBJECT_H_
 
 	#include <linux/kernel/types.h>
 	#include <linux/lib/list.h>

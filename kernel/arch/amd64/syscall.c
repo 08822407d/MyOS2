@@ -14,13 +14,13 @@
 #include "include/archconst.h"
 #include "include/arch_proto.h"
 
-long no_system_call(void)
+long myos_no_system_call(void)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
 	return -ENOSYS;
 }
 
-long sys_putstring(char *string)
+long myos_sys_putstring(char *string)
 {
 	color_printk(WHITE, BLACK, string);
 	return 0;

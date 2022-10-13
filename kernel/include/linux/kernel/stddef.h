@@ -2,7 +2,7 @@
 #ifndef _LINUX_STDDEF_H
 #define _LINUX_STDDEF_H
 
-#include <uapi/kernel/stddef.h>
+	#include <uapi/kernel/stddef.h>
 
 	#undef NULL
 	#define NULL ((void *)0)
@@ -14,9 +14,9 @@
 
 	#undef offsetof
 	#ifdef __compiler_offsetof
-		#define offsetof(TYPE, MEMBER)	__compiler_offsetof(TYPE, MEMBER)
+	#	define offsetof(TYPE, MEMBER)	__compiler_offsetof(TYPE, MEMBER)
 	#else
-		#define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
+	#	define offsetof(TYPE, MEMBER)	((size_t)&((TYPE *)0)->MEMBER)
 	#endif
 
 	/**
@@ -25,7 +25,7 @@
 	 * @TYPE: The structure containing the field of interest
 	 * @MEMBER: The field to return the size of
 	 */
-	#define sizeof_field(TYPE, MEMBER) sizeof((((TYPE *)0)->MEMBER))
+	#define sizeof_field(TYPE, MEMBER)	sizeof((((TYPE *)0)->MEMBER))
 
 	/**
 	 * offsetofend() - Report the offset of a struct field within the struct
@@ -48,7 +48,7 @@
 	 * used to reason about the start, end, and size of the group of
 	 * struct members.
 	 */
-	#define struct_group(NAME, MEMBERS...)	\
+	#define struct_group(NAME, MEMBERS...) \
 				__struct_group(/* no tag */, NAME, /* no attrs */, MEMBERS)
 
 	/**

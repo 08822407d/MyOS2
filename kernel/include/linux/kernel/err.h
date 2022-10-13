@@ -2,21 +2,20 @@
 #ifndef _LINUX_ERR_H
 #define _LINUX_ERR_H
 
-#include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 
 	/*
-	* Kernel pointers have redundant information, so we can use a
-	* scheme where we can return either an error code or a normal
-	* pointer with the same return value.
-	*
-	* This should be a per-architecture thing, to allow different
-	* error and pointer decisions.
-	*/
+	 * Kernel pointers have redundant information, so we can use a
+	 * scheme where we can return either an error code or a normal
+	 * pointer with the same return value.
+	 *
+	 * This should be a per-architecture thing, to allow different
+	 * error and pointer decisions.
+	 */
 	#define MAX_ERRNO	4095
 
 	#ifndef __ASSEMBLY__
-
-		#define IS_ERR_VALUE(x) ((size_t)(void *)(x) >= (size_t)-MAX_ERRNO)
+	#	define IS_ERR_VALUE(x) ((size_t)(void *)(x) >= (size_t)-MAX_ERRNO)
 
 		static inline void * ERR_PTR(long error)
 		{
@@ -58,7 +57,6 @@
 			else
 				return 0;
 		}
-
 	#endif
 
 #endif /* _LINUX_ERR_H_ */

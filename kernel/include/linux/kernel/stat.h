@@ -2,8 +2,8 @@
 #ifndef _LINUX_STAT_H
 #define _LINUX_STAT_H
 
-#include <uapi/asm-generic/stat.h>
-#include <uapi/kernel/stat.h>
+	#include <uapi/asm-generic/stat.h>
+	#include <uapi/kernel/stat.h>
 
 	#define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
 	#define S_IALLUGO	(S_ISUID|S_ISGID|S_ISVTX|S_IRWXUGO)
@@ -14,9 +14,9 @@
 	#define UTIME_NOW	((1l << 30) - 1l)
 	#define UTIME_OMIT	((1l << 30) - 2l)
 
-#include <linux/kernel/types.h>
-#include <linux/kernel/time64.h>
-#include <linux/kernel/uidgid.h>
+	#include <linux/kernel/types.h>
+	#include <linux/kernel/time64.h>
+	#include <linux/kernel/uidgid.h>
 
 	typedef struct kstat {
 		u32			result_mask;	/* What fields the user got */
@@ -26,12 +26,13 @@
 		u64			attributes_mask;
 		unsigned int	nlink;
 	#define KSTAT_ATTR_FS_IOC_FLAGS				\
-				(STATX_ATTR_COMPRESSED |		\
-				STATX_ATTR_IMMUTABLE |			\
-				STATX_ATTR_APPEND |				\
-				STATX_ATTR_NODUMP |				\
-				STATX_ATTR_ENCRYPTED |			\
-				STATX_ATTR_VERITY				\
+				(								\
+					STATX_ATTR_COMPRESSED |		\
+					STATX_ATTR_IMMUTABLE |		\
+					STATX_ATTR_APPEND |			\
+					STATX_ATTR_NODUMP |			\
+					STATX_ATTR_ENCRYPTED |		\
+					STATX_ATTR_VERITY			\
 				)				/* Attrs corresponding to FS_*_FL flags */
 		u64			ino;
 		dev_t		dev;

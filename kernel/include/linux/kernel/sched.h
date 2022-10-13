@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _LINUX_SCHED_H
-
-	#define _LINUX_SCHED_H
+#define _LINUX_SCHED_H
 
 	/*
 	* Define 'struct task_struct' and provide the main scheduler
@@ -141,8 +140,9 @@
 	* Special states are those that do not use the normal wait-loop pattern. See
 	* the comment with set_special_state().
 	*/
-	#define is_special_task_state(state)	\
-			((state) & (__TASK_STOPPED | __TASK_TRACED | TASK_PARKED | TASK_DEAD))
+	#define is_special_task_state(state)							\
+					((state) & (__TASK_STOPPED | __TASK_TRACED |	\
+					TASK_PARKED | TASK_DEAD))
 
 	// #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
 	// #define debug_normal_state_change(state_value)            \
@@ -234,11 +234,10 @@
 	// 		debug_normal_state_change((state_value));    \
 	// 		WRITE_ONCE(current->__state, (state_value)); \
 	// 	} while (0)
-	#define __set_current_state(state_value)             \
-		do                                               \
-		{                                                \
-			curr_tsk->__state = (state_value); \
-		} while (0)
+	#define __set_current_state(state_value)			\
+				do {									\
+					curr_tsk->__state = (state_value);	\
+				} while (0)
 
 	// #define set_current_state(state_value)                 \
 	// 	do                                                 \

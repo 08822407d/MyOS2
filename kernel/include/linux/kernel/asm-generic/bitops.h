@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef __ASM_GENERIC_BITOPS_H
-
-	#define __ASM_GENERIC_BITOPS_H
+#define __ASM_GENERIC_BITOPS_H
 
 	/*
 	* For the benefit of those who are trying to port Linux to another
@@ -23,7 +22,7 @@
 	// #include <asm-generic/bitops/fls64.h>
 
 	// #ifndef _LINUX_BITOPS_H
-	// 	#error only <linux/bitops.h> can be included directly
+	// #	error only <linux/bitops.h> can be included directly
 	// #endif
 
 	// #include <asm-generic/bitops/sched.h>

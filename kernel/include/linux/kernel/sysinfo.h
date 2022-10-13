@@ -2,7 +2,7 @@
 #ifndef _LINUX_SYSINFO_H
 #define _LINUX_SYSINFO_H
 
-#include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 
 	#define SI_LOAD_SHIFT	16
 	struct sysinfo {

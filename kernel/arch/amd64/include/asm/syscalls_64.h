@@ -36,4 +36,4 @@ __SYSCALL(__NR_reboot, sys_reboot)
 
 __SYSCALL(__NR_getdents64, sys_getdents64)
 
-__SYSCALL(__NR_putstring, sys_putstring)
+__SYSCALL(__NR_putstring, myos_sys_putstring)

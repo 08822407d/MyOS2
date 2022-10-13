@@ -8,9 +8,9 @@
 #ifndef _LINUX_UUID_H_
 #define _LINUX_UUID_H_
 
-#include <uapi/kernel/uuid.h>
+	#include <uapi/kernel/uuid.h>
 
-#include <linux/lib/string.h> /// need replace
+	#include <linux/lib/string.h> /// need replace
 
 	#define UUID_SIZE 16
 
@@ -27,9 +27,9 @@
 				(d0), (d1), (d2), (d3), (d4), (d5), (d6), (d7) }})
 
 	/*
-	* The length of a UUID string ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
-	* not including trailing NUL.
-	*/
+	 * The length of a UUID string ("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee")
+	 * not including trailing NUL.
+	 */
 	#define	UUID_STRING_LEN		36
 
 	extern const guid_t	guid_null;

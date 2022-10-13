@@ -1,9 +1,9 @@
 #ifndef _LINUX_STATFS_H
 #define _LINUX_STATFS_H
 
-#include <linux/kernel/types.h>
-// #include <asm/statfs.h>
-// #include <asm/byteorder.h>
+	#include <linux/kernel/types.h>
+	// #include <asm/statfs.h>
+	// #include <asm/byteorder.h>
 
 	typedef struct kstatfs {
 		long f_type;
@@ -21,12 +21,12 @@
 	} kstatfs_s;
 
 	/*
-	* Definitions for the flag in f_flag.
-	*
-	* Generally these flags are equivalent to the MS_ flags used in the mount
-	* ABI.  The exception is ST_VALID which has the same value as MS_REMOUNT
-	* which doesn't make any sense for statfs.
-	*/
+	 * Definitions for the flag in f_flag.
+	 *
+	 * Generally these flags are equivalent to the MS_ flags used in the mount
+	 * ABI.  The exception is ST_VALID which has the same value as MS_REMOUNT
+	 * which doesn't make any sense for statfs.
+	 */
 	#define ST_RDONLY		0x0001	/* mount read-only */
 	#define ST_NOSUID		0x0002	/* ignore suid and sgid bits */
 	#define ST_NODEV		0x0004	/* disallow access to device special files */

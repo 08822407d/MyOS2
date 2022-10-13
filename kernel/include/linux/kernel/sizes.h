@@ -3,8 +3,7 @@
  * include/linux/sizes.h
  */
 #ifndef __LINUX_SIZES_H__
-
-	#define __LINUX_SIZES_H__
+#define __LINUX_SIZES_H__
 
 	#include <linux/kernel/const.h>
 

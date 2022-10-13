@@ -10,8 +10,7 @@
  */
 
 #ifndef _LINUX_SLAB_H
-
-	#define _LINUX_SLAB_H
+#define _LINUX_SLAB_H
 
 	#include <linux/mm/gfp.h>
 	// #include <linux/overflow.h>

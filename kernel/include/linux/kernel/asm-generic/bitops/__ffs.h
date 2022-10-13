@@ -1,7 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_GENERIC_BITOPS___FFS_H_
-
-	#define _ASM_GENERIC_BITOPS___FFS_H_
+#define _ASM_GENERIC_BITOPS___FFS_H_
 
 	#include <uapi/kernel/types.h>
 

@@ -2,12 +2,12 @@
 #ifndef _LINUX_CTYPE_H
 #define _LINUX_CTYPE_H
 
-#include <linux/kernel/compiler.h>
+	#include <linux/kernel/compiler.h>
 
 	/*
-	* NOTE! This ctype does not handle EOF like the standard C
-	* library is required to.
-	*/
+	 * NOTE! This ctype does not handle EOF like the standard C
+	 * library is required to.
+	 */
 
 	#define _U	0x01	/* upper */
 	#define _L	0x02	/* lower */
@@ -37,14 +37,14 @@
 	#define isascii(c) (((unsigned char)(c))<=0x7f)
 	#define toascii(c) (((unsigned char)(c))&0x7f)
 
-	// #if __has_builtin(__builtin_isdigit)
-	// 	#define  isdigit(c) __builtin_isdigit(c)
-	// #else
-	static inline int isdigit(int c)
-	{
-		return '0' <= c && c <= '9';
-	}
-	// #endif
+	#if __has_builtin(__builtin_isdigit)
+	#	define  isdigit(c) __builtin_isdigit(c)
+	#else
+		static inline int isdigit(int c)
+		{
+			return '0' <= c && c <= '9';
+		}
+	#endif
 
 	static inline unsigned char __tolower(unsigned char c)
 	{

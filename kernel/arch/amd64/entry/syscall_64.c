@@ -10,7 +10,7 @@
 
 // #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
 #define __SYSCALL(nr, sym)	extern long sym(void);
-	__SYSCALL(0, no_system_call)
+	__SYSCALL(0, myos_no_system_call)
 #	include <asm/syscalls_64.h>
 #undef __SYSCALL
 
@@ -18,7 +18,7 @@
 #define __SYSCALL(nr, sym)	[nr] = sym,
 
 const sys_call_ptr_t sys_call_table[] = {
-	[0 ... __NR_syscalls - 1] = no_system_call,
+	[0 ... __NR_syscalls - 1] = myos_no_system_call,
 #include <asm/syscalls_64.h>
 };
 

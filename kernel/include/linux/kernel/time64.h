@@ -2,12 +2,12 @@
 #ifndef _LINUX_TIME64_H
 #define _LINUX_TIME64_H
 
-#include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 
 	typedef __s64	time64_t;
 	typedef __u64	timeu64_t;
 
-#include <uapi/kernel/time.h>
+	#include <uapi/kernel/time.h>
 
 	typedef struct timespec64 {
 		time64_t	tv_sec;			/* seconds */

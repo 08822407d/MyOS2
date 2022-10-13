@@ -7,8 +7,7 @@
  */
 
 #ifndef _LINUX_SYSCALLS_H
-
-	#define _LINUX_SYSCALLS_H
+#define _LINUX_SYSCALLS_H
 
 	// struct __aio_sigset;
 	// struct epoll_event;
@@ -1388,8 +1387,8 @@
 
 
 	#ifndef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
-		long no_system_call(void);
-		long sys_putstring(char *string);
+		long myos_no_system_call(void);
+		long myos_sys_putstring(char *string);
 	#endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
 
 #endif

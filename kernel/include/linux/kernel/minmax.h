@@ -2,20 +2,20 @@
 #ifndef _LINUX_MINMAX_H
 #define _LINUX_MINMAX_H
 
-#include <linux/kernel/const.h>
+	#include <linux/kernel/const.h>
 
 	/*
-	* min()/max()/clamp() macros must accomplish three things:
-	*
-	* - avoid multiple evaluations of the arguments (so side-effects like
-	*   "x++" happen only once) when non-constant.
-	* - perform strict type-checking (to generate warnings instead of
-	*   nasty runtime surprises). See the "unnecessary" pointer comparison
-	*   in __typecheck().
-	* - retain result as a constant expressions when called with only
-	*   constant expressions (to avoid tripping VLA warnings in stack
-	*   allocation usage).
-	*/
+	 * min()/max()/clamp() macros must accomplish three things:
+	 *
+	 * - avoid multiple evaluations of the arguments (so side-effects like
+	 *   "x++" happen only once) when non-constant.
+	 * - perform strict type-checking (to generate warnings instead of
+	 *   nasty runtime surprises). See the "unnecessary" pointer comparison
+	 *   in __typecheck().
+	 * - retain result as a constant expressions when called with only
+	 *   constant expressions (to avoid tripping VLA warnings in stack
+	 *   allocation usage).
+	 */
 	#define __typecheck(x, y) \
 					(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
 
@@ -27,18 +27,18 @@
 
 	#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
 
-	#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
-					typeof(x) unique_x = (x);		\
-					typeof(y) unique_y = (y);		\
+	#define __cmp_once(x, y, unique_x, unique_y, op)({	\
+					typeof(x) unique_x = (x);			\
+					typeof(y) unique_y = (y);			\
 					__cmp(unique_x, unique_y, op); })
 
 	// #define __careful_cmp(x, y, op) \
 	// 	__builtin_choose_expr(__safe_cmp(x, y), \
 	// 		__cmp(x, y, op), \
 	// 		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
-	#define __careful_cmp(x, y, op) \
-					__builtin_choose_expr(__safe_cmp(x, y), \
-					__cmp(x, y, op), \
+	#define __careful_cmp(x, y, op)							\
+					__builtin_choose_expr(__safe_cmp(x, y),	\
+					__cmp(x, y, op),						\
 					__cmp_once(x, y, (__x), (__y), op))
 
 	/**
@@ -76,10 +76,13 @@
 	 * @x: value1
 	 * @y: value2
 	 */
-	#define min_not_zero(x, y) ({			\
-		typeof(x) __x = (x);			\
-		typeof(y) __y = (y);			\
-		__x == 0 ? __y : ((__y == 0) ? __x : min(__x, __y)); })
+	#define min_not_zero(x, y)({					\
+					typeof(x) __x = (x);			\
+					typeof(y) __y = (y);			\
+					__x == 0 ? __y : ((__y == 0) ?	\
+					__x : min(__x, __y));			\
+				}									\
+			)
 
 	/**
 	 * clamp - return a value clamped to a given range with strict typechecking
@@ -90,7 +93,7 @@
 	 * This macro does strict typechecking of @lo/@hi to make sure they are of the
 	 * same type as @val.  See the unnecessary pointer comparisons.
 	 */
-	#define clamp(val, lo, hi) min((typeof(val))max(val, lo), hi)
+	#define clamp(val, lo, hi)	min((typeof(val))max(val, lo), hi)
 
 	/*
 	* ..and if you can't take the strict
@@ -125,7 +128,7 @@
 	 * This macro does no typechecking and uses temporary variables of type
 	 * @type to make all the comparisons.
 	 */
-	#define clamp_t(type, val, lo, hi) min_t(type, max_t(type, val, lo), hi)
+	#define clamp_t(type, val, lo, hi)	min_t(type, max_t(type, val, lo), hi)
 
 	/**
 	 * clamp_val - return a value clamped to a given range using val's type
@@ -138,14 +141,18 @@
 	 * type and @lo and @hi are literals that will otherwise be assigned a signed
 	 * integer type.
 	 */
-	#define clamp_val(val, lo, hi) clamp_t(typeof(val), val, lo, hi)
+	#define clamp_val(val, lo, hi)	clamp_t(typeof(val), val, lo, hi)
 
 	/**
 	 * swap - swap values of @a and @b
 	 * @a: first value
 	 * @b: second value
 	 */
-	#define swap(a, b) \
-		do { typeof(a) __tmp = (a); (a) = (b); (b) = __tmp; } while (0)
+	#define swap(a, b)						\
+				do {						\
+					typeof(a) __tmp = (a);	\
+					(a) = (b);				\
+					(b) = __tmp;			\
+				} while (0)
 
 #endif	/* _LINUX_MINMAX_H */
