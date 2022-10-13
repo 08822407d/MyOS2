@@ -2,7 +2,7 @@
 #ifndef _LINUX_FS_H
 #define _LINUX_FS_H
 
-// #include <linux/linkage.h>
+#include <linux/kernel/linkage.h>
 // #include <linux/wait_bit.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/fs/dcache.h>

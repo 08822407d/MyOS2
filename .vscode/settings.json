@@ -171,7 +171,10 @@
 		"class.h": "c",
 		"myos_slab.h": "c",
 		"magic.h": "c",
-		"ext2.h": "c"
+		"ext2.h": "c",
+		"syscalls_64.h": "c",
+		"syscalls.h": "c",
+		"unistd_64.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

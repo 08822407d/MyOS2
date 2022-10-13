@@ -14,7 +14,7 @@
 #include <linux/lib/stdarg.h>
 // #include <linux/align.h>
 #include <linux/kernel/limits.h>
-// #include <linux/linkage.h>
+#include <linux/kernel/linkage.h>
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/compiler.h>

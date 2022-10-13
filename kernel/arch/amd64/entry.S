@@ -93,7 +93,7 @@ ENTRY(sysenter_entp)
 	SET_RET_POINTS(sa_sysent_retp, ra_sysex_retp)
 	jmp			SAVE_ALL
 sa_sysent_retp:
-	leaq		syscall_table(%rip),	%rbx
+	leaq		sys_call_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
 	movq		%rax,					SAVEALL_SIZE(%rsp)	// save return value to stack
 

@@ -1,5 +1,3 @@
-#define ASM_FILE 1
-
 #include <linux/kernel/linkage.h>
 
 #include <uefi/multiboot2.h>
@@ -9,7 +7,7 @@
 
 .code64
 .balign	8
-ENTRY(start)
+ENTRY(startup_64)
 	cli
 	jmp		code_64_start
 

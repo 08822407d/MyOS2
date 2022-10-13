@@ -6,7 +6,7 @@
 	// #include <linux/mmdebug.h>
 	#include <linux/mm/mmzone.h>
 	#include <linux/kernel/stddef.h>
-	// #include <linux/linkage.h>
+	#include <linux/kernel/linkage.h>
 	// #include <linux/topology.h>
 
 	/* The typedef is in types.h but we want the documentation here */

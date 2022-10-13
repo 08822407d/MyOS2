@@ -1,5 +1,3 @@
-#define ASM_FILE 1
-
 #include <linux/kernel/linkage.h>
 
 #include "../arch/amd64/include/archconst.h"

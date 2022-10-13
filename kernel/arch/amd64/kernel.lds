@@ -1,6 +1,6 @@
 OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
-ENTRY(start)
+ENTRY(startup_64)
 
 _k_phys_start	= 0x1000000;
 _k_virt_start	= 0xffff800001000000;

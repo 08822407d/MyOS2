@@ -1,5 +1,6 @@
 #ifndef  _AMD64_ASM_H_
-#define  _AMD64_ASM_H_   
+
+    #define  _AMD64_ASM_H_   
 
     #ifdef __ELF__
     #   define _C_LABEL(x)      x 

@@ -5,6 +5,7 @@
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
 #include <uapi/kernel/myos_sysreboot.h>
+#include <asm/syscall.h>
 #include <asm/setup.h>
 
 #include <obsolete/printk.h>
@@ -12,15 +13,14 @@
 
 #include "include/archconst.h"
 #include "include/arch_proto.h"
-#include "include/syscall.h"
 
-unsigned long no_system_call(void)
+long no_system_call(void)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
 	return -ENOSYS;
 }
 
-unsigned long sys_putstring(char *string)
+long sys_putstring(char *string)
 {
 	color_printk(WHITE, BLACK, string);
 	return 0;
@@ -29,12 +29,12 @@ unsigned long sys_putstring(char *string)
 /*==============================================================================================*
  *										file operations											*
  *==============================================================================================*/
-unsigned long sys_open(char *filename, int flags, umode_t mode)
+long sys_open(const char *filename, int flags, umode_t mode)
 {
 	return do_sys_open(0, filename, flags, mode);
 }
 
-unsigned long sys_close(int fd)
+long sys_close(unsigned int fd)
 {
 	task_s * curr = curr_tsk;
 
@@ -54,7 +54,7 @@ unsigned long sys_close(int fd)
 	return 0;
 }
 
-unsigned long sys_read(int fd, void * buf, long count)
+long sys_read(unsigned int fd, char *buf, size_t count)
 {
 	task_s * curr = curr_tsk;
 	struct file * fp = NULL;
@@ -72,7 +72,7 @@ unsigned long sys_read(int fd, void * buf, long count)
 	return ret;
 }
 
-unsigned long sys_write(int fd, void *buf, long count)
+long sys_write(unsigned int fd, const char *buf, size_t count)
 {
 	task_s * curr = curr_tsk;
 	struct file * fp = NULL;
@@ -90,37 +90,37 @@ unsigned long sys_write(int fd, void *buf, long count)
 	return ret;
 }
 
-
-unsigned long sys_lseek(int filds, long offset, int whence)
+long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 {
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_lseek:%d\n",filds);
-	if(filds < 0 || filds >= MAX_FILE_NR)
+	if(fd < 0 || fd >= MAX_FILE_NR)
 		return -EBADF;
 	if(whence < 0 || whence >= SEEK_MAX)
 		return -EINVAL;
 
-	fp = curr_tsk->fps[filds];
+	fp = curr_tsk->fps[fd];
 	if(fp->f_op && fp->f_op->llseek)
 		ret = fp->f_op->llseek(fp, offset, whence);
 	return ret;
 }
 
-unsigned long sys_fork()
+long sys_fork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
 	return do_fork(curr_context, 0, curr_context->rsp, 0, NULL, NULL);	
 }
 
-unsigned long sys_vfork()
+long sys_vfork()
 {
 	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
 	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, 0, NULL, NULL);
 }
 
-unsigned long sys_execve()
+long sys_execve(const char *filename, const char *const *argv,
+				const char *const *envp)
 {
 	char * pathname = NULL;
 	long pathlen = 0;
@@ -150,13 +150,13 @@ unsigned long sys_execve()
 	return error;
 }
 
-unsigned long sys_exit(int exit_code)
+long sys_exit(int error_code)
 {
-	return do_exit(exit_code);
+	return do_exit(error_code);
 }
 
 int exit_mm(task_s * new_tsk);
-unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusage)
+long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 {
 	long retval = 0;
 	task_s * child = NULL;
@@ -185,7 +185,7 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 	{
 		wq_sleep_on_intrable(&child->wait_childexit);
 	}
-	copy_to_user(status, &child->exit_code, sizeof(int));
+	copy_to_user(start_addr, &child->exit_code, sizeof(int));
 	exit_mm(child);
 	list_delete(&child->child_list);
 	kfree(child);
@@ -195,9 +195,9 @@ unsigned long sys_wait4(unsigned long pid, int *status, int options, void *rusag
 /*==============================================================================================*
  *									user memory manage											*
  *==============================================================================================*/
-virt_addr_t sys_sbrk(const void * brk)
+virt_addr_t sys_sbrk(unsigned long brk)
 {
-	unsigned long new_brk = round_up((reg_t)brk, PAGE_SIZE);
+	virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
 
 //	color_printk(GREEN,BLACK,"sys_brk\n");
 //	color_printk(RED,BLACK,"brk:%#018lx,new_brk:%#018lx,current->mm->end_brk:%#018lx\n",brk,new_brk,current->mm->end_brk);
@@ -209,19 +209,19 @@ virt_addr_t sys_sbrk(const void * brk)
 		new_brk = do_brk(curr_tsk->mm_struct->end_brk, new_brk - curr_tsk->mm_struct->end_brk);	//expand brk space
 
 	curr_tsk->mm_struct->end_brk = new_brk;
-	return (virt_addr_t)new_brk;
+	return new_brk;
 }
 
 
 /*==============================================================================================*
  *									get task infomation											*
  *==============================================================================================*/
-unsigned long sys_getpid()
+long sys_getpid()
 {
 	return curr_tsk->pid;
 }
 
-unsigned long sys_getppid()
+long sys_getppid()
 {
 	return curr_tsk->parent->pid;
 }
@@ -230,7 +230,7 @@ unsigned long sys_getppid()
 /*==============================================================================================*
  *									special functions											*
  *==============================================================================================*/
-unsigned long sys_reboot(unsigned long cmd, void * arg)
+long sys_reboot(unsigned int cmd, void *arg)
 {
 	color_printk(GREEN,BLACK,"sys_reboot\n");
 	switch(cmd)

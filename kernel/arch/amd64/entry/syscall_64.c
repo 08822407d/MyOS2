@@ -1,26 +1,25 @@
-/***************************************************
-*		 Copyright (c) 2018 MINE 田宇
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of version 2 of the GNU General Public
-* License as published by the Free Software Foundation.
-*
-***************************************************/
+// SPDX-License-Identifier: GPL-2.0
+/* System call table for x86-64. */
+#define CONFIG_ARCH_HAS_SYSCALL_WRAPPER
 
-#include <uapi/kernel/unistd.h>
+#include <linux/kernel/linkage.h>
+// #include <linux/sys.h>
+// #include <linux/cache.h>
+#include <linux/kernel/syscalls.h>
+#include <asm/syscall.h>
 
-#include "../include/syscall.h"
+// #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
+#define __SYSCALL(nr, sym)	extern long sym(void);
+	__SYSCALL(0, no_system_call)
+	#include <asm/syscalls_64.h>
+#undef __SYSCALL
 
-#define SYSCALL_COMMON(nr,sym)	extern unsigned long sym(void);
-SYSCALL_COMMON(0,no_system_call)
-#include <asm/syscalls_64.h>
-#undef	SYSCALL_COMMON
+// #define __SYSCALL(nr, sym)	__x64_##sym,
+#define __SYSCALL(nr, sym)	[nr] = sym,
 
-#define SYSCALL_COMMON(nr,sym)	[nr] = sym,
-
-system_call_t syscall_table[MAX_SYSTEM_CALL_NR] = 
-{
-	[0 ... MAX_SYSTEM_CALL_NR-1] = no_system_call,
+const sys_call_ptr_t sys_call_table[] = {
+	[0 ... __NR_syscalls - 1] = no_system_call,
 #include <asm/syscalls_64.h>
 };
 
+#undef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
