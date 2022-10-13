@@ -20,19 +20,19 @@ SECTIONS
 	__k_unpaged__kern_unpaged_start = .;
 	.unpaged_text :
 	{
-		*/head.S.o(.text);
+		*/head_64.S.o(.text);
 	}
 	.unpaged_data ALIGN(0x1000) :
 	{
-		*/head.S.o(.data .rodata*);
+		*/head_64.S.o(.data .rodata*);
 	}
 	.unpaged_bss  ALIGN(0x1000) :
 	{
-		*/head.S.o(.bss COMMON);
+		*/head_64.S.o(.bss COMMON);
 	}
 	.unpaged_eh_frame ALIGN(0x1000) :
 	{
-		*/head.S.o(.eh_frame);
+		*/head_64.S.o(.eh_frame);
 	}
 	__k_unpaged__kern_unpaged_end = .;
 

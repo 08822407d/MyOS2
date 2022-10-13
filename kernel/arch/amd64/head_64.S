@@ -3,13 +3,12 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
-.text
-
-.code64
-.balign	8
-ENTRY(startup_64)
+	.text
+	.code64
+SYM_CODE_START_NOALIGN(startup_64)
 	cli
 	jmp		code_64_start
+SYM_CODE_END(startup_64)
 
 /*==============================================================================================*
  *										multiboot2 header                           			*
