@@ -175,6 +175,10 @@ void __init start_kernel(void)
 	// enable bsp's apic
 	init_bsp_intr();
 
+	size_t delay = 0;
+	for (unsigned i = 0; i < -1; i++)
+		delay++;
+	
 	// post init
 	softirq_init();
 	timer_init();
@@ -258,6 +262,11 @@ unsigned long kernel_init(unsigned long arg)
 	init_ATArqd();
 
 	get_ata_info();
+
+	// schedule();
+	// while (1)
+	// 	hlt();
+	
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");

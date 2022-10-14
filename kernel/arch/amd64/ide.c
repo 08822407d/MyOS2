@@ -359,12 +359,24 @@ void init_disk()
 	{
 		ide0_0 = ATA_identify(MASTER, MASTER);
 		ide0_1 = ATA_identify(MASTER, SLAVE);
+		if (ide0_0)
+			color_printk(WHITE, BLACK, "Found ide 0:0 device\n");
+		if (ide0_1)
+			color_printk(WHITE, BLACK, "Found ide 0:1 device\n");
+
 	}
 	if (ide1_mgc == 0x88)
 	{
 		ide1_0 = ATA_identify(SLAVE, MASTER);
 		ide1_1 = ATA_identify(SLAVE, SLAVE);
+		if (ide1_0)
+			color_printk(WHITE, BLACK, "Found ide 1:0 device\n");
+		if (ide1_1)
+			color_printk(WHITE, BLACK, "Found ide 1:1 device\n");
 	}
+	if (!ide0_0 && !ide0_1 &&
+		!ide1_0 && !ide1_1)
+		color_printk(RED, BLACK, "No ide device was found\n");
 
 	outb(IED_PIO_CTRL_BASE(MASTER), 0);
 

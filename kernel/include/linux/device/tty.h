@@ -528,6 +528,10 @@
 	int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
 	ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position);
 	ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position);
-	void myos_tty_write_color(const char * buf, size_t length, unsigned int FRcolor, unsigned int BKcolor);
+	void myos_tty_write_color(const char * buf, size_t length,
+			unsigned int FRcolor, unsigned int BKcolor);
+	void myos_tty_write_color_at(const char *buf, size_t length,
+			unsigned int FRcolor, unsigned int BKcolor,
+			unsigned int XPosition, unsigned int YPosition);
 
 #endif

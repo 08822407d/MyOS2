@@ -37,7 +37,8 @@
 	#define KBCMD_WRITE_CMD	0x60
 	#define KBCMD_READ_CMD	0x20
 
-	#define KB_INIT_MODE	0x47
+	// #define KB_INIT_MODE	0x47
+	#define KB_INIT_MODE	0x45
 
 	#define  wait_KB_write()	while(inb(PORT_KB_STATUS) & KBSTATUS_IBF)
 	#define  wait_KB_read()		while(inb(PORT_KB_STATUS) & KBSTATUS_OBF)

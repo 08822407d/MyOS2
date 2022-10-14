@@ -1,6 +1,8 @@
+#include <linux/kernel/kernel.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
+#include <linux/device/tty.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -87,7 +89,23 @@ void keyboard_handler(unsigned long param, stack_frame_s * sf_regs)
 {
 	unsigned char x;
 	x = inb(0x60);
-	// color_printk(WHITE,BLACK,"(K:%02x) ",x);
+
+	int xpos;
+	int ypos = 0;
+	char *prompt;
+	if (x & FLAG_BREAK)
+	{
+		xpos = 18;
+		prompt = "Key Up";
+	}
+	else
+	{
+		xpos = 0;
+		prompt = "Key Down";
+	}
+	char buf[32] = {0};
+	snprintf(buf, 32, "%s : (K:%02x) ", prompt, x);
+	myos_tty_write_color_at(buf, strlen(buf), YELLOW, BLUE, xpos, ypos);
 
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;

@@ -37,14 +37,14 @@
 	#define isascii(c) (((unsigned char)(c))<=0x7f)
 	#define toascii(c) (((unsigned char)(c))&0x7f)
 
-	#if __has_builtin(__builtin_isdigit)
-	#	define  isdigit(c) __builtin_isdigit(c)
-	#else
+	// #if __has_builtin(__builtin_isdigit)
+	// #	define  isdigit(c) __builtin_isdigit(c)
+	// #else
 		static inline int isdigit(int c)
 		{
 			return '0' <= c && c <= '9';
 		}
-	#endif
+	// #endif
 
 	static inline unsigned char __tolower(unsigned char c)
 	{

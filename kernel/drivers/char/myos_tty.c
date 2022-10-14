@@ -83,7 +83,8 @@ ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 	return counter;	
 }
 
-static void kputchar(unsigned int *fb, int Xresol, int x, int y, unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
+static void kputchar(unsigned int *fb, int Xresol, int x, int y,
+		unsigned int FRcolor, unsigned int BKcolor, unsigned char font)
 {
 	int i = 0, j = 0;
 	unsigned int *addr = NULL;
@@ -137,7 +138,8 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 				if (Pos.YPosition < 0)
 					Pos.YPosition = Pos.YResolution / Pos.YCharSize - 1;
 			}
-			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
+			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize,
+					Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
 		}
 		else if ((unsigned char)*(buf + count) == '\t')
 		{
@@ -145,12 +147,14 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 
 		Label_tab:
 			line--;
-			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
+			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize,
+					Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
 			Pos.XPosition++;
 		}
 		else
 		{
-			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize, Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, (unsigned char)*(buf + count));
+			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize,
+					Pos.YPosition * Pos.YCharSize, FRcolor, BKcolor, (unsigned char)*(buf + count));
 			Pos.XPosition++;
 		}
 
@@ -165,6 +169,68 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 		}
 	}
 	unlock_spin_lock(&Pos.printk_lock);
+}
+
+void myos_tty_write_color_at(const char *buf, size_t length,
+		unsigned int FRcolor, unsigned int BKcolor,
+		unsigned int XPosition, unsigned int YPosition)
+{
+	int count = 0;
+	int line = 0;
+
+	for (count = 0; count < length || line; count++)
+	{
+		////	add \n \b \t
+		if (line > 0)
+		{
+			count--;
+			goto Label_tab;
+		}
+		if ((unsigned char)*(buf + count) == '\n')
+		{
+			YPosition++;
+			XPosition = 0;
+		}
+		else if ((unsigned char)*(buf + count) == '\b')
+		{
+			XPosition--;
+			if (XPosition < 0)
+			{
+				XPosition = Pos.XResolution / Pos.XCharSize - 1;
+				YPosition--;
+				if (YPosition < 0)
+					YPosition = Pos.YResolution / Pos.YCharSize - 1;
+			}
+			kputchar(Pos.FB_addr, Pos.XResolution, Pos.XPosition * Pos.XCharSize,
+					YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
+		}
+		else if ((unsigned char)*(buf + count) == '\t')
+		{
+			line = ((XPosition + 8) & ~(8 - 1)) - XPosition;
+
+		Label_tab:
+			line--;
+			kputchar(Pos.FB_addr, Pos.XResolution, XPosition * Pos.XCharSize,
+					YPosition * Pos.YCharSize, FRcolor, BKcolor, ' ');
+			XPosition++;
+		}
+		else
+		{
+			kputchar(Pos.FB_addr, Pos.XResolution, XPosition * Pos.XCharSize,
+					YPosition * Pos.YCharSize, FRcolor, BKcolor, (unsigned char)*(buf + count));
+			XPosition++;
+		}
+
+		if (XPosition >= (Pos.XResolution / Pos.XCharSize))
+		{
+			Pos.YPosition++;
+			XPosition = 0;
+		}
+		if (YPosition >= (Pos.YResolution / Pos.YCharSize))
+		{
+			YPosition = 0;
+		}
+	}
 }
 
 ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position)
