@@ -16,7 +16,7 @@ void wq_sleep_on(List_hdr_s * wqhdr)
 	curr->__state = TASK_UNINTERRUPTIBLE;
 	list_hdr_append(wqhdr, &wq.wq_list);
 
-	schedule();
+	myos_schedule();
 }
 
 void wq_sleep_on_intrable(List_hdr_s * wqhdr)
@@ -27,7 +27,7 @@ void wq_sleep_on_intrable(List_hdr_s * wqhdr)
 	curr->__state = TASK_INTERRUPTIBLE;
 	list_hdr_append(wqhdr, &wq.wq_list);
 
-	schedule();
+	myos_schedule();
 }
 
 void wq_wakeup(List_hdr_s * wqhdr, unsigned long pstate)

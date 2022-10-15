@@ -83,7 +83,7 @@ void prepair_COW(task_s * task)
 		}
 	}
 
-	refresh_arch_page();
+	myos_refresh_arch_page();
 }
 
 int do_COW(task_s * task, virt_addr_t virt)

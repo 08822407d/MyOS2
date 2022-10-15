@@ -58,6 +58,7 @@
 #include <linux/kernel/sizes.h>
 #include <linux/kernel/math.h>
 
+#include <asm/e820-api.h>
 #include <asm/setup.h>
 
 /*
@@ -122,6 +123,9 @@ unsigned long max_pfn_mapped;
 
 static void __init early_reserve_memory(void)
 {
+extern char _k_phys_start;
+extern char _k_virt_start;
+extern char _end;
 	/*
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
@@ -130,12 +134,8 @@ static void __init early_reserve_memory(void)
 	 */
 	// memblock_reserve(__pa_symbol(_text),
 	// 		 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
-extern char _k_phys_start;
-extern char _k_virt_start;
-extern char _end;
-	memblock_reserve(round_down((phys_addr_t)&_k_phys_start, PAGE_SIZE),
-					round_up((phys_addr_t)&_end, PAGE_SIZE) -
-					round_down((phys_addr_t)&_k_virt_start, PAGE_SIZE));
+	memblock_reserve((phys_addr_t)&_k_phys_start,
+					(phys_addr_t)&_end - (phys_addr_t)&_k_virt_start);
 
 	/*
 	 * The first 4Kb of memory is a BIOS owned area, but generally it is
@@ -155,7 +155,11 @@ extern char _end;
 	// memblock_x86_reserve_range_setup_data();
 
 	// reserve_ibft_region();
-	// reserve_bios_regions();
+	// void __init reserve_bios_regions(void)
+	// {
+		phys_addr_t bios_start = 0x9F000;
+		memblock_reserve(bios_start, SZ_1M - bios_start);
+	// }
 	// trim_snb_memory();
 }
 
@@ -187,4 +191,7 @@ void __init setup_arch(char **cmdline_p)
 	 * early reservations have happened already.
 	 */
 	early_reserve_memory();
+
+
+	// myos_e820__memblock_setup();
 }

@@ -19,7 +19,7 @@ SYM_CODE_START(higher_half_entry)
 	pushq   $0
 
 	// here init single core ia32-e environment
-	callq	start_kernel
+	callq	x86_64_start_kernel
 
 	// here is the idle task for all cores
 	movq	$0,			%rdi

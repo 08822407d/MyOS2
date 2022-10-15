@@ -254,7 +254,7 @@ void submit(blkbuf_node_s * node)
 void wait_for_finish()
 {
 	__set_current_state(TASK_UNINTERRUPTIBLE);
-	schedule();
+	myos_schedule();
 }
 
 // long ATA_disk_open(unsigned controller, unsigned disk)
@@ -432,7 +432,7 @@ static unsigned long ATArq_deamon(unsigned long param)
 			cmd_out(node);
 		}
 
-		schedule();
+		myos_schedule();
 	}
 
 	return 1;
@@ -440,5 +440,5 @@ static unsigned long ATArq_deamon(unsigned long param)
 
 void init_ATArqd()
 {
-	thread = kernel_thread(ATArq_deamon, 0, 0, "ATArqd");
+	thread = myos_kernel_thread(ATArq_deamon, 0, 0, "ATArqd");
 }

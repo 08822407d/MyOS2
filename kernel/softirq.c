@@ -54,7 +54,7 @@ void do_softirq()
 	}
 }
 
-void softirq_init()
+void myos_softirq_init()
 {
 	softirq_status = 0;
 }

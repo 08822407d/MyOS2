@@ -37,8 +37,8 @@
 	void cstart(void);
 
 	/* memory.c */
-	void early_init_mm(void);
-	void init_mm(void);
+	void myos_early_init_mm(void);
+	void myos_init_mm(void);
 	page_s * alloc_pages(enum zone_type ,unsigned int order);
 	void free_pages(page_s * page, unsigned int order);
 	page_s * paddr_to_page(phys_addr_t paddr);
@@ -46,7 +46,7 @@
 	void page_free(page_s *);
 
 	/* video.c */
-	void init_video(void);
+	void myos_init_video(void);
 
 	/* functions defined in architecture-dependent files. */
 	void prot_bsp_init(void);
@@ -56,13 +56,13 @@
 	void unregister_softirq(unsigned sirq);
 	void set_softirq_status(unsigned sirq);
 	uint64_t get_softirq_status(void);
-	void softirq_init(void);
+	void myos_softirq_init(void);
 
 	/* timer.c */
 	void init_timer(timer_s * timer,void (* func)(void * data),void *data,unsigned long expire_jiffies);
 	void add_timer(timer_s * timer);
 	void del_timer(timer_s * timer);
-	void timer_init(void);
+	void myos_timer_init(void);
 	void do_timer(void * data);
 
 

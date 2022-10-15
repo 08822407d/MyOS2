@@ -2484,14 +2484,14 @@
 		unsigned tail; // point to next unit of the last non-null
 	} task_queue_s;
 	
-	void early_init_task(size_t lcpu_nr);
-	void init_task(size_t lcpu_nr);
-	void preinit_arch_task(void);
-	void init_arch_task(size_t cpu_idx);
-	unsigned long gen_newpid(void);
-	void __switch_to(task_s *curr, task_s *target);
-	void switch_to(task_s *curr, task_s *target);
-	void idle_enqueue(task_s *idle);
+	void myos_early_init_task(size_t lcpu_nr);
+	void myos_init_task(size_t lcpu_nr);
+	void myos_preinit_arch_task(void);
+	void myos_init_arch_task(size_t cpu_idx);
+	unsigned long myos_gen_newpid(void);
+	void __myos_switch_to(task_s *curr, task_s *target);
+	void myos_switch_to(task_s *curr, task_s *target);
+	void myos_idle_enqueue(task_s *idle);
 	task_s *idle_dequeue(void);
 
 #endif

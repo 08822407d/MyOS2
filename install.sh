@@ -37,14 +37,14 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	objcopy --only-keep-debug shell shell.debug
 	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shell shell.bin
 	# copy files to virt-disk
-	if [ ! -f "/dev/dm-0" ]; then
+	if [ -e "/dev/dm-0" ]; then
 		echo "installing on virtual disk"
 		sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
 		install_files
 		sudo umount /mnt
 	fi
 	# copy files to sata phys-disk
-	if [ ! -f "/dev/dm-0" ]; then
+	if [ -e "/dev/sda1" ]; then
 		echo "installing on physical disk"
 		sudo mount /dev/sda1 /mnt -o uid=$USER,gid=$USER
 		install_files

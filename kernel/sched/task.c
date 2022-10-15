@@ -23,7 +23,7 @@ extern char _ebss;
 size_t			cpustack_off;
 PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
-// in early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
+// in myos_early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
 mm_s			task0_mm = 
 {
@@ -57,14 +57,14 @@ static void create_smp_idles(size_t cpu_idx)
 	list_init(&idletask->schedule_list, idletask);
 	list_init(&idletask->child_list, idletask);
 	list_hdr_init(&idletask->child_lhdr);
-	idletask->pid = gen_newpid();
+	idletask->pid = myos_gen_newpid();
 }
 
-void init_task(size_t lcpu_nr)
+void myos_init_task(size_t lcpu_nr)
 {
 	compute_consts();
 
-	preinit_arch_task();
+	myos_preinit_arch_task();
 
 	task_s *task0 = &task0_PCB.task;
 	
@@ -84,7 +84,7 @@ void init_task(size_t lcpu_nr)
 	for (int i = 0; i < lcpu_nr; i++)
 	{
 		create_smp_idles(i);
-		init_arch_task(i);
+		myos_init_arch_task(i);
 	}
 }
 
@@ -94,7 +94,7 @@ void compute_consts()
 	cpustack_off = (void *)&(base_p->cpudata.cpustack_p) - (void *)base_p;
 }
 
-void early_init_task(size_t lcpu_nr)
+void myos_early_init_task(size_t lcpu_nr)
 {
 	idle_tasks = myos_memblock_alloc_normal(lcpu_nr * sizeof(PCB_u *), sizeof(PCB_u *));
 	idle_tasks[0] = &task0_PCB;

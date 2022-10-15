@@ -443,7 +443,7 @@
 
 		// /* fs/nfsctl.c */
 
-		// /* fs/open.c */
+		/* fs/open.c */
 		// asmlinkage long sys_statfs(const char __user *path,
 		// 						struct statfs __user *buf);
 		// asmlinkage long sys_statfs64(const char __user *path, size_t sz,
@@ -474,7 +474,7 @@
 		// 						umode_t mode);
 		// asmlinkage long sys_openat2(int dfd, const char __user *filename,
 		// 							struct open_how *how, size_t size);
-		long sys_close(unsigned int fd);
+		asmlinkage long sys_close(unsigned int fd);
 		// asmlinkage long sys_close_range(unsigned int fd, unsigned int max_fd,
 		// 								unsigned int flags);
 		// asmlinkage long sys_vhangup(void);
@@ -493,13 +493,13 @@
 		// 							struct linux_dirent64 __user *dirent,
 		// 							unsigned int count);
 
-		// /* fs/read_write.c */
+		/* fs/read_write.c */
 		// asmlinkage long sys_llseek(unsigned int fd, unsigned long offset_high,
 		// 						unsigned long offset_low, loff_t __user *result,
 		// 						unsigned int whence);
-		long sys_lseek(unsigned int fd, off_t offset, unsigned int whence);
-		long sys_read(unsigned int fd, char *buf, size_t count);
-		long sys_write(unsigned int fd, const char *buf, size_t count);
+		asmlinkage long sys_lseek(unsigned int fd, off_t offset, unsigned int whence);
+		asmlinkage long sys_read(unsigned int fd, char *buf, size_t count);
+		asmlinkage long sys_write(unsigned int fd, const char *buf, size_t count);
 		// asmlinkage long sys_readv(unsigned long fd,
 		// 						const struct iovec __user *vec,
 		// 						unsigned long vlen);
@@ -597,8 +597,8 @@
 		// /* kernel/exec_domain.c */
 		// asmlinkage long sys_personality(unsigned int personality);
 
-		// /* kernel/exit.c */
-		long sys_exit(int error_code);
+		/* kernel/exit.c */
+		asmlinkage long sys_exit(int error_code);
 		// asmlinkage long sys_exit_group(int error_code);
 		// asmlinkage long sys_waitid(int which, pid_t pid,
 		// 						struct siginfo __user *infop,
@@ -737,12 +737,12 @@
 		// 										size_t sigsetsize);
 		// asmlinkage long sys_rt_sigqueueinfo(pid_t pid, int sig, siginfo_t __user *uinfo);
 
-		// /* kernel/sys.c */
+		/* kernel/sys.c */
 		// asmlinkage long sys_setpriority(int which, int who, int niceval);
 		// asmlinkage long sys_getpriority(int which, int who);
 		// asmlinkage long sys_reboot(int magic1, int magic2, unsigned int cmd,
 		// 						void __user *arg);
-		long sys_reboot(unsigned int cmd, void *arg);
+		asmlinkage long sys_reboot(unsigned int cmd, void *arg);
 		// asmlinkage long sys_setregid(gid_t rgid, gid_t egid);
 		// asmlinkage long sys_setgid(gid_t gid);
 		// asmlinkage long sys_setreuid(uid_t ruid, uid_t euid);
@@ -781,9 +781,9 @@
 		// asmlinkage long sys_adjtimex(struct __kernel_timex __user *txc_p);
 		// asmlinkage long sys_adjtimex_time32(struct old_timex32 __user *txc_p);
 
-		// /* kernel/sys.c */
-		long sys_getpid(void);
-		long sys_getppid(void);
+		/* kernel/sys.c */
+		asmlinkage long sys_getpid(void);
+		asmlinkage long sys_getppid(void);
 		// asmlinkage long sys_getuid(void);
 		// asmlinkage long sys_geteuid(void);
 		// asmlinkage long sys_getgid(void);
@@ -860,9 +860,9 @@
 		// /* mm/filemap.c */
 		// asmlinkage long sys_readahead(int fd, loff_t offset, size_t count);
 
-		// /* mm/nommu.c, also with MMU */
+		/* mm/nommu.c, also with MMU */
 		// asmlinkage long sys_brk(unsigned long brk);
-		long sys_sbrk(unsigned long brk);
+		asmlinkage long sys_sbrk(unsigned long brk);
 		// asmlinkage long sys_munmap(unsigned long addr, size_t len);
 		// asmlinkage long sys_mremap(unsigned long addr,
 		// 						unsigned long old_len, unsigned long new_len,
@@ -897,10 +897,10 @@
 
 		// asmlinkage long sys_clone3(struct clone_args __user *uargs, size_t size);
 
-		long sys_execve(const char *filename, const char *const *argv,
+		asmlinkage long sys_execve(const char *filename, const char *const *argv,
 						const char *const *envp);
 
-		// /* mm/fadvise.c */
+		/* mm/fadvise.c */
 		// asmlinkage long sys_fadvise64_64(int fd, loff_t offset, loff_t len, int advice);
 
 		// /* mm/, CONFIG_MMU only */
@@ -957,7 +957,7 @@
 
 		// asmlinkage long sys_wait4(pid_t pid, int __user *stat_addr,
 		// 						int options, struct rusage __user *ru);
-		long sys_wait4(pid_t pid, int *stat_addr, int options, void *ru);
+		asmlinkage long sys_wait4(pid_t pid, int *stat_addr, int options, void *ru);
 		// asmlinkage long sys_prlimit64(pid_t pid, unsigned int resource,
 		// 							const struct rlimit64 __user *new_rlim,
 		// 							struct rlimit64 __user *old_rlim);
@@ -1087,8 +1087,8 @@
 		// * include/uapi/asm-generic/unistd.h and wanted by >= 1 arch
 		// */
 
-		// /* __ARCH_WANT_SYSCALL_NO_AT */
-		long sys_open(const char *filename, int flags, umode_t mode);
+		/* __ARCH_WANT_SYSCALL_NO_AT */
+		asmlinkage long sys_open(const char *filename, int flags, umode_t mode);
 		// asmlinkage long sys_link(const char __user *oldname,
 		// 						const char __user *newname);
 		// asmlinkage long sys_unlink(const char __user *pathname);
@@ -1161,14 +1161,14 @@
 		// asmlinkage long sys_epoll_wait(int epfd, struct epoll_event __user *events,
 		// 							int maxevents, int timeout);
 		// asmlinkage long sys_ustat(unsigned dev, struct ustat __user *ubuf);
-		long sys_vfork(void);
+		asmlinkage long sys_vfork(void);
 		// asmlinkage long sys_recv(int, void __user *, size_t, unsigned);
 		// asmlinkage long sys_send(int, void __user *, size_t, unsigned);
 		// asmlinkage long sys_oldumount(char __user *name);
 		// asmlinkage long sys_uselib(const char __user *library);
 		// asmlinkage long sys_sysfs(int option,
 		// 						unsigned long arg1, unsigned long arg2);
-		long sys_fork(void);
+		asmlinkage long sys_fork(void);
 
 		// /* obsolete: kernel/time/time.c */
 		// asmlinkage long sys_stime(__kernel_old_time_t __user *tptr);
@@ -1387,8 +1387,8 @@
 
 
 	#ifndef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
-		long myos_no_system_call(void);
-		long myos_sys_putstring(char *string);
+		asmlinkage long myos_no_system_call(void);
+		asmlinkage long myos_sys_putstring(char *string);
 	#endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
 
 #endif

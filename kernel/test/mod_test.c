@@ -136,10 +136,10 @@
 
 // void kernthd_test()
 // {
-// 	kernel_thread(test_task_a, 0, 0);
-// 	kernel_thread(test_task_b, 0, 0);
-// 	kernel_thread(test_task_c, 0, 0);
-// 	kernel_thread(test_task_d, 0, 0);
+// 	myos_kernel_thread(test_task_a, 0, 0);
+// 	myos_kernel_thread(test_task_b, 0, 0);
+// 	myos_kernel_thread(test_task_c, 0, 0);
+// 	myos_kernel_thread(test_task_d, 0, 0);
 // }
 
 // void kmalloc_kfree_test()
@@ -167,5 +167,5 @@
 
 // void disk_drv_test()
 // {
-// 	kernel_thread(ide_read_test, 0, 0);
+// 	myos_kernel_thread(ide_read_test, 0, 0);
 // }

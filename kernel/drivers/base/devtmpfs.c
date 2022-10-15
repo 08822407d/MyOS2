@@ -368,7 +368,7 @@ static void devtmpfs_work_loop(void)
 			// spin_lock(&req_lock);
 		}
 		__set_current_state(TASK_INTERRUPTIBLE);
-		schedule();
+		myos_schedule();
 	}
 }
 
@@ -423,7 +423,7 @@ int devtmpfs_init(void)
 	}
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-	thread = kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
+	thread = myos_kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);
 	// } else {

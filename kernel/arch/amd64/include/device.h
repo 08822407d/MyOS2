@@ -12,7 +12,7 @@
 	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 
 	/* device.c */
-	void devices_init(void);
+	void myos_devices_init(void);
 
 	/* keyboard.c */
 	void init_keyboard(void);

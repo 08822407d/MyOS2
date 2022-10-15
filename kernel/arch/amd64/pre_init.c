@@ -52,10 +52,12 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 
 static void init_memblock(mb_memmap_s * e820_info)
 {
+	extern mb_memmap_s *e820_table;
 	kparam.kernel_phy_base	= (phys_addr_t)&_k_phys_start;
 	kparam.kernel_vir_base	= (phys_addr_t)&_k_virt_start;
 	kparam.kernel_vir_end	= (phys_addr_t)&_end;
 	kparam.init_flags.memblock = 1;
+	e820_table = e820_info;
 
 	int i;
 	mb_memmap_s * mb_mmap_ent;
@@ -72,11 +74,6 @@ static void init_memblock(mb_memmap_s * e820_info)
 		kparam.max_phys_mem = framebuffer.FB_phybase + framebuffer.FB_size;
 	max_low_pfn =
 	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
-
-	// some part of memmory space is reserved
-	memblock_reserve(round_down(kparam.kernel_phy_base, PAGE_SIZE),
-					round_up(kparam.kernel_vir_end, PAGE_SIZE) -
-					round_down(kparam.kernel_vir_base, PAGE_SIZE));
 
 	kparam.init_flags.memblock = 1;
 }
@@ -145,7 +142,7 @@ static void cpuid_info(void)
 	cpuinfo.max_extend_opcode = CpuFacName[0];
 }
 
-void early_init_sytem(void)
+void myos_early_init_sytem(void)
 {
 	memset((void *)&_bss, 0, &_ebss - &_bss);
 	enable_AMD_syscall();

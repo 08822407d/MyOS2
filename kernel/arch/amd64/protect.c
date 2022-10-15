@@ -273,7 +273,7 @@ static void init_arch_data(size_t cpu_idx)
 	init_idt();
 }
 
-void reload_arch_data(size_t cpu_idx)
+void myos_reload_arch_data(size_t cpu_idx)
 {
 	load_idt(&idt_ptr);
 	load_gdt(&gdt_ptr);
@@ -286,7 +286,7 @@ void reload_arch_data(size_t cpu_idx)
 	kparam.arch_init_flags.arch_data = 1;
 }
 
-void early_init_arch_data(size_t lcpu_nr)
+void myos_early_init_arch_data(size_t lcpu_nr)
 {
 	size_t gdt_size = GDT_SIZE(lcpu_nr)* sizeof(segdesc64_T);
 	gdt = myos_memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));
@@ -298,16 +298,16 @@ void early_init_arch_data(size_t lcpu_nr)
 		init_tss(i);
 }
 
-void init_arch(size_t cpu_idx)
+void myos_init_arch(size_t cpu_idx)
 {
 	init_arch_data(cpu_idx);
-	reload_arch_data(cpu_idx);
+	myos_reload_arch_data(cpu_idx);
 }
 
 /*==============================================================================================*
  *									systemcall mechanism env initiate							*
  *==============================================================================================*/
-void arch_system_call_init()
+void myos_arch_system_call_init()
 {
 	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
 	// init MSR sf_regs related to sysenter/sysexit

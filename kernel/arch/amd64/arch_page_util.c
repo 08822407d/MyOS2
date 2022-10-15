@@ -26,7 +26,7 @@ phys_addr_t kernel_cr3 = 0;
 
 static void init_fixed_kernel_pgmap();
 
-void init_arch_page()
+void myos_init_arch_page()
 {
 	while (!kparam.arch_init_flags.arch_data)
 	{
@@ -77,7 +77,7 @@ static void init_fixed_kernel_pgmap()
 	int e = 0;
 }
 
-void unmap_kernel_lowhalf()
+void myos_unmap_kernel_lowhalf()
 {
 	memset(KERN_PML4, 0, PGENT_SIZE / 2);
 }
@@ -104,7 +104,7 @@ void pg_load_cr3(reg_t cr3)
 						);
 }
 
-void refresh_arch_page(void)
+void myos_refresh_arch_page(void)
 {
 	uint64_t tempreg;
 	__asm__ __volatile__(	"movq	%%cr3,	%0	\n\t"
@@ -223,7 +223,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		pde_ptr->ENT = round_down(phys, PAGE_SIZE) | attr | ARCH_PG_PAT;
 	}
 
-	refresh_arch_page();
+	myos_refresh_arch_page();
 
 fail_return:
 	return ret_val;

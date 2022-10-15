@@ -9,14 +9,14 @@
 	#include <linux/kernel/linkage.h>
 	#include <asm/page_types.h>
 
-	// #ifdef __i386__
-		#include <linux/mm/pfn.h>
-	// 	/*
-	// 	* Reserved space for vmalloc and iomap - defined in asm/page.h
-	// 	*/
-	// 	#define MAXMEM_PFN	PFN_DOWN(MAXMEM)
-	// 	#define MAX_NONPAE_PFN	(1 << 20)
-	// #endif /* __i386__ */
+	#ifdef __i386__
+	#	include <linux/mm/pfn.h>
+		/*
+		* Reserved space for vmalloc and iomap - defined in asm/page.h
+		*/
+	#	define MAXMEM_PFN	PFN_DOWN(MAXMEM)
+	#	define MAX_NONPAE_PFN	(1 << 20)
+	#endif /* __i386__ */
 
 	// #define PARAM_SIZE 4096		/* sizeof(struct boot_params) */
 
@@ -24,7 +24,7 @@
 	// #define OLD_CL_ADDRESS		0x020	/* Relative to real mode data */
 	// #define NEW_CL_POINTER		0x228	/* Relative to real mode data */
 
-	// #ifndef __ASSEMBLY__
+	#ifndef __ASSEMBLY__
 
 		// #include <asm/bootparam.h>
 		// #include <asm/x86_init.h>
@@ -65,7 +65,7 @@
 		// 	static inline void x86_ce4100_early_setup(void) { }
 		// #endif
 
-		// #ifndef _SETUP
+	#	ifndef _SETUP
 
 			// #include <asm/espfix.h>
 			// #include <linux/kernel.h>
@@ -130,14 +130,14 @@
 			// 	}
 
 			// extern void probe_roms(void);
-			// #ifdef __i386__
-			// 	asmlinkage void __init i386_start_kernel(void);
-			// #else
-			// 	asmlinkage void __init x86_64_start_kernel(char *real_mode);
-			// 	asmlinkage void __init x86_64_start_reservations(char *real_mode_data);
-			// #endif /* __i386__ */
+	// #		ifdef __i386__
+	// 			asmlinkage void __init i386_start_kernel(void);
+	// #		else
+	// 			asmlinkage void __init x86_64_start_kernel(char *real_mode);
+	// 			// asmlinkage void __init x86_64_start_reservations(char *real_mode_data);
+	// #		endif /* __i386__ */
 
-		// #endif /* _SETUP */
+	#	endif /* _SETUP */
 
 	// #else
 
@@ -148,6 +148,6 @@
 		// 			.size .brk.name,.-1b;						\
 		// 			.popsection
 
-	// #endif /* __ASSEMBLY__ */
+	#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_X86_SETUP_H */

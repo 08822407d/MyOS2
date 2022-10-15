@@ -160,7 +160,7 @@ void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
 	while (1);
 
 PF_finish:
-	refresh_arch_page();
+	myos_refresh_arch_page();
 	return;
 }
 
@@ -307,7 +307,7 @@ int unregister_IPI(unsigned long irq)
 /*==============================================================================================*
  *											init										 		*
  *==============================================================================================*/
-void init_bsp_intr()
+void myos_init_bsp_intr()
 {
 	init_lapic();
 	//init local apic
@@ -319,7 +319,7 @@ void init_bsp_intr()
 	IOAPIC_init();
 }
 
-void init_percpu_intr()
+void myos_init_percpu_intr()
 {
 	init_lapic();
 	// LVT_timer_init();

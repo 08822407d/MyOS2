@@ -288,7 +288,7 @@ static int __init memblock_add_range(memblock_type_s *type,
  * Return:
  * 0 on success, -errno on failure.
  */
-int memblock_add(phys_addr_t base, phys_addr_t size)
+int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
 {
 	while (!kparam.init_flags.memblock)
 	{
@@ -298,7 +298,7 @@ int memblock_add(phys_addr_t base, phys_addr_t size)
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
-int __init memblock_reserve(phys_addr_t base, phys_addr_t size)
+int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
 {
 	while (!kparam.init_flags.memblock)
 	{

@@ -174,27 +174,27 @@
 	} arch_init_flags_s;
 
 	/* early_init.c */
-	void early_init_sytem(void);
+	void myos_early_init_sytem(void);
 	/* protect.c */
 	phys_addr_t virt2phys(virt_addr_t);
 	virt_addr_t phys2virt(phys_addr_t);
-	void early_init_arch_data(size_t lcpu_nr);
+	void myos_early_init_arch_data(size_t lcpu_nr);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
-	void init_arch(size_t cpu_idx);
-	void reload_arch_data(size_t cpu_idx);
-	void arch_system_call_init(void);
+	void myos_init_arch(size_t cpu_idx);
+	void myos_reload_arch_data(size_t cpu_idx);
+	void myos_arch_system_call_init(void);
 
 	/* arch_page_util. */
 	struct mm;
 	typedef struct mm mm_s;
 	void arch_page_preinit(void);
-	void init_arch_page(void);
+	void myos_init_arch_page(void);
 	reg_t read_cr3(void);
 	void pg_load_cr3(reg_t cr3);
-	void refresh_arch_page(void);
-	void unmap_kernel_lowhalf(void);
+	void myos_refresh_arch_page(void);
+	void myos_unmap_kernel_lowhalf(void);
 	int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
 	int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
 	int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
@@ -271,9 +271,9 @@
 					const char *taskname, task_s **ret_child);
 	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
-	void schedule(void);
+	void myos_schedule(void);
 	void try_sched(void);
-	task_s *kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
+	task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
 					unsigned long flags, const char *taskname);
 	unsigned long kernel_init(unsigned long arg);
 	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
@@ -291,16 +291,16 @@
 					 unsigned long parameter, hw_int_controller_s * controller,
 					 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_IPI(unsigned long irq);
-	void init_bsp_intr(void);
-	void init_percpu_intr(void);
+	void myos_init_bsp_intr(void);
+	void myos_init_percpu_intr(void);
 
 	/* smp.c */
 	void init_cpu(void);
-	void early_init_smp(size_t lcpu_nr);
-	void init_smp(size_t lcpu_nr);
+	void myos_early_init_smp(size_t lcpu_nr);
+	void myos_init_smp(size_t lcpu_nr);
 	void start_SMP(uint64_t apic_id);
-	void startup_smp(void);
-	void percpu_self_config(size_t cpu_idx);
+	void myos_startup_smp(void);
+	void myos_percpu_self_config(size_t cpu_idx);
 
 	/* utils.c */
 	bool verify_area(unsigned char* addr, unsigned long size);

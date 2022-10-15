@@ -1,13 +1,13 @@
 #include <linux/mm/page.h>
 #include <linux/mm/myos_slab.h>
 
-void early_init_mm()
+void myos_early_init_mm()
 {
 	preinit_page();
 	preinit_slab();
 }
 
-void init_mm()
+void myos_init_mm()
 {
 	init_page();
 	init_slab();

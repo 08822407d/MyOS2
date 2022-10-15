@@ -37,7 +37,7 @@
 // #include <linux/posix_acl.h>
 // #include <linux/hash.h>
 #include <linux/kernel/bitops.h>
-// #include <linux/init_task.h>
+// #include <linux/myos_init_task.h>
 // #include <linux/uaccess.h>
 #include <linux/fs/internal.h>
 #include <linux/fs/mount.h>

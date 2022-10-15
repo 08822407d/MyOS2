@@ -147,46 +147,48 @@ void myos_zone_sizes_init(void)
 	free_area_init(max_zone_pfns);
 }
 
-void __init start_kernel(void)
+asmlinkage void __init start_kernel(void)
 {
 	// char *command_line;
 	// char *after_dashes;
 
 	size_t cpu_idx = 0;
 
-	early_init_sytem();
-	// setup_arch(NULL);
+	myos_early_init_sytem();
+	setup_arch(NULL);
 
-	early_init_task(kparam.nr_lcpu);
-	early_init_arch_data(kparam.nr_lcpu);
-	early_init_smp(kparam.nr_lcpu);
+	myos_early_init_task(kparam.nr_lcpu);
+	myos_early_init_arch_data(kparam.nr_lcpu);
+	myos_early_init_smp(kparam.nr_lcpu);
 
-	init_arch(cpu_idx);
-	init_arch_page();
+	myos_init_arch(cpu_idx);
+	myos_init_arch_page();
 
-	init_video();
+	myos_init_video();
 
-	early_init_mm();
-	init_mm();
+	myos_early_init_mm();
+	myos_init_mm();
 
-	init_task(kparam.nr_lcpu);
-	init_smp(kparam.nr_lcpu);
+	myos_init_task(kparam.nr_lcpu);
+	myos_init_smp(kparam.nr_lcpu);
 	
 	// enable bsp's apic
-	init_bsp_intr();
+	myos_init_bsp_intr();
 
+#ifdef START_WAIT
 	size_t delay = 0;
 	for (unsigned i = 0; i < -1; i++)
 		delay++;
+#endif
 	
 	// post init
-	softirq_init();
-	timer_init();
-	devices_init();
+	myos_softirq_init();
+	myos_timer_init();
+	myos_devices_init();
 
 	// color_printk(BLACK, BLUE, "BSP env initiated.\n");
 
-	startup_smp();
+	myos_startup_smp();
 
 	vfs_caches_init();
 
@@ -198,20 +200,20 @@ void __init start_kernel(void)
  *==============================================================================================*/
 void idle(size_t cpu_idx)
 {	
-	reload_arch_data(cpu_idx);
-	init_percpu_intr();
-	percpu_self_config(cpu_idx);
-	arch_system_call_init();
+	myos_reload_arch_data(cpu_idx);
+	myos_init_percpu_intr();
+	myos_percpu_self_config(cpu_idx);
+	myos_arch_system_call_init();
 
 	atomic_inc(&boot_counter);
 	while (boot_counter.value != kparam.nr_lcpu);
-	unmap_kernel_lowhalf();
-	refresh_arch_page();
+	myos_unmap_kernel_lowhalf();
+	myos_refresh_arch_page();
 
 	if (cpu_idx == 0)
-		kernel_thread(kernel_init, 0, 0, "init");
+		myos_kernel_thread(kernel_init, 0, 0, "init");
 	
-	schedule();
+	myos_schedule();
 
 	while (1)
 		hlt();
@@ -263,7 +265,7 @@ unsigned long kernel_init(unsigned long arg)
 
 	get_ata_info();
 
-	// schedule();
+	// myos_schedule();
 	// while (1)
 	// 	hlt();
 	

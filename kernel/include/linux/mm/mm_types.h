@@ -574,7 +574,7 @@
 
 	// 		struct list_head mmlist; /* List of maybe swapped mm's.	These
 	// 								* are globally strung together off
-	// 								* init_mm.mmlist, and are protected
+	// 								* myos_init_mm.mmlist, and are protected
 	// 								* by mmlist_lock
 	// 								*/
 
@@ -689,7 +689,7 @@
 	// 	unsigned long cpu_bitmap[];
 	// };
 
-	// extern struct mm_struct init_mm;
+	// extern struct mm_struct myos_init_mm;
 
 	// /* Pointer magic because the dynamic array size confuses some compilers. */
 	// static inline void mm_init_cpumask(struct mm_struct *mm)

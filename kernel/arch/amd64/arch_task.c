@@ -40,7 +40,7 @@ unsigned long	curr_pid;
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void preinit_arch_task()
+void myos_preinit_arch_task()
 {
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
@@ -48,7 +48,7 @@ void preinit_arch_task()
 	init_spin_lock(&newpid_lock);
 }
 
-void init_arch_task(size_t cpu_idx)
+void myos_init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
@@ -58,7 +58,7 @@ void init_arch_task(size_t cpu_idx)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long gen_newpid()
+unsigned long myos_gen_newpid()
 {
 	lock_spin_lock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
@@ -88,7 +88,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
 }
 
-inline __always_inline void __switch_to(task_s * curr, task_s * target)
+inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
@@ -111,7 +111,7 @@ inline __always_inline void __switch_to(task_s * curr, task_s * target)
 
 }
 
-void inline __always_inline switch_to(task_s * curr, task_s * target)
+void inline __always_inline myos_switch_to(task_s * curr, task_s * target)
 {
 	__asm__ __volatile__(	"pushq	%%rbp				\n\t"
 							"pushq	%%rax				\n\t"
@@ -120,7 +120,7 @@ void inline __always_inline switch_to(task_s * curr, task_s * target)
 							"leaq	1f(%%rip),	%%rax	\n\t"
 							"movq	%%rax,	%1			\n\t"
 							"pushq	%3					\n\t"
-							"jmp	__switch_to			\n\t"
+							"jmp	__myos_switch_to			\n\t"
 							"1:							\n\t"
 							"popq	%%rax				\n\t"
 							"popq	%%rbp				\n\t"
@@ -294,7 +294,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	list_hdr_init(&child_task->wait_childexit);
 	child_task->name = taskname;
 	child_task->__state = TASK_UNINTERRUPTIBLE;
-	child_task->pid = gen_newpid();
+	child_task->pid = myos_gen_newpid();
 	child_task->vruntime = 0;
 	child_task->parent = parent_task;
 	child_task->fs = parent_task->fs;
@@ -457,13 +457,13 @@ do_exit_again:
 	sti();
 
 	curr_tsk->__state = EXIT_ZOMBIE;
-	schedule();
+	myos_schedule();
 
 	goto do_exit_again;
 	return 0;
 }
 
-task_s *kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
+task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
 				unsigned long flags, const char *taskname)
 {
 	task_s *ret_val = NULL;
@@ -502,7 +502,7 @@ stack_frame_s * get_stackframe(task_s * task_p)
 	return (stack_frame_s *)(pcb_p + 1) - 1;
 }
 
-void schedule()
+void myos_schedule()
 {
 	per_cpudata_s *	cpudata_p = curr_cpu;
 	task_s *		curr_task = cpudata_p->curr_task;
@@ -549,7 +549,7 @@ void schedule()
 		curr_task->flags &= ~PF_NEED_SCHEDULE;
 
 		switch_mm(curr_task, next_task);
-		switch_to(curr_task, next_task);
+		myos_switch_to(curr_task, next_task);
 	}
 }
 
@@ -576,5 +576,5 @@ void try_sched()
 
 	// normal sched
 	if (curr_task->flags & PF_NEED_SCHEDULE)
-		schedule();
+		myos_schedule();
 }

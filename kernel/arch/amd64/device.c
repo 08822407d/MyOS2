@@ -15,7 +15,7 @@ void init_cdev_intr(void);
 void init_bdev_intr(void);
 
 
-void devices_init()
+void myos_devices_init()
 {
 	init_intr();
 

@@ -127,13 +127,13 @@
 	// 	unsigned long constant;
 	// };
 
-	// #if defined(CC_USING_HOTPATCH)
-	// #define notrace __attribute__((hotpatch(0, 0)))
-	// #elif defined(CC_USING_PATCHABLE_FUNCTION_ENTRY)
-	// #define notrace __attribute__((patchable_function_entry(0, 0)))
-	// #else
-	// #define notrace __attribute__((__no_instrument_function__))
-	// #endif
+	#if defined(CC_USING_HOTPATCH)
+	#	define notrace __attribute__((hotpatch(0, 0)))
+	#elif defined(CC_USING_PATCHABLE_FUNCTION_ENTRY)
+	#	define notrace __attribute__((patchable_function_entry(0, 0)))
+	#else
+	#	define notrace __attribute__((__no_instrument_function__))
+	#endif
 
 	// /*
 	//  * it doesn't make sense on ARM (currently the only user of __naked)

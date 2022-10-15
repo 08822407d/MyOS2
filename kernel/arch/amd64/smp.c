@@ -13,7 +13,7 @@
 
 cpudata_u *	percpu_data;
 
-void early_init_smp(size_t lcpu_nr)
+void myos_early_init_smp(size_t lcpu_nr)
 {
 	percpu_data	= myos_memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
 }
@@ -42,7 +42,7 @@ static void init_percpu_data(size_t cpu_idx)
 	arch_cpuinfo->tss = tss_ptr_arr + cpu_idx;
 }
 
-void init_smp(size_t lcpu_nr)
+void myos_init_smp(size_t lcpu_nr)
 {
 	// copy ap_boot entry code to its address
 	extern char _APboot_phys_start;
@@ -59,7 +59,7 @@ void init_smp(size_t lcpu_nr)
 	}
 }
 
-void percpu_self_config(size_t cpu_idx)
+void myos_percpu_self_config(size_t cpu_idx)
 {
 	cpudata_u * cpudata_u_p = percpu_data + cpu_idx;
 	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
@@ -67,10 +67,10 @@ void percpu_self_config(size_t cpu_idx)
 	wrgsbase((reg_t)cpudata_u_p);
 	// tasks
 
-	refresh_arch_page();
+	myos_refresh_arch_page();
 }
 
-void startup_smp()
+void myos_startup_smp()
 {
 	wrmsr(0x830,0xc4500);	//INIT IPI
 	wrmsr(0x830,0xc4620);	//Start-up IPI

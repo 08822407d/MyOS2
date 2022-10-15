@@ -63,7 +63,7 @@ void test_timer(void * data)
 	color_printk(BLUE,WHITE,"test_timer");
 }
 
-void timer_init()
+void myos_timer_init()
 {
 	jiffies = 0;
 	list_hdr_init(&timer_lhdr);

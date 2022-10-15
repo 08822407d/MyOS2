@@ -20,19 +20,19 @@ SECTIONS
 	__k_unpaged__kern_unpaged_start = .;
 	.unpaged_text :
 	{
-		*/head_64.S.o(.text);
+		*/myos_head_64.S.o(.text);
 	}
 	.unpaged_data ALIGN(0x1000) :
 	{
-		*/head_64.S.o(.data .rodata*);
+		*/myos_head_64.S.o(.data .rodata*);
 	}
 	.unpaged_bss  ALIGN(0x1000) :
 	{
-		*/head_64.S.o(.bss COMMON);
+		*/myos_head_64.S.o(.bss COMMON);
 	}
 	.unpaged_eh_frame ALIGN(0x1000) :
 	{
-		*/head_64.S.o(.eh_frame);
+		*/myos_head_64.S.o(.eh_frame);
 	}
 	__k_unpaged__kern_unpaged_end = .;
 
@@ -41,7 +41,7 @@ SECTIONS
 	.APboot_text ALIGN(0x1000) : AT(apb_start_viraddr)
 	{
 		_APboot_text = apb_start_viraddr - _APboot_phys_start;
-		KEEP(*/AP_boot.S.o(.text));
+		KEEP(*/myos_AP_boot.S.o(.text));
 		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
 	}
 	. = _APboot_etext;

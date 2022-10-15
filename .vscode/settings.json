@@ -176,7 +176,8 @@
 		"syscalls_64.h": "c",
 		"syscalls.h": "c",
 		"unistd_64.h": "c",
-		"page_types.h": "c"
+		"page_types.h": "c",
+		"api.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

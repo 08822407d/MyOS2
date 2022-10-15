@@ -46,7 +46,7 @@
 // #include <linux/debugfs.h>
 // #include <linux/delayacct.h>
 // #include <linux/energy_model.h>
-// #include <linux/init_task.h>
+// #include <linux/myos_init_task.h>
 // #include <linux/kprobes.h>
 // #include <linux/kthread.h>
 // #include <linux/membarrier.h>
