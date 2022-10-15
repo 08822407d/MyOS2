@@ -95,6 +95,8 @@ static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type
 		unsigned long start_pfn;
 		unsigned long end_pfn;
 
+		if (entry->size == 0)
+			break;
 		if (entry->type != type)
 			continue;
 

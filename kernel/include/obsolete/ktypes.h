@@ -26,7 +26,6 @@
 	typedef struct
 	{
 		// mm
-		int		buddy;
 		int		slab;
 		// task
 		int		idle_task;

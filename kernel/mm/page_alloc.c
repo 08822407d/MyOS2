@@ -143,7 +143,7 @@ const char * const migratetype_names[MIGRATE_TYPES] = {
 
 recurs_lock_T	page_alloc_lock;
 
-pglist_data_s	pg_list;
+pg_data_t		pg_list;
 page_s *		mem_map;
 
 /*==============================================================================================*
@@ -530,8 +530,8 @@ void preinit_page()
 	pg_list.node_spanned_pages = max_low_pfn;
 	mem_map =
 	pg_list.node_mem_map = (void *)myos_phys2virt(
-			memblock_alloc_range_nid(sizeof(page_s) * pg_list.node_spanned_pages,
-								sizeof(size_t), MAX_DMA_PFN, 0, 0, false));
+			memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
+					sizeof(size_t), MAX_DMA_PFN, 0));
 	memset(mem_map, 0, sizeof(page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{
@@ -540,15 +540,3 @@ void preinit_page()
 		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
 	}
 }
-
-void init_page()
-{
-	myos_zone_sizes_init();
-
-	memblock_free_all();
-
-	// set init flag
-	kparam.init_flags.buddy = 1;
-}
-
-

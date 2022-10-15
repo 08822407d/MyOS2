@@ -36,13 +36,8 @@ void preinit_slab()
 	}
 }
 
-void init_slab()
+void myos_init_slab()
 {
-	#ifdef DEBUG
-		// make sure have init page management
-		while (!kparam.init_flags.buddy);
-	#endif
-
 	init_recurs_lock(&slab_alloc_lock);
 	list_hdr_init(&slabcache_lhdr);
 

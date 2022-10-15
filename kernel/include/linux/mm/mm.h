@@ -2554,7 +2554,7 @@
 	// extern void setup_per_zone_wmarks(void);
 	// extern void calculate_min_free_kbytes(void);
 	// extern int __meminit init_per_zone_wmark_min(void);
-	// extern void mem_init(void);
+	extern void mem_init(void);
 	// extern void __init mmap_init(void);
 	// extern void show_mem(unsigned int flags, nodemask_t *nodemask);
 	// extern long si_mem_available(void);

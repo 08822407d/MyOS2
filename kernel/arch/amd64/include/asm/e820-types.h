@@ -59,6 +59,7 @@
 		u64			addr;
 		u64			size;
 		enum e820_type		type;
+		u32			align;
 	} e820_entry_s;
 
 	// /*

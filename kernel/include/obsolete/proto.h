@@ -38,7 +38,6 @@
 
 	/* memory.c */
 	void myos_early_init_mm(void);
-	void myos_init_mm(void);
 	page_s * alloc_pages(enum zone_type ,unsigned int order);
 	void free_pages(page_s * page, unsigned int order);
 	page_s * paddr_to_page(phys_addr_t paddr);

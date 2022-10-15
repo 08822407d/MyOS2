@@ -40,6 +40,6 @@
 	} slab_cache_s;
 
 	void preinit_slab(void);
-	void init_slab(void);
+	void myos_init_slab(void);
 
 #endif /* _SLAB_H_ */

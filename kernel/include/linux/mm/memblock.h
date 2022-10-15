@@ -63,7 +63,7 @@
 	#ifdef CONFIG_NUMA
 		int nid;
 	#endif
-	} memblock_region_s;
+	} mmblk_rgn_s;
 
 	/**
 	 * struct memblock_type - collection of memory regions of certain type
@@ -77,9 +77,9 @@
 		unsigned long	cnt;
 		unsigned long	max;
 		phys_addr_t		total_size;
-		memblock_region_s *	regions;
+		mmblk_rgn_s *	regions;
 		char *name;
-	} memblock_type_s;
+	} mmblk_type_s;
 
 	/**
 	 * struct memblock - memblock allocator metadata
@@ -91,8 +91,8 @@
 	typedef struct memblock {
 		bool			bottom_up;  /* is bottom up direction? */
 		phys_addr_t		current_limit;
-		memblock_type_s	memory;
-		memblock_type_s	reserved;
+		mmblk_type_s	memory;
+		mmblk_type_s	reserved;
 	} memblock_s;
 
 	extern memblock_s memblock;
@@ -118,7 +118,7 @@
 	// int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
 	// #endif
 	// void memblock_trim_memory(phys_addr_t align);
-	bool memblock_overlaps_region(memblock_type_s *type,
+	bool memblock_overlaps_region(mmblk_type_s *type,
 					phys_addr_t base, phys_addr_t size);
 	// int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
 	// int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
@@ -136,7 +136,7 @@
 	// 			struct memblock_type *type_a,
 	// 			struct memblock_type *type_b, phys_addr_t *out_start,
 	// 			phys_addr_t *out_end, int *out_nid);
-	void __next_mem_range(uint64_t *idx, memblock_type_s *type_a, memblock_type_s *type_b,
+	void __next_mem_range(uint64_t *idx, mmblk_type_s *type_a, mmblk_type_s *type_b,
 							phys_addr_t *out_start, phys_addr_t *out_end);
 
 	// void __next_mem_range_rev(u64 *idx, int nid, enum memblock_flags flags,
@@ -277,20 +277,22 @@
 	// 				unsigned long  *end_pfn);
 	// void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
 	// 			unsigned long *out_end_pfn, int *out_nid);
+	void __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
+			unsigned long *out_end_pfn);
 
-	// /**
-	//  * for_each_mem_pfn_range - early memory pfn range iterator
-	//  * @i: an integer used as loop variable
-	//  * @nid: node selector, %MAX_NUMNODES for all nodes
-	//  * @p_start: ptr to ulong for start pfn of the range, can be %NULL
-	//  * @p_end: ptr to ulong for end pfn of the range, can be %NULL
-	//  * @p_nid: ptr to int for nid of the range, can be %NULL
-	//  *
-	//  * Walks over configured memory ranges.
-	//  */
-	// #define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)		\
-	// 	for (i = -1, __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid); \
-	// 		i >= 0; __next_mem_pfn_range(&i, nid, p_start, p_end, p_nid))
+	/**
+	 * for_each_mem_pfn_range - early memory pfn range iterator
+	 * @i: an integer used as loop variable
+	 * @nid: node selector, %MAX_NUMNODES for all nodes
+	 * @p_start: ptr to ulong for start pfn of the range, can be %NULL
+	 * @p_end: ptr to ulong for end pfn of the range, can be %NULL
+	 * @p_nid: ptr to int for nid of the range, can be %NULL
+	 *
+	 * Walks over configured memory ranges.
+	 */
+	#define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)	\
+		for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
+			i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
 
 	// #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
 	// void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
@@ -409,18 +411,11 @@
 	#	define ARCH_LOW_ADDRESS_LIMIT		0xffffffffUL
 	#endif
 
-	// phys_addr_t memblock_phys_alloc_range(phys_addr_t size, phys_addr_t align,
-	// 					phys_addr_t start, phys_addr_t end);
-	phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
-					phys_addr_t start, phys_addr_t end, int nid, bool exact_nid);
+	// phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
+	// 				phys_addr_t start, phys_addr_t end, int nid, bool exact_nid);
 	// phys_addr_t memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
-
-	// static __always_inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
-	// 							phys_addr_t align)
-	// {
-	// 	return memblock_phys_alloc_range(size, align, 0,
-	// 					MEMBLOCK_ALLOC_ACCESSIBLE);
-	// }
+	phys_addr_t memblock_alloc_range(phys_addr_t size,
+			phys_addr_t align, phys_addr_t start, phys_addr_t end);
 
 	// void *memblock_alloc_exact_nid_raw(phys_addr_t size, phys_addr_t align,
 	// 				phys_addr_t min_addr, phys_addr_t max_addr,
@@ -437,6 +432,7 @@
 	// 	return memblock_alloc_try_nid(size, align, MEMBLOCK_LOW_LIMIT,
 	// 					MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE);
 	// }
+	void *memblock_alloc(phys_addr_t size, phys_addr_t align);
 
 	// static inline void *memblock_alloc_raw(phys_addr_t size,
 	// 						phys_addr_t align)

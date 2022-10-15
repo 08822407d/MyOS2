@@ -61,6 +61,9 @@
 #include <asm/e820-api.h>
 #include <asm/setup.h>
 
+#include <obsolete/proto.h>
+#include <obsolete/glo.h>
+
 /*
  * max_low_pfn_mapped: highest directly mapped pfn < 4 GB
  * max_pfn_mapped:     highest directly mapped pfn > 4 GB
@@ -203,11 +206,23 @@ void __init setup_arch(char **cmdline_p)
 
 	// check_x2apic();
 
-	/* need this before calling reserve_initrd */
-	if (max_pfn > (1UL << (32 - PAGE_SHIFT)))
-		max_low_pfn = e820__end_of_low_ram_pfn();
-	else
+	// /* need this before calling reserve_initrd */
+	// if (max_pfn > (1UL << (32 - PAGE_SHIFT)))
+	// 	max_low_pfn = e820__end_of_low_ram_pfn();
+	// else
 		max_low_pfn = max_pfn;
 
 	// high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
+
+
+	myos_early_init_task(kparam.nr_lcpu);
+	myos_early_init_arch_data(kparam.nr_lcpu);
+	myos_early_init_smp(kparam.nr_lcpu);
+	myos_init_arch(0);
+	myos_init_arch_page();
+	myos_init_video();
+	myos_early_init_mm();
+
+	// x86_init.paging.pagetable_init();
+	zone_sizes_init();
 }

@@ -115,6 +115,7 @@
 
 #include <linux/kernel/sched.h>
 #include <linux/lib/string.h>
+#include <linux/mm/myos_slab.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -122,30 +123,38 @@
 #include "../arch/amd64/include/apic.h"
 #include "../arch/amd64/include/device.h"
 
-atomic_T boot_counter;
-
-extern void kjmp_to_doexecve();
-extern void do_name(void);
-
-void myos_zone_sizes_init(void)
+/*
+ * Set up kernel memory allocators
+ */
+static void __init mm_init(void)
 {
-	unsigned long max_zone_pfns[MAX_NR_ZONES];
-
-	memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
-
-#ifdef CONFIG_ZONE_DMA
-	max_zone_pfns[ZONE_DMA]		= min((unsigned long)MAX_DMA_PFN, max_low_pfn);
-#endif
-#ifdef CONFIG_ZONE_DMA32
-	max_zone_pfns[ZONE_DMA32]	= min(MAX_DMA32_PFN, max_low_pfn);
-#endif
-	max_zone_pfns[ZONE_NORMAL]	= max_low_pfn;
-#ifdef CONFIG_HIGHMEM
-	max_zone_pfns[ZONE_HIGHMEM]	= max_pfn;
-#endif
-
-	free_area_init(max_zone_pfns);
+	// /*
+	//  * page_ext requires contiguous pages,
+	//  * bigger than MAX_ORDER unless SPARSEMEM.
+	//  */
+	// page_ext_init_flatmem();
+	// init_mem_debugging_and_hardening();
+	// kfence_alloc_pool();
+	// report_meminit();
+	// stack_depot_early_init();
+	mem_init();
+	// mem_init_print_info();
+	// kmem_cache_init();
+	// /*
+	//  * page_owner must be initialized after buddy is ready, and also after
+	//  * slab is ready so that stack_depot_init() works properly
+	//  */
+	// page_ext_init_flatmem_late();
+	// kmemleak_init();
+	// pgtable_init();
+	// debug_objects_mem_init();
+	// vmalloc_init();
+	// /* Should be run before the first non-init thread is created */
+	// init_espfix_bsp();
+	// /* Should be run after espfix64 is set up. */
+	// pti_init();
 }
+
 
 asmlinkage void __init start_kernel(void)
 {
@@ -157,17 +166,9 @@ asmlinkage void __init start_kernel(void)
 	myos_early_init_sytem();
 	setup_arch(NULL);
 
-	myos_early_init_task(kparam.nr_lcpu);
-	myos_early_init_arch_data(kparam.nr_lcpu);
-	myos_early_init_smp(kparam.nr_lcpu);
+	mem_init();
 
-	myos_init_arch(cpu_idx);
-	myos_init_arch_page();
-
-	myos_init_video();
-
-	myos_early_init_mm();
-	myos_init_mm();
+	myos_init_slab();
 
 	myos_init_task(kparam.nr_lcpu);
 	myos_init_smp(kparam.nr_lcpu);
@@ -186,13 +187,9 @@ asmlinkage void __init start_kernel(void)
 	myos_timer_init();
 	myos_devices_init();
 
-	// color_printk(BLACK, BLUE, "BSP env initiated.\n");
-
 	myos_startup_smp();
 
 	vfs_caches_init();
-
-	atomic_set(&boot_counter, 0);
 }
 
 /*==============================================================================================*
@@ -205,8 +202,6 @@ void idle(size_t cpu_idx)
 	myos_percpu_self_config(cpu_idx);
 	myos_arch_system_call_init();
 
-	atomic_inc(&boot_counter);
-	while (boot_counter.value != kparam.nr_lcpu);
 	myos_unmap_kernel_lowhalf();
 	myos_refresh_arch_page();
 
@@ -254,6 +249,7 @@ static void do_basic_setup(void)
 extern int ata_probe();
 extern void get_ata_info(void);
 extern void init_ATArqd();
+extern void kjmp_to_doexecve();
 unsigned long kernel_init(unsigned long arg)
 {
 	sti();

@@ -113,7 +113,7 @@
 			// }
 
 			struct pglist_data;
-			typedef struct pglist_data pglist_data_s;
+			typedef struct pglist_data pg_data_t;
 
 	/*
 	 * Add a wild amount of padding here to ensure data fall into separate
@@ -534,7 +534,7 @@
 			// #ifdef CONFIG_NUMA
 			// 	int node;
 			// #endif
-				pglist_data_s *zone_pgdat;
+				pg_data_t *zone_pgdat;
 				// struct per_cpu_pages __percpu *per_cpu_pageset;
 				// struct per_cpu_zonestat __percpu *per_cpu_zonestats;
 				// /*
@@ -850,9 +850,9 @@
 			#ifdef CONFIG_FLATMEM /* means !SPARSEMEM */
 				// struct page *node_mem_map;
 				page_s *node_mem_map;
-			#ifdef CONFIG_PAGE_EXTENSION
-				struct page_ext *node_page_ext;
-			#endif
+			// #ifdef CONFIG_PAGE_EXTENSION
+			// 	struct page_ext *node_page_ext;
+			// #endif
 			#endif
 			// #if defined(CONFIG_MEMORY_HOTPLUG) || defined(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
 			// 	/*
@@ -1630,6 +1630,6 @@
 	#endif /* !__ASSEMBLY__ */
 
 
-	void myos_zone_sizes_init(void);
+	void zone_sizes_init(void);
 
 #endif /* _LINUX_MMZONE_H */
