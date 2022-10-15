@@ -64,12 +64,10 @@ static void init_memblock(mb_memmap_s * e820_info)
 	for (i = 0; e820_info[i].len != 0; i++)
 	{
 		mb_mmap_ent = &e820_info[i];
-		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
+		if (mb_mmap_ent->type != 1)
+			memblock_reserve(mb_mmap_ent->addr, mb_mmap_ent->len);
+		else if (mb_mmap_ent->len != 0)
 			memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
-		// if (mb_mmap_ent->type != 1)
-		// 	memblock_reserve(mb_mmap_ent->addr, mb_mmap_ent->len);
-		// else if (mb_mmap_ent->len != 0)
-		// 	memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
 	}
 	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
 	if ((framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)

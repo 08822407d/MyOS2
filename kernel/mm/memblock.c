@@ -179,9 +179,7 @@ static void memblock_merge_regions(memblock_type_s *type)
 		memblock_region_s *this = &type->regions[i];
 		memblock_region_s *next = &type->regions[i + 1];
 
-		if (this->base + this->size != next->base) {
-			// BUG_ON(this->base + this->size > next->base);
-			while (this->base + this->size > next->base);
+		if (this->base + this->size < next->base) {
 			i++;
 			continue;
 		}

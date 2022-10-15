@@ -73,19 +73,36 @@ static void init_physmem_pgmap()
 		fill_pde(KERN_PD + i, k_phy_pgbase, attr);
 		k_phy_pgbase += PAGE_SIZE;
 	}
-
-	pgmapset_s dbg = DBG_get_pgmapset((reg_t)KERN_PML4, 0x1000000);
-	
-	int e = 0;
 }
 
 static void init_framebuffer_pgmap()
 {
 	phys_addr_t fbppg_start = round_down(framebuffer.FB_phybase, PAGE_SIZE);
 	virt_addr_t fbvpg_start = myos_phys2virt(fbppg_start);
-	size_t fbppg_nr = round_up(framebuffer.FB_phybase + framebuffer.FB_size, PAGE_SIZE) / PAGE_SIZE;
-	size_t pd_nr	= round_up(fbppg_nr, PGENT_NR) / PGENT_NR;
-	size_t pdpt_nr	= round_up(fbppg_nr, PGENT_NR) / PGENT_NR;
+	size_t pg_nr	= round_up(framebuffer.FB_phybase + framebuffer.FB_size, PAGE_SIZE) / PAGE_SIZE;
+	size_t pd_nr	= round_up(pg_nr, PGENT_NR) / PGENT_NR;
+	size_t pdpt_nr	= round_up(pg_nr, PGENT_NR) / PGENT_NR;
+
+	uint64_t attr = ARCH_PG_PRESENT | ARCH_PG_RW;
+	// // fill PML4 by hand
+	// for (int i = 0; i < pdpt_nr; i++)
+	// {
+	// 	fill_pml4e(KERN_PML4 + 0 + i, KERN_PDPT + i * PGENT_NR, attr);
+	// 	// so called higher half
+	// 	fill_pml4e(KERN_PML4 + 256 + i, KERN_PDPT + i * PGENT_NR, attr);
+	// }
+	// // fill PDPTs by hand
+	// for (int i = 0; i < pd_nr; i++)
+	// 	fill_pdpte(KERN_PDPT + i, KERN_PD + i * PGENT_NR, attr);
+	// // fill PDs by hand
+	// // here framebuffer mem had already been included in kparam.max_phys_mem
+	// phys_addr_t k_phy_pgbase = 0;
+	// attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+	// for (long i = 0; i < pg_nr; i++)
+	// {
+	// 	fill_pde(KERN_PD + i, k_phy_pgbase, attr);
+	// 	k_phy_pgbase += PAGE_SIZE;
+	// }
 }
 
 void myos_unmap_kernel_lowhalf()

@@ -72,12 +72,15 @@ mb_memmap_s *e820_table;
 
 void __init myos_e820__memblock_setup(void)
 {
-	while (e820_table != NULL && e820_table->len != 0)
+	if (e820_table == NULL)
+		while (1);
+		
+	while (e820_table->len != 0)
 	{
-		if (e820_table->type == 1 && e820_table->len != 0)
-		{
+		if (e820_table->type != 1)
+			memblock_reserve(e820_table->addr, e820_table->len);
+		else if(e820_table->len != 0)
 			memblock_add(e820_table->addr, e820_table->len);
-		}
 		e820_table++;
 	}
 }
