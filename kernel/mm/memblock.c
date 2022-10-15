@@ -486,7 +486,7 @@ static void * memblock_alloc_internal(size_t size, size_t align,
 	if (!alloc)
 		return NULL;
 
-	return (void *)phys2virt(alloc);
+	return (void *)myos_phys2virt(alloc);
 }
 
 /**

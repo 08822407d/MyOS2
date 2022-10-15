@@ -111,8 +111,8 @@ int do_COW(task_s * task, virt_addr_t virt)
 			if (orig_pgp->map_count < 2)
 				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
 
-			virt_addr_t orig_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(orig_pgp));
-			virt_addr_t new_pg_vaddr = (virt_addr_t)phys2virt(page_to_paddr(new_pgp));
+			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_pgp));
+			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_pgp));
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			pg_load_cr3(new_cr3);

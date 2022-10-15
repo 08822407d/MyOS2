@@ -40,7 +40,7 @@ static void enable_AMD_syscall()
 static void get_VBE_info(mb_fb_common_s * vbe_info)
 {
 	framebuffer.FB_phybase = vbe_info->framebuffer_addr;
-	framebuffer.FB_virbase = phys2virt(framebuffer.FB_phybase);
+	framebuffer.FB_virbase = myos_phys2virt(framebuffer.FB_phybase);
 	framebuffer.FB_size = vbe_info->size;
 	framebuffer.X_Resolution = vbe_info->framebuffer_pitch;
 	framebuffer.X_Resolution = vbe_info->framebuffer_width;
@@ -65,15 +65,19 @@ static void init_memblock(mb_memmap_s * e820_info)
 	{
 		mb_mmap_ent = &e820_info[i];
 		if (mb_mmap_ent->type == 1 && mb_mmap_ent->len != 0)
-		{
 			memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
-		}
+		// if (mb_mmap_ent->type != 1)
+		// 	memblock_reserve(mb_mmap_ent->addr, mb_mmap_ent->len);
+		// else if (mb_mmap_ent->len != 0)
+		// 	memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
 	}
 	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
 	if ((framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
 		kparam.max_phys_mem = framebuffer.FB_phybase + framebuffer.FB_size;
-	max_low_pfn =
-	kparam.phys_page_nr = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
+	
+	max_low_pfn = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
+
+	memblock_reserve(framebuffer.FB_phybase, framebuffer.FB_size);
 
 	kparam.init_flags.memblock = 1;
 }

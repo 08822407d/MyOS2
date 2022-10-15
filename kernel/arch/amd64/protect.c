@@ -36,7 +36,7 @@ phys_addr_t virt2phys(virt_addr_t virt)
 						(virt_addr_t) &_k_phys_start;
 	return (phys_addr_t)(virt - offset);
 }
-virt_addr_t phys2virt(phys_addr_t phys)
+virt_addr_t myos_phys2virt(phys_addr_t phys)
 {
 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
 	uint64_t offset = (virt_addr_t) &_k_virt_start -
