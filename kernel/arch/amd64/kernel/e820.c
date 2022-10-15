@@ -19,7 +19,7 @@
 
 #include <asm/e820-api.h>
 #include <asm/setup.h>
-
+#include <asm/pgtable_64_types.h>
 
 #include <linux/kernel/stddef.h>
 #include <uefi/multiboot2.h>
@@ -68,19 +68,97 @@
 // struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
 // struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
 
-mb_memmap_s *e820_table;
+e820_entry_s *e820_table;
+
+#ifdef CONFIG_X86_32
+#	ifdef CONFIG_X86_PAE
+#		define MAX_ARCH_PFN (1ULL << (36 - PAGE_SHIFT))
+#	else
+#		define MAX_ARCH_PFN (1ULL << (32 - PAGE_SHIFT))
+#	endif
+#else /* CONFIG_X86_32 */
+#	define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
+#endif
+
+/*
+ * Find the highest page frame number we have available
+ */
+static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
+{
+	int i;
+	unsigned long last_pfn = 0;
+	unsigned long max_arch_pfn = MAX_ARCH_PFN;
+
+	for (i = 0; i < E820_MAX_ENTRIES; i++)
+	{
+		e820_entry_s *entry = e820_table + i;
+		unsigned long start_pfn;
+		unsigned long end_pfn;
+
+		if (entry->type != type)
+			continue;
+
+		start_pfn = entry->addr >> PAGE_SHIFT;
+		end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+
+		if (start_pfn >= limit_pfn)
+			continue;
+		if (end_pfn > limit_pfn)
+		{
+			last_pfn = limit_pfn;
+			break;
+		}
+		if (end_pfn > last_pfn)
+			last_pfn = end_pfn;
+	}
+
+	if (last_pfn > max_arch_pfn)
+		last_pfn = max_arch_pfn;
+
+	return last_pfn;
+}
+
+unsigned long __init e820__end_of_ram_pfn(void)
+{
+	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
+}
+
+unsigned long __init e820__end_of_low_ram_pfn(void)
+{
+	return e820_end_pfn(1UL << (32 - PAGE_SHIFT), E820_TYPE_RAM);
+}
 
 void __init myos_e820__memblock_setup(void)
 {
 	if (e820_table == NULL)
-		while (1);
-		
-	while (e820_table->len != 0)
+		while (1)
+			;
+
+	int i;
+	u64 end;
+
+	/*
+	 * The bootstrap memblock region count maximum is 128 entries
+	 * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
+	 * than that - so allow memblock resizing.
+	 *
+	 * This is safe, because this call happens pretty late during x86 setup,
+	 * so we know about reserved memory regions already. (This is important
+	 * so that memblock resizing does no stomp over reserved areas.)
+	 */
+
+	for (int i = 0; i < E820_MAX_ENTRIES; i++)
 	{
-		if (e820_table->type != 1)
-			memblock_reserve(e820_table->addr, e820_table->len);
-		else if(e820_table->len != 0)
-			memblock_add(e820_table->addr, e820_table->len);
-		e820_table++;
+		e820_entry_s *entry = e820_table + i;
+
+		end = entry->addr + entry->size;
+
+		if (entry->type == E820_TYPE_SOFT_RESERVED)
+			memblock_reserve(entry->addr, entry->size);
+
+		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
+			continue;
+
+		memblock_add(entry->addr, entry->size);
 	}
 }

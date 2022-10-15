@@ -2,7 +2,7 @@
 #ifndef _ASM_E820_API_H
 #define _ASM_E820_API_H
 
-	// #include <asm/e820/types.h>
+	#include <asm/e820-types.h>
 
 	// extern struct e820_table *e820_table;
 	// extern struct e820_table *e820_table_kexec;
@@ -22,8 +22,8 @@
 	// extern int  e820__update_table(struct e820_table *table);
 	// extern void e820__update_table_print(void);
 
-	// extern unsigned long e820__end_of_ram_pfn(void);
-	// extern unsigned long e820__end_of_low_ram_pfn(void);
+	extern unsigned long e820__end_of_ram_pfn(void);
+	extern unsigned long e820__end_of_low_ram_pfn(void);
 
 	// extern u64  e820__memblock_alloc_reserved(u64 size, u64 align);
 	// extern void e820__memblock_setup(void);

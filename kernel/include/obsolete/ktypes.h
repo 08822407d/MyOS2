@@ -26,7 +26,6 @@
 	typedef struct
 	{
 		// mm
-		int		memblock;
 		int		buddy;
 		int		slab;
 		// task
@@ -38,15 +37,7 @@
 /* This is used to obtain system information through SYS_GETINFO. */
 
 	typedef struct kinfo {
-		phys_addr_t		kernel_phy_base;
-		virt_addr_t		kernel_vir_base;
-		virt_addr_t		kernel_vir_end;
-		
-		size_t			phys_page_nr;
-		reg_t			max_phys_mem;
-
 		unsigned		nr_lcpu;
-
 		init_flags_s	init_flags;
 		arch_init_flags_s	arch_init_flags;
 	} kinfo_s;

@@ -177,7 +177,10 @@
 		"syscalls.h": "c",
 		"unistd_64.h": "c",
 		"page_types.h": "c",
-		"api.h": "c"
+		"api.h": "c",
+		"e820-api.h": "c",
+		"e820-types.h": "c",
+		"pgtable_64_types.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

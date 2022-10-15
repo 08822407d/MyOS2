@@ -70,7 +70,7 @@ void init_slab()
 		bslp->free = bslp->total;
 		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
 		bslp->page->attr |= PG_Slab;
-		bslp->page = paddr_to_page(virt2phys(bslp->virt_addr));;
+		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
 		bslp->page->slab_ptr = bslp;
 	}
 	// set init flag
@@ -208,7 +208,7 @@ void kfree(const void * objp)
 		return;
 
 	// find which slab does the pointer belonged to
-	phys_addr_t pg_addr = virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
+	phys_addr_t pg_addr = myos_virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
 	page_s * pgp = &mem_map[pg_idx];
 	slab_s * slp = pgp->slab_ptr;

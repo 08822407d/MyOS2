@@ -29,7 +29,7 @@ tss64_T *		tss_ptr_arr = NULL;
 /*==============================================================================================*
  *										global functions							 			*
  *==============================================================================================*/
-phys_addr_t virt2phys(virt_addr_t virt)
+phys_addr_t myos_virt2phys(virt_addr_t virt)
 {
 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
 	uint64_t offset = (virt_addr_t) &_k_virt_start -

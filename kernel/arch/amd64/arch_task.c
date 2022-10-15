@@ -356,7 +356,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		curr->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
-		curr->mm_struct->cr3 = virt2phys((virt_addr_t)virt_cr3);
+		curr->mm_struct->cr3 = myos_virt2phys((virt_addr_t)virt_cr3);
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);

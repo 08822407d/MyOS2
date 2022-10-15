@@ -37,6 +37,8 @@
 
 unsigned long max_low_pfn;
 unsigned long min_low_pfn;
+unsigned long max_pfn;
+unsigned long long max_possible_pfn;
 
 static memblock_region_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] = 
 	{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0}};
@@ -179,12 +181,15 @@ static void memblock_merge_regions(memblock_type_s *type)
 		memblock_region_s *this = &type->regions[i];
 		memblock_region_s *next = &type->regions[i + 1];
 
-		if (this->base + this->size < next->base) {
+		phys_addr_t this_end = this->base + this->size;
+		phys_addr_t next_end = next->base + next->size;
+		if (this_end < next->base) {
 			i++;
 			continue;
 		}
+		if (this_end < next_end)
+			this->size = next_end - this->base;
 
-		this->size += next->size;
 		/* move forward from next + 1, index of which is i + 2 */
 		memmove(next, next + 1, (type->cnt - (i + 1)) * sizeof(*next));
 		type->cnt--;
@@ -288,21 +293,11 @@ static int __init memblock_add_range(memblock_type_s *type,
  */
 int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
 {
-	while (!kparam.init_flags.memblock)
-	{
-		// only can be used while buddy-system not setup
-	}
-
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
 int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
 {
-	while (!kparam.init_flags.memblock)
-	{
-		// only can be used while buddy-system not setup
-	}
-
 	return memblock_add_range(&memblock.reserved, base, size, 0);
 }
 
@@ -457,11 +452,6 @@ phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
 static void * memblock_alloc_internal(size_t size, size_t align,
 					    phys_addr_t min_addr, phys_addr_t max_addr)
 {
-	while (!kparam.init_flags.memblock)
-	{
-		// only can be used while buddy-system not setup
-	}
-	
 	phys_addr_t alloc;
 
 	/*
@@ -631,6 +621,4 @@ void memblock_free_all(void)
 {
 	unsigned long pages;
 	pages = free_low_memory_core_early();
-	
-	kparam.init_flags.memblock = 0;
 }

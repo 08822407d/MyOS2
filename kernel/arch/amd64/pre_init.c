@@ -3,6 +3,8 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
+#include <asm/e820-types.h>
+
 #include "include/arch_proto.h"
 #include "include/archconst.h"
 #include "include/arch_glo.h"
@@ -48,36 +50,8 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
 	// set init flag
 	kparam.arch_init_flags.framebuffer = 1;
-}
-
-static void init_memblock(mb_memmap_s * e820_info)
-{
-	extern mb_memmap_s *e820_table;
-	kparam.kernel_phy_base	= (phys_addr_t)&_k_phys_start;
-	kparam.kernel_vir_base	= (phys_addr_t)&_k_virt_start;
-	kparam.kernel_vir_end	= (phys_addr_t)&_end;
-	kparam.init_flags.memblock = 1;
-	e820_table = e820_info;
-
-	int i;
-	mb_memmap_s * mb_mmap_ent;
-	for (i = 0; e820_info[i].len != 0; i++)
-	{
-		mb_mmap_ent = &e820_info[i];
-		if (mb_mmap_ent->type != 1)
-			memblock_reserve(mb_mmap_ent->addr, mb_mmap_ent->len);
-		else if (mb_mmap_ent->len != 0)
-			memblock_add(mb_mmap_ent->addr, mb_mmap_ent->len);
-	}
-	kparam.max_phys_mem = mb_mmap_ent->addr + mb_mmap_ent->len;
-	if ((framebuffer.FB_phybase + framebuffer.FB_size) > kparam.max_phys_mem)
-		kparam.max_phys_mem = framebuffer.FB_phybase + framebuffer.FB_size;
-	
-	max_low_pfn = round_up(kparam.max_phys_mem, PAGE_SIZE) / PAGE_SIZE;
 
 	memblock_reserve(framebuffer.FB_phybase, framebuffer.FB_size);
-
-	kparam.init_flags.memblock = 1;
 }
 
 static void get_SMP_info(efi_smpinfo_s * smp_info)
@@ -151,8 +125,9 @@ void myos_early_init_sytem(void)
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =
 			(struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR;
+	extern e820_entry_s *e820_table;
+	e820_table = (e820_entry_s *)machine_info->mb_mmap;
 	get_VBE_info(&machine_info->mb_fb_common);
-	init_memblock(machine_info->mb_mmap);
 	get_SMP_info(&machine_info->efi_smp_info);
 
 	cpuid_info();

@@ -193,5 +193,21 @@ void __init setup_arch(char **cmdline_p)
 	early_reserve_memory();
 
 
-	// myos_e820__memblock_setup();
+	myos_e820__memblock_setup();
+
+	/*
+	 * partially used pages are not usable - thus
+	 * we are rounding upwards:
+	 */
+	max_pfn = e820__end_of_ram_pfn();
+
+	// check_x2apic();
+
+	/* need this before calling reserve_initrd */
+	if (max_pfn > (1UL << (32 - PAGE_SHIFT)))
+		max_low_pfn = e820__end_of_low_ram_pfn();
+	else
+		max_low_pfn = max_pfn;
+
+	// high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 }
