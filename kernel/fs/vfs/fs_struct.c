@@ -6,7 +6,7 @@
 #include <linux/fs/path.h>
 // #include <linux/kernel/slab.h>
 #include <linux/sched/fs_struct.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 /*
  * Replace the fs->{rootmnt,root} with {mnt,dentry}. Put the old values.

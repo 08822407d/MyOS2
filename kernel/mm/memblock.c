@@ -20,7 +20,7 @@
 // #include <asm/sections.h>
 // #include <linux/io.h>
 
-#include <linux/mm/internal.h>
+#include "internal.h"
 
 
 
@@ -60,7 +60,7 @@ memblock_s memblock __initdata_memblock = {
 	.reserved.total_size= 0,
 	.reserved.name		= "reserved",
 
-	.bottom_up			= false,
+	.bottom_up			= true,
 	.current_limit		= (phys_addr_t)MEMBLOCK_ALLOC_ANYWHERE,
 };
 
@@ -399,8 +399,8 @@ void __next_mem_range(uint64_t *idx, mmblk_type_s *type_a,
 void __init_memblock __next_mem_pfn_range(int *idx,
 		unsigned long *out_start_pfn, unsigned long *out_end_pfn)
 {
-	struct memblock_type *type = &memblock.memory;
-	struct memblock_region *r;
+	mmblk_type_s *type = &memblock.memory;
+	mmblk_rgn_s *r;
 
 	while (++*idx < type->cnt) {
 		r = &type->regions[*idx];

@@ -39,7 +39,7 @@
 #include <linux/kernel/bitops.h>
 // #include <linux/myos_init_task.h>
 // #include <linux/uaccess.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 #include <linux/fs/mount.h>
 
 

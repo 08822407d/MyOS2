@@ -38,9 +38,9 @@
 			// 			alloc_page_vma(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, vma, vaddr)
 			// #define __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE_MOVABLE
 
-			// #ifndef __pa
-			// #	define __pa(x)	__phys_addr((unsigned long)(x))
-			// #endif
+			#ifndef __pa
+			#	define __pa(x)	__phys_addr((unsigned long)(x))
+			#endif
 
 			// #define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(x))
 			// /* __pa_symbol should be used for C visible symbols.
@@ -55,9 +55,9 @@
 			// #define __pa_symbol(x) \
 			// 			__phys_addr_symbol(__phys_reloc_hide((unsigned long)(x)))
 
-			// #ifndef __va
-			// #	define __va(x)	((void *)((unsigned long)(x) + PAGE_OFFSET))
-			// #endif
+			#ifndef __va
+			#	define __va(x)	((void *)((unsigned long)(x) + PAGE_OFFSET))
+			#endif
 
 			// #define __boot_va(x)	__va(x)
 			// #define __boot_pa(x)	__pa(x)

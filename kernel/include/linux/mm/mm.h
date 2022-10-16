@@ -75,7 +75,7 @@
 	// 	atomic_long_add(count, &_totalram_pages);
 	// }
 
-	// extern void * high_memory;
+	extern void *high_memory;
 	// extern int page_cluster;
 
 	// #ifdef CONFIG_SYSCTL
@@ -110,7 +110,7 @@
 	// #endif
 
 	// #ifndef __pa_symbol
-	// #define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
+	// #	define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
 	// #endif
 
 	// #ifndef page_to_virt
@@ -2535,6 +2535,7 @@
 	// 						unsigned long end_pfn);
 	// extern void get_pfn_range_for_nid(unsigned int nid,
 	// 			unsigned long *start_pfn, unsigned long *end_pfn);
+	extern void get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn);
 	// extern unsigned long find_min_pfn_with_active_regions(void);
 
 	// #ifndef CONFIG_NUMA

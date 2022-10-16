@@ -91,28 +91,28 @@
 	// // #include <linux/numa.h>
 
 	// #define E820_MAX_ENTRIES	(E820_MAX_ENTRIES_ZEROPAGE + 3*MAX_NUMNODES)
-	#define E820_MAX_ENTRIES	32
+	#define E820_MAX_ENTRIES	128
 
-	// /*
-	//  * The whole array of E820 entries:
-	//  */
-	// struct e820_table {
-	// 	__u32 nr_entries;
-	// 	struct e820_entry entries[E820_MAX_ENTRIES];
-	// };
+	/*
+	 * The whole array of E820 entries:
+	 */
+	struct e820_table {
+		__u32			nr_entries;
+		e820_entry_s	entries[E820_MAX_ENTRIES];
+	};
 
-	// /*
-	//  * Various well-known legacy memory ranges in physical memory:
-	//  */
-	// #define ISA_START_ADDRESS	0x000a0000
-	// #define ISA_END_ADDRESS		0x00100000
+	/*
+	 * Various well-known legacy memory ranges in physical memory:
+	 */
+	#define ISA_START_ADDRESS	0x000a0000
+	#define ISA_END_ADDRESS		0x00100000
 
-	// #define BIOS_BEGIN			0x000a0000
-	// #define BIOS_END			0x00100000
+	#define BIOS_BEGIN			0x000a0000
+	#define BIOS_END			0x00100000
 
-	// #define HIGH_MEMORY			0x00100000
+	#define HIGH_MEMORY			0x00100000
 
-	// #define BIOS_ROM_BASE		0xffe00000
-	// #define BIOS_ROM_END		0xffffffff
+	#define BIOS_ROM_BASE		0xffe00000
+	#define BIOS_ROM_END		0xffffffff
 
 #endif /* _ASM_E820_TYPES_H */

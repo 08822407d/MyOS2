@@ -472,15 +472,15 @@
 	// 	memblock.bottom_up = enable;
 	// }
 
-	// /*
-	// * Check if the allocation direction is bottom-up or not.
-	// * if this is true, that said, memblock will allocate memory
-	// * in bottom-up direction.
-	// */
-	// static inline __init_memblock bool memblock_bottom_up(void)
-	// {
-	// 	return memblock.bottom_up;
-	// }
+	/*
+	 * Check if the allocation direction is bottom-up or not.
+	 * if this is true, that said, memblock will allocate memory
+	 * in bottom-up direction.
+	 */
+	static inline __init_memblock bool memblock_bottom_up(void)
+	{
+		return memblock.bottom_up;
+	}
 
 	// phys_addr_t memblock_phys_mem_size(void);
 	// phys_addr_t memblock_reserved_size(void);

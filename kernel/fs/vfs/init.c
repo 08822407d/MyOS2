@@ -11,7 +11,7 @@
 #include <linux/fs/file.h>
 // #include <linux/init_syscalls.h>
 // #include <linux/security.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 
 #include <linux/kernel/sched.h>

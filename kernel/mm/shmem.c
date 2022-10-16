@@ -80,7 +80,7 @@ static vfsmount_s *shm_mnt;
 // #include <linux/rmap.h>
 #include <linux/kernel/uuid.h>
 // #include <linux/uaccess.h>
-#include <linux/mm/internal.h>
+#include "internal.h"
 
 
 #include <obsolete/proto.h>

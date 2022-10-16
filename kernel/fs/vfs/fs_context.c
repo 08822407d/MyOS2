@@ -23,7 +23,7 @@
 // #include <net/net_namespace.h>
 // #include <asm/sections.h>
 #include <linux/fs/mount.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 
 enum legacy_fs_param {

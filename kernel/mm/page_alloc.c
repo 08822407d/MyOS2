@@ -78,7 +78,7 @@
 // #include <asm/sections.h>
 // #include <asm/tlbflush.h>
 // #include <asm/div64.h>
-#include <linux/mm/internal.h>
+#include "internal.h"
 // #include "shuffle.h"
 // #include "page_reporting.h"
 
@@ -463,20 +463,7 @@ void __init memblock_free_pages(page_s * page,
 	add_to_free_list(page, zone, order);
 }
 
-/**
- * free_area_init - Initialise all pg_data_t and zone data
- * @max_zone_pfn: an array of max PFNs for each zone
- *
- * This will call free_area_init_node() for each active node in the system.
- * Using the page ranges provided by memblock_set_node(), the size of each
- * zone in each node and their holes is calculated. If the maximum PFN
- * between two adjacent zones match, it is assumed that the zone is empty.
- * For example, if arch_max_dma_pfn == arch_max_dma32_pfn, it is assumed
- * that arch_max_dma32_pfn has no pages. It is also assumed that a zone
- * starts where the previous one ended. For example, ZONE_DMA32 starts
- * at arch_max_dma_pfn.
- */
-void __init free_area_init(unsigned long *max_zone_pfn)
+static void __init memmap_init(unsigned long *max_zone_pfn)
 {
 	unsigned long start_pfn, end_pfn;
 	start_pfn = 1;
@@ -500,6 +487,106 @@ void __init free_area_init(unsigned long *max_zone_pfn)
 	}
 }
 
+/**
+ * get_pfn_range_for_nid - Return the start and end page frames for a node
+ * @nid: The nid to return the range for. If MAX_NUMNODES, the min and max PFN are returned.
+ * @start_pfn: Passed by reference. On return, it will have the node start_pfn.
+ * @end_pfn: Passed by reference. On return, it will have the node end_pfn.
+ *
+ * It returns the start and end page frame of a node based on information
+ * provided by memblock_set_node(). If called for a node
+ * with no available memory, a warning is printed and the start and end
+ * PFNs will be 0.
+ */
+void __init get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
+{
+	unsigned long this_start_pfn, this_end_pfn;
+	int i;
+
+	*start_pfn = -1UL;
+	*end_pfn = 0;
+
+	for_each_mem_pfn_range(i, nid, &this_start_pfn, &this_end_pfn, NULL) {
+		*start_pfn = min(*start_pfn, this_start_pfn);
+		*end_pfn = max(*end_pfn, this_end_pfn);
+	}
+
+	if (*start_pfn == -1UL)
+		*start_pfn = 0;
+}
+
+static void __init calculate_node_totalpages(pg_data_t *pgdat,
+		unsigned long node_start_pfn, unsigned long node_end_pfn)
+{
+	pgdat->node_spanned_pages = node_end_pfn - node_start_pfn;
+	// unsigned long realtotalpages = 0, totalpages = 0;
+	// enum zone_type i;
+
+	// for (i = 0; i < MAX_NR_ZONES; i++) {
+	// 	struct zone *zone = pgdat->node_zones + i;
+	// 	unsigned long zone_start_pfn, zone_end_pfn;
+	// 	unsigned long spanned, absent;
+	// 	unsigned long size, real_size;
+
+	// 	spanned = zone_spanned_pages_in_node(pgdat->node_id, i,
+	// 					     node_start_pfn,
+	// 					     node_end_pfn,
+	// 					     &zone_start_pfn,
+	// 					     &zone_end_pfn);
+	// 	absent = zone_absent_pages_in_node(pgdat->node_id, i,
+	// 					   node_start_pfn,
+	// 					   node_end_pfn);
+
+	// 	size = spanned;
+	// 	real_size = size - absent;
+
+	// 	if (size)
+	// 		zone->zone_start_pfn = zone_start_pfn;
+	// 	else
+	// 		zone->zone_start_pfn = 0;
+	// 	zone->spanned_pages = size;
+	// 	zone->present_pages = real_size;
+
+	// 	totalpages += size;
+	// 	realtotalpages += real_size;
+	// }
+
+	// pgdat->node_spanned_pages = totalpages;
+	// pgdat->node_present_pages = realtotalpages;
+	// pr_debug("On node %d totalpages: %lu\n", pgdat->node_id, realtotalpages);
+}
+
+/**
+ * free_area_init - Initialise all pg_data_t and zone data
+ * @max_zone_pfn: an array of max PFNs for each zone
+ *
+ * This will call free_area_init_node() for each active node in the system.
+ * Using the page ranges provided by memblock_set_node(), the size of each
+ * zone in each node and their holes is calculated. If the maximum PFN
+ * between two adjacent zones match, it is assumed that the zone is empty.
+ * For example, if arch_max_dma_pfn == arch_max_dma32_pfn, it is assumed
+ * that arch_max_dma32_pfn has no pages. It is also assumed that a zone
+ * starts where the previous one ended. For example, ZONE_DMA32 starts
+ * at arch_max_dma_pfn.
+ */
+// static void __init free_area_init_node(int nid)
+void __init free_area_init(unsigned long *max_zone_pfn)
+{
+	// static void __init free_area_init_node(int nid)
+	// {
+		pg_data_t *pgdat = &pg_list;
+		unsigned long start_pfn = 0;
+		unsigned long end_pfn = 0;
+
+		get_pfn_range(&start_pfn, &end_pfn);
+
+		pgdat->node_start_pfn = start_pfn;
+		calculate_node_totalpages(pgdat, start_pfn, end_pfn);
+	// }
+
+	memmap_init(max_zone_pfn);
+}
+
 
 /*==============================================================================================*
  *									myos page funcs for buddy system							*
@@ -521,7 +608,7 @@ phys_addr_t page_to_paddr(page_s * page)
 /*==============================================================================================*
  *								myos early init fuctions for buddy system						*
  *==============================================================================================*/
-void preinit_page()
+void myos_preinit_page()
 {
 	memset(&pg_list, 0, sizeof(pg_list));
 

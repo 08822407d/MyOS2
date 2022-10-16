@@ -20,7 +20,7 @@
 // #include <linux/compat.h>
 #include <linux/kernel/mount.h>
 #include <linux/fs/fs.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 // #include <linux/uaccess.h>
 // #include <asm/unistd.h>

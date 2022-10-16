@@ -6,6 +6,9 @@
 	#include <linux/kernel/types.h>
 	// #include <linux/mem_encrypt.h>
 
+
+	#include <asm/page_64_types.h>
+
 	/* PAGE_SHIFT determines the page size */
 	// #define PAGE_SHIFT				12
 	#define PAGE_SHIFT				21

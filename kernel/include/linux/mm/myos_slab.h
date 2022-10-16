@@ -39,7 +39,7 @@
 		slab_s *		normal_base_slab;
 	} slab_cache_s;
 
-	void preinit_slab(void);
+	void myos_preinit_slab(void);
 	void myos_init_slab(void);
 
 #endif /* _SLAB_H_ */

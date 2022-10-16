@@ -125,16 +125,10 @@ unsigned long __init e820__end_of_ram_pfn(void)
 	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
 }
 
-unsigned long __init e820__end_of_low_ram_pfn(void)
-{
-	return e820_end_pfn(1UL << (32 - PAGE_SHIFT), E820_TYPE_RAM);
-}
-
 void __init myos_e820__memblock_setup(void)
 {
 	if (e820_table == NULL)
-		while (1)
-			;
+		while (1);
 
 	int i;
 	u64 end;

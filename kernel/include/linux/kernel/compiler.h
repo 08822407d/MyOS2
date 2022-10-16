@@ -169,12 +169,14 @@
 			// 	= (unsigned long)&sym;
 			// #endif
 
-			// #ifndef RELOC_HIDE
-			// # define RELOC_HIDE(ptr, off)					\
-			// ({ unsigned long __ptr;					\
-			// 	__ptr = (unsigned long) (ptr);				\
-			// 	(typeof(ptr)) (__ptr + (off)); })
-			// #endif
+			#ifndef RELOC_HIDE
+			#	define RELOC_HIDE(ptr, off) (						\
+							{										\
+								unsigned long __ptr;				\
+								__ptr = (unsigned long) (ptr);		\
+								(typeof(ptr)) (__ptr + (off));}	\
+						)
+			#endif
 
 			// #define absolute_pointer(val)	RELOC_HIDE((void *)(val), 0)
 

@@ -58,9 +58,11 @@
 #include <linux/kernel/sizes.h>
 #include <linux/kernel/math.h>
 
+#include <asm/pgtable.h>
 #include <asm/e820-api.h>
 #include <asm/setup.h>
 
+#include <linux/mm/myos_slab.h>
 #include <obsolete/proto.h>
 #include <obsolete/glo.h>
 
@@ -193,26 +195,30 @@ void __init setup_arch(char **cmdline_p)
 	 * xen_memory_setup() on Xen dom0 which relies on the fact that those
 	 * early reservations have happened already.
 	 */
+	// 将一些保留内存段在memblock里标记为已使用,比如bios,kernel等已占用空间
 	early_reserve_memory();
 
-
+	// 这里用e820获取的内存分布初始化memblock分配器
 	myos_e820__memblock_setup();
+	// 现在可以使用memblock分配内存了
 
 	/*
 	 * partially used pages are not usable - thus
 	 * we are rounding upwards:
 	 */
+	// 计算内存最大页数目
 	max_pfn = e820__end_of_ram_pfn();
 
 	// check_x2apic();
 
 	// /* need this before calling reserve_initrd */
-	// if (max_pfn > (1UL << (32 - PAGE_SHIFT)))
-	// 	max_low_pfn = e820__end_of_low_ram_pfn();
-	// else
-		max_low_pfn = max_pfn;
+	max_low_pfn = max_pfn;
+	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
-	// high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
+
+	init_mem_mapping();
+
+
 
 
 	myos_early_init_task(kparam.nr_lcpu);
@@ -221,7 +227,10 @@ void __init setup_arch(char **cmdline_p)
 	myos_init_arch(0);
 	myos_init_arch_page();
 	myos_init_video();
-	myos_early_init_mm();
+	myos_preinit_page();
+	myos_preinit_slab();
+
+
 
 	// x86_init.paging.pagetable_init();
 	zone_sizes_init();

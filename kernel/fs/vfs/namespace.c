@@ -33,7 +33,7 @@
 #include <linux/mm/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>
 // #include "pnode.h"
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 
 #include <linux/kernel/slab.h>

@@ -33,7 +33,7 @@
 // #include <linux/dnotify.h>
 // #include <linux/compat.h>
 // #include <linux/mnt_idmapping.h>
-#include <linux/fs/internal.h>
+#include "internal.h"
 
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
