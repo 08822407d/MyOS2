@@ -3,13 +3,16 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
-	.section .text
-	.code64
+#include "../arch/amd64/include/archconst.h"
+
+.text
+.section .unpaged.text
+.code64
+
 SYM_CODE_START_NOALIGN(startup_64)
 	cli
 	jmp		code_64_start
 SYM_CODE_END(startup_64)
-
 
 /*==============================================================================================*
  *										multiboot2 header                           			*
@@ -44,33 +47,7 @@ address_tag_end:
 //===========================================
 
 #ifdef GRUB2_BOOTUP_SUPPORT
-
-	.align	8
-entry_address_tag_start:
-	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	entry_address_tag_end - entry_address_tag_start
-	.long	multiboot_entry
-entry_address_tag_end:
-// use grub2 derectly boot into long mode failed
-// can't find reason why step into fisrt instruction of
-// my code entry will cause cpu reset
-//===========================================
-// 	.align	8
-// efi_boot_service_tag_start:
-// 	.short	MULTIBOOT_HEADER_TAG_EFI_BS
-// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-// 	.long	efi_boot_service_tag_end - efi_boot_service_tag_start
-// efi_boot_service_tag_end:
-//===========================================
-// 	.align	8
-// efi_amd64_entry_address_tag_start:
-// 	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS_EFI64
-// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-// 	.long	efi_amd64_entry_address_tag_end - efi_amd64_entry_address_tag_start
-// 	.long	code_64_start
-// efi_amd64_entry_address_tag_end:
-
+	#include "grub2_boot_data.S"
 #endif
 
 //===========================================
@@ -85,54 +62,7 @@ multiboot_header_end:
 
 
 #ifdef GRUB2_BOOTUP_SUPPORT
-/*==============================================================================================*
- *											grub2 boot entry                            		*
- *==============================================================================================*/
-.code32
-.balign 8
-multiboot_entry:
-	cli
-	movl	$0,			%esi
-//	store boot info
-	movl	%ebx,		multiboot2_info_base(%esi)
-//	start initialize
-	// open PAE
-	call	set_temp_PDE_32
-	movl	%cr4,		%eax
-	bts		$5,			%eax
-	bts		$16,		%eax	// enable fsgsbase instuctions
-	movl	%eax,		%cr4
-
-	movl	$0x01,		boot_from_grub2(%esi)
-set_tmp_page:
-	// set page table
-	movl	$__PML4E,	%eax
-	movl	%eax,		%cr3
-	// enable long mode
-	movl	$0xC0000080,%ecx
-	rdmsr
-	bts		$8,			%eax
-	wrmsr
-	// enable PE & pagin
-	movl	%cr0,		%eax
-	bts		$0,			%eax
-	bts		$31,		%eax
-	movl	%eax,		%cr0
-go_to_64_code:
-	lgdt	TMP_GDT_PTR(%esi)
-	jmp		$0x08,		$code_64_start
-
-// 32bit fuction
-set_temp_PDE_32:
-	movl	$0x83,		%eax
-	movl	$__PDE,		%edi
-	movl	$0x200,		%ecx
-l1:
-	movl	%eax,		(%edi)
-	addl	$0x200000,	%eax
-	addl	$8,			%edi
-	loop	l1
-	retl
+	#include "grub2_boot_code.S"
 #endif
 
 /*==============================================================================================*
@@ -185,10 +115,37 @@ creat_higher_half_pagemap:
 	movq	%rax,		%cr3
 	ret
 
+
+/*==============================================================================================*
+ *									higher half text section							 		*
+ *==============================================================================================*/
+.text
+.code64
+.balign 8
+SYM_CODE_START(higher_half_entry)
+	movabsq	$task0_PCB,	%rbx
+	addq	$TASK_KSTACK_SIZE,	%rbx
+	movq    $0x10,		%rax
+	movq    %rax,		%ss
+	movq    %rbx,		%rsp
+
+	pushq   $0
+	popfq
+	pushq   $0
+
+	// here init single core ia32-e environment
+	callq	x86_64_start_kernel
+
+	// here is the idle task for all cores
+	movq	$0,			%rdi
+	callq	idle
+
+
 /*==============================================================================================*
  *											data section								 		*
  *==============================================================================================*/
-.section .data
+.data
+.section .unpaged.data
 //=======init page
 .align 8
 
