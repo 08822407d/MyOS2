@@ -67,10 +67,10 @@ memblock_s memblock __initdata_memblock = {
 /*==============================================================================================*
  *									core fuctions for buddy system								*
  *==============================================================================================*/
-#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)		\
-		for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
-			rgn_idx < memblock_type->cnt + 1;						\
-			rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
+#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)			\
+			for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
+				rgn_idx < memblock_type->cnt + 1;						\
+				rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
 
 /* adjust *@size so that (@base + *@size) doesn't overflow, return new size */
 static inline phys_addr_t memblock_cap_size(phys_addr_t base, phys_addr_t *size)
@@ -96,8 +96,9 @@ bool __init_memblock memblock_overlaps_region(
 	memblock_cap_size(base, &size);
 
 	for (i = 0; i < type->cnt; i++)
-		if (memblock_addrs_overlap(base, size, type->regions[i].base,
-					   type->regions[i].size))
+		if (memblock_addrs_overlap(base, size,
+					type->regions[i].base,
+					type->regions[i].size))
 			break;
 	return i < type->cnt;
 }

@@ -215,22 +215,18 @@ void __init setup_arch(char **cmdline_p)
 	max_low_pfn = max_pfn;
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
-
+	myos_early_init_arch_data(kparam.nr_lcpu);
+	myos_init_arch(0);
+	// 初始化x86架构物理页映射
 	init_mem_mapping();
 
 
 
-
 	myos_early_init_task(kparam.nr_lcpu);
-	myos_early_init_arch_data(kparam.nr_lcpu);
 	myos_early_init_smp(kparam.nr_lcpu);
-	myos_init_arch(0);
-	myos_init_arch_page();
 	myos_init_video();
 	myos_preinit_page();
 	myos_preinit_slab();
-
-
 
 	// x86_init.paging.pagetable_init();
 	zone_sizes_init();

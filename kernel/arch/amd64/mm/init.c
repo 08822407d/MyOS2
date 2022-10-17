@@ -29,6 +29,9 @@
 
 // #include "mm_internal.h"
 
+
+#include <arch_proto.h>
+
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up
  * @map_start: start address of the target memory range
@@ -72,6 +75,8 @@ static void __init memory_map_bottom_up(
 	// 	if (mapped_ram_size >= step_size)
 	// 		step_size = get_new_step_size(step_size);
 	// }
+
+	myos_init_arch_page();
 }
 
 void __init init_mem_mapping(void)

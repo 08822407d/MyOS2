@@ -144,7 +144,6 @@ const char * const migratetype_names[MIGRATE_TYPES] = {
 recurs_lock_T	page_alloc_lock;
 
 pg_data_t		pg_list;
-page_s *		mem_map;
 
 /*==============================================================================================*
  *								private fuctions for buddy system								*
@@ -518,7 +517,6 @@ void __init get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
 static void __init calculate_node_totalpages(pg_data_t *pgdat,
 		unsigned long node_start_pfn, unsigned long node_end_pfn)
 {
-	pgdat->node_spanned_pages = node_end_pfn - node_start_pfn;
 	// unsigned long realtotalpages = 0, totalpages = 0;
 	// enum zone_type i;
 
@@ -551,6 +549,7 @@ static void __init calculate_node_totalpages(pg_data_t *pgdat,
 	// 	realtotalpages += real_size;
 	// }
 
+	pgdat->node_spanned_pages = node_end_pfn - node_start_pfn;
 	// pgdat->node_spanned_pages = totalpages;
 	// pgdat->node_present_pages = realtotalpages;
 	// pr_debug("On node %d totalpages: %lu\n", pgdat->node_id, realtotalpages);
@@ -615,10 +614,9 @@ void myos_preinit_page()
 	pg_list.nr_zones = MAX_NR_ZONES;
 	pg_list.node_start_pfn = pg_list.node_zones[0].zone_start_pfn;
 	pg_list.node_spanned_pages = max_low_pfn;
-	mem_map =
-	pg_list.node_mem_map = (void *)myos_phys2virt(
-			memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
-					sizeof(size_t), MAX_DMA_PFN, 0));
+	mem_map = pg_list.node_mem_map = (void *)myos_phys2virt(
+					memblock_alloc_range(sizeof(page_s) * pg_list.node_spanned_pages,
+							sizeof(size_t), MAX_DMA_PFN, 0));
 	memset(mem_map, 0, sizeof(page_s) * pg_list.node_spanned_pages);
 	for (int i = 0; i < pg_list.node_spanned_pages; i++)
 	{
