@@ -3,12 +3,13 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
-	.text
+	.section .text
 	.code64
 SYM_CODE_START_NOALIGN(startup_64)
 	cli
 	jmp		code_64_start
 SYM_CODE_END(startup_64)
+
 
 /*==============================================================================================*
  *										multiboot2 header                           			*
@@ -41,6 +42,9 @@ address_tag_start:
 	.long	_k_phys_ebss
 address_tag_end:
 //===========================================
+
+#ifdef GRUB2_BOOTUP_SUPPORT
+
 	.align	8
 entry_address_tag_start:
 	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
@@ -66,6 +70,9 @@ entry_address_tag_end:
 // 	.long	efi_amd64_entry_address_tag_end - efi_amd64_entry_address_tag_start
 // 	.long	code_64_start
 // efi_amd64_entry_address_tag_end:
+
+#endif
+
 //===========================================
 	.align	8
 multiboot_header_tag_end_begin:
@@ -76,6 +83,8 @@ multiboot_header_tag_end_end:
 //===========================================
 multiboot_header_end:
 
+
+#ifdef GRUB2_BOOTUP_SUPPORT
 /*==============================================================================================*
  *											grub2 boot entry                            		*
  *==============================================================================================*/
@@ -124,6 +133,7 @@ l1:
 	addl	$8,			%edi
 	loop	l1
 	retl
+#endif
 
 /*==============================================================================================*
  *											long mode code                              		*
@@ -133,6 +143,7 @@ l1:
 code_64_start:
 	movq    $tmp_kstack_top,	%rax
 	movq    %rax,		%rsp
+
 //=======load GDTR
 	lgdt	TMP_GDT_PTR(%rip)
 //=======load dummy IDTR
@@ -143,16 +154,13 @@ code_64_start:
 	je		skip_set_pde
 // if not boot from grub, need to set pages and cr4[16]
 
-	callq	set_temp_PDE_64
-	movq	$0,	boot_from_grub2
+	callq	creat_higher_half_pagemap
 
 	movq	%cr4,		%rax
 	bts		$16,		%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
 
 skip_set_pde:
-	movq	$__PML4E,	%rax
-	movq	%rax,		%cr3
 	// reset cs:rip at same time jump to higher half
 	movabsq	$higher_half_entry,	%rax
 	pushq   $0x08
@@ -162,21 +170,25 @@ skip_set_pde:
 hang:
 	jmp     hang
 
-set_temp_PDE_64:
-	movq	$0x83,		%rax
-	movq	$__PDE,		%rdi
-	movq	$0x200,		%rcx
-l2:
-	movq	%rax,		(%rdi)
-	addq	$0x200000,	%rax
-	addq	$8,			%rdi
-	loop	l2
-	retq
+// if boot from UEFI, all physical page all ready mapped
+// to lower half, here duplicate lower 256 PML4 entries to
+// higher 256 ones(to creat tmp higher half page mapping)
+creat_higher_half_pagemap:
+	cld
+	movq	%cr3,		%rsi
+	movq	%cr3,		%rdi
+	addq	$2048,		%rdi
+	movq	$256,		%rcx
+	rep
+	movsq
+	movq	%cr3,		%rax
+	movq	%rax,		%cr3
+	ret
 
 /*==============================================================================================*
  *											data section								 		*
  *==============================================================================================*/
-.data
+.section .data
 //=======init page
 .align 8
 

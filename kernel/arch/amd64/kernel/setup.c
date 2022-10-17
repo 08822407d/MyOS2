@@ -216,6 +216,7 @@ void __init setup_arch(char **cmdline_p)
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
 	myos_early_init_arch_data(kparam.nr_lcpu);
+
 	myos_init_arch(0);
 	// 初始化x86架构物理页映射
 	init_mem_mapping();

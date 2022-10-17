@@ -24,7 +24,15 @@ SECTIONS
 	}
 	.unpaged_data ALIGN(0x1000) :
 	{
-		*/myos_head_64.S.o(.data);
+		*/myos_head_64.S.o(.data .rodata*);
+	}
+	.unpaged_bss  ALIGN(0x1000) :
+	{
+		*/myos_head_64.S.o(.bss COMMON);
+	}
+	.unpaged_eh_frame ALIGN(0x1000) :
+	{
+		*/myos_head_64.S.o(.eh_frame);
 	}
 	__k_unpaged__kern_unpaged_end = .;
 
