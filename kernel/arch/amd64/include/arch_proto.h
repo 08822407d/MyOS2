@@ -5,6 +5,7 @@
 #include <linux/kernel/sched.h>
 
 #include "archtypes.h"
+#include "mutex.h"
 
 /*==============================================================================================*
  *										external symbols							 			*
@@ -194,7 +195,7 @@
 	reg_t read_cr3(void);
 	void pg_load_cr3(reg_t cr3);
 	void myos_refresh_arch_page(void);
-	void myos_unmap_kernel_lowhalf(void);
+	void myos_unmap_kernel_lowhalf(atomic_T *um_flag);
 	int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
 	int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
 	int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);

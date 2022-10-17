@@ -130,9 +130,10 @@ static int __init early_arch_map_memregion(phys_addr_t base, size_t size)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void myos_unmap_kernel_lowhalf()
+void myos_unmap_kernel_lowhalf(atomic_T *um_flag)
 {
 	memset(KERN_PML4, 0, PGENT_SIZE / 2);
+	atomic_inc(um_flag);
 }
 
 reg_t read_cr3()

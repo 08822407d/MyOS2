@@ -46,3 +46,49 @@ l1:
 	addl	$8,			%edi
 	loop	l1
 	retl
+
+.section .unpaged.data
+//=======init page
+.align 8
+
+.org	0x0000
+__PML4E:
+.globl	__PML4E
+	.quad	__PDPTE + 3
+	.fill	255,8,0
+	.quad	__PDPTE + 3
+	.fill	255,8,0
+
+.org	0x1000
+__PDPTE:
+	.quad	__PDE + 3
+	.fill	511,8,0
+
+.org	0x2000
+__PDE:
+	.fill	512,8,0
+
+//=======temp GDT_table
+TMP_GDT_TBL:
+	.quad	0x0000000000000000			/*0	NULL descriptor		       		00*/
+	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
+	.quad	0x0000920000000000			/*2	KERNEL	Data	64-bit	Segment	10*/
+	.quad	0x00cf9a000000ffff			/*1	KERNEL	Code	32-bit	Segment	08*/
+	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	10*/
+GDT_END:
+
+TMP_GDT_PTR:
+GDT_LIMIT:	.word	GDT_END - TMP_GDT_TBL - 1
+GDT_BASE:	.quad	TMP_GDT_TBL
+//=======temp IDT_ptr
+TMP_IDT_PTR:
+	.word	0
+	.word	0,0
+
+.balign 4
+multiboot2_info_base:
+	.quad	0x0
+
+boot_from_grub2:
+	.quad	0x0
+

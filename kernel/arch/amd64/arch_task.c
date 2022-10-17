@@ -235,7 +235,7 @@ int exit_mm(task_s * new_tsk)
 }
 
 static int copy_thread(unsigned long clone_flags, unsigned long stack_start,
-							task_s * child_task, 	stack_frame_s * parent_context)
+		task_s * child_task, stack_frame_s * parent_context)
 {
 	int err = -ENOERR;
 
@@ -548,6 +548,8 @@ void myos_schedule()
 
 		curr_task->flags &= ~PF_NEED_SCHEDULE;
 
+		while (curr_task == next_task);
+		
 		switch_mm(curr_task, next_task);
 		myos_switch_to(curr_task, next_task);
 	}

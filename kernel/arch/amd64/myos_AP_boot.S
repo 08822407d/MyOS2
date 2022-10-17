@@ -53,7 +53,8 @@ _AP_code32:
 	bts		$5,			%eax
 	movl	%eax,		%cr4
 	// set page table
-	movl	$__PML4E,	%eax
+	movl	$cr3_paddr,	%eax
+	movl	(%eax),	%eax
 	movl	%eax,		%cr3
 	// enable long mode
 	movl	$0xC0000080,	%ecx
@@ -142,6 +143,8 @@ _AP_tmp_GDT:
 	.quad	0x00cf9a000000ffff			/*1	KERNEL	Code	32-bit	Segment	18*/
 	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	20*/
 _AP_tmp_GDT_end:
+
+SYM_DATA(cr3_paddr, .long 0)
 
 .balign 4
 _APboot_tmp_Stack_start:

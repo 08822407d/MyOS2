@@ -5,8 +5,7 @@
 
 #include "../arch/amd64/include/archconst.h"
 
-.text
-.section .unpaged.text
+.section .unpaged.text, "ax"
 .code64
 
 SYM_CODE_START_NOALIGN(startup_64)
@@ -47,7 +46,7 @@ address_tag_end:
 //===========================================
 
 #ifdef GRUB2_BOOTUP_SUPPORT
-	#include "grub2_boot_data.S"
+	#include "grub2_boot_tags.S"
 #endif
 
 //===========================================
@@ -73,17 +72,7 @@ multiboot_header_end:
 code_64_start:
 	movq    $tmp_kstack_top,	%rax
 	movq    %rax,		%rsp
-
-//=======load GDTR
-	lgdt	TMP_GDT_PTR(%rip)
-//=======load dummy IDTR
-	lidt	TMP_IDT_PTR(%rip)
-//=======load cr3
-	movq	boot_from_grub2,	%rax
-	cmpq	$0x01,		%rax
-	je		skip_set_pde
-// if not boot from grub, need to set pages and cr4[16]
-
+	// set page map
 	callq	creat_higher_half_pagemap
 
 	movq	%cr4,		%rax
@@ -92,8 +81,9 @@ code_64_start:
 
 skip_set_pde:
 	// reset cs:rip at same time jump to higher half
+	movq	%cs,		%rax
+	pushq	%rax
 	movabsq	$higher_half_entry,	%rax
-	pushq   $0x08
 	pushq   %rax
 	lretq
 
@@ -125,8 +115,6 @@ creat_higher_half_pagemap:
 SYM_CODE_START(higher_half_entry)
 	movabsq	$task0_PCB,	%rbx
 	addq	$TASK_KSTACK_SIZE,	%rbx
-	movq    $0x10,		%rax
-	movq    %rax,		%ss
 	movq    %rbx,		%rsp
 
 	pushq   $0
@@ -144,52 +132,7 @@ SYM_CODE_START(higher_half_entry)
 /*==============================================================================================*
  *											data section								 		*
  *==============================================================================================*/
-.data
 .section .unpaged.data
-//=======init page
-.align 8
-
-.org	0x0000
-__PML4E:
-.globl	__PML4E
-	.quad	__PDPTE + 3
-	.fill	255,8,0
-	.quad	__PDPTE + 3
-	.fill	255,8,0
-
-.org	0x1000
-__PDPTE:
-	.quad	__PDE + 3
-	.fill	511,8,0
-
-.org	0x2000
-__PDE:
-	.fill	512,8,0
-
-//=======temp GDT_table
-TMP_GDT_TBL:
-	.quad	0x0000000000000000			/*0	NULL descriptor		       		00*/
-	.quad	0x0020980000000000			/*1	KERNEL	Code	64-bit	Segment	08*/
-	.quad	0x0000920000000000			/*2	KERNEL	Data	64-bit	Segment	10*/
-	.quad	0x00cf9a000000ffff			/*1	KERNEL	Code	32-bit	Segment	08*/
-	.quad	0x00cf92000000ffff			/*2	KERNEL	Data	32-bit	Segment	10*/
-GDT_END:
-
-TMP_GDT_PTR:
-GDT_LIMIT:	.word	GDT_END - TMP_GDT_TBL - 1
-GDT_BASE:	.quad	TMP_GDT_TBL
-//=======temp IDT_ptr
-TMP_IDT_PTR:
-	.word	0
-	.word	0,0
-
-.balign 4
-multiboot2_info_base:
-	.quad	0x0
-
-boot_from_grub2:
-	.quad	0x0
-
 //=======temp stack
 .align 8
 tmp_kstack_start:

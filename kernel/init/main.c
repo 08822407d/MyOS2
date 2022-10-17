@@ -120,6 +120,7 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
+#include <mutex.h>
 #include "../arch/amd64/include/apic.h"
 #include "../arch/amd64/include/device.h"
 
@@ -155,7 +156,8 @@ static void __init mm_init(void)
 	// pti_init();
 }
 
-
+atomic_T lcpu_boot_count;
+atomic_T lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
 	// char *command_line;
@@ -190,6 +192,8 @@ asmlinkage void __init start_kernel(void)
 	myos_startup_smp();
 
 	vfs_caches_init();
+
+	lcpu_boot_count.value = 0;
 }
 
 /*==============================================================================================*
@@ -202,14 +206,25 @@ void idle(size_t cpu_idx)
 	myos_percpu_self_config(cpu_idx);
 	myos_arch_system_call_init();
 
-	myos_unmap_kernel_lowhalf();
-	myos_refresh_arch_page();
+	atomic_inc(&lcpu_boot_count);
+	while (atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
 
 	if (cpu_idx == 0)
-		myos_kernel_thread(kernel_init, 0, 0, "init");
-	
-	myos_schedule();
+	{
+		lower_half_unmapped.value = 0;
+		myos_unmap_kernel_lowhalf(&lower_half_unmapped);
+	}
+	while (lower_half_unmapped.value == 0)
+		myos_refresh_arch_page();
 
+	if (cpu_idx == 0)
+	{
+		myos_kernel_thread(kernel_init, 0, 0, "init");
+		myos_schedule();
+	}
+	
+
+	sti();
 	while (1)
 		hlt();
 }
@@ -252,8 +267,6 @@ extern void init_ATArqd();
 extern void kjmp_to_doexecve();
 unsigned long kernel_init(unsigned long arg)
 {
-	sti();
-
 	do_basic_setup();
 	// do_name();
 	// ata_probe();

@@ -12,6 +12,7 @@
 #include "include/mutex.h"
 
 cpudata_u *	percpu_data;
+extern u32	cr3_paddr;
 
 void myos_early_init_smp(size_t lcpu_nr)
 {
@@ -52,6 +53,7 @@ void myos_init_smp(size_t lcpu_nr)
 	memcpy((void *)myos_phys2virt((phys_addr_t)&_APboot_phys_start),
 			(void *)&_APboot_text, apboot_len);
 
+	cr3_paddr = kernel_cr3;
 	// init basic data for percpu
 	for (int i = 0; i < lcpu_nr; i++)
 	{
