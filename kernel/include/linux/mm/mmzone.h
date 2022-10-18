@@ -1294,7 +1294,7 @@
 			// }
 
 			// #ifdef CONFIG_SPARSEMEM
-			// 	#include <asm/sparsemem.h>
+			#	include <asm/sparsemem.h>
 			// #endif
 
 			// #ifdef CONFIG_FLATMEM

@@ -125,6 +125,7 @@ unsigned long max_pfn_mapped;
 // 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
 // };
 
+cpuinfo_x86_s boot_cpu_data __read_mostly;
 
 static void __init early_reserve_memory(void)
 {
@@ -183,6 +184,11 @@ extern char _end;
 
 void __init setup_arch(char **cmdline_p)
 {
+	// printk(KERN_INFO "Command line: %s\n", boot_command_line);
+	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
+	
+	early_cpu_init();
+
 	/*
 	 * Do some memory reservations *before* memory is added to memblock, so
 	 * memblock allocations won't overwrite it.

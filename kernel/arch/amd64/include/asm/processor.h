@@ -79,7 +79,7 @@
 	 *  before touching them. [mj]
 	 */
 
-	struct cpuinfo_x86
+	typedef struct cpuinfo_x86
 	{
 		__u8	x86;		 /* CPU family */
 		__u8	x86_vendor; /* CPU vendor */
@@ -143,7 +143,7 @@
 		/* Address space bits used by the cache internally */
 		u8		x86_cache_bits;
 		unsigned	initialized : 1;
-	};
+	} cpuinfo_x86_s;
 
 	typedef struct cpuid_regs
 	{
@@ -172,10 +172,10 @@
 
 	#define X86_VENDOR_UNKNOWN		0xff
 
-	// /*
-	// * capabilities of CPUs
-	// */
-	// extern struct cpuinfo_x86 boot_cpu_data;
+	/*
+	 * capabilities of CPUs
+	 */
+	extern cpuinfo_x86_s boot_cpu_data;
 	// extern struct cpuinfo_x86 new_cpu_data;
 
 	// extern __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS];
@@ -195,7 +195,7 @@
 	// 	return BIT_ULL(boot_cpu_data.x86_cache_bits - 1 - PAGE_SHIFT);
 	// }
 
-	// extern void early_cpu_init(void);
+	extern void early_cpu_init(void);
 	// extern void identify_boot_cpu(void);
 	// extern void identify_secondary_cpu(struct cpuinfo_x86 *);
 	// extern void print_cpu_info(struct cpuinfo_x86 *);
