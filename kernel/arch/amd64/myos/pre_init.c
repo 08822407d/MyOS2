@@ -22,15 +22,6 @@ framebuffer_s	framebuffer;
 uint64_t		apic_id[CONFIG_NR_CPUS];
 struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
-
-static void enable_AMD_syscall()
-{
-	// enalble syscall/sysret machanism
-	uint64_t ia32_efer = rdmsr(IA32_EFER);
-	ia32_efer |= MSR_IA32_EFER_SCE;	// bit0: SCE , enable syscall/sysret
-	wrmsr(IA32_EFER, ia32_efer);
-}
-
 static void get_VBE_info(mb_fb_common_s * vbe_info)
 {
 	framebuffer.FB_phybase = vbe_info->framebuffer_addr;
@@ -43,6 +34,7 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	// set init flag
 	kparam.arch_init_flags.framebuffer = 1;
 
+	memblock_add(framebuffer.FB_phybase, framebuffer.FB_size);
 	memblock_reserve(framebuffer.FB_phybase, framebuffer.FB_size);
 }
 
@@ -67,8 +59,6 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 
 void myos_early_init_sytem(void)
 {
-	enable_AMD_syscall();
-
 	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =
 			(struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR;
 	extern e820_entry_s *e820_table;

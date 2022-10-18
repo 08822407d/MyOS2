@@ -10,7 +10,7 @@
 	// #include <linux/atomic.h>
 	// #include <asm/fixmap.h>
 	// #include <asm/mpspec.h>
-	// #include <asm/msr.h>
+	#include <asm/msr.h>
 	// #include <asm/hardirq.h>
 
 	#define ARCH_APICTIMER_STOPS_ON_C3	1

@@ -1,4 +1,7 @@
 #include <linux/kernel/linkage.h>
+#include <linux/init/init.h>
+#include <asm/processor-flags.h>
+#include <asm/msr.h>
 
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
@@ -78,6 +81,20 @@ code_64_start:
 	movq	%cr4,		%rax
 	bts		$16,		%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
+
+	/* Check if nx is implemented */
+	movl	$0x80000001,	%eax
+	cpuid
+	movl	%edx,		%edi
+
+	/* Setup EFER (Extended Feature Enable Register) */
+	movl	$MSR_EFER,	%ecx
+	rdmsr
+	btsl	$_EFER_SCE,	%eax	/* Enable System Call */
+	/* Setup cr0 */
+	movl	$CR0_STATE,	%eax
+	/* Make changes effective */
+	movq	%rax,		%cr0
 
 skip_set_pde:
 	// reset cs:rip at same time jump to higher half

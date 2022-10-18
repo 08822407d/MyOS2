@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_PROCESSOR_H
 #define _ASM_X86_PROCESSOR_H
 
-	// #include <asm/processor-flags.h>
+	#include <asm/processor-flags.h>
 
 	// /* Forward declaration, a strange C thing */
 	// struct task_struct;
@@ -19,7 +19,7 @@
 	#include <asm/page.h>
 	// #include <asm/pgtable_types.h>
 	// #include <asm/percpu.h>
-	// #include <asm/msr.h>
+	#include <asm/msr.h>
 	// #include <asm/desc_defs.h>
 	// #include <asm/nops.h>
 	// #include <asm/special_insns.h>

@@ -182,7 +182,8 @@
 		"e820-types.h": "c",
 		"pgtable_64_types.h": "c",
 		"cache.h": "c",
-		"cpu.h": "c"
+		"cpu.h": "c",
+		"processor-flags.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

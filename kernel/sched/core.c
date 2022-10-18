@@ -158,8 +158,11 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 	extern int load_balance();
 	int target_cpu_idx = load_balance();
 	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
-	p->__state = TASK_RUNNING;
-	list_hdr_push(&target_cpu_p->running_lhdr, &p->schedule_list);
+	if (p->__state != TASK_RUNNING)
+	{
+		p->__state = TASK_RUNNING;
+		list_hdr_push(&target_cpu_p->running_lhdr, &p->schedule_list);
+	}
 
 
 // 	unsigned long flags;

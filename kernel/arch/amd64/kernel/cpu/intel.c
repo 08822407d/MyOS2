@@ -13,7 +13,7 @@
 #include <linux/kernel/delay.h>
 
 #include <asm/cpufeature.h>
-// #include <asm/msr.h>
+#include <asm/msr.h>
 #include <asm/bugs.h>
 #include <asm/cpu.h>
 // #include <asm/intel-family.h>
