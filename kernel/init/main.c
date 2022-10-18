@@ -22,7 +22,7 @@
 // #include <linux/stackprotector.h>
 // #include <linux/string.h>
 // #include <linux/ctype.h>
-// #include <linux/delay.h>
+#include <linux/kernel/delay.h>
 // #include <linux/ioport.h>
 #include <linux/init/init.h>
 // #include <linux/initrd.h>
@@ -102,7 +102,7 @@
 // #include <net/net_namespace.h>
 
 // #include <asm/io.h>
-// #include <asm/bugs.h>
+#include <asm/bugs.h>
 #include <asm/setup.h>
 // #include <asm/sections.h>
 // #include <asm/cacheflush.h>
@@ -123,6 +123,12 @@
 #include <obsolete/mutex.h>
 #include <obsolete/apic.h>
 #include <obsolete/device.h>
+
+/*
+ * This should be approx 2 Bo*oMips to start (note initial shift), and will
+ * still work even if initially too large, it will just take slightly longer
+ */
+unsigned long loops_per_jiffy = (1<<12);
 
 /*
  * Set up kernel memory allocators
@@ -163,9 +169,6 @@ asmlinkage void __init start_kernel(void)
 	// char *command_line;
 	// char *after_dashes;
 
-	size_t cpu_idx = 0;
-
-	myos_early_init_sytem();
 	setup_arch(NULL);
 
 	mem_init();
@@ -192,6 +195,8 @@ asmlinkage void __init start_kernel(void)
 	myos_startup_smp();
 
 	vfs_caches_init();
+
+	check_bugs();
 
 	lcpu_boot_count.value = 0;
 }

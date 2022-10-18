@@ -257,9 +257,7 @@
 	void cld(void);
 	void cli(void);
 	void sti(void);
-	void cpuid(unsigned int Mop,unsigned int Sop,
-				unsigned int * a,unsigned int * b,
-				unsigned int * c,unsigned int * d);
+
 	void wrgsbase(uint64_t addr);
 	uint64_t rdgsbase(void);
 	// void intr_disable(void);

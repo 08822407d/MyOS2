@@ -22,7 +22,7 @@
 // #include <asm/microcode.h>
 // #include <asm/kaslr.h>
 // #include <asm/hypervisor.h>
-// #include <asm/cpufeature.h>
+#include <asm/cpufeature.h>
 // #include <asm/pti.h>
 // #include <asm/text-patching.h>
 // #include <asm/memtype.h>

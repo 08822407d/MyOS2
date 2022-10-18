@@ -15,7 +15,7 @@
 	// #include <asm/types.h>
 	// #include <uapi/asm/sigcontext.h>
 	// #include <asm/current.h>
-	// #include <asm/cpufeatures.h>
+	#include <asm/cpufeatures.h>
 	#include <asm/page.h>
 	// #include <asm/pgtable_types.h>
 	// #include <asm/percpu.h>
@@ -81,8 +81,8 @@
 
 	typedef struct cpuinfo_x86
 	{
-		__u8	x86;		 /* CPU family */
-		__u8	x86_vendor; /* CPU vendor */
+		__u8	x86_family;		/* CPU family */
+		__u8	x86_vendor;		/* CPU vendor */
 		__u8	x86_model;
 		__u8	x86_stepping;
 		/* Number of 4K pages in DTLB/ITLB combined(in pages): */
@@ -96,27 +96,29 @@
 		__u8	x86_coreid_bits;
 		__u8	cu_id;
 		/* Max extended CPUID function supported: */
+		/* or to say maximum CPUID extend opcode */
 		__u32	extended_cpuid_level;
 		/* Maximum supported CPUID level, -1=no CPUID: */
+		/* or to say maximum CPUID basic opcode */
 		int		cpuid_level;
 		/*
 		 * Align to size of unsigned long because the x86_capability array
 		 * is passed to bitops which require the alignment. Use unnamed
 		 * union to enforce the array is aligned to size of unsigned long.
 		 */
-		// union
-		// {
-		// 	__u32 x86_capability[NCAPINTS + NBUGINTS];
-		// 	unsigned long x86_capability_alignment;
-		// };
+		union
+		{
+			__u32 x86_capability[NCAPINTS + NBUGINTS];
+			unsigned long x86_capability_alignment;
+		};
 		char	x86_vendor_id[16];
 		char	x86_model_id[64];
 		/* in KB - valid for CPUS which support this call: */
 		unsigned int	x86_cache_size;
-		int		x86_cache_alignment; /* In bytes */
+		int		x86_cache_alignment;		/* In bytes */
 		/* Cache QoS architectural values, valid only on the BSP: */
-		int		x86_cache_max_rmid;	 /* max index */
-		int		x86_cache_occ_scale; /* scale to bytes */
+		int		x86_cache_max_rmid;			/* max index */
+		int		x86_cache_occ_scale;		/* scale to bytes */
 		int		x86_cache_mbm_width_offset;
 		int		x86_power;
 		unsigned long	loops_per_jiffy;
@@ -176,19 +178,19 @@
 	 * capabilities of CPUs
 	 */
 	extern cpuinfo_x86_s boot_cpu_data;
-	// extern struct cpuinfo_x86 new_cpu_data;
+	// extern cpuinfo_x86_s new_cpu_data;
 
 	// extern __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS];
 	// extern __u32 cpu_caps_set[NCAPINTS + NBUGINTS];
 
-	// DECLARE_PER_CPU_READ_MOSTLY(struct cpuinfo_x86, cpu_info);
+	// DECLARE_PER_CPU_READ_MOSTLY(cpuinfo_x86_s, cpu_info);
 	// #define cpu_data(cpu) per_cpu(cpu_info, cpu)
 
 	// extern const struct seq_operations cpuinfo_op;
 
 	// #define cache_line_size() (boot_cpu_data.x86_cache_alignment)
 
-	// extern void cpu_detect(struct cpuinfo_x86 *c);
+	// extern void cpu_detect(cpuinfo_x86_s *c);
 
 	// static inline unsigned long long l1tf_pfn_limit(void)
 	// {
@@ -196,36 +198,30 @@
 	// }
 
 	extern void early_cpu_init(void);
-	// extern void identify_boot_cpu(void);
-	// extern void identify_secondary_cpu(struct cpuinfo_x86 *);
-	// extern void print_cpu_info(struct cpuinfo_x86 *);
-	// void print_cpu_msr(struct cpuinfo_x86 *);
+	extern void identify_boot_cpu(void);
+	extern void identify_secondary_cpu(cpuinfo_x86_s *);
+	// extern void print_cpu_info(cpuinfo_x86_s *);
+	// void print_cpu_msr(cpuinfo_x86_s *);
 
-	// static inline int have_cpuid_p(void)
-	// {
-	// 	return 1;
-	// }
-	// static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
-	// 								unsigned int *ecx, unsigned int *edx)
-	// {
-	// 	/* ecx is often an input as well as an output. */
-	// 	asm volatile("cpuid"
-	// 				: "=a"(*eax),
-	// 				"=b"(*ebx),
-	// 				"=c"(*ecx),
-	// 				"=d"(*edx)
-	// 				: "0"(*eax), "2"(*ecx)
-	// 				: "memory");
-	// }
+	static inline void native_cpuid(
+			unsigned int *eax, unsigned int *ebx,
+			unsigned int *ecx, unsigned int *edx)
+	{
+		/* ecx is often an input as well as an output. */
+		asm volatile(	"cpuid"
+					:	"=a"(*eax),	"=b"(*ebx),
+						"=c"(*ecx),	"=d"(*edx)
+					:	"0"(*eax),	"2"(*ecx)
+					:	"memory");
+	}
 
-	// #define native_cpuid_reg(reg)                                      \
-	// 	static inline unsigned int native_cpuid_##reg(unsigned int op) \
-	// 	{                                                              \
-	// 		unsigned int eax = op, ebx, ecx = 0, edx;                  \
-	// 																\
-	// 		native_cpuid(&eax, &ebx, &ecx, &edx);                      \
-	// 																\
-	// 		return reg;                                                \
+	// #define native_cpuid_reg(reg)						\
+	// 			static inline unsigned int				\
+	// 			native_cpuid_##reg(unsigned int op)		\
+	// 	{												\
+	// 		unsigned int eax = op, ebx, ecx = 0, edx;	\
+	// 		native_cpuid(&eax, &ebx, &ecx, &edx);		\
+	// 		return reg;									\
 	// 	}
 
 	// /*
@@ -504,7 +500,7 @@
 	// #ifdef CONFIG_PARAVIRT_XXL
 	// #include <asm/paravirt.h>
 	// #else
-	// #define __cpuid native_cpuid
+	#define __cpuid	native_cpuid
 
 	// static inline void load_sp0(unsigned long sp0)
 	// {
@@ -518,70 +514,63 @@
 
 	// unsigned long __get_wchan(struct task_struct *p);
 
-	// /*
-	// * Generic CPUID function
-	// * clear %ecx since some cpus (Cyrix MII) do not set or clear %ecx
-	// * resulting in stale register contents being returned.
-	// */
-	// static inline void cpuid(unsigned int op,
-	// 						unsigned int *eax, unsigned int *ebx,
-	// 						unsigned int *ecx, unsigned int *edx)
-	// {
-	// 	*eax = op;
-	// 	*ecx = 0;
-	// 	__cpuid(eax, ebx, ecx, edx);
-	// }
+	/*
+	 * Generic CPUID function
+	 * clear %ecx since some cpus (Cyrix MII) do not set or clear %ecx
+	 * resulting in stale register contents being returned.
+	 */
+	static inline void cpuid(unsigned int op,
+			unsigned int *eax, unsigned int *ebx,
+			unsigned int *ecx, unsigned int *edx)
+	{
+		*eax = op;
+		*ecx = 0;
+		__cpuid(eax, ebx, ecx, edx);
+	}
 
-	// /* Some CPUID calls want 'count' to be placed in ecx */
-	// static inline void cpuid_count(unsigned int op, int count,
-	// 							unsigned int *eax, unsigned int *ebx,
-	// 							unsigned int *ecx, unsigned int *edx)
-	// {
-	// 	*eax = op;
-	// 	*ecx = count;
-	// 	__cpuid(eax, ebx, ecx, edx);
-	// }
+	/* Some CPUID calls want 'count' to be placed in ecx */
+	static inline void cpuid_count(
+			unsigned int op, int count,
+			unsigned int *eax, unsigned int *ebx,
+			unsigned int *ecx, unsigned int *edx)
+	{
+		*eax = op;
+		*ecx = count;
+		__cpuid(eax, ebx, ecx, edx);
+	}
 
-	// /*
-	// * CPUID functions returning a single datum
-	// */
-	// static inline unsigned int cpuid_eax(unsigned int op)
-	// {
-	// 	unsigned int eax, ebx, ecx, edx;
+	/*
+	 * CPUID functions returning a single datum
+	 */
+	static inline unsigned int cpuid_eax(unsigned int op)
+	{
+		unsigned int eax, ebx, ecx, edx;
+		cpuid(op, &eax, &ebx, &ecx, &edx);
+		return eax;
+	}
 
-	// 	cpuid(op, &eax, &ebx, &ecx, &edx);
+	static inline unsigned int cpuid_ebx(unsigned int op)
+	{
+		unsigned int eax, ebx, ecx, edx;
+		cpuid(op, &eax, &ebx, &ecx, &edx);
+		return ebx;
+	}
 
-	// 	return eax;
-	// }
+	static inline unsigned int cpuid_ecx(unsigned int op)
+	{
+		unsigned int eax, ebx, ecx, edx;
+		cpuid(op, &eax, &ebx, &ecx, &edx);
+		return ecx;
+	}
 
-	// static inline unsigned int cpuid_ebx(unsigned int op)
-	// {
-	// 	unsigned int eax, ebx, ecx, edx;
+	static inline unsigned int cpuid_edx(unsigned int op)
+	{
+		unsigned int eax, ebx, ecx, edx;
+		cpuid(op, &eax, &ebx, &ecx, &edx);
+		return edx;
+	}
 
-	// 	cpuid(op, &eax, &ebx, &ecx, &edx);
-
-	// 	return ebx;
-	// }
-
-	// static inline unsigned int cpuid_ecx(unsigned int op)
-	// {
-	// 	unsigned int eax, ebx, ecx, edx;
-
-	// 	cpuid(op, &eax, &ebx, &ecx, &edx);
-
-	// 	return ecx;
-	// }
-
-	// static inline unsigned int cpuid_edx(unsigned int op)
-	// {
-	// 	unsigned int eax, ebx, ecx, edx;
-
-	// 	cpuid(op, &eax, &ebx, &ecx, &edx);
-
-	// 	return edx;
-	// }
-
-	// extern void select_idle_routine(const struct cpuinfo_x86 *c);
+	// extern void select_idle_routine(const cpuinfo_x86_s *c);
 	// extern void amd_e400_c1e_apic_setup(void);
 
 	// extern unsigned long boot_option_idle_override;

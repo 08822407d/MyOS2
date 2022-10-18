@@ -46,8 +46,12 @@
    yet. */
 static void __init clear_bss(void)
 {
+extern char _bss;
+extern char _ebss;
+
 	// memset(__bss_start, 0,
 	//        (unsigned long) __bss_stop - (unsigned long) __bss_start);
+	memset((void *)&_bss, 0, &_ebss - &_bss);
 }
 
 asmlinkage __visible void __init x86_64_start_kernel(char * real_mode_data)

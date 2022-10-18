@@ -94,7 +94,7 @@
 #include <linux/device/device.h>
 // #include <linux/wait.h>
 #include <linux/kernel/bitops.h>
-// #include <linux/delay.h>
+#include <linux/kernel/delay.h>
 // #include <linux/seq_file.h>
 // #include <linux/serial.h>
 // #include <linux/ratelimit.h>

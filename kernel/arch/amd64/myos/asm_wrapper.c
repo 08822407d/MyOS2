@@ -144,19 +144,6 @@ inline __always_inline void sti()
 	__asm__ __volatile__(	"sti		\n");
 }
 
-inline __always_inline void cpuid(unsigned int Mop,
-								  unsigned int Sop,
-								  unsigned int * a,
-								  unsigned int * b,
-								  unsigned int * c,
-								  unsigned int * d)
-{
-	__asm__ __volatile__(	"cpuid		\n\t"
-						:	"=a"(*a),"=b"(*b),"=c"(*c),"=d"(*d)
-						:	"0"(Mop),"2"(Sop)
-						:	);
-}
-
 inline __always_inline void wrgsbase(uint64_t addr)
 {
 	__asm__ __volatile__(	"wrgsbase	%%rax	\n\t"

@@ -56,20 +56,20 @@
 	// 	static inline void tsx_ap_init(void) {}
 	// #endif /* CONFIG_CPU_SUP_INTEL */
 
-	// extern void get_cpu_cap(struct cpuinfo_x86 *c);
-	// extern void get_cpu_address_sizes(struct cpuinfo_x86 *c);
-	// extern void cpu_detect_cache_sizes(struct cpuinfo_x86 *c);
-	// extern void init_scattered_cpuid_features(struct cpuinfo_x86 *c);
-	// extern void init_intel_cacheinfo(struct cpuinfo_x86 *c);
-	// extern void init_amd_cacheinfo(struct cpuinfo_x86 *c);
-	// extern void init_hygon_cacheinfo(struct cpuinfo_x86 *c);
+	// extern void get_cpu_cap(cpuinfo_x86_s *c);
+	// extern void get_cpu_address_sizes(cpuinfo_x86_s *c);
+	extern void cpu_detect_cache_sizes(cpuinfo_x86_s *c);
+	// extern void init_scattered_cpuid_features(cpuinfo_x86_s *c);
+	// extern void init_intel_cacheinfo(cpuinfo_x86_s *c);
+	// extern void init_amd_cacheinfo(cpuinfo_x86_s *c);
+	// extern void init_hygon_cacheinfo(cpuinfo_x86_s *c);
 
-	// extern void detect_num_cpu_cores(struct cpuinfo_x86 *c);
-	// extern int detect_extended_topology_early(struct cpuinfo_x86 *c);
-	// extern int detect_extended_topology(struct cpuinfo_x86 *c);
-	// extern int detect_ht_early(struct cpuinfo_x86 *c);
-	// extern void detect_ht(struct cpuinfo_x86 *c);
-	// extern void check_null_seg_clears_base(struct cpuinfo_x86 *c);
+	extern void detect_num_cpu_cores(cpuinfo_x86_s *c);
+	// extern int detect_extended_topology_early(cpuinfo_x86_s *c);
+	// extern int detect_extended_topology(cpuinfo_x86_s *c);
+	// extern int detect_ht_early(cpuinfo_x86_s *c);
+	// extern void detect_ht(cpuinfo_x86_s *c);
+	// extern void check_null_seg_clears_base(cpuinfo_x86_s *c);
 
 	// unsigned int aperfmperf_get_khz(int cpu);
 

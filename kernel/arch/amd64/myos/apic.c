@@ -14,6 +14,8 @@
 ***************************************************/
 #include <linux/lib/string.h>
 
+#include <asm/processor.h>
+
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 #include <obsolete/arch_glo.h>
@@ -260,7 +262,7 @@ void init_lapic()
 	unsigned int x,y;
 	unsigned int a,b,c,d;
 	//check APIC & x2APIC support
-	cpuid(1,0,&a,&b,&c,&d);
+	cpuid(1, &a, &b, &c, &d);
 
 	enable_x2apic();
 

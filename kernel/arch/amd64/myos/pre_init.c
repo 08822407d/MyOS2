@@ -14,17 +14,9 @@
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>
 
-extern char _k_phys_start;
-extern char _k_virt_start;
-
-extern char _bss;
-extern char _ebss;
-extern char _end;
-
 extern uint64_t	boot_from_grub2;
 
 kinfo_s			kparam;
-cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
 uint64_t		apic_id[CONFIG_NR_CPUS];
@@ -73,54 +65,8 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 	}
 }
 
-static void cpuid_info(void)
-{
-	unsigned int CpuFacName[4] = {0,0,0,0};
-
-	//vendor_string
-	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	*(unsigned int*)&cpuinfo.id_string[0] = CpuFacName[1];
-	*(unsigned int*)&cpuinfo.id_string[4] = CpuFacName[3];
-	*(unsigned int*)&cpuinfo.id_string[8] = CpuFacName[2];	
-	cpuinfo.id_string[12] = '\0';
-	
-	//brand_string
-	int i = 0, j = -4;
-	for(i = 0x80000002;i < 0x80000005;i++)
-	{
-		cpuid(i,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[0];
-		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[1];
-		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[2];
-		*(unsigned int*)&cpuinfo.cpu_model[j += 4] = CpuFacName[3];
-	}
-	cpuinfo.id_string[j += 4] = '\0';
-
-	//Version Informatin Type,Family,Model,and Stepping ID
-	cpuid(1,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	cpuinfo.family_code = CpuFacName[0] >> 8 & 0xf;
-	cpuinfo.extend_family = CpuFacName[0] >> 20 & 0xff;
-	cpuinfo.model_number = CpuFacName[0] >> 4 & 0xf;
-	cpuinfo.extend_model = CpuFacName[0] >> 16 & 0xf;
-	cpuinfo.processor_type = CpuFacName[0] >> 12 & 0x3;
-	cpuinfo.stepping_id = CpuFacName[0] & 0xf;
-
-	//get Linear/Physical Address size
-	cpuid(0x80000008,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	cpuinfo.physical_address_width = CpuFacName[0] & 0xff;
-	cpuinfo.linear_address_width = CpuFacName[0] >> 8 & 0xff;
-
-	//max cpuid operation code
-	cpuid(0,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	cpuinfo.max_basic_opcode = CpuFacName[0];
-
-	cpuid(0x80000000,0,&CpuFacName[0],&CpuFacName[1],&CpuFacName[2],&CpuFacName[3]);
-	cpuinfo.max_extend_opcode = CpuFacName[0];
-}
-
 void myos_early_init_sytem(void)
 {
-	memset((void *)&_bss, 0, &_ebss - &_bss);
 	enable_AMD_syscall();
 
 	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =
@@ -129,7 +75,5 @@ void myos_early_init_sytem(void)
 	e820_table = (e820_entry_s *)machine_info->mb_mmap;
 	get_VBE_info(&machine_info->mb_fb_common);
 	get_SMP_info(&machine_info->efi_smp_info);
-
-	cpuid_info();
 }
 

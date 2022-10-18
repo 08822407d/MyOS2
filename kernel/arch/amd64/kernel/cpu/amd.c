@@ -12,7 +12,7 @@
 // #include <asm/processor.h>
 // #include <asm/apic.h>
 // #include <asm/cacheinfo.h>
-// #include <asm/cpu.h>
+#include <asm/cpu.h>
 // #include <asm/spec-ctrl.h>
 // #include <asm/smp.h>
 // #include <asm/numa.h>

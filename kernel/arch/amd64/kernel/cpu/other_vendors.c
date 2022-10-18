@@ -1,11 +1,3 @@
-
-
-// static const cpu_dev_s default_cpu = {
-// 	.c_init			= default_init,
-// 	.c_vendor		= "Unknown",
-// 	.c_x86_vendor	= X86_VENDOR_UNKNOWN,
-// };
-
 // static const cpu_dev_s cyrix_cpu_dev = {
 // 	.c_vendor		= "Cyrix",
 // 	.c_ident		= {"CyrixInstead"},

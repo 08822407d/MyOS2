@@ -7,7 +7,7 @@
 // #include <linux/suspend.h>
 // #include <linux/root_dev.h>
 // #include <linux/security.h>
-// #include <linux/delay.h>
+#include <linux/kernel/delay.h>
 #include <linux/block/genhd.h>
 #include <linux/kernel/mount.h>
 #include <linux/device/device.h>

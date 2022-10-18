@@ -6,8 +6,8 @@ set(CMAKE_ASM_FLAGS
 # kernel common C make flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
 				-mno-red-zone \
-				${UNUSED_MACRO} \
-				-D__KERNEL__ -DCONFIG_FLATMEM -DCONFIG_NR_CPUS=256 \
+				${UNUSED_MACRO} -D__KERNEL__ \
+				-DCONFIG_FLATMEM -DCONFIG_NR_CPUS=256 \
 				-DCONFIG_64BIT -DCONFIG_PHYS_ADDR_T_64BIT \
 				-DCONFIG_ZONE_DMA -DCONFIG_ZONE_DMA32 \
 				-T ${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/kernel.lds")
