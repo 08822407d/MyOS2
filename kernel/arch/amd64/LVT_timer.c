@@ -5,10 +5,10 @@
 #include <obsolete/printk.h>
 #include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
-#include "include/arch_proto.h"
-#include "include/interrupt.h"
-#include "include/apic.h"
-#include "include/device.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/interrupt.h>
+#include <obsolete/apic.h>
+#include <obsolete/device.h>
 
 #define DIVISOR_2	0x00
 #define DIVISOR_4	0x01

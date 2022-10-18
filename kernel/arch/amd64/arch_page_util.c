@@ -12,10 +12,10 @@
 #include <obsolete/printk.h>
 #include <obsolete/dbg_utils.h>
 
-#include "include/archconst.h"
-#include "include/archtypes.h"
-#include "include/arch_glo.h"
-#include "include/arch_proto.h"
+#include <obsolete/archconst.h>
+#include <obsolete/archtypes.h>
+#include <obsolete/arch_glo.h>
+#include <obsolete/arch_proto.h>
 
 PML4E_T	*	KERN_PML4;
 PDPTE_T	*	KERN_PDPT;

@@ -3,10 +3,10 @@
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
-#include "include/arch_proto.h"
-#include "include/interrupt.h"
-#include "include/apic.h"
-#include "include/device.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/interrupt.h>
+#include <obsolete/apic.h>
+#include <obsolete/device.h>
 
 extern gate_table_s exception_init_table[];
 

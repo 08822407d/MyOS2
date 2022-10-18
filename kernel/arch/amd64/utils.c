@@ -8,8 +8,8 @@
 #include <obsolete/printk.h>
 #include <linux/fs/fs.h>
 
-#include "include/arch_proto.h"
-#include "include/archconst.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/archconst.h>
 
 inline __always_inline bool verify_area(unsigned char *addr, unsigned long size)
 {

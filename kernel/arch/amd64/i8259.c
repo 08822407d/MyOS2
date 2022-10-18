@@ -1,5 +1,5 @@
-#include "include/arch_proto.h"
-#include "include/interrupt.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/interrupt.h>
 
 void init_i8259()
 {

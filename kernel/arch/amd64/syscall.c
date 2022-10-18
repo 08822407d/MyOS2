@@ -11,8 +11,8 @@
 #include <obsolete/printk.h>
 #include <obsolete/wait_queue.h>
 
-#include "include/archconst.h"
-#include "include/arch_proto.h"
+#include <obsolete/archconst.h>
+#include <obsolete/arch_proto.h>
 
 long myos_no_system_call(void)
 {

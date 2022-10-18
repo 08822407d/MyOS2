@@ -1,6 +1,6 @@
 #include <linux/kernel/linkage.h>
 
-#include "../arch/amd64/include/archconst.h"
+#include <obsolete/archconst.h>
 
 .balign	0x1000
 .section .AP_boot.text, "ax"

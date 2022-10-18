@@ -4,9 +4,9 @@
 
 // #include <obsolete/glo.h>
 // #include <obsolete/printk.h>
-// #include "../arch/amd64/include/arch_proto.h"
-// #include "../arch/amd64/include/device.h"
-// #include "../arch/amd64/include/ide.h"
+// #include <obsolete/arch_proto.h"
+// #include <obsolete/device.h>
+// #include <obsolete/ide.h"
 
 // extern atomic_T boot_counter;
 

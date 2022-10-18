@@ -2,8 +2,8 @@
 #include <linux/lib/string.h>
 
 #include <obsolete/dbg_utils.h>
-#include "../arch/amd64/include/archconst.h"
-#include "../arch/amd64/include/arch_proto.h"
+#include <obsolete/archconst.h>
+#include <obsolete/arch_proto.h>
 
 pgmapset_s DBG_get_pgmapset(IN reg_t cr3, IN virt_addr_t virt)
 {

@@ -1,7 +1,7 @@
 #include <linux/kernel/linkage.h>
 
-#include "include/archconst.h"
-#include "include/interrupt.h"
+#include <obsolete/archconst.h>
+#include <obsolete/interrupt.h>
 
 .align 16
 /*

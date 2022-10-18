@@ -6,10 +6,10 @@
 #include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
-#include "../arch/amd64/include/archconst.h"
-#include "../arch/amd64/include/archtypes.h"
-#include "../arch/amd64/include/arch_glo.h"
-#include "../arch/amd64/include/arch_proto.h"
+#include <obsolete/archconst.h>
+#include <obsolete/archtypes.h>
+#include <obsolete/arch_glo.h>
+#include <obsolete/arch_proto.h>
 
 extern position_t Pos;
 

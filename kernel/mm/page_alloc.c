@@ -84,7 +84,7 @@
 
 
 #include <obsolete/glo.h>
-#include "../arch/amd64/include/mutex.h"
+#include <obsolete/mutex.h>
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:

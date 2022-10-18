@@ -9,11 +9,11 @@
 #include <obsolete/ktypes.h>
 #include <obsolete/wait_queue.h>
 
-#include "include/arch_proto.h"
-#include "include/interrupt.h"
-#include "include/apic.h"
-#include "include/keyboard.h"
-#include "include/device.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/interrupt.h>
+#include <obsolete/apic.h>
+#include <obsolete/keyboard.h>
+#include <obsolete/device.h>
 
 extern List_hdr_s kbd_wqhdr;
 

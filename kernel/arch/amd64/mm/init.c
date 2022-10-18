@@ -30,7 +30,7 @@
 // #include "mm_internal.h"
 
 
-#include <arch_proto.h>
+#include <obsolete/arch_proto.h>
 
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up

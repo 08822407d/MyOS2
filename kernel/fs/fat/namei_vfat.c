@@ -28,8 +28,8 @@
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
-#include "../../arch/amd64/include/device.h"
-#include "../../arch/amd64/include/ide.h"
+#include <obsolete/device.h>
+#include <obsolete/ide.h>
 
 
 static int vfat_revalidate(dentry_s *dentry, unsigned int flags)

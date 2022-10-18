@@ -60,7 +60,7 @@
 // #include <asm/uv/uv.h>
 // #include <asm/sigframe.h>
 
-// #include "cpu.h"
+#include "cpu.h"
 
 void __init early_cpu_init(void)
 {

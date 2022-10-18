@@ -26,7 +26,7 @@
 
 
 #include <linux/kernel/align.h>
-#include "../arch/amd64/include/arch_proto.h"
+#include <obsolete/arch_proto.h>
 
 typedef struct getdents_callback64 {
 	dir_ctxt_s ctx;

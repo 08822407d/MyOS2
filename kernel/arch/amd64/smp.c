@@ -6,10 +6,10 @@
 #include <linux/kernel/sched.h>
 #include <linux/mm/memblock.h>
 
-#include "include/arch_proto.h"
-#include "include/archconst.h"
-#include "include/arch_glo.h"
-#include "include/mutex.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/archconst.h>
+#include <obsolete/arch_glo.h>
+#include <obsolete/mutex.h>
 
 cpudata_u *	percpu_data;
 extern u32	cr3_paddr;

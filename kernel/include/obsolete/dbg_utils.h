@@ -1,7 +1,7 @@
 #ifndef _DBG_UTILS_H_
 #define _DBG_UTILS_H_
 
-#include "../arch/amd64/include/archtypes.h"
+#include <obsolete/archtypes.h>
 
 	typedef struct pgmapset
 	{

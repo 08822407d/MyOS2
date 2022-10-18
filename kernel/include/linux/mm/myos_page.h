@@ -6,7 +6,7 @@
 #include <uapi/kernel/const.h>
 
 #include <obsolete/block_dev.h>
-#include "../arch/amd64/include/archconst.h"
+#include <obsolete/archconst.h>
 
 	////struct page attribute (alloc_pages flags)
 	//

@@ -7,8 +7,8 @@
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
-#include "../../arch/amd64/include/device.h"
-#include "../../arch/amd64/include/ide.h"
+#include <obsolete/device.h>
+#include <obsolete/ide.h>
 
 char *FAT32_parse_short(int *namelen, const msdos_dirent_s *de)
 {

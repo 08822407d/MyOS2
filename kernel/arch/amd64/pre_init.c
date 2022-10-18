@@ -5,9 +5,9 @@
 
 #include <asm/e820-types.h>
 
-#include "include/arch_proto.h"
-#include "include/archconst.h"
-#include "include/arch_glo.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/archconst.h>
+#include <obsolete/arch_glo.h>
 
 #include <obsolete/proto.h>
 
