@@ -1,0 +1,4 @@
+file(GLOB MYOS_ARCH_C_SRCS *.c)
+file(GLOB MYOS_ARCH_ASM_SRCS *.S)
+
+target_sources(kern PRIVATE ${MYOS_ARCH_C_SRCS} ${MYOS_ARCH_ASM_SRCS})
