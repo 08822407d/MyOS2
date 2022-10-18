@@ -70,15 +70,7 @@
 
 e820_entry_s *e820_table;
 
-#ifdef CONFIG_X86_32
-#	ifdef CONFIG_X86_PAE
-#		define MAX_ARCH_PFN (1ULL << (36 - PAGE_SHIFT))
-#	else
-#		define MAX_ARCH_PFN (1ULL << (32 - PAGE_SHIFT))
-#	endif
-#else /* CONFIG_X86_32 */
-#	define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
-#endif
+#define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
 
 /*
  * Find the highest page frame number we have available

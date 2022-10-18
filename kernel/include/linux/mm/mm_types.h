@@ -494,7 +494,7 @@
 	// 	struct mempolicy *vm_policy; /* NUMA policy for the VMA */
 	// #endif
 	// 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
-	// } __randomize_layout;
+	// };
 
 	// struct kioctx_table;
 	// struct mm_struct
@@ -680,7 +680,7 @@
 	// #ifdef CONFIG_IOMMU_SUPPORT
 	// 		u32 pasid;
 	// #endif
-	// 	} __randomize_layout;
+	// 	};
 
 	// 	/*
 	// 	* The mm_cpumask needs to be at the end of mm_struct, because it

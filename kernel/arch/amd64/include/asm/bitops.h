@@ -309,7 +309,6 @@
 		// {
 		// 	int r;
 
-		// #ifdef CONFIG_X86_64
 		// 	/*
 		// 	* AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
 		// 	* dest reg is undefined if x==0, but their CPU architect says its
@@ -322,19 +321,7 @@
 		// 	asm("bsfl %1,%0"
 		// 		: "=r"(r)
 		// 		: "rm"(x), "0"(-1));
-		// #elif defined(CONFIG_X86_CMOV)
-		// 	asm("bsfl %1,%0\n\t"
-		// 		"cmovzl %2,%0"
-		// 		: "=&r"(r)
-		// 		: "rm"(x), "r"(-1));
-		// #else
-		// 	asm("bsfl %1,%0\n\t"
-		// 		"jnz 1f\n\t"
-		// 		"movl $-1,%0\n"
-		// 		"1:"
-		// 		: "=r"(r)
-		// 		: "rm"(x));
-		// #endif
+
 		// 	return r + 1;
 		// }
 
@@ -353,7 +340,6 @@
 		// {
 		// 	int r;
 
-		// #ifdef CONFIG_X86_64
 		// 	/*
 		// 	* AMD64 says BSRL won't clobber the dest reg if x==0; Intel64 says the
 		// 	* dest reg is undefined if x==0, but their CPU architect says its
@@ -366,19 +352,7 @@
 		// 	asm("bsrl %1,%0"
 		// 		: "=r"(r)
 		// 		: "rm"(x), "0"(-1));
-		// #elif defined(CONFIG_X86_CMOV)
-		// 	asm("bsrl %1,%0\n\t"
-		// 		"cmovzl %2,%0"
-		// 		: "=&r"(r)
-		// 		: "rm"(x), "rm"(-1));
-		// #else
-		// 	asm("bsrl %1,%0\n\t"
-		// 		"jnz 1f\n\t"
-		// 		"movl $-1,%0\n"
-		// 		"1:"
-		// 		: "=r"(r)
-		// 		: "rm"(x));
-		// #endif
+
 		// 	return r + 1;
 		// }
 
@@ -393,7 +367,6 @@
 		//  * set bit if value is nonzero. The last (most significant) bit is
 		//  * at position 64.
 		//  */
-		// #ifdef CONFIG_X86_64
 		// static __always_inline int fls64(__u64 x)
 		// {
 		// 	int bitpos = -1;
@@ -407,9 +380,6 @@
 		// 		: "rm"(x));
 		// 	return bitpos + 1;
 		// }
-		// #else
-		// #include <asm-generic/bitops/fls64.h>
-		// #endif
 
 		// #include <asm-generic/bitops/sched.h>
 

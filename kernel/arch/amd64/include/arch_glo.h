@@ -3,8 +3,8 @@
 
 #include "archtypes.h"
 
-	extern uint64_t	apic_id[CONFIG_MAX_CPUS];
-	extern struct cputopo	smp_topos[CONFIG_MAX_CPUS];
+	extern uint64_t	apic_id[CONFIG_NR_CPUS];
+	extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 	extern desctblptr64_T	gdt_ptr;
 	extern desctblptr64_T	idt_ptr;

@@ -180,7 +180,8 @@
 		"api.h": "c",
 		"e820-api.h": "c",
 		"e820-types.h": "c",
-		"pgtable_64_types.h": "c"
+		"pgtable_64_types.h": "c",
+		"cache.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

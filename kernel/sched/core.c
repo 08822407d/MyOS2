@@ -226,7 +226,6 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 // 	if (READ_ONCE(p->on_rq) && ttwu_runnable(p, wake_flags))
 // 		goto unlock;
 
-// #ifdef CONFIG_SMP
 // 	/*
 // 	 * Ensure we load p->on_cpu _after_ p->on_rq, otherwise it would be
 // 	 * possible to, falsely, observe p->on_cpu == 0.
@@ -305,9 +304,6 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 // 		psi_ttwu_dequeue(p);
 // 		set_task_cpu(p, cpu);
 // 	}
-// #else
-// 	cpu = task_cpu(p);
-// #endif /* CONFIG_SMP */
 
 // 	ttwu_queue(p, cpu, wake_flags);
 // unlock:

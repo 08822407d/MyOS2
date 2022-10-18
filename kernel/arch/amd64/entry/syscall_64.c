@@ -4,7 +4,7 @@
 
 #include <linux/kernel/linkage.h>
 // #include <linux/sys.h>
-// #include <linux/cache.h>
+#include <linux/kernel/cache.h>
 #include <linux/kernel/syscalls.h>
 #include <asm/syscall.h>
 

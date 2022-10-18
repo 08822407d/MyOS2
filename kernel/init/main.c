@@ -92,7 +92,7 @@
 // #include <linux/integrity.h>
 // #include <linux/proc_ns.h>
 // #include <linux/io.h>
-// #include <linux/cache.h>
+#include <linux/kernel/cache.h>
 // #include <linux/rodata_test.h>
 // #include <linux/jump_label.h>
 // #include <linux/mem_encrypt.h>

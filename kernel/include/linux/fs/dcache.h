@@ -8,7 +8,7 @@
 	// #include <linux/rculist_bl.h>
 	// #include <linux/spinlock.h>
 	// #include <linux/seqlock.h>
-	// #include <linux/cache.h>
+	#include <linux/kernel/cache.h>
 	// #include <linux/rcupdate.h>
 	// #include <linux/lockref.h>
 	// #include <linux/stringhash.h>

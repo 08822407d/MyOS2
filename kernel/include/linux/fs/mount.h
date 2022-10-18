@@ -47,12 +47,9 @@ typedef struct mount {
 	// 	struct rcu_head mnt_rcu;
 	// 	struct llist_node mnt_llist;
 	// };
-// #ifdef CONFIG_SMP
-// 	struct mnt_pcp __percpu *mnt_pcp;
-// #else
-// 	int			mnt_count;
-// 	int			mnt_writers;
-// #endif
+
+	// struct mnt_pcp __percpu *mnt_pcp;
+
 	List_hdr_s	mnt_mounts;		/* list of children, anchored here */
 	List_s		mnt_child;		/* and going through their mnt_child */
 	// list_head_s	mnt_instance;	/* mount instance on sb->s_mounts */

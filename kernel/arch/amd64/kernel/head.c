@@ -22,7 +22,7 @@
 // #include <linux/cc_platform.h>
 // #include <linux/pgtable.h>
 
-// #include <asm/processor.h>
+#include <asm/processor.h>
 // #include <asm/proto.h>
 // #include <asm/smp.h>
 #include <asm/setup.h>

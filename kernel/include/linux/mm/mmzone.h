@@ -8,7 +8,7 @@
 	#		include <linux/lib/list.h>
 	// #include <linux/wait.h>
 	#		include <linux/kernel/bitops.h>
-	// #include <linux/cache.h>
+	#		include <linux/kernel/cache.h>
 	// #include <linux/threads.h>
 	// #include <linux/numa.h>
 	#		include <linux/init/init.h>
@@ -394,10 +394,8 @@
 
 			// struct per_cpu_zonestat
 			// {
-			// #ifdef CONFIG_SMP
 			// 	s8 vm_stat_diff[NR_VM_ZONE_STAT_ITEMS];
 			// 	s8 stat_threshold;
-			// #endif
 			// #ifdef CONFIG_NUMA
 			// 	/*
 			// 	* Low priority inaccurate counters that are only folded

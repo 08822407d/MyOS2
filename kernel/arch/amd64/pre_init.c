@@ -27,8 +27,8 @@ kinfo_s			kparam;
 cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
-uint64_t		apic_id[CONFIG_MAX_CPUS];
-struct cputopo	smp_topos[CONFIG_MAX_CPUS];
+uint64_t		apic_id[CONFIG_NR_CPUS];
+struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 
 static void enable_AMD_syscall()

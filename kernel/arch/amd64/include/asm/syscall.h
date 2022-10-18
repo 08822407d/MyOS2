@@ -82,22 +82,6 @@
 	// 	regs->ax = (long)error ?: val;
 	// }
 
-	// #ifdef CONFIG_X86_32
-
-		// static inline void syscall_get_arguments(struct task_struct *task,
-		// 										struct pt_regs *regs,
-		// 										unsigned long *args)
-		// {
-		// 	memcpy(args, &regs->bx, 6 * sizeof(args[0]));
-		// }
-
-		// static inline int syscall_get_arch(struct task_struct *task)
-		// {
-		// 	return AUDIT_ARCH_I386;
-		// }
-
-	// #else /* CONFIG_X86_64 */
-
 		// static inline void syscall_get_arguments(struct task_struct *task,
 		// 										struct pt_regs *regs,
 		// 										unsigned long *args)
@@ -136,7 +120,5 @@
 		// void do_syscall_64(struct pt_regs *regs, int nr);
 		// void do_int80_syscall_32(struct pt_regs *regs);
 		// long do_fast_syscall_32(struct pt_regs *regs);
-
-	// #endif /* CONFIG_X86_32 */
 
 #endif /* _ASM_X86_SYSCALL_H */
