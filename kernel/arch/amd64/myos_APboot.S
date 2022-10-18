@@ -3,7 +3,7 @@
 #include "../arch/amd64/include/archconst.h"
 
 .balign	0x1000
-.text
+.section .AP_boot.text, "ax"
 
 /*==============================================================================================*
  *										real mode code                              			*
