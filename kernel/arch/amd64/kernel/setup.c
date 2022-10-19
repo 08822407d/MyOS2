@@ -206,22 +206,24 @@ void __init setup_arch(char **cmdline_p)
 	// 将一些保留内存段在memblock里标记为已使用,比如bios,kernel等已占用空间
 	early_reserve_memory();
 
-	// 这里用e820获取的内存分布初始化memblock分配器
-	myos_e820__memblock_setup();
-	// 现在可以使用memblock分配内存了
-
 	/*
 	 * partially used pages are not usable - thus
 	 * we are rounding upwards:
 	 */
 	// 计算内存最大页数目
 	max_pfn = e820__end_of_ram_pfn();
+	max_possible_pfn = max_pfn;
 
 	// check_x2apic();
 
 	// /* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
+
+	// 这里用e820获取的内存分布初始化memblock分配器
+	myos_e820__memblock_setup();
+	// 现在可以使用memblock分配内存了
+
 
 	myos_early_init_arch_data(kparam.nr_lcpu);
 

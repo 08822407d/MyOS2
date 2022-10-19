@@ -144,7 +144,8 @@ void __init myos_e820__memblock_setup(void)
 		if (entry->type == E820_TYPE_SOFT_RESERVED)
 			memblock_reserve(entry->addr, entry->size);
 
-		if (entry->type != E820_TYPE_RAM && entry->type != E820_TYPE_RESERVED_KERN)
+		if (entry->type != E820_TYPE_RAM &&
+			entry->type != E820_TYPE_RESERVED_KERN)
 			continue;
 
 		memblock_add(entry->addr, entry->size);
