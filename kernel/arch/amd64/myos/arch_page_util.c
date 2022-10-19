@@ -18,10 +18,7 @@
 #include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
 
-PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
-PDPTE_T	*KERN_PDPT;
-PDE_T	*KERN_PD;
-
+extern PML4E_T	*KERN_PML4;
 
 static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr)
 {

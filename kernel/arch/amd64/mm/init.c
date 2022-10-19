@@ -31,8 +31,10 @@
 
 
 #include <obsolete/arch_proto.h>
+#include <obsolete/ktypes.h>
 
 // this value is also loaded by APboot assembly code
+PML4E_T	*KERN_PML4;
 phys_addr_t kernel_cr3 = 0;
 
 /**
@@ -49,29 +51,36 @@ phys_addr_t kernel_cr3 = 0;
 static void __init myos_memory_map_bottom_up(
 		unsigned long map_start, unsigned long map_end)
 {
-	extern PML4E_T	KERN_PML4[];
+	extern framebuffer_s	framebuffer;
 
-	// KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
-	// static unsigned long __init init_range_memory_mapping(
-	// 		unsigned long r_start, unsigned long r_end)
-	// {
-			unsigned long start_pfn, end_pfn;
-			unsigned long mapped_ram_size = 0;
-			int i;
+	// // KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
+	// // static unsigned long __init init_range_memory_mapping(
+	// // 		unsigned long r_start, unsigned long r_end)
+	// // {
+	// 		unsigned long start_pfn, end_pfn;
+	// 		unsigned long mapped_ram_size = 0;
+	// 		int i;
 
-			for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
-				u64 start = PFN_PHYS(start_pfn);
-				u64 end = PFN_PHYS(end_pfn);
-				if (start >= end)
-					continue;
+	// 		for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
+	// 			u64 start = PFN_PHYS(start_pfn);
+	// 			u64 end = PFN_PHYS(end_pfn);
+	// 			if (start >= end)
+	// 				continue;
 
-				myos_init_memory_mapping(start, end - start);
-				mapped_ram_size += end - start;
-			}
+	// 			myos_init_memory_mapping(start, end - start);
+	// 			mapped_ram_size += end - start;
+	// 		}
 
-			// return mapped_ram_size;
-	// }
-	kernel_cr3 = myos_virt2phys((virt_addr_t)&KERN_PML4);
+	// 		// return mapped_ram_size;
+	// // }
+
+	KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
+	// map available memory from e820
+	myos_init_memory_mapping(0, max_low_pfn * PAGE_SIZE);
+	// map available memory from e820
+	myos_init_memory_mapping(framebuffer.FB_phybase, framebuffer.FB_size);
+
+	kernel_cr3 = myos_virt2phys((virt_addr_t)KERN_PML4);
 }
 
 void __init init_mem_mapping(void)
@@ -85,7 +94,7 @@ void __init init_mem_mapping(void)
 	end = max_pfn << PAGE_SHIFT;
 
 	/* the ISA range is always mapped regardless of memory holes */
-	myos_init_memory_mapping(0, ISA_END_ADDRESS);
+	// myos_init_memory_mapping(0, ISA_END_ADDRESS);
 
 	// /* Init the trampoline, possibly with KASLR memory offset */
 	// init_trampoline();
@@ -100,6 +109,5 @@ void __init init_mem_mapping(void)
 	// load_cr3(swapper_pg_dir);
 	load_cr3((reg_t)kernel_cr3);
 	// __flush_tlb_all();
-
 	// early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
 }
