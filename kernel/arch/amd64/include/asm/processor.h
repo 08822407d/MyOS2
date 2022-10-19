@@ -17,7 +17,7 @@
 	// #include <asm/current.h>
 	#include <asm/cpufeatures.h>
 	#include <asm/page.h>
-	// #include <asm/pgtable_types.h>
+	#include <asm/pgtable_types.h>
 	// #include <asm/percpu.h>
 	#include <asm/msr.h>
 	// #include <asm/desc_defs.h>
@@ -225,20 +225,46 @@
 	// 	}
 
 	// /*
-	// * Native CPUID functions returning a single datum.
-	// */
+	//  * Native CPUID functions returning a single datum.
+	//  */
 	// native_cpuid_reg(eax)
-	// 	native_cpuid_reg(ebx)
-	// 		native_cpuid_reg(ecx)
-	// 			native_cpuid_reg(edx)
+	// native_cpuid_reg(ebx)
+	// native_cpuid_reg(ecx)
+	// native_cpuid_reg(edx)
 
-	// 	/*
-	// 	* Friendlier CR3 helpers.
-	// 	*/
-	// 	static inline unsigned long read_cr3_pa(void)
+	static inline reg_t myos_read_cr3()
+	{
+		reg_t ret_val = 0;
+		__asm__ __volatile__(	"movq	%%cr3,	%0 	\n\t"
+								"nop				\n\t"
+							:	"=r"(ret_val)
+							:
+							:
+							);
+		return ret_val;
+	}
+
+	static inline void myos_write_cr3(reg_t cr3)
+	{
+		__asm__ __volatile__(	"movq	%0, %%cr3	\n\t"
+								"nop				\n\t"
+							:
+							:	"r"(cr3)
+							:
+							);
+	}
+
+	/*
+	 * Friendlier CR3 helpers.
+	 */
+	// static inline unsigned long read_cr3_pa(void)
 	// {
-	// 	return __read_cr3() & CR3_ADDR_MASK;
+	// 	// return __read_cr3() & CR3_ADDR_MASK;
 	// }
+	static inline unsigned long read_cr3_pa(void)
+	{
+		return myos_read_cr3() & CR3_ADDR_MASK;
+	}
 
 	// static inline unsigned long native_read_cr3_pa(void)
 	// {
@@ -247,8 +273,12 @@
 
 	// static inline void load_cr3(pgd_t *pgdir)
 	// {
-	// 	write_cr3(__sme_pa(pgdir));
+	// 	// write_cr3(__sme_pa(pgdir));
 	// }
+	static inline void load_cr3(reg_t pgdir)
+	{
+		myos_write_cr3(pgdir);
+	}
 
 	// /*
 	// * Note that while the legacy 'TSS' name comes from 'Task State Segment',

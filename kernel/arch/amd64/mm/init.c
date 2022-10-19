@@ -32,6 +32,9 @@
 
 #include <obsolete/arch_proto.h>
 
+// this value is also loaded by APboot assembly code
+phys_addr_t kernel_cr3 = 0;
+
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up
  * @map_start: start address of the target memory range
@@ -43,40 +46,32 @@
  * be allocated just above the kernel and we map the memory
  * in [map_start, map_end) in bottom-up.
  */
-static void __init memory_map_bottom_up(
+static void __init myos_memory_map_bottom_up(
 		unsigned long map_start, unsigned long map_end)
 {
-	// unsigned long next, start;
-	// unsigned long mapped_ram_size = 0;
-	// /* step_size need to be small so pgt_buf from BRK could cover it */
-	// unsigned long step_size = PMD_SIZE;
+	extern PML4E_T	KERN_PML4[];
 
-	// start = map_start;
-	// min_pfn_mapped = start >> PAGE_SHIFT;
+	// KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
+	// static unsigned long __init init_range_memory_mapping(
+	// 		unsigned long r_start, unsigned long r_end)
+	// {
+			unsigned long start_pfn, end_pfn;
+			unsigned long mapped_ram_size = 0;
+			int i;
 
-	// /*
-	//  * We start from the bottom (@map_start) and go to the top (@map_end).
-	//  * The memblock_find_in_range() gets us a block of RAM from the
-	//  * end of RAM in [min_pfn_mapped, max_pfn_mapped) used as new pages
-	//  * for page table.
-	//  */
-	// while (start < map_end) {
-	// 	if (step_size && map_end - start > step_size) {
-	// 		next = round_up(start + 1, step_size);
-	// 		if (next > map_end)
-	// 			next = map_end;
-	// 	} else {
-	// 		next = map_end;
-	// 	}
+			for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
+				u64 start = PFN_PHYS(start_pfn);
+				u64 end = PFN_PHYS(end_pfn);
+				if (start >= end)
+					continue;
 
-	// 	mapped_ram_size += init_range_memory_mapping(start, next);
-	// 	start = next;
+				myos_init_memory_mapping(start, end - start);
+				mapped_ram_size += end - start;
+			}
 
-	// 	if (mapped_ram_size >= step_size)
-	// 		step_size = get_new_step_size(step_size);
+			// return mapped_ram_size;
 	// }
-
-	myos_init_arch_page();
+	kernel_cr3 = myos_virt2phys((virt_addr_t)&KERN_PML4);
 }
 
 void __init init_mem_mapping(void)
@@ -90,12 +85,12 @@ void __init init_mem_mapping(void)
 	end = max_pfn << PAGE_SHIFT;
 
 	/* the ISA range is always mapped regardless of memory holes */
-	// init_memory_mapping(0, ISA_END_ADDRESS, PAGE_KERNEL);
+	myos_init_memory_mapping(0, ISA_END_ADDRESS);
 
 	// /* Init the trampoline, possibly with KASLR memory offset */
 	// init_trampoline();
 
-	memory_map_bottom_up(ISA_END_ADDRESS, end);
+	myos_memory_map_bottom_up(ISA_END_ADDRESS, end);
 
 	if (max_pfn > max_low_pfn) {
 		/* can we preserve max_low_pfn ?*/
@@ -103,9 +98,8 @@ void __init init_mem_mapping(void)
 	}
 
 	// load_cr3(swapper_pg_dir);
+	load_cr3((reg_t)kernel_cr3);
 	// __flush_tlb_all();
-
-	// x86_init.hyper.init_mem_mapping();
 
 	// early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
 }

@@ -183,7 +183,8 @@
 		"pgtable_64_types.h": "c",
 		"cache.h": "c",
 		"cpu.h": "c",
-		"processor-flags.h": "c"
+		"processor-flags.h": "c",
+		"processor.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

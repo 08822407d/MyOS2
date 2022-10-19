@@ -363,7 +363,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	}
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
-	pg_load_cr3(curr->mm_struct->cr3);
+	load_cr3(curr->mm_struct->cr3);
 	curr->flags &= ~CLONE_VFORK;
 
 	long argv_pos = 0;

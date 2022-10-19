@@ -4,7 +4,7 @@
 
 	// #include <linux/mem_encrypt.h>
 	#include <asm/page.h>
-	// #include <asm/pgtable_types.h>
+	#include <asm/pgtable_types.h>
 
 	// /*
 	//  * Macro to mark a page protection value as UC-

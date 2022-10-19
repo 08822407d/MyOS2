@@ -405,8 +405,8 @@ void __init_memblock __next_mem_pfn_range(int *idx,
 
 	while (++*idx < type->cnt) {
 		r = &type->regions[*idx];
-		if (PFN_UP(r->base) >= PFN_DOWN(r->base + r->size))
-			continue;
+		if (PFN_UP(r->base) < PFN_DOWN(r->base + r->size))
+			break;;
 	}
 	if (*idx >= type->cnt) {
 		*idx = -1;
@@ -576,8 +576,6 @@ void * myos_memblock_alloc_DMA(size_t size, size_t align)
 
 	ptr = memblock_alloc_internal(size, align,
 			MEMBLOCK_LOW_LIMIT, MAX_DMA_PFN << PAGE_SHIFT);
-	if (ptr)
-		memset(ptr, 0, size);
 
 	return ptr;
 }
@@ -588,8 +586,6 @@ void * myos_memblock_alloc_normal(size_t size, size_t align)
 
 	ptr = memblock_alloc_internal(size, align,
 			MAX_DMA_PFN << PAGE_SHIFT, MEMBLOCK_ALLOC_ACCESSIBLE);
-	if (ptr)
-		memset(ptr, 0, size);
 
 	return ptr;
 }

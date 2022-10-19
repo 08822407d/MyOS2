@@ -8,20 +8,20 @@
 	#	include <linux/kernel/types.h>
 	// #	include <asm/kaslr.h>
 
-		// /*
-		//  * These are used to make use of C type-checking..
-		//  */
-		// typedef unsigned long pteval_t;
-		// typedef unsigned long pmdval_t;
-		// typedef unsigned long pudval_t;
-		// typedef unsigned long p4dval_t;
-		// typedef unsigned long pgdval_t;
-		// typedef unsigned long pgprotval_t;
+		/*
+		 * These are used to make use of C type-checking..
+		 */
+		typedef unsigned long pteval_t;
+		typedef unsigned long pmdval_t;
+		typedef unsigned long pudval_t;
+		typedef unsigned long p4dval_t;
+		typedef unsigned long pgdval_t;
+		typedef unsigned long pgprotval_t;
 
-		// typedef struct
-		// {
-		// 	pteval_t pte;
-		// } pte_t;
+		typedef struct
+		{
+			pteval_t pte;
+		} pte_t;
 
 	// #ifdef CONFIG_X86_5LEVEL
 	// 	extern unsigned int __pgtable_l5_enabled;

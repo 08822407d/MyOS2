@@ -6,6 +6,7 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
+#include <asm/processor.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/ktypes.h>
@@ -17,33 +18,10 @@
 #include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
 
-PML4E_T	*	KERN_PML4;
-PDPTE_T	*	KERN_PDPT;
-PDE_T	*	KERN_PD;
+PML4E_T	KERN_PML4[PGENT_NR] __aligned(PGENT_SIZE);
+PDPTE_T	*KERN_PDPT;
+PDE_T	*KERN_PD;
 
-// this value is also loaded by APboot assembly code
-phys_addr_t kernel_cr3 = 0;
-
-static int early_arch_map_memregion(phys_addr_t base, size_t size);
-
-void __init myos_init_arch_page()
-{
-	while (!kparam.arch_init_flags.arch_data)
-	{
-		// before init x86 page, GDT IDT TSS must be initiated
-	}
-	
-	KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
-	// map available memory from e820
-	early_arch_map_memregion(0, max_low_pfn * PAGE_SIZE);
-	// map available memory from e820
-	early_arch_map_memregion(framebuffer.FB_phybase, framebuffer.FB_size);
-
-	kernel_cr3 = myos_virt2phys((virt_addr_t)KERN_PML4);
-	pg_load_cr3((reg_t)kernel_cr3);
-	// set init flag
-	kparam.arch_init_flags.arch_page = 1;
-}
 
 static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr)
 {
@@ -64,7 +42,7 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 	PML4E_T *	pml4e_ptr	= PML4_ptr;
 	if (pml4e_ptr->ENT == 0)
 	{
-		PDPTE_T * pdpt_ptr = (PDPTE_T *)myos_memblock_alloc_normal(PGENT_SIZE, GFP_KERNEL);
+		PDPTE_T * pdpt_ptr = (PDPTE_T *)myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
 		if (pdpt_ptr != NULL)
 		{
 			// higher half
@@ -87,7 +65,7 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
-		PDE_T * pd_ptr = (PDE_T *)myos_memblock_alloc_normal(PGENT_SIZE, GFP_KERNEL);
+		PDE_T * pd_ptr = (PDE_T *)myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
 		if (pd_ptr != NULL)
 		{
 			pdpte_ptr->ENT = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pd_ptr)) | attr;
@@ -114,10 +92,10 @@ fail_return:
 	return ret_val;
 }
 
-static int __init early_arch_map_memregion(phys_addr_t base, size_t size)
+int __init myos_init_memory_mapping(phys_addr_t base, size_t size)
 {
 	phys_addr_t pg_base = round_down(base, PAGE_SIZE);
-	size_t pg_nr = round_up(base + size, PAGE_SIZE) / PAGE_SIZE;
+	size_t pg_nr = (round_up(base + size, PAGE_SIZE) - pg_base) / PAGE_SIZE;
 	u64 attr = ARCH_PG_PRESENT | ARCH_PG_RW;
 	for (long i = 0; i < pg_nr; i++)
 	{
@@ -136,27 +114,6 @@ void myos_unmap_kernel_lowhalf(atomic_T *um_flag)
 	atomic_inc(um_flag);
 }
 
-reg_t read_cr3()
-{
-	reg_t ret_val = 0;
-	__asm__ __volatile__(	"movq	%%cr3,	%0 	\n\t"
-							"nop				\n\t"
-						:	"=r"(ret_val)
-						:
-						:
-						);
-	return ret_val;
-}
-
-void pg_load_cr3(reg_t cr3)
-{
-	__asm__ __volatile__(	"movq	%0, %%cr3	\n\t"
-							"nop				\n\t"
-						:
-						:	"r"(cr3)
-						:
-						);
-}
 
 void myos_refresh_arch_page(void)
 {
