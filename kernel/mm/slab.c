@@ -64,8 +64,8 @@ void myos_init_slab()
 		bslp->slabcache_ptr = scgp;
 		bslp->free = bslp->total;
 		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
-		bslp->page->attr |= PG_Slab;
 		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
+		bslp->page->attr |= PG_Slab;
 		bslp->page->slab_ptr = bslp;
 	}
 	// set init flag

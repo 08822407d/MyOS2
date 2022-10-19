@@ -140,14 +140,20 @@ void __init myos_e820__memblock_setup(void)
 		e820_entry_s *entry = e820_table + i;
 
 		end = entry->addr + entry->size;
+		enum e820_type type = entry->type;
 
-		if (entry->type == E820_TYPE_SOFT_RESERVED)
+		if (type == E820_TYPE_SOFT_RESERVED)
 			memblock_reserve(entry->addr, entry->size);
 
-		if (entry->type != E820_TYPE_RAM &&
-			entry->type != E820_TYPE_RESERVED_KERN)
+		if (type != E820_TYPE_RAM &&
+			type != E820_TYPE_ACPI &&
+			type != E820_TYPE_NVS &&
+			type != E820_TYPE_RESERVED_KERN)
 			continue;
 
 		memblock_add(entry->addr, entry->size);
+		if (type == E820_TYPE_ACPI ||
+			type == E820_TYPE_NVS)
+			memblock_reserve(entry->addr, entry->size);
 	}
 }

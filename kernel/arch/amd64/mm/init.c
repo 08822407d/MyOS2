@@ -33,6 +33,8 @@
 #include <obsolete/arch_proto.h>
 #include <obsolete/ktypes.h>
 
+#define BUG_NOT_FIXED
+
 // this value is also loaded by APboot assembly code
 PML4E_T	*KERN_PML4;
 phys_addr_t kernel_cr3 = 0;
@@ -51,34 +53,38 @@ phys_addr_t kernel_cr3 = 0;
 static void __init myos_memory_map_bottom_up(
 		unsigned long map_start, unsigned long map_end)
 {
-	extern framebuffer_s	framebuffer;
-
-	// // KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
-	// // static unsigned long __init init_range_memory_mapping(
-	// // 		unsigned long r_start, unsigned long r_end)
-	// // {
-	// 		unsigned long start_pfn, end_pfn;
-	// 		unsigned long mapped_ram_size = 0;
-	// 		int i;
-
-	// 		for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
-	// 			u64 start = PFN_PHYS(start_pfn);
-	// 			u64 end = PFN_PHYS(end_pfn);
-	// 			if (start >= end)
-	// 				continue;
-
-	// 			myos_init_memory_mapping(start, end - start);
-	// 			mapped_ram_size += end - start;
-	// 		}
-
-	// 		// return mapped_ram_size;
-	// // }
-
 	KERN_PML4 = myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
+
+#ifndef BUG_NOT_FIXED
+	// static unsigned long __init init_range_memory_mapping(
+	// 		unsigned long r_start, unsigned long r_end)
+	// {
+			unsigned long start_pfn, end_pfn;
+			unsigned long mapped_ram_size = 0;
+			int i;
+
+			for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
+				u64 start = PFN_PHYS(start_pfn);
+				u64 end = PFN_PHYS(end_pfn);
+				if (start >= end)
+					continue;
+
+				myos_init_memory_mapping(start, end - start);
+				mapped_ram_size += end - start;
+			}
+
+			// return mapped_ram_size;
+	// }
+	myos_init_memory_mapping(0, PAGE_SIZE);
+#else
 	// map available memory from e820
 	myos_init_memory_mapping(0, max_low_pfn * PAGE_SIZE);
-	// map available memory from e820
+	extern framebuffer_s	framebuffer;
+	// map VBE framebuffer
 	myos_init_memory_mapping(framebuffer.FB_phybase, framebuffer.FB_size);
+#endif
+
+	// 因为页大小是2M，后面要用到第一页的物理地址，所以此处临时手动映射一下
 
 	kernel_cr3 = myos_virt2phys((virt_addr_t)KERN_PML4);
 }
