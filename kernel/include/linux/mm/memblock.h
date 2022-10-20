@@ -290,7 +290,10 @@
 	 *
 	 * Walks over configured memory ranges.
 	 */
-	#define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)	\
+	// #define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)	\
+	// 	for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
+	// 		i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
+	#define for_each_mem_pfn_range(i, p_start, p_end)			\
 		for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
 			i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
 

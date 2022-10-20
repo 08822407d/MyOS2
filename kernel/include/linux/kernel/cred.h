@@ -26,7 +26,7 @@
 	// 	atomic_t	usage;
 	// 	int		ngroups;
 	// 	kgid_t		gid[];
-	// } __randomize_layout;
+	// };
 
 	// /**
 	//  * get_group_info - Get a reference to a group info structure
@@ -150,7 +150,7 @@
 	// 		int non_rcu;			/* Can we skip RCU deletion? */
 	// 		struct rcu_head	rcu;		/* RCU deletion hook */
 	// 	};
-	// } __randomize_layout;
+	// };
 
 	// extern void __put_cred(struct cred *);
 	// extern void exit_creds(struct task_struct *);

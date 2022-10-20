@@ -95,8 +95,8 @@
 	// extern int mmap_rnd_compat_bits __read_mostly;
 	// #endif
 
-	// #include <asm/page.h>
-	// #include <asm/processor.h>
+	#include <asm/page.h>
+	#include <asm/processor.h>
 
 	// /*
 	// * Architectures that support memory tagging (assigning tags to memory regions,

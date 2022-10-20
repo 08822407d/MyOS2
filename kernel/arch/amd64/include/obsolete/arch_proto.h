@@ -171,7 +171,6 @@
 	{
 		int		framebuffer;
 		int		arch_data;
-		int		arch_page;
 	} arch_init_flags_s;
 
 	/* early_init.c */
@@ -191,9 +190,7 @@
 	struct mm;
 	typedef struct mm mm_s;
 	void arch_page_preinit(void);
-	void myos_init_arch_page(void);
-	reg_t read_cr3(void);
-	void pg_load_cr3(reg_t cr3);
+	int myos_init_memory_mapping(phys_addr_t base, size_t size);
 	void myos_refresh_arch_page(void);
 	void myos_unmap_kernel_lowhalf(atomic_T *um_flag);
 	int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
@@ -257,9 +254,7 @@
 	void cld(void);
 	void cli(void);
 	void sti(void);
-	void cpuid(unsigned int Mop,unsigned int Sop,
-				unsigned int * a,unsigned int * b,
-				unsigned int * c,unsigned int * d);
+
 	void wrgsbase(uint64_t addr);
 	uint64_t rdgsbase(void);
 	// void intr_disable(void);

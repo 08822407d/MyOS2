@@ -8,7 +8,7 @@
 	#include <linux/fs/dcache.h>
 	#include <linux/fs/path.h>
 	#include <linux/kernel/stat.h>
-	// #include <linux/cache.h>
+	#include <linux/kernel/cache.h>
 	#include <linux/lib/list.h>
 	// #include <linux/list_lru.h>
 	// #include <linux/llist.h>
@@ -698,7 +698,7 @@
 	// #endif
 
 		void			*i_private; /* fs or device private pointer */
-	} __randomize_layout;
+	} inode_s;
 
 	// timespec64_s timestamp_truncate(timespec64_s t, inode_s *inode);
 

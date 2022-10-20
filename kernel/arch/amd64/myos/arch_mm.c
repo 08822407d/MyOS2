@@ -1,5 +1,6 @@
 #include <linux/lib/string.h>
 #include <asm/setup.h>
+#include <asm/processor.h>
 
 #include <linux/mm/myos_page.h>
 #include <klib/stdbool.h>
@@ -92,7 +93,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 	mm_s * mm = task->mm_struct;
 	get_seginfo(task);
 
-	reg_t orig_cr3 = read_cr3();
+	reg_t orig_cr3 = myos_read_cr3();
 	reg_t new_cr3 = 0;
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
@@ -115,7 +116,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_pgp));
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
-			pg_load_cr3(new_cr3);
+			load_cr3(new_cr3);
 			task->mm_struct->cr3 = new_cr3;
 		}
 	}

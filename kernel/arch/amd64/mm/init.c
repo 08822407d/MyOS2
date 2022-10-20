@@ -76,6 +76,7 @@ static void __init memory_map_bottom_up(
 	// 		step_size = get_new_step_size(step_size);
 	// }
 
+	extern void myos_init_arch_page();
 	myos_init_arch_page();
 }
 

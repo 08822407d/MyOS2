@@ -398,10 +398,8 @@
 	// 	UCLAMP_CNT
 	// };
 
-	// #ifdef CONFIG_SMP
 	// extern struct root_domain def_root_domain;
 	// extern struct mutex sched_domains_mutex;
-	// #endif
 
 	// struct sched_info
 	// {
@@ -609,15 +607,13 @@
 	// 	unsigned long runnable_weight;
 	// #endif
 
-	// #ifdef CONFIG_SMP
-	// 	/*
-	// 	* Per entity load average tracking.
-	// 	*
-	// 	* Put into separate cache line so it does not
-	// 	* collide with read-mostly values above.
-	// 	*/
-	// 	struct sched_avg avg;
-	// #endif
+		// /*
+		// * Per entity load average tracking.
+		// *
+		// * Put into separate cache line so it does not
+		// * collide with read-mostly values above.
+		// */
+		// struct sched_avg avg;
 	// };
 
 	// struct sched_rt_entity
@@ -637,7 +633,7 @@
 	// 	/* rq "owned" by this entity/group: */
 	// 	struct rt_rq *my_q;
 	// #endif
-	// } __randomize_layout;
+	// };
 
 	// struct sched_dl_entity
 	// {
@@ -826,46 +822,44 @@
 	// 	unsigned int saved_state;
 	// #endif
 
-	// 	/*
-	// 	* This begins the randomizable portion of task_struct. Only
-	// 	* scheduling-critical items should be added above here.
-	// 	*/
-	// 	randomized_struct_fields_start
+		// /*
+		// * This begins the randomizable portion of task_struct. Only
+		// * scheduling-critical items should be added above here.
+		// */
+		// randomized_struct_fields_start
 
-	// 		void *stack;
-	// 	refcount_t usage;
-	// 	/* Per task flags (PF_*), defined further below: */
-	// 	unsigned int flags;
-	// 	unsigned int ptrace;
+		// 	void *stack;
+		// refcount_t usage;
+		// /* Per task flags (PF_*), defined further below: */
+		// unsigned int flags;
+		// unsigned int ptrace;
 
-	// #ifdef CONFIG_SMP
-	// 	int on_cpu;
-	// 	struct __call_single_node wake_entry;
-	// 	unsigned int wakee_flips;
-	// 	unsigned long wakee_flip_decay_ts;
-	// 	struct task_struct *last_wakee;
+		// int on_cpu;
+		// struct __call_single_node wake_entry;
+		// unsigned int wakee_flips;
+		// unsigned long wakee_flip_decay_ts;
+		// struct task_struct *last_wakee;
 
-	// 	/*
-	// 	* recent_used_cpu is initially set as the last CPU used by a task
-	// 	* that wakes affine another task. Waker/wakee relationships can
-	// 	* push tasks around a CPU where each wakeup moves to the next one.
-	// 	* Tracking a recently used CPU allows a quick search for a recently
-	// 	* used CPU that may be idle.
-	// 	*/
-	// 	int recent_used_cpu;
-	// 	int wake_cpu;
-	// #endif
-	// 	int on_rq;
+		// /*
+		// * recent_used_cpu is initially set as the last CPU used by a task
+		// * that wakes affine another task. Waker/wakee relationships can
+		// * push tasks around a CPU where each wakeup moves to the next one.
+		// * Tracking a recently used CPU allows a quick search for a recently
+		// * used CPU that may be idle.
+		// */
+		// int recent_used_cpu;
+		// int wake_cpu;
+		// int on_rq;
 
-	// 	int prio;
-	// 	int static_prio;
-	// 	int normal_prio;
-	// 	unsigned int rt_priority;
+		// int prio;
+		// int static_prio;
+		// int normal_prio;
+		// unsigned int rt_priority;
 
-	// 	struct sched_entity se;
-	// 	struct sched_rt_entity rt;
-	// 	struct sched_dl_entity dl;
-	// 	const struct sched_class *sched_class;
+		// struct sched_entity se;
+		// struct sched_rt_entity rt;
+		// struct sched_dl_entity dl;
+		// const struct sched_class *sched_class;
 
 	// #ifdef CONFIG_SCHED_CORE
 	// 	struct rb_node core_node;
@@ -907,9 +901,7 @@
 	// 	cpumask_t *user_cpus_ptr;
 	// 	cpumask_t cpus_mask;
 	// 	void *migration_pending;
-	// #ifdef CONFIG_SMP
 	// 	unsigned short migration_disabled;
-	// #endif
 	// 	unsigned short migration_flags;
 
 	// #ifdef CONFIG_PREEMPT_RCU
@@ -938,10 +930,8 @@
 	// 	struct sched_info sched_info;
 
 	// 	struct list_head tasks;
-	// #ifdef CONFIG_SMP
 	// 	struct plist_node pushable_tasks;
 	// 	struct rb_node pushable_dl_tasks;
-	// #endif
 
 	// 	struct mm_struct *mm;
 	// 	struct mm_struct *active_mm;
@@ -1834,12 +1824,8 @@
 
 	// static __always_inline bool is_percpu_thread(void)
 	// {
-	// #ifdef CONFIG_SMP
 	// 	return (current->flags & PF_NO_SETAFFINITY) &&
 	// 		(current->nr_cpus_allowed == 1);
-	// #else
-	// 	return true;
-	// #endif
 	// }
 
 	// /* Per-process atomic flags. */
@@ -1908,7 +1894,6 @@
 
 	// extern int cpuset_cpumask_can_shrink(const struct cpumask *cur, const struct cpumask *trial);
 	// extern int task_can_attach(struct task_struct *p, const struct cpumask *cs_cpus_allowed);
-	// #ifdef CONFIG_SMP
 	// extern void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask);
 	// extern int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask);
 	// extern int dup_user_cpus_ptr(struct task_struct *dst, struct task_struct *src, int node);
@@ -1916,32 +1901,6 @@
 	// extern int dl_task_check_affinity(struct task_struct *p, const struct cpumask *mask);
 	// extern void force_compatible_cpus_allowed_ptr(struct task_struct *p);
 	// extern void relax_compatible_cpus_allowed_ptr(struct task_struct *p);
-	// #else
-	// static inline void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
-	// {
-	// }
-	// static inline int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask)
-	// {
-	// 	if (!cpumask_test_cpu(0, new_mask))
-	// 		return -EINVAL;
-	// 	return 0;
-	// }
-	// static inline int dup_user_cpus_ptr(struct task_struct *dst, struct task_struct *src, int node)
-	// {
-	// 	if (src->user_cpus_ptr)
-	// 		return -EINVAL;
-	// 	return 0;
-	// }
-	// static inline void release_user_cpus_ptr(struct task_struct *p)
-	// {
-	// 	WARN_ON(p->user_cpus_ptr);
-	// }
-
-	// static inline int dl_task_check_affinity(struct task_struct *p, const struct cpumask *mask)
-	// {
-	// 	return 0;
-	// }
-	// #endif
 
 	// extern int yield_to(struct task_struct *p, bool preempt);
 	// extern void set_user_nice(struct task_struct *p, long nice);
@@ -2033,13 +1992,7 @@
 	extern int wake_up_process(task_s *tsk);
 	// extern void wake_up_new_task(struct task_struct *tsk);
 
-	// #ifdef CONFIG_SMP
 	// extern void kick_process(struct task_struct *tsk);
-	// #else
-	// static inline void kick_process(struct task_struct *tsk)
-	// {
-	// }
-	// #endif
 
 	// extern void __set_task_comm(struct task_struct *tsk, const char *from, bool exec);
 
@@ -2054,7 +2007,6 @@
 	// 	__get_task_comm(buf, sizeof(buf), tsk);     \
 	// })
 
-	// #ifdef CONFIG_SMP
 	// static __always_inline void scheduler_ipi(void)
 	// {
 	// 	/*
@@ -2065,15 +2017,6 @@
 	// 	preempt_fold_need_resched();
 	// }
 	// extern unsigned long wait_task_inactive(struct task_struct *, unsigned int match_state);
-	// #else
-	// static inline void scheduler_ipi(void)
-	// {
-	// }
-	// static inline unsigned long wait_task_inactive(struct task_struct *p, unsigned int match_state)
-	// {
-	// 	return 1;
-	// }
-	// #endif
 
 	// /*
 	// * Set thread flags in other task's structures.
@@ -2252,27 +2195,12 @@
 	// /*
 	// * Wrappers for p->thread_info->cpu access. No-op on UP.
 	// */
-	// #ifdef CONFIG_SMP
-
 	// static inline unsigned int task_cpu(const struct task_struct *p)
 	// {
 	// 	return READ_ONCE(task_thread_info(p)->cpu);
 	// }
 
 	// extern void set_task_cpu(struct task_struct *p, unsigned int cpu);
-
-	// #else
-
-	// static inline unsigned int task_cpu(const struct task_struct *p)
-	// {
-	// 	return 0;
-	// }
-
-	// static inline void set_task_cpu(struct task_struct *p, unsigned int cpu)
-	// {
-	// }
-
-	// #endif /* CONFIG_SMP */
 
 	// extern bool sched_task_on_rq(struct task_struct *p);
 	// extern unsigned long get_wchan(struct task_struct *p);
@@ -2299,7 +2227,6 @@
 	// #define TASK_SIZE_OF(tsk) TASK_SIZE
 	// #endif
 
-	// #ifdef CONFIG_SMP
 	// static inline bool owner_on_cpu(struct task_struct *owner)
 	// {
 	// 	/*
@@ -2311,7 +2238,6 @@
 
 	// /* Returns effective CPU energy utilization, as seen by the scheduler */
 	// unsigned long sched_cpu_util(int cpu, unsigned long max);
-	// #endif /* CONFIG_SMP */
 
 	// #ifdef CONFIG_RSEQ
 

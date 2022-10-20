@@ -243,7 +243,7 @@
 	#endif
 
 	// #ifndef __randomize_layout
-	// #define __randomize_layout __designated_init
+	// #	define __randomize_layout	__designated_init
 	// #endif
 
 	// #ifndef __no_randomize_layout

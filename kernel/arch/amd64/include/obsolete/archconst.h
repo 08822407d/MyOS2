@@ -30,9 +30,6 @@
 	#define USER_SS_DUP_SELECTOR	(SEG_SELECTOR(USER_SS_INDEX) | USER_PRIVILEGE)
 	#define TSS_SELECTOR(cpu)	SEG_SELECTOR(TSS_INDEX(cpu))
 
-	#define SEGDESC_SIZE		0x08
-	#define GATEDESC_SIZE		0x10
-
 	/* Privileges. */
 	#define KERN_PRIVILEGE		0	/* kernel and interrupt handlers */
 	#define USER_PRIVILEGE		3	/* servers and user processes */
@@ -59,58 +56,6 @@
 	#define CANONICAL_ADDR(x)	((x) & 0xFFFFFFFFFFFF)
 	#define ARCH_PGS_ADDR(x)	round_down((CANONICAL_ADDR(x)), CONST_4K)
 	#define ARCH_PGS_ATTR(x)	(x & 0x1FF)
-
-	/* CRn registers bits */
-	#define IA32_CR0_PE			(1 << 0)
-	#define IA32_CR0_MP			(1 << 1)
-	#define IA32_CR0_EM			(1 << 2)
-	#define IA32_CR0_TS			(1 << 3)
-	#define IA32_CR0_ET			(1 << 4)
-	#define IA32_CR0_NE			(1 << 5)
-	#define IA32_CR0_WP			(1 << 16)
-	#define IA32_CR0_AM			(1 << 18)
-	#define IA32_CR0_NW			(1 << 29)
-	#define IA32_CR0_CD			(1 << 30)
-	#define IA32_CR0_PG			(1 << 31)
-
-	/* MSR registers addresses */
-	#define IA32_EFER			0xC0000080
-	#define	MSR_IA32_EFER_SCE	0x00000001
-	#define MSR_IA32_EFER_LME	0x00000100
-	#define MSR_IA32_EFER_LMA	0x00000400
-	#define MSR_IA32_EFER_NXE	0x00000800
-
-	#define MSR_IA32_SYSENTER_CS	0x174
-	#define MSR_IA32_SYSENTER_ESP	0x175
-	#define MSR_IA32_SYSENTER_EIP	0x176
-
-	#define MSR_IA32_STAR		0xC0000081
-	#define MSR_IA32_LSTAR		0xC0000082
-	#define MSR_IA32_CSTAR		0xC0000083
-	#define MSR_IA32_FMASK		0xC0000084
-
-	/* i386 flags register */ // copyied from darwin-xnu
-	#ifndef EFL_CF
-		#define EFL_CF          0x00000001              /* carry */
-		#define EFL_PF          0x00000004              /* parity of low 8 bits */
-		#define EFL_AF          0x00000010              /* carry out of bit 3 */
-		#define EFL_ZF          0x00000040              /* zero */
-		#define EFL_SF          0x00000080              /* sign */
-		#define EFL_TF          0x00000100              /* trace trap */
-		#define EFL_IF          0x00000200              /* interrupt enable */
-		#define EFL_DF          0x00000400              /* direction */
-		#define EFL_OF          0x00000800              /* overflow */
-		#define EFL_IOPL        0x00003000              /* IO privilege level: */
-		#define EFL_IOPL_KERNEL 0x00000000              /* kernel */
-		#define EFL_IOPL_USER   0x00003000              /* user */
-		#define EFL_NT          0x00004000              /* nested task */
-		#define EFL_RF          0x00010000              /* resume without tracing */
-		#define EFL_VM          0x00020000              /* virtual 8086 mode */
-		#define EFL_AC          0x00040000              /* alignment check */
-		#define EFL_VIF         0x00080000              /* virtual interrupt flag */
-		#define EFL_VIP         0x00100000              /* virtual interrupt pending */
-		#define EFL_ID          0x00200000              /* cpuID instruction */
-	#endif
 
 	// process and task consts
 	#define TASK_KSTACK_SIZE	(32 * CONST_1K)

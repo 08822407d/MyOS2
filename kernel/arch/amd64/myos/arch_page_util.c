@@ -6,6 +6,7 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
+#include <asm/processor.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/ktypes.h>
@@ -40,9 +41,7 @@ void __init myos_init_arch_page()
 	early_arch_map_memregion(framebuffer.FB_phybase, framebuffer.FB_size);
 
 	kernel_cr3 = myos_virt2phys((virt_addr_t)KERN_PML4);
-	pg_load_cr3((reg_t)kernel_cr3);
-	// set init flag
-	kparam.arch_init_flags.arch_page = 1;
+	load_cr3((reg_t)kernel_cr3);
 }
 
 static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr)
@@ -134,28 +133,6 @@ void myos_unmap_kernel_lowhalf(atomic_T *um_flag)
 {
 	memset(KERN_PML4, 0, PGENT_SIZE / 2);
 	atomic_inc(um_flag);
-}
-
-reg_t read_cr3()
-{
-	reg_t ret_val = 0;
-	__asm__ __volatile__(	"movq	%%cr3,	%0 	\n\t"
-							"nop				\n\t"
-						:	"=r"(ret_val)
-						:
-						:
-						);
-	return ret_val;
-}
-
-void pg_load_cr3(reg_t cr3)
-{
-	__asm__ __volatile__(	"movq	%0, %%cr3	\n\t"
-							"nop				\n\t"
-						:
-						:	"r"(cr3)
-						:
-						);
 }
 
 void myos_refresh_arch_page(void)

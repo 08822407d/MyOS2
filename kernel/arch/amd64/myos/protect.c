@@ -8,7 +8,6 @@
 #include <linux/mm/memblock.h>
 
 #include <obsolete/arch_glo.h>
-#include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
@@ -16,9 +15,8 @@
 
 
 /* Storage for gdt, idt and tss. */
-// segdesc64_T		gdt[GDT_SIZE] __aligned(SEGDESC_SIZE);
 segdesc64_T *	gdt;
-gatedesc64_T	idt[IDT_SIZE] __aligned(GATEDESC_SIZE);
+gatedesc64_T	idt[IDT_SIZE] __aligned(sizeof(gatedesc64_T));
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 

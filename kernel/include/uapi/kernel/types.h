@@ -56,10 +56,12 @@
 
 	#endif /*  __ASSEMBLY__ */
 
-	// <linux/vdso/time.h> contents
-	typedef struct timens_offset {
-		s64	sec;
-		u64	nsec;
-	} timens_offset_s;
+	#ifndef __ASSEMBLY__
+		// <linux/vdso/time.h> contents
+		typedef struct timens_offset {
+			s64	sec;
+			u64	nsec;
+		} timens_offset_s;
+	#endif /*  __ASSEMBLY__ */
 
 #endif /* _UAPI_LINUX_TYPES_H */

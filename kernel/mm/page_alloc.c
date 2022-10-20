@@ -505,7 +505,7 @@ void __init get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
 	*start_pfn = -1UL;
 	*end_pfn = 0;
 
-	for_each_mem_pfn_range(i, nid, &this_start_pfn, &this_end_pfn, NULL) {
+	for_each_mem_pfn_range(i, &this_start_pfn, &this_end_pfn) {
 		*start_pfn = min(*start_pfn, this_start_pfn);
 		*end_pfn = max(*end_pfn, this_end_pfn);
 	}
