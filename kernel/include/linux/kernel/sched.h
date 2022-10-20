@@ -41,8 +41,8 @@
 	#include <linux/sched/fs_struct.h>
 	#include <linux/kernel/types.h>
 
-	#include "../arch/amd64/include/asm/current.h"
-	#include "../arch/amd64/include/arch_task.h"
+	#include <asm/current.h>
+	#include <obsolete/arch_task.h>
 
 	#define PF_NEED_SCHEDULE (1UL << 1)
 	#define MAX_FILE_NR 256
@@ -2466,7 +2466,7 @@
 	
 
 
-#include <archconst.h>
+#include <obsolete/archconst.h>
 // myos obsolete defines
 	typedef union PCB
 	{

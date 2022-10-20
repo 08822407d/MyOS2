@@ -1,4 +1,4 @@
-OUTPUT_FORMAT("elf64-x86-64","elf64-x86-64","elf64-x86-64")
+OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
 ENTRY(startup_64)
 
@@ -20,19 +20,11 @@ SECTIONS
 	__k_unpaged__kern_unpaged_start = .;
 	.unpaged_text :
 	{
-		*/myos_head_64.S.o(.text);
+		*(.unpaged.text);
 	}
 	.unpaged_data ALIGN(0x1000) :
 	{
-		*/myos_head_64.S.o(.data .rodata*);
-	}
-	.unpaged_bss  ALIGN(0x1000) :
-	{
-		*/myos_head_64.S.o(.bss COMMON);
-	}
-	.unpaged_eh_frame ALIGN(0x1000) :
-	{
-		*/myos_head_64.S.o(.eh_frame);
+		*(.unpaged.data);
 	}
 	__k_unpaged__kern_unpaged_end = .;
 
@@ -51,31 +43,31 @@ SECTIONS
 	.text ALIGN(0x1000) : AT(ADDR(.text) - _k_offset)
 	{
 		_text = .;
-		*.o(.text)
+		*(.text)
 		_etext = .;
 	}
 	.rodata ALIGN(0x1000) : AT(ADDR(.rodata) - _k_offset)
 	{
 		_rodata = .;
-		*.o(.rodata*)
+		*(.rodata*)
 		_erodata = .;
 	}
 	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
 	{
 		_data = .;
-		*.o(.data)
+		*(.data)
 		_edata = .;
 	}
 	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
 	{
 		_bss = .;
-		*.o(.bss COMMON)
+		*(.bss COMMON)
 		_ebss = .;
 	}
 	.eh_frame ALIGN(0x1000) : AT(ADDR(.eh_frame) - _k_offset)
 	{
 		_eh_frame = .;
-		*.o(.eh_frame)
+		*(.eh_frame)
 		_eeh_frame = .;
 	}
 

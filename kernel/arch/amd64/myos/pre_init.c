@@ -5,9 +5,9 @@
 
 #include <asm/e820-types.h>
 
-#include "include/arch_proto.h"
-#include "include/archconst.h"
-#include "include/arch_glo.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/archconst.h>
+#include <obsolete/arch_glo.h>
 
 #include <obsolete/proto.h>
 
@@ -27,8 +27,8 @@ kinfo_s			kparam;
 cpu_info_s		cpuinfo;
 framebuffer_s	framebuffer;
 
-uint64_t		apic_id[CONFIG_MAX_CPUS];
-struct cputopo	smp_topos[CONFIG_MAX_CPUS];
+uint64_t		apic_id[CONFIG_NR_CPUS];
+struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 
 static void enable_AMD_syscall()

@@ -2,7 +2,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
-#include "include/mutex.h"
+#include <obsolete/mutex.h>
 
 /*==============================================================================================*
  *											spin lock											*

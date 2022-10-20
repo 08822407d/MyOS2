@@ -20,7 +20,7 @@
 
 #include <klib/font.h>
 
-#include "../arch/amd64/include/mutex.h"
+#include <obsolete/mutex.h>
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */

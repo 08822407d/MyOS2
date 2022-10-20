@@ -1,7 +1,7 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
 
-#include "include/arch_proto.h"
+#include <obsolete/arch_proto.h>
 
 /*==============================================================================================*
  *								x86 asm i/o instructions' warpper					 			*

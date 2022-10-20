@@ -4,7 +4,7 @@
 #include <asm/setup.h>
 #include "sched.h"
 
-#include <arch_proto.h>
+#include <obsolete/arch_proto.h>
 
 	typedef struct per_cpudata {
 		task_s *	curr_task;

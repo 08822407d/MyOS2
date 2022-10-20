@@ -21,8 +21,8 @@
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
-#include "../../arch/amd64/include/device.h"
-#include "../../arch/amd64/include/ide.h"
+#include <obsolete/device.h>
+#include <obsolete/ide.h>
 
 bool FAT32_ent_empty(const msdos_dirent_s *de)
 {

@@ -1,7 +1,7 @@
 #include <obsolete/glo.h>
 
-#include "include/arch_proto.h"
-#include "include/device.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/device.h>
 
 #define	BCD2BIN(value)	(((value) & 0xf) + ((value) >> 4 ) * 10)
 #define CMOS_READ(addr)					\

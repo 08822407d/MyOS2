@@ -7,7 +7,7 @@
 #include <obsolete/proto.h>
 #include <linux/device/tty.h>
 
-#include "include/device.h"
+#include <obsolete/device.h>
 
 void init_intr(void);
 

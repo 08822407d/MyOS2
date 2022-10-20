@@ -8,10 +8,10 @@
 #include <obsolete/proto.h>
 #include <linux/kernel/sched.h>
 
-#include "include/arch_proto.h"
-#include "include/archconst.h"
-#include "include/archtypes.h"
-#include "include/arch_task.h"
+#include <obsolete/arch_proto.h>
+#include <obsolete/archconst.h>
+#include <obsolete/archtypes.h>
+#include <obsolete/arch_task.h>
 
 #define SEG_NR	6
 

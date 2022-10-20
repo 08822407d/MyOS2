@@ -9,9 +9,9 @@
 #include <linux/fs/fs.h>
 #include <linux/device/tty.h>
 
-#include <keyboard.h>
-#include <device.h>
-#include <mutex.h>
+#include <obsolete/keyboard.h>
+#include <obsolete/device.h>
+#include <obsolete/mutex.h>
 
 position_t Pos;
 List_hdr_s kbd_wqhdr;

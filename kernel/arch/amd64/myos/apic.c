@@ -16,12 +16,12 @@
 
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
-#include "include/arch_glo.h"
-#include "include/arch_proto.h"
-#include "include/archtypes.h"
-#include "include/archconst.h"
-#include "include/interrupt.h"
-#include "include/apic.h"
+#include <obsolete/arch_glo.h>
+#include <obsolete/arch_proto.h>
+#include <obsolete/archtypes.h>
+#include <obsolete/archconst.h>
+#include <obsolete/interrupt.h>
+#include <obsolete/apic.h>
 
 ioapic_map_s ioapic_map;
 

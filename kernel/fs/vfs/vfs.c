@@ -11,8 +11,8 @@
 
 #include <obsolete/printk.h>
 #include <obsolete/glo.h>
-#include "../../arch/amd64/include/device.h"
-#include "../../arch/amd64/include/ide.h"
+#include <obsolete/device.h>
+#include <obsolete/ide.h>
 
 
 #include <linux/kernel/init_syscalls.h>

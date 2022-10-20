@@ -7,8 +7,8 @@
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>
-#include "../../arch/amd64/include/device.h"
-#include "../../arch/amd64/include/ide.h"
+#include <obsolete/device.h>
+#include <obsolete/ide.h>
 
 
 dentry_s *FAT32_lookup(inode_s * parent_inode, dentry_s * dest_dentry, unsigned int flags)

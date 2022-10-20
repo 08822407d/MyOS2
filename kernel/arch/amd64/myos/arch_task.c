@@ -15,12 +15,12 @@
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
 
-#include "include/archconst.h"
-#include "include/archtypes.h"
-#include "include/arch_task.h"
-#include "include/arch_proto.h"
-#include "include/arch_glo.h"
-#include "include/device.h"
+#include <obsolete/archconst.h>
+#include <obsolete/archtypes.h>
+#include <obsolete/arch_task.h>
+#include <obsolete/arch_proto.h>
+#include <obsolete/arch_glo.h>
+#include <obsolete/device.h>
 
 #define	USER_CODE_ADDR		0x6000000
 #define USER_MEM_LENGTH		0x800000

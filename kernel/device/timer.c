@@ -4,7 +4,7 @@
 #include <obsolete/printk.h>
 #include <obsolete/proto.h>
 #include <obsolete/glo.h>
-#include "../arch/amd64/include/interrupt.h"
+#include <obsolete/interrupt.h>
 
 unsigned long volatile jiffies = 0;
 List_hdr_s	timer_lhdr;

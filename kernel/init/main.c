@@ -120,9 +120,9 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include <mutex.h>
-#include "../arch/amd64/include/apic.h"
-#include "../arch/amd64/include/device.h"
+#include <obsolete/mutex.h>
+#include <obsolete/apic.h>
+#include <obsolete/device.h>
 
 /*
  * Set up kernel memory allocators

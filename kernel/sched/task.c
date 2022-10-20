@@ -7,8 +7,8 @@
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
-#include "../arch/amd64/include/arch_glo.h"
-#include "../arch/amd64/include/mutex.h"
+#include <obsolete/arch_glo.h>
+#include <obsolete/mutex.h>
 
 extern char _text;
 extern char _etext;

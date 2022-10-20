@@ -18,11 +18,11 @@ SECTIONS
 {
 	. = _k_phys_start;
 	__k_unpaged__kern_unpaged_start = .;
-	.unpaged_text :
+	.head.text :
 	{
 		*(.unpaged.text);
 	}
-	.unpaged_data ALIGN(0x1000) :
+	.head.data ALIGN(0x1000) :
 	{
 		*(.unpaged.data);
 	}
@@ -30,10 +30,10 @@ SECTIONS
 
 	apb_start_viraddr = ALIGN(0x1000);
 	. = _APboot_phys_start;
-	.APboot_text ALIGN(0x1000) : AT(apb_start_viraddr)
+	.APboot.text ALIGN(0x1000) : AT(apb_start_viraddr)
 	{
 		_APboot_text = apb_start_viraddr - _APboot_phys_start;
-		KEEP(*/myos_AP_boot.S.o(.text));
+		KEEP(*(.AP_boot.text));
 		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
 	}
 	. = _APboot_etext;
