@@ -35,7 +35,7 @@
 // #include <linux/kcore.h>
 // #include <linux/bootmem_info.h>
 
-// #include <asm/processor.h>
+#include <asm/processor.h>
 // #include <asm/bios_ebda.h>
 // #include <linux/uaccess.h>
 // #include <asm/pgalloc.h>

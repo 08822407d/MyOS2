@@ -24,7 +24,7 @@
 #include <linux/kernel/slab.h>
 #include <linux/init/init.h>
 // #include <linux/hash.h>
-// #include <linux/cache.h>
+#include <linux/kernel/cache.h>
 // #include <linux/export.h>
 // #include <linux/security.h>
 // #include <linux/seqlock.h>
