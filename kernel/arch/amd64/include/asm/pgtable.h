@@ -4,7 +4,7 @@
 
 	// #include <linux/mem_encrypt.h>
 	#include <asm/page.h>
-	// #include <asm/pgtable_types.h>
+	#include <asm/pgtable_types.h>
 
 	// /*
 	//  * Macro to mark a page protection value as UC-
@@ -710,12 +710,7 @@
 		// #endif  /* CONFIG_PAGE_TABLE_ISOLATION */
 	#endif	/* __ASSEMBLY__ */
 
-
-	// #ifdef CONFIG_X86_32
-	// #	include <asm/pgtable_32.h>
-	// #else
-	// #	include <asm/pgtable_64.h>
-	// #endif
+	// #include <asm/pgtable_64.h>
 
 	#ifndef __ASSEMBLY__
 		// #include <linux/mm_types.h>
@@ -972,9 +967,7 @@
 		// unsigned long init_memory_mapping(unsigned long start,
 		// 				unsigned long end, pgprot_t prot);
 
-		// #ifdef CONFIG_X86_64
 		// extern pgd_t trampoline_pgd_entry;
-		// #endif
 
 		// /* local pte updates need not use xchg for locking */
 		// static inline pte_t native_local_ptep_get_and_clear(pte_t *ptep)

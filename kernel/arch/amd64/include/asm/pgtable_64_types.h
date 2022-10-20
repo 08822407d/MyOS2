@@ -2,26 +2,26 @@
 #ifndef _ASM_X86_PGTABLE_64_DEFS_H
 #define _ASM_X86_PGTABLE_64_DEFS_H
 
-	// #include <asm/sparsemem.h>
+	#include <asm/sparsemem.h>
 
 	#ifndef __ASSEMBLY__
 	#	include <linux/kernel/types.h>
 	// #	include <asm/kaslr.h>
 
-		// /*
-		//  * These are used to make use of C type-checking..
-		//  */
-		// typedef unsigned long pteval_t;
-		// typedef unsigned long pmdval_t;
-		// typedef unsigned long pudval_t;
-		// typedef unsigned long p4dval_t;
-		// typedef unsigned long pgdval_t;
-		// typedef unsigned long pgprotval_t;
+		/*
+		 * These are used to make use of C type-checking..
+		 */
+		typedef unsigned long pteval_t;
+		typedef unsigned long pmdval_t;
+		typedef unsigned long pudval_t;
+		typedef unsigned long p4dval_t;
+		typedef unsigned long pgdval_t;
+		typedef unsigned long pgprotval_t;
 
-		// typedef struct
-		// {
-		// 	pteval_t pte;
-		// } pte_t;
+		typedef struct
+		{
+			pteval_t pte;
+		} pte_t;
 
 	// #ifdef CONFIG_X86_5LEVEL
 	// 	extern unsigned int __pgtable_l5_enabled;
@@ -105,7 +105,7 @@
 	//  * range must not overlap with anything except the KASAN shadow area, which
 	//  * is correct as KASAN disables KASLR.
 	//  */
-	// #define MAXMEM (1UL << MAX_PHYSMEM_BITS)
+	#define MAXMEM (1UL << MAX_PHYSMEM_BITS)
 
 	// #define GUARD_HOLE_PGD_ENTRY	-256UL
 	// #define GUARD_HOLE_SIZE			(16UL << PGDIR_SHIFT)
@@ -159,7 +159,5 @@
 	// #define EARLY_DYNAMIC_PAGE_TABLES	64
 
 	// #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
-
-	#define MAXMEM	(1ULL << 46)
 
 #endif /* _ASM_X86_PGTABLE_64_DEFS_H */
