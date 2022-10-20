@@ -235,23 +235,23 @@
 	static inline reg_t myos_read_cr3()
 	{
 		reg_t ret_val = 0;
-		__asm__ __volatile__(	"movq	%%cr3,	%0 	\n\t"
-								"nop				\n\t"
-							:	"=r"(ret_val)
-							:
-							:
-							);
+		asm volatile(	"movq	%%cr3,	%0 	\n\t"
+						"nop				\n\t"
+					:	"=r"(ret_val)
+					:
+					:
+					);
 		return ret_val;
 	}
 
 	static inline void myos_write_cr3(reg_t cr3)
 	{
-		__asm__ __volatile__(	"movq	%0, %%cr3	\n\t"
-								"nop				\n\t"
-							:
-							:	"r"(cr3)
-							:
-							);
+		asm volatile(	"movq	%0, %%cr3	\n\t"
+						"nop				\n\t"
+					:
+					:	"r"(cr3)
+					:
+					);
 	}
 
 	/*

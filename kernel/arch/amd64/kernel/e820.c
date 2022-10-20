@@ -21,8 +21,13 @@
 #include <asm/setup.h>
 #include <asm/pgtable_64_types.h>
 
+
+
 #include <linux/kernel/stddef.h>
 #include <uefi/multiboot2.h>
+#include <uefi/bootloader.h>
+
+extern efi_machine_conf_s	*machine_info;
 
 /*
  * We organize the E820 table into three main data structures:
@@ -60,7 +65,8 @@
  * re-propagated. So itsmain role is a temporary bootstrap storage of firmware
  * specific memory layout data during early bootup.
  */
-// static struct e820_table e820_table_init		__initdata;
+// static e820_table_s e820_table_init		__initdata;
+e820_table_s e820_table	__initdata;
 // static struct e820_table e820_table_kexec_init		__initdata;
 // static struct e820_table e820_table_firmware_init	__initdata;
 
@@ -68,78 +74,102 @@
 // struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
 // struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
 
-e820_entry_s *e820_table;
+// e820_entry_s *e820_table;
 
 #define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
 
-/*
- * Find the highest page frame number we have available
- */
-static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
+
+void __init e820__memory_setup(void)
 {
-	int i;
-	unsigned long last_pfn = 0;
-	unsigned long max_arch_pfn = MAX_ARCH_PFN;
-
-	for (i = 0; i < E820_MAX_ENTRIES; i++)
-	{
-		e820_entry_s *entry = e820_table + i;
-		unsigned long start_pfn;
-		unsigned long end_pfn;
-
-		if (entry->size == 0)
-			break;
-		if (entry->type != type)
-			continue;
-
-		start_pfn = entry->addr >> PAGE_SHIFT;
-		end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-
-		if (start_pfn >= limit_pfn)
-			continue;
-		if (end_pfn > limit_pfn)
+		int i = 0;
+	e820_table.nr_entries = 0;
+	// char *__init e820__memory_setup_default(void)
+	// {
+	//							||
+	//							\/
+	// static int __init append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
+	// {
+		for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
+			i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
+			i++, mmap_entp++)
 		{
-			last_pfn = limit_pfn;
-			break;
+			if (mmap_entp->len == 0)
+			{
+				e820_table.nr_entries = i;
+				break;
+			}
+			
+			e820_entry_s *e820_entp = &e820_table.entries[i];
+			e820_entp->addr = mmap_entp->addr;
+			e820_entp->size = mmap_entp->len;
+			e820_entp->type = mmap_entp->type;
 		}
-		if (end_pfn > last_pfn)
-			last_pfn = end_pfn;
-	}
-
-	if (last_pfn > max_arch_pfn)
-		last_pfn = max_arch_pfn;
-
-	return last_pfn;
+	// }
+	// }
 }
+
 
 unsigned long __init e820__end_of_ram_pfn(void)
 {
-	return e820_end_pfn(MAX_ARCH_PFN, E820_TYPE_RAM);
+	// /*
+	// * Find the highest page frame number we have available
+	// */
+	// static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
+	// {
+		int i;
+		unsigned long last_pfn = 0;
+		unsigned long limit_pfn = MAX_ARCH_PFN;
+		unsigned long max_arch_pfn = MAX_ARCH_PFN;
+
+		for (i = 0; i < e820_table.nr_entries; i++)
+		{
+			e820_entry_s *entry = &e820_table.entries[i];
+			unsigned long start_pfn;
+			unsigned long end_pfn;
+
+			if (entry->size == 0)
+				break;
+			if (entry->type != E820_TYPE_RAM)
+				continue;
+
+			start_pfn = entry->addr >> PAGE_SHIFT;
+			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+
+			if (start_pfn >= limit_pfn)
+				continue;
+			if (end_pfn > limit_pfn)
+			{
+				last_pfn = limit_pfn;
+				break;
+			}
+			if (end_pfn > last_pfn)
+				last_pfn = end_pfn;
+		}
+
+		if (last_pfn > max_arch_pfn)
+			last_pfn = max_arch_pfn;
+
+		return last_pfn;
+	// }
 }
 
 void __init myos_e820__memblock_setup(void)
 {
-	if (e820_table == NULL)
-		while (1);
-
 	int i;
 	u64 end;
 
-	/*
-	 * The bootstrap memblock region count maximum is 128 entries
-	 * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
-	 * than that - so allow memblock resizing.
-	 *
-	 * This is safe, because this call happens pretty late during x86 setup,
-	 * so we know about reserved memory regions already. (This is important
-	 * so that memblock resizing does no stomp over reserved areas.)
-	 */
-
-	for (int i = 0; i < E820_MAX_ENTRIES; i++)
+	// /*
+	//  * The bootstrap memblock region count maximum is 128 entries
+	//  * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
+	//  * than that - so allow memblock resizing.
+	//  *
+	//  * This is safe, because this call happens pretty late during x86 setup,
+	//  * so we know about reserved memory regions already. (This is important
+	//  * so that memblock resizing does no stomp over reserved areas.)
+	//  */
+	for (i = 0; i < e820_table.nr_entries; i++)
 	{
-		e820_entry_s *entry = e820_table + i;
-
-		end = entry->addr + entry->size;
+		e820_entry_s *entry = &e820_table.entries[i];
 		enum e820_type type = entry->type;
 
 		if (type == E820_TYPE_SOFT_RESERVED)

@@ -115,14 +115,14 @@ void myos_unmap_kernel_lowhalf(atomic_T *um_flag)
 void myos_refresh_arch_page(void)
 {
 	uint64_t tempreg;
-	__asm__ __volatile__(	"movq	%%cr3,	%0	\n\t"
-							"nop				\n\t"
-							"movq	%0,	%%cr3	\n\t"
-							"nop				\n\t"
-						:	"=r"(tempreg)
-						:
-						:
-						);
+	asm volatile(	"movq	%%cr3,	%0	\n\t"
+					"nop				\n\t"
+					"movq	%0,	%%cr3	\n\t"
+					"nop				\n\t"
+				:	"=r"(tempreg)
+				:
+				:
+				);
 }
 
 //

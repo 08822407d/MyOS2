@@ -14,31 +14,31 @@ inline __always_inline void init_spin_lock(spinlock_T * lock)
 
 inline __always_inline void lock_spin_lock(spinlock_T * lock)
 {
-	__asm__	__volatile__(	"1:						\n\t"
-							"lock	decq	%0		\n\t"
-							"jns	3f				\n\t"
-							"2:						\n\t"
-							"pause					\n\t"
-							"cmpq	$0,		%0		\n\t"
-							"jle	2b				\n\t"
-							"jmp	1b				\n\t"
-							"3:						\n\t"
-							// "cli					\n\t"
-						:	"=m"(lock->lock.value)
-						:
-						:	"memory"
-						);
+	asm volatile(	"1:						\n\t"
+					"lock	decq	%0		\n\t"
+					"jns	3f				\n\t"
+					"2:						\n\t"
+					"pause					\n\t"
+					"cmpq	$0,		%0		\n\t"
+					"jle	2b				\n\t"
+					"jmp	1b				\n\t"
+					"3:						\n\t"
+					// "cli					\n\t"
+				:	"=m"(lock->lock.value)
+				:
+				:	"memory"
+				);
 	curr_tsk->spin_count++;
 }
 
 inline __always_inline void unlock_spin_lock(spinlock_T * lock)
 {
-	__asm__	__volatile__(	"movq	$1,		%0		\n\t"
-							// "sti					\n\t"
-						:	"=m"(lock->lock.value)
-						:
-						:	"memory"
-						);
+	asm volatile(	"movq	$1,		%0		\n\t"
+					// "sti					\n\t"
+				:	"=m"(lock->lock.value)
+				:
+				:	"memory"
+				);
 	curr_tsk->spin_count--;
 }
 
@@ -211,7 +211,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
  *==============================================================================================*/
 inline __always_inline void atomic_add(atomic_T * atomic, long value)
 {
-	__asm__ __volatile__(	"lock	addq	%1,	%0	\n\t"
+	asm volatile(	"lock	addq	%1,	%0	\n\t"
 						:	"=m"(atomic->value)
 						:	"r"(value)
 						:	"memory"
@@ -220,45 +220,45 @@ inline __always_inline void atomic_add(atomic_T * atomic, long value)
 
 inline __always_inline void atomic_sub(atomic_T * atomic, long value)
 {
-	__asm__ __volatile__(	"lock	subq	%1,	%0	\n\t"
-						:	"=m"(atomic->value)
-						:	"r"(value)
-						:	"memory"
-						);
+	asm volatile(	"lock	subq	%1,	%0	\n\t"
+				:	"=m"(atomic->value)
+				:	"r"(value)
+				:	"memory"
+				);
 }
 
 inline __always_inline void atomic_inc(atomic_T * atomic)
 {
-	__asm__ __volatile__(	"lock	incq	%0		\n\t"
-						:	"=m"(atomic->value)
-						:	"m"(atomic->value)
-						:	"memory"
-						);
+	asm volatile(	"lock	incq	%0		\n\t"
+				:	"=m"(atomic->value)
+				:	"m"(atomic->value)
+				:	"memory"
+				);
 }
 
 inline __always_inline void atomic_dec(atomic_T * atomic)
 {
-	__asm__ __volatile__(	"lock	decq	%0		\n\t"
-						:	"=m"(atomic->value)
-						:	"m"(atomic->value)
-						:	"memory"
-						);
+	asm volatile(	"lock	decq	%0		\n\t"
+				:	"=m"(atomic->value)
+				:	"m"(atomic->value)
+				:	"memory"
+				);
 }
 
 inline __always_inline void atomic_set_mask(atomic_T * atomic, long mask)
 {
-	__asm__ __volatile__(	"lock	orq		%1,	%0	\n\t"
-						:	"=m"(atomic->value)
-						:	"r"(mask)
-						:	"memory"
-						);
+	asm volatile(	"lock	orq		%1,	%0	\n\t"
+				:	"=m"(atomic->value)
+				:	"r"(mask)
+				:	"memory"
+				);
 }
 
 inline __always_inline void atomic_clear_mask(atomic_T * atomic, long mask)
 {
-	__asm__ __volatile__(	"lock	andq	%1,	%0	\n\t"
-						:	"=m"(atomic->value)
-						:	"r"(~(mask))
-						:	"memory"
-						);
+	asm volatile(	"lock	andq	%1,	%0	\n\t"
+				:	"=m"(atomic->value)
+				:	"r"(~(mask))
+				:	"memory"
+				);
 }

@@ -69,11 +69,11 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	void (*func)(void);
 	func = (void *)k_load_addr;
 
-	__asm__ __volatile__("movq	%0, %%rbx"
-						:
-						:"rbx"(func)
-						:
-						);
+	asm volatile("movq	%0, %%rbx"
+				:
+				:"rbx"(func)
+				:
+				);
 
 	func();
 

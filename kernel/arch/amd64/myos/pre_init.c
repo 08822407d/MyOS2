@@ -16,6 +16,7 @@
 
 extern uint64_t	boot_from_grub2;
 
+efi_machine_conf_s	*machine_info;
 kinfo_s			kparam;
 framebuffer_s	framebuffer;
 
@@ -61,10 +62,7 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 
 void myos_early_init_sytem(void)
 {
-	struct KERNEL_BOOT_PARAMETER_INFORMATION * machine_info =
-			(struct KERNEL_BOOT_PARAMETER_INFORMATION *)MACHINE_CONF_ADDR;
-	extern e820_entry_s *e820_table;
-	e820_table = (e820_entry_s *)machine_info->mb_mmap;
+	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 	get_VBE_info(&machine_info->mb_fb_common);
 	get_SMP_info(&machine_info->efi_smp_info);
 }

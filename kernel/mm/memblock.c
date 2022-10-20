@@ -576,6 +576,8 @@ void * myos_memblock_alloc_DMA(size_t size, size_t align)
 
 	ptr = memblock_alloc_internal(size, align,
 			MEMBLOCK_LOW_LIMIT, MAX_DMA_PFN << PAGE_SHIFT);
+	if (ptr)
+		memset(ptr, 0, size);
 
 	return ptr;
 }
@@ -586,6 +588,8 @@ void * myos_memblock_alloc_normal(size_t size, size_t align)
 
 	ptr = memblock_alloc_internal(size, align,
 			MAX_DMA_PFN << PAGE_SHIFT, MEMBLOCK_ALLOC_ACCESSIBLE);
+	if (ptr)
+		memset(ptr, 0, size);
 
 	return ptr;
 }

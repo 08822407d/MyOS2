@@ -647,10 +647,10 @@
 	// #define MSR_IA32_XFD_ERR		0x000001c5
 	// #define MSR_IA32_XSS			0x00000da0
 
-	// #define MSR_IA32_APICBASE		0x0000001b
-	// #define MSR_IA32_APICBASE_BSP		(1<<8)
-	// #define MSR_IA32_APICBASE_ENABLE	(1<<11)
-	// #define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
+	#define MSR_IA32_APICBASE			0x0000001b
+	#define MSR_IA32_APICBASE_BSP		(1<<8)
+	#define MSR_IA32_APICBASE_ENABLE	(1<<11)
+	#define MSR_IA32_APICBASE_BASE		(0xfffff<<12)
 
 	// #define MSR_IA32_UCODE_WRITE		0x00000079
 	// #define MSR_IA32_UCODE_REV		0x0000008b

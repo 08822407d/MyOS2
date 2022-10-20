@@ -9,6 +9,7 @@
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
 #include <asm/setup.h>
+#include <asm/msr.h>
 
 
 #include <klib/utils.h>
@@ -80,11 +81,11 @@ unsigned long myos_gen_newpid()
 
 inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
-	__asm__ __volatile__(	"movq	%0,	%%cr3		\n\t"
-						:
-						:	"r"(target->mm_struct->cr3)
-						:	"memory"
-						);
+	asm volatile(	"movq	%0,	%%cr3		\n\t"
+				:
+				:	"r"(target->mm_struct->cr3)
+				:	"memory"
+				);
 	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
 }
 
@@ -97,40 +98,40 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset
 	// here need to save and restore them
 
-	// __asm__ __volatile__("movq	%%fs,	%0 \n\t"
-	// 					 : "=a"(curr->arch_struct.fs));
-	// __asm__ __volatile__("movq	%%gs,	%0 \n\t"
-	// 					 : "=a"(curr->arch_struct.gs));
+	// asm volatile("movq	%%fs,	%0 \n\t"
+	// 			: "=a"(curr->arch_struct.fs));
+	// asm volatile("movq	%%gs,	%0 \n\t"
+	// 			: "=a"(curr->arch_struct.gs));
 
-	// __asm__ __volatile__("movq	%0,	%%fs \n\t"
-	// 					 :
-	// 					 :"a"(target->arch_struct.fs));
-	// __asm__ __volatile__("movq	%0,	%%gs \n\t"
-	// 					 :
-	// 					 :"a"(target->arch_struct.gs));
+	// asm volatile("movq	%0,	%%fs \n\t"
+	// 			:
+	// 			:"a"(target->arch_struct.fs));
+	// asm volatile("movq	%0,	%%gs \n\t"
+	// 			:
+	// 			:"a"(target->arch_struct.gs));
 
 }
 
-void inline __always_inline myos_switch_to(task_s * curr, task_s * target)
+inline __always_inline void myos_switch_to(task_s * curr, task_s * target)
 {
-	__asm__ __volatile__(	"pushq	%%rbp				\n\t"
-							"pushq	%%rax				\n\t"
-							"movq	%%rsp,	%0			\n\t"
-							"movq	%2,		%%rsp		\n\t"
-							"leaq	1f(%%rip),	%%rax	\n\t"
-							"movq	%%rax,	%1			\n\t"
-							"pushq	%3					\n\t"
-							"jmp	__myos_switch_to			\n\t"
-							"1:							\n\t"
-							"popq	%%rax				\n\t"
-							"popq	%%rbp				\n\t"
-						:	"=m"(curr->arch_struct.k_rsp),
-							"=m"(curr->arch_struct.k_rip)
-						:	"m"(target->arch_struct.k_rsp),
-							"m"(target->arch_struct.k_rip),
-							"D"(curr), "S"(target)
-						:	"memory"
-						);
+	asm volatile(	"pushq	%%rbp				\n\t"
+					"pushq	%%rax				\n\t"
+					"movq	%%rsp,	%0			\n\t"
+					"movq	%2,		%%rsp		\n\t"
+					"leaq	1f(%%rip),	%%rax	\n\t"
+					"movq	%%rax,	%1			\n\t"
+					"pushq	%3					\n\t"
+					"jmp	__myos_switch_to			\n\t"
+					"1:							\n\t"
+					"popq	%%rax				\n\t"
+					"popq	%%rbp				\n\t"
+				:	"=m"(curr->arch_struct.k_rsp),
+					"=m"(curr->arch_struct.k_rip)
+				:	"m"(target->arch_struct.k_rsp),
+					"m"(target->arch_struct.k_rip),
+					"D"(curr), "S"(target)
+				:	"memory"
+				);
 }
 
 // read memory distribution of the executive
@@ -418,15 +419,15 @@ void kjmp_to_doexecve()
 	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
 
-	__asm__	__volatile__(	"movq	%1,	%%rsp	\n\t"
-							"pushq	%2			\n\t"
-							"jmp	do_execve	\n\t"
-						:
-						:	"D"(ctx_rsp), "m"(ctx_rsp),
-							"m"(ctx_rip), "S"("/init.bin"),
-							"d"(NULL), "c"(NULL)
-						:	"memory"
-						);
+	asm volatile(	"movq	%1,	%%rsp	\n\t"
+					"pushq	%2			\n\t"
+					"jmp	do_execve	\n\t"
+				:
+				:	"D"(ctx_rsp), "m"(ctx_rsp),
+					"m"(ctx_rip), "S"("/init.bin"),
+					"d"(NULL), "c"(NULL)
+				:	"memory"
+				);
 }
 
 static void exit_notify(void)
@@ -488,11 +489,11 @@ task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long ar
 inline __always_inline task_s * get_current_task()
 {
 	task_s * curr_task = NULL;
-	__asm__ __volatile__(	"andq 	%%rsp,	%1		\n\t"
-						:	"=r"(curr_task)
-						:	"r"(~(TASK_KSTACK_SIZE - 1))
-						:
-						);
+	asm volatile(	"andq 	%%rsp,	%1		\n\t"
+				:	"=r"(curr_task)
+				:	"r"(~(TASK_KSTACK_SIZE - 1))
+				:
+				);
 	return curr_task;
 }
 

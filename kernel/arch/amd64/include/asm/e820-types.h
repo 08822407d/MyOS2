@@ -58,8 +58,7 @@
 	typedef struct e820_entry {
 		u64			addr;
 		u64			size;
-		enum e820_type		type;
-		u32			align;
+		enum e820_type	type;
 	} e820_entry_s;
 
 	// /*
@@ -96,10 +95,10 @@
 	/*
 	 * The whole array of E820 entries:
 	 */
-	struct e820_table {
+	typedef struct e820_table {
 		__u32			nr_entries;
 		e820_entry_s	entries[E820_MAX_ENTRIES];
-	};
+	} e820_table_s;
 
 	/*
 	 * Various well-known legacy memory ranges in physical memory:

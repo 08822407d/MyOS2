@@ -184,7 +184,9 @@
 		"cache.h": "c",
 		"cpu.h": "c",
 		"processor-flags.h": "c",
-		"processor.h": "c"
+		"processor.h": "c",
+		"msr.h": "c",
+		"msr-index.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

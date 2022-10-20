@@ -119,11 +119,11 @@ void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
 	mm_s *mm = curr->mm_struct;
 	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
-	__asm__	__volatile__(	"movq	%%cr2,	%0		\n\t"
-						:	"=r"(cr2)
-						:
-						:	"memory"
-						);
+	asm volatile(	"movq	%%cr2,	%0		\n\t"
+				:	"=r"(cr2)
+				:
+				:	"memory"
+				);
 
 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
 		check_addr_writable(cr2, curr))

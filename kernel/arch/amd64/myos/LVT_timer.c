@@ -1,5 +1,6 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
+#include <asm/msr.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>

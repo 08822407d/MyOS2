@@ -2,12 +2,12 @@
 #ifndef _ASM_X86_APICDEF_H
 #define _ASM_X86_APICDEF_H
 
-	// /*
-	//  * Constants for various Intel APICs. (local APIC, IOAPIC, etc.)
-	//  *
-	//  * Alan Cox <Alan.Cox@linux.org>, 1995.
-	//  * Ingo Molnar <mingo@redhat.com>, 1999, 2000
-	//  */
+	/*
+	 * Constants for various Intel APICs. (local APIC, IOAPIC, etc.)
+	 *
+	 * Alan Cox <Alan.Cox@linux.org>, 1995.
+	 * Ingo Molnar <mingo@redhat.com>, 1999, 2000
+	 */
 
 	// #define IO_APIC_DEFAULT_PHYS_BASE	0xfec00000
 	// #define	APIC_DEFAULT_PHYS_BASE		0xfee00000
@@ -143,18 +143,13 @@
 	// #define		APIC_EILVT_MSG_EXT	0x7
 	// #define		APIC_EILVT_MASKED	(1 << 16)
 
-	// #define APIC_BASE (fix_to_virt(FIX_APIC_BASE))
-	// #define APIC_BASE_MSR	0x800
-	// #define XAPIC_ENABLE	(1UL << 11)
-	// #define X2APIC_ENABLE	(1UL << 10)
+	#define APIC_BASE		(fix_to_virt(FIX_APIC_BASE))
+	#define APIC_BASE_MSR	0x800
+	#define XAPIC_ENABLE	(1UL << 11)
+	#define X2APIC_ENABLE	(1UL << 10)
 
-	// #ifdef CONFIG_X86_32
-	// # define MAX_IO_APICS 64
-	// # define MAX_LOCAL_APIC 256
-	// #else
-	// # define MAX_IO_APICS 128
-	// # define MAX_LOCAL_APIC 32768
-	// #endif
+	# define MAX_IO_APICS	128
+	# define MAX_LOCAL_APIC	32768
 
 	// /*
 	// * All x86-64 systems are xAPIC compatible.

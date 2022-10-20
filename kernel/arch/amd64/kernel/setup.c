@@ -28,7 +28,7 @@
 
 // #include <xen/xen.h>
 
-// #include <asm/apic.h>
+#include <asm/apic.h>
 // #include <asm/numa.h>
 // #include <asm/bios_ebda.h>
 #include <asm/bugs.h>
@@ -205,6 +205,8 @@ void __init setup_arch(char **cmdline_p)
 	 */
 	// 将一些保留内存段在memblock里标记为已使用,比如bios,kernel等已占用空间
 	early_reserve_memory();
+	// 将固件生成的e820分布提取存储到内核结构中
+	e820__memory_setup();
 
 	/*
 	 * partially used pages are not usable - thus
@@ -214,7 +216,7 @@ void __init setup_arch(char **cmdline_p)
 	max_pfn = e820__end_of_ram_pfn();
 	max_possible_pfn = max_pfn;
 
-	// check_x2apic();
+	check_x2apic();
 
 	// /* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;
