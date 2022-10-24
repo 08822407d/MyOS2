@@ -10,10 +10,9 @@
 	 * the libc and compiler builtin ffs routines, therefore
 	 * differs in spirit from ffz (man ffs).
 	 */
-	static inline int ffs(int x)
-	{
+	static inline int
+	ffs(int x) {
 		int r = 1;
-
 		if (!x)
 			return 0;
 		if (!(x & 0xffff)) {

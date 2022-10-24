@@ -7,7 +7,11 @@
 	#define ND_JUMPED		4
 
 	#define MAXSYMLINKS		40
-	enum {WALK_TRAILING = 1, WALK_MORE = 2, WALK_NOFOLLOW = 4};
+	enum {
+		WALK_TRAILING = 1,
+		WALK_MORE = 2,
+		WALK_NOFOLLOW = 4
+	};
 
 	#include <linux/fs/fs.h>
 	#include <linux/fs/path.h>
@@ -16,13 +20,20 @@
 
 	#include <linux/lib/errno.h>
 
-	enum { MAX_NESTED_LINKS = 8 };
+	enum {
+		MAX_NESTED_LINKS = 8
+	};
 
 	#define MAXSYMLINKS 40
 	/*
 	* Type of the last component on LOOKUP_PARENT
 	*/
-	enum {LAST_NORM, LAST_ROOT, LAST_DOT, LAST_DOTDOT};
+	enum {
+		LAST_NORM,
+		LAST_ROOT,
+		LAST_DOT,
+		LAST_DOTDOT
+	};
 
 	/* pathwalk mode */
 	#define LOOKUP_FOLLOW			0x0001	/* follow links at the end */
@@ -52,19 +63,24 @@
 	#define LOOKUP_IN_ROOT			0x100000 /* Treat dirfd as fs root. */
 	#define LOOKUP_CACHED			0x200000 /* Only do cached lookup */
 	/* LOOKUP_* flags which do scope-related checks based on the dirfd. */
-	#define LOOKUP_IS_SCOPED (LOOKUP_BENEATH | LOOKUP_IN_ROOT)	
+	#define LOOKUP_IS_SCOPED (					\
+				LOOKUP_BENEATH | LOOKUP_IN_ROOT	\
+			)	
 
 	// extern int path_pts(path_s *path);
 
-	extern int user_path_at_empty(int dfd, const char *name, unsigned flags, path_s *);
-	static inline int user_path_at(int dfd, const char *name, unsigned flags, path_s *path)
-	{
+	extern int
+	user_path_at_empty(int dfd, const char *name, unsigned flags, path_s *);
+	static inline int
+	user_path_at(int dfd, const char *name, unsigned flags, path_s *path) {
 		return user_path_at_empty(dfd, name, flags, path);
 	}
 	int kern_path(const char * name, unsigned int flags, path_s * path);
 
-	extern dentry_s *kern_path_create(int, const char *, path_s *, unsigned int);
-	extern dentry_s *user_path_create(int, const char *, path_s *, unsigned int);
+	extern dentry_s *
+	kern_path_create(int, const char *, path_s *, unsigned int);
+	extern dentry_s *
+	user_path_create(int, const char *, path_s *, unsigned int);
 	extern void done_path_create(path_s *, dentry_s *);
 	// extern dentry_s *kern_path_locked(const char *, path_s *);
 

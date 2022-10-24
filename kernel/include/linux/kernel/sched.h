@@ -2394,14 +2394,12 @@
 
 #include <obsolete/archconst.h>
 // myos obsolete defines
-	typedef union PCB
-	{
+	typedef union PCB {
 		task_s task;
 		reg_t stack[TASK_KSTACK_SIZE / sizeof(reg_t)];
 	} PCB_u __attribute__((aligned(8)));
 
-	typedef struct task_queue
-	{
+	typedef struct task_queue {
 		task_s **queue;
 		task_s *sched_task;
 		unsigned nr_max;

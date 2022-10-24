@@ -23,8 +23,7 @@
 		arch_cpudata_s	arch_info;
 	} per_cpudata_s;
 
-	typedef union cpudata
-	{
+	typedef union cpudata {
 		per_cpudata_s	cpudata;
 		reg_t			cpu_stack[PAGE_SIZE / sizeof(reg_t)];
 	} cpudata_u;

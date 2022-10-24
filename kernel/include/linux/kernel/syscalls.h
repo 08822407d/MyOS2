@@ -399,10 +399,6 @@
 		// asmlinkage long sys_dup(unsigned int fildes);
 		// asmlinkage long sys_dup3(unsigned int oldfd, unsigned int newfd, int flags);
 		// asmlinkage long sys_fcntl(unsigned int fd, unsigned int cmd, unsigned long arg);
-		// #if BITS_PER_LONG == 32
-		// asmlinkage long sys_fcntl64(unsigned int fd,
-		// 							unsigned int cmd, unsigned long arg);
-		// #endif
 
 		// /* fs/inotify_user.c */
 		// asmlinkage long sys_inotify_init1(int flags);
@@ -453,10 +449,6 @@
 		// 							struct statfs64 __user *buf);
 		// asmlinkage long sys_truncate(const char __user *path, long length);
 		// asmlinkage long sys_ftruncate(unsigned int fd, unsigned long length);
-		// #if BITS_PER_LONG == 32
-		// asmlinkage long sys_truncate64(const char __user *path, loff_t length);
-		// asmlinkage long sys_ftruncate64(unsigned int fd, loff_t length);
-		// #endif
 		// asmlinkage long sys_fallocate(int fd, int mode, loff_t offset, loff_t len);
 		// asmlinkage long sys_faccessat(int dfd, const char __user *filename, int mode);
 		// asmlinkage long sys_faccessat2(int dfd, const char __user *filename, int mode,

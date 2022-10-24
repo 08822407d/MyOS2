@@ -38,8 +38,7 @@
 	*/
 	#		define PAGE_ALLOC_COSTLY_ORDER 3
 
-			enum migratetype
-			{
+			enum migratetype {
 				MIGRATE_UNMOVABLE,
 				MIGRATE_MOVABLE,
 				MIGRATE_RECLAIMABLE,
@@ -120,8 +119,7 @@
 	 * cachelines.  There are very few zone structures in the machine, so space
 	 * consumption is not a concern here.
 	 */
-			struct zone_padding
-			{
+			struct zone_padding {
 				char x[0];
 			} ____cacheline_internodealigned_in_smp;
 	#		define ZONE_PADDING(name) struct zone_padding name;
@@ -410,8 +408,7 @@
 
 	#	endif /* !__GENERATING_BOUNDS.H */
 
-		enum zone_type
-		{
+		enum zone_type {
 		/*
 		* ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
 		* to DMA to all of the addressable memory (ZONE_NORMAL).
@@ -493,8 +490,7 @@
 	#	ifndef __GENERATING_BOUNDS_H
 	#		define ASYNC_AND_SYNC 2
 
-			typedef struct zone
-			{
+			typedef struct zone {
 				/* Read-mostly fields */
 
 				// /* zone watermarks, access with *_wmark_pages(zone) macros */
@@ -812,8 +808,7 @@
 			* Memory statistics and page replacement data structures are maintained on a
 			* per-zone basis.
 			*/
-			typedef struct pglist_data
-			{
+			typedef struct pglist_data {
 				/*
 				* node_zones contains just the zones for THIS node. Not all of the
 				* zones may be populated, but it is the full list. It is referenced by

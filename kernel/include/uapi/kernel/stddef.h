@@ -6,11 +6,10 @@
 
 	#ifndef _CONTAINER_OF
 	#define _CONTAINER_OF
-	#	define container_of(member_ptr, container_type, member_name)				\
-				({																	\
+	#	define container_of(member_ptr, container_type, member_name) ({				\
 					typeof(((container_type *)0)->member_name) * p = (member_ptr);	\
 					(container_type *)((unsigned long)p -							\
-					(unsigned long)&(((container_type *)0)->member_name));			\
+						(unsigned long)&(((container_type *)0)->member_name));		\
 				})
 	#endif /* _CONTAINER_OF */
 

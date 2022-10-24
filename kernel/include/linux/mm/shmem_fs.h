@@ -49,8 +49,8 @@
 		// unsigned long	shrinklist_len;		/* Length of shrinklist */
 	} shmem_sb_info_s;
 
-	static inline shmem_inode_info_s *SHMEM_I(inode_s *inode)
-	{
+	static inline shmem_inode_info_s *
+	SHMEM_I(inode_s *inode) {
 		return container_of(inode, shmem_inode_info_s, vfs_inode);
 	}
 

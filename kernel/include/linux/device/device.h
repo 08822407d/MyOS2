@@ -300,8 +300,7 @@
 	 * @DL_STATE_ACTIVE: Both the supplier and consumer drivers are present.
 	 * @DL_STATE_SUPPLIER_UNBIND: The supplier driver is unbinding.
 	 */
-	enum device_link_state
-	{
+	enum device_link_state {
 		DL_STATE_NONE = -1,
 		DL_STATE_DORMANT = 0,
 		DL_STATE_AVAILABLE,
@@ -340,8 +339,7 @@
 	 * @DL_DEV_DRIVER_BOUND: The driver has been bound to the device.
 	 * @DL_DEV_UNBINDING: The driver is unbinding from the device.
 	 */
-	enum dl_dev_state
-	{
+	enum dl_dev_state {
 		DL_DEV_NO_DRIVER = 0,
 		DL_DEV_PROBING,
 		DL_DEV_DRIVER_BOUND,
@@ -357,8 +355,7 @@
 	 * @DEVICE_FIXED: Device is not removable by the user.
 	 * @DEVICE_REMOVABLE: Device is removable by the user.
 	 */
-	enum device_removable
-	{
+	enum device_removable {
 		DEVICE_REMOVABLE_NOT_SUPPORTED = 0, /* must be 0 */
 		DEVICE_REMOVABLE_UNKNOWN,
 		DEVICE_FIXED,
@@ -621,8 +618,8 @@
 	// 	bool supplier_preactivated; /* Owned by consumer probe. */
 	// };
 
-	static inline device_s *kobj_to_dev(kobj_s *kobj)
-	{
+	static inline device_s *
+	kobj_to_dev(kobj_s *kobj) {
 		return container_of(kobj, device_s, kobj);
 	}
 
@@ -639,11 +636,10 @@
 	// /* Get the wakeup routines, which depend on struct device */
 	// #include <linux/pm_wakeup.h>
 
-	static inline const char *dev_name(const device_s *dev)
-	{
+	static inline const char *
+	dev_name(const device_s *dev) {
 		/* Use the init name until the kobject becomes available */
-		if (dev->init_name)
-			return dev->init_name;
+		if (dev->init_name) return dev->init_name;
 
 		return kobject_name(&dev->kobj);
 	}

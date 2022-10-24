@@ -368,39 +368,41 @@
 	} request_queue_s;
 
 	/* Keep blk_queue_flag_name[] in sync with the definitions below */
-	#define QUEUE_FLAG_STOPPED	0	/* queue is stopped */
-	#define QUEUE_FLAG_DYING	1	/* queue being torn down */
-	#define QUEUE_FLAG_HAS_SRCU	2	/* SRCU is allocated */
-	#define QUEUE_FLAG_NOMERGES     3	/* disable merge attempts */
-	#define QUEUE_FLAG_SAME_COMP	4	/* complete on same CPU-group */
-	#define QUEUE_FLAG_FAIL_IO	5	/* fake timeout */
-	#define QUEUE_FLAG_NONROT	6	/* non-rotational device (SSD) */
-	#define QUEUE_FLAG_VIRT		QUEUE_FLAG_NONROT /* paravirt device */
-	#define QUEUE_FLAG_IO_STAT	7	/* do disk/partitions IO accounting */
-	#define QUEUE_FLAG_DISCARD	8	/* supports DISCARD */
-	#define QUEUE_FLAG_NOXMERGES	9	/* No extended merges */
-	#define QUEUE_FLAG_ADD_RANDOM	10	/* Contributes to random pool */
-	#define QUEUE_FLAG_SECERASE	11	/* supports secure erase */
-	#define QUEUE_FLAG_SAME_FORCE	12	/* force complete on same CPU */
-	#define QUEUE_FLAG_DEAD		13	/* queue tear-down finished */
-	#define QUEUE_FLAG_INIT_DONE	14	/* queue is initialized */
-	#define QUEUE_FLAG_STABLE_WRITES 15	/* don't modify blks until WB is done */
-	#define QUEUE_FLAG_POLL		16	/* IO polling enabled if set */
-	#define QUEUE_FLAG_WC		17	/* Write back caching */
-	#define QUEUE_FLAG_FUA		18	/* device supports FUA writes */
-	#define QUEUE_FLAG_DAX		19	/* device supports DAX */
-	#define QUEUE_FLAG_STATS	20	/* track IO start and completion times */
-	#define QUEUE_FLAG_REGISTERED	22	/* queue has been registered to a disk */
-	#define QUEUE_FLAG_QUIESCED	24	/* queue has been quiesced */
-	#define QUEUE_FLAG_PCI_P2PDMA	25	/* device supports PCI p2p requests */
-	#define QUEUE_FLAG_ZONE_RESETALL 26	/* supports Zone Reset All */
-	#define QUEUE_FLAG_RQ_ALLOC_TIME 27	/* record rq->alloc_time_ns */
-	#define QUEUE_FLAG_HCTX_ACTIVE	28	/* at least one blk-mq hctx is active */
-	#define QUEUE_FLAG_NOWAIT       29	/* device supports NOWAIT */
+	#define QUEUE_FLAG_STOPPED			0	/* queue is stopped */
+	#define QUEUE_FLAG_DYING			1	/* queue being torn down */
+	#define QUEUE_FLAG_HAS_SRCU			2	/* SRCU is allocated */
+	#define QUEUE_FLAG_NOMERGES			3	/* disable merge attempts */
+	#define QUEUE_FLAG_SAME_COMP		4	/* complete on same CPU-group */
+	#define QUEUE_FLAG_FAIL_IO			5	/* fake timeout */
+	#define QUEUE_FLAG_NONROT			6	/* non-rotational device (SSD) */
+	#define QUEUE_FLAG_VIRT				QUEUE_FLAG_NONROT /* paravirt device */
+	#define QUEUE_FLAG_IO_STAT			7	/* do disk/partitions IO accounting */
+	#define QUEUE_FLAG_DISCARD			8	/* supports DISCARD */
+	#define QUEUE_FLAG_NOXMERGES		9	/* No extended merges */
+	#define QUEUE_FLAG_ADD_RANDOM		10	/* Contributes to random pool */
+	#define QUEUE_FLAG_SECERASE			11	/* supports secure erase */
+	#define QUEUE_FLAG_SAME_FORCE		12	/* force complete on same CPU */
+	#define QUEUE_FLAG_DEAD				13	/* queue tear-down finished */
+	#define QUEUE_FLAG_INIT_DONE		14	/* queue is initialized */
+	#define QUEUE_FLAG_STABLE_WRITES	15	/* don't modify blks until WB is done */
+	#define QUEUE_FLAG_POLL				16	/* IO polling enabled if set */
+	#define QUEUE_FLAG_WC				17	/* Write back caching */
+	#define QUEUE_FLAG_FUA				18	/* device supports FUA writes */
+	#define QUEUE_FLAG_DAX				19	/* device supports DAX */
+	#define QUEUE_FLAG_STATS			20	/* track IO start and completion times */
+	#define QUEUE_FLAG_REGISTERED		22	/* queue has been registered to a disk */
+	#define QUEUE_FLAG_QUIESCED			24	/* queue has been quiesced */
+	#define QUEUE_FLAG_PCI_P2PDMA		25	/* device supports PCI p2p requests */
+	#define QUEUE_FLAG_ZONE_RESETALL	26	/* supports Zone Reset All */
+	#define QUEUE_FLAG_RQ_ALLOC_TIME	27	/* record rq->alloc_time_ns */
+	#define QUEUE_FLAG_HCTX_ACTIVE		28	/* at least one blk-mq hctx is active */
+	#define QUEUE_FLAG_NOWAIT			29	/* device supports NOWAIT */
 
-	#define QUEUE_FLAG_MQ_DEFAULT	((1 << QUEUE_FLAG_IO_STAT) |		\
-					(1 << QUEUE_FLAG_SAME_COMP) |		\
-					(1 << QUEUE_FLAG_NOWAIT))
+	#define QUEUE_FLAG_MQ_DEFAULT (				\
+				(1 << QUEUE_FLAG_IO_STAT) |		\
+				(1 << QUEUE_FLAG_SAME_COMP) |	\
+				(1 << QUEUE_FLAG_NOWAIT)		\
+			)
 
 	// void blk_queue_flag_set(unsigned int flag, struct request_queue *q);
 	// void blk_queue_flag_clear(unsigned int flag, struct request_queue *q);

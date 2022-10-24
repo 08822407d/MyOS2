@@ -119,7 +119,7 @@
 	// #endif
 	// void memblock_trim_memory(phys_addr_t align);
 	bool memblock_overlaps_region(mmblk_type_s *type,
-					phys_addr_t base, phys_addr_t size);
+			phys_addr_t base, phys_addr_t size);
 	// int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);
 	// int memblock_clear_hotplug(phys_addr_t base, phys_addr_t size);
 	// int memblock_mark_mirror(phys_addr_t base, phys_addr_t size);
@@ -136,8 +136,10 @@
 	// 			struct memblock_type *type_a,
 	// 			struct memblock_type *type_b, phys_addr_t *out_start,
 	// 			phys_addr_t *out_end, int *out_nid);
-	void __next_mem_range(uint64_t *idx, mmblk_type_s *type_a, mmblk_type_s *type_b,
-							phys_addr_t *out_start, phys_addr_t *out_end);
+	void
+	__next_mem_range(uint64_t *idx, mmblk_type_s *type_a,
+			mmblk_type_s *type_b, phys_addr_t *out_start,
+			phys_addr_t *out_end);
 
 	// void __next_mem_range_rev(u64 *idx, int nid, enum memblock_flags flags,
 	// 			struct memblock_type *type_a,
@@ -283,7 +285,8 @@
 	// 				unsigned long  *end_pfn);
 	// void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
 	// 			unsigned long *out_end_pfn, int *out_nid);
-	void __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
+	void
+	__next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
 			unsigned long *out_end_pfn);
 
 	/**
@@ -299,9 +302,9 @@
 	// #define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)	\
 	// 	for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
 	// 		i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
-	#define for_each_mem_pfn_range(i, p_start, p_end)			\
-		for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
-			i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
+	#define for_each_mem_pfn_range(i, p_start, p_end)					\
+				for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
+					i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
 
 	// #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
 	// void __next_mem_pfn_range_in_zone(u64 *idx, struct zone *zone,
@@ -394,7 +397,7 @@
 	// #endif /* CONFIG_NUMA */
 
 	/* Flags for memblock allocation APIs */
-	#define MEMBLOCK_ALLOC_ANYWHERE	(~(phys_addr_t)0)
+	#define MEMBLOCK_ALLOC_ANYWHERE		(~(phys_addr_t)0)
 	#define MEMBLOCK_ALLOC_ACCESSIBLE	0
 	#define MEMBLOCK_ALLOC_NOLEAKTRACE	1
 
@@ -471,8 +474,8 @@
 	 * if this is true, that said, memblock will allocate memory
 	 * in bottom-up direction.
 	 */
-	static inline __init_memblock bool memblock_bottom_up(void)
-	{
+	static inline __init_memblock bool
+	memblock_bottom_up(void) {
 		return memblock.bottom_up;
 	}
 
@@ -558,11 +561,11 @@
 	 * for_each_mem_region - itereate over memory regions
 	 * @region: loop variable
 	 */
-	#define for_each_mem_region(region)			\
-		for (region = memblock.memory.regions;	\
-			region < (memblock.memory.regions +	\
-						memblock.memory.cnt);	\
-			region++)
+	#define for_each_mem_region(region)					\
+				for (region = memblock.memory.regions;	\
+					region < (memblock.memory.regions +	\
+								memblock.memory.cnt);	\
+					region++)
 
 	// /**
 	//  * for_each_reserved_mem_region - itereate over reserved memory regions

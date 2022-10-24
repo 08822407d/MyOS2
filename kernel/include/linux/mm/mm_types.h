@@ -863,8 +863,7 @@
 	//  * signals before a retry to make sure the continuous page faults can still be
 	//  * interrupted if necessary.
 	//  */
-	// enum fault_flag
-	// {
+	// enum fault_flag {
 	// 	FAULT_FLAG_WRITE = 1 << 0,
 	// 	FAULT_FLAG_MKWRITE = 1 << 1,
 	// 	FAULT_FLAG_ALLOW_RETRY = 1 << 2,

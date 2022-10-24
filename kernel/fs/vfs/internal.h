@@ -43,15 +43,18 @@ extern void chrdev_init(void);
 /*
  * namei.c
  */
-extern int filename_lookup(int dfd, filename_s *name, unsigned flags,
-				path_s *path, path_s *root);
-extern int vfs_path_lookup(dentry_s *, vfsmount_s *,
-				const char *, unsigned int, path_s *);
+extern int
+filename_lookup(int dfd, filename_s *name,
+		unsigned flags, path_s *path, path_s *root);
+extern int
+vfs_path_lookup(dentry_s *, vfsmount_s *,
+		const char *, unsigned int, path_s *);
 long do_rmdir(int dfd, filename_s *name);
 long do_unlinkat(int dfd, filename_s *name);
 // int may_linkat(struct user_namespace *mnt_userns, path_s *link);
-int do_renameat2(int olddfd, filename_s *oldname, int newdfd,
-				filename_s *newname, unsigned int flags);
+int
+do_renameat2(int olddfd, filename_s *oldname, int newdfd,
+		filename_s *newname, unsigned int flags);
 
 /*
  * namespace.c
@@ -68,7 +71,8 @@ extern void __mnt_drop_write_file(file_s *);
 
 extern void dissolve_on_fput(vfsmount_s *);
 
-int path_mount(const char *dev_name, IN path_s *path,
+int
+path_mount(const char *dev_name, IN path_s *path,
 		const char *type_page, unsigned long flags);
 int path_umount(path_s *path, int flags);
 
@@ -102,18 +106,19 @@ typedef struct open_flags {
 	int intent;
 	int lookup_flags;
 } open_flags_s;
-extern file_s *do_filp_open(int dfd, filename_s *pathname,
-				const open_flags_s *op);
-extern file_s *do_file_open_root(const path_s *,
-				const char *, const open_flags_s *);
+extern file_s *
+do_filp_open(int dfd, filename_s *pathname, const open_flags_s *op);
+extern file_s *
+do_file_open_root(const path_s, const char *, const open_flags_s *);
 extern struct open_how build_open_how(int flags, umode_t mode);
 extern int build_open_flags(const struct open_how *how, open_flags_s *op);
 extern int __close_fd_get_file(unsigned int fd, file_s **res);
 
 // long do_sys_ftruncate(unsigned int fd, loff_t length, int small);
 int chmod_common(const path_s *path, umode_t mode);
-int do_fchownat(int dfd, const char *filename, uid_t user, gid_t group,
-				int flag);
+int
+do_fchownat(int dfd, const char *filename,
+		uid_t user, gid_t group, int flag);
 int chown_common(const path_s *path, uid_t user, gid_t group);
 extern int vfs_open(const path_s *, file_s *);
 
@@ -136,7 +141,7 @@ extern int invalidate_inodes(super_block_s *, bool);
 extern int d_set_mounted(dentry_s *dentry);
 // extern long prune_dcache_sb(super_block_s *sb, struct shrink_control *sc);
 extern dentry_s *d_alloc_cursor(dentry_s *);
-extern dentry_s * d_alloc_pseudo(super_block_s *, const qstr_s *);
+extern dentry_s *d_alloc_pseudo(super_block_s *, const qstr_s *);
 extern char *simple_dname(dentry_s *, char *, int);
 // extern void dput_to_list(dentry_s *, struct list_head *);
 // extern void shrink_dentry_list(struct list_head *);

@@ -187,12 +187,6 @@
 	//  */
 	// static inline unsigned long __ffs64(u64 word)
 	// {
-	// #if BITS_PER_LONG == 32
-	// 	if (((u32)word) == 0UL)
-	// 		return __ffs((u32)(word >> 32)) + 32;
-	// #elif BITS_PER_LONG != 64
-	// #error BITS_PER_LONG not 32 or 64
-	// #endif
 	// 	return __ffs((unsigned long)word);
 	// }
 

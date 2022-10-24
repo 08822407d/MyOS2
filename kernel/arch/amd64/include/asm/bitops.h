@@ -18,9 +18,7 @@
 	// #include <asm/rmwcc.h>
 	// #include <asm/barrier.h>
 
-	// #if BITS_PER_LONG == 32
-	// #	define _BITOPS_LONG_SHIFT	5
-	// #elif BITS_PER_LONG == 64
+	// if BITS_PER_LONG == 64
 	// #	define _BITOPS_LONG_SHIFT	6
 	// #else
 	// #	error "Unexpected BITS_PER_LONG"

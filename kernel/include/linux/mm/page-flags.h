@@ -97,8 +97,9 @@
 	 * SPARSEMEM section (for variants of SPARSEMEM that require section ids like
 	 * SPARSEMEM_EXTREME with !SPARSEMEM_VMEMMAP).
 	 */
-	enum pageflags
-	{
+	// detailed explanations:
+	// https://www.kernel.org/doc/html/latest/admin-guide/mm/pagemap.html?highlight=kpageflags
+	enum pageflags {
 		PG_locked, /* Page is locked. Don't touch. */
 		PG_referenced,
 		PG_uptodate,
@@ -176,9 +177,9 @@
 		PG_reported = PG_uptodate,
 	};
 
-	// #define PAGEFLAGS_MASK ((1UL << NR_PAGEFLAGS) - 1)
+	#define PAGEFLAGS_MASK ((1UL << NR_PAGEFLAGS) - 1)
 
-	// #ifndef __GENERATING_BOUNDS_H
+	#ifndef __GENERATING_BOUNDS_H
 
 	// 	static inline unsigned long _compound_head(const struct page *page)
 	// 	{
@@ -231,7 +232,7 @@
 	// 		return test_bit(PG_head, &page->flags) || PageTail(page);
 	// 	}
 
-		#define PAGE_POISON_PATTERN -1L
+	#	define PAGE_POISON_PATTERN -1L
 	// 	static inline int PagePoisoned(const struct page *page)
 	// 	{
 	// 		return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
@@ -998,6 +999,6 @@
 	// 	#undef PF_NO_COMPOUND
 	// 	#undef PF_SECOND
 
-	// #endif /* !__GENERATING_BOUNDS_H */
+	#endif /* !__GENERATING_BOUNDS_H */
 
 #endif /* PAGE_FLAGS_H */

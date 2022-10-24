@@ -41,11 +41,7 @@
 	// #define DIV_ROUND_UP_ULL(ll, d) \
 	// 		DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
 
-	#if BITS_PER_LONG == 32
-	#	define DIV_ROUND_UP_SECTOR_T(ll,d)	DIV_ROUND_UP_ULL(ll, d)
-	#else
-	#	define DIV_ROUND_UP_SECTOR_T(ll,d)	DIV_ROUND_UP(ll,d)
-	#endif
+	#define DIV_ROUND_UP_SECTOR_T(ll,d)	DIV_ROUND_UP(ll,d)
 
 	/**
 	 * roundup - round up to the next specified multiple
@@ -55,12 +51,10 @@
 	 * Rounds @x up to next multiple of @y. If @y will always be a power
 	 * of 2, consider using the faster round_up().
 	 */
-	#define roundup(x, y) (								\
-				{										\
-					typeof(y) __y = y;					\
-					(((x) + (__y - 1)) / __y) * __y;	\
-				}										\
-			)
+	#define roundup(x, y) ({						\
+				typeof(y) __y = y;					\
+				(((x) + (__y - 1)) / __y) * __y;	\
+			})
 	/**
 	 * rounddown - round down to next specified multiple
 	 * @x: the value to round
@@ -69,12 +63,10 @@
 	 * Rounds @x down to next multiple of @y. If @y will always be a power
 	 * of 2, consider using the faster round_down().
 	 */
-	#define rounddown(x, y) (				\
-				{							\
-					typeof(x) __x = (x);	\
-					__x - (__x % (y));		\
-				}							\
-			)
+	#define rounddown(x, y) ({			\
+				typeof(x) __x = (x);	\
+				__x - (__x % (y));		\
+			})
 
 	/*
 	* Divide positive or negative dividend by positive or negative divisor
@@ -82,17 +74,15 @@
 	* divisors if the dividend variable type is unsigned and for negative
 	* dividends if the divisor variable type is unsigned.
 	*/
-	#define DIV_ROUND_CLOSEST(x, divisor)(					\
-				{											\
-					typeof(x) __x = x;						\
-					typeof(divisor) __d = divisor;			\
-					(((typeof(x))-1) > 0 ||					\
-					((typeof(divisor))-1) > 0 ||			\
-					(((__x) > 0) == ((__d) > 0))) ?			\
-						(((__x) + ((__d) / 2)) / (__d)) :	\
-						(((__x) - ((__d) / 2)) / (__d));	\
-				}											\
-			)
+	#define DIV_ROUND_CLOSEST(x, divisor) ({			\
+				typeof(x) __x = x;						\
+				typeof(divisor) __d = divisor;			\
+				(((typeof(x))-1) > 0 ||					\
+				((typeof(divisor))-1) > 0 ||			\
+				(((__x) > 0) == ((__d) > 0))) ?			\
+					(((__x) + ((__d) / 2)) / (__d)) :	\
+					(((__x) - ((__d) / 2)) / (__d));	\
+			})
 	/*
 	* Same as above but for u64 dividends. divisor must be a 32-bit
 	* number.
@@ -110,13 +100,11 @@
 	* Multiplies an integer by a fraction, while avoiding unnecessary
 	* overflow or loss of precision.
 	*/
-	#define mult_frac(x, numer, denom)(								\
-				{													\
-					typeof(x) quot = (x) / (denom);					\
-					typeof(x) rem  = (x) % (denom);					\
-					(quot * (numer)) + ((rem * (numer)) / (denom));	\
-				}													\
-			)
+	#define mult_frac(x, numer, denom) ({						\
+				typeof(x) quot = (x) / (denom);					\
+				typeof(x) rem  = (x) % (denom);					\
+				(quot * (numer)) + ((rem * (numer)) / (denom));	\
+			})
 
 	// #define sector_div(a, b) do_div(a, b)
 

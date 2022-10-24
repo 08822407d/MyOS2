@@ -138,8 +138,8 @@
 		// struct buffer_head *bh;
 	} fat_slot_info_s;
 
-	static inline msdos_sb_info_s *MSDOS_SB(super_block_s *sb)
-	{
+	static inline msdos_sb_info_s *
+	MSDOS_SB(super_block_s *sb) {
 		return sb->s_fs_info;
 	}
 
@@ -147,18 +147,18 @@
 	 * Functions that determine the variant of the FAT file system (i.e.,
 	 * whether this is FAT12, FAT16 or FAT32.
 	 */
-	static inline bool is_fat12(const msdos_sb_info_s *sbi)
-	{
+	static inline bool
+	is_fat12(const msdos_sb_info_s *sbi) {
 		return sbi->fat_bits == 12;
 	}
 
-	static inline bool is_fat16(const msdos_sb_info_s *sbi)
-	{
+	static inline bool
+	is_fat16(const msdos_sb_info_s *sbi) {
 		return sbi->fat_bits == 16;
 	}
 
-	static inline bool is_fat32(const msdos_sb_info_s *sbi)
-	{
+	static inline bool
+	is_fat32(const msdos_sb_info_s *sbi) {
 		return sbi->fat_bits == 32;
 	}
 
@@ -171,8 +171,8 @@
 	// 			is_fat16(sbi) ? MAX_FAT16 : MAX_FAT12;
 	// }
 
-	static inline msdos_inode_info_s *MSDOS_I(inode_s *inode)
-	{
+	static inline msdos_inode_info_s *
+	MSDOS_I(inode_s *inode) {
 		return container_of(inode, msdos_inode_info_s, vfs_inode);
 	}
 
@@ -183,8 +183,8 @@
 	 * If it's directory and !sbi->options.rodir, ATTR_RO isn't read-only
 	 * bit, it's just used as flag for app.
 	 */
-	static inline int fat_mode_can_hold_ro(inode_s *inode)
-	{
+	static inline int
+	fat_mode_can_hold_ro(inode_s *inode) {
 		msdos_sb_info_s *sbi = MSDOS_SB(inode->i_sb);
 		umode_t mask;
 
@@ -201,9 +201,8 @@
 	}
 
 	/* Convert attribute bits and a mask to the UNIX mode. */
-	static inline umode_t fat_make_mode(msdos_sb_info_s *sbi,
-					u8 attrs, umode_t mode)
-	{
+	static inline umode_t
+	fat_make_mode(msdos_sb_info_s *sbi, u8 attrs, umode_t mode) {
 		if (attrs & ATTR_RO && !((attrs & ATTR_DIR) && !sbi->options.rodir))
 			mode &= ~S_IWUGO;
 
@@ -224,16 +223,16 @@
 	// 	return attrs;
 	// }
 
-	static inline void fat_save_attrs(inode_s *inode, u8 attrs)
-	{
+	static inline void
+	fat_save_attrs(inode_s *inode, u8 attrs) {
 		if (fat_mode_can_hold_ro(inode))
 			MSDOS_I(inode)->i_attrs = attrs & ATTR_UNUSED;
 		else
 			MSDOS_I(inode)->i_attrs = attrs & (ATTR_UNUSED | ATTR_RO);
 	}
 
-	static inline unsigned char fat_checksum(const u8 *name)
-	{
+	static inline unsigned char
+	fat_checksum(const u8 *name) {
 		unsigned char s = name[0];
 		s = (s<<7) + (s>>1) + name[1];	s = (s<<7) + (s>>1) + name[2];
 		s = (s<<7) + (s>>1) + name[3];	s = (s<<7) + (s>>1) + name[4];
@@ -243,8 +242,8 @@
 		return s;
 	}
 
-	static inline sector_t fat_clus_to_blknr(msdos_sb_info_s *sbi, int clus)
-	{
+	static inline sector_t
+	fat_clus_to_blknr(msdos_sb_info_s *sbi, int clus) {
 		return ((sector_t)clus - FAT_START_ENT) * sbi->sec_per_clus
 			+ sbi->data_start;
 	}
@@ -260,13 +259,7 @@
 	// 					inode_s *inode)
 	// {
 	// 	loff_t i_pos;
-	// #if BITS_PER_LONG == 32
-	// 	spin_lock(&sbi->inode_hash_lock);
-	// #endif
 	// 	i_pos = MSDOS_I(inode)->i_pos;
-	// #if BITS_PER_LONG == 32
-	// 	spin_unlock(&sbi->inode_hash_lock);
-	// #endif
 	// 	return i_pos;
 	// }
 
@@ -291,8 +284,8 @@
 	// 	return cluster;
 	// }
 
-	static inline void fat_set_start(msdos_dirent_s *de, int cluster)
-	{
+	static inline void
+	fat_set_start(msdos_dirent_s *de, int cluster) {
 		de->start   = cluster;
 		de->starthi = cluster >> 16;
 	}
@@ -352,8 +345,8 @@
 		inode_s *fat_inode;
 	} fat_entry_s;
 
-	static inline void fatent_init(fat_entry_s *fatent)
-	{
+	static inline void
+	fatent_init(fat_entry_s *fatent) {
 		fatent->nr_bhs = 0;
 		fatent->entry = 0;
 		fatent->u.ent32_p = NULL;
@@ -361,14 +354,14 @@
 		fatent->fat_inode = NULL;
 	}
 
-	static inline void fatent_set_entry(fat_entry_s *fatent, int entry)
-	{
+	static inline void
+	fatent_set_entry(fat_entry_s *fatent, int entry) {
 		fatent->entry = entry;
 		fatent->u.ent32_p = NULL;
 	}
 
-	static inline void fatent_brelse(fat_entry_s *fatent)
-	{
+	static inline void
+	fatent_brelse(fat_entry_s *fatent) {
 		int i;
 		fatent->u.ent32_p = NULL;
 		// for (i = 0; i < fatent->nr_bhs; i++)
@@ -378,8 +371,8 @@
 		fatent->fat_inode = NULL;
 	}
 
-	static inline bool fat_valid_entry(msdos_sb_info_s *sbi, int entry)
-	{
+	static inline bool
+	fat_valid_entry(msdos_sb_info_s *sbi, int entry) {
 		return FAT_START_ENT <= entry && entry < sbi->max_cluster;
 	}
 
@@ -410,11 +403,12 @@
 	// extern void fat_attach(inode_s *inode, loff_t i_pos);
 	// extern void fat_detach(inode_s *inode);
 	// extern inode_s *fat_iget(super_block_s *sb, loff_t i_pos);
-	extern inode_s *fat_build_inode(super_block_s *sb,
-					msdos_dirent_s *de, loff_t i_pos);
+	extern inode_s *
+	fat_build_inode(super_block_s *sb, msdos_dirent_s *de, loff_t i_pos);
 	// extern int fat_sync_inode(inode_s *inode);
-	extern int fat_fill_super(super_block_s *sb, void *data,
-					int isvfat, void (*setup)(super_block_s *));
+	extern int
+	fat_fill_super(super_block_s *sb, void *data,
+			int isvfat, void (*setup)(super_block_s *));
 	// extern int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de);
 
 	// extern int fat_flush_inodes(super_block_s *sb, inode_s *i1,

@@ -43,7 +43,7 @@
 
 	#define MAX_BUF_PER_PAGE	(PAGE_SIZE / 512)
 
-	typedef void (bh_end_io_t)(struct buffer_head *bh, int uptodate);
+	typedef void (bh_end_io_t)(buffer_head_s *bh, int uptodate);
 
 	/*
 	* Historically, a buffer_head was used to map a single block
@@ -280,10 +280,9 @@
 	// 		atomic_dec(&bh->b_count);
 	// }
 
-	static inline void brelse(buffer_head_s *bh)
-	{
-		if (bh)
-			__brelse(bh);
+	static inline void
+	brelse(buffer_head_s *bh){
+		if (bh) __brelse(bh);
 	}
 
 	// static inline void bforget(struct buffer_head *bh)
@@ -293,8 +292,7 @@
 	// }
 
 	static inline buffer_head_s *
-	sb_bread(super_block_s *sb, sector_t block)
-	{
+	sb_bread(super_block_s *sb, sector_t block) {
 		return __bread_gfp(sb->s_bdev, block, sb->s_blocksize);
 	}
 

@@ -26,25 +26,27 @@
 	#	define cond_syscall(x) asm(					\
 					".weak " __stringify(x) "\n\t"	\
 					".set  " __stringify(x) ","		\
-					__stringify(sys_ni_syscall))
+					__stringify(sys_ni_syscall)		\
+				)
 	#endif
 
 	#ifndef SYSCALL_ALIAS
 	#	define SYSCALL_ALIAS(alias, name) asm(			\
 					".globl " __stringify(alias) "\n\t"	\
 					".set   " __stringify(alias) ","	\
-					__stringify(name))
+					__stringify(name)					\
+				)
 	#endif
 
 	#define __page_aligned_data __section(".data..page_aligned") __aligned(PAGE_SIZE)
 	#define __page_aligned_bss __section(".bss..page_aligned") __aligned(PAGE_SIZE)
 
 	/*
-	* For assembly routines.
-	*
-	* Note when using these that you must specify the appropriate
-	* alignment directives yourself
-	*/
+	 * For assembly routines.
+	 *
+	 * Note when using these that you must specify the appropriate
+	 * alignment directives yourself
+	 */
 	#define __PAGE_ALIGNED_DATA .section ".data..page_aligned", "aw"
 	#define __PAGE_ALIGNED_BSS .section ".bss..page_aligned", "aw"
 
@@ -65,8 +67,7 @@
 	#ifndef __ASSEMBLY__
 	#	ifndef asmlinkage_protect
 	#		define asmlinkage_protect(n, ret, args...)	\
-						do								\
-						{								\
+						do {							\
 						} while (0)
 	#	endif
 	#endif

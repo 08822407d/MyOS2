@@ -10,10 +10,9 @@
 	 *
 	 * Undefined if no bit exists, so code should check against 0 first.
 	 */
-	static __always_inline unsigned long __ffs(unsigned long word)
-	{
+	static __always_inline unsigned long
+	__ffs(unsigned long word) {
 		int num = 0;
-
 	#if BITS_PER_LONG == 64
 		if ((word & 0xffffffff) == 0) {
 			num += 32;

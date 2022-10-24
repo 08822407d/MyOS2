@@ -117,17 +117,17 @@
 	// #define DT_HIPROC		0x7fffffff
 
 	/* This info is needed when parsing the symbol table */
-	#define STB_LOCAL	0
-	#define STB_GLOBAL	1
-	#define STB_WEAK	2
+	#define STB_LOCAL		0
+	#define STB_GLOBAL		1
+	#define STB_WEAK		2
 
-	#define STT_NOTYPE	0
-	#define STT_OBJECT	1
-	#define STT_FUNC	2
-	#define STT_SECTION	3
-	#define STT_FILE	4
-	#define STT_COMMON	5
-	#define STT_TLS		6
+	#define STT_NOTYPE		0
+	#define STT_OBJECT		1
+	#define STT_FUNC		2
+	#define STT_SECTION		3
+	#define STT_FILE		4
+	#define STT_COMMON		5
+	#define STT_TLS			6
 
 	// #define ELF_ST_BIND(x)		((x) >> 4)
 	// #define ELF_ST_TYPE(x)		(((unsigned int)x) & 0xf)

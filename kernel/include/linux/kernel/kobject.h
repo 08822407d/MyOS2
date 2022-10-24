@@ -50,8 +50,7 @@
 	 * kobject_uevent_env(kobj, KOBJ_CHANGE, env) with additional event
 	 * specific variables added to the event environment.
 	 */
-	enum kobject_action
-	{
+	enum kobject_action {
 		KOBJ_ADD,
 		KOBJ_REMOVE,
 		KOBJ_CHANGE,
@@ -64,8 +63,7 @@
 
 	struct kobject;
 	typedef struct kobject kobj_s;
-	typedef struct kobject
-	{
+	typedef struct kobject {
 		const char		*name;
 		List_s			entry;
 		kobj_s			*parent;
@@ -87,8 +85,8 @@
 	// extern __printf(2, 0) int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
 	// 												va_list vargs);
 
-	static inline const char *kobject_name(const kobj_s *kobj)
-	{
+	static inline const char *
+	kobject_name(const kobj_s *kobj) {
 		return kobj->name;
 	}
 

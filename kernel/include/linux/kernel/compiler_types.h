@@ -67,14 +67,14 @@
 
 	/* Builtins */
 
-	// /*
-	//  * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
-	//  * In the meantime, to support gcc < 10, we implement __has_builtin
-	//  * by hand.
-	//  */
-	// #ifndef __has_builtin
-	// #define __has_builtin(x) (0)
-	// #endif
+	/*
+	 * __has_builtin is supported on gcc >= 10, clang >= 3 and icc >= 21.
+	 * In the meantime, to support gcc < 10, we implement __has_builtin
+	 * by hand.
+	 */
+	#	ifndef __has_builtin
+	#		define __has_builtin(x) (0)
+	#	endif
 
 	// /* Compiler specific macros. */
 	// #ifdef __clang__
@@ -88,14 +88,14 @@
 	// #error "Unknown compiler"
 	// #endif
 
-	// /*
-	//  * Some architectures need to provide custom definitions of macros provided
-	//  * by linux/compiler-*.h, and can do so using asm/compiler.h. We include that
-	//  * conditionally rather than using an asm-generic wrapper in order to avoid
-	//  * build failures if any C compilation, which will include this file via an
-	//  * -include argument in c_flags, occurs prior to the asm-generic wrappers being
-	//  * generated.
-	//  */
+	/*
+	 * Some architectures need to provide custom definitions of macros provided
+	 * by linux/compiler-*.h, and can do so using asm/compiler.h. We include that
+	 * conditionally rather than using an asm-generic wrapper in order to avoid
+	 * build failures if any C compilation, which will include this file via an
+	 * -include argument in c_flags, occurs prior to the asm-generic wrappers being
+	 * generated.
+	 */
 	// #ifdef CONFIG_HAVE_ARCH_COMPILER_H
 	// #include <asm/compiler.h>
 	// #endif
@@ -135,15 +135,15 @@
 	#	define notrace __attribute__((__no_instrument_function__))
 	#endif
 
-	// /*
-	//  * it doesn't make sense on ARM (currently the only user of __naked)
-	//  * to trace naked functions because then mcount is called without
-	//  * stack and frame pointer being set up and there is no chance to
-	//  * restore the lr register to the value before mcount was called.
-	//  */
-	// #define __naked __attribute__((__naked__)) notrace
+	/*
+	 * it doesn't make sense on ARM (currently the only user of __naked)
+	 * to trace naked functions because then mcount is called without
+	 * stack and frame pointer being set up and there is no chance to
+	 * restore the lr register to the value before mcount was called.
+	 */
+	#define __naked __attribute__((__naked__)) notrace
 
-	// #define __compiler_offsetof(a, b) __builtin_offsetof(a, b)
+	#define __compiler_offsetof(a, b) __builtin_offsetof(a, b)
 
 	// /*
 	//  * Prefer gnu_inline, so that extern inline functions do not emit an
@@ -154,17 +154,17 @@
 	//  */
 	// #define inline inline __gnu_inline __inline_maybe_unused notrace
 
-	// /*
-	//  * gcc provides both __inline__ and __inline as alternate spellings of
-	//  * the inline keyword, though the latter is undocumented. New kernel
-	//  * code should only use the inline spelling, but some existing code
-	//  * uses __inline__. Since we #define inline above, to ensure
-	//  * __inline__ has the same semantics, we need this #define.
-	//  *
-	//  * However, the spelling __inline is strictly reserved for referring
-	//  * to the bare keyword.
-	//  */
-	// #define __inline__ inline
+	/*
+	 * gcc provides both __inline__ and __inline as alternate spellings of
+	 * the inline keyword, though the latter is undocumented. New kernel
+	 * code should only use the inline spelling, but some existing code
+	 * uses __inline__. Since we #define inline above, to ensure
+	 * __inline__ has the same semantics, we need this #define.
+	 *
+	 * However, the spelling __inline is strictly reserved for referring
+	 * to the bare keyword.
+	 */
+	#define __inline__ inline
 
 	// /*
 	//  * GCC does not warn about unused static inline functions for -Wunused-function.
@@ -220,9 +220,9 @@
 	// #define __no_kcsan
 	// #endif
 
-	// #ifndef __no_sanitize_or_inline
-	// #define __no_sanitize_or_inline __always_inline
-	// #endif
+	#ifndef __no_sanitize_or_inline
+	#	define __no_sanitize_or_inline	__always_inline
+	#endif
 
 	// /* Section for code which can't be instrumented at all */
 	// #define noinstr                                                  \

@@ -594,8 +594,8 @@
 	*	eventually.
 	*/
 	// static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
-	static __always_inline void *kmalloc(size_t size, gfp_t flags)
-	{
+	static __always_inline void *
+	kmalloc(size_t size, gfp_t flags) {
 	// 	if (__builtin_constant_p(size))
 	// 	{
 	// #ifndef CONFIG_SLOB
@@ -735,8 +735,8 @@
 	 * @size: how many bytes of memory are required.
 	 * @flags: the type of memory to allocate (see kmalloc).
 	 */
-	static inline void *kzalloc(size_t size, gfp_t flags)
-	{
+	static inline void *
+	kzalloc(size_t size, gfp_t flags) {
 		return kmalloc(size, flags | __GFP_ZERO);
 	}
 

@@ -322,25 +322,26 @@
 	 * version does not attempt reclaim/compaction at all and is by default used
 	 * in page fault path, while the non-light is used by khugepaged.
 	 */
-	#define GFP_ATOMIC			(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
-	#define GFP_KERNEL			(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
-	#define GFP_KERNEL_ACCOUNT	(GFP_KERNEL | __GFP_ACCOUNT)
-	#define GFP_NOWAIT			(__GFP_KSWAPD_RECLAIM)
-	#define GFP_NOIO			(__GFP_RECLAIM)
-	#define GFP_NOFS			(__GFP_RECLAIM | __GFP_IO)
-	#define GFP_USER			(__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARDWALL)
-	#define GFP_DMA				__GFP_DMA
-	#define GFP_DMA32			__GFP_DMA32
-	#define GFP_HIGHUSER		(GFP_USER | __GFP_HIGHMEM)
+	#define GFP_ATOMIC				(__GFP_HIGH|__GFP_ATOMIC|__GFP_KSWAPD_RECLAIM)
+	#define GFP_KERNEL				(__GFP_RECLAIM | __GFP_IO | __GFP_FS)
+	#define GFP_KERNEL_ACCOUNT		(GFP_KERNEL | __GFP_ACCOUNT)
+	#define GFP_NOWAIT				(__GFP_KSWAPD_RECLAIM)
+	#define GFP_NOIO				(__GFP_RECLAIM)
+	#define GFP_NOFS				(__GFP_RECLAIM | __GFP_IO)
+	#define GFP_USER				(__GFP_RECLAIM | __GFP_IO | __GFP_FS | __GFP_HARDWALL)
+	#define GFP_DMA					__GFP_DMA
+	#define GFP_DMA32				__GFP_DMA32
+	#define GFP_HIGHUSER			(GFP_USER | __GFP_HIGHMEM)
 	#define GFP_HIGHUSER_MOVABLE	(GFP_HIGHUSER | __GFP_MOVABLE | \
 										__GFP_SKIP_KASAN_POISON)
-	#define GFP_TRANSHUGE_LIGHT	((GFP_HIGHUSER_MOVABLE | __GFP_COMP | \
-									__GFP_NOMEMALLOC | __GFP_NOWARN) & ~__GFP_RECLAIM)
-	#define GFP_TRANSHUGE		(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
+	#define GFP_TRANSHUGE_LIGHT		((GFP_HIGHUSER_MOVABLE | __GFP_COMP |	\
+										__GFP_NOMEMALLOC | __GFP_NOWARN) &	\
+										~__GFP_RECLAIM)
+	#define GFP_TRANSHUGE			(GFP_TRANSHUGE_LIGHT | __GFP_DIRECT_RECLAIM)
 
 	/* Convert GFP flags to their corresponding migrate type */
-	#define GFP_MOVABLE_MASK	(__GFP_RECLAIMABLE|__GFP_MOVABLE)
-	#define GFP_MOVABLE_SHIFT	3
+	#define GFP_MOVABLE_MASK		(__GFP_RECLAIMABLE|__GFP_MOVABLE)
+	#define GFP_MOVABLE_SHIFT		3
 
 	// static inline int gfp_migratetype(const gfp_t gfp_flags)
 	// {

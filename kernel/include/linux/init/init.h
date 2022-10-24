@@ -49,8 +49,9 @@
 	 */
 
 	/* These are for everybody (although not all archs will actually discard it in modules) */
-	#define __init			__section(".init.text") \
-								__cold  __latent_entropy __noinitretpoline __nocfi
+	#define __init			__section(".init.text")			\
+								__cold  __latent_entropy	\
+								__noinitretpoline __nocfi
 	#define __initdata		__section(".init.data")
 	#define __initconst		__section(".init.rodata")
 	#define __exitdata		__section(".exit.data")
@@ -83,14 +84,16 @@
 	#	define __exitused		__used
 	#endif
 
-	#define __exit			__section(".exit.text") __exitused __cold notrace
+	#define __exit			__section(".exit.text")	\
+								__exitused __cold notrace
 
 	/* Used for MEMORY_HOTPLUG */
-	#define __meminit		__section(".meminit.text") __cold notrace \
-							__latent_entropy
+	#define __meminit		__section(".meminit.text")	\
+								__cold notrace __latent_entropy
 	#define __meminitdata	__section(".meminit.data")
 	#define __meminitconst	__section(".meminit.rodata")
-	#define __memexit		__section(".memexit.text") __exitused __cold notrace
+	#define __memexit		__section(".memexit.text")	\
+								__exitused __cold notrace
 	#define __memexitdata	__section(".memexit.data")
 	#define __memexitconst	__section(".memexit.rodata")
 

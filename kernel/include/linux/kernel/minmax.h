@@ -17,29 +17,30 @@
 	 *   allocation usage).
 	 */
 	#define __typecheck(x, y) \
-					(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+				(!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
 
 	#define __no_side_effects(x, y) \
-					(__is_constexpr(x) && __is_constexpr(y))
+				(__is_constexpr(x) && __is_constexpr(y))
 
 	#define __safe_cmp(x, y) \
-					(__typecheck(x, y) && __no_side_effects(x, y))
+				(__typecheck(x, y) && __no_side_effects(x, y))
 
 	#define __cmp(x, y, op)	((x) op (y) ? (x) : (y))
 
-	#define __cmp_once(x, y, unique_x, unique_y, op)({	\
-					typeof(x) unique_x = (x);			\
-					typeof(y) unique_y = (y);			\
-					__cmp(unique_x, unique_y, op); })
+	#define __cmp_once(x, y, unique_x, unique_y, op) ({	\
+				typeof(x) unique_x = (x);				\
+				typeof(y) unique_y = (y);				\
+				__cmp(unique_x, unique_y, op);			\
+			})
 
 	// #define __careful_cmp(x, y, op) \
 	// 	__builtin_choose_expr(__safe_cmp(x, y), \
 	// 		__cmp(x, y, op), \
 	// 		__cmp_once(x, y, __UNIQUE_ID(__x), __UNIQUE_ID(__y), op))
-	#define __careful_cmp(x, y, op)							\
-					__builtin_choose_expr(__safe_cmp(x, y),	\
-					__cmp(x, y, op),						\
-					__cmp_once(x, y, (__x), (__y), op))
+	#define __careful_cmp(x, y, op)						\
+				__builtin_choose_expr(__safe_cmp(x, y),	\
+				__cmp(x, y, op),						\
+				__cmp_once(x, y, (__x), (__y), op))
 
 	/**
 	 * min - return minimum of two values of the same or compatible types
@@ -76,13 +77,12 @@
 	 * @x: value1
 	 * @y: value2
 	 */
-	#define min_not_zero(x, y)({					\
-					typeof(x) __x = (x);			\
-					typeof(y) __y = (y);			\
-					__x == 0 ? __y : ((__y == 0) ?	\
-					__x : min(__x, __y));			\
-				}									\
-			)
+	#define min_not_zero(x, y) ({				\
+				typeof(x) __x = (x);			\
+				typeof(y) __y = (y);			\
+				__x == 0 ? __y : ((__y == 0) ?	\
+				__x : min(__x, __y));			\
+			})
 
 	/**
 	 * clamp - return a value clamped to a given range with strict typechecking

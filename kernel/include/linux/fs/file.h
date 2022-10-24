@@ -14,15 +14,15 @@
 	extern void fput(file_s *file);
 	extern void fput_many(file_s *, unsigned int);
 
-	extern file_s *alloc_file_pseudo(inode_s *, vfsmount_s *,
-			const char *, int flags, const file_ops_s *);
-	extern file_s *alloc_file_clone(file_s *, int flags,
-			const file_ops_s *);
+	extern file_s *
+	alloc_file_pseudo(inode_s *, vfsmount_s *, const char *,
+			int flags, const file_ops_s *);
+	extern file_s *
+	alloc_file_clone(file_s *, int flags, const file_ops_s *);
 
-	static inline void fput_light(file_s *file, int fput_needed)
-	{
-		if (fput_needed)
-			fput(file);
+	static inline void
+	fput_light(file_s *file, int fput_needed) {
+		if (fput_needed) fput(file);
 	}
 
 	typedef struct fd {
@@ -67,8 +67,8 @@
 	// 	return __to_fd(__fdget_pos(fd));
 	// }
 
-	static inline void fdput_pos(fd_s f)
-	{
+	static inline void
+	fdput_pos(fd_s f) {
 		// if (f.flags & FDPUT_POS_UNLOCK)
 		// 	__f_unlock_pos(f.file);
 		// fdput(f);

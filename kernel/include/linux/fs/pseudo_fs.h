@@ -10,6 +10,7 @@
 		unsigned long magic;
 	} pseudo_fs_ctxt_s;
 
-	pseudo_fs_ctxt_s *init_pseudo(fs_ctxt_s *fc, unsigned long magic);
+	pseudo_fs_ctxt_s *
+	init_pseudo(fs_ctxt_s *fc, unsigned long magic);
 
 #endif

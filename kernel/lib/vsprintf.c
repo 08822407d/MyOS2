@@ -256,7 +256,6 @@
 // 	return buf;
 // }
 
-// #if BITS_PER_LONG == 64 && BITS_PER_LONG_LONG == 64
 // static noinline_for_stack
 // char *put_dec_full8(char *buf, unsigned r)
 // {
@@ -294,78 +293,6 @@
 // 	/* 1 <= n < 1e8 */
 // 	return put_dec_trunc8(buf, n);
 // }
-
-// #elif BITS_PER_LONG == 32 && BITS_PER_LONG_LONG == 64
-
-// static void
-// put_dec_full4(char *buf, unsigned r)
-// {
-// 	unsigned q;
-
-// 	/* 0 <= r < 10^4 */
-// 	q = (r * 0x147b) >> 19;
-// 	*((u16 *)buf) = decpair[r - 100*q];
-// 	buf += 2;
-// 	/* 0 <= q < 100 */
-// 	*((u16 *)buf) = decpair[q];
-// }
-
-// /*
-//  * Call put_dec_full4 on x % 10000, return x / 10000.
-//  * The approximation x/10000 == (x * 0x346DC5D7) >> 43
-//  * holds for all x < 1,128,869,999.  The largest value this
-//  * helper will ever be asked to convert is 1,125,520,955.
-//  * (second call in the put_dec code, assuming n is all-ones).
-//  */
-// static noinline_for_stack
-// unsigned put_dec_helper4(char *buf, unsigned x)
-// {
-//         uint32_t q = (x * (uint64_t)0x346DC5D7) >> 43;
-
-//         put_dec_full4(buf, x - q * 10000);
-//         return q;
-// }
-
-// /* Based on code by Douglas W. Jones found at
-//  * <http://www.cs.uiowa.edu/~jones/bcd/decimal.html#sixtyfour>
-//  * (with permission from the author).
-//  * Performs no 64-bit division and hence should be fast on 32-bit machines.
-//  */
-// static
-// char *put_dec(char *buf, unsigned long long n)
-// {
-// 	uint32_t d3, d2, d1, q, h;
-
-// 	if (n < 100*1000*1000)
-// 		return put_dec_trunc8(buf, n);
-
-// 	d1  = ((uint32_t)n >> 16); /* implicit "& 0xffff" */
-// 	h   = (n >> 32);
-// 	d2  = (h      ) & 0xffff;
-// 	d3  = (h >> 16); /* implicit "& 0xffff" */
-
-// 	/* n = 2^48 d3 + 2^32 d2 + 2^16 d1 + d0
-// 	     = 281_4749_7671_0656 d3 + 42_9496_7296 d2 + 6_5536 d1 + d0 */
-// 	q   = 656 * d3 + 7296 * d2 + 5536 * d1 + ((uint32_t)n & 0xffff);
-// 	q = put_dec_helper4(buf, q);
-
-// 	q += 7671 * d3 + 9496 * d2 + 6 * d1;
-// 	q = put_dec_helper4(buf+4, q);
-
-// 	q += 4749 * d3 + 42 * d2;
-// 	q = put_dec_helper4(buf+8, q);
-
-// 	q += 281 * d3;
-// 	buf += 12;
-// 	if (q)
-// 		buf = put_dec_trunc8(buf, q);
-// 	else while (buf[-1] == '0')
-// 		--buf;
-
-// 	return buf;
-// }
-
-// #endif
 
 // /*
 //  * Convert passed number to decimal string.

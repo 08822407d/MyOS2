@@ -234,6 +234,7 @@
 			struct callback_head *next;
 			void (*func)(struct callback_head *head);
 		} __attribute__((aligned(sizeof(void *))));
+
 	#	define rcu_head callback_head
 
 		typedef void	(*rcu_callback_t)(struct rcu_head *head);

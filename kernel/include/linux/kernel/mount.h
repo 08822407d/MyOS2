@@ -41,14 +41,16 @@
 	* flag, consider how it interacts with shared mounts.
 	*/
 	#define MNT_SHARED_MASK	(MNT_UNBINDABLE)
-	#define MNT_USER_SETTABLE_MASK  (MNT_NOSUID | MNT_NODEV | MNT_NOEXEC \
-					| MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME \
-					| MNT_READONLY | MNT_NOSYMFOLLOW)
+	#define MNT_USER_SETTABLE_MASK (							\
+				MNT_NOSUID | MNT_NODEV | MNT_NOEXEC				\
+				| MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME	\
+				| MNT_READONLY | MNT_NOSYMFOLLOW)
 	#define MNT_ATIME_MASK (MNT_NOATIME | MNT_NODIRATIME | MNT_RELATIME )
 
-	#define MNT_INTERNAL_FLAGS (MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL | \
-					MNT_DOOMED | MNT_SYNC_UMOUNT | MNT_MARKED | \
-					MNT_CURSOR)
+	#define MNT_INTERNAL_FLAGS (								\
+				MNT_SHARED | MNT_WRITE_HOLD | MNT_INTERNAL |	\
+				MNT_DOOMED | MNT_SYNC_UMOUNT | MNT_MARKED |		\
+				MNT_CURSOR)
 
 	#define MNT_INTERNAL		0x4000
 
@@ -93,10 +95,12 @@
 
 	extern vfsmount_s *fc_mount(fs_ctxt_s *fc);
 	extern vfsmount_s *vfs_create_mount(fs_ctxt_s *fc);
-	extern vfsmount_s *vfs_kern_mount(fs_type_s *type,
-					int flags, const char *name, void *data);
-	extern vfsmount_s *vfs_submount(const dentry_s *mountpoint,
-					fs_type_s *type, const char *name, void *data);
+	extern vfsmount_s *
+	vfs_kern_mount(fs_type_s *type, int flags,
+			const char *name, void *data);
+	extern vfsmount_s *
+	vfs_submount(const dentry_s *mountpoint, fs_type_s *type,
+			const char *name, void *data);
 
 	// extern void mnt_set_expiry(vfsmount_s *mnt, list_head_s *expiry_list);
 	// extern void mark_mounts_for_expiry(list_head_s *mounts);

@@ -34,18 +34,18 @@
 
 	/* Fixed constants first: */
 	#undef NR_OPEN
-	#define INR_OPEN_CUR	1024	/* Initial setting for nfile rlimits */
-	#define INR_OPEN_MAX	4096	/* Hard limit for nfile rlimits */
+	#define INR_OPEN_CUR		1024		/* Initial setting for nfile rlimits */
+	#define INR_OPEN_MAX		4096		/* Hard limit for nfile rlimits */
 
-	#define BLOCK_SIZE_BITS	10
-	#define BLOCK_SIZE		(1<<BLOCK_SIZE_BITS)
+	#define BLOCK_SIZE_BITS		10
+	#define BLOCK_SIZE			(1<<BLOCK_SIZE_BITS)
 
-	#define SEEK_SET		0		/* seek relative to beginning of file */
-	#define SEEK_CUR		1		/* seek relative to current file position */
-	#define SEEK_END		2		/* seek relative to end of file */
-	#define SEEK_DATA		3		/* seek to the next data */
-	#define SEEK_HOLE		4		/* seek to the next hole */
-	#define SEEK_MAX		SEEK_HOLE
+	#define SEEK_SET			0			/* seek relative to beginning of file */
+	#define SEEK_CUR			1			/* seek relative to current file position */
+	#define SEEK_END			2			/* seek relative to end of file */
+	#define SEEK_DATA			3			/* seek to the next data */
+	#define SEEK_HOLE			4			/* seek to the next hole */
+	#define SEEK_MAX			SEEK_HOLE
 
 	#define RENAME_NOREPLACE	(1 << 0)	/* Don't overwrite target */
 	#define RENAME_EXCHANGE		(1 << 1)	/* Exchange source and dest */
@@ -75,10 +75,10 @@
 		__u64	bytes_deduped;	/* out - total # of bytes we were able
 								 * to dedupe from this file. */
 		/* status of this dedupe operation:
-		* < 0 for error
-		* == FILE_DEDUPE_RANGE_SAME if dedupe succeeds
-		* == FILE_DEDUPE_RANGE_DIFFERS if data differs
-		*/
+		 * < 0 for error
+		 * == FILE_DEDUPE_RANGE_SAME if dedupe succeeds
+		 * == FILE_DEDUPE_RANGE_DIFFERS if data differs
+		 */
 		__s32	status;			/* out - see above description */
 		__u32	reserved;		/* must be zero */
 	};
@@ -145,18 +145,18 @@
 	/* the read-only stuff doesn't really belong here, but any other place is
 	probably as bad and I don't want to create yet another include file. */
 
-	#define BLKROSET		_IO(0x12,93)	/* set device read-only (0 = read-write) */
-	#define BLKROGET		_IO(0x12,94)	/* get read-only status (0 = read_write) */
-	#define BLKRRPART		_IO(0x12,95)	/* re-read partition table */
-	#define BLKGETSIZE		_IO(0x12,96)	/* return device size /512 (long *arg) */
-	#define BLKFLSBUF		_IO(0x12,97)	/* flush buffer cache */
-	#define BLKRASET		_IO(0x12,98)	/* set read ahead for block device */
-	#define BLKRAGET		_IO(0x12,99)	/* get current read ahead setting */
-	#define BLKFRASET		_IO(0x12,100)	/* set filesystem (mm/filemap.c) read-ahead */
-	#define BLKFRAGET		_IO(0x12,101)	/* get filesystem (mm/filemap.c) read-ahead */
-	#define BLKSECTSET		_IO(0x12,102)	/* set max sectors per request (ll_rw_blk.c) */
-	#define BLKSECTGET		_IO(0x12,103)	/* get max sectors per request (ll_rw_blk.c) */
-	#define BLKSSZGET		_IO(0x12,104)	/* get block device sector size */
+	#define BLKROSET			_IO(0x12,93)	/* set device read-only (0 = read-write) */
+	#define BLKROGET			_IO(0x12,94)	/* get read-only status (0 = read_write) */
+	#define BLKRRPART			_IO(0x12,95)	/* re-read partition table */
+	#define BLKGETSIZE			_IO(0x12,96)	/* return device size /512 (long *arg) */
+	#define BLKFLSBUF			_IO(0x12,97)	/* flush buffer cache */
+	#define BLKRASET			_IO(0x12,98)	/* set read ahead for block device */
+	#define BLKRAGET			_IO(0x12,99)	/* get current read ahead setting */
+	#define BLKFRASET			_IO(0x12,100)	/* set filesystem (mm/filemap.c) read-ahead */
+	#define BLKFRAGET			_IO(0x12,101)	/* get filesystem (mm/filemap.c) read-ahead */
+	#define BLKSECTSET			_IO(0x12,102)	/* set max sectors per request (ll_rw_blk.c) */
+	#define BLKSECTGET			_IO(0x12,103)	/* get max sectors per request (ll_rw_blk.c) */
+	#define BLKSSZGET			_IO(0x12,104)	/* get block device sector size */
 	#if 0
 		#define BLKPG		_IO(0x12,105)	/* See blkpg.h */
 
@@ -190,31 +190,31 @@
 	 * (see uapi/linux/blkzoned.h)
 	 */
 
-	#define BMAP_IOCTL		1						/* obsolete - kept for compatibility */
-	#define FIBMAP			_IO(0x00,1)				/* bmap access */
-	#define FIGETBSZ		_IO(0x00,2)				/* get the block size used for bmap */
-	#define FIFREEZE		_IOWR('X', 119, int)	/* Freeze */
-	#define FITHAW			_IOWR('X', 120, int)	/* Thaw */
-	#define FITRIM			_IOWR('X', 121, struct fstrim_range)	/* Trim */
-	#define FICLONE			_IOW(0x94, 9, int)
-	#define FICLONERANGE	_IOW(0x94, 13, struct file_clone_range)
-	#define FIDEDUPERANGE	_IOWR(0x94, 54, struct file_dedupe_range)
+	#define BMAP_IOCTL			1						/* obsolete - kept for compatibility */
+	#define FIBMAP				_IO(0x00,1)				/* bmap access */
+	#define FIGETBSZ			_IO(0x00,2)				/* get the block size used for bmap */
+	#define FIFREEZE			_IOWR('X', 119, int)	/* Freeze */
+	#define FITHAW				_IOWR('X', 120, int)	/* Thaw */
+	#define FITRIM				_IOWR('X', 121, struct fstrim_range)	/* Trim */
+	#define FICLONE				_IOW(0x94, 9, int)
+	#define FICLONERANGE		_IOW(0x94, 13, struct file_clone_range)
+	#define FIDEDUPERANGE		_IOWR(0x94, 54, struct file_dedupe_range)
 
-	#define FSLABEL_MAX 	256	/* Max chars for the interface; each fs may differ */
+	#define FSLABEL_MAX 		256	/* Max chars for the interface; each fs may differ */
 
-	#define	FS_IOC_GETFLAGS			_IOR('f', 1, long)
-	#define	FS_IOC_SETFLAGS			_IOW('f', 2, long)
-	#define	FS_IOC_GETVERSION		_IOR('v', 1, long)
-	#define	FS_IOC_SETVERSION		_IOW('v', 2, long)
-	#define FS_IOC_FIEMAP			_IOWR('f', 11, struct fiemap)
-	#define FS_IOC32_GETFLAGS		_IOR('f', 1, int)
-	#define FS_IOC32_SETFLAGS		_IOW('f', 2, int)
-	#define FS_IOC32_GETVERSION		_IOR('v', 1, int)
-	#define FS_IOC32_SETVERSION		_IOW('v', 2, int)
-	#define FS_IOC_FSGETXATTR		_IOR('X', 31, struct fsxattr)
-	#define FS_IOC_FSSETXATTR		_IOW('X', 32, struct fsxattr)
-	#define FS_IOC_GETFSLABEL		_IOR(0x94, 49, char[FSLABEL_MAX])
-	#define FS_IOC_SETFSLABEL		_IOW(0x94, 50, char[FSLABEL_MAX])
+	#define	FS_IOC_GETFLAGS		_IOR('f', 1, long)
+	#define	FS_IOC_SETFLAGS		_IOW('f', 2, long)
+	#define	FS_IOC_GETVERSION	_IOR('v', 1, long)
+	#define	FS_IOC_SETVERSION	_IOW('v', 2, long)
+	#define FS_IOC_FIEMAP		_IOWR('f', 11, struct fiemap)
+	#define FS_IOC32_GETFLAGS	_IOR('f', 1, int)
+	#define FS_IOC32_SETFLAGS	_IOW('f', 2, int)
+	#define FS_IOC32_GETVERSION	_IOR('v', 1, int)
+	#define FS_IOC32_SETVERSION	_IOW('v', 2, int)
+	#define FS_IOC_FSGETXATTR	_IOR('X', 31, struct fsxattr)
+	#define FS_IOC_FSSETXATTR	_IOW('X', 32, struct fsxattr)
+	#define FS_IOC_GETFSLABEL	_IOR(0x94, 49, char[FSLABEL_MAX])
+	#define FS_IOC_SETFSLABEL	_IOW(0x94, 50, char[FSLABEL_MAX])
 
 	/*
 	 * Inode flags (FS_IOC_GETFLAGS / FS_IOC_SETFLAGS)
@@ -276,9 +276,11 @@
 	#define SYNC_FILE_RANGE_WAIT_BEFORE		1
 	#define SYNC_FILE_RANGE_WRITE			2
 	#define SYNC_FILE_RANGE_WAIT_AFTER		4
-	#define SYNC_FILE_RANGE_WRITE_AND_WAIT	(SYNC_FILE_RANGE_WRITE | \
-					SYNC_FILE_RANGE_WAIT_BEFORE | \
-					SYNC_FILE_RANGE_WAIT_AFTER)
+	#define SYNC_FILE_RANGE_WRITE_AND_WAIT (	\
+				SYNC_FILE_RANGE_WRITE |			\
+				SYNC_FILE_RANGE_WAIT_BEFORE |	\
+				SYNC_FILE_RANGE_WAIT_AFTER		\
+			)
 
 	/*
 	 * Flags for preadv2/pwritev2:
@@ -288,19 +290,14 @@
 
 	/* high priority request, poll if possible */
 	#define RWF_HIPRI		((__force __kernel_rwf_t)0x00000001)
-
 	/* per-IO O_DSYNC */
 	#define RWF_DSYNC		((__force __kernel_rwf_t)0x00000002)
-
 	/* per-IO O_SYNC */
 	#define RWF_SYNC		((__force __kernel_rwf_t)0x00000004)
-
 	/* per-IO, return -EAGAIN if operation would block */
 	#define RWF_NOWAIT		((__force __kernel_rwf_t)0x00000008)
-
 	/* per-IO O_APPEND */
 	#define RWF_APPEND		((__force __kernel_rwf_t)0x00000010)
-
 	/* mask of flags supported by the kernel */
 	#define RWF_SUPPORTED	(RWF_HIPRI | RWF_DSYNC | RWF_SYNC \
 								| RWF_NOWAIT | RWF_APPEND)

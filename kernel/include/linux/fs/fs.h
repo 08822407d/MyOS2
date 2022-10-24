@@ -543,13 +543,7 @@
 	// /*
 	// * Use sequence counter to get consistent i_size on 32-bit processors.
 	// */
-	// #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
-	// #include <linux/seqlock.h>
-	// #define __NEED_I_SIZE_ORDERED
-	// #define i_size_ordered_init(inode) seqcount_init(&inode->i_size_seqcount)
-	// #else
 	// #define i_size_ordered_init(inode) do { } while (0)
-	// #endif
 
 	// struct posix_acl;
 	// #define ACL_NOT_CACHED ((void *)(-1))
@@ -842,25 +836,7 @@
 	// */
 	// static inline loff_t i_size_read(const inode_s *inode)
 	// {
-	// #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
-	// 	loff_t i_size;
-	// 	unsigned int seq;
-
-	// 	do {
-	// 		seq = read_seqcount_begin(&inode->i_size_seqcount);
-	// 		i_size = inode->i_size;
-	// 	} while (read_seqcount_retry(&inode->i_size_seqcount, seq));
-	// 	return i_size;
-	// #elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPTION)
-	// 	loff_t i_size;
-
-	// 	preempt_disable();
-	// 	i_size = inode->i_size;
-	// 	preempt_enable();
-	// 	return i_size;
-	// #else
 	// 	return inode->i_size;
-	// #endif
 	// }
 
 	// /*
@@ -870,19 +846,7 @@
 	// */
 	// static inline void i_size_write(inode_s *inode, loff_t i_size)
 	// {
-	// #if BITS_PER_LONG==32 && defined(CONFIG_SMP)
-	// 	preempt_disable();
-	// 	write_seqcount_begin(&inode->i_size_seqcount);
 	// 	inode->i_size = i_size;
-	// 	write_seqcount_end(&inode->i_size_seqcount);
-	// 	preempt_enable();
-	// #elif BITS_PER_LONG==32 && defined(CONFIG_PREEMPTION)
-	// 	preempt_disable();
-	// 	inode->i_size = i_size;
-	// 	preempt_enable();
-	// #else
-	// 	inode->i_size = i_size;
-	// #endif
 	// }
 
 	// static inline unsigned iminor(const inode_s *inode)
@@ -987,15 +951,11 @@
 	// #define get_file_rcu(x) get_file_rcu_many((x), 1)
 	// #define file_count(x)	atomic_long_read(&(x)->f_count)
 
-	#define	MAX_NON_LFS	((1UL<<31) - 1)
+	#define	MAX_NON_LFS			((1UL<<31) - 1)
 
 	/* Page cache limit. The filesystems should put that into their s_maxbytes 
 	   limits, otherwise bad things can happen in VM. */ 
-	#if BITS_PER_LONG==32
-	#	define MAX_LFS_FILESIZE		((loff_t)ULONG_MAX << PAGE_SHIFT)
-	#elif BITS_PER_LONG==64
-	#	define MAX_LFS_FILESIZE 	((loff_t)LLONG_MAX)
-	#endif
+	#define MAX_LFS_FILESIZE 	((loff_t)LLONG_MAX)
 
 	#define FL_POSIX				1
 	#define FL_FLOCK				2
@@ -1134,12 +1094,6 @@
 	// extern int fcntl_setlk(unsigned int, file_s *, unsigned int,
 	// 			struct flock *);
 
-	// #if BITS_PER_LONG == 32
-	// extern int fcntl_getlk64(file_s *, unsigned int, struct flock64 *);
-	// extern int fcntl_setlk64(unsigned int, file_s *, unsigned int,
-	// 			struct flock64 *);
-	// #endif
-
 	// extern int fcntl_setlease(unsigned int fd, file_s *filp, long arg);
 	// extern int fcntl_getlease(file_s *filp);
 
@@ -1186,19 +1140,6 @@
 	// 	return -EACCES;
 	// }
 
-	// #if BITS_PER_LONG == 32
-	// static inline int fcntl_getlk64(file_s *file, unsigned int cmd,
-	// 				struct flock64 *user)
-	// {
-	// 	return -EINVAL;
-	// }
-
-	// static inline int fcntl_setlk64(unsigned int fd, file_s *file,
-	// 				unsigned int cmd, struct flock64 *user)
-	// {
-	// 	return -EACCES;
-	// }
-	// #endif
 	// static inline int fcntl_setlease(unsigned int fd, file_s *filp, long arg)
 	// {
 	// 	return -EINVAL;
@@ -1415,7 +1356,7 @@
 		SB_FREEZE_WRITE		= 1,	/* Writes, dir ops, ioctls frozen */
 		SB_FREEZE_PAGEFAULT	= 2,	/* Page faults stopped as well */
 		SB_FREEZE_FS		= 3,	/* For internal FS use (e.g. to stop
-									* internal threads if needed) */
+									 * internal threads if needed) */
 		SB_FREEZE_COMPLETE	= 4,	/* ->freeze_fs finished successfully */
 	};
 
@@ -2147,37 +2088,41 @@
 	 * i_flags updated.  Hence, i_flags no longer inherit the superblock mount
 	 * flags, so these have to be checked separately. -- rmk@arm.uk.linux.org
 	 */
-	#define __IS_FLG(inode, flg)((inode)->i_sb->s_flags & (flg))
+	#define __IS_FLG(inode, flg)	((inode)->i_sb->s_flags & (flg))
 
-	static inline bool sb_rdonly(const super_block_s *sb) { return sb->s_flags & SB_RDONLY; }
-	#define IS_RDONLY(inode)	sb_rdonly((inode)->i_sb)
-	#define IS_SYNC(inode)		(__IS_FLG(inode, SB_SYNCHRONOUS) || \
-									((inode)->i_flags & S_SYNC))
-	#define IS_DIRSYNC(inode)	(__IS_FLG(inode, SB_SYNCHRONOUS|SB_DIRSYNC) || \
-									((inode)->i_flags & (S_SYNC|S_DIRSYNC)))
-	#define IS_MANDLOCK(inode)	__IS_FLG(inode, SB_MANDLOCK)
-	#define IS_NOATIME(inode)	__IS_FLG(inode, SB_RDONLY|SB_NOATIME)
-	#define IS_I_VERSION(inode)	__IS_FLG(inode, SB_I_VERSION)
+	static inline bool
+	sb_rdonly(const super_block_s *sb) {
+		return sb->s_flags & SB_RDONLY;
+	}
 
-	#define IS_NOQUOTA(inode)	((inode)->i_flags & S_NOQUOTA)
-	#define IS_APPEND(inode)	((inode)->i_flags & S_APPEND)
-	#define IS_IMMUTABLE(inode)	((inode)->i_flags & S_IMMUTABLE)
-	#define IS_POSIXACL(inode)	__IS_FLG(inode, SB_POSIXACL)
+	#define IS_RDONLY(inode)		sb_rdonly((inode)->i_sb)
+	#define IS_SYNC(inode)			(__IS_FLG(inode, SB_SYNCHRONOUS) || \
+										((inode)->i_flags & S_SYNC))
+	#define IS_DIRSYNC(inode)		(__IS_FLG(inode, SB_SYNCHRONOUS|SB_DIRSYNC) || \
+										((inode)->i_flags & (S_SYNC|S_DIRSYNC)))
+	#define IS_MANDLOCK(inode)		__IS_FLG(inode, SB_MANDLOCK)
+	#define IS_NOATIME(inode)		__IS_FLG(inode, SB_RDONLY|SB_NOATIME)
+	#define IS_I_VERSION(inode)		__IS_FLG(inode, SB_I_VERSION)
 
-	#define IS_DEADDIR(inode)	((inode)->i_flags & S_DEAD)
-	#define IS_NOCMTIME(inode)	((inode)->i_flags & S_NOCMTIME)
-	#define IS_SWAPFILE(inode)	((inode)->i_flags & S_SWAPFILE)
-	#define IS_PRIVATE(inode)	((inode)->i_flags & S_PRIVATE)
-	#define IS_IMA(inode)		((inode)->i_flags & S_IMA)
-	#define IS_AUTOMOUNT(inode)	((inode)->i_flags & S_AUTOMOUNT)
-	#define IS_NOSEC(inode)		((inode)->i_flags & S_NOSEC)
-	#define IS_DAX(inode)		((inode)->i_flags & S_DAX)
-	#define IS_ENCRYPTED(inode)	((inode)->i_flags & S_ENCRYPTED)
-	#define IS_CASEFOLDED(inode)((inode)->i_flags & S_CASEFOLD)
-	#define IS_VERITY(inode)	((inode)->i_flags & S_VERITY)
+	#define IS_NOQUOTA(inode)		((inode)->i_flags & S_NOQUOTA)
+	#define IS_APPEND(inode)		((inode)->i_flags & S_APPEND)
+	#define IS_IMMUTABLE(inode)		((inode)->i_flags & S_IMMUTABLE)
+	#define IS_POSIXACL(inode)		__IS_FLG(inode, SB_POSIXACL)
 
-	#define IS_WHITEOUT(inode)	(S_ISCHR(inode->i_mode) && \
-									(inode)->i_rdev == WHITEOUT_DEV)
+	#define IS_DEADDIR(inode)		((inode)->i_flags & S_DEAD)
+	#define IS_NOCMTIME(inode)		((inode)->i_flags & S_NOCMTIME)
+	#define IS_SWAPFILE(inode)		((inode)->i_flags & S_SWAPFILE)
+	#define IS_PRIVATE(inode)		((inode)->i_flags & S_PRIVATE)
+	#define IS_IMA(inode)			((inode)->i_flags & S_IMA)
+	#define IS_AUTOMOUNT(inode)		((inode)->i_flags & S_AUTOMOUNT)
+	#define IS_NOSEC(inode)			((inode)->i_flags & S_NOSEC)
+	#define IS_DAX(inode)			((inode)->i_flags & S_DAX)
+	#define IS_ENCRYPTED(inode)		((inode)->i_flags & S_ENCRYPTED)
+	#define IS_CASEFOLDED(inode)	((inode)->i_flags & S_CASEFOLD)
+	#define IS_VERITY(inode)		((inode)->i_flags & S_VERITY)
+
+	#define IS_WHITEOUT(inode)		(S_ISCHR(inode->i_mode) && \
+										(inode)->i_rdev == WHITEOUT_DEV)
 
 	// static inline bool HAS_UNMAPPED_ID(user_namespace_s *mnt_userns,
 	// 				inode_s *inode)
@@ -2306,31 +2251,31 @@
 	 *
 	 * Q: What is the difference between I_WILL_FREE and I_FREEING?
 	 */
-	#define I_DIRTY_SYNC		(1 << 0)
-	#define I_DIRTY_DATASYNC	(1 << 1)
-	#define I_DIRTY_PAGES		(1 << 2)
-	#define __I_NEW				3
-	#define I_NEW				(1 << __I_NEW)
-	#define I_WILL_FREE			(1 << 4)
-	#define I_FREEING			(1 << 5)
-	#define I_CLEAR				(1 << 6)
-	#define __I_SYNC			7
-	#define I_SYNC				(1 << __I_SYNC)
-	#define I_REFERENCED		(1 << 8)
-	#define __I_DIO_WAKEUP		9
-	#define I_DIO_WAKEUP		(1 << __I_DIO_WAKEUP)
-	#define I_LINKABLE			(1 << 10)
-	#define I_DIRTY_TIME		(1 << 11)
-	#define I_WB_SWITCH			(1 << 13)
-	#define I_OVL_INUSE			(1 << 14)
-	#define I_CREATING			(1 << 15)
-	#define I_DONTCACHE			(1 << 16)
-	#define I_SYNC_QUEUED		(1 << 17)
+	#define I_DIRTY_SYNC			(1 << 0)
+	#define I_DIRTY_DATASYNC		(1 << 1)
+	#define I_DIRTY_PAGES			(1 << 2)
+	#define __I_NEW					3
+	#define I_NEW					(1 << __I_NEW)
+	#define I_WILL_FREE				(1 << 4)
+	#define I_FREEING				(1 << 5)
+	#define I_CLEAR					(1 << 6)
+	#define __I_SYNC				7
+	#define I_SYNC					(1 << __I_SYNC)
+	#define I_REFERENCED			(1 << 8)
+	#define __I_DIO_WAKEUP			9
+	#define I_DIO_WAKEUP			(1 << __I_DIO_WAKEUP)
+	#define I_LINKABLE				(1 << 10)
+	#define I_DIRTY_TIME			(1 << 11)
+	#define I_WB_SWITCH				(1 << 13)
+	#define I_OVL_INUSE				(1 << 14)
+	#define I_CREATING				(1 << 15)
+	#define I_DONTCACHE				(1 << 16)
+	#define I_SYNC_QUEUED			(1 << 17)
 	#define I_PINNING_FSCACHE_WB	(1 << 18)
 
-	#define I_DIRTY_INODE		(I_DIRTY_SYNC | I_DIRTY_DATASYNC)
-	#define I_DIRTY				(I_DIRTY_INODE | I_DIRTY_PAGES)
-	#define I_DIRTY_ALL			(I_DIRTY | I_DIRTY_TIME)
+	#define I_DIRTY_INODE			(I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+	#define I_DIRTY					(I_DIRTY_INODE | I_DIRTY_PAGES)
+	#define I_DIRTY_ALL				(I_DIRTY | I_DIRTY_TIME)
 
 	// extern void __mark_inode_dirty(inode_s *, int);
 	// static inline void mark_inode_dirty(inode_s *inode)
@@ -2431,9 +2376,9 @@
 
 	// #define MODULE_ALIAS_FS(NAME) MODULE_ALIAS("fs-" NAME)
 
-	extern dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
-					const char *dev_name, void *data,
-					int (*fill_super)(super_block_s *, void *, int));
+	extern dentry_s *
+	mount_bdev(fs_type_s *fs_type, int flags, const char *dev_name,
+			void *data, int (*fill_super)(super_block_s *, void *, int));
 	// extern dentry_s *mount_single(fs_type_s *fs_type,
 	// 	int flags, void *data,
 	// 	int (*fill_super)(super_block_s *, void *, int));
@@ -2635,7 +2580,8 @@
 	// 		unsigned int time_attrs, file_s *filp);
 	// extern int vfs_fallocate(file_s *file, int mode, loff_t offset,
 	// 			loff_t len);
-	extern long do_sys_open(int dfd, const char *filename, int flags, umode_t mode);
+	extern long
+	do_sys_open(int dfd, const char *filename, int flags, umode_t mode);
 	// extern file_s *file_open_name(filename_s *, int, umode_t);
 	extern file_s *filp_open(const char *, int, umode_t);
 	// extern file_s *file_open_root(const path_s *,
@@ -3309,7 +3255,8 @@
 	// extern int simple_nosetlease(file_s *, long, file_s_lock **, void **);
 	// extern const dentry_s_operations simple_dentry_operations;
 
-	extern dentry_s *simple_lookup(inode_s *, dentry_s *, unsigned int flags);
+	extern dentry_s *
+	simple_lookup(inode_s *, dentry_s *, unsigned int flags);
 	// extern ssize_t generic_read_dir(file_s *, char __user *, size_t, loff_t *);
 	extern const file_ops_s simple_dir_operations;
 	extern const inode_ops_s simple_dir_inode_operations;
@@ -3501,8 +3448,10 @@
 	#define __FMODE_NONOTIFY	((__force int) FMODE_NONOTIFY)
 
 	#define ACC_MODE(x)			("\004\002\006\006"[(x)&O_ACCMODE])
-	#define OPEN_FMODE(flag)	((__force fmode_t)(((flag + 1) & O_ACCMODE) | \
-									(flag & __FMODE_NONOTIFY)))
+	#define OPEN_FMODE(flag) (									\
+				(__force fmode_t)(((flag + 1) & O_ACCMODE) |	\
+					(flag & __FMODE_NONOTIFY))					\
+				)
 
 	// static inline bool is_sxid(umode_t mode)
 	// {
@@ -3529,8 +3478,8 @@
 	// 	return inode == inode->i_sb->s_root->d_inode;
 	// }
 
-	static inline bool dir_emit_dots(file_s *file, dir_ctxt_s *ctx)
-	{
+	static inline bool
+	dir_emit_dots(file_s *file, dir_ctxt_s *ctx) {
 		if (ctx->pos == 0) {
 			if (ctx->actor(ctx, ".", 1, ctx->pos, 0, 0) != 0)
 				return false;
@@ -3576,7 +3525,6 @@
 	// 	inode_dio_wait(inode);
 	// 	return filemap_write_and_wait(inode->i_mapping);
 	// }
-
 
 
 

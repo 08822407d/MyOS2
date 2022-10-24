@@ -24,8 +24,8 @@
 	};
 
 	/*
-	* Userspace usage phase for fsopen/fspick.
-	*/
+	 * Userspace usage phase for fsopen/fspick.
+	 */
 	enum fs_context_phase {
 		FS_CONTEXT_CREATE_PARAMS,	/* Loading params for sb creation */
 		FS_CONTEXT_CREATING,		/* A superblock is being created */
@@ -37,8 +37,8 @@
 	};
 
 	/*
-	* Type of parameter value.
-	*/
+	 * Type of parameter value.
+	 */
 	enum fs_value_type {
 		fs_value_is_undefined,
 		fs_value_is_flag,		/* Value not given a value */
@@ -49,8 +49,8 @@
 	};
 
 	/*
-	* Configuration parameter.
-	*/
+	 * Configuration parameter.
+	 */
 	typedef struct fs_parameter {
 		const char		*key;		/* Parameter name */
 		enum fs_value_type	type:8;		/* The type of value here */
@@ -112,11 +112,11 @@
 		int		(*reconfigure)(fs_ctxt_s *fc);
 	} fs_ctxt_ops_s;
 
-	// /*
-	// * fs_context manipulation functions.
-	// */
-	extern fs_ctxt_s *fs_context_for_mount(fs_type_s *fs_type,
-					unsigned int sb_flags);
+	/*
+	 * fs_context manipulation functions.
+	 */
+	extern fs_ctxt_s *
+	fs_context_for_mount(fs_type_s *fs_type, unsigned int sb_flags);
 	// extern fs_ctxt_s *fs_context_for_reconfigure(struct dentry *dentry,
 	// 						unsigned int sb_flags,
 	// 						unsigned int sb_flags_mask);
@@ -145,14 +145,13 @@
 		vfs_get_keyed_super,			/* Superblocks with different s_fs_info keys may exist */
 		vfs_get_independent_super,		/* Multiple independent superblocks may exist */
 	};
-	extern int vfs_get_super(fs_ctxt_s *fc,
-				enum vfs_get_super_keying keying,
-				int (*fill_super)(super_block_s *sb,
-						fs_ctxt_s *fc));
+	extern int
+	vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
+			int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc));
 
-	extern int get_tree_nodev(fs_ctxt_s *fc,
-					int (*fill_super)(super_block_s *sb,
-							fs_ctxt_s *fc));
+	extern int
+	get_tree_nodev(fs_ctxt_s *fc, int (*fill_super)(super_block_s *sb,
+			fs_ctxt_s *fc));
 	// extern int get_tree_single(fs_ctxt_s *fc,
 	// 			int (*fill_super)(struct super_block *sb,
 	// 					fs_ctxt_s *fc));

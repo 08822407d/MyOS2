@@ -152,9 +152,10 @@
 	#define DCACHE_MOUNTED				0x00010000 /* is a mountpoint */
 	#define DCACHE_NEED_AUTOMOUNT		0x00020000 /* handle automount on this dir */
 	#define DCACHE_MANAGE_TRANSIT		0x00040000 /* manage transit from this dirent */
-	#define DCACHE_MANAGED_DENTRY \
-				(DCACHE_MOUNTED | DCACHE_NEED_AUTOMOUNT | \
-				DCACHE_MANAGE_TRANSIT)
+	#define DCACHE_MANAGED_DENTRY (							\
+				DCACHE_MOUNTED | DCACHE_NEED_AUTOMOUNT |	\
+				DCACHE_MANAGE_TRANSIT						\
+			)
 
 	#define DCACHE_LRU_LIST				0x00080000
 
@@ -276,8 +277,8 @@
 	// 	return dentry;
 	// }
 
-	static inline dentry_s *dget(dentry_s *dentry)
-	{
+	static inline dentry_s *
+	dget(dentry_s *dentry) {
 		// if (dentry)
 		// 	lockref_get(&dentry->d_lockref);
 		return dentry;
@@ -345,33 +346,33 @@
 	/*
 	 * Directory cache entry type accessor functions.
 	 */
-	static inline unsigned __d_entry_type(const dentry_s *dentry)
-	{
+	static inline unsigned
+	__d_entry_type(const dentry_s *dentry) {
 		return dentry->d_flags & DCACHE_ENTRY_TYPE;
 	}
 
-	static inline bool d_is_miss(const dentry_s *dentry)
-	{
+	static inline bool
+	d_is_miss(const dentry_s *dentry) {
 		return __d_entry_type(dentry) == DCACHE_MISS_TYPE;
 	}
 
-	static inline bool d_is_whiteout(const dentry_s *dentry)
-	{
+	static inline bool
+	d_is_whiteout(const dentry_s *dentry) {
 		return __d_entry_type(dentry) == DCACHE_WHITEOUT_TYPE;
 	}
 
-	static inline bool d_can_lookup(const dentry_s *dentry)
-	{
+	static inline bool
+	d_can_lookup(const dentry_s *dentry) {
 		return __d_entry_type(dentry) == DCACHE_DIRECTORY_TYPE;
 	}
 
-	static inline bool d_is_autodir(const dentry_s *dentry)
-	{
+	static inline bool
+	d_is_autodir(const dentry_s *dentry) {
 		return __d_entry_type(dentry) == DCACHE_AUTODIR_TYPE;
 	}
 
-	static inline bool d_is_dir(const dentry_s *dentry)
-	{
+	static inline bool
+	d_is_dir(const dentry_s *dentry) {
 		return d_can_lookup(dentry) || d_is_autodir(dentry);
 	}
 

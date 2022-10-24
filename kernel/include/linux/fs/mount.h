@@ -80,13 +80,13 @@ typedef struct mount {
 
 #define MNT_NS_INTERNAL ERR_PTR(-EINVAL) /* distinct from any mnt_namespace */
 
-static inline mount_s *real_mount(vfsmount_s *mnt)
-{
+static inline mount_s *
+real_mount(vfsmount_s *mnt) {
 	return container_of(mnt, struct mount, mnt);
 }
 
-static inline int mnt_has_parent(mount_s *mnt)
-{
+static inline int
+mnt_has_parent(mount_s *mnt) {
 	return mnt != mnt->mnt_parent;
 }
 

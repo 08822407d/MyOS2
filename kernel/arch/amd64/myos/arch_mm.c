@@ -57,7 +57,6 @@ void creat_exec_addrspace(task_s * task)
 		{
 			page_s *page = alloc_pages(ZONE_NORMAL, 0);
 			page->map_count++;
-			page->attr = PG_PTable_Maped;
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 							page_to_paddr(page), attr, &mm->cr3);
 		}
@@ -102,7 +101,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 
 	if (new_page != NULL)
 	{
-		new_page->attr = PG_PTable_Maped | PG_Referenced;
+		new_page->attr = PG_referenced;
 		if (!arch_page_duplicate(virt, page_to_paddr(new_page), orig_cr3, &new_cr3))
 		{
 			new_page->map_count++;

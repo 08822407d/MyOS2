@@ -66,7 +66,7 @@ void myos_init_slab()
 		bslp->free = bslp->total;
 		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
 		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
-		bslp->page->attr |= PG_Slab;
+		bslp->page->attr |= PG_slab;
 		bslp->page->slab_ptr = bslp;
 	}
 	// set init flag
@@ -77,17 +77,15 @@ slab_s * slab_alloc(slab_s *cslp)
 {
 	page_s *page = alloc_pages(ZONE_NORMAL, 0);
 	phys_addr_t page_paddr = page_to_paddr(page);
-	if (!(page->attr & PG_PTable_Maped))
-		arch_page_domap(myos_phys2virt(page_paddr), page_paddr,
-				ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
-	page->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
+	page->attr |= PG_slab;
 	slab_s *nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
 	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = page;
 	page->slab_ptr = nslp;
-	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
+	nslp->colormap = (bitmap_t *)kmalloc(cslp->total /
+					sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
 	nslp->total =
 	nslp->free = cslp->total;
 	nslp->virt_addr = myos_phys2virt(page_paddr);
@@ -98,7 +96,7 @@ slab_s * slab_alloc(slab_s *cslp)
 void slab_free(slab_s *slp)
 {
 	kfree(slp->colormap);
-	slp->page->attr &= ~PG_Slab;
+	slp->page->attr &= ~PG_slab;
 	slp->page->slab_ptr = NULL;
 	list_delete(&slp->slab_list);
 	slp->slabcache_ptr->normal_slab_free.count--;
