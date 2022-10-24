@@ -65,7 +65,7 @@ memblock_s memblock __initdata_memblock = {
 };
 
 /*==============================================================================================*
- *									core fuctions for buddy system								*
+ *								core fuctions for add/remove regions							*
  *==============================================================================================*/
 #define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)			\
 			for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
@@ -163,11 +163,29 @@ static phys_addr_t __init_memblock memblock_find_in_range(
 		end = memblock.current_limit;
 
 	/* avoid allocating the first page */
-	// start = max_t(phys_addr_t, start, PAGE_SIZE);
-	start = max(start, (phys_addr_t)PAGE_SIZE);
+	start = max_t(phys_addr_t, start, PAGE_SIZE);
 	end = max(start, end);
 
 	return __memblock_find_range_bottom_up(start, end, size, align);
+}
+
+static void __init_memblock memblock_remove_region(
+		mmblk_type_s *type, unsigned long r)
+{
+	// type->total_size -= type->regions[r].size;
+	// memmove(&type->regions[r], &type->regions[r + 1],
+	// 	(type->cnt - (r + 1)) * sizeof(type->regions[r]));
+	// type->cnt--;
+
+	// /* Special case for empty arrays */
+	// if (type->cnt == 0) {
+	// 	WARN_ON(type->total_size != 0);
+	// 	type->cnt = 1;
+	// 	type->regions[0].base = 0;
+	// 	type->regions[0].size = 0;
+	// 	type->regions[0].flags = 0;
+	// 	memblock_set_region_node(&type->regions[0], MAX_NUMNODES);
+	// }
 }
 
 /**
@@ -278,6 +296,8 @@ static int __init memblock_add_range(mmblk_type_s *type,
 		}
 	}
 
+	while (type->cnt >= type->max - 2);
+
 	memblock_merge_regions(type);
 	return ENOERR;
 }
@@ -303,6 +323,105 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
 	return memblock_add_range(&memblock.reserved, base, size, 0);
 }
 
+/**
+ * memblock_isolate_range - isolate given range into disjoint memblocks
+ * @type: memblock type to isolate range for
+ * @base: base of range to isolate
+ * @size: size of range to isolate
+ * @start_rgn: out parameter for the start of isolated region
+ * @end_rgn: out parameter for the end of isolated region
+ *
+ * Walk @type and ensure that regions don't cross the boundaries defined by
+ * [@base, @base + @size).  Crossing regions are split at the boundaries,
+ * which may create at most two more regions.  The index of the first
+ * region inside the range is returned in *@start_rgn and end in *@end_rgn.
+ *
+ * Return:
+ * 0 on success, -errno on failure.
+ */
+static int __init_memblock memblock_isolate_range(
+		mmblk_type_s *type, phys_addr_t base, phys_addr_t size,
+		int *start_rgn, int *end_rgn)
+{
+	phys_addr_t end = base + memblock_cap_size(base, &size);
+	int idx;
+	mmblk_rgn_s *rgn;
+
+	*start_rgn = *end_rgn = 0;
+
+	if (!size)
+		return 0;
+
+	/* we'll create at most two more regions */
+	while (type->cnt >= type->max - 2);
+
+	for_each_memblock_type(idx, type, rgn) {
+		phys_addr_t rbase = rgn->base;
+		phys_addr_t rend = rbase + rgn->size;
+
+		if (rbase >= end)
+			break;
+		if (rend <= base)
+			continue;
+
+		if (rbase < base) {
+			/*
+			 * @rgn intersects from below.  Split and continue
+			 * to process the next region - the new top half.
+			 */
+			rgn->base = base;
+			rgn->size -= base - rbase;
+			type->total_size -= base - rbase;
+			memblock_insert_region(type, idx,
+					rbase, base - rbase, rgn->flags);
+		} else if (rend > end) {
+			/*
+			 * @rgn intersects from above.  Split and redo the
+			 * current region - the new bottom half.
+			 */
+			rgn->base = end;
+			rgn->size -= end - rbase;
+			type->total_size -= end - rbase;
+			memblock_insert_region(type, idx--,
+					rbase, end - rbase, rgn->flags);
+		} else {
+			/* @rgn is fully contained, record it */
+			if (!*end_rgn)
+				*start_rgn = idx;
+			*end_rgn = idx + 1;
+		}
+	}
+
+	return 0;
+}
+
+static int __init_memblock memblock_remove_range(
+		mmblk_type_s *type, phys_addr_t base, phys_addr_t size)
+{
+	int start_rgn, end_rgn;
+	int i, ret;
+
+	ret = memblock_isolate_range(type, base, size, &start_rgn, &end_rgn);
+	if (ret)
+		return ret;
+
+	for (i = end_rgn - 1; i >= start_rgn; i--)
+		memblock_remove_region(type, i);
+	return 0;
+}
+
+int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
+{
+	phys_addr_t end = base + size - 1;
+	mmblk_type_s *type = &memblock.memory;
+
+	return memblock_remove_range(type, base, size);
+}
+
+
+/*==============================================================================================*
+ *									core fuctions for alloc/free								*
+ *==============================================================================================*/
 /**
  * __next_mem_range - next function for for_each_free_mem_range() etc.
  * @idx: pointer to uint64_t loop variable
@@ -531,39 +650,8 @@ void *__init memblock_alloc(phys_addr_t size, phys_addr_t align)
 {
 	while (align == 0);
 
-	// linux call stack :
-	// void *__init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
-	//					phys_addr_t min_addr, phys_addr_t max_addr, int nid)
-	//								||
-	//								\/
-	// static void *__init memblock_alloc_internal(phys_addr_t size, phys_addr_t align,
-	//					phys_addr_t min_addr, phys_addr_t max_addr, int nid, bool exact_nid)
-	//								||
-	//								\/
-	// phys_addr_t __init memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
-	//				    phys_addr_t start, phys_addr_t end, int nid, bool exact_nid)
-	//								||
-	//								\/
-	// static phys_addr_t __init_memblock memblock_find_in_range_node(phys_addr_t size,
-	//					phys_addr_t align, phys_addr_t start, phys_addr_t end,
-	//					int nid, enum memblock_flags flags)
-	//								||
-	//								\/
-	// static phys_addr_t __init_memblock __memblock_find_range_bottom_up(phys_addr_t start,
-	//					phys_addr_t end, phys_addr_t size, phys_addr_t align,
-	//					int nid, enum memblock_flags flags)
-	//								||
-	//								\/
-	// #define __for_each_mem_range(i, type_a, type_b, nid, flags, p_start, p_end, p_nid)
-	//								||
-	//								\/
-	// void __next_mem_range(uint64_t *idx, int nid, enum memblock_flags flags, struct memblock_type *type_a,
-	//	      struct memblock_type *type_b, phys_addr_t *out_start, phys_addr_t *out_end, int *out_nid)
-
-	void *ptr;
-
-	ptr = memblock_alloc_internal(size, align, MEMBLOCK_LOW_LIMIT,
-					MEMBLOCK_ALLOC_ACCESSIBLE);
+	void *ptr = memblock_alloc_internal(size, align,
+			MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
 	if (ptr)
 		memset(ptr, 0, size);
 
@@ -593,6 +681,33 @@ void * myos_memblock_alloc_normal(size_t size, size_t align)
 
 	return ptr;
 }
+
+/**
+ * memblock_free - free boot memory allocation
+ * @ptr: starting address of the  boot memory allocation
+ * @size: size of the boot memory block in bytes
+ *
+ * Free boot memory block previously allocated by memblock_alloc_xx() API.
+ * The freeing memory will not be released to the buddy allocator.
+ */
+void __init_memblock memblock_free(void *ptr, size_t size)
+{
+	if (ptr)
+	{
+		phys_addr_t base = myos_virt2phys((virt_addr_t)ptr);
+		// int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
+		// {
+			phys_addr_t end = base + size - 1;
+
+			// memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+			// 		&base, &end, (void *)_RET_IP_);
+
+			// kmemleak_free_part_phys(base, size);
+			memblock_remove_range(&memblock.reserved, base, size);
+		// }
+	}
+}
+
 
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
@@ -652,5 +767,10 @@ static unsigned long __init free_low_memory_core_early(void)
 void __init memblock_free_all(void)
 {
 	unsigned long pages;
+
+	// free_unused_memmap();
+	// reset_all_zones_managed_pages();
+
 	pages = free_low_memory_core_early();
+	// totalram_pages_add(pages);
 }
