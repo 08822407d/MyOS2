@@ -17,7 +17,7 @@
 	/*
 	 * Various page->flags bits:
 	 *
-	 * PG_reserved is set for special pages. The "struct page" of such a page
+	 * PG_reserved is set for special pages. The "page_s" of such a page
 	 * should in general not be touched (e.g. set dirty) except by its owner.
 	 * Pages marked as PG_reserved include:
 	 * - Pages part of the kernel image (including vDSO) and similar (e.g. BIOS,
@@ -38,7 +38,7 @@
 	 * - MMIO/DMA pages. Some architectures don't allow to ioremap pages that are
 	 *   not marked PG_reserved (as they might be in use by somebody else who does
 	 *   not respect the caching strategy).
-	 * - Pages part of an offline section (struct pages of offline sections should
+	 * - Pages part of an offline section (page_ss of offline sections should
 	 *   not be trusted as they will be initialized when first onlined).
 	 * - MCA pages on ia64
 	 * - Pages holding CPU notes for POWER Firmware Assisted Dump
@@ -181,7 +181,7 @@
 
 	#ifndef __GENERATING_BOUNDS_H
 
-	// 	static inline unsigned long _compound_head(const struct page *page)
+	// 	static inline unsigned long _compound_head(const page_s *page)
 	// 	{
 	// 		unsigned long head = READ_ONCE(page->compound_head);
 
@@ -206,9 +206,9 @@
 	// 	 * Return: The folio which contains this page.
 	// 	 */
 	// 	#define page_folio(p) (_Generic((p),                                       \
-	// 									const struct page *                        \
+	// 									const page_s *                        \
 	// 									: (const struct folio *)_compound_head(p), \
-	// 									struct page *                            \
+	// 									page_s *                            \
 	// 									: (struct folio *)_compound_head(p)))
 
 	// 	/**
@@ -222,33 +222,33 @@
 	// 	 */
 	// 	#define folio_page(folio, n) nth_page(&(folio)->page, n)
 
-	// 	static __always_inline int PageTail(struct page *page)
+	// 	static __always_inline int PageTail(page_s *page)
 	// 	{
 	// 		return READ_ONCE(page->compound_head) & 1;
 	// 	}
 
-	// 	static __always_inline int PageCompound(struct page *page)
+	// 	static __always_inline int PageCompound(page_s *page)
 	// 	{
 	// 		return test_bit(PG_head, &page->flags) || PageTail(page);
 	// 	}
 
 	#	define PAGE_POISON_PATTERN -1L
-	// 	static inline int PagePoisoned(const struct page *page)
-	// 	{
-	// 		return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
-	// 	}
+		static inline int
+		PagePoisoned(const page_s *page) {
+			return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
+		}
 
 	// 	#ifdef CONFIG_DEBUG_VM
-	// 		void page_init_poison(struct page *page, size_t size);
+	// 		void page_init_poison(page_s *page, size_t size);
 	// 	#else
-	// 		static inline void page_init_poison(struct page *page, size_t size)
+	// 		static inline void page_init_poison(page_s *page, size_t size)
 	// 		{
 	// 		}
 	// 	#endif
 
 	// 	static unsigned long *folio_flags(struct folio *folio, unsigned n)
 	// 	{
-	// 		struct page *page = &folio->page;
+	// 		page_s *page = &folio->page;
 
 	// 		VM_BUG_ON_PGFLAGS(PageTail(page), page);
 	// 		VM_BUG_ON_PGFLAGS(n > 0 && !test_bit(PG_head, &page->flags), page);
@@ -259,7 +259,7 @@
 	// 	* Page flags policies wrt compound pages
 	// 	*
 	// 	* PF_POISONED_CHECK
-	// 	*     check if this struct page poisoned/uninitialized
+	// 	*     check if this page_s poisoned/uninitialized
 	// 	*
 	// 	* PF_ANY:
 	// 	*     the page flag is relevant for small, head and tail pages.
@@ -315,7 +315,7 @@
 	// 		{                                                                    \
 	// 			return test_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
 	// 		}                                                                    \
-	// 		static __always_inline int Page##uname(struct page *page)            \
+	// 		static __always_inline int Page##uname(page_s *page)            \
 	// 		{                                                                    \
 	// 			return test_bit(PG_##lname, &policy(page, 0)->flags);            \
 	// 		}
@@ -325,7 +325,7 @@
 	// 		{                                                                  \
 	// 			set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
 	// 		}                                                                  \
-	// 		static __always_inline void SetPage##uname(struct page *page)      \
+	// 		static __always_inline void SetPage##uname(page_s *page)      \
 	// 		{                                                                  \
 	// 			set_bit(PG_##lname, &policy(page, 1)->flags);                  \
 	// 		}
@@ -335,7 +335,7 @@
 	// 		{                                                                    \
 	// 			clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
 	// 		}                                                                    \
-	// 		static __always_inline void ClearPage##uname(struct page *page)      \
+	// 		static __always_inline void ClearPage##uname(page_s *page)      \
 	// 		{                                                                    \
 	// 			clear_bit(PG_##lname, &policy(page, 1)->flags);                  \
 	// 		}
@@ -345,7 +345,7 @@
 	// 		{                                                                    \
 	// 			__set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
 	// 		}                                                                    \
-	// 		static __always_inline void __SetPage##uname(struct page *page)      \
+	// 		static __always_inline void __SetPage##uname(page_s *page)      \
 	// 		{                                                                    \
 	// 			__set_bit(PG_##lname, &policy(page, 1)->flags);                  \
 	// 		}
@@ -355,7 +355,7 @@
 	// 		{                                                                      \
 	// 			__clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
 	// 		}                                                                      \
-	// 		static __always_inline void __ClearPage##uname(struct page *page)      \
+	// 		static __always_inline void __ClearPage##uname(page_s *page)      \
 	// 		{                                                                      \
 	// 			__clear_bit(PG_##lname, &policy(page, 1)->flags);                  \
 	// 		}
@@ -365,7 +365,7 @@
 	// 		{                                                                            \
 	// 			return test_and_set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
 	// 		}                                                                            \
-	// 		static __always_inline int TestSetPage##uname(struct page *page)             \
+	// 		static __always_inline int TestSetPage##uname(page_s *page)             \
 	// 		{                                                                            \
 	// 			return test_and_set_bit(PG_##lname, &policy(page, 1)->flags);            \
 	// 		}
@@ -375,7 +375,7 @@
 	// 		{                                                                              \
 	// 			return test_and_clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
 	// 		}                                                                              \
-	// 		static __always_inline int TestClearPage##uname(struct page *page)             \
+	// 		static __always_inline int TestClearPage##uname(page_s *page)             \
 	// 		{                                                                              \
 	// 			return test_and_clear_bit(PG_##lname, &policy(page, 1)->flags);            \
 	// 		}
@@ -396,33 +396,33 @@
 
 	// 	#define TESTPAGEFLAG_FALSE(uname, lname)                                               \
 	// 		static inline bool folio_test_##lname(const struct folio *folio) { return false; } \
-	// 		static inline int Page##uname(const struct page *page) { return 0; }
+	// 		static inline int Page##uname(const page_s *page) { return 0; }
 
 	// 	#define SETPAGEFLAG_NOOP(uname, lname)                           \
 	// 		static inline void folio_set_##lname(struct folio *folio) {} \
-	// 		static inline void SetPage##uname(struct page *page) {}
+	// 		static inline void SetPage##uname(page_s *page) {}
 
 	// 	#define CLEARPAGEFLAG_NOOP(uname, lname)                           \
 	// 		static inline void folio_clear_##lname(struct folio *folio) {} \
-	// 		static inline void ClearPage##uname(struct page *page) {}
+	// 		static inline void ClearPage##uname(page_s *page) {}
 
 	// 	#define __CLEARPAGEFLAG_NOOP(uname, lname)                           \
 	// 		static inline void __folio_clear_##lname(struct folio *folio) {} \
-	// 		static inline void __ClearPage##uname(struct page *page) {}
+	// 		static inline void __ClearPage##uname(page_s *page) {}
 
 	// 	#define TESTSETFLAG_FALSE(uname, lname)                            \
 	// 		static inline bool folio_test_set_##lname(struct folio *folio) \
 	// 		{                                                              \
 	// 			return 0;                                                  \
 	// 		}                                                              \
-	// 		static inline int TestSetPage##uname(struct page *page) { return 0; }
+	// 		static inline int TestSetPage##uname(page_s *page) { return 0; }
 
 	// 	#define TESTCLEARFLAG_FALSE(uname, lname)                            \
 	// 		static inline bool folio_test_clear_##lname(struct folio *folio) \
 	// 		{                                                                \
 	// 			return 0;                                                    \
 	// 		}                                                                \
-	// 		static inline int TestClearPage##uname(struct page *page) { return 0; }
+	// 		static inline int TestClearPage##uname(page_s *page) { return 0; }
 
 	// 	#define PAGEFLAG_FALSE(uname, lname) \
 	// 		TESTPAGEFLAG_FALSE(uname, lname) \
@@ -509,7 +509,7 @@
 	// 				test_bit(PG_swapcache, folio_flags(folio, 0));
 	// 		}
 
-	// 		static __always_inline bool PageSwapCache(struct page *page)
+	// 		static __always_inline bool PageSwapCache(page_s *page)
 	// 		{
 	// 			return folio_test_swapcache(page_folio(page));
 	// 		}
@@ -544,10 +544,10 @@
 	// 		TESTSCFLAG(HWPoison, hwpoison, PF_ANY)
 	// 		#define __PG_HWPOISON (1UL << PG_hwpoison)
 	// 		#define MAGIC_HWPOISON 0x48575053U /* HWPS */
-	// 		extern void SetPageHWPoisonTakenOff(struct page *page);
-	// 		extern void ClearPageHWPoisonTakenOff(struct page *page);
-	// 		extern bool take_page_off_buddy(struct page *page);
-	// 		extern bool put_page_back_buddy(struct page *page);
+	// 		extern void SetPageHWPoisonTakenOff(page_s *page);
+	// 		extern void ClearPageHWPoisonTakenOff(page_s *page);
+	// 		extern bool take_page_off_buddy(page_s *page);
+	// 		extern bool put_page_back_buddy(page_s *page);
 	// 	#else
 	// 		PAGEFLAG_FALSE(HWPoison, hwpoison)
 	// 		#define __PG_HWPOISON 0
@@ -596,7 +596,7 @@
 	// 	#define PAGE_MAPPING_KSM (PAGE_MAPPING_ANON | PAGE_MAPPING_MOVABLE)
 	// 	#define PAGE_MAPPING_FLAGS (PAGE_MAPPING_ANON | PAGE_MAPPING_MOVABLE)
 
-	// 	static __always_inline int PageMappingFlags(struct page *page)
+	// 	static __always_inline int PageMappingFlags(page_s *page)
 	// 	{
 	// 		return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) != 0;
 	// 	}
@@ -606,12 +606,12 @@
 	// 		return ((unsigned long)folio->mapping & PAGE_MAPPING_ANON) != 0;
 	// 	}
 
-	// 	static __always_inline bool PageAnon(struct page *page)
+	// 	static __always_inline bool PageAnon(page_s *page)
 	// 	{
 	// 		return folio_test_anon(page_folio(page));
 	// 	}
 
-	// 	static __always_inline int __PageMovable(struct page *page)
+	// 	static __always_inline int __PageMovable(page_s *page)
 	// 	{
 	// 		return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) ==
 	// 			PAGE_MAPPING_MOVABLE;
@@ -630,7 +630,7 @@
 	// 				PAGE_MAPPING_KSM;
 	// 		}
 
-	// 		static __always_inline bool PageKsm(struct page *page)
+	// 		static __always_inline bool PageKsm(page_s *page)
 	// 		{
 	// 			return folio_test_ksm(page_folio(page));
 	// 		}
@@ -638,7 +638,7 @@
 	// 		TESTPAGEFLAG_FALSE(Ksm, ksm)
 	// 	#endif
 
-	// 	u64 stable_page_flags(struct page *page);
+	// 	u64 stable_page_flags(page_s *page);
 
 	// 	/**
 	// 	 * folio_test_uptodate - Is this folio up to date?
@@ -667,7 +667,7 @@
 	// 		return ret;
 	// 	}
 
-	// 	static inline int PageUptodate(struct page *page)
+	// 	static inline int PageUptodate(page_s *page)
 	// 	{
 	// 		return folio_test_uptodate(page_folio(page));
 	// 	}
@@ -689,12 +689,12 @@
 	// 		set_bit(PG_uptodate, folio_flags(folio, 0));
 	// 	}
 
-	// 	static __always_inline void __SetPageUptodate(struct page *page)
+	// 	static __always_inline void __SetPageUptodate(page_s *page)
 	// 	{
 	// 		__folio_mark_uptodate((struct folio *)page);
 	// 	}
 
-	// 	static __always_inline void SetPageUptodate(struct page *page)
+	// 	static __always_inline void SetPageUptodate(page_s *page)
 	// 	{
 	// 		folio_mark_uptodate((struct folio *)page);
 	// 	}
@@ -702,19 +702,19 @@
 	// 	CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
 
 	// 	bool __folio_start_writeback(struct folio *folio, bool keep_write);
-	// 	bool set_page_writeback(struct page *page);
+	// 	bool set_page_writeback(page_s *page);
 
 	// 	#define folio_start_writeback(folio) \
 	// 		__folio_start_writeback(folio, false)
 	// 	#define folio_start_writeback_keepwrite(folio) \
 	// 		__folio_start_writeback(folio, true)
 
-	// 	static inline void set_page_writeback_keepwrite(struct page *page)
+	// 	static inline void set_page_writeback_keepwrite(page_s *page)
 	// 	{
 	// 		folio_start_writeback_keepwrite(page_folio(page));
 	// 	}
 
-	// 	static inline bool test_set_page_writeback(struct page *page)
+	// 	static inline bool test_set_page_writeback(page_s *page)
 	// 	{
 	// 		return set_page_writeback(page);
 	// 	}
@@ -733,18 +733,18 @@
 	// 		return folio_test_head(folio);
 	// 	}
 
-	// 	static __always_inline void set_compound_head(struct page *page, struct page *head)
+	// 	static __always_inline void set_compound_head(page_s *page, page_s *head)
 	// 	{
 	// 		WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
 	// 	}
 
-	// 	static __always_inline void clear_compound_head(struct page *page)
+	// 	static __always_inline void clear_compound_head(page_s *page)
 	// 	{
 	// 		WRITE_ONCE(page->compound_head, 0);
 	// 	}
 
 	// 	#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	// 		static inline void ClearPageCompound(struct page *page)
+	// 		static inline void ClearPageCompound(page_s *page)
 	// 		{
 	// 			BUG_ON(!PageHead(page));
 	// 			ClearPageHead(page);
@@ -754,8 +754,8 @@
 	// 	#define PG_head_mask ((1UL << PG_head))
 
 	// 	#ifdef CONFIG_HUGETLB_PAGE
-	// 		int PageHuge(struct page *page);
-	// 		int PageHeadHuge(struct page *page);
+	// 		int PageHuge(page_s *page);
+	// 		int PageHeadHuge(page_s *page);
 	// 		static inline bool folio_test_hugetlb(struct folio *folio)
 	// 		{
 	// 			return PageHeadHuge(&folio->page);
@@ -774,7 +774,7 @@
 	// 		* hugetlbfs pages, but not normal pages. PageTransHuge() can only be
 	// 		* called only in the core VM paths where hugetlbfs pages can't exist.
 	// 		*/
-	// 		static inline int PageTransHuge(struct page *page)
+	// 		static inline int PageTransHuge(page_s *page)
 	// 		{
 	// 			VM_BUG_ON_PAGE(PageTail(page), page);
 	// 			return PageHead(page);
@@ -790,7 +790,7 @@
 	// 		* and hugetlbfs pages, so it should only be called when it's known
 	// 		* that hugetlbfs pages aren't involved.
 	// 		*/
-	// 		static inline int PageTransCompound(struct page *page)
+	// 		static inline int PageTransCompound(page_s *page)
 	// 		{
 	// 			return PageCompound(page);
 	// 		}
@@ -800,7 +800,7 @@
 	// 		* and hugetlbfs pages, so it should only be called when it's known
 	// 		* that hugetlbfs pages aren't involved.
 	// 		*/
-	// 		static inline int PageTransTail(struct page *page)
+	// 		static inline int PageTransTail(page_s *page)
 	// 		{
 	// 			return PageTail(page);
 	// 		}
@@ -848,7 +848,7 @@
 	// 	* best effort only and inherently racy: there is no way to synchronize with
 	// 	* failing hardware.
 	// 	*/
-	// 	static inline bool is_page_hwpoison(struct page *page)
+	// 	static inline bool is_page_hwpoison(page_s *page)
 	// 	{
 	// 		if (PageHWPoison(page))
 	// 			return true;
@@ -875,22 +875,22 @@
 	// 	#define PageType(page, flag) \
 	// 		((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
 
-	// 	static inline int page_has_type(struct page *page)
+	// 	static inline int page_has_type(page_s *page)
 	// 	{
 	// 		return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
 	// 	}
 
 	// 	#define PAGE_TYPE_OPS(uname, lname)                                   \
-	// 		static __always_inline int Page##uname(struct page *page)         \
+	// 		static __always_inline int Page##uname(page_s *page)         \
 	// 		{                                                                 \
 	// 			return PageType(page, PG_##lname);                            \
 	// 		}                                                                 \
-	// 		static __always_inline void __SetPage##uname(struct page *page)   \
+	// 		static __always_inline void __SetPage##uname(page_s *page)   \
 	// 		{                                                                 \
 	// 			VM_BUG_ON_PAGE(!PageType(page, 0), page);                     \
 	// 			page->page_type &= ~PG_##lname;                               \
 	// 		}                                                                 \
-	// 		static __always_inline void __ClearPage##uname(struct page *page) \
+	// 		static __always_inline void __ClearPage##uname(page_s *page) \
 	// 		{                                                                 \
 	// 			VM_BUG_ON_PAGE(!Page##uname(page), page);                     \
 	// 			page->page_type |= PG_##lname;                                \
@@ -941,7 +941,7 @@
 	// 	*/
 	// 	PAGE_TYPE_OPS(Guard, guard)
 
-	// 	extern bool is_free_buddy_page(struct page *page);
+	// 	extern bool is_free_buddy_page(page_s *page);
 
 	// 	__PAGEFLAG(Isolated, isolated, PF_ANY);
 
@@ -965,7 +965,7 @@
 	// 	/*
 	// 	* Flags checked when a page is prepped for return by the page allocator.
 	// 	* Pages being prepped should not have these flags set.  If they are set,
-	// 	* there has been a kernel bug or struct page corruption.
+	// 	* there has been a kernel bug or page_s corruption.
 	// 	*
 	// 	* __PG_HWPOISON is exceptional because it needs to be kept beyond page's
 	// 	* alloc-free cycle to prevent from reusing the page.
@@ -982,7 +982,7 @@
 	// 	 * Determine if a page has private stuff, indicating that release routines
 	// 	 * should be invoked upon it.
 	// 	 */
-	// 	static inline int page_has_private(struct page *page)
+	// 	static inline int page_has_private(page_s *page)
 	// 	{
 	// 		return !!(page->flags & PAGE_FLAGS_PRIVATE);
 	// 	}

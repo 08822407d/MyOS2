@@ -266,13 +266,12 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order)
  *
  * For recording page's order, we use page_private(page).
  */
-static inline bool page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
+static inline bool
+page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
 {
-	if (get_buddy_order(buddy) != order)
-		return false;
+	if (get_buddy_order(buddy) != order) return false;
 
-	if (myos_page_zone(page) != myos_page_zone(buddy))
-		return false;
+	if (myos_page_zone(page) != myos_page_zone(buddy)) return false;
 
 	return true;
 }
@@ -284,8 +283,8 @@ static inline bool page_is_buddy(page_s *page, page_s *buddy, unsigned int order
 // Linux function proto :
 // static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
 //					unsigned int order, int migratetype)
-static inline 
-page_s *__rmqueue_smallest(zone_s *zone, unsigned int order)
+static inline page_s *
+__rmqueue_smallest(zone_s *zone, unsigned int order)
 {
 	unsigned int current_order;
 	page_s *page;
@@ -365,7 +364,9 @@ static inline void __free_one_page(page_s *page, unsigned long pfn,
 
 static inline void myos_set_pageflag(page_s *page, enum pageflags flag)
 {
-	page->flags |= 1 << flag;
+	unsigned long pgflag = READ_ONCE(page->flags);
+	pgflag |= 1 << flag;
+	WRITE_ONCE(page->flags, pgflag);
 }
 
 /*
