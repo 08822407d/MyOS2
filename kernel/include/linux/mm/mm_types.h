@@ -88,8 +88,8 @@
 		slab_s *		slab_ptr;
 
 
-	// 	unsigned long flags; /* Atomic flags, some possibly
-	// 						* updated asynchronously */
+		unsigned long flags; /* Atomic flags, some possibly
+							* updated asynchronously */
 	// 	/*
 	// 	* Five words (20/40 bytes) are available in this union.
 	// 	* WARNING: bit 0 of the first word is used for PageTail(). That

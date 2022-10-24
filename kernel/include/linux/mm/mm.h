@@ -2468,7 +2468,7 @@
 	// extern void adjust_managed_page_count(struct page *page, long count);
 	// extern void mem_init_print_info(void);
 
-	// extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
+	extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
 
 	// /* Free the reserved page into the buddy system, so it gets managed. */
 	// static inline void free_reserved_page(struct page *page)

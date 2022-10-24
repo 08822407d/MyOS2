@@ -186,7 +186,8 @@
 		"processor-flags.h": "c",
 		"processor.h": "c",
 		"msr.h": "c",
-		"msr-index.h": "c"
+		"msr-index.h": "c",
+		"bounds.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

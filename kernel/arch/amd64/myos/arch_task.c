@@ -205,8 +205,8 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int err = -ENOERR;
 
-	page_s * page = NULL;
-	PML4E_T * new_cr3 = NULL;
+	page_s *page = NULL;
+	PML4E_T *new_cr3 = NULL;
 	reg_t curr_endstack = get_stackframe(curr_tsk)->rsp;
 
 	if(clone_flags & CLONE_VM)
@@ -225,7 +225,7 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 exit_cpmm:
 	return err;
 }
-int exit_mm(task_s * new_tsk)
+int exit_mm(task_s *new_tsk)
 {
 	int err = -ENOERR;
 

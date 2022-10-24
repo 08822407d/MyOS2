@@ -82,9 +82,9 @@ void __init mem_init(void)
 {
 	// pci_iommu_alloc();
 
-	// /* clear_bss() already clear the empty_zero_page */
+	/* clear_bss() already clear the empty_zero_page */
 
-	// /* this will put all memory onto the freelists */
+	/* this will put all memory onto the freelists */
 	memblock_free_all();
 	// after_bootmem = 1;
 	// x86_init.hyper.init_after_bootmem();

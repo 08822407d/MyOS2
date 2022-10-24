@@ -44,7 +44,7 @@ void myos_init_slab()
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
-		slab_cache_s * scgp = slab_cache_groups_p + i;
+		slab_cache_s *scgp = slab_cache_groups_p + i;
 		list_init(&scgp->slabcache_list, scgp);
 		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
@@ -52,7 +52,7 @@ void myos_init_slab()
 		list_hdr_init(&scgp->normal_slab_used);
 		list_hdr_init(&scgp->normal_slab_full);
 
-		slab_s * bslp = base_slabs_p + i;
+		slab_s *bslp = base_slabs_p + i;
 		list_init(&bslp->slab_list, bslp);
 
 		// init 3 status of slab list
@@ -73,20 +73,20 @@ void myos_init_slab()
 	kparam.init_flags.slab = 1;
 }
 
-slab_s * slab_alloc(slab_s * cslp)
+slab_s * slab_alloc(slab_s *cslp)
 {
-	page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
-	phys_addr_t page_paddr = page_to_paddr(pgp);
-	if (!(pgp->attr & PG_PTable_Maped))
+	page_s *page = alloc_pages(ZONE_NORMAL, 0);
+	phys_addr_t page_paddr = page_to_paddr(page);
+	if (!(page->attr & PG_PTable_Maped))
 		arch_page_domap(myos_phys2virt(page_paddr), page_paddr,
 				ARCH_PG_RW | ARCH_PG_PRESENT, &curr_tsk->mm_struct->cr3);
 	
-	pgp->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
-	slab_s * nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
+	page->attr |= PG_PTable_Maped | PG_Kernel | PG_Slab;
+	slab_s *nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
 	list_init(&nslp->slab_list, nslp);
 
-	nslp->page = pgp;
-	pgp->slab_ptr = nslp;
+	nslp->page = page;
+	page->slab_ptr = nslp;
 	nslp->colormap = (bitmap_t *)kmalloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
 	nslp->total =
 	nslp->free = cslp->total;
@@ -95,7 +95,7 @@ slab_s * slab_alloc(slab_s * cslp)
 	return nslp;
 }
 
-void slab_free(slab_s * slp)
+void slab_free(slab_s *slp)
 {
 	kfree(slp->colormap);
 	slp->page->attr &= ~PG_Slab;
@@ -113,7 +113,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 		while (!kparam.init_flags.slab);
 	#endif
 
-	void * ret_val = NULL;
+	void *ret_val = NULL;
 	if (size > CONST_1M)
 	{
 		color_printk(RED, WHITE, "Mem required too big\n");
@@ -121,17 +121,17 @@ void * __kmalloc(size_t size, gfp_t flags)
 	else
 	{
 		// find suitable slab group
-		slab_cache_s *	scgp = slab_cache_groups_p;
+		slab_cache_s *scgp = slab_cache_groups_p;
 		while (size > scgp->obj_size)
 			scgp = container_of(list_get_next(&scgp->slabcache_list), slab_cache_s, slabcache_list);
 
 		lock_recurs_lock(&slab_alloc_lock);
 		// find a usable slab and if it is in free list, move it to used list
 		// or if it is in used list and has only one free slot, move it to full list
-		slab_s *	slp = NULL;
+		slab_s *slp = NULL;
 		if (scgp->normal_slab_used.count > 0)
 		{
-			List_s * slp_lp = list_hdr_pop(&scgp->normal_slab_used);
+			List_s *slp_lp = list_hdr_pop(&scgp->normal_slab_used);
 			while (slp_lp == 0);
 			
 			slp = container_of(slp_lp, slab_s, slab_list);
@@ -142,7 +142,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 		}
 		else if (scgp->normal_slab_free.count > 0)
 		{
-			List_s * slp_lp = list_hdr_pop(&scgp->normal_slab_free);
+			List_s *slp_lp = list_hdr_pop(&scgp->normal_slab_free);
 			while (slp_lp == 0);
 
 			slp = container_of(slp_lp, slab_s, slab_list);
@@ -171,7 +171,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 		if (scgp->normal_slab_free.count < 1)
 		{
 			scgp->normal_slab_free.count++;
-			slab_s * new_slab = slab_alloc(slp);
+			slab_s *new_slab = slab_alloc(slp);
 			scgp->normal_slab_free.count--;
 			if (new_slab == NULL)
 			{
@@ -193,7 +193,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 	return ret_val;
 }
 
-void kfree(const void * objp)
+void kfree(const void *objp)
 {
 	#ifdef DEBUG
 		// make sure have init slab
@@ -206,8 +206,8 @@ void kfree(const void * objp)
 	// find which slab does the pointer belonged to
 	phys_addr_t pg_addr = myos_virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
-	page_s * pgp = &mem_map[pg_idx];
-	slab_s * slp = pgp->slab_ptr;
+	page_s *page = &mem_map[pg_idx];
+	slab_s *slp = page->slab_ptr;
 	slab_cache_s * scgp = slp->slabcache_ptr;
 	// of coures it should not in an empty-slab
 	if (slp->free == slp->total)

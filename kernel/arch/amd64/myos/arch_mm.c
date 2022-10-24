@@ -55,11 +55,11 @@ void creat_exec_addrspace(task_s * task)
 	{
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
-			page_s * pgp = alloc_pages(ZONE_NORMAL, 0);
-			pgp->map_count++;
-			pgp->attr = PG_PTable_Maped;
+			page_s *page = alloc_pages(ZONE_NORMAL, 0);
+			page->map_count++;
+			page->attr = PG_PTable_Maped;
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-							page_to_paddr(pgp), attr, &mm->cr3);
+							page_to_paddr(page), attr, &mm->cr3);
 		}
 	}
 }
@@ -79,8 +79,8 @@ void prepair_COW(task_s * task)
 			phys_addr_t paddr = 0;
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
-			page_s * pgp = paddr_to_page(paddr);
-			pgp->map_count++;
+			page_s *page = paddr_to_page(paddr);
+			page->map_count++;
 		}
 	}
 
@@ -97,23 +97,23 @@ int do_COW(task_s * task, virt_addr_t virt)
 	reg_t new_cr3 = 0;
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
-	page_s * orig_pgp = paddr_to_page(orig_paddr);
-	page_s * new_pgp = alloc_pages(ZONE_NORMAL, 0);
+	page_s * orig_page = paddr_to_page(orig_paddr);
+	page_s * new_page = alloc_pages(ZONE_NORMAL, 0);
 
-	if (new_pgp != NULL)
+	if (new_page != NULL)
 	{
-		new_pgp->attr = PG_PTable_Maped | PG_Referenced;
-		if (!arch_page_duplicate(virt, page_to_paddr(new_pgp), orig_cr3, &new_cr3))
+		new_page->attr = PG_PTable_Maped | PG_Referenced;
+		if (!arch_page_duplicate(virt, page_to_paddr(new_page), orig_cr3, &new_cr3))
 		{
-			new_pgp->map_count++;
+			new_page->map_count++;
 			arch_page_setattr(virt, ARCH_PG_RW, &new_cr3);
 
-			orig_pgp->map_count--;
-			if (orig_pgp->map_count < 2)
+			orig_page->map_count--;
+			if (orig_page->map_count < 2)
 				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
 
-			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_pgp));
-			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_pgp));
+			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_page));
+			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_page));
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			load_cr3(new_cr3);

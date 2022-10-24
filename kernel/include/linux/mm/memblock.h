@@ -190,8 +190,8 @@
 	// 		__next_mem_range(&i, nid, flags, type_a, type_b,		\
 	// 				p_start, p_end, p_nid))
 	#define __for_each_mem_range(i, type_a, type_b, p_start, p_end)	\
-				for (i = 0, __next_mem_range(&i, type_a, type_b,	\
-					p_start, p_end);								\
+				for (i = 0, __next_mem_range(&i,					\
+					type_a, type_b,	p_start, p_end);				\
 					i != (uint64_t)ULLONG_MAX;						\
 					__next_mem_range(&i, type_a, type_b,			\
 									p_start, p_end))
@@ -227,6 +227,9 @@
 	// 	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,	\
 	// 				MEMBLOCK_HOTPLUG | MEMBLOCK_DRIVER_MANAGED, \
 	// 				p_start, p_end, NULL)
+	#define for_each_mem_range(i, p_start, p_end)			\
+				__for_each_mem_range(i, &memblock.memory,	\
+					NULL, p_start, p_end, NULL)
 
 	// /**
 	//  * for_each_mem_range_rev - reverse iterate through memblock areas from
@@ -240,18 +243,21 @@
 	// 				MEMBLOCK_HOTPLUG | MEMBLOCK_DRIVER_MANAGED,\
 	// 				p_start, p_end, NULL)
 
-	// /**
-	//  * for_each_reserved_mem_range - iterate over all reserved memblock areas
-	//  * @i: u64 used as loop variable
-	//  * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
-	//  * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
-	//  *
-	//  * Walks over reserved areas of memblock. Available as soon as memblock
-	//  * is initialized.
-	//  */
+	/**
+	 * for_each_reserved_mem_range - iterate over all reserved memblock areas
+	 * @i: u64 used as loop variable
+	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+	 *
+	 * Walks over reserved areas of memblock. Available as soon as memblock
+	 * is initialized.
+	 */
 	// #define for_each_reserved_mem_range(i, p_start, p_end)			\
-	// 	__for_each_mem_range(i, &memblock.reserved, NULL, NUMA_NO_NODE,	\
-	// 				MEMBLOCK_NONE, p_start, p_end, NULL)
+	// __for_each_mem_range(i, &memblock.reserved, NULL, NUMA_NO_NODE,	\
+	// 		     MEMBLOCK_NONE, p_start, p_end, NULL)
+	#define for_each_reserved_mem_range(i, p_start, p_end)	\
+				__for_each_mem_range(i, &memblock.reserved,	\
+					NULL, p_start, p_end)
 
 	// static inline bool memblock_is_hotpluggable(struct memblock_region *m)
 	// {
@@ -380,21 +386,6 @@
 
 	// int memblock_set_node(phys_addr_t base, phys_addr_t size,
 	// 			struct memblock_type *type, int nid);
-
-	// #ifdef CONFIG_NUMA
-	// static inline void memblock_set_region_node(struct memblock_region *r, int nid)
-	// {
-	// 	r->nid = nid;
-	// }
-
-	// static inline int memblock_get_region_node(const struct memblock_region *r)
-	// {
-	// 	return r->nid;
-	// }
-	// #else
-	// static inline void memblock_set_region_node(struct memblock_region *r, int nid)
-	// {
-	// }
 
 	// static inline int memblock_get_region_node(const struct memblock_region *r)
 	// {
@@ -563,14 +554,15 @@
 	// 	return PFN_UP(reg->base + reg->size);
 	// }
 
-	// /**
-	//  * for_each_mem_region - itereate over memory regions
-	//  * @region: loop variable
-	//  */
-	// #define for_each_mem_region(region)					\
-	// 	for (region = memblock.memory.regions;				\
-	// 		region < (memblock.memory.regions + memblock.memory.cnt);	\
-	// 		region++)
+	/**
+	 * for_each_mem_region - itereate over memory regions
+	 * @region: loop variable
+	 */
+	#define for_each_mem_region(region)			\
+		for (region = memblock.memory.regions;	\
+			region < (memblock.memory.regions +	\
+						memblock.memory.cnt);	\
+			region++)
 
 	// /**
 	//  * for_each_reserved_mem_region - itereate over reserved memory regions
