@@ -43,15 +43,6 @@
 	#define SHIFT_PDPTE			30
 	#define SHIFT_PDE			21
 	#define SHIFT_PTE			12
-	#define ARCH_PG_PRESENT		(1 << 0ULL)
-	#define ARCH_PG_RW			(1 << 1ULL)
-	#define ARCH_PG_USER		(1 << 2ULL)
-	#define ARCH_PG_PWT			(1 << 3ULL)
-	#define ARCH_PG_PCD			(1 << 4ULL)
-	#define ARCH_PG_ACCESSED	(1 << 5ULL)
-	#define ARCH_PG_DIRTY		(1 << 6ULL)
-	#define ARCH_PG_PAT			(1 << 7ULL)
-	#define ARCH_PG_GLOBAL		(1 << 8ULL)
 
 	#define CANONICAL_ADDR(x)	((x) & 0xFFFFFFFFFFFF)
 	#define ARCH_PGS_ADDR(x)	round_down((CANONICAL_ADDR(x)), CONST_4K)

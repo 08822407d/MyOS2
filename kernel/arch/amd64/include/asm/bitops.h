@@ -18,33 +18,36 @@
 	// #include <asm/rmwcc.h>
 	// #include <asm/barrier.h>
 
-	// if BITS_PER_LONG == 64
-	// #	define _BITOPS_LONG_SHIFT	6
-	// #else
-	// #	error "Unexpected BITS_PER_LONG"
-	// #endif
 
-	// #define BIT_64(n)	(U64_C(1) << (n))
+	#include <linux/kernel/types.h>
 
-	// /*
-	// * These have to be done with inline assembly: that way the bit-setting
-	// * is guaranteed to be atomic. All bit operations return 0 if the bit
-	// * was cleared before the operation and != 0 if it was not.
-	// *
-	// * bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
-	// */
+	#if BITS_PER_LONG == 64
+	#	define _BITOPS_LONG_SHIFT	6
+	#else
+	#	error "Unexpected BITS_PER_LONG"
+	#endif
 
-	// #define RLONG_ADDR(x)	"m"(*(volatile long *)(x))
-	// #define WBYTE_ADDR(x)	"+m"(*(volatile char *)(x))
+	#define BIT_64(n)	(U64_C(1) << (n))
 
-	// #define ADDR RLONG_ADDR(addr)
+	/*
+	* These have to be done with inline assembly: that way the bit-setting
+	* is guaranteed to be atomic. All bit operations return 0 if the bit
+	* was cleared before the operation and != 0 if it was not.
+	*
+	* bit 0 is the LSB of addr; bit 32 is the LSB of (addr+1).
+	*/
 
-	// /*
-	// * We do the locked ops that don't return the old value as
-	// * a mask operation on a byte.
-	// */
-	// #define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr) >> 3))
-	// #define CONST_MASK(nr)	(1 << ((nr)&7))
+	#define RLONG_ADDR(x)	"m"(*(volatile long *)(x))
+	#define WBYTE_ADDR(x)	"+m"(*(volatile char *)(x))
+
+	#define ADDR RLONG_ADDR(addr)
+
+	/*
+	* We do the locked ops that don't return the old value as
+	* a mask operation on a byte.
+	*/
+	#define CONST_MASK_ADDR(nr, addr)	WBYTE_ADDR((void *)(addr) + ((nr) >> 3))
+	#define CONST_MASK(nr)				(1 << ((nr)&7))
 
 	// static __always_inline void
 	// arch_set_bit(long nr, volatile unsigned long *addr)
@@ -290,7 +293,7 @@
 
 	// #undef ADDR
 
-	// #ifdef __KERNEL__
+	#ifdef __KERNEL__
 
 		// /**
 		//  * ffs - find first set bit in word
@@ -393,6 +396,122 @@
 
 		// #include <asm-generic/bitops/ext2-atomic-setbit.h>
 
-	// #endif /* __KERNEL__ */
+	#endif /* __KERNEL__ */
+
+
+
+
+	static __always_inline bool
+	test_bit(long nr, volatile const unsigned long *addr) {
+		bool oldbit;
+		asm volatile(	"btq	%2,	%1	\n\t"
+					:	"=r"(oldbit)
+					:	"m"(*(unsigned long *)addr),
+						"Ir"(nr)
+					:	"memory");
+		return oldbit;
+	}
+
+	static __always_inline void
+	set_bit(long nr, volatile unsigned long *addr) {
+		if (__builtin_constant_p(nr)) {
+			asm volatile(	"lock orb	%b1,	%0	\n\t"
+						:	CONST_MASK_ADDR(nr, addr)
+						:	"iq"(CONST_MASK(nr))
+						:	"memory");
+		} else {
+			asm volatile(	"lock btsq	%1,		%0	\n\t"
+						:
+						:	RLONG_ADDR(addr), "Ir"(nr)
+						:	"memory");
+		}
+	}
+
+	static __always_inline void
+	__set_bit(long nr, volatile unsigned long *addr) {
+		asm volatile(	"btsq	%1,		%0	\n\t"
+					:
+					:	ADDR,
+						"Ir"(nr)
+					:	"memory");
+	}
+
+	static __always_inline void
+	clear_bit(long nr, volatile unsigned long *addr) {
+		if (__builtin_constant_p(nr)) {
+			asm volatile(	"lock andb	%b1,	%0	\n\t"
+						:	CONST_MASK_ADDR(nr, addr)
+						:	"iq"(~CONST_MASK(nr)));
+		} else {
+			asm volatile(	"lock btrq	%1,		%0	\n\t"
+						:
+						:	RLONG_ADDR(addr),
+							"Ir"(nr)
+						:	"memory");
+		}
+	}
+
+	static __always_inline void
+	__clear_bit(long nr, volatile unsigned long *addr)
+	{
+		asm volatile(	"btrq	%1,		%0	\n\t"
+					:
+					:	ADDR,
+						"Ir"(nr)
+					:	"memory");
+	}
+
+	static __always_inline bool
+	test_and_set_bit(long nr, volatile unsigned long *addr)
+	{
+		bool oldbit;
+		asm(	"lock btsq	%2,		%1	\n\t"
+			:	"=r"(oldbit)
+			:	ADDR,
+				"Ir"(nr)
+			:	"memory");
+		return oldbit;
+	}
+
+	static __always_inline bool
+	__test_and_set_bit(long nr, volatile unsigned long *addr) {
+		bool oldbit;
+		asm(	"btsq	%2,		%1	\n\t"
+			:	"=r"(oldbit)
+			:	ADDR,
+				"Ir"(nr)
+			:	"memory");
+		return oldbit;
+	}
+
+	static __always_inline bool
+	test_and_clear_bit(long nr, volatile unsigned long *addr) {
+		bool oldbit;
+		asm volatile(	"lock btrq	%1,		%1	\n\t"
+					:	"=r"(oldbit)
+					:	ADDR,
+						"Ir"(nr)
+					:	"memory");
+		return oldbit;
+	}
+
+	/*
+	 * Note: the operation is performed atomically with respect to
+	 * the local CPU, but not other CPUs. Portable code should not
+	 * rely on this behaviour.
+	 * KVM relies on this behaviour on x86 for modifying memory that is also
+	 * accessed from a hypervisor on the same CPU if running in a VM: don't change
+	 * this without also updating arch/x86/kernel/kvm.c
+	 */
+	static __always_inline bool
+	__test_and_clear_bit(long nr, volatile unsigned long *addr) {
+		bool oldbit;
+		asm volatile(	"btrq	%1,		%1	\n\t"
+					:	"=r"(oldbit)
+					:	ADDR,
+						"Ir"(nr)
+					:	"memory");
+		return oldbit;
+	}
 
 #endif /* _ASM_X86_BITOPS_H */

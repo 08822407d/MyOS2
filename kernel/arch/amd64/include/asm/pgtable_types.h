@@ -145,7 +145,9 @@
 		};
 	#endif
 
-	#define _PAGE_ENC					(_AT(pteval_t, sme_me_mask))
+	// #define _PAGE_ENC					(_AT(pteval_t, sme_me_mask))
+	// memory encypt not supported
+	#define _PAGE_ENC					(_AT(pteval_t, 0))
 
 	#define _PAGE_CACHE_MASK			(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)
 	#define _PAGE_LARGE_CACHE_MASK		(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT_LARGE)
@@ -167,7 +169,8 @@
 	#define _PSE	_PAGE_PSE
 
 	#define pgprot_val(x)				((x).pgprot)
-	#define __pgprot(x)					((pgprot_t) { (x) } )
+	// #define __pgprot(x)					((pgprot_t) { (x) } )
+	#define __pgprot(x)					((u64) { (x) } )
 	#define __pg(x)						__pgprot(x)
 
 	#define PAGE_NONE					__pg(   0|   0|   0|___A|   0|   0|   0|___G)
@@ -198,54 +201,54 @@
 	#define __PAGE_KERNEL_IO_NOCACHE	__PAGE_KERNEL_NOCACHE
 
 
-	// #ifndef __ASSEMBLY__
-	// #	define __PAGE_KERNEL_ENC		(__PAGE_KERNEL    | _ENC)
-	// #	define __PAGE_KERNEL_ENC_WP		(__PAGE_KERNEL_WP | _ENC)
-	// #	define __PAGE_KERNEL_NOENC		(__PAGE_KERNEL    |    0)
-	// #	define __PAGE_KERNEL_NOENC_WP	(__PAGE_KERNEL_WP |    0)
+	#ifndef __ASSEMBLY__
+	#	define __PAGE_KERNEL_ENC		(__PAGE_KERNEL    | _ENC)
+	#	define __PAGE_KERNEL_ENC_WP		(__PAGE_KERNEL_WP | _ENC)
+	#	define __PAGE_KERNEL_NOENC		(__PAGE_KERNEL    |    0)
+	#	define __PAGE_KERNEL_NOENC_WP	(__PAGE_KERNEL_WP |    0)
 
-	// #	define __pgprot_mask(x)			__pgprot((x) & __default_kernel_pte_mask)
+	#	define __pgprot_mask(x)			__pgprot((x) & __default_kernel_pte_mask)
 
-	// #	define PAGE_KERNEL				__pgprot_mask(__PAGE_KERNEL            | _ENC)
-	// #	define PAGE_KERNEL_NOENC		__pgprot_mask(__PAGE_KERNEL            |    0)
-	// #	define PAGE_KERNEL_RO			__pgprot_mask(__PAGE_KERNEL_RO         | _ENC)
-	// #	define PAGE_KERNEL_EXEC			__pgprot_mask(__PAGE_KERNEL_EXEC       | _ENC)
-	// #	define PAGE_KERNEL_EXEC_NOENC	__pgprot_mask(__PAGE_KERNEL_EXEC       |    0)
-	// #	define PAGE_KERNEL_ROX			__pgprot_mask(__PAGE_KERNEL_ROX        | _ENC)
-	// #	define PAGE_KERNEL_NOCACHE		__pgprot_mask(__PAGE_KERNEL_NOCACHE    | _ENC)
-	// #	define PAGE_KERNEL_LARGE		__pgprot_mask(__PAGE_KERNEL_LARGE      | _ENC)
-	// #	define PAGE_KERNEL_LARGE_EXEC	__pgprot_mask(__PAGE_KERNEL_LARGE_EXEC | _ENC)
-	// #	define PAGE_KERNEL_VVAR			__pgprot_mask(__PAGE_KERNEL_VVAR       | _ENC)
+	#	define PAGE_KERNEL				__pgprot_mask(__PAGE_KERNEL            | _ENC)
+	#	define PAGE_KERNEL_NOENC		__pgprot_mask(__PAGE_KERNEL            |    0)
+	#	define PAGE_KERNEL_RO			__pgprot_mask(__PAGE_KERNEL_RO         | _ENC)
+	#	define PAGE_KERNEL_EXEC			__pgprot_mask(__PAGE_KERNEL_EXEC       | _ENC)
+	#	define PAGE_KERNEL_EXEC_NOENC	__pgprot_mask(__PAGE_KERNEL_EXEC       |    0)
+	#	define PAGE_KERNEL_ROX			__pgprot_mask(__PAGE_KERNEL_ROX        | _ENC)
+	#	define PAGE_KERNEL_NOCACHE		__pgprot_mask(__PAGE_KERNEL_NOCACHE    | _ENC)
+	#	define PAGE_KERNEL_LARGE		__pgprot_mask(__PAGE_KERNEL_LARGE      | _ENC)
+	#	define PAGE_KERNEL_LARGE_EXEC	__pgprot_mask(__PAGE_KERNEL_LARGE_EXEC | _ENC)
+	#	define PAGE_KERNEL_VVAR			__pgprot_mask(__PAGE_KERNEL_VVAR       | _ENC)
 
-	// #	define PAGE_KERNEL_IO			__pgprot_mask(__PAGE_KERNEL_IO)
-	// #	define PAGE_KERNEL_IO_NOCACHE	__pgprot_mask(__PAGE_KERNEL_IO_NOCACHE)
-	// #endif	/* __ASSEMBLY__ */
+	#	define PAGE_KERNEL_IO			__pgprot_mask(__PAGE_KERNEL_IO)
+	#	define PAGE_KERNEL_IO_NOCACHE	__pgprot_mask(__PAGE_KERNEL_IO_NOCACHE)
+	#endif	/* __ASSEMBLY__ */
 
-	// /*         xwr */
-	// #define __P000	PAGE_NONE
-	// #define __P001	PAGE_READONLY
-	// #define __P010	PAGE_COPY
-	// #define __P011	PAGE_COPY
-	// #define __P100	PAGE_READONLY_EXEC
-	// #define __P101	PAGE_READONLY_EXEC
-	// #define __P110	PAGE_COPY_EXEC
-	// #define __P111	PAGE_COPY_EXEC
+	/*         xwr */
+	#define __P000	PAGE_NONE
+	#define __P001	PAGE_READONLY
+	#define __P010	PAGE_COPY
+	#define __P011	PAGE_COPY
+	#define __P100	PAGE_READONLY_EXEC
+	#define __P101	PAGE_READONLY_EXEC
+	#define __P110	PAGE_COPY_EXEC
+	#define __P111	PAGE_COPY_EXEC
 
-	// #define __S000	PAGE_NONE
-	// #define __S001	PAGE_READONLY
-	// #define __S010	PAGE_SHARED
-	// #define __S011	PAGE_SHARED
-	// #define __S100	PAGE_READONLY_EXEC
-	// #define __S101	PAGE_READONLY_EXEC
-	// #define __S110	PAGE_SHARED_EXEC
-	// #define __S111	PAGE_SHARED_EXEC
+	#define __S000	PAGE_NONE
+	#define __S001	PAGE_READONLY
+	#define __S010	PAGE_SHARED
+	#define __S011	PAGE_SHARED
+	#define __S100	PAGE_READONLY_EXEC
+	#define __S101	PAGE_READONLY_EXEC
+	#define __S110	PAGE_SHARED_EXEC
+	#define __S111	PAGE_SHARED_EXEC
 
 	// /*
 	// * early identity mapping  pte attrib macros.
 	// */
 	// #define __PAGE_KERNEL_IDENT_LARGE_EXEC	__PAGE_KERNEL_LARGE_EXEC
 
-	// # include <asm/pgtable_64_types.h>
+	# include <asm/pgtable_64_types.h>
 
 	// #ifndef __ASSEMBLY__
 
@@ -438,8 +441,8 @@
 
 	// 	typedef struct page *pgtable_t;
 
-	// 	extern pteval_t __supported_pte_mask;
-	// 	extern pteval_t __default_kernel_pte_mask;
+		extern pteval_t __supported_pte_mask;
+		extern pteval_t __default_kernel_pte_mask;
 	// 	extern void set_nx(void);
 	// 	extern int nx_enabled;
 

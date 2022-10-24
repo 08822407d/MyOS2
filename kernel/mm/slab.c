@@ -66,7 +66,7 @@ void myos_init_slab()
 		bslp->free = bslp->total;
 		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
 		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
-		bslp->page->attr |= PG_slab;
+		__SetPageSlab(bslp->page);
 		bslp->page->slab_ptr = bslp;
 	}
 	// set init flag
@@ -78,7 +78,7 @@ slab_s * slab_alloc(slab_s *cslp)
 	page_s *page = alloc_pages(ZONE_NORMAL, 0);
 	phys_addr_t page_paddr = page_to_paddr(page);
 	
-	page->attr |= PG_slab;
+	__SetPageSlab(page);
 	slab_s *nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
 	list_init(&nslp->slab_list, nslp);
 
@@ -96,7 +96,7 @@ slab_s * slab_alloc(slab_s *cslp)
 void slab_free(slab_s *slp)
 {
 	kfree(slp->colormap);
-	slp->page->attr &= ~PG_slab;
+	__ClearPageSlab(slp->page);
 	slp->page->slab_ptr = NULL;
 	list_delete(&slp->slab_list);
 	slp->slabcache_ptr->normal_slab_free.count--;

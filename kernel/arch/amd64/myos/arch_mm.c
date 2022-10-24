@@ -49,7 +49,7 @@ void creat_exec_addrspace(task_s * task)
 	mm_s * mm = task->mm_struct;
 	context->rsp = round_down(mm->start_stack, PAGE_SIZE) - PAGE_SIZE;
 	get_seginfo(task);
-	unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_RW | ARCH_PG_USER;
+	unsigned long attr = PAGE_SHARED;
 
 	for (int seg_idx = 0; seg_idx < SEG_NR; seg_idx++)
 	{
@@ -74,7 +74,7 @@ void prepair_COW(task_s * task)
 		{
 			// set all pages to read-only
 			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-								ARCH_PG_RW, &mm->cr3);
+								_PAGE_RW, &mm->cr3);
 			phys_addr_t paddr = 0;
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
@@ -101,15 +101,15 @@ int do_COW(task_s * task, virt_addr_t virt)
 
 	if (new_page != NULL)
 	{
-		new_page->attr = PG_referenced;
+		SetPageReferenced(new_page);
 		if (!arch_page_duplicate(virt, page_to_paddr(new_page), orig_cr3, &new_cr3))
 		{
 			new_page->map_count++;
-			arch_page_setattr(virt, ARCH_PG_RW, &new_cr3);
+			arch_page_setattr(virt, _PAGE_RW, &new_cr3);
 
 			orig_page->map_count--;
 			if (orig_page->map_count < 2)
-				arch_page_setattr(virt, ARCH_PG_RW, &orig_cr3);
+				arch_page_setattr(virt, _PAGE_RW, &orig_cr3);
 
 			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_page));
 			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_page));
@@ -145,7 +145,7 @@ reg_t do_brk(reg_t start, reg_t length)
 	reg_t new_end = start + length;
 	for (reg_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
-		unsigned long attr = ARCH_PG_PRESENT | ARCH_PG_USER | ARCH_PG_RW;
+		unsigned long attr = PAGE_SHARED;
 		page_s * pg_p = alloc_pages(ZONE_NORMAL, 0);
 		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p), attr, &curr_tsk->mm_struct->cr3);
 	}

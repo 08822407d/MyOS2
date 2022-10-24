@@ -62,6 +62,17 @@
 
 
 
+/*
+ * NOTE: pagetable_init alloc all the fixmap pagetables contiguous on the
+ * physical space so we can cache the place of the first one and move
+ * around without checking the pgd every time.
+ */
+
+/* Bits supported by the hardware: */
+pteval_t __supported_pte_mask __read_mostly = ~0;
+/* Bits allowed in normal kernel mappings: */
+pteval_t __default_kernel_pte_mask __read_mostly = ~0;
+
 void __init paging_init(void)
 {
 	// sparse_init();

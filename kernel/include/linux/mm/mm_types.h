@@ -79,7 +79,6 @@
 		zone_s *		zone;
 		phys_addr_t		page_start_addr;
 		
-		unsigned long	attr;
 		unsigned long	ref_count;
 		unsigned long	map_count;
 

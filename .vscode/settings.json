@@ -187,7 +187,8 @@
 		"processor.h": "c",
 		"msr.h": "c",
 		"msr-index.h": "c",
-		"bounds.h": "c"
+		"bounds.h": "c",
+		"sparsemem.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

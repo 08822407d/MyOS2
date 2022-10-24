@@ -248,8 +248,7 @@ void IOAPIC_pagetable_remap()
 	ioapic_map.virt_data_addr = (uint32_t *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
 	
-	uint64_t page_attr = ARCH_PG_PRESENT | ARCH_PG_RW |
-							ARCH_PG_PWT | ARCH_PG_PCD | ARCH_PG_PAT;
+	uint64_t page_attr = PAGE_KERNEL | _PAGE_CACHE_MASK;
 	arch_page_domap((virt_addr_t)ioapic_map.virt_idx_addr,
 					(phys_addr_t)ioapic_map.phys_addr,
 					page_attr, &curr_tsk->mm_struct->cr3);

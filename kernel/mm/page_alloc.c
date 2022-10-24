@@ -394,7 +394,7 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 			 * page is not visible yet so nobody should
 			 * access it yet.
 			 */
-			myos_set_pageflag(page, PG_reserved);
+			__SetPageReserved(page);
 		// }
 	}
 }
