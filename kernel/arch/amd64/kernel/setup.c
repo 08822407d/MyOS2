@@ -223,7 +223,7 @@ void __init setup_arch(char **cmdline_p)
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
 	// 这里用e820获取的内存分布初始化memblock分配器
-	myos_e820__memblock_setup();
+	e820__memblock_setup();
 	// 现在可以使用memblock分配内存了
 
 
@@ -234,13 +234,14 @@ void __init setup_arch(char **cmdline_p)
 	init_mem_mapping();
 
 
-
 	myos_early_init_task(kparam.nr_lcpu);
 	myos_early_init_smp(kparam.nr_lcpu);
 	myos_init_video();
-	myos_preinit_page();
-	myos_preinit_slab();
 
-	// x86_init.paging.pagetable_init();
-	zone_sizes_init();
+
+	// x86_init.paging.pagetable_init() {
+	// void __init paging_init(>void) {
+	// }
+		zone_sizes_init();
+	// }
 }

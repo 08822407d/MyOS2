@@ -47,10 +47,8 @@ void __init check_bugs(void)
 	//  */
 	// cpu_smt_check_topology();
 
-	// if (!IS_ENABLED(CONFIG_SMP)) {
 	// 	pr_info("CPU: ");
 	// 	print_cpu_info(&boot_cpu_data);
-	// }
 
 	// /*
 	//  * Read the SPEC_CTRL MSR to account for reserved bits which may

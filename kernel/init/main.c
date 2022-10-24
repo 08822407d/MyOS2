@@ -171,7 +171,7 @@ asmlinkage void __init start_kernel(void)
 
 	setup_arch(NULL);
 
-	mem_init();
+	mm_init();
 
 	myos_init_slab();
 

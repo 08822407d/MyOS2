@@ -153,7 +153,7 @@ unsigned long __init e820__end_of_ram_pfn(void)
 	// }
 }
 
-void __init myos_e820__memblock_setup(void)
+void __init e820__memblock_setup(void)
 {
 	int i;
 	u64 end;
@@ -186,4 +186,9 @@ void __init myos_e820__memblock_setup(void)
 			type == E820_TYPE_NVS)
 			memblock_reserve(entry->addr, entry->size);
 	}
+
+	// /* Throw away partial pages: */
+	// memblock_trim_memory(PAGE_SIZE);
+
+	// memblock_dump_all();
 }

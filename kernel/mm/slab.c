@@ -38,6 +38,7 @@ void myos_preinit_slab()
 
 void myos_init_slab()
 {
+	myos_preinit_slab();
 	init_recurs_lock(&slab_alloc_lock);
 	list_hdr_init(&slabcache_lhdr);
 
