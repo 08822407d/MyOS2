@@ -1,3 +1,0 @@
-file(GLOB LIBC_EXIT_C_SRCS *.c)
-file(GLOB LIBC_EXIT_ASM_SRCS *.S)
-target_sources(mylibc PUBLIC ${LIBC_EXIT_C_SRCS} ${LIBC_EXIT_ASM_SRCS})

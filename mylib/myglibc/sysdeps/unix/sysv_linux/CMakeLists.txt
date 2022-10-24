@@ -1,3 +1,0 @@
-file(GLOB SYSV_LINUX_C_SRCS *.c)
-file(GLOB SYSV_LINUX_ASM_SRCS *.S)
-target_sources(mylibc PUBLIC ${SYSV_LINUX_C_SRCS} ${SYSV_LINUX_ASM_SRCS})
