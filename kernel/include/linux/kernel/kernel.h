@@ -12,7 +12,7 @@
 #define _LINUX_KERNEL_H
 
 	#include <linux/lib/stdarg.h>
-	// #include <linux/align.h>
+	#include <linux/kernel/align.h>
 	#include <linux/kernel/limits.h>
 	#include <linux/kernel/linkage.h>
 	#include <linux/kernel/stddef.h>

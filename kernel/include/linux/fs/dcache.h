@@ -59,15 +59,7 @@
 	 * give reasonable cacheline footprint with larger lines without the
 	 * large memory footprint increase).
 	 */
-	// #ifdef CONFIG_64BIT
 	#	define DNAME_INLINE_LEN	32	/* 192 bytes */
-	// #else
-	// #	ifdef CONFIG_SMP
-	// #		define DNAME_INLINE_LEN	36	/* 128 bytes */
-	// #	else
-	// #		define DNAME_INLINE_LEN	40	/* 128 bytes */
-	// #	endif
-	// #endif
 
 	// #define d_lock	d_lockref.lock
 

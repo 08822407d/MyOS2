@@ -7,8 +7,9 @@
 	*/
 
 	#define NR_PAGEFLAGS	27	/* __NR_PAGEFLAGS */
-	#define MAX_NR_ZONES	5	/* __MAX_NR_ZONES */
+	#define MAX_NR_ZONES	__MAX_NR_ZONES	/* __MAX_NR_ZONES */
 	#define NR_CPUS_BITS	13	/* ilog2(CONFIG_NR_CPUS) */
 	#define SPINLOCK_SIZE	4	/* sizeof(spinlock_t) */
+	#define CONFIG_X86_L1_CACHE_SHIFT	6
 
 #endif

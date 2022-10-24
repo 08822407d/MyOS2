@@ -18,4 +18,5 @@ _deps
 !BOOTX64.EFI
 !bootx64.efi
 *.vmdk
+*.diff
 build

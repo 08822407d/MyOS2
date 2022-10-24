@@ -242,7 +242,7 @@
 	// 		return test_bit(PG_head, &page->flags) || PageTail(page);
 	// 	}
 
-	// 	#define PAGE_POISON_PATTERN -1l
+		#define PAGE_POISON_PATTERN -1L
 	// 	static inline int PagePoisoned(const struct page *page)
 	// 	{
 	// 		return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;

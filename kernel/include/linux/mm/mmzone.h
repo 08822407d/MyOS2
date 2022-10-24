@@ -120,15 +120,11 @@
 	 * cachelines.  There are very few zone structures in the machine, so space
 	 * consumption is not a concern here.
 	 */
-	#		if defined(CONFIG_SMP)
-				struct zone_padding
-				{
-					char x[0];
-				} ____cacheline_internodealigned_in_smp;
-	#			define ZONE_PADDING(name) struct zone_padding name;
-	#		else
-	#			define ZONE_PADDING(name)
-	#		endif
+			struct zone_padding
+			{
+				char x[0];
+			} ____cacheline_internodealigned_in_smp;
+	#		define ZONE_PADDING(name) struct zone_padding name;
 
 			// #ifdef CONFIG_NUMA
 			// 	enum numa_stat_item
@@ -438,17 +434,6 @@
 			* transfers to all addressable memory.
 			*/
 			ZONE_NORMAL,
-		#ifdef CONFIG_HIGHMEM
-			/*
-			* A memory area that is only addressable by the kernel through
-			* mapping portions into its own address space. This is for example
-			* used by i386 to allow the kernel to address the memory beyond
-			* 900MB. The kernel will set up special mappings (page
-			* table entries on i386) for each page that the kernel needs to
-			* access.
-			*/
-			ZONE_HIGHMEM,
-		#endif
 			/*
 			* ZONE_MOVABLE is similar to ZONE_NORMAL, except that it contains
 			* movable pages with few exceptional cases described below. Main use
@@ -498,7 +483,7 @@
 			* if has_unmovable_pages() states that there are no unmovable pages,
 			* there can be false negatives).
 			*/
-			ZONE_MOVABLE,
+			// ZONE_MOVABLE,
 		#ifdef CONFIG_ZONE_DEVICE
 			ZONE_DEVICE,
 		#endif

@@ -72,7 +72,7 @@
 	#define __GFP_DMA		((__force gfp_t)___GFP_DMA)
 	#define __GFP_HIGHMEM	((__force gfp_t)___GFP_HIGHMEM)
 	#define __GFP_DMA32		((__force gfp_t)___GFP_DMA32)
-	#define __GFP_MOVABLE	((__force gfp_t)___GFP_MOVABLE)  /* ZONE_MOVABLE allowed */
+	// #define __GFP_MOVABLE	((__force gfp_t)___GFP_MOVABLE)  /* ZONE_MOVABLE allowed */
 	#define GFP_ZONEMASK	(__GFP_DMA|__GFP_HIGHMEM|__GFP_DMA32|__GFP_MOVABLE)
 
 	/**
