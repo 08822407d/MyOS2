@@ -1,0 +1,8 @@
+set architecture i386:x86-64
+
+set print array on
+
+file build/kernel.debug
+add-symbol-file build/init.debug 0x6000000
+
+target remote localhost:8864

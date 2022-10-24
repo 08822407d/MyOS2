@@ -1,0 +1,10 @@
+2022-04-14
+	1.实现fat32的create,mkdir,rmdir
+	2.完善vfs的文件标志位相关代码
+
+-exec watch percpu_data[0]->cpudata->idle_task->pid
+
+构建edk2
+make -C BaseTools/
+source edksetup.sh BaseTools 
+build -a X64 -t GCC5 -p ShellPkg/ShellPkg.dsc

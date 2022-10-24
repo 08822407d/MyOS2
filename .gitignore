@@ -1,0 +1,21 @@
+# .vscode
+
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
+
+*.fd
+*.efi
+!bootloader.efi
+!BOOTX64.EFI
+!bootx64.efi
+*.vmdk
+build
