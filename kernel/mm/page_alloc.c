@@ -375,19 +375,20 @@ static inline void myos_set_pageflag(page_s *page, enum pageflags flag)
  * marks the pages PageReserved. The remaining valid pages are later
  * sent to the buddy page allocator.
  */
-void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
+void __meminit
+reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 {
 	unsigned long start_pfn = PFN_DOWN(start);
 	unsigned long end_pfn = PFN_UP(end);
 
 	for (; start_pfn < end_pfn; start_pfn++) {
-		// if (pfn_valid(start_pfn)) {
+		if (pfn_valid(start_pfn)) {
 			page_s *page = pfn_to_page(start_pfn);
 
-		// 	init_reserved_page(start_pfn);
+			// init_reserved_page(start_pfn);
 
-		// 	/* Avoid false-positive PageTail() */
-		// 	INIT_LIST_HEAD(&page->lru);
+			// /* Avoid false-positive PageTail() */
+			// INIT_LIST_HEAD(&page->lru);
 
 			/*
 			 * no need for atomic set_bit because the struct
@@ -395,7 +396,7 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 			 * access it yet.
 			 */
 			__SetPageReserved(page);
-		// }
+		}
 	}
 }
 
@@ -490,12 +491,42 @@ void free_pages(page_s *page, unsigned int order)
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
-void __init memblock_free_pages(page_s *page,
-		unsigned long pfn, unsigned int order)
+void __init
+memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 {
-	zone_s *zone = myos_page_zone(page);
-	set_buddy_order(page, order);
-	add_to_free_list(page, zone, order);
+	// zone_s *zone = myos_page_zone(page);
+	// set_buddy_order(page, order);
+	// add_to_free_list(page, zone, order);
+
+	// void __free_pages_core(struct page *page, unsigned int order)
+	// {
+		unsigned int nr_pages = 1 << order;
+		struct page *p = page;
+		unsigned int loop;
+
+		/*
+		 * When initializing the memmap, __init_single_page() sets the refcount
+		 * of all pages to 1 ("allocated"/"not free"). We have to set the
+		 * refcount of all involved pages to 0.
+		 */
+		// prefetchw(p);
+		// for (loop = 0; loop < (nr_pages - 1); loop++, p++) {
+		for (loop = 0; loop < nr_pages; loop++, p++) {
+			// prefetchw(p + 1);
+			__ClearPageReserved(p);
+			// set_page_count(p, 0);
+		}
+		// __ClearPageReserved(p);
+		// set_page_count(p, 0);
+
+		// atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
+
+		/*
+		* Bypass PCP and place fresh pages right to the tail, primarily
+		* relevant for memory onlining.
+		*/
+		__free_pages_ok(page, order, FPI_TO_TAIL | FPI_SKIP_KASAN_POISON);
+	// }
 }
 
 static void __init memmap_init(unsigned long *max_zone_pfn)
@@ -531,7 +562,8 @@ static void __init memmap_init(unsigned long *max_zone_pfn)
  * with no available memory, a warning is printed and the start and end
  * PFNs will be 0.
  */
-void __init get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
+void __init
+get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
 {
 	unsigned long this_start_pfn, this_end_pfn;
 	int i;
@@ -549,7 +581,8 @@ void __init get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
 }
 
 
-static unsigned long __init __myos_calculate_node_pages(unsigned long zone_type,
+static unsigned long __init
+__myos_calculate_node_pages(unsigned long zone_type,
 		unsigned long node_start_pfn, unsigned long node_end_pfn,
 		unsigned long *zone_start_pfn, unsigned long *zone_end_pfn,
 		unsigned long *nr_absent, unsigned long *nr_spanned)
@@ -590,7 +623,8 @@ static unsigned long __init __myos_calculate_node_pages(unsigned long zone_type,
 	return *nr_spanned;
 }
 
-static void __init calculate_node_totalpages(pg_data_t *pgdat,
+static void __init
+calculate_node_totalpages(pg_data_t *pgdat,
 		unsigned long node_start_pfn, unsigned long node_end_pfn)
 {
 	unsigned long realtotalpages = 0, totalpages = 0;
@@ -646,8 +680,9 @@ static void __meminit pgdat_init_internals(pg_data_t *pgdat)
 	// lruvec_init(&pgdat->__lruvec);
 }
 
-static void __meminit zone_init_internals(zone_s *zone,
-		enum zone_type idx, unsigned long remaining_pages)
+static void __meminit
+zone_init_internals(zone_s *zone, enum zone_type idx,
+		unsigned long remaining_pages)
 {
 	// atomic_long_set(&zone->managed_pages, remaining_pages);
 	zone->name = zone_names[idx];

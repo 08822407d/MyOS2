@@ -8,7 +8,7 @@
 
 	#	include <asm/page_types.h>
 
-		// #include <asm/page_64.h>
+		#include <asm/page_64.h>
 
 		// #ifndef __ASSEMBLY__
 

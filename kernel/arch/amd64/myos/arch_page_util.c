@@ -292,7 +292,7 @@ fail_return:
 }
 
 // ret_val = 0 : success
-int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
+int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 {
 	int ret_val = 0;
 	attr = ARCH_PGS_ATTR(attr);

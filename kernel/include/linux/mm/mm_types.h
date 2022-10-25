@@ -63,11 +63,7 @@
 	 * bits of struct page, we align all struct pages to double-word boundaries,
 	 * and ensure that 'freelist' is aligned within struct slab.
 	 */
-	// #ifdef CONFIG_HAVE_ALIGNED_STRUCT_PAGE
-	// #define _struct_page_alignment __aligned(2 * sizeof(unsigned long))
-	// #else
-	// #define _struct_page_alignment
-	// #endif
+	#define _struct_page_alignment __aligned(2 * sizeof(unsigned long))
 
 	struct zone;
 	typedef struct zone zone_s;
@@ -192,7 +188,6 @@
 
 	// 		/** @rcu_head: You can use this to free a page by RCU. */
 	// 		struct rcu_head rcu_head;
-	} page_s;
 
 	// 	union
 	// 	{ /* This union is 4 bytes in size. */
@@ -218,25 +213,10 @@
 	// 	unsigned long memcg_data;
 	// #endif
 
-	// 	/*
-	// 	* On machines where all RAM is mapped into kernel address space,
-	// 	* we can simply calculate the virtual address. On machines with
-	// 	* highmem some memory is mapped into kernel virtual memory
-	// 	* dynamically, so we need a place to store that address.
-	// 	* Note that this field could be 16 bits on x86 ... ;)
-	// 	*
-	// 	* Architectures with slow multiplication can define
-	// 	* WANT_PAGE_VIRTUAL in asm/page.h
-	// 	*/
-	// #if defined(WANT_PAGE_VIRTUAL)
-	// 	void *virtual; /* Kernel virtual address (NULL if
-	// 			not kmapped, ie. highmem) */
-	// #endif			   /* WANT_PAGE_VIRTUAL */
-
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
 	// #endif
-	// } _struct_page_alignment;
+	} page_s _struct_page_alignment ;
 
 	// /**
 	//  * struct folio - Represents a contiguous set of bytes.

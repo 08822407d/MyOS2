@@ -763,11 +763,11 @@ static void __init memmap_init_reserved_pages(void)
 
 	/* and also treat struct pages for the NOMAP regions as PageReserved */
 	for_each_mem_region(region) {
-		// if (memblock_is_nomap(region)) {
+		if (region->flags & MEMBLOCK_NOMAP) {
 			start = region->base;
 			end = start + region->size;
 			reserve_bootmem_region(start, end);
-		// }
+		}
 	}
 }
 
