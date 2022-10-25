@@ -751,6 +751,31 @@ void __init_memblock memblock_free(void *ptr, size_t size)
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
+void __init_memblock memblock_trim_memory(phys_addr_t align)
+{
+	phys_addr_t start, end, orig_start, orig_end;
+	mmblk_rgn_s *r;
+
+	for_each_mem_region(r) {
+		orig_start = r->base;
+		orig_end = r->base + r->size;
+		start = round_up(orig_start, align);
+		end = round_down(orig_end, align);
+
+		if (start == orig_start && end == orig_end)
+			continue;
+
+		if (start < end) {
+			r->base = start;
+			r->size = end - start;
+		} else {
+			memblock_remove_region(&memblock.memory,
+					r - memblock.memory.regions);
+			r--;
+		}
+	}
+}
+
 static void __init memmap_init_reserved_pages(void)
 {
 	struct memblock_region *region;
@@ -795,6 +820,8 @@ static unsigned long __init free_low_memory_core_early(void)
 
 		if (start_pfn >= end_pfn)
 			continue;
+
+		count += end_pfn - start_pfn;
 		// static void __init __free_pages_memory(
 		// 		unsigned long start, unsigned long end)
 		// {
@@ -807,7 +834,6 @@ static unsigned long __init free_low_memory_core_early(void)
 				start_pfn += (1UL << order);
 			}
 		// }
-		count += end_pfn - start_pfn;
 	// }
 	}
 

@@ -117,7 +117,7 @@
 	// #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
 	// int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
 	// #endif
-	// void memblock_trim_memory(phys_addr_t align);
+	void memblock_trim_memory(phys_addr_t align);
 	bool memblock_overlaps_region(mmblk_type_s *type,
 			phys_addr_t base, phys_addr_t size);
 	// int memblock_mark_hotplug(phys_addr_t base, phys_addr_t size);

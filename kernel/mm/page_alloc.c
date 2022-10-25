@@ -491,6 +491,30 @@ void free_pages(page_s *page, unsigned int order)
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
+static void
+__free_pages_ok(page_s *page, unsigned int order)
+{
+	unsigned long flags;
+	int migratetype;
+	unsigned long pfn = page_to_pfn(page);
+	zone_s *zone = myos_page_zone(page);
+
+	// if (!free_pages_prepare(page, order, true, fpi_flags))
+	// 	return;
+
+	// migratetype = get_pfnblock_migratetype(page, pfn);
+
+	// spin_lock_irqsave(&zone->lock, flags);
+	// if (unlikely(has_isolate_pageblock(zone) ||
+	// 	is_migrate_isolate(migratetype))) {
+	// 	migratetype = get_pfnblock_migratetype(page, pfn);
+	// }
+	__free_one_page(page, pfn, zone, order);
+	// spin_unlock_irqrestore(&zone->lock, flags);
+
+	// __count_vm_events(PGFREE, 1 << order);
+}
+
 void __init
 memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 {
@@ -522,10 +546,10 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 		// atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
 
 		/*
-		* Bypass PCP and place fresh pages right to the tail, primarily
-		* relevant for memory onlining.
-		*/
-		__free_pages_ok(page, order, FPI_TO_TAIL | FPI_SKIP_KASAN_POISON);
+		 * Bypass PCP and place fresh pages right to the tail, primarily
+		 * relevant for memory onlining.
+		 */
+		__free_pages_ok(page, order);
 	// }
 }
 

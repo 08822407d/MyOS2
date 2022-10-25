@@ -187,8 +187,8 @@ void __init e820__memblock_setup(void)
 			memblock_reserve(entry->addr, entry->size);
 	}
 
-	// /* Throw away partial pages: */
-	// memblock_trim_memory(PAGE_SIZE);
+	/* Throw away partial pages: */
+	memblock_trim_memory(PAGE_SIZE);
 
 	// memblock_dump_all();
 }
