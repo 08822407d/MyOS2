@@ -518,11 +518,6 @@ __free_pages_ok(page_s *page, unsigned int order)
 void __init
 memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 {
-	// zone_s *zone = myos_page_zone(page);
-	// set_buddy_order(page, order);
-	// add_to_free_list(page, zone, order);
-
-	// void __free_pages_core(struct page *page, unsigned int order)
 	// {
 		unsigned int nr_pages = 1 << order;
 		struct page *p = page;
@@ -538,7 +533,7 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 		for (loop = 0; loop < nr_pages; loop++, p++) {
 			// prefetchw(p + 1);
 			__ClearPageReserved(p);
-			// set_page_count(p, 0);
+			set_page_count(p, 0);
 		}
 		// __ClearPageReserved(p);
 		// set_page_count(p, 0);

@@ -29,7 +29,7 @@
 // #include <linux/swap.h>
 // #include <linux/kmemleak.h>
 #include "internal.h"
-// #include <linux/atomic.h>
+#include <linux/kernel/atomic.h>
 
 
 /* Find an unused file structure and return a pointer to it.

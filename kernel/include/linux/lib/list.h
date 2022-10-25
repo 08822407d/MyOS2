@@ -8,7 +8,7 @@
 	// #include <linux/poison.h>
 	#include <linux/kernel/const.h>
 
-	// #include <asm/barrier.h>
+	#include <asm/barrier.h>
 
 
 	typedef struct List List_s;

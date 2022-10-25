@@ -41,8 +41,8 @@
 // #include <asm/pc-conf-reg.h>
 // #include <asm/perf_event.h>
 // #include <asm/x86_init.h>
-// #include <linux/atomic.h>
-// #include <asm/barrier.h>
+#include <linux/kernel/atomic.h>
+#include <asm/barrier.h>
 // #include <asm/mpspec.h>
 // #include <asm/i8259.h>
 // #include <asm/proto.h>

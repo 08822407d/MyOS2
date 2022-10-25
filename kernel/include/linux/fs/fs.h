@@ -25,7 +25,7 @@
 	// #include <linux/semaphore.h>
 	#include <linux/kernel/fcntl.h>
 	// #include <linux/rculist_bl.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	// #include <linux/shrinker.h>
 	// #include <linux/migrate_mode.h>
 	#include <linux/kernel/uidgid.h>

@@ -59,7 +59,7 @@ typedef struct
 	unsigned int *	FB_addr;
 	unsigned long	FB_length;
 
-	spinlock_T		printk_lock;
+	myos_spinlock_T		printk_lock;
 } position_t;
 
 /*

@@ -13,7 +13,7 @@
 
 	// #include <linux/irqflags.h>
 	#include <linux/kernel/compiler.h>
-	// #include <asm/barrier.h>
+	#include <asm/barrier.h>
 
 	#include <linux/kernel/asm-generic/bitops/__ffs.h>
 	// #include <asm-generic/bitops/ffz.h>

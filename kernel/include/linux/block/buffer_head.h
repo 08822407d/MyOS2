@@ -13,7 +13,7 @@
 	#include <linux/kernel/linkage.h>
 	// #include <linux/pagemap.h>
 	// #include <linux/wait.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 
 	#include <obsolete/device.h>
 

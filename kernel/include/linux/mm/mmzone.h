@@ -16,7 +16,7 @@
 	// #include <linux/nodemask.h>
 	// #include <linux/pageblock-flags.h>
 	// #include <linux/page-flags-layout.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	#		include <linux/mm/mm_types.h>
 	#		include <linux/mm/page-flags.h>
 	// #include <linux/local_lock.h>
@@ -576,7 +576,7 @@
 				* mem_hotplug_begin/end(). Any reader who can't tolerant drift of
 				* present_pages should get_online_mems() to get a stable value.
 				*/
-				// atomic_long_t managed_pages;
+				atomic_long_t managed_pages;
 				unsigned long spanned_pages;
 				unsigned long present_pages;
 			// #if defined(CONFIG_MEMORY_HOTPLUG)

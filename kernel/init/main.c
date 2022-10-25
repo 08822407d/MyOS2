@@ -162,8 +162,8 @@ static void __init mm_init(void)
 	// pti_init();
 }
 
-atomic_T lcpu_boot_count;
-atomic_T lower_half_unmapped;
+myos_atomic_T lcpu_boot_count;
+myos_atomic_T lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
 	// char *command_line;
@@ -211,8 +211,8 @@ void idle(size_t cpu_idx)
 	myos_percpu_self_config(cpu_idx);
 	myos_arch_system_call_init();
 
-	atomic_inc(&lcpu_boot_count);
-	while (atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
+	myos_atomic_inc(&lcpu_boot_count);
+	while (myos_atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
 
 	if (cpu_idx == 0)
 	{

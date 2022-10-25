@@ -16,7 +16,7 @@
 	#include <linux/kernel/compiler.h>
 	// #include <asm/alternative.h>
 	// #include <asm/rmwcc.h>
-	// #include <asm/barrier.h>
+	#include <asm/barrier.h>
 
 
 	#include <linux/kernel/types.h>

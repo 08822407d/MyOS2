@@ -206,8 +206,8 @@
 	// 		unsigned int page_type;
 	// 	};
 
-	// 	/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
-	// 	atomic_t _refcount;
+		/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
+		atomic_t _refcount;
 
 	// #ifdef CONFIG_MEMCG
 	// 	unsigned long memcg_data;

@@ -61,10 +61,10 @@
 	// #	define EAX_EDX_VAL(val, low, high) ((low) | (high) << 32)
 	// #	define EAX_EDX_RET(val, low, high) "=a"(low), "=d"(high)
 
-	// /*
-	//  * Be very careful with includes. This header is prone to include loops.
-	//  */
-	// #	include <asm/atomic.h>
+	/*
+	 * Be very careful with includes. This header is prone to include loops.
+	 */
+	#	include <asm/atomic.h>
 	// #	include <linux/tracepoint-defs.h>
 
 	// #	ifdef CONFIG_TRACEPOINTS

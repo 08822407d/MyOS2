@@ -12,7 +12,7 @@
 	#	include <linux/lib/list.h>
 	#	include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	// #include <linux/debug_locks.h>
 	// #include <linux/mm_types.h>
 	// #include <linux/mmap_lock.h>
@@ -24,8 +24,8 @@
 	// #include <linux/resource.h>
 	// #include <linux/page_ext.h>
 	#	include <linux/kernel/err.h>
-	// #include <linux/page-flags.h>
-	// #include <linux/page_ref.h>
+	#include <linux/mm/page-flags.h>
+	#include <linux/mm/page_ref.h>
 	// #include <linux/memremap.h>
 	// #include <linux/overflow.h>
 	#	include <linux/kernel/sizes.h>

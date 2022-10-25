@@ -161,12 +161,8 @@
 		typedef unsigned int	__bitwise slab_flags_t;
 		typedef unsigned int	__bitwise fmode_t;
 
-	#	ifdef CONFIG_PHYS_ADDR_T_64BIT
-			typedef u64		phys_addr_t;
-			typedef u64		virt_addr_t;
-	#	else
-			typedef u32		phys_addr_t;
-	#	endif
+		typedef u64		phys_addr_t;
+		typedef u64		virt_addr_t;
 
 		typedef phys_addr_t	resource_size_t;
 
@@ -182,11 +178,9 @@
 
 	#	define ATOMIC_INIT(i) { (i) }
 
-	#	ifdef CONFIG_64BIT
-			typedef struct {
-				s64 counter;
-			} atomic64_t;
-	#	endif
+		typedef struct {
+			s64 counter;
+		} atomic64_t;
 
 		// struct list_head {
 		// 	struct list_head *next, *prev;

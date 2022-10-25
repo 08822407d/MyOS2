@@ -130,7 +130,7 @@
 	#ifdef CONFIG_MEMORY_FAILURE
 		PG_hwpoison, /* hardware poisoned page. Don't touch */
 	#endif
-	#if defined(CONFIG_PAGE_IDLE_FLAG) && defined(CONFIG_64BIT)
+	#if defined(CONFIG_PAGE_IDLE_FLAG)
 		PG_young,
 		PG_idle,
 	#endif

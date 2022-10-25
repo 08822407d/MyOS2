@@ -11,7 +11,7 @@
 	// #include <linux/capability.h>
 	#include <linux/init/init.h>
 	// #include <linux/key.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	#include <linux/kernel/uidgid.h>
 	#include <linux/kernel/sched.h>
 	// #include <linux/sched/user.h>

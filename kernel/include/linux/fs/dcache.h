@@ -1,7 +1,7 @@
 #ifndef _LINUX_DCACHE_H_
 #define _LINUX_DCACHE_H_
 
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	#include <linux/lib/list.h>
 	#include <linux/kernel/math.h>
 	// #include <linux/rculist.h>

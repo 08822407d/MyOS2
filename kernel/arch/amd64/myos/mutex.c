@@ -7,12 +7,12 @@
 /*==============================================================================================*
  *											spin lock											*
  *==============================================================================================*/
-inline __always_inline void init_spin_lock(spinlock_T * lock)
+inline __always_inline void init_spin_lock(myos_spinlock_T * lock)
 {
 	lock->lock.value = 1;
 }
 
-inline __always_inline void lock_spin_lock(spinlock_T * lock)
+inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
 {
 	asm volatile(	"1:						\n\t"
 					"lock	decq	%0		\n\t"
@@ -31,7 +31,7 @@ inline __always_inline void lock_spin_lock(spinlock_T * lock)
 	curr_tsk->spin_count++;
 }
 
-inline __always_inline void unlock_spin_lock(spinlock_T * lock)
+inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
 {
 	asm volatile(	"movq	$1,		%0		\n\t"
 					// "sti					\n\t"
@@ -209,7 +209,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 /*==============================================================================================*
  *										atomic operations										*
  *==============================================================================================*/
-inline __always_inline void atomic_add(atomic_T * atomic, long value)
+inline __always_inline void myos_atomic_add(myos_atomic_T * atomic, long value)
 {
 	asm volatile(	"lock	addq	%1,	%0	\n\t"
 						:	"=m"(atomic->value)
@@ -218,7 +218,7 @@ inline __always_inline void atomic_add(atomic_T * atomic, long value)
 						);
 }
 
-inline __always_inline void atomic_sub(atomic_T * atomic, long value)
+inline __always_inline void myos_atomic_sub(myos_atomic_T * atomic, long value)
 {
 	asm volatile(	"lock	subq	%1,	%0	\n\t"
 				:	"=m"(atomic->value)
@@ -227,7 +227,7 @@ inline __always_inline void atomic_sub(atomic_T * atomic, long value)
 				);
 }
 
-inline __always_inline void atomic_inc(atomic_T * atomic)
+inline __always_inline void myos_atomic_inc(myos_atomic_T * atomic)
 {
 	asm volatile(	"lock	incq	%0		\n\t"
 				:	"=m"(atomic->value)
@@ -236,7 +236,7 @@ inline __always_inline void atomic_inc(atomic_T * atomic)
 				);
 }
 
-inline __always_inline void atomic_dec(atomic_T * atomic)
+inline __always_inline void myos_atomic_dec(myos_atomic_T * atomic)
 {
 	asm volatile(	"lock	decq	%0		\n\t"
 				:	"=m"(atomic->value)
@@ -245,7 +245,7 @@ inline __always_inline void atomic_dec(atomic_T * atomic)
 				);
 }
 
-inline __always_inline void atomic_set_mask(atomic_T * atomic, long mask)
+inline __always_inline void myos_atomic_set_mask(myos_atomic_T * atomic, long mask)
 {
 	asm volatile(	"lock	orq		%1,	%0	\n\t"
 				:	"=m"(atomic->value)
@@ -254,7 +254,7 @@ inline __always_inline void atomic_set_mask(atomic_T * atomic, long mask)
 				);
 }
 
-inline __always_inline void atomic_clear_mask(atomic_T * atomic, long mask)
+inline __always_inline void myos_atomic_clear_mask(myos_atomic_T * atomic, long mask)
 {
 	asm volatile(	"lock	andq	%1,	%0	\n\t"
 				:	"=m"(atomic->value)

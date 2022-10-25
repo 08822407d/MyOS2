@@ -8,7 +8,7 @@
 // #include <obsolete/device.h>
 // #include <obsolete/ide.h"
 
-// extern atomic_T boot_counter;
+// extern myos_atomic_T boot_counter;
 
 // void kmalloc_kfree_test(void);
 // void kernthd_test(void);

@@ -23,7 +23,7 @@
 	#include <linux/kernel/types.h>
 	// #include <linux/mutex.h>
 	// #include <linux/pm.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	#include <linux/kernel/uidgid.h>
 	#include <linux/mm/gfp.h>
 	// #include <linux/overflow.h>

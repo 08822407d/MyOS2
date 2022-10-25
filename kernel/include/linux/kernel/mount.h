@@ -15,7 +15,7 @@
 	// #include <linux/nodemask.h>
 	// #include <linux/spinlock.h>
 	// #include <linux/seqlock.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 
 	#include <linux/fs/vfs_s_defs.h>
 

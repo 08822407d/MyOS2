@@ -7,7 +7,7 @@
 	// #include <asm/alternative.h>
 	#include <asm/cpufeature.h>
 	#include <asm/apicdef.h>
-	// #include <linux/atomic.h>
+	#include <linux/kernel/atomic.h>
 	// #include <asm/fixmap.h>
 	// #include <asm/mpspec.h>
 	#include <asm/msr.h>
