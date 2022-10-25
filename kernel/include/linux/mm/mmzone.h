@@ -535,47 +535,47 @@
 				unsigned long zone_start_pfn;
 
 				/*
-				* spanned_pages is the total pages spanned by the zone, including
-				* holes, which is calculated as:
-				* 	spanned_pages = zone_end_pfn - zone_start_pfn;
-				*
-				* present_pages is physical pages existing within the zone, which
-				* is calculated as:
-				*	present_pages = spanned_pages - absent_pages(pages in holes);
-				*
-				* present_early_pages is present pages existing within the zone
-				* located on memory available since early boot, excluding hotplugged
-				* memory.
-				*
-				* managed_pages is present pages managed by the buddy system, which
-				* is calculated as (reserved_pages includes pages allocated by the
-				* bootmem allocator):
-				*	managed_pages = present_pages - reserved_pages;
-				*
-				* cma pages is present pages that are assigned for CMA use
-				* (MIGRATE_CMA).
-				*
-				* So present_pages may be used by memory hotplug or memory power
-				* management logic to figure out unmanaged pages by checking
-				* (present_pages - managed_pages). And managed_pages should be used
-				* by page allocator and vm scanner to calculate all kinds of watermarks
-				* and thresholds.
-				*
-				* Locking rules:
-				*
-				* zone_start_pfn and spanned_pages are protected by span_seqlock.
-				* It is a seqlock because it has to be read outside of zone->lock,
-				* and it is done in the main allocator path.  But, it is written
-				* quite infrequently.
-				*
-				* The span_seq lock is declared along with zone->lock because it is
-				* frequently read in proximity to zone->lock.  It's good to
-				* give them a chance of being in the same cacheline.
-				*
-				* Write access to present_pages at runtime should be protected by
-				* mem_hotplug_begin/end(). Any reader who can't tolerant drift of
-				* present_pages should get_online_mems() to get a stable value.
-				*/
+				 * spanned_pages is the total pages spanned by the zone, including
+				 * holes, which is calculated as:
+				 * 	spanned_pages = zone_end_pfn - zone_start_pfn;
+				 *
+				 * present_pages is physical pages existing within the zone, which
+				 * is calculated as:
+				 *	present_pages = spanned_pages - absent_pages(pages in holes);
+				 *
+				 * present_early_pages is present pages existing within the zone
+				 * located on memory available since early boot, excluding hotplugged
+				 * memory.
+				 *
+				 * managed_pages is present pages managed by the buddy system, which
+				 * is calculated as (reserved_pages includes pages allocated by the
+				 * bootmem allocator):
+				 *	managed_pages = present_pages - reserved_pages;
+				 *
+				 * cma pages is present pages that are assigned for CMA use
+				 * (MIGRATE_CMA).
+				 *
+				 * So present_pages may be used by memory hotplug or memory power
+				 * management logic to figure out unmanaged pages by checking
+				 * (present_pages - managed_pages). And managed_pages should be used
+				 * by page allocator and vm scanner to calculate all kinds of watermarks
+				 * and thresholds.
+				 *
+				 * Locking rules:
+				 *
+				 * zone_start_pfn and spanned_pages are protected by span_seqlock.
+				 * It is a seqlock because it has to be read outside of zone->lock,
+				 * and it is done in the main allocator path.  But, it is written
+				 * quite infrequently.
+				 *
+				 * The span_seq lock is declared along with zone->lock because it is
+				 * frequently read in proximity to zone->lock.  It's good to
+				 * give them a chance of being in the same cacheline.
+				 *
+				 * Write access to present_pages at runtime should be protected by
+				 * mem_hotplug_begin/end(). Any reader who can't tolerant drift of
+				 * present_pages should get_online_mems() to get a stable value.
+				 */
 				atomic_long_t managed_pages;
 				unsigned long spanned_pages;
 				unsigned long present_pages;

@@ -188,7 +188,10 @@
 		"msr.h": "c",
 		"msr-index.h": "c",
 		"bounds.h": "c",
-		"sparsemem.h": "c"
+		"sparsemem.h": "c",
+		"atomic.h": "c",
+		"page_ref.h": "c",
+		"atomic-long.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

@@ -155,48 +155,53 @@ pg_data_t		pg_list;
  * page cannot be allocated or merged in parallel. Alternatively, it must
  * handle invalid values gracefully, and use buddy_order_unsafe() below.
  */
-static inline unsigned long get_buddy_order(page_s *page)
-{
+static inline unsigned long
+get_buddy_order(page_s *page) {
 	/* PageBuddy() must be checked by the caller */
 	return page->buddy_order;
 }
 
-static inline void set_buddy_order(page_s *page, unsigned int order)
-{
+static inline void
+set_buddy_order(page_s *page, unsigned int order) {
 	page->buddy_order = order;
 }
 
 /* Used for pages not on another list */
-static inline void add_to_free_list(page_s *page,
-		zone_s * zone, unsigned int order)
+static inline void
+add_to_free_list(page_s *page, zone_s *zone,
+		unsigned int order)
 {
-	List_hdr_s * fa_lhdr = &zone->free_area[order];
+	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_hdr_push(fa_lhdr, &page->free_list);
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
 
 /* Used for pages not on another list */
-static inline void add_to_free_list_tail(page_s *page,
-		zone_s * zone, unsigned int order)
+static inline void
+add_to_free_list_tail(page_s *page, zone_s *zone,
+		unsigned int order)
 {
-	List_hdr_s * fa_lhdr = &zone->free_area[order];
+	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_hdr_append(fa_lhdr, &page->free_list);
 	zone->zone_pgdat->node_present_pages += 1 << order;
 }
 
-static inline page_s *get_page_from_free_area(List_hdr_s *area)
+static inline page_s *
+get_page_from_free_area(List_hdr_s *area)
 {
-	List_s * pg_lp = list_hdr_pop(area);
+	List_s *pg_lp = list_hdr_pop(area);
 	if (pg_lp == NULL)
 		return NULL;
 	else
 		return container_of(pg_lp, page_s, free_list);
 }
 
-static inline page_s *del_page_from_free_list(page_s *page,
-		zone_s * zone, unsigned int order)
+static inline page_s *
+del_page_from_free_list(page_s *page, zone_s * zone,
+		unsigned int order)
 {
-	List_s * pg_lp = list_hdr_delete(&zone->free_area[order], &page->free_list);
+	List_s * pg_lp = list_hdr_delete(&zone->free_area[order],
+			&page->free_list);
 	if (pg_lp == NULL)
 		return NULL;
 	else
@@ -217,10 +222,10 @@ static inline page_s *del_page_from_free_list(page_s *page,
  *
  * -- nyc
  */
-static inline void expand(zone_s *zone, page_s *page, int low, int high)
+static inline void
+expand(zone_s *zone, page_s *page, int low, int high)
 {
 	unsigned long size = 1 << high;
-
 	while (high > low) {
 		high--;
 		size >>= 1;
@@ -248,8 +253,7 @@ static inline void expand(zone_s *zone, page_s *page, int low, int high)
  * Assumption: *_mem_map is contiguous at least up to MAX_ORDER
  */
 static inline unsigned long
-__find_buddy_pfn(unsigned long page_pfn, unsigned int order)
-{
+__find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
 	return page_pfn ^ (1 << order);
 }
 
@@ -335,7 +339,8 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 // static inline void __free_one_page(struct page *page, unsigned long pfn,
 //					struct zone *zone, unsigned int order, int migratetype,
 //					fpi_t fpi_flags)
-static inline void __free_one_page(page_s *page, unsigned long pfn,
+static inline void
+__free_one_page(page_s *page, unsigned long pfn,
 		zone_s *zone, unsigned int order)
 {
 	unsigned long buddy_pfn;
@@ -362,7 +367,8 @@ static inline void __free_one_page(page_s *page, unsigned long pfn,
 }
 
 
-static inline void myos_set_pageflag(page_s *page, enum pageflags flag)
+static inline void
+myos_set_pageflag(page_s *page, enum pageflags flag)
 {
 	unsigned long pgflag = READ_ONCE(page->flags);
 	pgflag |= 1 << flag;
@@ -538,7 +544,7 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 		// __ClearPageReserved(p);
 		// set_page_count(p, 0);
 
-		// atomic_long_add(nr_pages, &page_zone(page)->managed_pages);
+		atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
 
 		/*
 		 * Bypass PCP and place fresh pages right to the tail, primarily
@@ -548,7 +554,8 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 	// }
 }
 
-static void __init memmap_init(unsigned long *max_zone_pfn)
+static void __init
+memmap_init(unsigned long *max_zone_pfn)
 {
 	unsigned long start_pfn, end_pfn;
 	start_pfn = 1;
@@ -680,7 +687,8 @@ calculate_node_totalpages(pg_data_t *pgdat,
 	// pr_debug("On node %d totalpages: %lu\n", pgdat->node_id, realtotalpages);
 }
 
-static void __meminit pgdat_init_internals(pg_data_t *pgdat)
+static void __meminit
+pgdat_init_internals(pg_data_t *pgdat)
 {
 	// int i;
 
@@ -720,7 +728,8 @@ zone_init_internals(zone_s *zone, enum zone_type idx,
  * NOTE: pgdat should get zeroed by caller.
  * NOTE: this function is only called during early init.
  */
-static void __init free_area_init_core(pg_data_t *pgdat)
+static void __init
+free_area_init_core(pg_data_t *pgdat)
 {
 	enum zone_type j;
 
@@ -776,7 +785,8 @@ static void __init free_area_init_core(pg_data_t *pgdat)
 	}
 }
 
-static void __init alloc_node_mem_map(pg_data_t *pgdat)
+static void __init
+alloc_node_mem_map(pg_data_t *pgdat)
 {
 	unsigned long __maybe_unused start = 0;
 	unsigned long __maybe_unused offset = 0;
@@ -839,7 +849,8 @@ static void __init alloc_node_mem_map(pg_data_t *pgdat)
  * at arch_max_dma_pfn.
  */
 // static void __init free_area_init_node(int nid)
-void __init free_area_init(unsigned long *max_zone_pfn)
+void __init
+free_area_init(unsigned long *max_zone_pfn)
 {
 	unsigned long start_pfn = 1;
 	unsigned long end_pfn = 0;

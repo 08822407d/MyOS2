@@ -9,6 +9,8 @@
 	#include <linux/kernel/compiler.h>
 	// #include <asm/types.h>
 
+	#include <asm/atomic64_64.h>
+
 	typedef atomic64_t atomic_long_t;
 	#define ATOMIC_LONG_INIT(i)		ATOMIC64_INIT(i)
 	#define atomic_long_cond_read_acquire	atomic64_cond_read_acquire
@@ -424,5 +426,9 @@
 	// 	return arch_atomic64_dec_if_positive(v);
 	// }
 
+	static __always_inline void
+	atomic_long_add(long i, atomic_long_t *v) {
+		arch_atomic64_add(i, v);
+	}
+
 #endif /* _LINUX_ATOMIC_LONG_H */
-// e8f0e08ff072b74d180eabe2ad001282b38c2c88

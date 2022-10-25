@@ -270,7 +270,7 @@
 	// }
 	// #define arch_atomic_fetch_xor arch_atomic_fetch_xor
 
-	// #	include <asm/atomic64_64.h>
+	#	include <asm/atomic64_64.h>
 
 
 	// definations for myos
