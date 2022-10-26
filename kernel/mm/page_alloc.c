@@ -733,7 +733,7 @@ free_area_init_core(pg_data_t *pgdat)
 {
 	enum zone_type j;
 
-	// pgdat_init_internals(pgdat);
+	pgdat_init_internals(pgdat);
 	// pgdat->per_cpu_nodestats = &boot_nodestats;
 
 	for (j = 0; j < MAX_NR_ZONES; j++)
