@@ -139,10 +139,7 @@ static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
 
 
-
 recurs_lock_T	page_alloc_lock;
-
-pg_data_t		pg_list;
 
 /*==============================================================================================*
  *								private fuctions for buddy system								*
@@ -156,14 +153,15 @@ pg_data_t		pg_list;
  * handle invalid values gracefully, and use buddy_order_unsafe() below.
  */
 static inline unsigned long
-get_buddy_order(page_s *page) {
+buddy_order(page_s *page) {
 	/* PageBuddy() must be checked by the caller */
-	return page->buddy_order;
+	return page_private(page);
 }
 
 static inline void
 set_buddy_order(page_s *page, unsigned int order) {
-	page->buddy_order = order;
+	set_page_private(page, order);
+	__SetPageBuddy(page);
 }
 
 /* Used for pages not on another list */
@@ -273,7 +271,9 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
 static inline bool
 page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
 {
-	if (get_buddy_order(buddy) != order) return false;
+	if (!page_is_guard(page) && !PageBuddy(buddy))
+		return false;
+	if (buddy_order(buddy) != order) return false;
 
 	if (myos_page_zone(page) != myos_page_zone(buddy)) return false;
 
@@ -426,7 +426,7 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 page_s *alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s *page;
-	zone_s *zone = &pg_list.node_zones[gfp];
+	zone_s *zone = &(NODE_DATA(0)->node_zones[gfp]);
 
 	// linux call stack :
 	// struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
@@ -562,13 +562,13 @@ memmap_init(unsigned long *max_zone_pfn)
 
 	for (int i = 0; i < MAX_NR_ZONES; i++) {
 		end_pfn = max(max_zone_pfn[i], start_pfn);
-		zone_s *zone = &pg_list.node_zones[i];
+		zone_s *zone = &(NODE_DATA(0)->node_zones[i]);
 
 		zone->zone_start_pfn = start_pfn;
 		zone->spanned_pages = end_pfn - start_pfn;
 		zone->present_pages = 0;
 		zone->name = zone_names[i];
-		zone->zone_pgdat = &pg_list;
+		zone->zone_pgdat = NODE_DATA(0);
 
 		for (int j = 0; j < MAX_ORDER; j++)
 			list_hdr_init(&zone->free_area[j]);
@@ -713,7 +713,7 @@ zone_init_internals(zone_s *zone, enum zone_type idx,
 {
 	// atomic_long_set(&zone->managed_pages, remaining_pages);
 	zone->name = zone_names[idx];
-	zone->zone_pgdat = &pg_list;
+	zone->zone_pgdat = NODE_DATA(0);
 	// spin_lock_init(&zone->lock);
 	// zone_seqlock_init(zone);
 	// zone_pcp_init(zone);
@@ -827,9 +827,9 @@ alloc_node_mem_map(pg_data_t *pgdat)
 	// 			(unsigned long)pgdat->node_mem_map);
 
 
-	for (int i = 0; i < pg_list.node_spanned_pages; i++)
+	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++)
 	{
-		page_s *page = &pg_list.node_mem_map[i];
+		page_s *page = &(NODE_DATA(0)->node_mem_map[i]);
 		list_init(&page->free_list, page);
 		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
 	}
@@ -870,7 +870,7 @@ free_area_init(unsigned long *max_zone_pfn)
 
 	// static void __init free_area_init_node(int nid)
 	// {
-		pg_data_t *pgdat = &pg_list;
+		pg_data_t *pgdat = NODE_DATA(0);
 		memset(pgdat, 0, sizeof(pg_data_t));
 
 		start_pfn = 0;

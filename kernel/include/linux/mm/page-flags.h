@@ -865,91 +865,93 @@
 	// 		return PageHuge(page) && PageHWPoison(compound_head(page));
 	// 	}
 
-	// 	/*
-	// 	* For pages that are never mapped to userspace (and aren't PageSlab),
-	// 	* page_type may be used.  Because it is initialised to -1, we invert the
-	// 	* sense of the bit, so __SetPageFoo *clears* the bit used for PageFoo, and
-	// 	* __ClearPageFoo *sets* the bit used for PageFoo.  We reserve a few high and
-	// 	* low bits so that an underflow or overflow of page_mapcount() won't be
-	// 	* mistaken for a page type value.
-	// 	*/
+		/*
+		 * For pages that are never mapped to userspace (and aren't PageSlab),
+		 * page_type may be used.  Because it is initialised to -1, we invert the
+		 * sense of the bit, so __SetPageFoo *clears* the bit used for PageFoo, and
+		 * __ClearPageFoo *sets* the bit used for PageFoo.  We reserve a few high and
+		 * low bits so that an underflow or overflow of page_mapcount() won't be
+		 * mistaken for a page type value.
+		 */
 
-	// 	#define PAGE_TYPE_BASE 0xf0000000
-	// 	/* Reserve		0x0000007f to catch underflows of page_mapcount */
-	// 	#define PAGE_MAPCOUNT_RESERVE -128
-	// 	#define PG_buddy 0x00000080
-	// 	#define PG_offline 0x00000100
-	// 	#define PG_table 0x00000200
-	// 	#define PG_guard 0x00000400
+		#define PAGE_TYPE_BASE			0xf0000000
+		/* Reserve		0x0000007f to catch underflows of page_mapcount */
+		#define PAGE_MAPCOUNT_RESERVE	-128
+		#define PG_buddy				0x00000080
+		#define PG_offline				0x00000100
+		#define PG_table				0x00000200
+		#define PG_guard				0x00000400
 
-	// 	#define PageType(page, flag) \
-	// 		((page->page_type & (PAGE_TYPE_BASE | flag)) == PAGE_TYPE_BASE)
+		#define PageType(page, flag)				\
+					((page->page_type &				\
+						(PAGE_TYPE_BASE | flag)) ==	\
+					PAGE_TYPE_BASE)
 
-	// 	static inline int page_has_type(page_s *page)
-	// 	{
-	// 		return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
-	// 	}
+		static inline int
+		page_has_type(page_s *page) {
+			return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
+		}
 
-	// 	#define PAGE_TYPE_OPS(uname, lname)                                   \
-	// 		static __always_inline int Page##uname(page_s *page)         \
-	// 		{                                                                 \
-	// 			return PageType(page, PG_##lname);                            \
-	// 		}                                                                 \
-	// 		static __always_inline void __SetPage##uname(page_s *page)   \
-	// 		{                                                                 \
-	// 			VM_BUG_ON_PAGE(!PageType(page, 0), page);                     \
-	// 			page->page_type &= ~PG_##lname;                               \
-	// 		}                                                                 \
-	// 		static __always_inline void __ClearPage##uname(page_s *page) \
-	// 		{                                                                 \
-	// 			VM_BUG_ON_PAGE(!Page##uname(page), page);                     \
-	// 			page->page_type |= PG_##lname;                                \
-	// 		}
+		#define PAGE_TYPE_OPS(uname, lname)							\
+					static __always_inline int						\
+					Page##uname(page_s *page) {						\
+						return PageType(page, PG_##lname);			\
+					}												\
+					static __always_inline							\
+					void __SetPage##uname(page_s *page) {			\
+						/* VM_BUG_ON_PAGE(!PageType(page, 0), page); */	\
+						page->page_type &= ~PG_##lname;				\
+					}												\
+					static __always_inline void						\
+					__ClearPage##uname(page_s *page) {				\
+						/* VM_BUG_ON_PAGE(!Page##uname(page), page); */	\
+						page->page_type |= PG_##lname;				\
+					}
 
-	// 	/*
-	// 	* PageBuddy() indicates that the page is free and in the buddy system
-	// 	* (see mm/page_alloc.c).
-	// 	*/
-	// 	PAGE_TYPE_OPS(Buddy, buddy)
+		/*
+		* PageBuddy() indicates that the page is free and in the buddy system
+		* (see mm/page_alloc.c).
+		*/
+		PAGE_TYPE_OPS(Buddy, buddy)
 
-	// 	/*
-	// 	* PageOffline() indicates that the page is logically offline although the
-	// 	* containing section is online. (e.g. inflated in a balloon driver or
-	// 	* not onlined when onlining the section).
-	// 	* The content of these pages is effectively stale. Such pages should not
-	// 	* be touched (read/write/dump/save) except by their owner.
-	// 	*
-	// 	* If a driver wants to allow to offline unmovable PageOffline() pages without
-	// 	* putting them back to the buddy, it can do so via the memory notifier by
-	// 	* decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
-	// 	* reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
-	// 	* pages (now with a reference count of zero) are treated like free pages,
-	// 	* allowing the containing memory block to get offlined. A driver that
-	// 	* relies on this feature is aware that re-onlining the memory block will
-	// 	* require to re-set the pages PageOffline() and not giving them to the
-	// 	* buddy via online_page_callback_t.
-	// 	*
-	// 	* There are drivers that mark a page PageOffline() and expect there won't be
-	// 	* any further access to page content. PFN walkers that read content of random
-	// 	* pages should check PageOffline() and synchronize with such drivers using
-	// 	* page_offline_freeze()/page_offline_thaw().
-	// 	*/
-	// 	PAGE_TYPE_OPS(Offline, offline)
+		/*
+		 * PageOffline() indicates that the page is logically offline although the
+		 * containing section is online. (e.g. inflated in a balloon driver or
+		 * not onlined when onlining the section).
+		 * The content of these pages is effectively stale. Such pages should not
+		 * be touched (read/write/dump/save) except by their owner.
+		 *
+		 * If a driver wants to allow to offline unmovable PageOffline() pages without
+		 * putting them back to the buddy, it can do so via the memory notifier by
+		 * decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
+		 * reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
+		 * pages (now with a reference count of zero) are treated like free pages,
+		 * allowing the containing memory block to get offlined. A driver that
+		 * relies on this feature is aware that re-onlining the memory block will
+		 * require to re-set the pages PageOffline() and not giving them to the
+		 * buddy via online_page_callback_t.
+		 *
+		 * There are drivers that mark a page PageOffline() and expect there won't be
+		 * any further access to page content. PFN walkers that read content of random
+		 * pages should check PageOffline() and synchronize with such drivers using
+		 * page_offline_freeze()/page_offline_thaw().
+		 */
+		PAGE_TYPE_OPS(Offline, offline)
 
 	// 	extern void page_offline_freeze(void);
 	// 	extern void page_offline_thaw(void);
 	// 	extern void page_offline_begin(void);
 	// 	extern void page_offline_end(void);
 
-	// 	/*
-	// 	* Marks pages in use as page tables.
-	// 	*/
-	// 	PAGE_TYPE_OPS(Table, table)
+		/*
+		 * Marks pages in use as page tables.
+		 */
+		PAGE_TYPE_OPS(Table, table)
 
-	// 	/*
-	// 	* Marks guardpages used with debug_pagealloc.
-	// 	*/
-	// 	PAGE_TYPE_OPS(Guard, guard)
+		/*
+		 * Marks guardpages used with debug_pagealloc.
+		 */
+		PAGE_TYPE_OPS(Guard, guard)
 
 	// 	extern bool is_free_buddy_page(page_s *page);
 

@@ -710,7 +710,7 @@
 		// #endif  /* CONFIG_PAGE_TABLE_ISOLATION */
 	#endif	/* __ASSEMBLY__ */
 
-	// #include <asm/pgtable_64.h>
+	#include <asm/pgtable_64.h>
 
 	#ifndef __ASSEMBLY__
 		// #include <linux/mm_types.h>

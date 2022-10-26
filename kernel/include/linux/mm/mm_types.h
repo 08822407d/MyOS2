@@ -31,14 +31,14 @@
 	// struct mem_cgroup;
 
 	/*
-	 * Each physical page in the system has a struct page associated with
+	 * Each physical page in the system has a page_s associated with
 	 * it to keep track of whatever it is we are using the page for at the
 	 * moment. Note that we have no way to track which tasks are using
 	 * a page, though if it is a pagecache page, rmap structures can tell us
 	 * who is mapping it.
 	 *
 	 * If you allocate the page using alloc_pages(), you can use some of the
-	 * space in struct page for your own purposes.  The five words in the main
+	 * space in page_s for your own purposes.  The five words in the main
 	 * union are available, except for bit 0 of the first word which must be
 	 * kept clear.  Many users use this word to store a pointer to an object
 	 * which is guaranteed to be aligned.  If you use the same storage as
@@ -60,7 +60,7 @@
 	 * SLUB uses cmpxchg_double() to atomically update its freelist and counters.
 	 * That requires that freelist & counters in struct slab be adjacent and
 	 * double-word aligned. Because struct slab currently just reinterprets the
-	 * bits of struct page, we align all struct pages to double-word boundaries,
+	 * bits of page_s, we align all page_ss to double-word boundaries,
 	 * and ensure that 'freelist' is aligned within struct slab.
 	 */
 	#define _struct_page_alignment __aligned(2 * sizeof(unsigned long))
@@ -72,46 +72,43 @@
 
 	typedef struct page {
 		List_s 			free_list;
-		zone_s *		zone;
 		phys_addr_t		page_start_addr;
 		
 		unsigned long	ref_count;
 		unsigned long	map_count;
-
-		unsigned long	buddy_order;
 
 		slab_s *		slab_ptr;
 
 
 		unsigned long flags; /* Atomic flags, some possibly
 							* updated asynchronously */
-	// 	/*
-	// 	* Five words (20/40 bytes) are available in this union.
-	// 	* WARNING: bit 0 of the first word is used for PageTail(). That
-	// 	* means the other users of this union MUST NOT use the bit to
-	// 	* avoid collision and false-positive PageTail().
-	// 	*/
-	// 	union
-	// 	{
-	// 		struct
-	// 		{ /* Page cache and anonymous pages */
-	// 			/**
-	// 			 * @lru: Pageout list, eg. active_list protected by
-	// 			 * lruvec->lru_lock.  Sometimes used as a generic list
-	// 			 * by the page owner.
-	// 			 */
-	// 			struct list_head lru;
-	// 			/* See page-flags.h for PAGE_MAPPING_FLAGS */
-	// 			struct address_space *mapping;
-	// 			pgoff_t index; /* Our offset within mapping. */
-	// 			/**
-	// 			 * @private: Mapping-private opaque data.
-	// 			 * Usually used for buffer_heads if PagePrivate.
-	// 			 * Used for swp_entry_t if PageSwapCache.
-	// 			 * Indicates order in the buddy system if PageBuddy.
-	// 			 */
-	// 			unsigned long private;
-	// 		};
+		/*
+		* Five words (20/40 bytes) are available in this union.
+		* WARNING: bit 0 of the first word is used for PageTail(). That
+		* means the other users of this union MUST NOT use the bit to
+		* avoid collision and false-positive PageTail().
+		*/
+		union
+		{
+			struct
+			{ /* Page cache and anonymous pages */
+				// /**
+				//  * @lru: Pageout list, eg. active_list protected by
+				//  * lruvec->lru_lock.  Sometimes used as a generic list
+				//  * by the page owner.
+				//  */
+				// struct list_head lru;
+				// /* See page-flags.h for PAGE_MAPPING_FLAGS */
+				// struct address_space *mapping;
+				pgoff_t index; /* Our offset within mapping. */
+				/**
+				 * @private: Mapping-private opaque data.
+				 * Usually used for buffer_heads if PagePrivate.
+				 * Used for swp_entry_t if PageSwapCache.
+				 * Indicates order in the buddy system if PageBuddy.
+				 */
+				unsigned long private;
+			};
 	// 		struct
 	// 		{ /* page_pool used by netstack */
 	// 			/**
@@ -119,7 +116,7 @@
 	// 			 * page_pool allocated pages.
 	// 			 */
 	// 			unsigned long pp_magic;
-	// 			struct page_pool *pp;
+	// 			page_s_pool *pp;
 	// 			unsigned long _pp_mapping_pad;
 	// 			unsigned long dma_addr;
 	// 			union
@@ -188,23 +185,24 @@
 
 	// 		/** @rcu_head: You can use this to free a page by RCU. */
 	// 		struct rcu_head rcu_head;
+		};
 
-	// 	union
-	// 	{ /* This union is 4 bytes in size. */
-	// 		/*
-	// 		* If the page can be mapped to userspace, encodes the number
-	// 		* of times this page is referenced by a page table.
-	// 		*/
-	// 		atomic_t _mapcount;
+		union
+		{ /* This union is 4 bytes in size. */
+			/*
+			 * If the page can be mapped to userspace, encodes the number
+			 * of times this page is referenced by a page table.
+			 */
+			atomic_t _mapcount;
 
-	// 		/*
-	// 		* If the page is neither PageSlab nor mappable to userspace,
-	// 		* the value stored here may help determine what this page
-	// 		* is used for.  See page-flags.h for a list of page types
-	// 		* which are currently stored here.
-	// 		*/
-	// 		unsigned int page_type;
-	// 	};
+			/*
+			 * If the page is neither PageSlab nor mappable to userspace,
+			 * the value stored here may help determine what this page
+			 * is used for.  See page-flags.h for a list of page types
+			 * which are currently stored here.
+			 */
+			unsigned int page_type;
+		};
 
 		/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
 		atomic_t _refcount;
@@ -260,15 +258,15 @@
 	// #ifdef CONFIG_MEMCG
 	// 			unsigned long memcg_data;
 	// #endif
-	// 			/* private: the union with struct page is transitional */
+	// 			/* private: the union with page_s is transitional */
 	// 		};
-	// 		struct page page;
+	// 		page_s page;
 	// 	};
 	// };
 
-	// static_assert(sizeof(struct page) == sizeof(struct folio));
+	// static_assert(sizeof(page_s) == sizeof(struct folio));
 	// #define FOLIO_MATCH(pg, fl) \
-	// 	static_assert(offsetof(struct page, pg) == offsetof(struct folio, fl))
+	// 	static_assert(offsetof(page_s, pg) == offsetof(struct folio, fl))
 	// FOLIO_MATCH(flags, flags);
 	// FOLIO_MATCH(lru, lru);
 	// FOLIO_MATCH(mapping, mapping);
@@ -284,16 +282,16 @@
 
 	// static inline atomic_t *folio_mapcount_ptr(struct folio *folio)
 	// {
-	// 	struct page *tail = &folio->page + 1;
+	// 	page_s *tail = &folio->page + 1;
 	// 	return &tail->compound_mapcount;
 	// }
 
-	// static inline atomic_t *compound_mapcount_ptr(struct page *page)
+	// static inline atomic_t *compound_mapcount_ptr(page_s *page)
 	// {
 	// 	return &page[1].compound_mapcount;
 	// }
 
-	// static inline atomic_t *compound_pincount_ptr(struct page *page)
+	// static inline atomic_t *compound_pincount_ptr(page_s *page)
 	// {
 	// 	return &page[2].hpage_pinned_refcount;
 	// }
@@ -301,30 +299,30 @@
 	// /*
 	// * Used for sizing the vmemmap region on some architectures
 	// */
-	// #define STRUCT_PAGE_MAX_SHIFT (order_base_2(sizeof(struct page)))
+	// #define STRUCT_PAGE_MAX_SHIFT (order_base_2(sizeof(page_s)))
 
 	// #define PAGE_FRAG_CACHE_MAX_SIZE __ALIGN_MASK(32768, ~PAGE_MASK)
 	// #define PAGE_FRAG_CACHE_MAX_ORDER get_order(PAGE_FRAG_CACHE_MAX_SIZE)
 
-	// /*
-	// * page_private can be used on tail pages.  However, PagePrivate is only
-	// * checked by the VM on the head page.  So page_private on the tail pages
-	// * should be used for data that's ancillary to the head page (eg attaching
-	// * buffer heads to tail pages after attaching buffer heads to the head page)
-	// */
-	// #define page_private(page) ((page)->private)
+	/*
+	 * page_private can be used on tail pages.  However, PagePrivate is only
+	 * checked by the VM on the head page.  So page_private on the tail pages
+	 * should be used for data that's ancillary to the head page (eg attaching
+	 * buffer heads to tail pages after attaching buffer heads to the head page)
+	 */
+	#define page_private(page)	((page)->private)
 
-	// static inline void set_page_private(struct page *page, unsigned long private)
-	// {
-	// 	page->private = private;
-	// }
+	static inline void
+	set_page_private(page_s *page, unsigned long private) {
+		page->private = private;
+	}
 
 	// static inline void *folio_get_private(struct folio *folio)
 	// {
 	// 	return folio->private;
 	// }
 
-	// struct page_frag_cache
+	// page_s_frag_cache
 	// {
 	// 	void *va;
 	// #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
@@ -777,7 +775,7 @@
 	// 	*
 	// 	* This must not be NULL unless .fault is provided.
 	// 	*/
-	// 	struct page **pages;
+	// 	page_s **pages;
 
 	// 	/*
 	// 	* If non-NULL, then this is called to resolve page faults

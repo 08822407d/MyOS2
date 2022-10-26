@@ -12,10 +12,6 @@
 	#define SLAB_LEVEL			16
 	#define SLAB_SIZE_BASE		32
 
-	extern pg_data_t 	pg_list;
-
-	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
-	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
 
 #endif

@@ -76,6 +76,10 @@ pteval_t __default_kernel_pte_mask __read_mostly = ~0;
 void __init paging_init(void)
 {
 	// sparse_init();
+	pg_data_t *nodes = myos_memblock_alloc_normal(
+			MAX_NUMNODES *sizeof(pg_data_t), SMP_CACHE_BYTES);
+	for (int i = 0; i < MAX_NUMNODES; i++)
+		NODE_DATA(i) = nodes + i;
 
 	// /*
 	//  * clear the default setting with node 0

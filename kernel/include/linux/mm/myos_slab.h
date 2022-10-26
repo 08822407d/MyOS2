@@ -3,6 +3,8 @@
 
 	#include <linux/lib/list.h>
 
+	#include <linux/mm/myos_page.h>
+
 	struct  slab;
 	typedef struct slab slab_s;
 

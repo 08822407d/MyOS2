@@ -1114,6 +1114,7 @@
 			// #else /* CONFIG_NUMA */
 
 			// 	#include <asm/mmzone.h>
+				#include <asm/mmzone_64.h>
 
 			// #endif /* !CONFIG_NUMA */
 

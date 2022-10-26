@@ -33,6 +33,10 @@
 	// #include <linux/pgtable.h>
 	// #include <linux/kasan.h>
 
+
+	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
+	#define pfn_to_page(pfn)	((pfn) + mem_map)
+
 	// struct mempolicy;
 	// struct anon_vma;
 	// struct anon_vma_chain;
@@ -139,23 +143,23 @@
 	// * define their own version of this macro in <asm/pgtable.h>
 	// */
 	// #if BITS_PER_LONG == 64
-	// /* This function must be updated when the size of struct page grows above 80
+	// /* This function must be updated when the size of page_s grows above 80
 	// * or reduces below 56. The idea that compiler optimizes out switch()
 	// * statement, and only leaves move/store instructions. Also the compiler can
 	// * combine write statements if they are both assignments and can be reordered,
 	// * this can result in several of the writes here being dropped.
 	// */
 	// #define	mm_zero_struct_page(pp) __mm_zero_struct_page(pp)
-	// static inline void __mm_zero_struct_page(struct page *page)
+	// static inline void __mm_zero_struct_page(page_s *page)
 	// {
 	// 	unsigned long *_pp = (void *)page;
 
-	// 	/* Check that struct page is either 56, 64, 72, or 80 bytes */
-	// 	BUILD_BUG_ON(sizeof(struct page) & 7);
-	// 	BUILD_BUG_ON(sizeof(struct page) < 56);
-	// 	BUILD_BUG_ON(sizeof(struct page) > 80);
+	// 	/* Check that page_s is either 56, 64, 72, or 80 bytes */
+	// 	BUILD_BUG_ON(sizeof(page_s) & 7);
+	// 	BUILD_BUG_ON(sizeof(page_s) < 56);
+	// 	BUILD_BUG_ON(sizeof(page_s) > 80);
 
-	// 	switch (sizeof(struct page)) {
+	// 	switch (sizeof(page_s)) {
 	// 	case 80:
 	// 		_pp[9] = 0;
 	// 		fallthrough;
@@ -176,7 +180,7 @@
 	// 	}
 	// }
 	// #else
-	// #define mm_zero_struct_page(pp)  ((void)memset((pp), 0, sizeof(struct page)))
+	// #define mm_zero_struct_page(pp)  ((void)memset((pp), 0, sizeof(page_s)))
 	// #endif
 
 	// /*
@@ -226,7 +230,7 @@
 	// /* test whether an address (unsigned long or pointer) is aligned to PAGE_SIZE */
 	// #define PAGE_ALIGNED(addr)	IS_ALIGNED((unsigned long)(addr), PAGE_SIZE)
 
-	// #define lru_to_page(head) (list_entry((head)->prev, struct page, lru))
+	// #define lru_to_page(head) (list_entry((head)->prev, page_s, lru))
 
 	// void setup_initial_init_mm(void *start_code, void *end_code,
 	// 			void *end_data, void *brk);
@@ -270,7 +274,7 @@
 
 	#	define VM_GROWSDOWN			0x00000100	/* general info on the segment */
 	#	define VM_UFFD_MISSING		0x00000200	/* missing pages tracking */
-	#	define VM_PFNMAP			0x00000400	/* Page-ranges managed without "struct page", just pure PFN */
+	#	define VM_PFNMAP			0x00000400	/* Page-ranges managed without "page_s", just pure PFN */
 	#	define VM_UFFD_WP			0x00001000	/* wrprotect pages tracking */
 
 	#	define VM_LOCKED			0x00002000
@@ -297,7 +301,7 @@
 	#		define VM_SOFTDIRTY		0
 	#	endif
 
-	#	define VM_MIXEDMAP			0x10000000	/* Can contain "struct page" and pure PFN pages */
+	#	define VM_MIXEDMAP			0x10000000	/* Can contain "page_s" and pure PFN pages */
 	#	define VM_HUGEPAGE			0x20000000	/* MADV_HUGEPAGE marked this vma */
 	#	define VM_NOHUGEPAGE		0x40000000	/* MADV_NOHUGEPAGE marked this vma */
 	#	define VM_MERGEABLE			0x80000000	/* KSM may merge identical pages */
@@ -494,8 +498,8 @@
 	// 					*/
 	// 	};
 
-	// 	struct page *cow_page;		/* Page handler may use for COW fault */
-	// 	struct page *page;		/* ->fault handlers should return a
+	// 	page_s *cow_page;		/* Page handler may use for COW fault */
+	// 	page_s *page;		/* ->fault handlers should return a
 	// 					* page here, unless VM_FAULT_NOPAGE
 	// 					* is set (which is also implied by
 	// 					* VM_FAULT_ERROR).
@@ -601,7 +605,7 @@
 	// 	* page for @addr.  This is useful if the default behavior
 	// 	* (using pte_page()) would not find the correct page.
 	// 	*/
-	// 	struct page *(*find_special_page)(struct vm_area_struct *vma,
+	// 	page_s *(*find_special_page)(struct vm_area_struct *vma,
 	// 					unsigned long addr);
 	// };
 
@@ -673,7 +677,7 @@
 	// struct mmu_gather;
 	// struct inode;
 
-	// static inline unsigned int compound_order(struct page *page)
+	// static inline unsigned int compound_order(page_s *page)
 	// {
 	// 	if (!PageHead(page))
 	// 		return 0;
@@ -712,7 +716,7 @@
 	// /*
 	// * Drop a ref, return true if the refcount fell to zero (the page has no users)
 	// */
-	// static inline int put_page_testzero(struct page *page)
+	// static inline int put_page_testzero(page_s *page)
 	// {
 	// 	VM_BUG_ON_PAGE(page_ref_count(page) == 0, page);
 	// 	return page_ref_dec_and_test(page);
@@ -729,7 +733,7 @@
 	// * This can be called when MMU is off so it must not access
 	// * any of the virtual mappings.
 	// */
-	// static inline bool get_page_unless_zero(struct page *page)
+	// static inline bool get_page_unless_zero(page_s *page)
 	// {
 	// 	return page_ref_add_unless(page, 1, 0);
 	// }
@@ -746,7 +750,7 @@
 	// 			unsigned long desc);
 
 	// /* Support for virtually mapped pages */
-	// struct page *vmalloc_to_page(const void *addr);
+	// page_s *vmalloc_to_page(const void *addr);
 	// unsigned long vmalloc_to_pfn(const void *addr);
 
 	// /*
@@ -774,7 +778,7 @@
 	// }
 	// #endif
 
-	// static inline int head_compound_mapcount(struct page *head)
+	// static inline int head_compound_mapcount(page_s *head)
 	// {
 	// 	return atomic_read(compound_mapcount_ptr(head)) + 1;
 	// }
@@ -784,7 +788,7 @@
 	// *
 	// * Must be called only for compound pages or any their tail sub-pages.
 	// */
-	// static inline int compound_mapcount(struct page *page)
+	// static inline int compound_mapcount(page_s *page)
 	// {
 	// 	VM_BUG_ON_PAGE(!PageCompound(page), page);
 	// 	page = compound_head(page);
@@ -796,12 +800,12 @@
 	// * both from it and to it can be tracked, using atomic_inc_and_test
 	// * and atomic_add_negative(-1).
 	// */
-	// static inline void page_mapcount_reset(struct page *page)
+	// static inline void page_mapcount_reset(page_s *page)
 	// {
 	// 	atomic_set(&(page)->_mapcount, -1);
 	// }
 
-	// int __page_mapcount(struct page *page);
+	// int __page_mapcount(page_s *page);
 
 	// /*
 	// * Mapcount of 0-order page; when compound sub-page, includes
@@ -809,9 +813,9 @@
 	// *
 	// * Result is undefined for pages which cannot be mapped into userspace.
 	// * For example SLAB or special types of pages. See function page_has_type().
-	// * They use this place in struct page differently.
+	// * They use this place in page_s differently.
 	// */
-	// static inline int page_mapcount(struct page *page)
+	// static inline int page_mapcount(page_s *page)
 	// {
 	// 	if (unlikely(PageCompound(page)))
 	// 		return __page_mapcount(page);
@@ -819,38 +823,38 @@
 	// }
 
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	// int total_mapcount(struct page *page);
-	// int page_trans_huge_mapcount(struct page *page);
+	// int total_mapcount(page_s *page);
+	// int page_trans_huge_mapcount(page_s *page);
 	// #else
-	// static inline int total_mapcount(struct page *page)
+	// static inline int total_mapcount(page_s *page)
 	// {
 	// 	return page_mapcount(page);
 	// }
-	// static inline int page_trans_huge_mapcount(struct page *page)
+	// static inline int page_trans_huge_mapcount(page_s *page)
 	// {
 	// 	return page_mapcount(page);
 	// }
 	// #endif
 
-	// static inline struct page *virt_to_head_page(const void *x)
+	// static inline page_s *virt_to_head_page(const void *x)
 	// {
-	// 	struct page *page = virt_to_page(x);
+	// 	page_s *page = virt_to_page(x);
 
 	// 	return compound_head(page);
 	// }
 
 	// static inline struct folio *virt_to_folio(const void *x)
 	// {
-	// 	struct page *page = virt_to_page(x);
+	// 	page_s *page = virt_to_page(x);
 
 	// 	return page_folio(page);
 	// }
 
-	// void __put_page(struct page *page);
+	// void __put_page(page_s *page);
 
 	// void put_pages_list(struct list_head *pages);
 
-	// void split_page(struct page *page, unsigned int order);
+	// void split_page(page_s *page, unsigned int order);
 	// void folio_copy(struct folio *dst, struct folio *src);
 
 	// unsigned long nr_free_buffer_pages(void);
@@ -860,7 +864,7 @@
 	// * prototype for that function and accessor functions.
 	// * These are _only_ valid on the head of a compound page.
 	// */
-	// typedef void compound_page_dtor(struct page *);
+	// typedef void compound_page_dtor(page_s *);
 
 	// /* Keep the enum in sync with compound_page_dtors array in mm/page_alloc.c */
 	// enum compound_dtor_id {
@@ -876,20 +880,20 @@
 	// };
 	// extern compound_page_dtor * const compound_page_dtors[NR_COMPOUND_DTORS];
 
-	// static inline void set_compound_page_dtor(struct page *page,
+	// static inline void set_compound_page_dtor(page_s *page,
 	// 		enum compound_dtor_id compound_dtor)
 	// {
 	// 	VM_BUG_ON_PAGE(compound_dtor >= NR_COMPOUND_DTORS, page);
 	// 	page[1].compound_dtor = compound_dtor;
 	// }
 
-	// static inline void destroy_compound_page(struct page *page)
+	// static inline void destroy_compound_page(page_s *page)
 	// {
 	// 	VM_BUG_ON_PAGE(page[1].compound_dtor >= NR_COMPOUND_DTORS, page);
 	// 	compound_page_dtors[page[1].compound_dtor](page);
 	// }
 
-	// static inline bool hpage_pincount_available(struct page *page)
+	// static inline bool hpage_pincount_available(page_s *page)
 	// {
 	// 	/*
 	// 	* Can the page->hpage_pinned_refcount field be used? That field is in
@@ -900,26 +904,26 @@
 	// 	return PageCompound(page) && compound_order(page) > 1;
 	// }
 
-	// static inline int head_compound_pincount(struct page *head)
+	// static inline int head_compound_pincount(page_s *head)
 	// {
 	// 	return atomic_read(compound_pincount_ptr(head));
 	// }
 
-	// static inline int compound_pincount(struct page *page)
+	// static inline int compound_pincount(page_s *page)
 	// {
 	// 	VM_BUG_ON_PAGE(!hpage_pincount_available(page), page);
 	// 	page = compound_head(page);
 	// 	return head_compound_pincount(page);
 	// }
 
-	// static inline void set_compound_order(struct page *page, unsigned int order)
+	// static inline void set_compound_order(page_s *page, unsigned int order)
 	// {
 	// 	page[1].compound_order = order;
 	// 	page[1].compound_nr = 1U << order;
 	// }
 
 	// /* Returns the number of pages in this potentially compound page. */
-	// static inline unsigned long compound_nr(struct page *page)
+	// static inline unsigned long compound_nr(page_s *page)
 	// {
 	// 	if (!PageHead(page))
 	// 		return 1;
@@ -927,18 +931,18 @@
 	// }
 
 	// /* Returns the number of bytes in this potentially compound page. */
-	// static inline unsigned long page_size(struct page *page)
+	// static inline unsigned long page_size(page_s *page)
 	// {
 	// 	return PAGE_SIZE << compound_order(page);
 	// }
 
 	// /* Returns the number of bits needed for the number of bytes in a page */
-	// static inline unsigned int page_shift(struct page *page)
+	// static inline unsigned int page_shift(page_s *page)
 	// {
 	// 	return PAGE_SHIFT + compound_order(page);
 	// }
 
-	// void free_compound_page(struct page *page);
+	// void free_compound_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
 	// /*
@@ -954,8 +958,8 @@
 	// 	return pte;
 	// }
 
-	// vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page);
-	// void do_set_pte(struct vm_fault *vmf, struct page *page, unsigned long addr);
+	// vm_fault_t do_set_pmd(struct vm_fault *vmf, page_s *page);
+	// void do_set_pte(struct vm_fault *vmf, page_s *page, unsigned long addr);
 
 	// vm_fault_t finish_fault(struct vm_fault *vmf);
 	// vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf);
@@ -974,7 +978,7 @@
 	// *
 	// * Pages are allocated by the slab allocator in order to provide memory
 	// * to kmalloc and kmem_cache_alloc. In this case, the management of the
-	// * page, and the fields in 'struct page' are the responsibility of mm/slab.c
+	// * page, and the fields in 'page_s' are the responsibility of mm/slab.c
 	// * unless a particular usage is carefully commented. (the responsibility of
 	// * freeing the kmalloc memory is the caller's, of course).
 	// *
@@ -1064,7 +1068,7 @@
 	// #define KASAN_TAG_MASK		((1UL << KASAN_TAG_WIDTH) - 1)
 	// #define ZONEID_MASK		((1UL << ZONEID_SHIFT) - 1)
 
-	// static inline enum zone_type page_zonenum(const struct page *page)
+	// static inline enum zone_type page_zonenum(const page_s *page)
 	// {
 	// 	ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
 	// 	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
@@ -1076,29 +1080,29 @@
 	// }
 
 	// #ifdef CONFIG_ZONE_DEVICE
-	// static inline bool is_zone_device_page(const struct page *page)
+	// static inline bool is_zone_device_page(const page_s *page)
 	// {
 	// 	return page_zonenum(page) == ZONE_DEVICE;
 	// }
 	// extern void memmap_init_zone_device(struct zone *, unsigned long,
 	// 					unsigned long, struct dev_pagemap *);
 	// #else
-	// static inline bool is_zone_device_page(const struct page *page)
+	// static inline bool is_zone_device_page(const page_s *page)
 	// {
 	// 	return false;
 	// }
 	// #endif
 
-	// static inline bool is_zone_movable_page(const struct page *page)
+	// static inline bool is_zone_movable_page(const page_s *page)
 	// {
 	// 	return page_zonenum(page) == ZONE_MOVABLE;
 	// }
 
 	// #ifdef CONFIG_DEV_PAGEMAP_OPS
-	// void free_devmap_managed_page(struct page *page);
+	// void free_devmap_managed_page(page_s *page);
 	// DECLARE_STATIC_KEY_FALSE(devmap_managed_key);
 
-	// static inline bool page_is_devmap_managed(struct page *page)
+	// static inline bool page_is_devmap_managed(page_s *page)
 	// {
 	// 	if (!static_branch_unlikely(&devmap_managed_key))
 	// 		return false;
@@ -1114,20 +1118,20 @@
 	// 	return false;
 	// }
 
-	// void put_devmap_managed_page(struct page *page);
+	// void put_devmap_managed_page(page_s *page);
 
 	// #else /* CONFIG_DEV_PAGEMAP_OPS */
-	// static inline bool page_is_devmap_managed(struct page *page)
+	// static inline bool page_is_devmap_managed(page_s *page)
 	// {
 	// 	return false;
 	// }
 
-	// static inline void put_devmap_managed_page(struct page *page)
+	// static inline void put_devmap_managed_page(page_s *page)
 	// {
 	// }
 	// #endif /* CONFIG_DEV_PAGEMAP_OPS */
 
-	// static inline bool is_device_private_page(const struct page *page)
+	// static inline bool is_device_private_page(const page_s *page)
 	// {
 	// 	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
 	// 		IS_ENABLED(CONFIG_DEVICE_PRIVATE) &&
@@ -1135,7 +1139,7 @@
 	// 		page->pgmap->type == MEMORY_DEVICE_PRIVATE;
 	// }
 
-	// static inline bool is_pci_p2pdma_page(const struct page *page)
+	// static inline bool is_pci_p2pdma_page(const page_s *page)
 	// {
 	// 	return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
 	// 		IS_ENABLED(CONFIG_PCI_P2PDMA) &&
@@ -1161,17 +1165,17 @@
 	// 	folio_ref_inc(folio);
 	// }
 
-	// static inline void get_page(struct page *page)
+	// static inline void get_page(page_s *page)
 	// {
 	// 	folio_get(page_folio(page));
 	// }
 
-	// bool __must_check try_grab_page(struct page *page, unsigned int flags);
-	// struct page *try_grab_compound_head(struct page *page, int refs,
+	// bool __must_check try_grab_page(page_s *page, unsigned int flags);
+	// page_s *try_grab_compound_head(page_s *page, int refs,
 	// 					unsigned int flags);
 
 
-	// static inline __must_check bool try_get_page(struct page *page)
+	// static inline __must_check bool try_get_page(page_s *page)
 	// {
 	// 	page = compound_head(page);
 	// 	if (WARN_ON_ONCE(page_ref_count(page) <= 0))
@@ -1219,7 +1223,7 @@
 	// 		__put_page(&folio->page);
 	// }
 
-	// static inline void put_page(struct page *page)
+	// static inline void put_page(page_s *page)
 	// {
 	// 	struct folio *folio = page_folio(page);
 
@@ -1270,12 +1274,12 @@
 	// */
 	// #define GUP_PIN_COUNTING_BIAS (1U << 10)
 
-	// void unpin_user_page(struct page *page);
-	// void unpin_user_pages_dirty_lock(struct page **pages, unsigned long npages,
+	// void unpin_user_page(page_s *page);
+	// void unpin_user_pages_dirty_lock(page_s **pages, unsigned long npages,
 	// 				bool make_dirty);
-	// void unpin_user_page_range_dirty_lock(struct page *page, unsigned long npages,
+	// void unpin_user_page_range_dirty_lock(page_s *page, unsigned long npages,
 	// 					bool make_dirty);
-	// void unpin_user_pages(struct page **pages, unsigned long npages);
+	// void unpin_user_pages(page_s **pages, unsigned long npages);
 
 	// /**
 	//  * page_maybe_dma_pinned - Report if a page is pinned for DMA.
@@ -1294,7 +1298,7 @@
 	//  * deal gracefully with a false positive.
 	//  *
 	//  * For huge pages, the result will be exactly correct. That's because we have
-	//  * more tracking data available: the 3rd struct page in the compound page is
+	//  * more tracking data available: the 3rd page_s in the compound page is
 	//  * used to track the pincount (instead using of the GUP_PIN_COUNTING_BIAS
 	//  * scheme).
 	//  *
@@ -1303,7 +1307,7 @@
 	//  * Return: True, if it is likely that the page has been "dma-pinned".
 	//  * False, if the page is definitely not dma-pinned.
 	//  */
-	// static inline bool page_maybe_dma_pinned(struct page *page)
+	// static inline bool page_maybe_dma_pinned(page_s *page)
 	// {
 	// 	if (hpage_pincount_available(page))
 	// 		return compound_pincount(page) > 0;
@@ -1330,7 +1334,7 @@
 	// * should break the cow immediately for a page on the src mm.
 	// */
 	// static inline bool page_needs_cow_for_dma(struct vm_area_struct *vma,
-	// 					struct page *page)
+	// 					page_s *page)
 	// {
 	// 	if (!is_cow_mapping(vma->vm_flags))
 	// 		return false;
@@ -1353,17 +1357,17 @@
 	// * We only guarantee that it will return the same value for two combinable
 	// * pages in a zone.
 	// */
-	// static inline int page_zone_id(struct page *page)
+	// static inline int page_zone_id(page_s *page)
 	// {
 	// 	return (page->flags >> ZONEID_PGSHIFT) & ZONEID_MASK;
 	// }
 
 	// #ifdef NODE_NOT_IN_PAGE_FLAGS
-	// extern int page_to_nid(const struct page *page);
+	// extern int page_to_nid(const page_s *page);
 	// #else
-	// static inline int page_to_nid(const struct page *page)
+	// static inline int page_to_nid(const page_s *page)
 	// {
-	// 	struct page *p = (struct page *)page;
+	// 	page_s *p = (page_s *)page;
 
 	// 	return (PF_POISONED_CHECK(p)->flags >> NODES_PGSHIFT) & NODES_MASK;
 	// }
@@ -1412,39 +1416,39 @@
 
 	// #define cpupid_match_pid(task, cpupid) __cpupid_match_pid(task->pid, cpupid)
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
-	// static inline int page_cpupid_xchg_last(struct page *page, int cpupid)
+	// static inline int page_cpupid_xchg_last(page_s *page, int cpupid)
 	// {
 	// 	return xchg(&page->_last_cpupid, cpupid & LAST_CPUPID_MASK);
 	// }
 
-	// static inline int page_cpupid_last(struct page *page)
+	// static inline int page_cpupid_last(page_s *page)
 	// {
 	// 	return page->_last_cpupid;
 	// }
-	// static inline void page_cpupid_reset_last(struct page *page)
+	// static inline void page_cpupid_reset_last(page_s *page)
 	// {
 	// 	page->_last_cpupid = -1 & LAST_CPUPID_MASK;
 	// }
 	// #else
-	// static inline int page_cpupid_last(struct page *page)
+	// static inline int page_cpupid_last(page_s *page)
 	// {
 	// 	return (page->flags >> LAST_CPUPID_PGSHIFT) & LAST_CPUPID_MASK;
 	// }
 
-	// extern int page_cpupid_xchg_last(struct page *page, int cpupid);
+	// extern int page_cpupid_xchg_last(page_s *page, int cpupid);
 
-	// static inline void page_cpupid_reset_last(struct page *page)
+	// static inline void page_cpupid_reset_last(page_s *page)
 	// {
 	// 	page->flags |= LAST_CPUPID_MASK << LAST_CPUPID_PGSHIFT;
 	// }
 	// #endif /* LAST_CPUPID_NOT_IN_PAGE_FLAGS */
 	// #else /* !CONFIG_NUMA_BALANCING */
-	// static inline int page_cpupid_xchg_last(struct page *page, int cpupid)
+	// static inline int page_cpupid_xchg_last(page_s *page, int cpupid)
 	// {
 	// 	return page_to_nid(page); /* XXX */
 	// }
 
-	// static inline int page_cpupid_last(struct page *page)
+	// static inline int page_cpupid_last(page_s *page)
 	// {
 	// 	return page_to_nid(page); /* XXX */
 	// }
@@ -1474,7 +1478,7 @@
 	// 	return true;
 	// }
 
-	// static inline void page_cpupid_reset_last(struct page *page)
+	// static inline void page_cpupid_reset_last(page_s *page)
 	// {
 	// }
 
@@ -1492,7 +1496,7 @@
 	// * value 0x00 maps to 0xff.
 	// */
 
-	// static inline u8 page_kasan_tag(const struct page *page)
+	// static inline u8 page_kasan_tag(const page_s *page)
 	// {
 	// 	u8 tag = 0xff;
 
@@ -1504,7 +1508,7 @@
 	// 	return tag;
 	// }
 
-	// static inline void page_kasan_tag_set(struct page *page, u8 tag)
+	// static inline void page_kasan_tag_set(page_s *page, u8 tag)
 	// {
 	// 	unsigned long old_flags, flags;
 
@@ -1520,7 +1524,7 @@
 	// 	} while (unlikely(!try_cmpxchg(&page->flags, &old_flags, flags)));
 	// }
 
-	// static inline void page_kasan_tag_reset(struct page *page)
+	// static inline void page_kasan_tag_reset(page_s *page)
 	// {
 	// 	if (kasan_enabled())
 	// 		page_kasan_tag_set(page, 0xff);
@@ -1528,22 +1532,22 @@
 
 	// #else /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
 
-	// static inline u8 page_kasan_tag(const struct page *page)
+	// static inline u8 page_kasan_tag(const page_s *page)
 	// {
 	// 	return 0xff;
 	// }
 
-	// static inline void page_kasan_tag_set(struct page *page, u8 tag) { }
-	// static inline void page_kasan_tag_reset(struct page *page) { }
+	// static inline void page_kasan_tag_set(page_s *page, u8 tag) { }
+	// static inline void page_kasan_tag_reset(page_s *page) { }
 
 	// #endif /* CONFIG_KASAN_SW_TAGS || CONFIG_KASAN_HW_TAGS */
 
-	// static inline struct zone *page_zone(const struct page *page)
+	// static inline struct zone *page_zone(const page_s *page)
 	// {
 	// 	return &NODE_DATA(page_to_nid(page))->node_zones[page_zonenum(page)];
 	// }
 	
-	// static inline pg_data_t *page_pgdat(const struct page *page)
+	// static inline pg_data_t *page_pgdat(const page_s *page)
 	// {
 	// 	return NODE_DATA(page_to_nid(page));
 	// }
@@ -1559,13 +1563,13 @@
 	// }
 
 	// #ifdef SECTION_IN_PAGE_FLAGS
-	// static inline void set_page_section(struct page *page, unsigned long section)
+	// static inline void set_page_section(page_s *page, unsigned long section)
 	// {
 	// 	page->flags &= ~(SECTIONS_MASK << SECTIONS_PGSHIFT);
 	// 	page->flags |= (section & SECTIONS_MASK) << SECTIONS_PGSHIFT;
 	// }
 
-	// static inline unsigned long page_to_section(const struct page *page)
+	// static inline unsigned long page_to_section(const page_s *page)
 	// {
 	// 	return (page->flags >> SECTIONS_PGSHIFT) & SECTIONS_MASK;
 	// }
@@ -1587,31 +1591,31 @@
 
 	// /* MIGRATE_CMA and ZONE_MOVABLE do not allow pin pages */
 	// #ifdef CONFIG_MIGRATION
-	// static inline bool is_pinnable_page(struct page *page)
+	// static inline bool is_pinnable_page(page_s *page)
 	// {
 	// 	return !(is_zone_movable_page(page) || is_migrate_cma_page(page)) ||
 	// 		is_zero_pfn(page_to_pfn(page));
 	// }
 	// #else
-	// static inline bool is_pinnable_page(struct page *page)
+	// static inline bool is_pinnable_page(page_s *page)
 	// {
 	// 	return true;
 	// }
 	// #endif
 
-	// static inline void set_page_zone(struct page *page, enum zone_type zone)
+	// static inline void set_page_zone(page_s *page, enum zone_type zone)
 	// {
 	// 	page->flags &= ~(ZONES_MASK << ZONES_PGSHIFT);
 	// 	page->flags |= (zone & ZONES_MASK) << ZONES_PGSHIFT;
 	// }
 
-	// static inline void set_page_node(struct page *page, unsigned long node)
+	// static inline void set_page_node(page_s *page, unsigned long node)
 	// {
 	// 	page->flags &= ~(NODES_MASK << NODES_PGSHIFT);
 	// 	page->flags |= (node & NODES_MASK) << NODES_PGSHIFT;
 	// }
 
-	// static inline void set_page_links(struct page *page, enum zone_type zone,
+	// static inline void set_page_links(page_s *page, enum zone_type zone,
 	// 	unsigned long node, unsigned long pfn)
 	// {
 	// 	set_page_zone(page, zone);
@@ -1682,7 +1686,7 @@
 	// }
 
 	// #ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-	// static inline int arch_make_page_accessible(struct page *page)
+	// static inline int arch_make_page_accessible(page_s *page)
 	// {
 	// 	return 0;
 	// }
@@ -1709,7 +1713,7 @@
 	// */
 	// #include <linux/vmstat.h>
 
-	// static __always_inline void *lowmem_page_address(const struct page *page)
+	// static __always_inline void *lowmem_page_address(const page_s *page)
 	// {
 	// 	return page_to_virt(page);
 	// }
@@ -1719,11 +1723,11 @@
 	// #endif
 
 	// #if defined(WANT_PAGE_VIRTUAL)
-	// static inline void *page_address(const struct page *page)
+	// static inline void *page_address(const page_s *page)
 	// {
 	// 	return page->virtual;
 	// }
-	// static inline void set_page_address(struct page *page, void *address)
+	// static inline void set_page_address(page_s *page, void *address)
 	// {
 	// 	page->virtual = address;
 	// }
@@ -1731,8 +1735,8 @@
 	// #endif
 
 	// #if defined(HASHED_PAGE_VIRTUAL)
-	// void *page_address(const struct page *page);
-	// void set_page_address(struct page *page, void *virtual);
+	// void *page_address(const page_s *page);
+	// void set_page_address(page_s *page, void *virtual);
 	// void page_address_init(void);
 	// #endif
 
@@ -1747,22 +1751,22 @@
 	// 	return page_address(&folio->page);
 	// }
 
-	// extern void *page_rmapping(struct page *page);
-	// extern struct anon_vma *page_anon_vma(struct page *page);
-	// extern pgoff_t __page_file_index(struct page *page);
+	// extern void *page_rmapping(page_s *page);
+	// extern struct anon_vma *page_anon_vma(page_s *page);
+	// extern pgoff_t __page_file_index(page_s *page);
 
 	// /*
 	// * Return the pagecache index of the passed page.  Regular pagecache pages
 	// * use ->index whereas swapcache pages use swp_offset(->private)
 	// */
-	// static inline pgoff_t page_index(struct page *page)
+	// static inline pgoff_t page_index(page_s *page)
 	// {
 	// 	if (unlikely(PageSwapCache(page)))
 	// 		return __page_file_index(page);
 	// 	return page->index;
 	// }
 
-	// bool page_mapped(struct page *page);
+	// bool page_mapped(page_s *page);
 	// bool folio_mapped(struct folio *folio);
 
 	// /*
@@ -1770,7 +1774,7 @@
 	// * ALLOC_NO_WATERMARKS and the low watermark was not
 	// * met implying that the system is under some pressure.
 	// */
-	// static inline bool page_is_pfmemalloc(const struct page *page)
+	// static inline bool page_is_pfmemalloc(const page_s *page)
 	// {
 	// 	/*
 	// 	* lru.next has bit 1 set if the page is allocated from the
@@ -1784,12 +1788,12 @@
 	// * Only to be called by the page allocator on a freshly allocated
 	// * page.
 	// */
-	// static inline void set_page_pfmemalloc(struct page *page)
+	// static inline void set_page_pfmemalloc(page_s *page)
 	// {
 	// 	page->lru.next = (void *)BIT(1);
 	// }
 
-	// static inline void clear_page_pfmemalloc(struct page *page)
+	// static inline void clear_page_pfmemalloc(page_s *page)
 	// {
 	// 	page->lru.next = NULL;
 	// }
@@ -1819,9 +1823,9 @@
 	// extern int user_shm_lock(size_t, struct ucounts *);
 	// extern void user_shm_unlock(size_t, struct ucounts *);
 
-	// struct page *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+	// page_s *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
 	// 				pte_t pte);
-	// struct page *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
+	// page_s *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
 	// 				pmd_t pmd);
 
 	// void zap_vma_ptes(struct vm_area_struct *vma, unsigned long address,
@@ -1853,8 +1857,8 @@
 	// extern void truncate_setsize(struct inode *inode, loff_t newsize);
 	// void pagecache_isize_extended(struct inode *inode, loff_t from, loff_t to);
 	// void truncate_pagecache_range(struct inode *inode, loff_t offset, loff_t end);
-	// int generic_error_remove_page(struct address_space *mapping, struct page *page);
-	// int invalidate_inode_page(struct page *page);
+	// int generic_error_remove_page(struct address_space *mapping, page_s *page);
+	// int invalidate_inode_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
 	// extern vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
@@ -1904,31 +1908,31 @@
 
 	// long get_user_pages_remote(struct mm_struct *mm,
 	// 				unsigned long start, unsigned long nr_pages,
-	// 				unsigned int gup_flags, struct page **pages,
+	// 				unsigned int gup_flags, page_s **pages,
 	// 				struct vm_area_struct **vmas, int *locked);
 	// long pin_user_pages_remote(struct mm_struct *mm,
 	// 			unsigned long start, unsigned long nr_pages,
-	// 			unsigned int gup_flags, struct page **pages,
+	// 			unsigned int gup_flags, page_s **pages,
 	// 			struct vm_area_struct **vmas, int *locked);
 	// long get_user_pages(unsigned long start, unsigned long nr_pages,
-	// 				unsigned int gup_flags, struct page **pages,
+	// 				unsigned int gup_flags, page_s **pages,
 	// 				struct vm_area_struct **vmas);
 	// long pin_user_pages(unsigned long start, unsigned long nr_pages,
-	// 			unsigned int gup_flags, struct page **pages,
+	// 			unsigned int gup_flags, page_s **pages,
 	// 			struct vm_area_struct **vmas);
 	// long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
-	// 			unsigned int gup_flags, struct page **pages, int *locked);
+	// 			unsigned int gup_flags, page_s **pages, int *locked);
 	// long pin_user_pages_locked(unsigned long start, unsigned long nr_pages,
-	// 			unsigned int gup_flags, struct page **pages, int *locked);
+	// 			unsigned int gup_flags, page_s **pages, int *locked);
 	// long get_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-	// 			struct page **pages, unsigned int gup_flags);
+	// 			page_s **pages, unsigned int gup_flags);
 	// long pin_user_pages_unlocked(unsigned long start, unsigned long nr_pages,
-	// 			struct page **pages, unsigned int gup_flags);
+	// 			page_s **pages, unsigned int gup_flags);
 
 	// int get_user_pages_fast(unsigned long start, int nr_pages,
-	// 			unsigned int gup_flags, struct page **pages);
+	// 			unsigned int gup_flags, page_s **pages);
 	// int pin_user_pages_fast(unsigned long start, int nr_pages,
-	// 			unsigned int gup_flags, struct page **pages);
+	// 			unsigned int gup_flags, page_s **pages);
 
 	// int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
 	// int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
@@ -1936,15 +1940,15 @@
 
 	// struct kvec;
 	// int get_kernel_pages(const struct kvec *iov, int nr_pages, int write,
-	// 			struct page **pages);
-	// struct page *get_dump_page(unsigned long addr);
+	// 			page_s **pages);
+	// page_s *get_dump_page(unsigned long addr);
 
-	// extern void do_invalidatepage(struct page *page, unsigned int offset,
+	// extern void do_invalidatepage(page_s *page, unsigned int offset,
 	// 				unsigned int length);
 
 	// bool folio_mark_dirty(struct folio *folio);
-	// bool set_page_dirty(struct page *page);
-	// int set_page_dirty_lock(struct page *page);
+	// bool set_page_dirty(page_s *page);
+	// int set_page_dirty_lock(page_s *page);
 
 	// int get_cmdline(struct task_struct *task, char *buffer, int buflen);
 
@@ -1980,12 +1984,12 @@
 	// * doesn't attempt to fault and will return short.
 	// */
 	// int get_user_pages_fast_only(unsigned long start, int nr_pages,
-	// 				unsigned int gup_flags, struct page **pages);
+	// 				unsigned int gup_flags, page_s **pages);
 	// int pin_user_pages_fast_only(unsigned long start, int nr_pages,
-	// 				unsigned int gup_flags, struct page **pages);
+	// 				unsigned int gup_flags, page_s **pages);
 
 	// static inline bool get_user_page_fast_only(unsigned long addr,
-	// 			unsigned int gup_flags, struct page **pagep)
+	// 			unsigned int gup_flags, page_s **pagep)
 	// {
 	// 	return get_user_pages_fast_only(addr, 1, gup_flags, pagep) == 1;
 	// }
@@ -2031,14 +2035,14 @@
 	// }
 
 	// /* Optimized variant when page is already known not to be PageAnon */
-	// static inline int mm_counter_file(struct page *page)
+	// static inline int mm_counter_file(page_s *page)
 	// {
 	// 	if (PageSwapBacked(page))
 	// 		return MM_SHMEMPAGES;
 	// 	return MM_FILEPAGES;
 	// }
 
-	// static inline int mm_counter(struct page *page)
+	// static inline int mm_counter(page_s *page)
 	// {
 	// 	if (PageAnon(page))
 	// 		return MM_ANONPAGES;
@@ -2255,10 +2259,10 @@
 	// #if USE_SPLIT_PTE_PTLOCKS
 	// #if ALLOC_SPLIT_PTLOCKS
 	// void __init ptlock_cache_init(void);
-	// extern bool ptlock_alloc(struct page *page);
-	// extern void ptlock_free(struct page *page);
+	// extern bool ptlock_alloc(page_s *page);
+	// extern void ptlock_free(page_s *page);
 
-	// static inline spinlock_t *ptlock_ptr(struct page *page)
+	// static inline spinlock_t *ptlock_ptr(page_s *page)
 	// {
 	// 	return page->ptl;
 	// }
@@ -2267,16 +2271,16 @@
 	// {
 	// }
 
-	// static inline bool ptlock_alloc(struct page *page)
+	// static inline bool ptlock_alloc(page_s *page)
 	// {
 	// 	return true;
 	// }
 
-	// static inline void ptlock_free(struct page *page)
+	// static inline void ptlock_free(page_s *page)
 	// {
 	// }
 
-	// static inline spinlock_t *ptlock_ptr(struct page *page)
+	// static inline spinlock_t *ptlock_ptr(page_s *page)
 	// {
 	// 	return &page->ptl;
 	// }
@@ -2287,7 +2291,7 @@
 	// 	return ptlock_ptr(pmd_page(*pmd));
 	// }
 
-	// static inline bool ptlock_init(struct page *page)
+	// static inline bool ptlock_init(page_s *page)
 	// {
 	// 	/*
 	// 	* prep_new_page() initialize page->private (and therefore page->ptl)
@@ -2312,8 +2316,8 @@
 	// 	return &mm->page_table_lock;
 	// }
 	// static inline void ptlock_cache_init(void) {}
-	// static inline bool ptlock_init(struct page *page) { return true; }
-	// static inline void ptlock_free(struct page *page) {}
+	// static inline bool ptlock_init(page_s *page) { return true; }
+	// static inline void ptlock_free(page_s *page) {}
 	// #endif /* USE_SPLIT_PTE_PTLOCKS */
 
 	// static inline void pgtable_init(void)
@@ -2322,7 +2326,7 @@
 	// 	pgtable_cache_init();
 	// }
 
-	// static inline bool pgtable_pte_page_ctor(struct page *page)
+	// static inline bool pgtable_pte_page_ctor(page_s *page)
 	// {
 	// 	if (!ptlock_init(page))
 	// 		return false;
@@ -2331,7 +2335,7 @@
 	// 	return true;
 	// }
 
-	// static inline void pgtable_pte_page_dtor(struct page *page)
+	// static inline void pgtable_pte_page_dtor(page_s *page)
 	// {
 	// 	ptlock_free(page);
 	// 	__ClearPageTable(page);
@@ -2367,7 +2371,7 @@
 
 	// #if USE_SPLIT_PMD_PTLOCKS
 
-	// static struct page *pmd_to_page(pmd_t *pmd)
+	// static page_s *pmd_to_page(pmd_t *pmd)
 	// {
 	// 	unsigned long mask = ~(PTRS_PER_PMD * sizeof(pmd_t) - 1);
 	// 	return virt_to_page((void *)((unsigned long) pmd & mask));
@@ -2378,7 +2382,7 @@
 	// 	return ptlock_ptr(pmd_to_page(pmd));
 	// }
 
-	// static inline bool pmd_ptlock_init(struct page *page)
+	// static inline bool pmd_ptlock_init(page_s *page)
 	// {
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	// 	page->pmd_huge_pte = NULL;
@@ -2386,7 +2390,7 @@
 	// 	return ptlock_init(page);
 	// }
 
-	// static inline void pmd_ptlock_free(struct page *page)
+	// static inline void pmd_ptlock_free(page_s *page)
 	// {
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	// 	VM_BUG_ON_PAGE(page->pmd_huge_pte, page);
@@ -2403,8 +2407,8 @@
 	// 	return &mm->page_table_lock;
 	// }
 
-	// static inline bool pmd_ptlock_init(struct page *page) { return true; }
-	// static inline void pmd_ptlock_free(struct page *page) {}
+	// static inline bool pmd_ptlock_init(page_s *page) { return true; }
+	// static inline void pmd_ptlock_free(page_s *page) {}
 
 	// #define pmd_huge_pte(mm, pmd) ((mm)->pmd_huge_pte)
 
@@ -2417,7 +2421,7 @@
 	// 	return ptl;
 	// }
 
-	// static inline bool pgtable_pmd_page_ctor(struct page *page)
+	// static inline bool pgtable_pmd_page_ctor(page_s *page)
 	// {
 	// 	if (!pmd_ptlock_init(page))
 	// 		return false;
@@ -2426,7 +2430,7 @@
 	// 	return true;
 	// }
 
-	// static inline void pgtable_pmd_page_dtor(struct page *page)
+	// static inline void pgtable_pmd_page_dtor(page_s *page)
 	// {
 	// 	pmd_ptlock_free(page);
 	// 	__ClearPageTable(page);
@@ -2465,14 +2469,14 @@
 	// extern unsigned long free_reserved_area(void *start, void *end,
 	// 					int poison, const char *s);
 
-	// extern void adjust_managed_page_count(struct page *page, long count);
+	// extern void adjust_managed_page_count(page_s *page, long count);
 	// extern void mem_init_print_info(void);
 
 	extern void
 	reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
 
 	// /* Free the reserved page into the buddy system, so it gets managed. */
-	// static inline void free_reserved_page(struct page *page)
+	// static inline void free_reserved_page(page_s *page)
 	// {
 	// 	ClearPageReserved(page);
 	// 	init_page_count(page);
@@ -2481,7 +2485,7 @@
 	// }
 	// #define free_highmem_page(page) free_reserved_page(page)
 
-	// static inline void mark_page_reserved(struct page *page)
+	// static inline void mark_page_reserved(page_s *page)
 	// {
 	// 	SetPageReserved(page);
 	// 	adjust_managed_page_count(page, -1);
@@ -2677,7 +2681,7 @@
 	// /* This is an obsolete alternative to _install_special_mapping. */
 	// extern int install_special_mapping(struct mm_struct *mm,
 	// 				unsigned long addr, unsigned long len,
-	// 				unsigned long flags, struct page **pages);
+	// 				unsigned long flags, page_s **pages);
 
 	// unsigned long randomize_stack_top(unsigned long stack_top);
 
@@ -2869,12 +2873,12 @@
 	// 			unsigned long pfn, unsigned long size, pgprot_t);
 	// int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long addr,
 	// 		unsigned long pfn, unsigned long size, pgprot_t prot);
-	// int vm_insert_page(struct vm_area_struct *, unsigned long addr, struct page *);
+	// int vm_insert_page(struct vm_area_struct *, unsigned long addr, page_s *);
 	// int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
-	// 			struct page **pages, unsigned long *num);
-	// int vm_map_pages(struct vm_area_struct *vma, struct page **pages,
+	// 			page_s **pages, unsigned long *num);
+	// int vm_map_pages(struct vm_area_struct *vma, page_s **pages,
 	// 				unsigned long num);
-	// int vm_map_pages_zero(struct vm_area_struct *vma, struct page **pages,
+	// int vm_map_pages_zero(struct vm_area_struct *vma, page_s **pages,
 	// 				unsigned long num);
 	// vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
 	// 			unsigned long pfn);
@@ -2889,7 +2893,7 @@
 	// int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
 
 	// static inline vm_fault_t vmf_insert_page(struct vm_area_struct *vma,
-	// 				unsigned long addr, struct page *page)
+	// 				unsigned long addr, page_s *page)
 	// {
 	// 	int err = vm_insert_page(vma, addr, page);
 
@@ -2917,7 +2921,7 @@
 	// 	return VM_FAULT_SIGBUS;
 	// }
 
-	// struct page *follow_page(struct vm_area_struct *vma, unsigned long address,
+	// page_s *follow_page(struct vm_area_struct *vma, unsigned long address,
 	// 			unsigned int foll_flags);
 
 	// #define FOLL_WRITE	0x01	/* check pte is writable */
@@ -3018,8 +3022,8 @@
 
 	// extern void init_mem_debugging_and_hardening(void);
 	// #ifdef CONFIG_PAGE_POISONING
-	// extern void __kernel_poison_pages(struct page *page, int numpages);
-	// extern void __kernel_unpoison_pages(struct page *page, int numpages);
+	// extern void __kernel_poison_pages(page_s *page, int numpages);
+	// extern void __kernel_unpoison_pages(page_s *page, int numpages);
 	// extern bool _page_poisoning_enabled_early;
 	// DECLARE_STATIC_KEY_FALSE(_page_poisoning_enabled);
 	// static inline bool page_poisoning_enabled(void)
@@ -3034,12 +3038,12 @@
 	// {
 	// 	return static_branch_unlikely(&_page_poisoning_enabled);
 	// }
-	// static inline void kernel_poison_pages(struct page *page, int numpages)
+	// static inline void kernel_poison_pages(page_s *page, int numpages)
 	// {
 	// 	if (page_poisoning_enabled_static())
 	// 		__kernel_poison_pages(page, numpages);
 	// }
-	// static inline void kernel_unpoison_pages(struct page *page, int numpages)
+	// static inline void kernel_unpoison_pages(page_s *page, int numpages)
 	// {
 	// 	if (page_poisoning_enabled_static())
 	// 		__kernel_unpoison_pages(page, numpages);
@@ -3047,9 +3051,9 @@
 	// #else
 	// static inline bool page_poisoning_enabled(void) { return false; }
 	// static inline bool page_poisoning_enabled_static(void) { return false; }
-	// static inline void __kernel_poison_pages(struct page *page, int nunmpages) { }
-	// static inline void kernel_poison_pages(struct page *page, int numpages) { }
-	// static inline void kernel_unpoison_pages(struct page *page, int numpages) { }
+	// static inline void __kernel_poison_pages(page_s *page, int nunmpages) { }
+	// static inline void kernel_poison_pages(page_s *page, int numpages) { }
+	// static inline void kernel_unpoison_pages(page_s *page, int numpages) { }
 	// #endif
 
 	// DECLARE_STATIC_KEY_MAYBE(CONFIG_INIT_ON_ALLOC_DEFAULT_ON, init_on_alloc);
@@ -3094,22 +3098,22 @@
 	// * To support DEBUG_PAGEALLOC architecture must ensure that
 	// * __kernel_map_pages() never fails
 	// */
-	// extern void __kernel_map_pages(struct page *page, int numpages, int enable);
+	// extern void __kernel_map_pages(page_s *page, int numpages, int enable);
 
-	// static inline void debug_pagealloc_map_pages(struct page *page, int numpages)
+	// static inline void debug_pagealloc_map_pages(page_s *page, int numpages)
 	// {
 	// 	if (debug_pagealloc_enabled_static())
 	// 		__kernel_map_pages(page, numpages, 1);
 	// }
 
-	// static inline void debug_pagealloc_unmap_pages(struct page *page, int numpages)
+	// static inline void debug_pagealloc_unmap_pages(page_s *page, int numpages)
 	// {
 	// 	if (debug_pagealloc_enabled_static())
 	// 		__kernel_map_pages(page, numpages, 0);
 	// }
 	// #else	/* CONFIG_DEBUG_PAGEALLOC */
-	// static inline void debug_pagealloc_map_pages(struct page *page, int numpages) {}
-	// static inline void debug_pagealloc_unmap_pages(struct page *page, int numpages) {}
+	// static inline void debug_pagealloc_map_pages(page_s *page, int numpages) {}
+	// static inline void debug_pagealloc_unmap_pages(page_s *page, int numpages) {}
 	// #endif	/* CONFIG_DEBUG_PAGEALLOC */
 
 	// #ifdef __HAVE_ARCH_GATE_AREA
@@ -3159,7 +3163,7 @@
 	// 			unsigned long reuse, gfp_t gfp_mask);
 
 	// void *sparse_buffer_alloc(unsigned long size);
-	// struct page * __populate_section_memmap(unsigned long pfn,
+	// page_s * __populate_section_memmap(unsigned long pfn,
 	// 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap);
 	// pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
 	// p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
@@ -3181,7 +3185,7 @@
 	// void vmemmap_free(unsigned long start, unsigned long end,
 	// 		struct vmem_altmap *altmap);
 	// #endif
-	// void register_page_bootmem_memmap(unsigned long section_nr, struct page *map,
+	// void register_page_bootmem_memmap(unsigned long section_nr, page_s *map,
 	// 				unsigned long nr_pages);
 
 	// enum mf_flags {
@@ -3197,7 +3201,7 @@
 	// extern int unpoison_memory(unsigned long pfn);
 	// extern int sysctl_memory_failure_early_kill;
 	// extern int sysctl_memory_failure_recovery;
-	// extern void shake_page(struct page *p);
+	// extern void shake_page(page_s *p);
 	// extern atomic_long_t num_poisoned_pages __read_mostly;
 	// extern int soft_offline_page(unsigned long pfn, int flags);
 
@@ -3250,14 +3254,14 @@
 	// };
 
 	// #if defined(CONFIG_TRANSPARENT_HUGEPAGE) || defined(CONFIG_HUGETLBFS)
-	// extern void clear_huge_page(struct page *page,
+	// extern void clear_huge_page(page_s *page,
 	// 				unsigned long addr_hint,
 	// 				unsigned int pages_per_huge_page);
-	// extern void copy_user_huge_page(struct page *dst, struct page *src,
+	// extern void copy_user_huge_page(page_s *dst, page_s *src,
 	// 				unsigned long addr_hint,
 	// 				struct vm_area_struct *vma,
 	// 				unsigned int pages_per_huge_page);
-	// extern long copy_huge_page_from_user(struct page *dst_page,
+	// extern long copy_huge_page_from_user(page_s *dst_page,
 	// 				const void __user *usr_src,
 	// 				unsigned int pages_per_huge_page,
 	// 				bool allow_pagefault);
@@ -3294,7 +3298,7 @@
 	// 	return static_branch_unlikely(&_debug_guardpage_enabled);
 	// }
 
-	// static inline bool page_is_guard(struct page *page)
+	// static inline bool page_is_guard(page_s *page)
 	// {
 	// 	if (!debug_guardpage_enabled())
 	// 		return false;
@@ -3304,7 +3308,8 @@
 	// #else
 	// static inline unsigned int debug_guardpage_minorder(void) { return 0; }
 	// static inline bool debug_guardpage_enabled(void) { return false; }
-	// static inline bool page_is_guard(struct page *page) { return false; }
+	static inline bool
+	page_is_guard(page_s *page) { return false; }
 	// #endif /* CONFIG_DEBUG_PAGEALLOC */
 
 	// #if MAX_NUMNODES > 1
@@ -3313,9 +3318,9 @@
 	// static inline void setup_nr_node_ids(void) {}
 	// #endif
 
-	// extern int memcmp_pages(struct page *page1, struct page *page2);
+	// extern int memcmp_pages(page_s *page1, page_s *page2);
 
-	// static inline int pages_identical(struct page *page1, struct page *page2)
+	// static inline int pages_identical(page_s *page1, page_s *page2)
 	// {
 	// 	return !memcmp_pages(page1, page2);
 	// }
@@ -3385,19 +3390,17 @@
 	// #endif
 
  
-
-	#	include <linux/mm/myos_page.h>
-		static inline zone_s *myos_page_zone(const page_s * page)
+	static inline zone_s *myos_page_zone(const page_s * page)
+	{
+		unsigned long pfn = page_to_pfn(page);
+		for (int i = 0 ; i < MAX_NR_ZONES; i ++)
 		{
-			unsigned long pfn = page_to_pfn(page);
-			for (int i = 0 ; i < MAX_NR_ZONES; i ++)
-			{
-				zone_s * zone = &pg_list.node_zones[i];
-				if (pfn >= zone->zone_start_pfn && 
-					pfn < (zone->zone_start_pfn + zone->spanned_pages))
-					return zone;
-			}
+			zone_s * zone = &(NODE_DATA(0)->node_zones[i]);
+			if (pfn >= zone->zone_start_pfn && 
+				pfn < (zone->zone_start_pfn + zone->spanned_pages))
+				return zone;
 		}
+	}
 
 	#endif /* __KERNEL__ */
 

@@ -239,9 +239,6 @@ void __init setup_arch(char **cmdline_p)
 	myos_init_video();
 
 
-	// x86_init.paging.pagetable_init() {
-	// void __init paging_init(>void) {
-	// }
-		zone_sizes_init();
-	// }
+	// x86_init.paging.pagetable_init()
+	paging_init();
 }
