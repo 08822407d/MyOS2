@@ -67,7 +67,7 @@ void myos_init_slab()
 		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
 		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
 		__SetPageSlab(bslp->page);
-		bslp->page->slab_ptr = bslp;
+		bslp->page->private = (unsigned long)bslp;
 	}
 	// set init flag
 	kparam.init_flags.slab = 1;
@@ -83,7 +83,7 @@ slab_s * slab_alloc(slab_s *cslp)
 	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = page;
-	page->slab_ptr = nslp;
+	page->private = (unsigned long)nslp;
 	nslp->colormap = (bitmap_t *)kmalloc(cslp->total /
 					sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
 	nslp->total =
@@ -95,9 +95,11 @@ slab_s * slab_alloc(slab_s *cslp)
 
 void slab_free(slab_s *slp)
 {
+	while (!PageSlab(slp->page));
+	
 	kfree(slp->colormap);
 	__ClearPageSlab(slp->page);
-	slp->page->slab_ptr = NULL;
+	slp->page->private = 0;
 	list_delete(&slp->slab_list);
 	slp->slabcache_ptr->normal_slab_free.count--;
 
@@ -205,7 +207,8 @@ void kfree(const void *objp)
 	phys_addr_t pg_addr = myos_virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
 	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
 	page_s *page = &mem_map[pg_idx];
-	slab_s *slp = page->slab_ptr;
+	while (!PageSlab(page));
+	slab_s *slp = (slab_s *)page->private;
 	slab_cache_s * scgp = slp->slabcache_ptr;
 	// of coures it should not in an empty-slab
 	if (slp->free == slp->total)

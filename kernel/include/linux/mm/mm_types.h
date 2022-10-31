@@ -82,7 +82,7 @@
 		union
 		{
 			struct
-			{ /* Page cache and anonymous pages */
+			{	/* Page cache and anonymous pages */
 				/**
 				 * @lru: Pageout list, eg. active_list protected by
 				 * lruvec->lru_lock.  Sometimes used as a generic list
@@ -124,16 +124,16 @@
 	// 				atomic_long_t pp_frag_count;
 	// 			};
 	// 		};
-	// 		struct
-	// 		{								 /* Tail pages of compound page */
-	// 			unsigned long compound_head; /* Bit zero is set */
+			struct
+			{	/* Tail pages of compound page */
+				unsigned long	compound_head;		/* Bit zero is set */
 
-	// 			/* First tail page only */
-	// 			unsigned char compound_dtor;
-	// 			unsigned char compound_order;
-	// 			atomic_t compound_mapcount;
-	// 			unsigned int compound_nr; /* 1 << compound_order */
-	// 		};
+				/* First tail page only */
+				unsigned char	compound_dtor;
+				unsigned char	compound_order;
+				atomic_t		compound_mapcount;
+				unsigned int	compound_nr;		/* 1 << compound_order */
+			};
 	// 		struct
 	// 		{								   /* Second tail page of compound page */
 	// 			unsigned long _compound_pad_1; /* compound_head */
@@ -205,9 +205,6 @@
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
 	// #endif
-
-
-		slab_s *		slab_ptr;
 	} page_s _struct_page_alignment ;
 
 	/**
@@ -306,10 +303,10 @@
 	 */
 	#define page_private(page)	((page)->private)
 
-	static inline void
-	set_page_private(page_s *page, unsigned long private) {
-		page->private = private;
-	}
+	// static inline void
+	// set_page_private(page_s *page, unsigned long private) {
+	// 	page->private = private;
+	// }
 
 	// static inline void *folio_get_private(struct folio *folio)
 	// {

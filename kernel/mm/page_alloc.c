@@ -160,7 +160,7 @@ buddy_order(page_s *page) {
 
 static inline void
 set_buddy_order(page_s *page, unsigned int order) {
-	set_page_private(page, order);
+	page->private = (unsigned long)order;
 	__SetPageBuddy(page);
 }
 
@@ -300,6 +300,9 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 		while (page_lp == NULL);
 
 		page = container_of(page_lp, page_s, lru);
+		__ClearPageBuddy(page);
+		page->private = 0;
+
 		expand(zone, page, order, current_order);
 		for (int i = 0; i < (1 << order); i++)
 			atomic_inc(&(page[i]._refcount));
