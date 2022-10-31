@@ -170,8 +170,7 @@ add_to_free_list(page_s *page, zone_s *zone,
 		unsigned int order)
 {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_hdr_push(fa_lhdr, &page->free_list);
-	zone->zone_pgdat->node_present_pages += 1 << order;
+	list_hdr_push(fa_lhdr, &page->lru);
 }
 
 /* Used for pages not on another list */
@@ -180,8 +179,7 @@ add_to_free_list_tail(page_s *page, zone_s *zone,
 		unsigned int order)
 {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_hdr_append(fa_lhdr, &page->free_list);
-	zone->zone_pgdat->node_present_pages += 1 << order;
+	list_hdr_append(fa_lhdr, &page->lru);
 }
 
 static inline page_s *
@@ -191,7 +189,7 @@ get_page_from_free_area(List_hdr_s *area)
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return container_of(pg_lp, page_s, free_list);
+		return container_of(pg_lp, page_s, lru);
 }
 
 static inline page_s *
@@ -199,11 +197,11 @@ del_page_from_free_list(page_s *page, zone_s * zone,
 		unsigned int order)
 {
 	List_s * pg_lp = list_hdr_delete(&zone->free_area[order],
-			&page->free_list);
+			&page->lru);
 	if (pg_lp == NULL)
 		return NULL;
 	else
-		return container_of(pg_lp, page_s, free_list);
+		return container_of(pg_lp, page_s, lru);
 }
 
 /*
@@ -271,8 +269,8 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
 static inline bool
 page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
 {
-	if (!page_is_guard(page) && !PageBuddy(buddy))
-		return false;
+	if (!page_is_guard(page) && !PageBuddy(buddy)) return false;
+
 	if (buddy_order(buddy) != order) return false;
 
 	if (myos_page_zone(page) != myos_page_zone(buddy)) return false;
@@ -301,10 +299,10 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 		List_s * page_lp = list_hdr_pop(&zone->free_area[current_order]);
 		while (page_lp == NULL);
 
-		page = container_of(page_lp, page_s, free_list);
+		page = container_of(page_lp, page_s, lru);
 		expand(zone, page, order, current_order);
 		for (int i = 0; i < (1 << order); i++)
-			page[i].ref_count++;
+			atomic_inc(&(page[i]._refcount));
 
 		return page;
 	}
@@ -352,10 +350,10 @@ __free_one_page(page_s *page, unsigned long pfn,
 		buddy = page + (buddy_pfn - pfn);
 
 		if (page_is_buddy(page, buddy, order) == false ||
-			!list_in_lhdr(&zone->free_area[order], &page->free_list))
+			!list_in_lhdr(&zone->free_area[order], &page->lru))
 			break;
 
-		list_hdr_delete(&zone->free_area[order], &page->free_list);
+		list_hdr_delete(&zone->free_area[order], &page->lru);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;
@@ -830,8 +828,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++)
 	{
 		page_s *page = &(NODE_DATA(0)->node_mem_map[i]);
-		list_init(&page->free_list, page);
-		page->page_start_addr = (phys_addr_t)(i * PAGE_SIZE);
+		list_init(&page->lru, page);
 	}
 }
 

@@ -207,9 +207,9 @@
 	// 	 */
 	// 	#define page_folio(p) (_Generic((p),                                       \
 	// 									const page_s *                        \
-	// 									: (const struct folio *)_compound_head(p), \
+	// 									: (const folio_s *)_compound_head(p), \
 	// 									page_s *                            \
-	// 									: (struct folio *)_compound_head(p)))
+	// 									: (folio_s *)_compound_head(p)))
 
 	// 	/**
 	// 	 * folio_page - Return a page from a folio.
@@ -246,14 +246,14 @@
 	// 		}
 	// 	#endif
 
-		// static unsigned long *folio_flags(struct folio *folio, unsigned n)
-		// {
-		// 	page_s *page = &folio->page;
+		static unsigned long
+		*folio_flags(folio_s *folio, unsigned n) {
+			page_s *page = &folio->page;
 
-		// 	VM_BUG_ON_PGFLAGS(PageTail(page), page);
-		// 	VM_BUG_ON_PGFLAGS(n > 0 && !test_bit(PG_head, &page->flags), page);
-		// 	return &page[n].flags;
-		// }
+			// VM_BUG_ON_PGFLAGS(PageTail(page), page);
+			// VM_BUG_ON_PGFLAGS(n > 0 && !test_bit(PG_head, &page->flags), page);
+			return &page[n].flags;
+		}
 
 		// /*
 		//  * Page flags policies wrt compound pages
@@ -320,74 +320,94 @@
 		#define FOLIO_PF_SECOND			1
 
 		/*
-		* Macros to create function definitions for page flags
-		*/
-	#	define TESTPAGEFLAG(uname, lname, policy) static __always_inline int	\
-					Page##uname(page_s *page) {									\
-						return test_bit(PG_##lname, &policy(page, 0)->flags);	\
-					}															\
-	// 		static __always_inline bool folio_test_##lname(struct folio *folio)  \
-	// 		{                                                                    \
-	// 			return test_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
-	// 		}
-
-	#	define SETPAGEFLAG(uname, lname, policy) static __always_inline void	\
-					SetPage##uname(page_s *page) {								\
-						set_bit(PG_##lname, &policy(page, 1)->flags);			\
-					}															\
-	// 		static __always_inline void folio_set_##lname(struct folio *folio) \
-	// 		{                                                                  \
-	// 			set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
-	// 		}
-
-	#	define CLEARPAGEFLAG(uname, lname, policy) static __always_inline void	\
-					ClearPage##uname(page_s *page) {							\
-						clear_bit(PG_##lname, &policy(page, 1)->flags);			\
-					}															\
-	// 		static __always_inline void folio_clear_##lname(struct folio *folio) \
-	// 		{                                                                    \
-	// 			clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
-	// 		}
-
-	#	define __SETPAGEFLAG(uname, lname, policy) static __always_inline void	\
-					__SetPage##uname(page_s *page) {							\
-						__set_bit(PG_##lname, &policy(page, 1)->flags);			\
-					}															\
-	// 		static __always_inline void __folio_set_##lname(struct folio *folio) \
-	// 		{                                                                    \
-	// 			__set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
-	// 		}
-
-	#	define __CLEARPAGEFLAG(uname, lname, policy) static __always_inline void	\
-					__ClearPage##uname(page_s *page) {								\
-						__clear_bit(PG_##lname, &policy(page, 1)->flags);			\
-					}																\
-	// 		static __always_inline void __folio_clear_##lname(struct folio *folio) \
-	// 		{                                                                      \
-	// 			__clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy));       \
-	// 		}
-
-	#	define TESTSETFLAG(uname, lname, policy) static __always_inline int				\
-					TestSetPage##uname(page_s *page) {									\
-						return test_and_set_bit(PG_##lname, &policy(page, 1)->flags);	\
+		 * Macros to create function definitions for page flags
+		 */
+	#	define TESTPAGEFLAG(uname, lname, policy)						\
+					static __always_inline int							\
+					Page##uname(page_s *page) {							\
+						return test_bit(PG_##lname,						\
+								&policy(page, 0)->flags);				\
+					}													\
+					static __always_inline bool							\
+					folio_test_##lname(folio_s *folio) {				\
+						return test_bit(PG_##lname,						\
+								folio_flags(folio, FOLIO_##policy));	\
 					}
-	// 		static __always_inline bool folio_test_set_##lname(struct folio *folio)      \
-	// 		{                                                                            \
-	// 			return test_and_set_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
-	// 		}
 
-	#	define TESTCLEARFLAG(uname, lname, policy) static __always_inline int			\
-					TestClearPage##uname(page_s *page) {								\
-						return test_and_clear_bit(PG_##lname, &policy(page, 1)->flags);	\
-					}																	\
-	// 		static __always_inline bool folio_test_clear_##lname(struct folio *folio)      \
-	// 		{                                                                              \
-	// 			return test_and_clear_bit(PG_##lname, folio_flags(folio, FOLIO_##policy)); \
-	// 		}
+	#	define SETPAGEFLAG(uname, lname, policy)						\
+					static __always_inline void							\
+					SetPage##uname(page_s *page) {						\
+						set_bit(PG_##lname, &policy(page, 1)->flags);	\
+					}													\
+					static __always_inline void							\
+					folio_set_##lname(folio_s *folio) {					\
+						set_bit(PG_##lname,								\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
 
-	#	define PAGEFLAG(uname, lname, policy)			\
-					TESTPAGEFLAG(uname, lname, policy)	\
-					SETPAGEFLAG(uname, lname, policy)	\
+	#	define CLEARPAGEFLAG(uname, lname, policy)						\
+					static __always_inline void							\
+					ClearPage##uname(page_s *page) {					\
+						clear_bit(PG_##lname,							\
+								&policy(page, 1)->flags);				\
+					}													\
+					static __always_inline void							\
+					folio_clear_##lname(folio_s *folio) {				\
+						clear_bit(PG_##lname,							\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
+
+	#	define __SETPAGEFLAG(uname, lname, policy)						\
+					static __always_inline void							\
+					__SetPage##uname(page_s *page) {					\
+						__set_bit(PG_##lname,							\
+								&policy(page, 1)->flags);				\
+					}													\
+					static __always_inline void							\
+					__folio_set_##lname(folio_s *folio) {				\
+						__set_bit(PG_##lname,							\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
+
+	#	define __CLEARPAGEFLAG(uname, lname, policy)					\
+					static __always_inline void							\
+					__ClearPage##uname(page_s *page) {					\
+						__clear_bit(PG_##lname,							\
+						&policy(page, 1)->flags);						\
+					}													\
+					static __always_inline void							\
+					__folio_clear_##lname(folio_s *folio) {				\
+						__clear_bit(PG_##lname,							\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
+
+	#	define TESTSETFLAG(uname, lname, policy)						\
+					static __always_inline int							\
+					TestSetPage##uname(page_s *page) {					\
+						return test_and_set_bit(PG_##lname,				\
+								&policy(page, 1)->flags);				\
+					}													\
+					static __always_inline bool							\
+					folio_test_set_##lname(folio_s *folio) {			\
+						return test_and_set_bit(PG_##lname,				\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
+
+	#	define TESTCLEARFLAG(uname, lname, policy)						\
+					static __always_inline int							\
+					TestClearPage##uname(page_s *page) {				\
+						return test_and_clear_bit(PG_##lname,			\
+								&policy(page, 1)->flags);				\
+					}													\
+					static __always_inline bool							\
+					folio_test_clear_##lname(folio_s *folio) {			\
+						return test_and_clear_bit(PG_##lname,			\
+								folio_flags(folio, FOLIO_##policy));	\
+					}
+
+	#	define PAGEFLAG(uname, lname, policy)				\
+					TESTPAGEFLAG(uname, lname, policy)		\
+					SETPAGEFLAG(uname, lname, policy)		\
 					CLEARPAGEFLAG(uname, lname, policy)
 
 	#	define __PAGEFLAG(uname, lname, policy)				\
@@ -395,33 +415,45 @@
 					__SETPAGEFLAG(uname, lname, policy)		\
 					__CLEARPAGEFLAG(uname, lname, policy)
 
-	#	define TESTSCFLAG(uname, lname, policy)			\
-					TESTSETFLAG(uname, lname, policy)	\
+	#	define TESTSCFLAG(uname, lname, policy)				\
+					TESTSETFLAG(uname, lname, policy)		\
 					TESTCLEARFLAG(uname, lname, policy)
 
-	#	define TESTPAGEFLAG_FALSE(uname, lname) static inline int	\
-					Page##uname(const page_s *page) { return 0; }	\
-					// static inline bool folio_test_##lname(const struct folio *folio) { return false; }
+	#	define TESTPAGEFLAG_FALSE(uname, lname)							\
+					static inline int									\
+					Page##uname(const page_s *page) { return 0; }		\
+					static inline bool									\
+					folio_test_##lname(const folio_s *folio) { return false; }
 
-	#	define SETPAGEFLAG_NOOP(uname, lname) static inline void	\
-					SetPage##uname(page_s *page) {}					\
-	// 		static inline void folio_set_##lname(struct folio *folio) {}
+	#	define SETPAGEFLAG_NOOP(uname, lname)							\
+					static inline void									\
+					SetPage##uname(page_s *page) {}						\
+					static inline void									\
+					folio_set_##lname(folio_s *folio) {}
 
-	#	define CLEARPAGEFLAG_NOOP(uname, lname) static inline void	\
-					ClearPage##uname(page_s *page) {}				\
-	// 		static inline void folio_clear_##lname(struct folio *folio) {}
+	#	define CLEARPAGEFLAG_NOOP(uname, lname)							\
+					static inline void									\
+					ClearPage##uname(page_s *page) {}					\
+					static inline void									\
+					folio_clear_##lname(folio_s *folio) {}
 
-	#	define __CLEARPAGEFLAG_NOOP(uname, lname) static inline void	\
+	#	define __CLEARPAGEFLAG_NOOP(uname, lname)						\
+					static inline void									\
 					__ClearPage##uname(page_s *page) {}					\
-	// 		static inline void __folio_clear_##lname(struct folio *folio) {}
+					static inline void									\
+					__folio_clear_##lname(folio_s *folio) {}
 
-	#	define TESTSETFLAG_FALSE(uname, lname) static inline int	\
-					TestSetPage##uname(page_s *page) { return 0; }	\
-	// 		static inline bool folio_test_set_##lname(struct folio *folio) { return 0; }
+	#	define TESTSETFLAG_FALSE(uname, lname)							\
+					static inline int									\
+					TestSetPage##uname(page_s *page) { return 0; }		\
+					static inline bool									\
+					folio_test_set_##lname(folio_s *folio) { return 0; }
 
-	#	define TESTCLEARFLAG_FALSE(uname, lname) static inline int	\
-					TestClearPage##uname(page_s *page) { return 0; }
-	// 		static inline bool folio_test_clear_##lname(struct folio *folio) { return 0; }                                                                \
+	#	define TESTCLEARFLAG_FALSE(uname, lname)						\
+					static inline int									\
+					TestClearPage##uname(page_s *page) { return 0; }	\
+					static inline bool									\
+					folio_test_clear_##lname(folio_s *folio) { return 0; }                                                                \
 
 	#	define PAGEFLAG_FALSE(uname, lname)				\
 					TESTPAGEFLAG_FALSE(uname, lname)	\
@@ -516,7 +548,7 @@
 		PAGEFLAG_FALSE(HighMem, highmem)
 
 		// static __always_inline bool
-		// folio_test_swapcache(struct folio *folio) {
+		// folio_test_swapcache(folio_s *folio) {
 		// 	return folio_test_swapbacked(folio) &&
 		// 		test_bit(PG_swapcache, folio_flags(folio, 0));
 		// }
@@ -611,7 +643,7 @@
 	// 		return ((unsigned long)page->mapping & PAGE_MAPPING_FLAGS) != 0;
 	// 	}
 
-	// 	static __always_inline bool folio_test_anon(struct folio *folio)
+	// 	static __always_inline bool folio_test_anon(folio_s *folio)
 	// 	{
 	// 		return ((unsigned long)folio->mapping & PAGE_MAPPING_ANON) != 0;
 	// 	}
@@ -634,7 +666,7 @@
 	// 		* is found in VM_MERGEABLE vmas.  It's a PageAnon page, pointing not to any
 	// 		* anon_vma, but to that page's node of the stable tree.
 	// 		*/
-	// 		static __always_inline bool folio_test_ksm(struct folio *folio)
+	// 		static __always_inline bool folio_test_ksm(folio_s *folio)
 	// 		{
 	// 			return ((unsigned long)folio->mapping & PAGE_MAPPING_FLAGS) ==
 	// 				PAGE_MAPPING_KSM;
@@ -660,7 +692,7 @@
 	// 	 * some of the bytes in it may be; see the is_partially_uptodate()
 	// 	 * address_space operation.
 	// 	 */
-	// 	static inline bool folio_test_uptodate(struct folio *folio)
+	// 	static inline bool folio_test_uptodate(folio_s *folio)
 	// 	{
 	// 		bool ret = test_bit(PG_uptodate, folio_flags(folio, 0));
 	// 		/*
@@ -682,13 +714,13 @@
 	// 		return folio_test_uptodate(page_folio(page));
 	// 	}
 
-	// 	static __always_inline void __folio_mark_uptodate(struct folio *folio)
+	// 	static __always_inline void __folio_mark_uptodate(folio_s *folio)
 	// 	{
 	// 		smp_wmb();
 	// 		__set_bit(PG_uptodate, folio_flags(folio, 0));
 	// 	}
 
-	// 	static __always_inline void folio_mark_uptodate(struct folio *folio)
+	// 	static __always_inline void folio_mark_uptodate(folio_s *folio)
 	// 	{
 	// 		/*
 	// 		* Memory barrier must be issued before setting the PG_uptodate bit,
@@ -701,17 +733,17 @@
 
 	// 	static __always_inline void __SetPageUptodate(page_s *page)
 	// 	{
-	// 		__folio_mark_uptodate((struct folio *)page);
+	// 		__folio_mark_uptodate((folio_s *)page);
 	// 	}
 
 	// 	static __always_inline void SetPageUptodate(page_s *page)
 	// 	{
-	// 		folio_mark_uptodate((struct folio *)page);
+	// 		folio_mark_uptodate((folio_s *)page);
 	// 	}
 
 	// 	CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
 
-	// 	bool __folio_start_writeback(struct folio *folio, bool keep_write);
+	// 	bool __folio_start_writeback(folio_s *folio, bool keep_write);
 	// 	bool set_page_writeback(page_s *page);
 
 	// 	#define folio_start_writeback(folio) \
@@ -738,7 +770,7 @@
 	// 		 *
 	// 		 * Return: True if the folio is larger than one page.
 	// 		 */
-	// 		static inline bool folio_test_large(struct folio *folio)
+	// 		static inline bool folio_test_large(folio_s *folio)
 	// 	{
 	// 		return folio_test_head(folio);
 	// 	}
@@ -766,7 +798,7 @@
 	// 	#ifdef CONFIG_HUGETLB_PAGE
 	// 		int PageHuge(page_s *page);
 	// 		int PageHeadHuge(page_s *page);
-	// 		static inline bool folio_test_hugetlb(struct folio *folio)
+	// 		static inline bool folio_test_hugetlb(folio_s *folio)
 	// 		{
 	// 			return PageHeadHuge(&folio->page);
 	// 		}
@@ -790,7 +822,7 @@
 	// 			return PageHead(page);
 	// 		}
 
-	// 		static inline bool folio_test_transhuge(struct folio *folio)
+	// 		static inline bool folio_test_transhuge(folio_s *folio)
 	// 		{
 	// 			return folio_test_head(folio);
 	// 		}
@@ -909,9 +941,9 @@
 					}
 
 		/*
-		* PageBuddy() indicates that the page is free and in the buddy system
-		* (see mm/page_alloc.c).
-		*/
+		 * PageBuddy() indicates that the page is free and in the buddy system
+		 * (see mm/page_alloc.c).
+		 */
 		PAGE_TYPE_OPS(Buddy, buddy)
 
 		/*
@@ -999,7 +1031,7 @@
 	// 		return !!(page->flags & PAGE_FLAGS_PRIVATE);
 	// 	}
 
-	// 	static inline bool folio_has_private(struct folio *folio)
+	// 	static inline bool folio_has_private(folio_s *folio)
 	// 	{
 	// 		return page_has_private(&folio->page);
 	// 	}

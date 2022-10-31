@@ -56,7 +56,7 @@ void creat_exec_addrspace(task_s * task)
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
 			page_s *page = alloc_pages(ZONE_NORMAL, 0);
-			page->map_count++;
+			atomic_inc(&(page->_mapcount));
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 							page_to_paddr(page), attr, &mm->cr3);
 		}
@@ -79,7 +79,7 @@ void prepair_COW(task_s * task)
 			get_paddr(ARCH_PGS_ADDR(mm->cr3),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
 			page_s *page = paddr_to_page(paddr);
-			page->map_count++;
+			atomic_inc(&(page->_mapcount));
 		}
 	}
 
@@ -104,11 +104,11 @@ int do_COW(task_s * task, virt_addr_t virt)
 		SetPageReferenced(new_page);
 		if (!arch_page_duplicate(virt, page_to_paddr(new_page), orig_cr3, &new_cr3))
 		{
-			new_page->map_count++;
+			atomic_inc(&(new_page->_mapcount));
 			arch_page_setattr(virt, _PAGE_RW, &new_cr3);
 
-			orig_page->map_count--;
-			if (orig_page->map_count < 2)
+			atomic_dec(&(orig_page->_mapcount));
+			if (atomic_read(&(orig_page->_mapcount)) < 2)
 				arch_page_setattr(virt, _PAGE_RW, &orig_cr3);
 
 			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_page));

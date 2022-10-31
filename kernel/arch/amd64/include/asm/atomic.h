@@ -9,10 +9,10 @@
 	// #include <asm/rmwcc.h>
 	#include <asm/barrier.h>
 
-	// /*
-	//  * Atomic operations that C can't guarantee us.  Useful for
-	//  * resource counting etc..
-	//  */
+	/*
+	 * Atomic operations that C can't guarantee us.  Useful for
+	 * resource counting etc..
+	 */
 
 	// /**
 	//  * arch_atomic_read - read atomic variable
@@ -41,36 +41,37 @@
 	// 	__WRITE_ONCE(v->counter, i);
 	// }
 
-	// /**
-	//  * arch_atomic_add - add integer to atomic variable
-	//  * @i: integer value to add
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically adds @i to @v.
-	//  */
-	// static __always_inline void
-	// arch_atomic_add(int i, atomic_t *v) {
-	// 	asm volatile(	"lock addl	%1,		%0	\n\t"
-	// 				:	"+m"(v->counter)
-	// 				:	"ir"(i)
-	// 				:	"memory");
-	// }
+	/**
+	 * arch_atomic_add - add integer to atomic variable
+	 * @i: integer value to add
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically adds @i to @v.
+	 */
+	static __always_inline void
+	arch_atomic_add(int i, atomic_t *v) {
+		asm volatile(	"lock addl	%1,		%0	\n\t"
+					:	"+m"(v->counter)
+					:	"ir"(i)
+					:	"memory");
+	}
+	#define atomic_add arch_atomic_add
 
-	// /**
-	//  * arch_atomic_sub - subtract integer from atomic variable
-	//  * @i: integer value to subtract
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically subtracts @i from @v.
-	//  */
-	// static __always_inline void
-	// arch_atomic_sub(int i, atomic_t *v) {
-	// 	asm volatile(	"lock subl	%1,		%0	\n\t"
-	// 				:	"+m"(v->counter)
-	// 				:	"ir"(i)
-	// 				:	"memory");
-
-	// }
+	/**
+	 * arch_atomic_sub - subtract integer from atomic variable
+	 * @i: integer value to subtract
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically subtracts @i from @v.
+	 */
+	static __always_inline void
+	arch_atomic_sub(int i, atomic_t *v) {
+		asm volatile(	"lock subl	%1,		%0	\n\t"
+					:	"+m"(v->counter)
+					:	"ir"(i)
+					:	"memory");
+	}
+	#define atomic_sub arch_atomic_sub
 
 	// /**
 	//  * arch_atomic_sub_and_test - subtract value from variable and test result
@@ -87,35 +88,35 @@
 	// }
 	// #define arch_atomic_sub_and_test arch_atomic_sub_and_test
 
-	// /**
-	//  * arch_atomic_inc - increment atomic variable
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically increments @v by 1.
-	//  */
-	// static __always_inline void
-	// arch_atomic_inc(atomic_t *v) {
-	// 	asm volatile(	"lock incl	%0			\n\t"
-	// 				:	"+m"(v->counter)
-	// 				:
-	// 				:	"memory");
-	// }
-	// #define arch_atomic_inc arch_atomic_inc
+	/**
+	 * arch_atomic_inc - increment atomic variable
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically increments @v by 1.
+	 */
+	static __always_inline void
+	arch_atomic_inc(atomic_t *v) {
+		asm volatile(	"lock incl	%0			\n\t"
+					:	"+m"(v->counter)
+					:
+					:	"memory");
+	}
+	#define atomic_inc arch_atomic_inc
 
-	// /**
-	//  * arch_atomic_dec - decrement atomic variable
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically decrements @v by 1.
-	//  */
-	// static __always_inline void
-	// arch_atomic_dec(atomic_t *v) {
-	// 	asm volatile(	"lock decl	%0			\n\t"
-	// 				:	"+m"(v->counter)
-	// 				:
-	// 				:	"memory");
-	// }
-	// #define arch_atomic_dec arch_atomic_dec
+	/**
+	 * arch_atomic_dec - decrement atomic variable
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically decrements @v by 1.
+	 */
+	static __always_inline void
+	arch_atomic_dec(atomic_t *v) {
+		asm volatile(	"lock decl	%0			\n\t"
+					:	"+m"(v->counter)
+					:
+					:	"memory");
+	}
+	#define atomic_dec arch_atomic_dec
 
 	// /**
 	//  * arch_atomic_dec_and_test - decrement and test
@@ -274,6 +275,8 @@
 
 
 	// definations for myos
+	static __always_inline int
+	atomic_read(const atomic_t *v) { return __READ_ONCE((v)->counter); }
 	static __always_inline void
 	atomic_set(atomic_t *v, int i) { __WRITE_ONCE(v->counter, i); }
 

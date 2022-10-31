@@ -71,43 +71,34 @@
 	typedef struct slab slab_s;
 
 	typedef struct page {
-		List_s 			free_list;
-		phys_addr_t		page_start_addr;
-		
-		unsigned long	ref_count;
-		unsigned long	map_count;
-
-		slab_s *		slab_ptr;
-
-
-		unsigned long flags; /* Atomic flags, some possibly
-							* updated asynchronously */
+		unsigned long flags;	/* Atomic flags, some possibly
+								 * updated asynchronously */
 		/*
-		* Five words (20/40 bytes) are available in this union.
-		* WARNING: bit 0 of the first word is used for PageTail(). That
-		* means the other users of this union MUST NOT use the bit to
-		* avoid collision and false-positive PageTail().
-		*/
+		 * Five words (20/40 bytes) are available in this union.
+		 * WARNING: bit 0 of the first word is used for PageTail(). That
+		 * means the other users of this union MUST NOT use the bit to
+		 * avoid collision and false-positive PageTail().
+		 */
 		union
 		{
 			struct
 			{ /* Page cache and anonymous pages */
-				// /**
-				//  * @lru: Pageout list, eg. active_list protected by
-				//  * lruvec->lru_lock.  Sometimes used as a generic list
-				//  * by the page owner.
-				//  */
-				// struct list_head lru;
+				/**
+				 * @lru: Pageout list, eg. active_list protected by
+				 * lruvec->lru_lock.  Sometimes used as a generic list
+				 * by the page owner.
+				 */
+				List_s		lru;
 				// /* See page-flags.h for PAGE_MAPPING_FLAGS */
 				// struct address_space *mapping;
-				pgoff_t index; /* Our offset within mapping. */
+				pgoff_t		index; /* Our offset within mapping. */
 				/**
 				 * @private: Mapping-private opaque data.
 				 * Usually used for buffer_heads if PagePrivate.
 				 * Used for swp_entry_t if PageSwapCache.
 				 * Indicates order in the buddy system if PageBuddy.
 				 */
-				unsigned long private;
+				unsigned long	private;
 			};
 	// 		struct
 	// 		{ /* page_pool used by netstack */
@@ -214,55 +205,58 @@
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
 	// #endif
+
+
+		slab_s *		slab_ptr;
 	} page_s _struct_page_alignment ;
 
-	// /**
-	//  * struct folio - Represents a contiguous set of bytes.
-	//  * @flags: Identical to the page flags.
-	//  * @lru: Least Recently Used list; tracks how recently this folio was used.
-	//  * @mapping: The file this page belongs to, or refers to the anon_vma for
-	//  *    anonymous memory.
-	//  * @index: Offset within the file, in units of pages.  For anonymous memory,
-	//  *    this is the index from the beginning of the mmap.
-	//  * @private: Filesystem per-folio data (see folio_attach_private()).
-	//  *    Used for swp_entry_t if folio_test_swapcache().
-	//  * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
-	//  *    find out how many times this folio is mapped by userspace.
-	//  * @_refcount: Do not access this member directly.  Use folio_ref_count()
-	//  *    to find how many references there are to this folio.
-	//  * @memcg_data: Memory Control Group data.
-	//  *
-	//  * A folio is a physically, virtually and logically contiguous set
-	//  * of bytes.  It is a power-of-two in size, and it is aligned to that
-	//  * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
-	//  * in the page cache, it is at a file offset which is a multiple of that
-	//  * power-of-two.  It may be mapped into userspace at an address which is
-	//  * at an arbitrary page offset, but its kernel virtual address is aligned
-	//  * to its size.
-	//  */
-	// struct folio
-	// {
-	// 	/* private: don't document the anon union */
-	// 	union
-	// 	{
-	// 		struct
-	// 		{
-	// 			/* public: */
-	// 			unsigned long flags;
-	// 			struct list_head lru;
-	// 			struct address_space *mapping;
-	// 			pgoff_t index;
-	// 			void *private;
-	// 			atomic_t _mapcount;
-	// 			atomic_t _refcount;
+	/**
+	 * struct folio - Represents a contiguous set of bytes.
+	 * @flags: Identical to the page flags.
+	 * @lru: Least Recently Used list; tracks how recently this folio was used.
+	 * @mapping: The file this page belongs to, or refers to the anon_vma for
+	 *    anonymous memory.
+	 * @index: Offset within the file, in units of pages.  For anonymous memory,
+	 *    this is the index from the beginning of the mmap.
+	 * @private: Filesystem per-folio data (see folio_attach_private()).
+	 *    Used for swp_entry_t if folio_test_swapcache().
+	 * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
+	 *    find out how many times this folio is mapped by userspace.
+	 * @_refcount: Do not access this member directly.  Use folio_ref_count()
+	 *    to find how many references there are to this folio.
+	 * @memcg_data: Memory Control Group data.
+	 *
+	 * A folio is a physically, virtually and logically contiguous set
+	 * of bytes.  It is a power-of-two in size, and it is aligned to that
+	 * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
+	 * in the page cache, it is at a file offset which is a multiple of that
+	 * power-of-two.  It may be mapped into userspace at an address which is
+	 * at an arbitrary page offset, but its kernel virtual address is aligned
+	 * to its size.
+	 */
+	typedef struct folio
+	{
+		/* private: don't document the anon union */
+		union
+		{
+			struct
+			{
+				/* public: */
+				unsigned long	flags;
+				// struct list_head		lru;
+				// struct address_space	*mapping;
+				pgoff_t			index;
+				void 			*private;
+				atomic_t		_mapcount;
+				atomic_t		_refcount;
 	// #ifdef CONFIG_MEMCG
-	// 			unsigned long memcg_data;
+	// 			unsigned long	memcg_data;
 	// #endif
-	// 			/* private: the union with page_s is transitional */
-	// 		};
-	// 		page_s page;
-	// 	};
-	// };
+				/* private: the union with page_s is transitional */
+			};
+			page_s page;
+		};
+	} folio_s;
 
 	// static_assert(sizeof(page_s) == sizeof(struct folio));
 	// #define FOLIO_MATCH(pg, fl) \
