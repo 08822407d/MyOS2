@@ -489,7 +489,7 @@
 
 	// /*
 	// * There is only one page-allocator function, and two main namespaces to
-	// * it. The alloc_page*() variants return 'struct page *' and as such
+	// * it. The alloc_page*() variants return 'page_s *' and as such
 	// * can allocate highmem pages, the *get*page*() variants return
 	// * virtual kernel addresses to the allocated page(s).
 	// */
@@ -518,25 +518,26 @@
 	// }
 
 	// #ifndef HAVE_ARCH_FREE_PAGE
-	// 	static inline void arch_free_page(struct page *page, int order) { }
+	// 	static inline void arch_free_page(page_s *page, int order) { }
 	// #endif
 	// #ifndef HAVE_ARCH_ALLOC_PAGE
-	// 	static inline void arch_alloc_page(struct page *page, int order) { }
+	// 	static inline void arch_alloc_page(page_s *page, int order) { }
 	// #endif
 
-	// struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+	// page_s *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
 	// 		nodemask_t *nodemask);
+	page_s *__alloc_pages(gfp_t gfp, unsigned int order);
 	// struct folio *__folio_alloc(gfp_t gfp, unsigned int order, int preferred_nid,
 	// 		nodemask_t *nodemask);
 
 	// unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
 	// 				nodemask_t *nodemask, int nr_pages,
 	// 				struct list_head *page_list,
-	// 				struct page **page_array);
+	// 				page_s **page_array);
 
 	// unsigned long alloc_pages_bulk_array_mempolicy(gfp_t gfp,
 	// 				unsigned long nr_pages,
-	// 				struct page **page_array);
+	// 				page_s **page_array);
 
 	// /* Bulk allocate order-0 pages */
 	// static inline unsigned long
@@ -546,13 +547,13 @@
 	// }
 
 	// static inline unsigned long
-	// alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, struct page **page_array)
+	// alloc_pages_bulk_array(gfp_t gfp, unsigned long nr_pages, page_s **page_array)
 	// {
 	// 	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, NULL, page_array);
 	// }
 
 	// static inline unsigned long
-	// alloc_pages_bulk_array_node(gfp_t gfp, int nid, unsigned long nr_pages, struct page **page_array)
+	// alloc_pages_bulk_array_node(gfp_t gfp, int nid, unsigned long nr_pages, page_s **page_array)
 	// {
 	// 	if (nid == NUMA_NO_NODE)
 	// 		nid = numa_mem_id();
@@ -564,7 +565,7 @@
 	// * Allocate pages, preferring the node given as nid. The node must be valid and
 	// * online. For more general interface, see alloc_pages_node().
 	// */
-	// static inline struct page *
+	// static inline page_s *
 	// __alloc_pages_node(int nid, gfp_t gfp_mask, unsigned int order)
 	// {
 	// 	VM_BUG_ON(nid < 0 || nid >= MAX_NUMNODES);
@@ -587,7 +588,7 @@
 	// * prefer the current CPU's closest node. Otherwise node must be valid and
 	// * online.
 	// */
-	// static inline struct page *alloc_pages_node(int nid, gfp_t gfp_mask,
+	// static inline page_s *alloc_pages_node(int nid, gfp_t gfp_mask,
 	// 						unsigned int order)
 	// {
 	// 	if (nid == NUMA_NO_NODE)
@@ -597,16 +598,15 @@
 	// }
 
 	// #ifdef CONFIG_NUMA
-	// 	struct page *alloc_pages(gfp_t gfp, unsigned int order);
 		page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	// 	struct folio *folio_alloc(gfp_t gfp, unsigned order);
-	// 	extern struct page *alloc_pages_vma(gfp_t gfp_mask, int order,
+	// 	extern page_s *alloc_pages_vma(gfp_t gfp_mask, int order,
 	// 				struct vm_area_struct *vma, unsigned long addr,
 	// 				bool hugepage);
 	// 	#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
 	// 		alloc_pages_vma(gfp_mask, order, vma, addr, true)
 	// #else
-	// 	static inline struct page *alloc_pages(gfp_t gfp_mask, unsigned int order)
+	// 	static inline page_s *alloc_pages(gfp_t gfp_mask, unsigned int order)
 	// 	{
 	// 		return alloc_pages_node(numa_node_id(), gfp_mask, order);
 	// 	}
@@ -636,16 +636,16 @@
 	// #define __get_dma_pages(gfp_mask, order) \
 	// 		__get_free_pages((gfp_mask) | GFP_DMA, (order))
 
-	// extern void __free_pages(struct page *page, unsigned int order);
+	// extern void __free_pages(page_s *page, unsigned int order);
 	// extern void free_pages(unsigned long addr, unsigned int order);
 
-	// struct page_frag_cache;
-	// extern void __page_frag_cache_drain(struct page *page, unsigned int count);
-	// extern void *page_frag_alloc_align(struct page_frag_cache *nc,
+	// page_s_frag_cache;
+	// extern void __page_frag_cache_drain(page_s *page, unsigned int count);
+	// extern void *page_frag_alloc_align(page_s_frag_cache *nc,
 	// 				unsigned int fragsz, gfp_t gfp_mask,
 	// 				unsigned int align_mask);
 
-	// static inline void *page_frag_alloc(struct page_frag_cache *nc,
+	// static inline void *page_frag_alloc(page_s_frag_cache *nc,
 	// 				unsigned int fragsz, gfp_t gfp_mask)
 	// {
 	// 	return page_frag_alloc_align(nc, fragsz, gfp_mask, ~0u);
@@ -693,14 +693,14 @@
 	// 	/* The below functions must be run on a range from a single zone. */
 	// 	extern int alloc_contig_range(unsigned long start, unsigned long end,
 	// 					unsigned migratetype, gfp_t gfp_mask);
-	// 	extern struct page *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
+	// 	extern page_s *alloc_contig_pages(unsigned long nr_pages, gfp_t gfp_mask,
 	// 						int nid, nodemask_t *nodemask);
 	// #endif
 	// void free_contig_range(unsigned long pfn, unsigned long nr_pages);
 
 	// #ifdef CONFIG_CMA
 	// 	/* CMA stuff */
-	// 	extern void init_cma_reserved_pageblock(struct page *page);
+	// 	extern void init_cma_reserved_pageblock(page_s *page);
 	// #endif
 
 #endif /* __LINUX_GFP_H */

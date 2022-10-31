@@ -313,6 +313,26 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 	return NULL;
 }
 
+// /*
+//  * get_page_from_freelist goes through the zonelist trying to allocate
+//  * a page.
+//  */
+// static page_s *
+// get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags)
+// {
+// 	zone_s *zone;
+
+// 	page_s *page;
+// try_this_zone:
+// 		page = rmqueue(zone, order, gfp_mask, alloc_flags);
+// 		if (page) {
+// 			prep_new_page(page, order, gfp_mask, alloc_flags);
+// 			return page;
+// 		}
+// }
+
+
+
 /*
  * Freeing function for a buddy system allocator.
  *
@@ -424,16 +444,18 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
-page_s *alloc_pages(gfp_t gfp, unsigned order)
+page_s *__alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s *page;
 	zone_s *zone = &(NODE_DATA(0)->node_zones[gfp]);
 
+	/*
+	 * There are several places where we assume that the order value is sane
+	 * so bail out early if the request is out of bound.
+	 */
+	if (order >= MAX_ORDER) return NULL;
+
 	// linux call stack :
-	// struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
-	//					nodemask_t *nodemask)
-	//								||
-	//								\/
 	// static struct page * get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
 	//					int alloc_flags, const struct alloc_context *ac)
 	//								||
