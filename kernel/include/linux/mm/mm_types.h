@@ -100,30 +100,30 @@
 				 */
 				unsigned long	private;
 			};
-	// 		struct
-	// 		{ /* page_pool used by netstack */
-	// 			/**
-	// 			 * @pp_magic: magic value to avoid recycling non
-	// 			 * page_pool allocated pages.
-	// 			 */
-	// 			unsigned long pp_magic;
-	// 			page_s_pool *pp;
-	// 			unsigned long _pp_mapping_pad;
-	// 			unsigned long dma_addr;
-	// 			union
-	// 			{
-	// 				/**
-	// 				 * dma_addr_upper: might require a 64-bit
-	// 				 * value on 32-bit architectures.
-	// 				 */
-	// 				unsigned long dma_addr_upper;
-	// 				/**
-	// 				 * For frag page support, not supported in
-	// 				 * 32-bit architectures with 64-bit DMA.
-	// 				 */
-	// 				atomic_long_t pp_frag_count;
-	// 			};
-	// 		};
+			// struct
+			// { /* page_pool used by netstack */
+			// 	/**
+			// 	 * @pp_magic: magic value to avoid recycling non
+			// 	 * page_pool allocated pages.
+			// 	 */
+			// 	unsigned long pp_magic;
+			// 	page_s_pool *pp;
+			// 	unsigned long _pp_mapping_pad;
+			// 	unsigned long dma_addr;
+			// 	union
+			// 	{
+			// 		/**
+			// 		 * dma_addr_upper: might require a 64-bit
+			// 		 * value on 32-bit architectures.
+			// 		 */
+			// 		unsigned long dma_addr_upper;
+			// 		/**
+			// 		 * For frag page support, not supported in
+			// 		 * 32-bit architectures with 64-bit DMA.
+			// 		 */
+			// 		atomic_long_t pp_frag_count;
+			// 	};
+			// };
 			struct
 			{	/* Tail pages of compound page */
 				unsigned long	compound_head;		/* Bit zero is set */
@@ -134,13 +134,13 @@
 				atomic_t		compound_mapcount;
 				unsigned int	compound_nr;		/* 1 << compound_order */
 			};
-	// 		struct
-	// 		{								   /* Second tail page of compound page */
-	// 			unsigned long _compound_pad_1; /* compound_head */
-	// 			atomic_t hpage_pinned_refcount;
-	// 			/* For both global and memcg */
-	// 			struct list_head deferred_list;
-	// 		};
+			// struct
+			// {	/* Second tail page of compound page */
+			// 	unsigned long _compound_pad_1; /* compound_head */
+			// 	atomic_t hpage_pinned_refcount;
+			// 	/* For both global and memcg */
+			// 	struct list_head deferred_list;
+			// };
 	// 		struct
 	// 		{							 /* Page table pages */
 	// 			unsigned long _pt_pad_1; /* compound_head */
@@ -157,25 +157,25 @@
 	// 			spinlock_t ptl;
 	// #endif
 	// 		};
-	// 		struct
-	// 		{ /* ZONE_DEVICE pages */
-	// 			/** @pgmap: Points to the hosting device page map. */
-	// 			struct dev_pagemap *pgmap;
-	// 			void *zone_device_data;
-	// 			/*
-	// 			* ZONE_DEVICE private pages are counted as being
-	// 			* mapped so the next 3 words hold the mapping, index,
-	// 			* and private fields from the source anonymous or
-	// 			* page cache page while the page is migrated to device
-	// 			* private memory.
-	// 			* ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
-	// 			* use the mapping, index, and private fields when
-	// 			* pmem backed DAX files are mapped.
-	// 			*/
-	// 		};
+			// struct
+			// { /* ZONE_DEVICE pages */
+			// 	/** @pgmap: Points to the hosting device page map. */
+			// 	struct dev_pagemap *pgmap;
+			// 	void *zone_device_data;
+			// 	/*
+			// 	* ZONE_DEVICE private pages are counted as being
+			// 	* mapped so the next 3 words hold the mapping, index,
+			// 	* and private fields from the source anonymous or
+			// 	* page cache page while the page is migrated to device
+			// 	* private memory.
+			// 	* ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
+			// 	* use the mapping, index, and private fields when
+			// 	* pmem backed DAX files are mapped.
+			// 	*/
+			// };
 
-	// 		/** @rcu_head: You can use this to free a page by RCU. */
-	// 		struct rcu_head rcu_head;
+			// /** @rcu_head: You can use this to free a page by RCU. */
+			// struct rcu_head rcu_head;
 		};
 
 		union

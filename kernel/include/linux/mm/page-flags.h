@@ -100,35 +100,35 @@
 	// detailed explanations:
 	// https://www.kernel.org/doc/html/latest/admin-guide/mm/pagemap.html?highlight=kpageflags
 	enum pageflags {
-		PG_locked, /* Page is locked. Don't touch. */
+		PG_locked,			/* Page is locked. Don't touch. */
 		PG_referenced,
 		PG_uptodate,
 		PG_dirty,
 		PG_lru,
 		PG_active,
 		PG_workingset,
-		PG_waiters, /* Page has waiters, check its waitqueue. Must be bit #7 and in the same byte as "PG_locked" */
+		PG_waiters,			/* Page has waiters, check its waitqueue. Must be bit #7 and in the same byte as "PG_locked" */
 		PG_error,
 		PG_slab,
-		PG_owner_priv_1, /* Owner use. If pagecache, fs may use*/
+		PG_owner_priv_1,	/* Owner use. If pagecache, fs may use*/
 		PG_arch_1,
 		PG_reserved,
-		PG_private,		 /* If pagecache, has fs-private data */
-		PG_private_2,	 /* If pagecache, has fs aux data */
-		PG_writeback,	 /* Page is under writeback */
-		PG_head,		 /* A head page */
-		PG_mappedtodisk, /* Has blocks allocated on-disk */
-		PG_reclaim,		 /* To be reclaimed asap */
-		PG_swapbacked,	 /* Page is backed by RAM/swap */
-		PG_unevictable,	 /* Page is "unevictable"  */
+		PG_private,			/* If pagecache, has fs-private data */
+		PG_private_2,		/* If pagecache, has fs aux data */
+		PG_writeback,		/* Page is under writeback */
+		PG_head,			/* A head page */
+		PG_mappedtodisk,	/* Has blocks allocated on-disk */
+		PG_reclaim,			/* To be reclaimed asap */
+		PG_swapbacked,		/* Page is backed by RAM/swap */
+		PG_unevictable,		/* Page is "unevictable"  */
 	#ifdef CONFIG_MMU
-		PG_mlocked, /* Page is vma mlocked */
+		PG_mlocked,			/* Page is vma mlocked */
 	#endif
 	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
-		PG_uncached, /* Page has been mapped as uncached */
+		PG_uncached,		/* Page has been mapped as uncached */
 	#endif
 	#ifdef CONFIG_MEMORY_FAILURE
-		PG_hwpoison, /* hardware poisoned page. Don't touch */
+		PG_hwpoison,		/* hardware poisoned page. Don't touch */
 	#endif
 	#if defined(CONFIG_PAGE_IDLE_FLAG)
 		PG_young,
@@ -140,103 +140,105 @@
 	#endif
 		__NR_PAGEFLAGS,
 
-		PG_readahead = PG_reclaim,
+		PG_readahead	= PG_reclaim,
 		/* Filesystems */
-		PG_checked = PG_owner_priv_1,
+		PG_checked		= PG_owner_priv_1,
 		/* SwapBacked */
-		PG_swapcache = PG_owner_priv_1, /* Swap page: swp_entry_t in private */
+		PG_swapcache	= PG_owner_priv_1, /* Swap page: swp_entry_t in private */
 		/* Two page bits are conscripted by FS-Cache to maintain local caching
 		* state.  These bits are set on pages belonging to the netfs's inodes
 		* when those inodes are being locally cached.
 		*/
-		PG_fscache = PG_private_2, /* page backed by cache */
+		PG_fscache		= PG_private_2, /* page backed by cache */
 		/* XEN */
 		/* Pinned in Xen as a read-only pagetable page. */
-		PG_pinned = PG_owner_priv_1,
-		/* Pinned as part of domain save (see xen_mm_pin_all()). */
-		PG_savepinned = PG_dirty,
+		PG_pinned		= PG_owner_priv_1,
+		/* Pinnedl as part of domain save (see xen_mm_pin_all()). */
+		PG_savepinned	= PG_dirty,
 		/* Has a grant mapping of another (foreign) domain's page. */
-		PG_foreign = PG_owner_priv_1,
+		PG_foreign		= PG_owner_priv_1,
 		/* Remapped by swiotlb-xen. */
-		PG_xen_remapped = PG_owner_priv_1,
+		PG_xen_remapped	= PG_owner_priv_1,
 		/* SLOB */
-		PG_slob_free = PG_private,
+		PG_slob_free	= PG_private,
 		/* Compound pages. Stored in first tail page's flags */
-		PG_double_map = PG_workingset,
+		PG_double_map	= PG_workingset,
 	#ifdef CONFIG_MEMORY_FAILURE
 		/*
-		* Compound pages. Stored in first tail page's flags.
-		* Indicates that at least one subpage is hwpoisoned in the
-		* THP.
-		*/
-		PG_has_hwpoisoned = PG_mappedtodisk,
+		 * Compound pages. Stored in first tail page's flags.
+		 * Indicates that at least one subpage is hwpoisoned in the
+		 * THP.
+		 */
+		PG_has_hwpoisoned	= PG_mappedtodisk,
 	#endif
 		/* non-lru isolated movable page */
-		PG_isolated = PG_reclaim,
+		PG_isolated		= PG_reclaim,
 		/* Only valid for buddy pages. Used to track pages that are reported */
-		PG_reported = PG_uptodate,
+		PG_reported		= PG_uptodate,
 	};
 
 	#define PAGEFLAGS_MASK ((1UL << NR_PAGEFLAGS) - 1)
 
 	#ifndef __GENERATING_BOUNDS_H
 
-		// static inline unsigned long
-		// _compound_head(const page_s *page) {
-		// 	unsigned long head = READ_ONCE(page->compound_head);
+		static inline unsigned long
+		_compound_head(const page_s *page) {
+			unsigned long head = READ_ONCE(page->compound_head);
 
-		// 	if (unlikely(head & 1)) return head - 1;
+			if (head & 1) return head - 1;
 
-		// 	return (unsigned long)page;
-		// }
+			return (unsigned long)page;
+		}
 
-		// #define compound_head(page) ((typeof(page))_compound_head(page))
+		#define compound_head(page) ((typeof(page))_compound_head(page))
 
-	// 	/**
-	// 	 * page_folio - Converts from page to folio.
-	// 	 * @p: The page.
-	// 	 *
-	// 	 * Every page is part of a folio.  This function cannot be called on a
-	// 	 * NULL pointer.
-	// 	 *
-	// 	 * Context: No reference, nor lock is required on @page.  If the caller
-	// 	 * does not hold a reference, this call may race with a folio split, so
-	// 	 * it should re-check the folio still contains this page after gaining
-	// 	 * a reference on the folio.
-	// 	 * Return: The folio which contains this page.
-	// 	 */
-	// 	#define page_folio(p) (_Generic((p),                                       \
-	// 									const page_s *                        \
-	// 									: (const folio_s *)_compound_head(p), \
-	// 									page_s *                            \
-	// 									: (folio_s *)_compound_head(p)))
+		/**
+		 * page_folio - Converts from page to folio.
+		 * @p: The page.
+		 *
+		 * Every page is part of a folio.  This function cannot be called on a
+		 * NULL pointer.
+		 *
+		 * Context: No reference, nor lock is required on @page.  If the caller
+		 * does not hold a reference, this call may race with a folio split, so
+		 * it should re-check the folio still contains this page after gaining
+		 * a reference on the folio.
+		 * Return: The folio which contains this page.
+		 */
+		#define page_folio(p) (												\
+					_Generic(												\
+						(p),												\
+						const page_s * : (const folio_s *)_compound_head(p),\
+						page_s * : (folio_s *)_compound_head(p)				\
+					)														\
+				)
 
-	// 	/**
-	// 	 * folio_page - Return a page from a folio.
-	// 	 * @folio: The folio.
-	// 	 * @n: The page number to return.
-	// 	 *
-	// 	 * @n is relative to the start of the folio.  This function does not
-	// 	 * check that the page number lies within @folio; the caller is presumed
-	// 	 * to have a reference to the page.
-	// 	 */
-	// #	define folio_page(folio, n) nth_page(&(folio)->page, n)
+		/**
+		 * folio_page - Return a page from a folio.
+		 * @folio: The folio.
+		 * @n: The page number to return.
+		 *
+		 * @n is relative to the start of the folio.  This function does not
+		 * check that the page number lies within @folio; the caller is presumed
+		 * to have a reference to the page.
+		 */
+	#	define folio_page(folio, n) nth_page(&(folio)->page, n)
 
-	// 	static __always_inline int PageTail(page_s *page)
-	// 	{
-	// 		return READ_ONCE(page->compound_head) & 1;
-	// 	}
+		static __always_inline int PageTail(page_s *page)
+		{
+			return READ_ONCE(page->compound_head) & 1;
+		}
 
-	// 	static __always_inline int PageCompound(page_s *page)
-	// 	{
-	// 		return test_bit(PG_head, &page->flags) || PageTail(page);
-	// 	}
+		static __always_inline int PageCompound(page_s *page)
+		{
+			return test_bit(PG_head, &page->flags) || PageTail(page);
+		}
 
 	#	define PAGE_POISON_PATTERN -1L
-	// 	static inline int
-	// 	PagePoisoned(const page_s *page) {
-	// 		return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
-	// 	}
+		static inline int
+		PagePoisoned(const page_s *page) {
+			return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
+		}
 
 	// 	#ifdef CONFIG_DEBUG_VM
 	// 		void page_init_poison(page_s *page, size_t size);
@@ -255,32 +257,32 @@
 			return &page[n].flags;
 		}
 
-		// /*
-		//  * Page flags policies wrt compound pages
-		//  *
-		//  * PF_POISONED_CHECK
-		//  *     check if this page_s poisoned/uninitialized
-		//  *
-		//  * PF_ANY:
-		//  *     the page flag is relevant for small, head and tail pages.
-		//  *
-		//  * PF_HEAD:
-		//  *     for compound page all operations related to the page flag applied to
-		//  *     head page.
-		//  *
-		//  * PF_ONLY_HEAD:
-		//  *     for compound page, callers only ever operate on the head page.
-		//  *
-		//  * PF_NO_TAIL:
-		//  *     modifications of the page flag must be done on small or head pages,
-		//  *     checks can be done on tail pages too.
-		//  *
-		//  * PF_NO_COMPOUND:
-		//  *     the page flag is not relevant for compound pages.
-		//  *
-		//  * PF_SECOND:
-		//  *     the page flag is stored in the first tail page.
-		//  */
+		/*
+		 * Page flags policies wrt compound pages
+		 *
+		 * PF_POISONED_CHECK
+		 *     check if this page_s poisoned/uninitialized
+		 *
+		 * PF_ANY:
+		 *     the page flag is relevant for small, head and tail pages.
+		 *
+		 * PF_HEAD:
+		 *     for compound page all operations related to the page flag applied to
+		 *     head page.
+		 *
+		 * PF_ONLY_HEAD:
+		 *     for compound page, callers only ever operate on the head page.
+		 *
+		 * PF_NO_TAIL:
+		 *     modifications of the page flag must be done on small or head pages,
+		 *     checks can be done on tail pages too.
+		 *
+		 * PF_NO_COMPOUND:
+		 *     the page flag is not relevant for compound pages.
+		 *
+		 * PF_SECOND:
+		 *     the page flag is stored in the first tail page.
+		 */
 		// #define PF_POISONED_CHECK(page) ({								\
 		// 			VM_BUG_ON_PGFLAGS(PagePoisoned(page), page); page;	\
 		// 		})
@@ -302,14 +304,13 @@
 		// 			VM_BUG_ON_PGFLAGS(!PageHead(page), page);	\
 		// 			PF_POISONED_CHECK(&page[1]);				\
 		// 		})
-
 		// for myos, mmdebug not implemented
 		#define PF_ANY(page, enforce)			(page)
-		#define PF_HEAD(page, enforce)			(page)
+		#define PF_HEAD(page, enforce)			compound_head(page)
 		#define PF_ONLY_HEAD(page, enforce)		(page)
-		#define PF_NO_TAIL(page, enforce)		(page)
+		#define PF_NO_TAIL(page, enforce)		compound_head(page)
 		#define PF_NO_COMPOUND(page, enforce)	(page)
-		#define PF_SECOND(page, enforce)		(page)
+		#define PF_SECOND(page, enforce)		(&page[1])
 
 		/* Which page is the flag stored in */
 		#define FOLIO_PF_ANY			0
@@ -547,16 +548,16 @@
 
 		PAGEFLAG_FALSE(HighMem, highmem)
 
-		// static __always_inline bool
-		// folio_test_swapcache(folio_s *folio) {
-		// 	return folio_test_swapbacked(folio) &&
-		// 		test_bit(PG_swapcache, folio_flags(folio, 0));
-		// }
+		static __always_inline bool
+		folio_test_swapcache(folio_s *folio) {
+			return folio_test_swapbacked(folio) &&
+				test_bit(PG_swapcache, folio_flags(folio, 0));
+		}
 
-		// static __always_inline bool
-		// PageSwapCache(page_s *page) {
-		// 	return folio_test_swapcache(page_folio(page));
-		// }
+		static __always_inline bool
+		PageSwapCache(page_s *page) {
+			return folio_test_swapcache(page_folio(page));
+		}
 
 		SETPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
 		CLEARPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
@@ -1036,12 +1037,12 @@
 	// 		return page_has_private(&folio->page);
 	// 	}
 
-	// 	#undef PF_ANY
-	// 	#undef PF_HEAD
-	// 	#undef PF_ONLY_HEAD
-	// 	#undef PF_NO_TAIL
-	// 	#undef PF_NO_COMPOUND
-	// 	#undef PF_SECOND
+	#	undef PF_ANY
+	#	undef PF_HEAD
+	#	undef PF_ONLY_HEAD
+	#	undef PF_NO_TAIL
+	#	undef PF_NO_COMPOUND
+	#	undef PF_SECOND
 
 	#endif /* !__GENERATING_BOUNDS_H */
 
