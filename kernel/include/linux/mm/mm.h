@@ -916,11 +916,11 @@
 	// 	return head_compound_pincount(page);
 	// }
 
-	// static inline void set_compound_order(page_s *page, unsigned int order)
-	// {
-	// 	page[1].compound_order = order;
-	// 	page[1].compound_nr = 1U << order;
-	// }
+	static inline void
+	set_compound_order(page_s *page, unsigned int order) {
+		page[1].compound_order = order;
+		page[1].compound_nr = 1U << order;
+	}
 
 	// /* Returns the number of pages in this potentially compound page. */
 	// static inline unsigned long compound_nr(page_s *page)

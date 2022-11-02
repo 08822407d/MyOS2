@@ -158,6 +158,56 @@ buddy_order(page_s *page) {
 	return page_private(page);
 }
 
+/*
+ * Higher-order pages are called "compound pages".  They are structured thusly:
+ *
+ * The first PAGE_SIZE page is called the "head page" and have PG_head set.
+ *
+ * The remaining PAGE_SIZE pages are called "tail pages". PageTail() is encoded
+ * in bit 0 of page->compound_head. The rest of bits is pointer to head page.
+ *
+ * The first tail page's ->compound_dtor holds the offset in array of compound
+ * page destructors. See compound_page_dtors.
+ *
+ * The first tail page's ->compound_order holds the order of allocation.
+ * This usage means that zero-order pages may not be compound.
+ */
+void free_compound_page(page_s *page)
+{
+	// mem_cgroup_uncharge(page_folio(page));
+	// free_the_page(page, compound_order(page));
+}
+
+static void prep_compound_head(page_s *page, unsigned int order)
+{
+	// set_compound_page_dtor(page, COMPOUND_PAGE_DTOR);
+	set_compound_order(page, order);
+	// atomic_set(compound_mapcount_ptr(page), -1);
+	// if (hpage_pincount_available(page))
+	// 	atomic_set(compound_pincount_ptr(page), 0);
+}
+
+static void prep_compound_tail(page_s *head, int tail_idx)
+{
+	page_s *p = head + tail_idx;
+
+	// p->mapping = TAIL_MAPPING;
+	set_compound_head(p, head);
+}
+
+void prep_compound_page(page_s *page, unsigned int order)
+{
+	int i;
+	int nr_pages = 1 << order;
+
+	__SetPageHead(page);
+	for (i = 1; i < nr_pages; i++)
+		prep_compound_tail(page, i);
+
+	prep_compound_head(page, order);
+}
+
+
 static inline void
 set_buddy_order(page_s *page, unsigned int order) {
 	page->private = (unsigned long)order;
@@ -278,6 +328,26 @@ page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
 	return true;
 }
 
+static void
+prep_new_page(page_s *page, unsigned int order, gfp_t gfp_flags)
+{
+	// post_alloc_hook(page, order, gfp_flags);
+
+	if (order && (gfp_flags & __GFP_COMP))
+		prep_compound_page(page, order);
+
+	// /*
+	//  * page is set pfmemalloc when ALLOC_NO_WATERMARKS was necessary to
+	//  * allocate the page. The expectation is that the caller is taking
+	//  * steps that will free more memory. The caller should avoid the page
+	//  * being used for !PFMEMALLOC purposes.
+	//  */
+	// if (alloc_flags & ALLOC_NO_WATERMARKS)
+	// 	set_page_pfmemalloc(page);
+	// else
+	// 	clear_page_pfmemalloc(page);
+}
+
 /*
  * Go through the free lists for the given migratetype and remove
  * the smallest available page from the freelists
@@ -312,25 +382,6 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 
 	return NULL;
 }
-
-// /*
-//  * get_page_from_freelist goes through the zonelist trying to allocate
-//  * a page.
-//  */
-// static page_s *
-// get_page_from_freelist(gfp_t gfp_mask, unsigned int order, int alloc_flags)
-// {
-// 	zone_s *zone;
-
-// 	page_s *page;
-// try_this_zone:
-// 		page = rmqueue(zone, order, gfp_mask, alloc_flags);
-// 		if (page) {
-// 			prep_new_page(page, order, gfp_mask, alloc_flags);
-// 			return page;
-// 		}
-// }
-
 
 
 /*
@@ -447,7 +498,13 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 page_s *__alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s *page;
-	zone_s *zone = &(NODE_DATA(0)->node_zones[gfp]);
+	zone_s *zone;
+	if (gfp & GFP_DMA)
+		zone = &(NODE_DATA(0)->node_zones[ZONE_DMA]);
+	else if (gfp & GFP_DMA32)
+		zone = &(NODE_DATA(0)->node_zones[ZONE_DMA32]);
+	else
+		zone = &(NODE_DATA(0)->node_zones[ZONE_NORMAL]);
 
 	/*
 	 * There are several places where we assume that the order value is sane
@@ -455,21 +512,23 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 	 */
 	if (order >= MAX_ORDER) return NULL;
 
-	// linux call stack :
-	// static struct page * get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
-	//					int alloc_flags, const struct alloc_context *ac)
-	//								||
-	//								\/
-	// static inline struct page *rmqueue(struct zone *preferred_zone, struct zone *zone,
-	//					unsigned int order, gfp_t gfp_flags, unsigned int alloc_flags,
-	// 					int migratetype)
-	//								||
-	//								\/
-	// static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
-	//					unsigned int order, int migratetype)
-
-	page = __rmqueue_smallest(zone, order);
-	return page;
+	// static struct page *
+	// get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
+	// 		int alloc_flags, const struct alloc_context *ac)
+	// {
+		// static inline struct page
+		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
+		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
+		// {
+			page = __rmqueue_smallest(zone, order);
+			if (page)
+			{
+				prep_new_page(page, order, gfp);
+				return page;
+			}
+		// }
+	// }
+	return NULL;
 }
 
 /**

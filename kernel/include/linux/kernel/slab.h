@@ -269,7 +269,8 @@
 	/* Maximum allocatable size */
 	#define KMALLOC_MAX_SIZE		(1UL << KMALLOC_SHIFT_MAX)
 	/* Maximum size for which we actually use a slab cache */
-	#define KMALLOC_MAX_CACHE_SIZE	(1UL << KMALLOC_SHIFT_HIGH)
+	// #define KMALLOC_MAX_CACHE_SIZE	(1UL << KMALLOC_SHIFT_HIGH)
+	#define KMALLOC_MAX_CACHE_SIZE	PAGE_SIZE
 	/* Maximum order allocatable via the slab allocator */
 	#define KMALLOC_MAX_ORDER		(KMALLOC_SHIFT_MAX - PAGE_SHIFT)
 
@@ -520,6 +521,7 @@
 
 	// extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
 	// 	__assume_page_alignment __alloc_size(1);
+	extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order);
 
 	// #ifdef CONFIG_TRACING
 	// 	extern void *kmalloc_order_trace(size_t size, gfp_t flags, unsigned int order)
@@ -532,11 +534,12 @@
 	// 	}
 	// #endif
 
-	// static __always_inline __alloc_size(1) void *kmalloc_large(size_t size, gfp_t flags)
-	// {
-	// 	unsigned int order = get_order(size);
+	static __always_inline void
+	*kmalloc_large(size_t size, gfp_t flags) {
+		unsigned int order = get_order(size);
 	// 	return kmalloc_order_trace(size, flags, order);
-	// }
+		return kmalloc_order(size, flags, order);
+	}
 
 	/**
 	 * kmalloc - allocate memory
@@ -600,8 +603,9 @@
 	// #ifndef CONFIG_SLOB
 	// 		unsigned int index;
 	// #endif
-	// 		if (size > KMALLOC_MAX_CACHE_SIZE)
-	// 			return kmalloc_large(size, flags);
+		size_t max = KMALLOC_MAX_CACHE_SIZE;
+		if (size > KMALLOC_MAX_CACHE_SIZE)
+			return kmalloc_large(size, flags);
 	// #ifndef CONFIG_SLOB
 	// 		index = kmalloc_index(size);
 

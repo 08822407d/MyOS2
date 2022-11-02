@@ -742,7 +742,7 @@
 	// 		folio_mark_uptodate((folio_s *)page);
 	// 	}
 
-	// 	CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
+		CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
 
 	// 	bool __folio_start_writeback(folio_s *folio, bool keep_write);
 	// 	bool set_page_writeback(page_s *page);
@@ -762,8 +762,8 @@
 	// 		return set_page_writeback(page);
 	// 	}
 
-	// 	__PAGEFLAG(Head, head, PF_ANY)
-	// 	CLEARPAGEFLAG(Head, head, PF_ANY)
+		__PAGEFLAG(Head, head, PF_ANY)
+		CLEARPAGEFLAG(Head, head, PF_ANY)
 
 	// 		/**
 	// 		 * folio_test_large() - Does this folio contain more than one page?
@@ -776,10 +776,10 @@
 	// 		return folio_test_head(folio);
 	// 	}
 
-	// 	static __always_inline void set_compound_head(page_s *page, page_s *head)
-	// 	{
-	// 		WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
-	// 	}
+		static __always_inline
+		void set_compound_head(page_s *page, page_s *head) {
+			WRITE_ONCE(page->compound_head, (unsigned long)head + 1);
+		}
 
 	// 	static __always_inline void clear_compound_head(page_s *page)
 	// 	{

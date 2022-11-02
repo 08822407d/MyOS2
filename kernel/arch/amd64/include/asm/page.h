@@ -70,7 +70,7 @@
 		// #endif /* __ASSEMBLY__ */
 
 		// #include <asm-generic/memory_model.h>
-		// #include <asm-generic/getorder.h>
+		#include <linux/kernel/asm-generic/getorder.h>
 
 		// #define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
 
