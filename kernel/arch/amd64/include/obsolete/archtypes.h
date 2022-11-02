@@ -47,7 +47,7 @@
 	} segdesc64_T;
 
 	/* 64bit version segdesc for TSS segment */
-	typedef struct  __attribute__((packed)) {
+	typedef struct __attribute__((packed)) {
 		uint64_t	Limit1	: 16,
 					Base1	: 24,
 					Type	: 4,

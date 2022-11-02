@@ -636,7 +636,7 @@
 	// #define __get_dma_pages(gfp_mask, order) \
 	// 		__get_free_pages((gfp_mask) | GFP_DMA, (order))
 
-	// extern void __free_pages(page_s *page, unsigned int order);
+	extern void __free_pages(page_s *page, unsigned int order);
 	// extern void free_pages(unsigned long addr, unsigned int order);
 
 	// page_s_frag_cache;

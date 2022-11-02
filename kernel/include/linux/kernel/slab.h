@@ -253,19 +253,6 @@
 	#	endif
 	#endif
 
-	#ifdef CONFIG_SLOB
-		/*
-		* SLOB passes all requests larger than one page to the page allocator.
-		* No kmalloc array is necessary since objects of different sizes can
-		* be allocated from the same page.
-		*/
-		#define KMALLOC_SHIFT_HIGH	PAGE_SHIFT
-		#define KMALLOC_SHIFT_MAX	(MAX_ORDER + PAGE_SHIFT - 1)
-		#ifndef KMALLOC_SHIFT_LOW
-			#define KMALLOC_SHIFT_LOW	3
-		#endif
-	#endif
-
 	/* Maximum allocatable size */
 	#define KMALLOC_MAX_SIZE		(1UL << KMALLOC_SHIFT_MAX)
 	/* Maximum size for which we actually use a slab cache */
@@ -317,124 +304,122 @@
 		NR_KMALLOC_TYPES
 	};
 
-	#ifndef CONFIG_SLOB
-		// extern struct kmem_cache *
-		// 	kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
+	// extern struct kmem_cache *
+	// 	kmalloc_caches[NR_KMALLOC_TYPES][KMALLOC_SHIFT_HIGH + 1];
 
-		// /*
-		// * Define gfp bits that should not be set for KMALLOC_NORMAL.
-		// */
-		// #define KMALLOC_NOT_NORMAL_BITS                      \
-		// 				(__GFP_RECLAIMABLE |                             \
-		// 				(IS_ENABLED(CONFIG_ZONE_DMA) ? __GFP_DMA : 0) | \
-		// 				(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
+	// /*
+	// * Define gfp bits that should not be set for KMALLOC_NORMAL.
+	// */
+	// #define KMALLOC_NOT_NORMAL_BITS                      \
+	// 				(__GFP_RECLAIMABLE |                             \
+	// 				(IS_ENABLED(CONFIG_ZONE_DMA) ? __GFP_DMA : 0) | \
+	// 				(IS_ENABLED(CONFIG_MEMCG_KMEM) ? __GFP_ACCOUNT : 0))
 
-		// static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
-		// {
-		// 	/*
-		// 	* The most common case is KMALLOC_NORMAL, so test for it
-		// 	* with a single branch for all the relevant flags.
-		// 	*/
-		// 	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
-		// 		return KMALLOC_NORMAL;
+	// static __always_inline enum kmalloc_cache_type kmalloc_type(gfp_t flags)
+	// {
+	// 	/*
+	// 	* The most common case is KMALLOC_NORMAL, so test for it
+	// 	* with a single branch for all the relevant flags.
+	// 	*/
+	// 	if (likely((flags & KMALLOC_NOT_NORMAL_BITS) == 0))
+	// 		return KMALLOC_NORMAL;
 
-		// 	/*
-		// 	* At least one of the flags has to be set. Their priorities in
-		// 	* decreasing order are:
-		// 	*  1) __GFP_DMA
-		// 	*  2) __GFP_RECLAIMABLE
-		// 	*  3) __GFP_ACCOUNT
-		// 	*/
-		// 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (flags & __GFP_DMA))
-		// 		return KMALLOC_DMA;
-		// 	if (!IS_ENABLED(CONFIG_MEMCG_KMEM) || (flags & __GFP_RECLAIMABLE))
-		// 		return KMALLOC_RECLAIM;
-		// 	else
-		// 		return KMALLOC_CGROUP;
-		// }
+	// 	/*
+	// 	* At least one of the flags has to be set. Their priorities in
+	// 	* decreasing order are:
+	// 	*  1) __GFP_DMA
+	// 	*  2) __GFP_RECLAIMABLE
+	// 	*  3) __GFP_ACCOUNT
+	// 	*/
+	// 	if (IS_ENABLED(CONFIG_ZONE_DMA) && (flags & __GFP_DMA))
+	// 		return KMALLOC_DMA;
+	// 	if (!IS_ENABLED(CONFIG_MEMCG_KMEM) || (flags & __GFP_RECLAIMABLE))
+	// 		return KMALLOC_RECLAIM;
+	// 	else
+	// 		return KMALLOC_CGROUP;
+	// }
 
-		/*
-		 * Figure out which kmalloc slab an allocation of a certain size
-		 * belongs to.
-		 * 0 = zero alloc
-		 * 1 =  65 .. 96 bytes
-		 * 2 = 129 .. 192 bytes
-		 * n = 2^(n-1)+1 .. 2^n
-		 *
-		 * Note: __kmalloc_index() is compile-time optimized, and not runtime optimized;
-		 * typical usage is via kmalloc_index() and therefore evaluated at compile-time.
-		 * Callers where !size_is_constant should only be test modules, where runtime
-		 * overheads of __kmalloc_index() can be tolerated.  Also see kmalloc_slab().
-		 */
-		static __always_inline unsigned int
-		__kmalloc_index(size_t size, bool size_is_constant) {
-			if (!size)
-				return 0;
+	/*
+		* Figure out which kmalloc slab an allocation of a certain size
+		* belongs to.
+		* 0 = zero alloc
+		* 1 =  65 .. 96 bytes
+		* 2 = 129 .. 192 bytes
+		* n = 2^(n-1)+1 .. 2^n
+		*
+		* Note: __kmalloc_index() is compile-time optimized, and not runtime optimized;
+		* typical usage is via kmalloc_index() and therefore evaluated at compile-time.
+		* Callers where !size_is_constant should only be test modules, where runtime
+		* overheads of __kmalloc_index() can be tolerated.  Also see kmalloc_slab().
+		*/
+	static __always_inline unsigned int
+	__kmalloc_index(size_t size, bool size_is_constant) {
+		if (!size)
+			return 0;
 
-			if (size <= KMALLOC_MIN_SIZE)
-				return KMALLOC_SHIFT_LOW;
+		if (size <= KMALLOC_MIN_SIZE)
+			return KMALLOC_SHIFT_LOW;
 
-			if (KMALLOC_MIN_SIZE <= 32 && size > 64 && size <= 96)
-				return 1;
-			if (KMALLOC_MIN_SIZE <= 64 && size > 128 && size <= 192)
-				return 2;
-			if (size <= 8)
-				return 3;
-			if (size <= 16)
-				return 4;
-			if (size <= 32)
-				return 5;
-			if (size <= 64)
-				return 6;
-			if (size <= 128)
-				return 7;
-			if (size <= 256)
-				return 8;
-			if (size <= 512)
-				return 9;
-			if (size <= 1024)
-				return 10;
-			if (size <= 2 * 1024)
-				return 11;
-			if (size <= 4 * 1024)
-				return 12;
-			if (size <= 8 * 1024)
-				return 13;
-			if (size <= 16 * 1024)
-				return 14;
-			if (size <= 32 * 1024)
-				return 15;
-			if (size <= 64 * 1024)
-				return 16;
-			if (size <= 128 * 1024)
-				return 17;
-			if (size <= 256 * 1024)
-				return 18;
-			if (size <= 512 * 1024)
-				return 19;
-			if (size <= 1024 * 1024)
-				return 20;
-			if (size <= 2 * 1024 * 1024)
-				return 21;
-			if (size <= 4 * 1024 * 1024)
-				return 22;
-			if (size <= 8 * 1024 * 1024)
-				return 23;
-			if (size <= 16 * 1024 * 1024)
-				return 24;
-			if (size <= 32 * 1024 * 1024)
-				return 25;
+		if (KMALLOC_MIN_SIZE <= 32 && size > 64 && size <= 96)
+			return 1;
+		if (KMALLOC_MIN_SIZE <= 64 && size > 128 && size <= 192)
+			return 2;
+		if (size <= 8)
+			return 3;
+		if (size <= 16)
+			return 4;
+		if (size <= 32)
+			return 5;
+		if (size <= 64)
+			return 6;
+		if (size <= 128)
+			return 7;
+		if (size <= 256)
+			return 8;
+		if (size <= 512)
+			return 9;
+		if (size <= 1024)
+			return 10;
+		if (size <= 2 * 1024)
+			return 11;
+		if (size <= 4 * 1024)
+			return 12;
+		if (size <= 8 * 1024)
+			return 13;
+		if (size <= 16 * 1024)
+			return 14;
+		if (size <= 32 * 1024)
+			return 15;
+		if (size <= 64 * 1024)
+			return 16;
+		if (size <= 128 * 1024)
+			return 17;
+		if (size <= 256 * 1024)
+			return 18;
+		if (size <= 512 * 1024)
+			return 19;
+		if (size <= 1024 * 1024)
+			return 20;
+		if (size <= 2 * 1024 * 1024)
+			return 21;
+		if (size <= 4 * 1024 * 1024)
+			return 22;
+		if (size <= 8 * 1024 * 1024)
+			return 23;
+		if (size <= 16 * 1024 * 1024)
+			return 24;
+		if (size <= 32 * 1024 * 1024)
+			return 25;
 
-			// if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES) && size_is_constant)
-			// 	BUILD_BUG_ON_MSG(1, "unexpected size in kmalloc_index()");
-			// else
-			// 	BUG();
+		// if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES) && size_is_constant)
+		// 	BUILD_BUG_ON_MSG(1, "unexpected size in kmalloc_index()");
+		// else
+		// 	BUG();
 
-			/* Will never be reached. Needed because the compiler may complain */
-			return -1;
-		}
-		#define kmalloc_index(s) __kmalloc_index(s, true)
-	#endif /* !CONFIG_SLOB */
+		/* Will never be reached. Needed because the compiler may complain */
+		return -1;
+	}
+	#define kmalloc_index(s) __kmalloc_index(s, true)
 
 	// void *__kmalloc(size_t size, gfp_t flags) __assume_kmalloc_alignment __alloc_size(1);
 	void *__kmalloc(size_t size, gfp_t flags);
@@ -600,29 +585,25 @@
 	kmalloc(size_t size, gfp_t flags) {
 	// 	if (__builtin_constant_p(size))
 	// 	{
-	// #ifndef CONFIG_SLOB
-	// 		unsigned int index;
-	// #endif
+		// unsigned int index;
 		size_t max = KMALLOC_MAX_CACHE_SIZE;
 		if (size > KMALLOC_MAX_CACHE_SIZE)
 			return kmalloc_large(size, flags);
-	// #ifndef CONFIG_SLOB
-	// 		index = kmalloc_index(size);
 
-	// 		if (!index)
-	// 			return ZERO_SIZE_PTR;
+		// index = kmalloc_index(size);
 
-	// 		return kmem_cache_alloc_trace(
-	// 			kmalloc_caches[kmalloc_type(flags)][index],
-	// 			flags, size);
-	// #endif
+		// if (!index)
+		// 	return ZERO_SIZE_PTR;
+
+		// return kmem_cache_alloc_trace(
+		// 	kmalloc_caches[kmalloc_type(flags)][index],
+		// 	flags, size);
 	// 	}
 		return __kmalloc(size, flags);
 	}
 
 	// static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
 	// {
-	// #ifndef CONFIG_SLOB
 	// 	if (__builtin_constant_p(size) &&
 	// 		size <= KMALLOC_MAX_CACHE_SIZE)
 	// 	{
@@ -635,7 +616,6 @@
 	// 			kmalloc_caches[kmalloc_type(flags)][i],
 	// 			flags, node, size);
 	// 	}
-	// #endif
 	// 	return __kmalloc_node(size, flags, node);
 	// }
 

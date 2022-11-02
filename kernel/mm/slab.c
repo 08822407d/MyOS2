@@ -1,4 +1,5 @@
 #include <linux/kernel/slab.h>
+#include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/myos_slab.h>
 #include <linux/lib/string.h>
@@ -198,58 +199,65 @@ void kfree(const void *objp)
 	if (objp == NULL)
 		return;
 
-	// find which slab does the pointer belonged to
-	phys_addr_t pg_addr = myos_virt2phys((virt_addr_t)round_down((size_t)objp, PAGE_SIZE));
-	unsigned long pg_idx = (size_t)pg_addr / PAGE_SIZE;
-	page_s *page = &mem_map[pg_idx];
-	while (!PageSlab(page));
-	slab_s *slp = (slab_s *)page->private;
-	slab_cache_s * scgp = slp->slabcache_ptr;
-	// of coures it should not in an empty-slab
-	if (slp->free == slp->total)
+	folio_s *folio = virt_to_folio(objp);
+	if (!folio_test_slab(folio))
 	{
-		color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
-		while (1);
+		unsigned int order = folio->page.private;
+		__free_pages(&folio->page, order);
 	}
+	else
+	{
+		// find which slab does the pointer belonged to
+		page_s *page = virt_to_page(objp);
+		while (!PageSlab(page));
+		slab_s *slp = (slab_s *)page->private;
+		slab_cache_s * scgp = slp->slabcache_ptr;
+		// of coures it should not in an empty-slab
+		if (slp->free == slp->total)
+		{
+			color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
+			while (1);
+		}
 
-	unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
-	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
-	{
-		color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
-		while (1);
-	}
-	lock_recurs_lock(&slab_alloc_lock);
-	bm_clear_bit(slp->colormap, obj_idx);
-	slp->free++;
-	scgp->nsobj_free_count++;
-	scgp->nsobj_used_count--;
-	// if the corresponding slab in full list, move it to used list
-	// or if it is in used list and only use one slot, move it to free list
-	if (slp->free == 1)
-	{
-		list_delete(&slp->slab_list);
-		scgp->normal_slab_full.count--;
-		list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
-	}
-	else if (slp->free == 0)
-	{
-		list_delete(&slp->slab_list);
-		scgp->normal_slab_used.count--;
-		// if slp is base-slab, add it to tail
-		if (slp != scgp->normal_base_slab)
-			list_hdr_push(&scgp->normal_slab_free, &slp->slab_list);
-		else
-			list_hdr_append(&scgp->normal_slab_free, &slp->slab_list);
-	}
-	// if there is too many free slab, free some of them
-	if (scgp->normal_slab_free.count > 2)
-	{
-		slab_s * tmp_slp = container_of(scgp->normal_slab_free.header.prev, slab_s, slab_list);
-		scgp->normal_slab_free.count--;
-		slab_free(tmp_slp);
-		scgp->normal_slab_total;
-		scgp->nsobj_free_count -= tmp_slp->total;
-	}
+		unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
+		if (!bm_get_assigned_bit(slp->colormap, obj_idx))
+		{
+			color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
+			while (1);
+		}
+		lock_recurs_lock(&slab_alloc_lock);
+		bm_clear_bit(slp->colormap, obj_idx);
+		slp->free++;
+		scgp->nsobj_free_count++;
+		scgp->nsobj_used_count--;
+		// if the corresponding slab in full list, move it to used list
+		// or if it is in used list and only use one slot, move it to free list
+		if (slp->free == 1)
+		{
+			list_delete(&slp->slab_list);
+			scgp->normal_slab_full.count--;
+			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
+		}
+		else if (slp->free == 0)
+		{
+			list_delete(&slp->slab_list);
+			scgp->normal_slab_used.count--;
+			// if slp is base-slab, add it to tail
+			if (slp != scgp->normal_base_slab)
+				list_hdr_push(&scgp->normal_slab_free, &slp->slab_list);
+			else
+				list_hdr_append(&scgp->normal_slab_free, &slp->slab_list);
+		}
+		// if there is too many free slab, free some of them
+		if (scgp->normal_slab_free.count > 2)
+		{
+			slab_s * tmp_slp = container_of(scgp->normal_slab_free.header.prev, slab_s, slab_list);
+			scgp->normal_slab_free.count--;
+			slab_free(tmp_slp);
+			scgp->normal_slab_total;
+			scgp->nsobj_free_count -= tmp_slp->total;
+		}
 
-	unlock_recurs_lock(&slab_alloc_lock);
+		unlock_recurs_lock(&slab_alloc_lock);
+	}
 }

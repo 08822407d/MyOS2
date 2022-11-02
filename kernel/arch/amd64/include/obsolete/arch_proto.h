@@ -178,6 +178,8 @@
 	/* protect.c */
 	phys_addr_t myos_virt2phys(virt_addr_t);
 	virt_addr_t myos_phys2virt(phys_addr_t);
+	#define __phys_addr myos_virt2phys
+	#define __virt_addr myos_phys2virt
 	void myos_early_init_arch_data(size_t lcpu_nr);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);

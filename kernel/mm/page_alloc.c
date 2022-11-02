@@ -552,16 +552,12 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
 // Linux function proto :
-// void free_pages(unsigned long addr, unsigned int order)
-void free_pages(page_s *page, unsigned int order)
+void __free_pages(page_s *page, unsigned int order)
 {
 	unsigned long pfn = page_to_pfn(page);
 	zone_s *zone = myos_page_zone(page);
 
 	// linux call stack :
-	// void __free_pages(struct page *page, unsigned int order)
-	//								||
-	//								\/
 	// static inline void free_the_page(struct page *page, unsigned int order)
 	//								||
 	//								\/

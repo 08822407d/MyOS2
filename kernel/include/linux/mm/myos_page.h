@@ -9,7 +9,7 @@
 #include <obsolete/archconst.h>
 
 	// slab consts
-	#define SLAB_LEVEL			16
+	#define SLAB_LEVEL			17
 	#define SLAB_SIZE_BASE		32
 
 

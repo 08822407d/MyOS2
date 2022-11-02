@@ -693,7 +693,7 @@
 	//  *
 	//  * Return: The order of the folio.
 	//  */
-	// static inline unsigned int folio_order(struct folio *folio)
+	// static inline unsigned int folio_order(folio_s *folio)
 	// {
 	// 	return compound_order(&folio->page);
 	// }
@@ -722,7 +722,7 @@
 	// 	return page_ref_dec_and_test(page);
 	// }
 
-	// static inline int folio_put_testzero(struct folio *folio)
+	// static inline int folio_put_testzero(folio_s *folio)
 	// {
 	// 	return put_page_testzero(&folio->page);
 	// }
@@ -843,19 +843,18 @@
 	// 	return compound_head(page);
 	// }
 
-	// static inline struct folio *virt_to_folio(const void *x)
-	// {
-	// 	page_s *page = virt_to_page(x);
-
-	// 	return page_folio(page);
-	// }
+	static inline folio_s
+	*virt_to_folio(const void *x) {
+		page_s *page = virt_to_page(x);
+		return page_folio(page);
+	}
 
 	// void __put_page(page_s *page);
 
 	// void put_pages_list(struct list_head *pages);
 
 	// void split_page(page_s *page, unsigned int order);
-	// void folio_copy(struct folio *dst, struct folio *src);
+	// void folio_copy(folio_s *dst, folio_s *src);
 
 	// unsigned long nr_free_buffer_pages(void);
 
@@ -1074,7 +1073,7 @@
 	// 	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
 	// }
 
-	// static inline enum zone_type folio_zonenum(const struct folio *folio)
+	// static inline enum zone_type folio_zonenum(const folio_s *folio)
 	// {
 	// 	return page_zonenum(&folio->page);
 	// }
@@ -1159,7 +1158,7 @@
 	//  * you have a refcount on the folio.  If you do not already have one,
 	//  * folio_try_get() may be the right interface for you to use.
 	//  */
-	// static inline void folio_get(struct folio *folio)
+	// static inline void folio_get(folio_s *folio)
 	// {
 	// 	VM_BUG_ON_FOLIO(folio_ref_zero_or_close_to_overflow(folio), folio);
 	// 	folio_ref_inc(folio);
@@ -1190,14 +1189,14 @@
 	//  *
 	//  * If the folio's reference count reaches zero, the memory will be
 	//  * released back to the page allocator and may be used by another
-	//  * allocation immediately.  Do not access the memory or the struct folio
+	//  * allocation immediately.  Do not access the memory or the folio_s
 	//  * after calling folio_put() unless you can be sure that it wasn't the
 	//  * last reference.
 	//  *
 	//  * Context: May be called in process or interrupt context, but not in NMI
 	//  * context.  May be called while holding a spinlock.
 	//  */
-	// static inline void folio_put(struct folio *folio)
+	// static inline void folio_put(folio_s *folio)
 	// {
 	// 	if (folio_put_testzero(folio))
 	// 		__put_page(&folio->page);
@@ -1210,14 +1209,14 @@
 	//  *
 	//  * If the folio's reference count reaches zero, the memory will be
 	//  * released back to the page allocator and may be used by another
-	//  * allocation immediately.  Do not access the memory or the struct folio
+	//  * allocation immediately.  Do not access the memory or the folio_s
 	//  * after calling folio_put_refs() unless you can be sure that these weren't
 	//  * the last references.
 	//  *
 	//  * Context: May be called in process or interrupt context, but not in NMI
 	//  * context.  May be called while holding a spinlock.
 	//  */
-	// static inline void folio_put_refs(struct folio *folio, int refs)
+	// static inline void folio_put_refs(folio_s *folio, int refs)
 	// {
 	// 	if (folio_ref_sub_and_test(folio, refs))
 	// 		__put_page(&folio->page);
@@ -1225,7 +1224,7 @@
 
 	// static inline void put_page(page_s *page)
 	// {
-	// 	struct folio *folio = page_folio(page);
+	// 	folio_s *folio = page_folio(page);
 
 	// 	/*
 	// 	* For devmap managed pages we need to catch refcount transition from
@@ -1373,7 +1372,7 @@
 	// }
 	// #endif
 
-	// static inline int folio_nid(const struct folio *folio)
+	// static inline int folio_nid(const folio_s *folio)
 	// {
 	// 	return page_to_nid(&folio->page);
 	// }
@@ -1552,12 +1551,12 @@
 	// 	return NODE_DATA(page_to_nid(page));
 	// }
 
-	// static inline struct zone *folio_zone(const struct folio *folio)
+	// static inline struct zone *folio_zone(const folio_s *folio)
 	// {
 	// 	return page_zone(&folio->page);
 	// }
 
-	// static inline pg_data_t *folio_pgdat(const struct folio *folio)
+	// static inline pg_data_t *folio_pgdat(const folio_s *folio)
 	// {
 	// 	return page_pgdat(&folio->page);
 	// }
@@ -1584,7 +1583,7 @@
 	//  *
 	//  * Return: The Page Frame Number of the first page in the folio.
 	//  */
-	// static inline unsigned long folio_pfn(struct folio *folio)
+	// static inline unsigned long folio_pfn(folio_s *folio)
 	// {
 	// 	return page_to_pfn(&folio->page);
 	// }
@@ -1631,7 +1630,7 @@
 	//  *
 	//  * Return: A positive power of two.
 	//  */
-	// static inline long folio_nr_pages(struct folio *folio)
+	// static inline long folio_nr_pages(folio_s *folio)
 	// {
 	// 	return compound_nr(&folio->page);
 	// }
@@ -1648,11 +1647,11 @@
 	//  *
 	//  * Context: We assume that the folios are refcounted and/or locked at a
 	//  * higher level and do not adjust the reference counts.
-	//  * Return: The next struct folio.
+	//  * Return: The next folio_s.
 	//  */
-	// static inline struct folio *folio_next(struct folio *folio)
+	// static inline folio_s *folio_next(folio_s *folio)
 	// {
-	// 	return (struct folio *)folio_page(folio, folio_nr_pages(folio));
+	// 	return (folio_s *)folio_page(folio, folio_nr_pages(folio));
 	// }
 
 	// /**
@@ -1667,7 +1666,7 @@
 	//  * it from being split.  It is not necessary for the folio to be locked.
 	//  * Return: The base-2 logarithm of the size of this folio.
 	//  */
-	// static inline unsigned int folio_shift(struct folio *folio)
+	// static inline unsigned int folio_shift(folio_s *folio)
 	// {
 	// 	return PAGE_SHIFT + folio_order(folio);
 	// }
@@ -1680,7 +1679,7 @@
 	//  * it from being split.  It is not necessary for the folio to be locked.
 	//  * Return: The number of bytes in this folio.
 	//  */
-	// static inline size_t folio_size(struct folio *folio)
+	// static inline size_t folio_size(folio_s *folio)
 	// {
 	// 	return PAGE_SIZE << folio_order(folio);
 	// }
@@ -1693,7 +1692,7 @@
 	// #endif
 
 	// #ifndef HAVE_ARCH_MAKE_FOLIO_ACCESSIBLE
-	// static inline int arch_make_folio_accessible(struct folio *folio)
+	// static inline int arch_make_folio_accessible(folio_s *folio)
 	// {
 	// 	int ret;
 	// 	long i, nr = folio_nr_pages(folio);
@@ -1746,7 +1745,7 @@
 	// #define page_address_init()  do { } while(0)
 	// #endif
 
-	// static inline void *folio_address(const struct folio *folio)
+	// static inline void *folio_address(const folio_s *folio)
 	// {
 	// 	return page_address(&folio->page);
 	// }
@@ -1767,7 +1766,7 @@
 	// }
 
 	// bool page_mapped(page_s *page);
-	// bool folio_mapped(struct folio *folio);
+	// bool folio_mapped(folio_s *folio);
 
 	// /*
 	// * Return true only if the page has been allocated with
@@ -1946,7 +1945,7 @@
 	// extern void do_invalidatepage(page_s *page, unsigned int offset,
 	// 				unsigned int length);
 
-	// bool folio_mark_dirty(struct folio *folio);
+	// bool folio_mark_dirty(folio_s *folio);
 	// bool set_page_dirty(page_s *page);
 	// int set_page_dirty_lock(page_s *page);
 

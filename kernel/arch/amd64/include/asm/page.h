@@ -4,6 +4,9 @@
 
 	#include <linux/kernel/types.h>
 
+
+	#include <obsolete/arch_proto.h>
+
 	#ifdef __KERNEL__
 
 	#	include <asm/page_types.h>
@@ -52,17 +55,18 @@
 			// 			__phys_addr_symbol(__phys_reloc_hide((unsigned long)(x)))
 
 			#ifndef __va
-			#	define __va(x)	((void *)((unsigned long)(x) + PAGE_OFFSET))
+			// #	define __va(x)	((void *)((unsigned long)(x) + PAGE_OFFSET))
+			#	define __va(x)	__virt_addr((unsigned long)(x))
 			#endif
 
 			// #define __boot_va(x)	__va(x)
 			// #define __boot_pa(x)	__pa(x)
 
-			// /*
-			// * virt_to_page(kaddr) returns a valid pointer if and only if
-			// * virt_addr_valid(kaddr) returns true.
-			// */
-			// #define virt_to_page(kaddr) pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+			/*
+			 * virt_to_page(kaddr) returns a valid pointer if and only if
+			 * virt_addr_valid(kaddr) returns true.
+			 */
+			#define virt_to_page(kaddr) pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
 			// #define pfn_to_kaddr(pfn) __va((pfn) << PAGE_SHIFT)
 			// extern bool __virt_addr_valid(unsigned long kaddr);
 			// #define virt_addr_valid(kaddr) __virt_addr_valid((unsigned long)(kaddr))
