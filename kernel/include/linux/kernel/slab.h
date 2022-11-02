@@ -586,9 +586,11 @@
 	// 	if (__builtin_constant_p(size))
 	// 	{
 		// unsigned int index;
-		size_t max = KMALLOC_MAX_CACHE_SIZE;
 		if (size > KMALLOC_MAX_CACHE_SIZE)
-			return kmalloc_large(size, flags);
+		{
+			unsigned int order = get_order(size);
+			return kmalloc_order(size, flags, order);
+		}
 
 		// index = kmalloc_index(size);
 

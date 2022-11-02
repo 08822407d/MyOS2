@@ -438,13 +438,22 @@ __free_one_page(page_s *page, unsigned long pfn,
 	add_to_free_list(page, zone, order);
 }
 
-
-static inline void
-myos_set_pageflag(page_s *page, enum pageflags flag)
+static void __meminit
+__init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
 {
-	unsigned long pgflag = READ_ONCE(page->flags);
-	pgflag |= 1 << flag;
-	WRITE_ONCE(page->flags, pgflag);
+	// mm_zero_struct_page(page);
+	// set_page_links(page, zone, nid, pfn);
+	// init_page_count(page);
+	// page_mapcount_reset(page);
+	// page_cpupid_reset_last(page);
+	// page_kasan_tag_reset(page);
+
+	list_init(&page->lru, page);
+// #ifdef WANT_PAGE_VIRTUAL
+	// /* The shift won't overflow because ZONE_NORMAL is below 4G. */
+	// if (!is_highmem_idx(zone))
+	// 	set_page_address(page, __va(pfn << PAGE_SHIFT));
+// #endif
 }
 
 /*
@@ -650,6 +659,12 @@ memmap_init(unsigned long *max_zone_pfn)
 
 		for (int j = 0; j < MAX_ORDER; j++)
 			list_hdr_init(&zone->free_area[j]);
+
+		for (unsigned long pfn = start_pfn; pfn < end_pfn; pfn++)
+		{
+			page_s *page = pfn_to_page(pfn);
+			__init_single_page(page, pfn, i);
+		}
 
 		start_pfn = end_pfn;
 	}
@@ -897,7 +912,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 			// panic("Failed to allocate %ld bytes for node %d memory map\n",
 			// 		size, pgdat->node_id);
 		}
-		memset(map, PAGE_POISON_PATTERN, size);
+		memset(map, 0, size);
 		pgdat->node_mem_map = mem_map = map + offset;
 	}
 	// pr_debug("%s: node %d, pgdat %08lx, node_mem_map %08lx\n",

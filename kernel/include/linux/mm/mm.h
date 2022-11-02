@@ -117,9 +117,9 @@
 	// #	define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
 	// #endif
 
-	// #ifndef page_to_virt
-	// #define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
-	// #endif
+	#ifndef page_to_virt
+	#	define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
+	#endif
 
 	// #ifndef lm_alias
 	// #define lm_alias(x)	__va(__pa_symbol(x))
@@ -1030,9 +1030,9 @@
 	// */
 
 	// /* Page flags: | [SECTION] | [NODE] | ZONE | [LAST_CPUPID] | ... | FLAGS | */
-	// #define SECTIONS_PGOFF		((sizeof(unsigned long)*8) - SECTIONS_WIDTH)
-	// #define NODES_PGOFF		(SECTIONS_PGOFF - NODES_WIDTH)
-	// #define ZONES_PGOFF		(NODES_PGOFF - ZONES_WIDTH)
+	#define SECTIONS_PGOFF		((sizeof(unsigned long)*8) - SECTIONS_WIDTH)
+	#define NODES_PGOFF			(SECTIONS_PGOFF - NODES_WIDTH)
+	#define ZONES_PGOFF			(NODES_PGOFF - ZONES_WIDTH)
 	// #define LAST_CPUPID_PGOFF	(ZONES_PGOFF - LAST_CPUPID_WIDTH)
 	// #define KASAN_TAG_PGOFF		(LAST_CPUPID_PGOFF - KASAN_TAG_WIDTH)
 
@@ -1042,8 +1042,8 @@
 	// * the compiler will optimise away reference to them.
 	// */
 	// #define SECTIONS_PGSHIFT	(SECTIONS_PGOFF * (SECTIONS_WIDTH != 0))
-	// #define NODES_PGSHIFT		(NODES_PGOFF * (NODES_WIDTH != 0))
-	// #define ZONES_PGSHIFT		(ZONES_PGOFF * (ZONES_WIDTH != 0))
+	#define NODES_PGSHIFT		(NODES_PGOFF * (NODES_WIDTH != 0))
+	#define ZONES_PGSHIFT		(ZONES_PGOFF * (ZONES_WIDTH != 0))
 	// #define LAST_CPUPID_PGSHIFT	(LAST_CPUPID_PGOFF * (LAST_CPUPID_WIDTH != 0))
 	// #define KASAN_TAG_PGSHIFT	(KASAN_TAG_PGOFF * (KASAN_TAG_WIDTH != 0))
 
@@ -1060,8 +1060,8 @@
 
 	// #define ZONEID_PGSHIFT		(ZONEID_PGOFF * (ZONEID_SHIFT != 0))
 
-	// #define ZONES_MASK		((1UL << ZONES_WIDTH) - 1)
-	// #define NODES_MASK		((1UL << NODES_WIDTH) - 1)
+	#define ZONES_MASK			((1UL << ZONES_WIDTH) - 1)
+	#define NODES_MASK			((1UL << NODES_WIDTH) - 1)
 	// #define SECTIONS_MASK		((1UL << SECTIONS_WIDTH) - 1)
 	// #define LAST_CPUPID_MASK	((1UL << LAST_CPUPID_SHIFT) - 1)
 	// #define KASAN_TAG_MASK		((1UL << KASAN_TAG_WIDTH) - 1)

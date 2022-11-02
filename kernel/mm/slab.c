@@ -14,7 +14,6 @@ recurs_lock_T	slab_alloc_lock;
 
 slab_cache_s *	slab_cache_groups_p;
 slab_s *		base_slabs_p;
-uint8_t	*		base_slab_pages_p;
 
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
@@ -23,7 +22,6 @@ void myos_preinit_slab()
 {
 	slab_cache_groups_p = myos_memblock_alloc_normal(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
 	base_slabs_p = myos_memblock_alloc_normal(sizeof(slab_s) * SLAB_LEVEL, 1);
-	base_slab_pages_p = myos_memblock_alloc_normal(SLAB_LEVEL * PAGE_SIZE, PAGE_SIZE);
 
 	for (int i = 0; i < SLAB_LEVEL; i++)
 	{
@@ -39,7 +37,6 @@ void myos_preinit_slab()
 
 void myos_init_slab()
 {
-	myos_preinit_slab();
 	init_recurs_lock(&slab_alloc_lock);
 	list_hdr_init(&slabcache_lhdr);
 
@@ -65,9 +62,10 @@ void myos_init_slab()
 
 		bslp->slabcache_ptr = scgp;
 		bslp->free = bslp->total;
-		bslp->virt_addr = (virt_addr_t)(base_slab_pages_p + i * PAGE_SIZE);
-		bslp->page = paddr_to_page(myos_virt2phys(bslp->virt_addr));;
-		__SetPageSlab(bslp->page);
+		page_s *page = __alloc_pages(GFP_KERNEL, 0);
+		bslp->page = page;
+		__SetPageSlab(page);
+		bslp->virt_addr = page_to_virt(page);
 		bslp->page->private = (unsigned long)bslp;
 	}
 	// set init flag
@@ -199,17 +197,15 @@ void kfree(const void *objp)
 	if (objp == NULL)
 		return;
 
-	folio_s *folio = virt_to_folio(objp);
-	if (!folio_test_slab(folio))
-	{
-		unsigned int order = folio->page.private;
-		__free_pages(&folio->page, order);
-	}
-	else
-	{
+	page_s *page = virt_to_page(objp);
+	// if (PageHead(page))
+	// {
+	// 	unsigned int order = page->private;
+	// 	__free_pages(page, order);
+	// }
+	// else if (PageSlab(page))
+	// {
 		// find which slab does the pointer belonged to
-		page_s *page = virt_to_page(objp);
-		while (!PageSlab(page));
 		slab_s *slp = (slab_s *)page->private;
 		slab_cache_s * scgp = slp->slabcache_ptr;
 		// of coures it should not in an empty-slab
@@ -259,5 +255,5 @@ void kfree(const void *objp)
 		}
 
 		unlock_recurs_lock(&slab_alloc_lock);
-	}
+	// }
 }
