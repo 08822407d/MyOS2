@@ -226,23 +226,24 @@
 	// 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
 	// }
 
-	// static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-	// {
-	// 	return ((1UL << (nr & (BITS_PER_LONG - 1))) &
-	// 			(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
-	// }
+	static __always_inline bool
+	constant_test_bit(long nr, const volatile unsigned long *addr) {
+		return ((1UL << (nr & (BITS_PER_LONG - 1))) &
+				(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
+	}
 
-	// static __always_inline bool variable_test_bit(long nr, volatile const unsigned long *addr)
-	// {
-	// 	bool oldbit;
+	static __always_inline bool
+	variable_test_bit(long nr, volatile const unsigned long *addr) {
+		bool oldbit;
 
-	// 	asm volatile(__ASM_SIZE(bt) " %2,%1" CC_SET(c)
-	// 				: CC_OUT(c)(oldbit)
-	// 				: "m"(*(unsigned long *)addr), "Ir"(nr)
-	// 				: "memory");
+		asm volatile(	"btq	%2,		%1	\n\t"
+					:	"=r"(oldbit)
+					:	"m"(*(unsigned long *)addr),
+						"Ir"(nr)
+					:	"memory");
 
-	// 	return oldbit;
-	// }
+		return oldbit;
+	}
 
 	// #define arch_test_bit(nr, addr)            \
 	// 	(__builtin_constant_p((nr))            \
@@ -398,19 +399,11 @@
 
 	#endif /* __KERNEL__ */
 
-
-
-
-	static __always_inline bool
-	test_bit(long nr, volatile const unsigned long *addr) {
-		bool oldbit;
-		asm volatile(	"btq	%2,		%1	\n\t"
-					:	"=r"(oldbit)
-					:	"m"(*(unsigned long *)addr),
-						"Ir"(nr)
-					:	"memory");
-		return oldbit;
-	}
+	#define test_bit(nr, addr) (						\
+				__builtin_constant_p((nr))				\
+					? constant_test_bit((nr), (addr))	\
+					: variable_test_bit((nr), (addr))	\
+			)
 
 	static __always_inline void
 	set_bit(long nr, volatile unsigned long *addr) {

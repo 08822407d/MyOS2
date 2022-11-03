@@ -2,7 +2,6 @@
 #include <asm/setup.h>
 #include <asm/processor.h>
 
-#include <linux/mm/myos_page.h>
 #include <klib/stdbool.h>
 
 #include <obsolete/ktypes.h>

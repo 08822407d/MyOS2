@@ -230,8 +230,10 @@ void idle(size_t cpu_idx)
 		myos_schedule();
 	}
 	
-
 	sti();
+
+	// module_test();
+
 	while (1)
 		hlt();
 }

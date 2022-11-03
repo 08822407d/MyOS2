@@ -9,21 +9,26 @@
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
 
+
+#define SLAB_SIZE_BASE		32
+
 List_hdr_s		slabcache_lhdr;
 recurs_lock_T	slab_alloc_lock;
 
 slab_cache_s *	slab_cache_groups_p;
 slab_s *		base_slabs_p;
+int		slab_level = 0;
 
 /*==============================================================================================*
  *								fuction relate to alloc virtual memory							*
  *==============================================================================================*/
 void myos_preinit_slab()
 {
-	slab_cache_groups_p = myos_memblock_alloc_normal(sizeof(slab_cache_s) * SLAB_LEVEL, 1);
-	base_slabs_p = myos_memblock_alloc_normal(sizeof(slab_s) * SLAB_LEVEL, 1);
+	slab_level = ilog2(KMALLOC_MAX_CACHE_SIZE / SLAB_SIZE_BASE) + 1;
+	slab_cache_groups_p = myos_memblock_alloc_normal(sizeof(slab_cache_s) * slab_level, 1);
+	base_slabs_p = myos_memblock_alloc_normal(sizeof(slab_s) * slab_level, 1);
 
-	for (int i = 0; i < SLAB_LEVEL; i++)
+	for (int i = 0; i < slab_level; i++)
 	{
 		int obj_size = SLAB_SIZE_BASE << i;
 		int obj_nr = PAGE_SIZE / obj_size;
@@ -40,7 +45,7 @@ void myos_init_slab()
 	init_recurs_lock(&slab_alloc_lock);
 	list_hdr_init(&slabcache_lhdr);
 
-	for (int i = 0; i < SLAB_LEVEL; i++)
+	for (int i = 0; i < slab_level; i++)
 	{
 		slab_cache_s *scgp = slab_cache_groups_p + i;
 		list_init(&scgp->slabcache_list, scgp);
@@ -57,6 +62,7 @@ void myos_init_slab()
 		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
 		scgp->normal_base_slab = bslp;
 		scgp->nsobj_used_count = 0;
+		scgp->nsobj_free_count += bslp->total;
 		scgp->normal_slab_total = 1;
 		scgp->obj_size = SLAB_SIZE_BASE << i;
 
@@ -113,7 +119,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 	#endif
 
 	void *ret_val = NULL;
-	while (size > PAGE_SIZE);
+	while (size > KMALLOC_MAX_CACHE_SIZE);
 
 	// find suitable slab group
 	slab_cache_s *scgp = slab_cache_groups_p;
@@ -124,46 +130,37 @@ void * __kmalloc(size_t size, gfp_t flags)
 	// find a usable slab and if it is in free list, move it to used list
 	// or if it is in used list and has only one free slot, move it to full list
 	slab_s *slp = NULL;
+	List_s *slp_lp = NULL;
 	if (scgp->normal_slab_used.count > 0)
-	{
-		List_s *slp_lp = list_hdr_pop(&scgp->normal_slab_used);
-		while (slp_lp == 0);
-		
-		slp = container_of(slp_lp, slab_s, slab_list);
-		if (slp->free == 1)
-			list_hdr_push(&scgp->normal_slab_full, &slp->slab_list);
-		else
-			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
-	}
+		slp_lp = list_hdr_pop(&scgp->normal_slab_used);
 	else if (scgp->normal_slab_free.count > 0)
-	{
-		List_s *slp_lp = list_hdr_pop(&scgp->normal_slab_free);
-		while (slp_lp == 0);
-
-		slp = container_of(slp_lp, slab_s, slab_list);
-		list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
-	}
+		slp_lp = list_hdr_pop(&scgp->normal_slab_free);
 	else
 	{
 		color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
 		while (1);
 	}
+	while (slp_lp == 0);
+	slp = container_of(slp_lp, slab_s, slab_list);
+
+	if (slp->free == 1)
+		list_hdr_push(&scgp->normal_slab_full, &slp->slab_list);
+	else
+		list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 		
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
-	if (obj_idx < slp->total)
-	{
-		size_t offset = scgp->obj_size * obj_idx;
-		ret_val = (void *)((size_t)slp->virt_addr + offset);
-		// refresh status of slab
-		slp->free--;
-		scgp->nsobj_free_count--;
-		scgp->nsobj_used_count++;
-		bm_set_bit(slp->colormap, obj_idx);
-	}
+	while (obj_idx >= slp->total);
+	size_t offset = scgp->obj_size * obj_idx;
+	ret_val = (void *)((size_t)slp->virt_addr + offset);
+	// refresh status of slab
+	slp->free--;
+	scgp->nsobj_free_count--;
+	scgp->nsobj_used_count++;
+	bm_set_bit(slp->colormap, obj_idx);
 
 	// make sure free slab more than one
-	if (scgp->normal_slab_free.count < 1)
+	if (scgp->normal_slab_free.count == 0)
 	{
 		scgp->normal_slab_free.count++;
 		slab_s *new_slab = slab_alloc(slp);
@@ -186,6 +183,29 @@ void * __kmalloc(size_t size, gfp_t flags)
 
 	return ret_val;
 }
+void *kmalloc(size_t size, gfp_t flags)
+{
+// 	if (__builtin_constant_p(size))
+// 	{
+	// unsigned int index;
+	if (size > KMALLOC_MAX_CACHE_SIZE)
+	{
+		unsigned int order = get_order(size);
+		return kmalloc_order(size, flags, order);
+	}
+
+	// index = kmalloc_index(size);
+
+	// if (!index)
+	// 	return ZERO_SIZE_PTR;
+
+	// return kmem_cache_alloc_trace(
+	// 	kmalloc_caches[kmalloc_type(flags)][index],
+	// 	flags, size);
+// 	}
+	return __kmalloc(size, flags);
+}
+
 
 void kfree(const void *objp)
 {
@@ -198,13 +218,13 @@ void kfree(const void *objp)
 		return;
 
 	page_s *page = virt_to_page(objp);
-	// if (PageHead(page))
-	// {
-	// 	unsigned int order = page->private;
-	// 	__free_pages(page, order);
-	// }
-	// else if (PageSlab(page))
-	// {
+	if (PageHead(page))
+	{
+		unsigned int order = page->private;
+		__free_pages(page, order);
+	}
+	else if (PageSlab(page))
+	{
 		// find which slab does the pointer belonged to
 		slab_s *slp = (slab_s *)page->private;
 		slab_cache_s * scgp = slp->slabcache_ptr;
@@ -255,5 +275,5 @@ void kfree(const void *objp)
 		}
 
 		unlock_recurs_lock(&slab_alloc_lock);
-	// }
+	}
 }

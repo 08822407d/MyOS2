@@ -1,48 +1,46 @@
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/slab.h>
 // #include <linux/fs/fs.h>
 // #include <linux/lib/string.h>
 
 // #include <obsolete/glo.h>
-// #include <obsolete/printk.h>
-// #include <obsolete/arch_proto.h"
+#include <obsolete/printk.h>
+// #include <obsolete/arch_proto.h>
 // #include <obsolete/device.h>
-// #include <obsolete/ide.h"
+// #include <obsolete/ide.h>
+#include <obsolete/proto.h>
 
 // extern myos_atomic_T boot_counter;
 
-// void kmalloc_kfree_test(void);
-// void kernthd_test(void);
-// void disk_drv_test(void);
+void kmalloc_kfree_test(void);
+void kernthd_test(void);
+void disk_drv_test(void);
 
-// unsigned long module_test(unsigned long flag);
+unsigned long module_test(unsigned long flag)
+{
+	// if (flag == 0)
+	// {
+	// 	long long i = 0;
+	// 	for ( ; i < 0xFFFFFFF; i++);
+	// 	long val = boot_counter.value;
+	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
+	// }
 
-// unsigned long module_test(unsigned long flag)
-// {
-// 	// if (flag == 0)
-// 	// {
-// 	// 	long long i = 0;
-// 	// 	for ( ; i < 0xFFFFFFF; i++);
-// 	// 	long val = boot_counter.value;
-// 	// 	color_printk(BLACK, GREEN, "Mutex servied core num : - %d -\n", val);
-// 	// }
+	kmalloc_kfree_test();
 
-// 	// kmalloc_kfree_test();
+	// kernthd_test();
 
-// 	kernthd_test();
+	// disk_drv_test();
 
-// 	// disk_drv_test();
-
-// 	// while (!kparam.init_flags.vfs);
+	// while (!kparam.init_flags.vfs);
 	
-// 	// char * testfname = "/EFI/BOOT/BOOTX64.EFI";
-// 	// char testf_buf[512];
-// 	// long pos = 0;
-// 	// file_s * testf_fp = open_exec_file(testfname);
-// 	// int retval = testf_fp->f_op->read(testf_fp, testf_buf, 512, &pos);
+	// char * testfname = "/EFI/BOOT/BOOTX64.EFI";
+	// char testf_buf[512];
+	// long pos = 0;
+	// file_s * testf_fp = open_exec_file(testfname);
+	// int retval = testf_fp->f_op->read(testf_fp, testf_buf, 512, &pos);
 
-// 	// color_printk(YELLOW, BLACK, "task module_test finished......");
-// 	while (1);
-// }
+	// color_printk(YELLOW, BLACK, "task module_test finished......");
+}
 
 // unsigned long test_task_a(unsigned long arg)
 // {
@@ -142,28 +140,30 @@
 // 	myos_kernel_thread(test_task_d, 0, 0);
 // }
 
-// void kmalloc_kfree_test()
-// {
-// 	unsigned char * test1 = (char *)kmalloc(0x100);
-// 	unsigned char * test2 = (char *)kmalloc(0x100);
-// 	unsigned char * test3 = (char *)kmalloc(0x100);
-// 	unsigned char * test4 = (char *)kmalloc(0x100);
+void kmalloc_kfree_test()
+{
+	unsigned char * test1 = kmalloc(0x100, GFP_KERNEL);
+	unsigned char * test2 = kmalloc(0x1000, GFP_KERNEL);
+	unsigned char * test3 = kmalloc(0x10000, GFP_KERNEL);
+	unsigned char * test4 = kmalloc(0x100000, GFP_KERNEL);
+	unsigned char * test5 = kmalloc(0x1000000, GFP_KERNEL);
 
-// 	kfree(test2);
-// 	kfree(test3);
-// 	kfree(test4);
-// 	unsigned char * test5 = (char *)kmalloc(0x100);
-// 	unsigned char * test6 = (char *)kmalloc(0x100);
-// 	kfree(test1);
-// 	kfree(test6);
-// 	unsigned char * test7 = (char *)kmalloc(0x100);
-// 	unsigned char * test8 = (char *)kmalloc(0x100);
-// 	kfree(test5);
-// 	kfree(test7);
-// 	kfree(test8);
+	kfree(test2);
+	kfree(test3);
+	kfree(test4);
+	kfree(test5);
+	unsigned char * test6 = kmalloc(0x100000, GFP_KERNEL);
+	unsigned char * test7 = kmalloc(0x100000, GFP_KERNEL);
+	kfree(test1);
+	kfree(test7);
+	unsigned char * test8 = kmalloc(0x100000, GFP_KERNEL);
+	unsigned char * test9 = kmalloc(0x100000, GFP_KERNEL);
+	kfree(test6);
+	kfree(test8);
+	kfree(test9);
 
-// 	color_printk(WHITE, BLACK, "kmalloc test finished.\n");
-// }
+	color_printk(WHITE, BLACK, "kmalloc test finished.\n");
+}
 
 // void disk_drv_test()
 // {

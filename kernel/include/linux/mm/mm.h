@@ -843,11 +843,11 @@
 	// 	return compound_head(page);
 	// }
 
-	static inline folio_s
-	*virt_to_folio(const void *x) {
-		page_s *page = virt_to_page(x);
-		return page_folio(page);
-	}
+	// static inline folio_s
+	// *virt_to_folio(const void *x) {
+	// 	page_s *page = virt_to_page(x);
+	// 	return page_folio(page);
+	// }
 
 	// void __put_page(page_s *page);
 

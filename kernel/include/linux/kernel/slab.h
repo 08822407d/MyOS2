@@ -519,12 +519,12 @@
 	// 	}
 	// #endif
 
-	static __always_inline void
-	*kmalloc_large(size_t size, gfp_t flags) {
-		unsigned int order = get_order(size);
-	// 	return kmalloc_order_trace(size, flags, order);
-		return kmalloc_order(size, flags, order);
-	}
+	// static __always_inline void
+	// *kmalloc_large(size_t size, gfp_t flags) {
+	// 	unsigned int order = get_order(size);
+	// // 	return kmalloc_order_trace(size, flags, order);
+	// 	return kmalloc_order(size, flags, order);
+	// }
 
 	/**
 	 * kmalloc - allocate memory
@@ -581,28 +581,29 @@
 	*	eventually.
 	*/
 	// static __always_inline __alloc_size(1) void *kmalloc(size_t size, gfp_t flags)
-	static __always_inline void *
-	kmalloc(size_t size, gfp_t flags) {
-	// 	if (__builtin_constant_p(size))
+	// static __always_inline void *
+	// kmalloc(size_t size, gfp_t flags) {
+	// // 	if (__builtin_constant_p(size))
+	// // 	{
+	// 	// unsigned int index;
+	// 	if (size > KMALLOC_MAX_CACHE_SIZE)
 	// 	{
-		// unsigned int index;
-		if (size > KMALLOC_MAX_CACHE_SIZE)
-		{
-			unsigned int order = get_order(size);
-			return kmalloc_order(size, flags, order);
-		}
-
-		// index = kmalloc_index(size);
-
-		// if (!index)
-		// 	return ZERO_SIZE_PTR;
-
-		// return kmem_cache_alloc_trace(
-		// 	kmalloc_caches[kmalloc_type(flags)][index],
-		// 	flags, size);
+	// 		unsigned int order = get_order(size);
+	// 		return kmalloc_order(size, flags, order);
 	// 	}
-		return __kmalloc(size, flags);
-	}
+
+	// 	// index = kmalloc_index(size);
+
+	// 	// if (!index)
+	// 	// 	return ZERO_SIZE_PTR;
+
+	// 	// return kmem_cache_alloc_trace(
+	// 	// 	kmalloc_caches[kmalloc_type(flags)][index],
+	// 	// 	flags, size);
+	// // 	}
+	// 	return __kmalloc(size, flags);
+	// }
+	void *kmalloc(size_t size, gfp_t flags);
 
 	// static __always_inline __alloc_size(1) void *kmalloc_node(size_t size, gfp_t flags, int node)
 	// {
