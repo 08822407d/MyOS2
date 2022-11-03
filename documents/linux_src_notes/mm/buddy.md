@@ -57,6 +57,45 @@ buddy是物理内存页分配器
     主要执行流程:
       (mm/mempolicy)alloc_pages() => (mm/page_alloc.c)__alloc_pages()
     调用栈:
+      struct page *
+      __alloc_pages(gfp_t gfp, unsigned int order,
+          int preferred_nid, nodemask_t *nodemask)
+      {
+                        ......
+        static struct page *
+        get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
+            int alloc_flags, const struct alloc_context *ac)
+        {
+                          ......
+          static inline struct page
+          *rmqueue(struct zone *preferred_zone, struct zone *zone,
+              unsigned int order, gfp_t gfp_flags, unsigned int alloc_flags,
+              int migratetype)
+          {
+                            ......
+            static __always_inline struct page
+            *__rmqueue_smallest(struct zone *zone, unsigned int order, int migratetype)
+            {
+              get_page_from_free_area();
+              del_page_from_free_list();
+              expand();
+            }
+                            ......
+          }
+
+          static void prep_new_page(struct page *page, unsigned int order,
+              gfp_t gfp_flags, unsigned int alloc_flags)
+          {
+                            ......
+            if (order && (gfp_flags & __GFP_COMP))
+              prep_compound_page();
+                            ......
+          }
+                          ......
+        }
+                        ......
+      }
+
 
   释放页面
     主要执行流程:
