@@ -16,30 +16,18 @@ SECTIONS
 	.text ALIGN(0x200000) :
 	{
 		_text = .;
-		*(.crt1.text);
+		*(.crt1.text)
 		*(.text)
+		*(.rodata)
 		_etext = .;
 	}
 
-	.rodata ALIGN(0x200000) : 
-	{
-		_rodata = .;	
-		*(.rodata)
-		_erodata = .;
-	}
-	
-	. = ALIGN(8);
 	.data ALIGN(0x200000) :
 	{
 		_data = .;
-		*(.data)		
-		_edata = .;
-	}
-	.bss :
-	{
-		_bss = .;
+		*(.data)
 		*(.bss)
-		_ebss = .;
+		_edata = .;
 	}
 
 	_end = .;

@@ -15,7 +15,7 @@
 // #include <linux/nospec.h>
 // #include <linux/prctl.h>
 // #include <linux/sched/smt.h>
-// #include <linux/pgtable.h>
+#include <linux/mm/pgtable.h>
 // #include <linux/bpf.h>
 
 // #include <asm/spec-ctrl.h>

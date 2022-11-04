@@ -18,7 +18,6 @@
 
 #include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
-#include <obsolete/arch_task.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/arch_glo.h>
 #include <obsolete/device.h>
@@ -83,7 +82,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	asm volatile(	"movq	%0,	%%cr3		\n\t"
 				:
-				:	"r"(target->mm_struct->cr3)
+				:	"r"(target->mm_struct->pgd->pgd)
 				:	"memory"
 				);
 	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
@@ -140,15 +139,11 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 	mm_s * mm = curr->mm_struct;
 
 	mm->start_code = USER_CODE_ADDR;
-	mm->start_rodata =
-	mm->end_code = USER_CODE_ADDR + PAGE_SIZE * 1;
 	mm->start_data =
-	mm->end_rodata = USER_CODE_ADDR + PAGE_SIZE * 2;
-	mm->start_bss =
-	mm->end_data = USER_CODE_ADDR + PAGE_SIZE * 3;
+	mm->end_code = USER_CODE_ADDR + PAGE_SIZE * 1;
 	mm->start_brk =
-	mm->end_bss = 
-	mm->end_brk = USER_CODE_ADDR + PAGE_SIZE * 4;
+	mm->end_data = USER_CODE_ADDR + PAGE_SIZE * 2;
+	mm->brk = USER_CODE_ADDR + PAGE_SIZE * 3;
 	mm->start_stack = USERADDR_LIMIT + 1 - PAGE_SIZE;
 }
 
@@ -204,6 +199,7 @@ static void exit_files(task_s * new_tsk)
 static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int err = -ENOERR;
+	mm_s *curr_mm = curr_tsk->mm_struct;
 
 	page_s *page = NULL;
 	PML4E_T *new_cr3 = NULL;
@@ -212,13 +208,16 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	if(clone_flags & CLONE_VM)
 	{
 		// if vfork(), share the mm_struct
-		new_tsk->mm_struct = curr_tsk->mm_struct;
+		new_tsk->mm_struct = curr_mm;
 		goto exit_cpmm;
 	}
 	else
 	{
-		new_tsk->mm_struct = (mm_s *)kmalloc(sizeof(mm_s), GFP_KERNEL);
-		memcpy(new_tsk->mm_struct, curr_tsk->mm_struct, sizeof(mm_s));
+		new_tsk->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
+		memcpy(new_tsk->mm_struct, curr_mm, sizeof(mm_s));
+		pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
+		memcpy(new_pgd, curr_mm->pgd, sizeof(pgd_t));
+		new_tsk->mm_struct->pgd = new_pgd;
 		prepair_COW(curr_tsk);
 	}
 
@@ -357,14 +356,16 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		curr->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 
 		PML4E_T * virt_cr3 = (PML4E_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
-		curr->mm_struct->cr3 = myos_virt2phys((virt_addr_t)virt_cr3);
+		pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
+		new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
+		curr->mm_struct->pgd = new_pgd;
 		memcpy(virt_cr3 + PGENT_NR / 2,
 				&KERN_PML4[PGENT_NR / 2],
 				PGENT_SIZE / 2);
 	}
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
-	load_cr3(curr->mm_struct->cr3);
+	load_cr3(curr->mm_struct->pgd->pgd);
 	curr->flags &= ~CLONE_VFORK;
 
 	long argv_pos = 0;

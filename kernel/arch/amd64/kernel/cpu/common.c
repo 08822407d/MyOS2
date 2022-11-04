@@ -21,7 +21,7 @@
 // #include <linux/smp.h>
 // #include <linux/io.h>
 // #include <linux/syscore_ops.h>
-// #include <linux/pgtable.h>
+#include <linux/mm/pgtable.h>
 
 // #include <asm/cmdline.h>
 // #include <asm/stackprotector.h>
@@ -30,7 +30,7 @@
 // #include <asm/doublefault.h>
 // #include <asm/archrandom.h>
 // #include <asm/hypervisor.h>
-// #include <asm/processor.h>
+#include <asm/processor.h>
 // #include <asm/tlbflush.h>
 // #include <asm/debugreg.h>
 // #include <asm/sections.h>

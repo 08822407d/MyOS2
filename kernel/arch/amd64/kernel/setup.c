@@ -208,6 +208,8 @@ void __init setup_arch(char **cmdline_p)
 	// 将固件生成的e820分布提取存储到内核结构中
 	e820__memory_setup();
 
+	// setup_initial_init_mm();
+
 	/*
 	 * partially used pages are not usable - thus
 	 * we are rounding upwards:

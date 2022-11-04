@@ -25,16 +25,15 @@ PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in myos_early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
+
+pgd_t			task0_pgd;
 mm_s			task0_mm = 
 {
+	.pgd			= &task0_pgd,
 	.start_code		= (reg_t)&_text,
-	.end_code		= (reg_t)&_etext,
-	.start_rodata	= (reg_t)&_rodata,
-	.end_rodata		= (reg_t)&_erodata,
+	.end_code		= (reg_t)&_erodata,
 	.start_data		= (reg_t)&_data,
-	.end_data		= (reg_t)&_edata,
-	.start_bss		= (reg_t)&_bss,
-	.end_bss		= (reg_t)&_bss,
+	.end_data		= (reg_t)&_ebss,
 	.start_stack	= 0,
 };
 taskfs_s		task0_fs =
@@ -69,7 +68,7 @@ void myos_init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0_mm.cr3		= myos_virt2phys((virt_addr_t)KERN_PML4);
+	task0_mm.pgd->pgd	= myos_virt2phys((virt_addr_t)KERN_PML4);
 
 	task0->name			= "cpu0_idel";
 	task0->time_slice	= 2;

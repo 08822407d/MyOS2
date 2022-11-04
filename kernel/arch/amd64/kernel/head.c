@@ -20,7 +20,7 @@
 // #include <linux/io.h>
 #include <linux/mm/memblock.h>
 // #include <linux/cc_platform.h>
-// #include <linux/pgtable.h>
+#include <linux/mm/pgtable.h>
 
 #include <asm/processor.h>
 // #include <asm/proto.h>

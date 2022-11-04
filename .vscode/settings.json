@@ -192,7 +192,9 @@
 		"atomic.h": "c",
 		"page_ref.h": "c",
 		"atomic-long.h": "c",
-		"page_64.h": "c"
+		"page_64.h": "c",
+		"pgtable.h": "c",
+		"mm_types.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

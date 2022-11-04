@@ -14,7 +14,7 @@
 	// #include <linux/rbtree.h>
 	#include <linux/kernel/atomic.h>
 	// #include <linux/debug_locks.h>
-	// #include <linux/mm_types.h>
+	#include <linux/mm/mm_types.h>
 	// #include <linux/mmap_lock.h>
 	// #include <linux/range.h>
 	#	include <linux/mm/pfn.h>
@@ -30,7 +30,7 @@
 	// #include <linux/overflow.h>
 	#	include <linux/kernel/sizes.h>
 	#	include <linux/kernel/sched.h>
-	// #include <linux/pgtable.h>
+	#include <linux/mm/pgtable.h>
 	// #include <linux/kasan.h>
 
 

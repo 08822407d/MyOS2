@@ -20,7 +20,7 @@
 	// #include <linux/bug.h>
 	// #include <linux/mutex.h>
 	// #include <linux/rwsem.h>
-	// #include <linux/mm_types.h>
+	#include <linux/mm/mm_types.h>
 	// #include <linux/capability.h>
 	// #include <linux/semaphore.h>
 	#include <linux/kernel/fcntl.h>

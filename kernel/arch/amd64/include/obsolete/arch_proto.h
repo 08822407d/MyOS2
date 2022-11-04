@@ -189,8 +189,8 @@
 	void myos_arch_system_call_init(void);
 
 	/* arch_page_util. */
-	struct mm;
-	typedef struct mm mm_s;
+	// struct mm;
+	// typedef struct mm mm_s;
 	void arch_page_preinit(void);
 	int myos_init_memory_mapping(phys_addr_t base, size_t size);
 	void myos_refresh_arch_page(void);

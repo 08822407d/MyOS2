@@ -11,7 +11,7 @@
 	 * This file contains the functions and defines necessary to modify and use
 	 * the x86-64 page table tree.
 	 */
-	// #	include <asm/processor.h>
+	#	include <asm/processor.h>
 	#	include <linux/kernel/bitops.h>
 	// #	include <linux/threads.h>
 	// #	include <asm/fixmap.h>

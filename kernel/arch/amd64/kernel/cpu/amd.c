@@ -9,7 +9,7 @@
 // #include <linux/sched/clock.h>
 // #include <linux/random.h>
 // #include <linux/topology.h>
-// #include <asm/processor.h>
+#include <asm/processor.h>
 // #include <asm/apic.h>
 // #include <asm/cacheinfo.h>
 #include <asm/cpu.h>

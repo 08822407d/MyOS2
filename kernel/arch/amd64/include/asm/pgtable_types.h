@@ -250,9 +250,9 @@
 
 	# include <asm/pgtable_64_types.h>
 
-	// #ifndef __ASSEMBLY__
+	#ifndef __ASSEMBLY__
 
-	// #	include <linux/kernel/types.h>
+	#	include <linux/kernel/types.h>
 
 	// /* Extracts the PFN from a (pte|pmd|pud|pgd)val_t of a 4KB page */
 	// #	define PTE_PFN_MASK		((pteval_t)PHYSICAL_PAGE_MASK)
@@ -265,7 +265,7 @@
 
 	// 	typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
 
-	// 	typedef struct { pgdval_t pgd; } pgd_t;
+		typedef struct { pgdval_t pgd; } pgd_t;
 
 	// 	static inline pgprot_t pgprot_nx(pgprot_t prot)
 	// 	{
@@ -504,6 +504,7 @@
 	// 						unsigned long page_flags);
 	// 	extern int __init kernel_unmap_pages_in_pgd(pgd_t *pgd, unsigned long address,
 	// 							unsigned long numpages);
-	// #endif	/* !__ASSEMBLY__ */
+
+	#endif	/* !__ASSEMBLY__ */
 
 #endif /* _ASM_X86_PGTABLE_DEFS_H */

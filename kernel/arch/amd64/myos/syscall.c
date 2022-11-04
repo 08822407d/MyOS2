@@ -203,12 +203,12 @@ virt_addr_t sys_sbrk(unsigned long brk)
 //	color_printk(RED,BLACK,"brk:%#018lx,new_brk:%#018lx,current->mm->end_brk:%#018lx\n",brk,new_brk,current->mm->end_brk);
 	if(new_brk == 0)
 		return (virt_addr_t)curr_tsk->mm_struct->start_brk;
-	else if(new_brk < curr_tsk->mm_struct->end_brk)	//release  brk space
+	else if(new_brk < curr_tsk->mm_struct->brk)	//release  brk space
 		return 0;	
 	else
-		new_brk = do_brk(curr_tsk->mm_struct->end_brk, new_brk - curr_tsk->mm_struct->end_brk);	//expand brk space
+		new_brk = do_brk(curr_tsk->mm_struct->brk, new_brk - curr_tsk->mm_struct->brk);	//expand brk space
 
-	curr_tsk->mm_struct->end_brk = new_brk;
+	curr_tsk->mm_struct->brk = new_brk;
 	return new_brk;
 }
 

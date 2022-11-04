@@ -11,9 +11,8 @@
 #include <obsolete/arch_proto.h>
 #include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
-#include <obsolete/arch_task.h>
 
-#define SEG_NR	6
+#define SEG_NR	4
 
 typedef struct mm_pair
 {
@@ -30,16 +29,12 @@ mmpr_s * get_seginfo(task_s * task)
 
 	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
 	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (reg_t)codepg_p) / PAGE_SIZE;
-	virt_addr_t rodatapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_rodata, PAGE_SIZE);
-	long rodatapg_nr = mmpr[1].pgnr = (round_up(mm->end_rodata, PAGE_SIZE) - (reg_t)rodatapg_p) / PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
-	long datapg_nr = mmpr[2].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (reg_t)datapg_p) / PAGE_SIZE;
-	virt_addr_t bsspg_p = mmpr[3].startp = (virt_addr_t)round_down(mm->start_bss, PAGE_SIZE);
-	long bsspg_nr = mmpr[3].pgnr = (round_up(mm->end_bss, PAGE_SIZE) - (reg_t)bsspg_p) / PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[4].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
-	long brkpg_nr = mmpr[4].pgnr = (round_up(mm->end_brk, PAGE_SIZE) - (reg_t)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[5].startp = (virt_addr_t)round_down(user_rsp, PAGE_SIZE);
-	long stackpg_nr = mmpr[5].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (reg_t)stackpg_p) / PAGE_SIZE;
+	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
+	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (reg_t)datapg_p) / PAGE_SIZE;
+	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
+	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, PAGE_SIZE) - (reg_t)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down(user_rsp, PAGE_SIZE);
+	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (reg_t)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
@@ -57,7 +52,7 @@ void creat_exec_addrspace(task_s * task)
 			page_s *page = alloc_pages(ZONE_NORMAL, 0);
 			atomic_inc(&(page->_mapcount));
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-							page_to_paddr(page), attr, &mm->cr3);
+							page_to_paddr(page), attr, &mm->pgd->pgd);
 		}
 	}
 }
@@ -73,9 +68,9 @@ void prepair_COW(task_s * task)
 		{
 			// set all pages to read-only
 			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-								_PAGE_RW, &mm->cr3);
+								_PAGE_RW, &mm->pgd->pgd);
 			phys_addr_t paddr = 0;
-			get_paddr(ARCH_PGS_ADDR(mm->cr3),
+			get_paddr(ARCH_PGS_ADDR(mm->pgd->pgd),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
 			page_s *page = paddr_to_page(paddr);
 			atomic_inc(&(page->_mapcount));
@@ -115,7 +110,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			load_cr3(new_cr3);
-			task->mm_struct->cr3 = new_cr3;
+			task->mm_struct->pgd->pgd = new_cr3;
 		}
 	}
 
@@ -129,10 +124,8 @@ int check_addr_writable(reg_t cr2, task_s * task)
 	reg_t rsp = get_stackframe(task)->rsp;
 
 	if ((cr2 >= mm->start_code && cr2 < mm->end_code) ||
-		(cr2 >= mm->start_rodata && cr2 < mm->end_rodata) ||
 		(cr2 >= mm->start_data && cr2 < mm->end_data) ||
-		(cr2 >= mm->start_bss && cr2 < mm->end_bss) ||
-		(cr2 >= mm->start_brk && cr2 < mm->end_brk) ||
+		(cr2 >= mm->start_brk && cr2 < mm->brk) ||
 		(cr2 >= rsp && cr2 < mm->start_stack))
 		ret_val = true;
 
@@ -146,8 +139,8 @@ reg_t do_brk(reg_t start, reg_t length)
 	{
 		unsigned long attr = PAGE_SHARED;
 		page_s * pg_p = alloc_pages(ZONE_NORMAL, 0);
-		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p), attr, &curr_tsk->mm_struct->cr3);
+		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p), attr, &curr_tsk->mm_struct->pgd->pgd);
 	}
-	curr_tsk->mm_struct->end_brk = new_end;
+	curr_tsk->mm_struct->brk = new_end;
 	return new_end;
 }

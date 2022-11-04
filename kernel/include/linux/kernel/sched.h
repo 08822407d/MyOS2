@@ -40,6 +40,7 @@
 	#include <linux/lib/list.h>
 	#include <linux/sched/fs_struct.h>
 	#include <linux/kernel/types.h>
+	#include <linux/mm/mm_types.h>
 
 	#include <asm/current.h>
 	#include <obsolete/arch_task.h>

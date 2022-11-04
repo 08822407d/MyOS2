@@ -20,6 +20,9 @@
 
 	// #include <asm/mmu.h>
 
+
+	#include <asm/pgtable_types.h>
+
 	// #ifndef AT_VECTOR_SIZE_ARCH
 	// #define AT_VECTOR_SIZE_ARCH 0
 	// #endif
@@ -514,10 +517,9 @@
 	// };
 
 	// struct kioctx_table;
-	// struct mm_struct
-	// {
-	// 	struct
-	// 	{
+	typedef struct mm_struct {
+		struct
+		{
 	// 		struct vm_area_struct *mmap; /* list of VMAs */
 	// 		struct rb_root mm_rb;
 	// 		u64 vmacache_seqnum; /* per-thread vmacache */
@@ -535,7 +537,7 @@
 	// #endif
 	// 		unsigned long task_size;	  /* size of task vm space */
 	// 		unsigned long highest_vm_end; /* highest vma end address */
-	// 		pgd_t *pgd;
+			pgd_t	*pgd;
 
 	// #ifdef CONFIG_MEMBARRIER
 	// 		/**
@@ -615,9 +617,9 @@
 
 	// 		spinlock_t arg_lock; /* protect the below fields */
 
-	// 		unsigned long start_code, end_code, start_data, end_data;
-	// 		unsigned long start_brk, brk, start_stack;
-	// 		unsigned long arg_start, arg_end, env_start, env_end;
+			unsigned long	start_code, end_code, start_data, end_data;
+			unsigned long	start_brk, brk, start_stack;
+			unsigned long	arg_start, arg_end, env_start, env_end;
 
 	// 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
 
@@ -697,14 +699,14 @@
 	// #ifdef CONFIG_IOMMU_SUPPORT
 	// 		u32 pasid;
 	// #endif
-	// 	};
+		};
 
 	// 	/*
 	// 	* The mm_cpumask needs to be at the end of mm_struct, because it
 	// 	* is dynamically sized based on nr_cpu_ids.
 	// 	*/
 	// 	unsigned long cpu_bitmap[];
-	// };
+	} mm_s;
 
 	// extern struct mm_struct init_mm;
 

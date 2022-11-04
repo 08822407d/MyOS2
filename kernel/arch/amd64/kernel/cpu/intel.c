@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/kernel/kernel.h>
-// #include <linux/pgtable.h>
+#include <linux/mm/pgtable.h>
 
 #include <linux/lib/string.h>
 #include <linux/kernel/bitops.h>

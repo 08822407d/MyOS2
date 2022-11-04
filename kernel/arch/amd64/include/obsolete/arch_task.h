@@ -18,16 +18,4 @@ typedef struct arch_task
 	uint64_t	err_code;
 } arch_task_s;
 
-typedef struct mm
-{
-	reg_t	cr3;
-
-	reg_t	start_code,end_code;
-	reg_t	start_rodata,end_rodata;
-	reg_t	start_data,end_data;
-	reg_t	start_bss,end_bss;
-	reg_t	start_brk,end_brk;
-	reg_t	start_stack;
-} mm_s;
-
 #endif /* _AMD64_PROC_H_ */
