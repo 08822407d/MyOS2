@@ -13,7 +13,7 @@
 // #include <asm/init.h>
 #include <asm/page.h>
 // #include <asm/page_types.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 #include <asm/setup.h>
 // #include <asm/tlbflush.h>
 // #include <asm/tlb.h>

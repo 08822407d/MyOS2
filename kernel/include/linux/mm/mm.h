@@ -232,8 +232,8 @@
 
 	// #define lru_to_page(head) (list_entry((head)->prev, page_s, lru))
 
-	// void setup_initial_init_mm(void *start_code, void *end_code,
-	// 			void *end_data, void *brk);
+	void setup_initial_init_mm(void *start_code,
+			void *end_code, void *end_data, void *brk);
 
 	// /*
 	// * Linux kernel virtual memory manager primitives.

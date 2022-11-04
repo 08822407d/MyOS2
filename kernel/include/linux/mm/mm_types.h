@@ -537,7 +537,8 @@
 	// #endif
 	// 		unsigned long task_size;	  /* size of task vm space */
 	// 		unsigned long highest_vm_end; /* highest vma end address */
-			pgd_t	*pgd;
+			// pgd_t	*pgd;
+			reg_t		pgd_ptr;
 
 	// #ifdef CONFIG_MEMBARRIER
 	// 		/**
@@ -708,7 +709,7 @@
 	// 	unsigned long cpu_bitmap[];
 	} mm_s;
 
-	// extern struct mm_struct init_mm;
+	extern mm_s init_mm;
 
 	// /* Pointer magic because the dynamic array size confuses some compilers. */
 	// static inline void mm_init_cpumask(struct mm_struct *mm)

@@ -28,7 +28,7 @@
 #include <asm/setup.h>
 // #include <asm/desc.h>
 // #include <asm/tlbflush.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 // #include <asm/kdebug.h>
 #include <asm/e820-api.h>
 // #include <asm/bios_ebda.h>
@@ -63,6 +63,7 @@ asmlinkage __visible void __init x86_64_start_kernel(char * real_mode_data)
 	//  * into that page.
 	//  */
 	// clear_page(init_top_pgt);
+	memset(init_top_pgt, 0, PGENT_SIZE);
 
 	// void __init x86_64_start_reservations(char *real_mode_data)
 	// {

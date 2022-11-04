@@ -33,7 +33,7 @@
 #include <asm/processor.h>
 // #include <asm/tlbflush.h>
 // #include <asm/debugreg.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 // #include <asm/vsyscall.h>
 // #include <linux/topology.h>
 // #include <linux/cpumask.h>

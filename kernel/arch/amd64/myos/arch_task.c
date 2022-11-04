@@ -82,7 +82,7 @@ inline __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	asm volatile(	"movq	%0,	%%cr3		\n\t"
 				:
-				:	"r"(target->mm_struct->pgd->pgd)
+				:	"r"(target->mm_struct->pgd_ptr)
 				:	"memory"
 				);
 	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
@@ -215,9 +215,8 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		new_tsk->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 		memcpy(new_tsk->mm_struct, curr_mm, sizeof(mm_s));
-		pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
-		memcpy(new_pgd, curr_mm->pgd, sizeof(pgd_t));
-		new_tsk->mm_struct->pgd = new_pgd;
+		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
+		// new_tsk->mm_struct->pgd_ptr = new_pgd;
 		prepair_COW(curr_tsk);
 	}
 
@@ -355,17 +354,17 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	{
 		curr->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 
-		PML4E_T * virt_cr3 = (PML4E_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
-		pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
-		new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
-		curr->mm_struct->pgd = new_pgd;
-		memcpy(virt_cr3 + PGENT_NR / 2,
-				&KERN_PML4[PGENT_NR / 2],
-				PGENT_SIZE / 2);
+		PML4E_T *virt_cr3 = (PML4E_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
+		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
+		// new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
+		// curr->mm_struct->pgd = new_pgd;
+		curr->mm_struct->pgd_ptr = myos_virt2phys((virt_addr_t)virt_cr3);
+		int hfent_nr = PGENT_NR / 2;
+		memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
 	}
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
-	load_cr3(curr->mm_struct->pgd->pgd);
+	load_cr3(curr->mm_struct->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
 	long argv_pos = 0;

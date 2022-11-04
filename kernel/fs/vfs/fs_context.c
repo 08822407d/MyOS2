@@ -21,7 +21,7 @@
 // #include <linux/pid_namespace.h>
 // #include <linux/user_namespace.h>
 // #include <net/net_namespace.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 #include <linux/fs/mount.h>
 #include "internal.h"
 

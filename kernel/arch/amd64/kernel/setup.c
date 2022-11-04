@@ -57,6 +57,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/sizes.h>
 #include <linux/kernel/math.h>
+#include <linux/kernel/asm-generic/sections.h>
 
 #include <asm/pgtable.h>
 #include <asm/e820-api.h>
@@ -131,7 +132,6 @@ static void __init early_reserve_memory(void)
 {
 extern char _k_phys_start;
 extern char _k_virt_start;
-extern char _end;
 	/*
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
@@ -208,7 +208,7 @@ void __init setup_arch(char **cmdline_p)
 	// 将固件生成的e820分布提取存储到内核结构中
 	e820__memory_setup();
 
-	// setup_initial_init_mm();
+	setup_initial_init_mm(_text, _etext, _edata, (void *)-1ULL);
 
 	/*
 	 * partially used pages are not usable - thus

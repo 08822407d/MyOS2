@@ -7,6 +7,7 @@
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 #include <asm/processor.h>
+#include <asm/pgtable_64.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/ktypes.h>
@@ -17,8 +18,6 @@
 #include <obsolete/archtypes.h>
 #include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
-
-extern PML4E_T	*KERN_PML4;
 
 static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr)
 {
@@ -31,10 +30,10 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 
 	// set cr3 attribute, although CPU ignored it,
 	// software will use it
-	while (KERN_PML4 == NULL);
+	while (init_top_pgt == NULL);
 	
 	// set pml4e
-	phys_addr_t pml4_paddr	= myos_virt2phys((virt_addr_t)KERN_PML4);
+	phys_addr_t pml4_paddr	= myos_virt2phys((virt_addr_t)init_top_pgt);
 	PML4E_T *	PML4_ptr	= (PML4E_T *)pml4_paddr;
 	PML4E_T *	pml4e_ptr	= PML4_ptr;
 	if (pml4e_ptr->ENT == 0)
@@ -107,7 +106,7 @@ int __init myos_init_memory_mapping(phys_addr_t base, size_t size)
  *==============================================================================================*/
 void myos_unmap_kernel_lowhalf(myos_atomic_T *um_flag)
 {
-	memset(KERN_PML4, 0, PGENT_SIZE / 2);
+	memset(init_top_pgt, 0, PGENT_SIZE / 2);
 	myos_atomic_inc(um_flag);
 }
 

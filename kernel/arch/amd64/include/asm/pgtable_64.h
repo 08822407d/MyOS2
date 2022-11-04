@@ -24,7 +24,7 @@
 	// extern pmd_t level2_fixmap_pgt[512];
 	// extern pmd_t level2_ident_pgt[512];
 	// extern pte_t level1_fixmap_pgt[512 * FIXMAP_PMD_NUM];
-	// extern pgd_t init_top_pgt[];
+	extern pgd_t init_top_pgt[];
 
 	// #define swapper_pg_dir init_top_pgt
 

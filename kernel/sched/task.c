@@ -5,19 +5,12 @@
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
+#include <linux/kernel/asm-generic/sections.h>
+
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/arch_glo.h>
 #include <obsolete/mutex.h>
-
-extern char _text;
-extern char _etext;
-extern char _rodata;
-extern char _erodata;
-extern char _data;
-extern char _edata;
-extern char _bss;
-extern char _ebss;
 
 
 size_t			cpustack_off;
@@ -25,17 +18,6 @@ PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in myos_early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
-
-pgd_t			task0_pgd;
-mm_s			task0_mm = 
-{
-	.pgd			= &task0_pgd,
-	.start_code		= (reg_t)&_text,
-	.end_code		= (reg_t)&_erodata,
-	.start_data		= (reg_t)&_data,
-	.end_data		= (reg_t)&_ebss,
-	.start_stack	= 0,
-};
 taskfs_s		task0_fs =
 {
 	.in_exec		= 0,
@@ -68,8 +50,6 @@ void myos_init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0_mm.pgd->pgd	= myos_virt2phys((virt_addr_t)KERN_PML4);
-
 	task0->name			= "cpu0_idel";
 	task0->time_slice	= 2;
 	task0->vruntime		= -1;
@@ -77,7 +57,7 @@ void myos_init_task(size_t lcpu_nr)
 	task0->spin_count	= 0;
 	task0->__state		= TASK_RUNNING;
 	task0->flags		= PF_KTHREAD;
-	task0->mm_struct	= &task0_mm;
+	task0->mm_struct	= &init_mm;
 	task0->fs			= &task0_fs;
 
 	for (int i = 0; i < lcpu_nr; i++)

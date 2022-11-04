@@ -75,7 +75,7 @@
 // #include <linux/khugepaged.h>
 // #include <linux/buffer_head.h>
 // #include <linux/delayacct.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 // #include <asm/tlbflush.h>
 // #include <asm/div64.h>
 #include "internal.h"

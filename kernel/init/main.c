@@ -104,7 +104,7 @@
 // #include <asm/io.h>
 #include <asm/bugs.h>
 #include <asm/setup.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 // #include <asm/cacheflush.h>
 
 // #define CREATE_TRACE_POINTS

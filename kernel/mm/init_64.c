@@ -47,7 +47,7 @@
 // #include <asm/mmu_context.h>
 // #include <asm/proto.h>
 // #include <asm/smp.h>
-// #include <asm/sections.h>
+#include <asm/sections.h>
 // #include <asm/kdebug.h>
 // #include <asm/numa.h>
 // #include <asm/set_memory.h>

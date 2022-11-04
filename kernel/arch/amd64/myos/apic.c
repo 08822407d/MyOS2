@@ -252,7 +252,7 @@ void IOAPIC_pagetable_remap()
 	uint64_t page_attr = PAGE_KERNEL | _PAGE_CACHE_MASK;
 	arch_page_domap((virt_addr_t)ioapic_map.virt_idx_addr,
 					(phys_addr_t)ioapic_map.phys_addr,
-					page_attr, &curr_tsk->mm_struct->pgd->pgd);
+					page_attr, &curr_tsk->mm_struct->pgd_ptr);
 }
 
 void init_lapic()
