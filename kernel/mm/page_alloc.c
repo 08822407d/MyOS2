@@ -456,12 +456,6 @@ __init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
 // #endif
 }
 
-/*
- * Initialised pages do not have PageReserved set. This function is
- * called for each range allocated by the bootmem allocator and
- * marks the pages PageReserved. The remaining valid pages are later
- * sent to the buddy page allocator.
- */
 void __meminit
 reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 {
@@ -507,13 +501,7 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 page_s *__alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s *page;
-	zone_s *zone;
-	if (gfp & GFP_DMA)
-		zone = &(NODE_DATA(0)->node_zones[ZONE_DMA]);
-	else if (gfp & GFP_DMA32)
-		zone = &(NODE_DATA(0)->node_zones[ZONE_DMA32]);
-	else
-		zone = &(NODE_DATA(0)->node_zones[ZONE_NORMAL]);
+	zone_s *zone = NULL;
 
 	/*
 	 * There are several places where we assume that the order value is sane
@@ -525,6 +513,21 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 	// get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
 	// 		int alloc_flags, const struct alloc_context *ac)
 	// {
+		int i;
+		int prefered_zone_list[] = {ZONE_NORMAL, ZONE_DMA32, ZONE_DMA};
+		int max_prefered_idx = NODE_DATA(0)->nr_zones;
+		int start_prefered_idx = 0;
+
+		if (gfp & GFP_DMA)
+			start_prefered_idx = 2;
+		else if (gfp & GFP_DMA32)
+			start_prefered_idx = 1;
+		else
+			start_prefered_idx = 0;
+
+		for (i = start_prefered_idx; i < max_prefered_idx; i++)
+		{
+			zone = &(NODE_DATA(0)->node_zones[i]);
 		// static inline struct page
 		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
@@ -535,7 +538,10 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 				prep_new_page(page, order, gfp);
 				return page;
 			}
+			else
+				continue;
 		// }
+		}
 	// }
 	return NULL;
 }
