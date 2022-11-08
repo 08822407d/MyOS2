@@ -1,3 +1,4 @@
+#include <linux/mm/mm.h>
 #include <linux/lib/string.h>
 #include <asm/setup.h>
 #include <asm/processor.h>
@@ -49,10 +50,10 @@ void creat_exec_addrspace(task_s * task)
 	{
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
-			page_s *page = alloc_pages(ZONE_NORMAL, 0);
+			page_s *page = alloc_pages(GFP_USER, 0);
 			atomic_inc(&(page->_mapcount));
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-							page_to_paddr(page), attr, &mm->pgd_ptr);
+							page_to_phys(page), attr, &mm->pgd_ptr);
 		}
 	}
 }
@@ -91,12 +92,12 @@ int do_COW(task_s * task, virt_addr_t virt)
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
 	page_s * orig_page = paddr_to_page(orig_paddr);
-	page_s * new_page = alloc_pages(ZONE_NORMAL, 0);
+	page_s * new_page = alloc_pages(GFP_USER, 0);
 
 	if (new_page != NULL)
 	{
 		SetPageReferenced(new_page);
-		if (!arch_page_duplicate(virt, page_to_paddr(new_page), orig_cr3, &new_cr3))
+		if (!arch_page_duplicate(virt, page_to_phys(new_page), orig_cr3, &new_cr3))
 		{
 			atomic_inc(&(new_page->_mapcount));
 			arch_page_setattr(virt, _PAGE_RW, &new_cr3);
@@ -105,8 +106,8 @@ int do_COW(task_s * task, virt_addr_t virt)
 			if (atomic_read(&(orig_page->_mapcount)) < 2)
 				arch_page_setattr(virt, _PAGE_RW, &orig_cr3);
 
-			virt_addr_t orig_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(orig_page));
-			virt_addr_t new_pg_vaddr = (virt_addr_t)myos_phys2virt(page_to_paddr(new_page));
+			virt_addr_t orig_pg_vaddr = page_to_virt(orig_page);
+			virt_addr_t new_pg_vaddr = page_to_virt(new_page);
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			load_cr3(new_cr3);
@@ -138,8 +139,8 @@ reg_t do_brk(reg_t start, reg_t length)
 	for (reg_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
 		unsigned long attr = PAGE_SHARED;
-		page_s * pg_p = alloc_pages(ZONE_NORMAL, 0);
-		arch_page_domap((virt_addr_t)vaddr, page_to_paddr(pg_p),
+		page_s * pg_p = alloc_pages(GFP_USER, 0);
+		arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
 				attr, &curr_tsk->mm_struct->pgd_ptr);
 	}
 	curr_tsk->mm_struct->brk = new_end;

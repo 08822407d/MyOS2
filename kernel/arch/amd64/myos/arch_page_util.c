@@ -471,18 +471,46 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 		new_pd_addr = orig_pd_addr;
 	}
 
-	// set pde
-	pmd_t *orig_pde_ptr = (pmd_t *)myos_phys2virt(
+	// if pdpte set bit read-only, copy PT
+	pmd_t *orig_pde_ptr	= (pmd_t *)myos_phys2virt(
 			ARCH_PGS_ADDR(orig_pdpte_ptr->pud)) + pde_idx;
-	pmd_t *new_pde_ptr = (pmd_t *)myos_phys2virt(
+	pmd_t *new_pde_ptr	= (pmd_t *)myos_phys2virt(
 			ARCH_PGS_ADDR(new_pdpte_ptr->pud)) + pde_idx;
+	virt_addr_t orig_pt_addr = myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pde_ptr->pmd));
+	virt_addr_t new_pt_addr = 0;
 	if (orig_pde_ptr->pmd & ~_PAGE_RW)
 	{
-		new_pde_ptr->pmd = phys | ARCH_PGS_ATTR(orig_pde_ptr->pmd);
+		new_pt_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
+		if (new_pt_addr != 0)
+		{
+			memcpy((void *)new_pt_addr, (void *)orig_pt_addr, PGENT_SIZE);
+			new_pde_ptr->pmd = myos_virt2phys(new_pt_addr) |
+					ARCH_PGS_ATTR(orig_pde_ptr->pmd);
+		}
+		else
+		{
+			ret_val = 2;
+			goto fail_return;
+		}
 	}
 	else
 	{
-		ret_val = 2;
+		new_pt_addr = orig_pt_addr;
+	}
+
+	// set pte
+	pte_t *orig_pte_ptr = (pte_t *)myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pde_ptr->pmd)) + pte_idx;
+	pte_t *new_pte_ptr = (pte_t *)myos_phys2virt(
+			ARCH_PGS_ADDR(new_pde_ptr->pmd)) + pte_idx;
+	if (orig_pte_ptr->pte & ~_PAGE_RW)
+	{
+		new_pte_ptr->pte = phys | ARCH_PGS_ATTR(orig_pte_ptr->pte);
+	}
+	else
+	{
+		ret_val = 1;
 		goto fail_return;
 	}
 

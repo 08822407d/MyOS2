@@ -39,7 +39,6 @@
 	/* memory.c */
 	page_s * alloc_pages(enum zone_type ,unsigned int order);
 	page_s * paddr_to_page(phys_addr_t paddr);
-	phys_addr_t page_to_paddr(page_s * page);
 	void page_free(page_s *);
 
 	/* video.c */

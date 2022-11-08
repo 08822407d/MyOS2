@@ -225,6 +225,7 @@ void kfree(const void *objp)
 	{
 		unsigned int order = page->private;
 		__free_pages(page, order);
+		__ClearPageHead(page);
 	}
 	else if (PageSlab(page))
 	{

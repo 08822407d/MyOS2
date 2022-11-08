@@ -282,10 +282,6 @@ unsigned long kernel_init(unsigned long arg)
 	init_ATArqd();
 
 	get_ata_info();
-
-	// myos_schedule();
-	// while (1)
-	// 	hlt();
 	
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();

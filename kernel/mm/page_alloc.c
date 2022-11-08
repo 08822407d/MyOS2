@@ -997,9 +997,3 @@ page_s *paddr_to_page(phys_addr_t paddr)
 	// return &mem_info.pages[pg_idx];
 	return pfn_to_page(pfn);
 }
-
-phys_addr_t page_to_paddr(page_s *page)
-{
-	unsigned long pfn = page_to_pfn(page);
-	return (phys_addr_t)(pfn * PAGE_SIZE);
-}

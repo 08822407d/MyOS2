@@ -116,6 +116,9 @@
 	// #ifndef __pa_symbol
 	// #	define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
 	// #endif
+	#ifndef page_to_phys
+	#	define page_to_phys(x)	(page_to_pfn(x) << PAGE_SHIFT)
+	#endif
 
 	#ifndef page_to_virt
 	#	define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
