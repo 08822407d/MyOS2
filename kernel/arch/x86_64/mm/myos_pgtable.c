@@ -125,10 +125,10 @@ int __init myos_init_memory_mapping(phys_addr_t base, size_t size)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void myos_unmap_kernel_lowhalf(myos_atomic_T *um_flag)
+void myos_unmap_kernel_lowhalf(atomic_t *um_flag)
 {
 	memset(init_top_pgt, 0, PGENT_SIZE / 2);
-	myos_atomic_inc(um_flag);
+	atomic_inc(um_flag);
 }
 
 

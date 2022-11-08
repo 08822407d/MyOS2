@@ -9,7 +9,6 @@
 // #include <obsolete/ide.h>
 #include <obsolete/proto.h>
 
-// extern myos_atomic_T boot_counter;
 
 void kmalloc_kfree_test(void);
 void kernthd_test(void);

@@ -24,7 +24,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAK
 #                                   global options                                              #
 #===============================================================================================#
 if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
-	set(ARCH amd64)
+	set(ARCH x86_64)
 elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
 	set(ARCH aarch64)
 endif()

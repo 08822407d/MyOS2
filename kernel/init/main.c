@@ -120,7 +120,6 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include <obsolete/mutex.h>
 #include <obsolete/apic.h>
 #include <obsolete/device.h>
 
@@ -162,8 +161,8 @@ static void __init mm_init(void)
 	// pti_init();
 }
 
-myos_atomic_T lcpu_boot_count;
-myos_atomic_T lower_half_unmapped;
+atomic_t lcpu_boot_count;
+atomic_t lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
 	// char *command_line;
@@ -200,7 +199,7 @@ asmlinkage void __init start_kernel(void)
 
 	check_bugs();
 
-	lcpu_boot_count.value = 0;
+	atomic_set(&lcpu_boot_count, 0);
 }
 
 /*==============================================================================================*
@@ -213,15 +212,15 @@ void idle(size_t cpu_idx)
 	myos_percpu_self_config(cpu_idx);
 	myos_arch_system_call_init();
 
-	myos_atomic_inc(&lcpu_boot_count);
-	while (myos_atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
+	atomic_inc(&lcpu_boot_count);
+	while (atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
 
 	if (cpu_idx == 0)
 	{
-		lower_half_unmapped.value = 0;
+		atomic_set(&lower_half_unmapped, 0);
 		myos_unmap_kernel_lowhalf(&lower_half_unmapped);
 	}
-	while (lower_half_unmapped.value == 0)
+	while (atomic_read(&lower_half_unmapped) == 0)
 		myos_refresh_arch_page();
 
 	if (cpu_idx == 0)

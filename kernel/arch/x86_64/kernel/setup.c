@@ -184,7 +184,7 @@ extern char _k_virt_start;
 
 void __init setup_arch(char **cmdline_p)
 {
-	myos_early_init_sytem();
+	myos_early_init_system();
 
 	// printk(KERN_INFO "Command line: %s\n", boot_command_line);
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;

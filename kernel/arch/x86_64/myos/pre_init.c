@@ -60,7 +60,7 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 	}
 }
 
-void myos_early_init_sytem(void)
+void myos_early_init_system(void)
 {
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 	get_VBE_info(&machine_info->mb_fb_common);

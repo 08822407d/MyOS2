@@ -9,7 +9,7 @@
  *==============================================================================================*/
 inline __always_inline void init_spin_lock(myos_spinlock_T * lock)
 {
-	lock->lock.value = 1;
+	atomic_set(&lock->lock, 1);
 }
 
 inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
@@ -24,7 +24,7 @@ inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
 					"jmp	1b				\n\t"
 					"3:						\n\t"
 					// "cli					\n\t"
-				:	"=m"(lock->lock.value)
+				:	"=m"(lock->lock.counter)
 				:
 				:	"memory"
 				);
@@ -35,7 +35,7 @@ inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
 {
 	asm volatile(	"movq	$1,		%0		\n\t"
 					// "sti					\n\t"
-				:	"=m"(lock->lock.value)
+				:	"=m"(lock->lock.counter)
 				:
 				:	"memory"
 				);
@@ -206,59 +206,3 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 	}
 // }
 
-/*==============================================================================================*
- *										atomic operations										*
- *==============================================================================================*/
-inline __always_inline void myos_atomic_add(myos_atomic_T * atomic, long value)
-{
-	asm volatile(	"lock	addq	%1,	%0	\n\t"
-						:	"=m"(atomic->value)
-						:	"r"(value)
-						:	"memory"
-						);
-}
-
-inline __always_inline void myos_atomic_sub(myos_atomic_T * atomic, long value)
-{
-	asm volatile(	"lock	subq	%1,	%0	\n\t"
-				:	"=m"(atomic->value)
-				:	"r"(value)
-				:	"memory"
-				);
-}
-
-inline __always_inline void myos_atomic_inc(myos_atomic_T * atomic)
-{
-	asm volatile(	"lock	incq	%0		\n\t"
-				:	"=m"(atomic->value)
-				:	"m"(atomic->value)
-				:	"memory"
-				);
-}
-
-inline __always_inline void myos_atomic_dec(myos_atomic_T * atomic)
-{
-	asm volatile(	"lock	decq	%0		\n\t"
-				:	"=m"(atomic->value)
-				:	"m"(atomic->value)
-				:	"memory"
-				);
-}
-
-inline __always_inline void myos_atomic_set_mask(myos_atomic_T * atomic, long mask)
-{
-	asm volatile(	"lock	orq		%1,	%0	\n\t"
-				:	"=m"(atomic->value)
-				:	"r"(mask)
-				:	"memory"
-				);
-}
-
-inline __always_inline void myos_atomic_clear_mask(myos_atomic_T * atomic, long mask)
-{
-	asm volatile(	"lock	andq	%1,	%0	\n\t"
-				:	"=m"(atomic->value)
-				:	"r"(~(mask))
-				:	"memory"
-				);
-}

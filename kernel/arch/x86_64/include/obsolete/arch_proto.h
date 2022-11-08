@@ -174,7 +174,7 @@
 	} arch_init_flags_s;
 
 	/* early_init.c */
-	void myos_early_init_sytem(void);
+	void myos_early_init_system(void);
 	/* protect.c */
 	phys_addr_t myos_virt2phys(virt_addr_t);
 	virt_addr_t myos_phys2virt(phys_addr_t);
@@ -194,7 +194,7 @@
 	void arch_page_preinit(void);
 	int myos_init_memory_mapping(phys_addr_t base, size_t size);
 	void myos_refresh_arch_page(void);
-	void myos_unmap_kernel_lowhalf(myos_atomic_T *um_flag);
+	void myos_unmap_kernel_lowhalf(atomic_t *um_flag);
 	int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
 	int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
 	int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);

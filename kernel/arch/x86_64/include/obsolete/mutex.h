@@ -2,15 +2,11 @@
 #define _POSIX_THREAD_H_
 
 #include <linux/kernel/sched.h>
-
-	typedef struct 
-	{
-		__volatile__ long value;
-	} myos_atomic_T;
+#include <linux/kernel/types.h>
 
 	typedef struct
 	{
-		myos_atomic_T	lock;
+		atomic_t	lock;
 	} myos_spinlock_T;
 
 	typedef struct
@@ -59,14 +55,5 @@
 	// void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr);
 	// void up_recurs_semaphore(recurs_semaphore_T * semaphore);
 	// void down_recurs_semaphore(recurs_semaphore_T * semaphore);
-
-	#define myos_atomic_read(atomic)	((atomic)->value)
-
-	void myos_atomic_inc(myos_atomic_T * atomic);
-	void myos_atomic_dec(myos_atomic_T * atomic);
-	void myos_atomic_add(myos_atomic_T * atomic, long value);
-	void myos_atomic_sub(myos_atomic_T * atomic, long value);
-	void myos_atomic_set_mask(myos_atomic_T * atomic, long mask);
-	void myos_atomic_clear_mask(myos_atomic_T * atomic, long mask);
 
 #endif /* _POSIX_THREAD_H_ */

@@ -16,7 +16,7 @@
 size_t			cpustack_off;
 PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
-// in myos_early_init_sytem() .bss section will be set 0, so here arrange task0 in .data section
+// in myos_early_init_system() .bss section will be set 0, so here arrange task0 in .data section
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
 taskfs_s		task0_fs =
 {
