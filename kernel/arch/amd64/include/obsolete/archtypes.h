@@ -2,6 +2,7 @@
 #define _AMD64_TYPES_H
 
 #include <linux/kernel/types.h>
+#include <asm/pgtable_64_types.h>
 
 /*==============================================================================================*
  *										segment structs								 			*
@@ -104,55 +105,20 @@
 /*==============================================================================================*
  *											page structs								 		*
  *==============================================================================================*/
-	typedef struct __attribute__((packed)) {
-		uint64_t	P		: 1,
-					RW		: 1,
-					US		: 1,
-					PWT		: 1,
-					PCD		: 1,
-					A		: 1,
-							: 6,
-					PHYADDR	: 36,
-							: 15,
-					XD		: 1;
-	} PML4E_defs_T;
 	typedef union
 	{
-		uint64_t		ENT;
-		PML4E_defs_T	defs;
-	} PML4E_T;
-	
-	typedef struct __attribute__((packed)) {
-		uint16_t	P		: 1,
-					RW		: 1,
-					US		: 1,
-					PWT		: 1,
-					PCD		: 1,
-				 	A		: 1,
-					D		: 1,
-					PAT		: 1,
-					G		: 1,
-							: 3;
-		uint64_t	PHYADDR	: 36,
-							: 15,
-					XD		: 1;
-	} PDPTE_defs_s;
-	typedef PDPTE_defs_s PDE_defs_s;
-	typedef PDPTE_defs_s PTE_defs_s;
-	typedef union
-	{
-		uint64_t		ENT;
-		PDPTE_defs_s	defs;
+		unsigned long	ENT;
+		arch_pud_T		defs;
 	} PDPTE_T;
 	typedef union
 	{
-		uint64_t		ENT;
-		PDE_defs_s		defs;
+		unsigned long	ENT;
+		arch_pmd_T		defs;
 	} PDE_T;
 	typedef union
 	{
-		uint64_t		ENT;
-		PTE_defs_s		defs;
+		unsigned long	ENT;
+		arch_pte_T		defs;
 	} PTE_T;
 	
 /*==============================================================================================*

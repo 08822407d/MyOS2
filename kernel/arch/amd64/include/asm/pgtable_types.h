@@ -254,18 +254,21 @@
 
 	#	include <linux/kernel/types.h>
 
-	// /* Extracts the PFN from a (pte|pmd|pud|pgd)val_t of a 4KB page */
-	// #	define PTE_PFN_MASK		((pteval_t)PHYSICAL_PAGE_MASK)
+	/* Extracts the PFN from a (pte|pmd|pud|pgd)val_t of a 4KB page */
+	#	define PTE_PFN_MASK		((pteval_t)PHYSICAL_PAGE_MASK)
 
-	// /*
-	// *  Extracts the flags from a (pte|pmd|pud|pgd)val_t
-	// *  This includes the protection key value.
-	// */
-	// #	define PTE_FLAGS_MASK		(~PTE_PFN_MASK)
+	/*
+	*  Extracts the flags from a (pte|pmd|pud|pgd)val_t
+	*  This includes the protection key value.
+	*/
+	#	define PTE_FLAGS_MASK	(~PTE_PFN_MASK)
 
 	// 	typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
 
-		typedef struct { pgdval_t pgd; } pgd_t;
+		typedef union {
+			pgdval_t	pgd;
+			arch_pgd_T	defs;
+		} pgd_t;
 
 	// 	static inline pgprot_t pgprot_nx(pgprot_t prot)
 	// 	{
@@ -317,7 +320,10 @@
 	// 		}
 	// #	endif
 
-	// 	typedef struct { pudval_t pud; } pud_t;
+		typedef struct {
+			pudval_t	pud;
+			arch_pud_T	defs;
+		} pud_t;
 
 	// 	static inline pud_t native_make_pud(pmdval_t val)
 	// 	{
@@ -329,7 +335,10 @@
 	// 		return pud.pud;
 	// 	}
 
-	// 	typedef struct { pmdval_t pmd; } pmd_t;
+		typedef struct {
+			pmdval_t	pmd;
+			arch_pmd_T	defs;
+		} pmd_t;
 
 	// 	static inline pmd_t native_make_pmd(pmdval_t val)
 	// 	{
@@ -392,6 +401,11 @@
 	// 	{
 	// 		return native_pmd_val(pmd) & pmd_flags_mask(pmd);
 	// 	}
+
+		typedef struct {
+			pteval_t	pte;
+			arch_pte_T	defs;
+		} pte_t;
 
 	// 	static inline pte_t native_make_pte(pteval_t val)
 	// 	{
@@ -468,14 +482,14 @@
 	// 	struct seq_file;
 	// 	extern void arch_report_meminfo(struct seq_file *m);
 
-	// 	enum pg_level {
-	// 		PG_LEVEL_NONE,
-	// 		PG_LEVEL_4K,
-	// 		PG_LEVEL_2M,
-	// 		PG_LEVEL_1G,
-	// 		PG_LEVEL_512G,
-	// 		PG_LEVEL_NUM
-	// 	};
+		enum pg_level {
+			PG_LEVEL_NONE,
+			PG_LEVEL_4K,
+			PG_LEVEL_2M,
+			PG_LEVEL_1G,
+			PG_LEVEL_512G,
+			PG_LEVEL_NUM
+		};
 
 	// #	ifdef CONFIG_PROC_FS
 	// 	extern void update_page_count(int level, unsigned long pages);

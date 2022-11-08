@@ -18,10 +18,70 @@
 		typedef unsigned long pgdval_t;
 		typedef unsigned long pgprotval_t;
 
-		typedef struct
-		{
-			pteval_t pte;
-		} pte_t;
+		typedef struct __attribute__((packed)) {
+			unsigned long
+				P		: 1,
+				RW		: 1,
+				US		: 1,
+				PWT		: 1,
+				PCD		: 1,
+				A		: 1,
+						: 6,
+				PHYADDR	: 36,
+						: 15,
+				XD		: 1;
+		} arch_pgd_T;
+	
+		typedef struct __attribute__((packed)) {
+			unsigned long
+				P		: 1,
+				RW		: 1,
+				US		: 1,
+				PWT		: 1,
+				PCD		: 1,
+				A		: 1,
+						: 1,
+				PS		: 1,
+						: 1,
+						: 3,
+				PHYADDR	: 36,
+						: 15,
+				XD		: 1;
+		} arch_pud_T;
+
+		typedef struct __attribute__((packed)) {
+			unsigned long
+				P		: 1,
+				RW		: 1,
+				US		: 1,
+				PWT		: 1,
+				PCD		: 1,
+				A		: 1,
+						: 1,
+				PS		: 1,
+						: 1,
+						: 3,
+				PHYADDR	: 36,
+						: 15,
+				XD		: 1;
+		} arch_pmd_T;
+
+		typedef struct __attribute__((packed)) {
+			unsigned long
+				P		: 1,
+				RW		: 1,
+				US		: 1,
+				PWT		: 1,
+				PCD		: 1,
+				A		: 1,
+				D		: 1,
+				PAT		: 1,
+				G		: 1,
+						: 3,
+				PHYADDR	: 36,
+						: 15,
+				XD		: 1;
+		} arch_pte_T;
 
 	// #ifdef CONFIG_X86_5LEVEL
 	// 	extern unsigned int __pgtable_l5_enabled;

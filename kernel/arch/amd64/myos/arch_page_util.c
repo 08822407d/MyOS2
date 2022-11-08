@@ -33,18 +33,18 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 	while (init_top_pgt == NULL);
 	
 	// set pml4e
-	phys_addr_t pml4_paddr	= myos_virt2phys((virt_addr_t)init_top_pgt);
-	PML4E_T *	PML4_ptr	= (PML4E_T *)pml4_paddr;
-	PML4E_T *	pml4e_ptr	= PML4_ptr;
-	if (pml4e_ptr->ENT == 0)
+	phys_addr_t pml4_pa	= myos_virt2phys((virt_addr_t)init_top_pgt);
+	pgd_t *PML4_ptr		= (pgd_t *)pml4_pa;
+	pgd_t *pml4e_ptr	= PML4_ptr;
+	if (pml4e_ptr->pgd == 0)
 	{
 		PDPTE_T * pdpt_ptr = (PDPTE_T *)myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
 		if (pdpt_ptr != NULL)
 		{
 			// higher half
-			(pml4e_ptr + pml4e_idx)->ENT =
+			(pml4e_ptr + pml4e_idx)->pgd =
 			// lower half
-			pml4e_ptr->ENT = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | attr;
+			pml4e_ptr->pgd = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | attr;
 		}
 		else
 		{
@@ -54,10 +54,10 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 	}
 	else
 	{
-		pml4e_ptr->ENT | attr;
+		pml4e_ptr->pgd | attr;
 	}
 	// set pdpte
-	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->pgd));
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
@@ -125,11 +125,11 @@ void myos_refresh_arch_page(void)
 }
 
 //
-inline void fill_pml4e(PML4E_T * pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr)
+inline void fill_pml4e(pgd_t *pml4e_ptr, PDPTE_T pdpt_ptr[PGENT_NR], uint64_t attr)
 {
-	pml4e_ptr->ENT = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | ARCH_PGS_ATTR(attr);
+	pml4e_ptr->pgd = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | ARCH_PGS_ATTR(attr);
 }
-PDPTE_T * get_pdpt(PML4E_T * pml4_ptr, uint64_t pml4e_idx)
+PDPTE_T * get_pdpt(pgd_t *pml4_ptr, uint64_t pml4e_idx)
 {
 	PDPTE_T * ret_val = NULL;
 	if (pml4e_idx < PGENT_NR)
@@ -182,15 +182,15 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	else
 		*cr3 |= attr;
 	// set pml4e
-	phys_addr_t pml4_paddr	= ARCH_PGS_ADDR(*cr3);
-	PML4E_T *	PML4_ptr	= (PML4E_T *)myos_phys2virt(pml4_paddr);
-	PML4E_T *	pml4e_ptr	= PML4_ptr + pml4e_idx;
-	if (pml4e_ptr->ENT == 0)
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
+	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
+	if (pml4e_ptr->pgd == 0)
 	{
 		PDPTE_T * pdpt_ptr = (PDPTE_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (pdpt_ptr != NULL)
 		{
-			pml4e_ptr->ENT = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | attr;
+			pml4e_ptr->pgd = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | attr;
 		}
 		else
 		{
@@ -200,10 +200,10 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	}
 	else
 	{
-		pml4e_ptr->ENT | attr;
+		pml4e_ptr->pgd | attr;
 	}
 	// set pdpte
-	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->pgd));
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
@@ -255,18 +255,18 @@ int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 	else
 		*cr3 |= attr;
 	// set pml4e
-	phys_addr_t pml4_paddr	= ARCH_PGS_ADDR(*cr3);
-	PML4E_T *	PML4_ptr	= (PML4E_T *)myos_phys2virt(pml4_paddr);
-	PML4E_T *	pml4e_ptr	= PML4_ptr + pml4e_idx;
-	if (pml4e_ptr->ENT == 0)
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
+	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
+	if (pml4e_ptr->pgd == 0)
 	{
 		ret_val = 4;
 		goto fail_return;
 	}
 	else
-		pml4e_ptr->ENT |= attr;
+		pml4e_ptr->pgd |= attr;
 	// set pdpte
-	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->pgd));
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
@@ -309,18 +309,18 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 	else
 		*cr3 &= ~attr;
 	// set pml4e
-	phys_addr_t pml4_paddr	= ARCH_PGS_ADDR(*cr3);
-	PML4E_T *	PML4_ptr	= (PML4E_T *)myos_phys2virt(pml4_paddr);
-	PML4E_T *	pml4e_ptr	= PML4_ptr + pml4e_idx;
-	if (pml4e_ptr->ENT == 0)
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
+	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
+	if (pml4e_ptr->pgd == 0)
 	{
 		ret_val = 4;
 		goto fail_return;
 	}
 	else
-		pml4e_ptr->ENT &= ~attr;
+		pml4e_ptr->pgd &= ~attr;
 	// set pdpte
-	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->pgd));
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{
@@ -384,17 +384,19 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	}
 
 	// if pml4e set bit read-only, copy PDPT
-	PML4E_T *	orig_pml4e_ptr	= (PML4E_T *)orig_pml4_addr + pml4e_idx;
-	PML4E_T *	new_pml4e_ptr	= (PML4E_T *)new_pml4_addr+ pml4e_idx;
-	virt_addr_t orig_pdpt_addr = myos_phys2virt(ARCH_PGS_ADDR(orig_pml4e_ptr->ENT));
+	pgd_t *orig_pml4e_ptr	= (pgd_t *)orig_pml4_addr + pml4e_idx;
+	pgd_t *new_pml4e_ptr	= (pgd_t *)new_pml4_addr+ pml4e_idx;
+	virt_addr_t orig_pdpt_addr = myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pml4e_ptr->pgd));
 	virt_addr_t new_pdpt_addr = 0;
-	if (orig_pml4e_ptr->ENT & ~_PAGE_RW)
+	if (orig_pml4e_ptr->pgd & ~_PAGE_RW)
 	{
 		new_pdpt_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (new_pdpt_addr != 0)
 		{
 			memcpy((void *)new_pdpt_addr, (void *)orig_pdpt_addr, PGENT_SIZE);
-			new_pml4e_ptr->ENT = myos_virt2phys(new_pdpt_addr) | ARCH_PGS_ATTR(orig_pml4e_ptr->ENT);
+			new_pml4e_ptr->pgd = myos_virt2phys(new_pdpt_addr) |
+					ARCH_PGS_ATTR(orig_pml4e_ptr->pgd);
 		}
 		else
 		{
@@ -408,9 +410,12 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	}
 
 	// if pdpte set bit read-only, copy PD
-	PDPTE_T *	orig_pdpte_ptr	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(orig_pml4e_ptr->ENT)) + pdpte_idx;
-	PDPTE_T *	new_pdpte_ptr	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(new_pml4e_ptr->ENT)) + pdpte_idx;
-	virt_addr_t orig_pd_addr = myos_phys2virt(ARCH_PGS_ADDR(orig_pdpte_ptr->ENT));
+	PDPTE_T *	orig_pdpte_ptr	= (PDPTE_T *)myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pml4e_ptr->pgd)) + pdpte_idx;
+	PDPTE_T *	new_pdpte_ptr	= (PDPTE_T *)myos_phys2virt(
+			ARCH_PGS_ADDR(new_pml4e_ptr->pgd)) + pdpte_idx;
+	virt_addr_t orig_pd_addr = myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pdpte_ptr->ENT));
 	virt_addr_t new_pd_addr = 0;
 	if (orig_pdpte_ptr->ENT & ~_PAGE_RW)
 	{
@@ -418,7 +423,8 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 		if (new_pd_addr != 0)
 		{
 			memcpy((void *)new_pd_addr, (void *)orig_pd_addr, PGENT_SIZE);
-			new_pdpte_ptr->ENT = myos_virt2phys(new_pd_addr) | ARCH_PGS_ATTR(orig_pdpte_ptr->ENT);
+			new_pdpte_ptr->ENT = myos_virt2phys(new_pd_addr) |
+					ARCH_PGS_ATTR(orig_pdpte_ptr->ENT);
 		}
 		else
 		{
@@ -432,8 +438,10 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	}
 
 	// set pde
-	PDE_T * orig_pde_ptr = (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(orig_pdpte_ptr->ENT)) + pde_idx;
-	PDE_T * new_pde_ptr = (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(new_pdpte_ptr->ENT)) + pde_idx;
+	PDE_T * orig_pde_ptr = (PDE_T *)myos_phys2virt(
+			ARCH_PGS_ADDR(orig_pdpte_ptr->ENT)) + pde_idx;
+	PDE_T * new_pde_ptr = (PDE_T *)myos_phys2virt(
+			ARCH_PGS_ADDR(new_pdpte_ptr->ENT)) + pde_idx;
 	if (orig_pde_ptr->ENT & ~_PAGE_RW)
 	{
 		new_pde_ptr->ENT = phys | ARCH_PGS_ATTR(orig_pde_ptr->ENT);
@@ -459,16 +467,16 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
 
 	// get pml4e
-	phys_addr_t pml4_paddr	= (phys_addr_t)ARCH_PGS_ADDR(cr3);
-	PML4E_T *	PML4_ptr	= (PML4E_T *)myos_phys2virt(pml4_paddr);
-	PML4E_T *	pml4e_ptr	= PML4_ptr + pml4e_idx;
-	if (pml4e_ptr->ENT == 0)
+	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR(cr3);
+	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
+	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
+	if (pml4e_ptr->pgd == 0)
 	{
 		ret_val = 4;
 		goto fail_return;
 	}
 	// get pdpte
-	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->ENT));
+	PDPTE_T *	PDPT_ptr 	= (PDPTE_T *)myos_phys2virt(ARCH_PGS_ADDR(pml4e_ptr->pgd));
 	PDPTE_T *	pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->ENT == 0)
 	{

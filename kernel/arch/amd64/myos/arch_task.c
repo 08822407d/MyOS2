@@ -202,7 +202,7 @@ static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	mm_s *curr_mm = curr_tsk->mm_struct;
 
 	page_s *page = NULL;
-	PML4E_T *new_cr3 = NULL;
+	pgd_t *new_cr3 = NULL;
 	reg_t curr_endstack = get_stackframe(curr_tsk)->rsp;
 
 	if(clone_flags & CLONE_VM)
@@ -354,7 +354,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	{
 		curr->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 
-		PML4E_T *virt_cr3 = (PML4E_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
+		pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
 		// new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
 		// curr->mm_struct->pgd = new_pgd;
