@@ -49,7 +49,7 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
 	page = alloc_pages(flags, order);
 	if (page) {
 	// 	ret = page_address(page);
-		ret = page;
+		ret = (void *)page_to_virt(page);
 	// 	mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE_B,
 	// 			      PAGE_SIZE << order);
 	}

@@ -242,7 +242,7 @@ void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
 	uint8_t *IOAPIC_addr = (uint8_t *)myos_phys2virt((phys_addr_t)0xfec00000);
-	task_s *curr = curr_tsk;
+	mm_s *curr_mm = curr_tsk->mm_struct;
 
 	ioapic_map.phys_addr = (phys_addr_t)0xfec00000;
 	ioapic_map.virt_idx_addr = IOAPIC_addr;
@@ -253,8 +253,8 @@ void IOAPIC_pagetable_remap()
 	for (int i = 0; i < SZ_2M / PAGE_SIZE; i++)
 	{
 		phys_addr_t pa = (phys_addr_t)ioapic_map.phys_addr + i * PAGE_SIZE;
-		virt_addr_t va = (virt_addr_t)ioapic_map.virt_data_addr + i * PAGE_SIZE;
-		arch_page_domap(va, pa ,page_attr, &curr_tsk->mm_struct->pgd_ptr);
+		virt_addr_t va = (virt_addr_t)ioapic_map.virt_idx_addr + i * PAGE_SIZE;
+		arch_page_domap(va, pa ,page_attr, &curr_mm->pgd_ptr);
 	}
 }
 

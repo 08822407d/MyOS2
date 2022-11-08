@@ -81,19 +81,18 @@ void myos_init_slab()
 slab_s * slab_alloc(slab_s *cslp)
 {
 	page_s *page = alloc_pages(ZONE_NORMAL, 0);
-	phys_addr_t page_paddr = page_to_paddr(page);
 	
 	__SetPageSlab(page);
-	slab_s *nslp = (slab_s *)kmalloc(sizeof(slab_s), GFP_KERNEL);
+	slab_s *nslp = (slab_s *)kzalloc(sizeof(slab_s), GFP_KERNEL);
 	list_init(&nslp->slab_list, nslp);
 
 	nslp->page = page;
 	page->private = (unsigned long)nslp;
-	nslp->colormap = (bitmap_t *)kmalloc(cslp->total /
+	nslp->colormap = (bitmap_t *)kzalloc(cslp->total /
 					sizeof(bitmap_t) + sizeof(bitmap_t), GFP_KERNEL);
 	nslp->total =
 	nslp->free = cslp->total;
-	nslp->virt_addr = myos_phys2virt(page_paddr);
+	nslp->virt_addr = page_to_virt(page);
 
 	return nslp;
 }
@@ -177,33 +176,37 @@ void * __kmalloc(size_t size, gfp_t flags)
 	}
 
 	unlock_recurs_lock(&slab_alloc_lock);
-
-	if (flags & __GFP_ZERO)
-		memset(ret_val, 0, size);
-
 	return ret_val;
 }
 void *kmalloc(size_t size, gfp_t flags)
 {
+	void *ret_val = 0;
 // 	if (__builtin_constant_p(size))
 // 	{
 	// unsigned int index;
 	if (size > KMALLOC_MAX_CACHE_SIZE)
 	{
 		unsigned int order = get_order(size);
-		return kmalloc_order(size, flags, order);
+		ret_val = kmalloc_order(size, flags, order);
 	}
+	else
+	{
+		// index = kmalloc_index(size);
 
-	// index = kmalloc_index(size);
+		// if (!index)
+		// 	return ZERO_SIZE_PTR;
 
-	// if (!index)
-	// 	return ZERO_SIZE_PTR;
-
-	// return kmem_cache_alloc_trace(
-	// 	kmalloc_caches[kmalloc_type(flags)][index],
-	// 	flags, size);
+		// return kmem_cache_alloc_trace(
+		// 	kmalloc_caches[kmalloc_type(flags)][index],
+		// 	flags, size);
+		ret_val = __kmalloc(size, flags);
+	}
 // 	}
-	return __kmalloc(size, flags);
+
+	if (flags & __GFP_ZERO)
+		memset(ret_val, 0, size);
+
+	return ret_val;
 }
 
 

@@ -275,10 +275,10 @@ expand(zone_s *zone, page_s *page, int low, int high)
 	while (high > low) {
 		high--;
 		size >>= 1;
-		page_s *page = &page[size];
-		list_init(&page->lru, page);
-		add_to_free_list(page, zone, high);
-		set_buddy_order(page, high);
+		page_s *p = &page[size];
+		list_init(&p->lru, page);
+		add_to_free_list(p, zone, high);
+		set_buddy_order(p, high);
 	}
 }
 
