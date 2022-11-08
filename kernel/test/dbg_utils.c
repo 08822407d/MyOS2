@@ -28,10 +28,10 @@ pgmapset_s DBG_get_pgmapset(IN reg_t cr3, IN virt_addr_t virt)
 	if (pdpte_ptr->pud == 0)
 		goto fail_return;
 	// get pde
-	PDE_T *PD_ptr		= (PDE_T *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *pde_ptr		= PD_ptr + pde_idx;
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *pde_ptr		= PD_ptr + pde_idx;
 	ret_val.pde				= *pde_ptr;
-	if (pde_ptr->ENT == 0)
+	if (pde_ptr->pmd == 0)
 		goto fail_return;
 
 	ret_val.paddr = (phys_addr_t)((uint64_t)pde_ptr->defs.PHYADDR << 12);

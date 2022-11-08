@@ -61,7 +61,7 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 	pud_t *pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->pud == 0)
 	{
-		PDE_T * pd_ptr = (PDE_T *)myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
+		pmd_t *pd_ptr = (pmd_t *)myos_memblock_alloc_normal(PGENT_SIZE, PGENT_SIZE);
 		if (pd_ptr != NULL)
 		{
 			pdpte_ptr->pud = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pd_ptr)) | attr;
@@ -77,11 +77,11 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 		pdpte_ptr->pud | attr;
 	}
 	// set pte
-	PDE_T *		PD_ptr		= (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *		pde_ptr		= PD_ptr + pde_idx;
-	if (pde_ptr->ENT == 0)
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *pde_ptr		= PD_ptr + pde_idx;
+	if (pde_ptr->pmd == 0)
 	{
-		pde_ptr->ENT = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
+		pde_ptr->pmd = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
 	}
 
 fail_return:
@@ -137,21 +137,21 @@ pud_t *get_pdpt(pgd_t *pml4_ptr, uint64_t pml4e_idx)
 	return ret_val;
 }
 
-inline void fill_pdpte(pud_t *pdpte_ptr, PDE_T pd_ptr[PGENT_NR], uint64_t attr)
+inline void fill_pdpte(pud_t *pdpte_ptr, pmd_t pd_ptr[PGENT_NR], uint64_t attr)
 {
 	pdpte_ptr->pud = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pd_ptr)) | ARCH_PGS_ATTR(attr);
 }
-PDE_T * get_pd(pud_t *pdpt_ptr, uint64_t pdpte_idx)
+pmd_t *get_pd(pud_t *pdpt_ptr, uint64_t pdpte_idx)
 {
-	PDE_T * ret_val = NULL;
+	pmd_t *ret_val = NULL;
 	if (pdpte_idx < PGENT_NR)
-		ret_val = (PDE_T *)myos_phys2virt((uint64_t)pdpt_ptr[pdpte_idx].defs.PHYADDR << 12);
+		ret_val = (pmd_t *)myos_phys2virt((uint64_t)pdpt_ptr[pdpte_idx].defs.PHYADDR << 12);
 	return ret_val;
 }
 
-inline void fill_pde(PDE_T * pde_ptr, phys_addr_t paddr, uint64_t attr)
+inline void fill_pde(pmd_t *pde_ptr, phys_addr_t paddr, uint64_t attr)
 {
-	pde_ptr->ENT = round_down(paddr, PAGE_SIZE) | ARCH_PGS_ATTR(attr) | _PAGE_PAT;
+	pde_ptr->pmd = round_down(paddr, PAGE_SIZE) | ARCH_PGS_ATTR(attr) | _PAGE_PAT;
 }
 
 
@@ -207,7 +207,7 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	pud_t *pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	if (pdpte_ptr->pud == 0)
 	{
-		PDE_T * pd_ptr = (PDE_T *)kzalloc(PGENT_SIZE, GFP_KERNEL);
+		pmd_t *pd_ptr = (pmd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (pd_ptr != NULL)
 		{
 			pdpte_ptr->pud = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pd_ptr)) | attr;
@@ -223,11 +223,11 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		pdpte_ptr->pud | attr;
 	}
 	// set pte
-	PDE_T *PD_ptr		= (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *pde_ptr		= PD_ptr + pde_idx;
-	if (pde_ptr->ENT == 0)
+	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	if (pde_ptr->pmd == 0)
 	{
-		pde_ptr->ENT = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
+		pde_ptr->pmd = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
 	}
 
 	myos_refresh_arch_page();
@@ -276,15 +276,15 @@ int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 	else
 		pdpte_ptr->pud |= attr;
 	// set pte
-	PDE_T *PD_ptr		= (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *pde_ptr		= PD_ptr + pde_idx;
-	if (pde_ptr->ENT == 0)
+	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	if (pde_ptr->pmd == 0)
 	{
 		ret_val = 2;
 		goto fail_return;
 	}
 	else
-		pde_ptr->ENT |= attr | _PAGE_PAT;
+		pde_ptr->pmd |= attr | _PAGE_PAT;
 
 fail_return:
 	return ret_val;
@@ -330,17 +330,17 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 	else
 		pdpte_ptr->pud &= ~attr;
 	// set pte
-	PDE_T *PD_ptr		= (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *pde_ptr		= PD_ptr + pde_idx;
-	if (pde_ptr->ENT == 0)
+	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	if (pde_ptr->pmd == 0)
 	{
 		ret_val = 2;
 		goto fail_return;
 	}
 	else
-		pde_ptr->ENT &= ~attr;
+		pde_ptr->pmd &= ~attr;
 	// make sure the clear step will not clear the PAT flag
-	pde_ptr->ENT |= _PAGE_PAT;
+	pde_ptr->pmd |= _PAGE_PAT;
 
 fail_return:
 	return ret_val;
@@ -438,13 +438,13 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	}
 
 	// set pde
-	PDE_T * orig_pde_ptr = (PDE_T *)myos_phys2virt(
+	pmd_t *orig_pde_ptr = (pmd_t *)myos_phys2virt(
 			ARCH_PGS_ADDR(orig_pdpte_ptr->pud)) + pde_idx;
-	PDE_T * new_pde_ptr = (PDE_T *)myos_phys2virt(
+	pmd_t *new_pde_ptr = (pmd_t *)myos_phys2virt(
 			ARCH_PGS_ADDR(new_pdpte_ptr->pud)) + pde_idx;
-	if (orig_pde_ptr->ENT & ~_PAGE_RW)
+	if (orig_pde_ptr->pmd & ~_PAGE_RW)
 	{
-		new_pde_ptr->ENT = phys | ARCH_PGS_ATTR(orig_pde_ptr->ENT);
+		new_pde_ptr->pmd = phys | ARCH_PGS_ATTR(orig_pde_ptr->pmd);
 	}
 	else
 	{
@@ -484,9 +484,9 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 		goto fail_return;
 	}
 	// get pte
-	PDE_T *		PD_ptr		= (PDE_T *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	PDE_T *		pde_ptr		= PD_ptr + pde_idx;
-	if (pde_ptr->ENT == 0)
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *pde_ptr		= PD_ptr + pde_idx;
+	if (pde_ptr->pmd == 0)
 	{
 		ret_val = 2;
 		goto fail_return;

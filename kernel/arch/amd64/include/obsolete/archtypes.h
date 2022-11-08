@@ -108,13 +108,8 @@
 	// typedef union
 	// {
 	// 	unsigned long	ENT;
-	// 	arch_pud_T		defs;
-	// } PDPTE_T;
-	typedef union
-	{
-		unsigned long	ENT;
-		arch_pmd_T		defs;
-	} PDE_T;
+	// 	arch_pmd_T		defs;
+	// } PDE_T;
 	typedef union
 	{
 		unsigned long	ENT;

@@ -8,8 +8,8 @@
 	{
 		pgd_t	pml4e;
 		pud_t	pdpte;
-		PDE_T	pde;
-		PTE_T	pte;
+		pmd_t	pde;
+		pte_t	pte;
 		phys_addr_t	paddr;
 	} pgmapset_s;
 
