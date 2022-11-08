@@ -213,12 +213,32 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	{
 		pdpte_ptr->pud | attr;
 	}
-	// set pte
-	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	// set pde
+	pmd_t *PD_ptr 	= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));
+	pmd_t *pde_ptr	= PD_ptr + pde_idx;
 	if (pde_ptr->pmd == 0)
 	{
-		pde_ptr->pmd = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
+		pte_t *pt_ptr = (pte_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
+		if (pt_ptr != NULL)
+		{
+			pde_ptr->pmd = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pt_ptr)) | attr;
+		}
+		else
+		{
+			ret_val = 2;
+			goto fail_return;
+		}
+	}
+	else
+	{
+		pde_ptr->pmd | attr;
+	}
+	// set pte
+	pte_t *PT_ptr		= (pte_t *)myos_phys2virt(ARCH_PGS_ADDR(pde_ptr->pmd));	
+	pte_t *pte_ptr		= PT_ptr + pte_idx;
+	if (pte_ptr->pte == 0)
+	{
+		pte_ptr->pte = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
 	}
 
 	myos_refresh_arch_page();
