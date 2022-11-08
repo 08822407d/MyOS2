@@ -275,9 +275,10 @@ expand(zone_s *zone, page_s *page, int low, int high)
 	while (high > low) {
 		high--;
 		size >>= 1;
-
-		add_to_free_list(&page[size], zone, high);
-		set_buddy_order(&page[size], high);
+		page_s *page = &page[size];
+		list_init(&page->lru, page);
+		add_to_free_list(page, zone, high);
+		set_buddy_order(page, high);
 	}
 }
 
@@ -527,7 +528,7 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 
 		for (i = start_prefered_idx; i < max_prefered_idx; i++)
 		{
-			zone = &(NODE_DATA(0)->node_zones[i]);
+			zone = &(NODE_DATA(0)->node_zones[prefered_zone_list[i]]);
 		// static inline struct page
 		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
