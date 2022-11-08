@@ -23,7 +23,7 @@ static int __init early_arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint
 {
 	unsigned long ret_val = 0;
 
-	attr = ARCH_PGS_ATTR(attr);
+	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
@@ -145,37 +145,6 @@ void myos_refresh_arch_page(void)
 				);
 }
 
-//
-inline void fill_pml4e(pgd_t *pml4e_ptr, pud_t pdpt_ptr[PGENT_NR], uint64_t attr)
-{
-	pml4e_ptr->pgd = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pdpt_ptr)) | ARCH_PGS_ATTR(attr);
-}
-pud_t *get_pdpt(pgd_t *pml4_ptr, uint64_t pml4e_idx)
-{
-	pud_t *ret_val = NULL;
-	if (pml4e_idx < PGENT_NR)
-		ret_val = (pud_t *)myos_phys2virt(pml4_ptr[pml4e_idx].defs.PHYADDR << 12);
-	return ret_val;
-}
-
-inline void fill_pdpte(pud_t *pdpte_ptr, pmd_t pd_ptr[PGENT_NR], uint64_t attr)
-{
-	pdpte_ptr->pud = ARCH_PGS_ADDR(myos_virt2phys((virt_addr_t)pd_ptr)) | ARCH_PGS_ATTR(attr);
-}
-pmd_t *get_pd(pud_t *pdpt_ptr, uint64_t pdpte_idx)
-{
-	pmd_t *ret_val = NULL;
-	if (pdpte_idx < PGENT_NR)
-		ret_val = (pmd_t *)myos_phys2virt((uint64_t)pdpt_ptr[pdpte_idx].defs.PHYADDR << 12);
-	return ret_val;
-}
-
-inline void fill_pde(pmd_t *pde_ptr, phys_addr_t paddr, uint64_t attr)
-{
-	pde_ptr->pmd = round_down(paddr, PAGE_SIZE) | ARCH_PGS_ATTR(attr) | _PAGE_PAT;
-}
-
-
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
@@ -188,10 +157,11 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		while (1);
 	}
 
-	attr = ARCH_PGS_ATTR(attr);
+	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
+	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	// set cr3 attribute, although CPU ignored it,
 	// software will use it
@@ -261,10 +231,11 @@ fail_return:
 int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 {
 	int ret_val = 0;
-	attr = ARCH_PGS_ATTR(attr);
+	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
+	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	// set cr3 attribute, although CPU ignored it,
 	// software will use it
@@ -315,10 +286,11 @@ fail_return:
 int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 {
 	int ret_val = 0;
-	attr = ARCH_PGS_ATTR(attr);
+	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
+	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	// set cr3 attribute, although CPU ignored it,
 	// software will use it
@@ -374,6 +346,7 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
+	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	if (orig_cr3 == 0)
 	{
@@ -486,6 +459,7 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
 	unsigned int pdpte_idx	= GETF_PGENT(virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT(virt >> SHIFT_PDE);
+	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	// get pml4e
 	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR(cr3);
@@ -504,7 +478,7 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 		ret_val = 3;
 		goto fail_return;
 	}
-	// get pte
+	// get pde
 	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
 	pmd_t *pde_ptr		= PD_ptr + pde_idx;
 	if (pde_ptr->pmd == 0)
@@ -512,8 +486,16 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 		ret_val = 2;
 		goto fail_return;
 	}
+	// get pte
+	pte_t *PT_ptr		= (pte_t*)myos_phys2virt(ARCH_PGS_ADDR(pde_ptr->pmd));	
+	pte_t *pte_ptr		= PT_ptr + pte_idx;
+	if (pte_ptr->pte == 0)
+	{
+		ret_val = 1;
+		goto fail_return;
+	}
 
-	*ret_phys = (pde_ptr->defs.PHYADDR << 12);
+	*ret_phys = (pte_ptr->defs.PHYADDR << 12);
 
 fail_return:
 	return ret_val;
