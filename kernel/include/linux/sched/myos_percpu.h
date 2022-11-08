@@ -1,6 +1,7 @@
 #ifndef _MYOS_PERCPU_H_
 #define _MYOS_PERCPU_H_
 
+#include <linux/kernel/sizes.h>
 #include <asm/setup.h>
 #include "sched.h"
 
@@ -25,7 +26,7 @@
 
 	typedef union cpudata {
 		per_cpudata_s	cpudata;
-		reg_t			cpu_stack[PAGE_SIZE / sizeof(reg_t)];
+		reg_t			cpu_stack[SZ_2M / sizeof(reg_t)];
 	} cpudata_u;
 
 	per_cpudata_s * get_current_cpu(void);

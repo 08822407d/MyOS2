@@ -27,21 +27,21 @@ mmpr_s * get_seginfo(task_s * task)
 	mm_s * mm = task->mm_struct;
 	reg_t user_rsp = get_stackframe(task)->rsp;
 
-	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
-	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (reg_t)codepg_p) / PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
-	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (reg_t)datapg_p) / PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
-	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, PAGE_SIZE) - (reg_t)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down(user_rsp, PAGE_SIZE);
-	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (reg_t)stackpg_p) / PAGE_SIZE;
+	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, SZ_2M);
+	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, SZ_2M) - (reg_t)codepg_p) / PAGE_SIZE;
+	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, SZ_2M);
+	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, SZ_2M) - (reg_t)datapg_p) / PAGE_SIZE;
+	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, SZ_2M);
+	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, SZ_2M) - (reg_t)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down(user_rsp, SZ_2M);
+	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, SZ_2M) - (reg_t)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
 {
 	stack_frame_s * context = get_stackframe(task);
 	mm_s * mm = task->mm_struct;
-	context->rsp = round_down(mm->start_stack, PAGE_SIZE) - PAGE_SIZE;
+	context->rsp = round_down(mm->start_stack, SZ_2M) - SZ_2M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
 

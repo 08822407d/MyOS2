@@ -73,7 +73,7 @@ static void __init myos_memory_map_bottom_up(
 	// }
 
 	// 因为页大小是2M，后面要用到第一页的物理地址，所以此处临时手动映射一下
-	myos_init_memory_mapping(0, PAGE_SIZE);
+	myos_init_memory_mapping(0, SZ_2M);
 
 	kernel_cr3 = myos_virt2phys((virt_addr_t)init_top_pgt);
 	init_mm.pgd_ptr = kernel_cr3;

@@ -140,11 +140,11 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 
 	mm->start_code = USER_CODE_ADDR;
 	mm->start_data =
-	mm->end_code = USER_CODE_ADDR + PAGE_SIZE * 1;
+	mm->end_code = USER_CODE_ADDR + SZ_2M * 1;
 	mm->start_brk =
-	mm->end_data = USER_CODE_ADDR + PAGE_SIZE * 2;
-	mm->brk = USER_CODE_ADDR + PAGE_SIZE * 3;
-	mm->start_stack = USERADDR_LIMIT + 1 - PAGE_SIZE;
+	mm->end_data = USER_CODE_ADDR + SZ_2M * 2;
+	mm->brk = USER_CODE_ADDR + SZ_2M * 3;
+	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 }
 
 

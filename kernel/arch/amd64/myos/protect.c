@@ -20,8 +20,6 @@ gatedesc64_T	idt[IDT_SIZE] __aligned(sizeof(gatedesc64_T));
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 
-char ist_cpu0[7][PAGE_SIZE];
-
 tss64_T *		tss_ptr_arr = NULL;
 
 /*==============================================================================================*
