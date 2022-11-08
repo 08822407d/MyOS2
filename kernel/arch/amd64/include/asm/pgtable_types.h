@@ -320,7 +320,7 @@
 	// 		}
 	// #	endif
 
-		typedef struct {
+		typedef union {
 			pudval_t	pud;
 			arch_pud_T	defs;
 		} pud_t;
@@ -335,7 +335,7 @@
 	// 		return pud.pud;
 	// 	}
 
-		typedef struct {
+		typedef union {
 			pmdval_t	pmd;
 			arch_pmd_T	defs;
 		} pmd_t;
@@ -402,7 +402,7 @@
 	// 		return native_pmd_val(pmd) & pmd_flags_mask(pmd);
 	// 	}
 
-		typedef struct {
+		typedef union {
 			pteval_t	pte;
 			arch_pte_T	defs;
 		} pte_t;

@@ -105,11 +105,11 @@
 /*==============================================================================================*
  *											page structs								 		*
  *==============================================================================================*/
-	typedef union
-	{
-		unsigned long	ENT;
-		arch_pud_T		defs;
-	} PDPTE_T;
+	// typedef union
+	// {
+	// 	unsigned long	ENT;
+	// 	arch_pud_T		defs;
+	// } PDPTE_T;
 	typedef union
 	{
 		unsigned long	ENT;
