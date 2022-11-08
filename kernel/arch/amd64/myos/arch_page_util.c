@@ -287,16 +287,26 @@ int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 	}
 	else
 		pdpte_ptr->pud |= attr;
-	// set pte
-	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	// set pde
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *pde_ptr		= PD_ptr + pde_idx;
 	if (pde_ptr->pmd == 0)
 	{
 		ret_val = 2;
 		goto fail_return;
 	}
 	else
-		pde_ptr->pmd |= attr | _PAGE_PAT;
+		pde_ptr->pmd |= attr;
+	// set pte
+	pte_t *PT_ptr		= (pte_t *)myos_phys2virt(ARCH_PGS_ADDR(pde_ptr->pmd));	
+	pte_t *pte_ptr		= PT_ptr + pte_idx;
+	if (pte_ptr->pte == 0)
+	{
+		ret_val = 1;
+		goto fail_return;
+	}
+	else
+		pte_ptr->pte |= attr | _PAGE_PAT;
 
 fail_return:
 	return ret_val;
@@ -342,9 +352,9 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 	}
 	else
 		pdpte_ptr->pud &= ~attr;
-	// set pte
-	pmd_t  *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
-	pmd_t  *pde_ptr		= PD_ptr + pde_idx;
+	// set pde
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt(ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *pde_ptr		= PD_ptr + pde_idx;
 	if (pde_ptr->pmd == 0)
 	{
 		ret_val = 2;
@@ -352,8 +362,18 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 	}
 	else
 		pde_ptr->pmd &= ~attr;
+	// set pte
+	pte_t *PT_ptr		= (pte_t *)myos_phys2virt(ARCH_PGS_ADDR(pde_ptr->pmd));	
+	pte_t *pte_ptr		= PT_ptr + pte_idx;
+	if (pte_ptr->pte == 0)
+	{
+		ret_val = 1;
+		goto fail_return;
+	}
+	else
+		pte_ptr->pte &= ~attr;
 	// make sure the clear step will not clear the PAT flag
-	pde_ptr->pmd |= _PAGE_PAT;
+	pte_ptr->pte |= _PAGE_PAT;
 
 fail_return:
 	return ret_val;
