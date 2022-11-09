@@ -71,7 +71,7 @@
 	// #define __smp_mb__before_atomic()	do { } while (0)
 	// #define __smp_mb__after_atomic()	do { } while (0)
 
-	// #include <asm-generic/barrier.h>
+	#include <linux/kernel/asm-generic/barrier.h>
 
 	// /*
 	// * Make previous memory operations globally visible before

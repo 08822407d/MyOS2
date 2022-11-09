@@ -87,7 +87,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 	mm_s * mm = task->mm_struct;
 	get_seginfo(task);
 
-	reg_t orig_cr3 = myos_read_cr3();
+	reg_t orig_cr3 = read_cr3_pa();
 	reg_t new_cr3 = 0;
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);

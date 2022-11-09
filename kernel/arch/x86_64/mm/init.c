@@ -100,7 +100,7 @@ void __init init_mem_mapping(void)
 	}
 
 	// load_cr3(swapper_pg_dir);
-	load_cr3((reg_t)kernel_cr3);
+	load_cr3(init_mm.pgd_ptr);
 	// __flush_tlb_all();
 	// early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
 }

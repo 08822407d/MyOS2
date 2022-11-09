@@ -232,38 +232,11 @@
 	// native_cpuid_reg(ecx)
 	// native_cpuid_reg(edx)
 
-	static inline reg_t myos_read_cr3()
-	{
-		reg_t ret_val = 0;
-		asm volatile(	"movq	%%cr3,	%0 	\n\t"
-						"nop				\n\t"
-					:	"=r"(ret_val)
-					:
-					:
-					);
-		return ret_val;
-	}
-
-	static inline void myos_write_cr3(reg_t cr3)
-	{
-		asm volatile(	"movq	%0, %%cr3	\n\t"
-						"nop				\n\t"
-					:
-					:	"r"(cr3)
-					:
-					);
-	}
-
 	/*
 	 * Friendlier CR3 helpers.
 	 */
-	// static inline unsigned long read_cr3_pa(void)
-	// {
-	// 	// return __read_cr3() & CR3_ADDR_MASK;
-	// }
-	static inline unsigned long read_cr3_pa(void)
-	{
-		return myos_read_cr3() & CR3_ADDR_MASK;
+	static inline unsigned long read_cr3_pa(void) {
+		return __read_cr3() & CR3_ADDR_MASK;
 	}
 
 	// static inline unsigned long native_read_cr3_pa(void)
@@ -271,13 +244,11 @@
 	// 	return __native_read_cr3() & CR3_ADDR_MASK;
 	// }
 
-	// static inline void load_cr3(pgd_t *pgdir)
-	// {
+	// static inline void load_cr3(pgd_t *pgdir) {
 	// 	// write_cr3(__sme_pa(pgdir));
 	// }
-	static inline void load_cr3(reg_t pgdir)
-	{
-		myos_write_cr3(pgdir);
+	static inline void load_cr3(reg_t pgdir) {
+		write_cr3(pgdir);
 	}
 
 	// /*
