@@ -16,6 +16,8 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
+#include <asm/io.h>
+
 	extern struct keyboard_inputbuffer * p_kb;
 
 	#define NR_SCAN_CODES 	0x80

@@ -7,6 +7,7 @@
 #include <uapi/kernel/myos_sysreboot.h>
 #include <asm/syscall.h>
 #include <asm/setup.h>
+#include <asm/io.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/wait_queue.h>
@@ -236,7 +237,7 @@ long sys_reboot(unsigned int cmd, void *arg)
 	switch(cmd)
 	{
 		case SYSTEM_REBOOT:
-			outb(0x64, 0xFE);
+			outb(0xFE, 0x64);
 			break;
 
 		case SYSTEM_POWEROFF:

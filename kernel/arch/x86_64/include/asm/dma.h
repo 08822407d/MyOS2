@@ -10,7 +10,7 @@
 #define _ASM_X86_DMA_H
 
 	// #include <linux/spinlock.h>	/* And spinlocks */
-	// #include <asm/io.h>		/* need byte IO */
+	#include <asm/io.h>		/* need byte IO */
 
  
 	#include <asm/page_types.h>
@@ -18,10 +18,10 @@
 	// #ifdef HAVE_REALLY_SLOW_DMA_CONTROLLER
 	// #	define dma_outb	outb_p
 	// #else
-	// #	define dma_outb	outb
+	#	define dma_outb	outb
 	// #endif
 
-	// #define dma_inb		inb
+	#define dma_inb		inb
 
 	/*
 	 * NOTES about DMA transfers:

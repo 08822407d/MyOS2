@@ -1,51 +1,53 @@
+#include <asm/io.h>
+
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
 
 void init_i8259()
 {
 	//8259A-master	ICW1-4
-	outb(INT_CTL, ICW1_AT);
-	outb(INT_CTLMASK, I8259_IRQ0_VEC);
-	outb(INT_CTLMASK, 1 << I8259_CASCADE_IRQ);
-	outb(INT_CTLMASK, 0x01);
+	outb(ICW1_AT, INT_CTL);
+	outb(I8259_IRQ0_VEC, INT_CTLMASK);
+	outb(1 << I8259_CASCADE_IRQ, INT_CTLMASK);
+	outb(0x01, INT_CTLMASK);
 
 	//8259A-slave	ICW1-4
-	outb(INT2_CTL, ICW1_AT);
-	outb(INT2_CTLMASK, I8259_IRQ0_VEC + 0x08);
-	outb(INT2_CTLMASK, I8259_CASCADE_IRQ);
-	outb(INT2_CTLMASK, 0x01);
+	outb(ICW1_AT, INT2_CTL);
+	outb(I8259_IRQ0_VEC + 0x08, INT2_CTLMASK);
+	outb(I8259_CASCADE_IRQ, INT2_CTLMASK);
+	outb(0x01, INT2_CTLMASK);
 
 	//8259A-M/S	OCW1
-	// outb(INT_CTLMASK,~(1 << CASCADE_IRQ));
-	// outb(INT2_CTLMASK,~0);
+	// outb(~(1 << CASCADE_IRQ), INT_CTLMASK);
+	// outb(~0, INT2_CTLMASK);
 
-	outb(INT_CTLMASK, ~0);
-	outb(INT2_CTLMASK, ~0);
+	outb(~0, INT_CTLMASK);
+	outb(~0, INT2_CTLMASK);
 }
 
 void i8259_unmask(const int irq_nr)
 {
 	const unsigned ctl_mask = irq_nr < 8 ? INT_CTLMASK : INT2_CTLMASK;
-	outb(ctl_mask, inb(ctl_mask) & ~(1 << (irq_nr & 0x7)));
+	outb(inb(ctl_mask) & ~(1 << (irq_nr & 0x7)), ctl_mask);
 }
 
 void i8259_mask(const int irq_nr)
 {
 	const unsigned ctl_mask = irq_nr < 8 ? INT_CTLMASK : INT2_CTLMASK;
-	outb(ctl_mask, inb(ctl_mask) | (1 << (irq_nr & 0x7)));
+	outb(inb(ctl_mask) | (1 << (irq_nr & 0x7)), ctl_mask);
 }
 
 /* Disable 8259 - write 0xFF in OCW1 master and slave. */
 void i8259_disable(void)
 {
-	outb(INT2_CTLMASK, 0xFF);
-	outb(INT_CTLMASK, 0xFF);
+	outb(0xFF, INT2_CTLMASK);
+	outb(0xFF, INT_CTLMASK);
 	inb(INT_CTLMASK);
 }
 
 void i8259_eoi(int irq_nr)
 {
-	outb(INT_CTL, END_OF_INT);
+	outb(END_OF_INT, INT_CTL);
 	if (irq_nr >= 8)
-		outb(INT2_CTL, END_OF_INT);
+		outb(END_OF_INT, INT2_CTL);
 }

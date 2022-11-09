@@ -3,6 +3,7 @@
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
 #include <uapi/kernel/major.h>
+#include <asm/io.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/block_dev.h>
@@ -24,73 +25,77 @@ bool	ide0_0, ide0_1,
  *																								*
  *==============================================================================================*/
 static void ATA_set_LBA(unsigned controller,
-				unsigned short count, unsigned long lba)
+		unsigned short count, unsigned long lba)
 {
-	outb(IDE_PIO_LBA_COUNT(controller), (count >> 0) & 0xFF);
-	outb(IDE_PIO_LBA_LOW(controller), (lba >> 0) & 0xFF);
-	outb(IDE_PIO_LBA_MID(controller), (lba >> 8) & 0xFF);
-	outb(IDE_PIO_LBA_HIGH(controller), (lba >> 16) & 0xFF);
+	outb((count >> 0) & 0xFF, IDE_PIO_LBA_COUNT(controller));
+	outb((lba >> 0) & 0xFF, IDE_PIO_LBA_LOW(controller));
+	outb((lba >> 8) & 0xFF, IDE_PIO_LBA_MID(controller));
+	outb((lba >> 16) & 0xFF, IDE_PIO_LBA_HIGH(controller));
 }
 
-static unsigned char ATA_read_LBA28(unsigned controller, unsigned disk,
-				unsigned long lba, unsigned short count)
+static unsigned char
+ATA_read_LBA28(unsigned controller, unsigned disk,
+		unsigned long lba, unsigned short count)
 {
 	ATA_set_LBA(controller, count, lba);
-	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4) | (lba >> 24) & 0x0F);
-	outb(IDE_PIO_CMD_STAT(controller), 0x20);
+	outb(0xE0 | (disk << 4) | (lba >> 24) & 0x0F,
+			IDE_PIO_DEV_OPT(controller));
+	outb(0x20, IDE_PIO_CMD_STAT(controller));
 	return inb(IDE_PIO_CMD_STAT(controller));
 }
 
-static void ATA_write_LBA28(unsigned controller, unsigned disk,
-				unsigned long lba, unsigned short count)
+static void ATA_write_LBA28(unsigned controller,
+		unsigned disk, unsigned long lba, unsigned short count)
 {
-	outb(IDE_PIO_ERR_STAT(controller), 0);
+	outb(0, IDE_PIO_ERR_STAT(controller));
 	ATA_set_LBA(controller, count, lba);
-	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4) | (lba >> 24) & 0x0F);
-	outb(IDE_PIO_CMD_STAT(controller), 0x30);
+	outb(0xE0 | (disk << 4) | (lba >> 24) & 0x0F,
+			IDE_PIO_DEV_OPT(controller));
+	outb(0x30, IDE_PIO_CMD_STAT(controller));
 
 	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
 		nop();
-	outb(IDE_PIO_CMD_STAT(controller), ATA_WRITE_CMD);
+	outb(ATA_WRITE_CMD, IDE_PIO_CMD_STAT(controller));
 
 	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_REQ))
 		nop();
 }
 
-static unsigned char ATA_read_LBA48(unsigned controller, unsigned disk,
-				unsigned long lba, unsigned short count)
+static unsigned char
+ATA_read_LBA48(unsigned controller, unsigned disk,
+		unsigned long lba, unsigned short count)
 {
-	outb(IDE_PIO_ERR_STAT(controller), 0);
+	outb(0, IDE_PIO_ERR_STAT(controller));
 	ATA_set_LBA(controller, count >> 8, lba >> 24);
 	ATA_set_LBA(controller, count, lba);
-	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4));
-	outb(IDE_PIO_CMD_STAT(controller), 0x24);
+	outb(0xE0 | (disk << 4), IDE_PIO_DEV_OPT(controller));
+	outb(0x24, IDE_PIO_CMD_STAT(controller));
 	return inb(IDE_PIO_CMD_STAT(controller));
 }
 
-static void ATA_write_LBA48(unsigned controller, unsigned disk,
-				unsigned long lba, unsigned short count)
+static void ATA_write_LBA48(unsigned controller,
+		unsigned disk, unsigned long lba, unsigned short count)
 {
 	ATA_set_LBA(controller, count >> 8, lba >> 24);
 	ATA_set_LBA(controller, count, lba);
-	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | (disk << 4));
-	outb(IDE_PIO_CMD_STAT(controller), 0x34);
+	outb(0xE0 | (disk << 4), IDE_PIO_DEV_OPT(controller));
+	outb(0x34, IDE_PIO_CMD_STAT(controller));
 }
 
 static void ATA_dev_info(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
-	outb(IDE_PIO_DEV_OPT(controller), 0xE0 | disk << 4);
+	outb(0xE0 | disk << 4, IDE_PIO_DEV_OPT(controller));
 
 	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
 		nop();			
-	outb(IDE_PIO_CMD_STAT(controller), ATA_DISK_IDENTIFY);
+	outb(ATA_DISK_IDENTIFY, IDE_PIO_CMD_STAT(controller));
 }
 
 static bool ATA_identify(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
-	outb(IDE_PIO_CMD_STAT(controller), 0xEC | disk << 4);
+	outb(0xEC | disk << 4, IDE_PIO_CMD_STAT(controller));
 	
 	u64 lba_mid = inb(IDE_PIO_LBA_MID(controller));	
 	u64 lba_high = inb(IDE_PIO_LBA_HIGH(controller));
@@ -351,8 +356,8 @@ void init_disk()
 				 &ATA_disk_handler);
 	
 	ide0_0 = ide0_1 = ide1_0 = ide1_1 = false;
-	outb(IDE_PIO_LBA_LOW(MASTER), 0x88);
-	outb(IDE_PIO_LBA_LOW(SLAVE), 0x88);
+	outb(0x88, IDE_PIO_LBA_LOW(MASTER));
+	outb(0x88, IDE_PIO_LBA_LOW(SLAVE));
 	int ide0_mgc = inb(IDE_PIO_LBA_LOW(MASTER));
 	int ide1_mgc = inb(IDE_PIO_LBA_LOW(SLAVE));
 	if (ide0_mgc == 0x88)
@@ -378,7 +383,7 @@ void init_disk()
 		!ide1_0 && !ide1_1)
 		color_printk(RED, BLACK, "No ide device was found\n");
 
-	outb(IED_PIO_CTRL_BASE(MASTER), 0);
+	outb(0, IED_PIO_CTRL_BASE(MASTER));
 
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);

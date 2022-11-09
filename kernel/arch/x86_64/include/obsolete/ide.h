@@ -17,7 +17,7 @@
 
 	#define MASTER					0x0
 	#define SLAVE					0x1
-	#define IDE_CMD_BASE(c)			(0x1F0 - (c) * 0x80)
+	#define IDE_CMD_BASE(c)			(0x1F0U - (c) * 0x80U)
 
 	#define IDE_PIO_DATA(p)			(IDE_CMD_BASE(p) + 0)
 	#define IDE_PIO_ERR_STAT(p)		(IDE_CMD_BASE(p) + 1)
@@ -28,7 +28,7 @@
 	#define IDE_PIO_DEV_OPT(p)		(IDE_CMD_BASE(p) + 6)
 	#define IDE_PIO_CMD_STAT(p)		(IDE_CMD_BASE(p) + 7)
 
-	#define IED_PIO_CTRL_BASE(c)	(IDE_CMD_BASE(c) + 0x206)
+	#define IED_PIO_CTRL_BASE(c)	(IDE_CMD_BASE(c) + 0x206U)
 
 	#define	PORT_DISK0_ALT_STA_CTL	0x3f6
 

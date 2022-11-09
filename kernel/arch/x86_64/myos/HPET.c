@@ -1,5 +1,6 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
+#include <asm/io.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -38,7 +39,7 @@ void HPET_init()
 	ioapic_retentry_T entry;
 	
 	//get RCBA address
-	outl(0xcf8,0x8000f8f0);
+	outl(0x8000f8f0, 0xcf8);
 	x = inl(0xcfc);
 	x = x & 0xffffc000;	
 

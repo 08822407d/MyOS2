@@ -10,7 +10,7 @@
 	// #include <asm/ptrace.h>
 	// #include <asm/user.h>
 	// #include <asm/auxvec.h>
-	// #include <asm/fsgsbase.h>
+	#include <asm/fsgsbase.h>
 
 	// typedef unsigned long elf_greg_t;
 

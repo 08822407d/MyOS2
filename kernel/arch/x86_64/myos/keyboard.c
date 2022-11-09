@@ -3,6 +3,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
+#include <asm/io.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -57,9 +58,9 @@ void init_keyboard()
 	entry.dst.physical.reserved2 = 0;
 
 	wait_KB_write();
-	outb(PORT_KB_CMD, KBCMD_WRITE_CMD);
+	outb(KBCMD_WRITE_CMD, PORT_KB_CMD);
 	wait_KB_write();
-	outb(PORT_KB_DATA, KB_INIT_MODE);
+	outb(KB_INIT_MODE, PORT_KB_DATA);
 
 	for(i = 0;i<1000;i++)
 		for(j = 0;j<1000;j++)

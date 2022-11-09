@@ -77,7 +77,7 @@
 
 // #include <trace/events/kmem.h>
 
-// #include <asm/io.h>
+#include <asm/io.h>
 // #include <asm/mmu_context.h>
 // #include <asm/pgalloc.h>
 // #include <linux/uaccess.h>

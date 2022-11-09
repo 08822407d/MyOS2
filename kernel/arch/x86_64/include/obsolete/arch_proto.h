@@ -233,14 +233,6 @@
 	void LVT_timer_init(void);
 
 	/* asm_wrapper.c */
-	uint64_t inb(uint16_t port);
-	uint64_t inw(uint16_t port);
-	uint64_t inl(uint16_t port);
-	void outb(uint16_t port, uint8_t value);
-	void outw(uint16_t port, uint16_t value);
-	void outl(uint16_t port, uint32_t value);
-	void insw(uint16_t port, uint16_t * buffer, uint64_t nr);
-	void outsw(uint16_t port, uint16_t * buffer, uint64_t nr);
 	uint64_t rdmsr(uint64_t msr_addr);
 	void wrmsr(uint64_t msr_addr, uint64_t value);
 	void io_mfence(void);
@@ -251,24 +243,21 @@
 	void cli(void);
 	void sti(void);
 
-	void wrgsbase(uint64_t addr);
-	uint64_t rdgsbase(void);
-	// void intr_disable(void);
-	// void intr_enable(void);
-
 	/* arch_task.c */
 	stack_frame_s * get_stackframe(task_s * task_p);
 	unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags,
-					unsigned long tmp_kstack_start, unsigned long stack_size,
-					const char *taskname, task_s **ret_child);
-	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename, char *argv[], char *envp[]);
+			unsigned long tmp_kstack_start, unsigned long stack_size,
+			const char *taskname, task_s **ret_child);
+	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename,
+			char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void myos_schedule(void);
 	void try_sched(void);
-	task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
-					unsigned long flags, const char *taskname);
+	task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long),
+			unsigned long arg, unsigned long flags, const char *taskname);
 	unsigned long kernel_init(unsigned long arg);
-	int user_thread_test(unsigned long (* fn)(unsigned long), unsigned long arg, unsigned long flags);
+	int user_thread_test(unsigned long (* fn)(unsigned long),
+			unsigned long arg, unsigned long flags);
 	unsigned long user_func(unsigned long arg);
 
 	/* interrupt.c */
@@ -276,12 +265,12 @@
 	void exception_handler(stack_frame_s * sf_regs);
 	void hwint_irq_handler(stack_frame_s * sf_regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
-					 unsigned long parameter, hw_int_controller_s * controller,
-					 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+			unsigned long parameter, hw_int_controller_s * controller,
+			void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_irq(unsigned long irq);
 	int register_IPI(unsigned long irq, void * arg, char * irq_name,
-					 unsigned long parameter, hw_int_controller_s * controller,
-					 void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+			unsigned long parameter, hw_int_controller_s * controller,
+			void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
 	int unregister_IPI(unsigned long irq);
 	void myos_init_bsp_intr(void);
 	void myos_init_percpu_intr(void);

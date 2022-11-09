@@ -1,12 +1,13 @@
-#include <obsolete/glo.h>
+#include <asm/io.h>
 
+#include <obsolete/glo.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/device.h>
 
 #define	BCD2BIN(value)	(((value) & 0xf) + ((value) >> 4 ) * 10)
 #define CMOS_READ(addr)					\
 		({								\
-			outb(0x70,0x80 | addr);		\
+			outb(0x80 | addr, 0x70);	\
 			inb(0x71);					\
 		})
 
@@ -25,5 +26,5 @@ void get_cmos_time(time_s *time)
 	}while(time->second != CMOS_READ(0x00));
 	time->second	= BCD2BIN(CMOS_READ(0x00));
 	
-	outb(0x70,0x00); 
+	outb(0x00, 0x70); 
 }
