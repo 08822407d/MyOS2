@@ -137,12 +137,12 @@
 	#define X86_CR8_TPR				_AC(0x0000000f,UL) /* task priority register */
 
 	/*
-	* AMD and Transmeta use MSRs for configuration; see <asm/msr-index.h>
-	*/
+	 * AMD and Transmeta use MSRs for configuration; see <asm/msr-index.h>
+	 */
 
 	/*
-	*      NSC/Cyrix CPU configuration register indexes
-	*/
+	 *      NSC/Cyrix CPU configuration register indexes
+	 */
 	#define CX86_PCR0		0x20
 	#define CX86_GCR		0xb8
 	#define CX86_CCR0		0xc0

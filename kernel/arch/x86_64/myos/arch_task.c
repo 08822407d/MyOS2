@@ -10,6 +10,7 @@
 #include <linux/lib/list.h>
 #include <asm/setup.h>
 #include <asm/msr.h>
+#include <asm/fsgsbase.h>
 
 
 #include <klib/utils.h>
@@ -24,7 +25,7 @@
 
 #define	USER_CODE_ADDR		0x6000000
 #define USER_MEM_LENGTH		0x800000
-#define MAX_PID 0x8000
+#define MAX_PID				0x8000
 
 extern char		ist_stack0;
 
@@ -78,7 +79,7 @@ unsigned long myos_gen_newpid()
 	return curr_pid;
 }
 
-inline __always_inline void switch_mm(task_s * curr, task_s * target)
+static __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	asm volatile(	"movq	%0,	%%cr3		\n\t"
 				:

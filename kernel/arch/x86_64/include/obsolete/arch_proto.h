@@ -233,8 +233,6 @@
 	void LVT_timer_init(void);
 
 	/* asm_wrapper.c */
-	uint64_t rdmsr(uint64_t msr_addr);
-	void wrmsr(uint64_t msr_addr, uint64_t value);
 	void io_mfence(void);
 	void nop(void);
 	void hlt(void);

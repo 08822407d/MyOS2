@@ -218,7 +218,7 @@ void __init setup_arch(char **cmdline_p)
 	max_pfn = e820__end_of_ram_pfn();
 	max_possible_pfn = max_pfn;
 
-	check_x2apic();
+	// check_x2apic();
 
 	// /* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;

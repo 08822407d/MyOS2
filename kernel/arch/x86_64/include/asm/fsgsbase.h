@@ -6,7 +6,7 @@
 
 	#ifndef __ASSEMBLY__
 
-	// #	include <asm/msr-index.h>
+	#	include <asm/msr-index.h>
 
 	// /*
 	//  * Read/write a task's FSBASE or GSBASE. This returns the value that
