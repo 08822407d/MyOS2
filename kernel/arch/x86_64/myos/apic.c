@@ -91,15 +91,15 @@ uint64_t ioapic_rte_read(uint8_t index)
 	uint64_t ret;
 
 	*ioapic_map.virt_idx_addr = index + 1;
-	io_mfence();
+	__mb();
 	ret = *ioapic_map.virt_data_addr;
 	ret <<= 32;
-	io_mfence();
+	__mb();
 
 	*ioapic_map.virt_idx_addr= index;		
-	io_mfence();
+	__mb();
 	ret |= *ioapic_map.virt_data_addr;
-	io_mfence();
+	__mb();
 
 	return ret;
 }
@@ -107,16 +107,16 @@ uint64_t ioapic_rte_read(uint8_t index)
 void ioapic_rte_write(uint8_t index, uint64_t value)
 {
 	*ioapic_map.virt_idx_addr = index;
-	io_mfence();
+	__mb();
 	*ioapic_map.virt_data_addr = value & 0xffffffff;
-	io_mfence();
+	__mb();
 	
 	value >>= 32;
 
 	*ioapic_map.virt_idx_addr = index + 1;
-	io_mfence();
+	__mb();
 	*ioapic_map.virt_data_addr = value & 0xffffffff;
-	io_mfence();
+	__mb();
 }
 
 /*==============================================================================================*
@@ -289,14 +289,14 @@ void IOAPIC_init()
 	//	I/O APIC
 	//	I/O APIC	ID	
 	*ioapic_map.virt_idx_addr = 0x00;
-	io_mfence();
+	__mb();
 	*ioapic_map.virt_data_addr = 0x0f000000;
-	io_mfence();
-	io_mfence();
+	__mb();
+	__mb();
 
 	//	I/O APIC	Version
 	*ioapic_map.virt_idx_addr = 0x01;
-	io_mfence();
+	__mb();
 
 	//RTE	
 	for(i = 0x10;i < 0x40;i += 2)

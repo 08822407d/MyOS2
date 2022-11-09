@@ -8,8 +8,8 @@
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
+#include <asm/processor.h>
 #include <asm/setup.h>
-#include <asm/msr.h>
 #include <asm/fsgsbase.h>
 
 
@@ -451,12 +451,12 @@ unsigned long do_exit(unsigned long exit_code)
 	color_printk(RED, WHITE, "Core-%d: task:%d exited.\n", cpudata_p->cpu_idx, curr->pid);
 
 do_exit_again:
-	cli();
+	asm volatile("cli");
 	curr_tsk->exit_code = exit_code;
 	exit_thread(curr_tsk);
 	exit_files(curr_tsk);
 	exit_notify();
-	sti();
+	asm volatile("sti");
 
 	curr_tsk->__state = EXIT_ZOMBIE;
 	myos_schedule();

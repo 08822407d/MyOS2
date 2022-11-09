@@ -3,6 +3,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
+#include <asm/processor.h>
 #include <asm/io.h>
 
 #include <obsolete/glo.h>

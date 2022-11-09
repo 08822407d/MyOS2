@@ -229,12 +229,12 @@ void idle(size_t cpu_idx)
 		myos_schedule();
 	}
 	
-	sti();
+	asm volatile("sti");
 
 	// module_test();
 
 	while (1)
-		hlt();
+		asm volatile("hlt");
 }
 
 /*==============================================================================================*

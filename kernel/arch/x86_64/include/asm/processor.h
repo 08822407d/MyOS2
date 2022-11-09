@@ -22,7 +22,7 @@
 	#include <asm/msr.h>
 	// #include <asm/desc_defs.h>
 	// #include <asm/nops.h>
-	// #include <asm/special_insns.h>
+	#include <asm/special_insns.h>
 	// #include <asm/fpu/types.h>
 	// #include <asm/unwind_hints.h>
 	// #include <asm/vmxfeatures.h>

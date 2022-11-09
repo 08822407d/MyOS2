@@ -51,7 +51,7 @@ void HPET_init()
 
 	//enable HPET
 	*p = 0x80;
-	io_mfence();
+	__mb();
 
 	//init I/O APIC IRQ2 => HPET Timer 0
 	entry.vector = VECTOR_IRQ(HPET_TIMER0_IRQ);
@@ -76,20 +76,20 @@ void HPET_init()
 	uint64_t accuracy = *(uint64_t *)HPET_addr >> 32;
 
 	*(unsigned long *)(HPET_addr + 0x10) = 3;
-	io_mfence();
+	__mb();
 
 	//edge triggered & periodic
 	*(unsigned long *)(HPET_addr + 0x100) = 0x004c;
-	io_mfence();
+	__mb();
 
 	// 1S qemu may have a different precision so here need a calculate
 	// 0x38D7EA4C680 is hex value of 1*10^15
 	unsigned long period = 0x38D7EA4C680 / accuracy;
 	*(unsigned long *)(HPET_addr + 0x108) = period * 10;
-	io_mfence();
+	__mb();
 
 	//init MAIN_CNT & get CMOS time
 	get_cmos_time(&time);
 	*(unsigned long *)(HPET_addr + 0xf0) = 0;
-	io_mfence();
+	__mb();
 }

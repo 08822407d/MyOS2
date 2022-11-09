@@ -3,6 +3,7 @@
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
 #include <uapi/kernel/major.h>
+#include <asm/processor.h>
 #include <asm/io.h>
 
 #include <obsolete/printk.h>

@@ -195,7 +195,9 @@
 		"page_64.h": "c",
 		"pgtable.h": "c",
 		"mm_types.h": "c",
-		"pgtable_64.h": "c"
+		"pgtable_64.h": "c",
+		"io.h": "c",
+		"special_insns.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

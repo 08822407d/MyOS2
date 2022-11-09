@@ -232,15 +232,6 @@
 	/* apic_timer.c */
 	void LVT_timer_init(void);
 
-	/* asm_wrapper.c */
-	void io_mfence(void);
-	void nop(void);
-	void hlt(void);
-	void std(void);
-	void cld(void);
-	void cli(void);
-	void sti(void);
-
 	/* arch_task.c */
 	stack_frame_s * get_stackframe(task_s * task_p);
 	unsigned long do_fork(stack_frame_s * sf_regs, unsigned long clone_flags,

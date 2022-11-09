@@ -5,15 +5,15 @@
 	// #include <asm/alternative.h>
 	// #include <asm/nops.h>
 
-	// /*
-	// * Force strict CPU ordering.
-	// * And yes, this might be required on UP too when we're talking
-	// * to devices.
-	// */
+	/*
+	* Force strict CPU ordering.
+	* And yes, this might be required on UP too when we're talking
+	* to devices.
+	*/
 
-	// #define __mb()		asm volatile("mfence":::"memory")
-	// #define __rmb()		asm volatile("lfence":::"memory")
-	// #define __wmb()		asm volatile("sfence" ::: "memory")
+	#define __mb()		asm volatile("mfence":::"memory")
+	#define __rmb()		asm volatile("lfence":::"memory")
+	#define __wmb()		asm volatile("sfence" ::: "memory")
 
 	// /**
 	//  * array_index_mask_nospec() - generate a mask that is ~0UL when the
