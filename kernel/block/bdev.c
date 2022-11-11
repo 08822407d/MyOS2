@@ -27,7 +27,7 @@
 // #include <linux/part_stat.h>
 // #include <linux/uaccess.h>
 #include "../fs/vfs/internal.h"
-#include <linux/block/blk.h>
+#include "blk.h"
 
 
 #include <obsolete/printk.h>

@@ -16,7 +16,7 @@
 // #include <linux/suspend.h>
 #include <linux/fs/fs.h>
 // #include <linux/module.h>
-#include <linux/block/blk.h>
+#include "blk.h"
 
 /*
  * for a block special file file_inode(file)->i_size is zero
@@ -56,40 +56,40 @@ static int blkdev_fsync(file_s *filp, loff_t start, loff_t end, int datasync)
 
 static int blkdev_open(inode_s *inode, file_s *filp)
 {
-	// struct block_device *bdev;
+	block_device_s *bdev;
 
-	// /*
-	//  * Preserve backwards compatibility and allow large file access
-	//  * even if userspace doesn't ask for it explicitly. Some mkfs
-	//  * binary needs it. We might want to drop this workaround
-	//  * during an unstable branch.
-	//  */
-	// filp->f_flags |= O_LARGEFILE;
-	// filp->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
+	/*
+	 * Preserve backwards compatibility and allow large file access
+	 * even if userspace doesn't ask for it explicitly. Some mkfs
+	 * binary needs it. We might want to drop this workaround
+	 * during an unstable branch.
+	 */
+	filp->f_flags |= O_LARGEFILE;
+	filp->f_mode |= FMODE_NOWAIT | FMODE_BUF_RASYNC;
 
-	// if (filp->f_flags & O_NDELAY)
-	// 	filp->f_mode |= FMODE_NDELAY;
-	// if (filp->f_flags & O_EXCL)
-	// 	filp->f_mode |= FMODE_EXCL;
-	// if ((filp->f_flags & O_ACCMODE) == 3)
-	// 	filp->f_mode |= FMODE_WRITE_IOCTL;
+	if (filp->f_flags & O_NDELAY)
+		filp->f_mode |= FMODE_NDELAY;
+	if (filp->f_flags & O_EXCL)
+		filp->f_mode |= FMODE_EXCL;
+	if ((filp->f_flags & O_ACCMODE) == 3)
+		filp->f_mode |= FMODE_WRITE_IOCTL;
 
 	// bdev = blkdev_get_by_dev(inode->i_rdev, filp->f_mode, filp);
-	// if (IS_ERR(bdev))
-	// 	return PTR_ERR(bdev);
+	if (IS_ERR(bdev))
+		return PTR_ERR(bdev);
 
-	// filp->private_data = bdev;
+	filp->private_data = bdev;
 	// filp->f_mapping = bdev->bd_inode->i_mapping;
 	// filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
-	// return 0;
+	return 0;
 }
 
 static int blkdev_close(inode_s *inode, file_s *filp)
 {
-	// struct block_device *bdev = filp->private_data;
+	block_device_s *bdev = filp->private_data;
 
 	// blkdev_put(bdev, filp->f_mode);
-	// return 0;
+	return 0;
 }
 
 // /*

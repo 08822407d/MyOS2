@@ -91,20 +91,20 @@
 		* major/first_minor/minors should not be set by any new driver, the
 		* block core will take care of allocating them automatically.
 		*/
-		int major;
-		int first_minor;
-		int minors;
+		int		major;
+		int		first_minor;
+		int		minors;
 
-		char disk_name[DISK_NAME_LEN];	/* name of major driver */
+		char	disk_name[DISK_NAME_LEN];	/* name of major driver */
 
 		// unsigned short events;		/* supported events */
 		// unsigned short event_flags;	/* flags related to event processing */
 
 		// struct xarray part_tbl;
-		block_device_s *part0;
+		block_device_s	*part0;
 
 		// const block_device_operations_s *fops;
-		request_queue_s *queue;
+		request_queue_s	*queue;
 		void *private_data;
 
 		// int flags;
@@ -142,14 +142,12 @@
 	// 	return !inode_unhashed(disk->part0->bd_inode);
 	// }
 
-	// /*
-	// * The gendisk is refcounted by the part0 block_device, and the bd_device
-	// * therein is also used for device model presentation in sysfs.
-	// */
-	// #define dev_to_disk(device) \
-	// 	(dev_to_bdev(device)->bd_disk)
-	// #define disk_to_dev(disk) \
-	// 	(&((disk)->part0->bd_device))
+	/*
+	 * The gendisk is refcounted by the part0 block_device, and the bd_device
+	 * therein is also used for device model presentation in sysfs.
+	 */
+	#define dev_to_disk(dev)	(dev_to_bdev(dev)->bd_disk)
+	#define disk_to_dev(disk)	(&((disk)->part0->bd_device))
 
 	// #if IS_REACHABLE(CONFIG_CDROM)
 	// #define disk_to_cdi(disk)	((disk)->cdi)

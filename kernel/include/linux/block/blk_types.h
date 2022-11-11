@@ -11,6 +11,9 @@
 	#include <linux/block/block_s_defs.h>
 	#include <linux/lib/list.h>
 
+
+	#include <linux/device/device.h>
+
 	// struct bio_set;
 	// struct bio;
 	// struct bio_integrity_payload;
@@ -34,7 +37,7 @@
 		inode_s *		bd_inode;	/* will die */
 		super_block_s *	bd_super;
 		void *			bd_claiming;
-		// device_s		bd_device;
+		device_s		bd_device;
 		void *			bd_holder;
 		int				bd_holders;
 		bool			bd_write_holder;
@@ -60,14 +63,12 @@
 	// #endif
 	} block_device_s;
 
-	// #define bdev_whole(_bdev) \
-	// 	((_bdev)->bd_disk->part0)
+	#define bdev_whole(_bdev)	((_bdev)->bd_disk->part0)
 
-	// #define dev_to_bdev(device) \
-	// 	container_of((device), block_device_s, bd_device)
+	#define dev_to_bdev(device) \
+		container_of((device), block_device_s, bd_device)
 
-	// #define bdev_kobj(_bdev) \
-	// 	(&((_bdev)->bd_device.kobj))
+	#define bdev_kobj(_bdev)	(&((_bdev)->bd_device.kobj))
 
 	// /*
 	// * Block error status values.  See block/blk-core:blk_errors for the details.
