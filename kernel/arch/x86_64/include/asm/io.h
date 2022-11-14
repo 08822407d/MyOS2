@@ -386,7 +386,7 @@
 
 	// #define IO_SPACE_LIMIT 0xffff
 
-	// #include <asm-generic/io.h>
+	#include <linux/kernel/asm-generic/io.h>
 	// #undef PCI_IOBASE
 
 	// #ifdef CONFIG_MTRR

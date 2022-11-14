@@ -20,12 +20,12 @@
 	// #define __acquire(x) __context__(x, 1)
 	// #define __release(x) __context__(x, -1)
 	// #define __cond_lock(x, c) ((c) ? ({ __acquire(x); 1; }) : 0)
-	/* other */
-	#		define __force __attribute__((force))
-	#		define __force
-	#		define __nocast __attribute__((nocast))
-	#		define __safe __attribute__((safe))
-	#		define __private __attribute__((noderef))
+	// /* other */
+	// #define __force __attribute__((force))
+	// #define __force
+	// #define __nocast __attribute__((nocast))
+	// #define __safe __attribute__((safe))
+	// #define __private __attribute__((noderef))
 	// #define ACCESS_PRIVATE(p, member) (*((typeof((p)->member) __force *)&(p)->member))
 	#	else /* __CHECKER__ */
 	/* address spaces */
@@ -35,7 +35,7 @@
 	// #else
 	// #define __user
 	// #endif
-	// #define __iomem
+	#		define __iomem
 	// #define __percpu
 	// #define __rcu
 	// #define __chk_user_ptr(x) (void)0
