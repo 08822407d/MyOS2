@@ -24,5 +24,5 @@ function format_vdisk() {
 	done
 }
 
-format_vdisk
-# part_vdisk "/home/cheyh/vmware/myos2test/myos2test-flat.vmdk"
+# format_vdisk
+part_vdisk "/home/cheyh/vmware/myos2test/myos2test-flat.vmdk"
