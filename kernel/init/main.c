@@ -91,7 +91,7 @@
 #include <linux/lib/list.h>
 // #include <linux/integrity.h>
 // #include <linux/proc_ns.h>
-// #include <linux/io.h>
+// #include <linux/kernel/io.h>
 #include <linux/kernel/cache.h>
 // #include <linux/rodata_test.h>
 // #include <linux/jump_label.h>
@@ -127,7 +127,8 @@
  * This should be approx 2 Bo*oMips to start (note initial shift), and will
  * still work even if initially too large, it will just take slightly longer
  */
-unsigned long loops_per_jiffy = (1<<12);
+// unsigned long loops_per_jiffy = (1<<12);
+unsigned long loops_per_jiffy = 10371364;
 
 /*
  * Set up kernel memory allocators

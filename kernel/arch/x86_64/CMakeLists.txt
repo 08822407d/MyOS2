@@ -14,6 +14,7 @@ target_sources(kern PRIVATE ${ARCH_C_SRCS} ${ARCH_ASM_SRCS})
 add_subdirectory(kernel)
 add_subdirectory(entry)
 add_subdirectory(mm)
+add_subdirectory(lib)
 
 
 add_subdirectory(myos)

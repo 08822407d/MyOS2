@@ -10,12 +10,12 @@
 #ifndef __LINUX_LIBATA_H__
 #define __LINUX_LIBATA_H__
 
-	// #include <linux/delay.h>
+	#include <linux/kernel/delay.h>
 	// #include <linux/jiffies.h>
 	// #include <linux/interrupt.h>
 	// #include <linux/dma-mapping.h>
 	// #include <linux/scatterlist.h>
-	// #include <linux/io.h>
+	#include <linux/kernel/io.h>
 	#include <linux/drivers/ata.h>
 	// #include <linux/workqueue.h>
 	// #include <scsi/scsi_host.h>
@@ -416,38 +416,35 @@
 				ATA_ACPI_FILTER_LOCK | ATA_ACPI_FILTER_DIPM,
 	};
 
-	// enum ata_xfer_mask {
-	// 	ATA_MASK_PIO		= ((1LU << ATA_NR_PIO_MODES) - 1)
-	// 					<< ATA_SHIFT_PIO,
-	// 	ATA_MASK_MWDMA		= ((1LU << ATA_NR_MWDMA_MODES) - 1)
-	// 					<< ATA_SHIFT_MWDMA,
-	// 	ATA_MASK_UDMA		= ((1LU << ATA_NR_UDMA_MODES) - 1)
-	// 					<< ATA_SHIFT_UDMA,
-	// };
+	enum ata_xfer_mask {
+		ATA_MASK_PIO	= ((1LU << ATA_NR_PIO_MODES) - 1) << ATA_SHIFT_PIO,
+		ATA_MASK_MWDMA	= ((1LU << ATA_NR_MWDMA_MODES) - 1) << ATA_SHIFT_MWDMA,
+		ATA_MASK_UDMA	= ((1LU << ATA_NR_UDMA_MODES) - 1) << ATA_SHIFT_UDMA,
+	};
 
-	// enum hsm_task_states {
-	// 	HSM_ST_IDLE,		/* no command on going */
-	// 	HSM_ST_FIRST,		/* (waiting the device to)
-	// 						   write CDB or first data block */
-	// 	HSM_ST,				/* (waiting the device to) transfer data */
-	// 	HSM_ST_LAST,		/* (waiting the device to) complete command */
-	// 	HSM_ST_ERR,			/* error */
-	// };
+	enum hsm_task_states {
+		HSM_ST_IDLE,		/* no command on going */
+		HSM_ST_FIRST,		/* (waiting the device to)
+							   write CDB or first data block */
+		HSM_ST,				/* (waiting the device to) transfer data */
+		HSM_ST_LAST,		/* (waiting the device to) complete command */
+		HSM_ST_ERR,			/* error */
+	};
 
-	// enum ata_completion_errors {
-	// 	AC_ERR_OK			= 0,			/* no error */
-	// 	AC_ERR_DEV			= (1 << 0),		/* device reported error */
-	// 	AC_ERR_HSM			= (1 << 1),		/* host state machine violation */
-	// 	AC_ERR_TIMEOUT		= (1 << 2),		/* timeout */
-	// 	AC_ERR_MEDIA		= (1 << 3),		/* media error */
-	// 	AC_ERR_ATA_BUS		= (1 << 4),		/* ATA bus error */
-	// 	AC_ERR_HOST_BUS		= (1 << 5),		/* host bus error */
-	// 	AC_ERR_SYSTEM		= (1 << 6),		/* system error */
-	// 	AC_ERR_INVALID		= (1 << 7),		/* invalid argument */
-	// 	AC_ERR_OTHER		= (1 << 8),		/* unknown */
-	// 	AC_ERR_NODEV_HINT	= (1 << 9),		/* polling device detection hint */
-	// 	AC_ERR_NCQ			= (1 << 10),	/* marker for offending NCQ qc */
-	// };
+	enum ata_completion_errors {
+		AC_ERR_OK			= 0,			/* no error */
+		AC_ERR_DEV			= (1 << 0),		/* device reported error */
+		AC_ERR_HSM			= (1 << 1),		/* host state machine violation */
+		AC_ERR_TIMEOUT		= (1 << 2),		/* timeout */
+		AC_ERR_MEDIA		= (1 << 3),		/* media error */
+		AC_ERR_ATA_BUS		= (1 << 4),		/* ATA bus error */
+		AC_ERR_HOST_BUS		= (1 << 5),		/* host bus error */
+		AC_ERR_SYSTEM		= (1 << 6),		/* system error */
+		AC_ERR_INVALID		= (1 << 7),		/* invalid argument */
+		AC_ERR_OTHER		= (1 << 8),		/* unknown */
+		AC_ERR_NODEV_HINT	= (1 << 9),		/* polling device detection hint */
+		AC_ERR_NCQ			= (1 << 10),	/* marker for offending NCQ qc */
+	};
 
 	// /*
 	//  * Link power management policy: If you alter this, you also need to
@@ -470,8 +467,10 @@
 
 	// /* forward declarations */
 	// struct scsi_device;
-	// ata_port_ops_s;
-	// ata_port_s;
+	struct ata_port_operations;
+	typedef struct ata_port_operations ata_port_ops_s;
+	struct ata_port;
+	typedef struct ata_port ata_port_s;
 	// struct ata_link;
 	// struct ata_queued_cmd;
 
@@ -526,25 +525,25 @@
 	} ata_tf_s;
 
 	// #ifdef CONFIG_ATA_SFF
-	// 	struct ata_ioports {
-	// 		void __iomem	*cmd_addr;
-	// 		void __iomem	*data_addr;
-	// 		void __iomem	*error_addr;
-	// 		void __iomem	*feature_addr;
-	// 		void __iomem	*nsect_addr;
-	// 		void __iomem	*lbal_addr;
-	// 		void __iomem	*lbam_addr;
-	// 		void __iomem	*lbah_addr;
-	// 		void __iomem	*device_addr;
-	// 		void __iomem	*status_addr;
-	// 		void __iomem	*command_addr;
-	// 		void __iomem	*altstatus_addr;
-	// 		void __iomem	*ctl_addr;
-	// 	#ifdef CONFIG_ATA_BMDMA
-	// 		void __iomem	*bmdma_addr;
-	// 	#endif /* CONFIG_ATA_BMDMA */
-	// 		void __iomem	*scr_addr;
-	// };
+		typedef struct ata_ioports {
+			void __iomem	*cmd_addr;
+			void __iomem	*data_addr;
+			void __iomem	*error_addr;
+			void __iomem	*feature_addr;
+			void __iomem	*nsect_addr;
+			void __iomem	*lbal_addr;
+			void __iomem	*lbam_addr;
+			void __iomem	*lbah_addr;
+			void __iomem	*device_addr;
+			void __iomem	*status_addr;
+			void __iomem	*command_addr;
+			void __iomem	*altstatus_addr;
+			void __iomem	*ctl_addr;
+		#ifdef CONFIG_ATA_BMDMA
+			void __iomem	*bmdma_addr;
+		#endif /* CONFIG_ATA_BMDMA */
+			void __iomem	*scr_addr;
+	} ata_ioports_s;
 	// #endif /* CONFIG_ATA_SFF */
 
 	// struct ata_host {
@@ -633,7 +632,7 @@
 	// 	struct ata_cpr		cpr[];
 	// };
 
-	typedef struct ata_dev_s {
+	typedef struct ata_device {
 	// 	struct ata_link		*link;
 		unsigned int		devno;		/* 0 or 1 */
 	// 	unsigned int		horkage;	/* List of broken features */
@@ -699,7 +698,7 @@
 	// 	int			spdn_cnt;
 	// 	/* ering is CLEAR_END, read comment above CLEAR_END */
 	// 	struct ata_ering	ering;
-	};
+	} ata_dev_s;
 
 	// /* Fields between ATA_DEVICE_CLEAR_BEGIN and ATA_DEVICE_CLEAR_END are
 	//  * cleared to zero on ata_dev_init().
@@ -776,19 +775,19 @@
 
 	typedef struct ata_port {
 	// 	struct Scsi_Host	*scsi_host; /* our co-allocated scsi host */
-	// 	ata_port_ops_s *ops;
+		ata_port_ops_s	*ops;
 	// 	spinlock_t		*lock;
-	// 	/* Flags owned by the EH context. Only EH should touch these once the
-	// 	port is active */
-	// 	unsigned long		flags;	/* ATA_FLAG_xxx */
-	// 	/* Flags that change dynamically, protected by ap->lock */
-	// 	unsigned int		pflags; /* ATA_PFLAG_xxx */
+		/* Flags owned by the EH context. Only EH should touch these once the
+		   port is active */
+		unsigned long		flags;	/* ATA_FLAG_xxx */
+		/* Flags that change dynamically, protected by ap->lock */
+		unsigned int		pflags; /* ATA_PFLAG_xxx */
 	// 	unsigned int		print_id; /* user visible unique port ID */
-	// 	unsigned int            local_port_no; /* host local port num */
-	// 	unsigned int		port_no; /* 0 based port no. inside the host */
+	// 	unsigned int		local_port_no; /* host local port num */
+		unsigned int		port_no; /* 0 based port no. inside the host */
 
 	// #ifdef CONFIG_ATA_SFF
-	// 	struct ata_ioports	ioaddr;	/* ATA cmd/ctl/dma register blocks */
+		ata_ioports_s	ioaddr;	/* ATA cmd/ctl/dma register blocks */
 	// 	u8			ctl;	/* cache of ATA control register */
 	// 	u8			last_ctl;	/* Cache last written value */
 	// 	struct ata_link*	sff_pio_task_link; /* link currently used */
@@ -917,13 +916,13 @@
 	// 	void (*host_stop)(struct ata_host *host);
 
 	// #ifdef CONFIG_ATA_SFF
-	// 	/*
-	// 	 * SFF / taskfile oriented ops
-	// 	 */
-	// 	void (*sff_dev_select)(ata_port_s *ap, unsigned int device);
+		/*
+		 * SFF / taskfile oriented ops
+		 */
+		void (*sff_dev_select)(ata_port_s *ap, unsigned int device);
 	// 	void (*sff_set_devctl)(ata_port_s *ap, u8 ctl);
 	// 	u8   (*sff_check_status)(ata_port_s *ap);
-	// 	u8   (*sff_check_altstatus)(ata_port_s *ap);
+		u8   (*sff_check_altstatus)(ata_port_s *ap);
 	// 	void (*sff_tf_load)(ata_port_s *ap, const ata_tf_s *tf);
 	// 	void (*sff_tf_read)(ata_port_s *ap, ata_tf_s *tf);
 	// 	void (*sff_exec_command)(ata_port_s *ap,
@@ -965,15 +964,15 @@
 	// 	const ata_port_ops_s	*inherits;
 	} ata_port_ops_s;
 
-	// typedef struct ata_port_info {
-	// 	unsigned long	flags;
-	// 	unsigned long	link_flags;
-	// 	unsigned long	pio_mask;
-	// 	unsigned long	mwdma_mask;
-	// 	unsigned long	udma_mask;
-	// 	ata_port_ops_s	*port_ops;
-	// 	void 			*private_data;
-	// } ata_port_info_s;
+	typedef struct ata_port_info {
+		unsigned long	flags;
+		unsigned long	link_flags;
+		unsigned long	pio_mask;
+		unsigned long	mwdma_mask;
+		unsigned long	udma_mask;
+		ata_port_ops_s	*port_ops;
+		void 			*private_data;
+	} ata_port_info_s;
 
 	// struct ata_timing {
 	// 	unsigned short	mode;		/* ATA mode */
@@ -988,11 +987,11 @@
 	// 	unsigned short	udma;		/* t2CYCTYP/2 */
 	// };
 
-	// /*
-	//  * Core layer - drivers/ata/libata-core.c
-	//  */
-	// extern ata_port_ops_s			ata_dummy_port_ops;
-	// extern const ata_port_info_s	ata_dummy_port_info;
+	/*
+	 * Core layer - drivers/ata/libata-core.c
+	 */
+	extern ata_port_ops_s			ata_dummy_port_ops;
+	extern const ata_port_info_s	ata_dummy_port_info;
 
 	static inline bool ata_is_atapi(u8 prot) {
 		return prot & ATA_PROT_FLAG_ATAPI;
@@ -1657,50 +1656,50 @@
 	// 	for ((dev) = ata_dev_next(NULL, (link), ATA_DITER_##mode); (dev); \
 	// 		(dev) = ata_dev_next((dev), (link), ATA_DITER_##mode))
 
-	/**
-	 *	ata_ncq_enabled - Test whether NCQ is enabled
-	 *	@dev: ATA device to test for
-	 *
-	 *	LOCKING:
-	 *	spin_lock_irqsave(host lock)
-	 *
-	 *	RETURNS:
-	 *	1 if NCQ is enabled for @dev, 0 otherwise.
-	 */
-	static inline int ata_ncq_enabled(ata_dev_s *dev)
-	{
-		if (!IS_ENABLED(CONFIG_SATA_HOST))
-			return 0;
-		return (dev->flags & (ATA_DFLAG_PIO | ATA_DFLAG_NCQ_OFF |
-					ATA_DFLAG_NCQ)) == ATA_DFLAG_NCQ;
-	}
+	// /**
+	//  *	ata_ncq_enabled - Test whether NCQ is enabled
+	//  *	@dev: ATA device to test for
+	//  *
+	//  *	LOCKING:
+	//  *	spin_lock_irqsave(host lock)
+	//  *
+	//  *	RETURNS:
+	//  *	1 if NCQ is enabled for @dev, 0 otherwise.
+	//  */
+	// static inline int ata_ncq_enabled(ata_dev_s *dev)
+	// {
+	// 	if (!IS_ENABLED(CONFIG_SATA_HOST))
+	// 		return 0;
+	// 	return (dev->flags & (ATA_DFLAG_PIO | ATA_DFLAG_NCQ_OFF |
+	// 				ATA_DFLAG_NCQ)) == ATA_DFLAG_NCQ;
+	// }
 
-	static inline bool
-	ata_fpdma_dsm_supported(ata_dev_s *dev) {
-		return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
-			(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_DSM_OFFSET] &
-			ATA_LOG_NCQ_SEND_RECV_DSM_TRIM);
-	}
+	// static inline bool
+	// ata_fpdma_dsm_supported(ata_dev_s *dev) {
+	// 	return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
+	// 		(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_DSM_OFFSET] &
+	// 		ATA_LOG_NCQ_SEND_RECV_DSM_TRIM);
+	// }
 
-	static inline bool
-	ata_fpdma_read_log_supported(ata_dev_s *dev) {
-		return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
-			(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_RD_LOG_OFFSET] &
-			ATA_LOG_NCQ_SEND_RECV_RD_LOG_SUPPORTED);
-	}
+	// static inline bool
+	// ata_fpdma_read_log_supported(ata_dev_s *dev) {
+	// 	return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
+	// 		(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_RD_LOG_OFFSET] &
+	// 		ATA_LOG_NCQ_SEND_RECV_RD_LOG_SUPPORTED);
+	// }
 
-	static inline bool
-	ata_fpdma_zac_mgmt_in_supported(ata_dev_s *dev) {
-		return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
-			(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_ZAC_MGMT_OFFSET] &
-			ATA_LOG_NCQ_SEND_RECV_ZAC_MGMT_IN_SUPPORTED);
-	}
+	// static inline bool
+	// ata_fpdma_zac_mgmt_in_supported(ata_dev_s *dev) {
+	// 	return (dev->flags & ATA_DFLAG_NCQ_SEND_RECV) &&
+	// 		(dev->ncq_send_recv_cmds[ATA_LOG_NCQ_SEND_RECV_ZAC_MGMT_OFFSET] &
+	// 		ATA_LOG_NCQ_SEND_RECV_ZAC_MGMT_IN_SUPPORTED);
+	// }
 
-	static inline bool
-	ata_fpdma_zac_mgmt_out_supported(ata_dev_s *dev) {
-		return (dev->ncq_non_data_cmds[ATA_LOG_NCQ_NON_DATA_ZAC_MGMT_OFFSET] &
-			ATA_LOG_NCQ_NON_DATA_ZAC_MGMT_OUT);
-	}
+	// static inline bool
+	// ata_fpdma_zac_mgmt_out_supported(ata_dev_s *dev) {
+	// 	return (dev->ncq_non_data_cmds[ATA_LOG_NCQ_NON_DATA_ZAC_MGMT_OFFSET] &
+	// 		ATA_LOG_NCQ_NON_DATA_ZAC_MGMT_OUT);
+	// }
 
 	// static inline void
 	// ata_qc_set_polling(struct ata_queued_cmd *qc) {
@@ -1766,11 +1765,11 @@
 	// 	qc->result_tf.feature = 0;
 	// }
 
-	static inline int ata_try_flush_cache(const ata_dev_s *dev) {
-		return ata_id_wcache_enabled(dev->id) ||
-			ata_id_has_flush(dev->id) ||
-			ata_id_has_flush_ext(dev->id);
-	}
+	// static inline int ata_try_flush_cache(const ata_dev_s *dev) {
+	// 	return ata_id_wcache_enabled(dev->id) ||
+	// 		ata_id_has_flush(dev->id) ||
+	// 		ata_id_has_flush_ext(dev->id);
+	// }
 
 	static inline unsigned int ac_err_mask(u8 status) {
 		if (status & (ATA_BUSY | ATA_DRQ))
@@ -1803,30 +1802,30 @@
 		return 0;
 	}
 
-	static inline unsigned long
-	ata_deadline(unsigned long from_jiffies, unsigned long timeout_msecs) {
-		return from_jiffies + msecs_to_jiffies(timeout_msecs);
-	}
+	// static inline unsigned long
+	// ata_deadline(unsigned long from_jiffies, unsigned long timeout_msecs) {
+	// 	return from_jiffies + msecs_to_jiffies(timeout_msecs);
+	// }
 
-	/* Don't open code these in drivers as there are traps. Firstly the range may
-	change in future hardware and specs, secondly 0xFF means 'no DMA' but is
-	> UDMA_0. Dyma ddreigiau */
+	// /* Don't open code these in drivers as there are traps. Firstly the range may
+	// change in future hardware and specs, secondly 0xFF means 'no DMA' but is
+	// > UDMA_0. Dyma ddreigiau */
 
-	static inline int ata_using_mwdma(ata_dev_s *adev) {
-		if (adev->dma_mode >= XFER_MW_DMA_0 && adev->dma_mode <= XFER_MW_DMA_4)
-			return 1;
-		return 0;
-	}
+	// static inline int ata_using_mwdma(ata_dev_s *adev) {
+	// 	if (adev->dma_mode >= XFER_MW_DMA_0 && adev->dma_mode <= XFER_MW_DMA_4)
+	// 		return 1;
+	// 	return 0;
+	// }
 
-	static inline int ata_using_udma(ata_dev_s *adev) {
-		if (adev->dma_mode >= XFER_UDMA_0 && adev->dma_mode <= XFER_UDMA_7)
-			return 1;
-		return 0;
-	}
+	// static inline int ata_using_udma(ata_dev_s *adev) {
+	// 	if (adev->dma_mode >= XFER_UDMA_0 && adev->dma_mode <= XFER_UDMA_7)
+	// 		return 1;
+	// 	return 0;
+	// }
 
-	static inline int ata_dma_enabled(ata_dev_s *adev) {
-		return (adev->dma_mode == 0xFF ? 0 : 1);
-	}
+	// static inline int ata_dma_enabled(ata_dev_s *adev) {
+	// 	return (adev->dma_mode == 0xFF ? 0 : 1);
+	// }
 
 	// /**************************************************************************
 	//  * PATA timings - drivers/ata/libata-pata-timings.c
@@ -1866,9 +1865,9 @@
 	// 		.sg_tablesize		= LIBATA_MAX_PRD,		\
 	// 		.dma_boundary		= ATA_DMA_BOUNDARY
 
-	// 	extern void ata_sff_dev_select(ata_port_s *ap, unsigned int device);
+		extern void ata_sff_dev_select(ata_port_s *ap, unsigned int device);
 	// 	extern u8 ata_sff_check_status(ata_port_s *ap);
-	// 	extern void ata_sff_pause(ata_port_s *ap);
+		extern void ata_sff_pause(ata_port_s *ap);
 	// 	extern void ata_sff_dma_pause(ata_port_s *ap);
 	// 	extern int ata_sff_busy_sleep(ata_port_s *ap,
 	// 					unsigned long timeout_pat, unsigned long timeout);

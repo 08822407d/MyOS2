@@ -1,0 +1,4 @@
+file(GLOB ARCH_LIB_C_SRCS *.c)
+file(GLOB ARCH_LIB_ASM_SRCS *.S)
+
+target_sources(kern PRIVATE ${ARCH_LIB_C_SRCS} ${ARCH_LIB_ASM_SRCS})

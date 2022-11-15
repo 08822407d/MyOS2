@@ -18,7 +18,7 @@
 #include <linux/mm/memblock.h>
 
 #include <asm/sections.h>
-// #include <linux/io.h>
+// #include <linux/kernel/io.h>
 
 #include "internal.h"
 
