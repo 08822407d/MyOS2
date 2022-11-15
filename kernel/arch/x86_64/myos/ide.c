@@ -96,7 +96,7 @@ static void ATA_dev_info(unsigned controller, unsigned disk)
 static bool ATA_identify(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
-	outb(0xEC | disk << 4, IDE_PIO_CMD_STAT(controller));
+	outb(0xA0 | disk << 4, IDE_PIO_CMD_STAT(controller));
 	
 	u64 lba_mid = inb(IDE_PIO_LBA_MID(controller));	
 	u64 lba_high = inb(IDE_PIO_LBA_HIGH(controller));
@@ -329,6 +329,7 @@ void ATA_disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 	node->end_handler(parameter);	
 }
 
+extern void myos_ata_probe();
 void init_disk()
 {
 	ioapic_retentry_T entry;
@@ -385,6 +386,8 @@ void init_disk()
 		color_printk(RED, BLACK, "No ide device was found\n");
 
 	outb(0, IED_PIO_CTRL_BASE(MASTER));
+
+	myos_ata_probe();
 
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);

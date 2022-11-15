@@ -59,7 +59,6 @@ const struct ata_port_operations ata_sff_port_ops = {
  *	LOCKING:
  *	Inherited from caller.
  */
-
 static void ata_sff_sync(ata_port_s *ap)
 {
 	if (ap->ops->sff_check_altstatus)
@@ -129,7 +128,7 @@ void ata_sff_dev_select(ata_port_s *ap, unsigned int device)
  *	LOCKING:
  *	caller.
  */
-static unsigned int ata_devchk(ata_port_s *ap, unsigned int device)
+unsigned int ata_devchk(ata_port_s *ap, unsigned int device)
 {
 	ata_ioports_s *ioaddr = &ap->ioaddr;
 	u8 nsect, lbal;

@@ -1856,7 +1856,7 @@
 	//  * SFF - drivers/ata/libata-sff.c
 	//  */
 	// #ifdef CONFIG_ATA_SFF
-	// 	extern const ata_port_ops_s ata_sff_port_ops;
+		extern const ata_port_ops_s ata_sff_port_ops;
 	// 	extern const ata_port_ops_s ata_bmdma32_port_ops;
 
 	// 	/* PIO only, sg_tablesize and dma_boundary limits can be removed */
@@ -2006,6 +2006,8 @@
 
 	// 		return status;
 	// 	}
+
+	unsigned int ata_devchk(ata_port_s *ap, unsigned int device);
 	// #endif /* CONFIG_ATA_SFF */
 
 #endif /* __LINUX_LIBATA_H__ */
