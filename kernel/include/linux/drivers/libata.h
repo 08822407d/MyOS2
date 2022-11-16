@@ -525,24 +525,40 @@
 	} ata_tf_s;
 
 	// #ifdef CONFIG_ATA_SFF
+	// 	typedef struct ata_ioports {
+	// 		void __iomem	*cmd_addr;
+	// 		void __iomem	*data_addr;
+	// 		void __iomem	*error_addr;
+	// 		void __iomem	*feature_addr;
+	// 		void __iomem	*nsect_addr;
+	// 		void __iomem	*lbal_addr;
+	// 		void __iomem	*lbam_addr;
+	// 		void __iomem	*lbah_addr;
+	// 		void __iomem	*device_addr;
+	// 		void __iomem	*status_addr;
+	// 		void __iomem	*command_addr;
+	// 		void __iomem	*altstatus_addr;
+	// 		void __iomem	*ctl_addr;
+	// 	#ifdef CONFIG_ATA_BMDMA
+	// 		void __iomem	*bmdma_addr;
+	// 	#endif /* CONFIG_ATA_BMDMA */
+	// 		void __iomem	*scr_addr;
+	// } ata_ioports_s;
 		typedef struct ata_ioports {
-			void __iomem	*cmd_addr;
-			void __iomem	*data_addr;
-			void __iomem	*error_addr;
-			void __iomem	*feature_addr;
-			void __iomem	*nsect_addr;
-			void __iomem	*lbal_addr;
-			void __iomem	*lbam_addr;
-			void __iomem	*lbah_addr;
-			void __iomem	*device_addr;
-			void __iomem	*status_addr;
-			void __iomem	*command_addr;
-			void __iomem	*altstatus_addr;
-			void __iomem	*ctl_addr;
-		#ifdef CONFIG_ATA_BMDMA
-			void __iomem	*bmdma_addr;
-		#endif /* CONFIG_ATA_BMDMA */
-			void __iomem	*scr_addr;
+			int		cmd_addr;
+			int		data_addr;
+			int		error_addr;
+			int		feature_addr;
+			int		nsect_addr;
+			int		lbal_addr;
+			int		lbam_addr;
+			int		lbah_addr;
+			int		device_addr;
+			int		status_addr;
+			int		command_addr;
+			int		altstatus_addr;
+			int		ctl_addr;
+			int		scr_addr;
 	} ata_ioports_s;
 	// #endif /* CONFIG_ATA_SFF */
 

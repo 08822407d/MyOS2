@@ -18,10 +18,6 @@
 static task_s *thread;
 bdev_req_queue_T IDE_req_queue;
 
-bool	ide0_0, ide0_1,
-		ide1_0, ide1_1;
-
-
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
@@ -349,76 +345,18 @@ void init_disk()
 
 	entry.vector = VECTOR_IRQ(SATA_MAST_IRQ);
 	register_irq(SATA_MAST_IRQ, &entry , "ATA-master",
-				 (unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
-				 &ATA_disk_handler);
+			(unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
+			&ATA_disk_handler);
 
 	entry.vector = VECTOR_IRQ(SATA_SLAV_IRQ);
 	register_irq(SATA_SLAV_IRQ, &entry , "ATA-slave",
-				 (unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
-				 &ATA_disk_handler);
+			(unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
+			&ATA_disk_handler);
 	
-	ide0_0 = ide0_1 = ide1_0 = ide1_1 = false;
-	outb(0x88, IDE_PIO_LBA_LOW(MASTER));
-	outb(0x88, IDE_PIO_LBA_LOW(SLAVE));
-	int ide0_mgc = inb(IDE_PIO_LBA_LOW(MASTER));
-	int ide1_mgc = inb(IDE_PIO_LBA_LOW(SLAVE));
-	if (ide0_mgc == 0x88)
-	{
-		ide0_0 = ATA_identify(MASTER, MASTER);
-		ide0_1 = ATA_identify(MASTER, SLAVE);
-		if (ide0_0)
-			color_printk(WHITE, BLACK, "Found ide 0:0 device\n");
-		if (ide0_1)
-			color_printk(WHITE, BLACK, "Found ide 0:1 device\n");
-
-	}
-	if (ide1_mgc == 0x88)
-	{
-		ide1_0 = ATA_identify(SLAVE, MASTER);
-		ide1_1 = ATA_identify(SLAVE, SLAVE);
-		if (ide1_0)
-			color_printk(WHITE, BLACK, "Found ide 1:0 device\n");
-		if (ide1_1)
-			color_printk(WHITE, BLACK, "Found ide 1:1 device\n");
-	}
-	if (!ide0_0 && !ide0_1 &&
-		!ide1_0 && !ide1_1)
-		color_printk(RED, BLACK, "No ide device was found\n");
-
-	outb(0, IED_PIO_CTRL_BASE(MASTER));
-
 	myos_ata_probe();
 
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
-}
-
-void get_ata_info()
-{
-	IDE_id_dev_data_s ide_disk_info[4];
-	if (ide0_0)
-	{
-		ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
-						(unsigned char *)&ide_disk_info[0]);
-	}
-
-	if (ide0_1)
-	{
-		ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0,
-						(unsigned char *)&ide_disk_info[1]);
-	}
-
-	if (ide1_0)
-	{
-		ATA_disk_transfer(SLAVE, MASTER, ATA_INFO_CMD, 0, 0,
-						(unsigned char *)&ide_disk_info[2]);
-	}
-
-	if (ide1_1)
-	{
-		ATA_disk_transfer(SLAVE, SLAVE, ATA_INFO_CMD, 0, 0,
-						(unsigned char *)&ide_disk_info[3]);
-	}
 }
 
 void disk_exit()

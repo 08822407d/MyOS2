@@ -271,7 +271,6 @@ static void do_basic_setup(void)
 
 
 extern int ata_probe();
-extern void get_ata_info(void);
 extern void init_ATArqd();
 extern void kjmp_to_doexecve();
 unsigned long kernel_init(unsigned long arg)
@@ -280,8 +279,6 @@ unsigned long kernel_init(unsigned long arg)
 	// do_name();
 	// ata_probe();
 	init_ATArqd();
-
-	get_ata_info();
 	
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();

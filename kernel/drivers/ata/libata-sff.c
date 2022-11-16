@@ -64,7 +64,7 @@ static void ata_sff_sync(ata_port_s *ap)
 	if (ap->ops->sff_check_altstatus)
 		ap->ops->sff_check_altstatus(ap);
 	else if (ap->ioaddr.altstatus_addr)
-		ioread8(ap->ioaddr.altstatus_addr);
+		inb(ap->ioaddr.altstatus_addr);
 }
 
 /**
@@ -106,7 +106,7 @@ void ata_sff_dev_select(ata_port_s *ap, unsigned int device)
 		tmp = ATA_DEVICE_OBS;
 	else
 		tmp = ATA_DEVICE_OBS | ATA_DEV1;
-	iowrite8(tmp, ap->ioaddr.device_addr);
+	outb(tmp, ap->ioaddr.device_addr);
 	ata_sff_pause(ap);	/* needed; also flushes, for mmio */
 }
 
@@ -135,17 +135,17 @@ unsigned int ata_devchk(ata_port_s *ap, unsigned int device)
 
 	ap->ops->sff_dev_select(ap, device);
 
-	iowrite8(0x55, ioaddr->nsect_addr);
-	iowrite8(0xaa, ioaddr->lbal_addr);
+	outb(0x55, ioaddr->nsect_addr);
+	outb(0xaa, ioaddr->lbal_addr);
 
-	iowrite8(0xaa, ioaddr->nsect_addr);
-	iowrite8(0x55, ioaddr->lbal_addr);
+	outb(0xaa, ioaddr->nsect_addr);
+	outb(0x55, ioaddr->lbal_addr);
 
-	iowrite8(0x55, ioaddr->nsect_addr);
-	iowrite8(0xaa, ioaddr->lbal_addr);
+	outb(0x55, ioaddr->nsect_addr);
+	outb(0xaa, ioaddr->lbal_addr);
 
-	nsect = ioread8(ioaddr->nsect_addr);
-	lbal = ioread8(ioaddr->lbal_addr);
+	nsect = inb(ioaddr->nsect_addr);
+	lbal = inb(ioaddr->lbal_addr);
 
 	if ((nsect == 0x55) && (lbal == 0xaa))
 		return 1;	/* we found a device */

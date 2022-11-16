@@ -1,37 +1,71 @@
 #include <linux/drivers/libata.h>
 
+// ata_ioports_s ioaddr_master =
+// {
+// 	.cmd_addr		= (void *)0x1f0,
+// 	.data_addr		= (void *)0x1f0,
+// 	.error_addr		= (void *)0x1f1,
+// 	.feature_addr	= (void *)0x1f1,
+// 	.nsect_addr		= (void *)0x1f2,
+// 	.lbal_addr		= (void *)0x1f3,
+// 	.lbam_addr		= (void *)0x1f4,
+// 	.lbah_addr		= (void *)0x1f5,
+// 	.device_addr	= (void *)0x1f6,
+// 	.status_addr	= (void *)0x1f7,
+// 	.command_addr	= (void *)0x1f7,
+// 	.altstatus_addr	= (void *)0x3f6,
+// 	.ctl_addr		= (void *)0x3f6,
+// };
+
+// ata_ioports_s ioaddr_slave =
+// {
+// 	.cmd_addr		= (void *)0x170,
+// 	.data_addr		= (void *)0x170,
+// 	.error_addr		= (void *)0x171,
+// 	.feature_addr	= (void *)0x171,
+// 	.nsect_addr		= (void *)0x172,
+// 	.lbal_addr		= (void *)0x173,
+// 	.lbam_addr		= (void *)0x174,
+// 	.lbah_addr		= (void *)0x175,
+// 	.device_addr	= (void *)0x176,
+// 	.status_addr	= (void *)0x177,
+// 	.command_addr	= (void *)0x177,
+// 	.altstatus_addr	= (void *)0x376,
+// 	.ctl_addr		= (void *)0x376,
+// };
+
 ata_ioports_s ioaddr_master =
 {
-	.cmd_addr		= (void *)0x1f0,
-	.data_addr		= (void *)0x1f0,
-	.error_addr		= (void *)0x1f1,
-	.feature_addr	= (void *)0x1f1,
-	.nsect_addr		= (void *)0x1f2,
-	.lbal_addr		= (void *)0x1f3,
-	.lbam_addr		= (void *)0x1f4,
-	.lbah_addr		= (void *)0x1f5,
-	.device_addr	= (void *)0x1f6,
-	.status_addr	= (void *)0x1f7,
-	.command_addr	= (void *)0x1f7,
-	.altstatus_addr	= (void *)0x3f6,
-	.ctl_addr		= (void *)0x3f6,
+	.cmd_addr		= 0x1f0,
+	.data_addr		= 0x1f0,
+	.error_addr		= 0x1f1,
+	.feature_addr	= 0x1f1,
+	.nsect_addr		= 0x1f2,
+	.lbal_addr		= 0x1f3,
+	.lbam_addr		= 0x1f4,
+	.lbah_addr		= 0x1f5,
+	.device_addr	= 0x1f6,
+	.status_addr	= 0x1f7,
+	.command_addr	= 0x1f7,
+	.altstatus_addr	= 0x3f6,
+	.ctl_addr		= 0x3f6,
 };
 
 ata_ioports_s ioaddr_slave =
 {
-	.cmd_addr		= (void *)0x170,
-	.data_addr		= (void *)0x170,
-	.error_addr		= (void *)0x171,
-	.feature_addr	= (void *)0x171,
-	.nsect_addr		= (void *)0x172,
-	.lbal_addr		= (void *)0x173,
-	.lbam_addr		= (void *)0x174,
-	.lbah_addr		= (void *)0x175,
-	.device_addr	= (void *)0x176,
-	.status_addr	= (void *)0x177,
-	.command_addr	= (void *)0x177,
-	.altstatus_addr	= (void *)0x376,
-	.ctl_addr		= (void *)0x376,
+	.cmd_addr		= 0x170,
+	.data_addr		= 0x170,
+	.error_addr		= 0x171,
+	.feature_addr	= 0x171,
+	.nsect_addr		= 0x172,
+	.lbal_addr		= 0x173,
+	.lbam_addr		= 0x174,
+	.lbah_addr		= 0x175,
+	.device_addr	= 0x176,
+	.status_addr	= 0x177,
+	.command_addr	= 0x177,
+	.altstatus_addr	= 0x376,
+	.ctl_addr		= 0x376,
 };
 
 enum {
@@ -43,9 +77,38 @@ enum {
 
 ata_port_s ide_ports[4];
 
+void get_ata_info()
+{
+	// IDE_id_dev_data_s ide_disk_info[4];
+	// if (ide0_0)
+	// {
+	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
+	// 					(unsigned char *)&ide_disk_info[0]);
+	// }
+
+	// if (ide0_1)
+	// {
+	// 	ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0,
+	// 					(unsigned char *)&ide_disk_info[1]);
+	// }
+
+	// if (ide1_0)
+	// {
+	// 	ATA_disk_transfer(SLAVE, MASTER, ATA_INFO_CMD, 0, 0,
+	// 					(unsigned char *)&ide_disk_info[2]);
+	// }
+
+	// if (ide1_1)
+	// {
+	// 	ATA_disk_transfer(SLAVE, SLAVE, ATA_INFO_CMD, 0, 0,
+	// 					(unsigned char *)&ide_disk_info[3]);
+	// }
+}
+
 void myos_ata_port_probe(ata_port_s *ap)
 {
-
+	ata_ioports_s *ioaddr = &ap->ioaddr;
+	outb(0, ioaddr->ctl_addr);
 }
 
 void myos_ata_probe()
