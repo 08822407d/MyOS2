@@ -44,12 +44,12 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 		sudo umount /mnt
 	fi
 	# copy files to sata phys-disk
-	if [ -e "/dev/sda1" ]; then
-		echo "installing on physical disk"
-		sudo mount /dev/sda1 /mnt -o uid=$USER,gid=$USER
-		install_files
-		sudo umount /mnt
-	fi
+	# if [ -e "/dev/sda1" ]; then
+	# 	echo "installing on physical disk"
+	# 	sudo mount /dev/sda1 /mnt -o uid=$USER,gid=$USER
+	# 	install_files
+	# 	sudo umount /mnt
+	# fi
 	objdump -S kern > k_dasm.txt
 	objdump -S init > init_dasm.txt
 	objdump -S shell > sh_dasm.txt

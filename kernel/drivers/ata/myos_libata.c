@@ -1,6 +1,7 @@
+#include <linux/kernel/slab.h>
 #include <linux/drivers/libata.h>
 
-// ata_ioports_s ioaddr_master =
+// ata_iops_s ioaddr_master =
 // {
 // 	.cmd_addr		= (void *)0x1f0,
 // 	.data_addr		= (void *)0x1f0,
@@ -17,7 +18,7 @@
 // 	.ctl_addr		= (void *)0x3f6,
 // };
 
-// ata_ioports_s ioaddr_slave =
+// ata_iops_s ioaddr_slave =
 // {
 // 	.cmd_addr		= (void *)0x170,
 // 	.data_addr		= (void *)0x170,
@@ -34,7 +35,7 @@
 // 	.ctl_addr		= (void *)0x376,
 // };
 
-ata_ioports_s ioaddr_master =
+ata_iops_s ioaddr_master =
 {
 	.cmd_addr		= 0x1f0,
 	.data_addr		= 0x1f0,
@@ -51,7 +52,7 @@ ata_ioports_s ioaddr_master =
 	.ctl_addr		= 0x3f6,
 };
 
-ata_ioports_s ioaddr_slave =
+ata_iops_s ioaddr_slave =
 {
 	.cmd_addr		= 0x170,
 	.data_addr		= 0x170,
@@ -75,59 +76,45 @@ enum {
 	IDE_1_1,
 };
 
-ata_port_s ide_ports[4];
+ata_dev_s ide_disks[4];
 
-void get_ata_info()
+long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
+		unsigned long blk_idx, long count, unsigned char * buffer);
+void myos_ata_port_probe(ata_dev_s *hdd)
 {
-	// IDE_id_dev_data_s ide_disk_info[4];
-	// if (ide0_0)
-	// {
+	ata_port_s *ap = &(hdd->ap);
+	ata_iops_s *ioaddr = &(ap->ioaddr);
+	outb(0, ioaddr->ctl_addr);
+
 	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 	// 					(unsigned char *)&ide_disk_info[0]);
-	// }
-
-	// if (ide0_1)
-	// {
-	// 	ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0,
-	// 					(unsigned char *)&ide_disk_info[1]);
-	// }
-
-	// if (ide1_0)
-	// {
-	// 	ATA_disk_transfer(SLAVE, MASTER, ATA_INFO_CMD, 0, 0,
-	// 					(unsigned char *)&ide_disk_info[2]);
-	// }
-
-	// if (ide1_1)
-	// {
-	// 	ATA_disk_transfer(SLAVE, SLAVE, ATA_INFO_CMD, 0, 0,
-	// 					(unsigned char *)&ide_disk_info[3]);
-	// }
-}
-
-void myos_ata_port_probe(ata_port_s *ap)
-{
-	ata_ioports_s *ioaddr = &ap->ioaddr;
-	outb(0, ioaddr->ctl_addr);
+	ATA_disk_transfer(hdd->devno, ap->port_no, ATA_CMD_STANDBYNOW1,
+			0, 0, (unsigned char *)hdd->id);
 }
 
 void myos_ata_probe()
 {
-	ide_ports[IDE_0_0].port_no = 0;
-	ide_ports[IDE_0_1].port_no = 1;
-	ide_ports[IDE_1_0].port_no = 0;
-	ide_ports[IDE_1_1].port_no = 1;
+	ide_disks[IDE_0_0].devno = 0;
+	ide_disks[IDE_0_1].devno = 0;
+	ide_disks[IDE_1_0].devno = 1;
+	ide_disks[IDE_1_1].devno = 1;
 
-	ide_ports[IDE_0_0].ioaddr =
-	ide_ports[IDE_0_1].ioaddr = ioaddr_master;
-	ide_ports[IDE_1_0].ioaddr =
-	ide_ports[IDE_1_1].ioaddr = ioaddr_slave;
+	ide_disks[IDE_0_0].ap.port_no = 0;
+	ide_disks[IDE_0_1].ap.port_no = 1;
+	ide_disks[IDE_1_0].ap.port_no = 0;
+	ide_disks[IDE_1_1].ap.port_no = 1;
+
+	ide_disks[IDE_0_0].ap.ioaddr =
+	ide_disks[IDE_0_1].ap.ioaddr = ioaddr_master;
+	ide_disks[IDE_1_0].ap.ioaddr =
+	ide_disks[IDE_1_1].ap.ioaddr = ioaddr_slave;
 
 	for (int i = 0; i < 4; i++)
 	{
-		ata_port_s *ap = &ide_ports[i];
+		ata_dev_s *hdd = &ide_disks[i];
+		ata_port_s *ap = &(hdd->ap);
 		ap->ops = (ata_port_ops_s *)&ata_sff_port_ops;
 		if (ata_devchk(ap, ap->port_no))
-			myos_ata_port_probe(ap);
+			myos_ata_port_probe(hdd);
 	}
 }

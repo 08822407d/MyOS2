@@ -44,7 +44,7 @@
 	// #endif
 	// extern u64 ata_tf_to_lba(const struct ata_taskfile *tf);
 	// extern u64 ata_tf_to_lba48(const struct ata_taskfile *tf);
-	// extern struct ata_queued_cmd *ata_qc_new_init(struct ata_device *dev, int tag);
+	// extern ata_q_cmd_s *ata_qc_new_init(struct ata_device *dev, int tag);
 	// extern int ata_build_rw_tf(struct ata_taskfile *tf, struct ata_device *dev,
 	// 			u64 block, u32 n_block, unsigned int tf_flags,
 	// 			unsigned int tag, int class);
@@ -70,10 +70,10 @@
 	// extern int ata_down_xfermask_limit(struct ata_device *dev, unsigned int sel);
 	// extern unsigned int ata_dev_set_feature(struct ata_device *dev,
 	// 					u8 enable, u8 feature);
-	// extern void ata_qc_free(struct ata_queued_cmd *qc);
-	// extern void ata_qc_issue(struct ata_queued_cmd *qc);
-	// extern void __ata_qc_complete(struct ata_queued_cmd *qc);
-	// extern int atapi_check_dma(struct ata_queued_cmd *qc);
+	// extern void ata_qc_free(ata_q_cmd_s *qc);
+	// extern void ata_qc_issue(ata_q_cmd_s *qc);
+	// extern void __ata_qc_complete(ata_q_cmd_s *qc);
+	// extern int atapi_check_dma(ata_q_cmd_s *qc);
 	// extern void swap_buf_le16(u16 *buf, unsigned int buf_words);
 	// extern bool ata_phys_link_online(struct ata_link *link);
 	// extern bool ata_phys_link_offline(struct ata_link *link);
@@ -157,7 +157,7 @@
 	// extern void ata_eh_release(struct ata_port *ap);
 	// extern void ata_scsi_error(struct Scsi_Host *host);
 	// extern void ata_eh_fastdrain_timerfn(struct timer_list *t);
-	// extern void ata_qc_schedule_eh(struct ata_queued_cmd *qc);
+	// extern void ata_qc_schedule_eh(ata_q_cmd_s *qc);
 	// extern void ata_dev_disable(struct ata_device *dev);
 	// extern void ata_eh_detach_dev(struct ata_device *dev);
 	// extern void ata_eh_about_to_do(struct ata_link *link, struct ata_device *dev,

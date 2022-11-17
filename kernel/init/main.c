@@ -270,16 +270,18 @@ static void do_basic_setup(void)
 }
 
 
-extern int ata_probe();
+	
+void myos_ata_probe();
 extern void init_ATArqd();
 extern void kjmp_to_doexecve();
 unsigned long kernel_init(unsigned long arg)
 {
 	do_basic_setup();
 	// do_name();
-	// ata_probe();
 	init_ATArqd();
 	
+	myos_ata_probe();
+
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");

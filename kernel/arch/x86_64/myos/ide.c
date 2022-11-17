@@ -50,7 +50,8 @@ static void ATA_write_LBA28(unsigned controller,
 			IDE_PIO_DEV_OPT(controller));
 	outb(0x30, IDE_PIO_CMD_STAT(controller));
 
-	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
+	int s;
+	while(!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
 		nop();
 	outb(ATA_WRITE_CMD, IDE_PIO_CMD_STAT(controller));
 
@@ -83,8 +84,8 @@ static void ATA_dev_info(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
 	outb(0xE0 | disk << 4, IDE_PIO_DEV_OPT(controller));
-
-	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_READY))
+	int s;
+	while(!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
 		nop();			
 	outb(ATA_DISK_IDENTIFY, IDE_PIO_CMD_STAT(controller));
 }
@@ -352,8 +353,6 @@ void init_disk()
 	register_irq(SATA_SLAV_IRQ, &entry , "ATA-slave",
 			(unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
 			&ATA_disk_handler);
-	
-	myos_ata_probe();
 
 	IDE_req_queue.in_using = NULL;
 	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
