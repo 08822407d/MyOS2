@@ -394,7 +394,7 @@ ata_sff_data_xfer(ata_q_cmd_s *qc, unsigned char *buf, unsigned int buflen, int 
 unsigned int
 ata_sff_data_xfer32(ata_q_cmd_s *qc, unsigned char *buf, unsigned int buflen, int rw)
 {
-	// struct ata_device *dev = qc->dev;
+	// ata_dev_s *dev = qc->dev;
 	// struct ata_port *ap = dev->link->ap;
 	// void __iomem *data_addr = ap->ioaddr.data_addr;
 	// unsigned int words = buflen >> 2;

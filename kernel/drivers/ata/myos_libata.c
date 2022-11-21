@@ -4,6 +4,8 @@
 #include <linux/block/blkdev.h>
 #include <uapi/kernel/major.h>
 
+#include "libata.h"
+
 
 #define MAX_IDE_DEV_NR 4
 
@@ -97,7 +99,7 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 void myos_ata_port_probe(ata_dev_s *hdd)
 {
 	gendisk_s *gd;
-
+	u16 *ataid = hdd->id;
 	ata_port_s *ap = &(hdd->ap);
 	ata_iops_s *ioaddr = &(ap->ioaddr);
 	outb(0, ioaddr->ctl_addr);
@@ -122,7 +124,8 @@ void myos_ata_port_probe(ata_dev_s *hdd)
 	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 	// 					(unsigned char *)&ide_disk_info[0]);
 	ATA_disk_transfer(hdd->devno, ap->port_no, ATA_CMD_STANDBYNOW1,
-			0, 0, (unsigned char *)hdd->id);
+			0, 0, (unsigned char *)ataid);
+	ata_dev_configure(hdd);
 }
 
 void myos_ata_probe()

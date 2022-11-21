@@ -956,9 +956,9 @@
 		// u8			xfer_mode;
 		// unsigned int	xfer_shift;	/* ATA_SHIFT_xxx */
 
-		// unsigned int	multi_count;	/* sectors count for
-		// 					READ/WRITE MULTIPLE */
-		// unsigned int	max_sectors;	/* per-device max sectors */
+		unsigned int	multi_count;	/* sectors count for
+										   READ/WRITE MULTIPLE */
+		unsigned int	max_sectors;	/* per-device max sectors */
 		// unsigned int	cdb_len;
 
 		// /* per-dev xfer mask */

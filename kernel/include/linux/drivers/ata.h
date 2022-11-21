@@ -550,276 +550,251 @@
 	// 	__le32			flags_len;
 	// };
 
-	// /*
-	// * id tests
-	// */
-	// #define ata_id_is_ata(id)	(((id)[ATA_ID_CONFIG] & (1 << 15)) == 0)
-	// #define ata_id_has_lba(id)	((id)[ATA_ID_CAPABILITY] & (1 << 9))
-	// #define ata_id_has_dma(id)	((id)[ATA_ID_CAPABILITY] & (1 << 8))
-	// #define ata_id_has_ncq(id)	((id)[ATA_ID_SATA_CAPABILITY] & (1 << 8))
-	// #define ata_id_queue_depth(id)	(((id)[ATA_ID_QUEUE_DEPTH] & 0x1f) + 1)
-	// #define ata_id_removable(id)	((id)[ATA_ID_CONFIG] & (1 << 7))
-	// #define ata_id_has_atapi_AN(id)	\
-	// 	((((id)[ATA_ID_SATA_CAPABILITY] != 0x0000) && \
-	// 	((id)[ATA_ID_SATA_CAPABILITY] != 0xffff)) && \
-	// 	((id)[ATA_ID_FEATURE_SUPP] & (1 << 5)))
-	// #define ata_id_has_fpdma_aa(id)	\
-	// 	((((id)[ATA_ID_SATA_CAPABILITY] != 0x0000) && \
-	// 	((id)[ATA_ID_SATA_CAPABILITY] != 0xffff)) && \
-	// 	((id)[ATA_ID_FEATURE_SUPP] & (1 << 2)))
-	// #define ata_id_iordy_disable(id) ((id)[ATA_ID_CAPABILITY] & (1 << 10))
-	// #define ata_id_has_iordy(id) ((id)[ATA_ID_CAPABILITY] & (1 << 11))
-	// #define ata_id_u32(id,n)	\
-	// 	(((u32) (id)[(n) + 1] << 16) | ((u32) (id)[(n)]))
-	// #define ata_id_u64(id,n)	\
-	// 	( ((u64) (id)[(n) + 3] << 48) |	\
-	// 	((u64) (id)[(n) + 2] << 32) |	\
-	// 	((u64) (id)[(n) + 1] << 16) |	\
-	// 	((u64) (id)[(n) + 0]) )
+	/*
+	 * id tests
+	 */
+	#define ata_id_is_ata(id)		(((id)[ATA_ID_CONFIG] & (1 << 15)) == 0)
+	#define ata_id_has_lba(id)		((id)[ATA_ID_CAPABILITY] & (1 << 9))
+	#define ata_id_has_dma(id)		((id)[ATA_ID_CAPABILITY] & (1 << 8))
+	#define ata_id_has_ncq(id)		((id)[ATA_ID_SATA_CAPABILITY] & (1 << 8))
+	#define ata_id_queue_depth(id)	(((id)[ATA_ID_QUEUE_DEPTH] & 0x1f) + 1)
+	#define ata_id_removable(id)	((id)[ATA_ID_CONFIG] & (1 << 7))
+	#define ata_id_has_atapi_AN(id)	(							\
+				(((id)[ATA_ID_SATA_CAPABILITY] != 0x0000) &&	\
+				((id)[ATA_ID_SATA_CAPABILITY] != 0xffff)) &&	\
+				((id)[ATA_ID_FEATURE_SUPP] & (1 << 5))			\
+			)
+	#define ata_id_has_fpdma_aa(id)	(							\
+				(((id)[ATA_ID_SATA_CAPABILITY] != 0x0000) &&	\
+				((id)[ATA_ID_SATA_CAPABILITY] != 0xffff)) &&	\
+				((id)[ATA_ID_FEATURE_SUPP] & (1 << 2))			\
+			)
+	#define ata_id_iordy_disable(id)	((id)[ATA_ID_CAPABILITY] & (1 << 10))
+	#define ata_id_has_iordy(id)		((id)[ATA_ID_CAPABILITY] & (1 << 11))
+	#define ata_id_u32(id,n) (					\
+				((u32) (id)[(n) + 1] << 16) |	\
+				((u32) (id)[(n)])				\
+			)
+	#define ata_id_u64(id,n) (					\
+				((u64) (id)[(n) + 3] << 48) |	\
+				((u64) (id)[(n) + 2] << 32) |	\
+				((u64) (id)[(n) + 1] << 16) |	\
+				((u64) (id)[(n) + 0])			\
+			)
 
-	// #define ata_id_cdb_intr(id)	(((id)[ATA_ID_CONFIG] & 0x60) == 0x20)
-	// #define ata_id_has_da(id)	((id)[ATA_ID_SATA_CAPABILITY_2] & (1 << 4))
-	// #define ata_id_has_devslp(id)	((id)[ATA_ID_FEATURE_SUPP] & (1 << 8))
-	// #define ata_id_has_ncq_autosense(id) \
-	// 				((id)[ATA_ID_FEATURE_SUPP] & (1 << 7))
+	#define ata_id_cdb_intr(id)		(((id)[ATA_ID_CONFIG] & 0x60) == 0x20)
+	#define ata_id_has_da(id)		((id)[ATA_ID_SATA_CAPABILITY_2] & (1 << 4))
+	#define ata_id_has_devslp(id)	((id)[ATA_ID_FEATURE_SUPP] & (1 << 8))
+	#define ata_id_has_ncq_autosense(id) \
+					((id)[ATA_ID_FEATURE_SUPP] & (1 << 7))
 
-	// static inline bool ata_id_has_hipm(const u16 *id)
-	// {
-	// 	u16 val = id[ATA_ID_SATA_CAPABILITY];
+	static inline bool ata_id_has_hipm(const u16 *id) {
+		u16 val = id[ATA_ID_SATA_CAPABILITY];
+		if (val == 0 || val == 0xffff)
+			return false;
+		return val & (1 << 9);
+	}
 
-	// 	if (val == 0 || val == 0xffff)
-	// 		return false;
-
-	// 	return val & (1 << 9);
-	// }
-
-	// static inline bool ata_id_has_dipm(const u16 *id)
-	// {
-	// 	u16 val = id[ATA_ID_FEATURE_SUPP];
-
-	// 	if (val == 0 || val == 0xffff)
-	// 		return false;
-
-	// 	return val & (1 << 3);
-	// }
+	static inline bool ata_id_has_dipm(const u16 *id) {
+		u16 val = id[ATA_ID_FEATURE_SUPP];
+		if (val == 0 || val == 0xffff)
+			return false;
+		return val & (1 << 3);
+	}
 
 
-	// static inline bool ata_id_has_fua(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_CFSSE] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_CFSSE] & (1 << 6);
-	// }
+	static inline bool ata_id_has_fua(const u16 *id) {
+		if ((id[ATA_ID_CFSSE] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_CFSSE] & (1 << 6);
+	}
 
-	// static inline bool ata_id_has_flush(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_2] & (1 << 12);
-	// }
+	static inline bool ata_id_has_flush(const u16 *id) {
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_COMMAND_SET_2] & (1 << 12);
+	}
 
-	// static inline bool ata_id_flush_enabled(const u16 *id)
-	// {
-	// 	if (ata_id_has_flush(id) == 0)
-	// 		return false;
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_CFS_ENABLE_2] & (1 << 12);
-	// }
+	static inline bool ata_id_flush_enabled(const u16 *id) {
+		if (ata_id_has_flush(id) == 0)
+			return false;
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_CFS_ENABLE_2] & (1 << 12);
+	}
 
-	// static inline bool ata_id_has_flush_ext(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_2] & (1 << 13);
-	// }
+	static inline bool ata_id_has_flush_ext(const u16 *id) {
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_COMMAND_SET_2] & (1 << 13);
+	}
 
-	// static inline bool ata_id_flush_ext_enabled(const u16 *id)
-	// {
-	// 	if (ata_id_has_flush_ext(id) == 0)
-	// 		return false;
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	/*
-	// 	* some Maxtor disks have bit 13 defined incorrectly
-	// 	* so check bit 10 too
-	// 	*/
-	// 	return (id[ATA_ID_CFS_ENABLE_2] & 0x2400) == 0x2400;
-	// }
+	static inline bool ata_id_flush_ext_enabled(const u16 *id) {
+		if (ata_id_has_flush_ext(id) == 0)
+			return false;
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		/*
+		 * some Maxtor disks have bit 13 defined incorrectly
+		 * so check bit 10 too
+		 */
+		return (id[ATA_ID_CFS_ENABLE_2] & 0x2400) == 0x2400;
+	}
 
-	// static inline u32 ata_id_logical_sector_size(const u16 *id)
-	// {
-	// 	/* T13/1699-D Revision 6a, Sep 6, 2008. Page 128.
-	// 	* IDENTIFY DEVICE data, word 117-118.
-	// 	* 0xd000 ignores bit 13 (logical:physical > 1)
-	// 	*/
-	// 	if ((id[ATA_ID_SECTOR_SIZE] & 0xd000) == 0x5000)
-	// 		return (((id[ATA_ID_LOGICAL_SECTOR_SIZE+1] << 16)
-	// 			+ id[ATA_ID_LOGICAL_SECTOR_SIZE]) * sizeof(u16)) ;
-	// 	return ATA_SECT_SIZE;
-	// }
+	static inline u32 ata_id_logical_sector_size(const u16 *id) {
+		/* T13/1699-D Revision 6a, Sep 6, 2008. Page 128.
+		 * IDENTIFY DEVICE data, word 117-118.
+		 * 0xd000 ignores bit 13 (logical:physical > 1)
+		 */
+		if ((id[ATA_ID_SECTOR_SIZE] & 0xd000) == 0x5000)
+			return (((id[ATA_ID_LOGICAL_SECTOR_SIZE+1] << 16)
+				+ id[ATA_ID_LOGICAL_SECTOR_SIZE]) * sizeof(u16)) ;
+		return ATA_SECT_SIZE;
+	}
 
-	// static inline u8 ata_id_log2_per_physical_sector(const u16 *id)
-	// {
-	// 	/* T13/1699-D Revision 6a, Sep 6, 2008. Page 128.
-	// 	* IDENTIFY DEVICE data, word 106.
-	// 	* 0xe000 ignores bit 12 (logical sector > 512 bytes)
-	// 	*/
-	// 	if ((id[ATA_ID_SECTOR_SIZE] & 0xe000) == 0x6000)
-	// 		return (id[ATA_ID_SECTOR_SIZE] & 0xf);
-	// 	return 0;
-	// }
+	static inline u8 ata_id_log2_per_physical_sector(const u16 *id) {
+		/* T13/1699-D Revision 6a, Sep 6, 2008. Page 128.
+		 * IDENTIFY DEVICE data, word 106.
+		 * 0xe000 ignores bit 12 (logical sector > 512 bytes)
+		 */
+		if ((id[ATA_ID_SECTOR_SIZE] & 0xe000) == 0x6000)
+			return (id[ATA_ID_SECTOR_SIZE] & 0xf);
+		return 0;
+	}
 
-	// /* Offset of logical sectors relative to physical sectors.
-	// *
-	// * If device has more than one logical sector per physical sector
-	// * (aka 512 byte emulation), vendors might offset the "sector 0" address
-	// * so sector 63 is "naturally aligned" - e.g. FAT partition table.
-	// * This avoids Read/Mod/Write penalties when using FAT partition table
-	// * and updating "well aligned" (FS perspective) physical sectors on every
-	// * transaction.
-	// */
-	// static inline u16 ata_id_logical_sector_offset(const u16 *id,
-	// 	u8 log2_per_phys)
-	// {
-	// 	u16 word_209 = id[209];
+	/* Offset of logical sectors relative to physical sectors.
+	 *
+	 * If device has more than one logical sector per physical sector
+	 * (aka 512 byte emulation), vendors might offset the "sector 0" address
+	 * so sector 63 is "naturally aligned" - e.g. FAT partition table.
+	 * This avoids Read/Mod/Write penalties when using FAT partition table
+	 * and updating "well aligned" (FS perspective) physical sectors on every
+	 * transaction.
+	 */
+	static inline u16
+	ata_id_logical_sector_offset(const u16 *id, u8 log2_per_phys) {
+		u16 word_209 = id[209];
+		if ((log2_per_phys > 1) && (word_209 & 0xc000) == 0x4000) {
+			u16 first = word_209 & 0x3fff;
+			if (first > 0)
+				return (1 << log2_per_phys) - first;
+		}
+		return 0;
+	}
 
-	// 	if ((log2_per_phys > 1) && (word_209 & 0xc000) == 0x4000) {
-	// 		u16 first = word_209 & 0x3fff;
-	// 		if (first > 0)
-	// 			return (1 << log2_per_phys) - first;
-	// 	}
-	// 	return 0;
-	// }
+	static inline bool ata_id_has_lba48(const u16 *id) {
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		if (!ata_id_u64(id, ATA_ID_LBA_CAPACITY_2))
+			return false;
+		return id[ATA_ID_COMMAND_SET_2] & (1 << 10);
+	}
 
-	// static inline bool ata_id_has_lba48(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	if (!ata_id_u64(id, ATA_ID_LBA_CAPACITY_2))
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_2] & (1 << 10);
-	// }
+	static inline bool ata_id_lba48_enabled(const u16 *id) {
+		if (ata_id_has_lba48(id) == 0)
+			return false;
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_CFS_ENABLE_2] & (1 << 10);
+	}
 
-	// static inline bool ata_id_lba48_enabled(const u16 *id)
-	// {
-	// 	if (ata_id_has_lba48(id) == 0)
-	// 		return false;
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_CFS_ENABLE_2] & (1 << 10);
-	// }
+	static inline bool ata_id_hpa_enabled(const u16 *id) {
+		/* Yes children, word 83 valid bits cover word 82 data */
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		/* And 87 covers 85-87 */
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		/* Check command sets enabled as well as supported */
+		if ((id[ATA_ID_CFS_ENABLE_1] & (1 << 10)) == 0)
+			return false;
+		return id[ATA_ID_COMMAND_SET_1] & (1 << 10);
+	}
 
-	// static inline bool ata_id_hpa_enabled(const u16 *id)
-	// {
-	// 	/* Yes children, word 83 valid bits cover word 82 data */
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	/* And 87 covers 85-87 */
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	/* Check command sets enabled as well as supported */
-	// 	if ((id[ATA_ID_CFS_ENABLE_1] & (1 << 10)) == 0)
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_1] & (1 << 10);
-	// }
+	static inline bool ata_id_has_wcache(const u16 *id) {
+		/* Yes children, word 83 valid bits cover word 82 data */
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_COMMAND_SET_1] & (1 << 5);
+	}
 
-	// static inline bool ata_id_has_wcache(const u16 *id)
-	// {
-	// 	/* Yes children, word 83 valid bits cover word 82 data */
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_1] & (1 << 5);
-	// }
+	static inline bool ata_id_has_pm(const u16 *id) {
+		if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_COMMAND_SET_1] & (1 << 3);
+	}
 
-	// static inline bool ata_id_has_pm(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_COMMAND_SET_2] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_1] & (1 << 3);
-	// }
+	static inline bool ata_id_rahead_enabled(const u16 *id) {
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_CFS_ENABLE_1] & (1 << 6);
+	}
 
-	// static inline bool ata_id_rahead_enabled(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_CFS_ENABLE_1] & (1 << 6);
-	// }
+	static inline bool ata_id_wcache_enabled(const u16 *id) {
+		if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
+			return false;
+		return id[ATA_ID_CFS_ENABLE_1] & (1 << 5);
+	}
 
-	// static inline bool ata_id_wcache_enabled(const u16 *id)
-	// {
-	// 	if ((id[ATA_ID_CSF_DEFAULT] & 0xC000) != 0x4000)
-	// 		return false;
-	// 	return id[ATA_ID_CFS_ENABLE_1] & (1 << 5);
-	// }
+	static inline bool ata_id_has_read_log_dma_ext(const u16 *id) {
+		/* Word 86 must have bit 15 set */
+		if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
+			return false;
 
-	// static inline bool ata_id_has_read_log_dma_ext(const u16 *id)
-	// {
-	// 	/* Word 86 must have bit 15 set */
-	// 	if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
-	// 		return false;
+		/* READ LOG DMA EXT support can be signaled either from word 119
+		 * or from word 120. The format is the same for both words: Bit
+		 * 15 must be cleared, bit 14 set and bit 3 set.
+		 */
+		if ((id[ATA_ID_COMMAND_SET_3] & 0xC008) == 0x4008 ||
+			(id[ATA_ID_COMMAND_SET_4] & 0xC008) == 0x4008)
+			return true;
 
-	// 	/* READ LOG DMA EXT support can be signaled either from word 119
-	// 	* or from word 120. The format is the same for both words: Bit
-	// 	* 15 must be cleared, bit 14 set and bit 3 set.
-	// 	*/
-	// 	if ((id[ATA_ID_COMMAND_SET_3] & 0xC008) == 0x4008 ||
-	// 		(id[ATA_ID_COMMAND_SET_4] & 0xC008) == 0x4008)
-	// 		return true;
+		return false;
+	}
 
-	// 	return false;
-	// }
+	static inline bool ata_id_has_sense_reporting(const u16 *id) {
+		if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
+			return false;
+		return id[ATA_ID_COMMAND_SET_3] & (1 << 6);
+	}
 
-	// static inline bool ata_id_has_sense_reporting(const u16 *id)
-	// {
-	// 	if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_3] & (1 << 6);
-	// }
+	static inline bool ata_id_sense_reporting_enabled(const u16 *id) {
+		if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
+			return false;
+		return id[ATA_ID_COMMAND_SET_4] & (1 << 6);
+	}
 
-	// static inline bool ata_id_sense_reporting_enabled(const u16 *id)
-	// {
-	// 	if (!(id[ATA_ID_CFS_ENABLE_2] & (1 << 15)))
-	// 		return false;
-	// 	return id[ATA_ID_COMMAND_SET_4] & (1 << 6);
-	// }
+	/**
+	 *
+	 * Word: 206 - SCT Command Transport
+	 *    15:12 - Vendor Specific
+	 *     11:6 - Reserved
+	 *        5 - SCT Command Transport Data Tables supported
+	 *        4 - SCT Command Transport Features Control supported
+	 *        3 - SCT Command Transport Error Recovery Control supported
+	 *        2 - SCT Command Transport Write Same supported
+	 *        1 - SCT Command Transport Long Sector Access supported
+	 *        0 - SCT Command Transport supported
+	 */
+	static inline bool ata_id_sct_data_tables(const u16 *id) {
+		return id[ATA_ID_SCT_CMD_XPORT] & (1 << 5) ? true : false;
+	}
 
-	// /**
-	//  *
-	//  * Word: 206 - SCT Command Transport
-	//  *    15:12 - Vendor Specific
-	//  *     11:6 - Reserved
-	//  *        5 - SCT Command Transport Data Tables supported
-	//  *        4 - SCT Command Transport Features Control supported
-	//  *        3 - SCT Command Transport Error Recovery Control supported
-	//  *        2 - SCT Command Transport Write Same supported
-	//  *        1 - SCT Command Transport Long Sector Access supported
-	//  *        0 - SCT Command Transport supported
-	//  */
-	// static inline bool ata_id_sct_data_tables(const u16 *id)
-	// {
-	// 	return id[ATA_ID_SCT_CMD_XPORT] & (1 << 5) ? true : false;
-	// }
+	static inline bool ata_id_sct_features_ctrl(const u16 *id) {
+		return id[ATA_ID_SCT_CMD_XPORT] & (1 << 4) ? true : false;
+	}
 
-	// static inline bool ata_id_sct_features_ctrl(const u16 *id)
-	// {
-	// 	return id[ATA_ID_SCT_CMD_XPORT] & (1 << 4) ? true : false;
-	// }
+	static inline bool ata_id_sct_error_recovery_ctrl(const u16 *id) {
+		return id[ATA_ID_SCT_CMD_XPORT] & (1 << 3) ? true : false;
+	}
 
-	// static inline bool ata_id_sct_error_recovery_ctrl(const u16 *id)
-	// {
-	// 	return id[ATA_ID_SCT_CMD_XPORT] & (1 << 3) ? true : false;
-	// }
+	static inline bool ata_id_sct_long_sector_access(const u16 *id) {
+		return id[ATA_ID_SCT_CMD_XPORT] & (1 << 1) ? true : false;
+	}
 
-	// static inline bool ata_id_sct_long_sector_access(const u16 *id)
-	// {
-	// 	return id[ATA_ID_SCT_CMD_XPORT] & (1 << 1) ? true : false;
-	// }
-
-	// static inline bool ata_id_sct_supported(const u16 *id)
-	// {
-	// 	return id[ATA_ID_SCT_CMD_XPORT] & (1 << 0) ? true : false;
-	// }
+	static inline bool ata_id_sct_supported(const u16 *id) {
+		return id[ATA_ID_SCT_CMD_XPORT] & (1 << 0) ? true : false;
+	}
 
 	// /**
 	//  *	ata_id_major_version	-	get ATA level of drive
@@ -960,17 +935,16 @@
 	// 	return false;
 	// }
 
-	// static inline bool ata_id_current_chs_valid(const u16 *id)
-	// {
-	// 	/* For ATA-1 devices, if the INITIALIZE DEVICE PARAMETERS command
-	// 	has not been issued to the device then the values of
-	// 	id[ATA_ID_CUR_CYLS] to id[ATA_ID_CUR_SECTORS] are vendor specific. */
-	// 	return (id[ATA_ID_FIELD_VALID] & 1) && /* Current translation valid */
-	// 		id[ATA_ID_CUR_CYLS] &&  /* cylinders in current translation */
-	// 		id[ATA_ID_CUR_HEADS] &&  /* heads in current translation */
-	// 		id[ATA_ID_CUR_HEADS] <= 16 &&
-	// 		id[ATA_ID_CUR_SECTORS];    /* sectors in current translation */
-	// }
+	static inline bool ata_id_current_chs_valid(const u16 *id) {
+		/* For ATA-1 devices, if the INITIALIZE DEVICE PARAMETERS command
+		   has not been issued to the device then the values of
+		   id[ATA_ID_CUR_CYLS] to id[ATA_ID_CUR_SECTORS] are vendor specific. */
+		return (id[ATA_ID_FIELD_VALID] & 1) &&	/* Current translation valid */
+				id[ATA_ID_CUR_CYLS] &&			/* cylinders in current translation */
+				id[ATA_ID_CUR_HEADS] &&			/* heads in current translation */
+				id[ATA_ID_CUR_HEADS] <= 16 &&
+				id[ATA_ID_CUR_SECTORS];			/* sectors in current translation */
+	}
 
 	// static inline bool ata_id_is_cfa(const u16 *id)
 	// {

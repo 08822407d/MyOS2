@@ -25,6 +25,7 @@
 
 	typedef struct block_device {
 		sector_t		bd_start_sect;
+		sector_t		bd_nr_sectors;
 		// disk_stats_s	__percpu *bd_stats;
 		// unsigned long	bd_stamp;
 		// bool			bd_read_only;	/* read-only policy */
