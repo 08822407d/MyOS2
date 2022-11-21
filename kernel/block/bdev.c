@@ -33,7 +33,7 @@
 #include <obsolete/printk.h>
 
 typedef struct bdev_inode {
-	block_device_s bdev;
+	blk_dev_s bdev;
 	inode_s vfs_inode;
 } bdev_inode_s;
 
@@ -42,7 +42,7 @@ static inline bdev_inode_s *BDEV_I(inode_s *inode)
 	return container_of(inode, bdev_inode_s, vfs_inode);
 }
 
-block_device_s *I_BDEV(inode_s *inode)
+blk_dev_s *I_BDEV(inode_s *inode)
 {
 	return &BDEV_I(inode)->bdev;
 }
@@ -59,7 +59,7 @@ static inode_s *bdev_alloc_inode(super_block_s *sb)
 
 static void bdev_free_inode(inode_s *inode)
 {
-	block_device_s *bdev = I_BDEV(inode);
+	blk_dev_s *bdev = I_BDEV(inode);
 
 	// if (!bdev_is_partition(bdev)) {
 	// 	if (bdev->bd_disk && bdev->bd_disk->bdi)
@@ -114,9 +114,9 @@ void bdev_cache_init(void)
 	blockdev_superblock = bd_mnt->mnt_sb;   /* For writeback */
 }
 
-block_device_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
+blk_dev_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
 {
-	block_device_s *bdev;
+	blk_dev_s *bdev;
 	inode_s *inode;
 
 	inode = new_inode(blockdev_superblock);

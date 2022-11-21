@@ -283,7 +283,7 @@ dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
 				const char *dev_name, void *data,
 				int (*fill_super)(super_block_s *, void *, int))
 {
-// 	block_device_s *bdev;
+// 	blk_dev_s *bdev;
 // 	super_block_s *s;
 // 	fmode_t mode = FMODE_READ | FMODE_EXCL;
 // 	int error = 0;

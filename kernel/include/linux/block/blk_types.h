@@ -24,23 +24,19 @@
 	// struct bio_crypt_ctx;
 
 	typedef struct block_device {
-		char			*dev_name;
-		List_s			bdev_list;
-		file_ops_s		*f_op;
-
 		sector_t		bd_start_sect;
 		// disk_stats_s	__percpu *bd_stats;
-		unsigned long	bd_stamp;
-		bool			bd_read_only;	/* read-only policy */
+		// unsigned long	bd_stamp;
+		// bool			bd_read_only;	/* read-only policy */
 		dev_t			bd_dev;
-		int				bd_openers;
-		inode_s *		bd_inode;	/* will die */
-		super_block_s *	bd_super;
-		void *			bd_claiming;
+		// int				bd_openers;
+		inode_s			*bd_inode;	/* will die */
+		super_block_s	*bd_super;
+		// void			*bd_claiming;
 		device_s		bd_device;
-		void *			bd_holder;
-		int				bd_holders;
-		bool			bd_write_holder;
+		// void			*bd_holder;
+		// int				bd_holders;
+		// bool			bd_write_holder;
 	// #ifdef CONFIG_SYSFS
 	// 	struct list_head	bd_holder_disks;
 	// #endif
@@ -61,12 +57,12 @@
 	// #ifdef CONFIG_FAIL_MAKE_REQUEST
 	// 	bool			bd_make_it_fail;
 	// #endif
-	} block_device_s;
+	} blk_dev_s;
 
 	#define bdev_whole(_bdev)	((_bdev)->bd_disk->part0)
 
 	#define dev_to_bdev(device) \
-		container_of((device), block_device_s, bd_device)
+		container_of((device), blk_dev_s, bd_device)
 
 	#define bdev_kobj(_bdev)	(&((_bdev)->bd_device.kobj))
 
@@ -224,7 +220,7 @@
 	// */
 	// struct bio {
 	// 	struct bio		*bi_next;	/* request queue link */
-	// 	block_device_s	*bi_bdev;
+	// 	blk_dev_s	*bi_bdev;
 	// 	unsigned int		bi_opf;		/* bottom bits req flags,
 	// 						* top bits REQ_OP. Use
 	// 						* accessors.

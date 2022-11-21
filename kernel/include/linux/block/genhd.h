@@ -88,24 +88,24 @@
 
 	typedef struct gendisk {
 		/*
-		* major/first_minor/minors should not be set by any new driver, the
-		* block core will take care of allocating them automatically.
-		*/
-		int		major;
-		int		first_minor;
-		int		minors;
+		 * major/first_minor/minors should not be set by any new driver, the
+		 * block core will take care of allocating them automatically.
+		 */
+		int			major;
+		int			first_minor;
+		int			minors;
 
-		char	disk_name[DISK_NAME_LEN];	/* name of major driver */
+		char		disk_name[DISK_NAME_LEN];	/* name of major driver */
 
 		// unsigned short events;		/* supported events */
 		// unsigned short event_flags;	/* flags related to event processing */
 
 		// struct xarray part_tbl;
-		block_device_s	*part0;
+		blk_dev_s	*part0;
 
-		// const block_device_operations_s *fops;
-		request_queue_s	*queue;
-		void *private_data;
+		const blk_dev_ops_s	*fops;
+		request_queue_s		*queue;
+		void		*private_data;
 
 		// int flags;
 		// unsigned long state;
@@ -181,7 +181,7 @@
 	// 		test_bit(GD_READ_ONLY, &disk->state);
 	// }
 
-	// static inline int bdev_read_only(block_device_s *bdev)
+	// static inline int bdev_read_only(blk_dev_s *bdev)
 	// {
 	// 	return bdev->bd_read_only || get_disk_ro(bdev->bd_disk);
 	// }
@@ -196,17 +196,17 @@
 	// extern void add_disk_randomness(gendisk_s *disk) __latent_entropy;
 	// extern void rand_initialize_disk(gendisk_s *disk);
 
-	// static inline sector_t get_start_sect(block_device_s *bdev)
+	// static inline sector_t get_start_sect(blk_dev_s *bdev)
 	// {
 	// 	return bdev->bd_start_sect;
 	// }
 
-	// static inline sector_t bdev_nr_sectors(block_device_s *bdev)
+	// static inline sector_t bdev_nr_sectors(blk_dev_s *bdev)
 	// {
 	// 	return bdev->bd_nr_sectors;
 	// }
 
-	// static inline loff_t bdev_nr_bytes(block_device_s *bdev)
+	// static inline loff_t bdev_nr_bytes(blk_dev_s *bdev)
 	// {
 	// 	return (loff_t)bdev_nr_sectors(bdev) << SECTOR_SHIFT;
 	// }
@@ -252,21 +252,21 @@
 	// 	__register_blkdev(major, name, NULL)
 	// void unregister_blkdev(unsigned int major, const char *name);
 
-	// bool bdev_check_media_change(block_device_s *bdev);
-	// int __invalidate_device(block_device_s *bdev, bool kill_dirty);
+	// bool bdev_check_media_change(blk_dev_s *bdev);
+	// int __invalidate_device(blk_dev_s *bdev, bool kill_dirty);
 	// void set_capacity(gendisk_s *disk, sector_t size);
 
 	// #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
-	// int bd_link_disk_holder(block_device_s *bdev, gendisk_s *disk);
-	// void bd_unlink_disk_holder(block_device_s *bdev, gendisk_s *disk);
+	// int bd_link_disk_holder(blk_dev_s *bdev, gendisk_s *disk);
+	// void bd_unlink_disk_holder(blk_dev_s *bdev, gendisk_s *disk);
 	// int bd_register_pending_holders(gendisk_s *disk);
 	// #else
-	// static inline int bd_link_disk_holder(block_device_s *bdev,
+	// static inline int bd_link_disk_holder(blk_dev_s *bdev,
 	// 					gendisk_s *disk)
 	// {
 	// 	return 0;
 	// }
-	// static inline void bd_unlink_disk_holder(block_device_s *bdev,
+	// static inline void bd_unlink_disk_holder(blk_dev_s *bdev,
 	// 					gendisk_s *disk)
 	// {
 	// }

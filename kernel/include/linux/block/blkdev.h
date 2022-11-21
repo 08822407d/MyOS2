@@ -1186,7 +1186,7 @@
 
 	// #define NFL4_UFLG_MASK			0x0000003F
 
-	// struct block_device_operations {
+	typedef struct block_device_operations {
 	// 	void (*submit_bio)(struct bio *bio);
 	// 	int (*open) (struct block_device *, fmode_t);
 	// 	void (*release) (struct gendisk *, fmode_t);
@@ -1215,7 +1215,7 @@
 	// 	* driver.
 	// 	*/
 	// 	int (*alternative_gpt_sector)(struct gendisk *disk, sector_t *sector);
-	// };
+	} blk_dev_ops_s;
 
 	// #ifdef CONFIG_COMPAT
 	// extern int blkdev_compat_ptr_ioctl(struct block_device *, fmode_t,
@@ -1288,7 +1288,7 @@
 	// struct block_device *blkdev_get_no_open(dev_t dev);
 	// void blkdev_put_no_open(struct block_device *bdev);
 
-	block_device_s *bdev_alloc(gendisk_s *disk, u8 partno);
+	blk_dev_s *bdev_alloc(gendisk_s *disk, u8 partno);
 	// void bdev_add(struct block_device *bdev, dev_t dev);
 	// struct block_device *I_BDEV(struct inode *inode);
 	// int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,

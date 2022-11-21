@@ -200,7 +200,8 @@
 		"special_insns.h": "c",
 		"ata.h": "c",
 		"libata.h": "c",
-		"delay.h": "c"
+		"delay.h": "c",
+		"major.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

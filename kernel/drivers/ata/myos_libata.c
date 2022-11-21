@@ -1,5 +1,11 @@
 #include <linux/kernel/slab.h>
 #include <linux/drivers/libata.h>
+#include <linux/block/genhd.h>
+#include <linux/block/blkdev.h>
+#include <uapi/kernel/major.h>
+
+
+#define MAX_IDE_DEV_NR 4
 
 // ata_iops_s ioaddr_master =
 // {
@@ -74,17 +80,44 @@ enum {
 	IDE_0_1,
 	IDE_1_0,
 	IDE_1_1,
+	IDE_END,
 };
 
-ata_dev_s ide_disks[4];
+char *ide_devnames[MAX_IDE_DEV_NR] = { "hda", "hdb", "hdc", "hdd"};
+
+ata_dev_s ide_disks[MAX_IDE_DEV_NR];
+
+
+static const blk_dev_ops_s ide_fops = {
+
+};
 
 long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		unsigned long blk_idx, long count, unsigned char * buffer);
 void myos_ata_port_probe(ata_dev_s *hdd)
 {
+	gendisk_s *gd;
+
 	ata_port_s *ap = &(hdd->ap);
 	ata_iops_s *ioaddr = &(ap->ioaddr);
 	outb(0, ioaddr->ctl_addr);
+
+	int ide_idx = hdd->devno << 1 | ap->port_no;
+	while (ide_idx >= MAX_IDE_DEV_NR);
+	
+	char *name = ide_devnames[ide_idx];
+	gd = kzalloc(sizeof(gendisk_s), GFP_KERNEL);
+	gd->part0 = kzalloc(sizeof(blk_dev_s), GFP_KERNEL);
+	memcpy(gd->disk_name, name, strlen(name));
+	if (hdd->devno == 0)
+		gd->major = IDE0_MAJOR;
+	else if (hdd->devno == 1)
+		gd->major = IDE1_MAJOR;
+	else
+		while (1);
+	gd->first_minor = 0;
+	gd->minors = MAX_IDE_DEV_NR;	
+	gd->fops = &ide_fops;
 
 	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 	// 					(unsigned char *)&ide_disk_info[0]);
@@ -94,6 +127,8 @@ void myos_ata_port_probe(ata_dev_s *hdd)
 
 void myos_ata_probe()
 {
+	while (IDE_END > MAX_IDE_DEV_NR);
+	
 	ide_disks[IDE_0_0].devno = 0;
 	ide_disks[IDE_0_1].devno = 0;
 	ide_disks[IDE_1_0].devno = 1;

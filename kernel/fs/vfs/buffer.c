@@ -60,7 +60,7 @@
 //  * try_to_free_buffers() attempt is failing.  FIXME, perhaps?
 //  */
 // buffer_head_s *
-// __getblk_gfp(block_device_s *bdev, sector_t block, unsigned size)
+// __getblk_gfp(blk_dev_s *bdev, sector_t block, unsigned size)
 // {
 // 	// // struct buffer_head *bh = __find_get_block(bdev, block, size);
 // 	// if (bh == NULL)
@@ -107,7 +107,7 @@
 //  *  It returns NULL if the block was unreadable.
 //  */
 // buffer_head_s *
-// __bread_gfp(block_device_s *bdev, sector_t block, unsigned size)
+// __bread_gfp(blk_dev_s *bdev, sector_t block, unsigned size)
 // {
 // 	buffer_head_s *bh = __getblk_gfp(bdev, block, size);
 

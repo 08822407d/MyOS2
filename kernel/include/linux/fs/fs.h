@@ -1406,7 +1406,7 @@
 	// #endif
 		// hlist_bl_head_s		s_roots;	/* alternate root dentries for NFS */
 		// list_head_s			s_mounts;	/* list of mounts; _not_ for fs use */
-		block_device_s		*s_bdev;
+		blk_dev_s		*s_bdev;
 		// backing_dev_info_s	*s_bdi;
 		// mtd_info_s			*s_mtd;
 		List_s				s_instances;

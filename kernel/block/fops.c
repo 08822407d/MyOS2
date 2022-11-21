@@ -56,7 +56,7 @@ static int blkdev_fsync(file_s *filp, loff_t start, loff_t end, int datasync)
 
 static int blkdev_open(inode_s *inode, file_s *filp)
 {
-	block_device_s *bdev;
+	blk_dev_s *bdev;
 
 	/*
 	 * Preserve backwards compatibility and allow large file access
@@ -86,7 +86,7 @@ static int blkdev_open(inode_s *inode, file_s *filp)
 
 static int blkdev_close(inode_s *inode, file_s *filp)
 {
-	block_device_s *bdev = filp->private_data;
+	blk_dev_s *bdev = filp->private_data;
 
 	// blkdev_put(bdev, filp->f_mode);
 	return 0;
