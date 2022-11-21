@@ -37,9 +37,9 @@
 	// #	define __ro_after_init	__section(".data..ro_after_init")
 	// #endif
 
-	// #ifndef ____cacheline_aligned
-	// #	define ____cacheline_aligned	__attribute__((__aligned__(SMP_CACHE_BYTES)))
-	// #endif
+	#ifndef ____cacheline_aligned
+	#	define ____cacheline_aligned	__attribute__((__aligned__(SMP_CACHE_BYTES)))
+	#endif
 
 	// #ifndef ____cacheline_aligned_in_smp
 	// #	define ____cacheline_aligned_in_smp	____cacheline_aligned

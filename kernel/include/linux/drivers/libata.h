@@ -801,7 +801,7 @@
 	// 	struct ata_acpi_gtm	__acpi_init_gtm; /* use ata_acpi_init_gtm() */
 	// #endif
 	// 	/* owned by EH */
-	// 	u8			sector_buf[ATA_SECT_SIZE] ____cacheline_aligned;
+		u8			sector_buf[ATA_SECT_SIZE] ____cacheline_aligned;
 	} ata_port_s;
 
 	// /* The following initializer overrides a method to NULL whether one of
@@ -928,7 +928,8 @@
 	} ata_port_info_s;
 
 	typedef struct ata_device {
-		ata_port_s		ap;
+		ata_port_s		*ap;
+		char			*name;
 
 
 		// struct ata_link		*link;

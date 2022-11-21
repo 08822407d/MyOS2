@@ -24,6 +24,7 @@
 
 	enum {
 		/* various global constants */
+		MYOS_ATA_MAX_PORTS			= 2,
 		ATA_MAX_DEVICES				= 2,	/* per bus/port */
 		ATA_MAX_PRD					= 256,	/* we could make these 256/256 */
 		ATA_SECT_SIZE				= 512,

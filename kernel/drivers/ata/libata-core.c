@@ -184,7 +184,7 @@ static void ata_dev_config_chs(ata_dev_s *dev)
  */
 int ata_dev_configure(ata_dev_s *dev)
 {
-	ata_port_s *ap = &dev->ap;
+	ata_port_s *ap = dev->ap;
 	// bool print_info = ata_dev_print_info(dev);
 	const u16 *id = dev->id;
 	// unsigned long xfer_mask;
