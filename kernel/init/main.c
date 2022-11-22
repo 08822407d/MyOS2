@@ -270,7 +270,6 @@ static void do_basic_setup(void)
 }
 
 
-	
 void myos_ata_probe();
 extern void init_ATArqd();
 extern void kjmp_to_doexecve();
@@ -286,7 +285,6 @@ unsigned long kernel_init(unsigned long arg)
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 
-	// color_printk(GREEN, BLACK, "Device files created.\n");
 	kjmp_to_doexecve();
 
 	while (true);

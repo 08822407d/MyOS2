@@ -107,18 +107,18 @@
 	// #ifdef CONFIG_BLK_DEV_ZONED
 
 	// #define BLK_ALL_ZONES  ((unsigned int)-1)
-	// int blkdev_report_zones(struct block_device *bdev, sector_t sector,
+	// int blkdev_report_zones(blk_dev_s *bdev, sector_t sector,
 	// 			unsigned int nr_zones, report_zones_cb cb, void *data);
 	// unsigned int blkdev_nr_zones(struct gendisk *disk);
-	// extern int blkdev_zone_mgmt(struct block_device *bdev, enum req_opf op,
+	// extern int blkdev_zone_mgmt(blk_dev_s *bdev, enum req_opf op,
 	// 				sector_t sectors, sector_t nr_sectors,
 	// 				gfp_t gfp_mask);
 	// int blk_revalidate_disk_zones(struct gendisk *disk,
 	// 				void (*update_driver_data)(struct gendisk *disk));
 
-	// extern int blkdev_report_zones_ioctl(struct block_device *bdev, fmode_t mode,
+	// extern int blkdev_report_zones_ioctl(blk_dev_s *bdev, fmode_t mode,
 	// 					unsigned int cmd, unsigned long arg);
-	// extern int blkdev_zone_mgmt_ioctl(struct block_device *bdev, fmode_t mode,
+	// extern int blkdev_zone_mgmt_ioctl(blk_dev_s *bdev, fmode_t mode,
 	// 				unsigned int cmd, unsigned long arg);
 
 	// #else /* CONFIG_BLK_DEV_ZONED */
@@ -128,14 +128,14 @@
 	// 	return 0;
 	// }
 
-	// static inline int blkdev_report_zones_ioctl(struct block_device *bdev,
+	// static inline int blkdev_report_zones_ioctl(blk_dev_s *bdev,
 	// 						fmode_t mode, unsigned int cmd,
 	// 						unsigned long arg)
 	// {
 	// 	return -ENOTTY;
 	// }
 
-	// static inline int blkdev_zone_mgmt_ioctl(struct block_device *bdev,
+	// static inline int blkdev_zone_mgmt_ioctl(blk_dev_s *bdev,
 	// 					fmode_t mode, unsigned int cmd,
 	// 					unsigned long arg)
 	// {
@@ -608,7 +608,7 @@
 	// int iocb_bio_iopoll(struct kiocb *kiocb, struct io_comp_batch *iob,
 	// 			unsigned int flags);
 
-	// static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+	// static inline struct request_queue *bdev_get_queue(blk_dev_s *bdev)
 	// {
 	// 	return bdev->bd_queue;	/* this is never NULL */
 	// }
@@ -705,7 +705,7 @@
 	// extern void blk_set_stacking_limits(struct queue_limits *lim);
 	// extern int blk_stack_limits(struct queue_limits *t, struct queue_limits *b,
 	// 				sector_t offset);
-	// extern void disk_stack_limits(struct gendisk *disk, struct block_device *bdev,
+	// extern void disk_stack_limits(struct gendisk *disk, blk_dev_s *bdev,
 	// 				sector_t offset);
 	// extern void blk_queue_update_dma_pad(struct request_queue *, unsigned int);
 	// extern void blk_queue_segment_boundary(struct request_queue *, unsigned long);
@@ -789,7 +789,7 @@
 	// 		(plug->mq_list || !list_empty(&plug->cb_list));
 	// }
 
-	// int blkdev_issue_flush(struct block_device *bdev);
+	// int blkdev_issue_flush(blk_dev_s *bdev);
 	// long nr_blockdev_pages(void);
 	// #else /* CONFIG_BLOCK */
 	// struct blk_plug {
@@ -817,7 +817,7 @@
 	// 	return false;
 	// }
 
-	// static inline int blkdev_issue_flush(struct block_device *bdev)
+	// static inline int blkdev_issue_flush(blk_dev_s *bdev)
 	// {
 	// 	return 0;
 	// }
@@ -830,24 +830,24 @@
 
 	// extern void blk_io_schedule(void);
 
-	// extern int blkdev_issue_write_same(struct block_device *bdev, sector_t sector,
+	// extern int blkdev_issue_write_same(blk_dev_s *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, struct page *page);
 
 	// #define BLKDEV_DISCARD_SECURE	(1 << 0)	/* issue a secure erase */
 
-	// extern int blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+	// extern int blkdev_issue_discard(blk_dev_s *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, unsigned long flags);
-	// extern int __blkdev_issue_discard(struct block_device *bdev, sector_t sector,
+	// extern int __blkdev_issue_discard(blk_dev_s *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, int flags,
 	// 		struct bio **biop);
 
 	// #define BLKDEV_ZERO_NOUNMAP	(1 << 0)  /* do not free blocks */
 	// #define BLKDEV_ZERO_NOFALLBACK	(1 << 1)  /* don't write explicit zeroes */
 
-	// extern int __blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+	// extern int __blkdev_issue_zeroout(blk_dev_s *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, struct bio **biop,
 	// 		unsigned flags);
-	// extern int blkdev_issue_zeroout(struct block_device *bdev, sector_t sector,
+	// extern int blkdev_issue_zeroout(blk_dev_s *bdev, sector_t sector,
 	// 		sector_t nr_sects, gfp_t gfp_mask, unsigned flags);
 
 	// static inline int sb_issue_discard(struct super_block *sb, sector_t block,
@@ -871,7 +871,7 @@
 	// 					gfp_mask, 0);
 	// }
 
-	// static inline bool bdev_is_partition(struct block_device *bdev)
+	// static inline bool bdev_is_partition(blk_dev_s *bdev)
 	// {
 	// 	return bdev->bd_partno;
 	// }
@@ -942,7 +942,7 @@
 	// 	return retval;
 	// }
 
-	// static inline unsigned int bdev_logical_block_size(struct block_device *bdev)
+	// static inline unsigned int bdev_logical_block_size(blk_dev_s *bdev)
 	// {
 	// 	return queue_logical_block_size(bdev_get_queue(bdev));
 	// }
@@ -952,7 +952,7 @@
 	// 	return q->limits.physical_block_size;
 	// }
 
-	// static inline unsigned int bdev_physical_block_size(struct block_device *bdev)
+	// static inline unsigned int bdev_physical_block_size(blk_dev_s *bdev)
 	// {
 	// 	return queue_physical_block_size(bdev_get_queue(bdev));
 	// }
@@ -962,7 +962,7 @@
 	// 	return q->limits.io_min;
 	// }
 
-	// static inline int bdev_io_min(struct block_device *bdev)
+	// static inline int bdev_io_min(blk_dev_s *bdev)
 	// {
 	// 	return queue_io_min(bdev_get_queue(bdev));
 	// }
@@ -972,7 +972,7 @@
 	// 	return q->limits.io_opt;
 	// }
 
-	// static inline int bdev_io_opt(struct block_device *bdev)
+	// static inline int bdev_io_opt(blk_dev_s *bdev)
 	// {
 	// 	return queue_io_opt(bdev_get_queue(bdev));
 	// }
@@ -984,7 +984,7 @@
 	// }
 
 	// static inline unsigned int
-	// bdev_zone_write_granularity(struct block_device *bdev)
+	// bdev_zone_write_granularity(blk_dev_s *bdev)
 	// {
 	// 	return queue_zone_write_granularity(bdev_get_queue(bdev));
 	// }
@@ -1006,7 +1006,7 @@
 	// 	return (granularity + lim->alignment_offset - alignment) % granularity;
 	// }
 
-	// static inline int bdev_alignment_offset(struct block_device *bdev)
+	// static inline int bdev_alignment_offset(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1049,7 +1049,7 @@
 	// 	return offset << SECTOR_SHIFT;
 	// }
 
-	// static inline int bdev_discard_alignment(struct block_device *bdev)
+	// static inline int bdev_discard_alignment(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1059,7 +1059,7 @@
 	// 	return q->limits.discard_alignment;
 	// }
 
-	// static inline unsigned int bdev_write_same(struct block_device *bdev)
+	// static inline unsigned int bdev_write_same(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1069,7 +1069,7 @@
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_write_zeroes_sectors(struct block_device *bdev)
+	// static inline unsigned int bdev_write_zeroes_sectors(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1079,7 +1079,7 @@
 	// 	return 0;
 	// }
 
-	// static inline enum blk_zoned_model bdev_zoned_model(struct block_device *bdev)
+	// static inline enum blk_zoned_model bdev_zoned_model(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1089,7 +1089,7 @@
 	// 	return BLK_ZONED_NONE;
 	// }
 
-	// static inline bool bdev_is_zoned(struct block_device *bdev)
+	// static inline bool bdev_is_zoned(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1099,7 +1099,7 @@
 	// 	return false;
 	// }
 
-	// static inline sector_t bdev_zone_sectors(struct block_device *bdev)
+	// static inline sector_t bdev_zone_sectors(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1108,7 +1108,7 @@
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_max_open_zones(struct block_device *bdev)
+	// static inline unsigned int bdev_max_open_zones(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1117,7 +1117,7 @@
 	// 	return 0;
 	// }
 
-	// static inline unsigned int bdev_max_active_zones(struct block_device *bdev)
+	// static inline unsigned int bdev_max_active_zones(blk_dev_s *bdev)
 	// {
 	// 	struct request_queue *q = bdev_get_queue(bdev);
 
@@ -1149,7 +1149,7 @@
 	// 	return bits;
 	// }
 
-	// static inline unsigned int block_size(struct block_device *bdev)
+	// static inline unsigned int block_size(blk_dev_s *bdev)
 	// {
 	// 	return 1 << bdev->bd_inode->i_blkbits;
 	// }
@@ -1188,18 +1188,18 @@
 
 	typedef struct block_device_operations {
 	// 	void (*submit_bio)(struct bio *bio);
-	// 	int (*open) (struct block_device *, fmode_t);
+	// 	int (*open) (blk_dev_s *, fmode_t);
 	// 	void (*release) (struct gendisk *, fmode_t);
-	// 	int (*rw_page)(struct block_device *, sector_t, struct page *, unsigned int);
-	// 	int (*ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
-	// 	int (*compat_ioctl) (struct block_device *, fmode_t, unsigned, unsigned long);
+	// 	int (*rw_page)(blk_dev_s *, sector_t, struct page *, unsigned int);
+	// 	int (*ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
+	// 	int (*compat_ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
 	// 	unsigned int (*check_events) (struct gendisk *disk,
 	// 					unsigned int clearing);
 	// 	void (*unlock_native_capacity) (struct gendisk *);
-	// 	int (*getgeo)(struct block_device *, struct hd_geometry *);
-	// 	int (*set_read_only)(struct block_device *bdev, bool ro);
+	// 	int (*getgeo)(blk_dev_s *, struct hd_geometry *);
+	// 	int (*set_read_only)(blk_dev_s *bdev, bool ro);
 	// 	/* this callback is with swap_lock and sometimes page table lock held */
-	// 	void (*swap_slot_free_notify) (struct block_device *, unsigned long);
+	// 	void (*swap_slot_free_notify) (blk_dev_s *, unsigned long);
 	// 	int (*report_zones)(struct gendisk *, sector_t sector,
 	// 			unsigned int nr_zones, report_zones_cb cb, void *data);
 	// 	char *(*devnode)(struct gendisk *disk, umode_t *mode);
@@ -1218,14 +1218,14 @@
 	} blk_dev_ops_s;
 
 	// #ifdef CONFIG_COMPAT
-	// extern int blkdev_compat_ptr_ioctl(struct block_device *, fmode_t,
+	// extern int blkdev_compat_ptr_ioctl(blk_dev_s *, fmode_t,
 	// 					unsigned int, unsigned long);
 	// #else
 	// #define blkdev_compat_ptr_ioctl NULL
 	// #endif
 
-	// extern int bdev_read_page(struct block_device *, sector_t, struct page *);
-	// extern int bdev_write_page(struct block_device *, sector_t, struct page *,
+	// extern int bdev_read_page(blk_dev_s *, sector_t, struct page *);
+	// extern int bdev_write_page(blk_dev_s *, sector_t, struct page *,
 	// 						struct writeback_control *);
 
 	// static inline void blk_wake_io_task(struct task_struct *waiter)
@@ -1249,7 +1249,7 @@
 	// void bio_start_io_acct_time(struct bio *bio, unsigned long start_time);
 	// unsigned long bio_start_io_acct(struct bio *bio);
 	// void bio_end_io_acct_remapped(struct bio *bio, unsigned long start_time,
-	// 		struct block_device *orig_bdev);
+	// 		blk_dev_s *orig_bdev);
 
 	// /**
 	//  * bio_end_io_acct - end I/O accounting for bio based drivers
@@ -1261,10 +1261,10 @@
 	// 	return bio_end_io_acct_remapped(bio, start_time, bio->bi_bdev);
 	// }
 
-	// int bdev_read_only(struct block_device *bdev);
-	// int set_blocksize(struct block_device *bdev, int size);
+	// int bdev_read_only(blk_dev_s *bdev);
+	// int set_blocksize(blk_dev_s *bdev, int size);
 
-	// const char *bdevname(struct block_device *bdev, char *buffer);
+	// const char *bdevname(blk_dev_s *bdev, char *buffer);
 	// int lookup_bdev(const char *pathname, dev_t *dev);
 
 	// void blkdev_show(struct seq_file *seqf, off_t offset);
@@ -1277,37 +1277,37 @@
 	// #define BLKDEV_MAJOR_MAX	0
 	// #endif
 
-	// struct block_device *blkdev_get_by_path(const char *path, fmode_t mode,
+	// blk_dev_s *blkdev_get_by_path(const char *path, fmode_t mode,
 	// 		void *holder);
-	// struct block_device *blkdev_get_by_dev(dev_t dev, fmode_t mode, void *holder);
-	// int bd_prepare_to_claim(struct block_device *bdev, void *holder);
-	// void bd_abort_claiming(struct block_device *bdev, void *holder);
-	// void blkdev_put(struct block_device *bdev, fmode_t mode);
+	// blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode, void *holder);
+	// int bd_prepare_to_claim(blk_dev_s *bdev, void *holder);
+	// void bd_abort_claiming(blk_dev_s *bdev, void *holder);
+	// void blkdev_put(blk_dev_s *bdev, fmode_t mode);
 
 	// /* just for blk-cgroup, don't use elsewhere */
-	// struct block_device *blkdev_get_no_open(dev_t dev);
-	// void blkdev_put_no_open(struct block_device *bdev);
+	// blk_dev_s *blkdev_get_no_open(dev_t dev);
+	// void blkdev_put_no_open(blk_dev_s *bdev);
 
 	blk_dev_s *bdev_alloc(gendisk_s *disk, u8 partno);
-	// void bdev_add(struct block_device *bdev, dev_t dev);
-	// struct block_device *I_BDEV(struct inode *inode);
-	// int truncate_bdev_range(struct block_device *bdev, fmode_t mode, loff_t lstart,
+	// void bdev_add(blk_dev_s *bdev, dev_t dev);
+	// blk_dev_s *I_BDEV(struct inode *inode);
+	// int truncate_bdev_range(blk_dev_s *bdev, fmode_t mode, loff_t lstart,
 	// 		loff_t lend);
 
 	// #ifdef CONFIG_BLOCK
-	// void invalidate_bdev(struct block_device *bdev);
-	// int sync_blockdev(struct block_device *bdev);
-	// int sync_blockdev_nowait(struct block_device *bdev);
+	// void invalidate_bdev(blk_dev_s *bdev);
+	// int sync_blockdev(blk_dev_s *bdev);
+	// int sync_blockdev_nowait(blk_dev_s *bdev);
 	// void sync_bdevs(bool wait);
 	// #else
-	// static inline void invalidate_bdev(struct block_device *bdev)
+	// static inline void invalidate_bdev(blk_dev_s *bdev)
 	// {
 	// }
-	// static inline int sync_blockdev(struct block_device *bdev)
+	// static inline int sync_blockdev(blk_dev_s *bdev)
 	// {
 	// 	return 0;
 	// }
-	// static inline int sync_blockdev_nowait(struct block_device *bdev)
+	// static inline int sync_blockdev_nowait(blk_dev_s *bdev)
 	// {
 	// 	return 0;
 	// }
@@ -1315,10 +1315,10 @@
 	// {
 	// }
 	// #endif
-	// int fsync_bdev(struct block_device *bdev);
+	// int fsync_bdev(blk_dev_s *bdev);
 
-	// int freeze_bdev(struct block_device *bdev);
-	// int thaw_bdev(struct block_device *bdev);
+	// int freeze_bdev(blk_dev_s *bdev);
+	// int thaw_bdev(blk_dev_s *bdev);
 
 	// struct io_comp_batch {
 	// 	struct request *req_list;

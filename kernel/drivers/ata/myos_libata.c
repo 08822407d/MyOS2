@@ -131,17 +131,22 @@ static const blk_dev_ops_s ide_fops = {
 
 long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		unsigned long blk_idx, long count, unsigned char * buffer);
-void myos_ata_port_probe(ata_dev_s *hdd)
+int myos_ata_port_probe(ata_dev_s *disk)
 {
 	gendisk_s *gd;
-	u16 *ataid = hdd->id;
-	ata_port_s *ap = hdd->ap;
+	int error;
+
+	u16 *ataid = disk->id;
+	ata_port_s *ap = disk->ap;
 	ata_iops_s *ioaddr = &(ap->ioaddr);
 	outb(0, ioaddr->ctl_addr);
 
-	gd = kzalloc(sizeof(gendisk_s), GFP_KERNEL);
-	gd->part0 = kzalloc(sizeof(blk_dev_s), GFP_KERNEL);
-	memcpy(gd->disk_name, hdd->name, strlen(hdd->name));
+	error = -ENOMEM;
+	gd = __myos_alloc_disk(NULL);
+	if (gd == NULL)
+		goto out_free;
+
+	memcpy(gd->disk_name, disk->name, strlen(disk->name));
 	if (ap->port_no == MASTER)
 		gd->major = IDE0_MAJOR;
 	else if (ap->port_no == SLAVE)
@@ -154,9 +159,26 @@ void myos_ata_port_probe(ata_dev_s *hdd)
 
 	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 	// 					(unsigned char *)&ide_disk_info[0]);
-	ATA_disk_transfer(ap->port_no, hdd->devno, ATA_CMD_STANDBYNOW1,
+	ATA_disk_transfer(ap->port_no, disk->devno, ATA_CMD_STANDBYNOW1,
 			0, 0, (unsigned char *)ataid);
-	ata_dev_configure(hdd);
+	ata_dev_configure(disk);
+
+	// ata_dev_revalidate(hdd);
+
+	myos_device_add_disk(gd);
+
+	return 0;
+
+ out_free_index:
+	// ida_free(&sd_index_ida, index);
+ out_put:
+	// put_disk(gd);
+ out_free:
+	// sd_zbc_release_disk(sdkp);
+	// kfree(sdkp);
+ out:
+	// scsi_autopm_put_device(sdp);
+	return error;
 }
 
 void myos_ata_probe()

@@ -41,7 +41,7 @@
  * This function registers the partitioning information in @disk
  * with the kernel.
  */
-int myos_device_add_disk(device_s *parent, gendisk_s *disk)
+int myos_device_add_disk(gendisk_s *disk)
 {
 	device_s *ddev = disk_to_dev(disk);
 	int ret;
@@ -77,7 +77,7 @@ int myos_device_add_disk(device_s *parent, gendisk_s *disk)
 
 	ddev->kobj.name = disk->disk_name;
 	// if (!(disk->flags & GENHD_FL_HIDDEN))
-	// 	ddev->devt = MKDEV(disk->major, disk->first_minor);
+		ddev->devt = MKDEV(disk->major, disk->first_minor);
 	ret = device_add(ddev);
 
 	return ret;
@@ -107,5 +107,59 @@ gendisk_s *__alloc_disk_node(request_queue_s *q)
 
 out_free_disk:
 	kfree(disk);
+	return NULL;
+}
+
+
+gendisk_s *__myos_alloc_disk(request_queue_s *q)
+{
+	gendisk_s *disk;
+
+// 	if (!blk_get_queue(q))
+// 		return NULL;
+
+	disk = kzalloc(sizeof(struct gendisk), GFP_KERNEL);
+	if (!disk)
+		goto out_put_queue;
+
+// 	disk->bdi = bdi_alloc(node_id);
+// 	if (!disk->bdi)
+// 		goto out_free_disk;
+
+// 	/* bdev_alloc() might need the queue, set before the first call */
+	disk->queue = q;
+
+	disk->part0 = bdev_alloc(disk, 0);
+	if (!disk->part0)
+		goto out_free_bdi;
+
+// 	disk->node_id = node_id;
+// 	mutex_init(&disk->open_mutex);
+// 	xa_init(&disk->part_tbl);
+// 	if (xa_insert(&disk->part_tbl, 0, disk->part0, GFP_KERNEL))
+// 		goto out_destroy_part_tbl;
+
+// 	rand_initialize_disk(disk);
+	disk_to_dev(disk)->class = &block_class;
+	// disk_to_dev(disk)->type = &disk_type;
+// 	device_initialize(disk_to_dev(disk));
+// 	inc_diskseq(disk);
+// 	q->disk = disk;
+// 	lockdep_init_map(&disk->lockdep_map, "(bio completion)", lkclass, 0);
+// #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
+// 	INIT_LIST_HEAD(&disk->slave_bdevs);
+// #endif
+	return disk;
+
+// out_destroy_part_tbl:
+// 	xa_destroy(&disk->part_tbl);
+// 	disk->part0->bd_disk = NULL;
+// 	iput(disk->part0->bd_inode);
+out_free_bdi:
+// 	bdi_put(disk->bdi);
+out_free_disk:
+	kfree(disk);
+out_put_queue:
+// 	blk_put_queue(q);
 	return NULL;
 }

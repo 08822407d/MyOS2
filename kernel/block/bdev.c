@@ -138,3 +138,11 @@ blk_dev_s *bdev_alloc(gendisk_s *disk, uint8_t partno)
 	bdev->bd_disk = disk;
 	return bdev;
 }
+
+void bdev_add(blk_dev_s *bdev, dev_t dev)
+{
+	bdev->bd_dev = dev;
+	bdev->bd_inode->i_rdev = dev;
+	// bdev->bd_inode->i_ino = dev;
+	// insert_inode_hash(bdev->bd_inode);
+}

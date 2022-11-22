@@ -178,7 +178,6 @@ int tty_class_init(void)
 
 
 static cdev_s tty_cdev, console_cdev;
-
 /*
  * Ok, now we can initialize the rest of the tty devices and can count
  * on memory allocations, interrupts etc..

@@ -101,6 +101,7 @@
 		// unsigned short event_flags;	/* flags related to event processing */
 
 		// struct xarray part_tbl;
+		List_hdr_s	part_tbl;
 		blk_dev_s	*part0;
 
 		const blk_dev_ops_s	*fops;
@@ -287,5 +288,9 @@
 	// {
 	// }
 	// #endif /* CONFIG_BLOCK */
+
+
+	int myos_device_add_disk(gendisk_s *disk);
+	gendisk_s *__myos_alloc_disk(request_queue_s *q);
 
 #endif /* _LINUX_GENHD_H */
