@@ -1277,16 +1277,15 @@
 	// #define BLKDEV_MAJOR_MAX	0
 	// #endif
 
-	// blk_dev_s *blkdev_get_by_path(const char *path, fmode_t mode,
-	// 		void *holder);
-	// blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode, void *holder);
+	blk_dev_s *blkdev_get_by_path(const char *path, fmode_t mode);
+	blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode);
 	// int bd_prepare_to_claim(blk_dev_s *bdev, void *holder);
 	// void bd_abort_claiming(blk_dev_s *bdev, void *holder);
 	// void blkdev_put(blk_dev_s *bdev, fmode_t mode);
 
-	// /* just for blk-cgroup, don't use elsewhere */
-	// blk_dev_s *blkdev_get_no_open(dev_t dev);
-	// void blkdev_put_no_open(blk_dev_s *bdev);
+	/* just for blk-cgroup, don't use elsewhere */
+	blk_dev_s *blkdev_get_no_open(dev_t dev);
+	void blkdev_put_no_open(blk_dev_s *bdev);
 
 	blk_dev_s *bdev_alloc(gendisk_s *disk, u8 partno);
 	void bdev_add(blk_dev_s *bdev, dev_t dev);

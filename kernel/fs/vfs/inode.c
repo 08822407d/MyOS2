@@ -181,6 +181,40 @@ static inline void inode_sb_list_del(inode_s *inode)
 	}
 }
 
+/*
+ * find_inode_fast is the fast path version of find_inode, see the comment at
+ * iget_locked for details.
+ */
+static inode_s *find_inode_fast(super_block_s *sb, unsigned long ino)
+{
+	inode_s *inode = NULL;
+	List_s *lp = NULL;
+repeat:
+	// hlist_for_each_entry(inode, head, i_hash) {
+	list_hdr_foreach_entry(&sb->s_inodes, lp) {
+		inode = container_of(lp, inode_s, i_sb_list);
+		if (inode->i_ino != ino)
+			continue;
+		if (inode->i_sb != sb)
+			continue;
+			
+		break;
+		inode = NULL;
+	// 	spin_lock(&inode->i_lock);
+	// 	if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
+	// 		__wait_on_freeing_inode(inode);
+	// 		goto repeat;
+	// 	}
+	// 	if (unlikely(inode->i_state & I_CREATING)) {
+	// 		spin_unlock(&inode->i_lock);
+	// 		return ERR_PTR(-ESTALE);
+	// 	}
+	// 	__iget(inode);
+	// 	spin_unlock(&inode->i_lock);
+	// 	return inode;
+	}
+	return inode;
+}
 
 /**
  *	new_inode 	- obtain an inode
@@ -196,7 +230,7 @@ static inline void inode_sb_list_del(inode_s *inode)
  */
 inode_s *new_inode(super_block_s *sb)
 {
-	// struct inode *new_inode_pseudo(struct super_block *sb)
+	// inode_s *new_inode_pseudo(super_block_s *sb)
 	// {
 	inode_s *inode = alloc_inode(sb);
 	if (inode != NULL)
@@ -211,6 +245,37 @@ inode_s *new_inode(super_block_s *sb)
 
 	return inode;
 }
+
+
+/**
+ * ilookup - search for an inode in the inode cache
+ * @sb:		super block of file system to search
+ * @ino:	inode number to search for
+ *
+ * Search for the inode @ino in the inode cache, and if the inode is in the
+ * cache, the inode is returned with an incremented reference count.
+ */
+inode_s *ilookup(super_block_s *sb, unsigned long ino)
+{
+	// struct hlist_head *head = inode_hashtable + hash(sb, ino);
+	inode_s *inode;
+again:
+	// spin_lock(&inode_hash_lock);
+	inode = find_inode_fast(sb, ino);
+	// spin_unlock(&inode_hash_lock);
+
+	// if (inode) {
+	// 	if (IS_ERR(inode))
+	// 		return NULL;
+	// 	wait_on_inode(inode);
+	// 	if (unlikely(inode_unhashed(inode))) {
+	// 		iput(inode);
+	// 		goto again;
+	// 	}
+	// }
+	return inode;
+}
+
 
 /**
  *	iput	- put an inode

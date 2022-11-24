@@ -195,8 +195,8 @@
 	// 				bip_next->bip_vec[0].bv_offset);
 	// }
 
-	// int blk_integrity_add(struct gendisk *disk);
-	// void blk_integrity_del(struct gendisk *);
+	// int blk_integrity_add(gendisk_s *disk);
+	// void blk_integrity_del(gendisk_s *);
 	// #else /* CONFIG_BLK_DEV_INTEGRITY */
 	// static inline bool blk_integrity_merge_rq(struct request_queue *rq,
 	// 		struct request *r1, struct request *r2)
@@ -229,11 +229,11 @@
 	// static inline void bio_integrity_free(struct bio *bio)
 	// {
 	// }
-	// static inline int blk_integrity_add(struct gendisk *disk)
+	// static inline int blk_integrity_add(gendisk_s *disk)
 	// {
 	// 	return 0;
 	// }
-	// static inline void blk_integrity_del(struct gendisk *disk)
+	// static inline void blk_integrity_del(gendisk_s *disk)
 	// {
 	// }
 	// #endif /* CONFIG_BLK_DEV_INTEGRITY */
@@ -421,10 +421,10 @@
 	// #define ADDPART_FLAG_NONE	0
 	// #define ADDPART_FLAG_RAID	1
 	// #define ADDPART_FLAG_WHOLEDISK	2
-	// int bdev_add_partition(struct gendisk *disk, int partno, sector_t start,
+	// int bdev_add_partition(gendisk_s *disk, int partno, sector_t start,
 	// 		sector_t length);
-	// int bdev_del_partition(struct gendisk *disk, int partno);
-	// int bdev_resize_partition(struct gendisk *disk, int partno, sector_t start,
+	// int bdev_del_partition(gendisk_s *disk, int partno);
+	// int bdev_resize_partition(gendisk_s *disk, int partno, sector_t start,
 	// 		sector_t length);
 
 	// int bio_add_hw_page(struct request_queue *q, struct bio *bio,
@@ -439,12 +439,12 @@
 	// }
 	// struct request_queue *blk_alloc_queue(int node_id, bool alloc_srcu);
 
-	// int disk_scan_partitions(struct gendisk *disk, fmode_t mode);
+	int disk_scan_partitions(gendisk_s *disk, fmode_t mode);
 
-	// int disk_alloc_events(struct gendisk *disk);
-	// void disk_add_events(struct gendisk *disk);
-	// void disk_del_events(struct gendisk *disk);
-	// void disk_release_events(struct gendisk *disk);
+	// int disk_alloc_events(gendisk_s *disk);
+	// void disk_add_events(gendisk_s *disk);
+	// void disk_del_events(gendisk_s *disk);
+	// void disk_release_events(gendisk_s *disk);
 	// extern struct device_attribute dev_attr_events;
 	// extern struct device_attribute dev_attr_events_async;
 	// extern struct device_attribute dev_attr_events_poll_msecs;
@@ -461,9 +461,9 @@
 
 	// extern const struct address_space_operations def_blk_aops;
 
-	// int disk_register_independent_access_ranges(struct gendisk *disk,
+	// int disk_register_independent_access_ranges(gendisk_s *disk,
 	// 				struct blk_independent_access_ranges *new_iars);
-	// void disk_unregister_independent_access_ranges(struct gendisk *disk);
+	// void disk_unregister_independent_access_ranges(gendisk_s *disk);
 
 	// #ifdef CONFIG_FAIL_MAKE_REQUEST
 	// bool should_fail_request(struct block_device *part, unsigned int bytes);

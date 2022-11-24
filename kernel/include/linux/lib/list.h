@@ -51,4 +51,9 @@
 			list_traverse_check chk_hdlr, list_traverse_do do_hdlr,
 			list_traverse_end end_hdlr);
 
+	#define list_hdr_foreach_entry(lhdr, member)		\
+			for ((member) = (lhdr)->header.next;		\
+				(member) != (lhdr)->header.prev;		\
+				(member) = (member)->next)
+
 #endif /* _LINUX_LIST_H */

@@ -2976,7 +2976,7 @@
 	// 		void *data);
 	// extern inode_s *ilookup5(super_block_s *sb, unsigned long hashval,
 	// 		int (*test)(inode_s *, void *), void *data);
-	// extern inode_s *ilookup(super_block_s *sb, unsigned long ino);
+	extern inode_s *ilookup(super_block_s *sb, unsigned long ino);
 
 	// extern inode_s *inode_insert5(inode_s *inode, unsigned long hashval,
 	// 		int (*test)(inode_s *, void *),

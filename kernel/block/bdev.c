@@ -146,3 +146,159 @@ void bdev_add(blk_dev_s *bdev, dev_t dev)
 	bdev->bd_inode->i_ino = dev;
 	// insert_inode_hash(bdev->bd_inode);
 }
+
+
+blk_dev_s *blkdev_get_no_open(dev_t dev)
+{
+	blk_dev_s *bdev;
+	inode_s *inode;
+
+	// inode = ilookup(blockdev_superblock, dev);
+	// if (!inode) {
+	// 	blk_request_module(dev);
+		inode = ilookup(blockdev_superblock, dev);
+		if (!inode)
+			return NULL;
+	// }
+
+	/* switch from the inode reference to a device mode one: */
+	bdev = &BDEV_I(inode)->bdev;
+	// if (!kobject_get_unless_zero(&bdev->bd_device.kobj))
+	// 	bdev = NULL;
+	iput(inode);
+	return bdev;
+}
+
+void blkdev_put_no_open(blk_dev_s *bdev)
+{
+	// put_device(&bdev->bd_device);
+}
+
+/**
+ * blkdev_get_by_dev - open a block device by device number
+ * @dev: device number of block device to open
+ * @mode: FMODE_* mask
+ * @holder: exclusive holder identifier
+ *
+ * Open the block device described by device number @dev. If @mode includes
+ * %FMODE_EXCL, the block device is opened with exclusive access.  Specifying
+ * %FMODE_EXCL with a %NULL @holder is invalid.  Exclusive opens may nest for
+ * the same @holder.
+ *
+ * Use this interface ONLY if you really do not have anything better - i.e. when
+ * you are behind a truly sucky interface and all you are given is a device
+ * number.  Everything else should use blkdev_get_by_path().
+ *
+ * CONTEXT:
+ * Might sleep.
+ *
+ * RETURNS:
+ * Reference to the block_device on success, ERR_PTR(-errno) on failure.
+ */
+blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode)
+{
+	// bool unblock_events = true;
+	blk_dev_s *bdev;
+	gendisk_s *disk;
+	int ret;
+
+// 	ret = devcgroup_check_permission(DEVCG_DEV_BLOCK,
+// 			MAJOR(dev), MINOR(dev),
+// 			((mode & FMODE_READ) ? DEVCG_ACC_READ : 0) |
+// 			((mode & FMODE_WRITE) ? DEVCG_ACC_WRITE : 0));
+// 	if (ret)
+// 		return ERR_PTR(ret);
+
+	bdev = blkdev_get_no_open(dev);
+	if (!bdev)
+		return ERR_PTR(-ENXIO);
+	disk = bdev->bd_disk;
+
+// 	if (mode & FMODE_EXCL) {
+// 		ret = bd_prepare_to_claim(bdev, holder);
+// 		if (ret)
+// 			goto put_blkdev;
+// 	}
+
+// 	disk_block_events(disk);
+
+// 	mutex_lock(&disk->open_mutex);
+// 	ret = -ENXIO;
+// 	if (!disk_live(disk))
+// 		goto abort_claiming;
+// 	if (!try_module_get(disk->fops->owner))
+// 		goto abort_claiming;
+// 	if (bdev_is_partition(bdev))
+// 		ret = blkdev_get_part(bdev, mode);
+// 	else
+// 		ret = blkdev_get_whole(bdev, mode);
+// 	if (ret)
+// 		goto put_module;
+// 	if (mode & FMODE_EXCL) {
+// 		bd_finish_claiming(bdev, holder);
+
+// 		/*
+// 		 * Block event polling for write claims if requested.  Any write
+// 		 * holder makes the write_holder state stick until all are
+// 		 * released.  This is good enough and tracking individual
+// 		 * writeable reference is too fragile given the way @mode is
+// 		 * used in blkdev_get/put().
+// 		 */
+// 		if ((mode & FMODE_WRITE) && !bdev->bd_write_holder &&
+// 		    (disk->event_flags & DISK_EVENT_FLAG_BLOCK_ON_EXCL_WRITE)) {
+// 			bdev->bd_write_holder = true;
+// 			unblock_events = false;
+// 		}
+// 	}
+// 	mutex_unlock(&disk->open_mutex);
+
+// 	if (unblock_events)
+// 		disk_unblock_events(disk);
+	return bdev;
+// put_module:
+// 	module_put(disk->fops->owner);
+// abort_claiming:
+// 	if (mode & FMODE_EXCL)
+// 		bd_abort_claiming(bdev, holder);
+// 	mutex_unlock(&disk->open_mutex);
+// 	disk_unblock_events(disk);
+put_blkdev:
+	blkdev_put_no_open(bdev);
+	return ERR_PTR(ret);
+}
+
+/**
+ * blkdev_get_by_path - open a block device by name
+ * @path: path to the block device to open
+ * @mode: FMODE_* mask
+ * @holder: exclusive holder identifier
+ *
+ * Open the block device described by the device file at @path.  If @mode
+ * includes %FMODE_EXCL, the block device is opened with exclusive access.
+ * Specifying %FMODE_EXCL with a %NULL @holder is invalid.  Exclusive opens may
+ * nest for the same @holder.
+ *
+ * CONTEXT:
+ * Might sleep.
+ *
+ * RETURNS:
+ * Reference to the block_device on success, ERR_PTR(-errno) on failure.
+ */
+blk_dev_s *blkdev_get_by_path(const char *path, fmode_t mode)
+{
+	// struct block_device *bdev;
+	// dev_t dev;
+	// int error;
+
+	// error = lookup_bdev(path, &dev);
+	// if (error)
+	// 	return ERR_PTR(error);
+
+	// bdev = blkdev_get_by_dev(dev, mode);
+	// if (!IS_ERR(bdev) && (mode & FMODE_WRITE) && bdev_read_only(bdev)) {
+	// 	blkdev_put(bdev, mode);
+	// 	return ERR_PTR(-EACCES);
+	// }
+
+	// return bdev;
+}

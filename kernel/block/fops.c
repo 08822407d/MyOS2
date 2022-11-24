@@ -74,7 +74,7 @@ static int blkdev_open(inode_s *inode, file_s *filp)
 	if ((filp->f_flags & O_ACCMODE) == 3)
 		filp->f_mode |= FMODE_WRITE_IOCTL;
 
-	// bdev = blkdev_get_by_dev(inode->i_rdev, filp->f_mode, filp);
+	bdev = blkdev_get_by_dev(inode->i_rdev, filp->f_mode);
 	if (IS_ERR(bdev))
 		return PTR_ERR(bdev);
 

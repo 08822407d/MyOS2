@@ -156,10 +156,9 @@
 	// #define disk_to_cdi(disk)	NULL
 	// #endif
 
-	// static inline dev_t disk_devt(gendisk_s *disk)
-	// {
-	// 	return MKDEV(disk->major, disk->first_minor);
-	// }
+	static inline dev_t disk_devt(gendisk_s *disk) {
+		return MKDEV(disk->major, disk->first_minor);
+	}
 
 	// void disk_uevent(gendisk_s *disk, enum kobject_action action);
 
@@ -202,20 +201,18 @@
 	// 	return bdev->bd_start_sect;
 	// }
 
-	// static inline sector_t bdev_nr_sectors(blk_dev_s *bdev)
-	// {
-	// 	return bdev->bd_nr_sectors;
-	// }
+	static inline sector_t bdev_nr_sectors(blk_dev_s *bdev) {
+		return bdev->bd_nr_sectors;
+	}
 
 	// static inline loff_t bdev_nr_bytes(blk_dev_s *bdev)
 	// {
 	// 	return (loff_t)bdev_nr_sectors(bdev) << SECTOR_SHIFT;
 	// }
 
-	// static inline sector_t get_capacity(gendisk_s *disk)
-	// {
-	// 	return bdev_nr_sectors(disk->part0);
-	// }
+	static inline sector_t get_capacity(gendisk_s *disk) {
+		return bdev_nr_sectors(disk->part0);
+	}
 
 	// static inline __u64 sb_bdev_nr_blocks(struct super_block *sb)
 	// {
@@ -255,7 +252,7 @@
 
 	// bool bdev_check_media_change(blk_dev_s *bdev);
 	// int __invalidate_device(blk_dev_s *bdev, bool kill_dirty);
-	// void set_capacity(gendisk_s *disk, sector_t size);
+	void set_capacity(gendisk_s *disk, sector_t size);
 
 	// #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
 	// int bd_link_disk_holder(blk_dev_s *bdev, gendisk_s *disk);

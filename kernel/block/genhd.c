@@ -32,6 +32,34 @@
 // #include "blk-rq-qos.h"
 
 
+void set_capacity(gendisk_s *disk, sector_t sectors)
+{
+	blk_dev_s *bdev = disk->part0;
+
+	// spin_lock(&bdev->bd_size_lock);
+	// i_size_write(bdev->bd_inode, (loff_t)sectors << SECTOR_SHIFT);
+	bdev->bd_nr_sectors = sectors;
+	// spin_unlock(&bdev->bd_size_lock);
+}
+
+
+int disk_scan_partitions(gendisk_s *disk, fmode_t mode)
+{
+	blk_dev_s *bdev;
+
+	// if (disk->flags & (GENHD_FL_NO_PART | GENHD_FL_HIDDEN))
+	// 	return -EINVAL;
+	// if (disk->open_partitions)
+	// 	return -EBUSY;
+
+	// set_bit(GD_NEED_PART_SCAN, &disk->state);
+	bdev = blkdev_get_by_dev(disk_devt(disk), mode);
+	if (IS_ERR(bdev))
+		return PTR_ERR(bdev);
+	// blkdev_put(bdev, mode);
+	return 0;
+}
+
 /**
  * device_add_disk - add disk information to kernel list
  * @parent: parent device for the disk
@@ -82,8 +110,8 @@ int myos_device_add_disk(gendisk_s *disk)
 
 
 	bdev_add(disk->part0, ddev->devt);
-	// if (get_capacity(disk))
-	// 	disk_scan_partitions(disk, FMODE_READ);
+	if (get_capacity(disk))
+		disk_scan_partitions(disk, FMODE_READ);
 
 
 	return ret;
