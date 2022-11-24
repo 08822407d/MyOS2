@@ -326,7 +326,6 @@ void ATA_disk_handler(unsigned long parameter, stack_frame_s * sf_regs)
 	node->end_handler(parameter);	
 }
 
-extern void myos_ata_probe();
 void init_disk()
 {
 	ioapic_retentry_T entry;

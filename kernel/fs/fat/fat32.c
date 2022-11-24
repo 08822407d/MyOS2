@@ -420,6 +420,7 @@ super_ops_s FAT32_sb_ops =
 	.write_inode = fat32_write_inode,
 };
 
+extern fs_type_s FAT32_fs_type;
 super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 {
 	super_block_s * sbp = NULL;
@@ -428,7 +429,9 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	FAT32_SBinfo_s * fsbi = NULL;
 
 	//super block
-	sbp = kzalloc(sizeof(super_block_s), GFP_KERNEL);
+	sbp = alloc_super(&FAT32_fs_type, 0);
+	if (sbp == NULL)
+		return ERR_PTR(-ENOMEM);
 
 	sbp->s_op = &FAT32_sb_ops;
 	sbp->private_sb_info = kzalloc(sizeof(FAT32_SBinfo_s), GFP_KERNEL);
@@ -491,7 +494,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	return sbp;
 }
 
-fs_type_s FAT32_fs_type=
+fs_type_s FAT32_fs_type =
 {
 	.name = "FAT32",
 	.fs_flags = 0,

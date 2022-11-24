@@ -55,7 +55,7 @@ void list_delete(List_s *src)
 	list_init(src, src->owner_p);
 }
 
-bool list_is_empty(List_s *l_p)
+bool list_empty(List_s *l_p)
 {
 	return (l_p == l_p->next);
 }

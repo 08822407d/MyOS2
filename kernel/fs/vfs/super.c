@@ -106,15 +106,59 @@ void kill_litter_super(super_block_s *sb)
  *	Allocates and initializes a new &struct super_block.  alloc_super()
  *	returns a pointer new superblock or %NULL if allocation had failed.
  */
-static super_block_s *alloc_super(fs_type_s *type, int flags)
+super_block_s *alloc_super(fs_type_s *type, int flags)
 {
 	super_block_s *s = kzalloc(sizeof(super_block_s), GFP_KERNEL);
-	if (s == NULL)
-		return ERR_PTR(-ENOMEM);
 	static const super_ops_s default_op;
 	int i;
 
+	if (s == NULL)
+		return ERR_PTR(-ENOMEM);
+
+	// INIT_LIST_HEAD(&s->s_mounts);
+	// s->s_user_ns = get_user_ns(user_ns);
+	// init_rwsem(&s->s_umount);
+	// lockdep_set_class(&s->s_umount, &type->s_umount_key);
+	// /*
+	//  * sget() can have s_umount recursion.
+	//  *
+	//  * When it cannot find a suitable sb, it allocates a new
+	//  * one (this one), and tries again to find a suitable old
+	//  * one.
+	//  *
+	//  * In case that succeeds, it will acquire the s_umount
+	//  * lock of the old one. Since these are clearly distrinct
+	//  * locks, and this object isn't exposed yet, there's no
+	//  * risk of deadlocks.
+	//  *
+	//  * Annotate this by putting this lock in a different
+	//  * subclass.
+	//  */
+	// down_write_nested(&s->s_umount, SINGLE_DEPTH_NESTING);
+
+	// if (security_sb_alloc(s))
+	// 	goto fail;
+
+	// for (i = 0; i < SB_FREEZE_LEVELS; i++) {
+	// 	if (__percpu_init_rwsem(&s->s_writers.rw_sem[i],
+	// 				sb_writers_name[i],
+	// 				&type->s_writers_key[i]))
+	// 		goto fail;
+	// }
+	// init_waitqueue_head(&s->s_writers.wait_unfrozen);
+	// s->s_bdi = &noop_backing_dev_info;
 	s->s_flags = flags;
+	// if (s->s_user_ns != &init_user_ns)
+	// 	s->s_iflags |= SB_I_NODEV;
+	// INIT_HLIST_NODE(&s->s_instances);
+	// INIT_HLIST_BL_HEAD(&s->s_roots);
+	// mutex_init(&s->s_sync_lock);
+	// INIT_LIST_HEAD(&s->s_inodes);
+	list_hdr_init(&s->s_inodes);
+	// spin_lock_init(&s->s_inode_list_lock);
+	// INIT_LIST_HEAD(&s->s_inodes_wb);
+	// spin_lock_init(&s->s_inode_wblist_lock);
+
 	s->s_count = 1;
 	s->s_maxbytes = MAX_NON_LFS;
 	s->s_op = &default_op;

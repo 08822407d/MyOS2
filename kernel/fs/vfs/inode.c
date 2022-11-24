@@ -82,13 +82,13 @@ int inode_init_always(super_block_s *sb, inode_s *inode)
 	inode->i_flags = 0;
 	inode->i_op = &empty_iops;
 	inode->i_fop = &no_open_fops;
-	// inode->i_ino = 0;
+	inode->i_ino = 0;
 	inode->i_opflags = 0;
 	inode->i_size = 0;
 	inode->i_blocks = 0;
 	// inode->i_bytes = 0;
 	// inode->i_pipe = NULL;
-	// inode->i_cdev = NULL;
+	inode->i_cdev = NULL;
 	inode->i_rdev = 0;
 
 	// if (security_inode_alloc(inode))
@@ -158,6 +158,30 @@ void inode_init_once(inode_s *inode)
 	// i_size_ordered_init(inode);
 }
 
+
+/**
+ * inode_sb_list_add - add inode to the superblock list of inodes
+ * @inode: inode to add
+ */
+void inode_sb_list_add(inode_s *inode)
+{
+	// spin_lock(&inode->i_sb->s_inode_list_lock);
+	// list_add(&inode->i_sb_list, &inode->i_sb->s_inodes);
+	list_hdr_append(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	// spin_unlock(&inode->i_sb->s_inode_list_lock);
+}
+
+static inline void inode_sb_list_del(inode_s *inode)
+{
+	if (!list_empty(&inode->i_sb_list)) {
+	// 	spin_lock(&inode->i_sb->s_inode_list_lock);
+	// 	list_del_init(&inode->i_sb_list);
+	list_hdr_delete(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	// 	spin_unlock(&inode->i_sb->s_inode_list_lock);
+	}
+}
+
+
 /**
  *	new_inode 	- obtain an inode
  *	@sb: superblock
@@ -172,13 +196,19 @@ void inode_init_once(inode_s *inode)
  */
 inode_s *new_inode(super_block_s *sb)
 {
-	inode_s *inode = alloc_inode(sb);
-
 	// struct inode *new_inode_pseudo(struct super_block *sb)
 	// {
-		if (inode != NULL)
-			inode->i_sb = sb;
+	inode_s *inode = alloc_inode(sb);
+	if (inode != NULL)
+	{
+		inode->i_sb = sb;
+		list_init(&inode->i_sb_list, inode);
+	}
 	// }
+
+	if (inode != NULL)
+		inode_sb_list_add(inode);
+
 	return inode;
 }
 

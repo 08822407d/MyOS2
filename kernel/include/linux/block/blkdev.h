@@ -1289,7 +1289,7 @@
 	// void blkdev_put_no_open(blk_dev_s *bdev);
 
 	blk_dev_s *bdev_alloc(gendisk_s *disk, u8 partno);
-	// void bdev_add(blk_dev_s *bdev, dev_t dev);
+	void bdev_add(blk_dev_s *bdev, dev_t dev);
 	// blk_dev_s *I_BDEV(struct inode *inode);
 	// int truncate_bdev_range(blk_dev_s *bdev, fmode_t mode, loff_t lstart,
 	// 		loff_t lend);

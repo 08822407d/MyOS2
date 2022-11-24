@@ -580,14 +580,14 @@
 	* of the 'inode_s'
 	*/
 	typedef struct inode {
-		void			*private_idx_info;
+		void				*private_idx_info;
 
 
-		umode_t			i_mode;
-		unsigned short	i_opflags;
-		// kuid_t			i_uid;
-		// kgid_t			i_gid;
-		unsigned int	i_flags;
+		umode_t				i_mode;
+		unsigned short		i_opflags;
+		kuid_t				i_uid;
+		kgid_t				i_gid;
+		unsigned int		i_flags;
 
 	// #ifdef CONFIG_FS_POSIX_ACL
 	// 	struct posix_acl	*i_acl;
@@ -603,20 +603,20 @@
 	// #endif
 
 		/* Stat data, not accessed from path walking */
-		// unsigned long		i_ino;
+		unsigned long		i_ino;
 		/*
-		* Filesystems may only read i_nlink directly.  They shall use the
-		* following functions for modification:
-		*
-		*    (set|clear|inc|drop)_nlink
-		*    inode_(inc|dec)_link_count
-		*/
+		 * Filesystems may only read i_nlink directly.  They shall use the
+		 * following functions for modification:
+		 *
+		 *    (set|clear|inc|drop)_nlink
+		 *    inode_(inc|dec)_link_count
+		 */
 		// union {
 		// 	const unsigned int	i_nlink;
 		// 	unsigned int 		__i_nlink;
 		// };
-		dev_t			i_rdev;
-		loff_t			i_size;
+		dev_t				i_rdev;
+		loff_t				i_size;
 		// timespec64_s	i_atime;
 		// timespec64_s	i_mtime;
 		// timespec64_s	i_ctime;
@@ -624,7 +624,7 @@
 		// unsigned short	i_bytes;
 		// u8				i_blkbits;
 		// u8				i_write_hint;
-		blkcnt_t		i_blocks;
+		blkcnt_t			i_blocks;
 
 	// #ifdef __NEED_I_SIZE_ORDERED
 	// 	seqcount_t		i_size_seqcount;
@@ -649,6 +649,7 @@
 	// #endif
 		// list_head_s		i_lru;		/* inode LRU list */
 		// list_head_s		i_sb_list;
+		List_s				i_sb_list;
 		// list_head_s		i_wb_list;	/* backing dev writeback list */
 		// union {
 		// 	hlist_head_s	i_dentry;
@@ -1500,6 +1501,7 @@
 		// /* s_inode_list_lock protects s_inodes */
 		// spinlock_t		s_inode_list_lock ____cacheline_aligned_in_smp;
 		// list_head_s		s_inodes;	/* all inodes */
+		List_hdr_s			s_inodes;	/* all inodes */
 
 		// spinlock_t		s_inode_wblist_lock;
 		// list_head_s		s_inodes_wb;	/* writeback inodes */
@@ -3041,7 +3043,7 @@
 	// 		__remove_inode_hash(inode);
 	// }
 
-	// extern void inode_sb_list_add(inode_s *inode);
+	extern void inode_sb_list_add(inode_s *inode);
 	// extern void inode_add_lru(inode_s *inode);
 
 	// extern int sb_set_blocksize(super_block_s *, int);
@@ -3531,6 +3533,7 @@
 	extern super_block_s *myos_root_sb;
 	extern mount_s myos_root_mnt;
 
+	super_block_s *alloc_super(fs_type_s *type, int flags);
 	unsigned long myos_switch_to_root_disk(void);
 
 #endif /* _LINUX_FS_H */

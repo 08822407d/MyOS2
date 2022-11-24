@@ -80,6 +80,12 @@ int myos_device_add_disk(gendisk_s *disk)
 		ddev->devt = MKDEV(disk->major, disk->first_minor);
 	ret = device_add(ddev);
 
+
+	bdev_add(disk->part0, ddev->devt);
+	// if (get_capacity(disk))
+	// 	disk_scan_partitions(disk, FMODE_READ);
+
+
 	return ret;
 }
 
