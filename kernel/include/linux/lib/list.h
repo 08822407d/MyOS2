@@ -53,7 +53,7 @@
 
 	#define list_hdr_foreach_entry(lhdr, member)		\
 			for ((member) = (lhdr)->header.next;		\
-				(member) != (lhdr)->header.prev;		\
+				(member) != &(lhdr)->header;		\
 				(member) = (member)->next)
 
 #endif /* _LINUX_LIST_H */
