@@ -840,15 +840,14 @@
 	// 	return inode->i_size;
 	// }
 
-	// /*
-	// * NOTE: unlike i_size_read(), i_size_write() does need locking around it
-	// * (normally i_mutex), otherwise on 32bit/SMP an update of i_size_seqcount
-	// * can be lost, resulting in subsequent i_size_read() calls spinning forever.
-	// */
-	// static inline void i_size_write(inode_s *inode, loff_t i_size)
-	// {
-	// 	inode->i_size = i_size;
-	// }
+	/*
+	 * NOTE: unlike i_size_read(), i_size_write() does need locking around it
+	 * (normally i_mutex), otherwise on 32bit/SMP an update of i_size_seqcount
+	 * can be lost, resulting in subsequent i_size_read() calls spinning forever.
+	 */
+	static inline void i_size_write(inode_s *inode, loff_t i_size) {
+		inode->i_size = i_size;
+	}
 
 	// static inline unsigned iminor(const inode_s *inode)
 	// {

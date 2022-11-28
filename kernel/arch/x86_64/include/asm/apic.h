@@ -148,28 +148,17 @@
 	// extern void setup_secondary_APIC_clock(void);
 	// extern void lapic_update_tsc_freq(void);
 
-	// #ifdef CONFIG_X86_64
 	// static inline int apic_force_enable(unsigned long addr)
 	// {
 	// 	return -1;
 	// }
-	// #else
-	// extern int apic_force_enable(unsigned long addr);
-	// #endif
 
 	// extern void apic_ap_setup(void);
 
 	// /*
 	// * On 32bit this is mach-xxx local
 	// */
-	// #ifdef CONFIG_X86_64
 	// extern int apic_is_clustered_box(void);
-	// #else
-	// static inline int apic_is_clustered_box(void)
-	// {
-	// 	return 0;
-	// }
-	// #endif
 
 	// extern int setup_APIC_eilvt(u8 lvt_off, u8 vector, u8 msg_type, u8 mask);
 	// extern void lapic_assign_system_vectors(void);

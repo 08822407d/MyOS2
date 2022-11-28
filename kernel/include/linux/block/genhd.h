@@ -220,7 +220,7 @@
 	// 		(sb->s_blocksize_bits - SECTOR_SHIFT);
 	// }
 
-	// int bdev_disk_changed(gendisk_s *disk, bool invalidate);
+	int bdev_disk_changed(gendisk_s *disk, bool invalidate);
 	// void blk_drop_partitions(gendisk_s *disk);
 
 	gendisk_s *__alloc_disk_node(request_queue_s *q);

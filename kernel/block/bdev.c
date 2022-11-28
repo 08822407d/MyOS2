@@ -148,6 +148,77 @@ void bdev_add(blk_dev_s *bdev, dev_t dev)
 }
 
 
+
+static int blkdev_get_whole(blk_dev_s *bdev, fmode_t mode)
+{
+	gendisk_s *disk = bdev->bd_disk;
+	int ret;
+
+	if (disk->fops->open) {
+		ret = disk->fops->open(bdev, mode);
+	// 	if (ret) {
+	// 		/* avoid ghost partitions on a removed medium */
+	// 		if (ret == -ENOMEDIUM &&
+	// 		     test_bit(GD_NEED_PART_SCAN, &disk->state))
+	// 			bdev_disk_changed(disk, true);
+	// 		return ret;
+	// 	}
+	}
+
+	// if (!bdev->bd_openers)
+	// 	set_init_blocksize(bdev);
+	// if (test_bit(GD_NEED_PART_SCAN, &disk->state))
+		bdev_disk_changed(disk, false);
+	// bdev->bd_openers++;
+	return 0;;
+}
+
+static void blkdev_put_whole(blk_dev_s *bdev, fmode_t mode)
+{
+	// if (!--bdev->bd_openers)
+	// 	blkdev_flush_mapping(bdev);
+	// if (bdev->bd_disk->fops->release)
+	// 	bdev->bd_disk->fops->release(bdev->bd_disk, mode);
+}
+
+static int blkdev_get_part(blk_dev_s *part, fmode_t mode)
+{
+	// gendisk_s *disk = part->bd_disk;
+	int ret;
+
+	// if (part->bd_openers)
+	// 	goto done;
+
+	ret = blkdev_get_whole(bdev_whole(part), mode);
+	if (ret)
+		return ret;
+
+	ret = -ENXIO;
+// 	if (!bdev_nr_sectors(part))
+// 		goto out_blkdev_put;
+
+// 	disk->open_partitions++;
+// 	set_init_blocksize(part);
+// done:
+// 	part->bd_openers++;
+// 	return 0;
+
+out_blkdev_put:
+	blkdev_put_whole(bdev_whole(part), mode);
+	return ret;
+}
+
+static void blkdev_put_part(blk_dev_s *part, fmode_t mode)
+{
+	// struct block_device *whole = bdev_whole(part);
+
+	// if (--part->bd_openers)
+	// 	return;
+	// blkdev_flush_mapping(part);
+	// whole->bd_disk->open_partitions--;
+	// blkdev_put_whole(whole, mode);
+}
+
 blk_dev_s *blkdev_get_no_open(dev_t dev)
 {
 	blk_dev_s *bdev;
@@ -214,54 +285,54 @@ blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode)
 		return ERR_PTR(-ENXIO);
 	disk = bdev->bd_disk;
 
-// 	if (mode & FMODE_EXCL) {
-// 		ret = bd_prepare_to_claim(bdev, holder);
-// 		if (ret)
-// 			goto put_blkdev;
-// 	}
+	// if (mode & FMODE_EXCL) {
+	// 	ret = bd_prepare_to_claim(bdev, holder);
+	// 	if (ret)
+	// 		goto put_blkdev;
+	// }
 
-// 	disk_block_events(disk);
+	// disk_block_events(disk);
 
-// 	mutex_lock(&disk->open_mutex);
-// 	ret = -ENXIO;
-// 	if (!disk_live(disk))
-// 		goto abort_claiming;
-// 	if (!try_module_get(disk->fops->owner))
-// 		goto abort_claiming;
-// 	if (bdev_is_partition(bdev))
-// 		ret = blkdev_get_part(bdev, mode);
-// 	else
-// 		ret = blkdev_get_whole(bdev, mode);
-// 	if (ret)
-// 		goto put_module;
-// 	if (mode & FMODE_EXCL) {
-// 		bd_finish_claiming(bdev, holder);
+	// mutex_lock(&disk->open_mutex);
+	// ret = -ENXIO;
+	// if (!disk_live(disk))
+	// 	goto abort_claiming;
+	// if (!try_module_get(disk->fops->owner))
+	// 	goto abort_claiming;
+	if (bdev_is_partition(bdev))
+		ret = blkdev_get_part(bdev, mode);
+	else
+		ret = blkdev_get_whole(bdev, mode);
+	// if (ret)
+	// 	goto put_module;
+	// if (mode & FMODE_EXCL) {
+	// 	bd_finish_claiming(bdev, holder);
 
-// 		/*
-// 		 * Block event polling for write claims if requested.  Any write
-// 		 * holder makes the write_holder state stick until all are
-// 		 * released.  This is good enough and tracking individual
-// 		 * writeable reference is too fragile given the way @mode is
-// 		 * used in blkdev_get/put().
-// 		 */
-// 		if ((mode & FMODE_WRITE) && !bdev->bd_write_holder &&
-// 		    (disk->event_flags & DISK_EVENT_FLAG_BLOCK_ON_EXCL_WRITE)) {
-// 			bdev->bd_write_holder = true;
-// 			unblock_events = false;
-// 		}
-// 	}
-// 	mutex_unlock(&disk->open_mutex);
+	// 	/*
+	// 	 * Block event polling for write claims if requested.  Any write
+	// 	 * holder makes the write_holder state stick until all are
+	// 	 * released.  This is good enough and tracking individual
+	// 	 * writeable reference is too fragile given the way @mode is
+	// 	 * used in blkdev_get/put().
+	// 	 */
+	// 	if ((mode & FMODE_WRITE) && !bdev->bd_write_holder &&
+	// 	    (disk->event_flags & DISK_EVENT_FLAG_BLOCK_ON_EXCL_WRITE)) {
+	// 		bdev->bd_write_holder = true;
+	// 		unblock_events = false;
+	// 	}
+	// }
+	// mutex_unlock(&disk->open_mutex);
 
-// 	if (unblock_events)
-// 		disk_unblock_events(disk);
+	// if (unblock_events)
+	// 	disk_unblock_events(disk);
 	return bdev;
-// put_module:
-// 	module_put(disk->fops->owner);
-// abort_claiming:
-// 	if (mode & FMODE_EXCL)
-// 		bd_abort_claiming(bdev, holder);
-// 	mutex_unlock(&disk->open_mutex);
-// 	disk_unblock_events(disk);
+put_module:
+	// module_put(disk->fops->owner);
+abort_claiming:
+	// if (mode & FMODE_EXCL)
+	// 	bd_abort_claiming(bdev, holder);
+	// mutex_unlock(&disk->open_mutex);
+	// disk_unblock_events(disk);
 put_blkdev:
 	blkdev_put_no_open(bdev);
 	return ERR_PTR(ret);

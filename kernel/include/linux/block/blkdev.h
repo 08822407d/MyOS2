@@ -871,10 +871,9 @@
 	// 					gfp_mask, 0);
 	// }
 
-	// static inline bool bdev_is_partition(blk_dev_s *bdev)
-	// {
-	// 	return bdev->bd_partno;
-	// }
+	static inline bool bdev_is_partition(blk_dev_s *bdev) {
+		return bdev->bd_partno;
+	}
 
 	// enum blk_default_limits {
 	// 	BLK_MAX_SEGMENTS	= 128,
@@ -1188,8 +1187,8 @@
 
 	typedef struct block_device_operations {
 	// 	void (*submit_bio)(struct bio *bio);
-	// 	int (*open) (blk_dev_s *, fmode_t);
-	// 	void (*release) (struct gendisk *, fmode_t);
+		int (*open) (blk_dev_s *, fmode_t);
+		void (*release) (struct gendisk *, fmode_t);
 	// 	int (*rw_page)(blk_dev_s *, sector_t, struct page *, unsigned int);
 	// 	int (*ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
 	// 	int (*compat_ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
@@ -1269,13 +1268,13 @@
 
 	// void blkdev_show(struct seq_file *seqf, off_t offset);
 
-	// #define BDEVNAME_SIZE	32	/* Largest string for a blockdev identifier */
-	// #define BDEVT_SIZE	10	/* Largest string for MAJ:MIN for blkdev */
-	// #ifdef CONFIG_BLOCK
-	// #define BLKDEV_MAJOR_MAX	512
-	// #else
-	// #define BLKDEV_MAJOR_MAX	0
-	// #endif
+	#define BDEVNAME_SIZE		32	/* Largest string for a blockdev identifier */
+	#define BDEVT_SIZE			10	/* Largest string for MAJ:MIN for blkdev */
+	#ifdef CONFIG_BLOCK
+	#	define BLKDEV_MAJOR_MAX	512
+	#else
+	#	define BLKDEV_MAJOR_MAX	0
+	#endif
 
 	blk_dev_s *blkdev_get_by_path(const char *path, fmode_t mode);
 	blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode);
