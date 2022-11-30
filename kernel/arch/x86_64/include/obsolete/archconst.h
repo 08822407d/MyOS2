@@ -1,7 +1,10 @@
 #ifndef _AMD64_ACONST_H_
 #define _AMD64_ACONST_H_ 1
 
-#include <linux/kernel/math.h>
+#ifndef __ASSEMBLY__
+#	include <linux/kernel/math.h>
+#endif /* !__ASSEMBLY__ */
+
 #include <klib/const.h>
 
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF

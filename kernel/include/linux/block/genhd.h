@@ -196,19 +196,17 @@
 	// extern void add_disk_randomness(gendisk_s *disk) __latent_entropy;
 	// extern void rand_initialize_disk(gendisk_s *disk);
 
-	// static inline sector_t get_start_sect(blk_dev_s *bdev)
-	// {
-	// 	return bdev->bd_start_sect;
-	// }
+	static inline sector_t get_start_sect(blk_dev_s *bdev) {
+		return bdev->bd_start_sect;
+	}
 
 	static inline sector_t bdev_nr_sectors(blk_dev_s *bdev) {
 		return bdev->bd_nr_sectors;
 	}
 
-	// static inline loff_t bdev_nr_bytes(blk_dev_s *bdev)
-	// {
-	// 	return (loff_t)bdev_nr_sectors(bdev) << SECTOR_SHIFT;
-	// }
+	static inline loff_t bdev_nr_bytes(blk_dev_s *bdev) {
+		return (loff_t)bdev_nr_sectors(bdev) << SECTOR_SHIFT;
+	}
 
 	static inline sector_t get_capacity(gendisk_s *disk) {
 		return bdev_nr_sectors(disk->part0);

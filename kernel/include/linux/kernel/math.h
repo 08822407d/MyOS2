@@ -2,7 +2,7 @@
 #ifndef _LINUX_MATH_H
 #define _LINUX_MATH_H
 
-	// #include <asm/div64.h>
+	#include <asm/div64.h>
 	#include <uapi/kernel/kernel.h>
 
 	/*
@@ -35,11 +35,13 @@
 
 	#define DIV_ROUND_UP		__KERNEL_DIV_ROUND_UP
 
-	// #define DIV_ROUND_DOWN_ULL(ll, d) \
-	// 		({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+	#define DIV_ROUND_DOWN_ULL(ll, d) ({		\
+				unsigned long long _tmp = (ll);	\
+				do_div(_tmp, d); _tmp;			\
+			})
 
-	// #define DIV_ROUND_UP_ULL(ll, d) \
-	// 		DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
+	#define DIV_ROUND_UP_ULL(ll, d) \
+				DIV_ROUND_DOWN_ULL((unsigned long long)(ll) + (d) - 1, (d))
 
 	#define DIV_ROUND_UP_SECTOR_T(ll,d)	DIV_ROUND_UP(ll,d)
 
@@ -84,29 +86,27 @@
 					(((__x) - ((__d) / 2)) / (__d));	\
 			})
 	/*
-	* Same as above but for u64 dividends. divisor must be a 32-bit
-	* number.
-	*/
-	// #define DIV_ROUND_CLOSEST_ULL(x, divisor)(					\
-	// 			{												\
-	// 				typeof(divisor) __d = divisor;				\
-	// 				unsigned long long _tmp = (x) + (__d) / 2;	\
-	// 				do_div(_tmp, __d);							\
-	// 				_tmp;										\
-	// 			}												\
-	// 		)
+	 * Same as above but for u64 dividends. divisor must be a 32-bit
+	 * number.
+	 */
+	#define DIV_ROUND_CLOSEST_ULL(x, divisor) ({			\
+				typeof(divisor) __d = divisor;				\
+				unsigned long long _tmp = (x) + (__d) / 2;	\
+				do_div(_tmp, __d);							\
+				_tmp;										\
+			})
 
 	/*
-	* Multiplies an integer by a fraction, while avoiding unnecessary
-	* overflow or loss of precision.
-	*/
+	 * Multiplies an integer by a fraction, while avoiding unnecessary
+	 * overflow or loss of precision.
+	 */
 	#define mult_frac(x, numer, denom) ({						\
 				typeof(x) quot = (x) / (denom);					\
 				typeof(x) rem  = (x) % (denom);					\
 				(quot * (numer)) + ((rem * (numer)) / (denom));	\
 			})
 
-	// #define sector_div(a, b) do_div(a, b)
+	#define sector_div(a, b)	do_div(a, b)
 
 	/**
 	 * abs - return absolute value of an argument
@@ -116,20 +116,28 @@
 	 *
 	 * Return: an absolute value of x.
 	 */
-	// #define abs(x)	__abs_choose_expr(x, long long,					\
-	// 		__abs_choose_expr(x, long,								\
-	// 		__abs_choose_expr(x, int,								\
-	// 		__abs_choose_expr(x, short,								\
-	// 		__abs_choose_expr(x, char,								\
-	// 		__builtin_choose_expr(									\
-	// 			__builtin_types_compatible_p(typeof(x), char),		\
-	// 			(char)({ signed char __x = (x); __x<0?-__x:__x; }),	\
-	// 			((void)0)))))))
+	#define abs(x)																			\
+				__abs_choose_expr(x, long long,												\
+					__abs_choose_expr(x, long,												\
+						__abs_choose_expr(x, int,											\
+							__abs_choose_expr(x, short,										\
+								__abs_choose_expr(x, char,									\
+									__builtin_choose_expr(									\
+										__builtin_types_compatible_p(typeof(x), char),		\
+										(char)({ signed char __x = (x); __x<0?-__x:__x; }),	\
+										((void)0)											\
+									)														\
+								)															\
+							)																\
+						)																	\
+					)																		\
+				)
 
-	// #define __abs_choose_expr(x, type, other) __builtin_choose_expr(	\
-	// 		__builtin_types_compatible_p(typeof(x),   signed type) ||	\
-	// 		__builtin_types_compatible_p(typeof(x), unsigned type),		\
-	// 		({ signed type __x = (x); __x < 0 ? -__x : __x; }), other)
+	#define __abs_choose_expr(x, type, other) __builtin_choose_expr(		\
+				__builtin_types_compatible_p(typeof(x),   signed type) ||	\
+				__builtin_types_compatible_p(typeof(x), unsigned type),		\
+				({ signed type __x = (x); __x < 0 ? -__x : __x; }), other	\
+			)
 
 	/**
 	 * reciprocal_scale - "scale" a value into range [0, ep_ro)
@@ -145,21 +153,15 @@
 	 *
 	 * Return: a result based on @val in interval [0, @ep_ro).
 	 */
-	// static inline u32 reciprocal_scale(u32 val, u32 ep_ro)
-	// {
-	// 	return (u32)(((u64) val * ep_ro) >> 32);
-	// }
+	static inline u32 reciprocal_scale(u32 val, u32 ep_ro) {
+		return (u32)(((u64) val * ep_ro) >> 32);
+	}
 
-	// u64 int_pow(u64 base, unsigned int exp);
-	// unsigned long int_sqrt(unsigned long);
+	u64 int_pow(u64 base, unsigned int exp);
+	unsigned long int_sqrt(unsigned long);
 
-	// #if BITS_PER_LONG < 64
-	// u32 int_sqrt64(u64 x);
-	// #else
-	// static inline u32 int_sqrt64(u64 x)
-	// {
-	// 	return (u32)int_sqrt(x);
-	// }
-	// #endif
+	static inline u32 int_sqrt64(u64 x) {
+		return (u32)int_sqrt(x);
+	}
 
 #endif	/* _LINUX_MATH_H */

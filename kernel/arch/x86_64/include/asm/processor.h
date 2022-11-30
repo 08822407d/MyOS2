@@ -31,7 +31,7 @@
 	// #include <linux/personality.h>
 	#include <linux/kernel/cache.h>
 	// #include <linux/threads.h>
-	// #include <linux/math64.h>
+	#include <linux/kernel/math64.h>
 	#include <linux/kernel/err.h>
 	// #include <linux/irqflags.h>
 	// #include <linux/mem_encrypt.h>

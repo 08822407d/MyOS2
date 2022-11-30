@@ -85,12 +85,195 @@
 #include <linux/kernel/kernel.h>
 // #include <linux/crc32.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/math64.h>
+#include <linux/kernel/math64.h>
 #include <linux/kernel/slab.h>
 #include "part_check.h"
 #include "efi.h"
 
 
+
+/**
+ * last_lba(): return number of last logical block of device
+ * @disk: block device
+ * 
+ * Description: Returns last LBA value on success, 0 on error.
+ * This is stored (by sd and ide-geometry) in
+ *  the part[0] entry for this disk, and is the number of
+ *  physical sectors available on the disk.
+ */
+static u64
+last_lba(gendisk_s *disk) {
+	// return div_u64(bdev_nr_bytes(disk->part0),
+	// 	       queue_logical_block_size(disk->queue)) - 1ULL;
+}
+
+
+/**
+ * read_lba(): Read bytes from disk, starting at given LBA
+ * @state: disk parsed partitions
+ * @lba: the Logical Block Address of the partition table
+ * @buffer: destination buffer
+ * @count: bytes to read
+ *
+ * Description: Reads @count bytes from @state->disk into @buffer.
+ * Returns number of bytes read on success, 0 on error.
+ */
+static size_t
+read_lba(parsed_parts_s *state, u64 lba, u8 *buffer, size_t count)
+{
+	// size_t totalreadcount = 0;
+	// sector_t n = lba *
+	// 	(queue_logical_block_size(state->disk->queue) / 512);
+
+	// if (!buffer || lba > last_lba(state->disk))
+    //             return 0;
+
+	// while (count) {
+	// 	int copied = 512;
+	// 	Sector sect;
+	// 	unsigned char *data = read_part_sector(state, n++, &sect);
+	// 	if (!data)
+	// 		break;
+	// 	if (copied > count)
+	// 		copied = count;
+	// 	memcpy(buffer, data, copied);
+	// 	put_dev_sector(sect);
+	// 	buffer += copied;
+	// 	totalreadcount +=copied;
+	// 	count -= copied;
+	// }
+	// return totalreadcount;
+}
+
+
+/**
+ * find_valid_gpt() - Search disk for valid GPT headers and PTEs
+ * @state: disk parsed partitions
+ * @gpt: GPT header ptr, filled on return.
+ * @ptes: PTEs ptr, filled on return.
+ *
+ * Description: Returns 1 if valid, 0 on error.
+ * If valid, returns pointers to newly allocated GPT header and PTEs.
+ * Validity depends on PMBR being valid (or being overridden by the
+ * 'gpt' kernel command line option) and finding either the Primary
+ * GPT header and PTEs valid, or the Alternate GPT header and PTEs
+ * valid.  If the Primary GPT header is not valid, the Alternate GPT header
+ * is not checked unless the 'gpt' kernel command line option is passed.
+ * This protects against devices which misreport their size, and forces
+ * the user to decide to use the Alternate GPT.
+ */
+static int
+find_valid_gpt(parsed_parts_s *state, gpt_header **gpt, gpt_entry **ptes)
+{
+	int good_pgpt = 0, good_agpt = 0, good_pmbr = 0;
+	gpt_header *pgpt = NULL, *agpt = NULL;
+	gpt_entry *pptes = NULL, *aptes = NULL;
+	legacy_mbr *legacymbr;
+	gendisk_s *disk = state->disk;
+	const blk_dev_ops_s *fops = disk->fops;
+	sector_t total_sectors = get_capacity(state->disk);
+	u64 lastlba;
+
+	if (!ptes)
+		return 0;
+
+	lastlba = last_lba(state->disk);
+// 		if (!force_gpt) {
+// 		/* This will be added to the EFI Spec. per Intel after v1.02. */
+// 		legacymbr = kzalloc(sizeof(*legacymbr), GFP_KERNEL);
+// 		if (!legacymbr)
+// 			goto fail;
+
+// 		read_lba(state, 0, (u8 *)legacymbr, sizeof(*legacymbr));
+// 		good_pmbr = is_pmbr_valid(legacymbr, total_sectors);
+// 		kfree(legacymbr);
+
+// 		if (!good_pmbr)
+// 			goto fail;
+
+// 		pr_debug("Device has a %s MBR\n",
+// 			 good_pmbr == GPT_MBR_PROTECTIVE ?
+// 						"protective" : "hybrid");
+// 	}
+
+// 	good_pgpt = is_gpt_valid(state, GPT_PRIMARY_PARTITION_TABLE_LBA,
+// 				 &pgpt, &pptes);
+// 		if (good_pgpt)
+// 		good_agpt = is_gpt_valid(state,
+// 					 le64_to_cpu(pgpt->alternate_lba),
+// 					 &agpt, &aptes);
+// 		if (!good_agpt && force_gpt)
+// 				good_agpt = is_gpt_valid(state, lastlba, &agpt, &aptes);
+
+// 	if (!good_agpt && force_gpt && fops->alternative_gpt_sector) {
+// 		sector_t agpt_sector;
+// 		int err;
+
+// 		err = fops->alternative_gpt_sector(disk, &agpt_sector);
+// 		if (!err)
+// 			good_agpt = is_gpt_valid(state, agpt_sector,
+// 						 &agpt, &aptes);
+// 	}
+
+// 		/* The obviously unsuccessful case */
+// 		if (!good_pgpt && !good_agpt)
+// 				goto fail;
+
+// 		compare_gpts(pgpt, agpt, lastlba);
+
+// 		/* The good cases */
+// 		if (good_pgpt) {
+// 				*gpt  = pgpt;
+// 				*ptes = pptes;
+// 				kfree(agpt);
+// 				kfree(aptes);
+// 		if (!good_agpt)
+// 						pr_warn("Alternate GPT is invalid, using primary GPT.\n");
+// 				return 1;
+// 		}
+// 		else if (good_agpt) {
+// 				*gpt  = agpt;
+// 				*ptes = aptes;
+// 				kfree(pgpt);
+// 				kfree(pptes);
+// 		pr_warn("Primary GPT is invalid, using alternate GPT.\n");
+// 				return 1;
+// 		}
+
+//  fail:
+// 		kfree(pgpt);
+// 		kfree(agpt);
+// 		kfree(pptes);
+// 		kfree(aptes);
+// 		*gpt = NULL;
+// 		*ptes = NULL;
+// 		return 0;
+}
+
+// /**
+//  * utf16_le_to_7bit(): Naively converts a UTF-16LE string to 7-bit ASCII characters
+//  * @in: input UTF-16LE string
+//  * @size: size of the input string
+//  * @out: output string ptr, should be capable to store @size+1 characters
+//  *
+//  * Description: Converts @size UTF16-LE symbols from @in string to 7-bit
+//  * ASCII characters and stores them to @out. Adds trailing zero to @out array.
+//  */
+// static void utf16_le_to_7bit(const __le16 *in, unsigned int size, u8 *out)
+// {
+// 	unsigned int i = 0;
+
+// 	out[size] = 0;
+
+// 	while (i < size) {
+// 		u8 c = le16_to_cpu(in[i]) & 0xff;
+
+// 		if (c && !isprint(c))
+// 			c = '!';
+// 		out[i] = c;
+// 		i++;
+// 	}
+// }
 
 /**
  * efi_partition - scan for GPT partitions
@@ -118,11 +301,11 @@ int efi_partition(parsed_parts_s *state)
 	u32 i;
 	// unsigned ssz = queue_logical_block_size(state->disk->queue) / 512;
 
-	// if (!find_valid_gpt(state, &gpt, &ptes) || !gpt || !ptes) {
-	// 	kfree(gpt);
-	// 	kfree(ptes);
-	// 	return 0;
-	// }
+	if (!find_valid_gpt(state, &gpt, &ptes) || !gpt || !ptes) {
+		kfree(gpt);
+		kfree(ptes);
+		return 0;
+	}
 
 	// pr_debug("GUID Partition Table is valid!  Yea!\n");
 
