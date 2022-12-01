@@ -121,7 +121,7 @@ last_lba(gendisk_s *disk) {
 static size_t
 read_lba(parsed_parts_s *state, u64 lba, u8 *buffer, size_t count)
 {
-	// size_t totalreadcount = 0;
+	size_t totalreadcount = 0;
 	// sector_t n = lba *
 	// 	(queue_logical_block_size(state->disk->queue) / 512);
 
@@ -184,7 +184,7 @@ find_valid_gpt(parsed_parts_s *state, gpt_header **gpt, gpt_entry **ptes)
 // 		if (!legacymbr)
 // 			goto fail;
 
-// 		read_lba(state, 0, (u8 *)legacymbr, sizeof(*legacymbr));
+		read_lba(state, 0, (u8 *)legacymbr, sizeof(*legacymbr));
 // 		good_pmbr = is_pmbr_valid(legacymbr, total_sectors);
 // 		kfree(legacymbr);
 
