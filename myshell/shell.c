@@ -72,6 +72,8 @@ int main(int argc, const char *argv[])
 	char buf[SZ_1K];
 	int index = -1;
 
+	int hdfd = open("/dev/hdb", O_RDWR, 0);
+
 	while (1)
 	{
 		printf("\n");
