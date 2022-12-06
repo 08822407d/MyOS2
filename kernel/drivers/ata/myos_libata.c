@@ -320,7 +320,7 @@ int myos_ata_port_probe(ata_dev_s *disk)
 		gd->major = IDE1_MAJOR;
 	else
 		while (1);
-	gd->first_minor = 0;
+	gd->first_minor = disk->devno;
 	gd->minors = MAX_IDE_DEV_NR;	
 	gd->fops = &ide_fops;
 

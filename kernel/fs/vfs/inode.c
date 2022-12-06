@@ -291,9 +291,9 @@ void iput(inode_s *inode)
 	if (inode == NULL)
 		return;
 
-	// input_final()
+	// iput_final()
 	// {
-		kfree(inode);
+		// kfree(inode);
 	// }
 }
 
