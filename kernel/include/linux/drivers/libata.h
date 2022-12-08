@@ -26,6 +26,7 @@
 
 
 	#include <linux/device/device.h>
+	#include <linux/block/genhd.h>
 	#include "myos_ide.h"
 
 	// /*
@@ -928,6 +929,7 @@
 	} ata_port_info_s;
 
 	typedef struct ata_device {
+		gendisk_s		gd;
 		ata_port_s		*ap;
 		char			*name;
 
@@ -2033,6 +2035,10 @@
 
 	// 		return status;
 	// 	}
+
+	static inline ata_dev_s *myos_gendisk_to_atadev(gendisk_s *gd) {
+		return container_of(gd, ata_dev_s, gd);
+	}
 
 	unsigned int ata_devchk(ata_port_s *ap, unsigned int device);
 	// #endif /* CONFIG_ATA_SFF */

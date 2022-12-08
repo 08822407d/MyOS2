@@ -81,6 +81,9 @@ static int blkdev_open(inode_s *inode, file_s *filp)
 	filp->private_data = bdev;
 	// filp->f_mapping = bdev->bd_inode->i_mapping;
 	// filp->f_wb_err = filemap_sample_wb_err(filp->f_mapping);
+
+	filp->f_op = bdev->bd_disk->myos_bd_fops;
+
 	return 0;
 }
 

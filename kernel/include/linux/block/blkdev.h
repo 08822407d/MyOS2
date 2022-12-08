@@ -365,7 +365,7 @@
 	// 	 * is blocking (BLK_MQ_F_BLOCKING). Must be the last member
 	// 	 */
 	// 	struct srcu_struct	srcu[];
-	} request_queue_s;
+	} req_queue_s;
 
 	/* Keep blk_queue_flag_name[] in sync with the definitions below */
 	#define QUEUE_FLAG_STOPPED			0	/* queue is stopped */

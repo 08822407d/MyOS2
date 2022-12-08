@@ -87,6 +87,9 @@
 	// };
 
 	typedef struct gendisk {
+		const file_ops_s	*myos_bd_fops;
+
+
 		/*
 		 * major/first_minor/minors should not be set by any new driver, the
 		 * block core will take care of allocating them automatically.
@@ -105,7 +108,7 @@
 		blk_dev_s	*part0;
 
 		const blk_dev_ops_s	*fops;
-		request_queue_s		*queue;
+		req_queue_s		*queue;
 		void		*private_data;
 
 		// int flags;
@@ -221,7 +224,7 @@
 	int bdev_disk_changed(gendisk_s *disk, bool invalidate);
 	// void blk_drop_partitions(gendisk_s *disk);
 
-	gendisk_s *__alloc_disk_node(request_queue_s *q);
+	gendisk_s *__alloc_disk_node(req_queue_s *q);
 	// extern void put_disk(gendisk_s *disk);
 	// gendisk_s *__blk_alloc_disk(int node, struct lock_class_key *lkclass);
 
@@ -286,6 +289,7 @@
 
 
 	int myos_device_add_disk(gendisk_s *disk);
-	gendisk_s *__myos_alloc_disk(request_queue_s *q);
+	gendisk_s *__myos_init_disk(gendisk_s *disk, req_queue_s *q);
+	gendisk_s *__myos_alloc_disk(req_queue_s *q);
 
 #endif /* _LINUX_GENHD_H */

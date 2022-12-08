@@ -7,9 +7,10 @@
 #include "libata.h"
 
 
+#include <linux/fs/fs.h>
+#include <obsolete/ide.h>
+
 #define MAX_IDE_DEV_NR (MYOS_ATA_MAX_PORTS * ATA_MAX_DEVICES)
-#define MASTER	0
-#define SLAVE	1
 
 // ata_iops_s ioaddr_master =
 // {
@@ -124,11 +125,90 @@ ata_dev_s	ide_devs[MYOS_ATA_MAX_PORTS][ATA_MAX_DEVICES] = {
 	}
 };
 
-
-static const blk_dev_ops_s ide_fops = {
+static const blk_dev_ops_s ata_fops = {
 
 };
 
+
+long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
+		unsigned long blk_idx, long count, unsigned char * buffer);
+static char *__myos_ide_read_block(blk_dev_s *bdev, sector_t start, sector_t nr)
+{
+	ata_dev_s *ad;
+	ata_port_s *ap;
+	char *tmp_buf;
+
+	tmp_buf = kmalloc(nr * SECTOR_SIZE, GFP_KERNEL);
+	if (tmp_buf == NULL)
+		return ERR_PTR(-ENOMEM);
+
+	ad = myos_gendisk_to_atadev(bdev->bd_disk);
+	ap = ad->ap;
+	ATA_disk_transfer(ap->port_no, ad->devno, ATA_READ_CMD,
+			start + bdev->bd_start_sect, nr, tmp_buf);
+
+	return tmp_buf;
+}
+
+static void __myos_ide_write_block(blk_dev_s *bdev, char *buf, sector_t start, sector_t nr)
+{
+	ata_dev_s *ad;
+	ata_port_s *ap;
+
+	ad = myos_gendisk_to_atadev(bdev->bd_disk);
+	ap = ad->ap;
+	ATA_disk_transfer(ap->port_no, ad->devno, ATA_WRITE_CMD,
+			start + bdev->bd_start_sect, nr, buf);
+}
+
+ssize_t myos_ide_read(file_s *file, char *buf, size_t size, loff_t *pos)
+{
+	loff_t offset;
+	loff_t end;
+	sector_t sec_start;
+	sector_t sec_nr;
+	inode_s *inode;
+	blk_dev_s *bdev;
+	char *blkbuf;
+
+	offset = *pos % SECTOR_SIZE;
+	end = ((*pos + size + SECTOR_SIZE - 1) & SECTOR_ALIGN) - (*pos & SECTOR_ALIGN);
+	sec_start = *pos >> SECTOR_SHIFT;
+	sec_nr = end / SECTOR_SIZE;
+	inode = file->f_path.dentry->d_inode;
+	bdev = blkdev_get_by_dev(inode->i_rdev, file->f_mode);
+	blkbuf = __myos_ide_read_block(bdev, sec_start, sec_nr);
+
+	memcpy(buf, blkbuf + offset, size);
+}
+
+ssize_t myos_ide_write(file_s *file, const char *buf, size_t size, loff_t *pos)
+{
+	loff_t offset;
+	loff_t end;
+	sector_t sec_start;
+	sector_t sec_nr;
+	inode_s *inode;
+	blk_dev_s *bdev;
+	char *blkbuf;
+
+	offset = *pos % SECTOR_SIZE;
+	end = ((*pos + size + SECTOR_SIZE - 1) & SECTOR_ALIGN) - (*pos & SECTOR_ALIGN);
+	sec_start = *pos >> SECTOR_SHIFT;
+	sec_nr = end / SECTOR_SIZE;
+	inode = file->f_path.dentry->d_inode;
+	bdev = blkdev_get_by_dev(inode->i_rdev, file->f_mode);
+	blkbuf = __myos_ide_read_block(bdev, sec_start, sec_nr);
+
+	memcpy(blkbuf + offset, buf, size);
+
+	__myos_ide_write_block(bdev, blkbuf, sec_start, sec_nr);
+}
+
+static const file_ops_s myos_ide_fops = {
+	.read = myos_ide_read,
+	.write = myos_ide_write,
+};
 
 /**
  *	sd_revalidate_disk - called the first time a new disk is seen,
@@ -296,8 +376,6 @@ static int myos_ata_format_disk_name(char *prefix,
 	return 0;
 }
 
-long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
-		unsigned long blk_idx, long count, unsigned char * buffer);
 int myos_ata_port_probe(ata_dev_s *disk)
 {
 	gendisk_s *gd;
@@ -309,9 +387,11 @@ int myos_ata_port_probe(ata_dev_s *disk)
 	outb(0, ioaddr->ctl_addr);
 
 	error = -ENOMEM;
-	gd = __myos_alloc_disk(NULL);
-	if (gd == NULL)
-		goto out_free;
+	// gd = __myos_alloc_disk(NULL);
+	// if (gd == NULL)
+	// 	goto out_free;
+	gd = &disk->gd;
+	__myos_init_disk(gd, NULL);
 
 	memcpy(gd->disk_name, disk->name, strlen(disk->name));
 	if (ap->port_no == MASTER)
@@ -322,7 +402,8 @@ int myos_ata_port_probe(ata_dev_s *disk)
 		while (1);
 	gd->first_minor = disk->devno;
 	gd->minors = MAX_IDE_DEV_NR;	
-	gd->fops = &ide_fops;
+	gd->fops = &ata_fops;
+	gd->myos_bd_fops = &myos_ide_fops;
 
 	// 	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0,
 	// 					(unsigned char *)&ide_disk_info[0]);
@@ -357,8 +438,8 @@ void myos_ata_probe()
 		{
 			if (ata_devchk(ap, ap->port_no))
 			{
-				ata_dev_s *hdd = &(ide_devs[i][j]);
-				myos_ata_port_probe(hdd);
+				ata_dev_s *disk = &(ide_devs[i][j]);
+				myos_ata_port_probe(disk);
 			}
 		}
 	}
