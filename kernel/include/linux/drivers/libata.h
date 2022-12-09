@@ -588,6 +588,10 @@
 	// };
 
 	typedef struct ata_queued_cmd {
+		void			*buf;
+
+
+
 		ata_port_s		*ap;
 		ata_dev_s		*dev;
 
@@ -758,7 +762,7 @@
 	// 	unsigned int		udma_mask;
 	// 	unsigned int		cbl;	/* cable type; ATA_CBL_xxx */
 
-	// 	ata_q_cmd_s	qcmd[ATA_MAX_QUEUE + 1];
+		ata_q_cmd_s		qcmd[ATA_MAX_QUEUE + 1];
 	// 	unsigned long		sas_tag_allocated; /* for sas tag allocation only */
 	// 	u64			qc_active;
 	// 	int			nr_active_links; /* #links with active qcs */
@@ -1776,23 +1780,23 @@
 			tf->device = ATA_DEVICE_OBS | ATA_DEV1;
 	}
 
-	// static inline void ata_qc_reinit(ata_q_cmd_s *qc) {
-	// 	qc->dma_dir = DMA_NONE;
-	// 	qc->sg = NULL;
-	// 	qc->flags = 0;
-	// 	qc->cursg = NULL;
-	// 	qc->cursg_ofs = 0;
-	// 	qc->nbytes = qc->extrabytes = qc->curbytes = 0;
-	// 	qc->n_elem = 0;
-	// 	qc->err_mask = 0;
-	// 	qc->sect_size = ATA_SECT_SIZE;
+	static inline void ata_qc_reinit(ata_q_cmd_s *qc) {
+		// qc->dma_dir = DMA_NONE;
+		// qc->sg = NULL;
+		// qc->flags = 0;
+		// qc->cursg = NULL;
+		// qc->cursg_ofs = 0;
+		qc->nbytes = qc->extrabytes = qc->curbytes = 0;
+		// qc->n_elem = 0;
+		// qc->err_mask = 0;
+		qc->sect_size = ATA_SECT_SIZE;
 
-	// 	ata_tf_init(qc->dev, &qc->tf);
+		ata_tf_init(qc->dev, &qc->tf);
 
-	// 	/* init result_tf such that it indicates normal completion */
-	// 	qc->result_tf.command = ATA_DRDY;
-	// 	qc->result_tf.feature = 0;
-	// }
+		/* init result_tf such that it indicates normal completion */
+		qc->result_tf.command = ATA_DRDY;
+		qc->result_tf.feature = 0;
+	}
 
 	// static inline int ata_try_flush_cache(const ata_dev_s *dev) {
 	// 	return ata_id_wcache_enabled(dev->id) ||
@@ -2042,5 +2046,9 @@
 
 	unsigned int ata_devchk(ata_port_s *ap, unsigned int device);
 	// #endif /* CONFIG_ATA_SFF */
+
+
+	unsigned int myos_ata_pio_qc_issue(ata_q_cmd_s *qc);
+	unsigned int myos_ata_dma_qc_issue(ata_q_cmd_s *qc);
 
 #endif /* __LINUX_LIBATA_H__ */

@@ -90,7 +90,7 @@ static void ATA_dev_info(unsigned controller, unsigned disk)
 	outb(ATA_DISK_IDENTIFY, IDE_PIO_CMD_STAT(controller));
 }
 
-static bool ATA_identify(unsigned controller, unsigned disk)
+static bool myos_ata_devchk(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
 	outb(0xA0 | disk << 4, IDE_PIO_CMD_STAT(controller));

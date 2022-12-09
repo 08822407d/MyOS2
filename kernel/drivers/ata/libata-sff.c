@@ -537,6 +537,16 @@ static void ata_pio_sectors(ata_q_cmd_s *qc)
 }
 
 
+unsigned int myos_ata_pio_qc_issue(ata_q_cmd_s *qc)
+{
+	ata_port_s *ap = qc->ap;
+	ata_dev_s *ad = qc->dev;
+	ata_sff_dev_select(ap, ad->devno);
+
+	ata_tf_to_host(ap, &qc->tf);
+}
+
+
 /**
  *	ata_devchk - PATA device presence detection
  *	@ap: ATA channel to examine
@@ -577,4 +587,10 @@ unsigned int ata_devchk(ata_port_s *ap, unsigned int device)
 		return 1;	/* we found a device */
 
 	return 0;		/* nothing found */
+}
+
+
+unsigned int myos_ata_dma_qc_issue(ata_q_cmd_s *qc)
+{
+	while (1);
 }

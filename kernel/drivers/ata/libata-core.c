@@ -109,6 +109,21 @@ u64 ata_tf_to_lba(const ata_tf_s *tf)
 }
 
 
+unsigned myos_ata_exec_internal(ata_dev_s *dev, ata_tf_s *tf, void *buf ,size_t len)
+{
+	ata_port_s *ap = dev->ap;
+	ata_q_cmd_s *qc = &(ap->qcmd[ATA_TAG_INTERNAL]);
+
+	qc->ap = ap;
+	qc->dev = dev;
+	ata_qc_reinit(qc);
+
+	qc->tf = *tf;
+	qc->buf = buf;
+	qc->nbytes = len;
+
+	ata_qc_issue(qc);
+}
 
 int myos_ata_dev_read_id(ata_dev_s *dev, u16 *id)
 {
@@ -116,6 +131,18 @@ int myos_ata_dev_read_id(ata_dev_s *dev, u16 *id)
 	ata_tf_init(dev, &tf);
 
 	tf.command = ATA_CMD_ID_ATA;
+
+	tf.protocol = ATA_PROT_PIO;
+	/* Some devices choke if TF registers contain garbage.  Make
+	 * sure those are properly initialized.
+	 */
+	tf.flags |= ATA_TFLAG_ISADDR | ATA_TFLAG_DEVICE;
+	/* Device presence detection is unreliable on some
+	 * controllers.  Always poll IDENTIFY if available.
+	 */
+	tf.flags |= ATA_TFLAG_POLLING;
+
+	myos_ata_exec_internal(dev, &tf, (void *)id, SECTOR_SIZE);
 }
 
 
@@ -462,4 +489,28 @@ int ata_dev_configure(ata_dev_s *dev)
 
 // err_out_nosup:
 // 	return rc;
+}
+
+
+
+/**
+ *	ata_qc_issue - issue taskfile to device
+ *	@qc: command to issue to device
+ *
+ *	Prepare an ATA command to submission to device.
+ *	This includes mapping the data into a DMA-able
+ *	area, filling in the S/G table, and finally
+ *	writing the taskfile to hardware, starting the command.
+ *
+ *	LOCKING:
+ *	spin_lock_irqsave(host lock)
+ */
+void ata_qc_issue(ata_q_cmd_s *qc)
+{
+	unsigned int err = 0;
+	/* defer PIO handling to sff_qc_issue */
+	if (!ata_is_dma(qc->tf.protocol))
+		err = myos_ata_pio_qc_issue(qc);
+	else
+		err = myos_ata_dma_qc_issue(qc);
 }

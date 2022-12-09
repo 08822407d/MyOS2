@@ -71,7 +71,7 @@
 	// extern unsigned int ata_dev_set_feature(ata_dev_s *dev,
 	// 					u8 enable, u8 feature);
 	// extern void ata_qc_free(ata_q_cmd_s *qc);
-	// extern void ata_qc_issue(ata_q_cmd_s *qc);
+	extern void ata_qc_issue(ata_q_cmd_s *qc);
 	// extern void __ata_qc_complete(ata_q_cmd_s *qc);
 	// extern int atapi_check_dma(ata_q_cmd_s *qc);
 	// extern void swap_buf_le16(u16 *buf, unsigned int buf_words);
