@@ -110,6 +110,16 @@ u64 ata_tf_to_lba(const ata_tf_s *tf)
 
 
 
+int myos_ata_dev_read_id(ata_dev_s *dev, u16 *id)
+{
+	ata_tf_s tf;
+	ata_tf_init(dev, &tf);
+
+	tf.command = ATA_CMD_ID_ATA;
+}
+
+
+
 static int ata_dev_config_lba(ata_dev_s *dev)
 {
 	const u16 *id = dev->id;

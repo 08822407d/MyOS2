@@ -409,6 +409,8 @@ int myos_ata_port_probe(ata_dev_s *disk)
 	// 					(unsigned char *)&ide_disk_info[0]);
 	ATA_disk_transfer(ap->port_no, disk->devno, ATA_CMD_STANDBYNOW1,
 			0, 0, (unsigned char *)ataid);
+	myos_ata_dev_read_id(disk, ataid);
+
 	ata_dev_configure(disk);
 
 	myos_ata_revalidate_disk(gd, disk);

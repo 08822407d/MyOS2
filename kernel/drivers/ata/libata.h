@@ -254,4 +254,6 @@
 	// static inline void zpodd_post_poweron(ata_dev_s *dev) {}
 	// #endif /* CONFIG_SATA_ZPODD */
 
+	int myos_ata_dev_read_id(ata_dev_s *dev, u16 *id);
+
 #endif /* __LIBATA_H__ */
