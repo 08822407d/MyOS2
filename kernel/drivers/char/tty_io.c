@@ -68,7 +68,7 @@
 #include <linux/kernel/types.h>
 #include <uapi/kernel/major.h>
 #include <linux/lib/errno.h>
-// #include <linux/signal.h>
+#include <linux/kernel/signal.h>
 #include <linux/kernel/fcntl.h>
 // #include <linux/sched/signal.h>
 // #include <linux/sched/task.h>

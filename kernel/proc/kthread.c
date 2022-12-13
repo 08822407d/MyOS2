@@ -127,7 +127,7 @@ static void create_kthread(kthd_create_info_s *create)
 {
 	int pid;
 
-	// /* We want our own signal handler (we take no signals by default). */
+	/* We want our own signal handler (we take no signals by default). */
 	// pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
 	// if (pid < 0) {
 	// 	/* If user was SIGKILLed, I release the structure. */

@@ -223,8 +223,8 @@
 
 	// 	struct {
 	// 		spinlock_t lock;
-	// 		struct pid *pgrp;
-	// 		struct pid *session;
+	// 		pid_s *pgrp;
+	// 		pid_s *session;
 	// 		unsigned char pktstatus;
 	// 		bool packet;
 	// 		unsigned long unused[0];
@@ -348,7 +348,7 @@
 
 	// #ifdef CONFIG_TTY
 	// void tty_kref_put(struct tty_struct *tty);
-	// struct pid *tty_get_pgrp(struct tty_struct *tty);
+	// pid_s *tty_get_pgrp(struct tty_struct *tty);
 	// void tty_vhangup_self(void);
 	// void disassociate_ctty(int priv);
 	// dev_t tty_devnum(struct tty_struct *tty);
@@ -364,7 +364,7 @@
 	// #else
 	// static inline void tty_kref_put(struct tty_struct *tty)
 	// { }
-	// static inline struct pid *tty_get_pgrp(struct tty_struct *tty)
+	// static inline pid_s *tty_get_pgrp(struct tty_struct *tty)
 	// { return NULL; }
 	// static inline void tty_vhangup_self(void)
 	// { }

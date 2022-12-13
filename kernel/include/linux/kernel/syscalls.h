@@ -76,7 +76,7 @@
 	#include <linux/kernel/types.h>
 	// #include <linux/aio_abi.h>
 	// #include <linux/capability.h>
-	// #include <linux/signal.h>
+	#include <linux/kernel/signal.h>
 	#include <linux/lib/list.h>
 	// #include <linux/bug.h>
 	// #include <linux/sem.h>

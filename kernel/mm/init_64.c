@@ -7,7 +7,7 @@
  *  Copyright (C) 2002,2003 Andi Kleen <ak@suse.de>
  */
 
-// #include <linux/signal.h>
+#include <linux/kernel/signal.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/kernel.h>
 #include <linux/lib/errno.h>

@@ -16,7 +16,7 @@
 	// #include <linux/xarray.h>
 	// #include <linux/rbtree.h>
 	#include <linux/init/init.h>
-	// #include <linux/pid.h>
+	#include <linux/kernel/pid.h>
 	// #include <linux/bug.h>
 	// #include <linux/mutex.h>
 	// #include <linux/rwsem.h>
@@ -861,7 +861,7 @@
 
 	// struct fown_struct {
 	// 	rwlock_t lock;          /* protects pid, uid, euid fields */
-	// 	struct pid *pid;	/* pid or -pgrp where SIGIO should be sent */
+	// 	pid_s *pid;	/* pid or -pgrp where SIGIO should be sent */
 	// 	enum pid_type pid_type;	/* Kind of process group SIGIO should be sent to */
 	// 	kuid_t uid, euid;	/* uid/euid of process setting the owner */
 	// 	int signum;		/* posix.1b rt signal to be delivered on IO */
@@ -1287,7 +1287,7 @@
 	// /* can be called from interrupts */
 	// extern void kill_fasync(struct fasync_struct **, int, int);
 
-	// extern void __f_setown(file_s *filp, struct pid *, enum pid_type, int force);
+	// extern void __f_setown(file_s *filp, pid_s *, enum pid_type, int force);
 	// extern int f_setown(file_s *filp, unsigned long arg, int force);
 	// extern void f_delown(file_s *filp);
 	// extern pid_t f_getown(file_s *filp);

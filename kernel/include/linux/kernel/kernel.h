@@ -34,27 +34,27 @@
 
 	#include <uapi/kernel/kernel.h>
 
-	// #define STACK_MAGIC	0xdeadbeef
+	#define STACK_MAGIC	0xdeadbeef
 
-	// /**
-	//  * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
-	//  * @x: value to repeat
-	//  *
-	//  * NOTE: @x is not checked for > 0xff; larger values produce odd results.
-	//  */
-	// #define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
+	/**
+	 * REPEAT_BYTE - repeat the value @x multiple times as an unsigned long value
+	 * @x: value to repeat
+	 *
+	 * NOTE: @x is not checked for > 0xff; larger values produce odd results.
+	 */
+	#define REPEAT_BYTE(x)	((~0ul / 0xff) * (x))
 
-	// /* generic data direction definitions */
-	// #define READ			0
-	// #define WRITE			1
+	/* generic data direction definitions */
+	#define READ			0
+	#define WRITE			1
 
-	// /**
-	//  * ARRAY_SIZE - get the number of elements in array @arr
-	//  * @arr: array to be sized
-	//  */
-	// #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
+	/**
+	 * ARRAY_SIZE - get the number of elements in array @arr
+	 * @arr: array to be sized
+	 */
+	#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
 
-	// #define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
+	#define PTR_IF(cond, ptr)	((cond) ? (ptr) : NULL)
 
 	// #define u64_to_user_ptr(x) (		\
 	// {					\
@@ -63,33 +63,33 @@
 	// }					\
 	// )
 
-	// /**
-	//  * upper_32_bits - return bits 32-63 of a number
-	//  * @n: the number we're accessing
-	//  *
-	//  * A basic shift-right of a 64- or 32-bit quantity.  Use this to suppress
-	//  * the "right shift count >= width of type" warning when that quantity is
-	//  * 32-bits.
-	//  */
-	// #define upper_32_bits(n) ((u32)(((n) >> 16) >> 16))
+	/**
+	 * upper_32_bits - return bits 32-63 of a number
+	 * @n: the number we're accessing
+	 *
+	 * A basic shift-right of a 64- or 32-bit quantity.  Use this to suppress
+	 * the "right shift count >= width of type" warning when that quantity is
+	 * 32-bits.
+	 */
+	#define upper_32_bits(n) ((u32)(((n) >> 16) >> 16))
 
-	// /**
-	//  * lower_32_bits - return bits 0-31 of a number
-	//  * @n: the number we're accessing
-	//  */
-	// #define lower_32_bits(n) ((u32)((n) & 0xffffffff))
+	/**
+	 * lower_32_bits - return bits 0-31 of a number
+	 * @n: the number we're accessing
+	 */
+	#define lower_32_bits(n) ((u32)((n) & 0xffffffff))
 
-	// /**
-	//  * upper_16_bits - return bits 16-31 of a number
-	//  * @n: the number we're accessing
-	//  */
-	// #define upper_16_bits(n) ((u16)((n) >> 16))
+	/**
+	 * upper_16_bits - return bits 16-31 of a number
+	 * @n: the number we're accessing
+	 */
+	#define upper_16_bits(n) ((u16)((n) >> 16))
 
-	// /**
-	//  * lower_16_bits - return bits 0-15 of a number
-	//  * @n: the number we're accessing
-	//  */
-	// #define lower_16_bits(n) ((u16)((n) & 0xffff))
+	/**
+	 * lower_16_bits - return bits 0-15 of a number
+	 * @n: the number we're accessing
+	 */
+	#define lower_16_bits(n) ((u16)((n) & 0xffff))
 
 	// struct completion;
 	// struct user;

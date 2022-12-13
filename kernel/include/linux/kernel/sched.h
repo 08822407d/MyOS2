@@ -11,7 +11,7 @@
 
 	#include <asm/current.h>
 
-	// #include <linux/pid.h>
+	#include <linux/kernel/pid.h>
 	// #include <linux/sem.h>
 	// #include <linux/shm.h>
 	// #include <linux/mutex.h>
@@ -1056,7 +1056,7 @@
 	// 	struct list_head ptrace_entry;
 
 	// 	/* PID/PID hash table linkage. */
-	// 	struct pid *thread_pid;
+	// 	pid_s *thread_pid;
 	// 	struct hlist_node pid_links[PIDTYPE_MAX];
 	// 	struct list_head thread_group;
 	// 	struct list_head thread_node;
@@ -1588,7 +1588,7 @@
 		*/
 	} task_s;
 
-	// static inline struct pid *task_pid(struct task_struct *task)
+	// static inline pid_s *task_pid(struct task_struct *task)
 	// {
 	// 	return task->thread_pid;
 	// }
@@ -1746,7 +1746,7 @@
 	// 	return task_tgid_nr(tsk) == 1;
 	// }
 
-	// extern struct pid *cad_pid;
+	// extern pid_s *cad_pid;
 
 	/*
 	* Per process flags

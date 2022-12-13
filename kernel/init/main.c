@@ -72,7 +72,7 @@
 // #include <linux/kthread.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/init.h>
-// #include <linux/signal.h>
+#include <linux/kernel/signal.h>
 // #include <linux/idr.h>
 // #include <linux/kgdb.h>
 // #include <linux/ftrace.h>
