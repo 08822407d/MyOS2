@@ -62,7 +62,7 @@
 		u8				bd_partno;
 	// 	spinlock_t		bd_size_lock; /* for bd_inode->i_size updates */
 		gendisk_s 		*bd_disk;
-		req_queue_s	*bd_queue;
+		req_queue_s		*bd_queue;
 	// 	backing_dev_info_s	*bd_bdi;
 
 	// 	/* The counter of freeze processes */
