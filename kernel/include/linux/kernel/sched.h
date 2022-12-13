@@ -37,10 +37,12 @@
 	// #include <asm/kmap_size.h>
 
  
+
 	#include <linux/lib/list.h>
 	#include <linux/sched/fs_struct.h>
 	#include <linux/kernel/types.h>
 	#include <linux/mm/mm_types.h>
+	#include <linux/kernel/fdtable.h>
 
 	#include <asm/current.h>
 	#include <obsolete/arch_task.h>
@@ -782,12 +784,7 @@
 
 	typedef struct task_struct {
 		// myos obsolete contents
-		List_s schedule_list;
-
 		arch_task_s arch_struct;
-
-		file_s *fps[MAX_FILE_NR];
-
 		List_hdr_s wait_childexit;
 
 
@@ -912,7 +909,8 @@
 
 		// struct sched_info sched_info;
 
-		// struct list_head tasks;
+		List_s			tasks;	// 调度链节点，与状态相关。
+								// 例如PS_RUNNING的进程就在CPU的调度链里。
 		// struct plist_node pushable_tasks;
 		// struct rb_node pushable_dl_tasks;
 
@@ -1129,7 +1127,7 @@
 		taskfs_s		*fs;
 
 		/* Open file information: */
-		// struct files_struct *files;
+		files_struct_s	*files;
 
 	// #ifdef CONFIG_IO_URING
 		// struct io_uring_task *io_uring;

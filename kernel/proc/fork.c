@@ -34,7 +34,7 @@
 // #include <linux/mempolicy.h>
 // #include <linux/sem.h>
 #include <linux/fs/file.h>
-// #include <linux/fdtable.h>
+#include <linux/kernel/fdtable.h>
 // #include <linux/iocontext.h>
 // #include <linux/key.h>
 // #include <linux/binfmts.h>

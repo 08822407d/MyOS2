@@ -161,7 +161,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 	if (p->__state != TASK_RUNNING)
 	{
 		p->__state = TASK_RUNNING;
-		list_hdr_push(&target_cpu_p->running_lhdr, &p->schedule_list);
+		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 	}
 
 

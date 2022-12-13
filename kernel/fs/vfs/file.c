@@ -15,7 +15,7 @@
 // #include <linux/sched/signal.h>
 #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
-// #include <linux/fdtable.h>
+#include <linux/kernel/fdtable.h>
 #include <linux/kernel/bitops.h>
 // #include <linux/spinlock.h>
 // #include <linux/rcupdate.h>
@@ -29,7 +29,7 @@
  */
 static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 {
-	file_s ** fps = current->fps;
+	file_s ** fps = current->files->fd_array;
 	int fd = -1;
 
 	for(int i = start; i < end; i++)
@@ -65,7 +65,7 @@ int get_unused_fd_flags(unsigned flags)
 
 void fd_install(unsigned int fd, file_s *file)
 {
-	file_s ** fps = current->fps;
+	file_s ** fps = current->files->fd_array;
 	if (fps[fd] == NULL)
 	{
 		fps[fd] = file;
@@ -79,7 +79,7 @@ void fd_install(unsigned int fd, file_s *file)
 fd_s fdget_pos(int fd)
 {
 	task_s *curr = current;
-	file_s *fp = curr->fps[fd];
+	file_s *fp = curr->files->fd_array[fd];
 	
 	return (fd_s){.file = fp, .flags = 0};
 }

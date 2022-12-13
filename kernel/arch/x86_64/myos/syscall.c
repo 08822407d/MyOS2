@@ -45,12 +45,12 @@ long sys_close(unsigned int fd)
 	if(fd < 0 || fd >= MAX_FILE_NR)
 		return -EBADF;
 
-	fp = curr->fps[fd];
+	fp = curr->files->fd_array[fd];
 	if(fp->f_op && fp->f_op->close)
 		fp->f_op->close(fp->f_path.dentry->d_inode, fp);
 
 	kfree(fp);
-	curr->fps[fd] = NULL;
+	curr->files->fd_array[fd] = NULL;
 
 	return 0;
 }
@@ -67,7 +67,7 @@ long sys_read(unsigned int fd, char *buf, size_t count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = current->fps[fd];
+	fp = current->files->fd_array[fd];
 	if(fp->f_op && fp->f_op->read)
 		ret = fp->f_op->read(fp, buf, count, &fp->f_pos);
 	return ret;
@@ -85,7 +85,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = current->fps[fd];
+	fp = current->files->fd_array[fd];
 	if(fp->f_op && fp->f_op->write)
 		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
 	return ret;
@@ -102,7 +102,7 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 	if(whence < 0 || whence >= SEEK_MAX)
 		return -EINVAL;
 
-	fp = current->fps[fd];
+	fp = current->files->fd_array[fd];
 	if(fp->f_op && fp->f_op->llseek)
 		ret = fp->f_op->llseek(fp, offset, whence);
 	return ret;

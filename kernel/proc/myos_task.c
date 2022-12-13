@@ -4,6 +4,7 @@
 #include <linux/mm/mm.h>
 #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
+#include <linux/kernel/fdtable.h>
 
 #include <linux/kernel/asm-generic/sections.h>
 
@@ -17,6 +18,7 @@ size_t			cpustack_off;
 PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in myos_early_init_system() .bss section will be set 0, so here arrange task0 in .data section
+files_struct_s	task0_files;
 PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
 taskfs_s		task0_fs =
 {
@@ -35,7 +37,7 @@ static void create_smp_idles(size_t cpu_idx)
 	task_s * idletask = &(idle_pcb->task);
 	idletask->parent = idletask;
 	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
-	list_init(&idletask->schedule_list, idletask);
+	list_init(&idletask->tasks, idletask);
 	list_init(&idletask->sibling, idletask);
 	list_hdr_init(&idletask->children);
 	idletask->pid = myos_gen_newpid();
@@ -56,6 +58,7 @@ void myos_init_task(size_t lcpu_nr)
 	task0->flags		= PF_KTHREAD;
 	task0->mm			= &init_mm;
 	task0->fs			= &task0_fs;
+	task0->files		= &task0_files;
 	strncpy(task0->comm, "cpu0_idel", TASK_COMM_LEN - 1);
 
 	for (int i = 0; i < lcpu_nr; i++)

@@ -169,11 +169,18 @@ static int copy_files(unsigned long clone_flags, task_s * new_tsk)
 	if(clone_flags & CLONE_FS)
 		goto out;
 	
+	files_struct_s *fss = kzalloc(sizeof(files_struct_s), GFP_KERNEL);
+	if (fss == NULL)
+	{
+		err = -ENOMEM;
+		goto out;
+	}
+	current->files = fss;
 	for(i = 0; i < MAX_FILE_NR; i++)
-		if(current->fps[i] != NULL)
+		if(current->files->fd_array[i] != NULL)
 		{
-			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s), GFP_KERNEL);
-			memcpy(new_tsk->fps[i], current->fps[i], sizeof(file_s));
+			new_tsk->files->fd_array[i] = (file_s *)kmalloc(sizeof(file_s), GFP_KERNEL);
+			memcpy(new_tsk->files->fd_array[i], current->files->fd_array[i], sizeof(file_s));
 		}
 
 	new_tsk->fs = kmalloc(sizeof(taskfs_s), GFP_KERNEL);
@@ -189,12 +196,12 @@ static void exit_files(task_s * new_tsk)
 		;
 	else
 		for(i = 0; i < MAX_FILE_NR; i++)
-			if(new_tsk->fps[i] != NULL)
+			if(new_tsk->files->fd_array[i] != NULL)
 			{
-				kfree(new_tsk->fps[i]);
+				kfree(new_tsk->files->fd_array[i]);
 			}
 
-	memset(new_tsk->fps, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
+	memset(new_tsk->files->fd_array, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
 }
 
 static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
@@ -287,7 +294,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 
 	memcpy(child_task, parent_task, sizeof(task_s));
 
-	list_init(&child_task->schedule_list, child_task);
+	list_init(&child_task->tasks, child_task);
 	list_init(&child_task->sibling, child_task);
 	list_hdr_init(&child_task->children);
 	list_hdr_init(&child_task->wait_childexit);
@@ -532,22 +539,22 @@ void myos_schedule()
 			if (curr_task == cpudata_p->idle_task)
 			{
 				// insert idle task to cpu's running-list tail
-				list_hdr_enqueue(&cpudata_p->running_lhdr, &curr_task->schedule_list);
+				list_hdr_enqueue(&cpudata_p->running_lhdr, &curr_task->tasks);
 			}
 			else
 			{
 				List_s * tmp_list = cpudata_p->running_lhdr.header.next;
-				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, schedule_list)->se.vruntime) &&
+				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, tasks)->se.vruntime) &&
 						tmp_list != &cpudata_p->running_lhdr.header)
 				{
 					tmp_list = tmp_list->next;
 				}
-				list_insert_prev(tmp_list, &curr_task->schedule_list);
+				list_insert_prev(tmp_list, &curr_task->tasks);
 				cpudata_p->running_lhdr.count++;
 			}
 		}
 
-		next_task = container_of(next_lp, task_s, schedule_list);
+		next_task = container_of(next_lp, task_s, tasks);
 		cpudata_p->curr_task = next_task;
 		cpudata_p->time_slice = next_task->rt.time_slice;
 
