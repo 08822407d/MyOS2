@@ -1,6 +1,7 @@
 #include <linux/kernel/slab.h>
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
+#include <linux/sched/myos_percpu.h>
 
 #include <obsolete/mutex.h>
 
@@ -28,7 +29,7 @@ inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
 				:
 				:	"memory"
 				);
-	current->spin_count++;
+	curr_cpu->preempt_count++;
 }
 
 inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
@@ -39,7 +40,7 @@ inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
 				:
 				:	"memory"
 				);
-	current->spin_count--;
+	curr_cpu->preempt_count--;
 }
 
 /*==============================================================================================*

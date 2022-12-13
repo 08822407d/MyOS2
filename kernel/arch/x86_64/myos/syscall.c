@@ -165,11 +165,11 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 
 	// color_printk(GREEN,BLACK,"sys_wait4\n");
 	List_s * child_lp;
-	for (child_lp = current->child_lhdr.header.next;
-			child_lp != &current->child_lhdr.header;
+	for (child_lp = current->children.header.next;
+			child_lp != &current->children.header;
 			child_lp = child_lp->next)
 	{
-		task_s * child_p = container_of(child_lp, task_s, child_list);
+		task_s * child_p = container_of(child_lp, task_s, sibling);
 		if (child_p->pid == pid)
 		{
 			child = child_p;
@@ -188,7 +188,7 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 	}
 	copy_to_user(start_addr, &child->exit_code, sizeof(int));
 	exit_mm(child);
-	list_delete(&child->child_list);
+	list_delete(&child->sibling);
 	kfree(child);
 	return retval;
 }

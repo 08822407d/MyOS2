@@ -22,6 +22,9 @@
 		size_t			cpu_idx;
 		reg_t			cpustack_p;
 		arch_cpudata_s	arch_info;
+
+		unsigned long	preempt_count;
+
 	} per_cpudata_s;
 
 	typedef union cpudata {

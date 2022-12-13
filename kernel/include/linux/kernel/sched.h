@@ -63,7 +63,8 @@
 	// struct io_context;
 	// struct io_uring_task;
 	// struct mempolicy;
-	// struct nameidata;
+	struct nameidata;
+	typedef struct nameidata nameidata_s;
 	// struct nsproxy;
 	// struct perf_event_context;
 	// struct pid_namespace;
@@ -313,14 +314,14 @@
 
 	// #define get_current_state() READ_ONCE(current->__state)
 
-	// /*
-	// * Define the task command name length as enum, then it can be visible to
-	// * BPF programs.
-	// */
-	// enum
-	// {
-	// 	TASK_COMM_LEN = 16,
-	// };
+	/*
+	* Define the task command name length as enum, then it can be visible to
+	* BPF programs.
+	*/
+	enum
+	{
+		TASK_COMM_LEN = 32,
+	};
 
 	// extern void scheduler_tick(void);
 
@@ -405,21 +406,21 @@
 	// struct sched_info
 	// {
 	// #ifdef CONFIG_SCHED_INFO
-	// 	/* Cumulative counters: */
+		// /* Cumulative counters: */
 
-	// 	/* # of times we have run on this CPU: */
-	// 	unsigned long pcount;
+		// /* # of times we have run on this CPU: */
+		// unsigned long pcount;
 
-	// 	/* Time spent waiting on a runqueue: */
-	// 	unsigned long long run_delay;
+		// /* Time spent waiting on a runqueue: */
+		// unsigned long long run_delay;
 
-	// 	/* Timestamps: */
+		// /* Timestamps: */
 
-	// 	/* When did we last run on a CPU? */
-	// 	unsigned long long last_arrival;
+		// /* When did we last run on a CPU? */
+		// unsigned long long last_arrival;
 
-	// 	/* When were we last queued to run? */
-	// 	unsigned long long last_queued;
+		// /* When were we last queued to run? */
+		// unsigned long long last_queued;
 
 	// #endif /* CONFIG_SCHED_INFO */
 	// };
@@ -582,59 +583,59 @@
 	// #endif /* CONFIG_SCHEDSTATS */
 	// } ____cacheline_aligned;
 
-	// struct sched_entity
-	// {
-	// 	/* For load-balancing: */
-	// 	struct load_weight load;
-	// 	struct rb_node run_node;
-	// 	struct list_head group_node;
-	// 	unsigned int on_rq;
+	typedef struct sched_entity
+	{
+		// /* For load-balancing: */
+		// struct load_weight load;
+		// struct rb_node run_node;
+		// struct list_head group_node;
+		// unsigned int on_rq;
 
-	// 	u64 exec_start;
-	// 	u64 sum_exec_runtime;
-	// 	u64 vruntime;
-	// 	u64 prev_sum_exec_runtime;
-
-	// 	u64 nr_migrations;
+		// u64				exec_start;
+		// u64				sum_exec_runtime;
+		u64				vruntime;
+		// u64				prev_sum_exec_runtime;
+	
+		// u64				nr_migrations;
 
 	// #ifdef CONFIG_FAIR_GROUP_SCHED
-	// 	int depth;
-	// 	struct sched_entity *parent;
-	// 	/* rq on which this entity is (to be) queued: */
-	// 	struct cfs_rq *cfs_rq;
-	// 	/* rq "owned" by this entity/group: */
-	// 	struct cfs_rq *my_q;
-	// 	/* cached value of my_q->h_nr_running */
-	// 	unsigned long runnable_weight;
+		// int depth;
+		// struct sched_entity *parent;
+		// /* rq on which this entity is (to be) queued: */
+		// struct cfs_rq *cfs_rq;
+		// /* rq "owned" by this entity/group: */
+		// struct cfs_rq *my_q;
+		// /* cached value of my_q->h_nr_running */
+		// unsigned long runnable_weight;
 	// #endif
 
-		// /*
-		// * Per entity load average tracking.
-		// *
-		// * Put into separate cache line so it does not
-		// * collide with read-mostly values above.
-		// */
+		/*
+		 * Per entity load average tracking.
+		 *
+		 * Put into separate cache line so it does not
+		 * collide with read-mostly values above.
+		 */
 		// struct sched_avg avg;
-	// };
+	} sched_entity_s;
 
-	// struct sched_rt_entity
-	// {
-	// 	struct list_head run_list;
-	// 	unsigned long timeout;
-	// 	unsigned long watchdog_stamp;
-	// 	unsigned int time_slice;
-	// 	unsigned short on_rq;
-	// 	unsigned short on_list;
+	typedef struct sched_rt_entity
+	{
+		// struct list_head run_list;
+		// unsigned long timeout;
+		// unsigned long watchdog_stamp;
+		unsigned int time_slice;
+		// unsigned short on_rq;
+		// unsigned short on_list;
 
-	// 	struct sched_rt_entity *back;
+		// struct sched_rt_entity *back;
 	// #ifdef CONFIG_RT_GROUP_SCHED
-	// 	struct sched_rt_entity *parent;
-	// 	/* rq on which this entity is (to be) queued: */
-	// 	struct rt_rq *rt_rq;
-	// 	/* rq "owned" by this entity/group: */
-	// 	struct rt_rq *my_q;
+		// struct sched_rt_entity *parent;
+		// /* rq on which this entity is (to be) queued: */
+		// struct rt_rq *rt_rq;
+		// /* rq "owned" by this entity/group: */
+		// struct rt_rq *my_q;
 	// #endif
-	// };
+	} sched_rt_entity_s;
 
 	// struct sched_dl_entity
 	// {
@@ -782,24 +783,12 @@
 	typedef struct task_struct {
 		// myos obsolete contents
 		List_s schedule_list;
-		const char *name;
-
-		List_s child_list;
-		List_hdr_s child_lhdr;
 
 		arch_task_s arch_struct;
 
 		file_s *fps[MAX_FILE_NR];
 
-		unsigned long signal;
-		unsigned long time_slice;
-		unsigned long vruntime;
-
-		unsigned long spin_count;
-		unsigned long sem_count;
-
 		List_hdr_s wait_childexit;
-
 
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
@@ -850,8 +839,8 @@
 		// int normal_prio;
 		// unsigned int rt_priority;
 
-		// struct sched_entity se;
-		// struct sched_rt_entity rt;
+		sched_entity_s		se;
+		sched_rt_entity_s	rt;
 		// struct sched_dl_entity dl;
 		// const struct sched_class *sched_class;
 
@@ -928,7 +917,7 @@
 		// struct rb_node pushable_dl_tasks;
 
 		mm_s			*mm;
-		// struct mm_struct *active_mm;
+		// mm_s			*active_mm;
 
 		// /* Per-thread vma caching: */
 		// struct vmacache vmacache;
@@ -1014,7 +1003,7 @@
 	// 	struct restart_block restart_block;
 
 		pid_t			pid;
-		pid_t			tgid;
+		// pid_t			tgid;
 
 	// #ifdef CONFIG_STACKPROTECTOR
 		// /* Canary value for the -fstack-protector GCC feature: */
@@ -1035,8 +1024,8 @@
 		/*
 		 * Children/sibling form the list of natural children:
 		 */
-		// struct list_head children;
-		// struct list_head sibling;
+		List_hdr_s		children;
+		List_s			sibling;
 		// task_s *group_leader;
 
 		// /*
@@ -1117,16 +1106,16 @@
 		// struct key *cached_requested_key;
 	// #endif
 
-		// /*
-		//  * executable name, excluding path.
-		//  *
-		//  * - normally initialized setup_new_exec()
-		//  * - access it with [gs]et_task_comm()
-		//  * - lock it with task_lock()
-		//  */
-		// char comm[TASK_COMM_LEN];
+		/*
+		 * executable name, excluding path.
+		 *
+		 * - normally initialized setup_new_exec()
+		 * - access it with [gs]et_task_comm()
+		 * - lock it with task_lock()
+		 */
+		char			comm[TASK_COMM_LEN];
 
-		// struct nameidata *nameidata;
+		// nameidata_s		*nameidata;
 
 	// #ifdef CONFIG_SYSVIPC
 		// struct sysv_sem sysvsem;
@@ -1136,10 +1125,10 @@
 		// unsigned long last_switch_count;
 		// unsigned long last_switch_time;
 	// #endif
-		// /* Filesystem information: */
-		taskfs_s	*fs;
+		/* Filesystem information: */
+		taskfs_s		*fs;
 
-		// /* Open file information: */
+		/* Open file information: */
 		// struct files_struct *files;
 
 	// #ifdef CONFIG_IO_URING

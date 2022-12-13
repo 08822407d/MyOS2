@@ -243,10 +243,9 @@ free_tsk:
  *
  * Return: the duplicated mm or NULL on failure.
  */
-static struct mm_struct *dup_mm(task_s *tsk,
-				struct mm_struct *oldmm)
+static mm_s *dup_mm(task_s *tsk, mm_s *oldmm)
 {
-// 	struct mm_struct *mm;
+// 	mm_s *mm;
 // 	int err;
 
 // 	mm = allocate_mm();
@@ -282,7 +281,7 @@ static struct mm_struct *dup_mm(task_s *tsk,
 
 static int copy_mm(unsigned long clone_flags, task_s *tsk)
 {
-// 	struct mm_struct *mm, *oldmm;
+// 	mm_s *mm, *oldmm;
 
 // 	tsk->min_flt = tsk->maj_flt = 0;
 // 	tsk->nvcsw = tsk->nivcsw = 0;

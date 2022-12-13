@@ -36,8 +36,8 @@ static void create_smp_idles(size_t cpu_idx)
 	idletask->parent = idletask;
 	memcpy(idletask, &task0_PCB.task, sizeof(task_s));
 	list_init(&idletask->schedule_list, idletask);
-	list_init(&idletask->child_list, idletask);
-	list_hdr_init(&idletask->child_lhdr);
+	list_init(&idletask->sibling, idletask);
+	list_hdr_init(&idletask->children);
 	idletask->pid = myos_gen_newpid();
 }
 
@@ -50,15 +50,13 @@ void myos_init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0->name			= "cpu0_idel";
-	task0->time_slice	= 2;
-	task0->vruntime		= -1;
-	task0->sem_count	=
-	task0->spin_count	= 0;
+	task0->rt.time_slice	= 2;
+	task0->se.vruntime		= -1;
 	task0->__state		= TASK_RUNNING;
 	task0->flags		= PF_KTHREAD;
-	task0->mm	= &init_mm;
+	task0->mm			= &init_mm;
 	task0->fs			= &task0_fs;
+	strncpy(task0->comm, "cpu0_idel", TASK_COMM_LEN - 1);
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{

@@ -288,16 +288,20 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	memcpy(child_task, parent_task, sizeof(task_s));
 
 	list_init(&child_task->schedule_list, child_task);
-	list_init(&child_task->child_list, child_task);
-	list_hdr_init(&child_task->child_lhdr);
+	list_init(&child_task->sibling, child_task);
+	list_hdr_init(&child_task->children);
 	list_hdr_init(&child_task->wait_childexit);
-	child_task->name = taskname;
 	child_task->__state = TASK_UNINTERRUPTIBLE;
 	child_task->pid = myos_gen_newpid();
-	child_task->vruntime = 0;
+	child_task->se.vruntime = 0;
 	child_task->parent = parent_task;
 	child_task->fs = parent_task->fs;
-	list_hdr_append(&parent_task->child_lhdr, &child_task->child_list);
+	if (taskname != NULL)
+	{
+		strncpy(child_task->comm, taskname, TASK_COMM_LEN - 1);
+		child_task->comm[TASK_COMM_LEN - 1] = '\0';
+	}
+	list_hdr_append(&parent_task->children, &child_task->sibling);
 
 	ret_val = -ENOMEM;
 	//	copy flags
@@ -395,7 +399,10 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
 	if (argv != NULL)
-		curr->name = argv[0];
+	{
+		strncpy(curr->comm, argv[0], TASK_COMM_LEN - 1);
+		curr->comm[TASK_COMM_LEN - 1] = '\0';
+	}
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr->mm->start_code;
@@ -433,12 +440,12 @@ void kjmp_to_doexecve()
 static void exit_notify(void)
 {
 	task_s * curr = current;
-	while (curr->child_lhdr.count != 0)
+	while (curr->children.count != 0)
 	{
-		List_s * child_lp = list_hdr_pop(&curr->child_lhdr);
+		List_s * child_lp = list_hdr_pop(&curr->children);
 		while (child_lp == 0);
 		
-		list_hdr_append(&task_init->child_lhdr, child_lp);
+		list_hdr_append(&task_init->children, child_lp);
 	}
 	wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
 }
@@ -530,7 +537,7 @@ void myos_schedule()
 			else
 			{
 				List_s * tmp_list = cpudata_p->running_lhdr.header.next;
-				while ((curr_task->vruntime > container_of(tmp_list, task_s, schedule_list)->vruntime) &&
+				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, schedule_list)->se.vruntime) &&
 						tmp_list != &cpudata_p->running_lhdr.header)
 				{
 					tmp_list = tmp_list->next;
@@ -542,7 +549,7 @@ void myos_schedule()
 
 		next_task = container_of(next_lp, task_s, schedule_list);
 		cpudata_p->curr_task = next_task;
-		cpudata_p->time_slice = next_task->time_slice;
+		cpudata_p->time_slice = next_task->rt.time_slice;
 
 		cpudata_p->last_jiffies = jiffies;
 		cpudata_p->scheduleing_flag = 0;
@@ -563,7 +570,7 @@ void try_sched()
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
 	if (curr_task != cpudata_p->idle_task)
-		curr_task->vruntime += used_jiffies;
+		curr_task->se.vruntime += used_jiffies;
 	// if running time out, make the need_schedule flag of current task
 	if (used_jiffies >= cpudata_p->time_slice)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;
@@ -574,7 +581,7 @@ void try_sched()
 	if (((curr_task->__state == TASK_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
 		return;
 
-	if ((curr_task->spin_count != 0) || (curr_task->sem_count != 0))
+	if (cpudata_p->preempt_count != 0)
 		return;
 
 	// normal sched

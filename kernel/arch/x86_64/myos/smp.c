@@ -30,7 +30,8 @@ static void init_percpu_data(size_t cpu_idx)
 	cpudata_p->scheduleing_flag = 0;
 	cpudata_p->curr_task =
 	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
-	cpudata_p->time_slice = cpudata_p->curr_task->time_slice;
+	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
+	cpudata_p->preempt_count = 0;
 	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + SZ_2M;
 	list_hdr_init(&cpudata_p->running_lhdr);
 
