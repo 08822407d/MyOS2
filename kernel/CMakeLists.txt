@@ -25,6 +25,7 @@ target_include_directories(kern PRIVATE
 add_subdirectory(arch)
 add_subdirectory(init)
 add_subdirectory(sched)
+add_subdirectory(proc)
 add_subdirectory(mm)
 add_subdirectory(fs)
 add_subdirectory(block)
