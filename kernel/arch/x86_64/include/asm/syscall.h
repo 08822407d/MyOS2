@@ -39,18 +39,18 @@
 	// * This importantly ignores the high bits on 64-bit, so comparisons
 	// * sign-extend the low 32 bits.
 	// */
-	// static inline int syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
+	// static inline int syscall_get_nr(task_s *task, struct pt_regs *regs)
 	// {
 	// 	return regs->orig_ax;
 	// }
 
-	// static inline void syscall_rollback(struct task_struct *task,
+	// static inline void syscall_rollback(task_s *task,
 	// 									struct pt_regs *regs)
 	// {
 	// 	regs->ax = regs->orig_ax;
 	// }
 
-	// static inline long syscall_get_error(struct task_struct *task,
+	// static inline long syscall_get_error(task_s *task,
 	// 									struct pt_regs *regs)
 	// {
 	// 	unsigned long error = regs->ax;
@@ -69,20 +69,20 @@
 	// 	return IS_ERR_VALUE(error) ? error : 0;
 	// }
 
-	// static inline long syscall_get_return_value(struct task_struct *task,
+	// static inline long syscall_get_return_value(task_s *task,
 	// 											struct pt_regs *regs)
 	// {
 	// 	return regs->ax;
 	// }
 
-	// static inline void syscall_set_return_value(struct task_struct *task,
+	// static inline void syscall_set_return_value(task_s *task,
 	// 											struct pt_regs *regs,
 	// 											int error, long val)
 	// {
 	// 	regs->ax = (long)error ?: val;
 	// }
 
-		// static inline void syscall_get_arguments(struct task_struct *task,
+		// static inline void syscall_get_arguments(task_s *task,
 		// 										struct pt_regs *regs,
 		// 										unsigned long *args)
 		// {
@@ -108,7 +108,7 @@
 		// 	}
 		// }
 
-		// static inline int syscall_get_arch(struct task_struct *task)
+		// static inline int syscall_get_arch(task_s *task)
 		// {
 		// 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
 		// 	return (IS_ENABLED(CONFIG_IA32_EMULATION) &&

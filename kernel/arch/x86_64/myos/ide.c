@@ -150,7 +150,7 @@ void end_request(blkbuf_node_s * node)
 		color_printk(RED,BLACK,"end_request error\n");
 
 	wake_up_process(node->wq.task);
-	curr_tsk->flags |= PF_NEED_SCHEDULE;
+	current->flags |= PF_NEED_SCHEDULE;
 
 	IDE_req_queue.in_using = NULL;
 }
@@ -219,7 +219,7 @@ blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
 				unsigned long blk_idx, long count, unsigned char * buffer)
 {
 	blkbuf_node_s * node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
-	wq_init(&node->wq, curr_tsk);
+	wq_init(&node->wq, current);
 	node->buffer = buffer;
 
 	switch(cmd)

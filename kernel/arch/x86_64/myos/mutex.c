@@ -28,7 +28,7 @@ inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
 				:
 				:	"memory"
 				);
-	curr_tsk->spin_count++;
+	current->spin_count++;
 }
 
 inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
@@ -39,7 +39,7 @@ inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
 				:
 				:	"memory"
 				);
-	curr_tsk->spin_count--;
+	current->spin_count--;
 }
 
 /*==============================================================================================*
@@ -60,15 +60,15 @@ void lock_recurs_lock(recurs_lock_T * lock)
 		lock_spin_lock(&lock->selflock);
 		owner = lock->owner;
 		if (lock->owner == NULL)
-			lock->owner = curr_tsk;
+			lock->owner = current;
 		unlock_spin_lock(&lock->selflock);
-	} while(owner != curr_tsk);
+	} while(owner != current);
 	lock->counter++;
 }
 
 void unlock_recurs_lock(recurs_lock_T * lock)
 {
-	while (lock->owner != curr_tsk);
+	while (lock->owner != current);
 	lock->counter--;
 	if (lock->counter == 0)
 		lock->owner = NULL;
@@ -94,7 +94,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 	else
 // 	{
 // 		curr_cpu->curr_task == NULL;
-// 		m_enqueue_list(curr_tsk, &semaphore->waiting_tasks);
+// 		m_enqueue_list(current, &semaphore->waiting_tasks);
 // 		schedule();
 // 	}
 // }
@@ -146,7 +146,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 
 // void down_recurs_semaphore(recurs_semaphore_T * semaphore)
 // {	
-// 	task_s * curr = curr_tsk;
+// 	task_s * curr = current;
 // 	cpudata_s * cpudata_p = curr_cpu;
 // 	lock_spin_lock(&semaphore->selflock);
 // 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);
@@ -175,7 +175,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 
 // void up_recurs_semaphore(recurs_semaphore_T * semaphore)
 // {
-// 	task_s * curr = curr_tsk;
+// 	task_s * curr = current;
 // 	cpudata_s * cpudata_p = curr_cpu;
 // 	lock_spin_lock(&semaphore->selflock);
 // 	recurs_wait_s * user = find_recurs_waiting_task(curr, &semaphore->owner_list_head);

@@ -5,7 +5,7 @@
 	#include <asm/processor-flags.h>
 
 	// /* Forward declaration, a strange C thing */
-	// struct task_struct;
+	// task_s;
 	// struct mm_struct;
 	// struct io_bitmap;
 	// struct vm86;
@@ -511,9 +511,9 @@
 	// #endif /* CONFIG_PARAVIRT_XXL */
 
 	// /* Free all resources held by a thread. */
-	// extern void release_thread(struct task_struct *);
+	// extern void release_thread(task_s *);
 
-	// unsigned long __get_wchan(struct task_struct *p);
+	// unsigned long __get_wchan(task_s *p);
 
 	/*
 	 * Generic CPUID function
@@ -621,7 +621,7 @@
 	// 	wrmsrl(MSR_IA32_DEBUGCTLMSR, debugctlmsr);
 	// }
 
-	// extern void set_task_blockstep(struct task_struct *task, bool on);
+	// extern void set_task_blockstep(task_s *task, bool on);
 
 	// /* Boot loader type from the setup header: */
 	// extern int bootloader_type;
@@ -681,7 +681,7 @@
 	// 	{               \
 	// 	}
 
-	// extern unsigned long KSTK_ESP(struct task_struct *task);
+	// extern unsigned long KSTK_ESP(task_s *task);
 
 	// extern void start_thread(struct pt_regs *regs, unsigned long new_ip,
 	// 						unsigned long new_sp);

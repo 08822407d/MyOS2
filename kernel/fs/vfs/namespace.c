@@ -622,7 +622,7 @@ static void init_mount_tree(void)
 	vfsmount_s *mnt;
 	mount_s *m;
 	path_s root;
-	task_s *curr= curr_tsk;
+	task_s *curr= current;
 
 	mnt = vfs_kern_mount(&rootfs_fs_type, 0, "rootfs", NULL);
 	if (IS_ERR(mnt))

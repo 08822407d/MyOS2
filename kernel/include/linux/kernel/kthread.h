@@ -9,7 +9,7 @@
 	// struct mm_struct;
 
 	// __printf(4, 5)
-	// struct task_struct *kthread_create_on_node(int (*threadfn)(void *data),
+	// task_s *kthread_create_on_node(int (*threadfn)(void *data),
 	// 					void *data,
 	// 					int node,
 	// 					const char namefmt[], ...);
@@ -29,16 +29,16 @@
 	// 	kthread_create_on_node(threadfn, data, NUMA_NO_NODE, namefmt, ##arg)
 
 
-	// struct task_struct *kthread_create_on_cpu(int (*threadfn)(void *data),
+	// task_s *kthread_create_on_cpu(int (*threadfn)(void *data),
 	// 					void *data,
 	// 					unsigned int cpu,
 	// 					const char *namefmt);
 
-	// void get_kthread_comm(char *buf, size_t buf_size, struct task_struct *tsk);
-	// bool set_kthread_struct(struct task_struct *p);
+	// void get_kthread_comm(char *buf, size_t buf_size, task_s *tsk);
+	// bool set_kthread_struct(task_s *p);
 
-	// void kthread_set_per_cpu(struct task_struct *k, int cpu);
-	// bool kthread_is_per_cpu(struct task_struct *k);
+	// void kthread_set_per_cpu(task_s *k, int cpu);
+	// bool kthread_is_per_cpu(task_s *k);
 
 	// /**
 	//  * kthread_run - create and wake a thread.
@@ -51,7 +51,7 @@
 	//  */
 	// #define kthread_run(threadfn, data, namefmt, ...)			   \
 	// ({									   \
-	// 	struct task_struct *__k						   \
+	// 	task_s *__k						   \
 	// 		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \
 	// 	if (!IS_ERR(__k))						   \
 	// 		wake_up_process(__k);					   \
@@ -70,11 +70,11 @@
 	// * followed by wake_up_process().  Returns the kthread or
 	// * ERR_PTR(-ENOMEM).
 	// */
-	// static inline struct task_struct *
+	// static inline task_s *
 	// kthread_run_on_cpu(int (*threadfn)(void *data), void *data,
 	// 			unsigned int cpu, const char *namefmt)
 	// {
-	// 	struct task_struct *p;
+	// 	task_s *p;
 
 	// 	p = kthread_create_on_cpu(threadfn, data, cpu, namefmt);
 	// 	if (!IS_ERR(p))
@@ -83,26 +83,26 @@
 	// 	return p;
 	// }
 
-	// void free_kthread_struct(struct task_struct *k);
-	// void kthread_bind(struct task_struct *k, unsigned int cpu);
-	// void kthread_bind_mask(struct task_struct *k, const struct cpumask *mask);
-	// int kthread_stop(struct task_struct *k);
+	// void free_kthread_struct(task_s *k);
+	// void kthread_bind(task_s *k, unsigned int cpu);
+	// void kthread_bind_mask(task_s *k, const struct cpumask *mask);
+	// int kthread_stop(task_s *k);
 	// bool kthread_should_stop(void);
 	// bool kthread_should_park(void);
-	// bool __kthread_should_park(struct task_struct *k);
+	// bool __kthread_should_park(task_s *k);
 	// bool kthread_freezable_should_stop(bool *was_frozen);
-	// void *kthread_func(struct task_struct *k);
-	// void *kthread_data(struct task_struct *k);
-	// void *kthread_probe_data(struct task_struct *k);
-	// int kthread_park(struct task_struct *k);
-	// void kthread_unpark(struct task_struct *k);
+	// void *kthread_func(task_s *k);
+	// void *kthread_data(task_s *k);
+	// void *kthread_probe_data(task_s *k);
+	// int kthread_park(task_s *k);
+	// void kthread_unpark(task_s *k);
 	// void kthread_parkme(void);
 	// void kthread_exit(long result) __noreturn;
 	// void kthread_complete_and_exit(struct completion *, long) __noreturn;
 
 	// int kthreadd(void *unused);
-	// extern struct task_struct *kthreadd_task;
-	// extern int tsk_fork_get_node(struct task_struct *tsk);
+	// extern task_s *kthreadd_task;
+	// extern int tsk_fork_get_node(task_s *tsk);
 
 	// /*
 	// * Simple work processor based on kthread.
@@ -125,7 +125,7 @@
 	// 	raw_spinlock_t		lock;
 	// 	struct list_head	work_list;
 	// 	struct list_head	delayed_work_list;
-	// 	struct task_struct	*task;
+	// 	task_s	*task;
 	// 	struct kthread_work	*current_work;
 	// };
 

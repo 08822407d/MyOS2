@@ -1484,7 +1484,7 @@
 	// {
 	// }
 
-	// static inline bool cpupid_match_pid(struct task_struct *task, int cpupid)
+	// static inline bool cpupid_match_pid(task_s *task, int cpupid)
 	// {
 	// 	return false;
 	// }
@@ -1901,7 +1901,7 @@
 	// 	unmap_mapping_range(mapping, holebegin, holelen, 0);
 	// }
 
-	// extern int access_process_vm(struct task_struct *tsk, unsigned long addr,
+	// extern int access_process_vm(task_s *tsk, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
 	// extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
@@ -1938,7 +1938,7 @@
 
 	// int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
 	// int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
-	// 			struct task_struct *task, bool bypass_rlim);
+	// 			task_s *task, bool bypass_rlim);
 
 	// struct kvec;
 	// int get_kernel_pages(const struct kvec *iov, int nr_pages, int write,
@@ -1952,7 +1952,7 @@
 	// bool set_page_dirty(page_s *page);
 	// int set_page_dirty_lock(page_s *page);
 
-	// int get_cmdline(struct task_struct *task, char *buffer, int buflen);
+	// int get_cmdline(task_s *task, char *buffer, int buflen);
 
 	// extern unsigned long move_page_tables(struct vm_area_struct *vma,
 	// 		unsigned long old_addr, struct vm_area_struct *new_vma,
@@ -2669,7 +2669,7 @@
 	// extern int set_mm_exe_file(struct mm_struct *mm, struct file *new_exe_file);
 	// extern int replace_mm_exe_file(struct mm_struct *mm, struct file *new_exe_file);
 	// extern struct file *get_mm_exe_file(struct mm_struct *mm);
-	// extern struct file *get_task_exe_file(struct task_struct *task);
+	// extern struct file *get_task_exe_file(task_s *task);
 
 	// extern bool may_expand_vm(struct mm_struct *, vm_flags_t, unsigned long npages);
 	// extern void vm_stat_account(struct mm_struct *, vm_flags_t, long npages);
@@ -3134,7 +3134,7 @@
 	// }
 	// #endif	/* __HAVE_ARCH_GATE_AREA */
 
-	// extern bool process_shares_mm(struct task_struct *p, struct mm_struct *mm);
+	// extern bool process_shares_mm(task_s *p, struct mm_struct *mm);
 
 	// #ifdef CONFIG_SYSCTL
 	// extern int sysctl_drop_caches;

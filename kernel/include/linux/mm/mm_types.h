@@ -652,7 +652,7 @@
 	// 		* new_owner->mm == mm
 	// 		* new_owner->alloc_lock is held
 	// 		*/
-	// 		struct task_struct __rcu *owner;
+	// 		task_s __rcu *owner;
 	// #endif
 	// 		struct user_namespace *user_ns;
 

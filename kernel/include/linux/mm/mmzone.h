@@ -861,7 +861,7 @@
 				// atomic_t nr_writeback_throttled; /* nr of writeback-throttled tasks */
 				// unsigned long nr_reclaim_start;	 /* nr pages written while throttled
 				// 								* when throttling started. */
-				// struct task_struct *kswapd;		 /* Protected by
+				// task_s *kswapd;		 /* Protected by
 				// 					mem_hotplug_begin/end() */
 				// int kswapd_order;
 				// enum zone_type kswapd_highest_zoneidx;
@@ -872,7 +872,7 @@
 			// 	int kcompactd_max_order;
 			// 	enum zone_type kcompactd_highest_zoneidx;
 			// 	wait_queue_head_t kcompactd_wait;
-			// 	struct task_struct *kcompactd;
+			// 	task_s *kcompactd;
 			// 	bool proactive_compact_trigger;
 			// #endif
 				/*

@@ -25,7 +25,7 @@ mmpr_s mmpr[SEG_NR];
 
 mmpr_s * get_seginfo(task_s * task)
 {
-	mm_s * mm = task->mm_struct;
+	mm_s * mm = task->mm;
 	reg_t user_rsp = get_stackframe(task)->rsp;
 
 	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, SZ_2M);
@@ -41,7 +41,7 @@ mmpr_s * get_seginfo(task_s * task)
 void creat_exec_addrspace(task_s * task)
 {
 	stack_frame_s * context = get_stackframe(task);
-	mm_s * mm = task->mm_struct;
+	mm_s * mm = task->mm;
 	context->rsp = round_down(mm->start_stack, SZ_2M) - SZ_2M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
@@ -60,7 +60,7 @@ void creat_exec_addrspace(task_s * task)
 
 void prepair_COW(task_s * task)
 {
-	mm_s * mm = task->mm_struct;
+	mm_s * mm = task->mm;
 	get_seginfo(task);
 
 	for (int seg_idx = 0; seg_idx < SEG_NR; seg_idx++)
@@ -84,7 +84,7 @@ void prepair_COW(task_s * task)
 int do_COW(task_s * task, virt_addr_t virt)
 {
 	int ret_val = 0;
-	mm_s * mm = task->mm_struct;
+	mm_s * mm = task->mm;
 	get_seginfo(task);
 
 	reg_t orig_cr3 = read_cr3_pa();
@@ -111,7 +111,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
 			load_cr3(new_cr3);
-			task->mm_struct->pgd_ptr = new_cr3;
+			task->mm->pgd_ptr = new_cr3;
 		}
 	}
 
@@ -121,7 +121,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 int check_addr_writable(reg_t cr2, task_s * task)
 {
 	int ret_val = false;
-	mm_s * mm = task->mm_struct;
+	mm_s * mm = task->mm;
 	reg_t rsp = get_stackframe(task)->rsp;
 
 	if ((cr2 >= mm->start_code && cr2 < mm->end_code) ||
@@ -141,8 +141,8 @@ reg_t do_brk(reg_t start, reg_t length)
 		unsigned long attr = PAGE_SHARED;
 		page_s * pg_p = alloc_pages(GFP_USER, 0);
 		arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
-				attr, &curr_tsk->mm_struct->pgd_ptr);
+				attr, &current->mm->pgd_ptr);
 	}
-	curr_tsk->mm_struct->brk = new_end;
+	current->mm->brk = new_end;
 	return new_end;
 }

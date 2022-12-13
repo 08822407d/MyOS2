@@ -83,7 +83,7 @@ static __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	asm volatile(	"movq	%0,	%%cr3		\n\t"
 				:
-				:	"r"(target->mm_struct->pgd_ptr)
+				:	"r"(target->mm->pgd_ptr)
 				:	"memory"
 				);
 	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
@@ -137,7 +137,7 @@ inline __always_inline void myos_switch_to(task_s * curr, task_s * target)
 // read memory distribution of the executive
 static int read_exec_mm(file_s * fp, task_s * curr)
 {
-	mm_s * mm = curr->mm_struct;
+	mm_s * mm = curr->mm;
 
 	mm->start_code = USER_CODE_ADDR;
 	mm->start_data =
@@ -170,14 +170,14 @@ static int copy_files(unsigned long clone_flags, task_s * new_tsk)
 		goto out;
 	
 	for(i = 0; i < MAX_FILE_NR; i++)
-		if(curr_tsk->fps[i] != NULL)
+		if(current->fps[i] != NULL)
 		{
 			new_tsk->fps[i] = (file_s *)kmalloc(sizeof(file_s), GFP_KERNEL);
-			memcpy(new_tsk->fps[i], curr_tsk->fps[i], sizeof(file_s));
+			memcpy(new_tsk->fps[i], current->fps[i], sizeof(file_s));
 		}
 
 	new_tsk->fs = kmalloc(sizeof(taskfs_s), GFP_KERNEL);
-	memcpy(new_tsk->fs, curr_tsk->fs, sizeof(taskfs_s));
+	memcpy(new_tsk->fs, current->fs, sizeof(taskfs_s));
 
 out:
 	return err;
@@ -200,25 +200,25 @@ static void exit_files(task_s * new_tsk)
 static int copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int err = -ENOERR;
-	mm_s *curr_mm = curr_tsk->mm_struct;
+	mm_s *curr_mm = current->mm;
 
 	page_s *page = NULL;
 	pgd_t *new_cr3 = NULL;
-	reg_t curr_endstack = get_stackframe(curr_tsk)->rsp;
+	reg_t curr_endstack = get_stackframe(current)->rsp;
 
 	if(clone_flags & CLONE_VM)
 	{
 		// if vfork(), share the mm_struct
-		new_tsk->mm_struct = curr_mm;
+		new_tsk->mm = curr_mm;
 		goto exit_cpmm;
 	}
 	else
 	{
-		new_tsk->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
-		memcpy(new_tsk->mm_struct, curr_mm, sizeof(mm_s));
+		new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
+		memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
 		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
-		// new_tsk->mm_struct->pgd_ptr = new_pgd;
-		prepair_COW(curr_tsk);
+		// new_tsk->mm->pgd_ptr = new_pgd;
+		prepair_COW(current);
 	}
 
 exit_cpmm:
@@ -276,9 +276,8 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 						const char *taskname, task_s **ret_child)
 {
 	long ret_val = 0;
-	PCB_u *parent_PCB = container_of(get_current_task(), PCB_u, task);
 	PCB_u *child_PCB = (PCB_u *)kzalloc(sizeof(PCB_u), GFP_KERNEL);
-	task_s *parent_task = &parent_PCB->task;
+	task_s *parent_task = current;
 	task_s *child_task = &child_PCB->task;
 	if (child_PCB == NULL)
 	{
@@ -339,7 +338,7 @@ do_fork_success:
 unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
-	task_s *curr = curr_tsk;
+	task_s *curr = current;
 
 	//
 	if (task_idle != NULL && task_init != NULL)
@@ -353,19 +352,19 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 
 	if (curr->flags & CLONE_VFORK)
 	{
-		curr->mm_struct = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
+		curr->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 
 		pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
 		// new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
-		// curr->mm_struct->pgd = new_pgd;
-		curr->mm_struct->pgd_ptr = myos_virt2phys((virt_addr_t)virt_cr3);
+		// curr->mm->pgd = new_pgd;
+		curr->mm->pgd_ptr = myos_virt2phys((virt_addr_t)virt_cr3);
 		int hfent_nr = PGENT_NR / 2;
 		memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
 	}
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
-	load_cr3(curr->mm_struct->pgd_ptr);
+	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
 	long argv_pos = 0;
@@ -374,7 +373,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		int argc = 0;
 		int len = 0;
 		int i = 0;
-		char ** dargv = (char **)(curr->mm_struct->start_stack - 10 * sizeof(char *));
+		char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
 		argv_pos = (unsigned long)dargv;
 
 		for(i = 0; i < 10 && argv[i] != NULL; i++)
@@ -384,23 +383,23 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 			dargv[i] = (char *)(argv_pos - len);
 			argv_pos -= len;
 		}
-		curr->mm_struct->start_stack = argv_pos - 10;
+		curr->mm->start_stack = argv_pos - 10;
 		curr_context->rdi = i;	//argc
 		curr_context->rsi = (unsigned long)dargv;	//argv
 	}
 
-	memset((void *)curr->mm_struct->start_code, 0,
-			curr->mm_struct->end_data - curr->mm_struct->start_code);
+	memset((void *)curr->mm->start_code, 0,
+			curr->mm->end_data - curr->mm->start_code);
 	loff_t fp_pos = 0;
-	ret_val = fp->f_op->read(fp, (void *)curr->mm_struct->start_code,
+	ret_val = fp->f_op->read(fp, (void *)curr->mm->start_code,
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
 	if (argv != NULL)
 		curr->name = argv[0];
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
-	curr_context->r10 = curr->mm_struct->start_code;
-	curr_context->r11 = curr->mm_struct->start_stack;
+	curr_context->r10 = curr->mm->start_code;
+	curr_context->r11 = curr->mm->start_stack;
 	curr_context->rax = 1;
 
 	return ret_val;
@@ -409,8 +408,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 void kjmp_to_doexecve()
 {
 	task_idle = &task0_PCB.task;
-	// here if derictly use macro:curr_tsk will cause unexpected rewriting memory
-	task_s * curr = curr_tsk;
+	// here if derictly use macro:current will cause unexpected rewriting memory
+	task_s * curr = current;
 	stack_frame_s * curr_sfp = get_stackframe(curr);
 	curr_sfp->restore_retp = (virt_addr_t)ra_sysex_retp;
 
@@ -433,7 +432,7 @@ void kjmp_to_doexecve()
 
 static void exit_notify(void)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	while (curr->child_lhdr.count != 0)
 	{
 		List_s * child_lp = list_hdr_pop(&curr->child_lhdr);
@@ -441,24 +440,24 @@ static void exit_notify(void)
 		
 		list_hdr_append(&task_init->child_lhdr, child_lp);
 	}
-	wq_wakeup(&curr_tsk->wait_childexit, TASK_INTERRUPTIBLE);
+	wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	color_printk(RED, WHITE, "Core-%d: task:%d exited.\n", cpudata_p->cpu_idx, curr->pid);
 
 do_exit_again:
 	asm volatile("cli");
-	curr_tsk->exit_code = exit_code;
-	exit_thread(curr_tsk);
-	exit_files(curr_tsk);
+	current->exit_code = exit_code;
+	exit_thread(current);
+	exit_files(current);
 	exit_notify();
 	asm volatile("sti");
 
-	curr_tsk->__state = EXIT_ZOMBIE;
+	current->__state = EXIT_ZOMBIE;
 	myos_schedule();
 
 	goto do_exit_again;
@@ -487,7 +486,7 @@ task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long ar
 /*==============================================================================================*
  *									schedule functions											*
  *==============================================================================================*/
-inline __always_inline task_s * get_current_task()
+inline __always_inline task_s * myos_get_current()
 {
 	task_s * curr_task = NULL;
 	asm volatile(	"andq 	%%rsp,	%1		\n\t"

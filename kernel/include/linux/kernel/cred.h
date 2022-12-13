@@ -153,9 +153,9 @@
 	// };
 
 	// extern void __put_cred(struct cred *);
-	// extern void exit_creds(struct task_struct *);
-	// extern int copy_creds(struct task_struct *, unsigned long);
-	// extern const struct cred *get_task_cred(struct task_struct *);
+	// extern void exit_creds(task_s *);
+	// extern int copy_creds(task_s *, unsigned long);
+	// extern const struct cred *get_task_cred(task_s *);
 	// extern struct cred *cred_alloc_blank(void);
 	// extern struct cred *prepare_creds(void);
 	// extern struct cred *prepare_exec_creds(void);
@@ -163,7 +163,7 @@
 	// extern void abort_creds(struct cred *);
 	// extern const struct cred *override_creds(const struct cred *);
 	// extern void revert_creds(const struct cred *);
-	// extern struct cred *prepare_kernel_cred(struct task_struct *);
+	// extern struct cred *prepare_kernel_cred(task_s *);
 	// extern int change_create_files_as(struct cred *, struct inode *);
 	// extern int set_security_override(struct cred *, u32);
 	// extern int set_security_override_from_ctx(struct cred *, const char *);
@@ -177,7 +177,7 @@
 	// */
 	// #ifdef CONFIG_DEBUG_CREDENTIALS
 	// extern void __invalid_creds(const struct cred *, const char *, unsigned);
-	// extern void __validate_process_creds(struct task_struct *,
+	// extern void __validate_process_creds(task_s *,
 	// 					const char *, unsigned);
 
 	// extern bool creds_are_invalid(const struct cred *cred);
@@ -199,12 +199,12 @@
 	// 	__validate_process_creds(current, __FILE__, __LINE__);	\
 	// } while(0)
 
-	// extern void validate_creds_for_do_exit(struct task_struct *);
+	// extern void validate_creds_for_do_exit(task_s *);
 	// #else
 	// static inline void validate_creds(const struct cred *cred)
 	// {
 	// }
-	// static inline void validate_creds_for_do_exit(struct task_struct *tsk)
+	// static inline void validate_creds_for_do_exit(task_s *tsk)
 	// {
 	// }
 	// static inline void validate_process_creds(void)

@@ -29,7 +29,7 @@
  */
 static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 {
-	file_s ** fps = curr_tsk->fps;
+	file_s ** fps = current->fps;
 	int fd = -1;
 
 	for(int i = start; i < end; i++)
@@ -65,7 +65,7 @@ int get_unused_fd_flags(unsigned flags)
 
 void fd_install(unsigned int fd, file_s *file)
 {
-	file_s ** fps = curr_tsk->fps;
+	file_s ** fps = current->fps;
 	if (fps[fd] == NULL)
 	{
 		fps[fd] = file;
@@ -78,7 +78,7 @@ void fd_install(unsigned int fd, file_s *file)
 
 fd_s fdget_pos(int fd)
 {
-	task_s *curr = curr_tsk;
+	task_s *curr = current;
 	file_s *fp = curr->fps[fd];
 	
 	return (fd_s){.file = fp, .flags = 0};

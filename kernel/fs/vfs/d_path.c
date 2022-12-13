@@ -163,7 +163,7 @@ restart:
 long sys_getcwd(char *buf, unsigned long size)
 {
 	int		error;
-	task_s *curr = curr_tsk;
+	task_s *curr = current;
 	path_s	pwd = curr->fs->pwd,
 			root = curr->fs->root;
 	prpndbuf_s b;

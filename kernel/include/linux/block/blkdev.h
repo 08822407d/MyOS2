@@ -781,7 +781,7 @@
 
 	// void blk_flush_plug(struct blk_plug *plug, bool from_schedule);
 
-	// static inline bool blk_needs_flush_plug(struct task_struct *tsk)
+	// static inline bool blk_needs_flush_plug(task_s *tsk)
 	// {
 	// 	struct blk_plug *plug = tsk->plug;
 
@@ -812,7 +812,7 @@
 	// {
 	// }
 
-	// static inline bool blk_needs_flush_plug(struct task_struct *tsk)
+	// static inline bool blk_needs_flush_plug(task_s *tsk)
 	// {
 	// 	return false;
 	// }
@@ -1227,7 +1227,7 @@
 	// extern int bdev_write_page(blk_dev_s *, sector_t, struct page *,
 	// 						struct writeback_control *);
 
-	// static inline void blk_wake_io_task(struct task_struct *waiter)
+	// static inline void blk_wake_io_task(task_s *waiter)
 	// {
 	// 	/*
 	// 	* If we're polling, the task itself is doing the completions. For

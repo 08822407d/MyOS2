@@ -10,7 +10,7 @@ void wq_init(wait_queue_T * wq, task_s * tsk)
 
 void wq_sleep_on(List_hdr_s * wqhdr)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	wait_queue_T wq;
 	wq_init(&wq, curr);
 	curr->__state = TASK_UNINTERRUPTIBLE;
@@ -21,7 +21,7 @@ void wq_sleep_on(List_hdr_s * wqhdr)
 
 void wq_sleep_on_intrable(List_hdr_s * wqhdr)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	wait_queue_T wq;
 	wq_init(&wq, curr);
 	curr->__state = TASK_INTERRUPTIBLE;

@@ -34,7 +34,7 @@
 	 * task_struct has a problem.  When the user space process exits
 	 * the now useless task_struct is still kept.  A task_struct plus a
 	 * stack consumes around 10K of low kernel memory.  More precisely
-	 * this is THREAD_SIZE + sizeof(struct task_struct).  By comparison
+	 * this is THREAD_SIZE + sizeof(task_s).  By comparison
 	 * a pid_s is about 64 bytes.
 	 *
 	 * Holding a reference to pid_s solves both of these problems.
@@ -78,7 +78,7 @@
 
 	// extern pid_s *pidfd_pid(const struct file *file);
 	// pid_s *pidfd_get_pid(unsigned int fd, unsigned int *flags);
-	// struct task_struct *pidfd_get_task(int pidfd, unsigned int *flags);
+	// task_s *pidfd_get_task(int pidfd, unsigned int *flags);
 	// int pidfd_create(pid_s *pid, unsigned int flags);
 
 	// static inline pid_s *get_pid(pid_s *pid)
@@ -89,24 +89,24 @@
 	// }
 
 	// extern void put_pid(pid_s *pid);
-	// extern struct task_struct *pid_task(pid_s *pid, enum pid_type);
+	// extern task_s *pid_task(pid_s *pid, enum pid_type);
 	// static inline bool pid_has_task(pid_s *pid, enum pid_type type)
 	// {
 	// 	return !hlist_empty(&pid->tasks[type]);
 	// }
-	// extern struct task_struct *get_pid_task(pid_s *pid, enum pid_type);
+	// extern task_s *get_pid_task(pid_s *pid, enum pid_type);
 
-	// extern pid_s *get_task_pid(struct task_struct *task, enum pid_type type);
+	// extern pid_s *get_task_pid(task_s *task, enum pid_type type);
 
 	// /*
 	// * these helpers must be called with the tasklist_lock write-held.
 	// */
-	// extern void attach_pid(struct task_struct *task, enum pid_type);
-	// extern void detach_pid(struct task_struct *task, enum pid_type);
-	// extern void change_pid(struct task_struct *task, enum pid_type,
+	// extern void attach_pid(task_s *task, enum pid_type);
+	// extern void detach_pid(task_s *task, enum pid_type);
+	// extern void change_pid(task_s *task, enum pid_type,
 	// 			pid_s *pid);
-	// extern void exchange_tids(struct task_struct *task, struct task_struct *old);
-	// extern void transfer_pid(struct task_struct *old, struct task_struct *new,
+	// extern void exchange_tids(task_s *task, task_s *old);
+	// extern void transfer_pid(task_s *old, task_s *new,
 	// 			enum pid_type);
 
 	// struct pid_namespace;
@@ -207,7 +207,7 @@
 
 	// #define do_each_pid_thread(pid, type, task)				\
 	// 	do_each_pid_task(pid, type, task) {				\
-	// 		struct task_struct *tg___ = task;			\
+	// 		task_s *tg___ = task;			\
 	// 		for_each_thread(tg___, task) {
 
 	// #define while_each_pid_thread(pid, type, task)				\

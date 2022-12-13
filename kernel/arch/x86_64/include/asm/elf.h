@@ -241,7 +241,7 @@
 	// #define elf_read_implies_exec(ex, executable_stack) \
 	// 	(mmap_is_ia32() && executable_stack == EXSTACK_DEFAULT)
 
-	// struct task_struct;
+	// task_s;
 
 	// #define ARCH_DLINFO_IA32                                     \
 	// 	do                                                       \

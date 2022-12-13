@@ -33,7 +33,7 @@
 
 // static DEFINE_SPINLOCK(kthread_create_lock);
 // static LIST_HEAD(kthread_create_list);
-// struct task_struct *kthreadd_task;
+// task_s *kthreadd_task;
 
 typedef struct kthread_create_info
 {
@@ -43,7 +43,7 @@ typedef struct kthread_create_info
 	int node;
 
 	// /* Result passed back to kthread_create() from kthreadd. */
-	// struct task_struct *result;
+	// task_s *result;
 	// struct completion *done;
 
 	// struct list_head list;

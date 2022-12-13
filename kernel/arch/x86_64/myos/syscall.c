@@ -37,7 +37,7 @@ long sys_open(const char *filename, int flags, umode_t mode)
 
 long sys_close(unsigned int fd)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 
 	file_s * fp = NULL;
 
@@ -57,7 +57,7 @@ long sys_close(unsigned int fd)
 
 long sys_read(unsigned int fd, char *buf, size_t count)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -67,7 +67,7 @@ long sys_read(unsigned int fd, char *buf, size_t count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = curr_tsk->fps[fd];
+	fp = current->fps[fd];
 	if(fp->f_op && fp->f_op->read)
 		ret = fp->f_op->read(fp, buf, count, &fp->f_pos);
 	return ret;
@@ -75,7 +75,7 @@ long sys_read(unsigned int fd, char *buf, size_t count)
 
 long sys_write(unsigned int fd, const char *buf, size_t count)
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	struct file * fp = NULL;
 	unsigned long ret = 0;
 
@@ -85,7 +85,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = curr_tsk->fps[fd];
+	fp = current->fps[fd];
 	if(fp->f_op && fp->f_op->write)
 		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
 	return ret;
@@ -102,7 +102,7 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 	if(whence < 0 || whence >= SEEK_MAX)
 		return -EINVAL;
 
-	fp = curr_tsk->fps[fd];
+	fp = current->fps[fd];
 	if(fp->f_op && fp->f_op->llseek)
 		ret = fp->f_op->llseek(fp, offset, whence);
 	return ret;
@@ -110,13 +110,13 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 
 long sys_fork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 - 1;
 	return do_fork(curr_context, 0, curr_context->rsp, 0, NULL, NULL);	
 }
 
 long sys_vfork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 - 1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 - 1;
 	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, 0, NULL, NULL);
 }
 
@@ -126,7 +126,7 @@ long sys_execve(const char *filename, const char *const *argv,
 	char * pathname = NULL;
 	long pathlen = 0;
 	long error = 0;
-	stack_frame_s * curr_context = (stack_frame_s *)curr_tsk->arch_struct.tss_rsp0 -1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 -1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
 	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);
@@ -165,8 +165,8 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 
 	// color_printk(GREEN,BLACK,"sys_wait4\n");
 	List_s * child_lp;
-	for (child_lp = curr_tsk->child_lhdr.header.next;
-			child_lp != &curr_tsk->child_lhdr.header;
+	for (child_lp = current->child_lhdr.header.next;
+			child_lp != &current->child_lhdr.header;
 			child_lp = child_lp->next)
 	{
 		task_s * child_p = container_of(child_lp, task_s, child_list);
@@ -203,13 +203,13 @@ virt_addr_t sys_sbrk(unsigned long brk)
 //	color_printk(GREEN,BLACK,"sys_brk\n");
 //	color_printk(RED,BLACK,"brk:%#018lx,new_brk:%#018lx,current->mm->end_brk:%#018lx\n",brk,new_brk,current->mm->end_brk);
 	if(new_brk == 0)
-		return (virt_addr_t)curr_tsk->mm_struct->start_brk;
-	else if(new_brk < curr_tsk->mm_struct->brk)	//release  brk space
+		return (virt_addr_t)current->mm->start_brk;
+	else if(new_brk < current->mm->brk)	//release  brk space
 		return 0;	
 	else
-		new_brk = do_brk(curr_tsk->mm_struct->brk, new_brk - curr_tsk->mm_struct->brk);	//expand brk space
+		new_brk = do_brk(current->mm->brk, new_brk - current->mm->brk);	//expand brk space
 
-	curr_tsk->mm_struct->brk = new_brk;
+	current->mm->brk = new_brk;
 	return new_brk;
 }
 
@@ -219,12 +219,12 @@ virt_addr_t sys_sbrk(unsigned long brk)
  *==============================================================================================*/
 long sys_getpid()
 {
-	return curr_tsk->pid;
+	return current->pid;
 }
 
 long sys_getppid()
 {
-	return curr_tsk->parent->pid;
+	return current->parent->pid;
 }
 
 

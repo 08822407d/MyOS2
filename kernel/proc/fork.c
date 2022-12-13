@@ -112,7 +112,360 @@
 
 #include <linux/kernel/kernel.h>
 
+static inline task_s *myos_alloc_task_struct() {
+	PCB_u *ret_val = kmalloc(sizeof(PCB_u), GFP_KERNEL);
+	memset(&(ret_val->task), 0, sizeof(task_s));
+	return &ret_val->task;
+}
 
+static inline void free_task_struct(task_s *tsk) {
+	kfree(tsk);
+}
+
+
+static task_s *dup_task_struct(task_s *orig)
+{
+	task_s *tsk;
+	// unsigned long *stack;
+	// struct vm_struct *stack_vm_area __maybe_unused;
+	int err;
+
+	// tsk = alloc_task_struct_node(node);
+	tsk = myos_alloc_task_struct();
+	if (!tsk)
+		return NULL;
+
+	// stack = alloc_thread_stack_node(tsk, node);
+	// if (!stack)
+	// 	goto free_tsk;
+
+	// if (memcg_charge_kernel_stack(tsk))
+	// 	goto free_stack;
+
+	// stack_vm_area = task_stack_vm_area(tsk);
+
+	// err = arch_dup_task_struct(tsk, orig);
+	*tsk = *orig;
+	err = 0;
+
+	// /*
+	//  * arch_dup_task_struct() clobbers the stack-related fields.  Make
+	//  * sure they're properly initialized before using any stack-related
+	//  * functions again.
+	//  */
+	// tsk->stack = stack;
+// #ifdef CONFIG_VMAP_STACK
+	// tsk->stack_vm_area = stack_vm_area;
+// #endif
+// #ifdef CONFIG_THREAD_INFO_IN_TASK
+	// refcount_set(&tsk->stack_refcount, 1);
+// #endif
+
+	if (err)
+		goto free_stack;
+
+	// err = scs_prepare(tsk, node);
+	// if (err)
+	// 	goto free_stack;
+
+// #ifdef CONFIG_SECCOMP
+	// /*
+	//  * We must handle setting up seccomp filters once we're under
+	//  * the sighand lock in case orig has changed between now and
+	//  * then. Until then, filter must be NULL to avoid messing up
+	//  * the usage counts on the error path calling free_task.
+	//  */
+	// tsk->seccomp.filter = NULL;
+// #endif
+
+	// setup_thread_stack(tsk, orig);
+	// clear_user_return_notifier(tsk);
+	// clear_tsk_need_resched(tsk);
+	// set_task_stack_end_magic(tsk);
+	// clear_syscall_work_syscall_user_dispatch(tsk);
+
+// #ifdef CONFIG_STACKPROTECTOR
+	// tsk->stack_canary = get_random_canary();
+// #endif
+	// if (orig->cpus_ptr == &orig->cpus_mask)
+	// 	tsk->cpus_ptr = &tsk->cpus_mask;
+	// dup_user_cpus_ptr(tsk, orig, node);
+
+	// /*
+	//  * One for the user space visible state that goes away when reaped.
+	//  * One for the scheduler.
+	//  */
+	// refcount_set(&tsk->rcu_users, 2);
+	// /* One for the rcu users */
+	// refcount_set(&tsk->usage, 1);
+// #ifdef CONFIG_BLK_DEV_IO_TRACE
+	// tsk->btrace_seq = 0;
+// #endif
+	// tsk->splice_pipe = NULL;
+	// tsk->task_frag.page = NULL;
+	// tsk->wake_q.next = NULL;
+	// tsk->worker_private = NULL;
+
+	// account_kernel_stack(tsk, 1);
+
+	// kcov_task_init(tsk);
+	// kmap_local_fork(tsk);
+
+// #ifdef CONFIG_FAULT_INJECTION
+	// tsk->fail_nth = 0;
+// #endif
+
+// #ifdef CONFIG_BLK_CGROUP
+	// tsk->throttle_queue = NULL;
+	// tsk->use_memdelay = 0;
+// #endif
+
+// #ifdef CONFIG_MEMCG
+	// tsk->active_memcg = NULL;
+// #endif
+	return tsk;
+
+free_stack:
+	// free_thread_stack(tsk);
+free_tsk:
+	free_task_struct(tsk);
+	return NULL;
+}
+
+
+/**
+ * dup_mm() - duplicates an existing mm structure
+ * @tsk: the task_struct with which the new mm will be associated.
+ * @oldmm: the mm to duplicate.
+ *
+ * Allocates a new mm structure and duplicates the provided @oldmm structure
+ * content into it.
+ *
+ * Return: the duplicated mm or NULL on failure.
+ */
+static struct mm_struct *dup_mm(task_s *tsk,
+				struct mm_struct *oldmm)
+{
+// 	struct mm_struct *mm;
+// 	int err;
+
+// 	mm = allocate_mm();
+// 	if (!mm)
+// 		goto fail_nomem;
+
+// 	memcpy(mm, oldmm, sizeof(*mm));
+
+// 	if (!mm_init(mm, tsk, mm->user_ns))
+// 		goto fail_nomem;
+
+// 	err = dup_mmap(mm, oldmm);
+// 	if (err)
+// 		goto free_pt;
+
+// 	mm->hiwater_rss = get_mm_rss(mm);
+// 	mm->hiwater_vm = mm->total_vm;
+
+// 	if (mm->binfmt && !try_module_get(mm->binfmt->module))
+// 		goto free_pt;
+
+// 	return mm;
+
+// free_pt:
+// 	/* don't put binfmt in mmput, we haven't got module yet */
+// 	mm->binfmt = NULL;
+// 	mm_init_owner(mm, NULL);
+// 	mmput(mm);
+
+// fail_nomem:
+// 	return NULL;
+}
+
+static int copy_mm(unsigned long clone_flags, task_s *tsk)
+{
+// 	struct mm_struct *mm, *oldmm;
+
+// 	tsk->min_flt = tsk->maj_flt = 0;
+// 	tsk->nvcsw = tsk->nivcsw = 0;
+// #ifdef CONFIG_DETECT_HUNG_TASK
+// 	tsk->last_switch_count = tsk->nvcsw + tsk->nivcsw;
+// 	tsk->last_switch_time = 0;
+// #endif
+
+// 	tsk->mm = NULL;
+// 	tsk->active_mm = NULL;
+
+// 	/*
+// 	 * Are we cloning a kernel thread?
+// 	 *
+// 	 * We need to steal a active VM for that..
+// 	 */
+// 	oldmm = current->mm;
+// 	if (!oldmm)
+// 		return 0;
+
+// 	/* initialize the new vmacache entries */
+// 	vmacache_flush(tsk);
+
+// 	if (clone_flags & CLONE_VM) {
+// 		mmget(oldmm);
+// 		mm = oldmm;
+// 	} else {
+// 		mm = dup_mm(tsk, current->mm);
+// 		if (!mm)
+// 			return -ENOMEM;
+// 	}
+
+// 	tsk->mm = mm;
+// 	tsk->active_mm = mm;
+// 	return 0;
+}
+
+static int copy_fs(unsigned long clone_flags, task_s *tsk)
+{
+	// struct fs_struct *fs = current->fs;
+	// if (clone_flags & CLONE_FS) {
+	// 	/* tsk->fs is already what we want */
+	// 	spin_lock(&fs->lock);
+	// 	if (fs->in_exec) {
+	// 		spin_unlock(&fs->lock);
+	// 		return -EAGAIN;
+	// 	}
+	// 	fs->users++;
+	// 	spin_unlock(&fs->lock);
+	// 	return 0;
+	// }
+	// tsk->fs = copy_fs_struct(fs);
+	// if (!tsk->fs)
+	// 	return -ENOMEM;
+	// return 0;
+}
+
+static int copy_files(unsigned long clone_flags, task_s *tsk)
+{
+// 	struct files_struct *oldf, *newf;
+// 	int error = 0;
+
+// 	/*
+// 	 * A background process may not have any files ...
+// 	 */
+// 	oldf = current->files;
+// 	if (!oldf)
+// 		goto out;
+
+// 	if (clone_flags & CLONE_FILES) {
+// 		atomic_inc(&oldf->count);
+// 		goto out;
+// 	}
+
+// 	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
+// 	if (!newf)
+// 		goto out;
+
+// 	tsk->files = newf;
+// 	error = 0;
+// out:
+// 	return error;
+}
+
+// static int copy_sighand(unsigned long clone_flags, task_s *tsk)
+// {
+// 	struct sighand_struct *sig;
+
+// 	if (clone_flags & CLONE_SIGHAND) {
+// 		refcount_inc(&current->sighand->count);
+// 		return 0;
+// 	}
+// 	sig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);
+// 	RCU_INIT_POINTER(tsk->sighand, sig);
+// 	if (!sig)
+// 		return -ENOMEM;
+
+// 	refcount_set(&sig->count, 1);
+// 	spin_lock_irq(&current->sighand->siglock);
+// 	memcpy(sig->action, current->sighand->action, sizeof(sig->action));
+// 	spin_unlock_irq(&current->sighand->siglock);
+
+// 	/* Reset all signal handler not set to SIG_IGN to SIG_DFL. */
+// 	if (clone_flags & CLONE_CLEAR_SIGHAND)
+// 		flush_signal_handlers(tsk, 0);
+
+// 	return 0;
+// }
+
+// void __cleanup_sighand(struct sighand_struct *sighand)
+// {
+// 	if (refcount_dec_and_test(&sighand->count)) {
+// 		signalfd_cleanup(sighand);
+// 		/*
+// 		 * sighand_cachep is SLAB_TYPESAFE_BY_RCU so we can free it
+// 		 * without an RCU grace period, see __lock_task_sighand().
+// 		 */
+// 		kmem_cache_free(sighand_cachep, sighand);
+// 	}
+// }
+
+// /*
+//  * Initialize POSIX timer handling for a thread group.
+//  */
+// static void posix_cpu_timers_init_group(struct signal_struct *sig)
+// {
+// 	struct posix_cputimers *pct = &sig->posix_cputimers;
+// 	unsigned long cpu_limit;
+
+// 	cpu_limit = READ_ONCE(sig->rlim[RLIMIT_CPU].rlim_cur);
+// 	posix_cputimers_group_init(pct, cpu_limit);
+// }
+
+static int copy_signal(unsigned long clone_flags, task_s *tsk)
+{
+// 	struct signal_struct *sig;
+
+// 	if (clone_flags & CLONE_THREAD)
+// 		return 0;
+
+// 	sig = kmem_cache_zalloc(signal_cachep, GFP_KERNEL);
+// 	tsk->signal = sig;
+// 	if (!sig)
+// 		return -ENOMEM;
+
+// 	sig->nr_threads = 1;
+// 	atomic_set(&sig->live, 1);
+// 	refcount_set(&sig->sigcnt, 1);
+
+// 	/* list_add(thread_node, thread_head) without INIT_LIST_HEAD() */
+// 	sig->thread_head = (struct list_head)LIST_HEAD_INIT(tsk->thread_node);
+// 	tsk->thread_node = (struct list_head)LIST_HEAD_INIT(sig->thread_head);
+
+// 	init_waitqueue_head(&sig->wait_chldexit);
+// 	sig->curr_target = tsk;
+// 	init_sigpending(&sig->shared_pending);
+// 	INIT_HLIST_HEAD(&sig->multiprocess);
+// 	seqlock_init(&sig->stats_lock);
+// 	prev_cputime_init(&sig->prev_cputime);
+
+// #ifdef CONFIG_POSIX_TIMERS
+// 	INIT_LIST_HEAD(&sig->posix_timers);
+// 	hrtimer_init(&sig->real_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+// 	sig->real_timer.function = it_real_fn;
+// #endif
+
+// 	task_lock(current->group_leader);
+// 	memcpy(sig->rlim, current->signal->rlim, sizeof sig->rlim);
+// 	task_unlock(current->group_leader);
+
+// 	posix_cpu_timers_init_group(sig);
+
+// 	tty_audit_fork(sig);
+// 	sched_autogroup_fork(sig);
+
+// 	sig->oom_score_adj = current->signal->oom_score_adj;
+// 	sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+
+// 	mutex_init(&sig->cred_guard_mutex);
+// 	init_rwsem(&sig->exec_update_lock);
+
+// 	return 0;
+}
 
 
 /*
@@ -215,10 +568,10 @@ static __latent_entropy task_s
 	// if (task_sigpending(current))
 	// 	goto fork_out;
 
-	// retval = -ENOMEM;
-	// p = dup_task_struct(current, node);
-	// if (!p)
-	// 	goto fork_out;
+	retval = -ENOMEM;
+	p = dup_task_struct(current);
+	if (!p)
+		goto fork_out;
 	// if (args->io_thread) {
 	// 	/*
 	// 	 * Mark us an IO worker, and block any signal that isn't

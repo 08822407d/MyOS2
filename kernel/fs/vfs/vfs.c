@@ -36,7 +36,7 @@ void set_init_mount()
 
 void set_init_taskfs()
 {
-	task_s * curr = curr_tsk;
+	task_s * curr = current;
 	// set cwd and root-dir of task1
 	taskfs_s * taskfs_p = curr->fs;
 	taskfs_p->pwd.dentry = 

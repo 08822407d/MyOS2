@@ -284,7 +284,7 @@ long do_sys_open(int dfd, const char * filename, int flags, umode_t mode)
 long sys_chdir(const char *filename)
 {
 	path_s path;
-	task_s *curr = curr_tsk;
+	task_s *curr = current;
 	int error;
 	unsigned int lookup_flags = LOOKUP_FOLLOW | LOOKUP_DIRECTORY;
 retry:

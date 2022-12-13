@@ -6,7 +6,7 @@
 	#include <linux/kernel/signal_types.h>
 	#include <linux/lib/string.h>
 
-	// struct task_struct;
+	// task_s;
 
 	// /* for sysctl */
 	// extern int print_fatal_signals;
@@ -279,10 +279,10 @@
 
 	// extern int next_signal(struct sigpending *pending, sigset_t *mask);
 	// extern int do_send_sig_info(int sig, struct kernel_siginfo *info,
-	// 				struct task_struct *p, enum pid_type type);
+	// 				task_s *p, enum pid_type type);
 	// extern int group_send_sig_info(int sig, struct kernel_siginfo *info,
-	// 				struct task_struct *p, enum pid_type type);
-	// extern int __group_send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+	// 				task_s *p, enum pid_type type);
+	// extern int __group_send_sig_info(int, struct kernel_siginfo *, task_s *);
 	// extern int sigprocmask(int, sigset_t *, sigset_t *);
 	// extern void set_current_blocked(sigset_t *);
 	// extern void __set_current_blocked(const sigset_t *);
@@ -290,7 +290,7 @@
 
 	// extern bool get_signal(struct ksignal *ksig);
 	// extern void signal_setup_done(int failed, struct ksignal *ksig, int stepping);
-	// extern void exit_signals(struct task_struct *tsk);
+	// extern void exit_signals(task_s *tsk);
 	// extern void kernel_sigaction(int, __sighandler_t);
 
 	// #define SIG_KTHREAD ((__force __sighandler_t)2)
@@ -323,7 +323,7 @@
 
 	// extern struct kmem_cache *sighand_cachep;
 
-	// extern bool unhandled_signal(struct task_struct *tsk, int sig);
+	// extern bool unhandled_signal(task_s *tsk, int sig);
 
 	// /*
 	// * In POSIX a signal is sent either to a specific thread (Linux task)
@@ -457,7 +457,7 @@
 
 	// #define unsafe_save_altstack(uss, sp, label) do { \
 	// 	stack_t __user *__uss = uss; \
-	// 	struct task_struct *t = current; \
+	// 	task_s *t = current; \
 	// 	unsafe_put_user((void __user *)t->sas_ss_sp, &__uss->ss_sp, label); \
 	// 	unsafe_put_user(t->sas_ss_flags, &__uss->ss_flags, label); \
 	// 	unsafe_put_user(t->sas_ss_size, &__uss->ss_size, label); \

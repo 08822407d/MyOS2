@@ -54,7 +54,7 @@ int init_chdir(const char *filename)
 		return error;
 	// error = path_permission(&path, MAY_EXEC | MAY_CHDIR);
 	if (!error)
-		set_fs_pwd(curr_tsk->fs, &path);
+		set_fs_pwd(current->fs, &path);
 	path_put(&path);
 	return error;
 }
@@ -76,7 +76,7 @@ int init_chroot(const char *filename)
 	// error = security_path_chroot(&path);
 	// if (error)
 	// 	goto dput_and_out;
-	set_fs_root(curr_tsk->fs, &path);
+	set_fs_root(current->fs, &path);
 dput_and_out:
 	path_put(&path);
 	return error;

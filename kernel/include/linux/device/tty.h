@@ -352,7 +352,7 @@
 	// void tty_vhangup_self(void);
 	// void disassociate_ctty(int priv);
 	// dev_t tty_devnum(struct tty_struct *tty);
-	// void proc_clear_tty(struct task_struct *p);
+	// void proc_clear_tty(task_s *p);
 	// struct tty_struct *get_current_tty(void);
 	// /* tty_io.c */
 	int tty_init(void);
@@ -372,7 +372,7 @@
 	// { }
 	// static inline dev_t tty_devnum(struct tty_struct *tty)
 	// { return 0; }
-	// static inline void proc_clear_tty(struct task_struct *p)
+	// static inline void proc_clear_tty(task_s *p)
 	// { }
 	// static inline struct tty_struct *get_current_tty(void)
 	// { return NULL; }

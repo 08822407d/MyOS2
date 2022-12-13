@@ -29,15 +29,15 @@
 	// #define ACCESS_PRIVATE(p, member) (*((typeof((p)->member) __force *)&(p)->member))
 	#	else /* __CHECKER__ */
 	/* address spaces */
-	// #define __kernel
-	// #ifdef STRUCTLEAK_PLUGIN
-	// #define __user __attribute__((user))
-	// #else
-	// #define __user
-	// #endif
+	#		define __kernel
+	#		ifdef STRUCTLEAK_PLUGIN
+	#			define __user __attribute__((user))
+	#		else
+	#			define __user
+	#		endif
 	#		define __iomem
-	// #define __percpu
-	// #define __rcu
+	#		define __percpu
+	#		define __rcu
 	// #define __chk_user_ptr(x) (void)0
 	// #define __chk_io_ptr(x) (void)0
 	// /* context/locking */

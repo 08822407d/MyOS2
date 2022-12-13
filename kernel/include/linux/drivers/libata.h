@@ -581,7 +581,7 @@
 	// 	struct kref		kref;
 
 	// 	struct mutex		eh_mutex;
-	// 	struct task_struct	*eh_owner;
+	// 	task_s	*eh_owner;
 
 	// 	ata_port_s		*simplex_claimed;	/* channel owning the DMA */
 	// 	ata_port_s		*ports[];

@@ -14,10 +14,10 @@
 	//  * work on the current task or on a non-running (typically stopped
 	//  * ptrace child) task.
 	//  */
-	// extern unsigned long x86_fsbase_read_task(struct task_struct *task);
-	// extern unsigned long x86_gsbase_read_task(struct task_struct *task);
-	// extern void x86_fsbase_write_task(struct task_struct *task, unsigned long fsbase);
-	// extern void x86_gsbase_write_task(struct task_struct *task, unsigned long gsbase);
+	// extern unsigned long x86_fsbase_read_task(task_s *task);
+	// extern unsigned long x86_gsbase_read_task(task_s *task);
+	// extern void x86_fsbase_write_task(task_s *task, unsigned long fsbase);
+	// extern void x86_gsbase_write_task(task_s *task, unsigned long gsbase);
 
 	/* Must be protected by X86_FEATURE_FSGSBASE check. */
 
@@ -71,7 +71,7 @@
 
 	// extern unsigned long x86_gsbase_read_cpu_inactive(void);
 	// extern void x86_gsbase_write_cpu_inactive(unsigned long gsbase);
-	// extern unsigned long x86_fsgsbase_read_task(struct task_struct *task,
+	// extern unsigned long x86_fsgsbase_read_task(task_s *task,
 	// 						unsigned short selector);
 
 	#endif /* __ASSEMBLY__ */

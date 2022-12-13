@@ -552,11 +552,11 @@ static const char *path_init(OUT nameidata_s *nd, unsigned flags)
 
 	nd->flags = flags;
 
-	nd->root = curr_tsk->fs->root;
+	nd->root = current->fs->root;
 	if (s[0] == '/')
 		nd->path = nd->root;
 	else
-		nd->path = curr_tsk->fs->pwd;
+		nd->path = current->fs->pwd;
 
 	return s;
 }

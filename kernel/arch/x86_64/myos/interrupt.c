@@ -115,8 +115,8 @@ void excep_gen_prot(stack_frame_s *sf_regs)
 
 void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
 {
-	task_s *curr = curr_tsk;
-	mm_s *mm = curr->mm_struct;
+	task_s *curr = current;
+	mm_s *mm = curr->mm;
 	int error_code = sf_regs->err_code;
 	unsigned long cr2 = 0;
 	asm volatile(	"movq	%%cr2,	%0		\n\t"
@@ -128,7 +128,7 @@ void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
 		check_addr_writable(cr2, curr))
 	{
-		do_COW(curr_tsk, (virt_addr_t)cr2);
+		do_COW(current, (virt_addr_t)cr2);
 		return;
 	}
 
@@ -182,7 +182,7 @@ void exception_handler(stack_frame_s *sf_regs)
 {
 	per_cpudata_s *cpudata_p = curr_cpu;
 	int vec = sf_regs->vec_nr;
-	task_s *curr = curr_tsk;
+	task_s *curr = current;
 	// color_printk(WHITE, BLUE,"Caused by core-%d, task-%d INTR: 0x%02x - %s ; \n",
 	// 				cpudata_p->cpu_idx, curr->pid, vec, exception_init_table[vec].name);
 
