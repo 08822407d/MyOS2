@@ -116,7 +116,7 @@
 			// #define RESERVE_BRK(name,sz)						\
 			// 	static void __section(".discard.text") __used notrace		\
 			// 	__brk_reservation_fn_##name##__(void) {				\
-			// 		asm volatile (						\
+			// 		asm volatile(						\
 			// 			".pushsection .brk_reservation,\"aw\",@nobits;" \
 			// 			".brk." #name ":"				\
 			// 			" 1:.skip %c0;"					\

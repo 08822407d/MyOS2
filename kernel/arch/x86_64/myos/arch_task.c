@@ -189,7 +189,7 @@ static int copy_files(unsigned long clone_flags, task_s * new_tsk)
 out:
 	return err;
 }
-static void exit_files(task_s * new_tsk)
+static void myos_exit_files(task_s * new_tsk)
 {
 	int i = 0;
 	if(new_tsk->flags & CLONE_VFORK)
@@ -333,7 +333,7 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 copy_thread_fail:
 	exit_thread(child_task);
 copy_files_fail:
-	exit_files(child_task);
+	myos_exit_files(child_task);
 copy_mm_fail:
 	exit_mm(child_task);
 copy_flags_fail:
@@ -358,7 +358,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 		task_init = curr;
 	//
 
-	exit_files(curr);
+	myos_exit_files(curr);
 	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
 
 	if (curr->flags & CLONE_VFORK)
@@ -467,7 +467,7 @@ do_exit_again:
 	asm volatile("cli");
 	current->exit_code = exit_code;
 	exit_thread(current);
-	exit_files(current);
+	myos_exit_files(current);
 	exit_notify();
 	asm volatile("sti");
 

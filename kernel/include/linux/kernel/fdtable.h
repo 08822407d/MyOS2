@@ -25,14 +25,14 @@
 	#define NR_OPEN_DEFAULT	256
 	// #define NR_OPEN_MAX ~0U
 
-	// struct fdtable {
-	// 	unsigned int max_fds;
-	// 	struct file __rcu **fd;      /* current fd array */
-	// 	unsigned long *close_on_exec;
-	// 	unsigned long *open_fds;
-	// 	unsigned long *full_fds_bits;
-	// 	struct rcu_head rcu;
-	// };
+	typedef struct fdtable {
+		unsigned int max_fds;
+		// struct file __rcu **fd;      /* current fd array */
+		// unsigned long *close_on_exec;
+		// unsigned long *open_fds;
+		// unsigned long *full_fds_bits;
+		// struct rcu_head rcu;
+	} fdtable_s;
 
 	// static inline bool close_on_exec(unsigned int fd, const struct fdtable *fdt)
 	// {
@@ -55,7 +55,7 @@
 		// bool resize_in_progress;
 		// wait_queue_head_t resize_wait;
 
-		// struct fdtable __rcu *fdt;
+		fdtable_s __rcu	*fdt;
 		// struct fdtable fdtab;
 	/*
 	 * written part on a separate cache line in SMP

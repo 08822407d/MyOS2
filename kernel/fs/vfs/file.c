@@ -24,6 +24,72 @@
 #include "internal.h"
 
 
+static fdtable_s *close_files(files_struct_s * files)
+{
+	/*
+	 * It is safe to dereference the fd table without RCU or
+	 * ->file_lock because this is the last reference to the
+	 * files structure.
+	 */
+	// fdtable_s *fdt = rcu_dereference_raw(files->fdt);
+	fdtable_s *fdt = files->fdt;
+	unsigned int i, j = 0;
+
+	// for (;;) {
+	// 	unsigned long set;
+	// 	i = j * BITS_PER_LONG;
+	// 	if (i >= fdt->max_fds)
+	// 		break;
+	// 	set = fdt->open_fds[j++];
+	// 	while (set) {
+	// 		if (set & 1) {
+	// 			file_s * file = &fdt->fd[i];
+	// 			if (file) {
+	// 				filp_close(file);
+	// 				cond_resched();
+	// 			}
+	// 		}
+	// 		i++;
+	// 		set >>= 1;
+	// 	}
+	// }
+
+	for(i = 0; i < MAX_FILE_NR; i++)
+	{
+		file_s *file = files->fd_array[i];
+		if(file != NULL)
+			filp_close(file);
+	}
+
+	return fdt;
+}
+
+void put_files_struct(files_struct_s *files)
+{
+	if (atomic_dec_and_test(&files->count)) {
+		fdtable_s *fdt = close_files(files);
+
+		/* free the arrays if they are not embedded */
+		// if (fdt != &files->fdtab)
+		// 	__free_fdtable(fdt);
+		// kmem_cache_free(files_cachep, files);
+		kfree(files);
+	}
+}
+
+void exit_files(task_s *tsk)
+{
+	files_struct_s * files = tsk->files;
+
+	if (files) {
+		// task_lock(tsk);
+		tsk->files = NULL;
+		// task_unlock(tsk);
+		put_files_struct(files);
+	}
+}
+
+
 /*
  * allocate a file descriptor, mark it busy.
  */

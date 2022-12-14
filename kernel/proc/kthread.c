@@ -12,7 +12,7 @@
 // #include <linux/mmu_context.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/mm.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 #include <linux/kernel/kthread.h>
 // #include <linux/completion.h>
 #include <linux/kernel/err.h>
@@ -38,15 +38,15 @@
 typedef struct kthread_create_info
 {
 	/* Information passed to kthread() from kthreadd. */
-	int (*threadfn)(void *data);
-	void *data;
-	int node;
+	int		(*threadfn)(void *data);
+	void	*data;
+	int		node;
 
-	// /* Result passed back to kthread_create() from kthreadd. */
-	// task_s *result;
+	/* Result passed back to kthread_create() from kthreadd. */
+	task_s	*result;
 	// struct completion *done;
 
-	// struct list_head list;
+	List_s	list;
 } kthd_create_info_s;
 
 typedef struct kthread {
@@ -57,9 +57,9 @@ typedef struct kthread {
 	void *data;
 	// mm_segment_t oldfs;
 	// struct completion parked;
-// 	// struct completion exited;
+	// struct completion exited;
 // #ifdef CONFIG_BLK_CGROUP
-// 	struct cgroup_subsys_state *blkcg_css;
+	// struct cgroup_subsys_state *blkcg_css;
 // #endif
 	/* To store the full name if task comm is truncated. */
 	char *full_name;
@@ -128,9 +128,9 @@ static void create_kthread(kthd_create_info_s *create)
 	int pid;
 
 	/* We want our own signal handler (we take no signals by default). */
-	// pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
-	// if (pid < 0) {
-	// 	/* If user was SIGKILLed, I release the structure. */
+	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
+	if (pid < 0) {
+		/* If user was SIGKILLed, I release the structure. */
 	// 	struct completion *done = xchg(&create->done, NULL);
 
 	// 	if (!done) {
@@ -139,5 +139,5 @@ static void create_kthread(kthd_create_info_s *create)
 	// 	}
 	// 	create->result = ERR_PTR(pid);
 	// 	complete(done);
-	// }
+	}
 }

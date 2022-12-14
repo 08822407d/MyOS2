@@ -6,6 +6,10 @@
 	// #include <linux/spinlock.h>
 	// #include <linux/seqlock.h>
 
+
+	struct task_struct;
+	typedef struct task_struct task_s;
+
 	typedef struct fs_struct {
 		int		users;
 		// spinlock_t lock;
@@ -17,7 +21,7 @@
 
 	// extern struct kmem_cache *fs_cachep;
 
-	// extern void exit_fs(task_s *);
+	extern void exit_fs(task_s *);
 	extern void set_fs_root(taskfs_s *, const path_s *);
 	extern void set_fs_pwd(taskfs_s *, const path_s *);
 	// extern taskfs_s *copy_fs_struct(taskfs_s *);

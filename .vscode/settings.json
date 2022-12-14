@@ -201,7 +201,8 @@
 		"ata.h": "c",
 		"libata.h": "c",
 		"delay.h": "c",
-		"major.h": "c"
+		"major.h": "c",
+		"kthread.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

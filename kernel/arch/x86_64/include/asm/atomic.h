@@ -118,33 +118,45 @@
 	}
 	#define atomic_dec arch_atomic_dec
 
-	// /**
-	//  * arch_atomic_dec_and_test - decrement and test
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically decrements @v by 1 and
-	//  * returns true if the result is 0, or false for all other
-	//  * cases.
-	//  */
-	// static __always_inline bool arch_atomic_dec_and_test(atomic_t *v)
-	// {
-	// 	return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
-	// }
-	// #define arch_atomic_dec_and_test arch_atomic_dec_and_test
+	/**
+	 * arch_atomic_dec_and_test - decrement and test
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically decrements @v by 1 and
+	 * returns true if the result is 0, or false for all other
+	 * cases.
+	 */
+	static __always_inline bool arch_atomic_dec_and_test(atomic_t *v) {
+		// return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
+		char c;
+		asm volatile(	"lock	decl	%0		\n\t"
+						"movb	%0,		%1		\n\t"
+					:	"+m"(v->counter) ,"=qm"(c)
+					:
+					:"memory");
+		return c != 0;
+	}
+	#define atomic_dec_and_test arch_atomic_dec_and_test
 
-	// /**
-	//  * arch_atomic_inc_and_test - increment and test
-	//  * @v: pointer of type atomic_t
-	//  *
-	//  * Atomically increments @v by 1
-	//  * and returns true if the result is zero, or false for all
-	//  * other cases.
-	//  */
-	// static __always_inline bool arch_atomic_inc_and_test(atomic_t *v)
-	// {
-	// 	return GEN_UNARY_RMWcc(LOCK_PREFIX "incl", v->counter, e);
-	// }
-	// #define arch_atomic_inc_and_test arch_atomic_inc_and_test
+	/**
+	 * arch_atomic_inc_and_test - increment and test
+	 * @v: pointer of type atomic_t
+	 *
+	 * Atomically increments @v by 1
+	 * and returns true if the result is zero, or false for all
+	 * other cases.
+	 */
+	static __always_inline bool arch_atomic_inc_and_test(atomic_t *v) {
+		// return GEN_UNARY_RMWcc(LOCK_PREFIX "incl", v->counter, e);
+		char c;
+		asm volatile(	"lock	incl	%0		\n\t"
+						"movb	%0,		%1		\n\t"
+					:	"+m"(v->counter) ,"=qm"(c)
+					:
+					:"memory");
+		return c != 0;
+	}
+	#define atomic_inc_and_test arch_atomic_inc_and_test
 
 	// /**
 	//  * arch_atomic_add_negative - add and test if negative

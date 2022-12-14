@@ -26,7 +26,7 @@
 // #include <linux/sched/smt.h>
 // #include <linux/sched/stat.h>
 // #include <linux/sched/sysctl.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 // #include <linux/sched/task_stack.h>
 // #include <linux/sched/topology.h>
 // #include <linux/sched/user.h>
@@ -46,7 +46,7 @@
 // #include <linux/debugfs.h>
 // #include <linux/delayacct.h>
 // #include <linux/energy_model.h>
-// #include <linux/myos_init_task.h>
+// #include <linux/init_task.h>
 // #include <linux/kprobes.h>
 // #include <linux/kthread.h>
 // #include <linux/membarrier.h>

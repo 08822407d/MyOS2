@@ -2601,6 +2601,7 @@
 	// 	return dentry_open(&file->f_path, file->f_flags, file->f_cred);
 	// }
 	// extern int filp_close(file_s *, fl_owner_t id);
+	extern int filp_close(file_s *fp);
 
 	// extern filename_s *getname_flags(const char __user *, int, int *);
 	// extern filename_s *getname_uflags(const char __user *, int);

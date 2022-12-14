@@ -33,11 +33,11 @@
 #include <linux/fs/file.h>
 #include <linux/kernel/fcntl.h>
 // #include <linux/device_cgroup.h>
-// #include <linux/fs_struct.h>
+#include <linux/sched/fs_struct.h>
 // #include <linux/posix_acl.h>
 // #include <linux/hash.h>
 #include <linux/kernel/bitops.h>
-// #include <linux/myos_init_task.h>
+// #include <linux/init_task.h>
 // #include <linux/uaccess.h>
 #include "internal.h"
 #include <linux/fs/mount.h>
