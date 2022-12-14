@@ -24,25 +24,23 @@
 	extern void exit_fs(task_s *);
 	extern void set_fs_root(taskfs_s *, const path_s *);
 	extern void set_fs_pwd(taskfs_s *, const path_s *);
-	// extern taskfs_s *copy_fs_struct(taskfs_s *);
+	extern taskfs_s *copy_fs_struct(taskfs_s *);
 	// extern void free_fs_struct(taskfs_s *);
 	// extern int unshare_fs_struct(void);
 
-	// static inline void get_fs_root(taskfs_s *fs, path_s *root)
-	// {
-	// 	spin_lock(&fs->lock);
-	// 	*root = fs->root;
-	// 	path_get(root);
-	// 	spin_unlock(&fs->lock);
-	// }
+	static inline void get_fs_root(taskfs_s *fs, path_s *root) {
+		// spin_lock(&fs->lock);
+		*root = fs->root;
+		path_get(root);
+		// spin_unlock(&fs->lock);
+	}
 
-	// static inline void get_fs_pwd(taskfs_s *fs, path_s *pwd)
-	// {
-	// 	spin_lock(&fs->lock);
-	// 	*pwd = fs->pwd;
-	// 	path_get(pwd);
-	// 	spin_unlock(&fs->lock);
-	// }
+	static inline void get_fs_pwd(taskfs_s *fs, path_s *pwd) {
+		// spin_lock(&fs->lock);
+		*pwd = fs->pwd;
+		path_get(pwd);
+		// spin_unlock(&fs->lock);
+	}
 
 	// extern bool current_chrooted(void);
 

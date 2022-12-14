@@ -33,4 +33,4 @@ init_rmdir(const char *pathname);
 int __init
 init_utimes(char *filename, struct timespec64 *ts);
 int __init
-init_dup(struct file *file);
+init_dup(file_s *file);

@@ -58,7 +58,7 @@
 	// #endif
 
 	// /* Optional callbacks to write extra ELF notes. */
-	// struct file;
+	// file_s;
 	// struct coredump_params;
 
 	// #ifndef ARCH_HAVE_EXTRA_ELF_NOTES

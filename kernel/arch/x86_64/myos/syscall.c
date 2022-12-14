@@ -58,7 +58,7 @@ long sys_close(unsigned int fd)
 long sys_read(unsigned int fd, char *buf, size_t count)
 {
 	task_s * curr = current;
-	struct file * fp = NULL;
+	file_s * fp = NULL;
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_read:%d\n",fd);
@@ -76,7 +76,7 @@ long sys_read(unsigned int fd, char *buf, size_t count)
 long sys_write(unsigned int fd, const char *buf, size_t count)
 {
 	task_s * curr = current;
-	struct file * fp = NULL;
+	file_s * fp = NULL;
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_write:%d\n",fd);
@@ -93,7 +93,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 
 long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 {
-	struct file * fp = NULL;
+	file_s * fp = NULL;
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_lseek:%d\n",filds);

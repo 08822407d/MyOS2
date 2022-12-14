@@ -225,15 +225,15 @@
 	// 		unsigned flags, struct page **pagep, get_block_t *get_block);
 	// int __block_write_begin(struct page *page, loff_t pos, unsigned len,
 	// 		get_block_t *get_block);
-	// int block_write_end(struct file *, addr_space_s *,
+	// int block_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
-	// int generic_write_end(struct file *, addr_space_s *,
+	// int generic_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
 	// void page_zero_new_buffers(struct page *page, unsigned from, unsigned to);
 	// void clean_page_buffers(struct page *page);
-	// int cont_write_begin(struct file *, addr_space_s *, loff_t,
+	// int cont_write_begin(file_s *, addr_space_s *, loff_t,
 	// 			unsigned, unsigned, struct page **, void **,
 	// 			get_block_t *, loff_t *);
 	// int generic_cont_expand_simple(struct inode *inode, loff_t size);
@@ -256,7 +256,7 @@
 	// int block_truncate_page(addr_space_s *, loff_t, get_block_t *);
 	// int nobh_write_begin(addr_space_s *, loff_t, unsigned, unsigned,
 	// 				struct page **, void **, get_block_t*);
-	// int nobh_write_end(struct file *, addr_space_s *,
+	// int nobh_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
 	// 				struct page *, void *);
 	// int nobh_truncate_page(addr_space_s *, loff_t, get_block_t *);

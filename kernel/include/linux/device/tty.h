@@ -256,7 +256,7 @@
 	// /* Each of a tty's open files has private_data pointing to tty_file_private */
 	// struct tty_file_private {
 	// 	struct tty_struct *tty;
-	// 	struct file *file;
+	// 	file_s *file;
 	// 	struct list_head list;
 	// };
 
@@ -330,7 +330,7 @@
 	// #define TTY_LDISC_CHANGING	20
 	// #define TTY_LDISC_HALTED	22
 
-	// static inline bool tty_io_nonblock(struct tty_struct *tty, struct file *file)
+	// static inline bool tty_io_nonblock(struct tty_struct *tty, file_s *file)
 	// {
 	// 	return file->f_flags & O_NONBLOCK ||
 	// 		test_bit(TTY_LDISC_CHANGING, &tty->flags);
@@ -430,7 +430,7 @@
 	// int is_current_pgrp_orphaned(void);
 	// void tty_hangup(struct tty_struct *tty);
 	// void tty_vhangup(struct tty_struct *tty);
-	// int tty_hung_up_p(struct file *filp);
+	// int tty_hung_up_p(file_s *filp);
 	// void do_SAK(struct tty_struct *tty);
 	// void __do_SAK(struct tty_struct *tty);
 	// void no_tty(void);

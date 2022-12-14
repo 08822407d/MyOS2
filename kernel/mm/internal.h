@@ -90,7 +90,7 @@
 	// 		unsigned long lookahead_size);
 	// void force_page_cache_ra(struct readahead_control *, unsigned long nr);
 	// static inline void force_page_cache_readahead(struct address_space *mapping,
-	// 		struct file *file, pgoff_t index, unsigned long nr_to_read)
+	// 		file_s *file, pgoff_t index, unsigned long nr_to_read)
 	// {
 	// 	DEFINE_READAHEAD(ractl, file, &file->f_ra, mapping, index);
 	// 	force_page_cache_ra(&ractl, nr_to_read);
@@ -480,8 +480,8 @@
 	// 	return address;
 	// }
 
-	// static inline struct file *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
-	// 							struct file *fpin)
+	// static inline file_s *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
+	// 							file_s *fpin)
 	// {
 	// 	int flags = vmf->flags;
 
@@ -616,7 +616,7 @@
 	// extern u64 hwpoison_filter_memcg;
 	// extern u32 hwpoison_filter_enable;
 
-	// extern unsigned long  __must_check vm_mmap_pgoff(struct file *, unsigned long,
+	// extern unsigned long  __must_check vm_mmap_pgoff(file_s *, unsigned long,
 	// 		unsigned long, unsigned long,
 	// 		unsigned long, unsigned long);
 

@@ -57,8 +57,8 @@ open_how_s build_open_how(int flags, umode_t mode)
 }
 
 // Linux function proto:
-// static int do_dentry_open(struct file *f, struct inode *inode,
-//			  int (*open)(struct inode *, struct file *))
+// static int do_dentry_open(file_s *f, struct inode *inode,
+//			  int (*open)(struct inode *, file_s *))
 static int do_dentry_open(file_s * f, inode_s * inode)
 {
 	unsigned long error = -ENOERR;

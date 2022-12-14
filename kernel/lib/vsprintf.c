@@ -888,7 +888,7 @@
 // }
 
 // static noinline_for_stack
-// char *file_dentry_name(char *buf, char *end, const struct file *f,
+// char *file_dentry_name(char *buf, char *end, const file_s *f,
 // 			struct printf_spec spec, const char *fmt)
 // {
 // 	if (check_pointer(&buf, end, f, spec))
@@ -2277,7 +2277,7 @@
 //  * - 'a[pd]' For address types [p] phys_addr_t, [d] dma_addr_t and derivatives
 //  *           (default assumed to be phys_addr_t, passed by reference)
 //  * - 'd[234]' For a dentry name (optionally 2-4 last components)
-//  * - 'D[234]' Same as 'd' but for a struct file
+//  * - 'D[234]' Same as 'd' but for a file_s
 //  * - 'g' For block_device name (gendisk + partition number)
 //  * - 't[RT][dt][r][s]' For time and date as represented by:
 //  *      R    struct rtc_time

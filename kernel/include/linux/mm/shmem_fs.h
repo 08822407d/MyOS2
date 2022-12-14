@@ -60,16 +60,16 @@
 	// extern const struct fs_parameter_spec shmem_fs_parameters[];
 	extern int shmem_init(void);
 	extern int shmem_init_fs_context(fs_ctxt_s *fc);
-	// extern struct file *shmem_file_setup(const char *name,
+	// extern file_s *shmem_file_setup(const char *name,
 	// 					loff_t size, unsigned long flags);
-	// extern struct file *shmem_kernel_file_setup(const char *name, loff_t size,
+	// extern file_s *shmem_kernel_file_setup(const char *name, loff_t size,
 	// 						unsigned long flags);
-	// extern struct file *shmem_file_setup_with_mnt(struct vfsmount *mnt,
+	// extern file_s *shmem_file_setup_with_mnt(struct vfsmount *mnt,
 	// 		const char *name, loff_t size, unsigned long flags);
 	// extern int shmem_zero_setup(struct vm_area_struct *);
-	// extern unsigned long shmem_get_unmapped_area(struct file *, unsigned long addr,
+	// extern unsigned long shmem_get_unmapped_area(file_s *, unsigned long addr,
 	// 		unsigned long len, unsigned long pgoff, unsigned long flags);
-	// extern int shmem_lock(struct file *file, int lock, struct ucounts *ucounts);
+	// extern int shmem_lock(file_s *file, int lock, struct ucounts *ucounts);
 	// #ifdef CONFIG_SHMEM
 	// extern const struct address_space_operations shmem_aops;
 	// static inline bool shmem_mapping(struct address_space *mapping)
@@ -117,7 +117,7 @@
 	// 					mapping_gfp_mask(mapping));
 	// }
 
-	// static inline bool shmem_file(struct file *file)
+	// static inline bool shmem_file(file_s *file)
 	// {
 	// 	if (!IS_ENABLED(CONFIG_SHMEM))
 	// 		return false;

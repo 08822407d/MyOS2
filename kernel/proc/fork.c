@@ -571,49 +571,49 @@ static int copy_mm(unsigned long clone_flags, task_s *tsk)
 
 static int copy_fs(unsigned long clone_flags, task_s *tsk)
 {
-	// taskfs_s *fs = current->fs;
-	// if (clone_flags & CLONE_FS) {
-	// 	/* tsk->fs is already what we want */
-	// 	// spin_lock(&fs->lock);
-	// 	if (fs->in_exec) {
-	// 		// spin_unlock(&fs->lock);
-	// 		return -EAGAIN;
-	// 	}
-	// 	fs->users++;
-	// 	// spin_unlock(&fs->lock);
-	// 	return 0;
-	// }
-	// tsk->fs = copy_fs_struct(fs);
-	// if (!tsk->fs)
-	// 	return -ENOMEM;
-	// return 0;
+	taskfs_s *fs = current->fs;
+	if (clone_flags & CLONE_FS) {
+		/* tsk->fs is already what we want */
+		// spin_lock(&fs->lock);
+		if (fs->in_exec) {
+			// spin_unlock(&fs->lock);
+			return -EAGAIN;
+		}
+		fs->users++;
+		// spin_unlock(&fs->lock);
+		return 0;
+	}
+	tsk->fs = copy_fs_struct(fs);
+	if (!tsk->fs)
+		return -ENOMEM;
+	return 0;
 }
 
 static int copy_files(unsigned long clone_flags, task_s *tsk)
 {
-// 	files_struct_s *oldf, *newf;
-// 	int error = 0;
+	files_struct_s *oldf, *newf;
+	int error = 0;
 
-// 	/*
-// 	 * A background process may not have any files ...
-// 	 */
-// 	oldf = current->files;
-// 	if (!oldf)
-// 		goto out;
+	/*
+	 * A background process may not have any files ...
+	 */
+	oldf = current->files;
+	if (!oldf)
+		goto out;
 
-// 	if (clone_flags & CLONE_FILES) {
-// 		atomic_inc(&oldf->count);
-// 		goto out;
-// 	}
+	if (clone_flags & CLONE_FILES) {
+		atomic_inc(&oldf->ref_count);
+		goto out;
+	}
 
-// 	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
-// 	if (!newf)
-// 		goto out;
+	newf = dup_fd(oldf, NR_OPEN_MAX, &error);
+	if (!newf)
+		goto out;
 
-// 	tsk->files = newf;
-// 	error = 0;
-// out:
-// 	return error;
+	tsk->files = newf;
+	error = 0;
+out:
+	return error;
 }
 
 static int copy_sighand(unsigned long clone_flags, task_s *tsk)

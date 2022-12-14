@@ -47,7 +47,7 @@ file_s *alloc_empty_file(int flags)
 	static long old_max;
 	file_s *f;
 
-	// static struct file *__alloc_file(int flags, const struct cred *cred)
+	// static file_s *__alloc_file(int flags, const struct cred *cred)
 	// {
 		f = kzalloc(sizeof(file_s), GFP_KERNEL);
 		if (f == NULL)

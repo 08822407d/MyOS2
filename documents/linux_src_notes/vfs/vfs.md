@@ -2,9 +2,9 @@
 static long do_sys_openat2(int dfd, const char __user *filename, struct open_how *how);
 //	{
 	// ， fs/namei.c
-	struct file *do_filp_open(int dfd, struct filename *pathname, const struct open_flags *op);
+	file_s *do_filp_open(int dfd, struct filename *pathname, const struct open_flags *op);
 		//	{
-		static struct file *path_openat(struct nameidata *nd, const struct open_flags *op, unsigned flags);
+		static file_s *path_openat(struct nameidata *nd, const struct open_flags *op, unsigned flags);
 		//	{
 			//	路径解析核心， fs/namei.c
 			//	大循环里分解跟踪路径的每一段

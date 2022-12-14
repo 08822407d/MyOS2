@@ -149,7 +149,7 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 		return -EBADF;
 
 	// error = iterate_dir(f.file, &buf.ctx);
-	// int iterate_dir(struct file *file, dir_ctxt_s *ctx)
+	// int iterate_dir(file_s *file, dir_ctxt_s *ctx)
 	// {
 		buf.ctx.pos = f.file->f_pos;
 		error = f.file->f_op->iterate_shared(f.file, &buf.ctx);

@@ -358,7 +358,7 @@
 	// void slab_kmem_cache_release(struct kmem_cache *);
 
 	// struct seq_file;
-	// struct file;
+	// file_s;
 
 	// struct slabinfo {
 	// 	unsigned long active_objs;
@@ -375,7 +375,7 @@
 
 	// void get_slabinfo(struct kmem_cache *s, struct slabinfo *sinfo);
 	// void slabinfo_show_stats(struct seq_file *m, struct kmem_cache *s);
-	// ssize_t slabinfo_write(struct file *file, const char __user *buffer,
+	// ssize_t slabinfo_write(file_s *file, const char __user *buffer,
 	// 			size_t count, loff_t *ppos);
 
 	// /*

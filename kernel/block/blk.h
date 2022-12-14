@@ -456,8 +456,8 @@
 	// 	bio->bi_opf &= ~REQ_POLLED;
 	// }
 
-	// long blkdev_ioctl(struct file *file, unsigned cmd, unsigned long arg);
-	// long compat_blkdev_ioctl(struct file *file, unsigned cmd, unsigned long arg);
+	// long blkdev_ioctl(file_s *file, unsigned cmd, unsigned long arg);
+	// long compat_blkdev_ioctl(file_s *file, unsigned cmd, unsigned long arg);
 
 	// extern const struct address_space_operations def_blk_aops;
 

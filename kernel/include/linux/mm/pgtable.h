@@ -1471,8 +1471,8 @@
 	// #endif
 	// #endif
 
-	// struct file;
-	// int phys_mem_access_prot_allowed(struct file *file, unsigned long pfn,
+	// file_s;
+	// int phys_mem_access_prot_allowed(file_s *file, unsigned long pfn,
 	// 			unsigned long size, pgprot_t *vma_prot);
 
 	// #ifndef CONFIG_X86_ESPFIX64

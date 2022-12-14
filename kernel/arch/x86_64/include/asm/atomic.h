@@ -133,7 +133,7 @@
 						"movb	%0,		%1		\n\t"
 					:	"+m"(v->counter) ,"=qm"(c)
 					:
-					:"memory");
+					:	"memory");
 		return c != 0;
 	}
 	#define atomic_dec_and_test arch_atomic_dec_and_test
@@ -153,7 +153,7 @@
 						"movb	%0,		%1		\n\t"
 					:	"+m"(v->counter) ,"=qm"(c)
 					:
-					:"memory");
+					:	"memory");
 		return c != 0;
 	}
 	#define atomic_inc_and_test arch_atomic_inc_and_test

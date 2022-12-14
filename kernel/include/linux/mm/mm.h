@@ -2633,7 +2633,7 @@
 	// }
 	// extern struct vm_area_struct *vma_merge(struct mm_struct *,
 	// 	struct vm_area_struct *prev, unsigned long addr, unsigned long end,
-	// 	unsigned long vm_flags, struct anon_vma *, struct file *, pgoff_t,
+	// 	unsigned long vm_flags, struct anon_vma *, file_s *, pgoff_t,
 	// 	struct mempolicy *, struct vm_userfaultfd_ctx, struct anon_vma_name *);
 	// extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
 	// extern int __split_vma(struct mm_struct *, struct vm_area_struct *,
@@ -2666,10 +2666,10 @@
 	// extern int mm_take_all_locks(struct mm_struct *mm);
 	// extern void mm_drop_all_locks(struct mm_struct *mm);
 
-	// extern int set_mm_exe_file(struct mm_struct *mm, struct file *new_exe_file);
-	// extern int replace_mm_exe_file(struct mm_struct *mm, struct file *new_exe_file);
-	// extern struct file *get_mm_exe_file(struct mm_struct *mm);
-	// extern struct file *get_task_exe_file(task_s *task);
+	// extern int set_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
+	// extern int replace_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
+	// extern file_s *get_mm_exe_file(struct mm_struct *mm);
+	// extern file_s *get_task_exe_file(task_s *task);
 
 	// extern bool may_expand_vm(struct mm_struct *, vm_flags_t, unsigned long npages);
 	// extern void vm_stat_account(struct mm_struct *, vm_flags_t, long npages);
@@ -2687,12 +2687,12 @@
 
 	// unsigned long randomize_stack_top(unsigned long stack_top);
 
-	// extern unsigned long get_unmapped_area(struct file *, unsigned long, unsigned long, unsigned long, unsigned long);
+	// extern unsigned long get_unmapped_area(file_s *, unsigned long, unsigned long, unsigned long, unsigned long);
 
-	// extern unsigned long mmap_region(struct file *file, unsigned long addr,
+	// extern unsigned long mmap_region(file_s *file, unsigned long addr,
 	// 	unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
 	// 	struct list_head *uf);
-	// extern unsigned long do_mmap(struct file *file, unsigned long addr,
+	// extern unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 	unsigned long len, unsigned long prot, unsigned long flags,
 	// 	unsigned long pgoff, unsigned long *populate, struct list_head *uf);
 	// extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
@@ -2717,7 +2717,7 @@
 	// extern int __must_check vm_brk(unsigned long, unsigned long);
 	// extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
 	// extern int vm_munmap(unsigned long, size_t);
-	// extern unsigned long __must_check vm_mmap(struct file *, unsigned long,
+	// extern unsigned long __must_check vm_mmap(file_s *, unsigned long,
 	// 		unsigned long, unsigned long,
 	// 		unsigned long, unsigned long);
 
@@ -2863,7 +2863,7 @@
 	// }
 	// #endif
 
-	// void vma_set_file(struct vm_area_struct *vma, struct file *file);
+	// void vma_set_file(struct vm_area_struct *vma, file_s *file);
 
 	// #ifdef CONFIG_NUMA_BALANCING
 	// unsigned long change_prot_numa(struct vm_area_struct *vma,

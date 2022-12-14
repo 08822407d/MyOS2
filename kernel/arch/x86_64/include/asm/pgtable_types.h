@@ -470,8 +470,8 @@
 	// #	define __HAVE_PFNMAP_TRACKING
 
 	// #	define __HAVE_PHYS_MEM_ACCESS_PROT
-	// 	struct file;
-	// 	pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
+	// 	file_s;
+	// 	pgprot_t phys_mem_access_prot(file_s *file, unsigned long pfn,
 	// 								unsigned long size, pgprot_t vma_prot);
 
 	// 	/* Install a pte for a particular vaddr in kernel space. */

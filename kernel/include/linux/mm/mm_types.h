@@ -396,7 +396,7 @@
 	// 	unsigned long vm_end;	/* region initialised to here */
 	// 	unsigned long vm_top;	/* region allocated to here */
 	// 	unsigned long vm_pgoff; /* the offset in vm_file corresponding to vm_start */
-	// 	struct file *vm_file;	/* the backing file or NULL */
+	// 	file_s *vm_file;	/* the backing file or NULL */
 
 	// 	int vm_usage;				/* region usage count (access under nommu_region_sem) */
 	// 	bool vm_icache_flushed : 1; /* true if the icache has been flushed for
@@ -501,7 +501,7 @@
 	// 	/* Information about our backing store: */
 	// 	unsigned long vm_pgoff; /* Offset (within vm_file) in PAGE_SIZE
 	// 				units */
-	// 	struct file *vm_file;	/* File we map to (can be NULL). */
+	// 	file_s *vm_file;	/* File we map to (can be NULL). */
 	// 	void *vm_private_data;	/* was vm_pte (shared mem) */
 
 	// #ifdef CONFIG_SWAP
@@ -524,7 +524,7 @@
 	// 		struct rb_root mm_rb;
 	// 		u64 vmacache_seqnum; /* per-thread vmacache */
 	// #ifdef CONFIG_MMU
-	// 		unsigned long (*get_unmapped_area)(struct file *filp,
+	// 		unsigned long (*get_unmapped_area)(file_s *filp,
 	// 										unsigned long addr, unsigned long len,
 	// 										unsigned long pgoff, unsigned long flags);
 	// #endif
@@ -657,7 +657,7 @@
 	// 		struct user_namespace *user_ns;
 
 	// 		/* store ref to file /proc/<pid>/exe symlink points to */
-	// 		struct file __rcu *exe_file;
+	// 		file_s __rcu *exe_file;
 	// #ifdef CONFIG_MMU_NOTIFIER
 	// 		struct mmu_notifier_subscriptions *notifier_subscriptions;
 	// #endif

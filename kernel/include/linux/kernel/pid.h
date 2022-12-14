@@ -74,9 +74,9 @@
 
 	// extern const struct file_operations pidfd_fops;
 
-	// struct file;
+	// file_s;
 
-	// extern pid_s *pidfd_pid(const struct file *file);
+	// extern pid_s *pidfd_pid(const file_s *file);
 	// pid_s *pidfd_get_pid(unsigned int fd, unsigned int *flags);
 	// task_s *pidfd_get_task(int pidfd, unsigned int *flags);
 	// int pidfd_create(pid_s *pid, unsigned int flags);

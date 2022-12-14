@@ -661,7 +661,7 @@ int kern_path(const char *name, unsigned int flags, OUT path_s *path)
  *==============================================================================================*/
 // Linux function proto:
 // static const char *open_last_lookups(struct nameidata *nd,
-//			struct file *file, const struct open_flags *op)
+//			file_s *file, const struct open_flags *op)
 static const char *open_last_lookups(IN nameidata_s *nd, int open_flag)
 {
 	dentry_s *dentry, *dir = nd->path.dentry;
@@ -700,7 +700,7 @@ finish_lookup:
  */
 // Linux function proto:
 // static int do_open(struct nameidata *nd,
-//		   struct file *file, const struct open_flags *op)
+//		   file_s *file, const struct open_flags *op)
 static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 {
 	// if ((nd->flags & LOOKUP_DIRECTORY) && !d_can_lookup(nd->path.dentry))
@@ -710,7 +710,7 @@ static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 }
 
 // Linux function proto:
-// static struct file *path_openat(struct nameidata *nd,
+// static file_s *path_openat(struct nameidata *nd,
 // 			const struct open_flags *op, unsigned flags)
 // open the path in nd->name
 static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
@@ -750,7 +750,7 @@ int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *pa
 }
 
 // Linux function proto:
-// struct file *do_filp_open(int dfd, struct filename *pathname,
+// file_s *do_filp_open(int dfd, struct filename *pathname,
 //			const struct open_flags *op)
 file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
 {
