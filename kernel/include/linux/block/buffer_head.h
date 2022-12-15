@@ -15,8 +15,6 @@
 	// #include <linux/wait.h>
 	#include <linux/kernel/atomic.h>
 
-	#include <obsolete/device.h>
-
 	enum bh_state_bits {
 		BH_Uptodate,		/* Contains valid data */
 		BH_Dirty,			/* Is dirty */

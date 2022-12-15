@@ -3,8 +3,8 @@
 #define _UAPI_LINUX_TTY_H
 
 	/*
-	* 'tty.h' defines some structures used by tty_io.c and some defines.
-	*/
+	 * 'tty.h' defines some structures used by tty_io.c and some defines.
+	 */
 
 	#define NR_LDISCS		30
 

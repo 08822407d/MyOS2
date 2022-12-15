@@ -6,8 +6,8 @@
 	#include <uapi/kernel/posix_types.h>
 
 	/*
-	* The MS-DOS filesystem constants/structures
-	*/
+	 * The MS-DOS filesystem constants/structures
+	 */
 
 	#ifndef SECTOR_SIZE
 	#	define SECTOR_SIZE		512			/* sector size (bytes) */

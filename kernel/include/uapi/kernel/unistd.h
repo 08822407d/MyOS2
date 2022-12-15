@@ -3,8 +3,8 @@
 #define _LINUX_UNISTD_H_
 
 	/*
-	* Include machine specific syscall numbers
-	*/
+	 * Include machine specific syscall numbers
+	 */
 	#include <asm/unistd.h>
 
 #endif /* _LINUX_UNISTD_H_ */

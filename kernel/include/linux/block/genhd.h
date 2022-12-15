@@ -17,9 +17,6 @@
 	#include <linux/device/device.h>
 	// #include <linux/xarray.h>
 
-
-	#include <linux/block/block_s_defs.h>
-
 	// extern const struct device_type disk_type;
 	// extern struct device_type part_type;
 	extern class_s block_class;

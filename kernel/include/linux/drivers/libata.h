@@ -25,7 +25,6 @@
 	// #include <linux/async.h>
 
 
-	#include <linux/device/device.h>
 	#include <linux/block/genhd.h>
 	#include "myos_ide.h"
 
