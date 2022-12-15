@@ -10,7 +10,7 @@
 // #include <linux/crash_dump.h>
 // #include <linux/dma-map-ops.h>
 // #include <linux/dmi.h>
-// #include <linux/efi.h>
+#include <linux/block/efi.h>
 // #include <linux/init_ohci1394_dma.h>
 // #include <linux/initrd.h>
 // #include <linux/iscsi_ibft.h>
@@ -53,17 +53,10 @@
 // #include <linux/vmalloc.h>
 
 
-
-#include <linux/init/init.h>
-#include <linux/kernel/sizes.h>
-#include <linux/kernel/math.h>
 #include <linux/kernel/asm-generic/sections.h>
 
-#include <asm/pgtable.h>
 #include <asm/e820-api.h>
-#include <asm/setup.h>
 
-#include <linux/mm/myos_slab.h>
 #include <obsolete/proto.h>
 #include <obsolete/glo.h>
 

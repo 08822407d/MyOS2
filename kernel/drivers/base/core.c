@@ -35,9 +35,6 @@
 // #include "power/power.h"
 
 
-#include <obsolete/proto.h>
-
-
 /**
  * device_add - add device to device hierarchy.
  * @dev: device.

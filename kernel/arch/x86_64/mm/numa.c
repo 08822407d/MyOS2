@@ -9,7 +9,7 @@
 #include <linux/mm/mmzone.h>
 #include <linux/kernel/ctype.h>
 // #include <linux/nodemask.h>
-// #include <linux/sched.h>
+#include <linux/kernel/sched.h>
 // #include <linux/topology.h>
 
 #include <asm/e820-api.h>

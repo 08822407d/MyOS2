@@ -91,7 +91,6 @@
 #include "efi.h"
 
 
-
 /**
  * last_lba(): return number of last logical block of device
  * @disk: block device

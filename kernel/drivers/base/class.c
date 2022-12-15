@@ -20,10 +20,6 @@
 #include <linux/kernel/mutex.h>
 // #include "base.h"
 
-
-#include <obsolete/proto.h>
-
-
 /**
  * __class_create - create a struct class structure
  * @owner: pointer to the module that is to "own" this struct class

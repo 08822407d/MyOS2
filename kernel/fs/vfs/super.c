@@ -41,7 +41,6 @@
 
 
 #include <obsolete/printk.h>
-#include <linux/fs/fs.h>
 
 /**
  * get_anon_bdev - Allocate a block device for filesystems which don't have one.

@@ -25,7 +25,6 @@
 // #include <asm/unaligned.h>
 
 
-#include <linux/kernel/align.h>
 #include <obsolete/arch_proto.h>
 
 typedef struct getdents_callback64 {

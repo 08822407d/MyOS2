@@ -30,14 +30,10 @@
 // #include "mm_internal.h"
 
 
-#include <linux/lib/string.h>
-#include <obsolete/arch_proto.h>
-#include <obsolete/ktypes.h>
-
-
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
 
+extern int myos_init_memory_mapping(phys_addr_t base, size_t size);
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up
  * @map_start: start address of the target memory range

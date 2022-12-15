@@ -22,8 +22,6 @@
 #include <asm/pgtable_64_types.h>
 
 
-
-#include <linux/kernel/stddef.h>
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>
 

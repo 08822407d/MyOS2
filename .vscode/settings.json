@@ -207,7 +207,8 @@
 		"pid.h": "c",
 		"linkage.h": "c",
 		"fdtable.h": "c",
-		"efi.h": "c"
+		"efi.h": "c",
+		"sections.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }
