@@ -74,7 +74,7 @@
 // #include <linux/hugetlb.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/mm.h>
+#include <linux/sched/mm.h>
 // #include <linux/sched/numa_balancing.h>
 // #include <linux/sched/task.h>
 // #include <linux/nodemask.h>

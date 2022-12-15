@@ -43,7 +43,7 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 	if (!newf)
 		goto out;
 
-	atomic_set(&newf->ref_count, 1);
+	atomic_set(&newf->refcount, 1);
 
 	// spin_lock_init(&newf->file_lock);
 	// newf->resize_in_progress = false;
@@ -160,7 +160,7 @@ static void myos_close_files(files_struct_s * files)
 
 void put_files_struct(files_struct_s *files)
 {
-	if (atomic_dec_and_test(&files->ref_count)) {
+	if (atomic_dec_and_test(&files->refcount)) {
 		myos_close_files(files);
 
 		/* free the arrays if they are not embedded */

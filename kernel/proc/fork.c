@@ -15,7 +15,7 @@
 // #include <linux/anon_inodes.h>
 #include <linux/kernel/slab.h>
 // #include <linux/sched/autogroup.h>
-// #include <linux/sched/mm.h>
+#include <linux/sched/mm.h>
 // #include <linux/sched/coredump.h>
 // #include <linux/sched/user.h>
 // #include <linux/sched/numa_balancing.h>
@@ -171,6 +171,15 @@ void free_task(task_s *tsk)
 }
 
 
+static inline mm_s *allocate_mm() {
+	return kzalloc(sizeof(mm_s), GFP_KERNEL);
+}
+
+static inline void free_mm(mm_s *mm) {
+	kfree(mm);
+}
+
+
 void set_task_stack_end_magic(task_s *tsk)
 {
 	unsigned long *stackend;
@@ -290,14 +299,28 @@ free_tsk:
 
 // #include <linux/init_task.h>
 
+static __always_inline void mm_clear_owner(mm_s *mm, task_s *p)
+{
+// #ifdef CONFIG_MEMCG
+	if (mm->owner == p)
+		WRITE_ONCE(mm->owner, NULL);
+// #endif
+}
+
+static void mm_init_owner(mm_s *mm, task_s *p)
+{
+// #ifdef CONFIG_MEMCG
+	mm->owner = p;
+// #endif
+}
 
 static mm_s *mm_init(mm_s *mm, task_s *p)
 {
 // 	mm->mmap = NULL;
 // 	mm->mm_rb = RB_ROOT;
 // 	mm->vmacache_seqnum = 0;
-// 	atomic_set(&mm->mm_users, 1);
-// 	atomic_set(&mm->mm_count, 1);
+	atomic_set(&mm->mm_users, 1);
+	atomic_set(&mm->mm_refcount, 1);
 // 	seqcount_init(&mm->write_protect_seq);
 // 	mmap_init_lock(mm);
 // 	INIT_LIST_HEAD(&mm->mmlist);
@@ -343,6 +366,38 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 // fail_nopgd:
 // 	free_mm(mm);
 // 	return NULL;
+}
+
+static inline void __mmput(mm_s *mm)
+{
+	// VM_BUG_ON(atomic_read(&mm->mm_users));
+
+	// uprobe_clear_state(mm);
+	// exit_aio(mm);
+	// ksm_exit(mm);
+	// khugepaged_exit(mm); /* must run before exit_mmap */
+	// exit_mmap(mm);
+	// mm_put_huge_zero_page(mm);
+	// set_mm_exe_file(mm, NULL);
+	// if (!list_empty(&mm->mmlist)) {
+	// 	spin_lock(&mmlist_lock);
+	// 	list_del(&mm->mmlist);
+	// 	spin_unlock(&mmlist_lock);
+	// }
+	// if (mm->binfmt)
+	// 	module_put(mm->binfmt->module);
+	// mmdrop(mm);
+}
+
+/*
+ * Decrement the use count and release all resources for an mm.
+ */
+void mmput(mm_s *mm)
+{
+	// might_sleep();
+
+	if (atomic_dec_and_test(&mm->mm_users))
+		__mmput(mm);
 }
 
 
@@ -495,21 +550,21 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
  */
 static mm_s *dup_mm(task_s *tsk, mm_s *oldmm)
 {
-// 	mm_s *mm;
-// 	int err;
+	mm_s *mm;
+	int err;
 
-// 	mm = allocate_mm();
-// 	if (!mm)
-// 		goto fail_nomem;
+	mm = allocate_mm();
+	if (!mm)
+		goto fail_nomem;
 
-// 	memcpy(mm, oldmm, sizeof(*mm));
+	memcpy(mm, oldmm, sizeof(*mm));
 
-// 	if (!mm_init(mm, tsk, mm->user_ns))
-// 		goto fail_nomem;
+	if (!mm_init(mm, tsk))
+		goto fail_nomem;
 
-// 	err = dup_mmap(mm, oldmm);
-// 	if (err)
-// 		goto free_pt;
+	// err = dup_mmap(mm, oldmm);
+	// if (err)
+	// 	goto free_pt;
 
 // 	mm->hiwater_rss = get_mm_rss(mm);
 // 	mm->hiwater_vm = mm->total_vm;
@@ -517,16 +572,16 @@ static mm_s *dup_mm(task_s *tsk, mm_s *oldmm)
 // 	if (mm->binfmt && !try_module_get(mm->binfmt->module))
 // 		goto free_pt;
 
-// 	return mm;
+	return mm;
 
-// free_pt:
-// 	/* don't put binfmt in mmput, we haven't got module yet */
-// 	mm->binfmt = NULL;
-// 	mm_init_owner(mm, NULL);
-// 	mmput(mm);
+free_pt:
+	/* don't put binfmt in mmput, we haven't got module yet */
+	// mm->binfmt = NULL;
+	mm_init_owner(mm, NULL);
+	mmput(mm);
 
-// fail_nomem:
-// 	return NULL;
+fail_nomem:
+	return NULL;
 }
 
 static int copy_mm(unsigned long clone_flags, task_s *tsk)
@@ -540,32 +595,32 @@ static int copy_mm(unsigned long clone_flags, task_s *tsk)
 	// tsk->last_switch_time = 0;
 // #endif
 
-	// tsk->mm = NULL;
-	// tsk->active_mm = NULL;
+	tsk->mm = NULL;
+	tsk->active_mm = NULL;
 
-	// /*
-	//  * Are we cloning a kernel thread?
-	//  *
-	//  * We need to steal a active VM for that..
-	//  */
-	// oldmm = current->mm;
-	// if (!oldmm)
-	// 	return 0;
+	/*
+	 * Are we cloning a kernel thread?
+	 *
+	 * We need to steal a active VM for that..
+	 */
+	oldmm = current->mm;
+	if (!oldmm)
+		return 0;
 
-	// /* initialize the new vmacache entries */
+	/* initialize the new vmacache entries */
 	// vmacache_flush(tsk);
 
-	// if (clone_flags & CLONE_VM) {
-	// 	mmget(oldmm);
-	// 	mm = oldmm;
-	// } else {
-	// 	mm = dup_mm(tsk, current->mm);
-	// 	if (!mm)
-	// 		return -ENOMEM;
-	// }
+	if (clone_flags & CLONE_VM) {
+		mmget(oldmm);
+		mm = oldmm;
+	} else {
+		mm = dup_mm(tsk, current->mm);
+		if (!mm)
+			return -ENOMEM;
+	}
 
-	// tsk->mm = mm;
-	// tsk->active_mm = mm;
+	tsk->mm = mm;
+	tsk->active_mm = mm;
 	return 0;
 }
 
@@ -602,7 +657,7 @@ static int copy_files(unsigned long clone_flags, task_s *tsk)
 		goto out;
 
 	if (clone_flags & CLONE_FILES) {
-		atomic_inc(&oldf->ref_count);
+		atomic_inc(&oldf->refcount);
 		goto out;
 	}
 
@@ -1256,10 +1311,10 @@ bad_fork_cleanup_io:
 bad_fork_cleanup_namespaces:
 	// exit_task_namespaces(p);
 bad_fork_cleanup_mm:
-	// if (p->mm) {
-	// 	mm_clear_owner(p->mm, p);
-	// 	mmput(p->mm);
-	// }
+	if (p->mm) {
+		mm_clear_owner(p->mm, p);
+		mmput(p->mm);
+	}
 bad_fork_cleanup_signal:
 	// if (!(clone_flags & CLONE_THREAD))
 	// 	free_signal_struct(p->signal);
@@ -1407,4 +1462,206 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 	};
 
 	return kernel_clone(&args);
+}
+
+
+
+
+
+
+/*==============================================================================================*
+ *									subcopy & exit funcstions									*
+ *==============================================================================================*/
+static int myos_copy_flags(unsigned long clone_flags, task_s * new_tsk)
+{ 
+	int err = -ENOERR;
+
+	if(clone_flags & CLONE_VM)
+		new_tsk->flags |= CLONE_VFORK;
+
+	return err;
+}
+
+static int myos_copy_files(unsigned long clone_flags, task_s * new_tsk)
+{
+	int err = -ENOERR;
+	int i = 0;
+	if(clone_flags & CLONE_FS)
+		goto out;
+	
+	files_struct_s *fss = kzalloc(sizeof(files_struct_s), GFP_KERNEL);
+	if (fss == NULL)
+	{
+		err = -ENOMEM;
+		goto out;
+	}
+	current->files = fss;
+	for(i = 0; i < MAX_FILE_NR; i++)
+		if(current->files->fd_array[i] != NULL)
+		{
+			new_tsk->files->fd_array[i] = (file_s *)kmalloc(sizeof(file_s), GFP_KERNEL);
+			memcpy(new_tsk->files->fd_array[i], current->files->fd_array[i], sizeof(file_s));
+		}
+
+	new_tsk->fs = kmalloc(sizeof(taskfs_s), GFP_KERNEL);
+	memcpy(new_tsk->fs, current->fs, sizeof(taskfs_s));
+
+out:
+	return err;
+}
+void myos_exit_files(task_s * new_tsk)
+{
+	int i = 0;
+	if(new_tsk->flags & CLONE_VFORK)
+		;
+	else
+		for(i = 0; i < MAX_FILE_NR; i++)
+			if(new_tsk->files->fd_array[i] != NULL)
+			{
+				kfree(new_tsk->files->fd_array[i]);
+			}
+
+	memset(new_tsk->files->fd_array, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
+}
+
+static int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
+{
+	int err = -ENOERR;
+	mm_s *curr_mm = current->mm;
+
+	page_s *page = NULL;
+	pgd_t *new_cr3 = NULL;
+	reg_t curr_endstack = get_stackframe(current)->rsp;
+
+	if(clone_flags & CLONE_VM)
+	{
+		// if vfork(), share the mm_struct
+		new_tsk->mm = curr_mm;
+		goto exit_cpmm;
+	}
+	else
+	{
+		new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
+		memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
+		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
+		// new_tsk->mm->pgd_ptr = new_pgd;
+		prepair_COW(current);
+	}
+
+exit_cpmm:
+	return err;
+}
+int myos_exit_mm(task_s *new_tsk)
+{
+	int err = -ENOERR;
+
+	if(new_tsk->flags & CLONE_VFORK)
+		err = -ENOERR;
+
+	return err;
+}
+
+static int myos_copy_thread(unsigned long clone_flags, unsigned long stack_start,
+		task_s * child_task, stack_frame_s * parent_context)
+{
+	int err = -ENOERR;
+
+	stack_frame_s * child_context = get_stackframe(child_task);
+	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
+
+	child_context->rsp = stack_start;
+	child_context->rax = 0;
+
+	child_task->arch_struct.tss_rsp0 = (reg_t)child_task + TASK_KSTACK_SIZE;
+	child_task->arch_struct.k_rsp = (reg_t)child_context;
+
+	if(child_task->flags & PF_KTHREAD)
+	{
+		child_task->arch_struct.k_rip = (unsigned long)entp_kernel_thread;
+		child_context->restore_retp = (virt_addr_t)ra_kthd_retp;
+	}
+	else
+	{
+		child_task->arch_struct.k_rip = (unsigned long)sysexit_entp;
+		child_context->restore_retp = (virt_addr_t)ra_sysex_retp;
+	}
+
+	return err;
+}
+int myos_exit_thread(task_s * new_task)
+{
+	int err = -ENOERR;
+
+	return err;
+}
+
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
+unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
+						unsigned long tmp_kstack_start, unsigned long stack_size,
+						const char *taskname, task_s **ret_child)
+{
+	long ret_val = 0;
+	PCB_u *child_PCB = (PCB_u *)kzalloc(sizeof(PCB_u), GFP_KERNEL);
+	task_s *parent_task = current;
+	task_s *child_task = &child_PCB->task;
+	if (child_PCB == NULL)
+	{
+		ret_val = -EAGAIN;
+		goto alloc_newtask_fail;
+	}
+
+	memcpy(child_task, parent_task, sizeof(task_s));
+
+	list_init(&child_task->tasks, child_task);
+	list_init(&child_task->sibling, child_task);
+	list_hdr_init(&child_task->children);
+	list_hdr_init(&child_task->wait_childexit);
+	child_task->__state = TASK_UNINTERRUPTIBLE;
+	child_task->pid = myos_gen_newpid();
+	child_task->se.vruntime = 0;
+	child_task->parent = parent_task;
+	child_task->fs = parent_task->fs;
+	if (taskname != NULL)
+	{
+		strncpy(child_task->comm, taskname, TASK_COMM_LEN - 1);
+		child_task->comm[TASK_COMM_LEN - 1] = '\0';
+	}
+	list_hdr_append(&parent_task->children, &child_task->sibling);
+
+	ret_val = -ENOMEM;
+	//	copy flags
+	if(myos_copy_flags(clone_flags, child_task))
+		goto copy_flags_fail;
+	//	copy mm struct
+	if(myos_copy_mm(clone_flags, child_task))
+		goto copy_mm_fail;
+	//	copy file struct
+	if(myos_copy_files(clone_flags, child_task))
+		goto copy_files_fail;
+	// copy thread struct
+	if(myos_copy_thread(clone_flags, stack_size, child_task, parent_context))
+		goto copy_thread_fail;
+
+	// do_fork successed
+	ret_val = child_task->pid;
+	wake_up_process(child_task);
+	goto do_fork_success;
+
+	// if failed clean memory
+copy_thread_fail:
+	myos_exit_thread(child_task);
+copy_files_fail:
+	myos_exit_files(child_task);
+copy_mm_fail:
+	myos_exit_mm(child_task);
+copy_flags_fail:
+alloc_newtask_fail:
+	kfree(child_task);
+
+do_fork_success:
+	if (ret_child != NULL)
+		*ret_child = child_task;
+	return ret_val;
 }

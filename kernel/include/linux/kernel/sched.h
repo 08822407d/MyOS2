@@ -915,7 +915,7 @@
 		// struct rb_node pushable_dl_tasks;
 
 		mm_s			*mm;
-		// mm_s			*active_mm;
+		mm_s			*active_mm;
 
 		// /* Per-thread vma caching: */
 		// struct vmacache vmacache;

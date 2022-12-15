@@ -17,7 +17,7 @@
 // #include <linux/sched/isolation.h>
 // #include <linux/sched/jobctl.h>
 // #include <linux/sched/loadavg.h>
-// #include <linux/sched/mm.h>
+#include <linux/sched/mm.h>
 // #include <linux/sched/nohz.h>
 // #include <linux/sched/numa_balancing.h>
 // #include <linux/sched/prio.h>

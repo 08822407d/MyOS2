@@ -35,8 +35,8 @@ extern reg_t _k_offset;
 mm_s init_mm = {
 	// .mm_rb				= RB_ROOT,
 	// .pgd				= swapper_pg_dir,
-	// .mm_users			= ATOMIC_INIT(2),
-	// .mm_count			= ATOMIC_INIT(1),
+	.mm_users			= ATOMIC_INIT(2),
+	.mm_refcount		= ATOMIC_INIT(1),
 	// .write_protect_seq	= SEQCNT_ZERO(init_mm.write_protect_seq),
 	// MMAP_LOCK_INITIALIZER(init_mm)
 	// .page_table_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),

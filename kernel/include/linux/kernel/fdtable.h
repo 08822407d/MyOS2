@@ -52,7 +52,7 @@
 	/*
 	 * read mostly part
 	 */
-		atomic_t ref_count;
+		atomic_t refcount;
 		// bool resize_in_progress;
 		// wait_queue_head_t resize_wait;
 

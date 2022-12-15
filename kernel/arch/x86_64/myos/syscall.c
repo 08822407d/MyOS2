@@ -156,7 +156,7 @@ long sys_exit(int error_code)
 	return do_exit(error_code);
 }
 
-int exit_mm(task_s * new_tsk);
+extern int myos_exit_mm(task_s * new_tsk);
 long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 {
 	long retval = 0;
@@ -187,7 +187,7 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 		wq_sleep_on_intrable(&child->wait_childexit);
 	}
 	copy_to_user(start_addr, &child->exit_code, sizeof(int));
-	exit_mm(child);
+	myos_exit_mm(child);
 	list_delete(&child->sibling);
 	kfree(child);
 	return retval;

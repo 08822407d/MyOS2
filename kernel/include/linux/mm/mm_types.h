@@ -30,6 +30,8 @@
 
 	// #define INIT_PASID 0
 
+	struct task_struct;
+	typedef struct task_struct task_s;
 	// struct address_space;
 	// struct mem_cgroup;
 
@@ -550,25 +552,25 @@
 	// 		atomic_t membarrier_state;
 	// #endif
 
-	// 		/**
-	// 		 * @mm_users: The number of users including userspace.
-	// 		 *
-	// 		 * Use mmget()/mmget_not_zero()/mmput() to modify. When this
-	// 		 * drops to 0 (i.e. when the task exits and there are no other
-	// 		 * temporary reference holders), we also release a reference on
-	// 		 * @mm_count (which may then free the &struct mm_struct if
-	// 		 * @mm_count also drops to 0).
-	// 		 */
-	// 		atomic_t mm_users;
+			/**
+			 * @mm_users: The number of users including userspace.
+			 *
+			 * Use mmget()/mmget_not_zero()/mmput() to modify. When this
+			 * drops to 0 (i.e. when the task exits and there are no other
+			 * temporary reference holders), we also release a reference on
+			 * @mm_count (which may then free the &struct mm_struct if
+			 * @mm_count also drops to 0).
+			 */
+			atomic_t mm_users;
 
-	// 		/**
-	// 		 * @mm_count: The number of references to &struct mm_struct
-	// 		 * (@mm_users count as 1).
-	// 		 *
-	// 		 * Use mmgrab()/mmdrop() to modify. When this drops to 0, the
-	// 		 * &struct mm_struct is freed.
-	// 		 */
-	// 		atomic_t mm_count;
+			/**
+			 * @mm_count: The number of references to &struct mm_struct
+			 * (@mm_users count as 1).
+			 *
+			 * Use mmgrab()/mmdrop() to modify. When this drops to 0, the
+			 * &struct mm_struct is freed.
+			 */
+			atomic_t mm_refcount;
 
 	// #ifdef CONFIG_MMU
 	// 		atomic_long_t pgtables_bytes; /* PTE page table pages */
@@ -607,7 +609,7 @@
 	// 		unsigned long data_vm;	 /* VM_WRITE & ~VM_SHARED & ~VM_STACK */
 	// 		unsigned long exec_vm;	 /* VM_EXEC & ~VM_WRITE & ~VM_STACK */
 	// 		unsigned long stack_vm;	 /* VM_STACK */
-	// 		unsigned long def_flags;
+			// unsigned long def_flags;
 
 	// 		/**
 	// 		 * @write_protect_seq: Locked when any thread is write
@@ -635,7 +637,7 @@
 	// 		/* Architecture-specific MM context */
 	// 		mm_context_t context;
 
-	// 		unsigned long flags; /* Must use atomic bitops to access */
+			unsigned long	flags; /* Must use atomic bitops to access */
 
 	// #ifdef CONFIG_AIO
 	// 		spinlock_t ioctx_lock;
@@ -652,7 +654,7 @@
 	// 		* new_owner->mm == mm
 	// 		* new_owner->alloc_lock is held
 	// 		*/
-	// 		task_s __rcu *owner;
+			task_s __rcu	*owner;
 	// #endif
 	// 		struct user_namespace *user_ns;
 
