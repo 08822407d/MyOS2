@@ -24,7 +24,7 @@
 #include <linux/fs/fs.h>
 // #include <linux/personality.h>
 // #include <linux/pagemap.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/rcupdate.h>
 // #include <linux/audit.h>
 // #include <linux/falloc.h>

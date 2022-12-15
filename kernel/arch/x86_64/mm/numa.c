@@ -7,7 +7,7 @@
 #include <linux/init/init.h>
 #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/ctype.h>
 // #include <linux/nodemask.h>
 // #include <linux/sched.h>
 // #include <linux/topology.h>

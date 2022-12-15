@@ -18,7 +18,7 @@
 	#include <linux/init/init.h>
 	#include <linux/kernel/pid.h>
 	// #include <linux/bug.h>
-	// #include <linux/mutex.h>
+	#include <linux/kernel/mutex.h>
 	// #include <linux/rwsem.h>
 	#include <linux/mm/mm_types.h>
 	// #include <linux/capability.h>

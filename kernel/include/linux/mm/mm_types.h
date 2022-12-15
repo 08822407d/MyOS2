@@ -20,9 +20,6 @@
 
 	// #include <asm/mmu.h>
 
-
-	#include <asm/pgtable_types.h>
-
 	// #ifndef AT_VECTOR_SIZE_ARCH
 	// #define AT_VECTOR_SIZE_ARCH 0
 	// #endif

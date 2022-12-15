@@ -65,7 +65,7 @@
 #include <linux/sched/mm.h>
 // #include <linux/page_owner.h>
 // #include <linux/page_table_check.h>
-// #include <linux/kthread.h>
+#include <linux/kernel/kthread.h>
 // #include <linux/memcontrol.h>
 // #include <linux/ftrace.h>
 // #include <linux/lockdep.h>
@@ -82,9 +82,6 @@
 // #include "shuffle.h"
 // #include "page_reporting.h"
 
-
-#include <obsolete/glo.h>
-#include <obsolete/mutex.h>
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:
@@ -138,8 +135,6 @@ const char * const migratetype_names[MIGRATE_TYPES] = {
 static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
 
-
-recurs_lock_T	page_alloc_lock;
 
 /*==============================================================================================*
  *								private fuctions for buddy system								*

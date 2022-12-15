@@ -405,18 +405,22 @@
 
 	// struct perf_event;
 
-	// struct thread_struct
-	// {
-	// 	/* Cached TLS descriptors: */
-	// 	struct desc_struct tls_array[GDT_ENTRY_TLS_ENTRIES];
-	// 	unsigned long sp;
-	// 	unsigned short es;
-	// 	unsigned short ds;
-	// 	unsigned short fsindex;
-	// 	unsigned short gsindex;
+	typedef struct thread_struct {
+		reg_t		tss_rsp0;	// point to curr-task's kernel stack bottom
+								// current cpu's tss-rsp0 equal to this at switch-time
+		reg_t		k_rip;		// point to curr_task's switch-time rip
+		reg_t		k_rsp;		// point to curr_task's switch-time rsp
 
-	// 	unsigned long fsbase;
-	// 	unsigned long gsbase;
+		/* Cached TLS descriptors: */
+		// struct desc_struct tls_array[GDT_ENTRY_TLS_ENTRIES];
+		unsigned long	sp;
+		unsigned short	es;
+		unsigned short	ds;
+		unsigned short	fsindex;
+		unsigned short	gsindex;
+
+		unsigned long	fsbase;
+		unsigned long	gsbase;
 
 	// 	/* Save middle states of ptrace breakpoints */
 	// 	struct perf_event *ptrace_bps[HBP_NUM];
@@ -424,10 +428,10 @@
 	// 	unsigned long virtual_dr6;
 	// 	/* Keep track of the exact dr7 value set by the user */
 	// 	unsigned long ptrace_dr7;
-	// 	/* Fault info: */
-	// 	unsigned long cr2;
-	// 	unsigned long trap_nr;
-	// 	unsigned long error_code;
+		/* Fault info: */
+		unsigned long	cr2;
+		unsigned long	trap_nr;
+		unsigned long	error_code;
 	// #ifdef CONFIG_VM86
 	// 	/* Virtual 86 mode info */
 	// 	struct vm86 *vm86;
@@ -445,22 +449,22 @@
 	// 	unsigned int iopl_warn : 1;
 	// 	unsigned int sig_on_uaccess_err : 1;
 
-	// 	/*
-	// 	* Protection Keys Register for Userspace.  Loaded immediately on
-	// 	* context switch. Store it in thread_struct to avoid a lookup in
-	// 	* the tasks's FPU xstate buffer. This value is only valid when a
-	// 	* task is scheduled out. For 'current' the authoritative source of
-	// 	* PKRU is the hardware itself.
-	// 	*/
-	// 	u32 pkru;
+		// /*
+		// * Protection Keys Register for Userspace.  Loaded immediately on
+		// * context switch. Store it in thread_struct to avoid a lookup in
+		// * the tasks's FPU xstate buffer. This value is only valid when a
+		// * task is scheduled out. For 'current' the authoritative source of
+		// * PKRU is the hardware itself.
+		// */
+		// u32 pkru;
 
-	// 	/* Floating point and extended processor state */
-	// 	struct fpu fpu;
-	// 	/*
-	// 	* WARNING: 'fpu' is dynamically-sized.  It *MUST* be at
-	// 	* the end.
-	// 	*/
-	// };
+		// /* Floating point and extended processor state */
+		// struct fpu fpu;
+		/*
+		 * WARNING: 'fpu' is dynamically-sized.  It *MUST* be at
+		 * the end.
+		 */
+	} thread_s;
 
 	// extern void fpu_thread_struct_whitelist(unsigned long *offset, unsigned long *size);
 

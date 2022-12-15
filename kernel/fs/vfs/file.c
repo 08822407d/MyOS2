@@ -7,7 +7,7 @@
  *  Manage the dynamic fd arrays in the process files_struct.
  */
 
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/export.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
@@ -22,7 +22,6 @@
 // #include <linux/close_range.h>
 // #include <net/sock.h>
 #include "internal.h"
-
 
 
 /*
@@ -44,6 +43,7 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 		goto out;
 
 	atomic_set(&newf->refcount, 1);
+	newf->fd_count = NR_OPEN_DEFAULT;
 
 	// spin_lock_init(&newf->file_lock);
 	// newf->resize_in_progress = false;
@@ -140,7 +140,7 @@ out:
 	return NULL;
 }
 
-static void myos_close_files(files_struct_s * files)
+void myos_close_files(files_struct_s * files)
 {
 	/*
 	 * It is safe to dereference the fd table without RCU or
@@ -150,7 +150,7 @@ static void myos_close_files(files_struct_s * files)
 	// fdtable_s *fdt = rcu_dereference_raw(files->fdt);
 	unsigned int i = 0;
 
-	for(i = 0; i < MAX_FILE_NR; i++)
+	for(i = 0; i < files->fd_count; i++)
 	{
 		file_s *file = files->fd_array[i];
 		if(file != NULL)
@@ -189,6 +189,7 @@ void exit_files(task_s *tsk)
  */
 static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 {
+	task_s *curr = current;
 	file_s ** fps = current->files->fd_array;
 	int fd = -1;
 
@@ -204,7 +205,7 @@ static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 
 int get_unused_fd_flags(unsigned flags)
 {
-	return alloc_fd(0, MAX_FILE_NR, flags);
+	return alloc_fd(0, current->files->fd_count, flags);
 }
 
 /*

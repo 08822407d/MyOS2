@@ -20,11 +20,12 @@ int main(int argc, const char *argv[])
 {
 	// printf("Welcome to MyOS2\n\n");
 	// while (1);
-	
+	char *args[] = {"shell.bin", NULL};
+
 	int rv = fork();
 	if (rv != 0)
 	{
-		execve("/shell.bin", NULL, NULL);
+		execve("/shell.bin", args, NULL);
 	}
 	else
 	{

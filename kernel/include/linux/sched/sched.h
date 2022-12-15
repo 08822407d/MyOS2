@@ -48,7 +48,7 @@
 // #include <linux/energy_model.h>
 // #include <linux/init_task.h>
 // #include <linux/kprobes.h>
-// #include <linux/kthread.h>
+#include <linux/kernel/kthread.h>
 // #include <linux/membarrier.h>
 // #include <linux/migrate.h>
 // #include <linux/mmu_context.h>
@@ -63,7 +63,7 @@
 // #include <linux/stop_machine.h>
 // #include <linux/suspend.h>
 // #include <linux/swait.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/task_work.h>
 // #include <linux/tsacct_kern.h>
 

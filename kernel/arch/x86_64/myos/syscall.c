@@ -42,7 +42,7 @@ long sys_close(unsigned int fd)
 	file_s * fp = NULL;
 
 //	color_printk(GREEN,BLACK,"sys_close:%d\n",fd);
-	if(fd < 0 || fd >= MAX_FILE_NR)
+	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
 
 	fp = curr->files->fd_array[fd];
@@ -62,7 +62,7 @@ long sys_read(unsigned int fd, char *buf, size_t count)
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_read:%d\n",fd);
-	if(fd < 0 || fd >= MAX_FILE_NR)
+	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
 	if(count < 0)
 		return -EINVAL;
@@ -80,7 +80,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_write:%d\n",fd);
-	if(fd < 0 || fd >= MAX_FILE_NR)
+	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
 	if(count < 0)
 		return -EINVAL;
@@ -93,11 +93,12 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 
 long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 {
+	task_s * curr = current;
 	file_s * fp = NULL;
 	unsigned long ret = 0;
 
 //	color_printk(GREEN,BLACK,"sys_lseek:%d\n",filds);
-	if(fd < 0 || fd >= MAX_FILE_NR)
+	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
 	if(whence < 0 || whence >= SEEK_MAX)
 		return -EINVAL;
@@ -110,13 +111,13 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 
 long sys_fork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 - 1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
 	return do_fork(curr_context, 0, curr_context->rsp, 0, NULL, NULL);	
 }
 
 long sys_vfork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 - 1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
 	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, 0, NULL, NULL);
 }
 
@@ -126,7 +127,7 @@ long sys_execve(const char *filename, const char *const *argv,
 	char * pathname = NULL;
 	long pathlen = 0;
 	long error = 0;
-	stack_frame_s * curr_context = (stack_frame_s *)current->arch_struct.tss_rsp0 -1;
+	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 -1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
 	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);

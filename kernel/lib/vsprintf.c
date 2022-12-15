@@ -25,7 +25,7 @@
 // #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
 // #include <linux/types.h>
 // #include <linux/string.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/ctype.h>
 // #include <linux/kernel.h>
 // #include <linux/kallsyms.h>
 // #include <linux/math64.h>

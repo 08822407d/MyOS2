@@ -4,9 +4,6 @@
 
 	#include <linux/kernel/types.h>
 
-
-	#include <obsolete/arch_proto.h>
-
 	#ifdef __KERNEL__
 
 	#	include <asm/page_types.h>

@@ -68,12 +68,12 @@ static vfsmount_s *shm_mnt;
 // #include <linux/swapops.h>
 // #include <linux/mempolicy.h>
 #include <linux/fs/namei.h>
-// #include <linux/ctype.h>
+#include <linux/kernel/ctype.h>
 // #include <linux/migrate.h>
 // #include <linux/highmem.h>
 // #include <linux/seq_file.h>
 // #include <linux/magic.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/kernel/fcntl.h>
 // #include <uapi/linux/memfd.h>
 // #include <linux/userfaultfd_k.h>
@@ -82,8 +82,6 @@ static vfsmount_s *shm_mnt;
 // #include <linux/uaccess.h>
 #include "internal.h"
 
-
-#include <obsolete/proto.h>
 
 #define BLOCKS_PER_PAGE  (PAGE_SIZE/512)
 #define VM_ACCT(size)    (PAGE_ALIGN(size) >> PAGE_SHIFT)

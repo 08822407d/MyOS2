@@ -14,7 +14,7 @@
 	#include <linux/kernel/pid.h>
 	// #include <linux/sem.h>
 	// #include <linux/shm.h>
-	// #include <linux/mutex.h>
+	#include <linux/kernel/mutex.h>
 	// #include <linux/plist.h>
 	// #include <linux/hrtimer.h>
 	// #include <linux/irqflags.h>
@@ -36,19 +36,11 @@
 	// #include <linux/kcsan.h>
 	// #include <asm/kmap_size.h>
 
- 
 
-	#include <linux/lib/list.h>
 	#include <linux/sched/fs_struct.h>
-	#include <linux/kernel/types.h>
-	#include <linux/mm/mm_types.h>
 	#include <linux/kernel/fdtable.h>
 
-	#include <asm/current.h>
-	#include <obsolete/arch_task.h>
-
 	#define PF_NEED_SCHEDULE (1UL << 1)
-	#define MAX_FILE_NR 256
 
 
 	// /* task_struct member predeclarations (sorted alphabetically): */
@@ -784,8 +776,8 @@
 
 	typedef struct task_struct {
 		// myos obsolete contents
-		arch_task_s arch_struct;
 		List_hdr_s wait_childexit;
+		char			*name;
 
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
@@ -1013,9 +1005,8 @@
 		 * p->real_parent->pid)
 		 */
 
-		// /* Real parent process: */
-		// task_s __rcu *real_parent;
-
+		/* Real parent process: */
+		task_s __rcu	*real_parent;
 		/* Recipient of SIGCHLD, wait4() reports: */
 		task_s __rcu	*parent;
 
@@ -1111,7 +1102,7 @@
 		 * - access it with [gs]et_task_comm()
 		 * - lock it with task_lock()
 		 */
-		char			comm[TASK_COMM_LEN];
+		// char			comm[TASK_COMM_LEN];
 
 		// nameidata_s		*nameidata;
 
@@ -1558,7 +1549,7 @@
 		// randomized_struct_fields_end
 
 		// 	/* CPU-specific state of this task: */
-		// 	struct thread_struct thread;
+			thread_s	thread;
 
 		/*
 		 * WARNING: on x86, 'thread_struct' contains a variable-sized

@@ -202,7 +202,12 @@
 		"libata.h": "c",
 		"delay.h": "c",
 		"major.h": "c",
-		"kthread.h": "c"
+		"kthread.h": "c",
+		"signal_types.h": "c",
+		"pid.h": "c",
+		"linkage.h": "c",
+		"fdtable.h": "c",
+		"efi.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

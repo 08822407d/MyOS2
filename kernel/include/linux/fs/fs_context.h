@@ -12,7 +12,7 @@
 	// #include <linux/refcount.h>
 	#include <linux/lib/errno.h>
 	// #include <linux/security.h>
-	// #include <linux/mutex.h>
+	#include <linux/kernel/mutex.h>
 
 
 	#include <linux/fs/vfs_s_defs.h>

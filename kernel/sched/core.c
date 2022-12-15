@@ -28,7 +28,6 @@
 // #include "smp.h"
 
 
-
 #include <linux/sched/myos_percpu.h>
 #include <obsolete/glo.h>
 
@@ -155,8 +154,8 @@
 static int
 try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 {
-	extern int load_balance();
-	int target_cpu_idx = load_balance();
+	extern int myos_load_balance();
+	int target_cpu_idx = myos_load_balance();
 	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
 	if (p->__state != TASK_RUNNING)
 	{
@@ -390,14 +389,13 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
  *
  * This function executes a full memory barrier before accessing the task state.
  */
-int wake_up_process(task_s *p)
-{
+int wake_up_process(task_s *p) {
 	return try_to_wake_up(p, TASK_NORMAL, 0);
 }
 
 
 
-int load_balance()
+int myos_load_balance()
 {
 	int i;
 	int min_load = 99999999;

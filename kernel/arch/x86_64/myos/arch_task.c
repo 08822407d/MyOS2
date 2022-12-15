@@ -53,7 +53,7 @@ void myos_init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	idle_pcb->task.arch_struct.tss_rsp0 = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
+	idle_pcb->task.thread.tss_rsp0 = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
 }
 
 /*==============================================================================================*
@@ -86,29 +86,29 @@ static __always_inline void switch_mm(task_s * curr, task_s * target)
 				:	"r"(target->mm->pgd_ptr)
 				:	"memory"
 				);
-	wrmsr(MSR_IA32_SYSENTER_ESP, target->arch_struct.tss_rsp0);
+	wrmsr(MSR_IA32_SYSENTER_ESP, target->thread.tss_rsp0);
 }
 
 inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->rsp0 = target->arch_struct.tss_rsp0;
+	curr_tss->rsp0 = target->thread.tss_rsp0;
 
 	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset
 	// here need to save and restore them
 
 	// asm volatile("movq	%%fs,	%0 \n\t"
-	// 			: "=a"(curr->arch_struct.fs));
+	// 			: "=a"(curr->thread.fs));
 	// asm volatile("movq	%%gs,	%0 \n\t"
-	// 			: "=a"(curr->arch_struct.gs));
+	// 			: "=a"(curr->thread.gs));
 
 	// asm volatile("movq	%0,	%%fs \n\t"
 	// 			:
-	// 			:"a"(target->arch_struct.fs));
+	// 			:"a"(target->thread.fs));
 	// asm volatile("movq	%0,	%%gs \n\t"
 	// 			:
-	// 			:"a"(target->arch_struct.gs));
+	// 			:"a"(target->thread.gs));
 
 }
 
@@ -125,17 +125,16 @@ inline __always_inline void myos_switch_to(task_s * curr, task_s * target)
 					"1:							\n\t"
 					"popq	%%rax				\n\t"
 					"popq	%%rbp				\n\t"
-				:	"=m"(curr->arch_struct.k_rsp),
-					"=m"(curr->arch_struct.k_rip)
-				:	"m"(target->arch_struct.k_rsp),
-					"m"(target->arch_struct.k_rip),
+				:	"=m"(curr->thread.k_rsp),
+					"=m"(curr->thread.k_rip)
+				:	"m"(target->thread.k_rsp),
+					"m"(target->thread.k_rip),
 					"D"(curr), "S"(target)
 				:	"memory"
 				);
 }
 
 extern int myos_exit_thread(task_s * new_task);
-extern void myos_exit_files(task_s * new_tsk);
 
 // read memory distribution of the executive
 static int read_exec_mm(file_s * fp, task_s * curr)
@@ -151,6 +150,7 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 }
 
+extern void myos_close_files(files_struct_s * files);
 unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
@@ -162,8 +162,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
 	//
-
-	myos_exit_files(curr);
+	myos_close_files(curr->files);
+	(curr);
 	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
 
 	if (curr->flags & CLONE_VFORK)
@@ -194,7 +194,9 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 
 		for(i = 0; i < 10 && argv[i] != NULL; i++)
 		{
-			len = strnlen_user(argv[i], 1024) + 1;
+			len = strnlen(argv[i], 1024) + 1;
+			if (len <= 0)
+				continue;
 			strcpy((char *)(argv_pos - len), argv[i]);
 			dargv[i] = (char *)(argv_pos - len);
 			argv_pos -= len;
@@ -211,10 +213,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
 	if (argv != NULL)
-	{
-		strncpy(curr->comm, argv[0], TASK_COMM_LEN - 1);
-		curr->comm[TASK_COMM_LEN - 1] = '\0';
-	}
+		curr->name = argv[0];
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr->mm->start_code;
@@ -233,18 +232,19 @@ void kjmp_to_doexecve()
 	curr_sfp->restore_retp = (virt_addr_t)ra_sysex_retp;
 
 	reg_t ctx_rip =
-	curr->arch_struct.k_rip = (reg_t)sysexit_entp;
+	curr->thread.k_rip = (reg_t)sysexit_entp;
 	reg_t ctx_rsp =
-	curr->arch_struct.k_rsp = (reg_t)curr_sfp;
+	curr->thread.k_rsp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
 
+	char *argv[] = {"task_init", NULL};
 	asm volatile(	"movq	%1,	%%rsp	\n\t"
 					"pushq	%2			\n\t"
 					"jmp	do_execve	\n\t"
 				:
 				:	"D"(ctx_rsp), "m"(ctx_rsp),
 					"m"(ctx_rip), "S"("/init.bin"),
-					"d"(NULL), "c"(NULL)
+					"d"(argv), "c"(NULL)
 				:	"memory"
 				);
 }
@@ -272,7 +272,7 @@ do_exit_again:
 	asm volatile("cli");
 	current->exit_code = exit_code;
 	myos_exit_thread(current);
-	myos_exit_files(current);
+	exit_files(current);
 	exit_notify();
 	asm volatile("sti");
 

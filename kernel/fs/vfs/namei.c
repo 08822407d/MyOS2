@@ -26,7 +26,7 @@
 // #include <linux/personality.h>
 // #include <linux/security.h>
 // #include <linux/ima.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/kernel/mount.h>
 // #include <linux/audit.h>
 // #include <linux/capability.h>

@@ -6,13 +6,13 @@
 // #include <linux/swapfile.h>
 // #include <linux/swapops.h>
 // #include <linux/kmemleak.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 
 // #include <asm/set_memory.h>
 #include <asm/e820-api.h>
 // #include <asm/init.h>
 #include <asm/page.h>
-// #include <asm/page_types.h>
+#include <asm/page_types.h>
 #include <asm/sections.h>
 #include <asm/setup.h>
 // #include <asm/tlbflush.h>
@@ -29,7 +29,6 @@
 
 
 #include <linux/kernel/minmax.h>
-#include <linux/lib/string.h>
 
 void __init zone_sizes_init(void)
 {

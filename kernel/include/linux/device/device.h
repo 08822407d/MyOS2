@@ -21,7 +21,7 @@
 	// #include <linux/lockdep.h>
 	#include <linux/kernel/compiler.h>
 	#include <linux/kernel/types.h>
-	// #include <linux/mutex.h>
+	#include <linux/kernel/mutex.h>
 	// #include <linux/pm.h>
 	#include <linux/kernel/atomic.h>
 	#include <linux/kernel/uidgid.h>

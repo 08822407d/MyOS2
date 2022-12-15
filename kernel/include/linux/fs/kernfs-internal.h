@@ -12,7 +12,7 @@
 
 	// #include <linux/lockdep.h>
 	#include <linux/fs/fs.h>
-	// #include <linux/mutex.h>
+	#include <linux/kernel/mutex.h>
 	// #include <linux/rwsem.h>
 	// #include <linux/xattr.h>
 

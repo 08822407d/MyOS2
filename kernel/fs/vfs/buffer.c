@@ -21,7 +21,7 @@
 
 #include <linux/kernel/kernel.h>
 // #include <linux/sched/signal.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/fs/fs.h>
 // #include <linux/iomap.h>
 #include <linux/mm/mm.h>

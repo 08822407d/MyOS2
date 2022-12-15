@@ -305,7 +305,7 @@ void myos_arch_system_call_init()
 	// init MSR sf_regs related to sysenter/sysexit
 	wrmsr(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
 	wrmsr(MSR_IA32_SYSENTER_EIP, (uint64_t)sysenter_entp);
-	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)task0_PCB.task.arch_struct.tss_rsp0);
+	wrmsr(MSR_IA32_SYSENTER_ESP, (uint64_t)task0_PCB.task.thread.tss_rsp0);
 	uint64_t kstack = rdmsr(MSR_IA32_SYSENTER_ESP);
 
 	// // init MSR sf_regs related to syscall/sysret

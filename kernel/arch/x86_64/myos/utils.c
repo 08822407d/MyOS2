@@ -60,6 +60,6 @@ inline __always_inline long strnlen_user(void *src, unsigned long maxlen)
 	unsigned long size = strlen(src);
 	if(!verify_area(src, size))
 		return -EFAULT;
-
-	return size <= maxlen ? size : maxlen;
+	size = size < maxlen ? size : maxlen;
+	return size;
 }

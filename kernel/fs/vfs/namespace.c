@@ -8,7 +8,7 @@
  * Heavily rewritten.
  */
 
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/export.h>
 // #include <linux/capability.h>
 // #include <linux/mnt_namespace.h>
@@ -27,7 +27,7 @@
 #include <linux/mm/memblock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/task_work.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 #include <uapi/kernel/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/mm/shmem_fs.h>

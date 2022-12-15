@@ -408,8 +408,8 @@
 	// /* Find the length of STRING, but scan at most MAXLEN characters.
 	// If no '\0' terminator is found in that many characters, return MAXLEN.  */
 	// extern size_t strnlen(const char *__string, size_t __maxlen)
-	extern size_t strnlen(const char *__string, size_t __maxlen);
 	// 	__THROW __attribute_pure__ __nonnull((1));
+	extern size_t strnlen(const char *__string, size_t __maxlen);
 	// #endif
 
 	// /* Return a string describing the meaning of the `errno' code in ERRNUM.  */

@@ -18,10 +18,10 @@
 // #include <linux/proc_fs.h>
 // #include <linux/binfmts.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/stackprotector.h>
-// #include <linux/string.h>
-// #include <linux/ctype.h>
+#include <linux/lib/string.h>
+#include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
 // #include <linux/ioport.h>
 #include <linux/init/init.h>
@@ -36,7 +36,7 @@
 // #include <linux/kprobes.h>
 // #include <linux/vmalloc.h>
 // #include <linux/kernel_stat.h>
-// #include <linux/start_kernel.h>
+#include <linux/kernel/start_kernel.h>
 // #include <linux/security.h>
 // #include <linux/smp.h>
 // #include <linux/profile.h>
@@ -50,13 +50,13 @@
 // #include <linux/cpu.h>
 // #include <linux/cpuset.h>
 // #include <linux/cgroup.h>
-// #include <linux/efi.h>
+#include <linux/block/efi.h>
 // #include <linux/tick.h>
 // #include <linux/sched/isolation.h>
 // #include <linux/interrupt.h>
 // #include <linux/taskstats_kern.h>
 // #include <linux/delayacct.h>
-// #include <linux/unistd.h>
+#include <uapi/kernel/unistd.h>
 // #include <linux/utsname.h>
 // #include <linux/rmap.h>
 // #include <linux/mempolicy.h>
@@ -68,8 +68,8 @@
 // #include <linux/kmemleak.h>
 // #include <linux/padata.h>
 // #include <linux/pid_namespace.h>
-// #include <linux/device/driver.h>
-// #include <linux/kthread.h>
+#include <linux/device/driver.h>
+#include <linux/kernel/kthread.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/init.h>
 #include <linux/kernel/signal.h>
@@ -84,14 +84,14 @@
 // #include <linux/pti.h>
 #include <linux/block/blkdev.h>
 // #include <linux/sched/clock.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 // #include <linux/sched/task_stack.h>
 // #include <linux/context_tracking.h>
 // #include <linux/random.h>
 #include <linux/lib/list.h>
 // #include <linux/integrity.h>
 // #include <linux/proc_ns.h>
-// #include <linux/kernel/io.h>
+#include <linux/kernel/io.h>
 #include <linux/kernel/cache.h>
 // #include <linux/rodata_test.h>
 // #include <linux/jump_label.h>
@@ -113,8 +113,6 @@
 // #include <kunit/test.h>
 
 
-#include <linux/kernel/sched.h>
-#include <linux/lib/string.h>
 #include <linux/mm/myos_slab.h>
 
 #include <obsolete/glo.h>

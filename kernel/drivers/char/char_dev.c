@@ -18,7 +18,7 @@
 #include <linux/kernel/kobject.h>
 #include <linux/kernel/kobj_map.h>
 #include <linux/device/cdev.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 // #include <linux/backing-dev.h>
 #include <linux/device/tty.h>
 

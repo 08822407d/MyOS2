@@ -110,8 +110,6 @@
 // #include <trace/events/task.h>
 
 
-#include <linux/kernel/kernel.h>
-
 static inline task_s *myos_alloc_task_struct() {
 	PCB_u *ret_val = kmalloc(sizeof(PCB_u), GFP_KERNEL);
 	memset(&(ret_val->task), 0, sizeof(task_s));
@@ -1187,19 +1185,19 @@ static __latent_entropy task_s
 	//  */
 	// write_lock_irq(&tasklist_lock);
 
-	// /* CLONE_PARENT re-uses the old parent */
-	// if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
-	// 	p->real_parent = current->real_parent;
-	// 	p->parent_exec_id = current->parent_exec_id;
-	// 	if (clone_flags & CLONE_THREAD)
-	// 		p->exit_signal = -1;
-	// 	else
-	// 		p->exit_signal = current->group_leader->exit_signal;
-	// } else {
-	// 	p->real_parent = current;
-	// 	p->parent_exec_id = current->self_exec_id;
-	// 	p->exit_signal = args->exit_signal;
-	// }
+	/* CLONE_PARENT re-uses the old parent */
+	if (clone_flags & (CLONE_PARENT|CLONE_THREAD)) {
+		p->real_parent = current->real_parent;
+		// p->parent_exec_id = current->parent_exec_id;
+		// if (clone_flags & CLONE_THREAD)
+		// 	p->exit_signal = -1;
+		// else
+		// 	p->exit_signal = current->group_leader->exit_signal;
+	} else {
+		p->real_parent = current;
+		// p->parent_exec_id = current->self_exec_id;
+		// p->exit_signal = args->exit_signal;
+	}
 
 	// klp_copy_process(p);
 
@@ -1467,7 +1465,7 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 
 
 
-
+#include <obsolete/arch_proto.h>
 
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
@@ -1480,48 +1478,6 @@ static int myos_copy_flags(unsigned long clone_flags, task_s * new_tsk)
 		new_tsk->flags |= CLONE_VFORK;
 
 	return err;
-}
-
-static int myos_copy_files(unsigned long clone_flags, task_s * new_tsk)
-{
-	int err = -ENOERR;
-	int i = 0;
-	if(clone_flags & CLONE_FS)
-		goto out;
-	
-	files_struct_s *fss = kzalloc(sizeof(files_struct_s), GFP_KERNEL);
-	if (fss == NULL)
-	{
-		err = -ENOMEM;
-		goto out;
-	}
-	current->files = fss;
-	for(i = 0; i < MAX_FILE_NR; i++)
-		if(current->files->fd_array[i] != NULL)
-		{
-			new_tsk->files->fd_array[i] = (file_s *)kmalloc(sizeof(file_s), GFP_KERNEL);
-			memcpy(new_tsk->files->fd_array[i], current->files->fd_array[i], sizeof(file_s));
-		}
-
-	new_tsk->fs = kmalloc(sizeof(taskfs_s), GFP_KERNEL);
-	memcpy(new_tsk->fs, current->fs, sizeof(taskfs_s));
-
-out:
-	return err;
-}
-void myos_exit_files(task_s * new_tsk)
-{
-	int i = 0;
-	if(new_tsk->flags & CLONE_VFORK)
-		;
-	else
-		for(i = 0; i < MAX_FILE_NR; i++)
-			if(new_tsk->files->fd_array[i] != NULL)
-			{
-				kfree(new_tsk->files->fd_array[i]);
-			}
-
-	memset(new_tsk->files->fd_array, 0, sizeof(file_s *) * MAX_FILE_NR);	//clear current->file_struct
 }
 
 static int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
@@ -1572,17 +1528,17 @@ static int myos_copy_thread(unsigned long clone_flags, unsigned long stack_start
 	child_context->rsp = stack_start;
 	child_context->rax = 0;
 
-	child_task->arch_struct.tss_rsp0 = (reg_t)child_task + TASK_KSTACK_SIZE;
-	child_task->arch_struct.k_rsp = (reg_t)child_context;
+	child_task->thread.tss_rsp0 = (reg_t)child_task + TASK_KSTACK_SIZE;
+	child_task->thread.k_rsp = (reg_t)child_context;
 
 	if(child_task->flags & PF_KTHREAD)
 	{
-		child_task->arch_struct.k_rip = (unsigned long)entp_kernel_thread;
+		child_task->thread.k_rip = (unsigned long)entp_kernel_thread;
 		child_context->restore_retp = (virt_addr_t)ra_kthd_retp;
 	}
 	else
 	{
-		child_task->arch_struct.k_rip = (unsigned long)sysexit_entp;
+		child_task->thread.k_rip = (unsigned long)sysexit_entp;
 		child_context->restore_retp = (virt_addr_t)ra_sysex_retp;
 	}
 
@@ -1591,7 +1547,6 @@ static int myos_copy_thread(unsigned long clone_flags, unsigned long stack_start
 int myos_exit_thread(task_s * new_task)
 {
 	int err = -ENOERR;
-
 	return err;
 }
 
@@ -1603,47 +1558,37 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 						const char *taskname, task_s **ret_child)
 {
 	long ret_val = 0;
-	PCB_u *child_PCB = (PCB_u *)kzalloc(sizeof(PCB_u), GFP_KERNEL);
 	task_s *parent_task = current;
-	task_s *child_task = &child_PCB->task;
-	if (child_PCB == NULL)
-	{
-		ret_val = -EAGAIN;
-		goto alloc_newtask_fail;
-	}
-
-	memcpy(child_task, parent_task, sizeof(task_s));
+	task_s *child_task = dup_task_struct(current);
 
 	list_init(&child_task->tasks, child_task);
 	list_init(&child_task->sibling, child_task);
 	list_hdr_init(&child_task->children);
 	list_hdr_init(&child_task->wait_childexit);
-	child_task->__state = TASK_UNINTERRUPTIBLE;
-	child_task->pid = myos_gen_newpid();
-	child_task->se.vruntime = 0;
-	child_task->parent = parent_task;
-	child_task->fs = parent_task->fs;
-	if (taskname != NULL)
-	{
-		strncpy(child_task->comm, taskname, TASK_COMM_LEN - 1);
-		child_task->comm[TASK_COMM_LEN - 1] = '\0';
-	}
-	list_hdr_append(&parent_task->children, &child_task->sibling);
 
 	ret_val = -ENOMEM;
 	//	copy flags
 	if(myos_copy_flags(clone_flags, child_task))
 		goto copy_flags_fail;
+	//	copy file struct
+	if(copy_files(clone_flags, child_task))
+		goto copy_files_fail;
+	if (copy_fs(clone_flags, child_task))
+		goto copy_fs_fail;
 	//	copy mm struct
 	if(myos_copy_mm(clone_flags, child_task))
 		goto copy_mm_fail;
-	//	copy file struct
-	if(myos_copy_files(clone_flags, child_task))
-		goto copy_files_fail;
 	// copy thread struct
 	if(myos_copy_thread(clone_flags, stack_size, child_task, parent_context))
 		goto copy_thread_fail;
 
+
+	child_task->__state = TASK_UNINTERRUPTIBLE;
+	child_task->pid = myos_gen_newpid();
+	child_task->se.vruntime = 0;
+	child_task->parent = parent_task;
+	list_hdr_append(&parent_task->children, &child_task->sibling);
+	child_task->name = (char *)taskname;
 	// do_fork successed
 	ret_val = child_task->pid;
 	wake_up_process(child_task);
@@ -1652,10 +1597,12 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	// if failed clean memory
 copy_thread_fail:
 	myos_exit_thread(child_task);
-copy_files_fail:
-	myos_exit_files(child_task);
 copy_mm_fail:
 	myos_exit_mm(child_task);
+copy_files_fail:
+	exit_files(child_task);
+copy_fs_fail:
+	exit_fs(child_task);
 copy_flags_fail:
 alloc_newtask_fail:
 	kfree(child_task);

@@ -28,7 +28,7 @@
 // #include <linux/security.h>
 // #include <linux/writeback.h>		/* for the emergency remount stuff */
 // #include <linux/idr.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 // #include <linux/backing-dev.h>
 // #include <linux/rculist_bl.h>
 // #include <linux/fscrypt.h>

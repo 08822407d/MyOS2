@@ -76,7 +76,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/sched/mm.h>
 // #include <linux/sched/numa_balancing.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 // #include <linux/nodemask.h>
 // #include <linux/cpuset.h>
 #include <linux/kernel/slab.h>
@@ -94,7 +94,7 @@
 // #include <linux/ksm.h>
 // #include <linux/rmap.h>
 // #include <linux/security.h>
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/kernel/ctype.h>
 // #include <linux/mm_inline.h>
 // #include <linux/mmu_notifier.h>

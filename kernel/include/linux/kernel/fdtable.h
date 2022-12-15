@@ -66,6 +66,7 @@
 		// unsigned long	close_on_exec_init[1];
 		// unsigned long	open_fds_init[1];
 		// unsigned long	full_fds_bits_init[1];
+		unsigned long	fd_count;
 		file_s __rcu	*fd_array[NR_OPEN_DEFAULT];
 	} files_struct_s;
 

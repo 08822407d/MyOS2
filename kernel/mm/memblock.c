@@ -18,13 +18,12 @@
 #include <linux/mm/memblock.h>
 
 #include <asm/sections.h>
-// #include <linux/kernel/io.h>
+#include <linux/kernel/io.h>
 
 #include "internal.h"
 
 
 #include <linux/kernel/asm-generic/bitops.h>
-#include <obsolete/glo.h>
 
 
 #define INIT_MEMBLOCK_REGIONS			128

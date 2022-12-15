@@ -22,7 +22,7 @@
 // #include <linux/of.h>
 // #include <linux/of_device.h>
 #include <linux/block/genhd.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 // #include <linux/pm_runtime.h>
 // #include <linux/netdevice.h>
 // #include <linux/sched/signal.h>

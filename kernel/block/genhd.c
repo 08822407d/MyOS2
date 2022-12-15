@@ -20,7 +20,7 @@
 #include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 #include <uapi/kernel/major.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 // #include <linux/idr.h>
 #include <linux/kernel/log2.h>
 // #include <linux/pm_runtime.h>

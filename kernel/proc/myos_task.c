@@ -11,7 +11,6 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/arch_glo.h>
-#include <obsolete/mutex.h>
 
 
 size_t			cpustack_off;
@@ -59,7 +58,7 @@ void myos_init_task(size_t lcpu_nr)
 	task0->mm			= &init_mm;
 	task0->fs			= &task0_fs;
 	task0->files		= &task0_files;
-	strncpy(task0->comm, "cpu0_idel", TASK_COMM_LEN - 1);
+	task0->name			= "cpu0_idel";
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{

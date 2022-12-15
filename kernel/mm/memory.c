@@ -45,7 +45,7 @@
 #include <linux/sched/mm.h>
 // #include <linux/sched/coredump.h>
 // #include <linux/sched/numa_balancing.h>
-// #include <linux/sched/task.h>
+#include <linux/sched/task.h>
 // #include <linux/hugetlb.h>
 // #include <linux/mman.h>
 // #include <linux/swap.h>
@@ -62,7 +62,7 @@
 // #include <linux/memcontrol.h>
 // #include <linux/mmu_notifier.h>
 // #include <linux/swapops.h>
-// #include <linux/elf.h>
+#include <linux/kernel/elf.h>
 #include <linux/mm/gfp.h>
 // #include <linux/migrate.h>
 #include <linux/lib/string.h>

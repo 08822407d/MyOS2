@@ -21,7 +21,7 @@
 #include <uapi/kernel/unistd.h>
 #include <linux/fs/file.h>
 // #include <linux/export.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 #include <linux/kernel/slab.h>
 // #include <linux/freezer.h>
 // #include <linux/ptrace.h>

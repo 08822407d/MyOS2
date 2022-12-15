@@ -12,7 +12,7 @@
 #include <linux/kernel/mount.h>
 // #include <linux/vfs.h>
 // #include <linux/quotaops.h>
-// #include <linux/mutex.h>
+#include <linux/kernel/mutex.h>
 #include <linux/fs/namei.h>
 // #include <linux/exportfs.h>
 // #include <linux/writeback.h>

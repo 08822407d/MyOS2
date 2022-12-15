@@ -63,14 +63,19 @@
 		extern unsigned long	max_low_pfn_mapped;
 		extern unsigned long	max_pfn_mapped;
 
-		static inline phys_addr_t get_max_mapped(void)
-		{
+		static inline phys_addr_t get_max_mapped(void) {
 			return (phys_addr_t)max_pfn_mapped << PAGE_SHIFT;
 		}
 
 		bool pfn_range_is_mapped(unsigned long start_pfn, unsigned long end_pfn);
 
 		extern void initmem_init(void);
+
+
+		phys_addr_t myos_virt2phys(virt_addr_t);
+		virt_addr_t myos_phys2virt(phys_addr_t);
+		#define __phys_addr myos_virt2phys
+		#define __virt_addr myos_phys2virt
 
 	#endif	/* !__ASSEMBLY__ */
 

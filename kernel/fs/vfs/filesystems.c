@@ -7,7 +7,7 @@
  *  table of configured filesystems
  */
 
-// #include <linux/syscalls.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/fs/fs.h>
 // #include <linux/proc_fs.h>
 // #include <linux/seq_file.h>
