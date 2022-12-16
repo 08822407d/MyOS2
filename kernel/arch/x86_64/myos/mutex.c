@@ -203,7 +203,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 		m_dequeue_list(user->owner, &semaphore->waiting_tasks);
 // 		user->counter = 1;
 // 		unlock_spin_lock(&semaphore->selflock);
-// 		wake_up_process(user->owner);
+// 		myos_wake_up_new_task(user->owner);
 // 	}
 // }
 

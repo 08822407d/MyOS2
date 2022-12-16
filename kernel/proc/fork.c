@@ -794,7 +794,7 @@ static __always_inline void delayed_free_task(task_s *tsk)
  * flags). The actual kick-off is left to the caller.
  */
 static __latent_entropy task_s
-*copy_process(pid_s *pid, struct kernel_clone_args *args)
+*copy_process(pid_s *pid, kclone_args_s *args)
 {
 	int pidfd = -1, retval;
 	task_s *p;
@@ -1061,9 +1061,9 @@ static __latent_entropy task_s
 	// retval = copy_io(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_namespaces;
-	// retval = copy_thread(clone_flags, args->stack, args->stack_size, p, args->tls);
-	// if (retval)
-	// 	goto bad_fork_cleanup_io;
+	retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
+	if (retval)
+		goto bad_fork_cleanup_io;
 
 	// stackleak_task_init(p);
 
@@ -1126,6 +1126,7 @@ static __latent_entropy task_s
 
 	// /* ok, now we should be set up.. */
 	// p->pid = pid_nr(pid);
+	p->pid = myos_pid_nr();
 	// if (clone_flags & CLONE_THREAD) {
 	// 	p->group_leader = current->group_leader;
 	// 	p->tgid = current->tgid;
@@ -1226,7 +1227,7 @@ static __latent_entropy task_s
 	// }
 
 	// init_task_pid_links(p);
-	// if (likely(p->pid)) {
+	if (p->pid) {
 	// 	ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
 	// 	init_task_pid(p, PIDTYPE_PID, pid);
@@ -1249,6 +1250,7 @@ static __latent_entropy task_s
 	// 		p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
 	// 						 p->real_parent->signal->is_child_subreaper;
 	// 		list_add_tail(&p->sibling, &p->real_parent->children);
+			list_hdr_append(&p->real_parent->children, &p->sibling);
 	// 		list_add_tail_rcu(&p->tasks, &init_task.tasks);
 	// 		attach_pid(p, PIDTYPE_TGID);
 	// 		attach_pid(p, PIDTYPE_PGID);
@@ -1266,7 +1268,7 @@ static __latent_entropy task_s
 	// 	}
 	// 	attach_pid(p, PIDTYPE_PID);
 	// 	nr_threads++;
-	// }
+	}
 	// total_forks++;
 	// hlist_del_init(&delayed.node);
 	// spin_unlock(&current->sighand->siglock);
@@ -1366,7 +1368,7 @@ static inline void init_idle_pids(task_s *idle)
  *
  * args->exit_signal is expected to be checked for sanity by the caller.
  */
-pid_t kernel_clone(struct kernel_clone_args *args)
+pid_t kernel_clone(kclone_args_s *args)
 {
 	u64 clone_flags = args->flags;
 	// struct completion vfork;
@@ -1384,10 +1386,10 @@ pid_t kernel_clone(struct kernel_clone_args *args)
 	 * here has the advantage that we don't need to have a separate helper
 	 * to check for legacy clone().
 	 */
-	// if ((args->flags & CLONE_PIDFD) &&
-	//     (args->flags & CLONE_PARENT_SETTID) &&
-	//     (args->pidfd == args->parent_tid))
-	// 	return -EINVAL;
+	if ((args->flags & CLONE_PIDFD) &&
+		(args->flags & CLONE_PARENT_SETTID) &&
+		(args->pidfd == args->parent_tid))
+		return -EINVAL;
 
 	/*
 	 * Determine whether and which event to report to ptracer.  When
@@ -1432,6 +1434,7 @@ pid_t kernel_clone(struct kernel_clone_args *args)
 	// }
 
 	// wake_up_new_task(p);
+	myos_wake_up_new_task(p);
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))
@@ -1451,7 +1454,7 @@ pid_t kernel_clone(struct kernel_clone_args *args)
  */
 pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 {
-	struct kernel_clone_args args = {
+	kclone_args_s args = {
 		.flags			= ((lower_32_bits(flags) | CLONE_VM |
 							CLONE_UNTRACED) & ~CSIGNAL),
 		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
@@ -1461,7 +1464,6 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 
 	return kernel_clone(&args);
 }
-
 
 
 
@@ -1517,7 +1519,8 @@ int myos_exit_mm(task_s *new_tsk)
 	return err;
 }
 
-static int myos_copy_thread(unsigned long clone_flags, unsigned long stack_start,
+static int myos_copy_thread(unsigned long clone_flags,
+		unsigned long stack, unsigned long size,
 		task_s * child_task, stack_frame_s * parent_context)
 {
 	int err = -ENOERR;
@@ -1525,14 +1528,19 @@ static int myos_copy_thread(unsigned long clone_flags, unsigned long stack_start
 	stack_frame_s * child_context = get_stackframe(child_task);
 	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
 
-	child_context->rsp = stack_start;
+	child_context->rsp = 0;
 	child_context->rax = 0;
 
-	child_task->thread.tss_rsp0 = (reg_t)child_task + TASK_KSTACK_SIZE;
-	child_task->thread.k_rsp = (reg_t)child_context;
+	child_task->thread.tss_rsp0 = (reg_t)child_task + THREAD_SIZE;
+	child_task->thread.sp = (reg_t)child_context;
 
 	if(child_task->flags & PF_KTHREAD)
 	{
+		child_context->rbx = (reg_t)stack;
+		child_context->rdx = (reg_t)size;
+		child_context->rflags = (1 << 9);
+		child_context->rip = (reg_t)entp_kernel_thread;
+
 		child_task->thread.k_rip = (unsigned long)entp_kernel_thread;
 		child_context->restore_retp = (virt_addr_t)ra_kthd_retp;
 	}
@@ -1553,13 +1561,14 @@ int myos_exit_thread(task_s * new_task)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
-						unsigned long tmp_kstack_start, unsigned long stack_size,
-						const char *taskname, task_s **ret_child)
+unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
 {
 	long ret_val = 0;
+	u64 clone_flags = args->flags;
 	task_s *parent_task = current;
 	task_s *child_task = dup_task_struct(current);
+	stack_frame_s *parent_context = task_pt_regs(current);
+	parent_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
 
 	list_init(&child_task->tasks, child_task);
 	list_init(&child_task->sibling, child_task);
@@ -1579,19 +1588,20 @@ unsigned long do_fork(stack_frame_s *parent_context, unsigned long clone_flags,
 	if(myos_copy_mm(clone_flags, child_task))
 		goto copy_mm_fail;
 	// copy thread struct
-	if(myos_copy_thread(clone_flags, stack_size, child_task, parent_context))
+	if(myos_copy_thread(clone_flags, args->stack,
+			args->stack_size, child_task, parent_context))
 		goto copy_thread_fail;
 
 
 	child_task->__state = TASK_UNINTERRUPTIBLE;
-	child_task->pid = myos_gen_newpid();
+	child_task->pid = myos_pid_nr();
 	child_task->se.vruntime = 0;
 	child_task->parent = parent_task;
 	list_hdr_append(&parent_task->children, &child_task->sibling);
-	child_task->name = (char *)taskname;
+	child_task->name = (char *)args->thread_name;
 	// do_fork successed
 	ret_val = child_task->pid;
-	wake_up_process(child_task);
+	myos_wake_up_new_task(child_task);
 	goto do_fork_success;
 
 	// if failed clean memory

@@ -149,7 +149,7 @@ void end_request(blkbuf_node_s * node)
 	if(node == NULL)
 		color_printk(RED,BLACK,"end_request error\n");
 
-	wake_up_process(node->wq.task);
+	myos_wake_up_new_task(node->wq.task);
 	current->flags |= PF_NEED_SCHEDULE;
 
 	IDE_req_queue.in_using = NULL;

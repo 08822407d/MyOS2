@@ -14,7 +14,7 @@
 	// #include <asm/segment.h>
 	// #include <asm/types.h>
 	// #include <uapi/asm/sigcontext.h>
-	// #include <asm/current.h>
+	#include <asm/current.h>
 	#include <asm/cpufeatures.h>
 	#include <asm/page.h>
 	#include <asm/pgtable_types.h>
@@ -79,8 +79,7 @@
 	 *  before touching them. [mj]
 	 */
 
-	typedef struct cpuinfo_x86
-	{
+	typedef struct cpuinfo_x86 {
 		__u8	x86_family;		/* CPU family */
 		__u8	x86_vendor;		/* CPU vendor */
 		__u8	x86_model;
@@ -147,13 +146,11 @@
 		unsigned	initialized : 1;
 	} cpuinfo_x86_s;
 
-	typedef struct cpuid_regs
-	{
+	typedef struct cpuid_regs {
 		u32 eax, ebx, ecx, edx;
 	} cpuid_regs_s;
 
-	enum cpuid_regs_idx
-	{
+	enum cpuid_regs_idx {
 		CPUID_EAX = 0,
 		CPUID_EBX,
 		CPUID_ECX,
@@ -203,10 +200,9 @@
 	// extern void print_cpu_info(cpuinfo_x86_s *);
 	// void print_cpu_msr(cpuinfo_x86_s *);
 
-	static inline void native_cpuid(
-			unsigned int *eax, unsigned int *ebx,
-			unsigned int *ecx, unsigned int *edx)
-	{
+	static inline void
+	native_cpuid(unsigned int *eax, unsigned int *ebx,
+			unsigned int *ecx, unsigned int *edx) {
 		/* ecx is often an input as well as an output. */
 		asm volatile(	"cpuid"
 					:	"=a"(*eax),	"=b"(*ebx),
@@ -409,7 +405,6 @@
 		reg_t		tss_rsp0;	// point to curr-task's kernel stack bottom
 								// current cpu's tss-rsp0 equal to this at switch-time
 		reg_t		k_rip;		// point to curr_task's switch-time rip
-		reg_t		k_rsp;		// point to curr_task's switch-time rsp
 
 		/* Cached TLS descriptors: */
 		// struct desc_struct tls_array[GDT_ENTRY_TLS_ENTRIES];
@@ -526,8 +521,7 @@
 	 */
 	static inline void cpuid(unsigned int op,
 			unsigned int *eax, unsigned int *ebx,
-			unsigned int *ecx, unsigned int *edx)
-	{
+			unsigned int *ecx, unsigned int *edx) {
 		*eax = op;
 		*ecx = 0;
 		__cpuid(eax, ebx, ecx, edx);
@@ -537,8 +531,7 @@
 	static inline void cpuid_count(
 			unsigned int op, int count,
 			unsigned int *eax, unsigned int *ebx,
-			unsigned int *ecx, unsigned int *edx)
-	{
+			unsigned int *ecx, unsigned int *edx) {
 		*eax = op;
 		*ecx = count;
 		__cpuid(eax, ebx, ecx, edx);
@@ -547,29 +540,25 @@
 	/*
 	 * CPUID functions returning a single datum
 	 */
-	static inline unsigned int cpuid_eax(unsigned int op)
-	{
+	static inline unsigned int cpuid_eax(unsigned int op) {
 		unsigned int eax, ebx, ecx, edx;
 		cpuid(op, &eax, &ebx, &ecx, &edx);
 		return eax;
 	}
 
-	static inline unsigned int cpuid_ebx(unsigned int op)
-	{
+	static inline unsigned int cpuid_ebx(unsigned int op) {
 		unsigned int eax, ebx, ecx, edx;
 		cpuid(op, &eax, &ebx, &ecx, &edx);
 		return ebx;
 	}
 
-	static inline unsigned int cpuid_ecx(unsigned int op)
-	{
+	static inline unsigned int cpuid_ecx(unsigned int op) {
 		unsigned int eax, ebx, ecx, edx;
 		cpuid(op, &eax, &ebx, &ecx, &edx);
 		return ecx;
 	}
 
-	static inline unsigned int cpuid_edx(unsigned int op)
-	{
+	static inline unsigned int cpuid_edx(unsigned int op) {
 		unsigned int eax, ebx, ecx, edx;
 		cpuid(op, &eax, &ebx, &ecx, &edx);
 		return edx;
@@ -672,14 +661,18 @@
 	// #define TOP_OF_INIT_STACK ((unsigned long)&init_stack + sizeof(init_stack) - \
 	// 						TOP_OF_KERNEL_STACK_PADDING)
 
-	// #define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1))
+	#define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1))
 
-	// #define task_pt_regs(task)                                          \
+	// #define task_pt_regs(task)                                       \
 	// 	({                                                              \
 	// 		unsigned long __ptr = (unsigned long)task_stack_page(task); \
 	// 		__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;         \
 	// 		((struct pt_regs *)__ptr) - 1;                              \
 	// 	})
+	#define task_pt_regs(task) ({							\
+				loff_t __ptr = (loff_t)task + THREAD_SIZE;	\
+				((stack_frame_s *)__ptr) - 1;				\
+			})
 
 	// #define INIT_THREAD \
 	// 	{               \

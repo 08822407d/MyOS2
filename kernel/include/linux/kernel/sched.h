@@ -1961,7 +1961,7 @@
 	// extern task_s *find_get_task_by_vpid(pid_t nr);
 
 	// extern int wake_up_state(task_s *tsk, unsigned int state);
-	extern int wake_up_process(task_s *tsk);
+	extern int myos_wake_up_new_task(task_s *tsk);
 	// extern void wake_up_new_task(task_s *tsk);
 
 	// extern void kick_process(task_s *tsk);
@@ -2368,7 +2368,7 @@
 // myos obsolete defines
 	typedef union PCB {
 		task_s task;
-		reg_t stack[TASK_KSTACK_SIZE / sizeof(reg_t)];
+		reg_t stack[THREAD_SIZE / sizeof(reg_t)];
 	} PCB_u __attribute__((aligned(8)));
 
 	typedef struct task_queue {
@@ -2384,7 +2384,7 @@
 	void myos_init_task(size_t lcpu_nr);
 	void myos_preinit_arch_task(void);
 	void myos_init_arch_task(size_t cpu_idx);
-	unsigned long myos_gen_newpid(void);
+	unsigned long myos_pid_nr(void);
 	void __myos_switch_to(task_s *curr, task_s *target);
 	void myos_switch_to(task_s *curr, task_s *target);
 	void myos_idle_enqueue(task_s *idle);

@@ -1,4 +1,5 @@
 #include <linux/kernel/linkage.h>
+#include <asm/page.h>
 
 #include <obsolete/archconst.h>
 
@@ -57,7 +58,7 @@ _AP_code32:
 	movl	(%eax),	%eax
 	movl	%eax,		%cr3
 	// enable long mode
-	movl	$0xC0000080,	%ecx
+	movl	$0xC0000080,%ecx
 	rdmsr
 	bts		$8,			%eax
 	wrmsr
@@ -111,9 +112,9 @@ l1:
 
 SYM_CODE_START(AP_DEBUG)
 	// get idle_task_PCB for current AP and set rsp to task's kstack
-	movabsq	idle_tasks,	%rax
-	movq	(%rax, %rbx, 8),	%rax
-	addq	$TASK_KSTACK_SIZE,	%rax
+	movabsq	idle_tasks,		%rax
+	movq	(%rax, %rbx, 8),%rax
+	addq	$THREAD_SIZE,	%rax
 	movq	%rax,		%rsp
 
 	movq	%rbx,		%rdi

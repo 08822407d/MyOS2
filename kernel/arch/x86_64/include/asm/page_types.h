@@ -46,8 +46,8 @@
 
 	#define __START_KERNEL			(__START_KERNEL_map + __PHYSICAL_START)
 
-	// #include <asm/page_64_types.h>
-	// #define IOREMAP_MAX_ORDER       (PUD_SHIFT)
+	#include <asm/page_64_types.h>
+	#define IOREMAP_MAX_ORDER       (PUD_SHIFT)
 
 	#ifndef __ASSEMBLY__
 

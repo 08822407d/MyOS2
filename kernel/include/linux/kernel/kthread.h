@@ -47,14 +47,14 @@
 	//  * @namefmt: printf-style name for the thread.
 	//  *
 	//  * Description: Convenient wrapper for kthread_create() followed by
-	//  * wake_up_process().  Returns the kthread or ERR_PTR(-ENOMEM).
+	//  * myos_wake_up_new_task().  Returns the kthread or ERR_PTR(-ENOMEM).
 	//  */
 	// #define kthread_run(threadfn, data, namefmt, ...)			   \
 	// ({									   \
 	// 	task_s *__k						   \
 	// 		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \
 	// 	if (!IS_ERR(__k))						   \
-	// 		wake_up_process(__k);					   \
+	// 		myos_wake_up_new_task(__k);					   \
 	// 	__k;								   \
 	// })
 
@@ -67,7 +67,7 @@
 	//  *	     to "name.*%u". Code fills in cpu number.
 	// *
 	// * Description: Convenient wrapper for kthread_create_on_cpu()
-	// * followed by wake_up_process().  Returns the kthread or
+	// * followed by myos_wake_up_new_task().  Returns the kthread or
 	// * ERR_PTR(-ENOMEM).
 	// */
 	// static inline task_s *
@@ -78,7 +78,7 @@
 
 	// 	p = kthread_create_on_cpu(threadfn, data, cpu, namefmt);
 	// 	if (!IS_ERR(p))
-	// 		wake_up_process(p);
+	// 		myos_wake_up_new_task(p);
 
 	// 	return p;
 	// }

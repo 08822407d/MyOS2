@@ -53,13 +53,13 @@ void myos_init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	idle_pcb->task.thread.tss_rsp0 = (reg_t)idle_pcb + TASK_KSTACK_SIZE;
+	idle_pcb->task.thread.tss_rsp0 = (reg_t)idle_pcb + THREAD_SIZE;
 }
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-unsigned long myos_gen_newpid()
+unsigned long myos_pid_nr()
 {
 	lock_spin_lock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
@@ -121,13 +121,13 @@ inline __always_inline void myos_switch_to(task_s * curr, task_s * target)
 					"leaq	1f(%%rip),	%%rax	\n\t"
 					"movq	%%rax,	%1			\n\t"
 					"pushq	%3					\n\t"
-					"jmp	__myos_switch_to			\n\t"
+					"jmp	__myos_switch_to	\n\t"
 					"1:							\n\t"
 					"popq	%%rax				\n\t"
 					"popq	%%rbp				\n\t"
-				:	"=m"(curr->thread.k_rsp),
+				:	"=m"(curr->thread.sp),
 					"=m"(curr->thread.k_rip)
-				:	"m"(target->thread.k_rsp),
+				:	"m"(target->thread.sp),
 					"m"(target->thread.k_rip),
 					"D"(curr), "S"(target)
 				:	"memory"
@@ -234,7 +234,7 @@ void kjmp_to_doexecve()
 	reg_t ctx_rip =
 	curr->thread.k_rip = (reg_t)sysexit_entp;
 	reg_t ctx_rsp =
-	curr->thread.k_rsp = (reg_t)curr_sfp;
+	curr->thread.sp = (reg_t)curr_sfp;
 	curr->flags &= ~PF_KTHREAD;
 
 	char *argv[] = {"task_init", NULL};
@@ -283,22 +283,20 @@ do_exit_again:
 	return 0;
 }
 
-task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long), unsigned long arg,
-				unsigned long flags, const char *taskname)
+task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long),
+		unsigned long arg, unsigned long flags, char *taskname)
 {
 	task_s *ret_val = NULL;
-	stack_frame_s sf_regs;
-	memset(&sf_regs,0,sizeof(sf_regs));
+	kclone_args_s args = {
+		.thread_name	= taskname,
 
-	sf_regs.rbx = (reg_t)fn;
-	sf_regs.rdx = (reg_t)arg;
-
-	sf_regs.cs = KERN_CS_SELECTOR;
-	sf_regs.ss = KERN_SS_SELECTOR;
-	sf_regs.rflags = (1 << 9);
-	sf_regs.rip = (reg_t)entp_kernel_thread;
-
-	do_fork(&sf_regs, flags | CLONE_VM, 0, 0, taskname, &ret_val);
+		.flags			= ((lower_32_bits(flags) | CLONE_VM | PF_KTHREAD |
+							CLONE_UNTRACED) & ~CSIGNAL),
+		.exit_signal	= 0,
+		.stack			= (unsigned long)fn,
+		.stack_size		= (unsigned long)taskname,
+	};
+	do_fork(&args, &ret_val);
 	return ret_val;
 }
 
@@ -310,7 +308,7 @@ inline __always_inline task_s * myos_get_current()
 	task_s * curr_task = NULL;
 	asm volatile(	"andq 	%%rsp,	%1		\n\t"
 				:	"=r"(curr_task)
-				:	"r"(~(TASK_KSTACK_SIZE - 1))
+				:	"r"(~(THREAD_SIZE - 1))
 				:
 				);
 	return curr_task;

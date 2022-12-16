@@ -18,7 +18,7 @@ PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in myos_early_init_system() .bss section will be set 0, so here arrange task0 in .data section
 files_struct_s	task0_files;
-PCB_u			task0_PCB __aligned(TASK_KSTACK_SIZE) __section(".data");
+PCB_u			task0_PCB __aligned(THREAD_SIZE) __section(".data");
 taskfs_s		task0_fs =
 {
 	.in_exec		= 0,
@@ -39,7 +39,7 @@ static void create_smp_idles(size_t cpu_idx)
 	list_init(&idletask->tasks, idletask);
 	list_init(&idletask->sibling, idletask);
 	list_hdr_init(&idletask->children);
-	idletask->pid = myos_gen_newpid();
+	idletask->pid = myos_pid_nr();
 }
 
 void myos_init_task(size_t lcpu_nr)

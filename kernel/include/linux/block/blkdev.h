@@ -1237,7 +1237,7 @@
 	// 	if (waiter == current)
 	// 		__set_current_state(TASK_RUNNING);
 	// 	else
-	// 		wake_up_process(waiter);
+	// 		myos_wake_up_new_task(waiter);
 	// }
 
 	// unsigned long disk_start_io_acct(struct gendisk *disk, unsigned int sectors,

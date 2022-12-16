@@ -98,7 +98,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 	requests = req;
 	// spin_unlock(&req_lock);
 
-	wake_up_process(thread);
+	myos_wake_up_new_task(thread);
 	// wait_for_completion(&req->done);
 
 	kfree((void *)tmp);

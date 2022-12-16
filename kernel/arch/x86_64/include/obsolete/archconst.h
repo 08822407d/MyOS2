@@ -51,7 +51,4 @@
 	#define ARCH_PGS_ADDR(x)	round_down((CANONICAL_ADDR(x)), CONST_4K)
 	#define ARCH_PGS_ATTR(x)	(x & 0x1FF)
 
-	// process and task consts
-	#define TASK_KSTACK_SIZE	(32 * CONST_1K)
-
 #endif /* _AMD64_ACONST_H_ */

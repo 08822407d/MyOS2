@@ -42,7 +42,7 @@ void wq_wakeup(List_hdr_s * wqhdr, unsigned long pstate)
 
 	if (the_wait->task->__state & pstate)
 	{
-		wake_up_process(the_wait->task);
+		myos_wake_up_new_task(the_wait->task);
 	}
 	else
 	{

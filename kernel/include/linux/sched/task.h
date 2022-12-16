@@ -18,7 +18,10 @@
 	/* All the bits taken by the old clone syscall. */
 	#define CLONE_LEGACY_FLAGS 0xffffffffULL
 
-	struct kernel_clone_args {
+	typedef struct kernel_clone_args {
+		char			*thread_name;
+
+
 		u64				flags;
 		int				*pidfd;
 		int				*child_tid;
@@ -34,7 +37,7 @@
 		int				io_thread;
 		// struct cgroup *cgrp;
 		// struct css_set *cset;
-	};
+	} kclone_args_s;
 
 	// /*
 	// * This serializes "schedule()" and also protects
@@ -67,8 +70,7 @@
 
 	// extern void release_task(task_s * p);
 
-	// extern int copy_thread(unsigned long, unsigned long, unsigned long,
-	// 			task_s *, unsigned long);
+	extern int copy_thread(unsigned long, unsigned long, unsigned long, task_s *);
 
 	// extern void flush_thread(void);
 

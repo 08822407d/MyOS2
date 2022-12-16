@@ -379,7 +379,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 // }
 
 /**
- * wake_up_process - Wake up a specific process
+ * myos_wake_up_new_task - Wake up a specific process
  * @p: The process to be woken up.
  *
  * Attempt to wake up the nominated process and move it to the set of runnable
@@ -389,7 +389,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
  *
  * This function executes a full memory barrier before accessing the task state.
  */
-int wake_up_process(task_s *p) {
+int myos_wake_up_new_task(task_s *p) {
 	return try_to_wake_up(p, TASK_NORMAL, 0);
 }
 

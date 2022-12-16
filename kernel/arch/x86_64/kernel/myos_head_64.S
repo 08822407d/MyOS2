@@ -1,6 +1,7 @@
 #include <linux/kernel/linkage.h>
 #include <linux/init/init.h>
 #include <asm/processor-flags.h>
+#include <asm/page.h>
 #include <asm/msr.h>
 
 #include <uefi/multiboot2.h>
@@ -83,7 +84,7 @@ code_64_start:
 	movq	%rax,		%cr4
 
 	/* Check if nx is implemented */
-	movl	$0x80000001,	%eax
+	movl	$0x80000001,%eax
 	cpuid
 	movl	%edx,		%edi
 
@@ -130,8 +131,8 @@ creat_higher_half_pagemap:
 .code64
 .balign 8
 SYM_CODE_START(higher_half_entry)
-	movabsq	$task0_PCB,	%rbx
-	addq	$TASK_KSTACK_SIZE,	%rbx
+	movabsq	$task0_PCB,		%rbx
+	addq	$THREAD_SIZE,	%rbx
 	movq    %rbx,		%rsp
 
 	pushq   $0

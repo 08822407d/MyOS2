@@ -1,3 +1,4 @@
+#include <linux/sched/task.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/file.h>
@@ -111,14 +112,15 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 
 long sys_fork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
-	return do_fork(curr_context, 0, curr_context->rsp, 0, NULL, NULL);	
+	kclone_args_s args = {
+		.exit_signal = SIGCHLD,
+	};
+	return do_fork(&args, NULL);	
 }
 
 long sys_vfork()
 {
-	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
-	return do_fork(curr_context, CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, 0, NULL, NULL);
+	// return do_fork(CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, NULL, NULL);
 }
 
 long sys_execve(const char *filename, const char *const *argv,
