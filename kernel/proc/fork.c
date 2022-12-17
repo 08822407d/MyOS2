@@ -1521,10 +1521,11 @@ int myos_exit_mm(task_s *new_tsk)
 
 static int myos_copy_thread(unsigned long clone_flags,
 		unsigned long stack, unsigned long size,
-		task_s * child_task, stack_frame_s * parent_context)
+		task_s * child_task)
 {
 	int err = -ENOERR;
 
+	stack_frame_s *parent_context = task_pt_regs(current);
 	stack_frame_s * child_context = get_stackframe(child_task);
 	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
 
@@ -1567,8 +1568,6 @@ unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
 	u64 clone_flags = args->flags;
 	task_s *parent_task = current;
 	task_s *child_task = dup_task_struct(current);
-	stack_frame_s *parent_context = task_pt_regs(current);
-	parent_context = (stack_frame_s *)current->thread.tss_rsp0 - 1;
 
 	list_init(&child_task->tasks, child_task);
 	list_init(&child_task->sibling, child_task);
@@ -1589,7 +1588,7 @@ unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
 		goto copy_mm_fail;
 	// copy thread struct
 	if(myos_copy_thread(clone_flags, args->stack,
-			args->stack_size, child_task, parent_context))
+			args->stack_size, child_task))
 		goto copy_thread_fail;
 
 
@@ -1598,7 +1597,6 @@ unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
 	child_task->se.vruntime = 0;
 	child_task->parent = parent_task;
 	list_hdr_append(&parent_task->children, &child_task->sibling);
-	child_task->name = (char *)args->thread_name;
 	// do_fork successed
 	ret_val = child_task->pid;
 	myos_wake_up_new_task(child_task);

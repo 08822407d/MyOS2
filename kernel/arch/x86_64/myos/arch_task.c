@@ -294,9 +294,13 @@ task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long),
 							CLONE_UNTRACED) & ~CSIGNAL),
 		.exit_signal	= 0,
 		.stack			= (unsigned long)fn,
-		.stack_size		= (unsigned long)taskname,
+		.stack_size		= (unsigned long)arg,
 	};
 	do_fork(&args, &ret_val);
+
+	if (ret_val != NULL)
+		ret_val->name = taskname;
+
 	return ret_val;
 }
 
