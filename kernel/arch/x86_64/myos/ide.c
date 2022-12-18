@@ -362,7 +362,7 @@ void disk_exit()
 	unregister_irq(SATA_MAST_IRQ);
 }
 
-static unsigned long ATArq_deamon(unsigned long param)
+static int ATArq_deamon(void *param)
 {
 	while (true)
 	{

@@ -100,7 +100,7 @@
 	// void kthread_exit(long result) __noreturn;
 	// void kthread_complete_and_exit(struct completion *, long) __noreturn;
 
-	// int kthreadd(void *unused);
+	int kthreadd(void *unused);
 	// extern task_s *kthreadd_task;
 	// extern int tsk_fork_get_node(task_s *tsk);
 

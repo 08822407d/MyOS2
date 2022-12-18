@@ -128,6 +128,58 @@
 // unsigned long loops_per_jiffy = (1<<12);
 unsigned long loops_per_jiffy = 10371364;
 
+
+
+noinline void __ref rest_init(void)
+{
+	task_s *tsk;
+	int pid;
+
+	// rcu_scheduler_starting();
+	/*
+	 * We need to spawn init first so that it obtains pid 1, however
+	 * the init task will end up wanting to create kthreads, which, if
+	 * we schedule it before we create kthreadd, will OOPS.
+	 */
+	pid = kernel_thread(kernel_init, NULL, CLONE_FS);
+	// /*
+	//  * Pin init on the boot CPU. Task migration is not properly working
+	//  * until sched_init_smp() has been run. It will set the allowed
+	//  * CPUs for init to the non isolated CPUs.
+	//  */
+	// rcu_read_lock();
+	// tsk = find_task_by_pid_ns(pid, &init_pid_ns);
+	// tsk->flags |= PF_NO_SETAFFINITY;
+	// set_cpus_allowed_ptr(tsk, cpumask_of(smp_processor_id()));
+	// rcu_read_unlock();
+
+	// numa_default_policy();
+	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
+	// rcu_read_lock();
+	// kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
+	// rcu_read_unlock();
+
+	// /*
+	//  * Enable might_sleep() and smp_processor_id() checks.
+	//  * They cannot be enabled earlier because with CONFIG_PREEMPTION=y
+	//  * kernel_thread() would trigger might_sleep() splats. With
+	//  * CONFIG_PREEMPT_VOLUNTARY=y the init task might have scheduled
+	//  * already, but it's stuck on the kthreadd_done completion.
+	//  */
+	// system_state = SYSTEM_SCHEDULING;
+
+	// complete(&kthreadd_done);
+
+	// /*
+	//  * The boot idle thread must execute schedule()
+	//  * at least once to get things moving:
+	//  */
+	// schedule_preempt_disabled();
+	// /* Call into cpu_idle with preempt disabled */
+	// cpu_startup_entry(CPUHP_ONLINE);
+}
+
+
 /*
  * Set up kernel memory allocators
  */
@@ -159,6 +211,7 @@ static void __init mm_init(void)
 	// /* Should be run after espfix64 is set up. */
 	// pti_init();
 }
+
 
 atomic_t lcpu_boot_count;
 atomic_t lower_half_unmapped;
@@ -225,6 +278,9 @@ void idle(size_t cpu_idx)
 	if (cpu_idx == 0)
 	{
 		myos_kernel_thread(kernel_init, 0, 0, "init");
+
+		// rest_init();
+
 		myos_schedule();
 	}
 	
@@ -271,7 +327,7 @@ static void do_basic_setup(void)
 void myos_ata_probe();
 extern void init_ATArqd();
 extern void kjmp_to_doexecve();
-unsigned long kernel_init(unsigned long arg)
+int kernel_init(void *arg)
 {
 	do_basic_setup();
 	// do_name();

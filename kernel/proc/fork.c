@@ -1412,8 +1412,8 @@ pid_t kernel_clone(kclone_args_s *args)
 	p = copy_process(NULL, args);
 	// add_latent_entropy();
 
-	// if (IS_ERR(p))
-	// 	return PTR_ERR(p);
+	if (IS_ERR(p))
+		return PTR_ERR(p);
 
 	// /*
 	//  * Do this prior waking up the new thread - the thread pointer
@@ -1423,6 +1423,7 @@ pid_t kernel_clone(kclone_args_s *args)
 
 	// pid = get_task_pid(p, PIDTYPE_PID);
 	// nr = pid_vnr(pid);
+	nr = p->pid;
 
 	// if (clone_flags & CLONE_PARENT_SETTID)
 	// 	put_user(nr, args->parent_tid);
@@ -1446,7 +1447,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// }
 
 	// put_pid(pid);
-	// return nr;
+	return nr;
 }
 
 /*

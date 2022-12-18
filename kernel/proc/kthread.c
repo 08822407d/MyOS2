@@ -75,13 +75,13 @@ enum KTHREAD_BITS {
 static int kthread(void *_create)
 {
 	// static const struct sched_param param = { .sched_priority = 0 };
-	// /* Copy data: it's on kthread's stack */
-	// struct kthread_create_info *create = _create;
-	// int (*threadfn)(void *data) = create->threadfn;
-	// void *data = create->data;
+	/* Copy data: it's on kthread's stack */
+	kthd_create_info_s *create = _create;
+	int (*threadfn)(void *data) = create->threadfn;
+	void *data = create->data;
 	// struct completion *done;
 	// struct kthread *self;
-	// int ret;
+	int ret;
 
 	// self = to_kthread(current);
 
@@ -104,7 +104,7 @@ static int kthread(void *_create)
 
 	// /* OK, tell user we're spawned, wait for stop or wakeup */
 	// __set_current_state(TASK_UNINTERRUPTIBLE);
-	// create->result = current;
+	create->result = current;
 	// /*
 	//  * Thread is going to call schedule(), do not preempt it,
 	//  * or the creator may spend more time in wait_task_inactive().
@@ -118,7 +118,7 @@ static int kthread(void *_create)
 	// if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
 	// 	cgroup_kthread_ready();
 	// 	__kthread_parkme(self);
-	// 	ret = threadfn(data);
+		ret = threadfn(data);
 	// }
 	// kthread_exit(ret);
 }
@@ -140,4 +140,43 @@ static void create_kthread(kthd_create_info_s *create)
 	// 	create->result = ERR_PTR(pid);
 	// 	complete(done);
 	}
+}
+
+
+int kthreadd(void *unused)
+{
+	task_s *tsk = current;
+
+	/* Setup a clean context for our children to inherit. */
+	set_task_comm(tsk, "kthreadd");
+	// ignore_signals(tsk);
+	// set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
+	// set_mems_allowed(node_states[N_MEMORY]);
+
+	current->flags |= PF_NOFREEZE;
+	// cgroup_init_kthreadd();
+
+	for (;;) {
+		// set_current_state(TASK_INTERRUPTIBLE);
+		// if (list_empty(&kthread_create_list))
+		// 	schedule();
+		// __set_current_state(TASK_RUNNING);
+
+		// spin_lock(&kthread_create_lock);
+		// while (!list_empty(&kthread_create_list)) {
+		// 	struct kthread_create_info *create;
+
+		// 	create = list_entry(kthread_create_list.next,
+		// 			    struct kthread_create_info, list);
+		// 	list_del_init(&create->list);
+		// 	spin_unlock(&kthread_create_lock);
+
+		// 	create_kthread(create);
+
+		// 	spin_lock(&kthread_create_lock);
+		// }
+		// spin_unlock(&kthread_create_lock);
+	}
+
+	return 0;
 }

@@ -236,9 +236,9 @@
 	unsigned long do_exit(unsigned long exit_code);
 	void myos_schedule(void);
 	void try_sched(void);
-	task_s *myos_kernel_thread(unsigned long (* fn)(unsigned long),
+	task_s *myos_kernel_thread(int (* fn)(void *),
 			unsigned long arg, unsigned long flags, char *taskname);
-	unsigned long kernel_init(unsigned long arg);
+	int kernel_init(void *arg);
 	int user_thread_test(unsigned long (* fn)(unsigned long),
 			unsigned long arg, unsigned long flags);
 	unsigned long user_func(unsigned long arg);

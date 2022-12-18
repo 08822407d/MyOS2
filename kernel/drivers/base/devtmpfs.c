@@ -377,7 +377,7 @@ static void devtmpfs_work_loop(void)
  * calls.  That call is done while devtmpfs_init, which is marked __init,
  * synchronously waits for it to complete.
  */
-static unsigned long devtmpfsd(unsigned long p)
+static int devtmpfsd(void *p)
 {
 	// int err = devtmpfs_setup(&p);
 	// {

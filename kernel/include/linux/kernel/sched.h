@@ -1972,6 +1972,7 @@
 	// {
 	// 	__set_task_comm(tsk, from, false);
 	// }
+	extern void set_task_comm(task_s *tsk, const char *from);
 
 	// extern char *__get_task_comm(char *to, size_t len, task_s *tsk);
 	// #define get_task_comm(buf, tsk) ({              \
