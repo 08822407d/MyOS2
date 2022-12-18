@@ -72,7 +72,7 @@
 // #include <linux/oom.h>
 // #include <linux/numa.h>
 // #include <linux/perf_event.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/vmalloc.h>
 
 // #include <trace/events/kmem.h>

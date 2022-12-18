@@ -86,7 +86,7 @@
 // #include <linux/interrupt.h>
 #include <linux/init/init.h>
 // #include <linux/compat.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/swap.h>
 // #include <linux/seq_file.h>
 // #include <linux/proc_fs.h>

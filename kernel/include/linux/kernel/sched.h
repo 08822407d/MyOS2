@@ -230,10 +230,10 @@
 	// 		debug_normal_state_change((state_value));    \
 	// 		WRITE_ONCE(current->__state, (state_value)); \
 	// 	} while (0)
-	#define __set_current_state(state_value)			\
-				do {									\
-					current->__state = (state_value);	\
-				} while (0)
+	#define __set_current_state(state_value)					\
+			do {												\
+				WRITE_ONCE(current->__state, (state_value));	\
+			} while (0)
 
 	// #define set_current_state(state_value)                 \
 	// 	do                                                 \
@@ -241,6 +241,11 @@
 	// 		debug_normal_state_change((state_value));      \
 	// 		smp_store_mb(current->__state, (state_value)); \
 	// 	} while (0)
+	#define set_current_state(state_value)						\
+			do {												\
+				/* smp_store_mb(current->__state, (state_value)); */	\
+				WRITE_ONCE(current->__state, (state_value));	\
+			} while (0)
 
 	// /*
 	// * set_special_state() should be used for those states when the blocking task
@@ -326,7 +331,7 @@
 	// extern long schedule_timeout_killable(long timeout);
 	// extern long schedule_timeout_uninterruptible(long timeout);
 	// extern long schedule_timeout_idle(long timeout);
-	// asmlinkage void schedule(void);
+	asmlinkage void schedule(void);
 	// extern void schedule_preempt_disabled(void);
 	// asmlinkage void preempt_schedule_irq(void);
 	// #ifdef CONFIG_PREEMPT_RT

@@ -283,7 +283,7 @@ do_exit_again:
 	return 0;
 }
 
-task_s *myos_kernel_thread(int (* fn)(void *args),
+task_s *myos_kernel_thread(int (* fn)(void *),
 		unsigned long arg, unsigned long flags, char *taskname)
 {
 	task_s *ret_val = NULL;

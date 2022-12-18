@@ -18,7 +18,7 @@
 #include <linux/init/init.h>
 #include <linux/device/tty.h>
 // #include <linux/capability.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 #include <linux/device/device.h>
 // #include <linux/highmem.h>
 // #include <linux/backing-dev.h>

@@ -24,12 +24,14 @@
 #include <linux/kernel/mutex.h>
 #include <linux/kernel/slab.h>
 // #include <linux/freezer.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/uaccess.h>
 // #include <linux/numa.h>
 // #include <linux/sched/isolation.h>
 // #include <trace/events/sched.h>
 
+
+#include <obsolete/arch_proto.h>
 
 // static DEFINE_SPINLOCK(kthread_create_lock);
 // static LIST_HEAD(kthread_create_list);
@@ -72,7 +74,7 @@ enum KTHREAD_BITS {
 };
 
 
-static int kthread(void *_create)
+int kthread(void *_create)
 {
 	// static const struct sched_param param = { .sched_priority = 0 };
 	/* Copy data: it's on kthread's stack */
@@ -142,6 +144,27 @@ static void create_kthread(kthd_create_info_s *create)
 	}
 }
 
+task_s *myos_kthread_create(int (*threadfn)(void *data),
+		void *data, char *threadname)
+{
+	task_s *task;
+	kthd_create_info_s *create =
+			kmalloc(sizeof(kthd_create_info_s), GFP_KERNEL);
+
+	if (!create)
+		return ERR_PTR(-ENOMEM);
+	create->threadfn = threadfn;
+	create->data = data;
+
+	myos_kernel_thread(threadfn, (unsigned long)create,
+			0, threadname);
+
+	task = create->result;
+
+	return task;
+}
+
+
 
 int kthreadd(void *unused)
 {
@@ -157,9 +180,10 @@ int kthreadd(void *unused)
 	// cgroup_init_kthreadd();
 
 	for (;;) {
-		// set_current_state(TASK_INTERRUPTIBLE);
+		set_current_state(TASK_INTERRUPTIBLE);
 		// if (list_empty(&kthread_create_list))
 		// 	schedule();
+		myos_schedule();
 		// __set_current_state(TASK_RUNNING);
 
 		// spin_lock(&kthread_create_lock);

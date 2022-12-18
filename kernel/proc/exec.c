@@ -87,6 +87,7 @@ void set_task_comm(task_s *tsk, const char *buf)
 	// task_lock(tsk);
 	// trace_task_rename(tsk, buf);
 	// strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+	
 	// task_unlock(tsk);
 	// perf_event_comm(tsk, exec);
 }

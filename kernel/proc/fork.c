@@ -59,7 +59,7 @@
 #include <linux/kernel/kthread.h>
 // #include <linux/task_io_accounting_ops.h>
 // #include <linux/rcupdate.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 #include <linux/kernel/mount.h>
 // #include <linux/audit.h>
 // #include <linux/memcontrol.h>
@@ -785,6 +785,9 @@ static __always_inline void delayed_free_task(task_s *tsk)
 		free_task(tsk);
 }
 
+int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
+int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
+		unsigned long size, task_s * child_task);
 /*
  * This creates a new process as a copy of the old one,
  * but does not actually start it yet.
@@ -1052,7 +1055,8 @@ static __latent_entropy task_s
 	retval = copy_signal(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_sighand;
-	retval = copy_mm(clone_flags, p);
+	// retval = copy_mm(clone_flags, p);
+	retval = myos_copy_mm(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_signal;
 	// retval = copy_namespaces(clone_flags, p);
@@ -1061,7 +1065,8 @@ static __latent_entropy task_s
 	// retval = copy_io(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_namespaces;
-	retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
+	// retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
+	retval = myos_copy_thread(clone_flags, args->stack, args->stack_size, p);
 	if (retval)
 		goto bad_fork_cleanup_io;
 
@@ -1229,6 +1234,7 @@ static __latent_entropy task_s
 	// init_task_pid_links(p);
 	if (p->pid) {
 	// 	ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
+		ptrace_init_task(p, (clone_flags & CLONE_PTRACE));
 
 	// 	init_task_pid(p, PIDTYPE_PID, pid);
 	// 	if (thread_group_leader(p)) {
@@ -1473,17 +1479,7 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-static int myos_copy_flags(unsigned long clone_flags, task_s * new_tsk)
-{ 
-	int err = -ENOERR;
-
-	if(clone_flags & CLONE_VM)
-		new_tsk->flags |= CLONE_VFORK;
-
-	return err;
-}
-
-static int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
+int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int err = -ENOERR;
 	mm_s *curr_mm = current->mm;
@@ -1520,9 +1516,9 @@ int myos_exit_mm(task_s *new_tsk)
 	return err;
 }
 
-static int myos_copy_thread(unsigned long clone_flags,
-		unsigned long stack, unsigned long size,
-		task_s * child_task)
+extern int kthread(void *_create);
+int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
+		unsigned long size, task_s * child_task)
 {
 	int err = -ENOERR;
 
@@ -1539,6 +1535,7 @@ static int myos_copy_thread(unsigned long clone_flags,
 	if(child_task->flags & PF_KTHREAD)
 	{
 		child_context->rbx = (reg_t)stack;
+		// child_context->rbx = (reg_t)kthread;
 		child_context->rdx = (reg_t)size;
 		child_context->rflags = (1 << 9);
 		child_context->rip = (reg_t)entp_kernel_thread;
@@ -1575,10 +1572,10 @@ unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
 	list_hdr_init(&child_task->children);
 	list_hdr_init(&child_task->wait_childexit);
 
+	if(clone_flags & CLONE_VM)
+		child_task->flags |= CLONE_VFORK;
+
 	ret_val = -ENOMEM;
-	//	copy flags
-	if(myos_copy_flags(clone_flags, child_task))
-		goto copy_flags_fail;
 	//	copy file struct
 	if(copy_files(clone_flags, child_task))
 		goto copy_files_fail;

@@ -27,6 +27,8 @@
 	//  */
 	// #define kthread_create(threadfn, data, namefmt, arg...) \
 	// 	kthread_create_on_node(threadfn, data, NUMA_NO_NODE, namefmt, ##arg)
+    task_s *myos_kthread_create(int (*threadfn)(void *data),
+    		void *data, char *threadname);
 
 
 	// task_s *kthread_create_on_cpu(int (*threadfn)(void *data),

@@ -80,7 +80,7 @@
 // #include <linux/shmem_fs.h>
 #include <linux/kernel/slab.h>
 // #include <linux/perf_event.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/pti.h>
 #include <linux/block/blkdev.h>
 // #include <linux/sched/clock.h>
@@ -141,7 +141,7 @@ noinline void __ref rest_init(void)
 	 * the init task will end up wanting to create kthreads, which, if
 	 * we schedule it before we create kthreadd, will OOPS.
 	 */
-	pid = kernel_thread(kernel_init, NULL, CLONE_FS);
+	// pid = kernel_thread(kernel_init, NULL, CLONE_FS);
 	// /*
 	//  * Pin init on the boot CPU. Task migration is not properly working
 	//  * until sched_init_smp() has been run. It will set the allowed
@@ -154,7 +154,7 @@ noinline void __ref rest_init(void)
 	// rcu_read_unlock();
 
 	// numa_default_policy();
-	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
+	// pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
 	// rcu_read_lock();
 	// kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
 	// rcu_read_unlock();
@@ -278,8 +278,9 @@ void idle(size_t cpu_idx)
 	if (cpu_idx == 0)
 	{
 		myos_kernel_thread(kernel_init, 0, 0, "init");
+		// myos_kthread_create(kernel_init, NULL, "init");
 
-		// rest_init();
+		rest_init();
 
 		myos_schedule();
 	}

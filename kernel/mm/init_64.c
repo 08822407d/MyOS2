@@ -13,7 +13,7 @@
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/types.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/mman.h>
 #include <linux/mm/mm.h>
 // #include <linux/swap.h>
