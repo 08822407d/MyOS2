@@ -941,6 +941,7 @@ static __latent_entropy task_s
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
 	list_init(&p->sibling, p);
+	list_hdr_init(&p->wait_childexit);
 	list_init(&p->tasks, p);
 	// rcu_copy_process(p);
 	// p->vfork_done = NULL;
@@ -1456,7 +1457,8 @@ pid_t kernel_clone(kclone_args_s *args)
 
 	// put_pid(pid);
 
-	// ((kthd_create_info_s *)(args->stack_size))->result = p;
+	if (args->stack_size != 0)
+		((kthd_create_info_s *)(args->stack_size))->result = p;
 
 	return nr;
 }

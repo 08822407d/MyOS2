@@ -18,8 +18,7 @@ void dirtest(void);
 
 int main(int argc, const char *argv[])
 {
-	// printf("Welcome to MyOS2\n\n");
-	// while (1);
+	printf("Welcome to MyOS2\n\n");
 	char *args[] = {"shell.bin", NULL};
 
 	int rv = fork();

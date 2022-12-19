@@ -212,8 +212,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	ret_val = fp->f_op->read(fp, (void *)curr->mm->start_code,
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
-	if (argv != NULL)
-		curr->name = argv[0];
+	curr->name = exec_filename;
+
 	curr_context->ss = USER_SS_SELECTOR;
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr->mm->start_code;
