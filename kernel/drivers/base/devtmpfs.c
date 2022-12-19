@@ -423,8 +423,7 @@ int devtmpfs_init(void)
 	}
 
 	// thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-	thread = myos_kernel_thread(devtmpfsd, 0, 0, "devtmpfsd");
-	// thread = myos_kthread_create(kernel_init, NULL, "init");
+	thread = myos_kthread_create(devtmpfsd, NULL, "init");
 
 	// if (!IS_ERR(thread)) {
 	// 	wait_for_completion(&setup_done);

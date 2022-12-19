@@ -691,7 +691,7 @@ static int copy_sighand(unsigned long clone_flags, task_s *tsk)
 	// if (clone_flags & CLONE_CLEAR_SIGHAND)
 	// 	flush_signal_handlers(tsk, 0);
 
-	// return 0;
+	return 0;
 }
 
 // void __cleanup_sighand(struct sighand_struct *sighand)
@@ -766,7 +766,7 @@ static int copy_signal(unsigned long clone_flags, task_s *tsk)
 	// mutex_init(&sig->cred_guard_mutex);
 	// init_rwsem(&sig->exec_update_lock);
 
-	// return 0;
+	return 0;
 }
 
 
@@ -941,6 +941,7 @@ static __latent_entropy task_s
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
 	list_init(&p->sibling, p);
+	list_init(&p->tasks, p);
 	// rcu_copy_process(p);
 	// p->vfork_done = NULL;
 	// spin_lock_init(&p->alloc_lock);
@@ -1441,6 +1442,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// }
 
 	// wake_up_new_task(p);
+	WRITE_ONCE(p->__state, TASK_NEW);
 	myos_wake_up_new_task(p);
 
 	// /* forking complete and child started to run, tell ptracer */
@@ -1453,6 +1455,9 @@ pid_t kernel_clone(kclone_args_s *args)
 	// }
 
 	// put_pid(pid);
+
+	// ((kthd_create_info_s *)(args->stack_size))->result = p;
+
 	return nr;
 }
 
@@ -1516,7 +1521,6 @@ int myos_exit_mm(task_s *new_tsk)
 	return err;
 }
 
-extern int kthread(void *_create);
 int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 		unsigned long size, task_s * child_task)
 {
@@ -1535,7 +1539,6 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	if(child_task->flags & PF_KTHREAD)
 	{
 		child_context->rbx = (reg_t)stack;
-		// child_context->rbx = (reg_t)kthread;
 		child_context->rdx = (reg_t)size;
 		child_context->rflags = (1 << 9);
 		child_context->rip = (reg_t)entp_kernel_thread;

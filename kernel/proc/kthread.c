@@ -37,19 +37,19 @@
 // static LIST_HEAD(kthread_create_list);
 // task_s *kthreadd_task;
 
-typedef struct kthread_create_info
-{
-	/* Information passed to kthread() from kthreadd. */
-	int		(*threadfn)(void *data);
-	void	*data;
-	int		node;
+// typedef struct kthread_create_info
+// {
+// 	/* Information passed to kthread() from kthreadd. */
+// 	int		(*threadfn)(void *data);
+// 	void	*data;
+// 	int		node;
 
-	/* Result passed back to kthread_create() from kthreadd. */
-	task_s	*result;
-	// struct completion *done;
+// 	/* Result passed back to kthread_create() from kthreadd. */
+// 	task_s	*result;
+// 	// struct completion *done;
 
-	List_s	list;
-} kthd_create_info_s;
+// 	List_s	list;
+// } kthd_create_info_s;
 
 typedef struct kthread {
 	unsigned long flags;
@@ -156,11 +156,13 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	create->threadfn = threadfn;
 	create->data = data;
 
-	myos_kernel_thread(threadfn, (unsigned long)create,
+	task = myos_kernel_thread(threadfn, (unsigned long)create,
 			0, threadname);
+	// kernel_thread(threadfn, create, 0);
 
-	task = create->result;
+	// task = create->result;
 
+	// kfree(create);
 	return task;
 }
 
@@ -185,6 +187,7 @@ int kthreadd(void *unused)
 		// 	schedule();
 		myos_schedule();
 		// __set_current_state(TASK_RUNNING);
+		set_current_state(TASK_RUNNING);
 
 		// spin_lock(&kthread_create_lock);
 		// while (!list_empty(&kthread_create_list)) {

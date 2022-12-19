@@ -1967,7 +1967,7 @@
 
 	// extern int wake_up_state(task_s *tsk, unsigned int state);
 	extern int myos_wake_up_new_task(task_s *tsk);
-	// extern void wake_up_new_task(task_s *tsk);
+	extern void wake_up_new_task(task_s *tsk);
 
 	// extern void kick_process(task_s *tsk);
 

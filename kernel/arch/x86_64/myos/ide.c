@@ -385,6 +385,5 @@ static int ATArq_deamon(void *param)
 
 void init_ATArqd()
 {
-	thread = myos_kernel_thread(ATArq_deamon, 0, 0, "ATArqd");
-	// thread = myos_kthread_create(kernel_init, NULL, "init");
+	thread = myos_kthread_create(ATArq_deamon, NULL, "init");
 }

@@ -253,4 +253,19 @@
 	// }
 	// #endif
 
+
+	typedef struct kthread_create_info
+	{
+		/* Information passed to kthread() from kthreadd. */
+		int		(*threadfn)(void *data);
+		void	*data;
+		int		node;
+
+		/* Result passed back to kthread_create() from kthreadd. */
+		task_s	*result;
+		// struct completion *done;
+
+		List_s	list;
+	} kthd_create_info_s;
+
 #endif /* _LINUX_KTHREAD_H */

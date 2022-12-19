@@ -141,7 +141,7 @@ noinline void __ref rest_init(void)
 	 * the init task will end up wanting to create kthreads, which, if
 	 * we schedule it before we create kthreadd, will OOPS.
 	 */
-	// pid = kernel_thread(kernel_init, NULL, CLONE_FS);
+	pid = kernel_thread(kernel_init, NULL, CLONE_FS);
 	// /*
 	//  * Pin init on the boot CPU. Task migration is not properly working
 	//  * until sched_init_smp() has been run. It will set the allowed
@@ -277,11 +277,7 @@ void idle(size_t cpu_idx)
 
 	if (cpu_idx == 0)
 	{
-		myos_kernel_thread(kernel_init, 0, 0, "init");
-		// myos_kthread_create(kernel_init, NULL, "init");
-
 		rest_init();
-
 		myos_schedule();
 	}
 	

@@ -133,10 +133,10 @@ unsigned long module_test(unsigned long flag)
 
 // void kernthd_test()
 // {
-// 	myos_kernel_thread(test_task_a, 0, 0);
-// 	myos_kernel_thread(test_task_b, 0, 0);
-// 	myos_kernel_thread(test_task_c, 0, 0);
-// 	myos_kernel_thread(test_task_d, 0, 0);
+// 	myos_kthread_create(test_task_a, 0, 0);
+// 	myos_kthread_create(test_task_b, 0, 0);
+// 	myos_kthread_create(test_task_c, 0, 0);
+// 	myos_kthread_create(test_task_d, 0, 0);
 // }
 
 void kmalloc_kfree_test()
@@ -166,5 +166,5 @@ void kmalloc_kfree_test()
 
 // void disk_drv_test()
 // {
-// 	myos_kernel_thread(ide_read_test, 0, 0);
+// 	myos_kthread_create(ide_read_test, 0, 0);
 // }
