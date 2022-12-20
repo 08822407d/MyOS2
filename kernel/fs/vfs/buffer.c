@@ -6,7 +6,7 @@
  */
 
 /*
- * Start bdflush() with myos_kernel_thread not syscall - Paul Gortmaker, 12/95
+ * Start bdflush() with kernel_thread not syscall - Paul Gortmaker, 12/95
  *
  * Removed a lot of unnecessary code and simplified things now that
  * the buffer cache isn't our primary cache - Andrew Tridgell 12/96

@@ -115,12 +115,8 @@ long sys_fork()
 	kclone_args_s args = {
 		.exit_signal = SIGCHLD,
 	};
-	return do_fork(&args, NULL);	
-}
-
-long sys_vfork()
-{
-	// return do_fork(CLONE_VM | CLONE_FS | CLONE_SIGHAND, curr_context->rsp, NULL, NULL);
+	// return do_fork(&args, NULL);	
+	return kernel_clone(&args);
 }
 
 long sys_execve(const char *filename, const char *const *argv,

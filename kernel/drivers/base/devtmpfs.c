@@ -32,6 +32,7 @@
 
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
+#include <linux/kernel/delay.h>
 
 
 #ifdef CONFIG_DEVTMPFS_SAFE
@@ -100,6 +101,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 
 	myos_wake_up_new_task(thread);
 	// wait_for_completion(&req->done);
+	udelay(19999);
 
 	kfree((void *)tmp);
 

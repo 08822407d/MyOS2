@@ -785,6 +785,13 @@ static __always_inline void delayed_free_task(task_s *tsk)
 		free_task(tsk);
 }
 
+static void myos_pcb_init(task_s *p, u64 clone_flags)
+{
+	list_hdr_init(&p->wait_childexit);
+	list_init(&p->tasks, p);
+	if(clone_flags & CLONE_VM)
+		p->flags |= CLONE_VFORK;
+}
 int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
 int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 		unsigned long size, task_s * child_task);
@@ -941,8 +948,7 @@ static __latent_entropy task_s
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
 	list_init(&p->sibling, p);
-	list_hdr_init(&p->wait_childexit);
-	list_init(&p->tasks, p);
+	myos_pcb_init(p, clone_flags);
 	// rcu_copy_process(p);
 	// p->vfork_done = NULL;
 	// spin_lock_init(&p->alloc_lock);
@@ -1560,66 +1566,4 @@ int myos_exit_thread(task_s * new_task)
 {
 	int err = -ENOERR;
 	return err;
-}
-
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/
-unsigned long do_fork(kclone_args_s *args, task_s **ret_child)
-{
-	long ret_val = 0;
-	u64 clone_flags = args->flags;
-	task_s *parent_task = current;
-	task_s *child_task = dup_task_struct(current);
-
-	list_init(&child_task->tasks, child_task);
-	list_init(&child_task->sibling, child_task);
-	list_hdr_init(&child_task->children);
-	list_hdr_init(&child_task->wait_childexit);
-
-	if(clone_flags & CLONE_VM)
-		child_task->flags |= CLONE_VFORK;
-
-	ret_val = -ENOMEM;
-	//	copy file struct
-	if(copy_files(clone_flags, child_task))
-		goto copy_files_fail;
-	if (copy_fs(clone_flags, child_task))
-		goto copy_fs_fail;
-	//	copy mm struct
-	if(myos_copy_mm(clone_flags, child_task))
-		goto copy_mm_fail;
-	// copy thread struct
-	if(myos_copy_thread(clone_flags, args->stack,
-			args->stack_size, child_task))
-		goto copy_thread_fail;
-
-
-	child_task->__state = TASK_UNINTERRUPTIBLE;
-	child_task->pid = myos_pid_nr();
-	child_task->se.vruntime = 0;
-	child_task->parent = parent_task;
-	list_hdr_append(&parent_task->children, &child_task->sibling);
-	// do_fork successed
-	ret_val = child_task->pid;
-	myos_wake_up_new_task(child_task);
-	goto do_fork_success;
-
-	// if failed clean memory
-copy_thread_fail:
-	myos_exit_thread(child_task);
-copy_mm_fail:
-	myos_exit_mm(child_task);
-copy_files_fail:
-	exit_files(child_task);
-copy_fs_fail:
-	exit_fs(child_task);
-copy_flags_fail:
-alloc_newtask_fail:
-	kfree(child_task);
-
-do_fork_success:
-	if (ret_child != NULL)
-		*ret_child = child_task;
-	return ret_val;
 }

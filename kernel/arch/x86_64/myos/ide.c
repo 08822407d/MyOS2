@@ -1,5 +1,7 @@
 #include <linux/kernel/slab.h>
+#include <linux/kernel/delay.h>
 #include <linux/kernel/sched.h>
+#include <linux/kernel/preempt.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
 #include <uapi/kernel/major.h>
@@ -256,7 +258,11 @@ void submit(blkbuf_node_s * node)
 
 void wait_for_finish()
 {
+	// myos_preempt_disable();
+	// myos_wake_up_new_task(thread);
+
 	__set_current_state(TASK_UNINTERRUPTIBLE);
+	// myos_preempt_enable_no_resched();
 	myos_schedule();
 }
 
@@ -377,6 +383,7 @@ static int ATArq_deamon(void *param)
 			cmd_out(node);
 		}
 
+		// __set_current_state(TASK_INTERRUPTIBLE);
 		myos_schedule();
 	}
 

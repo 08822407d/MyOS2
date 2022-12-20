@@ -57,7 +57,7 @@
 	// extern void init_idle(task_s *idle, int cpu);
 
 	// extern int sched_fork(unsigned long clone_flags, task_s *p);
-	// extern void sched_cgroup_fork(task_s *p, struct kernel_clone_args *kargs);
+	// extern void sched_cgroup_fork(task_s *p, kclone_args_s *kargs);
 	// extern void sched_post_fork(task_s *p);
 	// extern void sched_dead(task_s *p);
 
@@ -86,7 +86,7 @@
 	extern void exit_files(task_s *);
 	// extern void exit_itimers(struct signal_struct *);
 
-	// extern pid_t kernel_clone(struct kernel_clone_args *kargs);
+	extern pid_t kernel_clone(kclone_args_s *kargs);
 	// task_s *create_io_thread(int (*fn)(void *), void *arg, int node);
 	// task_s *fork_idle(int);
 	// struct mm_struct *copy_init_mm(void);

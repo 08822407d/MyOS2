@@ -208,7 +208,8 @@
 		"linkage.h": "c",
 		"fdtable.h": "c",
 		"efi.h": "c",
-		"sections.h": "c"
+		"sections.h": "c",
+		"preempt.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

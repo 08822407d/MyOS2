@@ -12,7 +12,7 @@ __SYSCALL(__NR_sbrk, sys_sbrk)
 __SYSCALL(__NR_getpid, sys_getpid)
 
 __SYSCALL(__NR_fork, sys_fork)
-__SYSCALL(__NR_vfork, sys_vfork)
+// __SYSCALL(__NR_vfork, sys_vfork)
 __SYSCALL(__NR_execve, sys_execve)
 __SYSCALL(__NR_exit, sys_exit)
 __SYSCALL(__NR_wait4, sys_wait4)

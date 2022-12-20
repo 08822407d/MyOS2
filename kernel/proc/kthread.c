@@ -156,8 +156,6 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	create->threadfn = threadfn;
 	create->data = data;
 
-	// task = myos_kernel_thread(threadfn, (unsigned long)create,
-	// 		0, threadname);
 	kernel_thread(threadfn, create, 0);
 
 	task = create->result;

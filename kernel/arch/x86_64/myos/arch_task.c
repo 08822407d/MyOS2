@@ -155,6 +155,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 {
 	int ret_val = 0;
 	task_s *curr = current;
+	curr->se.vruntime = 0;
 
 	//
 	if (task_idle != NULL && task_init != NULL)
@@ -281,27 +282,6 @@ do_exit_again:
 
 	goto do_exit_again;
 	return 0;
-}
-
-task_s *myos_kernel_thread(int (* fn)(void *),
-		unsigned long arg, unsigned long flags, char *taskname)
-{
-	task_s *ret_val = NULL;
-	kclone_args_s args = {
-		.thread_name	= taskname,
-
-		.flags			= ((lower_32_bits(flags) | CLONE_VM | PF_KTHREAD |
-							CLONE_UNTRACED) & ~CSIGNAL),
-		.exit_signal	= 0,
-		.stack			= (unsigned long)fn,
-		.stack_size		= (unsigned long)arg,
-	};
-	do_fork(&args, &ret_val);
-
-	if (ret_val != NULL)
-		ret_val->name = taskname;
-
-	return ret_val;
 }
 
 /*==============================================================================================*
