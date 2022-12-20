@@ -115,7 +115,6 @@ long sys_fork()
 	kclone_args_s args = {
 		.exit_signal = SIGCHLD,
 	};
-	// return do_fork(&args, NULL);	
 	return kernel_clone(&args);
 }
 

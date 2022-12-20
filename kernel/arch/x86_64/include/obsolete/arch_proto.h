@@ -230,7 +230,6 @@
 
 	/* arch_task.c */
 	stack_frame_s * get_stackframe(task_s * task_p);
-	unsigned long do_fork(kclone_args_s *args, task_s **ret_child);
 	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename,
 			char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);

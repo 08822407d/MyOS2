@@ -60,7 +60,6 @@ void run_cmd(int index, int argc, char **argv);
 
 int main(int argc, const char *argv[])
 {
-	printf("Welcome to MyOS2!\n");
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 
@@ -71,8 +70,6 @@ int main(int argc, const char *argv[])
 
 	char buf[SZ_1K];
 	int index = -1;
-
-	int hdfd = open("/dev/hdb", O_RDWR, 0);
 
 	while (1)
 	{
