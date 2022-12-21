@@ -34,7 +34,7 @@
 		// /* Interrupt control for vSMPowered x86_64 systems */
 		// 	void vsmp_init(void);
 
-		// struct pt_regs;
+		// pt_regs_s;
 
 		// void setup_bios_corruption_check(void);
 		// void early_platform_quirks(void);
@@ -47,7 +47,7 @@
 		// extern unsigned long __startup_secondary_64(void);
 		// extern void startup_64_setup_env(unsigned long physbase);
 		// extern void early_setup_idt(void);
-		// extern void __init do_early_exception(struct pt_regs *regs, int trapnr);
+		// extern void __init do_early_exception(pt_regs_s *regs, int trapnr);
 
 		// #ifdef CONFIG_X86_INTEL_MID
 		// 	extern void x86_intel_mid_early_setup(void);

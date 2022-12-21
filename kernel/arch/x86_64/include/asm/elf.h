@@ -7,7 +7,7 @@
 	// */
 	// #include <linux/thread_info.h>
 
-	// #include <asm/ptrace.h>
+	#include <asm/ptrace.h>
 	// #include <asm/user.h>
 	// #include <asm/auxvec.h>
 	#include <asm/fsgsbase.h>
@@ -99,7 +99,7 @@
 	// #endif
 
 	// static inline void elf_common_init(struct thread_struct *t,
-	// 								struct pt_regs *regs, const u16 ds)
+	// 								pt_regs_s *regs, const u16 ds)
 	// {
 	// 	/* ax gets execve's return value. */
 	// 	/*regs->ax = */ regs->bx = regs->cx = regs->dx = 0;
@@ -117,7 +117,7 @@
 	// #define COMPAT_ELF_PLAT_INIT(regs, load_addr) \
 	// 	elf_common_init(&current->thread, regs, __USER_DS)
 
-	// void compat_start_thread(struct pt_regs *regs, u32 new_ip, u32 new_sp, bool x32);
+	// void compat_start_thread(pt_regs_s *regs, u32 new_ip, u32 new_sp, bool x32);
 	// #define COMPAT_START_THREAD(ex, regs, new_ip, new_sp) \
 	// 	compat_start_thread(regs, new_ip, new_sp, ex->e_machine == EM_X86_64)
 
@@ -128,7 +128,7 @@
 	// #define COMPAT_ELF_PLATFORM ("i686")
 
 	// /*
-	// * regs is struct pt_regs, pr_reg is elf_gregset_t (which is
+	// * regs is pt_regs_s, pr_reg is elf_gregset_t (which is
 	// * now struct_user_regs, they are different). Assumes current is the process
 	// * getting dumped.
 	// */
@@ -320,7 +320,7 @@
 	// 	compat_arch_setup_additional_pages(bprm, interpreter,         \
 	// 									(ex->e_machine == EM_X86_64))
 
-	// extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
+	// extern bool arch_syscall_is_vdso_sigreturn(pt_regs_s *regs);
 
 	// /* Do not change the values. See get_align_mask() */
 	// enum align_flags

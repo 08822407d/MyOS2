@@ -19,7 +19,7 @@
 	// #include <asm/thread_info.h> /* for TS_COMPAT */
 	#include <asm/unistd.h>
 
-	// typedef long (*sys_call_ptr_t)(const struct pt_regs *);
+	// typedef long (*sys_call_ptr_t)(const pt_regs_s *);
 	typedef long (*sys_call_ptr_t)(void);
 	extern const sys_call_ptr_t sys_call_table[];
 
@@ -39,19 +39,19 @@
 	// * This importantly ignores the high bits on 64-bit, so comparisons
 	// * sign-extend the low 32 bits.
 	// */
-	// static inline int syscall_get_nr(task_s *task, struct pt_regs *regs)
+	// static inline int syscall_get_nr(task_s *task, pt_regs_s *regs)
 	// {
 	// 	return regs->orig_ax;
 	// }
 
 	// static inline void syscall_rollback(task_s *task,
-	// 									struct pt_regs *regs)
+	// 									pt_regs_s *regs)
 	// {
 	// 	regs->ax = regs->orig_ax;
 	// }
 
 	// static inline long syscall_get_error(task_s *task,
-	// 									struct pt_regs *regs)
+	// 									pt_regs_s *regs)
 	// {
 	// 	unsigned long error = regs->ax;
 	// #ifdef CONFIG_IA32_EMULATION
@@ -70,20 +70,20 @@
 	// }
 
 	// static inline long syscall_get_return_value(task_s *task,
-	// 											struct pt_regs *regs)
+	// 											pt_regs_s *regs)
 	// {
 	// 	return regs->ax;
 	// }
 
 	// static inline void syscall_set_return_value(task_s *task,
-	// 											struct pt_regs *regs,
+	// 											pt_regs_s *regs,
 	// 											int error, long val)
 	// {
 	// 	regs->ax = (long)error ?: val;
 	// }
 
 		// static inline void syscall_get_arguments(task_s *task,
-		// 										struct pt_regs *regs,
+		// 										pt_regs_s *regs,
 		// 										unsigned long *args)
 		// {
 		// #ifdef CONFIG_IA32_EMULATION
@@ -117,8 +117,8 @@
 		// 			: AUDIT_ARCH_X86_64;
 		// }
 
-		// void do_syscall_64(struct pt_regs *regs, int nr);
-		// void do_int80_syscall_32(struct pt_regs *regs);
-		// long do_fast_syscall_32(struct pt_regs *regs);
+		// void do_syscall_64(pt_regs_s *regs, int nr);
+		// void do_int80_syscall_32(pt_regs_s *regs);
+		// long do_fast_syscall_32(pt_regs_s *regs);
 
 #endif /* _ASM_X86_SYSCALL_H */

@@ -41,7 +41,7 @@
 	// struct anon_vma;
 	// struct anon_vma_chain;
 	// struct user_struct;
-	// struct pt_regs;
+	// pt_regs_s;
 
 	// extern int sysctl_page_lock_unfairness;
 
@@ -1865,7 +1865,7 @@
 	// #ifdef CONFIG_MMU
 	// extern vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
 	// 				unsigned long address, unsigned int flags,
-	// 				struct pt_regs *regs);
+	// 				pt_regs_s *regs);
 	// extern int fixup_user_fault(struct mm_struct *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);
@@ -1876,7 +1876,7 @@
 	// #else
 	// static inline vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
 	// 					unsigned long address, unsigned int flags,
-	// 					struct pt_regs *regs)
+	// 					pt_regs_s *regs)
 	// {
 	// 	/* should never happen if there's no MMU */
 	// 	BUG();

@@ -43,7 +43,7 @@
 	// #include <linux/cred.h>
 	// #include <linux/mnt_idmapping.h>
 	// #include <asm/byteorder.h>
-	#include <uapi/kernel/fs.h>
+	#include <uapi/linux/fs.h>
 
 
 	#include <linux/device/cdev.h>

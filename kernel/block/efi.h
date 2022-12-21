@@ -15,7 +15,7 @@
 	#include <linux/fs/fs.h>
 	#include <linux/block/genhd.h>
 	#include <linux/kernel/kernel.h>
-	#include <uapi/kernel/major.h>
+	#include <uapi/linux/major.h>
 	#include <linux/lib/string.h>
 	#include <linux/block/efi.h>
 	#include <linux/kernel/compiler.h>

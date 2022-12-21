@@ -3,7 +3,7 @@
 #define _LINUX_TTY_H
 
 	#include <linux/fs/fs.h>
-	#include <uapi/kernel/major.h>
+	#include <uapi/linux/major.h>
 	// #include <linux/termios.h>
 	// #include <linux/workqueue.h>
 	// #include <linux/tty_buffer.h>
@@ -12,7 +12,7 @@
 	// #include <linux/tty_port.h>
 	#include <linux/kernel/mutex.h>
 	// #include <linux/tty_flags.h>
-	#include <uapi/kernel/tty.h>
+	#include <uapi/linux/tty.h>
 	// #include <linux/rwsem.h>
 	// #include <linux/llist.h>
 

@@ -26,7 +26,7 @@
 #include <linux/kernel/slab.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/init_syscalls.h>
-#include <uapi/kernel/mount.h>
+#include <uapi/linux/mount.h>
 #include <linux/drivers/base.h>
 
 

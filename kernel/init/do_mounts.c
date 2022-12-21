@@ -24,7 +24,7 @@
 // #include <linux/nfs_fs_sb.h>
 // #include <linux/nfs_mount.h>
 // #include <linux/raid/detect.h>
-#include <uapi/kernel/mount.h>
+#include <uapi/linux/mount.h>
 
 #include <linux/init/do_mounts.h>
 

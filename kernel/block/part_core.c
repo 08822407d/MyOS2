@@ -5,7 +5,7 @@
  * Copyright (C) 2020 Christoph Hellwig
  */
 #include <linux/fs/fs.h>
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/ctype.h>
 #include <linux/block/genhd.h>

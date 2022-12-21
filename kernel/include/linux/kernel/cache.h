@@ -2,7 +2,7 @@
 #ifndef __LINUX_CACHE_H
 #define __LINUX_CACHE_H
 
-	#include <uapi/kernel/kernel.h>
+	#include <uapi/linux/kernel.h>
 	#include <asm/cache.h>
 
 	// #ifndef L1_CACHE_ALIGN

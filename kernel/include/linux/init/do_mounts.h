@@ -3,10 +3,10 @@
 #include <linux/block/blkdev.h>
 #include <linux/init/init.h>
 #include <linux/kernel/syscalls.h>
-#include <uapi/kernel/unistd.h>
+#include <uapi/linux/unistd.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/mount.h>
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 // #include <linux/root_dev.h>
 // #include <linux/init_syscalls.h>
 

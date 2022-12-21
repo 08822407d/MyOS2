@@ -4,7 +4,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <asm/elf.h>
-	#include <uapi/kernel/elf.h>
+	#include <uapi/linux/elf.h>
 
 	// #ifndef elf_read_implies_exec
 	// /* Executables for which elf_read_implies_exec() returns TRUE will

@@ -13,17 +13,17 @@
 #define SAVEALL_SIZE		0x70
 SAVE_ALL:
 	cli
-	pushq		%rax
-	pushq		%rbx
-	pushq		%rcx
-	pushq		%rdx
-	pushq		%rbp
 	pushq		%rdi
 	pushq		%rsi
+	pushq		%rdx
+	pushq		%rcx
+	pushq		%rax
 	pushq		%r8
 	pushq		%r9
 	pushq		%r10
 	pushq		%r11
+	pushq		%rbx
+	pushq		%rbp
 	pushq		%r12
 	pushq		%r13
 	pushq		%r14
@@ -37,17 +37,17 @@ RESTORE_ALL:
 	popq		%r14
 	popq		%r13
 	popq		%r12
+	popq		%rbp
+	popq		%rbx
 	popq		%r11
 	popq		%r10
 	popq		%r9
 	popq		%r8
+	popq		%rax
+	popq		%rcx
+	popq		%rdx
 	popq		%rsi
 	popq		%rdi
-	popq		%rbp
-	popq		%rdx
-	popq		%rcx
-	popq		%rbx
-	popq		%rax
 	retq
 
 #define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
@@ -95,7 +95,7 @@ SYM_CODE_START(sysenter_entp)
 sa_sysent_retp:
 	leaq		sys_call_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
-	movq		%rax,					SAVEALL_SIZE(%rsp)	// save return value to stack
+	movq		%rax,					(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
 
 // RDX -> user RSP
 // RCX -> user RIP

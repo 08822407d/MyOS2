@@ -38,7 +38,7 @@
 // #include <asm/tlbflush.h>
 // #include <asm/mce.h>
 // #include <asm/vm86.h>
-// #include <asm/switch_to.h>
+#include <asm/switch_to.h>
 // #include <asm/desc.h>
 // #include <asm/prctl.h>
 // #include <asm/spec-ctrl.h>
@@ -54,7 +54,7 @@ int copy_thread(unsigned long clone_flags, unsigned long sp,
 {
 	// struct inactive_task_frame *frame;
 	// struct fork_frame *fork_frame;
-	// struct pt_regs *childregs;
+	// pt_regs_s *childregs;
 	// int ret = 0;
 
 	// childregs = task_pt_regs(p);
@@ -82,7 +82,7 @@ int copy_thread(unsigned long clone_flags, unsigned long sp,
 	// /* Kernel thread ? */
 	// if (unlikely(p->flags & PF_KTHREAD)) {
 	// 	p->thread.pkru = pkru_get_init_value();
-	// 	memset(childregs, 0, sizeof(struct pt_regs));
+	// 	memset(childregs, 0, sizeof(pt_regs_s));
 	// 	kthread_frame_init(frame, sp, arg);
 	// 	return 0;
 	// }

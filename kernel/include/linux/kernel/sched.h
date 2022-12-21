@@ -7,7 +7,7 @@
 	* APIs (schedule(), wakeup variants, etc.)
 	*/
 
-	#include <uapi/kernel/sched.h>
+	#include <uapi/linux/sched.h>
 
 	#include <asm/current.h>
 
@@ -2243,17 +2243,17 @@
 	// 		set_tsk_thread_flag(t, TIF_NOTIFY_RESUME);
 	// }
 
-	// void __rseq_handle_notify_resume(struct ksignal *sig, struct pt_regs *regs);
+	// void __rseq_handle_notify_resume(struct ksignal *sig, pt_regs_s *regs);
 
 	// static inline void rseq_handle_notify_resume(struct ksignal *ksig,
-	// 											struct pt_regs *regs)
+	// 											pt_regs_s *regs)
 	// {
 	// 	if (current->rseq)
 	// 		__rseq_handle_notify_resume(ksig, regs);
 	// }
 
 	// static inline void rseq_signal_deliver(struct ksignal *ksig,
-	// 									struct pt_regs *regs)
+	// 									pt_regs_s *regs)
 	// {
 	// 	preempt_disable();
 	// 	__set_bit(RSEQ_EVENT_SIGNAL_BIT, &current->rseq_event_mask);
@@ -2308,11 +2308,11 @@
 	// {
 	// }
 	// static inline void rseq_handle_notify_resume(struct ksignal *ksig,
-	// 											struct pt_regs *regs)
+	// 											pt_regs_s *regs)
 	// {
 	// }
 	// static inline void rseq_signal_deliver(struct ksignal *ksig,
-	// 									struct pt_regs *regs)
+	// 									pt_regs_s *regs)
 	// {
 	// }
 	// static inline void rseq_preempt(task_s *t)
@@ -2332,11 +2332,11 @@
 
 	// #ifdef CONFIG_DEBUG_RSEQ
 
-	// void rseq_syscall(struct pt_regs *regs);
+	// void rseq_syscall(pt_regs_s *regs);
 
 	// #else
 
-	// static inline void rseq_syscall(struct pt_regs *regs)
+	// static inline void rseq_syscall(pt_regs_s *regs)
 	// {
 	// }
 

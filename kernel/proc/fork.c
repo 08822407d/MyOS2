@@ -26,7 +26,7 @@
 // #include <linux/seq_file.h>
 // #include <linux/rtmutex.h>
 #include <linux/init/init.h>
-#include <uapi/kernel/unistd.h>
+#include <uapi/linux/unistd.h>
 // #include <linux/module.h>
 // #include <linux/vmalloc.h>
 // #include <linux/completion.h>
@@ -78,7 +78,7 @@
 // #include <linux/random.h>
 #include <linux/device/tty.h>
 #include <linux/sched/fs_struct.h>
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 // #include <linux/perf_event.h>
 // #include <linux/posix-timers.h>
 // #include <linux/user-return-notifier.h>

@@ -8,7 +8,7 @@
 
 	#include <linux/kernel/compiler.h>
 	#include <linux/kernel/types.h>
-	#include <uapi/kernel/posix_types.h>
+	#include <uapi/linux/posix_types.h>
 	#include <linux/lib/errno.h>
 
 	extern void fput(file_s *file);

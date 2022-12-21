@@ -3,7 +3,7 @@
 #define _LINUX_TYPES_H
 
 	#define __EXPORTED_HEADERS__
-	#include <uapi/kernel/types.h>
+	#include <uapi/linux/types.h>
 
 	#ifndef __ASSEMBLY__
 

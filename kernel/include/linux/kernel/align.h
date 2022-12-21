@@ -2,7 +2,7 @@
 #ifndef _LINUX_ALIGN_H
 #define _LINUX_ALIGN_H
 
-	#include <uapi/kernel/const.h>
+	#include <uapi/linux/const.h>
 
 	/* @a is a power of 2 value */
 	#define ALIGN(x, a)				__ALIGN_KERNEL((x), (a))

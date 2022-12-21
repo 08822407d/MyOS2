@@ -8,7 +8,7 @@
 #ifndef _LINUX_UUID_H_
 #define _LINUX_UUID_H_
 
-	#include <uapi/kernel/uuid.h>
+	#include <uapi/linux/uuid.h>
 
 	#include <linux/lib/string.h> /// need replace
 

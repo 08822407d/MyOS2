@@ -8,7 +8,7 @@
 #include <linux/kernel/syscalls.h>
 #include <asm/syscall.h>
 
-// #define __SYSCALL(nr, sym) extern long __x64_##sym(const struct pt_regs *);
+// #define __SYSCALL(nr, sym) extern long __x64_##sym(const pt_regs_s *);
 #define __SYSCALL(nr, sym)	extern long sym(void);
 	__SYSCALL(0, myos_no_system_call)
 #	include <asm/syscalls_64.h>

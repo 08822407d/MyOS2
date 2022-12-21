@@ -36,7 +36,7 @@
 // #include <linux/lockdep.h>
 // #include <linux/user_namespace.h>
 #include <linux/fs/fs_context.h>
-#include <uapi/kernel/mount.h>
+#include <uapi/linux/mount.h>
 #include "internal.h"
 
 

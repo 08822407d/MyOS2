@@ -209,7 +209,9 @@
 		"fdtable.h": "c",
 		"efi.h": "c",
 		"sections.h": "c",
-		"preempt.h": "c"
+		"preempt.h": "c",
+		"task_stack.h": "c",
+		"ptrace.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

@@ -40,7 +40,7 @@
 // #include <linux/swapfile.h>
 
 
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 
 static vfsmount_s *shm_mnt;
 

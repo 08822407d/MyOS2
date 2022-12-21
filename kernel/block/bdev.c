@@ -9,14 +9,14 @@
 #include <linux/mm/mm.h>
 #include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 // #include <linux/device_cgroup.h>
 #include <linux/block/blkdev.h>
 // #include <linux/blk-integrity.h>
 // #include <linux/backing-dev.h>
 // #include <linux/module.h>
 // #include <linux/blkpg.h>
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 // #include <linux/block/buffer_head.h>
 // #include <linux/swap.h>
 // #include <linux/writeback.h>

@@ -6,7 +6,7 @@
 	#include <linux/kernel/bits.h>
 	// #include <linux/typecheck.h>
 
-	#include <uapi/kernel/kernel.h>
+	#include <uapi/linux/kernel.h>
 
 	// /* Set bits in the first 'n' bytes when loaded from memory */
 	// #ifdef __LITTLE_ENDIAN

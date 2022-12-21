@@ -23,12 +23,12 @@
 #include <linux/fs/file.h>
 // #include <linux/uaccess.h>
 // #include <linux/proc_ns.h>
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 #include <linux/mm/memblock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/task_work.h>
 #include <linux/sched/task.h>
-#include <uapi/kernel/mount.h>
+#include <uapi/linux/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>

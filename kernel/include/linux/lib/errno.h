@@ -2,7 +2,7 @@
 #ifndef _LINUX_ERRNO_H
 #define _LINUX_ERRNO_H
 
-	#include <uapi/kernel/errno.h>
+	#include <uapi/linux/errno.h>
 
 	/*
 	 * These should never be seen by user programs.  To return one of ERESTART*

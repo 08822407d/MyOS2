@@ -2,7 +2,7 @@
 #ifndef _LINUX_LIMITS_H
 #define _LINUX_LIMITS_H
 
-	#include <uapi/kernel/limits.h>
+	#include <uapi/linux/limits.h>
 	#include <linux/kernel/types.h>
 
 	#define SIZE_MAX		(~(size_t)0)

@@ -7,7 +7,7 @@
 	typedef __s64	time64_t;
 	typedef __u64	timeu64_t;
 
-	#include <uapi/kernel/time.h>
+	#include <uapi/linux/time.h>
 
 	typedef struct timespec64 {
 		time64_t	tv_sec;			/* seconds */

@@ -28,7 +28,7 @@
 
 #include <linux/kernel/asm-generic/bitops.h>
 #include <linux/kernel/slab.h>
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 
 extern file_ops_s FAT32_file_ops;
 

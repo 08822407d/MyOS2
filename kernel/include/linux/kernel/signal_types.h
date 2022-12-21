@@ -7,7 +7,7 @@
 	 */
 
 	#include <linux/lib/list.h>
-	#include <uapi/kernel/signal.h>
+	#include <uapi/linux/signal.h>
 
 	// typedef struct kernel_siginfo {
 	// 	__SIGINFO;

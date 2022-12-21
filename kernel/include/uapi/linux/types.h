@@ -11,7 +11,7 @@
 	#		endif /* __EXPORTED_HEADERS__ */
 	#	endif
 
-	#	include <uapi/kernel/posix_types.h>
+	#	include <uapi/linux/posix_types.h>
 
 	#	ifndef NULL
 	#		define NULL ((void *)0)

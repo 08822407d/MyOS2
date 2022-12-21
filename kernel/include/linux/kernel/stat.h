@@ -3,7 +3,7 @@
 #define _LINUX_STAT_H
 
 	#include <uapi/asm-generic/stat.h>
-	#include <uapi/kernel/stat.h>
+	#include <uapi/linux/stat.h>
 
 	#define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
 	#define S_IALLUGO	(S_ISUID|S_ISGID|S_ISVTX|S_IRWXUGO)

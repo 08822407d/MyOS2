@@ -45,7 +45,7 @@
 
 	// <linux/vdso/bits.h> contents
 	// #include <linux/vdso/const.h>
-	#include <uapi/kernel/const.h>
+	#include <uapi/linux/const.h>
 	#define BIT(nr)			(UL(1) << (nr))
 
 #endif	/* __LINUX_BITS_H */

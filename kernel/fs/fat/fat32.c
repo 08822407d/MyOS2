@@ -17,7 +17,7 @@
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
-#include <uapi/kernel/msdos_fs.h>
+#include <uapi/linux/msdos_fs.h>
 
 #include <linux/fs/fat32.h>
 #include <obsolete/printk.h>

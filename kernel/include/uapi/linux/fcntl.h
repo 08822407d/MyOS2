@@ -3,7 +3,7 @@
 #define _UAPI_LINUX_FCNTL_H
 
 	#include <uapi/asm-generic/fcntl.h>
-	#include <uapi/kernel/openat2.h>
+	#include <uapi/linux/openat2.h>
 
 	#define F_SETLEASE		(F_LINUX_SPECIFIC_BASE + 0)
 	#define F_GETLEASE		(F_LINUX_SPECIFIC_BASE + 1)

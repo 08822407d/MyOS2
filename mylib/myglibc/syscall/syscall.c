@@ -8,7 +8,7 @@
 ***************************************************/
 #include <errno.h>
 
-#include <uapi/kernel/unistd.h>
+#include <uapi/linux/unistd.h>
 
 #define SYSFUNC_DEF(name)						\
 			_SYSFUNC_DEF_(name, __NR_##name)

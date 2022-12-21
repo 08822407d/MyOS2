@@ -15,7 +15,7 @@
 #include <linux/kernel/mount.h>
 // #include <linux/nsproxy.h>
 #include <linux/kernel/slab.h>
-#include <uapi/kernel/magic.h>
+#include <uapi/linux/magic.h>
 // #include <linux/security.h>
 // #include <linux/mnt_namespace.h>
 // #include <linux/pid_namespace.h>

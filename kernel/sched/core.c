@@ -17,7 +17,7 @@
 // #include <linux/kcov.h>
 // #include <linux/scs.h>
 
-// #include <asm/switch_to.h>
+#include <asm/switch_to.h>
 // #include <asm/tlb.h>
 
 // #include "../workqueue_internal.h"

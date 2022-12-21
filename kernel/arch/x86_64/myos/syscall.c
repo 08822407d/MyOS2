@@ -5,7 +5,7 @@
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
-#include <uapi/kernel/myos_sysreboot.h>
+#include <uapi/linux/myos_sysreboot.h>
 #include <asm/syscall.h>
 #include <asm/setup.h>
 #include <asm/io.h>

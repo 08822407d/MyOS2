@@ -11,7 +11,7 @@
 #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 // #include <linux/module.h>
 // #include <linux/seq_file.h>
 

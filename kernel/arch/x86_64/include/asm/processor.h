@@ -667,7 +667,7 @@
 	// 	({                                                              \
 	// 		unsigned long __ptr = (unsigned long)task_stack_page(task); \
 	// 		__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;         \
-	// 		((struct pt_regs *)__ptr) - 1;                              \
+	// 		((pt_regs_s *)__ptr) - 1;                              \
 	// 	})
 	#define task_pt_regs(task) ({							\
 				loff_t __ptr = (loff_t)task + THREAD_SIZE;	\
@@ -680,7 +680,7 @@
 
 	// extern unsigned long KSTK_ESP(task_s *task);
 
-	// extern void start_thread(struct pt_regs *regs, unsigned long new_ip,
+	// extern void start_thread(pt_regs_s *regs, unsigned long new_ip,
 	// 						unsigned long new_sp);
 
 	// /*

@@ -2,7 +2,7 @@
 #include <linux/drivers/libata.h>
 #include <linux/block/genhd.h>
 #include <linux/block/blkdev.h>
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 
 #include "libata.h"
 

@@ -2,7 +2,7 @@
 #ifndef _LINUX_MSDOS_FS_H
 #define _LINUX_MSDOS_FS_H
 
-	#include <uapi/kernel/msdos_fs.h>
+	#include <uapi/linux/msdos_fs.h>
 
 	/* media of boot sector */
 	static inline int

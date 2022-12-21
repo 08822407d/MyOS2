@@ -4,7 +4,7 @@
 #include <linux/kernel/preempt.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/lib/string.h>
-#include <uapi/kernel/major.h>
+#include <uapi/linux/major.h>
 #include <asm/processor.h>
 #include <asm/io.h>
 

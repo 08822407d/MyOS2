@@ -8,7 +8,7 @@
 	#include <linux/kernel/err.h>			/* for IS_ERR_VALUE */
 	// #include <linux/bug.h>			/* For BUG_ON.  */
 	// #include <linux/pid_namespace.h>	/* For task_active_pid_ns.  */
-	// #include <uapi/linux/ptrace.h>
+	#include <uapi/linux/ptrace.h>
 	// #include <linux/seccomp.h>
 
 	// /* Add sp to seccomp_data, as seccomp is user API, we don't want to modify it */
@@ -333,9 +333,9 @@
 	// #endif	/* arch_has_block_step */
 
 	// #ifdef ARCH_HAS_USER_SINGLE_STEP_REPORT
-	// 	extern void user_single_step_report(struct pt_regs *regs);
+	// 	extern void user_single_step_report(pt_regs_s *regs);
 	// #else
-	// 	static inline void user_single_step_report(struct pt_regs *regs) {
+	// 	static inline void user_single_step_report(pt_regs_s *regs) {
 	// 		kernel_siginfo_t info;
 	// 		clear_siginfo(&info);
 	// 		info.si_signo = SIGTRAP;

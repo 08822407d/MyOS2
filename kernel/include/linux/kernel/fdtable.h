@@ -6,7 +6,7 @@
 #ifndef __LINUX_FDTABLE_H
 #define __LINUX_FDTABLE_H
 
-	#include <uapi/kernel/posix_types.h>
+	#include <uapi/linux/posix_types.h>
 	#include <linux/kernel/compiler.h>
 	// #include <linux/spinlock.h>
 	// #include <linux/rcupdate.h>
