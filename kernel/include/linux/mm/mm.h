@@ -41,7 +41,8 @@
 	// struct anon_vma;
 	// struct anon_vma_chain;
 	// struct user_struct;
-	// pt_regs_s;
+	// struct pt_regs;
+	// typedef struct pt_regs pt_regs_s;
 
 	// extern int sysctl_page_lock_unfairness;
 

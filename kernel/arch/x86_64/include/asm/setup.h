@@ -34,7 +34,8 @@
 		// /* Interrupt control for vSMPowered x86_64 systems */
 		// 	void vsmp_init(void);
 
-		// pt_regs_s;
+		// struct pt_regs;
+		// typedef struct pt_regs pt_regs_s;
 
 		// void setup_bios_corruption_check(void);
 		// void early_platform_quirks(void);

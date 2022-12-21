@@ -45,7 +45,7 @@ hw_int_controller_s LVT_timer_int_controller =
 	.ack		= LVT_timer_ack,
 };
 
-void LVT_timer_handler(unsigned long parameter, stack_frame_s * sf_regs)
+void LVT_timer_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
 	// color_printk(WHITE, BLUE, "(LVT_timer)");
 }

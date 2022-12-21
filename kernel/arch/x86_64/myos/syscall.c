@@ -124,13 +124,13 @@ long sys_execve(const char *filename, const char *const *argv,
 	char * pathname = NULL;
 	long pathlen = 0;
 	long error = 0;
-	stack_frame_s * curr_context = (stack_frame_s *)current->thread.tss_rsp0 -1;
+	pt_regs_s * curr_context = (pt_regs_s *)current->thread.tss_rsp0 -1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
 	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);
 	if(pathname == NULL)
 		return -ENOMEM;
-	pathlen = strnlen_user((char *)curr_context->rdi, CONST_4K);
+	pathlen = strnlen_user((char *)curr_context->di, CONST_4K);
 	if(pathlen <= 0)
 	{
 		kfree(pathname);
@@ -141,9 +141,9 @@ long sys_execve(const char *filename, const char *const *argv,
 		kfree(pathname);
 		return -ENAMETOOLONG;
 	}
-	strncpy_from_user(pathname, (void *)curr_context->rdi, pathlen);
+	strncpy_from_user(pathname, (void *)curr_context->di, pathlen);
 	
-	error = do_execve(curr_context, pathname, (char **)curr_context->rsi, NULL);
+	error = do_execve(curr_context, pathname, (char **)curr_context->si, NULL);
 
 	kfree(pathname);
 	return error;

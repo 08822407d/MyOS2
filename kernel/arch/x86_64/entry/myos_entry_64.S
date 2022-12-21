@@ -11,7 +11,8 @@
  * exception pushes an error code
  */
 #define SAVEALL_SIZE		0x70
-SAVE_ALL:
+
+.macro PUSH_REGS
 	cli
 	pushq		%rdi
 	pushq		%rsi
@@ -28,10 +29,9 @@ SAVE_ALL:
 	pushq		%r13
 	pushq		%r14
 	pushq		%r15	
-	subq		$0x08,		%rsp
-	retq
+.endm
 
-RESTORE_ALL:
+.macro POP_REGS
 	cli
 	popq		%r15
 	popq		%r14
@@ -48,24 +48,13 @@ RESTORE_ALL:
 	popq		%rdx
 	popq		%rsi
 	popq		%rdi
-	retq
-
-#define SAVEALL_RETP		(SAVEALL_SIZE + 0x08)
-// set the ret_point when return from SAVE_ALL and RESTORE_ALL
-#define	SET_RET_POINTS(ent_rp, ex_rp)				\
-	subq		$0x08,			%RSP				;\
-	pushq		%rax								;\
-	leaq		ex_rp(%rip),	%rax				;\
-	movq		%rax,			0x08(%rsp)			;\
-	leaq		ent_rp(%rip),	%rax				;\
-	movq		%rax,			-SAVEALL_RETP(%rsp)	;\
-	popq		%rax								;\
+.endm
 
 /*==============================================================================================*/
 /*									kernel thread func							     			*/
 /*==============================================================================================*/
 SYM_CODE_START(entp_kernel_thread)
-	jmp			RESTORE_ALL
+	POP_REGS
 SYM_CODE_START(ra_kthd_retp)
 	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
 	/////////////////////////////////
@@ -90,19 +79,17 @@ SYM_CODE_START(ra_kthd_retp)
 // kernel RSP = IA32_SYSENTER_ESP
 SYM_CODE_START(sysenter_entp)
 	subq		$0x38,		%rsp
-	SET_RET_POINTS(sa_sysent_retp, ra_sysex_retp)
-	jmp			SAVE_ALL
-sa_sysent_retp:
+	PUSH_REGS
 	leaq		sys_call_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
-	movq		%rax,					(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
+	movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
 
 // RDX -> user RSP
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
 SYM_CODE_START(sysexit_entp)
-	jmp			RESTORE_ALL
+	POP_REGS
 SYM_CODE_START(ra_sysex_retp)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
@@ -174,8 +161,7 @@ sa_entintr_retp:
 	// callq		do_softirq
 	// cli
 
-	jmp			RESTORE_ALL
-ra_exintr_retp:
+	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
 	iretq;
@@ -186,8 +172,8 @@ ra_exintr_retp:
 #define EXCEPTION_ERR_CODE(vector)				\
 	cli											;\
 	pushq		$vector							;\
-	SET_RET_POINTS(sa_entintr_retp, ra_exintr_retp)	;\
-	jmp			SAVE_ALL
+	PUSH_REGS									;\
+	jmp			sa_entintr_retp
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
 	pushq		$0						;\

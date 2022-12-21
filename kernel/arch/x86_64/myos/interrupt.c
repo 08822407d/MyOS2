@@ -16,9 +16,9 @@ irq_desc_s	ipi_descriptors[NR_LAPIC_IPI_VECS];
 /*==============================================================================================*
  *										exception handlers								 		*
  *==============================================================================================*/
-void excep_inval_tss(stack_frame_s *sf_regs)
+void excep_inval_tss(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->err_code;
+	int error_code = sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_invalid_TSS(10),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -41,9 +41,9 @@ void excep_inval_tss(stack_frame_s *sf_regs)
 	while (1);
 }
 
-void excep_seg_not_pres(stack_frame_s *sf_regs)
+void excep_seg_not_pres(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->err_code;
+	int error_code = sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_segment_not_present(11),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -65,9 +65,9 @@ void excep_seg_not_pres(stack_frame_s *sf_regs)
 	while (1);
 }
 
-void excep_stack_segfault(stack_frame_s *sf_regs)
+void excep_stack_segfault(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->err_code;
+	int error_code = sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_stack_segment_fault(12),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -89,10 +89,10 @@ void excep_stack_segfault(stack_frame_s *sf_regs)
 	while (1);
 }
 
-void excep_gen_prot(stack_frame_s *sf_regs)
+void excep_gen_prot(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->err_code;
-	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf_regs->rip);
+	int error_code = sf_regs->orig_ax;
+	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf_regs->ip);
 
 	if(error_code & 0x01)
 		color_printk(RED,BLACK,"The exception occurred during delivery of an event external to the program,such as an interrupt or an earlier exception.\n");
@@ -113,11 +113,11 @@ void excep_gen_prot(stack_frame_s *sf_regs)
 	while (1);
 }
 
-void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
+void excep_page_fault(pt_regs_s *sf_regs, per_cpudata_s *cpudata_p)
 {
 	task_s *curr = current;
 	mm_s *mm = curr->mm;
-	int error_code = sf_regs->err_code;
+	int error_code = sf_regs->orig_ax;
 	unsigned long cr2 = 0;
 	asm volatile(	"movq	%%cr2,	%0		\n\t"
 				:	"=r"(cr2)
@@ -153,7 +153,7 @@ void excep_page_fault(stack_frame_s *sf_regs, per_cpudata_s *cpudata_p)
 	if(error_code & 0x10)
 		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
 
-	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->rip);
+	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->ip);
 
 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 
@@ -168,9 +168,9 @@ PF_finish:
 /*==============================================================================================*
  *											entrys									 			*
  *==============================================================================================*/
-void excep_hwint_entry(stack_frame_s *sf_regs)
+void excep_hwint_entry(pt_regs_s *sf_regs)
 {
-	int vec = sf_regs->vec_nr;
+	int vec = sf_regs->irq_nr;
 
 	if (vec < HWINT0_VEC)
 		exception_handler(sf_regs);
@@ -178,10 +178,10 @@ void excep_hwint_entry(stack_frame_s *sf_regs)
 		hwint_irq_handler(sf_regs);
 }
 
-void exception_handler(stack_frame_s *sf_regs)
+void exception_handler(pt_regs_s *sf_regs)
 {
 	per_cpudata_s *cpudata_p = curr_cpu;
-	int vec = sf_regs->vec_nr;
+	int vec = sf_regs->irq_nr;
 	task_s *curr = current;
 	// color_printk(WHITE, BLUE,"Caused by core-%d, task-%d INTR: 0x%02x - %s ; \n",
 	// 				cpudata_p->cpu_idx, curr->pid, vec, exception_init_table[vec].name);
@@ -210,9 +210,9 @@ void exception_handler(stack_frame_s *sf_regs)
 	}
 }
 
-void hwint_irq_handler(stack_frame_s *sf_regs)
+void hwint_irq_handler(pt_regs_s *sf_regs)
 {
-	int vec = sf_regs->vec_nr;
+	int vec = sf_regs->irq_nr;
 	int irq_nr = 0;
 	irq_desc_s * irq_d = NULL;
 	if (vec < APIC_IPI0_VEC)
@@ -242,7 +242,7 @@ int register_irq(unsigned long irq,
 				 char *irq_name,
 				 unsigned long parameter,
 				 hw_int_controller_s *controller,
-				 void (*handler)(unsigned long parameter, stack_frame_s *sf_regs))
+				 void (*handler)(unsigned long parameter, pt_regs_s *sf_regs))
 {
 	irq_desc_s *p = &irq_descriptors[irq];
 	p->controller = controller;
@@ -279,7 +279,7 @@ int register_IPI(unsigned long irq,
 				 char *irq_name,
 				 unsigned long parameter,
 				 hw_int_controller_s *controller,
-				 void (*handler)(unsigned long parameter, stack_frame_s *sf_regs))
+				 void (*handler)(unsigned long parameter, pt_regs_s *sf_regs))
 {
 	irq_desc_s *p = &ipi_descriptors[irq];
 

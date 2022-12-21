@@ -26,7 +26,7 @@ mmpr_s mmpr[SEG_NR];
 mmpr_s * get_seginfo(task_s * task)
 {
 	mm_s * mm = task->mm;
-	reg_t user_rsp = get_stackframe(task)->rsp;
+	reg_t user_rsp = get_stackframe(task)->sp;
 
 	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, SZ_2M);
 	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, SZ_2M) - (reg_t)codepg_p) / PAGE_SIZE;
@@ -40,9 +40,9 @@ mmpr_s * get_seginfo(task_s * task)
 
 void creat_exec_addrspace(task_s * task)
 {
-	stack_frame_s * context = get_stackframe(task);
+	pt_regs_s *context = get_stackframe(task);
 	mm_s * mm = task->mm;
-	context->rsp = round_down(mm->start_stack, SZ_2M) - SZ_2M;
+	context->sp = round_down(mm->start_stack, SZ_2M) - SZ_2M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
 
@@ -122,7 +122,7 @@ int check_addr_writable(reg_t cr2, task_s * task)
 {
 	int ret_val = false;
 	mm_s * mm = task->mm;
-	reg_t rsp = get_stackframe(task)->rsp;
+	reg_t rsp = get_stackframe(task)->sp;
 
 	if ((cr2 >= mm->start_code && cr2 < mm->end_code) ||
 		(cr2 >= mm->start_data && cr2 < mm->end_data) ||

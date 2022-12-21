@@ -21,7 +21,7 @@ hw_int_controller_s HPET_int_controller =
 	.ack		= IOAPIC_edge_ack,
 };
 
-void HPET_handler(unsigned long parameter, stack_frame_s * sf_regs)
+void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 {
 	jiffies++;
 

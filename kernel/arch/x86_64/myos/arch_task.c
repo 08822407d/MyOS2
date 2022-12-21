@@ -151,7 +151,8 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 }
 
 extern void myos_close_files(files_struct_s * files);
-unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *argv[], char *envp[])
+unsigned long do_execve(pt_regs_s *curr_context,
+		char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
 	task_s *curr = current;
@@ -203,8 +204,8 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 			argv_pos -= len;
 		}
 		curr->mm->start_stack = argv_pos - 10;
-		curr_context->rdi = i;	//argc
-		curr_context->rsi = (unsigned long)dargv;	//argv
+		curr_context->di = i;	//argc
+		curr_context->si = (unsigned long)dargv;	//argv
 	}
 
 	memset((void *)curr->mm->start_code, 0,
@@ -219,7 +220,7 @@ unsigned long do_execve(stack_frame_s *curr_context, char *exec_filename, char *
 	curr_context->cs = USER_CS_SELECTOR;
 	curr_context->r10 = curr->mm->start_code;
 	curr_context->r11 = curr->mm->start_stack;
-	curr_context->rax = 1;
+	curr_context->ax = 1;
 
 	return ret_val;
 }
@@ -229,8 +230,7 @@ void kjmp_to_doexecve()
 	task_idle = &task0_PCB.task;
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;
-	stack_frame_s * curr_sfp = get_stackframe(curr);
-	curr_sfp->restore_retp = (virt_addr_t)ra_sysex_retp;
+	pt_regs_s *curr_sfp = get_stackframe(curr);
 
 	reg_t ctx_rip =
 	curr->thread.k_rip = (reg_t)sysexit_entp;
@@ -298,10 +298,10 @@ inline __always_inline task_s * myos_get_current()
 	return curr_task;
 }
 
-stack_frame_s * get_stackframe(task_s * task_p)
+pt_regs_s *get_stackframe(task_s * task_p)
 {
 	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
-	return (stack_frame_s *)(pcb_p + 1) - 1;
+	return (pt_regs_s *)(pcb_p + 1) - 1;
 }
 
 void myos_schedule()

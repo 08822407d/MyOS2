@@ -3,6 +3,7 @@
 
 #include <linux/kernel/types.h>
 #include <linux/kernel/sched.h>
+#include <linux/kernel/ptrace.h>
 #include <linux/sched/task.h>
 
 #include "archtypes.h"
@@ -80,32 +81,6 @@
 /*==============================================================================================*
  *										internal symbols										*
  *==============================================================================================*/
-// interrupt stack
-	typedef struct stack_frame {
-		reg_t	r15;
-		reg_t	r14;
-		reg_t	r13;
-		reg_t	r12;
-		reg_t	rbp;
-		reg_t	rbx;
-		reg_t	r11;
-		reg_t	r10;
-		reg_t	r9;
-		reg_t	r8;
-		reg_t	rax;
-		reg_t	rcx;
-		reg_t	rdx;
-		reg_t	rsi;
-		reg_t	rdi;
-		virt_addr_t		restore_retp;
-		reg_t	vec_nr;
-		reg_t	err_code;
-		reg_t	rip;
-		reg_t	cs;
-		reg_t	rflags;
-		reg_t	rsp;
-		reg_t	ss;
-	} __attribute__((packed)) stack_frame_s;
 // intr gate initiate infomation
 	typedef struct {
 		void	(*gate_entry) (void);
@@ -149,7 +124,7 @@
 		unsigned long	flags;
 
 		void (*handler)(unsigned long parameter,
-						stack_frame_s * sf_regs);
+						pt_regs_s *stack_frame);
 	} irq_desc_s;
 
 	/* cpu info */
@@ -203,7 +178,7 @@
 	void i8259_mask(const int);
 	void i8259_disable(void);
 	void i8259_eoi(int);
-	void i8259_do_irq(stack_frame_s * sf_regs);
+	void i8259_do_irq(pt_regs_s *sf_regs);
 	/* apic.c */
 	void IOAPIC_pagetable_remap(void);
 	void init_lapic(void);
@@ -217,7 +192,7 @@
 	void IOAPIC_edge_ack(unsigned long irq);
 	uint64_t ioapic_rte_read(uint8_t index);
 	void ioapic_rte_write(uint8_t index, uint64_t value);
-	void apic_do_irq(stack_frame_s * sf_regs);
+	void apic_do_irq(pt_regs_s *sf_regs);
 	void enable_x2apic(void);
 	void open_lapic(void);
 	unsigned get_x2apic_id(void);
@@ -229,9 +204,9 @@
 	void LVT_timer_init(void);
 
 	/* arch_task.c */
-	stack_frame_s * get_stackframe(task_s * task_p);
-	unsigned long do_execve(stack_frame_s * curr_context, char *exec_filename,
-			char *argv[], char *envp[]);
+	pt_regs_s *get_stackframe(task_s * task_p);
+	unsigned long do_execve(pt_regs_s *curr_context,
+			char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void myos_schedule(void);
 	void try_sched(void);
@@ -241,16 +216,16 @@
 	unsigned long user_func(unsigned long arg);
 
 	/* interrupt.c */
-	void excep_hwint_entry(stack_frame_s * sf_regs);
-	void exception_handler(stack_frame_s * sf_regs);
-	void hwint_irq_handler(stack_frame_s * sf_regs);
+	void excep_hwint_entry(pt_regs_s *sf_regs);
+	void exception_handler(pt_regs_s *sf_regs);
+	void hwint_irq_handler(pt_regs_s *sf_regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
 			unsigned long parameter, hw_int_controller_s * controller,
-			void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+			void (*handler)(unsigned long parameter, pt_regs_s *sf_regs));
 	int unregister_irq(unsigned long irq);
 	int register_IPI(unsigned long irq, void * arg, char * irq_name,
 			unsigned long parameter, hw_int_controller_s * controller,
-			void (*handler)(unsigned long parameter, stack_frame_s * sf_regs));
+			void (*handler)(unsigned long parameter, pt_regs_s *sf_regs));
 	int unregister_IPI(unsigned long irq);
 	void myos_init_bsp_intr(void);
 	void myos_init_percpu_intr(void);

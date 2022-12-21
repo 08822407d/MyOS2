@@ -671,7 +671,7 @@
 	// 	})
 	#define task_pt_regs(task) ({							\
 				loff_t __ptr = (loff_t)task + THREAD_SIZE;	\
-				((stack_frame_s *)__ptr) - 1;				\
+				((pt_regs_s *)__ptr) - 1;				\
 			})
 
 	// #define INIT_THREAD \

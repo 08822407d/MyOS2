@@ -1499,7 +1499,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 	page_s *page = NULL;
 	pgd_t *new_cr3 = NULL;
-	reg_t curr_endstack = get_stackframe(current)->rsp;
+	reg_t curr_endstack = get_stackframe(current)->sp;
 
 	if(clone_flags & CLONE_VM)
 	{
@@ -1534,30 +1534,28 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 {
 	int err = -ENOERR;
 
-	stack_frame_s *parent_context = task_pt_regs(current);
-	stack_frame_s * child_context = get_stackframe(child_task);
-	memcpy(child_context,  parent_context, sizeof(stack_frame_s));
+	pt_regs_s *parent_context = task_pt_regs(current);
+	pt_regs_s * child_context = get_stackframe(child_task);
+	memcpy(child_context,  parent_context, sizeof(pt_regs_s));
 
-	child_context->rsp = 0;
-	child_context->rax = 0;
+	child_context->sp = 0;
+	child_context->ax = 0;
 
 	child_task->thread.tss_rsp0 = (reg_t)child_task + THREAD_SIZE;
 	child_task->thread.sp = (reg_t)child_context;
 
 	if(child_task->flags & PF_KTHREAD)
 	{
-		child_context->rbx = (reg_t)stack;
-		child_context->rdx = (reg_t)size;
-		child_context->rflags = (1 << 9);
-		child_context->rip = (reg_t)entp_kernel_thread;
+		child_context->bx = (reg_t)stack;
+		child_context->dx = (reg_t)size;
+		child_context->flags = (1 << 9);
+		child_context->ip = (reg_t)entp_kernel_thread;
 
 		child_task->thread.k_rip = (unsigned long)entp_kernel_thread;
-		child_context->restore_retp = (virt_addr_t)ra_kthd_retp;
 	}
 	else
 	{
 		child_task->thread.k_rip = (unsigned long)sysexit_entp;
-		child_context->restore_retp = (virt_addr_t)ra_sysex_retp;
 	}
 
 	return err;
