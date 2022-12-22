@@ -18,7 +18,7 @@ irq_desc_s	ipi_descriptors[NR_LAPIC_IPI_VECS];
  *==============================================================================================*/
 void excep_inval_tss(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_invalid_TSS(10),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -43,7 +43,7 @@ void excep_inval_tss(pt_regs_s *sf_regs)
 
 void excep_seg_not_pres(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_segment_not_present(11),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -67,7 +67,7 @@ void excep_seg_not_pres(pt_regs_s *sf_regs)
 
 void excep_stack_segfault(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_stack_segment_fault(12),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -91,7 +91,7 @@ void excep_stack_segfault(pt_regs_s *sf_regs)
 
 void excep_gen_prot(pt_regs_s *sf_regs)
 {
-	int error_code = sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf_regs->ip);
 
 	if(error_code & 0x01)
@@ -117,7 +117,7 @@ void excep_page_fault(pt_regs_s *sf_regs, per_cpudata_s *cpudata_p)
 {
 	task_s *curr = current;
 	mm_s *mm = curr->mm;
-	int error_code = sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 	unsigned long cr2 = 0;
 	asm volatile(	"movq	%%cr2,	%0		\n\t"
 				:	"=r"(cr2)
@@ -126,7 +126,7 @@ void excep_page_fault(pt_regs_s *sf_regs, per_cpudata_s *cpudata_p)
 				);
 
 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
-		check_addr_writable(cr2, curr))
+		check_addr_writable((reg_t)cr2, curr))
 	{
 		do_COW(current, (virt_addr_t)cr2);
 		return;
@@ -170,7 +170,7 @@ PF_finish:
  *==============================================================================================*/
 void excep_hwint_entry(pt_regs_s *sf_regs)
 {
-	int vec = sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 
 	if (vec < HWINT0_VEC)
 		exception_handler(sf_regs);
@@ -181,7 +181,7 @@ void excep_hwint_entry(pt_regs_s *sf_regs)
 void exception_handler(pt_regs_s *sf_regs)
 {
 	per_cpudata_s *cpudata_p = curr_cpu;
-	int vec = sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 	task_s *curr = current;
 	// color_printk(WHITE, BLUE,"Caused by core-%d, task-%d INTR: 0x%02x - %s ; \n",
 	// 				cpudata_p->cpu_idx, curr->pid, vec, exception_init_table[vec].name);
@@ -212,7 +212,7 @@ void exception_handler(pt_regs_s *sf_regs)
 
 void hwint_irq_handler(pt_regs_s *sf_regs)
 {
-	int vec = sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 	int irq_nr = 0;
 	irq_desc_s * irq_d = NULL;
 	if (vec < APIC_IPI0_VEC)

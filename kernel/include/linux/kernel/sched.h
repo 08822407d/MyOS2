@@ -781,7 +781,7 @@
 
 	typedef struct task_struct {
 		// myos obsolete contents
-		List_hdr_s wait_childexit;
+		List_hdr_s		wait_childexit;
 		char			*name;
 
 

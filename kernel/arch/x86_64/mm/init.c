@@ -69,7 +69,7 @@ static void __init myos_memory_map_bottom_up(
 	// }
 
 	kernel_cr3 = myos_virt2phys((virt_addr_t)init_top_pgt);
-	init_mm.pgd_ptr = kernel_cr3;
+	init_mm.pgd_ptr = (reg_t)kernel_cr3;
 }
 
 void __init init_mem_mapping(void)

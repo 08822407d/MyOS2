@@ -9,80 +9,41 @@
 	#ifndef __ASSEMBLY__
 
 		typedef struct pt_regs {
-		// define members as pointer to view hex value in debugger
-		#ifdef DEBUG
 		/*
 		 * C ABI says these regs are callee-preserved. They aren't saved on kernel entry
 		 * unless syscall needs a complete, fully filled "pt_regs_s".
 		 */
-			void	*r15;
-			void	*r14;
-			void	*r13;
-			void	*r12;
-			void	*bp;
-			void	*bx;
+			reg_t	r15;
+			reg_t	r14;
+			reg_t	r13;
+			reg_t	r12;
+			reg_t	bp;
+			reg_t	bx;
 		/* These regs are callee-clobbered. Always saved on kernel entry. */
-			void	*r11;
-			void	*r10;
-			void	*r9;
-			void	*r8;
-			void	*ax;
-			void	*cx;
-			void	*dx;
-			void	*si;
-			void	*di;
+			reg_t	r11;
+			reg_t	r10;
+			reg_t	r9;
+			reg_t	r8;
+			reg_t	ax;
+			reg_t	cx;
+			reg_t	dx;
+			reg_t	si;
+			reg_t	di;
 
 		// myos push irq vec number separately
-			void	*irq_nr;
+			reg_t	irq_nr;
 		/*
 		 * On syscall entry, this is syscall#. On CPU exception, this is error code.
 		 * On hw interrupt, it's IRQ number:
 		 */
-			void	*orig_ax;
+			reg_t	orig_ax;
 		/* Return frame for iretq */
-			void	*ip;
-			void	*cs;
-			void	*flags;
-			void	*sp;
-			void	*ss;
+			reg_t	ip;
+			reg_t	cs;
+			reg_t	flags;
+			reg_t	sp;
+			reg_t	ss;
 		/* top of stack page */
-		#else
-		/*
-		 * C ABI says these regs are callee-preserved. They aren't saved on kernel entry
-		 * unless syscall needs a complete, fully filled "pt_regs_s".
-		 */
-			unsigned long	r15;
-			unsigned long	r14;
-			unsigned long	r13;
-			unsigned long	r12;
-			unsigned long	bp;
-			unsigned long	bx;
-		/* These regs are callee-clobbered. Always saved on kernel entry. */
-			unsigned long	r11;
-			unsigned long	r10;
-			unsigned long	r9;
-			unsigned long	r8;
-			unsigned long	ax;
-			unsigned long	cx;
-			unsigned long	dx;
-			unsigned long	si;
-			unsigned long	di;
-
-		// myos push irq vec number separately
-			unsigned long	irq_nr;
-		/*
-		 * On syscall entry, this is syscall#. On CPU exception, this is error code.
-		 * On hw interrupt, it's IRQ number:
-		 */
-			unsigned long	orig_ax;
-		/* Return frame for iretq */
-			unsigned long	ip;
-			unsigned long	cs;
-			unsigned long	flags;
-			unsigned long	sp;
-			unsigned long	ss;
-		/* top of stack page */
-		#endif
 		} pt_regs_s;
 
 	// #	ifdef CONFIG_PARAVIRT

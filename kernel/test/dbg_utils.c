@@ -14,7 +14,7 @@ pgmapset_s DBG_get_pgmapset(IN reg_t cr3, IN virt_addr_t virt)
 	unsigned int pdpte_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDPTE);
 	unsigned int pde_idx	= GETF_PGENT((uint64_t)virt >> SHIFT_PDE);
 
-	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR(cr3);
+	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR((unsigned long)cr3);
 	// get pml4e
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;

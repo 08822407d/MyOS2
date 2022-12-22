@@ -251,6 +251,6 @@
 	void prepair_COW(task_s * task);
 	int do_COW(task_s * task, virt_addr_t vaddr);
 	int check_addr_writable(reg_t cr2, task_s * task);
-	reg_t do_brk(reg_t start, reg_t length);
+	virt_addr_t do_brk(virt_addr_t start, size_t length);
 
 #endif /* _AMD64_PROTO_H_ */

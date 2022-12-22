@@ -148,8 +148,9 @@ void myos_refresh_arch_page(void)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * cr3)
+int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t *cr3)
 {
+	unsigned long cr3_val = (unsigned long)*cr3;
 	unsigned long ret_val = 0;
 	if (kparam.init_flags.slab == 0)
 	{
@@ -171,9 +172,9 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 		goto fail_return;
 	}
 	else
-		*cr3 |= attr;
+		cr3_val |= attr;
 	// set pml4e
-	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(cr3_val);
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->pgd == 0)
@@ -242,14 +243,16 @@ int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * c
 	}
 
 	myos_refresh_arch_page();
+	*cr3 = (reg_t)cr3_val;
 
 fail_return:
 	return ret_val;
 }
 
 // ret_val = 0 : success
-int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
+int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 {
+	unsigned long cr3_val = (unsigned long)*cr3;
 	int ret_val = 0;
 	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
@@ -265,9 +268,9 @@ int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 		goto fail_return;
 	}
 	else
-		*cr3 |= attr;
+		cr3_val |= attr;
 	// set pml4e
-	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(cr3_val);
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->pgd == 0)
@@ -308,6 +311,8 @@ int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3)
 	else
 		pte_ptr->pte |= attr | _PAGE_PAT;
 
+	*cr3 = (reg_t)cr3_val;
+
 fail_return:
 	return ret_val;
 }
@@ -315,6 +320,7 @@ fail_return:
 // ret_val = 0 : success
 int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 {
+	unsigned long cr3_val = (unsigned long)*cr3;
 	int ret_val = 0;
 	attr = ARCH_PGS_ATTR(attr) & ~_PAGE_PAT;
 	unsigned int pml4e_idx	= GETF_PGENT(virt >> SHIFT_PML4E);
@@ -330,9 +336,9 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 		goto fail_return;
 	}
 	else
-		*cr3 &= ~attr;
+		cr3_val &= ~attr;
 	// set pml4e
-	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(*cr3);
+	phys_addr_t pml4_pa	= ARCH_PGS_ADDR(cr3_val);
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->pgd == 0)
@@ -375,6 +381,8 @@ int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t *cr3)
 	// make sure the clear step will not clear the PAT flag
 	pte_ptr->pte |= _PAGE_PAT;
 
+	*cr3 = (reg_t)cr3_val;
+
 fail_return:
 	return ret_val;
 }
@@ -396,15 +404,17 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 
 	// if cr3 set bit read-only, copy PML4
 	reg_t tmp_ret_cr3 = 0;
-	virt_addr_t orig_pml4_addr	= myos_phys2virt(ARCH_PGS_ADDR(orig_cr3));
+	virt_addr_t orig_pml4_addr	=
+			myos_phys2virt(ARCH_PGS_ADDR((unsigned long)orig_cr3));
 	virt_addr_t new_pml4_addr	= 0;
-	if (orig_cr3 & ~_PAGE_RW)
+	if ((unsigned long)orig_cr3 & ~_PAGE_RW)
 	{
 		new_pml4_addr = (virt_addr_t)kzalloc(PGENT_SIZE, GFP_KERNEL);
 		if (new_pml4_addr != 0)
 		{
 			memcpy((void *)new_pml4_addr, (void *)orig_pml4_addr, PGENT_SIZE);
-			tmp_ret_cr3 = myos_virt2phys(new_pml4_addr) | ARCH_PGS_ATTR(orig_cr3);
+			tmp_ret_cr3 = (reg_t)(myos_virt2phys(new_pml4_addr) |
+							ARCH_PGS_ATTR((unsigned long) orig_cr3));
 		}
 		else
 		{
@@ -514,7 +524,8 @@ int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_
 		goto fail_return;
 	}
 
-	*ret_cr3 = tmp_ret_cr3 | ARCH_PGS_ATTR(orig_cr3);
+	*ret_cr3 = (reg_t)((unsigned long)tmp_ret_cr3 |
+						ARCH_PGS_ATTR((unsigned long)orig_cr3));
 fail_return:
 	return ret_val;
 }
@@ -530,7 +541,7 @@ int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys)
 	unsigned int pte_idx	= GETF_PGENT(virt >> SHIFT_PTE);
 
 	// get pml4e
-	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR(cr3);
+	phys_addr_t pml4_pa	= (phys_addr_t)ARCH_PGS_ADDR((unsigned long)cr3);
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
 	if (pml4e_ptr->pgd == 0)

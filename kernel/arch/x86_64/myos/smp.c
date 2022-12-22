@@ -68,7 +68,7 @@ void myos_percpu_self_config(size_t cpu_idx)
 	cpudata_u * cpudata_u_p = percpu_data + cpu_idx;
 	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
 	task_s *	current_task = current;
-	wrgsbase((reg_t)cpudata_u_p);
+	wrgsbase((unsigned long)cpudata_u_p);
 	// tasks
 
 	myos_refresh_arch_page();

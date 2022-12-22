@@ -244,7 +244,7 @@
 	// 	// write_cr3(__sme_pa(pgdir));
 	// }
 	static inline void load_cr3(reg_t pgdir) {
-		write_cr3(pgdir);
+		write_cr3((unsigned long)pgdir);
 	}
 
 	// /*
@@ -402,20 +402,20 @@
 	// struct perf_event;
 
 	typedef struct thread_struct {
-		reg_t		tss_rsp0;	// point to curr-task's kernel stack bottom
-								// current cpu's tss-rsp0 equal to this at switch-time
-		reg_t		k_rip;		// point to curr_task's switch-time rip
+		reg_t			tss_rsp0;	// point to curr-task's kernel stack bottom
+									// current cpu's tss-rsp0 equal to this at switch-time
+		reg_t			k_rip;		// point to curr_task's switch-time rip
 
 		/* Cached TLS descriptors: */
 		// struct desc_struct tls_array[GDT_ENTRY_TLS_ENTRIES];
-		unsigned long	sp;
+		reg_t			sp;
 		unsigned short	es;
 		unsigned short	ds;
 		unsigned short	fsindex;
 		unsigned short	gsindex;
 
-		unsigned long	fsbase;
-		unsigned long	gsbase;
+		reg_t			fsbase;
+		reg_t			gsbase;
 
 	// 	/* Save middle states of ptrace breakpoints */
 	// 	struct perf_event *ptrace_bps[HBP_NUM];
@@ -424,7 +424,7 @@
 	// 	/* Keep track of the exact dr7 value set by the user */
 	// 	unsigned long ptrace_dr7;
 		/* Fault info: */
-		unsigned long	cr2;
+		reg_t			cr2;
 		unsigned long	trap_nr;
 		unsigned long	error_code;
 	// #ifdef CONFIG_VM86

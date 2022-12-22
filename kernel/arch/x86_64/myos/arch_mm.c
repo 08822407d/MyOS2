@@ -29,20 +29,20 @@ mmpr_s * get_seginfo(task_s * task)
 	reg_t user_rsp = get_stackframe(task)->sp;
 
 	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, SZ_2M);
-	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, SZ_2M) - (reg_t)codepg_p) / PAGE_SIZE;
+	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, SZ_2M) - (unsigned long)codepg_p) / PAGE_SIZE;
 	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, SZ_2M);
-	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, SZ_2M) - (reg_t)datapg_p) / PAGE_SIZE;
+	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, SZ_2M) - (unsigned long)datapg_p) / PAGE_SIZE;
 	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, SZ_2M);
-	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, SZ_2M) - (reg_t)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down(user_rsp, SZ_2M);
-	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, SZ_2M) - (reg_t)stackpg_p) / PAGE_SIZE;
+	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, SZ_2M) - (unsigned long)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down((unsigned long)user_rsp, SZ_2M);
+	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, SZ_2M) - (unsigned long)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
 {
 	pt_regs_s *context = get_stackframe(task);
 	mm_s * mm = task->mm;
-	context->sp = round_down(mm->start_stack, SZ_2M) - SZ_2M;
+	context->sp = (reg_t)round_down(mm->start_stack, SZ_2M) - SZ_2M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
 
@@ -71,7 +71,7 @@ void prepair_COW(task_s * task)
 			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 								_PAGE_RW, &mm->pgd_ptr);
 			phys_addr_t paddr = 0;
-			get_paddr(ARCH_PGS_ADDR(mm->pgd_ptr),
+			get_paddr((reg_t)ARCH_PGS_ADDR((unsigned long)mm->pgd_ptr),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
 			page_s *page = paddr_to_page(paddr);
 			atomic_inc(&(page->_mapcount));
@@ -87,7 +87,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 	mm_s * mm = task->mm;
 	get_seginfo(task);
 
-	reg_t orig_cr3 = read_cr3_pa();
+	reg_t orig_cr3 = (reg_t)read_cr3_pa();
 	reg_t new_cr3 = 0;
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
@@ -120,29 +120,30 @@ int do_COW(task_s * task, virt_addr_t virt)
 
 int check_addr_writable(reg_t cr2, task_s * task)
 {
+	unsigned long cr2_val = (unsigned long)cr2;
 	int ret_val = false;
 	mm_s * mm = task->mm;
 	reg_t rsp = get_stackframe(task)->sp;
 
-	if ((cr2 >= mm->start_code && cr2 < mm->end_code) ||
-		(cr2 >= mm->start_data && cr2 < mm->end_data) ||
-		(cr2 >= mm->start_brk && cr2 < mm->brk) ||
-		(cr2 >= rsp && cr2 < mm->start_stack))
+	if ((cr2_val >= mm->start_code && cr2_val < mm->end_code) ||
+		(cr2_val >= mm->start_data && cr2_val < mm->end_data) ||
+		(cr2_val >= mm->start_brk && cr2_val < mm->brk) ||
+		(cr2 >= rsp && cr2_val < mm->start_stack))
 		ret_val = true;
 
 	return ret_val;
 }
 
-reg_t do_brk(reg_t start, reg_t length)
+virt_addr_t do_brk(virt_addr_t start, size_t length)
 {
-	reg_t new_end = start + length;
-	for (reg_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
+	virt_addr_t new_end = start + length;
+	for (virt_addr_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
 		unsigned long attr = PAGE_SHARED;
 		page_s * pg_p = alloc_pages(GFP_USER, 0);
 		arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
 				attr, &current->mm->pgd_ptr);
 	}
-	current->mm->brk = new_end;
+	current->mm->brk = (unsigned long)new_end;
 	return new_end;
 }

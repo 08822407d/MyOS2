@@ -1548,14 +1548,14 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	{
 		child_context->bx = (reg_t)stack;
 		child_context->dx = (reg_t)size;
-		child_context->flags = (1 << 9);
+		child_context->flags = (reg_t)(1 << 9);
 		child_context->ip = (reg_t)entp_kernel_thread;
 
-		child_task->thread.k_rip = (unsigned long)entp_kernel_thread;
+		child_task->thread.k_rip = (reg_t)entp_kernel_thread;
 	}
 	else
 	{
-		child_task->thread.k_rip = (unsigned long)sysexit_entp;
+		child_task->thread.k_rip = (reg_t)sysexit_entp;
 	}
 
 	return err;

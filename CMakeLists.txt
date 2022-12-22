@@ -29,7 +29,7 @@ elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
 	set(ARCH aarch64)
 endif()
 
-set(DEBUG)
+set(DEBUG true)
 
 #===============================================================================================#
 #                                   compile options                                             #

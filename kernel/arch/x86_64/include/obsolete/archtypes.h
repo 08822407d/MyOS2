@@ -85,20 +85,20 @@
 
 	/* 64bit version TSS */
 	typedef struct __attribute__((packed)) {
-		uint32_t			: 32; // unused
-		reg_t		rsp0	: 64;
-		reg_t		rsp1	: 64;
-		reg_t		rsp2	: 64;
-		reg_t				: 64; // unused
-		reg_t		ist1	: 64;
-		reg_t		ist2	: 64;
-		reg_t		ist3	: 64;
-		reg_t		ist4	: 64;
-		reg_t		ist5	: 64;
-		reg_t		ist6	: 64;
-		reg_t		ist7	: 64;
-		reg_t				: 64; // unused
-		uint64_t			: 32, // unused
+		uint32_t	PLACE_HOLDER_1; // unused
+		reg_t		rsp0;
+		reg_t		rsp1;
+		reg_t		rsp2;
+		reg_t		PLACE_HOLDER_2; // unused
+		reg_t		ist1;
+		reg_t		ist2;
+		reg_t		ist3;
+		reg_t		ist4;
+		reg_t		ist5;
+		reg_t		ist6;
+		reg_t		ist7;
+		reg_t		PLACE_HOLDER_3; // unused
+		uint64_t			: 32,	// unused
 					iobm	: 32;
 	} tss64_T;
 	

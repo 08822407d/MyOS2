@@ -176,7 +176,7 @@ unsigned long do_execve(pt_regs_s *curr_context,
 		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
 		// new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
 		// curr->mm->pgd = new_pgd;
-		curr->mm->pgd_ptr = myos_virt2phys((virt_addr_t)virt_cr3);
+		curr->mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
 		int hfent_nr = PGENT_NR / 2;
 		memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
 	}
@@ -190,7 +190,7 @@ unsigned long do_execve(pt_regs_s *curr_context,
 	{
 		int argc = 0;
 		int len = 0;
-		int i = 0;
+		long i = 0;
 		char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
 		argv_pos = (unsigned long)dargv;
 
@@ -204,8 +204,8 @@ unsigned long do_execve(pt_regs_s *curr_context,
 			argv_pos -= len;
 		}
 		curr->mm->start_stack = argv_pos - 10;
-		curr_context->di = i;	//argc
-		curr_context->si = (unsigned long)dargv;	//argv
+		curr_context->di = (reg_t)i;	//argc
+		curr_context->si = (reg_t)dargv;	//argv
 	}
 
 	memset((void *)curr->mm->start_code, 0,
@@ -216,11 +216,11 @@ unsigned long do_execve(pt_regs_s *curr_context,
 
 	curr->name = exec_filename;
 
-	curr_context->ss = USER_SS_SELECTOR;
-	curr_context->cs = USER_CS_SELECTOR;
-	curr_context->r10 = curr->mm->start_code;
-	curr_context->r11 = curr->mm->start_stack;
-	curr_context->ax = 1;
+	curr_context->ss = (reg_t)USER_SS_SELECTOR;
+	curr_context->cs = (reg_t)USER_CS_SELECTOR;
+	curr_context->r10 = (reg_t)curr->mm->start_code;
+	curr_context->r11 = (reg_t)curr->mm->start_stack;
+	curr_context->ax = (reg_t)1;
 
 	return ret_val;
 }

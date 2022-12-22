@@ -44,26 +44,26 @@
 // #include <asm/spec-ctrl.h>
 // #include <asm/io_bitmap.h>
 // #include <asm/proto.h>
-// #include <asm/frame.h>
+#include <asm/frame.h>
 // #include <asm/unwind.h>
 
 // #include "process.h"
 
-int copy_thread(unsigned long clone_flags, unsigned long sp,
-		unsigned long arg, task_s *p)
+int copy_thread(unsigned long clone_flags,
+		unsigned long sp, unsigned long arg, task_s *p)
 {
-	// struct inactive_task_frame *frame;
-	// struct fork_frame *fork_frame;
-	// pt_regs_s *childregs;
-	// int ret = 0;
+	task_kframe_s *frame;
+	fork_frame_s *fork_frame;
+	pt_regs_s *childregs;
+	int ret = 0;
 
-	// childregs = task_pt_regs(p);
-	// fork_frame = container_of(childregs, struct fork_frame, regs);
-	// frame = &fork_frame->frame;
+	childregs = task_pt_regs(p);
+	fork_frame = container_of(childregs, fork_frame_s, regs);
+	frame = &fork_frame->frame;
 
-	// frame->bp = encode_frame_pointer(childregs);
+	frame->bp = encode_frame_pointer(childregs);
 	// frame->ret_addr = (unsigned long) ret_from_fork;
-	// p->thread.sp = (unsigned long) fork_frame;
+	p->thread.sp = (reg_t)fork_frame;
 	// p->thread.io_bitmap = NULL;
 	// p->thread.iopl_warn = 0;
 	// memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
