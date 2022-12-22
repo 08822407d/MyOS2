@@ -51,7 +51,7 @@
 .endm
 
 /*==============================================================================================*/
-/*									kernel thread func							     			*/
+/*									kernel thread start entry									*/
 /*==============================================================================================*/
 SYM_CODE_START(entp_kernel_thread)
 	POP_REGS
@@ -353,3 +353,4 @@ SYM_CODE_START(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
 
 SYM_CODE_START(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
 	lapic_ipi_entry(7)
+

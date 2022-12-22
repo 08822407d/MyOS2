@@ -112,7 +112,7 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 
 }
 
-inline __always_inline void myos_switch_to(task_s * curr, task_s * target)
+void myos_switch_to(task_s * curr, task_s * target)
 {
 	asm volatile(	"pushq	%%rbp				\n\t"
 					"pushq	%%rax				\n\t"

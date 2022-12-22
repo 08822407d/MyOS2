@@ -49,6 +49,9 @@
 
 // #include "process.h"
 
+
+#include <linux/kernel/ptrace.h>
+
 int copy_thread(unsigned long clone_flags,
 		unsigned long sp, unsigned long arg, task_s *p)
 {
@@ -61,31 +64,31 @@ int copy_thread(unsigned long clone_flags,
 	fork_frame = container_of(childregs, fork_frame_s, regs);
 	frame = &fork_frame->frame;
 
-	frame->bp = encode_frame_pointer(childregs);
-	// frame->ret_addr = (unsigned long) ret_from_fork;
+	frame->bp = (reg_t)encode_frame_pointer(childregs);
+	frame->ret_addr = (reg_t)ret_from_fork;
 	p->thread.sp = (reg_t)fork_frame;
 	// p->thread.io_bitmap = NULL;
 	// p->thread.iopl_warn = 0;
 	// memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
 
 	// current_save_fsgs();
-	// p->thread.fsindex = current->thread.fsindex;
-	// p->thread.fsbase = current->thread.fsbase;
-	// p->thread.gsindex = current->thread.gsindex;
-	// p->thread.gsbase = current->thread.gsbase;
+	p->thread.fsindex = current->thread.fsindex;
+	p->thread.fsbase = current->thread.fsbase;
+	p->thread.gsindex = current->thread.gsindex;
+	p->thread.gsbase = current->thread.gsbase;
 
 	// savesegment(es, p->thread.es);
 	// savesegment(ds, p->thread.ds);
 
 	// fpu_clone(p, clone_flags);
 
-	// /* Kernel thread ? */
-	// if (unlikely(p->flags & PF_KTHREAD)) {
+	/* Kernel thread ? */
+	if (p->flags & PF_KTHREAD) {
 	// 	p->thread.pkru = pkru_get_init_value();
 	// 	memset(childregs, 0, sizeof(pt_regs_s));
 	// 	kthread_frame_init(frame, sp, arg);
-	// 	return 0;
-	// }
+		return 0;
+	}
 
 	// /*
 	//  * Clone current's PKRU value from hardware. tsk->thread.pkru
@@ -93,11 +96,11 @@ int copy_thread(unsigned long clone_flags,
 	//  */
 	// p->thread.pkru = read_pkru();
 
-	// frame->bx = 0;
-	// *childregs = *current_pt_regs();
-	// childregs->ax = 0;
-	// if (sp)
-	// 	childregs->sp = sp;
+	frame->bx = 0;
+	*childregs = *current_pt_regs();
+	childregs->ax = 0;
+	if (sp)
+		childregs->sp = (reg_t)sp;
 
 	// if (unlikely(p->flags & PF_IO_WORKER)) {
 	// 	/*
@@ -123,5 +126,5 @@ int copy_thread(unsigned long clone_flags,
 	// if (!ret && unlikely(test_tsk_thread_flag(current, TIF_IO_BITMAP)))
 	// 	io_bitmap_share(p);
 
-	// return ret;
+	return ret;
 }

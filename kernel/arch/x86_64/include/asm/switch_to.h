@@ -19,17 +19,17 @@
 	 * order of the fields must match the code in __switch_to_asm().
 	 */
 	typedef struct inactive_task_frame {
-		unsigned long r15;
-		unsigned long r14;
-		unsigned long r13;
-		unsigned long r12;
-		unsigned long bx;
+		reg_t	r15;
+		reg_t	r14;
+		reg_t	r13;
+		reg_t	r12;
+		reg_t	bx;
 		/*
 		 * These two fields must be together.  They form a stack frame header,
 		 * needed by get_frame_pointer().
 		 */
-		unsigned long bp;
-		unsigned long ret_addr;
+		reg_t	bp;
+		reg_t	ret_addr;
 	} task_kframe_s;
 
 	typedef struct fork_frame {
@@ -51,8 +51,8 @@
 
 	static inline void
 	kthread_frame_init(task_kframe_s *frame, unsigned long fun, unsigned long arg) {
-		frame->bx = fun;
-		frame->r12 = arg;
+		frame->bx = (reg_t)fun;
+		frame->r12 = (reg_t)arg;
 	}
 
 #endif /* _ASM_X86_SWITCH_TO_H */

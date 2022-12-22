@@ -1535,7 +1535,7 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	int err = -ENOERR;
 
 	pt_regs_s *parent_context = task_pt_regs(current);
-	pt_regs_s * child_context = get_stackframe(child_task);
+	pt_regs_s *child_context = task_pt_regs(child_task);
 	memcpy(child_context,  parent_context, sizeof(pt_regs_s));
 
 	child_context->sp = 0;

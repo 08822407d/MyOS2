@@ -381,9 +381,9 @@
 	// #	define arch_ptrace_stop()	do { } while (0)
 	// #endif
 
-	// #ifndef current_pt_regs
-	// #	define current_pt_regs() task_pt_regs(current)
-	// #endif
+	#ifndef current_pt_regs
+	#	define current_pt_regs()	task_pt_regs(current)
+	#endif
 
 	// /*
 	// * unlike current_pt_regs(), this one is equal to task_pt_regs(current)
