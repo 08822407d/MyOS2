@@ -223,15 +223,15 @@
 	// 	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
 	// #endif
 
-	// /* SYM_FUNC_START -- use for global functions */
-	// #ifndef SYM_FUNC_START
-	// /*
-	// * The same as SYM_FUNC_START_ALIAS, but we will need to distinguish these two
-	// * later.
-	// */
-	// #define SYM_FUNC_START(name) \
-	// 	SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
-	// #endif
+	/* SYM_FUNC_START -- use for global functions */
+	#	ifndef SYM_FUNC_START
+	/*
+	* The same as SYM_FUNC_START_ALIAS, but we will need to distinguish these two
+	* later.
+	*/
+	#		define SYM_FUNC_START(name) \
+					SYM_START(name, SYM_L_GLOBAL, SYM_A_ALIGN)
+	#	endif
 
 	// /* SYM_FUNC_START_NOALIGN -- use for global functions, w/o alignment */
 	// #ifndef SYM_FUNC_START_NOALIGN
@@ -270,15 +270,15 @@
 	// 	SYM_END(name, SYM_T_FUNC)
 	// #endif
 
-	// /*
-	// * SYM_FUNC_END -- the end of SYM_FUNC_START_LOCAL, SYM_FUNC_START,
-	// * SYM_FUNC_START_WEAK, ...
-	// */
-	// #ifndef SYM_FUNC_END
-	// /* the same as SYM_FUNC_END_ALIAS, see comment near SYM_FUNC_START */
-	// #define SYM_FUNC_END(name) \
-	// 	SYM_END(name, SYM_T_FUNC)
-	// #endif
+	/*
+	* SYM_FUNC_END -- the end of SYM_FUNC_START_LOCAL, SYM_FUNC_START,
+	* SYM_FUNC_START_WEAK, ...
+	*/
+	#	ifndef SYM_FUNC_END
+	/* the same as SYM_FUNC_END_ALIAS, see comment near SYM_FUNC_START */
+	#		define SYM_FUNC_END(name) \
+					SYM_END(name, SYM_T_FUNC)
+	#	endif
 
 	/* SYM_CODE_START -- use for non-C (special) functions */
 	#	ifndef SYM_CODE_START

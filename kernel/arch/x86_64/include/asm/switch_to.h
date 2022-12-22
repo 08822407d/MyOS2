@@ -37,9 +37,9 @@
 		pt_regs_s		regs;
 	} fork_frame_s;
 
-	#define switch_to(prev, next, last)						\
-			do {											\
-				((last) = __switch_to_asm((prev), (next)));	\
+	#define switch_to(prev, next)					\
+			do {									\
+				__switch_to_asm((prev), (next));	\
 			} while (0)
 
 	// /* This is used when switching tasks or entering/exiting vm86 mode. */

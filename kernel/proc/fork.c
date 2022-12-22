@@ -1538,9 +1538,6 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	pt_regs_s *child_context = task_pt_regs(child_task);
 	memcpy(child_context,  parent_context, sizeof(pt_regs_s));
 
-	child_context->sp = 0;
-	child_context->ax = 0;
-
 	child_task->thread.tss_rsp0 = (reg_t)child_task + THREAD_SIZE;
 	child_task->thread.sp = (reg_t)child_context;
 
@@ -1548,7 +1545,6 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	{
 		child_context->bx = (reg_t)stack;
 		child_context->dx = (reg_t)size;
-		child_context->flags = (reg_t)(1 << 9);
 		child_context->ip = (reg_t)entp_kernel_thread;
 
 		child_task->thread.k_rip = (reg_t)entp_kernel_thread;
@@ -1556,6 +1552,9 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	else
 	{
 		child_task->thread.k_rip = (reg_t)sysexit_entp;
+		child_context->ax = 0;
+		if (stack != 0)
+			child_context->sp = (reg_t)stack;
 	}
 
 	return err;

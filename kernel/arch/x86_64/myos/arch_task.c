@@ -11,6 +11,7 @@
 #include <asm/processor.h>
 #include <asm/setup.h>
 #include <asm/fsgsbase.h>
+#include <asm/switch_to.h>
 
 
 #include <klib/utils.h>
@@ -354,6 +355,8 @@ void myos_schedule()
 		
 		switch_mm(curr_task, next_task);
 		myos_switch_to(curr_task, next_task);
+
+		// switch_to(curr_task, next_task);
 	}
 }
 

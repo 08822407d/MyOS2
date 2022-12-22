@@ -85,8 +85,8 @@ int copy_thread(unsigned long clone_flags,
 	/* Kernel thread ? */
 	if (p->flags & PF_KTHREAD) {
 	// 	p->thread.pkru = pkru_get_init_value();
-	// 	memset(childregs, 0, sizeof(pt_regs_s));
-	// 	kthread_frame_init(frame, sp, arg);
+		memset(childregs, 0, sizeof(pt_regs_s));
+		kthread_frame_init(frame, sp, arg);
 		return 0;
 	}
 
