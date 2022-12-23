@@ -791,6 +791,8 @@ static void myos_pcb_init(task_s *p, u64 clone_flags)
 	list_init(&p->tasks, p);
 	if(clone_flags & CLONE_VM)
 		p->flags |= CLONE_VFORK;
+	
+	p->thread.tss_rsp0 = (reg_t)p + THREAD_SIZE;
 }
 int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
 int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
@@ -1073,8 +1075,8 @@ static __latent_entropy task_s
 	// retval = copy_io(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_namespaces;
-	// retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
-	retval = myos_copy_thread(clone_flags, args->stack, args->stack_size, p);
+	retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
+	// retval = myos_copy_thread(clone_flags, args->stack, args->stack_size, p);
 	if (retval)
 		goto bad_fork_cleanup_io;
 
@@ -1499,7 +1501,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 	page_s *page = NULL;
 	pgd_t *new_cr3 = NULL;
-	reg_t curr_endstack = get_stackframe(current)->sp;
+	reg_t curr_endstack = task_pt_regs(current)->sp;
 
 	if(clone_flags & CLONE_VM)
 	{
@@ -1546,12 +1548,9 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 		child_context->bx = (reg_t)stack;
 		child_context->dx = (reg_t)size;
 		child_context->ip = (reg_t)entp_kernel_thread;
-
-		child_task->thread.k_rip = (reg_t)entp_kernel_thread;
 	}
 	else
 	{
-		child_task->thread.k_rip = (reg_t)sysexit_entp;
 		child_context->ax = 0;
 		if (stack != 0)
 			child_context->sp = (reg_t)stack;

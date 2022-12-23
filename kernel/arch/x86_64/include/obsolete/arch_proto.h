@@ -204,9 +204,8 @@
 	void LVT_timer_init(void);
 
 	/* arch_task.c */
-	pt_regs_s *get_stackframe(task_s * task_p);
-	unsigned long do_execve(pt_regs_s *curr_context,
-			char *exec_filename, char *argv[], char *envp[]);
+	// pt_regs_s *get_stackframe(task_s * task_p);
+	unsigned long do_execve(char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void myos_schedule(void);
 	void try_sched(void);

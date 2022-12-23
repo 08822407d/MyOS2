@@ -22,7 +22,7 @@
 // #include <asm/segment.h>
 #include <asm/cache.h>
 // #include <asm/errno.h>
-#include <asm/asm-offsets.h>
+// #include <asm/asm-offsets.h>
 #include <asm/msr.h>
 #include <asm/unistd.h>
 // #include <asm/thread_info.h>
@@ -66,8 +66,11 @@ SYM_FUNC_START(__switch_to_asm)
 	pushq	%r15
 
 	/* switch stack */
-	movq	%rsp, TASK_threadsp(%rdi)
-	movq	TASK_threadsp(%rsi), %rsp
+	// movq	%rsp, TASK_threadsp(%rdi)
+	// movq	TASK_threadsp(%rsi), %rsp
+	movq	TASK_threadsp(%rip),	%rbx
+	movq	%rsp,		(%rbx, %rdi)
+	movq	(%rbx, %rsi),			%rsp
 
 // #ifdef CONFIG_STACKPROTECTOR
 // 	movq	TASK_stack_canary(%rsi), %rbx
@@ -107,22 +110,23 @@ SYM_FUNC_END(__switch_to_asm)
 .pushsection .text, "ax"
 SYM_CODE_START(ret_from_fork)
 	// UNWIND_HINT_EMPTY
-	movq	%rax, %rdi
-	// call	schedule_tail			/* rdi: 'prev' task parameter */
+	movq	%rax,		%rdi
+	// call	schedule_tail		/* rdi: 'prev' task parameter */
 
-	testq	%rbx, %rbx			/* from kernel_thread? */
-	jnz	1f				/* kernel threads are uncommon */
+	testq	%rbx,		%rbx	/* from kernel_thread? */
+	jnz		1f					/* kernel threads are uncommon */
 
-// 2:
+2:
 // 	UNWIND_HINT_REGS
 // 	movq	%rsp, %rdi
 // 	call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
 // 	jmp	swapgs_restore_regs_and_return_to_usermode
+	jmp		sysexit_entp
 
 1:
 	/* kernel thread */
 	// UNWIND_HINT_EMPTY
-	movq	%r12, %rdi
+	movq	%r12,		%rdi
 	// CALL_NOSPEC rbx
 	callq	*%rbx
 	// /*
@@ -132,6 +136,6 @@ SYM_CODE_START(ret_from_fork)
 	//  */
 	// movq	$0, RAX(%rsp)
 	// jmp	2b
-	jmp	.
+	jmp		.
 SYM_CODE_END(ret_from_fork)
 .popsection

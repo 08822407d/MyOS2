@@ -95,44 +95,6 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->rsp0 = target->thread.tss_rsp0;
-
-	// since when intel cpu reload gs and fs, gs_base and fs_base will be reset
-	// here need to save and restore them
-
-	// asm volatile("movq	%%fs,	%0 \n\t"
-	// 			: "=a"(curr->thread.fs));
-	// asm volatile("movq	%%gs,	%0 \n\t"
-	// 			: "=a"(curr->thread.gs));
-
-	// asm volatile("movq	%0,	%%fs \n\t"
-	// 			:
-	// 			:"a"(target->thread.fs));
-	// asm volatile("movq	%0,	%%gs \n\t"
-	// 			:
-	// 			:"a"(target->thread.gs));
-
-}
-
-void myos_switch_to(task_s * curr, task_s * target)
-{
-	asm volatile(	"pushq	%%rbp				\n\t"
-					"pushq	%%rax				\n\t"
-					"movq	%%rsp,	%0			\n\t"
-					"movq	%2,		%%rsp		\n\t"
-					"leaq	1f(%%rip),	%%rax	\n\t"
-					"movq	%%rax,	%1			\n\t"
-					"pushq	%3					\n\t"
-					"jmp	__myos_switch_to	\n\t"
-					"1:							\n\t"
-					"popq	%%rax				\n\t"
-					"popq	%%rbp				\n\t"
-				:	"=m"(curr->thread.sp),
-					"=m"(curr->thread.k_rip)
-				:	"m"(target->thread.sp),
-					"m"(target->thread.k_rip),
-					"D"(curr), "S"(target)
-				:	"memory"
-				);
 }
 
 extern int myos_exit_thread(task_s * new_task);
@@ -152,11 +114,11 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 }
 
 extern void myos_close_files(files_struct_s * files);
-unsigned long do_execve(pt_regs_s *curr_context,
-		char *exec_filename, char *argv[], char *envp[])
+unsigned long do_execve(char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
 	task_s *curr = current;
+	pt_regs_s *curr_context = (pt_regs_s *)curr->thread.sp;
 	curr->se.vruntime = 0;
 
 	//
@@ -231,23 +193,19 @@ void kjmp_to_doexecve()
 	task_idle = &task0_PCB.task;
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;
-	pt_regs_s *curr_sfp = get_stackframe(curr);
+	pt_regs_s *curr_ptregs = task_pt_regs(curr);
 
-	reg_t ctx_rip =
-	curr->thread.k_rip = (reg_t)sysexit_entp;
-	reg_t ctx_rsp =
-	curr->thread.sp = (reg_t)curr_sfp;
+	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
 	char *argv[] = {"task_init", NULL};
-	asm volatile(	"movq	%1,	%%rsp	\n\t"
-					"pushq	%2			\n\t"
-					"jmp	do_execve	\n\t"
+	do_execve("/init.bin", argv, NULL);
+
+	asm volatile(	"movq	%0,	%%rsp		\n\t"
+					"jmp	sysexit_entp	\n\t"
 				:
-				:	"D"(ctx_rsp), "m"(ctx_rsp),
-					"m"(ctx_rip), "S"("/init.bin"),
-					"d"(argv), "c"(NULL)
-				:	"memory"
+				:	"m"(curr_ptregs)
+				:
 				);
 }
 
@@ -299,12 +257,6 @@ inline __always_inline task_s * myos_get_current()
 	return curr_task;
 }
 
-pt_regs_s *get_stackframe(task_s * task_p)
-{
-	PCB_u * pcb_p = container_of(task_p, PCB_u, task);
-	return (pt_regs_s *)(pcb_p + 1) - 1;
-}
-
 void myos_schedule()
 {
 	per_cpudata_s *	cpudata_p = curr_cpu;
@@ -354,9 +306,7 @@ void myos_schedule()
 		while (curr_task == next_task);
 		
 		switch_mm(curr_task, next_task);
-		myos_switch_to(curr_task, next_task);
-
-		// switch_to(curr_task, next_task);
+		switch_to(curr_task, next_task);
 	}
 }
 

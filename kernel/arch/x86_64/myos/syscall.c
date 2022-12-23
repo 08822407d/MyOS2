@@ -143,7 +143,7 @@ long sys_execve(const char *filename, const char *const *argv,
 	}
 	strncpy_from_user(pathname, (void *)curr_context->di, pathlen);
 	
-	error = do_execve(curr_context, pathname, (char **)curr_context->si, NULL);
+	error = do_execve(pathname, (char **)curr_context->si, NULL);
 
 	kfree(pathname);
 	return error;

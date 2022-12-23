@@ -174,9 +174,10 @@ extern char _k_virt_start;
  *
  * Note: On x86_64, fixmaps are ready for use even before this is called.
  */
-
 void __init setup_arch(char **cmdline_p)
 {
+extern void __used asm_offsets(void);
+	asm_offsets();
 	myos_early_init_system();
 
 	// printk(KERN_INFO "Command line: %s\n", boot_command_line);

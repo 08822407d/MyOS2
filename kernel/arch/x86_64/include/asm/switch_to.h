@@ -10,7 +10,7 @@
 
 	task_s *__switch_to_asm(task_s *prev, task_s *next);
 
-	__visible task_s *__switch_to(task_s *prev, task_s *next);
+	__visible void __switch_to(task_s *prev, task_s *next);
 
 	asmlinkage void ret_from_fork(void);
 
