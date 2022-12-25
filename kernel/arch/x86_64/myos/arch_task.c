@@ -54,7 +54,7 @@ void myos_init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
 	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
-	idle_pcb->task.thread.tss_rsp0 = (reg_t)idle_pcb + THREAD_SIZE;
+	idle_pcb->task.stack = (void *)idle_pcb + THREAD_SIZE;
 }
 
 /*==============================================================================================*
@@ -87,14 +87,14 @@ static __always_inline void switch_mm(task_s * curr, task_s * target)
 				:	"r"(target->mm->pgd_ptr)
 				:	"memory"
 				);
-	wrmsr(MSR_IA32_SYSENTER_ESP, target->thread.tss_rsp0);
+	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
 }
 
 inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->rsp0 = target->thread.tss_rsp0;
+	curr_tss->rsp0 = (reg_t)target->stack;
 }
 
 extern int myos_exit_thread(task_s * new_task);
@@ -120,6 +120,7 @@ unsigned long do_execve(char *exec_filename, char *argv[], char *envp[])
 	task_s *curr = current;
 	pt_regs_s *curr_context = (pt_regs_s *)curr->thread.sp;
 	curr->se.vruntime = 0;
+	curr->name = exec_filename;
 
 	//
 	if (task_idle != NULL && task_init != NULL)
@@ -177,8 +178,6 @@ unsigned long do_execve(char *exec_filename, char *argv[], char *envp[])
 	ret_val = fp->f_op->read(fp, (void *)curr->mm->start_code,
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
-	curr->name = exec_filename;
-
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
 	curr_context->r10 = (reg_t)curr->mm->start_code;
@@ -199,7 +198,7 @@ void kjmp_to_doexecve()
 	curr->flags &= ~PF_KTHREAD;
 
 	char *argv[] = {"task_init", NULL};
-	do_execve("/init.bin", argv, NULL);
+	do_execve("/shell.bin", argv, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"

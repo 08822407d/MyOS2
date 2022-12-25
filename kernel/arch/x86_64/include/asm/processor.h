@@ -402,10 +402,6 @@
 	// struct perf_event;
 
 	typedef struct thread_struct {
-		reg_t			tss_rsp0;	// point to curr-task's kernel stack bottom
-									// current cpu's tss-rsp0 equal to this at switch-time
-		// reg_t			k_rip;		// point to curr_task's switch-time rip
-
 		/* Cached TLS descriptors: */
 		// struct desc_struct tls_array[GDT_ENTRY_TLS_ENTRIES];
 		reg_t			sp;

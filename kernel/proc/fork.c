@@ -792,7 +792,7 @@ static void myos_pcb_init(task_s *p, u64 clone_flags)
 	if(clone_flags & CLONE_VM)
 		p->flags |= CLONE_VFORK;
 	
-	p->thread.tss_rsp0 = (reg_t)p + THREAD_SIZE;
+	p->stack = (void *)((unsigned long)p + THREAD_SIZE);
 }
 int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
 int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
@@ -1540,7 +1540,7 @@ int myos_copy_thread(unsigned long clone_flags, unsigned long stack,
 	pt_regs_s *child_context = task_pt_regs(child_task);
 	memcpy(child_context,  parent_context, sizeof(pt_regs_s));
 
-	child_task->thread.tss_rsp0 = (reg_t)child_task + THREAD_SIZE;
+	child_task->stack = (void *)((unsigned long)child_task + THREAD_SIZE);
 	child_task->thread.sp = (reg_t)child_context;
 
 	if(child_task->flags & PF_KTHREAD)

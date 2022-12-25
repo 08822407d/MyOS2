@@ -124,7 +124,7 @@ long sys_execve(const char *filename, const char *const *argv,
 	char * pathname = NULL;
 	long pathlen = 0;
 	long error = 0;
-	pt_regs_s * curr_context = (pt_regs_s *)current->thread.tss_rsp0 -1;
+	pt_regs_s * curr_context = (pt_regs_s *)current->stack - 1;
 
 	// color_printk(GREEN,BLACK,"sys_execve\n");
 	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);

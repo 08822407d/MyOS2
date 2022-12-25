@@ -24,15 +24,15 @@ int main(int argc, const char *argv[])
 	int rv = fork();
 	if (rv != 0)
 	{
-		execve("/shell.bin", args, NULL);
+		while (1);
 	}
 	else
 	{
+		execve("/shell.bin", args, NULL);
 		// malloc_free_test();
 		// file_io_test();
 		// dirtest();
 	}
-	while (1);
 }
 
 void file_io_test()

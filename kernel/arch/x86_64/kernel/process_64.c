@@ -80,7 +80,7 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
 	tss64_T * curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->rsp0 = next_p->thread.tss_rsp0;
+	curr_tss->rsp0 = (reg_t)next_p->stack;
 
 
 	// struct thread_struct *prev = &prev_p->thread;
