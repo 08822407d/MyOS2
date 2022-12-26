@@ -197,8 +197,10 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	char *argv[] = {"task_init", NULL};
-	do_execve("/init.bin", argv, NULL);
+	// char *argv[] = {"task_init", NULL};
+	// do_execve("/init.bin", argv, NULL);
+	char *argv[] = {"task_shell", NULL};
+	do_execve("/shell.bin", argv, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"

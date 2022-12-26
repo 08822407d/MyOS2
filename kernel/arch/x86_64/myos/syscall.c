@@ -86,7 +86,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	if(count < 0)
 		return -EINVAL;
 
-	fp = current->files->fd_array[fd];
+	fp = curr->files->fd_array[fd];
 	if(fp->f_op && fp->f_op->write)
 		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
 	return ret;
@@ -113,6 +113,7 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 long sys_fork()
 {
 	kclone_args_s args = {
+		.flags = CLONE_FILES,
 		.exit_signal = SIGCHLD,
 	};
 	return kernel_clone(&args);
