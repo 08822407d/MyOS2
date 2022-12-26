@@ -51,24 +51,6 @@
 .endm
 
 /*==============================================================================================*/
-/*									kernel thread start entry									*/
-/*==============================================================================================*/
-SYM_CODE_START(entp_kernel_thread)
-	POP_REGS
-SYM_CODE_START(ra_kthd_retp)
-	addq		$0x38,		%rsp	//skip vec_nr,err_code,rip,cs,rflags,rsp,ss
-	/////////////////////////////////
-	movq		%rdx,		%rdi
-	sti
-	pushq		%rbx
-	callq		*%rbx
-	popq		%rbx
-	movq		%rax,		%rdi
-	movq		%rbx,		%rsi
-	sti
-	callq		do_exit
-
-/*==============================================================================================*/
 /*									syscenter and sysexit entry						 			*/
 /*==============================================================================================*/
 // user RSP -> R11 by hand
