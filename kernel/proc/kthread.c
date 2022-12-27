@@ -35,7 +35,8 @@
 
 // static DEFINE_SPINLOCK(kthread_create_lock);
 // static LIST_HEAD(kthread_create_list);
-// task_s *kthreadd_task;
+static List_hdr_s kthread_create_list;
+task_s *kthreadd_task;
 
 // typedef struct kthread_create_info
 // {
