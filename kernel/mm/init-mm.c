@@ -2,7 +2,7 @@
 #include <linux/mm/mm_types.h>
 // #include <linux/rbtree.h>
 // #include <linux/rwsem.h>
-// #include <linux/spinlock.h>
+#include <linux/kernel/spinlock.h>
 #include <linux/lib/list.h>
 // #include <linux/cpumask.h>
 // #include <linux/mman.h>

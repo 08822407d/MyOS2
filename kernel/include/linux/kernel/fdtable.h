@@ -8,7 +8,7 @@
 
 	#include <uapi/linux/posix_types.h>
 	#include <linux/kernel/compiler.h>
-	// #include <linux/spinlock.h>
+	#include <linux/kernel/spinlock.h>
 	// #include <linux/rcupdate.h>
 	// #include <linux/nospec.h>
 	#include <linux/kernel/types.h>

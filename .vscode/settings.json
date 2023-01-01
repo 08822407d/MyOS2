@@ -211,7 +211,11 @@
 		"sections.h": "c",
 		"preempt.h": "c",
 		"task_stack.h": "c",
-		"ptrace.h": "c"
+		"ptrace.h": "c",
+		"spinlock.h": "c",
+		"spinlock_types.h": "c",
+		"spinlock_types_raw.h": "c",
+		"qspinlock_types.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

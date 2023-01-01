@@ -100,7 +100,7 @@
 	// void kthread_unpark(task_s *k);
 	// void kthread_parkme(void);
 	// void kthread_exit(long result) __noreturn;
-	// void kthread_complete_and_exit(struct completion *, long) __noreturn;
+	// void kthread_complete_and_exit(completion_s *, long) __noreturn;
 
 	int kthreadd(void *unused);
 	// extern task_s *kthreadd_task;
@@ -263,7 +263,7 @@
 
 		/* Result passed back to kthread_create() from kthreadd. */
 		task_s	*result;
-		// struct completion *done;
+		// completion_s *done;
 
 		List_s	list;
 	} kthd_create_info_s;

@@ -4,7 +4,7 @@
 
 	#ifndef __ASSEMBLY__
 	#	ifndef __GENERATING_BOUNDS_H
-	// #include <linux/spinlock.h>
+	#include <linux/kernel/spinlock.h>
 	#		include <linux/lib/list.h>
 	// #include <linux/wait.h>
 	#		include <linux/kernel/bitops.h>

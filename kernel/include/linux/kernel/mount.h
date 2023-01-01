@@ -13,7 +13,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/lib/list.h>
 	// #include <linux/nodemask.h>
-	// #include <linux/spinlock.h>
+	#include <linux/kernel/spinlock.h>
 	// #include <linux/seqlock.h>
 	#include <linux/kernel/atomic.h>
 

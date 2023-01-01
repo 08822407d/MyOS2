@@ -788,7 +788,7 @@
 	// 	struct list_head	eh_done_q;
 	// 	wait_queue_head_t	eh_wait_q;
 	// 	int			eh_tries;
-	// 	struct completion	park_req_pending;
+	// 	completion_s	park_req_pending;
 
 	// 	pm_message_t		pm_mesg;
 	// 	enum ata_lpm_policy	target_lpm_policy;

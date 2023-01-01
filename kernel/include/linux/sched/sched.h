@@ -62,7 +62,7 @@
 // #include <linux/security.h>
 // #include <linux/stop_machine.h>
 // #include <linux/suspend.h>
-// #include <linux/swait.h>
+#include <linux/kernel/swait.h>
 #include <linux/kernel/syscalls.h>
 // #include <linux/task_work.h>
 // #include <linux/tsacct_kern.h>
@@ -3045,8 +3045,8 @@
 // 	return true;
 // }
 
-// extern void swake_up_all_locked(struct swait_queue_head *q);
-// extern void __prepare_to_swait(struct swait_queue_head *q, struct swait_queue *wait);
+// extern void swake_up_all_locked(swqueue_hdr_s *q);
+// extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
 
 // #ifdef CONFIG_PREEMPT_DYNAMIC
 // extern int preempt_dynamic_mode;

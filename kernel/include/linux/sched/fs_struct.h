@@ -3,7 +3,7 @@
 #define _LINUX_FS_STRUCT_H
 
 	#include <linux/fs/path.h>
-	// #include <linux/spinlock.h>
+	#include <linux/kernel/spinlock.h>
 	// #include <linux/seqlock.h>
 
 

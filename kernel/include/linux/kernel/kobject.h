@@ -20,7 +20,7 @@
 	// #include <linux/sysfs.h>
 	#include <linux/kernel/compiler.h>
 	// #include <linux/container_of.h>
-	// #include <linux/spinlock.h>
+	#include <linux/kernel/spinlock.h>
 	// #include <linux/kref.h>
 	// #include <linux/kobject_ns.h>
 	// #include <linux/wait.h>

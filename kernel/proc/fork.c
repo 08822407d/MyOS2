@@ -447,7 +447,7 @@ void mmput(mm_s *mm)
 
 // static void complete_vfork_done(struct task_struct *tsk)
 // {
-// 	struct completion *vfork;
+// 	completion_s *vfork;
 
 // 	task_lock(tsk);
 // 	vfork = tsk->vfork_done;
@@ -459,7 +459,7 @@ void mmput(mm_s *mm)
 // }
 
 // static int wait_for_vfork_done(struct task_struct *child,
-// 				struct completion *vfork)
+// 				completion_s *vfork)
 // {
 // 	int killed;
 
@@ -1383,7 +1383,7 @@ static inline void init_idle_pids(task_s *idle)
 pid_t kernel_clone(kclone_args_s *args)
 {
 	u64 clone_flags = args->flags;
-	// struct completion vfork;
+	// completion_s vfork;
 	// pid_s *pid;
 	task_s *p;
 	// int trace = 0;

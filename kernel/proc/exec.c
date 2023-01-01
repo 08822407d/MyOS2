@@ -42,7 +42,7 @@
 // #include <linux/pagemap.h>
 // #include <linux/perf_event.h>
 // #include <linux/highmem.h>
-// #include <linux/spinlock.h>
+#include <linux/kernel/spinlock.h>
 // #include <linux/key.h>
 // #include <linux/personality.h>
 // #include <linux/binfmts.h>

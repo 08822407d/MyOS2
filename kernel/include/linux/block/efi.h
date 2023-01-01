@@ -1273,7 +1273,7 @@
 	// 	efi_status_t status;
 	// 	struct work_struct work;
 	// 	enum efi_rts_ids efi_rts_id;
-	// 	struct completion efi_rts_comp;
+	// 	completion_s efi_rts_comp;
 	// };
 
 	// extern struct efi_runtime_work efi_rts_work;

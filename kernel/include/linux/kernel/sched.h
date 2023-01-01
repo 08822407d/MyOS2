@@ -1037,7 +1037,7 @@
 		// struct list_head thread_group;
 		// struct list_head thread_node;
 
-		// struct completion *vfork_done;
+		// completion_s *vfork_done;
 
 		// /* CLONE_CHILD_SETTID: */
 		// int __user *set_child_tid;

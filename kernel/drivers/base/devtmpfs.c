@@ -47,7 +47,7 @@ struct req;
 typedef struct req req_s;
 typedef struct req {
 	req_s		*next;
-	// struct completion done;
+	// completion_s done;
 	int			err;
 	const char	*name;
 	umode_t		mode;	/* 0 => delete */

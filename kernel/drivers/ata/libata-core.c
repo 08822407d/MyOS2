@@ -31,7 +31,7 @@
 #include <linux/init/init.h>
 #include <linux/lib/list.h>
 #include <linux/mm/mm.h>
-// #include <linux/spinlock.h>
+#include <linux/kernel/spinlock.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/delay.h>
 // #include <linux/timer.h>

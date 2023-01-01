@@ -14,7 +14,7 @@
 #include <linux/block/blkdev.h>
 // #include <linux/backing-dev.h>
 #include <linux/init/init.h>
-// #include <linux/spinlock.h>
+#include <linux/kernel/spinlock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/seq_file.h>
 #include <linux/kernel/slab.h>

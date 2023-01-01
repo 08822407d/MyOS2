@@ -47,7 +47,7 @@ task_s *kthreadd_task;
 
 // 	/* Result passed back to kthread_create() from kthreadd. */
 // 	task_s	*result;
-// 	// struct completion *done;
+// 	// completion_s *done;
 
 // 	List_s	list;
 // } kthd_create_info_s;
@@ -59,8 +59,8 @@ typedef struct kthread {
 	int (*threadfn)(void *);
 	void *data;
 	// mm_segment_t oldfs;
-	// struct completion parked;
-	// struct completion exited;
+	// completion_s parked;
+	// completion_s exited;
 // #ifdef CONFIG_BLK_CGROUP
 	// struct cgroup_subsys_state *blkcg_css;
 // #endif
@@ -82,7 +82,7 @@ int kthread(void *_create)
 	kthd_create_info_s *create = _create;
 	int (*threadfn)(void *data) = create->threadfn;
 	void *data = create->data;
-	// struct completion *done;
+	// completion_s *done;
 	// struct kthread *self;
 	int ret;
 
@@ -134,7 +134,7 @@ static void create_kthread(kthd_create_info_s *create)
 	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
 	if (pid < 0) {
 		/* If user was SIGKILLed, I release the structure. */
-	// 	struct completion *done = xchg(&create->done, NULL);
+	// 	completion_s *done = xchg(&create->done, NULL);
 
 	// 	if (!done) {
 	// 		kfree(create);

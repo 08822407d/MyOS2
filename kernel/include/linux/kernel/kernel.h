@@ -91,7 +91,7 @@
 	 */
 	#define lower_16_bits(n) ((u16)((n) & 0xffff))
 
-	// struct completion;
+	// completion_s;
 	// struct user;
 
 	// #ifdef CONFIG_PREEMPT_VOLUNTARY_BUILD
