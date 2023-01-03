@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_BARRIER_H
 #define _ASM_X86_BARRIER_H
 
-	// #include <asm/alternative.h>
+	#include <asm/alternative.h>
 	// #include <asm/nops.h>
 
 	/*

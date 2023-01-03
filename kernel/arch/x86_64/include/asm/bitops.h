@@ -14,7 +14,7 @@
 	#endif
 
 	#include <linux/kernel/compiler.h>
-	// #include <asm/alternative.h>
+	#include <asm/alternative.h>
 	// #include <asm/rmwcc.h>
 	#include <asm/barrier.h>
 

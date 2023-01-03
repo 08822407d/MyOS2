@@ -3,8 +3,8 @@
 #define _ASM_X86_ATOMIC64_64_H
 
 	#include <linux/kernel/types.h>
-	// #include <asm/alternative.h>
-	// #include <asm/cmpxchg.h>
+	#include <asm/alternative.h>
+	#include <asm/cmpxchg.h>
 
 	/* The 64-bit atomic type */
 
@@ -191,11 +191,11 @@
 	// }
 	// #define arch_atomic64_cmpxchg arch_atomic64_cmpxchg
 
-	// static __always_inline bool arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s64 new)
-	// {
-	// 	return arch_try_cmpxchg(&v->counter, old, new);
-	// }
-	// #define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
+	static __always_inline bool
+	arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s64 new) {
+		return arch_try_cmpxchg(&v->counter, old, new);
+	}
+	#define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
 
 	// static inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
 	// {

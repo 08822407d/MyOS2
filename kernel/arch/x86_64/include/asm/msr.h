@@ -6,7 +6,7 @@
 
 	#ifndef __ASSEMBLY__
 
-	// #	include <asm/asm.h>
+	#	include <asm/asm.h>
 	// #	include <asm/errno.h>
 	// #	include <asm/cpumask.h>
 	// #	include <uapi/asm/msr.h>

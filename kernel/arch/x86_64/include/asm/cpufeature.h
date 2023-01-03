@@ -6,9 +6,9 @@
 
 	#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
 
-	// #	include <asm/asm.h>
+	#	include <asm/asm.h>
 	#	include <linux/kernel/bitops.h>
-	// #	include <asm/alternative.h>
+	#	include <asm/alternative.h>
 
 		enum cpuid_leafs
 		{

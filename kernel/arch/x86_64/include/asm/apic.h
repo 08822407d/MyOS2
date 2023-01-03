@@ -4,7 +4,7 @@
 
 	// #include <linux/cpumask.h>
 
-	// #include <asm/alternative.h>
+	#include <asm/alternative.h>
 	#include <asm/cpufeature.h>
 	#include <asm/apicdef.h>
 	#include <linux/kernel/atomic.h>
