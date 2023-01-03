@@ -6,7 +6,7 @@
 	#include <linux/kernel/types.h>
 	#include <asm/alternative.h>
 	#include <asm/cmpxchg.h>
-	// #include <asm/rmwcc.h>
+	#include <asm/rmwcc.h>
 	#include <asm/barrier.h>
 
 	/*
@@ -50,7 +50,7 @@
 	 */
 	static __always_inline void
 	arch_atomic_add(int i, atomic_t *v) {
-		asm volatile(	"lock addl	%1,		%0	\n\t"
+		asm volatile(LOCK_PREFIX "addl	%1,	%0	\n\t"
 					:	"+m"(v->counter)
 					:	"ir"(i)
 					:	"memory");
@@ -66,7 +66,7 @@
 	 */
 	static __always_inline void
 	arch_atomic_sub(int i, atomic_t *v) {
-		asm volatile(	"lock subl	%1,		%0	\n\t"
+		asm volatile(LOCK_PREFIX "subl	%1,	%0	\n\t"
 					:	"+m"(v->counter)
 					:	"ir"(i)
 					:	"memory");
@@ -96,7 +96,7 @@
 	 */
 	static __always_inline void
 	arch_atomic_inc(atomic_t *v) {
-		asm volatile(	"lock incl	%0			\n\t"
+		asm volatile(LOCK_PREFIX "incl	%0		\n\t"
 					:	"+m"(v->counter)
 					:
 					:	"memory");
@@ -111,7 +111,7 @@
 	 */
 	static __always_inline void
 	arch_atomic_dec(atomic_t *v) {
-		asm volatile(	"lock decl	%0			\n\t"
+		asm volatile(LOCK_PREFIX "decl	%0		\n\t"
 					:	"+m"(v->counter)
 					:
 					:	"memory");
@@ -127,14 +127,14 @@
 	 * cases.
 	 */
 	static __always_inline bool arch_atomic_dec_and_test(atomic_t *v) {
-		// return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
-		char c;
-		asm volatile(	"lock	decl	%0		\n\t"
-						"movb	%0,		%1		\n\t"
-					:	"+m"(v->counter) ,"=qm"(c)
-					:
-					:	"memory");
-		return c != 0;
+		return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
+		// char c;
+		// asm volatile(	"lock	decl	%0		\n\t"
+		// 				"movb	%0,		%1		\n\t"
+		// 			:	"+m"(v->counter) ,"=qm"(c)
+		// 			:
+		// 			:	"memory");
+		// return c != 0;
 	}
 	#define atomic_dec_and_test arch_atomic_dec_and_test
 
@@ -147,14 +147,14 @@
 	 * other cases.
 	 */
 	static __always_inline bool arch_atomic_inc_and_test(atomic_t *v) {
-		// return GEN_UNARY_RMWcc(LOCK_PREFIX "incl", v->counter, e);
-		char c;
-		asm volatile(	"lock	incl	%0		\n\t"
-						"movb	%0,		%1		\n\t"
-					:	"+m"(v->counter) ,"=qm"(c)
-					:
-					:	"memory");
-		return c != 0;
+		return GEN_UNARY_RMWcc(LOCK_PREFIX "incl", v->counter, e);
+		// char c;
+		// asm volatile(	"lock	incl	%0		\n\t"
+		// 				"movb	%0,		%1		\n\t"
+		// 			:	"+m"(v->counter) ,"=qm"(c)
+		// 			:
+		// 			:	"memory");
+		// return c != 0;
 	}
 	#define atomic_inc_and_test arch_atomic_inc_and_test
 

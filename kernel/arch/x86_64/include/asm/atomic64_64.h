@@ -10,29 +10,27 @@
 
 	#define ATOMIC64_INIT(i)	{ (i) }
 
-	// /**
-	//  * arch_atomic64_read - read atomic64 variable
-	//  * @v: pointer of type atomic64_t
-	//  *
-	//  * Atomically reads the value of @v.
-	//  * Doesn't imply a read memory barrier.
-	//  */
-	// static inline s64
-	// arch_atomic64_read(const atomic64_t *v) {
-	// 	return __READ_ONCE((v)->counter);
-	// }
+	/**
+	 * arch_atomic64_read - read atomic64 variable
+	 * @v: pointer of type atomic64_t
+	 *
+	 * Atomically reads the value of @v.
+	 * Doesn't imply a read memory barrier.
+	 */
+	static inline s64 arch_atomic64_read(const atomic64_t *v) {
+		return __READ_ONCE((v)->counter);
+	}
 
-	// /**
-	//  * arch_atomic64_set - set atomic64 variable
-	//  * @v: pointer to type atomic64_t
-	//  * @i: required value
-	//  *
-	//  * Atomically sets the value of @v to @i.
-	//  */
-	// static inline void
-	// arch_atomic64_set(atomic64_t *v, s64 i) {
-	// 	__WRITE_ONCE(v->counter, i);
-	// }
+	/**
+	 * arch_atomic64_set - set atomic64 variable
+	 * @v: pointer to type atomic64_t
+	 * @i: required value
+	 *
+	 * Atomically sets the value of @v to @i.
+	 */
+	static inline void arch_atomic64_set(atomic64_t *v, s64 i) {
+		__WRITE_ONCE(v->counter, i);
+	}
 
 	/**
 	 * arch_atomic64_add - add integer to atomic64 variable
@@ -43,10 +41,9 @@
 	 */
 	static __always_inline void
 	arch_atomic64_add(s64 i, atomic64_t *v) {
-		asm volatile(	"lock addq	%1,		%0	\n\t"
+		asm volatile(LOCK_PREFIX "addq	%1,	%0	\n\t"
 					:	"=m"(v->counter)
-					:	"er"(i),
-						"m"(v->counter)
+					:	"er"(i), "m"(v->counter)
 					:	"memory");
 	}
 

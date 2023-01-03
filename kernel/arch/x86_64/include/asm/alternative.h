@@ -9,38 +9,38 @@
 	// #define ALTINSTR_FLAG_INV	(1 << 15)
 	// #define ALT_NOT(feat)		((feat) | ALTINSTR_FLAG_INV)
 
-	// #ifndef __ASSEMBLY__
+	#ifndef __ASSEMBLY__
 
-	// #	include <linux/kernel/stddef.h>
+	#	include <linux/kernel/stddef.h>
 
-	// 	/*
-	// 	* Alternative inline assembly for SMP.
-	// 	*
-	// 	* The LOCK_PREFIX macro defined here replaces the LOCK and
-	// 	* LOCK_PREFIX macros used everywhere in the source tree.
-	// 	*
-	// 	* SMP alternatives use the same data structures as the other
-	// 	* alternatives and the X86_FEATURE_UP flag to indicate the case of a
-	// 	* UP system running a SMP kernel.  The existing apply_alternatives()
-	// 	* works fine for patching a SMP kernel for UP.
-	// 	*
-	// 	* The SMP alternative tables can be kept after boot and contain both
-	// 	* UP and SMP versions of the instructions to allow switching back to
-	// 	* SMP at runtime, when hotplugging in a new CPU, which is especially
-	// 	* useful in virtualized environments.
-	// 	*
-	// 	* The very common lock prefix is handled as special case in a
-	// 	* separate table which is a pure address list without replacement ptr
-	// 	* and size information.  That keeps the table sizes small.
-	// 	*/
-	// 	#define LOCK_PREFIX_HERE						\
-	// 				".pushsection .smp_locks,\"a\"\n"	\
-	// 				".balign 4\n"						\
-	// 				".long 671f - .\n" /* offset */		\
-	// 				".popsection\n"						\
-	// 				"671:"
+		/*
+		 * Alternative inline assembly for SMP.
+		 *
+		 * The LOCK_PREFIX macro defined here replaces the LOCK and
+		 * LOCK_PREFIX macros used everywhere in the source tree.
+		 *
+		 * SMP alternatives use the same data structures as the other
+		 * alternatives and the X86_FEATURE_UP flag to indicate the case of a
+		 * UP system running a SMP kernel.  The existing apply_alternatives()
+		 * works fine for patching a SMP kernel for UP.
+		 *
+		 * The SMP alternative tables can be kept after boot and contain both
+		 * UP and SMP versions of the instructions to allow switching back to
+		 * SMP at runtime, when hotplugging in a new CPU, which is especially
+		 * useful in virtualized environments.
+		 *
+		 * The very common lock prefix is handled as special case in a
+		 * separate table which is a pure address list without replacement ptr
+		 * and size information.  That keeps the table sizes small.
+		 */
+	#	define LOCK_PREFIX_HERE							\
+					".pushsection .smp_locks,\"a\"\n"	\
+					".balign 4\n"						\
+					".long 671f - .\n" /* offset */		\
+					".popsection\n"						\
+					"671:"
 
-	// 	#define LOCK_PREFIX LOCK_PREFIX_HERE	"\n\tlock; "
+	#	define LOCK_PREFIX	LOCK_PREFIX_HERE	"\n\tlock; "
 
 	// 	/*
 	// 	* objtool annotation to ignore the alternatives and only consider the original
@@ -271,7 +271,7 @@
 	// 	*/
 	// 	#define ASM_NO_INPUT_CLOBBER(clbr...) "i" (0) : clbr
 
-	// #else /* __ASSEMBLY__ */
+	#else /* __ASSEMBLY__ */
 
 	// 	#ifdef CONFIG_SMP
 	// 		.macro LOCK_PREFIX
@@ -380,6 +380,6 @@
 	// 		ALTERNATIVE_2 oldinstr, newinstr_no, X86_FEATURE_ALWAYS,	\
 	// 		newinstr_yes, feature
 
-	// #endif /* __ASSEMBLY__ */
+	#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_X86_ALTERNATIVE_H */
