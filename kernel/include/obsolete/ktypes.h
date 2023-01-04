@@ -38,7 +38,6 @@
 	typedef struct kinfo {
 		unsigned		nr_lcpu;
 		init_flags_s	init_flags;
-		arch_init_flags_s	arch_init_flags;
 	} kinfo_s;
 
 	typedef struct framebuffer

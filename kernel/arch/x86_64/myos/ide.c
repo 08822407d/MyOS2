@@ -3,6 +3,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/preempt.h>
 #include <linux/kernel/kdev_t.h>
+#include <linux/kernel/kthread.h>
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>
 #include <asm/processor.h>

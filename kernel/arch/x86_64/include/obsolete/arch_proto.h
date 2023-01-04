@@ -134,27 +134,10 @@
 		uint8_t		thd_id;
 	};
 
-	typedef struct arch_percpu_info
-	{
-		uint64_t	lcpu_addr;			// local apic_id
-		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
-		tss64_T *	tss;
-	} arch_cpudata_s;
-
-	typedef struct
-	{
-		int		framebuffer;
-		int		arch_data;
-	} arch_init_flags_s;
-
-	/* early_init.c */
-	void myos_early_init_system(void);
 	/* protect.c */
-	void myos_early_init_arch_data(size_t lcpu_nr);
 	void load_gdt(desctblptr64_T * gdt_desc);
 	void load_idt(desctblptr64_T * idt_desc);
 	void load_tss(uint64_t cpu_idx);
-	void myos_init_arch(size_t cpu_idx);
 	void myos_reload_arch_data(size_t cpu_idx);
 	void myos_arch_system_call_init(void);
 
@@ -205,7 +188,6 @@
 	// pt_regs_s *get_stackframe(task_s * task_p);
 	unsigned long do_execve(char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
-	void myos_schedule(void);
 	void try_sched(void);
 	int kernel_init(void *arg);
 	int user_thread_test(unsigned long (* fn)(unsigned long),
@@ -229,7 +211,6 @@
 
 	/* smp.c */
 	void init_cpu(void);
-	void myos_early_init_smp(size_t lcpu_nr);
 	void myos_init_smp(size_t lcpu_nr);
 	void start_SMP(uint64_t apic_id);
 	void myos_startup_smp(void);

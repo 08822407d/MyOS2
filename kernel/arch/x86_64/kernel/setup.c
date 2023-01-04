@@ -177,6 +177,11 @@ extern char _k_virt_start;
 void __init setup_arch(char **cmdline_p)
 {
 extern void __used asm_offsets(void);
+extern void myos_early_init_system(void);
+extern void myos_early_init_arch_data(size_t lcpu_nr);
+extern void myos_init_arch(size_t cpu_idx);
+extern void myos_early_init_smp(size_t lcpu_nr);
+
 	asm_offsets();
 	myos_early_init_system();
 

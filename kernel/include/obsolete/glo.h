@@ -1,6 +1,8 @@
 #ifndef _GLO_H_
 #define _GLO_H_
 
+#include <linux/kernel/sched.h>
+
 #include <obsolete/ktypes.h>
 
 	extern unsigned long volatile	jiffies;

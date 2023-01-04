@@ -32,8 +32,6 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	framebuffer.X_Resolution = vbe_info->framebuffer_width;
 	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
 	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
-	// set init flag
-	kparam.arch_init_flags.framebuffer = 1;
 
 	memblock_add(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
 			PFN_PHYS(PFN_UP(framebuffer.FB_size)));

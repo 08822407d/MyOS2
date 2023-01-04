@@ -3,9 +3,9 @@
 #define _LINUX_SCHED_H
 
 	/*
-	* Define 'task_s' and provide the main scheduler
-	* APIs (schedule(), wakeup variants, etc.)
-	*/
+	 * Define 'task_s' and provide the main scheduler
+	 * APIs (schedule(), wakeup variants, etc.)
+	 */
 
 	#include <uapi/linux/sched.h>
 
@@ -2395,5 +2395,6 @@
 	void myos_switch_to(task_s *curr, task_s *target);
 	void myos_idle_enqueue(task_s *idle);
 	task_s *idle_dequeue(void);
+	asmlinkage void myos_schedule(void);
 
 #endif

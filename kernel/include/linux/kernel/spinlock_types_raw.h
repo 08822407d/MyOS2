@@ -3,12 +3,17 @@
 
 	#include <linux/kernel/types.h>
 
-	# include <asm/spinlock_types.h>
+	#include <asm/spinlock_types.h>
 
 	// #include <linux/lockdep_types.h>
 
 	typedef struct raw_spinlock {
+	#ifdef USE_QSPINLOCK
 		arch_spinlock_t raw_lock;
+	#else
+		u32		head;
+		u32		tail;
+	#endif
 	// #ifdef CONFIG_DEBUG_SPINLOCK
 	// 	unsigned int magic, owner_cpu;
 	// 	void *owner;

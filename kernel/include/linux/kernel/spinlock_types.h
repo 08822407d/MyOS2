@@ -13,10 +13,10 @@
 
 	// #ifndef CONFIG_PREEMPT_RT
 
-	// /* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
-	// typedef struct spinlock {
+	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
+	typedef struct spinlock {
 	// 	union {
-	// 		struct raw_spinlock rlock;
+			raw_spinlock_t	rlock;
 
 	// #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	// # define LOCK_PADSIZE (offsetof(struct raw_spinlock, dep_map))
@@ -26,7 +26,7 @@
 	// 		};
 	// #endif
 	// 	};
-	// } spinlock_t;
+	} spinlock_t;
 
 	// #define ___SPIN_LOCK_INITIALIZER(lockname)	\
 	// 	{					\

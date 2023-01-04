@@ -14,6 +14,7 @@
 
 cpudata_u *	percpu_data;
 extern u32	cr3_paddr;
+extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 void myos_early_init_smp(size_t lcpu_nr)
 {

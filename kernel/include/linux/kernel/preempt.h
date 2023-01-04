@@ -10,6 +10,10 @@
 	#include <linux/kernel/linkage.h>
 	#include <linux/lib/list.h>
 
+
+	#include <linux/sched/myos_percpu.h>
+	extern void myos_schedule(void);
+
 	// /*
 	//  * We put the hardirq and softirq counter into the preemption
 	//  * counter. The bitmask has the following meaning:
@@ -206,7 +210,7 @@
 	// 			} while (0)
 	#	define myos_preempt_disable()						\
 				do {										\
-					per_cpudata_s *	cpudata_p = curr_cpu;	\
+					per_cpudata_s *cpudata_p = curr_cpu;	\
 					cpudata_p->preempt_count += 1;			\
 					barrier();								\
 				} while (0)
@@ -222,7 +226,7 @@
 	#	define myos_preempt_enable_no_resched()				\
 				do {										\
 					barrier();								\
-					per_cpudata_s *	cpudata_p = curr_cpu;	\
+					per_cpudata_s *cpudata_p = curr_cpu;	\
 					cpudata_p->preempt_count -= 1;			\
 				} while (0)
 
@@ -238,6 +242,14 @@
 	// 				if (unlikely(preempt_count_dec_and_test()))	\
 	// 					__preempt_schedule();					\
 	// 			} while (0)
+	#	define myos_preempt_enable()						\
+				do {										\
+					barrier();								\
+					per_cpudata_s *cpudata_p = curr_cpu;	\
+					cpudata_p->preempt_count -= 1;			\
+					if (cpudata_p->preempt_count == 0)		\
+						myos_schedule();					\
+				} while (0)
 
 	// #		define preempt_enable_notrace()							\
 	// 			do {												\

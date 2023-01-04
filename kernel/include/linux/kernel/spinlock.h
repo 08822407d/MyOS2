@@ -203,7 +203,7 @@
 	//  */
 	// #define raw_spin_trylock(lock)	__cond_lock(lock, _raw_spin_trylock(lock))
 
-	// #define raw_spin_lock(lock)		_raw_spin_lock(lock)
+	#define raw_spin_lock(lock)		_raw_spin_lock(lock)
 
 	// #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	// #	define raw_spin_lock_nested(lock, subclass)			\
@@ -248,7 +248,7 @@
 
 	// #define raw_spin_lock_irq(lock)		_raw_spin_lock_irq(lock)
 	// #define raw_spin_lock_bh(lock)		_raw_spin_lock_bh(lock)
-	// #define raw_spin_unlock(lock)		_raw_spin_unlock(lock)
+	#define raw_spin_unlock(lock)		_raw_spin_unlock(lock)
 	// #define raw_spin_unlock_irq(lock)	_raw_spin_unlock_irq(lock)
 
 	// #define raw_spin_unlock_irqrestore(lock, flags)				\
@@ -281,7 +281,7 @@
 	// /*
 	//  * Pull the _spin_*()/_read_*()/_write_*() functions/declarations:
 	//  */
-	// # include <linux/spinlock_api_smp.h>
+	# include <linux/kernel/spinlock_api_smp.h>
 
 	// /* Non PREEMPT_RT kernel, map to raw spinlocks: */
 	// #ifndef CONFIG_PREEMPT_RT
@@ -310,9 +310,9 @@
 	// 				} while (0)
 	// #	endif
 
-	// 	static __always_inline void spin_lock(spinlock_t *lock) {
-	// 		raw_spin_lock(&lock->rlock);
-	// 	}
+		static __always_inline void spin_lock(spinlock_t *lock) {
+			raw_spin_lock(&lock->rlock);
+		}
 
 	// 	static __always_inline void spin_lock_bh(spinlock_t *lock) {
 	// 		raw_spin_lock_bh(&lock->rlock);
@@ -350,9 +350,9 @@
 	// 					spinlock_check(lock), flags, subclass);		\
 	// 			} while (0)
 
-	// 	static __always_inline void spin_unlock(spinlock_t *lock) {
-	// 		raw_spin_unlock(&lock->rlock);
-	// 	}
+		static __always_inline void spin_unlock(spinlock_t *lock) {
+			raw_spin_unlock(&lock->rlock);
+		}
 
 	// 	static __always_inline void spin_unlock_bh(spinlock_t *lock) {
 	// 		raw_spin_unlock_bh(&lock->rlock);
@@ -412,9 +412,9 @@
 	// #endif /* CONFIG_PREEMPT_RT */
 
 	/*
-	 * Pull the atomic_t declaration:
-	 * (asm-mips/atomic.h needs above definitions)
-	 */
+	* Pull the atomic_t declaration:
+	* (asm-mips/atomic.h needs above definitions)
+	*/
 	#include <linux/kernel/atomic.h>
 	// /**
 	//  * atomic_dec_and_lock - lock on reaching reference count zero

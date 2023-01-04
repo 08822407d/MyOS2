@@ -9,7 +9,9 @@
 #include <linux/fs/mount.h>
 
 
+#include <linux/kernel/sched.h>
 #include <obsolete/proto.h>
+#include <obsolete/arch_proto.h>
 
 typedef struct prepend_buffer
 {

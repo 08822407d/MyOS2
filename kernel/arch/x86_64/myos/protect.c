@@ -273,9 +273,6 @@ void myos_reload_arch_data(size_t cpu_idx)
 	// set TSS-desc in GDT
 	set_TSSseg_desc(cpu_idx, TSS_AVAIL, KERN_PRIVILEGE);
 	load_tss(cpu_idx);
-
-	// set init flag
-	kparam.arch_init_flags.arch_data = 1;
 }
 
 void myos_early_init_arch_data(size_t lcpu_nr)
