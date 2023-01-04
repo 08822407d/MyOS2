@@ -203,7 +203,7 @@
 	//  */
 	// #define raw_spin_trylock(lock)	__cond_lock(lock, _raw_spin_trylock(lock))
 
-	#define raw_spin_lock(lock)		_raw_spin_lock(lock)
+	// #define raw_spin_lock(lock)		_raw_spin_lock(lock)
 
 	// #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	// #	define raw_spin_lock_nested(lock, subclass)			\
@@ -248,7 +248,7 @@
 
 	// #define raw_spin_lock_irq(lock)		_raw_spin_lock_irq(lock)
 	// #define raw_spin_lock_bh(lock)		_raw_spin_lock_bh(lock)
-	#define raw_spin_unlock(lock)		_raw_spin_unlock(lock)
+	// #define raw_spin_unlock(lock)		_raw_spin_unlock(lock)
 	// #define raw_spin_unlock_irq(lock)	_raw_spin_unlock_irq(lock)
 
 	// #define raw_spin_unlock_irqrestore(lock, flags)				\
