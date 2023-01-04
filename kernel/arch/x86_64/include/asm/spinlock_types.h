@@ -3,7 +3,11 @@
 #define _ASM_X86_SPINLOCK_TYPES_H
 
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/asm-generic/qspinlock_types.h>
+	#ifdef USE_QSPINLOCK
+	#	include <linux/kernel/asm-generic/qspinlock_types.h>
+	#else
+	#	include <linux/kernel/asm-generic/tspinlock_types.h>
+	#endif
 	// #include <asm-generic/qrwlock_types.h>
 
 #endif /* _ASM_X86_SPINLOCK_TYPES_H */

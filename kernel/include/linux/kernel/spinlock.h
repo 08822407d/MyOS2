@@ -86,10 +86,10 @@
 	 */
 	#include <linux/kernel/spinlock_types.h>
 
-	// /*
-	//  * Pull the arch_spin*() functions/declarations (UP-nondebug doesn't need them):
-	//  */
-	// # include <asm/spinlock.h>
+	/*
+	 * Pull the arch_spin*() functions/declarations (UP-nondebug doesn't need them):
+	 */
+	# include <asm/spinlock.h>
 
 	// #ifdef CONFIG_DEBUG_SPINLOCK
 	// 	extern void __raw_spin_lock_init(raw_spinlock_t *lock,

@@ -216,7 +216,11 @@
 		"spinlock_types.h": "c",
 		"spinlock_types_raw.h": "c",
 		"qspinlock_types.h": "c",
-		"myos_percpu.h": "c"
+		"myos_percpu.h": "c",
+		"tspinlock_types.h": "c",
+		"spinlock_api_smp.h": "c",
+		"qspinlock.h": "c",
+		"tspinlock.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

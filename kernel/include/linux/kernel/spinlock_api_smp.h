@@ -5,15 +5,15 @@
 	#	error "please don't include this file directly"
 	#endif
 
-	// /*
-	// * include/linux/spinlock_api_smp.h
-	// *
-	// * spinlock API declarations on SMP (and debug)
-	// * (implemented in kernel/spinlock.c)
-	// *
-	// * portions Copyright 2005, Red Hat, Inc., Ingo Molnar
-	// * Released under the General Public License (GPL).
-	// */
+	/*
+	 * include/linux/spinlock_api_smp.h
+	 *
+	 * spinlock API declarations on SMP (and debug)
+	 * (implemented in kernel/spinlock.c)
+	 *
+	 * portions Copyright 2005, Red Hat, Inc., Ingo Molnar
+	 * Released under the General Public License (GPL).
+	 */
 
 	// int in_lock_functions(unsigned long addr);
 
@@ -124,6 +124,7 @@
 		myos_preempt_disable();
 		// spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
 		// LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
+		arch_spin_lock(&lock->raw_lock);
 	}
 
 	// #endif /* !CONFIG_GENERIC_LOCKBREAK || CONFIG_DEBUG_LOCK_ALLOC */
@@ -132,6 +133,7 @@
 	static inline void raw_spin_unlock(raw_spinlock_t *lock) {
 		// spin_release(&lock->dep_map, _RET_IP_);
 		// do_raw_spin_unlock(lock);
+		arch_spin_unlock(&lock->raw_lock);
 		myos_preempt_enable();
 	}
 
