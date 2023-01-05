@@ -17,7 +17,7 @@
 	#include <linux/kernel/mutex.h>
 	// #include <linux/plist.h>
 	// #include <linux/hrtimer.h>
-	// #include <linux/irqflags.h>
+	#include <linux/kernel/irqflags.h>
 	// #include <linux/seccomp.h>
 	// #include <linux/nodemask.h>
 	// #include <linux/rcupdate.h>

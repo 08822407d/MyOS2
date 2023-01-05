@@ -11,7 +11,7 @@
 	* C language equivalents written by Theodore Ts'o, 9/26/92
 	*/
 
-	// #include <linux/irqflags.h>
+	#include <linux/kernel/irqflags.h>
 	#include <linux/kernel/compiler.h>
 	#include <asm/barrier.h>
 

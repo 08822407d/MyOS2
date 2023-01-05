@@ -33,7 +33,7 @@
 	// #include <linux/threads.h>
 	#include <linux/kernel/math64.h>
 	#include <linux/kernel/err.h>
-	// #include <linux/irqflags.h>
+	#include <linux/kernel/irqflags.h>
 	// #include <linux/mem_encrypt.h>
 
 	// /*

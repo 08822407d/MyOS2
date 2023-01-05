@@ -9,14 +9,16 @@
 	 * Released under the General Public License (GPL).
 	 */
 
-	#include <linux/kernel/spinlock_types_raw.h>
+	// #include <linux/kernel/spinlock_types_raw.h>
+
+	#include <asm/spinlock_types.h>
 
 	// #ifndef CONFIG_PREEMPT_RT
 
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
 	typedef struct spinlock {
 	// 	union {
-			raw_spinlock_t	rlock;
+			arch_spinlock_t	rlock;
 
 	// #ifdef CONFIG_DEBUG_LOCK_ALLOC
 	// # define LOCK_PADSIZE (offsetof(struct raw_spinlock, dep_map))

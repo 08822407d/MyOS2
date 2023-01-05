@@ -107,11 +107,13 @@
 	// }
 
 	// static inline void __raw_spin_lock_irq(raw_spinlock_t *lock) {
-	// 	local_irq_disable();
-	// 	preempt_disable();
-	// 	spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
-	// 	LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
-	// }
+	static inline void raw_spin_lock_irq(arch_spinlock_t *lock) {
+		local_irq_disable();
+		myos_preempt_disable();
+		// spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
+		// LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
+		arch_spin_lock(lock);
+	}
 
 	// static inline void __raw_spin_lock_bh(raw_spinlock_t *lock) {
 	// 	__local_bh_disable_ip(_RET_IP_, SOFTIRQ_LOCK_OFFSET);
@@ -120,20 +122,20 @@
 	// }
 
 	// static inline void __raw_spin_lock(raw_spinlock_t *lock) {
-	static inline void raw_spin_lock(raw_spinlock_t *lock) {
+	static inline void raw_spin_lock(arch_spinlock_t *lock) {
 		myos_preempt_disable();
 		// spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
 		// LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
-		arch_spin_lock(&lock->raw_lock);
+		arch_spin_lock(lock);
 	}
 
 	// #endif /* !CONFIG_GENERIC_LOCKBREAK || CONFIG_DEBUG_LOCK_ALLOC */
 
 	// static inline void __raw_spin_unlock(raw_spinlock_t *lock) {
-	static inline void raw_spin_unlock(raw_spinlock_t *lock) {
+	static inline void raw_spin_unlock(arch_spinlock_t *lock) {
 		// spin_release(&lock->dep_map, _RET_IP_);
 		// do_raw_spin_unlock(lock);
-		arch_spin_unlock(&lock->raw_lock);
+		arch_spin_unlock(lock);
 		myos_preempt_enable();
 	}
 
@@ -146,11 +148,13 @@
 	// }
 
 	// static inline void __raw_spin_unlock_irq(raw_spinlock_t *lock) {
+	static inline void raw_spin_unlock_irq(arch_spinlock_t *lock) {
 	// 	spin_release(&lock->dep_map, _RET_IP_);
 	// 	do_raw_spin_unlock(lock);
-	// 	local_irq_enable();
-	// 	preempt_enable();
-	// }
+		arch_spin_unlock(lock);
+		local_irq_enable();
+		myos_preempt_enable();
+	}
 
 	// static inline void __raw_spin_unlock_bh(raw_spinlock_t *lock) {
 	// 	spin_release(&lock->dep_map, _RET_IP_);

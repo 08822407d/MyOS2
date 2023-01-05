@@ -55,7 +55,7 @@
 	#include <linux/kernel/preempt.h>
 	#include <linux/kernel/linkage.h>
 	#include <linux/kernel/compiler.h>
-	// #include <linux/irqflags.h>
+	#include <linux/kernel/irqflags.h>
 	// #include <linux/thread_info.h>
 	// #include <linux/stringify.h>
 	// #include <linux/bottom_half.h>
@@ -334,9 +334,9 @@
 	// 					spinlock_check(lock), nest_lock);	\
 	// 			} while (0)
 
-	// 	static __always_inline void spin_lock_irq(spinlock_t *lock) {
-	// 		raw_spin_lock_irq(&lock->rlock);
-	// 	}
+		static __always_inline void spin_lock_irq(spinlock_t *lock) {
+			raw_spin_lock_irq(&lock->rlock);
+		}
 
 	// #	define spin_lock_irqsave(lock, flags)			\
 	// 			do {									\
@@ -358,9 +358,9 @@
 	// 		raw_spin_unlock_bh(&lock->rlock);
 	// 	}
 
-	// 	static __always_inline void spin_unlock_irq(spinlock_t *lock) {
-	// 		raw_spin_unlock_irq(&lock->rlock);
-	// 	}
+		static __always_inline void spin_unlock_irq(spinlock_t *lock) {
+			raw_spin_unlock_irq(&lock->rlock);
+		}
 
 	// 	static __always_inline void
 	// 	spin_unlock_irqrestore(spinlock_t *lock, unsigned long flags) {

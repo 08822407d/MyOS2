@@ -6,7 +6,7 @@
 
 	// #	include <asm/nops.h>
 	#	include <asm/processor-flags.h>
-	// #	include <linux/irqflags.h>
+	#	include <linux/kernel/irqflags.h>
 	// #	include <linux/jump_label.h>
 
 	/*
