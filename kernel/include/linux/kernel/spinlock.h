@@ -290,10 +290,10 @@
 	// 	 * Map the spin_lock functions to the raw variants for PREEMPT_RT=n
 	// 	 */
 
-	// 	static __always_inline raw_spinlock_t
-	// 	*spinlock_check(spinlock_t *lock) {
-	// 		return &lock->rlock;
-	// 	}
+		static __always_inline arch_spinlock_t
+		*spinlock_check(spinlock_t *lock) {
+			return &lock->rlock;
+		}
 
 	// #	ifdef CONFIG_DEBUG_SPINLOCK
 	// #		define spin_lock_init(lock)								\
@@ -303,12 +303,15 @@
 	// 						#lock, &__key, LD_WAIT_CONFIG);			\
 	// 				} while (0)
 	// #	else
-	// #		define spin_lock_init(_lock)						\
-	// 				do {										\
-	// 					spinlock_check(_lock);					\
-	// 					*(_lock) = __SPIN_LOCK_UNLOCKED(_lock);	\
-	// 				} while (0)
+	// #	define spin_lock_init(_lock)						\
+	// 			do {										\
+	// 				spinlock_check(_lock);					\
+	// 				*(_lock) = __SPIN_LOCK_UNLOCKED(_lock);	\
+	// 			} while (0)
 	// #	endif
+		static __always_inline void spin_lock_init(spinlock_t *lock) {
+			raw_spin_lock_init(&lock->rlock);
+		}
 
 		static __always_inline void spin_lock(spinlock_t *lock) {
 			raw_spin_lock(&lock->rlock);

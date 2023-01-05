@@ -31,7 +31,6 @@
 	} spinlock_t;
 
 	// #define ___SPIN_LOCK_INITIALIZER(lockname)	\
-	// 	{					\
 	// 	.raw_lock = __ARCH_SPIN_LOCK_UNLOCKED,	\
 	// 	SPIN_DEBUG_INIT(lockname)		\
 	// 	SPIN_DEP_MAP_INIT(lockname) }

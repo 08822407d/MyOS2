@@ -37,6 +37,7 @@ task_s			*task_shell = NULL;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 myos_spinlock_T		newpid_lock;
+// spinlock_t		newpid_lock;
 unsigned long	curr_pid;
 
 /*==============================================================================================*
@@ -48,6 +49,7 @@ void myos_preinit_arch_task()
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
 	init_spin_lock(&newpid_lock);
+	// spin_lock_init(&newpid_lock);
 }
 
 void myos_init_arch_task(size_t cpu_idx)
@@ -63,6 +65,7 @@ void myos_init_arch_task(size_t cpu_idx)
 unsigned long myos_pid_nr()
 {
 	lock_spin_lock(&newpid_lock);
+	// spin_lock(&newpid_lock);
 	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
 	if (newpid >= MAX_PID || newpid < curr_pid)
 	{
@@ -76,6 +79,7 @@ unsigned long myos_pid_nr()
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
 	unlock_spin_lock(&newpid_lock);
+	// spin_unlock(&newpid_lock);
 
 	return curr_pid;
 }

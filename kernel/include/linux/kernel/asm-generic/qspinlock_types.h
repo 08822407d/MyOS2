@@ -43,10 +43,10 @@
 		};
 	} arch_spinlock_t;
 
-	// /*
-	//  * Initializier
-	//  */
-	// #define	__ARCH_SPIN_LOCK_UNLOCKED	{ { .val = ATOMIC_INIT(0) } }
+	/*
+	 * Initializier
+	 */
+	#define	__ARCH_SPIN_LOCK_UNLOCKED	{ { .val = ATOMIC_INIT(0) } }
 
 	// /*
 	//  * Bitfields in the atomic value:

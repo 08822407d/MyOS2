@@ -177,4 +177,7 @@
 	// #	include <linux/rwlock_api_smp.h>
 	// #endif
 
+
+	#define raw_spin_lock_init	arch_spinlock_init
+
 #endif /* __LINUX_SPINLOCK_API_SMP_H */
