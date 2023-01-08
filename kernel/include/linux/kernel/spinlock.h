@@ -357,6 +357,10 @@
 			raw_spin_unlock(&lock->rlock);
 		}
 
+		static __always_inline void spin_unlock_no_resched(spinlock_t *lock) {
+			raw_spin_unlock_no_resched(&lock->rlock);
+		}
+
 	// 	static __always_inline void spin_unlock_bh(spinlock_t *lock) {
 	// 		raw_spin_unlock_bh(&lock->rlock);
 	// 	}

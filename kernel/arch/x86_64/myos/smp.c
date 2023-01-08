@@ -12,7 +12,8 @@
 #include <obsolete/arch_glo.h>
 #include <obsolete/mutex.h>
 
-cpudata_u *	percpu_data;
+cpudata_u bsp_cpudata;
+cpudata_u *percpu_data;
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 

@@ -139,6 +139,13 @@
 		myos_preempt_enable();
 	}
 
+	static inline void raw_spin_unlock_no_resched(arch_spinlock_t *lock) {
+		// spin_release(&lock->dep_map, _RET_IP_);
+		// do_raw_spin_unlock(lock);
+		arch_spin_unlock(lock);
+		myos_preempt_enable_no_resched();
+	}
+
 	// static inline void
 	// __raw_spin_unlock_irqrestore(raw_spinlock_t *lock, unsigned long flags) {
 	// 	spin_release(&lock->dep_map, _RET_IP_);

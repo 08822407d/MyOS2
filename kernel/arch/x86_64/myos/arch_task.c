@@ -79,7 +79,7 @@ unsigned long myos_pid_nr()
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
 	unlock_spin_lock(&newpid_lock);
-	// spin_unlock(&newpid_lock);
+	// spin_unlock_no_resched(&newpid_lock);
 
 	return curr_pid;
 }
