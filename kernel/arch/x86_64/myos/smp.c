@@ -13,19 +13,26 @@
 #include <obsolete/mutex.h>
 
 cpudata_u bsp_cpudata;
-cpudata_u *percpu_data;
+cpudata_u **percpu_data;
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 void myos_early_init_smp(size_t lcpu_nr)
 {
-	percpu_data	= myos_memblock_alloc_normal(lcpu_nr * sizeof(cpudata_u), sizeof(void *));
+	percpu_data	= myos_memblock_alloc_normal(
+			lcpu_nr * sizeof(cpudata_u *), sizeof(void *));
+	cpudata_u *pcpudata_arr = myos_memblock_alloc_normal(
+			(lcpu_nr - 1) * sizeof(cpudata_u), sizeof(long));
+	percpu_data[0] = &bsp_cpudata;
+	wrgsbase((unsigned long)percpu_data[0]);
+	for (int i = 1; i < lcpu_nr; i++)
+		percpu_data[i] = &(pcpudata_arr[i - 1]);
 }
 
 static void init_percpu_data(size_t cpu_idx)
 {
 	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(percpu_data + cpu_idx)->cpudata;
+	per_cpudata_s * cpudata_p = &(percpu_data[cpu_idx]->cpudata);
 	cpudata_p->cpu_idx = cpu_idx;
 	cpudata_p->last_jiffies = 0;
 	cpudata_p->is_idle_flag = 1;
@@ -34,7 +41,7 @@ static void init_percpu_data(size_t cpu_idx)
 	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
 	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
 	cpudata_p->preempt_count = 0;
-	cpudata_p->cpustack_p = (reg_t)(percpu_data + cpu_idx) + SZ_2M;
+	cpudata_p->cpustack_p = (reg_t)percpu_data[cpu_idx] + sizeof(cpudata_u);
 	list_hdr_init(&cpudata_p->running_lhdr);
 
 	// fill architechture part
@@ -67,7 +74,7 @@ void myos_init_smp(size_t lcpu_nr)
 
 void myos_percpu_self_config(size_t cpu_idx)
 {
-	cpudata_u * cpudata_u_p = percpu_data + cpu_idx;
+	cpudata_u *cpudata_u_p = percpu_data[cpu_idx];
 	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
 	task_s *	current_task = current;
 	wrgsbase((unsigned long)cpudata_u_p);

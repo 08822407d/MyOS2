@@ -156,7 +156,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 {
 	extern int myos_load_balance();
 	int target_cpu_idx = myos_load_balance();
-	per_cpudata_s * target_cpu_p = &percpu_data[target_cpu_idx].cpudata;
+	per_cpudata_s * target_cpu_p = &(percpu_data[target_cpu_idx]->cpudata);
 	if (p->__state != TASK_RUNNING)
 	{
 		p->__state = TASK_RUNNING;
@@ -402,7 +402,7 @@ int myos_load_balance()
 	int min_idx = 0;
 	for (i = 0; i < kparam.nr_lcpu; i++)
 	{
-		per_cpudata_s * cpu_p = &percpu_data[i].cpudata;
+		per_cpudata_s * cpu_p = &(percpu_data[i]->cpudata);
 		if (cpu_p->running_lhdr.count < min_load)
 		{
 			min_load = cpu_p->running_lhdr.count;
