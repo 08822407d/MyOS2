@@ -114,7 +114,7 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 	int count = 0;
 	int line = 0;
 
-	lock_spin_lock(&Pos.printk_lock);
+	spin_lock(&Pos.lock);
 	for (count = 0; count < length || line; count++)
 	{
 		////	add \n \b \t
@@ -168,7 +168,7 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 			Pos.YPosition = 0;
 		}
 	}
-	unlock_spin_lock(&Pos.printk_lock);
+	spin_unlock_no_resched(&Pos.lock);
 }
 
 void myos_tty_write_color_at(const char *buf, size_t length,

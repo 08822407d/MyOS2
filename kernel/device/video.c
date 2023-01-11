@@ -25,7 +25,7 @@ void myos_init_video()
 	Pos.XCharSize = 8;
 	Pos.YCharSize = 16;
 
-	init_spin_lock(&Pos.printk_lock);
+	spin_lock_init(&Pos.lock);
 	// clean screen
 	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
 }

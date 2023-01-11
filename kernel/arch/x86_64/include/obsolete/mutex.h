@@ -6,12 +6,7 @@
 
 	typedef struct
 	{
-		atomic_t	lock;
-	} myos_spinlock_T;
-
-	typedef struct
-	{
-		myos_spinlock_T	selflock;
+		spinlock_t	selflock;
 		task_s *	owner;
 		__volatile__	unsigned	counter;
 	} recurs_lock_T;
@@ -34,15 +29,11 @@
 	
 	// typedef struct
 	// {
-	// 	myos_spinlock_T		selflock;
-	// 	myos_atomic_T		counter;
+	// 	spinlock_t	selflock;
+	// 	atomic_t		counter;
 	// 	task_list_s		waiting_tasks;
 	// 	recurs_wait_list_s	owner_list_head;
 	// } recurs_semaphore_T;
-	
-	void init_spin_lock(myos_spinlock_T * lock);
-	void lock_spin_lock(myos_spinlock_T * lock);
-	void unlock_spin_lock(myos_spinlock_T * lock);
 
 	void init_recurs_lock(recurs_lock_T * lock);
 	void lock_recurs_lock(recurs_lock_T * lock);

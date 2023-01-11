@@ -6,51 +6,13 @@
 #include <obsolete/mutex.h>
 
 /*==============================================================================================*
- *											spin lock											*
- *==============================================================================================*/
-inline __always_inline void init_spin_lock(myos_spinlock_T * lock)
-{
-	atomic_set(&lock->lock, 1);
-}
-
-inline __always_inline void lock_spin_lock(myos_spinlock_T * lock)
-{
-	asm volatile(	"1:						\n\t"
-					"lock	decq	%0		\n\t"
-					"jns	3f				\n\t"
-					"2:						\n\t"
-					"pause					\n\t"
-					"cmpq	$0,		%0		\n\t"
-					"jle	2b				\n\t"
-					"jmp	1b				\n\t"
-					"3:						\n\t"
-					// "cli					\n\t"
-				:	"=m"(lock->lock.counter)
-				:
-				:	"memory"
-				);
-	curr_cpu->preempt_count++;
-}
-
-inline __always_inline void unlock_spin_lock(myos_spinlock_T * lock)
-{
-	asm volatile(	"movq	$1,		%0		\n\t"
-					// "sti					\n\t"
-				:	"=m"(lock->lock.counter)
-				:
-				:	"memory"
-				);
-	curr_cpu->preempt_count--;
-}
-
-/*==============================================================================================*
  *										recursive spin lock										*
  *==============================================================================================*/
 inline __always_inline void init_recurs_lock(recurs_lock_T * lock)
 {
 	lock->counter = 0;
 	lock->owner = NULL;
-	init_spin_lock(&lock->selflock);
+	spin_lock_init(&lock->selflock);
 }
 
 void lock_recurs_lock(recurs_lock_T * lock)
@@ -58,11 +20,11 @@ void lock_recurs_lock(recurs_lock_T * lock)
 	task_s * owner = NULL;
 	do
 	{
-		lock_spin_lock(&lock->selflock);
+		spin_lock(&lock->selflock);
 		owner = lock->owner;
 		if (lock->owner == NULL)
 			lock->owner = current;
-		unlock_spin_lock(&lock->selflock);
+		spin_unlock_no_resched(&lock->selflock);
 	} while(owner != current);
 	lock->counter++;
 }
@@ -140,7 +102,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // inline __always_inline void init_recurs_semaphore(recurs_semaphore_T * semaphore, long max_nr)
 // {
 // 	semaphore->counter.value = max_nr;
-// 	init_spin_lock(&semaphore->selflock);
+// 	spin_lock(&semaphore->lock);
 // 	m_init_list_header(&semaphore->owner_list_head);
 // 	m_init_list_header(&semaphore->waiting_tasks);
 // }
@@ -154,7 +116,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 	if (user != NULL)
 // 	{
 // 		user->counter++;
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 	}
 // 	else if (semaphore->counter.value > 0)
 // 	{
@@ -163,13 +125,13 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 		new_user->owner = curr;
 // 		new_user->counter = 1;
 // 		m_enqueue_list(new_user, &semaphore->owner_list_head);
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 	}
 // 	else
 // 	{
 // 		m_enqueue_list(curr, &semaphore->waiting_tasks);
 // 		cpudata_p->curr_task = NULL;
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 		schedule();
 // 	}
 // }
@@ -188,7 +150,7 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 	if (user->counter != 0)
 // 	{
 // 		user->counter--;
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 	}
 // 	else if (semaphore->waiting_tasks.count == 0)
 // 	{
@@ -196,13 +158,13 @@ void unlock_recurs_lock(recurs_lock_T * lock)
 // 		semaphore->owner_list_head.count--;
 // 		semaphore->counter.value++;
 // 		kfree(user);
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 	}
 // 	else
 // 	{
 // 		m_dequeue_list(user->owner, &semaphore->waiting_tasks);
 // 		user->counter = 1;
-// 		unlock_spin_lock(&semaphore->selflock);
+		// spin_unlock_no_resched(&lock->selflock);
 // 		myos_wake_up_new_task(user->owner);
 // 	}
 // }
