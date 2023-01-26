@@ -142,7 +142,7 @@
 
 	// extern void swake_up_one(swqueue_hdr_s *q);
 	// extern void swake_up_all(swqueue_hdr_s *q);
-	// extern void swake_up_locked(swqueue_hdr_s *q);
+	extern void swake_up_locked(swqueue_hdr_s *q);
 
 	// extern void prepare_to_swait_exclusive(swqueue_hdr_s *q,
 	// 		swqueue_s *wait, int state);

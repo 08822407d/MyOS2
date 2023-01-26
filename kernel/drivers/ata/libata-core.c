@@ -37,7 +37,7 @@
 // #include <linux/timer.h>
 #include <linux/kernel/time.h>
 // #include <linux/interrupt.h>
-// #include <linux/completion.h>
+#include <linux/kernel/completion.h>
 // #include <linux/suspend.h>
 // #include <linux/workqueue.h>
 // #include <linux/scatterlist.h>

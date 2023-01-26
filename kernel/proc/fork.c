@@ -29,7 +29,7 @@
 #include <uapi/linux/unistd.h>
 // #include <linux/module.h>
 // #include <linux/vmalloc.h>
-// #include <linux/completion.h>
+#include <linux/kernel/completion.h>
 // #include <linux/personality.h>
 // #include <linux/mempolicy.h>
 // #include <linux/sem.h>

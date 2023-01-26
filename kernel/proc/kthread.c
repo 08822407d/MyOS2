@@ -14,7 +14,7 @@
 #include <linux/sched/mm.h>
 #include <linux/sched/task.h>
 #include <linux/kernel/kthread.h>
-// #include <linux/completion.h>
+#include <linux/kernel/completion.h>
 #include <linux/kernel/err.h>
 // #include <linux/cgroup.h>
 // #include <linux/cpuset.h>

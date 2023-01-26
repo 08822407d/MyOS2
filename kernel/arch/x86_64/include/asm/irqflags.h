@@ -2,7 +2,7 @@
 #ifndef _X86_IRQFLAGS_H_
 #define _X86_IRQFLAGS_H_
 
-	// #include <asm/processor-flags.h>
+	#include <asm/processor-flags.h>
 
 	#ifndef __ASSEMBLY__
 
@@ -15,24 +15,23 @@
 		 * Interrupt control:
 		 */
 
-		// /* Declaration required for gcc < 4.9 to prevent -Werror=missing-prototypes */
+		/* Declaration required for gcc < 4.9 to prevent -Werror=missing-prototypes */
 		// extern inline unsigned long native_save_fl(void);
-		// extern __always_inline unsigned long native_save_fl(void) {
-		// 	unsigned long flags;
-		// 	/*
-		// 	 * "=rm" is safe here, because "pop" adjusts the stack before
-		// 	 * it evaluates its effective address -- this is part of the
-		// 	 * documented behavior of the "pop" instruction.
-		// 	 */
-		// 	asm volatile(	"# __raw_save_flags	\n\t"
-		// 					"pushf				\n\t"
-		// 					"pop	%0			\n\t"
-		// 				:	"=rm"(flags)
-		// 				:	/* no input */
-		// 				:	"memory");
-
-		// 	return flags;
-		// }
+		// static __always_inline unsigned long native_save_fl(void) {
+		static __always_inline unsigned long arch_local_save_flags(void) {
+			unsigned long flags;
+			/*
+			 * "=rm" is safe here, because "pop" adjusts the stack before
+			 * it evaluates its effective address -- this is part of the
+			 * documented behavior of the "pop" instruction.
+			 */
+			asm volatile(	"pushfq				\n\t"
+							"popq		%0		\n\t"
+						:	"=rm"(flags)
+						:	/* no input */
+						:	"memory");
+			return flags;
+		}
 
 		// static __always_inline void native_irq_disable(void) {
 		static __always_inline void arch_local_irq_disable(void) {
@@ -61,8 +60,8 @@
 	// #ifdef CONFIG_PARAVIRT_XXL
 	// #include <asm/paravirt.h>
 	// #else
-	// #ifndef __ASSEMBLY__
-	// #include <linux/types.h>
+	#ifndef __ASSEMBLY__
+	#	include <linux/kernel/types.h>
 
 	// static __always_inline unsigned long arch_local_save_flags(void)
 	// {
@@ -97,28 +96,27 @@
 	// 	native_halt();
 	// }
 
-	// /*
-	// * For spinlocks, etc:
-	// */
-	// static __always_inline unsigned long arch_local_irq_save(void)
-	// {
-	// 	unsigned long flags = arch_local_save_flags();
-	// 	arch_local_irq_disable();
-	// 	return flags;
-	// }
-	// #else
+	/*
+	 * For spinlocks, etc:
+	 */
+	static __always_inline unsigned long arch_local_irq_save(void) {
+		unsigned long flags = arch_local_save_flags();
+		arch_local_irq_disable();
+		return flags;
+	}
+	#else
 
-	// #ifdef CONFIG_DEBUG_ENTRY
-	// #define SAVE_FLAGS		pushfq; popq %rax
-	// #endif
+	#	ifdef CONFIG_DEBUG_ENTRY
+	#		define SAVE_FLAGS		pushfq; popq %rax
+	#	endif
 
-	// #endif /* __ASSEMBLY__ */
+	#endif /* __ASSEMBLY__ */
 	// #endif /* CONFIG_PARAVIRT_XXL */
 
-	// #ifndef __ASSEMBLY__
-	// 	static __always_inline int arch_irqs_disabled_flags(unsigned long flags) {
-	// 		return !(flags & X86_EFLAGS_IF);
-	// 	}
+	#ifndef __ASSEMBLY__
+		static __always_inline int arch_irqs_disabled_flags(unsigned long flags) {
+			return !(flags & X86_EFLAGS_IF);
+		}
 
 	// 	static __always_inline int arch_irqs_disabled(void) {
 	// 		unsigned long flags = arch_local_save_flags();
@@ -126,10 +124,10 @@
 	// 		return arch_irqs_disabled_flags(flags);
 	// 	}
 
-	// 	static __always_inline void arch_local_irq_restore(unsigned long flags) {
-	// 		if (!arch_irqs_disabled_flags(flags))
-	// 			arch_local_irq_enable();
-	// 	}
+		static __always_inline void arch_local_irq_restore(unsigned long flags) {
+			if (!arch_irqs_disabled_flags(flags))
+				arch_local_irq_enable();
+		}
 	// #else
 	// #	ifdef CONFIG_XEN_PV
 	// #		define SWAPGS	ALTERNATIVE "swapgs", "", X86_FEATURE_XENPV
@@ -141,6 +139,6 @@
 	// #		define SWAPGS	swapgs
 	// #		define INTERRUPT_RETURN	jmp native_iret
 	// #	endif
-	// #endif /* !__ASSEMBLY__ */
+	#endif /* !__ASSEMBLY__ */
 
 #endif
