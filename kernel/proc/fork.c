@@ -736,8 +736,8 @@ static int copy_signal(unsigned long clone_flags, task_s *tsk)
 	// refcount_set(&sig->sigcnt, 1);
 
 	// /* list_add(thread_node, thread_head) without INIT_LIST_HEAD() */
-	// sig->thread_head = (struct list_head)LIST_HEAD_INIT(tsk->thread_node);
-	// tsk->thread_node = (struct list_head)LIST_HEAD_INIT(sig->thread_head);
+	// sig->thread_head = (List_s)LIST_HEAD_INIT(tsk->thread_node);
+	// tsk->thread_node = (List_s)LIST_HEAD_INIT(sig->thread_head);
 
 	// init_waitqueue_head(&sig->wait_chldexit);
 	// sig->curr_target = tsk;

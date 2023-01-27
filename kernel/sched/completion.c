@@ -36,3 +36,59 @@ void complete(completion_s *x)
 	swake_up_locked(&x->wait);
 	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
 }
+
+
+static inline long
+do_wait_for_common(completion_s *x, long timeout, int state) {
+	if (!x->done) {
+		// DECLARE_SWAITQUEUE(wait);
+
+		do {
+			// if (signal_pending_state(state, current)) {
+			// 	timeout = -ERESTARTSYS;
+			// 	break;
+			// }
+			// __prepare_to_swait(&x->wait, &wait);
+			// __set_current_state(state);
+			// raw_spin_unlock_irq(&x->wait.lock);
+			// timeout = action(timeout);
+			// raw_spin_lock_irq(&x->wait.lock);
+		// } while (!x->done && timeout);
+		} while (!x->done);
+		// __finish_swait(&x->wait, &wait);
+		if (!x->done)
+			return timeout;
+	}
+	if (x->done != UINT_MAX)
+		x->done--;
+	return timeout ?: 1;
+}
+
+static inline long
+wait_for_common(completion_s*x, long timeout, int state) {
+	// might_sleep();
+
+	complete_acquire(x);
+
+	raw_spin_lock_irq(&x->wait.lock);
+	timeout = do_wait_for_common(x, timeout, state);
+	raw_spin_unlock_irq(&x->wait.lock);
+
+	complete_release(x);
+
+	return timeout;
+}
+
+/**
+ * wait_for_completion: - waits for completion of a task
+ * @x:  holds the state of this particular completion
+ *
+ * This waits to be signaled for completion of a specific task. It is NOT
+ * interruptible and there is no timeout.
+ *
+ * See also similar routines (i.e. wait_for_completion_timeout()) with timeout
+ * and interrupt capability. Also see complete().
+ */
+void wait_for_completion(completion_s *x) {
+	wait_for_common(x, MAX_SCHEDULE_TIMEOUT, TASK_UNINTERRUPTIBLE);
+}

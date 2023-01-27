@@ -324,7 +324,7 @@
 
 	// extern void scheduler_tick(void);
 
-	// #define MAX_SCHEDULE_TIMEOUT LONG_MAX
+	#define MAX_SCHEDULE_TIMEOUT LONG_MAX
 
 	// extern long schedule_timeout(long timeout);
 	// extern long schedule_timeout_interruptible(long timeout);
@@ -587,7 +587,7 @@
 		// /* For load-balancing: */
 		// struct load_weight load;
 		// struct rb_node run_node;
-		// struct list_head group_node;
+		// List_s group_node;
 		// unsigned int on_rq;
 
 		// u64				exec_start;
@@ -619,7 +619,7 @@
 
 	typedef struct sched_rt_entity
 	{
-		// struct list_head run_list;
+		// List_s run_list;
 		// unsigned long timeout;
 		// unsigned long watchdog_stamp;
 		unsigned int time_slice;
@@ -884,7 +884,7 @@
 	// #ifdef CONFIG_PREEMPT_RCU
 		// int rcu_read_lock_nesting;
 		// union rcu_special rcu_read_unlock_special;
-		// struct list_head rcu_node_entry;
+		// List_s rcu_node_entry;
 		// struct rcu_node *rcu_blocked_node;
 	// #endif /* #ifdef CONFIG_PREEMPT_RCU */
 
@@ -893,7 +893,7 @@
 		// u8 rcu_tasks_holdout;
 		// u8 rcu_tasks_idx;
 		// int rcu_tasks_idle_cpu;
-		// struct list_head rcu_tasks_holdout_list;
+		// List_s rcu_tasks_holdout_list;
 	// #endif /* #ifdef CONFIG_TASKS_RCU */
 
 	// #ifdef CONFIG_TASKS_TRACE_RCU
@@ -901,7 +901,7 @@
 		// int trc_ipi_to_cpu;
 		// union rcu_special trc_reader_special;
 		// bool trc_reader_checked;
-		// struct list_head trc_holdout_list;
+		// List_s trc_holdout_list;
 	// #endif /* #ifdef CONFIG_TASKS_TRACE_RCU */
 
 		// struct sched_info sched_info;
@@ -1028,14 +1028,14 @@
 		// * This includes both natural children and PTRACE_ATTACH targets.
 		// * 'ptrace_entry' is this task's link on the p->parent->ptraced list.
 		// */
-		// struct list_head ptraced;
-		// struct list_head ptrace_entry;
+		// List_s ptraced;
+		// List_s ptrace_entry;
 
 		// /* PID/PID hash table linkage. */
 		// pid_s			*thread_pid;
 		// struct hlist_node pid_links[PIDTYPE_MAX];
-		// struct list_head thread_group;
-		// struct list_head thread_node;
+		// List_s thread_group;
+		// List_s thread_node;
 
 		// completion_s *vfork_done;
 
@@ -1258,7 +1258,7 @@
 		// /* Control Group info protected by css_set_lock: */
 		// struct css_set __rcu *cgroups;
 		// /* cg_list protected by css_set_lock and tsk->alloc_lock: */
-		// struct list_head cg_list;
+		// List_s cg_list;
 	// #endif
 	// #ifdef CONFIG_X86_CPU_RESCTRL
 		// u32 closid;
@@ -1269,7 +1269,7 @@
 	// #ifdef CONFIG_COMPAT
 		// struct compat_robust_list_head __user *compat_robust_list;
 	// #endif
-		// struct list_head pi_state_list;
+		// List_s pi_state_list;
 		// struct futex_pi_state *pi_state_cache;
 		// struct mutex futex_exit_mutex;
 		// unsigned int futex_state;
@@ -1277,7 +1277,7 @@
 	// #ifdef CONFIG_PERF_EVENTS
 		// struct perf_event_context *perf_event_ctxp[perf_nr_task_contexts];
 		// struct mutex perf_event_mutex;
-		// struct list_head perf_event_list;
+		// List_s perf_event_list;
 	// #endif
 	// #ifdef CONFIG_DEBUG_PREEMPT
 		// unsigned long preempt_disable_ip;

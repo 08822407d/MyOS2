@@ -40,7 +40,7 @@
 
 	typedef struct swait_queue_head {
 		arch_spinlock_t	lock;
-		List_s			task_list;
+		List_hdr_s		task_list;
 	} swqueue_hdr_s;
 
 	typedef struct swait_queue {

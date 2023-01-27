@@ -246,7 +246,7 @@
 
 	// struct class_interface
 	// {
-	// 	struct list_head node;
+	// 	List_s node;
 	// 	struct class *class;
 
 	// 	int (*add_dev)(struct device *, struct class_interface *);

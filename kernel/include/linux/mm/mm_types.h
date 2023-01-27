@@ -190,7 +190,7 @@
 			// 	unsigned long _compound_pad_1; /* compound_head */
 			// 	atomic_t hpage_pinned_refcount;
 			// 	/* For both global and memcg */
-			// 	struct list_head deferred_list;
+			// 	List_s deferred_list;
 			// };
 	// 		struct
 	// 		{							 /* Page table pages */
@@ -291,7 +291,7 @@
 			{
 				/* public: */
 				unsigned long	flags;
-				// struct list_head		lru;
+				// List_s		lru;
 				// struct address_space	*mapping;
 				pgoff_t			index;
 				void 			*private;
@@ -490,7 +490,7 @@
 	// 	* can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
 	// 	* or brk vma (with NULL file) can only be in an anon_vma list.
 	// 	*/
-	// 	struct list_head anon_vma_chain; /* Serialized by mmap_lock &
+	// 	List_s anon_vma_chain; /* Serialized by mmap_lock &
 	// 									* page_table_lock */
 	// 	struct anon_vma *anon_vma;		 /* Serialized by page_table_lock */
 
@@ -591,7 +591,7 @@
 	// 		*/
 	// 		struct rw_semaphore mmap_lock;
 
-	// 		struct list_head mmlist; /* List of maybe swapped mm's.	These
+	// 		List_s mmlist; /* List of maybe swapped mm's.	These
 	// 								* are globally strung together off
 	// 								* init_mm.mmlist, and are protected
 	// 								* by mmlist_lock

@@ -15,7 +15,7 @@
 // 	 * - taking namespace_sem for write, OR
 // 	 * - taking namespace_sem for read AND taking .ns_lock.
 // 	 */
-// 	struct list_head	list;
+// 	List_s	list;
 // 	spinlock_t		ns_lock;
 // 	struct user_namespace	*user_ns;
 // 	struct ucounts		*ucounts;

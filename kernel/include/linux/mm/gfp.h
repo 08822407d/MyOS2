@@ -532,7 +532,7 @@
 
 	// unsigned long __alloc_pages_bulk(gfp_t gfp, int preferred_nid,
 	// 				nodemask_t *nodemask, int nr_pages,
-	// 				struct list_head *page_list,
+	// 				List_s *page_list,
 	// 				page_s **page_array);
 
 	// unsigned long alloc_pages_bulk_array_mempolicy(gfp_t gfp,
@@ -541,7 +541,7 @@
 
 	// /* Bulk allocate order-0 pages */
 	// static inline unsigned long
-	// alloc_pages_bulk_list(gfp_t gfp, unsigned long nr_pages, struct list_head *list)
+	// alloc_pages_bulk_list(gfp_t gfp, unsigned long nr_pages, List_s *list)
 	// {
 	// 	return __alloc_pages_bulk(gfp, numa_mem_id(), NULL, nr_pages, list, NULL);
 	// }

@@ -11,16 +11,44 @@
  * If for some reason it would return 0, that means the previously waiting
  * task is already running, so it will observe condition true (or has already).
  */
-void swake_up_locked(swqueue_hdr_s *q)
-{
+void swake_up_locked(swqueue_hdr_s *q) {
 	swqueue_s *curr;
 
-	if (list_empty(&q->task_list))
+	if (&q->task_list.count == 0)
 		return;
 
-	// curr = list_first_entry(&q->task_list, typeof(*curr), task_list);
-	// wake_up_process(curr->task);
+	List_s *lp = list_hdr_dequeue(&q->task_list);
+	curr = container_of(lp, swqueue_s, task_list);
 	myos_wake_up_new_task(curr->task);
-	// list_del_init(&curr->task_list);
-	list_delete(&curr->task_list);
+}
+
+/*
+ * Wake up all waiters. This is an interface which is solely exposed for
+ * completions and not for general usage.
+ *
+ * It is intentionally different from swake_up_all() to allow usage from
+ * hard interrupt context and interrupt disabled regions.
+ */
+void swake_up_all_locked(swqueue_hdr_s *q) {
+	while (&q->task_list.count != 0)
+		swake_up_locked(q);
+}
+
+
+// void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
+// 	__set_current_state(TASK_RUNNING);
+// 	if (!list_empty(&wait->task_list))
+// 		list_del_init(&wait->task_list);
+// }
+
+void finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
+	unsigned long flags;
+
+	__set_current_state(TASK_RUNNING);
+
+	// if (!list_empty_careful(&wait->task_list)) {
+	// 	flags = raw_spin_lock_irqsave(&q->lock);
+	// 	list_del_init(&wait->task_list);
+	// 	raw_spin_unlock_irqrestore(&q->lock, flags);
+	// }
 }

@@ -149,7 +149,7 @@ int dcache_dir_close(inode_s *inode, file_s *file)
  * If no such element exists, NULL is returned.
  */
 // static struct dentry *scan_positives(struct dentry *cursor,
-//			struct list_head *p, loff_t count, struct dentry *last)
+//			List_s *p, loff_t count, struct dentry *last)
 static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 {
 	dentry_s	*dentry = cursor->d_parent,

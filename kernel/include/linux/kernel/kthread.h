@@ -125,14 +125,14 @@
 	// struct kthread_worker {
 	// 	unsigned int		flags;
 	// 	raw_spinlock_t		lock;
-	// 	struct list_head	work_list;
-	// 	struct list_head	delayed_work_list;
+	// 	List_s	work_list;
+	// 	List_s	delayed_work_list;
 	// 	task_s	*task;
 	// 	struct kthread_work	*current_work;
 	// };
 
 	// struct kthread_work {
-	// 	struct list_head	node;
+	// 	List_s	node;
 	// 	kthread_work_func_t	func;
 	// 	struct kthread_worker	*worker;
 	// 	/* Number of canceling calls that are running at the moment. */

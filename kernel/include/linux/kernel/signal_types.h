@@ -20,7 +20,7 @@
 	// */
 
 	// struct sigqueue {
-	// 	struct list_head list;
+	// 	List_s list;
 	// 	int flags;
 	// 	kernel_siginfo_t info;
 	// 	struct ucounts *ucounts;
@@ -30,7 +30,7 @@
 	// #define SIGQUEUE_PREALLOC	1
 
 	// struct sigpending {
-	// 	struct list_head list;
+	// 	List_s list;
 	// 	sigset_t signal;
 	// };
 

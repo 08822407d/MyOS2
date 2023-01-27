@@ -55,7 +55,7 @@
 		// #define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
 
 		// extern spinlock_t pgd_lock;
-		// extern struct list_head pgd_list;
+		// extern List_s pgd_list;
 
 		// extern struct mm_struct *pgd_page_get_mm(struct page *page);
 

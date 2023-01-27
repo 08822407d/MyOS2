@@ -66,7 +66,7 @@
 	// #ifdef CONFIG_MUTEX_SPIN_ON_OWNER
 	// 	struct optimistic_spin_queue osq; /* Spinner MCS lock */
 	// #endif
-	// 	struct list_head	wait_list;
+	// 	List_s	wait_list;
 	// #ifdef CONFIG_DEBUG_MUTEXES
 	// 	void			*magic;
 	// #endif

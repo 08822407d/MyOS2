@@ -242,7 +242,7 @@
 	// 	void *disc_data;
 	// 	void *driver_data;
 	// 	spinlock_t files_lock;
-	// 	struct list_head tty_files;
+	// 	List_s tty_files;
 
 	// #define N_TTY_BUF_SIZE 4096
 
@@ -257,7 +257,7 @@
 	// struct tty_file_private {
 	// 	struct tty_struct *tty;
 	// 	file_s *file;
-	// 	struct list_head list;
+	// 	List_s list;
 	// };
 
 	// /* tty magic number */

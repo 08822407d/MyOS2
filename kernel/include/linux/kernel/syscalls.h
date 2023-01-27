@@ -20,7 +20,7 @@
 	// struct kexec_segment;
 	// struct linux_dirent;
 	// struct linux_dirent64;
-	// struct list_head;
+	// List_s;
 	// struct mmap_arg_struct;
 	// struct msgbuf;
 	// struct user_msghdr;

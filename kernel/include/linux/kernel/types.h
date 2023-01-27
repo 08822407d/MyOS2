@@ -189,14 +189,27 @@
 		// struct list_head {
 		// 	struct list_head *next, *prev;
 		// };
+		typedef struct List List_s;
+		typedef struct List {
+			List_s *	prev;
+			List_s *	next;
+			void *		owner_p;
+		} List_s;
 
-		// struct hlist_head {
-		// 	struct hlist_node *first;
-		// };
+		typedef struct List_hdr {
+			unsigned long	count;
+			List_s			header;
+		} List_hdr_s;
 
-		// struct hlist_node {
-		// 	struct hlist_node *next, **pprev;
-		// };
+		struct hlist_node;
+		typedef struct hlist_node hlist_s;
+		typedef struct hlist_head {
+			hlist_s *first;
+		} hlist_hdr_s;
+
+		typedef struct hlist_node {
+			hlist_s *next, **pprev;
+		} hlist_s;
 
 		struct ustat {
 			__kernel_daddr_t	f_tfree;

@@ -66,7 +66,7 @@
 	// extern void __ptrace_link(task_s *child, task_s *new_parent,
 	// 		const struct cred *ptracer_cred);
 	// extern void __ptrace_unlink(task_s *child);
-	// extern void exit_ptrace(task_s *tracer, struct list_head *dead);
+	// extern void exit_ptrace(task_s *tracer, List_s *dead);
 	// #define PTRACE_MODE_READ		0x01
 	// #define PTRACE_MODE_ATTACH		0x02
 	// #define PTRACE_MODE_NOAUDIT		0x04

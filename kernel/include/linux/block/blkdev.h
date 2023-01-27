@@ -262,11 +262,11 @@
 
 	// 	struct blk_mq_tags	*sched_shared_tags;
 
-	// 	struct list_head	icq_list;
+	// 	List_s	icq_list;
 	// #ifdef CONFIG_BLK_CGROUP
 	// 	DECLARE_BITMAP		(blkcg_pols, BLKCG_MAX_POLS);
 	// 	struct blkcg_gq		*root_blkg;
-	// 	struct list_head	blkg_list;
+	// 	List_s	blkg_list;
 	// #endif
 
 	// 	struct queue_limits	limits;
@@ -308,7 +308,7 @@
 	// 	*/
 	// 	struct blk_flush_queue	*fq;
 
-	// 	struct list_head	requeue_list;
+	// 	List_s	requeue_list;
 	// 	spinlock_t		requeue_lock;
 	// 	struct delayed_work	requeue_work;
 
@@ -319,7 +319,7 @@
 	// 	* for reusing dead hctx instance in case of updating
 	// 	* nr_hw_queues
 	// 	*/
-	// 	struct list_head	unused_hctx_list;
+	// 	List_s	unused_hctx_list;
 	// 	spinlock_t		unused_hctx_lock;
 
 	// 	int			mq_freeze_depth;
@@ -339,7 +339,7 @@
 	// 	int			quiesce_depth;
 
 	// 	struct blk_mq_tag_set	*tag_set;
-	// 	struct list_head	tag_set_list;
+	// 	List_s	tag_set_list;
 	// 	struct bio_set		bio_split;
 
 	// 	struct dentry		*debugfs_dir;
@@ -763,13 +763,13 @@
 	// 	bool has_elevator;
 	// 	bool nowait;
 
-	// 	struct list_head cb_list; /* md requires an unplug callback */
+	// 	List_s cb_list; /* md requires an unplug callback */
 	// };
 
 	// struct blk_plug_cb;
 	// typedef void (*blk_plug_cb_fn)(struct blk_plug_cb *, bool);
 	// struct blk_plug_cb {
-	// 	struct list_head list;
+	// 	List_s list;
 	// 	blk_plug_cb_fn callback;
 	// 	void *data;
 	// };

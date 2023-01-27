@@ -56,7 +56,7 @@
 		// int				bd_holders;
 		// bool			bd_write_holder;
 	// #ifdef CONFIG_SYSFS
-	// 	struct list_head	bd_holder_disks;
+	// 	List_s	bd_holder_disks;
 	// #endif
 	// 	struct kobject		*bd_holder_dir;
 		u8				bd_partno;

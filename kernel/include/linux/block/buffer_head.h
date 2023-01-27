@@ -64,7 +64,7 @@
 		blk_dev_s *b_bdev;
 		// bh_end_io_t *b_end_io;		/* I/O completion */
 		// void *b_private;				/* reserved for b_end_io */
-		// struct list_head b_assoc_buffers; /* associated with another mapping */
+		// List_s b_assoc_buffers; /* associated with another mapping */
 		// addr_space_s *b_assoc_map;	/* mapping this buffer is
 		// 					associated with */
 		// atomic_t b_count;		/* users using this buffer_head */

@@ -176,7 +176,7 @@
 	//  */
 	// struct kset
 	// {
-	// 	struct list_head list;
+	// 	List_s list;
 	// 	spinlock_t list_lock;
 	// 	struct kobject kobj;
 	// 	const struct kset_uevent_ops *uevent_ops;

@@ -95,7 +95,7 @@
 
 			// struct free_area
 			// {
-			// 	struct list_head free_list[MIGRATE_TYPES];
+			// 	List_s free_list[MIGRATE_TYPES];
 			// 	unsigned long nr_free;
 			// };
 
@@ -309,7 +309,7 @@
 
 			// struct lruvec
 			// {
-			// 	struct list_head lists[NR_LRU_LISTS];
+			// 	List_s lists[NR_LRU_LISTS];
 			// 	/* per lruvec lru_lock for memcg */
 			// 	spinlock_t lru_lock;
 			// 	/*
@@ -383,7 +383,7 @@
 			// #endif
 
 			// 	/* Lists of pages, one per migrate type stored on the pcp-lists */
-			// 	struct list_head lists[NR_PCP_LISTS];
+			// 	List_s lists[NR_PCP_LISTS];
 			// };
 
 			// struct per_cpu_zonestat
@@ -795,7 +795,7 @@
 			// struct deferred_split
 			// {
 			// 	spinlock_t split_queue_lock;
-			// 	struct list_head split_queue;
+			// 	List_s split_queue;
 			// 	unsigned long split_queue_len;
 			// };
 			// #endif

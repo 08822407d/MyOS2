@@ -855,7 +855,7 @@
 
 	// void __put_page(page_s *page);
 
-	// void put_pages_list(struct list_head *pages);
+	// void put_pages_list(List_s *pages);
 
 	// void split_page(page_s *page, unsigned int order);
 	// void folio_copy(folio_s *dst, folio_s *src);
@@ -2692,14 +2692,14 @@
 
 	// extern unsigned long mmap_region(file_s *file, unsigned long addr,
 	// 	unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
-	// 	struct list_head *uf);
+	// 	List_s *uf);
 	// extern unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 	unsigned long len, unsigned long prot, unsigned long flags,
-	// 	unsigned long pgoff, unsigned long *populate, struct list_head *uf);
+	// 	unsigned long pgoff, unsigned long *populate, List_s *uf);
 	// extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
-	// 			struct list_head *uf, bool downgrade);
+	// 			List_s *uf, bool downgrade);
 	// extern int do_munmap(struct mm_struct *, unsigned long, size_t,
-	// 			struct list_head *uf);
+	// 			List_s *uf);
 	// extern int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int behavior);
 
 	// #ifdef CONFIG_MMU

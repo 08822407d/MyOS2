@@ -121,7 +121,7 @@
 		// struct backing_dev_info	*bdi;
 		// struct kobject *slave_dir;
 	// #ifdef CONFIG_BLOCK_HOLDER_DEPRECATED
-	// 	struct list_head slave_bdevs;
+	// 	List_s slave_bdevs;
 	// #endif
 	// 	struct timer_rand_state *random;
 	// 	atomic_t sync_io;		/* RAID */

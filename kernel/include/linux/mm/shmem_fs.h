@@ -22,8 +22,8 @@
 		unsigned long	alloced;			/* data pages alloced to file */
 		unsigned long	swapped;			/* subtotal assigned to swap */
 		pgoff_t			fallocend;			/* highest fallocate endindex */
-		// struct list_head	shrinklist;		/* shrinkable hpage inodes */
-		// struct list_head	swaplist;		/* chain of maybes on swap */
+		// List_s	shrinklist;		/* shrinkable hpage inodes */
+		// List_s	swaplist;		/* chain of maybes on swap */
 		// struct shared_policy	policy;		/* NUMA memory alloc policy */
 		// struct simple_xattrs	xattrs;		/* list of xattrs */
 		// atomic_t		stop_eviction;		/* hold when working on inode */
@@ -45,7 +45,7 @@
 		// ino_t			*ino_batch;			/* The next per-cpu inode number to use */
 		// struct mempolicy	*mpol;			/* default memory policy for mappings */
 		// spinlock_t		shrinklist_lock;	/* Protects shrinklist */
-		// struct list_head shrinklist; 		/* List of shinkable inodes */
+		// List_s shrinklist; 		/* List of shinkable inodes */
 		// unsigned long	shrinklist_len;		/* Length of shrinklist */
 	} shmem_sb_info_s;
 

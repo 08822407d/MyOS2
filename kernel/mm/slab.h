@@ -12,7 +12,7 @@
 	// #if defined(CONFIG_SLAB)
 
 	// 	union {
-	// 		struct list_head slab_list;
+	// 		List_s slab_list;
 	// 		struct rcu_head rcu_head;
 	// 	};
 	// 	struct kmem_cache *slab_cache;
@@ -23,7 +23,7 @@
 	// #elif defined(CONFIG_SLUB)
 
 	// 	union {
-	// 		struct list_head slab_list;
+	// 		List_s slab_list;
 	// 		struct rcu_head rcu_head;
 	// #ifdef CONFIG_SLUB_CPU_PARTIAL
 	// 		struct {
@@ -47,7 +47,7 @@
 
 	// #elif defined(CONFIG_SLOB)
 
-	// 	struct list_head slab_list;
+	// 	List_s slab_list;
 	// 	void *__unused_1;
 	// 	void *freelist;		/* first free block */
 	// 	long units;
@@ -212,7 +212,7 @@
 	// 	const char *name;	/* Slab name for sysfs */
 	// 	int refcount;		/* Use counter */
 	// 	void (*ctor)(void *);	/* Called on object slot creation */
-	// 	struct list_head list;	/* List of all slab caches on the system */
+	// 	List_s list;	/* List of all slab caches on the system */
 	// };
 
 	// #endif /* CONFIG_SLOB */
@@ -254,7 +254,7 @@
 	// extern struct mutex slab_mutex;
 
 	// /* The list of all slab caches on the system */
-	// extern struct list_head slab_caches;
+	// extern List_s slab_caches;
 
 	// /* The slab cache that manages slab cache information */
 	// extern struct kmem_cache *kmem_cache;
@@ -747,9 +747,9 @@
 	// 	spinlock_t list_lock;
 
 	// #ifdef CONFIG_SLAB
-	// 	struct list_head slabs_partial;	/* partial list first, better asm code */
-	// 	struct list_head slabs_full;
-	// 	struct list_head slabs_free;
+	// 	List_s slabs_partial;	/* partial list first, better asm code */
+	// 	List_s slabs_full;
+	// 	List_s slabs_free;
 	// 	unsigned long total_slabs;	/* length of all slab lists */
 	// 	unsigned long free_slabs;	/* length of free slab list only */
 	// 	unsigned long free_objects;
@@ -763,11 +763,11 @@
 
 	// #ifdef CONFIG_SLUB
 	// 	unsigned long nr_partial;
-	// 	struct list_head partial;
+	// 	List_s partial;
 	// #ifdef CONFIG_SLUB_DEBUG
 	// 	atomic_long_t nr_slabs;
 	// 	atomic_long_t total_objects;
-	// 	struct list_head full;
+	// 	List_s full;
 	// #endif
 	// #endif
 

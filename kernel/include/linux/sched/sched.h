@@ -247,7 +247,7 @@
 // struct rt_prio_array
 // {
 // 	DECLARE_BITMAP(bitmap, MAX_RT_PRIO + 1); /* include 1 bit for delimiter */
-// 	struct list_head queue[MAX_RT_PRIO];
+// 	List_s queue[MAX_RT_PRIO];
 // };
 
 // struct rt_bandwidth
@@ -355,7 +355,7 @@
 // struct cfs_rq;
 // struct rt_rq;
 
-// extern struct list_head task_groups;
+// extern List_s task_groups;
 
 // struct cfs_bandwidth
 // {
@@ -373,7 +373,7 @@
 // 	u8 slack_started;
 // 	struct hrtimer period_timer;
 // 	struct hrtimer slack_timer;
-// 	struct list_head throttled_cfs_rq;
+// 	List_s throttled_cfs_rq;
 
 // 	/* Statistics: */
 // 	int nr_periods;
@@ -415,11 +415,11 @@
 // #endif
 
 // 	struct rcu_head rcu;
-// 	struct list_head list;
+// 	List_s list;
 
 // 	struct task_group *parent;
-// 	struct list_head siblings;
-// 	struct list_head children;
+// 	List_s siblings;
+// 	List_s children;
 
 // #ifdef CONFIG_SCHED_AUTOGROUP
 // 	struct autogroup *autogroup;
@@ -596,7 +596,7 @@
 // 	 * This list is used during load balance.
 // 	 */
 // 	int on_list;
-// 	struct list_head leaf_cfs_rq_list;
+// 	List_s leaf_cfs_rq_list;
 // 	struct task_group *tg; /* group that "owns" this runqueue */
 
 // 	/* Locally cached copy of our task_group's idle value */
@@ -611,7 +611,7 @@
 // 	u64 throttled_clock_task_time;
 // 	int throttled;
 // 	int throttle_count;
-// 	struct list_head throttled_list;
+// 	List_s throttled_list;
 // #endif /* CONFIG_CFS_BANDWIDTH */
 // #endif /* CONFIG_FAIR_GROUP_SCHED */
 // };
@@ -948,8 +948,8 @@
 
 // #ifdef CONFIG_FAIR_GROUP_SCHED
 // 	/* list of leaf cfs_rq on this CPU: */
-// 	struct list_head leaf_cfs_rq_list;
-// 	struct list_head *tmp_alone_branch;
+// 	List_s leaf_cfs_rq_list;
+// 	List_s *tmp_alone_branch;
 // #endif /* CONFIG_FAIR_GROUP_SCHED */
 
 // 	/*
@@ -1006,7 +1006,7 @@
 // 	int cpu;
 // 	int online;
 
-// 	struct list_head cfs_tasks;
+// 	List_s cfs_tasks;
 
 // 	struct sched_avg avg_rt;
 // 	struct sched_avg avg_dl;

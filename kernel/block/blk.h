@@ -19,8 +19,8 @@
 	// 	unsigned int		flush_running_idx:1;
 	// 	blk_status_t 		rq_status;
 	// 	unsigned long		flush_pending_since;
-	// 	struct list_head	flush_queue[2];
-	// 	struct list_head	flush_data_in_flight;
+	// 	List_s	flush_queue[2];
+	// 	List_s	flush_data_in_flight;
 	// 	struct request		*flush_rq;
 
 	// 	spinlock_t		mq_flush_lock;
@@ -244,7 +244,7 @@
 
 	// bool blk_attempt_plug_merge(struct request_queue *q, struct bio *bio,
 	// 		unsigned int nr_segs);
-	// bool blk_bio_list_merge(struct request_queue *q, struct list_head *list,
+	// bool blk_bio_list_merge(struct request_queue *q, List_s *list,
 	// 			struct bio *bio, unsigned int nr_segs);
 
 	// /*

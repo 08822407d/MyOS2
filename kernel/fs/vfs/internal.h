@@ -143,8 +143,8 @@ extern int d_set_mounted(dentry_s *dentry);
 extern dentry_s *d_alloc_cursor(dentry_s *);
 extern dentry_s *d_alloc_pseudo(super_block_s *, const qstr_s *);
 extern char *simple_dname(dentry_s *, char *, int);
-// extern void dput_to_list(dentry_s *, struct list_head *);
-// extern void shrink_dentry_list(struct list_head *);
+// extern void dput_to_list(dentry_s *, List_s *);
+// extern void shrink_dentry_list(List_s *);
 
 /*
  * read_write.c

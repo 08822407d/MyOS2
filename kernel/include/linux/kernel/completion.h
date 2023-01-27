@@ -29,8 +29,8 @@
 	} completion_s;
 
 	// #define init_completion_map(x, m)	init_completion(x)
-	// static inline void complete_acquire(completion_s *x) {}
-	// static inline void complete_release(completion_s *x) {}
+	static inline void complete_acquire(completion_s *x) {}
+	static inline void complete_release(completion_s *x) {}
 
 	// #define COMPLETION_INITIALIZER(work)	\
 	// 			{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
@@ -74,17 +74,17 @@
 	// #	define DECLARE_COMPLETION_ONSTACK_MAP(work, map)	DECLARE_COMPLETION(work)
 	// #endif
 
-	// /**
-	//  * init_completion - Initialize a dynamically allocated completion
-	//  * @x:  pointer to completion structure that is to be initialized
-	//  *
-	//  * This inline function will initialize a dynamically created completion
-	//  * structure.
-	//  */
-	// static inline void init_completion(completion_s *x) {
-	// 	x->done = 0;
-	// 	init_swait_queue_head(&x->wait);
-	// }
+	/**
+	 * init_completion - Initialize a dynamically allocated completion
+	 * @x:  pointer to completion structure that is to be initialized
+	 *
+	 * This inline function will initialize a dynamically created completion
+	 * structure.
+	 */
+	static inline void init_completion(completion_s *x) {
+		x->done = 0;
+		// init_swait_queue_head(&x->wait);
+	}
 
 	// /**
 	//  * reinit_completion - reinitialize a completion structure

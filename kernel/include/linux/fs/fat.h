@@ -112,7 +112,7 @@
 	 */
 	typedef struct msdos_inode_info {
 		// spinlock_t cache_lru_lock;
-		// struct list_head cache_lru;
+		// List_s cache_lru;
 		int		nr_caches;
 		/* for avoiding the race between fat_free() and fat_get_cluster() */
 		unsigned int cache_valid_id;

@@ -63,7 +63,7 @@
 	// {
 	// 	const char *name;
 	// 	struct bus_type *subsys;
-	// 	struct list_head node;
+	// 	List_s node;
 	// 	int (*add_dev)(struct device *dev, struct subsys_interface *sif);
 	// 	void (*remove_dev)(struct device *dev, struct subsys_interface *sif);
 	// };
@@ -371,9 +371,9 @@
 	//  */
 	// struct dev_links_info
 	// {
-	// 	struct list_head suppliers;
-	// 	struct list_head consumers;
-	// 	struct list_head defer_sync;
+	// 	List_s suppliers;
+	// 	List_s consumers;
+	// 	List_s defer_sync;
 	// 	enum dl_dev_state status;
 	// };
 
@@ -537,7 +537,7 @@
 
 	// 	struct device_dma_parameters *dma_parms;
 
-	// 	struct list_head dma_pools; /* dma pools (if dma'ble) */
+	// 	List_s dma_pools; /* dma pools (if dma'ble) */
 
 	// #ifdef CONFIG_DMA_DECLARE_COHERENT
 	// 	struct dma_coherent_mem *dma_mem; /* internal for coherent mem
@@ -563,7 +563,7 @@
 		u32			id;		/* device instance */
 
 	// 	spinlock_t devres_lock;
-	// 	struct list_head devres_head;
+	// 	List_s devres_head;
 
 		class_s		*class;
 	// 	const struct attribute_group **groups; /* optional groups */
@@ -606,9 +606,9 @@
 	// struct device_link
 	// {
 	// 	struct device *supplier;
-	// 	struct list_head s_node;
+	// 	List_s s_node;
 	// 	struct device *consumer;
-	// 	struct list_head c_node;
+	// 	List_s c_node;
 	// 	struct device link_dev;
 	// 	enum device_link_state status;
 	// 	u32 flags;

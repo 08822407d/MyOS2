@@ -785,7 +785,7 @@
 
 	// 	unsigned int		hsm_task_state;
 
-	// 	struct list_head	eh_done_q;
+	// 	List_s	eh_done_q;
 	// 	wait_queue_head_t	eh_wait_q;
 	// 	int			eh_tries;
 	// 	completion_s	park_req_pending;
@@ -1153,7 +1153,7 @@
 	// extern ata_dev_s *ata_dev_pair(ata_dev_s *adev);
 	// extern int ata_do_set_mode(struct ata_link *link, ata_dev_s **r_failed_dev);
 	// extern void ata_scsi_port_error_handler(struct Scsi_Host *host, ata_port_s *ap);
-	// extern void ata_scsi_cmd_error_handler(struct Scsi_Host *host, ata_port_s *ap, struct list_head *eh_q);
+	// extern void ata_scsi_cmd_error_handler(struct Scsi_Host *host, ata_port_s *ap, List_s *eh_q);
 
 	// /*
 	//  * SATA specific code - drivers/ata/libata-sata.c

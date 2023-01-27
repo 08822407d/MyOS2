@@ -43,7 +43,7 @@
 // struct subsys_private {
 // 	struct kset subsys;
 // 	struct kset *devices_kset;
-// 	struct list_head interfaces;
+// 	List_s interfaces;
 // 	struct mutex mutex;
 
 // 	struct kset *drivers_kset;
@@ -94,7 +94,7 @@
 // 	struct klist_node knode_driver;
 // 	struct klist_node knode_bus;
 // 	struct klist_node knode_class;
-// 	struct list_head deferred_probe;
+// 	List_s deferred_probe;
 // 	struct device_driver *async_driver;
 // 	char *deferred_probe_reason;
 // 	struct device *device;

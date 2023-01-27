@@ -254,7 +254,7 @@
 	// extern int user_min_free_kbytes;
 
 	// extern void free_unref_page(struct page *page, unsigned int order);
-	// extern void free_unref_page_list(struct list_head *list);
+	// extern void free_unref_page_list(List_s *list);
 
 	// extern void zone_pcp_update(struct zone *zone, int cpu_online);
 	// extern void zone_pcp_reset(struct zone *zone);
@@ -278,8 +278,8 @@
 	// * completes when free_pfn <= migrate_pfn
 	// */
 	// struct compact_control {
-	// 	struct list_head freepages;	/* List of free pages to migrate to */
-	// 	struct list_head migratepages;	/* List of pages being migrated */
+	// 	List_s freepages;	/* List of free pages to migrate to */
+	// 	List_s migratepages;	/* List of pages being migrated */
 	// 	unsigned int nr_freepages;	/* Number of isolated free pages */
 	// 	unsigned int nr_migratepages;	/* Number of pages to migrate */
 	// 	unsigned long free_pfn;		/* isolate_freepages search base */
@@ -622,7 +622,7 @@
 
 	// extern void set_pageblock_order(void);
 	// unsigned int reclaim_clean_pages_from_list(struct zone *zone,
-	// 						struct list_head *page_list);
+	// 						List_s *page_list);
 	// /* The ALLOC_WMARK bits are used as an index to zone->watermark */
 	// #define ALLOC_WMARK_MIN		WMARK_MIN
 	// #define ALLOC_WMARK_LOW		WMARK_LOW

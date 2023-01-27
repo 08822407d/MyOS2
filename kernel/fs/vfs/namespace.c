@@ -144,7 +144,7 @@ done:
 /* called with namespace_lock and vfsmount lock */
 static void put_mountpoint(mountpoint_s *mp)
 {
-	// static void __put_mountpoint(struct mountpoint *mp, struct list_head *list)
+	// static void __put_mountpoint(struct mountpoint *mp, List_s *list)
 	// {
 		if (--mp->m_count == 0) {
 			dentry_s *dentry = mp->m_dentry;
