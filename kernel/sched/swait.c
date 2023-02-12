@@ -14,7 +14,7 @@
 void swake_up_locked(swqueue_hdr_s *q) {
 	swqueue_s *curr;
 
-	if (&q->task_list.count == 0)
+	if (q->task_list.count == 0)
 		return;
 
 	List_s *lp = list_hdr_dequeue(&q->task_list);

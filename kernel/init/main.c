@@ -114,7 +114,7 @@
 
 
 #include <linux/mm/myos_slab.h>
-
+#include <linux/kernel/completion.h>
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
@@ -129,6 +129,16 @@
 unsigned long loops_per_jiffy = 10371364;
 
 
+/*
+ * We need to finalize in a non-__init function or else race conditions
+ * between the root thread and the init thread may cause start_kernel to
+ * be reaped by free_initmem before the root thread has proceeded to
+ * cpu_idle.
+ *
+ * gcc-3.4 accidentally inlines this function, so use noinline.
+ */
+
+static __initdata DECLARE_COMPLETION(kthreadd_done);
 
 noinline void __ref rest_init(void)
 {
@@ -168,7 +178,7 @@ noinline void __ref rest_init(void)
 	//  */
 	// system_state = SYSTEM_SCHEDULING;
 
-	// complete(&kthreadd_done);
+	complete(&kthreadd_done);
 
 	// /*
 	//  * The boot idle thread must execute schedule()
@@ -324,8 +334,15 @@ static void do_basic_setup(void)
 void myos_ata_probe();
 extern void init_ATArqd();
 extern void kjmp_to_doexecve();
-int kernel_init(void *arg)
+int kernel_init(void *unused)
 {
+	int ret;
+
+	/*
+	 * Wait until kthreadd is all set-up.
+	 */
+	wait_for_completion(&kthreadd_done);
+
 	do_basic_setup();
 	// do_name();
 	init_ATArqd();

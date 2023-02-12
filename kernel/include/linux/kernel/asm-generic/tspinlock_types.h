@@ -14,12 +14,12 @@
 		u32		tail;
 	} arch_spinlock_t;
 
-	// /*
-	//  * Initializier
-	//  */
-	// #define	__ARCH_SPIN_LOCK_UNLOCKED	{{	\
-	// 			.head = 0U,					\
-	// 			.tail = 0U,					\
-	// 			}}
+	/*
+	 * Initializier
+	 */
+	#define	__ARCH_SPIN_LOCK_UNLOCKED	{	\
+				.head = 0U,					\
+				.tail = 0U,					\
+				}
 
 #endif /* __ASM_GENERIC_TSPINLOCK_TYPES_H */

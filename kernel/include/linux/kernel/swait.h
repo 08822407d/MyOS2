@@ -56,10 +56,10 @@
 	// #define DECLARE_SWAITQUEUE(name)	\
 	// 			swqueue_s name = __SWAITQUEUE_INITIALIZER(name)
 
-	// #define __SWAIT_QUEUE_HEAD_INITIALIZER(name) {					\
-	// 			.lock		= __RAW_SPIN_LOCK_UNLOCKED(name.lock),	\
-	// 			.task_list	= LIST_HEAD_INIT((name).task_list),		\
-	// 		}
+	#define __SWAIT_QUEUE_HEAD_INITIALIZER(name) {					\
+				.lock		= __ARCH_SPIN_LOCK_UNLOCKED,			\
+				.task_list	= LIST_HEADER_INIT((name).task_list),	\
+			}
 
 	// #define DECLARE_SWAIT_QUEUE_HEAD(name)	\
 	// 			swqueue_hdr_s name = __SWAIT_QUEUE_HEAD_INITIALIZER(name)

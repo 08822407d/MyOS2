@@ -20,10 +20,16 @@
 	 * using the generic single-entry routines.
 	 */
 
-	#define LIST_HEAD_INIT(name) { &(name), &(name) }
+	#define LIST_INIT(name) { &(name), &(name) }
+	#define LIST_HEADER_INIT(name) {			\
+				.header	= { &(name.header), &(name.header) },	\
+				.count	= 0,					\
+			}
 
-	#define LIST_HEAD(name) \
-				List_s name = LIST_HEAD_INIT(name)
+	#define LIST_S(name) \
+				List_s name = LIST_INIT(name)
+	#define LIST_HDR_S(name) \
+				List_hdr_s name = LIST_HEADER_INIT(name)
 
 	/**
 	 * INIT_LIST_HEAD - Initialize a list_head structure

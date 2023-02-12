@@ -32,8 +32,8 @@
 	static inline void complete_acquire(completion_s *x) {}
 	static inline void complete_release(completion_s *x) {}
 
-	// #define COMPLETION_INITIALIZER(work)	\
-	// 			{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
+	#define COMPLETION_INITIALIZER(work)	\
+				{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }
 
 	// #define COMPLETION_INITIALIZER_ONSTACK_MAP(work, map)	\
 	// 			(*({ init_completion_map(&(work), &(map)); &(work); }))
@@ -41,16 +41,16 @@
 	// #define COMPLETION_INITIALIZER_ONSTACK(work)	\
 	// 			(*({ init_completion(&work); &work; }))
 
-	// /**
-	//  * DECLARE_COMPLETION - declare and initialize a completion structure
-	//  * @work:  identifier for the completion structure
-	//  *
-	//  * This macro declares and initializes a completion structure. Generally used
-	//  * for static declarations. You should use the _ONSTACK variant for automatic
-	//  * variables.
-	//  */
-	// #define DECLARE_COMPLETION(work)	\
-	// 			completion_s work = COMPLETION_INITIALIZER(work)
+	/**
+	 * DECLARE_COMPLETION - declare and initialize a completion structure
+	 * @work:  identifier for the completion structure
+	 *
+	 * This macro declares and initializes a completion structure. Generally used
+	 * for static declarations. You should use the _ONSTACK variant for automatic
+	 * variables.
+	 */
+	#define DECLARE_COMPLETION(work)	\
+				completion_s work = COMPLETION_INITIALIZER(work)
 
 	// /*
 	// * Lockdep needs to run a non-constant initializer for on-stack
@@ -97,7 +97,7 @@
 	// 	x->done = 0;
 	// }
 
-	// extern void wait_for_completion(completion_s *);
+	extern void wait_for_completion(completion_s *);
 	// extern void wait_for_completion_io(completion_s *);
 	// extern int wait_for_completion_interruptible(completion_s *x);
 	// extern int wait_for_completion_killable(completion_s *x);
@@ -112,7 +112,7 @@
 	// extern bool try_wait_for_completion(completion_s *x);
 	// extern bool completion_done(completion_s *x);
 
-	// extern void complete(completion_s *);
+	extern void complete(completion_s *);
 	// extern void complete_all(completion_s *);
 
 #endif
