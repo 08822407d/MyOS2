@@ -129,14 +129,14 @@
 	// #define in_softirq()		(softirq_count())
 	// #define in_interrupt()		(irq_count())
 
-	// /*
-	//  * The preempt_count offset after preempt_disable();
-	//  */
-	// #define PREEMPT_DISABLE_OFFSET	PREEMPT_OFFSET
+	/*
+	 * The preempt_count offset after preempt_disable();
+	 */
+	#define PREEMPT_DISABLE_OFFSET	PREEMPT_OFFSET
 
-	// /*
-	//  * The preempt_count offset after spin_lock()
-	//  */
+	/*
+	 * The preempt_count offset after spin_lock()
+	 */
 	// #if !defined(CONFIG_PREEMPT_RT)
 	// #define PREEMPT_LOCK_OFFSET		PREEMPT_DISABLE_OFFSET
 	// #else
@@ -157,7 +157,7 @@
 	 *
 	 * Work as expected.
 	 */
-	// #define SOFTIRQ_LOCK_OFFSET		(SOFTIRQ_DISABLE_OFFSET + PREEMPT_LOCK_OFFSET)
+	#define SOFTIRQ_LOCK_OFFSET		(SOFTIRQ_DISABLE_OFFSET + PREEMPT_LOCK_OFFSET)
 
 	/*
 	 * Are we running in atomic context?  WARNING: this macro cannot
@@ -172,7 +172,7 @@
 	 * Check whether we were atomic before we did preempt_disable():
 	 * (used by the scheduler)
 	 */
-	// #define in_atomic_preempt_off()	(preempt_count() != PREEMPT_DISABLE_OFFSET)
+	#define in_atomic_preempt_off()	(preempt_count() != PREEMPT_DISABLE_OFFSET)
 
 	extern void preempt_count_add(int val);
 	extern void preempt_count_sub(int val);
@@ -309,61 +309,61 @@
 
 	// #endif
 
-	// /*
-	//  * Migrate-Disable and why it is undesired.
-	//  *
-	//  * When a preempted task becomes elegible to run under the ideal model (IOW it
-	//  * becomes one of the M highest priority tasks), it might still have to wait
-	//  * for the preemptee's migrate_disable() section to complete. Thereby suffering
-	//  * a reduction in bandwidth in the exact duration of the migrate_disable()
-	//  * section.
-	//  *
-	//  * Per this argument, the change from preempt_disable() to migrate_disable()
-	//  * gets us:
-	//  *
-	//  * - a higher priority tasks gains reduced wake-up latency; with preempt_disable()
-	//  *   it would have had to wait for the lower priority task.
-	//  *
-	//  * - a lower priority tasks; which under preempt_disable() could've instantly
-	//  *   migrated away when another CPU becomes available, is now constrained
-	//  *   by the ability to push the higher priority task away, which might itself be
-	//  *   in a migrate_disable() section, reducing it's available bandwidth.
-	//  *
-	//  * IOW it trades latency / moves the interference term, but it stays in the
-	//  * system, and as long as it remains unbounded, the system is not fully
-	//  * deterministic.
-	//  *
-	//  *
-	//  * The reason we have it anyway.
-	//  *
-	//  * PREEMPT_RT breaks a number of assumptions traditionally held. By forcing a
-	//  * number of primitives into becoming preemptible, they would also allow
-	//  * migration. This turns out to break a bunch of per-cpu usage. To this end,
-	//  * all these primitives employ migirate_disable() to restore this implicit
-	//  * assumption.
-	//  *
-	//  * This is a 'temporary' work-around at best. The correct solution is getting
-	//  * rid of the above assumptions and reworking the code to employ explicit
-	//  * per-cpu locking or short preempt-disable regions.
-	//  *
-	//  * The end goal must be to get rid of migrate_disable(), alternatively we need
-	//  * a schedulability theory that does not depend on abritrary migration.
-	//  *
-	//  *
-	//  * Notes on the implementation.
-	//  *
-	//  * The implementation is particularly tricky since existing code patterns
-	//  * dictate neither migrate_disable() nor migrate_enable() is allowed to block.
-	//  * This means that it cannot use cpus_read_lock() to serialize against hotplug,
-	//  * nor can it easily migrate itself into a pending affinity mask change on
-	//  * migrate_enable().
-	//  *
-	//  *
-	//  * Note: even non-work-conserving schedulers like semi-partitioned depends on
-	//  *       migration, so migrate_disable() is not only a problem for
-	//  *       work-conserving schedulers.
-	//  *
-	//  */
+	/*
+	 * Migrate-Disable and why it is undesired.
+	 *
+	 * When a preempted task becomes elegible to run under the ideal model (IOW it
+	 * becomes one of the M highest priority tasks), it might still have to wait
+	 * for the preemptee's migrate_disable() section to complete. Thereby suffering
+	 * a reduction in bandwidth in the exact duration of the migrate_disable()
+	 * section.
+	 *
+	 * Per this argument, the change from preempt_disable() to migrate_disable()
+	 * gets us:
+	 *
+	 * - a higher priority tasks gains reduced wake-up latency; with preempt_disable()
+	 *   it would have had to wait for the lower priority task.
+	 *
+	 * - a lower priority tasks; which under preempt_disable() could've instantly
+	 *   migrated away when another CPU becomes available, is now constrained
+	 *   by the ability to push the higher priority task away, which might itself be
+	 *   in a migrate_disable() section, reducing it's available bandwidth.
+	 *
+	 * IOW it trades latency / moves the interference term, but it stays in the
+	 * system, and as long as it remains unbounded, the system is not fully
+	 * deterministic.
+	 *
+	 *
+	 * The reason we have it anyway.
+	 *
+	 * PREEMPT_RT breaks a number of assumptions traditionally held. By forcing a
+	 * number of primitives into becoming preemptible, they would also allow
+	 * migration. This turns out to break a bunch of per-cpu usage. To this end,
+	 * all these primitives employ migirate_disable() to restore this implicit
+	 * assumption.
+	 *
+	 * This is a 'temporary' work-around at best. The correct solution is getting
+	 * rid of the above assumptions and reworking the code to employ explicit
+	 * per-cpu locking or short preempt-disable regions.
+	 *
+	 * The end goal must be to get rid of migrate_disable(), alternatively we need
+	 * a schedulability theory that does not depend on abritrary migration.
+	 *
+	 *
+	 * Notes on the implementation.
+	 *
+	 * The implementation is particularly tricky since existing code patterns
+	 * dictate neither migrate_disable() nor migrate_enable() is allowed to block.
+	 * This means that it cannot use cpus_read_lock() to serialize against hotplug,
+	 * nor can it easily migrate itself into a pending affinity mask change on
+	 * migrate_enable().
+	 *
+	 *
+	 * Note: even non-work-conserving schedulers like semi-partitioned depends on
+	 *       migration, so migrate_disable() is not only a problem for
+	 *       work-conserving schedulers.
+	 *
+	 */
 	// extern void migrate_disable(void);
 	// extern void migrate_enable(void);
 
