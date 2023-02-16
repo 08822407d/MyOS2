@@ -104,7 +104,7 @@
 
 	// static inline void __raw_spin_lock(raw_spinlock_t *lock) {
 	static inline void raw_spin_lock(arch_spinlock_t *lock) {
-		myos_preempt_disable();
+		preempt_disable();
 		// spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
 		// LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
 		arch_spin_lock(lock);
@@ -139,14 +139,14 @@
 		// spin_release(&lock->dep_map, _RET_IP_);
 		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
-		myos_preempt_enable();
+		preempt_enable();
 	}
 
 	static inline void raw_spin_unlock_no_resched(arch_spinlock_t *lock) {
 		// spin_release(&lock->dep_map, _RET_IP_);
 		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
-		myos_preempt_enable_no_resched();
+		preempt_enable_no_resched();
 	}
 
 	static inline void
@@ -155,7 +155,7 @@
 		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
 		local_irq_restore(flags);
-		myos_preempt_enable();
+		preempt_enable();
 	}
 
 	// static inline void __raw_spin_unlock_irq(raw_spinlock_t *lock) {
@@ -164,7 +164,7 @@
 	// 	do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
 		local_irq_enable();
-		myos_preempt_enable();
+		preempt_enable();
 	}
 
 	// static inline void __raw_spin_unlock_bh(raw_spinlock_t *lock) {

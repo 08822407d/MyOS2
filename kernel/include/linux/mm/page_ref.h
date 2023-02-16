@@ -273,12 +273,7 @@
 	// 	* context, so (on !SMP) we only need preemption to be disabled
 	// 	* and TINY_RCU does that for us.
 	// 	*/
-	// # ifdef CONFIG_PREEMPT_COUNT
 	// 	VM_BUG_ON(!in_atomic() && !irqs_disabled());
-	// # endif
-	// 	VM_BUG_ON_FOLIO(folio_ref_count(folio) == 0, folio);
-	// 	folio_ref_add(folio, count);
-	// #else
 	// 	if (unlikely(!folio_ref_add_unless(folio, count, 0))) {
 	// 		/* Either the folio has been freed, or will be freed. */
 	// 		return false;

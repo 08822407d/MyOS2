@@ -118,11 +118,10 @@
 			return !(flags & X86_EFLAGS_IF);
 		}
 
-	// 	static __always_inline int arch_irqs_disabled(void) {
-	// 		unsigned long flags = arch_local_save_flags();
-
-	// 		return arch_irqs_disabled_flags(flags);
-	// 	}
+		static __always_inline int arch_irqs_disabled(void) {
+			unsigned long flags = arch_local_save_flags();
+			return arch_irqs_disabled_flags(flags);
+		}
 
 		static __always_inline void arch_local_irq_restore(unsigned long flags) {
 			if (!arch_irqs_disabled_flags(flags))

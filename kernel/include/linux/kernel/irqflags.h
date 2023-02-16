@@ -253,18 +253,17 @@
 
 	// #define local_save_flags(flags)	raw_local_save_flags(flags)
 
-	// /*
-	// * Some architectures don't define arch_irqs_disabled(), so even if either
-	// * definition would be fine we need to use different ones for the time being
-	// * to avoid build issues.
-	// */
+	/*
+	 * Some architectures don't define arch_irqs_disabled(), so even if either
+	 * definition would be fine we need to use different ones for the time being
+	 * to avoid build issues.
+	 */
 	// #ifdef CONFIG_TRACE_IRQFLAGS_SUPPORT
-	// #define irqs_disabled()					\
-	// 	({						\
-	// 		unsigned long _flags;			\
-	// 		raw_local_save_flags(_flags);		\
-	// 		raw_irqs_disabled_flags(_flags);	\
-	// 	})
+	#define irqs_disabled() ({						\
+				unsigned long _flags;				\
+				arch_local_save_flags(_flags);		\
+				arch_irqs_disabled_flags(_flags);	\
+			})
 	// #else /* !CONFIG_TRACE_IRQFLAGS_SUPPORT */
 	// #define irqs_disabled()	raw_irqs_disabled()
 	// #endif /* CONFIG_TRACE_IRQFLAGS_SUPPORT */
