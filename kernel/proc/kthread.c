@@ -34,8 +34,7 @@
 #include <obsolete/arch_proto.h>
 
 // static DEFINE_SPINLOCK(kthread_create_lock);
-// static LIST_HEAD(kthread_create_list);
-static List_hdr_s kthread_create_list;
+static LIST_S(kthread_create_list);
 task_s *kthreadd_task;
 
 // typedef struct kthread_create_info
@@ -182,9 +181,8 @@ int kthreadd(void *unused)
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		// if (list_empty(&kthread_create_list))
-		// 	schedule();
-		myos_schedule();
+		if (list_empty(&kthread_create_list))
+			schedule();
 		// __set_current_state(TASK_RUNNING);
 		set_current_state(TASK_RUNNING);
 

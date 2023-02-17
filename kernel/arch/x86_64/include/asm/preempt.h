@@ -9,7 +9,6 @@
 
 
 	#include <linux/sched/myos_percpu.h>
-	extern void myos_schedule(void);
 
 	// DECLARE_PER_CPU(int, __preempt_count);
 
@@ -160,6 +159,7 @@
 	// #	endif /* PREEMPT_DYNAMIC */
 
 	// #endif /* PREEMPTION */
-	#define __preempt_schedule	myos_schedule
+	extern void myos_schedule(void);
+	#define __preempt_schedule myos_schedule
 
 #endif /* __ASM_PREEMPT_H */

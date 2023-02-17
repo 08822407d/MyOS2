@@ -288,7 +288,7 @@ void idle(size_t cpu_idx)
 	if (cpu_idx == 0)
 	{
 		rest_init();
-		myos_schedule();
+		schedule();
 	}
 	
 	asm volatile("sti");

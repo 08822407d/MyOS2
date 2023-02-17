@@ -238,7 +238,7 @@ do_exit_again:
 	asm volatile("sti");
 
 	current->__state = EXIT_ZOMBIE;
-	myos_schedule();
+	schedule();
 
 	goto do_exit_again;
 	return 0;
@@ -258,7 +258,7 @@ inline __always_inline task_s * myos_get_current()
 	return curr_task;
 }
 
-void myos_schedule()
+void myos_schedule(void)
 {
 	per_cpudata_s *	cpudata_p = curr_cpu;
 	task_s *		curr_task = cpudata_p->curr_task;
@@ -334,5 +334,5 @@ void try_sched()
 
 	// normal sched
 	if (curr_task->flags & PF_NEED_SCHEDULE)
-		myos_schedule();
+		schedule();
 }

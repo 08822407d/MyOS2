@@ -332,7 +332,10 @@
 	// extern long schedule_timeout_killable(long timeout);
 	// extern long schedule_timeout_uninterruptible(long timeout);
 	// extern long schedule_timeout_idle(long timeout);
-	asmlinkage void schedule(void);
+	// asmlinkage void schedule(void);
+	extern asmlinkage void myos_schedule(void);
+	#define schedule() myos_schedule();
+
 	// extern void schedule_preempt_disabled(void);
 	// asmlinkage void preempt_schedule_irq(void);
 	// #ifdef CONFIG_PREEMPT_RT
@@ -2396,6 +2399,5 @@
 	void myos_switch_to(task_s *curr, task_s *target);
 	void myos_idle_enqueue(task_s *idle);
 	task_s *idle_dequeue(void);
-	asmlinkage void myos_schedule(void);
 
 #endif

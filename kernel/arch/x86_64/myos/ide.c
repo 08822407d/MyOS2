@@ -264,7 +264,7 @@ void wait_for_finish()
 
 	__set_current_state(TASK_UNINTERRUPTIBLE);
 	// myos_preempt_enable_no_resched();
-	myos_schedule();
+	schedule();
 }
 
 // long ATA_disk_open(unsigned controller, unsigned disk)
@@ -385,7 +385,7 @@ static int ATArq_deamon(void *param)
 		}
 
 		// __set_current_state(TASK_INTERRUPTIBLE);
-		myos_schedule();
+		schedule();
 	}
 
 	return 1;

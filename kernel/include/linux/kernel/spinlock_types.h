@@ -34,6 +34,9 @@
 	// 	.raw_lock = __ARCH_SPIN_LOCK_UNLOCKED,	\
 	// 	SPIN_DEBUG_INIT(lockname)		\
 	// 	SPIN_DEP_MAP_INIT(lockname) }
+	#define __SPIN_LOCK_UNLOCKED(lockname)	{			\
+				.rlock = __ARCH_SPIN_LOCK_UNLOCKED	\
+			}
 
 	// #define __SPIN_LOCK_INITIALIZER(lockname) \
 	// 	{ { .rlock = ___SPIN_LOCK_INITIALIZER(lockname) } }
@@ -41,7 +44,7 @@
 	// #define __SPIN_LOCK_UNLOCKED(lockname) \
 	// 	(spinlock_t) __SPIN_LOCK_INITIALIZER(lockname)
 
-	// #define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
+	#define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
 
 	// #else /* !CONFIG_PREEMPT_RT */
 

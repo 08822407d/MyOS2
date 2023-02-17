@@ -20,6 +20,6 @@
 	#define	__ARCH_SPIN_LOCK_UNLOCKED	{	\
 				.head = 0U,					\
 				.tail = 0U,					\
-				}
+			}
 
 #endif /* __ASM_GENERIC_TSPINLOCK_TYPES_H */
