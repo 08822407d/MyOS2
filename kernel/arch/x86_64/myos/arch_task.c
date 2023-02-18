@@ -36,7 +36,7 @@ task_s			*task_init = NULL;
 task_s			*task_shell = NULL;
 
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
-spinlock_t		newpid_lock;
+static DEFINE_SPINLOCK(newpid_lock);
 unsigned long	curr_pid;
 
 /*==============================================================================================*

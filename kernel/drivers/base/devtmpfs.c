@@ -36,9 +36,9 @@
 
 
 #ifdef CONFIG_DEVTMPFS_SAFE
-#define DEVTMPFS_MFLAGS       (MS_SILENT | MS_NOEXEC | MS_NOSUID)
+#	define DEVTMPFS_MFLAGS       (MS_SILENT | MS_NOEXEC | MS_NOSUID)
 #else
-#define DEVTMPFS_MFLAGS       (MS_SILENT)
+#	define DEVTMPFS_MFLAGS       (MS_SILENT)
 #endif
 
 static task_s *thread;
@@ -61,8 +61,9 @@ static req_s *requests;
 
 static struct vfsmount *mnt;
 
-static dentry_s *public_dev_mount(fs_type_s *fs_type, int flags,
-				const char *dev_name, void *data)
+static dentry_s
+*public_dev_mount(fs_type_s *fs_type, int flags,
+	const char *dev_name, void *data)
 {
 	super_block_s *s = mnt->mnt_sb;
 	int err;
@@ -87,19 +88,17 @@ static fs_type_s dev_fs_type = {
 	.mount = public_dev_mount,
 };
 
-static inline int is_blockdev(device_s *dev)
-{
+static inline int is_blockdev(device_s *dev) {
 	return dev->class == &block_class;
 }
 
-static int devtmpfs_submit_req(req_s *req, const char *tmp)
-{
+static int devtmpfs_submit_req(req_s *req, const char *tmp) {
 	// init_completion(&req->done);
 
-	spin_lock(&req_lock);
+	// spin_lock(&req_lock);
 	req->next = requests;
 	requests = req;
-	spin_unlock(&req_lock);
+	// spin_unlock(&req_lock);
 
 	myos_wake_up_new_task(thread);
 	// wait_for_completion(&req->done);
@@ -410,6 +409,8 @@ int devtmpfs_init(void)
 {
 	char opts[] = "mode=0755";
 	int err;
+
+	spin_lock_init(&req_lock);
 
 	list_hdr_init(&internal_fs_type.fs_supers);
 	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);

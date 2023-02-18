@@ -242,11 +242,7 @@
 	// 		debug_normal_state_change((state_value));      \
 	// 		smp_store_mb(current->__state, (state_value)); \
 	// 	} while (0)
-	#define set_current_state(state_value)						\
-			do {												\
-				/* smp_store_mb(current->__state, (state_value)); */	\
-				WRITE_ONCE(current->__state, (state_value));	\
-			} while (0)
+	#define set_current_state __set_current_state
 
 	// /*
 	// * set_special_state() should be used for those states when the blocking task
