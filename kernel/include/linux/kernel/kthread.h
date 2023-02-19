@@ -14,17 +14,17 @@
 	// 					int node,
 	// 					const char namefmt[], ...);
 
-	// /**
-	//  * kthread_create - create a kthread on the current node
-	//  * @threadfn: the function to run in the thread
-	//  * @data: data pointer for @threadfn()
-	//  * @namefmt: printf-style format string for the thread name
-	//  * @arg: arguments for @namefmt.
-	//  *
-	//  * This macro will create a kthread on the current node, leaving it in
-	//  * the stopped state.  This is just a helper for kthread_create_on_node();
-	//  * see the documentation there for more details.
-	//  */
+	/**
+	 * kthread_create - create a kthread on the current node
+	 * @threadfn: the function to run in the thread
+	 * @data: data pointer for @threadfn()
+	 * @namefmt: printf-style format string for the thread name
+	 * @arg: arguments for @namefmt.
+	 *
+	 * This macro will create a kthread on the current node, leaving it in
+	 * the stopped state.  This is just a helper for kthread_create_on_node();
+	 * see the documentation there for more details.
+	 */
 	// #define kthread_create(threadfn, data, namefmt, arg...) \
 	// 	kthread_create_on_node(threadfn, data, NUMA_NO_NODE, namefmt, ##arg)
     task_s *myos_kthread_create(int (*threadfn)(void *data),
@@ -42,15 +42,15 @@
 	// void kthread_set_per_cpu(task_s *k, int cpu);
 	// bool kthread_is_per_cpu(task_s *k);
 
-	// /**
-	//  * kthread_run - create and wake a thread.
-	//  * @threadfn: the function to run until signal_pending(current).
-	//  * @data: data ptr for @threadfn.
-	//  * @namefmt: printf-style name for the thread.
-	//  *
-	//  * Description: Convenient wrapper for kthread_create() followed by
-	//  * myos_wake_up_new_task().  Returns the kthread or ERR_PTR(-ENOMEM).
-	//  */
+	/**
+	 * kthread_run - create and wake a thread.
+	 * @threadfn: the function to run until signal_pending(current).
+	 * @data: data ptr for @threadfn.
+	 * @namefmt: printf-style name for the thread.
+	 *
+	 * Description: Convenient wrapper for kthread_create() followed by
+	 * myos_wake_up_new_task().  Returns the kthread or ERR_PTR(-ENOMEM).
+	 */
 	// #define kthread_run(threadfn, data, namefmt, ...)			   \
 	// ({									   \
 	// 	task_s *__k						   \
@@ -59,6 +59,12 @@
 	// 		myos_wake_up_new_task(__k);					   \
 	// 	__k;								   \
 	// })
+	#define kthread_run(threadfn, data, name) ({					\
+				task_s *__k											\
+					= myos_kthread_create(threadfn, data, name);	\
+				if (!IS_ERR(__k)) myos_wake_up_new_task(__k);		\
+				__k;												\
+			})
 
 	// /**
 	//  * kthread_run_on_cpu - create and wake a cpu bound thread.
@@ -103,7 +109,7 @@
 	// void kthread_complete_and_exit(completion_s *, long) __noreturn;
 
 	int kthreadd(void *unused);
-	// extern task_s *kthreadd_task;
+	extern task_s *kthreadd_task;
 	// extern int tsk_fork_get_node(task_s *tsk);
 
 	// /*
@@ -254,18 +260,17 @@
 	// #endif
 
 
-	typedef struct kthread_create_info
-	{
+	typedef struct kthread_create_info {
 		/* Information passed to kthread() from kthreadd. */
-		int		(*threadfn)(void *data);
-		void	*data;
-		int		node;
+		int				(*threadfn)(void *data);
+		void			*data;
+		int				node;
 
 		/* Result passed back to kthread_create() from kthreadd. */
-		task_s	*result;
-		// completion_s *done;
+		task_s			*result;
+		completion_s	*done;
 
-		List_s	list;
+		List_s			list;
 	} kthd_create_info_s;
 
 #endif /* _LINUX_KTHREAD_H */

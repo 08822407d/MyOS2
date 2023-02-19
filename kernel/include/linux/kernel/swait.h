@@ -48,13 +48,13 @@
 		List_s	task_list;
 	} swqueue_s;
 
-	// #define __SWAITQUEUE_INITIALIZER(name) {					\
-	// 			.task		= current,							\
-	// 			.task_list	= LIST_HEAD_INIT((name).task_list),	\
-	// 		}
+	#define __SWAITQUEUE_INITIALIZER(name) {				\
+				.task		= current,						\
+				.task_list	= LIST_INIT((name).task_list),	\
+			}
 
-	// #define DECLARE_SWAITQUEUE(name)	\
-	// 			swqueue_s name = __SWAITQUEUE_INITIALIZER(name)
+	#define DECLARE_SWAITQUEUE(name)	\
+				swqueue_s name = __SWAITQUEUE_INITIALIZER(name)
 
 	#define __SWAIT_QUEUE_HEAD_INITIALIZER(name) {					\
 				.lock		= __ARCH_SPIN_LOCK_UNLOCKED,			\
@@ -64,14 +64,17 @@
 	// #define DECLARE_SWAIT_QUEUE_HEAD(name)	\
 	// 			swqueue_hdr_s name = __SWAIT_QUEUE_HEAD_INITIALIZER(name)
 
-	// extern void __init_swait_queue_head(swqueue_hdr_s *q,
-	// 		const char *name, struct lock_class_key *key);
+	extern void __init_swait_queue_head(swqueue_hdr_s *q);
 
 	// #define init_swait_queue_head(q)						\
 	// 		do {											\
 	// 			static struct lock_class_key __key;			\
 	// 			__init_swait_queue_head((q), #q, &__key);	\
 	// 		} while (0)
+	#define init_swait_queue_head(q)			\
+			do {								\
+				__init_swait_queue_head((q));	\
+			} while (0)
 
 	// #ifdef CONFIG_LOCKDEP
 	// #	define __SWAIT_QUEUE_HEAD_INIT_ONSTACK(name)	\
@@ -149,7 +152,7 @@
 	// extern long prepare_to_swait_event(swqueue_hdr_s *q,
 	// 		swqueue_s *wait, int state);
 
-	// extern void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait);
+	extern void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait);
 	// extern void finish_swait(swqueue_hdr_s *q, swqueue_s *wait);
 
 	// /* as per ___wait_event() but for swait, therefore "exclusive == 1" */

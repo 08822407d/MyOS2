@@ -4,6 +4,11 @@
  */
 #include <linux/sched/sched.h>
 
+void __init_swait_queue_head(swqueue_hdr_s *q)
+{
+	raw_spin_lock_init(&q->lock);
+	INIT_LIST_HDR_S(&q->task_list);
+}
 
 /*
  * The thing about the wake_up_state() return value; I think we can ignore it.
@@ -35,11 +40,19 @@ void swake_up_all_locked(swqueue_hdr_s *q) {
 }
 
 
-// void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
-// 	__set_current_state(TASK_RUNNING);
-// 	if (!list_empty(&wait->task_list))
-// 		list_del_init(&wait->task_list);
-// }
+void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait) {
+	wait->task = current;
+	if (list_empty(&wait->task_list))
+		list_hdr_enqueue(&q->task_list, &wait->task_list);
+}
+
+void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
+	__set_current_state(TASK_RUNNING);
+	if (!list_empty(&wait->task_list)) {
+		list_delete(&wait->task_list); 
+		q->task_list.count--;
+	}
+}
 
 void finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
 	unsigned long flags;

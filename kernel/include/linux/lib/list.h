@@ -38,9 +38,13 @@
 	 * Initializes the list_head to point to itself.  If it is a list header,
 	 * the result is an empty list.
 	 */
-	static inline void INIT_LIST_HEAD(List_s *list) {
+	static inline void INIT_LIST_S(List_s *list) {
 		WRITE_ONCE(list->next, list);
 		list->prev = list;
+	}
+	static inline void INIT_LIST_HDR_S(List_hdr_s *lhdr) {
+		lhdr->count = 0;
+		INIT_LIST_S(&lhdr->header);
 	}
 
 	// #ifdef CONFIG_DEBUG_LIST

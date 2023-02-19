@@ -3046,7 +3046,7 @@
 // }
 
 // extern void swake_up_all_locked(swqueue_hdr_s *q);
-// extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
+extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
 
 // #ifdef CONFIG_PREEMPT_DYNAMIC
 // extern int preempt_dynamic_mode;
