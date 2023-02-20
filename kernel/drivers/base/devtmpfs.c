@@ -93,7 +93,7 @@ static inline int is_blockdev(device_s *dev) {
 }
 
 static int devtmpfs_submit_req(req_s *req, const char *tmp) {
-	init_completion(&req->done);
+	// init_completion(&req->done);
 
 	// spin_lock(&req_lock);
 	req->next = requests;
@@ -101,7 +101,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp) {
 	// spin_unlock(&req_lock);
 
 	myos_wake_up_new_task(thread);
-	wait_for_completion(&req->done);
+	// wait_for_completion(&req->done);
 	udelay(19999);
 
 	kfree((void *)tmp);
@@ -357,7 +357,7 @@ static void devtmpfs_work_loop(void) {
 				req_s *next = req->next;
 				req->err = handle(req->name, req->mode,
 						req->uid, req->gid, req->dev);
-				complete(&req->done);
+				// complete(&req->done);
 				kfree(req);
 				req = next;
 			}

@@ -70,8 +70,8 @@
 	// #	define DECLARE_COMPLETION_ONSTACK_MAP(work, map)	\
 	// 		completion_s work = COMPLETION_INITIALIZER_ONSTACK_MAP(work, map)
 	// #else
-	// #	define DECLARE_COMPLETION_ONSTACK(work)				DECLARE_COMPLETION(work)
-	// #	define DECLARE_COMPLETION_ONSTACK_MAP(work, map)	DECLARE_COMPLETION(work)
+	#define DECLARE_COMPLETION_ONSTACK(work)	DECLARE_COMPLETION(work)
+	// #define DECLARE_COMPLETION_ONSTACK_MAP(work, map)	DECLARE_COMPLETION(work)
 	// #endif
 
 	/**

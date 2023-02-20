@@ -33,7 +33,7 @@
 
 #include <obsolete/arch_proto.h>
 
-// static DEFINE_SPINLOCK(kthread_create_lock);
+static DEFINE_SPINLOCK(kthread_create_lock);
 static LIST_S(kthread_create_list);
 task_s *kthreadd_task;
 
@@ -147,6 +147,7 @@ static void create_kthread(kthd_create_info_s *create)
 task_s *myos_kthread_create(int (*threadfn)(void *data),
 		void *data, char *threadname)
 {
+	DECLARE_COMPLETION_ONSTACK(done);
 	task_s *task;
 	kthd_create_info_s *create =
 			kmalloc(sizeof(kthd_create_info_s), GFP_KERNEL);
@@ -155,11 +156,56 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 		return ERR_PTR(-ENOMEM);
 	create->threadfn = threadfn;
 	create->data = data;
+	create->done = &done;
+
+	spin_lock(&kthread_create_lock);
+	// list_hdr_append(&create->list, &kthread_create_list);
+	spin_unlock(&kthread_create_lock);
+
+	// wake_up_process(kthreadd_task);
+	// /*
+	//  * Wait for completion in killable state, for I might be chosen by
+	//  * the OOM killer while kthreadd is trying to allocate memory for
+	//  * new kernel thread.
+	//  */
+	// if (unlikely(wait_for_completion_killable(&done))) {
+	// 	/*
+	// 	 * If I was SIGKILLed before kthreadd (or new kernel thread)
+	// 	 * calls complete(), leave the cleanup of this structure to
+	// 	 * that thread.
+	// 	 */
+	// 	if (xchg(&create->done, NULL))
+	// 		return ERR_PTR(-EINTR);
+	// 	/*
+	// 	 * kthreadd (or new kernel thread) will call complete()
+	// 	 * shortly.
+	// 	 */
+	// 	wait_for_completion(&done);
+	// }
 
 	kernel_thread(threadfn, create, 0);
 
 	task = create->result;
+	// if (!IS_ERR(task)) {
+	// 	char name[TASK_COMM_LEN];
+	// 	va_list aq;
+	// 	int len;
 
+	// 	/*
+	// 	 * task is already visible to other tasks, so updating
+	// 	 * COMM must be protected.
+	// 	 */
+	// 	va_copy(aq, args);
+	// 	len = vsnprintf(name, sizeof(name), namefmt, aq);
+	// 	va_end(aq);
+	// 	if (len >= TASK_COMM_LEN) {
+	// 		struct kthread *kthread = to_kthread(task);
+
+	// 		/* leave it truncated when out of memory. */
+	// 		kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
+	// 	}
+	// 	set_task_comm(task, name);
+	// }
 	kfree(create);
 	return task;
 }
