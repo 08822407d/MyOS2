@@ -47,7 +47,6 @@ void myos_preinit_arch_task()
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
-	spin_lock_init(&newpid_lock);
 }
 
 void myos_init_arch_task(size_t cpu_idx)

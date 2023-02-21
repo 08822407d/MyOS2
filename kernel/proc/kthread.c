@@ -34,7 +34,7 @@
 #include <obsolete/arch_proto.h>
 
 static DEFINE_SPINLOCK(kthread_create_lock);
-static LIST_S(kthread_create_list);
+static LIST_HDR_S(kthread_create_list);
 task_s *kthreadd_task;
 
 // typedef struct kthread_create_info
@@ -133,7 +133,7 @@ static void create_kthread(kthd_create_info_s *create)
 	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
 	if (pid < 0) {
 		/* If user was SIGKILLed, I release the structure. */
-	// 	completion_s *done = xchg(&create->done, NULL);
+		completion_s *done = xchg(&create->done, NULL);
 
 	// 	if (!done) {
 	// 		kfree(create);
@@ -157,9 +157,10 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	create->threadfn = threadfn;
 	create->data = data;
 	create->done = &done;
+	list_init(&create->list, create);
 
 	spin_lock(&kthread_create_lock);
-	// list_hdr_append(&create->list, &kthread_create_list);
+	list_hdr_enqueue(&kthread_create_list, &create->list);
 	spin_unlock(&kthread_create_lock);
 
 	// wake_up_process(kthreadd_task);
@@ -227,25 +228,23 @@ int kthreadd(void *unused)
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		if (list_empty(&kthread_create_list))
+		if (kthread_create_list.count == 0)
 			schedule();
-		// __set_current_state(TASK_RUNNING);
-		set_current_state(TASK_RUNNING);
+		__set_current_state(TASK_RUNNING);
 
-		// spin_lock(&kthread_create_lock);
-		// while (!list_empty(&kthread_create_list)) {
-		// 	struct kthread_create_info *create;
+		spin_lock(&kthread_create_lock);
+		while (kthread_create_list.count != 0) {
+			kthd_create_info_s *create;
 
-		// 	create = list_entry(kthread_create_list.next,
-		// 			    struct kthread_create_info, list);
-		// 	list_del_init(&create->list);
-		// 	spin_unlock(&kthread_create_lock);
+			List_s *lp = list_hdr_dequeue(&kthread_create_list);
+			create = container_of(lp, kthd_create_info_s, list);
+			spin_unlock(&kthread_create_lock);
 
 		// 	create_kthread(create);
 
-		// 	spin_lock(&kthread_create_lock);
-		// }
-		// spin_unlock(&kthread_create_lock);
+			spin_lock(&kthread_create_lock);
+		}
+		spin_unlock(&kthread_create_lock);
 	}
 
 	return 0;

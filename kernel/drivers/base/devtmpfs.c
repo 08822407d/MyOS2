@@ -95,10 +95,10 @@ static inline int is_blockdev(device_s *dev) {
 static int devtmpfs_submit_req(req_s *req, const char *tmp) {
 	// init_completion(&req->done);
 
-	// spin_lock(&req_lock);
+	spin_lock(&req_lock);
 	req->next = requests;
 	requests = req;
-	// spin_unlock(&req_lock);
+	spin_unlock(&req_lock);
 
 	myos_wake_up_new_task(thread);
 	// wait_for_completion(&req->done);
@@ -349,6 +349,7 @@ static int handle(const char *name, umode_t mode,
 
 static void devtmpfs_work_loop(void) {
 	while (1) {
+		spin_lock(&req_lock);
 		while (requests) {
 			req_s *req = requests;
 			requests = NULL;
@@ -364,6 +365,7 @@ static void devtmpfs_work_loop(void) {
 			spin_lock(&req_lock);
 		}
 		__set_current_state(TASK_INTERRUPTIBLE);
+		spin_unlock(&req_lock);
 		schedule();
 	}
 }
@@ -401,8 +403,6 @@ int devtmpfs_init(void)
 {
 	char opts[] = "mode=0755";
 	int err;
-
-	spin_lock_init(&req_lock);
 
 	list_hdr_init(&internal_fs_type.fs_supers);
 	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);

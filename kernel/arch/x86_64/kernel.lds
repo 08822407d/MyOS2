@@ -43,7 +43,7 @@ SECTIONS
 	.text ALIGN(0x1000) : AT(ADDR(.text) - _k_offset)
 	{
 		_text = .;
-		*(.text)
+		*(.text*)
 		_etext = .;
 	}
 	.rodata ALIGN(0x1000) : AT(ADDR(.rodata) - _k_offset)
@@ -55,13 +55,13 @@ SECTIONS
 	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
 	{
 		_data = .;
-		*(.data)
+		*(.data*)
 		_edata = .;
 	}
 	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
 	{
 		_bss = .;
-		*(.bss COMMON)
+		*(.bss* COMMON)
 		_ebss = .;
 	}
 	.eh_frame ALIGN(0x1000) : AT(ADDR(.eh_frame) - _k_offset)
