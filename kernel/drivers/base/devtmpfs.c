@@ -100,7 +100,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp) {
 	requests = req;
 	spin_unlock(&req_lock);
 
-	myos_wake_up_new_task(thread);
+	wake_up_process(thread);
 	// wait_for_completion(&req->done);
 	udelay(19999);
 

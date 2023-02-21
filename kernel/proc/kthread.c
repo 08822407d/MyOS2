@@ -81,21 +81,21 @@ int kthread(void *_create)
 	kthd_create_info_s *create = _create;
 	int (*threadfn)(void *data) = create->threadfn;
 	void *data = create->data;
-	// completion_s *done;
-	// struct kthread *self;
+	completion_s *done;
+	kthread_s *self;
 	int ret;
 
 	// self = to_kthread(current);
 
-	// /* If user was SIGKILLed, I release the structure. */
-	// done = xchg(&create->done, NULL);
-	// if (!done) {
-	// 	kfree(create);
+	/* If user was SIGKILLed, I release the structure. */
+	done = xchg(&create->done, NULL);
+	if (!done) {
+		kfree(create);
 	// 	kthread_exit(-EINTR);
-	// }
+	}
 
-	// self->threadfn = threadfn;
-	// self->data = data;
+	self->threadfn = threadfn;
+	self->data = data;
 
 	// /*
 	//  * The new thread inherited kthreadd's priority and CPU mask. Reset
@@ -104,17 +104,17 @@ int kthread(void *_create)
 	// sched_setscheduler_nocheck(current, SCHED_NORMAL, &param);
 	// set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_FLAG_KTHREAD));
 
-	// /* OK, tell user we're spawned, wait for stop or wakeup */
-	// __set_current_state(TASK_UNINTERRUPTIBLE);
+	/* OK, tell user we're spawned, wait for stop or wakeup */
+	__set_current_state(TASK_UNINTERRUPTIBLE);
 	create->result = current;
-	// /*
-	//  * Thread is going to call schedule(), do not preempt it,
-	//  * or the creator may spend more time in wait_task_inactive().
-	//  */
-	// preempt_disable();
-	// complete(done);
-	// schedule_preempt_disabled();
-	// preempt_enable();
+	/*
+	 * Thread is going to call schedule(), do not preempt it,
+	 * or the creator may spend more time in wait_task_inactive().
+	 */
+	preempt_disable();
+	complete(done);
+	schedule_preempt_disabled();
+	preempt_enable();
 
 	// ret = -EINTR;
 	// if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {

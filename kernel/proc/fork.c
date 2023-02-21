@@ -1448,7 +1448,7 @@ pid_t kernel_clone(kclone_args_s *args)
 
 	// wake_up_new_task(p);
 	WRITE_ONCE(p->__state, TASK_NEW);
-	myos_wake_up_new_task(p);
+	wake_up_process(p);
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))

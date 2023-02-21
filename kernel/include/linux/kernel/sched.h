@@ -332,7 +332,7 @@
 	extern asmlinkage void myos_schedule(void);
 	#define schedule() myos_schedule();
 
-	// extern void schedule_preempt_disabled(void);
+	extern void schedule_preempt_disabled(void);
 	// asmlinkage void preempt_schedule_irq(void);
 	// #ifdef CONFIG_PREEMPT_RT
 	// extern void schedule_rtlock(void);
@@ -1966,7 +1966,7 @@
 	// extern task_s *find_get_task_by_vpid(pid_t nr);
 
 	// extern int wake_up_state(task_s *tsk, unsigned int state);
-	extern int myos_wake_up_new_task(task_s *tsk);
+	extern int wake_up_process(task_s *tsk);
 	extern void wake_up_new_task(task_s *tsk);
 
 	// extern void kick_process(task_s *tsk);

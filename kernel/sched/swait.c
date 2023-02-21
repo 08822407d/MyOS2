@@ -24,7 +24,7 @@ void swake_up_locked(swqueue_hdr_s *q) {
 
 	List_s *lp = list_hdr_dequeue(&q->task_list);
 	curr = container_of(lp, swqueue_s, task_list);
-	myos_wake_up_new_task(curr->task);
+	wake_up_process(curr->task);
 }
 
 /*
