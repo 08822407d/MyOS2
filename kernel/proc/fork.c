@@ -1031,10 +1031,10 @@ static __latent_entropy task_s
 	// p->bpf_ctx = NULL;
 // #endif
 
-	// /* Perform scheduler related setup. Assign this task to a CPU. */
-	// retval = sched_fork(clone_flags, p);
-	// if (retval)
-	// 	goto bad_fork_cleanup_policy;
+	/* Perform scheduler related setup. Assign this task to a CPU. */
+	retval = sched_fork(clone_flags, p);
+	if (retval)
+		goto bad_fork_cleanup_policy;
 
 	// retval = perf_event_init_task(p, clone_flags);
 	// if (retval)
@@ -1362,8 +1362,7 @@ fork_out:
 	return ERR_PTR(retval);
 }
 
-static inline void init_idle_pids(task_s *idle)
-{
+static inline void init_idle_pids(task_s *idle) {
 	// enum pid_type type;
 
 	// for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type) {
@@ -1446,9 +1445,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// 	get_task_struct(p);
 	// }
 
-	// wake_up_new_task(p);
-	WRITE_ONCE(p->__state, TASK_NEW);
-	wake_up_process(p);
+	wake_up_new_task(p);
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))

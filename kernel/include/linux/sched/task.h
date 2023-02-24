@@ -56,7 +56,7 @@
 	// extern asmlinkage void schedule_tail(task_s *prev);
 	// extern void init_idle(task_s *idle, int cpu);
 
-	// extern int sched_fork(unsigned long clone_flags, task_s *p);
+	extern int sched_fork(unsigned long clone_flags, task_s *p);
 	// extern void sched_cgroup_fork(task_s *p, kclone_args_s *kargs);
 	// extern void sched_post_fork(task_s *p);
 	// extern void sched_dead(task_s *p);

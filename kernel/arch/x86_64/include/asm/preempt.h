@@ -42,10 +42,14 @@
 	// 	} while (raw_cpu_cmpxchg_4(__preempt_count, old, new) != old);
 	// }
 
-	// /*
-	//  * must be macros to avoid header recursion hell
-	//  */
+	/*
+	 * must be macros to avoid header recursion hell
+	 */
 	// #define init_task_preempt_count(p) do { } while (0)
+	#define init_task_preempt_count(p) do {				\
+				per_cpudata_s *cpudata_p = curr_cpu;	\
+				cpudata_p->preempt_count = 0;			\
+			} while (0)
 
 	// #define init_idle_preempt_count(p, cpu) do {					\
 	// 			per_cpu(__preempt_count, (cpu)) = PREEMPT_DISABLED; \

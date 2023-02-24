@@ -78,6 +78,10 @@
 
 // #include <trace/events/sched.h>
 
+
+#include <obsolete/glo.h>
+
+
 // #ifdef CONFIG_SCHED_DEBUG
 // #define SCHED_WARN_ON(x) WARN_ONCE(x, #x)
 // #else
@@ -1905,18 +1909,24 @@
 
 // #endif /* CONFIG_CGROUP_SCHED */
 
-// static inline void __set_task_cpu(task_s *p, unsigned int cpu)
-// {
-// 	set_task_rq(p, cpu);
-// 	/*
-// 	 * After ->cpu is set up to a new value, task_rq_lock(p, ...) can be
-// 	 * successfully executed on another CPU. We must ensure that updates of
-// 	 * per-task data have been completed by this moment.
-// 	 */
-// 	smp_wmb();
-// 	WRITE_ONCE(task_thread_info(p)->cpu, cpu);
-// 	p->wake_cpu = cpu;
-// }
+static inline void __set_task_cpu(task_s *p, unsigned int cpu) {
+	// set_task_rq(p, cpu);
+	// /*
+	//  * After ->cpu is set up to a new value, task_rq_lock(p, ...) can be
+	//  * successfully executed on another CPU. We must ensure that updates of
+	//  * per-task data have been completed by this moment.
+	//  */
+	// smp_wmb();
+	// WRITE_ONCE(task_thread_info(p)->cpu, cpu);
+	// p->wake_cpu = cpu;
+
+	per_cpudata_s * target_cpu_p = &(percpu_data[cpu]->cpudata);
+	if (p->__state != TASK_RUNNING)
+	{
+		p->__state = TASK_RUNNING;
+		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+	}
+}
 
 // /*
 //  * Tunables that become constants when CONFIG_SCHED_DEBUG is off:
