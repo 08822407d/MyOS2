@@ -83,7 +83,14 @@ void set_task_cpu(task_s *p, unsigned int new_cpu) {
 	// 	perf_event_task_migrate(p);
 	// }
 
-	__set_task_cpu(p, new_cpu);
+	// __set_task_cpu(p, new_cpu);
+
+	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->cpudata);
+	// if (p->__state != TASK_RUNNING)
+	// {
+		p->__state = TASK_RUNNING;
+		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+	// }
 }
 
 
@@ -589,6 +596,11 @@ int sched_fork(unsigned long clone_flags, task_s *p) {
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 // #endif
+
+	per_cpudata_s * target_cpu_p =
+			&(percpu_data[select_task_rq(p)]->cpudata);
+	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+
 	return 0;
 }
 
@@ -605,8 +617,7 @@ void wake_up_new_task(task_s *p)
 	// struct rq *rq;
 
 	// raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
-	// WRITE_ONCE(p->__state, TASK_RUNNING);
-	WRITE_ONCE(p->__state, TASK_NEW);
+	WRITE_ONCE(p->__state, TASK_RUNNING);
 // #ifdef CONFIG_SMP
 	/*
 	 * Fork balancing, do it here and not earlier because:
@@ -619,7 +630,6 @@ void wake_up_new_task(task_s *p)
 	// p->recent_used_cpu = task_cpu(p);
 	// rseq_migrate(p);
 	// __set_task_cpu(p, select_task_rq(p, task_cpu(p), WF_FORK));
-	__set_task_cpu(p, select_task_rq(p));
 // #endif
 	// rq = __task_rq_lock(p, &rf);
 	// update_rq_clock(rq);

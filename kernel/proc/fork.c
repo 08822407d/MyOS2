@@ -121,8 +121,7 @@ static inline void free_task_struct(task_s *tsk) {
 }
 
 
-static void release_task_stack(task_s *tsk)
-{
+static void release_task_stack(task_s *tsk) {
 // 	if (WARN_ON(READ_ONCE(tsk->__state) != TASK_DEAD))
 // 		return;  /* Better to leak the stack than to free prematurely */
 
@@ -135,15 +134,13 @@ static void release_task_stack(task_s *tsk)
 }
 
 // #ifdef CONFIG_THREAD_INFO_IN_TASK
-void put_task_stack(task_s *tsk)
-{
+void put_task_stack(task_s *tsk) {
 	// if (refcount_dec_and_test(&tsk->stack_refcount))
 		release_task_stack(tsk);
 }
 // #endif
 
-void free_task(task_s *tsk)
-{
+void free_task(task_s *tsk) {
 	// release_user_cpus_ptr(tsk);
 	// scs_release(tsk);
 
@@ -178,16 +175,14 @@ static inline void free_mm(mm_s *mm) {
 }
 
 
-void set_task_stack_end_magic(task_s *tsk)
-{
+void set_task_stack_end_magic(task_s *tsk) {
 	unsigned long *stackend;
 
 	// stackend = end_of_stack(tsk);
 	// *stackend = STACK_END_MAGIC;	/* for overflow detection */
 }
 
-static task_s *dup_task_struct(task_s *orig)
-{
+static task_s *dup_task_struct(task_s *orig) {
 	task_s *tsk;
 	unsigned long *stack;
 	// struct vm_struct *stack_vm_area __maybe_unused;
@@ -298,23 +293,21 @@ free_tsk:
 
 // #include <linux/init_task.h>
 
-static __always_inline void mm_clear_owner(mm_s *mm, task_s *p)
-{
+static __always_inline void
+mm_clear_owner(mm_s *mm, task_s *p) {
 // #ifdef CONFIG_MEMCG
 	if (mm->owner == p)
 		WRITE_ONCE(mm->owner, NULL);
 // #endif
 }
 
-static void mm_init_owner(mm_s *mm, task_s *p)
-{
+static void mm_init_owner(mm_s *mm, task_s *p) {
 // #ifdef CONFIG_MEMCG
 	mm->owner = p;
 // #endif
 }
 
-static mm_s *mm_init(mm_s *mm, task_s *p)
-{
+static mm_s *mm_init(mm_s *mm, task_s *p) {
 // 	mm->mmap = NULL;
 // 	mm->mm_rb = RB_ROOT;
 // 	mm->vmacache_seqnum = 0;
@@ -367,8 +360,7 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 // 	return NULL;
 }
 
-static inline void __mmput(mm_s *mm)
-{
+static inline void __mmput(mm_s *mm) {
 	// VM_BUG_ON(atomic_read(&mm->mm_users));
 
 	// uprobe_clear_state(mm);
@@ -391,8 +383,7 @@ static inline void __mmput(mm_s *mm)
 /*
  * Decrement the use count and release all resources for an mm.
  */
-void mmput(mm_s *mm)
-{
+void mmput(mm_s *mm) {
 	// might_sleep();
 
 	if (atomic_dec_and_test(&mm->mm_users))
@@ -547,8 +538,7 @@ void mmput(mm_s *mm)
  *
  * Return: the duplicated mm or NULL on failure.
  */
-static mm_s *dup_mm(task_s *tsk, mm_s *oldmm)
-{
+static mm_s *dup_mm(task_s *tsk, mm_s *oldmm) {
 	mm_s *mm;
 	int err;
 
@@ -583,8 +573,7 @@ fail_nomem:
 	return NULL;
 }
 
-static int copy_mm(unsigned long clone_flags, task_s *tsk)
-{
+static int copy_mm(unsigned long clone_flags, task_s *tsk) {
 	mm_s *mm, *oldmm;
 
 	// tsk->min_flt = tsk->maj_flt = 0;
@@ -623,8 +612,7 @@ static int copy_mm(unsigned long clone_flags, task_s *tsk)
 	return 0;
 }
 
-static int copy_fs(unsigned long clone_flags, task_s *tsk)
-{
+static int copy_fs(unsigned long clone_flags, task_s *tsk) {
 	taskfs_s *fs = current->fs;
 	if (clone_flags & CLONE_FS) {
 		/* tsk->fs is already what we want */
@@ -643,8 +631,7 @@ static int copy_fs(unsigned long clone_flags, task_s *tsk)
 	return 0;
 }
 
-static int copy_files(unsigned long clone_flags, task_s *tsk)
-{
+static int copy_files(unsigned long clone_flags, task_s *tsk) {
 	files_struct_s *oldf, *newf;
 	int error = 0;
 
@@ -670,8 +657,7 @@ out:
 	return error;
 }
 
-static int copy_sighand(unsigned long clone_flags, task_s *tsk)
-{
+static int copy_sighand(unsigned long clone_flags, task_s *tsk) {
 	// struct sighand_struct *sig;
 
 	// if (clone_flags & CLONE_SIGHAND) {
@@ -719,8 +705,7 @@ static int copy_sighand(unsigned long clone_flags, task_s *tsk)
 // 	posix_cputimers_group_init(pct, cpu_limit);
 // }
 
-static int copy_signal(unsigned long clone_flags, task_s *tsk)
-{
+static int copy_signal(unsigned long clone_flags, task_s *tsk) {
 	// struct signal_struct *sig;
 
 	// if (clone_flags & CLONE_THREAD)
@@ -778,16 +763,14 @@ static int copy_signal(unsigned long clone_flags, task_s *tsk)
 // 	free_task(tsk);
 // }
 
-static __always_inline void delayed_free_task(task_s *tsk)
-{
+static __always_inline void delayed_free_task(task_s *tsk) {
 	// if (IS_ENABLED(CONFIG_MEMCG))
 	// 	call_rcu(&tsk->rcu, __delayed_free_task);
 	// else
 		free_task(tsk);
 }
 
-static void myos_pcb_init(task_s *p, u64 clone_flags)
-{
+static void myos_pcb_init(task_s *p, u64 clone_flags) {
 	list_hdr_init(&p->wait_childexit);
 	list_init(&p->tasks, p);
 	if(clone_flags & CLONE_VM)
@@ -803,8 +786,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
  * flags). The actual kick-off is left to the caller.
  */
 static __latent_entropy task_s
-*copy_process(pid_s *pid, kclone_args_s *args)
-{
+*copy_process(pid_s *pid, kclone_args_s *args) {
 	int pidfd = -1, retval;
 	task_s *p;
 	// struct multiprocess_signals delayed;
@@ -1379,8 +1361,7 @@ static inline void init_idle_pids(task_s *idle) {
  *
  * args->exit_signal is expected to be checked for sanity by the caller.
  */
-pid_t kernel_clone(kclone_args_s *args)
-{
+pid_t kernel_clone(kclone_args_s *args) {
 	u64 clone_flags = args->flags;
 	// completion_s vfork;
 	// pid_s *pid;
