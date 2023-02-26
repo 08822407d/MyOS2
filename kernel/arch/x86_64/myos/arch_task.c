@@ -29,15 +29,16 @@
 #define MAX_PID				0x8000
 
 extern char		ist_stack0;
-
 extern PCB_u	task0_PCB;
+
 task_s			*task_idle = NULL;
 task_s			*task_init = NULL;
 task_s			*task_shell = NULL;
 
-bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 static DEFINE_SPINLOCK(newpid_lock);
+bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 unsigned long	curr_pid;
+
 
 /*==============================================================================================*
  *																								*
