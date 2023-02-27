@@ -135,12 +135,12 @@ static void create_kthread(kthd_create_info_s *create)
 		/* If user was SIGKILLed, I release the structure. */
 		completion_s *done = xchg(&create->done, NULL);
 
-	// 	if (!done) {
-	// 		kfree(create);
-	// 		return;
-	// 	}
-	// 	create->result = ERR_PTR(pid);
-	// 	complete(done);
+		if (!done) {
+			kfree(create);
+			return;
+		}
+		create->result = ERR_PTR(pid);
+		complete(done);
 	}
 }
 
@@ -163,7 +163,7 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	list_hdr_enqueue(&kthread_create_list, &create->list);
 	spin_unlock(&kthread_create_lock);
 
-	// wake_up_process(kthreadd_task);
+	wake_up_process(kthreadd_task);
 	// /*
 	//  * Wait for completion in killable state, for I might be chosen by
 	//  * the OOM killer while kthreadd is trying to allocate memory for
@@ -181,7 +181,7 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	// 	 * kthreadd (or new kernel thread) will call complete()
 	// 	 * shortly.
 	// 	 */
-	// 	wait_for_completion(&done);
+		wait_for_completion(&done);
 	// }
 
 	kernel_thread(threadfn, create, 0);
@@ -242,7 +242,7 @@ int kthreadd(void *unused)
 			create = container_of(lp, kthd_create_info_s, list);
 			spin_unlock(&kthread_create_lock);
 
-		// 	create_kthread(create);
+			create_kthread(create);
 
 			spin_lock(&kthread_create_lock);
 		}
