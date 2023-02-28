@@ -62,7 +62,7 @@
 	#define kthread_run(threadfn, data, name) ({					\
 				task_s *__k											\
 					= myos_kthread_create(threadfn, data, name);	\
-				if (!IS_ERR(__k)) myos_wake_up_new_task(__k);		\
+				if (!IS_ERR(__k)) wake_up_new_task(__k);			\
 				__k;												\
 			})
 

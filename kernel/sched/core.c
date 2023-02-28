@@ -397,8 +397,8 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
 // out:
 	// if (success)
 	// 	ttwu_stat(p, task_cpu(p), wake_flags);
-	// preempt_enable();
-	preempt_enable_no_resched();
+	preempt_enable();
+	// preempt_enable_no_resched();
 
 	return success;
 }
