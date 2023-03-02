@@ -86,11 +86,8 @@ void set_task_cpu(task_s *p, unsigned int new_cpu) {
 	// __set_task_cpu(p, new_cpu);
 
 	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->cpudata);
-	// if (p->__state != TASK_RUNNING)
-	// {
-		p->__state = TASK_RUNNING;
-		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
-	// }
+	p->__state = TASK_RUNNING;
+	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 }
 
 
