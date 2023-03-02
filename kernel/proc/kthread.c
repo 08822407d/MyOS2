@@ -240,13 +240,13 @@ int kthreadd(void *unused)
 
 			List_s *lp = list_hdr_dequeue(&kthread_create_list);
 			create = container_of(lp, kthd_create_info_s, list);
-			spin_unlock(&kthread_create_lock);
+			spin_unlock_no_resched(&kthread_create_lock);
 
 			create_kthread(create);
 
 			spin_lock(&kthread_create_lock);
 		}
-		spin_unlock(&kthread_create_lock);
+		spin_unlock_no_resched(&kthread_create_lock);
 	}
 
 	return 0;
