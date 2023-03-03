@@ -161,7 +161,7 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 
 	spin_lock(&kthread_create_lock);
 	list_hdr_enqueue(&kthread_create_list, &create->list);
-	spin_unlock(&kthread_create_lock);
+	spin_unlock_no_resched(&kthread_create_lock);
 
 	wake_up_process(kthreadd_task);
 	// /*

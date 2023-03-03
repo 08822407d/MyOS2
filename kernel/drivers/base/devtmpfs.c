@@ -93,16 +93,15 @@ static inline int is_blockdev(device_s *dev) {
 }
 
 static int devtmpfs_submit_req(req_s *req, const char *tmp) {
-	// init_completion(&req->done);
+	init_completion(&req->done);
 
 	spin_lock(&req_lock);
 	req->next = requests;
 	requests = req;
-	spin_unlock(&req_lock);
+	spin_unlock_no_resched(&req_lock);
 
 	wake_up_process(thread);
-	// wait_for_completion(&req->done);
-	udelay(19999);
+	wait_for_completion(&req->done);
 
 	kfree((void *)tmp);
 
@@ -353,19 +352,19 @@ static void devtmpfs_work_loop(void) {
 		while (requests) {
 			req_s *req = requests;
 			requests = NULL;
-			spin_unlock(&req_lock);
+			spin_unlock_no_resched(&req_lock);
 			while (req) {
 				req_s *next = req->next;
 				req->err = handle(req->name, req->mode,
 						req->uid, req->gid, req->dev);
-				// complete(&req->done);
+				complete(&req->done);
 				kfree(req);
 				req = next;
 			}
 			spin_lock(&req_lock);
 		}
 		__set_current_state(TASK_INTERRUPTIBLE);
-		spin_unlock(&req_lock);
+		spin_unlock_no_resched(&req_lock);
 		schedule();
 	}
 }
