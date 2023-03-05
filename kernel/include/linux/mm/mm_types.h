@@ -15,7 +15,7 @@
 	// #include <linux/uprobes.h>
 	// #include <linux/rcupdate.h>
 	// #include <linux/page-flags-layout.h>
-	// #include <linux/workqueue.h>
+	#include <linux/kernel/workqueue.h>
 	// #include <linux/seqlock.h>
 
 	// #include <asm/mmu.h>

@@ -25,7 +25,7 @@
 	// #include <linux/kobject_ns.h>
 	// #include <linux/wait.h>
 	#include <linux/kernel/atomic.h>
-	// #include <linux/workqueue.h>
+	#include <linux/kernel/workqueue.h>
 	#include <linux/kernel/uidgid.h>
 
 	#define UEVENT_HELPER_PATH_LEN	256
