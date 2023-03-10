@@ -17,15 +17,15 @@ SECTIONS
 	{
 		_text = .;
 		*(.crt1.text)
-		*(.text)
-		*(.rodata)
+		*(.text*)
+		*(.rodata*)
 		_etext = .;
 	}
 
 	.data ALIGN(0x200000) :
 	{
 		_data = .;
-		*(.data)
+		*(.data*)
 		*(.bss)
 		_edata = .;
 	}
