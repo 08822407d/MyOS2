@@ -114,7 +114,7 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 }
 
 extern void myos_close_files(files_struct_s * files);
-unsigned long do_execve(char *exec_filename, char *argv[], char *envp[])
+int kernel_execve(char *exec_filename, char *argv[], char *envp[])
 {
 	int ret_val = 0;
 	task_s *curr = current;
@@ -198,9 +198,9 @@ void kjmp_to_doexecve()
 	curr->flags &= ~PF_KTHREAD;
 
 	// char *argv[] = {"task_init", NULL};
-	// do_execve("/init.bin", argv, NULL);
+	// kernel_execve("/init.bin", argv, NULL);
 	char *argv[] = {"task_shell", NULL};
-	do_execve("/shell.bin", argv, NULL);
+	kernel_execve("/shell.bin", argv, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"

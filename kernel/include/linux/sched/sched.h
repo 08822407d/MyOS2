@@ -35,7 +35,7 @@
 
 // #include <uapi/linux/sched/types.h>
 
-// #include <linux/binfmts.h>
+#include <linux/fs/binfmts.h>
 #include <linux/kernel/bitops.h>
 // #include <linux/compat.h>
 // #include <linux/context_tracking.h>

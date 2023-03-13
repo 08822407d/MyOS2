@@ -16,7 +16,7 @@
 // #include <linux/extable.h>
 // #include <linux/module.h>
 // #include <linux/proc_fs.h>
-// #include <linux/binfmts.h>
+#include <linux/fs/binfmts.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/syscalls.h>
 // #include <linux/stackprotector.h>
