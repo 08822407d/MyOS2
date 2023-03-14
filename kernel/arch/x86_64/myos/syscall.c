@@ -119,7 +119,7 @@ long sys_fork()
 	return kernel_clone(&args);
 }
 
-long sys_execve(const char *filename, const char *const *argv,
+long myos_do_execve(const char *filename, const char *const *argv,
 				const char *const *envp)
 {
 	char * pathname = NULL;
@@ -144,7 +144,7 @@ long sys_execve(const char *filename, const char *const *argv,
 	}
 	strncpy_from_user(pathname, (void *)curr_context->di, pathlen);
 	
-	error = kernel_execve(pathname, (char **)curr_context->si, NULL);
+	error = myos_kernel_execve(pathname, (char **)curr_context->si, NULL);
 
 	kfree(pathname);
 	return error;

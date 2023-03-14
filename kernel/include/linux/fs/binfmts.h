@@ -143,7 +143,7 @@
 	// extern void set_binfmt(struct linux_binfmt *new);
 	// extern ssize_t read_code(struct file *, unsigned long, loff_t, size_t);
 
-	// int kernel_execve(const char *filename,
-	// 		const char *const *argv, const char *const *envp);
+	int kernel_execve(const char *filename,
+			const char *const *argv, const char *const *envp);
 
 #endif /* _LINUX_BINFMTS_H */

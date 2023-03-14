@@ -221,7 +221,8 @@
 		"spinlock_api_smp.h": "c",
 		"qspinlock.h": "c",
 		"tspinlock.h": "c",
-		"swait.h": "c"
+		"swait.h": "c",
+		"binfmts.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

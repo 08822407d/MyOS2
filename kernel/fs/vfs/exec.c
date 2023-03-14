@@ -77,3 +77,160 @@
 // #include <trace/events/sched.h>
 
 
+
+// static int do_execveat_common(int fd, struct filename *filename,
+// 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
+static int do_execveat_common(int fd, filename_s *filename,
+	const char *const *argv, const char *const *envp, int flags) {
+	linux_bprm_s *bprm;
+	int retval;
+
+	if (IS_ERR(filename))
+		return PTR_ERR(filename);
+
+// 	/*
+// 	 * We move the actual failure in case of RLIMIT_NPROC excess from
+// 	 * set*uid() to execve() because too many poorly written programs
+// 	 * don't check setuid() return code.  Here we additionally recheck
+// 	 * whether NPROC limit is still exceeded.
+// 	 */
+// 	if ((current->flags & PF_NPROC_EXCEEDED) &&
+// 	    is_ucounts_overlimit(current_ucounts(), UCOUNT_RLIMIT_NPROC, rlimit(RLIMIT_NPROC))) {
+// 		retval = -EAGAIN;
+// 		goto out_ret;
+// 	}
+
+	/* We're below the limit (still or again), so we don't want to make
+	 * further execve() calls fail. */
+	current->flags &= ~PF_NPROC_EXCEEDED;
+
+// 	bprm = alloc_bprm(fd, filename);
+// 	if (IS_ERR(bprm)) {
+// 		retval = PTR_ERR(bprm);
+// 		goto out_ret;
+// 	}
+
+// 	retval = count(argv, MAX_ARG_STRINGS);
+// 	if (retval == 0)
+// 		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
+// 			     current->comm, bprm->filename);
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->argc = retval;
+
+// 	retval = count(envp, MAX_ARG_STRINGS);
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->envc = retval;
+
+// 	retval = bprm_stack_limits(bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	retval = copy_string_kernel(bprm->filename, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->exec = bprm->p;
+
+// 	retval = copy_strings(bprm->envc, envp, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	retval = copy_strings(bprm->argc, argv, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	/*
+// 	 * When argv is empty, add an empty string ("") as argv[0] to
+// 	 * ensure confused userspace programs that start processing
+// 	 * from argv[1] won't end up walking envp. See also
+// 	 * bprm_stack_limits().
+// 	 */
+// 	if (bprm->argc == 0) {
+// 		retval = copy_string_kernel("", bprm);
+// 		if (retval < 0)
+// 			goto out_free;
+// 		bprm->argc = 1;
+// 	}
+
+// 	retval = bprm_execve(bprm, fd, filename, flags);
+// out_free:
+// 	free_bprm(bprm);
+
+// out_ret:
+// 	putname(filename);
+// 	return retval;
+}
+
+
+int kernel_execve(const char *kernel_filename,
+	const char *const *argv, const char *const *envp)
+{
+	filename_s *filename;
+	linux_bprm_s *bprm;
+	int fd = AT_FDCWD;
+	int retval;
+
+	filename = getname_kernel(kernel_filename);
+	if (IS_ERR(filename))
+		return PTR_ERR(filename);
+
+// 	bprm = alloc_bprm(fd, filename);
+// 	if (IS_ERR(bprm)) {
+// 		retval = PTR_ERR(bprm);
+// 		goto out_ret;
+// 	}
+
+// 	retval = count_strings_kernel(argv);
+// 	if (WARN_ON_ONCE(retval == 0))
+// 		retval = -EINVAL;
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->argc = retval;
+
+// 	retval = count_strings_kernel(envp);
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->envc = retval;
+
+// 	retval = bprm_stack_limits(bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	retval = copy_string_kernel(bprm->filename, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+// 	bprm->exec = bprm->p;
+
+// 	retval = copy_strings_kernel(bprm->envc, envp, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	retval = copy_strings_kernel(bprm->argc, argv, bprm);
+// 	if (retval < 0)
+// 		goto out_free;
+
+// 	retval = bprm_execve(bprm, fd, filename, 0);
+// out_free:
+// 	free_bprm(bprm);
+// out_ret:
+// 	putname(filename);
+// 	return retval;
+}
+
+static int do_execve(filename_s *filename,
+	const char *const *__argv, const char *const *__envp) {
+	// struct user_arg_ptr argv = { .ptr.native = __argv };
+	// struct user_arg_ptr envp = { .ptr.native = __envp };
+	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
+}
+
+
+extern long myos_do_execve(const char *filename,
+	const char *const *argv, const char *const *envp);
+long sys_execve(const char *filename,
+	const char *const __user *argv, const char *const __user *envp)
+{
+	// return do_execve(getname(filename), argv, envp);
+	return myos_do_execve(filename, argv, envp);
+}
