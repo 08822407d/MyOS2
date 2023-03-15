@@ -78,6 +78,64 @@
 
 
 
+
+static void free_bprm(linux_bprm_s *bprm)
+{
+	// if (bprm->mm) {
+	// 	acct_arg_size(bprm, 0);
+	// 	mmput(bprm->mm);
+	// }
+	// free_arg_pages(bprm);
+	// if (bprm->cred) {
+	// 	mutex_unlock(&current->signal->cred_guard_mutex);
+	// 	abort_creds(bprm->cred);
+	// }
+	// if (bprm->file) {
+	// 	allow_write_access(bprm->file);
+	// 	fput(bprm->file);
+	// }
+	// if (bprm->executable)
+	// 	fput(bprm->executable);
+	// /* If a binfmt changed the interp, free it. */
+	if (bprm->interp != bprm->filename)
+		kfree(bprm->interp);
+	kfree(bprm->fdpath);
+	kfree(bprm);
+}
+
+static linux_bprm_s *alloc_bprm(int fd, filename_s *filename) {
+	linux_bprm_s *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
+	int retval = -ENOMEM;
+	if (!bprm)
+		goto out;
+
+	if (fd == AT_FDCWD || filename->name[0] == '/') {
+		bprm->filename = filename->name;
+	} else {
+	// 	if (filename->name[0] == '\0')
+	// 		bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
+	// 	else
+	// 		bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
+	// 					  fd, filename->name);
+	// 	if (!bprm->fdpath)
+	// 		goto out_free;
+
+		bprm->filename = bprm->fdpath;
+	}
+	bprm->interp = bprm->filename;
+
+	// retval = bprm_mm_init(bprm);
+	if (retval)
+		goto out_free;
+	return bprm;
+
+out_free:
+	free_bprm(bprm);
+out:
+	return ERR_PTR(retval);
+}
+
+
 // static int do_execveat_common(int fd, struct filename *filename,
 // 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
 static int do_execveat_common(int fd, filename_s *filename,
@@ -104,11 +162,11 @@ static int do_execveat_common(int fd, filename_s *filename,
 	 * further execve() calls fail. */
 	current->flags &= ~PF_NPROC_EXCEEDED;
 
-// 	bprm = alloc_bprm(fd, filename);
-// 	if (IS_ERR(bprm)) {
-// 		retval = PTR_ERR(bprm);
-// 		goto out_ret;
-// 	}
+	bprm = alloc_bprm(fd, filename);
+	if (IS_ERR(bprm)) {
+		retval = PTR_ERR(bprm);
+		goto out_ret;
+	}
 
 // 	retval = count(argv, MAX_ARG_STRINGS);
 // 	if (retval == 0)
@@ -154,12 +212,12 @@ static int do_execveat_common(int fd, filename_s *filename,
 // 	}
 
 // 	retval = bprm_execve(bprm, fd, filename, flags);
-// out_free:
-// 	free_bprm(bprm);
+out_free:
+	free_bprm(bprm);
 
-// out_ret:
-// 	putname(filename);
-// 	return retval;
+out_ret:
+	putname(filename);
+	return retval;
 }
 
 
