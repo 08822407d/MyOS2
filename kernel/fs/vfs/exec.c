@@ -77,6 +77,204 @@
 // #include <trace/events/sched.h>
 
 
+/*
+ * count() counts the number of strings in array ARGV.
+ */
+static int count(const char *const *argv, int max) {
+	int i = 0;
+
+	if (argv != NULL) {
+		for (;;) {
+			const char *p = *argv + i;
+
+			if (!p)
+				break;
+
+			if (IS_ERR(p))
+				return -EFAULT;
+
+			if (i >= max)
+				return -E2BIG;
+			++i;
+
+			// if (fatal_signal_pending(current))
+			// 	return -ERESTARTNOHAND;
+			// cond_resched();
+		}
+	}
+	return i;
+}
+
+static int count_strings_kernel(const char *const *argv) {
+	// int i;
+
+	// if (!argv)
+	// 	return 0;
+
+	// for (i = 0; argv[i]; ++i) {
+	// 	if (i >= MAX_ARG_STRINGS)
+	// 		return -E2BIG;
+	// 	if (fatal_signal_pending(current))
+	// 		return -ERESTARTNOHAND;
+	// 	cond_resched();
+	// }
+	// return i;
+}
+
+
+/*
+ * 'copy_strings()' copies argument/environment strings from the old
+ * processes's memory to the new process's stack.  The call to get_user_pages()
+ * ensures the destination page is created and not swapped out.
+ */
+static int
+copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
+{
+// 	struct page *kmapped_page = NULL;
+// 	char *kaddr = NULL;
+// 	unsigned long kpos = 0;
+// 	int ret;
+
+// 	while (argc-- > 0) {
+// 		const char __user *str;
+// 		int len;
+// 		unsigned long pos;
+
+// 		ret = -EFAULT;
+// 		str = get_user_arg_ptr(argv, argc);
+// 		if (IS_ERR(str))
+// 			goto out;
+
+// 		len = strnlen_user(str, MAX_ARG_STRLEN);
+// 		if (!len)
+// 			goto out;
+
+// 		ret = -E2BIG;
+// 		if (!valid_arg_len(bprm, len))
+// 			goto out;
+
+// 		/* We're going to work our way backwords. */
+// 		pos = bprm->p;
+// 		str += len;
+// 		bprm->p -= len;
+// #ifdef CONFIG_MMU
+// 		if (bprm->p < bprm->argmin)
+// 			goto out;
+// #endif
+
+// 		while (len > 0) {
+// 			int offset, bytes_to_copy;
+
+// 			if (fatal_signal_pending(current)) {
+// 				ret = -ERESTARTNOHAND;
+// 				goto out;
+// 			}
+// 			cond_resched();
+
+// 			offset = pos % PAGE_SIZE;
+// 			if (offset == 0)
+// 				offset = PAGE_SIZE;
+
+// 			bytes_to_copy = offset;
+// 			if (bytes_to_copy > len)
+// 				bytes_to_copy = len;
+
+// 			offset -= bytes_to_copy;
+// 			pos -= bytes_to_copy;
+// 			str -= bytes_to_copy;
+// 			len -= bytes_to_copy;
+
+// 			if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
+// 				struct page *page;
+
+// 				page = get_arg_page(bprm, pos, 1);
+// 				if (!page) {
+// 					ret = -E2BIG;
+// 					goto out;
+// 				}
+
+// 				if (kmapped_page) {
+// 					flush_dcache_page(kmapped_page);
+// 					kunmap(kmapped_page);
+// 					put_arg_page(kmapped_page);
+// 				}
+// 				kmapped_page = page;
+// 				kaddr = kmap(kmapped_page);
+// 				kpos = pos & PAGE_MASK;
+// 				flush_arg_page(bprm, kpos, kmapped_page);
+// 			}
+// 			if (copy_from_user(kaddr+offset, str, bytes_to_copy)) {
+// 				ret = -EFAULT;
+// 				goto out;
+// 			}
+// 		}
+// 	}
+// 	ret = 0;
+// out:
+// 	if (kmapped_page) {
+// 		flush_dcache_page(kmapped_page);
+// 		kunmap(kmapped_page);
+// 		put_arg_page(kmapped_page);
+// 	}
+// 	return ret;
+}
+
+/*
+ * Copy and argument/environment string from the kernel to the processes stack.
+ */
+int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
+{
+	int len = strnlen(arg, MAX_ARG_STRLEN) + 1 /* terminating NUL */;
+	unsigned long pos = bprm->p;
+
+	if (len == 0)
+		return -EFAULT;
+	// if (!valid_arg_len(bprm, len))
+	// 	return -E2BIG;
+
+	// /* We're going to work our way backwards. */
+	// arg += len;
+	// bprm->p -= len;
+	// if (IS_ENABLED(CONFIG_MMU) && bprm->p < bprm->argmin)
+	// 	return -E2BIG;
+
+	// while (len > 0) {
+	// 	unsigned int bytes_to_copy = min_t(unsigned int, len,
+	// 			min_not_zero(offset_in_page(pos), PAGE_SIZE));
+	// 	struct page *page;
+	// 	char *kaddr;
+
+	// 	pos -= bytes_to_copy;
+	// 	arg -= bytes_to_copy;
+	// 	len -= bytes_to_copy;
+
+	// 	page = get_arg_page(bprm, pos, 1);
+	// 	if (!page)
+	// 		return -E2BIG;
+	// 	kaddr = kmap_atomic(page);
+	// 	flush_arg_page(bprm, pos & PAGE_MASK, page);
+	// 	memcpy(kaddr + offset_in_page(pos), arg, bytes_to_copy);
+	// 	flush_dcache_page(page);
+	// 	kunmap_atomic(kaddr);
+	// 	put_arg_page(page);
+	// }
+
+	return 0;
+}
+
+static int
+copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
+{
+	while (argc-- > 0) {
+		int ret = copy_string_kernel(argv[argc], bprm);
+		if (ret < 0)
+			return ret;
+		// if (fatal_signal_pending(current))
+		// 	return -ERESTARTNOHAND;
+		// cond_resched();
+	}
+	return 0;
+}
 
 
 static void free_bprm(linux_bprm_s *bprm)
@@ -185,31 +383,31 @@ static int do_execveat_common(int fd, filename_s *filename,
 // 	if (retval < 0)
 // 		goto out_free;
 
-// 	retval = copy_string_kernel(bprm->filename, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->exec = bprm->p;
+	retval = copy_string_kernel(bprm->filename, bprm);
+	if (retval < 0)
+		goto out_free;
+	bprm->exec = bprm->p;
 
-// 	retval = copy_strings(bprm->envc, envp, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	retval = copy_strings(bprm->envc, envp, bprm);
+	if (retval < 0)
+		goto out_free;
 
-// 	retval = copy_strings(bprm->argc, argv, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	retval = copy_strings(bprm->argc, argv, bprm);
+	if (retval < 0)
+		goto out_free;
 
-// 	/*
-// 	 * When argv is empty, add an empty string ("") as argv[0] to
-// 	 * ensure confused userspace programs that start processing
-// 	 * from argv[1] won't end up walking envp. See also
-// 	 * bprm_stack_limits().
-// 	 */
-// 	if (bprm->argc == 0) {
-// 		retval = copy_string_kernel("", bprm);
-// 		if (retval < 0)
-// 			goto out_free;
-// 		bprm->argc = 1;
-// 	}
+	/*
+	 * When argv is empty, add an empty string ("") as argv[0] to
+	 * ensure confused userspace programs that start processing
+	 * from argv[1] won't end up walking envp. See also
+	 * bprm_stack_limits().
+	 */
+	if (bprm->argc == 0) {
+		retval = copy_string_kernel("", bprm);
+		if (retval < 0)
+			goto out_free;
+		bprm->argc = 1;
+	}
 
 // 	retval = bprm_execve(bprm, fd, filename, flags);
 out_free:

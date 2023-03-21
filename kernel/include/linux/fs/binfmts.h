@@ -22,9 +22,9 @@
 	// # define MAX_ARG_PAGES	32
 	// 	struct page *page[MAX_ARG_PAGES];
 	// #endif
-		mm_s		*mm;
-	// 	unsigned long p; /* current top of mem */
-	// 	unsigned long argmin; /* rlimit marker for copy_strings() */
+		mm_s			*mm;
+		unsigned long	p; /* current top of mem */
+		unsigned long	argmin; /* rlimit marker for copy_strings() */
 		unsigned int
 			/* Should an execfd be passed to userspace? */
 			have_execfd:1,
@@ -45,20 +45,20 @@
 	// #ifdef __alpha__
 	// 	unsigned int taso:1;
 	// #endif
-		file_s		*executable; /* Executable to pass to the interpreter */
-		file_s		*interpreter;
-		file_s		*file;
+		file_s			*executable; /* Executable to pass to the interpreter */
+		file_s			*interpreter;
+		file_s			*file;
 	// 	struct cred *cred;	/* new credentials */
 	// 	int unsafe;		/* how unsafe this exec is (mask of LSM_UNSAFE_*) */
 	// 	unsigned int per_clear;	/* bits to clear in current->personality */
-		int			argc, envc;
-		const char	*filename;	/* Name of binary as seen by procps */
-		const char	*interp;	/* Name of the binary really executed. Most
+		int				argc, envc;
+		const char		*filename;	/* Name of binary as seen by procps */
+		const char		*interp;	/* Name of the binary really executed. Most
 								   of the time same as filename, but could be
 								   different for binfmt_{misc,script} */
-		const char	*fdpath;	/* generated filename for execveat */
-		unsigned	interp_flags;
-		int			execfd;		/* File descriptor of the executable */
+		const char		*fdpath;	/* generated filename for execveat */
+		unsigned		interp_flags;
+		int				execfd;		/* File descriptor of the executable */
 		unsigned long	loader, exec;
 
 	// 	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
