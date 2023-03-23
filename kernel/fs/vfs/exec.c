@@ -106,19 +106,19 @@ static int count(const char *const *argv, int max) {
 }
 
 static int count_strings_kernel(const char *const *argv) {
-	// int i;
+	int i;
 
-	// if (!argv)
-	// 	return 0;
+	if (!argv)
+		return 0;
 
-	// for (i = 0; argv[i]; ++i) {
-	// 	if (i >= MAX_ARG_STRINGS)
-	// 		return -E2BIG;
+	for (i = 0; argv[i]; ++i) {
+		if (i >= MAX_ARG_STRINGS)
+			return -E2BIG;
 	// 	if (fatal_signal_pending(current))
 	// 		return -ERESTARTNOHAND;
 	// 	cond_resched();
-	// }
-	// return i;
+	}
+	return i;
 }
 
 
@@ -131,16 +131,16 @@ static int
 copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 {
 // 	struct page *kmapped_page = NULL;
-// 	char *kaddr = NULL;
-// 	unsigned long kpos = 0;
-// 	int ret;
+	char *kaddr = NULL;
+	unsigned long kpos = 0;
+	int ret;
 
-// 	while (argc-- > 0) {
-// 		const char __user *str;
-// 		int len;
-// 		unsigned long pos;
+	while (argc-- > 0) {
+		const char __user *str;
+		int len;
+		unsigned long pos;
 
-// 		ret = -EFAULT;
+		ret = -EFAULT;
 // 		str = get_user_arg_ptr(argv, argc);
 // 		if (IS_ERR(str))
 // 			goto out;
@@ -162,8 +162,8 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 // 			goto out;
 // #endif
 
-// 		while (len > 0) {
-// 			int offset, bytes_to_copy;
+		while (len > 0) {
+			int offset, bytes_to_copy;
 
 // 			if (fatal_signal_pending(current)) {
 // 				ret = -ERESTARTNOHAND;
@@ -207,16 +207,16 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 // 				ret = -EFAULT;
 // 				goto out;
 // 			}
-// 		}
-// 	}
-// 	ret = 0;
-// out:
+		}
+	}
+	ret = 0;
+out:
 // 	if (kmapped_page) {
 // 		flush_dcache_page(kmapped_page);
 // 		kunmap(kmapped_page);
 // 		put_arg_page(kmapped_page);
 // 	}
-// 	return ret;
+	return ret;
 }
 
 /*
@@ -232,13 +232,13 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 	// if (!valid_arg_len(bprm, len))
 	// 	return -E2BIG;
 
-	// /* We're going to work our way backwards. */
-	// arg += len;
-	// bprm->p -= len;
+	/* We're going to work our way backwards. */
+	arg += len;
+	bprm->p -= len;
 	// if (IS_ENABLED(CONFIG_MMU) && bprm->p < bprm->argmin)
 	// 	return -E2BIG;
 
-	// while (len > 0) {
+	while (len > 0) {
 	// 	unsigned int bytes_to_copy = min_t(unsigned int, len,
 	// 			min_not_zero(offset_in_page(pos), PAGE_SIZE));
 	// 	struct page *page;
@@ -257,7 +257,7 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 	// 	flush_dcache_page(page);
 	// 	kunmap_atomic(kaddr);
 	// 	put_arg_page(page);
-	// }
+	}
 
 	return 0;
 }
@@ -315,8 +315,8 @@ static linux_bprm_s *alloc_bprm(int fd, filename_s *filename) {
 	// 	else
 	// 		bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
 	// 					  fd, filename->name);
-	// 	if (!bprm->fdpath)
-	// 		goto out_free;
+		if (!bprm->fdpath)
+			goto out_free;
 
 		bprm->filename = bprm->fdpath;
 	}
@@ -366,18 +366,18 @@ static int do_execveat_common(int fd, filename_s *filename,
 		goto out_ret;
 	}
 
-// 	retval = count(argv, MAX_ARG_STRINGS);
+	retval = count(argv, MAX_ARG_STRINGS);
 // 	if (retval == 0)
 // 		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
 // 			     current->comm, bprm->filename);
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->argc = retval;
+	if (retval < 0)
+		goto out_free;
+	bprm->argc = retval;
 
-// 	retval = count(envp, MAX_ARG_STRINGS);
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->envc = retval;
+	retval = count(envp, MAX_ARG_STRINGS);
+	if (retval < 0)
+		goto out_free;
+	bprm->envc = retval;
 
 // 	retval = bprm_stack_limits(bprm);
 // 	if (retval < 0)
@@ -431,47 +431,48 @@ int kernel_execve(const char *kernel_filename,
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
 
-// 	bprm = alloc_bprm(fd, filename);
-// 	if (IS_ERR(bprm)) {
-// 		retval = PTR_ERR(bprm);
-// 		goto out_ret;
-// 	}
+	bprm = alloc_bprm(fd, filename);
+	if (IS_ERR(bprm)) {
+		retval = PTR_ERR(bprm);
+		goto out_ret;
+	}
 
-// 	retval = count_strings_kernel(argv);
-// 	if (WARN_ON_ONCE(retval == 0))
-// 		retval = -EINVAL;
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->argc = retval;
+	retval = count_strings_kernel(argv);
+	if (retval == 0)
+		retval = -EINVAL;
+	if (retval < 0)
+		goto out_free;
+	bprm->argc = retval;
 
-// 	retval = count_strings_kernel(envp);
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->envc = retval;
+	retval = count_strings_kernel(envp);
+	if (retval < 0)
+		goto out_free;
+	bprm->envc = retval;
 
 // 	retval = bprm_stack_limits(bprm);
 // 	if (retval < 0)
 // 		goto out_free;
 
-// 	retval = copy_string_kernel(bprm->filename, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
-// 	bprm->exec = bprm->p;
+	retval = copy_string_kernel(bprm->filename, bprm);
+	if (retval < 0)
+		goto out_free;
+	bprm->exec = bprm->p;
 
-// 	retval = copy_strings_kernel(bprm->envc, envp, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	retval = copy_strings_kernel(bprm->envc, envp, bprm);
+	if (retval < 0)
+		goto out_free;
 
-// 	retval = copy_strings_kernel(bprm->argc, argv, bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	retval = copy_strings_kernel(bprm->argc, argv, bprm);
+	if (retval < 0)
+		goto out_free;
 
 // 	retval = bprm_execve(bprm, fd, filename, 0);
-// out_free:
-// 	free_bprm(bprm);
-// out_ret:
-// 	putname(filename);
-// 	return retval;
+out_free:
+	free_bprm(bprm);
+
+out_ret:
+	putname(filename);
+	return retval;
 }
 
 static int do_execve(filename_s *filename,
