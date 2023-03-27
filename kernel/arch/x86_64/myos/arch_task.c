@@ -5,6 +5,7 @@
 #include <linux/mm/mm.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
+#include <linux/fs/binfmts.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
@@ -199,8 +200,9 @@ void kjmp_to_doexecve()
 
 	// char *argv[] = {"task_init", NULL};
 	// myos_kernel_execve("/init.bin", argv, NULL);
-	char *argv[] = {"task_shell", NULL};
-	myos_kernel_execve("/shell.bin", argv, NULL);
+	// char *argv[] = {"task_shell", NULL};
+	kernel_execve("/shell.bin", NULL, NULL);
+	myos_kernel_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"

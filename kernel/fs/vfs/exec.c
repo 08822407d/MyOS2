@@ -323,6 +323,7 @@ static linux_bprm_s *alloc_bprm(int fd, filename_s *filename) {
 	bprm->interp = bprm->filename;
 
 	// retval = bprm_mm_init(bprm);
+	retval = -ENOERR;
 	if (retval)
 		goto out_free;
 	return bprm;
@@ -449,24 +450,24 @@ int kernel_execve(const char *kernel_filename,
 		goto out_free;
 	bprm->envc = retval;
 
-// 	retval = bprm_stack_limits(bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	// retval = bprm_stack_limits(bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-	retval = copy_string_kernel(bprm->filename, bprm);
-	if (retval < 0)
-		goto out_free;
-	bprm->exec = bprm->p;
+	// retval = copy_string_kernel(bprm->filename, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->exec = bprm->p;
 
-	retval = copy_strings_kernel(bprm->envc, envp, bprm);
-	if (retval < 0)
-		goto out_free;
+	// retval = copy_strings_kernel(bprm->envc, envp, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-	retval = copy_strings_kernel(bprm->argc, argv, bprm);
-	if (retval < 0)
-		goto out_free;
+	// retval = copy_strings_kernel(bprm->argc, argv, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-// 	retval = bprm_execve(bprm, fd, filename, 0);
+	// retval = bprm_execve(bprm, fd, filename, 0);
 out_free:
 	free_bprm(bprm);
 
