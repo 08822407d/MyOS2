@@ -307,6 +307,14 @@ static void mm_init_owner(mm_s *mm, task_s *p) {
 // #endif
 }
 
+mm_s *__myos_mm_init(mm_s *mm) {
+	pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
+	mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
+	int hfent_nr = PGENT_NR / 2;
+	memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
+	return mm;
+}
+
 static mm_s *mm_init(mm_s *mm, task_s *p) {
 // 	mm->mmap = NULL;
 // 	mm->mm_rb = RB_ROOT;
@@ -351,13 +359,29 @@ static mm_s *mm_init(mm_s *mm, task_s *p) {
 // 		goto fail_nocontext;
 
 // 	mm->user_ns = get_user_ns(user_ns);
-// 	return mm;
+	__myos_mm_init(mm);
+	return mm;
 
 // fail_nocontext:
 // 	mm_free_pgd(mm);
 // fail_nopgd:
 // 	free_mm(mm);
 // 	return NULL;
+}
+
+/*
+ * Allocate and initialize an mm_struct.
+ */
+mm_s *mm_alloc(void) {
+	mm_s *mm;
+
+	// mm = allocate_mm();
+	mm = (mm_s *)kmalloc(sizeof(mm_s), GFP_KERNEL);
+	if (!mm)
+		return NULL;
+
+	memset(mm, 0, sizeof(*mm));
+	return mm_init(mm, current);
 }
 
 static inline void __mmput(mm_s *mm) {

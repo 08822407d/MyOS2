@@ -334,6 +334,76 @@ out:
 	return ERR_PTR(retval);
 }
 
+extern int __myos_bprm_execve(linux_bprm_s *bprm);
+/*
+ * sys_execve() executes a new program.
+ */
+static int
+bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags) {
+	file_s *file;
+	int retval;
+
+// 	retval = prepare_bprm_creds(bprm);
+// 	if (retval)
+// 		return retval;
+
+// 	check_unsafe_exec(bprm);
+// 	current->in_execve = 1;
+
+// 	file = do_open_execat(fd, filename, flags);
+// 	retval = PTR_ERR(file);
+// 	if (IS_ERR(file))
+// 		goto out_unmark;
+
+// 	sched_exec();
+
+// 	bprm->file = file;
+// 	/*
+// 	 * Record that a name derived from an O_CLOEXEC fd will be
+// 	 * inaccessible after exec.  This allows the code in exec to
+// 	 * choose to fail when the executable is not mmaped into the
+// 	 * interpreter and an open file descriptor is not passed to
+// 	 * the interpreter.  This makes for a better user experience
+// 	 * than having the interpreter start and then immediately fail
+// 	 * when it finds the executable is inaccessible.
+// 	 */
+// 	if (bprm->fdpath && get_close_on_exec(fd))
+// 		bprm->interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;
+
+// 	/* Set the unchanging part of bprm->cred */
+// 	retval = security_bprm_creds_for_exec(bprm);
+// 	if (retval)
+// 		goto out;
+
+// 	retval = exec_binprm(bprm);
+// 	if (retval < 0)
+// 		goto out;
+
+// 	/* execve succeeded */
+// 	current->fs->in_exec = 0;
+// 	current->in_execve = 0;
+// 	rseq_execve(current);
+// 	acct_update_integrals(current);
+// 	task_numa_free(current, false);
+// 	return retval;
+
+// out:
+// 	/*
+// 	 * If past the point of no return ensure the code never
+// 	 * returns to the userspace process.  Use an existing fatal
+// 	 * signal if present otherwise terminate the process with
+// 	 * SIGSEGV.
+// 	 */
+// 	if (bprm->point_of_no_return && !fatal_signal_pending(current))
+// 		force_fatal_sig(SIGSEGV);
+
+// out_unmark:
+// 	current->fs->in_exec = 0;
+// 	current->in_execve = 0;
+
+	retval = __myos_bprm_execve(bprm);
+	return retval;
+}
 
 // static int do_execveat_common(int fd, struct filename *filename,
 // 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
@@ -367,50 +437,50 @@ static int do_execveat_common(int fd, filename_s *filename,
 		goto out_ret;
 	}
 
-	retval = count(argv, MAX_ARG_STRINGS);
-// 	if (retval == 0)
-// 		pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
-// 			     current->comm, bprm->filename);
-	if (retval < 0)
-		goto out_free;
-	bprm->argc = retval;
+	// retval = count(argv, MAX_ARG_STRINGS);
+	// if (retval == 0)
+	// 	pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
+	// 		     current->comm, bprm->filename);
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->argc = retval;
 
-	retval = count(envp, MAX_ARG_STRINGS);
-	if (retval < 0)
-		goto out_free;
-	bprm->envc = retval;
+	// retval = count(envp, MAX_ARG_STRINGS);
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->envc = retval;
 
-// 	retval = bprm_stack_limits(bprm);
-// 	if (retval < 0)
-// 		goto out_free;
+	// retval = bprm_stack_limits(bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-	retval = copy_string_kernel(bprm->filename, bprm);
-	if (retval < 0)
-		goto out_free;
-	bprm->exec = bprm->p;
+	// retval = copy_string_kernel(bprm->filename, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->exec = bprm->p;
 
-	retval = copy_strings(bprm->envc, envp, bprm);
-	if (retval < 0)
-		goto out_free;
+	// retval = copy_strings(bprm->envc, envp, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-	retval = copy_strings(bprm->argc, argv, bprm);
-	if (retval < 0)
-		goto out_free;
+	// retval = copy_strings(bprm->argc, argv, bprm);
+	// if (retval < 0)
+	// 	goto out_free;
 
-	/*
-	 * When argv is empty, add an empty string ("") as argv[0] to
-	 * ensure confused userspace programs that start processing
-	 * from argv[1] won't end up walking envp. See also
-	 * bprm_stack_limits().
-	 */
-	if (bprm->argc == 0) {
-		retval = copy_string_kernel("", bprm);
-		if (retval < 0)
-			goto out_free;
-		bprm->argc = 1;
-	}
+	// /*
+	//  * When argv is empty, add an empty string ("") as argv[0] to
+	//  * ensure confused userspace programs that start processing
+	//  * from argv[1] won't end up walking envp. See also
+	//  * bprm_stack_limits().
+	//  */
+	// if (bprm->argc == 0) {
+	// 	retval = copy_string_kernel("", bprm);
+	// 	if (retval < 0)
+	// 		goto out_free;
+	// 	bprm->argc = 1;
+	// }
 
-// 	retval = bprm_execve(bprm, fd, filename, flags);
+	retval = bprm_execve(bprm, fd, filename, flags);
 out_free:
 	free_bprm(bprm);
 
@@ -438,17 +508,17 @@ int kernel_execve(const char *kernel_filename,
 		goto out_ret;
 	}
 
-	retval = count_strings_kernel(argv);
-	if (retval == 0)
-		retval = -EINVAL;
-	if (retval < 0)
-		goto out_free;
-	bprm->argc = retval;
+	// retval = count_strings_kernel(argv);
+	// if (retval == 0)
+	// 	retval = -EINVAL;
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->argc = retval;
 
-	retval = count_strings_kernel(envp);
-	if (retval < 0)
-		goto out_free;
-	bprm->envc = retval;
+	// retval = count_strings_kernel(envp);
+	// if (retval < 0)
+	// 	goto out_free;
+	// bprm->envc = retval;
 
 	// retval = bprm_stack_limits(bprm);
 	// if (retval < 0)
@@ -467,7 +537,7 @@ int kernel_execve(const char *kernel_filename,
 	// if (retval < 0)
 	// 	goto out_free;
 
-	// retval = bprm_execve(bprm, fd, filename, 0);
+	retval = bprm_execve(bprm, fd, filename, 0);
 out_free:
 	free_bprm(bprm);
 
@@ -484,11 +554,9 @@ static int do_execve(filename_s *filename,
 }
 
 
-extern long myos_do_execve(const char *filename,
-	const char *const *argv, const char *const *envp);
 long sys_execve(const char *filename,
-	const char *const __user *argv, const char *const __user *envp)
+		const char *const __user *argv,
+		const char *const __user *envp)
 {
-	// return do_execve(getname(filename), argv, envp);
-	return myos_do_execve(filename, argv, envp);
+	return do_execve(getname(filename), argv, envp);
 }

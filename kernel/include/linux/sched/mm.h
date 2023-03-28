@@ -9,10 +9,10 @@
 	#include <linux/mm/gfp.h>
 	// #include <linux/sync_core.h>
 
-	// /*
-	//  * Routines for handling mm_structs
-	//  */
-	// extern mm_s *mm_alloc(void);
+	/*
+	 * Routines for handling mm_structs
+	 */
+	extern mm_s *mm_alloc(void);
 
 	// /**
 	//  * mmgrab() - Pin a &mm_s.

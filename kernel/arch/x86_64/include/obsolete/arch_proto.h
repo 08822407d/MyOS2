@@ -186,7 +186,6 @@
 
 	/* arch_task.c */
 	// pt_regs_s *get_stackframe(task_s * task_p);
-	int myos_kernel_execve(char *exec_filename, char *argv[], char *envp[]);
 	unsigned long do_exit(unsigned long exit_code);
 	void try_sched(void);
 	int kernel_init(void *arg);

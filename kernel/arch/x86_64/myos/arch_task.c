@@ -2,10 +2,12 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/mm/mm.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/binfmts.h>
+#include <linux/sched/mm.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
@@ -115,13 +117,13 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 }
 
 extern void myos_close_files(files_struct_s * files);
-int myos_kernel_execve(char *exec_filename, char *argv[], char *envp[])
+int __myos_bprm_execve(linux_bprm_s *bprm)
 {
 	int ret_val = 0;
 	task_s *curr = current;
 	pt_regs_s *curr_context = (pt_regs_s *)curr->thread.sp;
 	curr->se.vruntime = 0;
-	curr->name = exec_filename;
+	curr->name = (char *)bprm->filename;
 
 	//
 	if (task_idle != NULL && task_init != NULL)
@@ -130,48 +132,37 @@ int myos_kernel_execve(char *exec_filename, char *argv[], char *envp[])
 		task_init = curr;
 	//
 	myos_close_files(curr->files);
-	(curr);
-	file_s *fp = filp_open(exec_filename, O_RDONLY, 0);
+	file_s *fp = filp_open(bprm->filename, O_RDONLY, 0);
 
 	if (curr->flags & CLONE_VFORK)
-	{
-		curr->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
-
-		pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
-		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
-		// new_pgd->pgd = myos_virt2phys((virt_addr_t)virt_cr3);
-		// curr->mm->pgd = new_pgd;
-		curr->mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
-		int hfent_nr = PGENT_NR / 2;
-		memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
-	}
+		curr->mm = mm_alloc();
 	read_exec_mm(fp, curr);
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
-	long argv_pos = 0;
-	if(argv != NULL)
-	{
-		int argc = 0;
-		int len = 0;
-		long i = 0;
-		char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
-		argv_pos = (unsigned long)dargv;
+	// long argv_pos = 0;
+	// if(argv != NULL)
+	// {
+	// 	int argc = 0;
+	// 	int len = 0;
+	// 	long i = 0;
+	// 	char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
+	// 	argv_pos = (unsigned long)dargv;
 
-		for(i = 0; i < 10 && argv[i] != NULL; i++)
-		{
-			len = strnlen(argv[i], 1024) + 1;
-			if (len <= 0)
-				continue;
-			strcpy((char *)(argv_pos - len), argv[i]);
-			dargv[i] = (char *)(argv_pos - len);
-			argv_pos -= len;
-		}
-		curr->mm->start_stack = argv_pos - 10;
-		curr_context->di = (reg_t)i;	//argc
-		curr_context->si = (reg_t)dargv;	//argv
-	}
+	// 	for(i = 0; i < 10 && argv[i] != NULL; i++)
+	// 	{
+	// 		len = strnlen(argv[i], 1024) + 1;
+	// 		if (len <= 0)
+	// 			continue;
+	// 		strcpy((char *)(argv_pos - len), argv[i]);
+	// 		dargv[i] = (char *)(argv_pos - len);
+	// 		argv_pos -= len;
+	// 	}
+	// 	curr->mm->start_stack = argv_pos - 10;
+	// 	curr_context->di = (reg_t)i;	//argc
+	// 	curr_context->si = (reg_t)dargv;	//argv
+	// }
 
 	memset((void *)curr->mm->start_code, 0,
 			curr->mm->end_data - curr->mm->start_code);
@@ -198,11 +189,7 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	// char *argv[] = {"task_init", NULL};
-	// myos_kernel_execve("/init.bin", argv, NULL);
-	// char *argv[] = {"task_shell", NULL};
-	kernel_execve("/shell.bin", NULL, NULL);
-	myos_kernel_execve("/shell.bin", NULL, NULL);
+	sys_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"
