@@ -147,7 +147,6 @@ long myos_do_execve(const char *filename, const char *const *argv,
 	}
 	strncpy_from_user(pathname, (void *)curr_context->di, pathlen);
 	
-	// error = __myos_bprm_execve(pathname, (char **)curr_context->si, NULL);
 	error = sys_execve(pathname, (const char *const *)curr_context->si, NULL);
 
 	kfree(pathname);

@@ -335,6 +335,7 @@ out:
 }
 
 extern int __myos_bprm_execve(linux_bprm_s *bprm);
+extern int __myos_copy_strings(const char *const *argv);
 /*
  * sys_execve() executes a new program.
  */
@@ -466,6 +467,7 @@ static int do_execveat_common(int fd, filename_s *filename,
 	// retval = copy_strings(bprm->argc, argv, bprm);
 	// if (retval < 0)
 	// 	goto out_free;
+	__myos_copy_strings(argv);
 
 	// /*
 	//  * When argv is empty, add an empty string ("") as argv[0] to
@@ -536,6 +538,7 @@ int kernel_execve(const char *kernel_filename,
 	// retval = copy_strings_kernel(bprm->argc, argv, bprm);
 	// if (retval < 0)
 	// 	goto out_free;
+	__myos_copy_strings(argv);
 
 	retval = bprm_execve(bprm, fd, filename, 0);
 out_free:

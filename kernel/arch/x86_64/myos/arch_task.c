@@ -116,6 +116,34 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 }
 
+int __myos_copy_strings(const char *const *argv)
+{
+	task_s *curr = current;
+	pt_regs_s *curr_context = (pt_regs_s *)curr->thread.sp;
+
+	long argv_pos = 0;
+	if(argv != NULL)
+	{
+		int argc = 0;
+		int len = 0;
+		long i = 0;
+		char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
+		argv_pos = (unsigned long)dargv;
+
+		for(i = 0; i < 10 && argv[i] != NULL; i++)
+		{
+			len = strnlen(argv[i], 1024) + 1;
+			if (len <= 0)
+				continue;
+			strcpy((char *)(argv_pos - len), argv[i]);
+			dargv[i] = (char *)(argv_pos - len);
+			argv_pos -= len;
+		}
+		curr->mm->start_stack = argv_pos - 10;
+		curr_context->di = (reg_t)i;	//argc
+		curr_context->si = (reg_t)dargv;	//argv
+	}
+}
 extern void myos_close_files(files_struct_s * files);
 int __myos_bprm_execve(linux_bprm_s *bprm)
 {
@@ -140,29 +168,6 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
-
-	// long argv_pos = 0;
-	// if(argv != NULL)
-	// {
-	// 	int argc = 0;
-	// 	int len = 0;
-	// 	long i = 0;
-	// 	char ** dargv = (char **)(curr->mm->start_stack - 10 * sizeof(char *));
-	// 	argv_pos = (unsigned long)dargv;
-
-	// 	for(i = 0; i < 10 && argv[i] != NULL; i++)
-	// 	{
-	// 		len = strnlen(argv[i], 1024) + 1;
-	// 		if (len <= 0)
-	// 			continue;
-	// 		strcpy((char *)(argv_pos - len), argv[i]);
-	// 		dargv[i] = (char *)(argv_pos - len);
-	// 		argv_pos -= len;
-	// 	}
-	// 	curr->mm->start_stack = argv_pos - 10;
-	// 	curr_context->di = (reg_t)i;	//argc
-	// 	curr_context->si = (reg_t)dargv;	//argv
-	// }
 
 	memset((void *)curr->mm->start_code, 0,
 			curr->mm->end_data - curr->mm->start_code);
@@ -189,7 +194,7 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	sys_execve("/shell.bin", NULL, NULL);
+	kernel_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"
