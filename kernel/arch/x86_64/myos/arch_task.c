@@ -149,7 +149,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 {
 	int ret_val = 0;
 	task_s *curr = current;
-	pt_regs_s *curr_context = (pt_regs_s *)curr->thread.sp;
+	pt_regs_s *curr_context = task_pt_regs(curr);
 	curr->se.vruntime = 0;
 	curr->name = (char *)bprm->filename;
 
@@ -160,7 +160,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 		task_init = curr;
 	//
 	myos_close_files(curr->files);
-	file_s *fp = filp_open(bprm->filename, O_RDONLY, 0);
+	file_s *fp = bprm->file;
 
 	if (curr->flags & CLONE_VFORK)
 		curr->mm = mm_alloc();

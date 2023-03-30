@@ -72,7 +72,7 @@
 // #include <asm/tlb.h>
 
 // #include <trace/events/task.h>
-// #include "internal.h"
+#include "internal.h"
 
 // #include <trace/events/sched.h>
 
@@ -277,6 +277,55 @@ copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
 }
 
 
+
+static file_s *do_open_execat(int fd, filename_s *name, int flags)
+{
+	file_s *file;
+	int err;
+	open_flags_s open_exec_flags = {
+		.open_flag = O_LARGEFILE | O_RDONLY | __FMODE_EXEC,
+		.acc_mode = MAY_EXEC,
+		.intent = LOOKUP_OPEN,
+		.lookup_flags = LOOKUP_FOLLOW,
+	};
+
+	if ((flags & ~(AT_SYMLINK_NOFOLLOW | AT_EMPTY_PATH)) != 0)
+		return ERR_PTR(-EINVAL);
+	if (flags & AT_SYMLINK_NOFOLLOW)
+		open_exec_flags.lookup_flags &= ~LOOKUP_FOLLOW;
+	if (flags & AT_EMPTY_PATH)
+		open_exec_flags.lookup_flags |= LOOKUP_EMPTY;
+
+	file = do_filp_open(fd, name, &open_exec_flags);
+	if (IS_ERR(file))
+		goto out;
+
+	// /*
+	//  * may_open() has already checked for this, so it should be
+	//  * impossible to trip now. But we need to be extra cautious
+	//  * and check again at the very end too.
+	//  */
+	// err = -EACCES;
+	// if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
+	// 		 path_noexec(&file->f_path)))
+	// 	goto exit;
+
+	// err = deny_write_access(file);
+	// if (err)
+	// 	goto exit;
+
+	// if (name->name[0] != '\0')
+	// 	fsnotify_open(file);
+
+out:
+	return file;
+
+exit:
+	fput(file);
+	return ERR_PTR(err);
+}
+
+
 static void free_bprm(linux_bprm_s *bprm)
 {
 	// if (bprm->mm) {
@@ -340,69 +389,70 @@ extern int __myos_copy_strings(const char *const *argv);
  * sys_execve() executes a new program.
  */
 static int
-bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags) {
+bprm_execve(linux_bprm_s *bprm, int fd,
+		filename_s *filename, int flags) {
 	file_s *file;
 	int retval;
 
-// 	retval = prepare_bprm_creds(bprm);
-// 	if (retval)
-// 		return retval;
+	// retval = prepare_bprm_creds(bprm);
+	// if (retval)
+	// 	return retval;
 
-// 	check_unsafe_exec(bprm);
-// 	current->in_execve = 1;
+	// check_unsafe_exec(bprm);
+	// current->in_execve = 1;
 
-// 	file = do_open_execat(fd, filename, flags);
-// 	retval = PTR_ERR(file);
-// 	if (IS_ERR(file))
-// 		goto out_unmark;
+	file = do_open_execat(fd, filename, flags);
+	retval = PTR_ERR(file);
+	if (IS_ERR(file))
+		goto out_unmark;
 
-// 	sched_exec();
+	// sched_exec();
 
-// 	bprm->file = file;
-// 	/*
-// 	 * Record that a name derived from an O_CLOEXEC fd will be
-// 	 * inaccessible after exec.  This allows the code in exec to
-// 	 * choose to fail when the executable is not mmaped into the
-// 	 * interpreter and an open file descriptor is not passed to
-// 	 * the interpreter.  This makes for a better user experience
-// 	 * than having the interpreter start and then immediately fail
-// 	 * when it finds the executable is inaccessible.
-// 	 */
-// 	if (bprm->fdpath && get_close_on_exec(fd))
-// 		bprm->interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;
+	bprm->file = file;
+	/*
+	 * Record that a name derived from an O_CLOEXEC fd will be
+	 * inaccessible after exec.  This allows the code in exec to
+	 * choose to fail when the executable is not mmaped into the
+	 * interpreter and an open file descriptor is not passed to
+	 * the interpreter.  This makes for a better user experience
+	 * than having the interpreter start and then immediately fail
+	 * when it finds the executable is inaccessible.
+	 */
+	// if (bprm->fdpath && get_close_on_exec(fd))
+	// 	bprm->interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;
 
-// 	/* Set the unchanging part of bprm->cred */
-// 	retval = security_bprm_creds_for_exec(bprm);
-// 	if (retval)
-// 		goto out;
+	// /* Set the unchanging part of bprm->cred */
+	// retval = security_bprm_creds_for_exec(bprm);
+	// if (retval)
+	// 	goto out;
 
-// 	retval = exec_binprm(bprm);
-// 	if (retval < 0)
-// 		goto out;
-
-// 	/* execve succeeded */
-// 	current->fs->in_exec = 0;
-// 	current->in_execve = 0;
-// 	rseq_execve(current);
-// 	acct_update_integrals(current);
-// 	task_numa_free(current, false);
-// 	return retval;
-
-// out:
-// 	/*
-// 	 * If past the point of no return ensure the code never
-// 	 * returns to the userspace process.  Use an existing fatal
-// 	 * signal if present otherwise terminate the process with
-// 	 * SIGSEGV.
-// 	 */
-// 	if (bprm->point_of_no_return && !fatal_signal_pending(current))
-// 		force_fatal_sig(SIGSEGV);
-
-// out_unmark:
-// 	current->fs->in_exec = 0;
-// 	current->in_execve = 0;
-
+	// retval = exec_binprm(bprm);
 	retval = __myos_bprm_execve(bprm);
+	if (retval < 0)
+		goto out;
+
+	/* execve succeeded */
+	current->fs->in_exec = 0;
+	// current->in_execve = 0;
+	// rseq_execve(current);
+	// acct_update_integrals(current);
+	// task_numa_free(current, false);
+	return retval;
+
+out:
+	/*
+	 * If past the point of no return ensure the code never
+	 * returns to the userspace process.  Use an existing fatal
+	 * signal if present otherwise terminate the process with
+	 * SIGSEGV.
+	 */
+	// if (bprm->point_of_no_return && !fatal_signal_pending(current))
+	// 	force_fatal_sig(SIGSEGV);
+
+out_unmark:
+	current->fs->in_exec = 0;
+	// current->in_execve = 0;
+
 	return retval;
 }
 
@@ -416,17 +466,17 @@ static int do_execveat_common(int fd, filename_s *filename,
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
 
-// 	/*
-// 	 * We move the actual failure in case of RLIMIT_NPROC excess from
-// 	 * set*uid() to execve() because too many poorly written programs
-// 	 * don't check setuid() return code.  Here we additionally recheck
-// 	 * whether NPROC limit is still exceeded.
-// 	 */
-// 	if ((current->flags & PF_NPROC_EXCEEDED) &&
-// 	    is_ucounts_overlimit(current_ucounts(), UCOUNT_RLIMIT_NPROC, rlimit(RLIMIT_NPROC))) {
-// 		retval = -EAGAIN;
-// 		goto out_ret;
-// 	}
+	// /*
+	//  * We move the actual failure in case of RLIMIT_NPROC excess from
+	//  * set*uid() to execve() because too many poorly written programs
+	//  * don't check setuid() return code.  Here we additionally recheck
+	//  * whether NPROC limit is still exceeded.
+	//  */
+	// if ((current->flags & PF_NPROC_EXCEEDED) &&
+	//     is_ucounts_overlimit(current_ucounts(), UCOUNT_RLIMIT_NPROC, rlimit(RLIMIT_NPROC))) {
+	// 	retval = -EAGAIN;
+	// 	goto out_ret;
+	// }
 
 	/* We're below the limit (still or again), so we don't want to make
 	 * further execve() calls fail. */
@@ -493,8 +543,8 @@ out_ret:
 
 
 int kernel_execve(const char *kernel_filename,
-	const char *const *argv, const char *const *envp)
-{
+		const char *const *argv,
+		const char *const *envp) {
 	filename_s *filename;
 	linux_bprm_s *bprm;
 	int fd = AT_FDCWD;
@@ -550,16 +600,14 @@ out_ret:
 }
 
 static int do_execve(filename_s *filename,
-	const char *const *__argv, const char *const *__envp) {
-	// struct user_arg_ptr argv = { .ptr.native = __argv };
-	// struct user_arg_ptr envp = { .ptr.native = __envp };
+		const char *const *__argv,
+		const char *const *__envp) {
 	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
 }
 
 
 long sys_execve(const char *filename,
 		const char *const __user *argv,
-		const char *const __user *envp)
-{
+		const char *const __user *envp) {
 	return do_execve(getname(filename), argv, envp);
 }
