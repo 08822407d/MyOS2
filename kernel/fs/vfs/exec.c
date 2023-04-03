@@ -79,6 +79,21 @@
 
 static LIST_HDR_S(formats);
 
+void __register_binfmt(linux_bfmt_s * fmt, int insert)
+{
+	// write_lock(&binfmt_lock);
+	insert ? list_hdr_push(&formats, &fmt->lh) :
+		list_hdr_append(&formats, &fmt->lh);
+	// write_unlock(&binfmt_lock);
+}
+
+void unregister_binfmt(linux_bfmt_s * fmt)
+{
+	// write_lock(&binfmt_lock);
+	list_del(&fmt->lh);
+	formats.count--;
+	// write_unlock(&binfmt_lock);
+}
 
 /*
  * count() counts the number of strings in array ARGV.

@@ -104,18 +104,17 @@
 		__list_add(new, head->prev, head);
 	}
 
-	// /*
-	// * Delete a list entry by making the prev/next entries
-	// * point to each other.
-	// *
-	// * This is only for internal list manipulation where we know
-	// * the prev/next entries already!
-	// */
-	// static inline void __list_del(List_s * prev, List_s * next)
-	// {
-	// 	next->prev = prev;
-	// 	WRITE_ONCE(prev->next, next);
-	// }
+	/*
+	* Delete a list entry by making the prev/next entries
+	* point to each other.
+	*
+	* This is only for internal list manipulation where we know
+	* the prev/next entries already!
+	*/
+	static inline void __list_del(List_s * prev, List_s * next) {
+		next->prev = prev;
+		WRITE_ONCE(prev->next, next);
+	}
 
 	// /*
 	// * Delete a list entry and clear the 'prev' pointer.
@@ -131,26 +130,24 @@
 	// 	entry->prev = NULL;
 	// }
 
-	// static inline void __list_del_entry(List_s *entry)
-	// {
-	// 	if (!__list_del_entry_valid(entry))
-	// 		return;
+	static inline void __list_del_entry(List_s *entry) {
+		if (!__list_del_entry_valid(entry))
+			return;
 
-	// 	__list_del(entry->prev, entry->next);
-	// }
+		__list_del(entry->prev, entry->next);
+	}
 
-	// /**
-	//  * list_del - deletes entry from list.
-	//  * @entry: the element to delete from the list.
-	//  * Note: list_empty() on entry does not return true after this, the entry is
-	//  * in an undefined state.
-	//  */
-	// static inline void list_del(List_s *entry)
-	// {
-	// 	__list_del_entry(entry);
-	// 	entry->next = LIST_POISON1;
-	// 	entry->prev = LIST_POISON2;
-	// }
+	/**
+	 * list_del - deletes entry from list.
+	 * @entry: the element to delete from the list.
+	 * Note: list_empty() on entry does not return true after this, the entry is
+	 * in an undefined state.
+	 */
+	static inline void list_del(List_s *entry) {
+		__list_del_entry(entry);
+		// entry->next = LIST_POISON1;
+		// entry->prev = LIST_POISON2;
+	}
 
 	// /**
 	//  * list_replace - replace old entry by new one
