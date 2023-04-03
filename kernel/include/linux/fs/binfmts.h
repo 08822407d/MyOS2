@@ -92,18 +92,18 @@
 	// 	struct core_vma_metadata *vma_meta;
 	// };
 
-	// /*
-	// * This structure defines the functions that are used to load the binary formats that
-	// * linux accepts.
-	// */
-	// struct linux_binfmt {
-	// 	struct list_head lh;
-	// 	struct module *module;
-	// 	int (*load_binary)(struct linux_binprm *);
-	// 	int (*load_shlib)(struct file *);
-	// 	int (*core_dump)(struct coredump_params *cprm);
-	// 	unsigned long min_coredump;	/* minimal dump size */
-	// } __randomize_layout;
+	/*
+	* This structure defines the functions that are used to load the binary formats that
+	* linux accepts.
+	*/
+	typedef struct linux_binfmt {
+		List_s		lh;
+		// module_s	*module;
+		int			(*load_binary)(linux_bprm_s *);
+		int			(*load_shlib)(file_s *);
+		// int			(*core_dump)(struct coredump_params *cprm);
+		unsigned long	min_coredump;	/* minimal dump size */
+	} linux_bfmt_s;
 
 	// extern void __register_binfmt(struct linux_binfmt *fmt, int insert);
 

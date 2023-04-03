@@ -77,6 +77,9 @@
 // #include <trace/events/sched.h>
 
 
+static LIST_HDR_S(formats);
+
+
 /*
  * count() counts the number of strings in array ARGV.
  */
@@ -383,6 +386,56 @@ out:
 	return ERR_PTR(retval);
 }
 
+
+#define printable(c) (((c)=='\t') || ((c)=='\n') || (0x20<=(c) && (c)<=0x7e))
+/*
+ * cycle the list of binary formats handler, until one recognizes the image
+ */
+static int search_binary_handler(linux_bprm_s *bprm) {
+	// bool need_retry = IS_ENABLED(CONFIG_MODULES);
+	linux_bfmt_s *fmt;
+	int retval;
+
+	// retval = prepare_binprm(bprm);
+	// if (retval < 0)
+	// 	return retval;
+
+	// retval = security_bprm_check(bprm);
+	// if (retval)
+	// 	return retval;
+
+	retval = -ENOENT;
+//  retry:
+	// read_lock(&binfmt_lock);
+	list_for_each_entry(fmt, &formats, lh) {
+		// if (!try_module_get(fmt->module))
+		// 	continue;
+		// read_unlock(&binfmt_lock);
+
+		retval = fmt->load_binary(bprm);
+
+		// read_lock(&binfmt_lock);
+		// put_binfmt(fmt);
+		// if (bprm->point_of_no_return || (retval != -ENOEXEC)) {
+		// 	read_unlock(&binfmt_lock);
+		// 	return retval;
+		// }
+	}
+	// read_unlock(&binfmt_lock);
+
+	// if (need_retry) {
+	// 	if (printable(bprm->buf[0]) && printable(bprm->buf[1]) &&
+	// 	    printable(bprm->buf[2]) && printable(bprm->buf[3]))
+	// 		return retval;
+	// 	if (request_module("binfmt-%04x", *(ushort *)(bprm->buf + 2)) < 0)
+	// 		return retval;
+	// 	need_retry = false;
+	// 	goto retry;
+	// }
+
+	return retval;
+}
+
 extern int __myos_bprm_execve(linux_bprm_s *bprm);
 extern int __myos_copy_strings(const char *const *argv);
 /*
@@ -427,6 +480,10 @@ bprm_execve(linux_bprm_s *bprm, int fd,
 	// 	goto out;
 
 	// retval = exec_binprm(bprm);
+	// static int exec_binprm(struct linux_binprm *bprm)
+	// {
+		retval = search_binary_handler(bprm);
+	// }
 	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)
 		goto out;

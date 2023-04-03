@@ -530,7 +530,7 @@
 	 * Note, that list is expected to be not empty.
 	 */
 	#define list_first_entry(ptr, type, member) \
-				list_entry((ptr)->next, type, member)
+				list_entry((ptr)->header.next, type, member)
 
 	/**
 	 * list_last_entry - get the last element from a list
@@ -541,7 +541,7 @@
 	 * Note, that list is expected to be not empty.
 	 */
 	#define list_last_entry(ptr, type, member) \
-				list_entry((ptr)->prev, type, member)
+				list_entry((ptr)->header.prev, type, member)
 
 	// /**
 	//  * list_first_entry_or_null - get the first element from a list
@@ -557,13 +557,13 @@
 	// 	pos__ != head__ ? list_entry(pos__, type, member) : NULL; \
 	// })
 
-	// /**
-	//  * list_next_entry - get the next element in list
-	//  * @pos:	the type * to cursor
-	//  * @member:	the name of the list_head within the struct.
-	//  */
-	// #define list_next_entry(pos, member) \
-	// 	list_entry((pos)->member.next, typeof(*(pos)), member)
+	/**
+	 * list_next_entry - get the next element in list
+	 * @pos:	the type * to cursor
+	 * @member:	the name of the list_head within the struct.
+	 */
+	#define list_next_entry(pos, member) \
+		list_entry((pos)->member.next, typeof(*(pos)), member)
 
 	// /**
 	//  * list_prev_entry - get the prev element in list
@@ -621,25 +621,25 @@
 	// 		!list_is_head(pos, (head)); \
 	// 		pos = n, n = pos->prev)
 
-	// /**
-	//  * list_entry_is_head - test if the entry points to the head of the list
-	//  * @pos:	the type * to cursor
-	//  * @head:	the head for your list.
-	//  * @member:	the name of the list_head within the struct.
-	//  */
-	// #define list_entry_is_head(pos, head, member)				\
-	// 	(&pos->member == (head))
+	/**
+	 * list_entry_is_head - test if the entry points to the head of the list
+	 * @pos:	the type * to cursor
+	 * @head:	the head for your list.
+	 * @member:	the name of the list_head within the struct.
+	 */
+	#define list_entry_is_head(pos, head, member)				\
+		(&pos->member == &((head)->header))
 
-	// /**
-	//  * list_for_each_entry	-	iterate over list of given type
-	//  * @pos:	the type * to use as a loop cursor.
-	//  * @head:	the head for your list.
-	//  * @member:	the name of the list_head within the struct.
-	//  */
-	// #define list_for_each_entry(pos, head, member)				\
-	// 	for (pos = list_first_entry(head, typeof(*pos), member);	\
-	// 		!list_entry_is_head(pos, head, member);			\
-	// 		pos = list_next_entry(pos, member))
+	/**
+	 * list_for_each_entry	-	iterate over list of given type
+	 * @pos:	the type * to use as a loop cursor.
+	 * @head:	the head for your list.
+	 * @member:	the name of the list_head within the struct.
+	 */
+	#define list_for_each_entry(pos, head, member)				\
+		for (pos = list_first_entry(head, typeof(*pos), member);	\
+			!list_entry_is_head(pos, head, member);			\
+			pos = list_next_entry(pos, member))
 
 	// /**
 	//  * list_for_each_entry_reverse - iterate backwards over list of given type.
