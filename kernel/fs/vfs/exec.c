@@ -79,16 +79,13 @@
 
 static LIST_HDR_S(formats);
 
-void __register_binfmt(linux_bfmt_s * fmt, int insert)
-{
+void register_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
-	insert ? list_hdr_push(&formats, &fmt->lh) :
-		list_hdr_append(&formats, &fmt->lh);
+	list_hdr_append(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 
-void unregister_binfmt(linux_bfmt_s * fmt)
-{
+void unregister_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
 	list_del(&fmt->lh);
 	formats.count--;

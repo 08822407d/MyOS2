@@ -105,19 +105,21 @@
 		unsigned long	min_coredump;	/* minimal dump size */
 	} linux_bfmt_s;
 
-	extern void __register_binfmt(linux_bfmt_s *fmt, int insert);
+	// extern void __register_binfmt(linux_bfmt_s *fmt, int insert);
 
-	/* Registration of default binfmt handlers */
-	static inline void register_binfmt(linux_bfmt_s *fmt) {
-		__register_binfmt(fmt, 0);
-	}
+	// /* Registration of default binfmt handlers */
+	// static inline void register_binfmt(linux_bfmt_s *fmt) {
+	// 	__register_binfmt(fmt, 0);
+	// }
+	void register_binfmt(linux_bfmt_s *fmt);
+
 	// /* Same as above, but adds a new binfmt at the top of the list */
 	// static inline void insert_binfmt(struct linux_binfmt *fmt)
 	// {
 	// 	__register_binfmt(fmt, 1);
 	// }
 
-	// extern void unregister_binfmt(struct linux_binfmt *);
+	extern void unregister_binfmt(linux_bfmt_s *);
 
 	// extern int __must_check remove_arg_zero(struct linux_binprm *);
 	// extern int begin_new_exec(struct linux_binprm * bprm);

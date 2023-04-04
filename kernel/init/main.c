@@ -305,6 +305,7 @@ void idle(size_t cpu_idx)
 void register_diskfs(void);
 int tty_class_init(void);
 int chr_dev_init(void);
+int init_elf_binfmt(void);
 static void do_initcalls(void)
 {
 	register_diskfs();
@@ -312,6 +313,8 @@ static void do_initcalls(void)
 	tty_class_init();
 
 	chr_dev_init();
+
+	init_elf_binfmt();
 }
 
 /*
