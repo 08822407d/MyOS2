@@ -393,5 +393,5 @@ static int ATArq_deamon(void *param)
 
 void init_ATArqd()
 {
-	thread = kthread_run(ATArq_deamon, NULL, "init");
+	thread = kthread_run(ATArq_deamon, NULL, "ATArqd");
 }

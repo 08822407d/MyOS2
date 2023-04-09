@@ -151,7 +151,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	task_s *curr = current;
 	pt_regs_s *curr_context = task_pt_regs(curr);
 	curr->se.vruntime = 0;
-	curr->name = (char *)bprm->filename;
+	set_task_comm(curr, bprm->filename);
 
 	//
 	if (task_idle != NULL && task_init != NULL)
@@ -194,7 +194,7 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	kernel_execve("/shell.bin", NULL, NULL);
+	kernel_execve("/init.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"jmp	sysexit_entp	\n\t"

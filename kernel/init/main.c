@@ -159,14 +159,17 @@ noinline void __ref rest_init(void)
 	 */
 	// rcu_read_lock();
 	// tsk = find_task_by_pid_ns(pid, &init_pid_ns);
-	// tsk->flags |= PF_NO_SETAFFINITY;
+	tsk = myos_find_task_by_pid(pid);
+	tsk->flags |= PF_NO_SETAFFINITY;
 	// set_cpus_allowed_ptr(tsk, cpumask_of(smp_processor_id()));
+	set_task_comm(tsk, "kernel_init");
 	// rcu_read_unlock();
 
 	// numa_default_policy();
 	pid = kernel_thread(kthreadd, NULL, CLONE_FS | CLONE_FILES);
 	// rcu_read_lock();
 	// kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
+	kthreadd_task = myos_find_task_by_pid(pid);
 	// rcu_read_unlock();
 
 	/*

@@ -40,6 +40,7 @@ static void create_smp_idles(size_t cpu_idx)
 	list_init(&idletask->sibling, idletask);
 	list_hdr_init(&idletask->children);
 	idletask->pid = myos_pid_nr();
+	attach_pid(idletask);
 }
 
 void myos_init_task(size_t lcpu_nr)
@@ -53,12 +54,13 @@ void myos_init_task(size_t lcpu_nr)
 	// set arch struct in mm_s
 	task0->rt.time_slice	= 2;
 	task0->se.vruntime		= -1;
-	task0->__state		= TASK_RUNNING;
-	task0->flags		= PF_KTHREAD;
-	task0->mm			= &init_mm;
-	task0->fs			= &task0_fs;
-	task0->files		= &task0_files;
-	task0->name			= "cpu0_idel";
+	task0->__state			= TASK_RUNNING;
+	task0->flags			= PF_KTHREAD;
+	task0->mm				= &init_mm;
+	task0->fs				= &task0_fs;
+	task0->files			= &task0_files;
+	set_task_comm(task0, "cpu0_idel");
+	attach_pid(task0);
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{

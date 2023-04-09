@@ -87,8 +87,8 @@ void register_binfmt(linux_bfmt_s * fmt) {
 
 void unregister_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
-	list_del(&fmt->lh);
-	formats.count--;
+	// list_del(&fmt->lh);
+	list_hdr_delete(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 
@@ -399,6 +399,20 @@ out:
 }
 
 
+/*
+ * Fill the binprm structure from the inode.
+ * Read the first BINPRM_BUF_SIZE bytes
+ *
+ * This may be called multiple times for binary chains (scripts for example).
+ */
+static int prepare_binprm(linux_bprm_s *bprm) {
+	loff_t pos = 0;
+
+	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
+	// return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
+}
+
+
 #define printable(c) (((c)=='\t') || ((c)=='\n') || (0x20<=(c) && (c)<=0x7e))
 /*
  * cycle the list of binary formats handler, until one recognizes the image
@@ -408,9 +422,9 @@ static int search_binary_handler(linux_bprm_s *bprm) {
 	linux_bfmt_s *fmt;
 	int retval;
 
-	// retval = prepare_binprm(bprm);
-	// if (retval < 0)
-	// 	return retval;
+	retval = prepare_binprm(bprm);
+	if (retval < 0)
+		return retval;
 
 	// retval = security_bprm_check(bprm);
 	// if (retval)
@@ -494,7 +508,7 @@ bprm_execve(linux_bprm_s *bprm, int fd,
 	// retval = exec_binprm(bprm);
 	// static int exec_binprm(struct linux_binprm *bprm)
 	// {
-		retval = search_binary_handler(bprm);
+		// retval = search_binary_handler(bprm);
 	// }
 	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)

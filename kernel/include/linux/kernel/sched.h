@@ -316,7 +316,7 @@
 	*/
 	enum
 	{
-		TASK_COMM_LEN = 32,
+		TASK_COMM_LEN = 64,
 	};
 
 	// extern void scheduler_tick(void);
@@ -782,7 +782,6 @@
 	typedef struct task_struct {
 		// myos obsolete contents
 		List_hdr_s		wait_childexit;
-		char			*name;
 
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
@@ -1031,9 +1030,10 @@
 		// List_s ptraced;
 		// List_s ptrace_entry;
 
-		// /* PID/PID hash table linkage. */
+		/* PID/PID hash table linkage. */
 		// pid_s			*thread_pid;
 		// struct hlist_node pid_links[PIDTYPE_MAX];
+		List_s			pid_links;
 		// List_s thread_group;
 		// List_s thread_node;
 
@@ -1107,7 +1107,7 @@
 		 * - access it with [gs]et_task_comm()
 		 * - lock it with task_lock()
 		 */
-		// char			comm[TASK_COMM_LEN];
+		char			comm[TASK_COMM_LEN];
 
 		// nameidata_s		*nameidata;
 
@@ -1959,6 +1959,7 @@
 
 	// extern task_s *find_task_by_vpid(pid_t nr);
 	// extern task_s *find_task_by_pid_ns(pid_t nr, struct pid_namespace *ns);
+	extern task_s *myos_find_task_by_pid(pid_t nr);
 
 	// /*
 	// * find a task by its virtual pid and get the task struct

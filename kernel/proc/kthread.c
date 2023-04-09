@@ -206,6 +206,7 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	// 		kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
 	// 	}
 	// 	set_task_comm(task, name);
+		set_task_comm(task, threadname);
 	// }
 	kfree(create);
 	return task;
@@ -218,15 +219,13 @@ int kthreadd(void *unused)
 	task_s *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
-	// set_task_comm(tsk, "kthreadd");
-	tsk->name = "kthreadd";
+	set_task_comm(tsk, "kthreadd");
 	// ignore_signals(tsk);
 	// set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
 	// set_mems_allowed(node_states[N_MEMORY]);
 
 	current->flags |= PF_NOFREEZE;
 	// cgroup_init_kthreadd();
-	kthreadd_task = tsk;
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);

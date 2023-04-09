@@ -40,7 +40,7 @@
 
 	typedef struct swait_queue_head {
 		arch_spinlock_t	lock;
-		List_hdr_s		task_list;
+		List_hdr_s		task_list_hdr;
 	} swqueue_hdr_s;
 
 	typedef struct swait_queue {
@@ -56,9 +56,9 @@
 	#define DECLARE_SWAITQUEUE(name)	\
 				swqueue_s name = __SWAITQUEUE_INITIALIZER(name)
 
-	#define __SWAIT_QUEUE_HEAD_INITIALIZER(name) {					\
-				.lock		= __ARCH_SPIN_LOCK_UNLOCKED,			\
-				.task_list	= LIST_HEADER_INIT((name).task_list),	\
+	#define __SWAIT_QUEUE_HEAD_INITIALIZER(name) {							\
+				.lock			= __ARCH_SPIN_LOCK_UNLOCKED,				\
+				.task_list_hdr	= LIST_HEADER_INIT((name).task_list_hdr),	\
 			}
 
 	// #define DECLARE_SWAIT_QUEUE_HEAD(name)	\

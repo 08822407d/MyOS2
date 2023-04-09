@@ -780,6 +780,24 @@ static int copy_signal(unsigned long clone_flags, task_s *tsk) {
 }
 
 
+static inline void init_task_pid_links(task_s *task) {
+	// enum pid_type type;
+
+	// for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type)
+	// 	INIT_HLIST_NODE(&task->pid_links[type]);
+
+	list_init(&task->pid_links, task);
+}
+
+// static inline void
+// init_task_pid(task_s *task, enum pid_type type, struct pid *pid) {
+// 	// if (type == PIDTYPE_PID)
+// 	// 	task->thread_pid = pid;
+// 	// else
+// 	// 	task->signal->pids[type] = pid;
+// }
+
+
 // static void __delayed_free_task(struct rcu_head *rhp)
 // {
 // 	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
@@ -1243,7 +1261,7 @@ static __latent_entropy task_s
 	// 	goto bad_fork_cancel_cgroup;
 	// }
 
-	// init_task_pid_links(p);
+	init_task_pid_links(p);
 	if (p->pid) {
 	// 	ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 		ptrace_init_task(p, (clone_flags & CLONE_PTRACE));
@@ -1285,6 +1303,7 @@ static __latent_entropy task_s
 	// 				  &p->signal->thread_head);
 	// 	}
 	// 	attach_pid(p, PIDTYPE_PID);
+		attach_pid(p);
 	// 	nr_threads++;
 	}
 	// total_forks++;

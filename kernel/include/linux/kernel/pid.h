@@ -102,7 +102,9 @@
 	// * these helpers must be called with the tasklist_lock write-held.
 	// */
 	// extern void attach_pid(task_s *task, enum pid_type);
+	extern void attach_pid(task_s *task);
 	// extern void detach_pid(task_s *task, enum pid_type);
+	extern void detach_pid(task_s *task);
 	// extern void change_pid(task_s *task, enum pid_type,
 	// 			pid_s *pid);
 	// extern void exchange_tids(task_s *task, task_s *old);
