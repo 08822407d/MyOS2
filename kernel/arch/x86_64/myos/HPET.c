@@ -27,15 +27,14 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 {
 	jiffies++;
 
-	char buf[12];
-	memset(buf, 0 , sizeof(buf));
-
 	timer_s * tmr = timer_lhdr.header.next->owner_p;
 	if(tmr->expire_jiffies <= jiffies)
 		set_softirq_status(HPET_TIMER0_IRQ);
 
+	char buf[12];
+	memset(buf, 0 , sizeof(buf));
 	snprintf(buf, sizeof(buf), "(HPET: %d)   ", jiffies);
-	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 188, 0);
+	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 48, 0);
 }
 	
 void HPET_init()

@@ -1,4 +1,6 @@
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/kernel.h>
+#include <linux/device/tty.h>
 #include <linux/lib/string.h>
 #include <asm/processor.h>
 
@@ -20,7 +22,10 @@
 #define DIVISOR_128	0x0A
 #define DIVISOR_1	0x0B
 
+#define SCALE 100
+
 void LVT_timer_ack(unsigned long param);
+static long lvt_count = 0;
 
 // set LVT
 apic_lvt_u LVT_timer = {
@@ -47,7 +52,14 @@ hw_int_controller_s LVT_timer_int_controller =
 
 void LVT_timer_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
-	// color_printk(WHITE, BLUE, "(LVT_timer)");
+	lvt_count++;
+	if ((lvt_count % SCALE) == 0)
+	{
+		char buf[30];
+		memset(buf, 0 , sizeof(buf));
+		snprintf(buf, sizeof(buf), "(LVT_timer: %ld)", lvt_count / SCALE);
+		myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 60, 0);
+	}
 }
 
 void LVT_timer_init()

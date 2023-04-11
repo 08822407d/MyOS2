@@ -113,7 +113,7 @@ long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
 long sys_fork()
 {
 	kclone_args_s args = {
-		.flags = CLONE_FILES,
+		// .flags = CLONE_FILES,
 		.exit_signal = SIGCHLD,
 	};
 	return kernel_clone(&args);
