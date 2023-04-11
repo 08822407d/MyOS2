@@ -94,8 +94,8 @@ int kthread(void *_create)
 	// 	kthread_exit(-EINTR);
 	}
 
-	self->threadfn = threadfn;
-	self->data = data;
+	// self->threadfn = threadfn;
+	// self->data = data;
 
 	// /*
 	//  * The new thread inherited kthreadd's priority and CPU mask. Reset
@@ -105,7 +105,7 @@ int kthread(void *_create)
 	// set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_FLAG_KTHREAD));
 
 	/* OK, tell user we're spawned, wait for stop or wakeup */
-	__set_current_state(TASK_UNINTERRUPTIBLE);
+	// __set_current_state(TASK_UNINTERRUPTIBLE);
 	create->result = current;
 	/*
 	 * Thread is going to call schedule(), do not preempt it,
@@ -114,7 +114,7 @@ int kthread(void *_create)
 	preempt_disable();
 	complete(done);
 	schedule_preempt_disabled();
-	preempt_enable();
+	preempt_enable_no_resched();
 
 	// ret = -EINTR;
 	// if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
@@ -125,8 +125,7 @@ int kthread(void *_create)
 	// kthread_exit(ret);
 }
 
-static void create_kthread(kthd_create_info_s *create)
-{
+static void create_kthread(kthd_create_info_s *create) {
 	int pid;
 
 	/* We want our own signal handler (we take no signals by default). */
@@ -183,11 +182,8 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 	// 	 */
 		wait_for_completion(&done);
 	// }
-
-	kernel_thread(threadfn, create, 0);
-
 	task = create->result;
-	// if (!IS_ERR(task)) {
+	// if (!IS_ERR(task))   
 	// 	char name[TASK_COMM_LEN];
 	// 	va_list aq;
 	// 	int len;
@@ -219,7 +215,7 @@ int kthreadd(void *unused)
 	task_s *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
-	set_task_comm(tsk, "kthreadd");
+	// set_task_comm(tsk, "kthreadd");
 	// ignore_signals(tsk);
 	// set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
 	// set_mems_allowed(node_states[N_MEMORY]);

@@ -813,6 +813,7 @@ static __always_inline void delayed_free_task(task_s *tsk) {
 }
 
 static void myos_pcb_init(task_s *p, u64 clone_flags) {
+	memset(p->comm, 0, sizeof(p->comm));
 	list_hdr_init(&p->wait_childexit);
 	list_init(&p->tasks, p);
 	if(clone_flags & CLONE_VM)

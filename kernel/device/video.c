@@ -28,4 +28,11 @@ void myos_init_video()
 	spin_lock_init(&Pos.lock);
 	// clean screen
 	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
+
+	char linebuf[4096] = {0};
+	int i;
+	for (i = 0; i < Pos.XResolution / Pos.XCharSize ; i++)
+		linebuf[i] = ' ';
+	color_printk(BLACK, GREEN, "%s", linebuf);
+	color_printk(BLACK, GREEN, "\n");
 }

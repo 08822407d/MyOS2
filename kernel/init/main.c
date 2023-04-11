@@ -170,6 +170,7 @@ noinline void __ref rest_init(void)
 	// rcu_read_lock();
 	// kthreadd_task = find_task_by_pid_ns(pid, &init_pid_ns);
 	kthreadd_task = myos_find_task_by_pid(pid);
+	set_task_comm(kthreadd_task, "kthreadd");
 	// rcu_read_unlock();
 
 	/*

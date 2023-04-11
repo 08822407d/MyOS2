@@ -107,7 +107,7 @@ void keyboard_handler(unsigned long param, pt_regs_s * sf_regs)
 	}
 	char buf[32] = {0};
 	snprintf(buf, 32, "%s : (K:%02x) ", prompt, x);
-	myos_tty_write_color_at(buf, strlen(buf), YELLOW, BLUE, xpos, ypos);
+	myos_tty_write_color_at(buf, strlen(buf), BLACK, GREEN, xpos, ypos);
 
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;

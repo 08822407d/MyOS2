@@ -1,5 +1,7 @@
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/kernel.h>
 #include <linux/lib/string.h>
+#include <linux/device/tty.h>
 #include <asm/io.h>
 
 #include <obsolete/glo.h>
@@ -25,10 +27,15 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 {
 	jiffies++;
 
+	char buf[12];
+	memset(buf, 0 , sizeof(buf));
+
 	timer_s * tmr = timer_lhdr.header.next->owner_p;
 	if(tmr->expire_jiffies <= jiffies)
 		set_softirq_status(HPET_TIMER0_IRQ);
-	// color_printk(WHITE, BLUE, "(HPET: %d) ", jiffies);
+
+	snprintf(buf, sizeof(buf), "(HPET: %d)   ", jiffies);
+	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 188, 0);
 }
 	
 void HPET_init()
@@ -85,7 +92,7 @@ void HPET_init()
 	// 1S qemu may have a different precision so here need a calculate
 	// 0x38D7EA4C680 is hex value of 1*10^15
 	unsigned long period = 0x38D7EA4C680 / accuracy;
-	*(unsigned long *)(HPET_addr + 0x108) = period * 10;
+	*(unsigned long *)(HPET_addr + 0x108) = period * 100;
 	mb();
 
 	//init MAIN_CNT & get CMOS time
