@@ -144,7 +144,7 @@ u32 FAT32_alloc_new_dir(inode_s *dir)
 	fat_set_start(&de[1], finode->first_cluster);
 
 	sector = FAT32_clus_to_blknr(fsbi, cluster);
-	if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
+	if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
 			sector, 1, (unsigned char *)buf))
 	{
 		color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");

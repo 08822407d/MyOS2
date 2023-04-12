@@ -22,6 +22,28 @@ static task_s *thread;
 
 static DEFINE_SPINLOCK(req_lock);
 
+struct blkbuf_node;
+typedef struct blkbuf_node blkbuf_node_s;
+typedef struct blkbuf_node
+{
+	unsigned		ATA_controller;
+	unsigned		ATA_disk;
+
+	wait_queue_T	wq;
+	unsigned int	count;
+	unsigned char	cmd;
+	// unsigned char finished_flag;
+	unsigned long	LBA;
+	unsigned char *	buffer;
+	void			(*end_handler)(unsigned long parameter);
+} blkbuf_node_s;
+
+typedef struct bdev_req_queue
+{
+	List_hdr_s	bdev_wqhdr;
+	blkbuf_node_s *		in_using;
+} bdev_req_queue_T;
+
 bdev_req_queue_T IDE_req_queue;
 
 /*==============================================================================================*
@@ -116,10 +138,6 @@ static bool myos_ata_devchk(unsigned controller, unsigned disk)
 // long cmd_out(unsigned controller, unsigned disk)
 long cmd_out(blkbuf_node_s *node)
 {
-	// List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
-	// while (!wq_lp);
-	
-	// blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
 	IDE_req_queue.in_using = node;
 	unsigned controller = node->ATA_controller;
 	unsigned disk = node->ATA_disk;
@@ -294,21 +312,21 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 	{
 		node = make_request(controller, disk, cmd,
 						blk_idx, count, buffer);
+
+	// extern unsigned long jiffies;
+	// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
+	// myos_delay_full_u32(500);
+	// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
+
 		submit(node);
 		wait_for_finish();
-
-	extern unsigned long jiffies;
-	color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
-	myos_delay_full_u32(500);
-	color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
-
 		if (node != NULL)
 			kfree(node);
-		return 1;
+		return -ENOERR;
 	}
 	else
 	{
-		return 0;
+		return -EINVAL;
 	}
 }
 
@@ -384,10 +402,10 @@ static int ATArq_deamon(void *param)
 {
 	while (true)
 	{
+		spin_lock(&req_lock);
 		if (IDE_req_queue.in_using == NULL &&
 			IDE_req_queue.bdev_wqhdr.count > 0)
 		{
-			spin_lock(&req_lock);
 			List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
 			while (!wq_lp);
 			blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
@@ -395,9 +413,11 @@ static int ATArq_deamon(void *param)
 			spin_unlock_no_resched(&req_lock);
 
 			cmd_out(node);
-		}
 
+			spin_lock(&req_lock);
+		}
 		// __set_current_state(TASK_INTERRUPTIBLE);
+		spin_unlock_no_resched(&req_lock);
 		schedule();
 	}
 

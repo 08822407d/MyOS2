@@ -29,26 +29,5 @@
 						long count, unsigned char * buffer);
 	} blkdev_ops_s;
 
-	struct blkbuf_node;
-	typedef struct blkbuf_node blkbuf_node_s;
-	typedef struct blkbuf_node
-	{
-		unsigned		ATA_controller;
-		unsigned		ATA_disk;
-
-		wait_queue_T	wq;
-		unsigned int	count;
-		unsigned char	cmd;
-		// unsigned char finished_flag;
-		unsigned long	LBA;
-		unsigned char *	buffer;
-		void			(*end_handler)(unsigned long parameter);
-	} blkbuf_node_s;
-
-	typedef struct bdev_req_queue
-	{
-		List_hdr_s	bdev_wqhdr;
-		blkbuf_node_s *		in_using;
-	} bdev_req_queue_T;
 
 #endif /* _BLOCK_H_ */

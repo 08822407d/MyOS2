@@ -140,7 +140,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	{
 		memset(buffer, 0, fsbi->bytes_per_cluster);
 		sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-		if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
+		if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
 					fsbi->sector_per_cluster, (unsigned char *)buffer))
 		{
 			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
@@ -212,7 +212,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 		{
 			memset(buffer, 0, fsbi->bytes_per_cluster);
 			sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-			if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
+			if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
 						fsbi->sector_per_cluster, (unsigned char *)buffer))
 			{
 				color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
@@ -228,7 +228,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 		else
 			memcpy(buffer + offset, buf, length);
 
-		if(!ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD, sector,
+		if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD, sector,
 					fsbi->sector_per_cluster, (unsigned char *)buffer))
 		{
 			color_printk(RED, BLACK, "FAT32 FS(write) write disk ERROR!!!!!!!!!!\n");
