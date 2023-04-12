@@ -9,6 +9,7 @@
 
 #include <linux/fs/fs.h>
 #include <obsolete/ide.h>
+#include <obsolete/printk.h>
 
 #define MAX_IDE_DEV_NR (MYOS_ATA_MAX_PORTS * ATA_MAX_DEVICES)
 

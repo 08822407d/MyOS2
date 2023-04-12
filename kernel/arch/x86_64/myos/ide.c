@@ -19,6 +19,9 @@
 #include <obsolete/ide.h>
 
 static task_s *thread;
+
+static DEFINE_SPINLOCK(req_lock);
+
 bdev_req_queue_T IDE_req_queue;
 
 /*==============================================================================================*
@@ -160,7 +163,9 @@ void end_request(blkbuf_node_s * node)
 
 void add_request(blkbuf_node_s * node)
 {
+	spin_lock(&req_lock);
 	list_hdr_append(&IDE_req_queue.bdev_wqhdr, &node->wq.wq_list);
+	spin_unlock_no_resched(&req_lock);
 }
 
 void read_handler(unsigned long parameter)
@@ -291,6 +296,12 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 						blk_idx, count, buffer);
 		submit(node);
 		wait_for_finish();
+
+	extern unsigned long jiffies;
+	color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
+	myos_delay_full_u32(500);
+	color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
+
 		if (node != NULL)
 			kfree(node);
 		return 1;
@@ -376,10 +387,12 @@ static int ATArq_deamon(void *param)
 		if (IDE_req_queue.in_using == NULL &&
 			IDE_req_queue.bdev_wqhdr.count > 0)
 		{
+			spin_lock(&req_lock);
 			List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
 			while (!wq_lp);
 			blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
 			IDE_req_queue.in_using = node;
+			spin_unlock_no_resched(&req_lock);
 
 			cmd_out(node);
 		}
@@ -394,4 +407,6 @@ static int ATArq_deamon(void *param)
 void init_ATArqd()
 {
 	thread = kthread_run(ATArq_deamon, NULL, "ATArqd");
+	
+	color_printk(GREEN, BLACK, "ATA disk: initialized\n");
 }

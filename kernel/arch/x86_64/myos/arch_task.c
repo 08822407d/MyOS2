@@ -195,12 +195,11 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	// myos_delay_full_u32(500);
-
 	kernel_execve("/init.bin", NULL, NULL);
 	// kernel_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
+					"sti					\n\t"
 					"jmp	sysexit_entp	\n\t"
 				:
 				:	"m"(curr_ptregs)
