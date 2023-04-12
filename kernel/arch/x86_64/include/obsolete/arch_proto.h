@@ -74,7 +74,6 @@
 	/* syscalls and others about intr */
 	void sysenter_entp(void);
 	void sysexit_entp(void);
-	void ra_sysex_retp(void);
 
 /*==============================================================================================*
  *										internal symbols										*

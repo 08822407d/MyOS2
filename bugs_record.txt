@@ -1,0 +1,6 @@
+2023.04.12
+	经初步排查发现HPET中断不触发原因是在myos_switch_to_root_disk()中执行读硬盘后eflags中IF位清除。
+
+2023.04.11
+	发现在运行init.bin后不再发生进程调度切换。
+	初步排查发现在运行init.bin前后不明原因造成HPET中断不再触发，导致jiffies不更新进而导致进程timeslice不变化。

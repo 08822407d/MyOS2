@@ -13,7 +13,6 @@
 #define SAVEALL_SIZE		0x70
 
 .macro PUSH_REGS
-	cli
 	pushq		%rdi
 	pushq		%rsi
 	pushq		%rdx
@@ -32,7 +31,6 @@
 .endm
 
 .macro POP_REGS
-	cli
 	popq		%r15
 	popq		%r14
 	popq		%r13
@@ -60,19 +58,20 @@
 // kernel RIP = IA32_SYSENTER_EIP
 // kernel RSP = IA32_SYSENTER_ESP
 SYM_CODE_START(sysenter_entp)
+	cli
 	subq		$0x38,		%rsp
 	PUSH_REGS
+	sti
 	leaq		sys_call_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
 	movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
-
 // RDX -> user RSP
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32
 // user SS = IA32_SYSENTER_CS + 40
 SYM_CODE_START(sysexit_entp)
+	cli
 	POP_REGS
-SYM_CODE_START(ra_sysex_retp)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
@@ -135,14 +134,17 @@ SYM_CODE_START(ra_sysex_retp)
 sa_entintr_retp:
 	cld
 	movq		%rsp,		%rdi
+
+	cli
 	callq 		excep_hwint_entry
 	callq		try_sched
-	// sti
+	sti
+
 	// movq		$-1,		%rcx
 	// testq		softirq_status(%rip),	%rcx	////check softirq	
 	// callq		do_softirq
-	// cli
 
+	cli
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
@@ -155,9 +157,11 @@ sa_entintr_retp:
 	cli											;\
 	pushq		$vector							;\
 	PUSH_REGS									;\
+	sti											;\
 	jmp			sa_entintr_retp
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\
+	cli									;\
 	pushq		$0						;\
 	EXCEPTION_ERR_CODE(vector)
 

@@ -90,4 +90,7 @@
 	// 		msleep(DIV_ROUND_UP(usecs, 1000));
 	// }
 
+
+	void myos_delay_full_u32(unsigned int devider);
+
 #endif /* defined(_LINUX_DELAY_H) */
