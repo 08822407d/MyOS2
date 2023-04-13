@@ -1,6 +1,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/completion.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
 #include <asm/processor.h>
@@ -9,7 +10,6 @@
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
 #include <obsolete/ktypes.h>
-#include <obsolete/wait_queue.h>
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
@@ -18,6 +18,7 @@
 #include <obsolete/device.h>
 
 extern List_hdr_s kbd_wqhdr;
+DECLARE_COMPLETION(getcode_done);
 
 kbd_inbuf_s * p_kb = NULL;
 static int shift_l,shift_r,ctrl_l,ctrl_r,alt_l,alt_r;
@@ -116,7 +117,8 @@ void keyboard_handler(unsigned long param, pt_regs_s * sf_regs)
 	p_kb->count++;
 	p_kb->p_head ++;	
 
-	wq_wakeup(&kbd_wqhdr, TASK_UNINTERRUPTIBLE);
+	// wq_wakeup(&kbd_wqhdr, TASK_UNINTERRUPTIBLE);
+	complete(&getcode_done);
 }
 
 /*==============================================================================================*
@@ -127,7 +129,8 @@ unsigned char kbd_get_scancode()
 	unsigned char ret  = 0;
 
 	if(p_kb->count == 0)
-		wq_sleep_on(&kbd_wqhdr);
+		wait_for_completion(&getcode_done);
+		// wq_sleep_on(&kbd_wqhdr);
 	
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	
 		p_kb->p_tail = p_kb->buf;

@@ -316,7 +316,7 @@
 	*/
 	enum
 	{
-		TASK_COMM_LEN = 64,
+		TASK_COMM_LEN = 32,
 	};
 
 	// extern void scheduler_tick(void);

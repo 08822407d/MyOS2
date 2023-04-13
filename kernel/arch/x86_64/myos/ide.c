@@ -27,17 +27,18 @@ struct blkbuf_node;
 typedef struct blkbuf_node blkbuf_node_s;
 typedef struct blkbuf_node
 {
-	unsigned ATA_controller;
-	unsigned ATA_disk;
+	List_s			req_list;
+	unsigned		ATA_controller;
+	unsigned		ATA_disk;
 
-	completion_s *done;
-	wait_queue_T wq;
-	unsigned int count;
-	unsigned char cmd;
+	completion_s	*done;
+	task_s			*task;
+	unsigned int	count;
+	unsigned char	cmd;
 	// unsigned char finished_flag;
-	unsigned long LBA;
-	unsigned char *buffer;
-	void (*end_handler)(unsigned long parameter);
+	unsigned long	LBA;
+	unsigned char	*buffer;
+	void			(*end_handler)(unsigned long parameter);
 } blkbuf_node_s;
 
 static blkbuf_node_s *req_in_using;
@@ -164,23 +165,18 @@ long cmd_out(blkbuf_node_s *node)
 	return 1;
 }
 
-void end_request(blkbuf_node_s *node)
+void end_request()
 {
+	blkbuf_node_s *node = req_in_using;
 	if (node == NULL)
 		color_printk(RED, BLACK, "end_request error\n");
 
-	wake_up_process(node->wq.task);
-	current->flags |= PF_NEED_SCHEDULE;
-
-	complete(req_in_using->done);
+	// wake_up_process(node->task);
+	complete(node->done);
 	spin_lock(&req_lock);
 	req_in_using = NULL;
 	spin_unlock_no_resched(&req_lock);
-}
-
-void add_request(blkbuf_node_s *node)
-{
-
+	// current->flags |= PF_NEED_SCHEDULE;
 }
 
 void read_handler(unsigned long parameter)
@@ -199,8 +195,7 @@ void read_handler(unsigned long parameter)
 		req_in_using->buffer += 512;
 		return;
 	}
-
-	end_request(req_in_using);
+	end_request();
 }
 
 void write_handler(unsigned long parameter)
@@ -218,8 +213,7 @@ void write_handler(unsigned long parameter)
 		outsw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
 		return;
 	}
-
-	end_request(req_in_using);
+	end_request();
 }
 
 void other_handler(unsigned long parameter)
@@ -229,15 +223,14 @@ void other_handler(unsigned long parameter)
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
 		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
-
-	end_request(req_in_using);
+	end_request();
 }
 
 blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
 							unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
-	wq_init(&node->wq, current);
+	list_init(&node->req_list, node);
 	node->buffer = buffer;
 
 	switch (cmd)
@@ -291,21 +284,24 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 							blk_idx, count, buffer);
 		DECLARE_COMPLETION_ONSTACK(done);
 		node->done = &done;
+		node->task = current;
 
 		// extern unsigned long jiffies;
 		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
 		// myos_delay_full_u32(500);
 		// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
 
-		add_request(node);
-
 		spin_lock(&req_lock);
-		list_hdr_append(&IDEreq_lhdr, &node->wq.wq_list);
+		list_hdr_enqueue(&IDEreq_lhdr, &node->req_list);
 		spin_unlock_no_resched(&req_lock);
 
+		preempt_disable();
 		wake_up_process(thread);
+		preempt_enable_no_resched();
 
 		wait_for_completion(&done);
+		// set_current_state(TASK_UNINTERRUPTIBLE);
+		// schedule();
 
 		if (node != NULL)
 			kfree(node);
@@ -345,7 +341,7 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
-	req_in_using->end_handler(0);
+	req_in_using->end_handler(parameter);
 }
 
 void init_disk()
@@ -366,14 +362,12 @@ void init_disk()
 	entry.dst.physical.reserved2 = 0;
 
 	entry.vector = VECTOR_IRQ(SATA_MAST_IRQ);
-	register_irq(SATA_MAST_IRQ, &entry, "ATA-master",
-				 (unsigned long)&IDEreq_lhdr, &ATA_disk_ioapic_controller,
-				 &ATA_disk_handler);
+	register_irq(SATA_MAST_IRQ, &entry, "ATA-master", 0,
+					&ATA_disk_ioapic_controller, ATA_disk_handler);
 
 	entry.vector = VECTOR_IRQ(SATA_SLAV_IRQ);
-	register_irq(SATA_SLAV_IRQ, &entry, "ATA-slave",
-				 (unsigned long)&IDEreq_lhdr, &ATA_disk_ioapic_controller,
-				 &ATA_disk_handler);
+	register_irq(SATA_SLAV_IRQ, &entry, "ATA-slave", 0,
+					&ATA_disk_ioapic_controller, &ATA_disk_handler);
 
 	req_in_using = NULL;
 }
@@ -399,7 +393,7 @@ static int ATArq_deamon(void *param)
 			if (req_in_using == NULL)
 			{
 				List_s *wq_lp = list_hdr_pop(&IDEreq_lhdr);
-				blkbuf_node_s *node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
+				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
 				req_in_using = node;
 				spin_unlock_no_resched(&req_lock);
 
@@ -418,5 +412,5 @@ void init_ATArqd()
 {
 	thread = kthread_run(ATArq_deamon, NULL, "ATArqd");
 
-	color_printk(GREEN, BLACK, "ATA disk: initialized\n");
+	color_printk(WHITE, BLACK, "ATA disk: initialized\n");
 }

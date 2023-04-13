@@ -16,8 +16,6 @@
 #ifndef _BLOCK_H_
 #define _BLOCK_H_
 
-#include "wait_queue.h"
-
 	typedef struct blkdev_ops
 	{
 		long (* open)(unsigned controller, unsigned disk);

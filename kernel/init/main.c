@@ -249,9 +249,7 @@ asmlinkage void __init start_kernel(void)
 	myos_init_bsp_intr();
 
 #ifdef START_WAIT
-	size_t delay = 0;
-	for (unsigned i = 0; i < -1; i++)
-		delay++;
+	myos_delay_full_u32(1000);
 #endif
 	
 	// post init

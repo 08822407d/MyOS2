@@ -195,8 +195,8 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	kernel_execve("/init.bin", NULL, NULL);
-	// kernel_execve("/shell.bin", NULL, NULL);
+	// kernel_execve("/init.bin", NULL, NULL);
+	kernel_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
@@ -217,7 +217,7 @@ static void exit_notify(void)
 		
 		list_hdr_append(&task_init->children, child_lp);
 	}
-	wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
+	// wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)

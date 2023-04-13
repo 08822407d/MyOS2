@@ -443,6 +443,9 @@ void myos_ata_probe()
 			{
 				ata_dev_s *disk = &(ide_devs[i][j]);
 				myos_ata_port_probe(disk);
+
+				if (disk->n_sectors > 1)
+					color_printk(WHITE, BLACK, "Found IDE disk : %s\n", disk->name);
 			}
 		}
 	}

@@ -11,8 +11,6 @@
 #include <asm/io.h>
 
 #include <obsolete/printk.h>
-#include <obsolete/wait_queue.h>
-
 #include <obsolete/archconst.h>
 #include <obsolete/arch_proto.h>
 
@@ -161,38 +159,38 @@ long sys_exit(int error_code)
 extern int myos_exit_mm(task_s * new_tsk);
 long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 {
-	long retval = 0;
-	task_s * child = NULL;
-	task_s * tsk = NULL;
+	// long retval = 0;
+	// task_s * child = NULL;
+	// task_s * tsk = NULL;
 
-	// color_printk(GREEN,BLACK,"sys_wait4\n");
-	List_s * child_lp;
-	for (child_lp = current->children.header.next;
-			child_lp != &current->children.header;
-			child_lp = child_lp->next)
-	{
-		task_s * child_p = container_of(child_lp, task_s, sibling);
-		if (child_p->pid == pid)
-		{
-			child = child_p;
-			break;
-		}
-	}
+	// // color_printk(GREEN,BLACK,"sys_wait4\n");
+	// List_s * child_lp;
+	// for (child_lp = current->children.header.next;
+	// 		child_lp != &current->children.header;
+	// 		child_lp = child_lp->next)
+	// {
+	// 	task_s * child_p = container_of(child_lp, task_s, sibling);
+	// 	if (child_p->pid == pid)
+	// 	{
+	// 		child = child_p;
+	// 		break;
+	// 	}
+	// }
 
-	if(child == NULL)
-		return -ECHILD;
-	if(options != 0)
-		return -EINVAL;
+	// if(child == NULL)
+	// 	return -ECHILD;
+	// if(options != 0)
+	// 	return -EINVAL;
 
-	if(child->__state != EXIT_ZOMBIE)
-	{
-		wq_sleep_on_intrable(&child->wait_childexit);
-	}
-	copy_to_user(start_addr, &child->exit_code, sizeof(int));
-	myos_exit_mm(child);
-	list_delete(&child->sibling);
-	kfree(child);
-	return retval;
+	// if(child->__state != EXIT_ZOMBIE)
+	// {
+	// 	wq_sleep_on_intrable(&child->wait_childexit);
+	// }
+	// copy_to_user(start_addr, &child->exit_code, sizeof(int));
+	// myos_exit_mm(child);
+	// list_delete(&child->sibling);
+	// kfree(child);
+	// return retval;
 }
 
 /*==============================================================================================*

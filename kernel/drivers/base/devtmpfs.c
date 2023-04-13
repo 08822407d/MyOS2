@@ -433,6 +433,6 @@ int devtmpfs_init(void)
 	// 	return err;
 	// }
 
-	color_printk(GREEN, BLACK, "devtmpfs: initialized\n");
+	color_printk(WHITE, BLACK, "devtmpfs: initialized\n");
 	return 0;
 }
