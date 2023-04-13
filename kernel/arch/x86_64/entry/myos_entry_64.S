@@ -62,6 +62,7 @@ SYM_CODE_START(sysenter_entp)
 	subq		$0x38,		%rsp
 	PUSH_REGS
 	sti
+
 	leaq		sys_call_table(%rip),	%rbx
 	callq		*(%rbx,%rax,8)
 	movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
@@ -77,6 +78,7 @@ SYM_CODE_START(sysexit_entp)
 	xchgq		%r11,		%rcx
 	// swapgs
 	sti
+
 	.byte	0x48
 	sysexit
 
@@ -135,16 +137,15 @@ sa_entintr_retp:
 	cld
 	movq		%rsp,		%rdi
 
-	cli
 	callq 		excep_hwint_entry
 	callq		try_sched
-	sti
+	// sti
 
 	// movq		$-1,		%rcx
 	// testq		softirq_status(%rip),	%rcx	////check softirq	
 	// callq		do_softirq
 
-	cli
+	// cli
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
@@ -157,7 +158,6 @@ sa_entintr_retp:
 	cli											;\
 	pushq		$vector							;\
 	PUSH_REGS									;\
-	sti											;\
 	jmp			sa_entintr_retp
 
 #define EXCEPTION_NO_ERR_CODE(vector)	\

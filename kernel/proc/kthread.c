@@ -212,7 +212,7 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 
 int kthreadd(void *unused)
 {
-	task_s *tsk = current;
+	// task_s *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
 	// set_task_comm(tsk, "kthreadd");

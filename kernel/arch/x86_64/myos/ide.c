@@ -4,6 +4,7 @@
 #include <linux/kernel/preempt.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kthread.h>
+#include <linux/kernel/completion.h>
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>
 #include <asm/processor.h>
@@ -26,31 +27,27 @@ struct blkbuf_node;
 typedef struct blkbuf_node blkbuf_node_s;
 typedef struct blkbuf_node
 {
-	unsigned		ATA_controller;
-	unsigned		ATA_disk;
+	unsigned ATA_controller;
+	unsigned ATA_disk;
 
-	wait_queue_T	wq;
-	unsigned int	count;
-	unsigned char	cmd;
+	completion_s *done;
+	wait_queue_T wq;
+	unsigned int count;
+	unsigned char cmd;
 	// unsigned char finished_flag;
-	unsigned long	LBA;
-	unsigned char *	buffer;
-	void			(*end_handler)(unsigned long parameter);
+	unsigned long LBA;
+	unsigned char *buffer;
+	void (*end_handler)(unsigned long parameter);
 } blkbuf_node_s;
 
-typedef struct bdev_req_queue
-{
-	List_hdr_s	bdev_wqhdr;
-	blkbuf_node_s *		in_using;
-} bdev_req_queue_T;
-
-bdev_req_queue_T IDE_req_queue;
+static blkbuf_node_s *req_in_using;
+LIST_HDR_S(IDEreq_lhdr);
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
 static void ATA_set_LBA(unsigned controller,
-		unsigned short count, unsigned long lba)
+						unsigned short count, unsigned long lba)
 {
 	outb((count >> 0) & 0xFF, IDE_PIO_LBA_COUNT(controller));
 	outb((lba >> 0) & 0xFF, IDE_PIO_LBA_LOW(controller));
@@ -60,36 +57,36 @@ static void ATA_set_LBA(unsigned controller,
 
 static unsigned char
 ATA_read_LBA28(unsigned controller, unsigned disk,
-		unsigned long lba, unsigned short count)
+			   unsigned long lba, unsigned short count)
 {
 	ATA_set_LBA(controller, count, lba);
 	outb(0xE0 | (disk << 4) | (lba >> 24) & 0x0F,
-			IDE_PIO_DEV_OPT(controller));
+		 IDE_PIO_DEV_OPT(controller));
 	outb(0x20, IDE_PIO_CMD_STAT(controller));
 	return inb(IDE_PIO_CMD_STAT(controller));
 }
 
 static void ATA_write_LBA28(unsigned controller,
-		unsigned disk, unsigned long lba, unsigned short count)
+							unsigned disk, unsigned long lba, unsigned short count)
 {
 	outb(0, IDE_PIO_ERR_STAT(controller));
 	ATA_set_LBA(controller, count, lba);
 	outb(0xE0 | (disk << 4) | (lba >> 24) & 0x0F,
-			IDE_PIO_DEV_OPT(controller));
+		 IDE_PIO_DEV_OPT(controller));
 	outb(0x30, IDE_PIO_CMD_STAT(controller));
 
 	int s;
-	while(!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
+	while (!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
 		nop();
 	outb(ATA_WRITE_CMD, IDE_PIO_CMD_STAT(controller));
 
-	while(!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_REQ))
+	while (!(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_REQ))
 		nop();
 }
 
 static unsigned char
 ATA_read_LBA48(unsigned controller, unsigned disk,
-		unsigned long lba, unsigned short count)
+			   unsigned long lba, unsigned short count)
 {
 	outb(0, IDE_PIO_ERR_STAT(controller));
 	ATA_set_LBA(controller, count >> 8, lba >> 24);
@@ -100,7 +97,7 @@ ATA_read_LBA48(unsigned controller, unsigned disk,
 }
 
 static void ATA_write_LBA48(unsigned controller,
-		unsigned disk, unsigned long lba, unsigned short count)
+							unsigned disk, unsigned long lba, unsigned short count)
 {
 	ATA_set_LBA(controller, count >> 8, lba >> 24);
 	ATA_set_LBA(controller, count, lba);
@@ -113,8 +110,8 @@ static void ATA_dev_info(unsigned controller, unsigned disk)
 	ATA_set_LBA(controller, 0, 0);
 	outb(0xE0 | disk << 4, IDE_PIO_DEV_OPT(controller));
 	int s;
-	while(!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
-		nop();			
+	while (!((s = inb(IDE_PIO_CMD_STAT(controller))) & DISK_STATUS_READY))
+		nop();
 	outb(ATA_DISK_IDENTIFY, IDE_PIO_CMD_STAT(controller));
 }
 
@@ -122,8 +119,8 @@ static bool myos_ata_devchk(unsigned controller, unsigned disk)
 {
 	ATA_set_LBA(controller, 0, 0);
 	outb(0xA0 | disk << 4, IDE_PIO_CMD_STAT(controller));
-	
-	u64 lba_mid = inb(IDE_PIO_LBA_MID(controller));	
+
+	u64 lba_mid = inb(IDE_PIO_LBA_MID(controller));
 	u64 lba_high = inb(IDE_PIO_LBA_HIGH(controller));
 	u64 cmd_stat = inb(IDE_PIO_CMD_STAT(controller));
 	if (lba_mid == 0 && lba_high == 0 && cmd_stat != 0)
@@ -138,134 +135,129 @@ static bool myos_ata_devchk(unsigned controller, unsigned disk)
 // long cmd_out(unsigned controller, unsigned disk)
 long cmd_out(blkbuf_node_s *node)
 {
-	IDE_req_queue.in_using = node;
 	unsigned controller = node->ATA_controller;
 	unsigned disk = node->ATA_disk;
 
-	while(inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_BUSY)
+	while (inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_BUSY)
 		nop();
 
 	unsigned char status = 0;
-	switch(node->cmd)
+	switch (node->cmd)
 	{
-		case ATA_WRITE_CMD:	
-			ATA_write_LBA28(controller, disk, node->LBA, node->count);
-			outsw(IDE_PIO_DATA(controller), (uint16_t *)node->buffer, 256);
-			break;
+	case ATA_WRITE_CMD:
+		ATA_write_LBA28(controller, disk, node->LBA, node->count);
+		outsw(IDE_PIO_DATA(controller), (uint16_t *)node->buffer, 256);
+		break;
 
-		case ATA_READ_CMD:
-			status = ATA_read_LBA28(controller, disk, node->LBA, node->count);
-			break;
-			
-		case ATA_INFO_CMD:
-			ATA_dev_info(controller, disk);
-			break;
+	case ATA_READ_CMD:
+		status = ATA_read_LBA28(controller, disk, node->LBA, node->count);
+		break;
 
-		default:
-			color_printk(BLACK,WHITE,"ATA CMD Error\n");
-			break;
+	case ATA_INFO_CMD:
+		ATA_dev_info(controller, disk);
+		break;
+
+	default:
+		color_printk(BLACK, WHITE, "ATA CMD Error\n");
+		break;
 	}
 	return 1;
 }
 
-void end_request(blkbuf_node_s * node)
+void end_request(blkbuf_node_s *node)
 {
-	if(node == NULL)
-		color_printk(RED,BLACK,"end_request error\n");
+	if (node == NULL)
+		color_printk(RED, BLACK, "end_request error\n");
 
 	wake_up_process(node->wq.task);
 	current->flags |= PF_NEED_SCHEDULE;
 
-	IDE_req_queue.in_using = NULL;
+	complete(req_in_using->done);
+	spin_lock(&req_lock);
+	req_in_using = NULL;
+	spin_unlock_no_resched(&req_lock);
 }
 
-void add_request(blkbuf_node_s * node)
+void add_request(blkbuf_node_s *node)
 {
-	spin_lock(&req_lock);
-	list_hdr_append(&IDE_req_queue.bdev_wqhdr, &node->wq.wq_list);
-	spin_unlock_no_resched(&req_lock);
+
 }
 
 void read_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
-	unsigned char status = inb(IDE_PIO_CMD_STAT(node->ATA_controller));
-	
-	if(status & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "read_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
-	else
-		insw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
+	unsigned char status = inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller));
 
-	node->count--;
-	if(node->count)
+	if (status & DISK_STATUS_ERROR)
+		color_printk(RED, BLACK, "read_handler:%#010x\n",
+					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
+	else
+		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
+
+	req_in_using->count--;
+	if (req_in_using->count)
 	{
-		node->buffer += 512;
+		req_in_using->buffer += 512;
 		return;
 	}
 
-	end_request(node);
+	end_request(req_in_using);
 }
 
 void write_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
-
-	if(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_ERROR)
+	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "write_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
+					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 
-	node->count--;
-	if(node->count)
+	req_in_using->count--;
+	if (req_in_using->count)
 	{
-		node->buffer += 512;
-		while(!(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_REQ))
+		req_in_using->buffer += 512;
+		while (!(inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_REQ))
 			nop();
-		outsw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
+		outsw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
 		return;
 	}
 
-	end_request(node);
+	end_request(req_in_using);
 }
 
 void other_handler(unsigned long parameter)
 {
-	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
-
-	if(inb(IDE_PIO_CMD_STAT(node->ATA_controller)) & DISK_STATUS_ERROR)
+	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "other_handler:%#010x\n",
-						inb(IDE_PIO_ERR_STAT(node->ATA_controller)));
+					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
-		insw(IDE_PIO_DATA(node->ATA_controller), (uint16_t *)node->buffer, 256);
+		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
 
-	end_request(node);
+	end_request(req_in_using);
 }
 
-blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
-				unsigned long blk_idx, long count, unsigned char * buffer)
+blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
+							unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	blkbuf_node_s * node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
+	blkbuf_node_s *node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
 	wq_init(&node->wq, current);
 	node->buffer = buffer;
 
-	switch(cmd)
+	switch (cmd)
 	{
-		case ATA_READ_CMD:
-			node->end_handler = read_handler;
-			node->cmd = ATA_READ_CMD;
-			break;
+	case ATA_READ_CMD:
+		node->end_handler = read_handler;
+		node->cmd = ATA_READ_CMD;
+		break;
 
-		case ATA_WRITE_CMD:
-			node->end_handler = write_handler;
-			node->cmd = ATA_WRITE_CMD;
-			break;
+	case ATA_WRITE_CMD:
+		node->end_handler = write_handler;
+		node->cmd = ATA_WRITE_CMD;
+		break;
 
-		default:///
-			node->end_handler = other_handler;
-			node->cmd = cmd;
-			break;
+	default: ///
+		node->end_handler = other_handler;
+		node->cmd = cmd;
+		break;
 	}
-	
+
 	node->ATA_controller = controller;
 	node->ATA_disk = disk;
 	node->LBA = blk_idx;
@@ -273,21 +265,6 @@ blkbuf_node_s * make_request(unsigned controller, unsigned disk, long cmd,
 	node->buffer = buffer;
 
 	return node;
-}
-
-void submit(blkbuf_node_s * node)
-{	
-	add_request(node);
-}
-
-void wait_for_finish()
-{
-	// myos_preempt_disable();
-	// myos_wake_up_new_task(thread);
-
-	__set_current_state(TASK_UNINTERRUPTIBLE);
-	// myos_preempt_enable_no_resched();
-	schedule();
 }
 
 // long ATA_disk_open(unsigned controller, unsigned disk)
@@ -303,23 +280,33 @@ void wait_for_finish()
 // }
 
 long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
-				unsigned long blk_idx, long count, unsigned char * buffer)
+					   unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	blkbuf_node_s * node = NULL;
-	if(cmd == ATA_READ_CMD ||
+	blkbuf_node_s *node = NULL;
+	if (cmd == ATA_READ_CMD ||
 		cmd == ATA_WRITE_CMD ||
 		cmd == ATA_INFO_CMD)
 	{
 		node = make_request(controller, disk, cmd,
-						blk_idx, count, buffer);
+							blk_idx, count, buffer);
+		DECLARE_COMPLETION_ONSTACK(done);
+		node->done = &done;
 
-	// extern unsigned long jiffies;
-	// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
-	// myos_delay_full_u32(500);
-	// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
+		// extern unsigned long jiffies;
+		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
+		// myos_delay_full_u32(500);
+		// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
 
-		submit(node);
-		wait_for_finish();
+		add_request(node);
+
+		spin_lock(&req_lock);
+		list_hdr_append(&IDEreq_lhdr, &node->wq.wq_list);
+		spin_unlock_no_resched(&req_lock);
+
+		wake_up_process(thread);
+
+		wait_for_completion(&done);
+
 		if (node != NULL)
 			kfree(node);
 		return -ENOERR;
@@ -336,37 +323,36 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 // 	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
 // }
 
-blkdev_ops_s ATA_master_ops = 
-{
-	// .open	= ATA_disk_open,
-	// .close	= ATA_disk_close,
-	// .ioctl	= ATA_disk_ioctl,
-	.transfer = ATA_disk_transfer,
+blkdev_ops_s ATA_master_ops =
+	{
+		// .open	= ATA_disk_open,
+		// .close	= ATA_disk_close,
+		// .ioctl	= ATA_disk_ioctl,
+		.transfer = ATA_disk_transfer,
 };
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-hw_int_controller_s ATA_disk_ioapic_controller = 
-{
-	.enable		= IOAPIC_enable,
-	.disable	= IOAPIC_disable,
-	.install	= IOAPIC_install,
-	.uninstall	= IOAPIC_uninstall,
-	.ack		= IOAPIC_edge_ack,
+hw_int_controller_s ATA_disk_ioapic_controller =
+	{
+		.enable = IOAPIC_enable,
+		.disable = IOAPIC_disable,
+		.install = IOAPIC_install,
+		.uninstall = IOAPIC_uninstall,
+		.ack = IOAPIC_edge_ack,
 };
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
-	blkbuf_node_s * node = ((bdev_req_queue_T *)parameter)->in_using;
-	node->end_handler(parameter);	
+	req_in_using->end_handler(0);
 }
 
 void init_disk()
 {
 	ioapic_retentry_T entry;
 
-	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
+	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed;
 	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
 	entry.deliver_status = APIC_ICR_IOAPIC_Idle;
 	entry.polarity = APIC_IOAPIC_POLARITY_HIGH;
@@ -380,17 +366,16 @@ void init_disk()
 	entry.dst.physical.reserved2 = 0;
 
 	entry.vector = VECTOR_IRQ(SATA_MAST_IRQ);
-	register_irq(SATA_MAST_IRQ, &entry , "ATA-master",
-			(unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
-			&ATA_disk_handler);
+	register_irq(SATA_MAST_IRQ, &entry, "ATA-master",
+				 (unsigned long)&IDEreq_lhdr, &ATA_disk_ioapic_controller,
+				 &ATA_disk_handler);
 
 	entry.vector = VECTOR_IRQ(SATA_SLAV_IRQ);
-	register_irq(SATA_SLAV_IRQ, &entry , "ATA-slave",
-			(unsigned long)&IDE_req_queue, &ATA_disk_ioapic_controller,
-			&ATA_disk_handler);
+	register_irq(SATA_SLAV_IRQ, &entry, "ATA-slave",
+				 (unsigned long)&IDEreq_lhdr, &ATA_disk_ioapic_controller,
+				 &ATA_disk_handler);
 
-	IDE_req_queue.in_using = NULL;
-	list_hdr_init(&IDE_req_queue.bdev_wqhdr);
+	req_in_using = NULL;
 }
 
 void disk_exit()
@@ -400,33 +385,38 @@ void disk_exit()
 
 static int ATArq_deamon(void *param)
 {
-	while (true)
-	{
-		spin_lock(&req_lock);
-		if (IDE_req_queue.in_using == NULL &&
-			IDE_req_queue.bdev_wqhdr.count > 0)
-		{
-			List_s * wq_lp = list_hdr_pop(&IDE_req_queue.bdev_wqhdr);
-			while (!wq_lp);
-			blkbuf_node_s * node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
-			IDE_req_queue.in_using = node;
-			spin_unlock_no_resched(&req_lock);
+	current->flags |= PF_NOFREEZE;
 
-			cmd_out(node);
+	for (;;) {
+		set_current_state(TASK_INTERRUPTIBLE);
+		if (IDEreq_lhdr.count == 0)
+			schedule();
+		__set_current_state(TASK_RUNNING);
 
+		while (IDEreq_lhdr.count != 0)
+		{		
 			spin_lock(&req_lock);
-		}
-		// __set_current_state(TASK_INTERRUPTIBLE);
-		spin_unlock_no_resched(&req_lock);
-		schedule();
-	}
+			if (req_in_using == NULL)
+			{
+				List_s *wq_lp = list_hdr_pop(&IDEreq_lhdr);
+				blkbuf_node_s *node = container_of(wq_lp->owner_p, blkbuf_node_s, wq);
+				req_in_using = node;
+				spin_unlock_no_resched(&req_lock);
 
+				cmd_out(node);
+
+				spin_lock(&req_lock);
+			}
+			spin_unlock_no_resched(&req_lock);
+			break;
+		}
+	}
 	return 1;
 }
 
 void init_ATArqd()
 {
 	thread = kthread_run(ATArq_deamon, NULL, "ATArqd");
-	
+
 	color_printk(GREEN, BLACK, "ATA disk: initialized\n");
 }
