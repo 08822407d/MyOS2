@@ -32,10 +32,8 @@ typedef struct blkbuf_node
 	unsigned		ATA_disk;
 
 	completion_s	*done;
-	task_s			*task;
 	unsigned int	count;
 	unsigned char	cmd;
-	// unsigned char finished_flag;
 	unsigned long	LBA;
 	unsigned char	*buffer;
 	void			(*end_handler)(unsigned long parameter);
@@ -165,25 +163,21 @@ long cmd_out(blkbuf_node_s *node)
 	return 1;
 }
 
-void end_request()
+void end_request(blkbuf_node_s *node)
 {
-	blkbuf_node_s *node = req_in_using;
 	if (node == NULL)
 		color_printk(RED, BLACK, "end_request error\n");
 
-	// wake_up_process(node->task);
 	complete(node->done);
 	spin_lock(&req_lock);
 	req_in_using = NULL;
+	current->flags |= PF_NEED_SCHEDULE;
 	spin_unlock_no_resched(&req_lock);
-	// current->flags |= PF_NEED_SCHEDULE;
 }
 
 void read_handler(unsigned long parameter)
 {
-	unsigned char status = inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller));
-
-	if (status & DISK_STATUS_ERROR)
+	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "read_handler:%#010x\n",
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
@@ -195,7 +189,6 @@ void read_handler(unsigned long parameter)
 		req_in_using->buffer += 512;
 		return;
 	}
-	end_request();
 }
 
 void write_handler(unsigned long parameter)
@@ -213,7 +206,6 @@ void write_handler(unsigned long parameter)
 		outsw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
 		return;
 	}
-	end_request();
 }
 
 void other_handler(unsigned long parameter)
@@ -223,7 +215,6 @@ void other_handler(unsigned long parameter)
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
 		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
-	end_request();
 }
 
 blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
@@ -284,7 +275,6 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 							blk_idx, count, buffer);
 		DECLARE_COMPLETION_ONSTACK(done);
 		node->done = &done;
-		node->task = current;
 
 		// extern unsigned long jiffies;
 		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
@@ -300,8 +290,6 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		preempt_enable_no_resched();
 
 		wait_for_completion(&done);
-		// set_current_state(TASK_UNINTERRUPTIBLE);
-		// schedule();
 
 		if (node != NULL)
 			kfree(node);
@@ -341,7 +329,10 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
-	req_in_using->end_handler(parameter);
+	blkbuf_node_s *node = req_in_using;
+	node->end_handler(parameter);
+	if (node->count == 0)
+	end_request(node);
 }
 
 void init_disk()
