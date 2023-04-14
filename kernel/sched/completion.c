@@ -68,13 +68,9 @@ static inline long
 wait_for_common(completion_s*x, long timeout, int state) {
 	// might_sleep();
 
-	// complete_acquire(x);
-
 	raw_spin_lock_irq(&x->wait.lock);
 	timeout = do_wait_for_common(x, timeout, state);
 	raw_spin_unlock_irq(&x->wait.lock);
-
-	// complete_release(x);
 
 	return timeout;
 }

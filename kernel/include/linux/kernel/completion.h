@@ -29,8 +29,8 @@
 	} completion_s;
 
 	// #define init_completion_map(x, m)	init_completion(x)
-	static inline void complete_acquire(completion_s *x) {}
-	static inline void complete_release(completion_s *x) {}
+	// static inline void complete_acquire(completion_s *x) {}
+	// static inline void complete_release(completion_s *x) {}
 
 	#define COMPLETION_INITIALIZER(work)	\
 				{ 0, __SWAIT_QUEUE_HEAD_INITIALIZER((work).wait) }

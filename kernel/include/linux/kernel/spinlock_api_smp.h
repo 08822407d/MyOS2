@@ -105,18 +105,12 @@
 	// static inline void __raw_spin_lock(raw_spinlock_t *lock) {
 	static inline void raw_spin_lock(arch_spinlock_t *lock) {
 		preempt_disable();
-		// spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
-		// LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
 		arch_spin_lock(lock);
 	}
 
 	// static inline void __raw_spin_lock_irq(raw_spinlock_t *lock) {
 	static inline void raw_spin_lock_irq(arch_spinlock_t *lock) {
 		local_irq_disable();
-		// myos_preempt_disable();
-		// // spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
-		// // LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
-		// arch_spin_lock(lock);
 		raw_spin_lock(lock);
 	}
 
@@ -124,10 +118,6 @@
 		unsigned long flags;
 
 		local_irq_save(flags);
-		// myos_preempt_disable();
-		// // spin_acquire(&lock->dep_map, 0, 0, _RET_IP_);
-		// // LOCK_CONTENDED(lock, do_raw_spin_trylock, do_raw_spin_lock);
-		// arch_spin_lock(lock);
 		raw_spin_lock(lock);
 		return flags;
 	}
@@ -137,14 +127,12 @@
 	// static inline void __raw_spin_unlock(raw_spinlock_t *lock) {
 	static inline void raw_spin_unlock(arch_spinlock_t *lock) {
 		// spin_release(&lock->dep_map, _RET_IP_);
-		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
 		preempt_enable();
 	}
 
 	static inline void raw_spin_unlock_no_resched(arch_spinlock_t *lock) {
 		// spin_release(&lock->dep_map, _RET_IP_);
-		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
 		preempt_enable_no_resched();
 	}
@@ -152,7 +140,6 @@
 	static inline void
 	raw_spin_unlock_irqrestore(arch_spinlock_t *lock, unsigned long flags) {
 		// spin_release(&lock->dep_map, _RET_IP_);
-		// do_raw_spin_unlock(lock);
 		arch_spin_unlock(lock);
 		local_irq_restore(flags);
 		preempt_enable();
@@ -160,8 +147,7 @@
 
 	// static inline void __raw_spin_unlock_irq(raw_spinlock_t *lock) {
 	static inline void raw_spin_unlock_irq(arch_spinlock_t *lock) {
-	// 	spin_release(&lock->dep_map, _RET_IP_);
-	// 	do_raw_spin_unlock(lock);
+		// spin_release(&lock->dep_map, _RET_IP_);
 		arch_spin_unlock(lock);
 		local_irq_enable();
 		preempt_enable();
