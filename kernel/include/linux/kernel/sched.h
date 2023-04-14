@@ -1968,6 +1968,7 @@
 
 	// extern int wake_up_state(task_s *tsk, unsigned int state);
 	extern int wake_up_process(task_s *tsk);
+	extern int wake_up_process_no_resched(task_s *tsk);
 	extern void wake_up_new_task(task_s *tsk);
 
 	// extern void kick_process(task_s *tsk);

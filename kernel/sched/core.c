@@ -247,7 +247,6 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
 	unsigned long flags;
 	int cpu, success = 0;
 
-	preempt_disable();
 	// if (p == current) {
 	// 	/*
 	// 	 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
@@ -394,8 +393,6 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
 // out:
 	// if (success)
 	// 	ttwu_stat(p, task_cpu(p), wake_flags);
-	preempt_enable();
-	// preempt_enable_no_resched();
 
 	return success;
 }
@@ -472,11 +469,32 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
  * This function executes a full memory barrier before accessing the task state.
  */
 int wake_up_process(task_s *p) {
-	return try_to_wake_up(p, TASK_NORMAL, 0);
+	int retval = 0;
+
+	preempt_disable();
+	retval = try_to_wake_up(p, TASK_NORMAL, 0);
+	preempt_enable();
+
+	return retval;
+}
+int wake_up_process_no_resched(task_s *p) {
+	int retval = 0;
+
+	preempt_disable();
+	retval = try_to_wake_up(p, TASK_NORMAL, 0);
+	preempt_enable_no_resched();
+
+	return retval;
 }
 
 int wake_up_state(task_s *p, unsigned int state) {
-	return try_to_wake_up(p, state, 0);
+	int retval = 0;
+
+	preempt_disable();
+	retval = try_to_wake_up(p, state, 0);
+	preempt_enable();
+
+	return retval;
 }
 
 /*
