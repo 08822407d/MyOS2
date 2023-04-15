@@ -47,7 +47,7 @@
 // #include <linux/kallsyms.h>
 // #include <linux/buildid.h>
 // #include <linux/writeback.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/cpuset.h>
 // #include <linux/cgroup.h>
 #include <linux/block/efi.h>
@@ -188,9 +188,9 @@ noinline void __ref rest_init(void)
 	 * The boot idle thread must execute schedule()
 	 * at least once to get things moving:
 	 */
-	// schedule_preempt_disabled();
-	// /* Call into cpu_idle with preempt disabled */
-	// cpu_startup_entry(CPUHP_ONLINE);
+	schedule_preempt_disabled();
+	/* Call into cpu_idle with preempt disabled */
+	cpu_startup_entry();
 }
 
 
@@ -288,17 +288,9 @@ void idle(size_t cpu_idx)
 		myos_refresh_arch_page();
 
 	if (cpu_idx == 0)
-	{
 		rest_init();
-		schedule();
-	}
 	
-	asm volatile("sti");
-
-	// module_test();
-
-	while (1)
-		asm volatile("hlt");
+	prevent_tail_call_optimization();
 }
 
 /*==============================================================================================*

@@ -46,7 +46,7 @@
 // #include <linux/vmacache.h>
 // #include <linux/nsproxy.h>
 // #include <linux/capability.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/cgroup.h>
 // #include <linux/security.h>
 // #include <linux/hugetlb.h>

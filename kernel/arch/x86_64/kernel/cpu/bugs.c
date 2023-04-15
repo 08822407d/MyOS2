@@ -10,7 +10,7 @@
  */
 #include <linux/init/init.h>
 // #include <linux/utsname.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/module.h>
 // #include <linux/nospec.h>
 // #include <linux/prctl.h>

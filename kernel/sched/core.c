@@ -10,7 +10,7 @@
 // #include <trace/events/sched.h>
 // #undef CREATE_TRACE_POINTS
 
-#include <linux/sched/sched.h>
+#include "sched.h"
 
 // #include <linux/nospec.h>
 #include <linux/block/blkdev.h>
@@ -667,6 +667,7 @@ void wake_up_new_task(task_s *p)
 	// task_rq_unlock(rq, p, &rf);
 }
 
+
 /**
  * schedule_preempt_disabled - called with preemption disabled
  *
@@ -674,9 +675,9 @@ void wake_up_new_task(task_s *p)
  */
 void schedule_preempt_disabled(void)
 {
-	sched_preempt_enable_no_resched();
+	// sched_preempt_enable_no_resched();
 	schedule();
-	preempt_disable();
+	// preempt_disable();
 }
 
 

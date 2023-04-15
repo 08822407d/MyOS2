@@ -40,7 +40,7 @@
 // #include <linux/block/buffer_head.h>
 // #include <linux/task_io_accounting_ops.h>
 // #include <linux/bio.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 #include <linux/kernel/bitops.h>
 // #include <linux/mpage.h>
 // #include <linux/bit_spinlock.h>

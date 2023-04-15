@@ -36,7 +36,7 @@
 // #include <linux/oom.h>
 // #include <linux/topology.h>
 // #include <linux/sysctl.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/cpuset.h>
 // #include <linux/memory_hotplug.h>
 // #include <linux/nodemask.h>

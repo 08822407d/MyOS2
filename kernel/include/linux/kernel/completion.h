@@ -83,7 +83,7 @@
 	 */
 	static inline void init_completion(completion_s *x) {
 		x->done = 0;
-		// init_swait_queue_head(&x->wait);
+		init_swait_queue_head(&x->wait);
 	}
 
 	// /**

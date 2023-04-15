@@ -15,7 +15,7 @@
  * This file handles the architecture-dependent parts of process handling..
  */
 
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/sched.h>
 #include <linux/sched/task.h>

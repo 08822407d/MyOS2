@@ -3,7 +3,7 @@
 #define _ASM_X86_CPU_H
 
 	#include <linux/device/device.h>
-	// #include <linux/cpu.h>
+	#include <linux/kernel/cpu.h>
 	// #include <linux/topology.h>
 	// #include <linux/nodemask.h>
 	// #include <linux/percpu.h>

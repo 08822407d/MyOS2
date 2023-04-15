@@ -33,7 +33,7 @@
 #include <linux/kernel/completion.h>
 #include <linux/kernel/workqueue.h>
 #include <linux/kernel/slab.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/notifier.h>
 #include <linux/kernel/kthread.h>
 // #include <linux/hardirq.h>

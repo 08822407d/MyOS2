@@ -243,11 +243,11 @@
 	// /* &a[0] degrades to a pointer: a different type from an array */
 	// #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
 
-	// /*
-	// * This is needed in functions which generate the stack canary, see
-	// * arch/x86/kernel/smpboot.c::start_secondary() for an example.
-	// */
-	// #define prevent_tail_call_optimization()	mb()
+	/*
+	 * This is needed in functions which generate the stack canary, see
+	 * arch/x86/kernel/smpboot.c::start_secondary() for an example.
+	 */
+	#define prevent_tail_call_optimization()	mb()
 
 	// #include <asm/rwonce.h>
 	#include <linux/kernel/asm-generic/rwonce.h>

@@ -388,7 +388,7 @@ static int devtmpfsd(void *p) {
 	// 	return err;
 	// }
 
-	// complete(&setup_done);
+	complete(&setup_done);
 	devtmpfs_work_loop();
 out:
 	return err;
@@ -420,13 +420,15 @@ int devtmpfs_init(void)
 
 	thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
 
-	// if (!IS_ERR(thread)) {
-	// 	wait_for_completion(&setup_done);
-	// } else {
-	// 	err = PTR_ERR(thread);
-	// 	thread = NULL;
-	// }
+	if (!IS_ERR(thread)) {
+		wait_for_completion(&setup_done);
+	} else {
+		err = PTR_ERR(thread);
+		thread = NULL;
+	}
 
+	while (err);
+	
 	// if (err) {
 	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
 	// 	unregister_filesystem(&dev_fs_type);

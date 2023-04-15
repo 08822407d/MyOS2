@@ -14,7 +14,7 @@
 #include <linux/kernel/compiler.h>
 // #include <linux/kfence.h>
 // #include <linux/module.h>
-// #include <linux/cpu.h>
+#include <linux/kernel/cpu.h>
 // #include <linux/uaccess.h>
 // #include <linux/seq_file.h>
 // #include <linux/proc_fs.h>
