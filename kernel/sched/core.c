@@ -87,7 +87,8 @@ void set_task_cpu(task_s *p, unsigned int new_cpu) {
 
 	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->cpudata);
 	p->__state = TASK_RUNNING;
-	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+	if (!list_in_lhdr(&target_cpu_p->running_lhdr, &p->tasks))
+		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 }
 
 
@@ -675,9 +676,9 @@ void wake_up_new_task(task_s *p)
  */
 void schedule_preempt_disabled(void)
 {
-	// sched_preempt_enable_no_resched();
+	sched_preempt_enable_no_resched();
 	schedule();
-	// preempt_disable();
+	preempt_disable();
 }
 
 
