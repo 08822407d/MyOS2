@@ -52,6 +52,7 @@ do_wait_for_common(completion_s *x, long timeout, int state) {
 			__set_current_state(state);
 			raw_spin_unlock_irq(&x->wait.lock);
 			// timeout = action(timeout);
+			schedule();
 			raw_spin_lock_irq(&x->wait.lock);
 		// } while (!x->done && timeout);
 		} while (!x->done);
