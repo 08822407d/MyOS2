@@ -105,6 +105,8 @@ void cpu_startup_entry()
 
 	// arch_cpu_idle_prepare();
 	// cpuhp_online_idle(state);
+
+	preempt_enable_no_resched();
 	while (1)
 		do_idle();
 }

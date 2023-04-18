@@ -135,9 +135,9 @@ unsigned long myos_switch_to_root_disk()
 
 	int err = init_mount("devtmpfs", "/dev", "devtmpfs", MS_SILENT);
 
-	id_def_s	id_def;
-	ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
-	ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
+	// id_def_s	id_def;
+	// ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
+	// ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
