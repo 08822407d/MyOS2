@@ -285,7 +285,7 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		list_hdr_enqueue(&IDEreq_lhdr, &node->req_list);
 		spin_unlock_no_resched(&req_lock);
 
-		wake_up_process_no_resched(thread);
+		wake_up_process(thread);
 
 		wait_for_completion(&done);
 

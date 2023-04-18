@@ -39,7 +39,8 @@ void complete(completion_s *x)
 
 
 static inline long
-do_wait_for_common(completion_s *x, long timeout, int state) {
+do_wait_for_common(completion_s *x, long (*action)(long),
+		long timeout, int state) {
 	if (!x->done) {
 		DECLARE_SWAITQUEUE(wait);
 
@@ -51,11 +52,9 @@ do_wait_for_common(completion_s *x, long timeout, int state) {
 			__prepare_to_swait(&x->wait, &wait);
 			__set_current_state(state);
 			raw_spin_unlock_irq(&x->wait.lock);
-			// timeout = action(timeout);
-			schedule();
+			timeout = action(timeout);
 			raw_spin_lock_irq(&x->wait.lock);
-		// } while (!x->done && timeout);
-		} while (!x->done);
+		} while (!x->done && timeout);
 		__finish_swait(&x->wait, &wait);
 		if (!x->done)
 			return timeout;
@@ -70,7 +69,7 @@ wait_for_common(completion_s*x, long timeout, int state) {
 	// might_sleep();
 
 	raw_spin_lock_irq(&x->wait.lock);
-	timeout = do_wait_for_common(x, timeout, state);
+	timeout = do_wait_for_common(x, schedule_timeout, timeout, state);
 	raw_spin_unlock_irq(&x->wait.lock);
 
 	return timeout;

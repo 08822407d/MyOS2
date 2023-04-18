@@ -478,15 +478,6 @@ int wake_up_process(task_s *p) {
 
 	return retval;
 }
-int wake_up_process_no_resched(task_s *p) {
-	int retval = 0;
-
-	preempt_disable();
-	retval = try_to_wake_up(p, TASK_NORMAL, 0);
-	preempt_enable_no_resched();
-
-	return retval;
-}
 
 int wake_up_state(task_s *p, unsigned int state) {
 	int retval = 0;
