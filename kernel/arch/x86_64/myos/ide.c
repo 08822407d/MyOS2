@@ -381,7 +381,7 @@ static int ATArq_deamon(void *param)
 			spin_lock(&req_lock);
 			if (req_in_using == NULL)
 			{
-				List_s *wq_lp = list_hdr_pop(&IDEreq_lhdr);
+				List_s *wq_lp = list_hdr_dequeue(&IDEreq_lhdr);
 				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
 				req_in_using = node;
 				spin_unlock_no_resched(&req_lock);
