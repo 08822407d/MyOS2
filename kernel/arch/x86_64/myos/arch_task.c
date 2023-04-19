@@ -195,8 +195,8 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	// kernel_execve("/init.bin", NULL, NULL);
-	kernel_execve("/shell.bin", NULL, NULL);
+	kernel_execve("/init.bin", NULL, NULL);
+	// kernel_execve("/shell.bin", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
@@ -292,6 +292,11 @@ void myos_schedule(void)
 			}
 		}
 
+		unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
+		curr_task->total_jiffies += used_jiffies;
+		if (curr_task != cpudata_p->idle_task)
+			curr_task->se.vruntime += used_jiffies;
+
 		next_task = container_of(next_lp, task_s, tasks);
 		cpudata_p->curr_task = next_task;
 		cpudata_p->time_slice = next_task->rt.time_slice;
@@ -314,8 +319,6 @@ void try_sched()
 	task_s *		curr_task = cpudata_p->curr_task;
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
-	if (curr_task != cpudata_p->idle_task)
-		curr_task->se.vruntime += used_jiffies;
 	// if running time out, make the need_schedule flag of current task
 	if (used_jiffies >= cpudata_p->time_slice)
 		cpudata_p->curr_task->flags |= PF_NEED_SCHEDULE;

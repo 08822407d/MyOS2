@@ -137,15 +137,8 @@ sa_entintr_retp:
 	cld
 	movq		%rsp,		%rdi
 
-	callq 		excep_hwint_entry
-	callq		try_sched
-	// sti
+	callq 		excep_hwint_context
 
-	// movq		$-1,		%rcx
-	// testq		softirq_status(%rip),	%rcx	////check softirq	
-	// callq		do_softirq
-
-	// cli
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti

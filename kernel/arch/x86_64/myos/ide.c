@@ -330,7 +330,7 @@ void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler(parameter);
 	if (node->count == 0)
-	end_request(node);
+		end_request(node);
 }
 
 void init_disk()

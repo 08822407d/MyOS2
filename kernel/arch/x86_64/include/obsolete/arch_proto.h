@@ -193,7 +193,7 @@
 	unsigned long user_func(unsigned long arg);
 
 	/* interrupt.c */
-	void excep_hwint_entry(pt_regs_s *sf_regs);
+	void excep_hwint_context(pt_regs_s *sf_regs);
 	void exception_handler(pt_regs_s *sf_regs);
 	void hwint_irq_handler(pt_regs_s *sf_regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,

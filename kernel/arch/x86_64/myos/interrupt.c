@@ -168,7 +168,8 @@ PF_finish:
 /*==============================================================================================*
  *											entrys									 			*
  *==============================================================================================*/
-void excep_hwint_entry(pt_regs_s *sf_regs)
+extern void do_softirq(void);
+void excep_hwint_context(pt_regs_s *sf_regs)
 {
 	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 
@@ -176,6 +177,16 @@ void excep_hwint_entry(pt_regs_s *sf_regs)
 		exception_handler(sf_regs);
 	else
 		hwint_irq_handler(sf_regs);
+
+	try_sched();
+
+	// sti
+	// movq		$-1,		%rcx
+	// testq		softirq_status(%rip),	%rcx	////check softirq	
+	// callq		do_softirq
+	// cli
+	// if (softirq_status != 0)
+	// 	do_softirq();
 }
 
 void exception_handler(pt_regs_s *sf_regs)

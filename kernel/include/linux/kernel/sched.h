@@ -782,6 +782,7 @@
 	typedef struct task_struct {
 		// myos obsolete contents
 		List_hdr_s		wait_childexit;
+		u64				total_jiffies;
 
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
@@ -804,7 +805,7 @@
 		// */
 		// randomized_struct_fields_start
 
-		void *stack;
+		void			*stack;
 		// refcount_t usage;
 		// /* Per task flags (PF_*), defined further below: */
 		unsigned int	flags;
