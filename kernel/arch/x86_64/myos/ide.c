@@ -5,6 +5,7 @@
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/completion.h>
+#include <linux/device/tty.h>
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>
 #include <asm/processor.h>
@@ -185,10 +186,7 @@ void read_handler(unsigned long parameter)
 
 	req_in_using->count--;
 	if (req_in_using->count)
-	{
 		req_in_using->buffer += 512;
-		return;
-	}
 }
 
 void write_handler(unsigned long parameter)
@@ -204,7 +202,6 @@ void write_handler(unsigned long parameter)
 		while (!(inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_REQ))
 			nop();
 		outsw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
-		return;
 	}
 }
 
@@ -327,10 +324,16 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
+	// char buf[] = " ";
+	// myos_tty_write_color_at(buf, sizeof(buf), BLACK, RED, 60, 0);
+
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler(parameter);
+	
 	if (node->count == 0)
 		end_request(node);
+
+	// myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 60, 0);
 }
 
 void init_disk()

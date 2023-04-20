@@ -52,7 +52,7 @@ void myos_init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0->rt.time_slice	= 2;
+	task0->rt.time_slice	= 20;
 	task0->se.vruntime		= -1;
 	task0->__state			= TASK_RUNNING;
 	task0->flags			= PF_KTHREAD;
