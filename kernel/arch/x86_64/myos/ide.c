@@ -33,6 +33,7 @@ typedef struct blkbuf_node
 	unsigned		ATA_disk;
 
 	completion_s	*done;
+	task_s			*task;
 	unsigned int	count;
 	unsigned char	cmd;
 	unsigned long	LBA;
@@ -169,11 +170,12 @@ void end_request(blkbuf_node_s *node)
 	if (node == NULL)
 		color_printk(RED, BLACK, "end_request error\n");
 
-	complete(node->done);
-	spin_lock(&req_lock);
+	// complete(node->done);
+	// spin_lock(&req_lock);
+	wake_up_process(node->task);
 	req_in_using = NULL;
 	current->flags |= PF_NEED_SCHEDULE;
-	spin_unlock_no_resched(&req_lock);
+	// spin_unlock_no_resched(&req_lock);
 }
 
 void read_handler(unsigned long parameter)
@@ -270,21 +272,18 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 	{
 		node = make_request(controller, disk, cmd,
 							blk_idx, count, buffer);
-		DECLARE_COMPLETION_ONSTACK(done);
-		node->done = &done;
-
-		// extern unsigned long jiffies;
-		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
-		// myos_delay_full_u32(500);
-		// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);
+		// DECLARE_COMPLETION_ONSTACK(done);
+		// node->done = &done;
+		node->task = current;
 
 		spin_lock(&req_lock);
 		list_hdr_enqueue(&IDEreq_lhdr, &node->req_list);
 		spin_unlock_no_resched(&req_lock);
 
+		__set_current_state(TASK_UNINTERRUPTIBLE);
 		wake_up_process(thread);
-
-		wait_for_completion(&done);
+		// wait_for_completion(&done);
+		schedule();
 
 		if (node != NULL)
 			kfree(node);
@@ -406,3 +405,9 @@ void init_ATArqd()
 
 	color_printk(WHITE, BLACK, "ATA disk: initialized\n");
 }
+
+
+		// extern unsigned long jiffies;
+		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
+		// myos_delay_full_u32(500);
+		// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);

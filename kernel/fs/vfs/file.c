@@ -123,6 +123,7 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 		{
 			file_s *new_fp = kzalloc(sizeof(file_s), GFP_KERNEL);
 			*new_fp = *old_fp;
+			new_fds[i] = new_fp;
 		}	
 	}
 

@@ -145,7 +145,6 @@ int __myos_copy_strings(const char *const *argv)
 		curr_context->si = (reg_t)dargv;	//argv
 	}
 }
-extern void myos_close_files(files_struct_s * files);
 int __myos_bprm_execve(linux_bprm_s *bprm)
 {
 	int ret_val = 0;
@@ -154,13 +153,11 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	curr->se.vruntime = 0;
 	set_task_comm(curr, bprm->filename);
 
-	//
 	if (task_idle != NULL && task_init != NULL)
 		task_shell = curr;
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
-	//
-	myos_close_files(curr->files);
+
 	file_s *fp = bprm->file;
 
 	if (curr->flags & CLONE_VFORK)
