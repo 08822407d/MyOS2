@@ -117,7 +117,6 @@ void keyboard_handler(unsigned long param, pt_regs_s * sf_regs)
 	p_kb->count++;
 	p_kb->p_head ++;	
 
-	// wq_wakeup(&kbd_wqhdr, TASK_UNINTERRUPTIBLE);
 	complete(&getcode_done);
 }
 
@@ -130,7 +129,6 @@ unsigned char kbd_get_scancode()
 
 	if(p_kb->count == 0)
 		wait_for_completion(&getcode_done);
-		// wq_sleep_on(&kbd_wqhdr);
 	
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	
 		p_kb->p_tail = p_kb->buf;

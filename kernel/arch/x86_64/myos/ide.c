@@ -323,16 +323,11 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
-	// char buf[] = " ";
-	// myos_tty_write_color_at(buf, sizeof(buf), BLACK, RED, 60, 0);
-
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler(parameter);
 	
 	if (node->count == 0)
 		end_request(node);
-
-	// myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 60, 0);
 }
 
 void init_disk()
