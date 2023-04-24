@@ -222,7 +222,8 @@
 		"qspinlock.h": "c",
 		"tspinlock.h": "c",
 		"swait.h": "c",
-		"binfmts.h": "c"
+		"binfmts.h": "c",
+		"workqueue.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/mylib/include",
-                "${workspaceFolder}/kernel/arch",
-                "${workspaceFolder}/kernel/arch/x86_64/include",
-                "${workspaceFolder}/kernel/include",
+                "${workspaceFolder}/mykernel/arch",
+                "${workspaceFolder}/mykernel/arch/x86_64/include",
+                "${workspaceFolder}/mykernel/include",
                 "${workspaceFolder}/loader"
             ],
             "defines": [],
