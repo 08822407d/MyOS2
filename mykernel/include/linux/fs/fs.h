@@ -1989,7 +1989,7 @@
 	// 	return file->f_op->mmap(file, vma);
 	// }
 
-	// extern ssize_t vfs_read(file_s *, char __user *, size_t, loff_t *);
+	extern ssize_t vfs_read(file_s *, char __user *, size_t, loff_t *);
 	// extern ssize_t vfs_write(file_s *, const char __user *, size_t, loff_t *);
 	// extern ssize_t vfs_copy_file_range(file_s *, loff_t , file_s *,
 	// 				loff_t, size_t, unsigned int);
@@ -2450,10 +2450,10 @@
 	extern void iput(inode_s *);
 	// extern int generic_update_time(inode_s *, timespec64_s *, int);
 
-	// /* /sys/fs */
+	/* /sys/fs */
 	// extern struct kobject *fs_kobj;
 
-	// #define MAX_RW_COUNT (INT_MAX & PAGE_MASK)
+	#define MAX_RW_COUNT (INT_MAX & PAGE_MASK)
 
 	// #ifdef CONFIG_FILE_LOCKING
 	// static inline int break_lease(inode_s *inode, unsigned int mode)
@@ -2939,8 +2939,8 @@
 	// #endif
 	// extern int do_pipe_flags(int *, int);
 
-	// extern ssize_t kernel_read(file_s *, void *, size_t, loff_t *);
-	// ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos);
+	extern ssize_t kernel_read(file_s *, void *, size_t, loff_t *);
+	ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos);
 	// extern ssize_t kernel_write(file_s *, const void *, size_t, loff_t *);
 	// extern ssize_t __kernel_write(file_s *, const void *, size_t, loff_t *);
 	// extern file_s * open_exec(const char *);

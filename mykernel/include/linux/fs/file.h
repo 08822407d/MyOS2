@@ -82,7 +82,7 @@
 	extern int get_unused_fd_flags(unsigned flags);
 	// extern void put_unused_fd(unsigned int fd);
 
-	extern void fd_install(unsigned int fd, file_s *file);
+	// extern void fd_install(unsigned int fd, file_s *file);
 
 	// extern int __receive_fd(file_s *file, int __user *ufd,
 	// 			unsigned int o_flags);
@@ -103,6 +103,8 @@
 
 	// extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
 
-	fd_s fdget_pos(int fd);
+
+	extern void myos_fd_install(unsigned int fd, file_s *file);
+	extern fd_s myos_fdget_pos(int fd);
 
 #endif /* __LINUX_FILE_H */

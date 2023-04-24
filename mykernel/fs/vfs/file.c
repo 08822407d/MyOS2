@@ -225,7 +225,7 @@ int get_unused_fd_flags(unsigned flags)
  * as if they had called fput(file).
  */
 
-void fd_install(unsigned int fd, file_s *file)
+void myos_fd_install(unsigned int fd, file_s *file)
 {
 	file_s ** fps = current->files->fd_array;
 	if (fps[fd] == NULL)
@@ -238,7 +238,7 @@ void fd_install(unsigned int fd, file_s *file)
 	}
 }
 
-fd_s fdget_pos(int fd)
+fd_s myos_fdget_pos(int fd)
 {
 	task_s *curr = current;
 	file_s *fp = curr->files->fd_array[fd];

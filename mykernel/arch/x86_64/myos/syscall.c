@@ -1,6 +1,7 @@
 #include <linux/sched/task.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/fcntl.h>
+#include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
@@ -54,22 +55,8 @@ long sys_close(unsigned int fd)
 	return 0;
 }
 
-long sys_read(unsigned int fd, char *buf, size_t count)
-{
-	task_s * curr = current;
-	file_s * fp = NULL;
-	unsigned long ret = 0;
-
-//	color_printk(GREEN,BLACK,"sys_read:%d\n",fd);
-	if(fd < 0 || fd >= curr->files->fd_count)
-		return -EBADF;
-	if(count < 0)
-		return -EINVAL;
-
-	fp = current->files->fd_array[fd];
-	if(fp->f_op && fp->f_op->read)
-		ret = fp->f_op->read(fp, buf, count, &fp->f_pos);
-	return ret;
+long sys_read(unsigned int fd, char *buf, size_t count) {
+	return ksys_read(fd, buf, count);
 }
 
 long sys_write(unsigned int fd, const char *buf, size_t count)
@@ -90,7 +77,7 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	return ret;
 }
 
-long sys_lseek(unsigned int fd, loff_t offset, unsigned int whence)
+long sys_lseek(unsigned int fd, off_t offset, unsigned int whence)
 {
 	task_s * curr = current;
 	file_s * fp = NULL;
@@ -196,7 +183,7 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 /*==============================================================================================*
  *									user memory manage											*
  *==============================================================================================*/
-virt_addr_t sys_sbrk(unsigned long brk)
+long sys_sbrk(unsigned long brk)
 {
 	virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
 

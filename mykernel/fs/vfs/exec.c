@@ -409,7 +409,7 @@ static int prepare_binprm(linux_bprm_s *bprm) {
 	loff_t pos = 0;
 
 	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
-	// return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
+	return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
 }
 
 
@@ -508,7 +508,7 @@ bprm_execve(linux_bprm_s *bprm, int fd,
 	// retval = exec_binprm(bprm);
 	// static int exec_binprm(struct linux_binprm *bprm)
 	// {
-		// retval = search_binary_handler(bprm);
+		retval = search_binary_handler(bprm);
 	// }
 	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)

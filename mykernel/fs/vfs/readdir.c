@@ -143,7 +143,7 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	};
 	int error;
 
-	f = fdget_pos(fd);
+	f = myos_fdget_pos(fd);
 	if (!f.file)
 		return -EBADF;
 

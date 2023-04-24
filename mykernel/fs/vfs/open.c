@@ -267,7 +267,7 @@ static long do_sys_openat2(int dfd, const char *filename, open_how_s *how)
 		if (IS_ERR(f))
 			fd = PTR_ERR(f);
 		else
-			fd_install(fd, f);
+			myos_fd_install(fd, f);
 	}
 	putname(tmp);
 	return fd;

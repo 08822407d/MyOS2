@@ -1270,14 +1270,14 @@
 
 	#endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
 
-	// /*
-	// * Kernel code should not call syscalls (i.e., sys_xyzyyz()) directly.
-	// * Instead, use one of the functions which work equivalently, such as
-	// * the ksys_xyzyyz() functions prototyped below.
-	// */
-	// ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
+	/*
+	* Kernel code should not call syscalls (i.e., sys_xyzyyz()) directly.
+	* Instead, use one of the functions which work equivalently, such as
+	* the ksys_xyzyyz() functions prototyped below.
+	*/
+	ssize_t ksys_write(unsigned int fd, const char __user *buf, size_t count);
 	// int ksys_fchown(unsigned int fd, uid_t user, gid_t group);
-	// ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
+	ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count);
 	// void ksys_sync(void);
 	// int ksys_unshare(unsigned long unshare_flags);
 	// int ksys_setsid(void);
