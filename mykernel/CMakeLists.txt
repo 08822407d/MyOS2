@@ -1,0 +1,41 @@
+# kernel common ASM make flags
+set(CMAKE_ASM_FLAGS
+		"${CMAKE_ASM_FLAGS} \
+		${UNUSED_MACRO} \
+		-D__KERNEL__ ")
+# kernel common C make flags
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
+				-mno-red-zone \
+				${UNUSED_MACRO} -D__KERNEL__ \
+				-DCONFIG_FLATMEM -DCONFIG_NR_CPUS=256 \
+				-DCONFIG_64BIT -DCONFIG_PHYS_ADDR_T_64BIT \
+				-DCONFIG_ZONE_DMA -DCONFIG_ZONE_DMA32 \
+				-DCONFIG_SLUB \
+				-T ${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/kernel.lds")
+# message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
+
+file(GLOB_RECURSE KERNEL_C_SRCS *.c)
+file(GLOB_RECURSE KERNEL_ASM_SRCS *.S)
+
+add_executable(kernelexec)
+target_sources(kernelexec PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
+target_include_directories(kernelexec PRIVATE
+				${CMAKE_CURRENT_SOURCE_DIR}/include
+				${PROJECT_SOURCE_DIR}/loader
+				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/include)
+
+add_subdirectory(arch)
+add_subdirectory(init)
+add_subdirectory(sched)
+add_subdirectory(proc)
+add_subdirectory(mm)
+add_subdirectory(fs)
+add_subdirectory(time)
+add_subdirectory(device)
+add_subdirectory(drivers)
+add_subdirectory(block)
+add_subdirectory(lib)
+
+add_subdirectory(klib)
+add_subdirectory(mechanics)
+add_subdirectory(test)

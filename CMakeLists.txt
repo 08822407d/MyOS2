@@ -85,16 +85,16 @@ add_subdirectory(mylib)
 #===============================================================================================#
 #                                       kernel.bin                                              #
 #===============================================================================================#
-add_subdirectory(kernel)
+add_subdirectory(mykernel)
 
 #===============================================================================================#
 #                                       init.bin                                                #
 #===============================================================================================#
-add_subdirectory(initd)
-target_link_libraries(init mylibc mycrt)
+add_subdirectory(myinitd)
+target_link_libraries(initdexec mylibc mycrt)
 
 #===============================================================================================#
 #                                       shell.bin                                               #
 #===============================================================================================#
 add_subdirectory(myshell)
-target_link_libraries(shell mylibc mycrt)
+target_link_libraries(shellexec mylibc mycrt)

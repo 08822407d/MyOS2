@@ -11,7 +11,9 @@ function install_files()
 	cp ../bootloader.efi /mnt/EFI/BOOT/BOOTX64.EFI
 	cp ./kernel.bin /mnt/kernel.bin
 	cp ./init.bin /mnt/init.bin
+	cp ./initd /mnt/initd
 	cp ./shell.bin /mnt/shell.bin
+	cp ./shell /mnt/shell
 	sync
 }
 
@@ -28,14 +30,16 @@ if [ "$(uname)" == "Darwin" ]; then
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	echo "Working on Linux"
 	# generate kernel debug file and bin
-	objcopy --only-keep-debug kern kernel.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kern kernel.bin
+	objcopy --only-keep-debug kernelexec kernel.debug
+	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernelexec kernel.bin
 	# generate init debug file and bin
-	objcopy --only-keep-debug init init.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary init init.bin
+	objcopy --only-keep-debug initdexec initd.debug
+	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary initdexec init.bin
+	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O elf64-x86-64 initdexec initd
 	# generate init debug file and bin
-	objcopy --only-keep-debug shell shell.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shell shell.bin
+	objcopy --only-keep-debug shellexec shell.debug
+	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary shellexec shell.bin
+	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O elf64-x86-64 shellexec shell
 	# copy files to virt-disk
 	if [ -e "/dev/dm-0" ]; then
 		echo "installing on virtual disk"
@@ -50,9 +54,9 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	# 	install_files
 	# 	sudo umount /mnt
 	# fi
-	objdump -S kern > k_dasm.txt
-	objdump -S init > init_dasm.txt
-	objdump -S shell > sh_dasm.txt
+	objdump -S kernelexec > kern_dasm.txt
+	objdump -S initdexec > initd_dasm.txt
+	objdump -S shellexec > sh_dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
 	echo "Working on MinGW"
 fi

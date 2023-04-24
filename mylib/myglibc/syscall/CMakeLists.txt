@@ -1,6 +1,6 @@
 target_include_directories(mylibc PUBLIC
-				${PROJECT_SOURCE_DIR}/kernel/include
-				${PROJECT_SOURCE_DIR}/kernel/arch/${ARCH}/include)
+				${PROJECT_SOURCE_DIR}/mykernel/include
+				${PROJECT_SOURCE_DIR}/mykernel/arch/${ARCH}/include)
 
 file(GLOB LIBC_SYS_C_SRCS *.c)
 file(GLOB LIBC_SYS_ASM_SRCS *.S)

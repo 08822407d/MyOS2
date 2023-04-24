@@ -34,7 +34,7 @@
           "ignoreFailures": false
         },
         {
-          "text": "add-symbol-file ${workspaceRoot}/build/init.debug 0x6000000",
+          "text": "add-symbol-file ${workspaceRoot}/build/initd.debug 0x6000000",
           "ignoreFailures": false
         },
         // {
