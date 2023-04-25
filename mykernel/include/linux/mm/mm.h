@@ -2667,7 +2667,7 @@
 	// extern int mm_take_all_locks(struct mm_struct *mm);
 	// extern void mm_drop_all_locks(struct mm_struct *mm);
 
-	// extern int set_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
+	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
 	// extern int replace_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
 	// extern file_s *get_mm_exe_file(struct mm_struct *mm);
 	// extern file_s *get_task_exe_file(task_s *task);

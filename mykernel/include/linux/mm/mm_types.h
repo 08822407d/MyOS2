@@ -655,8 +655,8 @@
 	// #endif
 	// 		struct user_namespace *user_ns;
 
-	// 		/* store ref to file /proc/<pid>/exe symlink points to */
-	// 		file_s __rcu *exe_file;
+			/* store ref to file /proc/<pid>/exe symlink points to */
+			file_s __rcu *exe_file;
 	// #ifdef CONFIG_MMU_NOTIFIER
 	// 		struct mmu_notifier_subscriptions *notifier_subscriptions;
 	// #endif

@@ -415,6 +415,48 @@ void mmput(mm_s *mm) {
 }
 
 
+/**
+ * set_mm_exe_file - change a reference to the mm's executable file
+ *
+ * This changes mm's executable file (shown as symlink /proc/[pid]/exe).
+ *
+ * Main users are mmput() and sys_execve(). Callers prevent concurrent
+ * invocations: in mmput() nobody alive left, in execve task is single
+ * threaded.
+ *
+ * Can only fail if new_exe_file != NULL.
+ */
+int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
+{
+	mm->exe_file = new_exe_file;
+
+	// file_s *old_exe_file;
+
+	/*
+	 * It is safe to dereference the exe_file without RCU as
+	 * this function is only called if nobody else can access
+	 * this mm -- see comment above for justification.
+	 */
+	// old_exe_file = rcu_dereference_raw(mm->exe_file);
+
+	// if (new_exe_file) {
+	// 	/*
+	// 	 * We expect the caller (i.e., sys_execve) to already denied
+	// 	 * write access, so this is unlikely to fail.
+	// 	 */
+	// 	if (deny_write_access(new_exe_file))
+	// 		return -EACCES;
+	// 	get_file(new_exe_file);
+	// }
+	// rcu_assign_pointer(mm->exe_file, new_exe_file);
+	// if (old_exe_file) {
+	// 	allow_write_access(old_exe_file);
+	// 	fput(old_exe_file);
+	// }
+	return 0;
+}
+
+
 // /**
 //  * get_task_mm - acquire a reference to the task's mm
 //  *

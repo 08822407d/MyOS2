@@ -84,7 +84,83 @@ static linux_bfmt_s elf_format = {
 	// .min_coredump	= ELF_EXEC_PAGESIZE,
 };
 
+#define BAD_ADDR(x) ((unsigned long)(x) >= TASK_SIZE)
 
+static int
+set_brk(unsigned long start, unsigned long end, int prot) {
+	start = ELF_PAGEALIGN(start);
+	end = ELF_PAGEALIGN(end);
+	// if (end > start) {
+	// 	/*
+	// 	 * Map the last of the bss segment.
+	// 	 * If the header is requesting these pages to be
+	// 	 * executable, honour that (ppc32 needs this).
+	// 	 */
+	// 	int error = vm_brk_flags(start, end - start,
+	// 			prot & PROT_EXEC ? VM_EXEC : 0);
+	// 	if (error)
+	// 		return error;
+	// }
+	current->mm->start_brk = current->mm->brk = end;
+	return 0;
+}
+
+
+static unsigned long
+elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
+		int prot, int type, unsigned long total_size) {
+	unsigned long map_addr;
+	unsigned long size = eppnt->p_filesz + ELF_PAGEOFFSET(eppnt->p_vaddr);
+	unsigned long off = eppnt->p_offset - ELF_PAGEOFFSET(eppnt->p_vaddr);
+	addr = ELF_PAGESTART(addr);
+	size = ELF_PAGEALIGN(size);
+
+	/* mmap() will return -EINVAL if given a zero size, but a
+	 * segment with zero filesize is perfectly valid */
+	if (!size)
+		return addr;
+
+	/*
+	 * total_size is the size of the ELF (interpreter) image.
+	 * The _first_ mmap needs to know the full size, otherwise
+	 * randomization might put this image into an overlapping
+	 * position with the ELF binary image. (since size < total_size)
+	 * So we first map the 'big' image - and unmap the remainder at
+	 * the end. (which unmap is needed for ELF images with holes.)
+	 */
+	// if (total_size) {
+	// 	total_size = ELF_PAGEALIGN(total_size);
+	// 	map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
+	// 	if (!BAD_ADDR(map_addr))
+	// 		vm_munmap(map_addr+size, total_size-size);
+	// } else
+	// 	map_addr = vm_mmap(filep, addr, size, prot, type, off);
+
+	// if ((type & MAP_FIXED_NOREPLACE) &&
+	//     PTR_ERR((void *)map_addr) == -EEXIST)
+	// 	pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
+	// 		task_pid_nr(current), current->comm, (void *)addr);
+
+	// return(map_addr);
+}
+
+static unsigned long
+total_mapping_size(const elf_phdr_t *cmds, int nr) {
+	int i, first_idx = -1, last_idx = -1;
+
+	for (i = 0; i < nr; i++) {
+		if (cmds[i].p_type == PT_LOAD) {
+			last_idx = i;
+			if (first_idx == -1)
+				first_idx = i;
+		}
+	}
+	if (first_idx == -1)
+		return 0;
+
+	return cmds[last_idx].p_vaddr + cmds[last_idx].p_memsz -
+				ELF_PAGESTART(cmds[first_idx].p_vaddr);
+}
 
 static int
 elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
@@ -333,9 +409,9 @@ out_free_interp:
 	// 	goto out_free_dentry;
 
 	/* Flush all traces of the currently running executable */
-	retval = begin_new_exec(bprm);
-	if (retval)
-		goto out_free_dentry;
+	// retval = begin_new_exec(bprm);
+	// if (retval)
+	// 	goto out_free_dentry;
 
 	// /* Do this immediately, since STACK_TOP as used in setup_arg_pages
 	//    may depend on the personality.  */
@@ -355,155 +431,154 @@ out_free_interp:
 	// if (retval < 0)
 	// 	goto out_free_dentry;
 	
-	// elf_bss = 0;
-	// elf_brk = 0;
+	elf_bss = 0;
+	elf_brk = 0;
 
-	// start_code = ~0UL;
-	// end_code = 0;
-	// start_data = 0;
-	// end_data = 0;
+	start_code = ~0UL;
+	end_code = 0;
+	start_data = 0;
+	end_data = 0;
 
-	// /* Now we do a little grungy work by mmapping the ELF image into
-	//    the correct location in memory. */
-	// for(i = 0, elf_ppnt = elf_phdata;
-	//     i < elf_ex->e_phnum; i++, elf_ppnt++) {
-	// 	int elf_prot, elf_flags;
-	// 	unsigned long k, vaddr;
-	// 	unsigned long total_size = 0;
-	// 	unsigned long alignment;
+	/* Now we do a little grungy work by mmapping the ELF image into
+	   the correct location in memory. */
+	for(i = 0, elf_ppnt = elf_phdata;
+	    i < elf_ex->e_phnum; i++, elf_ppnt++) {
+		int elf_prot, elf_flags;
+		unsigned long k, vaddr;
+		unsigned long total_size = 0;
+		unsigned long alignment;
 
-	// 	if (elf_ppnt->p_type != PT_LOAD)
-	// 		continue;
+		if (elf_ppnt->p_type != PT_LOAD)
+			continue;
 
-	// 	if (unlikely (elf_brk > elf_bss)) {
-	// 		unsigned long nbyte;
-	            
-	// 		/* There was a PT_LOAD segment with p_memsz > p_filesz
-	// 		   before this one. Map anonymous pages, if needed,
-	// 		   and clear the area.  */
-	// 		retval = set_brk(elf_bss + load_bias,
-	// 				 elf_brk + load_bias,
-	// 				 bss_prot);
-	// 		if (retval)
-	// 			goto out_free_dentry;
-	// 		nbyte = ELF_PAGEOFFSET(elf_bss);
-	// 		if (nbyte) {
-	// 			nbyte = ELF_MIN_ALIGN - nbyte;
-	// 			if (nbyte > elf_brk - elf_bss)
-	// 				nbyte = elf_brk - elf_bss;
-	// 			if (clear_user((void __user *)elf_bss +
-	// 						load_bias, nbyte)) {
-	// 				/*
-	// 				 * This bss-zeroing can fail if the ELF
-	// 				 * file specifies odd protections. So
-	// 				 * we don't check the return value
-	// 				 */
-	// 			}
-	// 		}
-	// 	}
+		if (elf_brk > elf_bss) {
+			unsigned long nbyte;
 
-	// 	elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
-	// 			     !!interpreter, false);
+			/* There was a PT_LOAD segment with p_memsz > p_filesz
+			   before this one. Map anonymous pages, if needed,
+			   and clear the area.  */
+			retval = set_brk(elf_bss + load_bias,
+					 elf_brk + load_bias, bss_prot);
+			if (retval)
+				goto out_free_dentry;
+			// nbyte = ELF_PAGEOFFSET(elf_bss);
+			// if (nbyte) {
+			// 	nbyte = ELF_MIN_ALIGN - nbyte;
+			// 	if (nbyte > elf_brk - elf_bss)
+			// 		nbyte = elf_brk - elf_bss;
+			// 	if (clear_user((void __user *)elf_bss +
+			// 				load_bias, nbyte)) {
+			// 		/*
+			// 		 * This bss-zeroing can fail if the ELF
+			// 		 * file specifies odd protections. So
+			// 		 * we don't check the return value
+			// 		 */
+			// 	}
+			// }
+		}
 
-	// 	elf_flags = MAP_PRIVATE;
+		// elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
+		// 		     !!interpreter, false);
 
-	// 	vaddr = elf_ppnt->p_vaddr;
-	// 	/*
-	// 	 * The first time through the loop, load_addr_set is false:
-	// 	 * layout will be calculated. Once set, use MAP_FIXED since
-	// 	 * we know we've already safely mapped the entire region with
-	// 	 * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
-	// 	 */
-	// 	if (load_addr_set) {
-	// 		elf_flags |= MAP_FIXED;
-	// 	} else if (elf_ex->e_type == ET_EXEC) {
-	// 		/*
-	// 		 * This logic is run once for the first LOAD Program
-	// 		 * Header for ET_EXEC binaries. No special handling
-	// 		 * is needed.
-	// 		 */
-	// 		elf_flags |= MAP_FIXED_NOREPLACE;
-	// 	} else if (elf_ex->e_type == ET_DYN) {
-	// 		/*
-	// 		 * This logic is run once for the first LOAD Program
-	// 		 * Header for ET_DYN binaries to calculate the
-	// 		 * randomization (load_bias) for all the LOAD
-	// 		 * Program Headers.
-	// 		 *
-	// 		 * There are effectively two types of ET_DYN
-	// 		 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
-	// 		 * and loaders (ET_DYN without INTERP, since they
-	// 		 * _are_ the ELF interpreter). The loaders must
-	// 		 * be loaded away from programs since the program
-	// 		 * may otherwise collide with the loader (especially
-	// 		 * for ET_EXEC which does not have a randomized
-	// 		 * position). For example to handle invocations of
-	// 		 * "./ld.so someprog" to test out a new version of
-	// 		 * the loader, the subsequent program that the
-	// 		 * loader loads must avoid the loader itself, so
-	// 		 * they cannot share the same load range. Sufficient
-	// 		 * room for the brk must be allocated with the
-	// 		 * loader as well, since brk must be available with
-	// 		 * the loader.
-	// 		 *
-	// 		 * Therefore, programs are loaded offset from
-	// 		 * ELF_ET_DYN_BASE and loaders are loaded into the
-	// 		 * independently randomized mmap region (0 load_bias
-	// 		 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
-	// 		 */
-	// 		if (interpreter) {
-	// 			load_bias = ELF_ET_DYN_BASE;
-	// 			if (current->flags & PF_RANDOMIZE)
-	// 				load_bias += arch_mmap_rnd();
-	// 			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-	// 			if (alignment)
-	// 				load_bias &= ~(alignment - 1);
-	// 			elf_flags |= MAP_FIXED_NOREPLACE;
-	// 		} else
-	// 			load_bias = 0;
+		// elf_flags = MAP_PRIVATE;
 
-	// 		/*
-	// 		 * Since load_bias is used for all subsequent loading
-	// 		 * calculations, we must lower it by the first vaddr
-	// 		 * so that the remaining calculations based on the
-	// 		 * ELF vaddrs will be correctly offset. The result
-	// 		 * is then page aligned.
-	// 		 */
-	// 		load_bias = ELF_PAGESTART(load_bias - vaddr);
+		vaddr = elf_ppnt->p_vaddr;
+		// /*
+		//  * The first time through the loop, load_addr_set is false:
+		//  * layout will be calculated. Once set, use MAP_FIXED since
+		//  * we know we've already safely mapped the entire region with
+		//  * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
+		//  */
+		// if (load_addr_set) {
+		// 	elf_flags |= MAP_FIXED;
+		// } else if (elf_ex->e_type == ET_EXEC) {
+		// 	/*
+		// 	 * This logic is run once for the first LOAD Program
+		// 	 * Header for ET_EXEC binaries. No special handling
+		// 	 * is needed.
+		// 	 */
+		// 	elf_flags |= MAP_FIXED_NOREPLACE;
+		// } else if (elf_ex->e_type == ET_DYN) {
+		// 	/*
+		// 	 * This logic is run once for the first LOAD Program
+		// 	 * Header for ET_DYN binaries to calculate the
+		// 	 * randomization (load_bias) for all the LOAD
+		// 	 * Program Headers.
+		// 	 *
+		// 	 * There are effectively two types of ET_DYN
+		// 	 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
+		// 	 * and loaders (ET_DYN without INTERP, since they
+		// 	 * _are_ the ELF interpreter). The loaders must
+		// 	 * be loaded away from programs since the program
+		// 	 * may otherwise collide with the loader (especially
+		// 	 * for ET_EXEC which does not have a randomized
+		// 	 * position). For example to handle invocations of
+		// 	 * "./ld.so someprog" to test out a new version of
+		// 	 * the loader, the subsequent program that the
+		// 	 * loader loads must avoid the loader itself, so
+		// 	 * they cannot share the same load range. Sufficient
+		// 	 * room for the brk must be allocated with the
+		// 	 * loader as well, since brk must be available with
+		// 	 * the loader.
+		// 	 *
+		// 	 * Therefore, programs are loaded offset from
+		// 	 * ELF_ET_DYN_BASE and loaders are loaded into the
+		// 	 * independently randomized mmap region (0 load_bias
+		// 	 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+		// 	 */
+		// 	if (interpreter) {
+		// 		load_bias = ELF_ET_DYN_BASE;
+		// 		if (current->flags & PF_RANDOMIZE)
+		// 			load_bias += arch_mmap_rnd();
+		// 		alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+		// 		if (alignment)
+		// 			load_bias &= ~(alignment - 1);
+		// 		elf_flags |= MAP_FIXED_NOREPLACE;
+		// 	} else
+		// 		load_bias = 0;
 
-	// 		/*
-	// 		 * Calculate the entire size of the ELF mapping
-	// 		 * (total_size), used for the initial mapping,
-	// 		 * due to load_addr_set which is set to true later
-	// 		 * once the initial mapping is performed.
-	// 		 *
-	// 		 * Note that this is only sensible when the LOAD
-	// 		 * segments are contiguous (or overlapping). If
-	// 		 * used for LOADs that are far apart, this would
-	// 		 * cause the holes between LOADs to be mapped,
-	// 		 * running the risk of having the mapping fail,
-	// 		 * as it would be larger than the ELF file itself.
-	// 		 *
-	// 		 * As a result, only ET_DYN does this, since
-	// 		 * some ET_EXEC (e.g. ia64) may have large virtual
-	// 		 * memory holes between LOADs.
-	// 		 *
-	// 		 */
-	// 		total_size = total_mapping_size(elf_phdata,
-	// 						elf_ex->e_phnum);
-	// 		if (!total_size) {
-	// 			retval = -EINVAL;
-	// 			goto out_free_dentry;
-	// 		}
-	// 	}
+		// 	/*
+		// 	 * Since load_bias is used for all subsequent loading
+		// 	 * calculations, we must lower it by the first vaddr
+		// 	 * so that the remaining calculations based on the
+		// 	 * ELF vaddrs will be correctly offset. The result
+		// 	 * is then page aligned.
+		// 	 */
+		// 	load_bias = ELF_PAGESTART(load_bias - vaddr);
 
-	// 	error = elf_map(bprm->file, load_bias + vaddr, elf_ppnt,
-	// 			elf_prot, elf_flags, total_size);
-	// 	if (BAD_ADDR(error)) {
-	// 		retval = IS_ERR((void *)error) ?
-	// 			PTR_ERR((void*)error) : -EINVAL;
-	// 		goto out_free_dentry;
-	// 	}
+			/*
+			 * Calculate the entire size of the ELF mapping
+			 * (total_size), used for the initial mapping,
+			 * due to load_addr_set which is set to true later
+			 * once the initial mapping is performed.
+			 *
+			 * Note that this is only sensible when the LOAD
+			 * segments are contiguous (or overlapping). If
+			 * used for LOADs that are far apart, this would
+			 * cause the holes between LOADs to be mapped,
+			 * running the risk of having the mapping fail,
+			 * as it would be larger than the ELF file itself.
+			 *
+			 * As a result, only ET_DYN does this, since
+			 * some ET_EXEC (e.g. ia64) may have large virtual
+			 * memory holes between LOADs.
+			 *
+			 */
+			total_size = total_mapping_size(elf_phdata,
+							elf_ex->e_phnum);
+			if (!total_size) {
+				retval = -EINVAL;
+				goto out_free_dentry;
+			}
+		// }
+
+		error = elf_map(bprm->file, load_bias + vaddr,
+				elf_ppnt, elf_prot, elf_flags, total_size);
+		if (BAD_ADDR(error)) {
+			retval = IS_ERR((void *)error) ?
+				PTR_ERR((void*)error) : -EINVAL;
+			goto out_free_dentry;
+		}
 
 	// 	if (!load_addr_set) {
 	// 		load_addr_set = 1;
@@ -558,7 +633,7 @@ out_free_interp:
 	// 		bss_prot = elf_prot;
 	// 		elf_brk = k;
 	// 	}
-	// }
+	}
 
 	// e_entry = elf_ex->e_entry + load_bias;
 	// phdr_addr += load_bias;

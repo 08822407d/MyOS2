@@ -413,9 +413,9 @@ int begin_new_exec(linux_bprm_s * bprm)
 	 * not visibile until then. This also enables the update
 	 * to be lockless.
 	 */
-	// retval = set_mm_exe_file(bprm->mm, bprm->file);
-	// if (retval)
-	// 	goto out;
+	retval = set_mm_exe_file(bprm->mm, bprm->file);
+	if (retval)
+		goto out;
 
 	// /* If the binary is not readable then enforce mm->dumpable=0 */
 	// would_dump(bprm, bprm->file);
