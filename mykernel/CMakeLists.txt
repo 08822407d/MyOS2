@@ -21,7 +21,7 @@ add_executable(kernelexec)
 target_sources(kernelexec PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
 target_include_directories(kernelexec PRIVATE
 				${CMAKE_CURRENT_SOURCE_DIR}/include
-				${PROJECT_SOURCE_DIR}/loader
+				${PROJECT_SOURCE_DIR}/myloader
 				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/include)
 
 add_subdirectory(arch)

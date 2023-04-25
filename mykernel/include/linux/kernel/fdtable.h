@@ -118,8 +118,8 @@
 
 	// struct task_struct;
 
-	// void put_files_struct(files_struct_s *fs);
-	// int unshare_files(void);
+	void put_files_struct(files_struct_s *fs);
+	int unshare_files(void);
 	files_struct_s *dup_fd(files_struct_s *, unsigned, int *) __latent_entropy;
 	// void do_close_on_exec(files_struct_s *);
 	// int iterate_fd(files_struct_s *, unsigned,

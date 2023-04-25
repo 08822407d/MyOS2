@@ -1161,8 +1161,8 @@
 		// u64 parent_exec_id;
 		// u64 self_exec_id;
 
-		// /* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
-		// spinlock_t alloc_lock;
+		/* Protection against (de-)allocation: mm, files, fs, tty, keyrings, mems_allowed, mempolicy: */
+		spinlock_t		alloc_lock;
 
 		// /* Protection of the PI data structures: */
 		// raw_spinlock_t pi_lock;

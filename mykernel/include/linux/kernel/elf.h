@@ -46,15 +46,15 @@
 	// #	define Elf_Word Elf32_Word
 	// #	define ELF_GNU_PROPERTY_ALIGN ELF32_GNU_PROPERTY_ALIGN
 	// #else
-	// 	extern Elf64_Dyn _DYNAMIC[];
-	// #	define elfhdr elf64_hdr
-	// #	define elf_phdr elf64_phdr
-	// #	define elf_shdr elf64_shdr
-	// #	define elf_note elf64_note
-	// #	define elf_addr_t Elf64_Off
-	// #	define Elf_Half Elf64_Half
-	// #	define Elf_Word Elf64_Word
-	// #	define ELF_GNU_PROPERTY_ALIGN ELF64_GNU_PROPERTY_ALIGN
+		// extern Elf64_Dyn _DYNAMIC[];
+		typedef Elf64_Ehdr	elfhdr_t;
+		typedef Elf64_Phdr	elf_phdr_t;
+		typedef Elf64_Shdr	elf_shdr_t;
+		typedef Elf64_Nhdr	elf_note_t;
+		typedef Elf64_Off	elf_addr_t;
+		typedef Elf64_Half	Elf_Half_t;
+		typedef Elf64_Word	Elf_Word_t;
+	#	define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
 	// #endif
 
 	// /* Optional callbacks to write extra ELF notes. */

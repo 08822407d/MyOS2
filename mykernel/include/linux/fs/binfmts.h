@@ -122,17 +122,17 @@
 	extern void unregister_binfmt(linux_bfmt_s *);
 
 	// extern int __must_check remove_arg_zero(struct linux_binprm *);
-	// extern int begin_new_exec(struct linux_binprm * bprm);
+	extern int begin_new_exec(linux_bprm_s * bprm);
 	// extern void setup_new_exec(struct linux_binprm * bprm);
 	// extern void finalize_exec(struct linux_binprm *bprm);
 	// extern void would_dump(struct linux_binprm *, struct file *);
 
 	// extern int suid_dumpable;
 
-	// /* Stack area protections */
-	// #define EXSTACK_DEFAULT   0	/* Whatever the arch defaults to */
-	// #define EXSTACK_DISABLE_X 1	/* Disable executable stacks */
-	// #define EXSTACK_ENABLE_X  2	/* Enable executable stacks */
+	/* Stack area protections */
+	#define EXSTACK_DEFAULT		0	/* Whatever the arch defaults to */
+	#define EXSTACK_DISABLE_X	1	/* Disable executable stacks */
+	#define EXSTACK_ENABLE_X	2	/* Enable executable stacks */
 
 	// extern int setup_arg_pages(struct linux_binprm * bprm,
 	// 			unsigned long stack_top,

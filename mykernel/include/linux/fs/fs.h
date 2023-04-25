@@ -2943,7 +2943,7 @@
 	ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos);
 	// extern ssize_t kernel_write(file_s *, const void *, size_t, loff_t *);
 	// extern ssize_t __kernel_write(file_s *, const void *, size_t, loff_t *);
-	// extern file_s * open_exec(const char *);
+	extern file_s * open_exec(const char *);
 	
 	// /* fs/dcache.c -- generic fs support functions */
 	// extern bool is_subdir(dentry_s *, dentry_s *);

@@ -7,7 +7,7 @@
                 "${workspaceFolder}/mykernel/arch",
                 "${workspaceFolder}/mykernel/arch/x86_64/include",
                 "${workspaceFolder}/mykernel/include",
-                "${workspaceFolder}/loader"
+                "${workspaceFolder}/myloader"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

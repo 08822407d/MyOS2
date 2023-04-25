@@ -1506,6 +1506,74 @@ pid_t kernel_thread(int (*fn)(void *), void *arg, unsigned long flags)
 }
 
 
+
+/*
+ * Unshare the filesystem structure if it is being shared
+ */
+static int
+unshare_fs(unsigned long unshare_flags, taskfs_s **new_fsp) {
+	taskfs_s *fs = current->fs;
+
+	if (!(unshare_flags & CLONE_FS) || !fs)
+		return 0;
+
+	/* don't need lock here; in the worst case we'll do useless copy */
+	if (fs->users == 1)
+		return 0;
+
+	*new_fsp = copy_fs_struct(fs);
+	if (!*new_fsp)
+		return -ENOMEM;
+
+	return 0;
+}
+
+/*
+ * Unshare file descriptor table if it is being shared
+ */
+int unshare_fd(unsigned long unshare_flags,
+		unsigned int max_fds, files_struct_s **new_fdp)
+{
+	files_struct_s *fd = current->files;
+	int error = 0;
+
+	if ((unshare_flags & CLONE_FILES) &&
+	    (fd && atomic_read(&fd->refcount) > 1)) {
+		*new_fdp = dup_fd(fd, max_fds, &error);
+		if (!*new_fdp)
+			return error;
+	}
+
+	return 0;
+}
+
+
+/*
+ *	Helper to unshare the files of the current task.
+ *	We don't want to expose copy_files internals to
+ *	the exec layer of the kernel.
+ */
+
+int unshare_files(void)
+{
+	task_s *task = current;
+	files_struct_s *old, *copy = NULL;
+	int error;
+
+	error = unshare_fd(CLONE_FILES, NR_OPEN_MAX, &copy);
+	if (error || !copy)
+		return error;
+
+	old = task->files;
+	task_lock(task);
+	task->files = copy;
+	task_unlock(task);
+	put_files_struct(old);
+	return 0;
+}
+
+
+
 #include <obsolete/arch_proto.h>
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
