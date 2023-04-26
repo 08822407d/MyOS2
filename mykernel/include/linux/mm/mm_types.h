@@ -35,6 +35,8 @@
 	typedef struct mm_struct mm_s;
 	struct vm_area_struct;
 	typedef struct vm_area_struct vma_s;
+	struct vm_operations_struct;
+	typedef struct vm_operations_struct vm_ops_s;
 
 	/*
 	 * Each physical page in the system has a page_s associated with
@@ -497,8 +499,8 @@
 		// 								* page_table_lock */
 		// struct anon_vma *anon_vma;		 /* Serialized by page_table_lock */
 
-		// /* Function pointers to deal with this struct. */
-		// const struct vm_operations_struct *vm_ops;
+		/* Function pointers to deal with this struct. */
+		const vm_ops_s	*vm_ops;
 
 		/* Information about our backing store: */
 		unsigned long	vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */

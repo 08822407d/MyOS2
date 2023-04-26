@@ -128,20 +128,20 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 	 * So we first map the 'big' image - and unmap the remainder at
 	 * the end. (which unmap is needed for ELF images with holes.)
 	 */
-	// if (total_size) {
-	// 	total_size = ELF_PAGEALIGN(total_size);
-	// 	map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
+	if (total_size) {
+		total_size = ELF_PAGEALIGN(total_size);
+		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
 	// 	if (!BAD_ADDR(map_addr))
 	// 		vm_munmap(map_addr+size, total_size-size);
-	// } else
-	// 	map_addr = vm_mmap(filep, addr, size, prot, type, off);
+	} else
+		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 
 	// if ((type & MAP_FIXED_NOREPLACE) &&
 	//     PTR_ERR((void *)map_addr) == -EEXIST)
 	// 	pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
 	// 		task_pid_nr(current), current->comm, (void *)addr);
 
-	// return(map_addr);
+	return(map_addr);
 }
 
 static unsigned long

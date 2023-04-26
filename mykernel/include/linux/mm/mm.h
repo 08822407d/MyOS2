@@ -187,29 +187,29 @@
 	// #define mm_zero_struct_page(pp)  ((void)memset((pp), 0, sizeof(page_s)))
 	// #endif
 
-	// /*
-	// * Default maximum number of active map areas, this limits the number of vmas
-	// * per mm struct. Users can overwrite this number by sysctl but there is a
-	// * problem.
-	// *
-	// * When a program's coredump is generated as ELF format, a section is created
-	// * per a vma. In ELF, the number of sections is represented in unsigned short.
-	// * This means the number of sections should be smaller than 65535 at coredump.
-	// * Because the kernel adds some informative sections to a image of program at
-	// * generating coredump, we need some margin. The number of extra sections is
-	// * 1-3 now and depends on arch. We use "5" as safe margin, here.
-	// *
-	// * ELF extended numbering allows more than 65535 sections, so 16-bit bound is
-	// * not a hard limit any more. Although some userspace tools can be surprised by
-	// * that.
-	// */
-	// #define MAPCOUNT_ELF_CORE_MARGIN	(5)
-	// #define DEFAULT_MAX_MAP_COUNT	(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
+	/*
+	* Default maximum number of active map areas, this limits the number of vmas
+	* per mm struct. Users can overwrite this number by sysctl but there is a
+	* problem.
+	*
+	* When a program's coredump is generated as ELF format, a section is created
+	* per a vma. In ELF, the number of sections is represented in unsigned short.
+	* This means the number of sections should be smaller than 65535 at coredump.
+	* Because the kernel adds some informative sections to a image of program at
+	* generating coredump, we need some margin. The number of extra sections is
+	* 1-3 now and depends on arch. We use "5" as safe margin, here.
+	*
+	* ELF extended numbering allows more than 65535 sections, so 16-bit bound is
+	* not a hard limit any more. Although some userspace tools can be surprised by
+	* that.
+	*/
+	#define MAPCOUNT_ELF_CORE_MARGIN	(5)
+	#define DEFAULT_MAX_MAP_COUNT		(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
 
-	// extern int sysctl_max_map_count;
+	extern int sysctl_max_map_count;
 
-	// extern unsigned long sysctl_user_reserve_kbytes;
-	// extern unsigned long sysctl_admin_reserve_kbytes;
+	extern unsigned long sysctl_user_reserve_kbytes;
+	extern unsigned long sysctl_admin_reserve_kbytes;
 
 	// extern int sysctl_overcommit_memory;
 	// extern int sysctl_overcommit_ratio;
@@ -239,18 +239,18 @@
 	void setup_initial_init_mm(void *start_code,
 			void *end_code, void *end_data, void *brk);
 
-	// /*
-	// * Linux kernel virtual memory manager primitives.
-	// * The idea being to have a "virtual" mm in the same way
-	// * we have a virtual fs - giving a cleaner interface to the
-	// * mm details, and allowing different kinds of memory mappings
-	// * (from shared memory to executable loading to arbitrary
-	// * mmap() functions).
-	// */
+	/*
+	 * Linux kernel virtual memory manager primitives.
+	 * The idea being to have a "virtual" mm in the same way
+	 * we have a virtual fs - giving a cleaner interface to the
+	 * mm details, and allowing different kinds of memory mappings
+	 * (from shared memory to executable loading to arbitrary
+	 * mmap() functions).
+	 */
 
-	// vma_s *vm_area_alloc(struct mm_struct *);
-	// vma_s *vm_area_dup(vma_s *);
-	// void vm_area_free(vma_s *);
+	vma_s *vm_area_alloc(mm_s *);
+	vma_s *vm_area_dup(vma_s *);
+	void vm_area_free(vma_s *);
 
 	// #ifndef CONFIG_MMU
 	// extern struct rb_root nommu_region_tree;
@@ -539,85 +539,83 @@
 	// 	PE_SIZE_PUD,
 	// };
 
-	// /*
-	// * These are the virtual MM functions - opening of an area, closing and
-	// * unmapping it (needed to keep files on disk up-to-date etc), pointer
-	// * to the functions called when a no-page or a wp-page exception occurs.
-	// */
-	// struct vm_operations_struct {
-	// 	void (*open)(vma_s * area);
-	// 	/**
-	// 	 * @close: Called when the VMA is being removed from the MM.
-	// 	 * Context: User context.  May sleep.  Caller holds mmap_lock.
-	// 	 */
-	// 	void (*close)(vma_s * area);
-	// 	/* Called any time before splitting to check if it's allowed */
-	// 	int (*may_split)(vma_s *area, unsigned long addr);
-	// 	int (*mremap)(vma_s *area);
-	// 	/*
-	// 	* Called by mprotect() to make driver-specific permission
-	// 	* checks before mprotect() is finalised.   The VMA must not
-	// 	* be modified.  Returns 0 if eprotect() can proceed.
-	// 	*/
-	// 	int (*mprotect)(vma_s *vma, unsigned long start,
-	// 			unsigned long end, unsigned long newflags);
-	// 	vm_fault_t (*fault)(struct vm_fault *vmf);
-	// 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
-	// 			enum page_entry_size pe_size);
-	// 	vm_fault_t (*map_pages)(struct vm_fault *vmf,
-	// 			pgoff_t start_pgoff, pgoff_t end_pgoff);
-	// 	unsigned long (*pagesize)(vma_s * area);
+	/*
+	 * These are the virtual MM functions - opening of an area, closing and
+	 * unmapping it (needed to keep files on disk up-to-date etc), pointer
+	 * to the functions called when a no-page or a wp-page exception occurs.
+	 */
+	typedef struct vm_operations_struct {
+		void	(*open)(vma_s * area);
+		/**
+		 * @close: Called when the VMA is being removed from the MM.
+		 * Context: User context.  May sleep.  Caller holds mmap_lock.
+		 */
+		void	(*close)(vma_s * area);
+		/* Called any time before splitting to check if it's allowed */
+		int		(*may_split)(vma_s *area, unsigned long addr);
+		int		(*mremap)(vma_s *area);
+		// /*
+		//  * Called by mprotect() to make driver-specific permission
+		//  * checks before mprotect() is finalised.   The VMA must not
+		//  * be modified.  Returns 0 if eprotect() can proceed.
+		//  */
+		// int (*mprotect)(vma_s *vma, unsigned long start,
+		// 		unsigned long end, unsigned long newflags);
+		// vm_fault_t (*fault)(struct vm_fault *vmf);
+		// vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+		// 		enum page_entry_size pe_size);
+		// vm_fault_t (*map_pages)(struct vm_fault *vmf,
+		// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
+		// unsigned long (*pagesize)(vma_s * area);
 
-	// 	/* notification that a previously read-only page is about to become
-	// 	* writable, if an error is returned it will cause a SIGBUS */
-	// 	vm_fault_t (*page_mkwrite)(struct vm_fault *vmf);
+		// /* notification that a previously read-only page is about to become
+		//  * writable, if an error is returned it will cause a SIGBUS */
+		// vm_fault_t (*page_mkwrite)(struct vm_fault *vmf);
 
-	// 	/* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
-	// 	vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
+		// /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
+		// vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
 
-	// 	/* called by access_process_vm when get_user_pages() fails, typically
-	// 	* for use by special VMAs. See also generic_access_phys() for a generic
-	// 	* implementation useful for any iomem mapping.
-	// 	*/
-	// 	int (*access)(vma_s *vma, unsigned long addr,
-	// 			void *buf, int len, int write);
+		// /* called by access_process_vm when get_user_pages() fails, typically
+		//  * for use by special VMAs. See also generic_access_phys() for a generic
+		//  * implementation useful for any iomem mapping.
+		//  */
+		// int (*access)(vma_s *vma, unsigned long addr,
+		// 		void *buf, int len, int write);
 
-	// 	/* Called by the /proc/PID/maps code to ask the vma whether it
-	// 	* has a special name.  Returning non-NULL will also cause this
-	// 	* vma to be dumped unconditionally. */
-	// 	const char *(*name)(vma_s *vma);
+		// /* Called by the /proc/PID/maps code to ask the vma whether it
+		//  * has a special name.  Returning non-NULL will also cause this
+		//  * vma to be dumped unconditionally. */
+		// const char *(*name)(vma_s *vma);
 
 	// #ifdef CONFIG_NUMA
-	// 	/*
-	// 	* set_policy() op must add a reference to any non-NULL @new mempolicy
-	// 	* to hold the policy upon return.  Caller should pass NULL @new to
-	// 	* remove a policy and fall back to surrounding context--i.e. do not
-	// 	* install a MPOL_DEFAULT policy, nor the task or system default
-	// 	* mempolicy.
-	// 	*/
-	// 	int (*set_policy)(vma_s *vma, struct mempolicy *new);
+		// /*
+		//  * set_policy() op must add a reference to any non-NULL @new mempolicy
+		//  * to hold the policy upon return.  Caller should pass NULL @new to
+		//  * remove a policy and fall back to surrounding context--i.e. do not
+		//  * install a MPOL_DEFAULT policy, nor the task or system default
+		//  * mempolicy.
+		//  */
+		// int (*set_policy)(vma_s *vma, struct mempolicy *new);
 
-	// 	/*
-	// 	* get_policy() op must add reference [mpol_get()] to any policy at
-	// 	* (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
-	// 	* in mm/mempolicy.c will do this automatically.
-	// 	* get_policy() must NOT add a ref if the policy at (vma,addr) is not
-	// 	* marked as MPOL_SHARED. vma policies are protected by the mmap_lock.
-	// 	* If no [shared/vma] mempolicy exists at the addr, get_policy() op
-	// 	* must return NULL--i.e., do not "fallback" to task or system default
-	// 	* policy.
-	// 	*/
-	// 	struct mempolicy *(*get_policy)(vma_s *vma,
-	// 					unsigned long addr);
+		// /*
+		//  * get_policy() op must add reference [mpol_get()] to any policy at
+		//  * (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
+		//  * in mm/mempolicy.c will do this automatically.
+		//  * get_policy() must NOT add a ref if the policy at (vma,addr) is not
+		//  * marked as MPOL_SHARED. vma policies are protected by the mmap_lock.
+		//  * If no [shared/vma] mempolicy exists at the addr, get_policy() op
+		//  * must return NULL--i.e., do not "fallback" to task or system default
+		//  * policy.
+		//  */
+		// struct mempolicy *(*get_policy)(vma_s *vma, unsigned long addr);
 	// #endif
-	// 	/*
-	// 	* Called by vm_normal_page() for special PTEs to find the
-	// 	* page for @addr.  This is useful if the default behavior
-	// 	* (using pte_page()) would not find the correct page.
-	// 	*/
-	// 	page_s *(*find_special_page)(vma_s *vma,
-	// 					unsigned long addr);
-	// };
+		// /*
+		//  * Called by vm_normal_page() for special PTEs to find the
+		//  * page for @addr.  This is useful if the default behavior
+		//  * (using pte_page()) would not find the correct page.
+		//  */
+		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
+	} vm_ops_s;
 
 	// static inline void vma_init(vma_s *vma, struct mm_struct *mm)
 	// {
@@ -1812,7 +1810,7 @@
 	// */
 	// extern void pagefault_out_of_memory(void);
 
-	// #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
+	#define offset_in_page(p)		((unsigned long)(p) & ~PAGE_MASK)
 	// #define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
 	// #define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
 
@@ -2631,8 +2629,11 @@
 	// /* mmap.c */
 	// extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
 	// extern int __vma_adjust(vma_s *vma, unsigned long start,
-	// 	unsigned long end, pgoff_t pgoff, vma_s *insert,
-	// 	vma_s *expand);
+	// 		unsigned long end, pgoff_t pgoff, vma_s *insert,
+	// 		vma_s *expand);
+	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,
+			unsigned long end, pgoff_t pgoff, vma_s *insert,
+			vma_s *expand);
 	// static inline int vma_adjust(vma_s *vma, unsigned long start,
 	// 	unsigned long end, pgoff_t pgoff, vma_s *insert)
 	// {
@@ -2696,11 +2697,16 @@
 
 	// extern unsigned long get_unmapped_area(file_s *, unsigned long, unsigned long, unsigned long, unsigned long);
 
-	extern unsigned long mmap_region(file_s *file, unsigned long addr, unsigned long len,
-			vm_flags_t vm_flags, unsigned long pgoff, List_s *uf);
+	// extern unsigned long mmap_region(file_s *file, unsigned long addr, unsigned long len,
+	// 		vm_flags_t vm_flags, unsigned long pgoff, List_s *uf);
+	extern unsigned long myos_mmap_region(file_s *file, unsigned long addr,
+			unsigned long len, vm_flags_t vm_flags, unsigned long pgoff);
 	// extern unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 	unsigned long len, unsigned long prot, unsigned long flags,
 	// 	unsigned long pgoff, unsigned long *populate, List_s *uf);
+	extern unsigned long do_mmap(file_s *file, unsigned long addr,
+			unsigned long len, unsigned long prot, unsigned long flags,
+			unsigned long pgoff, unsigned long *populate);
 	// extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
 	// 			List_s *uf, bool downgrade);
 	extern int __do_munmap(mm_s *, unsigned long, size_t, bool downgrade);
@@ -2724,9 +2730,9 @@
 	// extern int __must_check vm_brk(unsigned long, unsigned long);
 	// extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
 	// extern int vm_munmap(unsigned long, size_t);
-	// extern unsigned long __must_check vm_mmap(file_s *, unsigned long,
-	// 		unsigned long, unsigned long,
-	// 		unsigned long, unsigned long);
+	extern unsigned long __must_check vm_mmap(file_s *,
+			unsigned long, unsigned long, unsigned long,
+			unsigned long, unsigned long);
 
 	// struct vm_unmapped_area_info {
 	// #define VM_UNMAPPED_AREA_TOPDOWN 1
