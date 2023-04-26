@@ -10,7 +10,8 @@
 	#include <linux/kernel/sched.h>
 	// #include <linux/uaccess.h>
 
-	// task_s;
+	// struct task_struct;
+	// typedef struct task_struct task_s;
 	// struct rusage;
 	// union thread_union;
 	// struct css_set;
@@ -156,23 +157,5 @@
 	// 	return NULL;
 	// }
 	// #endif
-
-	/*
-	 * Protects ->fs, ->files, ->mm, ->group_info, ->comm, keyring
-	 * subscriptions and synchronises with wait4().  Also used in procfs.  Also
-	 * pins the final release of task.io_context.  Also protects ->cpuset and
-	 * ->cgroup.subsys[]. And ->vfork_done. And ->sysvshm.shm_clist.
-	 *
-	 * Nests both inside and outside of read_lock(&tasklist_lock).
-	 * It must not be nested with write_lock_irq(&tasklist_lock),
-	 * neither inside nor outside.
-	 */
-	static inline void task_lock(task_s *p) {
-		spin_lock(&p->alloc_lock);
-	}
-
-	static inline void task_unlock(task_s *p) {
-		spin_unlock(&p->alloc_lock);
-	}
 
 #endif /* _LINUX_SCHED_TASK_H */

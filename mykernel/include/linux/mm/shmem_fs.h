@@ -66,7 +66,7 @@
 	// 						unsigned long flags);
 	// extern file_s *shmem_file_setup_with_mnt(struct vfsmount *mnt,
 	// 		const char *name, loff_t size, unsigned long flags);
-	// extern int shmem_zero_setup(struct vm_area_struct *);
+	// extern int shmem_zero_setup(vma_s *);
 	// extern unsigned long shmem_get_unmapped_area(file_s *, unsigned long addr,
 	// 		unsigned long len, unsigned long pgoff, unsigned long flags);
 	// extern int shmem_lock(file_s *file, int lock, struct ucounts *ucounts);
@@ -88,13 +88,13 @@
 	// extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
 	// int shmem_unuse(unsigned int type);
 
-	// extern bool shmem_is_huge(struct vm_area_struct *vma,
+	// extern bool shmem_is_huge(vma_s *vma,
 	// 			struct inode *inode, pgoff_t index);
-	// static inline bool shmem_huge_enabled(struct vm_area_struct *vma)
+	// static inline bool shmem_huge_enabled(vma_s *vma)
 	// {
 	// 	return shmem_is_huge(vma, file_inode(vma->vm_file), vma->vm_pgoff);
 	// }
-	// extern unsigned long shmem_swap_usage(struct vm_area_struct *vma);
+	// extern unsigned long shmem_swap_usage(vma_s *vma);
 	// extern unsigned long shmem_partial_swap_usage(struct address_space *mapping,
 	// 						pgoff_t start, pgoff_t end);
 
@@ -144,7 +144,7 @@
 	// #ifdef CONFIG_USERFAULTFD
 	// #ifdef CONFIG_SHMEM
 	// extern int shmem_mfill_atomic_pte(struct mm_struct *dst_mm, pmd_t *dst_pmd,
-	// 				struct vm_area_struct *dst_vma,
+	// 				vma_s *dst_vma,
 	// 				unsigned long dst_addr,
 	// 				unsigned long src_addr,
 	// 				bool zeropage,

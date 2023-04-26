@@ -384,7 +384,7 @@
 	// 	bool pfmemalloc;
 	// };
 
-	// typedef unsigned long vm_flags_t;
+	typedef unsigned long	vm_flags_t;
 
 	// /*
 	// * A region containing a mapping of a non-memory backed file under NOMMU
@@ -456,14 +456,14 @@
 
 		/* Second cache line starts here. */
 
-		mm_s			*vm_mm; /* The address space we belong to. */
+		mm_s			*vm_mm;		/* The address space we belong to. */
 
 		/*
 		* Access permissions of this VMA.
 		* See vmf_insert_mixed_prot() for discussion.
 		*/
 		// pgprot_t vm_page_prot;
-		unsigned long	vm_flags; /* Flags, see mm.h. */
+		unsigned long	vm_flags;	/* Flags, see mm.h. */
 
 		/*
 		 * For areas with an address space and backing store,
@@ -501,7 +501,7 @@
 		// const struct vm_operations_struct *vm_ops;
 
 		/* Information about our backing store: */
-		unsigned long	vm_pgoff; /* Offset (within vm_file) in PAGE_SIZE units */
+		unsigned long	vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */
 		file_s			*vm_file;	/* File we map to (can be NULL). */
 		// void *vm_private_data;	/* was vm_pte (shared mem) */
 
@@ -601,13 +601,13 @@
 			// unsigned long hiwater_rss; /* High-watermark of RSS usage */
 			// unsigned long hiwater_vm;  /* High-water virtual memory usage */
 
-			// unsigned long total_vm;	 /* Total pages mapped */
-			// unsigned long locked_vm; /* Pages that have PG_mlocked set */
-			// atomic64_t pinned_vm;	 /* Refcount permanently increased */
-			// unsigned long data_vm;	 /* VM_WRITE & ~VM_SHARED & ~VM_STACK */
-			// unsigned long exec_vm;	 /* VM_EXEC & ~VM_WRITE & ~VM_STACK */
-			// unsigned long stack_vm;	 /* VM_STACK */
-			// unsigned long def_flags;
+			unsigned long	total_vm;			/* Total pages mapped */
+			unsigned long	locked_vm;			/* Pages that have PG_mlocked set */
+			atomic64_t		pinned_vm;			/* Refcount permanently increased */
+			unsigned long	data_vm;			/* VM_WRITE & ~VM_SHARED & ~VM_STACK */
+			unsigned long	exec_vm;			/* VM_EXEC & ~VM_WRITE & ~VM_STACK */
+			unsigned long	stack_vm;			/* VM_STACK */
+			unsigned long	def_flags;
 
 			// /**
 			//  * @write_protect_seq: Locked when any thread is write
@@ -635,7 +635,7 @@
 			// /* Architecture-specific MM context */
 			// mm_context_t context;
 
-			unsigned long	flags; /* Must use atomic bitops to access */
+			unsigned long	flags;				/* Must use atomic bitops to access */
 
 	// #ifdef CONFIG_AIO
 	// 		spinlock_t ioctx_lock;
@@ -825,11 +825,11 @@
 	// 	* on the special mapping.  If used, .pages is not checked.
 	// 	*/
 	// 	vm_fault_t (*fault)(const struct vm_special_mapping *sm,
-	// 						struct vm_area_struct *vma,
+	// 						vma_s *vma,
 	// 						struct vm_fault *vmf);
 
 	// 	int (*mremap)(const struct vm_special_mapping *sm,
-	// 				struct vm_area_struct *new_vma);
+	// 				vma_s *new_vma);
 	// };
 
 	// enum tlb_flush_reason

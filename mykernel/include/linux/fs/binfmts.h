@@ -16,7 +16,7 @@
 	 */
 	typedef struct linux_binprm {
 	// #ifdef CONFIG_MMU
-	// 	struct vm_area_struct *vma;
+	// 	vma_s *vma;
 	// 	unsigned long vma_pages;
 	// #else
 	// # define MAX_ARG_PAGES	32

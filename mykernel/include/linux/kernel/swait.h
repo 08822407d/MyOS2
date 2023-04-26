@@ -48,9 +48,10 @@
 		List_s	task_list;
 	} swqueue_s;
 
-	#define __SWAITQUEUE_INITIALIZER(name) {				\
-				.task		= current,						\
-				.task_list	= LIST_INIT((name).task_list),	\
+	#define __SWAITQUEUE_INITIALIZER(name) {						\
+				.task				= current,						\
+				.task_list			= LIST_INIT((name).task_list),	\
+				.task_list.owner_p	= &name,						\
 			}
 
 	#define DECLARE_SWAITQUEUE(name)	\

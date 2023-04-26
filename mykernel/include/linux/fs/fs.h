@@ -1911,7 +1911,7 @@
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
 		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
 		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
-		// int			(*mmap) (file_s *, struct vm_area_struct *);
+		// int			(*mmap) (file_s *, vma_s *);
 		// unsigned long	mmap_supported_flags;
 		int			(*open) (inode_s *, file_s *);
 		// int			(*flush) (file_s *, fl_owner_t id);
@@ -1984,7 +1984,7 @@
 	// 	return file->f_op->write_iter(kio, iter);
 	// }
 
-	// static inline int call_mmap(file_s *file, struct vm_area_struct *vma)
+	// static inline int call_mmap(file_s *file, vma_s *vma)
 	// {
 	// 	return file->f_op->mmap(file, vma);
 	// }
@@ -3049,8 +3049,8 @@
 	// extern int sb_set_blocksize(super_block_s *, int);
 	// extern int sb_min_blocksize(super_block_s *, int);
 
-	// extern int generic_file_mmap(file_s *, struct vm_area_struct *);
-	// extern int generic_file_readonly_mmap(file_s *, struct vm_area_struct *);
+	// extern int generic_file_mmap(file_s *, vma_s *);
+	// extern int generic_file_readonly_mmap(file_s *, vma_s *);
 	// extern ssize_t generic_write_checks(struct kiocb *, struct iov_iter *);
 	// extern int generic_write_check_limits(file_s *file, loff_t pos,
 	// 		loff_t *count);
@@ -3304,12 +3304,12 @@
 
 	// extern int file_update_time(file_s *file);
 
-	// static inline bool vma_is_dax(const struct vm_area_struct *vma)
+	// static inline bool vma_is_dax(const vma_s *vma)
 	// {
 	// 	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
 	// }
 
-	// static inline bool vma_is_fsdax(struct vm_area_struct *vma)
+	// static inline bool vma_is_fsdax(vma_s *vma)
 	// {
 	// 	inode_s *inode;
 

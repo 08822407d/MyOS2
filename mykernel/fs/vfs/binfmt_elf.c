@@ -17,7 +17,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/mman.h>
 #include <linux/lib/errno.h>
-// #include <linux/signal.h>
+#include <linux/kernel/signal.h>
 #include <linux/fs/binfmts.h>
 #include <linux/lib/string.h>
 #include <linux/fs/file.h>

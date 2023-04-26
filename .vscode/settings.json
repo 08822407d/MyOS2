@@ -224,7 +224,10 @@
 		"swait.h": "c",
 		"binfmts.h": "c",
 		"workqueue.h": "c",
-		"elf.h": "c"
+		"elf.h": "c",
+		"resource.h": "c",
+		"signal.h": "c",
+		"irqflags.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

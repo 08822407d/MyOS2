@@ -22,7 +22,7 @@
 		typedef unsigned int __bitwise gfp_t;
 	#endif
 
-	// struct vm_area_struct;
+	// vma_s;
 
 	/*
 	* In case of changes, please don't forget to update
@@ -601,7 +601,7 @@
 		page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	// 	struct folio *folio_alloc(gfp_t gfp, unsigned order);
 	// 	extern page_s *alloc_pages_vma(gfp_t gfp_mask, int order,
-	// 				struct vm_area_struct *vma, unsigned long addr,
+	// 				vma_s *vma, unsigned long addr,
 	// 				bool hugepage);
 	// 	#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
 	// 		alloc_pages_vma(gfp_mask, order, vma, addr, true)
@@ -678,7 +678,7 @@
 	// extern void pm_restrict_gfp_mask(void);
 	// extern void pm_restore_gfp_mask(void);
 
-	// extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
+	// extern gfp_t vma_thp_gfp_mask(vma_s *vma);
 
 	// #ifdef CONFIG_PM_SLEEP
 	// 	extern bool pm_suspended_storage(void);

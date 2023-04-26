@@ -22,7 +22,7 @@
 	// #include <linux/nodemask.h>
 	// #include <linux/rcupdate.h>
 	// #include <linux/refcount.h>
-	// #include <linux/resource.h>
+	#include <linux/kernel/resource.h>
 	// #include <linux/latencytop.h>
 	// #include <linux/sched/prio.h>
 	// #include <linux/sched/types.h>
@@ -72,7 +72,8 @@
 	// struct sched_param;
 	// struct seq_file;
 	// struct sighand_struct;
-	// struct signal_struct;
+	struct signal_struct;
+	typedef struct signal_struct signal_s;
 	// struct task_delay_info;
 	// struct task_group;
 
@@ -1133,8 +1134,8 @@
 		// /* Namespaces: */
 		// struct nsproxy *nsproxy;
 
-		// /* Signal handlers: */
-		// struct signal_struct *signal;
+		/* Signal handlers: */
+		signal_s	*signal;
 		// struct sighand_struct __rcu *sighand;
 		// sigset_t blocked;
 		// sigset_t real_blocked;
@@ -2371,6 +2372,23 @@
 	// #endif
 	
 
+	/*
+	 * Protects ->fs, ->files, ->mm, ->group_info, ->comm, keyring
+	 * subscriptions and synchronises with wait4().  Also used in procfs.  Also
+	 * pins the final release of task.io_context.  Also protects ->cpuset and
+	 * ->cgroup.subsys[]. And ->vfork_done. And ->sysvshm.shm_clist.
+	 *
+	 * Nests both inside and outside of read_lock(&tasklist_lock).
+	 * It must not be nested with write_lock_irq(&tasklist_lock),
+	 * neither inside nor outside.
+	 */
+	static inline void task_lock(task_s *p) {
+		spin_lock(&p->alloc_lock);
+	}
+
+	static inline void task_unlock(task_s *p) {
+		spin_unlock(&p->alloc_lock);
+	}
 
 #include <obsolete/archconst.h>
 // myos obsolete defines

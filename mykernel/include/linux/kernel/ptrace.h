@@ -4,7 +4,7 @@
 
 	#include <linux/kernel/compiler.h>		/* For unlikely.  */
 	#include <linux/kernel/sched.h>		/* For task_s.  */
-	// #include <linux/sched/signal.h>		/* For send_sig(), same_thread_group(), etc. */
+	#include <linux/sched/signal.h>		/* For send_sig(), same_thread_group(), etc. */
 	#include <linux/kernel/err.h>			/* for IS_ERR_VALUE */
 	// #include <linux/bug.h>			/* For BUG_ON.  */
 	// #include <linux/pid_namespace.h>	/* For task_active_pid_ns.  */

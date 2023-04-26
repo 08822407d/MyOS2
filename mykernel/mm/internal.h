@@ -71,18 +71,18 @@
 	// void folio_rotate_reclaimable(struct folio *folio);
 	// bool __folio_end_writeback(struct folio *folio);
 
-	// void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+	// void free_pgtables(struct mmu_gather *tlb, vma_s *start_vma,
 	// 		unsigned long floor, unsigned long ceiling);
 	// void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte);
 
-	// static inline bool can_madv_lru_vma(struct vm_area_struct *vma)
+	// static inline bool can_madv_lru_vma(vma_s *vma)
 	// {
 	// 	return !(vma->vm_flags & (VM_LOCKED|VM_HUGETLB|VM_PFNMAP));
 	// }
 
 	// struct zap_details;
 	// void unmap_page_range(struct mmu_gather *tlb,
-	// 				struct vm_area_struct *vma,
+	// 				vma_s *vma,
 	// 				unsigned long addr, unsigned long end,
 	// 				struct zap_details *details);
 
@@ -359,52 +359,49 @@
 	// */
 	// #define buddy_order_unsafe(page)	READ_ONCE(page_private(page))
 
-	// /*
-	// * These three helpers classifies VMAs for virtual memory accounting.
-	// */
+	/*
+	 * These three helpers classifies VMAs for virtual memory accounting.
+	 */
 
-	// /*
-	// * Executable code area - executable, not writable, not stack
-	// */
-	// static inline bool is_exec_mapping(vm_flags_t flags)
-	// {
-	// 	return (flags & (VM_EXEC | VM_WRITE | VM_STACK)) == VM_EXEC;
-	// }
+	/*
+	 * Executable code area - executable, not writable, not stack
+	 */
+	static inline bool is_exec_mapping(vm_flags_t flags) {
+		return (flags & (VM_EXEC | VM_WRITE | VM_STACK)) == VM_EXEC;
+	}
 
-	// /*
-	// * Stack area - automatically grows in one direction
-	// *
-	// * VM_GROWSUP / VM_GROWSDOWN VMAs are always private anonymous:
-	// * do_mmap() forbids all other combinations.
-	// */
-	// static inline bool is_stack_mapping(vm_flags_t flags)
-	// {
-	// 	return (flags & VM_STACK) == VM_STACK;
-	// }
+	/*
+	 * Stack area - automatically grows in one direction
+	 *
+	 * VM_GROWSUP / VM_GROWSDOWN VMAs are always private anonymous:
+	 * do_mmap() forbids all other combinations.
+	 */
+	static inline bool is_stack_mapping(vm_flags_t flags) {
+		return (flags & VM_STACK) == VM_STACK;
+	}
 
-	// /*
-	// * Data area - private, writable, not stack
-	// */
-	// static inline bool is_data_mapping(vm_flags_t flags)
-	// {
-	// 	return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
-	// }
+	/*
+	 * Data area - private, writable, not stack
+	 */
+	static inline bool is_data_mapping(vm_flags_t flags) {
+		return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
+	}
 
 	// /* mm/util.c */
-	// void __vma_link_list(struct mm_struct *mm, struct vm_area_struct *vma,
-	// 		struct vm_area_struct *prev);
-	// void __vma_unlink_list(struct mm_struct *mm, struct vm_area_struct *vma);
+	// void __vma_link_list(struct mm_struct *mm, vma_s *vma,
+	// 		vma_s *prev);
+	// void __vma_unlink_list(struct mm_struct *mm, vma_s *vma);
 
 	// #ifdef CONFIG_MMU
 	// void unmap_mapping_folio(struct folio *folio);
-	// extern long populate_vma_page_range(struct vm_area_struct *vma,
+	// extern long populate_vma_page_range(vma_s *vma,
 	// 		unsigned long start, unsigned long end, int *locked);
-	// extern long faultin_vma_page_range(struct vm_area_struct *vma,
+	// extern long faultin_vma_page_range(vma_s *vma,
 	// 				unsigned long start, unsigned long end,
 	// 				bool write, int *locked);
-	// extern void munlock_vma_pages_range(struct vm_area_struct *vma,
+	// extern void munlock_vma_pages_range(vma_s *vma,
 	// 			unsigned long start, unsigned long end);
-	// static inline void munlock_vma_pages_all(struct vm_area_struct *vma)
+	// static inline void munlock_vma_pages_all(vma_s *vma)
 	// {
 	// 	munlock_vma_pages_range(vma, vma->vm_start, vma->vm_end);
 	// }
@@ -429,7 +426,7 @@
 	// */
 	// extern void clear_page_mlock(struct page *page);
 
-	// extern pmd_t maybe_pmd_mkwrite(pmd_t pmd, struct vm_area_struct *vma);
+	// extern pmd_t maybe_pmd_mkwrite(pmd_t pmd, vma_s *vma);
 
 	// /*
 	// * At what user virtual address is page expected in vma?
@@ -437,7 +434,7 @@
 	// * If page is a compound head, the entire compound page is considered.
 	// */
 	// static inline unsigned long
-	// vma_address(struct page *page, struct vm_area_struct *vma)
+	// vma_address(struct page *page, vma_s *vma)
 	// {
 	// 	pgoff_t pgoff;
 	// 	unsigned long address;
@@ -466,7 +463,7 @@
 	// * If page is a compound head, the entire compound page is considered.
 	// */
 	// static inline unsigned long
-	// vma_address_end(struct page *page, struct vm_area_struct *vma)
+	// vma_address_end(struct page *page, vma_s *vma)
 	// {
 	// 	pgoff_t pgoff;
 	// 	unsigned long address;
@@ -719,7 +716,7 @@
 
 	// void vunmap_range_noflush(unsigned long start, unsigned long end);
 
-	// int numa_migrate_prep(struct page *page, struct vm_area_struct *vma,
+	// int numa_migrate_prep(struct page *page, vma_s *vma,
 	// 			unsigned long addr, int page_nid, int *flags);
 
 #endif	/* __MM_INTERNAL_H */
