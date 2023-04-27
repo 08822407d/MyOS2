@@ -38,8 +38,8 @@
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
 	// struct mempolicy;
-	// struct anon_vma;
-	// struct anon_vma_chain;
+	// anon_vma_s;
+	// anon_vma_chain_s;
 	// struct user_struct;
 	// struct pt_regs;
 	// typedef struct pt_regs pt_regs_s;
@@ -617,7 +617,7 @@
 		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
 	} vm_ops_s;
 
-	// static inline void vma_init(vma_s *vma, struct mm_struct *mm)
+	// static inline void vma_init(vma_s *vma, mm_s *mm)
 	// {
 	// 	static const struct vm_operations_struct dummy_vm_ops = {};
 
@@ -1759,7 +1759,7 @@
 	// }
 
 	// extern void *page_rmapping(page_s *page);
-	// extern struct anon_vma *page_anon_vma(page_s *page);
+	// extern anon_vma_s *page_anon_vma(page_s *page);
 	// extern pgoff_t __page_file_index(page_s *page);
 
 	// /*
@@ -1848,10 +1848,10 @@
 	// 		unsigned long end, unsigned long floor, unsigned long ceiling);
 	// int
 	// copy_page_range(vma_s *dst_vma, vma_s *src_vma);
-	// int follow_invalidate_pte(struct mm_struct *mm, unsigned long address,
+	// int follow_invalidate_pte(mm_s *mm, unsigned long address,
 	// 			struct mmu_notifier_range *range, pte_t **ptepp,
 	// 			pmd_t **pmdpp, spinlock_t **ptlp);
-	// int follow_pte(struct mm_struct *mm, unsigned long address,
+	// int follow_pte(mm_s *mm, unsigned long address,
 	// 		pte_t **ptepp, spinlock_t **ptlp);
 	// int follow_pfn(vma_s *vma, unsigned long address,
 	// 	unsigned long *pfn);
@@ -1871,7 +1871,7 @@
 	// extern vm_fault_t handle_mm_fault(vma_s *vma,
 	// 				unsigned long address, unsigned int flags,
 	// 				pt_regs_s *regs);
-	// extern int fixup_user_fault(struct mm_struct *mm,
+	// extern int fixup_user_fault(mm_s *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);
 	// void unmap_mapping_pages(struct address_space *mapping,
@@ -1887,7 +1887,7 @@
 	// 	BUG();
 	// 	return VM_FAULT_SIGBUS;
 	// }
-	// static inline int fixup_user_fault(struct mm_struct *mm, unsigned long address,
+	// static inline int fixup_user_fault(mm_s *mm, unsigned long address,
 	// 		unsigned int fault_flags, bool *unlocked)
 	// {
 	// 	/* should never happen if there's no MMU */
@@ -1908,16 +1908,16 @@
 
 	// extern int access_process_vm(task_s *tsk, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
-	// extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
+	// extern int access_remote_vm(mm_s *mm, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
-	// extern int __access_remote_vm(struct mm_struct *mm, unsigned long addr,
+	// extern int __access_remote_vm(mm_s *mm, unsigned long addr,
 	// 				void *buf, int len, unsigned int gup_flags);
 
-	// long get_user_pages_remote(struct mm_struct *mm,
+	// long get_user_pages_remote(mm_s *mm,
 	// 				unsigned long start, unsigned long nr_pages,
 	// 				unsigned int gup_flags, page_s **pages,
 	// 				vma_s **vmas, int *locked);
-	// long pin_user_pages_remote(struct mm_struct *mm,
+	// long pin_user_pages_remote(mm_s *mm,
 	// 			unsigned long start, unsigned long nr_pages,
 	// 			unsigned int gup_flags, page_s **pages,
 	// 			vma_s **vmas, int *locked);
@@ -1941,8 +1941,8 @@
 	// int pin_user_pages_fast(unsigned long start, int nr_pages,
 	// 			unsigned int gup_flags, page_s **pages);
 
-	// int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
-	// int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+	// int account_locked_vm(mm_s *mm, unsigned long pages, bool inc);
+	// int __account_locked_vm(mm_s *mm, unsigned long pages, bool inc,
 	// 			task_s *task, bool bypass_rlim);
 
 	// struct kvec;
@@ -2003,7 +2003,7 @@
 	// /*
 	// * per-process(per-mm_struct) statistics.
 	// */
-	// static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+	// static inline unsigned long get_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long val = atomic_long_read(&mm->rss_stat.count[member]);
 
@@ -2018,23 +2018,23 @@
 	// 	return (unsigned long)val;
 	// }
 
-	// void mm_trace_rss_stat(struct mm_struct *mm, int member, long count);
+	// void mm_trace_rss_stat(mm_s *mm, int member, long count);
 
-	// static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+	// static inline void add_mm_counter(mm_s *mm, int member, long value)
 	// {
 	// 	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
 
 	// 	mm_trace_rss_stat(mm, member, count);
 	// }
 
-	// static inline void inc_mm_counter(struct mm_struct *mm, int member)
+	// static inline void inc_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
 
 	// 	mm_trace_rss_stat(mm, member, count);
 	// }
 
-	// static inline void dec_mm_counter(struct mm_struct *mm, int member)
+	// static inline void dec_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
 
@@ -2056,24 +2056,24 @@
 	// 	return mm_counter_file(page);
 	// }
 
-	// static inline unsigned long get_mm_rss(struct mm_struct *mm)
+	// static inline unsigned long get_mm_rss(mm_s *mm)
 	// {
 	// 	return get_mm_counter(mm, MM_FILEPAGES) +
 	// 		get_mm_counter(mm, MM_ANONPAGES) +
 	// 		get_mm_counter(mm, MM_SHMEMPAGES);
 	// }
 
-	// static inline unsigned long get_mm_hiwater_rss(struct mm_struct *mm)
+	// static inline unsigned long get_mm_hiwater_rss(mm_s *mm)
 	// {
 	// 	return max(mm->hiwater_rss, get_mm_rss(mm));
 	// }
 
-	// static inline unsigned long get_mm_hiwater_vm(struct mm_struct *mm)
+	// static inline unsigned long get_mm_hiwater_vm(mm_s *mm)
 	// {
 	// 	return max(mm->hiwater_vm, mm->total_vm);
 	// }
 
-	// static inline void update_hiwater_rss(struct mm_struct *mm)
+	// static inline void update_hiwater_rss(mm_s *mm)
 	// {
 	// 	unsigned long _rss = get_mm_rss(mm);
 
@@ -2081,19 +2081,19 @@
 	// 		(mm)->hiwater_rss = _rss;
 	// }
 
-	// static inline void update_hiwater_vm(struct mm_struct *mm)
+	// static inline void update_hiwater_vm(mm_s *mm)
 	// {
 	// 	if (mm->hiwater_vm < mm->total_vm)
 	// 		mm->hiwater_vm = mm->total_vm;
 	// }
 
-	// static inline void reset_mm_hiwater_rss(struct mm_struct *mm)
+	// static inline void reset_mm_hiwater_rss(mm_s *mm)
 	// {
 	// 	mm->hiwater_rss = get_mm_rss(mm);
 	// }
 
 	// static inline void setmax_mm_hiwater_rss(unsigned long *maxrss,
-	// 					struct mm_struct *mm)
+	// 					mm_s *mm)
 	// {
 	// 	unsigned long hiwater_rss = get_mm_hiwater_rss(mm);
 
@@ -2102,9 +2102,9 @@
 	// }
 
 	// #if defined(SPLIT_RSS_COUNTING)
-	// void sync_mm_rss(struct mm_struct *mm);
+	// void sync_mm_rss(mm_s *mm);
 	// #else
-	// static inline void sync_mm_rss(struct mm_struct *mm)
+	// static inline void sync_mm_rss(mm_s *mm)
 	// {
 	// }
 	// #endif
@@ -2130,9 +2130,9 @@
 
 	// int vma_wants_writenotify(vma_s *vma, pgprot_t vm_page_prot);
 
-	// extern pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
+	// extern pte_t *__get_locked_pte(mm_s *mm, unsigned long addr,
 	// 				spinlock_t **ptl);
-	// static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
+	// static inline pte_t *get_locked_pte(mm_s *mm, unsigned long addr,
 	// 					spinlock_t **ptl)
 	// {
 	// 	pte_t *ptep;
@@ -2141,35 +2141,35 @@
 	// }
 
 	// #ifdef __PAGETABLE_P4D_FOLDED
-	// static inline int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+	// static inline int __p4d_alloc(mm_s *mm, pgd_t *pgd,
 	// 						unsigned long address)
 	// {
 	// 	return 0;
 	// }
 	// #else
-	// int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd, unsigned long address);
+	// int __p4d_alloc(mm_s *mm, pgd_t *pgd, unsigned long address);
 	// #endif
 
 	// #if defined(__PAGETABLE_PUD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+	// static inline int __pud_alloc(mm_s *mm, p4d_t *p4d,
 	// 						unsigned long address)
 	// {
 	// 	return 0;
 	// }
-	// static inline void mm_inc_nr_puds(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_puds(struct mm_struct *mm) {}
+	// static inline void mm_inc_nr_puds(mm_s *mm) {}
+	// static inline void mm_dec_nr_puds(mm_s *mm) {}
 
 	// #else
-	// int __pud_alloc(struct mm_struct *mm, p4d_t *p4d, unsigned long address);
+	// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
-	// static inline void mm_inc_nr_puds(struct mm_struct *mm)
+	// static inline void mm_inc_nr_puds(mm_s *mm)
 	// {
 	// 	if (mm_pud_folded(mm))
 	// 		return;
 	// 	atomic_long_add(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_puds(struct mm_struct *mm)
+	// static inline void mm_dec_nr_puds(mm_s *mm)
 	// {
 	// 	if (mm_pud_folded(mm))
 	// 		return;
@@ -2178,26 +2178,26 @@
 	// #endif
 
 	// #if defined(__PAGETABLE_PMD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pmd_alloc(struct mm_struct *mm, pud_t *pud,
+	// static inline int __pmd_alloc(mm_s *mm, pud_t *pud,
 	// 						unsigned long address)
 	// {
 	// 	return 0;
 	// }
 
-	// static inline void mm_inc_nr_pmds(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_pmds(struct mm_struct *mm) {}
+	// static inline void mm_inc_nr_pmds(mm_s *mm) {}
+	// static inline void mm_dec_nr_pmds(mm_s *mm) {}
 
 	// #else
-	// int __pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address);
+	// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
-	// static inline void mm_inc_nr_pmds(struct mm_struct *mm)
+	// static inline void mm_inc_nr_pmds(mm_s *mm)
 	// {
 	// 	if (mm_pmd_folded(mm))
 	// 		return;
 	// 	atomic_long_add(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_pmds(struct mm_struct *mm)
+	// static inline void mm_dec_nr_pmds(mm_s *mm)
 	// {
 	// 	if (mm_pmd_folded(mm))
 	// 		return;
@@ -2206,57 +2206,57 @@
 	// #endif
 
 	// #ifdef CONFIG_MMU
-	// static inline void mm_pgtables_bytes_init(struct mm_struct *mm)
+	// static inline void mm_pgtables_bytes_init(mm_s *mm)
 	// {
 	// 	atomic_long_set(&mm->pgtables_bytes, 0);
 	// }
 
-	// static inline unsigned long mm_pgtables_bytes(const struct mm_struct *mm)
+	// static inline unsigned long mm_pgtables_bytes(const mm_s *mm)
 	// {
 	// 	return atomic_long_read(&mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_inc_nr_ptes(struct mm_struct *mm)
+	// static inline void mm_inc_nr_ptes(mm_s *mm)
 	// {
 	// 	atomic_long_add(PTRS_PER_PTE * sizeof(pte_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_ptes(struct mm_struct *mm)
+	// static inline void mm_dec_nr_ptes(mm_s *mm)
 	// {
 	// 	atomic_long_sub(PTRS_PER_PTE * sizeof(pte_t), &mm->pgtables_bytes);
 	// }
 	// #else
 
-	// static inline void mm_pgtables_bytes_init(struct mm_struct *mm) {}
-	// static inline unsigned long mm_pgtables_bytes(const struct mm_struct *mm)
+	// static inline void mm_pgtables_bytes_init(mm_s *mm) {}
+	// static inline unsigned long mm_pgtables_bytes(const mm_s *mm)
 	// {
 	// 	return 0;
 	// }
 
-	// static inline void mm_inc_nr_ptes(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_ptes(struct mm_struct *mm) {}
+	// static inline void mm_inc_nr_ptes(mm_s *mm) {}
+	// static inline void mm_dec_nr_ptes(mm_s *mm) {}
 	// #endif
 
-	// int __pte_alloc(struct mm_struct *mm, pmd_t *pmd);
+	// int __pte_alloc(mm_s *mm, pmd_t *pmd);
 	// int __pte_alloc_kernel(pmd_t *pmd);
 
 	// #if defined(CONFIG_MMU)
 
-	// static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
+	// static inline p4d_t *p4d_alloc(mm_s *mm, pgd_t *pgd,
 	// 		unsigned long address)
 	// {
 	// 	return (unlikely(pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address)) ?
 	// 		NULL : p4d_offset(pgd, address);
 	// }
 
-	// static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
+	// static inline pud_t *pud_alloc(mm_s *mm, p4d_t *p4d,
 	// 		unsigned long address)
 	// {
 	// 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
 	// 		NULL : pud_offset(p4d, address);
 	// }
 
-	// static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
+	// static inline pmd_t *pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	// {
 	// 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
 	// 		NULL: pmd_offset(pud, address);
@@ -2293,7 +2293,7 @@
 	// }
 	// #endif /* ALLOC_SPLIT_PTLOCKS */
 
-	// static inline spinlock_t *pte_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pte_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return ptlock_ptr(pmd_page(*pmd));
 	// }
@@ -2318,7 +2318,7 @@
 	// /*
 	// * We use mm->page_table_lock to guard all pagetable pages of the mm.
 	// */
-	// static inline spinlock_t *pte_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pte_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
@@ -2384,7 +2384,7 @@
 	// 	return virt_to_page((void *)((unsigned long) pmd & mask));
 	// }
 
-	// static inline spinlock_t *pmd_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return ptlock_ptr(pmd_to_page(pmd));
 	// }
@@ -2409,7 +2409,7 @@
 
 	// #else
 
-	// static inline spinlock_t *pmd_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
@@ -2421,7 +2421,7 @@
 
 	// #endif
 
-	// static inline spinlock_t *pmd_lock(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lock(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	spinlock_t *ptl = pmd_lockptr(mm, pmd);
 	// 	spin_lock(ptl);
@@ -2450,12 +2450,12 @@
 	// * considered ready to switch to split PUD locks yet; there may be places
 	// * which need to be converted from page_table_lock.
 	// */
-	// static inline spinlock_t *pud_lockptr(struct mm_struct *mm, pud_t *pud)
+	// static inline spinlock_t *pud_lockptr(mm_s *mm, pud_t *pud)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
 
-	// static inline spinlock_t *pud_lock(struct mm_struct *mm, pud_t *pud)
+	// static inline spinlock_t *pud_lock(mm_s *mm, pud_t *pud)
 	// {
 	// 	spinlock_t *ptl = pud_lockptr(mm, pud);
 
@@ -2609,17 +2609,17 @@
 	// 	for (vma = vma_interval_tree_iter_first(root, start, last);	\
 	// 		vma; vma = vma_interval_tree_iter_next(vma, start, last))
 
-	// void anon_vma_interval_tree_insert(struct anon_vma_chain *node,
+	// void anon_vma_interval_tree_insert(anon_vma_chain_s *node,
 	// 				struct rb_root_cached *root);
-	// void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+	// void anon_vma_interval_tree_remove(anon_vma_chain_s *node,
 	// 				struct rb_root_cached *root);
-	// struct anon_vma_chain *
+	// anon_vma_chain_s *
 	// anon_vma_interval_tree_iter_first(struct rb_root_cached *root,
 	// 				unsigned long start, unsigned long last);
-	// struct anon_vma_chain *anon_vma_interval_tree_iter_next(
-	// 	struct anon_vma_chain *node, unsigned long start, unsigned long last);
+	// anon_vma_chain_s *anon_vma_interval_tree_iter_next(
+	// 	anon_vma_chain_s *node, unsigned long start, unsigned long last);
 	// #ifdef CONFIG_DEBUG_VM_RB
-	// void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
+	// void anon_vma_interval_tree_verify(anon_vma_chain_s *node);
 	// #endif
 
 	// #define anon_vma_interval_tree_foreach(avc, root, start, last)		 \
@@ -2627,7 +2627,7 @@
 	// 		avc; avc = anon_vma_interval_tree_iter_next(avc, start, last))
 
 	// /* mmap.c */
-	// extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
+	// extern int __vm_enough_memory(mm_s *mm, long pages, int cap_sys_admin);
 	// extern int __vma_adjust(vma_s *vma, unsigned long start,
 	// 		unsigned long end, pgoff_t pgoff, vma_s *insert,
 	// 		vma_s *expand);
@@ -2639,23 +2639,23 @@
 	// {
 	// 	return __vma_adjust(vma, start, end, pgoff, insert, NULL);
 	// }
-	// extern vma_s *vma_merge(struct mm_struct *,
+	// extern vma_s *vma_merge(mm_s *,
 	// 	vma_s *prev, unsigned long addr, unsigned long end,
-	// 	unsigned long vm_flags, struct anon_vma *, file_s *, pgoff_t,
+	// 	unsigned long vm_flags, anon_vma_s *, file_s *, pgoff_t,
 	// 	struct mempolicy *, struct vm_userfaultfd_ctx, struct anon_vma_name *);
-	// extern struct anon_vma *find_mergeable_anon_vma(vma_s *);
-	// extern int __split_vma(struct mm_struct *, vma_s *,
+	// extern anon_vma_s *find_mergeable_anon_vma(vma_s *);
+	// extern int __split_vma(mm_s *, vma_s *,
 	// 	unsigned long addr, int new_below);
-	// extern int split_vma(struct mm_struct *, vma_s *,
+	// extern int split_vma(mm_s *, vma_s *,
 	// 	unsigned long addr, int new_below);
-	// extern int insert_vm_struct(struct mm_struct *, vma_s *);
-	// extern void __vma_link_rb(struct mm_struct *, vma_s *,
+	// extern int insert_vm_struct(mm_s *, vma_s *);
+	// extern void __vma_link_rb(mm_s *, vma_s *,
 	// 	struct rb_node **, struct rb_node *);
 	// extern void unlink_file_vma(vma_s *);
 	// extern vma_s *copy_vma(vma_s **,
 	// 	unsigned long addr, unsigned long len, pgoff_t pgoff,
 	// 	bool *need_rmap_locks);
-	// extern void exit_mmap(struct mm_struct *);
+	// extern void exit_mmap(mm_s *);
 
 	// static inline int check_data_rlimit(unsigned long rlim,
 	// 					unsigned long new,
@@ -2671,25 +2671,25 @@
 	// 	return 0;
 	// }
 
-	// extern int mm_take_all_locks(struct mm_struct *mm);
-	// extern void mm_drop_all_locks(struct mm_struct *mm);
+	// extern int mm_take_all_locks(mm_s *mm);
+	// extern void mm_drop_all_locks(mm_s *mm);
 
 	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
-	// extern int replace_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
-	// extern file_s *get_mm_exe_file(struct mm_struct *mm);
+	// extern int replace_mm_exe_file(mm_s *mm, file_s *new_exe_file);
+	// extern file_s *get_mm_exe_file(mm_s *mm);
 	// extern file_s *get_task_exe_file(task_s *task);
 
 	// extern bool may_expand_vm(mm_s *, vm_flags_t, unsigned long npages);
-	// extern void vm_stat_account(struct mm_struct *, vm_flags_t, long npages);
+	// extern void vm_stat_account(mm_s *, vm_flags_t, long npages);
 
 	// extern bool vma_is_special_mapping(const vma_s *vma,
 	// 				const struct vm_special_mapping *sm);
-	// extern vma_s *_install_special_mapping(struct mm_struct *mm,
+	// extern vma_s *_install_special_mapping(mm_s *mm,
 	// 				unsigned long addr, unsigned long len,
 	// 				unsigned long flags,
 	// 				const struct vm_special_mapping *spec);
 	// /* This is an obsolete alternative to _install_special_mapping. */
-	// extern int install_special_mapping(struct mm_struct *mm,
+	// extern int install_special_mapping(mm_s *mm,
 	// 				unsigned long addr, unsigned long len,
 	// 				unsigned long flags, page_s **pages);
 
@@ -2707,12 +2707,12 @@
 	extern unsigned long do_mmap(file_s *file, unsigned long addr,
 			unsigned long len, unsigned long prot, unsigned long flags,
 			unsigned long pgoff, unsigned long *populate);
-	// extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+	// extern int __do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf, bool downgrade);
 	extern int __do_munmap(mm_s *, unsigned long, size_t, bool downgrade);
-	// extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+	// extern int do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf);
-	// extern int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int behavior);
+	// extern int do_madvise(mm_s *mm, unsigned long start, size_t len_in, int behavior);
 
 	// #ifdef CONFIG_MMU
 	// extern int __mm_populate(unsigned long addr, unsigned long len,
@@ -2878,7 +2878,7 @@
 	// 			unsigned long start, unsigned long end);
 	// #endif
 
-	// vma_s *find_extend_vma(struct mm_struct *, unsigned long addr);
+	// vma_s *find_extend_vma(mm_s *, unsigned long addr);
 	// int remap_pfn_range(vma_s *, unsigned long addr,
 	// 			unsigned long pfn, unsigned long size, pgprot_t);
 	// int remap_pfn_range_notrack(vma_s *vma, unsigned long addr,
@@ -3024,9 +3024,9 @@
 	// }
 
 	// typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
-	// extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+	// extern int apply_to_page_range(mm_s *mm, unsigned long address,
 	// 				unsigned long size, pte_fn_t fn, void *data);
-	// extern int apply_to_existing_page_range(struct mm_struct *mm,
+	// extern int apply_to_existing_page_range(mm_s *mm,
 	// 				unsigned long address, unsigned long size,
 	// 				pte_fn_t fn, void *data);
 
@@ -3127,22 +3127,22 @@
 	// #endif	/* CONFIG_DEBUG_PAGEALLOC */
 
 	// #ifdef __HAVE_ARCH_GATE_AREA
-	// extern vma_s *get_gate_vma(struct mm_struct *mm);
+	// extern vma_s *get_gate_vma(mm_s *mm);
 	// extern int in_gate_area_no_mm(unsigned long addr);
-	// extern int in_gate_area(struct mm_struct *mm, unsigned long addr);
+	// extern int in_gate_area(mm_s *mm, unsigned long addr);
 	// #else
-	// static inline vma_s *get_gate_vma(struct mm_struct *mm)
+	// static inline vma_s *get_gate_vma(mm_s *mm)
 	// {
 	// 	return NULL;
 	// }
 	// static inline int in_gate_area_no_mm(unsigned long addr) { return 0; }
-	// static inline int in_gate_area(struct mm_struct *mm, unsigned long addr)
+	// static inline int in_gate_area(mm_s *mm, unsigned long addr)
 	// {
 	// 	return 0;
 	// }
 	// #endif	/* __HAVE_ARCH_GATE_AREA */
 
-	// extern bool process_shares_mm(task_s *p, struct mm_struct *mm);
+	// extern bool process_shares_mm(task_s *p, mm_s *mm);
 
 	// #ifdef CONFIG_SYSCTL
 	// extern int sysctl_drop_caches;
@@ -3388,12 +3388,12 @@
 	// }
 
 	// #ifdef CONFIG_ANON_VMA_NAME
-	// int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+	// int madvise_set_anon_name(mm_s *mm, unsigned long start,
 	// 			unsigned long len_in,
 	// 			struct anon_vma_name *anon_name);
 	// #else
 	// static inline int
-	// madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+	// madvise_set_anon_name(mm_s *mm, unsigned long start,
 	// 			unsigned long len_in, struct anon_vma_name *anon_name) {
 	// 	return 0;
 	// }

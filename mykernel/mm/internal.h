@@ -73,7 +73,7 @@
 
 	// void free_pgtables(struct mmu_gather *tlb, vma_s *start_vma,
 	// 		unsigned long floor, unsigned long ceiling);
-	// void pmd_install(struct mm_struct *mm, pmd_t *pmd, pgtable_t *pte);
+	// void pmd_install(mm_s *mm, pmd_t *pmd, pgtable_t *pte);
 
 	// static inline bool can_madv_lru_vma(vma_s *vma)
 	// {
@@ -168,7 +168,7 @@
 	// /*
 	// * in mm/rmap.c:
 	// */
-	// extern pmd_t *mm_find_pmd(struct mm_struct *mm, unsigned long address);
+	// extern pmd_t *mm_find_pmd(mm_s *mm, unsigned long address);
 
 	// /*
 	// * in mm/page_alloc.c
@@ -388,9 +388,9 @@
 	}
 
 	// /* mm/util.c */
-	// void __vma_link_list(struct mm_struct *mm, vma_s *vma,
+	// void __vma_link_list(mm_s *mm, vma_s *vma,
 	// 		vma_s *prev);
-	// void __vma_unlink_list(struct mm_struct *mm, vma_s *vma);
+	// void __vma_unlink_list(mm_s *mm, vma_s *vma);
 
 	// #ifdef CONFIG_MMU
 	// void unmap_mapping_folio(struct folio *folio);
@@ -412,7 +412,7 @@
 	// extern void mlock_vma_page(struct page *page);
 	// extern unsigned int munlock_vma_page(struct page *page);
 
-	// extern int mlock_future_check(struct mm_struct *mm, unsigned long flags,
+	// extern int mlock_future_check(mm_s *mm, unsigned long flags,
 	// 				unsigned long len);
 
 	// /*
@@ -664,7 +664,7 @@
 	// #ifdef CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH
 	// void try_to_unmap_flush(void);
 	// void try_to_unmap_flush_dirty(void);
-	// void flush_tlb_batched_pending(struct mm_struct *mm);
+	// void flush_tlb_batched_pending(mm_s *mm);
 	// #else
 	// static inline void try_to_unmap_flush(void)
 	// {
@@ -672,7 +672,7 @@
 	// static inline void try_to_unmap_flush_dirty(void)
 	// {
 	// }
-	// static inline void flush_tlb_batched_pending(struct mm_struct *mm)
+	// static inline void flush_tlb_batched_pending(mm_s *mm)
 	// {
 	// }
 	// #endif /* CONFIG_ARCH_WANT_BATCHED_UNMAP_TLB_FLUSH */

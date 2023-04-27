@@ -66,7 +66,7 @@
 // #include <linux/ftrace.h>
 // #include <linux/proc_fs.h>
 // #include <linux/profile.h>
-// #include <linux/rmap.h>
+#include <linux/mm/rmap.h>
 // #include <linux/ksm.h>
 // #include <linux/acct.h>
 // #include <linux/userfaultfd_k.h>
@@ -504,9 +504,9 @@ int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 //  * bumping up the use count.  User must release the mm via mmput()
 //  * after use.  Typically used by /proc and ptrace.
 //  */
-// struct mm_struct *get_task_mm(struct task_struct *task)
+// mm_s *get_task_mm(struct task_struct *task)
 // {
-// 	struct mm_struct *mm;
+// 	mm_s *mm;
 
 // 	task_lock(task);
 // 	mm = task->mm;
@@ -520,9 +520,9 @@ int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 // 	return mm;
 // }
 
-// struct mm_struct *mm_access(struct task_struct *task, unsigned int mode)
+// mm_s *mm_access(struct task_struct *task, unsigned int mode)
 // {
-// 	struct mm_struct *mm;
+// 	mm_s *mm;
 // 	int err;
 
 // 	err =  down_read_killable(&task->signal->exec_update_lock);
@@ -587,7 +587,7 @@ int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 //  * restoring the old one. . .
 //  * Eric Biederman 10 January 1998
 //  */
-// static void mm_release(struct task_struct *tsk, struct mm_struct *mm)
+// static void mm_release(struct task_struct *tsk, mm_s *mm)
 // {
 // 	uprobe_free_utask(tsk);
 
@@ -620,13 +620,13 @@ int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 // 		complete_vfork_done(tsk);
 // }
 
-// void exit_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+// void exit_mm_release(struct task_struct *tsk, mm_s *mm)
 // {
 // 	futex_exit_release(tsk);
 // 	mm_release(tsk, mm);
 // }
 
-// void exec_mm_release(struct task_struct *tsk, struct mm_struct *mm)
+// void exec_mm_release(struct task_struct *tsk, mm_s *mm)
 // {
 // 	futex_exec_release(tsk);
 // 	mm_release(tsk, mm);

@@ -37,6 +37,8 @@
 	typedef struct vm_area_struct vma_s;
 	struct vm_operations_struct;
 	typedef struct vm_operations_struct vm_ops_s;
+	struct anon_vma;
+	typedef struct anon_vma anon_vma_s;
 
 	/*
 	 * Each physical page in the system has a page_s associated with
@@ -205,7 +207,7 @@
 	// 			unsigned long _pt_pad_2; /* mapping */
 	// 			union
 	// 			{
-	// 				struct mm_struct *pt_mm;   /* x86 pgds only */
+	// 				mm_s *pt_mm;   /* x86 pgds only */
 	// 				atomic_t pt_frag_refcount; /* powerpc */
 	// 			};
 	// #if ALLOC_SPLIT_PTLOCKS
@@ -417,7 +419,7 @@
 	// 	struct userfaultfd_ctx *ctx;
 	// };
 	// #else /* CONFIG_USERFAULTFD */
-	// #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx){})
+	#define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx){})
 	// struct vm_userfaultfd_ctx
 	// {
 	// };
@@ -489,15 +491,15 @@
 		// 	struct anon_vma_name *anon_name;
 		// };
 
-		// /*
-		// * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
-		// * list, after a COW of one of the file pages.	A MAP_SHARED vma
-		// * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
-		// * or brk vma (with NULL file) can only be in an anon_vma list.
-		// */
-		// List_s anon_vma_chain; /* Serialized by mmap_lock &
-		// 								* page_table_lock */
-		// struct anon_vma *anon_vma;		 /* Serialized by page_table_lock */
+		/*
+		 * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
+		 * list, after a COW of one of the file pages.	A MAP_SHARED vma
+		 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
+		 * or brk vma (with NULL file) can only be in an anon_vma list.
+		 */
+		List_s			anon_vma_chain; /* Serialized by mmap_lock &
+										* page_table_lock */
+		anon_vma_s		*anon_vma;		 /* Serialized by page_table_lock */
 
 		/* Function pointers to deal with this struct. */
 		const vm_ops_s	*vm_ops;
@@ -559,17 +561,17 @@
 			 * Use mmget()/mmget_not_zero()/mmput() to modify. When this
 			 * drops to 0 (i.e. when the task exits and there are no other
 			 * temporary reference holders), we also release a reference on
-			 * @mm_count (which may then free the &struct mm_struct if
+			 * @mm_count (which may then free the &mm_s if
 			 * @mm_count also drops to 0).
 			 */
 			atomic_t		mm_users;
 
 			/**
-			 * @mm_count: The number of references to &struct mm_struct
+			 * @mm_count: The number of references to &mm_s
 			 * (@mm_users count as 1).
 			 *
 			 * Use mmgrab()/mmdrop() to modify. When this drops to 0, the
-			 * &struct mm_struct is freed.
+			 * &mm_s is freed.
 			 */
 			atomic_t		mm_refcount;
 
@@ -714,23 +716,23 @@
 	extern mm_s init_mm;
 
 	// /* Pointer magic because the dynamic array size confuses some compilers. */
-	// static inline void mm_init_cpumask(struct mm_struct *mm)
+	// static inline void mm_init_cpumask(mm_s *mm)
 	// {
 	// 	unsigned long cpu_bitmap = (unsigned long)mm;
 
-	// 	cpu_bitmap += offsetof(struct mm_struct, cpu_bitmap);
+	// 	cpu_bitmap += offsetof(mm_s, cpu_bitmap);
 	// 	cpumask_clear((struct cpumask *)cpu_bitmap);
 	// }
 
-	// /* Future-safe accessor for struct mm_struct's cpu_vm_mask. */
-	// static inline cpumask_t *mm_cpumask(struct mm_struct *mm)
+	// /* Future-safe accessor for mm_s's cpu_vm_mask. */
+	// static inline cpumask_t *mm_cpumask(mm_s *mm)
 	// {
 	// 	return (struct cpumask *)&mm->cpu_bitmap;
 	// }
 
 	// struct mmu_gather;
-	// extern void tlb_gather_mmu(struct mmu_gather *tlb, struct mm_struct *mm);
-	// extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, struct mm_struct *mm);
+	// extern void tlb_gather_mmu(struct mmu_gather *tlb, mm_s *mm);
+	// extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, mm_s *mm);
 	// extern void tlb_finish_mmu(struct mmu_gather *tlb);
 
 	// struct vm_fault;

@@ -965,7 +965,7 @@
 // 	task_s *idle;
 // 	task_s *stop;
 // 	unsigned long next_balance;
-// 	struct mm_struct *prev_mm;
+// 	mm_s *prev_mm;
 
 // 	unsigned int clock_update_flags;
 // 	u64 clock;
@@ -3012,8 +3012,8 @@
 //  * In the same way it provides those guarantees around store to rq->curr.
 //  */
 // static inline void membarrier_switch_mm(struct rq *rq,
-// 										struct mm_struct *prev_mm,
-// 										struct mm_struct *next_mm)
+// 										mm_s *prev_mm,
+// 										mm_s *next_mm)
 // {
 // 	int membarrier_state;
 
@@ -3028,8 +3028,8 @@
 // }
 // #else
 // static inline void membarrier_switch_mm(struct rq *rq,
-// 										struct mm_struct *prev_mm,
-// 										struct mm_struct *next_mm)
+// 										mm_s *prev_mm,
+// 										mm_s *next_mm)
 // {
 // }
 // #endif

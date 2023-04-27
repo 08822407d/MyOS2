@@ -32,8 +32,8 @@
 		// extern pgd_t early_top_pgt[PTRS_PER_PGD];
 		// bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
 
-		// void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
-		// void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+		// void ptdump_walk_pgd_level(struct seq_file *m, mm_s *mm);
+		// void ptdump_walk_pgd_level_debugfs(struct seq_file *m, mm_s *mm,
 		// 				bool user);
 		// void ptdump_walk_pgd_level_checkwx(void);
 		// void ptdump_walk_user_pgd_level_checkwx(void);
@@ -57,7 +57,7 @@
 		// extern spinlock_t pgd_lock;
 		// extern List_s pgd_list;
 
-		// extern struct mm_struct *pgd_page_get_mm(struct page *page);
+		// extern mm_s *pgd_page_get_mm(struct page *page);
 
 		// extern pmdval_t early_pmd_flags;
 
@@ -742,7 +742,7 @@
 		// #endif
 
 		// #define pte_accessible pte_accessible
-		// static inline bool pte_accessible(struct mm_struct *mm, pte_t a)
+		// static inline bool pte_accessible(mm_s *mm, pte_t a)
 		// {
 		// 	if (pte_flags(a) & _PAGE_PRESENT)
 		// 		return true;
@@ -995,21 +995,21 @@
 		// 	return res;
 		// }
 
-		// static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pte_at(mm_s *mm, unsigned long addr,
 		// 				pte_t *ptep, pte_t pte)
 		// {
 		// 	page_table_check_pte_set(mm, addr, ptep, pte);
 		// 	set_pte(ptep, pte);
 		// }
 
-		// static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pmd_at(mm_s *mm, unsigned long addr,
 		// 				pmd_t *pmdp, pmd_t pmd)
 		// {
 		// 	page_table_check_pmd_set(mm, addr, pmdp, pmd);
 		// 	set_pmd(pmdp, pmd);
 		// }
 
-		// static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pud_at(mm_s *mm, unsigned long addr,
 		// 				pud_t *pudp, pud_t pud)
 		// {
 		// 	page_table_check_pud_set(mm, addr, pudp, pud);
@@ -1039,7 +1039,7 @@
 		// 				unsigned long address, pte_t *ptep);
 
 		// #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
-		// static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline pte_t ptep_get_and_clear(mm_s *mm, unsigned long addr,
 		// 					pte_t *ptep)
 		// {
 		// 	pte_t pte = native_ptep_get_and_clear(ptep);
@@ -1048,7 +1048,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_GET_AND_CLEAR_FULL
-		// static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
+		// static inline pte_t ptep_get_and_clear_full(mm_s *mm,
 		// 						unsigned long addr, pte_t *ptep,
 		// 						int full)
 		// {
@@ -1067,7 +1067,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_CLEAR
-		// static inline void ptep_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline void ptep_clear(mm_s *mm, unsigned long addr,
 		// 				pte_t *ptep)
 		// {
 		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_CHECK))
@@ -1077,7 +1077,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_SET_WRPROTECT
-		// static inline void ptep_set_wrprotect(struct mm_struct *mm,
+		// static inline void ptep_set_wrprotect(mm_s *mm,
 		// 					unsigned long addr, pte_t *ptep)
 		// {
 		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->pte);
@@ -1113,7 +1113,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
-		// static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline pmd_t pmdp_huge_get_and_clear(mm_s *mm, unsigned long addr,
 		// 					pmd_t *pmdp)
 		// {
 		// 	pmd_t pmd = native_pmdp_get_and_clear(pmdp);
@@ -1124,7 +1124,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR
-		// static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
+		// static inline pud_t pudp_huge_get_and_clear(mm_s *mm,
 		// 					unsigned long addr, pud_t *pudp)
 		// {
 		// 	pud_t pud = native_pudp_get_and_clear(pudp);
@@ -1135,7 +1135,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PMDP_SET_WRPROTECT
-		// static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+		// static inline void pmdp_set_wrprotect(mm_s *mm,
 		// 					unsigned long addr, pmd_t *pmdp)
 		// {
 		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)pmdp);

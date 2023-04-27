@@ -92,7 +92,7 @@
 // #include <linux/proc_fs.h>
 // #include <linux/migrate.h>
 // #include <linux/ksm.h>
-// #include <linux/rmap.h>
+#include <linux/mm/rmap.h>
 // #include <linux/security.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/ctype.h>

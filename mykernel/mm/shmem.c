@@ -77,7 +77,7 @@ static vfsmount_s *shm_mnt;
 #include <linux/kernel/fcntl.h>
 // #include <uapi/linux/memfd.h>
 // #include <linux/userfaultfd_k.h>
-// #include <linux/rmap.h>
+#include <linux/mm/rmap.h>
 #include <linux/kernel/uuid.h>
 // #include <linux/uaccess.h>
 #include "internal.h"

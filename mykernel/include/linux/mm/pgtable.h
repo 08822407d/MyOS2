@@ -147,7 +147,7 @@
 	// * address to the pointer in the PTE in the kernel page tables with simple
 	// * helpers.
 	// */
-	// static inline pmd_t *pmd_off(struct mm_struct *mm, unsigned long va)
+	// static inline pmd_t *pmd_off(mm_s *mm, unsigned long va)
 	// {
 	// 	return pmd_offset(pud_offset(p4d_offset(pgd_offset(mm, va), va), va), va);
 	// }
@@ -260,7 +260,7 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PTEP_CLEAR
-	// static inline void ptep_clear(struct mm_struct *mm, unsigned long addr,
+	// static inline void ptep_clear(mm_s *mm, unsigned long addr,
 	// 				pte_t *ptep)
 	// {
 	// 	pte_clear(mm, addr, ptep);
@@ -268,7 +268,7 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PTEP_GET_AND_CLEAR
-	// static inline pte_t ptep_get_and_clear(struct mm_struct *mm,
+	// static inline pte_t ptep_get_and_clear(mm_s *mm,
 	// 					unsigned long address,
 	// 					pte_t *ptep)
 	// {
@@ -342,7 +342,7 @@
 
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	// #ifndef __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
-	// static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm,
+	// static inline pmd_t pmdp_huge_get_and_clear(mm_s *mm,
 	// 						unsigned long address,
 	// 						pmd_t *pmdp)
 	// {
@@ -352,7 +352,7 @@
 	// }
 	// #endif /* __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR */
 	// #ifndef __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR
-	// static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
+	// static inline pud_t pudp_huge_get_and_clear(mm_s *mm,
 	// 						unsigned long address,
 	// 						pud_t *pudp)
 	// {
@@ -375,7 +375,7 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR_FULL
-	// static inline pud_t pudp_huge_get_and_clear_full(struct mm_struct *mm,
+	// static inline pud_t pudp_huge_get_and_clear_full(mm_s *mm,
 	// 						unsigned long address, pud_t *pudp,
 	// 						int full)
 	// {
@@ -385,7 +385,7 @@
 	// #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
 
 	// #ifndef __HAVE_ARCH_PTEP_GET_AND_CLEAR_FULL
-	// static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
+	// static inline pte_t ptep_get_and_clear_full(mm_s *mm,
 	// 						unsigned long address, pte_t *ptep,
 	// 						int full)
 	// {
@@ -418,7 +418,7 @@
 	// * not present, or in the process of an address space destruction.
 	// */
 	// #ifndef __HAVE_ARCH_PTE_CLEAR_NOT_PRESENT_FULL
-	// static inline void pte_clear_not_present_full(struct mm_struct *mm,
+	// static inline void pte_clear_not_present_full(mm_s *mm,
 	// 						unsigned long address,
 	// 						pte_t *ptep,
 	// 						int full)
@@ -443,8 +443,8 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PTEP_SET_WRPROTECT
-	// struct mm_struct;
-	// static inline void ptep_set_wrprotect(struct mm_struct *mm, unsigned long address, pte_t *ptep)
+	// mm_s;
+	// static inline void ptep_set_wrprotect(mm_s *mm, unsigned long address, pte_t *ptep)
 	// {
 	// 	pte_t old_pte = *ptep;
 	// 	set_pte_at(mm, address, ptep, pte_wrprotect(old_pte));
@@ -493,14 +493,14 @@
 
 	// #ifndef __HAVE_ARCH_PMDP_SET_WRPROTECT
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-	// static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+	// static inline void pmdp_set_wrprotect(mm_s *mm,
 	// 					unsigned long address, pmd_t *pmdp)
 	// {
 	// 	pmd_t old_pmd = *pmdp;
 	// 	set_pmd_at(mm, address, pmdp, pmd_wrprotect(old_pmd));
 	// }
 	// #else
-	// static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+	// static inline void pmdp_set_wrprotect(mm_s *mm,
 	// 					unsigned long address, pmd_t *pmdp)
 	// {
 	// 	BUILD_BUG();
@@ -509,7 +509,7 @@
 	// #endif
 	// #ifndef __HAVE_ARCH_PUDP_SET_WRPROTECT
 	// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-	// static inline void pudp_set_wrprotect(struct mm_struct *mm,
+	// static inline void pudp_set_wrprotect(mm_s *mm,
 	// 					unsigned long address, pud_t *pudp)
 	// {
 	// 	pud_t old_pud = *pudp;
@@ -517,7 +517,7 @@
 	// 	set_pud_at(mm, address, pudp, pud_wrprotect(old_pud));
 	// }
 	// #else
-	// static inline void pudp_set_wrprotect(struct mm_struct *mm,
+	// static inline void pudp_set_wrprotect(mm_s *mm,
 	// 					unsigned long address, pud_t *pudp)
 	// {
 	// 	BUILD_BUG();
@@ -542,12 +542,12 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PGTABLE_DEPOSIT
-	// extern void pgtable_trans_huge_deposit(struct mm_struct *mm, pmd_t *pmdp,
+	// extern void pgtable_trans_huge_deposit(mm_s *mm, pmd_t *pmdp,
 	// 					pgtable_t pgtable);
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PGTABLE_WITHDRAW
-	// extern pgtable_t pgtable_trans_huge_withdraw(struct mm_struct *mm, pmd_t *pmdp);
+	// extern pgtable_t pgtable_trans_huge_withdraw(mm_s *mm, pmd_t *pmdp);
 	// #endif
 
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
@@ -688,7 +688,7 @@
 	// * page as metadata for the page. arch_do_swap_page() can restore this
 	// * metadata when a page is swapped back in.
 	// */
-	// static inline void arch_do_swap_page(struct mm_struct *mm,
+	// static inline void arch_do_swap_page(mm_s *mm,
 	// 					vma_s *vma,
 	// 					unsigned long addr,
 	// 					pte_t pte, pte_t oldpte)
@@ -706,7 +706,7 @@
 	// * page as metadata for the page. arch_unmap_one() can save this
 	// * metadata on a swap-out of a page.
 	// */
-	// static inline int arch_unmap_one(struct mm_struct *mm,
+	// static inline int arch_unmap_one(mm_s *mm,
 	// 				vma_s *vma,
 	// 				unsigned long addr,
 	// 				pte_t orig_pte)

@@ -51,10 +51,10 @@
 	// 	pr_err("%s:%d: bad pgd %p(%016lx)\n",		\
 	// 		__FILE__, __LINE__, &(e), pgd_val(e))
 
-	// struct mm_struct;
+	// mm_s;
 
 	// #define mm_p4d_folded mm_p4d_folded
-	// static inline bool mm_p4d_folded(struct mm_struct *mm)
+	// static inline bool mm_p4d_folded(mm_s *mm)
 	// {
 	// 	return !pgtable_l5_enabled();
 	// }
@@ -67,7 +67,7 @@
 	// 	WRITE_ONCE(*ptep, pte);
 	// }
 
-	// static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
+	// static inline void native_pte_clear(mm_s *mm, unsigned long addr,
 	// 					pte_t *ptep)
 	// {
 	// 	native_set_pte(ptep, native_make_pte(0));

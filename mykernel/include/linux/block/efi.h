@@ -637,7 +637,7 @@
 	// #define EFI_RT_SUPPORTED_TIME_SERVICES				0x000f
 	// #define EFI_RT_SUPPORTED_VARIABLE_SERVICES			0x0070
 
-	// extern struct mm_struct efi_mm;
+	// extern mm_s efi_mm;
 
 	// static inline int
 	// efi_guidcmp (efi_guid_t left, efi_guid_t right)
@@ -730,10 +730,10 @@
 	// *                           argument in the page tables referred to by the
 	// *                           first argument.
 	// */
-	// typedef int (*efi_memattr_perm_setter)(struct mm_struct *, efi_memory_desc_t *);
+	// typedef int (*efi_memattr_perm_setter)(mm_s *, efi_memory_desc_t *);
 
 	// extern int efi_memattr_init(void);
-	// extern int efi_memattr_apply_permissions(struct mm_struct *mm,
+	// extern int efi_memattr_apply_permissions(mm_s *mm,
 	// 					efi_memattr_perm_setter fn);
 
 	// /*

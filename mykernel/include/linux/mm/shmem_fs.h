@@ -143,7 +143,7 @@
 
 	// #ifdef CONFIG_USERFAULTFD
 	// #ifdef CONFIG_SHMEM
-	// extern int shmem_mfill_atomic_pte(struct mm_struct *dst_mm, pmd_t *dst_pmd,
+	// extern int shmem_mfill_atomic_pte(mm_s *dst_mm, pmd_t *dst_pmd,
 	// 				vma_s *dst_vma,
 	// 				unsigned long dst_addr,
 	// 				unsigned long src_addr,

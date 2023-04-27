@@ -53,7 +53,7 @@
 // #include <linux/pagemap.h>
 // #include <linux/memremap.h>
 // #include <linux/ksm.h>
-// #include <linux/rmap.h>
+#include <linux/mm/rmap.h>
 // #include <linux/export.h>
 // #include <linux/delayacct.h>
 #include <linux/init/init.h>
