@@ -144,290 +144,289 @@ static inline vma_s
 //	int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
 // 	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
 // 	struct vm_area_struct *expand)
-// int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
-// 		pgoff_t pgoff, vma_s *insert, vma_s *expand)
-// {
-// 	mm_s *mm = vma->vm_mm;
-// 	vma_s *next = vma->vm_next, *orig_vma = vma;
-// 	// struct address_space *mapping = NULL;
-// 	// struct rb_root_cached *root = NULL;
-// 	anon_vma_s *anon_vma = NULL;
-// 	file_s *file = vma->vm_file;
-// 	bool start_changed = false, end_changed = false;
-// 	long adjust_next = 0;
-// 	int remove_next = 0;
+int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
+		pgoff_t pgoff, vma_s *insert, vma_s *expand)
+{
+	mm_s *mm = vma->vm_mm;
+	vma_s *next = vma->vm_next, *orig_vma = vma;
+	// struct address_space *mapping = NULL;
+	anon_vma_s *anon_vma = NULL;
+	file_s *file = vma->vm_file;
+	bool start_changed = false, end_changed = false;
+	long adjust_next = 0;
+	int remove_next = 0;
 
-// 	if (next && !insert) {
-// 		vma_s *exporter = NULL, *importer = NULL;
+	if (next && !insert) {
+		vma_s *exporter = NULL, *importer = NULL;
 
-// 		if (end >= next->vm_end) {
-// 			/*
-// 			 * vma expands, overlapping all the next, and
-// 			 * perhaps the one after too (mprotect case 6).
-// 			 * The only other cases that gets here are
-// 			 * case 1, case 7 and case 8.
-// 			 */
-// 			if (next == expand) {
-// 				/*
-// 				 * The only case where we don't expand "vma"
-// 				 * and we expand "next" instead is case 8.
-// 				 */
-// 				// VM_WARN_ON(end != next->vm_end);
-// 				/*
-// 				 * remove_next == 3 means we're
-// 				 * removing "vma" and that to do so we
-// 				 * swapped "vma" and "next".
-// 				 */
-// 				remove_next = 3;
-// 				// VM_WARN_ON(file != next->vm_file);
-// 				swap(vma, next);
-// 			} else {
-// 				// VM_WARN_ON(expand != vma);
-// 				/*
-// 				 * case 1, 6, 7, remove_next == 2 is case 6,
-// 				 * remove_next == 1 is case 1 or 7.
-// 				 */
-// 				remove_next = 1 + (end > next->vm_end);
-// 				// VM_WARN_ON(remove_next == 2 &&
-// 				// 	   end != next->vm_next->vm_end);
-// 				/* trim end to next, for case 6 first pass */
-// 				end = next->vm_end;
-// 			}
+		if (end >= next->vm_end) {
+			/*
+			 * vma expands, overlapping all the next, and
+			 * perhaps the one after too (mprotect case 6).
+			 * The only other cases that gets here are
+			 * case 1, case 7 and case 8.
+			 */
+			if (next == expand) {
+				/*
+				 * The only case where we don't expand "vma"
+				 * and we expand "next" instead is case 8.
+				 */
+				// VM_WARN_ON(end != next->vm_end);
+				/*
+				 * remove_next == 3 means we're
+				 * removing "vma" and that to do so we
+				 * swapped "vma" and "next".
+				 */
+				remove_next = 3;
+				// VM_WARN_ON(file != next->vm_file);
+				swap(vma, next);
+			} else {
+				// VM_WARN_ON(expand != vma);
+				/*
+				 * case 1, 6, 7, remove_next == 2 is case 6,
+				 * remove_next == 1 is case 1 or 7.
+				 */
+				remove_next = 1 + (end > next->vm_end);
+				// VM_WARN_ON(remove_next == 2 &&
+				// 	   end != next->vm_next->vm_end);
+				/* trim end to next, for case 6 first pass */
+				end = next->vm_end;
+			}
 
-// 			exporter = next;
-// 			importer = vma;
+			exporter = next;
+			importer = vma;
 
-// 			/*
-// 			 * If next doesn't have anon_vma, import from vma after
-// 			 * next, if the vma overlaps with it.
-// 			 */
-// 			if (remove_next == 2 && !next->anon_vma)
-// 				exporter = next->vm_next;
+			/*
+			 * If next doesn't have anon_vma, import from vma after
+			 * next, if the vma overlaps with it.
+			 */
+			if (remove_next == 2 && !next->anon_vma)
+				exporter = next->vm_next;
 
-// 		} else if (end > next->vm_start) {
-// 			/*
-// 			 * vma expands, overlapping part of the next:
-// 			 * mprotect case 5 shifting the boundary up.
-// 			 */
-// 			adjust_next = (end - next->vm_start);
-// 			exporter = next;
-// 			importer = vma;
-// 			// VM_WARN_ON(expand != importer);
-// 		} else if (end < vma->vm_end) {
-// 			/*
-// 			 * vma shrinks, and !insert tells it's not
-// 			 * split_vma inserting another: so it must be
-// 			 * mprotect case 4 shifting the boundary down.
-// 			 */
-// 			adjust_next = -(vma->vm_end - end);
-// 			exporter = vma;
-// 			importer = next;
-// 			// VM_WARN_ON(expand != importer);
-// 		}
+		} else if (end > next->vm_start) {
+			/*
+			 * vma expands, overlapping part of the next:
+			 * mprotect case 5 shifting the boundary up.
+			 */
+			adjust_next = (end - next->vm_start);
+			exporter = next;
+			importer = vma;
+			// VM_WARN_ON(expand != importer);
+		} else if (end < vma->vm_end) {
+			/*
+			 * vma shrinks, and !insert tells it's not
+			 * split_vma inserting another: so it must be
+			 * mprotect case 4 shifting the boundary down.
+			 */
+			adjust_next = -(vma->vm_end - end);
+			exporter = vma;
+			importer = next;
+			// VM_WARN_ON(expand != importer);
+		}
 
-// 		/*
-// 		 * Easily overlooked: when mprotect shifts the boundary,
-// 		 * make sure the expanding vma has anon_vma set if the
-// 		 * shrinking vma had, to cover any anon pages imported.
-// 		 */
-// 		if (exporter && exporter->anon_vma && !importer->anon_vma) {
-// 			int error;
+		/*
+		 * Easily overlooked: when mprotect shifts the boundary,
+		 * make sure the expanding vma has anon_vma set if the
+		 * shrinking vma had, to cover any anon pages imported.
+		 */
+		if (exporter && exporter->anon_vma && !importer->anon_vma) {
+			int error;
 
-// 			importer->anon_vma = exporter->anon_vma;
-// 			error = anon_vma_clone(importer, exporter);
-// 			if (error)
-// 				return error;
-// 		}
-// 	}
-// again:
-// 	// vma_adjust_trans_huge(orig_vma, start, end, adjust_next);
+			importer->anon_vma = exporter->anon_vma;
+			error = anon_vma_clone(importer, exporter);
+			if (error)
+				return error;
+		}
+	}
+again:
+	// vma_adjust_trans_huge(orig_vma, start, end, adjust_next);
 
-// 	// if (file) {
-// 	// 	mapping = file->f_mapping;
-// 	// 	root = &mapping->i_mmap;
-// 	// 	uprobe_munmap(vma, vma->vm_start, vma->vm_end);
+	// if (file) {
+	// 	mapping = file->f_mapping;
+	// 	root = &mapping->i_mmap;
+	// 	uprobe_munmap(vma, vma->vm_start, vma->vm_end);
 
-// 	// 	if (adjust_next)
-// 	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
+	// 	if (adjust_next)
+	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
 
-// 	// 	i_mmap_lock_write(mapping);
-// 	// 	if (insert) {
-// 	// 		/*
-// 	// 		 * Put into interval tree now, so instantiated pages
-// 	// 		 * are visible to arm/parisc __flush_dcache_page
-// 	// 		 * throughout; but we cannot insert into address
-// 	// 		 * space until vma start or end is updated.
-// 	// 		 */
-// 	// 		__vma_link_file(insert);
-// 	// 	}
-// 	// }
+	// 	i_mmap_lock_write(mapping);
+	// 	if (insert) {
+	// 		/*
+	// 		 * Put into interval tree now, so instantiated pages
+	// 		 * are visible to arm/parisc __flush_dcache_page
+	// 		 * throughout; but we cannot insert into address
+	// 		 * space until vma start or end is updated.
+	// 		 */
+	// 		__vma_link_file(insert);
+	// 	}
+	// }
 
-// 	// anon_vma = vma->anon_vma;
-// 	// if (!anon_vma && adjust_next)
-// 	// 	anon_vma = next->anon_vma;
-// 	// if (anon_vma) {
-// 	// 	VM_WARN_ON(adjust_next && next->anon_vma &&
-// 	// 		   anon_vma != next->anon_vma);
-// 	// 	anon_vma_lock_write(anon_vma);
-// 	// 	anon_vma_interval_tree_pre_update_vma(vma);
-// 	// 	if (adjust_next)
-// 	// 		anon_vma_interval_tree_pre_update_vma(next);
-// 	// }
+	// anon_vma = vma->anon_vma;
+	// if (!anon_vma && adjust_next)
+	// 	anon_vma = next->anon_vma;
+	// if (anon_vma) {
+	// 	VM_WARN_ON(adjust_next && next->anon_vma &&
+	// 		   anon_vma != next->anon_vma);
+	// 	anon_vma_lock_write(anon_vma);
+	// 	anon_vma_interval_tree_pre_update_vma(vma);
+	// 	if (adjust_next)
+	// 		anon_vma_interval_tree_pre_update_vma(next);
+	// }
 
-// 	// if (file) {
-// 	// 	flush_dcache_mmap_lock(mapping);
-// 	// 	vma_interval_tree_remove(vma, root);
-// 	// 	if (adjust_next)
-// 	// 		vma_interval_tree_remove(next, root);
-// 	// }
+	// if (file) {
+	// 	flush_dcache_mmap_lock(mapping);
+	// 	vma_interval_tree_remove(vma, root);
+	// 	if (adjust_next)
+	// 		vma_interval_tree_remove(next, root);
+	// }
 
-// 	// if (start != vma->vm_start) {
-// 	// 	vma->vm_start = start;
-// 	// 	start_changed = true;
-// 	// }
-// 	// if (end != vma->vm_end) {
-// 	// 	vma->vm_end = end;
-// 	// 	end_changed = true;
-// 	// }
-// 	// vma->vm_pgoff = pgoff;
-// 	// if (adjust_next) {
-// 	// 	next->vm_start += adjust_next;
-// 	// 	next->vm_pgoff += adjust_next >> PAGE_SHIFT;
-// 	// }
+	// if (start != vma->vm_start) {
+	// 	vma->vm_start = start;
+	// 	start_changed = true;
+	// }
+	// if (end != vma->vm_end) {
+	// 	vma->vm_end = end;
+	// 	end_changed = true;
+	// }
+	// vma->vm_pgoff = pgoff;
+	// if (adjust_next) {
+	// 	next->vm_start += adjust_next;
+	// 	next->vm_pgoff += adjust_next >> PAGE_SHIFT;
+	// }
 
-// 	// if (file) {
-// 	// 	if (adjust_next)
-// 	// 		vma_interval_tree_insert(next, root);
-// 	// 	vma_interval_tree_insert(vma, root);
-// 	// 	flush_dcache_mmap_unlock(mapping);
-// 	// }
+	// if (file) {
+	// 	if (adjust_next)
+	// 		vma_interval_tree_insert(next, root);
+	// 	vma_interval_tree_insert(vma, root);
+	// 	flush_dcache_mmap_unlock(mapping);
+	// }
 
-// 	// if (remove_next) {
-// 	// 	/*
-// 	// 	 * vma_merge has merged next into vma, and needs
-// 	// 	 * us to remove next before dropping the locks.
-// 	// 	 */
-// 	// 	if (remove_next != 3)
-// 	// 		__vma_unlink(mm, next, next);
-// 	// 	else
-// 	// 		/*
-// 	// 		 * vma is not before next if they've been
-// 	// 		 * swapped.
-// 	// 		 *
-// 	// 		 * pre-swap() next->vm_start was reduced so
-// 	// 		 * tell validate_mm_rb to ignore pre-swap()
-// 	// 		 * "next" (which is stored in post-swap()
-// 	// 		 * "vma").
-// 	// 		 */
-// 	// 		__vma_unlink(mm, next, vma);
-// 	// 	if (file)
-// 	// 		__remove_shared_vm_struct(next, file, mapping);
-// 	// } else if (insert) {
-// 	// 	/*
-// 	// 	 * split_vma has split insert from vma, and needs
-// 	// 	 * us to insert it before dropping the locks
-// 	// 	 * (it may either follow vma or precede it).
-// 	// 	 */
-// 	// 	__insert_vm_struct(mm, insert);
-// 	// } else {
-// 	// 	if (start_changed)
-// 	// 		vma_gap_update(vma);
-// 	// 	if (end_changed) {
-// 	// 		if (!next)
-// 	// 			mm->highest_vm_end = vm_end_gap(vma);
-// 	// 		else if (!adjust_next)
-// 	// 			vma_gap_update(next);
-// 	// 	}
-// 	// }
+	// if (remove_next) {
+	// 	/*
+	// 	 * vma_merge has merged next into vma, and needs
+	// 	 * us to remove next before dropping the locks.
+	// 	 */
+	// 	if (remove_next != 3)
+	// 		__vma_unlink(mm, next, next);
+	// 	else
+	// 		/*
+	// 		 * vma is not before next if they've been
+	// 		 * swapped.
+	// 		 *
+	// 		 * pre-swap() next->vm_start was reduced so
+	// 		 * tell validate_mm_rb to ignore pre-swap()
+	// 		 * "next" (which is stored in post-swap()
+	// 		 * "vma").
+	// 		 */
+	// 		__vma_unlink(mm, next, vma);
+	// 	if (file)
+	// 		__remove_shared_vm_struct(next, file, mapping);
+	// } else if (insert) {
+	// 	/*
+	// 	 * split_vma has split insert from vma, and needs
+	// 	 * us to insert it before dropping the locks
+	// 	 * (it may either follow vma or precede it).
+	// 	 */
+	// 	__insert_vm_struct(mm, insert);
+	// } else {
+	// 	if (start_changed)
+	// 		vma_gap_update(vma);
+	// 	if (end_changed) {
+	// 		if (!next)
+	// 			mm->highest_vm_end = vm_end_gap(vma);
+	// 		else if (!adjust_next)
+	// 			vma_gap_update(next);
+	// 	}
+	// }
 
-// 	// if (anon_vma) {
-// 	// 	anon_vma_interval_tree_post_update_vma(vma);
-// 	// 	if (adjust_next)
-// 	// 		anon_vma_interval_tree_post_update_vma(next);
-// 	// 	anon_vma_unlock_write(anon_vma);
-// 	// }
+	// if (anon_vma) {
+	// 	anon_vma_interval_tree_post_update_vma(vma);
+	// 	if (adjust_next)
+	// 		anon_vma_interval_tree_post_update_vma(next);
+	// 	anon_vma_unlock_write(anon_vma);
+	// }
 
-// 	// if (file) {
-// 	// 	i_mmap_unlock_write(mapping);
-// 	// 	uprobe_mmap(vma);
+	// if (file) {
+	// 	i_mmap_unlock_write(mapping);
+	// 	uprobe_mmap(vma);
 
-// 	// 	if (adjust_next)
-// 	// 		uprobe_mmap(next);
-// 	// }
+	// 	if (adjust_next)
+	// 		uprobe_mmap(next);
+	// }
 
-// 	// if (remove_next) {
-// 	// 	if (file) {
-// 	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
-// 	// 		fput(file);
-// 	// 	}
-// 	// 	if (next->anon_vma)
-// 	// 		anon_vma_merge(vma, next);
-// 	// 	mm->map_count--;
-// 	// 	mpol_put(vma_policy(next));
-// 	// 	vm_area_free(next);
-// 	// 	/*
-// 	// 	 * In mprotect's case 6 (see comments on vma_merge),
-// 	// 	 * we must remove another next too. It would clutter
-// 	// 	 * up the code too much to do both in one go.
-// 	// 	 */
-// 	// 	if (remove_next != 3) {
-// 	// 		/*
-// 	// 		 * If "next" was removed and vma->vm_end was
-// 	// 		 * expanded (up) over it, in turn
-// 	// 		 * "next->vm_prev->vm_end" changed and the
-// 	// 		 * "vma->vm_next" gap must be updated.
-// 	// 		 */
-// 	// 		next = vma->vm_next;
-// 	// 	} else {
-// 	// 		/*
-// 	// 		 * For the scope of the comment "next" and
-// 	// 		 * "vma" considered pre-swap(): if "vma" was
-// 	// 		 * removed, next->vm_start was expanded (down)
-// 	// 		 * over it and the "next" gap must be updated.
-// 	// 		 * Because of the swap() the post-swap() "vma"
-// 	// 		 * actually points to pre-swap() "next"
-// 	// 		 * (post-swap() "next" as opposed is now a
-// 	// 		 * dangling pointer).
-// 	// 		 */
-// 	// 		next = vma;
-// 	// 	}
-// 	// 	if (remove_next == 2) {
-// 	// 		remove_next = 1;
-// 	// 		end = next->vm_end;
-// 	// 		goto again;
-// 	// 	}
-// 	// 	else if (next)
-// 	// 		vma_gap_update(next);
-// 	// 	else {
-// 	// 		/*
-// 	// 		 * If remove_next == 2 we obviously can't
-// 	// 		 * reach this path.
-// 	// 		 *
-// 	// 		 * If remove_next == 3 we can't reach this
-// 	// 		 * path because pre-swap() next is always not
-// 	// 		 * NULL. pre-swap() "next" is not being
-// 	// 		 * removed and its next->vm_end is not altered
-// 	// 		 * (and furthermore "end" already matches
-// 	// 		 * next->vm_end in remove_next == 3).
-// 	// 		 *
-// 	// 		 * We reach this only in the remove_next == 1
-// 	// 		 * case if the "next" vma that was removed was
-// 	// 		 * the highest vma of the mm. However in such
-// 	// 		 * case next->vm_end == "end" and the extended
-// 	// 		 * "vma" has vma->vm_end == next->vm_end so
-// 	// 		 * mm->highest_vm_end doesn't need any update
-// 	// 		 * in remove_next == 1 case.
-// 	// 		 */
-// 	// 		VM_WARN_ON(mm->highest_vm_end != vm_end_gap(vma));
-// 	// 	}
-// 	// }
-// 	// if (insert && file)
-// 	// 	uprobe_mmap(insert);
+	// if (remove_next) {
+	// 	if (file) {
+	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
+	// 		fput(file);
+	// 	}
+	// 	if (next->anon_vma)
+	// 		anon_vma_merge(vma, next);
+	// 	mm->map_count--;
+	// 	mpol_put(vma_policy(next));
+	// 	vm_area_free(next);
+	// 	/*
+	// 	 * In mprotect's case 6 (see comments on vma_merge),
+	// 	 * we must remove another next too. It would clutter
+	// 	 * up the code too much to do both in one go.
+	// 	 */
+	// 	if (remove_next != 3) {
+	// 		/*
+	// 		 * If "next" was removed and vma->vm_end was
+	// 		 * expanded (up) over it, in turn
+	// 		 * "next->vm_prev->vm_end" changed and the
+	// 		 * "vma->vm_next" gap must be updated.
+	// 		 */
+	// 		next = vma->vm_next;
+	// 	} else {
+	// 		/*
+	// 		 * For the scope of the comment "next" and
+	// 		 * "vma" considered pre-swap(): if "vma" was
+	// 		 * removed, next->vm_start was expanded (down)
+	// 		 * over it and the "next" gap must be updated.
+	// 		 * Because of the swap() the post-swap() "vma"
+	// 		 * actually points to pre-swap() "next"
+	// 		 * (post-swap() "next" as opposed is now a
+	// 		 * dangling pointer).
+	// 		 */
+	// 		next = vma;
+	// 	}
+	// 	if (remove_next == 2) {
+	// 		remove_next = 1;
+	// 		end = next->vm_end;
+	// 		goto again;
+	// 	}
+	// 	else if (next)
+	// 		vma_gap_update(next);
+	// 	else {
+	// 		/*
+	// 		 * If remove_next == 2 we obviously can't
+	// 		 * reach this path.
+	// 		 *
+	// 		 * If remove_next == 3 we can't reach this
+	// 		 * path because pre-swap() next is always not
+	// 		 * NULL. pre-swap() "next" is not being
+	// 		 * removed and its next->vm_end is not altered
+	// 		 * (and furthermore "end" already matches
+	// 		 * next->vm_end in remove_next == 3).
+	// 		 *
+	// 		 * We reach this only in the remove_next == 1
+	// 		 * case if the "next" vma that was removed was
+	// 		 * the highest vma of the mm. However in such
+	// 		 * case next->vm_end == "end" and the extended
+	// 		 * "vma" has vma->vm_end == next->vm_end so
+	// 		 * mm->highest_vm_end doesn't need any update
+	// 		 * in remove_next == 1 case.
+	// 		 */
+	// 		VM_WARN_ON(mm->highest_vm_end != vm_end_gap(vma));
+	// 	}
+	// }
+	// if (insert && file)
+	// 	uprobe_mmap(insert);
 
-// 	// validate_mm(mm);
+	// validate_mm(mm);
 
-// 	return 0;
-// }
+	return 0;
+}
 
 /*
  * If the vma has a ->close operation then the driver probably needs to release
