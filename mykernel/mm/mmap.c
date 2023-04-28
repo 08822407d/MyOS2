@@ -556,47 +556,41 @@ vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long e
 		 * OK, it can.  Can we now merge in the successor as well?
 		 */
 		if (next && end == next->vm_start &&
-				myos_can_vma_merge_before(next, vm_flags,
-						file, pgoff+pglen)) {
-							/* cases 1, 6 */
+				myos_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
+								/* cases 1, 6 */
 			err = __myos_vma_adjust(prev, prev->vm_start,
-					 next->vm_end, prev->vm_pgoff, NULL,
-					 prev);
+					next->vm_end, prev->vm_pgoff, NULL, prev);
 		} else					/* cases 2, 5, 7 */
 			err = __myos_vma_adjust(prev, prev->vm_start,
-					 end, prev->vm_pgoff, NULL, prev);
+					end, prev->vm_pgoff, NULL, prev);
 		if (err)
 			return NULL;
-		// khugepaged_enter_vma_merge(prev, vm_flags);
 		return prev;
 	}
 
-	// /*
-	//  * Can this new request be merged in front of next?
-	//  */
-	// if (next && end == next->vm_start &&
-	// 		mpol_equal(policy, vma_policy(next)) &&
-	// 		can_vma_merge_before(next, vm_flags,
-	// 				     anon_vma, file, pgoff+pglen,
-	// 				     vm_userfaultfd_ctx, anon_name)) {
-	// 	if (prev && addr < prev->vm_end)	/* case 4 */
-	// 		err = __vma_adjust(prev, prev->vm_start,
-	// 				 addr, prev->vm_pgoff, NULL, next);
-	// 	else {					/* cases 3, 8 */
-	// 		err = __vma_adjust(area, addr, next->vm_end,
-	// 				 next->vm_pgoff - pglen, NULL, next);
-	// 		/*
-	// 		 * In case 3 area is already equal to next and
-	// 		 * this is a noop, but in case 8 "area" has
-	// 		 * been removed and next was expanded over it.
-	// 		 */
-	// 		area = next;
-	// 	}
-	// 	if (err)
-	// 		return NULL;
-	// 	khugepaged_enter_vma_merge(area, vm_flags);
-	// 	return area;
-	// }
+	/*
+	 * Can this new request be merged in front of next?
+	 */
+	if (next && end == next->vm_start &&
+			myos_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
+		if (prev && addr < prev->vm_end)
+								/* case 4 */
+			err = __myos_vma_adjust(prev, prev->vm_start,
+					addr, prev->vm_pgoff, NULL, next);
+		else {					/* cases 3, 8 */
+			err = __myos_vma_adjust(area, addr, next->vm_end,
+					next->vm_pgoff - pglen, NULL, next);
+			/*
+			 * In case 3 area is already equal to next and
+			 * this is a noop, but in case 8 "area" has
+			 * been removed and next was expanded over it.
+			 */
+			area = next;
+		}
+		if (err)
+			return NULL;
+		return area;
+	}
 
 	return NULL;
 }
@@ -845,12 +839,12 @@ myos_mmap_region(file_s *file, unsigned long addr, unsigned long len,
 	int error;
 	unsigned long charged = 0;
 
-	// /* Clear old maps, set up prev, rb_link, rb_parent, and uf */
-	// if (munmap_vma_range(mm, addr, len, &prev))
-	// 	return -ENOMEM;
-	// /*
-	//  * Private writable mapping: check memory availability
-	//  */
+	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
+	if (munmap_vma_range(mm, addr, len, &prev))
+		return -ENOMEM;
+	/*
+	 * Private writable mapping: check memory availability
+	 */
 	// if (accountable_mapping(file, vm_flags)) {
 		charged = len >> PAGE_SHIFT;
 	// 	if (security_vm_enough_memory_mm(mm, charged))
