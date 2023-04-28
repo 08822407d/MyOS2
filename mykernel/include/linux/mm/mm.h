@@ -362,9 +362,9 @@
 	// # define VM_MTE_ALLOWED	VM_NONE
 	// #endif
 
-	// #ifndef VM_GROWSUP
-	// # define VM_GROWSUP	VM_NONE
-	// #endif
+	#ifndef VM_GROWSUP
+	#	define VM_GROWSUP	VM_NONE
+	#endif
 
 	// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
 	// # define VM_UFFD_MINOR_BIT	37
@@ -2760,7 +2760,7 @@
 	// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
 	// extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
 
-	// extern unsigned long stack_guard_gap;
+	extern unsigned long stack_guard_gap;
 	// /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
 	// extern int expand_stack(vma_s *vma, unsigned long address);
 
@@ -2814,29 +2814,27 @@
 		return vma;
 	}
 
-	// static inline unsigned long vm_start_gap(vma_s *vma)
-	// {
-	// 	unsigned long vm_start = vma->vm_start;
+	static inline unsigned long vm_start_gap(vma_s *vma) {
+		unsigned long vm_start = vma->vm_start;
 
-	// 	if (vma->vm_flags & VM_GROWSDOWN) {
-	// 		vm_start -= stack_guard_gap;
-	// 		if (vm_start > vma->vm_start)
-	// 			vm_start = 0;
-	// 	}
-	// 	return vm_start;
-	// }
+		if (vma->vm_flags & VM_GROWSDOWN) {
+			vm_start -= stack_guard_gap;
+			if (vm_start > vma->vm_start)
+				vm_start = 0;
+		}
+		return vm_start;
+	}
 
-	// static inline unsigned long vm_end_gap(vma_s *vma)
-	// {
-	// 	unsigned long vm_end = vma->vm_end;
+	static inline unsigned long vm_end_gap(vma_s *vma) {
+		unsigned long vm_end = vma->vm_end;
 
-	// 	if (vma->vm_flags & VM_GROWSUP) {
-	// 		vm_end += stack_guard_gap;
-	// 		if (vm_end < vma->vm_end)
-	// 			vm_end = -PAGE_SIZE;
-	// 	}
-	// 	return vm_end;
-	// }
+		if (vma->vm_flags & VM_GROWSUP) {
+			vm_end += stack_guard_gap;
+			if (vm_end < vma->vm_end)
+				vm_end = -PAGE_SIZE;
+		}
+		return vm_end;
+	}
 
 	static inline unsigned long vma_pages(vma_s *vma) {
 		return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;

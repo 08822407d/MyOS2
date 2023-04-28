@@ -387,10 +387,9 @@
 		return (flags & (VM_WRITE | VM_SHARED | VM_STACK)) == VM_WRITE;
 	}
 
-	// /* mm/util.c */
-	// void __vma_link_list(mm_s *mm, vma_s *vma,
-	// 		vma_s *prev);
-	// void __vma_unlink_list(mm_s *mm, vma_s *vma);
+	/* mm/util.c */
+	void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev);
+	void __vma_unlink_list(mm_s *mm, vma_s *vma);
 
 	// #ifdef CONFIG_MMU
 	// void unmap_mapping_folio(struct folio *folio);

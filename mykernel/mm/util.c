@@ -29,6 +29,39 @@
 #include "internal.h"
 
 
+
+void __vma_link_list(mm_s	*mm, vma_s *vma, vma_s *prev)
+{
+	vma_s *next;
+
+	vma->vm_prev = prev;
+	if (prev) {
+		next = prev->vm_next;
+		prev->vm_next = vma;
+	} else {
+		next = mm->mmap;
+		mm->mmap = vma;
+	}
+	vma->vm_next = next;
+	if (next)
+		next->vm_prev = vma;
+}
+
+void __vma_unlink_list(mm_s *mm, vma_s *vma)
+{
+	vma_s *prev, *next;
+
+	next = vma->vm_next;
+	prev = vma->vm_prev;
+	if (prev)
+		prev->vm_next = next;
+	else
+		mm->mmap = next;
+	if (next)
+		next->vm_prev = prev;
+}
+
+
 unsigned long vm_mmap_pgoff(file_s *file, unsigned long addr,
 		unsigned long len, unsigned long prot,
 		unsigned long flag, unsigned long pgoff)

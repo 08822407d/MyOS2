@@ -66,29 +66,58 @@
 static bool ignore_rlimit_data = false;
 
 
+static void validate_mm(mm_s *mm) {
+	int bug = 0;
+	int i = 0;
+	unsigned long highest_address = 0;
+	vma_s *vma = mm->mmap;
+
+	while (vma) {
+		highest_address = vm_end_gap(vma);
+		vma = vma->vm_next;
+		i++;
+	}
+	if (i != mm->map_count) {
+		// pr_emerg("map_count %d vm_next %d\n", mm->map_count, i);
+		bug = 1;
+	}
+	if (highest_address != mm->highest_vm_end) {
+		// pr_emerg("mm->highest_vm_end %lx, found %lx\n",
+		// 	  mm->highest_vm_end, highest_address);
+		bug = 1;
+	}
+	if (i != mm->map_count) {
+		// if (i != -1)
+		// 	pr_emerg("map_count %d rb %d\n", mm->map_count, i);
+		bug = 1;
+	}
+	// VM_BUG_ON_MM(bug, mm);
+}
+
+
 //	Linux proto:
 //	static int find_vma_links(mm_s *mm, unsigned long addr,
 // 		unsigned long end, struct vm_area_struct **pprev,
 // 		struct rb_node ***rb_link, struct rb_node **rb_parent)
-// static int
-// myos_if_vma_overlaps(mm_s *mm, unsigned long addr,
-// 		unsigned long end, vma_s **pprev) {
-// 	vma_s	*vma = NULL,
-// 			*tmp = mm->mmap;
+static int
+myos_if_vma_overlaps(mm_s *mm, unsigned long addr,
+		unsigned long end, vma_s **pprev) {
+	vma_s	*vma = NULL,
+			*tmp = mm->mmap;
 
-// 	while (tmp) {
-// 		if (addr < tmp->vm_end && end > tmp->vm_start ||
-// 			end > tmp->vm_start && addr < tmp->vm_end) {
-// 			return -ENOMEM;
-// 		}
-// 		if (tmp->vm_next = mm->mmap)
-// 			break;
-// 		tmp = tmp->vm_next;
-// 	}
+	while (tmp) {
+		if (addr < tmp->vm_end && end > tmp->vm_start ||
+			end > tmp->vm_start && addr < tmp->vm_end) {
+			return -ENOMEM;
+		}
+		if (tmp->vm_next = mm->mmap)
+			break;
+		tmp = tmp->vm_next;
+	}
 
-// 	*pprev = NULL;
-// 	return 0;
-// }
+	*pprev = NULL;
+	return 0;
+}
 
 /*
  * vma_next() - Get the next VMA.
@@ -132,13 +161,13 @@ static inline vma_s
 // }
 
 
-// /*
-//  * We cannot adjust vm_start, vm_end, vm_pgoff fields of a vma that
-//  * is already present in an i_mmap tree without adjusting the tree.
-//  * The following helper function should be used when such adjustments
-//  * are necessary.  The "insert" vma (if any) is to be inserted
-//  * before we drop the necessary locks.
-//  */
+/*
+ * We cannot adjust vm_start, vm_end, vm_pgoff fields of a vma that
+ * is already present in an i_mmap tree without adjusting the tree.
+ * The following helper function should be used when such adjustments
+ * are necessary.  The "insert" vma (if any) is to be inserted
+ * before we drop the necessary locks.
+ */
 //	Linux proto:
 //	int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
 // 	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
@@ -169,6 +198,7 @@ int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
 				 * and we expand "next" instead is case 8.
 				 */
 				// VM_WARN_ON(end != next->vm_end);
+				while (end != next->vm_end);
 				/*
 				 * remove_next == 3 means we're
 				 * removing "vma" and that to do so we
@@ -272,129 +302,100 @@ again:
 	// 	flush_dcache_mmap_unlock(mapping);
 	// }
 
-	// if (remove_next) {
-	// 	/*
-	// 	 * vma_merge has merged next into vma, and needs
-	// 	 * us to remove next before dropping the locks.
-	// 	 */
-	// 	if (remove_next != 3)
-	// 		__vma_unlink(mm, next, next);
-	// 	else
-	// 		/*
-	// 		 * vma is not before next if they've been
-	// 		 * swapped.
-	// 		 *
-	// 		 * pre-swap() next->vm_start was reduced so
-	// 		 * tell validate_mm_rb to ignore pre-swap()
-	// 		 * "next" (which is stored in post-swap()
-	// 		 * "vma").
-	// 		 */
-	// 		__vma_unlink(mm, next, vma);
-	// 	if (file)
-	// 		__remove_shared_vm_struct(next, file, mapping);
-	// } else if (insert) {
-	// 	/*
-	// 	 * split_vma has split insert from vma, and needs
-	// 	 * us to insert it before dropping the locks
-	// 	 * (it may either follow vma or precede it).
-	// 	 */
-	// 	__insert_vm_struct(mm, insert);
-	// } else {
-	// 	if (start_changed)
-	// 		vma_gap_update(vma);
-	// 	if (end_changed) {
-	// 		if (!next)
-	// 			mm->highest_vm_end = vm_end_gap(vma);
-	// 		else if (!adjust_next)
-	// 			vma_gap_update(next);
-	// 	}
-	// }
+	if (remove_next) {
+		/*
+		 * vma_merge has merged next into vma, and needs
+		 * us to remove next before dropping the locks.
+		 */
+		/*
+			* vma is not before next if they've been
+			* swapped.
+			*
+			* pre-swap() next->vm_start was reduced so
+			* tell validate_mm_rb to ignore pre-swap()
+			* "next" (which is stored in post-swap()
+			* "vma").
+			*/
+		__vma_unlink_list(mm, next);
+		// if (file)
+		// 	__remove_shared_vm_struct(next, file, mapping);
+	} else if (insert) {
+		/*
+		 * split_vma has split insert from vma, and needs
+		 * us to insert it before dropping the locks
+		 * (it may either follow vma or precede it).
+		 */
+		vma_s *prev;
+		while (myos_if_vma_overlaps(mm, insert->vm_start, insert->vm_end, &prev));
 
-	// if (anon_vma) {
-	// 	anon_vma_interval_tree_post_update_vma(vma);
-	// 	if (adjust_next)
-	// 		anon_vma_interval_tree_post_update_vma(next);
-	// 	anon_vma_unlock_write(anon_vma);
-	// }
+		__vma_link_list(mm, insert, prev);
+		mm->map_count++;
+	} else {
+		if (end_changed && !next)
+			mm->highest_vm_end = vm_end_gap(vma);
+	}
 
-	// if (file) {
-	// 	i_mmap_unlock_write(mapping);
-	// 	uprobe_mmap(vma);
+	if (remove_next) {
+		mm->map_count--;
+		vm_area_free(next);
+		/*
+		 * In mprotect's case 6 (see comments on vma_merge),
+		 * we must remove another next too. It would clutter
+		 * up the code too much to do both in one go.
+		 */
+		if (remove_next != 3) {
+			/*
+			 * If "next" was removed and vma->vm_end was
+			 * expanded (up) over it, in turn
+			 * "next->vm_prev->vm_end" changed and the
+			 * "vma->vm_next" gap must be updated.
+			 */
+			next = vma->vm_next;
+		} else {
+			/*
+			 * For the scope of the comment "next" and
+			 * "vma" considered pre-swap(): if "vma" was
+			 * removed, next->vm_start was expanded (down)
+			 * over it and the "next" gap must be updated.
+			 * Because of the swap() the post-swap() "vma"
+			 * actually points to pre-swap() "next"
+			 * (post-swap() "next" as opposed is now a
+			 * dangling pointer).
+			 */
+			next = vma;
+		}
+		if (remove_next == 2) {
+			remove_next = 1;
+			end = next->vm_end;
+			goto again;
+		}
+		// else if (next)
+		// 	vma_gap_update(next);
+		// else {
+		// 	/*
+		// 	 * If remove_next == 2 we obviously can't
+		// 	 * reach this path.
+		// 	 *
+		// 	 * If remove_next == 3 we can't reach this
+		// 	 * path because pre-swap() next is always not
+		// 	 * NULL. pre-swap() "next" is not being
+		// 	 * removed and its next->vm_end is not altered
+		// 	 * (and furthermore "end" already matches
+		// 	 * next->vm_end in remove_next == 3).
+		// 	 *
+		// 	 * We reach this only in the remove_next == 1
+		// 	 * case if the "next" vma that was removed was
+		// 	 * the highest vma of the mm. However in such
+		// 	 * case next->vm_end == "end" and the extended
+		// 	 * "vma" has vma->vm_end == next->vm_end so
+		// 	 * mm->highest_vm_end doesn't need any update
+		// 	 * in remove_next == 1 case.
+		// 	 */
+		// 	VM_WARN_ON(mm->highest_vm_end != vm_end_gap(vma));
+		// }
+	}
 
-	// 	if (adjust_next)
-	// 		uprobe_mmap(next);
-	// }
-
-	// if (remove_next) {
-	// 	if (file) {
-	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
-	// 		fput(file);
-	// 	}
-	// 	if (next->anon_vma)
-	// 		anon_vma_merge(vma, next);
-	// 	mm->map_count--;
-	// 	mpol_put(vma_policy(next));
-	// 	vm_area_free(next);
-	// 	/*
-	// 	 * In mprotect's case 6 (see comments on vma_merge),
-	// 	 * we must remove another next too. It would clutter
-	// 	 * up the code too much to do both in one go.
-	// 	 */
-	// 	if (remove_next != 3) {
-	// 		/*
-	// 		 * If "next" was removed and vma->vm_end was
-	// 		 * expanded (up) over it, in turn
-	// 		 * "next->vm_prev->vm_end" changed and the
-	// 		 * "vma->vm_next" gap must be updated.
-	// 		 */
-	// 		next = vma->vm_next;
-	// 	} else {
-	// 		/*
-	// 		 * For the scope of the comment "next" and
-	// 		 * "vma" considered pre-swap(): if "vma" was
-	// 		 * removed, next->vm_start was expanded (down)
-	// 		 * over it and the "next" gap must be updated.
-	// 		 * Because of the swap() the post-swap() "vma"
-	// 		 * actually points to pre-swap() "next"
-	// 		 * (post-swap() "next" as opposed is now a
-	// 		 * dangling pointer).
-	// 		 */
-	// 		next = vma;
-	// 	}
-	// 	if (remove_next == 2) {
-	// 		remove_next = 1;
-	// 		end = next->vm_end;
-	// 		goto again;
-	// 	}
-	// 	else if (next)
-	// 		vma_gap_update(next);
-	// 	else {
-	// 		/*
-	// 		 * If remove_next == 2 we obviously can't
-	// 		 * reach this path.
-	// 		 *
-	// 		 * If remove_next == 3 we can't reach this
-	// 		 * path because pre-swap() next is always not
-	// 		 * NULL. pre-swap() "next" is not being
-	// 		 * removed and its next->vm_end is not altered
-	// 		 * (and furthermore "end" already matches
-	// 		 * next->vm_end in remove_next == 3).
-	// 		 *
-	// 		 * We reach this only in the remove_next == 1
-	// 		 * case if the "next" vma that was removed was
-	// 		 * the highest vma of the mm. However in such
-	// 		 * case next->vm_end == "end" and the extended
-	// 		 * "vma" has vma->vm_end == next->vm_end so
-	// 		 * mm->highest_vm_end doesn't need any update
-	// 		 * in remove_next == 1 case.
-	// 		 */
-	// 		VM_WARN_ON(mm->highest_vm_end != vm_end_gap(vma));
-	// 	}
-	// }
-	// if (insert && file)
-	// 	uprobe_mmap(insert);
-
-	// validate_mm(mm);
+	validate_mm(mm);
 
 	return 0;
 }
@@ -1027,6 +1028,10 @@ vma_s *find_vma_prev(mm_s *mm, unsigned long addr, vma_s **pprev)
 
 	return vma;
 }
+
+
+/* enforced gap between the expanding stack and other mappings. */
+unsigned long stack_guard_gap = 256UL<<PAGE_SHIFT;
 
 
 /*
