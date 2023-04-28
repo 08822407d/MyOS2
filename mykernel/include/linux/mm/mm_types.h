@@ -497,9 +497,9 @@
 		 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
 		 * or brk vma (with NULL file) can only be in an anon_vma list.
 		 */
-		List_s			anon_vma_chain; /* Serialized by mmap_lock &
-										* page_table_lock */
-		anon_vma_s		*anon_vma;		 /* Serialized by page_table_lock */
+		// List_s			anon_vma_chain; /* Serialized by mmap_lock &
+		// 								* page_table_lock */
+		// anon_vma_s		*anon_vma;		 /* Serialized by page_table_lock */
 
 		/* Function pointers to deal with this struct. */
 		const vm_ops_s	*vm_ops;

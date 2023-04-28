@@ -103,7 +103,6 @@ static inline vma_s
 *vma_next(mm_s *mm, vma_s *vma) {
 	if (!vma)
 		return mm->mmap;
-
 	return vma->vm_next;
 }
 
@@ -149,8 +148,6 @@ int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
 {
 	mm_s *mm = vma->vm_mm;
 	vma_s *next = vma->vm_next, *orig_vma = vma;
-	// struct address_space *mapping = NULL;
-	anon_vma_s *anon_vma = NULL;
 	file_s *file = vma->vm_file;
 	bool start_changed = false, end_changed = false;
 	long adjust_next = 0;
@@ -200,7 +197,7 @@ int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
 			 * If next doesn't have anon_vma, import from vma after
 			 * next, if the vma overlaps with it.
 			 */
-			if (remove_next == 2 && !next->anon_vma)
+			if (remove_next == 2)
 				exporter = next->vm_next;
 
 		} else if (end > next->vm_start) {
@@ -222,20 +219,6 @@ int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
 			exporter = vma;
 			importer = next;
 			// VM_WARN_ON(expand != importer);
-		}
-
-		/*
-		 * Easily overlooked: when mprotect shifts the boundary,
-		 * make sure the expanding vma has anon_vma set if the
-		 * shrinking vma had, to cover any anon pages imported.
-		 */
-		if (exporter && exporter->anon_vma && !importer->anon_vma) {
-			int error;
-
-			importer->anon_vma = exporter->anon_vma;
-			error = anon_vma_clone(importer, exporter);
-			if (error)
-				return error;
 		}
 	}
 again:
@@ -261,18 +244,6 @@ again:
 	// 	}
 	// }
 
-	// anon_vma = vma->anon_vma;
-	// if (!anon_vma && adjust_next)
-	// 	anon_vma = next->anon_vma;
-	// if (anon_vma) {
-	// 	VM_WARN_ON(adjust_next && next->anon_vma &&
-	// 		   anon_vma != next->anon_vma);
-	// 	anon_vma_lock_write(anon_vma);
-	// 	anon_vma_interval_tree_pre_update_vma(vma);
-	// 	if (adjust_next)
-	// 		anon_vma_interval_tree_pre_update_vma(next);
-	// }
-
 	// if (file) {
 	// 	flush_dcache_mmap_lock(mapping);
 	// 	vma_interval_tree_remove(vma, root);
@@ -280,19 +251,19 @@ again:
 	// 		vma_interval_tree_remove(next, root);
 	// }
 
-	// if (start != vma->vm_start) {
-	// 	vma->vm_start = start;
-	// 	start_changed = true;
-	// }
-	// if (end != vma->vm_end) {
-	// 	vma->vm_end = end;
-	// 	end_changed = true;
-	// }
-	// vma->vm_pgoff = pgoff;
-	// if (adjust_next) {
-	// 	next->vm_start += adjust_next;
-	// 	next->vm_pgoff += adjust_next >> PAGE_SHIFT;
-	// }
+	if (start != vma->vm_start) {
+		vma->vm_start = start;
+		start_changed = true;
+	}
+	if (end != vma->vm_end) {
+		vma->vm_end = end;
+		end_changed = true;
+	}
+	vma->vm_pgoff = pgoff;
+	if (adjust_next) {
+		next->vm_start += adjust_next;
+		next->vm_pgoff += adjust_next >> PAGE_SHIFT;
+	}
 
 	// if (file) {
 	// 	if (adjust_next)
@@ -432,43 +403,28 @@ again:
  * If the vma has a ->close operation then the driver probably needs to release
  * per-vma resources, so we don't attempt to merge those.
  */
-// static inline int
-// is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags,
-// 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		struct anon_vma_name *anon_name) {
-// 	/*
-// 	 * VM_SOFTDIRTY should not prevent from VMA merging, if we
-// 	 * match the flags but dirty bit -- the caller should mark
-// 	 * merged VMA as dirty. If dirty bit won't be excluded from
-// 	 * comparison, we increase pressure on the memory system forcing
-// 	 * the kernel to generate new VMAs when old one could be
-// 	 * extended instead.
-// 	 */
-// 	if ((vma->vm_flags ^ vm_flags) & ~VM_SOFTDIRTY)
-// 		return 0;
-// 	if (vma->vm_file != file)
-// 		return 0;
-// 	if (vma->vm_ops && vma->vm_ops->close)
-// 		return 0;
-// 	if (!is_mergeable_vm_userfaultfd_ctx(vma, vm_userfaultfd_ctx))
-// 		return 0;
-// 	if (!anon_vma_name_eq(anon_vma_name(vma), anon_name))
-// 		return 0;
-// 	return 1;
-// }
-
-// static inline int
-// is_mergeable_anon_vma(anon_vma_s *anon_vma1,
-// 		anon_vma_s *anon_vma2, vma_s *vma) {
-// 	/*
-// 	 * The list_is_singular() test is to avoid merging VMA cloned from
-// 	 * parents. This can improve scalability caused by anon_vma lock.
-// 	 */
-// 	if ((!anon_vma1 || !anon_vma2) && (!vma ||
-// 		list_is_singular(&vma->anon_vma_chain)))
-// 		return 1;
-// 	return anon_vma1 == anon_vma2;
-// }
+// static inline int is_mergeable_vma(struct vm_area_struct *vma,
+// 				struct file *file, unsigned long vm_flags,
+// 				struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 				struct anon_vma_name *anon_name)
+static inline int
+myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
+	/*
+	 * VM_SOFTDIRTY should not prevent from VMA merging, if we
+	 * match the flags but dirty bit -- the caller should mark
+	 * merged VMA as dirty. If dirty bit won't be excluded from
+	 * comparison, we increase pressure on the memory system forcing
+	 * the kernel to generate new VMAs when old one could be
+	 * extended instead.
+	 */
+	if ((vma->vm_flags ^ vm_flags) & ~VM_SOFTDIRTY)
+		return 0;
+	if (vma->vm_file != file)
+		return 0;
+	if (vma->vm_ops && vma->vm_ops->close)
+		return 0;
+	return 1;
+}
 
 /*
  * Return true if we can merge this (vm_flags,anon_vma,file,vm_pgoff)
@@ -482,17 +438,20 @@ again:
  * wrap, nor mmaps which cover the final page at index -1UL.
  */
 // static int
-// can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
-// 		anon_vma_s *anon_vma, file_s *file, pgoff_t vm_pgoff,
-// 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		struct anon_vma_name *anon_name) {
-// 	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, anon_name) &&
-// 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
-// 		if (vma->vm_pgoff == vm_pgoff)
-// 			return 1;
-// 	}
-// 	return 0;
-// }
+// can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
+// 		     struct anon_vma *anon_vma, struct file *file,
+// 		     pgoff_t vm_pgoff,
+// 		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 		     struct anon_vma_name *anon_name)
+static int
+myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
+		file_s *file, pgoff_t vm_pgoff) {
+	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
+		if (vma->vm_pgoff == vm_pgoff)
+			return 1;
+	}
+	return 0;
+}
 
 /*
  * Return true if we can merge this (vm_flags,anon_vma,file,vm_pgoff)
@@ -502,19 +461,22 @@ again:
  * anon_vmas, nor if same anon_vma is assigned but offsets incompatible.
  */
 // static int
-// can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
-// 		anon_vma_s *anon_vma, file_s *file, pgoff_t vm_pgoff,
-// 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		struct anon_vma_name *anon_name) {
-// 	if (is_mergeable_vma(vma, file, vm_flags, vm_userfaultfd_ctx, anon_name) &&
-// 	    is_mergeable_anon_vma(anon_vma, vma->anon_vma, vma)) {
-// 		pgoff_t vm_pglen;
-// 		vm_pglen = vma_pages(vma);
-// 		if (vma->vm_pgoff + vm_pglen == vm_pgoff)
-// 			return 1;
-// 	}
-// 	return 0;
-// }
+// can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
+// 		    struct anon_vma *anon_vma, struct file *file,
+// 		    pgoff_t vm_pgoff,
+// 		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 		    struct anon_vma_name *anon_name)
+static int
+myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
+		file_s *file, pgoff_t vm_pgoff) {
+	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
+		pgoff_t vm_pglen;
+		vm_pglen = vma_pages(vma);
+		if (vma->vm_pgoff + vm_pglen == vm_pgoff)
+			return 1;
+	}
+	return 0;
+}
 
 /*
  * Given a mapping request (addr,end,vm_flags,file,pgoff,anon_name),
@@ -565,89 +527,78 @@ again:
 // 		struct mempolicy *policy,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
-// {
-// 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
-// 	struct vm_area_struct *area, *next;
-// 	int err;
+vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long end,
+		unsigned long vm_flags, file_s *file, pgoff_t pgoff)
+{
+	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
+	vma_s *area, *next;
+	int err;
 
-// 	/*
-// 	 * We later require that vma->vm_flags == vm_flags,
-// 	 * so this tests vma->vm_flags & VM_SPECIAL, too.
-// 	 */
-// 	if (vm_flags & VM_SPECIAL)
-// 		return NULL;
+	/*
+	 * We later require that vma->vm_flags == vm_flags,
+	 * so this tests vma->vm_flags & VM_SPECIAL, too.
+	 */
+	if (vm_flags & VM_SPECIAL)
+		return NULL;
 
-// 	next = vma_next(mm, prev);
-// 	area = next;
-// 	if (area && area->vm_end == end)		/* cases 6, 7, 8 */
-// 		next = next->vm_next;
+	next = vma_next(mm, prev);
+	area = next;
+	if (area && area->vm_end == end)		/* cases 6, 7, 8 */
+		next = next->vm_next;
 
-// 	/* verify some invariant that must be enforced by the caller */
-// 	VM_WARN_ON(prev && addr <= prev->vm_start);
-// 	VM_WARN_ON(area && end > area->vm_end);
-// 	VM_WARN_ON(addr >= end);
+	/*
+	 * Can it merge with the predecessor?
+	 */
+	if (prev && prev->vm_end == addr &&
+			myos_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
+		/*
+		 * OK, it can.  Can we now merge in the successor as well?
+		 */
+		if (next && end == next->vm_start &&
+				myos_can_vma_merge_before(next, vm_flags,
+						file, pgoff+pglen)) {
+							/* cases 1, 6 */
+			err = __myos_vma_adjust(prev, prev->vm_start,
+					 next->vm_end, prev->vm_pgoff, NULL,
+					 prev);
+		} else					/* cases 2, 5, 7 */
+			err = __myos_vma_adjust(prev, prev->vm_start,
+					 end, prev->vm_pgoff, NULL, prev);
+		if (err)
+			return NULL;
+		// khugepaged_enter_vma_merge(prev, vm_flags);
+		return prev;
+	}
 
-// 	/*
-// 	 * Can it merge with the predecessor?
-// 	 */
-// 	if (prev && prev->vm_end == addr &&
-// 			mpol_equal(vma_policy(prev), policy) &&
-// 			can_vma_merge_after(prev, vm_flags,
-// 					    anon_vma, file, pgoff,
-// 					    vm_userfaultfd_ctx, anon_name)) {
-// 		/*
-// 		 * OK, it can.  Can we now merge in the successor as well?
-// 		 */
-// 		if (next && end == next->vm_start &&
-// 				mpol_equal(policy, vma_policy(next)) &&
-// 				can_vma_merge_before(next, vm_flags,
-// 						     anon_vma, file,
-// 						     pgoff+pglen,
-// 						     vm_userfaultfd_ctx, anon_name) &&
-// 				is_mergeable_anon_vma(prev->anon_vma,
-// 						      next->anon_vma, NULL)) {
-// 							/* cases 1, 6 */
-// 			err = __vma_adjust(prev, prev->vm_start,
-// 					 next->vm_end, prev->vm_pgoff, NULL,
-// 					 prev);
-// 		} else					/* cases 2, 5, 7 */
-// 			err = __vma_adjust(prev, prev->vm_start,
-// 					 end, prev->vm_pgoff, NULL, prev);
-// 		if (err)
-// 			return NULL;
-// 		khugepaged_enter_vma_merge(prev, vm_flags);
-// 		return prev;
-// 	}
+	// /*
+	//  * Can this new request be merged in front of next?
+	//  */
+	// if (next && end == next->vm_start &&
+	// 		mpol_equal(policy, vma_policy(next)) &&
+	// 		can_vma_merge_before(next, vm_flags,
+	// 				     anon_vma, file, pgoff+pglen,
+	// 				     vm_userfaultfd_ctx, anon_name)) {
+	// 	if (prev && addr < prev->vm_end)	/* case 4 */
+	// 		err = __vma_adjust(prev, prev->vm_start,
+	// 				 addr, prev->vm_pgoff, NULL, next);
+	// 	else {					/* cases 3, 8 */
+	// 		err = __vma_adjust(area, addr, next->vm_end,
+	// 				 next->vm_pgoff - pglen, NULL, next);
+	// 		/*
+	// 		 * In case 3 area is already equal to next and
+	// 		 * this is a noop, but in case 8 "area" has
+	// 		 * been removed and next was expanded over it.
+	// 		 */
+	// 		area = next;
+	// 	}
+	// 	if (err)
+	// 		return NULL;
+	// 	khugepaged_enter_vma_merge(area, vm_flags);
+	// 	return area;
+	// }
 
-// 	/*
-// 	 * Can this new request be merged in front of next?
-// 	 */
-// 	if (next && end == next->vm_start &&
-// 			mpol_equal(policy, vma_policy(next)) &&
-// 			can_vma_merge_before(next, vm_flags,
-// 					     anon_vma, file, pgoff+pglen,
-// 					     vm_userfaultfd_ctx, anon_name)) {
-// 		if (prev && addr < prev->vm_end)	/* case 4 */
-// 			err = __vma_adjust(prev, prev->vm_start,
-// 					 addr, prev->vm_pgoff, NULL, next);
-// 		else {					/* cases 3, 8 */
-// 			err = __vma_adjust(area, addr, next->vm_end,
-// 					 next->vm_pgoff - pglen, NULL, next);
-// 			/*
-// 			 * In case 3 area is already equal to next and
-// 			 * this is a noop, but in case 8 "area" has
-// 			 * been removed and next was expanded over it.
-// 			 */
-// 			area = next;
-// 		}
-// 		if (err)
-// 			return NULL;
-// 		khugepaged_enter_vma_merge(area, vm_flags);
-// 		return area;
-// 	}
-
-// 	return NULL;
-// }
+	return NULL;
+}
 
 
 /*
@@ -909,8 +860,7 @@ myos_mmap_region(file_s *file, unsigned long addr, unsigned long len,
 	/*
 	 * Can we just expand an old mapping?
 	 */
-	// vma = vma_merge(mm, prev, addr, addr + len, vm_flags,
-	// 		NULL, file, pgoff, NULL, NULL_VM_UFFD_CTX, NULL);
+	vma = myos_vma_merge(mm, prev, addr, addr + len, vm_flags, file, pgoff);
 	if (vma)
 		goto out;
 
@@ -1079,61 +1029,61 @@ vma_s *find_vma_prev(mm_s *mm, unsigned long addr, vma_s **pprev)
 }
 
 
-// /*
-//  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
-//  * has already been checked or doesn't make sense to fail.
-//  */
-// int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
-// {
-// 	vma_s *new;
-// 	int err;
+/*
+ * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
+ * has already been checked or doesn't make sense to fail.
+ */
+int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
+{
+	vma_s *new;
+	int err;
 
-// 	if (vma->vm_ops && vma->vm_ops->may_split) {
-// 		err = vma->vm_ops->may_split(vma, addr);
-// 		if (err)
-// 			return err;
-// 	}
+	if (vma->vm_ops && vma->vm_ops->may_split) {
+		err = vma->vm_ops->may_split(vma, addr);
+		if (err)
+			return err;
+	}
 
-// 	new = vm_area_dup(vma);
-// 	if (!new)
-// 		return -ENOMEM;
+	new = vm_area_dup(vma);
+	if (!new)
+		return -ENOMEM;
 
-// 	new->vm_start = addr;
-// 	new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+	new->vm_start = addr;
+	new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
 
-// 	// err = vma_dup_policy(vma, new);
-// 	// if (err)
-// 	// 	goto out_free_vma;
+	// err = vma_dup_policy(vma, new);
+	// if (err)
+	// 	goto out_free_vma;
 
-// 	err = anon_vma_clone(new, vma);
-// 	if (err)
-// 		goto out_free_mpol;
+	err = anon_vma_clone(new, vma);
+	if (err)
+		goto out_free_mpol;
 
-// 	// if (new->vm_file)
-// 	// 	get_file(new->vm_file);
+	// if (new->vm_file)
+	// 	get_file(new->vm_file);
 
-// 	if (new->vm_ops && new->vm_ops->open)
-// 		new->vm_ops->open(new);
+	if (new->vm_ops && new->vm_ops->open)
+		new->vm_ops->open(new);
 
-// 	err = __myos_vma_adjust(vma, vma->vm_start, addr,
-// 			vma->vm_pgoff, new, NULL);
+	err = __myos_vma_adjust(vma, vma->vm_start, addr,
+			vma->vm_pgoff, new, NULL);
 
-// 	/* Success. */
-// 	if (!err)
-// 		return 0;
+	/* Success. */
+	if (!err)
+		return 0;
 
-// 	/* Clean everything up if vma_adjust failed. */
-// 	if (new->vm_ops && new->vm_ops->close)
-// 		new->vm_ops->close(new);
-// 	// if (new->vm_file)
-// 	// 	fput(new->vm_file);
-// 	// unlink_anon_vmas(new);
-//  out_free_mpol:
-// // 	mpol_put(vma_policy(new));
-//  out_free_vma:
-// 	vm_area_free(new);
-// 	return err;
-// }
+	/* Clean everything up if vma_adjust failed. */
+	if (new->vm_ops && new->vm_ops->close)
+		new->vm_ops->close(new);
+	// if (new->vm_file)
+	// 	fput(new->vm_file);
+	// unlink_anon_vmas(new);
+ out_free_mpol:
+// 	mpol_put(vma_policy(new));
+ out_free_vma:
+	vm_area_free(new);
+	return err;
+}
 
 // /*
 //  * Split a vma into two pieces at address 'addr', a new vma is allocated
