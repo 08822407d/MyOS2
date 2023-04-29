@@ -135,30 +135,30 @@ static inline vma_s
 	return vma->vm_next;
 }
 
-// /*
-//  * munmap_vma_range() - munmap VMAs that overlap a range.
-//  * @mm: The mm struct
-//  * @start: The start of the range.
-//  * @len: The length of the range.
-//  * @pprev: pointer to the pointer that will be set to previous vm_area_struct
-//  * @rb_link: the rb_node
-//  * @rb_parent: the parent rb_node
-//  *
-//  * Find all the vm_area_struct that overlap from @start to
-//  * @end and munmap them.  Set @pprev to the previous vm_area_struct.
-//  *
-//  * Returns: -ENOMEM on munmap failure or 0 on success.
-//  */
-// static inline int
-// munmap_vma_range(mm_s *mm, unsigned long start,
-// 		unsigned long len, vma_s **pprev) {
+/*
+ * munmap_vma_range() - munmap VMAs that overlap a range.
+ * @mm: The mm struct
+ * @start: The start of the range.
+ * @len: The length of the range.
+ * @pprev: pointer to the pointer that will be set to previous vm_area_struct
+ * @rb_link: the rb_node
+ * @rb_parent: the parent rb_node
+ *
+ * Find all the vm_area_struct that overlap from @start to
+ * @end and munmap them.  Set @pprev to the previous vm_area_struct.
+ *
+ * Returns: -ENOMEM on munmap failure or 0 on success.
+ */
+static inline int
+munmap_vma_range(mm_s *mm, unsigned long start,
+		unsigned long len, vma_s **pprev) {
 
-// 	while (myos_if_vma_overlaps(mm, start, start + len, pprev))
-// 		if (__do_munmap(mm, start, len, false))
-// 			return -ENOMEM;
+	while (myos_if_vma_overlaps(mm, start, start + len, pprev))
+		if (__do_munmap(mm, start, len))
+			return -ENOMEM;
 
-// 	return 0;
-// }
+	return 0;
+}
 
 
 /*
@@ -1054,7 +1054,6 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 	// if (err)
 	// 	goto out_free_vma;
 
-	err = anon_vma_clone(new, vma);
 	if (err)
 		goto out_free_mpol;
 
@@ -1096,98 +1095,98 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 // 	return __split_vma(mm, vma, addr);
 // }
 
-// /* Munmap is split into 2 main parts -- this part which finds
-//  * what needs doing, and the areas themselves, which do the
-//  * work.  This now handles partial unmappings.
-//  * Jeremy Fitzhardinge <jeremy@goop.org>
-//  */
-// int __do_munmap(mm_s *mm, unsigned long start, size_t len, bool downgrade)
-// {
-// 	unsigned long end;
-// 	vma_s *vma, *prev, *last;
+/* Munmap is split into 2 main parts -- this part which finds
+ * what needs doing, and the areas themselves, which do the
+ * work.  This now handles partial unmappings.
+ * Jeremy Fitzhardinge <jeremy@goop.org>
+ */
+int __do_munmap(mm_s *mm, unsigned long start, size_t len)
+{
+	unsigned long end;
+	vma_s *vma, *prev, *last;
 
-// 	if ((offset_in_page(start)) || start > TASK_SIZE ||
-// 			len > TASK_SIZE-start)
-// 		return -EINVAL;
+	if ((offset_in_page(start)) || start > TASK_SIZE ||
+			len > TASK_SIZE-start)
+		return -EINVAL;
 
-// 	len = PAGE_ALIGN(len);
-// 	end = start + len;
-// 	if (len == 0)
-// 		return -EINVAL;
+	len = PAGE_ALIGN(len);
+	end = start + len;
+	if (len == 0)
+		return -EINVAL;
 
-// 	// arch_unmap(mm, start, end); x86 do not do this
+	// arch_unmap(mm, start, end);
 
-// 	/* Find the first overlapping VMA where start < vma->vm_end */
-// 	vma = find_vma_intersection(mm, start, end);
-// 	if (!vma)
-// 		return 0;
-// 	prev = vma->vm_prev;
+	/* Find the first overlapping VMA where start < vma->vm_end */
+	vma = find_vma_intersection(mm, start, end);
+	if (!vma)
+		return 0;
+	prev = vma->vm_prev;
 
-// 	/*
-// 	 * If we need to split any vma, do it now to save pain later.
-// 	 *
-// 	 * Note: mremap's move_vma VM_ACCOUNT handling assumes a partially
-// 	 * unmapped vm_area_struct will remain in use: so lower split_vma
-// 	 * places tmp vma above, and higher split_vma places tmp vma below.
-// 	 */
-// 	if (start > vma->vm_start) {
-// 		int error;
+	/*
+	 * If we need to split any vma, do it now to save pain later.
+	 *
+	 * Note: mremap's move_vma VM_ACCOUNT handling assumes a partially
+	 * unmapped vm_area_struct will remain in use: so lower split_vma
+	 * places tmp vma above, and higher split_vma places tmp vma below.
+	 */
+	if (start > vma->vm_start) {
+		int error;
 
-// 		/*
-// 		 * Make sure that map_count on return from munmap() will
-// 		 * not exceed its limit; but let map_count go just above
-// 		 * its limit temporarily, to help free resources as expected.
-// 		 */
-// 		if (end < vma->vm_end && mm->map_count >= sysctl_max_map_count)
-// 			return -ENOMEM;
+		/*
+		 * Make sure that map_count on return from munmap() will
+		 * not exceed its limit; but let map_count go just above
+		 * its limit temporarily, to help free resources as expected.
+		 */
+		if (end < vma->vm_end && mm->map_count >= sysctl_max_map_count)
+			return -ENOMEM;
 
-// 		error = __split_vma(mm, vma, start);
-// 		if (error)
-// 			return error;
-// 		prev = vma;
-// 	}
+		error = __split_vma(mm, vma, start);
+		if (error)
+			return error;
+		prev = vma;
+	}
 
-// 	// /* Does it split the last one? */
-// 	// last = find_vma(mm, end);
-// 	// if (last && end > last->vm_start) {
-// 	// 	int error = __split_vma(mm, last, end, 1);
-// 	// 	if (error)
-// 	// 		return error;
-// 	// }
-// 	// vma = vma_next(mm, prev);
+	/* Does it split the last one? */
+	last = myos_find_vma(mm, end);
+	if (last && end > last->vm_start) {
+		int error = __split_vma(mm, last, end);
+		if (error)
+			return error;
+	}
+	vma = vma_next(mm, prev);
 
-// 	// if (unlikely(uf)) {
-// 	// 	/*
-// 	// 	 * If userfaultfd_unmap_prep returns an error the vmas
-// 	// 	 * will remain split, but userland will get a
-// 	// 	 * highly unexpected error anyway. This is no
-// 	// 	 * different than the case where the first of the two
-// 	// 	 * __split_vma fails, but we don't undo the first
-// 	// 	 * split, despite we could. This is unlikely enough
-// 	// 	 * failure that it's not worth optimizing it for.
-// 	// 	 */
-// 	// 	int error = userfaultfd_unmap_prep(vma, start, end, uf);
-// 	// 	if (error)
-// 	// 		return error;
-// 	// }
+	// if (unlikely(uf)) {
+	// 	/*
+	// 	 * If userfaultfd_unmap_prep returns an error the vmas
+	// 	 * will remain split, but userland will get a
+	// 	 * highly unexpected error anyway. This is no
+	// 	 * different than the case where the first of the two
+	// 	 * __split_vma fails, but we don't undo the first
+	// 	 * split, despite we could. This is unlikely enough
+	// 	 * failure that it's not worth optimizing it for.
+	// 	 */
+	// 	int error = userfaultfd_unmap_prep(vma, start, end, uf);
+	// 	if (error)
+	// 		return error;
+	// }
 
-// 	// /*
-// 	//  * unlock any mlock()ed ranges before detaching vmas
-// 	//  */
-// 	// if (mm->locked_vm)
-// 	// 	unlock_range(vma, end);
+	// /*
+	//  * unlock any mlock()ed ranges before detaching vmas
+	//  */
+	// if (mm->locked_vm)
+	// 	unlock_range(vma, end);
 
-// 	// /* Detach vmas from rbtree */
-// 	// if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
-// 	// 	downgrade = false;
+	// /* Detach vmas from rbtree */
+	// if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
+	// 	downgrade = false;
 
-// 	// if (downgrade)
-// 	// 	mmap_write_downgrade(mm);
+	// if (downgrade)
+	// 	mmap_write_downgrade(mm);
 
-// 	// unmap_region(mm, vma, prev, start, end);
+	// unmap_region(mm, vma, prev, start, end);
 
-// 	// /* Fix up all other VM information */
-// 	// remove_vma_list(mm, vma);
+	// /* Fix up all other VM information */
+	// remove_vma_list(mm, vma);
 
-// 	// return downgrade ? 1 : 0;
-// }
+	// return downgrade ? 1 : 0;
+}

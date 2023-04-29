@@ -354,8 +354,7 @@ mm_s *__myos_mm_init(mm_s *mm) {
 }
 
 static mm_s *mm_init(mm_s *mm, task_s *p) {
-// 	mm->mmap = NULL;
-// 	mm->mm_rb = RB_ROOT;
+	mm->mmap = NULL;
 // 	mm->vmacache_seqnum = 0;
 	atomic_set(&mm->mm_users, 1);
 	atomic_set(&mm->mm_refcount, 1);
