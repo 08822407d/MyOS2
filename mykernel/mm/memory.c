@@ -100,3 +100,107 @@
  * and ZONE_HIGHMEM.
  */
 void	*high_memory;
+
+
+
+// static inline int
+// copy_p4d_range(vma_s *dst_vma, vma_s *src_vma,
+// 		pgd_t *dst_pgd, pgd_t *src_pgd,
+// 		unsigned long addr, unsigned long end) {
+// 	mm_s *dst_mm = dst_vma->vm_mm;
+// 	p4d_t *src_p4d, *dst_p4d;
+// 	unsigned long next;
+
+// 	dst_p4d = p4d_alloc(dst_mm, dst_pgd, addr);
+// 	if (!dst_p4d)
+// 		return -ENOMEM;
+// 	src_p4d = p4d_offset(src_pgd, addr);
+// 	do {
+// 		next = p4d_addr_end(addr, end);
+// 		if (p4d_none_or_clear_bad(src_p4d))
+// 			continue;
+// 		if (copy_pud_range(dst_vma, src_vma, dst_p4d, src_p4d,
+// 				   addr, next))
+// 			return -ENOMEM;
+// 	} while (dst_p4d++, src_p4d++, addr = next, addr != end);
+// 	return 0;
+// }
+
+int
+copy_page_range(vma_s *dst_vma, vma_s *src_vma)
+{
+	pgd_t *src_pgd, *dst_pgd;
+	unsigned long next;
+	unsigned long addr = src_vma->vm_start;
+	unsigned long end = src_vma->vm_end;
+	mm_s *dst_mm = dst_vma->vm_mm;
+	mm_s *src_mm = src_vma->vm_mm;
+	// struct mmu_notifier_range range;
+	bool is_cow;
+	int ret;
+
+	/*
+	 * Don't copy ptes where a page fault will fill them correctly.
+	 * Fork becomes much lighter when there are big shared or private
+	 * readonly mappings. The tradeoff is that copy_page_range is more
+	 * efficient than faulting.
+	 */
+	if (!(src_vma->vm_flags & (VM_HUGETLB | VM_PFNMAP | VM_MIXEDMAP)))
+		return 0;
+
+	// if (is_vm_hugetlb_page(src_vma))
+	// 	return copy_hugetlb_page_range(dst_mm, src_mm, src_vma);
+
+	// if (unlikely(src_vma->vm_flags & VM_PFNMAP)) {
+	// 	/*
+	// 	 * We do not free on error cases below as remove_vma
+	// 	 * gets called on error from higher level routine
+	// 	 */
+	// 	ret = track_pfn_copy(src_vma);
+	// 	if (ret)
+	// 		return ret;
+	// }
+
+	/*
+	 * We need to invalidate the secondary MMU mappings only when
+	 * there could be a permission downgrade on the ptes of the
+	 * parent mm. And a permission downgrade will only happen if
+	 * is_cow_mapping() returns true.
+	 */
+	is_cow = is_cow_mapping(src_vma->vm_flags);
+
+	// if (is_cow) {
+	// 	mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE,
+	// 				0, src_vma, src_mm, addr, end);
+	// 	mmu_notifier_invalidate_range_start(&range);
+	// 	/*
+	// 	 * Disabling preemption is not needed for the write side, as
+	// 	 * the read side doesn't spin, but goes to the mmap_lock.
+	// 	 *
+	// 	 * Use the raw variant of the seqcount_t write API to avoid
+	// 	 * lockdep complaining about preemptibility.
+	// 	 */
+	// 	mmap_assert_write_locked(src_mm);
+	// 	raw_write_seqcount_begin(&src_mm->write_protect_seq);
+	// }
+
+	// ret = 0;
+	// dst_pgd = pgd_offset(dst_mm, addr);
+	// src_pgd = pgd_offset(src_mm, addr);
+	// do {
+	// 	next = pgd_addr_end(addr, end);
+	// 	if (pgd_none_or_clear_bad(src_pgd))
+	// 		continue;
+	// 	if (unlikely(copy_p4d_range(dst_vma, src_vma, dst_pgd, src_pgd,
+	// 				    addr, next))) {
+	// 		ret = -ENOMEM;
+	// 		break;
+	// 	}
+	// } while (dst_pgd++, src_pgd++, addr = next, addr != end);
+
+	// if (is_cow) {
+	// 	raw_write_seqcount_end(&src_mm->write_protect_seq);
+	// 	mmu_notifier_invalidate_range_end(&range);
+	// }
+	return ret;
+}

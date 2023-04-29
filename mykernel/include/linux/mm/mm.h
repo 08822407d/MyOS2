@@ -1331,10 +1331,9 @@
 	// 		GUP_PIN_COUNTING_BIAS;
 	// }
 
-	// static inline bool is_cow_mapping(vm_flags_t flags)
-	// {
-	// 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
-	// }
+	static inline bool is_cow_mapping(vm_flags_t flags) {
+		return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+	}
 
 	// /*
 	// * This should most likely only be called during fork() to see whether we
@@ -1846,8 +1845,8 @@
 
 	// void free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
 	// 		unsigned long end, unsigned long floor, unsigned long ceiling);
-	// int
-	// copy_page_range(vma_s *dst_vma, vma_s *src_vma);
+	int
+	copy_page_range(vma_s *dst_vma, vma_s *src_vma);
 	// int follow_invalidate_pte(mm_s *mm, unsigned long address,
 	// 			struct mmu_notifier_range *range, pte_t **ptepp,
 	// 			pmd_t **pmdpp, spinlock_t **ptlp);
