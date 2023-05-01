@@ -160,7 +160,7 @@
 	// #define phys_to_virt	phys_to_virt
 
 	// /*
-	//  * Change "struct page" to physical address.
+	//  * Change "page_s" to physical address.
 	//  */
 	// #define page_to_phys(page)	((dma_addr_t)page_to_pfn(page) << PAGE_SHIFT)
 

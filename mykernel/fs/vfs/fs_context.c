@@ -54,9 +54,9 @@ static int legacy_init_fs_context(fs_ctxt_s *fc);
  * another superblock (referred to by @reference) is supplied, may have
  * parameters such as namespaces copied across from that superblock.
  */
-static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type, dentry_s *reference,
-				unsigned int sb_flags, unsigned int sb_flags_mask,
-				enum fs_context_purpose purpose)
+static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type,
+		dentry_s *reference, unsigned int sb_flags,
+		unsigned int sb_flags_mask, enum fs_context_purpose purpose)
 {
 	int (*init_fs_context)(fs_ctxt_s *);
 	fs_ctxt_s *fc;
@@ -127,7 +127,7 @@ void put_fs_context(fs_ctxt_s *fc)
 /*
  * Get a mountable root with the legacy mount command.
  */
-static int legacy_get_tree(struct fs_context *fc)
+static int legacy_get_tree(fs_ctxt_s *fc)
 {
 	legacy_fs_ctx_s *ctx = fc->fs_private;
 	dentry_s *root;

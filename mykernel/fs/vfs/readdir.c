@@ -93,8 +93,8 @@ static int verify_dirent_name(const char *name, int len)
 	return 0;
 }
 
-static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
-				loff_t offset, u64 ino, unsigned int d_type)
+static int filldir64(dir_ctxt_s *ctx, const char *name,
+		int namelen, loff_t offset, u64 ino, unsigned int d_type)
 {
 	linux_dirent64_s *dirent, *prev;
 	getdents_cbk64_s *buf =

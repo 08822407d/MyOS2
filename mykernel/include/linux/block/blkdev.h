@@ -831,7 +831,7 @@
 	// extern void blk_io_schedule(void);
 
 	// extern int blkdev_issue_write_same(blk_dev_s *bdev, sector_t sector,
-	// 		sector_t nr_sects, gfp_t gfp_mask, struct page *page);
+	// 		sector_t nr_sects, gfp_t gfp_mask, page_s *page);
 
 	// #define BLKDEV_DISCARD_SECURE	(1 << 0)	/* issue a secure erase */
 
@@ -1189,7 +1189,7 @@
 	// 	void (*submit_bio)(struct bio *bio);
 		int (*open) (blk_dev_s *, fmode_t);
 		void (*release) (struct gendisk *, fmode_t);
-	// 	int (*rw_page)(blk_dev_s *, sector_t, struct page *, unsigned int);
+	// 	int (*rw_page)(blk_dev_s *, sector_t, page_s *, unsigned int);
 	// 	int (*ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
 	// 	int (*compat_ioctl) (blk_dev_s *, fmode_t, unsigned, unsigned long);
 	// 	unsigned int (*check_events) (struct gendisk *disk,
@@ -1223,8 +1223,8 @@
 	// #define blkdev_compat_ptr_ioctl NULL
 	// #endif
 
-	// extern int bdev_read_page(blk_dev_s *, sector_t, struct page *);
-	// extern int bdev_write_page(blk_dev_s *, sector_t, struct page *,
+	// extern int bdev_read_page(blk_dev_s *, sector_t, page_s *);
+	// extern int bdev_write_page(blk_dev_s *, sector_t, page_s *,
 	// 						struct writeback_control *);
 
 	// static inline void blk_wake_io_task(task_s *waiter)

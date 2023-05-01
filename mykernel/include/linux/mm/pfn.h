@@ -8,7 +8,7 @@
 
 	/*
 	 * pfn_t: encapsulates a page-frame number that is optionally backed
-	 * by memmap (struct page).  Whether a pfn_t has a 'struct page'
+	 * by memmap (page_s).  Whether a pfn_t has a 'page_s'
 	 * backing is indicated by flags in the high bits of the value.
 	 */
 		typedef struct {

@@ -150,13 +150,14 @@ void putname(filename_s *name)
 }
 
 // Linux function proto:
-// static inline void set_nameidata(struct nameidata *p, int dfd, struct filename *name,
-// 			  const struct path *root)
-// fill three params into name
-static void set_nameidata(OUT nameidata_s *p, int dfd, IN filename_s *name, IN path_s *root)
+// static inline void set_nameidata(struct nameidata *p, int dfd,
+// struct filename *name, const struct path *root)
+static void set_nameidata(OUT nameidata_s *p, int dfd,
+		IN filename_s *name, IN path_s *root)
 {
 	// linux call stack :
-	// static void __set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+	// static void __set_nameidata(struct nameidata *p, int dfd,
+	// struct filename *name)
 	// {
 		memset(p, 0, sizeof(nameidata_s));
 
@@ -208,7 +209,8 @@ static int complete_walk(nameidata_s *nd)
  *==============================================================================================*/
 // static bool choose_mountpoint(struct mount *m, const struct path *root,
 // 			      struct path *path)
-static bool choose_mountpoint(IN mount_s *m, IN const path_s *root, OUT path_s *path)
+static bool choose_mountpoint(IN mount_s *m,
+		IN const path_s *root, OUT path_s *path)
 {
 	while (mnt_has_parent(m))
 	{
@@ -256,7 +258,8 @@ static inline int traverse_mounts(IN OUT path_s *path)
 // static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
 // 			  struct path *path, struct inode **inode,
 // 			  unsigned int *seqp)
-static inline int handle_mounts(IN nameidata_s *nd, IN dentry_s *dentry, OUT path_s *path)
+static inline int handle_mounts(IN nameidata_s *nd,
+		IN dentry_s *dentry, OUT path_s *path)
 {
 	path->mnt = nd->path.mnt;
 	path->dentry = dentry;
@@ -315,7 +318,8 @@ static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 // Linux function proto:
 // static struct dentry *__lookup_slow(const struct qstr *name,
 //				    struct dentry *dir, unsigned int flags)
-static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags)
+static dentry_s *__lookup_slow(IN qstr_s *name,
+		IN dentry_s *dir, unsigned flags)
 {
 	dentry_s *dentry;
 
@@ -352,7 +356,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name, IN dentry_s *dir, unsigned flags
  * at all.
  */
 static dentry_s *__lookup_hash(const qstr_s *name,
-				dentry_s *base, unsigned int flags)
+		dentry_s *base, unsigned int flags)
 {
 	dentry_s *dentry = __d_lookup(base, name);
 	dentry_s *old;
@@ -630,8 +634,7 @@ static int path_parentat(nameidata_s *nd, unsigned flags, path_s *parent)
 }
 
 static int filename_parentat(int dfd, filename_s *name,
-				unsigned int flags, path_s *parent, qstr_s *last,
-				int *type)
+		unsigned int flags, path_s *parent, qstr_s *last, int *type)
 {
 	int retval;
 	nameidata_s nd;
@@ -713,8 +716,8 @@ static int do_open(IN nameidata_s *nd, OUT file_s *file, int open_flag)
 // static file_s *path_openat(struct nameidata *nd,
 // 			const struct open_flags *op, unsigned flags)
 // open the path in nd->name
-static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
-				unsigned flags)
+static file_s *path_openat(IN nameidata_s *nd,
+		const open_flags_s *op, unsigned flags)
 {
 	file_s *file;
 	int error;
@@ -743,7 +746,8 @@ static file_s *path_openat(IN nameidata_s *nd, const open_flags_s *op,
 // Linux function proto:
 // int user_path_at_empty(int dfd, const char __user *name, unsigned flags,
 // 		 struct path *path, int *empty)
-int user_path_at_empty(int dfd, const char *name, unsigned flags, OUT path_s *path)
+int user_path_at_empty(int dfd, const char *name,
+		unsigned flags, OUT path_s *path)
 {
 	filename_s *fn = getname(name);
 	return filename_lookup(dfd, fn, flags, path, NULL);
@@ -770,7 +774,7 @@ file_s *do_filp_open(int dfd, IN filename_s * name, const open_flags_s *op)
  *									fuctions for file create									*
  *==============================================================================================*/
 static dentry_s *filename_create(int dfd, filename_s *name,
-				path_s *path, unsigned int lookup_flags)
+		path_s *path, unsigned int lookup_flags)
 {
 	dentry_s *dentry = ERR_PTR(-EEXIST);
 	qstr_s last;
@@ -825,7 +829,7 @@ out:
 }
 
 dentry_s *kern_path_create(int dfd, const char *pathname,
-				path_s *path, unsigned int lookup_flags)
+		path_s *path, unsigned int lookup_flags)
 {
 	filename_s *filename = getname_kernel(pathname);
 	dentry_s *res = filename_create(dfd, filename, path, lookup_flags);
@@ -841,7 +845,7 @@ void done_path_create(path_s *path, dentry_s *dentry)
 }
 
 inline dentry_s *user_path_create(int dfd, const char *pathname,
-				path_s *path, unsigned int lookup_flags)
+		path_s *path, unsigned int lookup_flags)
 {
 	filename_s *filename = getname(pathname);
 	dentry_s *res = filename_create(dfd, filename, path, lookup_flags);

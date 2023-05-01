@@ -1719,10 +1719,10 @@
 	// */
 	// #include <linux/vmstat.h>
 
-	// static __always_inline void *lowmem_page_address(const page_s *page)
-	// {
-	// 	return page_to_virt(page);
-	// }
+	static __always_inline void
+	*lowmem_page_address(const page_s *page) {
+		return (void *)page_to_virt(page);
+	}
 
 	// #if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
 	// #define HASHED_PAGE_VIRTUAL
@@ -1746,11 +1746,11 @@
 	// void page_address_init(void);
 	// #endif
 
-	// #if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
-	// #define page_address(page) lowmem_page_address(page)
-	// #define set_page_address(page, address)  do { } while(0)
-	// #define page_address_init()  do { } while(0)
-	// #endif
+	#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
+	#	define page_address(page)				lowmem_page_address(page)
+	#	define set_page_address(page, address)	do { } while(0)
+	#	define page_address_init()				do { } while(0)
+	#endif
 
 	// static inline void *folio_address(const folio_s *folio)
 	// {
@@ -2139,12 +2139,12 @@
 	// 	return ptep;
 	// }
 
-	static inline int __p4d_alloc(mm_s *mm,
-			pgd_t *pgd, unsigned long address) {
-		return 0;
-	}
+	// static inline int __p4d_alloc(mm_s *mm,
+	// 		pgd_t *pgd, unsigned long address) {
+	// 	return 0;
+	// }
 
-	// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
+	int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
 	// static inline void mm_inc_nr_puds(mm_s *mm)
 	// {
@@ -2160,7 +2160,7 @@
 	// 	atomic_long_sub(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
-	// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
+	int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
 	// static inline void mm_inc_nr_pmds(mm_s *mm)
 	// {
@@ -2213,18 +2213,21 @@
 
 	// #if defined(CONFIG_MMU)
 
+	// static inline p4d_t *p4d_alloc(mm_s *mm,
+	// 		pgd_t *pgd, unsigned long address) {
+	// 	return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
+	// 		NULL : p4d_offset(pgd, address);
+	// }
 	static inline p4d_t *p4d_alloc(mm_s *mm,
 			pgd_t *pgd, unsigned long address) {
-		return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
-			NULL : p4d_offset(pgd, address);
+		return p4d_offset(pgd, address);
 	}
 
-	// static inline pud_t *pud_alloc(mm_s *mm, p4d_t *p4d,
-	// 		unsigned long address)
-	// {
-	// 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
-	// 		NULL : pud_offset(p4d, address);
-	// }
+	static inline pud_t *pud_alloc(mm_s *mm,
+			p4d_t *p4d, unsigned long address) {
+		return (p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
+			NULL : pud_offset(p4d, address);
+	}
 
 	// static inline pmd_t *pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	// {

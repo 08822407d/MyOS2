@@ -95,7 +95,8 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 /*
  * count() counts the number of strings in array ARGV.
  */
-static int count(const char *const *argv, int max) {
+static int count(const char *const *argv, int max)
+{
 	int i = 0;
 
 	if (argv != NULL) {
@@ -120,7 +121,8 @@ static int count(const char *const *argv, int max) {
 	return i;
 }
 
-static int count_strings_kernel(const char *const *argv) {
+static int count_strings_kernel(const char *const *argv)
+{
 	int i;
 
 	if (!argv)
@@ -143,9 +145,9 @@ static int count_strings_kernel(const char *const *argv) {
  * ensures the destination page is created and not swapped out.
  */
 static int
-copy_strings(int argc, const char *const *argv,
-		linux_bprm_s *bprm) {
-// 	struct page *kmapped_page = NULL;
+copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
+{
+// 	page_s *kmapped_page = NULL;
 	char *kaddr = NULL;
 	unsigned long kpos = 0;
 	int ret;
@@ -200,7 +202,7 @@ copy_strings(int argc, const char *const *argv,
 // 			len -= bytes_to_copy;
 
 // 			if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
-// 				struct page *page;
+// 				page_s *page;
 
 // 				page = get_arg_page(bprm, pos, 1);
 // 				if (!page) {
@@ -256,7 +258,7 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 	while (len > 0) {
 	// 	unsigned int bytes_to_copy = min_t(unsigned int, len,
 	// 			min_not_zero(offset_in_page(pos), PAGE_SIZE));
-	// 	struct page *page;
+	// 	page_s *page;
 	// 	char *kaddr;
 
 	// 	pos -= bytes_to_copy;
@@ -278,8 +280,8 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 }
 
 static int
-copy_strings_kernel(int argc, const char *const *argv,
-		linux_bprm_s *bprm) {
+copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
+{
 	while (argc-- > 0) {
 		int ret = copy_string_kernel(argv[argc], bprm);
 		if (ret < 0)
@@ -294,7 +296,8 @@ copy_strings_kernel(int argc, const char *const *argv,
 
 
 static file_s
-*do_open_execat(int fd, filename_s *name, int flags) {
+*do_open_execat(int fd, filename_s *name, int flags)
+{
 	file_s *file;
 	int err;
 	open_flags_s open_exec_flags = {
@@ -359,7 +362,8 @@ file_s *open_exec(const char *name)
  */
 
 // void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
-void set_task_comm(task_s *tsk, const char *buf) {
+void set_task_comm(task_s *tsk, const char *buf)
+{
 	// task_lock(tsk);
 	// trace_task_rename(tsk, buf);
 	// strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
@@ -573,7 +577,8 @@ static void free_bprm(linux_bprm_s *bprm)
 	kfree(bprm);
 }
 
-static linux_bprm_s *alloc_bprm(int fd, filename_s *filename) {
+static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
+{
 	linux_bprm_s *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
 	int retval = -ENOMEM;
 	if (!bprm)
@@ -613,7 +618,8 @@ out:
  *
  * This may be called multiple times for binary chains (scripts for example).
  */
-static int prepare_binprm(linux_bprm_s *bprm) {
+static int prepare_binprm(linux_bprm_s *bprm)
+{
 	loff_t pos = 0;
 
 	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
@@ -625,7 +631,8 @@ static int prepare_binprm(linux_bprm_s *bprm) {
 /*
  * cycle the list of binary formats handler, until one recognizes the image
  */
-static int search_binary_handler(linux_bprm_s *bprm) {
+static int search_binary_handler(linux_bprm_s *bprm)
+{
 	// bool need_retry = IS_ENABLED(CONFIG_MODULES);
 	linux_bfmt_s *fmt;
 	int retval;
@@ -676,8 +683,8 @@ extern int __myos_copy_strings(const char *const *argv);
  * sys_execve() executes a new program.
  */
 static int
-bprm_execve(linux_bprm_s *bprm, int fd,
-		filename_s *filename, int flags) {
+bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
+{
 	file_s *file;
 	int retval;
 
@@ -750,7 +757,8 @@ out_unmark:
 // static int do_execveat_common(int fd, struct filename *filename,
 // 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
 static int do_execveat_common(int fd, filename_s *filename,
-	const char *const *argv, const char *const *envp, int flags) {
+	const char *const *argv, const char *const *envp, int flags)
+{
 	linux_bprm_s *bprm;
 	int retval;
 
@@ -835,7 +843,8 @@ out_ret:
 
 int kernel_execve(const char *kernel_filename,
 		const char *const *argv,
-		const char *const *envp) {
+		const char *const *envp)
+{
 	filename_s *filename;
 	linux_bprm_s *bprm;
 	int fd = AT_FDCWD;
@@ -892,13 +901,15 @@ out_ret:
 
 static int do_execve(filename_s *filename,
 		const char *const *__argv,
-		const char *const *__envp) {
+		const char *const *__envp)
+{
 	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
 }
 
 
 long sys_execve(const char *filename,
 		const char *const __user *argv,
-		const char *const __user *envp) {
+		const char *const __user *envp)
+{
 	return do_execve(getname(filename), argv, envp);
 }

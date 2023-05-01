@@ -41,7 +41,7 @@
 	 * system RAM. This corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED in the
 	 * kernel resource tree.
 	 */
-	enum memblock_flags {
+	enum mmblk_flags {
 		MEMBLOCK_NONE			= 0x0,	/* No special request */
 		MEMBLOCK_HOTPLUG		= 0x1,	/* hotpluggable region */
 		MEMBLOCK_MIRROR			= 0x2,	/* mirrored region */
@@ -57,9 +57,9 @@
 	 * @nid: NUMA node id
 	 */
 	typedef struct memblock_region {
-		phys_addr_t	base;
-		phys_addr_t	size;
-		enum memblock_flags flags;
+		phys_addr_t			base;
+		phys_addr_t			size;
+		enum mmblk_flags	flags;
 	#ifdef CONFIG_NUMA
 		int nid;
 	#endif
@@ -109,7 +109,7 @@
 
 	// void memblock_allow_resize(void);
 	// int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
-	// 			enum memblock_flags flags);
+	// 			enum mmblk_flags flags);
 	int memblock_add(phys_addr_t base, phys_addr_t size);
 	int memblock_remove(phys_addr_t base, phys_addr_t size);
 	// int memblock_phys_free(phys_addr_t base, phys_addr_t size);
@@ -132,7 +132,7 @@
 	// void reset_all_zones_managed_pages(void);
 
 	/* Low level functions */
-	// void __next_mem_range(u64 *idx, int nid, enum memblock_flags flags,
+	// void __next_mem_range(u64 *idx, int nid, enum mmblk_flags flags,
 	// 			struct memblock_type *type_a,
 	// 			struct memblock_type *type_b, phys_addr_t *out_start,
 	// 			phys_addr_t *out_end, int *out_nid);
@@ -141,7 +141,7 @@
 			mmblk_type_s *type_b, phys_addr_t *out_start,
 			phys_addr_t *out_end);
 
-	// void __next_mem_range_rev(u64 *idx, int nid, enum memblock_flags flags,
+	// void __next_mem_range_rev(u64 *idx, int nid, enum mmblk_flags flags,
 	// 			struct memblock_type *type_a,
 	// 			struct memblock_type *type_b, phys_addr_t *out_start,
 	// 			phys_addr_t *out_end, int *out_nid);

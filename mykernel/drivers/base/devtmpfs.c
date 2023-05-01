@@ -92,7 +92,8 @@ static inline int is_blockdev(device_s *dev) {
 	return dev->class == &block_class;
 }
 
-static int devtmpfs_submit_req(req_s *req, const char *tmp) {
+static int devtmpfs_submit_req(req_s *req, const char *tmp)
+{
 	init_completion(&req->done);
 
 	spin_lock(&req_lock);
@@ -147,7 +148,8 @@ int devtmpfs_delete_node(device_s *dev)
 	return devtmpfs_submit_req(&req, tmp);
 }
 
-static int dev_mkdir(const char *name, umode_t mode) {
+static int dev_mkdir(const char *name, umode_t mode)
+{
 	dentry_s *dentry;
 	path_s path;
 	int err;
@@ -164,7 +166,8 @@ static int dev_mkdir(const char *name, umode_t mode) {
 	return err;
 }
 
-static int create_path(const char *nodepath) {
+static int create_path(const char *nodepath)
+{
 	char *path;
 	char *s;
 	int err = 0;
@@ -191,7 +194,8 @@ static int create_path(const char *nodepath) {
 }
 
 static int handle_create(const char *nodename, umode_t mode,
-		kuid_t uid, kgid_t gid, device_s *dev) {
+		kuid_t uid, kgid_t gid, device_s *dev)
+{
 	dentry_s *dentry;
 	path_s path;
 	int err;
@@ -223,7 +227,8 @@ static int handle_create(const char *nodename, umode_t mode,
 	return err;
 }
 
-static int dev_rmdir(const char *name) {
+static int dev_rmdir(const char *name)
+{
 	// struct path parent;
 	// struct dentry *dentry;
 	// int err;
@@ -246,7 +251,8 @@ static int dev_rmdir(const char *name) {
 	// return err;
 }
 
-static int delete_path(const char *nodepath) {
+static int delete_path(const char *nodepath)
+{
 	// char *path;
 	// int err = 0;
 
@@ -270,7 +276,8 @@ static int delete_path(const char *nodepath) {
 	// return err;
 }
 
-static int dev_mynode(device_s *dev, inode_s *inode, kstat_s *stat) {
+static int dev_mynode(device_s *dev, inode_s *inode, kstat_s *stat)
+{
 	// /* did we create it */
 	// if (inode->i_private != &thread)
 	// 	return 0;
@@ -290,7 +297,8 @@ static int dev_mynode(device_s *dev, inode_s *inode, kstat_s *stat) {
 	// return 1;
 }
 
-static int handle_remove(const char *nodename, device_s *dev) {
+static int handle_remove(const char *nodename, device_s *dev)
+{
 	// struct path parent;
 	// struct dentry *dentry;
 	// int deleted = 0;
@@ -339,14 +347,16 @@ static int handle_remove(const char *nodename, device_s *dev) {
 static __initdata DECLARE_COMPLETION(setup_done);
 
 static int handle(const char *name, umode_t mode,
-		kuid_t uid, kgid_t gid, device_s *dev) {
+		kuid_t uid, kgid_t gid, device_s *dev)
+{
 	if (mode)
 		return handle_create(name, mode, uid, gid, dev);
 	else
 		return handle_remove(name, dev);
 }
 
-static void devtmpfs_work_loop(void) {
+static void devtmpfs_work_loop(void)
+{
 	while (1) {
 		spin_lock(&req_lock);
 		while (requests) {
@@ -374,7 +384,8 @@ static void devtmpfs_work_loop(void) {
  * calls.  That call is done while devtmpfs_init, which is marked __init,
  * synchronously waits for it to complete.
  */
-static int devtmpfsd(void *p) {
+static int devtmpfsd(void *p)
+{
 	// int err = devtmpfs_setup(&p);
 	// {
 		int err = 0;

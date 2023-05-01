@@ -134,7 +134,7 @@ static void ascii_to16(u8 *buf, const char *name, int len)
 }
 
 static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
-				int is_dir, int cluster, msdos_dirslot_s *slots, int *nr_slots)
+		int is_dir, int cluster, msdos_dirslot_s *slots, int *nr_slots)
 {
 	msdos_dirslot_s *ps;
 	msdos_dirent_s *de;
@@ -197,7 +197,7 @@ out_free:
 // 			  int is_dir, int cluster, struct timespec64 *ts,
 // 			  struct fat_slot_info *sinfo)
 int vfat_add_entry(inode_s *dir, const qstr_s *qname,
-			  int is_dir, int cluster, fat_slot_info_s *sinfo)
+		int is_dir, int cluster, fat_slot_info_s *sinfo)
 {
 	msdos_dirslot_s *slots;
 	unsigned int len;
@@ -223,7 +223,7 @@ cleanup:
 }
 
 static int vfat_find(inode_s *dir, const qstr_s *qname,
-				fat_slot_info_s *sinfo)
+		fat_slot_info_s *sinfo)
 {
 	// unsigned int len = vfat_striptail_len(qname);
 	// if (len == 0)
@@ -232,7 +232,7 @@ static int vfat_find(inode_s *dir, const qstr_s *qname,
 }
 
 static dentry_s *vfat_lookup(inode_s *dir, dentry_s *dentry,
-				unsigned int flags)
+		unsigned int flags)
 {
 	super_block_s	*sb = dir->i_sb;
 	fat_slot_info_s	sinfo;
@@ -301,7 +301,7 @@ static int vfat_fill_super(super_block_s *sb, void *data, int silent)
 
 extern fs_type_s vfat_fs_type;
 static dentry_s *vfat_mount(fs_type_s *fs_type, int flags,
-				const char *dev_name, void *data)
+		const char *dev_name, void *data)
 {
 	return mount_bdev(&vfat_fs_type, flags, dev_name, data, vfat_fill_super);
 }

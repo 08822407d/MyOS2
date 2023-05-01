@@ -209,7 +209,7 @@
 	// 	long			index;
 	// 	size_t			count;
 	// 	size_t			total_size;
-	// 	struct page		**pages;
+	// 	page_s		**pages;
 	// 	phys_addr_t		*phys;
 	// 	size_t			page_bytes_remain;
 	// };

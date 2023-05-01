@@ -279,7 +279,7 @@ void d_set_d_op(dentry_s *dentry, const dentry_ops_s *op)
 }
 
 static inline void __d_set_inode_and_type(dentry_s *dentry,
-				inode_s *inode, unsigned type_flags)
+		inode_s *inode, unsigned type_flags)
 {
 	unsigned flags;
 

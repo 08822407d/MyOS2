@@ -171,7 +171,7 @@
 // libc_hidden_ver(_IO_new_file_finish, _IO_file_finish)
 
 FILE *_IO_file_open(FILE *fp, const char *filename,
-				int posix_mode, int prot, int read_write)
+		int posix_mode, int prot, int read_write)
 {
 	int fdesc;
 

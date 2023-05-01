@@ -141,7 +141,7 @@ static void shmem_free_inode(super_block_s *sb)
 }
 
 static inode_s *shmem_get_inode(super_block_s *sb, const inode_s *dir,
-				umode_t mode, dev_t dev, unsigned long flags)
+		umode_t mode, dev_t dev, unsigned long flags)
 {
 	inode_s *inode;
 	shmem_inode_info_s *info;
@@ -219,16 +219,14 @@ out_iput:
 	return error;
 }
 
-static int shmem_mkdir(inode_s *dir, dentry_s *dentry,
-				umode_t mode)
+static int shmem_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
 {
 	int error;
 	error = shmem_mknod(dir, dentry, mode | S_IFDIR, 0);
 	return error;
 }
 
-static int shmem_create(inode_s *dir, dentry_s *dentry,
-				umode_t mode)
+static int shmem_create(inode_s *dir, dentry_s *dentry, umode_t mode)
 {
 	return shmem_mknod(dir, dentry, mode | S_IFREG, 0);
 }
@@ -250,8 +248,7 @@ static int shmem_rmdir(inode_s *dir, dentry_s *dentry)
  * gets overwritten.
  */
 static int shmem_rename2(inode_s *old_dir, dentry_s *old_dentry,
-				inode_s *new_dir, dentry_s *new_dentry,
-				unsigned int flags)
+		inode_s *new_dir, dentry_s *new_dentry, unsigned int flags)
 {
 	// inode_s *inode = d_inode(old_dentry);
 	// int they_are_dirs = S_ISDIR(inode->i_mode);

@@ -329,7 +329,7 @@ static int fat_read_root(inode_s *inode)
 }
 
 static int fat_read_bpb(fat_boot_sector_s *b,
-				fat_bios_param_block_s *bpb)
+		fat_bios_param_block_s *bpb)
 {
 	int error = -EINVAL;
 
@@ -388,7 +388,7 @@ out:
  * Read the super block of an MS-DOS FS.
  */
 int fat_fill_super(super_block_s *sb, void *data, int isvfat,
-				void (*setup)(super_block_s *))
+		void (*setup)(super_block_s *))
 {
 	inode_s *root_inode = NULL, *fat_inode = NULL;
 	inode_s *fsinfo_inode = NULL;

@@ -722,7 +722,7 @@
 	// * prototypes must be defined in the arch-specific asm/pgtable.h file.
 	// */
 	// #ifndef __HAVE_ARCH_PREPARE_TO_SWAP
-	// static inline int arch_prepare_to_swap(struct page *page)
+	// static inline int arch_prepare_to_swap(page_s *page)
 	// {
 	// 	return 0;
 	// }
@@ -739,7 +739,7 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_SWAP_RESTORE
-	// static inline void arch_swap_restore(swp_entry_t entry, struct page *page)
+	// static inline void arch_swap_restore(swp_entry_t entry, page_s *page)
 	// {
 	// }
 	// #endif

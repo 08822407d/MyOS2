@@ -159,7 +159,7 @@
 	// 	unlink_anon_vmas(next);
 	// }
 
-	// anon_vma_s *page_get_anon_vma(struct page *page);
+	// anon_vma_s *page_get_anon_vma(page_s *page);
 
 	// /* bitflags for do_page_add_anon_rmap() */
 	// #define RMAP_EXCLUSIVE 0x01
@@ -168,22 +168,22 @@
 	// /*
 	// * rmap interfaces called when adding or removing pte of page
 	// */
-	// void page_move_anon_rmap(struct page *, vma_s *);
-	// void page_add_anon_rmap(struct page *, vma_s *,
+	// void page_move_anon_rmap(page_s *, vma_s *);
+	// void page_add_anon_rmap(page_s *, vma_s *,
 	// 		unsigned long, bool);
-	// void do_page_add_anon_rmap(struct page *, vma_s *,
+	// void do_page_add_anon_rmap(page_s *, vma_s *,
 	// 			unsigned long, int);
-	// void page_add_new_anon_rmap(struct page *, vma_s *,
+	// void page_add_new_anon_rmap(page_s *, vma_s *,
 	// 		unsigned long, bool);
-	// void page_add_file_rmap(struct page *, bool);
-	// void page_remove_rmap(struct page *, bool);
+	// void page_add_file_rmap(page_s *, bool);
+	// void page_remove_rmap(page_s *, bool);
 
-	// void hugepage_add_anon_rmap(struct page *, vma_s *,
+	// void hugepage_add_anon_rmap(page_s *, vma_s *,
 	// 				unsigned long);
-	// void hugepage_add_new_anon_rmap(struct page *, vma_s *,
+	// void hugepage_add_new_anon_rmap(page_s *, vma_s *,
 	// 				unsigned long);
 
-	// static inline void page_dup_rmap(struct page *page, bool compound)
+	// static inline void page_dup_rmap(page_s *page, bool compound)
 	// {
 	// 	atomic_inc(compound ? compound_mapcount_ptr(page) : &page->_mapcount);
 	// }
@@ -191,14 +191,14 @@
 	// /*
 	// * Called from mm/vmscan.c to handle paging out
 	// */
-	// int page_referenced(struct page *, int is_locked,
+	// int page_referenced(page_s *, int is_locked,
 	// 			struct mem_cgroup *memcg, unsigned long *vm_flags);
 
-	// void try_to_migrate(struct page *page, enum ttu_flags flags);
-	// void try_to_unmap(struct page *, enum ttu_flags flags);
+	// void try_to_migrate(page_s *page, enum ttu_flags flags);
+	// void try_to_unmap(page_s *, enum ttu_flags flags);
 
 	// int make_device_exclusive_range(mm_s *mm, unsigned long start,
-	// 				unsigned long end, struct page **pages,
+	// 				unsigned long end, page_s **pages,
 	// 				void *arg);
 
 	// /* Avoid racy checks */
@@ -207,7 +207,7 @@
 	// #define PVMW_MIGRATION		(1 << 1)
 
 	// struct page_vma_mapped_walk {
-	// 	struct page *page;
+	// 	page_s *page;
 	// 	vma_s *vma;
 	// 	unsigned long address;
 	// 	pmd_t *pmd;
@@ -230,7 +230,7 @@
 	// /*
 	// * Used by swapoff to help locate where page is expected in vma.
 	// */
-	// unsigned long page_address_in_vma(struct page *, vma_s *);
+	// unsigned long page_address_in_vma(page_s *, vma_s *);
 
 	// /*
 	// * Cleans the PTEs of shared mappings.
@@ -244,16 +244,16 @@
 	// * called in munlock()/munmap() path to check for other vmas holding
 	// * the page mlocked.
 	// */
-	// void page_mlock(struct page *page);
+	// void page_mlock(page_s *page);
 
-	// void remove_migration_ptes(struct page *old, struct page *new, bool locked);
+	// void remove_migration_ptes(page_s *old, page_s *new, bool locked);
 
 	// /*
 	// * Called by memory-failure.c to kill processes.
 	// */
-	// anon_vma_s *page_lock_anon_vma_read(struct page *page);
+	// anon_vma_s *page_lock_anon_vma_read(page_s *page);
 	// void page_unlock_anon_vma_read(anon_vma_s *anon_vma);
-	// int page_mapped_in_vma(struct page *page, vma_s *vma);
+	// int page_mapped_in_vma(page_s *page, vma_s *vma);
 
 	// /*
 	// * rmap_walk_control: To control rmap traversing for specific needs
@@ -270,15 +270,15 @@
 	// 	* Return false if page table scanning in rmap_walk should be stopped.
 	// 	* Otherwise, return true.
 	// 	*/
-	// 	bool (*rmap_one)(struct page *page, vma_s *vma,
+	// 	bool (*rmap_one)(page_s *page, vma_s *vma,
 	// 					unsigned long addr, void *arg);
-	// 	int (*done)(struct page *page);
-	// 	anon_vma_s *(*anon_lock)(struct page *page);
+	// 	int (*done)(page_s *page);
+	// 	anon_vma_s *(*anon_lock)(page_s *page);
 	// 	bool (*invalid_vma)(vma_s *vma, void *arg);
 	// };
 
-	// void rmap_walk(struct page *page, struct rmap_walk_control *rwc);
-	// void rmap_walk_locked(struct page *page, struct rmap_walk_control *rwc);
+	// void rmap_walk(page_s *page, struct rmap_walk_control *rwc);
+	// void rmap_walk_locked(page_s *page, struct rmap_walk_control *rwc);
 
 	// #else	/* !CONFIG_MMU */
 
@@ -286,7 +286,7 @@
 	// #define anon_vma_prepare(vma)	(0)
 	// #define anon_vma_link(vma)	do {} while (0)
 
-	// static inline int page_referenced(struct page *page, int is_locked,
+	// static inline int page_referenced(page_s *page, int is_locked,
 	// 				struct mem_cgroup *memcg,
 	// 				unsigned long *vm_flags)
 	// {
@@ -294,7 +294,7 @@
 	// 	return 0;
 	// }
 
-	// static inline void try_to_unmap(struct page *page, enum ttu_flags flags)
+	// static inline void try_to_unmap(page_s *page, enum ttu_flags flags)
 	// {
 	// }
 
@@ -304,7 +304,7 @@
 	// }
 	// #endif	/* CONFIG_MMU */
 
-	// static inline int page_mkclean(struct page *page)
+	// static inline int page_mkclean(page_s *page)
 	// {
 	// 	return folio_mkclean(page_folio(page));
 	// }

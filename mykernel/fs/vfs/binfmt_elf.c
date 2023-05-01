@@ -87,7 +87,8 @@ static linux_bfmt_s elf_format = {
 #define BAD_ADDR(x) ((unsigned long)(x) >= TASK_SIZE)
 
 static int
-set_brk(unsigned long start, unsigned long end, int prot) {
+set_brk(unsigned long start, unsigned long end, int prot)
+{
 	start = ELF_PAGEALIGN(start);
 	end = ELF_PAGEALIGN(end);
 	// if (end > start) {
@@ -108,7 +109,8 @@ set_brk(unsigned long start, unsigned long end, int prot) {
 
 static unsigned long
 elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
-		int prot, int type, unsigned long total_size) {
+		int prot, int type, unsigned long total_size)
+{
 	unsigned long map_addr;
 	unsigned long size = eppnt->p_filesz + ELF_PAGEOFFSET(eppnt->p_vaddr);
 	unsigned long off = eppnt->p_offset - ELF_PAGEOFFSET(eppnt->p_vaddr);
@@ -145,7 +147,8 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 }
 
 static unsigned long
-total_mapping_size(const elf_phdr_t *cmds, int nr) {
+total_mapping_size(const elf_phdr_t *cmds, int nr)
+{
 	int i, first_idx = -1, last_idx = -1;
 
 	for (i = 0; i < nr; i++) {
@@ -163,7 +166,8 @@ total_mapping_size(const elf_phdr_t *cmds, int nr) {
 }
 
 static int
-elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
+elf_read(file_s *file, void *buf, size_t len, loff_t pos)
+{
 	ssize_t rv;
 
 	rv = kernel_read(file, buf, len, &pos);
@@ -184,7 +188,8 @@ elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
  * responsible for freeing the allocated data. Returns an ERR_PTR upon failure.
  */
 static elf_phdr_t
-*load_elf_phdrs(const elfhdr_t *elf_ex, file_s *elf_file) {
+*load_elf_phdrs(const elfhdr_t *elf_ex, file_s *elf_file)
+{
 	elf_phdr_t		*elf_phdata = NULL;
 	int				retval,
 					err = -1;
@@ -225,7 +230,8 @@ out:
 }
 
 
-static int load_elf_binary(linux_bprm_s *bprm) {
+static int load_elf_binary(linux_bprm_s *bprm)
+{
 	file_s			*interpreter = NULL; /* to shut gcc up */
 	unsigned long	load_addr,
 					load_bias = 0,
@@ -774,14 +780,16 @@ out_free_ph:
 }
 
 
-// static int __init init_elf_binfmt(void) {
-int __init init_elf_binfmt(void) {
+// static int __init init_elf_binfmt(void)
+int __init init_elf_binfmt(void)
+{
 	list_init(&elf_format.lh, &elf_format);
 	register_binfmt(&elf_format);
 	return 0;
 }
 
-static void __exit exit_elf_binfmt(void) {
+static void __exit exit_elf_binfmt(void)
+{
 	/* Remove the COFF and ELF loaders. */
 	unregister_binfmt(&elf_format);
 }

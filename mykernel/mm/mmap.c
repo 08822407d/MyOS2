@@ -66,7 +66,8 @@
 static bool ignore_rlimit_data = false;
 
 
-static void validate_mm(mm_s *mm) {
+static void validate_mm(mm_s *mm)
+{
 	int bug = 0;
 	int i = 0;
 	unsigned long highest_address = 0;
@@ -101,7 +102,8 @@ static void validate_mm(mm_s *mm) {
 // 		struct rb_node ***rb_link, struct rb_node **rb_parent)
 static int
 myos_if_vma_overlaps(mm_s *mm, unsigned long addr,
-		unsigned long end, vma_s **pprev) {
+		unsigned long end, vma_s **pprev)
+{
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
 
@@ -446,7 +448,8 @@ myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
 // 		     struct anon_vma_name *anon_name)
 static int
 myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
-		file_s *file, pgoff_t vm_pgoff) {
+		file_s *file, pgoff_t vm_pgoff)
+{
 	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
 		if (vma->vm_pgoff == vm_pgoff)
 			return 1;
@@ -469,7 +472,8 @@ myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
 // 		    struct anon_vma_name *anon_name)
 static int
 myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
-		file_s *file, pgoff_t vm_pgoff) {
+		file_s *file, pgoff_t vm_pgoff)
+{
 	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
 		pgoff_t vm_pglen;
 		vm_pglen = vma_pages(vma);
@@ -528,8 +532,8 @@ myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
 // 		struct mempolicy *policy,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
-vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long end,
-		unsigned long vm_flags, file_s *file, pgoff_t pgoff)
+vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
+		unsigned long end, unsigned long vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
 	vma_s *area, *next;
@@ -599,9 +603,8 @@ vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long e
 /*
  * The caller must write-lock current->mm->mmap_lock.
  */
-unsigned long do_mmap(file_s *file,
-		unsigned long addr, unsigned long len,
-		unsigned long prot, unsigned long flags,
+unsigned long do_mmap(file_s *file, unsigned long addr,
+		unsigned long len, unsigned long prot, unsigned long flags,
 		unsigned long pgoff, unsigned long *populate)
 {
 	mm_s *mm = current->mm;
@@ -831,8 +834,8 @@ unsigned long do_mmap(file_s *file,
 // 		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
 // 		struct list_head *uf)
 unsigned long
-myos_mmap_region(file_s *file, unsigned long addr, unsigned long len,
-		vm_flags_t vm_flags, unsigned long pgoff)
+myos_mmap_region(file_s *file, unsigned long addr,
+		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff)
 {
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev, *merge;

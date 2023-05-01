@@ -20,7 +20,7 @@
 	// 	unsigned long vma_pages;
 	// #else
 	// # define MAX_ARG_PAGES	32
-	// 	struct page *page[MAX_ARG_PAGES];
+	// 	page_s *page[MAX_ARG_PAGES];
 	// #endif
 		mm_s			*mm;
 		unsigned long	p; /* current top of mem */

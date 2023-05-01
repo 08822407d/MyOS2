@@ -57,7 +57,7 @@
 		// extern spinlock_t pgd_lock;
 		// extern List_s pgd_list;
 
-		// extern mm_s *pgd_page_get_mm(struct page *page);
+		// extern mm_s *pgd_page_get_mm(page_s *page);
 
 		// extern pmdval_t early_pmd_flags;
 

@@ -5,7 +5,7 @@
 	// * Internal slab definitions
 	// */
 
-	// /* Reuses the bits in struct page */
+	// /* Reuses the bits in page_s */
 	// struct slab {
 	// 	unsigned long __page_flags;
 
@@ -64,7 +64,7 @@
 	// };
 
 	// #define SLAB_MATCH(pg, sl)						\
-	// 	static_assert(offsetof(struct page, pg) == offsetof(struct slab, sl))
+	// 	static_assert(offsetof(page_s, pg) == offsetof(struct slab, sl))
 	// SLAB_MATCH(flags, __page_flags);
 	// SLAB_MATCH(compound_head, slab_list);	/* Ensure bit 0 is clear */
 	// #ifndef CONFIG_SLOB
@@ -75,7 +75,7 @@
 	// SLAB_MATCH(memcg_data, memcg_data);
 	// #endif
 	// #undef SLAB_MATCH
-	// static_assert(sizeof(struct slab) <= sizeof(struct page));
+	// static_assert(sizeof(struct slab) <= sizeof(page_s));
 
 	// /**
 	//  * folio_slab - Converts from folio to slab.
@@ -95,7 +95,7 @@
 	//  * @slab: The slab.
 	//  *
 	//  * Slabs are allocated as folios that contain the individual objects and are
-	//  * using some fields in the first struct page of the folio - those fields are
+	//  * using some fields in the first page_s of the folio - those fields are
 	//  * now accessed by struct slab. It is occasionally necessary to convert back to
 	//  * a folio in order to communicate with the rest of the mm.  Please use this
 	//  * helper function instead of casting yourself, as the implementation may change
@@ -106,10 +106,10 @@
 	// 	struct slab *:		(struct folio *)s))
 
 	// /**
-	//  * page_slab - Converts from first struct page to slab.
+	//  * page_slab - Converts from first page_s to slab.
 	//  * @p: The first (either head of compound or single) page of slab.
 	//  *
-	//  * A temporary wrapper to convert struct page to struct slab in situations where
+	//  * A temporary wrapper to convert page_s to struct slab in situations where
 	//  * we know the page is the compound head, or single order-0 page.
 	//  *
 	//  * Long-term ideally everything would work with struct slab directly or go
@@ -118,14 +118,14 @@
 	//  * Return: The slab which contains this page
 	//  */
 	// #define page_slab(p)		(_Generic((p),				\
-	// 	const struct page *:	(const struct slab *)(p),		\
-	// 	struct page *:		(struct slab *)(p)))
+	// 	const page_s *:	(const struct slab *)(p),		\
+	// 	page_s *:		(struct slab *)(p)))
 
 	// /**
-	//  * slab_page - The first struct page allocated for a slab
+	//  * slab_page - The first page_s allocated for a slab
 	//  * @slab: The slab.
 	//  *
-	//  * A convenience wrapper for converting slab to the first struct page of the
+	//  * A convenience wrapper for converting slab to the first page_s of the
 	//  * underlying folio, to communicate with code not yet converted to folio or
 	//  * struct slab.
 	//  */

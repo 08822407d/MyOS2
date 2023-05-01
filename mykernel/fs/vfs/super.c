@@ -300,8 +300,7 @@ error:
 }
 
 int get_tree_nodev(fs_ctxt_s *fc,
-				int (*fill_super)(super_block_s *sb,
-						fs_ctxt_s *fc))
+		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc))
 {
 	return vfs_get_super(fc, vfs_get_independent_super, fill_super);
 }

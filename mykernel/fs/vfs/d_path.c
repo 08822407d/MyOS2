@@ -73,8 +73,8 @@ static void prepend(prpndbuf_s *p, const char *str, int namelen)
 // Linux function proto:
 // static int __prepend_path(const struct dentry *dentry, const struct mount *mnt,
 // 			  const struct path *root, struct prepend_buffer *p)
-static int __prepend_path(const dentry_s *dentry, const mount_s *mnt,
-			  const path_s *root, prpndbuf_s *p)
+static int __prepend_path(const dentry_s *dentry,
+		const mount_s *mnt, const path_s *root, prpndbuf_s *p)
 {
 	while (dentry != root->dentry || &mnt->mnt != root->mnt) {
 		const dentry_s *parent = dentry->d_parent;
@@ -123,8 +123,8 @@ static int __prepend_path(const dentry_s *dentry, const mount_s *mnt,
 // static int prepend_path(const struct path *path,
 // 			const struct path *root,
 // 			struct prepend_buffer *p)
-static int prepend_path(const path_s *path, const path_s *root,
-			prpndbuf_s *p)
+static int prepend_path(const path_s *path,
+		const path_s *root, prpndbuf_s *p)
 {
 	unsigned seq, m_seq = 0;
 	prpndbuf_s b;

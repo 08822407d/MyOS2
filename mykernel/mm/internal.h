@@ -128,7 +128,7 @@
 	// 	return ret;
 	// }
 
-	// static inline bool page_evictable(struct page *page)
+	// static inline bool page_evictable(page_s *page)
 	// {
 	// 	bool ret;
 
@@ -143,7 +143,7 @@
 	// * Turn a non-refcounted page (->_refcount == 0) into refcounted with
 	// * a count of one.
 	// */
-	// static inline void set_page_refcounted(struct page *page)
+	// static inline void set_page_refcounted(page_s *page)
 	// {
 	// 	VM_BUG_ON_PAGE(PageTail(page), page);
 	// 	VM_BUG_ON_PAGE(page_ref_count(page), page);
@@ -161,8 +161,8 @@
 	// /*
 	// * in mm/vmscan.c:
 	// */
-	// extern int isolate_lru_page(struct page *page);
-	// extern void putback_lru_page(struct page *page);
+	// extern int isolate_lru_page(page_s *page);
+	// extern void putback_lru_page(page_s *page);
 	// extern void reclaim_throttle(pg_data_t *pgdat, enum vmscan_throttle_state reason);
 
 	// /*
@@ -208,7 +208,7 @@
 	// };
 
 	// /*
-	// * Locate the struct page for both the matching buddy in our
+	// * Locate the page_s for both the matching buddy in our
 	// * pair (buddy1) and the combined O(n+1) page they form (page).
 	// *
 	// * 1) Any buddy B1 will have an order O twin B2 which satisfies
@@ -230,10 +230,10 @@
 	// 	return page_pfn ^ (1 << order);
 	// }
 
-	// extern struct page *__pageblock_pfn_to_page(unsigned long start_pfn,
+	// extern page_s *__pageblock_pfn_to_page(unsigned long start_pfn,
 	// 				unsigned long end_pfn, struct zone *zone);
 
-	// static inline struct page *pageblock_pfn_to_page(unsigned long start_pfn,
+	// static inline page_s *pageblock_pfn_to_page(unsigned long start_pfn,
 	// 				unsigned long end_pfn, struct zone *zone)
 	// {
 	// 	if (zone->contiguous)
@@ -242,18 +242,18 @@
 	// 	return __pageblock_pfn_to_page(start_pfn, end_pfn, zone);
 	// }
 
-	// extern int __isolate_free_page(struct page *page, unsigned int order);
-	// extern void __putback_isolated_page(struct page *page, unsigned int order,
+	// extern int __isolate_free_page(page_s *page, unsigned int order);
+	// extern void __putback_isolated_page(page_s *page, unsigned int order,
 	// 					int mt);
 	extern void
 	memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order);
-	// extern void __free_pages_core(struct page *page, unsigned int order);
-	// extern void prep_compound_page(struct page *page, unsigned int order);
-	// extern void post_alloc_hook(struct page *page, unsigned int order,
+	// extern void __free_pages_core(page_s *page, unsigned int order);
+	// extern void prep_compound_page(page_s *page, unsigned int order);
+	// extern void post_alloc_hook(page_s *page, unsigned int order,
 	// 					gfp_t gfp_flags);
 	// extern int user_min_free_kbytes;
 
-	// extern void free_unref_page(struct page *page, unsigned int order);
+	// extern void free_unref_page(page_s *page, unsigned int order);
 	// extern void free_unref_page_list(List_s *list);
 
 	// extern void zone_pcp_update(struct zone *zone, int cpu_online);
@@ -319,7 +319,7 @@
 	// */
 	// struct capture_control {
 	// 	struct compact_control *cc;
-	// 	struct page *page;
+	// 	page_s *page;
 	// };
 
 	// unsigned long
@@ -340,7 +340,7 @@
 	// * page cannot be allocated or merged in parallel. Alternatively, it must
 	// * handle invalid values gracefully, and use buddy_order_unsafe() below.
 	// */
-	// static inline unsigned int buddy_order(struct page *page)
+	// static inline unsigned int buddy_order(page_s *page)
 	// {
 	// 	/* PageBuddy() must be checked by the caller */
 	// 	return page_private(page);
@@ -408,8 +408,8 @@
 	// /*
 	// * must be called with vma's mmap_lock held for read or write, and page locked.
 	// */
-	// extern void mlock_vma_page(struct page *page);
-	// extern unsigned int munlock_vma_page(struct page *page);
+	// extern void mlock_vma_page(page_s *page);
+	// extern unsigned int munlock_vma_page(page_s *page);
 
 	// extern int mlock_future_check(mm_s *mm, unsigned long flags,
 	// 				unsigned long len);
@@ -423,7 +423,7 @@
 	// * If called for a page that is still mapped by mlocked vmas, all we do
 	// * is revert to lazy LRU behaviour -- semantics are not broken.
 	// */
-	// extern void clear_page_mlock(struct page *page);
+	// extern void clear_page_mlock(page_s *page);
 
 	// extern pmd_t maybe_pmd_mkwrite(pmd_t pmd, vma_s *vma);
 
@@ -433,7 +433,7 @@
 	// * If page is a compound head, the entire compound page is considered.
 	// */
 	// static inline unsigned long
-	// vma_address(struct page *page, vma_s *vma)
+	// vma_address(page_s *page, vma_s *vma)
 	// {
 	// 	pgoff_t pgoff;
 	// 	unsigned long address;
@@ -462,7 +462,7 @@
 	// * If page is a compound head, the entire compound page is considered.
 	// */
 	// static inline unsigned long
-	// vma_address_end(struct page *page, vma_s *vma)
+	// vma_address_end(page_s *page, vma_s *vma)
 	// {
 	// 	pgoff_t pgoff;
 	// 	unsigned long address;
@@ -498,8 +498,8 @@
 	// }
 	// #else /* !CONFIG_MMU */
 	// static inline void unmap_mapping_folio(struct folio *folio) { }
-	// static inline void clear_page_mlock(struct page *page) { }
-	// static inline void mlock_vma_page(struct page *page) { }
+	// static inline void clear_page_mlock(page_s *page) { }
+	// static inline void mlock_vma_page(page_s *page) { }
 	// static inline void vunmap_range_noflush(unsigned long start, unsigned long end)
 	// {
 	// }
@@ -510,7 +510,7 @@
 	// * the maximally aligned gigantic page 'base'.  Handle any discontiguity
 	// * in the mem_map at MAX_ORDER_NR_PAGES boundaries.
 	// */
-	// static inline struct page *mem_map_offset(struct page *base, int offset)
+	// static inline page_s *mem_map_offset(page_s *base, int offset)
 	// {
 	// 	if (unlikely(offset >= MAX_ORDER_NR_PAGES))
 	// 		return nth_page(base, offset);
@@ -521,8 +521,8 @@
 	// * Iterator over all subpages within the maximally aligned gigantic
 	// * page 'base'.  Handle any discontiguity in the mem_map.
 	// */
-	// static inline struct page *mem_map_next(struct page *iter,
-	// 						struct page *base, int offset)
+	// static inline page_s *mem_map_next(page_s *iter,
+	// 						page_s *base, int offset)
 	// {
 	// 	if (unlikely((offset & (MAX_ORDER_NR_PAGES - 1)) == 0)) {
 	// 		unsigned long pfn = page_to_pfn(base) + offset;
@@ -603,7 +603,7 @@
 	// }
 	// #endif
 
-	// extern int hwpoison_filter(struct page *p);
+	// extern int hwpoison_filter(page_s *p);
 
 	// extern u32 hwpoison_filter_dev_major;
 	// extern u32 hwpoison_filter_dev_minor;
@@ -685,7 +685,7 @@
 	// 	return migratetype == MIGRATE_HIGHATOMIC;
 	// }
 
-	// static inline bool is_migrate_highatomic_page(struct page *page)
+	// static inline bool is_migrate_highatomic_page(page_s *page)
 	// {
 	// 	return get_pageblock_migratetype(page) == MIGRATE_HIGHATOMIC;
 	// }
@@ -703,11 +703,11 @@
 	// */
 	// #ifdef CONFIG_MMU
 	// int vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-	// 				pgprot_t prot, struct page **pages, unsigned int page_shift);
+	// 				pgprot_t prot, page_s **pages, unsigned int page_shift);
 	// #else
 	// static inline
 	// int vmap_pages_range_noflush(unsigned long addr, unsigned long end,
-	// 				pgprot_t prot, struct page **pages, unsigned int page_shift)
+	// 				pgprot_t prot, page_s **pages, unsigned int page_shift)
 	// {
 	// 	return -EINVAL;
 	// }
@@ -715,7 +715,7 @@
 
 	// void vunmap_range_noflush(unsigned long start, unsigned long end);
 
-	// int numa_migrate_prep(struct page *page, vma_s *vma,
+	// int numa_migrate_prep(page_s *page, vma_s *vma,
 	// 			unsigned long addr, int page_nid, int *flags);
 
 #endif	/* __MM_INTERNAL_H */

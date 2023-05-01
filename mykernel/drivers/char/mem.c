@@ -53,8 +53,7 @@
  * can fopen() both devices with "a" now.  This was previously impossible.
  * -- SRB.
  */
-static loff_t null_lseek(file_s *file,
-				loff_t offset, int orig)
+static loff_t null_lseek(file_s *file, loff_t offset, int orig)
 {
 	return file->f_pos = 0;
 }

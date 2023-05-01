@@ -6,7 +6,7 @@
 	* generic non-linear memory support:
 	*
 	* 1) we will not split memory into more chunks than will fit into the flags
-	*    field of the struct page
+	*    field of the page_s
 	*
 	* SECTION_SIZE_BITS		2^n: size of each section
 	* MAX_PHYSMEM_BITS		2^n: max size of physical address space
