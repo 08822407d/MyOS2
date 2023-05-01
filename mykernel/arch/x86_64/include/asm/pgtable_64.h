@@ -78,15 +78,13 @@
 	// 	native_set_pte(ptep, pte);
 	// }
 
-	// static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd)
-	// {
-	// 	WRITE_ONCE(*pmdp, pmd);
-	// }
+	static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd) {
+		WRITE_ONCE(*pmdp, pmd);
+	}
 
-	// static inline void native_pmd_clear(pmd_t *pmd)
-	// {
-	// 	native_set_pmd(pmd, native_make_pmd(0));
-	// }
+	static inline void native_pmd_clear(pmd_t *pmd) {
+		native_set_pmd(pmd, native_make_pmd(0));
+	}
 
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
 	// {
@@ -114,15 +112,13 @@
 	// #endif
 	// }
 
-	// static inline void native_set_pud(pud_t *pudp, pud_t pud)
-	// {
-	// 	WRITE_ONCE(*pudp, pud);
-	// }
+	static inline void native_set_pud(pud_t *pudp, pud_t pud) {
+		WRITE_ONCE(*pudp, pud);
+	}
 
-	// static inline void native_pud_clear(pud_t *pud)
-	// {
-	// 	native_set_pud(pud, native_make_pud(0));
-	// }
+	static inline void native_pud_clear(pud_t *pud) {
+		native_set_pud(pud, native_make_pud(0));
+	}
 
 	// static inline pud_t native_pudp_get_and_clear(pud_t *xp)
 	// {
@@ -139,24 +135,16 @@
 	// #endif
 	// }
 
-	// static inline void native_set_p4d(p4d_t *p4dp, p4d_t p4d)
-	// {
-	// 	pgd_t pgd;
+	static inline void native_set_p4d(p4d_t *p4dp, p4d_t p4d) {
+		pgd_t pgd;
+		pgd = native_make_pgd(native_p4d_val(p4d));
+		pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
+		WRITE_ONCE(*p4dp, native_make_p4d(native_pgd_val(pgd)));
+	}
 
-	// 	if (pgtable_l5_enabled() || !IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION)) {
-	// 		WRITE_ONCE(*p4dp, p4d);
-	// 		return;
-	// 	}
-
-	// 	pgd = native_make_pgd(native_p4d_val(p4d));
-	// 	pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
-	// 	WRITE_ONCE(*p4dp, native_make_p4d(native_pgd_val(pgd)));
-	// }
-
-	// static inline void native_p4d_clear(p4d_t *p4d)
-	// {
-	// 	native_set_p4d(p4d, native_make_p4d(0));
-	// }
+	static inline void native_p4d_clear(p4d_t *p4d) {
+		native_set_p4d(p4d, native_make_p4d(0));
+	}
 
 	// static inline void native_set_pgd(pgd_t *pgdp, pgd_t pgd)
 	// {

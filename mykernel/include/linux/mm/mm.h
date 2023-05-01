@@ -2139,26 +2139,11 @@
 	// 	return ptep;
 	// }
 
-	// #ifdef __PAGETABLE_P4D_FOLDED
-	// static inline int __p4d_alloc(mm_s *mm, pgd_t *pgd,
-	// 						unsigned long address)
-	// {
-	// 	return 0;
-	// }
-	// #else
-	// int __p4d_alloc(mm_s *mm, pgd_t *pgd, unsigned long address);
-	// #endif
+	static inline int __p4d_alloc(mm_s *mm,
+			pgd_t *pgd, unsigned long address) {
+		return 0;
+	}
 
-	// #if defined(__PAGETABLE_PUD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pud_alloc(mm_s *mm, p4d_t *p4d,
-	// 						unsigned long address)
-	// {
-	// 	return 0;
-	// }
-	// static inline void mm_inc_nr_puds(mm_s *mm) {}
-	// static inline void mm_dec_nr_puds(mm_s *mm) {}
-
-	// #else
 	// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
 	// static inline void mm_inc_nr_puds(mm_s *mm)
@@ -2174,19 +2159,7 @@
 	// 		return;
 	// 	atomic_long_sub(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
-	// #endif
 
-	// #if defined(__PAGETABLE_PMD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pmd_alloc(mm_s *mm, pud_t *pud,
-	// 						unsigned long address)
-	// {
-	// 	return 0;
-	// }
-
-	// static inline void mm_inc_nr_pmds(mm_s *mm) {}
-	// static inline void mm_dec_nr_pmds(mm_s *mm) {}
-
-	// #else
 	// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
 	// static inline void mm_inc_nr_pmds(mm_s *mm)
@@ -2202,7 +2175,6 @@
 	// 		return;
 	// 	atomic_long_sub(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
-	// #endif
 
 	// #ifdef CONFIG_MMU
 	// static inline void mm_pgtables_bytes_init(mm_s *mm)
@@ -2241,12 +2213,11 @@
 
 	// #if defined(CONFIG_MMU)
 
-	// static inline p4d_t *p4d_alloc(mm_s *mm, pgd_t *pgd,
-	// 		unsigned long address)
-	// {
-	// 	return (unlikely(pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address)) ?
-	// 		NULL : p4d_offset(pgd, address);
-	// }
+	static inline p4d_t *p4d_alloc(mm_s *mm,
+			pgd_t *pgd, unsigned long address) {
+		return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
+			NULL : p4d_offset(pgd, address);
+	}
 
 	// static inline pud_t *pud_alloc(mm_s *mm, p4d_t *p4d,
 	// 		unsigned long address)

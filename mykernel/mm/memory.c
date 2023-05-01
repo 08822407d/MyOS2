@@ -103,28 +103,28 @@ void	*high_memory;
 
 
 
-// static inline int
-// copy_p4d_range(vma_s *dst_vma, vma_s *src_vma,
-// 		pgd_t *dst_pgd, pgd_t *src_pgd,
-// 		unsigned long addr, unsigned long end) {
-// 	mm_s *dst_mm = dst_vma->vm_mm;
-// 	p4d_t *src_p4d, *dst_p4d;
-// 	unsigned long next;
+static inline int
+copy_p4d_range(vma_s *dst_vma, vma_s *src_vma,
+		pgd_t *dst_pgd, pgd_t *src_pgd,
+		unsigned long addr, unsigned long end) {
+	mm_s *dst_mm = dst_vma->vm_mm;
+	p4d_t *src_p4d, *dst_p4d;
+	unsigned long next;
 
-// 	dst_p4d = p4d_alloc(dst_mm, dst_pgd, addr);
-// 	if (!dst_p4d)
-// 		return -ENOMEM;
-// 	src_p4d = p4d_offset(src_pgd, addr);
-// 	do {
-// 		next = p4d_addr_end(addr, end);
-// 		if (p4d_none_or_clear_bad(src_p4d))
-// 			continue;
-// 		if (copy_pud_range(dst_vma, src_vma, dst_p4d, src_p4d,
-// 				   addr, next))
-// 			return -ENOMEM;
-// 	} while (dst_p4d++, src_p4d++, addr = next, addr != end);
-// 	return 0;
-// }
+	// dst_p4d = p4d_alloc(dst_mm, dst_pgd, addr);
+	// if (!dst_p4d)
+	// 	return -ENOMEM;
+	// src_p4d = p4d_offset(src_pgd, addr);
+	// do {
+	// 	next = p4d_addr_end(addr, end);
+	// 	if (p4d_none_or_clear_bad(src_p4d))
+	// 		continue;
+	// 	if (copy_pud_range(dst_vma, src_vma, dst_p4d, src_p4d,
+	// 			   addr, next))
+	// 		return -ENOMEM;
+	// } while (dst_p4d++, src_p4d++, addr = next, addr != end);
+	return 0;
+}
 
 int
 copy_page_range(vma_s *dst_vma, vma_s *src_vma)
@@ -184,19 +184,19 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	// 	raw_write_seqcount_begin(&src_mm->write_protect_seq);
 	// }
 
-	// ret = 0;
-	// dst_pgd = pgd_offset(dst_mm, addr);
-	// src_pgd = pgd_offset(src_mm, addr);
-	// do {
-	// 	next = pgd_addr_end(addr, end);
-	// 	if (pgd_none_or_clear_bad(src_pgd))
-	// 		continue;
-	// 	if (unlikely(copy_p4d_range(dst_vma, src_vma, dst_pgd, src_pgd,
-	// 				    addr, next))) {
-	// 		ret = -ENOMEM;
-	// 		break;
-	// 	}
-	// } while (dst_pgd++, src_pgd++, addr = next, addr != end);
+	ret = 0;
+	dst_pgd = pgd_offset(dst_mm, addr);
+	src_pgd = pgd_offset(src_mm, addr);
+	do {
+		next = pgd_addr_end(addr, end);
+		if (pgd_none_or_clear_bad(src_pgd))
+			continue;
+		if (copy_p4d_range(dst_vma, src_vma,
+				dst_pgd, src_pgd, addr, next)) {
+			ret = -ENOMEM;
+			break;
+		}
+	} while (dst_pgd++, src_pgd++, addr = next, addr != end);
 
 	// if (is_cow) {
 	// 	raw_write_seqcount_end(&src_mm->write_protect_seq);

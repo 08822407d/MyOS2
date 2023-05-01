@@ -542,7 +542,7 @@
 	// #endif
 			unsigned long	task_size;			/* size of task vm space */
 			unsigned long	highest_vm_end;		/* highest vma end address */
-			// pgd_t	*pgd;
+			pgd_t			*pgd;
 			reg_t			pgd_ptr;
 
 	// #ifdef CONFIG_MEMBARRIER

@@ -760,37 +760,41 @@
 	// #define flush_tlb_fix_spurious_fault(vma, address) flush_tlb_page(vma, address)
 	// #endif
 
-	// /*
-	// * When walking page tables, get the address of the next boundary,
-	// * or the end address of the range if that comes earlier.  Although no
-	// * vma end wraps to 0, rounded up __boundary may wrap to 0 throughout.
-	// */
+	/*
+	 * When walking page tables, get the address of the next boundary,
+	 * or the end address of the range if that comes earlier.  Although no
+	 * vma end wraps to 0, rounded up __boundary may wrap to 0 throughout.
+	 */
 
-	// #define pgd_addr_end(addr, end)						\
-	// ({	unsigned long __boundary = ((addr) + PGDIR_SIZE) & PGDIR_MASK;	\
-	// 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-	// })
+	#define pgd_addr_end(addr, end) ({								\
+				unsigned long __boundary = 							\
+					((addr) + PGDIR_SIZE) & PGDIR_MASK;				\
+				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
+			})
 
-	// #ifndef p4d_addr_end
-	// #define p4d_addr_end(addr, end)						\
-	// ({	unsigned long __boundary = ((addr) + P4D_SIZE) & P4D_MASK;	\
-	// 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-	// })
-	// #endif
+	#ifndef p4d_addr_end
+	#	define p4d_addr_end(addr, end) ({								\
+					unsigned long __boundary =							\
+						((addr) + P4D_SIZE) & P4D_MASK;					\
+					(__boundary - 1 < (end) - 1)? __boundary: (end);	\
+				})
+	#endif
 
-	// #ifndef pud_addr_end
-	// #define pud_addr_end(addr, end)						\
-	// ({	unsigned long __boundary = ((addr) + PUD_SIZE) & PUD_MASK;	\
-	// 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-	// })
-	// #endif
+	#ifndef pud_addr_end
+	#	define pud_addr_end(addr, end) ({								\
+					unsigned long __boundary =							\
+						((addr) + PUD_SIZE) & PUD_MASK;					\
+					(__boundary - 1 < (end) - 1)? __boundary: (end);	\
+				})
+	#endif
 
-	// #ifndef pmd_addr_end
-	// #define pmd_addr_end(addr, end)						\
-	// ({	unsigned long __boundary = ((addr) + PMD_SIZE) & PMD_MASK;	\
-	// 	(__boundary - 1 < (end) - 1)? __boundary: (end);		\
-	// })
-	// #endif
+	#ifndef pmd_addr_end
+	#	define pmd_addr_end(addr, end) ({								\
+					unsigned long __boundary =							\
+						((addr) + PMD_SIZE) & PMD_MASK;					\
+					(__boundary - 1 < (end) - 1)? __boundary: (end);	\
+				})
+	#endif
 
 	// /*
 	// * When walking page tables, we usually want to skip any p?d_none entries;
@@ -798,64 +802,50 @@
 	// * Do the tests inline, but report and clear the bad entry in mm/memory.c.
 	// */
 	// void pgd_clear_bad(pgd_t *);
-
-	// #ifndef __PAGETABLE_P4D_FOLDED
-	// void p4d_clear_bad(p4d_t *);
-	// #else
 	// #define p4d_clear_bad(p4d)        do { } while (0)
-	// #endif
 
-	// #ifndef __PAGETABLE_PUD_FOLDED
 	// void pud_clear_bad(pud_t *);
-	// #else
-	// #define pud_clear_bad(p4d)        do { } while (0)
-	// #endif
-
 	// void pmd_clear_bad(pmd_t *);
 
-	// static inline int pgd_none_or_clear_bad(pgd_t *pgd)
-	// {
-	// 	if (pgd_none(*pgd))
-	// 		return 1;
-	// 	if (unlikely(pgd_bad(*pgd))) {
-	// 		pgd_clear_bad(pgd);
-	// 		return 1;
-	// 	}
-	// 	return 0;
-	// }
+	static inline int pgd_none_or_clear_bad(pgd_t *pgd) {
+		if (pgd_none(*pgd))
+			return 1;
+		if (pgd_bad(*pgd)) {
+			pgd_clear(pgd);
+			return 1;
+		}
+		return 0;
+	}
 
-	// static inline int p4d_none_or_clear_bad(p4d_t *p4d)
-	// {
-	// 	if (p4d_none(*p4d))
-	// 		return 1;
-	// 	if (unlikely(p4d_bad(*p4d))) {
-	// 		p4d_clear_bad(p4d);
-	// 		return 1;
-	// 	}
-	// 	return 0;
-	// }
+	static inline int p4d_none_or_clear_bad(p4d_t *p4d) {
+		if (p4d_none(*p4d))
+			return 1;
+		if (p4d_bad(*p4d)) {
+			p4d_clear(p4d);
+			return 1;
+		}
+		return 0;
+	}
 
-	// static inline int pud_none_or_clear_bad(pud_t *pud)
-	// {
-	// 	if (pud_none(*pud))
-	// 		return 1;
-	// 	if (unlikely(pud_bad(*pud))) {
-	// 		pud_clear_bad(pud);
-	// 		return 1;
-	// 	}
-	// 	return 0;
-	// }
+	static inline int pud_none_or_clear_bad(pud_t *pud) {
+		if (pud_none(*pud))
+			return 1;
+		if (pud_bad(*pud)) {
+			pud_clear(pud);
+			return 1;
+		}
+		return 0;
+	}
 
-	// static inline int pmd_none_or_clear_bad(pmd_t *pmd)
-	// {
-	// 	if (pmd_none(*pmd))
-	// 		return 1;
-	// 	if (unlikely(pmd_bad(*pmd))) {
-	// 		pmd_clear_bad(pmd);
-	// 		return 1;
-	// 	}
-	// 	return 0;
-	// }
+	static inline int pmd_none_or_clear_bad(pmd_t *pmd) {
+		if (pmd_none(*pmd))
+			return 1;
+		if (pmd_bad(*pmd)) {
+			pmd_clear(pmd);
+			return 1;
+		}
+		return 0;
+	}
 
 	// static inline pte_t __ptep_modify_prot_start(vma_s *vma,
 	// 						unsigned long addr,
@@ -1392,20 +1382,6 @@
 	// #endif /* CONFIG_MMU */
 
 	// #ifdef CONFIG_HAVE_ARCH_HUGE_VMAP
-
-	// #ifndef __PAGETABLE_P4D_FOLDED
-	// int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot);
-	// int p4d_clear_huge(p4d_t *p4d);
-	// #else
-	// static inline int p4d_set_huge(p4d_t *p4d, phys_addr_t addr, pgprot_t prot)
-	// {
-	// 	return 0;
-	// }
-	// static inline int p4d_clear_huge(p4d_t *p4d)
-	// {
-	// 	return 0;
-	// }
-	// #endif /* !__PAGETABLE_P4D_FOLDED */
 
 	// int pud_set_huge(pud_t *pud, phys_addr_t addr, pgprot_t prot);
 	// int pmd_set_huge(pmd_t *pmd, phys_addr_t addr, pgprot_t prot);

@@ -71,47 +71,28 @@
 
 		// #define set_pmd(pmdp, pmd)		native_set_pmd(pmdp, pmd)
 
-		// #ifndef __PAGETABLE_P4D_FOLDED
-		// #define set_pgd(pgdp, pgd)		native_set_pgd(pgdp, pgd)
-		// #define pgd_clear(pgd)			(pgtable_l5_enabled() ? native_pgd_clear(pgd) : 0)
-		// #endif
-
 		// #ifndef set_p4d
 		// # define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
 		// #endif
 
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define p4d_clear(p4d)			native_p4d_clear(p4d)
-		// #endif
+		#define p4d_clear(p4d)				native_p4d_clear(p4d)
 
 		// #ifndef set_pud
 		// # define set_pud(pudp, pud)		native_set_pud(pudp, pud)
 		// #endif
 
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define pud_clear(pud)			native_pud_clear(pud)
-		// #endif
-
-		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-		// #define pmd_clear(pmd)			native_pmd_clear(pmd)
+		#define pud_clear(pud)				native_pud_clear(pud)
+		#define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
+		#define pmd_clear(pmd)				native_pmd_clear(pmd)
 
 		#define pgd_val(x)		native_pgd_val(x)
 		#define __pgd(x)		native_make_pgd(x)
 
-		#ifndef __PAGETABLE_P4D_FOLDED
-		#	define p4d_val(x)	native_p4d_val(x)
-		#	define __p4d(x)		native_make_p4d(x)
-		#endif
+		#define pud_val(x)		native_pud_val(x)
+		#define __pud(x)		native_make_pud(x)
 
-		#ifndef __PAGETABLE_PUD_FOLDED
-		#	define pud_val(x)	native_pud_val(x)
-		#	define __pud(x)		native_make_pud(x)
-		#endif
-
-		#ifndef __PAGETABLE_PMD_FOLDED
-		#	define pmd_val(x)	native_pmd_val(x)
-		#	define __pmd(x)		native_make_pmd(x)
-		#endif
+		#define pmd_val(x)		native_pmd_val(x)
+		#define __pmd(x)		native_make_pmd(x)
 
 		#define pte_val(x)		native_pte_val(x)
 		#define __pte(x)		native_make_pte(x)
@@ -688,26 +669,9 @@
 		// pmd_t *populate_extra_pmd(unsigned long vaddr);
 		// pte_t *populate_extra_pte(unsigned long vaddr);
 
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd);
-
-		// /*
-		// * Take a PGD location (pgdp) and a pgd value that needs to be set there.
-		// * Populates the user and returns the resulting PGD that must be set in
-		// * the kernel copy of the page tables.
-		// */
-		// static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
-		// {
-		// 	if (!static_cpu_has(X86_FEATURE_PTI))
-		// 		return pgd;
-		// 	return __pti_set_user_pgtbl(pgdp, pgd);
-		// }
-		// #else   /* CONFIG_PAGE_TABLE_ISOLATION */
-		// static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
-		// {
-		// 	return pgd;
-		// }
-		// #endif  /* CONFIG_PAGE_TABLE_ISOLATION */
+		static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd) {
+			return pgd;
+		}
 	#endif	/* __ASSEMBLY__ */
 
 	#include <asm/pgtable_64.h>
@@ -783,13 +747,12 @@
 		// }
 		// #endif /* CONFIG_NUMA_BALANCING */
 
-		// static inline int pmd_none(pmd_t pmd)
-		// {
-		// 	/* Only check low word on 32-bit platforms, since it might be
-		// 	out of sync with upper half. */
-		// 	unsigned long val = native_pmd_val(pmd);
-		// 	return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
-		// }
+		static inline int pmd_none(pmd_t pmd) {
+			/* Only check low word on 32-bit platforms, since it might be
+			out of sync with upper half. */
+			unsigned long val = native_pmd_val(pmd);
+			return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
+		}
 
 		// static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 		// {
@@ -811,21 +774,18 @@
 		// */
 		// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
-		// static inline int pmd_bad(pmd_t pmd)
-		// {
-		// 	return (pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
-		// }
+		static inline int pmd_bad(pmd_t pmd) {
+			return (pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
+		}
 
 		// static inline unsigned long pages_to_mb(unsigned long npg)
 		// {
 		// 	return npg >> (20 - PAGE_SHIFT);
 		// }
 
-		// #if CONFIG_PGTABLE_LEVELS > 2
-		// static inline int pud_none(pud_t pud)
-		// {
-		// 	return (native_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		// }
+		static inline int pud_none(pud_t pud) {
+			return (native_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
 
 		// static inline int pud_present(pud_t pud)
 		// {
@@ -849,23 +809,13 @@
 		// 		(_PAGE_PSE | _PAGE_PRESENT);
 		// }
 
-		// static inline int pud_bad(pud_t pud)
-		// {
-		// 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		// }
-		// #else
-		// #define pud_leaf	pud_large
-		// static inline int pud_large(pud_t pud)
-		// {
-		// 	return 0;
-		// }
-		// #endif	/* CONFIG_PGTABLE_LEVELS > 2 */
+		static inline int pud_bad(pud_t pud) {
+			return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 
-		// #if CONFIG_PGTABLE_LEVELS > 3
-		// static inline int p4d_none(p4d_t p4d)
-		// {
-		// 	return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		// }
+		static inline int p4d_none(p4d_t p4d) {
+			return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
 
 		// static inline int p4d_present(p4d_t p4d)
 		// {
@@ -882,75 +832,15 @@
 		// */
 		// #define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
-		// static inline int p4d_bad(p4d_t p4d)
-		// {
-		// 	unsigned long ignore_flags = _KERNPG_TABLE | _PAGE_USER;
-
-		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION))
-		// 		ignore_flags |= _PAGE_NX;
-
-		// 	return (p4d_flags(p4d) & ~ignore_flags) != 0;
-		// }
-		// #endif  /* CONFIG_PGTABLE_LEVELS > 3 */
+		static inline int p4d_bad(p4d_t p4d) {
+			return (p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 
 		// static inline unsigned long p4d_index(unsigned long address)
 		// {
 		// 	return (address >> P4D_SHIFT) & (PTRS_PER_P4D - 1);
 		// }
 
-		// #if CONFIG_PGTABLE_LEVELS > 4
-		// static inline int pgd_present(pgd_t pgd)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return 1;
-		// 	return pgd_flags(pgd) & _PAGE_PRESENT;
-		// }
-
-		// static inline unsigned long pgd_page_vaddr(pgd_t pgd)
-		// {
-		// 	return (unsigned long)__va((unsigned long)pgd_val(pgd) & PTE_PFN_MASK);
-		// }
-
-		// /*
-		// * Currently stuck as a macro due to indirect forward reference to
-		// * linux/mmzone.h's __section_mem_map_addr() definition:
-		// */
-		// #define pgd_page(pgd)	pfn_to_page(pgd_pfn(pgd))
-
-		// /* to find an entry in a page-table-directory. */
-		// static inline p4d_t *p4d_offset(pgd_t *pgd, unsigned long address)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return (p4d_t *)pgd;
-		// 	return (p4d_t *)pgd_page_vaddr(*pgd) + p4d_index(address);
-		// }
-
-		// static inline int pgd_bad(pgd_t pgd)
-		// {
-		// 	unsigned long ignore_flags = _PAGE_USER;
-
-		// 	if (!pgtable_l5_enabled())
-		// 		return 0;
-
-		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION))
-		// 		ignore_flags |= _PAGE_NX;
-
-		// 	return (pgd_flags(pgd) & ~ignore_flags) != _KERNPG_TABLE;
-		// }
-
-		// static inline int pgd_none(pgd_t pgd)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return 0;
-		// 	/*
-		// 	* There is no need to do a workaround for the KNL stray
-		// 	* A/D bit erratum here.  PGDs only point to page tables
-		// 	* except on 32-bit non-PAE which is not supported on
-		// 	* KNL.
-		// 	*/
-		// 	return !native_pgd_val(pgd);
-		// }
-		// #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
 	#endif	/* __ASSEMBLY__ */
 
 	// #define KERNEL_PGD_BOUNDARY	pgd_index(PAGE_OFFSET)
@@ -1177,55 +1067,6 @@
 		// #define pgd_leaf	pgd_large
 		// static inline int pgd_large(pgd_t pgd) { return 0; }
 
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// /*
-		// * All top-level PAGE_TABLE_ISOLATION page tables are order-1 pages
-		// * (8k-aligned and 8k in size).  The kernel one is at the beginning 4k and
-		// * the user one is in the last 4k.  To switch between them, you
-		// * just need to flip the 12th bit in their addresses.
-		// */
-		// #define PTI_PGTABLE_SWITCH_BIT	PAGE_SHIFT
-
-		// /*
-		// * This generates better code than the inline assembly in
-		// * __set_bit().
-		// */
-		// static inline void *ptr_set_bit(void *ptr, int bit)
-		// {
-		// 	unsigned long __ptr = (unsigned long)ptr;
-
-		// 	__ptr |= BIT(bit);
-		// 	return (void *)__ptr;
-		// }
-		// static inline void *ptr_clear_bit(void *ptr, int bit)
-		// {
-		// 	unsigned long __ptr = (unsigned long)ptr;
-
-		// 	__ptr &= ~BIT(bit);
-		// 	return (void *)__ptr;
-		// }
-
-		// static inline pgd_t *kernel_to_user_pgdp(pgd_t *pgdp)
-		// {
-		// 	return ptr_set_bit(pgdp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline pgd_t *user_to_kernel_pgdp(pgd_t *pgdp)
-		// {
-		// 	return ptr_clear_bit(pgdp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline p4d_t *kernel_to_user_p4dp(p4d_t *p4dp)
-		// {
-		// 	return ptr_set_bit(p4dp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline p4d_t *user_to_kernel_p4dp(p4d_t *p4dp)
-		// {
-		// 	return ptr_clear_bit(p4dp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-		// #endif /* CONFIG_PAGE_TABLE_ISOLATION */
-
 		// /*
 		// * clone_pgd_range(pgd_t *dst, pgd_t *src, int count);
 		// *
@@ -1239,13 +1080,6 @@
 		// static inline void clone_pgd_range(pgd_t *dst, pgd_t *src, int count)
 		// {
 		// 	memcpy(dst, src, count * sizeof(pgd_t));
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// 	if (!static_cpu_has(X86_FEATURE_PTI))
-		// 		return;
-		// 	/* Clone the user space pgd as well */
-		// 	memcpy(kernel_to_user_pgdp(dst), kernel_to_user_pgdp(src),
-		// 		count * sizeof(pgd_t));
-		// #endif
 		// }
 
 		// #define PTE_SHIFT ilog2(PTRS_PER_PTE)
