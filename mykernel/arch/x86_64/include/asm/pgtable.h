@@ -95,26 +95,26 @@
 		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
 		// #define pmd_clear(pmd)			native_pmd_clear(pmd)
 
-		// #define pgd_val(x)	native_pgd_val(x)
-		// #define __pgd(x)	native_make_pgd(x)
+		#define pgd_val(x)		native_pgd_val(x)
+		#define __pgd(x)		native_make_pgd(x)
 
-		// #ifndef __PAGETABLE_P4D_FOLDED
-		// #define p4d_val(x)	native_p4d_val(x)
-		// #define __p4d(x)	native_make_p4d(x)
-		// #endif
+		#ifndef __PAGETABLE_P4D_FOLDED
+		#	define p4d_val(x)	native_p4d_val(x)
+		#	define __p4d(x)		native_make_p4d(x)
+		#endif
 
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define pud_val(x)	native_pud_val(x)
-		// #define __pud(x)	native_make_pud(x)
-		// #endif
+		#ifndef __PAGETABLE_PUD_FOLDED
+		#	define pud_val(x)	native_pud_val(x)
+		#	define __pud(x)		native_make_pud(x)
+		#endif
 
-		// #ifndef __PAGETABLE_PMD_FOLDED
-		// #define pmd_val(x)	native_pmd_val(x)
-		// #define __pmd(x)	native_make_pmd(x)
-		// #endif
+		#ifndef __PAGETABLE_PMD_FOLDED
+		#	define pmd_val(x)	native_pmd_val(x)
+		#	define __pmd(x)		native_make_pmd(x)
+		#endif
 
-		// #define pte_val(x)	native_pte_val(x)
-		// #define __pte(x)	native_make_pte(x)
+		#define pte_val(x)		native_pte_val(x)
+		#define __pte(x)		native_make_pte(x)
 
 		// #define arch_end_context_switch(prev)	do {} while(0)
 		// #endif	/* CONFIG_PARAVIRT_XXL */
@@ -832,10 +832,9 @@
 		// 	return pud_flags(pud) & _PAGE_PRESENT;
 		// }
 
-		// static inline pmd_t *pud_pgtable(pud_t pud)
-		// {
-		// 	return (pmd_t *)__va(pud_val(pud) & pud_pfn_mask(pud));
-		// }
+		static inline pmd_t *pud_pgtable(pud_t pud) {
+			return (pmd_t *)__va(pud_val(pud) & pud_pfn_mask(pud));
+		}
 
 		// /*
 		// * Currently stuck as a macro due to indirect forward reference to
@@ -873,10 +872,9 @@
 		// 	return p4d_flags(p4d) & _PAGE_PRESENT;
 		// }
 
-		// static inline pud_t *p4d_pgtable(p4d_t p4d)
-		// {
-		// 	return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));
-		// }
+		static inline pud_t *p4d_pgtable(p4d_t p4d) {
+			return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));
+		}
 
 		// /*
 		// * Currently stuck as a macro due to indirect forward reference to

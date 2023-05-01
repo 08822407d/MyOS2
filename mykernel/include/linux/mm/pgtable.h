@@ -46,44 +46,45 @@
 	// #define pmd_pgtable(pmd) pmd_page(pmd)
 	// #endif
 
-	// /*
-	// * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
-	// *
-	// * The pXx_index() functions return the index of the entry in the page
-	// * table page which would control the given virtual address
-	// *
-	// * As these functions may be used by the same code for different levels of
-	// * the page table folding, they are always available, regardless of
-	// * CONFIG_PGTABLE_LEVELS value. For the folded levels they simply return 0
-	// * because in such cases PTRS_PER_PxD equals 1.
-	// */
+	/*
+	 * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
+	 *
+	 * The pXx_index() functions return the index of the entry in the page
+	 * table page which would control the given virtual address
+	 *
+	 * As these functions may be used by the same code for different levels of
+	 * the page table folding, they are always available, regardless of
+	 * CONFIG_PGTABLE_LEVELS value. For the folded levels they simply return 0
+	 * because in such cases PTRS_PER_PxD equals 1.
+	 */
 
-	// static inline unsigned long pte_index(unsigned long address)
-	// {
-	// 	return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-	// }
-	// #define pte_index pte_index
+	static inline unsigned long
+		pte_index(unsigned long address) {
+			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
+		}
+	#define pte_index		pte_index
 
-	// #ifndef pmd_index
-	// static inline unsigned long pmd_index(unsigned long address)
-	// {
-	// 	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-	// }
-	// #define pmd_index pmd_index
-	// #endif
+	#ifndef pmd_index
+		static inline unsigned long
+		pmd_index(unsigned long address) {
+			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
+		}
+	#	define pmd_index	pmd_index
+	#endif
 
-	// #ifndef pud_index
-	// static inline unsigned long pud_index(unsigned long address)
-	// {
-	// 	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-	// }
-	// #define pud_index pud_index
-	// #endif
+	#ifndef pud_index
+		static inline unsigned long
+		pud_index(unsigned long address) {
+			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
+		}
+	#	define pud_index	pud_index
+	#endif
 
-	// #ifndef pgd_index
-	// /* Must be a compile-time constant, so implement it as a macro */
-	// #define pgd_index(a)  (((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-	// #endif
+	#ifndef pgd_index
+	/* Must be a compile-time constant, so implement it as a macro */
+	#	define pgd_index(a)	\
+				(((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+	#endif
 
 	// #ifndef pte_offset_kernel
 	// static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
@@ -103,34 +104,34 @@
 	// #define pte_unmap(pte) ((void)(pte))	/* NOP */
 	// #endif
 
-	// /* Find an entry in the second-level page table.. */
-	// #ifndef pmd_offset
-	// static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
-	// {
-	// 	return pud_pgtable(*pud) + pmd_index(address);
-	// }
-	// #define pmd_offset pmd_offset
-	// #endif
+	/* Find an entry in the second-level page table.. */
+	#ifndef pmd_offset
+		static inline pmd_t
+		*pmd_offset(pud_t *pud, unsigned long address) {
+			return pud_pgtable(*pud) + pmd_index(address);
+		}
+	#	define pmd_offset	pmd_offset
+	#endif
 
-	// #ifndef pud_offset
-	// static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
-	// {
-	// 	return p4d_pgtable(*p4d) + pud_index(address);
-	// }
-	// #define pud_offset pud_offset
-	// #endif
+	#ifndef pud_offset
+		static inline pud_t
+		*pud_offset(p4d_t *p4d, unsigned long address) {
+			return p4d_pgtable(*p4d) + pud_index(address);
+		}
+	#	define pud_offset	pud_offset
+	#endif
 
-	// static inline pgd_t *pgd_offset_pgd(pgd_t *pgd, unsigned long address)
-	// {
-	// 	return (pgd + pgd_index(address));
-	// };
+	static inline pgd_t
+	*pgd_offset_pgd(pgd_t *pgd, unsigned long address) {
+		return (pgd + pgd_index(address));
+	};
 
-	// /*
-	// * a shortcut to get a pgd_t in a given mm
-	// */
-	// #ifndef pgd_offset
-	// #define pgd_offset(mm, address)		pgd_offset_pgd((mm)->pgd, (address))
-	// #endif
+	/*
+	* a shortcut to get a pgd_t in a given mm
+	*/
+	#ifndef pgd_offset
+	#	define pgd_offset(mm, address)	pgd_offset_pgd((mm)->pgd, (address))
+	#endif
 
 	// /*
 	// * a shortcut which implies the use of the kernel's pgd, instead
