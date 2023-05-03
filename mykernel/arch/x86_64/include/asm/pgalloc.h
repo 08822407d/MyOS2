@@ -9,19 +9,19 @@
 	#define __HAVE_ARCH_PGD_FREE
 	#include <linux/kernel/asm-generic/pgalloc.h>
 
-	// static inline int  __paravirt_pgd_alloc(struct mm_struct *mm) { return 0; }
+	// static inline int  __paravirt_pgd_alloc(mm_s *mm) { return 0; }
 
 	// #ifdef CONFIG_PARAVIRT_XXL
 	// #include <asm/paravirt.h>
 	// #else
 	// #define paravirt_pgd_alloc(mm)	__paravirt_pgd_alloc(mm)
-	// static inline void paravirt_pgd_free(struct mm_struct *mm, pgd_t *pgd) {}
-	// static inline void paravirt_alloc_pte(struct mm_struct *mm, unsigned long pfn)	{}
-	// static inline void paravirt_alloc_pmd(struct mm_struct *mm, unsigned long pfn)	{}
+	// static inline void paravirt_pgd_free(mm_s *mm, pgd_t *pgd) {}
+	// static inline void paravirt_alloc_pte(mm_s *mm, unsigned long pfn)	{}
+	// static inline void paravirt_alloc_pmd(mm_s *mm, unsigned long pfn)	{}
 	// static inline void paravirt_alloc_pmd_clone(unsigned long pfn, unsigned long clonepfn,
 	// 						unsigned long start, unsigned long count) {}
-	// static inline void paravirt_alloc_pud(struct mm_struct *mm, unsigned long pfn)	{}
-	// static inline void paravirt_alloc_p4d(struct mm_struct *mm, unsigned long pfn)	{}
+	// static inline void paravirt_alloc_pud(mm_s *mm, unsigned long pfn)	{}
+	// static inline void paravirt_alloc_p4d(mm_s *mm, unsigned long pfn)	{}
 	// static inline void paravirt_release_pte(unsigned long pfn) {}
 	// static inline void paravirt_release_pmd(unsigned long pfn) {}
 	// static inline void paravirt_release_pud(unsigned long pfn) {}
@@ -47,10 +47,10 @@
 	// /*
 	// * Allocate and free page tables.
 	// */
-	// extern pgd_t *pgd_alloc(struct mm_struct *);
-	// extern void pgd_free(struct mm_struct *mm, pgd_t *pgd);
+	// extern pgd_t *pgd_alloc(mm_s *);
+	// extern void pgd_free(mm_s *mm, pgd_t *pgd);
 
-	// extern pgtable_t pte_alloc_one(struct mm_struct *);
+	// extern pgtable_t pte_alloc_one(mm_s *);
 
 	// extern void ___pte_free_tlb(struct mmu_gather *tlb, page_s *pte);
 
@@ -60,28 +60,26 @@
 	// 	___pte_free_tlb(tlb, pte);
 	// }
 
-	// static inline void pmd_populate_kernel(struct mm_struct *mm,
+	// static inline void pmd_populate_kernel(mm_s *mm,
 	// 					pmd_t *pmd, pte_t *pte)
 	// {
 	// 	paravirt_alloc_pte(mm, __pa(pte) >> PAGE_SHIFT);
 	// 	set_pmd(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
 	// }
 
-	// static inline void pmd_populate_kernel_safe(struct mm_struct *mm,
+	// static inline void pmd_populate_kernel_safe(mm_s *mm,
 	// 					pmd_t *pmd, pte_t *pte)
 	// {
 	// 	paravirt_alloc_pte(mm, __pa(pte) >> PAGE_SHIFT);
 	// 	set_pmd_safe(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
 	// }
 
-	// static inline void pmd_populate(struct mm_struct *mm, pmd_t *pmd,
-	// 				page_s *pte)
-	// {
-	// 	unsigned long pfn = page_to_pfn(pte);
+	static inline void pmd_populate(mm_s *mm, pmd_t *pmd, page_s *pte) {
+		// unsigned long pfn = page_to_pfn(pte);
 
-	// 	paravirt_alloc_pte(mm, pfn);
-	// 	set_pmd(pmd, __pmd(((pteval_t)pfn << PAGE_SHIFT) | _PAGE_TABLE));
-	// }
+		// paravirt_alloc_pte(mm, pfn);
+		// set_pmd(pmd, __pmd(((pteval_t)pfn << PAGE_SHIFT) | _PAGE_TABLE));
+	}
 
 	// #if CONFIG_PGTABLE_LEVELS > 2
 	// extern void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd);
@@ -93,15 +91,14 @@
 	// }
 
 	// #ifdef CONFIG_X86_PAE
-	// extern void pud_populate(struct mm_struct *mm, pud_t *pudp, pmd_t *pmd);
+	// extern void pud_populate(mm_s *mm, pud_t *pudp, pmd_t *pmd);
 	// #else	/* !CONFIG_X86_PAE */
-	// static inline void pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
-	// {
-	// 	paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
-	// 	set_pud(pud, __pud(_PAGE_TABLE | __pa(pmd)));
-	// }
+	static inline void pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
+		// paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
+		// set_pud(pud, __pud(_PAGE_TABLE | __pa(pmd)));
+	}
 
-	// static inline void pud_populate_safe(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+	// static inline void pud_populate_safe(mm_s *mm, pud_t *pud, pmd_t *pmd)
 	// {
 	// 	paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
 	// 	set_pud_safe(pud, __pud(_PAGE_TABLE | __pa(pmd)));
@@ -109,13 +106,12 @@
 	// #endif	/* CONFIG_X86_PAE */
 
 	// #if CONFIG_PGTABLE_LEVELS > 3
-	// static inline void p4d_populate(struct mm_struct *mm, p4d_t *p4d, pud_t *pud)
-	// {
-	// 	paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
-	// 	set_p4d(p4d, __p4d(_PAGE_TABLE | __pa(pud)));
-	// }
+	static inline void p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
+		// paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
+		// set_p4d(p4d, __p4d(_PAGE_TABLE | __pa(pud)));
+	}
 
-	// static inline void p4d_populate_safe(struct mm_struct *mm, p4d_t *p4d, pud_t *pud)
+	// static inline void p4d_populate_safe(mm_s *mm, p4d_t *p4d, pud_t *pud)
 	// {
 	// 	paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
 	// 	set_p4d_safe(p4d, __p4d(_PAGE_TABLE | __pa(pud)));
@@ -130,7 +126,7 @@
 	// }
 
 	// #if CONFIG_PGTABLE_LEVELS > 4
-	// static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, p4d_t *p4d)
+	// static inline void pgd_populate(mm_s *mm, pgd_t *pgd, p4d_t *p4d)
 	// {
 	// 	if (!pgtable_l5_enabled())
 	// 		return;
@@ -138,7 +134,7 @@
 	// 	set_pgd(pgd, __pgd(_PAGE_TABLE | __pa(p4d)));
 	// }
 
-	// static inline void pgd_populate_safe(struct mm_struct *mm, pgd_t *pgd, p4d_t *p4d)
+	// static inline void pgd_populate_safe(mm_s *mm, pgd_t *pgd, p4d_t *p4d)
 	// {
 	// 	if (!pgtable_l5_enabled())
 	// 		return;
@@ -146,7 +142,7 @@
 	// 	set_pgd_safe(pgd, __pgd(_PAGE_TABLE | __pa(p4d)));
 	// }
 
-	// static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long addr)
+	// static inline p4d_t *p4d_alloc_one(mm_s *mm, unsigned long addr)
 	// {
 	// 	gfp_t gfp = GFP_KERNEL_ACCOUNT;
 
@@ -155,7 +151,7 @@
 	// 	return (p4d_t *)get_zeroed_page(gfp);
 	// }
 
-	// static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
+	// static inline void p4d_free(mm_s *mm, p4d_t *p4d)
 	// {
 	// 	if (!pgtable_l5_enabled())
 	// 		return;

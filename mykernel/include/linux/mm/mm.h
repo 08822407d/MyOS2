@@ -2146,33 +2146,29 @@
 
 	int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
-	// static inline void mm_inc_nr_puds(mm_s *mm)
-	// {
-	// 	if (mm_pud_folded(mm))
-	// 		return;
+	// static inline void mm_inc_nr_puds(mm_s *mm) {
+	// 	// if (mm_pud_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_add(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_puds(mm_s *mm)
-	// {
-	// 	if (mm_pud_folded(mm))
-	// 		return;
+	// static inline void mm_dec_nr_puds(mm_s *mm) {
+	// 	// if (mm_pud_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_sub(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
 	int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
-	// static inline void mm_inc_nr_pmds(mm_s *mm)
-	// {
-	// 	if (mm_pmd_folded(mm))
-	// 		return;
+	// static inline void mm_inc_nr_pmds(mm_s *mm) {
+	// 	// if (mm_pmd_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_add(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_pmds(mm_s *mm)
-	// {
-	// 	if (mm_pmd_folded(mm))
-	// 		return;
+	// static inline void mm_dec_nr_pmds(mm_s *mm) {
+	// 	// if (mm_pmd_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_sub(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
 
@@ -2226,14 +2222,14 @@
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {
 		return (p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
-			NULL : pud_offset(p4d, address);
+				NULL : pud_offset(p4d, address);
 	}
 
-	// static inline pmd_t *pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
-	// {
-	// 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
-	// 		NULL: pmd_offset(pud, address);
-	// }
+	static inline pmd_t *pmd_alloc(mm_s *mm,
+			pud_t *pud, unsigned long address) {
+		return (pud_none(*pud)) && __pmd_alloc(mm, pud, address)?
+				NULL: pmd_offset(pud, address);
+	}
 	// #endif /* CONFIG_MMU */
 
 	// #if USE_SPLIT_PTE_PTLOCKS

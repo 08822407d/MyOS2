@@ -43,13 +43,13 @@
 	// /* Prevent speculative execution past this barrier. */
 	// #define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
 
-	// #define __dma_rmb()	barrier()
-	// #define __dma_wmb()	barrier()
+	#define __dma_rmb()	barrier()
+	#define __dma_wmb()	barrier()
 
 	// #define __smp_mb()	asm volatile("lock; addl $0,-4(%%" _ASM_SP ")" ::: "memory", "cc")
 
-	// #define __smp_rmb()	dma_rmb()
-	// #define __smp_wmb()	barrier()
+	#define __smp_rmb()	dma_rmb()
+	#define __smp_wmb()	barrier()
 	// #define __smp_store_mb(var, value) do { (void)xchg(&var, value); } while (0)
 
 	// #define __smp_store_release(p, v)					\

@@ -718,16 +718,15 @@
 		// 	return false;
 		// }
 
-		// static inline int pmd_present(pmd_t pmd)
-		// {
-		// 	/*
-		// 	* Checking for _PAGE_PSE is needed too because
-		// 	* split_huge_page will temporarily clear the present bit (but
-		// 	* the _PAGE_PSE flag will remain set at all times while the
-		// 	* _PAGE_PRESENT bit is clear).
-		// 	*/
-		// 	return pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
-		// }
+		static inline int pmd_present(pmd_t pmd) {
+			/*
+			* Checking for _PAGE_PSE is needed too because
+			* split_huge_page will temporarily clear the present bit (but
+			* the _PAGE_PSE flag will remain set at all times while the
+			* _PAGE_PRESENT bit is clear).
+			*/
+			return pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
+		}
 
 		// #ifdef CONFIG_NUMA_BALANCING
 		// /*
@@ -787,10 +786,9 @@
 			return (native_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
-		// static inline int pud_present(pud_t pud)
-		// {
-		// 	return pud_flags(pud) & _PAGE_PRESENT;
-		// }
+		static inline int pud_present(pud_t pud) {
+			return pud_flags(pud) & _PAGE_PRESENT;
+		}
 
 		static inline pmd_t *pud_pgtable(pud_t pud) {
 			return (pmd_t *)__va(pud_val(pud) & pud_pfn_mask(pud));
@@ -817,10 +815,9 @@
 			return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
-		// static inline int p4d_present(p4d_t p4d)
-		// {
-		// 	return p4d_flags(p4d) & _PAGE_PRESENT;
-		// }
+		static inline int p4d_present(p4d_t p4d) {
+			return p4d_flags(p4d) & _PAGE_PRESENT;
+		}
 
 		static inline pud_t *p4d_pgtable(p4d_t p4d) {
 			return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));

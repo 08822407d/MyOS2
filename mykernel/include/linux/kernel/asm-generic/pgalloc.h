@@ -20,7 +20,7 @@
 	//  *
 	//  * Return: pointer to the allocated memory or %NULL on error
 	//  */
-	// static inline pte_t *__pte_alloc_one_kernel(struct mm_struct *mm)
+	// static inline pte_t *__pte_alloc_one_kernel(mm_s *mm)
 	// {
 	// 	return (pte_t *)__get_free_page(GFP_PGTABLE_KERNEL);
 	// }
@@ -32,7 +32,7 @@
 	//  *
 	//  * Return: pointer to the allocated memory or %NULL on error
 	//  */
-	// static inline pte_t *pte_alloc_one_kernel(struct mm_struct *mm)
+	// static inline pte_t *pte_alloc_one_kernel(mm_s *mm)
 	// {
 	// 	return __pte_alloc_one_kernel(mm);
 	// }
@@ -43,7 +43,7 @@
 	//  * @mm: the mm_struct of the current context
 	//  * @pte: pointer to the memory containing the page table
 	//  */
-	// static inline void pte_free_kernel(struct mm_struct *mm, pte_t *pte)
+	// static inline void pte_free_kernel(mm_s *mm, pte_t *pte)
 	// {
 	// 	free_page((unsigned long)pte);
 	// }
@@ -60,7 +60,7 @@
 	//  *
 	//  * Return: `page_s` initialized as page table or %NULL on error
 	//  */
-	// static inline pgtable_t __pte_alloc_one(struct mm_struct *mm, gfp_t gfp)
+	// static inline pgtable_t __pte_alloc_one(mm_s *mm, gfp_t gfp)
 	// {
 	// 	page_s *pte;
 
@@ -84,7 +84,7 @@
 	//  *
 	//  * Return: `page_s` initialized as page table or %NULL on error
 	//  */
-	// static inline pgtable_t pte_alloc_one(struct mm_struct *mm)
+	// static inline pgtable_t pte_alloc_one(mm_s *mm)
 	// {
 	// 	return __pte_alloc_one(mm, GFP_PGTABLE_USER);
 	// }
@@ -100,7 +100,7 @@
 	//  * @mm: the mm_struct of the current context
 	//  * @pte_page: the `page_s` representing the page table
 	//  */
-	// static inline void pte_free(struct mm_struct *mm, page_s *pte_page)
+	// static inline void pte_free(mm_s *mm, page_s *pte_page)
 	// {
 	// 	pgtable_pte_page_dtor(pte_page);
 	// 	__free_page(pte_page);

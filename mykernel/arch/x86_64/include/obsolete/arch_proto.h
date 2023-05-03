@@ -141,8 +141,6 @@
 	void myos_arch_system_call_init(void);
 
 	/* arch_page_util. */
-	// struct mm;
-	// typedef struct mm mm_s;
 	void arch_page_preinit(void);
 	void myos_refresh_arch_page(void);
 	void myos_unmap_kernel_lowhalf(atomic_t *um_flag);

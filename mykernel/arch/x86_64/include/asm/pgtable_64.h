@@ -51,7 +51,7 @@
 	// 	pr_err("%s:%d: bad pgd %p(%016lx)\n",		\
 	// 		__FILE__, __LINE__, &(e), pgd_val(e))
 
-	// mm_s;
+	// struct mm_struct;
 
 	// #define mm_p4d_folded mm_p4d_folded
 	// static inline bool mm_p4d_folded(mm_s *mm)

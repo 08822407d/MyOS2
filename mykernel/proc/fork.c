@@ -1313,7 +1313,7 @@ static __latent_entropy task_s
 	retval = copy_signal(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_sighand;
-	// retval = copy_mm(clone_flags, p);
+	retval = copy_mm(clone_flags, p);
 	retval = myos_copy_mm(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_signal;

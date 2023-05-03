@@ -6,7 +6,7 @@
 	#include <linux/kernel/err.h>
 	#include <linux/kernel/sched.h>
 
-	// mm_s;
+	// struct mm_struct;
 
 	// __printf(4, 5)
 	// task_s *kthread_create_on_node(int (*threadfn)(void *data),

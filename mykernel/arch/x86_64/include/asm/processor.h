@@ -6,7 +6,7 @@
 
 	// /* Forward declaration, a strange C thing */
 	// task_s;
-	// mm_s;
+	// struct mm_struct;
 	// struct io_bitmap;
 	// struct vm86;
 
