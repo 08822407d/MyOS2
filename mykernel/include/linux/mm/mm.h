@@ -617,15 +617,14 @@
 		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
 	} vm_ops_s;
 
-	// static inline void vma_init(vma_s *vma, mm_s *mm)
-	// {
-	// 	static const struct vm_operations_struct dummy_vm_ops = {};
+	static inline void vma_init(vma_s *vma, mm_s *mm) {
+		static const vm_ops_s dummy_vm_ops = {};
 
-	// 	memset(vma, 0, sizeof(*vma));
-	// 	vma->vm_mm = mm;
-	// 	vma->vm_ops = &dummy_vm_ops;
-	// 	INIT_LIST_HEAD(&vma->anon_vma_chain);
-	// }
+		memset(vma, 0, sizeof(*vma));
+		vma->vm_mm = mm;
+		vma->vm_ops = &dummy_vm_ops;
+		// INIT_LIST_HEAD(&vma->anon_vma_chain);
+	}
 
 	// static inline void vma_set_anonymous(vma_s *vma)
 	// {

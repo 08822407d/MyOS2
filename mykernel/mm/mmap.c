@@ -862,22 +862,22 @@ myos_mmap_region(file_s *file, unsigned long addr,
 	if (vma)
 		goto out;
 
-	// /*
-	//  * Determine the object being mapped and call the appropriate
-	//  * specific mapper. the address has already been validated, but
-	//  * not unmapped, but the maps are removed from the list.
-	//  */
-	// vma = vm_area_alloc(mm);
-	// if (!vma) {
-	// 	error = -ENOMEM;
-	// 	goto unacct_error;
-	// }
+	/*
+	 * Determine the object being mapped and call the appropriate
+	 * specific mapper. the address has already been validated, but
+	 * not unmapped, but the maps are removed from the list.
+	 */
+	vma = vm_area_alloc(mm);
+	if (!vma) {
+		error = -ENOMEM;
+		goto unacct_error;
+	}
 
-	// vma->vm_start = addr;
-	// vma->vm_end = addr + len;
-	// vma->vm_flags = vm_flags;
+	vma->vm_start = addr;
+	vma->vm_end = addr + len;
+	vma->vm_flags = vm_flags;
 	// vma->vm_page_prot = vm_get_page_prot(vm_flags);
-	// vma->vm_pgoff = pgoff;
+	vma->vm_pgoff = pgoff;
 
 	// if (file) {
 	// 	if (vm_flags & VM_SHARED) {
@@ -975,21 +975,21 @@ out:
 
 	return addr;
 
-// unmap_and_free_vma:
-// 	fput(vma->vm_file);
-// 	vma->vm_file = NULL;
+unmap_and_free_vma:
+	// fput(vma->vm_file);
+	vma->vm_file = NULL;
 
-// 	/* Undo any partial mapping done by a device driver. */
-// 	unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
-// 	charged = 0;
-// 	if (vm_flags & VM_SHARED)
-// 		mapping_unmap_writable(file->f_mapping);
-// free_vma:
-// 	vm_area_free(vma);
-// unacct_error:
-// 	if (charged)
-// 		vm_unacct_memory(charged);
-// 	return error;
+	// /* Undo any partial mapping done by a device driver. */
+	// unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
+	// charged = 0;
+	// if (vm_flags & VM_SHARED)
+	// 	mapping_unmap_writable(file->f_mapping);
+free_vma:
+	vm_area_free(vma);
+unacct_error:
+	// if (charged)
+	// 	vm_unacct_memory(charged);
+	return error;
 }
 
 

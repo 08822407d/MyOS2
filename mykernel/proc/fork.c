@@ -122,15 +122,14 @@ static inline void free_task_struct(task_s *tsk) {
 
 
 
-// vma_s *vm_area_alloc(mm_s *mm)
-// {
-// 	vma_s *vma;
-
-// 	vma = kmalloc(sizeof(vma_s), GFP_KERNEL);
-// 	if (vma)
-// 		vma_init(vma, mm);
-// 	return vma;
-// }
+vma_s *vm_area_alloc(mm_s *mm)
+{
+	vma_s *vma;
+	vma = kmalloc(sizeof(vma_s), GFP_KERNEL);
+	if (vma)
+		vma_init(vma, mm);
+	return vma;
+}
 
 vma_s *vm_area_dup(vma_s *orig)
 {
@@ -1817,7 +1816,6 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 	if(clone_flags & CLONE_VM)
 	{
-		// if vfork(), share the mm_struct
 		new_tsk->mm = curr_mm;
 		goto exit_cpmm;
 	}
@@ -1825,8 +1823,6 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 		memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
-		// pgd_t *new_pgd = kzalloc(sizeof(pgd_t), GFP_KERNEL);
-		// new_tsk->mm->pgd_ptr = new_pgd;
 		prepair_COW(current);
 	}
 
