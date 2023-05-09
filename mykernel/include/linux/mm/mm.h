@@ -438,13 +438,13 @@
 	// */
 	// extern pgprot_t protection_map[16];
 
-	// /*
-	// * The default fault flags that should be used by most of the
-	// * arch-specific page fault handlers.
-	// */
-	// #define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
-	// 				FAULT_FLAG_KILLABLE | \
-	// 				FAULT_FLAG_INTERRUPTIBLE)
+	/*
+	* The default fault flags that should be used by most of the
+	* arch-specific page fault handlers.
+	*/
+	#define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
+					FAULT_FLAG_KILLABLE | \
+					FAULT_FLAG_INTERRUPTIBLE)
 
 	// /**
 	//  * fault_flag_allow_retry_first - check ALLOW_RETRY the first time
