@@ -64,38 +64,32 @@
 		// #ifdef CONFIG_PARAVIRT_XXL
 		// #include <asm/paravirt.h>
 		// #else  /* !CONFIG_PARAVIRT_XXL */
-		// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
 
 		// #define set_pte_atomic(ptep, pte)					\
 		// 	native_set_pte_atomic(ptep, pte)
 
+
+		// #define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
+		// #define set_pud(pudp, pud)		native_set_pud(pudp, pud)
 		// #define set_pmd(pmdp, pmd)		native_set_pmd(pmdp, pmd)
+		// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
 
-		// #ifndef set_p4d
-		// # define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
-		// #endif
+		// #define p4d_clear(p4d)				native_p4d_clear(p4d)
+		// #define pud_clear(pud)				native_pud_clear(pud)
+		// #define pmd_clear(pmd)				native_pmd_clear(pmd)
+		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
 
-		#define p4d_clear(p4d)				native_p4d_clear(p4d)
+		// #define pgd_val(x)		native_pgd_val(x)
+		// #define __pgd(x)		native_make_pgd(x)
 
-		// #ifndef set_pud
-		// # define set_pud(pudp, pud)		native_set_pud(pudp, pud)
-		// #endif
+		// #define pud_val(x)		native_pud_val(x)
+		// #define __pud(x)		native_make_pud(x)
 
-		#define pud_clear(pud)				native_pud_clear(pud)
-		#define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-		#define pmd_clear(pmd)				native_pmd_clear(pmd)
+		// #define pmd_val(x)		native_pmd_val(x)
+		// #define __pmd(x)		native_make_pmd(x)
 
-		#define pgd_val(x)		native_pgd_val(x)
-		#define __pgd(x)		native_make_pgd(x)
-
-		#define pud_val(x)		native_pud_val(x)
-		#define __pud(x)		native_make_pud(x)
-
-		#define pmd_val(x)		native_pmd_val(x)
-		#define __pmd(x)		native_make_pmd(x)
-
-		#define pte_val(x)		native_pte_val(x)
-		#define __pte(x)		native_make_pte(x)
+		// #define pte_val(x)		native_pte_val(x)
+		// #define __pte(x)		native_make_pte(x)
 
 		// #define arch_end_context_switch(prev)	do {} while(0)
 		// #endif	/* CONFIG_PARAVIRT_XXL */
@@ -749,7 +743,7 @@
 		static inline int pmd_none(pmd_t pmd) {
 			/* Only check low word on 32-bit platforms, since it might be
 			out of sync with upper half. */
-			unsigned long val = native_pmd_val(pmd);
+			unsigned long val = pmd_val(pmd);
 			return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
 		}
 
@@ -783,7 +777,7 @@
 		// }
 
 		static inline int pud_none(pud_t pud) {
-			return (native_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+			return (pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
 		static inline int pud_present(pud_t pud) {

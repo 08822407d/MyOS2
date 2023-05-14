@@ -279,16 +279,16 @@
 	/* No need to mask any bits for !PAE */
 	#	define PGD_ALLOWED_BITS	(~0ULL)
 
-		static inline pgd_t native_make_pgd(pgdval_t val) {
+		static inline pgd_t make_pgd(pgdval_t val) {
 			return (pgd_t) { val & PGD_ALLOWED_BITS };
 		}
 
-		static inline pgdval_t native_pgd_val(pgd_t pgd) {
+		static inline pgdval_t pgd_val(pgd_t pgd) {
 			return pgd.pgd & PGD_ALLOWED_BITS;
 		}
 
 		static inline pgdval_t pgd_flags(pgd_t pgd) {
-			return native_pgd_val(pgd) & PTE_FLAGS_MASK;
+			return pgd_val(pgd) & PTE_FLAGS_MASK;
 		}
 
 
@@ -319,11 +319,11 @@
 
 	// #	define pgd_populate(mm, pgd, p4d)		do { } while (0)
 	// #	define pgd_populate_safe(mm, pgd, p4d)	do { } while (0)
-	// /*
-	//  * (p4ds are folded into pgds so this doesn't get actually called,
-	//  * but the define is needed for a generic inline function.)
-	//  */
-	// #	define set_pgd(pgdptr, pgdval)			set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
+	/*
+	 * (p4ds are folded into pgds so this doesn't get actually called,
+	 * but the define is needed for a generic inline function.)
+	 */
+	#	define set_pgd(pgdptr, pgdval)			set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
 
 	static inline p4d_t
 	*p4d_offset(pgd_t *pgd, unsigned long address) {
@@ -331,7 +331,7 @@
 	}
 
 	#	define p4d_val(x)				(pgd_val((x).pgd))
-	// #	define __p4d(x)					((p4d_t) { __pgd(x) })
+	#	define make_p4d(x)					((p4d_t) { make_pgd(x) })
 
 	// #	define pgd_page(pgd)			(p4d_page((p4d_t){ pgd }))
 	// #	define pgd_page_vaddr(pgd)		((unsigned long)(p4d_pgtable((p4d_t){ pgd })))
@@ -350,11 +350,11 @@
 
 
 		static inline p4d_t native_make_p4d(pudval_t val) {
-			return (p4d_t) { .pgd = native_make_pgd((pgdval_t)val) };
+			return (p4d_t) { .pgd = make_pgd((pgdval_t)val) };
 		}
 
 		static inline p4dval_t native_p4d_val(p4d_t p4d) {
-			return native_pgd_val(p4d.pgd);
+			return pgd_val(p4d.pgd);
 		}
 
 		typedef union {
@@ -362,11 +362,11 @@
 			arch_pud_T	defs;
 		} pud_t;
 
-		static inline pud_t native_make_pud(pmdval_t val) {
+		static inline pud_t make_pud(pmdval_t val) {
 			return (pud_t) { val };
 		}
 
-		static inline pudval_t native_pud_val(pud_t pud) {
+		static inline pudval_t pud_val(pud_t pud) {
 			return pud.pud;
 		}
 
@@ -375,11 +375,11 @@
 			arch_pmd_T	defs;
 		} pmd_t;
 
-		static inline pmd_t native_make_pmd(pmdval_t val) {
+		static inline pmd_t make_pmd(pmdval_t val) {
 			return (pmd_t) { val };
 		}
 
-		static inline pmdval_t native_pmd_val(pmd_t pmd) {
+		static inline pmdval_t pmd_val(pmd_t pmd) {
 			return pmd.pmd;
 		}
 
@@ -397,7 +397,7 @@
 		}
 
 		static inline pudval_t pud_pfn_mask(pud_t pud) {
-			if (native_pud_val(pud) & _PAGE_PSE)
+			if (pud_val(pud) & _PAGE_PSE)
 				return PHYSICAL_PUD_PAGE_MASK;
 			else
 				return PTE_PFN_MASK;
@@ -408,11 +408,11 @@
 		}
 
 		static inline pudval_t pud_flags(pud_t pud) {
-			return native_pud_val(pud) & pud_flags_mask(pud);
+			return pud_val(pud) & pud_flags_mask(pud);
 		}
 
 		static inline pmdval_t pmd_pfn_mask(pmd_t pmd) {
-			if (native_pmd_val(pmd) & _PAGE_PSE)
+			if (pmd_val(pmd) & _PAGE_PSE)
 				return PHYSICAL_PMD_PAGE_MASK;
 			else
 				return PTE_PFN_MASK;
@@ -423,7 +423,7 @@
 		}
 
 		static inline pmdval_t pmd_flags(pmd_t pmd) {
-			return native_pmd_val(pmd) & pmd_flags_mask(pmd);
+			return pmd_val(pmd) & pmd_flags_mask(pmd);
 		}
 
 		typedef union {
@@ -431,16 +431,16 @@
 			arch_pte_T	defs;
 		} pte_t;
 
-		static inline pte_t native_make_pte(pteval_t val) {
+		static inline pte_t make_pte(pteval_t val) {
 			return (pte_t) { .pte = val };
 		}
 
-		static inline pteval_t native_pte_val(pte_t pte) {
+		static inline pteval_t pte_val(pte_t pte) {
 			return pte.pte;
 		}
 
 		static inline pteval_t pte_flags(pte_t pte) {
-			return native_pte_val(pte) & PTE_FLAGS_MASK;
+			return pte_val(pte) & PTE_FLAGS_MASK;
 		}
 
 	// #	define __pte2cm_idx(cb)								\

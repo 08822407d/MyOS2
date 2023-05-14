@@ -16,6 +16,8 @@
 	// #	include <linux/threads.h>
 	// #	include <asm/fixmap.h>
 
+	struct mm_struct;
+	typedef struct mm_struct mm_s;
 	// extern p4d_t level4_kernel_pgt[512];
 	// extern p4d_t level4_ident_pgt[512];
 	// extern pud_t level3_kernel_pgt[512];
@@ -62,28 +64,26 @@
 	// void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
 	// void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
 
-	// static inline void native_set_pte(pte_t *ptep, pte_t pte)
-	// {
-	// 	WRITE_ONCE(*ptep, pte);
-	// }
+	static inline void set_pte(pte_t *ptep, pte_t pte) {
+		WRITE_ONCE(*ptep, pte);
+	}
 
-	// static inline void native_pte_clear(mm_s *mm, unsigned long addr,
-	// 					pte_t *ptep)
-	// {
-	// 	native_set_pte(ptep, native_make_pte(0));
-	// }
+	static inline void
+	pte_clear(mm_s *mm, unsigned long addr, pte_t *ptep) {
+		set_pte(ptep, make_pte(0));
+	}
 
-	// static inline void native_set_pte_atomic(pte_t *ptep, pte_t pte)
-	// {
-	// 	native_set_pte(ptep, pte);
-	// }
+	static inline void
+	native_set_pte_atomic(pte_t *ptep, pte_t pte) {
+		set_pte(ptep, pte);
+	}
 
-	static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd) {
+	static inline void set_pmd(pmd_t *pmdp, pmd_t pmd) {
 		WRITE_ONCE(*pmdp, pmd);
 	}
 
-	static inline void native_pmd_clear(pmd_t *pmd) {
-		native_set_pmd(pmd, native_make_pmd(0));
+	static inline void pmd_clear(pmd_t *pmd) {
+		set_pmd(pmd, make_pmd(0));
 	}
 
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
@@ -112,12 +112,12 @@
 	// #endif
 	// }
 
-	static inline void native_set_pud(pud_t *pudp, pud_t pud) {
+	static inline void set_pud(pud_t *pudp, pud_t pud) {
 		WRITE_ONCE(*pudp, pud);
 	}
 
-	static inline void native_pud_clear(pud_t *pud) {
-		native_set_pud(pud, native_make_pud(0));
+	static inline void pud_clear(pud_t *pud) {
+		set_pud(pud, make_pud(0));
 	}
 
 	// static inline pud_t native_pudp_get_and_clear(pud_t *xp)
@@ -135,25 +135,24 @@
 	// #endif
 	// }
 
-	static inline void native_set_p4d(p4d_t *p4dp, p4d_t p4d) {
+	static inline void set_p4d(p4d_t *p4dp, p4d_t p4d) {
 		pgd_t pgd;
-		pgd = native_make_pgd(native_p4d_val(p4d));
+		pgd = make_pgd(native_p4d_val(p4d));
 		pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
-		WRITE_ONCE(*p4dp, native_make_p4d(native_pgd_val(pgd)));
+		WRITE_ONCE(*p4dp, native_make_p4d(pgd_val(pgd)));
 	}
 
-	static inline void native_p4d_clear(p4d_t *p4d) {
-		native_set_p4d(p4d, native_make_p4d(0));
+	static inline void p4d_clear(p4d_t *p4d) {
+		set_p4d(p4d, native_make_p4d(0));
 	}
 
-	// static inline void native_set_pgd(pgd_t *pgdp, pgd_t pgd)
-	// {
-	// 	WRITE_ONCE(*pgdp, pti_set_user_pgtbl(pgdp, pgd));
+	// static inline void
+	// native_set_pgd(pgd_t *pgdp, pgd_t pgd) {
+	// 	// WRITE_ONCE(*pgdp, pti_set_user_pgtbl(pgdp, pgd));
 	// }
 
-	// static inline void native_pgd_clear(pgd_t *pgd)
-	// {
-	// 	native_set_pgd(pgd, native_make_pgd(0));
+	// static inline void native_pgd_clear(pgd_t *pgd) {
+	// 	native_set_pgd(pgd, make_pgd(0));
 	// }
 
 	// /*
