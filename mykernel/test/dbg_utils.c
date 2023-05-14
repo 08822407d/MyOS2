@@ -19,19 +19,19 @@ pgmapset_s DBG_get_pgmapset(IN reg_t cr3, IN virt_addr_t virt)
 	pgd_t *PML4_ptr		= (pgd_t *)myos_phys2virt(pml4_pa);
 	pgd_t *pml4e_ptr	= PML4_ptr + pml4e_idx;
 	ret_val.pml4e			= *pml4e_ptr;
-	if (pml4e_ptr->pgd == 0)
+	if (pml4e_ptr->val == 0)
 		goto fail_return;
 	// get pdpte
-	pud_t *PDPT_ptr 	= (pud_t *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pml4e_ptr->pgd));
+	pud_t *PDPT_ptr 	= (pud_t *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pml4e_ptr->val));
 	pud_t *pdpte_ptr	= PDPT_ptr + pdpte_idx;
 	ret_val.pdpte			= *pdpte_ptr;
-	if (pdpte_ptr->pud == 0)
+	if (pdpte_ptr->val == 0)
 		goto fail_return;
 	// get pde
-	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pdpte_ptr->pud));	
+	pmd_t *PD_ptr		= (pmd_t *)myos_phys2virt((phys_addr_t)ARCH_PGS_ADDR(pdpte_ptr->val));	
 	pmd_t *pde_ptr		= PD_ptr + pde_idx;
 	ret_val.pde				= *pde_ptr;
-	if (pde_ptr->pmd == 0)
+	if (pde_ptr->val == 0)
 		goto fail_return;
 
 	ret_val.paddr = (phys_addr_t)((uint64_t)pde_ptr->defs.PHYADDR << 12);

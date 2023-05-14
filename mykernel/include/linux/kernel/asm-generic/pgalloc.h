@@ -146,8 +146,10 @@
 		}
 	#endif
 
+	// static inline pud_t
+	// *__pud_alloc_one(mm_s *mm, unsigned long addr) {
 	static inline pud_t
-	*__pud_alloc_one(mm_s *mm, unsigned long addr) {
+	*pud_alloc_one(mm_s *mm, unsigned long addr) {
 		gfp_t gfp = GFP_PGTABLE_USER;
 
 		if (mm == &init_mm)
@@ -155,34 +157,36 @@
 		return (pud_t *)get_zeroed_page(gfp);
 	}
 
-	#ifndef __HAVE_ARCH_PUD_ALLOC_ONE
-	/**
-	 * pud_alloc_one - allocate a page for PUD-level page table
-	 * @mm: the mm_struct of the current context
-	 *
-	 * Allocates a page using %GFP_PGTABLE_USER for user context and
-	 * %GFP_PGTABLE_KERNEL for kernel context.
-	 *
-	 * Return: pointer to the allocated memory or %NULL on error
-	 */
-		static inline pud_t
-		*pud_alloc_one(mm_s *mm, unsigned long addr) {
-			return __pud_alloc_one(mm, addr);
-		}
-	#endif
+	// #ifndef __HAVE_ARCH_PUD_ALLOC_ONE
+	// /**
+	//  * pud_alloc_one - allocate a page for PUD-level page table
+	//  * @mm: the mm_struct of the current context
+	//  *
+	//  * Allocates a page using %GFP_PGTABLE_USER for user context and
+	//  * %GFP_PGTABLE_KERNEL for kernel context.
+	//  *
+	//  * Return: pointer to the allocated memory or %NULL on error
+	//  */
+	// 	static inline pud_t
+	// 	*pud_alloc_one(mm_s *mm, unsigned long addr) {
+	// 		return __pud_alloc_one(mm, addr);
+	// 	}
+	// #endif
 
+	// static inline void
+	// __pud_free(mm_s *mm, pud_t *pud) {
 	static inline void
-	__pud_free(mm_s *mm, pud_t *pud) {
+	pud_free(mm_s *mm, pud_t *pud) {
 		// BUG_ON((unsigned long)pud & (PAGE_SIZE-1));
 		free_page((unsigned long)pud);
 	}
 
-	#ifndef __HAVE_ARCH_PUD_FREE
-		static inline void
-		pud_free(mm_s *mm, pud_t *pud) {
-			__pud_free(mm, pud);
-		}
-	#endif
+	// #ifndef __HAVE_ARCH_PUD_FREE
+	// 	static inline void
+	// 	pud_free(mm_s *mm, pud_t *pud) {
+	// 		__pud_free(mm, pud);
+	// 	}
+	// #endif
 
 	#ifndef __HAVE_ARCH_PGD_FREE
 		static inline void

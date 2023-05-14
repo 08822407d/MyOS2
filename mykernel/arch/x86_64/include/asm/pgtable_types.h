@@ -266,7 +266,7 @@
 	// 	typedef struct pgprot { pgprotval_t pgprot; } pgprot_t;
 
 		typedef union {
-			pgdval_t	pgd;
+			pgdval_t	val;
 			arch_pgd_T	defs;
 		} pgd_t;
 
@@ -280,11 +280,11 @@
 	#	define PGD_ALLOWED_BITS	(~0ULL)
 
 		static inline pgd_t make_pgd(pgdval_t val) {
-			return (pgd_t) { val & PGD_ALLOWED_BITS };
+			return (pgd_t) { .val = val & PGD_ALLOWED_BITS };
 		}
 
 		static inline pgdval_t pgd_val(pgd_t pgd) {
-			return pgd.pgd & PGD_ALLOWED_BITS;
+			return pgd.val & PGD_ALLOWED_BITS;
 		}
 
 		static inline pgdval_t pgd_flags(pgd_t pgd) {
@@ -330,8 +330,8 @@
 		return (p4d_t *)pgd;
 	}
 
-	#	define p4d_val(x)				(pgd_val((x).pgd))
-	#	define make_p4d(x)					((p4d_t) { make_pgd(x) })
+	#	define p4d_val(x)			(pgd_val((x).pgd))
+	#	define make_p4d(x)			((p4d_t) { make_pgd(x) })
 
 	// #	define pgd_page(pgd)			(p4d_page((p4d_t){ pgd }))
 	// #	define pgd_page_vaddr(pgd)		((unsigned long)(p4d_pgtable((p4d_t){ pgd })))
@@ -349,51 +349,53 @@
 	// #endif
 
 
-		static inline p4d_t native_make_p4d(pudval_t val) {
-			return (p4d_t) { .pgd = make_pgd((pgdval_t)val) };
-		}
-
-		static inline p4dval_t native_p4d_val(p4d_t p4d) {
-			return pgd_val(p4d.pgd);
-		}
+		// static inline p4d_t native_make_p4d(pudval_t val) {
+		// 	return (p4d_t) { .pgd = make_pgd((pgdval_t)val) };
+		// }
+		// static inline p4dval_t native_p4d_val(p4d_t p4d) {
+		// 	return pgd_val(p4d.pgd);
+		// }
 
 		typedef union {
-			pudval_t	pud;
+			pudval_t	val;
 			arch_pud_T	defs;
 		} pud_t;
 
 		static inline pud_t make_pud(pmdval_t val) {
-			return (pud_t) { val };
+			return (pud_t) { .val = val };
 		}
 
-		static inline pudval_t pud_val(pud_t pud) {
-			return pud.pud;
-		}
+		// static inline pudval_t pud_val(pud_t pud) {
+		// 	return pud.pud;
+		// }
+		#define pud_val(pud)		(((pud_t)pud).val)
 
 		typedef union {
-			pmdval_t	pmd;
+			pmdval_t	val;
 			arch_pmd_T	defs;
 		} pmd_t;
 
 		static inline pmd_t make_pmd(pmdval_t val) {
-			return (pmd_t) { val };
+			return (pmd_t) { .val = val };
 		}
 
-		static inline pmdval_t pmd_val(pmd_t pmd) {
-			return pmd.pmd;
-		}
+		// static inline pmdval_t pmd_val(pmd_t pmd) {
+		// 	return pmd.pmd;
+		// }
+		#define pmd_val(pmd)		(((pmd_t)pmd).val)
 
-		static inline p4dval_t p4d_pfn_mask(p4d_t p4d) {
-			/* No 512 GiB huge pages yet */
-			return PTE_PFN_MASK;
-		}
-
-		static inline p4dval_t p4d_flags_mask(p4d_t p4d) {
-			return ~p4d_pfn_mask(p4d);
-		}
+		// static inline p4dval_t p4d_pfn_mask(p4d_t p4d) {
+		// 	/* No 512 GiB huge pages yet */
+		// 	return PTE_PFN_MASK;
+		// }
+		// static inline p4dval_t p4d_flags_mask(p4d_t p4d) {
+		// 	return ~p4d_pfn_mask(p4d);
+		// }
+		#define p4d_pfn_mask(n)		((unsigned long)PTE_PFN_MASK)	
+		#define p4d_flags_mask(n)	(~p4d_pfn_mask(n))
 
 		static inline p4dval_t p4d_flags(p4d_t p4d) {
-			return native_p4d_val(p4d) & p4d_flags_mask(p4d);
+			return p4d_val(p4d) & p4d_flags_mask(p4d);
 		}
 
 		static inline pudval_t pud_pfn_mask(pud_t pud) {
@@ -403,9 +405,10 @@
 				return PTE_PFN_MASK;
 		}
 
-		static inline pudval_t pud_flags_mask(pud_t pud) {
-			return ~pud_pfn_mask(pud);
-		}
+		// static inline pudval_t pud_flags_mask(pud_t pud) {
+		// 	return ~pud_pfn_mask(pud);
+		// }
+		#define pud_flags_mask(n)	(~pud_pfn_mask(n))
 
 		static inline pudval_t pud_flags(pud_t pud) {
 			return pud_val(pud) & pud_flags_mask(pud);
@@ -418,26 +421,29 @@
 				return PTE_PFN_MASK;
 		}
 
-		static inline pmdval_t pmd_flags_mask(pmd_t pmd) {
-			return ~pmd_pfn_mask(pmd);
-		}
+		// static inline pmdval_t pmd_flags_mask(pmd_t pmd) {
+		// 	return ~pmd_pfn_mask(pmd);
+		// }	
+		#define pmd_flags_mask(n)	(~pmd_pfn_mask(n))
 
 		static inline pmdval_t pmd_flags(pmd_t pmd) {
 			return pmd_val(pmd) & pmd_flags_mask(pmd);
 		}
 
 		typedef union {
-			pteval_t	pte;
+			pteval_t	val;
 			arch_pte_T	defs;
 		} pte_t;
 
 		static inline pte_t make_pte(pteval_t val) {
-			return (pte_t) { .pte = val };
+			return (pte_t) { .val = val };
 		}
 
-		static inline pteval_t pte_val(pte_t pte) {
-			return pte.pte;
-		}
+		// static inline pteval_t pte_val(pte_t pte) {
+		// 	return pte.pte;
+		// }
+		#define pte_val(pte)		(((pte_t)pte).val)
+		
 
 		static inline pteval_t pte_flags(pte_t pte) {
 			return pte_val(pte) & PTE_FLAGS_MASK;

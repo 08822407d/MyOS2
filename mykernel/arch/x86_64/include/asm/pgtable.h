@@ -69,27 +69,25 @@
 		// 	native_set_pte_atomic(ptep, pte)
 
 
+
 		// #define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
 		// #define set_pud(pudp, pud)		native_set_pud(pudp, pud)
 		// #define set_pmd(pmdp, pmd)		native_set_pmd(pmdp, pmd)
 		// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
-
 		// #define p4d_clear(p4d)				native_p4d_clear(p4d)
 		// #define pud_clear(pud)				native_pud_clear(pud)
 		// #define pmd_clear(pmd)				native_pmd_clear(pmd)
 		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-
 		// #define pgd_val(x)		native_pgd_val(x)
 		// #define __pgd(x)		native_make_pgd(x)
-
 		// #define pud_val(x)		native_pud_val(x)
 		// #define __pud(x)		native_make_pud(x)
-
 		// #define pmd_val(x)		native_pmd_val(x)
 		// #define __pmd(x)		native_make_pmd(x)
-
 		// #define pte_val(x)		native_pte_val(x)
 		// #define __pte(x)		native_make_pte(x)
+
+
 
 		// #define arch_end_context_switch(prev)	do {} while(0)
 		// #endif	/* CONFIG_PARAVIRT_XXL */
@@ -806,7 +804,7 @@
 		}
 
 		static inline int p4d_none(p4d_t p4d) {
-			return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+			return (p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
 		static inline int p4d_present(p4d_t p4d) {
@@ -817,11 +815,11 @@
 			return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));
 		}
 
-		// /*
-		// * Currently stuck as a macro due to indirect forward reference to
-		// * linux/mmzone.h's __section_mem_map_addr() definition:
-		// */
-		// #define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+		/*
+		 * Currently stuck as a macro due to indirect forward reference to
+		 * linux/mmzone.h's __section_mem_map_addr() definition:
+		 */
+		#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
 		static inline int p4d_bad(p4d_t p4d) {
 			return (p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
@@ -959,7 +957,7 @@
 		// static inline void ptep_set_wrprotect(mm_s *mm,
 		// 					unsigned long addr, pte_t *ptep)
 		// {
-		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->pte);
+		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->val);
 		// }
 
 		// #define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
