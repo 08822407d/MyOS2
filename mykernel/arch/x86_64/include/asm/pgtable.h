@@ -93,7 +93,7 @@
 		// #endif	/* CONFIG_PARAVIRT_XXL */
 
 		// /*
-		// * The following only work if pte_present() is true.
+		// * The following only work if arch_pte_present() is true.
 		// * Undefined behaviour if not..
 		// */
 		// static inline int pte_dirty(pte_t pte)
@@ -674,10 +674,9 @@
 		// #include <linux/log2.h>
 		// #include <asm/fixmap.h>
 
-		// static inline int pte_none(pte_t pte)
-		// {
-		// 	return !(pte.pte & ~(_PAGE_KNL_ERRATUM_MASK));
-		// }
+		static inline int arch_pte_none(pte_t pte) {
+			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
+		}
 
 		// #define __HAVE_ARCH_PTE_SAME
 		// static inline int pte_same(pte_t a, pte_t b)
@@ -685,10 +684,9 @@
 		// 	return a.pte == b.pte;
 		// }
 
-		// static inline int pte_present(pte_t a)
-		// {
-		// 	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
-		// }
+		static inline int arch_pte_present(pte_t a) {
+			return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
+		}
 
 		// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 		// static inline int pte_devmap(pte_t a)
@@ -710,7 +708,7 @@
 		// 	return false;
 		// }
 
-		static inline int pmd_present(pmd_t pmd) {
+		static inline int arch_pmd_present(pmd_t pmd) {
 			/*
 			* Checking for _PAGE_PSE is needed too because
 			* split_huge_page will temporarily clear the present bit (but
@@ -738,7 +736,7 @@
 		// }
 		// #endif /* CONFIG_NUMA_BALANCING */
 
-		static inline int pmd_none(pmd_t pmd) {
+		static inline int arch_pmd_none(pmd_t pmd) {
 			/* Only check low word on 32-bit platforms, since it might be
 			out of sync with upper half. */
 			unsigned long val = pmd_val(pmd);
@@ -765,7 +763,7 @@
 		// */
 		// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
-		static inline int pmd_bad(pmd_t pmd) {
+		static inline int arch_pmd_bad(pmd_t pmd) {
 			return (pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
 		}
 
@@ -774,11 +772,11 @@
 		// 	return npg >> (20 - PAGE_SHIFT);
 		// }
 
-		static inline int pud_none(pud_t pud) {
+		static inline int arch_pud_none(pud_t pud) {
 			return (pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
-		static inline int pud_present(pud_t pud) {
+		static inline int arch_pud_present(pud_t pud) {
 			return pud_flags(pud) & _PAGE_PRESENT;
 		}
 
@@ -799,15 +797,15 @@
 		// 		(_PAGE_PSE | _PAGE_PRESENT);
 		// }
 
-		static inline int pud_bad(pud_t pud) {
+		static inline int arch_pud_bad(pud_t pud) {
 			return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 
-		static inline int p4d_none(p4d_t p4d) {
+		static inline int arch_p4d_none(p4d_t p4d) {
 			return (p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
-		static inline int p4d_present(p4d_t p4d) {
+		static inline int arch_p4d_present(p4d_t p4d) {
 			return p4d_flags(p4d) & _PAGE_PRESENT;
 		}
 
@@ -821,7 +819,7 @@
 		 */
 		#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
-		static inline int p4d_bad(p4d_t p4d) {
+		static inline int arch_p4d_bad(p4d_t p4d) {
 			return (p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 

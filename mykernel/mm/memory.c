@@ -142,11 +142,11 @@ again:
 	// 		    spin_needbreak(src_ptl) || spin_needbreak(dst_ptl))
 	// 			break;
 	// 	}
-	// 	if (pte_none(*src_pte)) {
+	// 	if (arch_pte_none(*src_pte)) {
 	// 		progress++;
 	// 		continue;
 	// 	}
-	// 	if (unlikely(!pte_present(*src_pte))) {
+	// 	if (unlikely(!arch_pte_present(*src_pte))) {
 	// 		ret = copy_nonpresent_pte(dst_mm, src_mm,
 	// 					  dst_pte, src_pte,
 	// 					  dst_vma, src_vma,
@@ -409,7 +409,7 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 		return -ENOMEM;
 
 	spin_lock(&mm->page_table_lock);
-	if (!p4d_present(*p4d)) {
+	if (!arch_p4d_present(*p4d)) {
 		// mm_inc_nr_puds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
 		p4d_populate(mm, p4d, new);
@@ -431,7 +431,7 @@ int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 		return -ENOMEM;
 
 	spin_lock(&mm->page_table_lock);
-	if (!pud_present(*pud)) {
+	if (!arch_pud_present(*pud)) {
 		// mm_inc_nr_pmds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
 		pud_populate(mm, pud, new);

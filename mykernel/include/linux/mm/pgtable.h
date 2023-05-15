@@ -162,7 +162,7 @@
 	// {
 	// 	pmd_t *pmd = pmd_off_k(vaddr);
 
-	// 	return pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
+	// 	return arch_pmd_none(*pmd) ? NULL : pte_offset_kernel(pmd, vaddr);
 	// }
 
 	// #ifndef __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
@@ -593,22 +593,22 @@
 
 	// #ifndef pte_access_permitted
 	// #define pte_access_permitted(pte, write) \
-	// 	(pte_present(pte) && (!(write) || pte_write(pte)))
+	// 	(arch_pte_present(pte) && (!(write) || pte_write(pte)))
 	// #endif
 
 	// #ifndef pmd_access_permitted
 	// #define pmd_access_permitted(pmd, write) \
-	// 	(pmd_present(pmd) && (!(write) || pmd_write(pmd)))
+	// 	(arch_pmd_present(pmd) && (!(write) || pmd_write(pmd)))
 	// #endif
 
 	// #ifndef pud_access_permitted
 	// #define pud_access_permitted(pud, write) \
-	// 	(pud_present(pud) && (!(write) || pud_write(pud)))
+	// 	(arch_pud_present(pud) && (!(write) || pud_write(pud)))
 	// #endif
 
 	// #ifndef p4d_access_permitted
 	// #define p4d_access_permitted(p4d, write) \
-	// 	(p4d_present(p4d) && (!(write) || p4d_write(p4d)))
+	// 	(arch_p4d_present(p4d) && (!(write) || p4d_write(p4d)))
 	// #endif
 
 	// #ifndef pgd_access_permitted
@@ -652,25 +652,25 @@
 	// */
 	// #define set_pte_safe(ptep, pte) \
 	// ({ \
-	// 	WARN_ON_ONCE(pte_present(*ptep) && !pte_same(*ptep, pte)); \
+	// 	WARN_ON_ONCE(arch_pte_present(*ptep) && !pte_same(*ptep, pte)); \
 	// 	set_pte(ptep, pte); \
 	// })
 
 	// #define set_pmd_safe(pmdp, pmd) \
 	// ({ \
-	// 	WARN_ON_ONCE(pmd_present(*pmdp) && !pmd_same(*pmdp, pmd)); \
+	// 	WARN_ON_ONCE(arch_pmd_present(*pmdp) && !pmd_same(*pmdp, pmd)); \
 	// 	set_pmd(pmdp, pmd); \
 	// })
 
 	// #define set_pud_safe(pudp, pud) \
 	// ({ \
-	// 	WARN_ON_ONCE(pud_present(*pudp) && !pud_same(*pudp, pud)); \
+	// 	WARN_ON_ONCE(arch_pud_present(*pudp) && !pud_same(*pudp, pud)); \
 	// 	set_pud(pudp, pud); \
 	// })
 
 	// #define set_p4d_safe(p4dp, p4d) \
 	// ({ \
-	// 	WARN_ON_ONCE(p4d_present(*p4dp) && !p4d_same(*p4dp, p4d)); \
+	// 	WARN_ON_ONCE(arch_p4d_present(*p4dp) && !p4d_same(*p4dp, p4d)); \
 	// 	set_p4d(p4dp, p4d); \
 	// })
 
@@ -818,9 +818,9 @@
 	}
 
 	static inline int p4d_none_or_clear_bad(p4d_t *p4d) {
-		if (p4d_none(*p4d))
+		if (arch_p4d_none(*p4d))
 			return 1;
-		if (p4d_bad(*p4d)) {
+		if (arch_p4d_bad(*p4d)) {
 			p4d_clear(p4d);
 			return 1;
 		}
@@ -828,9 +828,9 @@
 	}
 
 	static inline int pud_none_or_clear_bad(pud_t *pud) {
-		if (pud_none(*pud))
+		if (arch_pud_none(*pud))
 			return 1;
-		if (pud_bad(*pud)) {
+		if (arch_pud_bad(*pud)) {
 			pud_clear(pud);
 			return 1;
 		}
@@ -838,9 +838,9 @@
 	}
 
 	static inline int pmd_none_or_clear_bad(pmd_t *pmd) {
-		if (pmd_none(*pmd))
+		if (arch_pmd_none(*pmd))
 			return 1;
-		if (pmd_bad(*pmd)) {
+		if (arch_pmd_bad(*pmd)) {
 			pmd_clear(pmd);
 			return 1;
 		}
@@ -1226,9 +1226,9 @@
 	// {
 	// 	pud_t pudval = READ_ONCE(*pud);
 
-	// 	if (pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
+	// 	if (arch_pud_none(pudval) || pud_trans_huge(pudval) || pud_devmap(pudval))
 	// 		return 1;
-	// 	if (unlikely(pud_bad(pudval))) {
+	// 	if (unlikely(arch_pud_bad(pudval))) {
 	// 		pud_clear_bad(pud);
 	// 		return 1;
 	// 	}
@@ -1294,33 +1294,33 @@
 	// 	* (for example pointing to an hugepage that has never been
 	// 	* mapped in the pmd). The below checks will only care about
 	// 	* the low part of the pmd with 32bit PAE x86 anyway, with the
-	// 	* exception of pmd_none(). So the important thing is that if
+	// 	* exception of arch_pmd_none(). So the important thing is that if
 	// 	* the low part of the pmd is found null, the high part will
-	// 	* be also null or the pmd_none() check below would be
+	// 	* be also null or the arch_pmd_none() check below would be
 	// 	* confused.
 	// 	*/
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	// 	barrier();
 	// #endif
 	// 	/*
-	// 	* !pmd_present() checks for pmd migration entries
+	// 	* !arch_pmd_present() checks for pmd migration entries
 	// 	*
 	// 	* The complete check uses is_pmd_migration_entry() in linux/swapops.h
 	// 	* But using that requires moving current function and pmd_trans_unstable()
 	// 	* to linux/swapops.h to resolve dependency, which is too much code move.
 	// 	*
-	// 	* !pmd_present() is equivalent to is_pmd_migration_entry() currently,
-	// 	* because !pmd_present() pages can only be under migration not swapped
+	// 	* !arch_pmd_present() is equivalent to is_pmd_migration_entry() currently,
+	// 	* because !arch_pmd_present() pages can only be under migration not swapped
 	// 	* out.
 	// 	*
-	// 	* pmd_none() is preserved for future condition checks on pmd migration
+	// 	* arch_pmd_none() is preserved for future condition checks on pmd migration
 	// 	* entries and not confusing with this function name, although it is
-	// 	* redundant with !pmd_present().
+	// 	* redundant with !arch_pmd_present().
 	// 	*/
-	// 	if (pmd_none(pmdval) || pmd_trans_huge(pmdval) ||
-	// 		(IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !pmd_present(pmdval)))
+	// 	if (arch_pmd_none(pmdval) || pmd_trans_huge(pmdval) ||
+	// 		(IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION) && !arch_pmd_present(pmdval)))
 	// 		return 1;
-	// 	if (unlikely(pmd_bad(pmdval))) {
+	// 	if (unlikely(arch_pmd_bad(pmdval))) {
 	// 		pmd_clear_bad(pmd);
 	// 		return 1;
 	// 	}

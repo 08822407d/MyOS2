@@ -2220,13 +2220,13 @@
 
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {
-		return (p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
+		return (arch_p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
 				NULL : pud_offset(p4d, address);
 	}
 
 	static inline pmd_t *pmd_alloc(mm_s *mm,
 			pud_t *pud, unsigned long address) {
-		return (pud_none(*pud)) && __pmd_alloc(mm, pud, address)?
+		return (arch_pud_none(*pud)) && __pmd_alloc(mm, pud, address)?
 				NULL: pmd_offset(pud, address);
 	}
 	// #endif /* CONFIG_MMU */
@@ -2331,7 +2331,7 @@
 	// 	pte_unmap(pte);					\
 	// } while (0)
 
-	// #define pte_alloc(mm, pmd) (unlikely(pmd_none(*(pmd))) && __pte_alloc(mm, pmd))
+	// #define pte_alloc(mm, pmd) (unlikely(arch_pmd_none(*(pmd))) && __pte_alloc(mm, pmd))
 
 	// #define pte_alloc_map(mm, pmd, address)			\
 	// 	(pte_alloc(mm, pmd) ? NULL : pte_offset_map(pmd, address))
@@ -2341,7 +2341,7 @@
 	// 		NULL : pte_offset_map_lock(mm, pmd, address, ptlp))
 
 	// #define pte_alloc_kernel(pmd, address)			\
-	// 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
+	// 	((unlikely(arch_pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
 	// 		NULL: pte_offset_kernel(pmd, address))
 
 	// #if USE_SPLIT_PMD_PTLOCKS

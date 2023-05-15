@@ -190,7 +190,7 @@
 	// * F (2) in swp entry is used to record when a pagetable is
 	// * writeprotected by userfaultfd WP support.
 	// *
-	// * Bit 7 in swp entry should be 0 because pmd_present checks not only P,
+	// * Bit 7 in swp entry should be 0 because arch_pmd_present checks not only P,
 	// * but also L and G.
 	// *
 	// * The offset is inverted by a binary not operation to make the high
