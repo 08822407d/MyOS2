@@ -62,14 +62,14 @@
 		pte_index(unsigned long address) {
 			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
 		}
-	#define pte_index		pte_index
+	// #define pte_index		pte_index
 
 	#ifndef pmd_index
 		static inline unsigned long
 		pmd_index(unsigned long address) {
 			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
 		}
-	#	define pmd_index	pmd_index
+	// #	define pmd_index	pmd_index
 	#endif
 
 	#ifndef pud_index
@@ -77,7 +77,7 @@
 		pud_index(unsigned long address) {
 			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
 		}
-	#	define pud_index	pud_index
+	// #	define pud_index	pud_index
 	#endif
 
 	#ifndef pgd_index
@@ -108,17 +108,17 @@
 	#ifndef pmd_offset
 		static inline pmd_t
 		*pmd_offset(pud_t *pud, unsigned long address) {
-			return pud_pgtable(*pud) + pmd_index(address);
+			return arch_pud_pgtable(*pud) + pmd_index(address);
 		}
-	#	define pmd_offset	pmd_offset
+	// #	define pmd_offset	pmd_offset
 	#endif
 
 	#ifndef pud_offset
 		static inline pud_t
 		*pud_offset(p4d_t *p4d, unsigned long address) {
-			return p4d_pgtable(*p4d) + pud_index(address);
+			return arch_p4d_pgtable(*p4d) + pud_index(address);
 		}
-	#	define pud_offset	pud_offset
+	// #	define pud_offset	pud_offset
 	#endif
 
 	static inline pgd_t
@@ -574,7 +574,7 @@
 	// #ifndef __HAVE_ARCH_PTE_SAME
 	// static inline int pte_same(pte_t pte_a, pte_t pte_b)
 	// {
-	// 	return pte_val(pte_a) == pte_val(pte_b);
+	// 	return arch_pte_val(pte_a) == arch_pte_val(pte_b);
 	// }
 	// #endif
 
@@ -619,26 +619,26 @@
 	// #ifndef __HAVE_ARCH_PMD_SAME
 	// static inline int pmd_same(pmd_t pmd_a, pmd_t pmd_b)
 	// {
-	// 	return pmd_val(pmd_a) == pmd_val(pmd_b);
+	// 	return arch_pmd_val(pmd_a) == arch_pmd_val(pmd_b);
 	// }
 
 	// static inline int pud_same(pud_t pud_a, pud_t pud_b)
 	// {
-	// 	return pud_val(pud_a) == pud_val(pud_b);
+	// 	return arch_pud_val(pud_a) == arch_pud_val(pud_b);
 	// }
 	// #endif
 
 	// #ifndef __HAVE_ARCH_P4D_SAME
 	// static inline int p4d_same(p4d_t p4d_a, p4d_t p4d_b)
 	// {
-	// 	return p4d_val(p4d_a) == p4d_val(p4d_b);
+	// 	return arch_p4d_val(p4d_a) == arch_p4d_val(p4d_b);
 	// }
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PGD_SAME
 	// static inline int pgd_same(pgd_t pgd_a, pgd_t pgd_b)
 	// {
-	// 	return pgd_val(pgd_a) == pgd_val(pgd_b);
+	// 	return arch_pgd_val(pgd_a) == arch_pgd_val(pgd_b);
 	// }
 	// #endif
 

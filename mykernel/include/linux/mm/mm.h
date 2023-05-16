@@ -2215,7 +2215,7 @@
 	// }
 	static inline p4d_t *p4d_alloc(mm_s *mm,
 			pgd_t *pgd, unsigned long address) {
-		return p4d_offset(pgd, address);
+		return arch_p4d_offset(pgd, address);
 	}
 
 	static inline pud_t *pud_alloc(mm_s *mm,

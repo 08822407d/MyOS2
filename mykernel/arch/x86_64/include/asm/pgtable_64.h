@@ -35,23 +35,23 @@
 
 	// #define pte_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pte %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), pte_val(e))
+	// 		__FILE__, __LINE__, &(e), arch_pte_val(e))
 	// #define pmd_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pmd %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), pmd_val(e))
+	// 		__FILE__, __LINE__, &(e), arch_pmd_val(e))
 	// #define pud_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pud %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), pud_val(e))
+	// 		__FILE__, __LINE__, &(e), arch_pud_val(e))
 
 	// #if CONFIG_PGTABLE_LEVELS >= 5
 	// #define p4d_ERROR(e)					\
 	// 	pr_err("%s:%d: bad p4d %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), p4d_val(e))
+	// 		__FILE__, __LINE__, &(e), arch_p4d_val(e))
 	// #endif
 
 	// #define pgd_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pgd %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), pgd_val(e))
+	// 		__FILE__, __LINE__, &(e), arch_pgd_val(e))
 
 	// struct mm_struct;
 
@@ -70,7 +70,7 @@
 
 	static inline void
 	pte_clear(mm_s *mm, unsigned long addr, pte_t *ptep) {
-		set_pte(ptep, make_pte(0));
+		set_pte(ptep, arch_make_pte(0));
 	}
 
 	static inline void
@@ -83,7 +83,7 @@
 	}
 
 	static inline void pmd_clear(pmd_t *pmd) {
-		set_pmd(pmd, make_pmd(0));
+		set_pmd(pmd, arch_make_pmd(0));
 	}
 
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
@@ -117,7 +117,7 @@
 	}
 
 	static inline void pud_clear(pud_t *pud) {
-		set_pud(pud, make_pud(0));
+		set_pud(pud, arch_make_pud(0));
 	}
 
 	// static inline pud_t native_pudp_get_and_clear(pud_t *xp)
@@ -137,13 +137,13 @@
 
 	static inline void set_p4d(p4d_t *p4dp, p4d_t p4d) {
 		pgd_t pgd;
-		pgd = make_pgd(p4d_val(p4d));
+		pgd = arch_make_pgd(arch_p4d_val(p4d));
 		pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
-		WRITE_ONCE(*p4dp, make_p4d(pgd_val(pgd)));
+		WRITE_ONCE(*p4dp, arch_make_p4d(arch_pgd_val(pgd)));
 	}
 
 	static inline void p4d_clear(p4d_t *p4d) {
-		set_p4d(p4d, make_p4d(0));
+		set_p4d(p4d, arch_make_p4d(0));
 	}
 
 	// static inline void
@@ -152,7 +152,7 @@
 	// }
 
 	// static inline void native_pgd_clear(pgd_t *pgd) {
-	// 	native_set_pgd(pgd, make_pgd(0));
+	// 	native_set_pgd(pgd, arch_make_pgd(0));
 	// }
 
 	// /*
@@ -220,8 +220,8 @@
 	// 	(~(unsigned long)(offset) << SWP_OFFSET_SHIFT >> SWP_TYPE_BITS) \
 	// 	| ((unsigned long)(type) << (64-SWP_TYPE_BITS)) })
 
-	// #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val((pte)) })
-	// #define __pmd_to_swp_entry(pmd)		((swp_entry_t) { pmd_val((pmd)) })
+	// #define __pte_to_swp_entry(pte)		((swp_entry_t) { arch_pte_val((pte)) })
+	// #define __pmd_to_swp_entry(pmd)		((swp_entry_t) { arch_pmd_val((pmd)) })
 	// #define __swp_entry_to_pte(x)		((pte_t) { .pte = (x).val })
 	// #define __swp_entry_to_pmd(x)		((pmd_t) { .pmd = (x).val })
 

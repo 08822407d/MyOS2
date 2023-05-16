@@ -304,7 +304,7 @@ copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd,
 	dst_p4d = p4d_alloc(dst_mm, dst_pgd, addr);
 	if (!dst_p4d)
 		return -ENOMEM;
-	src_p4d = p4d_offset(src_pgd, addr);
+	src_p4d = arch_p4d_offset(src_pgd, addr);
 	do {
 		next = p4d_addr_end(addr, end);
 		// 四级映射下p4d页必有效，所以不检查
@@ -412,7 +412,7 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 	if (!arch_p4d_present(*p4d)) {
 		// mm_inc_nr_puds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
-		p4d_populate(mm, p4d, new);
+		arch_p4d_populate(mm, p4d, new);
 	} else	/* Another has populated it */
 		pud_free(mm, new);
 	spin_unlock(&mm->page_table_lock);
@@ -434,7 +434,7 @@ int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	if (!arch_pud_present(*pud)) {
 		// mm_inc_nr_pmds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
-		pud_populate(mm, pud, new);
+		arch_pud_populate(mm, pud, new);
 	} else {	/* Another has populated it */
 		pmd_free(mm, new);
 	}

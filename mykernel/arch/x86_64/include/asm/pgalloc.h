@@ -74,11 +74,11 @@
 	// 	set_pmd_safe(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
 	// }
 
-	static inline void pmd_populate(mm_s *mm, pmd_t *pmd, page_s *pte) {
+	static inline void arch_pmd_populate(mm_s *mm, pmd_t *pmd, page_s *pte) {
 		unsigned long pfn = page_to_pfn(pte);
 
 		// paravirt_alloc_pte(mm, pfn);
-		set_pmd(pmd, make_pmd(((pteval_t)pfn << PAGE_SHIFT) | _PAGE_TABLE));
+		set_pmd(pmd, arch_make_pmd(_PAGE_TABLE | ((pteval_t)pfn << PAGE_SHIFT)));
 	}
 
 	// #if CONFIG_PGTABLE_LEVELS > 2
@@ -93,9 +93,9 @@
 	// #ifdef CONFIG_X86_PAE
 	// extern void pud_populate(mm_s *mm, pud_t *pudp, pmd_t *pmd);
 	// #else	/* !CONFIG_X86_PAE */
-	static inline void pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
+	static inline void arch_pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
 		// paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
-		set_pud(pud, make_pud(_PAGE_TABLE | __pa(pmd)));
+		set_pud(pud, arch_make_pud(_PAGE_TABLE | __pa(pmd)));
 	}
 
 	// static inline void pud_populate_safe(mm_s *mm, pud_t *pud, pmd_t *pmd)
@@ -106,9 +106,9 @@
 	// #endif	/* CONFIG_X86_PAE */
 
 	// #if CONFIG_PGTABLE_LEVELS > 3
-	static inline void p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
+	static inline void arch_p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
 		// paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
-		set_p4d(p4d, make_p4d(_PAGE_TABLE | __pa(pud)));
+		set_p4d(p4d, arch_make_p4d(_PAGE_TABLE | __pa(pud)));
 	}
 
 	// static inline void p4d_populate_safe(mm_s *mm, p4d_t *p4d, pud_t *pud)

@@ -78,13 +78,13 @@
 		// #define pud_clear(pud)				native_pud_clear(pud)
 		// #define pmd_clear(pmd)				native_pmd_clear(pmd)
 		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-		// #define pgd_val(x)		native_pgd_val(x)
+		// #define arch_pgd_val(x)		native_pgd_val(x)
 		// #define __pgd(x)		native_make_pgd(x)
-		// #define pud_val(x)		native_pud_val(x)
+		// #define arch_pud_val(x)		native_pud_val(x)
 		// #define __pud(x)		native_make_pud(x)
-		// #define pmd_val(x)		native_pmd_val(x)
+		// #define arch_pmd_val(x)		native_pmd_val(x)
 		// #define __pmd(x)		native_make_pmd(x)
-		// #define pte_val(x)		native_pte_val(x)
+		// #define arch_pte_val(x)		native_pte_val(x)
 		// #define __pte(x)		native_make_pte(x)
 
 
@@ -98,57 +98,57 @@
 		// */
 		// static inline int pte_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pte_young(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_ACCESSED;
+		// 	return arch_pte_flags(pte) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pmd_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pmd_young(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_ACCESSED;
+		// 	return arch_pmd_flags(pmd) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pud_dirty(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_DIRTY;
+		// 	return arch_pud_flags(pud) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pud_young(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_ACCESSED;
+		// 	return arch_pud_flags(pud) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pte_write(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_RW;
+		// 	return arch_pte_flags(pte) & _PAGE_RW;
 		// }
 
 		// static inline int pte_huge(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_PSE;
+		// 	return arch_pte_flags(pte) & _PAGE_PSE;
 		// }
 
 		// static inline int pte_global(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_GLOBAL;
+		// 	return arch_pte_flags(pte) & _PAGE_GLOBAL;
 		// }
 
 		// static inline int pte_exec(pte_t pte)
 		// {
-		// 	return !(pte_flags(pte) & _PAGE_NX);
+		// 	return !(arch_pte_flags(pte) & _PAGE_NX);
 		// }
 
 		// static inline int pte_special(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SPECIAL;
+		// 	return arch_pte_flags(pte) & _PAGE_SPECIAL;
 		// }
 
 		// /* Entries that were set to PROT_NONE are inverted */
@@ -157,33 +157,33 @@
 
 		// static inline unsigned long pte_pfn(pte_t pte)
 		// {
-		// 	phys_addr_t pfn = pte_val(pte);
+		// 	phys_addr_t pfn = arch_pte_val(pte);
 		// 	pfn ^= protnone_mask(pfn);
 		// 	return (pfn & PTE_PFN_MASK) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pmd_pfn(pmd_t pmd)
 		// {
-		// 	phys_addr_t pfn = pmd_val(pmd);
+		// 	phys_addr_t pfn = arch_pmd_val(pmd);
 		// 	pfn ^= protnone_mask(pfn);
-		// 	return (pfn & pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
+		// 	return (pfn & arch_pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pud_pfn(pud_t pud)
 		// {
-		// 	phys_addr_t pfn = pud_val(pud);
+		// 	phys_addr_t pfn = arch_pud_val(pud);
 		// 	pfn ^= protnone_mask(pfn);
-		// 	return (pfn & pud_pfn_mask(pud)) >> PAGE_SHIFT;
+		// 	return (pfn & arch_pud_pfn_mask(pud)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long p4d_pfn(p4d_t p4d)
 		// {
-		// 	return (p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
+		// 	return (arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pgd_pfn(pgd_t pgd)
 		// {
-		// 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+		// 	return (arch_pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
 		// }
 
 		// #define p4d_leaf	p4d_large
@@ -198,20 +198,20 @@
 		// #define pmd_leaf	pmd_large
 		// static inline int pmd_large(pmd_t pte)
 		// {
-		// 	return pmd_flags(pte) & _PAGE_PSE;
+		// 	return arch_pmd_flags(pte) & _PAGE_PSE;
 		// }
 
 		// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 		// /* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
 		// static inline int pmd_trans_huge(pmd_t pmd)
 		// {
-		// 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+		// 	return (arch_pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 		// }
 
 		// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 		// static inline int pud_trans_huge(pud_t pud)
 		// {
-		// 	return (pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+		// 	return (arch_pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 		// }
 		// #endif
 
@@ -224,13 +224,13 @@
 		// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 		// static inline int pmd_devmap(pmd_t pmd)
 		// {
-		// 	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
+		// 	return !!(arch_pmd_val(pmd) & _PAGE_DEVMAP);
 		// }
 
 		// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 		// static inline int pud_devmap(pud_t pud)
 		// {
-		// 	return !!(pud_val(pud) & _PAGE_DEVMAP);
+		// 	return !!(arch_pud_val(pud) & _PAGE_DEVMAP);
 		// }
 		// #else
 		// static inline int pud_devmap(pud_t pud)
@@ -263,7 +263,7 @@
 		// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 		// static inline int pte_uffd_wp(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_UFFD_WP;
+		// 	return arch_pte_flags(pte) & _PAGE_UFFD_WP;
 		// }
 
 		// static inline pte_t pte_mkuffd_wp(pte_t pte)
@@ -359,7 +359,7 @@
 		// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 		// static inline int pmd_uffd_wp(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_UFFD_WP;
+		// 	return arch_pmd_flags(pmd) & _PAGE_UFFD_WP;
 		// }
 
 		// static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
@@ -470,17 +470,17 @@
 		// #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
 		// static inline int pte_soft_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline int pmd_soft_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline int pud_soft_dirty(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pud_flags(pud) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline pte_t pte_mksoft_dirty(pte_t pte)
@@ -573,14 +573,14 @@
 		// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 		// {
 		// 	return pfn_pmd(pmd_pfn(pmd),
-		// 			__pgprot(pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
+		// 			__pgprot(arch_pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
 		// }
 
 		// static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
 
 		// static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 		// {
-		// 	pteval_t val = pte_val(pte), oldval = val;
+		// 	pteval_t val = arch_pte_val(pte), oldval = val;
 
 		// 	/*
 		// 	* Chop off the NX bit (if present), and add the NX portion of
@@ -594,7 +594,7 @@
 
 		// static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
 		// {
-		// 	pmdval_t val = pmd_val(pmd), oldval = val;
+		// 	pmdval_t val = arch_pmd_val(pmd), oldval = val;
 
 		// 	val &= _HPAGE_CHG_MASK;
 		// 	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
@@ -614,10 +614,10 @@
 		// 	return __pgprot(preservebits | addbits);
 		// }
 
-		// #define pte_pgprot(x) __pgprot(pte_flags(x))
-		// #define pmd_pgprot(x) __pgprot(pmd_flags(x))
-		// #define pud_pgprot(x) __pgprot(pud_flags(x))
-		// #define p4d_pgprot(x) __pgprot(p4d_flags(x))
+		// #define pte_pgprot(x) __pgprot(arch_pte_flags(x))
+		// #define pmd_pgprot(x) __pgprot(arch_pmd_flags(x))
+		// #define pud_pgprot(x) __pgprot(arch_pud_flags(x))
+		// #define p4d_pgprot(x) __pgprot(arch_p4d_flags(x))
 
 		// #define canon_pgprot(p) __pgprot(massage_pgprot(p))
 
@@ -685,23 +685,23 @@
 		// }
 
 		static inline int arch_pte_present(pte_t a) {
-			return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
+			return arch_pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
 		}
 
 		// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 		// static inline int pte_devmap(pte_t a)
 		// {
-		// 	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
+		// 	return (arch_pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
 		// }
 		// #endif
 
 		// #define pte_accessible pte_accessible
 		// static inline bool pte_accessible(mm_s *mm, pte_t a)
 		// {
-		// 	if (pte_flags(a) & _PAGE_PRESENT)
+		// 	if (arch_pte_flags(a) & _PAGE_PRESENT)
 		// 		return true;
 
-		// 	if ((pte_flags(a) & _PAGE_PROTNONE) &&
+		// 	if ((arch_pte_flags(a) & _PAGE_PROTNONE) &&
 		// 			atomic_read(&mm->tlb_flush_pending))
 		// 		return true;
 
@@ -715,7 +715,7 @@
 			* the _PAGE_PSE flag will remain set at all times while the
 			* _PAGE_PRESENT bit is clear).
 			*/
-			return pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
+			return arch_pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
 		}
 
 		// #ifdef CONFIG_NUMA_BALANCING
@@ -725,13 +725,13 @@
 		// */
 		// static inline int pte_protnone(pte_t pte)
 		// {
-		// 	return (pte_flags(pte) & (_PAGE_PROTNONE | _PAGE_PRESENT))
+		// 	return (arch_pte_flags(pte) & (_PAGE_PROTNONE | _PAGE_PRESENT))
 		// 		== _PAGE_PROTNONE;
 		// }
 
 		// static inline int pmd_protnone(pmd_t pmd)
 		// {
-		// 	return (pmd_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
+		// 	return (arch_pmd_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
 		// 		== _PAGE_PROTNONE;
 		// }
 		// #endif /* CONFIG_NUMA_BALANCING */
@@ -739,13 +739,13 @@
 		static inline int arch_pmd_none(pmd_t pmd) {
 			/* Only check low word on 32-bit platforms, since it might be
 			out of sync with upper half. */
-			unsigned long val = pmd_val(pmd);
+			unsigned long val = arch_pmd_val(pmd);
 			return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
 		}
 
 		// static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 		// {
-		// 	return (unsigned long)__va(pmd_val(pmd) & pmd_pfn_mask(pmd));
+		// 	return (unsigned long)__va(arch_pmd_val(pmd) & arch_pmd_pfn_mask(pmd));
 		// }
 
 		// /*
@@ -764,7 +764,7 @@
 		// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
 		static inline int arch_pmd_bad(pmd_t pmd) {
-			return (pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
+			return (arch_pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
 		}
 
 		// static inline unsigned long pages_to_mb(unsigned long npg)
@@ -773,15 +773,15 @@
 		// }
 
 		static inline int arch_pud_none(pud_t pud) {
-			return (pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+			return (arch_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
 		static inline int arch_pud_present(pud_t pud) {
-			return pud_flags(pud) & _PAGE_PRESENT;
+			return arch_pud_flags(pud) & _PAGE_PRESENT;
 		}
 
-		static inline pmd_t *pud_pgtable(pud_t pud) {
-			return (pmd_t *)__va(pud_val(pud) & pud_pfn_mask(pud));
+		static inline pmd_t *arch_pud_pgtable(pud_t pud) {
+			return (pmd_t *)__va(arch_pud_val(pud) & arch_pud_pfn_mask(pud));
 		}
 
 		// /*
@@ -793,24 +793,24 @@
 		// #define pud_leaf	pud_large
 		// static inline int pud_large(pud_t pud)
 		// {
-		// 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
+		// 	return (arch_pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
 		// 		(_PAGE_PSE | _PAGE_PRESENT);
 		// }
 
 		static inline int arch_pud_bad(pud_t pud) {
-			return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+			return (arch_pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 
 		static inline int arch_p4d_none(p4d_t p4d) {
-			return (p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+			return (arch_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
 		static inline int arch_p4d_present(p4d_t p4d) {
-			return p4d_flags(p4d) & _PAGE_PRESENT;
+			return arch_p4d_flags(p4d) & _PAGE_PRESENT;
 		}
 
-		static inline pud_t *p4d_pgtable(p4d_t p4d) {
-			return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));
+		static inline pud_t *arch_p4d_pgtable(p4d_t p4d) {
+			return (pud_t *)__va(arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d));
 		}
 
 		/*
@@ -820,7 +820,7 @@
 		#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
 		static inline int arch_p4d_bad(p4d_t p4d) {
-			return (p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+			return (arch_p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 
 		// static inline unsigned long p4d_index(unsigned long address)
@@ -984,7 +984,7 @@
 		// #define pmd_write pmd_write
 		// static inline int pmd_write(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_RW;
+		// 	return arch_pmd_flags(pmd) & _PAGE_RW;
 		// }
 
 		// #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
@@ -1019,7 +1019,7 @@
 		// #define pud_write pud_write
 		// static inline int pud_write(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_RW;
+		// 	return arch_pud_flags(pud) & _PAGE_RW;
 		// }
 
 		// #ifndef pmdp_establish
@@ -1108,7 +1108,7 @@
 
 		// static inline int pte_swp_soft_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SWP_SOFT_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_SWP_SOFT_DIRTY;
 		// }
 
 		// static inline pte_t pte_swp_clear_soft_dirty(pte_t pte)
@@ -1124,7 +1124,7 @@
 
 		// static inline int pmd_swp_soft_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
 		// }
 
 		// static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
@@ -1142,7 +1142,7 @@
 
 		// static inline int pte_swp_uffd_wp(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SWP_UFFD_WP;
+		// 	return arch_pte_flags(pte) & _PAGE_SWP_UFFD_WP;
 		// }
 
 		// static inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
@@ -1157,7 +1157,7 @@
 
 		// static inline int pmd_swp_uffd_wp(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SWP_UFFD_WP;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SWP_UFFD_WP;
 		// }
 
 		// static inline pmd_t pmd_swp_clear_uffd_wp(pmd_t pmd)
@@ -1166,11 +1166,11 @@
 		// }
 		// #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
 
-		// static inline u16 pte_flags_pkey(unsigned long pte_flags)
+		// static inline u16 pte_flags_pkey(unsigned long arch_pte_flags)
 		// {
 		// #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
 		// 	/* ifdef to avoid doing 59-bit shift on 32-bit values */
-		// 	return (pte_flags & _PAGE_PKEY_MASK) >> _PAGE_BIT_PKEY_BIT0;
+		// 	return (arch_pte_flags & _PAGE_PKEY_MASK) >> _PAGE_BIT_PKEY_BIT0;
 		// #else
 		// 	return 0;
 		// #endif
@@ -1209,19 +1209,19 @@
 		// #define pte_access_permitted pte_access_permitted
 		// static inline bool pte_access_permitted(pte_t pte, bool write)
 		// {
-		// 	return __pte_access_permitted(pte_val(pte), write);
+		// 	return __pte_access_permitted(arch_pte_val(pte), write);
 		// }
 
 		// #define pmd_access_permitted pmd_access_permitted
 		// static inline bool pmd_access_permitted(pmd_t pmd, bool write)
 		// {
-		// 	return __pte_access_permitted(pmd_val(pmd), write);
+		// 	return __pte_access_permitted(arch_pmd_val(pmd), write);
 		// }
 
 		// #define pud_access_permitted pud_access_permitted
 		// static inline bool pud_access_permitted(pud_t pud, bool write)
 		// {
-		// 	return __pte_access_permitted(pud_val(pud), write);
+		// 	return __pte_access_permitted(arch_pud_val(pud), write);
 		// }
 
 		// #define __HAVE_ARCH_PFN_MODIFY_ALLOWED 1
