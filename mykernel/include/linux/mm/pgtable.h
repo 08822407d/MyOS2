@@ -766,30 +766,30 @@
 	 * vma end wraps to 0, rounded up __boundary may wrap to 0 throughout.
 	 */
 
-	#define pgd_addr_end(addr, end) ({								\
+	#define next_pgd_addr_end(addr, end) ({								\
 				unsigned long __boundary = 							\
 					((addr) + PGDIR_SIZE) & PGDIR_MASK;				\
 				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 			})
 
-	#ifndef p4d_addr_end
-	#	define p4d_addr_end(addr, end) ({								\
+	#ifndef next_p4d_addr_end
+	#	define next_p4d_addr_end(addr, end) ({								\
 					unsigned long __boundary =							\
 						((addr) + P4D_SIZE) & P4D_MASK;					\
 					(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 				})
 	#endif
 
-	#ifndef pud_addr_end
-	#	define pud_addr_end(addr, end) ({								\
+	#ifndef next_pud_addr_end
+	#	define next_pud_addr_end(addr, end) ({								\
 					unsigned long __boundary =							\
 						((addr) + PUD_SIZE) & PUD_MASK;					\
 					(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 				})
 	#endif
 
-	#ifndef pmd_addr_end
-	#	define pmd_addr_end(addr, end) ({								\
+	#ifndef next_pmd_addr_end
+	#	define next_pmd_addr_end(addr, end) ({								\
 					unsigned long __boundary =							\
 						((addr) + PMD_SIZE) & PMD_MASK;					\
 					(__boundary - 1 < (end) - 1)? __boundary: (end);	\

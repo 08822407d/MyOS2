@@ -237,7 +237,7 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud,
 		return -ENOMEM;
 	src_pmd = pmd_offset(src_pud, addr);
 	do {
-		next = pmd_addr_end(addr, end);
+		next = next_pmd_addr_end(addr, end);
 		// if (is_swap_pmd(*src_pmd) || pmd_trans_huge(*src_pmd)
 		// 	|| pmd_devmap(*src_pmd)) {
 		// 	int err;
@@ -272,7 +272,7 @@ copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d,
 		return -ENOMEM;
 	src_pud = pud_offset(src_p4d, addr);
 	do {
-		next = pud_addr_end(addr, end);
+		next = next_pud_addr_end(addr, end);
 		// if (pud_trans_huge(*src_pud) || pud_devmap(*src_pud)) {
 		// 	int err;
 
@@ -295,32 +295,32 @@ copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d,
 }
 
 static inline int
-copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd,
-		pgd_t *src_pgd, unsigned long addr, unsigned long end) {
+copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_ent,
+		pgd_t *src_pgd_ent, unsigned long addr, unsigned long end) {
 	mm_s *dst_mm = dst_vma->vm_mm;
-	p4d_t *src_p4d, *dst_p4d;
+	p4d_t *src_p4d_ent, *dst_p4d_ent;
 	unsigned long next;
 
-	dst_p4d = p4d_alloc(dst_mm, dst_pgd, addr);
-	if (!dst_p4d)
+	dst_p4d_ent = p4d_alloc(dst_mm, dst_pgd_ent, addr);
+	if (!dst_p4d_ent)
 		return -ENOMEM;
-	src_p4d = arch_p4d_offset(src_pgd, addr);
+	src_p4d_ent = arch_p4d_offset(src_pgd_ent, addr);
 	do {
-		next = p4d_addr_end(addr, end);
+		next = next_p4d_addr_end(addr, end);
 		// 四级映射下p4d页必有效，所以不检查
 		// if (p4d_none_or_clear_bad(src_p4d))
 		// 	continue;
-		if (copy_pud_range(dst_vma, src_vma, dst_p4d, src_p4d,
-				   addr, next))
+		if (copy_pud_range(dst_vma, src_vma,
+				dst_p4d_ent, src_p4d_ent, addr, next))
 			return -ENOMEM;
-	} while (dst_p4d++, src_p4d++, addr = next, addr != end);
+	} while (dst_p4d_ent++, src_p4d_ent++, addr = next, addr != end);
 	return 0;
 }
 
 int
 copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 {
-	pgd_t *src_pgd, *dst_pgd;
+	pgd_t *src_pgd_ent, *dst_pgd_ent;
 	unsigned long next;
 	unsigned long addr = src_vma->vm_start;
 	unsigned long end = src_vma->vm_end;
@@ -376,18 +376,18 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	// }
 
 	ret = 0;
-	dst_pgd = pgd_offset(dst_mm, addr);
-	src_pgd = pgd_offset(src_mm, addr);
+	dst_pgd_ent = pgd_offset(dst_mm, addr);
+	src_pgd_ent = pgd_offset(src_mm, addr);
 	do {
-		next = pgd_addr_end(addr, end);
-		if (pgd_none_or_clear_bad(src_pgd))
+		next = next_pgd_addr_end(addr, end);
+		if (pgd_none_or_clear_bad(src_pgd_ent))
 			continue;
 		if (copy_p4d_range(dst_vma, src_vma,
-				dst_pgd, src_pgd, addr, next)) {
+				dst_pgd_ent, src_pgd_ent, addr, next)) {
 			ret = -ENOMEM;
 			break;
 		}
-	} while (dst_pgd++, src_pgd++, addr = next, addr != end);
+	} while (dst_pgd_ent++, src_pgd_ent++, addr = next, addr != end);
 
 	// if (is_cow) {
 	// 	raw_write_seqcount_end(&src_mm->write_protect_seq);

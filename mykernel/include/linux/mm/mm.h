@@ -2213,10 +2213,7 @@
 	// 	return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
 	// 		NULL : p4d_offset(pgd, address);
 	// }
-	static inline p4d_t *p4d_alloc(mm_s *mm,
-			pgd_t *pgd, unsigned long address) {
-		return arch_p4d_offset(pgd, address);
-	}
+	#define p4d_alloc(mm, pgd, addr)	arch_p4d_offset(pgd, addr)
 
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {

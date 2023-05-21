@@ -301,9 +301,10 @@
 			arch_pgd_T	defs;
 		} p4d_t;
 
-	#	define P4D_SHIFT		PGDIR_SHIFT
+	// #	define P4D_SHIFT		PGDIR_SHIFT
 	#	define PTRS_PER_P4D		1
-	#	define P4D_SIZE			(1UL << P4D_SHIFT)
+	// #	define P4D_SIZE			(1UL << P4D_SHIFT)
+	#	define P4D_SIZE			(1UL << PGDIR_SHIFT)
 	#	define P4D_MASK			(~(P4D_SIZE-1))
 
 	/*
@@ -325,10 +326,7 @@
 	 */
 	#	define set_pgd(pgdptr, pgdval)		set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
 
-	static inline p4d_t
-	*arch_p4d_offset(pgd_t *pgd, unsigned long address) {
-		return (p4d_t *)pgd;
-	}
+	#	define arch_p4d_offset(pgd, addr)	((p4d_t *)pgd);
 
 	#	define arch_p4d_val(x)		(arch_pgd_val((x).pgd))
 	#	define arch_make_p4d(x)		((p4d_t) { arch_make_pgd(x) })
@@ -344,8 +342,8 @@
 	// #	define p4d_free(mm, x)					do { } while (0)
 	// #	define p4d_free_tlb(tlb, x, a)			do { } while (0)
 
-	// #	undef  p4d_addr_end
-	// #	define p4d_addr_end(addr, end)			(end)
+	// #	undef  next_p4d_addr_end
+	// #	define next_p4d_addr_end(addr, end)			(end)
 	// #endif
 
 
