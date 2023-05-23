@@ -193,7 +193,8 @@ void kjmp_to_doexecve()
 	curr->flags &= ~PF_KTHREAD;
 
 	// kernel_execve("/initd.bin", NULL, NULL);
-	kernel_execve("/sh.bin", NULL, NULL);
+	kernel_execve("/initd", NULL, NULL);
+	// kernel_execve("/sh.bin", NULL, NULL);
 	// kernel_execve("/sh", NULL, NULL);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
