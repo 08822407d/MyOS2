@@ -723,7 +723,7 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 	// retval = exec_binprm(bprm);
 	// static int exec_binprm(struct linux_binprm *bprm)
 	// {
-		// retval = search_binary_handler(bprm);
+		retval = search_binary_handler(bprm);
 	// }
 	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)

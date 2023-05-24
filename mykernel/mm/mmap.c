@@ -603,6 +603,7 @@ vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
 /*
  * The caller must write-lock current->mm->mmap_lock.
  */
+// 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
 unsigned long do_mmap(file_s *file, unsigned long addr,
 		unsigned long len, unsigned long prot, unsigned long flags,
 		unsigned long pgoff, unsigned long *populate)
