@@ -674,6 +674,8 @@ static int search_binary_handler(linux_bprm_s *bprm)
 	// 	goto retry;
 	// }
 
+	mm_s *currmm = current->mm;
+
 	return retval;
 }
 

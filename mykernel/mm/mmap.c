@@ -163,6 +163,56 @@ munmap_vma_range(mm_s *mm, unsigned long start,
 }
 
 
+static void __vma_link_file(vma_s *vma)
+{
+	file_s *file;
+
+	file = vma->vm_file;
+	if (file) {
+		// struct address_space *mapping = file->f_mapping;
+
+		// if (vma->vm_flags & VM_SHARED)
+		// 	mapping_allow_writable(mapping);
+
+		// flush_dcache_mmap_lock(mapping);
+		// vma_interval_tree_insert(vma, &mapping->i_mmap);
+		// flush_dcache_mmap_unlock(mapping);
+	}
+}
+
+// static void
+// __vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
+// 	struct vm_area_struct *prev, struct rb_node **rb_link,
+// 	struct rb_node *rb_parent)
+static void __vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
+{
+	__vma_link_list(mm, vma, prev);
+	// __vma_link_rb(mm, vma, rb_link, rb_parent);
+}
+
+// static void vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
+// 			struct vm_area_struct *prev, struct rb_node **rb_link,
+// 			struct rb_node *rb_parent)
+static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
+{
+	// struct address_space *mapping = NULL;
+
+	if (vma->vm_file) {
+		// mapping = vma->vm_file->f_mapping;
+		// i_mmap_lock_write(mapping);
+	}
+
+	__vma_link(mm, vma, prev);
+	__vma_link_file(vma);
+
+	// if (mapping)
+	// 	i_mmap_unlock_write(mapping);
+
+	mm->map_count++;
+	// validate_mm(mm);
+}
+
+
 /*
  * We cannot adjust vm_start, vm_end, vm_pgoff fields of a vma that
  * is already present in an i_mmap tree without adjusting the tree.
@@ -941,7 +991,7 @@ myos_mmap_region(file_s *file, unsigned long addr,
 	// 		goto free_vma;
 	// }
 
-	// vma_link(mm, vma, prev, rb_link, rb_parent);
+	vma_link(mm, vma, prev);
 	// /* Once vma denies write, undo our temporary denial count */
 unmap_writable:
 	// if (file && vm_flags & VM_SHARED)
