@@ -108,11 +108,11 @@ myos_if_vma_overlaps(mm_s *mm, unsigned long addr,
 			*tmp = mm->mmap;
 
 	while (tmp) {
-		if (addr < tmp->vm_end && end > tmp->vm_start ||
-			end > tmp->vm_start && addr < tmp->vm_end) {
+		if ((addr > tmp->vm_start && addr < tmp->vm_end) ||
+			(end > tmp->vm_start && end < tmp->vm_end)) {
 			return -ENOMEM;
 		}
-		if (tmp->vm_next = mm->mmap)
+		if (tmp->vm_next == NULL)
 			break;
 		tmp = tmp->vm_next;
 	}

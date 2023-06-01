@@ -633,6 +633,8 @@ static int prepare_binprm(linux_bprm_s *bprm)
  */
 static int search_binary_handler(linux_bprm_s *bprm)
 {
+	mm_s *currmm = current->mm;
+
 	// bool need_retry = IS_ENABLED(CONFIG_MODULES);
 	linux_bfmt_s *fmt;
 	int retval;
@@ -673,8 +675,6 @@ static int search_binary_handler(linux_bprm_s *bprm)
 	// 	need_retry = false;
 	// 	goto retry;
 	// }
-
-	mm_s *currmm = current->mm;
 
 	return retval;
 }
