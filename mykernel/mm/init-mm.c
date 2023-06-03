@@ -61,6 +61,4 @@ void setup_initial_init_mm(void *start_code,
 	init_mm.map_count	= 1;
 	init_vma.vm_start	= USERADDR_LIMIT - 17 * PAGE_SIZE;
 	init_vma.vm_end		= USERADDR_LIMIT;
-	// init_vma.vm_prev	= &init_vma;
-	// init_vma.vm_next	= &init_vma;
 }
