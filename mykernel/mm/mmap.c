@@ -101,23 +101,30 @@ static void validate_mm(mm_s *mm)
 // 		unsigned long end, struct vm_area_struct **pprev,
 // 		struct rb_node ***rb_link, struct rb_node **rb_parent)
 static int
-myos_if_vma_overlaps(mm_s *mm, unsigned long addr,
+myos_find_vma_links(mm_s *mm, unsigned long addr,
 		unsigned long end, vma_s **pprev)
 {
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
 
 	while (tmp) {
+		if (end <= tmp->vm_start)
+			break;
+
 		if ((addr > tmp->vm_start && addr < tmp->vm_end) ||
 			(end > tmp->vm_start && end < tmp->vm_end)) {
 			return -ENOMEM;
 		}
 		if (tmp->vm_next == NULL)
 			break;
+
 		tmp = tmp->vm_next;
 	}
 
 	*pprev = NULL;
+	if (tmp != NULL)
+		*pprev = tmp->vm_prev;
+
 	return 0;
 }
 
@@ -155,7 +162,7 @@ static inline int
 munmap_vma_range(mm_s *mm, unsigned long start,
 		unsigned long len, vma_s **pprev) {
 
-	while (myos_if_vma_overlaps(mm, start, start + len, pprev))
+	while (myos_find_vma_links(mm, start, start + len, pprev))
 		if (__do_munmap(mm, start, len))
 			return -ENOMEM;
 
@@ -180,16 +187,6 @@ static void __vma_link_file(vma_s *vma)
 	}
 }
 
-// static void
-// __vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
-// 	struct vm_area_struct *prev, struct rb_node **rb_link,
-// 	struct rb_node *rb_parent)
-static void __vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
-{
-	__vma_link_list(mm, vma, prev);
-	// __vma_link_rb(mm, vma, rb_link, rb_parent);
-}
-
 // static void vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
 // 			struct vm_area_struct *prev, struct rb_node **rb_link,
 // 			struct rb_node *rb_parent)
@@ -202,7 +199,13 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 		// i_mmap_lock_write(mapping);
 	}
 
-	__vma_link(mm, vma, prev);
+	// static void
+	// __vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
+	// 	struct vm_area_struct *prev, struct rb_node **rb_link,
+	// 	struct rb_node *rb_parent)
+	// {
+		__vma_link_list(mm, vma, prev);
+	// }
 	__vma_link_file(vma);
 
 	// if (mapping)
@@ -378,7 +381,7 @@ again:
 		 * (it may either follow vma or precede it).
 		 */
 		vma_s *prev;
-		while (myos_if_vma_overlaps(mm, insert->vm_start, insert->vm_end, &prev));
+		while (myos_find_vma_links(mm, insert->vm_start, insert->vm_end, &prev));
 
 		__vma_link_list(mm, insert, prev);
 		mm->map_count++;
