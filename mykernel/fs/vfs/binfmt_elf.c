@@ -607,11 +607,11 @@ out_free_interp:
 	// 			    elf_ppnt->p_vaddr;
 	// 	}
 
-	// 	k = elf_ppnt->p_vaddr;
-	// 	if ((elf_ppnt->p_flags & PF_X) && k < start_code)
-	// 		start_code = k;
-	// 	if (start_data < k)
-	// 		start_data = k;
+		k = elf_ppnt->p_vaddr;
+		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
+			start_code = k;
+		if (start_data < k)
+			start_data = k;
 
 	// 	/*
 	// 	 * Check to see if the section's size will overflow the
@@ -626,29 +626,29 @@ out_free_interp:
 	// 		goto out_free_dentry;
 	// 	}
 
-	// 	k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
+		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
 
-	// 	if (k > elf_bss)
-	// 		elf_bss = k;
-	// 	if ((elf_ppnt->p_flags & PF_X) && end_code < k)
-	// 		end_code = k;
-	// 	if (end_data < k)
-	// 		end_data = k;
-	// 	k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
-	// 	if (k > elf_brk) {
-	// 		bss_prot = elf_prot;
-	// 		elf_brk = k;
-	// 	}
+		if (k > elf_bss)
+			elf_bss = k;
+		if ((elf_ppnt->p_flags & PF_X) && end_code < k)
+			end_code = k;
+		if (end_data < k)
+			end_data = k;
+		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
+		if (k > elf_brk) {
+			bss_prot = elf_prot;
+			elf_brk = k;
+		}
 	}
 
-	// e_entry = elf_ex->e_entry + load_bias;
-	// phdr_addr += load_bias;
-	// elf_bss += load_bias;
-	// elf_brk += load_bias;
-	// start_code += load_bias;
-	// end_code += load_bias;
-	// start_data += load_bias;
-	// end_data += load_bias;
+	e_entry = elf_ex->e_entry + load_bias;
+	phdr_addr += load_bias;
+	elf_bss += load_bias;
+	elf_brk += load_bias;
+	start_code += load_bias;
+	end_code += load_bias;
+	start_data += load_bias;
+	end_data += load_bias;
 
 	// /* Calling set_brk effectively mmaps the pages that we need
 	//  * for the bss and break sections.  We must do this before
@@ -706,17 +706,17 @@ out_free_interp:
 // 		goto out;
 // #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
 
-// 	retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
-// 				   e_entry, phdr_addr);
-// 	if (retval < 0)
-// 		goto out;
+	// retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
+	// 			   e_entry, phdr_addr);
+	// if (retval < 0)
+	// 	goto out;
 
-// 	mm = current->mm;
-// 	mm->end_code = end_code;
-// 	mm->start_code = start_code;
-// 	mm->start_data = start_data;
-// 	mm->end_data = end_data;
-// 	mm->start_stack = bprm->p;
+	mm = current->mm;
+	mm->end_code = end_code;
+	mm->start_code = start_code;
+	mm->start_data = start_data;
+	mm->end_data = end_data;
+	// mm->start_stack = bprm->p;
 
 // 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
 // 		/*
@@ -737,16 +737,16 @@ out_free_interp:
 // #endif
 // 	}
 
-// 	if (current->personality & MMAP_PAGE_ZERO) {
-// 		/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
-// 		   and some applications "depend" upon this behavior.
-// 		   Since we do not have the power to recompile these, we
-// 		   emulate the SVr4 behavior. Sigh. */
-// 		error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,
-// 				MAP_FIXED | MAP_PRIVATE, 0);
-// 	}
+	// if (current->personality & MMAP_PAGE_ZERO) {
+	// 	/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
+	// 	   and some applications "depend" upon this behavior.
+	// 	   Since we do not have the power to recompile these, we
+	// 	   emulate the SVr4 behavior. Sigh. */
+	// 	error = vm_mmap(NULL, 0, PAGE_SIZE, PROT_READ | PROT_EXEC,
+	// 			MAP_FIXED | MAP_PRIVATE, 0);
+	// }
 
-// 	regs = current_pt_regs();
+	// regs = current_pt_regs();
 // #ifdef ELF_PLAT_INIT
 // 	/*
 // 	 * The ABI may specify that certain registers be set up in special
@@ -761,8 +761,8 @@ out_free_interp:
 // 	ELF_PLAT_INIT(regs, reloc_func_desc);
 // #endif
 
-// 	finalize_exec(bprm);
-// 	START_THREAD(elf_ex, regs, elf_entry, bprm->p);
+	// finalize_exec(bprm);
+	// START_THREAD(elf_ex, regs, elf_entry, bprm->p);
 	retval = 0;
 out:
 	return retval;
