@@ -650,12 +650,12 @@ out_free_interp:
 	start_data += load_bias;
 	end_data += load_bias;
 
-	// /* Calling set_brk effectively mmaps the pages that we need
-	//  * for the bss and break sections.  We must do this before
-	//  * mapping in the interpreter, to make sure it doesn't wind
-	//  * up getting placed where the bss needs to go.
-	//  */
-	// retval = set_brk(elf_bss, elf_brk, bss_prot);
+	/* Calling set_brk effectively mmaps the pages that we need
+	 * for the bss and break sections.  We must do this before
+	 * mapping in the interpreter, to make sure it doesn't wind
+	 * up getting placed where the bss needs to go.
+	 */
+	retval = set_brk(elf_bss, elf_brk, bss_prot);
 	// if (retval)
 	// 	goto out_free_dentry;
 	// if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {

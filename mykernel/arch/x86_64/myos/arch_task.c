@@ -161,7 +161,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	file_s *fp = bprm->file;
 
 	// read_exec_mm(fp, curr);
-	// creat_exec_addrspace(curr);
+	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
