@@ -43,6 +43,7 @@ static DEFINE_SPINLOCK(newpid_lock);
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 unsigned long	curr_pid;
 
+#define LOAD_ELF
 
 /*==============================================================================================*
  *																								*
@@ -104,10 +105,8 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 extern int myos_exit_thread(task_s * new_task);
 
 // read memory distribution of the executive
-static int read_exec_mm(file_s * fp, task_s * curr)
+static int read_exec_mm(mm_s *mm)
 {
-	mm_s * mm = curr->mm;
-
 	mm->start_code = USER_CODE_ADDR;
 	mm->start_data =
 	mm->end_code = USER_CODE_ADDR + SZ_2M * 1;
@@ -162,7 +161,6 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 {
 	int ret_val = 0;
 	task_s *curr = current;
-	mm_s *mm = curr->mm;
 	pt_regs_s *curr_context = task_pt_regs(curr);
 	curr->se.vruntime = 0;
 	set_task_comm(curr, bprm->filename);
@@ -172,22 +170,32 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
 
-	sys_sbrk((sys_sbrk(0)) + SZ_2M * 3);
+#ifdef LOAD_ELF
+	mm_s *mm = curr->mm;
+	sys_sbrk((sys_sbrk(0)) + SZ_2M);
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
-
-	// file_s *fp = bprm->file;
-	// read_exec_mm(fp, curr);
 
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
 	load_map_file(mm);
+#else
+	if (curr->flags & CLONE_VFORK)
+		curr->mm = mm_alloc();
+	mm_s *mm = curr->mm;
+	file_s *fp = bprm->file;
+	read_exec_mm(mm);
 
-	// memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
-	// loff_t fp_pos = 0;
-	// ret_val = fp->f_op->read(fp, (void *)mm->start_code,
-	// 		fp->f_path.dentry->d_inode->i_size, &fp_pos);
+	creat_exec_addrspace(curr);
+	load_cr3(curr->mm->pgd_ptr);
+	curr->flags &= ~CLONE_VFORK;
+
+	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
+	loff_t fp_pos = 0;
+	ret_val = fp->f_op->read(fp, (void *)mm->start_code,
+			fp->f_path.dentry->d_inode->i_size, &fp_pos);
+#endif
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
@@ -208,10 +216,11 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	// kernel_execve("/initd.bin", NULL, NULL);
+#ifdef LOAD_ELF
 	kernel_execve("/initd", NULL, NULL);
-	// kernel_execve("/sh.bin", NULL, NULL);
-	// kernel_execve("/sh", NULL, NULL);
+#else
+	kernel_execve("/initd.bin", NULL, NULL);
+#endif
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
