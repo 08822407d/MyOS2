@@ -172,22 +172,28 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
 
+#ifdef LOAD_ELF
 	sys_sbrk((sys_sbrk(0)) + SZ_2M * 3);
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
-
-	// file_s *fp = bprm->file;
-	// read_exec_mm(fp, curr);
 
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
 	load_map_file(mm);
+#else
+	file_s *fp = bprm->file;
+	read_exec_mm(fp, curr);
 
-	// memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
-	// loff_t fp_pos = 0;
-	// ret_val = fp->f_op->read(fp, (void *)mm->start_code,
-	// 		fp->f_path.dentry->d_inode->i_size, &fp_pos);
+	creat_exec_addrspace(curr);
+	load_cr3(curr->mm->pgd_ptr);
+	curr->flags &= ~CLONE_VFORK;
+
+	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
+	loff_t fp_pos = 0;
+	ret_val = fp->f_op->read(fp, (void *)mm->start_code,
+			fp->f_path.dentry->d_inode->i_size, &fp_pos);
+#endif
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
@@ -208,10 +214,11 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	// kernel_execve("/initd.bin", NULL, NULL);
+#ifdef LOAD_ELF
 	kernel_execve("/initd", NULL, NULL);
-	// kernel_execve("/sh.bin", NULL, NULL);
-	// kernel_execve("/sh", NULL, NULL);
+#else
+	kernel_execve("/initd.bin", NULL, NULL);
+#endif
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
