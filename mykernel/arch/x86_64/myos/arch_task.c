@@ -116,6 +116,19 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 	mm->brk = USER_CODE_ADDR + SZ_2M * 3;
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 }
+static void load_map_file(mm_s *mm)
+{
+	int ret_val = 0;
+	for (vma_s *vma = mm->mmap;
+		vma != NULL && vma->vm_flags != 0 && vma->vm_pgoff != 0;
+		vma = vma->vm_next)
+	{
+		file_s *fp = vma->vm_file;
+		loff_t fp_pos = vma->vm_pgoff * PAGE_SIZE;
+		ret_val = fp->f_op->read(fp, (void *)vma->vm_start,
+			vma->vm_end - vma->vm_start, &fp_pos);
+	}
+}
 
 int __myos_copy_strings(const char *const *argv)
 {
@@ -149,6 +162,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 {
 	int ret_val = 0;
 	task_s *curr = current;
+	mm_s *mm = curr->mm;
 	pt_regs_s *curr_context = task_pt_regs(curr);
 	curr->se.vruntime = 0;
 	set_task_comm(curr, bprm->filename);
@@ -158,23 +172,27 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
 
-	file_s *fp = bprm->file;
+	sys_sbrk((sys_sbrk(0)) + SZ_2M * 3);
+	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
+	// file_s *fp = bprm->file;
 	// read_exec_mm(fp, curr);
+
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
-	memset((void *)curr->mm->start_code, 0,
-			curr->mm->end_data - curr->mm->start_code);
-	loff_t fp_pos = 0;
-	ret_val = fp->f_op->read(fp, (void *)curr->mm->start_code,
-			fp->f_path.dentry->d_inode->i_size, &fp_pos);
+	load_map_file(mm);
+
+	// memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
+	// loff_t fp_pos = 0;
+	// ret_val = fp->f_op->read(fp, (void *)mm->start_code,
+	// 		fp->f_path.dentry->d_inode->i_size, &fp_pos);
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
-	curr_context->r10 = (reg_t)curr->mm->start_code;
-	curr_context->r11 = (reg_t)curr->mm->start_stack;
+	curr_context->r10 = (reg_t)mm->start_code;
+	curr_context->r11 = (reg_t)mm->start_stack;
 	curr_context->ax = (reg_t)1;
 
 	return ret_val;

@@ -941,6 +941,7 @@ myos_mmap_region(file_s *file, unsigned long addr,
 	// 	}
 
 	// 	vma->vm_file = get_file(file);
+		vma->vm_file = file;
 	// 	error = call_mmap(file, vma);
 	// 	if (error)
 	// 		goto unmap_and_free_vma;
