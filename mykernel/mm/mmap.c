@@ -1242,4 +1242,5 @@ int __do_munmap(mm_s *mm, unsigned long start, size_t len)
 	// remove_vma_list(mm, vma);
 
 	// return downgrade ? 1 : 0;
+	return 0;
 }
