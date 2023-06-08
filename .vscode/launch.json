@@ -33,14 +33,14 @@
           "text": "dir .",
           "ignoreFailures": false
         },
-        {
-          "text": "add-symbol-file ${workspaceRoot}/build/initd.debug 0x6000000",
-          "ignoreFailures": false
-        },
         // {
-        //   "text": "add-symbol-file ${workspaceRoot}/build/shell.debug 0x6000000",
+        //   "text": "add-symbol-file ${workspaceRoot}/build/initd.debug",
         //   "ignoreFailures": false
         // },
+        {
+          "text": "add-symbol-file ${workspaceRoot}/build/sh.debug",
+          "ignoreFailures": false
+        },
         {
           "text": "add-auto-load-safe-path ./",
           "ignoreFailures": false

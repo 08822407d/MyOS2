@@ -119,7 +119,7 @@ static void load_map_file(mm_s *mm)
 {
 	int ret_val = 0;
 	for (vma_s *vma = mm->mmap;
-		vma != NULL && vma->vm_flags != 0 && vma->vm_pgoff != 0;
+		vma != NULL && vma->vm_flags != 0;
 		vma = vma->vm_next)
 	{
 		file_s *fp = vma->vm_file;
@@ -173,6 +173,8 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 #ifdef LOAD_ELF
 	mm_s *mm = curr->mm;
 	sys_sbrk((sys_sbrk(0)) + SZ_2M);
+	mm->start_code = mm->mmap->vm_start;
+	mm->start_data = round_up(mm->end_code, PAGE_SIZE);
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
 	creat_exec_addrspace(curr);
@@ -218,6 +220,7 @@ void kjmp_to_doexecve()
 
 #ifdef LOAD_ELF
 	kernel_execve("/initd", NULL, NULL);
+	// kernel_execve("/sh", NULL, NULL);
 #else
 	kernel_execve("/initd.bin", NULL, NULL);
 #endif
