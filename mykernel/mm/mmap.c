@@ -1112,9 +1112,6 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 	// if (err)
 	// 	goto out_free_vma;
 
-	if (err)
-		goto out_free_mpol;
-
 	// if (new->vm_file)
 	// 	get_file(new->vm_file);
 
@@ -1134,8 +1131,6 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 	// if (new->vm_file)
 	// 	fput(new->vm_file);
 	// unlink_anon_vmas(new);
- out_free_mpol:
-// 	mpol_put(vma_policy(new));
  out_free_vma:
 	vm_area_free(new);
 	return err;
