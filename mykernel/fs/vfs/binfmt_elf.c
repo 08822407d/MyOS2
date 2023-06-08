@@ -626,7 +626,8 @@ out_free_interp:
 	// 		goto out_free_dentry;
 	// 	}
 
-		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
+		// k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
+		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
 
 		if (k > elf_bss)
 			elf_bss = k;
@@ -717,6 +718,7 @@ out_free_interp:
 	mm->start_data = start_data;
 	mm->end_data = end_data;
 	// mm->start_stack = bprm->p;
+	mm->entry_point = e_entry;
 
 // 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
 // 		/*

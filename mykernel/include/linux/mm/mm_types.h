@@ -523,6 +523,7 @@
 
 	// struct kioctx_table;
 	typedef struct mm_struct {
+		size_t				entry_point;
 		struct
 		{
 			vma_s			*mmap;				/* list of VMAs */

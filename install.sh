@@ -10,9 +10,7 @@ function install_files()
 	fi
 	cp ../bootloader.efi /mnt/EFI/BOOT/BOOTX64.EFI
 	cp ./kernel.bin /mnt/kernel.bin
-	cp ./init.bin /mnt/initd.bin
 	cp ./initd /mnt/initd
-	cp ./sh.bin /mnt/sh.bin
 	cp ./sh /mnt/sh
 	sync
 }
@@ -32,12 +30,10 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	# generate kernel debug file and bin
 	objcopy --only-keep-debug kernel kernel.debug
 	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
-	# generate init debug file and bin
+	# generate init debug file
 	objcopy --only-keep-debug initd initd.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary initd init.bin
-	# generate init debug file and bin
+	# generate init debug file
 	objcopy --only-keep-debug sh sh.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary sh sh.bin
 	# copy files to virt-disk
 	if [ -e "/dev/dm-0" ]; then
 		echo "installing on virtual disk"

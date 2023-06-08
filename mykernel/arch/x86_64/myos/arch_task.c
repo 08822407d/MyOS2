@@ -199,7 +199,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
-	curr_context->r10 = (reg_t)mm->start_code;
+	curr_context->r10 = (reg_t)mm->entry_point;
 	curr_context->r11 = (reg_t)mm->start_stack;
 	curr_context->ax = (reg_t)1;
 

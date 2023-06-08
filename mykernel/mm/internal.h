@@ -612,9 +612,8 @@
 	// extern u64 hwpoison_filter_memcg;
 	// extern u32 hwpoison_filter_enable;
 
-	// extern unsigned long  __must_check vm_mmap_pgoff(file_s *, unsigned long,
-	// 		unsigned long, unsigned long,
-	// 		unsigned long, unsigned long);
+	extern unsigned long  __must_check vm_mmap_pgoff(file_s *, unsigned long,
+			unsigned long, unsigned long, unsigned long, unsigned long);
 
 	// extern void set_pageblock_order(void);
 	// unsigned int reclaim_clean_pages_from_list(struct zone *zone,
