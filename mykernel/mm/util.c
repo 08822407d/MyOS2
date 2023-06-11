@@ -30,7 +30,7 @@
 
 
 
-void __vma_link_list(mm_s	*mm, vma_s *vma, vma_s *prev)
+void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
 	vma_s *next;
 

@@ -1056,7 +1056,7 @@ static __latent_entropy task_s
 *copy_process(pid_s *pid, kclone_args_s *args)
 {
 	int pidfd = -1, retval;
-	task_s *p;
+	task_s *p, *curr = current;
 	// struct multiprocess_signals delayed;
 	file_s *pidfile = NULL;
 	u64 clone_flags = args->flags;
@@ -1815,14 +1815,11 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	reg_t curr_endstack = task_pt_regs(current)->sp;
 
 	if(clone_flags & CLONE_VM)
-	{
 		new_tsk->mm = curr_mm;
-		goto exit_cpmm;
-	}
 	else
 	{
-		new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
-		memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
+		// new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
+		// memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
 		prepair_COW(current);
 	}
 

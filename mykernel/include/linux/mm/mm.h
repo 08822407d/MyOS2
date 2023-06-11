@@ -2676,7 +2676,7 @@
 			unsigned long pgoff, unsigned long *populate);
 	// extern int __do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf, bool downgrade);
-	extern int __do_munmap(mm_s *, unsigned long, size_t);
+	extern int __do_munmap(mm_s *, unsigned long, size_t, bool downgrade);
 	// extern int do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf);
 	// extern int do_madvise(mm_s *mm, unsigned long start, size_t len_in, int behavior);

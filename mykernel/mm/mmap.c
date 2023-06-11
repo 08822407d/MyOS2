@@ -104,6 +104,7 @@ static int
 myos_find_vma_links(mm_s *mm, unsigned long addr,
 		unsigned long end, vma_s **pprev)
 {
+	int		retval = 0;
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
 
@@ -111,9 +112,10 @@ myos_find_vma_links(mm_s *mm, unsigned long addr,
 		if (end <= tmp->vm_start)
 			break;
 
-		if ((addr > tmp->vm_start && addr < tmp->vm_end) ||
-			(end > tmp->vm_start && end < tmp->vm_end)) {
-			return -ENOMEM;
+		if ((addr >= tmp->vm_start && addr < tmp->vm_end) ||
+			(end > tmp->vm_start && end <= tmp->vm_end)) {
+			retval = -ENOMEM;
+			break;
 		}
 		if (tmp->vm_next == NULL)
 			break;
@@ -125,7 +127,7 @@ myos_find_vma_links(mm_s *mm, unsigned long addr,
 	if (tmp != NULL)
 		*pprev = tmp->vm_prev;
 
-	return 0;
+	return retval;
 }
 
 /*
@@ -163,7 +165,7 @@ munmap_vma_range(mm_s *mm, unsigned long start,
 		unsigned long len, vma_s **pprev) {
 
 	while (myos_find_vma_links(mm, start, start + len, pprev))
-		if (__do_munmap(mm, start, len))
+		if (__do_munmap(mm, start, len, false))
 			return -ENOMEM;
 
 	return 0;
@@ -896,7 +898,7 @@ myos_mmap_region(file_s *file, unsigned long addr,
 	int error;
 	unsigned long charged = 0;
 
-	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
+	/* Clear old maps, set up prev */
 	if (munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
 	/*
@@ -1090,7 +1092,8 @@ unsigned long stack_guard_gap = 256UL<<PAGE_SHIFT;
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
  * has already been checked or doesn't make sense to fail.
  */
-int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
+int __split_vma(mm_s *mm, vma_s *vma,
+		unsigned long addr, int new_below)
 {
 	vma_s *new;
 	int err;
@@ -1105,8 +1108,12 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 	if (!new)
 		return -ENOMEM;
 
-	new->vm_start = addr;
-	new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+	if (new_below)
+		new->vm_end = addr;
+	else {
+		new->vm_start = addr;
+		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+	}
 
 	// err = vma_dup_policy(vma, new);
 	// if (err)
@@ -1118,8 +1125,12 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
 	if (new->vm_ops && new->vm_ops->open)
 		new->vm_ops->open(new);
 
-	err = __myos_vma_adjust(vma, vma->vm_start, addr,
-			vma->vm_pgoff, new, NULL);
+	if (new_below)
+		err = __myos_vma_adjust(vma, addr, vma->vm_end, vma->vm_pgoff +
+					((addr - new->vm_start) >> PAGE_SHIFT), new, NULL);
+	else
+		err = __myos_vma_adjust(vma, vma->vm_start, addr,
+					vma->vm_pgoff, new, NULL);
 
 	/* Success. */
 	if (!err)
@@ -1153,7 +1164,8 @@ int __split_vma(mm_s *mm, vma_s *vma, unsigned long addr)
  * work.  This now handles partial unmappings.
  * Jeremy Fitzhardinge <jeremy@goop.org>
  */
-int __do_munmap(mm_s *mm, unsigned long start, size_t len)
+int __do_munmap(mm_s *mm, unsigned long start,
+		size_t len, bool downgrade)
 {
 	unsigned long end;
 	vma_s *vma, *prev, *last;
@@ -1193,7 +1205,7 @@ int __do_munmap(mm_s *mm, unsigned long start, size_t len)
 		if (end < vma->vm_end && mm->map_count >= sysctl_max_map_count)
 			return -ENOMEM;
 
-		error = __split_vma(mm, vma, start);
+		error = __split_vma(mm, vma, start, 0);
 		if (error)
 			return error;
 		prev = vma;
@@ -1202,7 +1214,7 @@ int __do_munmap(mm_s *mm, unsigned long start, size_t len)
 	/* Does it split the last one? */
 	last = myos_find_vma(mm, end);
 	if (last && end > last->vm_start) {
-		int error = __split_vma(mm, last, end);
+		int error = __split_vma(mm, last, end, 1);
 		if (error)
 			return error;
 	}
@@ -1241,6 +1253,5 @@ int __do_munmap(mm_s *mm, unsigned long start, size_t len)
 	// /* Fix up all other VM information */
 	// remove_vma_list(mm, vma);
 
-	// return downgrade ? 1 : 0;
-	return 0;
+	return downgrade ? 1 : 0;
 }
