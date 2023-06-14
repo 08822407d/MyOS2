@@ -370,7 +370,7 @@ exc_page_fault(pt_regs_s *regs, unsigned long error_code)
 {
 	myos_excep_page_fault(regs);
 
-	unsigned long address = read_cr2();
+	// unsigned long address = read_cr2();
 	// irqentry_state_t state;
 
 	// prefetchw(&current->mm->mmap_lock);
@@ -412,7 +412,7 @@ exc_page_fault(pt_regs_s *regs, unsigned long error_code)
 	// state = irqentry_enter(regs);
 
 	// instrumentation_begin();
-	handle_page_fault(regs, error_code, address);
+	// handle_page_fault(regs, error_code, address);
 	// instrumentation_end();
 
 	// irqentry_exit(regs, state);
