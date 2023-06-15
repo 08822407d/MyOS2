@@ -210,7 +210,7 @@ static __latent_entropy int
 dup_mmap(mm_s *mm, mm_s *oldmm)
 {
 	vma_s *mpnt, *tmp, *prev, **pprev;
-	int retval;
+	int retval = 0;
 	unsigned long charge;
 	// LIST_HEAD(uf);
 
@@ -226,13 +226,13 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	//  */
 	// mmap_write_lock_nested(mm, SINGLE_DEPTH_NESTING);
 
-	/* No ordering required: file already has been exposed. */
+	// /* No ordering required: file already has been exposed. */
 	// dup_mm_exe_file(mm, oldmm);
 
-	mm->total_vm = oldmm->total_vm;
-	mm->data_vm = oldmm->data_vm;
-	mm->exec_vm = oldmm->exec_vm;
-	mm->stack_vm = oldmm->stack_vm;
+	// mm->total_vm = oldmm->total_vm;
+	// mm->data_vm = oldmm->data_vm;
+	// mm->exec_vm = oldmm->exec_vm;
+	// mm->stack_vm = oldmm->stack_vm;
 
 	pprev = &mm->mmap;
 	// retval = ksm_fork(mm, oldmm);
@@ -310,11 +310,11 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		prev = tmp;
 
 		mm->map_count++;
-		if (!(tmp->vm_flags & VM_WIPEONFORK))
-			retval = copy_page_range(tmp, mpnt);
+		// if (!(tmp->vm_flags & VM_WIPEONFORK))
+		// 	retval = copy_page_range(tmp, mpnt);
 
-		if (tmp->vm_ops && tmp->vm_ops->open)
-			tmp->vm_ops->open(tmp);
+		// if (tmp->vm_ops && tmp->vm_ops->open)
+		// 	tmp->vm_ops->open(tmp);
 
 		if (retval)
 			goto out;
@@ -484,9 +484,13 @@ static void mm_init_owner(mm_s *mm, task_s *p)
 
 mm_s *__myos_mm_init(mm_s *mm)
 {
+	mm_s *curr_mm = current->mm;
 	pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 	mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
 	int hfent_nr = PGENT_NR / 2;
+	memcpy(virt_cr3,
+		(const void*)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
+		hfent_nr);
 	memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
 	return mm;
 }
@@ -1808,6 +1812,7 @@ int unshare_files(void)
 int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 {
 	int err = -ENOERR;
+	task_s *curr = current;
 	mm_s *curr_mm = current->mm;
 
 	page_s *page = NULL;
@@ -1820,7 +1825,12 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		// new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 		// memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
+		memcpy(task_pt_regs(new_tsk),
+				task_pt_regs(curr), sizeof(pt_regs_s));
 		prepair_COW(current);
+		prepair_COW(new_tsk);
+
+		myos_refresh_arch_page();
 	}
 
 exit_cpmm:

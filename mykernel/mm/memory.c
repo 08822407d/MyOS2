@@ -352,13 +352,13 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	// 		return ret;
 	// }
 
-	/*
-	 * We need to invalidate the secondary MMU mappings only when
-	 * there could be a permission downgrade on the ptes of the
-	 * parent mm. And a permission downgrade will only happen if
-	 * is_cow_mapping() returns true.
-	 */
-	is_cow = is_cow_mapping(src_vma->vm_flags);
+	// /*
+	//  * We need to invalidate the secondary MMU mappings only when
+	//  * there could be a permission downgrade on the ptes of the
+	//  * parent mm. And a permission downgrade will only happen if
+	//  * is_cow_mapping() returns true.
+	//  */
+	// is_cow = is_cow_mapping(src_vma->vm_flags);
 
 	// if (is_cow) {
 	// 	mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE,

@@ -77,8 +77,6 @@ void prepair_COW(task_s * task)
 			atomic_inc(&(page->_mapcount));
 		}
 	}
-
-	myos_refresh_arch_page();
 }
 
 int do_COW(task_s * task, virt_addr_t virt)
