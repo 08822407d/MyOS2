@@ -330,14 +330,14 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	bool is_cow;
 	int ret;
 
-	/*
-	 * Don't copy ptes where a page fault will fill them correctly.
-	 * Fork becomes much lighter when there are big shared or private
-	 * readonly mappings. The tradeoff is that copy_page_range is more
-	 * efficient than faulting.
-	 */
-	if (!(src_vma->vm_flags & (VM_HUGETLB | VM_PFNMAP | VM_MIXEDMAP)))
-		return 0;
+	// /*
+	//  * Don't copy ptes where a page fault will fill them correctly.
+	//  * Fork becomes much lighter when there are big shared or private
+	//  * readonly mappings. The tradeoff is that copy_page_range is more
+	//  * efficient than faulting.
+	//  */
+	// if (!(src_vma->vm_flags & (VM_HUGETLB | VM_PFNMAP | VM_MIXEDMAP)))
+	// 	return 0;
 
 	// if (is_vm_hugetlb_page(src_vma))
 	// 	return copy_hugetlb_page_range(dst_mm, src_mm, src_vma);

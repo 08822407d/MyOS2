@@ -24,12 +24,12 @@ int main(int argc, const char *argv[])
 	int rv = fork();
 	if (rv != 0)
 	{
-		printf("parent task, %d\n", rv);
+		// printf("parent task, %d\n", rv);
 		while (1);
 	}
 	else
 	{
-		printf("child task, %d\n", rv);
+		// printf("child task, %d\n", rv);
 		execve("/sh", args, NULL);
 		// malloc_free_test();
 		// file_io_test();
