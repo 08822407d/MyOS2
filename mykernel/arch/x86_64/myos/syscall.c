@@ -21,7 +21,7 @@ MYOS_SYSCALL_DEFINE0(no_syscall)
 	return -ENOSYS;
 }
 
-MYOS_SYSCALL_DEFINE1(putstring, char *,string)
+MYOS_SYSCALL_DEFINE1(myos_putstring, char *,string)
 {
 	color_printk(WHITE, BLACK, string);
 	return 0;
@@ -30,7 +30,8 @@ MYOS_SYSCALL_DEFINE1(putstring, char *,string)
 /*==============================================================================================*
  *										file operations											*
  *==============================================================================================*/
-long sys_open(const char *filename, int flags, umode_t mode)
+MYOS_SYSCALL_DEFINE3(open, const char *, filename,
+		int, flags, umode_t, mode)
 {
 	return do_sys_open(0, filename, flags, mode);
 }
@@ -55,11 +56,13 @@ MYOS_SYSCALL_DEFINE1(close, unsigned int, fd)
 	return 0;
 }
 
-long sys_read(unsigned int fd, char *buf, size_t count) {
+MYOS_SYSCALL_DEFINE3(read, unsigned int, fd,
+		char *,buf, size_t, count) {
 	return ksys_read(fd, buf, count);
 }
 
-long sys_write(unsigned int fd, const char *buf, size_t count)
+MYOS_SYSCALL_DEFINE3(write, unsigned int, fd,
+		const char, *buf, size_t, count)
 {
 	task_s * curr = current;
 	file_s * fp = NULL;
@@ -77,7 +80,8 @@ long sys_write(unsigned int fd, const char *buf, size_t count)
 	return ret;
 }
 
-long sys_lseek(unsigned int fd, off_t offset, unsigned int whence)
+MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,
+		off_t, offset, unsigned int, whence)
 {
 	task_s * curr = current;
 	file_s * fp = NULL;
@@ -138,13 +142,14 @@ long myos_do_execve(const char *filename, const char *const *argv,
 	return error;
 }
 
-long sys_exit(int error_code)
+MYOS_SYSCALL_DEFINE1(exit, int, error_code)
 {
 	return do_exit(error_code);
 }
 
 extern int myos_exit_mm(task_s * new_tsk);
-long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
+MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
+		int, options, void *, rusage)
 {
 	// long retval = 0;
 	// task_s * child = NULL;
@@ -183,7 +188,7 @@ long sys_wait4(pid_t pid, int *start_addr, int options, void *rusage)
 /*==============================================================================================*
  *									user memory manage											*
  *==============================================================================================*/
-long sys_sbrk(unsigned long brk)
+MYOS_SYSCALL_DEFINE1(sbrk, unsigned long, brk)
 {
 	virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
 
@@ -218,7 +223,7 @@ MYOS_SYSCALL_DEFINE0(getppid)
 /*==============================================================================================*
  *									special functions											*
  *==============================================================================================*/
-long sys_reboot(unsigned int cmd, void *arg)
+MYOS_SYSCALL_DEFINE2(reboot, unsigned int, cmd, void *, arg)
 {
 	color_printk(GREEN,BLACK,"sys_reboot\n");
 	switch(cmd)

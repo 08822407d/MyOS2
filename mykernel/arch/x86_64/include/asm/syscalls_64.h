@@ -1,10 +1,10 @@
-__SYSCALL(0, sys_no_syscall)
+__SYSCALL(__NR_syscalls - 1, sys_no_syscall)
 
 
-__SYSCALL(__NR_open, sys_open)
-__SYSCALL(__NR_close, sys_close)
 __SYSCALL(__NR_read, sys_read)
 __SYSCALL(__NR_write, sys_write)
+__SYSCALL(__NR_open, sys_open)
+__SYSCALL(__NR_close, sys_close)
 
 // __SYSCALL(__NR_newfstat, sys_newfstat)
 
@@ -39,4 +39,4 @@ __SYSCALL(__NR_reboot, sys_reboot)
 
 __SYSCALL(__NR_getdents64, sys_getdents64)
 
-__SYSCALL(__NR_putstring, myos_sys_putstring)
+__SYSCALL(__NR_putstring, sys_myos_putstring)

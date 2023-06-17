@@ -172,7 +172,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 
 #ifdef LOAD_ELF
 	mm_s *mm = curr->mm;
-	sys_sbrk((sys_sbrk(0)) + SZ_2M);
+	mm->brk += SZ_2M;
 	mm->start_code = mm->mmap->vm_start;
 	mm->start_data = round_up(mm->end_code, PAGE_SIZE);
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;

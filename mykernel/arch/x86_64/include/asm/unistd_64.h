@@ -418,7 +418,7 @@
 
 	#define	__NR_putstring		451
 	#ifdef	__KERNEL__
-	#	define	__NR_syscalls	452
+	#	define	__NR_syscalls	453
 	#endif
 
 
