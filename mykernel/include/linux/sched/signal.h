@@ -399,7 +399,7 @@
 	// * a VM_FAULT_RETRY.
 	// */
 	// static inline bool fault_signal_pending(vm_fault_t fault_flags,
-	// 					struct pt_regs *regs)
+	// 					pt_regs_s *regs)
 	// {
 	// 	return unlikely((fault_flags & VM_FAULT_RETRY) &&
 	// 			(fatal_signal_pending(current) ||

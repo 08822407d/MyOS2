@@ -1,3 +1,6 @@
+__SYSCALL(0, sys_no_syscall)
+
+
 __SYSCALL(__NR_open, sys_open)
 __SYSCALL(__NR_close, sys_close)
 __SYSCALL(__NR_read, sys_read)

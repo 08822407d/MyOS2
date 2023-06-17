@@ -87,36 +87,40 @@
 	// #include <linux/personality.h>
 	// #include <trace/syscall.h>
 
-	// #ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
-	// /*
-	// * It may be useful for an architecture to override the definitions of the
-	// * SYSCALL_DEFINE0() and __SYSCALL_DEFINEx() macros, in particular to use a
-	// * different calling convention for syscalls. To allow for that, the prototypes
-	// * for the sys_*() functions below will *not* be included if
-	// * CONFIG_ARCH_HAS_SYSCALL_WRAPPER is enabled.
-	// */
-	// #include <asm/syscall_wrapper.h>
-	// #endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
 
-	// /*
-	// * __MAP - apply a macro to syscall arguments
-	// * __MAP(n, m, t1, a1, t2, a2, ..., tn, an) will expand to
-	// *    m(t1, a1), m(t2, a2), ..., m(tn, an)
-	// * The first argument must be equal to the amount of type/name
-	// * pairs given.  Note that this list of pairs (i.e. the arguments
-	// * of __MAP starting at the third one) is in the same format as
-	// * for SYSCALL_DEFINE<n>/COMPAT_SYSCALL_DEFINE<n>
-	// */
-	// #define __MAP0(m, ...)
-	// #define __MAP1(m, t, a, ...) m(t, a)
-	// #define __MAP2(m, t, a, ...) m(t, a), __MAP1(m, __VA_ARGS__)
-	// #define __MAP3(m, t, a, ...) m(t, a), __MAP2(m, __VA_ARGS__)
-	// #define __MAP4(m, t, a, ...) m(t, a), __MAP3(m, __VA_ARGS__)
-	// #define __MAP5(m, t, a, ...) m(t, a), __MAP4(m, __VA_ARGS__)
-	// #define __MAP6(m, t, a, ...) m(t, a), __MAP5(m, __VA_ARGS__)
-	// #define __MAP(n, ...) __MAP##n(__VA_ARGS__)
+	#include <asm/ptrace.h>
 
-	// #define __SC_DECL(t, a) t a
+
+	#ifdef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
+	/*
+	 * It may be useful for an architecture to override the definitions of the
+	 * SYSCALL_DEFINE0() and __SYSCALL_DEFINEx() macros, in particular to use a
+	 * different calling convention for syscalls. To allow for that, the prototypes
+	 * for the sys_*() functions below will *not* be included if
+	 * CONFIG_ARCH_HAS_SYSCALL_WRAPPER is enabled.
+	 */
+	#include <asm/syscall_wrapper.h>
+	#endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
+
+	/*
+	 * __MAP - apply a macro to syscall arguments
+	 * __MAP(n, m, t1, a1, t2, a2, ..., tn, an) will expand to
+	 *    m(t1, a1), m(t2, a2), ..., m(tn, an)
+	 * The first argument must be equal to the amount of type/name
+	 * pairs given.  Note that this list of pairs (i.e. the arguments
+	 * of __MAP starting at the third one) is in the same format as
+	 * for SYSCALL_DEFINE<n>/COMPAT_SYSCALL_DEFINE<n>
+	 */
+	#define __MAP0(m, ...)
+	#define __MAP1(m, t, a, ...)	m(t, a)
+	#define __MAP2(m, t, a, ...)	m(t, a), __MAP1(m, __VA_ARGS__)
+	#define __MAP3(m, t, a, ...)	m(t, a), __MAP2(m, __VA_ARGS__)
+	#define __MAP4(m, t, a, ...)	m(t, a), __MAP3(m, __VA_ARGS__)
+	#define __MAP5(m, t, a, ...)	m(t, a), __MAP4(m, __VA_ARGS__)
+	#define __MAP6(m, t, a, ...)	m(t, a), __MAP5(m, __VA_ARGS__)
+	#define __MAP(n, ...)			__MAP##n(__VA_ARGS__)
+
+	#define __SC_DECL(t, a) t a
 	// #define __TYPE_AS(t, v) __same_type((__force t)0, v)
 	// #define __TYPE_IS_L(t) (__TYPE_AS(t, 0L))
 	// #define __TYPE_IS_UL(t) (__TYPE_AS(t, 0UL))
@@ -219,7 +223,7 @@
 	// #define SYSCALL_DEFINE5(name, ...) SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
 	// #define SYSCALL_DEFINE6(name, ...) SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
 
-	// #define SYSCALL_DEFINE_MAXARGS 6
+	#define SYSCALL_DEFINE_MAXARGS 6
 
 	// #define SYSCALL_DEFINEx(x, sname, ...)      \
 	// 	SYSCALL_METADATA(sname, x, __VA_ARGS__) \
@@ -233,24 +237,24 @@
 	// * done within __do_sys_*().
 	// */
 	// #ifndef __SYSCALL_DEFINEx
-	// #define __SYSCALL_DEFINEx(x, name, ...)                                   \
-	// 	__diag_push();                                                        \
-	// 	__diag_ignore(GCC, 8, "-Wattribute-alias",                            \
-	// 				"Type aliasing is used to sanitize syscall arguments"); \
-	// 	asmlinkage long sys##name(__MAP(x, __SC_DECL, __VA_ARGS__))           \
-	// 		__attribute__((alias(__stringify(__se_sys##name))));              \
-	// 	ALLOW_ERROR_INJECTION(sys##name, ERRNO);                              \
-	// 	static inline long __do_sys##name(__MAP(x, __SC_DECL, __VA_ARGS__));  \
-	// 	asmlinkage long __se_sys##name(__MAP(x, __SC_LONG, __VA_ARGS__));     \
-	// 	asmlinkage long __se_sys##name(__MAP(x, __SC_LONG, __VA_ARGS__))      \
-	// 	{                                                                     \
-	// 		long ret = __do_sys##name(__MAP(x, __SC_CAST, __VA_ARGS__));      \
-	// 		__MAP(x, __SC_TEST, __VA_ARGS__);                                 \
-	// 		__PROTECT(x, ret, __MAP(x, __SC_ARGS, __VA_ARGS__));              \
-	// 		return ret;                                                       \
-	// 	}                                                                     \
-	// 	__diag_pop();                                                         \
-	// 	static inline long __do_sys##name(__MAP(x, __SC_DECL, __VA_ARGS__))
+	// #define __SYSCALL_DEFINEx(x, name, ...)												\
+	// 			__diag_push();															\
+	// 			__diag_ignore(GCC, 8, "-Wattribute-alias",								\
+	// 						"Type aliasing is used to sanitize syscall arguments");		\
+	// 			asmlinkage long sys##name(__MAP(x, __SC_DECL, __VA_ARGS__))				\
+	// 				__attribute__((alias(__stringify(__se_sys##name))));				\
+	// 			ALLOW_ERROR_INJECTION(sys##name, ERRNO);								\
+	// 			static inline long __do_sys##name(__MAP(x, __SC_DECL, __VA_ARGS__));	\
+	// 			asmlinkage long __se_sys##name(__MAP(x, __SC_LONG, __VA_ARGS__));		\
+	// 			asmlinkage long __se_sys##name(__MAP(x, __SC_LONG, __VA_ARGS__))		\
+	// 			{																		\
+	// 				long ret = __do_sys##name(__MAP(x, __SC_CAST, __VA_ARGS__));		\
+	// 				__MAP(x, __SC_TEST, __VA_ARGS__);									\
+	// 				__PROTECT(x, ret, __MAP(x, __SC_ARGS, __VA_ARGS__));				\
+	// 				return ret;															\
+	// 			}																		\
+	// 			__diag_pop();															\
+	// 			static inline long __do_sys##name(__MAP(x, __SC_DECL, __VA_ARGS__))
 	// #endif /* __SYSCALL_DEFINEx */
 
 	// /* For split 64-bit arguments on 32-bit architectures */
@@ -1378,9 +1382,15 @@
 	// 					int optlen);
 
 
-	#ifndef CONFIG_ARCH_HAS_SYSCALL_WRAPPER
-		asmlinkage long myos_no_system_call(void);
-		asmlinkage long myos_sys_putstring(char *string);
-	#endif /* CONFIG_ARCH_HAS_SYSCALL_WRAPPER */
+	#define __SYSCALL_DEFINEx(x, name, ...)										\
+				asmlinkage long sys##name(__MAP(x, __SC_DECL, __VA_ARGS__));	\
+				long sys##name(__MAP(x, __SC_DECL, __VA_ARGS__))
+
+	#define MYOS_SYSCALL_DEFINE1(name, ...)	__SYSCALL_DEFINEx(1, _##name, __VA_ARGS__)
+	#define MYOS_SYSCALL_DEFINE2(name, ...)	__SYSCALL_DEFINEx(2, _##name, __VA_ARGS__)
+	#define MYOS_SYSCALL_DEFINE3(name, ...)	__SYSCALL_DEFINEx(3, _##name, __VA_ARGS__)
+	#define MYOS_SYSCALL_DEFINE4(name, ...)	__SYSCALL_DEFINEx(4, _##name, __VA_ARGS__)
+	#define MYOS_SYSCALL_DEFINE5(name, ...)	__SYSCALL_DEFINEx(5, _##name, __VA_ARGS__)
+	#define MYOS_SYSCALL_DEFINE6(name, ...)	__SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
 
 #endif

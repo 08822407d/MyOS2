@@ -21,8 +21,9 @@
 	}
 
 	struct pt_regs;
+	typedef struct pt_regs pt_regs_s;
 
-	extern void show_regs(struct pt_regs *);
+	extern void show_regs(pt_regs_s *);
 
 	/*
 	 * TASK is a pointer to the task whose backtrace we want to see (or NULL for current

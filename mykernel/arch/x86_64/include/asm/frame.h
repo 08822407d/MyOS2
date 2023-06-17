@@ -37,8 +37,8 @@
 
 	#	else /* !__ASSEMBLY__ */
 
-	struct pt_regs;
-	typedef struct pt_regs pt_regs_s;
+	pt_regs_s;
+	typedef pt_regs_s pt_regs_s;
 
 	#		define FRAME_BEGIN								\
 					"push %" _ASM_BP "\n"					\

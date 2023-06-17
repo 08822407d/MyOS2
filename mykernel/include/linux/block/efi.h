@@ -49,11 +49,7 @@
 	typedef u64				efi_physical_addr_t;
 	typedef void			*efi_handle_t;
 
-	#if defined(CONFIG_X86_64)
-	#	define __efiapi	__attribute__((ms_abi))
-	#else
-	#	define __efiapi
-	#endif
+	#define __efiapi	__attribute__((ms_abi))
 
 	/*
 	 * The UEFI spec and EDK2 reference implementation both define EFI_GUID as

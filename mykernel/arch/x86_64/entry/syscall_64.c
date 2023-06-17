@@ -8,17 +8,14 @@
 #include <linux/kernel/syscalls.h>
 #include <asm/syscall.h>
 
-// #define __SYSCALL(nr, sym) extern long __x64_##sym(const pt_regs_s *);
-#define __SYSCALL(nr, sym)	extern long sym(void);
-	__SYSCALL(0, myos_no_system_call)
+#define __SYSCALL(nr, sym) extern long __x64_##sym(const pt_regs_s *);
 #	include <asm/syscalls_64.h>
 #undef __SYSCALL
 
-// #define __SYSCALL(nr, sym)	__x64_##sym,
-#define __SYSCALL(nr, sym)	[nr] = sym,
+#define __SYSCALL(nr, sym)	__x64_##sym,
 
 const sys_call_ptr_t sys_call_table[] = {
-	[0 ... __NR_syscalls - 1] = myos_no_system_call,
+	[0 ... __NR_syscalls - 1] = __x64_sys_no_syscall,
 #include <asm/syscalls_64.h>
 };
 

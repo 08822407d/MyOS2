@@ -15,13 +15,13 @@
 #include <obsolete/archconst.h>
 #include <obsolete/arch_proto.h>
 
-long myos_no_system_call(void)
+MYOS_SYSCALL_DEFINE0(no_syscall)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
 	return -ENOSYS;
 }
 
-long myos_sys_putstring(char *string)
+MYOS_SYSCALL_DEFINE1(putstring, char *,string)
 {
 	color_printk(WHITE, BLACK, string);
 	return 0;
@@ -35,7 +35,7 @@ long sys_open(const char *filename, int flags, umode_t mode)
 	return do_sys_open(0, filename, flags, mode);
 }
 
-long sys_close(unsigned int fd)
+MYOS_SYSCALL_DEFINE1(close, unsigned int, fd)
 {
 	task_s * curr = current;
 
@@ -95,7 +95,7 @@ long sys_lseek(unsigned int fd, off_t offset, unsigned int whence)
 	return ret;
 }
 
-long sys_fork()
+MYOS_SYSCALL_DEFINE0(fork)
 {
 	kclone_args_s args = {
 		// .flags = CLONE_FILES,
@@ -204,12 +204,12 @@ long sys_sbrk(unsigned long brk)
 /*==============================================================================================*
  *									get task infomation											*
  *==============================================================================================*/
-long sys_getpid()
+MYOS_SYSCALL_DEFINE0(getpid)
 {
 	return current->pid;
 }
 
-long sys_getppid()
+MYOS_SYSCALL_DEFINE0(getppid)
 {
 	return current->parent->pid;
 }

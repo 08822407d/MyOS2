@@ -63,9 +63,15 @@ SYM_CODE_START(sysenter_entp)
 	PUSH_REGS
 	sti
 
-	leaq		sys_call_table(%rip),	%rbx
-	callq		*(%rbx,%rax,8)
-	movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
+	/* IRQs are off. */
+	movq		%rsp,		%rdi
+	/* Sign extend the lower 32bit as syscall numbers are treated as int */
+	movslq		%eax,		%rsi
+	call		do_syscall_64		/* returns with IRQs disabled */
+
+	// leaq		sys_call_table(%rip),	%rbx
+	// callq		*(%rbx,%rax,8)
+	// movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
 // RDX -> user RSP
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32

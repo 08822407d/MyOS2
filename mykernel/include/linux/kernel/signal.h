@@ -274,8 +274,8 @@
 	// }
 
 	// struct timespec;
-	// struct pt_regs;
-	// typedef struct pt_regs pt_regs_s;
+	// pt_regs_s;
+	// typedef pt_regs_s pt_regs_s;
 	// enum pid_type;
 
 	// extern int next_signal(struct sigpending *pending, sigset_t *mask);

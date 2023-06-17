@@ -4,7 +4,7 @@
 
 	// #include <linux/capability.h>
 
-	// struct pt_regs;
+	// pt_regs_s;
 
 	/*
 	 * These are the maximum length and maximum number of strings passed to the

@@ -227,7 +227,8 @@
 		"elf.h": "c",
 		"resource.h": "c",
 		"signal.h": "c",
-		"irqflags.h": "c"
+		"irqflags.h": "c",
+		"syscall_wrapper.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }
