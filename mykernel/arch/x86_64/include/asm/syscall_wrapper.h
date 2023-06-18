@@ -11,6 +11,25 @@
 	// extern long __x64_sys_ni_syscall(const pt_regs_s *regs);
 	// extern long __ia32_sys_ni_syscall(const pt_regs_s *regs);
 
+	#define __X86_64_MAP0(m, ...)
+	#define __X86_64_MAP1(m, t1, a1)											\
+				m(t1, regs->di)
+	#define __X86_64_MAP2(m, t1, a1, t2, a2)									\
+				m(t1, regs->di), m(t2, regs->si)
+	#define __X86_64_MAP3(m, t1, a1, t2, a2, t3, a3)							\
+				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx)
+	#define __X86_64_MAP4(m, t1, a1, t2, a2, t3, a3, t4, a4)					\
+				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),				\
+				m(t4, regs->r10)
+	#define __X86_64_MAP5(m, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)			\
+				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),				\
+				m(t4, regs->r10), m(t4, regs->r8)
+	#define __X86_64_MAP6(m, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6)	\
+				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),				\
+				m(t4, regs->r10), m(t4, regs->r8), m(t4, regs->r9)
+	#define __ARCH_MAP(n, ...)	__X86_64_MAP##n(__VA_ARGS__)
+
+
 	/*
 	 * Instead of the generic __SYSCALL_DEFINEx() definition, the x86 version takes
 	 * pt_regs_s *regs as the only argument of the syscall stub(s) named as:
@@ -53,10 +72,10 @@
 	 */
 
 	/* Mapping of registers to parameters for syscalls on x86-64 and x32 */
-	#define SC_X86_64_REGS_TO_ARGS(x, ...)				\
-				__MAP(x,__SC_ARGS						\
-					,,regs->di,,regs->si,,regs->dx		\
-					,,regs->r10,,regs->r8,,regs->r9)	\
+	// #define SC_X86_64_REGS_TO_ARGS(x, ...)				\
+	// 			__MAP(x,__SC_ARGS						\
+	// 				,,regs->di,,regs->si,,regs->dx		\
+	// 				,,regs->r10,,regs->r8,,regs->r9)	\
 
 	// /* Mapping of registers to parameters for syscalls on i386 */
 	// #define SC_IA32_REGS_TO_ARGS(x, ...)					\
@@ -86,7 +105,7 @@
 				long __##abi##_##name(const pt_regs_s *regs);	\
 				long __##abi##_##name(const pt_regs_s *regs)	\
 				{												\
-					return __se_##name(__VA_ARGS__);			\
+					return __se_##name(regs);					\
 				}	
 
 	// #define __COND_SYSCALL(abi, name)					\
@@ -102,9 +121,9 @@
 	#define __X64_SYS_STUB0(name)								\
 				__SYS_STUB0(x64, sys_##name)
 
-	#define __X64_SYS_STUBx(x, name, ...)						\
-				__SYS_STUBx(x64, sys##name,						\
-					SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
+	// #define __X64_SYS_STUBx(x, name, ...)						\
+	// 			__SYS_STUBx(x64, sys##name,						\
+	// 				SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
 
 	// #define __X64_COND_SYSCALL(name)					\
 	// 	__COND_SYSCALL(x64, sys_##name)
@@ -214,19 +233,19 @@
 	// long __x64_sys_time(const pt_regs_s *regs);
 
 
-	#define MYOS_SYSCALL_DEFINE0(sname)									\
-				long __do_sys_##sname(const pt_regs_s *__unused);		\
-				__X64_SYS_STUB0(sname)									\
-				long __do_sys_##sname(const pt_regs_s *__unused)
+	// #define MYOS_SYSCALL_DEFINE0(sname)									\
+	// 			long __do_sys_##sname(const pt_regs_s *__unused);		\
+	// 			__X64_SYS_STUB0(sname)									\
+	// 			long __do_sys_##sname(const pt_regs_s *__unused)
 	
 	#define __MYOS_SYSCALL_DEFINEx(x, name, ...)						\
-				long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
+				long __se_sys##name(const pt_regs_s *regs);				\
 				long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
-				__X64_SYS_STUBx(x, name, __VA_ARGS__)					\
-				long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))		\
+				__SYS_STUBx(x64, sys##name)								\
+				long __se_sys##name(const pt_regs_s *regs)				\
 				{														\
 					long ret = __do_sys##name(							\
-								__MAP(x,__SC_CAST,__VA_ARGS__));		\
+								__ARCH_MAP(x,__SC_CAST,__VA_ARGS__));	\
 					return ret;											\
 				}														\
 				long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
