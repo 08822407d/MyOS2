@@ -162,7 +162,7 @@ restart:
  *		return NULL;
  *	}
  */
-long sys_getcwd(char *buf, unsigned long size)
+MYOS_SYSCALL_DEFINE2(getcwd, char *, buf, unsigned long, size)
 {
 	int		error;
 	task_s *curr = current;

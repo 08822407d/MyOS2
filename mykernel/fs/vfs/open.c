@@ -281,7 +281,7 @@ long do_sys_open(int dfd, const char * filename, int flags, umode_t mode)
 	return do_sys_openat2(dfd, filename, &how);
 }
 
-long sys_chdir(const char *filename)
+MYOS_SYSCALL_DEFINE1(chdir, const char *, filename)
 {
 	path_s path;
 	task_s *curr = current;

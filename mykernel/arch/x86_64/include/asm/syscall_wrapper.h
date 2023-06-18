@@ -70,6 +70,10 @@
 	// 	ALLOW_ERROR_INJECTION(__##abi##_##name, ERRNO);			\
 	// 	long __##abi##_##name(const pt_regs_s *regs)		\
 	// 		__alias(__do_##name);
+	#define __SYS_STUB0(abi, name)								\
+				long __##abi##_##name(const pt_regs_s *regs);	\
+				long __##abi##_##name(const pt_regs_s *regs)	\
+					__alias(__do_##name);
 
 	// #define __SYS_STUBx(abi, name, ...)							\
 	// 			long __##abi##_##name(const pt_regs_s *regs);	\
@@ -79,7 +83,11 @@
 	// 				return __se_##name(__VA_ARGS__);			\
 	// 			}	
 	#define __SYS_STUBx(abi, name, ...)							\
-				long __##abi##_##name(const pt_regs_s *regs);
+				long __##abi##_##name(const pt_regs_s *regs);	\
+				long __##abi##_##name(const pt_regs_s *regs)	\
+				{												\
+					return __se_##name(__VA_ARGS__);			\
+				}	
 
 	// #define __COND_SYSCALL(abi, name)					\
 	// 	__weak long __##abi##_##name(const pt_regs_s *__unused);	\
@@ -91,11 +99,11 @@
 	// #define __SYS_NI(abi, name)						\
 	// 	SYSCALL_ALIAS(__##abi##_##name, sys_ni_posix_timers);
 
-	// #define __X64_SYS_STUB0(name)						\
-	// 	__SYS_STUB0(x64, sys_##name)
+	#define __X64_SYS_STUB0(name)								\
+				__SYS_STUB0(x64, sys_##name)
 
-	#define __X64_SYS_STUBx(x, name, ...)					\
-				__SYS_STUBx(x64, sys##name,					\
+	#define __X64_SYS_STUBx(x, name, ...)						\
+				__SYS_STUBx(x64, sys##name,						\
 					SC_X86_64_REGS_TO_ARGS(x, __VA_ARGS__))
 
 	// #define __X64_COND_SYSCALL(name)					\
@@ -204,5 +212,24 @@
 	// long __x64_sys_getcpu(const pt_regs_s *regs);
 	// long __x64_sys_gettimeofday(const pt_regs_s *regs);
 	// long __x64_sys_time(const pt_regs_s *regs);
+
+
+	#define MYOS_SYSCALL_DEFINE0(sname)									\
+				long __do_sys_##sname(const pt_regs_s *__unused);		\
+				__X64_SYS_STUB0(sname)									\
+				long __do_sys_##sname(const pt_regs_s *__unused)
+	
+	#define __MYOS_SYSCALL_DEFINEx(x, name, ...)						\
+				long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__));	\
+				long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__));	\
+				__X64_SYS_STUBx(x, name, __VA_ARGS__)					\
+				long __se_sys##name(__MAP(x,__SC_LONG,__VA_ARGS__))		\
+				{														\
+					long ret = __do_sys##name(							\
+								__MAP(x,__SC_CAST,__VA_ARGS__));		\
+					return ret;											\
+				}														\
+				long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+
 
 #endif /* _ASM_X86_SYSCALL_WRAPPER_H */

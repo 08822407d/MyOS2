@@ -132,8 +132,8 @@ efault:
 	return -EFAULT;
 }
 
-long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
-				unsigned int count)
+MYOS_SYSCALL_DEFINE3(getdents64, unsigned int, fd,
+		linux_dirent64_s *, dirent, unsigned int, count)
 {
 	fd_s f;
 	getdents_cbk64_s buf = {

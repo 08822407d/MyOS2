@@ -21,8 +21,10 @@ MYOS_SYSCALL_DEFINE0(no_syscall)
 	return -ENOSYS;
 }
 
-MYOS_SYSCALL_DEFINE1(myos_putstring, char *,string)
+MYOS_SYSCALL_DEFINE1(myos_putstring, char *, string)
 {
+	// __MAP(3,__SC_CAST, const char *, filename, int, flags, umode_t, mode);
+	// __X64_SYS_STUBx(1, myos_putstring, char *, string);
 	color_printk(WHITE, BLACK, string);
 	return 0;
 }

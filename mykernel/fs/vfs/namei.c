@@ -961,7 +961,7 @@ out_putname:
 	return error;
 }
 
-long sys_creat(const char *pathname, umode_t mode)
+MYOS_SYSCALL_DEFINE2(creat, const char *, pathname, umode_t, mode)
 {
 	return do_creatat(AT_FDCWD, getname(pathname), mode);
 }
@@ -1028,7 +1028,7 @@ out_putname:
 	return error;
 }
 
-long sys_mkdir(const char *pathname, umode_t mode)
+MYOS_SYSCALL_DEFINE2(mkdir, const char *, pathname, umode_t, mode)
 {
 	return do_mkdirat(AT_FDCWD, getname(pathname), mode);
 }
@@ -1121,7 +1121,7 @@ exit1:
 	return error;
 }
 
-long sys_rmdir(const char *pathname)
+MYOS_SYSCALL_DEFINE1(rmdir, const char *, pathname)
 {
 	return do_rmdir(AT_FDCWD, getname(pathname));
 }
@@ -1226,7 +1226,7 @@ exit1:
 	return error;
 }
 
-long sys_unlink(const char * pathname)
+MYOS_SYSCALL_DEFINE1(unlink, const char *, pathname)
 {
 	return do_unlinkat(AT_FDCWD, getname(pathname));
 }

@@ -909,9 +909,9 @@ static int do_execve(filename_s *filename,
 }
 
 
-long sys_execve(const char *filename,
-		const char *const __user *argv,
-		const char *const __user *envp)
+MYOS_SYSCALL_DEFINE3(execve, const char *,filename,
+		const char *const __user *, argv,
+		const char *const __user *, envp)
 {
 	return do_execve(getname(filename), argv, envp);
 }
