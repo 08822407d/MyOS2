@@ -849,7 +849,7 @@ static int copy_mm(unsigned long clone_flags, task_s *tsk)
 		mmget(oldmm);
 		mm = oldmm;
 	} else {
-		mm = dup_mm(tsk, current->mm);
+		mm = dup_mm(tsk, oldmm);
 		if (!mm)
 			return -ENOMEM;
 	}
@@ -1814,21 +1814,25 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	int err = -ENOERR;
 	task_s *curr = current;
 	mm_s *curr_mm = current->mm;
+	mm_s *new_mm = new_tsk->mm;
 
 	page_s *page = NULL;
 	pgd_t *new_cr3 = NULL;
 	reg_t curr_endstack = task_pt_regs(current)->sp;
 
 	if(clone_flags & CLONE_VM)
-		new_tsk->mm = curr_mm;
+		new_mm = curr_mm;
 	else
 	{
 		// new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
 		// memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
+		new_mm->pgd_ptr &= ARCH_PGS_ADDR(~0);
+		unsigned long attr = ARCH_PGS_ATTR(curr_mm->pgd_ptr);
+		new_mm->pgd_ptr |= attr;
 		memcpy(task_pt_regs(new_tsk),
 				task_pt_regs(curr), sizeof(pt_regs_s));
 		prepair_COW(current);
-		prepair_COW(new_tsk);
+		// prepair_COW(new_tsk);
 
 		myos_refresh_arch_page();
 	}
