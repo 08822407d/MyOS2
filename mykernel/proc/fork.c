@@ -484,14 +484,14 @@ static void mm_init_owner(mm_s *mm, task_s *p)
 
 mm_s *__myos_mm_init(mm_s *mm)
 {
-	mm_s *curr_mm = current->mm;
+	// mm_s *curr_mm = current->mm;
 	pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
 	mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
-	int hfent_nr = PGENT_NR / 2;
-	memcpy(virt_cr3,
-		(const void*)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
-		hfent_nr);
-	memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
+	// int hfent_nr = PGENT_NR / 2;
+	// memcpy(virt_cr3,
+	// 	(const void*)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
+	// 	hfent_nr);
+	// memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
 	return mm;
 }
 
@@ -1824,15 +1824,10 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		new_mm = curr_mm;
 	else
 	{
-		// new_tsk->mm = (mm_s *)kzalloc(sizeof(mm_s), GFP_KERNEL);
-		// memcpy(new_tsk->mm, curr_mm, sizeof(mm_s));
-		new_mm->pgd_ptr &= ARCH_PGS_ADDR(~0);
-		unsigned long attr = ARCH_PGS_ATTR(curr_mm->pgd_ptr);
-		new_mm->pgd_ptr |= attr;
-		memcpy(task_pt_regs(new_tsk),
-				task_pt_regs(curr), sizeof(pt_regs_s));
+		pt_regs_s *oldregs = task_pt_regs(curr);
+		pt_regs_s *newregs = task_pt_regs(new_tsk);
+		memcpy(new_mm, curr_mm, sizeof(mm_s));
 		prepair_COW(current);
-		// prepair_COW(new_tsk);
 
 		myos_refresh_arch_page();
 	}
