@@ -1826,7 +1826,9 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 	{
 		pt_regs_s *oldregs = task_pt_regs(curr);
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
-		memcpy(new_mm, curr_mm, sizeof(mm_s));
+		memcpy((void *)myos_phys2virt(ARCH_PGS_ADDR(new_mm->pgd_ptr)),
+				(void *)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
+				sizeof(mm_s));
 		prepair_COW(current);
 
 		myos_refresh_arch_page();
