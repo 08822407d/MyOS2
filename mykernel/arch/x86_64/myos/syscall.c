@@ -105,12 +105,13 @@ MYOS_SYSCALL_DEFINE0(fork)
 	return kernel_clone(&args);
 }
 
-long sys_execve(const char *filename,
-		const char *const __user *argv,
-		const char *const __user *envp);
-long myos_do_execve(const char *filename, const char *const *argv,
-				const char *const *envp)
+long myos_do_execve(const char *filename,
+		const char *const *argv, const char *const *envp)
 {
+	extern long sys_execve(const char *filename,
+			const char *const __user *argv,
+			const char *const __user *envp);
+
 	char * pathname = NULL;
 	long pathlen = 0;
 	long error = 0;

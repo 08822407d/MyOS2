@@ -1824,12 +1824,14 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		new_mm = curr_mm;
 	else
 	{
-		pt_regs_s *oldregs = task_pt_regs(curr);
-		pt_regs_s *newregs = task_pt_regs(new_tsk);
+		prepair_COW(current);
 		memcpy((void *)myos_phys2virt(ARCH_PGS_ADDR(new_mm->pgd_ptr)),
 				(void *)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
 				sizeof(mm_s));
-		prepair_COW(current);
+
+		pt_regs_s *oldregs = task_pt_regs(curr);
+		pt_regs_s *newregs = task_pt_regs(new_tsk);
+		memcpy(newregs, oldregs, sizeof(pt_regs_s));
 
 		myos_refresh_arch_page();
 	}
