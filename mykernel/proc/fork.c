@@ -539,7 +539,7 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 	// 	goto fail_nocontext;
 
 	// mm->user_ns = get_user_ns(user_ns);
-	__myos_mm_init(mm);
+	// __myos_mm_init(mm);
 	return mm;
 
 fail_nocontext:
@@ -1824,16 +1824,18 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		new_mm = curr_mm;
 	else
 	{
-		prepair_COW(current);
-		memcpy((void *)myos_phys2virt(ARCH_PGS_ADDR(new_mm->pgd_ptr)),
-				(void *)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
-				sizeof(mm_s));
+		// memcpy((void *)myos_phys2virt(ARCH_PGS_ADDR(new_mm->pgd_ptr)),
+		// 		(void *)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
+		// 		sizeof(mm_s));
 
+		new_mm->pgd_ptr = curr_mm->pgd_ptr;
 		pt_regs_s *oldregs = task_pt_regs(curr);
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));
 
 		myos_refresh_arch_page();
+
+		prepair_COW(current);
 	}
 
 exit_cpmm:

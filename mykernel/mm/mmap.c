@@ -1089,6 +1089,48 @@ unsigned long stack_guard_gap = 256UL<<PAGE_SHIFT;
 
 
 /*
+ * Create a list of vma's touched by the unmap, removing them from the mm's
+ * vma list as we go..
+ */
+static bool
+detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma,
+		vma_s *prev, unsigned long end)
+{
+	vma_s **insertion_point;
+	vma_s *tail_vma = NULL;
+
+	insertion_point = (prev ? &prev->vm_next : &mm->mmap);
+	vma->vm_prev = NULL;
+	// do {
+	// 	vma_rb_erase(vma, &mm->mm_rb);
+	// 	mm->map_count--;
+	// 	tail_vma = vma;
+	// 	vma = vma->vm_next;
+	// } while (vma && vma->vm_start < end);
+	// *insertion_point = vma;
+	// if (vma) {
+	// 	vma->vm_prev = prev;
+	// 	vma_gap_update(vma);
+	// } else
+	// 	mm->highest_vm_end = prev ? vm_end_gap(prev) : 0;
+	tail_vma->vm_next = NULL;
+
+	// /* Kill the cache */
+	// vmacache_invalidate(mm);
+
+	/*
+	 * Do not downgrade mmap_lock if we are next to VM_GROWSDOWN or
+	 * VM_GROWSUP VMA. Such VMAs can change their size under
+	 * down_read(mmap_lock) and collide with the VMA we are about to unmap.
+	 */
+	if (vma && (vma->vm_flags & VM_GROWSDOWN))
+		return false;
+	if (prev && (prev->vm_flags & VM_GROWSUP))
+		return false;
+	return true;
+}
+
+/*
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
  * has already been checked or doesn't make sense to fail.
  */
@@ -1241,9 +1283,9 @@ int __do_munmap(mm_s *mm, unsigned long start,
 	// if (mm->locked_vm)
 	// 	unlock_range(vma, end);
 
-	// /* Detach vmas from rbtree */
-	// if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
-	// 	downgrade = false;
+	/* Detach vmas from rbtree */
+	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
+		downgrade = false;
 
 	// if (downgrade)
 	// 	mmap_write_downgrade(mm);
