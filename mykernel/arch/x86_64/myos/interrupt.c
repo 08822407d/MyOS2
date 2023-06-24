@@ -131,14 +131,6 @@ void excep_hwint_context(pt_regs_s *sf_regs)
 		hwint_irq_handler(sf_regs);
 
 	try_sched();
-
-	// sti
-	// movq		$-1,		%rcx
-	// testq		softirq_status(%rip),	%rcx	////check softirq	
-	// callq		do_softirq
-	// cli
-	// if (softirq_status != 0)
-	// 	do_softirq();
 }
 
 void exception_handler(pt_regs_s *sf_regs)
