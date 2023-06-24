@@ -36,8 +36,8 @@ enum ranks {
 
 #define EMIT(x)			({ if(o<n) {*q++ = (x);} o++; })
 
-static size_t format_int(char * q, size_t n, size_t val, enum flags flags,
-		int base, int width, int prec)
+static size_t format_int(char * q, size_t n, size_t val,
+		enum flags flags, int base, int width, int prec)
 {
 	char * qq;
 	size_t o = 0, oo;
@@ -203,7 +203,8 @@ static size_t format_int(char * q, size_t n, size_t val, enum flags flags,
 
 #define CVT_BUFSZ	(309 + 43)
 
-static char * cvt(double arg, int ndigits, int * decpt, int * sign, char * buf, int eflag)
+static char * cvt(double arg, int ndigits, int * decpt,
+		int * sign, char * buf, int eflag)
 {
 	int r2;
 	double fi, fj;
@@ -454,7 +455,8 @@ static void cropzeros(char *buffer)
 	}
 }
 
-static size_t format_float(char * q, size_t n, double val, enum flags flags, char fmt, int width, int prec)
+static size_t format_float(char * q, size_t n, double val,
+		enum flags flags, char fmt, int width, int prec)
 {
 	size_t o = 0;
 	char tmp[CVT_BUFSZ];

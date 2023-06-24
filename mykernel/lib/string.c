@@ -81,7 +81,8 @@
 	 * @dest: Where to copy the string to
 	 * @src: Where to copy the string from
 	 */
-	char *strcpy(char *dest, const char *src) {
+	char *strcpy(char *dest, const char *src)
+	{
 		char *tmp = dest;
 		while ((*dest++ = *src++) != '\0')
 			/* nothing */;
@@ -104,7 +105,8 @@
 	 * count, the remainder of @dest will be padded with %NUL.
 	 *
 	 */
-	char *strncpy(char *dest, const char *src, size_t count) {
+	char *strncpy(char *dest, const char *src, size_t count)
+	{
 		char *tmp = dest;
 		while (count) {
 			if ((*tmp = *src) != 0)
@@ -334,7 +336,8 @@
 	 * @cs: One string
 	 * @ct: Another string
 	 */
-	int strcmp(const char *cs, const char *ct) {
+	int strcmp(const char *cs, const char *ct)
+	{
 		unsigned char c1, c2;
 		while (1) {
 			c1 = *cs++;
@@ -356,7 +359,8 @@
 	 * @ct: Another string
 	 * @count: The maximum number of bytes to compare
 	 */
-	int strncmp(const char *cs, const char *ct, size_t count) {
+	int strncmp(const char *cs, const char *ct, size_t count)
+	{
 		unsigned char c1, c2;
 		while (count) {
 			c1 = *cs++;
@@ -381,7 +385,8 @@
 	 * Note that the %NUL-terminator is considered part of the string, and can
 	 * be searched for.
 	 */
-	char *strchr(const char *s, int c) {
+	char *strchr(const char *s, int c)
+	{
 		for (; *s != (char)c; ++s)
 			if (*s == '\0')
 				return NULL;
@@ -431,7 +436,8 @@
 	 * @s: The string to be searched
 	 * @c: The character to search for
 	 */
-	char *strrchr(const char *s, int c) {
+	char *strrchr(const char *s, int c)
+	{
 		const char *last = NULL;
 		do {
 			if (*s == (char)c)
@@ -470,7 +476,8 @@
 	 * strlen - Find the length of a string
 	 * @s: The string to be sized
 	 */
-	size_t strlen(const char *s) {
+	size_t strlen(const char *s)
+	{
 		const char *sc;
 		for (sc = s; *sc != '\0'; ++sc)
 			/* nothing */;
@@ -485,7 +492,8 @@
 	 * @s: The string to be sized
 	 * @count: The maximum number of bytes to search
 	 */
-	size_t strnlen(const char *s, size_t count) {
+	size_t strnlen(const char *s, size_t count)
+	{
 		const char *sc;
 		for (sc = s; count-- && *sc != '\0'; ++sc)
 			/* nothing */;
@@ -603,7 +611,8 @@
 	 *
 	 * Do not use memset() to access IO space, use memset_io() instead.
 	 */
-	void *memset(void *s, int c, size_t count) {
+	void *memset(void *s, int c, size_t count)
+	{
 		char *xs = s;
 		while (count--)
 			*xs++ = c;
@@ -688,7 +697,8 @@
 	 * You should not use this function to access IO space, use memcpy_toio()
 	 * or memcpy_fromio() instead.
 	 */
-	void *memcpy(void *dest, const void *src, size_t count) {
+	void *memcpy(void *dest, const void *src, size_t count)
+	{
 		char *tmp = dest;
 		const char *s = src;
 		while (count--)
@@ -707,7 +717,8 @@
 	 *
 	 * Unlike memcpy(), memmove() copes with overlapping areas.
 	 */
-	void *memmove(void *dest, const void *src, size_t count) {
+	void *memmove(void *dest, const void *src, size_t count)
+	{
 		char *tmp;
 		const char *s;
 		if (dest <= src) {
@@ -736,7 +747,8 @@
 	 * @count: The size of the area.
 	 */
 	#undef memcmp
-	__visible int memcmp(const void *cs, const void *ct, size_t count) {
+	__visible int memcmp(const void *cs, const void *ct, size_t count)
+	{
 		const unsigned char *su1, *su2;
 		int res = 0;
 
@@ -867,7 +879,8 @@
 	 * returns the address of the first occurrence of @c, or %NULL
 	 * if @c is not found
 	 */
-	void *memchr(const void *s, int c, size_t n) {
+	void *memchr(const void *s, int c, size_t n)
+	{
 		const unsigned char *p = s;
 		while (n-- != 0) {
 				if ((unsigned char)c == *p++) {

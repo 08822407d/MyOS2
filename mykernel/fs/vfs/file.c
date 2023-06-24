@@ -12,7 +12,7 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
-// #include <linux/sched/signal.h>
+#include <linux/sched/signal.h>
 #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
@@ -225,7 +225,7 @@ int get_unused_fd_flags(unsigned flags)
  * as if they had called fput(file).
  */
 
-void fd_install(unsigned int fd, file_s *file)
+void myos_fd_install(unsigned int fd, file_s *file)
 {
 	file_s ** fps = current->files->fd_array;
 	if (fps[fd] == NULL)
@@ -238,7 +238,7 @@ void fd_install(unsigned int fd, file_s *file)
 	}
 }
 
-fd_s fdget_pos(int fd)
+fd_s myos_fdget_pos(int fd)
 {
 	task_s *curr = current;
 	file_s *fp = curr->files->fd_array[fd];

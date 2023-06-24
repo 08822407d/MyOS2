@@ -32,7 +32,8 @@
 #include <obsolete/glo.h>
 
 
-void set_task_cpu(task_s *p, unsigned int new_cpu) {
+void set_task_cpu(task_s *p, unsigned int new_cpu)
+{
 // #ifdef CONFIG_SCHED_DEBUG
 	// unsigned int state = READ_ONCE(p->__state);
 
@@ -244,7 +245,8 @@ static inline int select_task_rq(task_s *p) {
  *	   %false otherwise.
  */
 static int
-try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
+try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
+{
 	unsigned long flags;
 	int cpu, success = 0;
 
@@ -469,7 +471,8 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags) {
  *
  * This function executes a full memory barrier before accessing the task state.
  */
-int wake_up_process(task_s *p) {
+int wake_up_process(task_s *p)
+{
 	int retval = 0;
 
 	preempt_disable();
@@ -479,7 +482,8 @@ int wake_up_process(task_s *p) {
 	return retval;
 }
 
-int wake_up_state(task_s *p, unsigned int state) {
+int wake_up_state(task_s *p, unsigned int state)
+{
 	int retval = 0;
 
 	preempt_disable();
@@ -495,7 +499,8 @@ int wake_up_state(task_s *p, unsigned int state) {
  *
  * __sched_fork() is basic setup used by init_idle() too:
  */
-static void __sched_fork(unsigned long clone_flags, task_s *p) {
+static void __sched_fork(unsigned long clone_flags, task_s *p)
+{
 	// p->on_rq			= 0;
 
 	// p->se.on_rq			= 0;
@@ -544,7 +549,8 @@ static void __sched_fork(unsigned long clone_flags, task_s *p) {
 /*
  * fork()/clone()-time setup:
  */
-int sched_fork(unsigned long clone_flags, task_s *p) {
+int sched_fork(unsigned long clone_flags, task_s *p)
+{
 	__sched_fork(clone_flags, p);
 	/*
 	 * We mark the process as NEW here. This guarantees that

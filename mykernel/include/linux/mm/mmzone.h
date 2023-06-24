@@ -99,11 +99,11 @@
 			// 	unsigned long nr_free;
 			// };
 
-			// static inline struct page *get_page_from_free_area(struct free_area *area,
+			// static inline page_s *get_page_from_free_area(struct free_area *area,
 			// 												int migratetype)
 			// {
 			// 	return list_first_entry_or_null(&area->free_list[migratetype],
-			// 									struct page, lru);
+			// 									page_s, lru);
 			// }
 
 			// static inline bool free_area_empty(struct free_area *area, int migratetype)
@@ -826,7 +826,7 @@
 
 				int nr_zones;	  /* number of populated zones in this node */
 			#ifdef CONFIG_FLATMEM /* means !SPARSEMEM */
-				// struct page *node_mem_map;
+				// page_s *node_mem_map;
 				page_s *node_mem_map;
 			// #ifdef CONFIG_PAGE_EXTENSION
 			// 	struct page_ext *node_page_ext;
@@ -1433,11 +1433,11 @@
 			// 	#define SECTION_MAP_MASK			(~(SECTION_MAP_LAST_BIT - 1))
 			// 	#define SECTION_NID_SHIFT			6
 
-			// 	static inline struct page *__section_mem_map_addr(struct mem_section *section)
+			// 	static inline page_s *__section_mem_map_addr(struct mem_section *section)
 			// 	{
 			// 		unsigned long map = section->section_mem_map;
 			// 		map &= SECTION_MAP_MASK;
-			// 		return (struct page *)map;
+			// 		return (page_s *)map;
 			// 	}
 
 			// 	static inline int present_section(struct mem_section *section)
@@ -1518,9 +1518,9 @@
 			// 		 * pfn_valid - check if there is a valid memory map entry for a PFN
 			// 		 * @pfn: the page frame number to check
 			// 		 *
-			// 		 * Check if there is a valid memory map entry aka struct page for the @pfn.
+			// 		 * Check if there is a valid memory map entry aka page_s for the @pfn.
 			// 		 * Note, that availability of the memory map entry does not imply that
-			// 		 * there is actual usable memory at that @pfn. The struct page may
+			// 		 * there is actual usable memory at that @pfn. The page_s may
 			// 		 * represent a hole or an unusable page frame.
 			// 		 *
 			// 		 * Return: 1 for PFNs that have memory map entries and 0 otherwise

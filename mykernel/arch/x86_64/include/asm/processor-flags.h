@@ -205,8 +205,4 @@
 	#define CR3_PCID_MASK	0xFFFull
 	#define CR3_NOFLUSH		BIT_ULL(63)
 
-	// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-	// #	define X86_CR3_PTI_PCID_USER_BIT	11
-	// #endif
-
 #endif /* _ASM_X86_PROCESSOR_FLAGS_H */

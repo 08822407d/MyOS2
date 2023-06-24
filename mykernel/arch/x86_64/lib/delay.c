@@ -39,7 +39,8 @@ static void (*delay_fn)(u64) = delay_loop;
 // static void (*delay_halt_fn)(u64 start, u64 cycles) __ro_after_init;
 
 /* simple loop based delay: */
-static void delay_loop(u64 __loops) {
+static void delay_loop(u64 __loops)
+{
 	unsigned long loops = (unsigned long)__loops;
 
 	asm volatile(	"	test	%0,	%0	\n"

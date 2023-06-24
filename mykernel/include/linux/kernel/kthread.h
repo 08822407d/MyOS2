@@ -243,8 +243,8 @@
 
 	// void kthread_destroy_worker(struct kthread_worker *worker);
 
-	// void kthread_use_mm(struct mm_struct *mm);
-	// void kthread_unuse_mm(struct mm_struct *mm);
+	// void kthread_use_mm(mm_s *mm);
+	// void kthread_unuse_mm(mm_s *mm);
 
 	// struct cgroup_subsys_state;
 

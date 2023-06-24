@@ -21,7 +21,7 @@
 	// #include <linux/percpu-refcount.h>
 	// #include <linux/bit_spinlock.h>
 	// #include <linux/shrinker.h>
-	// #include <linux/resource.h>
+	#include <linux/kernel/resource.h>
 	// #include <linux/page_ext.h>
 	#	include <linux/kernel/err.h>
 	#include <linux/mm/page-flags.h>
@@ -38,11 +38,11 @@
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
 	// struct mempolicy;
-	// struct anon_vma;
-	// struct anon_vma_chain;
+	// anon_vma_s;
+	// anon_vma_chain_s;
 	// struct user_struct;
-	// struct pt_regs;
-	// typedef struct pt_regs pt_regs_s;
+	// pt_regs_s;
+	// typedef pt_regs_s pt_regs_s;
 
 	// extern int sysctl_page_lock_unfairness;
 
@@ -187,29 +187,29 @@
 	// #define mm_zero_struct_page(pp)  ((void)memset((pp), 0, sizeof(page_s)))
 	// #endif
 
-	// /*
-	// * Default maximum number of active map areas, this limits the number of vmas
-	// * per mm struct. Users can overwrite this number by sysctl but there is a
-	// * problem.
-	// *
-	// * When a program's coredump is generated as ELF format, a section is created
-	// * per a vma. In ELF, the number of sections is represented in unsigned short.
-	// * This means the number of sections should be smaller than 65535 at coredump.
-	// * Because the kernel adds some informative sections to a image of program at
-	// * generating coredump, we need some margin. The number of extra sections is
-	// * 1-3 now and depends on arch. We use "5" as safe margin, here.
-	// *
-	// * ELF extended numbering allows more than 65535 sections, so 16-bit bound is
-	// * not a hard limit any more. Although some userspace tools can be surprised by
-	// * that.
-	// */
-	// #define MAPCOUNT_ELF_CORE_MARGIN	(5)
-	// #define DEFAULT_MAX_MAP_COUNT	(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
+	/*
+	* Default maximum number of active map areas, this limits the number of vmas
+	* per mm struct. Users can overwrite this number by sysctl but there is a
+	* problem.
+	*
+	* When a program's coredump is generated as ELF format, a section is created
+	* per a vma. In ELF, the number of sections is represented in unsigned short.
+	* This means the number of sections should be smaller than 65535 at coredump.
+	* Because the kernel adds some informative sections to a image of program at
+	* generating coredump, we need some margin. The number of extra sections is
+	* 1-3 now and depends on arch. We use "5" as safe margin, here.
+	*
+	* ELF extended numbering allows more than 65535 sections, so 16-bit bound is
+	* not a hard limit any more. Although some userspace tools can be surprised by
+	* that.
+	*/
+	#define MAPCOUNT_ELF_CORE_MARGIN	(5)
+	#define DEFAULT_MAX_MAP_COUNT		(USHRT_MAX - MAPCOUNT_ELF_CORE_MARGIN)
 
-	// extern int sysctl_max_map_count;
+	extern int sysctl_max_map_count;
 
-	// extern unsigned long sysctl_user_reserve_kbytes;
-	// extern unsigned long sysctl_admin_reserve_kbytes;
+	extern unsigned long sysctl_user_reserve_kbytes;
+	extern unsigned long sysctl_admin_reserve_kbytes;
 
 	// extern int sysctl_overcommit_memory;
 	// extern int sysctl_overcommit_ratio;
@@ -239,18 +239,18 @@
 	void setup_initial_init_mm(void *start_code,
 			void *end_code, void *end_data, void *brk);
 
-	// /*
-	// * Linux kernel virtual memory manager primitives.
-	// * The idea being to have a "virtual" mm in the same way
-	// * we have a virtual fs - giving a cleaner interface to the
-	// * mm details, and allowing different kinds of memory mappings
-	// * (from shared memory to executable loading to arbitrary
-	// * mmap() functions).
-	// */
+	/*
+	 * Linux kernel virtual memory manager primitives.
+	 * The idea being to have a "virtual" mm in the same way
+	 * we have a virtual fs - giving a cleaner interface to the
+	 * mm details, and allowing different kinds of memory mappings
+	 * (from shared memory to executable loading to arbitrary
+	 * mmap() functions).
+	 */
 
-	// struct vm_area_struct *vm_area_alloc(struct mm_struct *);
-	// struct vm_area_struct *vm_area_dup(struct vm_area_struct *);
-	// void vm_area_free(struct vm_area_struct *);
+	vma_s *vm_area_alloc(mm_s *);
+	vma_s *vm_area_dup(vma_s *);
+	void vm_area_free(vma_s *);
 
 	// #ifndef CONFIG_MMU
 	// extern struct rb_root nommu_region_tree;
@@ -362,9 +362,9 @@
 	// # define VM_MTE_ALLOWED	VM_NONE
 	// #endif
 
-	// #ifndef VM_GROWSUP
-	// # define VM_GROWSUP	VM_NONE
-	// #endif
+	#ifndef VM_GROWSUP
+	#	define VM_GROWSUP	VM_NONE
+	#endif
 
 	// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_MINOR
 	// # define VM_UFFD_MINOR_BIT	37
@@ -378,47 +378,53 @@
 
 	// #define TASK_EXEC ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0)
 
-	// /* Common data flag combinations */
-	// #define VM_DATA_FLAGS_TSK_EXEC	(VM_READ | VM_WRITE | TASK_EXEC | \
-	// 				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
-	// #define VM_DATA_FLAGS_NON_EXEC	(VM_READ | VM_WRITE | VM_MAYREAD | \
-	// 				VM_MAYWRITE | VM_MAYEXEC)
-	// #define VM_DATA_FLAGS_EXEC	(VM_READ | VM_WRITE | VM_EXEC | \
-	// 				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+	/* Common data flag combinations */
+	#define VM_DATA_FLAGS_TSK_EXEC (					\
+				VM_READ | VM_WRITE | TASK_EXEC |		\
+				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC	\
+			)
+	#define VM_DATA_FLAGS_NON_EXEC (				\
+				VM_READ | VM_WRITE | VM_MAYREAD |	\
+				VM_MAYWRITE | VM_MAYEXEC			\
+			)
+	#define VM_DATA_FLAGS_EXEC (						\
+				VM_READ | VM_WRITE | VM_EXEC |			\
+				VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC	\
+			)
 
-	// #ifndef VM_DATA_DEFAULT_FLAGS		/* arch can override this */
-	// #define VM_DATA_DEFAULT_FLAGS  VM_DATA_FLAGS_EXEC
-	// #endif
+	#ifndef VM_DATA_DEFAULT_FLAGS		/* arch can override this */
+	#define VM_DATA_DEFAULT_FLAGS  VM_DATA_FLAGS_EXEC
+	#endif
 
-	// #ifndef VM_STACK_DEFAULT_FLAGS		/* arch can override this */
-	// #define VM_STACK_DEFAULT_FLAGS VM_DATA_DEFAULT_FLAGS
-	// #endif
+	#ifndef VM_STACK_DEFAULT_FLAGS		/* arch can override this */
+	#define VM_STACK_DEFAULT_FLAGS VM_DATA_DEFAULT_FLAGS
+	#endif
 
-	// #ifdef CONFIG_STACK_GROWSUP
-	// #define VM_STACK	VM_GROWSUP
-	// #else
-	// #define VM_STACK	VM_GROWSDOWN
-	// #endif
+	#ifdef CONFIG_STACK_GROWSUP
+	#	define VM_STACK		VM_GROWSUP
+	#else
+	#	define VM_STACK		VM_GROWSDOWN
+	#endif
 
-	// #define VM_STACK_FLAGS	(VM_STACK | VM_STACK_DEFAULT_FLAGS | VM_ACCOUNT)
+	#define VM_STACK_FLAGS		(VM_STACK | VM_STACK_DEFAULT_FLAGS | VM_ACCOUNT)
 
-	// /* VMA basic access permission flags */
-	// #define VM_ACCESS_FLAGS (VM_READ | VM_WRITE | VM_EXEC)
+	/* VMA basic access permission flags */
+	#define VM_ACCESS_FLAGS		(VM_READ | VM_WRITE | VM_EXEC)
 
 
-	// /*
-	// * Special vmas that are non-mergable, non-mlock()able.
-	// */
-	// #define VM_SPECIAL (VM_IO | VM_DONTEXPAND | VM_PFNMAP | VM_MIXEDMAP)
+	/*
+	 * Special vmas that are non-mergable, non-mlock()able.
+	 */
+	#define VM_SPECIAL			(VM_IO | VM_DONTEXPAND | VM_PFNMAP | VM_MIXEDMAP)
 
-	// /* This mask prevents VMA from being scanned with khugepaged */
-	// #define VM_NO_KHUGEPAGED (VM_SPECIAL | VM_HUGETLB)
+	/* This mask prevents VMA from being scanned with khugepaged */
+	#define VM_NO_KHUGEPAGED	(VM_SPECIAL | VM_HUGETLB)
 
-	// /* This mask defines which mm->def_flags a process can inherit its parent */
-	// #define VM_INIT_DEF_MASK	VM_NOHUGEPAGE
+	/* This mask defines which mm->def_flags a process can inherit its parent */
+	#define VM_INIT_DEF_MASK	VM_NOHUGEPAGE
 
-	// /* This mask is used to clear all the VMA flags used by mlock */
-	// #define VM_LOCKED_CLEAR_MASK	(~(VM_LOCKED | VM_LOCKONFAULT))
+	/* This mask is used to clear all the VMA flags used by mlock */
+	#define VM_LOCKED_CLEAR_MASK	(~(VM_LOCKED | VM_LOCKONFAULT))
 
 	// /* Arch-specific flags to clear when updating VM flags on protection change */
 	// #ifndef VM_ARCH_CLEAR
@@ -432,13 +438,13 @@
 	// */
 	// extern pgprot_t protection_map[16];
 
-	// /*
-	// * The default fault flags that should be used by most of the
-	// * arch-specific page fault handlers.
-	// */
-	// #define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
-	// 				FAULT_FLAG_KILLABLE | \
-	// 				FAULT_FLAG_INTERRUPTIBLE)
+	/*
+	* The default fault flags that should be used by most of the
+	* arch-specific page fault handlers.
+	*/
+	#define FAULT_FLAG_DEFAULT  (FAULT_FLAG_ALLOW_RETRY | \
+					FAULT_FLAG_KILLABLE | \
+					FAULT_FLAG_INTERRUPTIBLE)
 
 	// /**
 	//  * fault_flag_allow_retry_first - check ALLOW_RETRY the first time
@@ -483,7 +489,7 @@
 	// */
 	// struct vm_fault {
 	// 	const struct {
-	// 		struct vm_area_struct *vma;	/* Target VMA */
+	// 		vma_s *vma;	/* Target VMA */
 	// 		gfp_t gfp_mask;			/* gfp mask to be used for allocations */
 	// 		pgoff_t pgoff;			/* Logical page offset based on vma */
 	// 		unsigned long address;		/* Faulting virtual address */
@@ -533,107 +539,104 @@
 	// 	PE_SIZE_PUD,
 	// };
 
-	// /*
-	// * These are the virtual MM functions - opening of an area, closing and
-	// * unmapping it (needed to keep files on disk up-to-date etc), pointer
-	// * to the functions called when a no-page or a wp-page exception occurs.
-	// */
-	// struct vm_operations_struct {
-	// 	void (*open)(struct vm_area_struct * area);
-	// 	/**
-	// 	 * @close: Called when the VMA is being removed from the MM.
-	// 	 * Context: User context.  May sleep.  Caller holds mmap_lock.
-	// 	 */
-	// 	void (*close)(struct vm_area_struct * area);
-	// 	/* Called any time before splitting to check if it's allowed */
-	// 	int (*may_split)(struct vm_area_struct *area, unsigned long addr);
-	// 	int (*mremap)(struct vm_area_struct *area);
-	// 	/*
-	// 	* Called by mprotect() to make driver-specific permission
-	// 	* checks before mprotect() is finalised.   The VMA must not
-	// 	* be modified.  Returns 0 if eprotect() can proceed.
-	// 	*/
-	// 	int (*mprotect)(struct vm_area_struct *vma, unsigned long start,
-	// 			unsigned long end, unsigned long newflags);
-	// 	vm_fault_t (*fault)(struct vm_fault *vmf);
-	// 	vm_fault_t (*huge_fault)(struct vm_fault *vmf,
-	// 			enum page_entry_size pe_size);
-	// 	vm_fault_t (*map_pages)(struct vm_fault *vmf,
-	// 			pgoff_t start_pgoff, pgoff_t end_pgoff);
-	// 	unsigned long (*pagesize)(struct vm_area_struct * area);
+	/*
+	 * These are the virtual MM functions - opening of an area, closing and
+	 * unmapping it (needed to keep files on disk up-to-date etc), pointer
+	 * to the functions called when a no-page or a wp-page exception occurs.
+	 */
+	typedef struct vm_operations_struct {
+		void	(*open)(vma_s * area);
+		/**
+		 * @close: Called when the VMA is being removed from the MM.
+		 * Context: User context.  May sleep.  Caller holds mmap_lock.
+		 */
+		void	(*close)(vma_s * area);
+		/* Called any time before splitting to check if it's allowed */
+		int		(*may_split)(vma_s *area, unsigned long addr);
+		int		(*mremap)(vma_s *area);
+		// /*
+		//  * Called by mprotect() to make driver-specific permission
+		//  * checks before mprotect() is finalised.   The VMA must not
+		//  * be modified.  Returns 0 if eprotect() can proceed.
+		//  */
+		// int (*mprotect)(vma_s *vma, unsigned long start,
+		// 		unsigned long end, unsigned long newflags);
+		// vm_fault_t (*fault)(struct vm_fault *vmf);
+		// vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+		// 		enum page_entry_size pe_size);
+		// vm_fault_t (*map_pages)(struct vm_fault *vmf,
+		// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
+		// unsigned long (*pagesize)(vma_s * area);
 
-	// 	/* notification that a previously read-only page is about to become
-	// 	* writable, if an error is returned it will cause a SIGBUS */
-	// 	vm_fault_t (*page_mkwrite)(struct vm_fault *vmf);
+		// /* notification that a previously read-only page is about to become
+		//  * writable, if an error is returned it will cause a SIGBUS */
+		// vm_fault_t (*page_mkwrite)(struct vm_fault *vmf);
 
-	// 	/* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
-	// 	vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
+		// /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
+		// vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
 
-	// 	/* called by access_process_vm when get_user_pages() fails, typically
-	// 	* for use by special VMAs. See also generic_access_phys() for a generic
-	// 	* implementation useful for any iomem mapping.
-	// 	*/
-	// 	int (*access)(struct vm_area_struct *vma, unsigned long addr,
-	// 			void *buf, int len, int write);
+		// /* called by access_process_vm when get_user_pages() fails, typically
+		//  * for use by special VMAs. See also generic_access_phys() for a generic
+		//  * implementation useful for any iomem mapping.
+		//  */
+		// int (*access)(vma_s *vma, unsigned long addr,
+		// 		void *buf, int len, int write);
 
-	// 	/* Called by the /proc/PID/maps code to ask the vma whether it
-	// 	* has a special name.  Returning non-NULL will also cause this
-	// 	* vma to be dumped unconditionally. */
-	// 	const char *(*name)(struct vm_area_struct *vma);
+		// /* Called by the /proc/PID/maps code to ask the vma whether it
+		//  * has a special name.  Returning non-NULL will also cause this
+		//  * vma to be dumped unconditionally. */
+		// const char *(*name)(vma_s *vma);
 
 	// #ifdef CONFIG_NUMA
-	// 	/*
-	// 	* set_policy() op must add a reference to any non-NULL @new mempolicy
-	// 	* to hold the policy upon return.  Caller should pass NULL @new to
-	// 	* remove a policy and fall back to surrounding context--i.e. do not
-	// 	* install a MPOL_DEFAULT policy, nor the task or system default
-	// 	* mempolicy.
-	// 	*/
-	// 	int (*set_policy)(struct vm_area_struct *vma, struct mempolicy *new);
+		// /*
+		//  * set_policy() op must add a reference to any non-NULL @new mempolicy
+		//  * to hold the policy upon return.  Caller should pass NULL @new to
+		//  * remove a policy and fall back to surrounding context--i.e. do not
+		//  * install a MPOL_DEFAULT policy, nor the task or system default
+		//  * mempolicy.
+		//  */
+		// int (*set_policy)(vma_s *vma, struct mempolicy *new);
 
-	// 	/*
-	// 	* get_policy() op must add reference [mpol_get()] to any policy at
-	// 	* (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
-	// 	* in mm/mempolicy.c will do this automatically.
-	// 	* get_policy() must NOT add a ref if the policy at (vma,addr) is not
-	// 	* marked as MPOL_SHARED. vma policies are protected by the mmap_lock.
-	// 	* If no [shared/vma] mempolicy exists at the addr, get_policy() op
-	// 	* must return NULL--i.e., do not "fallback" to task or system default
-	// 	* policy.
-	// 	*/
-	// 	struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
-	// 					unsigned long addr);
+		// /*
+		//  * get_policy() op must add reference [mpol_get()] to any policy at
+		//  * (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
+		//  * in mm/mempolicy.c will do this automatically.
+		//  * get_policy() must NOT add a ref if the policy at (vma,addr) is not
+		//  * marked as MPOL_SHARED. vma policies are protected by the mmap_lock.
+		//  * If no [shared/vma] mempolicy exists at the addr, get_policy() op
+		//  * must return NULL--i.e., do not "fallback" to task or system default
+		//  * policy.
+		//  */
+		// struct mempolicy *(*get_policy)(vma_s *vma, unsigned long addr);
 	// #endif
-	// 	/*
-	// 	* Called by vm_normal_page() for special PTEs to find the
-	// 	* page for @addr.  This is useful if the default behavior
-	// 	* (using pte_page()) would not find the correct page.
-	// 	*/
-	// 	page_s *(*find_special_page)(struct vm_area_struct *vma,
-	// 					unsigned long addr);
-	// };
+		// /*
+		//  * Called by vm_normal_page() for special PTEs to find the
+		//  * page for @addr.  This is useful if the default behavior
+		//  * (using pte_page()) would not find the correct page.
+		//  */
+		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
+	} vm_ops_s;
 
-	// static inline void vma_init(struct vm_area_struct *vma, struct mm_struct *mm)
-	// {
-	// 	static const struct vm_operations_struct dummy_vm_ops = {};
+	static inline void vma_init(vma_s *vma, mm_s *mm) {
+		static const vm_ops_s dummy_vm_ops = {};
 
-	// 	memset(vma, 0, sizeof(*vma));
-	// 	vma->vm_mm = mm;
-	// 	vma->vm_ops = &dummy_vm_ops;
-	// 	INIT_LIST_HEAD(&vma->anon_vma_chain);
-	// }
+		memset(vma, 0, sizeof(*vma));
+		vma->vm_mm = mm;
+		vma->vm_ops = &dummy_vm_ops;
+		// INIT_LIST_HEAD(&vma->anon_vma_chain);
+	}
 
-	// static inline void vma_set_anonymous(struct vm_area_struct *vma)
+	// static inline void vma_set_anonymous(vma_s *vma)
 	// {
 	// 	vma->vm_ops = NULL;
 	// }
 
-	// static inline bool vma_is_anonymous(struct vm_area_struct *vma)
+	// static inline bool vma_is_anonymous(vma_s *vma)
 	// {
 	// 	return !vma->vm_ops;
 	// }
 
-	// static inline bool vma_is_temporary_stack(struct vm_area_struct *vma)
+	// static inline bool vma_is_temporary_stack(vma_s *vma)
 	// {
 	// 	int maybe_stack = vma->vm_flags & (VM_GROWSDOWN | VM_GROWSUP);
 
@@ -647,7 +650,7 @@
 	// 	return false;
 	// }
 
-	// static inline bool vma_is_foreign(struct vm_area_struct *vma)
+	// static inline bool vma_is_foreign(vma_s *vma)
 	// {
 	// 	if (!current->mm)
 	// 		return true;
@@ -658,7 +661,7 @@
 	// 	return false;
 	// }
 
-	// static inline bool vma_is_accessible(struct vm_area_struct *vma)
+	// static inline bool vma_is_accessible(vma_s *vma)
 	// {
 	// 	return vma->vm_flags & VM_ACCESS_FLAGS;
 	// }
@@ -668,12 +671,12 @@
 	// * The vma_is_shmem is not inline because it is used only by slow
 	// * paths in userfault.
 	// */
-	// bool vma_is_shmem(struct vm_area_struct *vma);
+	// bool vma_is_shmem(vma_s *vma);
 	// #else
-	// static inline bool vma_is_shmem(struct vm_area_struct *vma) { return false; }
+	// static inline bool vma_is_shmem(vma_s *vma) { return false; }
 	// #endif
 
-	// int vma_is_stack_for_current(struct vm_area_struct *vma);
+	// int vma_is_stack_for_current(vma_s *vma);
 
 	// /* flush_tlb_range() takes a vma, not a mm, and can care about flags */
 	// #define TLB_FLUSH_VMA(mm,flags) { .vm_mm = (mm), .vm_flags = (flags) }
@@ -954,7 +957,7 @@
 	// * pte_mkwrite.  But get_user_pages can cause write faults for mappings
 	// * that do not have writing enabled, when used by access_process_vm.
 	// */
-	// static inline pte_t maybe_mkwrite(pte_t pte, struct vm_area_struct *vma)
+	// static inline pte_t maybe_mkwrite(pte_t pte, vma_s *vma)
 	// {
 	// 	if (likely(vma->vm_flags & VM_WRITE))
 	// 		pte = pte_mkwrite(pte);
@@ -1327,16 +1330,15 @@
 	// 		GUP_PIN_COUNTING_BIAS;
 	// }
 
-	// static inline bool is_cow_mapping(vm_flags_t flags)
-	// {
-	// 	return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
-	// }
+	static inline bool is_cow_mapping(vm_flags_t flags) {
+		return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
+	}
 
 	// /*
 	// * This should most likely only be called during fork() to see whether we
 	// * should break the cow immediately for a page on the src mm.
 	// */
-	// static inline bool page_needs_cow_for_dma(struct vm_area_struct *vma,
+	// static inline bool page_needs_cow_for_dma(vma_s *vma,
 	// 					page_s *page)
 	// {
 	// 	if (!is_cow_mapping(vma->vm_flags))
@@ -1716,10 +1718,10 @@
 	// */
 	// #include <linux/vmstat.h>
 
-	// static __always_inline void *lowmem_page_address(const page_s *page)
-	// {
-	// 	return page_to_virt(page);
-	// }
+	static __always_inline void
+	*lowmem_page_address(const page_s *page) {
+		return (void *)page_to_virt(page);
+	}
 
 	// #if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
 	// #define HASHED_PAGE_VIRTUAL
@@ -1743,11 +1745,11 @@
 	// void page_address_init(void);
 	// #endif
 
-	// #if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
-	// #define page_address(page) lowmem_page_address(page)
-	// #define set_page_address(page, address)  do { } while(0)
-	// #define page_address_init()  do { } while(0)
-	// #endif
+	#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
+	#	define page_address(page)				lowmem_page_address(page)
+	#	define set_page_address(page, address)	do { } while(0)
+	#	define page_address_init()				do { } while(0)
+	#endif
 
 	// static inline void *folio_address(const folio_s *folio)
 	// {
@@ -1755,7 +1757,7 @@
 	// }
 
 	// extern void *page_rmapping(page_s *page);
-	// extern struct anon_vma *page_anon_vma(page_s *page);
+	// extern anon_vma_s *page_anon_vma(page_s *page);
 	// extern pgoff_t __page_file_index(page_s *page);
 
 	// /*
@@ -1806,7 +1808,7 @@
 	// */
 	// extern void pagefault_out_of_memory(void);
 
-	// #define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
+	#define offset_in_page(p)		((unsigned long)(p) & ~PAGE_MASK)
 	// #define offset_in_thp(page, p)	((unsigned long)(p) & (thp_size(page) - 1))
 	// #define offset_in_folio(folio, p) ((unsigned long)(p) & (folio_size(folio) - 1))
 
@@ -1826,34 +1828,34 @@
 	// extern int user_shm_lock(size_t, struct ucounts *);
 	// extern void user_shm_unlock(size_t, struct ucounts *);
 
-	// page_s *vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+	// page_s *vm_normal_page(vma_s *vma, unsigned long addr,
 	// 				pte_t pte);
-	// page_s *vm_normal_page_pmd(struct vm_area_struct *vma, unsigned long addr,
+	// page_s *vm_normal_page_pmd(vma_s *vma, unsigned long addr,
 	// 				pmd_t pmd);
 
-	// void zap_vma_ptes(struct vm_area_struct *vma, unsigned long address,
+	// void zap_vma_ptes(vma_s *vma, unsigned long address,
 	// 		unsigned long size);
-	// void zap_page_range(struct vm_area_struct *vma, unsigned long address,
+	// void zap_page_range(vma_s *vma, unsigned long address,
 	// 			unsigned long size);
-	// void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+	// void unmap_vmas(struct mmu_gather *tlb, vma_s *start_vma,
 	// 		unsigned long start, unsigned long end);
 
 	// struct mmu_notifier_range;
 
 	// void free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
 	// 		unsigned long end, unsigned long floor, unsigned long ceiling);
-	// int
-	// copy_page_range(struct vm_area_struct *dst_vma, struct vm_area_struct *src_vma);
-	// int follow_invalidate_pte(struct mm_struct *mm, unsigned long address,
+	int
+	copy_page_range(vma_s *dst_vma, vma_s *src_vma);
+	// int follow_invalidate_pte(mm_s *mm, unsigned long address,
 	// 			struct mmu_notifier_range *range, pte_t **ptepp,
 	// 			pmd_t **pmdpp, spinlock_t **ptlp);
-	// int follow_pte(struct mm_struct *mm, unsigned long address,
+	// int follow_pte(mm_s *mm, unsigned long address,
 	// 		pte_t **ptepp, spinlock_t **ptlp);
-	// int follow_pfn(struct vm_area_struct *vma, unsigned long address,
+	// int follow_pfn(vma_s *vma, unsigned long address,
 	// 	unsigned long *pfn);
-	// int follow_phys(struct vm_area_struct *vma, unsigned long address,
+	// int follow_phys(vma_s *vma, unsigned long address,
 	// 		unsigned int flags, unsigned long *prot, resource_size_t *phys);
-	// int generic_access_phys(struct vm_area_struct *vma, unsigned long addr,
+	// int generic_access_phys(vma_s *vma, unsigned long addr,
 	// 			void *buf, int len, int write);
 
 	// extern void truncate_pagecache(struct inode *inode, loff_t new);
@@ -1864,10 +1866,10 @@
 	// int invalidate_inode_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
-	// extern vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
+	// extern vm_fault_t handle_mm_fault(vma_s *vma,
 	// 				unsigned long address, unsigned int flags,
 	// 				pt_regs_s *regs);
-	// extern int fixup_user_fault(struct mm_struct *mm,
+	// extern int fixup_user_fault(mm_s *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);
 	// void unmap_mapping_pages(struct address_space *mapping,
@@ -1875,7 +1877,7 @@
 	// void unmap_mapping_range(struct address_space *mapping,
 	// 		loff_t const holebegin, loff_t const holelen, int even_cows);
 	// #else
-	// static inline vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
+	// static inline vm_fault_t handle_mm_fault(vma_s *vma,
 	// 					unsigned long address, unsigned int flags,
 	// 					pt_regs_s *regs)
 	// {
@@ -1883,7 +1885,7 @@
 	// 	BUG();
 	// 	return VM_FAULT_SIGBUS;
 	// }
-	// static inline int fixup_user_fault(struct mm_struct *mm, unsigned long address,
+	// static inline int fixup_user_fault(mm_s *mm, unsigned long address,
 	// 		unsigned int fault_flags, bool *unlocked)
 	// {
 	// 	/* should never happen if there's no MMU */
@@ -1904,25 +1906,25 @@
 
 	// extern int access_process_vm(task_s *tsk, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
-	// extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
+	// extern int access_remote_vm(mm_s *mm, unsigned long addr,
 	// 		void *buf, int len, unsigned int gup_flags);
-	// extern int __access_remote_vm(struct mm_struct *mm, unsigned long addr,
+	// extern int __access_remote_vm(mm_s *mm, unsigned long addr,
 	// 				void *buf, int len, unsigned int gup_flags);
 
-	// long get_user_pages_remote(struct mm_struct *mm,
+	// long get_user_pages_remote(mm_s *mm,
 	// 				unsigned long start, unsigned long nr_pages,
 	// 				unsigned int gup_flags, page_s **pages,
-	// 				struct vm_area_struct **vmas, int *locked);
-	// long pin_user_pages_remote(struct mm_struct *mm,
+	// 				vma_s **vmas, int *locked);
+	// long pin_user_pages_remote(mm_s *mm,
 	// 			unsigned long start, unsigned long nr_pages,
 	// 			unsigned int gup_flags, page_s **pages,
-	// 			struct vm_area_struct **vmas, int *locked);
+	// 			vma_s **vmas, int *locked);
 	// long get_user_pages(unsigned long start, unsigned long nr_pages,
 	// 				unsigned int gup_flags, page_s **pages,
-	// 				struct vm_area_struct **vmas);
+	// 				vma_s **vmas);
 	// long pin_user_pages(unsigned long start, unsigned long nr_pages,
 	// 			unsigned int gup_flags, page_s **pages,
-	// 			struct vm_area_struct **vmas);
+	// 			vma_s **vmas);
 	// long get_user_pages_locked(unsigned long start, unsigned long nr_pages,
 	// 			unsigned int gup_flags, page_s **pages, int *locked);
 	// long pin_user_pages_locked(unsigned long start, unsigned long nr_pages,
@@ -1937,8 +1939,8 @@
 	// int pin_user_pages_fast(unsigned long start, int nr_pages,
 	// 			unsigned int gup_flags, page_s **pages);
 
-	// int account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc);
-	// int __account_locked_vm(struct mm_struct *mm, unsigned long pages, bool inc,
+	// int account_locked_vm(mm_s *mm, unsigned long pages, bool inc);
+	// int __account_locked_vm(mm_s *mm, unsigned long pages, bool inc,
 	// 			task_s *task, bool bypass_rlim);
 
 	// struct kvec;
@@ -1955,8 +1957,8 @@
 
 	// int get_cmdline(task_s *task, char *buffer, int buflen);
 
-	// extern unsigned long move_page_tables(struct vm_area_struct *vma,
-	// 		unsigned long old_addr, struct vm_area_struct *new_vma,
+	// extern unsigned long move_page_tables(vma_s *vma,
+	// 		unsigned long old_addr, vma_s *new_vma,
 	// 		unsigned long new_addr, unsigned long len,
 	// 		bool need_rmap_locks);
 
@@ -1976,11 +1978,11 @@
 	// #define  MM_CP_UFFD_WP_ALL                 (MM_CP_UFFD_WP | \
 	// 						MM_CP_UFFD_WP_RESOLVE)
 
-	// extern unsigned long change_protection(struct vm_area_struct *vma, unsigned long start,
+	// extern unsigned long change_protection(vma_s *vma, unsigned long start,
 	// 				unsigned long end, pgprot_t newprot,
 	// 				unsigned long cp_flags);
-	// extern int mprotect_fixup(struct vm_area_struct *vma,
-	// 			struct vm_area_struct **pprev, unsigned long start,
+	// extern int mprotect_fixup(vma_s *vma,
+	// 			vma_s **pprev, unsigned long start,
 	// 			unsigned long end, unsigned long newflags);
 
 	// /*
@@ -1999,7 +2001,7 @@
 	// /*
 	// * per-process(per-mm_struct) statistics.
 	// */
-	// static inline unsigned long get_mm_counter(struct mm_struct *mm, int member)
+	// static inline unsigned long get_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long val = atomic_long_read(&mm->rss_stat.count[member]);
 
@@ -2014,23 +2016,23 @@
 	// 	return (unsigned long)val;
 	// }
 
-	// void mm_trace_rss_stat(struct mm_struct *mm, int member, long count);
+	// void mm_trace_rss_stat(mm_s *mm, int member, long count);
 
-	// static inline void add_mm_counter(struct mm_struct *mm, int member, long value)
+	// static inline void add_mm_counter(mm_s *mm, int member, long value)
 	// {
 	// 	long count = atomic_long_add_return(value, &mm->rss_stat.count[member]);
 
 	// 	mm_trace_rss_stat(mm, member, count);
 	// }
 
-	// static inline void inc_mm_counter(struct mm_struct *mm, int member)
+	// static inline void inc_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long count = atomic_long_inc_return(&mm->rss_stat.count[member]);
 
 	// 	mm_trace_rss_stat(mm, member, count);
 	// }
 
-	// static inline void dec_mm_counter(struct mm_struct *mm, int member)
+	// static inline void dec_mm_counter(mm_s *mm, int member)
 	// {
 	// 	long count = atomic_long_dec_return(&mm->rss_stat.count[member]);
 
@@ -2052,24 +2054,24 @@
 	// 	return mm_counter_file(page);
 	// }
 
-	// static inline unsigned long get_mm_rss(struct mm_struct *mm)
+	// static inline unsigned long get_mm_rss(mm_s *mm)
 	// {
 	// 	return get_mm_counter(mm, MM_FILEPAGES) +
 	// 		get_mm_counter(mm, MM_ANONPAGES) +
 	// 		get_mm_counter(mm, MM_SHMEMPAGES);
 	// }
 
-	// static inline unsigned long get_mm_hiwater_rss(struct mm_struct *mm)
+	// static inline unsigned long get_mm_hiwater_rss(mm_s *mm)
 	// {
 	// 	return max(mm->hiwater_rss, get_mm_rss(mm));
 	// }
 
-	// static inline unsigned long get_mm_hiwater_vm(struct mm_struct *mm)
+	// static inline unsigned long get_mm_hiwater_vm(mm_s *mm)
 	// {
 	// 	return max(mm->hiwater_vm, mm->total_vm);
 	// }
 
-	// static inline void update_hiwater_rss(struct mm_struct *mm)
+	// static inline void update_hiwater_rss(mm_s *mm)
 	// {
 	// 	unsigned long _rss = get_mm_rss(mm);
 
@@ -2077,19 +2079,19 @@
 	// 		(mm)->hiwater_rss = _rss;
 	// }
 
-	// static inline void update_hiwater_vm(struct mm_struct *mm)
+	// static inline void update_hiwater_vm(mm_s *mm)
 	// {
 	// 	if (mm->hiwater_vm < mm->total_vm)
 	// 		mm->hiwater_vm = mm->total_vm;
 	// }
 
-	// static inline void reset_mm_hiwater_rss(struct mm_struct *mm)
+	// static inline void reset_mm_hiwater_rss(mm_s *mm)
 	// {
 	// 	mm->hiwater_rss = get_mm_rss(mm);
 	// }
 
 	// static inline void setmax_mm_hiwater_rss(unsigned long *maxrss,
-	// 					struct mm_struct *mm)
+	// 					mm_s *mm)
 	// {
 	// 	unsigned long hiwater_rss = get_mm_hiwater_rss(mm);
 
@@ -2098,9 +2100,9 @@
 	// }
 
 	// #if defined(SPLIT_RSS_COUNTING)
-	// void sync_mm_rss(struct mm_struct *mm);
+	// void sync_mm_rss(mm_s *mm);
 	// #else
-	// static inline void sync_mm_rss(struct mm_struct *mm)
+	// static inline void sync_mm_rss(mm_s *mm)
 	// {
 	// }
 	// #endif
@@ -2124,11 +2126,11 @@
 	// }
 	// #endif
 
-	// int vma_wants_writenotify(struct vm_area_struct *vma, pgprot_t vm_page_prot);
+	// int vma_wants_writenotify(vma_s *vma, pgprot_t vm_page_prot);
 
-	// extern pte_t *__get_locked_pte(struct mm_struct *mm, unsigned long addr,
+	// extern pte_t *__get_locked_pte(mm_s *mm, unsigned long addr,
 	// 				spinlock_t **ptl);
-	// static inline pte_t *get_locked_pte(struct mm_struct *mm, unsigned long addr,
+	// static inline pte_t *get_locked_pte(mm_s *mm, unsigned long addr,
 	// 					spinlock_t **ptl)
 	// {
 	// 	pte_t *ptep;
@@ -2136,127 +2138,94 @@
 	// 	return ptep;
 	// }
 
-	// #ifdef __PAGETABLE_P4D_FOLDED
-	// static inline int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
-	// 						unsigned long address)
-	// {
+	// static inline int __p4d_alloc(mm_s *mm,
+	// 		pgd_t *pgd, unsigned long address) {
 	// 	return 0;
 	// }
-	// #else
-	// int __p4d_alloc(struct mm_struct *mm, pgd_t *pgd, unsigned long address);
-	// #endif
 
-	// #if defined(__PAGETABLE_PUD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pud_alloc(struct mm_struct *mm, p4d_t *p4d,
-	// 						unsigned long address)
-	// {
-	// 	return 0;
-	// }
-	// static inline void mm_inc_nr_puds(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_puds(struct mm_struct *mm) {}
+	int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
-	// #else
-	// int __pud_alloc(struct mm_struct *mm, p4d_t *p4d, unsigned long address);
-
-	// static inline void mm_inc_nr_puds(struct mm_struct *mm)
-	// {
-	// 	if (mm_pud_folded(mm))
-	// 		return;
+	// static inline void mm_inc_nr_puds(mm_s *mm) {
+	// 	// if (mm_pud_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_add(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_puds(struct mm_struct *mm)
-	// {
-	// 	if (mm_pud_folded(mm))
-	// 		return;
+	// static inline void mm_dec_nr_puds(mm_s *mm) {
+	// 	// if (mm_pud_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_sub(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
-	// #endif
 
-	// #if defined(__PAGETABLE_PMD_FOLDED) || !defined(CONFIG_MMU)
-	// static inline int __pmd_alloc(struct mm_struct *mm, pud_t *pud,
-	// 						unsigned long address)
-	// {
-	// 	return 0;
-	// }
+	int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
-	// static inline void mm_inc_nr_pmds(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_pmds(struct mm_struct *mm) {}
-
-	// #else
-	// int __pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address);
-
-	// static inline void mm_inc_nr_pmds(struct mm_struct *mm)
-	// {
-	// 	if (mm_pmd_folded(mm))
-	// 		return;
+	// static inline void mm_inc_nr_pmds(mm_s *mm) {
+	// 	// if (mm_pmd_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_add(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_pmds(struct mm_struct *mm)
-	// {
-	// 	if (mm_pmd_folded(mm))
-	// 		return;
+	// static inline void mm_dec_nr_pmds(mm_s *mm) {
+	// 	// if (mm_pmd_folded(mm))
+	// 	// 	return;
 	// 	atomic_long_sub(PTRS_PER_PMD * sizeof(pmd_t), &mm->pgtables_bytes);
 	// }
-	// #endif
 
 	// #ifdef CONFIG_MMU
-	// static inline void mm_pgtables_bytes_init(struct mm_struct *mm)
+	// static inline void mm_pgtables_bytes_init(mm_s *mm)
 	// {
 	// 	atomic_long_set(&mm->pgtables_bytes, 0);
 	// }
 
-	// static inline unsigned long mm_pgtables_bytes(const struct mm_struct *mm)
+	// static inline unsigned long mm_pgtables_bytes(const mm_s *mm)
 	// {
 	// 	return atomic_long_read(&mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_inc_nr_ptes(struct mm_struct *mm)
+	// static inline void mm_inc_nr_ptes(mm_s *mm)
 	// {
 	// 	atomic_long_add(PTRS_PER_PTE * sizeof(pte_t), &mm->pgtables_bytes);
 	// }
 
-	// static inline void mm_dec_nr_ptes(struct mm_struct *mm)
+	// static inline void mm_dec_nr_ptes(mm_s *mm)
 	// {
 	// 	atomic_long_sub(PTRS_PER_PTE * sizeof(pte_t), &mm->pgtables_bytes);
 	// }
 	// #else
 
-	// static inline void mm_pgtables_bytes_init(struct mm_struct *mm) {}
-	// static inline unsigned long mm_pgtables_bytes(const struct mm_struct *mm)
+	// static inline void mm_pgtables_bytes_init(mm_s *mm) {}
+	// static inline unsigned long mm_pgtables_bytes(const mm_s *mm)
 	// {
 	// 	return 0;
 	// }
 
-	// static inline void mm_inc_nr_ptes(struct mm_struct *mm) {}
-	// static inline void mm_dec_nr_ptes(struct mm_struct *mm) {}
+	// static inline void mm_inc_nr_ptes(mm_s *mm) {}
+	// static inline void mm_dec_nr_ptes(mm_s *mm) {}
 	// #endif
 
-	// int __pte_alloc(struct mm_struct *mm, pmd_t *pmd);
+	// int __pte_alloc(mm_s *mm, pmd_t *pmd);
 	// int __pte_alloc_kernel(pmd_t *pmd);
 
 	// #if defined(CONFIG_MMU)
 
-	// static inline p4d_t *p4d_alloc(struct mm_struct *mm, pgd_t *pgd,
-	// 		unsigned long address)
-	// {
-	// 	return (unlikely(pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address)) ?
+	// static inline p4d_t *p4d_alloc(mm_s *mm,
+	// 		pgd_t *pgd, unsigned long address) {
+	// 	return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
 	// 		NULL : p4d_offset(pgd, address);
 	// }
+	#define p4d_alloc(mm, pgd, addr)	arch_p4d_offset(pgd, addr)
 
-	// static inline pud_t *pud_alloc(struct mm_struct *mm, p4d_t *p4d,
-	// 		unsigned long address)
-	// {
-	// 	return (unlikely(p4d_none(*p4d)) && __pud_alloc(mm, p4d, address)) ?
-	// 		NULL : pud_offset(p4d, address);
-	// }
+	static inline pud_t *pud_alloc(mm_s *mm,
+			p4d_t *p4d, unsigned long address) {
+		return (arch_p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
+				NULL : pud_offset(p4d, address);
+	}
 
-	// static inline pmd_t *pmd_alloc(struct mm_struct *mm, pud_t *pud, unsigned long address)
-	// {
-	// 	return (unlikely(pud_none(*pud)) && __pmd_alloc(mm, pud, address))?
-	// 		NULL: pmd_offset(pud, address);
-	// }
+	static inline pmd_t *pmd_alloc(mm_s *mm,
+			pud_t *pud, unsigned long address) {
+		return (arch_pud_none(*pud)) && __pmd_alloc(mm, pud, address)?
+				NULL: pmd_offset(pud, address);
+	}
 	// #endif /* CONFIG_MMU */
 
 	// #if USE_SPLIT_PTE_PTLOCKS
@@ -2289,7 +2258,7 @@
 	// }
 	// #endif /* ALLOC_SPLIT_PTLOCKS */
 
-	// static inline spinlock_t *pte_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pte_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return ptlock_ptr(pmd_page(*pmd));
 	// }
@@ -2314,7 +2283,7 @@
 	// /*
 	// * We use mm->page_table_lock to guard all pagetable pages of the mm.
 	// */
-	// static inline spinlock_t *pte_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pte_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
@@ -2359,7 +2328,7 @@
 	// 	pte_unmap(pte);					\
 	// } while (0)
 
-	// #define pte_alloc(mm, pmd) (unlikely(pmd_none(*(pmd))) && __pte_alloc(mm, pmd))
+	// #define pte_alloc(mm, pmd) (unlikely(arch_pmd_none(*(pmd))) && __pte_alloc(mm, pmd))
 
 	// #define pte_alloc_map(mm, pmd, address)			\
 	// 	(pte_alloc(mm, pmd) ? NULL : pte_offset_map(pmd, address))
@@ -2369,7 +2338,7 @@
 	// 		NULL : pte_offset_map_lock(mm, pmd, address, ptlp))
 
 	// #define pte_alloc_kernel(pmd, address)			\
-	// 	((unlikely(pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
+	// 	((unlikely(arch_pmd_none(*(pmd))) && __pte_alloc_kernel(pmd))? \
 	// 		NULL: pte_offset_kernel(pmd, address))
 
 	// #if USE_SPLIT_PMD_PTLOCKS
@@ -2380,7 +2349,7 @@
 	// 	return virt_to_page((void *)((unsigned long) pmd & mask));
 	// }
 
-	// static inline spinlock_t *pmd_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return ptlock_ptr(pmd_to_page(pmd));
 	// }
@@ -2405,7 +2374,7 @@
 
 	// #else
 
-	// static inline spinlock_t *pmd_lockptr(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lockptr(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
@@ -2417,7 +2386,7 @@
 
 	// #endif
 
-	// static inline spinlock_t *pmd_lock(struct mm_struct *mm, pmd_t *pmd)
+	// static inline spinlock_t *pmd_lock(mm_s *mm, pmd_t *pmd)
 	// {
 	// 	spinlock_t *ptl = pmd_lockptr(mm, pmd);
 	// 	spin_lock(ptl);
@@ -2446,12 +2415,12 @@
 	// * considered ready to switch to split PUD locks yet; there may be places
 	// * which need to be converted from page_table_lock.
 	// */
-	// static inline spinlock_t *pud_lockptr(struct mm_struct *mm, pud_t *pud)
+	// static inline spinlock_t *pud_lockptr(mm_s *mm, pud_t *pud)
 	// {
 	// 	return &mm->page_table_lock;
 	// }
 
-	// static inline spinlock_t *pud_lock(struct mm_struct *mm, pud_t *pud)
+	// static inline spinlock_t *pud_lock(mm_s *mm, pud_t *pud)
 	// {
 	// 	spinlock_t *ptl = pud_lockptr(mm, pud);
 
@@ -2589,33 +2558,33 @@
 	// extern int nommu_shrink_inode_mappings(struct inode *, size_t, size_t);
 
 	// /* interval_tree.c */
-	// void vma_interval_tree_insert(struct vm_area_struct *node,
+	// void vma_interval_tree_insert(vma_s *node,
 	// 				struct rb_root_cached *root);
-	// void vma_interval_tree_insert_after(struct vm_area_struct *node,
-	// 					struct vm_area_struct *prev,
+	// void vma_interval_tree_insert_after(vma_s *node,
+	// 					vma_s *prev,
 	// 					struct rb_root_cached *root);
-	// void vma_interval_tree_remove(struct vm_area_struct *node,
+	// void vma_interval_tree_remove(vma_s *node,
 	// 				struct rb_root_cached *root);
-	// struct vm_area_struct *vma_interval_tree_iter_first(struct rb_root_cached *root,
+	// vma_s *vma_interval_tree_iter_first(struct rb_root_cached *root,
 	// 				unsigned long start, unsigned long last);
-	// struct vm_area_struct *vma_interval_tree_iter_next(struct vm_area_struct *node,
+	// vma_s *vma_interval_tree_iter_next(vma_s *node,
 	// 				unsigned long start, unsigned long last);
 
 	// #define vma_interval_tree_foreach(vma, root, start, last)		\
 	// 	for (vma = vma_interval_tree_iter_first(root, start, last);	\
 	// 		vma; vma = vma_interval_tree_iter_next(vma, start, last))
 
-	// void anon_vma_interval_tree_insert(struct anon_vma_chain *node,
+	// void anon_vma_interval_tree_insert(anon_vma_chain_s *node,
 	// 				struct rb_root_cached *root);
-	// void anon_vma_interval_tree_remove(struct anon_vma_chain *node,
+	// void anon_vma_interval_tree_remove(anon_vma_chain_s *node,
 	// 				struct rb_root_cached *root);
-	// struct anon_vma_chain *
+	// anon_vma_chain_s *
 	// anon_vma_interval_tree_iter_first(struct rb_root_cached *root,
 	// 				unsigned long start, unsigned long last);
-	// struct anon_vma_chain *anon_vma_interval_tree_iter_next(
-	// 	struct anon_vma_chain *node, unsigned long start, unsigned long last);
+	// anon_vma_chain_s *anon_vma_interval_tree_iter_next(
+	// 	anon_vma_chain_s *node, unsigned long start, unsigned long last);
 	// #ifdef CONFIG_DEBUG_VM_RB
-	// void anon_vma_interval_tree_verify(struct anon_vma_chain *node);
+	// void anon_vma_interval_tree_verify(anon_vma_chain_s *node);
 	// #endif
 
 	// #define anon_vma_interval_tree_foreach(avc, root, start, last)		 \
@@ -2623,32 +2592,37 @@
 	// 		avc; avc = anon_vma_interval_tree_iter_next(avc, start, last))
 
 	// /* mmap.c */
-	// extern int __vm_enough_memory(struct mm_struct *mm, long pages, int cap_sys_admin);
-	// extern int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
-	// 	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
-	// 	struct vm_area_struct *expand);
-	// static inline int vma_adjust(struct vm_area_struct *vma, unsigned long start,
-	// 	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert)
+	// extern int __vm_enough_memory(mm_s *mm, long pages, int cap_sys_admin);
+	// extern int __vma_adjust(vma_s *vma, unsigned long start,
+	// 		unsigned long end, pgoff_t pgoff, vma_s *insert,
+	// 		vma_s *expand);
+	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,
+			unsigned long end, pgoff_t pgoff, vma_s *insert,
+			vma_s *expand);
+	// static inline int vma_adjust(vma_s *vma, unsigned long start,
+	// 	unsigned long end, pgoff_t pgoff, vma_s *insert)
 	// {
 	// 	return __vma_adjust(vma, start, end, pgoff, insert, NULL);
 	// }
-	// extern struct vm_area_struct *vma_merge(struct mm_struct *,
-	// 	struct vm_area_struct *prev, unsigned long addr, unsigned long end,
-	// 	unsigned long vm_flags, struct anon_vma *, file_s *, pgoff_t,
+	// extern vma_s *vma_merge(mm_s *,
+	// 	vma_s *prev, unsigned long addr, unsigned long end,
+	// 	unsigned long vm_flags, anon_vma_s *, file_s *, pgoff_t,
 	// 	struct mempolicy *, struct vm_userfaultfd_ctx, struct anon_vma_name *);
-	// extern struct anon_vma *find_mergeable_anon_vma(struct vm_area_struct *);
-	// extern int __split_vma(struct mm_struct *, struct vm_area_struct *,
+	vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long end,
+			unsigned long vm_flags, file_s *file, pgoff_t pgoff);
+	// extern anon_vma_s *find_mergeable_anon_vma(vma_s *);
+	// extern int __split_vma(mm_s *, vma_s *,
 	// 	unsigned long addr, int new_below);
-	// extern int split_vma(struct mm_struct *, struct vm_area_struct *,
+	// extern int split_vma(mm_s *, vma_s *,
 	// 	unsigned long addr, int new_below);
-	// extern int insert_vm_struct(struct mm_struct *, struct vm_area_struct *);
-	// extern void __vma_link_rb(struct mm_struct *, struct vm_area_struct *,
+	// extern int insert_vm_struct(mm_s *, vma_s *);
+	// extern void __vma_link_rb(mm_s *, vma_s *,
 	// 	struct rb_node **, struct rb_node *);
-	// extern void unlink_file_vma(struct vm_area_struct *);
-	// extern struct vm_area_struct *copy_vma(struct vm_area_struct **,
+	// extern void unlink_file_vma(vma_s *);
+	// extern vma_s *copy_vma(vma_s **,
 	// 	unsigned long addr, unsigned long len, pgoff_t pgoff,
 	// 	bool *need_rmap_locks);
-	// extern void exit_mmap(struct mm_struct *);
+	// extern void exit_mmap(mm_s *);
 
 	// static inline int check_data_rlimit(unsigned long rlim,
 	// 					unsigned long new,
@@ -2664,25 +2638,25 @@
 	// 	return 0;
 	// }
 
-	// extern int mm_take_all_locks(struct mm_struct *mm);
-	// extern void mm_drop_all_locks(struct mm_struct *mm);
+	// extern int mm_take_all_locks(mm_s *mm);
+	// extern void mm_drop_all_locks(mm_s *mm);
 
-	// extern int set_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
-	// extern int replace_mm_exe_file(struct mm_struct *mm, file_s *new_exe_file);
-	// extern file_s *get_mm_exe_file(struct mm_struct *mm);
+	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
+	// extern int replace_mm_exe_file(mm_s *mm, file_s *new_exe_file);
+	// extern file_s *get_mm_exe_file(mm_s *mm);
 	// extern file_s *get_task_exe_file(task_s *task);
 
-	// extern bool may_expand_vm(struct mm_struct *, vm_flags_t, unsigned long npages);
-	// extern void vm_stat_account(struct mm_struct *, vm_flags_t, long npages);
+	// extern bool may_expand_vm(mm_s *, vm_flags_t, unsigned long npages);
+	// extern void vm_stat_account(mm_s *, vm_flags_t, long npages);
 
-	// extern bool vma_is_special_mapping(const struct vm_area_struct *vma,
+	// extern bool vma_is_special_mapping(const vma_s *vma,
 	// 				const struct vm_special_mapping *sm);
-	// extern struct vm_area_struct *_install_special_mapping(struct mm_struct *mm,
+	// extern vma_s *_install_special_mapping(mm_s *mm,
 	// 				unsigned long addr, unsigned long len,
 	// 				unsigned long flags,
 	// 				const struct vm_special_mapping *spec);
 	// /* This is an obsolete alternative to _install_special_mapping. */
-	// extern int install_special_mapping(struct mm_struct *mm,
+	// extern int install_special_mapping(mm_s *mm,
 	// 				unsigned long addr, unsigned long len,
 	// 				unsigned long flags, page_s **pages);
 
@@ -2690,17 +2664,22 @@
 
 	// extern unsigned long get_unmapped_area(file_s *, unsigned long, unsigned long, unsigned long, unsigned long);
 
-	// extern unsigned long mmap_region(file_s *file, unsigned long addr,
-	// 	unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
-	// 	List_s *uf);
+	// extern unsigned long mmap_region(file_s *file, unsigned long addr, unsigned long len,
+	// 		vm_flags_t vm_flags, unsigned long pgoff, List_s *uf);
+	extern unsigned long myos_mmap_region(file_s *file, unsigned long addr,
+			unsigned long len, vm_flags_t vm_flags, unsigned long pgoff);
 	// extern unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 	unsigned long len, unsigned long prot, unsigned long flags,
 	// 	unsigned long pgoff, unsigned long *populate, List_s *uf);
-	// extern int __do_munmap(struct mm_struct *, unsigned long, size_t,
+	extern unsigned long do_mmap(file_s *file, unsigned long addr,
+			unsigned long len, unsigned long prot, unsigned long flags,
+			unsigned long pgoff, unsigned long *populate);
+	// extern int __do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf, bool downgrade);
-	// extern int do_munmap(struct mm_struct *, unsigned long, size_t,
+	extern int __do_munmap(mm_s *, unsigned long, size_t, bool downgrade);
+	// extern int do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf);
-	// extern int do_madvise(struct mm_struct *mm, unsigned long start, size_t len_in, int behavior);
+	// extern int do_madvise(mm_s *mm, unsigned long start, size_t len_in, int behavior);
 
 	// #ifdef CONFIG_MMU
 	// extern int __mm_populate(unsigned long addr, unsigned long len,
@@ -2718,9 +2697,9 @@
 	// extern int __must_check vm_brk(unsigned long, unsigned long);
 	// extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
 	// extern int vm_munmap(unsigned long, size_t);
-	// extern unsigned long __must_check vm_mmap(file_s *, unsigned long,
-	// 		unsigned long, unsigned long,
-	// 		unsigned long, unsigned long);
+	extern unsigned long __must_check vm_mmap(file_s *,
+			unsigned long, unsigned long, unsigned long,
+			unsigned long, unsigned long);
 
 	// struct vm_unmapped_area_info {
 	// #define VM_UNMAPPED_AREA_TOPDOWN 1
@@ -2746,105 +2725,98 @@
 	// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
 	// extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
 
-	// extern unsigned long stack_guard_gap;
+	extern unsigned long stack_guard_gap;
 	// /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
-	// extern int expand_stack(struct vm_area_struct *vma, unsigned long address);
+	// extern int expand_stack(vma_s *vma, unsigned long address);
 
 	// /* CONFIG_STACK_GROWSUP still needs to grow downwards at some places */
-	// extern int expand_downwards(struct vm_area_struct *vma,
+	// extern int expand_downwards(vma_s *vma,
 	// 		unsigned long address);
 	// #if VM_GROWSUP
-	// extern int expand_upwards(struct vm_area_struct *vma, unsigned long address);
+	// extern int expand_upwards(vma_s *vma, unsigned long address);
 	// #else
 	// #define expand_upwards(vma, address) (0)
 	// #endif
 
-	// /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
-	// extern struct vm_area_struct * find_vma(struct mm_struct * mm, unsigned long addr);
-	// extern struct vm_area_struct * find_vma_prev(struct mm_struct * mm, unsigned long addr,
-	// 						struct vm_area_struct **pprev);
+	/* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
+	// extern vma_s * find_vma(mm_s * mm, unsigned long addr);
+	extern vma_s * myos_find_vma(mm_s * mm, unsigned long addr);
+	// extern vma_s * find_vma_prev(mm_s * mm, unsigned long addr, vma_s **pprev);
 
-	// /**
-	//  * find_vma_intersection() - Look up the first VMA which intersects the interval
-	//  * @mm: The process address space.
-	//  * @start_addr: The inclusive start user address.
-	//  * @end_addr: The exclusive end user address.
-	//  *
-	//  * Returns: The first VMA within the provided range, %NULL otherwise.  Assumes
-	//  * start_addr < end_addr.
-	//  */
-	// static inline
-	// struct vm_area_struct *find_vma_intersection(struct mm_struct *mm,
-	// 						unsigned long start_addr,
-	// 						unsigned long end_addr)
-	// {
-	// 	struct vm_area_struct *vma = find_vma(mm, start_addr);
+	/**
+	 * find_vma_intersection() - Look up the first VMA which intersects the interval
+	 * @mm: The process address space.
+	 * @start_addr: The inclusive start user address.
+	 * @end_addr: The exclusive end user address.
+	 *
+	 * Returns: The first VMA within the provided range, %NULL otherwise.  Assumes
+	 * start_addr < end_addr.
+	 */
+	static inline vma_s
+	*find_vma_intersection(mm_s *mm,
+			unsigned long start_addr, unsigned long end_addr) {
+		vma_s *vma = myos_find_vma(mm, start_addr);
 
-	// 	if (vma && end_addr <= vma->vm_start)
-	// 		vma = NULL;
-	// 	return vma;
-	// }
+		if (vma && end_addr <= vma->vm_start)
+			vma = NULL;
+		return vma;
+	}
 
-	// /**
-	//  * vma_lookup() - Find a VMA at a specific address
-	//  * @mm: The process address space.
-	//  * @addr: The user address.
-	//  *
-	//  * Return: The vm_area_struct at the given address, %NULL otherwise.
-	//  */
-	// static inline
-	// struct vm_area_struct *vma_lookup(struct mm_struct *mm, unsigned long addr)
-	// {
-	// 	struct vm_area_struct *vma = find_vma(mm, addr);
+	/**
+	 * vma_lookup() - Find a VMA at a specific address
+	 * @mm: The process address space.
+	 * @addr: The user address.
+	 *
+	 * Return: The vm_area_struct at the given address, %NULL otherwise.
+	 */
+	static inline
+	vma_s *vma_lookup(mm_s *mm, unsigned long addr) {
+		vma_s *vma = myos_find_vma(mm, addr);
 
-	// 	if (vma && addr < vma->vm_start)
-	// 		vma = NULL;
+		if (vma && addr < vma->vm_start)
+			vma = NULL;
 
-	// 	return vma;
-	// }
+		return vma;
+	}
 
-	// static inline unsigned long vm_start_gap(struct vm_area_struct *vma)
-	// {
-	// 	unsigned long vm_start = vma->vm_start;
+	static inline unsigned long vm_start_gap(vma_s *vma) {
+		unsigned long vm_start = vma->vm_start;
 
-	// 	if (vma->vm_flags & VM_GROWSDOWN) {
-	// 		vm_start -= stack_guard_gap;
-	// 		if (vm_start > vma->vm_start)
-	// 			vm_start = 0;
-	// 	}
-	// 	return vm_start;
-	// }
+		if (vma->vm_flags & VM_GROWSDOWN) {
+			vm_start -= stack_guard_gap;
+			if (vm_start > vma->vm_start)
+				vm_start = 0;
+		}
+		return vm_start;
+	}
 
-	// static inline unsigned long vm_end_gap(struct vm_area_struct *vma)
-	// {
-	// 	unsigned long vm_end = vma->vm_end;
+	static inline unsigned long vm_end_gap(vma_s *vma) {
+		unsigned long vm_end = vma->vm_end;
 
-	// 	if (vma->vm_flags & VM_GROWSUP) {
-	// 		vm_end += stack_guard_gap;
-	// 		if (vm_end < vma->vm_end)
-	// 			vm_end = -PAGE_SIZE;
-	// 	}
-	// 	return vm_end;
-	// }
+		if (vma->vm_flags & VM_GROWSUP) {
+			vm_end += stack_guard_gap;
+			if (vm_end < vma->vm_end)
+				vm_end = -PAGE_SIZE;
+		}
+		return vm_end;
+	}
 
-	// static inline unsigned long vma_pages(struct vm_area_struct *vma)
-	// {
-	// 	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
-	// }
+	static inline unsigned long vma_pages(vma_s *vma) {
+		return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+	}
 
-	// /* Look up the first VMA which exactly match the interval vm_start ... vm_end */
-	// static inline struct vm_area_struct *find_exact_vma(struct mm_struct *mm,
-	// 				unsigned long vm_start, unsigned long vm_end)
-	// {
-	// 	struct vm_area_struct *vma = find_vma(mm, vm_start);
+	/* Look up the first VMA which exactly match the interval vm_start ... vm_end */
+	static inline vma_s
+	*find_exact_vma(mm_s *mm, unsigned long vm_start, unsigned long vm_end) {
+		vma_s *vma = myos_find_vma(mm, vm_start);
 
-	// 	if (vma && (vma->vm_start != vm_start || vma->vm_end != vm_end))
-	// 		vma = NULL;
+		if (vma && (vma->vm_start != vm_start || vma->vm_end != vm_end))
+			vma = NULL;
 
-	// 	return vma;
-	// }
+		return vma;
+	}
 
-	// static inline bool range_in_vma(struct vm_area_struct *vma,
+	// static inline bool range_in_vma(vma_s *vma,
 	// 				unsigned long start, unsigned long end)
 	// {
 	// 	return (vma && vma->vm_start <= start && end <= vma->vm_end);
@@ -2852,50 +2824,50 @@
 
 	// #ifdef CONFIG_MMU
 	// pgprot_t vm_get_page_prot(unsigned long vm_flags);
-	// void vma_set_page_prot(struct vm_area_struct *vma);
+	// void vma_set_page_prot(vma_s *vma);
 	// #else
 	// static inline pgprot_t vm_get_page_prot(unsigned long vm_flags)
 	// {
 	// 	return __pgprot(0);
 	// }
-	// static inline void vma_set_page_prot(struct vm_area_struct *vma)
+	// static inline void vma_set_page_prot(vma_s *vma)
 	// {
 	// 	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
 	// }
 	// #endif
 
-	// void vma_set_file(struct vm_area_struct *vma, file_s *file);
+	// void vma_set_file(vma_s *vma, file_s *file);
 
 	// #ifdef CONFIG_NUMA_BALANCING
-	// unsigned long change_prot_numa(struct vm_area_struct *vma,
+	// unsigned long change_prot_numa(vma_s *vma,
 	// 			unsigned long start, unsigned long end);
 	// #endif
 
-	// struct vm_area_struct *find_extend_vma(struct mm_struct *, unsigned long addr);
-	// int remap_pfn_range(struct vm_area_struct *, unsigned long addr,
+	// vma_s *find_extend_vma(mm_s *, unsigned long addr);
+	// int remap_pfn_range(vma_s *, unsigned long addr,
 	// 			unsigned long pfn, unsigned long size, pgprot_t);
-	// int remap_pfn_range_notrack(struct vm_area_struct *vma, unsigned long addr,
+	// int remap_pfn_range_notrack(vma_s *vma, unsigned long addr,
 	// 		unsigned long pfn, unsigned long size, pgprot_t prot);
-	// int vm_insert_page(struct vm_area_struct *, unsigned long addr, page_s *);
-	// int vm_insert_pages(struct vm_area_struct *vma, unsigned long addr,
+	// int vm_insert_page(vma_s *, unsigned long addr, page_s *);
+	// int vm_insert_pages(vma_s *vma, unsigned long addr,
 	// 			page_s **pages, unsigned long *num);
-	// int vm_map_pages(struct vm_area_struct *vma, page_s **pages,
+	// int vm_map_pages(vma_s *vma, page_s **pages,
 	// 				unsigned long num);
-	// int vm_map_pages_zero(struct vm_area_struct *vma, page_s **pages,
+	// int vm_map_pages_zero(vma_s *vma, page_s **pages,
 	// 				unsigned long num);
-	// vm_fault_t vmf_insert_pfn(struct vm_area_struct *vma, unsigned long addr,
+	// vm_fault_t vmf_insert_pfn(vma_s *vma, unsigned long addr,
 	// 			unsigned long pfn);
-	// vm_fault_t vmf_insert_pfn_prot(struct vm_area_struct *vma, unsigned long addr,
+	// vm_fault_t vmf_insert_pfn_prot(vma_s *vma, unsigned long addr,
 	// 			unsigned long pfn, pgprot_t pgprot);
-	// vm_fault_t vmf_insert_mixed(struct vm_area_struct *vma, unsigned long addr,
+	// vm_fault_t vmf_insert_mixed(vma_s *vma, unsigned long addr,
 	// 			pfn_t pfn);
-	// vm_fault_t vmf_insert_mixed_prot(struct vm_area_struct *vma, unsigned long addr,
+	// vm_fault_t vmf_insert_mixed_prot(vma_s *vma, unsigned long addr,
 	// 			pfn_t pfn, pgprot_t pgprot);
-	// vm_fault_t vmf_insert_mixed_mkwrite(struct vm_area_struct *vma,
+	// vm_fault_t vmf_insert_mixed_mkwrite(vma_s *vma,
 	// 		unsigned long addr, pfn_t pfn);
-	// int vm_iomap_memory(struct vm_area_struct *vma, phys_addr_t start, unsigned long len);
+	// int vm_iomap_memory(vma_s *vma, phys_addr_t start, unsigned long len);
 
-	// static inline vm_fault_t vmf_insert_page(struct vm_area_struct *vma,
+	// static inline vm_fault_t vmf_insert_page(vma_s *vma,
 	// 				unsigned long addr, page_s *page)
 	// {
 	// 	int err = vm_insert_page(vma, addr, page);
@@ -2909,7 +2881,7 @@
 	// }
 
 	// #ifndef io_remap_pfn_range
-	// static inline int io_remap_pfn_range(struct vm_area_struct *vma,
+	// static inline int io_remap_pfn_range(vma_s *vma,
 	// 					unsigned long addr, unsigned long pfn,
 	// 					unsigned long size, pgprot_t prot)
 	// {
@@ -2924,7 +2896,7 @@
 	// 	return VM_FAULT_SIGBUS;
 	// }
 
-	// page_s *follow_page(struct vm_area_struct *vma, unsigned long address,
+	// page_s *follow_page(vma_s *vma, unsigned long address,
 	// 			unsigned int foll_flags);
 
 	// #define FOLL_WRITE	0x01	/* check pte is writable */
@@ -3017,9 +2989,9 @@
 	// }
 
 	// typedef int (*pte_fn_t)(pte_t *pte, unsigned long addr, void *data);
-	// extern int apply_to_page_range(struct mm_struct *mm, unsigned long address,
+	// extern int apply_to_page_range(mm_s *mm, unsigned long address,
 	// 				unsigned long size, pte_fn_t fn, void *data);
-	// extern int apply_to_existing_page_range(struct mm_struct *mm,
+	// extern int apply_to_existing_page_range(mm_s *mm,
 	// 				unsigned long address, unsigned long size,
 	// 				pte_fn_t fn, void *data);
 
@@ -3120,22 +3092,22 @@
 	// #endif	/* CONFIG_DEBUG_PAGEALLOC */
 
 	// #ifdef __HAVE_ARCH_GATE_AREA
-	// extern struct vm_area_struct *get_gate_vma(struct mm_struct *mm);
+	// extern vma_s *get_gate_vma(mm_s *mm);
 	// extern int in_gate_area_no_mm(unsigned long addr);
-	// extern int in_gate_area(struct mm_struct *mm, unsigned long addr);
+	// extern int in_gate_area(mm_s *mm, unsigned long addr);
 	// #else
-	// static inline struct vm_area_struct *get_gate_vma(struct mm_struct *mm)
+	// static inline vma_s *get_gate_vma(mm_s *mm)
 	// {
 	// 	return NULL;
 	// }
 	// static inline int in_gate_area_no_mm(unsigned long addr) { return 0; }
-	// static inline int in_gate_area(struct mm_struct *mm, unsigned long addr)
+	// static inline int in_gate_area(mm_s *mm, unsigned long addr)
 	// {
 	// 	return 0;
 	// }
 	// #endif	/* __HAVE_ARCH_GATE_AREA */
 
-	// extern bool process_shares_mm(task_s *p, struct mm_struct *mm);
+	// extern bool process_shares_mm(task_s *p, mm_s *mm);
 
 	// #ifdef CONFIG_SYSCTL
 	// extern int sysctl_drop_caches;
@@ -3151,7 +3123,7 @@
 	// extern int randomize_va_space;
 	// #endif
 
-	// const char * arch_vma_name(struct vm_area_struct *vma);
+	// const char * arch_vma_name(vma_s *vma);
 	// #ifdef CONFIG_MMU
 	// void print_vma_addr(char *prefix, unsigned long rip);
 	// #else
@@ -3262,7 +3234,7 @@
 	// 				unsigned int pages_per_huge_page);
 	// extern void copy_user_huge_page(page_s *dst, page_s *src,
 	// 				unsigned long addr_hint,
-	// 				struct vm_area_struct *vma,
+	// 				vma_s *vma,
 	// 				unsigned int pages_per_huge_page);
 	// extern long copy_huge_page_from_user(page_s *dst_page,
 	// 				const void __user *usr_src,
@@ -3271,7 +3243,7 @@
 
 	// /**
 	//  * vma_is_special_huge - Are transhuge page-table entries considered special?
-	//  * @vma: Pointer to the struct vm_area_struct to consider
+	//  * @vma: Pointer to the vma_s to consider
 	//  *
 	//  * Whether transhuge page-table entries are considered "special" following
 	//  * the definition in vm_normal_page().
@@ -3279,7 +3251,7 @@
 	//  * Return: true if transhuge page-table entries should be considered special,
 	//  * false otherwise.
 	//  */
-	// static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
+	// static inline bool vma_is_special_huge(const vma_s *vma)
 	// {
 	// 	return vma_is_dax(vma) || (vma->vm_file &&
 	// 				(vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP)));
@@ -3356,7 +3328,7 @@
 	//  * Check whether F_SEAL_FUTURE_WRITE is set; if so, do proper check/handling on
 	//  * the vma flags.  Return 0 if check pass, or <0 for errors.
 	//  */
-	// static inline int seal_check_future_write(int seals, struct vm_area_struct *vma)
+	// static inline int seal_check_future_write(int seals, vma_s *vma)
 	// {
 	// 	if (seals & F_SEAL_FUTURE_WRITE) {
 	// 		/*
@@ -3381,12 +3353,12 @@
 	// }
 
 	// #ifdef CONFIG_ANON_VMA_NAME
-	// int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+	// int madvise_set_anon_name(mm_s *mm, unsigned long start,
 	// 			unsigned long len_in,
 	// 			struct anon_vma_name *anon_name);
 	// #else
 	// static inline int
-	// madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+	// madvise_set_anon_name(mm_s *mm, unsigned long start,
 	// 			unsigned long len_in, struct anon_vma_name *anon_name) {
 	// 	return 0;
 	// }

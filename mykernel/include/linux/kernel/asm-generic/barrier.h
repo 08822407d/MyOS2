@@ -93,9 +93,9 @@
 	// #		define smp_rmb()	do { __smp_rmb(); } while (0)
 	// #	endif
 
-	// #	ifndef smp_wmb
-	// #		define smp_wmb()	do { __smp_wmb(); } while (0)
-	// #	endif
+	#	ifndef smp_wmb
+	#		define smp_wmb()	do { __smp_wmb(); } while (0)
+	#	endif
 
 	// #	ifndef __smp_store_mb
 	// #		define __smp_store_mb(var, value)  do { WRITE_ONCE(var, value); __smp_mb(); } while (0)

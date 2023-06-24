@@ -224,7 +224,8 @@
 	#	define __no_sanitize_or_inline	__always_inline
 	#endif
 
-	// /* Section for code which can't be instrumented at all */
+	/* Section for code which can't be instrumented at all */
+	#define noinstr
 	// #define noinstr                                                  \
 	// 	noinline notrace __attribute((__section__(".noinstr.text"))) \
 	// 	__no_kcsan __no_sanitize_address __no_profile __no_sanitize_coverage
@@ -283,14 +284,14 @@
 	// #define asm_volatile_goto(x...) asm goto(x)
 	// #endif
 
-	// #ifdef CONFIG_CC_HAS_ASM_INLINE
-	// #define asm_inline asm __inline
-	// #else
-	// #define asm_inline asm
-	// #endif
+	#ifdef CONFIG_CC_HAS_ASM_INLINE
+	#	define asm_inline	asm __inline
+	#else
+	#	define asm_inline	asm
+	#endif
 
-	// /* Are two types/vars the same type (ignoring qualifiers)? */
-	// #define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
+	/* Are two types/vars the same type (ignoring qualifiers)? */
+	#define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
 
 	/*
 	 * __unqual_scalar_typeof(x) - Declare an unqualified scalar type,

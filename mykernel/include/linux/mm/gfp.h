@@ -22,7 +22,7 @@
 		typedef unsigned int __bitwise gfp_t;
 	#endif
 
-	// struct vm_area_struct;
+	// vma_s;
 
 	/*
 	* In case of changes, please don't forget to update
@@ -601,7 +601,7 @@
 		page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	// 	struct folio *folio_alloc(gfp_t gfp, unsigned order);
 	// 	extern page_s *alloc_pages_vma(gfp_t gfp_mask, int order,
-	// 				struct vm_area_struct *vma, unsigned long addr,
+	// 				vma_s *vma, unsigned long addr,
 	// 				bool hugepage);
 	// 	#define alloc_hugepage_vma(gfp_mask, vma, addr, order) \
 	// 		alloc_pages_vma(gfp_mask, order, vma, addr, true)
@@ -623,8 +623,8 @@
 	// #define alloc_page_vma(gfp_mask, vma, addr)			\
 	// 	alloc_pages_vma(gfp_mask, 0, vma, addr, false)
 
-	// extern unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order);
-	// extern unsigned long get_zeroed_page(gfp_t gfp_mask);
+	extern unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order);
+	extern unsigned long get_zeroed_page(gfp_t gfp_mask);
 
 	// void *alloc_pages_exact(size_t size, gfp_t gfp_mask) __alloc_size(1);
 	// void free_pages_exact(void *virt, size_t size);
@@ -637,7 +637,7 @@
 	// 		__get_free_pages((gfp_mask) | GFP_DMA, (order))
 
 	extern void __free_pages(page_s *page, unsigned int order);
-	// extern void free_pages(unsigned long addr, unsigned int order);
+	extern void free_pages(unsigned long addr, unsigned int order);
 
 	// page_s_frag_cache;
 	// extern void __page_frag_cache_drain(page_s *page, unsigned int count);
@@ -653,8 +653,8 @@
 
 	// extern void page_frag_free(void *addr);
 
-	// #define __free_page(page) __free_pages((page), 0)
-	// #define free_page(addr) free_pages((addr), 0)
+	#define __free_page(page) __free_pages((page), 0)
+	#define free_page(addr) free_pages((addr), 0)
 
 	// void page_alloc_init(void);
 	// void drain_zone_pages(struct zone *zone, struct per_cpu_pages *pcp);
@@ -678,7 +678,7 @@
 	// extern void pm_restrict_gfp_mask(void);
 	// extern void pm_restore_gfp_mask(void);
 
-	// extern gfp_t vma_thp_gfp_mask(struct vm_area_struct *vma);
+	// extern gfp_t vma_thp_gfp_mask(vma_s *vma);
 
 	// #ifdef CONFIG_PM_SLEEP
 	// 	extern bool pm_suspended_storage(void);

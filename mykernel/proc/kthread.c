@@ -125,7 +125,8 @@ int kthread(void *_create)
 	// kthread_exit(ret);
 }
 
-static void create_kthread(kthd_create_info_s *create) {
+static void create_kthread(kthd_create_info_s *create)
+{
 	int pid;
 
 	/* We want our own signal handler (we take no signals by default). */

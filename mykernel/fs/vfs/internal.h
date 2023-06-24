@@ -24,7 +24,7 @@
 /*
  * buffer.c
  */
-// extern int __block_write_begin_int(struct page *page, loff_t pos, unsigned len,
+// extern int __block_write_begin_int(page_s *page, loff_t pos, unsigned len,
 // 		get_block_t *get_block, struct iomap *iomap);
 
 /*

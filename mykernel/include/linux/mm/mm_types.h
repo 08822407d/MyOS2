@@ -31,6 +31,14 @@
 	typedef struct task_struct task_s;
 	// struct address_space;
 	// struct mem_cgroup;
+	struct mm_struct;
+	typedef struct mm_struct mm_s;
+	struct vm_area_struct;
+	typedef struct vm_area_struct vma_s;
+	struct vm_operations_struct;
+	typedef struct vm_operations_struct vm_ops_s;
+	struct anon_vma;
+	typedef struct anon_vma anon_vma_s;
 
 	/*
 	 * Each physical page in the system has a page_s associated with
@@ -199,7 +207,7 @@
 	// 			unsigned long _pt_pad_2; /* mapping */
 	// 			union
 	// 			{
-	// 				struct mm_struct *pt_mm;   /* x86 pgds only */
+	// 				mm_s *pt_mm;   /* x86 pgds only */
 	// 				atomic_t pt_frag_refcount; /* powerpc */
 	// 			};
 	// #if ALLOC_SPLIT_PTLOCKS
@@ -380,7 +388,7 @@
 	// 	bool pfmemalloc;
 	// };
 
-	// typedef unsigned long vm_flags_t;
+	typedef unsigned long	vm_flags_t;
 
 	// /*
 	// * A region containing a mapping of a non-memory backed file under NOMMU
@@ -411,7 +419,7 @@
 	// 	struct userfaultfd_ctx *ctx;
 	// };
 	// #else /* CONFIG_USERFAULTFD */
-	// #define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx){})
+	#define NULL_VM_UFFD_CTX ((struct vm_userfaultfd_ctx){})
 	// struct vm_userfaultfd_ctx
 	// {
 	// };
@@ -424,84 +432,82 @@
 	// 	char name[];
 	// };
 
-	// /*
-	// * This struct describes a virtual memory area. There is one of these
-	// * per VM-area/task. A VM area is any part of the process virtual memory
-	// * space that has a special rule for the page-fault handlers (ie a shared
-	// * library, the executable area etc).
-	// */
-	// struct vm_area_struct
-	// {
-	// 	/* The first cache line has the info for VMA tree walking. */
+	/*
+	 * This struct describes a virtual memory area. There is one of these
+	 * per VM-area/task. A VM area is any part of the process virtual memory
+	 * space that has a special rule for the page-fault handlers (ie a shared
+	 * library, the executable area etc).
+	 */
+	typedef struct vm_area_struct {
+		/* The first cache line has the info for VMA tree walking. */
 
-	// 	unsigned long vm_start; /* Our start address within vm_mm. */
-	// 	unsigned long vm_end;	/* The first byte after our end address
-	// 				within vm_mm. */
+		unsigned long	vm_start;	/* Our start address within vm_mm. */
+		unsigned long	vm_end;		/* The first byte after our end address
+									   within vm_mm. */
 
-	// 	/* linked list of VM areas per task, sorted by address */
-	// 	struct vm_area_struct *vm_next, *vm_prev;
+		/* linked list of VM areas per task, sorted by address */
+		vma_s			*vm_next, *vm_prev;
 
-	// 	struct rb_node vm_rb;
+		// struct rb_node vm_rb;
 
-	// 	/*
-	// 	* Largest free memory gap in bytes to the left of this VMA.
-	// 	* Either between this VMA and vma->vm_prev, or between one of the
-	// 	* VMAs below us in the VMA rbtree and its ->vm_prev. This helps
-	// 	* get_unmapped_area find a free area of the right size.
-	// 	*/
-	// 	unsigned long rb_subtree_gap;
+		/*
+		* Largest free memory gap in bytes to the left of this VMA.
+		* Either between this VMA and vma->vm_prev, or between one of the
+		* VMAs below us in the VMA rbtree and its ->vm_prev. This helps
+		* get_unmapped_area find a free area of the right size.
+		*/
+		// unsigned long rb_subtree_gap;
 
-	// 	/* Second cache line starts here. */
+		/* Second cache line starts here. */
 
-	// 	struct mm_struct *vm_mm; /* The address space we belong to. */
+		mm_s			*vm_mm;		/* The address space we belong to. */
 
-	// 	/*
-	// 	* Access permissions of this VMA.
-	// 	* See vmf_insert_mixed_prot() for discussion.
-	// 	*/
-	// 	pgprot_t vm_page_prot;
-	// 	unsigned long vm_flags; /* Flags, see mm.h. */
+		/*
+		* Access permissions of this VMA.
+		* See vmf_insert_mixed_prot() for discussion.
+		*/
+		// pgprot_t vm_page_prot;
+		unsigned long	vm_flags;	/* Flags, see mm.h. */
 
-	// 	/*
-	// 	* For areas with an address space and backing store,
-	// 	* linkage into the address_space->i_mmap interval tree.
-	// 	*
-	// 	* For private anonymous mappings, a pointer to a null terminated string
-	// 	* containing the name given to the vma, or NULL if unnamed.
-	// 	*/
+		/*
+		 * For areas with an address space and backing store,
+		 * linkage into the address_space->i_mmap interval tree.
+		 *
+		 * For private anonymous mappings, a pointer to a null terminated string
+		 * containing the name given to the vma, or NULL if unnamed.
+		 */
 
-	// 	union
-	// 	{
-	// 		struct
-	// 		{
-	// 			struct rb_node rb;
-	// 			unsigned long rb_subtree_last;
-	// 		} shared;
-	// 		/*
-	// 		* Serialized by mmap_sem. Never use directly because it is
-	// 		* valid only when vm_file is NULL. Use anon_vma_name instead.
-	// 		*/
-	// 		struct anon_vma_name *anon_name;
-	// 	};
+		// union
+		// {
+		// 	struct
+		// 	{
+		// 		struct rb_node rb;
+		// 		unsigned long rb_subtree_last;
+		// 	} shared;
+		// 	/*
+		// 	* Serialized by mmap_sem. Never use directly because it is
+		// 	* valid only when vm_file is NULL. Use anon_vma_name instead.
+		// 	*/
+		// 	struct anon_vma_name *anon_name;
+		// };
 
-	// 	/*
-	// 	* A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
-	// 	* list, after a COW of one of the file pages.	A MAP_SHARED vma
-	// 	* can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
-	// 	* or brk vma (with NULL file) can only be in an anon_vma list.
-	// 	*/
-	// 	List_s anon_vma_chain; /* Serialized by mmap_lock &
-	// 									* page_table_lock */
-	// 	struct anon_vma *anon_vma;		 /* Serialized by page_table_lock */
+		/*
+		 * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
+		 * list, after a COW of one of the file pages.	A MAP_SHARED vma
+		 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
+		 * or brk vma (with NULL file) can only be in an anon_vma list.
+		 */
+		// List_s			anon_vma_chain; /* Serialized by mmap_lock &
+		// 								* page_table_lock */
+		// anon_vma_s		*anon_vma;		 /* Serialized by page_table_lock */
 
-	// 	/* Function pointers to deal with this struct. */
-	// 	const struct vm_operations_struct *vm_ops;
+		/* Function pointers to deal with this struct. */
+		const vm_ops_s	*vm_ops;
 
-	// 	/* Information about our backing store: */
-	// 	unsigned long vm_pgoff; /* Offset (within vm_file) in PAGE_SIZE
-	// 				units */
-	// 	file_s *vm_file;	/* File we map to (can be NULL). */
-	// 	void *vm_private_data;	/* was vm_pte (shared mem) */
+		/* Information about our backing store: */
+		unsigned long	vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */
+		file_s			*vm_file;	/* File we map to (can be NULL). */
+		// void *vm_private_data;	/* was vm_pte (shared mem) */
 
 	// #ifdef CONFIG_SWAP
 	// 	atomic_long_t swap_readahead_info;
@@ -513,40 +519,41 @@
 	// 	struct mempolicy *vm_policy; /* NUMA policy for the VMA */
 	// #endif
 	// 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
-	// };
+	} vma_s;
 
 	// struct kioctx_table;
 	typedef struct mm_struct {
+		size_t				entry_point;
 		struct
 		{
-	// 		struct vm_area_struct *mmap; /* list of VMAs */
-	// 		struct rb_root mm_rb;
-	// 		u64 vmacache_seqnum; /* per-thread vmacache */
+			vma_s			*mmap;				/* list of VMAs */
+			// struct rb_root mm_rb;
+			// u64 vmacache_seqnum; /* per-thread vmacache */
 	// #ifdef CONFIG_MMU
-	// 		unsigned long (*get_unmapped_area)(file_s *filp,
-	// 										unsigned long addr, unsigned long len,
-	// 										unsigned long pgoff, unsigned long flags);
+			// unsigned long (*get_unmapped_area)(file_s *filp,
+			// 								unsigned long addr, unsigned long len,
+			// 								unsigned long pgoff, unsigned long flags);
 	// #endif
-	// 		unsigned long mmap_base;		/* base of mmap area */
-	// 		unsigned long mmap_legacy_base; /* base of mmap area in bottom-up allocations */
+			unsigned long	mmap_base;			/* base of mmap area */
+			// unsigned long mmap_legacy_base; /* base of mmap area in bottom-up allocations */
 	// #ifdef CONFIG_HAVE_ARCH_COMPAT_MMAP_BASES
-	// 		/* Base addresses for compatible mmap() */
-	// 		unsigned long mmap_compat_base;
-	// 		unsigned long mmap_compat_legacy_base;
+			// /* Base addresses for compatible mmap() */
+			// unsigned long mmap_compat_base;
+			// unsigned long mmap_compat_legacy_base;
 	// #endif
-	// 		unsigned long task_size;	  /* size of task vm space */
-	// 		unsigned long highest_vm_end; /* highest vma end address */
-			// pgd_t	*pgd;
-			reg_t		pgd_ptr;
+			unsigned long	task_size;			/* size of task vm space */
+			unsigned long	highest_vm_end;		/* highest vma end address */
+			pgd_t			*pgd;
+			reg_t			pgd_ptr;
 
 	// #ifdef CONFIG_MEMBARRIER
-	// 		/**
-	// 		 * @membarrier_state: Flags controlling membarrier behavior.
-	// 		 *
-	// 		 * This field is close to @pgd to hopefully fit in the same
-	// 		 * cache-line, which needs to be touched by switch_mm().
-	// 		 */
-	// 		atomic_t membarrier_state;
+			// /**
+			//  * @membarrier_state: Flags controlling membarrier behavior.
+			//  *
+			//  * This field is close to @pgd to hopefully fit in the same
+			//  * cache-line, which needs to be touched by switch_mm().
+			//  */
+			// atomic_t membarrier_state;
 	// #endif
 
 			/**
@@ -555,86 +562,85 @@
 			 * Use mmget()/mmget_not_zero()/mmput() to modify. When this
 			 * drops to 0 (i.e. when the task exits and there are no other
 			 * temporary reference holders), we also release a reference on
-			 * @mm_count (which may then free the &struct mm_struct if
+			 * @mm_count (which may then free the &mm_s if
 			 * @mm_count also drops to 0).
 			 */
-			atomic_t mm_users;
+			atomic_t		mm_users;
 
 			/**
-			 * @mm_count: The number of references to &struct mm_struct
+			 * @mm_count: The number of references to &mm_s
 			 * (@mm_users count as 1).
 			 *
 			 * Use mmgrab()/mmdrop() to modify. When this drops to 0, the
-			 * &struct mm_struct is freed.
+			 * &mm_s is freed.
 			 */
-			atomic_t mm_refcount;
+			atomic_t		mm_refcount;
 
 	// #ifdef CONFIG_MMU
-	// 		atomic_long_t pgtables_bytes; /* PTE page table pages */
+			atomic_long_t	pgtables_bytes;		/* PTE page table pages */
 	// #endif
-	// 		int map_count; /* number of VMAs */
+			int				map_count;			/* number of VMAs */
 
-	// 		spinlock_t page_table_lock; /* Protects page tables and some
-	// 									* counters
-	// 									*/
-	// 		/*
-	// 		* With some kernel config, the current mmap_lock's offset
-	// 		* inside 'mm_struct' is at 0x120, which is very optimal, as
-	// 		* its two hot fields 'count' and 'owner' sit in 2 different
-	// 		* cachelines,  and when mmap_lock is highly contended, both
-	// 		* of the 2 fields will be accessed frequently, current layout
-	// 		* will help to reduce cache bouncing.
-	// 		*
-	// 		* So please be careful with adding new fields before
-	// 		* mmap_lock, which can easily push the 2 fields into one
-	// 		* cacheline.
-	// 		*/
-	// 		struct rw_semaphore mmap_lock;
+			spinlock_t		page_table_lock;	/* Protects page tables and some
+												   counters */
+			// /*
+			// * With some kernel config, the current mmap_lock's offset
+			// * inside 'mm_struct' is at 0x120, which is very optimal, as
+			// * its two hot fields 'count' and 'owner' sit in 2 different
+			// * cachelines,  and when mmap_lock is highly contended, both
+			// * of the 2 fields will be accessed frequently, current layout
+			// * will help to reduce cache bouncing.
+			// *
+			// * So please be careful with adding new fields before
+			// * mmap_lock, which can easily push the 2 fields into one
+			// * cacheline.
+			// */
+			// struct rw_semaphore mmap_lock;
 
-	// 		List_s mmlist; /* List of maybe swapped mm's.	These
-	// 								* are globally strung together off
-	// 								* init_mm.mmlist, and are protected
-	// 								* by mmlist_lock
-	// 								*/
+			// List_s mmlist; /* List of maybe swapped mm's.	These
+			// 						* are globally strung together off
+			// 						* init_mm.mmlist, and are protected
+			// 						* by mmlist_lock
+			// 						*/
 
-	// 		unsigned long hiwater_rss; /* High-watermark of RSS usage */
-	// 		unsigned long hiwater_vm;  /* High-water virtual memory usage */
+			// unsigned long hiwater_rss; /* High-watermark of RSS usage */
+			// unsigned long hiwater_vm;  /* High-water virtual memory usage */
 
-	// 		unsigned long total_vm;	 /* Total pages mapped */
-	// 		unsigned long locked_vm; /* Pages that have PG_mlocked set */
-	// 		atomic64_t pinned_vm;	 /* Refcount permanently increased */
-	// 		unsigned long data_vm;	 /* VM_WRITE & ~VM_SHARED & ~VM_STACK */
-	// 		unsigned long exec_vm;	 /* VM_EXEC & ~VM_WRITE & ~VM_STACK */
-	// 		unsigned long stack_vm;	 /* VM_STACK */
-			// unsigned long def_flags;
+			unsigned long	total_vm;			/* Total pages mapped */
+			unsigned long	locked_vm;			/* Pages that have PG_mlocked set */
+			atomic64_t		pinned_vm;			/* Refcount permanently increased */
+			unsigned long	data_vm;			/* VM_WRITE & ~VM_SHARED & ~VM_STACK */
+			unsigned long	exec_vm;			/* VM_EXEC & ~VM_WRITE & ~VM_STACK */
+			unsigned long	stack_vm;			/* VM_STACK */
+			unsigned long	def_flags;
 
-	// 		/**
-	// 		 * @write_protect_seq: Locked when any thread is write
-	// 		 * protecting pages mapped by this mm to enforce a later COW,
-	// 		 * for instance during page table copying for fork().
-	// 		 */
-	// 		seqcount_t write_protect_seq;
+			// /**
+			//  * @write_protect_seq: Locked when any thread is write
+			//  * protecting pages mapped by this mm to enforce a later COW,
+			//  * for instance during page table copying for fork().
+			//  */
+			// seqcount_t write_protect_seq;
 
-	// 		spinlock_t arg_lock; /* protect the below fields */
+			// spinlock_t arg_lock; /* protect the below fields */
 
 			unsigned long	start_code, end_code, start_data, end_data;
 			unsigned long	start_brk, brk, start_stack;
 			unsigned long	arg_start, arg_end, env_start, env_end;
 
-	// 		unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
+			// unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
 
-	// 		/*
-	// 		* Special counters, in some configurations protected by the
-	// 		* page_table_lock, in other configurations by being atomic.
-	// 		*/
-	// 		struct mm_rss_stat rss_stat;
+			// /*
+			// * Special counters, in some configurations protected by the
+			// * page_table_lock, in other configurations by being atomic.
+			// */
+			// struct mm_rss_stat rss_stat;
 
-	// 		struct linux_binfmt *binfmt;
+			// struct linux_binfmt *binfmt;
 
-	// 		/* Architecture-specific MM context */
-	// 		mm_context_t context;
+			// /* Architecture-specific MM context */
+			// mm_context_t context;
 
-			unsigned long	flags; /* Must use atomic bitops to access */
+			unsigned long	flags;				/* Must use atomic bitops to access */
 
 	// #ifdef CONFIG_AIO
 	// 		spinlock_t ioctx_lock;
@@ -655,8 +661,8 @@
 	// #endif
 	// 		struct user_namespace *user_ns;
 
-	// 		/* store ref to file /proc/<pid>/exe symlink points to */
-	// 		file_s __rcu *exe_file;
+			/* store ref to file /proc/<pid>/exe symlink points to */
+			file_s __rcu	*exe_file;
 	// #ifdef CONFIG_MMU_NOTIFIER
 	// 		struct mmu_notifier_subscriptions *notifier_subscriptions;
 	// #endif
@@ -711,33 +717,33 @@
 	extern mm_s init_mm;
 
 	// /* Pointer magic because the dynamic array size confuses some compilers. */
-	// static inline void mm_init_cpumask(struct mm_struct *mm)
+	// static inline void mm_init_cpumask(mm_s *mm)
 	// {
 	// 	unsigned long cpu_bitmap = (unsigned long)mm;
 
-	// 	cpu_bitmap += offsetof(struct mm_struct, cpu_bitmap);
+	// 	cpu_bitmap += offsetof(mm_s, cpu_bitmap);
 	// 	cpumask_clear((struct cpumask *)cpu_bitmap);
 	// }
 
-	// /* Future-safe accessor for struct mm_struct's cpu_vm_mask. */
-	// static inline cpumask_t *mm_cpumask(struct mm_struct *mm)
+	// /* Future-safe accessor for mm_s's cpu_vm_mask. */
+	// static inline cpumask_t *mm_cpumask(mm_s *mm)
 	// {
 	// 	return (struct cpumask *)&mm->cpu_bitmap;
 	// }
 
 	// struct mmu_gather;
-	// extern void tlb_gather_mmu(struct mmu_gather *tlb, struct mm_struct *mm);
-	// extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, struct mm_struct *mm);
+	// extern void tlb_gather_mmu(struct mmu_gather *tlb, mm_s *mm);
+	// extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, mm_s *mm);
 	// extern void tlb_finish_mmu(struct mmu_gather *tlb);
 
 	// struct vm_fault;
 
-	// /**
-	//  * typedef vm_fault_t - Return type for page fault handlers.
-	//  *
-	//  * Page fault handlers return a bitmask of %VM_FAULT values.
-	//  */
-	// typedef __bitwise unsigned int vm_fault_t;
+	/**
+	 * typedef vm_fault_t - Return type for page fault handlers.
+	 *
+	 * Page fault handlers return a bitmask of %VM_FAULT values.
+	 */
+	typedef __bitwise unsigned int vm_fault_t;
 
 	// /**
 	//  * enum vm_fault_reason - Page fault handlers return a bitmask of
@@ -824,11 +830,11 @@
 	// 	* on the special mapping.  If used, .pages is not checked.
 	// 	*/
 	// 	vm_fault_t (*fault)(const struct vm_special_mapping *sm,
-	// 						struct vm_area_struct *vma,
+	// 						vma_s *vma,
 	// 						struct vm_fault *vmf);
 
 	// 	int (*mremap)(const struct vm_special_mapping *sm,
-	// 				struct vm_area_struct *new_vma);
+	// 				vma_s *new_vma);
 	// };
 
 	// enum tlb_flush_reason
@@ -850,49 +856,49 @@
 	// 	unsigned long val;
 	// } swp_entry_t;
 
-	// /**
-	//  * enum fault_flag - Fault flag definitions.
-	//  * @FAULT_FLAG_WRITE: Fault was a write fault.
-	//  * @FAULT_FLAG_MKWRITE: Fault was mkwrite of existing PTE.
-	//  * @FAULT_FLAG_ALLOW_RETRY: Allow to retry the fault if blocked.
-	//  * @FAULT_FLAG_RETRY_NOWAIT: Don't drop mmap_lock and wait when retrying.
-	//  * @FAULT_FLAG_KILLABLE: The fault task is in SIGKILL killable region.
-	//  * @FAULT_FLAG_TRIED: The fault has been tried once.
-	//  * @FAULT_FLAG_USER: The fault originated in userspace.
-	//  * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
-	//  * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
-	//  * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
-	//  *
-	//  * About @FAULT_FLAG_ALLOW_RETRY and @FAULT_FLAG_TRIED: we can specify
-	//  * whether we would allow page faults to retry by specifying these two
-	//  * fault flags correctly.  Currently there can be three legal combinations:
-	//  *
-	//  * (a) ALLOW_RETRY and !TRIED:  this means the page fault allows retry, and
-	//  *                              this is the first try
-	//  *
-	//  * (b) ALLOW_RETRY and TRIED:   this means the page fault allows retry, and
-	//  *                              we've already tried at least once
-	//  *
-	//  * (c) !ALLOW_RETRY and !TRIED: this means the page fault does not allow retry
-	//  *
-	//  * The unlisted combination (!ALLOW_RETRY && TRIED) is illegal and should never
-	//  * be used.  Note that page faults can be allowed to retry for multiple times,
-	//  * in which case we'll have an initial fault with flags (a) then later on
-	//  * continuous faults with flags (b).  We should always try to detect pending
-	//  * signals before a retry to make sure the continuous page faults can still be
-	//  * interrupted if necessary.
-	//  */
-	// enum fault_flag {
-	// 	FAULT_FLAG_WRITE = 1 << 0,
-	// 	FAULT_FLAG_MKWRITE = 1 << 1,
-	// 	FAULT_FLAG_ALLOW_RETRY = 1 << 2,
-	// 	FAULT_FLAG_RETRY_NOWAIT = 1 << 3,
-	// 	FAULT_FLAG_KILLABLE = 1 << 4,
-	// 	FAULT_FLAG_TRIED = 1 << 5,
-	// 	FAULT_FLAG_USER = 1 << 6,
-	// 	FAULT_FLAG_REMOTE = 1 << 7,
-	// 	FAULT_FLAG_INSTRUCTION = 1 << 8,
-	// 	FAULT_FLAG_INTERRUPTIBLE = 1 << 9,
-	// };
+	/**
+	 * enum fault_flag - Fault flag definitions.
+	 * @FAULT_FLAG_WRITE: Fault was a write fault.
+	 * @FAULT_FLAG_MKWRITE: Fault was mkwrite of existing PTE.
+	 * @FAULT_FLAG_ALLOW_RETRY: Allow to retry the fault if blocked.
+	 * @FAULT_FLAG_RETRY_NOWAIT: Don't drop mmap_lock and wait when retrying.
+	 * @FAULT_FLAG_KILLABLE: The fault task is in SIGKILL killable region.
+	 * @FAULT_FLAG_TRIED: The fault has been tried once.
+	 * @FAULT_FLAG_USER: The fault originated in userspace.
+	 * @FAULT_FLAG_REMOTE: The fault is not for current task/mm.
+	 * @FAULT_FLAG_INSTRUCTION: The fault was during an instruction fetch.
+	 * @FAULT_FLAG_INTERRUPTIBLE: The fault can be interrupted by non-fatal signals.
+	 *
+	 * About @FAULT_FLAG_ALLOW_RETRY and @FAULT_FLAG_TRIED: we can specify
+	 * whether we would allow page faults to retry by specifying these two
+	 * fault flags correctly.  Currently there can be three legal combinations:
+	 *
+	 * (a) ALLOW_RETRY and !TRIED:  this means the page fault allows retry, and
+	 *                              this is the first try
+	 *
+	 * (b) ALLOW_RETRY and TRIED:   this means the page fault allows retry, and
+	 *                              we've already tried at least once
+	 *
+	 * (c) !ALLOW_RETRY and !TRIED: this means the page fault does not allow retry
+	 *
+	 * The unlisted combination (!ALLOW_RETRY && TRIED) is illegal and should never
+	 * be used.  Note that page faults can be allowed to retry for multiple times,
+	 * in which case we'll have an initial fault with flags (a) then later on
+	 * continuous faults with flags (b).  We should always try to detect pending
+	 * signals before a retry to make sure the continuous page faults can still be
+	 * interrupted if necessary.
+	 */
+	enum fault_flag {
+		FAULT_FLAG_WRITE = 1 << 0,
+		FAULT_FLAG_MKWRITE = 1 << 1,
+		FAULT_FLAG_ALLOW_RETRY = 1 << 2,
+		FAULT_FLAG_RETRY_NOWAIT = 1 << 3,
+		FAULT_FLAG_KILLABLE = 1 << 4,
+		FAULT_FLAG_TRIED = 1 << 5,
+		FAULT_FLAG_USER = 1 << 6,
+		FAULT_FLAG_REMOTE = 1 << 7,
+		FAULT_FLAG_INSTRUCTION = 1 << 8,
+		FAULT_FLAG_INTERRUPTIBLE = 1 << 9,
+	};
 
 #endif /* _LINUX_MM_TYPES_H */

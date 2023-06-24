@@ -19,13 +19,13 @@
 			// extern int nr_pfn_mapped;
 
 			// static inline void clear_user_page(void *page,
-			// 		unsigned long vaddr, struct page *pg)
+			// 		unsigned long vaddr, page_s *pg)
 			// {
 			// 	clear_page(page);
 			// }
 
 			// static inline void copy_user_page(void *to, void *from,
-			// 		unsigned long vaddr, struct page *topage)
+			// 		unsigned long vaddr, page_s *topage)
 			// {
 			// 	copy_page(to, from);
 			// }

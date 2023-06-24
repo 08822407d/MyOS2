@@ -76,7 +76,8 @@ u8 ata_sff_check_status(ata_port_s *ap) {
  *	LOCKING:
  *	Inherited from caller.
  */
-static u8 ata_sff_altstatus(ata_port_s *ap) {
+static u8 ata_sff_altstatus(ata_port_s *ap)
+{
 	if (ap->ops->sff_check_altstatus)
 		return ap->ops->sff_check_altstatus(ap);
 	return inb(ap->ioaddr.altstatus_addr);
@@ -94,7 +95,8 @@ static u8 ata_sff_altstatus(ata_port_s *ap) {
  *	LOCKING:
  *	Inherited from caller.
  */
-static u8 ata_sff_irq_status(ata_port_s *ap) {
+static u8 ata_sff_irq_status(ata_port_s *ap)
+{
 	u8 status;
 	if (ap->ops->sff_check_altstatus || ap->ioaddr.altstatus_addr) {
 		status = ata_sff_altstatus(ap);
@@ -437,7 +439,7 @@ ata_sff_data_xfer32(ata_q_cmd_s *qc, unsigned char *buf, unsigned int buflen, in
 	// return (buflen + 1) & ~1;
 }
 
-static void ata_pio_xfer(ata_q_cmd_s *qc, struct page *page,
+static void ata_pio_xfer(ata_q_cmd_s *qc, page_s *page,
 		unsigned int offset, size_t xfer_size)
 {
 	// bool do_write = (qc->tf.flags & ATA_TFLAG_WRITE);
@@ -463,7 +465,7 @@ static void ata_pio_xfer(ata_q_cmd_s *qc, struct page *page,
 static void ata_pio_sector(ata_q_cmd_s *qc)
 {
 	// struct ata_port *ap = qc->ap;
-	// struct page *page;
+	// page_s *page;
 	// unsigned int offset;
 
 	// if (!qc->cursg) {

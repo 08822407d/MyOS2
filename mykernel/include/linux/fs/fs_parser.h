@@ -65,7 +65,7 @@
 	// 			struct fs_parameter *value,
 	// 			struct fs_parse_result *result);
 
-	// static inline int fs_parse(struct fs_context *fc,
+	// static inline int fs_parse(fs_ctxt_s *fc,
 	// 		const struct fs_parameter_spec *desc,
 	// 		struct fs_parameter *param,
 	// 		struct fs_parse_result *result)
@@ -73,7 +73,7 @@
 	// 	return __fs_parse(&fc->log, desc, param, result);
 	// }
 
-	// extern int fs_lookup_param(struct fs_context *fc,
+	// extern int fs_lookup_param(fs_ctxt_s *fc,
 	// 			struct fs_parameter *param,
 	// 			bool want_bdev,
 	// 			struct path *_path);

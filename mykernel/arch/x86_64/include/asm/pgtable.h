@@ -32,8 +32,8 @@
 		// extern pgd_t early_top_pgt[PTRS_PER_PGD];
 		// bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
 
-		// void ptdump_walk_pgd_level(struct seq_file *m, struct mm_struct *mm);
-		// void ptdump_walk_pgd_level_debugfs(struct seq_file *m, struct mm_struct *mm,
+		// void ptdump_walk_pgd_level(struct seq_file *m, mm_s *mm);
+		// void ptdump_walk_pgd_level_debugfs(struct seq_file *m, mm_s *mm,
 		// 				bool user);
 		// void ptdump_walk_pgd_level_checkwx(void);
 		// void ptdump_walk_user_pgd_level_checkwx(void);
@@ -57,125 +57,98 @@
 		// extern spinlock_t pgd_lock;
 		// extern List_s pgd_list;
 
-		// extern struct mm_struct *pgd_page_get_mm(struct page *page);
+		// extern mm_s *pgd_page_get_mm(page_s *page);
 
 		// extern pmdval_t early_pmd_flags;
 
 		// #ifdef CONFIG_PARAVIRT_XXL
 		// #include <asm/paravirt.h>
 		// #else  /* !CONFIG_PARAVIRT_XXL */
-		// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
 
 		// #define set_pte_atomic(ptep, pte)					\
 		// 	native_set_pte_atomic(ptep, pte)
 
+
+
+		// #define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
+		// #define set_pud(pudp, pud)		native_set_pud(pudp, pud)
 		// #define set_pmd(pmdp, pmd)		native_set_pmd(pmdp, pmd)
-
-		// #ifndef __PAGETABLE_P4D_FOLDED
-		// #define set_pgd(pgdp, pgd)		native_set_pgd(pgdp, pgd)
-		// #define pgd_clear(pgd)			(pgtable_l5_enabled() ? native_pgd_clear(pgd) : 0)
-		// #endif
-
-		// #ifndef set_p4d
-		// # define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
-		// #endif
-
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define p4d_clear(p4d)			native_p4d_clear(p4d)
-		// #endif
-
-		// #ifndef set_pud
-		// # define set_pud(pudp, pud)		native_set_pud(pudp, pud)
-		// #endif
-
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define pud_clear(pud)			native_pud_clear(pud)
-		// #endif
-
+		// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
+		// #define p4d_clear(p4d)				native_p4d_clear(p4d)
+		// #define pud_clear(pud)				native_pud_clear(pud)
+		// #define pmd_clear(pmd)				native_pmd_clear(pmd)
 		// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-		// #define pmd_clear(pmd)			native_pmd_clear(pmd)
+		// #define arch_pgd_val(x)		native_pgd_val(x)
+		// #define __pgd(x)		native_make_pgd(x)
+		// #define arch_pud_val(x)		native_pud_val(x)
+		// #define __pud(x)		native_make_pud(x)
+		// #define arch_pmd_val(x)		native_pmd_val(x)
+		// #define __pmd(x)		native_make_pmd(x)
+		// #define arch_pte_val(x)		native_pte_val(x)
+		// #define __pte(x)		native_make_pte(x)
 
-		// #define pgd_val(x)	native_pgd_val(x)
-		// #define __pgd(x)	native_make_pgd(x)
 
-		// #ifndef __PAGETABLE_P4D_FOLDED
-		// #define p4d_val(x)	native_p4d_val(x)
-		// #define __p4d(x)	native_make_p4d(x)
-		// #endif
-
-		// #ifndef __PAGETABLE_PUD_FOLDED
-		// #define pud_val(x)	native_pud_val(x)
-		// #define __pud(x)	native_make_pud(x)
-		// #endif
-
-		// #ifndef __PAGETABLE_PMD_FOLDED
-		// #define pmd_val(x)	native_pmd_val(x)
-		// #define __pmd(x)	native_make_pmd(x)
-		// #endif
-
-		// #define pte_val(x)	native_pte_val(x)
-		// #define __pte(x)	native_make_pte(x)
 
 		// #define arch_end_context_switch(prev)	do {} while(0)
 		// #endif	/* CONFIG_PARAVIRT_XXL */
 
 		// /*
-		// * The following only work if pte_present() is true.
+		// * The following only work if arch_pte_present() is true.
 		// * Undefined behaviour if not..
 		// */
 		// static inline int pte_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pte_young(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_ACCESSED;
+		// 	return arch_pte_flags(pte) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pmd_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pmd_young(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_ACCESSED;
+		// 	return arch_pmd_flags(pmd) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pud_dirty(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_DIRTY;
+		// 	return arch_pud_flags(pud) & _PAGE_DIRTY;
 		// }
 
 		// static inline int pud_young(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_ACCESSED;
+		// 	return arch_pud_flags(pud) & _PAGE_ACCESSED;
 		// }
 
 		// static inline int pte_write(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_RW;
+		// 	return arch_pte_flags(pte) & _PAGE_RW;
 		// }
 
 		// static inline int pte_huge(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_PSE;
+		// 	return arch_pte_flags(pte) & _PAGE_PSE;
 		// }
 
 		// static inline int pte_global(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_GLOBAL;
+		// 	return arch_pte_flags(pte) & _PAGE_GLOBAL;
 		// }
 
 		// static inline int pte_exec(pte_t pte)
 		// {
-		// 	return !(pte_flags(pte) & _PAGE_NX);
+		// 	return !(arch_pte_flags(pte) & _PAGE_NX);
 		// }
 
 		// static inline int pte_special(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SPECIAL;
+		// 	return arch_pte_flags(pte) & _PAGE_SPECIAL;
 		// }
 
 		// /* Entries that were set to PROT_NONE are inverted */
@@ -184,33 +157,33 @@
 
 		// static inline unsigned long pte_pfn(pte_t pte)
 		// {
-		// 	phys_addr_t pfn = pte_val(pte);
+		// 	phys_addr_t pfn = arch_pte_val(pte);
 		// 	pfn ^= protnone_mask(pfn);
 		// 	return (pfn & PTE_PFN_MASK) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pmd_pfn(pmd_t pmd)
 		// {
-		// 	phys_addr_t pfn = pmd_val(pmd);
+		// 	phys_addr_t pfn = arch_pmd_val(pmd);
 		// 	pfn ^= protnone_mask(pfn);
-		// 	return (pfn & pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
+		// 	return (pfn & arch_pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pud_pfn(pud_t pud)
 		// {
-		// 	phys_addr_t pfn = pud_val(pud);
+		// 	phys_addr_t pfn = arch_pud_val(pud);
 		// 	pfn ^= protnone_mask(pfn);
-		// 	return (pfn & pud_pfn_mask(pud)) >> PAGE_SHIFT;
+		// 	return (pfn & arch_pud_pfn_mask(pud)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long p4d_pfn(p4d_t p4d)
 		// {
-		// 	return (p4d_val(p4d) & p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
+		// 	return (arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
 		// }
 
 		// static inline unsigned long pgd_pfn(pgd_t pgd)
 		// {
-		// 	return (pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+		// 	return (arch_pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
 		// }
 
 		// #define p4d_leaf	p4d_large
@@ -225,20 +198,20 @@
 		// #define pmd_leaf	pmd_large
 		// static inline int pmd_large(pmd_t pte)
 		// {
-		// 	return pmd_flags(pte) & _PAGE_PSE;
+		// 	return arch_pmd_flags(pte) & _PAGE_PSE;
 		// }
 
 		// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 		// /* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
 		// static inline int pmd_trans_huge(pmd_t pmd)
 		// {
-		// 	return (pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+		// 	return (arch_pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 		// }
 
 		// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 		// static inline int pud_trans_huge(pud_t pud)
 		// {
-		// 	return (pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+		// 	return (arch_pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 		// }
 		// #endif
 
@@ -251,13 +224,13 @@
 		// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 		// static inline int pmd_devmap(pmd_t pmd)
 		// {
-		// 	return !!(pmd_val(pmd) & _PAGE_DEVMAP);
+		// 	return !!(arch_pmd_val(pmd) & _PAGE_DEVMAP);
 		// }
 
 		// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 		// static inline int pud_devmap(pud_t pud)
 		// {
-		// 	return !!(pud_val(pud) & _PAGE_DEVMAP);
+		// 	return !!(arch_pud_val(pud) & _PAGE_DEVMAP);
 		// }
 		// #else
 		// static inline int pud_devmap(pud_t pud)
@@ -290,7 +263,7 @@
 		// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 		// static inline int pte_uffd_wp(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_UFFD_WP;
+		// 	return arch_pte_flags(pte) & _PAGE_UFFD_WP;
 		// }
 
 		// static inline pte_t pte_mkuffd_wp(pte_t pte)
@@ -386,7 +359,7 @@
 		// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 		// static inline int pmd_uffd_wp(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_UFFD_WP;
+		// 	return arch_pmd_flags(pmd) & _PAGE_UFFD_WP;
 		// }
 
 		// static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
@@ -497,17 +470,17 @@
 		// #ifdef CONFIG_HAVE_ARCH_SOFT_DIRTY
 		// static inline int pte_soft_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline int pmd_soft_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline int pud_soft_dirty(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_SOFT_DIRTY;
+		// 	return arch_pud_flags(pud) & _PAGE_SOFT_DIRTY;
 		// }
 
 		// static inline pte_t pte_mksoft_dirty(pte_t pte)
@@ -600,14 +573,14 @@
 		// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 		// {
 		// 	return pfn_pmd(pmd_pfn(pmd),
-		// 			__pgprot(pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
+		// 			__pgprot(arch_pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
 		// }
 
 		// static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
 
 		// static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
 		// {
-		// 	pteval_t val = pte_val(pte), oldval = val;
+		// 	pteval_t val = arch_pte_val(pte), oldval = val;
 
 		// 	/*
 		// 	* Chop off the NX bit (if present), and add the NX portion of
@@ -621,7 +594,7 @@
 
 		// static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
 		// {
-		// 	pmdval_t val = pmd_val(pmd), oldval = val;
+		// 	pmdval_t val = arch_pmd_val(pmd), oldval = val;
 
 		// 	val &= _HPAGE_CHG_MASK;
 		// 	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
@@ -641,10 +614,10 @@
 		// 	return __pgprot(preservebits | addbits);
 		// }
 
-		// #define pte_pgprot(x) __pgprot(pte_flags(x))
-		// #define pmd_pgprot(x) __pgprot(pmd_flags(x))
-		// #define pud_pgprot(x) __pgprot(pud_flags(x))
-		// #define p4d_pgprot(x) __pgprot(p4d_flags(x))
+		// #define pte_pgprot(x) __pgprot(arch_pte_flags(x))
+		// #define pmd_pgprot(x) __pgprot(arch_pmd_flags(x))
+		// #define pud_pgprot(x) __pgprot(arch_pud_flags(x))
+		// #define p4d_pgprot(x) __pgprot(arch_p4d_flags(x))
 
 		// #define canon_pgprot(p) __pgprot(massage_pgprot(p))
 
@@ -688,26 +661,9 @@
 		// pmd_t *populate_extra_pmd(unsigned long vaddr);
 		// pte_t *populate_extra_pte(unsigned long vaddr);
 
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// pgd_t __pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd);
-
-		// /*
-		// * Take a PGD location (pgdp) and a pgd value that needs to be set there.
-		// * Populates the user and returns the resulting PGD that must be set in
-		// * the kernel copy of the page tables.
-		// */
-		// static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
-		// {
-		// 	if (!static_cpu_has(X86_FEATURE_PTI))
-		// 		return pgd;
-		// 	return __pti_set_user_pgtbl(pgdp, pgd);
-		// }
-		// #else   /* CONFIG_PAGE_TABLE_ISOLATION */
-		// static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd)
-		// {
-		// 	return pgd;
-		// }
-		// #endif  /* CONFIG_PAGE_TABLE_ISOLATION */
+		static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd) {
+			return pgd;
+		}
 	#endif	/* __ASSEMBLY__ */
 
 	#include <asm/pgtable_64.h>
@@ -718,10 +674,9 @@
 		// #include <linux/log2.h>
 		// #include <asm/fixmap.h>
 
-		// static inline int pte_none(pte_t pte)
-		// {
-		// 	return !(pte.pte & ~(_PAGE_KNL_ERRATUM_MASK));
-		// }
+		static inline int arch_pte_none(pte_t pte) {
+			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
+		}
 
 		// #define __HAVE_ARCH_PTE_SAME
 		// static inline int pte_same(pte_t a, pte_t b)
@@ -729,41 +684,39 @@
 		// 	return a.pte == b.pte;
 		// }
 
-		// static inline int pte_present(pte_t a)
-		// {
-		// 	return pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
-		// }
+		static inline int arch_pte_present(pte_t a) {
+			return arch_pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);
+		}
 
 		// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 		// static inline int pte_devmap(pte_t a)
 		// {
-		// 	return (pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
+		// 	return (arch_pte_flags(a) & _PAGE_DEVMAP) == _PAGE_DEVMAP;
 		// }
 		// #endif
 
 		// #define pte_accessible pte_accessible
-		// static inline bool pte_accessible(struct mm_struct *mm, pte_t a)
+		// static inline bool pte_accessible(mm_s *mm, pte_t a)
 		// {
-		// 	if (pte_flags(a) & _PAGE_PRESENT)
+		// 	if (arch_pte_flags(a) & _PAGE_PRESENT)
 		// 		return true;
 
-		// 	if ((pte_flags(a) & _PAGE_PROTNONE) &&
+		// 	if ((arch_pte_flags(a) & _PAGE_PROTNONE) &&
 		// 			atomic_read(&mm->tlb_flush_pending))
 		// 		return true;
 
 		// 	return false;
 		// }
 
-		// static inline int pmd_present(pmd_t pmd)
-		// {
-		// 	/*
-		// 	* Checking for _PAGE_PSE is needed too because
-		// 	* split_huge_page will temporarily clear the present bit (but
-		// 	* the _PAGE_PSE flag will remain set at all times while the
-		// 	* _PAGE_PRESENT bit is clear).
-		// 	*/
-		// 	return pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
-		// }
+		static inline int arch_pmd_present(pmd_t pmd) {
+			/*
+			* Checking for _PAGE_PSE is needed too because
+			* split_huge_page will temporarily clear the present bit (but
+			* the _PAGE_PSE flag will remain set at all times while the
+			* _PAGE_PRESENT bit is clear).
+			*/
+			return arch_pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
+		}
 
 		// #ifdef CONFIG_NUMA_BALANCING
 		// /*
@@ -772,28 +725,27 @@
 		// */
 		// static inline int pte_protnone(pte_t pte)
 		// {
-		// 	return (pte_flags(pte) & (_PAGE_PROTNONE | _PAGE_PRESENT))
+		// 	return (arch_pte_flags(pte) & (_PAGE_PROTNONE | _PAGE_PRESENT))
 		// 		== _PAGE_PROTNONE;
 		// }
 
 		// static inline int pmd_protnone(pmd_t pmd)
 		// {
-		// 	return (pmd_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
+		// 	return (arch_pmd_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
 		// 		== _PAGE_PROTNONE;
 		// }
 		// #endif /* CONFIG_NUMA_BALANCING */
 
-		// static inline int pmd_none(pmd_t pmd)
-		// {
-		// 	/* Only check low word on 32-bit platforms, since it might be
-		// 	out of sync with upper half. */
-		// 	unsigned long val = native_pmd_val(pmd);
-		// 	return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
-		// }
+		static inline int arch_pmd_none(pmd_t pmd) {
+			/* Only check low word on 32-bit platforms, since it might be
+			out of sync with upper half. */
+			unsigned long val = arch_pmd_val(pmd);
+			return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
+		}
 
 		// static inline unsigned long pmd_page_vaddr(pmd_t pmd)
 		// {
-		// 	return (unsigned long)__va(pmd_val(pmd) & pmd_pfn_mask(pmd));
+		// 	return (unsigned long)__va(arch_pmd_val(pmd) & arch_pmd_pfn_mask(pmd));
 		// }
 
 		// /*
@@ -811,31 +763,26 @@
 		// */
 		// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
-		// static inline int pmd_bad(pmd_t pmd)
-		// {
-		// 	return (pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
-		// }
+		static inline int arch_pmd_bad(pmd_t pmd) {
+			return (arch_pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
+		}
 
 		// static inline unsigned long pages_to_mb(unsigned long npg)
 		// {
 		// 	return npg >> (20 - PAGE_SHIFT);
 		// }
 
-		// #if CONFIG_PGTABLE_LEVELS > 2
-		// static inline int pud_none(pud_t pud)
-		// {
-		// 	return (native_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		// }
+		static inline int arch_pud_none(pud_t pud) {
+			return (arch_pud_val(pud) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
 
-		// static inline int pud_present(pud_t pud)
-		// {
-		// 	return pud_flags(pud) & _PAGE_PRESENT;
-		// }
+		static inline int arch_pud_present(pud_t pud) {
+			return arch_pud_flags(pud) & _PAGE_PRESENT;
+		}
 
-		// static inline pmd_t *pud_pgtable(pud_t pud)
-		// {
-		// 	return (pmd_t *)__va(pud_val(pud) & pud_pfn_mask(pud));
-		// }
+		static inline pmd_t *arch_pud_pgtable(pud_t pud) {
+			return (pmd_t *)__va(arch_pud_val(pud) & arch_pud_pfn_mask(pud));
+		}
 
 		// /*
 		// * Currently stuck as a macro due to indirect forward reference to
@@ -846,113 +793,41 @@
 		// #define pud_leaf	pud_large
 		// static inline int pud_large(pud_t pud)
 		// {
-		// 	return (pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
+		// 	return (arch_pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
 		// 		(_PAGE_PSE | _PAGE_PRESENT);
 		// }
 
-		// static inline int pud_bad(pud_t pud)
-		// {
-		// 	return (pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		// }
-		// #else
-		// #define pud_leaf	pud_large
-		// static inline int pud_large(pud_t pud)
-		// {
-		// 	return 0;
-		// }
-		// #endif	/* CONFIG_PGTABLE_LEVELS > 2 */
+		static inline int arch_pud_bad(pud_t pud) {
+			return (arch_pud_flags(pud) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 
-		// #if CONFIG_PGTABLE_LEVELS > 3
-		// static inline int p4d_none(p4d_t p4d)
-		// {
-		// 	return (native_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		// }
+		static inline int arch_p4d_none(p4d_t p4d) {
+			return (arch_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
 
-		// static inline int p4d_present(p4d_t p4d)
-		// {
-		// 	return p4d_flags(p4d) & _PAGE_PRESENT;
-		// }
+		static inline int arch_p4d_present(p4d_t p4d) {
+			return arch_p4d_flags(p4d) & _PAGE_PRESENT;
+		}
 
-		// static inline pud_t *p4d_pgtable(p4d_t p4d)
-		// {
-		// 	return (pud_t *)__va(p4d_val(p4d) & p4d_pfn_mask(p4d));
-		// }
+		static inline pud_t *arch_p4d_pgtable(p4d_t p4d) {
+			return (pud_t *)__va(arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d));
+		}
 
-		// /*
-		// * Currently stuck as a macro due to indirect forward reference to
-		// * linux/mmzone.h's __section_mem_map_addr() definition:
-		// */
-		// #define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+		/*
+		 * Currently stuck as a macro due to indirect forward reference to
+		 * linux/mmzone.h's __section_mem_map_addr() definition:
+		 */
+		#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
-		// static inline int p4d_bad(p4d_t p4d)
-		// {
-		// 	unsigned long ignore_flags = _KERNPG_TABLE | _PAGE_USER;
-
-		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION))
-		// 		ignore_flags |= _PAGE_NX;
-
-		// 	return (p4d_flags(p4d) & ~ignore_flags) != 0;
-		// }
-		// #endif  /* CONFIG_PGTABLE_LEVELS > 3 */
+		static inline int arch_p4d_bad(p4d_t p4d) {
+			return (arch_p4d_flags(p4d) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 
 		// static inline unsigned long p4d_index(unsigned long address)
 		// {
 		// 	return (address >> P4D_SHIFT) & (PTRS_PER_P4D - 1);
 		// }
 
-		// #if CONFIG_PGTABLE_LEVELS > 4
-		// static inline int pgd_present(pgd_t pgd)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return 1;
-		// 	return pgd_flags(pgd) & _PAGE_PRESENT;
-		// }
-
-		// static inline unsigned long pgd_page_vaddr(pgd_t pgd)
-		// {
-		// 	return (unsigned long)__va((unsigned long)pgd_val(pgd) & PTE_PFN_MASK);
-		// }
-
-		// /*
-		// * Currently stuck as a macro due to indirect forward reference to
-		// * linux/mmzone.h's __section_mem_map_addr() definition:
-		// */
-		// #define pgd_page(pgd)	pfn_to_page(pgd_pfn(pgd))
-
-		// /* to find an entry in a page-table-directory. */
-		// static inline p4d_t *p4d_offset(pgd_t *pgd, unsigned long address)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return (p4d_t *)pgd;
-		// 	return (p4d_t *)pgd_page_vaddr(*pgd) + p4d_index(address);
-		// }
-
-		// static inline int pgd_bad(pgd_t pgd)
-		// {
-		// 	unsigned long ignore_flags = _PAGE_USER;
-
-		// 	if (!pgtable_l5_enabled())
-		// 		return 0;
-
-		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION))
-		// 		ignore_flags |= _PAGE_NX;
-
-		// 	return (pgd_flags(pgd) & ~ignore_flags) != _KERNPG_TABLE;
-		// }
-
-		// static inline int pgd_none(pgd_t pgd)
-		// {
-		// 	if (!pgtable_l5_enabled())
-		// 		return 0;
-		// 	/*
-		// 	* There is no need to do a workaround for the KNL stray
-		// 	* A/D bit erratum here.  PGDs only point to page tables
-		// 	* except on 32-bit non-PAE which is not supported on
-		// 	* KNL.
-		// 	*/
-		// 	return !native_pgd_val(pgd);
-		// }
-		// #endif	/* CONFIG_PGTABLE_LEVELS > 4 */
 	#endif	/* __ASSEMBLY__ */
 
 	// #define KERNEL_PGD_BOUNDARY	pgd_index(PAGE_OFFSET)
@@ -995,21 +870,21 @@
 		// 	return res;
 		// }
 
-		// static inline void set_pte_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pte_at(mm_s *mm, unsigned long addr,
 		// 				pte_t *ptep, pte_t pte)
 		// {
 		// 	page_table_check_pte_set(mm, addr, ptep, pte);
 		// 	set_pte(ptep, pte);
 		// }
 
-		// static inline void set_pmd_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pmd_at(mm_s *mm, unsigned long addr,
 		// 				pmd_t *pmdp, pmd_t pmd)
 		// {
 		// 	page_table_check_pmd_set(mm, addr, pmdp, pmd);
 		// 	set_pmd(pmdp, pmd);
 		// }
 
-		// static inline void set_pud_at(struct mm_struct *mm, unsigned long addr,
+		// static inline void set_pud_at(mm_s *mm, unsigned long addr,
 		// 				pud_t *pudp, pud_t pud)
 		// {
 		// 	page_table_check_pud_set(mm, addr, pudp, pud);
@@ -1023,23 +898,23 @@
 		// * race with other CPU's that might be updating the dirty
 		// * bit at the same time.
 		// */
-		// struct vm_area_struct;
+		// vma_s;
 
 		// #define  __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
-		// extern int ptep_set_access_flags(struct vm_area_struct *vma,
+		// extern int ptep_set_access_flags(vma_s *vma,
 		// 				unsigned long address, pte_t *ptep,
 		// 				pte_t entry, int dirty);
 
 		// #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG
-		// extern int ptep_test_and_clear_young(struct vm_area_struct *vma,
+		// extern int ptep_test_and_clear_young(vma_s *vma,
 		// 					unsigned long addr, pte_t *ptep);
 
 		// #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
-		// extern int ptep_clear_flush_young(struct vm_area_struct *vma,
+		// extern int ptep_clear_flush_young(vma_s *vma,
 		// 				unsigned long address, pte_t *ptep);
 
 		// #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
-		// static inline pte_t ptep_get_and_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline pte_t ptep_get_and_clear(mm_s *mm, unsigned long addr,
 		// 					pte_t *ptep)
 		// {
 		// 	pte_t pte = native_ptep_get_and_clear(ptep);
@@ -1048,7 +923,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_GET_AND_CLEAR_FULL
-		// static inline pte_t ptep_get_and_clear_full(struct mm_struct *mm,
+		// static inline pte_t ptep_get_and_clear_full(mm_s *mm,
 		// 						unsigned long addr, pte_t *ptep,
 		// 						int full)
 		// {
@@ -1067,7 +942,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_CLEAR
-		// static inline void ptep_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline void ptep_clear(mm_s *mm, unsigned long addr,
 		// 				pte_t *ptep)
 		// {
 		// 	if (IS_ENABLED(CONFIG_PAGE_TABLE_CHECK))
@@ -1077,10 +952,10 @@
 		// }
 
 		// #define __HAVE_ARCH_PTEP_SET_WRPROTECT
-		// static inline void ptep_set_wrprotect(struct mm_struct *mm,
+		// static inline void ptep_set_wrprotect(mm_s *mm,
 		// 					unsigned long addr, pte_t *ptep)
 		// {
-		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->pte);
+		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->val);
 		// }
 
 		// #define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
@@ -1088,32 +963,32 @@
 		// #define mk_pmd(page, pgprot)   pfn_pmd(page_to_pfn(page), (pgprot))
 
 		// #define  __HAVE_ARCH_PMDP_SET_ACCESS_FLAGS
-		// extern int pmdp_set_access_flags(struct vm_area_struct *vma,
+		// extern int pmdp_set_access_flags(vma_s *vma,
 		// 				unsigned long address, pmd_t *pmdp,
 		// 				pmd_t entry, int dirty);
-		// extern int pudp_set_access_flags(struct vm_area_struct *vma,
+		// extern int pudp_set_access_flags(vma_s *vma,
 		// 				unsigned long address, pud_t *pudp,
 		// 				pud_t entry, int dirty);
 
 		// #define __HAVE_ARCH_PMDP_TEST_AND_CLEAR_YOUNG
-		// extern int pmdp_test_and_clear_young(struct vm_area_struct *vma,
+		// extern int pmdp_test_and_clear_young(vma_s *vma,
 		// 					unsigned long addr, pmd_t *pmdp);
-		// extern int pudp_test_and_clear_young(struct vm_area_struct *vma,
+		// extern int pudp_test_and_clear_young(vma_s *vma,
 		// 					unsigned long addr, pud_t *pudp);
 
 		// #define __HAVE_ARCH_PMDP_CLEAR_YOUNG_FLUSH
-		// extern int pmdp_clear_flush_young(struct vm_area_struct *vma,
+		// extern int pmdp_clear_flush_young(vma_s *vma,
 		// 				unsigned long address, pmd_t *pmdp);
 
 
 		// #define pmd_write pmd_write
 		// static inline int pmd_write(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_RW;
+		// 	return arch_pmd_flags(pmd) & _PAGE_RW;
 		// }
 
 		// #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
-		// static inline pmd_t pmdp_huge_get_and_clear(struct mm_struct *mm, unsigned long addr,
+		// static inline pmd_t pmdp_huge_get_and_clear(mm_s *mm, unsigned long addr,
 		// 					pmd_t *pmdp)
 		// {
 		// 	pmd_t pmd = native_pmdp_get_and_clear(pmdp);
@@ -1124,7 +999,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PUDP_HUGE_GET_AND_CLEAR
-		// static inline pud_t pudp_huge_get_and_clear(struct mm_struct *mm,
+		// static inline pud_t pudp_huge_get_and_clear(mm_s *mm,
 		// 					unsigned long addr, pud_t *pudp)
 		// {
 		// 	pud_t pud = native_pudp_get_and_clear(pudp);
@@ -1135,7 +1010,7 @@
 		// }
 
 		// #define __HAVE_ARCH_PMDP_SET_WRPROTECT
-		// static inline void pmdp_set_wrprotect(struct mm_struct *mm,
+		// static inline void pmdp_set_wrprotect(mm_s *mm,
 		// 					unsigned long addr, pmd_t *pmdp)
 		// {
 		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)pmdp);
@@ -1144,12 +1019,12 @@
 		// #define pud_write pud_write
 		// static inline int pud_write(pud_t pud)
 		// {
-		// 	return pud_flags(pud) & _PAGE_RW;
+		// 	return arch_pud_flags(pud) & _PAGE_RW;
 		// }
 
 		// #ifndef pmdp_establish
 		// #define pmdp_establish pmdp_establish
-		// static inline pmd_t pmdp_establish(struct vm_area_struct *vma,
+		// static inline pmd_t pmdp_establish(vma_s *vma,
 		// 		unsigned long address, pmd_t *pmdp, pmd_t pmd)
 		// {
 		// 	page_table_check_pmd_set(vma->vm_mm, address, pmdp, pmd);
@@ -1179,55 +1054,6 @@
 		// #define pgd_leaf	pgd_large
 		// static inline int pgd_large(pgd_t pgd) { return 0; }
 
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// /*
-		// * All top-level PAGE_TABLE_ISOLATION page tables are order-1 pages
-		// * (8k-aligned and 8k in size).  The kernel one is at the beginning 4k and
-		// * the user one is in the last 4k.  To switch between them, you
-		// * just need to flip the 12th bit in their addresses.
-		// */
-		// #define PTI_PGTABLE_SWITCH_BIT	PAGE_SHIFT
-
-		// /*
-		// * This generates better code than the inline assembly in
-		// * __set_bit().
-		// */
-		// static inline void *ptr_set_bit(void *ptr, int bit)
-		// {
-		// 	unsigned long __ptr = (unsigned long)ptr;
-
-		// 	__ptr |= BIT(bit);
-		// 	return (void *)__ptr;
-		// }
-		// static inline void *ptr_clear_bit(void *ptr, int bit)
-		// {
-		// 	unsigned long __ptr = (unsigned long)ptr;
-
-		// 	__ptr &= ~BIT(bit);
-		// 	return (void *)__ptr;
-		// }
-
-		// static inline pgd_t *kernel_to_user_pgdp(pgd_t *pgdp)
-		// {
-		// 	return ptr_set_bit(pgdp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline pgd_t *user_to_kernel_pgdp(pgd_t *pgdp)
-		// {
-		// 	return ptr_clear_bit(pgdp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline p4d_t *kernel_to_user_p4dp(p4d_t *p4dp)
-		// {
-		// 	return ptr_set_bit(p4dp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-
-		// static inline p4d_t *user_to_kernel_p4dp(p4d_t *p4dp)
-		// {
-		// 	return ptr_clear_bit(p4dp, PTI_PGTABLE_SWITCH_BIT);
-		// }
-		// #endif /* CONFIG_PAGE_TABLE_ISOLATION */
-
 		// /*
 		// * clone_pgd_range(pgd_t *dst, pgd_t *src, int count);
 		// *
@@ -1241,13 +1067,6 @@
 		// static inline void clone_pgd_range(pgd_t *dst, pgd_t *src, int count)
 		// {
 		// 	memcpy(dst, src, count * sizeof(pgd_t));
-		// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-		// 	if (!static_cpu_has(X86_FEATURE_PTI))
-		// 		return;
-		// 	/* Clone the user space pgd as well */
-		// 	memcpy(kernel_to_user_pgdp(dst), kernel_to_user_pgdp(src),
-		// 		count * sizeof(pgd_t));
-		// #endif
 		// }
 
 		// #define PTE_SHIFT ilog2(PTRS_PER_PTE)
@@ -1268,15 +1087,15 @@
 		// * The x86 doesn't have any external MMU info: the kernel page
 		// * tables contain all the necessary information.
 		// */
-		// static inline void update_mmu_cache(struct vm_area_struct *vma,
+		// static inline void update_mmu_cache(vma_s *vma,
 		// 		unsigned long addr, pte_t *ptep)
 		// {
 		// }
-		// static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+		// static inline void update_mmu_cache_pmd(vma_s *vma,
 		// 		unsigned long addr, pmd_t *pmd)
 		// {
 		// }
-		// static inline void update_mmu_cache_pud(struct vm_area_struct *vma,
+		// static inline void update_mmu_cache_pud(vma_s *vma,
 		// 		unsigned long addr, pud_t *pud)
 		// {
 		// }
@@ -1289,7 +1108,7 @@
 
 		// static inline int pte_swp_soft_dirty(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SWP_SOFT_DIRTY;
+		// 	return arch_pte_flags(pte) & _PAGE_SWP_SOFT_DIRTY;
 		// }
 
 		// static inline pte_t pte_swp_clear_soft_dirty(pte_t pte)
@@ -1305,7 +1124,7 @@
 
 		// static inline int pmd_swp_soft_dirty(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
 		// }
 
 		// static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
@@ -1323,7 +1142,7 @@
 
 		// static inline int pte_swp_uffd_wp(pte_t pte)
 		// {
-		// 	return pte_flags(pte) & _PAGE_SWP_UFFD_WP;
+		// 	return arch_pte_flags(pte) & _PAGE_SWP_UFFD_WP;
 		// }
 
 		// static inline pte_t pte_swp_clear_uffd_wp(pte_t pte)
@@ -1338,7 +1157,7 @@
 
 		// static inline int pmd_swp_uffd_wp(pmd_t pmd)
 		// {
-		// 	return pmd_flags(pmd) & _PAGE_SWP_UFFD_WP;
+		// 	return arch_pmd_flags(pmd) & _PAGE_SWP_UFFD_WP;
 		// }
 
 		// static inline pmd_t pmd_swp_clear_uffd_wp(pmd_t pmd)
@@ -1347,11 +1166,11 @@
 		// }
 		// #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_WP */
 
-		// static inline u16 pte_flags_pkey(unsigned long pte_flags)
+		// static inline u16 pte_flags_pkey(unsigned long arch_pte_flags)
 		// {
 		// #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
 		// 	/* ifdef to avoid doing 59-bit shift on 32-bit values */
-		// 	return (pte_flags & _PAGE_PKEY_MASK) >> _PAGE_BIT_PKEY_BIT0;
+		// 	return (arch_pte_flags & _PAGE_PKEY_MASK) >> _PAGE_BIT_PKEY_BIT0;
 		// #else
 		// 	return 0;
 		// #endif
@@ -1390,19 +1209,19 @@
 		// #define pte_access_permitted pte_access_permitted
 		// static inline bool pte_access_permitted(pte_t pte, bool write)
 		// {
-		// 	return __pte_access_permitted(pte_val(pte), write);
+		// 	return __pte_access_permitted(arch_pte_val(pte), write);
 		// }
 
 		// #define pmd_access_permitted pmd_access_permitted
 		// static inline bool pmd_access_permitted(pmd_t pmd, bool write)
 		// {
-		// 	return __pte_access_permitted(pmd_val(pmd), write);
+		// 	return __pte_access_permitted(arch_pmd_val(pmd), write);
 		// }
 
 		// #define pud_access_permitted pud_access_permitted
 		// static inline bool pud_access_permitted(pud_t pud, bool write)
 		// {
-		// 	return __pte_access_permitted(pud_val(pud), write);
+		// 	return __pte_access_permitted(arch_pud_val(pud), write);
 		// }
 
 		// #define __HAVE_ARCH_PFN_MODIFY_ALLOWED 1

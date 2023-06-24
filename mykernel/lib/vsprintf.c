@@ -2288,7 +2288,7 @@
 //  *        (legacy clock framework) of the clock
 //  * - 'G' For flags to be printed as a collection of symbolic strings that would
 //  *       construct the specific value. Supported flags given by option:
-//  *       p page flags (see struct page) given as pointer to unsigned long
+//  *       p page flags (see page_s) given as pointer to unsigned long
 //  *       g gfp flags (GFP_* and __GFP_*) given as pointer to gfp_t
 //  *       v vma flags (VM_*) given as pointer to unsigned long
 //  * - 'OF[fnpPcCF]'  For a device tree object

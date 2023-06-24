@@ -93,8 +93,8 @@ static int verify_dirent_name(const char *name, int len)
 	return 0;
 }
 
-static int filldir64(dir_ctxt_s *ctx, const char *name, int namelen,
-				loff_t offset, u64 ino, unsigned int d_type)
+static int filldir64(dir_ctxt_s *ctx, const char *name,
+		int namelen, loff_t offset, u64 ino, unsigned int d_type)
 {
 	linux_dirent64_s *dirent, *prev;
 	getdents_cbk64_s *buf =
@@ -132,8 +132,8 @@ efault:
 	return -EFAULT;
 }
 
-long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
-				unsigned int count)
+MYOS_SYSCALL_DEFINE3(getdents64, unsigned int, fd,
+		linux_dirent64_s *, dirent, unsigned int, count)
 {
 	fd_s f;
 	getdents_cbk64_s buf = {
@@ -143,7 +143,7 @@ long sys_getdents64(unsigned int fd, linux_dirent64_s *dirent,
 	};
 	int error;
 
-	f = fdget_pos(fd);
+	f = myos_fdget_pos(fd);
 	if (!f.file)
 		return -EBADF;
 

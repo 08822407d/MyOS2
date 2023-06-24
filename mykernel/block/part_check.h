@@ -25,7 +25,7 @@ typedef struct parsed_partitions {
 } parsed_parts_s;
 
 // typedef struct {
-// 	struct page *v;
+// 	page_s *v;
 // } Sector;
 
 // void *read_part_sector(struct parsed_partitions *state, sector_t n, Sector *p);

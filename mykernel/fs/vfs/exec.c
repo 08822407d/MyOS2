@@ -36,7 +36,7 @@
 #include <linux/init/init.h>
 #include <linux/sched/mm.h>
 // #include <linux/sched/coredump.h>
-// #include <linux/sched/signal.h>
+#include <linux/sched/signal.h>
 // #include <linux/sched/numa_balancing.h>
 #include <linux/sched/task.h>
 // #include <linux/pagemap.h>
@@ -95,7 +95,8 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 /*
  * count() counts the number of strings in array ARGV.
  */
-static int count(const char *const *argv, int max) {
+static int count(const char *const *argv, int max)
+{
 	int i = 0;
 
 	if (argv != NULL) {
@@ -120,7 +121,8 @@ static int count(const char *const *argv, int max) {
 	return i;
 }
 
-static int count_strings_kernel(const char *const *argv) {
+static int count_strings_kernel(const char *const *argv)
+{
 	int i;
 
 	if (!argv)
@@ -145,7 +147,7 @@ static int count_strings_kernel(const char *const *argv) {
 static int
 copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 {
-// 	struct page *kmapped_page = NULL;
+// 	page_s *kmapped_page = NULL;
 	char *kaddr = NULL;
 	unsigned long kpos = 0;
 	int ret;
@@ -200,7 +202,7 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 // 			len -= bytes_to_copy;
 
 // 			if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
-// 				struct page *page;
+// 				page_s *page;
 
 // 				page = get_arg_page(bprm, pos, 1);
 // 				if (!page) {
@@ -256,7 +258,7 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 	while (len > 0) {
 	// 	unsigned int bytes_to_copy = min_t(unsigned int, len,
 	// 			min_not_zero(offset_in_page(pos), PAGE_SIZE));
-	// 	struct page *page;
+	// 	page_s *page;
 	// 	char *kaddr;
 
 	// 	pos -= bytes_to_copy;
@@ -293,7 +295,8 @@ copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
 
 
 
-static file_s *do_open_execat(int fd, filename_s *name, int flags)
+static file_s
+*do_open_execat(int fd, filename_s *name, int flags)
 {
 	file_s *file;
 	int err;
@@ -340,6 +343,215 @@ exit:
 	return ERR_PTR(err);
 }
 
+file_s *open_exec(const char *name)
+{
+	filename_s *filename = getname_kernel(name);
+	file_s *f = ERR_CAST(filename);
+
+	if (!IS_ERR(filename)) {
+		f = do_open_execat(AT_FDCWD, filename, 0);
+		putname(filename);
+	}
+	return f;
+}
+
+
+/*
+ * These functions flushes out all traces of the currently running executable
+ * so that a new one can be started
+ */
+
+// void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+void set_task_comm(task_s *tsk, const char *buf)
+{
+	// task_lock(tsk);
+	// trace_task_rename(tsk, buf);
+	// strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+	memset(tsk->comm, 0, sizeof(tsk->comm));
+	strncpy(tsk->comm, buf, sizeof(tsk->comm));
+	
+	// task_unlock(tsk);
+	// perf_event_comm(tsk, exec);
+}
+
+/*
+ * Calling this is the point of no return. None of the failures will be
+ * seen by userspace since either the process is already taking a fatal
+ * signal (via de_thread() or coredump), or will have SEGV raised
+ * (after exec_mmap()) by search_binary_handler (see below).
+ */
+int begin_new_exec(linux_bprm_s * bprm)
+{
+	task_s *me = current;
+	int retval;
+
+	// /* Once we are committed compute the creds */
+	// retval = bprm_creds_from_file(bprm);
+	// if (retval)
+	// 	return retval;
+
+	/*
+	 * Ensure all future errors are fatal.
+	 */
+	bprm->point_of_no_return = true;
+
+	// /*
+	//  * Make this the only thread in the thread group.
+	//  */
+	// retval = de_thread(me);
+	// if (retval)
+	// 	goto out;
+
+	// /*
+	//  * Cancel any io_uring activity across execve
+	//  */
+	// io_uring_task_cancel();
+
+	/* Ensure the files table is not shared. */
+	retval = unshare_files();
+	if (retval)
+		goto out;
+
+	/*
+	 * Must be called _before_ exec_mmap() as bprm->mm is
+	 * not visibile until then. This also enables the update
+	 * to be lockless.
+	 */
+	retval = set_mm_exe_file(bprm->mm, bprm->file);
+	if (retval)
+		goto out;
+
+	// /* If the binary is not readable then enforce mm->dumpable=0 */
+	// would_dump(bprm, bprm->file);
+	// if (bprm->have_execfd)
+	// 	would_dump(bprm, bprm->executable);
+
+	// /*
+	//  * Release all of the old mmap stuff
+	//  */
+	// acct_arg_size(bprm, 0);
+	// retval = exec_mmap(bprm->mm);
+	// if (retval)
+	// 	goto out;
+
+	// bprm->mm = NULL;
+
+// #ifdef CONFIG_POSIX_TIMERS
+// 	exit_itimers(me->signal);
+// 	flush_itimer_signals();
+// #endif
+
+// 	/*
+// 	 * Make the signal table private.
+// 	 */
+// 	retval = unshare_sighand(me);
+// 	if (retval)
+// 		goto out_unlock;
+
+// 	/*
+// 	 * Ensure that the uaccess routines can actually operate on userspace
+// 	 * pointers:
+// 	 */
+// 	force_uaccess_begin();
+
+// 	if (me->flags & PF_KTHREAD)
+// 		free_kthread_struct(me);
+// 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+// 					PF_NOFREEZE | PF_NO_SETAFFINITY);
+// 	flush_thread();
+// 	me->personality &= ~bprm->per_clear;
+
+// 	clear_syscall_work_syscall_user_dispatch(me);
+
+// 	/*
+// 	 * We have to apply CLOEXEC before we change whether the process is
+// 	 * dumpable (in setup_new_exec) to avoid a race with a process in userspace
+// 	 * trying to access the should-be-closed file descriptors of a process
+// 	 * undergoing exec(2).
+// 	 */
+// 	do_close_on_exec(me->files);
+
+// 	if (bprm->secureexec) {
+// 		/* Make sure parent cannot signal privileged process. */
+// 		me->pdeath_signal = 0;
+
+// 		/*
+// 		 * For secureexec, reset the stack limit to sane default to
+// 		 * avoid bad behavior from the prior rlimits. This has to
+// 		 * happen before arch_pick_mmap_layout(), which examines
+// 		 * RLIMIT_STACK, but after the point of no return to avoid
+// 		 * needing to clean up the change on failure.
+// 		 */
+// 		if (bprm->rlim_stack.rlim_cur > _STK_LIM)
+// 			bprm->rlim_stack.rlim_cur = _STK_LIM;
+// 	}
+
+// 	me->sas_ss_sp = me->sas_ss_size = 0;
+
+// 	/*
+// 	 * Figure out dumpability. Note that this checking only of current
+// 	 * is wrong, but userspace depends on it. This should be testing
+// 	 * bprm->secureexec instead.
+// 	 */
+// 	if (bprm->interp_flags & BINPRM_FLAGS_ENFORCE_NONDUMP ||
+// 	    !(uid_eq(current_euid(), current_uid()) &&
+// 	      gid_eq(current_egid(), current_gid())))
+// 		set_dumpable(current->mm, suid_dumpable);
+// 	else
+// 		set_dumpable(current->mm, SUID_DUMP_USER);
+
+// 	perf_event_exec();
+// 	__set_task_comm(me, kbasename(bprm->filename), true);
+
+// 	/* An exec changes our domain. We are no longer part of the thread
+// 	   group */
+// 	WRITE_ONCE(me->self_exec_id, me->self_exec_id + 1);
+// 	flush_signal_handlers(me, 0);
+
+// 	retval = set_cred_ucounts(bprm->cred);
+// 	if (retval < 0)
+// 		goto out_unlock;
+
+// 	/*
+// 	 * install the new credentials for this executable
+// 	 */
+// 	security_bprm_committing_creds(bprm);
+
+// 	commit_creds(bprm->cred);
+// 	bprm->cred = NULL;
+
+// 	/*
+// 	 * Disable monitoring for regular users
+// 	 * when executing setuid binaries. Must
+// 	 * wait until new credentials are committed
+// 	 * by commit_creds() above
+// 	 */
+// 	if (get_dumpable(me->mm) != SUID_DUMP_USER)
+// 		perf_event_exit_task(me);
+// 	/*
+// 	 * cred_guard_mutex must be held at least to this point to prevent
+// 	 * ptrace_attach() from altering our determination of the task's
+// 	 * credentials; any time after this it may be unlocked.
+// 	 */
+// 	security_bprm_committed_creds(bprm);
+
+// 	/* Pass the opened binary to the interpreter. */
+// 	if (bprm->have_execfd) {
+// 		retval = get_unused_fd_flags(0);
+// 		if (retval < 0)
+// 			goto out_unlock;
+// 		fd_install(retval, bprm->executable);
+// 		bprm->executable = NULL;
+// 		bprm->execfd = retval;
+// 	}
+// 	return 0;
+
+// out_unlock:
+// 	up_write(&me->signal->exec_update_lock);
+out:
+	return retval;
+}
+
 
 static void free_bprm(linux_bprm_s *bprm)
 {
@@ -365,7 +577,8 @@ static void free_bprm(linux_bprm_s *bprm)
 	kfree(bprm);
 }
 
-static linux_bprm_s *alloc_bprm(int fd, filename_s *filename) {
+static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
+{
 	linux_bprm_s *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
 	int retval = -ENOMEM;
 	if (!bprm)
@@ -405,11 +618,12 @@ out:
  *
  * This may be called multiple times for binary chains (scripts for example).
  */
-static int prepare_binprm(linux_bprm_s *bprm) {
+static int prepare_binprm(linux_bprm_s *bprm)
+{
 	loff_t pos = 0;
 
 	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
-	// return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
+	return kernel_read(bprm->file, bprm->buf, BINPRM_BUF_SIZE, &pos);
 }
 
 
@@ -417,7 +631,10 @@ static int prepare_binprm(linux_bprm_s *bprm) {
 /*
  * cycle the list of binary formats handler, until one recognizes the image
  */
-static int search_binary_handler(linux_bprm_s *bprm) {
+static int search_binary_handler(linux_bprm_s *bprm)
+{
+	mm_s *currmm = current->mm;
+
 	// bool need_retry = IS_ENABLED(CONFIG_MODULES);
 	linux_bfmt_s *fmt;
 	int retval;
@@ -468,8 +685,8 @@ extern int __myos_copy_strings(const char *const *argv);
  * sys_execve() executes a new program.
  */
 static int
-bprm_execve(linux_bprm_s *bprm, int fd,
-		filename_s *filename, int flags) {
+bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
+{
 	file_s *file;
 	int retval;
 
@@ -508,7 +725,7 @@ bprm_execve(linux_bprm_s *bprm, int fd,
 	// retval = exec_binprm(bprm);
 	// static int exec_binprm(struct linux_binprm *bprm)
 	// {
-		// retval = search_binary_handler(bprm);
+		retval = search_binary_handler(bprm);
 	// }
 	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)
@@ -542,7 +759,8 @@ out_unmark:
 // static int do_execveat_common(int fd, struct filename *filename,
 // 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
 static int do_execveat_common(int fd, filename_s *filename,
-	const char *const *argv, const char *const *envp, int flags) {
+	const char *const *argv, const char *const *envp, int flags)
+{
 	linux_bprm_s *bprm;
 	int retval;
 
@@ -627,7 +845,8 @@ out_ret:
 
 int kernel_execve(const char *kernel_filename,
 		const char *const *argv,
-		const char *const *envp) {
+		const char *const *envp)
+{
 	filename_s *filename;
 	linux_bprm_s *bprm;
 	int fd = AT_FDCWD;
@@ -684,13 +903,15 @@ out_ret:
 
 static int do_execve(filename_s *filename,
 		const char *const *__argv,
-		const char *const *__envp) {
+		const char *const *__envp)
+{
 	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
 }
 
 
-long sys_execve(const char *filename,
-		const char *const __user *argv,
-		const char *const __user *envp) {
+MYOS_SYSCALL_DEFINE3(execve, const char *,filename,
+		const char *const __user *, argv,
+		const char *const __user *, envp)
+{
 	return do_execve(getname(filename), argv, envp);
 }

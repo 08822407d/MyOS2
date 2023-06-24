@@ -1911,7 +1911,7 @@
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
 		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
 		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
-		// int			(*mmap) (file_s *, struct vm_area_struct *);
+		// int			(*mmap) (file_s *, vma_s *);
 		// unsigned long	mmap_supported_flags;
 		int			(*open) (inode_s *, file_s *);
 		// int			(*flush) (file_s *, fl_owner_t id);
@@ -1984,12 +1984,12 @@
 	// 	return file->f_op->write_iter(kio, iter);
 	// }
 
-	// static inline int call_mmap(file_s *file, struct vm_area_struct *vma)
+	// static inline int call_mmap(file_s *file, vma_s *vma)
 	// {
 	// 	return file->f_op->mmap(file, vma);
 	// }
 
-	// extern ssize_t vfs_read(file_s *, char __user *, size_t, loff_t *);
+	extern ssize_t vfs_read(file_s *, char __user *, size_t, loff_t *);
 	// extern ssize_t vfs_write(file_s *, const char __user *, size_t, loff_t *);
 	// extern ssize_t vfs_copy_file_range(file_s *, loff_t , file_s *,
 	// 				loff_t, size_t, unsigned int);
@@ -2450,10 +2450,10 @@
 	extern void iput(inode_s *);
 	// extern int generic_update_time(inode_s *, timespec64_s *, int);
 
-	// /* /sys/fs */
+	/* /sys/fs */
 	// extern struct kobject *fs_kobj;
 
-	// #define MAX_RW_COUNT (INT_MAX & PAGE_MASK)
+	#define MAX_RW_COUNT (INT_MAX & PAGE_MASK)
 
 	// #ifdef CONFIG_FILE_LOCKING
 	// static inline int break_lease(inode_s *inode, unsigned int mode)
@@ -2939,11 +2939,11 @@
 	// #endif
 	// extern int do_pipe_flags(int *, int);
 
-	// extern ssize_t kernel_read(file_s *, void *, size_t, loff_t *);
-	// ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos);
+	extern ssize_t kernel_read(file_s *, void *, size_t, loff_t *);
+	ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos);
 	// extern ssize_t kernel_write(file_s *, const void *, size_t, loff_t *);
 	// extern ssize_t __kernel_write(file_s *, const void *, size_t, loff_t *);
-	// extern file_s * open_exec(const char *);
+	extern file_s * open_exec(const char *);
 	
 	// /* fs/dcache.c -- generic fs support functions */
 	// extern bool is_subdir(dentry_s *, dentry_s *);
@@ -3049,8 +3049,8 @@
 	// extern int sb_set_blocksize(super_block_s *, int);
 	// extern int sb_min_blocksize(super_block_s *, int);
 
-	// extern int generic_file_mmap(file_s *, struct vm_area_struct *);
-	// extern int generic_file_readonly_mmap(file_s *, struct vm_area_struct *);
+	// extern int generic_file_mmap(file_s *, vma_s *);
+	// extern int generic_file_readonly_mmap(file_s *, vma_s *);
 	// extern ssize_t generic_write_checks(struct kiocb *, struct iov_iter *);
 	// extern int generic_write_check_limits(file_s *file, loff_t pos,
 	// 		loff_t *count);
@@ -3304,12 +3304,12 @@
 
 	// extern int file_update_time(file_s *file);
 
-	// static inline bool vma_is_dax(const struct vm_area_struct *vma)
+	// static inline bool vma_is_dax(const vma_s *vma)
 	// {
 	// 	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
 	// }
 
-	// static inline bool vma_is_fsdax(struct vm_area_struct *vma)
+	// static inline bool vma_is_fsdax(vma_s *vma)
 	// {
 	// 	inode_s *inode;
 

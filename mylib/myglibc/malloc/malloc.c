@@ -57,7 +57,7 @@
 
 #define PAGE_ROUND_UP(x)	round_up((x), PAGE_SIZE)
 #define PAGE_ROUND_DOWN(x)	round_down((x), PAGE_SIZE)
-#define PAGE_SIZE 0x200000
+#define PAGE_SIZE			CONST_2M
 
 bool initiated = false;
 void *brk_end = NULL;

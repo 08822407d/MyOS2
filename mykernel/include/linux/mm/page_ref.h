@@ -26,43 +26,43 @@
 	// */
 	// #define page_ref_tracepoint_active(t) tracepoint_enabled(t)
 
-	// extern void __page_ref_set(struct page *page, int v);
-	// extern void __page_ref_mod(struct page *page, int v);
-	// extern void __page_ref_mod_and_test(struct page *page, int v, int ret);
-	// extern void __page_ref_mod_and_return(struct page *page, int v, int ret);
-	// extern void __page_ref_mod_unless(struct page *page, int v, int u);
-	// extern void __page_ref_freeze(struct page *page, int v, int ret);
-	// extern void __page_ref_unfreeze(struct page *page, int v);
+	// extern void __page_ref_set(page_s *page, int v);
+	// extern void __page_ref_mod(page_s *page, int v);
+	// extern void __page_ref_mod_and_test(page_s *page, int v, int ret);
+	// extern void __page_ref_mod_and_return(page_s *page, int v, int ret);
+	// extern void __page_ref_mod_unless(page_s *page, int v, int u);
+	// extern void __page_ref_freeze(page_s *page, int v, int ret);
+	// extern void __page_ref_unfreeze(page_s *page, int v);
 
 	// #else
 
 	// #define page_ref_tracepoint_active(t) false
 
-	// static inline void __page_ref_set(struct page *page, int v)
+	// static inline void __page_ref_set(page_s *page, int v)
 	// {
 	// }
-	// static inline void __page_ref_mod(struct page *page, int v)
+	// static inline void __page_ref_mod(page_s *page, int v)
 	// {
 	// }
-	// static inline void __page_ref_mod_and_test(struct page *page, int v, int ret)
+	// static inline void __page_ref_mod_and_test(page_s *page, int v, int ret)
 	// {
 	// }
-	// static inline void __page_ref_mod_and_return(struct page *page, int v, int ret)
+	// static inline void __page_ref_mod_and_return(page_s *page, int v, int ret)
 	// {
 	// }
-	// static inline void __page_ref_mod_unless(struct page *page, int v, int u)
+	// static inline void __page_ref_mod_unless(page_s *page, int v, int u)
 	// {
 	// }
-	// static inline void __page_ref_freeze(struct page *page, int v, int ret)
+	// static inline void __page_ref_freeze(page_s *page, int v, int ret)
 	// {
 	// }
-	// static inline void __page_ref_unfreeze(struct page *page, int v)
+	// static inline void __page_ref_unfreeze(page_s *page, int v)
 	// {
 	// }
 
 	// #endif
 
-	// static inline int page_ref_count(const struct page *page)
+	// static inline int page_ref_count(const page_s *page)
 	// {
 	// 	return atomic_read(&page->_refcount);
 	// }
@@ -89,12 +89,12 @@
 	// 	return page_ref_count(&folio->page);
 	// }
 
-	// static inline int page_count(const struct page *page)
+	// static inline int page_count(const page_s *page)
 	// {
 	// 	return folio_ref_count(page_folio(page));
 	// }
 
-	// static inline void set_page_count(struct page *page, int v)
+	// static inline void set_page_count(page_s *page, int v)
 	// {
 	// 	atomic_set(&page->_refcount, v);
 	// 	if (page_ref_tracepoint_active(page_ref_set))
@@ -112,12 +112,12 @@
 	// * Setup the page count before being freed into the page allocator for
 	// * the first time (boot or memory hotplug)
 	// */
-	// static inline void init_page_count(struct page *page)
+	// static inline void init_page_count(page_s *page)
 	// {
 	// 	set_page_count(page, 1);
 	// }
 
-	// static inline void page_ref_add(struct page *page, int nr)
+	// static inline void page_ref_add(page_s *page, int nr)
 	// {
 	// 	atomic_add(nr, &page->_refcount);
 	// 	if (page_ref_tracepoint_active(page_ref_mod))
@@ -129,7 +129,7 @@
 	// 	page_ref_add(&folio->page, nr);
 	// }
 
-	// static inline void page_ref_sub(struct page *page, int nr)
+	// static inline void page_ref_sub(page_s *page, int nr)
 	// {
 	// 	atomic_sub(nr, &page->_refcount);
 	// 	if (page_ref_tracepoint_active(page_ref_mod))
@@ -141,7 +141,7 @@
 	// 	page_ref_sub(&folio->page, nr);
 	// }
 
-	// static inline int page_ref_sub_return(struct page *page, int nr)
+	// static inline int page_ref_sub_return(page_s *page, int nr)
 	// {
 	// 	int ret = atomic_sub_return(nr, &page->_refcount);
 
@@ -155,7 +155,7 @@
 	// 	return page_ref_sub_return(&folio->page, nr);
 	// }
 
-	// static inline void page_ref_inc(struct page *page)
+	// static inline void page_ref_inc(page_s *page)
 	// {
 	// 	atomic_inc(&page->_refcount);
 	// 	if (page_ref_tracepoint_active(page_ref_mod))
@@ -167,7 +167,7 @@
 	// 	page_ref_inc(&folio->page);
 	// }
 
-	// static inline void page_ref_dec(struct page *page)
+	// static inline void page_ref_dec(page_s *page)
 	// {
 	// 	atomic_dec(&page->_refcount);
 	// 	if (page_ref_tracepoint_active(page_ref_mod))
@@ -179,7 +179,7 @@
 	// 	page_ref_dec(&folio->page);
 	// }
 
-	// static inline int page_ref_sub_and_test(struct page *page, int nr)
+	// static inline int page_ref_sub_and_test(page_s *page, int nr)
 	// {
 	// 	int ret = atomic_sub_and_test(nr, &page->_refcount);
 
@@ -193,7 +193,7 @@
 	// 	return page_ref_sub_and_test(&folio->page, nr);
 	// }
 
-	// static inline int page_ref_inc_return(struct page *page)
+	// static inline int page_ref_inc_return(page_s *page)
 	// {
 	// 	int ret = atomic_inc_return(&page->_refcount);
 
@@ -207,7 +207,7 @@
 	// 	return page_ref_inc_return(&folio->page);
 	// }
 
-	// static inline int page_ref_dec_and_test(struct page *page)
+	// static inline int page_ref_dec_and_test(page_s *page)
 	// {
 	// 	int ret = atomic_dec_and_test(&page->_refcount);
 
@@ -221,7 +221,7 @@
 	// 	return page_ref_dec_and_test(&folio->page);
 	// }
 
-	// static inline int page_ref_dec_return(struct page *page)
+	// static inline int page_ref_dec_return(page_s *page)
 	// {
 	// 	int ret = atomic_dec_return(&page->_refcount);
 
@@ -235,7 +235,7 @@
 	// 	return page_ref_dec_return(&folio->page);
 	// }
 
-	// static inline bool page_ref_add_unless(struct page *page, int nr, int u)
+	// static inline bool page_ref_add_unless(page_s *page, int nr, int u)
 	// {
 	// 	bool ret = atomic_add_unless(&page->_refcount, nr, u);
 
@@ -310,7 +310,7 @@
 	// 	return folio_ref_try_add_rcu(folio, 1);
 	// }
 
-	// static inline int page_ref_freeze(struct page *page, int count)
+	// static inline int page_ref_freeze(page_s *page, int count)
 	// {
 	// 	int ret = likely(atomic_cmpxchg(&page->_refcount, count, 0) == count);
 
@@ -324,7 +324,7 @@
 	// 	return page_ref_freeze(&folio->page, count);
 	// }
 
-	// static inline void page_ref_unfreeze(struct page *page, int count)
+	// static inline void page_ref_unfreeze(page_s *page, int count)
 	// {
 	// 	VM_BUG_ON_PAGE(page_count(page) != 0, page);
 	// 	VM_BUG_ON(count == 0);

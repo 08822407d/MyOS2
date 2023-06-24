@@ -142,7 +142,8 @@ memblock_cap_size(phys_addr_t base, phys_addr_t *size) {
  */
 static unsigned long __init_memblock
 memblock_addrs_overlap(phys_addr_t base1, phys_addr_t size1,
-		phys_addr_t base2, phys_addr_t size2) {
+		phys_addr_t base2, phys_addr_t size2)
+{
 	return ((base1 < (base2 + size2)) && (base2 < (base1 + size1)));
 }
 
@@ -178,8 +179,8 @@ memblock_overlaps_region(mmblk_type_s *type,
  * Found address on success, 0 on failure.
  */
 static phys_addr_t __init_memblock
-__memblock_find_range_bottom_up(phys_addr_t start, phys_addr_t end,
-		phys_addr_t size, phys_addr_t align)
+__memblock_find_range_bottom_up(phys_addr_t start,
+		phys_addr_t end, phys_addr_t size, phys_addr_t align)
 {
 	phys_addr_t this_start, this_end, cand;
 	uint64_t i;
@@ -289,7 +290,7 @@ memblock_merge_regions(mmblk_type_s *type)
  */
 static void __init_memblock
 memblock_insert_region(mmblk_type_s *type, int idx,
-		phys_addr_t base, phys_addr_t size, enum memblock_flags flags)
+		phys_addr_t base, phys_addr_t size, enum mmblk_flags flags)
 {
 	mmblk_rgn_s *rgn = &type->regions[idx];
 	while(type->cnt >= type->max);
@@ -319,7 +320,7 @@ memblock_insert_region(mmblk_type_s *type, int idx,
  */
 static int __init
 memblock_add_range(mmblk_type_s *type, phys_addr_t base,
-		phys_addr_t size, enum memblock_flags flags)
+		phys_addr_t size, enum mmblk_flags flags)
 {
 	int idx;
 	phys_addr_t end = base + memblock_cap_size(base, &size);
@@ -370,12 +371,14 @@ memblock_add_range(mmblk_type_s *type, phys_addr_t base,
  * 0 on success, -errno on failure.
  */
 int __init_memblock
-memblock_add(phys_addr_t base, phys_addr_t size) {
+memblock_add(phys_addr_t base, phys_addr_t size)
+{
 	return memblock_add_range(&memblock.memory, base, size, 0);
 }
 
 int __init_memblock
-memblock_reserve(phys_addr_t base, phys_addr_t size) {
+memblock_reserve(phys_addr_t base, phys_addr_t size)
+{
 	return memblock_add_range(&memblock.reserved, base, size, 0);
 }
 
@@ -463,7 +466,8 @@ memblock_remove_range(mmblk_type_s *type,
 }
 
 int __init_memblock
-memblock_remove(phys_addr_t base, phys_addr_t size) {
+memblock_remove(phys_addr_t base, phys_addr_t size)
+{
 	phys_addr_t end = base + size - 1;
 	mmblk_type_s *type = &memblock.memory;
 

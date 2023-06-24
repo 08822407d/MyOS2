@@ -28,21 +28,21 @@ mmpr_s * get_seginfo(task_s * task)
 	mm_s * mm = task->mm;
 	reg_t user_rsp = task_pt_regs(task)->sp;
 
-	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, SZ_2M);
-	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, SZ_2M) - (unsigned long)codepg_p) / PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, SZ_2M);
-	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, SZ_2M) - (unsigned long)datapg_p) / PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, SZ_2M);
-	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, SZ_2M) - (unsigned long)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down((unsigned long)user_rsp, SZ_2M);
-	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, SZ_2M) - (unsigned long)stackpg_p) / PAGE_SIZE;
+	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
+	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (unsigned long)codepg_p) / PAGE_SIZE;
+	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
+	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (unsigned long)datapg_p) / PAGE_SIZE;
+	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
+	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, PAGE_SIZE) - (unsigned long)brkpg_p) / PAGE_SIZE;
+	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down((unsigned long)user_rsp, PAGE_SIZE);
+	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (unsigned long)stackpg_p) / PAGE_SIZE;
 }
 
 void creat_exec_addrspace(task_s * task)
 {
 	pt_regs_s *context = task_pt_regs(task);
 	mm_s * mm = task->mm;
-	context->sp = (reg_t)round_down(mm->start_stack, SZ_2M) - SZ_2M;
+	context->sp = (reg_t)round_down(mm->start_stack, PAGE_SIZE) - SZ_2M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
 
@@ -77,8 +77,6 @@ void prepair_COW(task_s * task)
 			atomic_inc(&(page->_mapcount));
 		}
 	}
-
-	myos_refresh_arch_page();
 }
 
 int do_COW(task_s * task, virt_addr_t virt)

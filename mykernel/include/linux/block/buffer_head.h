@@ -140,7 +140,7 @@
 	// 	})
 	// #define page_has_buffers(page)	PagePrivate(page)
 
-	// void buffer_check_dirty_writeback(struct page *page,
+	// void buffer_check_dirty_writeback(page_s *page,
 	// 					bool *dirty, bool *writeback);
 
 	// /*
@@ -151,11 +151,11 @@
 	// void mark_buffer_write_io_error(struct buffer_head *bh);
 	// void touch_buffer(struct buffer_head *bh);
 	// void set_bh_page(struct buffer_head *bh,
-	// 		struct page *page, unsigned long offset);
-	// int try_to_free_buffers(struct page *);
-	// struct buffer_head *alloc_page_buffers(struct page *page, unsigned long size,
+	// 		page_s *page, unsigned long offset);
+	// int try_to_free_buffers(page_s *);
+	// struct buffer_head *alloc_page_buffers(page_s *page, unsigned long size,
 	// 		bool retry);
-	// void create_empty_buffers(struct page *, unsigned long,
+	// void create_empty_buffers(page_s *, unsigned long,
 	// 			unsigned long b_state);
 	// void end_buffer_read_sync(struct buffer_head *bh, int uptodate);
 	// void end_buffer_write_sync(struct buffer_head *bh, int uptodate);
@@ -209,34 +209,34 @@
 	// * Generic address_space_operations implementations for buffer_head-backed
 	// * address_spaces.
 	// */
-	// void block_invalidatepage(struct page *page, unsigned int offset,
+	// void block_invalidatepage(page_s *page, unsigned int offset,
 	// 			unsigned int length);
-	// int block_write_full_page(struct page *page, get_block_t *get_block,
+	// int block_write_full_page(page_s *page, get_block_t *get_block,
 	// 				struct writeback_control *wbc);
-	// int __block_write_full_page(struct inode *inode, struct page *page,
+	// int __block_write_full_page(struct inode *inode, page_s *page,
 	// 			get_block_t *get_block, struct writeback_control *wbc,
 	// 			bh_end_io_t *handler);
-	// int block_read_full_page(struct page*, get_block_t*);
-	// int block_is_partially_uptodate(struct page *page, unsigned long from,
+	// int block_read_full_page(page_s*, get_block_t*);
+	// int block_is_partially_uptodate(page_s *page, unsigned long from,
 	// 				unsigned long count);
 	// int block_write_begin(addr_space_s *mapping, loff_t pos, unsigned len,
-	// 		unsigned flags, struct page **pagep, get_block_t *get_block);
-	// int __block_write_begin(struct page *page, loff_t pos, unsigned len,
+	// 		unsigned flags, page_s **pagep, get_block_t *get_block);
+	// int __block_write_begin(page_s *page, loff_t pos, unsigned len,
 	// 		get_block_t *get_block);
 	// int block_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
-	// 				struct page *, void *);
+	// 				page_s *, void *);
 	// int generic_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
-	// 				struct page *, void *);
-	// void page_zero_new_buffers(struct page *page, unsigned from, unsigned to);
-	// void clean_page_buffers(struct page *page);
+	// 				page_s *, void *);
+	// void page_zero_new_buffers(page_s *page, unsigned from, unsigned to);
+	// void clean_page_buffers(page_s *page);
 	// int cont_write_begin(file_s *, addr_space_s *, loff_t,
-	// 			unsigned, unsigned, struct page **, void **,
+	// 			unsigned, unsigned, page_s **, void **,
 	// 			get_block_t *, loff_t *);
 	// int generic_cont_expand_simple(struct inode *inode, loff_t size);
-	// int block_commit_write(struct page *page, unsigned from, unsigned to);
-	// int block_page_mkwrite(struct vm_area_struct *vma, struct vm_fault *vmf,
+	// int block_commit_write(page_s *page, unsigned from, unsigned to);
+	// int block_page_mkwrite(vma_s *vma, struct vm_fault *vmf,
 	// 				get_block_t get_block);
 	// /* Convert errno to return value from ->page_mkwrite() call */
 	// static inline vm_fault_t block_page_mkwrite_return(int err)
@@ -253,12 +253,12 @@
 	// sector_t generic_block_bmap(addr_space_s *, sector_t, get_block_t *);
 	// int block_truncate_page(addr_space_s *, loff_t, get_block_t *);
 	// int nobh_write_begin(addr_space_s *, loff_t, unsigned, unsigned,
-	// 				struct page **, void **, get_block_t*);
+	// 				page_s **, void **, get_block_t*);
 	// int nobh_write_end(file_s *, addr_space_s *,
 	// 				loff_t, unsigned, unsigned,
-	// 				struct page *, void *);
+	// 				page_s *, void *);
 	// int nobh_truncate_page(addr_space_s *, loff_t, get_block_t *);
-	// int nobh_writepage(struct page *page, get_block_t *get_block,
+	// int nobh_writepage(page_s *page, get_block_t *get_block,
 	// 						struct writeback_control *wbc);
 
 	// void buffer_init(void);
@@ -389,12 +389,12 @@
 	// 	return __bread_gfp(bdev, block, size, __GFP_MOVABLE);
 	// }
 
-	// extern int __set_page_dirty_buffers(struct page *page);
+	// extern int __set_page_dirty_buffers(page_s *page);
 
 	// #else /* CONFIG_BLOCK */
 
 	// static inline void buffer_init(void) {}
-	// static inline int try_to_free_buffers(struct page *page) { return 1; }
+	// static inline int try_to_free_buffers(page_s *page) { return 1; }
 	// static inline int inode_has_buffers(struct inode *inode) { return 0; }
 	// static inline void invalidate_inode_buffers(struct inode *inode) {}
 	// static inline int remove_inode_buffers(struct inode *inode) { return 1; }

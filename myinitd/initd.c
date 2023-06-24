@@ -30,7 +30,7 @@ int main(int argc, const char *argv[])
 	else
 	{
 		// printf("child task, %d\n", rv);
-		execve("/shell.bin", args, NULL);
+		execve("/sh", args, NULL);
 		// malloc_free_test();
 		// file_io_test();
 		// dirtest();

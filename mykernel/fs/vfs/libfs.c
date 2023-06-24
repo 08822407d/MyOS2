@@ -208,8 +208,7 @@ loff_t dcache_dir_lseek(file_s *file, loff_t offset, int whence)
 }
 
 /* Relationship between i_mode and the DT_xxx types */
-static inline unsigned char dt_type(inode_s *inode)
-{
+static inline unsigned char dt_type(inode_s *inode) {
 	return (inode->i_mode >> 12) & 15;
 }
 

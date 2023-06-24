@@ -46,6 +46,7 @@ mm_s init_mm = {
 	// .cpu_bitmap			= CPU_BITS_NONE,
 	// INIT_MM_CONTEXT(init_mm)
 };
+vma_s init_vma;
 
 void setup_initial_init_mm(void *start_code,
 		void *end_code, void *end_data, void *brk)
@@ -54,4 +55,10 @@ void setup_initial_init_mm(void *start_code,
 	init_mm.end_code	= (unsigned long)end_code;
 	init_mm.end_data	= (unsigned long)end_data;
 	init_mm.brk			= (unsigned long)brk;
+
+	memset(&init_vma, 0, sizeof(vma_s));
+	init_mm.mmap		= &init_vma;
+	init_mm.map_count	= 1;
+	init_vma.vm_start	= USERADDR_LIMIT - 17 * PAGE_SIZE;
+	init_vma.vm_end		= USERADDR_LIMIT;
 }

@@ -83,25 +83,8 @@
 				XD		: 1;
 		} arch_pte_T;
 
-	// #ifdef CONFIG_X86_5LEVEL
-	// 	extern unsigned int __pgtable_l5_enabled;
 
-	// #	ifdef USE_EARLY_PGTABLE_L5
-	// 	/*
-	// 	* cpu_feature_enabled() is not available in early boot code.
-	// 	* Use variable instead.
-	// 	*/
-	// 		static inline bool pgtable_l5_enabled(void)
-	// 		{
-	// 			return __pgtable_l5_enabled;
-	// 		}
-	// #	else
-	// #		define pgtable_l5_enabled() cpu_feature_enabled(X86_FEATURE_LA57)
-	// #	endif /* USE_EARLY_PGTABLE_L5 */
-
-	// #else
-	// #	define pgtable_l5_enabled()	0
-	// #endif /* CONFIG_X86_5LEVEL */
+	// #define pgtable_l5_enabled()	0
 
 	// 	extern unsigned int pgdir_shift;
 	// 	extern unsigned int ptrs_per_p4d;
@@ -109,62 +92,45 @@
 
 	// #define SHARED_KERNEL_PMD 0
 
-	// #ifdef CONFIG_X86_5LEVEL
-	// /*
-	//  * PGDIR_SHIFT determines what a top-level page table entry can map
-	//  */
-	// #	define PGDIR_SHIFT		pgdir_shift
-	// #	define PTRS_PER_PGD		512
-	// /*
-	//  * 4th level page in 5-level paging case
-	//  */
-	// #	define P4D_SHIFT		39
-	// #	define MAX_PTRS_PER_P4D	512
-	// #	define PTRS_PER_P4D		ptrs_per_p4d
-	// #	define P4D_SIZE			(_AC(1, UL) << P4D_SHIFT)
-	// #	define P4D_MASK			(~(P4D_SIZE - 1))
-	// #	define MAX_POSSIBLE_PHYSMEM_BITS	52
-	// #else /* CONFIG_X86_5LEVEL */
-	// /*
-	//  * PGDIR_SHIFT determines what a top-level page table entry can map
-	//  */
-	// #	define PGDIR_SHIFT		39
-	// #	define PTRS_PER_PGD		512
-	// #	define MAX_PTRS_PER_P4D	1
-	// #endif /* CONFIG_X86_5LEVEL */
+	/*
+	 * PGDIR_SHIFT determines what a top-level page table entry can map
+	 */
+	#define PGDIR_SHIFT			39
+	#define PTRS_PER_PGD		512
+	#define MAX_PTRS_PER_P4D	1
 
-	// /*
-	//  * 3rd level page
-	//  */
-	// #define PUD_SHIFT		30
-	// #define PTRS_PER_PUD	512
+	/*
+	 * 3rd level page
+	 */
+	#define PUD_SHIFT			30
+	#define PTRS_PER_PUD		512
 
-	// /*
-	//  * PMD_SHIFT determines the size of the area a middle-level
-	//  * page table can map
-	//  */
-	// #define PMD_SHIFT		21
-	// #define PTRS_PER_PMD	512
+	/*
+	 * PMD_SHIFT determines the size of the area a middle-level
+	 * page table can map
+	 */
+	#define PMD_SHIFT			21
+	#define PTRS_PER_PMD		512
 
-	// /*
-	//  * entries per page directory level
-	//  */
-	// #define PTRS_PER_PTE	512
+	/*
+	 * entries per page directory level
+	 */
+	#define PTRS_PER_PTE		512
 
-	// #define PMD_SIZE		(_AC(1, UL) << PMD_SHIFT)
-	// #define PMD_MASK		(~(PMD_SIZE - 1))
-	// #define PUD_SIZE		(_AC(1, UL) << PUD_SHIFT)
-	// #define PUD_MASK		(~(PUD_SIZE - 1))
-	// #define PGDIR_SIZE		(_AC(1, UL) << PGDIR_SHIFT)
-	// #define PGDIR_MASK		(~(PGDIR_SIZE - 1))
+	#define PMD_SIZE			(_AC(1, UL) << PMD_SHIFT)
+	#define PMD_MASK			(~(PMD_SIZE - 1))
+	#define PUD_SIZE			(_AC(1, UL) << PUD_SHIFT)
+	#define PUD_MASK			(~(PUD_SIZE - 1))
+	#define PGDIR_SIZE			(_AC(1, UL) << PGDIR_SHIFT)
+	#define PGDIR_MASK			(~(PGDIR_SIZE - 1))
 
-	// /*
-	//  * See Documentation/x86/x86_64/mm.rst for a description of the memory map.
-	//  *
-	//  * Be very careful vs. KASLR when changing anything here. The KASLR address
-	//  * range must not overlap with anything except the KASAN shadow area, which
-	//  * is correct as KASAN disables KASLR.
-	//  */
+	/*
+	 * See Documentation/x86/x86_64/mm.rst for a description of the memory map.
+	 *
+	 * Be very careful vs. KASLR when changing anything here. The KASLR address
+	 * range must not overlap with anything except the KASAN shadow area, which
+	 * is correct as KASAN disables KASLR.
+	 */
 	#define MAXMEM (1UL << MAX_PHYSMEM_BITS)
 
 	// #define GUARD_HOLE_PGD_ENTRY	-256UL

@@ -8,6 +8,9 @@
 #include <obsolete/apic.h>
 #include <obsolete/device.h>
 
+#include <asm/idtentry.h>
+
+
 extern gate_table_s exception_init_table[];
 
 irq_desc_s	irq_descriptors[NR_IRQ_VECS];
@@ -113,57 +116,6 @@ void excep_gen_prot(pt_regs_s *sf_regs)
 	while (1);
 }
 
-void excep_page_fault(pt_regs_s *sf_regs, per_cpudata_s *cpudata_p)
-{
-	task_s *curr = current;
-	mm_s *mm = curr->mm;
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
-	unsigned long cr2 = 0;
-	asm volatile(	"movq	%%cr2,	%0		\n\t"
-				:	"=r"(cr2)
-				:
-				:	"memory"
-				);
-
-	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
-		check_addr_writable((reg_t)cr2, curr))
-	{
-		do_COW(current, (virt_addr_t)cr2);
-		return;
-	}
-
-	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
-
-	if(!(error_code & 0x01))
-		color_printk(RED,BLACK,"Page Not-Present,\t");
-
-	if(error_code & 0x02)
-		color_printk(RED,BLACK,"Write Cause Fault,\t");
-	else
-		color_printk(RED,BLACK,"Read Cause Fault,\t");
-
-	if(error_code & 0x04)
-		color_printk(RED,BLACK,"Fault in user(3)\t");
-	else
-		color_printk(RED,BLACK,"Fault in supervisor(0,1,2)\t");
-
-	if(error_code & 0x08)
-		color_printk(RED,BLACK,",Reserved Bit Cause Fault\t");
-
-	if(error_code & 0x10)
-		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
-
-	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->ip);
-
-	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
-
-	while (1);
-
-PF_finish:
-	myos_refresh_arch_page();
-	return;
-}
-
 
 /*==============================================================================================*
  *											entrys									 			*
@@ -212,7 +164,7 @@ void exception_handler(pt_regs_s *sf_regs)
 		excep_gen_prot(sf_regs);
 		break;
 	case PAGE_FAULT_VEC:
-		excep_page_fault(sf_regs, cpudata_p);
+		exc_page_fault(sf_regs, sf_regs->orig_ax);
 		break;
 
 	default:

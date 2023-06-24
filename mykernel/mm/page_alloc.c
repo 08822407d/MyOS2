@@ -278,7 +278,7 @@ expand(zone_s *zone, page_s *page, int low, int high)
 }
 
 /*
- * Locate the struct page for both the matching buddy in our
+ * Locate the page_s for both the matching buddy in our
  * pair (buddy1) and the combined O(n+1) page they form (page).
  *
  * 1) Any buddy B1 will have an order O twin B2 which satisfies
@@ -349,7 +349,7 @@ prep_new_page(page_s *page, unsigned int order, gfp_t gfp_flags)
  * the smallest available page from the freelists
  */
 // Linux function proto :
-// static __always_inline struct page *__rmqueue_smallest(struct zone *zone,
+// static __always_inline page_s *__rmqueue_smallest(struct zone *zone,
 //					unsigned int order, int migratetype)
 static inline page_s *
 __rmqueue_smallest(zone_s *zone, unsigned int order)
@@ -404,7 +404,7 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
  * -- nyc
  */
 // Linux function proto :
-// static inline void __free_one_page(struct page *page, unsigned long pfn,
+// static inline void __free_one_page(page_s *page, unsigned long pfn,
 //					struct zone *zone, unsigned int order, int migratetype,
 //					fpi_t fpi_flags)
 static inline void
@@ -505,7 +505,7 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 	 */
 	if (order >= MAX_ORDER) return NULL;
 
-	// static struct page *
+	// static page_s *
 	// get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
 	// 		int alloc_flags, const struct alloc_context *ac)
 	// {
@@ -524,7 +524,7 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 		for (i = start_prefered_idx; i < max_prefered_idx; i++)
 		{
 			zone = &(NODE_DATA(0)->node_zones[prefered_zone_list[i]]);
-		// static inline struct page
+		// static inline page_s
 		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
 		// {
@@ -569,19 +569,25 @@ void __free_pages(page_s *page, unsigned int order)
 	zone_s *zone = myos_page_zone(page);
 
 	// linux call stack :
-	// static inline void free_the_page(struct page *page, unsigned int order)
+	// static inline void free_the_page(page_s *page, unsigned int order)
 	//								||
 	//								\/
-	// static void __free_pages_ok(struct page *page, unsigned int order, fpi_t fpi_flags)
+	// static void __free_pages_ok(page_s *page, unsigned int order, fpi_t fpi_flags)
 	//								||
 	//								\/
-	// static inline void __free_one_page(struct page *page, unsigned long pfn,
+	// static inline void __free_one_page(page_s *page, unsigned long pfn,
 	//					struct zone *zone, unsigned int order, int migratetype,
 	//					fpi_t fpi_flags)
 
 	__free_one_page(page, pfn, zone, order);
 }
 
+void free_pages(unsigned long addr, unsigned int order) {
+	if (addr != 0) {
+		// VM_BUG_ON(!virt_addr_valid((void *)addr));
+		__free_pages(virt_to_page((void *)addr), order);
+	}
+}
 
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
@@ -615,7 +621,7 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 {
 	// {
 		unsigned int nr_pages = 1 << order;
-		struct page *p = page;
+		page_s *p = page;
 		unsigned int loop;
 
 		/*
@@ -642,6 +648,28 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
 		__free_pages_ok(page, order);
 	// }
 }
+
+
+/*
+ * Common helper functions. Never use with __GFP_HIGHMEM because the returned
+ * address cannot represent highmem pages. Use alloc_pages and then kmap if
+ * you need to access high mem.
+ */
+unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order)
+{
+	page_s *page;
+
+	page = alloc_pages(gfp_mask & ~__GFP_HIGHMEM, order);
+	if (!page)
+		return 0;
+	return (unsigned long) page_address(page);
+}
+
+unsigned long get_zeroed_page(gfp_t gfp_mask)
+{
+	return __get_free_pages(gfp_mask | __GFP_ZERO, 0);
+}
+
 
 static void __init
 memmap_init(unsigned long *max_zone_pfn)

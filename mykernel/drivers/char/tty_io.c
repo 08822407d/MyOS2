@@ -70,7 +70,7 @@
 #include <linux/lib/errno.h>
 #include <linux/kernel/signal.h>
 #include <linux/kernel/fcntl.h>
-// #include <linux/sched/signal.h>
+#include <linux/sched/signal.h>
 #include <linux/sched/task.h>
 // #include <linux/interrupt.h>
 #include <linux/device/tty.h>

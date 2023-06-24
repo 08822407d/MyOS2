@@ -43,6 +43,7 @@ static DEFINE_SPINLOCK(newpid_lock);
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 unsigned long	curr_pid;
 
+#define LOAD_ELF
 
 /*==============================================================================================*
  *																								*
@@ -104,10 +105,8 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 extern int myos_exit_thread(task_s * new_task);
 
 // read memory distribution of the executive
-static int read_exec_mm(file_s * fp, task_s * curr)
+static int read_exec_mm(mm_s *mm)
 {
-	mm_s * mm = curr->mm;
-
 	mm->start_code = USER_CODE_ADDR;
 	mm->start_data =
 	mm->end_code = USER_CODE_ADDR + SZ_2M * 1;
@@ -115,6 +114,19 @@ static int read_exec_mm(file_s * fp, task_s * curr)
 	mm->end_data = USER_CODE_ADDR + SZ_2M * 2;
 	mm->brk = USER_CODE_ADDR + SZ_2M * 3;
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
+}
+static void load_map_file(mm_s *mm)
+{
+	int ret_val = 0;
+	for (vma_s *vma = mm->mmap;
+		vma != NULL && vma->vm_flags != 0;
+		vma = vma->vm_next)
+	{
+		file_s *fp = vma->vm_file;
+		loff_t fp_pos = vma->vm_pgoff * PAGE_SIZE;
+		ret_val = fp->f_op->read(fp, (void *)vma->vm_start,
+			vma->vm_end - vma->vm_start, &fp_pos);
+	}
 }
 
 int __myos_copy_strings(const char *const *argv)
@@ -158,25 +170,39 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	if (task_idle != NULL && task_init == NULL)
 		task_init = curr;
 
-	file_s *fp = bprm->file;
+#ifdef LOAD_ELF
+	mm_s *mm = curr->mm;
+	mm->brk += SZ_2M;
+	mm->start_code = mm->mmap->vm_start;
+	mm->start_data = round_up(mm->end_code, PAGE_SIZE);
+	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
+	creat_exec_addrspace(curr);
+	load_cr3(mm->pgd_ptr);
+	curr->flags &= ~CLONE_VFORK;
+
+	load_map_file(mm);
+#else
 	if (curr->flags & CLONE_VFORK)
 		curr->mm = mm_alloc();
-	read_exec_mm(fp, curr);
+	mm_s *mm = curr->mm;
+	file_s *fp = bprm->file;
+	read_exec_mm(mm);
+
 	creat_exec_addrspace(curr);
 	load_cr3(curr->mm->pgd_ptr);
 	curr->flags &= ~CLONE_VFORK;
 
-	memset((void *)curr->mm->start_code, 0,
-			curr->mm->end_data - curr->mm->start_code);
+	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
 	loff_t fp_pos = 0;
-	ret_val = fp->f_op->read(fp, (void *)curr->mm->start_code,
+	ret_val = fp->f_op->read(fp, (void *)mm->start_code,
 			fp->f_path.dentry->d_inode->i_size, &fp_pos);
+#endif
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;
 	curr_context->cs = (reg_t)USER_CS_SELECTOR;
-	curr_context->r10 = (reg_t)curr->mm->start_code;
-	curr_context->r11 = (reg_t)curr->mm->start_stack;
+	curr_context->r10 = (reg_t)mm->entry_point;
+	curr_context->r11 = (reg_t)mm->start_stack;
 	curr_context->ax = (reg_t)1;
 
 	return ret_val;
@@ -192,8 +218,11 @@ void kjmp_to_doexecve()
 	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
-	kernel_execve("/init.bin", NULL, NULL);
-	// kernel_execve("/shell.bin", NULL, NULL);
+#ifdef LOAD_ELF
+	kernel_execve("/initd", NULL, NULL);
+#else
+	kernel_execve("/initd.bin", NULL, NULL);
+#endif
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
@@ -214,7 +243,6 @@ static void exit_notify(void)
 		
 		list_hdr_append(&task_init->children, child_lp);
 	}
-	// wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)

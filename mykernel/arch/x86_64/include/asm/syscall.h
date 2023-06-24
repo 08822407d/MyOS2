@@ -19,20 +19,19 @@
 	// #include <asm/thread_info.h> /* for TS_COMPAT */
 	#include <asm/unistd.h>
 
-	// typedef long (*sys_call_ptr_t)(const pt_regs_s *);
-	typedef long (*sys_call_ptr_t)(void);
+
+	#include <asm/ptrace.h>
+
+
+	typedef long (*sys_call_ptr_t)(const pt_regs_s *);
 	extern const sys_call_ptr_t sys_call_table[];
 
-	// #if defined(CONFIG_X86_32)
-	// #	define ia32_sys_call_table sys_call_table
-	// #else
 	// /*
-	// * These may not exist, but still put the prototypes in so we
-	// * can use IS_ENABLED().
-	// */
-	// 	extern const sys_call_ptr_t ia32_sys_call_table[];
-	// 	extern const sys_call_ptr_t x32_sys_call_table[];
-	// #endif
+	//  * These may not exist, but still put the prototypes in so we
+	//  * can use IS_ENABLED().
+	//  */
+	// extern const sys_call_ptr_t ia32_sys_call_table[];
+	// extern const sys_call_ptr_t x32_sys_call_table[];
 
 	// /*
 	// * Only the low 32 bits of orig_ax are meaningful, so we return int.
@@ -117,7 +116,7 @@
 		// 			: AUDIT_ARCH_X86_64;
 		// }
 
-		// void do_syscall_64(pt_regs_s *regs, int nr);
+		void do_syscall_64(pt_regs_s *regs, int nr);
 		// void do_int80_syscall_32(pt_regs_s *regs);
 		// long do_fast_syscall_32(pt_regs_s *regs);
 

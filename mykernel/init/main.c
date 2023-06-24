@@ -58,7 +58,7 @@
 // #include <linux/delayacct.h>
 #include <uapi/linux/unistd.h>
 // #include <linux/utsname.h>
-// #include <linux/rmap.h>
+#include <linux/mm/rmap.h>
 // #include <linux/mempolicy.h>
 // #include <linux/key.h>
 // #include <linux/page_ext.h>

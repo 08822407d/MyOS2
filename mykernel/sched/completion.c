@@ -39,8 +39,8 @@ void complete(completion_s *x)
 
 
 static inline long
-do_wait_for_common(completion_s *x, long (*action)(long),
-		long timeout, int state) {
+do_wait_for_common(completion_s *x,
+		long (*action)(long), long timeout, int state) {
 	if (!x->done) {
 		DECLARE_SWAITQUEUE(wait);
 

@@ -49,11 +49,7 @@
 	typedef u64				efi_physical_addr_t;
 	typedef void			*efi_handle_t;
 
-	#if defined(CONFIG_X86_64)
-	#	define __efiapi	__attribute__((ms_abi))
-	#else
-	#	define __efiapi
-	#endif
+	#define __efiapi	__attribute__((ms_abi))
 
 	/*
 	 * The UEFI spec and EDK2 reference implementation both define EFI_GUID as
@@ -209,7 +205,7 @@
 	// 	long			index;
 	// 	size_t			count;
 	// 	size_t			total_size;
-	// 	struct page		**pages;
+	// 	page_s		**pages;
 	// 	phys_addr_t		*phys;
 	// 	size_t			page_bytes_remain;
 	// };
@@ -637,7 +633,7 @@
 	// #define EFI_RT_SUPPORTED_TIME_SERVICES				0x000f
 	// #define EFI_RT_SUPPORTED_VARIABLE_SERVICES			0x0070
 
-	// extern struct mm_struct efi_mm;
+	// extern mm_s efi_mm;
 
 	// static inline int
 	// efi_guidcmp (efi_guid_t left, efi_guid_t right)
@@ -730,10 +726,10 @@
 	// *                           argument in the page tables referred to by the
 	// *                           first argument.
 	// */
-	// typedef int (*efi_memattr_perm_setter)(struct mm_struct *, efi_memory_desc_t *);
+	// typedef int (*efi_memattr_perm_setter)(mm_s *, efi_memory_desc_t *);
 
 	// extern int efi_memattr_init(void);
-	// extern int efi_memattr_apply_permissions(struct mm_struct *mm,
+	// extern int efi_memattr_apply_permissions(mm_s *mm,
 	// 					efi_memattr_perm_setter fn);
 
 	// /*

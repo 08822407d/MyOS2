@@ -428,7 +428,7 @@
 	// 		sector_t length);
 
 	// int bio_add_hw_page(struct request_queue *q, struct bio *bio,
-	// 		struct page *page, unsigned int len, unsigned int offset,
+	// 		page_s *page, unsigned int len, unsigned int offset,
 	// 		unsigned int max_sectors, bool *same_page);
 
 	// static inline struct kmem_cache *blk_get_queue_kmem_cache(bool srcu)

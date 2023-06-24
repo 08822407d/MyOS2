@@ -4,10 +4,10 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/mylib/include",
-                "${workspaceFolder}/kernel/arch",
-                "${workspaceFolder}/kernel/arch/x86_64/include",
-                "${workspaceFolder}/kernel/include",
-                "${workspaceFolder}/loader"
+                "${workspaceFolder}/mykernel/arch",
+                "${workspaceFolder}/mykernel/arch/x86_64/include",
+                "${workspaceFolder}/mykernel/include",
+                "${workspaceFolder}/myloader"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

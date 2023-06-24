@@ -16,11 +16,11 @@
 	 */
 	typedef struct linux_binprm {
 	// #ifdef CONFIG_MMU
-	// 	struct vm_area_struct *vma;
+	// 	vma_s *vma;
 	// 	unsigned long vma_pages;
 	// #else
 	// # define MAX_ARG_PAGES	32
-	// 	struct page *page[MAX_ARG_PAGES];
+	// 	page_s *page[MAX_ARG_PAGES];
 	// #endif
 		mm_s			*mm;
 		unsigned long	p; /* current top of mem */
@@ -80,7 +80,7 @@
 	// /* Function parameter for binfmt->coredump */
 	// struct coredump_params {
 	// 	const kernel_siginfo_t *siginfo;
-	// 	struct pt_regs *regs;
+	// 	pt_regs_s *regs;
 	// 	struct file *file;
 	// 	unsigned long limit;
 	// 	unsigned long mm_flags;
@@ -122,17 +122,17 @@
 	extern void unregister_binfmt(linux_bfmt_s *);
 
 	// extern int __must_check remove_arg_zero(struct linux_binprm *);
-	// extern int begin_new_exec(struct linux_binprm * bprm);
+	extern int begin_new_exec(linux_bprm_s * bprm);
 	// extern void setup_new_exec(struct linux_binprm * bprm);
 	// extern void finalize_exec(struct linux_binprm *bprm);
 	// extern void would_dump(struct linux_binprm *, struct file *);
 
 	// extern int suid_dumpable;
 
-	// /* Stack area protections */
-	// #define EXSTACK_DEFAULT   0	/* Whatever the arch defaults to */
-	// #define EXSTACK_DISABLE_X 1	/* Disable executable stacks */
-	// #define EXSTACK_ENABLE_X  2	/* Enable executable stacks */
+	/* Stack area protections */
+	#define EXSTACK_DEFAULT		0	/* Whatever the arch defaults to */
+	#define EXSTACK_DISABLE_X	1	/* Disable executable stacks */
+	#define EXSTACK_ENABLE_X	2	/* Enable executable stacks */
 
 	// extern int setup_arg_pages(struct linux_binprm * bprm,
 	// 			unsigned long stack_top,

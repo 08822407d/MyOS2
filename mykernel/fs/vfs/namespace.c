@@ -158,8 +158,8 @@ static void put_mountpoint(mountpoint_s *mp)
 /*
  * vfsmount lock must be held for write
  */
-void mnt_set_mountpoint(mount_s *parent_mnt, mountpoint_s *mp,
-				mount_s *child_mnt)
+void mnt_set_mountpoint(mount_s *parent_mnt,
+		mountpoint_s *mp, mount_s *child_mnt)
 {
 	child_mnt->mnt_mountpoint = mp->m_dentry;
 	child_mnt->mnt_parent = parent_mnt;
@@ -316,7 +316,7 @@ retry:
 // 				struct mountpoint *dest_mp,
 // 				bool moving)
 static int attach_recursive_mnt(mount_s *source_mnt,
-				mount_s *dest_mnt, mountpoint_s *dest_mp)
+		mount_s *dest_mnt, mountpoint_s *dest_mp)
 {
 	// mountpoint_s *smp;
 	mount_s *child, *p;
@@ -360,8 +360,8 @@ static void unlock_mount(mountpoint_s *where)
 // Linux function proto:
 // static int graft_tree(struct mount *mnt, struct mount *p,
 //				struct mountpoint *mp)
-static int graft_tree(IN mount_s *mnt, IN mount_s *p,
-				IN mountpoint_s *mp)
+static int graft_tree(IN mount_s *mnt,
+		IN mount_s *p, IN mountpoint_s *mp)
 {
 	// if (d_is_dir(mp->m_dentry) !=
 	//       d_is_dir(mnt->mnt.mnt_root))
@@ -462,8 +462,8 @@ out:
 /*
  * add a mount into a namespace's mount tree
  */
-static int do_add_mount(mount_s *newmnt, mountpoint_s *mp,
-				path_s *path, int mnt_flags)
+static int do_add_mount(mount_s *newmnt,
+		mountpoint_s *mp, path_s *path, int mnt_flags)
 {
 	mount_s *parent = real_mount(path->mnt);
 
@@ -485,8 +485,8 @@ static int do_add_mount(mount_s *newmnt, mountpoint_s *mp,
  * Create a new mount using a superblock configuration and request it
  * be added to the namespace tree.
  */
-static int do_new_mount_fc(fs_ctxt_s *fc, path_s *mountpoint,
-				unsigned int mnt_flags)
+static int do_new_mount_fc(fs_ctxt_s *fc,
+		path_s *mountpoint, unsigned int mnt_flags)
 {
 	vfsmount_s *mnt;
 	mountpoint_s *mp;
@@ -513,10 +513,10 @@ static int do_new_mount_fc(fs_ctxt_s *fc, path_s *mountpoint,
  * namespace's tree
  */
 // Linux function proto:
-// static int do_new_mount(struct path *path, const char *fstype, int sb_flags,
-// 			int mnt_flags, const char *name, void *data)
-static int do_new_mount(IN path_s *path, const char *fstype, int sb_flags,
-				int mnt_flags, const char *name)
+// static int do_new_mount(struct path *path, const char *fstype,
+// int sb_flags, int mnt_flags, const char *name, void *data)
+static int do_new_mount(IN path_s *path, const char *fstype,
+		int sb_flags, int mnt_flags, const char *name)
 {
 	fs_type_s	*type;
 	fs_ctxt_s *fc;
@@ -582,7 +582,7 @@ static int do_new_mount(IN path_s *path, const char *fstype, int sb_flags,
 // int path_mount(const char *dev_name, struct path *path,
 // 		const char *type_page, unsigned long flags, void *data_page)
 int path_mount(const char *dev_name, IN path_s *path,
-				const char *type_page, unsigned long flags)
+		const char *type_page, unsigned long flags)
 {
 	unsigned int mnt_flags = 0, sb_flags;
 	int ret;
@@ -605,7 +605,7 @@ int path_mount(const char *dev_name, IN path_s *path,
 // long do_mount(const char *dev_name, const char __user *dir_name,
 //		const char *type_page, unsigned long flags, void *data_page)
 long do_mount(const char * dev_name, const char * dir_name,
-				const char *type_page, unsigned long flags)
+		const char *type_page, unsigned long flags)
 {
 	path_s path;
 	int ret;

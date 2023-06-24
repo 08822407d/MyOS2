@@ -16,7 +16,8 @@
  *
  * Called with polling cleared.
  */
-static void do_idle(void) {
+static void do_idle(void)
+{
 	// int cpu = smp_processor_id();
 
 	// /*

@@ -12,8 +12,8 @@ OUTPUT_ARCH(i386:x86-64)
 ENTRY(_start)
 SECTIONS
 {
-	. = 0x6000000;
-	.text ALIGN(0x200000) :
+	. = 0x400000;
+	.text ALIGN(0x1000) :
 	{
 		_text = .;
 		*(.crt1.text)
@@ -22,7 +22,7 @@ SECTIONS
 		_etext = .;
 	}
 
-	.data ALIGN(0x200000) :
+	.data ALIGN(0x1000) :
 	{
 		_data = .;
 		*(.data*)

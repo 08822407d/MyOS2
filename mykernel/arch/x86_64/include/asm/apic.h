@@ -319,20 +319,6 @@
 	// 	int	(*wakeup_secondary_cpu)(int apicid, unsigned long start_eip);
 
 	// 	void	(*inquire_remote_apic)(int apicid);
-
-	// #ifdef CONFIG_X86_32
-	// 	/*
-	// 	* Called very early during boot from get_smp_config().  It should
-	// 	* return the logical apicid.  x86_[bios]_cpu_to_apicid is
-	// 	* initialized before this function is called.
-	// 	*
-	// 	* If logical apicid can't be determined that early, the function
-	// 	* may return BAD_APICID.  Logical apicid will be configured after
-	// 	* init_apic_ldr() while bringing up CPUs.  Note that NUMA affinity
-	// 	* won't be applied properly during early boot in this case.
-	// 	*/
-	// 	int (*x86_32_early_logical_apicid)(int cpu);
-	// #endif
 	// 	char	*name;
 	// };
 

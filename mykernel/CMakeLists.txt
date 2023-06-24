@@ -11,17 +11,18 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
 				-DCONFIG_64BIT -DCONFIG_PHYS_ADDR_T_64BIT \
 				-DCONFIG_ZONE_DMA -DCONFIG_ZONE_DMA32 \
 				-DCONFIG_SLUB \
+				-DCONFIG_ARCH_HAS_SYSCALL_WRAPPER \
 				-T ${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/kernel.lds")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
 file(GLOB_RECURSE KERNEL_C_SRCS *.c)
 file(GLOB_RECURSE KERNEL_ASM_SRCS *.S)
 
-add_executable(kernelexec)
-target_sources(kernelexec PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
-target_include_directories(kernelexec PRIVATE
+add_executable(kernel)
+target_sources(kernel PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
+target_include_directories(kernel PRIVATE
 				${CMAKE_CURRENT_SOURCE_DIR}/include
-				${PROJECT_SOURCE_DIR}/loader
+				${PROJECT_SOURCE_DIR}/myloader
 				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/include)
 
 add_subdirectory(arch)
