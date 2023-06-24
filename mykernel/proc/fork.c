@@ -229,10 +229,10 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	// /* No ordering required: file already has been exposed. */
 	// dup_mm_exe_file(mm, oldmm);
 
-	// mm->total_vm = oldmm->total_vm;
-	// mm->data_vm = oldmm->data_vm;
-	// mm->exec_vm = oldmm->exec_vm;
-	// mm->stack_vm = oldmm->stack_vm;
+	mm->total_vm = oldmm->total_vm;
+	mm->data_vm = oldmm->data_vm;
+	mm->exec_vm = oldmm->exec_vm;
+	mm->stack_vm = oldmm->stack_vm;
 
 	pprev = &mm->mmap;
 	// retval = ksm_fork(mm, oldmm);
@@ -482,18 +482,6 @@ static void mm_init_owner(mm_s *mm, task_s *p)
 // #endif
 }
 
-mm_s *__myos_mm_init(mm_s *mm)
-{
-	// mm_s *curr_mm = current->mm;
-	pgd_t *virt_cr3 = (pgd_t *)kzalloc(PGENT_SIZE, GFP_KERNEL);
-	mm->pgd_ptr = (reg_t)myos_virt2phys((virt_addr_t)virt_cr3);
-	// int hfent_nr = PGENT_NR / 2;
-	// memcpy(virt_cr3,
-	// 	(const void*)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
-	// 	hfent_nr);
-	// memcpy(virt_cr3 + hfent_nr, &init_top_pgt[hfent_nr], hfent_nr);
-	return mm;
-}
 
 static mm_s *mm_init(mm_s *mm, task_s *p)
 {
@@ -539,7 +527,6 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 	// 	goto fail_nocontext;
 
 	// mm->user_ns = get_user_ns(user_ns);
-	// __myos_mm_init(mm);
 	return mm;
 
 fail_nocontext:
@@ -1824,18 +1811,14 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		new_mm = curr_mm;
 	else
 	{
-		// memcpy((void *)myos_phys2virt(ARCH_PGS_ADDR(new_mm->pgd_ptr)),
-		// 		(void *)myos_phys2virt(ARCH_PGS_ADDR(curr_mm->pgd_ptr)),
-		// 		sizeof(mm_s));
-
 		new_mm->pgd_ptr = curr_mm->pgd_ptr;
 		pt_regs_s *oldregs = task_pt_regs(curr);
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));
 
-		myos_refresh_arch_page();
-
 		prepair_COW(current);
+
+		myos_refresh_arch_page();
 	}
 
 exit_cpmm:

@@ -220,7 +220,6 @@ void kjmp_to_doexecve()
 
 #ifdef LOAD_ELF
 	kernel_execve("/initd", NULL, NULL);
-	// kernel_execve("/sh", NULL, NULL);
 #else
 	kernel_execve("/initd.bin", NULL, NULL);
 #endif
@@ -244,7 +243,6 @@ static void exit_notify(void)
 		
 		list_hdr_append(&task_init->children, child_lp);
 	}
-	// wq_wakeup(&current->wait_childexit, TASK_INTERRUPTIBLE);
 }
 
 unsigned long do_exit(unsigned long exit_code)

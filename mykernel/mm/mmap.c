@@ -65,6 +65,9 @@
 
 static bool ignore_rlimit_data = false;
 
+static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
+		unsigned long start, unsigned long end);
+
 
 static void validate_mm(mm_s *mm)
 {
@@ -214,7 +217,7 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 	// 	i_mmap_unlock_write(mapping);
 
 	mm->map_count++;
-	// validate_mm(mm);
+	validate_mm(mm);
 }
 
 
@@ -1036,9 +1039,9 @@ unmap_and_free_vma:
 	// fput(vma->vm_file);
 	vma->vm_file = NULL;
 
-	// /* Undo any partial mapping done by a device driver. */
-	// unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
-	// charged = 0;
+	/* Undo any partial mapping done by a device driver. */
+	unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
+	charged = 0;
 	// if (vm_flags & VM_SHARED)
 	// 	mapping_unmap_writable(file->f_mapping);
 free_vma:
@@ -1061,7 +1064,7 @@ vma_s *myos_find_vma(mm_s *mm, unsigned long addr)
 			vma = tmp;
 			break;
 		}
-		if (tmp->vm_next = mm->mmap)
+		if (tmp->vm_next == mm->mmap)
 			break;
 		tmp = tmp->vm_next;
 	}
@@ -1087,32 +1090,72 @@ vma_s *find_vma_prev(mm_s *mm, unsigned long addr, vma_s **pprev)
 /* enforced gap between the expanding stack and other mappings. */
 unsigned long stack_guard_gap = 256UL<<PAGE_SHIFT;
 
+/*
+ * Ok - we have the memory areas we should free on the vma list,
+ * so release them, and do the vma updates.
+ *
+ * Called with the mm semaphore held.
+ */
+static void remove_vma_list(mm_s *mm, vma_s *vma)
+{
+	unsigned long nr_accounted = 0;
+
+	// /* Update high watermark before we lower total_vm */
+	// update_hiwater_vm(mm);
+	// do {
+	// 	long nrpages = vma_pages(vma);
+
+	// 	if (vma->vm_flags & VM_ACCOUNT)
+	// 		nr_accounted += nrpages;
+	// 	vm_stat_account(mm, vma->vm_flags, -nrpages);
+	// 	vma = remove_vma(vma);
+	// } while (vma);
+	// vm_unacct_memory(nr_accounted);
+	validate_mm(mm);
+}
+
+/*
+ * Get rid of page table information in the indicated region.
+ *
+ * Called with the mm semaphore held.
+ */
+static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
+		unsigned long start, unsigned long end)
+{
+	vma_s *next = vma_next(mm, prev);
+	// struct mmu_gather tlb;
+
+	// lru_add_drain();
+	// tlb_gather_mmu(&tlb, mm);
+	// update_hiwater_rss(mm);
+	// unmap_vmas(&tlb, vma, start, end);
+	// free_pgtables(&tlb, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,
+	// 			 next ? next->vm_start : USER_PGTABLES_CEILING);
+	// tlb_finish_mmu(&tlb);
+
+	// kfree(prev);
+}
 
 /*
  * Create a list of vma's touched by the unmap, removing them from the mm's
  * vma list as we go..
  */
-static bool
-detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma,
-		vma_s *prev, unsigned long end)
+static bool myos_detach_vmas_to_be_unmapped(mm_s *mm,
+		vma_s *vma, vma_s *prev, unsigned long end)
 {
 	vma_s **insertion_point;
 	vma_s *tail_vma = NULL;
 
 	insertion_point = (prev ? &prev->vm_next : &mm->mmap);
 	vma->vm_prev = NULL;
-	// do {
-	// 	vma_rb_erase(vma, &mm->mm_rb);
-	// 	mm->map_count--;
-	// 	tail_vma = vma;
-	// 	vma = vma->vm_next;
-	// } while (vma && vma->vm_start < end);
-	// *insertion_point = vma;
-	// if (vma) {
-	// 	vma->vm_prev = prev;
-	// 	vma_gap_update(vma);
-	// } else
-	// 	mm->highest_vm_end = prev ? vm_end_gap(prev) : 0;
+	do {
+		mm->map_count--;
+		tail_vma = vma;
+		vma = vma->vm_next;
+	} while (vma && vma->vm_start < end);
+	*insertion_point = vma;
+	if (vma)
+		vma->vm_prev = prev;
 	tail_vma->vm_next = NULL;
 
 	// /* Kill the cache */
@@ -1123,9 +1166,8 @@ detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma,
 	 * VM_GROWSUP VMA. Such VMAs can change their size under
 	 * down_read(mmap_lock) and collide with the VMA we are about to unmap.
 	 */
-	if (vma && (vma->vm_flags & VM_GROWSDOWN))
-		return false;
-	if (prev && (prev->vm_flags & VM_GROWSUP))
+	if (vma && (vma->vm_flags & VM_GROWSDOWN) ||
+		prev && (prev->vm_flags & VM_GROWSUP))
 		return false;
 	return true;
 }
@@ -1284,16 +1326,16 @@ int __do_munmap(mm_s *mm, unsigned long start,
 	// 	unlock_range(vma, end);
 
 	/* Detach vmas from rbtree */
-	if (!detach_vmas_to_be_unmapped(mm, vma, prev, end))
+	if (!myos_detach_vmas_to_be_unmapped(mm, vma, prev, end))
 		downgrade = false;
 
 	// if (downgrade)
 	// 	mmap_write_downgrade(mm);
 
-	// unmap_region(mm, vma, prev, start, end);
+	unmap_region(mm, vma, prev, start, end);
 
-	// /* Fix up all other VM information */
-	// remove_vma_list(mm, vma);
+	/* Fix up all other VM information */
+	remove_vma_list(mm, vma);
 
 	return downgrade ? 1 : 0;
 }
