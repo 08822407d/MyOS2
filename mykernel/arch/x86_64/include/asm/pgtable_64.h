@@ -28,7 +28,7 @@
 	// extern pte_t level1_fixmap_pgt[512 * FIXMAP_PMD_NUM];
 	extern pgd_t init_top_pgt[];
 
-	// #define swapper_pg_dir init_top_pgt
+	#define swapper_pg_dir init_top_pgt
 
 		extern void paging_init(void);
 	// static inline void sync_initial_page_table(void) { }

@@ -34,21 +34,21 @@
 	// extern gfp_t __userpte_alloc_gfp;
 
 	// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-	// /*
-	// * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
-	// * both 8k in size and 8k-aligned.  That lets us just flip bit 12
-	// * in a pointer to swap between the two 4k halves.
-	// */
+	/*
+	 * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
+	 * both 8k in size and 8k-aligned.  That lets us just flip bit 12
+	 * in a pointer to swap between the two 4k halves.
+	 */
 	// #define PGD_ALLOCATION_ORDER 1
 	// #else
-	// #define PGD_ALLOCATION_ORDER 0
+	#define PGD_ALLOCATION_ORDER 0
 	// #endif
 
-	// /*
-	// * Allocate and free page tables.
-	// */
-	// extern pgd_t *pgd_alloc(mm_s *);
-	// extern void pgd_free(mm_s *mm, pgd_t *pgd);
+	/*
+	 * Allocate and free page tables.
+	 */
+	extern pgd_t *pgd_alloc(mm_s *);
+	extern void pgd_free(mm_s *mm, pgd_t *pgd);
 
 	// extern pgtable_t pte_alloc_one(mm_s *);
 

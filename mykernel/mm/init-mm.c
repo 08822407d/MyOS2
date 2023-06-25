@@ -34,7 +34,7 @@ pgd_t	init_top_pgt[PGENT_NR]__aligned(PGENT_SIZE);
 extern reg_t _k_offset;
 mm_s init_mm = {
 	// .mm_rb				= RB_ROOT,
-	// .pgd				= swapper_pg_dir,
+	.pgd				= swapper_pg_dir,
 	.mm_users			= ATOMIC_INIT(2),
 	.mm_refcount		= ATOMIC_INIT(1),
 	// .write_protect_seq	= SEQCNT_ZERO(init_mm.write_protect_seq),

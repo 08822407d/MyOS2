@@ -310,8 +310,8 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		prev = tmp;
 
 		mm->map_count++;
-		// if (!(tmp->vm_flags & VM_WIPEONFORK))
-		// 	retval = copy_page_range(tmp, mpnt);
+		if (!(tmp->vm_flags & VM_WIPEONFORK))
+			retval = copy_page_range(tmp, mpnt);
 
 		// if (tmp->vm_ops && tmp->vm_ops->open)
 		// 	tmp->vm_ops->open(tmp);
@@ -335,6 +335,17 @@ fail_nomem:
 	retval = -ENOMEM;
 	// vm_unacct_memory(charge);
 	goto out;
+}
+
+static inline int mm_alloc_pgd(mm_s *mm) {
+	mm->pgd = pgd_alloc(mm);
+	if (!mm->pgd)
+		return -ENOMEM;
+	return 0;
+}
+
+static inline void mm_free_pgd(mm_s *mm) {
+	pgd_free(mm, mm->pgd);
 }
 
 
@@ -514,14 +525,14 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 
 	// if (current->mm) {
 	// 	mm->flags = current->mm->flags & MMF_INIT_MASK;
-	// 	mm->def_flags = current->mm->def_flags & VM_INIT_DEF_MASK;
+		mm->def_flags = current->mm->def_flags & VM_INIT_DEF_MASK;
 	// } else {
 	// 	mm->flags = default_dump_filter;
 	// 	mm->def_flags = 0;
 	// }
 
-	// if (mm_alloc_pgd(mm))
-	// 	goto fail_nopgd;
+	if (mm_alloc_pgd(mm))
+		goto fail_nopgd;
 
 	// if (init_new_context(p, mm))
 	// 	goto fail_nocontext;
@@ -530,7 +541,7 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 	return mm;
 
 fail_nocontext:
-	// mm_free_pgd(mm);
+	mm_free_pgd(mm);
 fail_nopgd:
 	free_mm(mm);
 	return NULL;
