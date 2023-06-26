@@ -739,14 +739,12 @@
 		static inline int arch_pmd_none(pmd_t pmd) {
 			/* Only check low word on 32-bit platforms, since it might be
 			out of sync with upper half. */
-			unsigned long val = arch_pmd_val(pmd);
-			return (val & ~_PAGE_KNL_ERRATUM_MASK) == 0;
+			return (arch_pmd_val(pmd) & ~_PAGE_KNL_ERRATUM_MASK) == 0;
 		}
 
-		// static inline unsigned long pmd_page_vaddr(pmd_t pmd)
-		// {
-		// 	return (unsigned long)__va(arch_pmd_val(pmd) & arch_pmd_pfn_mask(pmd));
-		// }
+		static inline pte_t *arch_pmd_pgtable(pmd_t pmd) {
+			return (pte_t *)__va(arch_pmd_val(pmd) & arch_pmd_pfn_mask(pmd));
+		}
 
 		// /*
 		// * Currently stuck as a macro due to indirect forward reference to

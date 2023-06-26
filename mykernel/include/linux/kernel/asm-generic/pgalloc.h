@@ -48,32 +48,32 @@
 	// 	free_page((unsigned long)pte);
 	// }
 
-	// /**
-	//  * __pte_alloc_one - allocate a page for PTE-level user page table
-	//  * @mm: the mm_struct of the current context
-	//  * @gfp: GFP flags to use for the allocation
-	//  *
-	//  * Allocates a page and runs the pgtable_pte_page_ctor().
-	//  *
-	//  * This function is intended for architectures that need
-	//  * anything beyond simple page allocation or must have custom GFP flags.
-	//  *
-	//  * Return: `page_s` initialized as page table or %NULL on error
-	//  */
+	/**
+	 * __pte_alloc_one - allocate a page for PTE-level user page table
+	 * @mm: the mm_struct of the current context
+	 * @gfp: GFP flags to use for the allocation
+	 *
+	 * Allocates a page and runs the pgtable_pte_page_ctor().
+	 *
+	 * This function is intended for architectures that need
+	 * anything beyond simple page allocation or must have custom GFP flags.
+	 *
+	 * Return: `page_s` initialized as page table or %NULL on error
+	 */
 	// static inline pgtable_t __pte_alloc_one(mm_s *mm, gfp_t gfp)
-	// {
-	// 	page_s *pte;
+	static inline pgtable_t pte_alloc_one(mm_s *mm, gfp_t gfp) {
+		page_s *pte;
 
-	// 	pte = alloc_page(gfp);
-	// 	if (!pte)
-	// 		return NULL;
-	// 	if (!pgtable_pte_page_ctor(pte)) {
-	// 		__free_page(pte);
-	// 		return NULL;
-	// 	}
+		pte = alloc_pages(gfp, 0);
+		if (!pte)
+			return NULL;
+		if (!pgtable_pte_page_ctor(pte)) {
+			__free_page(pte);
+			return NULL;
+		}
 
-	// 	return pte;
-	// }
+		return pte;
+	}
 
 	// #ifndef __HAVE_ARCH_PTE_ALLOC_ONE
 	// /**

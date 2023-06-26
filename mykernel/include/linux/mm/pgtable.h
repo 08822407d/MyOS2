@@ -92,23 +92,15 @@
 				(((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
 	#endif
 
-	// #ifndef pte_offset_kernel
-	// static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
-	// {
-	// 	return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
-	// }
+	#ifndef pte_offset
+		static inline pte_t
+		*pte_offset(pmd_t *pmd, unsigned long address) {
+			return arch_pmd_pgtable(*pmd) + pte_index(address);
+		}
 	// #define pte_offset_kernel pte_offset_kernel
-	// #endif
+	#endif
 
-	// #if defined(CONFIG_HIGHPTE)
-	// #define pte_offset_map(dir, address)				\
-	// 	((pte_t *)kmap_atomic(pmd_page(*(dir))) +		\
-	// 	pte_index((address)))
-	// #define pte_unmap(pte) kunmap_atomic((pte))
-	// #else
-	// #define pte_offset_map(dir, address)	pte_offset_kernel((dir), (address))
-	// #define pte_unmap(pte) ((void)(pte))	/* NOP */
-	// #endif
+	#define pte_unmap(pte) ((void)(pte))	/* NOP */
 
 	/* Find an entry in the second-level page table.. */
 	#ifndef pmd_offset

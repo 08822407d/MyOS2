@@ -102,6 +102,45 @@
 void	*high_memory;
 
 
+// void pmd_install(mm_s *mm, pmd_t *pmd, pgtable_t *pte)
+// {
+	// spinlock_t *ptl = pmd_lock(mm, pmd);
+
+	// if (pmd_none(*pmd)) {	/* Has another populated it ? */
+	// 	mm_inc_nr_ptes(mm);
+	// 	/*
+	// 	 * Ensure all pte setup (eg. pte page lock and page clearing) are
+	// 	 * visible before the pte is made visible to other CPUs by being
+	// 	 * put into page tables.
+	// 	 *
+	// 	 * The other side of the story is the pointer chasing in the page
+	// 	 * table walking code (when walking the page table without locking;
+	// 	 * ie. most of the time). Fortunately, these data accesses consist
+	// 	 * of a chain of data-dependent loads, meaning most CPUs (alpha
+	// 	 * being the notable exception) will already guarantee loads are
+	// 	 * seen in-order. See the alpha page table accessors for the
+	// 	 * smp_rmb() barriers in page table walking code.
+	// 	 */
+	// 	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
+	// 	pmd_populate(mm, pmd, *pte);
+	// 	*pte = NULL;
+	// }
+	// spin_unlock(ptl);
+// }
+
+int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
+{
+	pgtable_t new = pte_alloc_one(mm, GFP_PGTABLE_USER);
+	if (!new)
+		return -ENOMEM;
+
+	// pmd_install(mm, pmd, &new);
+	// if (new)
+	// 	pte_free(mm, new);
+	// return 0;
+}
+
+
 static int
 copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
 		pmd_t *src_pmd_ent, unsigned long addr, unsigned long end) {
@@ -113,81 +152,82 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
 	int progress, ret = 0;
 	// int rss[NR_MM_COUNTERS];
 	// swp_entry_t entry = (swp_entry_t){0};
-	// struct page *prealloc = NULL;
+	page_s *prealloc = NULL;
 
 again:
-	// progress = 0;
+	progress = 0;
 	// init_rss_vec(rss);
 
 	// dst_pte = pte_alloc_map_lock(dst_mm, dst_pmd_ent, addr, &dst_ptl);
+	dst_pte = pte_alloc(dst_mm, dst_pmd_ent, addr);
 	// if (!dst_pte) {
 	// 	ret = -ENOMEM;
 	// 	goto out;
 	// }
-	// src_pte = pte_offset_map(src_pmd_ent, addr);
+	src_pte = pte_offset(src_pmd_ent, addr);
 	// src_ptl = pte_lockptr(src_mm, src_pmd_ent);
 	// spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
-	// orig_src_pte = src_pte;
-	// orig_dst_pte = dst_pte;
+	orig_src_pte = src_pte;
+	orig_dst_pte = dst_pte;
 	// arch_enter_lazy_mmu_mode();
 
-	// do {
-	// 	/*
-	// 	 * We are holding two locks at this point - either of them
-	// 	 * could generate latencies in another task on another CPU.
-	// 	 */
-	// 	if (progress >= 32) {
-	// 		progress = 0;
-	// 		if (need_resched() ||
-	// 		    spin_needbreak(src_ptl) || spin_needbreak(dst_ptl))
-	// 			break;
-	// 	}
-	// 	if (arch_pte_none(*src_pte)) {
-	// 		progress++;
-	// 		continue;
-	// 	}
-	// 	if (unlikely(!arch_pte_present(*src_pte))) {
-	// 		ret = copy_nonpresent_pte(dst_mm, src_mm,
-	// 					  dst_pte, src_pte,
-	// 					  dst_vma, src_vma,
-	// 					  addr, rss);
-	// 		if (ret == -EIO) {
-	// 			entry = pte_to_swp_entry(*src_pte);
-	// 			break;
-	// 		} else if (ret == -EBUSY) {
-	// 			break;
-	// 		} else if (!ret) {
-	// 			progress += 8;
-	// 			continue;
-	// 		}
+	do {
+		/*
+		 * We are holding two locks at this point - either of them
+		 * could generate latencies in another task on another CPU.
+		 */
+		// if (progress >= 32) {
+		// 	progress = 0;
+		// 	if (need_resched() ||
+		// 	    spin_needbreak(src_ptl) || spin_needbreak(dst_ptl))
+		// 		break;
+		// }
+		// if (arch_pte_none(*src_pte)) {
+		// 	progress++;
+		// 	continue;
+		// }
+		// if (unlikely(!arch_pte_present(*src_pte))) {
+		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
+		// 				  dst_pte, src_pte,
+		// 				  dst_vma, src_vma,
+		// 				  addr, rss);
+		// 	if (ret == -EIO) {
+		// 		entry = pte_to_swp_entry(*src_pte);
+		// 		break;
+		// 	} else if (ret == -EBUSY) {
+		// 		break;
+		// 	} else if (!ret) {
+		// 		progress += 8;
+		// 		continue;
+		// 	}
 
-	// 		/*
-	// 		 * Device exclusive entry restored, continue by copying
-	// 		 * the now present pte.
-	// 		 */
-	// 		WARN_ON_ONCE(ret != -ENOENT);
-	// 	}
-	// 	/* copy_present_pte() will clear `*prealloc' if consumed */
-	// 	ret = copy_present_pte(dst_vma, src_vma, dst_pte, src_pte,
-	// 			       addr, rss, &prealloc);
-	// 	/*
-	// 	 * If we need a pre-allocated page for this pte, drop the
-	// 	 * locks, allocate, and try again.
-	// 	 */
-	// 	if (unlikely(ret == -EAGAIN))
-	// 		break;
-	// 	if (unlikely(prealloc)) {
-	// 		/*
-	// 		 * pre-alloc page cannot be reused by next time so as
-	// 		 * to strictly follow mempolicy (e.g., alloc_page_vma()
-	// 		 * will allocate page according to address).  This
-	// 		 * could only happen if one pinned pte changed.
-	// 		 */
-	// 		put_page(prealloc);
-	// 		prealloc = NULL;
-	// 	}
-	// 	progress += 8;
-	// } while (dst_pte++, src_pte++, addr += PAGE_SIZE, addr != end);
+		// 	/*
+		// 	 * Device exclusive entry restored, continue by copying
+		// 	 * the now present pte.
+		// 	 */
+		// 	WARN_ON_ONCE(ret != -ENOENT);
+		// }
+		// /* copy_present_pte() will clear `*prealloc' if consumed */
+		// ret = copy_present_pte(dst_vma, src_vma, dst_pte, src_pte,
+		// 		       addr, rss, &prealloc);
+		// /*
+		//  * If we need a pre-allocated page for this pte, drop the
+		//  * locks, allocate, and try again.
+		//  */
+		// if (unlikely(ret == -EAGAIN))
+		// 	break;
+		// if (unlikely(prealloc)) {
+		// 	/*
+		// 	 * pre-alloc page cannot be reused by next time so as
+		// 	 * to strictly follow mempolicy (e.g., alloc_page_vma()
+		// 	 * will allocate page according to address).  This
+		// 	 * could only happen if one pinned pte changed.
+		// 	 */
+		// 	put_page(prealloc);
+		// 	prealloc = NULL;
+		// }
+		progress += 8;
+	} while (dst_pte++, src_pte++, addr += PAGE_SIZE, addr != end);
 
 	// arch_leave_lazy_mmu_mode();
 	// spin_unlock(src_ptl);
@@ -408,13 +448,13 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 	if (!new)
 		return -ENOMEM;
 
-	spin_lock(&mm->page_table_lock);
+	// spin_lock(&mm->page_table_lock);
 	if (!arch_p4d_present(*p4d)) {
 		smp_wmb(); /* See comment in pmd_install() */
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(mm, new);
-	spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
 
@@ -429,13 +469,13 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	if (!new)
 		return -ENOMEM;
 
-	spin_lock(&mm->page_table_lock);
+	// spin_lock(&mm->page_table_lock);
 	if (!arch_pud_present(*pud)) {
 		smp_wmb(); /* See comment in pmd_install() */
 		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
 	} else {	/* Another has populated it */
 		pmd_free(mm, new);
 	}
-	spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
