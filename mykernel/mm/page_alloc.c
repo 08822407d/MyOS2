@@ -667,7 +667,9 @@ unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order)
 
 unsigned long get_zeroed_page(gfp_t gfp_mask)
 {
-	return __get_free_pages(gfp_mask | __GFP_ZERO, 0);
+	unsigned long retval = __get_free_pages(gfp_mask | __GFP_ZERO, 0);
+	memset((void *)retval, 0, PAGE_SIZE);
+	return retval;
 }
 
 

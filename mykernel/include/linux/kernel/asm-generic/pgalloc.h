@@ -137,14 +137,14 @@
 		}
 	#endif
 
-	#ifndef __HAVE_ARCH_PMD_FREE
-		static inline void
-		pmd_free(mm_s *mm, pmd_t *pmd) {
-			// BUG_ON((unsigned long)pmd & (PAGE_SIZE-1));
-			// pgtable_pmd_page_dtor(virt_to_page(pmd));
-			free_page((unsigned long)pmd);
-		}
-	#endif
+	// #ifndef __HAVE_ARCH_PMD_FREE
+	// 	static inline void
+	// 	pmd_free(mm_s *mm, pmd_t *pmd) {
+	// 		// BUG_ON((unsigned long)pmd & (PAGE_SIZE-1));
+	// 		// pgtable_pmd_page_dtor(virt_to_page(pmd));
+	// 		free_page((unsigned long)pmd);
+	// 	}
+	// #endif
 
 	// static inline pud_t
 	// *__pud_alloc_one(mm_s *mm, unsigned long addr) {
@@ -175,11 +175,9 @@
 
 	// static inline void
 	// __pud_free(mm_s *mm, pud_t *pud) {
-	static inline void
-	pud_free(mm_s *mm, pud_t *pud) {
-		// BUG_ON((unsigned long)pud & (PAGE_SIZE-1));
-		free_page((unsigned long)pud);
-	}
+	// 	BUG_ON((unsigned long)pud & (PAGE_SIZE-1));
+	// 	free_page((unsigned long)pud);
+	// }
 
 	// #ifndef __HAVE_ARCH_PUD_FREE
 	// 	static inline void
@@ -188,12 +186,17 @@
 	// 	}
 	// #endif
 
-	#ifndef __HAVE_ARCH_PGD_FREE
-		static inline void
-		pgd_free(mm_s *mm, pgd_t *pgd) {
-			free_page((unsigned long)pgd);
-		}
-	#endif
+	// #ifndef __HAVE_ARCH_PGD_FREE
+	// 	static inline void
+	// 	pgd_free(mm_s *mm, pgd_t *pgd) {
+	// 		free_page((unsigned long)pgd);
+	// 	}
+	// #endif
+
+
+	#define pmd_free(mmp, pmdp) free_page((unsigned long)(pmdp))
+	#define pud_free(mmp, pudp) free_page((unsigned long)(pudp))
+	// #define pgd_free(mmp, pgdp) free_page((unsigned long)(pgdp))
 
 	// #endif /* CONFIG_MMU */
 

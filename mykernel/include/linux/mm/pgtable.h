@@ -58,32 +58,38 @@
 	 * because in such cases PTRS_PER_PxD equals 1.
 	 */
 
-	static inline unsigned long
-		pte_index(unsigned long address) {
-			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-		}
+	// static inline unsigned long
+	// 	pte_index(unsigned long address) {
+	// 		return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
+	// 	}
 	// #define pte_index		pte_index
+	#define pte_index(address)	\
+				(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
 
 	#ifndef pmd_index
-		static inline unsigned long
-		pmd_index(unsigned long address) {
-			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-		}
+		// static inline unsigned long
+		// pmd_index(unsigned long address) {
+		// 	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
+		// }
 	// #	define pmd_index	pmd_index
+	#	define pmd_index(address)	\
+				(((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
 	#endif
 
 	#ifndef pud_index
-		static inline unsigned long
-		pud_index(unsigned long address) {
-			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-		}
+		// static inline unsigned long
+		// pud_index(unsigned long address) {
+		// 	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
+		// }
 	// #	define pud_index	pud_index
+	#	define pud_index(address)	\
+				(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
 	#endif
 
 	#ifndef pgd_index
 	/* Must be a compile-time constant, so implement it as a macro */
-	#	define pgd_index(a)	\
-				(((a) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+	#	define pgd_index(address)	\
+				(((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
 	#endif
 
 	// #ifndef pte_offset_kernel
@@ -121,17 +127,19 @@
 	// #	define pud_offset	pud_offset
 	#endif
 
-	static inline pgd_t
-	*pgd_offset_pgd(pgd_t *pgd, unsigned long address) {
-		return (pgd + pgd_index(address));
-	};
+	// static inline pgd_t
+	// *pgd_offset_pgd(pgd_t *pgd, unsigned long address) {
+	// 	return (pgd + pgd_index(address));
+	// };
+	#define pgd_ent_offset(mmp, address)	\
+				(pgd_t *)((mmp)->pgd + pgd_index(address))
 
 	/*
 	* a shortcut to get a pgd_t in a given mm
 	*/
-	#ifndef pgd_offset
-	#	define pgd_offset(mm, address)	pgd_offset_pgd((mm)->pgd, (address))
-	#endif
+	// #ifndef pgd_offset
+	// #	define pgd_offset(mm, address)	pgd_offset_pgd((mm)->pgd, (address))
+	// #endif
 
 	// /*
 	// * a shortcut which implies the use of the kernel's pgd, instead

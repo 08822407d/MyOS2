@@ -2158,7 +2158,8 @@
 	// 	atomic_long_sub(PTRS_PER_PUD * sizeof(pud_t), &mm->pgtables_bytes);
 	// }
 
-	int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
+	// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
+	int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
 	// static inline void mm_inc_nr_pmds(mm_s *mm) {
 	// 	// if (mm_pmd_folded(mm))
@@ -2224,7 +2225,7 @@
 
 	static inline pmd_t *pmd_alloc(mm_s *mm,
 			pud_t *pud, unsigned long address) {
-		return (arch_pud_none(*pud)) && __pmd_alloc(mm, pud, address)?
+		return (arch_pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
 				NULL: pmd_offset(pud, address);
 	}
 	// #endif /* CONFIG_MMU */

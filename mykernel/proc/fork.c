@@ -337,12 +337,6 @@ fail_nomem:
 	goto out;
 }
 
-static inline int mm_alloc_pgd(mm_s *mm) {
-	mm->pgd = pgd_alloc(mm);
-	if (!mm->pgd)
-		return -ENOMEM;
-	return 0;
-}
 
 static inline void mm_free_pgd(mm_s *mm) {
 	pgd_free(mm, mm->pgd);
@@ -531,7 +525,8 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 	// 	mm->def_flags = 0;
 	// }
 
-	if (mm_alloc_pgd(mm))
+	mm->pgd = pgd_alloc(mm);
+	if (!mm->pgd)
 		goto fail_nopgd;
 
 	// if (init_new_context(p, mm))
@@ -1195,7 +1190,8 @@ static __latent_entropy task_s
 	// 	goto bad_fork_cleanup_count;
 
 	// delayacct_tsk_init(p);	/* Must remain after dup_task_struct() */
-	p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER | PF_IDLE | PF_NO_SETAFFINITY);
+	p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER |
+					PF_IDLE | PF_NO_SETAFFINITY);
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
 	list_init(&p->sibling, p);

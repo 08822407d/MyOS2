@@ -661,9 +661,9 @@
 		// pmd_t *populate_extra_pmd(unsigned long vaddr);
 		// pte_t *populate_extra_pte(unsigned long vaddr);
 
-		static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd) {
-			return pgd;
-		}
+		// static inline pgd_t pti_set_user_pgtbl(pgd_t *pgdp, pgd_t pgd) {
+		// 	return pgd;
+		// }
 	#endif	/* __ASSEMBLY__ */
 
 	#include <asm/pgtable_64.h>
@@ -763,8 +763,11 @@
 		// */
 		// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
+		// static inline int arch_pmd_bad(pmd_t pmd) {
+		// 	return (arch_pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
+		// }
 		static inline int arch_pmd_bad(pmd_t pmd) {
-			return (arch_pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
+			return (arch_pmd_flags(pmd) & ~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 
 		// static inline unsigned long pages_to_mb(unsigned long npg)

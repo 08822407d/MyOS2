@@ -30,7 +30,7 @@
 
 	#define swapper_pg_dir init_top_pgt
 
-		extern void paging_init(void);
+	extern void paging_init(void);
 	// static inline void sync_initial_page_table(void) { }
 
 	// #define pte_ERROR(e)					\
@@ -64,27 +64,27 @@
 	// void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
 	// void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
 
-	static inline void set_pte(pte_t *ptep, pte_t pte) {
-		WRITE_ONCE(*ptep, pte);
-	}
+	// static inline void set_pte(pte_t *ptep, pte_t pte) {
+	// 	WRITE_ONCE(*ptep, pte);
+	// }
 
-	static inline void
-	pte_clear(mm_s *mm, unsigned long addr, pte_t *ptep) {
-		set_pte(ptep, arch_make_pte(0));
-	}
+	// static inline void
+	// pte_clear(mm_s *mm, unsigned long addr, pte_t *ptep) {
+	// 	set_pte(ptep, arch_make_pte(0));
+	// }
 
-	static inline void
-	native_set_pte_atomic(pte_t *ptep, pte_t pte) {
-		set_pte(ptep, pte);
-	}
+	// static inline void
+	// native_set_pte_atomic(pte_t *ptep, pte_t pte) {
+	// 	set_pte(ptep, pte);
+	// }
 
-	static inline void set_pmd(pmd_t *pmdp, pmd_t pmd) {
-		WRITE_ONCE(*pmdp, pmd);
-	}
+	// static inline void set_pmd(pmd_t *pmdp, pmd_t pmd) {
+	// 	WRITE_ONCE(*pmdp, pmd);
+	// }
 
-	static inline void pmd_clear(pmd_t *pmd) {
-		set_pmd(pmd, arch_make_pmd(0));
-	}
+	// static inline void pmd_clear(pmd_t *pmd) {
+	// 	set_pmd(pmd, arch_make_pmd(0));
+	// }
 
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
 	// {
@@ -112,13 +112,13 @@
 	// #endif
 	// }
 
-	static inline void set_pud(pud_t *pudp, pud_t pud) {
-		WRITE_ONCE(*pudp, pud);
-	}
+	// static inline void set_pud(pud_t *pudp, pud_t pud) {
+	// 	WRITE_ONCE(*pudp, pud);
+	// }
 
-	static inline void pud_clear(pud_t *pud) {
-		set_pud(pud, arch_make_pud(0));
-	}
+	// static inline void pud_clear(pud_t *pud) {
+	// 	set_pud(pud, arch_make_pud(0));
+	// }
 
 	// static inline pud_t native_pudp_get_and_clear(pud_t *xp)
 	// {
@@ -141,12 +141,10 @@
 	// 	pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
 	// 	WRITE_ONCE(*p4dp, arch_make_p4d(arch_pgd_val(pgd)));
 	// }
-	#define set_p4d(p4dp, p4d)	(*(p4dp) = (p4d));
 
 	// static inline void p4d_clear(p4d_t *p4d) {
 	// 	set_p4d(p4d, arch_make_p4d(0));
 	// }
-	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
 	// static inline void
 	// native_set_pgd(pgd_t *pgdp, pgd_t pgd) {
@@ -256,6 +254,20 @@
 	// }
 
 	// #include <asm/pgtable-invert.h>
+
+
+	#define set_pte(ptep, pte)	WRITE_ONCE(*(ptep), (pte))
+	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))
+
+	#define set_pmd(pmdp, pmd)	WRITE_ONCE(*(pmdp), (pmd))
+	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmd(0))
+
+	#define set_pud(pudp, pud)	WRITE_ONCE(*(pudp), (pud))
+	#define pud_clear(pudp)		set_pud((pudp), arch_make_pud(0))
+
+	#define set_p4d(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
+	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
+
 
 	#endif /* !__ASSEMBLY__ */
 

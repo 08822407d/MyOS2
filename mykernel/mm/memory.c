@@ -103,8 +103,8 @@ void	*high_memory;
 
 
 static int
-copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd,
-		pmd_t *src_pmd, unsigned long addr, unsigned long end) {
+copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
+		pmd_t *src_pmd_ent, unsigned long addr, unsigned long end) {
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pte_t *orig_src_pte, *orig_dst_pte;
@@ -119,13 +119,13 @@ again:
 	// progress = 0;
 	// init_rss_vec(rss);
 
-	// dst_pte = pte_alloc_map_lock(dst_mm, dst_pmd, addr, &dst_ptl);
+	// dst_pte = pte_alloc_map_lock(dst_mm, dst_pmd_ent, addr, &dst_ptl);
 	// if (!dst_pte) {
 	// 	ret = -ENOMEM;
 	// 	goto out;
 	// }
-	// src_pte = pte_offset_map(src_pmd, addr);
-	// src_ptl = pte_lockptr(src_mm, src_pmd);
+	// src_pte = pte_offset_map(src_pmd_ent, addr);
+	// src_ptl = pte_lockptr(src_mm, src_pmd_ent);
 	// spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
 	// orig_src_pte = src_pte;
 	// orig_dst_pte = dst_pte;
@@ -216,8 +216,8 @@ again:
 	/* We've captured and resolved the error. Reset, try again. */
 	ret = 0;
 
-	if (addr != end)
-		goto again;
+	// if (addr != end)
+	// 	goto again;
 out:
 	// if (prealloc)
 	// 	put_page(prealloc);
@@ -225,24 +225,24 @@ out:
 }
 
 static inline int
-copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud,
-		pud_t *src_pud, unsigned long addr, unsigned long end) {
+copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_ent,
+		pud_t *src_pud_ent, unsigned long addr, unsigned long end) {
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pmd_t *src_pmd, *dst_pmd;
+	pmd_t *src_pmd_ent, *dst_pmd_ent;
 	unsigned long next;
 
-	dst_pmd = pmd_alloc(dst_mm, dst_pud, addr);
-	if (!dst_pmd)
+	dst_pmd_ent = pmd_alloc(dst_mm, dst_pud_ent, addr);
+	if (!dst_pmd_ent)
 		return -ENOMEM;
-	src_pmd = pmd_offset(src_pud, addr);
+	src_pmd_ent = pmd_offset(src_pud_ent, addr);
 	do {
 		next = next_pmd_addr_end(addr, end);
-		// if (is_swap_pmd(*src_pmd) || pmd_trans_huge(*src_pmd)
-		// 	|| pmd_devmap(*src_pmd)) {
+		// if (is_swap_pmd(*src_pmd_ent) || pmd_trans_huge(*src_pmd_ent)
+		// 	|| pmd_devmap(*src_pmd_ent)) {
 		// 	int err;
 		// 	VM_BUG_ON_VMA(next-addr != HPAGE_PMD_SIZE, src_vma);
-		// 	err = copy_huge_pmd(dst_mm, src_mm, dst_pmd, src_pmd,
+		// 	err = copy_huge_pmd(dst_mm, src_mm, dst_pmd_ent, src_pmd_ent,
 		// 			    addr, dst_vma, src_vma);
 		// 	if (err == -ENOMEM)
 		// 		return -ENOMEM;
@@ -250,47 +250,47 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud,
 		// 		continue;
 		// 	/* fall through */
 		// }
-		if (pmd_none_or_clear_bad(src_pmd))
+		if (pmd_none_or_clear_bad(src_pmd_ent))
 			continue;
-		if (copy_pte_range(dst_vma, src_vma, dst_pmd, src_pmd,
+		if (copy_pte_range(dst_vma, src_vma, dst_pmd_ent, src_pmd_ent,
 				   addr, next))
 			return -ENOMEM;
-	} while (dst_pmd++, src_pmd++, addr = next, addr != end);
+	} while (dst_pmd_ent++, src_pmd_ent++, addr = next, addr != end);
 	return 0;
 }
 
 static inline int
-copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d,
-		p4d_t *src_p4d, unsigned long addr, unsigned long end) {
+copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_ent,
+		p4d_t *src_p4d_ent, unsigned long addr, unsigned long end) {
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pud_t *src_pud, *dst_pud;
+	pud_t *src_pud_ent, *dst_pud_ent;
 	unsigned long next;
 
-	dst_pud = pud_alloc(dst_mm, dst_p4d, addr);
-	if (!dst_pud)
+	dst_pud_ent = pud_alloc(dst_mm, dst_p4d_ent, addr);
+	if (!dst_pud_ent)
 		return -ENOMEM;
-	src_pud = pud_offset(src_p4d, addr);
+	src_pud_ent = pud_offset(src_p4d_ent, addr);
 	do {
 		next = next_pud_addr_end(addr, end);
-		// if (pud_trans_huge(*src_pud) || pud_devmap(*src_pud)) {
+		// if (pud_trans_huge(*src_pud_ent) || pud_devmap(*src_pud_ent)) {
 		// 	int err;
 
 		// 	VM_BUG_ON_VMA(next-addr != HPAGE_PUD_SIZE, src_vma);
 		// 	err = copy_huge_pud(dst_mm, src_mm,
-		// 			    dst_pud, src_pud, addr, src_vma);
+		// 			    dst_pud_ent, src_pud_ent, addr, src_vma);
 		// 	if (err == -ENOMEM)
 		// 		return -ENOMEM;
 		// 	if (!err)
 		// 		continue;
 		// 	/* fall through */
 		// }
-		if (pud_none_or_clear_bad(src_pud))
+		if (pud_none_or_clear_bad(src_pud_ent))
 			continue;
-		if (copy_pmd_range(dst_vma, src_vma, dst_pud, src_pud,
+		if (copy_pmd_range(dst_vma, src_vma, dst_pud_ent, src_pud_ent,
 				   addr, next))
 			return -ENOMEM;
-	} while (dst_pud++, src_pud++, addr = next, addr != end);
+	} while (dst_pud_ent++, src_pud_ent++, addr = next, addr != end);
 	return 0;
 }
 
@@ -308,7 +308,7 @@ copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_ent,
 	do {
 		next = next_p4d_addr_end(addr, end);
 		// 四级映射下p4d页必有效，所以不检查
-		// if (p4d_none_or_clear_bad(src_p4d))
+		// if (p4d_none_or_clear_bad(src_p4d_ent))
 		// 	continue;
 		if (copy_pud_range(dst_vma, src_vma,
 				dst_p4d_ent, src_p4d_ent, addr, next))
@@ -376,8 +376,8 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	// }
 
 	ret = 0;
-	dst_pgd_ent = pgd_offset(dst_mm, addr);
-	src_pgd_ent = pgd_offset(src_mm, addr);
+	dst_pgd_ent = pgd_ent_offset(dst_mm, addr);
+	src_pgd_ent = pgd_ent_offset(src_mm, addr);
 	do {
 		next = next_pgd_addr_end(addr, end);
 		if (pgd_none_or_clear_bad(src_pgd_ent))
@@ -397,31 +397,11 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 }
 
 
-
 /*
  * Allocate page upper directory.
  * We've already handled the fast-path in-line.
  */
 // int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
-// {
-// 	pud_t *new = pud_alloc_one(mm, address);
-// 	if (!new)
-// 		return -ENOMEM;
-
-// 	spin_lock(&mm->page_table_lock);
-// 	if (!arch_p4d_present(*p4d)) {
-// 		mm_inc_nr_puds(mm);
-// 		smp_wmb(); /* See comment in pmd_install() */
-// 		arch_p4d_populate(mm, p4d, new);
-// 	} else	/* Another has populated it */
-// 		pud_free(mm, new);
-// 	spin_unlock(&mm->page_table_lock);
-// 	return 0;
-// }
-/*
- * Allocate page upper directory.
- * We've already handled the fast-path in-line.
- */
 int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 {
 	pud_t *new = pud_alloc_one(mm, address);
@@ -434,7 +414,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(mm, new);
-	spin_unlock(&mm->page_table_lock);
+	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
 
@@ -442,7 +422,8 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
  * Allocate page middle directory.
  * We've already handled the fast-path in-line.
  */
-int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
+// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
+int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 {
 	pmd_t *new = pmd_alloc_one(mm, address);
 	if (!new)
@@ -450,12 +431,11 @@ int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 
 	spin_lock(&mm->page_table_lock);
 	if (!arch_pud_present(*pud)) {
-		// mm_inc_nr_pmds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
-		arch_pud_populate(mm, pud, new);
+		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
 	} else {	/* Another has populated it */
 		pmd_free(mm, new);
 	}
-	spin_unlock(&mm->page_table_lock);
+	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }

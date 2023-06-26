@@ -43,12 +43,6 @@ static void pgd_dtor(pgd_t *pgd)
 	spin_unlock_no_resched(&pgd_lock);
 }
 
-
-static inline pgd_t *_pgd_alloc(void) {
-	return (pgd_t *)__get_free_pages(GFP_PGTABLE_USER,
-					 PGD_ALLOCATION_ORDER);
-}
-
 static inline void _pgd_free(pgd_t *pgd) {
 	free_pages((unsigned long)pgd, PGD_ALLOCATION_ORDER);
 }
@@ -57,7 +51,7 @@ pgd_t *pgd_alloc(mm_s *mm)
 {
 	pgd_t *pgd;
 
-	pgd = _pgd_alloc();
+	pgd = (pgd_t *)get_zeroed_page(GFP_PGTABLE_USER);
 	if (pgd == NULL)
 		goto out;
 
