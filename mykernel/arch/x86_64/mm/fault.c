@@ -44,6 +44,10 @@
 #include <obsolete/arch_proto.h>
 
 
+DEFINE_SPINLOCK(pgd_lock);
+LIST_HDR_S(pgd_list_hdr);
+
+
 void myos_excep_page_fault(pt_regs_s *sf_regs)
 {
 	task_s *curr = current;

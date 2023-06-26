@@ -106,10 +106,10 @@
 	// #endif	/* CONFIG_X86_PAE */
 
 	// #if CONFIG_PGTABLE_LEVELS > 3
-	static inline void arch_p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
-		// paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
-		set_p4d(p4d, arch_make_p4d(_PAGE_TABLE | __pa(pud)));
-	}
+	// static inline void arch_p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
+	// 	// paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
+	// 	set_p4d(p4d, arch_make_p4d(_PAGE_TABLE | __pa(pud)));
+	// }
 
 	// static inline void p4d_populate_safe(mm_s *mm, p4d_t *p4d, pud_t *pud)
 	// {

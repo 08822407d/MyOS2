@@ -464,8 +464,8 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 
 			// init_reserved_page(start_pfn);
 
-			// /* Avoid false-positive PageTail() */
-			// INIT_LIST_HEAD(&page->lru);
+			/* Avoid false-positive PageTail() */
+			list_init(&page->lru, &page);
 
 			/*
 			 * no need for atomic set_bit because the struct

@@ -2143,7 +2143,8 @@
 	// 	return 0;
 	// }
 
-	int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
+	// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
+	int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
 	// static inline void mm_inc_nr_puds(mm_s *mm) {
 	// 	// if (mm_pud_folded(mm))
@@ -2217,7 +2218,7 @@
 
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {
-		return (arch_p4d_none(*p4d)) && __pud_alloc(mm, p4d, address) ?
+		return (arch_p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
 				NULL : pud_offset(p4d, address);
 	}
 

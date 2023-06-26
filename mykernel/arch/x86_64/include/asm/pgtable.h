@@ -54,8 +54,8 @@
 		// 	__visible;
 		// #define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
 
-		// extern spinlock_t pgd_lock;
-		// extern List_s pgd_list;
+		extern spinlock_t	pgd_lock;
+		extern List_hdr_s	pgd_list_hdr;
 
 		// extern mm_s *pgd_page_get_mm(page_s *page);
 
@@ -805,9 +805,10 @@
 			return (arch_p4d_val(p4d) & ~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 
-		static inline int arch_p4d_present(p4d_t p4d) {
-			return arch_p4d_flags(p4d) & _PAGE_PRESENT;
-		}
+		// static inline int arch_p4d_present(p4d_t p4d) {
+		// 	return arch_p4d_flags(p4d) & _PAGE_PRESENT;
+		// }
+		#define arch_p4d_present(p4d) (arch_p4d_flags(p4d) & _PAGE_PRESENT)
 
 		static inline pud_t *arch_p4d_pgtable(p4d_t p4d) {
 			return (pud_t *)__va(arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d));
@@ -830,8 +831,8 @@
 
 	#endif	/* __ASSEMBLY__ */
 
-	// #define KERNEL_PGD_BOUNDARY	pgd_index(PAGE_OFFSET)
-	// #define KERNEL_PGD_PTRS		(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
+	#define KERNEL_PGD_BOUNDARY		pgd_index(PAGE_OFFSET)
+	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
 
 	#ifndef __ASSEMBLY__
 		// extern int direct_gbpages;

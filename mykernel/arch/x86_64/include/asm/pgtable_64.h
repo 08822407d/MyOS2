@@ -135,16 +135,18 @@
 	// #endif
 	// }
 
-	static inline void set_p4d(p4d_t *p4dp, p4d_t p4d) {
-		pgd_t pgd;
-		pgd = arch_make_pgd(arch_p4d_val(p4d));
-		pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
-		WRITE_ONCE(*p4dp, arch_make_p4d(arch_pgd_val(pgd)));
-	}
+	// static inline void set_p4d(p4d_t *p4dp, p4d_t p4d) {
+	// 	pgd_t pgd;
+	// 	pgd = arch_make_pgd(arch_p4d_val(p4d));
+	// 	pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
+	// 	WRITE_ONCE(*p4dp, arch_make_p4d(arch_pgd_val(pgd)));
+	// }
+	#define set_p4d(p4dp, p4d)	(*(p4dp) = (p4d));
 
-	static inline void p4d_clear(p4d_t *p4d) {
-		set_p4d(p4d, arch_make_p4d(0));
-	}
+	// static inline void p4d_clear(p4d_t *p4d) {
+	// 	set_p4d(p4d, arch_make_p4d(0));
+	// }
+	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
 	// static inline void
 	// native_set_pgd(pgd_t *pgdp, pgd_t pgd) {

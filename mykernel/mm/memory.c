@@ -402,7 +402,27 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
  * Allocate page upper directory.
  * We've already handled the fast-path in-line.
  */
-int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
+// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
+// {
+// 	pud_t *new = pud_alloc_one(mm, address);
+// 	if (!new)
+// 		return -ENOMEM;
+
+// 	spin_lock(&mm->page_table_lock);
+// 	if (!arch_p4d_present(*p4d)) {
+// 		mm_inc_nr_puds(mm);
+// 		smp_wmb(); /* See comment in pmd_install() */
+// 		arch_p4d_populate(mm, p4d, new);
+// 	} else	/* Another has populated it */
+// 		pud_free(mm, new);
+// 	spin_unlock(&mm->page_table_lock);
+// 	return 0;
+// }
+/*
+ * Allocate page upper directory.
+ * We've already handled the fast-path in-line.
+ */
+int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 {
 	pud_t *new = pud_alloc_one(mm, address);
 	if (!new)
@@ -410,9 +430,8 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 
 	spin_lock(&mm->page_table_lock);
 	if (!arch_p4d_present(*p4d)) {
-		// mm_inc_nr_puds(mm);
 		smp_wmb(); /* See comment in pmd_install() */
-		arch_p4d_populate(mm, p4d, new);
+		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(mm, new);
 	spin_unlock(&mm->page_table_lock);
@@ -425,7 +444,6 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
  */
 int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 {
-	spinlock_t *ptl;
 	pmd_t *new = pmd_alloc_one(mm, address);
 	if (!new)
 		return -ENOMEM;
