@@ -662,7 +662,7 @@ unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order)
 	page = alloc_pages(gfp_mask & ~__GFP_HIGHMEM, order);
 	if (!page)
 		return 0;
-	return (unsigned long) page_address(page);
+	return (unsigned long)page_to_virt(page);
 }
 
 unsigned long get_zeroed_page(gfp_t gfp_mask)

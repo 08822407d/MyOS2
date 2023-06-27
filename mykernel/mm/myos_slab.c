@@ -80,7 +80,7 @@ void myos_init_slab()
 
 slab_s * slab_alloc(slab_s *cslp)
 {
-	page_s *page = alloc_pages(ZONE_NORMAL, 0);
+	page_s *page = alloc_page(ZONE_NORMAL);
 	
 	__SetPageSlab(page);
 	slab_s *nslp = (slab_s *)kzalloc(sizeof(slab_s), GFP_KERNEL);

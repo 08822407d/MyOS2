@@ -74,12 +74,9 @@
 	// 	set_pmd_safe(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
 	// }
 
-	static inline void arch_pmd_populate(mm_s *mm, pmd_t *pmd, page_s *pte) {
-		unsigned long pfn = page_to_pfn(pte);
-
-		// paravirt_alloc_pte(mm, pfn);
-		set_pmd(pmd, arch_make_pmd(_PAGE_TABLE | ((pteval_t)pfn << PAGE_SHIFT)));
-	}
+	// static inline void arch_pmd_populate(mm_s *mm, pmd_t *pmd, pte_t *pte) {
+	// 	set_pmd(pmd, arch_make_pmd(_PAGE_TABLE | __pa(pte)));
+	// }
 
 	// #if CONFIG_PGTABLE_LEVELS > 2
 	// extern void ___pmd_free_tlb(struct mmu_gather *tlb, pmd_t *pmd);
@@ -90,13 +87,9 @@
 	// 	___pmd_free_tlb(tlb, pmd);
 	// }
 
-	// #ifdef CONFIG_X86_PAE
-	// extern void pud_populate(mm_s *mm, pud_t *pudp, pmd_t *pmd);
-	// #else	/* !CONFIG_X86_PAE */
-	static inline void arch_pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
-		// paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
-		set_pud(pud, arch_make_pud(_PAGE_TABLE | __pa(pmd)));
-	}
+	// static inline void arch_pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
+	// 	set_pud(pud, arch_make_pud(_PAGE_TABLE | __pa(pmd)));
+	// }
 
 	// static inline void pud_populate_safe(mm_s *mm, pud_t *pud, pmd_t *pmd)
 	// {

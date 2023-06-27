@@ -48,32 +48,34 @@
 	// 	free_page((unsigned long)pte);
 	// }
 
-	/**
-	 * __pte_alloc_one - allocate a page for PTE-level user page table
-	 * @mm: the mm_struct of the current context
-	 * @gfp: GFP flags to use for the allocation
-	 *
-	 * Allocates a page and runs the pgtable_pte_page_ctor().
-	 *
-	 * This function is intended for architectures that need
-	 * anything beyond simple page allocation or must have custom GFP flags.
-	 *
-	 * Return: `page_s` initialized as page table or %NULL on error
-	 */
-	// static inline pgtable_t __pte_alloc_one(mm_s *mm, gfp_t gfp)
-	static inline pgtable_t pte_alloc_one(mm_s *mm, gfp_t gfp) {
-		page_s *pte;
+	// /**
+	//  * __pte_alloc_one - allocate a page for PTE-level user page table
+	//  * @mm: the mm_struct of the current context
+	//  * @gfp: GFP flags to use for the allocation
+	//  *
+	//  * Allocates a page and runs the pgtable_pte_page_ctor().
+	//  *
+	//  * This function is intended for architectures that need
+	//  * anything beyond simple page allocation or must have custom GFP flags.
+	//  *
+	//  * Return: `page_s` initialized as page table or %NULL on error
+	//  */
+	// // static inline pgtable_t __pte_alloc_one(mm_s *mm, gfp_t gfp)
+	// static inline pte_t *pte_alloc_one(mm_s *mm) {
+	// 	page_s *page;
+	// 	gfp_t gfp = GFP_PGTABLE_USER;
+	// 	if (mm == &init_mm)
+	// 		gfp = GFP_PGTABLE_KERNEL;
 
-		pte = alloc_pages(gfp, 0);
-		if (!pte)
-			return NULL;
-		if (!pgtable_pte_page_ctor(pte)) {
-			__free_page(pte);
-			return NULL;
-		}
+	// 	page = alloc_page(gfp);
+	// 	if (!page)
+	// 		return NULL;
 
-		return pte;
-	}
+	// 	memset((void *)page_to_virt(page), 0, PAGE_SIZE);
+	// 	__SetPageTable(page);
+	// 	__free_pages(page, 0);
+	// 	return (pte_t *)page_to_virt(page);
+	// }
 
 	// #ifndef __HAVE_ARCH_PTE_ALLOC_ONE
 	// /**
@@ -100,42 +102,41 @@
 	//  * @mm: the mm_struct of the current context
 	//  * @pte_page: the `page_s` representing the page table
 	//  */
-	// static inline void pte_free(mm_s *mm, page_s *pte_page)
-	// {
+	// static inline void pte_free(mm_s *mm, page_s *pte_page) {
 	// 	pgtable_pte_page_dtor(pte_page);
-	// 	__free_page(pte_page);
+	// 	free_page((unsigned long)pte_page);
 	// }
 
 
 
-	#ifndef __HAVE_ARCH_PMD_ALLOC_ONE
-	/**
-	 * pmd_alloc_one - allocate a page for PMD-level page table
-	 * @mm: the mm_struct of the current context
-	 *
-	 * Allocates a page and runs the pgtable_pmd_page_ctor().
-	 * Allocations use %GFP_PGTABLE_USER in user context and
-	 * %GFP_PGTABLE_KERNEL in kernel context.
-	 *
-	 * Return: pointer to the allocated memory or %NULL on error
-	 */
-		static inline pmd_t
-		*pmd_alloc_one(mm_s *mm, unsigned long addr) {
-			page_s *page;
-			gfp_t gfp = GFP_PGTABLE_USER;
+	// #ifndef __HAVE_ARCH_PMD_ALLOC_ONE
+	// /**
+	//  * pmd_alloc_one - allocate a page for PMD-level page table
+	//  * @mm: the mm_struct of the current context
+	//  *
+	//  * Allocates a page and runs the pgtable_pmd_page_ctor().
+	//  * Allocations use %GFP_PGTABLE_USER in user context and
+	//  * %GFP_PGTABLE_KERNEL in kernel context.
+	//  *
+	//  * Return: pointer to the allocated memory or %NULL on error
+	//  */
+	// 	static inline pmd_t
+	// 	*pmd_alloc_one(mm_s *mm) {
+	// 		page_s *page;
+	// 		gfp_t gfp = GFP_PGTABLE_USER;
+	// 		if (mm == &init_mm)
+	// 			gfp = GFP_PGTABLE_KERNEL;
 
-			if (mm == &init_mm)
-				gfp = GFP_PGTABLE_KERNEL;
-			page = alloc_pages(gfp, 0);
-			if (!page)
-				return NULL;
-			// if (!pgtable_pmd_page_ctor(page)) {
-			// 	__free_pages(page, 0);
-			// 	return NULL;
-			// }
-			return (pmd_t *)page_address(page);
-		}
-	#endif
+	// 		page = alloc_page(gfp);
+	// 		if (!page)
+	// 			return NULL;
+
+	// 		memset((void *)page_to_virt(page), 0, PAGE_SIZE);
+	// 		__SetPageTable(page);
+	// 		__free_pages(page, 0);
+	// 		return (pmd_t *)page_to_virt(page);
+	// 	}
+	// #endif
 
 	// #ifndef __HAVE_ARCH_PMD_FREE
 	// 	static inline void
@@ -148,14 +149,22 @@
 
 	// static inline pud_t
 	// *__pud_alloc_one(mm_s *mm, unsigned long addr) {
-	static inline pud_t
-	*pud_alloc_one(mm_s *mm, unsigned long addr) {
-		gfp_t gfp = GFP_PGTABLE_USER;
+	// static inline pud_t
+	// *pud_alloc_one(mm_s *mm) {
+	// 	page_s *page;
+	// 	gfp_t gfp = GFP_PGTABLE_USER;
+	// 	if (mm == &init_mm)
+	// 		gfp = GFP_PGTABLE_KERNEL;
 
-		if (mm == &init_mm)
-			gfp = GFP_PGTABLE_KERNEL;
-		return (pud_t *)get_zeroed_page(gfp);
-	}
+	// 	page = alloc_page(gfp);
+	// 	if (!page)
+	// 		return NULL;
+
+	// 	memset((void *)page_to_virt(page), 0, PAGE_SIZE);
+	// 	__SetPageTable(page);
+	// 	__free_pages(page, 0);
+	// 	return (pud_t *)page_to_virt(page);
+	// }
 
 	// #ifndef __HAVE_ARCH_PUD_ALLOC_ONE
 	// /**
@@ -194,8 +203,35 @@
 	// #endif
 
 
-	#define pmd_free(mmp, pmdp) free_page((unsigned long)(pmdp))
-	#define pud_free(mmp, pudp) free_page((unsigned long)(pudp))
+	static inline void *__myos_pgtable_alloc_one(mm_s *mm) {
+		page_s *page;
+		gfp_t gfp = GFP_PGTABLE_USER;
+		if (mm == &init_mm)
+			gfp = GFP_PGTABLE_KERNEL;
+
+		page = alloc_page(gfp);
+		if (!page)
+			return NULL;
+
+		memset((void *)page_to_virt(page), 0, PAGE_SIZE);
+		__SetPageTable(page);
+		return (void *)page_to_virt(page);
+	}
+
+	static inline void __myos_pgtable_free(void *address) {
+		page_s *page = virt_to_page(address);
+		__SetPageTable(page);
+		__free_pages(page, 0);
+	}	
+
+
+	#define pte_alloc_one(mmp)	(pte_t *)__myos_pgtable_alloc_one(mmp)
+	#define pmd_alloc_one(mmp)	(pmd_t *)__myos_pgtable_alloc_one(mmp)
+	#define pud_alloc_one(mmp)	(pud_t *)__myos_pgtable_alloc_one(mmp)
+
+	#define pte_free(ptep) __myos_pgtable_free((void *)(ptep))
+	#define pmd_free(pmdp) __myos_pgtable_free((void *)(pmdp))
+	#define pud_free(pudp) __myos_pgtable_free((void *)(pudp))
 	// #define pgd_free(mmp, pgdp) free_page((unsigned long)(pgdp))
 
 	// #endif /* CONFIG_MMU */

@@ -102,44 +102,6 @@
 void	*high_memory;
 
 
-// void pmd_install(mm_s *mm, pmd_t *pmd, pgtable_t *pte)
-// {
-	// spinlock_t *ptl = pmd_lock(mm, pmd);
-
-	// if (pmd_none(*pmd)) {	/* Has another populated it ? */
-	// 	mm_inc_nr_ptes(mm);
-	// 	/*
-	// 	 * Ensure all pte setup (eg. pte page lock and page clearing) are
-	// 	 * visible before the pte is made visible to other CPUs by being
-	// 	 * put into page tables.
-	// 	 *
-	// 	 * The other side of the story is the pointer chasing in the page
-	// 	 * table walking code (when walking the page table without locking;
-	// 	 * ie. most of the time). Fortunately, these data accesses consist
-	// 	 * of a chain of data-dependent loads, meaning most CPUs (alpha
-	// 	 * being the notable exception) will already guarantee loads are
-	// 	 * seen in-order. See the alpha page table accessors for the
-	// 	 * smp_rmb() barriers in page table walking code.
-	// 	 */
-	// 	smp_wmb(); /* Could be smp_wmb__xxx(before|after)_spin_lock */
-	// 	pmd_populate(mm, pmd, *pte);
-	// 	*pte = NULL;
-	// }
-	// spin_unlock(ptl);
-// }
-
-int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
-{
-	pgtable_t new = pte_alloc_one(mm, GFP_PGTABLE_USER);
-	if (!new)
-		return -ENOMEM;
-
-	// pmd_install(mm, pmd, &new);
-	// if (new)
-	// 	pte_free(mm, new);
-	// return 0;
-}
-
 
 static int
 copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
@@ -444,7 +406,7 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 // int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 {
-	pud_t *new = pud_alloc_one(mm, address);
+	pud_t *new = pud_alloc_one(mm);
 	if (!new)
 		return -ENOMEM;
 
@@ -453,7 +415,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 		smp_wmb(); /* See comment in pmd_install() */
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
-		pud_free(mm, new);
+		pud_free(new);
 	// spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
@@ -465,7 +427,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 // int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 {
-	pmd_t *new = pmd_alloc_one(mm, address);
+	pmd_t *new = pmd_alloc_one(mm);
 	if (!new)
 		return -ENOMEM;
 
@@ -474,7 +436,24 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 		smp_wmb(); /* See comment in pmd_install() */
 		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
 	} else {	/* Another has populated it */
-		pmd_free(mm, new);
+		pmd_free(new);
+	}
+	// spin_unlock_no_resched(&mm->page_table_lock);
+	return 0;
+}
+
+int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
+{
+	pte_t *new = pte_alloc_one(mm);
+	if (!new)
+		return -ENOMEM;
+
+	// spin_lock(&mm->page_table_lock);
+	if (!arch_pmd_present(*pmd)) {
+		smp_wmb(); /* See comment in pmd_install() */
+		*pmd = arch_make_pmd(_PAGE_TABLE | __pa(new));
+	} else {	/* Another has populated it */
+		pte_free(new);
 	}
 	// spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;

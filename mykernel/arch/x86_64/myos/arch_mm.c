@@ -50,7 +50,7 @@ void creat_exec_addrspace(task_s * task)
 	{
 		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
 		{
-			page_s *page = alloc_pages(GFP_USER, 0);
+			page_s *page = alloc_page(GFP_USER);
 			atomic_inc(&(page->_mapcount));
 			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
 							page_to_phys(page), attr, &mm->pgd_ptr);
@@ -90,7 +90,7 @@ int do_COW(task_s * task, virt_addr_t virt)
 	phys_addr_t orig_paddr = 0;
 	get_paddr(orig_cr3, virt, &orig_paddr);
 	page_s * orig_page = paddr_to_page(orig_paddr);
-	page_s * new_page = alloc_pages(GFP_USER, 0);
+	page_s * new_page = alloc_page(GFP_USER);
 
 	if (new_page != NULL)
 	{
@@ -138,7 +138,7 @@ virt_addr_t do_brk(virt_addr_t start, size_t length)
 	for (virt_addr_t vaddr = start; vaddr < new_end; vaddr += PAGE_SIZE)
 	{
 		unsigned long attr = PAGE_SHARED;
-		page_s * pg_p = alloc_pages(GFP_USER, 0);
+		page_s * pg_p = alloc_page(GFP_USER);
 		arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
 				attr, &current->mm->pgd_ptr);
 	}

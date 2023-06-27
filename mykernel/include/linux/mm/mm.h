@@ -1718,10 +1718,10 @@
 	// */
 	// #include <linux/vmstat.h>
 
-	static __always_inline void
-	*lowmem_page_address(const page_s *page) {
-		return (void *)page_to_virt(page);
-	}
+	// static __always_inline void
+	// *lowmem_page_address(const page_s *page) {
+	// 	return (void *)page_to_virt(page);
+	// }
 
 	// #if defined(CONFIG_HIGHMEM) && !defined(WANT_PAGE_VIRTUAL)
 	// #define HASHED_PAGE_VIRTUAL
@@ -1745,11 +1745,11 @@
 	// void page_address_init(void);
 	// #endif
 
-	#if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
-	#	define page_address(page)				lowmem_page_address(page)
-	#	define set_page_address(page, address)	do { } while(0)
-	#	define page_address_init()				do { } while(0)
-	#endif
+	// #if !defined(HASHED_PAGE_VIRTUAL) && !defined(WANT_PAGE_VIRTUAL)
+	// #	define page_address(page)				lowmem_page_address(page)
+	// #	define set_page_address(page, address)	do { } while(0)
+	// #	define page_address_init()				do { } while(0)
+	// #endif
 
 	// static inline void *folio_address(const folio_s *folio)
 	// {
@@ -2229,6 +2229,12 @@
 		return (arch_pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
 				NULL: pmd_offset(pud, address);
 	}
+
+	static inline pte_t *pte_alloc(mm_s *mm,
+			pmd_t *pmd, unsigned long address) {
+		return (arch_pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
+				NULL : pte_offset(pmd, address);
+	}
 	// #endif /* CONFIG_MMU */
 
 	// #if USE_SPLIT_PTE_PTLOCKS
@@ -2301,19 +2307,18 @@
 	// 	pgtable_cache_init();
 	// }
 
-	static inline bool pgtable_pte_page_ctor(page_s *page) {
-		// if (!ptlock_init(page))
-		// 	return false;
-		__SetPageTable(page);
-		// inc_lruvec_page_state(page, NR_PAGETABLE);
-		return true;
-	}
+	// static inline bool pgtable_pte_page_ctor(page_s *page) {
+	// 	// if (!ptlock_init(page))
+	// 	// 	return false;
+	// 	__SetPageTable(page);
+	// 	// inc_lruvec_page_state(page, NR_PAGETABLE);
+	// 	return true;
+	// }
 
-	// static inline void pgtable_pte_page_dtor(page_s *page)
-	// {
-	// 	ptlock_free(page);
+	// static inline void pgtable_pte_page_dtor(page_s *page) {
+	// 	// ptlock_free(page);
 	// 	__ClearPageTable(page);
-	// 	dec_lruvec_page_state(page, NR_PAGETABLE);
+	// 	// dec_lruvec_page_state(page, NR_PAGETABLE);
 	// }
 
 	// #define pte_offset_map_lock(mm, pmd, address, ptlp)	\
@@ -2330,11 +2335,6 @@
 	// 	pte_unmap(pte);					\
 	// } while (0)
 
-	static inline pte_t *pte_alloc(mm_s *mm,
-			pmd_t *pmd, unsigned long address) {
-		return (arch_pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
-				NULL : pte_offset(pmd, address);
-	}
 	// #define pte_alloc(mm, pmd)	\
 	// 			(arch_pmd_none(*(pmd)) && __pte_alloc(mm, pmd))
 
