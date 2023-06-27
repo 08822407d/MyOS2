@@ -43,7 +43,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/mm_inline.h>
 #include <linux/sched/mm.h>
-// #include <linux/sched/coredump.h>
+#include <linux/sched/coredump.h>
 // #include <linux/sched/numa_balancing.h>
 #include <linux/sched/task.h>
 // #include <linux/hugetlb.h>
@@ -101,6 +101,232 @@
  */
 void	*high_memory;
 
+unsigned long highest_memmap_pfn __read_mostly;
+
+
+/*
+ * vm_normal_page -- This function gets the "struct page" associated with a pte.
+ *
+ * "Special" mappings do not wish to be associated with a "struct page" (either
+ * it doesn't exist, or it exists but they don't want to touch it). In this
+ * case, NULL is returned here. "Normal" mappings do have a struct page.
+ *
+ * There are 2 broad cases. Firstly, an architecture may define a pte_special()
+ * pte bit, in which case this function is trivial. Secondly, an architecture
+ * may not have a spare pte bit, which requires a more complicated scheme,
+ * described below.
+ *
+ * A raw VM_PFNMAP mapping (ie. one that is not COWed) is always considered a
+ * special mapping (even if there are underlying and valid "struct pages").
+ * COWed pages of a VM_PFNMAP are always normal.
+ *
+ * The way we recognize COWed pages within VM_PFNMAP mappings is through the
+ * rules set up by "remap_pfn_range()": the vma will have the VM_PFNMAP bit
+ * set, and the vm_pgoff will point to the first PFN mapped: thus every special
+ * mapping will always honor the rule
+ *
+ *	pfn_of_page == vma->vm_pgoff + ((addr - vma->vm_start) >> PAGE_SHIFT)
+ *
+ * And for normal mappings this is false.
+ *
+ * This restricts such mappings to be a linear translation from virtual address
+ * to pfn. To get around this restriction, we allow arbitrary mappings so long
+ * as the vma is not a COW mapping; in that case, we know that all ptes are
+ * special (because none can have been COWed).
+ *
+ *
+ * In order to support COW of arbitrary special mappings, we have VM_MIXEDMAP.
+ *
+ * VM_MIXEDMAP mappings can likewise contain memory with or without "struct
+ * page" backing, however the difference is that _all_ pages with a struct
+ * page (that is, those where pfn_valid is true) are refcounted and considered
+ * normal pages by the VM. The disadvantage is that pages are refcounted
+ * (which can be slower and simply not an option for some PFNMAP users). The
+ * advantage is that we don't have to follow the strict linearity rule of
+ * PFNMAP mappings in order to support COWable mappings.
+ *
+ */
+page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte)
+{
+	unsigned long pfn = pte_pfn(pte);
+
+// 	if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+// 		if (likely(!pte_special(pte)))
+// 			goto check_pfn;
+// 		if (vma->vm_ops && vma->vm_ops->find_special_page)
+// 			return vma->vm_ops->find_special_page(vma, addr);
+// 		if (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP))
+// 			return NULL;
+// 		if (is_zero_pfn(pfn))
+// 			return NULL;
+// 		if (pte_devmap(pte))
+// 			return NULL;
+
+// 		print_bad_pte(vma, addr, pte, NULL);
+// 		return NULL;
+// 	}
+
+// 	/* !CONFIG_ARCH_HAS_PTE_SPECIAL case follows: */
+
+// 	if (unlikely(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP))) {
+// 		if (vma->vm_flags & VM_MIXEDMAP) {
+// 			if (!pfn_valid(pfn))
+// 				return NULL;
+// 			goto out;
+// 		} else {
+// 			unsigned long off;
+// 			off = (addr - vma->vm_start) >> PAGE_SHIFT;
+// 			if (pfn == vma->vm_pgoff + off)
+// 				return NULL;
+// 			if (!is_cow_mapping(vma->vm_flags))
+// 				return NULL;
+// 		}
+// 	}
+
+// 	if (is_zero_pfn(pfn))
+// 		return NULL;
+
+check_pfn:
+	if (pfn > highest_memmap_pfn) {
+		// print_bad_pte(vma, addr, pte, NULL);
+		return NULL;
+	}
+
+	/*
+	 * NOTE! We still have PageReserved() pages in the page tables.
+	 * eg. VDSO mappings can cause them to exist.
+	 */
+out:
+	return pfn_to_page(pfn);
+}
+
+
+/*
+ * Copy a present and normal page if necessary.
+ *
+ * NOTE! The usual case is that this doesn't need to do
+ * anything, and can just return a positive value. That
+ * will let the caller know that it can just increase
+ * the page refcount and re-use the pte the traditional
+ * way.
+ *
+ * But _if_ we need to copy it because it needs to be
+ * pinned in the parent (and the child should get its own
+ * copy rather than just a reference to the same page),
+ * we'll do that here and return zero to let the caller
+ * know we're done.
+ *
+ * And if we need a pre-allocated page but don't yet have
+ * one, return a negative error to let the preallocation
+ * code know so that it can do so outside the page table
+ * lock.
+ */
+static inline int
+copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
+		pte_t *src_pte, unsigned long addr, pte_t pte, page_s *page) {
+	page_s *new_page;
+
+	/*
+	 * What we want to do is to check whether this page may
+	 * have been pinned by the parent process.  If so,
+	 * instead of wrprotect the pte on both sides, we copy
+	 * the page immediately so that we'll always guarantee
+	 * the pinned page won't be randomly replaced in the
+	 * future.
+	 *
+	 * The page pinning checks are just "has this mm ever
+	 * seen pinning", along with the (inexact) check of
+	 * the page count. That might give false positives for
+	 * for pinning, but it will work correctly.
+	 */
+	// if (likely(!page_needs_cow_for_dma(src_vma, page)))
+	// 	return 1;
+	// static inline bool
+	// page_needs_cow_for_dma(vma_s *vma, page_s *page)
+	// {
+		if (!is_cow_mapping(src_vma->vm_flags))
+			return 1;
+
+		if (!test_bit(MMF_HAS_PINNED, &src_vma->vm_mm->flags))
+			return 1;
+
+	// 	return page_maybe_dma_pinned(page);
+	// }
+
+	// new_page = *prealloc;
+	// if (!new_page)
+	// 	return -EAGAIN;
+
+	// /*
+	//  * We have a prealloc page, all good!  Take it
+	//  * over and copy the page & arm it.
+	//  */
+	// *prealloc = NULL;
+	// copy_user_highpage(new_page, page, addr, src_vma);
+	// __SetPageUptodate(new_page);
+	// page_add_new_anon_rmap(new_page, dst_vma, addr, false);
+	// lru_cache_add_inactive_or_unevictable(new_page, dst_vma);
+	// rss[mm_counter(new_page)]++;
+
+	// /* All done, just insert the new page copy in the child */
+	// pte = mk_pte(new_page, dst_vma->vm_page_prot);
+	// pte = maybe_mkwrite(pte_mkdirty(pte), dst_vma);
+	// if (userfaultfd_pte_wp(dst_vma, *src_pte))
+	// 	/* Uffd-wp needs to be delivered to dest pte as well */
+	// 	pte = pte_wrprotect(pte_mkuffd_wp(pte));
+	// set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+	return 0;
+}
+
+/*
+ * Copy one pte.  Returns 0 if succeeded, or -EAGAIN if one preallocated page
+ * is required to copy this pte.
+ */
+static inline int
+copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
+		pte_t *dst_pte, pte_t *src_pte, unsigned long addr) {
+	mm_s *src_mm = src_vma->vm_mm;
+	unsigned long vm_flags = src_vma->vm_flags;
+	pte_t pte = *src_pte;
+	page_s *page;
+
+	page = vm_normal_page(src_vma, addr, pte);
+	if (page) {
+		int retval;
+
+		retval = copy_present_page(dst_vma, src_vma,
+					dst_pte, src_pte, addr, pte, page);
+		if (retval <= 0)
+			return retval;
+
+		// get_page(page);
+		// page_dup_rmap(page, false);
+		// rss[mm_counter(page)]++;
+	}
+
+	/*
+	 * If it's a COW mapping, write protect it both
+	 * in the parent and the child
+	 */
+	if (is_cow_mapping(vm_flags) && pte_writable(pte)) {
+		arch_ptep_set_wrprotect(src_pte);
+		pte = pte_wrprotect(pte);
+	}
+
+	/*
+	 * If it's a shared mapping, mark it clean in
+	 * the child
+	 */
+	if (vm_flags & VM_SHARED)
+		pte = pte_mkclean(pte);
+	pte = pte_mkold(pte);
+
+	// if (!userfaultfd_wp(dst_vma))
+	// 	pte = pte_clear_uffd_wp(pte);
+
+	// set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+	return 0;
+}
 
 
 static int
@@ -114,7 +340,7 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
 	int progress, ret = 0;
 	// int rss[NR_MM_COUNTERS];
 	// swp_entry_t entry = (swp_entry_t){0};
-	page_s *prealloc = NULL;
+	// page_s *prealloc = NULL;
 
 again:
 	progress = 0;
@@ -144,34 +370,32 @@ again:
 		// 	    spin_needbreak(src_ptl) || spin_needbreak(dst_ptl))
 		// 		break;
 		// }
-		// if (arch_pte_none(*src_pte)) {
-		// 	progress++;
-		// 	continue;
-		// }
-		// if (unlikely(!arch_pte_present(*src_pte))) {
-		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
-		// 				  dst_pte, src_pte,
-		// 				  dst_vma, src_vma,
-		// 				  addr, rss);
-		// 	if (ret == -EIO) {
-		// 		entry = pte_to_swp_entry(*src_pte);
-		// 		break;
-		// 	} else if (ret == -EBUSY) {
-		// 		break;
-		// 	} else if (!ret) {
-		// 		progress += 8;
-		// 		continue;
-		// 	}
-
-		// 	/*
-		// 	 * Device exclusive entry restored, continue by copying
-		// 	 * the now present pte.
-		// 	 */
-		// 	WARN_ON_ONCE(ret != -ENOENT);
-		// }
-		// /* copy_present_pte() will clear `*prealloc' if consumed */
-		// ret = copy_present_pte(dst_vma, src_vma, dst_pte, src_pte,
-		// 		       addr, rss, &prealloc);
+		if (arch_pte_none(*src_pte)) {
+			progress++;
+			continue;
+		}
+		if (!arch_pte_present(*src_pte)) {
+			// ret = copy_nonpresent_pte(dst_mm, src_mm,
+			// 			  dst_pte, src_pte,
+			// 			  dst_vma, src_vma,
+			// 			  addr, rss);
+			// if (ret == -EIO) {
+			// 	entry = pte_to_swp_entry(*src_pte);
+			// 	break;
+			// } else if (ret == -EBUSY) {
+			// 	break;
+			// } else if (!ret) {
+			// 	progress += 8;
+				continue;
+			// }
+			// /*
+			//  * Device exclusive entry restored, continue by copying
+			//  * the now present pte.
+			//  */
+			// WARN_ON_ONCE(ret != -ENOENT);
+		}
+		/* copy_present_pte() will clear `*prealloc' if consumed */
+		ret = copy_present_pte(dst_vma, src_vma, dst_pte, src_pte, addr);
 		// /*
 		//  * If we need a pre-allocated page for this pte, drop the
 		//  * locks, allocate, and try again.
@@ -188,7 +412,7 @@ again:
 		// 	put_page(prealloc);
 		// 	prealloc = NULL;
 		// }
-		progress += 8;
+		// progress += 8;
 	} while (dst_pte++, src_pte++, addr += PAGE_SIZE, addr != end);
 
 	// arch_leave_lazy_mmu_mode();
@@ -354,13 +578,13 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	// 		return ret;
 	// }
 
-	// /*
-	//  * We need to invalidate the secondary MMU mappings only when
-	//  * there could be a permission downgrade on the ptes of the
-	//  * parent mm. And a permission downgrade will only happen if
-	//  * is_cow_mapping() returns true.
-	//  */
-	// is_cow = is_cow_mapping(src_vma->vm_flags);
+	/*
+	 * We need to invalidate the secondary MMU mappings only when
+	 * there could be a permission downgrade on the ptes of the
+	 * parent mm. And a permission downgrade will only happen if
+	 * is_cow_mapping() returns true.
+	 */
+	is_cow = is_cow_mapping(src_vma->vm_flags);
 
 	// if (is_cow) {
 	// 	mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE,

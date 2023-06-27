@@ -130,6 +130,7 @@
 		// {
 		// 	return arch_pte_flags(pte) & _PAGE_RW;
 		// }
+		#define pte_writable(ptep)	(arch_pte_flags(ptep) & _PAGE_RW)
 
 		// static inline int pte_huge(pte_t pte)
 		// {
@@ -155,12 +156,11 @@
 
 		// static inline u64 protnone_mask(u64 val);
 
-		// static inline unsigned long pte_pfn(pte_t pte)
-		// {
-		// 	phys_addr_t pfn = arch_pte_val(pte);
-		// 	pfn ^= protnone_mask(pfn);
-		// 	return (pfn & PTE_PFN_MASK) >> PAGE_SHIFT;
-		// }
+		static inline unsigned long pte_pfn(pte_t pte) {
+			phys_addr_t pfn = arch_pte_val(pte);
+			// pfn ^= protnone_mask(pfn);
+			return (pfn & PTE_PFN_MASK) >> PAGE_SHIFT;
+		}
 
 		// static inline unsigned long pmd_pfn(pmd_t pmd)
 		// {
@@ -248,17 +248,19 @@
 
 		// static inline pte_t pte_set_flags(pte_t pte, pteval_t set)
 		// {
-		// 	pteval_t v = native_pte_val(pte);
+		// 	pteval_t v = arch_pte_val(pte);
 
-		// 	return native_make_pte(v | set);
+		// 	return arch_make_pte(v | set);
 		// }
 
 		// static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
 		// {
-		// 	pteval_t v = native_pte_val(pte);
+		// 	pteval_t v = arch_pte_val(pte);
 
-		// 	return native_make_pte(v & ~clear);
+		// 	return arch_make_pte(v & ~clear);
 		// }
+		#define pte_clear_flags(pte, clear)	\
+					arch_make_pte(arch_pte_val(pte) & ~clear)
 
 		// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 		// static inline int pte_uffd_wp(pte_t pte)
@@ -281,16 +283,22 @@
 		// {
 		// 	return pte_clear_flags(pte, _PAGE_DIRTY);
 		// }
+		#define pte_mkclean(pte)	\
+					pte_clear_flags(pte, _PAGE_DIRTY)
 
 		// static inline pte_t pte_mkold(pte_t pte)
 		// {
 		// 	return pte_clear_flags(pte, _PAGE_ACCESSED);
 		// }
+		#define pte_mkold(pte)	\
+					pte_clear_flags(pte, _PAGE_ACCESSED)
 
 		// static inline pte_t pte_wrprotect(pte_t pte)
 		// {
 		// 	return pte_clear_flags(pte, _PAGE_RW);
 		// }
+		#define pte_wrprotect(pte)	\
+					pte_clear_flags(pte, _PAGE_RW)
 
 		// static inline pte_t pte_mkexec(pte_t pte)
 		// {
@@ -710,12 +718,12 @@
 
 		static inline int arch_pmd_present(pmd_t pmd) {
 			/*
-			* Checking for _PAGE_PSE is needed too because
-			* split_huge_page will temporarily clear the present bit (but
-			* the _PAGE_PSE flag will remain set at all times while the
-			* _PAGE_PRESENT bit is clear).
-			*/
-			return arch_pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PROTNONE | _PAGE_PSE);
+			 * Checking for _PAGE_PSE is needed too because
+			 * split_huge_page will temporarily clear the present bit (but
+			 * the _PAGE_PSE flag will remain set at all times while the
+			 * _PAGE_PRESENT bit is clear).
+			 */
+			return arch_pmd_flags(pmd) & (_PAGE_PRESENT | _PAGE_PSE);
 		}
 
 		// #ifdef CONFIG_NUMA_BALANCING
@@ -778,7 +786,7 @@
 		}
 
 		static inline int arch_pud_present(pud_t pud) {
-			return arch_pud_flags(pud) & _PAGE_PRESENT;
+			return arch_pud_flags(pud) & (_PAGE_PRESENT | _PAGE_PSE);
 		}
 
 		static inline pmd_t *arch_pud_pgtable(pud_t pud) {
@@ -959,6 +967,8 @@
 		// {
 		// 	clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->val);
 		// }
+		#define arch_ptep_set_wrprotect(ptep)	\
+					clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->val)
 
 		// #define flush_tlb_fix_spurious_fault(vma, address) do { } while (0)
 

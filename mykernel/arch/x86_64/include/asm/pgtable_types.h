@@ -386,14 +386,14 @@
 		// 	/* No 512 GiB huge pages yet */
 		// 	return PTE_PFN_MASK;
 		// }
-		// static inline p4dval_t p4d_flags_mask(p4d_t p4d) {
+		// static inline p4dval_t P4D_FLAG_MASK(p4d_t p4d) {
 		// 	return ~arch_p4d_pfn_mask(p4d);
 		// }
-		#define arch_p4d_pfn_mask(n)	((unsigned long)PTE_PFN_MASK)	
-		#define p4d_flags_mask(n)		(~arch_p4d_pfn_mask(n))
+		#define arch_p4d_pfn_mask(n)	PTE_PFN_MASK	
+		#define P4D_FLAG_MASK(n)		(~arch_p4d_pfn_mask(n))
 
 		static inline p4dval_t arch_p4d_flags(p4d_t p4d) {
-			return arch_p4d_val(p4d) & p4d_flags_mask(p4d);
+			return arch_p4d_val(p4d) & P4D_FLAG_MASK(p4d);
 		}
 
 		// static inline pudval_t arch_pud_pfn_mask(pud_t pud) {
@@ -404,13 +404,13 @@
 		// }
 		#define arch_pud_pfn_mask(n)	PTE_PFN_MASK
 
-		// static inline pudval_t pud_flags_mask(pud_t pud) {
+		// static inline pudval_t PUD_FLAG_MASK(pud_t pud) {
 		// 	return ~arch_pud_pfn_mask(pud);
 		// }
-		#define pud_flags_mask(n)		(~arch_pud_pfn_mask(n))
+		#define PUD_FLAG_MASK(n)		(~arch_pud_pfn_mask(n))
 
 		static inline pudval_t arch_pud_flags(pud_t pud) {
-			return arch_pud_val(pud) & pud_flags_mask(pud);
+			return arch_pud_val(pud) & PUD_FLAG_MASK(pud);
 		}
 
 		// static inline pmdval_t arch_pmd_pfn_mask(pmd_t pmd) {
@@ -421,13 +421,13 @@
 		// }
 		#define arch_pmd_pfn_mask(n)	PTE_PFN_MASK
 
-		// static inline pmdval_t pmd_flags_mask(pmd_t pmd) {
+		// static inline pmdval_t PMD_FLAG_MASK(pmd_t pmd) {
 		// 	return ~arch_pmd_pfn_mask(pmd);
 		// }	
-		#define pmd_flags_mask(n)		(~arch_pmd_pfn_mask(n))
+		#define PMD_FLAG_MASK(n)		(~arch_pmd_pfn_mask(n))
 
 		static inline pmdval_t arch_pmd_flags(pmd_t pmd) {
-			return arch_pmd_val(pmd) & pmd_flags_mask(pmd);
+			return arch_pmd_val(pmd) & PMD_FLAG_MASK(pmd);
 		}
 
 		typedef union {

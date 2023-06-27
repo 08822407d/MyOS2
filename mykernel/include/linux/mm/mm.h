@@ -1828,8 +1828,7 @@
 	// extern int user_shm_lock(size_t, struct ucounts *);
 	// extern void user_shm_unlock(size_t, struct ucounts *);
 
-	// page_s *vm_normal_page(vma_s *vma, unsigned long addr,
-	// 				pte_t pte);
+	page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte);
 	// page_s *vm_normal_page_pmd(vma_s *vma, unsigned long addr,
 	// 				pmd_t pmd);
 

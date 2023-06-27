@@ -89,7 +89,7 @@
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
 	// {
 	// #ifdef CONFIG_SMP
-	// 	return native_make_pte(xchg(&xp->val, 0));
+	// 	return arch_make_pte(xchg(&xp->val, 0));
 	// #else
 	// 	/* native_local_ptep_get_and_clear,
 	// 	but duplicated because of cyclic dependency */

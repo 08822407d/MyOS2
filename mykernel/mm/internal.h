@@ -150,7 +150,7 @@
 	// 	set_page_count(page, 1);
 	// }
 
-	// extern unsigned long highest_memmap_pfn;
+	extern unsigned long highest_memmap_pfn;
 
 	// /*
 	// * Maximum number of reclaim retries without progress before the OOM
