@@ -16,7 +16,7 @@
 // #include <linux/mm_inline.h>
 // #include <linux/vmacache.h>
 // #include <linux/shm.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 // #include <linux/pagemap.h>
 // #include <linux/swap.h>
 #include <linux/kernel/syscalls.h>

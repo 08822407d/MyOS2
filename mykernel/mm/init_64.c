@@ -14,7 +14,7 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/ptrace.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 #include <linux/mm/mm.h>
 // #include <linux/swap.h>
 // #include <linux/smp.h>

@@ -12,7 +12,7 @@
 // #include <linux/security.h>
 // #include <linux/swap.h>
 // #include <linux/swapops.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 // #include <linux/hugetlb.h>
 // #include <linux/vmalloc.h>
 // #include <linux/userfaultfd_k.h>

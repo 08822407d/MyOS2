@@ -5,7 +5,7 @@
 #include <linux/kernel/spinlock.h>
 #include <linux/lib/list.h>
 // #include <linux/cpumask.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 #include <linux/mm/pgtable.h>
 
 // #include <linux/atomic.h>

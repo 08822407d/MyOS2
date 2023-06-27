@@ -47,7 +47,7 @@
 // #include <linux/sched/numa_balancing.h>
 #include <linux/sched/task.h>
 // #include <linux/hugetlb.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 // #include <linux/swap.h>
 // #include <linux/highmem.h>
 // #include <linux/pagemap.h>

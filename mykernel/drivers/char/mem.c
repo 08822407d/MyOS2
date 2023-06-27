@@ -13,7 +13,7 @@
 // #include <linux/miscdevice.h>
 #include <linux/kernel/slab.h>
 // #include <linux/vmalloc.h>
-// #include <linux/mman.h>
+#include <linux/mm/mman.h>
 // #include <linux/random.h>
 #include <linux/init/init.h>
 #include <linux/device/tty.h>
