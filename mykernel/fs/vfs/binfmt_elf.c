@@ -230,6 +230,22 @@ out:
 }
 
 
+static inline int
+make_prot(u32 p_flags, bool has_interp, bool is_interp) {
+	int prot = 0;
+
+	if (p_flags & PF_R)
+		prot |= PROT_READ;
+	if (p_flags & PF_W)
+		prot |= PROT_WRITE;
+	if (p_flags & PF_X)
+		prot |= PROT_EXEC;
+
+	// return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
+	return prot;
+}
+
+
 static int load_elf_binary(linux_bprm_s *bprm)
 {
 	file_s			*interpreter = NULL; /* to shut gcc up */
@@ -483,74 +499,73 @@ out_free_interp:
 			// }
 		}
 
-		// elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
-		// 		     !!interpreter, false);
+		elf_prot = make_prot(elf_ppnt->p_flags, !!interpreter, false);
 
-		// elf_flags = MAP_PRIVATE;
+		elf_flags = MAP_PRIVATE;
 
 		vaddr = elf_ppnt->p_vaddr;
-		// /*
-		//  * The first time through the loop, load_addr_set is false:
-		//  * layout will be calculated. Once set, use MAP_FIXED since
-		//  * we know we've already safely mapped the entire region with
-		//  * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
-		//  */
-		// if (load_addr_set) {
-		// 	elf_flags |= MAP_FIXED;
-		// } else if (elf_ex->e_type == ET_EXEC) {
-		// 	/*
-		// 	 * This logic is run once for the first LOAD Program
-		// 	 * Header for ET_EXEC binaries. No special handling
-		// 	 * is needed.
-		// 	 */
-		// 	elf_flags |= MAP_FIXED_NOREPLACE;
-		// } else if (elf_ex->e_type == ET_DYN) {
-		// 	/*
-		// 	 * This logic is run once for the first LOAD Program
-		// 	 * Header for ET_DYN binaries to calculate the
-		// 	 * randomization (load_bias) for all the LOAD
-		// 	 * Program Headers.
-		// 	 *
-		// 	 * There are effectively two types of ET_DYN
-		// 	 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
-		// 	 * and loaders (ET_DYN without INTERP, since they
-		// 	 * _are_ the ELF interpreter). The loaders must
-		// 	 * be loaded away from programs since the program
-		// 	 * may otherwise collide with the loader (especially
-		// 	 * for ET_EXEC which does not have a randomized
-		// 	 * position). For example to handle invocations of
-		// 	 * "./ld.so someprog" to test out a new version of
-		// 	 * the loader, the subsequent program that the
-		// 	 * loader loads must avoid the loader itself, so
-		// 	 * they cannot share the same load range. Sufficient
-		// 	 * room for the brk must be allocated with the
-		// 	 * loader as well, since brk must be available with
-		// 	 * the loader.
-		// 	 *
-		// 	 * Therefore, programs are loaded offset from
-		// 	 * ELF_ET_DYN_BASE and loaders are loaded into the
-		// 	 * independently randomized mmap region (0 load_bias
-		// 	 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
-		// 	 */
-		// 	if (interpreter) {
-		// 		load_bias = ELF_ET_DYN_BASE;
-		// 		if (current->flags & PF_RANDOMIZE)
-		// 			load_bias += arch_mmap_rnd();
-		// 		alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-		// 		if (alignment)
-		// 			load_bias &= ~(alignment - 1);
-		// 		elf_flags |= MAP_FIXED_NOREPLACE;
-		// 	} else
-		// 		load_bias = 0;
+		/*
+		 * The first time through the loop, load_addr_set is false:
+		 * layout will be calculated. Once set, use MAP_FIXED since
+		 * we know we've already safely mapped the entire region with
+		 * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
+		 */
+		if (load_addr_set) {
+			elf_flags |= MAP_FIXED;
+		} else if (elf_ex->e_type == ET_EXEC) {
+			/*
+			 * This logic is run once for the first LOAD Program
+			 * Header for ET_EXEC binaries. No special handling
+			 * is needed.
+			 */
+			elf_flags |= MAP_FIXED_NOREPLACE;
+		} else if (elf_ex->e_type == ET_DYN) {
+			// /*
+			//  * This logic is run once for the first LOAD Program
+			//  * Header for ET_DYN binaries to calculate the
+			//  * randomization (load_bias) for all the LOAD
+			//  * Program Headers.
+			//  *
+			//  * There are effectively two types of ET_DYN
+			//  * binaries: programs (i.e. PIE: ET_DYN with INTERP)
+			//  * and loaders (ET_DYN without INTERP, since they
+			//  * _are_ the ELF interpreter). The loaders must
+			//  * be loaded away from programs since the program
+			//  * may otherwise collide with the loader (especially
+			//  * for ET_EXEC which does not have a randomized
+			//  * position). For example to handle invocations of
+			//  * "./ld.so someprog" to test out a new version of
+			//  * the loader, the subsequent program that the
+			//  * loader loads must avoid the loader itself, so
+			//  * they cannot share the same load range. Sufficient
+			//  * room for the brk must be allocated with the
+			//  * loader as well, since brk must be available with
+			//  * the loader.
+			//  *
+			//  * Therefore, programs are loaded offset from
+			//  * ELF_ET_DYN_BASE and loaders are loaded into the
+			//  * independently randomized mmap region (0 load_bias
+			//  * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+			//  */
+			// if (interpreter) {
+			// 	load_bias = ELF_ET_DYN_BASE;
+			// 	if (current->flags & PF_RANDOMIZE)
+			// 		load_bias += arch_mmap_rnd();
+			// 	alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+			// 	if (alignment)
+			// 		load_bias &= ~(alignment - 1);
+			// 	elf_flags |= MAP_FIXED_NOREPLACE;
+			// } else
+			// 	load_bias = 0;
 
-		// 	/*
-		// 	 * Since load_bias is used for all subsequent loading
-		// 	 * calculations, we must lower it by the first vaddr
-		// 	 * so that the remaining calculations based on the
-		// 	 * ELF vaddrs will be correctly offset. The result
-		// 	 * is then page aligned.
-		// 	 */
-		// 	load_bias = ELF_PAGESTART(load_bias - vaddr);
+			// /*
+			//  * Since load_bias is used for all subsequent loading
+			//  * calculations, we must lower it by the first vaddr
+			//  * so that the remaining calculations based on the
+			//  * ELF vaddrs will be correctly offset. The result
+			//  * is then page aligned.
+			//  */
+			// load_bias = ELF_PAGESTART(load_bias - vaddr);
 
 			/*
 			 * Calculate the entire size of the ELF mapping
@@ -576,7 +591,7 @@ out_free_interp:
 				retval = -EINVAL;
 				goto out_free_dentry;
 			}
-		// }
+		}
 
 		error = elf_map(bprm->file, load_bias + vaddr,
 				elf_ppnt, elf_prot, elf_flags, total_size);

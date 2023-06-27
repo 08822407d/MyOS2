@@ -723,12 +723,12 @@ unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 		pkey = 0;
 	// }
 
-	// /* Do simple checking here so the lower-level routines won't have
-	//  * to. we assume access permissions have been handled by the open
-	//  * of the memory object, so we don't do any here.
-	//  */
-	// vm_flags = calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
-	// 		mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
+	/* Do simple checking here so the lower-level routines won't have
+	 * to. we assume access permissions have been handled by the open
+	 * of the memory object, so we don't do any here.
+	 */
+	vm_flags = calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
+				mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
 
 	// if (flags & MAP_LOCKED)
 	// 	if (!can_do_mlock())
@@ -737,86 +737,86 @@ unsigned long do_mmap(file_s *file, unsigned long addr,
 	// if (mlock_future_check(mm, vm_flags, len))
 	// 	return -EAGAIN;
 
-	// if (file) {
-	// 	struct inode *inode = file_inode(file);
-	// 	unsigned long flags_mask;
+	if (file) {
+		// inode_s *inode = file_inode(file);
+		// unsigned long flags_mask;
 
-	// 	if (!file_mmap_ok(file, inode, pgoff, len))
-	// 		return -EOVERFLOW;
+		// if (!file_mmap_ok(file, inode, pgoff, len))
+		// 	return -EOVERFLOW;
 
-	// 	flags_mask = LEGACY_MAP_MASK | file->f_op->mmap_supported_flags;
+		// flags_mask = LEGACY_MAP_MASK | file->f_op->mmap_supported_flags;
 
-	// 	switch (flags & MAP_TYPE) {
-	// 	case MAP_SHARED:
-	// 		/*
-	// 		 * Force use of MAP_SHARED_VALIDATE with non-legacy
-	// 		 * flags. E.g. MAP_SYNC is dangerous to use with
-	// 		 * MAP_SHARED as you don't know which consistency model
-	// 		 * you will get. We silently ignore unsupported flags
-	// 		 * with MAP_SHARED to preserve backward compatibility.
-	// 		 */
-	// 		flags &= LEGACY_MAP_MASK;
-	// 		fallthrough;
-	// 	case MAP_SHARED_VALIDATE:
-	// 		if (flags & ~flags_mask)
-	// 			return -EOPNOTSUPP;
-	// 		if (prot & PROT_WRITE) {
-	// 			if (!(file->f_mode & FMODE_WRITE))
-	// 				return -EACCES;
-	// 			if (IS_SWAPFILE(file->f_mapping->host))
-	// 				return -ETXTBSY;
-	// 		}
+		switch (flags & MAP_TYPE) {
+		case MAP_SHARED:
+			/*
+			 * Force use of MAP_SHARED_VALIDATE with non-legacy
+			 * flags. E.g. MAP_SYNC is dangerous to use with
+			 * MAP_SHARED as you don't know which consistency model
+			 * you will get. We silently ignore unsupported flags
+			 * with MAP_SHARED to preserve backward compatibility.
+			 */
+			flags &= LEGACY_MAP_MASK;
+			fallthrough;
+		case MAP_SHARED_VALIDATE:
+			// if (flags & ~flags_mask)
+			// 	return -EOPNOTSUPP;
+			// if (prot & PROT_WRITE) {
+			// 	if (!(file->f_mode & FMODE_WRITE))
+			// 		return -EACCES;
+			// 	if (IS_SWAPFILE(file->f_mapping->host))
+			// 		return -ETXTBSY;
+			// }
 
-	// 		/*
-	// 		 * Make sure we don't allow writing to an append-only
-	// 		 * file..
-	// 		 */
-	// 		if (IS_APPEND(inode) && (file->f_mode & FMODE_WRITE))
-	// 			return -EACCES;
+			// /*
+			//  * Make sure we don't allow writing to an append-only
+			//  * file..
+			//  */
+			// if (IS_APPEND(inode) && (file->f_mode & FMODE_WRITE))
+			// 	return -EACCES;
 
-	// 		vm_flags |= VM_SHARED | VM_MAYSHARE;
-	// 		if (!(file->f_mode & FMODE_WRITE))
-	// 			vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
-	// 		fallthrough;
-	// 	case MAP_PRIVATE:
-	// 		if (!(file->f_mode & FMODE_READ))
-	// 			return -EACCES;
-	// 		if (path_noexec(&file->f_path)) {
-	// 			if (vm_flags & VM_EXEC)
-	// 				return -EPERM;
-	// 			vm_flags &= ~VM_MAYEXEC;
-	// 		}
+			vm_flags |= VM_SHARED | VM_MAYSHARE;
+			if (!(file->f_mode & FMODE_WRITE))
+				vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
+			fallthrough;
+		case MAP_PRIVATE:
+			// if (!(file->f_mode & FMODE_READ))
+			// 	return -EACCES;
+			// if (path_noexec(&file->f_path)) {
+			// 	if (vm_flags & VM_EXEC)
+			// 		return -EPERM;
+			// 	vm_flags &= ~VM_MAYEXEC;
+			// }
 
-	// 		if (!file->f_op->mmap)
-	// 			return -ENODEV;
-	// 		if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
-	// 			return -EINVAL;
-	// 		break;
+			// if (!file->f_op->mmap)
+			// 	return -ENODEV;
+			// if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+			// 	return -EINVAL;
+			break;
 
-	// 	default:
-	// 		return -EINVAL;
-	// 	}
-	// } else {
-	// 	switch (flags & MAP_TYPE) {
-	// 	case MAP_SHARED:
-	// 		if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
-	// 			return -EINVAL;
-	// 		/*
-	// 		 * Ignore pgoff.
-	// 		 */
-	// 		pgoff = 0;
-	// 		vm_flags |= VM_SHARED | VM_MAYSHARE;
-	// 		break;
-	// 	case MAP_PRIVATE:
-	// 		/*
-	// 		 * Set pgoff according to addr for anon_vma.
-	// 		 */
-	// 		pgoff = addr >> PAGE_SHIFT;
-	// 		break;
-	// 	default:
-	// 		return -EINVAL;
-	// 	}
-	// }
+		default:
+			return -EINVAL;
+		}
+	} else {
+		switch (flags & MAP_TYPE) {
+		case MAP_SHARED:
+			if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+				return -EINVAL;
+			/*
+			 * Ignore pgoff.
+			 */
+			pgoff = 0;
+			vm_flags |= VM_SHARED | VM_MAYSHARE;
+			break;
+		case MAP_PRIVATE:
+			/*
+			 * Set pgoff according to addr for anon_vma.
+			 */
+			pgoff = addr >> PAGE_SHIFT;
+			break;
+		default:
+			return -EINVAL;
+		}
+	}
 
 	// /*
 	//  * Set 'VM_NORESERVE' if we should not account for the

@@ -324,7 +324,7 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	// if (!userfaultfd_wp(dst_vma))
 	// 	pte = pte_clear_uffd_wp(pte);
 
-	// set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+	set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
 	return 0;
 }
 

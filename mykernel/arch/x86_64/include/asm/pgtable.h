@@ -880,12 +880,11 @@
 		// 	return res;
 		// }
 
-		// static inline void set_pte_at(mm_s *mm, unsigned long addr,
-		// 				pte_t *ptep, pte_t pte)
-		// {
-		// 	page_table_check_pte_set(mm, addr, ptep, pte);
-		// 	set_pte(ptep, pte);
-		// }
+		static inline void
+		set_pte_at(mm_s *mm, unsigned long addr, pte_t *ptep, pte_t pte) {
+			// page_table_check_pte_set(mm, addr, ptep, pte);
+			set_pte(ptep, pte);
+		}
 
 		// static inline void set_pmd_at(mm_s *mm, unsigned long addr,
 		// 				pmd_t *pmdp, pmd_t pmd)

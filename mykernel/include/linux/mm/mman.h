@@ -6,7 +6,7 @@
 	// #include <linux/percpu_counter.h>
 
 	#include <linux/kernel/atomic.h>
-	#include <uapi/asm-generic/mman.h>
+	#include <uapi/linux/mman.h>
 
 	// /*
 	// * Arrange for legacy / undefined architecture specific flags to be
@@ -28,30 +28,32 @@
 	// #define MAP_SYNC 0
 	// #endif
 
-	// /*
-	// * The historical set of flags that all mmap implementations implicitly
-	// * support when a ->mmap_validate() op is not provided in file_operations.
-	// *
-	// * MAP_EXECUTABLE and MAP_DENYWRITE are completely ignored throughout the
-	// * kernel.
-	// */
-	// #define LEGACY_MAP_MASK (MAP_SHARED \
-	// 		| MAP_PRIVATE \
-	// 		| MAP_FIXED \
-	// 		| MAP_ANONYMOUS \
-	// 		| MAP_DENYWRITE \
-	// 		| MAP_EXECUTABLE \
-	// 		| MAP_UNINITIALIZED \
-	// 		| MAP_GROWSDOWN \
-	// 		| MAP_LOCKED \
-	// 		| MAP_NORESERVE \
-	// 		| MAP_POPULATE \
-	// 		| MAP_NONBLOCK \
-	// 		| MAP_STACK \
-	// 		| MAP_HUGETLB \
-	// 		| MAP_32BIT \
-	// 		| MAP_HUGE_2MB \
-	// 		| MAP_HUGE_1GB)
+	/*
+	* The historical set of flags that all mmap implementations implicitly
+	* support when a ->mmap_validate() op is not provided in file_operations.
+	*
+	* MAP_EXECUTABLE and MAP_DENYWRITE are completely ignored throughout the
+	* kernel.
+	*/
+	#define LEGACY_MAP_MASK	(		\
+				MAP_SHARED			\
+				| MAP_PRIVATE		\
+				| MAP_FIXED			\
+				| MAP_ANONYMOUS		\
+				| MAP_DENYWRITE		\
+				| MAP_EXECUTABLE	\
+				| MAP_UNINITIALIZED	\
+				| MAP_GROWSDOWN		\
+				| MAP_LOCKED		\
+				| MAP_NORESERVE		\
+				| MAP_POPULATE		\
+				| MAP_NONBLOCK		\
+				| MAP_STACK			\
+				| MAP_HUGETLB		\
+				| MAP_32BIT			\
+				| MAP_HUGE_2MB		\
+				| MAP_HUGE_1GB		\
+			)
 
 	// extern int sysctl_overcommit_memory;
 	// extern int sysctl_overcommit_ratio;
@@ -85,13 +87,13 @@
 	// * overriding macros must be defined in the arch-specific asm/mman.h file.
 	// */
 
-	// #ifndef arch_calc_vm_prot_bits
-	// #define arch_calc_vm_prot_bits(prot, pkey) 0
-	// #endif
+	#ifndef arch_calc_vm_prot_bits
+	#	define arch_calc_vm_prot_bits(prot, pkey)	0
+	#endif
 
-	// #ifndef arch_calc_vm_flag_bits
-	// #define arch_calc_vm_flag_bits(flags) 0
-	// #endif
+	#ifndef arch_calc_vm_flag_bits
+	#	define arch_calc_vm_flag_bits(flags)		0
+	#endif
 
 	// #ifndef arch_vm_get_page_prot
 	// #define arch_vm_get_page_prot(vm_flags) __pgprot(0)

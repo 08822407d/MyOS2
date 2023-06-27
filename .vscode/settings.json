@@ -228,7 +228,8 @@
 		"resource.h": "c",
 		"signal.h": "c",
 		"irqflags.h": "c",
-		"syscall_wrapper.h": "c"
+		"syscall_wrapper.h": "c",
+		"mman.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }
