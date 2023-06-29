@@ -17,7 +17,7 @@
 // #include <linux/vmacache.h>
 // #include <linux/shm.h>
 #include <linux/mm/mman.h>
-// #include <linux/pagemap.h>
+#include <linux/mm/pagemap.h>
 // #include <linux/swap.h>
 #include <linux/kernel/syscalls.h>
 // #include <linux/capability.h>
@@ -101,7 +101,7 @@ static void validate_mm(mm_s *mm)
 
 //	Linux proto:
 //	static int find_vma_links(mm_s *mm, unsigned long addr,
-// 		unsigned long end, struct vm_area_struct **pprev,
+// 		unsigned long end, vma_s **pprev,
 // 		struct rb_node ***rb_link, struct rb_node **rb_parent)
 static int
 myos_find_vma_links(mm_s *mm, unsigned long addr,
@@ -192,8 +192,8 @@ static void __vma_link_file(vma_s *vma)
 	}
 }
 
-// static void vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
-// 			struct vm_area_struct *prev, struct rb_node **rb_link,
+// static void vma_link(struct mm_struct *mm, vma_s *vma,
+// 			vma_s *prev, struct rb_node **rb_link,
 // 			struct rb_node *rb_parent)
 static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 {
@@ -205,8 +205,8 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 	}
 
 	// static void
-	// __vma_link(struct mm_struct *mm, struct vm_area_struct *vma,
-	// 	struct vm_area_struct *prev, struct rb_node **rb_link,
+	// __vma_link(struct mm_struct *mm, vma_s *vma,
+	// 	vma_s *prev, struct rb_node **rb_link,
 	// 	struct rb_node *rb_parent)
 	// {
 		__vma_link_list(mm, vma, prev);
@@ -229,9 +229,9 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
  * before we drop the necessary locks.
  */
 //	Linux proto:
-//	int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
-// 	unsigned long end, pgoff_t pgoff, struct vm_area_struct *insert,
-// 	struct vm_area_struct *expand)
+//	int __vma_adjust(vma_s *vma, unsigned long start,
+// 	unsigned long end, pgoff_t pgoff, vma_s *insert,
+// 	vma_s *expand)
 int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
 		pgoff_t pgoff, vma_s *insert, vma_s *expand)
 {
@@ -464,7 +464,7 @@ again:
  * If the vma has a ->close operation then the driver probably needs to release
  * per-vma resources, so we don't attempt to merge those.
  */
-// static inline int is_mergeable_vma(struct vm_area_struct *vma,
+// static inline int is_mergeable_vma(vma_s *vma,
 // 				struct file *file, unsigned long vm_flags,
 // 				struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 				struct anon_vma_name *anon_name)
@@ -499,7 +499,7 @@ myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
  * wrap, nor mmaps which cover the final page at index -1UL.
  */
 // static int
-// can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
+// can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
 // 		     struct anon_vma *anon_vma, struct file *file,
 // 		     pgoff_t vm_pgoff,
 // 		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
@@ -523,7 +523,7 @@ myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
  * anon_vmas, nor if same anon_vma is assigned but offsets incompatible.
  */
 // static int
-// can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
+// can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
 // 		    struct anon_vma *anon_vma, struct file *file,
 // 		    pgoff_t vm_pgoff,
 // 		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,

@@ -20,7 +20,7 @@
 // #include <linux/smp.h>
 #include <linux/init/init.h>
 // #include <linux/initrd.h>
-// #include <linux/pagemap.h>
+#include <linux/mm/pagemap.h>
 #include <linux/mm/memblock.h>
 // #include <linux/proc_fs.h>
 // #include <linux/pci.h>

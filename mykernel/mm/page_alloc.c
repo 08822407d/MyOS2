@@ -21,7 +21,7 @@
 // #include <linux/swap.h>
 // #include <linux/swapops.h>
 // #include <linux/interrupt.h>
-// #include <linux/pagemap.h>
+#include <linux/mm/pagemap.h>
 // #include <linux/jiffies.h>
 #include <linux/mm/memblock.h>
 #include <linux/kernel/compiler.h>

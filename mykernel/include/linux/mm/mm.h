@@ -37,6 +37,8 @@
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
+	struct pt_regs;
+	typedef struct pt_regs pt_regs_s;
 	// struct mempolicy;
 	// anon_vma_s;
 	// anon_vma_chain_s;
@@ -525,67 +527,68 @@
 	// 	{ FAULT_FLAG_INSTRUCTION,	"INSTRUCTION" }, \
 	// 	{ FAULT_FLAG_INTERRUPTIBLE,	"INTERRUPTIBLE" }
 
-	// /*
-	// * vm_fault is filled by the pagefault handler and passed to the vma's
-	// * ->fault function. The vma's ->fault is responsible for returning a bitmask
-	// * of VM_FAULT_xxx flags that give details about how the fault was handled.
-	// *
-	// * MM layer fills up gfp_mask for page allocations but fault handler might
-	// * alter it if its implementation requires a different allocation context.
-	// *
-	// * pgoff should be used in favour of virtual_address, if possible.
-	// */
-	// struct vm_fault {
-	// 	const struct {
-	// 		vma_s *vma;	/* Target VMA */
-	// 		gfp_t gfp_mask;			/* gfp mask to be used for allocations */
-	// 		pgoff_t pgoff;			/* Logical page offset based on vma */
-	// 		unsigned long address;		/* Faulting virtual address */
-	// 	};
-	// 	enum fault_flag flags;		/* FAULT_FLAG_xxx flags
-	// 					* XXX: should really be 'const' */
-	// 	pmd_t *pmd;			/* Pointer to pmd entry matching
-	// 					* the 'address' */
-	// 	pud_t *pud;			/* Pointer to pud entry matching
-	// 					* the 'address'
-	// 					*/
-	// 	union {
-	// 		pte_t orig_pte;		/* Value of PTE at the time of fault */
-	// 		pmd_t orig_pmd;		/* Value of PMD at the time of fault,
-	// 					* used by PMD fault only.
-	// 					*/
-	// 	};
+	/*
+	 * vm_fault is filled by the pagefault handler and passed to the vma's
+	 * ->fault function. The vma's ->fault is responsible for returning a bitmask
+	 * of VM_FAULT_xxx flags that give details about how the fault was handled.
+	 *
+	 * MM layer fills up gfp_mask for page allocations but fault handler might
+	 * alter it if its implementation requires a different allocation context.
+	 *
+	 * pgoff should be used in favour of virtual_address, if possible.
+	 */
+	typedef struct vm_fault {
+		const struct {
+			vma_s			*vma;		/* Target VMA */
+			gfp_t			gfp_mask;	/* gfp mask to be used for allocations */
+			pgoff_t			pgoff;		/* Logical page offset based on vma */
+			unsigned long	address;	/* Faulting virtual address */
+		};
+		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
+									 * XXX: should really be 'const' */
+		pmd_t			*pmd;		/* Pointer to pmd entry matching
+									 * the 'address' */
+		pud_t			*pud;		/* Pointer to pud entry matching
+									 * the 'address'
+									 */
+		union {
+			pte_t		orig_pte;	/* Value of PTE at the time of fault */
+			pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
+									 * used by PMD fault only.
+									 */
+		};
 
-	// 	page_s *cow_page;		/* Page handler may use for COW fault */
-	// 	page_s *page;		/* ->fault handlers should return a
-	// 					* page here, unless VM_FAULT_NOPAGE
-	// 					* is set (which is also implied by
-	// 					* VM_FAULT_ERROR).
-	// 					*/
-	// 	/* These three entries are valid only while holding ptl lock */
-	// 	pte_t *pte;			/* Pointer to pte entry matching
-	// 					* the 'address'. NULL if the page
-	// 					* table hasn't been allocated.
-	// 					*/
-	// 	spinlock_t *ptl;		/* Page table lock.
-	// 					* Protects pte page table if 'pte'
-	// 					* is not NULL, otherwise pmd.
-	// 					*/
-	// 	pgtable_t prealloc_pte;		/* Pre-allocated pte page table.
-	// 					* vm_ops->map_pages() sets up a page
-	// 					* table from atomic context.
-	// 					* do_fault_around() pre-allocates
-	// 					* page table to avoid allocation from
-	// 					* atomic context.
-	// 					*/
-	// };
+		page_s			*cow_page;	/* Page handler may use for COW fault */
+		page_s			*page;		/* ->fault handlers should return a
+									 * page here, unless VM_FAULT_NOPAGE
+									 * is set (which is also implied by
+									 * VM_FAULT_ERROR).
+									 */
+		/* These three entries are valid only while holding ptl lock */
+		pte_t			*pte;		/* Pointer to pte entry matching
+									 * the 'address'. NULL if the page
+									 * table hasn't been allocated.
+									 */
+		spinlock_t		*ptl;		/* Page table lock.
+									 * Protects pte page table if 'pte'
+									 * is not NULL, otherwise pmd.
+									 */
+		// pgtable_t		prealloc_pte;
+		// 							/* Pre-allocated pte page table.
+		// 							 * vm_ops->map_pages() sets up a page
+		// 							 * table from atomic context.
+		// 							 * do_fault_around() pre-allocates
+		// 							 * page table to avoid allocation from
+		// 							 * atomic context.
+		// 							 */
+	} vm_fault_s;
 
-	// /* page entry size for vm->huge_fault() */
-	// enum page_entry_size {
-	// 	PE_SIZE_PTE = 0,
-	// 	PE_SIZE_PMD,
-	// 	PE_SIZE_PUD,
-	// };
+	/* page entry size for vm->huge_fault() */
+	enum page_entry_size {
+		PE_SIZE_PTE = 0,
+		PE_SIZE_PMD,
+		PE_SIZE_PUD,
+	};
 
 	/*
 	 * These are the virtual MM functions - opening of an area, closing and
@@ -1913,9 +1916,9 @@
 	// int invalidate_inode_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
-	// extern vm_fault_t handle_mm_fault(vma_s *vma,
-	// 				unsigned long address, unsigned int flags,
-	// 				pt_regs_s *regs);
+	extern vm_fault_t
+	handle_mm_fault(vma_s *vma, unsigned long address,
+			unsigned int flags, pt_regs_s *regs);
 	// extern int fixup_user_fault(mm_s *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);

@@ -71,18 +71,18 @@
 	// 		regs->ax = rc;
 	// 	}
 
-	// 	/*
-	// 	 * user_mode(regs) determines whether a register set came from user
-	// 	 * mode.  On x86_32, this is true if V8086 mode was enabled OR if the
-	// 	 * register set was from protected mode with RPL-3 CS value.  This
-	// 	 * tricky test checks that with one comparison.
-	// 	 *
-	// 	 * On x86_64, vm86 mode is mercifully nonexistent, and we don't need
-	// 	 * the extra check.
-	// 	 */
-	// 	static __always_inline int user_mode(pt_regs_s *regs) {
-	// 		return !!(regs->cs & 3);
-	// 	}
+		/*
+		 * user_mode(regs) determines whether a register set came from user
+		 * mode.  On x86_32, this is true if V8086 mode was enabled OR if the
+		 * register set was from protected mode with RPL-3 CS value.  This
+		 * tricky test checks that with one comparison.
+		 *
+		 * On x86_64, vm86 mode is mercifully nonexistent, and we don't need
+		 * the extra check.
+		 */
+		static __always_inline int user_mode(pt_regs_s *regs) {
+			return !!(regs->cs & 3);
+		}
 
 	// 	static inline int v8086_mode(pt_regs_s *regs) {
 	// 		return 0;	/* No V86 mode support in long mode */

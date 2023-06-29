@@ -12,7 +12,7 @@
  */
 
 // #include <linux/module.h>
-// #include <linux/pagemap.h>
+#include <linux/mm/pagemap.h>
 // #include <linux/mpage.h>
 // #include <linux/vfs.h>
 // #include <linux/seq_file.h>

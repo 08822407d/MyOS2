@@ -22,7 +22,7 @@
 #include <asm/elf.h>
 // #include <asm/cpu_device_id.h>
 // #include <asm/cmdline.h>
-// #include <asm/traps.h>
+#include <asm/traps.h>
 // #include <asm/resctrl.h>
 // #include <asm/numa.h>
 // #include <asm/thermal.h>

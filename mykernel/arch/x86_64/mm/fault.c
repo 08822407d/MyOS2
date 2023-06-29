@@ -21,7 +21,7 @@
 #include <linux/mm/mm_types.h>
 
 // #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
-// #include <asm/traps.h>			/* dotraplinkage, ...		*/
+#include <asm/traps.h>			/* dotraplinkage, ...		*/
 // #include <asm/fixmap.h>			/* VSYSCALL_ADDR		*/
 // #include <asm/vsyscall.h>		/* emulate_vsyscall		*/
 // #include <asm/vm86.h>			/* struct vm86			*/
@@ -219,27 +219,27 @@ void do_user_addr_fault(pt_regs_s *regs,
 	// 	return;
 	// }
 
-	// /*
-	//  * It's safe to allow irq's after cr2 has been saved and the
-	//  * vmalloc fault has been handled.
-	//  *
-	//  * User-mode registers count as a user access even for any
-	//  * potential system fault or CPU buglet:
-	//  */
-	// if (user_mode(regs)) {
-	// 	local_irq_enable();
-	// 	flags |= FAULT_FLAG_USER;
-	// } else {
-	// 	if (regs->flags & X86_EFLAGS_IF)
-	// 		local_irq_enable();
-	// }
+	/*
+	 * It's safe to allow irq's after cr2 has been saved and the
+	 * vmalloc fault has been handled.
+	 *
+	 * User-mode registers count as a user access even for any
+	 * potential system fault or CPU buglet:
+	 */
+	if (user_mode(regs)) {
+		local_irq_enable();
+		flags |= FAULT_FLAG_USER;
+	} else {
+		if (regs->flags & X86_EFLAGS_IF)
+			local_irq_enable();
+	}
 
 	// perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 
-	// if (error_code & X86_PF_WRITE)
-	// 	flags |= FAULT_FLAG_WRITE;
-	// if (error_code & X86_PF_INSTR)
-	// 	flags |= FAULT_FLAG_INSTRUCTION;
+	if (error_code & X86_PF_WRITE)
+		flags |= FAULT_FLAG_WRITE;
+	if (error_code & X86_PF_INSTR)
+		flags |= FAULT_FLAG_INSTRUCTION;
 
 	// /*
 	//  * Faults in the vsyscall page might need emulation.  The
@@ -289,13 +289,13 @@ void do_user_addr_fault(pt_regs_s *regs,
 	// 	might_sleep();
 	// }
 
-	// vma = find_vma(mm, address);
+	vma = myos_find_vma(mm, address);
 	// if (unlikely(!vma)) {
 	// 	bad_area(regs, error_code, address);
 	// 	return;
 	// }
-	// if (likely(vma->vm_start <= address))
-	// 	goto good_area;
+	if (vma->vm_start <= address)
+		goto good_area;
 	// if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
 	// 	bad_area(regs, error_code, address);
 	// 	return;
@@ -305,30 +305,30 @@ void do_user_addr_fault(pt_regs_s *regs,
 	// 	return;
 	// }
 
-	// /*
-	//  * Ok, we have a good vm_area for this memory access, so
-	//  * we can handle it..
-	//  */
-// good_area:
+	/*
+	 * Ok, we have a good vm_area for this memory access, so
+	 * we can handle it..
+	 */
+good_area:
 	// if (unlikely(access_error(error_code, vma))) {
 	// 	bad_area_access_error(regs, error_code, address, vma);
 	// 	return;
 	// }
 
-	// /*
-	//  * If for any reason at all we couldn't handle the fault,
-	//  * make sure we exit gracefully rather than endlessly redo
-	//  * the fault.  Since we never set FAULT_FLAG_RETRY_NOWAIT, if
-	//  * we get VM_FAULT_RETRY back, the mmap_lock has been unlocked.
-	//  *
-	//  * Note that handle_userfault() may also release and reacquire mmap_lock
-	//  * (and not return with VM_FAULT_RETRY), when returning to userland to
-	//  * repeat the page fault later with a VM_FAULT_NOPAGE retval
-	//  * (potentially after handling any pending signal during the return to
-	//  * userland). The return to userland is identified whenever
-	//  * FAULT_FLAG_USER|FAULT_FLAG_KILLABLE are both set in flags.
-	//  */
-	// fault = handle_mm_fault(vma, address, flags, regs);
+	/*
+	 * If for any reason at all we couldn't handle the fault,
+	 * make sure we exit gracefully rather than endlessly redo
+	 * the fault.  Since we never set FAULT_FLAG_RETRY_NOWAIT, if
+	 * we get VM_FAULT_RETRY back, the mmap_lock has been unlocked.
+	 *
+	 * Note that handle_userfault() may also release and reacquire mmap_lock
+	 * (and not return with VM_FAULT_RETRY), when returning to userland to
+	 * repeat the page fault later with a VM_FAULT_NOPAGE retval
+	 * (potentially after handling any pending signal during the return to
+	 * userland). The return to userland is identified whenever
+	 * FAULT_FLAG_USER|FAULT_FLAG_KILLABLE are both set in flags.
+	 */
+	fault = handle_mm_fault(vma, address, flags, regs);
 
 	// if (fault_signal_pending(fault, regs)) {
 	// 	/*

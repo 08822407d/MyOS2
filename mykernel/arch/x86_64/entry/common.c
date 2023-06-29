@@ -26,7 +26,7 @@
 // #endif
 
 // #include <asm/desc.h>
-// #include <asm/traps.h>
+#include <asm/traps.h>
 // #include <asm/vdso.h>
 #include <asm/cpufeature.h>
 // #include <asm/fpu/api.h>

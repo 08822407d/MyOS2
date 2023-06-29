@@ -6,7 +6,7 @@
 
 #include <linux/block/blkdev.h>
 // #include <linux/export.h>
-// #include <linux/pagemap.h>
+#include <linux/mm/pagemap.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/cred.h>
 #include <linux/kernel/mount.h>

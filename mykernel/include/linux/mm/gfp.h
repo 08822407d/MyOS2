@@ -22,7 +22,8 @@
 		typedef unsigned int __bitwise gfp_t;
 	#endif
 
-	// vma_s;
+	struct vm_area_struct;
+	typedef struct vm_area_struct vma_s;
 
 	/*
 	* In case of changes, please don't forget to update

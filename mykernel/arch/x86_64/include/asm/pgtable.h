@@ -907,7 +907,8 @@
 		// * race with other CPU's that might be updating the dirty
 		// * bit at the same time.
 		// */
-		// vma_s;
+		struct vm_area_struct;
+		typedef struct vm_area_struct vma_s;
 
 		// #define  __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
 		// extern int ptep_set_access_flags(vma_s *vma,
