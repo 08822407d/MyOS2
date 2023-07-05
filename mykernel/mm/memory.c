@@ -640,6 +640,97 @@ static gfp_t __get_fault_gfp_mask(vma_s *vma)
 
 
 /*
+ * This routine handles present pages, when users try to write
+ * to a shared page. It is done by copying the page to a new address
+ * and decrementing the shared-page counter for the old page.
+ *
+ * Note that this routine assumes that the protection checks have been
+ * done by the caller (the low-level page fault routine in most cases).
+ * Thus we can safely just mark it writable once we've done any necessary
+ * COW.
+ *
+ * We also mark the page dirty at this point even though the page will
+ * change only once the write actually happens. This avoids a few races,
+ * and potentially makes it more efficient.
+ *
+ * We enter with non-exclusive mmap_lock (to exclude vma changes,
+ * but allow concurrent faults), with pte both mapped and locked.
+ * We return with mmap_lock still held, but pte unmapped and unlocked.
+ */
+static vm_fault_t do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl)
+{
+	vma_s *vma = vmf->vma;
+
+// 	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
+// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+// 		return handle_userfault(vmf, VM_UFFD_WP);
+// 	}
+
+// 	/*
+// 	 * Userfaultfd write-protect can defer flushes. Ensure the TLB
+// 	 * is flushed in this case before copying.
+// 	 */
+// 	if (unlikely(userfaultfd_wp(vmf->vma) &&
+// 		     mm_tlb_flush_pending(vmf->vma->vm_mm)))
+// 		flush_tlb_page(vmf->vma, vmf->address);
+
+// 	vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
+// 	if (!vmf->page) {
+// 		/*
+// 		 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
+// 		 * VM_PFNMAP VMA.
+// 		 *
+// 		 * We should not cow pages in a shared writeable mapping.
+// 		 * Just mark the pages writable and/or call ops->pfn_mkwrite.
+// 		 */
+// 		if ((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+// 				     (VM_WRITE|VM_SHARED))
+// 			return wp_pfn_shared(vmf);
+
+// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+// 		return wp_page_copy(vmf);
+// 	}
+
+// 	/*
+// 	 * Take out anonymous pages first, anonymous shared vmas are
+// 	 * not dirty accountable.
+// 	 */
+// 	if (PageAnon(vmf->page)) {
+// 		struct page *page = vmf->page;
+
+// 		/* PageKsm() doesn't necessarily raise the page refcount */
+// 		if (PageKsm(page) || page_count(page) != 1)
+// 			goto copy;
+// 		if (!trylock_page(page))
+// 			goto copy;
+// 		if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
+// 			unlock_page(page);
+// 			goto copy;
+// 		}
+// 		/*
+// 		 * Ok, we've got the only map reference, and the only
+// 		 * page count reference, and the page is locked,
+// 		 * it's dark out, and we're wearing sunglasses. Hit it.
+// 		 */
+// 		unlock_page(page);
+// 		wp_page_reuse(vmf);
+// 		return VM_FAULT_WRITE;
+// 	} else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+// 					(VM_WRITE|VM_SHARED))) {
+// 		return wp_page_shared(vmf);
+// 	}
+// copy:
+// 	/*
+// 	 * Ok, we need to copy. Oh, well..
+// 	 */
+// 	get_page(vmf->page);
+
+// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+// 	return wp_page_copy(vmf);
+}
+
+
+/*
  * These routines also need to handle stuff like marking pages dirty
  * and/or accessed for architectures that don't do it in hardware (most
  * RISC architectures).  The early dirtying is also good on the i386.
@@ -658,52 +749,52 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 {
 	pte_t entry;
 
-	// if (unlikely(pmd_none(*vmf->pmd))) {
-	// 	/*
-	// 	 * Leave __pte_alloc() until later: because vm_ops->fault may
-	// 	 * want to allocate huge page, and if we expose page table
-	// 	 * for an instant, it will be difficult to retract from
-	// 	 * concurrent faults and from rmap lookups.
-	// 	 */
-	// 	vmf->pte = NULL;
-	// } else {
-	// 	/*
-	// 	 * If a huge pmd materialized under us just retry later.  Use
-	// 	 * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
-	// 	 * of pmd_trans_huge() to ensure the pmd didn't become
-	// 	 * pmd_trans_huge under us and then back to pmd_none, as a
-	// 	 * result of MADV_DONTNEED running immediately after a huge pmd
-	// 	 * fault in a different thread of this mm, in turn leading to a
-	// 	 * misleading pmd_trans_huge() retval. All we have to ensure is
-	// 	 * that it is a regular pmd that we can walk with
-	// 	 * pte_offset_map() and we can do that through an atomic read
-	// 	 * in C, which is what pmd_trans_unstable() provides.
-	// 	 */
-	// 	if (pmd_devmap_trans_unstable(vmf->pmd))
-	// 		return 0;
-	// 	/*
-	// 	 * A regular pmd is established and it can't morph into a huge
-	// 	 * pmd from under us anymore at this point because we hold the
-	// 	 * mmap_lock read mode and khugepaged takes it in write mode.
-	// 	 * So now it's safe to run pte_offset_map().
-	// 	 */
-	// 	vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
-	// 	vmf->orig_pte = *vmf->pte;
+	if (arch_pmd_none(*vmf->pmd)) {
+		/*
+		 * Leave __pte_alloc() until later: because vm_ops->fault may
+		 * want to allocate huge page, and if we expose page table
+		 * for an instant, it will be difficult to retract from
+		 * concurrent faults and from rmap lookups.
+		 */
+		vmf->pte = NULL;
+	} else {
+		// /*
+		//  * If a huge pmd materialized under us just retry later.  Use
+		//  * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
+		//  * of pmd_trans_huge() to ensure the pmd didn't become
+		//  * pmd_trans_huge under us and then back to pmd_none, as a
+		//  * result of MADV_DONTNEED running immediately after a huge pmd
+		//  * fault in a different thread of this mm, in turn leading to a
+		//  * misleading pmd_trans_huge() retval. All we have to ensure is
+		//  * that it is a regular pmd that we can walk with
+		//  * pte_offset_map() and we can do that through an atomic read
+		//  * in C, which is what pmd_trans_unstable() provides.
+		//  */
+		// if (pmd_devmap_trans_unstable(vmf->pmd))
+		// 	return 0;
+		/*
+		 * A regular pmd is established and it can't morph into a huge
+		 * pmd from under us anymore at this point because we hold the
+		 * mmap_lock read mode and khugepaged takes it in write mode.
+		 * So now it's safe to run pte_offset_map().
+		 */
+		vmf->pte = pte_offset(vmf->pmd, vmf->address);
+		vmf->orig_pte = *vmf->pte;
 
-	// 	/*
-	// 	 * some architectures can have larger ptes than wordsize,
-	// 	 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
-	// 	 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
-	// 	 * accesses.  The code below just needs a consistent view
-	// 	 * for the ifs and we later double check anyway with the
-	// 	 * ptl lock held. So here a barrier will do.
-	// 	 */
-	// 	barrier();
-	// 	if (pte_none(vmf->orig_pte)) {
-	// 		pte_unmap(vmf->pte);
-	// 		vmf->pte = NULL;
-	// 	}
-	// }
+		/*
+		 * some architectures can have larger ptes than wordsize,
+		 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
+		 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
+		 * accesses.  The code below just needs a consistent view
+		 * for the ifs and we later double check anyway with the
+		 * ptl lock held. So here a barrier will do.
+		 */
+		barrier();
+		if (arch_pte_none(vmf->orig_pte)) {
+			pte_unmap(vmf->pte);
+			vmf->pte = NULL;
+		}
+	}
 
 	// if (!vmf->pte) {
 	// 	if (vma_is_anonymous(vmf->vma))
@@ -720,16 +811,16 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 
 	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
 	// spin_lock(vmf->ptl);
-	// entry = vmf->orig_pte;
+	entry = vmf->orig_pte;
 	// if (unlikely(!pte_same(*vmf->pte, entry))) {
 	// 	update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
 	// 	goto unlock;
 	// }
-	// if (vmf->flags & FAULT_FLAG_WRITE) {
-	// 	if (!pte_write(entry))
-	// 		return do_wp_page(vmf);
-	// 	entry = pte_mkdirty(entry);
-	// }
+	if (vmf->flags & FAULT_FLAG_WRITE) {
+		if (!pte_writable(entry))
+			return do_wp_page(vmf);
+		// entry = pte_mkdirty(entry);
+	}
 	// entry = pte_mkyoung(entry);
 	// if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
 	// 			vmf->flags & FAULT_FLAG_WRITE)) {
@@ -774,7 +865,7 @@ static vm_fault_t __handle_mm_fault(vma_s *vma,
 	p4d_t *p4d;
 	vm_fault_t ret;
 
-	pgd = pgd_offset(mm, address);
+	pgd = pgd_ent_offset(mm, address);
 	p4d = p4d_alloc(mm, pgd, address);
 	if (!p4d)
 		return VM_FAULT_OOM;
@@ -788,9 +879,9 @@ retry_pud:
 	// 	if (!(ret & VM_FAULT_FALLBACK))
 	// 		return ret;
 	// } else {
-		pud_t orig_pud = *vmf.pud;
+	// 	pud_t orig_pud = *vmf.pud;
 
-		barrier();
+	// 	barrier();
 	// 	if (pud_trans_huge(orig_pud) || pud_devmap(orig_pud)) {
 
 	// 		/* NUMA case for anonymous PUDs would go here */

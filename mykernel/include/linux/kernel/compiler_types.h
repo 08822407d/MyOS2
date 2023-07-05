@@ -43,7 +43,7 @@
 	// /* context/locking */
 	// #define __must_hold(x)
 	// #define __acquires(x)
-	// #define __releases(x)
+	#define __releases(x)
 	// #define __acquire(x) (void)0
 	// #define __release(x) (void)0
 	// #define __cond_lock(x, c) (c)
