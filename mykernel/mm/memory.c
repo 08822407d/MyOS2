@@ -747,7 +747,7 @@ static vm_fault_t do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl)
  */
 static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 {
-	pte_t entry;
+	// pte_t entry;
 
 	if (arch_pmd_none(*vmf->pmd)) {
 		/*
@@ -779,7 +779,7 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 		 * So now it's safe to run pte_offset_map().
 		 */
 		vmf->pte = pte_offset(vmf->pmd, vmf->address);
-		vmf->orig_pte = *vmf->pte;
+		// vmf->orig_pte = *vmf->pte;
 
 		/*
 		 * some architectures can have larger ptes than wordsize,
@@ -790,7 +790,7 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 		 * ptl lock held. So here a barrier will do.
 		 */
 		barrier();
-		if (arch_pte_none(vmf->orig_pte)) {
+		if (arch_pte_none(*vmf->pte)) {
 			pte_unmap(vmf->pte);
 			vmf->pte = NULL;
 		}
@@ -811,14 +811,14 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 
 	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
 	// spin_lock(vmf->ptl);
-	entry = vmf->orig_pte;
+	// entry = vmf->orig_pte;
 	// if (unlikely(!pte_same(*vmf->pte, entry))) {
 	// 	update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
 	// 	goto unlock;
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
-		if (!pte_writable(entry))
-			return do_wp_page(vmf);
+		// if (!pte_writable(*vmf->pte))
+		// 	return do_wp_page(vmf);
 		// entry = pte_mkdirty(entry);
 	}
 	// entry = pte_mkyoung(entry);
@@ -862,15 +862,14 @@ static vm_fault_t __handle_mm_fault(vma_s *vma,
 	unsigned int dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
 	pgd_t *pgd;
-	p4d_t *p4d;
 	vm_fault_t ret;
 
 	pgd = pgd_ent_offset(mm, address);
-	p4d = p4d_alloc(mm, pgd, address);
-	if (!p4d)
+	vmf.p4d = p4d_alloc(mm, pgd, address);
+	if (!vmf.p4d)
 		return VM_FAULT_OOM;
 
-	vmf.pud = pud_alloc(mm, p4d, address);
+	vmf.pud = pud_alloc(mm, vmf.p4d, address);
 	if (!vmf.pud)
 		return VM_FAULT_OOM;
 retry_pud:
@@ -910,9 +909,9 @@ retry_pud:
 	// 	if (!(ret & VM_FAULT_FALLBACK))
 	// 		return ret;
 	// } else {
-		vmf.orig_pmd = *vmf.pmd;
+	// 	vmf.orig_pmd = *vmf.pmd;
 
-		barrier();
+	// 	barrier();
 	// 	if (unlikely(is_swap_pmd(vmf.orig_pmd))) {
 	// 		VM_BUG_ON(thp_migration_supported() &&
 	// 				  !is_pmd_migration_entry(vmf.orig_pmd));

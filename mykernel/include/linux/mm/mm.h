@@ -546,17 +546,18 @@
 		};
 		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
 									 * XXX: should really be 'const' */
-		pmd_t			*pmd;		/* Pointer to pmd entry matching
-									 * the 'address' */
+		p4d_t			*p4d;
 		pud_t			*pud;		/* Pointer to pud entry matching
 									 * the 'address'
 									 */
-		union {
-			pte_t		orig_pte;	/* Value of PTE at the time of fault */
-			pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
-									 * used by PMD fault only.
-									 */
-		};
+		pmd_t			*pmd;		/* Pointer to pmd entry matching
+									 * the 'address' */
+		// union {
+		// 	pte_t		orig_pte;	/* Value of PTE at the time of fault */
+		// 	pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
+		// 							 * used by PMD fault only.
+		// 							 */
+		// };
 
 		page_s			*cow_page;	/* Page handler may use for COW fault */
 		page_s			*page;		/* ->fault handlers should return a
