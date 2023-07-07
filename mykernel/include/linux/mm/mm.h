@@ -546,12 +546,17 @@
 		};
 		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
 									 * XXX: should really be 'const' */
+
 		p4d_t			*p4d;
 		pud_t			*pud;		/* Pointer to pud entry matching
 									 * the 'address'
 									 */
 		pmd_t			*pmd;		/* Pointer to pmd entry matching
 									 * the 'address' */
+		pte_t			*pte;		/* Pointer to pte entry matching
+									 * the 'address'. NULL if the page
+									 * table hasn't been allocated.
+									 */
 		// union {
 		// 	pte_t		orig_pte;	/* Value of PTE at the time of fault */
 		// 	pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
@@ -566,14 +571,10 @@
 									 * VM_FAULT_ERROR).
 									 */
 		/* These three entries are valid only while holding ptl lock */
-		pte_t			*pte;		/* Pointer to pte entry matching
-									 * the 'address'. NULL if the page
-									 * table hasn't been allocated.
-									 */
-		spinlock_t		*ptl;		/* Page table lock.
-									 * Protects pte page table if 'pte'
-									 * is not NULL, otherwise pmd.
-									 */
+		// spinlock_t		*ptl;		/* Page table lock.
+		// 							 * Protects pte page table if 'pte'
+		// 							 * is not NULL, otherwise pmd.
+		// 							 */
 		// pgtable_t		prealloc_pte;
 		// 							/* Pre-allocated pte page table.
 		// 							 * vm_ops->map_pages() sets up a page
@@ -1917,9 +1918,12 @@
 	// int invalidate_inode_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
+	// extern vm_fault_t
+	// handle_mm_fault(vma_s *vma, unsigned long address,
+	// 		unsigned int flags, pt_regs_s *regs);
 	extern vm_fault_t
-	handle_mm_fault(vma_s *vma, unsigned long address,
-			unsigned int flags, pt_regs_s *regs);
+	myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
+			unsigned long address, unsigned int flags);
 	// extern int fixup_user_fault(mm_s *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);
@@ -2272,19 +2276,19 @@
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {
 		return (arch_p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
-				NULL : pud_offset(p4d, address);
+				NULL : pud_ent_offset(p4d, address);
 	}
 
 	static inline pmd_t *pmd_alloc(mm_s *mm,
 			pud_t *pud, unsigned long address) {
 		return (arch_pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
-				NULL: pmd_offset(pud, address);
+				NULL: pmd_ent_offset(pud, address);
 	}
 
 	static inline pte_t *pte_alloc(mm_s *mm,
 			pmd_t *pmd, unsigned long address) {
 		return (arch_pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
-				NULL : pte_offset(pmd, address);
+				NULL : pte_ent_offset(pmd, address);
 	}
 	// #endif /* CONFIG_MMU */
 

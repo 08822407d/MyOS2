@@ -58,7 +58,7 @@ void myos_excep_page_fault(pt_regs_s *sf_regs)
 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
 		check_addr_writable((reg_t)cr2, curr))
 	{
-		do_COW(current, (virt_addr_t)cr2);
+		do_COW(curr, (virt_addr_t)cr2);
 		return;
 	}
 
@@ -328,7 +328,8 @@ good_area:
 	 * userland). The return to userland is identified whenever
 	 * FAULT_FLAG_USER|FAULT_FLAG_KILLABLE are both set in flags.
 	 */
-	fault = handle_mm_fault(vma, address, flags, regs);
+	// fault = handle_mm_fault(vma, address, flags, regs);
+	fault = myos_handle_mm_fault(vma, regs, address, flags);
 
 	// if (fault_signal_pending(fault, regs)) {
 	// 	/*
@@ -402,14 +403,14 @@ handle_page_fault(pt_regs_s *regs,
 		do_kern_addr_fault(regs, error_code, address);
 	} else {
 		do_user_addr_fault(regs, error_code, address);
-	// 	/*
-	// 	 * User address page fault handling might have reenabled
-	// 	 * interrupts. Fixing up all potential exit points of
-	// 	 * do_user_addr_fault() and its leaf functions is just not
-	// 	 * doable w/o creating an unholy mess or turning the code
-	// 	 * upside down.
-	// 	 */
-	// 	local_irq_disable();
+		/*
+		 * User address page fault handling might have reenabled
+		 * interrupts. Fixing up all potential exit points of
+		 * do_user_addr_fault() and its leaf functions is just not
+		 * doable w/o creating an unholy mess or turning the code
+		 * upside down.
+		 */
+		local_irq_disable();
 	}
 }
 

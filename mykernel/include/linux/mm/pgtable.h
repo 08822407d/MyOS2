@@ -92,32 +92,29 @@
 				(((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
 	#endif
 
-	#ifndef pte_offset
-		static inline pte_t
-		*pte_offset(pmd_t *pmd, unsigned long address) {
-			return arch_pmd_pgtable(*pmd) + pte_index(address);
-		}
-	// #define pte_offset_kernel pte_offset_kernel
-	#endif
+	// static inline pte_t
+	// *pte_offset(pmd_t *pmd, unsigned long address) {
+	// 	return arch_pmd_pgtable(*pmd) + pte_index(address);
+	// }
+	#define pte_ent_offset(pmdp, address)	\
+				(pte_t *)(arch_pmd_pgtable(*pmdp) + pte_index(address))
 
 	#define pte_unmap(pte) ((void)(pte))	/* NOP */
 
 	/* Find an entry in the second-level page table.. */
-	#ifndef pmd_offset
-		static inline pmd_t
-		*pmd_offset(pud_t *pud, unsigned long address) {
-			return arch_pud_pgtable(*pud) + pmd_index(address);
-		}
-	// #	define pmd_offset	pmd_offset
-	#endif
+	// static inline pmd_t
+	// *pmd_offset(pud_t *pud, unsigned long address) {
+	// 	return arch_pud_pgtable(*pud) + pmd_index(address);
+	// }
+	#define pmd_ent_offset(pudp, address)	\
+				(pmd_t *)(arch_pud_pgtable(*pudp) + pmd_index(address))
 
-	#ifndef pud_offset
-		static inline pud_t
-		*pud_offset(p4d_t *p4d, unsigned long address) {
-			return arch_p4d_pgtable(*p4d) + pud_index(address);
-		}
-	// #	define pud_offset	pud_offset
-	#endif
+	// static inline pud_t
+	// *pud_offset(p4d_t *p4d, unsigned long address) {
+	// 	return arch_p4d_pgtable(*p4d) + pud_index(address);
+	// }
+	#define pud_ent_offset(p4dp, address)	\
+				(pud_t *)(arch_p4d_pgtable(*p4dp) + pud_index(address))
 
 	// static inline pgd_t
 	// *pgd_offset_pgd(pgd_t *pgd, unsigned long address) {

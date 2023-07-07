@@ -352,7 +352,7 @@ again:
 	// 	ret = -ENOMEM;
 	// 	goto out;
 	// }
-	src_pte = pte_offset(src_pmd_ent, addr);
+	src_pte = pte_ent_offset(src_pmd_ent, addr);
 	// src_ptl = pte_lockptr(src_mm, src_pmd_ent);
 	// spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
 	orig_src_pte = src_pte;
@@ -461,7 +461,7 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_ent,
 	dst_pmd_ent = pmd_alloc(dst_mm, dst_pud_ent, addr);
 	if (!dst_pmd_ent)
 		return -ENOMEM;
-	src_pmd_ent = pmd_offset(src_pud_ent, addr);
+	src_pmd_ent = pmd_ent_offset(src_pud_ent, addr);
 	do {
 		next = next_pmd_addr_end(addr, end);
 		// if (is_swap_pmd(*src_pmd_ent) || pmd_trans_huge(*src_pmd_ent)
@@ -496,7 +496,7 @@ copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_ent,
 	dst_pud_ent = pud_alloc(dst_mm, dst_p4d_ent, addr);
 	if (!dst_pud_ent)
 		return -ENOMEM;
-	src_pud_ent = pud_offset(src_p4d_ent, addr);
+	src_pud_ent = pud_ent_offset(src_p4d_ent, addr);
 	do {
 		next = next_pud_addr_end(addr, end);
 		// if (pud_trans_huge(*src_pud_ent) || pud_devmap(*src_pud_ent)) {
@@ -745,70 +745,9 @@ static vm_fault_t do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl)
  * The mmap_lock may have been released depending on flags and our return value.
  * See filemap_fault() and __folio_lock_or_retry().
  */
-static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
+// static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
+static vm_fault_t myos_handle_pte_fault(vm_fault_s *vmf)
 {
-	// pte_t entry;
-
-	if (arch_pmd_none(*vmf->pmd)) {
-		/*
-		 * Leave __pte_alloc() until later: because vm_ops->fault may
-		 * want to allocate huge page, and if we expose page table
-		 * for an instant, it will be difficult to retract from
-		 * concurrent faults and from rmap lookups.
-		 */
-		vmf->pte = NULL;
-	} else {
-		// /*
-		//  * If a huge pmd materialized under us just retry later.  Use
-		//  * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
-		//  * of pmd_trans_huge() to ensure the pmd didn't become
-		//  * pmd_trans_huge under us and then back to pmd_none, as a
-		//  * result of MADV_DONTNEED running immediately after a huge pmd
-		//  * fault in a different thread of this mm, in turn leading to a
-		//  * misleading pmd_trans_huge() retval. All we have to ensure is
-		//  * that it is a regular pmd that we can walk with
-		//  * pte_offset_map() and we can do that through an atomic read
-		//  * in C, which is what pmd_trans_unstable() provides.
-		//  */
-		// if (pmd_devmap_trans_unstable(vmf->pmd))
-		// 	return 0;
-		/*
-		 * A regular pmd is established and it can't morph into a huge
-		 * pmd from under us anymore at this point because we hold the
-		 * mmap_lock read mode and khugepaged takes it in write mode.
-		 * So now it's safe to run pte_offset_map().
-		 */
-		vmf->pte = pte_offset(vmf->pmd, vmf->address);
-		// vmf->orig_pte = *vmf->pte;
-
-		/*
-		 * some architectures can have larger ptes than wordsize,
-		 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
-		 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
-		 * accesses.  The code below just needs a consistent view
-		 * for the ifs and we later double check anyway with the
-		 * ptl lock held. So here a barrier will do.
-		 */
-		barrier();
-		if (arch_pte_none(*vmf->pte)) {
-			pte_unmap(vmf->pte);
-			vmf->pte = NULL;
-		}
-	}
-
-	// if (!vmf->pte) {
-	// 	if (vma_is_anonymous(vmf->vma))
-	// 		return do_anonymous_page(vmf);
-	// 	else
-	// 		return do_fault(vmf);
-	// }
-
-	// if (!pte_present(vmf->orig_pte))
-	// 	return do_swap_page(vmf);
-
-	// if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
-	// 	return do_numa_page(vmf);
-
 	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
 	// spin_lock(vmf->ptl);
 	// entry = vmf->orig_pte;
@@ -817,30 +756,10 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 	// 	goto unlock;
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
-		// if (!pte_writable(*vmf->pte))
-		// 	return do_wp_page(vmf);
+		if (!pte_writable(*vmf->pte))
+			return do_wp_page(vmf);
 		// entry = pte_mkdirty(entry);
 	}
-	// entry = pte_mkyoung(entry);
-	// if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
-	// 			vmf->flags & FAULT_FLAG_WRITE)) {
-	// 	update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
-	// } else {
-	// 	/* Skip spurious TLB flush for retried page fault */
-	// 	if (vmf->flags & FAULT_FLAG_TRIED)
-	// 		goto unlock;
-	// 	/*
-	// 	 * This is needed only for protection faults but the arch code
-	// 	 * is not yet telling us if this is a protection fault or not.
-	// 	 * This still avoids useless tlb flushes for .text page faults
-	// 	 * with threads.
-	// 	 */
-	// 	if (vmf->flags & FAULT_FLAG_WRITE)
-	// 		flush_tlb_fix_spurious_fault(vmf->vma, vmf->address);
-	// }
-unlock:
-	// pte_unmap_unlock(vmf->pte, vmf->ptl);
-	return 0;
 }
 
 /*
@@ -849,9 +768,14 @@ unlock:
  * The mmap_lock may have been released depending on flags and our
  * return value.  See filemap_fault() and __folio_lock_or_retry().
  */
-static vm_fault_t __handle_mm_fault(vma_s *vma,
+// vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,
+// 		unsigned int flags, pt_regs_s *regs)
+vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
 		unsigned long address, unsigned int flags)
 {
+	vm_fault_t ret;
+	__set_current_state(TASK_RUNNING);
+
 	vm_fault_s vmf = {
 		.vma		= vma,
 		.address	= address & PAGE_MASK,
@@ -861,133 +785,36 @@ static vm_fault_t __handle_mm_fault(vma_s *vma,
 	};
 	unsigned int dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
-	pgd_t *pgd;
-	vm_fault_t ret;
+	pgd_t *pgd = pgd_ent_offset(mm, address);
 
-	pgd = pgd_ent_offset(mm, address);
 	vmf.p4d = p4d_alloc(mm, pgd, address);
 	if (!vmf.p4d)
-		return VM_FAULT_OOM;
-
+	{
+		ret = VM_FAULT_OOM;
+		goto fail;
+	}
 	vmf.pud = pud_alloc(mm, vmf.p4d, address);
 	if (!vmf.pud)
-		return VM_FAULT_OOM;
-retry_pud:
-	// if (pud_none(*vmf.pud) && __transparent_hugepage_enabled(vma)) {
-	// 	ret = create_huge_pud(&vmf);
-	// 	if (!(ret & VM_FAULT_FALLBACK))
-	// 		return ret;
-	// } else {
-	// 	pud_t orig_pud = *vmf.pud;
-
-	// 	barrier();
-	// 	if (pud_trans_huge(orig_pud) || pud_devmap(orig_pud)) {
-
-	// 		/* NUMA case for anonymous PUDs would go here */
-
-	// 		if (dirty && !pud_write(orig_pud)) {
-	// 			ret = wp_huge_pud(&vmf, orig_pud);
-	// 			if (!(ret & VM_FAULT_FALLBACK))
-	// 				return ret;
-	// 		} else {
-	// 			huge_pud_set_accessed(&vmf, orig_pud);
-	// 			return 0;
-	// 		}
-	// 	}
-	// }
-
+	{
+		ret = VM_FAULT_OOM;
+		goto fail;
+	}
 	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
 	if (!vmf.pmd)
-		return VM_FAULT_OOM;
+	{
+		ret = VM_FAULT_OOM;
+		goto fail;
+	}
+	vmf.pte = pte_alloc(mm, vmf.pmd, address);
+	if (!vmf.pmd)
+	{
+		ret = VM_FAULT_OOM;
+		goto fail;
+	}
+	barrier();
 
-	// /* Huge pud page fault raced with pmd_alloc? */
-	// if (pud_trans_unstable(vmf.pud))
-	// 	goto retry_pud;
-
-	// if (pmd_none(*vmf.pmd) && __transparent_hugepage_enabled(vma)) {
-	// 	ret = create_huge_pmd(&vmf);
-	// 	if (!(ret & VM_FAULT_FALLBACK))
-	// 		return ret;
-	// } else {
-	// 	vmf.orig_pmd = *vmf.pmd;
-
-	// 	barrier();
-	// 	if (unlikely(is_swap_pmd(vmf.orig_pmd))) {
-	// 		VM_BUG_ON(thp_migration_supported() &&
-	// 				  !is_pmd_migration_entry(vmf.orig_pmd));
-	// 		if (is_pmd_migration_entry(vmf.orig_pmd))
-	// 			pmd_migration_entry_wait(mm, vmf.pmd);
-	// 		return 0;
-	// 	}
-	// 	if (pmd_trans_huge(vmf.orig_pmd) || pmd_devmap(vmf.orig_pmd)) {
-	// 		if (pmd_protnone(vmf.orig_pmd) && vma_is_accessible(vma))
-	// 			return do_huge_pmd_numa_page(&vmf);
-
-	// 		if (dirty && !pmd_write(vmf.orig_pmd)) {
-	// 			ret = wp_huge_pmd(&vmf);
-	// 			if (!(ret & VM_FAULT_FALLBACK))
-	// 				return ret;
-	// 		} else {
-	// 			huge_pmd_set_accessed(&vmf);
-	// 			return 0;
-	// 		}
-	// 	}
-	// }
-
-	return handle_pte_fault(&vmf);
-}
-
-
-/*
- * By the time we get here, we already hold the mm semaphore
- *
- * The mmap_lock may have been released depending on flags and our
- * return value.  See filemap_fault() and __folio_lock_or_retry().
- */
-vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,
-		unsigned int flags, pt_regs_s *regs)
-{
-	vm_fault_t ret;
-
-	__set_current_state(TASK_RUNNING);
-
-	// count_vm_event(PGFAULT);
-	// count_memcg_event_mm(vma->vm_mm, PGFAULT);
-
-	// /* do counter updates before entering really critical section. */
-	// check_sync_rss_stat(current);
-
-	// if (!arch_vma_access_permitted(vma, flags & FAULT_FLAG_WRITE,
-	// 				    flags & FAULT_FLAG_INSTRUCTION,
-	// 				    flags & FAULT_FLAG_REMOTE))
-	// 	return VM_FAULT_SIGSEGV;
-
-	// /*
-	//  * Enable the memcg OOM handling for faults triggered in user
-	//  * space.  Kernel faults are handled more gracefully.
-	//  */
-	// if (flags & FAULT_FLAG_USER)
-	// 	mem_cgroup_enter_user_fault();
-
-	// if (unlikely(is_vm_hugetlb_page(vma)))
-	// 	ret = hugetlb_fault(vma->vm_mm, vma, address, flags);
-	// else
-		ret = __handle_mm_fault(vma, address, flags);
-
-	// if (flags & FAULT_FLAG_USER) {
-	// 	mem_cgroup_exit_user_fault();
-	// 	/*
-	// 	 * The task may have entered a memcg OOM situation but
-	// 	 * if the allocation error was handled gracefully (no
-	// 	 * VM_FAULT_OOM), there is no need to kill anything.
-	// 	 * Just clean up the OOM state peacefully.
-	// 	 */
-	// 	if (task_in_memcg_oom(current) && !(ret & VM_FAULT_OOM))
-	// 		mem_cgroup_oom_synchronize(false);
-	// }
-
-	// mm_account_fault(regs, address, flags, ret);
-
+	ret = myos_handle_pte_fault(&vmf);
+fail:
 	return ret;
 }
 
