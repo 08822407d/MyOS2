@@ -299,7 +299,7 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 		if (retval <= 0)
 			return retval;
 
-		// get_page(page);
+		get_page(page);
 		// page_dup_rmap(page, false);
 		// rss[mm_counter(page)]++;
 	}
@@ -661,106 +661,74 @@ static vm_fault_t do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl)
 {
 	vma_s *vma = vmf->vma;
 
-// 	if (userfaultfd_pte_wp(vma, *vmf->pte)) {
-// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-// 		return handle_userfault(vmf, VM_UFFD_WP);
-// 	}
-
-// 	/*
-// 	 * Userfaultfd write-protect can defer flushes. Ensure the TLB
-// 	 * is flushed in this case before copying.
-// 	 */
-// 	if (unlikely(userfaultfd_wp(vmf->vma) &&
-// 		     mm_tlb_flush_pending(vmf->vma->vm_mm)))
-// 		flush_tlb_page(vmf->vma, vmf->address);
-
-// 	vmf->page = vm_normal_page(vma, vmf->address, vmf->orig_pte);
-// 	if (!vmf->page) {
-// 		/*
-// 		 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
-// 		 * VM_PFNMAP VMA.
-// 		 *
-// 		 * We should not cow pages in a shared writeable mapping.
-// 		 * Just mark the pages writable and/or call ops->pfn_mkwrite.
-// 		 */
-// 		if ((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
-// 				     (VM_WRITE|VM_SHARED))
-// 			return wp_pfn_shared(vmf);
-
-// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-// 		return wp_page_copy(vmf);
-// 	}
-
-// 	/*
-// 	 * Take out anonymous pages first, anonymous shared vmas are
-// 	 * not dirty accountable.
-// 	 */
-// 	if (PageAnon(vmf->page)) {
-// 		struct page *page = vmf->page;
-
-// 		/* PageKsm() doesn't necessarily raise the page refcount */
-// 		if (PageKsm(page) || page_count(page) != 1)
-// 			goto copy;
-// 		if (!trylock_page(page))
-// 			goto copy;
-// 		if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
-// 			unlock_page(page);
-// 			goto copy;
-// 		}
-// 		/*
-// 		 * Ok, we've got the only map reference, and the only
-// 		 * page count reference, and the page is locked,
-// 		 * it's dark out, and we're wearing sunglasses. Hit it.
-// 		 */
-// 		unlock_page(page);
-// 		wp_page_reuse(vmf);
-// 		return VM_FAULT_WRITE;
-// 	} else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
-// 					(VM_WRITE|VM_SHARED))) {
-// 		return wp_page_shared(vmf);
-// 	}
-// copy:
-// 	/*
-// 	 * Ok, we need to copy. Oh, well..
-// 	 */
-// 	get_page(vmf->page);
-
-// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-// 	return wp_page_copy(vmf);
-}
-
-
-/*
- * These routines also need to handle stuff like marking pages dirty
- * and/or accessed for architectures that don't do it in hardware (most
- * RISC architectures).  The early dirtying is also good on the i386.
- *
- * There is also a hook called "update_mmu_cache()" that architectures
- * with external mmu caches can use to update those (ie the Sparc or
- * PowerPC hashed page tables that act as extended TLBs).
- *
- * We enter with non-exclusive mmap_lock (to exclude vma changes, but allow
- * concurrent faults).
- *
- * The mmap_lock may have been released depending on flags and our return value.
- * See filemap_fault() and __folio_lock_or_retry().
- */
-// static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
-static vm_fault_t myos_handle_pte_fault(vm_fault_s *vmf)
-{
-	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
-	// spin_lock(vmf->ptl);
-	// entry = vmf->orig_pte;
-	// if (unlikely(!pte_same(*vmf->pte, entry))) {
-	// 	update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
-	// 	goto unlock;
+	// if (userfaultfd_pte_wp(vma, *vmf->pte)) {
+	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// 	return handle_userfault(vmf, VM_UFFD_WP);
 	// }
-	if (vmf->flags & FAULT_FLAG_WRITE) {
-		if (!pte_writable(*vmf->pte))
-			return do_wp_page(vmf);
-		// entry = pte_mkdirty(entry);
-	}
+
+	// /*
+	//  * Userfaultfd write-protect can defer flushes. Ensure the TLB
+	//  * is flushed in this case before copying.
+	//  */
+	// if (unlikely(userfaultfd_wp(vmf->vma) &&
+	// 	     mm_tlb_flush_pending(vmf->vma->vm_mm)))
+	// 	flush_tlb_page(vmf->vma, vmf->address);
+
+	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
+	// if (!vmf->page) {
+	// 	/*
+	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
+	// 	 * VM_PFNMAP VMA.
+	// 	 *
+	// 	 * We should not cow pages in a shared writeable mapping.
+	// 	 * Just mark the pages writable and/or call ops->pfn_mkwrite.
+	// 	 */
+	// 	if ((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+	// 			     (VM_WRITE|VM_SHARED))
+	// 		return wp_pfn_shared(vmf);
+
+	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// 	return wp_page_copy(vmf);
+	// }
+
+	// /*
+	//  * Take out anonymous pages first, anonymous shared vmas are
+	//  * not dirty accountable.
+	//  */
+	// if (PageAnon(vmf->page)) {
+	// 	struct page *page = vmf->page;
+
+	// 	/* PageKsm() doesn't necessarily raise the page refcount */
+	// 	if (PageKsm(page) || page_count(page) != 1)
+	// 		goto copy;
+	// 	if (!trylock_page(page))
+	// 		goto copy;
+	// 	if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
+	// 		unlock_page(page);
+	// 		goto copy;
+	// 	}
+	// 	/*
+	// 	 * Ok, we've got the only map reference, and the only
+	// 	 * page count reference, and the page is locked,
+	// 	 * it's dark out, and we're wearing sunglasses. Hit it.
+	// 	 */
+	// 	unlock_page(page);
+	// 	wp_page_reuse(vmf);
+	// 	return VM_FAULT_WRITE;
+	// } else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
+	// 				(VM_WRITE|VM_SHARED))) {
+	// 	return wp_page_shared(vmf);
+	// }
+copy:
+	/*
+	 * Ok, we need to copy. Oh, well..
+	 */
+	get_page(vmf->page);
+
+	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// return wp_page_copy(vmf);
 }
+
 
 /*
  * By the time we get here, we already hold the mm semaphore
@@ -813,7 +781,14 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
 	}
 	barrier();
 
-	ret = myos_handle_pte_fault(&vmf);
+	ret = 0;
+	if (vmf.flags & FAULT_FLAG_WRITE) {
+		if (!pte_writable(*vmf.pte))
+			ret = do_wp_page(&vmf);
+		// entry = pte_mkdirty(entry);
+	}
+	// ret = myos_handle_pte_fault(&vmf);
+	
 fail:
 	return ret;
 }

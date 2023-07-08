@@ -1228,6 +1228,9 @@
 	// {
 	// 	folio_get(page_folio(page));
 	// }
+	static inline void get_page(page_s *page) {
+		atomic_inc(&page->_refcount);
+	}
 
 	// bool __must_check try_grab_page(page_s *page, unsigned int flags);
 	// page_s *try_grab_compound_head(page_s *page, int refs,
@@ -1299,6 +1302,9 @@
 
 	// 	folio_put(folio);
 	// }
+	static inline void put_page(page_s *page) {
+		atomic_dec(&page->_refcount);
+	}
 
 	// /*
 	// * GUP_PIN_COUNTING_BIAS, and the associated functions that use it, overload
