@@ -20,9 +20,10 @@
 
 	#	define __FORCE_ORDER "m"(*(unsigned int *)0x1000UL)
 
-		void native_write_cr0(unsigned long val);
+		// void native_write_cr0(unsigned long val);
 
-		static inline unsigned long native_read_cr0(void) {
+		// static inline unsigned long native_read_cr0(void) {
+		static inline unsigned long read_cr0(void) {
 			unsigned long val;
 			asm volatile(	"mov	%%cr0,	%0		\n\t"
 						:	"=r"(val)
@@ -30,7 +31,8 @@
 			return val;
 		}
 
-		static __always_inline unsigned long native_read_cr2(void) {
+		// static __always_inline unsigned long native_read_cr2(void) {
+		static __always_inline unsigned long read_cr2(void) {
 			unsigned long val;
 			asm volatile(	"mov	%%cr2,	%0		\n\t"
 						:	"=r"(val)
@@ -38,14 +40,16 @@
 			return val;
 		}
 
-		static __always_inline void native_write_cr2(unsigned long val) {
+		// static __always_inline void native_write_cr2(unsigned long val) {
+		static __always_inline void write_cr2(unsigned long val) {
 			asm volatile(	"mov	%0,		%%cr2	\n\t"
 						:
 						:	"r"(val)
 						:	"memory");
 		}
 
-		static inline unsigned long __native_read_cr3(void) {
+		// static inline unsigned long __native_read_cr3(void) {
+		static inline unsigned long __read_cr3(void) {
 			unsigned long val;
 			asm volatile(	"mov	%%cr3,	%0		\n\t"
 						:	"=r"(val)
@@ -53,21 +57,22 @@
 			return val;
 		}
 
-		static inline void native_write_cr3(unsigned long val) {
+		// static inline void native_write_cr3(unsigned long val) {
+		static inline void write_cr3(unsigned long val) {
 			asm volatile(	"mov	%0,		%%cr3	\n\t"
 						:
 						:	"r"(val)
 						:	"memory");
 		}
 
-		static inline unsigned long native_read_cr4(void) {
-			unsigned long val;
-			/* CR4 always exists on x86_64. */
-			asm volatile(	"mov	%%cr4,	%0		\n\t"
-						:	"=r"(val)
-						:	__FORCE_ORDER);
-			return val;
-		}
+		// static inline unsigned long native_read_cr4(void) {
+		// 	unsigned long val;
+		// 	/* CR4 always exists on x86_64. */
+		// 	asm volatile(	"mov	%%cr4,	%0		\n\t"
+		// 				:	"=r"(val)
+		// 				:	__FORCE_ORDER);
+		// 	return val;
+		// }
 
 		void native_write_cr4(unsigned long val);
 
@@ -108,54 +113,54 @@
 						:	"memory");
 		}
 
-	// 	extern asmlinkage void asm_load_gs_index(unsigned int selector);
+		// extern asmlinkage void asm_load_gs_index(unsigned int selector);
 
-	// 	static inline void native_load_gs_index(unsigned int selector) {
-	// 		unsigned long flags;
+		// static inline void native_load_gs_index(unsigned int selector) {
+		// 	unsigned long flags;
 
-	// 		local_irq_save(flags);
-	// 		asm_load_gs_index(selector);
-	// 		local_irq_restore(flags);
-	// 	}
+		// 	local_irq_save(flags);
+		// 	asm_load_gs_index(selector);
+		// 	local_irq_restore(flags);
+		// }
 
-		static inline unsigned long __read_cr4(void) {
-			return native_read_cr4();
-		}
+		// static inline unsigned long __read_cr4(void) {
+		// 	return native_read_cr4();
+		// }
 
 	// #	ifdef CONFIG_PARAVIRT_XXL
 	// #		include <asm/paravirt.h>
 	// #	else
-			static inline unsigned long read_cr0(void) {
-				return native_read_cr0();
-			}
+			// static inline unsigned long read_cr0(void) {
+			// 	return native_read_cr0();
+			// }
 
-			static inline void write_cr0(unsigned long x) {
-				native_write_cr0(x);
-			}
+			// static inline void write_cr0(unsigned long x) {
+			// 	native_write_cr0(x);
+			// }
 
-			static __always_inline unsigned long read_cr2(void) {
-				return native_read_cr2();
-			}
+			// static __always_inline unsigned long read_cr2(void) {
+			// 	return native_read_cr2();
+			// }
 
-			static __always_inline void write_cr2(unsigned long x) {
-				native_write_cr2(x);
-			}
+			// static __always_inline void write_cr2(unsigned long x) {
+			// 	native_write_cr2(x);
+			// }
 
-			/*
-			 * Careful!  CR3 contains more than just an address.
-			 * You probably want read_cr3_pa() instead.
-			 */
-			static inline unsigned long __read_cr3(void) {
-				return __native_read_cr3();
-			}
+			// /*
+			//  * Careful!  CR3 contains more than just an address.
+			//  * You probably want read_cr3_pa() instead.
+			//  */
+			// static inline unsigned long __read_cr3(void) {
+			// 	return __native_read_cr3();
+			// }
 
-			static inline void write_cr3(unsigned long x) {
-				native_write_cr3(x);
-			}
+			// static inline void write_cr3(unsigned long x) {
+			// 	native_write_cr3(x);
+			// }
 
-			static inline void __write_cr4(unsigned long x) {
-				native_write_cr4(x);
-			}
+			// static inline void __write_cr4(unsigned long x) {
+			// 	native_write_cr4(x);
+			// }
 
 			// static inline void wbinvd(void)
 			// {
