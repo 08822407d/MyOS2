@@ -6,7 +6,7 @@ _k_phys_start	= 0x1000000;
 _k_virt_start	= 0xffff800001000000;
 _k_offset		= _k_virt_start - _k_phys_start;
 _k_phys_edata	= _edata - _k_offset;
-_k_phys_ebss	= _ebss - _k_offset;
+_k_phys_ebss	= __bss_stop - _k_offset;
 
 __k_unpaged__k_offset		= _k_offset;
 __k_unpaged__k_virt_start	= _k_virt_start;
@@ -58,11 +58,17 @@ SECTIONS
 		*(.data*)
 		_edata = .;
 	}
-	.bss ALIGN(0x8000) : AT(ADDR(.bss) - _k_offset)
+	.bss ALIGN(0x1000) : AT(ADDR(.bss) - _k_offset)
 	{
-		_bss = .;
+		__bss_start = .;
 		*(.bss* COMMON)
-		_ebss = .;
+		__bss_stop = .;
+	}
+	.brk ALIGN(0x1000) : AT(ADDR(.brk) - _k_offset)
+	{
+		__brk_base = .;
+		*(.brk*)
+		__brk_limit = .;
 	}
 	.eh_frame ALIGN(0x1000) : AT(ADDR(.eh_frame) - _k_offset)
 	{
@@ -71,5 +77,6 @@ SECTIONS
 		_eeh_frame = .;
 	}
 
+	. = ALIGN((0x1000));
 	_end = .;
 }

@@ -53,7 +53,7 @@
 // #include <linux/vmalloc.h>
 
 
-#include <linux/kernel/asm-generic/sections.h>
+#include <asm/sections.h>
 
 #include <asm/e820-api.h>
 
@@ -75,13 +75,13 @@ unsigned long max_pfn_mapped;
 // #endif
 
 
-// /*
-//  * Range of the BSS area. The size of the BSS area is determined
-//  * at link time, with RESERVE_BRK() facility reserving additional
-//  * chunks.
-//  */
-// unsigned long _brk_start = (unsigned long)__brk_base;
-// unsigned long _brk_end   = (unsigned long)__brk_base;
+/*
+ * Range of the BSS area. The size of the BSS area is determined
+ * at link time, with RESERVE_BRK() facility reserving additional
+ * chunks.
+ */
+unsigned long _brk_start = (unsigned long)__brk_base;
+unsigned long _brk_end   = (unsigned long)__brk_base;
 
 // struct boot_params boot_params;
 
@@ -119,7 +119,40 @@ unsigned long max_pfn_mapped;
 // 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
 // };
 
+
 cpuinfo_x86_s boot_cpu_data __read_mostly;
+
+
+void * __init extend_brk(size_t size, size_t align)
+{
+	size_t mask = align - 1;
+	void *ret;
+
+	while (_brk_start == 0);
+	// BUG_ON(_brk_start == 0);
+	// BUG_ON(align & mask);
+
+	_brk_end = (_brk_end + mask) & ~mask;
+	// BUG_ON((char *)(_brk_end + size) > __brk_limit);
+
+	ret = (void *)_brk_end;
+	_brk_end += size;
+
+	memset(ret, 0, size);
+
+	return ret;
+}
+
+static void __init reserve_brk(void)
+{
+	if (_brk_end > _brk_start)
+		memblock_reserve(__pa(_brk_start),
+				_brk_end - _brk_start);
+
+	/* Mark brk area as locked down and no longer taking any
+	   new allocations */
+	_brk_start = 0;
+}
 
 static void __init early_reserve_memory(void)
 {
@@ -222,6 +255,15 @@ extern void myos_early_init_smp(size_t lcpu_nr);
 	// /* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
+
+	myos_early_alloc_pgt_buf();
+
+	/*
+	 * Need to conclude brk, before e820__memblock_setup()
+	 * it could use memblock_find_in_range, could overlap with
+	 * brk area.
+	 */
+	reserve_brk();
 
 	// 这里用e820获取的内存分布初始化memblock分配器
 	e820__memblock_setup();

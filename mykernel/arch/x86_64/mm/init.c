@@ -33,6 +33,24 @@
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
 
+pud_t	*init_pud_buffer;
+pmd_t	*init_pmd_buffer;
+pte_t	*init_pte_buffer;
+
+
+void __init myos_early_alloc_pgt_buf(void)
+{
+	int ent_size = sizeof(pte_t);
+	long ptebuf_pgcount = PFN_UP(max_pfn * ent_size);
+	long pmdbuf_pgcount = PFN_UP(ptebuf_pgcount * ent_size);
+	long pudbuf_pgcount = PFN_UP(pmdbuf_pgcount * ent_size);
+
+	extend_brk(pudbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+	extend_brk(pmdbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+	extend_brk(ptebuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+}
+
+
 extern int myos_init_memory_mapping(phys_addr_t base, size_t size);
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up

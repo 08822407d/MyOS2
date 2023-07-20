@@ -101,7 +101,7 @@
 
 			// /* exceedingly early brk-like allocator */
 			// extern unsigned long _brk_end;
-			// void *extend_brk(size_t size, size_t align);
+			void *extend_brk(size_t size, size_t align);
 
 			// /*
 			// * Reserve space in the brk section.  The name must be unique within
