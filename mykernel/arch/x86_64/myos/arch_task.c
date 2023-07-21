@@ -87,11 +87,7 @@ unsigned long myos_pid_nr()
 
 static __always_inline void switch_mm(task_s * curr, task_s * target)
 {
-	asm volatile(	"movq	%0,	%%cr3		\n\t"
-				:
-				:	"r"(target->mm->pgd)
-				:	"memory"
-				);
+	load_cr3(target->mm->pgd);
 	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
 }
 
