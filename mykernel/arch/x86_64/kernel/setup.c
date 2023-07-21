@@ -256,6 +256,7 @@ extern void myos_early_init_smp(size_t lcpu_nr);
 	max_low_pfn = max_pfn;
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
+	// 为内核页映射预留内存空间并构建映射树
 	myos_early_alloc_pgt_buf();
 
 	/*
