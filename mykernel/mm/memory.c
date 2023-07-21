@@ -530,7 +530,7 @@ copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_ent,
 	dst_p4d_ent = p4d_alloc(dst_mm, dst_pgd_ent, addr);
 	if (!dst_p4d_ent)
 		return -ENOMEM;
-	src_p4d_ent = arch_p4d_offset(src_pgd_ent, addr);
+	src_p4d_ent = p4d_ent_offset(src_pgd_ent, addr);
 	do {
 		next = next_p4d_addr_end(addr, end);
 		// 四级映射下p4d页必有效，所以不检查

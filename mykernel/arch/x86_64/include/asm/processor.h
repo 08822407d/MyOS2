@@ -240,11 +240,8 @@
 	// 	return __native_read_cr3() & CR3_ADDR_MASK;
 	// }
 
-	// static inline void load_cr3(pgd_t *pgdir) {
-	// 	// write_cr3(__sme_pa(pgdir));
-	// }
-	static inline void load_cr3(reg_t pgdir) {
-		write_cr3((unsigned long)__pa(pgdir));
+	static inline void load_cr3(pgd_t *pgdir) {
+		write_cr3(__pa(pgdir));
 	}
 
 	// /*

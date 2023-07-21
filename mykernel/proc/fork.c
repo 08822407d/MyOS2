@@ -1818,7 +1818,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		new_mm = curr_mm;
 	else
 	{
-		new_mm->pgd_ptr = curr_mm->pgd_ptr;
+		new_mm->pgd = curr_mm->pgd;
 		pt_regs_s *oldregs = task_pt_regs(curr);
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));

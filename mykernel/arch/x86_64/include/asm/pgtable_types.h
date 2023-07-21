@@ -326,7 +326,7 @@
 	 */
 	#	define set_pgd(pgdptr, pgdval)		set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
 
-	#	define arch_p4d_offset(pgd, addr)	((p4d_t *)pgd);
+	#	define p4d_ent_offset(pgd, addr)	((p4d_t *)pgd);
 
 	#	define arch_p4d_val(x)		(arch_pgd_val((x).pgd))
 	#	define arch_make_p4d(x)		((p4d_t) { arch_make_pgd(x) })

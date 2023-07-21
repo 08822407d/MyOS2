@@ -2277,7 +2277,7 @@
 	// 	return (pgd_none(*pgd)) && __p4d_alloc(mm, pgd, address) ?
 	// 		NULL : p4d_offset(pgd, address);
 	// }
-	#define p4d_alloc(mm, pgd, addr)	arch_p4d_offset(pgd, addr)
+	#define p4d_alloc(mm, pgd, addr)	p4d_ent_offset(pgd, addr)
 
 	static inline pud_t *pud_alloc(mm_s *mm,
 			p4d_t *p4d, unsigned long address) {
@@ -3446,6 +3446,10 @@
 				return zone;
 		}
 	}
+
+	extern unsigned long
+	myos_kernel_physical_mapping_init(
+			unsigned long paddr_start, unsigned long paddr_end);
 
 	#endif /* __KERNEL__ */
 

@@ -52,8 +52,8 @@ void creat_exec_addrspace(task_s * task)
 		{
 			page_s *page = alloc_page(GFP_USER);
 			atomic_inc(&(page->_mapcount));
-			arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-							page_to_phys(page), attr, &mm->pgd_ptr);
+			// arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
+			// 				page_to_phys(page), attr, (reg_t *)&mm->pgd);
 		}
 	}
 }
@@ -69,9 +69,9 @@ void prepair_COW(task_s * task)
 		{
 			// set all pages to read-only
 			arch_page_clearattr(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-								_PAGE_RW, &mm->pgd_ptr);
+								_PAGE_RW, (reg_t *)&mm->pgd);
 			phys_addr_t paddr = 0;
-			get_paddr((reg_t)ARCH_PGS_ADDR((unsigned long)mm->pgd_ptr),
+			get_paddr((reg_t)ARCH_PGS_ADDR((unsigned long)mm->pgd),
 						mmpr[seg_idx].startp + pgnr * PAGE_SIZE, &paddr);
 			page_s *page = paddr_to_page(paddr);
 			atomic_inc(&(page->_mapcount));
@@ -108,8 +108,8 @@ int do_COW(task_s * task, virt_addr_t virt)
 			virt_addr_t new_pg_vaddr = page_to_virt(new_page);
 			memcpy((void *)new_pg_vaddr, (void *)orig_pg_vaddr, PAGE_SIZE);
 
-			load_cr3(new_cr3);
-			task->mm->pgd_ptr = new_cr3;
+			load_cr3((pgd_t *)new_cr3);
+			task->mm->pgd = (pgd_t *)new_cr3;
 		}
 	}
 
@@ -139,8 +139,8 @@ virt_addr_t do_brk(virt_addr_t start, size_t length)
 	{
 		unsigned long attr = PAGE_SHARED;
 		page_s * pg_p = alloc_page(GFP_USER);
-		arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
-				attr, &current->mm->pgd_ptr);
+		// arch_page_domap((virt_addr_t)vaddr, page_to_phys(pg_p),
+		// 		attr, (reg_t *)&current->mm->pgd);
 	}
 	current->mm->brk = (unsigned long)new_end;
 	return new_end;

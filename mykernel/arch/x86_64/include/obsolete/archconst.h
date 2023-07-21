@@ -38,10 +38,7 @@
 	#define USER_PRIVILEGE		3	/* servers and user processes */
 
 	/* AMD64 page */
-	#define	PGENT_SIZE			CONST_4K
-	#define	PGENT_NR			(PGENT_SIZE / 8)
-	#define GET_PGENT_IDX(n)	((n) & (PGENT_NR - 1))
-	#define GETF_PGENT(val)		((PGENT_NR - 1) & val)
+	#define GETF_PGENT(val)		((PTRS_PER_PGD - 1) & val)
 	#define SHIFT_PML4E			39
 	#define SHIFT_PDPTE			30
 	#define SHIFT_PDE			21

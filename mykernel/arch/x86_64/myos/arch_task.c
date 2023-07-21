@@ -89,7 +89,7 @@ static __always_inline void switch_mm(task_s * curr, task_s * target)
 {
 	asm volatile(	"movq	%0,	%%cr3		\n\t"
 				:
-				:	"r"(target->mm->pgd_ptr)
+				:	"r"(target->mm->pgd)
 				:	"memory"
 				);
 	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
@@ -178,7 +178,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
 	creat_exec_addrspace(curr);
-	load_cr3(mm->pgd_ptr);
+	load_cr3(mm->pgd);
 	curr->flags &= ~CLONE_VFORK;
 
 	load_map_file(mm);
@@ -190,7 +190,7 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	read_exec_mm(mm);
 
 	creat_exec_addrspace(curr);
-	load_cr3(curr->mm->pgd_ptr);
+	load_cr3(curr->mm->pgd);
 	curr->flags &= ~CLONE_VFORK;
 
 	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);

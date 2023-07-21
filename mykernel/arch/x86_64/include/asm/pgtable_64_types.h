@@ -177,6 +177,6 @@
 
 	// #define EARLY_DYNAMIC_PAGE_TABLES	64
 
-	// #define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
+	#define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
 
 #endif /* _ASM_X86_PGTABLE_64_DEFS_H */

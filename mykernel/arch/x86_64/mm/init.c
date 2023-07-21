@@ -37,7 +37,6 @@ pud_t	*init_pud_buf;
 pmd_t	*init_pmd_buf;
 pte_t	*init_pte_buf;
 
-
 void __init myos_early_alloc_pgt_buf(void)
 {
 	int ent_size = sizeof(pte_t);
@@ -51,19 +50,18 @@ void __init myos_early_alloc_pgt_buf(void)
 
 	// fill pml4 entries
 	for (int pgt_idx = 0; pgt_idx < pudbuf_pgcount; pgt_idx++)
-		init_top_pgt[pgt_idx] = arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * 512));
+		init_top_pgt[pgt_idx] = arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * PTRS_PER_PUD));
 	// fill pdpt entries
 	for (int pud_idx = 0; pud_idx < pmdbuf_pgcount; pud_idx++)
-		init_pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * 512));
+		init_pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * PTRS_PER_PMD));
 	// fill pdt entries
 	for (int pmd_idx = 0; pmd_idx < ptebuf_pgcount; pmd_idx++)
-		init_pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * 512));
+		init_pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * PTRS_PER_PTE));
 
-	memcpy(init_top_pgt + 256, init_top_pgt, PAGE_SIZE / 2);
+	memcpy(init_top_pgt + PGD_KERNEL_START, init_top_pgt, PAGE_SIZE / 2);
 }
 
 
-extern int myos_init_memory_mapping(phys_addr_t base, size_t size);
 /**
  * memory_map_bottom_up - Map [map_start, map_end) bottom up
  * @map_start: start address of the target memory range
@@ -75,31 +73,23 @@ extern int myos_init_memory_mapping(phys_addr_t base, size_t size);
  * be allocated just above the kernel and we map the memory
  * in [map_start, map_end) in bottom-up.
  */
-static void __init myos_memory_map_bottom_up(
-		unsigned long map_start, unsigned long map_end)
+static void __init myos_memory_map()
 {
-	// static unsigned long __init init_range_memory_mapping(
-	// 		unsigned long r_start, unsigned long r_end)
-	// {
-			unsigned long start_pfn, end_pfn;
-			unsigned long mapped_ram_size = 0;
-			int i;
+	unsigned long start_pfn, end_pfn;
+	unsigned long mapped_ram_size = 0;
+	int i;
 
-			for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
-				u64 start = PFN_PHYS(start_pfn);
-				u64 end = PFN_PHYS(end_pfn);
-				if (start >= end)
-					continue;
+	for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
+		u64 start = PFN_PHYS(start_pfn);
+		u64 end = PFN_PHYS(end_pfn);
+		if (start >= end)
+			continue;
 
-				myos_init_memory_mapping(start, end - start);
-				mapped_ram_size += end - start;
-			}
-
-			// return mapped_ram_size;
-	// }
+		myos_kernel_physical_mapping_init(start, end);
+		mapped_ram_size += end - start;
+	}
 
 	kernel_cr3 = myos_virt2phys((virt_addr_t)init_top_pgt);
-	init_mm.pgd_ptr = (reg_t)kernel_cr3;
 }
 
 void __init init_mem_mapping(void)
@@ -113,20 +103,19 @@ void __init init_mem_mapping(void)
 	end = max_pfn << PAGE_SHIFT;
 
 	/* the ISA range is always mapped regardless of memory holes */
-	// myos_init_memory_mapping(0, ISA_END_ADDRESS);
+	// init_memory_mapping(0, ISA_END_ADDRESS);
 
 	// /* Init the trampoline, possibly with KASLR memory offset */
 	// init_trampoline();
 
-	myos_memory_map_bottom_up(ISA_END_ADDRESS, end);
+	myos_memory_map();
 
 	if (max_pfn > max_low_pfn) {
 		/* can we preserve max_low_pfn ?*/
 		max_low_pfn = max_pfn;
 	}
 
-	// load_cr3(swapper_pg_dir);
-	load_cr3(init_mm.pgd_ptr);
+	load_cr3(swapper_pg_dir);
 	// __flush_tlb_all();
 	// early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
 }

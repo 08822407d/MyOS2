@@ -19,7 +19,7 @@
 #	define INIT_MM_CONTEXT(name)
 #endif
 
-pgd_t	init_top_pgt[PGENT_NR]__aligned(PGENT_SIZE);
+pgd_t	init_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE);
 
 /*
  * For dynamically allocated mm_structs, there is a dynamically sized cpumask
