@@ -33,9 +33,9 @@
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
 
-pud_t	*init_pud_buffer;
-pmd_t	*init_pmd_buffer;
-pte_t	*init_pte_buffer;
+pud_t	*init_pud_buf;
+pmd_t	*init_pmd_buf;
+pte_t	*init_pte_buf;
 
 
 void __init myos_early_alloc_pgt_buf(void)
@@ -45,19 +45,19 @@ void __init myos_early_alloc_pgt_buf(void)
 	long pmdbuf_pgcount = PFN_UP(ptebuf_pgcount * ent_size);
 	long pudbuf_pgcount = PFN_UP(pmdbuf_pgcount * ent_size);
 
-	pud_t *pud_buf = extend_brk(pudbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
-	pmd_t *pmd_buf = extend_brk(pmdbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
-	pte_t *pte_buf = extend_brk(ptebuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+	init_pud_buf = extend_brk(pudbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+	init_pmd_buf = extend_brk(pmdbuf_pgcount * PAGE_SIZE, PAGE_SIZE);
+	init_pte_buf = extend_brk(ptebuf_pgcount * PAGE_SIZE, PAGE_SIZE);
 
 	// fill pml4 entries
 	for (int pgt_idx = 0; pgt_idx < pudbuf_pgcount; pgt_idx++)
-		init_top_pgt[pgt_idx] = arch_make_pgd(_PAGE_TABLE | __pa(pud_buf + pgt_idx * 512));
+		init_top_pgt[pgt_idx] = arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * 512));
 	// fill pdpt entries
 	for (int pud_idx = 0; pud_idx < pmdbuf_pgcount; pud_idx++)
-		pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(pmd_buf + pud_idx * 512));
+		init_pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * 512));
 	// fill pdt entries
 	for (int pmd_idx = 0; pmd_idx < ptebuf_pgcount; pmd_idx++)
-		pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(pte_buf + pmd_idx * 512));
+		init_pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * 512));
 
 	memcpy(init_top_pgt + 256, init_top_pgt, PAGE_SIZE / 2);
 }
