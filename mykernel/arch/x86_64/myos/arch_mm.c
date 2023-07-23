@@ -42,20 +42,24 @@ void creat_exec_addrspace(task_s * task)
 {
 	pt_regs_s *context = task_pt_regs(task);
 	mm_s * mm = task->mm;
-	context->sp = (reg_t)round_down(mm->start_stack, PAGE_SIZE) - SZ_2M;
+	context->sp = (reg_t)round_down(mm->start_stack, PAGE_SIZE) - SZ_1M;
 	get_seginfo(task);
 	unsigned long attr = PAGE_SHARED;
 
 	for (int seg_idx = 0; seg_idx < SEG_NR; seg_idx++)
 	{
-		for (int pgnr = 0; pgnr < mmpr[seg_idx].pgnr; pgnr++)
-		{
-			page_s *page = alloc_page(GFP_USER);
-			atomic_inc(&(page->_mapcount));
-			// arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
-			// 				page_to_phys(page), attr, (reg_t *)&mm->pgd);
-		}
+		// for (int pgnr = -1; pgnr < mmpr[seg_idx].pgnr; pgnr++)
+		// {
+		// 	page_s *page = alloc_page(GFP_USER);
+		// 	atomic_inc(&(page->_mapcount));
+		// 	// arch_page_domap(mmpr[seg_idx].startp + pgnr * PAGE_SIZE,
+		// 	// 				page_to_phys(page), attr, (reg_t *)&mm->pgd);
+		// }
+		unsigned long start = mmpr[seg_idx].startp;
+		unsigned long end = start + mmpr[seg_idx].pgnr * PAGE_SIZE;
+		myos_map_range(mm, start, end);
 	}
+	load_cr3(mm->pgd);
 }
 
 void prepair_COW(task_s * task)

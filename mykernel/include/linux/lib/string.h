@@ -34,9 +34,9 @@
 	// /* Wraps calls to strscpy()/memset(), no arch specific code required */
 	// ssize_t strscpy_pad(char *dest, const char *src, size_t count);
 
-	// #ifndef __HAVE_ARCH_STRCAT
-	// 	extern char * strcat(char *, const char *);
-	// #endif
+	#ifndef __HAVE_ARCH_STRCAT
+		extern char * strcat(char *, const char *);
+	#endif
 	// #ifndef __HAVE_ARCH_STRNCAT
 	// 	extern char * strncat(char *, const char *, __kernel_size_t);
 	// #endif

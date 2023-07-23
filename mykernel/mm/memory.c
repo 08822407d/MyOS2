@@ -787,7 +787,6 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
 			ret = do_wp_page(&vmf);
 		// entry = pte_mkdirty(entry);
 	}
-	// ret = myos_handle_pte_fault(&vmf);
 	
 fail:
 	return ret;
@@ -852,4 +851,52 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
 	}
 	// spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
+}
+
+int myos_map_range(mm_s *mm, unsigned long start, unsigned long end)
+{
+	int ret = 0;
+	pgd_t *pgd;
+	p4d_t *p4d;
+	pud_t *pud;
+	pmd_t *pmd;
+	pte_t *pte;
+	pte_t *pte_ent;
+	unsigned long addr = start;
+
+	do
+	{
+		pgd = pgd_ent_offset(mm, addr);
+		p4d = p4d_alloc(mm, pgd, addr);
+		if (!p4d) {
+			ret = VM_FAULT_OOM;
+			goto fail;
+		}
+		pud = pud_alloc(mm, p4d, addr);
+		if (!pud) {
+			ret = VM_FAULT_OOM;
+			goto fail;
+		}
+		pmd = pmd_alloc(mm, pud, addr);
+		if (!pmd) {
+			ret = VM_FAULT_OOM;
+			goto fail;
+		}
+		pte = pte_alloc(mm, pmd, addr);
+		if (!pmd) {
+			ret = VM_FAULT_OOM;
+			goto fail;
+		}
+		page_s *newpage = alloc_page(GFP_USER);
+		atomic_inc(&(newpage->_mapcount));
+		unsigned long page_addr = page_to_phys(newpage);
+		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
+
+		addr += PAGE_SIZE;
+	} while (addr < end);
+	
+	barrier();
+
+fail:
+	return ret;
 }

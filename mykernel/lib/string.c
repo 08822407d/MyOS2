@@ -255,24 +255,24 @@
 // }
 // // EXPORT_SYMBOL(stpcpy);
 
-// // #ifndef __HAVE_ARCH_STRCAT
-// /**
-//  * strcat - Append one %NUL-terminated string to another
-//  * @dest: The string to be appended to
-//  * @src: The string to append to it
-//  */
-// char *strcat(char *dest, const char *src)
-// {
-// 	char *tmp = dest;
+#ifndef __HAVE_ARCH_STRCAT
+	/**
+	 * strcat - Append one %NUL-terminated string to another
+	 * @dest: The string to be appended to
+	 * @src: The string to append to it
+	 */
+	char *strcat(char *dest, const char *src)
+	{
+		char *tmp = dest;
 
-// 	while (*dest)
-// 		dest++;
-// 	while ((*dest++ = *src++) != '\0')
-// 		;
-// 	return tmp;
-// }
-// // EXPORT_SYMBOL(strcat);
-// // #endif
+		while (*dest)
+			dest++;
+		while ((*dest++ = *src++) != '\0')
+			;
+		return tmp;
+	}
+// EXPORT_SYMBOL(strcat);
+#endif
 
 // // #ifndef __HAVE_ARCH_STRNCAT
 // /**

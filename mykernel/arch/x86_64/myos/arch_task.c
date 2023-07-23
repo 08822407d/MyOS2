@@ -174,7 +174,6 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
 	creat_exec_addrspace(curr);
-	load_cr3(mm->pgd);
 	curr->flags &= ~CLONE_VFORK;
 
 	load_map_file(mm);
@@ -186,7 +185,6 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	read_exec_mm(mm);
 
 	creat_exec_addrspace(curr);
-	load_cr3(curr->mm->pgd);
 	curr->flags &= ~CLONE_VFORK;
 
 	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);

@@ -38,6 +38,8 @@
 // #include <asm/trace/exceptions.h>
 
 
+#include <linux/kernel/kernel.h>
+#include <linux/kernel/slab.h>
 #include <asm/idtentry.h>
 #include <obsolete/printk.h>
 #include <obsolete/interrupt.h>
@@ -94,6 +96,40 @@ PF_finish:
 	return;
 }
 
+static void
+parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
+{
+	char tempbuf[100];
+	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+
+	memset(tempbuf, 0, 100);
+	snprintf(tempbuf, 45, "do_page_fault(14),ERROR_CODE: %#018lx\n", error_code);
+	strcat(buf, tempbuf);
+
+	if(!(error_code & 0x01))
+		strcat(buf, "Page Not-Present,\n");
+
+	if(error_code & 0x02)
+		strcat(buf, "Write Cause Fault,");
+	else
+		strcat(buf, "Read Cause Fault,");
+
+	if(error_code & 0x04)
+		strcat(buf, "Fault in user(3)\n");
+	else
+		strcat(buf, "Fault in supervisor(0,1,2)\n");
+
+	if(error_code & 0x08)
+		strcat(buf, ",Reserved Bit Cause Fault\n");
+
+	if(error_code & 0x10)
+		strcat(buf, ",Instruction fetch Cause Fault\n");
+
+	memset(tempbuf, 0, 100);
+	snprintf(tempbuf, 100, "Code address: %#018lx, CR2:%#018lx\n",
+				sf_regs->ip, cr2);
+	strcat(buf, tempbuf);
+}
 
 bool fault_in_kernel_space(unsigned long address)
 {
@@ -165,6 +201,17 @@ void do_user_addr_fault(pt_regs_s *regs,
 
 	tsk = current;
 	mm = tsk->mm;
+
+
+	char *buf = kmalloc(500, GFP_KERNEL);
+	memset(buf, 0, 500);
+	parse_PF_errcode(regs, address, buf);
+	if (!(error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
+	{
+		color_printk(RED, BLACK, buf);
+		while (1);
+	}	
+
 
 	// if (unlikely((error_code & (X86_PF_USER | X86_PF_INSTR)) == X86_PF_INSTR)) {
 	// 	/*
@@ -418,7 +465,7 @@ handle_page_fault(pt_regs_s *regs,
 __visible noinstr void
 exc_page_fault(pt_regs_s *regs, unsigned long error_code)
 {
-	myos_excep_page_fault(regs);
+	// myos_excep_page_fault(regs);
 
 	unsigned long address = read_cr2();
 	// irqentry_state_t state;

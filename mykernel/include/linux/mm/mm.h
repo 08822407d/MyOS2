@@ -3450,6 +3450,8 @@
 	extern unsigned long
 	myos_kernel_physical_mapping_init(
 			unsigned long paddr_start, unsigned long paddr_end);
+	extern int
+	myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
 
 	#endif /* __KERNEL__ */
 
