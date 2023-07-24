@@ -145,10 +145,10 @@
 	void myos_refresh_arch_page(void);
 	void myos_unmap_kernel_lowhalf(atomic_t *um_flag);
 	// int arch_page_domap(virt_addr_t virt, phys_addr_t phys, uint64_t attr, reg_t * kernel_cr3);
-	int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
-	int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
-	int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_t * ret_cr3);
-	int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys);
+	// int arch_page_setattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
+	// int arch_page_clearattr(virt_addr_t virt, uint64_t attr, reg_t * cr3);
+	// int arch_page_duplicate(virt_addr_t virt, phys_addr_t phys, reg_t orig_cr3, reg_t * ret_cr3);
+	// int get_paddr(reg_t cr3, virt_addr_t virt, phys_addr_t *ret_phys);
 
 	/* i8259.c */
 	void init_i8259(void);
@@ -221,9 +221,9 @@
 	long strnlen_user(void * src, unsigned long maxlen);
 
 	/*  mm.c */
-	void creat_exec_addrspace(task_s * task);
-	void prepair_COW(task_s * task);
-	int do_COW(task_s * task, virt_addr_t vaddr);
+	// void creat_exec_addrspace(task_s * task);
+	// void prepair_COW(task_s * task);
+	// int do_COW(task_s * task, virt_addr_t vaddr);
 	int check_addr_writable(reg_t cr2, task_s * task);
 	virt_addr_t do_brk(virt_addr_t start, size_t length);
 

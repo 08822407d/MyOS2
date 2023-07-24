@@ -50,51 +50,51 @@ DEFINE_SPINLOCK(pgd_lock);
 LIST_HDR_S(pgd_list_hdr);
 
 
-void myos_excep_page_fault(pt_regs_s *sf_regs)
-{
-	task_s *curr = current;
-	mm_s *mm = curr->mm;
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
-	unsigned long cr2 = read_cr2();
+// void myos_excep_page_fault(pt_regs_s *sf_regs)
+// {
+// 	task_s *curr = current;
+// 	mm_s *mm = curr->mm;
+// 	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+// 	unsigned long cr2 = read_cr2();
 
-	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
-		check_addr_writable((reg_t)cr2, curr))
-	{
-		do_COW(curr, (virt_addr_t)cr2);
-		return;
-	}
+// 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
+// 		check_addr_writable((reg_t)cr2, curr))
+// 	{
+// 		do_COW(curr, (virt_addr_t)cr2);
+// 		return;
+// 	}
 
-	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
+// 	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
 
-	if(!(error_code & 0x01))
-		color_printk(RED,BLACK,"Page Not-Present,\t");
+// 	if(!(error_code & 0x01))
+// 		color_printk(RED,BLACK,"Page Not-Present,\t");
 
-	if(error_code & 0x02)
-		color_printk(RED,BLACK,"Write Cause Fault,\t");
-	else
-		color_printk(RED,BLACK,"Read Cause Fault,\t");
+// 	if(error_code & 0x02)
+// 		color_printk(RED,BLACK,"Write Cause Fault,\t");
+// 	else
+// 		color_printk(RED,BLACK,"Read Cause Fault,\t");
 
-	if(error_code & 0x04)
-		color_printk(RED,BLACK,"Fault in user(3)\t");
-	else
-		color_printk(RED,BLACK,"Fault in supervisor(0,1,2)\t");
+// 	if(error_code & 0x04)
+// 		color_printk(RED,BLACK,"Fault in user(3)\t");
+// 	else
+// 		color_printk(RED,BLACK,"Fault in supervisor(0,1,2)\t");
 
-	if(error_code & 0x08)
-		color_printk(RED,BLACK,",Reserved Bit Cause Fault\t");
+// 	if(error_code & 0x08)
+// 		color_printk(RED,BLACK,",Reserved Bit Cause Fault\t");
 
-	if(error_code & 0x10)
-		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
+// 	if(error_code & 0x10)
+// 		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
 
-	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->ip);
+// 	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->ip);
 
-	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
+// 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
 
-	while (1);
+// 	while (1);
 
-PF_finish:
-	myos_refresh_arch_page();
-	return;
-}
+// PF_finish:
+// 	myos_refresh_arch_page();
+// 	return;
+// }
 
 static void
 parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)

@@ -178,19 +178,19 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 
 	load_map_file(mm);
 #else
-	if (curr->flags & CLONE_VFORK)
-		curr->mm = mm_alloc();
-	mm_s *mm = curr->mm;
-	file_s *fp = bprm->file;
-	read_exec_mm(mm);
+	// if (curr->flags & CLONE_VFORK)
+	// 	curr->mm = mm_alloc();
+	// mm_s *mm = curr->mm;
+	// file_s *fp = bprm->file;
+	// read_exec_mm(mm);
 
-	creat_exec_addrspace(curr);
-	curr->flags &= ~CLONE_VFORK;
+	// creat_exec_addrspace(curr);
+	// curr->flags &= ~CLONE_VFORK;
 
-	memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
-	loff_t fp_pos = 0;
-	ret_val = fp->f_op->read(fp, (void *)mm->start_code,
-			fp->f_path.dentry->d_inode->i_size, &fp_pos);
+	// memset((void *)mm->start_code, 0, mm->end_data - mm->start_code);
+	// loff_t fp_pos = 0;
+	// ret_val = fp->f_op->read(fp, (void *)mm->start_code,
+	// 		fp->f_path.dentry->d_inode->i_size, &fp_pos);
 #endif
 
 	curr_context->ss = (reg_t)USER_SS_SELECTOR;

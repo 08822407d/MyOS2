@@ -1823,7 +1823,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));
 
-		prepair_COW(current);
+		// prepair_COW(current);
 
 		myos_refresh_arch_page();
 	}
