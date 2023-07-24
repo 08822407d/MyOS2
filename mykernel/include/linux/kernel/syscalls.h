@@ -857,8 +857,7 @@
 		// asmlinkage long sys_readahead(int fd, loff_t offset, size_t count);
 
 		/* mm/nommu.c, also with MMU */
-		// asmlinkage long sys_brk(unsigned long brk);
-		asmlinkage long sys_sbrk(unsigned long brk);
+		asmlinkage long sys_brk(unsigned long brk);
 		// asmlinkage long sys_munmap(unsigned long addr, size_t len);
 		// asmlinkage long sys_mremap(unsigned long addr,
 		// 						unsigned long old_len, unsigned long new_len,

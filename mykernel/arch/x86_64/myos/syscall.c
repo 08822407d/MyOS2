@@ -185,7 +185,7 @@ MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
 /*==============================================================================================*
  *									user memory manage											*
  *==============================================================================================*/
-MYOS_SYSCALL_DEFINE1(sbrk, unsigned long, brk)
+MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 {
 	virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
 

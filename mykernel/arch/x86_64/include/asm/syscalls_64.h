@@ -10,7 +10,7 @@ __SYSCALL(__NR_close, sys_close)
 
 __SYSCALL(__NR_lseek, sys_lseek)
 
-__SYSCALL(__NR_sbrk, sys_sbrk)
+__SYSCALL(__NR_brk, sys_brk)
 
 __SYSCALL(__NR_getpid, sys_getpid)
 

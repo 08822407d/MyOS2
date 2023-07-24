@@ -122,20 +122,20 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 	if (!size)
 		return addr;
 
-	// /*
-	//  * total_size is the size of the ELF (interpreter) image.
-	//  * The _first_ mmap needs to know the full size, otherwise
-	//  * randomization might put this image into an overlapping
-	//  * position with the ELF binary image. (since size < total_size)
-	//  * So we first map the 'big' image - and unmap the remainder at
-	//  * the end. (which unmap is needed for ELF images with holes.)
-	//  */
-	// if (total_size) {
-	// 	total_size = ELF_PAGEALIGN(total_size);
-	// 	map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
-	// 	if (!BAD_ADDR(map_addr))
-	// 		vm_munmap(map_addr+size, total_size-size);
-	// } else
+	/*
+	 * total_size is the size of the ELF (interpreter) image.
+	 * The _first_ mmap needs to know the full size, otherwise
+	 * randomization might put this image into an overlapping
+	 * position with the ELF binary image. (since size < total_size)
+	 * So we first map the 'big' image - and unmap the remainder at
+	 * the end. (which unmap is needed for ELF images with holes.)
+	 */
+	if (total_size) {
+		total_size = ELF_PAGEALIGN(total_size);
+		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
+		// if (!BAD_ADDR(map_addr))
+		// 	vm_munmap(map_addr+size, total_size-size);
+	} else
 		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 
 	// if ((type & MAP_FIXED_NOREPLACE) &&
@@ -520,52 +520,52 @@ out_free_interp:
 			 */
 			elf_flags |= MAP_FIXED_NOREPLACE;
 		} else if (elf_ex->e_type == ET_DYN) {
-			// /*
-			//  * This logic is run once for the first LOAD Program
-			//  * Header for ET_DYN binaries to calculate the
-			//  * randomization (load_bias) for all the LOAD
-			//  * Program Headers.
-			//  *
-			//  * There are effectively two types of ET_DYN
-			//  * binaries: programs (i.e. PIE: ET_DYN with INTERP)
-			//  * and loaders (ET_DYN without INTERP, since they
-			//  * _are_ the ELF interpreter). The loaders must
-			//  * be loaded away from programs since the program
-			//  * may otherwise collide with the loader (especially
-			//  * for ET_EXEC which does not have a randomized
-			//  * position). For example to handle invocations of
-			//  * "./ld.so someprog" to test out a new version of
-			//  * the loader, the subsequent program that the
-			//  * loader loads must avoid the loader itself, so
-			//  * they cannot share the same load range. Sufficient
-			//  * room for the brk must be allocated with the
-			//  * loader as well, since brk must be available with
-			//  * the loader.
-			//  *
-			//  * Therefore, programs are loaded offset from
-			//  * ELF_ET_DYN_BASE and loaders are loaded into the
-			//  * independently randomized mmap region (0 load_bias
-			//  * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
-			//  */
-			// if (interpreter) {
-			// 	load_bias = ELF_ET_DYN_BASE;
-			// 	if (current->flags & PF_RANDOMIZE)
-			// 		load_bias += arch_mmap_rnd();
-			// 	alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-			// 	if (alignment)
-			// 		load_bias &= ~(alignment - 1);
-			// 	elf_flags |= MAP_FIXED_NOREPLACE;
-			// } else
-			// 	load_bias = 0;
+			/*
+			 * This logic is run once for the first LOAD Program
+			 * Header for ET_DYN binaries to calculate the
+			 * randomization (load_bias) for all the LOAD
+			 * Program Headers.
+			 *
+			 * There are effectively two types of ET_DYN
+			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
+			 * and loaders (ET_DYN without INTERP, since they
+			 * _are_ the ELF interpreter). The loaders must
+			 * be loaded away from programs since the program
+			 * may otherwise collide with the loader (especially
+			 * for ET_EXEC which does not have a randomized
+			 * position). For example to handle invocations of
+			 * "./ld.so someprog" to test out a new version of
+			 * the loader, the subsequent program that the
+			 * loader loads must avoid the loader itself, so
+			 * they cannot share the same load range. Sufficient
+			 * room for the brk must be allocated with the
+			 * loader as well, since brk must be available with
+			 * the loader.
+			 *
+			 * Therefore, programs are loaded offset from
+			 * ELF_ET_DYN_BASE and loaders are loaded into the
+			 * independently randomized mmap region (0 load_bias
+			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+			 */
+			if (interpreter) {
+				load_bias = ELF_ET_DYN_BASE;
+				// if (current->flags & PF_RANDOMIZE)
+				// 	load_bias += arch_mmap_rnd();
+				// alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+				// if (alignment)
+				// 	load_bias &= ~(alignment - 1);
+				elf_flags |= MAP_FIXED_NOREPLACE;
+			} else
+				load_bias = 0;
 
-			// /*
-			//  * Since load_bias is used for all subsequent loading
-			//  * calculations, we must lower it by the first vaddr
-			//  * so that the remaining calculations based on the
-			//  * ELF vaddrs will be correctly offset. The result
-			//  * is then page aligned.
-			//  */
-			// load_bias = ELF_PAGESTART(load_bias - vaddr);
+			/*
+			 * Since load_bias is used for all subsequent loading
+			 * calculations, we must lower it by the first vaddr
+			 * so that the remaining calculations based on the
+			 * ELF vaddrs will be correctly offset. The result
+			 * is then page aligned.
+			 */
+			load_bias = ELF_PAGESTART(load_bias - vaddr);
 
 			/*
 			 * Calculate the entire size of the ELF mapping
@@ -601,26 +601,26 @@ out_free_interp:
 			goto out_free_dentry;
 		}
 
-	// 	if (!load_addr_set) {
-	// 		load_addr_set = 1;
-	// 		load_addr = (elf_ppnt->p_vaddr - elf_ppnt->p_offset);
-	// 		if (elf_ex->e_type == ET_DYN) {
-	// 			load_bias += error -
-	// 			             ELF_PAGESTART(load_bias + vaddr);
-	// 			load_addr += load_bias;
-	// 			reloc_func_desc = load_bias;
-	// 		}
-	// 	}
+		if (!load_addr_set) {
+			load_addr_set = 1;
+			load_addr = (elf_ppnt->p_vaddr - elf_ppnt->p_offset);
+			// if (elf_ex->e_type == ET_DYN) {
+			// 	load_bias += error -
+			// 	             ELF_PAGESTART(load_bias + vaddr);
+			// 	load_addr += load_bias;
+			// 	reloc_func_desc = load_bias;
+			// }
+		}
 
-	// 	/*
-	// 	 * Figure out which segment in the file contains the Program
-	// 	 * Header table, and map to the associated memory address.
-	// 	 */
-	// 	if (elf_ppnt->p_offset <= elf_ex->e_phoff &&
-	// 	    elf_ex->e_phoff < elf_ppnt->p_offset + elf_ppnt->p_filesz) {
-	// 		phdr_addr = elf_ex->e_phoff - elf_ppnt->p_offset +
-	// 			    elf_ppnt->p_vaddr;
-	// 	}
+		// /*
+		//  * Figure out which segment in the file contains the Program
+		//  * Header table, and map to the associated memory address.
+		//  */
+		// if (elf_ppnt->p_offset <= elf_ex->e_phoff &&
+		//     elf_ex->e_phoff < elf_ppnt->p_offset + elf_ppnt->p_filesz) {
+		// 	phdr_addr = elf_ex->e_phoff - elf_ppnt->p_offset +
+		// 		    elf_ppnt->p_vaddr;
+		// }
 
 		k = elf_ppnt->p_vaddr;
 		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
@@ -628,18 +628,18 @@ out_free_interp:
 		if (start_data < k)
 			start_data = k;
 
-	// 	/*
-	// 	 * Check to see if the section's size will overflow the
-	// 	 * allowed task size. Note that p_filesz must always be
-	// 	 * <= p_memsz so it is only necessary to check p_memsz.
-	// 	 */
-	// 	if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
-	// 	    elf_ppnt->p_memsz > TASK_SIZE ||
-	// 	    TASK_SIZE - elf_ppnt->p_memsz < k) {
-	// 		/* set_brk can never work. Avoid overflows. */
-	// 		retval = -EINVAL;
-	// 		goto out_free_dentry;
-	// 	}
+		// /*
+		//  * Check to see if the section's size will overflow the
+		//  * allowed task size. Note that p_filesz must always be
+		//  * <= p_memsz so it is only necessary to check p_memsz.
+		//  */
+		// if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
+		//     elf_ppnt->p_memsz > TASK_SIZE ||
+		//     TASK_SIZE - elf_ppnt->p_memsz < k) {
+		// 	/* set_brk can never work. Avoid overflows. */
+		// 	retval = -EINVAL;
+		// 	goto out_free_dentry;
+		// }
 
 		// k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
