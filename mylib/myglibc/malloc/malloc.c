@@ -122,7 +122,7 @@ uPage_s *upage_alloc()
 	else
 	{
 		uPage_s *upgp = malloc(sizeof(uPage_s));
-		void *pg_vaddr = brk((ptrdiff_t)brk_end + PAGE_SIZE);
+		void *pg_vaddr = brk(brk_end + PAGE_SIZE);
 		if (pg_vaddr != NULL)
 		{
 			brk_end += PAGE_SIZE;
@@ -210,7 +210,7 @@ void init_uslab()
 		uPage_s * upgp = &base_upages[i];
 		list_init(&upgp->upage_list, upgp);
 		upgp->vaddr =
-		brk_end = brk((ptrdiff_t)brk_end + PAGE_SIZE);
+		brk_end = brk(brk_end + PAGE_SIZE);
 		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
 
 		bslp->upage_p = upage_alloc();

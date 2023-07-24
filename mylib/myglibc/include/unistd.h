@@ -128,7 +128,9 @@
 	// 			attribute_hidden;
 	// 	extern int __getdtablesize(void) attribute_hidden;
 	// 	extern int __brk(void *__addr) attribute_hidden;
-	extern int brk(void *__addr);
+	// extern int brk(void *__addr);
+	//临时brk声明
+	extern void *brk(void *__addr);
 	// 	extern int __close(int __fd);
 	// 	libc_hidden_proto(__close) extern int __libc_close(int __fd);
 	// 	extern _Bool __closefrom_fallback(int __lowfd, _Bool) attribute_hidden;
@@ -141,7 +143,7 @@
 	// 	extern int __ftruncate64(int __fd, __off64_t __length) attribute_hidden;
 	// 	extern int __truncate(const char *path, __off_t __length);
 	//	extern void *__sbrk(intptr_t __delta);
-	extern void *sbrk(intptr_t __delta);
+	// extern void *sbrk(intptr_t __delta);
 	// 	libc_hidden_proto(__sbrk)
 
 	// 	/* This variable is set nonzero at startup if the process's effective
