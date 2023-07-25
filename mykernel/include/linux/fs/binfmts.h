@@ -81,7 +81,7 @@
 	// struct coredump_params {
 	// 	const kernel_siginfo_t *siginfo;
 	// 	pt_regs_s *regs;
-	// 	struct file *file;
+	// 	file_s *file;
 	// 	unsigned long limit;
 	// 	unsigned long mm_flags;
 	// 	loff_t written;
@@ -125,7 +125,7 @@
 	extern int begin_new_exec(linux_bprm_s * bprm);
 	// extern void setup_new_exec(struct linux_binprm * bprm);
 	// extern void finalize_exec(struct linux_binprm *bprm);
-	// extern void would_dump(struct linux_binprm *, struct file *);
+	// extern void would_dump(struct linux_binprm *, file_s *);
 
 	// extern int suid_dumpable;
 
@@ -142,7 +142,7 @@
 	// extern int bprm_change_interp(const char *interp, struct linux_binprm *bprm);
 	// int copy_string_kernel(const char *arg, struct linux_binprm *bprm);
 	// extern void set_binfmt(struct linux_binfmt *new);
-	// extern ssize_t read_code(struct file *, unsigned long, loff_t, size_t);
+	// extern ssize_t read_code(file_s *, unsigned long, loff_t, size_t);
 
 	int kernel_execve(const char *filename,
 			const char *const *argv, const char *const *envp);

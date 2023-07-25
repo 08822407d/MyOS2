@@ -79,7 +79,7 @@ void myos_percpu_self_config(size_t cpu_idx)
 	task_s *	current_task = current;
 	wrgsbase((unsigned long)cpudata_u_p);
 
-	myos_refresh_arch_page();
+	myos_update_mmu_tlb();
 }
 
 void myos_startup_smp()

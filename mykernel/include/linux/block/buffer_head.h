@@ -236,7 +236,7 @@
 	// 			get_block_t *, loff_t *);
 	// int generic_cont_expand_simple(struct inode *inode, loff_t size);
 	// int block_commit_write(page_s *page, unsigned from, unsigned to);
-	// int block_page_mkwrite(vma_s *vma, struct vm_fault *vmf,
+	// int block_page_mkwrite(vma_s *vma, vm_fault_s *vmf,
 	// 				get_block_t get_block);
 	// /* Convert errno to return value from ->page_mkwrite() call */
 	// static inline vm_fault_t block_page_mkwrite_return(int err)

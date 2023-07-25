@@ -465,7 +465,7 @@ again:
  * per-vma resources, so we don't attempt to merge those.
  */
 // static inline int is_mergeable_vma(vma_s *vma,
-// 				struct file *file, unsigned long vm_flags,
+// 				file_s *file, unsigned long vm_flags,
 // 				struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 				struct anon_vma_name *anon_name)
 static inline int
@@ -500,7 +500,7 @@ myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
  */
 // static int
 // can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
-// 		     struct anon_vma *anon_vma, struct file *file,
+// 		     struct anon_vma *anon_vma, file_s *file,
 // 		     pgoff_t vm_pgoff,
 // 		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		     struct anon_vma_name *anon_name)
@@ -524,7 +524,7 @@ myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
  */
 // static int
 // can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
-// 		    struct anon_vma *anon_vma, struct file *file,
+// 		    struct anon_vma *anon_vma, file_s *file,
 // 		    pgoff_t vm_pgoff,
 // 		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		    struct anon_vma_name *anon_name)
@@ -842,7 +842,7 @@ unsigned long do_mmap(file_s *file, unsigned long addr,
 
 
 //	Linux proto:
-//	unsigned long mmap_region(struct file *file, unsigned long addr,
+//	unsigned long mmap_region(file_s *file, unsigned long addr,
 // 		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
 // 		struct list_head *uf)
 unsigned long

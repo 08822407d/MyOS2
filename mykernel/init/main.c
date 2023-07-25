@@ -285,7 +285,7 @@ void idle(size_t cpu_idx)
 		myos_unmap_kernel_lowhalf(&lower_half_unmapped);
 	}
 	while (atomic_read(&lower_half_unmapped) == 0)
-		myos_refresh_arch_page();
+		myos_update_mmu_tlb();
 
 	if (cpu_idx == 0)
 		rest_init();

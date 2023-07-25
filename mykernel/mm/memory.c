@@ -731,6 +731,68 @@ copy:
 
 
 
+/*
+ * The mmap_lock must have been held on entry, and may have been
+ * released depending on flags and vma->vm_ops->fault() return value.
+ * See filemap_fault() and __lock_page_retry().
+ */
+static vm_fault_t __do_fault(vm_fault_s *vmf)
+{
+	vma_s *vma = vmf->vma;
+	vm_fault_t ret;
+
+	// /*
+	//  * Preallocate pte before we take page_lock because this might lead to
+	//  * deadlocks for memcg reclaim which waits for pages under writeback:
+	//  *				lock_page(A)
+	//  *				SetPageWriteback(A)
+	//  *				unlock_page(A)
+	//  * lock_page(B)
+	//  *				lock_page(B)
+	//  * pte_alloc_one
+	//  *   shrink_page_list
+	//  *     wait_on_page_writeback(A)
+	//  *				SetPageWriteback(B)
+	//  *				unlock_page(B)
+	//  *				# flush A, B to clear the writeback
+	//  */
+	// if (pmd_none(*vmf->pmd) && !vmf->prealloc_pte) {
+	// 	vmf->prealloc_pte = pte_alloc_one(vma->vm_mm);
+	// 	if (!vmf->prealloc_pte)
+	// 		return VM_FAULT_OOM;
+	// }
+
+	ret = vma->vm_ops->fault(vmf);
+	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY |
+	// 		    VM_FAULT_DONE_COW)))
+	// 	return ret;
+
+	// if (unlikely(PageHWPoison(vmf->page))) {
+	// 	struct page *page = vmf->page;
+	// 	vm_fault_t poisonret = VM_FAULT_HWPOISON;
+	// 	if (ret & VM_FAULT_LOCKED) {
+	// 		if (page_mapped(page))
+	// 			unmap_mapping_pages(page_mapping(page),
+	// 					    page->index, 1, false);
+	// 		/* Retry if a clean page was removed from the cache. */
+	// 		if (invalidate_inode_page(page))
+	// 			poisonret = VM_FAULT_NOPAGE;
+	// 		unlock_page(page);
+	// 	}
+	// 	put_page(page);
+	// 	vmf->page = NULL;
+	// 	return poisonret;
+	// }
+
+	// if (unlikely(!(ret & VM_FAULT_LOCKED)))
+	// 	lock_page(vmf->page);
+	// else
+	// 	VM_BUG_ON_PAGE(!PageLocked(vmf->page), vmf->page);
+
+	// return ret;
+}
+
+
 /**
  * finish_fault - finish page fault once we have prepared the page to fault
  *
@@ -799,6 +861,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	// 	ret = VM_FAULT_NOPAGE;
 
 	// update_mmu_tlb(vma, vmf->address, vmf->pte);
+	myos_update_mmu_tlb();
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
 	return ret;
 }
@@ -863,8 +926,8 @@ static vm_fault_t do_fault_around(vm_fault_s *vmf)
 
 static vm_fault_t do_read_fault(vm_fault_s *vmf)
 {
-	// struct vm_area_struct *vma = vmf->vma;
-	// vm_fault_t ret = 0;
+	vma_s *vma = vmf->vma;
+	vm_fault_t ret = 0;
 
 	// /*
 	//  * Let's call ->map_pages() first and use ->fault() as fallback
@@ -879,15 +942,15 @@ static vm_fault_t do_read_fault(vm_fault_s *vmf)
 	// 	}
 	// }
 
-	// ret = __do_fault(vmf);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-	// 	return ret;
+	ret = __do_fault(vmf);
+	if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY))
+		return ret;
 
-	// ret |= finish_fault(vmf);
+	ret |= finish_fault(vmf);
 	// unlock_page(vmf->page);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-	// 	put_page(vmf->page);
-	// return ret;
+	if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY))
+		put_page(vmf->page);
+	return ret;
 }
 
 static vm_fault_t do_cow_fault(vm_fault_s *vmf)
@@ -910,7 +973,7 @@ static vm_fault_t do_cow_fault(vm_fault_s *vmf)
 	// }
 	// cgroup_throttle_swaprate(vmf->cow_page, GFP_KERNEL);
 
-	// ret = __do_fault(vmf);
+	ret = __do_fault(vmf);
 	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 	// 	goto uncharge_out;
 	// if (ret & VM_FAULT_DONE_COW)
@@ -932,7 +995,7 @@ uncharge_out:
 
 static vm_fault_t do_shared_fault(vm_fault_s *vmf)
 {
-	// struct vm_area_struct *vma = vmf->vma;
+	// vma_s *vma = vmf->vma;
 	// vm_fault_t ret, tmp;
 
 	// ret = __do_fault(vmf);

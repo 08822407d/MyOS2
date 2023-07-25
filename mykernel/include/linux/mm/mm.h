@@ -615,19 +615,19 @@
 		//  */
 		// int (*mprotect)(vma_s *vma, unsigned long start,
 		// 		unsigned long end, unsigned long newflags);
-		// vm_fault_t (*fault)(struct vm_fault *vmf);
-		// vm_fault_t (*huge_fault)(struct vm_fault *vmf,
+		vm_fault_t (*fault)(vm_fault_s *vmf);
+		// vm_fault_t (*huge_fault)(vm_fault_s *vmf,
 		// 		enum page_entry_size pe_size);
-		// vm_fault_t (*map_pages)(struct vm_fault *vmf,
-		// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
+		vm_fault_t (*map_pages)(vm_fault_s *vmf,
+				pgoff_t start_pgoff, pgoff_t end_pgoff);
 		// unsigned long (*pagesize)(vma_s * area);
 
-		// /* notification that a previously read-only page is about to become
-		//  * writable, if an error is returned it will cause a SIGBUS */
-		// vm_fault_t (*page_mkwrite)(struct vm_fault *vmf);
+		/* notification that a previously read-only page is about to become
+		 * writable, if an error is returned it will cause a SIGBUS */
+		vm_fault_t (*page_mkwrite)(vm_fault_s *vmf);
 
 		// /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
-		// vm_fault_t (*pfn_mkwrite)(struct vm_fault *vmf);
+		// vm_fault_t (*pfn_mkwrite)(vm_fault_s *vmf);
 
 		// /* called by access_process_vm when get_user_pages() fails, typically
 		//  * for use by special VMAs. See also generic_access_phys() for a generic
@@ -1018,11 +1018,11 @@
 	// 	return pte;
 	// }
 
-	// vm_fault_t do_set_pmd(struct vm_fault *vmf, page_s *page);
-	// void do_set_pte(struct vm_fault *vmf, page_s *page, unsigned long addr);
+	// vm_fault_t do_set_pmd(vm_fault_s *vmf, page_s *page);
+	// void do_set_pte(vm_fault_s *vmf, page_s *page, unsigned long addr);
 
-	// vm_fault_t finish_fault(struct vm_fault *vmf);
-	// vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf);
+	// vm_fault_t finish_fault(vm_fault_s *vmf);
+	// vm_fault_t finish_mkwrite_fault(vm_fault_s *vmf);
 	// #endif
 
 	// /*
@@ -2792,10 +2792,10 @@
 	// extern void truncate_inode_pages_final(struct address_space *);
 
 	// /* generic vm_area_ops exported for stackable file systems */
-	// extern vm_fault_t filemap_fault(struct vm_fault *vmf);
-	// extern vm_fault_t filemap_map_pages(struct vm_fault *vmf,
+	// extern vm_fault_t filemap_fault(vm_fault_s *vmf);
+	// extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 	// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
-	// extern vm_fault_t filemap_page_mkwrite(struct vm_fault *vmf);
+	// extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
 
 	extern unsigned long stack_guard_gap;
 	// /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */

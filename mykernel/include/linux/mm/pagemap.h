@@ -1007,7 +1007,7 @@
 	// * @ra: File readahead state.  May be NULL.
 	// */
 	// struct readahead_control {
-	// 	struct file *file;
+	// 	file_s *file;
 	// 	struct address_space *mapping;
 	// 	struct file_ra_state *ra;
 	// /* private: use the readahead_* accessors instead */
@@ -1049,7 +1049,7 @@
 	//  */
 	// static inline
 	// void page_cache_sync_readahead(struct address_space *mapping,
-	// 		struct file_ra_state *ra, struct file *file, pgoff_t index,
+	// 		struct file_ra_state *ra, file_s *file, pgoff_t index,
 	// 		unsigned long req_count)
 	// {
 	// 	DEFINE_READAHEAD(ractl, file, ra, mapping, index);
@@ -1072,7 +1072,7 @@
 	//  */
 	// static inline
 	// void page_cache_async_readahead(struct address_space *mapping,
-	// 		struct file_ra_state *ra, struct file *file,
+	// 		struct file_ra_state *ra, file_s *file,
 	// 		struct page *page, pgoff_t index, unsigned long req_count)
 	// {
 	// 	DEFINE_READAHEAD(ractl, file, ra, mapping, index);

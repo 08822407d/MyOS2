@@ -29,7 +29,7 @@ void myos_unmap_kernel_lowhalf(atomic_t *um_flag)
 }
 
 
-void myos_refresh_arch_page(void)
+void myos_update_mmu_tlb(void)
 {
 	uint64_t tempreg;
 	asm volatile(	"movq	%%cr3,	%0	\n\t"
@@ -139,7 +139,7 @@ void myos_refresh_arch_page(void)
 // 		pte_ptr->val = round_down(phys, PAGE_SIZE) | attr | _PAGE_PAT;
 // 	}
 
-// 	myos_refresh_arch_page();
+// 	myos_update_mmu_tlb();
 // 	*cr3 = (reg_t)cr3_val;
 
 // fail_return:

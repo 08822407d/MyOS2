@@ -67,7 +67,7 @@
 	// 		wake_up(wqh);
 	// }
 
-	// vm_fault_t do_swap_page(struct vm_fault *vmf);
+	// vm_fault_t do_swap_page(vm_fault_s *vmf);
 	// void folio_rotate_reclaimable(struct folio *folio);
 	// bool __folio_end_writeback(struct folio *folio);
 
@@ -476,7 +476,7 @@
 	// 	return address;
 	// }
 
-	// static inline file_s *maybe_unlock_mmap_for_io(struct vm_fault *vmf,
+	// static inline file_s *maybe_unlock_mmap_for_io(vm_fault_s *vmf,
 	// 							file_s *fpin)
 	// {
 	// 	int flags = vmf->flags;

@@ -1825,7 +1825,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 
 		// prepair_COW(current);
 
-		myos_refresh_arch_page();
+		myos_update_mmu_tlb();
 	}
 
 exit_cpmm:

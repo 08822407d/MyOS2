@@ -731,7 +731,7 @@
 	// extern void tlb_gather_mmu_fullmm(struct mmu_gather *tlb, mm_s *mm);
 	// extern void tlb_finish_mmu(struct mmu_gather *tlb);
 
-	// struct vm_fault;
+	// vm_fault_s;
 
 	/**
 	 * typedef vm_fault_t - Return type for page fault handlers.
@@ -783,13 +783,13 @@
 		VM_FAULT_HINDEX_MASK = (__force vm_fault_t)0x0f0000,
 	};
 
-	// /* Encode hstate index for a hwpoisoned large page */
-	// #define VM_FAULT_SET_HINDEX(x) ((__force vm_fault_t)((x) << 16))
-	// #define VM_FAULT_GET_HINDEX(x) (((__force unsigned int)(x) >> 16) & 0xf)
+	/* Encode hstate index for a hwpoisoned large page */
+	#define VM_FAULT_SET_HINDEX(x) ((__force vm_fault_t)((x) << 16))
+	#define VM_FAULT_GET_HINDEX(x) (((__force unsigned int)(x) >> 16) & 0xf)
 
-	// #define VM_FAULT_ERROR (VM_FAULT_OOM | VM_FAULT_SIGBUS |       \
-	// 						VM_FAULT_SIGSEGV | VM_FAULT_HWPOISON | \
-	// 						VM_FAULT_HWPOISON_LARGE | VM_FAULT_FALLBACK)
+	#define VM_FAULT_ERROR (VM_FAULT_OOM | VM_FAULT_SIGBUS |       \
+							VM_FAULT_SIGSEGV | VM_FAULT_HWPOISON | \
+							VM_FAULT_HWPOISON_LARGE | VM_FAULT_FALLBACK)
 
 	// #define VM_FAULT_RESULT_TRACE                        \
 	// 	{VM_FAULT_OOM, "OOM"},                           \
@@ -826,7 +826,7 @@
 	// 	*/
 	// 	vm_fault_t (*fault)(const struct vm_special_mapping *sm,
 	// 						vma_s *vma,
-	// 						struct vm_fault *vmf);
+	// 						vm_fault_s *vmf);
 
 	// 	int (*mremap)(const struct vm_special_mapping *sm,
 	// 				vma_s *new_vma);

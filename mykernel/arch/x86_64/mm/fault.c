@@ -92,7 +92,7 @@ LIST_HDR_S(pgd_list_hdr);
 // 	while (1);
 
 // PF_finish:
-// 	myos_refresh_arch_page();
+// 	myos_update_mmu_tlb();
 // 	return;
 // }
 
@@ -130,6 +130,20 @@ parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
 				sf_regs->ip, cr2);
 	strcat(buf, tempbuf);
 }
+
+static noinline void
+myos_bad_area(pt_regs_s *regs, unsigned long error_code, unsigned long address)
+{
+	char *buf = kmalloc(500, GFP_KERNEL);
+	memset(buf, 0, 500);
+	parse_PF_errcode(regs, address, buf);
+	// if (!(error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
+	// {
+		color_printk(RED, BLACK, buf);
+		while (1);
+	// }	
+}
+
 
 bool fault_in_kernel_space(unsigned long address)
 {
@@ -201,17 +215,6 @@ void do_user_addr_fault(pt_regs_s *regs,
 
 	tsk = current;
 	mm = tsk->mm;
-
-
-	char *buf = kmalloc(500, GFP_KERNEL);
-	memset(buf, 0, 500);
-	parse_PF_errcode(regs, address, buf);
-	if (!(error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
-	{
-		color_printk(RED, BLACK, buf);
-		while (1);
-	}	
-
 
 	// if (unlikely((error_code & (X86_PF_USER | X86_PF_INSTR)) == X86_PF_INSTR)) {
 	// 	/*
@@ -338,17 +341,17 @@ void do_user_addr_fault(pt_regs_s *regs,
 
 	vma = myos_find_vma(mm, address);
 	if (!vma) {
-		// bad_area(regs, error_code, address);
+		myos_bad_area(regs, error_code, address);
 		return;
 	}
 	if (vma->vm_start <= address)
 		goto good_area;
-	// if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
-	// 	bad_area(regs, error_code, address);
-	// 	return;
-	// }
+	if (!(vma->vm_flags & VM_GROWSDOWN)) {
+		myos_bad_area(regs, error_code, address);
+		return;
+	}
 	// if (unlikely(expand_stack(vma, address))) {
-	// 	bad_area(regs, error_code, address);
+	// 	myos_bad_area(regs, error_code, address);
 	// 	return;
 	// }
 
