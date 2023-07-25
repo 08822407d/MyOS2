@@ -129,9 +129,11 @@ page_s *myos_readpage(vm_fault_s *vmf)
 	if (filp == NULL)
 		return NULL;
 
+	int pg_idx = (vmf->address - vma->vm_start) / PAGE_SIZE;
+	loff_t pos = (vma->vm_pgoff + pg_idx) * PAGE_SIZE;
 	page_s *retval = alloc_page(GFP_USER);
 	virt_addr_t vaddr = page_to_virt(retval);
-	loff_t pos = vmf->address;
+	memset((void *)vaddr, 0, PAGE_SIZE);
 	filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &pos);
 
 	return retval;

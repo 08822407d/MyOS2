@@ -1042,37 +1042,36 @@ static vm_fault_t do_fault(vm_fault_s *vmf)
 	mm_s *vm_mm = vma->vm_mm;
 	vm_fault_t ret;
 
-	// /*
-	//  * The VMA was not fully populated on mmap() or missing VM_DONTEXPAND
-	//  */
-	// if (!vma->vm_ops->fault) {
-	// 	/*
-	// 	 * If we find a migration pmd entry or a none pmd entry, which
-	// 	 * should never happen, return SIGBUS
-	// 	 */
-	// 	if (unlikely(!pmd_present(*vmf->pmd)))
-	// 		ret = VM_FAULT_SIGBUS;
-	// 	else {
-	// 		vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
-	// 					       vmf->pmd,
-	// 					       vmf->address,
-	// 					       &vmf->ptl);
-	// 		/*
-	// 		 * Make sure this is not a temporary clearing of pte
-	// 		 * by holding ptl and checking again. A R/M/W update
-	// 		 * of pte involves: take ptl, clearing the pte so that
-	// 		 * we don't have concurrent modification by hardware
-	// 		 * followed by an update.
-	// 		 */
-	// 		if (unlikely(pte_none(*vmf->pte)))
-	// 			ret = VM_FAULT_SIGBUS;
-	// 		else
-	// 			ret = VM_FAULT_NOPAGE;
+	/*
+	 * The VMA was not fully populated on mmap() or missing VM_DONTEXPAND
+	 */
+	if (!vma->vm_ops->fault) {
+		// /*
+		//  * If we find a migration pmd entry or a none pmd entry, which
+		//  * should never happen, return SIGBUS
+		//  */
+		// if (unlikely(!pmd_present(*vmf->pmd)))
+		// 	ret = VM_FAULT_SIGBUS;
+		// else {
+		// 	vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
+		// 				       vmf->pmd,
+		// 				       vmf->address,
+		// 				       &vmf->ptl);
+		// 	/*
+		// 	 * Make sure this is not a temporary clearing of pte
+		// 	 * by holding ptl and checking again. A R/M/W update
+		// 	 * of pte involves: take ptl, clearing the pte so that
+		// 	 * we don't have concurrent modification by hardware
+		// 	 * followed by an update.
+		// 	 */
+		// 	if (unlikely(pte_none(*vmf->pte)))
+		// 		ret = VM_FAULT_SIGBUS;
+		// 	else
+		// 		ret = VM_FAULT_NOPAGE;
 
-	// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// 	}
-	// } else if (!(vmf->flags & FAULT_FLAG_WRITE))
-	if (!(vmf->flags & FAULT_FLAG_WRITE))
+		// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+		// }
+	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
 		ret = do_read_fault(vmf);
 	else if (!(vma->vm_flags & VM_SHARED))
 		ret = do_cow_fault(vmf);
@@ -1252,7 +1251,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
 	}
 	barrier();
 
-	return handle_pte_fault(&vmf);
+	ret = handle_pte_fault(&vmf);
 fail:
 	return ret;
 }

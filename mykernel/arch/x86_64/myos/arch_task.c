@@ -100,30 +100,30 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 
 extern int myos_exit_thread(task_s * new_task);
 
-// read memory distribution of the executive
-static int read_exec_mm(mm_s *mm)
-{
-	mm->start_code = USER_CODE_ADDR;
-	mm->start_data =
-	mm->end_code = USER_CODE_ADDR + SZ_2M * 1;
-	mm->start_brk =
-	mm->end_data = USER_CODE_ADDR + SZ_2M * 2;
-	mm->brk = USER_CODE_ADDR + SZ_2M * 3;
-	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
-}
-static void load_map_file(mm_s *mm)
-{
-	int ret_val = 0;
-	for (vma_s *vma = mm->mmap;
-		vma != NULL && vma->vm_flags != 0;
-		vma = vma->vm_next)
-	{
-		file_s *fp = vma->vm_file;
-		loff_t fp_pos = vma->vm_pgoff * PAGE_SIZE;
-		ret_val = fp->f_op->read(fp, (void *)vma->vm_start,
-			vma->vm_end - vma->vm_start, &fp_pos);
-	}
-}
+// // read memory distribution of the executive
+// static int read_exec_mm(mm_s *mm)
+// {
+// 	mm->start_code = USER_CODE_ADDR;
+// 	mm->start_data =
+// 	mm->end_code = USER_CODE_ADDR + SZ_2M * 1;
+// 	mm->start_brk =
+// 	mm->end_data = USER_CODE_ADDR + SZ_2M * 2;
+// 	mm->brk = USER_CODE_ADDR + SZ_2M * 3;
+// 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
+// }
+// static void load_map_file(mm_s *mm)
+// {
+// 	int ret_val = 0;
+// 	for (vma_s *vma = mm->mmap;
+// 		vma != NULL && vma->vm_flags != 0;
+// 		vma = vma->vm_next)
+// 	{
+// 		file_s *fp = vma->vm_file;
+// 		loff_t fp_pos = vma->vm_pgoff * PAGE_SIZE;
+// 		ret_val = fp->f_op->read(fp, (void *)vma->vm_start,
+// 			vma->vm_end - vma->vm_start, &fp_pos);
+// 	}
+// }
 
 int __myos_copy_strings(const char *const *argv)
 {
