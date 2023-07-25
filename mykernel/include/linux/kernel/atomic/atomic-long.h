@@ -12,9 +12,9 @@
 	#include <asm/atomic64_64.h>
 
 	typedef atomic64_t atomic_long_t;
-	#define ATOMIC_LONG_INIT(i)		ATOMIC64_INIT(i)
-	#define atomic_long_cond_read_acquire	atomic64_cond_read_acquire
-	#define atomic_long_cond_read_relaxed	atomic64_cond_read_relaxed
+	// #define ATOMIC_LONG_INIT(i)		ATOMIC64_INIT(i)
+	// #define atomic_long_cond_read_acquire	atomic64_cond_read_acquire
+	// #define atomic_long_cond_read_relaxed	atomic64_cond_read_relaxed
 
 	// static __always_inline long
 	// arch_atomic_long_read(const atomic_long_t *v) {
@@ -425,10 +425,5 @@
 	// arch_atomic_long_dec_if_positive(atomic_long_t *v) {
 	// 	return arch_atomic64_dec_if_positive(v);
 	// }
-
-	static __always_inline void
-	atomic_long_add(long i, atomic_long_t *v) {
-		arch_atomic64_add(i, v);
-	}
 
 #endif /* _LINUX_ATOMIC_LONG_H */

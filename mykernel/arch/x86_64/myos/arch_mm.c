@@ -13,30 +13,30 @@
 #include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
 
-#define SEG_NR	4
+// #define SEG_NR	4
 
-typedef struct mm_pair
-{
-	virt_addr_t	startp;
-	long		pgnr;
-} mmpr_s;
+// typedef struct mm_pair
+// {
+// 	virt_addr_t	startp;
+// 	long		pgnr;
+// } mmpr_s;
 
-mmpr_s mmpr[SEG_NR];
+// mmpr_s mmpr[SEG_NR];
 
-mmpr_s * get_seginfo(task_s * task)
-{
-	mm_s * mm = task->mm;
-	reg_t user_rsp = task_pt_regs(task)->sp;
+// mmpr_s * get_seginfo(task_s * task)
+// {
+// 	mm_s * mm = task->mm;
+// 	reg_t user_rsp = task_pt_regs(task)->sp;
 
-	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
-	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (unsigned long)codepg_p) / PAGE_SIZE;
-	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
-	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (unsigned long)datapg_p) / PAGE_SIZE;
-	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
-	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, PAGE_SIZE) - (unsigned long)brkpg_p) / PAGE_SIZE;
-	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down((unsigned long)user_rsp, PAGE_SIZE);
-	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (unsigned long)stackpg_p) / PAGE_SIZE;
-}
+// 	virt_addr_t codepg_p = mmpr[0].startp = (virt_addr_t)round_down(mm->start_code, PAGE_SIZE);
+// 	long codepg_nr = mmpr[0].pgnr = (round_up(mm->end_code, PAGE_SIZE) - (unsigned long)codepg_p) / PAGE_SIZE;
+// 	virt_addr_t datapg_p = mmpr[1].startp = (virt_addr_t)round_down(mm->start_data, PAGE_SIZE);
+// 	long datapg_nr = mmpr[1].pgnr = (round_up(mm->end_data, PAGE_SIZE) - (unsigned long)datapg_p) / PAGE_SIZE;
+// 	virt_addr_t brkpg_p = mmpr[2].startp = (virt_addr_t)round_down(mm->start_brk, PAGE_SIZE);
+// 	long brkpg_nr = mmpr[2].pgnr = (round_up(mm->brk, PAGE_SIZE) - (unsigned long)brkpg_p) / PAGE_SIZE;
+// 	virt_addr_t stackpg_p = mmpr[3].startp = (virt_addr_t)round_down((unsigned long)user_rsp, PAGE_SIZE);
+// 	long stackpg_nr = mmpr[3].pgnr = (round_up(mm->start_stack, PAGE_SIZE) - (unsigned long)stackpg_p) / PAGE_SIZE;
+// }
 
 // void creat_exec_addrspace(task_s * task)
 // {

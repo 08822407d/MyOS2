@@ -53,6 +53,10 @@ file_s *alloc_empty_file(int flags)
 		if (f == NULL)
 			return ERR_PTR(-ENOMEM);
 
+		atomic_long_set(&f->f_count, 1);
+		// rwlock_init(&f->f_owner.lock);
+		// spin_lock_init(&f->f_lock);
+		// mutex_init(&f->f_pos_lock);
 		f->f_flags = flags;
 		f->f_mode = OPEN_FMODE(flags);
 		/* f->f_version: 0 */
@@ -60,7 +64,30 @@ file_s *alloc_empty_file(int flags)
 	return f;
 }
 
+void fput_many(file_s *file, unsigned int refs)
+{
+	if (atomic_long_sub_and_test(refs, &file->f_count)) {
+		kfree (file);
+
+		task_s *task = current;
+
+		// if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
+		// 	init_task_work(&file->f_u.fu_rcuhead, ____fput);
+		// 	if (!task_work_add(task, &file->f_u.fu_rcuhead, TWA_RESUME))
+		// 		return;
+		// 	/*
+		// 	 * After this task has run exit_task_work(),
+		// 	 * task_work_add() will fail.  Fall through to delayed
+		// 	 * fput to avoid leaking *file.
+		// 	 */
+		// }
+
+		// if (llist_add(&file->f_u.fu_llist, &delayed_fput_list))
+		// 	schedule_delayed_work(&delayed_fput_work, 1);
+	}
+}
+
 void fput(file_s *file)
 {
-	kfree(file);
+	fput_many(file, 1);
 }

@@ -356,14 +356,15 @@ int FAT32_getdents64(file_s *filp, dir_ctxt_s *ctx)
 
 file_ops_s FAT32_file_ops = 
 {
-	.open = FAT32_open,
-	.close = FAT32_close,
-	.read = FAT32_read,
-	.write = FAT32_write,
-	.llseek = FAT32_lseek,
-	.ioctl = FAT32_ioctl,
+	.open			= FAT32_open,
+	.close			= FAT32_close,
+	.read			= FAT32_read,
+	.write			= FAT32_write,
+	.llseek			= FAT32_lseek,
+	.ioctl			= FAT32_ioctl,
 
-	.iterate_shared = FAT32_getdents64,
+	.mmap			= generic_file_mmap,
+	.iterate_shared	= FAT32_getdents64,
 };
 
 // these operation need cache and list

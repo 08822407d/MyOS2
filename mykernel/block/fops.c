@@ -272,7 +272,7 @@ const file_ops_s def_blk_fops = {
 	// .read_iter		= blkdev_read_iter,
 	// .write_iter		= blkdev_write_iter,
 	// .iopoll			= iocb_bio_iopoll,
-	// .mmap			= generic_file_mmap,
+	.mmap			= generic_file_mmap,
 	.fsync			= blkdev_fsync,
 	// .unlocked_ioctl	= blkdev_ioctl,
 // #ifdef CONFIG_COMPAT

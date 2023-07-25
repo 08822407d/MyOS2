@@ -427,6 +427,7 @@
 	// #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
 
 	// #define TASK_EXEC ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0)
+	#define TASK_EXEC	VM_EXEC
 
 	/* Common data flag combinations */
 	#define VM_DATA_FLAGS_TSK_EXEC (					\
@@ -2765,8 +2766,9 @@
 
 	// /* These take the mm semaphore themselves */
 	// extern int __must_check vm_brk(unsigned long, unsigned long);
-	// extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
-	// extern int vm_munmap(unsigned long, size_t);
+	extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
+	extern int vm_munmap(unsigned long, size_t);
+	int __vm_munmap(unsigned long start, size_t len, bool downgrade);
 	extern unsigned long __must_check vm_mmap(file_s *,
 			unsigned long, unsigned long, unsigned long,
 			unsigned long, unsigned long);

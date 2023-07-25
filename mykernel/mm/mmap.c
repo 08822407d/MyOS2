@@ -840,53 +840,6 @@ unsigned long do_mmap(file_s *file, unsigned long addr,
 	return addr;
 }
 
-// unsigned long ksys_mmap_pgoff(
-// 		unsigned long addr, unsigned long len,
-// 		unsigned long prot, unsigned long flags,
-// 		unsigned long fd, unsigned long pgoff)
-// {
-// 	struct file *file = NULL;
-// 	unsigned long retval;
-
-// 	if (!(flags & MAP_ANONYMOUS)) {
-// 		audit_mmap_fd(fd, flags);
-// 		file = fget(fd);
-// 		if (!file)
-// 			return -EBADF;
-// 		if (is_file_hugepages(file)) {
-// 			len = ALIGN(len, huge_page_size(hstate_file(file)));
-// 		} else if (unlikely(flags & MAP_HUGETLB)) {
-// 			retval = -EINVAL;
-// 			goto out_fput;
-// 		}
-// 	} else if (flags & MAP_HUGETLB) {
-// 		struct hstate *hs;
-
-// 		hs = hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-// 		if (!hs)
-// 			return -EINVAL;
-
-// 		len = ALIGN(len, huge_page_size(hs));
-// 		/*
-// 		 * VM_NORESERVE is used because the reservations will be
-// 		 * taken when vm_ops->mmap() is called
-// 		 * A dummy user value is used because we are not locking
-// 		 * memory so no accounting is necessary
-// 		 */
-// 		file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
-// 				VM_NORESERVE,
-// 				HUGETLB_ANONHUGE_INODE,
-// 				(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-// 		if (IS_ERR(file))
-// 			return PTR_ERR(file);
-// 	}
-
-// 	retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);
-// out_fput:
-// 	if (file)
-// 		fput(file);
-// 	return retval;
-// }
 
 //	Linux proto:
 //	unsigned long mmap_region(struct file *file, unsigned long addr,
@@ -938,58 +891,57 @@ myos_mmap_region(file_s *file, unsigned long addr,
 	// vma->vm_page_prot = vm_get_page_prot(vm_flags);
 	vma->vm_pgoff = pgoff;
 
-	// if (file) {
-	// 	if (vm_flags & VM_SHARED) {
-	// 		error = mapping_map_writable(file->f_mapping);
-	// 		if (error)
-	// 			goto free_vma;
-	// 	}
+	if (file) {
+		// if (vm_flags & VM_SHARED) {
+		// 	error = mapping_map_writable(file->f_mapping);
+		// 	if (error)
+		// 		goto free_vma;
+		// }
 
-	// 	vma->vm_file = get_file(file);
-		vma->vm_file = file;
-	// 	error = call_mmap(file, vma);
-	// 	if (error)
-	// 		goto unmap_and_free_vma;
+		vma->vm_file = get_file(file);
+		error = call_mmap(file, vma);
+		if (error)
+			goto unmap_and_free_vma;
 
-	// 	/* Can addr have changed??
-	// 	 *
-	// 	 * Answer: Yes, several device drivers can do it in their
-	// 	 *         f_op->mmap method. -DaveM
-	// 	 * Bug: If addr is changed, prev, rb_link, rb_parent should
-	// 	 *      be updated for vma_link()
-	// 	 */
-	// 	WARN_ON_ONCE(addr != vma->vm_start);
+		// /* Can addr have changed??
+		//  *
+		//  * Answer: Yes, several device drivers can do it in their
+		//  *         f_op->mmap method. -DaveM
+		//  * Bug: If addr is changed, prev, rb_link, rb_parent should
+		//  *      be updated for vma_link()
+		//  */
+		// WARN_ON_ONCE(addr != vma->vm_start);
 
-	// 	addr = vma->vm_start;
+		addr = vma->vm_start;
 
-	// 	/* If vm_flags changed after call_mmap(), we should try merge vma again
-	// 	 * as we may succeed this time.
-	// 	 */
-	// 	if (unlikely(vm_flags != vma->vm_flags && prev)) {
-	// 		merge = vma_merge(mm, prev, vma->vm_start, vma->vm_end, vma->vm_flags,
-	// 			NULL, vma->vm_file, vma->vm_pgoff, NULL, NULL_VM_UFFD_CTX, NULL);
-	// 		if (merge) {
-	// 			/* ->mmap() can change vma->vm_file and fput the original file. So
-	// 			 * fput the vma->vm_file here or we would add an extra fput for file
-	// 			 * and cause general protection fault ultimately.
-	// 			 */
-	// 			fput(vma->vm_file);
-	// 			vm_area_free(vma);
-	// 			vma = merge;
-	// 			/* Update vm_flags to pick up the change. */
-	// 			vm_flags = vma->vm_flags;
-	// 			goto unmap_writable;
-	// 		}
-	// 	}
+		/* If vm_flags changed after call_mmap(), we should try merge vma again
+		 * as we may succeed this time.
+		 */
+		if (vm_flags != vma->vm_flags && prev) {
+			merge = myos_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
+			if (merge) {
+				/* ->mmap() can change vma->vm_file and fput the original file. So
+				 * fput the vma->vm_file here or we would add an extra fput for file
+				 * and cause general protection fault ultimately.
+				 */
+				fput(vma->vm_file);
+				vm_area_free(vma);
+				vma = merge;
+				/* Update vm_flags to pick up the change. */
+				vm_flags = vma->vm_flags;
+				goto unmap_writable;
+			}
+		}
 
-	// 	vm_flags = vma->vm_flags;
-	// } else if (vm_flags & VM_SHARED) {
-	// 	error = shmem_zero_setup(vma);
-	// 	if (error)
-	// 		goto free_vma;
-	// } else {
-	// 	vma_set_anonymous(vma);
-	// }
+		vm_flags = vma->vm_flags;
+	} else if (vm_flags & VM_SHARED) {
+		// error = shmem_zero_setup(vma);
+		// if (error)
+		// 	goto free_vma;
+	} else {
+		// vma_set_anonymous(vma);
+	}
 
 	// /* Allow architectures to sanity-check the vm_flags */
 	// if (!arch_validate_flags(vma->vm_flags)) {
@@ -1036,7 +988,7 @@ out:
 	return addr;
 
 unmap_and_free_vma:
-	// fput(vma->vm_file);
+	fput(vma->vm_file);
 	vma->vm_file = NULL;
 
 	/* Undo any partial mapping done by a device driver. */
@@ -1223,8 +1175,8 @@ int __split_vma(mm_s *mm, vma_s *vma,
 	/* Clean everything up if vma_adjust failed. */
 	if (new->vm_ops && new->vm_ops->close)
 		new->vm_ops->close(new);
-	// if (new->vm_file)
-	// 	fput(new->vm_file);
+	if (new->vm_file)
+		fput(new->vm_file);
 	// unlink_anon_vmas(new);
  out_free_vma:
 	vm_area_free(new);
@@ -1338,4 +1290,131 @@ int __do_munmap(mm_s *mm, unsigned long start,
 	remove_vma_list(mm, vma);
 
 	return downgrade ? 1 : 0;
+}
+
+int __vm_munmap(unsigned long start, size_t len, bool downgrade)
+{
+	int ret;
+	struct mm_struct *mm = current->mm;
+	// LIST_HEAD(uf);
+
+	// if (mmap_write_lock_killable(mm))
+	// 	return -EINTR;
+
+	ret = __do_munmap(mm, start, len, downgrade);
+	// /*
+	//  * Returning 1 indicates mmap_lock is downgraded.
+	//  * But 1 is not legal return value of vm_munmap() and munmap(), reset
+	//  * it to 0 before return.
+	//  */
+	// if (ret == 1) {
+	// 	mmap_read_unlock(mm);
+	// 	ret = 0;
+	// } else
+	// 	mmap_write_unlock(mm);
+
+	// userfaultfd_unmap_complete(mm, &uf);
+	return ret;
+}
+
+
+/*
+ *  this is really a simplified "do_mmap".  it only handles
+ *  anonymous maps.  eventually we may be able to do some
+ *  brk-specific accounting here.
+ */
+// static int do_brk_flags(unsigned long addr, unsigned long len,
+// 		unsigned long flags, struct list_head *uf)
+static int
+do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags)
+{
+	mm_s *mm = current->mm;
+	vma_s *vma, *prev;
+	// struct rb_node **rb_link, *rb_parent;
+	pgoff_t pgoff = addr >> PAGE_SHIFT;
+	int error;
+	unsigned long mapped_addr;
+
+	/* Until we need other flags, refuse anything except VM_EXEC. */
+	if ((flags & (~VM_EXEC)) != 0)
+		return -EINVAL;
+	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
+
+	// mapped_addr = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
+	// if (IS_ERR_VALUE(mapped_addr))
+	// 	return mapped_addr;
+
+	// error = mlock_future_check(mm, mm->def_flags, len);
+	// if (error)
+	// 	return error;
+
+	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
+	if (munmap_vma_range(mm, addr, len, &prev))
+		return -ENOMEM;
+
+	// /* Check against address space limits *after* clearing old maps... */
+	// if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
+	// 	return -ENOMEM;
+
+	// if (mm->map_count > sysctl_max_map_count)
+	// 	return -ENOMEM;
+
+	// if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
+	// 	return -ENOMEM;
+
+	/* Can we just expand an old private anonymous mapping? */
+	vma = myos_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
+	if (vma)
+		goto out;
+
+	/*
+	 * create a vma struct for an anonymous mapping
+	 */
+	vma = vm_area_alloc(mm);
+	if (!vma) {
+		// vm_unacct_memory(len >> PAGE_SHIFT);
+		return -ENOMEM;
+	}
+
+	// vma_set_anonymous(vma);
+	vma->vm_start = addr;
+	vma->vm_end = addr + len;
+	vma->vm_pgoff = pgoff;
+	vma->vm_flags = flags;
+	// vma->vm_page_prot = vm_get_page_prot(flags);
+	vma_link(mm, vma, prev);
+out:
+	// perf_event_mmap(vma);
+	mm->total_vm += len >> PAGE_SHIFT;
+	mm->data_vm += len >> PAGE_SHIFT;
+	if (flags & VM_LOCKED)
+		mm->locked_vm += (len >> PAGE_SHIFT);
+	vma->vm_flags |= VM_SOFTDIRTY;
+	return 0;
+}
+
+int vm_brk_flags(unsigned long addr, unsigned long request, unsigned long flags)
+{
+	mm_s *mm = current->mm;
+	unsigned long len;
+	int ret;
+	bool populate;
+	// LIST_HEAD(uf);
+
+	len = PAGE_ALIGN(request);
+	if (len < request)
+		return -ENOMEM;
+	if (!len)
+		return 0;
+
+	// if (mmap_write_lock_killable(mm))
+	// 	return -EINTR;
+
+	ret = do_brk_flags(addr, len, flags);
+	// populate = ((mm->def_flags & VM_LOCKED) != 0);
+	// mmap_write_unlock(mm);
+	// userfaultfd_unmap_complete(mm, &uf);
+	// if (populate && !ret)
+	// 	mm_populate(addr, len);
+	return ret;
 }

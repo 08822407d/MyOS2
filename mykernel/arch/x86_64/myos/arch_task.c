@@ -173,10 +173,9 @@ int __myos_bprm_execve(linux_bprm_s *bprm)
 	mm->start_data = round_up(mm->end_code, PAGE_SIZE);
 	mm->start_stack = USERADDR_LIMIT + 1 - SZ_2M;
 
-	// creat_exec_addrspace(curr);
 	curr->flags &= ~CLONE_VFORK;
 
-	load_map_file(mm);
+	// load_map_file(mm);
 #else
 	// if (curr->flags & CLONE_VFORK)
 	// 	curr->mm = mm_alloc();

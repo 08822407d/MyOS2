@@ -224,7 +224,7 @@
 	// void creat_exec_addrspace(task_s * task);
 	// void prepair_COW(task_s * task);
 	// int do_COW(task_s * task, virt_addr_t vaddr);
-	int check_addr_writable(reg_t cr2, task_s * task);
+	// int check_addr_writable(reg_t cr2, task_s * task);
 	virt_addr_t do_brk(virt_addr_t start, size_t length);
 
 #endif /* _AMD64_PROTO_H_ */

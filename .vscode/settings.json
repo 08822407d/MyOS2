@@ -229,7 +229,8 @@
 		"signal.h": "c",
 		"irqflags.h": "c",
 		"syscall_wrapper.h": "c",
-		"mman.h": "c"
+		"mman.h": "c",
+		"atomic64_64.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

@@ -8,7 +8,7 @@
 
 	/* The 64-bit atomic type */
 
-	#define ATOMIC64_INIT(i)	{ (i) }
+	// #define ATOMIC64_INIT(i)	{ (i) }
 
 	/**
 	 * arch_atomic64_read - read atomic64 variable
@@ -20,6 +20,8 @@
 	static inline s64 arch_atomic64_read(const atomic64_t *v) {
 		return __READ_ONCE((v)->counter);
 	}
+	#define atomic_long_read arch_atomic64_read
+
 
 	/**
 	 * arch_atomic64_set - set atomic64 variable
@@ -31,6 +33,7 @@
 	static inline void arch_atomic64_set(atomic64_t *v, s64 i) {
 		__WRITE_ONCE(v->counter, i);
 	}
+	#define atomic_long_set arch_atomic64_set
 
 	/**
 	 * arch_atomic64_add - add integer to atomic64 variable
@@ -41,72 +44,74 @@
 	 */
 	static __always_inline void
 	arch_atomic64_add(s64 i, atomic64_t *v) {
-		asm volatile(LOCK_PREFIX "addq	%1,	%0	\n\t"
+		asm volatile(	"lock addq	%1,		%0	\n\t"
 					:	"=m"(v->counter)
-					:	"er"(i), "m"(v->counter)
+					:	"er"(i),
+						"m"(v->counter)
+					:	"memory");
+	}
+	#define atomic_long_add arch_atomic64_add
+
+	/**
+	 * arch_atomic64_sub - subtract the atomic64 variable
+	 * @i: integer value to subtract
+	 * @v: pointer to type atomic64_t
+	 *
+	 * Atomically subtracts @i from @v.
+	 */
+	static inline void
+	arch_atomic64_sub(s64 i, atomic64_t *v) {
+		asm volatile(	"lock subq	%1,		%0	\n\t"
+					:	"=m"(v->counter)
+					:	"er"(i),
+						"m"(v->counter)
 					:	"memory");
 	}
 
-	// /**
-	//  * arch_atomic64_sub - subtract the atomic64 variable
-	//  * @i: integer value to subtract
-	//  * @v: pointer to type atomic64_t
-	//  *
-	//  * Atomically subtracts @i from @v.
-	//  */
-	// static inline void
-	// arch_atomic64_sub(s64 i, atomic64_t *v) {
-	// 	asm volatile(	"lock subq	%1,		%0	\n\t"
-	// 				:	"=m"(v->counter)
-	// 				:	"er"(i),
-	// 					"m"(v->counter)
-	// 				:	"memory");
-	// }
+	/**
+	 * arch_atomic64_sub_and_test - subtract value from variable and test result
+	 * @i: integer value to subtract
+	 * @v: pointer to type atomic64_t
+	 *
+	 * Atomically subtracts @i from @v and returns
+	 * true if the result is zero, or false for all
+	 * other cases.
+	 */
+	static inline bool
+	arch_atomic64_sub_and_test(s64 i, atomic64_t *v) {
+		return GEN_BINARY_RMWcc(LOCK_PREFIX "subq", v->counter, e, "er", i);
+	}
+	#define atomic_long_sub_and_test arch_atomic64_sub_and_test
 
-	// /**
-	//  * arch_atomic64_sub_and_test - subtract value from variable and test result
-	//  * @i: integer value to subtract
-	//  * @v: pointer to type atomic64_t
-	//  *
-	//  * Atomically subtracts @i from @v and returns
-	//  * true if the result is zero, or false for all
-	//  * other cases.
-	//  */
-	// static inline bool arch_atomic64_sub_and_test(s64 i, atomic64_t *v)
-	// {
-	// 	return GEN_BINARY_RMWcc(LOCK_PREFIX "subq", v->counter, e, "er", i);
-	// }
-	// #define arch_atomic64_sub_and_test arch_atomic64_sub_and_test
+	/**
+	 * arch_atomic64_inc - increment atomic64 variable
+	 * @v: pointer to type atomic64_t
+	 *
+	 * Atomically increments @v by 1.
+	 */
+	static __always_inline void
+	arch_atomic64_inc(atomic64_t *v) {
+		asm volatile(	"lock incq	%0			\n\t"
+					:	"=m"(v->counter)
+					:	"m"(v->counter)
+					:	"memory");
+	}
+	#define atomic_long_inc arch_atomic64_inc
 
-	// /**
-	//  * arch_atomic64_inc - increment atomic64 variable
-	//  * @v: pointer to type atomic64_t
-	//  *
-	//  * Atomically increments @v by 1.
-	//  */
-	// static __always_inline void
-	// arch_atomic64_inc(atomic64_t *v) {
-	// 	asm volatile(	"lock incq	%0			\n\t"
-	// 				:	"=m"(v->counter)
-	// 				:	"m"(v->counter)
-	// 				:	"memory");
-	// }
-	// #define arch_atomic64_inc arch_atomic64_inc
-
-	// /**
-	//  * arch_atomic64_dec - decrement atomic64 variable
-	//  * @v: pointer to type atomic64_t
-	//  *
-	//  * Atomically decrements @v by 1.
-	//  */
-	// static __always_inline void
-	// arch_atomic64_dec(atomic64_t *v) {
-	// 	asm volatile(	"lock decq	%0			\n\t"
-	// 				:	"=m"(v->counter)
-	// 				:	"m"(v->counter)
-	// 				:	"memory");
-	// }
-	// #define arch_atomic64_dec arch_atomic64_dec
+	/**
+	 * arch_atomic64_dec - decrement atomic64 variable
+	 * @v: pointer to type atomic64_t
+	 *
+	 * Atomically decrements @v by 1.
+	 */
+	static __always_inline void
+	arch_atomic64_dec(atomic64_t *v) {
+		asm volatile(	"lock decq	%0			\n\t"
+					:	"=m"(v->counter)
+					:	"m"(v->counter)
+					:	"memory");
+	}
+	#define atomic_long_dec arch_atomic64_dec
 
 	// /**
 	//  * arch_atomic64_dec_and_test - decrement and test
@@ -192,7 +197,7 @@
 	arch_atomic64_try_cmpxchg(atomic64_t *v, s64 *old, s64 new) {
 		return arch_try_cmpxchg(&v->counter, old, new);
 	}
-	#define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
+	#define atomic_long_try_cmpxchg arch_atomic64_try_cmpxchg
 
 	// static inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
 	// {

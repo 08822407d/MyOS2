@@ -91,17 +91,17 @@ set_brk(unsigned long start, unsigned long end, int prot)
 {
 	start = ELF_PAGEALIGN(start);
 	end = ELF_PAGEALIGN(end);
-	// if (end > start) {
-	// 	/*
-	// 	 * Map the last of the bss segment.
-	// 	 * If the header is requesting these pages to be
-	// 	 * executable, honour that (ppc32 needs this).
-	// 	 */
-	// 	int error = vm_brk_flags(start, end - start,
-	// 			prot & PROT_EXEC ? VM_EXEC : 0);
-	// 	if (error)
-	// 		return error;
-	// }
+	if (end > start) {
+		/*
+		 * Map the last of the bss segment.
+		 * If the header is requesting these pages to be
+		 * executable, honour that (ppc32 needs this).
+		 */
+		int error = vm_brk_flags(start, end - start,
+				prot & PROT_EXEC ? VM_EXEC : 0);
+		if (error)
+			return error;
+	}
 	current->mm->start_brk = current->mm->brk = end;
 	return 0;
 }
@@ -133,8 +133,8 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 	if (total_size) {
 		total_size = ELF_PAGEALIGN(total_size);
 		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
-		// if (!BAD_ADDR(map_addr))
-		// 	vm_munmap(map_addr+size, total_size-size);
+		if (!BAD_ADDR(map_addr))
+			__vm_munmap(map_addr+size, total_size-size, false);
 	} else
 		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 
@@ -476,13 +476,13 @@ out_free_interp:
 		if (elf_brk > elf_bss) {
 			unsigned long nbyte;
 
-			/* There was a PT_LOAD segment with p_memsz > p_filesz
-			   before this one. Map anonymous pages, if needed,
-			   and clear the area.  */
-			retval = set_brk(elf_bss + load_bias,
-					 elf_brk + load_bias, bss_prot);
-			if (retval)
-				goto out_free_dentry;
+			// /* There was a PT_LOAD segment with p_memsz > p_filesz
+			//    before this one. Map anonymous pages, if needed,
+			//    and clear the area.  */
+			// retval = set_brk(elf_bss + load_bias,
+			// 		 elf_brk + load_bias, bss_prot);
+			// if (retval)
+			// 	goto out_free_dentry;
 			// nbyte = ELF_PAGEOFFSET(elf_bss);
 			// if (nbyte) {
 			// 	nbyte = ELF_MIN_ALIGN - nbyte;
@@ -628,21 +628,20 @@ out_free_interp:
 		if (start_data < k)
 			start_data = k;
 
-		// /*
-		//  * Check to see if the section's size will overflow the
-		//  * allowed task size. Note that p_filesz must always be
-		//  * <= p_memsz so it is only necessary to check p_memsz.
-		//  */
-		// if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
-		//     elf_ppnt->p_memsz > TASK_SIZE ||
-		//     TASK_SIZE - elf_ppnt->p_memsz < k) {
-		// 	/* set_brk can never work. Avoid overflows. */
-		// 	retval = -EINVAL;
-		// 	goto out_free_dentry;
-		// }
+		/*
+		 * Check to see if the section's size will overflow the
+		 * allowed task size. Note that p_filesz must always be
+		 * <= p_memsz so it is only necessary to check p_memsz.
+		 */
+		if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
+		    elf_ppnt->p_memsz > TASK_SIZE ||
+		    TASK_SIZE - elf_ppnt->p_memsz < k) {
+			/* set_brk can never work. Avoid overflows. */
+			retval = -EINVAL;
+			goto out_free_dentry;
+		}
 
-		// k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
-		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
+		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
 
 		if (k > elf_bss)
 			elf_bss = k;

@@ -906,9 +906,9 @@
 		* Protects f_ep, f_flags.
 		* Must not be taken from IRQ context.
 		*/
-		// spinlock_t			f_lock;
+		spinlock_t			f_lock;
 		// enum rw_hint		f_write_hint;
-		// atomic_long_t		f_count;
+		atomic_long_t		f_count;
 		unsigned int 		f_flags;
 		fmode_t				f_mode;
 		// mutex_s				f_pos_lock;
@@ -941,11 +941,10 @@
 	// 	unsigned char f_handle[];
 	// } file_handle_s;
 
-	// static inline file_s *get_file(file_s *f)
-	// {
-	// 	atomic_long_inc(&f->f_count);
-	// 	return f;
-	// }
+	static inline file_s *get_file(file_s *f) {
+		atomic_long_inc(&f->f_count);
+		return f;
+	}
 	// #define get_file_rcu_many(x, cnt)	\
 	// 				atomic_long_add_unless(&(x)->f_count, (cnt), 0)
 	// #define get_file_rcu(x) get_file_rcu_many((x), 1)
@@ -1911,7 +1910,7 @@
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
 		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
 		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
-		// int			(*mmap) (file_s *, vma_s *);
+		int			(*mmap) (file_s *, vma_s *);
 		// unsigned long	mmap_supported_flags;
 		int			(*open) (inode_s *, file_s *);
 		// int			(*flush) (file_s *, fl_owner_t id);
@@ -1984,10 +1983,9 @@
 	// 	return file->f_op->write_iter(kio, iter);
 	// }
 
-	// static inline int call_mmap(file_s *file, vma_s *vma)
-	// {
-	// 	return file->f_op->mmap(file, vma);
-	// }
+	static inline int call_mmap(file_s *file, vma_s *vma) {
+		return file->f_op->mmap(file, vma);
+	}
 
 	extern ssize_t vfs_read(file_s *, char __user *, size_t, loff_t *);
 	// extern ssize_t vfs_write(file_s *, const char __user *, size_t, loff_t *);
@@ -3049,7 +3047,7 @@
 	// extern int sb_set_blocksize(super_block_s *, int);
 	// extern int sb_min_blocksize(super_block_s *, int);
 
-	// extern int generic_file_mmap(file_s *, vma_s *);
+	extern int generic_file_mmap(file_s *, vma_s *);
 	// extern int generic_file_readonly_mmap(file_s *, vma_s *);
 	// extern ssize_t generic_write_checks(struct kiocb *, struct iov_iter *);
 	// extern int generic_write_check_limits(file_s *file, loff_t pos,

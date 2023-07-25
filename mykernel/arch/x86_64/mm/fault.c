@@ -103,16 +103,16 @@ parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
 	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
 
 	memset(tempbuf, 0, 100);
-	snprintf(tempbuf, 45, "do_page_fault(14),ERROR_CODE: %#018lx\n", error_code);
+	snprintf(tempbuf, 45, "do_page_fault(14),ERROR_CODE: %#018lx", error_code);
 	strcat(buf, tempbuf);
 
 	if(!(error_code & 0x01))
-		strcat(buf, "Page Not-Present,\n");
+		strcat(buf, "\tPage Not-Present,\n");
 
 	if(error_code & 0x02)
-		strcat(buf, "Write Cause Fault,");
+		strcat(buf, "Write Cause Fault, ");
 	else
-		strcat(buf, "Read Cause Fault,");
+		strcat(buf, "Read Cause Fault, ");
 
 	if(error_code & 0x04)
 		strcat(buf, "Fault in user(3)\n");
