@@ -252,6 +252,8 @@
 
 		// 	return arch_make_pte(v | set);
 		// }
+		#define pte_set_flags(pte, set)	\
+					arch_make_pte(arch_pte_val(pte) | set)
 
 		// static inline pte_t pte_clear_flags(pte_t pte, pteval_t clear)
 		// {
@@ -304,21 +306,29 @@
 		// {
 		// 	return pte_clear_flags(pte, _PAGE_NX);
 		// }
+		#define pte_mkexec(pte)	\
+					pte_clear_flags(pte, _PAGE_NX)
 
 		// static inline pte_t pte_mkdirty(pte_t pte)
 		// {
 		// 	return pte_set_flags(pte, _PAGE_DIRTY | _PAGE_SOFT_DIRTY);
 		// }
+		#define  pte_mkdirty(pte)	\
+					pte_set_flags(pte, _PAGE_DIRTY | _PAGE_SOFT_DIRTY)
 
 		// static inline pte_t pte_mkyoung(pte_t pte)
 		// {
 		// 	return pte_set_flags(pte, _PAGE_ACCESSED);
 		// }
+		#define pte_mkyoung(pte)	\
+					pte_set_flags(pte, _PAGE_ACCESSED)
 
 		// static inline pte_t pte_mkwrite(pte_t pte)
 		// {
 		// 	return pte_set_flags(pte, _PAGE_RW);
 		// }
+		#define pte_mkwrite(pte)	\
+					pte_set_flags(pte, _PAGE_RW)
 
 		// static inline pte_t pte_mkhuge(pte_t pte)
 		// {

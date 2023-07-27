@@ -940,7 +940,7 @@ myos_mmap_region(file_s *file, unsigned long addr,
 		// if (error)
 		// 	goto free_vma;
 	} else {
-		// vma_set_anonymous(vma);
+		vma_set_anonymous(vma);
 	}
 
 	// /* Allow architectures to sanity-check the vm_flags */
@@ -1325,7 +1325,7 @@ int __vm_munmap(unsigned long start, size_t len, bool downgrade)
  */
 // static int do_brk_flags(unsigned long addr, unsigned long len,
 // 		unsigned long flags, struct list_head *uf)
-static int
+int
 do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags)
 {
 	mm_s *mm = current->mm;
@@ -1376,7 +1376,7 @@ do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags)
 		return -ENOMEM;
 	}
 
-	// vma_set_anonymous(vma);
+	vma_set_anonymous(vma);
 	vma->vm_start = addr;
 	vma->vm_end = addr + len;
 	vma->vm_pgoff = pgoff;

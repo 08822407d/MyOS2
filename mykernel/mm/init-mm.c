@@ -62,4 +62,5 @@ void setup_initial_init_mm(void *start_code,
 	init_vma.vm_mm		= &init_mm;
 	init_vma.vm_start	= USERADDR_LIMIT - SZ_16M;
 	init_vma.vm_end		= USERADDR_LIMIT;
+	init_vma.vm_flags	|= VM_WRITE;
 }

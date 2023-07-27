@@ -3,6 +3,7 @@
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
+#include <linux/mm/mm.h>
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
@@ -187,17 +188,95 @@ MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
  *==============================================================================================*/
 MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 {
-	virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
+	unsigned long newbrk, oldbrk, origbrk;
+	mm_s *mm = current->mm;
+	vma_s *next;
+	unsigned long min_brk;
+	bool populate;
+	bool downgraded = false;
+	
+	origbrk = mm->brk;
+	min_brk = mm->start_brk;
 
-	if(new_brk == 0)
-		return (virt_addr_t)current->mm->start_brk;
-	else if(new_brk < current->mm->brk)	//release  brk space
-		return 0;	
-	else
-		new_brk = do_brk(current->mm->brk, new_brk - current->mm->brk);	//expand brk space
+	if (brk < min_brk)
+		goto out;
 
-	current->mm->brk = new_brk;
-	return new_brk;
+	// virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
+
+	// if(new_brk == 0)
+	// 	return (virt_addr_t)current->mm->start_brk;
+	// else if(new_brk < current->mm->brk)	//release  brk space
+	// 	return 0;	
+	// else
+	// 	new_brk = do_brk(current->mm->brk, new_brk - current->mm->brk);	//expand brk space
+
+	// current->mm->brk = new_brk;
+	// return new_brk;
+
+	// /*
+	//  * Check against rlimit here. If this check is done later after the test
+	//  * of oldbrk with newbrk then it can escape the test and let the data
+	//  * segment grow beyond its set limit the in case where the limit is
+	//  * not page aligned -Ram Gupta
+	//  */
+	// if (check_data_rlimit(rlimit(RLIMIT_DATA), brk, mm->start_brk,
+	// 		      mm->end_data, mm->start_data))
+	// 	goto out;
+
+	newbrk = PAGE_ALIGN(brk);
+	oldbrk = PAGE_ALIGN(mm->brk);
+	if (oldbrk == newbrk) {
+		mm->brk = brk;
+		goto success;
+	}
+
+	/*
+	 * Always allow shrinking brk.
+	 * __do_munmap() may downgrade mmap_lock to read.
+	 */
+	if (brk <= mm->brk) {
+		int ret;
+
+		/*
+		 * mm->brk must to be protected by write mmap_lock so update it
+		 * before downgrading mmap_lock. When __do_munmap() fails,
+		 * mm->brk will be restored from origbrk.
+		 */
+		mm->brk = brk;
+		ret = __do_munmap(mm, newbrk, oldbrk-newbrk, true);
+		if (ret < 0) {
+			mm->brk = origbrk;
+			goto out;
+		} else if (ret == 1) {
+			downgraded = true;
+		}
+		goto success;
+	}
+
+	/* Check against existing mmap mappings. */
+	next = myos_find_vma(mm, oldbrk);
+	// if (next && newbrk + PAGE_SIZE > vm_start_gap(next))
+	// 	goto out;
+
+	/* Ok, looks good - let it rip. */
+	if (do_brk_flags(oldbrk, newbrk-oldbrk, 0) < 0)
+		goto out;
+	mm->brk = brk;
+
+success:
+	// populate = newbrk > oldbrk && (mm->def_flags & VM_LOCKED) != 0;
+	// if (downgraded)
+	// 	mmap_read_unlock(mm);
+	// else
+	// 	mmap_write_unlock(mm);
+	// userfaultfd_unmap_complete(mm, &uf);
+	// if (populate)
+	// 	mm_populate(oldbrk, newbrk - oldbrk);
+	return brk;
+
+out:
+	// mmap_write_unlock(mm);
+	return origbrk;
 }
 
 

@@ -684,6 +684,8 @@
 	// {
 	// 	vma->vm_ops = NULL;
 	// }
+	#define vma_set_anonymous(vma)	\
+				vma->vm_ops = NULL
 
 	// static inline bool vma_is_anonymous(vma_s *vma)
 	// {
@@ -3437,6 +3439,10 @@
 	// #endif
 
  
+
+	int
+	do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags);
+
 	static inline zone_s *myos_page_zone(const page_s * page)
 	{
 		unsigned long pfn = page_to_pfn(page);
