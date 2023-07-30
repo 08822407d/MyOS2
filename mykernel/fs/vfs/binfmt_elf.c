@@ -431,9 +431,9 @@ out_free_interp:
 	// 	goto out_free_dentry;
 
 	/* Flush all traces of the currently running executable */
-	// retval = begin_new_exec(bprm);
-	// if (retval)
-	// 	goto out_free_dentry;
+	retval = begin_new_exec(bprm);
+	if (retval)
+		goto out_free_dentry;
 
 	// /* Do this immediately, since STACK_TOP as used in setup_arg_pages
 	//    may depend on the personality.  */
