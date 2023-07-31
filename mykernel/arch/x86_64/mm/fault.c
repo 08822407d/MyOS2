@@ -25,7 +25,7 @@
 // #include <asm/fixmap.h>			/* VSYSCALL_ADDR		*/
 // #include <asm/vsyscall.h>		/* emulate_vsyscall		*/
 // #include <asm/vm86.h>			/* struct vm86			*/
-// #include <asm/mmu_context.h>		/* vma_pkey()			*/
+#include <asm/mmu_context.h>		/* vma_pkey()			*/
 // #include <asm/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
 // #include <asm/desc.h>			/* store_idt(), ...		*/
 // #include <asm/cpu_entry_area.h>		/* exception stack		*/

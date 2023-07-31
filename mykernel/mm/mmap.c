@@ -52,7 +52,7 @@
 // #include <linux/uaccess.h>
 // #include <asm/cacheflush.h>
 // #include <asm/tlb.h>
-// #include <asm/mmu_context.h>
+#include <asm/mmu_context.h>
 
 // #define CREATE_TRACE_POINTS
 // #include <trace/events/mmap.h>

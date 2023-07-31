@@ -68,7 +68,7 @@
 // #include <linux/coredump.h>
 
 // #include <linux/uaccess.h>
-// #include <asm/mmu_context.h>
+#include <asm/mmu_context.h>
 // #include <asm/tlb.h>
 
 // #include <trace/events/task.h>
@@ -91,6 +91,50 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 	list_hdr_delete(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
+
+
+
+/*
+ * Create a new mm_struct and populate it with a temporary stack
+ * vm_area_struct.  We don't have enough context at this point to set the stack
+ * flags, permissions, and offset, so we use temporary values.  We'll update
+ * them later in setup_arg_pages().
+ */
+static int bprm_mm_init(linux_bprm_s *bprm)
+{
+	int err;
+	mm_s *mm = NULL;
+
+	bprm->mm = mm = mm_alloc();
+	err = -ENOMEM;
+	if (!mm)
+		goto err;
+
+	// /* Save current stack limit for all calculations made during exec. */
+	// task_lock(current->group_leader);
+	// bprm->rlim_stack = current->signal->rlim[RLIMIT_STACK];
+	// task_unlock(current->group_leader);
+
+	// static int __bprm_mm_init(struct linux_binprm *bprm)
+	// {
+		bprm->p = PAGE_SIZE * MAX_ARG_PAGES - sizeof(void *);
+	// 	return 0;
+	// }
+	// err = __bprm_mm_init(bprm);
+	// if (err)
+	// 	goto err;
+
+	return 0;
+
+err:
+	if (mm) {
+		bprm->mm = NULL;
+		// mmdrop(mm);
+	}
+
+	return err;
+}
+
 
 /*
  * count() counts the number of strings in array ARGV.
@@ -361,7 +405,7 @@ file_s *open_exec(const char *name)
  * On success, this function returns with exec_update_lock
  * held for writing.
  */
-static int exec_mmap(struct mm_s *mm)
+static int exec_mmap(mm_s *mm)
 {
 	task_s *tsk;
 	mm_s *old_mm, *active_mm;
@@ -395,9 +439,9 @@ static int exec_mmap(struct mm_s *mm)
 	// membarrier_exec_mmap(mm);
 
 	// local_irq_disable();
-	// active_mm = tsk->active_mm;
-	// tsk->active_mm = mm;
-	// tsk->mm = mm;
+	active_mm = tsk->active_mm;
+	tsk->active_mm = mm;
+	tsk->mm = mm;
 	// /*
 	//  * This prevents preemption while active_mm is being loaded and
 	//  * it and mm are being updated, which could cause problems for
@@ -407,7 +451,7 @@ static int exec_mmap(struct mm_s *mm)
 	//  */
 	// if (!IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
 	// 	local_irq_enable();
-	// activate_mm(active_mm, mm);
+	activate_mm(active_mm, mm);
 	// if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
 	// 	local_irq_enable();
 	// tsk->mm->vmacache_seqnum = 0;
@@ -669,7 +713,7 @@ static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
 	}
 	bprm->interp = bprm->filename;
 
-	// retval = bprm_mm_init(bprm);
+	retval = bprm_mm_init(bprm);
 	retval = -ENOERR;
 	if (retval)
 		goto out_free;

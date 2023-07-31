@@ -26,7 +26,7 @@
 // #include <asm/cmdline.h>
 // #include <asm/stackprotector.h>
 // #include <asm/perf_event.h>
-// #include <asm/mmu_context.h>
+#include <asm/mmu_context.h>
 // #include <asm/doublefault.h>
 // #include <asm/archrandom.h>
 // #include <asm/hypervisor.h>

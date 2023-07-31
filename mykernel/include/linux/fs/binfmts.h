@@ -19,7 +19,7 @@
 	// 	vma_s *vma;
 	// 	unsigned long vma_pages;
 	// #else
-	// # define MAX_ARG_PAGES	32
+	# define MAX_ARG_PAGES	32
 	// 	page_s *page[MAX_ARG_PAGES];
 	// #endif
 		mm_s			*mm;

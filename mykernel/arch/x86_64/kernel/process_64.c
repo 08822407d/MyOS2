@@ -43,7 +43,7 @@
 #include <asm/processor.h>
 // #include <asm/pkru.h>
 // #include <asm/fpu/sched.h>
-// #include <asm/mmu_context.h>
+#include <asm/mmu_context.h>
 // #include <asm/prctl.h>
 // #include <asm/desc.h>
 // #include <asm/proto.h>

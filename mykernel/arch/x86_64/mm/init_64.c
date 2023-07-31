@@ -44,7 +44,7 @@
 // #include <asm/e820/api.h>
 #include <asm/apic.h>
 // #include <asm/tlb.h>
-// #include <asm/mmu_context.h>
+#include <asm/mmu_context.h>
 // #include <asm/proto.h>
 // #include <asm/smp.h>
 #include <asm/sections.h>

@@ -85,7 +85,7 @@ unsigned long myos_pid_nr()
 	return curr_pid;
 }
 
-static __always_inline void switch_mm(task_s * curr, task_s * target)
+static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 {
 	load_cr3(target->mm->pgd);
 	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
@@ -326,7 +326,7 @@ void myos_schedule(void)
 
 		while (curr_task == next_task);
 		
-		switch_mm(curr_task, next_task);
+		myos_switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task);
 	}
 }
