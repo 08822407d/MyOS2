@@ -334,56 +334,56 @@
 	// typedef int (*read_actor_t)(read_descriptor_t *, page_s *,
 	// 		unsigned long, unsigned long);
 
-	// typedef struct addr_space_ops {
-	// 	int (*writepage)(page_s *page, struct writeback_control *wbc);
-	// 	int (*readpage)(file_s *, page_s *);
+	typedef struct addr_space_ops {
+		// int (*writepage)(page_s *page, struct writeback_control *wbc);
+		// int (*readpage)(file_s *, page_s *);
 
-	// 	/* Write back some dirty pages from this mapping. */
-	// 	int (*writepages)(addr_space_s *, struct writeback_control *);
+		// /* Write back some dirty pages from this mapping. */
+		// int (*writepages)(addr_space_s *, struct writeback_control *);
 
-	// 	/* Set a page dirty.  Return true if this dirtied it */
-	// 	int (*set_page_dirty)(page_s *page);
+		// /* Set a page dirty.  Return true if this dirtied it */
+		// int (*set_page_dirty)(page_s *page);
 
-	// 	/*
-	// 	* Reads in the requested pages. Unlike ->readpage(), this is
-	// 	* PURELY used for read-ahead!.
-	// 	*/
-	// 	int (*readpages)(file_s *filp, addr_space_s *mapping,
-	// 			list_head_s *pages, unsigned nr_pages);
-	// 	void (*readahead)(struct readahead_control *);
+		// /*
+		// * Reads in the requested pages. Unlike ->readpage(), this is
+		// * PURELY used for read-ahead!.
+		// */
+		// int (*readpages)(file_s *filp, addr_space_s *mapping,
+		// 		list_head_s *pages, unsigned nr_pages);
+		// void (*readahead)(struct readahead_control *);
 
-	// 	int (*write_begin)(file_s *, addr_space_s *mapping,
-	// 				loff_t pos, unsigned len, unsigned flags,
-	// 				page_s **pagep, void **fsdata);
-	// 	int (*write_end)(file_s *, addr_space_s *mapping,
-	// 				loff_t pos, unsigned len, unsigned copied,
-	// 				page_s *page, void *fsdata);
+		// int (*write_begin)(file_s *, addr_space_s *mapping,
+		// 			loff_t pos, unsigned len, unsigned flags,
+		// 			page_s **pagep, void **fsdata);
+		// int (*write_end)(file_s *, addr_space_s *mapping,
+		// 			loff_t pos, unsigned len, unsigned copied,
+		// 			page_s *page, void *fsdata);
 
-	// 	/* Unfortunately this kludge is needed for FIBMAP. Don't use it */
-	// 	sector_t (*bmap)(addr_space_s *, sector_t);
-	// 	void (*invalidatepage) (page_s *, unsigned int, unsigned int);
-	// 	int (*releasepage) (page_s *, gfp_t);
-	// 	void (*freepage)(page_s *);
-	// 	ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
-	// 	/*
-	// 	* migrate the contents of a page to the specified target. If
-	// 	* migrate_mode is MIGRATE_ASYNC, it must not block.
-	// 	*/
-	// 	int (*migratepage) (addr_space_s *,
-	// 			page_s *, page_s *, enum migrate_mode);
-	// 	bool (*isolate_page)(page_s *, isolate_mode_t);
-	// 	void (*putback_page)(page_s *);
-	// 	int (*launder_page) (page_s *);
-	// 	int (*is_partially_uptodate) (page_s *, unsigned long,
-	// 					unsigned long);
-	// 	void (*is_dirty_writeback) (page_s *, bool *, bool *);
-	// 	int (*error_remove_page)(addr_space_s *, page_s *);
+		// /* Unfortunately this kludge is needed for FIBMAP. Don't use it */
+		// sector_t (*bmap)(addr_space_s *, sector_t);
+		// void (*invalidatepage) (page_s *, unsigned int, unsigned int);
+		// int (*releasepage) (page_s *, gfp_t);
+		// void (*freepage)(page_s *);
+		// ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+		// /*
+		// * migrate the contents of a page to the specified target. If
+		// * migrate_mode is MIGRATE_ASYNC, it must not block.
+		// */
+		// int (*migratepage) (addr_space_s *,
+		// 		page_s *, page_s *, enum migrate_mode);
+		// bool (*isolate_page)(page_s *, isolate_mode_t);
+		// void (*putback_page)(page_s *);
+		// int (*launder_page) (page_s *);
+		// int (*is_partially_uptodate) (page_s *, unsigned long,
+		// 				unsigned long);
+		// void (*is_dirty_writeback) (page_s *, bool *, bool *);
+		// int (*error_remove_page)(addr_space_s *, page_s *);
 
-	// 	/* swapfile support */
-	// 	int (*swap_activate)(struct swap_info_struct *sis, file_s *file,
-	// 				sector_t *span);
-	// 	void (*swap_deactivate)(file_s *file);
-	// } addr_space_ops_s;
+		// /* swapfile support */
+		// int (*swap_activate)(struct swap_info_struct *sis, file_s *file,
+		// 			sector_t *span);
+		// void (*swap_deactivate)(file_s *file);
+	} addr_space_ops_s;
 
 	// extern const addr_space_ops_s empty_aops;
 
@@ -399,54 +399,54 @@
 	// 				loff_t pos, unsigned len, unsigned copied,
 	// 				page_s *page, void *fsdata);
 
-	// /**
-	//  * addr_space_s - Contents of a cacheable, mappable object.
-	//  * @host: Owner, either the inode or the block_device.
-	//  * @i_pages: Cached pages.
-	//  * @invalidate_lock: Guards coherency between page cache contents and
-	//  *   file offset->disk block mappings in the filesystem during invalidates.
-	//  *   It is also used to block modification of page cache contents through
-	//  *   memory mappings.
-	//  * @gfp_mask: Memory allocation flags to use for allocating pages.
-	//  * @i_mmap_writable: Number of VM_SHARED mappings.
-	//  * @nr_thps: Number of THPs in the pagecache (non-shmem only).
-	//  * @i_mmap: Tree of private and shared mappings.
-	//  * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
-	//  * @nrpages: Number of page entries, protected by the i_pages lock.
-	//  * @writeback_index: Writeback starts here.
-	//  * @a_ops: Methods.
-	//  * @flags: Error bits and flags (AS_*).
-	//  * @wb_err: The most recent error which has occurred.
-	//  * @private_lock: For use by the owner of the address_space.
-	//  * @private_list: For use by the owner of the address_space.
-	//  * @private_data: For use by the owner of the address_space.
-	//  */
-	// typedef struct addr_space {
-	// 	inode_s				*host;
-	// 	xarray_s			i_pages;
-	// 	rw_semaphore_s		invalidate_lock;
-	// 	gfp_t				gfp_mask;
-	// 	atomic_t			i_mmap_writable;
+	/**
+	 * addr_space_s - Contents of a cacheable, mappable object.
+	 * @host: Owner, either the inode or the block_device.
+	 * @i_pages: Cached pages.
+	 * @invalidate_lock: Guards coherency between page cache contents and
+	 *   file offset->disk block mappings in the filesystem during invalidates.
+	 *   It is also used to block modification of page cache contents through
+	 *   memory mappings.
+	 * @gfp_mask: Memory allocation flags to use for allocating pages.
+	 * @i_mmap_writable: Number of VM_SHARED mappings.
+	 * @nr_thps: Number of THPs in the pagecache (non-shmem only).
+	 * @i_mmap: Tree of private and shared mappings.
+	 * @i_mmap_rwsem: Protects @i_mmap and @i_mmap_writable.
+	 * @nrpages: Number of page entries, protected by the i_pages lock.
+	 * @writeback_index: Writeback starts here.
+	 * @a_ops: Methods.
+	 * @flags: Error bits and flags (AS_*).
+	 * @wb_err: The most recent error which has occurred.
+	 * @private_lock: For use by the owner of the address_space.
+	 * @private_list: For use by the owner of the address_space.
+	 * @private_data: For use by the owner of the address_space.
+	 */
+	typedef struct addr_space {
+		inode_s				*host;
+		// xarray_s			i_pages;
+		// rw_semaphore_s		invalidate_lock;
+		gfp_t				gfp_mask;
+		atomic_t			i_mmap_writable;
 	// #ifdef CONFIG_READ_ONLY_THP_FOR_FS
-	// 	/* number of thp, only for non-shmem files */
-	// 	atomic_t			nr_thps;
+		// /* number of thp, only for non-shmem files */
+		// atomic_t			nr_thps;
 	// #endif
-	// 	rb_root_cached_s	i_mmap;
-	// 	rw_semaphore_s		i_mmap_rwsem;
-	// 	unsigned long		nrpages;
-	// 	pgoff_t				writeback_index;
-	// 	const addr_space_ops_s	*a_ops;
-	// 	unsigned long		flags;
-	// 	errseq_t			wb_err;
-	// 	spinlock_t			private_lock;
-	// 	list_head_s			private_list;
-	// 	void				*private_data;
-	// } __attribute__((aligned(sizeof(long)))) addr_space_s;
-	// 	/*
-	// 	* On most architectures that alignment is already the case; but
-	// 	* must be enforced here for CRIS, to let the least significant bit
-	// 	* of page_s's "mapping" pointer be used for PAGE_MAPPING_ANON.
-	// 	*/
+		// rb_root_cached_s	i_mmap;
+		// rw_semaphore_s		i_mmap_rwsem;
+		unsigned long		nrpages;
+		pgoff_t				writeback_index;
+		const addr_space_ops_s	*a_ops;
+		// unsigned long		flags;
+		// errseq_t			wb_err;
+		// spinlock_t			private_lock;
+		// list_head_s			private_list;
+		// void				*private_data;
+	} __attribute__((aligned(sizeof(long)))) addr_space_s;
+		/*
+		* On most architectures that alignment is already the case; but
+		* must be enforced here for CRIS, to let the least significant bit
+		* of page_s's "mapping" pointer be used for PAGE_MAPPING_ANON.
+		*/
 
 	// /* XArray tags, for tagging dirty and writeback pages in the pagecache. */
 	// #define PAGECACHE_TAG_DIRTY	XA_MARK_0
@@ -596,7 +596,7 @@
 
 		const inode_ops_s	*i_op;
 		super_block_s		*i_sb;
-		// addr_space_s		*i_mapping;
+		addr_space_s		*i_mapping;
 
 	// #ifdef CONFIG_SECURITY
 	// 	void			*i_security;

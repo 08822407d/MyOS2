@@ -22,27 +22,6 @@ static inline void pgd_list_del(pgd_t *pgd) {
 }
 
 
-static void pgd_ctor(mm_s *mm, pgd_t *pgd)
-{
-	/* If the pgd points to a shared pagetable level (either the
-	   ptes in non-PAE, or shared PMD in PAE), then just copy the
-	   references from swapper_pg_dir. */
-	memcpy(pgd + KERNEL_PGD_BOUNDARY,
-		swapper_pg_dir + KERNEL_PGD_BOUNDARY,
-		KERNEL_PGD_PTRS * sizeof(pgd_t));
-
-	/* list required to sync kernel mapping updates */
-	virt_to_page(pgd)->pt_mm = mm;
-	pgd_list_add(pgd);
-}
-
-static void pgd_dtor(pgd_t *pgd)
-{
-	spin_lock(&pgd_lock);
-	pgd_list_del(pgd);
-	spin_unlock_no_resched(&pgd_lock);
-}
-
 static inline void _pgd_free(pgd_t *pgd) {
 	free_pages((unsigned long)pgd, PGD_ALLOCATION_ORDER);
 }
@@ -64,7 +43,19 @@ pgd_t *pgd_alloc(mm_s *mm)
 	 */
 	spin_lock(&pgd_lock);
 
-	pgd_ctor(mm, pgd);
+	// static void pgd_ctor(mm_s *mm, pgd_t *pgd)
+	// {
+		/* If the pgd points to a shared pagetable level (either the
+		   ptes in non-PAE, or shared PMD in PAE), then just copy the
+		   references from swapper_pg_dir. */
+		memcpy(pgd + KERNEL_PGD_BOUNDARY,
+			swapper_pg_dir + KERNEL_PGD_BOUNDARY,
+			KERNEL_PGD_PTRS * sizeof(pgd_t));
+
+		/* list required to sync kernel mapping updates */
+		virt_to_page(pgd)->pt_mm = mm;
+		pgd_list_add(pgd);
+	// }
 	// pgd_prepopulate_pmd(mm, pgd, pmds);
 	// pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
 
@@ -80,6 +71,12 @@ out:
 
 void pgd_free(mm_s *mm, pgd_t *pgd)
 {
-	pgd_dtor(pgd);
+	// pgd_mop_up_pmds(mm, pgd);
+	// static void pgd_dtor(pgd_t *pgd)
+	// {
+		spin_lock(&pgd_lock);
+		pgd_list_del(pgd);
+		spin_unlock_no_resched(&pgd_lock);
+	// }
 	_pgd_free(pgd);
 }

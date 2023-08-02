@@ -118,11 +118,8 @@ static int bprm_mm_init(linux_bprm_s *bprm)
 	// static int __bprm_mm_init(struct linux_binprm *bprm)
 	// {
 		bprm->p = PAGE_SIZE * MAX_ARG_PAGES - sizeof(void *);
-	// 	return 0;
+		err = 0;
 	// }
-	// err = __bprm_mm_init(bprm);
-	// if (err)
-	// 	goto err;
 
 	return 0;
 
