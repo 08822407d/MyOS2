@@ -1418,3 +1418,109 @@ int vm_brk_flags(unsigned long addr, unsigned long request, unsigned long flags)
 	// 	mm_populate(addr, len);
 	return ret;
 }
+
+int vm_brk(unsigned long addr, unsigned long len)
+{
+	return vm_brk_flags(addr, len, 0);
+}
+
+// /* Release all mmaps. */
+// void exit_mmap(mm_s *mm)
+// {
+// 	struct mmu_gather tlb;
+// 	struct vm_area_struct *vma;
+// 	unsigned long nr_accounted = 0;
+
+// 	/* mm's last user has gone, and its about to be pulled down */
+// 	mmu_notifier_release(mm);
+
+// 	if (unlikely(mm_is_oom_victim(mm))) {
+// 		/*
+// 		 * Manually reap the mm to free as much memory as possible.
+// 		 * Then, as the oom reaper does, set MMF_OOM_SKIP to disregard
+// 		 * this mm from further consideration.  Taking mm->mmap_lock for
+// 		 * write after setting MMF_OOM_SKIP will guarantee that the oom
+// 		 * reaper will not run on this mm again after mmap_lock is
+// 		 * dropped.
+// 		 *
+// 		 * Nothing can be holding mm->mmap_lock here and the above call
+// 		 * to mmu_notifier_release(mm) ensures mmu notifier callbacks in
+// 		 * __oom_reap_task_mm() will not block.
+// 		 *
+// 		 * This needs to be done before calling unlock_range(),
+// 		 * which clears VM_LOCKED, otherwise the oom reaper cannot
+// 		 * reliably test it.
+// 		 */
+// 		(void)__oom_reap_task_mm(mm);
+
+// 		set_bit(MMF_OOM_SKIP, &mm->flags);
+// 	}
+
+// 	mmap_write_lock(mm);
+// 	if (mm->locked_vm)
+// 		unlock_range(mm->mmap, ULONG_MAX);
+
+// 	arch_exit_mmap(mm);
+
+// 	vma = mm->mmap;
+// 	if (!vma) {
+// 		/* Can happen if dup_mmap() received an OOM */
+// 		mmap_write_unlock(mm);
+// 		return;
+// 	}
+
+// 	lru_add_drain();
+// 	flush_cache_mm(mm);
+// 	tlb_gather_mmu_fullmm(&tlb, mm);
+// 	/* update_hiwater_rss(mm) here? but nobody should be looking */
+// 	/* Use -1 here to ensure all VMAs in the mm are unmapped */
+// 	unmap_vmas(&tlb, vma, 0, -1);
+// 	free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, USER_PGTABLES_CEILING);
+// 	tlb_finish_mmu(&tlb);
+
+// 	/* Walk the list again, actually closing and freeing it. */
+// 	while (vma) {
+// 		if (vma->vm_flags & VM_ACCOUNT)
+// 			nr_accounted += vma_pages(vma);
+// 		vma = remove_vma(vma);
+// 		cond_resched();
+// 	}
+// 	mm->mmap = NULL;
+// 	mmap_write_unlock(mm);
+// 	vm_unacct_memory(nr_accounted);
+// }
+
+/* Insert vm structure into process list sorted by address
+ * and into the inode's i_mmap tree.  If vm_file is non-NULL
+ * then i_mmap_rwsem is taken here.
+ */
+int insert_vm_struct(mm_s *mm, vma_s *vma)
+{
+	vma_s *prev;
+
+	if (myos_find_vma_links(mm, vma->vm_start, vma->vm_end, &prev))
+		return -ENOMEM;
+	// if ((vma->vm_flags & VM_ACCOUNT) &&
+	//      security_vm_enough_memory_mm(mm, vma_pages(vma)))
+	// 	return -ENOMEM;
+
+	/*
+	 * The vm_pgoff of a purely anonymous vma should be irrelevant
+	 * until its first write fault, when page's anon_vma and index
+	 * are set.  But now set the vm_pgoff it will almost certainly
+	 * end up with (unless mremap moves it elsewhere before that
+	 * first wfault), so /proc/pid/maps tells a consistent story.
+	 *
+	 * By setting it to reflect the virtual start address of the
+	 * vma, merges and splits can happen in a seamless way, just
+	 * using the existing file pgoff checks and manipulations.
+	 * Similarly in do_mmap and in do_brk_flags.
+	 */
+	if (vma_is_anonymous(vma)) {
+		// BUG_ON(vma->anon_vma);
+		vma->vm_pgoff = vma->vm_start >> PAGE_SHIFT;
+	}
+
+	vma_link(mm, vma, prev);
+	return 0;
+}

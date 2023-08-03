@@ -73,7 +73,7 @@
 	// #define TASK_SIZE_OF(child)		((test_tsk_thread_flag(child, TIF_ADDR32)) ? IA32_PAGE_OFFSET : TASK_SIZE_MAX)
 
 	// #define STACK_TOP				TASK_SIZE_LOW
-	// #define STACK_TOP_MAX			TASK_SIZE_MAX
+	#define STACK_TOP_MAX			TASK_SIZE_MAX
 
 	// /*
 	//  * In spite of the name, KERNEL_IMAGE_SIZE is a limit on the maximum virtual

@@ -424,7 +424,7 @@
 	// #endif /* CONFIG_HAVE_ARCH_USERFAULTFD_MINOR */
 
 	// /* Bits set in the VMA until the stack is in its final location */
-	// #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
+	#define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
 
 	// #define TASK_EXEC ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0)
 	#define TASK_EXEC	VM_EXEC
@@ -687,10 +687,9 @@
 	#define vma_set_anonymous(vma)	\
 				vma->vm_ops = NULL
 
-	// static inline bool vma_is_anonymous(vma_s *vma)
-	// {
-	// 	return !vma->vm_ops;
-	// }
+	static inline bool vma_is_anonymous(vma_s *vma) {
+		return !vma->vm_ops;
+	}
 
 	// static inline bool vma_is_temporary_stack(vma_s *vma)
 	// {
@@ -2688,7 +2687,7 @@
 	// 	unsigned long addr, int new_below);
 	// extern int split_vma(mm_s *, vma_s *,
 	// 	unsigned long addr, int new_below);
-	// extern int insert_vm_struct(mm_s *, vma_s *);
+	extern int insert_vm_struct(mm_s *, vma_s *);
 	// extern void __vma_link_rb(mm_s *, vma_s *,
 	// 	struct rb_node **, struct rb_node *);
 	// extern void unlink_file_vma(vma_s *);
