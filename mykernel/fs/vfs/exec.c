@@ -93,6 +93,72 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 }
 
 
+
+/*
+ * The nascent bprm->mm is not visible until exec_mmap() but it can
+ * use a lot of memory, account these pages in current->mm temporary
+ * for oom_badness()->get_mm_rss(). Once exec succeeds or fails, we
+ * change the counter back via acct_arg_size(0).
+ */
+// static void acct_arg_size(linux_bprm_s *bprm, unsigned long pages)
+// {
+// 	mm_s *mm = current->mm;
+// 	long diff = (long)(pages - bprm->vma_pages);
+
+// 	if (!mm || !diff)
+// 		return;
+
+// 	bprm->vma_pages = pages;
+// 	add_mm_counter(mm, MM_ANONPAGES, diff);
+// }
+
+static page_s
+*get_arg_page(linux_bprm_s *bprm, unsigned long pos, int write)
+{
+// 	struct page *page;
+// 	int ret;
+// 	unsigned int gup_flags = FOLL_FORCE;
+
+// #ifdef CONFIG_STACK_GROWSUP
+// 	if (write) {
+// 		ret = expand_downwards(bprm->vma, pos);
+// 		if (ret < 0)
+// 			return NULL;
+// 	}
+// #endif
+
+// 	if (write)
+// 		gup_flags |= FOLL_WRITE;
+
+// 	/*
+// 	 * We are doing an exec().  'current' is the process
+// 	 * doing the exec and bprm->mm is the new process's mm.
+// 	 */
+// 	mmap_read_lock(bprm->mm);
+// 	ret = get_user_pages_remote(bprm->mm, pos, 1, gup_flags,
+// 			&page, NULL, NULL);
+// 	mmap_read_unlock(bprm->mm);
+// 	if (ret <= 0)
+// 		return NULL;
+
+// 	if (write)
+// 		acct_arg_size(bprm, vma_pages(bprm->vma));
+
+// 	return page;
+}
+
+static void put_arg_page(page_s *page)
+{
+	put_page(page);
+}
+
+
+// static void
+// flush_arg_page(linux_bprm_s *bprm, unsigned long pos, page_s *page)
+// {
+// 	flush_cache_page(bprm->vma, pos, page_to_pfn(page));
+// }
+
 static int __bprm_mm_init(linux_bprm_s *bprm)
 {
 	int err;
@@ -137,7 +203,7 @@ err_free:
 	return err;
 }
 
-static bool valid_arg_len(struct linux_binprm *bprm, long len)
+static bool valid_arg_len(linux_bprm_s *bprm, long len)
 {
 	return len <= MAX_ARG_STRLEN;
 }
@@ -217,13 +283,53 @@ static int count_strings_kernel(const char *const *argv)
 	for (i = 0; argv[i]; ++i) {
 		if (i >= MAX_ARG_STRINGS)
 			return -E2BIG;
-	// 	if (fatal_signal_pending(current))
-	// 		return -ERESTARTNOHAND;
-	// 	cond_resched();
+		// if (fatal_signal_pending(current))
+		// 	return -ERESTARTNOHAND;
+		// cond_resched();
 	}
 	return i;
 }
 
+static int bprm_stack_limits(linux_bprm_s *bprm)
+{
+	unsigned long limit, ptr_size;
+
+	/*
+	 * Limit to 1/4 of the max stack size or 3/4 of _STK_LIM
+	 * (whichever is smaller) for the argv+env strings.
+	 * This ensures that:
+	 *  - the remaining binfmt code will not run out of stack space,
+	 *  - the program will have a reasonable amount of stack left
+	 *    to work from.
+	 */
+	limit = _STK_LIM / 4 * 3;
+	// limit = min(limit, bprm->rlim_stack.rlim_cur / 4);
+	/*
+	 * We've historically supported up to 32 pages (ARG_MAX)
+	 * of argument strings even with small stacks
+	 */
+	limit = max_t(unsigned long, limit, ARG_MAX);
+	/*
+	 * We must account for the size of all the argv and envp pointers to
+	 * the argv and envp strings, since they will also take up space in
+	 * the stack. They aren't stored until much later when we can't
+	 * signal to the parent that the child has run out of stack space.
+	 * Instead, calculate it here so it's possible to fail gracefully.
+	 *
+	 * In the case of argc = 0, make sure there is space for adding a
+	 * empty string (which will bump argc to 1), to ensure confused
+	 * userspace programs don't start processing from argv[1], thinking
+	 * argc can never be 0, to keep them from walking envp by accident.
+	 * See do_execveat_common().
+	 */
+	ptr_size = (max(bprm->argc, 1) + bprm->envc) * sizeof(void *);
+	if (limit <= ptr_size)
+		return -E2BIG;
+	limit -= ptr_size;
+
+	bprm->argmin = bprm->p - limit;
+	return 0;
+}
 
 /*
  * 'copy_strings()' copies argument/environment strings from the old
@@ -244,72 +350,72 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 		unsigned long pos;
 
 		ret = -EFAULT;
-// 		str = get_user_arg_ptr(argv, argc);
-// 		if (IS_ERR(str))
-// 			goto out;
+		// str = get_user_arg_ptr(argv, argc);
+		// if (IS_ERR(str))
+		// 	goto out;
 
-// 		len = strnlen_user(str, MAX_ARG_STRLEN);
-// 		if (!len)
-// 			goto out;
+		// len = strnlen_user(str, MAX_ARG_STRLEN);
+		// if (!len)
+		// 	goto out;
 
-// 		ret = -E2BIG;
-// 		if (!valid_arg_len(bprm, len))
-// 			goto out;
+		ret = -E2BIG;
+		if (!valid_arg_len(bprm, len))
+			goto out;
 
-// 		/* We're going to work our way backwords. */
-// 		pos = bprm->p;
-// 		str += len;
-// 		bprm->p -= len;
+		/* We're going to work our way backwords. */
+		pos = bprm->p;
+		str += len;
+		bprm->p -= len;
 // #ifdef CONFIG_MMU
-// 		if (bprm->p < bprm->argmin)
-// 			goto out;
+		if (bprm->p < bprm->argmin)
+			goto out;
 // #endif
 
 		while (len > 0) {
-			int offset, bytes_to_copy;
+			// int offset, bytes_to_copy;
 
-// 			if (fatal_signal_pending(current)) {
-// 				ret = -ERESTARTNOHAND;
-// 				goto out;
-// 			}
-// 			cond_resched();
+			// if (fatal_signal_pending(current)) {
+			// 	ret = -ERESTARTNOHAND;
+			// 	goto out;
+			// }
+			// cond_resched();
 
-// 			offset = pos % PAGE_SIZE;
-// 			if (offset == 0)
-// 				offset = PAGE_SIZE;
+			// offset = pos % PAGE_SIZE;
+			// if (offset == 0)
+			// 	offset = PAGE_SIZE;
 
-// 			bytes_to_copy = offset;
-// 			if (bytes_to_copy > len)
-// 				bytes_to_copy = len;
+			// bytes_to_copy = offset;
+			// if (bytes_to_copy > len)
+			// 	bytes_to_copy = len;
 
-// 			offset -= bytes_to_copy;
-// 			pos -= bytes_to_copy;
-// 			str -= bytes_to_copy;
-// 			len -= bytes_to_copy;
+			// offset -= bytes_to_copy;
+			// pos -= bytes_to_copy;
+			// str -= bytes_to_copy;
+			// len -= bytes_to_copy;
 
-// 			if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
-// 				page_s *page;
+			// if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
+			// 	page_s *page;
 
-// 				page = get_arg_page(bprm, pos, 1);
-// 				if (!page) {
-// 					ret = -E2BIG;
-// 					goto out;
-// 				}
+			// 	page = get_arg_page(bprm, pos, 1);
+			// 	if (!page) {
+			// 		ret = -E2BIG;
+			// 		goto out;
+			// 	}
 
-// 				if (kmapped_page) {
-// 					flush_dcache_page(kmapped_page);
-// 					kunmap(kmapped_page);
-// 					put_arg_page(kmapped_page);
-// 				}
-// 				kmapped_page = page;
-// 				kaddr = kmap(kmapped_page);
-// 				kpos = pos & PAGE_MASK;
-// 				flush_arg_page(bprm, kpos, kmapped_page);
-// 			}
-// 			if (copy_from_user(kaddr+offset, str, bytes_to_copy)) {
-// 				ret = -EFAULT;
-// 				goto out;
-// 			}
+			// 	if (kmapped_page) {
+			// 		flush_dcache_page(kmapped_page);
+			// 		kunmap(kmapped_page);
+			// 		put_arg_page(kmapped_page);
+			// 	}
+			// 	kmapped_page = page;
+			// 	kaddr = kmap(kmapped_page);
+			// 	kpos = pos & PAGE_MASK;
+			// 	flush_arg_page(bprm, kpos, kmapped_page);
+			// }
+			// if (copy_from_user(kaddr+offset, str, bytes_to_copy)) {
+			// 	ret = -EFAULT;
+			// 	goto out;
+			// }
 		}
 	}
 	ret = 0;
@@ -332,34 +438,38 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 
 	if (len == 0)
 		return -EFAULT;
-	// if (!valid_arg_len(bprm, len))
-	// 	return -E2BIG;
+	if (!valid_arg_len(bprm, len))
+		return -E2BIG;
 
 	/* We're going to work our way backwards. */
 	arg += len;
 	bprm->p -= len;
 	// if (IS_ENABLED(CONFIG_MMU) && bprm->p < bprm->argmin)
-	// 	return -E2BIG;
+	if (bprm->p < bprm->argmin)
+		return -E2BIG;
 
 	while (len > 0) {
-	// 	unsigned int bytes_to_copy = min_t(unsigned int, len,
-	// 			min_not_zero(offset_in_page(pos), PAGE_SIZE));
-	// 	page_s *page;
-	// 	char *kaddr;
+		unsigned int bytes_to_copy =
+			min_t(unsigned int, len,
+				min_not_zero(offset_in_page(pos), PAGE_SIZE));
+		page_s *page;
+		char *kaddr;
 
-	// 	pos -= bytes_to_copy;
-	// 	arg -= bytes_to_copy;
-	// 	len -= bytes_to_copy;
+		pos -= bytes_to_copy;
+		arg -= bytes_to_copy;
+		len -= bytes_to_copy;
 
-	// 	page = get_arg_page(bprm, pos, 1);
-	// 	if (!page)
-	// 		return -E2BIG;
-	// 	kaddr = kmap_atomic(page);
-	// 	flush_arg_page(bprm, pos & PAGE_MASK, page);
-	// 	memcpy(kaddr + offset_in_page(pos), arg, bytes_to_copy);
-	// 	flush_dcache_page(page);
-	// 	kunmap_atomic(kaddr);
-	// 	put_arg_page(page);
+		memcpy((void *)pos, arg, bytes_to_copy);
+
+		// page = get_arg_page(bprm, pos, 1);
+		// if (!page)
+		// 	return -E2BIG;
+		// kaddr = kmap_atomic(page);
+		// flush_arg_page(bprm, pos & PAGE_MASK, page);
+		// memcpy(kaddr + offset_in_page(pos), arg, bytes_to_copy);
+		// flush_dcache_page(page);
+		// kunmap_atomic(kaddr);
+		// put_arg_page(page);
 	}
 
 	return 0;
@@ -945,27 +1055,27 @@ static int do_execveat_common(int fd, filename_s *filename,
 		goto out_ret;
 	}
 
-	// retval = count(argv, MAX_ARG_STRINGS);
+	retval = count(argv, MAX_ARG_STRINGS);
 	// if (retval == 0)
 	// 	pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
 	// 		     current->comm, bprm->filename);
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->argc = retval;
+	if (retval < 0)
+		goto out_free;
+	bprm->argc = retval;
 
-	// retval = count(envp, MAX_ARG_STRINGS);
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->envc = retval;
+	retval = count(envp, MAX_ARG_STRINGS);
+	if (retval < 0)
+		goto out_free;
+	bprm->envc = retval;
 
-	// retval = bprm_stack_limits(bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = bprm_stack_limits(bprm);
+	if (retval < 0)
+		goto out_free;
 
-	// retval = copy_string_kernel(bprm->filename, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->exec = bprm->p;
+	retval = copy_string_kernel(bprm->filename, bprm);
+	if (retval < 0)
+		goto out_free;
+	bprm->exec = bprm->p;
 
 	// retval = copy_strings(bprm->envc, envp, bprm);
 	// if (retval < 0)
@@ -974,20 +1084,22 @@ static int do_execveat_common(int fd, filename_s *filename,
 	// retval = copy_strings(bprm->argc, argv, bprm);
 	// if (retval < 0)
 	// 	goto out_free;
-	__myos_copy_strings(argv);
 
-	// /*
-	//  * When argv is empty, add an empty string ("") as argv[0] to
-	//  * ensure confused userspace programs that start processing
-	//  * from argv[1] won't end up walking envp. See also
-	//  * bprm_stack_limits().
-	//  */
-	// if (bprm->argc == 0) {
-	// 	retval = copy_string_kernel("", bprm);
-	// 	if (retval < 0)
-	// 		goto out_free;
-	// 	bprm->argc = 1;
-	// }
+	/*
+	 * When argv is empty, add an empty string ("") as argv[0] to
+	 * ensure confused userspace programs that start processing
+	 * from argv[1] won't end up walking envp. See also
+	 * bprm_stack_limits().
+	 */
+	if (bprm->argc == 0) {
+		retval = copy_string_kernel("", bprm);
+		if (retval < 0)
+			goto out_free;
+		bprm->argc = 1;
+	}
+	
+
+	__myos_copy_strings(argv);
 
 	retval = bprm_execve(bprm, fd, filename, flags);
 out_free:
@@ -1018,34 +1130,36 @@ int kernel_execve(const char *kernel_filename,
 		goto out_ret;
 	}
 
-	// retval = count_strings_kernel(argv);
-	// if (retval == 0)
-	// 	retval = -EINVAL;
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->argc = retval;
+	retval = count_strings_kernel(argv);
+	if (retval == 0)
+		retval = -EINVAL;
+	if (retval < 0)
+		goto out_free;
+	bprm->argc = retval;
 
-	// retval = count_strings_kernel(envp);
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->envc = retval;
+	retval = count_strings_kernel(envp);
+	if (retval < 0)
+		goto out_free;
+	bprm->envc = retval;
 
-	// retval = bprm_stack_limits(bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = bprm_stack_limits(bprm);
+	if (retval < 0)
+		goto out_free;
 
-	// retval = copy_string_kernel(bprm->filename, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
-	// bprm->exec = bprm->p;
+	retval = copy_string_kernel(bprm->filename, bprm);
+	if (retval < 0)
+		goto out_free;
+	bprm->exec = bprm->p;
 
-	// retval = copy_strings_kernel(bprm->envc, envp, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = copy_strings_kernel(bprm->envc, envp, bprm);
+	if (retval < 0)
+		goto out_free;
 
-	// retval = copy_strings_kernel(bprm->argc, argv, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = copy_strings_kernel(bprm->argc, argv, bprm);
+	if (retval < 0)
+		goto out_free;
+
+
 	__myos_copy_strings(argv);
 
 	retval = bprm_execve(bprm, fd, filename, 0);

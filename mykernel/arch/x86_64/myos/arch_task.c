@@ -212,10 +212,14 @@ void kjmp_to_doexecve()
 	curr->flags &= ~PF_KTHREAD;
 
 #ifdef LOAD_ELF
-	kernel_execve("/initd", NULL, NULL);
+	const char *initd_name = "/initd";
 #else
-	kernel_execve("/initd.bin", NULL, NULL);
+	const char *initd_name = "/initd.bin";
 #endif
+	const char *const argv[] = { initd_name, NULL };
+	const char *const envp[] = { NULL };
+
+	kernel_execve(initd_name, argv, envp);
 
 	asm volatile(	"movq	%0,	%%rsp		\n\t"
 					"sti					\n\t"
