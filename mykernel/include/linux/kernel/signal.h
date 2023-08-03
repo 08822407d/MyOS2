@@ -2,7 +2,7 @@
 #ifndef _LINUX_SIGNAL_H
 #define _LINUX_SIGNAL_H
 
-	// #include <linux/bug.h>
+	#include <linux/kernel/bug.h>
 	#include <linux/kernel/signal_types.h>
 	#include <linux/lib/string.h>
 

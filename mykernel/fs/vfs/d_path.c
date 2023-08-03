@@ -5,7 +5,7 @@
 #include <linux/sched/fs_struct.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/slab.h>
-// #include <linux/prefetch.h>
+#include <linux/kernel/prefetch.h>
 #include <linux/fs/mount.h>
 
 
@@ -18,7 +18,46 @@ typedef struct prepend_buffer
 	char *buf;
 	int len;
 } prpndbuf_s;
+#define DECLARE_BUFFER(__name, __buf, __len)		\
+			struct prepend_buffer __name = {		\
+				.buf = __buf + __len, .len = __len	\
+			}
 
+static char *extract_string(prpndbuf_s *p)
+{
+	if (likely(p->len >= 0))
+		return p->buf;
+	return ERR_PTR(-ENAMETOOLONG);
+}
+
+static bool prepend_char(prpndbuf_s *p, unsigned char c)
+{
+	if (likely(p->len > 0)) {
+		p->len--;
+		*--p->buf = c;
+		return true;
+	}
+	p->len = -1;
+	return false;
+}
+
+
+// Linux function proto:
+// static bool prepend(struct prepend_buffer *p, const char *str, int namelen)
+static bool myos_prepend(prpndbuf_s *p, const char *str, int namelen)
+{
+	// Already overflowed?
+	if (p->len < 0)
+		return false;
+
+	p->len -= namelen;
+	if (p->len >= 0) {
+		p->buf -= namelen;
+		memcpy(p->buf, str, namelen);
+	}
+
+	return true;
+}
 
 /**
  * prepend_name - prepend a pathname in front of current buffer pointer
@@ -59,16 +98,6 @@ static bool prepend_name(prpndbuf_s *p, const qstr_s *name)
 	return true;
 }
 
-// Linux function proto:
-// static void prepend(struct prepend_buffer *p, const char *str, int namelen)
-static void prepend(prpndbuf_s *p, const char *str, int namelen)
-{
-	p->len -= namelen;
-	if (p->len >= 0) {
-		p->buf -= namelen;
-		memcpy(p->buf, str, namelen);
-	}
-}
 
 // Linux function proto:
 // static int __prepend_path(const struct dentry *dentry, const struct mount *mnt,
@@ -77,13 +106,13 @@ static int __prepend_path(const dentry_s *dentry,
 		const mount_s *mnt, const path_s *root, prpndbuf_s *p)
 {
 	while (dentry != root->dentry || &mnt->mnt != root->mnt) {
-		const dentry_s *parent = dentry->d_parent;
+		const dentry_s *parent = READ_ONCE(dentry->d_parent);
 
 		if (dentry == mnt->mnt.mnt_root) {
-			mount_s *m = mnt->mnt_parent;
+			mount_s *m = READ_ONCE(mnt->mnt_parent);
 
-			if (mnt != m) {
-				dentry = mnt->mnt_mountpoint;
+			if (likely(mnt != m)) {
+				dentry = READ_ONCE(mnt->mnt_mountpoint);
 				mnt = m;
 				continue;
 			}
@@ -91,7 +120,8 @@ static int __prepend_path(const dentry_s *dentry,
 			return 2;	// detached or not attached yet
 		}
 
-		if (dentry == parent)
+		prefetch(parent);
+		if (unlikely(dentry == parent))
 			/* Escaped? */
 			return 3;
 
@@ -123,7 +153,7 @@ static int __prepend_path(const dentry_s *dentry,
 // static int prepend_path(const struct path *path,
 // 			const struct path *root,
 // 			struct prepend_buffer *p)
-static int prepend_path(const path_s *path,
+static int myos_prepend_path(const path_s *path,
 		const path_s *root, prpndbuf_s *p)
 {
 	unsigned seq, m_seq = 0;
@@ -137,8 +167,11 @@ restart:
 	if (error == 3)
 		b = *p;
 
+	if (unlikely(error == 3))
+		b = *p;
+
 	if (b.len == p->len)
-		prepend(&b, "/", 1);
+		myos_prepend(&b, "/", 1);
 
 	*p = b;
 	return error;
@@ -180,9 +213,9 @@ MYOS_SYSCALL_DEFINE2(getcwd, char *, buf, unsigned long, size)
 		bufhead = kzalloc(b.len, GFP_KERNEL);
 		b.buf = bufhead + PATH_MAX;
 
-		prepend(&b, "", 1);
-		if (prepend_path(&pwd, &root, &b) > 0)
-			prepend(&b, "(unreachable)", 13);
+		myos_prepend(&b, "", 1);
+		if (myos_prepend_path(&pwd, &root, &b) > 0)
+			myos_prepend(&b, "(unreachable)", 13);
 
 		len = PATH_MAX - b.len;
 		if (len > PATH_MAX)

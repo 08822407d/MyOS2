@@ -480,9 +480,9 @@
 	// 		return __pgprot(protval_large_2_4k(pgprot_val(pgprot)));
 	// 	}
 
-		// struct page;
-		// typedef struct page page_s;
-		// typedef page_s *pgtable_t;
+		struct page;
+		typedef struct page page_s;
+		typedef page_s *pgtable_t;
 
 		extern pteval_t __supported_pte_mask;
 		extern pteval_t __default_kernel_pte_mask;

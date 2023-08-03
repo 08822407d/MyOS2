@@ -15,7 +15,7 @@
 // #include <linux/fsnotify.h>
 #include <linux/kernel/mount.h>
 // #include <linux/posix_acl.h>
-// #include <linux/prefetch.h>
+#include <linux/kernel/prefetch.h>
 // #include <linux/buffer_head.h> /* for inode_has_buffers */
 // #include <linux/ratelimit.h>
 // #include <linux/list_lru.h>

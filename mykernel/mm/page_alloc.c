@@ -56,7 +56,7 @@
 // #include <linux/compaction.h>
 // #include <trace/events/kmem.h>
 // #include <trace/events/oom.h>
-// #include <linux/prefetch.h>
+#include <linux/kernel/prefetch.h>
 // #include <linux/mm_inline.h>
 // #include <linux/mmu_notifier.h>
 // #include <linux/migrate.h>
@@ -341,7 +341,7 @@ prep_new_page(page_s *page, unsigned int order, gfp_t gfp_flags)
 	// if (alloc_flags & ALLOC_NO_WATERMARKS)
 	// 	set_page_pfmemalloc(page);
 	// else
-	// 	clear_page_pfmemalloc(page);
+		clear_page_pfmemalloc(page);
 }
 
 /*

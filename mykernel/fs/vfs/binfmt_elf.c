@@ -84,7 +84,7 @@ static linux_bfmt_s elf_format = {
 	// .min_coredump	= ELF_EXEC_PAGESIZE,
 };
 
-#define BAD_ADDR(x) ((unsigned long)(x) >= TASK_SIZE)
+#define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
 static int
 set_brk(unsigned long start, unsigned long end, int prot)
@@ -171,7 +171,7 @@ elf_read(file_s *file, void *buf, size_t len, loff_t pos)
 	ssize_t rv;
 
 	rv = kernel_read(file, buf, len, &pos);
-	if (rv != len) {
+	if (unlikely(rv != len)) {
 		return (rv < 0) ? rv : -EIO;
 	}
 	return 0;

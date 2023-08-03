@@ -54,7 +54,7 @@
 // #include <linux/mmu_context.h>
 // #include <linux/nmi.h>
 // #include <linux/proc_fs.h>
-// #include <linux/prefetch.h>
+#include <linux/kernel/prefetch.h>
 // #include <linux/profile.h>
 // #include <linux/psi.h>
 // #include <linux/ratelimit.h>

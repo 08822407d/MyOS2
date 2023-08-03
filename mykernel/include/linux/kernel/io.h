@@ -8,7 +8,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <linux/init/init.h>
-	// #include <linux/bug.h>
+	#include <linux/kernel/bug.h>
 	#include <linux/kernel/err.h>
 	#include <asm/io.h>
 	#include <asm/page.h>

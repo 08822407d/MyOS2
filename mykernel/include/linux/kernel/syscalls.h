@@ -78,7 +78,7 @@
 	// #include <linux/capability.h>
 	#include <linux/kernel/signal.h>
 	#include <linux/lib/list.h>
-	// #include <linux/bug.h>
+	#include <linux/kernel/bug.h>
 	// #include <linux/sem.h>
 	#include <uapi/linux/unistd.h>
 	// #include <asm/siginfo.h>

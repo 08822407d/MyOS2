@@ -960,9 +960,9 @@
 	// 	*/
 	// 	unsigned sched_remote_wakeup : 1;
 
-	// 	/* Bit to tell LSMs we're in execve(): */
-	// 	unsigned in_execve : 1;
-	// 	unsigned in_iowait : 1;
+		/* Bit to tell LSMs we're in execve(): */
+		unsigned in_execve : 1;
+		unsigned in_iowait : 1;
 	// #ifndef TIF_RESTORE_SIGMASK
 	// 	unsigned restore_sigmask : 1;
 	// #endif

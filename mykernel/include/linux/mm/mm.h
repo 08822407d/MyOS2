@@ -8,7 +8,7 @@
 
 	// #include <linux/mmdebug.h>
 	#	include <linux/mm/gfp.h>
-	// #include <linux/bug.h>
+	#include <linux/kernel/bug.h>
 	#	include <linux/lib/list.h>
 	#	include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
@@ -1860,10 +1860,10 @@
 	// 	page->lru.next = (void *)BIT(1);
 	// }
 
-	// static inline void clear_page_pfmemalloc(page_s *page)
-	// {
-	// 	page->lru.next = NULL;
-	// }
+	static inline void clear_page_pfmemalloc(page_s *page) {
+		// page->lru.next = NULL;
+		list_init(&page->lru, page);
+	}
 
 	// /*
 	// * Can be called by the pagefault handler when it gets a VM_FAULT_OOM.

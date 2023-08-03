@@ -454,14 +454,14 @@ static int exec_mmap(mm_s *mm)
 	// tsk->mm->vmacache_seqnum = 0;
 	// vmacache_flush(tsk);
 	// task_unlock(tsk);
-	// if (old_mm) {
-	// 	mmap_read_unlock(old_mm);
-	// 	BUG_ON(active_mm != old_mm);
-	// 	setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
-	// 	mm_update_next_owner(old_mm);
-	// 	mmput(old_mm);
-	// 	return 0;
-	// }
+	if (old_mm) {
+		// mmap_read_unlock(old_mm);
+		BUG_ON(active_mm != old_mm);
+		// setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
+		// mm_update_next_owner(old_mm);
+		mmput(old_mm);
+		return 0;
+	}
 	// mmdrop(active_mm);
 	return 0;
 }
@@ -666,10 +666,10 @@ out:
 
 static void free_bprm(linux_bprm_s *bprm)
 {
-	// if (bprm->mm) {
-	// 	acct_arg_size(bprm, 0);
-	// 	mmput(bprm->mm);
-	// }
+	if (bprm->mm) {
+		// acct_arg_size(bprm, 0);
+		mmput(bprm->mm);
+	}
 	// free_arg_pages(bprm);
 	// if (bprm->cred) {
 	// 	mutex_unlock(&current->signal->cred_guard_mutex);
@@ -806,7 +806,7 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 	// 	return retval;
 
 	// check_unsafe_exec(bprm);
-	// current->in_execve = 1;
+	current->in_execve = 1;
 
 	file = do_open_execat(fd, filename, flags);
 	retval = PTR_ERR(file);
@@ -844,7 +844,7 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 
 	/* execve succeeded */
 	current->fs->in_exec = 0;
-	// current->in_execve = 0;
+	current->in_execve = 0;
 	// rseq_execve(current);
 	// acct_update_integrals(current);
 	// task_numa_free(current, false);
@@ -862,7 +862,7 @@ out:
 
 out_unmark:
 	current->fs->in_exec = 0;
-	// current->in_execve = 0;
+	current->in_execve = 0;
 
 	return retval;
 }

@@ -97,8 +97,8 @@
 	// 	return atomic_inc_not_zero(&mm->mm_users);
 	// }
 
-	// /* mmput gets rid of the mappings and all user-space */
-	// extern void mmput(mm_s *);
+	/* mmput gets rid of the mappings and all user-space */
+	extern void mmput(mm_s *);
 	// #ifdef CONFIG_MMU
 	// 	/* same as above but performs the slow path from the async context. Can
 	// 	 * be called from the atomic context as well
