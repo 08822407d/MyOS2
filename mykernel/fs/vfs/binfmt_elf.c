@@ -648,12 +648,13 @@ out_free_interp:
 
 	// setup_new_exec(bprm);
 
-	// /* Do this so that we can load the interpreter, if need be.  We will
-	//    change some of these later */
+	/* Do this so that we can load the interpreter, if need be.  We will
+	   change some of these later */
 	// retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
 	// 			 executable_stack);
-	// if (retval < 0)
-	// 	goto out_free_dentry;
+	retval = setup_arg_pages(bprm, bprm->p, executable_stack);
+	if (retval < 0)
+		goto out_free_dentry;
 	
 	elf_bss = 0;
 	elf_brk = 0;

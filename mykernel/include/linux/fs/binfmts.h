@@ -134,9 +134,8 @@
 	#define EXSTACK_DISABLE_X	1	/* Disable executable stacks */
 	#define EXSTACK_ENABLE_X	2	/* Enable executable stacks */
 
-	// extern int setup_arg_pages(struct linux_binprm * bprm,
-	// 			unsigned long stack_top,
-	// 			int executable_stack);
+	extern int setup_arg_pages(linux_bprm_s * bprm,
+			unsigned long stack_top, int executable_stack);
 	// extern int transfer_args_to_stack(struct linux_binprm *bprm,
 	// 				unsigned long *sp_location);
 	// extern int bprm_change_interp(const char *interp, struct linux_binprm *bprm);

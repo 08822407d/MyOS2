@@ -2799,8 +2799,8 @@
 	// extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
 
 	extern unsigned long stack_guard_gap;
-	// /* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
-	// extern int expand_stack(vma_s *vma, unsigned long address);
+	/* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
+	extern int expand_stack(vma_s *vma, unsigned long address);
 
 	// /* CONFIG_STACK_GROWSUP still needs to grow downwards at some places */
 	// extern int expand_downwards(vma_s *vma,
