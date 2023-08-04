@@ -22,7 +22,7 @@
 // #include <linux/fsnotify.h>
 // #include <linux/unicode.h>
 // #include <linux/fscrypt.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include "internal.h"
 
 

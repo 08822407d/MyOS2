@@ -37,7 +37,7 @@
 
 #include <asm/processor.h>
 // #include <asm/bios_ebda.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <asm/pgalloc.h>
 #include <asm/dma.h>
 // #include <asm/fixmap.h>

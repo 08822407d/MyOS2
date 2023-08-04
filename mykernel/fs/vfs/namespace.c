@@ -21,7 +21,7 @@
 #include <linux/sched/fs_struct.h>	/* get_fs_root et.al. */
 // #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/fs/file.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <linux/proc_ns.h>
 #include <uapi/linux/magic.h>
 #include <linux/mm/memblock.h>

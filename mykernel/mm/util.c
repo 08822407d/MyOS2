@@ -24,7 +24,7 @@
 #include <linux/kernel/sizes.h>
 // #include <linux/compat.h>
 
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 
 #include "internal.h"
 

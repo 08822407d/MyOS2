@@ -45,7 +45,7 @@
 // #include <linux/compat.h>
 // #include <linux/random.h>
 
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <asm/unistd.h>
 #include <asm/div64.h>
 // #include <asm/timex.h>

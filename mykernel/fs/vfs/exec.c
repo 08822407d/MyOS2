@@ -67,7 +67,7 @@
 // #include <linux/syscall_user_dispatch.h>
 // #include <linux/coredump.h>
 
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <asm/mmu_context.h>
 // #include <asm/tlb.h>
 
@@ -354,9 +354,9 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 		// if (IS_ERR(str))
 		// 	goto out;
 
-		// len = strnlen_user(str, MAX_ARG_STRLEN);
-		// if (!len)
-		// 	goto out;
+		len = strnlen_user(str, MAX_ARG_STRLEN);
+		if (!len)
+			goto out;
 
 		ret = -E2BIG;
 		if (!valid_arg_len(bprm, len))
@@ -1158,9 +1158,6 @@ int kernel_execve(const char *kernel_filename,
 	retval = copy_strings_kernel(bprm->argc, argv, bprm);
 	if (retval < 0)
 		goto out_free;
-
-
-	__myos_copy_strings(argv);
 
 	retval = bprm_execve(bprm, fd, filename, 0);
 out_free:

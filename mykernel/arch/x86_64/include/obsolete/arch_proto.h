@@ -218,7 +218,7 @@
 	long copy_to_user(void * to, void * from, unsigned long size);
 	long strncpy_from_user(void * to, void * from, unsigned long size);
 	long strlen_user(void * src);
-	long strnlen_user(void * src, unsigned long maxlen);
+	long myos_strnlen_user(void * src, unsigned long maxlen);
 
 	/*  mm.c */
 	// void creat_exec_addrspace(task_s * task);

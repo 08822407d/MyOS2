@@ -99,7 +99,7 @@
 // #include <linux/bpf.h>
 
 #include <asm/pgalloc.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <asm/mmu_context.h>
 // #include <asm/cacheflush.h>
 // #include <asm/tlbflush.h>

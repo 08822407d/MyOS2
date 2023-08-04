@@ -121,7 +121,7 @@ long myos_do_execve(const char *filename,
 	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);
 	if(pathname == NULL)
 		return -ENOMEM;
-	pathlen = strnlen_user((char *)curr_context->di, CONST_4K);
+	pathlen = myos_strnlen_user((char *)curr_context->di, CONST_4K);
 	if(pathlen <= 0)
 	{
 		kfree(pathname);

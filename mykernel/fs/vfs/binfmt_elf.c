@@ -45,7 +45,7 @@
 #include <linux/kernel/types.h>
 // #include <linux/cred.h>
 // #include <linux/dax.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <asm/param.h>
 #include <asm/page.h>
 
@@ -103,6 +103,208 @@ set_brk(unsigned long start, unsigned long end, int prot)
 			return error;
 	}
 	current->mm->start_brk = current->mm->brk = end;
+	return 0;
+}
+
+
+#ifndef ELF_BASE_PLATFORM
+/*
+ * AT_BASE_PLATFORM indicates the "real" hardware/microarchitecture.
+ * If the arch defines ELF_BASE_PLATFORM (in asm/elf.h), the value
+ * will be copied to the user stack in the same manner as AT_PLATFORM.
+ */
+#	define ELF_BASE_PLATFORM	NULL
+#endif
+
+static int
+create_elf_tables(linux_bprm_s *bprm,
+		const elfhdr_t *exec, unsigned long interp_load_addr,
+		unsigned long e_entry, unsigned long phdr_addr)
+{
+	mm_s *mm = current->mm;
+	unsigned long p = bprm->p;
+	int argc = bprm->argc;
+	int envc = bprm->envc;
+	elf_addr_t __user *sp;
+	// elf_addr_t __user *u_platform;
+	// elf_addr_t __user *u_base_platform;
+	// elf_addr_t __user *u_rand_bytes;
+	// const char *k_platform = ELF_PLATFORM;
+	// const char *k_base_platform = ELF_BASE_PLATFORM;
+	// unsigned char k_rand_bytes[16];
+	// int items;
+	// elf_addr_t *elf_info;
+	// elf_addr_t flags = 0;
+	// int ei_index;
+	// const struct cred *cred = current_cred();
+	// vma_s *vma;
+
+	/*
+	 * In some cases (e.g. Hyper-Threading), we want to avoid L1
+	 * evictions by the processes running on the same package. One
+	 * thing we can do is to shuffle the initial stack for them.
+	 */
+
+	// p = arch_align_stack(p);
+
+	// /*
+	//  * If this architecture has a platform capability string, copy it
+	//  * to userspace.  In some cases (Sparc), this info is impossible
+	//  * for userspace to get any other way, in others (i386) it is
+	//  * merely difficult.
+	//  */
+	// u_platform = NULL;
+	// if (k_platform) {
+	// 	size_t len = strlen(k_platform) + 1;
+
+	// 	u_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
+	// 	if (copy_to_user(u_platform, k_platform, len))
+	// 		return -EFAULT;
+	// }
+
+	// /*
+	//  * If this architecture has a "base" platform capability
+	//  * string, copy it to userspace.
+	//  */
+	// u_base_platform = NULL;
+	// if (k_base_platform) {
+	// 	size_t len = strlen(k_base_platform) + 1;
+
+	// 	u_base_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
+	// 	if (copy_to_user(u_base_platform, k_base_platform, len))
+	// 		return -EFAULT;
+	// }
+
+	// /*
+	//  * Generate 16 random bytes for userspace PRNG seeding.
+	//  */
+	// get_random_bytes(k_rand_bytes, sizeof(k_rand_bytes));
+	// u_rand_bytes = (elf_addr_t __user *)
+	// 	       STACK_ALLOC(p, sizeof(k_rand_bytes));
+	// if (copy_to_user(u_rand_bytes, k_rand_bytes, sizeof(k_rand_bytes)))
+	// 	return -EFAULT;
+
+	// /* Create the ELF interpreter info */
+	// elf_info = (elf_addr_t *)mm->saved_auxv;
+	// /* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
+// #define NEW_AUX_ENT(id, val) \
+// 	do { \
+// 		*elf_info++ = id; \
+// 		*elf_info++ = val; \
+// 	} while (0)
+
+// #ifdef ARCH_DLINFO
+// 	/* 
+// 	 * ARCH_DLINFO must come first so PPC can do its special alignment of
+// 	 * AUXV.
+// 	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
+// 	 * ARCH_DLINFO changes
+// 	 */
+// 	ARCH_DLINFO;
+// #endif
+// 	NEW_AUX_ENT(AT_HWCAP, ELF_HWCAP);
+// 	NEW_AUX_ENT(AT_PAGESZ, ELF_EXEC_PAGESIZE);
+// 	NEW_AUX_ENT(AT_CLKTCK, CLOCKS_PER_SEC);
+// 	NEW_AUX_ENT(AT_PHDR, phdr_addr);
+// 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+// 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+// 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+// 	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
+// 		flags |= AT_FLAGS_PRESERVE_ARGV0;
+// 	NEW_AUX_ENT(AT_FLAGS, flags);
+// 	NEW_AUX_ENT(AT_ENTRY, e_entry);
+// 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+// 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+// 	NEW_AUX_ENT(AT_GID, from_kgid_munged(cred->user_ns, cred->gid));
+// 	NEW_AUX_ENT(AT_EGID, from_kgid_munged(cred->user_ns, cred->egid));
+// 	NEW_AUX_ENT(AT_SECURE, bprm->secureexec);
+// 	NEW_AUX_ENT(AT_RANDOM, (elf_addr_t)(unsigned long)u_rand_bytes);
+// #ifdef ELF_HWCAP2
+// 	NEW_AUX_ENT(AT_HWCAP2, ELF_HWCAP2);
+// #endif
+// 	NEW_AUX_ENT(AT_EXECFN, bprm->exec);
+// 	if (k_platform) {
+// 		NEW_AUX_ENT(AT_PLATFORM,
+// 			    (elf_addr_t)(unsigned long)u_platform);
+// 	}
+// 	if (k_base_platform) {
+// 		NEW_AUX_ENT(AT_BASE_PLATFORM,
+// 			    (elf_addr_t)(unsigned long)u_base_platform);
+// 	}
+// 	if (bprm->have_execfd) {
+// 		NEW_AUX_ENT(AT_EXECFD, bprm->execfd);
+// 	}
+// #undef NEW_AUX_ENT
+	// /* AT_NULL is zero; clear the rest too */
+	// memset(elf_info, 0, (char *)mm->saved_auxv +
+	// 		sizeof(mm->saved_auxv) - (char *)elf_info);
+
+	// /* And advance past the AT_NULL entry.  */
+	// elf_info += 2;
+
+	// ei_index = elf_info - (elf_addr_t *)mm->saved_auxv;
+	// sp = STACK_ADD(p, ei_index);
+
+	// items = (argc + 1) + (envc + 1) + 1;
+	// bprm->p = STACK_ROUND(sp, items);
+
+	// /* Point sp at the lowest address on the stack */
+// #ifdef CONFIG_STACK_GROWSUP
+// 	sp = (elf_addr_t __user *)bprm->p - items - ei_index;
+// 	bprm->exec = (unsigned long)sp; /* XXX: PARISC HACK */
+// #else
+	sp = (elf_addr_t __user *)bprm->p;
+// #endif
+
+
+	// /*
+	//  * Grow the stack manually; some architectures have a limit on how
+	//  * far ahead a user-space access may be in order to grow the stack.
+	//  */
+	// if (mmap_read_lock_killable(mm))
+	// 	return -EINTR;
+	// vma = find_extend_vma(mm, bprm->p);
+	// mmap_read_unlock(mm);
+	// if (!vma)
+	// 	return -EFAULT;
+
+	// /* Now, let's put argc (and argv, envp if appropriate) on the stack */
+	// if (put_user(argc, sp++))
+	// 	return -EFAULT;
+
+	/* Populate list of argv pointers back to argv strings. */
+	p = mm->arg_end = mm->arg_start;
+	while (argc-- > 0) {
+		size_t len;
+		// if (put_user((elf_addr_t)p, sp++))
+		// 	return -EFAULT;
+		len = strnlen_user((void __user *)p, MAX_ARG_STRLEN);
+		if (!len || len > MAX_ARG_STRLEN)
+			return -EINVAL;
+		p += len;
+	}
+	// if (put_user(0, sp++))
+	// 	return -EFAULT;
+	mm->arg_end = p;
+
+	/* Populate list of envp pointers back to envp strings. */
+	mm->env_end = mm->env_start = p;
+	while (envc-- > 0) {
+		size_t len;
+		// if (put_user((elf_addr_t)p, sp++))
+		// 	return -EFAULT;
+		len = strnlen_user((void __user *)p, MAX_ARG_STRLEN);
+		if (!len || len > MAX_ARG_STRLEN)
+			return -EINVAL;
+		p += len;
+	}
+	// if (put_user(0, sp++))
+	// 	return -EFAULT;
+	mm->env_end = p;
+
+	// /* Put the elf_info on the stack in the right place.  */
+	// if (copy_to_user(sp, mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
+	// 	return -EFAULT;
 	return 0;
 }
 
@@ -464,7 +666,7 @@ out_free_interp:
 	/* Now we do a little grungy work by mmapping the ELF image into
 	   the correct location in memory. */
 	for(i = 0, elf_ppnt = elf_phdata;
-	    i < elf_ex->e_phnum; i++, elf_ppnt++) {
+		i < elf_ex->e_phnum; i++, elf_ppnt++) {
 		int elf_prot, elf_flags;
 		unsigned long k, vaddr;
 		unsigned long total_size = 0;
@@ -634,8 +836,8 @@ out_free_interp:
 		 * <= p_memsz so it is only necessary to check p_memsz.
 		 */
 		if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
-		    elf_ppnt->p_memsz > TASK_SIZE ||
-		    TASK_SIZE - elf_ppnt->p_memsz < k) {
+			elf_ppnt->p_memsz > TASK_SIZE ||
+			TASK_SIZE - elf_ppnt->p_memsz < k) {
 			/* set_brk can never work. Avoid overflows. */
 			retval = -EINVAL;
 			goto out_free_dentry;
@@ -716,42 +918,42 @@ out_free_interp:
 	// set_binfmt(&elf_format);
 
 // #ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
-// 	retval = ARCH_SETUP_ADDITIONAL_PAGES(bprm, elf_ex, !!interpreter);
-// 	if (retval < 0)
-// 		goto out;
-// #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
-
-	// retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
-	// 			   e_entry, phdr_addr);
+	// retval = ARCH_SETUP_ADDITIONAL_PAGES(bprm, elf_ex, !!interpreter);
 	// if (retval < 0)
 	// 	goto out;
+// #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
+
+	retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
+				   e_entry, phdr_addr);
+	if (retval < 0)
+		goto out;
 
 	mm = current->mm;
 	mm->end_code = end_code;
 	mm->start_code = start_code;
 	mm->start_data = start_data;
 	mm->end_data = end_data;
-	// mm->start_stack = bprm->p;
+	mm->start_stack = bprm->p;
 	mm->entry_point = e_entry;
 
-// 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
-// 		/*
-// 		 * For architectures with ELF randomization, when executing
-// 		 * a loader directly (i.e. no interpreter listed in ELF
-// 		 * headers), move the brk area out of the mmap region
-// 		 * (since it grows up, and may collide early with the stack
-// 		 * growing down), and into the unused ELF_ET_DYN_BASE region.
-// 		 */
-// 		if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
-// 		    elf_ex->e_type == ET_DYN && !interpreter) {
-// 			mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
-// 		}
+	// if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+	// 	/*
+	// 	 * For architectures with ELF randomization, when executing
+	// 	 * a loader directly (i.e. no interpreter listed in ELF
+	// 	 * headers), move the brk area out of the mmap region
+	// 	 * (since it grows up, and may collide early with the stack
+	// 	 * growing down), and into the unused ELF_ET_DYN_BASE region.
+	// 	 */
+	// 	if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
+	// 	    elf_ex->e_type == ET_DYN && !interpreter) {
+	// 		mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
+	// 	}
 
-// 		mm->brk = mm->start_brk = arch_randomize_brk(mm);
+	// 	mm->brk = mm->start_brk = arch_randomize_brk(mm);
 // #ifdef compat_brk_randomized
-// 		current->brk_randomized = 1;
+		// current->brk_randomized = 1;
 // #endif
-// 	}
+	// }
 
 	// if (current->personality & MMAP_PAGE_ZERO) {
 	// 	/* Why this, you ask???  Well SVr4 maps page 0 as read-only,
@@ -764,17 +966,17 @@ out_free_interp:
 
 	// regs = current_pt_regs();
 // #ifdef ELF_PLAT_INIT
-// 	/*
-// 	 * The ABI may specify that certain registers be set up in special
-// 	 * ways (on i386 %edx is the address of a DT_FINI function, for
-// 	 * example.  In addition, it may also specify (eg, PowerPC64 ELF)
-// 	 * that the e_entry field is the address of the function descriptor
-// 	 * for the startup routine, rather than the address of the startup
-// 	 * routine itself.  This macro performs whatever initialization to
-// 	 * the regs structure is required as well as any relocations to the
-// 	 * function descriptor entries when executing dynamically links apps.
-// 	 */
-// 	ELF_PLAT_INIT(regs, reloc_func_desc);
+	// /*
+	//  * The ABI may specify that certain registers be set up in special
+	//  * ways (on i386 %edx is the address of a DT_FINI function, for
+	//  * example.  In addition, it may also specify (eg, PowerPC64 ELF)
+	//  * that the e_entry field is the address of the function descriptor
+	//  * for the startup routine, rather than the address of the startup
+	//  * routine itself.  This macro performs whatever initialization to
+	//  * the regs structure is required as well as any relocations to the
+	//  * function descriptor entries when executing dynamically links apps.
+	//  */
+	// ELF_PLAT_INIT(regs, reloc_func_desc);
 // #endif
 
 	// finalize_exec(bprm);

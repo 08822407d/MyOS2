@@ -102,7 +102,7 @@
 // #include <linux/swapops.h>
 
 // #include <asm/tlbflush.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 
 #include "internal.h"
 

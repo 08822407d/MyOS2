@@ -20,7 +20,7 @@
 #include <linux/kernel/syscalls.h>
 #include <uapi/linux/unistd.h>
 // #include <linux/compat.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 
 // #include <asm/unaligned.h>
 

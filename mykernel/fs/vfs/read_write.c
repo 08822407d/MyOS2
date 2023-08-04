@@ -22,7 +22,7 @@
 #include <linux/fs/fs.h>
 #include "internal.h"
 
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <asm/unistd.h>
 
 

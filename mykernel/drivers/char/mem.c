@@ -28,7 +28,7 @@
 // #include <linux/export.h>
 #include <linux/kernel/io.h>
 // #include <linux/uio.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <linux/security.h>
 
 

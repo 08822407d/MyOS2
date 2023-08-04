@@ -18,7 +18,7 @@
 // #include <linux/export.h>
 // #include <linux/nospec.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 
 // #ifdef CONFIG_XEN_PV
 // #include <xen/xen-ops.h>

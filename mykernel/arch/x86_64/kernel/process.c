@@ -28,7 +28,7 @@
 // #include <linux/hw_breakpoint.h>
 #include <asm/cpu.h>
 #include <asm/apic.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <asm/mwait.h>
 // #include <asm/fpu/api.h>
 // #include <asm/fpu/sched.h>

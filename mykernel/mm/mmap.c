@@ -49,7 +49,7 @@
 // #include <linux/oom.h>
 #include <linux/sched/mm.h>
 
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <asm/cacheflush.h>
 // #include <asm/tlb.h>
 #include <asm/mmu_context.h>

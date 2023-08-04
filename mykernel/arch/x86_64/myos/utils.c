@@ -55,7 +55,7 @@ inline __always_inline long strlen_user(void *src)
 	return size;
 }
 
-inline __always_inline long strnlen_user(void *src, unsigned long maxlen)
+inline __always_inline long myos_strnlen_user(void *src, unsigned long maxlen)
 {
 	unsigned long size = strlen(src);
 	if(!verify_area(src, size))

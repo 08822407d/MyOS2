@@ -20,7 +20,7 @@
 #include <linux/kernel/mount.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/slab.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/fs/fs.h>
 // #include <linux/personality.h>
 #include <linux/mm/pagemap.h>

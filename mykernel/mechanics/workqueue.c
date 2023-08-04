@@ -47,7 +47,7 @@
 // #include <linux/rculist.h>
 // #include <linux/nodemask.h>
 // #include <linux/moduleparam.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <linux/sched/isolation.h>
 // #include <linux/nmi.h>
 // #include <linux/kvm_para.h>

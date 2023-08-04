@@ -10,7 +10,7 @@
 	#include <linux/lib/list.h>
 	// #include <linux/highmem.h>
 	#include <linux/kernel/compiler.h>
-	// #include <linux/uaccess.h>
+	#include <linux/kernel/uaccess.h>
 	#include <linux/mm/gfp.h>
 	#include <linux/kernel/bitops.h>
 	// #include <linux/hardirq.h> /* for in_interrupt() */

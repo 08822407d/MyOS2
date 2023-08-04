@@ -16,7 +16,7 @@
 // #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
 #include <linux/kernel/prefetch.h>		/* prefetchw			*/
 // #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
-// #include <linux/uaccess.h>		/* faulthandler_disabled()	*/
+#include <linux/kernel/uaccess.h>		/* faulthandler_disabled()	*/
 // #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
 #include <linux/mm/mm_types.h>
 

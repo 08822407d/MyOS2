@@ -154,7 +154,7 @@
 	// 	} while (0);
 
 	// /* I'm not sure if we can use '-' here */
-	// #define ELF_PLATFORM ("x86_64")
+	#define ELF_PLATFORM ("x86_64")
 	// extern void set_personality_64bit(void);
 	// extern unsigned int sysctl_vsyscall32;
 	// extern int force_personality32;

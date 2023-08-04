@@ -35,7 +35,7 @@
 // #include <linux/kprobes.h>
 // #include <linux/kdebug.h>
 // #include <linux/prctl.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/kernel/io.h>
 // #include <linux/ftrace.h>
 #include <linux/kernel/syscalls.h>

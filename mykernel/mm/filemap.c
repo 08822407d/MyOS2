@@ -15,7 +15,7 @@
 // #include <linux/dax.h>
 #include <linux/fs/fs.h>
 #include <linux/sched/signal.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <linux/capability.h>
 // #include <linux/kernel_stat.h>
 #include <linux/mm/gfp.h>

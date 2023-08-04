@@ -8,7 +8,7 @@
 	 */
 
 	#include <linux/kernel/sched.h>
-	// #include <linux/uaccess.h>
+	#include <linux/kernel/uaccess.h>
 
 	// struct task_struct;
 	// typedef struct task_struct task_s;

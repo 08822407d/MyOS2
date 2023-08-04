@@ -25,7 +25,7 @@
 #include <linux/kernel/slab.h>
 // #include <linux/freezer.h>
 #include <linux/kernel/ptrace.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 // #include <linux/numa.h>
 // #include <linux/sched/isolation.h>
 // #include <trace/events/sched.h>

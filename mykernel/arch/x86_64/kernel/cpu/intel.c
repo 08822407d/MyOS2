@@ -9,7 +9,7 @@
 // #include <linux/sched/clock.h>
 // #include <linux/thread_info.h>
 #include <linux/init/init.h>
-// #include <linux/uaccess.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/kernel/delay.h>
 
 #include <asm/cpufeature.h>
