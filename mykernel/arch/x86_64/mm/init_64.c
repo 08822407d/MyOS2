@@ -7,13 +7,13 @@
  *  Copyright (C) 2002,2003 Andi Kleen <ak@suse.de>
  */
 
-// #include <linux/signal.h>
+#include <linux/kernel/signal.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/kernel.h>
 #include <uapi/linux/errno.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/types.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 #include <linux/mm/mman.h>
 #include <linux/mm/mm.h>
 // #include <linux/swap.h>

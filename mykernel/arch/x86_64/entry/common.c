@@ -14,7 +14,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/smp.h>
 #include <uapi/linux/errno.h>
-// #include <linux/ptrace.h>
+#include <linux/kernel/ptrace.h>
 // #include <linux/export.h>
 // #include <linux/nospec.h>
 #include <linux/kernel/syscalls.h>

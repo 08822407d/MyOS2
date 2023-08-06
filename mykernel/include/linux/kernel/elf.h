@@ -22,10 +22,10 @@
 	// 			SET_PERSONALITY(ex)
 	// #endif
 
-	// #ifndef START_THREAD
-	// #	define START_THREAD(elf_ex, regs, elf_entry, start_stack) \
-	// 			start_thread(regs, elf_entry, start_stack)
-	// #endif
+	#ifndef START_THREAD
+	#	define START_THREAD(elf_ex, regs, elf_entry, start_stack) \
+					start_thread(regs, elf_entry, start_stack)
+	#endif
 
 	// #if defined(ARCH_HAS_SETUP_ADDITIONAL_PAGES) && !defined(ARCH_SETUP_ADDITIONAL_PAGES)
 	// #	define ARCH_SETUP_ADDITIONAL_PAGES(bprm, ex, interpreter) \

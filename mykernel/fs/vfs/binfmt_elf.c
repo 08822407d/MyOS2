@@ -50,6 +50,9 @@
 #include <asm/page.h>
 
 
+#include <linux/kernel/ptrace.h>
+
+
 static int load_elf_binary(struct linux_binprm *bprm);
 
 /*
@@ -490,7 +493,7 @@ static int load_elf_binary(linux_bprm_s *bprm)
 		goto out;
 	// if (elf_check_fdpic(elf_ex))
 	// 	goto out;
-	// if (!bprm->file->f_op->mmap)
+	// if (!bprm->file->f_op->mmapload_elf_binary)
 	// 	goto out;
 
 	elf_phdata = load_elf_phdrs(elf_ex, bprm->file);
@@ -881,40 +884,40 @@ out_free_interp:
 	// 	goto out_free_dentry;
 	// }
 
-	// if (interpreter) {
-	// 	elf_entry = load_elf_interp(interp_elf_ex,
-	// 				    interpreter,
-	// 				    load_bias, interp_elf_phdata,
-	// 				    &arch_state);
-	// 	if (!IS_ERR((void *)elf_entry)) {
-	// 		/*
-	// 		 * load_elf_interp() returns relocation
-	// 		 * adjustment
-	// 		 */
-	// 		interp_load_addr = elf_entry;
-	// 		elf_entry += interp_elf_ex->e_entry;
-	// 	}
-	// 	if (BAD_ADDR(elf_entry)) {
-	// 		retval = IS_ERR((void *)elf_entry) ?
-	// 				(int)elf_entry : -EINVAL;
-	// 		goto out_free_dentry;
-	// 	}
-	// 	reloc_func_desc = interp_load_addr;
+	if (interpreter) {
+		// elf_entry = load_elf_interp(interp_elf_ex,
+		// 			    interpreter,
+		// 			    load_bias, interp_elf_phdata,
+		// 			    &arch_state);
+		// if (!IS_ERR((void *)elf_entry)) {
+		// 	/*
+		// 	 * load_elf_interp() returns relocation
+		// 	 * adjustment
+		// 	 */
+		// 	interp_load_addr = elf_entry;
+		// 	elf_entry += interp_elf_ex->e_entry;
+		// }
+		// if (BAD_ADDR(elf_entry)) {
+		// 	retval = IS_ERR((void *)elf_entry) ?
+		// 			(int)elf_entry : -EINVAL;
+		// 	goto out_free_dentry;
+		// }
+		// reloc_func_desc = interp_load_addr;
 
-	// 	allow_write_access(interpreter);
-	// 	fput(interpreter);
+		// allow_write_access(interpreter);
+		// fput(interpreter);
 
-	// 	kfree(interp_elf_ex);
-	// 	kfree(interp_elf_phdata);
-	// } else {
-	// 	elf_entry = e_entry;
-	// 	if (BAD_ADDR(elf_entry)) {
-	// 		retval = -EINVAL;
-	// 		goto out_free_dentry;
-	// 	}
-	// }
+		// kfree(interp_elf_ex);
+		// kfree(interp_elf_phdata);
+	} else {
+		elf_entry = e_entry;
+		if (BAD_ADDR(elf_entry)) {
+			retval = -EINVAL;
+			goto out_free_dentry;
+		}
+	}
 
-	// kfree(elf_phdata);
+	kfree(elf_phdata);
 
 	// set_binfmt(&elf_format);
 
@@ -924,10 +927,10 @@ out_free_interp:
 	// 	goto out;
 // #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
 
-	retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
-				   e_entry, phdr_addr);
-	if (retval < 0)
-		goto out;
+	// retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
+	// 			   e_entry, phdr_addr);
+	// if (retval < 0)
+	// 	goto out;
 
 	mm = current->mm;
 	mm->end_code = end_code;
@@ -965,7 +968,7 @@ out_free_interp:
 	// 			MAP_FIXED | MAP_PRIVATE, 0);
 	// }
 
-	// regs = current_pt_regs();
+	regs = current_pt_regs();
 // #ifdef ELF_PLAT_INIT
 	// /*
 	//  * The ABI may specify that certain registers be set up in special
