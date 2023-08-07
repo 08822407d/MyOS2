@@ -119,10 +119,10 @@
 	 * cachelines.  There are very few zone structures in the machine, so space
 	 * consumption is not a concern here.
 	 */
-			struct zone_padding {
-				char x[0];
-			} ____cacheline_internodealigned_in_smp;
-	#		define ZONE_PADDING(name) struct zone_padding name;
+	// 		struct zone_padding {
+	// 			char x[0];
+	// 		} ____cacheline_internodealigned_in_smp;
+	// #		define ZONE_PADDING(name) struct zone_padding name;
 
 			// #ifdef CONFIG_NUMA
 			// 	enum numa_stat_item

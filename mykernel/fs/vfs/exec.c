@@ -599,10 +599,10 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	// if (stack_size + stack_expand > rlim_stack)
 	// 	stack_base = vma->vm_end - rlim_stack;
 	// else
-	// 	stack_base = vma->vm_start - stack_expand;
+		stack_base = vma->vm_start - stack_expand;
 // #endif
 	current->mm->start_stack = bprm->p;
-	// ret = expand_stack(vma, stack_base);
+	ret = expand_stack(vma, stack_base);
 	// if (ret)
 	// 	ret = -EFAULT;
 

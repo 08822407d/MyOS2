@@ -350,10 +350,10 @@ void do_user_addr_fault(pt_regs_s *regs,
 		myos_bad_area(regs, error_code, address);
 		return;
 	}
-	// if (unlikely(expand_stack(vma, address))) {
-	// 	myos_bad_area(regs, error_code, address);
-	// 	return;
-	// }
+	if (unlikely(expand_stack(vma, address))) {
+		myos_bad_area(regs, error_code, address);
+		return;
+	}
 
 	/*
 	 * Ok, we have a good vm_area for this memory access, so
