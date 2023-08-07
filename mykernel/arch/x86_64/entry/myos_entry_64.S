@@ -1,5 +1,4 @@
 #include <linux/kernel/linkage.h>
-#include <asm/asm-offsets.h>
 #include <asm/ptrace.h>
 
 #include <obsolete/archconst.h>
@@ -63,6 +62,14 @@ SYM_CODE_START(sysenter_entp)
 	cli
 	subq		$0x38,		%rsp
 	PUSH_REGS
+	/* exchange user rip and rsp to corresponding position in struct pt_reg */
+	xchgq		%r11,		R11(%rsp)
+	xchgq		%r10,		R10(%rsp)
+	xchgq		%r11,		RSP(%rsp)
+	xchgq		%r10,		RIP(%rsp)
+	xchgq		%r11,		R11(%rsp)
+	xchgq		%r10,		R10(%rsp)
+
 	sti
 
 	/* IRQs are off. */
@@ -80,8 +87,13 @@ SYM_CODE_START(sysenter_entp)
 // user SS = IA32_SYSENTER_CS + 40
 SYM_CODE_START(sysexit_entp)
 	cli
-	movq		RSP(%rsp),	%r11
-	movq		RIP(%rsp),	%r10
+	/* exchange struct pt_reg rip and rsp to corresponding user register */
+	xchgq		%r11,		RSP(%rsp)
+	xchgq		%r10,		RIP(%rsp)
+	xchgq		%r11,		R11(%rsp)
+	xchgq		%r10,		R10(%rsp)
+	xchgq		%r11,		RSP(%rsp)
+	xchgq		%r10,		RIP(%rsp)
 	POP_REGS
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
