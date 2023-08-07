@@ -1,4 +1,6 @@
 #include <linux/kernel/linkage.h>
+#include <asm/asm-offsets.h>
+#include <asm/ptrace.h>
 
 #include <obsolete/archconst.h>
 #include <obsolete/interrupt.h>
@@ -78,6 +80,8 @@ SYM_CODE_START(sysenter_entp)
 // user SS = IA32_SYSENTER_CS + 40
 SYM_CODE_START(sysexit_entp)
 	cli
+	movq		RSP(%rsp),	%r11
+	movq		RIP(%rsp),	%r10
 	POP_REGS
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx

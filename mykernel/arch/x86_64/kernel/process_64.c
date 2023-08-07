@@ -66,6 +66,51 @@
 #include <linux/sched/myos_percpu.h>
 #include <obsolete/archtypes.h>
 
+
+void x86_fsbase_write_task(task_s* task, unsigned long fsbase)
+{
+	// WARN_ON_ONCE(task == current);
+	task->thread.fsbase = fsbase;
+}
+
+void x86_gsbase_write_task(task_s *task, unsigned long gsbase)
+{
+	// WARN_ON_ONCE(task == current);
+	task->thread.gsbase = gsbase;
+}
+
+static void
+start_thread_common(pt_regs_s *regs,
+		unsigned long new_ip, unsigned long new_sp,
+		unsigned int _cs, unsigned int _ss, unsigned int _ds)
+{
+	// WARN_ON_ONCE(regs != current_pt_regs());
+
+	// if (static_cpu_has(X86_BUG_NULL_SEG)) {
+	// 	/* Loading zero below won't clear the base. */
+	// 	loadsegment(fs, __USER_DS);
+	// 	load_gs_index(__USER_DS);
+	// }
+
+	// loadsegment(fs, 0);
+	loadsegment(es, _ds);
+	loadsegment(ds, _ds);
+	// load_gs_index(0);
+
+	regs->ip		= new_ip;
+	regs->sp		= new_sp;
+	regs->cs		= _cs;
+	regs->ss		= _ss;
+	regs->flags		= X86_EFLAGS_IF;
+}
+
+void
+start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
+{
+	// start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
+	start_thread_common(regs, new_ip, new_sp, USER_CS_SELECTOR, USER_SS_SELECTOR, 0);
+}
+
 /*
  *	switch_to(x,y) should switch tasks from x to y.
  *

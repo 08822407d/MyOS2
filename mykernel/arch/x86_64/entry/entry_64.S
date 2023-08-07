@@ -19,7 +19,7 @@
  * - idtentry:		Define exception entry points.
  */
 #include <linux/kernel/linkage.h>
-// #include <asm/segment.h>
+#include <asm/segment.h>
 #include <asm/cache.h>
 // #include <asm/errno.h>
 // #include <asm/asm-offsets.h>

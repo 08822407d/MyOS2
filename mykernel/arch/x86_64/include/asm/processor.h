@@ -11,7 +11,7 @@
 	// struct vm86;
 
 	// #include <asm/math_emu.h>
-	// #include <asm/segment.h>
+	#include <asm/segment.h>
 	// #include <asm/types.h>
 	// #include <uapi/asm/sigcontext.h>
 	#include <asm/current.h>
@@ -35,6 +35,9 @@
 	#include <linux/kernel/err.h>
 	#include <linux/kernel/irqflags.h>
 	// #include <linux/mem_encrypt.h>
+
+
+	#include <asm/ptrace.h>
 
 	// /*
 	// * We handle most unaligned accesses in hardware.  On the other hand
@@ -673,8 +676,8 @@
 
 	// extern unsigned long KSTK_ESP(task_s *task);
 
-	// extern void start_thread(pt_regs_s *regs, unsigned long new_ip,
-	// 						unsigned long new_sp);
+	extern void
+	start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp);
 
 	// /*
 	// * This decides where the kernel will search for a free chunk of vm

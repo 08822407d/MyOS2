@@ -1067,7 +1067,6 @@ static int search_binary_handler(linux_bprm_s *bprm)
 }
 
 extern int __myos_bprm_execve(linux_bprm_s *bprm);
-extern int __myos_copy_strings(const char *const *argv);
 /*
  * sys_execve() executes a new program.
  */
@@ -1219,9 +1218,6 @@ static int do_execveat_common(int fd, filename_s *filename,
 		bprm->argc = 1;
 	}
 	
-
-	__myos_copy_strings(argv);
-
 	retval = bprm_execve(bprm, fd, filename, flags);
 out_free:
 	free_bprm(bprm);
