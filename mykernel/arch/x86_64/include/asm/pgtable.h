@@ -696,11 +696,10 @@
 			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
 		}
 
-		// #define __HAVE_ARCH_PTE_SAME
-		// static inline int pte_same(pte_t a, pte_t b)
-		// {
-		// 	return a.pte == b.pte;
-		// }
+		#define __HAVE_ARCH_PTE_SAME
+		static inline int pte_same(pte_t a, pte_t b) {
+			return a.val == b.val;
+		}
 
 		static inline int arch_pte_present(pte_t a) {
 			return arch_pte_flags(a) & (_PAGE_PRESENT | _PAGE_PROTNONE);

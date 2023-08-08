@@ -801,102 +801,102 @@ static vm_fault_t wp_page_copy(vm_fault_s *vmf)
 	// 			(vmf->address & PAGE_MASK) + PAGE_SIZE);
 	// mmu_notifier_invalidate_range_start(&range);
 
-	// /*
-	//  * Re-check the pte - we dropped the lock
-	//  */
+	/*
+	 * Re-check the pte - we dropped the lock
+	 */
 	// vmf->pte = pte_offset_map_lock(mm, vmf->pmd, vmf->address, &vmf->ptl);
-	// if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-	// 	if (old_page) {
-	// 		if (!PageAnon(old_page)) {
-	// 			dec_mm_counter_fast(mm,
-	// 					mm_counter_file(old_page));
-	// 			inc_mm_counter_fast(mm, MM_ANONPAGES);
-	// 		}
-	// 	} else {
-	// 		inc_mm_counter_fast(mm, MM_ANONPAGES);
-	// 	}
-	// 	flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
-	// 	entry = mk_pte(new_page, vma->vm_page_prot);
-		entry = arch_make_pte(page_to_phys(new_page) | _PAGE_PRESENT | _PAGE_USER |  _PAGE_RW | _PAGE_PAT);
-	// 	entry = pte_sw_mkyoung(entry);
+	if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+		// if (old_page) {
+		// 	if (!PageAnon(old_page)) {
+		// 		dec_mm_counter_fast(mm,
+		// 				mm_counter_file(old_page));
+		// 		inc_mm_counter_fast(mm, MM_ANONPAGES);
+		// 	}
+		// } else {
+		// 	inc_mm_counter_fast(mm, MM_ANONPAGES);
+		// }
+		// flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+		// entry = mk_pte(new_page, vma->vm_page_prot);
+		entry = arch_make_pte(page_to_phys(new_page) | _PAGE_ACCESSED |  _PAGE_PRESENT | _PAGE_USER);
+		// entry = pte_sw_mkyoung(entry);
 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
 
-	// 	/*
-	// 	 * Clear the pte entry and flush it first, before updating the
-	// 	 * pte with the new entry, to keep TLBs on different CPUs in
-	// 	 * sync. This code used to set the new PTE then flush TLBs, but
-	// 	 * that left a window where the new PTE could be loaded into
-	// 	 * some TLBs while the old PTE remains in others.
-	// 	 */
-	// 	ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
-	// 	page_add_new_anon_rmap(new_page, vma, vmf->address, false);
-	// 	lru_cache_add_inactive_or_unevictable(new_page, vma);
-	// 	/*
-	// 	 * We call the notify macro here because, when using secondary
-	// 	 * mmu page tables (such as kvm shadow page tables), we want the
-	// 	 * new page to be mapped directly into the secondary page table.
-	// 	 */
-	// 	set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
+		// /*
+		//  * Clear the pte entry and flush it first, before updating the
+		//  * pte with the new entry, to keep TLBs on different CPUs in
+		//  * sync. This code used to set the new PTE then flush TLBs, but
+		//  * that left a window where the new PTE could be loaded into
+		//  * some TLBs while the old PTE remains in others.
+		//  */
+		// ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
+		// page_add_new_anon_rmap(new_page, vma, vmf->address, false);
+		// lru_cache_add_inactive_or_unevictable(new_page, vma);
+		// /*
+		//  * We call the notify macro here because, when using secondary
+		//  * mmu page tables (such as kvm shadow page tables), we want the
+		//  * new page to be mapped directly into the secondary page table.
+		//  */
+		// set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
 		set_pte_at(mm, vmf->address, vmf->pte, entry);
-	// 	update_mmu_cache(vma, vmf->address, vmf->pte);
-	// 	if (old_page) {
-	// 		/*
-	// 		 * Only after switching the pte to the new page may
-	// 		 * we remove the mapcount here. Otherwise another
-	// 		 * process may come and find the rmap count decremented
-	// 		 * before the pte is switched to the new page, and
-	// 		 * "reuse" the old page writing into it while our pte
-	// 		 * here still points into it and can be read by other
-	// 		 * threads.
-	// 		 *
-	// 		 * The critical issue is to order this
-	// 		 * page_remove_rmap with the ptp_clear_flush above.
-	// 		 * Those stores are ordered by (if nothing else,)
-	// 		 * the barrier present in the atomic_add_negative
-	// 		 * in page_remove_rmap.
-	// 		 *
-	// 		 * Then the TLB flush in ptep_clear_flush ensures that
-	// 		 * no process can access the old page before the
-	// 		 * decremented mapcount is visible. And the old page
-	// 		 * cannot be reused until after the decremented
-	// 		 * mapcount is visible. So transitively, TLBs to
-	// 		 * old page will be flushed before it can be reused.
-	// 		 */
-	// 		page_remove_rmap(old_page, false);
-	// 	}
+		// update_mmu_cache(vma, vmf->address, vmf->pte);
+		// if (old_page) {
+		// 	/*
+		// 	 * Only after switching the pte to the new page may
+		// 	 * we remove the mapcount here. Otherwise another
+		// 	 * process may come and find the rmap count decremented
+		// 	 * before the pte is switched to the new page, and
+		// 	 * "reuse" the old page writing into it while our pte
+		// 	 * here still points into it and can be read by other
+		// 	 * threads.
+		// 	 *
+		// 	 * The critical issue is to order this
+		// 	 * page_remove_rmap with the ptp_clear_flush above.
+		// 	 * Those stores are ordered by (if nothing else,)
+		// 	 * the barrier present in the atomic_add_negative
+		// 	 * in page_remove_rmap.
+		// 	 *
+		// 	 * Then the TLB flush in ptep_clear_flush ensures that
+		// 	 * no process can access the old page before the
+		// 	 * decremented mapcount is visible. And the old page
+		// 	 * cannot be reused until after the decremented
+		// 	 * mapcount is visible. So transitively, TLBs to
+		// 	 * old page will be flushed before it can be reused.
+		// 	 */
+		// 	page_remove_rmap(old_page, false);
+		// }
 
-	// 	/* Free the old page.. */
-	// 	new_page = old_page;
-	// 	page_copied = 1;
-	// } else {
-	// 	update_mmu_tlb(vma, vmf->address, vmf->pte);
-	// }
+		/* Free the old page.. */
+		new_page = old_page;
+		page_copied = 1;
+	} else {
+		// update_mmu_tlb(vma, vmf->address, vmf->pte);
+	}
 
-	// if (new_page)
-	// 	put_page(new_page);
+	if (new_page)
+		put_page(new_page);
 
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// /*
-	//  * No need to double call mmu_notifier->invalidate_range() callback as
-	//  * the above ptep_clear_flush_notify() did already call it.
-	//  */
+	/*
+	 * No need to double call mmu_notifier->invalidate_range() callback as
+	 * the above ptep_clear_flush_notify() did already call it.
+	 */
 	// mmu_notifier_invalidate_range_only_end(&range);
-	// if (old_page) {
-	// 	/*
-	// 	 * Don't let another task, with possibly unlocked vma,
-	// 	 * keep the mlocked page.
-	// 	 */
-	// 	if (page_copied && (vma->vm_flags & VM_LOCKED)) {
-	// 		lock_page(old_page);	/* LRU manipulation */
-	// 		if (PageMlocked(old_page))
-	// 			munlock_vma_page(old_page);
-	// 		unlock_page(old_page);
-	// 	}
-	// 	if (page_copied)
-	// 		free_swap_cache(old_page);
-	// 	put_page(old_page);
-	// }
-	// return page_copied ? VM_FAULT_WRITE : 0;
+	if (old_page) {
+		// /*
+		//  * Don't let another task, with possibly unlocked vma,
+		//  * keep the mlocked page.
+		//  */
+		// if (page_copied && (vma->vm_flags & VM_LOCKED)) {
+		// 	lock_page(old_page);	/* LRU manipulation */
+		// 	if (PageMlocked(old_page))
+		// 		munlock_vma_page(old_page);
+		// 	unlock_page(old_page);
+		// }
+		// if (page_copied)
+		// 	free_swap_cache(old_page);
+		put_page(old_page);
+	}
+	return page_copied ? VM_FAULT_WRITE : 0;
 oom_free_new:
 	put_page(new_page);
 oom:
