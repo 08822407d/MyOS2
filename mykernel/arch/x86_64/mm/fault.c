@@ -50,51 +50,32 @@ DEFINE_SPINLOCK(pgd_lock);
 LIST_HDR_S(pgd_list_hdr);
 
 
-// void myos_excep_page_fault(pt_regs_s *sf_regs)
-// {
-// 	task_s *curr = current;
-// 	mm_s *mm = curr->mm;
-// 	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
-// 	unsigned long cr2 = read_cr2();
+vm_fault_s myos_dump_pagetable(unsigned long address)
+{
+	vm_fault_s vmf;
+	memset(&vmf, 0, sizeof(vm_fault_s));
+	pgd_t *base = (pgd_t *)__va(read_cr3_pa());
+	pgd_t *pgd = base + pgd_index(address);
+	
+	vmf.p4d = p4d_ent_offset(pgd, address);
+	if (arch_p4d_none(*vmf.p4d))
+		goto finish;
+	vmf.pud = pud_ent_offset(vmf.p4d, address);
+	if (arch_pud_none(*vmf.pud))
+		goto finish;
+	vmf.pmd = pmd_ent_offset(vmf.pud, address);
+	if (arch_pmd_none(*vmf.pmd))
+		goto finish;
+	vmf.pte = pte_ent_offset(vmf.pmd, address);
+	if (arch_pte_none(*vmf.pte))
+		goto finish;
+	virt_addr_t pg_vaddr = myos_phys2virt(PTE_PFN_MASK & vmf.pte->val);
+	vmf.page = (virt_to_page(pg_vaddr));
+	
+finish:
+	return vmf;
+}
 
-// 	if (error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P) &&
-// 		check_addr_writable((reg_t)cr2, curr))
-// 	{
-// 		do_COW(curr, (virt_addr_t)cr2);
-// 		return;
-// 	}
-
-// 	color_printk(RED,BLACK,"do_page_fault(14),ERROR_CODE: %#018lx\n",error_code);
-
-// 	if(!(error_code & 0x01))
-// 		color_printk(RED,BLACK,"Page Not-Present,\t");
-
-// 	if(error_code & 0x02)
-// 		color_printk(RED,BLACK,"Write Cause Fault,\t");
-// 	else
-// 		color_printk(RED,BLACK,"Read Cause Fault,\t");
-
-// 	if(error_code & 0x04)
-// 		color_printk(RED,BLACK,"Fault in user(3)\t");
-// 	else
-// 		color_printk(RED,BLACK,"Fault in supervisor(0,1,2)\t");
-
-// 	if(error_code & 0x08)
-// 		color_printk(RED,BLACK,",Reserved Bit Cause Fault\t");
-
-// 	if(error_code & 0x10)
-// 		color_printk(RED,BLACK,",Instruction fetch Cause Fault");
-
-// 	color_printk(RED,BLACK,"Code address: %#018lx\n", sf_regs->ip);
-
-// 	color_printk(RED,BLACK,"CR2:%#018lx\n",cr2);
-
-// 	while (1);
-
-// PF_finish:
-// 	myos_update_mmu_tlb();
-// 	return;
-// }
 
 static void
 parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
@@ -339,6 +320,7 @@ void do_user_addr_fault(pt_regs_s *regs,
 	// 	might_sleep();
 	// }
 
+	vm_fault_s vmf = myos_dump_pagetable(address);
 	vma = myos_find_vma(mm, address);
 	if (!vma) {
 		myos_bad_area(regs, error_code, address);

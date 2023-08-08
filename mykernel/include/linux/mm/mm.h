@@ -3459,6 +3459,8 @@
 	extern int
 	myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
 
+	extern vm_fault_s myos_dump_pagetable(unsigned long address);
+
 	#endif /* __KERNEL__ */
 
 #endif /* _LINUX_MM_H */

@@ -402,11 +402,10 @@
 		// 	else
 		// 		return PTE_PFN_MASK;
 		// }
-		#define arch_pud_pfn_mask(n)	PTE_PFN_MASK
-
 		// static inline pudval_t PUD_FLAG_MASK(pud_t pud) {
 		// 	return ~arch_pud_pfn_mask(pud);
 		// }
+		#define arch_pud_pfn_mask(n)	PTE_PFN_MASK
 		#define PUD_FLAG_MASK(n)		(~arch_pud_pfn_mask(n))
 
 		static inline pudval_t arch_pud_flags(pud_t pud) {
@@ -419,11 +418,10 @@
 		// 	else
 		// 		return PTE_PFN_MASK;
 		// }
-		#define arch_pmd_pfn_mask(n)	PTE_PFN_MASK
-
 		// static inline pmdval_t PMD_FLAG_MASK(pmd_t pmd) {
 		// 	return ~arch_pmd_pfn_mask(pmd);
 		// }	
+		#define arch_pmd_pfn_mask(n)	PTE_PFN_MASK
 		#define PMD_FLAG_MASK(n)		(~arch_pmd_pfn_mask(n))
 
 		static inline pmdval_t arch_pmd_flags(pmd_t pmd) {
@@ -444,7 +442,6 @@
 		// }
 		#define arch_pte_val(pte)	(((pte_t)pte).val)
 		
-
 		static inline pteval_t arch_pte_flags(pte_t pte) {
 			return arch_pte_val(pte) & PTE_FLAGS_MASK;
 		}
