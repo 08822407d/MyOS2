@@ -35,10 +35,6 @@
 extern char		ist_stack0;
 extern PCB_u	task0_PCB;
 
-task_s			*task_idle = NULL;
-task_s			*task_init = NULL;
-task_s			*task_shell = NULL;
-
 static DEFINE_SPINLOCK(newpid_lock);
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
 unsigned long	curr_pid;
@@ -100,33 +96,11 @@ inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 	curr_tss->rsp0 = (reg_t)target->stack;
 }
 
-int __myos_bprm_execve(linux_bprm_s *bprm)
-{
-	int ret_val = 0;
-	task_s *curr = current;
-	pt_regs_s *curr_context = task_pt_regs(curr);
-	curr->se.vruntime = 0;
-	set_task_comm(curr, bprm->filename);
-
-	if (task_idle != NULL && task_init != NULL)
-		task_shell = curr;
-	if (task_idle != NULL && task_init == NULL)
-		task_init = curr;
-
-	curr->flags &= ~CLONE_VFORK;
-	curr_context->ax = (reg_t)1;
-
-	return ret_val;
-}
-
 void kjmp_to_doexecve()
 {
-	task_idle = &task0_PCB.task;
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;
 	pt_regs_s *curr_ptregs = task_pt_regs(curr);
-
-	curr->thread.sp = (reg_t)curr_ptregs;
 	curr->flags &= ~PF_KTHREAD;
 
 #ifdef LOAD_ELF
@@ -155,8 +129,9 @@ static void exit_notify(void)
 	{
 		List_s * child_lp = list_hdr_pop(&curr->children);
 		while (child_lp == 0);
-		
-		list_hdr_append(&task_init->children, child_lp);
+
+		task_s *task_initd = myos_find_task_by_pid(1);
+		list_hdr_append(&task_initd->children, child_lp);
 	}
 }
 

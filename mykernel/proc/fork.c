@@ -1055,8 +1055,6 @@ static void myos_pcb_init(task_s *p, u64 clone_flags)
 	memset(p->comm, 0, sizeof(p->comm));
 	list_hdr_init(&p->wait_childexit);
 	list_init(&p->tasks, p);
-	if(clone_flags & CLONE_VM)
-		p->flags |= CLONE_VFORK;
 }
 int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
 /*
@@ -1840,8 +1838,6 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		pt_regs_s *oldregs = task_pt_regs(curr);
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));
-
-		// prepair_COW(current);
 
 		myos_update_mmu_tlb();
 	}

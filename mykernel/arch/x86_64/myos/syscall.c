@@ -106,40 +106,6 @@ MYOS_SYSCALL_DEFINE0(fork)
 	return kernel_clone(&args);
 }
 
-long myos_do_execve(const char *filename,
-		const char *const *argv, const char *const *envp)
-{
-	extern long sys_execve(const char *filename,
-			const char *const __user *argv,
-			const char *const __user *envp);
-
-	char * pathname = NULL;
-	long pathlen = 0;
-	long error = 0;
-	pt_regs_s * curr_context = (pt_regs_s *)current->stack - 1;
-
-	pathname = (char *)kzalloc(CONST_4K, GFP_KERNEL);
-	if(pathname == NULL)
-		return -ENOMEM;
-	pathlen = myos_strnlen_user((char *)curr_context->di, CONST_4K);
-	if(pathlen <= 0)
-	{
-		kfree(pathname);
-		return -EFAULT;
-	}
-	else if(pathlen >= CONST_4K)
-	{
-		kfree(pathname);
-		return -ENAMETOOLONG;
-	}
-	strncpy_from_user(pathname, (void *)curr_context->di, pathlen);
-	
-	error = sys_execve(pathname, (const char *const *)curr_context->si, NULL);
-
-	kfree(pathname);
-	return error;
-}
-
 MYOS_SYSCALL_DEFINE1(exit, int, error_code)
 {
 	return do_exit(error_code);
@@ -200,28 +166,6 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 
 	if (brk < min_brk)
 		goto out;
-
-	// virt_addr_t new_brk = round_up(brk, PAGE_SIZE);
-
-	// if(new_brk == 0)
-	// 	return (virt_addr_t)current->mm->start_brk;
-	// else if(new_brk < current->mm->brk)	//release  brk space
-	// 	return 0;	
-	// else
-	// 	new_brk = do_brk(current->mm->brk, new_brk - current->mm->brk);	//expand brk space
-
-	// current->mm->brk = new_brk;
-	// return new_brk;
-
-	// /*
-	//  * Check against rlimit here. If this check is done later after the test
-	//  * of oldbrk with newbrk then it can escape the test and let the data
-	//  * segment grow beyond its set limit the in case where the limit is
-	//  * not page aligned -Ram Gupta
-	//  */
-	// if (check_data_rlimit(rlimit(RLIMIT_DATA), brk, mm->start_brk,
-	// 		      mm->end_data, mm->start_data))
-	// 	goto out;
 
 	newbrk = PAGE_ALIGN(brk);
 	oldbrk = PAGE_ALIGN(mm->brk);

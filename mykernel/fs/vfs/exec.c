@@ -449,9 +449,10 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 		return -E2BIG;
 
 	while (len > 0) {
-		unsigned int bytes_to_copy =
-			min_t(unsigned int, len,
-				min_not_zero(offset_in_page(pos), PAGE_SIZE));
+		// unsigned int bytes_to_copy =
+		// 	min_t(unsigned int, len,
+		// 		min_not_zero(offset_in_page(pos), PAGE_SIZE));
+		unsigned int bytes_to_copy = len;
 		page_s *page;
 		char *kaddr;
 
@@ -824,117 +825,118 @@ int begin_new_exec(linux_bprm_s * bprm)
 	bprm->mm = NULL;
 
 // #ifdef CONFIG_POSIX_TIMERS
-// 	exit_itimers(me->signal);
-// 	flush_itimer_signals();
+	// exit_itimers(me->signal);
+	// flush_itimer_signals();
 // #endif
 
-// 	/*
-// 	 * Make the signal table private.
-// 	 */
-// 	retval = unshare_sighand(me);
-// 	if (retval)
-// 		goto out_unlock;
+	// /*
+	//  * Make the signal table private.
+	//  */
+	// retval = unshare_sighand(me);
+	// if (retval)
+	// 	goto out_unlock;
 
-// 	/*
-// 	 * Ensure that the uaccess routines can actually operate on userspace
-// 	 * pointers:
-// 	 */
-// 	force_uaccess_begin();
+	// /*
+	//  * Ensure that the uaccess routines can actually operate on userspace
+	//  * pointers:
+	//  */
+	// force_uaccess_begin();
 
-// 	if (me->flags & PF_KTHREAD)
-// 		free_kthread_struct(me);
-// 	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
-// 					PF_NOFREEZE | PF_NO_SETAFFINITY);
-// 	flush_thread();
-// 	me->personality &= ~bprm->per_clear;
+	// if (me->flags & PF_KTHREAD)
+	// 	free_kthread_struct(me);
+	// me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
+	// 				PF_NOFREEZE | PF_NO_SETAFFINITY);
+	// flush_thread();
+	// me->personality &= ~bprm->per_clear;
 
-// 	clear_syscall_work_syscall_user_dispatch(me);
+	// clear_syscall_work_syscall_user_dispatch(me);
 
-// 	/*
-// 	 * We have to apply CLOEXEC before we change whether the process is
-// 	 * dumpable (in setup_new_exec) to avoid a race with a process in userspace
-// 	 * trying to access the should-be-closed file descriptors of a process
-// 	 * undergoing exec(2).
-// 	 */
-// 	do_close_on_exec(me->files);
+	// /*
+	//  * We have to apply CLOEXEC before we change whether the process is
+	//  * dumpable (in setup_new_exec) to avoid a race with a process in userspace
+	//  * trying to access the should-be-closed file descriptors of a process
+	//  * undergoing exec(2).
+	//  */
+	// do_close_on_exec(me->files);
 
-// 	if (bprm->secureexec) {
-// 		/* Make sure parent cannot signal privileged process. */
-// 		me->pdeath_signal = 0;
+	// if (bprm->secureexec) {
+	// 	/* Make sure parent cannot signal privileged process. */
+	// 	me->pdeath_signal = 0;
 
-// 		/*
-// 		 * For secureexec, reset the stack limit to sane default to
-// 		 * avoid bad behavior from the prior rlimits. This has to
-// 		 * happen before arch_pick_mmap_layout(), which examines
-// 		 * RLIMIT_STACK, but after the point of no return to avoid
-// 		 * needing to clean up the change on failure.
-// 		 */
-// 		if (bprm->rlim_stack.rlim_cur > _STK_LIM)
-// 			bprm->rlim_stack.rlim_cur = _STK_LIM;
-// 	}
+	// 	/*
+	// 	 * For secureexec, reset the stack limit to sane default to
+	// 	 * avoid bad behavior from the prior rlimits. This has to
+	// 	 * happen before arch_pick_mmap_layout(), which examines
+	// 	 * RLIMIT_STACK, but after the point of no return to avoid
+	// 	 * needing to clean up the change on failure.
+	// 	 */
+	// 	if (bprm->rlim_stack.rlim_cur > _STK_LIM)
+	// 		bprm->rlim_stack.rlim_cur = _STK_LIM;
+	// }
 
-// 	me->sas_ss_sp = me->sas_ss_size = 0;
+	// me->sas_ss_sp = me->sas_ss_size = 0;
 
-// 	/*
-// 	 * Figure out dumpability. Note that this checking only of current
-// 	 * is wrong, but userspace depends on it. This should be testing
-// 	 * bprm->secureexec instead.
-// 	 */
-// 	if (bprm->interp_flags & BINPRM_FLAGS_ENFORCE_NONDUMP ||
-// 	    !(uid_eq(current_euid(), current_uid()) &&
-// 	      gid_eq(current_egid(), current_gid())))
-// 		set_dumpable(current->mm, suid_dumpable);
-// 	else
-// 		set_dumpable(current->mm, SUID_DUMP_USER);
+	// /*
+	//  * Figure out dumpability. Note that this checking only of current
+	//  * is wrong, but userspace depends on it. This should be testing
+	//  * bprm->secureexec instead.
+	//  */
+	// if (bprm->interp_flags & BINPRM_FLAGS_ENFORCE_NONDUMP ||
+	//     !(uid_eq(current_euid(), current_uid()) &&
+	//       gid_eq(current_egid(), current_gid())))
+	// 	set_dumpable(current->mm, suid_dumpable);
+	// else
+	// 	set_dumpable(current->mm, SUID_DUMP_USER);
 
-// 	perf_event_exec();
-// 	__set_task_comm(me, kbasename(bprm->filename), true);
+	// perf_event_exec();
+	// __set_task_comm(me, kbasename(bprm->filename), true);
+	set_task_comm(me, bprm->filename);
 
-// 	/* An exec changes our domain. We are no longer part of the thread
-// 	   group */
-// 	WRITE_ONCE(me->self_exec_id, me->self_exec_id + 1);
-// 	flush_signal_handlers(me, 0);
+	// /* An exec changes our domain. We are no longer part of the thread
+	//    group */
+	// WRITE_ONCE(me->self_exec_id, me->self_exec_id + 1);
+	// flush_signal_handlers(me, 0);
 
-// 	retval = set_cred_ucounts(bprm->cred);
-// 	if (retval < 0)
-// 		goto out_unlock;
+	// retval = set_cred_ucounts(bprm->cred);
+	// if (retval < 0)
+	// 	goto out_unlock;
 
-// 	/*
-// 	 * install the new credentials for this executable
-// 	 */
-// 	security_bprm_committing_creds(bprm);
+	// /*
+	//  * install the new credentials for this executable
+	//  */
+	// security_bprm_committing_creds(bprm);
 
-// 	commit_creds(bprm->cred);
-// 	bprm->cred = NULL;
+	// commit_creds(bprm->cred);
+	// bprm->cred = NULL;
 
-// 	/*
-// 	 * Disable monitoring for regular users
-// 	 * when executing setuid binaries. Must
-// 	 * wait until new credentials are committed
-// 	 * by commit_creds() above
-// 	 */
-// 	if (get_dumpable(me->mm) != SUID_DUMP_USER)
-// 		perf_event_exit_task(me);
-// 	/*
-// 	 * cred_guard_mutex must be held at least to this point to prevent
-// 	 * ptrace_attach() from altering our determination of the task's
-// 	 * credentials; any time after this it may be unlocked.
-// 	 */
-// 	security_bprm_committed_creds(bprm);
+	// /*
+	//  * Disable monitoring for regular users
+	//  * when executing setuid binaries. Must
+	//  * wait until new credentials are committed
+	//  * by commit_creds() above
+	//  */
+	// if (get_dumpable(me->mm) != SUID_DUMP_USER)
+	// 	perf_event_exit_task(me);
+	// /*
+	//  * cred_guard_mutex must be held at least to this point to prevent
+	//  * ptrace_attach() from altering our determination of the task's
+	//  * credentials; any time after this it may be unlocked.
+	//  */
+	// security_bprm_committed_creds(bprm);
 
-// 	/* Pass the opened binary to the interpreter. */
-// 	if (bprm->have_execfd) {
-// 		retval = get_unused_fd_flags(0);
-// 		if (retval < 0)
-// 			goto out_unlock;
-// 		fd_install(retval, bprm->executable);
-// 		bprm->executable = NULL;
-// 		bprm->execfd = retval;
-// 	}
-// 	return 0;
+	// /* Pass the opened binary to the interpreter. */
+	// if (bprm->have_execfd) {
+	// 	retval = get_unused_fd_flags(0);
+	// 	if (retval < 0)
+	// 		goto out_unlock;
+	// 	fd_install(retval, bprm->executable);
+	// 	bprm->executable = NULL;
+	// 	bprm->execfd = retval;
+	// }
+	return 0;
 
 // out_unlock:
-// 	up_write(&me->signal->exec_update_lock);
+	// up_write(&me->signal->exec_update_lock);
 out:
 	return retval;
 }
@@ -974,11 +976,11 @@ static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
 	if (fd == AT_FDCWD || filename->name[0] == '/') {
 		bprm->filename = filename->name;
 	} else {
-	// 	if (filename->name[0] == '\0')
-	// 		bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
-	// 	else
-	// 		bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
-	// 					  fd, filename->name);
+		// if (filename->name[0] == '\0')
+		// 	bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
+		// else
+		// 	bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
+		// 				  fd, filename->name);
 		if (!bprm->fdpath)
 			goto out_free;
 
@@ -1066,7 +1068,6 @@ static int search_binary_handler(linux_bprm_s *bprm)
 	return retval;
 }
 
-extern int __myos_bprm_execve(linux_bprm_s *bprm);
 /*
  * sys_execve() executes a new program.
  */
@@ -1075,13 +1076,14 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 {
 	file_s *file;
 	int retval;
+	task_s *curr = current;
 
 	// retval = prepare_bprm_creds(bprm);
 	// if (retval)
 	// 	return retval;
 
 	// check_unsafe_exec(bprm);
-	current->in_execve = 1;
+	curr->in_execve = 1;
 
 	file = do_open_execat(fd, filename, flags);
 	retval = PTR_ERR(file);
@@ -1113,13 +1115,12 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 	// {
 		retval = search_binary_handler(bprm);
 	// }
-	retval = __myos_bprm_execve(bprm);
 	if (retval < 0)
 		goto out;
 
 	/* execve succeeded */
-	current->fs->in_exec = 0;
-	current->in_execve = 0;
+	curr->fs->in_exec = 0;
+	curr->in_execve = 0;
 	// rseq_execve(current);
 	// acct_update_integrals(current);
 	// task_numa_free(current, false);
@@ -1197,13 +1198,13 @@ static int do_execveat_common(int fd, filename_s *filename,
 		goto out_free;
 	bprm->exec = bprm->p;
 
-	// retval = copy_strings(bprm->envc, envp, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = copy_strings(bprm->envc, envp, bprm);
+	if (retval < 0)
+		goto out_free;
 
-	// retval = copy_strings(bprm->argc, argv, bprm);
-	// if (retval < 0)
-	// 	goto out_free;
+	retval = copy_strings(bprm->argc, argv, bprm);
+	if (retval < 0)
+		goto out_free;
 
 	/*
 	 * When argv is empty, add an empty string ("") as argv[0] to
