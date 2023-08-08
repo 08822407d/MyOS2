@@ -559,7 +559,7 @@
 									 * table hasn't been allocated.
 									 */
 		// union {
-		// 	pte_t		orig_pte;	/* Value of PTE at the time of fault */
+			pte_t		orig_pte;	/* Value of PTE at the time of fault */
 		// 	pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
 		// 							 * used by PMD fault only.
 		// 							 */
@@ -1006,18 +1006,17 @@
 	// void free_compound_page(page_s *page);
 
 	// #ifdef CONFIG_MMU
-	// /*
-	// * Do pte_mkwrite, but only if the vma says VM_WRITE.  We do this when
-	// * servicing faults for write access.  In the normal case, do always want
-	// * pte_mkwrite.  But get_user_pages can cause write faults for mappings
-	// * that do not have writing enabled, when used by access_process_vm.
-	// */
-	// static inline pte_t maybe_mkwrite(pte_t pte, vma_s *vma)
-	// {
-	// 	if (likely(vma->vm_flags & VM_WRITE))
-	// 		pte = pte_mkwrite(pte);
-	// 	return pte;
-	// }
+	/*
+	* Do pte_mkwrite, but only if the vma says VM_WRITE.  We do this when
+	* servicing faults for write access.  In the normal case, do always want
+	* pte_mkwrite.  But get_user_pages can cause write faults for mappings
+	* that do not have writing enabled, when used by access_process_vm.
+	*/
+	static inline pte_t maybe_mkwrite(pte_t pte, vma_s *vma) {
+		if (likely(vma->vm_flags & VM_WRITE))
+			pte = pte_mkwrite(pte);
+		return pte;
+	}
 
 	// vm_fault_t do_set_pmd(vm_fault_s *vmf, page_s *page);
 	// void do_set_pte(vm_fault_s *vmf, page_s *page, unsigned long addr);

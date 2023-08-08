@@ -623,6 +623,101 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 }
 
 
+static inline bool
+cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
+	bool ret;
+	// void *kaddr;
+	// void __user *uaddr;
+	// bool locked = false;
+	vma_s *vma = vmf->vma;
+	mm_s *mm = vma->vm_mm;
+	unsigned long addr = vmf->address;
+
+	if (likely(src)) {
+		// copy_user_highpage(dst, src, addr, vma);
+		copy_user_page((void *)page_to_virt(dst),
+				(void *)page_to_virt(src), addr, dst);
+		return true;
+	}
+
+// 	/*
+// 	 * If the source page was a PFN mapping, we don't have
+// 	 * a "struct page" for it. We do a best-effort copy by
+// 	 * just copying from the original user address. If that
+// 	 * fails, we just zero-fill it. Live with it.
+// 	 */
+// 	kaddr = kmap_atomic(dst);
+// 	uaddr = (void __user *)(addr & PAGE_MASK);
+
+// 	/*
+// 	 * On architectures with software "accessed" bits, we would
+// 	 * take a double page fault, so mark it accessed here.
+// 	 */
+// 	if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+// 		pte_t entry;
+
+// 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+// 		locked = true;
+// 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+// 			/*
+// 			 * Other thread has already handled the fault
+// 			 * and update local tlb only
+// 			 */
+// 			update_mmu_tlb(vma, addr, vmf->pte);
+// 			ret = false;
+// 			goto pte_unlock;
+// 		}
+
+// 		entry = pte_mkyoung(vmf->orig_pte);
+// 		if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
+// 			update_mmu_cache(vma, addr, vmf->pte);
+// 	}
+
+// 	/*
+// 	 * This really shouldn't fail, because the page is there
+// 	 * in the page tables. But it might just be unreadable,
+// 	 * in which case we just give up and fill the result with
+// 	 * zeroes.
+// 	 */
+// 	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+// 		if (locked)
+// 			goto warn;
+
+// 		/* Re-validate under PTL if the page is still mapped */
+// 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+// 		locked = true;
+// 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+// 			/* The PTE changed under us, update local tlb */
+// 			update_mmu_tlb(vma, addr, vmf->pte);
+// 			ret = false;
+// 			goto pte_unlock;
+// 		}
+
+// 		/*
+// 		 * The same page can be mapped back since last copy attempt.
+// 		 * Try to copy again under PTL.
+// 		 */
+// 		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+// 			/*
+// 			 * Give a warn in case there can be some obscure
+// 			 * use-case
+// 			 */
+// warn:
+// 			WARN_ON_ONCE(1);
+// 			clear_page(kaddr);
+// 		}
+// 	}
+
+	ret = true;
+
+pte_unlock:
+	// if (locked)
+	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// kunmap_atomic(kaddr);
+	// flush_dcache_page(dst);
+
+	return ret;
+}
 
 static gfp_t __get_fault_gfp_mask(vma_s *vma)
 {
@@ -636,6 +731,178 @@ static gfp_t __get_fault_gfp_mask(vma_s *vma)
 	 * a default GFP_KERNEL for them.
 	 */
 	return GFP_KERNEL;
+}
+
+
+
+/*
+ * Handle the case of a page which we actually need to copy to a new page.
+ *
+ * Called with mmap_lock locked and the old page referenced, but
+ * without the ptl held.
+ *
+ * High level logic flow:
+ *
+ * - Allocate a page, copy the content of the old page to the new one.
+ * - Handle book keeping and accounting - cgroups, mmu-notifiers, etc.
+ * - Take the PTL. If the pte changed, bail out and release the allocated page
+ * - If the pte is still the way we remember it, update the page table and all
+ *   relevant references. This includes dropping the reference the page-table
+ *   held to the old page, as well as updating the rmap.
+ * - In any case, unlock the PTL and drop the reference we took to the old page.
+ */
+static vm_fault_t wp_page_copy(vm_fault_s *vmf)
+{
+	vma_s *vma = vmf->vma;
+	mm_s *mm = vma->vm_mm;
+	page_s *old_page = vmf->page;
+	page_s *new_page = NULL;
+	pte_t entry;
+	int page_copied = 0;
+	// struct mmu_notifier_range range;
+
+	// if (unlikely(anon_vma_prepare(vma)))
+	// 	goto oom;
+
+	// if (is_zero_pfn(pte_pfn(vmf->orig_pte))) {
+	// 	new_page = alloc_zeroed_user_highpage_movable(vma,
+	// 						      vmf->address);
+	// 	if (!new_page)
+	// 		goto oom;
+	// } else {
+	// 	new_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
+	// 			vmf->address);
+		new_page = alloc_page(GFP_HIGHUSER_MOVABLE);
+		if (!new_page)
+			goto oom;
+
+		if (!cow_user_page(new_page, old_page, vmf)) {
+			/*
+			 * COW failed, if the fault was solved by other,
+			 * it's fine. If not, userspace would re-fault on
+			 * the same address and we will handle the fault
+			 * from the second attempt.
+			 */
+			put_page(new_page);
+			if (old_page)
+				put_page(old_page);
+			return 0;
+		}
+	// }
+
+	// if (mem_cgroup_charge(page_folio(new_page), mm, GFP_KERNEL))
+	// 	goto oom_free_new;
+	// cgroup_throttle_swaprate(new_page, GFP_KERNEL);
+
+	// __SetPageUptodate(new_page);
+
+	// mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm,
+	// 			vmf->address & PAGE_MASK,
+	// 			(vmf->address & PAGE_MASK) + PAGE_SIZE);
+	// mmu_notifier_invalidate_range_start(&range);
+
+	// /*
+	//  * Re-check the pte - we dropped the lock
+	//  */
+	// vmf->pte = pte_offset_map_lock(mm, vmf->pmd, vmf->address, &vmf->ptl);
+	// if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	// 	if (old_page) {
+	// 		if (!PageAnon(old_page)) {
+	// 			dec_mm_counter_fast(mm,
+	// 					mm_counter_file(old_page));
+	// 			inc_mm_counter_fast(mm, MM_ANONPAGES);
+	// 		}
+	// 	} else {
+	// 		inc_mm_counter_fast(mm, MM_ANONPAGES);
+	// 	}
+	// 	flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
+	// 	entry = mk_pte(new_page, vma->vm_page_prot);
+		entry = arch_make_pte(page_to_phys(new_page) | _PAGE_PRESENT | _PAGE_USER |  _PAGE_RW | _PAGE_PAT);
+	// 	entry = pte_sw_mkyoung(entry);
+		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+
+	// 	/*
+	// 	 * Clear the pte entry and flush it first, before updating the
+	// 	 * pte with the new entry, to keep TLBs on different CPUs in
+	// 	 * sync. This code used to set the new PTE then flush TLBs, but
+	// 	 * that left a window where the new PTE could be loaded into
+	// 	 * some TLBs while the old PTE remains in others.
+	// 	 */
+	// 	ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
+	// 	page_add_new_anon_rmap(new_page, vma, vmf->address, false);
+	// 	lru_cache_add_inactive_or_unevictable(new_page, vma);
+	// 	/*
+	// 	 * We call the notify macro here because, when using secondary
+	// 	 * mmu page tables (such as kvm shadow page tables), we want the
+	// 	 * new page to be mapped directly into the secondary page table.
+	// 	 */
+	// 	set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
+		set_pte_at(mm, vmf->address, vmf->pte, entry);
+	// 	update_mmu_cache(vma, vmf->address, vmf->pte);
+	// 	if (old_page) {
+	// 		/*
+	// 		 * Only after switching the pte to the new page may
+	// 		 * we remove the mapcount here. Otherwise another
+	// 		 * process may come and find the rmap count decremented
+	// 		 * before the pte is switched to the new page, and
+	// 		 * "reuse" the old page writing into it while our pte
+	// 		 * here still points into it and can be read by other
+	// 		 * threads.
+	// 		 *
+	// 		 * The critical issue is to order this
+	// 		 * page_remove_rmap with the ptp_clear_flush above.
+	// 		 * Those stores are ordered by (if nothing else,)
+	// 		 * the barrier present in the atomic_add_negative
+	// 		 * in page_remove_rmap.
+	// 		 *
+	// 		 * Then the TLB flush in ptep_clear_flush ensures that
+	// 		 * no process can access the old page before the
+	// 		 * decremented mapcount is visible. And the old page
+	// 		 * cannot be reused until after the decremented
+	// 		 * mapcount is visible. So transitively, TLBs to
+	// 		 * old page will be flushed before it can be reused.
+	// 		 */
+	// 		page_remove_rmap(old_page, false);
+	// 	}
+
+	// 	/* Free the old page.. */
+	// 	new_page = old_page;
+	// 	page_copied = 1;
+	// } else {
+	// 	update_mmu_tlb(vma, vmf->address, vmf->pte);
+	// }
+
+	// if (new_page)
+	// 	put_page(new_page);
+
+	// pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// /*
+	//  * No need to double call mmu_notifier->invalidate_range() callback as
+	//  * the above ptep_clear_flush_notify() did already call it.
+	//  */
+	// mmu_notifier_invalidate_range_only_end(&range);
+	// if (old_page) {
+	// 	/*
+	// 	 * Don't let another task, with possibly unlocked vma,
+	// 	 * keep the mlocked page.
+	// 	 */
+	// 	if (page_copied && (vma->vm_flags & VM_LOCKED)) {
+	// 		lock_page(old_page);	/* LRU manipulation */
+	// 		if (PageMlocked(old_page))
+	// 			munlock_vma_page(old_page);
+	// 		unlock_page(old_page);
+	// 	}
+	// 	if (page_copied)
+	// 		free_swap_cache(old_page);
+	// 	put_page(old_page);
+	// }
+	// return page_copied ? VM_FAULT_WRITE : 0;
+oom_free_new:
+	put_page(new_page);
+oom:
+	if (old_page)
+		put_page(old_page);
+	return VM_FAULT_OOM;
 }
 
 
@@ -726,7 +993,7 @@ copy:
 	get_page(vmf->page);
 
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// return wp_page_copy(vmf);
+	return wp_page_copy(vmf);
 }
 
 
@@ -1223,54 +1490,54 @@ static vm_fault_t do_fault(vm_fault_s *vmf)
  */
 static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 {
-	// pte_t entry;
+	pte_t entry;
 
-	// if (unlikely(pmd_none(*vmf->pmd))) {
-	// 	/*
-	// 	 * Leave __pte_alloc() until later: because vm_ops->fault may
-	// 	 * want to allocate huge page, and if we expose page table
-	// 	 * for an instant, it will be difficult to retract from
-	// 	 * concurrent faults and from rmap lookups.
-	// 	 */
-	// 	vmf->pte = NULL;
-	// } else {
-	// 	/*
-	// 	 * If a huge pmd materialized under us just retry later.  Use
-	// 	 * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
-	// 	 * of pmd_trans_huge() to ensure the pmd didn't become
-	// 	 * pmd_trans_huge under us and then back to pmd_none, as a
-	// 	 * result of MADV_DONTNEED running immediately after a huge pmd
-	// 	 * fault in a different thread of this mm, in turn leading to a
-	// 	 * misleading pmd_trans_huge() retval. All we have to ensure is
-	// 	 * that it is a regular pmd that we can walk with
-	// 	 * pte_offset_map() and we can do that through an atomic read
-	// 	 * in C, which is what pmd_trans_unstable() provides.
-	// 	 */
-	// 	if (pmd_devmap_trans_unstable(vmf->pmd))
-	// 		return 0;
-	// 	/*
-	// 	 * A regular pmd is established and it can't morph into a huge
-	// 	 * pmd from under us anymore at this point because we hold the
-	// 	 * mmap_lock read mode and khugepaged takes it in write mode.
-	// 	 * So now it's safe to run pte_offset_map().
-	// 	 */
-	// 	vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
-	// 	vmf->orig_pte = *vmf->pte;
+	if (unlikely(arch_pmd_none(*vmf->pmd))) {
+		/*
+		 * Leave __pte_alloc() until later: because vm_ops->fault may
+		 * want to allocate huge page, and if we expose page table
+		 * for an instant, it will be difficult to retract from
+		 * concurrent faults and from rmap lookups.
+		 */
+		vmf->pte = NULL;
+	} else {
+		// /*
+		//  * If a huge pmd materialized under us just retry later.  Use
+		//  * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
+		//  * of pmd_trans_huge() to ensure the pmd didn't become
+		//  * pmd_trans_huge under us and then back to pmd_none, as a
+		//  * result of MADV_DONTNEED running immediately after a huge pmd
+		//  * fault in a different thread of this mm, in turn leading to a
+		//  * misleading pmd_trans_huge() retval. All we have to ensure is
+		//  * that it is a regular pmd that we can walk with
+		//  * pte_offset_map() and we can do that through an atomic read
+		//  * in C, which is what pmd_trans_unstable() provides.
+		//  */
+		// if (pmd_devmap_trans_unstable(vmf->pmd))
+		// 	return 0;
+		/*
+		 * A regular pmd is established and it can't morph into a huge
+		 * pmd from under us anymore at this point because we hold the
+		 * mmap_lock read mode and khugepaged takes it in write mode.
+		 * So now it's safe to run pte_offset_map().
+		 */
+		// vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
+		vmf->orig_pte = *vmf->pte;
 
-	// 	/*
-	// 	 * some architectures can have larger ptes than wordsize,
-	// 	 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
-	// 	 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
-	// 	 * accesses.  The code below just needs a consistent view
-	// 	 * for the ifs and we later double check anyway with the
-	// 	 * ptl lock held. So here a barrier will do.
-	// 	 */
-	// 	barrier();
-	// 	if (pte_none(vmf->orig_pte)) {
-	// 		pte_unmap(vmf->pte);
-	// 		vmf->pte = NULL;
-	// 	}
-	// }
+		/*
+		 * some architectures can have larger ptes than wordsize,
+		 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
+		 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
+		 * accesses.  The code below just needs a consistent view
+		 * for the ifs and we later double check anyway with the
+		 * ptl lock held. So here a barrier will do.
+		 */
+		barrier();
+		// if (arch_pte_none(vmf->orig_pte)) {
+		// 	pte_unmap(vmf->pte);
+		// 	vmf->pte = NULL;
+		// }
+	}
 
 	if (arch_pte_none(*vmf->pte)) {
 		if (vmf->vma->vm_ops == NULL)
@@ -1287,7 +1554,7 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 
 	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
 	// spin_lock(vmf->ptl);
-	// entry = vmf->orig_pte;
+	entry = vmf->orig_pte;
 	// if (unlikely(!pte_same(*vmf->pte, entry))) {
 	// 	update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
 	// 	goto unlock;
@@ -1295,9 +1562,9 @@ static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
 	if (vmf->flags & FAULT_FLAG_WRITE) {
 		if (!pte_writable(*vmf->pte))
 			return do_wp_page(vmf);
-		// entry = pte_mkdirty(entry);
+		entry = pte_mkdirty(entry);
 	}
-	// entry = pte_mkyoung(entry);
+	entry = pte_mkyoung(entry);
 	// if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
 	// 			vmf->flags & FAULT_FLAG_WRITE)) {
 	// 	update_mmu_cache(vmf->vma, vmf->address, vmf->pte);

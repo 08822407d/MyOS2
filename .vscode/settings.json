@@ -230,7 +230,8 @@
 		"irqflags.h": "c",
 		"syscall_wrapper.h": "c",
 		"mman.h": "c",
-		"atomic64_64.h": "c"
+		"atomic64_64.h": "c",
+		"getorder.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

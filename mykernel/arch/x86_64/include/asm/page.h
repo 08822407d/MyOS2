@@ -4,31 +4,33 @@
 
 	#include <linux/kernel/types.h>
 
+
+	#include <linux/kernel/asm-generic/page.h>
+
 	#ifdef __KERNEL__
 
 	#	include <asm/page_types.h>
 
 		#include <asm/page_64.h>
 
-		// #ifndef __ASSEMBLY__
+		#ifndef __ASSEMBLY__
 
-			// struct page;
+			struct page;
+			typedef struct page page_s;
 
 			// #include <linux/range.h>
 			// extern struct range pfn_mapped[];
 			// extern int nr_pfn_mapped;
 
-			// static inline void clear_user_page(void *page,
-			// 		unsigned long vaddr, page_s *pg)
-			// {
-			// 	clear_page(page);
-			// }
+			static inline void
+			clear_user_page(void *page, unsigned long vaddr, page_s *pg) {
+				clear_page(page);
+			}
 
-			// static inline void copy_user_page(void *to, void *from,
-			// 		unsigned long vaddr, page_s *topage)
-			// {
-			// 	copy_page(to, from);
-			// }
+			static inline void
+			copy_user_page(void *to, void *from, unsigned long vaddr, page_s *topage) {
+				copy_page(to, from);
+			}
 
 			// #define alloc_zeroed_user_highpage_movable(vma, vaddr) \
 			// 			alloc_page_vma(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, vma, vaddr)
@@ -68,7 +70,7 @@
 			// extern bool __virt_addr_valid(unsigned long kaddr);
 			// #define virt_addr_valid(kaddr) __virt_addr_valid((unsigned long)(kaddr))
 
-		// #endif /* __ASSEMBLY__ */
+		#endif /* __ASSEMBLY__ */
 
 		// #include <asm-generic/memory_model.h>
 		#include <linux/kernel/asm-generic/getorder.h>
