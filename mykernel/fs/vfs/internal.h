@@ -138,7 +138,7 @@ extern int invalidate_inodes(super_block_s *, bool);
 /*
  * dcache.c
  */
-extern int d_set_mounted(dentry_s *dentry);
+// extern int d_set_mounted(dentry_s *dentry);
 // extern long prune_dcache_sb(super_block_s *sb, struct shrink_control *sc);
 extern dentry_s *d_alloc_cursor(dentry_s *);
 extern dentry_s *d_alloc_pseudo(super_block_s *, const qstr_s *);

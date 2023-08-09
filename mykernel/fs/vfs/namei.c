@@ -329,7 +329,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name,
 	// {
 	//		struct dentry *d_alloc(struct dentry * parent, const struct qstr *name)
 	//		{
-				dentry = __d_alloc(dir->d_sb, name);
+				dentry = __myos_d_alloc(dir->d_sb, name);
 	//		}
 	// }
 	if (IS_ERR(dentry))
@@ -369,7 +369,7 @@ static dentry_s *__lookup_hash(const qstr_s *name,
 	if (IS_DEADDIR(dir))
 		return ERR_PTR(-ENOENT);
 
-	dentry = __d_alloc(base->d_sb, name);
+	dentry = __myos_d_alloc(base->d_sb, name);
 	if (!dentry)
 		return ERR_PTR(-ENOMEM);
 	dentry->d_parent = base;

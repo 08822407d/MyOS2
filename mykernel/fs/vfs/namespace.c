@@ -148,8 +148,12 @@ static void put_mountpoint(mountpoint_s *mp)
 	// {
 		if (--mp->m_count == 0) {
 			dentry_s *dentry = mp->m_dentry;
+			// BUG_ON(!hlist_empty(&mp->m_list));
+			// spin_lock(&dentry->d_lock);
 			dentry->d_flags &= ~DCACHE_MOUNTED;
+			// spin_unlock(&dentry->d_lock);
 			// dput_to_list(dentry, list);
+			// hlist_del(&mp->m_hash);
 			kfree(mp);
 		}
 	// }
@@ -238,9 +242,20 @@ static mountpoint_s *lock_mount(IN path_s *path)
 	vfsmount_s * mnt;
 	dentry_s * dentry = path->dentry;
 retry:
+	// inode_lock(dentry->d_inode);
+	// if (unlikely(cant_mount(dentry))) {
+	// 	inode_unlock(dentry->d_inode);
+	// 	return ERR_PTR(-ENOENT);
+	// }
+	// namespace_lock();
 	mnt = lookup_mnt(path);
-	if (mnt == NULL) {
+	if (likely(mnt == NULL)) {
 		mountpoint_s * mp = get_mountpoint(dentry);
+		if (IS_ERR(mp)) {
+			// namespace_unlock();
+			// inode_unlock(dentry->d_inode);
+			return mp;
+		}
 		return mp;
 	}
 	path->mnt = mnt;
@@ -469,6 +484,15 @@ static int do_add_mount(mount_s *newmnt,
 
 	mnt_flags &= ~MNT_INTERNAL_FLAGS;
 
+	// if (unlikely(!check_mnt(parent))) {
+	// 	/* that's acceptable only for automounts done in private ns */
+	// 	if (!(mnt_flags & MNT_SHRINKABLE))
+	// 		return -EINVAL;
+	// 	/* ... and for those we'd better have mountpoint still alive */
+	// 	if (!parent->mnt_ns)
+	// 		return -EINVAL;
+	// }
+
 	/* Refuse the same filesystem on the same mount point */
 	if (path->mnt->mnt_sb == newmnt->mnt.mnt_sb &&
 	    path->mnt->mnt_root == path->dentry)
@@ -493,9 +517,22 @@ static int do_new_mount_fc(fs_ctxt_s *fc,
 	super_block_s *sb = fc->root->d_sb;
 	int error;
 
+	// error = security_sb_kern_mount(sb);
+	// if (!error && mount_too_revealing(sb, &mnt_flags))
+	// 	error = -EPERM;
+
+	// if (unlikely(error)) {
+	// 	fc_drop_locked(fc);
+	// 	return error;
+	// }
+
+	// up_write(&sb->s_umount);
+
 	mnt = vfs_create_mount(fc);
 	if (IS_ERR(mnt))
 		return PTR_ERR(mnt);
+
+	// mnt_warn_timestamp_expiry(mountpoint, mnt);
 
 	mp = lock_mount(mountpoint);
 	if (IS_ERR(mp)) {
@@ -503,6 +540,7 @@ static int do_new_mount_fc(fs_ctxt_s *fc,
 		return PTR_ERR(mp);
 	}
 	error = do_add_mount(real_mount(mnt), mp, mountpoint, mnt_flags);
+	unlock_mount(mp);
 	// if (error < 0)
 	// 	mntput(mnt);
 	return error;
@@ -657,6 +695,6 @@ void kern_unmount(vfsmount_s *mnt)
 {
 	/* release long term mount so mount point can be released */
 	if (!IS_ERR_OR_NULL(mnt)) {
-		mntput(mnt);
+		// mntput(mnt);
 	}
 }

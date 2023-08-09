@@ -50,7 +50,7 @@ int rw_verify_area(int read_write, file_s *file, const loff_t *ppos, size_t coun
 {
 	return 0;
 
-	if ((ssize_t) count < 0)
+	if (likely((ssize_t) count < 0))
 		return -EINVAL;
 
 	if (ppos) {

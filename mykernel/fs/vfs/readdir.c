@@ -104,7 +104,7 @@ static int filldir64(dir_ctxt_s *ctx, const char *name,
 	int prev_reclen = 0;
 
 	buf->error = verify_dirent_name(name, namelen);
-	if (buf->error)
+	if (unlikely(buf->error))
 		return buf->error;
 	buf->error = -EINVAL;	/* only used if we fail.. */
 	if (reclen > buf->count)

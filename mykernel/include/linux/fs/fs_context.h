@@ -145,8 +145,11 @@
 		vfs_get_keyed_super,			/* Superblocks with different s_fs_info keys may exist */
 		vfs_get_independent_super,		/* Multiple independent superblocks may exist */
 	};
+	// extern int
+	// vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
+	// 		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc));
 	extern int
-	vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
+	myos_vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
 			int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc));
 
 	extern int

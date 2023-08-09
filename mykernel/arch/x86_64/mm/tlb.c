@@ -190,18 +190,15 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	if (need_flush) {
 		// this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
 		// this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
-		load_new_mm_cr3(next->pgd, new_asid, true);
-
 		// trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
 	} else {
 		/* The new ASID is already up to date. */
-		load_new_mm_cr3(next->pgd, new_asid, false);
-
 		// trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
 	}
+	load_new_mm_cr3(next->pgd, new_asid, need_flush);
 
-	// /* Make sure we write CR3 before loaded_mm. */
-	// barrier();
+	/* Make sure we write CR3 before loaded_mm. */
+	barrier();
 
 	// this_cpu_write(cpu_tlbstate.loaded_mm, next);
 	// this_cpu_write(cpu_tlbstate.loaded_mm_asid, new_asid);

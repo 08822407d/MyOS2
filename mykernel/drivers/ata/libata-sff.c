@@ -270,7 +270,7 @@ void ata_sff_tf_read(ata_port_s *ap, ata_tf_s *tf)
 	tf->device	= inb(ioaddr->device_addr);
 
 	if (tf->flags & ATA_TFLAG_LBA48) {
-		if (ioaddr->ctl_addr) {
+		if (likely(ioaddr->ctl_addr)) {
 			outb(tf->ctl | ATA_HOB, ioaddr->ctl_addr);
 			tf->hob_feature	= inb(ioaddr->error_addr);
 			tf->hob_nsect	= inb(ioaddr->nsect_addr);

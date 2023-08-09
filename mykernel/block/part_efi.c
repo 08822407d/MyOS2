@@ -1,3 +1,5 @@
+// block/partitions/efi.c
+
 // SPDX-License-Identifier: GPL-2.0-or-later
 /************************************************************
  * EFI GUID Partition Table handling

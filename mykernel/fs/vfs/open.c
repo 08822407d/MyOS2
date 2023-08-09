@@ -59,7 +59,7 @@ open_how_s build_open_how(int flags, umode_t mode)
 // Linux function proto:
 // static int do_dentry_open(file_s *f, struct inode *inode,
 //			  int (*open)(struct inode *, file_s *))
-static int do_dentry_open(file_s * f, inode_s * inode)
+static int myos_do_dentry_open(file_s * f, inode_s * inode)
 {
 	unsigned long error = -ENOERR;
 	f->f_op = inode->i_fop;
@@ -313,7 +313,7 @@ out:
 int vfs_open(const path_s * path, file_s * file)
 {
 	file->f_path = *path;
-	return do_dentry_open(file, path->dentry->d_inode);
+	return myos_do_dentry_open(file, path->dentry->d_inode);
 }
 
 /*==============================================================================================*
@@ -335,7 +335,7 @@ int filp_close(file_s *filp)
 	// if (filp->f_op->flush)
 	// 	retval = filp->f_op->flush(filp, id);
 
-	// if (!(filp->f_mode & FMODE_PATH)) {
+	// if (likely(!(filp->f_mode & FMODE_PATH))) {
 	// 	dnotify_flush(filp, id);
 	// 	locks_remove_posix(filp, id);
 	// }

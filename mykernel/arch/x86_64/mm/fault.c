@@ -322,13 +322,13 @@ void do_user_addr_fault(pt_regs_s *regs,
 
 	vm_fault_s vmf = myos_dump_pagetable(address);
 	vma = myos_find_vma(mm, address);
-	if (!vma) {
+	if (unlikely(!vma)) {
 		myos_bad_area(regs, error_code, address);
 		return;
 	}
-	if (vma->vm_start <= address)
+	if (likely(vma->vm_start <= address))
 		goto good_area;
-	if (!(vma->vm_flags & VM_GROWSDOWN)) {
+	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
 		myos_bad_area(regs, error_code, address);
 		return;
 	}
@@ -431,7 +431,7 @@ handle_page_fault(pt_regs_s *regs,
 	// 	return;
 
 	/* Was the fault on kernel-controlled part of the address space? */
-	if (fault_in_kernel_space(address)) {
+	if (unlikely(fault_in_kernel_space(address))) {
 		do_kern_addr_fault(regs, error_code, address);
 	} else {
 		do_user_addr_fault(regs, error_code, address);

@@ -239,7 +239,8 @@
 	// extern dentry_s *d_lookup(const dentry_s *, const qstr_s *);
 	// extern dentry_s *d_hash_and_lookup(dentry_s *, qstr_s *);
 	extern dentry_s *__d_lookup(const dentry_s *, const qstr_s *);
-	extern dentry_s *__d_alloc(super_block_s *sb, const qstr_s * name);
+	// extern dentry_s *__d_alloc(super_block_s *sb, const qstr_s * name);
+	extern dentry_s *__myos_d_alloc(super_block_s *sb, const qstr_s * name);
 	// extern dentry_s *__d_lookup_rcu(const dentry_s *parent,
 	// 				const qstr_s *name, unsigned *seq);
 

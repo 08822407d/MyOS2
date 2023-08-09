@@ -122,7 +122,7 @@ unsigned myos_ata_exec_internal(ata_dev_s *dev, ata_tf_s *tf, void *buf ,size_t 
 	qc->buf = buf;
 	qc->nbytes = len;
 
-	ata_qc_issue(qc);
+	myos_ata_qc_issue(qc);
 }
 
 int myos_ata_dev_read_id(ata_dev_s *dev, u16 *id)
@@ -505,7 +505,8 @@ int ata_dev_configure(ata_dev_s *dev)
  *	LOCKING:
  *	spin_lock_irqsave(host lock)
  */
-void ata_qc_issue(ata_q_cmd_s *qc)
+// void ata_qc_issue(struct ata_queued_cmd *qc)
+void myos_ata_qc_issue(ata_q_cmd_s *qc)
 {
 	unsigned int err = 0;
 	/* defer PIO handling to sff_qc_issue */

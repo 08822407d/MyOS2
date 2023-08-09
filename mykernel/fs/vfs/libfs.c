@@ -91,7 +91,7 @@ pseudo_fs_ctxt_s *init_pseudo(fs_ctxt_s *fc, unsigned long magic)
 	struct pseudo_fs_context *ctx;
 
 	ctx = kzalloc(sizeof(pseudo_fs_ctxt_s), GFP_KERNEL);
-	if (ctx) {
+	if (likely(ctx)) {
 		ctx->magic = magic;
 		fc->fs_private = ctx;
 		fc->ops = &pseudo_fs_context_ops;
@@ -154,6 +154,8 @@ static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 {
 	dentry_s	*dentry = cursor->d_parent,
 				*found = NULL;
+
+	// spin_lock(&dentry->d_lock);
 	List_s *lp = p;
 	while ((lp = lp->next) != &(dentry->d_subdirs.header)) {
 		dentry_s *d = container_of(lp, dentry_s, d_child);
@@ -164,8 +166,16 @@ static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 			found = d;
 			break;
 		}
+		// if (need_resched()) {
+		// 	list_move(&cursor->d_child, p);
+		// 	p = &cursor->d_child;
+		// 	spin_unlock(&dentry->d_lock);
+		// 	cond_resched();
+		// 	spin_lock(&dentry->d_lock);
+		// }
 	}
-
+	// spin_unlock(&dentry->d_lock);
+	// dput(last);
 	return found;
 }
 

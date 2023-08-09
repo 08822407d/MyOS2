@@ -98,7 +98,7 @@ static ssize_t read_zero(file_s *file,
 		cleared += chunk;
 
 		// left = clear_user(buf + cleared, chunk);
-		// if (left) {
+		// if (unlikely(left)) {
 		// 	cleared += (chunk - left);
 		// 	if (!cleared)
 		// 		return -EFAULT;

@@ -130,12 +130,16 @@ void put_fs_context(fs_ctxt_s *fc)
 static int legacy_get_tree(fs_ctxt_s *fc)
 {
 	legacy_fs_ctx_s *ctx = fc->fs_private;
+	super_block_s *sb;
 	dentry_s *root;
 
 	root = fc->fs_type->mount(fc->fs_type, fc->sb_flags,
 				      fc->source, ctx->legacy_data);
 	if (IS_ERR(root))
 		return PTR_ERR(root);
+
+	sb = root->d_sb;
+	BUG_ON(!sb);
 
 	fc->root = root;
 	return 0;

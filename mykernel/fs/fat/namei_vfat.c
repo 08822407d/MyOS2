@@ -90,7 +90,7 @@ dentry_ops_s vfat_dentry_ops = {
 };
 
 
-static int vfat_create_shortname(const char *name, int len, char *name_res)
+static int myos_vfat_create_shortname(const char *name, int len, char *name_res)
 {
 	int ret_val = 0;
 	loff_t ext_idx;
@@ -146,7 +146,7 @@ static int vfat_build_slots(inode_s *dir, const unsigned char *name, int len,
 
 	*nr_slots = 0;
 
-	err = vfat_create_shortname(name, len, msdos_name);
+	err = myos_vfat_create_shortname(name, len, msdos_name);
 	if (err < 0)
 		goto out_free;
 	else if (err == 1) {

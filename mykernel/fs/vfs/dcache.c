@@ -155,7 +155,7 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
  */
 // Linux function proto:
 // static struct dentry *__d_alloc(struct super_block *sb, const struct qstr *name)
-dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
+dentry_s * __myos_d_alloc(super_block_s *sb, const qstr_s * name)
 {
 	dentry_s * dentry = kzalloc(sizeof(dentry_s), GFP_KERNEL);
 	if (dentry == NULL)
@@ -196,7 +196,7 @@ dentry_s * __d_alloc(super_block_s *sb, const qstr_s * name)
  */
 dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 {
-	dentry_s *dentry = __d_alloc(parent->d_sb, name);
+	dentry_s *dentry = __myos_d_alloc(parent->d_sb, name);
 	if (dentry == NULL)
 		return NULL;
 	/*
@@ -212,7 +212,7 @@ dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 dentry_s *d_alloc_anon(super_block_s *sb)
 {
 	qstr_s q = {.name = "/", .len = 1};
-	return __d_alloc(sb, &q);
+	return __myos_d_alloc(sb, &q);
 }
 
 dentry_s *d_alloc_cursor(dentry_s * parent)
@@ -242,8 +242,8 @@ dentry_s *d_alloc_cursor(dentry_s * parent)
  */
 dentry_s *d_alloc_pseudo(super_block_s *sb, const qstr_s *name)
 {
-	dentry_s *dentry = __d_alloc(sb, name);
-	if (dentry)
+	dentry_s *dentry = __myos_d_alloc(sb, name);
+	if (likely(dentry))
 		dentry->d_flags |= DCACHE_NORCU;
 	return dentry;
 }
@@ -344,8 +344,12 @@ static void __d_instantiate(dentry_s *dentry, inode_s *inode)
  
 void d_instantiate(dentry_s *entry, inode_s * inode)
 {
+	// BUG_ON(!hlist_unhashed(&entry->d_u.d_alias));
 	if (inode) {
+		// security_d_instantiate(entry, inode);
+		// spin_lock(&inode->i_lock);
 		__d_instantiate(entry, inode);
+		// spin_unlock(&inode->i_lock);
 	}
 }
 

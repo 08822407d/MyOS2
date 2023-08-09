@@ -127,7 +127,7 @@ static inode_s *alloc_inode(super_block_s *sb)
 	if (inode == NULL)
 		return NULL;
 
-	if (inode_init_always(sb, inode)) {
+	if (unlikely(inode_init_always(sb, inode))) {
 		if (ops->destroy_inode) {
 			ops->destroy_inode(inode);
 			if (!ops->free_inode)
@@ -198,22 +198,20 @@ repeat:
 		if (inode->i_sb != sb)
 			continue;
 			
-		break;
-		inode = NULL;
-	// 	spin_lock(&inode->i_lock);
-	// 	if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
-	// 		__wait_on_freeing_inode(inode);
-	// 		goto repeat;
-	// 	}
-	// 	if (unlikely(inode->i_state & I_CREATING)) {
-	// 		spin_unlock(&inode->i_lock);
-	// 		return ERR_PTR(-ESTALE);
-	// 	}
-	// 	__iget(inode);
-	// 	spin_unlock(&inode->i_lock);
-	// 	return inode;
+		// spin_lock(&inode->i_lock);
+		// if (inode->i_state & (I_FREEING|I_WILL_FREE)) {
+		// 	__wait_on_freeing_inode(inode);
+		// 	goto repeat;
+		// }
+		// if (unlikely(inode->i_state & I_CREATING)) {
+		// 	spin_unlock(&inode->i_lock);
+		// 	return ERR_PTR(-ESTALE);
+		// }
+		// __iget(inode);
+		// spin_unlock(&inode->i_lock);
+		return inode;
 	}
-	return inode;
+	return NULL;
 }
 
 /**
@@ -291,9 +289,17 @@ void iput(inode_s *inode)
 	if (inode == NULL)
 		return;
 
-	// iput_final()
-	// {
-		// kfree(inode);
+	// BUG_ON(inode->i_state & I_CLEAR);
+// retry:
+	// if (atomic_dec_and_lock(&inode->i_count, &inode->i_lock)) {
+	// 	if (inode->i_nlink && (inode->i_state & I_DIRTY_TIME)) {
+	// 		atomic_inc(&inode->i_count);
+	// 		spin_unlock(&inode->i_lock);
+	// 		trace_writeback_lazytime_iput(inode);
+	// 		mark_inode_dirty_sync(inode);
+	// 		goto retry;
+	// 	}
+	// 	iput_final(inode);
 	// }
 }
 
