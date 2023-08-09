@@ -20,7 +20,7 @@
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/export.h>
-#include <linux/kernel/bug.h>
+#include <linux/debug/bug.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/slab.h>
 

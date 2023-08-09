@@ -9,7 +9,7 @@
 	// #ifdef CONFIG_MMU
 
 	#include <linux/mm/mm_types.h>
-	#include <linux/kernel/bug.h>
+	#include <linux/debug/bug.h>
 	#include <linux/lib/errno.h>
 	// #include <asm-generic/pgtable_uffd.h>
 

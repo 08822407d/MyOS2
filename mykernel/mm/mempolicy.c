@@ -98,7 +98,7 @@
 #include <linux/kernel/ctype.h>
 // #include <linux/mm_inline.h>
 // #include <linux/mmu_notifier.h>
-// #include <linux/printk.h>
+#include <linux/debug/printk.h>
 // #include <linux/swapops.h>
 
 // #include <asm/tlbflush.h>

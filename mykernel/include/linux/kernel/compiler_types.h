@@ -145,14 +145,14 @@
 
 	#define __compiler_offsetof(a, b) __builtin_offsetof(a, b)
 
-	// /*
-	//  * Prefer gnu_inline, so that extern inline functions do not emit an
-	//  * externally visible function. This makes extern inline behave as per gnu89
-	//  * semantics rather than c99. This prevents multiple symbol definition errors
-	//  * of extern inline functions at link time.
-	//  * A lot of inline functions can cause havoc with function tracing.
-	//  */
-	// #define inline inline __gnu_inline __inline_maybe_unused notrace
+	/*
+	 * Prefer gnu_inline, so that extern inline functions do not emit an
+	 * externally visible function. This makes extern inline behave as per gnu89
+	 * semantics rather than c99. This prevents multiple symbol definition errors
+	 * of extern inline functions at link time.
+	 * A lot of inline functions can cause havoc with function tracing.
+	 */
+	#define inline inline __gnu_inline __inline_maybe_unused notrace
 
 	/*
 	 * gcc provides both __inline__ and __inline as alternate spellings of
@@ -166,59 +166,59 @@
 	 */
 	#define __inline__ inline
 
-	// /*
-	//  * GCC does not warn about unused static inline functions for -Wunused-function.
-	//  * Suppress the warning in clang as well by using __maybe_unused, but enable it
-	//  * for W=1 build. This will allow clang to find unused functions. Remove the
-	//  * __inline_maybe_unused entirely after fixing most of -Wunused-function warnings.
-	//  */
-	// #ifdef KBUILD_EXTRA_WARN1
-	// #define __inline_maybe_unused
-	// #else
-	// #define __inline_maybe_unused __maybe_unused
-	// #endif
+	/*
+	 * GCC does not warn about unused static inline functions for -Wunused-function.
+	 * Suppress the warning in clang as well by using __maybe_unused, but enable it
+	 * for W=1 build. This will allow clang to find unused functions. Remove the
+	 * __inline_maybe_unused entirely after fixing most of -Wunused-function warnings.
+	 */
+	#ifdef KBUILD_EXTRA_WARN1
+	#	define __inline_maybe_unused
+	#else
+	#	define __inline_maybe_unused __maybe_unused
+	#endif
 
-	// /*
-	//  * Rather then using noinline to prevent stack consumption, use
-	//  * noinline_for_stack instead.  For documentation reasons.
-	//  */
-	// #define noinline_for_stack noinline
+	/*
+	 * Rather then using noinline to prevent stack consumption, use
+	 * noinline_for_stack instead.  For documentation reasons.
+	 */
+	#define noinline_for_stack noinline
 
-	// /*
-	//  * Sanitizer helper attributes: Because using __always_inline and
-	//  * __no_sanitize_* conflict, provide helper attributes that will either expand
-	//  * to __no_sanitize_* in compilation units where instrumentation is enabled
-	//  * (__SANITIZE_*__), or __always_inline in compilation units without
-	//  * instrumentation (__SANITIZE_*__ undefined).
-	//  */
-	// #ifdef __SANITIZE_ADDRESS__
-	// /*
-	//  * We can't declare function 'inline' because __no_sanitize_address conflicts
-	//  * with inlining. Attempt to inline it may cause a build failure.
-	//  *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
-	//  * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
-	//  */
-	// #define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-	// #define __no_sanitize_or_inline __no_kasan_or_inline
-	// #else
-	// #define __no_kasan_or_inline __always_inline
-	// #endif
+	/*
+	 * Sanitizer helper attributes: Because using __always_inline and
+	 * __no_sanitize_* conflict, provide helper attributes that will either expand
+	 * to __no_sanitize_* in compilation units where instrumentation is enabled
+	 * (__SANITIZE_*__), or __always_inline in compilation units without
+	 * instrumentation (__SANITIZE_*__ undefined).
+	 */
+	#ifdef __SANITIZE_ADDRESS__
+	/*
+	 * We can't declare function 'inline' because __no_sanitize_address conflicts
+	 * with inlining. Attempt to inline it may cause a build failure.
+	 *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
+	 * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+	 */
+	#define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
+	#	define __no_sanitize_or_inline __no_kasan_or_inline
+	#else
+	#	define __no_kasan_or_inline __always_inline
+	#endif
 
-	// #ifdef __SANITIZE_THREAD__
-	// /*
-	//  * Clang still emits instrumentation for __tsan_func_{entry,exit}() and builtin
-	//  * atomics even with __no_sanitize_thread (to avoid false positives in userspace
-	//  * ThreadSanitizer). The kernel's requirements are stricter and we really do not
-	//  * want any instrumentation with __no_kcsan.
-	//  *
-	//  * Therefore we add __disable_sanitizer_instrumentation where available to
-	//  * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
-	//  */
-	// #define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
-	// #define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
-	// #else
-	// #define __no_kcsan
-	// #endif
+	#ifdef __SANITIZE_THREAD__
+	/*
+	 * Clang still emits instrumentation for __tsan_func_{entry,exit}() and builtin
+	 * atomics even with __no_sanitize_thread (to avoid false positives in userspace
+	 * ThreadSanitizer). The kernel's requirements are stricter and we really do not
+	 * want any instrumentation with __no_kcsan.
+	 *
+	 * Therefore we add __disable_sanitizer_instrumentation where available to
+	 * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
+	 */
+	#	define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
+	#	define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
+	#else
+	#	define __no_kcsan
+	#endif
 
 	#ifndef __no_sanitize_or_inline
 	#	define __no_sanitize_or_inline	__always_inline
@@ -243,30 +243,30 @@
 	#	define __latent_entropy
 	#endif
 
-	// #ifndef __randomize_layout
-	// #	define __randomize_layout	__designated_init
-	// #endif
+	#ifndef __randomize_layout
+	#	define __randomize_layout	__designated_init
+	#endif
 
-	// #ifndef __no_randomize_layout
-	// #define __no_randomize_layout
-	// #endif
+	#ifndef __no_randomize_layout
+	#	define __no_randomize_layout
+	#endif
 
-	// #ifndef randomized_struct_fields_start
-	// #define randomized_struct_fields_start
-	// #define randomized_struct_fields_end
-	// #endif
+	#ifndef randomized_struct_fields_start
+	#	define randomized_struct_fields_start
+	#	define randomized_struct_fields_end
+	#endif
 
-	// #ifndef __noscs
-	// #define __noscs
-	// #endif
+	#ifndef __noscs
+	#	define __noscs
+	#endif
 
 	#ifndef __nocfi
 	#	define __nocfi
 	#endif
 
-	// #ifndef __cficanonical
-	// #define __cficanonical
-	// #endif
+	#ifndef __cficanonical
+	#	define __cficanonical
+	#endif
 
 	// /*
 	//  * Any place that could be marked with the "alloc_size" attribute is also

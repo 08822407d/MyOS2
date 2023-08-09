@@ -76,6 +76,8 @@
 	typedef struct signal_struct signal_s;
 	// struct task_delay_info;
 	// struct task_group;
+	struct files_struct;
+	typedef struct files_struct files_struct_s;
 
 	/*
 	* Task state bitmask. NOTE! These bits are also

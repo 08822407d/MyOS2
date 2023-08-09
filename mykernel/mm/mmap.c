@@ -42,7 +42,7 @@
 // #include <linux/rbtree_augmented.h>
 // #include <linux/notifier.h>
 // #include <linux/memory.h>
-// #include <linux/printk.h>
+#include <linux/debug/printk.h>
 // #include <linux/userfaultfd_k.h>
 // #include <linux/moduleparam.h>
 // #include <linux/pkeys.h>

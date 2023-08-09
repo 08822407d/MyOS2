@@ -231,7 +231,13 @@
 		"syscall_wrapper.h": "c",
 		"mman.h": "c",
 		"atomic64_64.h": "c",
-		"getorder.h": "c"
+		"getorder.h": "c",
+		"uaccess.h": "c",
+		"pagemap.h": "c",
+		"kern_levels.h": "c",
+		"debug.h": "c",
+		"bug.h": "c",
+		"build_bug.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

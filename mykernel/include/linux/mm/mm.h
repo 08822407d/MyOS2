@@ -8,7 +8,7 @@
 
 	// #include <linux/mmdebug.h>
 	#	include <linux/mm/gfp.h>
-	#include <linux/kernel/bug.h>
+	#include <linux/debug/bug.h>
 	#	include <linux/lib/list.h>
 	#	include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>

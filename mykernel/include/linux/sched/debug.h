@@ -7,7 +7,8 @@
 	 */
 
 	struct task_struct;
-	struct pid_namespace;
+	typedef struct task_struct task_s;
+	// struct pid_namespace;
 
 	extern void dump_cpu_task(int cpu);
 
@@ -30,17 +31,17 @@
 	 * task), SP is the stack pointer of the first frame that should be shown in the back
 	 * trace (or NULL if the entire call-chain of the task should be shown).
 	 */
-	extern void show_stack(struct task_struct *task, unsigned long *sp,
-				const char *loglvl);
+	extern void show_stack(task_s *task,
+			unsigned long *sp, const char *loglvl);
 
-	extern void sched_show_task(struct task_struct *p);
+	extern void sched_show_task(task_s *p);
 
-	#ifdef CONFIG_SCHED_DEBUG
-		struct seq_file;
-		extern void proc_sched_show_task(struct task_struct *p,
-						struct pid_namespace *ns, struct seq_file *m);
-		extern void proc_sched_set_task(struct task_struct *p);
-	#endif
+	// #ifdef CONFIG_SCHED_DEBUG
+	// 	struct seq_file;
+	// 	extern void proc_sched_show_task(struct task_struct *p,
+	// 					struct pid_namespace *ns, struct seq_file *m);
+	// 	extern void proc_sched_set_task(struct task_struct *p);
+	// #endif
 
 	/* Attach to any functions which should be ignored in wchan output. */
 	#define __sched		__section(".sched.text")

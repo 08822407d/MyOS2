@@ -65,7 +65,7 @@
 	#	ifndef _SETUP
 
 			// #include <asm/espfix.h>
-			// #include <linux/kernel.h>
+			#include <linux/kernel/kernel.h>
 
 			// /*
 			// * This is set up by the setup-routine at boot-time

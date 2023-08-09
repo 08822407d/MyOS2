@@ -229,14 +229,14 @@
 
 	#define preempt_disable_notrace()			\
 			do {								\
-				__preempt_count_inc();			\
+				preempt_count_inc();			\
 				barrier();						\
 			} while (0)
 
 	#define preempt_enable_no_resched_notrace()	\
 			do {								\
 				barrier();						\
-				__preempt_count_dec();			\
+				preempt_count_dec();			\
 			} while (0)
 
 	// #ifdef MODULE

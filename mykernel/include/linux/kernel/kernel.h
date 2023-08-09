@@ -25,8 +25,8 @@
 	#include <linux/kernel/math.h>
 	#include <linux/kernel/minmax.h>
 	// #include <linux/typecheck.h>
-	// #include <linux/panic.h>
-	// #include <linux/printk.h>
+	#include <linux/debug/panic.h>
+	#include <linux/debug/printk.h>
 	// #include <linux/build_bug.h>
 	// #include <linux/static_call_types.h>
 	// #include <linux/instruction_pointer.h>
@@ -202,23 +202,24 @@
 
 	// /* lib/printf utilities */
 
-	// extern __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
-	extern int sprintf(char *buf, const char * fmt, ...);
-	// extern __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
-	// extern __printf(3, 4)
+	extern __printf(2, 3) int
+	sprintf(char *buf, const char * fmt, ...);
+	extern __printf(2, 0) int
+	vsprintf(char *buf, const char *, va_list);
+	extern __printf(3, 4)
 	int snprintf(char *buf, size_t size, const char *fmt, ...);
-	// extern __printf(3, 0)
+	extern __printf(3, 0)
 	int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
-	// extern __printf(3, 4)
-	// int scnprintf(char *buf, size_t size, const char *fmt, ...);
-	// extern __printf(3, 0)
-	// int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
-	// extern __printf(2, 3) __malloc
-	// char *kasprintf(gfp_t gfp, const char *fmt, ...);
-	// extern __printf(2, 0) __malloc
-	// char *kvasprintf(gfp_t gfp, const char *fmt, va_list args);
-	// extern __printf(2, 0)
-	// const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
+	extern __printf(3, 4)
+	int scnprintf(char *buf, size_t size, const char *fmt, ...);
+	extern __printf(3, 0)
+	int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
+	extern __printf(2, 3) __malloc
+	char *kasprintf(gfp_t gfp, const char *fmt, ...);
+	extern __printf(2, 0) __malloc
+	char *kvasprintf(gfp_t gfp, const char *fmt, va_list args);
+	extern __printf(2, 0)
+	const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
 
 	// extern __scanf(2, 3)
 	// int sscanf(const char *, const char *, ...);

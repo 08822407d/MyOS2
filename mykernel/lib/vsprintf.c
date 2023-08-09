@@ -17,16 +17,16 @@
 //  * - scnprintf and vscnprintf
 //  */
 
-// #include <linux/stdarg.h>
+#include <linux/lib/stdarg.h>
 // #include <linux/build_bug.h>
 // #include <linux/clk.h>
 // #include <linux/clk-provider.h>
 // #include <linux/errname.h>
 // #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
 // #include <linux/types.h>
-// #include <linux/string.h>
+#include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/kernel.h>
+#include <linux/kernel/kernel.h>
 // #include <linux/kallsyms.h>
 // #include <linux/math64.h>
 #include <linux/kernel/uaccess.h>
@@ -35,14 +35,14 @@
 // #include <linux/cred.h>
 // #include <linux/rtc.h>
 // #include <linux/time.h>
-// #include <linux/uuid.h>
+#include <linux/kernel/uuid.h>
 // #include <linux/of.h>
 // #include <net/addrconf.h>
 // #include <linux/siphash.h>
-// #include <linux/compiler.h>
+#include <linux/kernel/compiler.h>
 // #include <linux/property.h>
 // #ifdef CONFIG_BLOCK
-// #include <linux/blkdev.h>
+#include <linux/block/blkdev.h>
 // #endif
 
 // #include "../mm/internal.h"	/* For the trace_print_flags arrays */
@@ -2807,33 +2807,33 @@
 // }
 // EXPORT_SYMBOL(vsnprintf);
 
-// /**
-//  * vscnprintf - Format a string and place it in a buffer
-//  * @buf: The buffer to place the result into
-//  * @size: The size of the buffer, including the trailing null space
-//  * @fmt: The format string to use
-//  * @args: Arguments for the format string
-//  *
-//  * The return value is the number of characters which have been written into
-//  * the @buf not including the trailing '\0'. If @size is == 0 the function
-//  * returns 0.
-//  *
-//  * If you're not already dealing with a va_list consider using scnprintf().
-//  *
-//  * See the vsnprintf() documentation for format string extensions over C99.
-//  */
-// int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
-// {
-// 	int i;
+/**
+ * vscnprintf - Format a string and place it in a buffer
+ * @buf: The buffer to place the result into
+ * @size: The size of the buffer, including the trailing null space
+ * @fmt: The format string to use
+ * @args: Arguments for the format string
+ *
+ * The return value is the number of characters which have been written into
+ * the @buf not including the trailing '\0'. If @size is == 0 the function
+ * returns 0.
+ *
+ * If you're not already dealing with a va_list consider using scnprintf().
+ *
+ * See the vsnprintf() documentation for format string extensions over C99.
+ */
+int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
+{
+	int i;
 
-// 	i = vsnprintf(buf, size, fmt, args);
+	i = vsnprintf(buf, size, fmt, args);
 
-// 	if (likely(i < size))
-// 		return i;
-// 	if (size != 0)
-// 		return size - 1;
-// 	return 0;
-// }
+	if (likely(i < size))
+		return i;
+	if (size != 0)
+		return size - 1;
+	return 0;
+}
 // EXPORT_SYMBOL(vscnprintf);
 
 // /**

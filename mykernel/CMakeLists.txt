@@ -12,6 +12,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
 				-DCONFIG_ZONE_DMA -DCONFIG_ZONE_DMA32 \
 				-DCONFIG_SLUB \
 				-DCONFIG_ARCH_HAS_SYSCALL_WRAPPER \
+				-DCONFIG_BUG \
 				-T ${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/kernel.lds")
 # message("${PROMPT} CFLAGS : ${CMAKE_C_FLAGS}")
 
@@ -40,3 +41,4 @@ add_subdirectory(lib)
 add_subdirectory(klib)
 add_subdirectory(mechanics)
 add_subdirectory(myos_test)
+add_subdirectory(debug)

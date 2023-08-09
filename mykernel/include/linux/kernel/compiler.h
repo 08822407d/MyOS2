@@ -107,10 +107,10 @@
 	#			define barrier_data(ptr) asm volatile("": :"r"(ptr) :"memory")
 	#		endif
 
-			// /* workaround for GCC PR82365 if needed */
-			// #ifndef barrier_before_unreachable
-			// # define barrier_before_unreachable() do { } while (0)
-			// #endif
+			/* workaround for GCC PR82365 if needed */
+	#		ifndef barrier_before_unreachable
+	#			define barrier_before_unreachable()	do { } while (0)
+	#		endif
 
 			// /* Unreachable code */
 			// #ifdef CONFIG_STACK_VALIDATION
