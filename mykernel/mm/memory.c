@@ -187,7 +187,7 @@ page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte)
 // 		return NULL;
 
 check_pfn:
-	if (pfn > highest_memmap_pfn) {
+	if (unlikely(pfn > highest_memmap_pfn)) {
 		// print_bad_pte(vma, addr, pte, NULL);
 		return NULL;
 	}
@@ -374,7 +374,7 @@ again:
 			progress++;
 			continue;
 		}
-		if (!arch_pte_present(*src_pte)) {
+		if (unlikely(!arch_pte_present(*src_pte))) {
 			// ret = copy_nonpresent_pte(dst_mm, src_mm,
 			// 			  dst_pte, src_pte,
 			// 			  dst_vma, src_vma,
@@ -608,8 +608,8 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 		next = next_pgd_addr_end(addr, end);
 		if (pgd_none_or_clear_bad(src_pgd_ent))
 			continue;
-		if (copy_p4d_range(dst_vma, src_vma,
-				dst_pgd_ent, src_pgd_ent, addr, next)) {
+		if (unlikely(copy_p4d_range(dst_vma, src_vma,
+				dst_pgd_ent, src_pgd_ent, addr, next))) {
 			ret = -ENOMEM;
 			break;
 		}
@@ -640,73 +640,73 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 		return true;
 	}
 
-// 	/*
-// 	 * If the source page was a PFN mapping, we don't have
-// 	 * a "struct page" for it. We do a best-effort copy by
-// 	 * just copying from the original user address. If that
-// 	 * fails, we just zero-fill it. Live with it.
-// 	 */
-// 	kaddr = kmap_atomic(dst);
-// 	uaddr = (void __user *)(addr & PAGE_MASK);
+	// /*
+	//  * If the source page was a PFN mapping, we don't have
+	//  * a "struct page" for it. We do a best-effort copy by
+	//  * just copying from the original user address. If that
+	//  * fails, we just zero-fill it. Live with it.
+	//  */
+	// kaddr = kmap_atomic(dst);
+	// uaddr = (void __user *)(addr & PAGE_MASK);
 
-// 	/*
-// 	 * On architectures with software "accessed" bits, we would
-// 	 * take a double page fault, so mark it accessed here.
-// 	 */
-// 	if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
-// 		pte_t entry;
+	// /*
+	//  * On architectures with software "accessed" bits, we would
+	//  * take a double page fault, so mark it accessed here.
+	//  */
+	// if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+	// 	pte_t entry;
 
-// 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-// 		locked = true;
-// 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-// 			/*
-// 			 * Other thread has already handled the fault
-// 			 * and update local tlb only
-// 			 */
-// 			update_mmu_tlb(vma, addr, vmf->pte);
-// 			ret = false;
-// 			goto pte_unlock;
-// 		}
+	// 	vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+	// 	locked = true;
+	// 	if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	// 		/*
+	// 		 * Other thread has already handled the fault
+	// 		 * and update local tlb only
+	// 		 */
+	// 		update_mmu_tlb(vma, addr, vmf->pte);
+	// 		ret = false;
+	// 		goto pte_unlock;
+	// 	}
 
-// 		entry = pte_mkyoung(vmf->orig_pte);
-// 		if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
-// 			update_mmu_cache(vma, addr, vmf->pte);
-// 	}
+	// 	entry = pte_mkyoung(vmf->orig_pte);
+	// 	if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
+	// 		update_mmu_cache(vma, addr, vmf->pte);
+	// }
 
-// 	/*
-// 	 * This really shouldn't fail, because the page is there
-// 	 * in the page tables. But it might just be unreadable,
-// 	 * in which case we just give up and fill the result with
-// 	 * zeroes.
-// 	 */
-// 	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-// 		if (locked)
-// 			goto warn;
+	// /*
+	//  * This really shouldn't fail, because the page is there
+	//  * in the page tables. But it might just be unreadable,
+	//  * in which case we just give up and fill the result with
+	//  * zeroes.
+	//  */
+	// if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+	// 	if (locked)
+	// 		goto warn;
 
-// 		/* Re-validate under PTL if the page is still mapped */
-// 		vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-// 		locked = true;
-// 		if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
-// 			/* The PTE changed under us, update local tlb */
-// 			update_mmu_tlb(vma, addr, vmf->pte);
-// 			ret = false;
-// 			goto pte_unlock;
-// 		}
+	// 	/* Re-validate under PTL if the page is still mapped */
+	// 	vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
+	// 	locked = true;
+	// 	if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	// 		/* The PTE changed under us, update local tlb */
+	// 		update_mmu_tlb(vma, addr, vmf->pte);
+	// 		ret = false;
+	// 		goto pte_unlock;
+	// 	}
 
-// 		/*
-// 		 * The same page can be mapped back since last copy attempt.
-// 		 * Try to copy again under PTL.
-// 		 */
-// 		if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-// 			/*
-// 			 * Give a warn in case there can be some obscure
-// 			 * use-case
-// 			 */
+	// 	/*
+	// 	 * The same page can be mapped back since last copy attempt.
+	// 	 * Try to copy again under PTL.
+	// 	 */
+	// 	if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
+	// 		/*
+	// 		 * Give a warn in case there can be some obscure
+	// 		 * use-case
+	// 		 */
 // warn:
-// 			WARN_ON_ONCE(1);
-// 			clear_page(kaddr);
-// 		}
-// 	}
+	// 		WARN_ON_ONCE(1);
+	// 		clear_page(kaddr);
+	// 	}
+	// }
 
 	ret = true;
 
@@ -1239,9 +1239,9 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 	// 			      vmf->address, &vmf->ptl);
 	*vmf->pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
-	// ret = 0;
+	ret = 0;
 	// /* Re-check under ptl */
-	// if (pte_none(*vmf->pte))
+	// if (likely(pte_none(*vmf->pte)))
 	// 	do_set_pte(vmf, page, vmf->address);
 	// else
 	// 	ret = VM_FAULT_NOPAGE;
@@ -1329,12 +1329,12 @@ static vm_fault_t do_read_fault(vm_fault_s *vmf)
 	// }
 
 	ret = __do_fault(vmf);
-	if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY))
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 		return ret;
 
 	ret |= finish_fault(vmf);
 	// unlock_page(vmf->page);
-	if (ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY))
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 		put_page(vmf->page);
 	return ret;
 }

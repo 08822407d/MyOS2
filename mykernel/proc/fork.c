@@ -278,20 +278,20 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		// 	goto fail_nomem_anon_vma_fork;
 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
 		file = tmp->vm_file;
-		// if (file) {
-		// 	struct address_space *mapping = file->f_mapping;
+		if (file) {
+			// struct address_space *mapping = file->f_mapping;
 
-		// 	get_file(file);
-		// 	i_mmap_lock_write(mapping);
-		// 	if (tmp->vm_flags & VM_SHARED)
-		// 		mapping_allow_writable(mapping);
-		// 	flush_dcache_mmap_lock(mapping);
-		// 	/* insert tmp into the share list, just after mpnt */
-		// 	vma_interval_tree_insert_after(tmp, mpnt,
-		// 			&mapping->i_mmap);
-		// 	flush_dcache_mmap_unlock(mapping);
-		// 	i_mmap_unlock_write(mapping);
-		// }
+			get_file(file);
+			// i_mmap_lock_write(mapping);
+			// if (tmp->vm_flags & VM_SHARED)
+			// 	mapping_allow_writable(mapping);
+			// flush_dcache_mmap_lock(mapping);
+			// /* insert tmp into the share list, just after mpnt */
+			// vma_interval_tree_insert_after(tmp, mpnt,
+			// 		&mapping->i_mmap);
+			// flush_dcache_mmap_unlock(mapping);
+			// i_mmap_unlock_write(mapping);
+		}
 
 		// /*
 		//  * Clear hugetlb-related page reserves for children. This only
@@ -358,7 +358,7 @@ static inline void free_mm(mm_s *mm) {
  */
 void __mmdrop(struct mm_struct *mm)
 {
-	// BUG_ON(mm == &init_mm);
+	BUG_ON(mm == &init_mm);
 	while (mm == &init_mm);
 	// WARN_ON_ONCE(mm == current->mm);
 	// WARN_ON_ONCE(mm == current->active_mm);
@@ -619,9 +619,7 @@ void mmput(mm_s *mm)
  */
 int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 {
-	mm->exe_file = new_exe_file;
-
-	// file_s *old_exe_file;
+	file_s *old_exe_file;
 
 	/*
 	 * It is safe to dereference the exe_file without RCU as
@@ -629,21 +627,23 @@ int set_mm_exe_file(mm_s *mm, file_s *new_exe_file)
 	 * this mm -- see comment above for justification.
 	 */
 	// old_exe_file = rcu_dereference_raw(mm->exe_file);
+	old_exe_file = mm->exe_file;
 
-	// if (new_exe_file) {
-	// 	/*
-	// 	 * We expect the caller (i.e., sys_execve) to already denied
-	// 	 * write access, so this is unlikely to fail.
-	// 	 */
-	// 	if (deny_write_access(new_exe_file))
-	// 		return -EACCES;
-	// 	get_file(new_exe_file);
-	// }
+	if (new_exe_file) {
+		// /*
+		//  * We expect the caller (i.e., sys_execve) to already denied
+		//  * write access, so this is unlikely to fail.
+		//  */
+		// if (deny_write_access(new_exe_file))
+		// 	return -EACCES;
+		get_file(new_exe_file);
+	}
 	// rcu_assign_pointer(mm->exe_file, new_exe_file);
-	// if (old_exe_file) {
-	// 	allow_write_access(old_exe_file);
-	// 	fput(old_exe_file);
-	// }
+	mm->exe_file = new_exe_file;
+	if (old_exe_file) {
+		// allow_write_access(old_exe_file);
+		fput(old_exe_file);
+	}
 	return 0;
 }
 
@@ -1066,7 +1066,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
  * flags). The actual kick-off is left to the caller.
  */
 static __latent_entropy task_s
-*copy_process(pid_s *pid, kclone_args_s *args)
+*copy_process(pid_s *pid, int trace, kclone_args_s *args)
 {
 	int pidfd = -1, retval;
 	task_s *p, *curr = current;
@@ -1502,49 +1502,46 @@ static __latent_entropy task_s
 	// }
 
 	init_task_pid_links(p);
-	if (p->pid) {
-	// 	ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
-		ptrace_init_task(p, (clone_flags & CLONE_PTRACE));
+	if (likely(p->pid)) {
+		ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
-	// 	init_task_pid(p, PIDTYPE_PID, pid);
-	// 	if (thread_group_leader(p)) {
-	// 		init_task_pid(p, PIDTYPE_TGID, pid);
-	// 		init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
-	// 		init_task_pid(p, PIDTYPE_SID, task_session(current));
+		// init_task_pid(p, PIDTYPE_PID, pid);
+		if (thread_group_leader(p)) {
+			// init_task_pid(p, PIDTYPE_TGID, pid);
+			// init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
+			// init_task_pid(p, PIDTYPE_SID, task_session(current));
 
-	// 		if (is_child_reaper(pid)) {
-	// 			ns_of_pid(pid)->child_reaper = p;
-	// 			p->signal->flags |= SIGNAL_UNKILLABLE;
-	// 		}
-	// 		p->signal->shared_pending.signal = delayed.signal;
-	// 		p->signal->tty = tty_kref_get(current->signal->tty);
-	// 		/*
-	// 		 * Inherit has_child_subreaper flag under the same
-	// 		 * tasklist_lock with adding child to the process tree
-	// 		 * for propagate_has_child_subreaper optimization.
-	// 		 */
-	// 		p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
-	// 						 p->real_parent->signal->is_child_subreaper;
-	// 		list_add_tail(&p->sibling, &p->real_parent->children);
+			// if (is_child_reaper(pid)) {
+			// 	ns_of_pid(pid)->child_reaper = p;
+			// 	p->signal->flags |= SIGNAL_UNKILLABLE;
+			// }
+			// p->signal->shared_pending.signal = delayed.signal;
+			// p->signal->tty = tty_kref_get(current->signal->tty);
+			// /*
+			//  * Inherit has_child_subreaper flag under the same
+			//  * tasklist_lock with adding child to the process tree
+			//  * for propagate_has_child_subreaper optimization.
+			//  */
+			// p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
+			// 				 p->real_parent->signal->is_child_subreaper;
 			list_hdr_append(&p->real_parent->children, &p->sibling);
-	// 		list_add_tail_rcu(&p->tasks, &init_task.tasks);
-	// 		attach_pid(p, PIDTYPE_TGID);
-	// 		attach_pid(p, PIDTYPE_PGID);
-	// 		attach_pid(p, PIDTYPE_SID);
-	// 		__this_cpu_inc(process_counts);
-	// 	} else {
-	// 		current->signal->nr_threads++;
-	// 		atomic_inc(&current->signal->live);
-	// 		refcount_inc(&current->signal->sigcnt);
-	// 		task_join_group_stop(p);
-	// 		list_add_tail_rcu(&p->thread_group,
-	// 				  &p->group_leader->thread_group);
-	// 		list_add_tail_rcu(&p->thread_node,
-	// 				  &p->signal->thread_head);
-	// 	}
-	// 	attach_pid(p, PIDTYPE_PID);
-		attach_pid(p);
-	// 	nr_threads++;
+			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
+			// attach_pid(p, PIDTYPE_TGID);
+			// attach_pid(p, PIDTYPE_PGID);
+			// attach_pid(p, PIDTYPE_SID);
+			// __this_cpu_inc(process_counts);
+		} else {
+			// current->signal->nr_threads++;
+			// atomic_inc(&current->signal->live);
+			// refcount_inc(&current->signal->sigcnt);
+			// task_join_group_stop(p);
+			// list_add_tail_rcu(&p->thread_group,
+			// 		  &p->group_leader->thread_group);
+			// list_add_tail_rcu(&p->thread_node,
+			// 		  &p->signal->thread_head);
+		}
+		attach_pid(p, PIDTYPE_PID);
+		// nr_threads++;
 	}
 	// total_forks++;
 	// hlist_del_init(&delayed.node);
@@ -1650,7 +1647,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// completion_s vfork;
 	// pid_s *pid;
 	task_s *p;
-	// int trace = 0;
+	int trace = 0;
 	pid_t nr;
 
 	/*
@@ -1685,7 +1682,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// 		trace = 0;
 	// }
 
-	p = copy_process(NULL, args);
+	p = copy_process(NULL, trace, args);
 	// add_latent_entropy();
 
 	if (IS_ERR(p))

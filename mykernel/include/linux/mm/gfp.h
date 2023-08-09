@@ -527,7 +527,7 @@
 
 	// page_s *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
 	// 		nodemask_t *nodemask);
-	page_s *__alloc_pages(gfp_t gfp, unsigned int order);
+	page_s *__myos_alloc_pages(gfp_t gfp, unsigned int order);
 	// struct folio *__folio_alloc(gfp_t gfp, unsigned int order, int preferred_nid,
 	// 		nodemask_t *nodemask);
 

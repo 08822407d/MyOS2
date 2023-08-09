@@ -446,24 +446,10 @@ static fs_type_s shmem_fs_type = {
 
 int shmem_init(void)
 {
-	int error;
-
-	error = register_filesystem(&shmem_fs_type);
-	if (error) {
-		goto out2;
-	}
+	BUG_ON(register_filesystem(&shmem_fs_type) != 0);
 
 	shm_mnt = kern_mount(&shmem_fs_type);
-	if (IS_ERR(shm_mnt)) {
-		error = PTR_ERR(shm_mnt);
-		goto out1;
-	}
-	return 0;
+	BUG_ON(IS_ERR(shm_mnt));
 
-out1:
-	unregister_filesystem(&shmem_fs_type);
-out2:
-	// shmem_destroy_inodecache();
-	shm_mnt = ERR_PTR(error);
-	return error;
+	return 0;
 }

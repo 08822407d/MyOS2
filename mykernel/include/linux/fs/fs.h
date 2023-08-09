@@ -825,20 +825,19 @@
 	// 				addr_space_s *mapping2);
 
 
-	// /*
-	// * NOTE: in a 32bit arch with a preemptable kernel and
-	// * an UP compile the i_size_read/write must be atomic
-	// * with respect to the local cpu (unlike with preempt disabled),
-	// * but they don't need to be atomic with respect to other cpus like in
-	// * true SMP (so they need either to either locally disable irq around
-	// * the read or for example on x86 they can be still implemented as a
-	// * cmpxchg8b without the need of the lock prefix). For SMP compiles
-	// * and 64bit archs it makes no difference if preempt is enabled or not.
-	// */
-	// static inline loff_t i_size_read(const inode_s *inode)
-	// {
-	// 	return inode->i_size;
-	// }
+	/*
+	 * NOTE: in a 32bit arch with a preemptable kernel and
+	 * an UP compile the i_size_read/write must be atomic
+	 * with respect to the local cpu (unlike with preempt disabled),
+	 * but they don't need to be atomic with respect to other cpus like in
+	 * true SMP (so they need either to either locally disable irq around
+	 * the read or for example on x86 they can be still implemented as a
+	 * cmpxchg8b without the need of the lock prefix). For SMP compiles
+	 * and 64bit archs it makes no difference if preempt is enabled or not.
+	 */
+	static inline loff_t i_size_read(const inode_s *inode) {
+		return inode->i_size;
+	}
 
 	/*
 	 * NOTE: unlike i_size_read(), i_size_write() does need locking around it

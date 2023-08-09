@@ -51,16 +51,14 @@ LIST_HDR_S(pid_list_hdr);
 /*
  * attach_pid() must be called with the tasklist_lock write-held.
  */
-// void attach_pid(struct task_struct *task, enum pid_type type) {
-void attach_pid(task_s *task) {
+void attach_pid(task_s *task, enum pid_type type) {
 	// struct pid *pid = *task_pid_ptr(task, type);
 	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
 	list_hdr_append(&pid_list_hdr, &task->pid_links);
 }
 
 
-// void detach_pid(struct task_struct *task, enum pid_type type) {
-void detach_pid(task_s *task) {
+void detach_pid(task_s *task, enum pid_type type) {
 	// __change_pid(task, type, NULL);
 	list_hdr_delete(&pid_list_hdr, &task->pid_links);
 }

@@ -40,7 +40,7 @@ static void create_smp_idles(size_t cpu_idx)
 	list_init(&idletask->sibling, idletask);
 	list_hdr_init(&idletask->children);
 	idletask->pid = myos_pid_nr();
-	attach_pid(idletask);
+	attach_pid(idletask, PIDTYPE_PID);
 }
 
 void myos_init_task(size_t lcpu_nr)
@@ -60,7 +60,7 @@ void myos_init_task(size_t lcpu_nr)
 	task0->fs				= &task0_fs;
 	task0->files			= &task0_files;
 	set_task_comm(task0, "cpu0_idel");
-	attach_pid(task0);
+	attach_pid(task0, PIDTYPE_PID);
 
 	for (int i = 0; i < lcpu_nr; i++)
 	{

@@ -408,7 +408,7 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 //					struct zone *zone, unsigned int order, int migratetype,
 //					fpi_t fpi_flags)
 static inline void
-__free_one_page(page_s *page, unsigned long pfn,
+__myos_free_one_page(page_s *page, unsigned long pfn,
 		zone_s *zone, unsigned int order)
 {
 	unsigned long buddy_pfn;
@@ -494,7 +494,7 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
-page_s *__alloc_pages(gfp_t gfp, unsigned order)
+page_s *__myos_alloc_pages(gfp_t gfp, unsigned order)
 {
 	page_s *page;
 	zone_s *zone = NULL;
@@ -503,7 +503,10 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 	 * There are several places where we assume that the order value is sane
 	 * so bail out early if the request is out of bound.
 	 */
-	if (order >= MAX_ORDER) return NULL;
+	if (unlikely(order >= MAX_ORDER)) {
+		// WARN_ON_ONCE(!(gfp & __GFP_NOWARN));
+		return NULL;
+	}
 
 	// static page_s *
 	// get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
@@ -529,7 +532,7 @@ page_s *__alloc_pages(gfp_t gfp, unsigned order)
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
 		// {
 			page = __rmqueue_smallest(zone, order);
-			if (page)
+			if (likely(page))
 			{
 				prep_new_page(page, order, gfp);
 				return page;
@@ -579,7 +582,7 @@ void __free_pages(page_s *page, unsigned int order)
 	//					struct zone *zone, unsigned int order, int migratetype,
 	//					fpi_t fpi_flags)
 
-	__free_one_page(page, pfn, zone, order);
+	__myos_free_one_page(page, pfn, zone, order);
 }
 
 void free_pages(unsigned long addr, unsigned int order) {
@@ -610,7 +613,7 @@ __free_pages_ok(page_s *page, unsigned int order)
 	// 	is_migrate_isolate(migratetype))) {
 	// 	migratetype = get_pfnblock_migratetype(page, pfn);
 	// }
-	__free_one_page(page, pfn, zone, order);
+	__myos_free_one_page(page, pfn, zone, order);
 	// spin_unlock_irqrestore(&zone->lock, flags);
 
 	// __count_vm_events(PGFREE, 1 << order);

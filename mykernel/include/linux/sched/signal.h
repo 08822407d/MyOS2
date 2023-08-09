@@ -668,10 +668,9 @@
 	// 	return task->signal->nr_threads;
 	// }
 
-	// static inline bool thread_group_leader(struct task_struct *p)
-	// {
-	// 	return p->exit_signal >= 0;
-	// }
+	static inline bool thread_group_leader(task_s *p) {
+		return p->exit_signal >= 0;
+	}
 
 	// static inline
 	// bool same_thread_group(struct task_struct *p1, struct task_struct *p2)

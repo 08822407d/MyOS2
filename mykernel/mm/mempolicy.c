@@ -143,7 +143,7 @@ page_s *alloc_pages(gfp_t gfp, unsigned order)
 	// 			policy_node(gfp, pol, numa_node_id()),
 	// 			policy_nodemask(gfp, pol));
 
-	page = __alloc_pages(gfp, order);
+	page = __myos_alloc_pages(gfp, order);
 
 	return page;
 }

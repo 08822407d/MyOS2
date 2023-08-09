@@ -68,7 +68,7 @@ void myos_init_slab()
 
 		bslp->slabcache_ptr = scgp;
 		bslp->free = bslp->total;
-		page_s *page = __alloc_pages(GFP_KERNEL, 0);
+		page_s *page = __myos_alloc_pages(GFP_KERNEL, 0);
 		bslp->page = page;
 		__SetPageSlab(page);
 		bslp->virt_addr = page_to_virt(page);

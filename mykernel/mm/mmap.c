@@ -917,7 +917,7 @@ myos_mmap_region(file_s *file, unsigned long addr,
 		/* If vm_flags changed after call_mmap(), we should try merge vma again
 		 * as we may succeed this time.
 		 */
-		if (vm_flags != vma->vm_flags && prev) {
+		if (unlikely(vm_flags != vma->vm_flags && prev)) {
 			merge = myos_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
 					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
 			if (merge) {
@@ -1235,8 +1235,8 @@ int __split_vma(mm_s *mm, vma_s *vma,
 	// if (err)
 	// 	goto out_free_vma;
 
-	// if (new->vm_file)
-	// 	get_file(new->vm_file);
+	if (new->vm_file)
+		get_file(new->vm_file);
 
 	if (new->vm_ops && new->vm_ops->open)
 		new->vm_ops->open(new);

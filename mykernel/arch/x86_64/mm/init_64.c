@@ -62,6 +62,18 @@
 
 
 /*
+ * NOTE: pagetable_init alloc all the fixmap pagetables contiguous on the
+ * physical space so we can cache the place of the first one and move
+ * around without checking the pgd every time.
+ */
+
+/* Bits supported by the hardware: */
+pteval_t __supported_pte_mask __read_mostly = ~0;
+/* Bits allowed in normal kernel mappings: */
+pteval_t __default_kernel_pte_mask __read_mostly = ~0;
+
+
+/*
  * Create page table mapping for the physical memory for specific physical
  * addresses. Note that it can only be used to populate non-present entries.
  * The virtual and physical addresses have to be aligned on PMD level
@@ -91,4 +103,53 @@ myos_kernel_physical_mapping_init(
 
 		addr += PAGE_SIZE;
 	} while (addr < paddr_end);
+}
+
+
+void __init paging_init(void)
+{
+	// sparse_init();
+	pg_data_t *nodes = myos_memblock_alloc_normal(
+			MAX_NUMNODES *sizeof(pg_data_t), SMP_CACHE_BYTES);
+	for (int i = 0; i < MAX_NUMNODES; i++)
+		NODE_DATA(i) = nodes + i;
+
+	// /*
+	//  * clear the default setting with node 0
+	//  * note: don't use nodes_clear here, that is really clearing when
+	//  *	 numa support is not compiled in, and later node_set_state
+	//  *	 will not set it back.
+	//  */
+	// node_clear_state(0, N_MEMORY);
+	// node_clear_state(0, N_NORMAL_MEMORY);
+
+	zone_sizes_init();
+}
+
+
+
+void __init mem_init(void)
+{
+	// pci_iommu_alloc();
+
+	/* clear_bss() already clear the empty_zero_page */
+
+	/* this will put all memory onto the freelists */
+	memblock_free_all();
+	// after_bootmem = 1;
+	// x86_init.hyper.init_after_bootmem();
+
+	// /*
+	//  * Must be done after boot memory is put on freelist, because here we
+	//  * might set fields in deferred struct pages that have not yet been
+	//  * initialized, and memblock_free_all() initializes all the reserved
+	//  * deferred pages for us.
+	//  */
+	// register_page_bootmem_info();
+
+	// /* Register memory areas for /proc/kcore */
+	// if (get_gate_vma(&init_mm))
+	// 	kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
+
+	// preallocate_vmalloc_pages();
 }

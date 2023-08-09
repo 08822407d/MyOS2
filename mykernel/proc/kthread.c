@@ -184,27 +184,27 @@ task_s *myos_kthread_create(int (*threadfn)(void *data),
 		wait_for_completion(&done);
 	// }
 	task = create->result;
-	// if (!IS_ERR(task))   
-	// 	char name[TASK_COMM_LEN];
-	// 	va_list aq;
-	// 	int len;
+	if (!IS_ERR(task)) {
+		// char name[TASK_COMM_LEN];
+		// va_list aq;
+		// int len;
 
-	// 	/*
-	// 	 * task is already visible to other tasks, so updating
-	// 	 * COMM must be protected.
-	// 	 */
-	// 	va_copy(aq, args);
-	// 	len = vsnprintf(name, sizeof(name), namefmt, aq);
-	// 	va_end(aq);
-	// 	if (len >= TASK_COMM_LEN) {
-	// 		struct kthread *kthread = to_kthread(task);
+		// /*
+		//  * task is already visible to other tasks, so updating
+		//  * COMM must be protected.
+		//  */
+		// va_copy(aq, args);
+		// len = vsnprintf(name, sizeof(name), namefmt, aq);
+		// va_end(aq);
+		// if (len >= TASK_COMM_LEN) {
+		// 	struct kthread *kthread = to_kthread(task);
 
-	// 		/* leave it truncated when out of memory. */
-	// 		kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
-	// 	}
-	// 	set_task_comm(task, name);
+		// 	/* leave it truncated when out of memory. */
+		// 	kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
+		// }
+		// set_task_comm(task, name);
 		set_task_comm(task, threadname);
-	// }
+	}
 	kfree(create);
 	return task;
 }

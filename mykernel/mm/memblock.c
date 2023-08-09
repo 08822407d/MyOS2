@@ -106,6 +106,9 @@ static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdat
 static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock =
 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
 
+// static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock; 
+// static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
+
 memblock_s memblock __initdata_memblock = {
 	.memory.regions		= memblock_memory_init_regions,
 	.memory.cnt			= 0,	/* empty dummy entry */
@@ -262,6 +265,17 @@ memblock_merge_regions(mmblk_type_s *type)
 	{
 		mmblk_rgn_s *this = &type->regions[i];
 		mmblk_rgn_s *next = &type->regions[i + 1];
+
+		// if (this->base + this->size != next->base ||
+		// 	// memblock_get_region_node(this) !=
+		// 	// memblock_get_region_node(next) ||
+		// 	this->flags != next->flags) {
+		// 	BUG_ON(this->base + this->size > next->base);
+		// 	i++;
+		// 	continue;
+		// }
+		// this->size += next->size;
+
 		phys_addr_t this_end = this->base + this->size;
 		phys_addr_t next_end = next->base + next->size;
 		if (this_end < next->base) {
@@ -270,7 +284,6 @@ memblock_merge_regions(mmblk_type_s *type)
 		}
 		if (this_end < next_end)
 			this->size = next_end - this->base;
-
 		/* move forward from next + 1, index of which is i + 2 */
 		memmove(next, next + 1, (type->cnt - (i + 1)) * sizeof(*next));
 		type->cnt--;
@@ -293,8 +306,8 @@ memblock_insert_region(mmblk_type_s *type, int idx,
 		phys_addr_t base, phys_addr_t size, enum mmblk_flags flags)
 {
 	mmblk_rgn_s *rgn = &type->regions[idx];
-	while(type->cnt >= type->max);
 
+	BUG_ON(type->cnt >= type->max);
 	memmove(rgn + 1, rgn, (type->cnt - idx) * sizeof(*rgn));
 	rgn->base = base;
 	rgn->size = size;

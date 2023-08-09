@@ -47,7 +47,7 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
 
 	flags |= __GFP_COMP;
 	page = alloc_pages(flags, order);
-	if (page) {
+	if (likely(page)) {
 	// 	ret = page_address(page);
 		ret = (void *)page_to_virt(page);
 	// 	mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE_B,
