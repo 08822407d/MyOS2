@@ -39,4 +39,4 @@ add_subdirectory(lib)
 
 add_subdirectory(klib)
 add_subdirectory(mechanics)
-add_subdirectory(test)
+add_subdirectory(myos_test)
