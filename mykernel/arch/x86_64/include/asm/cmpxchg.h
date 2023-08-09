@@ -199,7 +199,7 @@
 					default:											\
 						__cmpxchg_wrong_size();							\
 				}														\
-				if (!success)											\
+				if (unlikely(!success))									\
 					*_old = __old;										\
 				success;												\
 			})

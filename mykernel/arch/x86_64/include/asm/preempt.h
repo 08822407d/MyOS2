@@ -113,7 +113,7 @@
 	// }
 	static __always_inline bool should_resched(int preempt_offset) {
 		per_cpudata_s *cpudata_p = curr_cpu;
-		return (cpudata_p->preempt_count == preempt_offset);
+		return unlikely(cpudata_p->preempt_count == preempt_offset);
 	}
 
 	// #ifdef CONFIG_PREEMPTION
