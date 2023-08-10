@@ -26,20 +26,20 @@ tss64_T *		tss_ptr_arr = NULL;
 /*==============================================================================================*
  *										global functions							 			*
  *==============================================================================================*/
-phys_addr_t myos_virt2phys(virt_addr_t virt)
-{
-	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
-	uint64_t offset = (virt_addr_t) &_k_virt_start -
-						(virt_addr_t) &_k_phys_start;
-	return (phys_addr_t)(virt - offset);
-}
-virt_addr_t myos_phys2virt(phys_addr_t phys)
-{
-	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
-	uint64_t offset = (virt_addr_t) &_k_virt_start -
-						(virt_addr_t) &_k_phys_start;
-	return (phys_addr_t)(phys + offset);
-}
+// phys_addr_t myos_virt2phys(virt_addr_t virt)
+// {
+// 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
+// 	uint64_t offset = (virt_addr_t) &_k_virt_start -
+// 						(virt_addr_t) &_k_phys_start;
+// 	return (phys_addr_t)(virt - offset);
+// }
+// virt_addr_t myos_phys2virt(phys_addr_t phys)
+// {
+// 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
+// 	uint64_t offset = (virt_addr_t) &_k_virt_start -
+// 						(virt_addr_t) &_k_phys_start;
+// 	return (phys_addr_t)(phys + offset);
+// }
 
 inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
 {

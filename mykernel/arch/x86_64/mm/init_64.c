@@ -92,7 +92,7 @@ myos_kernel_physical_mapping_init(
 	{
 		// map physical memory only to high-half of kernel mapping
 		unsigned long kv_addr =
-			(unsigned long)myos_phys2virt(pg_addr);
+			(unsigned long)phys_to_virt(pg_addr);
 
 		pgd_t *pgdp = pgd_ent_offset(&init_mm, kv_addr);
 		while (pgdp == 0);

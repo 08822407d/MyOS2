@@ -14,7 +14,7 @@
 
 	// #include <linux/dev_printk.h>
 	// #include <linux/energy_model.h>
-	// #include <linux/ioport.h>
+	#include <linux/kernel/ioport.h>
 	#include <linux/kernel/kobject.h>
 	// #include <linux/klist.h>
 		#include <linux/lib/list.h>

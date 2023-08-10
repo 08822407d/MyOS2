@@ -830,30 +830,30 @@
 	#	endif
 	#endif /* CONFIG_GENERIC_IOMAP */
 
-	// #ifdef __KERNEL__
+	#ifdef __KERNEL__
 
 	// 	#include <linux/vmalloc.h>
 	// 	#define __io_virt(x) ((void __force *)(x))
 
-	// 	/*
-	// 	* Change virtual addresses to physical addresses and vv.
-	// 	* These are pretty trivial
-	// 	*/
-	// 	#ifndef virt_to_phys
-	// 	#define virt_to_phys virt_to_phys
-	// 	static inline unsigned long virt_to_phys(volatile void *address)
-	// 	{
+		/*
+		* Change virtual addresses to physical addresses and vv.
+		* These are pretty trivial
+		*/
+	// #	ifndef virt_to_phys
+	// #	define virt_to_phys virt_to_phys
+	// 	static inline phys_addr_t
+	// 	virt_to_phys(volatile virt_addr_t address) {
 	// 		return __pa((unsigned long)address);
 	// 	}
-	// 	#endif
+	// #	endif
 
-	// 	#ifndef phys_to_virt
-	// 	#define phys_to_virt phys_to_virt
-	// 	static inline void *phys_to_virt(unsigned long address)
-	// 	{
+	// #	ifndef phys_to_virt
+	// #	define phys_to_virt phys_to_virt
+	// 	static inline virt_addr_t
+	// 	phys_to_virt(volatile phys_addr_t address) {
 	// 		return __va(address);
 	// 	}
-	// 	#endif
+	// #	endif
 
 	// 	/**
 	// 	 * DOC: ioremap() and ioremap_*() variants
@@ -1053,6 +1053,6 @@
 	// 	extern int devmem_is_allowed(unsigned long pfn);
 	// 	#endif
 
-	// #endif /* __KERNEL__ */
+	#endif /* __KERNEL__ */
 
 #endif /* __ASM_GENERIC_IO_H */

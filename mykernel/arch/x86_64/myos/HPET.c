@@ -41,7 +41,7 @@ void HPET_init()
 {
 	unsigned int x;
 	unsigned int * p = NULL;
-	unsigned char * HPET_addr = (unsigned char *)myos_phys2virt((phys_addr_t)0xfed00000);
+	unsigned char * HPET_addr = (unsigned char *)phys_to_virt((phys_addr_t)0xfed00000);
 	ioapic_retentry_T entry;
 	
 	//get RCBA address
@@ -52,7 +52,7 @@ void HPET_init()
 	//get HPTC address
 	if(x > 0xfec00000 && x < 0xfee00000)
 	{
-		p = (unsigned int *)myos_phys2virt((phys_addr_t)(x + 0x3404UL));
+		p = (unsigned int *)phys_to_virt((phys_addr_t)(x + 0x3404UL));
 		//enable HPET
 		*p = 0x80;
 	}

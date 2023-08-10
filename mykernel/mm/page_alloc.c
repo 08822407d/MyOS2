@@ -941,7 +941,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 		end = ALIGN(end, MAX_ORDER_NR_PAGES);
 		size =  (end - start) * sizeof(page_s);
 
-		map = (void *)myos_phys2virt(memblock_alloc_range(
+		map = (void *)phys_to_virt(memblock_alloc_range(
 				size, SMP_CACHE_BYTES, MAX_DMA_PFN, 0));
 		if (!map)
 		{

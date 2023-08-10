@@ -18,6 +18,8 @@
 			struct page;
 			typedef struct page page_s;
 
+			extern char _k_offset;
+
 			// #include <linux/range.h>
 			// extern struct range pfn_mapped[];
 			// extern int nr_pfn_mapped;
@@ -37,7 +39,8 @@
 			// #define __HAVE_ARCH_ALLOC_ZEROED_USER_HIGHPAGE_MOVABLE
 
 			#ifndef __pa
-			#	define __pa(x)	__phys_addr((unsigned long)(x))
+			#	define __pa(x)	(phys_addr_t)((unsigned long)(x) -	\
+												(unsigned long)&_k_offset)
 			#endif
 
 			// #define __pa_nodebug(x)	__phys_addr_nodebug((unsigned long)(x))
@@ -54,12 +57,12 @@
 			// 			__phys_addr_symbol(__phys_reloc_hide((unsigned long)(x)))
 
 			#ifndef __va
-			// #	define __va(x)	((void *)((unsigned long)(x) + PAGE_OFFSET))
-			#	define __va(x)	__virt_addr((unsigned long)(x))
+			#	define __va(x)	((virt_addr_t)((unsigned long)(x) +	\
+												(unsigned long)&_k_offset))
 			#endif
 
-			// #define __boot_va(x)	__va(x)
-			// #define __boot_pa(x)	__pa(x)
+			#define __boot_va(x)	__va(x)
+			#define __boot_pa(x)	__pa(x)
 
 			/*
 			 * virt_to_page(kaddr) returns a valid pointer if and only if

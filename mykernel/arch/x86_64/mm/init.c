@@ -1,6 +1,6 @@
 #include <linux/mm/gfp.h>
 // #include <linux/initrd.h>
-// #include <linux/ioport.h>
+#include <linux/kernel/ioport.h>
 // #include <linux/swap.h>
 #include <linux/mm/memblock.h>
 // #include <linux/swapfile.h>
@@ -93,7 +93,7 @@ static void __init myos_memory_map()
 		mapped_ram_size += end - start;
 	}
 
-	kernel_cr3 = myos_virt2phys((virt_addr_t)init_top_pgt);
+	kernel_cr3 = virt_to_phys((virt_addr_t)init_top_pgt);
 }
 
 void __init init_mem_mapping(void)

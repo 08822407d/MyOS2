@@ -1,6 +1,8 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/mm/mm_types.h>
-// #include <linux/rbtree.h>
+// #include <linux/maple_tree.h>
 // #include <linux/rwsem.h>
 #include <linux/kernel/spinlock.h>
 #include <linux/lib/list.h>
@@ -8,8 +10,9 @@
 #include <linux/mm/mman.h>
 #include <linux/mm/pgtable.h>
 
-// #include <linux/atomic.h>
+#include <linux/kernel/atomic.h>
 // #include <linux/user_namespace.h>
+// #include <linux/iommu.h>
 // #include <asm/mmu.h>
 
 
@@ -31,9 +34,8 @@ pgd_t	init_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE);
  * Since there is only one init_mm in the entire system, keep it simple
  * and size this cpu_bitmask to NR_CPUS.
  */
-extern reg_t _k_offset;
 mm_s init_mm = {
-	// .mm_rb				= RB_ROOT,
+	// .mm_mt				= MTREE_INIT_EXT(mm_mt, MM_MT_FLAGS, init_mm.mmap_lock),
 	.pgd				= swapper_pg_dir,
 	.mm_users			= ATOMIC_INIT(2),
 	.mm_refcount		= ATOMIC_INIT(1),
@@ -42,9 +44,15 @@ mm_s init_mm = {
 	// .page_table_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
 	// .arg_lock			=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
 	// .mmlist				= LIST_HEAD_INIT(init_mm.mmlist),
+// #ifdef CONFIG_PER_VMA_LOCK
+// 	.mm_lock_seq		= 0,
+// #endif
 	// .user_ns			= &init_user_ns,
 	// .cpu_bitmap			= CPU_BITS_NONE,
-	// INIT_MM_CONTEXT(init_mm)
+// #ifdef CONFIG_IOMMU_SVA
+// 	.pasid				= IOMMU_PASID_INVALID,
+// #endif
+	INIT_MM_CONTEXT(init_mm)
 };
 vma_s init_vma;
 

@@ -691,7 +691,7 @@ memblock_alloc_internal(phys_addr_t size, phys_addr_t align,
 	if (!alloc)
 		return NULL;
 
-	return (void *)myos_phys2virt(alloc);
+	return (void *)phys_to_virt(alloc);
 }
 
 /**
@@ -758,7 +758,7 @@ memblock_free(void *ptr, size_t size)
 {
 	if (ptr)
 	{
-		phys_addr_t base = myos_virt2phys((virt_addr_t)ptr);
+		phys_addr_t base = virt_to_phys((virt_addr_t)ptr);
 	// int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
 	// {
 		phys_addr_t end = base + size - 1;

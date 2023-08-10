@@ -71,12 +71,6 @@
 
 		extern void initmem_init(void);
 
-
-		phys_addr_t myos_virt2phys(virt_addr_t);
-		virt_addr_t myos_phys2virt(phys_addr_t);
-		#define __phys_addr myos_virt2phys
-		#define __virt_addr myos_phys2virt
-
 	#endif	/* !__ASSEMBLY__ */
 
 #endif	/* _ASM_X86_PAGE_DEFS_H */

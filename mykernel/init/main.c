@@ -23,7 +23,7 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
-// #include <linux/ioport.h>
+#include <linux/kernel/ioport.h>
 #include <linux/init/init.h>
 // #include <linux/initrd.h>
 #include <linux/mm/memblock.h>

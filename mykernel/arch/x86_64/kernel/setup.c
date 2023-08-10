@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  *  Copyright (C) 1995  Linus Torvalds
@@ -11,6 +13,7 @@
 // #include <linux/dma-map-ops.h>
 // #include <linux/dmi.h>
 #include <linux/block/efi.h>
+// #include <linux/ima.h>
 // #include <linux/init_ohci1394_dma.h>
 // #include <linux/initrd.h>
 // #include <linux/iscsi_ibft.h>
@@ -23,6 +26,7 @@
 // #include <linux/usb/xhci-dbgp.h>
 // #include <linux/static_call.h>
 // #include <linux/swiotlb.h>
+// #include <linux/random.h>
 
 #include <uapi/linux/mount.h>
 
@@ -32,6 +36,7 @@
 // #include <asm/numa.h>
 // #include <asm/bios_ebda.h>
 #include <asm/bugs.h>
+// #include <asm/cacheinfo.h>
 #include <asm/cpu.h>
 // #include <asm/efi.h>
 // #include <asm/gart.h>
@@ -54,7 +59,6 @@
 
 
 #include <asm/sections.h>
-
 #include <asm/e820-api.h>
 
 #include <obsolete/proto.h>
@@ -74,50 +78,44 @@ unsigned long max_pfn_mapped;
 // RESERVE_BRK(dmi_alloc, 65536);
 // #endif
 
-
-/*
- * Range of the BSS area. The size of the BSS area is determined
- * at link time, with RESERVE_BRK() facility reserving additional
- * chunks.
- */
 unsigned long _brk_start = (unsigned long)__brk_base;
 unsigned long _brk_end   = (unsigned long)__brk_base;
 
 // struct boot_params boot_params;
 
-// /*
-//  * These are the four main kernel memory regions, we put them into
-//  * the resource tree so that kdump tools and other debugging tools
-//  * recover it:
-//  */
+/*
+ * These are the four main kernel memory regions, we put them into
+ * the resource tree so that kdump tools and other debugging tools
+ * recover it:
+ */
 
-// static struct resource rodata_resource = {
-// 	.name	= "Kernel rodata",
-// 	.start	= 0,
-// 	.end	= 0,
-// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-// };
+static resource_s rodata_resource = {
+	.name	= "Kernel rodata",
+	.start	= 0,
+	.end	= 0,
+	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+};
 
-// static struct resource data_resource = {
-// 	.name	= "Kernel data",
-// 	.start	= 0,
-// 	.end	= 0,
-// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-// };
+static resource_s data_resource = {
+	.name	= "Kernel data",
+	.start	= 0,
+	.end	= 0,
+	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+};
 
-// static struct resource code_resource = {
-// 	.name	= "Kernel code",
-// 	.start	= 0,
-// 	.end	= 0,
-// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-// };
+static resource_s code_resource = {
+	.name	= "Kernel code",
+	.start	= 0,
+	.end	= 0,
+	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+};
 
-// static struct resource bss_resource = {
-// 	.name	= "Kernel bss",
-// 	.start	= 0,
-// 	.end	= 0,
-// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-// };
+static resource_s bss_resource = {
+	.name	= "Kernel bss",
+	.start	= 0,
+	.end	= 0,
+	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+};
 
 
 cpuinfo_x86_s boot_cpu_data __read_mostly;
@@ -155,8 +153,6 @@ static void __init reserve_brk(void)
 
 static void __init early_reserve_memory(void)
 {
-extern char _k_phys_start;
-extern char _k_virt_start;
 	/*
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
@@ -208,16 +204,10 @@ extern char _k_virt_start;
  */
 void __init setup_arch(char **cmdline_p)
 {
-extern void __used asm_offsets(void);
-extern void myos_early_init_system(void);
 extern void myos_early_init_arch_data(size_t lcpu_nr);
 extern void myos_init_arch(size_t cpu_idx);
-extern void myos_early_init_smp(size_t lcpu_nr);
 extern void myos_init_smp(size_t lcpu_nr);
 
-	asm_offsets();
-	myos_early_init_smp(kparam.nr_lcpu);
-	myos_early_init_system();
 
 	// printk(KERN_INFO "Command line: %s\n", boot_command_line);
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;

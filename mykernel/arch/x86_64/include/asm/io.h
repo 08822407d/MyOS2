@@ -45,25 +45,25 @@
 	// #include <asm/early_ioremap.h>
 	#include <asm/pgtable_types.h>
 
-	#define build_mmio_read(name, size, type, reg, barrier)				\
-				static inline type										\
-				name(const volatile void *addr) {						\
-					type ret;											\
-					asm volatile("mov" size " %1,	%0"					\
-								:reg (ret)								\
-								:"m" (*(volatile type __force *)addr)	\
-								barrier);								\
-					return ret;											\
+	#define build_mmio_read(name, size, type, reg, barrier)					\
+				static inline type											\
+				name(const volatile void *addr) {							\
+					type ret;												\
+					asm volatile(	"mov" size " %1,	%0"					\
+								:	reg (ret)								\
+								:	"m" (*(volatile type __force *)addr)	\
+									barrier);								\
+					return ret;												\
 				}
 
-	#define build_mmio_write(name, size, type, reg, barrier)			\
-				static inline void										\
-				name(type val, volatile void *addr) {					\
-					asm volatile("mov" size " %0,	%1"					\
-								:										\
-								:reg (val),								\
-									"m" (*(volatile type __force *)addr)\
-								barrier);								\
+	#define build_mmio_write(name, size, type, reg, barrier)				\
+				static inline void											\
+				name(type val, volatile void *addr) {						\
+					asm volatile(	"mov" size " %0,	%1"					\
+								:											\
+								:	reg (val),								\
+									"m" (*(volatile type __force *)addr)	\
+									barrier);								\
 				}
 
 	build_mmio_read(readb, "b", unsigned char, "=q", :"memory")
@@ -82,15 +82,15 @@
 	build_mmio_write(__writew, "w", unsigned short, "r", )
 	build_mmio_write(__writel, "l", unsigned int, "r", )
 
-	#define readb				readb
-	#define readw				readw
-	#define readl				readl
-	#define readb_relaxed(a)	__readb(a)
-	#define readw_relaxed(a)	__readw(a)
-	#define readl_relaxed(a)	__readl(a)
-	#define __raw_readb			__readb
-	#define __raw_readw			__readw
-	#define __raw_readl			__readl
+	#define readb					readb
+	#define readw					readw
+	#define readl					readl
+	#define readb_relaxed(a)		__readb(a)
+	#define readw_relaxed(a)		__readw(a)
+	#define readl_relaxed(a)		__readl(a)
+	#define __raw_readb				__readb
+	#define __raw_readw				__readw
+	#define __raw_readl				__readl
 
 	#define writeb					writeb
 	#define writew					writew
@@ -110,59 +110,59 @@
 	#define readq_relaxed(a)		__readq(a)
 	#define writeq_relaxed(v, a)	__writeq(v, a)
 
-	#define __raw_readq		__readq
-	#define __raw_writeq	__writeq
+	#define __raw_readq				__readq
+	#define __raw_writeq			__writeq
 
 	/* Let people know that we have them */
-	#define readq			readq
-	#define writeq			writeq
+	#define readq					readq
+	#define writeq					writeq
 
 	// #define ARCH_HAS_VALID_PHYS_ADDR_RANGE
 	// extern int valid_phys_addr_range(phys_addr_t addr, size_t size);
 	// extern int valid_mmap_phys_addr_range(unsigned long pfn, size_t size);
 
-	// /**
-	//  *	virt_to_phys	-	map virtual addresses to physical
-	//  *	@address: address to remap
-	//  *
-	//  *	The returned physical address is the physical (CPU) mapping for
-	//  *	the memory address given. It is only valid to use this function on
-	//  *	addresses directly mapped or allocated via kmalloc.
-	//  *
-	//  *	This function does not give bus mappings for DMA transfers. In
-	//  *	almost all conceivable cases a device driver should not be using
-	//  *	this function
-	//  */
+	/**
+	 *	virt_to_phys	-	map virtual addresses to physical
+	 *	@address: address to remap
+	 *
+	 *	The returned physical address is the physical (CPU) mapping for
+	 *	the memory address given. It is only valid to use this function on
+	 *	addresses directly mapped or allocated via kmalloc.
+	 *
+	 *	This function does not give bus mappings for DMA transfers. In
+	 *	almost all conceivable cases a device driver should not be using
+	 *	this function
+	 */
 
-	// static inline phys_addr_t
-	// virt_to_phys(volatile void *address) {
-	// 	return __pa(address);
-	// }
+	static inline phys_addr_t
+	virt_to_phys(volatile virt_addr_t address) {
+		return __pa(address);
+	}
 	// #define virt_to_phys	virt_to_phys
 
-	// /**
-	//  *	phys_to_virt	-	map physical address to virtual
-	//  *	@address: address to remap
-	//  *
-	//  *	The returned virtual address is a current CPU mapping for
-	//  *	the memory address given. It is only valid to use this function on
-	//  *	addresses that have a kernel mapping
-	//  *
-	//  *	This function does not handle bus mappings for DMA transfers. In
-	//  *	almost all conceivable cases a device driver should not be using
-	//  *	this function
-	//  */
+	/**
+	 *	phys_to_virt	-	map physical address to virtual
+	 *	@address: address to remap
+	 *
+	 *	The returned virtual address is a current CPU mapping for
+	 *	the memory address given. It is only valid to use this function on
+	 *	addresses that have a kernel mapping
+	 *
+	 *	This function does not handle bus mappings for DMA transfers. In
+	 *	almost all conceivable cases a device driver should not be using
+	 *	this function
+	 */
 
-	// static inline void
-	// *phys_to_virt(phys_addr_t address) {
-	// 	return __va(address);
-	// }
+	static inline virt_addr_t
+	phys_to_virt(volatile phys_addr_t address) {
+		return __va(address);
+	}
 	// #define phys_to_virt	phys_to_virt
 
-	// /*
-	//  * Change "page_s" to physical address.
-	//  */
-	// #define page_to_phys(page)	((dma_addr_t)page_to_pfn(page) << PAGE_SHIFT)
+	/*
+	 * Change "page_s" to physical address.
+	 */
+	// #define page_to_phys(page)	(phys_addr_t)(page_to_pfn(page) << PAGE_SHIFT)
 
 	// /*
 	//  * ISA I/O bus memory addresses are 1:1 with the physical address.
@@ -255,60 +255,63 @@
 		// 	native_io_delay();
 		// 	native_io_delay();
 		// #endif
-			asm volatile("mfence	\n\t"
-						 "nop		\n\t"
-						 "nop		\n\t"
-						 "nop		\n\t"
-						 "nop		\n\t");
+			asm volatile(	"mfence		\n\t"
+							"nop		\n\t"
+							"nop		\n\t"
+							"nop		\n\t"
+							"nop		\n\t");
 		}
 	// #endif
 
-	#define BUILDIO(bwl, bw, type)								\
-				static inline void								\
-				out##bwl(unsigned type value, int port) {		\
-					asm volatile("out" #bwl " %" #bw "0, %w1"	\
-								:								\
-								: "a"(value), "Nd"(port));		\
-				}												\
-																\
-				static inline unsigned type						\
-				in##bwl(int port) {								\
-					unsigned type value;						\
-					asm volatile("in" #bwl " %w1, %" #bw "0"	\
-								: "=a"(value)					\
-								: "Nd"(port));					\
-					return value;								\
-				}												\
-																\
-				static inline void								\
-				out##bwl##_p(unsigned type value, int port) {	\
-					out##bwl(value, port);						\
-					slow_down_io();								\
-				}												\
-																\
-				static inline unsigned type						\
-				in##bwl##_p(int port) {							\
-					unsigned type value = in##bwl(port);		\
-					slow_down_io();								\
-					return value;								\
-				}												\
-																\
-				static inline void								\
-				outs##bwl(int port, const void *addr,			\
-						unsigned long count) {					\
-					asm volatile("rep; outs" #bwl				\
-								: "+S"(addr), "+c"(count)		\
-								: "d"(port)						\
-								: "memory");					\
-				}												\
-																\
-				static inline void								\
-				ins##bwl(int port, void *addr,					\
-						unsigned long count)	{				\
-					asm volatile("rep; ins" #bwl				\
-								: "+D"(addr), "+c"(count)		\
-								: "d"(port)						\
-								: "memory");					\
+	#define BUILDIO(bwl, bw, type)									\
+				static inline void									\
+				out##bwl(unsigned type value, int port) {			\
+					asm volatile(	"out" #bwl " %" #bw "0, %w1"	\
+								:									\
+								:	"a"(value),						\
+									"Nd"(port));					\
+				}													\
+																	\
+				static inline unsigned type							\
+				in##bwl(int port) {									\
+					unsigned type value;							\
+					asm volatile(	"in" #bwl " %w1, %" #bw "0"		\
+								:	"=a"(value)						\
+								:	"Nd"(port));					\
+					return value;									\
+				}													\
+																	\
+				static inline void									\
+				out##bwl##_p(unsigned type value, int port) {		\
+					out##bwl(value, port);							\
+					slow_down_io();									\
+				}													\
+																	\
+				static inline unsigned type							\
+				in##bwl##_p(int port) {								\
+					unsigned type value = in##bwl(port);			\
+					slow_down_io();									\
+					return value;									\
+				}													\
+																	\
+				static inline void									\
+				outs##bwl(int port, const void *addr,				\
+						unsigned long count) {						\
+					asm volatile(	"rep; outs" #bwl				\
+								:	"+S"(addr),						\
+									"+c"(count)						\
+								:	"d"(port)						\
+								:	"memory");						\
+				}													\
+																	\
+				static inline void									\
+				ins##bwl(int port, void *addr,						\
+						unsigned long count)	{					\
+					asm volatile(	"rep; ins" #bwl					\
+								:	"+D"(addr),						\
+									"+c"(count)						\
+								:	"d"(port)						\
+								:	"memory");						\
 				}
 				// static inline void												\
 				// outs##bwl(int port, const void *addr, unsigned long count) {	\

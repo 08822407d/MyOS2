@@ -18,7 +18,7 @@
 	#include <linux/kernel/types.h>
 	// #include <linux/proc_fs.h>
 	// #include <linux/rtc.h>
-	// #include <linux/ioport.h>
+	#include <linux/kernel/ioport.h>
 	#include <linux/mm/pfn.h>
 	// #include <linux/pstore.h>
 	// #include <linux/range.h>

@@ -69,7 +69,7 @@ vm_fault_s myos_dump_pagetable(unsigned long address)
 	vmf.pte = pte_ent_offset(vmf.pmd, address);
 	if (arch_pte_none(*vmf.pte))
 		goto finish;
-	virt_addr_t pg_vaddr = myos_phys2virt(PTE_PFN_MASK & vmf.pte->val);
+	virt_addr_t pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte->val);
 	vmf.page = (virt_to_page(pg_vaddr));
 	
 finish:

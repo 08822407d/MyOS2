@@ -242,7 +242,7 @@ inline __always_inline unsigned get_lvt_ppr()
 void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
-	uint8_t *IOAPIC_addr = (uint8_t *)myos_phys2virt((phys_addr_t)0xfec00000);
+	uint8_t *IOAPIC_addr = (uint8_t *)phys_to_virt((phys_addr_t)0xfec00000);
 	mm_s *curr_mm = current->mm;
 
 	ioapic_map.phys_addr = (phys_addr_t)0xfec00000;

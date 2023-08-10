@@ -23,12 +23,15 @@
 
 // #include "mm_internal.h"
 
+
+#include <asm/io.h>
+
 // static void load_new_mm_cr3(pgd_t *pgdir,
 // 		u16 new_asid, unsigned long lam, bool need_flush)
 static void load_new_mm_cr3(pgd_t *pgdir, u16 new_asid, bool need_flush)
 {
 	unsigned long new_mm_cr3;
-	new_mm_cr3 = (unsigned long)myos_virt2phys((virt_addr_t)pgdir);
+	new_mm_cr3 = (unsigned long)virt_to_phys((virt_addr_t)pgdir);
 
 	// if (need_flush) {
 	// 	invalidate_user_asid(new_asid);

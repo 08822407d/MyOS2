@@ -8,16 +8,12 @@ _k_offset		= _k_virt_start - _k_phys_start;
 _k_phys_edata	= _edata - _k_offset;
 _k_phys_ebss	= __bss_stop - _k_offset;
 
-__k_unpaged__k_offset		= _k_offset;
-__k_unpaged__k_virt_start	= _k_virt_start;
-__k_unpaged__k_phys_start	= _k_phys_start;
-
 _APboot_phys_start			= 0x4000;
 
 SECTIONS
 {
+	/* the head of kernel running in low-half mem */
 	. = _k_phys_start;
-	__k_unpaged__kern_unpaged_start = .;
 	.head.text :
 	{
 		*(.unpaged.text);
@@ -26,8 +22,9 @@ SECTIONS
 	{
 		*(.unpaged.data);
 	}
-	__k_unpaged__kern_unpaged_end = .;
 
+	/* AP boot from real-mode, related code and data will be copied to */
+	/* begin 1MB of memory, so the symbols need relocated */
 	apb_start_viraddr = ALIGN(0x1000);
 	. = _APboot_phys_start;
 	.APboot.text ALIGN(0x1000) : AT(apb_start_viraddr)
@@ -39,6 +36,7 @@ SECTIONS
 	. = _APboot_etext;
 
 
+	/* here is the kernel in high-half meme */
 	. += _k_offset;
 	.text ALIGN(0x1000) : AT(ADDR(.text) - _k_offset)
 	{

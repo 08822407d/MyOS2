@@ -26,7 +26,7 @@ struct cputopo	smp_topos[CONFIG_NR_CPUS];
 static void get_VBE_info(mb_fb_common_s * vbe_info)
 {
 	framebuffer.FB_phybase = vbe_info->framebuffer_addr;
-	framebuffer.FB_virbase = myos_phys2virt(framebuffer.FB_phybase);
+	framebuffer.FB_virbase = phys_to_virt(framebuffer.FB_phybase);
 	framebuffer.FB_size = vbe_info->size;
 	framebuffer.X_Resolution = vbe_info->framebuffer_pitch;
 	framebuffer.X_Resolution = vbe_info->framebuffer_width;

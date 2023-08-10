@@ -30,7 +30,7 @@
 // #include <linux/kallsyms.h>
 // #include <linux/math64.h>
 #include <linux/kernel/uaccess.h>
-// #include <linux/ioport.h>
+#include <linux/kernel/ioport.h>
 // #include <linux/dcache.h>
 // #include <linux/cred.h>
 // #include <linux/rtc.h>

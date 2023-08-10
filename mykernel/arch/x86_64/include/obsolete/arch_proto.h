@@ -206,7 +206,7 @@
 
 	/* smp.c */
 	void init_cpu(void);
-	void myos_early_init_smp(size_t lcpu_nr);
+	void myos_early_init_smp(void);
 	void myos_init_smp(size_t lcpu_nr);
 	void start_SMP(uint64_t apic_id);
 	void myos_startup_smp(void);

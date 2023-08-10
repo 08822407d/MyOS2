@@ -61,6 +61,15 @@ asmlinkage __visible void __init x86_64_start_kernel(char * real_mode_data)
 	// clear_page(init_top_pgt);
 	memset(init_top_pgt, 0, PAGE_SIZE);
 
+
+	extern void __used asm_offsets(void);
+	extern void myos_early_init_system(void);
+	extern void myos_early_init_smp(void);
+
+	asm_offsets();
+	myos_early_init_system();
+	myos_early_init_smp();
+
 	// void __init x86_64_start_reservations(char *real_mode_data)
 	// {
 		/* version is always not zero if it is copied */
