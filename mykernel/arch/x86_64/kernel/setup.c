@@ -213,8 +213,10 @@ extern void myos_early_init_system(void);
 extern void myos_early_init_arch_data(size_t lcpu_nr);
 extern void myos_init_arch(size_t cpu_idx);
 extern void myos_early_init_smp(size_t lcpu_nr);
+extern void myos_init_smp(size_t lcpu_nr);
 
 	asm_offsets();
+	myos_early_init_smp(kparam.nr_lcpu);
 	myos_early_init_system();
 
 	// printk(KERN_INFO "Command line: %s\n", boot_command_line);
@@ -278,7 +280,7 @@ extern void myos_early_init_smp(size_t lcpu_nr);
 
 
 	myos_early_init_task(kparam.nr_lcpu);
-	myos_early_init_smp(kparam.nr_lcpu);
+	myos_init_smp(kparam.nr_lcpu);
 	myos_init_video();
 
 

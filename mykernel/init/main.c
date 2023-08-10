@@ -113,6 +113,7 @@
 // #include <kunit/test.h>
 
 
+#include <asm/tlbflush.h>
 #include <linux/mm/myos_slab.h>
 #include <linux/kernel/completion.h>
 #include <obsolete/glo.h>
@@ -243,7 +244,6 @@ asmlinkage void __init start_kernel(void)
 	myos_init_slab();
 
 	myos_init_task(kparam.nr_lcpu);
-	myos_init_smp(kparam.nr_lcpu);
 	
 	// enable bsp's apic
 	myos_init_bsp_intr();
@@ -284,8 +284,6 @@ void idle(size_t cpu_idx)
 		atomic_set(&lower_half_unmapped, 0);
 		myos_unmap_kernel_lowhalf(&lower_half_unmapped);
 	}
-	while (atomic_read(&lower_half_unmapped) == 0)
-		myos_update_mmu_tlb();
 
 	if (cpu_idx == 0)
 		rest_init();

@@ -15,7 +15,7 @@
 #include <asm/page_types.h>
 #include <asm/sections.h>
 #include <asm/setup.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 // #include <asm/tlb.h>
 // #include <asm/proto.h>
 // #include <asm/dma.h>		/* for MAX_DMA_PFN */
@@ -29,6 +29,7 @@
 
 // #include "mm_internal.h"
 
+// #define MAP_LOWHALF
 
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
@@ -50,7 +51,8 @@ void __init myos_early_alloc_pgt_buf(void)
 
 	// fill pml4 entries
 	for (int pgt_idx = 0; pgt_idx < pudbuf_pgcount; pgt_idx++)
-		init_top_pgt[pgt_idx] = arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * PTRS_PER_PUD));
+		init_top_pgt[pgt_idx + PGD_KERNEL_START] =
+				arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * PTRS_PER_PUD));
 	// fill pdpt entries
 	for (int pud_idx = 0; pud_idx < pmdbuf_pgcount; pud_idx++)
 		init_pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * PTRS_PER_PMD));
@@ -58,7 +60,9 @@ void __init myos_early_alloc_pgt_buf(void)
 	for (int pmd_idx = 0; pmd_idx < ptebuf_pgcount; pmd_idx++)
 		init_pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * PTRS_PER_PTE));
 
-	memcpy(init_top_pgt + PGD_KERNEL_START, init_top_pgt, PAGE_SIZE / 2);
+#if defined(MAP_LOWHALF)
+	memcpy(init_top_pgt, init_top_pgt + PGD_KERNEL_START, PAGE_SIZE / 2);
+#endif
 }
 
 
@@ -116,7 +120,7 @@ void __init init_mem_mapping(void)
 	}
 
 	load_cr3(swapper_pg_dir);
-	// __flush_tlb_all();
+	__flush_tlb_all();
 	// early_memtest(0, max_pfn_mapped << PAGE_SHIFT);
 }
 

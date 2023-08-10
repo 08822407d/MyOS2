@@ -1,6 +1,7 @@
 #include <linux/lib/string.h>
 #include <asm/fsgsbase.h>
 #include <asm/setup.h>
+#include <asm/tlbflush.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -19,14 +20,15 @@ extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 void myos_early_init_smp(size_t lcpu_nr)
 {
-	percpu_data	= myos_memblock_alloc_normal(
-			lcpu_nr * sizeof(cpudata_u *), sizeof(void *));
-	cpudata_u *pcpudata_arr = myos_memblock_alloc_normal(
-			(lcpu_nr - 1) * sizeof(cpudata_u), sizeof(long));
-	percpu_data[0] = &bsp_cpudata;
-	wrgsbase((unsigned long)percpu_data[0]);
-	for (int i = 1; i < lcpu_nr; i++)
-		percpu_data[i] = &(pcpudata_arr[i - 1]);
+	// copy ap_boot entry code to its address
+	extern char _APboot_phys_start;
+	extern char _APboot_text;
+	extern char _APboot_etext;
+	size_t apboot_len = &_APboot_etext - &_APboot_text;
+	memcpy((void *)myos_phys2virt((phys_addr_t)&_APboot_phys_start),
+			(void *)&_APboot_text, apboot_len);
+	cr3_paddr = kernel_cr3;
+
 }
 
 static void init_percpu_data(size_t cpu_idx)
@@ -56,15 +58,15 @@ static void init_percpu_data(size_t cpu_idx)
 
 void myos_init_smp(size_t lcpu_nr)
 {
-	// copy ap_boot entry code to its address
-	extern char _APboot_phys_start;
-	extern char _APboot_text;
-	extern char _APboot_etext;
-	size_t apboot_len = &_APboot_etext - &_APboot_text;
-	memcpy((void *)myos_phys2virt((phys_addr_t)&_APboot_phys_start),
-			(void *)&_APboot_text, apboot_len);
+	percpu_data	= myos_memblock_alloc_normal(
+			lcpu_nr * sizeof(cpudata_u *), sizeof(void *));
+	cpudata_u *pcpudata_arr = myos_memblock_alloc_normal(
+			(lcpu_nr - 1) * sizeof(cpudata_u), sizeof(long));
+	percpu_data[0] = &bsp_cpudata;
+	wrgsbase((unsigned long)percpu_data[0]);
+	for (int i = 1; i < lcpu_nr; i++)
+		percpu_data[i] = &(pcpudata_arr[i - 1]);
 
-	cr3_paddr = kernel_cr3;
 	// init basic data for percpu
 	for (int i = 0; i < lcpu_nr; i++)
 	{
@@ -79,7 +81,7 @@ void myos_percpu_self_config(size_t cpu_idx)
 	task_s *	current_task = current;
 	wrgsbase((unsigned long)cpudata_u_p);
 
-	myos_update_mmu_tlb();
+	__flush_tlb_all();
 }
 
 void myos_startup_smp()

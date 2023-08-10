@@ -35,7 +35,7 @@
 // #include <asm/fpu/xstate.h>
 // #include <asm/debugreg.h>
 // #include <asm/nmi.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 // #include <asm/mce.h>
 // #include <asm/vm86.h>
 #include <asm/switch_to.h>

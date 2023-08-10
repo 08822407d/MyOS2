@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0-only
 #include <linux/init/init.h>
 
@@ -9,8 +11,9 @@
 #include <linux/kernel/cpu.h>
 // #include <linux/debugfs.h>
 // #include <linux/sched/smt.h>
+// #include <linux/task_work.h>
 
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 #include <asm/mmu_context.h>
 // #include <asm/nospec-branch.h>
 #include <asm/cache.h>
@@ -20,7 +23,8 @@
 
 // #include "mm_internal.h"
 
-
+// static void load_new_mm_cr3(pgd_t *pgdir,
+// 		u16 new_asid, unsigned long lam, bool need_flush)
 static void load_new_mm_cr3(pgd_t *pgdir, u16 new_asid, bool need_flush)
 {
 	unsigned long new_mm_cr3;
@@ -56,6 +60,7 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 {
 	// struct mm_struct *real_prev = this_cpu_read(cpu_tlbstate.loaded_mm);
 	// u16 prev_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+	// unsigned long new_lam = mm_lam_cr3_mask(next);
 	// bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);
 	// unsigned cpu = smp_processor_id();
 	// u64 next_tlb_gen;
@@ -85,7 +90,8 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	//  * isn't free.
 	//  */
 // #ifdef CONFIG_DEBUG_VM
-	// if (WARN_ON_ONCE(__read_cr3() != build_cr3(real_prev->pgd, prev_asid))) {
+	// if (WARN_ON_ONCE(__read_cr3() != build_cr3(real_prev->pgd, prev_asid,
+	// 					   tlbstate_lam_cr3_mask()))) {
 	// 	/*
 	// 	 * If we were to BUG here, we'd be very likely to kill
 	// 	 * the system so hard that we don't see the call trace.
@@ -117,8 +123,14 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	//  * instruction.
 	//  */
 	// if (real_prev == next) {
+	// 	/* Not actually switching mm's */
 	// 	VM_WARN_ON(this_cpu_read(cpu_tlbstate.ctxs[prev_asid].ctx_id) !=
 	// 		   next->context.ctx_id);
+
+	// 	/*
+	// 	 * If this races with another thread that enables lam, 'new_lam'
+	// 	 * might not match tlbstate_lam_cr3_mask().
+	// 	 */
 
 	// 	/*
 	// 	 * Even in lazy TLB mode, the CPU should stay set in the
@@ -187,14 +199,20 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	// 	barrier();
 	// }
 
-	if (need_flush) {
-		// this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
-		// this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
-		// trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
-	} else {
-		/* The new ASID is already up to date. */
-		// trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
-	}
+	// set_tlbstate_lam_mode(next);
+	// if (need_flush) {
+	// 	this_cpu_write(cpu_tlbstate.ctxs[new_asid].ctx_id, next->context.ctx_id);
+	// 	this_cpu_write(cpu_tlbstate.ctxs[new_asid].tlb_gen, next_tlb_gen);
+	// 	load_new_mm_cr3(next->pgd, new_asid, new_lam, true);
+
+	// 	trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, TLB_FLUSH_ALL);
+	// } else {
+	// 	/* The new ASID is already up to date. */
+	// 	load_new_mm_cr3(next->pgd, new_asid, new_lam, false);
+
+	// 	trace_tlb_flush(TLB_FLUSH_ON_TASK_SWITCH, 0);
+	// }
+
 	load_new_mm_cr3(next->pgd, new_asid, need_flush);
 
 	/* Make sure we write CR3 before loaded_mm. */
@@ -206,5 +224,47 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	// if (next != real_prev) {
 	// 	cr4_update_pce_mm(next);
 	// 	switch_ldt(real_prev, next);
+	// }
+}
+
+
+
+/*
+ * Flush the entire current user mapping
+ */
+// STATIC_NOPV void native_flush_tlb_local(void)
+void flush_tlb_local(void)
+{
+	// /*
+	//  * Preemption or interrupts must be disabled to protect the access
+	//  * to the per CPU variable and to prevent being preempted between
+	//  * read_cr3() and write_cr3().
+	//  */
+	// WARN_ON_ONCE(preemptible());
+
+	// invalidate_user_asid(this_cpu_read(cpu_tlbstate.loaded_mm_asid));
+
+	/* If current->mm == NULL then the read_cr3() "borrows" an mm */
+	write_cr3(__read_cr3());
+}
+
+/*
+ * Flush everything
+ */
+void __flush_tlb_all(void)
+{
+	// /*
+	//  * This is to catch users with enabled preemption and the PGE feature
+	//  * and don't trigger the warning in __native_flush_tlb().
+	//  */
+	// VM_WARN_ON_ONCE(preemptible());
+
+	// if (cpu_feature_enabled(X86_FEATURE_PGE)) {
+	// 	__flush_tlb_global();
+	// } else {
+	// 	/*
+	// 	 * !PGE -> !PCID (setup_pcid()), thus every flush is total.
+	// 	 */
+		flush_tlb_local();
 	// }
 }

@@ -409,7 +409,6 @@
 	// }
 	// #define __HAVE_ARCH_UPDATE_MMU_TLB
 	// #endif
-	extern void myos_update_mmu_tlb(void);
 
 	// /*
 	// * Some architectures may be able to avoid expensive synchronization

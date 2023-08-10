@@ -43,7 +43,7 @@
 // #include <linux/page_idle.h>
 // #include <linux/migrate.h>
 #include <asm/pgalloc.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 #include "internal.h"
 
 // #define CREATE_TRACE_POINTS

@@ -31,7 +31,7 @@
 // #include <asm/archrandom.h>
 // #include <asm/hypervisor.h>
 #include <asm/processor.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 // #include <asm/debugreg.h>
 #include <asm/sections.h>
 // #include <asm/vsyscall.h>

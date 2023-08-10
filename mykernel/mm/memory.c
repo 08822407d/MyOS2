@@ -82,7 +82,7 @@
 #include <asm/pgalloc.h>
 #include <linux/kernel/uaccess.h>
 // #include <asm/tlb.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 
 // #include "pgalloc-track.h"
 #include "internal.h"
@@ -1198,8 +1198,8 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 {
 	vma_s *vma = vmf->vma;
 	page_s *page;
-	unsigned long page_addr = 0;
 	vm_fault_t ret;
+	unsigned long page_addr = 0;
 
 	/* Did we COW the page? */
 	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
@@ -1232,22 +1232,30 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	// 		return VM_FAULT_OOM;
 	// }
 
-	// /* See comment in handle_pte_fault() */
+	// /*
+	//  * See comment in handle_pte_fault() for how this scenario happens, we
+	//  * need to return NOPAGE so that we drop this page.
+	//  */
 	// if (pmd_devmap_trans_unstable(vmf->pmd))
-	// 	return 0;
+	// 	return VM_FAULT_NOPAGE;
 
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 	// 			      vmf->address, &vmf->ptl);
 	*vmf->pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
 	ret = 0;
 	// /* Re-check under ptl */
-	// if (likely(pte_none(*vmf->pte)))
+	// if (likely(!vmf_pte_changed(vmf))) {
 	// 	do_set_pte(vmf, page, vmf->address);
-	// else
-	// 	ret = VM_FAULT_NOPAGE;
 
-	// update_mmu_tlb(vma, vmf->address, vmf->pte);
-	myos_update_mmu_tlb();
+	// 	/* no need to invalidate: a not-present page won't be cached */
+	// 	update_mmu_cache(vma, vmf->address, vmf->pte);
+
+	// 	ret = 0;
+	// } else {
+	// 	update_mmu_tlb(vma, vmf->address, vmf->pte);
+	// 	ret = VM_FAULT_NOPAGE;
+	// }
+
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
 	return ret;
 }

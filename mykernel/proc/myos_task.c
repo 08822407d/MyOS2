@@ -18,7 +18,6 @@ PCB_u **		idle_tasks;
 // de attention that before entering start_kernel, rsp had already point to stack of task0,
 // in myos_early_init_system() .bss section will be set 0, so here arrange task0 in .data section
 files_struct_s	task0_files;
-PCB_u			task0_PCB __aligned(THREAD_SIZE) __section(".data");
 taskfs_s		task0_fs =
 {
 	.in_exec		= 0,
@@ -26,6 +25,17 @@ taskfs_s		task0_fs =
 	.users			= 0,
 	.pwd.mnt		= NULL,
 	.root.mnt		= NULL,
+};
+PCB_u			task0_PCB __aligned(THREAD_SIZE) __section(".data") =
+{
+	.task.rt.time_slice		= 20,
+	.task.se.vruntime		= -1,
+	.task.__state			= TASK_RUNNING,
+	.task.flags				= PF_KTHREAD,
+	.task.mm				= &init_mm,
+	.task.fs				= &task0_fs,
+	.task.files				= &task0_files,
+	.task.pid_links 	= LIST_INIT(task0_PCB.task.pid_links),
 };
 
 void compute_consts(void);
@@ -52,13 +62,13 @@ void myos_init_task(size_t lcpu_nr)
 	task_s *task0 = &task0_PCB.task;
 	
 	// set arch struct in mm_s
-	task0->rt.time_slice	= 20;
-	task0->se.vruntime		= -1;
-	task0->__state			= TASK_RUNNING;
-	task0->flags			= PF_KTHREAD;
-	task0->mm				= &init_mm;
-	task0->fs				= &task0_fs;
-	task0->files			= &task0_files;
+	// task0->rt.time_slice	= 20;
+	// task0->se.vruntime		= -1;
+	// task0->__state			= TASK_RUNNING;
+	// task0->flags			= PF_KTHREAD;
+	// task0->mm				= &init_mm;
+	// task0->fs				= &task0_fs;
+	// task0->files			= &task0_files;
 	set_task_comm(task0, "cpu0_idel");
 	attach_pid(task0, PIDTYPE_PID);
 

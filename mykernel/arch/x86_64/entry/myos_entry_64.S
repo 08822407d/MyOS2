@@ -98,11 +98,10 @@ SYM_CODE_START(sysexit_entp)
 	addq		$0x38,		%rsp
 	xchgq		%r10,		%rdx
 	xchgq		%r11,		%rcx
-	// swapgs
 	sti
 
-	.byte	0x48
-	sysexit
+	REX.W
+	sysexitq
 
 // /*==============================================================================================*/
 // /*									syscall and sysret entry						 			*/

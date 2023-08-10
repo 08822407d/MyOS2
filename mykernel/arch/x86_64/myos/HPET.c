@@ -53,10 +53,9 @@ void HPET_init()
 	if(x > 0xfec00000 && x < 0xfee00000)
 	{
 		p = (unsigned int *)myos_phys2virt((phys_addr_t)(x + 0x3404UL));
+		//enable HPET
+		*p = 0x80;
 	}
-
-	//enable HPET
-	*p = 0x80;
 	mb();
 
 	//init I/O APIC IRQ2 => HPET Timer 0

@@ -87,22 +87,26 @@ unsigned long __meminit
 myos_kernel_physical_mapping_init(
 		unsigned long paddr_start, unsigned long paddr_end)
 {
-	unsigned long addr = PFN_ALIGN(paddr_start);
+	unsigned long pg_addr = PFN_ALIGN(paddr_start);
 	do
 	{
-		pgd_t *pgdp = pgd_ent_offset(&init_mm, addr);
-		while (pgdp == 0);
-		p4d_t *p4dp = p4d_ent_offset(pgdp, addr);
-		while (p4dp == 0);
-		pud_t *pudp = pud_ent_offset(p4dp, addr);
-		while (pudp == 0);
-		pmd_t *pmdp = pmd_ent_offset(pudp, addr);
-		while (pmdp == 0);
-		pte_t *ptep = pte_ent_offset(pmdp, addr);
-		*ptep = arch_make_pte(__PAGE_KERNEL_EXEC | _PAGE_PAT | addr);
+		// map physical memory only to high-half of kernel mapping
+		unsigned long kv_addr =
+			(unsigned long)myos_phys2virt(pg_addr);
 
-		addr += PAGE_SIZE;
-	} while (addr < paddr_end);
+		pgd_t *pgdp = pgd_ent_offset(&init_mm, kv_addr);
+		while (pgdp == 0);
+		p4d_t *p4dp = p4d_ent_offset(pgdp, kv_addr);
+		while (p4dp == 0);
+		pud_t *pudp = pud_ent_offset(p4dp, kv_addr);
+		while (pudp == 0);
+		pmd_t *pmdp = pmd_ent_offset(pudp, kv_addr);
+		while (pmdp == 0);
+		pte_t *ptep = pte_ent_offset(pmdp, kv_addr);
+		*ptep = arch_make_pte(__PAGE_KERNEL_EXEC | _PAGE_PAT | pg_addr);
+
+		pg_addr += PAGE_SIZE;
+	} while (pg_addr < paddr_end);
 }
 
 
@@ -152,4 +156,14 @@ void __init mem_init(void)
 	// 	kclist_add(&kcore_vsyscall, (void *)VSYSCALL_ADDR, PAGE_SIZE, KCORE_USER);
 
 	// preallocate_vmalloc_pages();
+}
+
+
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
+void myos_unmap_kernel_lowhalf(atomic_t *um_flag)
+{
+	memset(init_top_pgt, 0, PAGE_SIZE / 2);
+	atomic_inc(um_flag);
 }

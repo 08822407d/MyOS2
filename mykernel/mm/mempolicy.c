@@ -101,7 +101,7 @@
 #include <linux/debug/printk.h>
 // #include <linux/swapops.h>
 
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 #include <linux/kernel/uaccess.h>
 
 #include "internal.h"

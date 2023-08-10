@@ -27,7 +27,7 @@
 // #include <asm/smp.h>
 #include <asm/setup.h>
 // #include <asm/desc.h>
-// #include <asm/tlbflush.h>
+#include <asm/tlbflush.h>
 #include <asm/sections.h>
 // #include <asm/kdebug.h>
 #include <asm/e820-api.h>

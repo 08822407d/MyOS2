@@ -1836,7 +1836,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
 		pt_regs_s *newregs = task_pt_regs(new_tsk);
 		memcpy(newregs, oldregs, sizeof(pt_regs_s));
 
-		myos_update_mmu_tlb();
+		__flush_tlb_all();
 	}
 
 exit_cpmm:
