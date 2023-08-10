@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
  * Procedures for maintaining information about logical memory blocks.
@@ -31,6 +33,10 @@
 
 #ifndef INIT_MEMBLOCK_RESERVED_REGIONS
 #	define INIT_MEMBLOCK_RESERVED_REGIONS	INIT_MEMBLOCK_REGIONS
+#endif
+
+#ifndef INIT_MEMBLOCK_MEMORY_REGIONS
+#	define INIT_MEMBLOCK_MEMORY_REGIONS		INIT_MEMBLOCK_REGIONS
 #endif
 
 /**
@@ -101,7 +107,7 @@ unsigned long min_low_pfn;
 unsigned long max_pfn;
 unsigned long long max_possible_pfn;
 
-static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock = 
+static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock = 
 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
 static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock =
 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
@@ -112,14 +118,12 @@ static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS
 memblock_s memblock __initdata_memblock = {
 	.memory.regions		= memblock_memory_init_regions,
 	.memory.cnt			= 0,	/* empty dummy entry */
-	.memory.max			= INIT_MEMBLOCK_REGIONS,
-	.memory.total_size	= 0,
+	.memory.max			= INIT_MEMBLOCK_MEMORY_REGIONS,
 	.memory.name		= "memory",
 
 	.reserved.regions	= memblock_reserved_init_regions,
 	.reserved.cnt		= 0,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
-	.reserved.total_size= 0,
 	.reserved.name		= "reserved",
 
 	.bottom_up			= true,

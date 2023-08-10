@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  * Low level x86 E820 memory map handling functions.
@@ -19,7 +21,6 @@
 
 #include <asm/e820-api.h>
 #include <asm/setup.h>
-#include <asm/pgtable_64_types.h>
 
 
 #include <uefi/multiboot2.h>
@@ -63,8 +64,9 @@ extern efi_machine_conf_s	*machine_info;
  * re-propagated. So itsmain role is a temporary bootstrap storage of firmware
  * specific memory layout data during early bootup.
  */
-// static e820_table_s e820_table_init		__initdata;
 e820_table_s e820_table	__initdata;
+
+// static e820_table_s e820_table_init		__initdata;
 // static struct e820_table e820_table_kexec_init		__initdata;
 // static struct e820_table e820_table_firmware_init	__initdata;
 
@@ -72,14 +74,13 @@ e820_table_s e820_table	__initdata;
 // struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
 // struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
 
-// e820_entry_s *e820_table;
 
 #define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
 
 
 void __init e820__memory_setup(void)
 {
-		int i = 0;
+	int i = 0;
 	e820_table.nr_entries = 0;
 	// char *__init e820__memory_setup_default(void)
 	// {
@@ -156,33 +157,38 @@ void __init e820__memblock_setup(void)
 	int i;
 	u64 end;
 
-	// /*
-	//  * The bootstrap memblock region count maximum is 128 entries
-	//  * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
-	//  * than that - so allow memblock resizing.
-	//  *
-	//  * This is safe, because this call happens pretty late during x86 setup,
-	//  * so we know about reserved memory regions already. (This is important
-	//  * so that memblock resizing does no stomp over reserved areas.)
-	//  */
+	/*
+	 * The bootstrap memblock region count maximum is 128 entries
+	 * (INIT_MEMBLOCK_REGIONS), but EFI might pass us more E820 entries
+	 * than that - so allow memblock resizing.
+	 *
+	 * This is safe, because this call happens pretty late during x86 setup,
+	 * so we know about reserved memory regions already. (This is important
+	 * so that memblock resizing does no stomp over reserved areas.)
+	 */
+	// memblock_allow_resize();
+
 	for (i = 0; i < e820_table.nr_entries; i++)
 	{
 		e820_entry_s *entry = &e820_table.entries[i];
 		enum e820_type type = entry->type;
 
+		end = entry->addr + entry->size;
+		if (end != (resource_size_t)end)
+			continue;
+
 		if (type == E820_TYPE_SOFT_RESERVED)
 			memblock_reserve(entry->addr, entry->size);
 
 		if (type != E820_TYPE_RAM &&
-			type != E820_TYPE_ACPI &&
-			type != E820_TYPE_NVS &&
 			type != E820_TYPE_RESERVED_KERN)
 			continue;
 
 		memblock_add(entry->addr, entry->size);
-		if (type == E820_TYPE_ACPI ||
-			type == E820_TYPE_NVS)
-			memblock_reserve(entry->addr, entry->size);
+
+		// if (type == E820_TYPE_ACPI ||
+		// 	type == E820_TYPE_NVS)
+		// 	memblock_reserve(entry->addr, entry->size);
 	}
 
 	/* Throw away partial pages: */

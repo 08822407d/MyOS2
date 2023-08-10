@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 #include <linux/mm/gfp.h>
 // #include <linux/initrd.h>
 #include <linux/kernel/ioport.h>
@@ -9,6 +11,7 @@
 #include <linux/sched/task.h>
 
 // #include <asm/set_memory.h>
+// #include <asm/cpu_device_id.h>
 #include <asm/e820-api.h>
 // #include <asm/init.h>
 #include <asm/page.h>
@@ -38,7 +41,9 @@ pud_t	*init_pud_buf;
 pmd_t	*init_pmd_buf;
 pte_t	*init_pte_buf;
 
-void __init myos_early_alloc_pgt_buf(void)
+// 与linux不同，MYOS这里一次性为内核映射所有物理内存申请了全部所需映射表内存空间
+// 并填充映射表,但目前并没有完成映射的最后一步（即填充pte）
+void __init early_alloc_pgt_buf(void)
 {
 	int ent_size = sizeof(pte_t);
 	long ptebuf_pgcount = PFN_UP(max_pfn * ent_size);

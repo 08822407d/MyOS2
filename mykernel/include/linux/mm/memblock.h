@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0-or-later */
 #ifndef _LINUX_MEMBLOCK_H_
 #define _LINUX_MEMBLOCK_H_
@@ -78,7 +80,7 @@
 		unsigned long	max;
 		phys_addr_t		total_size;
 		mmblk_rgn_s *	regions;
-		char *name;
+		char			*name;
 	} mmblk_type_s;
 
 	/**

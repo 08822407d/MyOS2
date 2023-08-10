@@ -1,3 +1,5 @@
+// arch/x86/include/asm/e820/types.h
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_E820_TYPES_H
 #define _ASM_E820_TYPES_H

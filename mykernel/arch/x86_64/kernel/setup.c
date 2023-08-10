@@ -233,6 +233,15 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 	setup_initial_init_mm(_text, _etext, _edata, (void *)-1ULL);
 
+	code_resource.start = __pa(_text);
+	code_resource.end = __pa(_etext)-1;
+	rodata_resource.start = __pa(__start_rodata);
+	rodata_resource.end = __pa(__end_rodata)-1;
+	data_resource.start = __pa(_sdata);
+	data_resource.end = __pa(_edata)-1;
+	bss_resource.start = __pa(__bss_start);
+	bss_resource.end = __pa(__bss_stop)-1;
+
 	/*
 	 * partially used pages are not usable - thus
 	 * we are rounding upwards:
@@ -248,7 +257,7 @@ extern void myos_init_smp(size_t lcpu_nr);
 	high_memory = (void *)__va(max_pfn * PAGE_SIZE - 1) + 1;
 
 	// 为内核页映射预留内存空间并构建映射树
-	myos_early_alloc_pgt_buf();
+	early_alloc_pgt_buf();
 
 	/*
 	 * Need to conclude brk, before e820__memblock_setup()

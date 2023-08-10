@@ -46,13 +46,13 @@ SECTIONS
 	}
 	.rodata ALIGN(0x1000) : AT(ADDR(.rodata) - _k_offset)
 	{
-		_rodata = .;
+		__start_rodata = .;
 		*(.rodata*)
-		_erodata = .;
+		__end_rodata = .;
 	}
 	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
 	{
-		_data = .;
+		_sdata = .;
 		*(.data*)
 		_edata = .;
 	}

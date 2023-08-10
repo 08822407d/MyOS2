@@ -1,3 +1,5 @@
+// arch/x86/include/asm/e820/api.h
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_E820_API_H
 #define _ASM_E820_API_H
