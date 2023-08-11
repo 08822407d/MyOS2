@@ -107,22 +107,22 @@ unsigned long min_low_pfn;
 unsigned long max_pfn;
 unsigned long long max_possible_pfn;
 
-static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock = 
-		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
-static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock =
-		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
+// static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock = 
+// 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
+// static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock =
+// 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
 
-// static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock; 
-// static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
+static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock; 
+static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
 
 memblock_s memblock __initdata_memblock = {
 	.memory.regions		= memblock_memory_init_regions,
-	.memory.cnt			= 0,	/* empty dummy entry */
+	.memory.cnt			= 1,	/* empty dummy entry */
 	.memory.max			= INIT_MEMBLOCK_MEMORY_REGIONS,
 	.memory.name		= "memory",
 
 	.reserved.regions	= memblock_reserved_init_regions,
-	.reserved.cnt		= 0,	/* empty dummy entry */
+	.reserved.cnt		= 1,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
 	.reserved.name		= "reserved",
 
@@ -324,7 +324,6 @@ memblock_insert_region(mmblk_type_s *type, int idx,
  * @type: memblock type to add new region into
  * @base: base address of the new region
  * @size: size of the new region
- * @nid: nid of the new region
  * @flags: flags of the new region
  *
  * Add new memblock region [@base, @base + @size) into @type.  The new region
@@ -339,38 +338,62 @@ static int __init
 memblock_add_range(mmblk_type_s *type, phys_addr_t base,
 		phys_addr_t size, enum mmblk_flags flags)
 {
-	int idx;
+	int idx, start_rgn, end_rgn;
 	phys_addr_t end = base + memblock_cap_size(base, &size);
 	mmblk_rgn_s *rgn;
 	if (!size)
 		return ENOERR;
+
+	/* special case for empty array */
+	if (type->regions[0].size == 0) {
+		// WARN_ON(type->cnt != 1 || type->total_size);
+		type->regions[0].base = base;
+		type->regions[0].size = size;
+		type->regions[0].flags = flags;
+		// memblock_set_region_node(&type->regions[0], nid);
+		type->total_size = size;
+		return 0;
+	}
+
+	// since extend_array() not implemented, just return no-mem error
 	if (type->cnt + 2 > type->max)
 		return -ENOMEM;
 
 	/*
-	 * 
+	 * this algorism asserts that in each iteration,
+	 * @base must be bigger than the end of former rgn
 	 */
 	for_each_memblock_type(idx, type, rgn) {
+		mmblk_rgn_s *prev = rgn - 1;
+		if (idx > 0)
+			BUG_ON(base < (prev->base + prev->size));
+
 		phys_addr_t rbase = rgn->base;
 		phys_addr_t rend = rbase + rgn->size;
-		if (rend <= base)
+		if ((rend <= base) && (rend != 0))
 			continue;
-
-		if (rbase >= end || rgn->size == 0)
+		/*
+		 * now r-end > base, cut the part of new-region which below r-end
+		 * and to see weahter the cut part can be merged to this rgn
+		 */
+		if (rbase > base) 					/* else just throw this part away */
 		{
-			memblock_insert_region(type, idx, base, end - base, flags);
-			break;
-		}
-		if (rbase > base)
-		{
-			memblock_insert_region(type, idx, base, rbase - base, flags);
-			idx++;
-			base = min(end, rend);
-			if (base = end)
+			if (rbase >= end)				/* new-region fully below rgn, directly insert */
+			{
+				memblock_insert_region(type, idx, base, end - base, flags);
 				break;
+			}
+			else if (rgn->flags == flags)	/* same flags means can be merged */
+				rbase = base;
+			else							/* if not, insert the part below r-base */
+				memblock_insert_region(type, idx - 1, base, rbase - base, flags);
 		}
+		if (rend >= end)	// if new-region has no remaining, insertion finish
+			break;
+		else				// else	cut the part(shrink base of new-range)
+			base = rend;
 	}
-	while (type->cnt >= type->max - 2);
+	BUG_ON(type->cnt >= (type->max - 2));
 
 	memblock_merge_regions(type);
 	return ENOERR;
