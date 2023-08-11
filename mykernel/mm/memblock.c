@@ -261,36 +261,30 @@ memblock_remove_region(mmblk_type_s *type, unsigned long r)
  * Scan @type and merge neighboring compatible regions.
  */
 static void __init_memblock
-memblock_merge_regions(mmblk_type_s *type)
+memblock_merge_regions(mmblk_type_s *type,
+		unsigned long start_rgn, unsigned long end_rgn)
 {
 	int i = 0;
-	/* cnt never goes below 1 */
-	while (i < type->cnt - 1)
-	{
+	if (start_rgn)
+		i = start_rgn - 1;
+	end_rgn = min(end_rgn, type->cnt - 1);
+	while (i < end_rgn) {
 		mmblk_rgn_s *this = &type->regions[i];
 		mmblk_rgn_s *next = &type->regions[i + 1];
-
-		// if (this->base + this->size != next->base ||
-		// 	// memblock_get_region_node(this) !=
-		// 	// memblock_get_region_node(next) ||
-		// 	this->flags != next->flags) {
-		// 	BUG_ON(this->base + this->size > next->base);
-		// 	i++;
-		// 	continue;
-		// }
-		// this->size += next->size;
-
 		phys_addr_t this_end = this->base + this->size;
-		phys_addr_t next_end = next->base + next->size;
-		if (this_end < next->base) {
+		// phys_addr_t next_end = next->base + next->size;
+
+		if (this_end != next->base ||
+			this->flags != next->flags) {
+			BUG_ON(this_end > next->base);
 			i++;
 			continue;
 		}
-		if (this_end < next_end)
-			this->size = next_end - this->base;
+		this->size += next->size;
 		/* move forward from next + 1, index of which is i + 2 */
-		memmove(next, next + 1, (type->cnt - (i + 1)) * sizeof(*next));
+		memmove(next, next + 1, (type->cnt - (i + 2)) * sizeof(*next));
 		type->cnt--;
+		end_rgn--;
 	}
 }
 
@@ -344,23 +338,8 @@ memblock_add_range(mmblk_type_s *type, phys_addr_t base,
 	if (!size)
 		return ENOERR;
 
-	/* special case for empty array */
-	if (type->regions[0].size == 0) {
-		// WARN_ON(type->cnt != 1 || type->total_size);
-		type->regions[0].base = base;
-		type->regions[0].size = size;
-		type->regions[0].flags = flags;
-		// memblock_set_region_node(&type->regions[0], nid);
-		type->total_size = size;
-		return 0;
-	}
-
-	// since extend_array() not implemented, just return no-mem error
-	if (type->cnt + 2 > type->max)
-		return -ENOMEM;
-
 	/*
-	 * this algorism asserts that in each iteration,
+	 * This algorism asserts that in each iteration,
 	 * @base must be bigger than the end of former rgn
 	 */
 	for_each_memblock_type(idx, type, rgn) {
@@ -370,32 +349,44 @@ memblock_add_range(mmblk_type_s *type, phys_addr_t base,
 
 		phys_addr_t rbase = rgn->base;
 		phys_addr_t rend = rbase + rgn->size;
+		size_t insert_base, insert_size;
 		if ((rend <= base) && (rend != 0))
 			continue;
 		/*
-		 * now r-end > base, cut the part of new-region which below r-end
-		 * and to see weahter the cut part can be merged to this rgn
+		 * Now r-end > base, cut the part of new-region which below r-end
+		 * and to see weahter the cut part can be merged to this rgn.
 		 */
-		if (rbase > base) 					/* else just throw this part away */
-		{
-			if (rbase >= end)				/* new-region fully below rgn, directly insert */
-			{
-				memblock_insert_region(type, idx, base, end - base, flags);
-				break;
-			}
-			else if (rgn->flags == flags)	/* same flags means can be merged */
-				rbase = base;
-			else							/* if not, insert the part below r-base */
-				memblock_insert_region(type, idx - 1, base, rbase - base, flags);
+		insert_base = base;
+		if ((rgn->size == 0) || (rbase > end && rend > end)) {
+		/* Reach the end of valid records, or fully below rgn */
+			insert_size = end - base;
+			base = end;
 		}
-		if (rend >= end)	// if new-region has no remaining, insertion finish
-			break;
-		else				// else	cut the part(shrink base of new-range)
+		else if (rbase > base) {
+		/* Else head part of new-region may be cut by or merged to rgn */
+			insert_size = rbase - base;
 			base = rend;
+		}
+		else {
+		/* Else no any part of new-region below @rbase, so no insertion */
+			insert_size = 0;
+			base = rend;
+		}
+
+		if (insert_size != 0) {
+			memblock_insert_region(type, idx, insert_base, insert_size, flags);
+			memblock_merge_regions(type, idx - 1, idx);
+		}
+
+		/*
+		 * In each itertion we only due with the part of new-region which 
+		 * is below @rend of rgn, so the remaining cases(is the same to the 
+		 * part which beyond @rend of rgn) will be treated in next iteration.
+		 */
+		if (base >= end)	/* if @base meets @end, insertion is finished */
+			break;
 	}
 	BUG_ON(type->cnt >= (type->max - 2));
-
-	memblock_merge_regions(type);
 	return ENOERR;
 }
 
