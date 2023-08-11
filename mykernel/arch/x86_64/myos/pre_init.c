@@ -33,9 +33,9 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
 	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
 
-	memblock_add(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
+	simple_mmblk_add(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
 			PFN_PHYS(PFN_UP(framebuffer.FB_size)));
-	memblock_reserve(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
+	simple_mmblk_reserve(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
 			PFN_PHYS(PFN_UP(framebuffer.FB_size)));
 }
 

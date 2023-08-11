@@ -178,17 +178,17 @@ void __init e820__memblock_setup(void)
 			continue;
 
 		if (type == E820_TYPE_SOFT_RESERVED)
-			memblock_reserve(entry->addr, entry->size);
+			simple_mmblk_reserve(entry->addr, entry->size);
 
 		if (type != E820_TYPE_RAM &&
 			type != E820_TYPE_RESERVED_KERN)
 			continue;
 
-		memblock_add(entry->addr, entry->size);
+		simple_mmblk_add(entry->addr, entry->size);
 
 		// if (type == E820_TYPE_ACPI ||
 		// 	type == E820_TYPE_NVS)
-		// 	memblock_reserve(entry->addr, entry->size);
+		// 	simple_mmblk_reserve(entry->addr, entry->size);
 	}
 
 	/* Throw away partial pages: */

@@ -143,7 +143,7 @@ void * __init extend_brk(size_t size, size_t align)
 static void __init reserve_brk(void)
 {
 	if (_brk_end > _brk_start)
-		memblock_reserve(__pa(_brk_start),
+		simple_mmblk_reserve(__pa(_brk_start),
 				_brk_end - _brk_start);
 
 	/* Mark brk area as locked down and no longer taking any
@@ -157,11 +157,11 @@ static void __init early_reserve_memory(void)
 	 * Reserve the memory occupied by the kernel between _text and
 	 * __end_of_kernel_reserve symbols. Any kernel sections after the
 	 * __end_of_kernel_reserve symbol must be explicitly reserved with a
-	 * separate memblock_reserve() or they will be discarded.
+	 * separate simple_mmblk_reserve() or they will be discarded.
 	 */
-	// memblock_reserve(__pa_symbol(_text),
+	// simple_mmblk_reserve(__pa_symbol(_text),
 	// 		 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
-	memblock_reserve((phys_addr_t)&_k_phys_start,
+	simple_mmblk_reserve((phys_addr_t)&_k_phys_start,
 					(phys_addr_t)&_end - (phys_addr_t)&_k_virt_start);
 
 	/*
@@ -175,7 +175,7 @@ static void __init early_reserve_memory(void)
 	 * In addition, make sure page 0 is always reserved because on
 	 * systems with L1TF its contents can be leaked to user processes.
 	 */
-	memblock_reserve(0, SZ_64K);
+	simple_mmblk_reserve(0, SZ_64K);
 
 	// early_reserve_initrd();
 
@@ -185,7 +185,7 @@ static void __init early_reserve_memory(void)
 	// void __init reserve_bios_regions(void)
 	// {
 		phys_addr_t bios_start = 0x9F000;
-		memblock_reserve(bios_start, SZ_1M - bios_start);
+		simple_mmblk_reserve(bios_start, SZ_1M - bios_start);
 	// }
 	// trim_snb_memory();
 }

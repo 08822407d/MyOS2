@@ -74,7 +74,7 @@
  * overlap with areas that should be reserved, for example initrd.
  *
  * The early architecture setup should tell memblock what the physical
- * memory layout is by using memblock_add() or memblock_add_node()
+ * memory layout is by using simple_mmblk_add() or memblock_add_node()
  * functions. The first function does not assign the region to a NUMA
  * node and it is appropriate for UMA systems. Yet, it is possible to
  * use it on NUMA systems as well and assign the region to a NUMA node
@@ -314,7 +314,7 @@ memblock_insert_region(mmblk_type_s *type, int idx,
 }
 
 /**
- * memblock_add_range - add new memblock region
+ * simple_mmblk_add_range - add new memblock region
  * @type: memblock type to add new region into
  * @base: base address of the new region
  * @size: size of the new region
@@ -329,7 +329,7 @@ memblock_insert_region(mmblk_type_s *type, int idx,
  * 0 on success, -errno on failure.
  */
 static int __init
-memblock_add_range(mmblk_type_s *type, phys_addr_t base,
+simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 		phys_addr_t size, enum mmblk_flags flags)
 {
 	int idx, start_rgn, end_rgn;
@@ -391,26 +391,26 @@ memblock_add_range(mmblk_type_s *type, phys_addr_t base,
 }
 
 /**
- * memblock_add - add new memblock region
+ * simple_mmblk_add - add new memblock region
  * @base: base address of the new region
  * @size: size of the new region
  *
  * Add new memblock region [@base, @base + @size) to the "memory"
- * type. See memblock_add_range() description for mode details
+ * type. See simple_mmblk_add_range() description for mode details
  *
  * Return:
  * 0 on success, -errno on failure.
  */
 int __init_memblock
-memblock_add(phys_addr_t base, phys_addr_t size)
+simple_mmblk_add(phys_addr_t base, phys_addr_t size)
 {
-	return memblock_add_range(&memblock.memory, base, size, 0);
+	return simple_mmblk_add_range(&memblock.memory, base, size, 0);
 }
 
 int __init_memblock
-memblock_reserve(phys_addr_t base, phys_addr_t size)
+simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
 {
-	return memblock_add_range(&memblock.reserved, base, size, 0);
+	return simple_mmblk_add_range(&memblock.reserved, base, size, 0);
 }
 
 /**
@@ -659,8 +659,11 @@ memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 {
 	phys_addr_t found;
 
+	if (align == 0)
+		align = SMP_CACHE_BYTES;
+
 	found = memblock_find_in_range(size, align, start, end);
-	if (found && !memblock_reserve(found, size))
+	if (found && !simple_mmblk_reserve(found, size))
 		return found;
 	else
 		return 0;
@@ -690,8 +693,6 @@ static void *__init
 memblock_alloc_internal(phys_addr_t size, phys_addr_t align,
 		phys_addr_t min_addr, phys_addr_t max_addr)
 {
-	while (align == 0);
-
 	phys_addr_t alloc;
 	/*
 	 * Detect any accidental use of these APIs after slab is ready, as at

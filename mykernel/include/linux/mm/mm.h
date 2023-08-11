@@ -2565,7 +2565,7 @@
 	* architecture independent manner.
 	*
 	* An architecture is expected to register range of page frames backed by
-	* physical memory with memblock_add[_node]() before calling
+	* physical memory with simple_mmblk_add[_node]() before calling
 	* free_area_init() passing in the PFN each zone ends at. At a basic
 	* usage, an architecture is expected to do something like
 	*
