@@ -16,31 +16,16 @@
 
 
 /* Storage for gdt, idt and tss. */
-segdesc64_T *	gdt;
+segdesc64_T		gdt[GDT_SIZE(CONFIG_NR_CPUS)] __aligned(PAGE_SIZE);
 gatedesc64_T	idt[IDT_SIZE] __aligned(sizeof(gatedesc64_T));
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 
-tss64_T *		tss_ptr_arr = NULL;
+tss64_T			tss_ptr_arr[CONFIG_NR_CPUS] __aligned(sizeof(size_t));
 
 /*==============================================================================================*
  *										global functions							 			*
  *==============================================================================================*/
-// phys_addr_t myos_virt2phys(virt_addr_t virt)
-// {
-// 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
-// 	uint64_t offset = (virt_addr_t) &_k_virt_start -
-// 						(virt_addr_t) &_k_phys_start;
-// 	return (phys_addr_t)(virt - offset);
-// }
-// virt_addr_t myos_phys2virt(phys_addr_t phys)
-// {
-// 	extern char _k_phys_start, _k_virt_start;	/* in kernel.lds */
-// 	uint64_t offset = (virt_addr_t) &_k_virt_start -
-// 						(virt_addr_t) &_k_phys_start;
-// 	return (phys_addr_t)(phys + offset);
-// }
-
 inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
 {
 	asm volatile(	"lgdt	(%0)					\n\t"
@@ -260,7 +245,6 @@ void init_tss(size_t cpu_idx)
 
 static void init_arch_data(size_t cpu_idx)
 {
-	// initate global architechture data
 	init_gdt();
 	init_idt();
 }
@@ -277,12 +261,9 @@ void myos_reload_arch_data(size_t cpu_idx)
 
 void myos_early_init_arch_data(size_t lcpu_nr)
 {
-	size_t gdt_size = GDT_SIZE(lcpu_nr)* sizeof(segdesc64_T);
-	gdt = myos_memblock_alloc_normal(gdt_size, sizeof(segdesc64_T));
-	gdt_ptr.limit = gdt_size - 1;
-	gdt_ptr.base  = (uint64_t)gdt;
+	gdt_ptr.limit = sizeof(gdt) - 1;
+	gdt_ptr.base  = (uint64_t)&gdt;
 
-	tss_ptr_arr = myos_memblock_alloc_normal(lcpu_nr * sizeof(tss64_T), sizeof(size_t));
 	for (int i = 0; i < lcpu_nr; i++)
 		init_tss(i);
 }

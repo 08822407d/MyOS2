@@ -31,12 +31,12 @@
 #define INIT_MEMBLOCK_REGIONS			128
 #define INIT_PHYSMEM_REGIONS			4
 
-#ifndef INIT_MEMBLOCK_RESERVED_REGIONS
-#	define INIT_MEMBLOCK_RESERVED_REGIONS	INIT_MEMBLOCK_REGIONS
+#ifndef INIT_MMBLK_RESERVED_REGIONS
+#	define INIT_MMBLK_RESERVED_REGIONS	(2 * INIT_MEMBLOCK_REGIONS)
 #endif
 
-#ifndef INIT_MEMBLOCK_MEMORY_REGIONS
-#	define INIT_MEMBLOCK_MEMORY_REGIONS		INIT_MEMBLOCK_REGIONS
+#ifndef INIT_MMBLK_MEMORY_REGIONS
+#	define INIT_MMBLK_MEMORY_REGIONS	INIT_MEMBLOCK_REGIONS
 #endif
 
 /**
@@ -107,18 +107,18 @@ unsigned long min_low_pfn;
 unsigned long max_pfn;
 unsigned long long max_possible_pfn;
 
-static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock; 
-static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
+static mmblk_rgn_s mmblk_memory_regions[INIT_MMBLK_MEMORY_REGIONS] __initdata_memblock; 
+static mmblk_rgn_s mmblk_reserved_regions[INIT_MMBLK_RESERVED_REGIONS] __initdata_memblock;
 
 memblock_s memblock __initdata_memblock = {
-	.memory.regions		= memblock_memory_init_regions,
+	.memory.regions		= mmblk_memory_regions,
 	.memory.cnt			= 0,	/* empty dummy entry */
-	.memory.max			= INIT_MEMBLOCK_MEMORY_REGIONS,
+	.memory.max			= INIT_MMBLK_MEMORY_REGIONS,
 	.memory.name		= "memory",
 
-	.reserved.regions	= memblock_reserved_init_regions,
+	.reserved.regions	= mmblk_reserved_regions,
 	.reserved.cnt		= 0,	/* empty dummy entry */
-	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
+	.reserved.max		= INIT_MMBLK_RESERVED_REGIONS,
 	.reserved.name		= "reserved",
 
 	.bottom_up			= true,
@@ -238,15 +238,15 @@ memblock_remove_region(mmblk_type_s *type, unsigned long r)
 		(type->cnt - (r + 1)) * sizeof(type->regions[r]));
 	type->cnt--;
 
-	/* Special case for empty arrays */
-	if (type->cnt == 0)
-	{
-		// WARN_ON(type->total_size != 0);
-		type->cnt = 1;
-		type->regions[0].base = 0;
-		type->regions[0].size = 0;
-		type->regions[0].flags = 0;
-	}
+	// /* Special case for empty arrays */
+	// if (type->cnt == 0)
+	// {
+	// 	// WARN_ON(type->total_size != 0);
+	// 	type->cnt = 1;
+	// 	type->regions[0].base = 0;
+	// 	type->regions[0].size = 0;
+	// 	type->regions[0].flags = 0;
+	// }
 }
 
 /**
@@ -348,14 +348,14 @@ simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 		phys_addr_t rbase = rgn->base;
 		phys_addr_t rend = rbase + rgn->size;
 		size_t insert_base, insert_size;
-		if ((rend <= base) && (rend != 0))
+		if ((rend <= base) && (idx != type->cnt))
 			continue;
 		/*
 		 * Now r-end > base, cut the part of new-region which below r-end
 		 * and to see weahter the cut part can be merged to this rgn.
 		 */
 		insert_base = base;
-		if ((rgn->size == 0) || (rbase >= end)) {
+		if ((idx == type->cnt) || (rbase >= end)) {
 		/* case1: Scan reach the start of empty records */
 		/* case2: ner-region fully below rgn */
 			insert_size = end - base;
@@ -489,14 +489,14 @@ memblock_remove_range(mmblk_type_s *type,
 	return 0;
 }
 
-int __init_memblock
-memblock_remove(phys_addr_t base, phys_addr_t size)
-{
-	phys_addr_t end = base + size - 1;
-	mmblk_type_s *type = &memblock.memory;
+// int __init_memblock
+// memblock_remove(phys_addr_t base, phys_addr_t size)
+// {
+// 	phys_addr_t end = base + size - 1;
+// 	mmblk_type_s *type = &memblock.memory;
 
-	return memblock_remove_range(type, base, size);
-}
+// 	return memblock_remove_range(type, base, size);
+// }
 
 
 /*==============================================================================================*

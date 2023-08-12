@@ -188,6 +188,11 @@ static void __init early_reserve_memory(void)
 		simple_mmblk_reserve(bios_start, SZ_1M - bios_start);
 	// }
 	// trim_snb_memory();
+
+extern framebuffer_s framebuffer;
+	// reserve VBE frame_buffer
+	simple_mmblk_reserve(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
+		PFN_PHYS(PFN_UP(framebuffer.FB_size)));
 }
 
 /*
@@ -272,8 +277,8 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 
 	myos_early_init_arch_data(kparam.nr_lcpu);
-
 	myos_init_arch(0);
+
 	// 初始化x86架构物理页映射
 	init_mem_mapping();
 

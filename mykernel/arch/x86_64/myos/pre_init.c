@@ -33,10 +33,19 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
 	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
 
-	simple_mmblk_add(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
-			PFN_PHYS(PFN_UP(framebuffer.FB_size)));
-	simple_mmblk_reserve(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
-			PFN_PHYS(PFN_UP(framebuffer.FB_size)));
+	int i = 0;
+	for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
+		i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
+		i++, mmap_entp++)
+	{
+		if (mmap_entp->len == 0)
+		{
+			mmap_entp->addr = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
+			mmap_entp->len = PFN_PHYS(PFN_UP(framebuffer.FB_size));
+			mmap_entp->type = E820_TYPE_RAM;
+			break;
+		}
+	}
 }
 
 static void get_SMP_info(efi_smpinfo_s * smp_info)
