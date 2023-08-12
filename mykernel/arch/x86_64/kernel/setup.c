@@ -188,11 +188,6 @@ static void __init early_reserve_memory(void)
 		simple_mmblk_reserve(bios_start, SZ_1M - bios_start);
 	// }
 	// trim_snb_memory();
-
-extern framebuffer_s framebuffer;
-	// reserve VBE frame_buffer
-	simple_mmblk_reserve(PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase)),
-		PFN_PHYS(PFN_UP(framebuffer.FB_size)));
 }
 
 /*

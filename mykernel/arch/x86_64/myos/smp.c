@@ -28,7 +28,6 @@ void myos_early_init_smp(void)
 	memcpy((void *)phys_to_virt((phys_addr_t)&_APboot_phys_start),
 			(void *)&_APboot_text, apboot_len);
 	cr3_paddr = kernel_cr3;
-
 }
 
 static void init_percpu_data(size_t cpu_idx)

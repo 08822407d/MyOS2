@@ -113,7 +113,7 @@
 	// int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
 	// 			enum mmblk_flags flags);
 	int simple_mmblk_add(phys_addr_t base, phys_addr_t size);
-	int memblock_remove(phys_addr_t base, phys_addr_t size);
+	// int memblock_remove(phys_addr_t base, phys_addr_t size);
 	// int memblock_phys_free(phys_addr_t base, phys_addr_t size);
 	int simple_mmblk_reserve(phys_addr_t base, phys_addr_t size);
 	// #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
@@ -231,9 +231,9 @@
 	// 	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,	\
 	// 				MEMBLOCK_HOTPLUG | MEMBLOCK_DRIVER_MANAGED, \
 	// 				p_start, p_end, NULL)
-	#define for_each_mem_range(i, p_start, p_end)			\
-				__for_each_mem_range(i, &memblock.memory,	\
-					NULL, p_start, p_end, NULL)
+	// #define for_each_mem_range(i, p_start, p_end)			\
+	// 			__for_each_mem_range(i, &memblock.memory,	\
+	// 				NULL, p_start, p_end, NULL)
 
 	// /**
 	//  * for_each_mem_range_rev - reverse iterate through memblock areas from
@@ -407,7 +407,7 @@
 	#define MEMBLOCK_LOW_LIMIT			0
 
 	#ifndef ARCH_LOW_ADDRESS_LIMIT
-	#	define ARCH_LOW_ADDRESS_LIMIT		0xffffffffUL
+	#	define ARCH_LOW_ADDRESS_LIMIT	0xffffffffUL
 	#endif
 
 	// phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,

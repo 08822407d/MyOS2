@@ -32,6 +32,9 @@
 
 // #include "mm_internal.h"
 
+
+#include <obsolete/ktypes.h>
+
 // #define MAP_LOWHALF
 
 // this value is also loaded by APboot assembly code
@@ -86,11 +89,12 @@ static void __init myos_memory_map()
 {
 	unsigned long start_pfn, end_pfn;
 	unsigned long mapped_ram_size = 0;
+	u64 start, end;
 	int i;
 
 	for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
-		u64 start = PFN_PHYS(start_pfn);
-		u64 end = PFN_PHYS(end_pfn);
+		start = PFN_PHYS(start_pfn);
+		end = PFN_PHYS(end_pfn);
 		if (start >= end)
 			continue;
 
@@ -99,6 +103,14 @@ static void __init myos_memory_map()
 	}
 
 	kernel_cr3 = virt_to_phys((virt_addr_t)init_top_pgt);
+
+
+	// map VBE frame_buffer, this part should not be
+	// add into any memory manage unit
+extern framebuffer_s framebuffer;
+	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
+	end = start + PFN_PHYS(PFN_UP(framebuffer.FB_size));
+	myos_kernel_physical_mapping_init(start, end);
 }
 
 void __init init_mem_mapping(void)
