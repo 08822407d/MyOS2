@@ -47,14 +47,16 @@
 	 * @x: first value
 	 * @y: second value
 	 */
-	#define min(x, y)	__careful_cmp(x, y, <)
+	// #define min(x, y)	__careful_cmp(x, y, <)
+	#define min(x, y)	__cmp(x, y, <)
 
 	/**
 	 * max - return maximum of two values of the same or compatible types
 	 * @x: first value
 	 * @y: second value
 	 */
-	#define max(x, y)	__careful_cmp(x, y, >)
+	// #define max(x, y)	__careful_cmp(x, y, >)
+	#define max(x, y)	__cmp(x, y, >)
 
 	/**
 	 * min3 - return minimum of three values
@@ -108,7 +110,8 @@
 	 * @x: first value
 	 * @y: second value
 	 */
-	#define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
+	// #define min_t(type, x, y)	__careful_cmp((type)(x), (type)(y), <)
+	#define min_t(type, x, y)	__cmp((type)(x), (type)(y), <)
 
 	/**
 	 * max_t - return maximum of two values, using the specified type
@@ -116,7 +119,8 @@
 	 * @x: first value
 	 * @y: second value
 	 */
-	#define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
+	// #define max_t(type, x, y)	__careful_cmp((type)(x), (type)(y), >)
+	#define max_t(type, x, y)	__cmp((type)(x), (type)(y), >)
 
 	/**
 	 * clamp_t - return a value clamped to a given range using a given type

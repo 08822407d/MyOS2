@@ -107,22 +107,17 @@ unsigned long min_low_pfn;
 unsigned long max_pfn;
 unsigned long long max_possible_pfn;
 
-// static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_MEMORY_REGIONS] __initdata_memblock = 
-// 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
-// static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock =
-// 		{ [0 ... INIT_MEMBLOCK_REGIONS - 1] = {.base = (phys_addr_t)~0, .size = 0} };
-
 static mmblk_rgn_s memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock; 
 static mmblk_rgn_s memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
 
 memblock_s memblock __initdata_memblock = {
 	.memory.regions		= memblock_memory_init_regions,
-	.memory.cnt			= 1,	/* empty dummy entry */
+	.memory.cnt			= 0,	/* empty dummy entry */
 	.memory.max			= INIT_MEMBLOCK_MEMORY_REGIONS,
 	.memory.name		= "memory",
 
 	.reserved.regions	= memblock_reserved_init_regions,
-	.reserved.cnt		= 1,	/* empty dummy entry */
+	.reserved.cnt		= 0,	/* empty dummy entry */
 	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
 	.reserved.name		= "reserved",
 
@@ -144,30 +139,30 @@ memblock_cap_size(phys_addr_t base, phys_addr_t *size) {
 	return *size = min(*size, PHYS_ADDR_MAX - base);
 }
 
-/*
- * Address comparison utilities
- */
-static unsigned long __init_memblock
-memblock_addrs_overlap(phys_addr_t base1, phys_addr_t size1,
-		phys_addr_t base2, phys_addr_t size2)
-{
-	return ((base1 < (base2 + size2)) && (base2 < (base1 + size1)));
-}
+// /*
+//  * Address comparison utilities
+//  */
+// static unsigned long __init_memblock
+// memblock_addrs_overlap(phys_addr_t base1, phys_addr_t size1,
+// 		phys_addr_t base2, phys_addr_t size2)
+// {
+// 	return ((base1 < (base2 + size2)) && (base2 < (base1 + size1)));
+// }
 
-bool __init_memblock
-memblock_overlaps_region(mmblk_type_s *type,
-		phys_addr_t base, phys_addr_t size)
-{
-	unsigned long i;
-	memblock_cap_size(base, &size);
+// bool __init_memblock
+// memblock_overlaps_region(mmblk_type_s *type,
+// 		phys_addr_t base, phys_addr_t size)
+// {
+// 	unsigned long i;
+// 	memblock_cap_size(base, &size);
 
-	for (i = 0; i < type->cnt; i++)
-		if (memblock_addrs_overlap(base, size,
-					type->regions[i].base,
-					type->regions[i].size))
-			break;
-	return i < type->cnt;
-}
+// 	for (i = 0; i < type->cnt; i++)
+// 		if (memblock_addrs_overlap(base, size,
+// 					type->regions[i].base,
+// 					type->regions[i].size))
+// 			break;
+// 	return i < type->cnt;
+// }
 
 
 /**
@@ -341,6 +336,9 @@ simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 	/*
 	 * This algorism asserts that in each iteration,
 	 * @base must be bigger than the end of former rgn
+	 * In each itertion we only due with the part of new-region which 
+	 * is below @rend of rgn, so the remaining cases(is the same to the 
+	 * part which beyond @rend of rgn) will be treated in next iteration.
 	 */
 	for_each_memblock_type(idx, type, rgn) {
 		mmblk_rgn_s *prev = rgn - 1;
@@ -357,32 +355,27 @@ simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 		 * and to see weahter the cut part can be merged to this rgn.
 		 */
 		insert_base = base;
-		if ((rgn->size == 0) || (rbase > end && rend > end)) {
-		/* Reach the end of valid records, or fully below rgn */
+		if ((rgn->size == 0) || (rbase >= end)) {
+		/* case1: Scan reach the start of empty records */
+		/* case2: ner-region fully below rgn */
 			insert_size = end - base;
 			base = end;
 		}
-		else if (rbase > base) {
-		/* Else head part of new-region may be cut by or merged to rgn */
+		else if (rbase < end) {
+		/* case3: Head part of new-region may be cut by or merged to rgn */
 			insert_size = rbase - base;
 			base = rend;
 		}
 		else {
-		/* Else no any part of new-region below @rbase, so no insertion */
-			insert_size = 0;
+		/* case4: There is no part of new-region need to be inserted or merged */
 			base = rend;
+			goto no_update;
 		}
-
-		if (insert_size != 0) {
-			memblock_insert_region(type, idx, insert_base, insert_size, flags);
-			memblock_merge_regions(type, idx - 1, idx);
-		}
-
-		/*
-		 * In each itertion we only due with the part of new-region which 
-		 * is below @rend of rgn, so the remaining cases(is the same to the 
-		 * part which beyond @rend of rgn) will be treated in next iteration.
-		 */
+		
+		memblock_insert_region(type, idx, insert_base, insert_size, flags);
+		memblock_merge_regions(type, idx - 1, idx);
+	
+	no_update:
 		if (base >= end)	/* if @base meets @end, insertion is finished */
 			break;
 	}
@@ -792,9 +785,6 @@ memblock_free(void *ptr, size_t size)
 }
 
 
-/*==============================================================================================*
- *								early init fuctions for buddy system							*
- *==============================================================================================*/
 void __init_memblock
 memblock_trim_memory(phys_addr_t align)
 {
@@ -821,6 +811,9 @@ memblock_trim_memory(phys_addr_t align)
 	}
 }
 
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
 static void __init
 memmap_init_reserved_pages(void)
 {
