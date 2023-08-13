@@ -231,32 +231,31 @@ memblock_find_in_range(phys_addr_t size, phys_addr_t align,
 }
 
 static void __init_memblock
-memblock_remove_region(mmblk_type_s *type, unsigned long r)
+simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long r)
 {
 	type->total_size -= type->regions[r].size;
 	memmove(&type->regions[r], &type->regions[r + 1],
 		(type->cnt - (r + 1)) * sizeof(type->regions[r]));
 	type->cnt--;
-
-	// /* Special case for empty arrays */
-	// if (type->cnt == 0)
-	// {
-	// 	// WARN_ON(type->total_size != 0);
-	// 	type->cnt = 1;
-	// 	type->regions[0].base = 0;
-	// 	type->regions[0].size = 0;
-	// 	type->regions[0].flags = 0;
-	// }
+	
+	/*
+	 * There is no need to clean array tail
+	 * since we have @type->cnt
+	 */
 }
 
+
 /**
- * memblock_merge_regions - merge neighboring compatible regions
+ * simple_mmblk_merge_rgn - merge neighboring compatible regions
  * @type: memblock type to scan
  *
  * Scan @type and merge neighboring compatible regions.
  */
+// static void __init_memblock
+// memblock_merge_regions(struct memblock_type *type,
+// 		unsigned long start_rgn, unsigned long end_rgn)
 static void __init_memblock
-memblock_merge_regions(mmblk_type_s *type,
+simple_mmblk_merge_rgn(mmblk_type_s *type,
 		unsigned long start_rgn, unsigned long end_rgn)
 {
 	int i = 0;
@@ -267,18 +266,17 @@ memblock_merge_regions(mmblk_type_s *type,
 		mmblk_rgn_s *this = &type->regions[i];
 		mmblk_rgn_s *next = &type->regions[i + 1];
 		phys_addr_t this_end = this->base + this->size;
-		// phys_addr_t next_end = next->base + next->size;
 
-		if (this_end != next->base ||
-			this->flags != next->flags) {
+		if (this_end != next->base || this->flags != next->flags) {
 			BUG_ON(this_end > next->base);
 			i++;
 			continue;
 		}
+
 		this->size += next->size;
+		type->total_size += next->size;
 		/* move forward from next + 1, index of which is i + 2 */
-		memmove(next, next + 1, (type->cnt - (i + 2)) * sizeof(*next));
-		type->cnt--;
+		simple_mmblk_remove_rgn(type, i + 1);
 		end_rgn--;
 	}
 }
@@ -294,6 +292,9 @@ memblock_merge_regions(mmblk_type_s *type,
  * Insert new memblock region [@base, @base + @size) into @type at @idx.
  * @type must already have extra room to accommodate the new region.
  */
+// static void __init_memblock memblock_insert_region(
+// 		struct memblock_type *type, int idx, phys_addr_t base,
+// 		phys_addr_t size, int nid, enum memblock_flags flags)
 static void __init_memblock
 memblock_insert_region(mmblk_type_s *type, int idx,
 		phys_addr_t base, phys_addr_t size, enum mmblk_flags flags)
@@ -323,6 +324,9 @@ memblock_insert_region(mmblk_type_s *type, int idx,
  * Return:
  * 0 on success, -errno on failure.
  */
+// static int __init_memblock memblock_add_range(
+// 		struct memblock_type *type, phys_addr_t base,
+// 		phys_addr_t size, int nid, enum memblock_flags flags)
 static int __init
 simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 		phys_addr_t size, enum mmblk_flags flags)
@@ -373,7 +377,7 @@ simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
 		}
 		
 		memblock_insert_region(type, idx, insert_base, insert_size, flags);
-		memblock_merge_regions(type, idx - 1, idx);
+		simple_mmblk_merge_rgn(type, idx - 1, idx);
 	
 	no_update:
 		if (base >= end)	/* if @base meets @end, insertion is finished */
@@ -394,16 +398,11 @@ simple_mmblk_add_range(mmblk_type_s *type, phys_addr_t base,
  * Return:
  * 0 on success, -errno on failure.
  */
+// int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
 int __init_memblock
 simple_mmblk_add(phys_addr_t base, phys_addr_t size)
 {
 	return simple_mmblk_add_range(&memblock.memory, base, size, 0);
-}
-
-int __init_memblock
-simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
-{
-	return simple_mmblk_add_range(&memblock.reserved, base, size, 0);
 }
 
 /**
@@ -485,7 +484,7 @@ memblock_remove_range(mmblk_type_s *type,
 		return ret;
 
 	for (int i = end_rgn - 1; i >= start_rgn; i--)
-		memblock_remove_region(type, i);
+		simple_mmblk_remove_rgn(type, i);
 	return 0;
 }
 
@@ -497,6 +496,38 @@ memblock_remove_range(mmblk_type_s *type,
 
 // 	return memblock_remove_range(type, base, size);
 // }
+
+/**
+ * memblock_free - free boot memory allocation
+ * @ptr: starting address of the  boot memory allocation
+ * @size: size of the boot memory block in bytes
+ *
+ * Free boot memory block previously allocated by memblock_alloc_xx() API.
+ * The freeing memory will not be released to the buddy allocator.
+ */
+void __init_memblock
+memblock_free(void *ptr, size_t size)
+{
+	if (ptr)
+	{
+		phys_addr_t base = virt_to_phys((virt_addr_t)ptr);
+	// int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
+	// {
+		phys_addr_t end = base + size - 1;
+
+		// kmemleak_free_part_phys(base, size);
+		memblock_remove_range(&memblock.reserved, base, size);
+	// }
+	}
+}
+
+// int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+int __init_memblock
+simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
+{
+	return simple_mmblk_add_range(&memblock.reserved, base, size, 0);
+}
+
 
 
 /*==============================================================================================*
@@ -757,34 +788,6 @@ void *myos_memblock_alloc_normal(size_t size, size_t align)
 	return ptr;
 }
 
-/**
- * memblock_free - free boot memory allocation
- * @ptr: starting address of the  boot memory allocation
- * @size: size of the boot memory block in bytes
- *
- * Free boot memory block previously allocated by memblock_alloc_xx() API.
- * The freeing memory will not be released to the buddy allocator.
- */
-void __init_memblock
-memblock_free(void *ptr, size_t size)
-{
-	if (ptr)
-	{
-		phys_addr_t base = virt_to_phys((virt_addr_t)ptr);
-	// int __init_memblock memblock_phys_free(phys_addr_t base, phys_addr_t size)
-	// {
-		phys_addr_t end = base + size - 1;
-
-		// memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
-		// 		&base, &end, (void *)_RET_IP_);
-
-		// kmemleak_free_part_phys(base, size);
-		memblock_remove_range(&memblock.reserved, base, size);
-	// }
-	}
-}
-
-
 void __init_memblock
 memblock_trim_memory(phys_addr_t align)
 {
@@ -804,7 +807,7 @@ memblock_trim_memory(phys_addr_t align)
 			r->base = start;
 			r->size = end - start;
 		} else {
-			memblock_remove_region(&memblock.memory,
+			simple_mmblk_remove_rgn(&memblock.memory,
 					r - memblock.memory.regions);
 			r--;
 		}
