@@ -20,7 +20,7 @@
 	#include <asm/pgtable_types.h>
 	// #include <asm/percpu.h>
 	#include <asm/msr.h>
-	// #include <asm/desc_defs.h>
+	#include <asm/desc_defs.h>
 	// #include <asm/nops.h>
 	#include <asm/special_insns.h>
 	// #include <asm/fpu/types.h>
@@ -579,13 +579,12 @@
 	// /* Defined in head.S */
 	// extern struct desc_ptr early_gdt_descr;
 
-	// extern void switch_to_new_gdt(int);
-	// extern void load_direct_gdt(int);
-	// extern void load_fixmap_gdt(int);
-	// extern void load_percpu_segment(int);
-	// extern void cpu_init(void);
+	extern void switch_gdt_and_percpu_base(int);
+	extern void load_direct_gdt(int);
+	extern void load_fixmap_gdt(int);
+	extern void cpu_init(void);
 	// extern void cpu_init_secondary(void);
-	// extern void cpu_init_exception_handling(void);
+	extern void cpu_init_exception_handling(void);
 	// extern void cr4_init(void);
 
 	// static inline unsigned long get_debugctlmsr(void)

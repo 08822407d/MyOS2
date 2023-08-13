@@ -195,51 +195,19 @@ noinline void __ref rest_init(void)
 }
 
 
-/*
- * Set up kernel memory allocators
- */
-static void __init mm_init(void)
-{
-	// /*
-	//  * page_ext requires contiguous pages,
-	//  * bigger than MAX_ORDER unless SPARSEMEM.
-	//  */
-	// page_ext_init_flatmem();
-	// init_mem_debugging_and_hardening();
-	// kfence_alloc_pool();
-	// report_meminit();
-	// stack_depot_early_init();
-	mem_init();
-	// mem_init_print_info();
-	// kmem_cache_init();
-	// /*
-	//  * page_owner must be initialized after buddy is ready, and also after
-	//  * slab is ready so that stack_depot_init() works properly
-	//  */
-	// page_ext_init_flatmem_late();
-	// kmemleak_init();
-	// pgtable_init();
-	// debug_objects_mem_init();
-	// vmalloc_init();
-	// /* Should be run before the first non-init thread is created */
-	// init_espfix_bsp();
-	// /* Should be run after espfix64 is set up. */
-	// pti_init();
-}
-
-
 atomic_t lcpu_boot_count;
 atomic_t lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
-	// char *command_line;
-	// char *after_dashes;
+	char *command_line;
+	char *after_dashes;
 
 	setup_arch(NULL);
 
 	myos_preinit_slab();
 
-	mm_init();
+	trap_init();
+	mm_core_init();
 
 	myos_init_slab();
 
@@ -271,7 +239,6 @@ asmlinkage void __init start_kernel(void)
  *==============================================================================================*/
 void idle(size_t cpu_idx)
 {	
-	myos_reload_arch_data(cpu_idx);
 	myos_init_percpu_intr();
 	myos_percpu_self_config(cpu_idx);
 	myos_arch_system_call_init();

@@ -238,7 +238,10 @@
 		"debug.h": "c",
 		"bug.h": "c",
 		"build_bug.h": "c",
-		"cpufeature.h": "c"
+		"cpufeature.h": "c",
+		"desc_defs.h": "c",
+		"pgtable_types.h": "c",
+		"segment.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

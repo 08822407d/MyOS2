@@ -85,8 +85,8 @@ void myos_percpu_self_config(size_t cpu_idx)
 
 void myos_startup_smp()
 {
-	wrmsr(0x830,0xc4500);	//INIT IPI
-	wrmsr(0x830,0xc4620);	//Start-up IPI
+	wrmsrl(0x830,0xc4500);	//INIT IPI
+	wrmsrl(0x830,0xc4620);	//Start-up IPI
 }
 
 inline __always_inline per_cpudata_s * get_current_cpu()

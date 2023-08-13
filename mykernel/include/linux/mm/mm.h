@@ -3,50 +3,50 @@
 #define _LINUX_MM_H
 
 	#include <linux/lib/errno.h>
-
-	#ifdef __KERNEL__
-
 	// #include <linux/mmdebug.h>
-	#	include <linux/mm/gfp.h>
+	#include <linux/mm/gfp.h>
 	#include <linux/debug/bug.h>
-	#	include <linux/lib/list.h>
-	#	include <linux/mm/mmzone.h>
+	#include <linux/lib/list.h>
+	#include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
 	#include <linux/kernel/atomic.h>
 	// #include <linux/debug_locks.h>
 	#include <linux/mm/mm_types.h>
 	// #include <linux/mmap_lock.h>
 	// #include <linux/range.h>
-	#	include <linux/mm/pfn.h>
+	#include <linux/mm/pfn.h>
 	// #include <linux/percpu-refcount.h>
 	// #include <linux/bit_spinlock.h>
 	// #include <linux/shrinker.h>
 	#include <linux/kernel/resource.h>
 	// #include <linux/page_ext.h>
-	#	include <linux/kernel/err.h>
+	#include <linux/kernel/err.h>
 	#include <linux/mm/page-flags.h>
 	#include <linux/mm/page_ref.h>
-	// #include <linux/memremap.h>
 	// #include <linux/overflow.h>
-	#	include <linux/kernel/sizes.h>
-	#	include <linux/kernel/sched.h>
+	#include <linux/kernel/sizes.h>
+	#include <linux/kernel/sched.h>
 	#include <linux/mm/pgtable.h>
 	// #include <linux/kasan.h>
+	// #include <linux/memremap.h>
+	#include <linux/kernel/slab.h>
 
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
-	struct pt_regs;
-	typedef struct pt_regs pt_regs_s;
+
 	// struct mempolicy;
 	// anon_vma_s;
 	// anon_vma_chain_s;
 	// struct user_struct;
-	// pt_regs_s;
-	// typedef pt_regs_s pt_regs_s;
+	struct pt_regs;
+	typedef struct pt_regs pt_regs_s;
 
 	// extern int sysctl_page_lock_unfairness;
+	
+	void mm_core_init(void);
+	void init_mm_internals(void);
 
 	// void init_mm_internals(void);
 
@@ -84,6 +84,7 @@
 
 	extern void *high_memory;
 	// extern int page_cluster;
+	// extern const int page_cluster_max;
 
 	// #ifdef CONFIG_SYSCTL
 	// extern int sysctl_legacy_va_layout;
@@ -116,9 +117,9 @@
 	// #define untagged_addr(addr) (addr)
 	// #endif
 
-	// #ifndef __pa_symbol
-	// #	define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
-	// #endif
+	#ifndef __pa_symbol
+	#	define __pa_symbol(x)  __pa(RELOC_HIDE((unsigned long)(x), 0))
+	#endif
 	#ifndef page_to_phys
 	#	define page_to_phys(x)	(page_to_pfn(x) << PAGE_SHIFT)
 	#endif
@@ -3460,7 +3461,5 @@
 	myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
 
 	extern vm_fault_s myos_dump_pagetable(unsigned long address);
-
-	#endif /* __KERNEL__ */
 
 #endif /* _LINUX_MM_H */

@@ -5,6 +5,9 @@
 	#include <linux/kernel/const.h>
 	#include <asm/alternative.h>
 
+
+	#include <obsolete/archconst.h>
+
 	// /*
 	//  * Constructor for a conventional segment GDT (or LDT) entry.
 	//  * This is a macro so it can be used in initializers.
@@ -55,7 +58,7 @@
 
 	// #define GDT_ENTRY_INVALID_SEG			0
 
-	// #include <asm/cache.h>
+	#include <asm/cache.h>
 
 	// #define GDT_ENTRY_KERNEL32_CS			1
 	// #define GDT_ENTRY_KERNEL_CS				2
@@ -109,13 +112,13 @@
 	// #define __USER_CS						(GDT_ENTRY_DEFAULT_USER_CS*8 + 3)
 	// #define __CPUNODE_SEG					(GDT_ENTRY_CPUNODE*8 + 3)
 
-	// #define IDT_ENTRIES						256
+	#define IDT_ENTRIES						256
 	// #define NUM_EXCEPTION_VECTORS			32
 
 	// /* Bitmask of exception vectors which push an error code on the stack: */
 	// #define EXCEPTION_ERRCODE_MASK		0x20027d00
 
-	// #define GDT_SIZE						(GDT_ENTRIES*8)
+	#define GDT_SIZE						(GDT_ENTRIES * 8)
 	// #define GDT_ENTRY_TLS_ENTRIES			3
 	// #define TLS_SIZE						(GDT_ENTRY_TLS_ENTRIES* 8)
 
@@ -217,16 +220,16 @@
 	#		define __loadsegment_ds(value) __loadsegment_simple(ds, (value))
 	#		define __loadsegment_es(value) __loadsegment_simple(es, (value))
 
-	// 		static inline void __loadsegment_fs(unsigned short value) {
-	// 			asm volatile(	"						\n"
-	// 							"1:	movw %0, %%fs		\n"
-	// 							"2:						\n"
-	// 							_ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_CLEAR_FS)
+			static inline void __loadsegment_fs(unsigned short value) {
+				asm volatile(	"						\n"
+								"1:	movw %0, %%fs		\n"
+								"2:						\n"
+								// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_CLEAR_FS)
 
-	// 						:
-	// 						:	"rm" (value)
-	// 						:	"memory");
-	// 		}
+							:
+							:	"rm" (value)
+							:	"memory");
+			}
 
 	/* __loadsegment_gs is intentionally undefined.  Use load_gs_index instead. */
 

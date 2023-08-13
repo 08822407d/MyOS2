@@ -44,15 +44,15 @@
 		// };
 
 	/*
-	* both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
-	* constraint has different meanings. For i386, "A" means exactly
-	* edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
-	* it means rax *or* rdx.
-	*/
+	 * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+	 * constraint has different meanings. For i386, "A" means exactly
+	 * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+	 * it means rax *or* rdx.
+	 */
 	/* Using 64-bit values saves one instruction clearing the high half of low */
-	#	define DECLARE_ARGS(low, high)		unsigned long low, high
-	#	define EAX_EDX_VAL(low, high)		((low) | (high) << 32)
-	// #	define EAX_EDX_RET(low, high)		"=a" (low), "=d" (high)
+	#	define DECLARE_ARGS(val, low, high)		unsigned long low, high
+	#	define EAX_EDX_VAL(val, low, high)		((low) | (high) << 32)
+	#	define EAX_EDX_RET(val, low, high)		"=a" (low), "=d" (high)
 
 	/*
 	 * Be very careful with includes. This header is prone to include loops.
@@ -73,32 +73,38 @@
 	// 		static inline void do_trace_rdpmc(unsigned int msr, u64 val, int failed) {}
 	// #	endif
 
-		// /*
-		//  * __rdmsr() and __wrmsr() are the two primitives which are the bare minimum MSR
-		//  * accessors and should not have any tracing or other functionality piggybacking
-		//  * on them - those are *purely* for accessing MSRs and nothing more. So don't even
-		//  * think of extending them - you will be slapped with a stinking trout or a frozen
-		//  * shark will reach you, wherever you are! You've been warned.
-		//  */
-		// static __always_inline unsigned long long
-		// __rdmsr(unsigned int msr) {
-		// 	DECLARE_ARGS(val, low, high);
+		/*
+		 * __rdmsr() and __wrmsr() are the two primitives which are the bare minimum MSR
+		 * accessors and should not have any tracing or other functionality piggybacking
+		 * on them - those are *purely* for accessing MSRs and nothing more. So don't even
+		 * think of extending them - you will be slapped with a stinking trout or a frozen
+		 * shark will reach you, wherever you are! You've been warned.
+		 */
+		static __always_inline unsigned long long
+		__rdmsr(unsigned int msr) {
+			DECLARE_ARGS(val, low, high);
 
-		// 	asm volatile("1: rdmsr\n"
-		// 			"2:\n"
-		// 			_ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
-		// 			: EAX_EDX_RET(val, low, high) : "c" (msr));
+			asm volatile(	"1: rdmsr\n"
+							"2:\n"
+							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
+						:	EAX_EDX_RET(val, low, high)
+						:	"c" (msr));
 
-		// 	return EAX_EDX_VAL(val, low, high);
-		// }
+			return EAX_EDX_VAL(val, low, high);
+		}
 
-		// static __always_inline void
-		// __wrmsr(unsigned int msr, u32 low, u32 high) {
-		// 	asm volatile("1: wrmsr\n"
-		// 			"2:\n"
-		// 			_ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
-		// 			: : "c" (msr), "a"(low), "d" (high) : "memory");
-		// }
+		static __always_inline void
+		__wrmsr(unsigned int msr, u32 low, u32 high) {
+			asm volatile(	"1: wrmsr\n"
+							"2:\n"
+							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
+						:
+						:	"c" (msr),
+							"a" (low),
+							"d" (high)
+						:	"memory"
+						);
+		}
 
 	// #	define native_rdmsr(msr, val1, val2)				\
 	// 			do {										\
@@ -239,18 +245,23 @@
 	// 					(void)((high) = (u32)(__val >> 32));\
 	// 				} while (0)
 
-	// 		static inline void
-	// 		wrmsr(unsigned int msr, u32 low, u32 high) {
-	// 			native_write_msr(msr, low, high);
-	// 		}
+			static inline void
+			wrmsr(unsigned int msr, u32 low, u32 high) {
+				// native_write_msr(msr, low, high);
+				__wrmsr(msr, low, high);
+			}
 
-	// #		define rdmsrl(msr, val)				\
-	// 			((val) = native_read_msr((msr)))
+	#		define rdmsrl(msr, val)	\
+					((val) = __rdmsr((msr)))
+					// ((val) = native_read_msr((msr)))
 
-	// 		static inline void
-	// 		wrmsrl(unsigned int msr, u64 val) {
-	// 			native_write_msr(msr, (u32)(val & 0xffffffffULL), (u32)(val >> 32));
-	// 		}
+			static inline void
+			wrmsrl(unsigned int msr, u64 val) {
+				// native_write_msr(msr, (u32)(val & 0xffffffffULL),
+				// 		(u32)(val >> 32));
+				__wrmsr(msr, (u32)(val & 0xffffffffULL),
+						(u32)(val >> 32));
+			}
 
 	// 		/* wrmsr with exception handling */
 	// 		static inline int
@@ -351,32 +362,6 @@
 		// wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]) {
 		// 	return wrmsr_safe_regs(regs);
 		// }
-
-
-
-		static __always_inline unsigned long long
-		__rdmsr(unsigned int msr) {
-			DECLARE_ARGS(low, high);
-			asm volatile(	"rdmsr		\n"
-						:	"=a"(low), "=d"(high)
-						:	"c"(msr)
-						:	"memory");
-			return EAX_EDX_VAL(low, high);
-		}
-		#define rdmsr	__rdmsr
-
-		static __always_inline void
-		__wrmsr(unsigned int msr, u32 low, u32 high) {
-			asm volatile(	"wrmsr		\n"
-						:
-						:	"c"(msr), "a"(low), "d"(high)
-						:	"memory");
-		}
-		#define wrmsr(msr, val) {					\
-					__wrmsr((u32)msr,				\
-						((u64)val & 0xffffffff),	\
-						((u64)val >> 32));			\
-				}
 
 	#endif /* __ASSEMBLY__ */
 

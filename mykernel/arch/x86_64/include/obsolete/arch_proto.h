@@ -134,10 +134,6 @@
 	};
 
 	/* protect.c */
-	void load_gdt(desctblptr64_T * gdt_desc);
-	void load_idt(desctblptr64_T * idt_desc);
-	void load_tss(uint64_t cpu_idx);
-	void myos_reload_arch_data(size_t cpu_idx);
 	void myos_arch_system_call_init(void);
 
 	/* arch_page_util. */

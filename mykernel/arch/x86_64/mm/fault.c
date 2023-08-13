@@ -27,7 +27,7 @@
 // #include <asm/vm86.h>			/* struct vm86			*/
 #include <asm/mmu_context.h>		/* vma_pkey()			*/
 // #include <asm/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
-// #include <asm/desc.h>			/* store_idt(), ...		*/
+#include <asm/desc.h>			/* store_idt(), ...		*/
 // #include <asm/cpu_entry_area.h>		/* exception stack		*/
 // #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
 // #include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/

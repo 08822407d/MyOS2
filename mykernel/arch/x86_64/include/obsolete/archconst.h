@@ -9,9 +9,6 @@
 
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF
 
-	/* Table sizes. */
-	#define IDT_SIZE			256	// the table is set to it's maximal size
-
 	/* GDT layout (SYSENTER/SYSEXIT compliant) */ // partial copied from minix3
 	#define NULL_DESC_INDEX		0
 	#define KERN_CS_INDEX       1
@@ -21,8 +18,8 @@
 	#define USER_CS_INDEX_DUP   5
 	#define USER_SS_INDEX_DUP   6
 	#define TSS_INDEX_FIRST     7
-	#define TSS_INDEX(cpu_idx)  (TSS_INDEX_FIRST + (cpu_idx * 2))	/* per cpu kernel tss */
-	#define GDT_SIZE(lcpu_nr)	(TSS_INDEX(lcpu_nr) + 1)/* GDT descriptor */
+	#define TSS_INDEX(cpu_idx)	(TSS_INDEX_FIRST + (cpu_idx * 2))	/* per cpu kernel tss */
+	#define GDT_ENTRIES			(TSS_INDEX(CONFIG_NR_CPUS) + 1)/* GDT descriptor */
 
 	#define SEG_SELECTOR(i)		((i) * 8)
 	#define KERN_CS_SELECTOR	SEG_SELECTOR(KERN_CS_INDEX)

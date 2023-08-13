@@ -227,6 +227,7 @@ extern void myos_init_smp(size_t lcpu_nr);
 	// printk(KERN_INFO "Command line: %s\n", boot_command_line);
 	boot_cpu_data.x86_phys_bits = MAX_PHYSMEM_BITS;
 	
+	// idt_setup_early_traps();
 	early_cpu_init();
 
 	/*

@@ -86,7 +86,7 @@ unsigned long myos_pid_nr()
 static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 {
 	load_cr3(target->mm->pgd);
-	wrmsr(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
 }
 
 inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)

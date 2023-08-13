@@ -74,6 +74,12 @@ multiboot_header_end:
 .code64
 .balign 8
 code_64_start:
+	movq	$0,			%rax
+	movq	%rax,		%ds
+	movq	%rax,		%es
+	movq	%rax,		%fs
+	movq	%rax,		%gs
+
 	movq    $tmp_kstack_top,	%rax
 	movq    %rax,		%rsp
 	// set page map

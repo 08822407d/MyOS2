@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0-only
 /* cpu_feature_enabled() cannot be used this early */
 // #define USE_EARLY_PGTABLE_L5
@@ -23,8 +25,8 @@
 // #include <linux/syscore_ops.h>
 #include <linux/mm/pgtable.h>
 
+// #include <asm/alternative.h>
 // #include <asm/cmdline.h>
-// #include <asm/stackprotector.h>
 // #include <asm/perf_event.h>
 #include <asm/mmu_context.h>
 // #include <asm/doublefault.h>
@@ -41,7 +43,7 @@
 // #include <asm/proto.h>
 #include <asm/setup.h>
 #include <asm/apic.h>
-// #include <asm/desc.h>
+#include <asm/desc.h>
 // #include <asm/fpu/api.h>
 // #include <asm/mtrr.h>
 // #include <asm/hwcap2.h>
@@ -61,6 +63,48 @@
 // #include <asm/sigframe.h>
 
 #include "cpu.h"
+
+
+
+/* Load the original GDT from the per-cpu structure */
+void load_direct_gdt(int cpu)
+{
+	// struct desc_ptr gdt_descr;
+
+	// gdt_descr.address = (long)get_cpu_gdt_rw(cpu);
+	// gdt_descr.size = GDT_SIZE - 1;
+	// load_gdt(&gdt_descr);
+}
+
+/* Load a fixmap remapping of the per-cpu GDT */
+void load_fixmap_gdt(int cpu)
+{
+	struct desc_ptr gdt_descr;
+
+	// gdt_descr.address = (long)get_cpu_gdt_ro(cpu);
+extern segdesc64_T gdt[];
+	gdt_descr.address = (long)&gdt;
+	gdt_descr.size = GDT_SIZE - 1;
+	load_gdt(&gdt_descr);
+
+	// Not Linux Code, long jmp refresh seg-reg
+	asm volatile(	"movq	%%rsp,		%%rax		\n\t"
+					"mov 	%0,			%%ss		\n\t"
+					"movq	%%rax,		%%rsp		\n\t"
+					"xor	%%rax,		%%rax		\n\t"
+					"leaq	1f(%%rip),	%%rax		\n\t"
+					"pushq	%1						\n\t"
+					"pushq	%%rax					\n\t"
+					"lretq							\n\t"
+					"1:								\n\t"
+					"xorq	%%rax, %%rax			\n\t"
+				:
+				:	"r"(KERN_SS_SELECTOR),
+					"rsi"((uint64_t)KERN_CS_SELECTOR)
+				:	"rax"
+				);
+}
+
 
 static void get_model_name(cpuinfo_x86_s *c)
 {
@@ -574,4 +618,97 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
 	// update_srbds_msr();
 
 	// tsx_ap_init();
+}
+
+
+/*
+ * Setup everything needed to handle exceptions from the IDT, including the IST
+ * exceptions which use paranoid_entry().
+ */
+void cpu_init_exception_handling(void)
+{
+	// struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
+	// int cpu = raw_smp_processor_id();
+
+	// /* paranoid_entry() gets the CPU number from the GDT */
+	// setup_getcpu(cpu);
+
+	// /* IST vectors need TSS to be set up. */
+	// tss_setup_ist(tss);
+	// tss_setup_io_bitmap(tss);
+	// set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+
+	// load_TR_desc();
+
+	// /* GHCB needs to be setup to handle #VC. */
+	// setup_ghcb();
+
+	// /* Finally load the IDT */
+	// load_current_idt();
+extern struct desc_ptr idt_descr;
+	load_idt(&idt_descr);
+}
+
+/*
+ * cpu_init() initializes state that is per-CPU. Some data is already
+ * initialized (naturally) in the bootstrap process, such as the GDT.  We
+ * reload it nevertheless, this function acts as a 'CPU state barrier',
+ * nothing should get across.
+ */
+void cpu_init(void)
+{
+	task_s *curr = current;
+	// int cpu = raw_smp_processor_id();
+	int cpu = 0;
+
+	// wait_for_master_cpu(cpu);
+
+	// ucode_cpu_init(cpu);
+
+// #ifdef CONFIG_NUMA
+	// if (this_cpu_read(numa_node) == 0 &&
+	// 	early_cpu_to_node(cpu) != NUMA_NO_NODE)
+	// 	set_numa_node(early_cpu_to_node(cpu));
+// #endif
+	// pr_debug("Initializing CPU#%d\n", cpu);
+
+	// if (IS_ENABLED(CONFIG_X86_64) || cpu_feature_enabled(X86_FEATURE_VME) ||
+	// 	boot_cpu_has(X86_FEATURE_TSC) || boot_cpu_has(X86_FEATURE_DE))
+	// 	cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
+
+	loadsegment(fs, 0);
+	// memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
+	// syscall_init();
+
+	wrmsrl(MSR_FS_BASE, 0);
+	wrmsrl(MSR_KERNEL_GS_BASE, 0);
+	barrier();
+
+	// x2apic_setup();
+
+	// mmgrab(&init_mm);
+	curr->active_mm = &init_mm;
+	BUG_ON(curr->mm);
+	// initialize_tlbstate_and_flush();
+	// enter_lazy_tlb(&init_mm, cur);
+
+	// /*
+	//  * sp0 points to the entry trampoline stack regardless of what task
+	//  * is running.
+	//  */
+	// load_sp0((unsigned long)(cpu_entry_stack(cpu) + 1));
+
+	// load_mm_ldt(&init_mm);
+
+	// clear_all_debug_regs();
+	// dbg_restore_debug_regs();
+
+	// doublefault_init_cpu_tss();
+
+	// if (is_uv_system())
+	// 	uv_cpu_init();
+
+	load_fixmap_gdt(cpu);
+extern void myos_reload_arch_data(size_t cpu_idx);
+	myos_reload_arch_data(cpu);
 }

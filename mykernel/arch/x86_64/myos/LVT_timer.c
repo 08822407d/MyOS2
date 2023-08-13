@@ -75,9 +75,9 @@ void LVT_timer_init()
 
 void LVT_timer_ack(unsigned long param)
 {
-	wrmsr(LVT_TIMER_INIT_COUNT_REG_MSR, 0xAFF);
-	wrmsr(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
-	wrmsr(LVT_TIMER_DIV_CONF_REG_MSR, DIVISOR_128);
+	wrmsrl(LVT_TIMER_INIT_COUNT_REG_MSR, 0xAFF);
+	wrmsrl(LAPIC_LVT_TIMER_REG_MSR, LVT_timer.value);
+	wrmsrl(LVT_TIMER_DIV_CONF_REG_MSR, DIVISOR_128);
 
 	IOAPIC_edge_ack(param);
 }

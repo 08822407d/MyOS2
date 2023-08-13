@@ -25,7 +25,7 @@
 // #include <xen/events.h>
 // #endif
 
-// #include <asm/desc.h>
+#include <asm/desc.h>
 #include <asm/traps.h>
 // #include <asm/vdso.h>
 #include <asm/cpufeature.h>

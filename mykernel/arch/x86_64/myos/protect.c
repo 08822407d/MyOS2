@@ -1,6 +1,7 @@
 #include <linux/lib/string.h>
 #include <asm/fsgsbase.h>
 #include <asm/setup.h>
+#include <asm/desc.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -16,56 +17,12 @@
 
 
 /* Storage for gdt, idt and tss. */
-segdesc64_T		gdt[GDT_SIZE(CONFIG_NR_CPUS)] __aligned(PAGE_SIZE);
-gatedesc64_T	idt[IDT_SIZE] __aligned(sizeof(gatedesc64_T));
+segdesc64_T		gdt[GDT_ENTRIES] __aligned(PAGE_SIZE);
+gatedesc64_T	idt_table[IDT_ENTRIES] __aligned(sizeof(gatedesc64_T));
 desctblptr64_T	gdt_ptr;
 desctblptr64_T	idt_ptr;
 
 tss64_T			tss_ptr_arr[CONFIG_NR_CPUS] __aligned(sizeof(size_t));
-
-/*==============================================================================================*
- *										global functions							 			*
- *==============================================================================================*/
-inline __always_inline void load_gdt(desctblptr64_T * gdt_desc)
-{
-	asm volatile(	"lgdt	(%0)					\n\t"
-					"movq	%%rsp,		%%rax		\n\t"
-					"mov 	%1,			%%ss		\n\t"
-					"movq	%%rax,		%%rsp		\n\t"
-					"xor	%%rax,		%%rax		\n\t"
-					"leaq	1f(%%rip),	%%rax		\n\t"
-					"pushq	%2						\n\t"
-					"pushq	%%rax					\n\t"
-					"lretq							\n\t"
-					"1:								\n\t"
-					"xorq	%%rax, %%rax			\n\t"
-				:
-				:	"r"(gdt_desc),
-					"r"(KERN_SS_SELECTOR),
-					"rsi"((uint64_t)KERN_CS_SELECTOR)
-				:	"rax"
-				);
-}
-
-inline __always_inline void load_idt(desctblptr64_T * idt_desc)
-{
-	asm volatile(	"lidt	(%0)					\n\t"
-				:
-				:	"r"(idt_desc)
-				:
-				);
-}
-
-inline __always_inline void load_tss(uint64_t cpu_idx)
-{
-	asm volatile(	"xorq	%%rax,	%%rax			\n\t"
-					"mov	%0,		%%ax			\n\t"
-					"ltr	%%ax					\n\t"
-				:
-				:	"r"((uint16_t)TSS_SELECTOR(cpu_idx))
-				:	"rax"
-				);
-}
 
 /*==============================================================================================*
  *										private datas									 		*
@@ -211,7 +168,7 @@ static void init_idt_inner(gate_table_s * gtbl)
 {
 	while (gtbl->gate_entry != NULL)
 	{
-		gatedesc64_T *curr_gate = &(idt[gtbl->vec_nr]);
+		gatedesc64_T *curr_gate = &(idt_table[gtbl->vec_nr]);
 		// fixed bits
 		curr_gate->Present = 1;
 		curr_gate->segslct = KERN_CS_SELECTOR;
@@ -235,20 +192,18 @@ static void init_idt()
 
 void myos_reload_arch_data(size_t cpu_idx)
 {
-	load_idt(&idt_ptr);
-	load_gdt(&gdt_ptr);
-
 	// set TSS-desc in GDT
 	set_TSSseg_desc(cpu_idx, TSS_AVAIL, KERN_PRIVILEGE);
-	load_tss(cpu_idx);
+	u16 tss_desc_idx = (uint16_t)TSS_SELECTOR(cpu_idx);
+	load_tr(tss_desc_idx);
 }
 
 void myos_init_arch(size_t cpu_idx)
 {
 	gdt_ptr.limit = sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)&gdt;
-	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
-	idt_ptr.base  = (uint64_t)idt;
+	idt_ptr.limit = (uint16_t)(sizeof(idt_table) - 1);
+	idt_ptr.base  = (uint64_t)idt_table;
 	for (int i = 0; i < kparam.nr_lcpu; i++)
 	{
 		tss64_T *curr_tss = tss_ptr_arr + i;
@@ -256,8 +211,6 @@ void myos_init_arch(size_t cpu_idx)
 	}
 	init_gdt();
 	init_idt();
-
-	myos_reload_arch_data(cpu_idx);
 }
 
 /*==============================================================================================*
@@ -267,15 +220,16 @@ void myos_arch_system_call_init()
 {
 	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
 	// init MSR sf_regs related to sysenter/sysexit
-	wrmsr(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
-	wrmsr(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
-	wrmsr(MSR_IA32_SYSENTER_ESP, (u64)task0_PCB.task.stack);
-	uint64_t kstack = rdmsr(MSR_IA32_SYSENTER_ESP);
+	wrmsrl(MSR_IA32_SYSENTER_CS, KERN_CS_SELECTOR);
+	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task0_PCB.task.stack);
+	uint64_t kstack;
+	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
 
 	// // init MSR sf_regs related to syscall/sysret
-	// wrmsr(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
-	// wrmsr(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
+	// wrmsrl(MSR_IA32_LSTAR, (uint64_t)enter_syscall);
+	// wrmsrl(MSR_IA32_STAR, ((uint64_t)(KERN_SS_SELECTOR | 3) << 48) | ((uint64_t)KERN_CS_SELECTOR << 32));
 
-	// // wrmsr(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
-	// wrmsr(MSR_IA32_FMASK, 2);
+	// // wrmsrl(MSR_IA32_FMASK, EFL_DF | EFL_IF | EFL_TF | EFL_NT);
+	// wrmsrl(MSR_IA32_FMASK, 2);
 }
