@@ -231,22 +231,6 @@ static void init_idt()
 	init_idt_inner(exception_init_table);
 	init_idt_inner(hwint_init_table);
 	init_idt_inner(lapic_ipi_init_table);
-
-	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
-	idt_ptr.base  = (uint64_t)idt;
-}
-
-void init_tss(size_t cpu_idx)
-{
-	// init TSS
-	tss64_T *curr_tss = tss_ptr_arr + cpu_idx;
-	curr_tss->rsp0 = (reg_t)(idle_tasks[cpu_idx] + 1);
-}
-
-static void init_arch_data(size_t cpu_idx)
-{
-	init_gdt();
-	init_idt();
 }
 
 void myos_reload_arch_data(size_t cpu_idx)
@@ -259,18 +243,20 @@ void myos_reload_arch_data(size_t cpu_idx)
 	load_tss(cpu_idx);
 }
 
-void myos_early_init_arch_data(size_t lcpu_nr)
+void myos_init_arch(size_t cpu_idx)
 {
 	gdt_ptr.limit = sizeof(gdt) - 1;
 	gdt_ptr.base  = (uint64_t)&gdt;
+	idt_ptr.limit = (uint16_t)(sizeof(idt) - 1);
+	idt_ptr.base  = (uint64_t)idt;
+	for (int i = 0; i < kparam.nr_lcpu; i++)
+	{
+		tss64_T *curr_tss = tss_ptr_arr + i;
+		curr_tss->rsp0 = (reg_t)(idle_tasks[i] + 1);
+	}
+	init_gdt();
+	init_idt();
 
-	for (int i = 0; i < lcpu_nr; i++)
-		init_tss(i);
-}
-
-void myos_init_arch(size_t cpu_idx)
-{
-	init_arch_data(cpu_idx);
 	myos_reload_arch_data(cpu_idx);
 }
 
