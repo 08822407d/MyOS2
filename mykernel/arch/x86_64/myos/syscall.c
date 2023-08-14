@@ -13,7 +13,6 @@
 #include <asm/io.h>
 
 #include <obsolete/printk.h>
-#include <obsolete/archconst.h>
 #include <obsolete/arch_proto.h>
 
 MYOS_SYSCALL_DEFINE0(no_syscall)

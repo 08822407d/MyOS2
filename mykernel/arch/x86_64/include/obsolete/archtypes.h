@@ -22,15 +22,6 @@
 		ERA_CODE	= 11,
 	} CommSegType_E;
 	/* type field of segdesc, for system segment */
-	typedef enum
-	{	
-		LDTdesc		= 2,
-		TSS_AVAIL	= 9,
-		TSS_BUSY	= 11,
-		CALLGATE	= 12,
-		INTRGATE	= 14,
-		TRAPGATE	= 15
-	} SysSegType_E;
 
 
 	/* 64bit version segdesc for common segment */
@@ -75,13 +66,6 @@
 		uint64_t	offs2	: 48;
 		uint32_t			: 32; // unused
 	} gatedesc64_T;
-
-	/* input for 64bit version instruction lgdt and lidt */
-	typedef struct __attribute__((packed)) {
-		uint32_t	limit	: 16;
-		uint64_t	base	: 64;
-		uint32_t			: 16;
-	} desctblptr64_T;
 
 	/* 64bit version TSS */
 	typedef struct __attribute__((packed)) {

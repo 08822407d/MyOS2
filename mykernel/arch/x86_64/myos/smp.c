@@ -9,7 +9,6 @@
 #include <linux/mm/memblock.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/archconst.h>
 #include <obsolete/arch_glo.h>
 #include <obsolete/mutex.h>
 

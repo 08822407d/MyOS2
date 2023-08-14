@@ -6,7 +6,6 @@
 #include <asm/e820-types.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/archconst.h>
 #include <obsolete/arch_glo.h>
 
 #include <obsolete/proto.h>

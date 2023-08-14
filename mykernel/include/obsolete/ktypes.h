@@ -6,7 +6,6 @@
 #include <linux/kernel/stddef.h>
 #include <linux/mm/page.h>
 
-#include <obsolete/archconst.h>
 #include <obsolete/keyboard.h>
 
 #define NR_BOOT_PROCS   (NR_TASKS + LAST_SPECIAL_PROC_NR + 1)

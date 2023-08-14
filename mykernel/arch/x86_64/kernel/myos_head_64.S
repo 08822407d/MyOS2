@@ -7,8 +7,6 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
-#include <obsolete/archconst.h>
-
 .section .unpaged.text, "ax"
 .code64
 

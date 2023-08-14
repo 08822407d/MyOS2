@@ -2392,7 +2392,6 @@
 		spin_unlock(&p->alloc_lock);
 	}
 
-#include <obsolete/archconst.h>
 // myos obsolete defines
 	typedef union PCB {
 		task_s task;

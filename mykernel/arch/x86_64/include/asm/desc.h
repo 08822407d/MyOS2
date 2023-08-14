@@ -13,6 +13,10 @@
 	// #include <linux/smp.h>
 	// #include <linux/percpu.h>
 
+
+	#include <asm/segment.h>
+	#include <asm/page_types.h>
+
 	// static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *info)
 	// {
 	// 	desc->limit0		= info->limit & 0x0ffff;
@@ -41,9 +45,9 @@
 	// 	desc->l			= 0;
 	// }
 
-	// struct gdt_page {
-	// 	struct desc_struct gdt[GDT_ENTRIES];
-	// } __attribute__((aligned(PAGE_SIZE)));
+	struct gdt_page {
+		struct desc_struct gdt[GDT_ENTRIES];
+	} __attribute__((aligned(PAGE_SIZE)));
 
 	// DECLARE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page);
 

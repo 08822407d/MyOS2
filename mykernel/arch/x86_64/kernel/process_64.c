@@ -108,7 +108,7 @@ void
 start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
 {
 	// start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
-	start_thread_common(regs, new_ip, new_sp, USER_CS_SELECTOR, USER_SS_SELECTOR, 0);
+	start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
 }
 
 /*

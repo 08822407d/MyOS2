@@ -15,6 +15,7 @@
 #ifndef _FAT32_H_
 #define _FAT32_H_
 
+
 #include <uapi/linux/msdos_fs.h>
 
 
@@ -138,7 +139,7 @@
 			+ fsbi->Data_firstsector;
 	}
 
-	#define FAT32_MAX_FILE_SIZE		(CONST_1M * 64)
+	#define FAT32_MAX_FILE_SIZE		(SZ_1M * 64)
 
 	#define FAT32_IOBUF_DIRTY		1
 	#define FAT32_IOBUF_DELETE		2

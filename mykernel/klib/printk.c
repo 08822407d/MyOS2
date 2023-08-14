@@ -21,7 +21,6 @@
 
 // #include <klib/stdio.h>
 #include <klib/font.h>
-#include <klib/const.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -52,7 +51,7 @@ int color_printk(unsigned int FRcolor, unsigned int BKcolor, const char *fmt, ..
 	va_list args;
 	va_start(args, fmt);
 
-	i = vsnprintf(buf, CONST_4K, fmt, args);
+	i = vsnprintf(buf, PAGE_SIZE, fmt, args);
 
 	va_end(args);
 

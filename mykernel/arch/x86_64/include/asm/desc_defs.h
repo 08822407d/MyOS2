@@ -16,10 +16,18 @@
 		typedef struct desc_struct {
 			u16	limit0;
 			u16	base0;
-			u16	base1: 8, type: 4, s: 1, dpl: 2, p: 1;
-			u16	limit1: 4, avl: 1, l: 1, d: 1, g: 1, base2: 8;
-		} desc_s;
-		// } desc_s __attribute__((packed));
+			u16	base1	: 8,
+				type	: 4,
+				s		: 1,
+				dpl		: 2,
+				p		: 1;
+			u16	limit1	: 4,
+				avl		: 1,
+				l		: 1,
+				d		: 1,
+				g		: 1,
+				base2	: 8;
+		} __attribute__((packed)) desc_s;
 
 	#	define GDT_ENTRY_INIT(flags, base, limit)	{		\
 					.limit0		= (u16) (limit),			\
@@ -76,8 +84,7 @@
 				type	: 5,
 				dpl		: 2,
 				p		: 1;
-		} idt_bits_s;
-		// } idt_bits_s __attribute__((packed));
+		} __attribute__((packed)) idt_bits_s;
 
 		struct idt_data {
 			unsigned int	vector;

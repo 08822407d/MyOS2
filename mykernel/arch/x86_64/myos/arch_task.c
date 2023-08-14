@@ -22,7 +22,6 @@
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
 
-#include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/arch_glo.h>

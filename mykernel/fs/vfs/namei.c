@@ -82,7 +82,7 @@ static inline filename_s *__getname()
 filename_s *getname(const char *u_filename)
 {
 	size_t len = strlen_user((void *)u_filename);
-	if (len > CONST_4K)
+	if (len > PAGE_SIZE)
 		return ERR_PTR(-ENAMETOOLONG);
 
 	// Linux call stack:
@@ -119,7 +119,7 @@ filename_s *getname_kernel(const char *k_filename)
 	filename_s *name = __getname();
 
 	size_t len = strlen((void *)k_filename);
-	if (len > CONST_4K)
+	if (len > PAGE_SIZE)
 		return ERR_PTR(-ENAMETOOLONG);
 	name->len = len;
 

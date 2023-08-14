@@ -1,7 +1,6 @@
 #include <linux/kernel/linkage.h>
 #include <asm/ptrace.h>
 
-#include <obsolete/archconst.h>
 #include <obsolete/interrupt.h>
 
 .align 16

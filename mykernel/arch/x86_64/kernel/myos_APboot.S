@@ -1,8 +1,6 @@
 #include <linux/kernel/linkage.h>
 #include <asm/page.h>
 
-#include <obsolete/archconst.h>
-
 .balign	0x1000
 .section .AP_boot.text, "ax"
 

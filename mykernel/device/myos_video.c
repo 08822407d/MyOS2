@@ -6,7 +6,6 @@
 #include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
-#include <obsolete/archconst.h>
 #include <obsolete/archtypes.h>
 #include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>

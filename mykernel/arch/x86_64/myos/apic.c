@@ -22,7 +22,6 @@
 #include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/archtypes.h>
-#include <obsolete/archconst.h>
 #include <obsolete/interrupt.h>
 #include <obsolete/apic.h>
 

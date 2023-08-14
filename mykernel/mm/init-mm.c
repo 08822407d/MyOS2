@@ -16,7 +16,8 @@
 // #include <asm/mmu.h>
 
 
-#include <obsolete/archconst.h>
+#include <obsolete/arch_glo.h>
+
 
 #ifndef INIT_MM_CONTEXT
 #	define INIT_MM_CONTEXT(name)

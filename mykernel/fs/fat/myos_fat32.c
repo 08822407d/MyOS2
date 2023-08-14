@@ -23,6 +23,7 @@
 #include <obsolete/printk.h>
 #include <obsolete/device.h>
 #include <obsolete/ide.h>
+#include <obsolete/arch_glo.h>
 
 bool FAT32_ent_empty(const msdos_dirent_s *de)
 {

@@ -9,7 +9,7 @@
 #include <linux/fs/fs.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/archconst.h>
+#include <obsolete/arch_glo.h>
 
 inline __always_inline bool verify_area(unsigned char *addr, unsigned long size)
 {
