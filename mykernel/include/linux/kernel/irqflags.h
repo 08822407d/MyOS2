@@ -14,7 +14,7 @@
 
 	// #include <linux/typecheck.h>
 	#include <asm/irqflags.h>
-	// #include <asm/percpu.h>
+	#include <asm/percpu.h>
 
 	// /* Currently lockdep_softirqs_on/off is used only by lockdep */
 	// #ifdef CONFIG_PROVE_LOCKING

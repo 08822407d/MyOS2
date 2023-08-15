@@ -72,11 +72,11 @@ void myos_init_task(size_t lcpu_nr)
 	set_task_comm(task0, "cpu0_idel");
 	attach_pid(task0, PIDTYPE_PID);
 
-	for (int i = 0; i < lcpu_nr; i++)
-	{
-		create_smp_idles(i);
-		myos_init_arch_task(i);
-	}
+	// for (int i = 0; i < lcpu_nr; i++)
+	// {
+		create_smp_idles(0);
+		myos_init_arch_task(0);
+	// }
 }
 
 void compute_consts()

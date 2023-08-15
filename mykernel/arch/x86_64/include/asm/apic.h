@@ -64,13 +64,7 @@
 	// 	APIC_SYMMETRIC_IO_NO_ROUTING
 	// };
 
-	// #ifdef CONFIG_SMP
 	// extern void __inquire_remote_apic(int apicid);
-	// #else /* CONFIG_SMP */
-	// static inline void __inquire_remote_apic(int apicid)
-	// {
-	// }
-	// #endif /* CONFIG_SMP */
 
 	// static inline void default_inquire_remote_apic(int apicid)
 	// {
@@ -352,10 +346,8 @@
 	// /*
 	// * APIC functionality to boot other CPUs - only used on SMP:
 	// */
-	// #ifdef CONFIG_SMP
 	// extern int wakeup_secondary_cpu_via_nmi(int apicid, unsigned long start_eip);
 	// extern int lapic_can_unplug_cpu(void);
-	// #endif
 
 	// #ifdef CONFIG_X86_LOCAL_APIC
 
@@ -477,13 +469,8 @@
 
 	// #endif /* CONFIG_X86_LOCAL_APIC */
 
-	// #ifdef CONFIG_SMP
 	// bool apic_id_is_primary_thread(unsigned int id);
 	// void apic_smt_update(void);
-	// #else
-	// static inline bool apic_id_is_primary_thread(unsigned int id) { return false; }
-	// static inline void apic_smt_update(void) { }
-	// #endif
 
 	// struct msi_msg;
 	// struct irq_cfg;

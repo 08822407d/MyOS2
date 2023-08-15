@@ -82,8 +82,8 @@
 		reg_t		ist6;
 		reg_t		ist7;
 		reg_t		PLACE_HOLDER_3; // unused
-		uint64_t			: 32,	// unused
-					iobm	: 32;
+		uint32_t			: 32;	// unused
+		// uint32_t	iobm	: 32;
 	} tss64_T;
 	
 /*==============================================================================================*

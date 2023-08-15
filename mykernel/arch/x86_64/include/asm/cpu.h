@@ -6,7 +6,7 @@
 	#include <linux/kernel/cpu.h>
 	// #include <linux/topology.h>
 	// #include <linux/nodemask.h>
-	// #include <linux/percpu.h>
+	#include <linux/smp/percpu.h>
 
 	// extern void prefill_possible_map(void);
 

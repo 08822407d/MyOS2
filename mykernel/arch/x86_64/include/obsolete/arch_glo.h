@@ -4,7 +4,6 @@
 #include "archtypes.h"
 
 	extern uint64_t	apic_id[CONFIG_NR_CPUS];
-	extern tss64_T			tss_ptr_arr[];
 	extern phys_addr_t 		kernel_cr3;
 
 	#define USERADDR_LIMIT		0x00007FFFFFFFFFFF

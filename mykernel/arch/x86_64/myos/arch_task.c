@@ -55,7 +55,6 @@ void myos_preinit_arch_task()
 void myos_init_arch_task(size_t cpu_idx)
 {
 	PCB_u * idle_pcb = idle_tasks[cpu_idx];
-	tss64_T * tss_p = tss_ptr_arr + cpu_idx;
 	idle_pcb->task.stack = (void *)idle_pcb + THREAD_SIZE;
 }
 
@@ -91,8 +90,8 @@ static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
 {
 	per_cpudata_s * cpudata_p = curr_cpu;
-	tss64_T * curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->rsp0 = (reg_t)target->stack;
+	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
+	curr_tss->x86_tss.sp0 = (reg_t)target->stack;
 }
 
 void kjmp_to_doexecve()

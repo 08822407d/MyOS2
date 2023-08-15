@@ -9,7 +9,7 @@
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/export.h>
-// #include <linux/percpu.h>
+#include <linux/smp/percpu.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
@@ -69,11 +69,28 @@
 /* Load the original GDT from the per-cpu structure */
 void load_direct_gdt(int cpu)
 {
-	// struct desc_ptr gdt_descr;
+	struct desc_ptr gdt_descr;
 
-	// gdt_descr.address = (long)get_cpu_gdt_rw(cpu);
-	// gdt_descr.size = GDT_SIZE - 1;
-	// load_gdt(&gdt_descr);
+	gdt_descr.address = (long)get_cpu_gdt_rw(cpu);
+	gdt_descr.size = GDT_SIZE - 1;
+	load_gdt(&gdt_descr);
+
+	// Not Linux Code, long jmp refresh seg-reg
+	asm volatile(	"movq	%%rsp,		%%rax		\n\t"
+					"mov 	%0,			%%ss		\n\t"
+					"movq	%%rax,		%%rsp		\n\t"
+					"xor	%%rax,		%%rax		\n\t"
+					"leaq	1f(%%rip),	%%rax		\n\t"
+					"pushq	%1						\n\t"
+					"pushq	%%rax					\n\t"
+					"lretq							\n\t"
+					"1:								\n\t"
+					"xorq	%%rax, %%rax			\n\t"
+				:
+				:	"r"(__KERNEL_DS),
+					"rsi"((uint64_t)__KERNEL_CS)
+				:	"rax"
+				);
 }
 
 /* Load a fixmap remapping of the per-cpu GDT */
@@ -81,9 +98,7 @@ void load_fixmap_gdt(int cpu)
 {
 	struct desc_ptr gdt_descr;
 
-	// gdt_descr.address = (long)get_cpu_gdt_ro(cpu);
-extern segdesc64_T gdt[];
-	gdt_descr.address = (long)&gdt;
+	gdt_descr.address = (long)get_cpu_gdt_ro(cpu);
 	gdt_descr.size = GDT_SIZE - 1;
 	load_gdt(&gdt_descr);
 
@@ -629,6 +644,7 @@ void cpu_init_exception_handling(void)
 {
 	// struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
 	// int cpu = raw_smp_processor_id();
+	int cpu = 0;
 
 	// /* paranoid_entry() gets the CPU number from the GDT */
 	// setup_getcpu(cpu);
@@ -637,8 +653,9 @@ void cpu_init_exception_handling(void)
 	// tss_setup_ist(tss);
 	// tss_setup_io_bitmap(tss);
 	// set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
+	set_tss_desc(cpu, &cpu_tss_rw.x86_tss);
 
-	// load_TR_desc();
+	load_TR_desc();
 
 	// /* GHCB needs to be setup to handle #VC. */
 	// setup_ghcb();
@@ -709,33 +726,4 @@ void cpu_init(void)
 	// 	uv_cpu_init();
 
 	load_fixmap_gdt(cpu);
-extern void myos_reload_arch_data(size_t cpu_idx);
-	myos_reload_arch_data(cpu);
 }
-
-struct gdt_page gdt_page = { .gdt = {
-	[GDT_ENTRY_INVALID_SEG]			= GDT_ENTRY_INIT(0, 0, 0),
-#if defined(CONFIG_INTER_X64_GDT_LAYOUT)
-	[GDT_ENTRY_KERNEL_CS]			= GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
-	[GDT_ENTRY_KERNEL_DS]			= GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_CS]		= GDT_ENTRY_INIT(0xa0fb, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_DS]		= GDT_ENTRY_INIT(0xc0f3, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_CS_DUP]	= GDT_ENTRY_INIT(0xa0fb, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_DS_DUP]	= GDT_ENTRY_INIT(0xc0f3, 0, 0xfffff),
-#else
-	/*
-	 * We need valid kernel segments for data and code in long mode too
-	 * IRET will check the segment types  kkeil 2000/10/28
-	 * Also sysret mandates a special GDT layout
-	 *
-	 * TLS descriptors are currently at a different place compared to i386.
-	 * Hopefully nobody expects them at a fixed place (Wine?)
-	 */
-	[GDT_ENTRY_KERNEL32_CS]			= GDT_ENTRY_INIT(0xc09b, 0, 0xfffff),
-	[GDT_ENTRY_KERNEL_CS]			= GDT_ENTRY_INIT(0xa09b, 0, 0xfffff),
-	[GDT_ENTRY_KERNEL_DS]			= GDT_ENTRY_INIT(0xc093, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER32_CS]	= GDT_ENTRY_INIT(0xc0fb, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_DS]		= GDT_ENTRY_INIT(0xc0f3, 0, 0xfffff),
-	[GDT_ENTRY_DEFAULT_USER_CS]		= GDT_ENTRY_INIT(0xa0fb, 0, 0xfffff),
-#endif
-}};

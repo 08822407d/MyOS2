@@ -293,7 +293,6 @@
 	// #define DECLARE_IDTENTRY_XENCB(vector, func)				\
 	// 	DECLARE_IDTENTRY(vector, func)
 
-	// #ifdef CONFIG_X86_64
 	// /**
 	//  * DECLARE_IDTENTRY_IST - Declare functions for IST handling IDT entry points
 	//  * @vector:	Vector number (ignored for C)
@@ -378,42 +377,10 @@
 	// #define DEFINE_IDTENTRY_VC_USER(func)				\
 	// 	DEFINE_IDTENTRY_RAW_ERRORCODE(user_##func)
 
-	// #else	/* CONFIG_X86_64 */
-
-	// /**
-	//  * DECLARE_IDTENTRY_DF - Declare functions for double fault 32bit variant
-	//  * @vector:	Vector number (ignored for C)
-	//  * @func:	Function name of the entry point
-	//  *
-	//  * Declares two functions:
-	//  * - The ASM entry point: asm_##func
-	//  * - The C handler called from the C shim
-	//  */
-	// #define DECLARE_IDTENTRY_DF(vector, func)				\
-	// 	asmlinkage void asm_##func(void);				\
-	// 	__visible void func(pt_regs_s *regs,			\
-	// 				unsigned long error_code,			\
-	// 				unsigned long address)
-
-	// /**
-	//  * DEFINE_IDTENTRY_DF - Emit code for double fault on 32bit
-	//  * @func:	Function name of the entry point
-	//  *
-	//  * This is called through the doublefault shim which already provides
-	//  * cr2 in the address argument.
-	//  */
-	// #define DEFINE_IDTENTRY_DF(func)					\
-	// __visible noinstr void func(pt_regs_s *regs,			\
-	// 				unsigned long error_code,			\
-	// 				unsigned long address)
-
-	// #endif	/* !CONFIG_X86_64 */
-
 	// /* C-Code mapping */
 	// #define DECLARE_IDTENTRY_NMI		DECLARE_IDTENTRY_RAW
 	// #define DEFINE_IDTENTRY_NMI		DEFINE_IDTENTRY_RAW
 
-	// #ifdef CONFIG_X86_64
 	// #define DECLARE_IDTENTRY_MCE		DECLARE_IDTENTRY_IST
 	// #define DEFINE_IDTENTRY_MCE		DEFINE_IDTENTRY_IST
 	// #define DEFINE_IDTENTRY_MCE_USER	DEFINE_IDTENTRY_NOIST
@@ -421,7 +388,6 @@
 	// #define DECLARE_IDTENTRY_DEBUG		DECLARE_IDTENTRY_IST
 	// #define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
 	// #define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
-	// #endif
 
 	// #else /* !__ASSEMBLY__ */
 
@@ -451,7 +417,6 @@
 	// #define DECLARE_IDTENTRY_SYSVEC(vector, func)				\
 	// 	idtentry_sysvec vector func
 
-	// #ifdef CONFIG_X86_64
 	// # define DECLARE_IDTENTRY_MCE(vector, func)				\
 	// 	idtentry_mce_db vector asm_##func func
 
@@ -466,18 +431,6 @@
 
 	// # define DECLARE_IDTENTRY_VC(vector, func)				\
 	// 	idtentry_vc vector asm_##func func
-
-	// #else
-	// # define DECLARE_IDTENTRY_MCE(vector, func)				\
-	// 	DECLARE_IDTENTRY(vector, func)
-
-	// /* No ASM emitted for DF as this goes through a C shim */
-	// # define DECLARE_IDTENTRY_DF(vector, func)
-
-	// /* No ASM emitted for XEN hypervisor callback */
-	// # define DECLARE_IDTENTRY_XENCB(vector, func)
-
-	// #endif
 
 	// /* No ASM code emitted for NMI */
 	// #define DECLARE_IDTENTRY_NMI(vector, func)
@@ -635,13 +588,11 @@
 	// DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI_VECTOR,	sysvec_x86_platform_ipi);
 	// #endif
 
-	// #ifdef CONFIG_SMP
 	// DECLARE_IDTENTRY(RESCHEDULE_VECTOR,			sysvec_reschedule_ipi);
 	// DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
 	// DECLARE_IDTENTRY_SYSVEC(REBOOT_VECTOR,			sysvec_reboot);
 	// DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
 	// DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VECTOR,		sysvec_call_function);
-	// #endif
 
 	// #ifdef CONFIG_X86_LOCAL_APIC
 	// # ifdef CONFIG_X86_MCE_THRESHOLD

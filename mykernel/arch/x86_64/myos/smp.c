@@ -2,6 +2,7 @@
 #include <asm/fsgsbase.h>
 #include <asm/setup.h>
 #include <asm/tlbflush.h>
+#include <asm/desc.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -51,7 +52,7 @@ static void init_percpu_data(size_t cpu_idx)
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
 	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
 	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
-	arch_cpuinfo->tss = tss_ptr_arr + cpu_idx;
+	arch_cpuinfo->tss = &cpu_tss_rw;
 }
 
 void myos_init_smp(size_t lcpu_nr)
@@ -66,10 +67,10 @@ void myos_init_smp(size_t lcpu_nr)
 		percpu_data[i] = &(pcpudata_arr[i - 1]);
 
 	// init basic data for percpu
-	for (int i = 0; i < lcpu_nr; i++)
-	{
-		init_percpu_data(i);
-	}
+	// for (int i = 0; i < lcpu_nr; i++)
+	// {
+		init_percpu_data(0);
+	// }
 }
 
 void myos_percpu_self_config(size_t cpu_idx)

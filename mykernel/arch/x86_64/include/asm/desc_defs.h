@@ -12,6 +12,7 @@
 
 	#	include <linux/kernel/types.h>
 
+		// Intel Manual Volume 3 Chapter 5: Protection
 		/* 8 byte segment descriptor */
 		typedef struct desc_struct {
 			u16	limit0;
@@ -58,6 +59,7 @@
 			DESCTYPE_S	= 0x10,	/* !system */
 		};
 
+		// Intel Manual Volume 3 Chapter 8: Task Management
 		/* LDT or TSS descriptor in the GDT. */
 		struct ldttss_desc {
 			u16	limit0;
@@ -78,6 +80,7 @@
 		typedef struct ldttss_desc ldt_desc;
 		typedef struct ldttss_desc tss_desc;
 
+		// Intel Manual Volume 3 Chapter 6: Interrupt and Exception Handling
 		typedef struct idt_bits {
 			u16	ist		: 3,
 				zero	: 5,

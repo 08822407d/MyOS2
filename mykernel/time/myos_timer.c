@@ -21,7 +21,7 @@
 // #include <linux/kernel_stat.h>
 // #include <linux/export.h>
 // #include <linux/interrupt.h>
-// #include <linux/percpu.h>
+#include <linux/smp/percpu.h>
 #include <linux/init/init.h>
 #include <linux/mm/mm.h>
 // #include <linux/swap.h>

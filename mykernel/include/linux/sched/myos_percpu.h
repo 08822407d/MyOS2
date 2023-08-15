@@ -1,6 +1,7 @@
 #ifndef _MYOS_PERCPU_H_
 #define _MYOS_PERCPU_H_
 
+#include <asm/processor.h>
 #include <linux/lib/list.h>
 #include <linux/kernel/sizes.h>
 
@@ -14,7 +15,7 @@
 	{
 		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
-		tss64_T		*tss;
+		struct tss_struct	*tss;
 	} arch_cpudata_s;
 
 	typedef struct per_cpudata {

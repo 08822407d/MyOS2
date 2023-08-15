@@ -10,13 +10,11 @@
 	// #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
 	#include <asm/trap_pf.h>
 
-	// #ifdef CONFIG_X86_64
 	// asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
 	// asmlinkage __visible notrace
 	// struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s);
 	// void __init trap_init(void);
 	// asmlinkage __visible noinstr struct pt_regs *vc_switch_off_ist(struct pt_regs *eregs);
-	// #endif
 
 	// #ifdef CONFIG_X86_F00F_BUG
 	// /* For handling the FOOF bug */

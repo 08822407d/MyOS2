@@ -3,7 +3,7 @@
 #define _ASM_X86_CURRENT_H
 
 	#include <linux/kernel/compiler.h>
-	// #include <asm/percpu.h>
+	#include <asm/percpu.h>
 
 	#ifndef __ASSEMBLY__
 		struct task_struct;

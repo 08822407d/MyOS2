@@ -12,4 +12,5 @@ add_subdirectory(mm)
 add_subdirectory(lib)
 
 
+add_subdirectory(smp)
 add_subdirectory(myos)

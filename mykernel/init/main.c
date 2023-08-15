@@ -31,7 +31,7 @@
 // #include <linux/bootconfig.h>
 // #include <linux/console.h>
 // #include <linux/nmi.h>
-// #include <linux/percpu.h>
+#include <linux/smp/percpu.h>
 // #include <linux/kmod.h>
 // #include <linux/kprobes.h>
 // #include <linux/vmalloc.h>
@@ -203,6 +203,8 @@ asmlinkage void __init start_kernel(void)
 	char *after_dashes;
 
 	setup_arch(NULL);
+
+	setup_per_cpu_areas();
 
 	myos_preinit_slab();
 

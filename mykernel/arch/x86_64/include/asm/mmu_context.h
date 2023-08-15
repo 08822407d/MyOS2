@@ -40,7 +40,7 @@
 	// 	* call gates.  On native, we could merge the ldt_struct and LDT
 	// 	* allocations, but it's not worth trying to optimize.
 	// 	*/
-	// 	struct desc_struct	*entries;
+	// 	desc_s	*entries;
 	// 	unsigned int		nr_entries;
 
 	// 	/*
@@ -180,18 +180,11 @@
 	// 	ldt_arch_exit_mmap(mm);
 	// }
 
-	// #ifdef CONFIG_X86_64
 	// static inline bool is_64bit_mm(struct mm_struct *mm)
 	// {
 	// 	return	!IS_ENABLED(CONFIG_IA32_EMULATION) ||
 	// 		!(mm->context.flags & MM_CONTEXT_UPROBE_IA32);
 	// }
-	// #else
-	// static inline bool is_64bit_mm(struct mm_struct *mm)
-	// {
-	// 	return false;
-	// }
-	// #endif
 
 	// static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
 	// 				unsigned long end)

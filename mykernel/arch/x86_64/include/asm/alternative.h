@@ -72,7 +72,6 @@
 
 	// 	struct module;
 
-	// 	#ifdef CONFIG_SMP
 	// 	extern void alternatives_smp_module_add(struct module *mod, char *name,
 	// 						void *locks, void *locks_end,
 	// 						void *text, void *text_end);
@@ -90,7 +89,6 @@
 	// 	{
 	// 		return 0;
 	// 	}
-	// 	#endif	/* CONFIG_SMP */
 
 	// 	#define b_replacement(num)	"664"#num
 	// 	#define e_replacement(num)	"665"#num
@@ -273,7 +271,6 @@
 
 	#else /* __ASSEMBLY__ */
 
-	// 	#ifdef CONFIG_SMP
 	// 		.macro LOCK_PREFIX
 	// 	672:	lock
 	// 		.pushsection .smp_locks,"a"
@@ -281,10 +278,6 @@
 	// 		.long 672b - .
 	// 		.popsection
 	// 		.endm
-	// 	#else
-	// 		.macro LOCK_PREFIX
-	// 		.endm
-	// 	#endif
 
 	// 	/*
 	// 	* objtool annotation to ignore the alternatives and only consider the original

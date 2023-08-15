@@ -3,7 +3,7 @@
 #define __ASM_PREEMPT_H
 
 	#include <asm/rmwcc.h>
-	// #include <asm/percpu.h>
+	#include <asm/percpu.h>
 	// #include <linux/thread_info.h>
 	// #include <linux/static_call_types.h>
 

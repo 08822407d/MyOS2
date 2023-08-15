@@ -15,7 +15,7 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/kernel.h>
 #include <linux/lib/string.h>
-// #include <linux/percpu.h>
+#include <linux/smp/percpu.h>
 #include <linux/kernel/start_kernel.h>
 #include <linux/kernel/io.h>
 #include <linux/mm/memblock.h>

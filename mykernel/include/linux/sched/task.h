@@ -98,11 +98,7 @@
 	// extern void free_task(task_s *tsk);
 
 	// /* sched_exec is called by processes performing an exec */
-	// #ifdef CONFIG_SMP
 	// extern void sched_exec(void);
-	// #else
-	// #define sched_exec()   {}
-	// #endif
 
 	// static inline task_s *get_task_struct(task_s *t)
 	// {

@@ -11,13 +11,18 @@
 
 	// #include <linux/debug_locks.h>
 	// #include <linux/smp.h>
-	// #include <linux/percpu.h>
+	#include <linux/smp/percpu.h>
 
 
 	#include <asm/segment.h>
+	#include <asm/processor.h>
 	#include <asm/page_types.h>
 
-	// static inline void fill_ldt(struct desc_struct *desc, const struct user_desc *info)
+	extern struct gdt_page gdt_page;
+	extern struct tss_struct cpu_tss_rw;
+
+
+	// static inline void fill_ldt(desc_s *desc, const struct user_desc *info)
 	// {
 	// 	desc->limit0		= info->limit & 0x0ffff;
 
@@ -46,31 +51,31 @@
 	// }
 
 	struct gdt_page {
-		struct desc_struct gdt[GDT_ENTRIES];
+		desc_s gdt[GDT_ENTRIES];
 	} __attribute__((aligned(PAGE_SIZE)));
 
 	// DECLARE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page);
 
-	// /* Provide the original GDT */
-	// static inline struct desc_struct *get_cpu_gdt_rw(unsigned int cpu)
-	// {
-	// 	return per_cpu(gdt_page, cpu).gdt;
-	// }
+	/* Provide the original GDT */
+	static inline desc_s *get_cpu_gdt_rw(unsigned int cpu) {
+		// return per_cpu(gdt_page, cpu).gdt;
+		return &gdt_page.gdt[0];
+	}
 
 	// /* Provide the current original GDT */
-	// static inline struct desc_struct *get_current_gdt_rw(void)
+	// static inline desc_s *get_current_gdt_rw(void)
 	// {
 	// 	return this_cpu_ptr(&gdt_page)->gdt;
 	// }
 
-	// /* Provide the fixmap address of the remapped GDT */
-	// static inline struct desc_struct *get_cpu_gdt_ro(int cpu)
-	// {
-	// 	return (struct desc_struct *)&get_cpu_entry_area(cpu)->gdt;
-	// }
+	/* Provide the fixmap address of the remapped GDT */
+	static inline desc_s *get_cpu_gdt_ro(int cpu) {
+		// return (desc_s *)&get_cpu_entry_area(cpu)->gdt;
+		return &gdt_page.gdt[0];
+	}
 
 	// /* Provide the current read-only GDT */
-	// static inline struct desc_struct *get_current_gdt_ro(void)
+	// static inline desc_s *get_current_gdt_ro(void)
 	// {
 	// 	return get_cpu_gdt_ro(smp_processor_id());
 	// }
@@ -90,15 +95,10 @@
 	// 	gate->bits.zero		= 0;
 	// 	gate->bits.type		= type;
 	// 	gate->offset_middle	= (u16) (func >> 16);
-	// #ifdef CONFIG_X86_64
 	// 	gate->segment		= __KERNEL_CS;
 	// 	gate->bits.ist		= ist;
 	// 	gate->reserved		= 0;
 	// 	gate->offset_high	= (u32) (func >> 32);
-	// #else
-	// 	gate->segment		= seg;
-	// 	gate->bits.ist		= 0;
-	// #endif
 	// }
 
 	// static inline int desc_empty(const void *ptr)
@@ -127,11 +127,11 @@
 	// #define write_gdt_entry(dt, entry, desc, type)	native_write_gdt_entry(dt, entry, desc, type)
 	// #define write_idt_entry(dt, entry, g)		native_write_idt_entry(dt, entry, g)
 
-	// static inline void paravirt_alloc_ldt(struct desc_struct *ldt, unsigned entries)
+	// static inline void paravirt_alloc_ldt(desc_s *ldt, unsigned entries)
 	// {
 	// }
 
-	// static inline void paravirt_free_ldt(struct desc_struct *ldt, unsigned entries)
+	// static inline void paravirt_free_ldt(desc_s *ldt, unsigned entries)
 	// {
 	// }
 	// #endif	/* CONFIG_PARAVIRT_XXL */
@@ -143,53 +143,53 @@
 	// 	memcpy(&idt[entry], gate, sizeof(*gate));
 	// }
 
-	// static inline void native_write_ldt_entry(struct desc_struct *ldt, int entry, const void *desc)
+	// static inline void native_write_ldt_entry(desc_s *ldt, int entry, const void *desc)
 	// {
 	// 	memcpy(&ldt[entry], desc, 8);
 	// }
 
 	// static inline void
-	// native_write_gdt_entry(struct desc_struct *gdt, int entry, const void *desc, int type)
-	// {
-	// 	unsigned int size;
+	// native_write_gdt_entry(desc_s *gdt, int entry, const void *desc, int type)
+	static inline void
+	write_gdt_entry(desc_s *gdt, int entry, const void *desc, int type) {
+		unsigned int size;
 
-	// 	switch (type) {
-	// 	case DESC_TSS:	size = sizeof(tss_desc);	break;
-	// 	case DESC_LDT:	size = sizeof(ldt_desc);	break;
-	// 	default:	size = sizeof(*gdt);		break;
-	// 	}
+		switch (type) {
+			case DESC_TSS:	size = sizeof(tss_desc);	break;
+			case DESC_LDT:	size = sizeof(ldt_desc);	break;
+			default:		size = sizeof(*gdt);		break;
+		}
 
-	// 	memcpy(&gdt[entry], desc, size);
-	// }
+		memcpy(&gdt[entry], desc, size);
+	}
 
-	// static inline void set_tssldt_descriptor(void *d, unsigned long addr,
-	// 					unsigned type, unsigned size)
-	// {
-	// 	struct ldttss_desc *desc = d;
+	static inline void
+	set_tssldt_descriptor(void *d, unsigned long addr, unsigned type, unsigned size) {
+		struct ldttss_desc *desc = d;
 
-	// 	memset(desc, 0, sizeof(*desc));
+		memset(desc, 0, sizeof(*desc));
 
-	// 	desc->limit0		= (u16) size;
-	// 	desc->base0		= (u16) addr;
-	// 	desc->base1		= (addr >> 16) & 0xFF;
-	// 	desc->type		= type;
-	// 	desc->p			= 1;
-	// 	desc->limit1		= (size >> 16) & 0xF;
-	// 	desc->base2		= (addr >> 24) & 0xFF;
-	// #ifdef CONFIG_X86_64
-	// 	desc->base3		= (u32) (addr >> 32);
-	// #endif
-	// }
+		desc->limit0		= (u16) size;
+		desc->base0		= (u16) addr;
+		desc->base1		= (addr >> 16) & 0xFF;
+		desc->type		= type;
+		desc->p			= 1;
+		desc->limit1		= (size >> 16) & 0xF;
+		desc->base2		= (addr >> 24) & 0xFF;
+		desc->base3		= (u32) (addr >> 32);
+	}
 
-	// static inline void __set_tss_desc(unsigned cpu, unsigned int entry, struct x86_hw_tss *addr)
-	// {
-	// 	struct desc_struct *d = get_cpu_gdt_rw(cpu);
-	// 	tss_desc tss;
+	// static inline void
+	// __set_tss_desc(unsigned cpu, unsigned int entry, x86_hw_tss_s *addr)
+	static inline void
+	set_tss_desc(unsigned cpu, x86_hw_tss_s *addr) {
+		desc_s *d = gdt_page.gdt;
+		tss_desc tss;
 
-	// 	set_tssldt_descriptor(&tss, (unsigned long)addr, DESC_TSS,
-	// 				__KERNEL_TSS_LIMIT);
-	// 	write_gdt_entry(d, entry, &tss, DESC_TSS);
-	// }
+		set_tssldt_descriptor(&tss, (unsigned long)addr, DESC_TSS,
+					__KERNEL_TSS_LIMIT);
+		write_gdt_entry(d, GDT_ENTRY_TSS, &tss, DESC_TSS);
+	}
 
 	// #define set_tss_desc(cpu, addr) __set_tss_desc(cpu, GDT_ENTRY_TSS, addr)
 
@@ -214,7 +214,8 @@
 	load_gdt(const struct desc_ptr *dtr) {
 		asm volatile(	"lgdt	%0		\t\n"
 					:
-					:	"m" (*dtr));
+					:	"m" (*dtr)
+					);
 	}
 
 	// static __always_inline void native_load_idt(const struct desc_ptr *dtr)
@@ -222,13 +223,17 @@
 	load_idt(const struct desc_ptr *dtr) {
 		asm volatile(	"lidt	%0		\t\n"
 					:
-					:	"m" (*dtr));
+					:	"m" (*dtr)
+					);
 	}
 
 	// static inline void native_store_gdt(struct desc_ptr *dtr)
-	// {
-	// 	asm volatile("sgdt %0":"=m" (*dtr));
-	// }
+	static inline void
+	store_gdt(struct desc_ptr *dtr) {
+		asm volatile(	"sgdt	%0		\t\n"
+					:	"=m" (*dtr)
+					);
+	}
 
 	// static inline void store_idt(struct desc_ptr *dtr)
 	// {
@@ -255,40 +260,38 @@
 	// 	native_load_idt(&invalid_idt);
 	// }
 
-	// /*
-	// * The LTR instruction marks the TSS GDT entry as busy. On 64-bit, the GDT is
-	// * a read-only remapping. To prevent a page fault, the GDT is switched to the
-	// * original writeable version when needed.
-	// */
-	// #ifdef CONFIG_X86_64
+	/*
+	 * The LTR instruction marks the TSS GDT entry as busy. On 64-bit, the GDT is
+	 * a read-only remapping. To prevent a page fault, the GDT is switched to the
+	 * original writeable version when needed.
+	 */
 	// static inline void native_load_tr_desc(void)
-	// {
-	// 	struct desc_ptr gdt;
-	// 	int cpu = raw_smp_processor_id();
-	// 	bool restore = 0;
-	// 	struct desc_struct *fixmap_gdt;
+	static inline void load_TR_desc(void)
+	{
+		struct desc_ptr gdt;
+		int cpu = 0;
+		// int cpu = raw_smp_processor_id();
+		bool restore = 0;
+		desc_s *fixmap_gdt;
 
-	// 	native_store_gdt(&gdt);
-	// 	fixmap_gdt = get_cpu_gdt_ro(cpu);
+		store_gdt(&gdt);
+		fixmap_gdt = get_cpu_gdt_ro(cpu);
 
-	// 	/*
-	// 	* If the current GDT is the read-only fixmap, swap to the original
-	// 	* writeable version. Swap back at the end.
-	// 	*/
-	// 	if (gdt.address == (unsigned long)fixmap_gdt) {
-	// 		load_direct_gdt(cpu);
-	// 		restore = 1;
-	// 	}
-	// 	asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
-	// 	if (restore)
-	// 		load_fixmap_gdt(cpu);
-	// }
-	// #else
-	// static inline void native_load_tr_desc(void)
-	// {
-	// 	asm volatile("ltr %w0"::"q" (GDT_ENTRY_TSS*8));
-	// }
-	// #endif
+		/*
+		 * If the current GDT is the read-only fixmap, swap to the original
+		 * writeable version. Swap back at the end.
+		 */
+		if (gdt.address == (unsigned long)fixmap_gdt) {
+			load_direct_gdt(cpu);
+			restore = 1;
+		}
+		asm volatile(	"ltr	%w0		\t\n"
+					:
+					:	"q" (GDT_ENTRY_TSS*8)
+					);
+		if (restore)
+			load_fixmap_gdt(cpu);
+	}
 
 	// static inline unsigned long native_store_tr(void)
 	// {
@@ -301,7 +304,7 @@
 
 	// static inline void native_load_tls(struct thread_struct *t, unsigned int cpu)
 	// {
-	// 	struct desc_struct *gdt = get_cpu_gdt_rw(cpu);
+	// 	desc_s *gdt = get_cpu_gdt_rw(cpu);
 	// 	unsigned int i;
 
 	// 	for (i = 0; i < GDT_ENTRY_TLS_ENTRIES; i++)
@@ -312,7 +315,7 @@
 
 	// static inline void force_reload_TR(void)
 	// {
-	// 	struct desc_struct *d = get_current_gdt_rw();
+	// 	desc_s *d = get_current_gdt_rw();
 	// 	tss_desc tss;
 
 	// 	memcpy(&tss, &d[GDT_ENTRY_TSS], sizeof(tss_desc));
@@ -389,24 +392,24 @@
 	// 	set_ldt(NULL, 0);
 	// }
 
-	// static inline unsigned long get_desc_base(const struct desc_struct *desc)
+	// static inline unsigned long get_desc_base(const desc_s *desc)
 	// {
 	// 	return (unsigned)(desc->base0 | ((desc->base1) << 16) | ((desc->base2) << 24));
 	// }
 
-	// static inline void set_desc_base(struct desc_struct *desc, unsigned long base)
+	// static inline void set_desc_base(desc_s *desc, unsigned long base)
 	// {
 	// 	desc->base0 = base & 0xffff;
 	// 	desc->base1 = (base >> 16) & 0xff;
 	// 	desc->base2 = (base >> 24) & 0xff;
 	// }
 
-	// static inline unsigned long get_desc_limit(const struct desc_struct *desc)
+	// static inline unsigned long get_desc_limit(const desc_s *desc)
 	// {
 	// 	return desc->limit0 | (desc->limit1 << 16);
 	// }
 
-	// static inline void set_desc_limit(struct desc_struct *desc, unsigned long limit)
+	// static inline void set_desc_limit(desc_s *desc, unsigned long limit)
 	// {
 	// 	desc->limit0 = limit & 0xffff;
 	// 	desc->limit1 = (limit >> 16) & 0xf;
@@ -435,26 +438,20 @@
 	// 	gate->segment		= (u16) d->segment;
 	// 	gate->bits		= d->bits;
 	// 	gate->offset_middle	= (u16) (addr >> 16);
-	// #ifdef CONFIG_X86_64
 	// 	gate->offset_high	= (u32) (addr >> 32);
 	// 	gate->reserved		= 0;
-	// #endif
 	// }
 
 	// extern unsigned long system_vectors[];
 
-	// extern void load_current_idt(void);
+	extern void load_current_idt(void);
 	// extern void idt_setup_early_handler(void);
 	// extern void idt_setup_early_traps(void);
 	// extern void idt_setup_traps(void);
 	// extern void idt_setup_apic_and_irq_gates(void);
 	// extern bool idt_is_f00f_address(unsigned long address);
 
-	// #ifdef CONFIG_X86_64
 	// extern void idt_setup_early_pf(void);
-	// #else
-	// static inline void idt_setup_early_pf(void) { }
-	// #endif
 
 	// extern void idt_invalidate(void);
 

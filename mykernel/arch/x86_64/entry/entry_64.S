@@ -30,7 +30,7 @@
 #include <asm/page_types.h>
 // #include <asm/irqflags.h>
 // #include <asm/paravirt.h>
-// #include <asm/percpu.h>
+#include <asm/percpu.h>
 #include <asm/asm.h>
 // #include <asm/smap.h>
 #include <asm/pgtable_types.h>

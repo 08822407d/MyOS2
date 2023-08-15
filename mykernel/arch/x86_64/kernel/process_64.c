@@ -123,9 +123,9 @@ start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
  */
 __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 {
-	per_cpudata_s * cpudata_p = curr_cpu;
-	tss64_T * curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->rsp0 = (reg_t)next_p->stack;
+	per_cpudata_s *cpudata_p = curr_cpu;
+	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
+	curr_tss->x86_tss.sp0 = (reg_t)next_p->stack;
 
 
 	// struct thread_struct *prev = &prev_p->thread;

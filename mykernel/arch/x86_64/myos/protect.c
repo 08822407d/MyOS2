@@ -17,10 +17,7 @@
 
 
 /* Storage for gdt, idt and tss. */
-segdesc64_T		gdt[GDT_ENTRIES] __aligned(PAGE_SIZE);
 gatedesc64_T	idt_table[IDT_ENTRIES] __aligned(sizeof(gatedesc64_T));
-
-tss64_T			tss_ptr_arr[CONFIG_NR_CPUS] __aligned(sizeof(size_t));
 
 /*==============================================================================================*
  *										private datas									 		*
@@ -92,76 +89,10 @@ gate_table_s lapic_ipi_init_table[] = {
 	{ lapic_ipi07, VECTOR_IPI( 7), GATE_INTERRUPT, KRNL_RPL, 0, "IPI-07"},
 	{ NULL, 0, 0, 0}
 };
-/*==============================================================================================*
- *										initiate segs							     			*
- *==============================================================================================*/
-
-static void set_commseg_desc(uint32_t index, CommSegType_E type, uint8_t privil, uint8_t Lflag)
-{
-	segdesc64_T *sd = &(gdt[index]);
-	sd->S		= 1;
-	sd->P		= 1;
-	// changable bits
-	sd->L		= Lflag;
-	sd->Type	= type;
-	sd->DPL		= privil;
-}
-
-static void set_codeseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
-{
-	set_commseg_desc(index, type, privil, 1);
-}
-
-static void set_dataseg_desc(uint32_t index, CommSegType_E type, uint8_t privil)
-{
-	set_commseg_desc(index, type, privil, 0);
-}	
-
-static void set_TSSseg_desc(u64 type, uint8_t privil)
-{
-	// size_t gdt_idx = 0;
-	switch (type)
-	{
-		case DESC_TSS:
-			{
-				tss64_T * curr_tss = tss_ptr_arr;
-				TSSsegdesc_T * tss_segdesc = (TSSsegdesc_T *)&gdt[GDT_ENTRY_TSS];
-				tss_segdesc->Limit1	= sizeof(*curr_tss) & 0xFFFF;
-				tss_segdesc->Limit2	= (sizeof(*curr_tss) >> 16) & 0xF;
-				tss_segdesc->Base1	= (uint64_t)curr_tss & 0xFFFFFF;
-				tss_segdesc->Base2	= ((uint64_t)curr_tss >> 24) & 0xFFFFFFFFFF;
-				tss_segdesc->Type	= type;
-				tss_segdesc->DPL	= privil;
-				tss_segdesc->AVL	=
-				tss_segdesc->P		= 1;
-			}
-			break;
-		case GATE_INTERRUPT:
-		case GATE_TRAP:
-			{
-
-			}
-			break;
-
-		default:
-			break;
-	}
-}
 
 /*==============================================================================================*
  *											prot_bsp_init								     	*
  *==============================================================================================*/
-static void init_gdt()
-{
-	// gdt[0] has been set to 0 by memset
-	set_codeseg_desc(GDT_ENTRY_KERNEL_CS, E_CODE, 0);
-	set_dataseg_desc(GDT_ENTRY_KERNEL_DS, RW_DATA, 0);
-	set_codeseg_desc(GDT_ENTRY_DEFAULT_USER_CS, E_CODE, 3);
-	set_dataseg_desc(GDT_ENTRY_DEFAULT_USER_DS, RW_DATA, 3);
-	set_codeseg_desc(GDT_ENTRY_DEFAULT_USER_CS_DUP, E_CODE, 3);
-	set_dataseg_desc(GDT_ENTRY_DEFAULT_USER_DS_DUP, RW_DATA, 3);
-}
-
 static void init_idt_inner(gate_table_s * gtbl)
 {
 	while (gtbl->gate_entry != NULL)
@@ -188,22 +119,9 @@ static void init_idt()
 	init_idt_inner(lapic_ipi_init_table);
 }
 
-void myos_reload_arch_data(size_t cpu_idx)
-{
-	// set TSS-desc in GDT
-	set_TSSseg_desc(DESC_TSS, KRNL_RPL);
-	u16 tss_desc_idx = (uint16_t)__TSS_SEG;
-	load_tr(tss_desc_idx);
-}
-
 void myos_init_arch(size_t cpu_idx)
 {
-	for (int i = 0; i < kparam.nr_lcpu; i++)
-	{
-		tss64_T *curr_tss = tss_ptr_arr + i;
-		curr_tss->rsp0 = (reg_t)(idle_tasks[i] + 1);
-	}
-	init_gdt();
+	cpu_tss_rw.x86_tss.sp0 = (reg_t)(idle_tasks[0] + 1);
 	init_idt();
 }
 
