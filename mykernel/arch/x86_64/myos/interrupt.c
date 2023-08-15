@@ -10,9 +10,6 @@
 
 #include <asm/idtentry.h>
 
-
-extern gate_table_s exception_init_table[];
-
 irq_desc_s	irq_descriptors[NR_IRQ_VECS];
 irq_desc_s	ipi_descriptors[NR_LAPIC_IPI_VECS];
 
@@ -138,8 +135,6 @@ void exception_handler(pt_regs_s *sf_regs)
 	per_cpudata_s *cpudata_p = curr_cpu;
 	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 	task_s *curr = current;
-	// color_printk(WHITE, BLUE,"Caused by core-%d, task-%d INTR: 0x%02x - %s ; \n",
-	// 				cpudata_p->cpu_idx, curr->pid, vec, exception_init_table[vec].name);
 
 	switch (vec)
 	{

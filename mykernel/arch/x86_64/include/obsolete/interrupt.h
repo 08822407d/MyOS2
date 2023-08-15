@@ -2,6 +2,7 @@
 #define _AMD64_PC_INTERRUPT_H_
 
 /* EXCEPTIONS */
+	#define INTEL_RESERVED_VEC			-1
 	/* Interrupt vectors defined/reserved by processor. */
 	#define DIVIDE_ERR_VEC				0		/* divide error */
 	#define DEBUG_VEC					1		/* single step (trace) */
@@ -26,6 +27,39 @@
 	#define VIRTUAL_EXCEP_VEC			20		/* virtualization exception */
 	#define CTRL_PROT_EXCEP_VEC			21
 
+	#define VECTOR_EXCEP_00				DIVIDE_ERR_VEC
+	#define VECTOR_EXCEP_01				DEBUG_VEC
+	#define VECTOR_EXCEP_02				NMI_VEC
+	#define VECTOR_EXCEP_03				BREAKPOINT_VEC
+	#define VECTOR_EXCEP_04				OVERFLOW_VEC
+	#define VECTOR_EXCEP_05				BOUNDS_VEC
+	#define VECTOR_EXCEP_06				INVAL_OP_VEC
+	#define VECTOR_EXCEP_07				DEV_NOT_AVAIL_VEC
+	#define VECTOR_EXCEP_08				DOUBLE_FAULT_VEC
+	#define VECTOR_EXCEP_09				COtask_sEG_VEC
+	#define VECTOR_EXCEP_10				INVAL_TSS_VEC
+	#define VECTOR_EXCEP_11				SEG_NOT_PRES_VEC
+	#define VECTOR_EXCEP_12				STACK_SEGFAULT_VEC
+	#define VECTOR_EXCEP_13				GEN_PROT_VEC
+	#define VECTOR_EXCEP_14				PAGE_FAULT_VEC
+	#define VECTOR_EXCEP_15
+	#define VECTOR_EXCEP_16				X87_FPU_ERR_VEC
+	#define VECTOR_EXCEP_17				ALIGNMENT_CHECK_VEC
+	#define VECTOR_EXCEP_18				MACHINE_CHECK_VEC
+	#define VECTOR_EXCEP_19				SIMD_EXCEP_VEC
+	#define VECTOR_EXCEP_20				VIRTUAL_EXCEP_VEC
+	#define VECTOR_EXCEP_21				CTRL_PROT_EXCEP_VEC
+	#define VECTOR_EXCEP_22
+	#define VECTOR_EXCEP_23
+	#define VECTOR_EXCEP_24
+	#define VECTOR_EXCEP_25
+	#define VECTOR_EXCEP_26
+	#define VECTOR_EXCEP_27
+	#define VECTOR_EXCEP_28
+	#define VECTOR_EXCEP_29
+	#define VECTOR_EXCEP_30
+	#define VECTOR_EXCEP_31
+			
 	/* Fixed system call vector. */
 	#define KERN_CALL_VEC_ORIG			32		/* system calls are made with int SYSVEC */
 	#define IPC_VEC_ORIG				33		/* interrupt vector for ipc */

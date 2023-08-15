@@ -30,7 +30,7 @@
 // #include <linux/acpi.h>
 // #include <linux/bootconfig.h>
 // #include <linux/console.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 #include <linux/smp/percpu.h>
 // #include <linux/kmod.h>
 // #include <linux/kprobes.h>
@@ -211,6 +211,8 @@ asmlinkage void __init start_kernel(void)
 	trap_init();
 	mm_core_init();
 
+	init_IRQ();
+
 	myos_init_slab();
 
 	myos_init_task(kparam.nr_lcpu);
@@ -243,7 +245,6 @@ void idle(size_t cpu_idx)
 {	
 	myos_init_percpu_intr();
 	myos_percpu_self_config(cpu_idx);
-	myos_arch_system_call_init();
 
 	atomic_inc(&lcpu_boot_count);
 	while (atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);

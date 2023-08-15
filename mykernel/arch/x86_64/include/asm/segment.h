@@ -132,7 +132,7 @@
 	#define __TSS_SEG				(GDT_ENTRY_TSS * 8)
 
 	#define IDT_ENTRIES						256
-	// #define NUM_EXCEPTION_VECTORS			32
+	#define NUM_EXCEPTION_VECTORS			32
 
 	// /* Bitmask of exception vectors which push an error code on the stack: */
 	// #define EXCEPTION_ERRCODE_MASK		0x20027d00
@@ -181,14 +181,14 @@
 
 	#ifdef __KERNEL__
 
-	// /*
-	//  * early_idt_handler_array is an array of entry points referenced in the
-	//  * early IDT.  For simplicity, it's a real array with one entry point
-	//  * every nine bytes.  That leaves room for an optional 'push $0' if the
-	//  * vector has no error code (two bytes), a 'push $vector_number' (two
-	//  * bytes), and a jump to the common entry code (up to five bytes).
-	//  */
-	// #	define EARLY_IDT_HANDLER_SIZE		9
+	/*
+	 * early_idt_handler_array is an array of entry points referenced in the
+	 * early IDT.  For simplicity, it's a real array with one entry point
+	 * every nine bytes.  That leaves room for an optional 'push $0' if the
+	 * vector has no error code (two bytes), a 'push $vector_number' (two
+	 * bytes), and a jump to the common entry code (up to five bytes).
+	 */
+	#	define EARLY_IDT_HANDLER_SIZE		9
 
 	// /*
 	//  * xen_early_idt_handler_array is for Xen pv guests: for each entry in
@@ -200,8 +200,8 @@
 
 	#	ifndef __ASSEMBLY__
 
-	// 		extern const char early_idt_handler_array
-	// 				[NUM_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
+			extern const char early_idt_handler_array
+					[NUM_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
 	// 		extern void early_ignore_irq(void);
 
 	// #		ifdef CONFIG_XEN_PV

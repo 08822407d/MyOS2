@@ -30,7 +30,7 @@
 // #include <linux/memory.h>
 // #include <linux/memory_hotplug.h>
 // #include <linux/memremap.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 #include <linux/mm/gfp.h>
 // #include <linux/kcore.h>
 // #include <linux/bootmem_info.h>

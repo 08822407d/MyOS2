@@ -49,7 +49,7 @@
 // #include <linux/moduleparam.h>
 #include <linux/kernel/uaccess.h>
 // #include <linux/sched/isolation.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 // #include <linux/kvm_para.h>
 
 // #include "workqueue_internal.h"

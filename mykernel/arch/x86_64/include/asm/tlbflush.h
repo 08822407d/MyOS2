@@ -45,8 +45,7 @@
 	// }
 
 	// /* Clear in this cpu's CR4. */
-	// static inline void cr4_clear_bits(unsigned long mask)
-	// {
+	// static inline void cr4_clear_bits(unsigned long mask) {
 	// 	unsigned long flags;
 
 	// 	local_irq_save(flags);

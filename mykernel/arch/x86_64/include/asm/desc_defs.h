@@ -76,11 +76,9 @@
 			u32	base3;
 			u32	zero1;
 		} __attribute__((packed));
-
 		typedef struct ldttss_desc ldt_desc;
 		typedef struct ldttss_desc tss_desc;
 
-		// Intel Manual Volume 3 Chapter 6: Interrupt and Exception Handling
 		typedef struct idt_bits {
 			u16	ist		: 3,
 				zero	: 5,
@@ -96,6 +94,7 @@
 			const void		*addr;
 		};
 
+		// Intel Manual Volume 3 Chapter 6: Interrupt and Exception Handling
 		struct gate_struct {
 			u16			offset_low;
 			u16			segment;
@@ -104,17 +103,16 @@
 			u32			offset_high;
 			u32			reserved;
 		} __attribute__((packed));
-
 		typedef struct gate_struct gate_desc;
 
-		static inline unsigned long gate_offset(const gate_desc *g) {
-			return g->offset_low | ((unsigned long)g->offset_middle << 16) |
-				((unsigned long) g->offset_high << 32);
-		}
+		// static inline unsigned long gate_offset(const gate_desc *g) {
+		// 	return g->offset_low | ((unsigned long)g->offset_middle << 16) |
+		// 		((unsigned long) g->offset_high << 32);
+		// }
 
-		static inline unsigned long gate_segment(const gate_desc *g) {
-			return g->segment;
-		}
+		// static inline unsigned long gate_segment(const gate_desc *g) {
+		// 	return g->segment;
+		// }
 
 		struct desc_ptr {
 			unsigned short size;

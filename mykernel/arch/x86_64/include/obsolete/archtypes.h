@@ -23,36 +23,6 @@
 	} CommSegType_E;
 	/* type field of segdesc, for system segment */
 
-
-	/* 64bit version segdesc for common segment */
-
-	typedef struct __attribute__((packed)) {
-		uint64_t			: 16, // unused
-							: 24, // unused
-					Type	: 4,
-					S		: 1, // 0=system seg, 1=common seg
-					DPL		: 2,
-					P		: 1, // segment present
-							: 5, // unused
-					L		: 1, // 0=dataseg, 1=codeseg
-							: 10; // unused
-	} segdesc64_T;
-
-	/* 64bit version segdesc for TSS segment */
-	typedef struct __attribute__((packed)) {
-		uint64_t	Limit1	: 16,
-					Base1	: 24,
-					Type	: 4,
-							: 1, // Sflag must be 0
-					DPL		: 2,
-					P		: 1,
-					Limit2	: 4,
-					AVL		: 1,
-							: 3; // unused
-		uint64_t	Base2	: 40;
-		uint32_t			: 32; // unused
-	} TSSsegdesc_T;
-
 	/* 64bit version segdesc for gate */
 	typedef struct __attribute__((packed)) {
 		uint64_t	offs1	: 16,
@@ -67,25 +37,6 @@
 		uint32_t			: 32; // unused
 	} gatedesc64_T;
 
-	/* 64bit version TSS */
-	typedef struct __attribute__((packed)) {
-		uint32_t	PLACE_HOLDER_1; // unused
-		reg_t		rsp0;
-		reg_t		rsp1;
-		reg_t		rsp2;
-		reg_t		PLACE_HOLDER_2; // unused
-		reg_t		ist1;
-		reg_t		ist2;
-		reg_t		ist3;
-		reg_t		ist4;
-		reg_t		ist5;
-		reg_t		ist6;
-		reg_t		ist7;
-		reg_t		PLACE_HOLDER_3; // unused
-		uint32_t			: 32;	// unused
-		// uint32_t	iobm	: 32;
-	} tss64_T;
-	
 /*==============================================================================================*
  *											APIC structs								 		*
  *==============================================================================================*/

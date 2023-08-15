@@ -86,20 +86,19 @@
 	// 	return per_cpu_ptr_to_phys(get_cpu_gdt_rw(cpu));
 	// }
 
-	// static inline void pack_gate(gate_desc *gate, unsigned type, unsigned long func,
-	// 				unsigned dpl, unsigned ist, unsigned seg)
-	// {
-	// 	gate->offset_low	= (u16) func;
-	// 	gate->bits.p		= 1;
-	// 	gate->bits.dpl		= dpl;
-	// 	gate->bits.zero		= 0;
-	// 	gate->bits.type		= type;
-	// 	gate->offset_middle	= (u16) (func >> 16);
-	// 	gate->segment		= __KERNEL_CS;
-	// 	gate->bits.ist		= ist;
-	// 	gate->reserved		= 0;
-	// 	gate->offset_high	= (u32) (func >> 32);
-	// }
+	static inline void pack_gate(gate_desc *gate, unsigned type,
+			void (*func)(void), unsigned dpl, unsigned ist) {
+		gate->offset_low	= (u16) (u64)func;
+		gate->bits.p		= 1;
+		gate->bits.dpl		= dpl;
+		gate->bits.zero		= 0;
+		gate->bits.type		= type;
+		gate->offset_middle	= (u16) ((u64)func >> 16);
+		gate->segment		= __KERNEL_CS;
+		gate->bits.ist		= ist;
+		gate->reserved		= 0;
+		gate->offset_high	= (u32) ((u64)func >> 32);
+	}
 
 	// static inline int desc_empty(const void *ptr)
 	// {
@@ -190,7 +189,6 @@
 					__KERNEL_TSS_LIMIT);
 		write_gdt_entry(d, GDT_ENTRY_TSS, &tss, DESC_TSS);
 	}
-
 	// #define set_tss_desc(cpu, addr) __set_tss_desc(cpu, GDT_ENTRY_TSS, addr)
 
 	// static inline void native_set_ldt(const void *addr, unsigned int entries)
@@ -445,14 +443,36 @@
 	// extern unsigned long system_vectors[];
 
 	extern void load_current_idt(void);
-	// extern void idt_setup_early_handler(void);
+	extern void idt_setup_early_handler(void);
 	// extern void idt_setup_early_traps(void);
 	// extern void idt_setup_traps(void);
-	// extern void idt_setup_apic_and_irq_gates(void);
+	extern void idt_setup_apic_and_irq_gates(void);
 	// extern bool idt_is_f00f_address(unsigned long address);
 
 	// extern void idt_setup_early_pf(void);
 
 	// extern void idt_invalidate(void);
+
+
+
+	// Not Linux Code, long jmp refresh seg-reg
+	static inline void refresh_segment_registers()
+	{
+		asm volatile(	"movq	%%rsp,		%%rax		\n\t"
+						"mov 	%0,			%%ss		\n\t"
+						"movq	%%rax,		%%rsp		\n\t"
+						"xor	%%rax,		%%rax		\n\t"
+						"leaq	1f(%%rip),	%%rax		\n\t"
+						"pushq	%1						\n\t"
+						"pushq	%%rax					\n\t"
+						"lretq							\n\t"
+						"1:								\n\t"
+						"xorq	%%rax, %%rax			\n\t"
+					:
+					:	"r"(__KERNEL_DS),
+						"rsi"((uint64_t)__KERNEL_CS)
+					:	"rax"
+					);
+	}
 
 #endif /* _ASM_X86_DESC_H */

@@ -19,7 +19,7 @@
 #include <linux/mm/memblock.h>
 // #include <linux/page-isolation.h>
 // #include <linux/padata.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 // #include <linux/buffer_head.h>
 // #include <linux/kmemleak.h>
 // #include <linux/kfence.h>

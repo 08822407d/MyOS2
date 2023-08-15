@@ -69,7 +69,7 @@
 // #include <linux/memcontrol.h>
 // #include <linux/ftrace.h>
 // #include <linux/lockdep.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 // #include <linux/psi.h>
 // #include <linux/padata.h>
 // #include <linux/khugepaged.h>

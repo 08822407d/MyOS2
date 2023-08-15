@@ -62,6 +62,9 @@ asmlinkage __visible void __init x86_64_start_kernel(char * real_mode_data)
 	memset(init_top_pgt, 0, PAGE_SIZE);
 
 
+	idt_setup_early_handler();
+
+
 	extern void __used asm_offsets(void);
 	extern void myos_early_init_system(void);
 	extern void myos_early_init_smp(void);

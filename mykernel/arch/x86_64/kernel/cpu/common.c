@@ -65,6 +65,9 @@
 #include "cpu.h"
 
 
+#include <obsolete/arch_proto.h>
+#include <obsolete/glo.h>
+
 
 /* Load the original GDT from the per-cpu structure */
 void load_direct_gdt(int cpu)
@@ -75,22 +78,7 @@ void load_direct_gdt(int cpu)
 	gdt_descr.size = GDT_SIZE - 1;
 	load_gdt(&gdt_descr);
 
-	// Not Linux Code, long jmp refresh seg-reg
-	asm volatile(	"movq	%%rsp,		%%rax		\n\t"
-					"mov 	%0,			%%ss		\n\t"
-					"movq	%%rax,		%%rsp		\n\t"
-					"xor	%%rax,		%%rax		\n\t"
-					"leaq	1f(%%rip),	%%rax		\n\t"
-					"pushq	%1						\n\t"
-					"pushq	%%rax					\n\t"
-					"lretq							\n\t"
-					"1:								\n\t"
-					"xorq	%%rax, %%rax			\n\t"
-				:
-				:	"r"(__KERNEL_DS),
-					"rsi"((uint64_t)__KERNEL_CS)
-				:	"rax"
-				);
+	refresh_segment_registers();
 }
 
 /* Load a fixmap remapping of the per-cpu GDT */
@@ -102,22 +90,7 @@ void load_fixmap_gdt(int cpu)
 	gdt_descr.size = GDT_SIZE - 1;
 	load_gdt(&gdt_descr);
 
-	// Not Linux Code, long jmp refresh seg-reg
-	asm volatile(	"movq	%%rsp,		%%rax		\n\t"
-					"mov 	%0,			%%ss		\n\t"
-					"movq	%%rax,		%%rsp		\n\t"
-					"xor	%%rax,		%%rax		\n\t"
-					"leaq	1f(%%rip),	%%rax		\n\t"
-					"pushq	%1						\n\t"
-					"pushq	%%rax					\n\t"
-					"lretq							\n\t"
-					"1:								\n\t"
-					"xorq	%%rax, %%rax			\n\t"
-				:
-				:	"r"(__KERNEL_DS),
-					"rsi"((uint64_t)__KERNEL_CS)
-				:	"rax"
-				);
+	refresh_segment_registers();
 }
 
 
@@ -636,6 +609,54 @@ void identify_secondary_cpu(struct cpuinfo_x86 *c)
 }
 
 
+
+/* May not be marked __init: used by software suspend */
+void syscall_init(void)
+{
+#if defined(CONFIG_INTER_X64_GDT_LAYOUT)
+	// init MSR sf_regs related to sysenter/sysexit
+	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
+	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task0_PCB.task.stack);
+	uint64_t kstack;
+	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
+#else
+		wrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);
+		wrmsrl(MSR_LSTAR, (unsigned long)entry_SYSCALL_64);
+
+	#ifdef CONFIG_IA32_EMULATION
+		wrmsrl_cstar((unsigned long)entry_SYSCALL_compat);
+		/*
+		* This only works on Intel CPUs.
+		* On AMD CPUs these MSRs are 32-bit, CPU truncates MSR_IA32_SYSENTER_EIP.
+		* This does not cause SYSENTER to jump to the wrong location, because
+		* AMD doesn't allow SYSENTER in long mode (either 32- or 64-bit).
+		*/
+		wrmsrl_safe(MSR_IA32_SYSENTER_CS, (u64)__KERNEL_CS);
+		wrmsrl_safe(MSR_IA32_SYSENTER_ESP,
+				(unsigned long)(cpu_entry_stack(smp_processor_id()) + 1));
+		wrmsrl_safe(MSR_IA32_SYSENTER_EIP, (u64)entry_SYSENTER_compat);
+	#else
+		wrmsrl_cstar((unsigned long)ignore_sysret);
+		wrmsrl_safe(MSR_IA32_SYSENTER_CS, (u64)GDT_ENTRY_INVALID_SEG);
+		wrmsrl_safe(MSR_IA32_SYSENTER_ESP, 0ULL);
+		wrmsrl_safe(MSR_IA32_SYSENTER_EIP, 0ULL);
+	#endif
+
+		/*
+		* Flags to clear on syscall; clear as much as possible
+		* to minimize user space-kernel interference.
+		*/
+		wrmsrl(MSR_SYSCALL_MASK,
+			X86_EFLAGS_CF|X86_EFLAGS_PF|X86_EFLAGS_AF|
+			X86_EFLAGS_ZF|X86_EFLAGS_SF|X86_EFLAGS_TF|
+			X86_EFLAGS_IF|X86_EFLAGS_DF|X86_EFLAGS_OF|
+			X86_EFLAGS_IOPL|X86_EFLAGS_NT|X86_EFLAGS_RF|
+			X86_EFLAGS_AC|X86_EFLAGS_ID);
+#endif
+}
+
+
 /*
  * Setup everything needed to handle exceptions from the IDT, including the IST
  * exceptions which use paranoid_entry().
@@ -661,9 +682,7 @@ void cpu_init_exception_handling(void)
 	// setup_ghcb();
 
 	// /* Finally load the IDT */
-	// load_current_idt();
-extern struct desc_ptr idt_descr;
-	load_idt(&idt_descr);
+	load_current_idt();
 }
 
 /*
@@ -689,13 +708,11 @@ void cpu_init(void)
 // #endif
 	// pr_debug("Initializing CPU#%d\n", cpu);
 
-	// if (IS_ENABLED(CONFIG_X86_64) || cpu_feature_enabled(X86_FEATURE_VME) ||
-	// 	boot_cpu_has(X86_FEATURE_TSC) || boot_cpu_has(X86_FEATURE_DE))
-	// 	cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
+	// cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
 
 	loadsegment(fs, 0);
 	// memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
-	// syscall_init();
+	syscall_init();
 
 	wrmsrl(MSR_FS_BASE, 0);
 	wrmsrl(MSR_KERNEL_GS_BASE, 0);

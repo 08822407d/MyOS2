@@ -241,7 +241,8 @@
 		"cpufeature.h": "c",
 		"desc_defs.h": "c",
 		"pgtable_types.h": "c",
-		"segment.h": "c"
+		"segment.h": "c",
+		"desc.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

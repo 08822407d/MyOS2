@@ -52,7 +52,7 @@
 // #include <linux/membarrier.h>
 // #include <linux/migrate.h>
 // #include <linux/mmu_context.h>
-// #include <linux/nmi.h>
+#include <linux/kernel/nmi.h>
 // #include <linux/proc_fs.h>
 #include <linux/kernel/prefetch.h>
 // #include <linux/profile.h>

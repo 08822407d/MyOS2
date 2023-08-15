@@ -13,81 +13,92 @@
  *										external symbols							 			*
  *==============================================================================================*/
 	/* Exception handlers (real or protected mode), in numerical order. */
-	void divide_error (void);
-	void debug(void);
-	void nmi (void);
-	void breakpoint_exception (void);
-	void overflow (void);
-	void bounds_exceed (void);
-	void invalid_opcode (void);
-	void dev_not_available (void);
-	void double_fault(void);
-	void cotask_seg_overrun(void);
-	void invalid_tss(void);
-	void segment_not_present(void);
-	void stack_segfault(void);
-	void general_protection(void);
-	void page_fault(void);
+	extern void divide_error(void);
+	#define cpu_excep_handler_00	divide_error
+	extern void debug(void);
+	#define cpu_excep_handler_01	debug
+	extern void nmi(void);
+	#define cpu_excep_handler_02	nmi
+	extern void breakpoint_exception(void);
+	#define cpu_excep_handler_03	breakpoint_exception
+	extern void overflow(void);
+	#define cpu_excep_handler_04	overflow
+	extern void bounds_exceed(void);
+	#define cpu_excep_handler_05	bounds_exceed
+	extern void invalid_opcode(void);
+	#define cpu_excep_handler_06	invalid_opcode
+	extern void dev_not_available(void);
+	#define cpu_excep_handler_07	dev_not_available
+	extern void double_fault(void);
+	#define cpu_excep_handler_08	double_fault
+	extern void cotask_seg_overrun(void);
+	#define cpu_excep_handler_09	cotask_seg_overrun
+	extern void invalid_tss(void);
+	#define cpu_excep_handler_10	invalid_tss
+	extern void segment_not_present(void);
+	#define cpu_excep_handler_11	segment_not_present
+	extern void stack_segfault(void);
+	#define cpu_excep_handler_12	stack_segfault
+	extern void general_protection(void);
+	#define cpu_excep_handler_13	general_protection
+	extern void page_fault(void);
+	#define cpu_excep_handler_14	page_fault
 	// EXCEPTION 15 INTEL RESERVED
-	void x87_fpu_error(void);
-	void alignment_check(void);
-	void machine_check(void);
-	void simd_exception(void);
-	void virtualization_exception(void);
-	void control_protection_exception(void);
+	extern void x87_fpu_error(void);
+	#define cpu_excep_handler_16	x87_fpu_error
+	extern void alignment_check(void);
+	#define cpu_excep_handler_17	alignment_check
+	extern void machine_check(void);
+	#define cpu_excep_handler_18	machine_check
+	extern void simd_exception(void);
+	#define cpu_excep_handler_19	simd_exception
+	extern void virtualization_exception(void);
+	#define cpu_excep_handler_20	virtualization_exception
+	extern void control_protection_exception(void);
+	#define cpu_excep_handler_21	control_protection_exception
 	/* Hardware interrupt handlers. */
-	void hwint00(void);
-	void hwint01(void);
-	void hwint02(void);
-	void hwint03(void);
-	void hwint04(void);
-	void hwint05(void);
-	void hwint06(void);
-	void hwint07(void);
-	void hwint08(void);
-	void hwint09(void);
-	void hwint10(void);
-	void hwint11(void);
-	void hwint12(void);
-	void hwint13(void);
-	void hwint14(void);
-	void hwint15(void);
+	extern void hwint00(void);
+	extern void hwint01(void);
+	extern void hwint02(void);
+	extern void hwint03(void);
+	extern void hwint04(void);
+	extern void hwint05(void);
+	extern void hwint06(void);
+	extern void hwint07(void);
+	extern void hwint08(void);
+	extern void hwint09(void);
+	extern void hwint10(void);
+	extern void hwint11(void);
+	extern void hwint12(void);
+	extern void hwint13(void);
+	extern void hwint14(void);
+	extern void hwint15(void);
 	/* APIC Hardware interrupt handlers. */
-	void hwint16(void);
-	void hwint17(void);
-	void hwint18(void);
-	void hwint19(void);
-	void hwint20(void);
-	void hwint21(void);
-	void hwint22(void);
-	void hwint23(void);
+	extern void hwint16(void);
+	extern void hwint17(void);
+	extern void hwint18(void);
+	extern void hwint19(void);
+	extern void hwint20(void);
+	extern void hwint21(void);
+	extern void hwint22(void);
+	extern void hwint23(void);
 	/* LAPIC IPI handlers. */
-	void lapic_ipi00(void);
-	void lapic_ipi01(void);
-	void lapic_ipi02(void);
-	void lapic_ipi03(void);
-	void lapic_ipi04(void);
-	void lapic_ipi05(void);
-	void lapic_ipi06(void);
-	void lapic_ipi07(void);
+	extern void lapic_ipi00(void);
+	extern void lapic_ipi01(void);
+	extern void lapic_ipi02(void);
+	extern void lapic_ipi03(void);
+	extern void lapic_ipi04(void);
+	extern void lapic_ipi05(void);
+	extern void lapic_ipi06(void);
+	extern void lapic_ipi07(void);
 
 	/* syscalls and others about intr */
-	void sysenter_entp(void);
-	void sysexit_entp(void);
+	extern void sysenter_entp(void);
+	extern void sysexit_entp(void);
 
 /*==============================================================================================*
  *										internal symbols										*
  *==============================================================================================*/
-// intr gate initiate infomation
-	typedef struct {
-		void	(*gate_entry) (void);
-		uint8_t	vec_nr;
-		uint8_t	type;
-		uint8_t	DPL;
-		uint8_t	ist;
-		char	name[16];
-	} gate_table_s;
-
 // local apic information
 	typedef struct lapic_info
 	{
@@ -132,9 +143,6 @@
 		uint8_t		core_id;
 		uint8_t		thd_id;
 	};
-
-	/* protect.c */
-	void myos_arch_system_call_init(void);
 
 	/* arch_page_util. */
 	void arch_page_preinit(void);
