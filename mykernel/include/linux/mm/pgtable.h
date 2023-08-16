@@ -441,7 +441,7 @@
 	// #endif
 
 	// #ifndef __HAVE_ARCH_PTEP_SET_WRPROTECT
-	// struct mm_struct;
+	// mm_s;
 	// static inline void ptep_set_wrprotect(mm_s *mm, unsigned long address, pte_t *ptep)
 	// {
 	// 	pte_t old_pte = *ptep;

@@ -14,7 +14,7 @@
 	#define MMF_DUMPABLE_BITS			2
 	#define MMF_DUMPABLE_MASK			((1 << MMF_DUMPABLE_BITS) - 1)
 
-	// extern void set_dumpable(struct mm_struct *mm, int value);
+	// extern void set_dumpable(mm_s *mm, int value);
 	// /*
 	//  * This returns the actual value of the suid_dumpable flag. For things
 	//  * that are using this for checking for privilege transitions, it must
@@ -26,7 +26,7 @@
 	// 	return mm_flags & MMF_DUMPABLE_MASK;
 	// }
 
-	// static inline int get_dumpable(struct mm_struct *mm)
+	// static inline int get_dumpable(mm_s *mm)
 	// {
 	// 	return __get_dumpable(mm->flags);
 	// }

@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_PGTABLE_64_H
 #define _ASM_X86_PGTABLE_64_H
@@ -35,28 +37,28 @@
 
 	// #define pte_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pte %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), arch_pte_val(e))
+	// 		__FILE__, __LINE__, &(e), pte_val(e))
 	// #define pmd_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pmd %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), arch_pmd_val(e))
+	// 		__FILE__, __LINE__, &(e), pmd_val(e))
 	// #define pud_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pud %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), arch_pud_val(e))
+	// 		__FILE__, __LINE__, &(e), pud_val(e))
 
 	// #if CONFIG_PGTABLE_LEVELS >= 5
 	// #define p4d_ERROR(e)					\
 	// 	pr_err("%s:%d: bad p4d %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), arch_p4d_val(e))
+	// 		__FILE__, __LINE__, &(e), p4d_val(e))
 	// #endif
 
 	// #define pgd_ERROR(e)					\
 	// 	pr_err("%s:%d: bad pgd %p(%016lx)\n",		\
-	// 		__FILE__, __LINE__, &(e), arch_pgd_val(e))
+	// 		__FILE__, __LINE__, &(e), pgd_val(e))
 
 	// struct mm_struct;
 
 	// #define mm_p4d_folded mm_p4d_folded
-	// static inline bool mm_p4d_folded(mm_s *mm)
+	// static inline bool mm_p4d_folded(struct mm_struct *mm)
 	// {
 	// 	return !pgtable_l5_enabled();
 	// }
@@ -64,69 +66,110 @@
 	// void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
 	// void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
 
-	// static inline void set_pte(pte_t *ptep, pte_t pte) {
+	// static inline void native_set_pte(pte_t *ptep, pte_t pte)
+	// {
 	// 	WRITE_ONCE(*ptep, pte);
 	// }
 
-	// static inline void
-	// pte_clear(mm_s *mm, unsigned long addr, pte_t *ptep) {
-	// 	set_pte(ptep, arch_make_pte(0));
+	// static inline void native_pte_clear(struct mm_struct *mm, unsigned long addr,
+	// 					pte_t *ptep)
+	// {
+	// 	native_set_pte(ptep, native_make_pte(0));
 	// }
 
-	// static inline void
-	// native_set_pte_atomic(pte_t *ptep, pte_t pte) {
-	// 	set_pte(ptep, pte);
+	// static inline void native_set_pte_atomic(pte_t *ptep, pte_t pte)
+	// {
+	// 	native_set_pte(ptep, pte);
 	// }
 
-	// static inline void set_pmd(pmd_t *pmdp, pmd_t pmd) {
+	// static inline void native_set_pmd(pmd_t *pmdp, pmd_t pmd)
+	// {
 	// 	WRITE_ONCE(*pmdp, pmd);
 	// }
 
-	// static inline void pmd_clear(pmd_t *pmd) {
-	// 	set_pmd(pmd, arch_make_pmd(0));
+	// static inline void native_pmd_clear(pmd_t *pmd)
+	// {
+	// 	native_set_pmd(pmd, native_make_pmd(0));
 	// }
 
 	// static inline pte_t native_ptep_get_and_clear(pte_t *xp)
 	// {
-	// 	return arch_make_pte(xchg(&xp->val, 0));
+	// #ifdef CONFIG_SMP
+	// 	return native_make_pte(xchg(&xp->pte, 0));
+	// #else
+	// 	/* native_local_ptep_get_and_clear,
+	// 	but duplicated because of cyclic dependency */
+	// 	pte_t ret = *xp;
+	// 	native_pte_clear(NULL, 0, xp);
+	// 	return ret;
+	// #endif
 	// }
 
 	// static inline pmd_t native_pmdp_get_and_clear(pmd_t *xp)
 	// {
-	// 	return native_make_pmd(xchg(&xp->val, 0));
+	// #ifdef CONFIG_SMP
+	// 	return native_make_pmd(xchg(&xp->pmd, 0));
+	// #else
+	// 	/* native_local_pmdp_get_and_clear,
+	// 	but duplicated because of cyclic dependency */
+	// 	pmd_t ret = *xp;
+	// 	native_pmd_clear(xp);
+	// 	return ret;
+	// #endif
 	// }
 
-	// static inline void set_pud(pud_t *pudp, pud_t pud) {
+	// static inline void native_set_pud(pud_t *pudp, pud_t pud)
+	// {
 	// 	WRITE_ONCE(*pudp, pud);
 	// }
 
-	// static inline void pud_clear(pud_t *pud) {
-	// 	set_pud(pud, arch_make_pud(0));
+	// static inline void native_pud_clear(pud_t *pud)
+	// {
+	// 	native_set_pud(pud, native_make_pud(0));
 	// }
 
 	// static inline pud_t native_pudp_get_and_clear(pud_t *xp)
 	// {
-	// 	return native_make_pud(xchg(&xp->val, 0));
+	// #ifdef CONFIG_SMP
+	// 	return native_make_pud(xchg(&xp->pud, 0));
+	// #else
+	// 	/* native_local_pudp_get_and_clear,
+	// 	* but duplicated because of cyclic dependency
+	// 	*/
+	// 	pud_t ret = *xp;
+
+	// 	native_pud_clear(xp);
+	// 	return ret;
+	// #endif
 	// }
 
-	// static inline void set_p4d(p4d_t *p4dp, p4d_t p4d) {
+	// static inline void native_set_p4d(p4d_t *p4dp, p4d_t p4d)
+	// {
 	// 	pgd_t pgd;
-	// 	pgd = arch_make_pgd(arch_p4d_val(p4d));
+
+	// 	if (pgtable_l5_enabled() || !IS_ENABLED(CONFIG_PAGE_TABLE_ISOLATION)) {
+	// 		WRITE_ONCE(*p4dp, p4d);
+	// 		return;
+	// 	}
+
+	// 	pgd = native_make_pgd(native_p4d_val(p4d));
 	// 	pgd = pti_set_user_pgtbl((pgd_t *)p4dp, pgd);
-	// 	WRITE_ONCE(*p4dp, arch_make_p4d(arch_pgd_val(pgd)));
+	// 	WRITE_ONCE(*p4dp, native_make_p4d(native_pgd_val(pgd)));
 	// }
 
-	// static inline void p4d_clear(p4d_t *p4d) {
-	// 	set_p4d(p4d, arch_make_p4d(0));
+	// static inline void native_p4d_clear(p4d_t *p4d)
+	// {
+	// 	native_set_p4d(p4d, native_make_p4d(0));
 	// }
 
-	// static inline void
-	// native_set_pgd(pgd_t *pgdp, pgd_t pgd) {
-	// 	// WRITE_ONCE(*pgdp, pti_set_user_pgtbl(pgdp, pgd));
+	// static inline void native_set_pgd(pgd_t *pgdp, pgd_t pgd)
+	// {
+	// 	WRITE_ONCE(*pgdp, pti_set_user_pgtbl(pgdp, pgd));
 	// }
 
-	// static inline void native_pgd_clear(pgd_t *pgd) {
-	// 	native_set_pgd(pgd, arch_make_pgd(0));
+	// static inline void native_pgd_clear(pgd_t *pgd)
+	// {
+	// 	native_set_pgd(pgd, native_make_pgd(0));
 	// }
 
 	// /*
@@ -147,7 +190,7 @@
 	// *
 	// * |     ...            | 11| 10|  9|8|7|6|5| 4| 3|2| 1|0| <- bit number
 	// * |     ...            |SW3|SW2|SW1|G|L|D|A|CD|WT|U| W|P| <- bit names
-	// * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| X|F|SD|0| <- swp entry
+	// * | TYPE (59-63) | ~OFFSET (9-58)  |0|0|X|X| X| E|F|SD|0| <- swp entry
 	// *
 	// * G (8) is aliased and used as a PROT_NONE indicator for
 	// * !present ptes.  We need to start storing swap entries above
@@ -164,7 +207,9 @@
 	// * F (2) in swp entry is used to record when a pagetable is
 	// * writeprotected by userfaultfd WP support.
 	// *
-	// * Bit 7 in swp entry should be 0 because arch_pmd_present checks not only P,
+	// * E (3) in swp entry is used to rememeber PG_anon_exclusive.
+	// *
+	// * Bit 7 in swp entry should be 0 because pmd_present checks not only P,
 	// * but also L and G.
 	// *
 	// * The offset is inverted by a binary not operation to make the high
@@ -194,12 +239,11 @@
 	// 	(~(unsigned long)(offset) << SWP_OFFSET_SHIFT >> SWP_TYPE_BITS) \
 	// 	| ((unsigned long)(type) << (64-SWP_TYPE_BITS)) })
 
-	// #define __pte_to_swp_entry(pte)		((swp_entry_t) { arch_pte_val((pte)) })
-	// #define __pmd_to_swp_entry(pmd)		((swp_entry_t) { arch_pmd_val((pmd)) })
-	// #define __swp_entry_to_pte(x)		((pte_t) { .pte = (x).val })
-	// #define __swp_entry_to_pmd(x)		((pmd_t) { .pmd = (x).val })
+	// #define __pte_to_swp_entry(pte)		((swp_entry_t) { pte_val((pte)) })
+	// #define __pmd_to_swp_entry(pmd)		((swp_entry_t) { pmd_val((pmd)) })
+	// #define __swp_entry_to_pte(x)		(__pte((x).val))
+	// #define __swp_entry_to_pmd(x)		(__pmd((x).val))
 
-	// extern int kern_addr_valid(unsigned long addr);
 	// extern void cleanup_highmap(void);
 
 	// #define HAVE_ARCH_UNMAPPED_AREA
@@ -214,7 +258,7 @@
 
 	// #define __HAVE_ARCH_PTE_SAME
 
-	// #define vmemmap ((page_s *)VMEMMAP_START)
+	// #define vmemmap ((struct page *)VMEMMAP_START)
 
 	// extern void init_extra_mapping_uc(unsigned long phys, unsigned long size);
 	// extern void init_extra_mapping_wb(unsigned long phys, unsigned long size);
@@ -228,7 +272,6 @@
 	// }
 
 	// #include <asm/pgtable-invert.h>
-
 
 	#define set_pte(ptep, pte)	WRITE_ONCE(*(ptep), (pte))
 	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))

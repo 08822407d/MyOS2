@@ -177,21 +177,8 @@
 	//  */
 	// #define __get_user(x,ptr) do_get_user_call(get_user_nocheck,x,ptr)
 
-
-	// #ifdef CONFIG_X86_32
-	// #define __put_user_goto_u64(x, addr, label)			\
-	// 	asm_volatile_goto("\n"					\
-	// 			"1:	movl %%eax,0(%1)\n"		\
-	// 			"2:	movl %%edx,4(%1)\n"		\
-	// 			_ASM_EXTABLE_UA(1b, %l2)			\
-	// 			_ASM_EXTABLE_UA(2b, %l2)			\
-	// 			: : "A" (x), "r" (addr)			\
-	// 			: : label)
-
-	// #else
 	// #define __put_user_goto_u64(x, ptr, label) \
 	// 	__put_user_goto(x, ptr, "q", "er", label)
-	// #endif
 
 	// extern void __put_user_bad(void);
 
@@ -296,19 +283,8 @@
 
 	// #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 
-	// #ifdef CONFIG_X86_32
-	// #define __get_user_asm_u64(x, ptr, label) do {				\
-	// 	unsigned int __gu_low, __gu_high;				\
-	// 	const unsigned int __user *__gu_ptr;				\
-	// 	__gu_ptr = (const void __user *)(ptr);				\
-	// 	__get_user_asm(__gu_low, __gu_ptr, "l", "=r", label);		\
-	// 	__get_user_asm(__gu_high, __gu_ptr+1, "l", "=r", label);	\
-	// 	(x) = ((unsigned long long)__gu_high << 32) | __gu_low;		\
-	// } while (0)
-	// #else
 	// #define __get_user_asm_u64(x, ptr, label)				\
 	// 	__get_user_asm(x, ptr, "q", "=r", label)
-	// #endif
 
 	// #define __get_user_size(x, ptr, size, label)				\
 	// do {									\
@@ -344,31 +320,8 @@
 
 	// #else // !CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 
-	// #ifdef CONFIG_X86_32
-	// #define __get_user_asm_u64(x, ptr, retval)				\
-	// ({									\
-	// 	__typeof__(ptr) __ptr = (ptr);					\
-	// 	asm volatile("\n"						\
-	// 			"1:	movl %[lowbits],%%eax\n"		\
-	// 			"2:	movl %[highbits],%%edx\n"		\
-	// 			"3:\n"						\
-	// 			_ASM_EXTABLE_TYPE_REG(1b, 3b, EX_TYPE_EFAULT_REG |	\
-	// 					EX_FLAG_CLEAR_AX_DX,		\
-	// 					%[errout])			\
-	// 			_ASM_EXTABLE_TYPE_REG(2b, 3b, EX_TYPE_EFAULT_REG |	\
-	// 					EX_FLAG_CLEAR_AX_DX,		\
-	// 					%[errout])			\
-	// 			: [errout] "=r" (retval),				\
-	// 			[output] "=&A"(x)				\
-	// 			: [lowbits] "m" (__m(__ptr)),			\
-	// 			[highbits] "m" __m(((u32 __user *)(__ptr)) + 1),	\
-	// 			"0" (retval));					\
-	// })
-
-	// #else
 	// #define __get_user_asm_u64(x, ptr, retval) \
 	// 	__get_user_asm(x, ptr, retval, "q")
-	// #endif
 
 	// #define __get_user_size(x, ptr, size, retval)				\
 	// do {									\
@@ -455,11 +408,7 @@
 
 	// #define ARCH_HAS_NOCACHE_UACCESS 1
 
-	// #ifdef CONFIG_X86_32
-	// # include <asm/uaccess_32.h>
-	// #else
 	// # include <asm/uaccess_64.h>
-	// #endif
 
 	// /*
 	// * The "unsafe" user accesses aren't really "unsafe", but the naming

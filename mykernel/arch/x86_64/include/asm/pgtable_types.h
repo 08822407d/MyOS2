@@ -533,7 +533,7 @@
 	// 	extern pte_t *lookup_address_in_pgd(pgd_t *pgd, unsigned long address,
 	// 						unsigned int *level);
 
-	// 	struct mm_struct;
+	// 	mm_s;
 	// 	extern pte_t *lookup_address_in_mm(mm_s *mm, unsigned long address,
 	// 					unsigned int *level);
 	// 	extern pmd_t *lookup_pmd_address(unsigned long address);

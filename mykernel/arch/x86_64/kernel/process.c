@@ -64,7 +64,7 @@ int copy_thread(unsigned long clone_flags,
 	fork_frame = container_of(childregs, fork_frame_s, regs);
 	frame = &fork_frame->frame;
 
-	frame->bp = (reg_t)encode_frame_pointer(childregs);
+	// frame->bp = (reg_t)encode_frame_pointer(childregs);
 	frame->ret_addr = (reg_t)ret_from_fork;
 	p->thread.sp = (reg_t)fork_frame;
 	// p->thread.io_bitmap = NULL;

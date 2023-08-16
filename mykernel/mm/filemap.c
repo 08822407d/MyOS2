@@ -54,7 +54,7 @@
  */
 // #include <linux/buffer_head.h> /* for try_to_free_buffers */
 
-#include <asm/mman.h>
+#include <asm/uapi_mman.h>
 
 /*
  * Shared mappings implemented 30.11.1994. It's not fully working yet,

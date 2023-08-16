@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_FSGSBASE_H
 #define _ASM_FSGSBASE_H
@@ -24,28 +26,40 @@
 	static __always_inline unsigned long
 	rdfsbase(void) {
 		unsigned long fsbase;
-		asm volatile("rdfsbase %0" : "=r" (fsbase) :: "memory");
+		asm volatile(	"rdfsbase	%0		\t\n"
+					:	"=r" (fsbase)
+					:
+					:	"memory");
 		return fsbase;
 	}
 
 	static __always_inline unsigned long
 	rdgsbase(void) {
 		unsigned long gsbase;
-		asm volatile("rdgsbase %0" : "=r" (gsbase) :: "memory");
+		asm volatile(	"rdgsbase	%0		\t\n"
+					:	"=r" (gsbase)
+					:
+					:	"memory");
 		return gsbase;
 	}
 
 	static __always_inline void
 	wrfsbase(unsigned long fsbase) {
-		asm volatile("wrfsbase %0" :: "r" (fsbase) : "memory");
+		asm volatile(	"wrfsbase	%0		\t\n"
+					:
+					:	"r" (fsbase)
+					:	"memory");
 	}
 
 	static __always_inline void
 	wrgsbase(unsigned long gsbase) {
-		asm volatile("wrgsbase %0" :: "r" (gsbase) : "memory");
+		asm volatile(	"wrgsbase	%0		\t\n"
+					:
+					:	"r" (gsbase)
+					:	"memory");
 	}
 
-	// #	include <asm/cpufeature.h>
+	#	include <asm/cpufeature.h>
 
 	// /* Helper functions for reading/writing FS/GS base */
 

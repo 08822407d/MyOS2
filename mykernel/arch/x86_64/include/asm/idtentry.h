@@ -526,11 +526,7 @@
 	// DECLARE_IDTENTRY_RAW_ERRORCODE(X86_TRAP_PF,	exc_page_fault);
 
 	// #ifdef CONFIG_X86_MCE
-	// #ifdef CONFIG_X86_64
 	// DECLARE_IDTENTRY_MCE(X86_TRAP_MC,	exc_machine_check);
-	// #else
-	// DECLARE_IDTENTRY_RAW(X86_TRAP_MC,	exc_machine_check);
-	// #endif
 	// #ifdef CONFIG_XEN_PV
 	// DECLARE_IDTENTRY_RAW(X86_TRAP_MC,	xenpv_exc_machine_check);
 	// #endif
@@ -554,11 +550,7 @@
 	// #endif
 
 	// /* #DB */
-	// #ifdef CONFIG_X86_64
 	// DECLARE_IDTENTRY_DEBUG(X86_TRAP_DB,	exc_debug);
-	// #else
-	// DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	exc_debug);
-	// #endif
 	// #ifdef CONFIG_XEN_PV
 	// DECLARE_IDTENTRY_RAW(X86_TRAP_DB,	xenpv_exc_debug);
 	// #endif

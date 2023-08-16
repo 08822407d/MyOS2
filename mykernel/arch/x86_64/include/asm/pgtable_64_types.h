@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_PGTABLE_64_DEFS_H
 #define _ASM_X86_PGTABLE_64_DEFS_H
@@ -83,11 +85,9 @@
 				XD		: 1;
 		} arch_pte_T;
 
+		// extern unsigned int pgdir_shift;
+		// extern unsigned int ptrs_per_p4d;
 
-	// #define pgtable_l5_enabled()	0
-
-	// 	extern unsigned int pgdir_shift;
-	// 	extern unsigned int ptrs_per_p4d;
 	#endif /* !__ASSEMBLY__ */
 
 	// #define SHARED_KERNEL_PMD 0
@@ -178,5 +178,10 @@
 	// #define EARLY_DYNAMIC_PAGE_TABLES	64
 
 	#define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
+
+	// /*
+	//  * We borrow bit 3 to remember PG_anon_exclusive.
+	//  */
+	// #define _PAGE_SWP_EXCLUSIVE	_PAGE_PWT
 
 #endif /* _ASM_X86_PGTABLE_64_DEFS_H */

@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_MSR_H
 #define _ASM_X86_MSR_H
@@ -10,16 +12,7 @@
 	// #	include <asm/errno.h>
 	// #	include <asm/cpumask.h>
 	// #	include <uapi/asm/msr.h>
-
-		// struct msr {
-		// 	union {
-		// 		struct {
-		// 			u32 l;
-		// 			u32 h;
-		// 		};
-		// 		u64 q;
-		// 	};
-		// };
+	// #	include <asm/shared/msr.h>
 
 		// struct msr_info {
 		// 	u32 msr_no;
@@ -84,19 +77,20 @@
 		__rdmsr(unsigned int msr) {
 			DECLARE_ARGS(val, low, high);
 
-			asm volatile(	"1: rdmsr\n"
-							"2:\n"
+			asm volatile(	"1: rdmsr			\n"
+							"2:					\n"
 							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
 						:	EAX_EDX_RET(val, low, high)
-						:	"c" (msr));
+						:	"c" (msr)
+						);
 
 			return EAX_EDX_VAL(val, low, high);
 		}
 
 		static __always_inline void
 		__wrmsr(unsigned int msr, u32 low, u32 high) {
-			asm volatile(	"1: wrmsr\n"
-							"2:\n"
+			asm volatile(	"1: wrmsr			\n"
+							"2:					\n"
 							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
 						:
 						:	"c" (msr),
@@ -106,32 +100,37 @@
 						);
 		}
 
-	// #	define native_rdmsr(msr, val1, val2)				\
-	// 			do {										\
-	// 				u64 __val = __rdmsr((msr));				\
-	// 				(void)((val1) = (u32)__val);			\
-	// 				(void)((val2) = (u32)(__val >> 32));	\
-	// 			} while (0)
+		// #define native_rdmsr(msr, val1, val2)			\
+		// do {							\
+		// 	u64 __val = __rdmsr((msr));			\
+		// 	(void)((val1) = (u32)__val);			\
+		// 	(void)((val2) = (u32)(__val >> 32));		\
+		// } while (0)
 
-	// #	define native_wrmsr(msr, low, high)			\
-	// 			__wrmsr(msr, low, high)
+		// #define native_wrmsr(msr, low, high)			\
+		// 	__wrmsr(msr, low, high)
 
-	// #	define native_wrmsrl(msr, val)				\
-	// 			__wrmsr((msr), (u32)((u64)(val)),	\
-	// 					(u32)((u64)(val) >> 32))
+		// #define native_wrmsrl(msr, val)				\
+		// 	__wrmsr((msr), (u32)((u64)(val)),		\
+		// 			(u32)((u64)(val) >> 32))
 
-		// static inline unsigned long long
-		// native_read_msr(unsigned int msr) {
+		// static inline unsigned long long native_read_msr(unsigned int msr)
+		// {
 		// 	unsigned long long val;
+
 		// 	val = __rdmsr(msr);
+
 		// 	if (tracepoint_enabled(read_msr))
 		// 		do_trace_read_msr(msr, val, 0);
+
 		// 	return val;
 		// }
 
-		// static inline unsigned long long
-		// native_read_msr_safe(unsigned int msr, int *err) {
+		// static inline unsigned long long native_read_msr_safe(unsigned int msr,
+		// 							int *err)
+		// {
 		// 	DECLARE_ARGS(val, low, high);
+
 		// 	asm volatile("1: rdmsr ; xor %[err],%[err]\n"
 		// 			"2:\n\t"
 		// 			_ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_RDMSR_SAFE, %[err])
@@ -144,16 +143,20 @@
 
 		// /* Can be uninlined because referenced by paravirt */
 		// static inline void notrace
-		// native_write_msr(unsigned int msr, u32 low, u32 high) {
+		// native_write_msr(unsigned int msr, u32 low, u32 high)
+		// {
 		// 	__wrmsr(msr, low, high);
+
 		// 	if (tracepoint_enabled(write_msr))
 		// 		do_trace_write_msr(msr, ((u64)high << 32 | low), 0);
 		// }
 
 		// /* Can be uninlined because referenced by paravirt */
 		// static inline int notrace
-		// native_write_msr_safe(unsigned int msr, u32 low, u32 high) {
+		// native_write_msr_safe(unsigned int msr, u32 low, u32 high)
+		// {
 		// 	int err;
+
 		// 	asm volatile("1: wrmsr ; xor %[err],%[err]\n"
 		// 			"2:\n\t"
 		// 			_ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_WRMSR_SAFE, %[err])
@@ -169,32 +172,35 @@
 		// extern int wrmsr_safe_regs(u32 regs[8]);
 
 		// /**
-		//  * rdtsc() - returns the current TSC without ordering constraints
-		//  *
-		//  * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
-		//  * only ordering constraint it supplies is the ordering implied by
-		//  * "asm volatile": it will put the RDTSC in the place you expect.  The
-		//  * CPU can and will speculatively execute that RDTSC, though, so the
-		//  * results can be non-monotonic if compared on different CPUs.
-		//  */
-		// static __always_inline unsigned long long
-		// rdtsc(void) {
+		// * rdtsc() - returns the current TSC without ordering constraints
+		// *
+		// * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
+		// * only ordering constraint it supplies is the ordering implied by
+		// * "asm volatile": it will put the RDTSC in the place you expect.  The
+		// * CPU can and will speculatively execute that RDTSC, though, so the
+		// * results can be non-monotonic if compared on different CPUs.
+		// */
+		// static __always_inline unsigned long long rdtsc(void)
+		// {
 		// 	DECLARE_ARGS(val, low, high);
+
 		// 	asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
+
 		// 	return EAX_EDX_VAL(val, low, high);
 		// }
 
 		// /**
-		//  * rdtsc_ordered() - read the current TSC in program order
-		//  *
-		//  * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
-		//  * It is ordered like a load to a global in-memory counter.  It should
-		//  * be impossible to observe non-monotonic rdtsc_unordered() behavior
-		//  * across multiple CPUs as long as the TSC is synced.
-		//  */
-		// static __always_inline unsigned long long
-		// rdtsc_ordered(void) {
+		// * rdtsc_ordered() - read the current TSC in program order
+		// *
+		// * rdtsc_ordered() returns the result of RDTSC as a 64-bit integer.
+		// * It is ordered like a load to a global in-memory counter.  It should
+		// * be impossible to observe non-monotonic rdtsc_unordered() behavior
+		// * across multiple CPUs as long as the TSC is synced.
+		// */
+		// static __always_inline unsigned long long rdtsc_ordered(void)
+		// {
 		// 	DECLARE_ARGS(val, low, high);
+
 		// 	/*
 		// 	* The RDTSC instruction is not ordered relative to memory
 		// 	* access.  The Intel SDM and the AMD APM are both vague on this
@@ -219,31 +225,32 @@
 		// 	return EAX_EDX_VAL(val, low, high);
 		// }
 
-		// static inline unsigned long long
-		// native_read_pmc(int counter) {
+		// static inline unsigned long long native_read_pmc(int counter)
+		// {
 		// 	DECLARE_ARGS(val, low, high);
+
 		// 	asm volatile("rdpmc" : EAX_EDX_RET(val, low, high) : "c" (counter));
 		// 	if (tracepoint_enabled(rdpmc))
 		// 		do_trace_rdpmc(counter, EAX_EDX_VAL(val, low, high), 0);
 		// 	return EAX_EDX_VAL(val, low, high);
 		// }
 
-	// #	ifdef CONFIG_PARAVIRT_XXL
-	// #		include <asm/paravirt.h>
-	// #	else
-	// #		include <linux/lib/errno.h>
-	// 		/*
-	// 		 * Access to machine-specific registers (available on 586 and better only)
-	// 		 * Note: the rd* operations modify the parameters directly (without using
-	// 		 * pointer indirection), this allows gcc to optimize better
-	// 		 */
+		// #ifdef CONFIG_PARAVIRT_XXL
+		// #include <asm/paravirt.h>
+		// #else
+		#include <linux/lib/errno.h>
+		// /*
+		// * Access to machine-specific registers (available on 586 and better only)
+		// * Note: the rd* operations modify the parameters directly (without using
+		// * pointer indirection), this allows gcc to optimize better
+		// */
 
-	// #		define rdmsr(msr, low, high)					\
-	// 				do {									\
-	// 					u64 __val = native_read_msr((msr));	\
-	// 					(void)((low) = (u32)__val);			\
-	// 					(void)((high) = (u32)(__val >> 32));\
-	// 				} while (0)
+		// #define rdmsr(msr, low, high)					\
+		// do {								\
+		// 	u64 __val = native_read_msr((msr));			\
+		// 	(void)((low) = (u32)__val);				\
+		// 	(void)((high) = (u32)(__val >> 32));			\
+		// } while (0)
 
 			static inline void
 			wrmsr(unsigned int msr, u32 low, u32 high) {
@@ -263,46 +270,41 @@
 						(u32)(val >> 32));
 			}
 
-	// 		/* wrmsr with exception handling */
-	// 		static inline int
-	// 		wrmsr_safe(unsigned int msr, u32 low, u32 high) {
-	// 			return native_write_msr_safe(msr, low, high);
-	// 		}
+		// 	/* rdmsr with exception handling */
+		// 	#define rdmsr_safe(msr, low, high)				\
+		// 	({								\
+		// 		int __err;						\
+		// 		u64 __val = native_read_msr_safe((msr), &__err);	\
+		// 		(*low) = (u32)__val;					\
+		// 		(*high) = (u32)(__val >> 32);				\
+		// 		__err;							\
+		// 	})
 
-	// 	/* rdmsr with exception handling */
-	// #		define rdmsr_safe(msr, low, high) ({							\
-	// 					int __err;											\
-	// 					u64 __val = native_read_msr_safe((msr), &__err);	\
-	// 					(*low) = (u32)__val;								\
-	// 					(*high) = (u32)(__val >> 32);						\
-	// 					__err;												\
-	// 				})
+		// 	static inline int rdmsrl_safe(unsigned int msr, unsigned long long *p)
+		// 	{
+		// 		int err;
 
-	// 		static inline int
-	// 		rdmsrl_safe(unsigned int msr, unsigned long long *p) {
-	// 			int err;
-	// 			*p = native_read_msr_safe(msr, &err);
-	// 			return err;
-	// 		}
+		// 		*p = native_read_msr_safe(msr, &err);
+		// 		return err;
+		// 	}
 
-	// #		define rdpmc(counter, low, high)					\
-	// 				do {										\
-	// 					u64 _l = native_read_pmc((counter));	\
-	// 					(low)  = (u32)_l;						\
-	// 					(high) = (u32)(_l >> 32);				\
-	// 				} while (0)
+		// 	#define rdpmc(counter, low, high)			\
+		// 	do {							\
+		// 		u64 _l = native_read_pmc((counter));		\
+		// 		(low)  = (u32)_l;				\
+		// 		(high) = (u32)(_l >> 32);			\
+		// 	} while (0)
 
-	// #		define rdpmcl(counter, val)					\
-	// 				((val) = native_read_pmc(counter))
+		// 	#define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
 
-	// #	endif	/* !CONFIG_PARAVIRT_XXL */
+		// #endif	/* !CONFIG_PARAVIRT_XXL */
 
 		// /*
 		// * 64-bit version of wrmsr_safe():
 		// */
-		// static inline int
-		// wrmsrl_safe(u32 msr, u64 val) {
-		// 	return wrmsr_safe(msr, (u32)val, (u32)(val >> 32));
+		// static inline int wrmsrl_safe(u32 msr, u64 val)
+		// {
+		// 	return wrmsr_safe(msr, (u32)val,  (u32)(val >> 32));
 		// }
 
 		// struct msr *msrs_alloc(void);
@@ -310,58 +312,18 @@
 		// int msr_set_bit(u32 msr, u8 bit);
 		// int msr_clear_bit(u32 msr, u8 bit);
 
-		// static inline int
-		// rdmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h) {
-		// 	rdmsr(msr_no, *l, *h);
-		// 	return 0;
-		// }
-		// static inline int
-		// wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h) {
-		// 	wrmsr(msr_no, l, h);
-		// 	return 0;
-		// }
-		// static inline int
-		// rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q) {
-		// 	rdmsrl(msr_no, *q);
-		// 	return 0;
-		// }
-		// static inline int
-		// wrmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 q) {
-		// 	wrmsrl(msr_no, q);
-		// 	return 0;
-		// }
-		// static inline void
-		// rdmsr_on_cpus(const struct cpumask *m, u32 msr_no, struct msr *msrs) {
-		// 	rdmsr_on_cpu(0, msr_no, &(msrs[0].l), &(msrs[0].h));
-		// }
-		// static inline void
-		// wrmsr_on_cpus(const struct cpumask *m, u32 msr_no, struct msr *msrs) {
-		// 	wrmsr_on_cpu(0, msr_no, msrs[0].l, msrs[0].h);
-		// }
-		// static inline int
-		// rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h) {
-		// 	return rdmsr_safe(msr_no, l, h);
-		// }
-		// static inline int
-		// wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h) {
-		// 	return wrmsr_safe(msr_no, l, h);
-		// }
-		// static inline int
-		// rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q) {
-		// 	return rdmsrl_safe(msr_no, q);
-		// }
-		// static inline int
-		// wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q) {
-		// 	return wrmsrl_safe(msr_no, q);
-		// }
-		// static inline int
-		// rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]) {
-		// 	return rdmsr_safe_regs(regs);
-		// }
-		// static inline int
-		// wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]) {
-		// 	return wrmsr_safe_regs(regs);
-		// }
+		// int rdmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
+		// int wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
+		// int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
+		// int wrmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
+		// void rdmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
+		// void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
+		// int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
+		// int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
+		// int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
+		// int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
+		// int rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
+		// int wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
 
 	#endif /* __ASSEMBLY__ */
 

@@ -192,7 +192,7 @@ static void __vma_link_file(vma_s *vma)
 	}
 }
 
-// static void vma_link(struct mm_struct *mm, vma_s *vma,
+// static void vma_link(mm_s *mm, vma_s *vma,
 // 			vma_s *prev, struct rb_node **rb_link,
 // 			struct rb_node *rb_parent)
 static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
@@ -205,7 +205,7 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 	}
 
 	// static void
-	// __vma_link(struct mm_struct *mm, vma_s *vma,
+	// __vma_link(mm_s *mm, vma_s *vma,
 	// 	vma_s *prev, struct rb_node **rb_link,
 	// 	struct rb_node *rb_parent)
 	// {
@@ -1375,7 +1375,7 @@ int __do_munmap(mm_s *mm, unsigned long start,
 int __vm_munmap(unsigned long start, size_t len, bool downgrade)
 {
 	int ret;
-	struct mm_struct *mm = current->mm;
+	mm_s *mm = current->mm;
 	// LIST_HEAD(uf);
 
 	// if (mmap_write_lock_killable(mm))

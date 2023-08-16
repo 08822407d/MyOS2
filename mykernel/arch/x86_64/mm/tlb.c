@@ -61,7 +61,7 @@ void switch_mm(mm_s *prev, mm_s *next, task_s*tsk)
 
 void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 {
-	// struct mm_struct *real_prev = this_cpu_read(cpu_tlbstate.loaded_mm);
+	// mm_s *real_prev = this_cpu_read(cpu_tlbstate.loaded_mm);
 	// u16 prev_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
 	// unsigned long new_lam = mm_lam_cr3_mask(next);
 	// bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);

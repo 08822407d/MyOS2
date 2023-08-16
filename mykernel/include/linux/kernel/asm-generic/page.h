@@ -70,7 +70,7 @@
 	// #	define ARCH_PFN_OFFSET	(PAGE_OFFSET >> PAGE_SHIFT)
 	// #endif
 
-	// #ifndef __ASSEMBLY__
+	#ifndef __ASSEMBLY__
 
 	// #	define __va(x)					((void *)((unsigned long) (x)))
 	// #	define __pa(x)					((unsigned long) (x))
@@ -86,11 +86,12 @@
 	// #	endif
 
 	// #	define pfn_valid(pfn)			((pfn) >= ARCH_PFN_OFFSET && ((pfn) - ARCH_PFN_OFFSET) < max_mapnr)
+	#	define pfn_valid(pfn)		((pfn) < max_pfn)
 
 	// #	define	virt_addr_valid(kaddr)	(((void *)(kaddr) >= (void *)PAGE_OFFSET) && \
 	// 										((void *)(kaddr) < (void *)memory_end))
 
-	// #endif /* __ASSEMBLY__ */
+	#endif /* __ASSEMBLY__ */
 
 	// #include <asm-generic/memory_model.h>
 	// #include <asm-generic/getorder.h>

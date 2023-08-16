@@ -1,8 +1,11 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_PGALLOC_H
 #define _ASM_X86_PGALLOC_H
 
 	// #include <linux/threads.h>
+	#include <linux/mm/mm.h>
 	#include <linux/mm/pagemap.h>
 
 	#define __HAVE_ARCH_PTE_ALLOC_ONE
@@ -34,27 +37,27 @@
 	// extern gfp_t __userpte_alloc_gfp;
 
 	// #ifdef CONFIG_PAGE_TABLE_ISOLATION
-	/*
-	 * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
-	 * both 8k in size and 8k-aligned.  That lets us just flip bit 12
-	 * in a pointer to swap between the two 4k halves.
-	 */
+	// /*
+	// * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
+	// * both 8k in size and 8k-aligned.  That lets us just flip bit 12
+	// * in a pointer to swap between the two 4k halves.
+	// */
 	// #define PGD_ALLOCATION_ORDER 1
 	// #else
 	#define PGD_ALLOCATION_ORDER 0
 	// #endif
 
 	/*
-	 * Allocate and free page tables.
-	 */
+	* Allocate and free page tables.
+	*/
 	extern pgd_t *pgd_alloc(mm_s *);
 	extern void pgd_free(mm_s *mm, pgd_t *pgd);
 
 	// extern pgtable_t pte_alloc_one(mm_s *);
 
-	// extern void ___pte_free_tlb(struct mmu_gather *tlb, page_s *pte);
+	// extern void ___pte_free_tlb(struct mmu_gather *tlb, struct page *pte);
 
-	// static inline void __pte_free_tlb(struct mmu_gather *tlb, page_s *pte,
+	// static inline void __pte_free_tlb(struct mmu_gather *tlb, struct page *pte,
 	// 				unsigned long address)
 	// {
 	// 	___pte_free_tlb(tlb, pte);
@@ -74,8 +77,13 @@
 	// 	set_pmd_safe(pmd, __pmd(__pa(pte) | _PAGE_TABLE));
 	// }
 
-	// static inline void arch_pmd_populate(mm_s *mm, pmd_t *pmd, pte_t *pte) {
-	// 	set_pmd(pmd, arch_make_pmd(_PAGE_TABLE | __pa(pte)));
+	// static inline void pmd_populate(mm_s *mm, pmd_t *pmd,
+	// 				struct page *pte)
+	// {
+	// 	unsigned long pfn = page_to_pfn(pte);
+
+	// 	paravirt_alloc_pte(mm, pfn);
+	// 	set_pmd(pmd, __pmd(((pteval_t)pfn << PAGE_SHIFT) | _PAGE_TABLE));
 	// }
 
 	// #if CONFIG_PGTABLE_LEVELS > 2
@@ -87,8 +95,13 @@
 	// 	___pmd_free_tlb(tlb, pmd);
 	// }
 
-	// static inline void arch_pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd) {
-	// 	set_pud(pud, arch_make_pud(_PAGE_TABLE | __pa(pmd)));
+	// #ifdef CONFIG_X86_PAE
+	// extern void pud_populate(mm_s *mm, pud_t *pudp, pmd_t *pmd);
+	// #else	/* !CONFIG_X86_PAE */
+	// static inline void pud_populate(mm_s *mm, pud_t *pud, pmd_t *pmd)
+	// {
+	// 	paravirt_alloc_pmd(mm, __pa(pmd) >> PAGE_SHIFT);
+	// 	set_pud(pud, __pud(_PAGE_TABLE | __pa(pmd)));
 	// }
 
 	// static inline void pud_populate_safe(mm_s *mm, pud_t *pud, pmd_t *pmd)
@@ -99,9 +112,10 @@
 	// #endif	/* CONFIG_X86_PAE */
 
 	// #if CONFIG_PGTABLE_LEVELS > 3
-	// static inline void arch_p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud) {
-	// 	// paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
-	// 	set_p4d(p4d, arch_make_p4d(_PAGE_TABLE | __pa(pud)));
+	// static inline void p4d_populate(mm_s *mm, p4d_t *p4d, pud_t *pud)
+	// {
+	// 	paravirt_alloc_pud(mm, __pa(pud) >> PAGE_SHIFT);
+	// 	set_p4d(p4d, __p4d(_PAGE_TABLE | __pa(pud)));
 	// }
 
 	// static inline void p4d_populate_safe(mm_s *mm, p4d_t *p4d, pud_t *pud)

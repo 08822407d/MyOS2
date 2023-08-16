@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_MMU_CONTEXT_H
 #define _ASM_X86_MMU_CONTEXT_H
@@ -12,15 +14,9 @@
 	#include <asm/tlbflush.h>
 	// #include <asm/paravirt.h>
 	// #include <asm/debugreg.h>
+	// #include <asm/gsseg.h>
 
 	// extern atomic64_t last_mm_ctx_id;
-
-	// #ifndef CONFIG_PARAVIRT_XXL
-	// static inline void paravirt_activate_mm(struct mm_struct *prev,
-	// 					struct mm_struct *next)
-	// {
-	// }
-	// #endif	/* !CONFIG_PARAVIRT_XXL */
 
 	// #ifdef CONFIG_PERF_EVENTS
 	// DECLARE_STATIC_KEY_FALSE(rdpmc_never_available_key);
@@ -40,7 +36,7 @@
 	// 	* call gates.  On native, we could merge the ldt_struct and LDT
 	// 	* allocations, but it's not worth trying to optimize.
 	// 	*/
-	// 	desc_s	*entries;
+	// 	struct desc_struct	*entries;
 	// 	unsigned int		nr_entries;
 
 	// 	/*
@@ -58,41 +54,86 @@
 	// /*
 	// * Used for LDT copy/destruction.
 	// */
-	// static inline void init_new_context_ldt(struct mm_struct *mm)
+	// static inline void init_new_context_ldt(mm_s *mm)
 	// {
 	// 	mm->context.ldt = NULL;
 	// 	init_rwsem(&mm->context.ldt_usr_sem);
 	// }
-	// int ldt_dup_context(struct mm_struct *oldmm, struct mm_struct *mm);
-	// void destroy_context_ldt(struct mm_struct *mm);
-	// void ldt_arch_exit_mmap(struct mm_struct *mm);
+	// int ldt_dup_context(mm_s *oldmm, mm_s *mm);
+	// void destroy_context_ldt(mm_s *mm);
+	// void ldt_arch_exit_mmap(mm_s *mm);
 	// #else	/* CONFIG_MODIFY_LDT_SYSCALL */
-	// static inline void init_new_context_ldt(struct mm_struct *mm) { }
-	// static inline int ldt_dup_context(struct mm_struct *oldmm,
-	// 				struct mm_struct *mm)
+	// static inline void init_new_context_ldt(mm_s *mm) { }
+	// static inline int ldt_dup_context(mm_s *oldmm,
+	// 				mm_s *mm)
 	// {
 	// 	return 0;
 	// }
-	// static inline void destroy_context_ldt(struct mm_struct *mm) { }
-	// static inline void ldt_arch_exit_mmap(struct mm_struct *mm) { }
+	// static inline void destroy_context_ldt(mm_s *mm) { }
+	// static inline void ldt_arch_exit_mmap(mm_s *mm) { }
 	// #endif
 
 	// #ifdef CONFIG_MODIFY_LDT_SYSCALL
-	// extern void load_mm_ldt(struct mm_struct *mm);
-	// extern void switch_ldt(struct mm_struct *prev, struct mm_struct *next);
+	// extern void load_mm_ldt(mm_s *mm);
+	// extern void switch_ldt(mm_s *prev, mm_s *next);
 	// #else
-	// static inline void load_mm_ldt(struct mm_struct *mm)
+	// static inline void load_mm_ldt(mm_s *mm)
 	// {
 	// 	clear_LDT();
 	// }
-	// static inline void switch_ldt(struct mm_struct *prev, struct mm_struct *next)
+	// static inline void switch_ldt(mm_s *prev, mm_s *next)
 	// {
 	// 	DEBUG_LOCKS_WARN_ON(preemptible());
 	// }
 	// #endif
 
+	// #ifdef CONFIG_ADDRESS_MASKING
+	// static inline unsigned long mm_lam_cr3_mask(mm_s *mm)
+	// {
+	// 	return mm->context.lam_cr3_mask;
+	// }
+
+	// static inline void dup_lam(mm_s *oldmm, mm_s *mm)
+	// {
+	// 	mm->context.lam_cr3_mask = oldmm->context.lam_cr3_mask;
+	// 	mm->context.untag_mask = oldmm->context.untag_mask;
+	// }
+
+	// #define mm_untag_mask mm_untag_mask
+	// static inline unsigned long mm_untag_mask(mm_s *mm)
+	// {
+	// 	return mm->context.untag_mask;
+	// }
+
+	// static inline void mm_reset_untag_mask(mm_s *mm)
+	// {
+	// 	mm->context.untag_mask = -1UL;
+	// }
+
+	// #define arch_pgtable_dma_compat arch_pgtable_dma_compat
+	// static inline bool arch_pgtable_dma_compat(mm_s *mm)
+	// {
+	// 	return !mm_lam_cr3_mask(mm) ||
+	// 		test_bit(MM_CONTEXT_FORCE_TAGGED_SVA, &mm->context.flags);
+	// }
+	// #else
+
+	// static inline unsigned long mm_lam_cr3_mask(mm_s *mm)
+	// {
+	// 	return 0;
+	// }
+
+	// static inline void dup_lam(mm_s *oldmm, mm_s *mm)
+	// {
+	// }
+
+	// static inline void mm_reset_untag_mask(mm_s *mm)
+	// {
+	// }
+	// #endif
+
 	// #define enter_lazy_tlb enter_lazy_tlb
-	// extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
+	// extern void enter_lazy_tlb(mm_s *mm, struct task_struct *tsk);
 
 	// /*
 	// * Init a new mm.  Used on mm copies, like at fork()
@@ -100,7 +141,7 @@
 	// */
 	// #define init_new_context init_new_context
 	// static inline int init_new_context(struct task_struct *tsk,
-	// 				struct mm_struct *mm)
+	// 				mm_s *mm)
 	// {
 	// 	mutex_init(&mm->context.lock);
 
@@ -115,17 +156,18 @@
 	// 		mm->context.execute_only_pkey = -1;
 	// 	}
 	// #endif
+	// 	mm_reset_untag_mask(mm);
 	// 	init_new_context_ldt(mm);
 	// 	return 0;
 	// }
 
 	// #define destroy_context destroy_context
-	// static inline void destroy_context(struct mm_struct *mm)
+	// static inline void destroy_context(mm_s *mm)
 	// {
 	// 	destroy_context_ldt(mm);
 	// }
 
-	extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+	extern void switch_mm(mm_s *prev, mm_s *next,
 				struct task_struct *tsk);
 
 	extern void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk);
@@ -136,26 +178,18 @@
 	// 	paravirt_activate_mm((prev), (next));	\
 	// 	switch_mm((prev), (next), NULL);	\
 	// } while (0);
-	#define activate_mm(prev, next)						\
-		    	do {									\
-		    		switch_mm((prev), (next), NULL);	\
-		    	} while (0);
+	#define activate_mm(prev, next) do {			\
+				switch_mm((prev), (next), NULL);	\
+			} while (0);
 
-	// #ifdef CONFIG_X86_32
-	// #define deactivate_mm(tsk, mm)			\
-	// do {						\
-	// 	lazy_load_gs(0);			\
-	// } while (0)
-	// #else
 	// #define deactivate_mm(tsk, mm)			\
 	// do {						\
 	// 	load_gs_index(0);			\
 	// 	loadsegment(fs, 0);			\
 	// } while (0)
-	// #endif
 
-	// static inline void arch_dup_pkeys(struct mm_struct *oldmm,
-	// 				struct mm_struct *mm)
+	// static inline void arch_dup_pkeys(mm_s *oldmm,
+	// 				mm_s *mm)
 	// {
 	// #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
 	// 	if (!cpu_feature_enabled(X86_FEATURE_OSPKE))
@@ -167,26 +201,27 @@
 	// #endif
 	// }
 
-	// static inline int arch_dup_mmap(struct mm_struct *oldmm, struct mm_struct *mm)
+	// static inline int arch_dup_mmap(mm_s *oldmm, mm_s *mm)
 	// {
 	// 	arch_dup_pkeys(oldmm, mm);
-	// 	paravirt_arch_dup_mmap(oldmm, mm);
+	// 	paravirt_enter_mmap(mm);
+	// 	dup_lam(oldmm, mm);
 	// 	return ldt_dup_context(oldmm, mm);
 	// }
 
-	// static inline void arch_exit_mmap(struct mm_struct *mm)
+	// static inline void arch_exit_mmap(mm_s *mm)
 	// {
 	// 	paravirt_arch_exit_mmap(mm);
 	// 	ldt_arch_exit_mmap(mm);
 	// }
 
-	// static inline bool is_64bit_mm(struct mm_struct *mm)
+	// static inline bool is_64bit_mm(mm_s *mm)
 	// {
 	// 	return	!IS_ENABLED(CONFIG_IA32_EMULATION) ||
-	// 		!(mm->context.flags & MM_CONTEXT_UPROBE_IA32);
+	// 		!test_bit(MM_CONTEXT_UPROBE_IA32, &mm->context.flags);
 	// }
 
-	// static inline void arch_unmap(struct mm_struct *mm, unsigned long start,
+	// static inline void arch_unmap(mm_s *mm, unsigned long start,
 	// 				unsigned long end)
 	// {
 	// }

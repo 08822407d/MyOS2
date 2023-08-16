@@ -754,7 +754,7 @@
 
 	// void __folio_lock(struct folio *folio);
 	// int __folio_lock_killable(struct folio *folio);
-	// bool __folio_lock_or_retry(struct folio *folio, struct mm_struct *mm,
+	// bool __folio_lock_or_retry(struct folio *folio, mm_s *mm,
 	// 				unsigned int flags);
 	// void unlock_page(struct page *page);
 	// void folio_unlock(struct folio *folio);
@@ -817,7 +817,7 @@
 	// * Return value and mmap_lock implications depend on flags; see
 	// * __folio_lock_or_retry().
 	// */
-	// static inline bool lock_page_or_retry(struct page *page, struct mm_struct *mm,
+	// static inline bool lock_page_or_retry(struct page *page, mm_s *mm,
 	// 					unsigned int flags)
 	// {
 	// 	struct folio *folio;

@@ -244,7 +244,11 @@
 		"segment.h": "c",
 		"desc.h": "c",
 		"trapnr.h": "c",
-		"percpu.h": "c"
+		"percpu.h": "c",
+		"tlbflush.h": "c",
+		"page_64_types.h": "c",
+		"pgalloc.h": "c",
+		"percpu-defs.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

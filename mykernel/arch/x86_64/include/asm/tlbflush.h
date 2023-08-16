@@ -86,13 +86,13 @@
 	// 	* when CR3 and loaded_mm would otherwise be inconsistent.  This
 	// 	* is for nmi_uaccess_okay()'s benefit.
 	// 	*/
-	// 	struct mm_struct *loaded_mm;
+	// 	mm_s *loaded_mm;
 
-	// #define LOADED_MM_SWITCHING ((struct mm_struct *)1UL)
+	// #define LOADED_MM_SWITCHING ((mm_s *)1UL)
 
 	// 	/* Last user mm for optimizing IBPB */
 	// 	union {
-	// 		struct mm_struct	*last_user_mm;
+	// 		mm_s	*last_user_mm;
 	// 		unsigned long		last_user_mm_spec;
 	// 	};
 
@@ -220,7 +220,7 @@
 	// 	*   will be NULL, .end will be TLB_FLUSH_ALL, and .new_tlb_gen
 	// 	*   will be zero.
 	// 	*/
-	// 	struct mm_struct	*mm;
+	// 	mm_s	*mm;
 	// 	unsigned long		start;
 	// 	unsigned long		end;
 	// 	u64			new_tlb_gen;
@@ -249,7 +249,7 @@
 	// 				: PAGE_SHIFT, false)
 
 	// extern void flush_tlb_all(void);
-	// extern void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+	// extern void flush_tlb_mm_range(mm_s *mm, unsigned long start,
 	// 				unsigned long end, unsigned int stride_shift,
 	// 				bool freed_tables);
 	// extern void flush_tlb_kernel_range(unsigned long start, unsigned long end);
@@ -259,7 +259,7 @@
 	// 	flush_tlb_mm_range(vma->vm_mm, a, a + PAGE_SIZE, PAGE_SHIFT, false);
 	// }
 
-	// static inline u64 inc_mm_tlb_gen(struct mm_struct *mm)
+	// static inline u64 inc_mm_tlb_gen(mm_s *mm)
 	// {
 	// 	/*
 	// 	* Bump the generation count.  This also serves as a full barrier
@@ -271,7 +271,7 @@
 	// }
 
 	// static inline void arch_tlbbatch_add_mm(struct arch_tlbflush_unmap_batch *batch,
-	// 					struct mm_struct *mm)
+	// 					mm_s *mm)
 	// {
 	// 	inc_mm_tlb_gen(mm);
 	// 	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
@@ -384,7 +384,7 @@
 	// 	return lam << X86_CR3_LAM_U57_BIT;
 	// }
 
-	// static inline void set_tlbstate_lam_mode(struct mm_struct *mm)
+	// static inline void set_tlbstate_lam_mode(mm_s *mm)
 	// {
 	// 	this_cpu_write(cpu_tlbstate.lam,
 	// 			mm->context.lam_cr3_mask >> X86_CR3_LAM_U57_BIT);
@@ -398,7 +398,7 @@
 	// 	return 0;
 	// }
 
-	// static inline void set_tlbstate_lam_mode(struct mm_struct *mm)
+	// static inline void set_tlbstate_lam_mode(mm_s *mm)
 	// {
 	// }
 	// #endif

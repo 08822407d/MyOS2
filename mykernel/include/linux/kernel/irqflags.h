@@ -170,8 +170,8 @@
 	// /*
 	// * Wrap the arch provided IRQ routines to provide appropriate checks.
 	// */
-	// #define raw_local_irq_disable()		arch_local_irq_disable()
-	// #define raw_local_irq_enable()		arch_local_irq_enable()
+	// #define raw_local_irq_disable()		arch_irq_disable()
+	// #define raw_local_irq_enable()		arch_irq_enable()
 	// #define raw_local_irq_save(flags)			\
 	// 	do {						\
 	// 		typecheck(unsigned long, flags);	\
@@ -186,7 +186,7 @@
 	// #define raw_local_save_flags(flags)			\
 	// 	do {						\
 	// 		typecheck(unsigned long, flags);	\
-	// 		flags = arch_local_save_flags();	\
+	// 		flags = arch_save_fl();	\
 	// 	} while (0)
 	// #define raw_irqs_disabled_flags(flags)			\
 	// 	({						\
@@ -240,9 +240,9 @@
 	// #else /* !CONFIG_TRACE_IRQFLAGS */
 
 	// #define local_irq_enable()	do { raw_local_irq_enable(); } while (0)
-	#define local_irq_enable()			do { arch_local_irq_enable(); } while (0)
+	#define local_irq_enable()			do { arch_irq_enable(); } while (0)
 	// #define local_irq_disable()	do { raw_local_irq_disable(); } while (0)
-	#define local_irq_disable()			do { arch_local_irq_disable(); } while (0)
+	#define local_irq_disable()			do { arch_irq_disable(); } while (0)
 	// #define local_irq_save(flags)	do { raw_local_irq_save(flags); } while (0)
 	#define local_irq_save(flags)		do { flags = arch_local_irq_save(); } while (0)
 	// #define local_irq_restore(flags) do { raw_local_irq_restore(flags); } while (0)
@@ -261,7 +261,7 @@
 	// #ifdef CONFIG_TRACE_IRQFLAGS_SUPPORT
 	#define irqs_disabled() ({						\
 				unsigned long _flags;				\
-				arch_local_save_flags(_flags);		\
+				arch_save_fl(_flags);		\
 				arch_irqs_disabled_flags(_flags);	\
 			})
 	// #else /* !CONFIG_TRACE_IRQFLAGS_SUPPORT */
