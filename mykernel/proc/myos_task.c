@@ -6,7 +6,7 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/fdtable.h>
 
-#include <linux/kernel/asm-generic/sections.h>
+#include <asm-generic/sections.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>

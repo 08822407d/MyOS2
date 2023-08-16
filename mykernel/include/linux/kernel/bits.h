@@ -3,7 +3,7 @@
 #define __LINUX_BITS_H
 
 	#include <linux/kernel/const.h>
-	#include <asm/bitsperlong.h>
+	#include <asm/uapi_bitsperlong.h>
 
 	#define BIT_ULL(nr)			(ULL(1) << (nr))
 	#define BIT_MASK(nr)		(UL(1) << ((nr) % BITS_PER_LONG))

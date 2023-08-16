@@ -7,7 +7,7 @@
 
 	#define __HAVE_ARCH_PTE_ALLOC_ONE
 	#define __HAVE_ARCH_PGD_FREE
-	#include <linux/kernel/asm-generic/pgalloc.h>
+	#include <asm-generic/pgalloc.h>
 
 	// static inline int  __paravirt_pgd_alloc(mm_s *mm) { return 0; }
 

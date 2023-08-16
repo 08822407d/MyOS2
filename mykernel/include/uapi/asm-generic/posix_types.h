@@ -3,7 +3,7 @@
 
 	#define __ASM_GENERIC_POSIX_TYPES_H
 
-	#include <asm/bitsperlong.h>
+	#include <asm/uapi_bitsperlong.h>
 	/*
 	* This file is generally used by user-level software, so you need to
 	* be a little careful about namespace pollution etc.

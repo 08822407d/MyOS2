@@ -9,7 +9,7 @@
 	 */
 
 	// #include <asm/apicdef.h>
-	// #include <asm/irq_vectors.h>
+	#include <asm/irq_vectors.h>
 
 
 	#include <linux/kernel/compiler.h>

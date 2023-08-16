@@ -26,7 +26,7 @@
 // #include <asm/smp.h>
 
 
-#include <linux/kernel/asm-generic/param.h>
+#include <asm-generic/param.h>
 
 static void delay_loop(u64 __loops);
 

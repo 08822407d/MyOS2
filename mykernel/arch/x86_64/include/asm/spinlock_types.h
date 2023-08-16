@@ -4,9 +4,9 @@
 
 	#include <linux/kernel/types.h>
 	#ifdef USE_QSPINLOCK
-	#	include <linux/kernel/asm-generic/qspinlock_types.h>
+	#	include <asm-generic/qspinlock_types.h>
 	#else
-	#	include <linux/kernel/asm-generic/tspinlock_types.h>
+	#	include <asm-generic/tspinlock_types.h>
 	#endif
 	// #include <asm-generic/qrwlock_types.h>
 

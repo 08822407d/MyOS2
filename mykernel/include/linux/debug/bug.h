@@ -29,7 +29,7 @@
 	// #endif	/* __CHECKER__ */
 
 	// #ifdef CONFIG_GENERIC_BUG
-	#include <linux/kernel/asm-generic/bug.h>
+	#include <asm-generic/bug.h>
 
 	// static inline int is_warning_bug(const struct bug_entry *bug)
 	// {

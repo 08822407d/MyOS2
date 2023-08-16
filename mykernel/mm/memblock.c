@@ -25,7 +25,7 @@
 #include "internal.h"
 
 
-#include <linux/kernel/asm-generic/bitops.h>
+#include <asm-generic/bitops.h>
 
 
 #define INIT_MEMBLOCK_REGIONS			128

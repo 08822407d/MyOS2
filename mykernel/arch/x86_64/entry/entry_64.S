@@ -36,7 +36,7 @@
 #include <asm/pgtable_types.h>
 // #include <asm/export.h>
 #include <asm/frame.h>
-// #include <asm/trapnr.h>
+#include <asm/trapnr.h>
 // #include <asm/nospec-branch.h>
 #include <asm/fsgsbase.h>
 #include <linux/kernel/err.h>

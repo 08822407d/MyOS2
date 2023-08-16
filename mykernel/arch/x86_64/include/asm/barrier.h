@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_BARRIER_H
 #define _ASM_X86_BARRIER_H
@@ -6,10 +8,10 @@
 	// #include <asm/nops.h>
 
 	/*
-	* Force strict CPU ordering.
-	* And yes, this might be required on UP too when we're talking
-	* to devices.
-	*/
+	 * Force strict CPU ordering.
+	 * And yes, this might be required on UP too when we're talking
+	 * to devices.
+	 */
 
 	#define __mb()		asm volatile("mfence":::"memory")
 	#define __rmb()		asm volatile("lfence":::"memory")
@@ -71,7 +73,7 @@
 	// #define __smp_mb__before_atomic()	do { } while (0)
 	// #define __smp_mb__after_atomic()	do { } while (0)
 
-	#include <linux/kernel/asm-generic/barrier.h>
+	#include <asm-generic/barrier.h>
 
 	// /*
 	// * Make previous memory operations globally visible before

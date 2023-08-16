@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // arch/x86/include/asm/e820/types.h
 
 /* SPDX-License-Identifier: GPL-2.0 */

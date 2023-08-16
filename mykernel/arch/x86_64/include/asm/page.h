@@ -5,7 +5,7 @@
 	#include <linux/kernel/types.h>
 
 
-	#include <linux/kernel/asm-generic/page.h>
+	#include <asm-generic/page.h>
 
 	#ifdef __KERNEL__
 
@@ -76,7 +76,7 @@
 		#endif /* __ASSEMBLY__ */
 
 		// #include <asm-generic/memory_model.h>
-		#include <linux/kernel/asm-generic/getorder.h>
+		#include <asm-generic/getorder.h>
 
 		// #define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
 

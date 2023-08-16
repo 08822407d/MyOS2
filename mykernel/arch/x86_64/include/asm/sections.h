@@ -4,7 +4,7 @@
 
 	// #define arch_is_kernel_initmem_freed	arch_is_kernel_initmem_freed
 
-	#include <linux/kernel/asm-generic/sections.h>
+	#include <asm-generic/sections.h>
 	// #include <asm/extable.h>
 
 	extern char __brk_base[], __brk_limit[];

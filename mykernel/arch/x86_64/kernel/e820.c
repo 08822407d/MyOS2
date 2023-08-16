@@ -67,12 +67,12 @@ extern efi_machine_conf_s	*machine_info;
 e820_table_s e820_table	__initdata;
 
 // static e820_table_s e820_table_init		__initdata;
-// static struct e820_table e820_table_kexec_init		__initdata;
-// static struct e820_table e820_table_firmware_init	__initdata;
+// static e820_table_s e820_table_kexec_init		__initdata;
+// static e820_table_s e820_table_firmware_init	__initdata;
 
-// struct e820_table *e820_table __refdata			= &e820_table_init;
-// struct e820_table *e820_table_kexec __refdata		= &e820_table_kexec_init;
-// struct e820_table *e820_table_firmware __refdata	= &e820_table_firmware_init;
+// e820_table_s *e820_table __refdata			= &e820_table_init;
+// e820_table_s *e820_table_kexec __refdata		= &e820_table_kexec_init;
+// e820_table_s *e820_table_firmware __refdata	= &e820_table_firmware_init;
 
 
 #define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT

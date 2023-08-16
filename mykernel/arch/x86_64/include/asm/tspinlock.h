@@ -7,7 +7,7 @@
 	// #include <asm/paravirt.h>
 	#include <asm/rmwcc.h>
 
-	#include <linux/kernel/asm-generic/tspinlock_types.h>
+	#include <asm-generic/tspinlock_types.h>
 	#include <linux/lib/string.h>
 
 	/* Function prototypes */

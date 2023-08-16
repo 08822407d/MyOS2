@@ -26,7 +26,7 @@
 #include <linux/fs/fat.h>
 
 
-#include <linux/kernel/asm-generic/bitops.h>
+#include <asm-generic/bitops.h>
 #include <linux/kernel/slab.h>
 #include <uapi/linux/magic.h>
 

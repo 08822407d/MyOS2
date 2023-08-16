@@ -10,7 +10,7 @@
 #ifndef __ASM_GENERIC_QSPINLOCK_H
 #define __ASM_GENERIC_QSPINLOCK_H
 
-	#include <linux/kernel/asm-generic/qspinlock_types.h>
+	#include <asm-generic/qspinlock_types.h>
 	#include <linux/kernel/atomic.h>
 
 	#ifndef queued_spin_is_locked

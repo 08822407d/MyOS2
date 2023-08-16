@@ -7,6 +7,7 @@
                 "${workspaceFolder}/mykernel/arch",
                 "${workspaceFolder}/mykernel/arch/x86_64/include",
                 "${workspaceFolder}/mykernel/include",
+                "${workspaceFolder}/mykernel/include/linux/kernel",
                 "${workspaceFolder}/myloader"
             ],
             "defines": [],

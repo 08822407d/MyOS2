@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_TRAPS_H
 #define _ASM_X86_TRAPS_H
@@ -6,7 +8,7 @@
 	// #include <linux/kprobes.h>
 
 	// #include <asm/debugreg.h>
-	// #include <asm/idtentry.h>
+	#include <asm/idtentry.h>
 	// #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
 	#include <asm/trap_pf.h>
 

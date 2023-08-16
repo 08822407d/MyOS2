@@ -472,7 +472,7 @@ static void generic_identify(cpuinfo_x86_s *c)
 /*
  * This does the hard work of actually picking apart the CPU stuff...
  */
-static void identify_cpu(struct cpuinfo_x86 *c)
+static void identify_cpu(cpuinfo_x86_s *c)
 {
 	int i;
 
@@ -596,9 +596,9 @@ void __init identify_boot_cpu(void)
 	// tsx_init();
 }
 
-void identify_secondary_cpu(struct cpuinfo_x86 *c)
+void identify_secondary_cpu(cpuinfo_x86_s *c)
 {
-	// BUG_ON(c == &boot_cpu_data);
+	BUG_ON(c == &boot_cpu_data);
 	identify_cpu(c);
 	// mtrr_ap_init();
 	// validate_apic_and_package_id(c);

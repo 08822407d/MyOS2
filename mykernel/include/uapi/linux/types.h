@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_TYPES_H
 #define _UAPI_LINUX_TYPES_H
 
-	#include <linux/kernel/asm-generic/int-ll64.h>
+	#include <asm-generic/int-ll64.h>
 
 	#ifndef __ASSEMBLY__
 	#	ifndef	__KERNEL__

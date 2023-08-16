@@ -1,8 +1,10 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_DELAY_H
 #define _ASM_X86_DELAY_H
 
-	#include <linux/kernel/asm-generic/delay.h>
+	#include <asm-generic/delay.h>
 	#include <linux/init/init.h>
 
 	void __init use_tsc_delay(void);

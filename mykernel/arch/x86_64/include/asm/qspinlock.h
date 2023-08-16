@@ -4,7 +4,7 @@
 
 	// #include <linux/jump_label.h>
 	#include <asm/cpufeature.h>
-	#include <linux/kernel/asm-generic/qspinlock_types.h>
+	#include <asm-generic/qspinlock_types.h>
 	// #include <asm/paravirt.h>
 	#include <asm/rmwcc.h>
 
@@ -109,6 +109,6 @@
 	// }
 	// #endif /* CONFIG_PARAVIRT */
 
-	#include <linux/kernel/asm-generic/qspinlock.h>
+	#include <asm-generic/qspinlock.h>
 
 #endif /* _ASM_X86_QSPINLOCK_H */

@@ -1,23 +1,52 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_CURRENT_H
 #define _ASM_X86_CURRENT_H
 
 	#include <linux/kernel/compiler.h>
-	#include <asm/percpu.h>
 
 	#ifndef __ASSEMBLY__
+
+	#	include <linux/kernel/cache.h>
+	#	include <asm/percpu.h>
+
 		struct task_struct;
 		typedef struct task_struct task_s;
 
-		// DECLARE_PER_CPU(task_s *, current_task);
+		// struct pcpu_hot {
+		// 	union {
+		// 		struct {
+		// 			struct task_struct	*current_task;
+		// 			int			preempt_count;
+		// 			int			cpu_number;
+		// #ifdef CONFIG_CALL_DEPTH_TRACKING
+		// 			u64			call_depth;
+		// #endif
+		// 			unsigned long		top_of_stack;
+		// 			void			*hardirq_stack_ptr;
+		// 			u16			softirq_pending;
+		// #ifdef CONFIG_X86_64
+		// 			bool			hardirq_stack_inuse;
+		// #else
+		// 			void			*softirq_stack_ptr;
+		// #endif
+		// 		};
+		// 		u8	pad[64];
+		// 	};
+		// };
+		// static_assert(sizeof(struct pcpu_hot) == 64);
 
-		// static __always_inline task_s *get_current(void)
+		// DECLARE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot);
+
+		// static __always_inline struct task_struct *get_current(void)
 		// {
-		// 	return this_cpu_read_stable(current_task);
+		// 	return this_cpu_read_stable(pcpu_hot.current_task);
 		// }
 
-		extern task_s *myos_get_current(void);
 	// #	define current get_current()
+
+		extern task_s *myos_get_current(void);
 	#	define current myos_get_current()
 	#endif /* __ASSEMBLY__ */
 

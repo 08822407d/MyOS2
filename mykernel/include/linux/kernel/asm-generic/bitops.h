@@ -15,7 +15,7 @@
 	#include <linux/kernel/compiler.h>
 	#include <asm/barrier.h>
 
-	#include <linux/kernel/asm-generic/bitops/__ffs.h>
+	#include <asm-generic/bitops/__ffs.h>
 	// #include <asm-generic/bitops/ffz.h>
 	// #include <asm-generic/bitops/fls.h>
 	// #include <asm-generic/bitops/__fls.h>
@@ -26,7 +26,7 @@
 	// #endif
 
 	// #include <asm-generic/bitops/sched.h>
-	#include <linux/kernel/asm-generic/bitops/ffs.h>
+	#include <asm-generic/bitops/ffs.h>
 	// #include <asm-generic/bitops/hweight.h>
 	// #include <asm-generic/bitops/lock.h>
 

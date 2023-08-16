@@ -1,8 +1,10 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_DIV64_H
 #define _ASM_X86_DIV64_H
 
-	# include <linux/kernel/asm-generic/div64.h>
+	#include <asm-generic/div64.h>
 
 	/*
 	 * Will generate an #DE when the result doesn't fit u64, could fix with an
@@ -12,8 +14,10 @@
 		u64 q;
 		asm (	"mulq	%2		\n\t"
 				"divq	%3		\n\t"
-			:	"=a"(q)
-			:	"a"(a), "rm"(mul), "rm"(div)
+			:	"=a" (q)
+			:	"a" (a),
+				"rm" (mul),
+				"rm" (div)
 			:	"rdx");
 		return q;
 	}

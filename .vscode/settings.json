@@ -242,7 +242,9 @@
 		"desc_defs.h": "c",
 		"pgtable_types.h": "c",
 		"segment.h": "c",
-		"desc.h": "c"
+		"desc.h": "c",
+		"trapnr.h": "c",
+		"percpu.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

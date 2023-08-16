@@ -255,6 +255,6 @@
 	#define prevent_tail_call_optimization()	mb()
 
 	// #include <asm/rwonce.h>
-	#include <linux/kernel/asm-generic/rwonce.h>
+	#include <asm-generic/rwonce.h>
 
 #endif /* __LINUX_COMPILER_H */

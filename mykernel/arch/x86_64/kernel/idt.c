@@ -91,6 +91,11 @@ void __init idt_setup_apic_and_irq_gates(void)
 	// static __init void
 	// idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
 	// {
+	// }
+
+	// for_each_clear_bit_from(i, system_vectors, FIRST_SYSTEM_VECTOR) {
+	// 	entry = irq_entries_start + IDT_ALIGN * (i - FIRST_EXTERNAL_VECTOR);
+	// 	set_intr_gate(i, entry);
 		pack_gate(&idt_table[VECTOR_IRQ( 0)], GATE_INTERRUPT, hwint00, KRNL_RPL, 0);
 		pack_gate(&idt_table[VECTOR_IRQ( 1)], GATE_INTERRUPT, hwint01, KRNL_RPL, 0);
 		pack_gate(&idt_table[VECTOR_IRQ( 2)], GATE_INTERRUPT, hwint02, KRNL_RPL, 0);
@@ -119,19 +124,6 @@ void __init idt_setup_apic_and_irq_gates(void)
 	#endif
 	// }
 
-	// for_each_clear_bit_from(i, system_vectors, FIRST_SYSTEM_VECTOR) {
-	// 	entry = irq_entries_start + IDT_ALIGN * (i - FIRST_EXTERNAL_VECTOR);
-	// 	set_intr_gate(i, entry);
-	// }
-	pack_gate(&idt_table[VECTOR_IPI( 0)], GATE_INTERRUPT, lapic_ipi00, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 1)], GATE_INTERRUPT, lapic_ipi01, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 2)], GATE_INTERRUPT, lapic_ipi02, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 3)], GATE_INTERRUPT, lapic_ipi03, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 4)], GATE_INTERRUPT, lapic_ipi04, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 5)], GATE_INTERRUPT, lapic_ipi05, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 6)], GATE_INTERRUPT, lapic_ipi06, KRNL_RPL, 0);
-	pack_gate(&idt_table[VECTOR_IPI( 7)], GATE_INTERRUPT, lapic_ipi07, KRNL_RPL, 0);
-
 // #ifdef CONFIG_X86_LOCAL_APIC
 // 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
 // 		/*
@@ -141,6 +133,14 @@ void __init idt_setup_apic_and_irq_gates(void)
 // 		 */
 // 		entry = spurious_entries_start + IDT_ALIGN * (i - FIRST_SYSTEM_VECTOR);
 // 		set_intr_gate(i, entry);
+	pack_gate(&idt_table[VECTOR_IPI( 0)], GATE_INTERRUPT, lapic_ipi00, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 1)], GATE_INTERRUPT, lapic_ipi01, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 2)], GATE_INTERRUPT, lapic_ipi02, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 3)], GATE_INTERRUPT, lapic_ipi03, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 4)], GATE_INTERRUPT, lapic_ipi04, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 5)], GATE_INTERRUPT, lapic_ipi05, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 6)], GATE_INTERRUPT, lapic_ipi06, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IPI( 7)], GATE_INTERRUPT, lapic_ipi07, KRNL_RPL, 0);
 // 	}
 // #endif
 	// /* Map IDT into CPU entry area and reload it. */

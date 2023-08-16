@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef _ASM_X86_ELF_H
 #define _ASM_X86_ELF_H
@@ -73,12 +75,8 @@
 					(x)->e_machine == EM_X86_64)	\
 			)
 
-	// #if __USER32_DS != __USER_DS
-	// #error "The following code assumes __USER32_DS == __USER_DS"
-	// #endif
-
 	// static inline void elf_common_init(struct thread_struct *t,
-	// 								pt_regs_s *regs, const u16 ds)
+	// 				struct pt_regs *regs, const u16 ds)
 	// {
 	// 	/* ax gets execve's return value. */
 	// 	/*regs->ax = */ regs->bx = regs->cx = regs->dx = 0;
@@ -90,27 +88,27 @@
 	// 	t->ds = t->es = ds;
 	// }
 
-	// #define ELF_PLAT_INIT(_r, load_addr) \
+	// #define ELF_PLAT_INIT(_r, load_addr)			\
 	// 	elf_common_init(&current->thread, _r, 0)
 
-	// #define COMPAT_ELF_PLAT_INIT(regs, load_addr) \
+	// #define	COMPAT_ELF_PLAT_INIT(regs, load_addr)		\
 	// 	elf_common_init(&current->thread, regs, __USER_DS)
 
-	// void compat_start_thread(pt_regs_s *regs, u32 new_ip, u32 new_sp, bool x32);
-	// #define COMPAT_START_THREAD(ex, regs, new_ip, new_sp) \
+	// void compat_start_thread(struct pt_regs *regs, u32 new_ip, u32 new_sp, bool x32);
+	// #define COMPAT_START_THREAD(ex, regs, new_ip, new_sp)	\
 	// 	compat_start_thread(regs, new_ip, new_sp, ex->e_machine == EM_X86_64)
 
 	// void set_personality_ia32(bool);
-	// #define COMPAT_SET_PERSONALITY(ex) \
+	// #define COMPAT_SET_PERSONALITY(ex)			\
 	// 	set_personality_ia32((ex).e_machine == EM_X86_64)
 
-	// #define COMPAT_ELF_PLATFORM ("i686")
+	// #define COMPAT_ELF_PLATFORM			("i686")
 
 	// /*
-	// * regs is pt_regs_s, pr_reg is elf_gregset_t (which is
-	// * now struct_user_regs, they are different). Assumes current is the process
-	// * getting dumped.
-	// */
+	//  * regs is struct pt_regs, pr_reg is elf_gregset_t (which is
+	//  * now struct_user_regs, they are different). Assumes current is the process
+	//  * getting dumped.
+	//  */
 
 	// #define ELF_CORE_COPY_REGS(pr_reg, regs)               \
 	// 	do                                                 \
@@ -156,7 +154,6 @@
 	// /* I'm not sure if we can use '-' here */
 	#define ELF_PLATFORM ("x86_64")
 	// extern void set_personality_64bit(void);
-	// extern unsigned int sysctl_vsyscall32;
 	// extern int force_personality32;
 
 	// #define CORE_DUMP_USE_REGSET
@@ -174,7 +171,7 @@
 	// instruction set this CPU supports.  This could be done in user space,
 	// but it's not easy, and we've already done it here.  */
 
-	// #define ELF_HWCAP (boot_cpu_data.x86_capability[CPUID_1_EDX])
+	// #define ELF_HWCAP		(boot_cpu_data.x86_capability[CPUID_1_EDX])
 
 	// extern u32 elf_hwcap2;
 
@@ -183,7 +180,7 @@
 	// * the application can discover that it can safely use them.
 	// * The bits are defined in uapi/asm/hwcap2.h.
 	// */
-	// #define ELF_HWCAP2 (elf_hwcap2)
+	// #define ELF_HWCAP2		(elf_hwcap2)
 
 	// /* This yields a string that ld.so will use to load implementation
 	// specific libraries for optimization.  This is more specific in
@@ -218,21 +215,19 @@
 	// *   https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
 	// *
 	// */
-	// #define elf_read_implies_exec(ex, executable_stack) \
+	// #define elf_read_implies_exec(ex, executable_stack)	\
 	// 	(mmap_is_ia32() && executable_stack == EXSTACK_DEFAULT)
 
-	// task_s;
+	// struct task_struct;
 
-	// #define ARCH_DLINFO_IA32                                     \
-	// 	do                                                       \
-	// 	{                                                        \
-	// 		if (VDSO_CURRENT_BASE)                               \
-	// 		{                                                    \
-	// 			NEW_AUX_ENT(AT_SYSINFO, VDSO_ENTRY);             \
-	// 			NEW_AUX_ENT(AT_SYSINFO_EHDR, VDSO_CURRENT_BASE); \
-	// 		}                                                    \
-	// 		NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());    \
-	// 	} while (0)
+	// #define	ARCH_DLINFO_IA32						\
+	// do {									\
+	// 	if (VDSO_CURRENT_BASE) {					\
+	// 		NEW_AUX_ENT(AT_SYSINFO,	VDSO_ENTRY);			\
+	// 		NEW_AUX_ENT(AT_SYSINFO_EHDR, VDSO_CURRENT_BASE);	\
+	// 	}								\
+	// 	NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());		\
+	// } while (0)
 
 	// /*
 	// * True on X86_32 or when emulating IA32 on X86_64
@@ -241,7 +236,7 @@
 	// {
 	// 	return IS_ENABLED(CONFIG_X86_32) ||
 	// 		(IS_ENABLED(CONFIG_COMPAT) &&
-	// 			test_thread_flag(TIF_ADDR32));
+	// 		test_thread_flag(TIF_ADDR32));
 	// }
 
 	// extern unsigned long task_size_32bit(void);
@@ -254,63 +249,59 @@
 	// #define __STACK_RND_MASK(is32bit) ((is32bit) ? 0x7ff : 0x3fffff)
 	// #define STACK_RND_MASK __STACK_RND_MASK(mmap_is_ia32())
 
-	// #define ARCH_DLINFO                                                        \
-	// 	do                                                                     \
-	// 	{                                                                      \
-	// 		if (vdso64_enabled)                                                \
-	// 			NEW_AUX_ENT(AT_SYSINFO_EHDR,                                   \
-	// 						(unsigned long __force)current->mm->context.vdso); \
-	// 		NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());                  \
-	// 	} while (0)
+	// #define ARCH_DLINFO							\
+	// do {									\
+	// 	if (vdso64_enabled)						\
+	// 		NEW_AUX_ENT(AT_SYSINFO_EHDR,				\
+	// 				(unsigned long __force)current->mm->context.vdso); \
+	// 	NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());		\
+	// } while (0)
 
 	// /* As a historical oddity, the x32 and x86_64 vDSOs are controlled together. */
-	// #define ARCH_DLINFO_X32                                                    \
-	// 	do                                                                     \
-	// 	{                                                                      \
-	// 		if (vdso64_enabled)                                                \
-	// 			NEW_AUX_ENT(AT_SYSINFO_EHDR,                                   \
-	// 						(unsigned long __force)current->mm->context.vdso); \
-	// 		NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());                  \
-	// 	} while (0)
+	// #define ARCH_DLINFO_X32							\
+	// do {									\
+	// 	if (vdso64_enabled)						\
+	// 		NEW_AUX_ENT(AT_SYSINFO_EHDR,				\
+	// 				(unsigned long __force)current->mm->context.vdso); \
+	// 	NEW_AUX_ENT(AT_MINSIGSTKSZ, get_sigframe_size());		\
+	// } while (0)
 
-	// #define AT_SYSINFO 32
+	// #define AT_SYSINFO		32
 
-	// #define COMPAT_ARCH_DLINFO                      \
-	// 	if (exec->e_machine == EM_X86_64)           \
-	// 		ARCH_DLINFO_X32;                        \
-	// 	else if (IS_ENABLED(CONFIG_IA32_EMULATION)) \
+	// #define COMPAT_ARCH_DLINFO						\
+	// if (exec->e_machine == EM_X86_64)					\
+	// 	ARCH_DLINFO_X32;						\
+	// else if (IS_ENABLED(CONFIG_IA32_EMULATION))				\
 	// 	ARCH_DLINFO_IA32
 
-	// #define COMPAT_ELF_ET_DYN_BASE (TASK_UNMAPPED_BASE + 0x1000000)
+	// #define COMPAT_ELF_ET_DYN_BASE	(TASK_UNMAPPED_BASE + 0x1000000)
 
-	// #define VDSO_CURRENT_BASE ((unsigned long)current->mm->context.vdso)
+	// #define VDSO_CURRENT_BASE	((unsigned long)current->mm->context.vdso)
 
-	// #define VDSO_ENTRY                              \
-	// 	((unsigned long)current->mm->context.vdso + \
+	// #define VDSO_ENTRY							\
+	// 	((unsigned long)current->mm->context.vdso +			\
 	// 	vdso_image_32.sym___kernel_vsyscall)
 
 	// struct linux_binprm;
 
 	// #define ARCH_HAS_SETUP_ADDITIONAL_PAGES 1
 	// extern int arch_setup_additional_pages(struct linux_binprm *bprm,
-	// 									int uses_interp);
+	// 					int uses_interp);
 	// extern int compat_arch_setup_additional_pages(struct linux_binprm *bprm,
-	// 											int uses_interp, bool x32);
-	// #define COMPAT_ARCH_SETUP_ADDITIONAL_PAGES(bprm, ex, interpreter) \
-	// 	compat_arch_setup_additional_pages(bprm, interpreter,         \
-	// 									(ex->e_machine == EM_X86_64))
+	// 						int uses_interp, bool x32);
+	// #define COMPAT_ARCH_SETUP_ADDITIONAL_PAGES(bprm, ex, interpreter)	\
+	// 	compat_arch_setup_additional_pages(bprm, interpreter,		\
+	// 					(ex->e_machine == EM_X86_64))
 
-	// extern bool arch_syscall_is_vdso_sigreturn(pt_regs_s *regs);
+	// extern bool arch_syscall_is_vdso_sigreturn(struct pt_regs *regs);
 
 	// /* Do not change the values. See get_align_mask() */
-	// enum align_flags
-	// {
-	// 	ALIGN_VA_32 = BIT(0),
-	// 	ALIGN_VA_64 = BIT(1),
+	// enum align_flags {
+	// 	ALIGN_VA_32	= BIT(0),
+	// 	ALIGN_VA_64	= BIT(1),
 	// };
 
-	// struct va_alignment
-	// {
+	// struct va_alignment {
 	// 	int flags;
 	// 	unsigned long mask;
 	// 	unsigned long bits;
