@@ -250,19 +250,20 @@
 	// 		? constant_test_bit((nr), (addr)) \
 	// 		: variable_test_bit((nr), (addr)))
 
-	// /**
-	//  * __ffs - find first set bit in word
-	//  * @word: The word to search
-	//  *
-	//  * Undefined if no bit exists, so code should check against 0 first.
-	//  */
-	// static __always_inline unsigned long __ffs(unsigned long word)
-	// {
-	// 	asm("rep; bsf %1,%0"
-	// 		: "=r"(word)
-	// 		: "rm"(word));
-	// 	return word;
-	// }
+	/**
+	 * __ffs - find first set bit in word
+	 * @word: The word to search
+	 *
+	 * Undefined if no bit exists, so code should check against 0 first.
+	 */
+	static __always_inline unsigned long
+	__ffs(unsigned long word) {
+		asm (	"rep				\t\n"
+				"bsf	%1,		%0	\t\n"
+			:	"=r"(word)
+			:	"rm"(word));
+		return word;
+	}
 
 	// /**
 	//  * ffz - find first zero bit in word
@@ -296,36 +297,35 @@
 
 	#ifdef __KERNEL__
 
-		// /**
-		//  * ffs - find first set bit in word
-		//  * @x: the word to search
-		//  *
-		//  * This is defined the same way as the libc and compiler builtin ffs
-		//  * routines, therefore differs in spirit from the other bitops.
-		//  *
-		//  * ffs(value) returns 0 if value is 0 or the position of the first
-		//  * set bit if value is nonzero. The first (least significant) bit
-		//  * is at position 1.
-		//  */
-		// static __always_inline int ffs(int x)
-		// {
-		// 	int r;
+		/**
+		 * ffs - find first set bit in word
+		 * @x: the word to search
+		 *
+		 * This is defined the same way as the libc and compiler builtin ffs
+		 * routines, therefore differs in spirit from the other bitops.
+		 *
+		 * ffs(value) returns 0 if value is 0 or the position of the first
+		 * set bit if value is nonzero. The first (least significant) bit
+		 * is at position 1.
+		 */
+		static __always_inline int ffs(int x) {
+			int r;
 
-		// 	/*
-		// 	* AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
-		// 	* dest reg is undefined if x==0, but their CPU architect says its
-		// 	* value is written to set it to the same as before, except that the
-		// 	* top 32 bits will be cleared.
-		// 	*
-		// 	* We cannot do this on 32 bits because at the very least some
-		// 	* 486 CPUs did not behave this way.
-		// 	*/
-		// 	asm("bsfl %1,%0"
-		// 		: "=r"(r)
-		// 		: "rm"(x), "0"(-1));
+			/*
+			* AMD64 says BSFL won't clobber the dest reg if x==0; Intel64 says the
+			* dest reg is undefined if x==0, but their CPU architect says its
+			* value is written to set it to the same as before, except that the
+			* top 32 bits will be cleared.
+			*
+			* We cannot do this on 32 bits because at the very least some
+			* 486 CPUs did not behave this way.
+			*/
+			asm (	"bsfl	%1,		%0	\t\n"
+				:	"=r"(r)
+				:	"rm"(x), "0"(-1));
 
-		// 	return r + 1;
-		// }
+			return r + 1;
+		}
 
 		/**
 		 * fls - find last set bit in word

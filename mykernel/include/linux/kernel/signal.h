@@ -57,7 +57,7 @@
 	// */
 
 	// #ifndef __HAVE_ARCH_SIG_BITOPS
-	// #include <linux/bitops.h>
+	#include <linux/kernel/bitops.h>
 
 	// /* We don't use <linux/bitops.h> for these because there is no need to
 	// be atomic.  */
