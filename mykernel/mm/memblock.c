@@ -130,7 +130,6 @@ memblock_cap_size(phys_addr_t base, phys_addr_t *size) {
 	return *size = min(*size, PHYS_ADDR_MAX - base);
 }
 
-
 static void __init_memblock
 simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long rgn_idx)
 {
@@ -144,7 +143,6 @@ simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long rgn_idx)
 	 * since we have @type->cnt
 	 */
 }
-
 
 /**
  * simple_mmblk_merge_rgn - merge neighboring compatible regions
@@ -316,8 +314,41 @@ simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
 /*==============================================================================================*
  *									core fuctions for alloc/free								*
  *==============================================================================================*/
+static bool
+should_skip_region(mmblk_type_s *type,
+		mmblk_rgn_s *m, enum mmblk_flags flags)
+{
+	// int m_nid = memblock_get_region_node(m);
+
+	/* we never skip regions when iterating memblock.reserved or physmem */
+	if (type != &memblock.memory)
+		return false;
+
+	// /* only memory regions are associated with nodes, check it */
+	// if (nid != NUMA_NO_NODE && nid != m_nid)
+	// 	return true;
+
+	// /* skip hotpluggable memory regions if needed */
+	// if (movable_node_is_enabled() && memblock_is_hotpluggable(m) &&
+	// 	!(flags & MEMBLOCK_HOTPLUG))
+	// 	return true;
+
+	/* if we want mirror memory skip non-mirror memory regions */
+	if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
+		return true;
+
+	/* skip nomap memory unless we were asked for it explicitly */
+	if (!(flags & MEMBLOCK_NOMAP) && memblock_is_nomap(m))
+		return true;
+
+	/* skip driver-managed memory unless we were asked for it explicitly */
+	if (!(flags & MEMBLOCK_DRIVER_MANAGED) && memblock_is_driver_managed(m))
+		return true;
+
+	return false;
+}
 /**
- * __next_mem_range - next function for for_each_free_mem_range() etc.
+ * __simple_next_mem_range - next function for for_each_free_mem_range() etc.
  * @idx: pointer to uint64_t loop variable
  * @nid: node selector, %NUMA_NO_NODE for all nodes
  * @flags: pick from blocks based on memory attributes
@@ -343,58 +374,53 @@ simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
  * in lockstep and returns each intersection.
  */
 void
-__next_mem_range(uint64_t *idx, mmblk_type_s *type_a, mmblk_type_s *type_b,
-		phys_addr_t *out_start, phys_addr_t *out_end)
+__simple_next_mem_range(OUT uint64_t *idx, enum mmblk_flags flags,
+		IN mmblk_type_s *within_type, IN mmblk_type_s *exclude_type,
+		OUT phys_addr_t *out_start, OUT phys_addr_t *out_end)
 {
-	int idx_a = *idx & 0xffffffff;
-	int idx_b = *idx >> 32;
+	BUG_ON(within_type == NULL || exclude_type == NULL);
 
-	for (; idx_a < type_a->cnt; idx_a++)
+	for (int idx_a = *idx & 0xffffffff, idx_b = *idx >> 32;
+		idx_a < within_type->cnt; idx_a++)
 	{
-		mmblk_rgn_s *m = &type_a->regions[idx_a];
+		mmblk_rgn_s *m = &within_type->regions[idx_a];
 		phys_addr_t m_start = m->base;
 		phys_addr_t m_end = m->base + m->size;
-		if (type_a != &memblock.memory)
+		if (should_skip_region(within_type, m, flags))
 			continue;
 
-		if (!type_b) {
-			if (out_start)
-				*out_start = m_start;
-			if (out_end)
-				*out_end = m_end;
-			idx_a++;
-			*idx = (uint32_t)idx_a | (uint64_t)idx_b << 32;
-			return;
-		}
-
 		/* scan areas before each reservation */
-		for (; idx_b < type_b->cnt + 1; idx_b++)
+		for (; idx_b < exclude_type->cnt + 1; idx_b++)
 		{
 			mmblk_rgn_s *r;
-			phys_addr_t r_start;
-			phys_addr_t r_end;
+			// @r_gap_start and @r_gap_end is the start and end of
+			// range which between two regions of type reserved.
+			phys_addr_t r_gap_start;
+			phys_addr_t r_gap_end;
 
-			r = &type_b->regions[idx_b];
-			r_start = idx_b ? r[-1].base + r[-1].size : 0;
-			r_end = idx_b < type_b->cnt ? r->base : (phys_addr_t)PHYS_ADDR_MAX;
+			r = &exclude_type->regions[idx_b];
+			r_gap_start = (idx_b == 0) ? 0 : r[-1].base + r[-1].size;
+			r_gap_end = (idx_b < exclude_type->cnt) ?
+							r->base : (phys_addr_t)PHYS_ADDR_MAX;
 			/*
 			 * if idx_b advanced past idx_a,
 			 * break out to advance idx_a
 			 */
-			if (r_start >= m_end)
+			if (m_end <= r_gap_start)
 				break;
+			// here @m_end > @r_gap_start
 			/* if the two regions intersect, we're done */
-			if (m_start < r_end)
+			if (m_start < r_gap_end)
 			{
 				if (out_start)
-					*out_start = max(m_start, r_start);
+					*out_start = max(m_start, r_gap_start);
 				if (out_end)
-					*out_end = min(m_end, r_end);
+					*out_end = min(m_end, r_gap_end);
 				/*
 				 * The region which ends first is
 				 * advanced for the next iteration.
 				 */
-				if (m_end <= r_end)
+				if (m_end <= r_gap_end)
 					idx_a++;
 				else
 					idx_b++;
@@ -406,31 +432,6 @@ __next_mem_range(uint64_t *idx, mmblk_type_s *type_a, mmblk_type_s *type_b,
 
 	/* signal end of iteration */
 	*idx = ULLONG_MAX;
-}
-
-/*
- * Common iterator interface used to define for_each_mem_pfn_range().
- */
-void __init_memblock
-__next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
-		unsigned long *out_end_pfn)
-{
-	mmblk_type_s *type = &memblock.memory;
-	mmblk_rgn_s *r;
-	while (++*idx < type->cnt) {
-		r = &type->regions[*idx];
-		if (PFN_UP(r->base) < PFN_DOWN(r->base + r->size))
-			break;;
-	}
-	if (*idx >= type->cnt) {
-		*idx = -1;
-		return;
-	}
-
-	if (out_start_pfn)
-		*out_start_pfn = PFN_UP(r->base);
-	if (out_end_pfn)
-		*out_end_pfn = PFN_DOWN(r->base + r->size);
 }
 
 /**
@@ -449,13 +450,13 @@ __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
  * Found address on success, 0 on failure.
  */
 static phys_addr_t __init_memblock
-__memblock_find_range_bottom_up(phys_addr_t start,
-		phys_addr_t end, phys_addr_t size, phys_addr_t align)
+__memblock_find_range_bottom_up(phys_addr_t start, phys_addr_t end,
+		phys_addr_t size, phys_addr_t align, enum mmblk_flags flags)
 {
 	phys_addr_t this_start, this_end, cand;
-	uint64_t i;
+	uint64_t i = 0;
 
-	for_each_free_mem_range (i, &this_start, &this_end) {
+	for_each_free_mem_range (i, flags, &this_start, &this_end) {
 		this_start = clamp(this_start, start, end);
 		this_end = clamp(this_end, start, end);
 
@@ -498,6 +499,7 @@ phys_addr_t __init
 memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 		phys_addr_t start, phys_addr_t end)
 {
+	enum mmblk_flags flags = MEMBLOCK_NONE;
 	phys_addr_t found;
 	if (align == 0)
 		align = SMP_CACHE_BYTES;
@@ -511,7 +513,7 @@ memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 	start = max_t(phys_addr_t, start, PAGE_SIZE);
 	end = max(start, end);
 
-	found = __memblock_find_range_bottom_up(start, end, size, align);
+	found = __memblock_find_range_bottom_up(start, end, size, align, flags);
 	if (found && !simple_mmblk_reserve(found, size))
 		return found;
 	else
@@ -639,19 +641,46 @@ memblock_trim_memory(phys_addr_t align)
 	}
 }
 
+
+/*
+ * Common iterator interface used to define for_each_mem_pfn_range().
+ */
+void __init_memblock
+__next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
+		unsigned long *out_end_pfn)
+{
+	mmblk_type_s *type = &memblock.memory;
+	mmblk_rgn_s *r;
+	while (++*idx < type->cnt) {
+		r = &type->regions[*idx];
+		if (PFN_UP(r->base) < PFN_DOWN(r->base + r->size))
+			break;;
+	}
+	if (*idx >= type->cnt) {
+		*idx = -1;
+		return;
+	}
+
+	if (out_start_pfn)
+		*out_start_pfn = PFN_UP(r->base);
+	if (out_end_pfn)
+		*out_end_pfn = PFN_DOWN(r->base + r->size);
+}
+
+
 /*==============================================================================================*
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
 static void __init
 memmap_init_reserved_pages(void)
 {
-	struct memblock_region *region;
+	mmblk_rgn_s *region;
 	phys_addr_t start, end;
-	u64 i;
+	u64 i = 0;
 
 	/* initialize struct pages for the reserved regions */
-	for_each_reserved_mem_range(i, &start, &end)
-		reserve_bootmem_region(start, end);
+	for_each_memblock_type(i, &memblock.reserved, region)
+		reserve_bootmem_region(region->base, region->base + region->size);
 
 	/* and also treat struct pages for the NOMAP regions as PageReserved */
 	for_each_memory_region(region) {
@@ -668,7 +697,7 @@ free_low_memory_core_early(void)
 {
 	unsigned long count = 0;
 	phys_addr_t start, end;
-	uint64_t i;
+	uint64_t i = 0;
 
 	memmap_init_reserved_pages();
 	/*
@@ -676,7 +705,7 @@ free_low_memory_core_early(void)
 	 *  because in some case like Node0 doesn't have RAM installed
 	 *  low ram will be on Node1
 	 */
-	for_each_free_mem_range (i, &start, &end)
+	for_each_free_mem_range (i, MEMBLOCK_NONE, &start, &end)
 	{
 	// count += __free_memory_core(start, end);
 	// static unsigned long __init __free_memory_core(

@@ -106,17 +106,37 @@
 	void memblock_free_all(void);
 	// void memblock_free(void *ptr, size_t size);
 
+	static inline bool
+	memblock_is_hotpluggable(mmblk_rgn_s *m) {
+		return m->flags & MEMBLOCK_HOTPLUG;
+	}
+
+	static inline bool
+	memblock_is_mirror(mmblk_rgn_s *m) {
+		return m->flags & MEMBLOCK_MIRROR;
+	}
+
+	static inline bool
+	memblock_is_nomap(mmblk_rgn_s *m) {
+		return m->flags & MEMBLOCK_NOMAP;
+	}
+
+	static inline bool
+	memblock_is_driver_managed(mmblk_rgn_s *m) {
+		return m->flags & MEMBLOCK_DRIVER_MANAGED;
+	}
+
 	/* Low level functions */
 	void
-	__next_mem_range(uint64_t *idx, mmblk_type_s *type_a,
-			mmblk_type_s *type_b, phys_addr_t *out_start,
-			phys_addr_t *out_end);
+	__simple_next_mem_range(uint64_t *idx, enum mmblk_flags flags,
+			mmblk_type_s *type_a, mmblk_type_s *type_b,
+			phys_addr_t *out_start, phys_addr_t *out_end);
 
 
 	#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)			\
-				for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
-					rgn_idx < memblock_type->cnt + 1;						\
-					rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
+				for (rgn_idx = 0, rgn_ptr = &(memblock_type)->regions[0];	\
+					rgn_idx < (memblock_type)->cnt + 1;						\
+					rgn_idx++, rgn_ptr = &(memblock_type)->regions[rgn_idx])
 
 	/**
 	 * __for_each_mem_range - iterate through memblock areas from type_a and not
@@ -130,32 +150,30 @@
 	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
 	 * @p_nid: ptr to int for nid of the range, can be %NULL
 	 */
-	// #define __for_each_mem_range(i, type_a, type_b, nid, flags,					\
-	// 				p_start, p_end, p_nid)										\
-	// 			for (i = 0, __next_mem_range(&i, nid, flags, type_a, type_b,	\
-	// 						p_start, p_end, p_nid);								\
-	// 				i != (u64)ULLONG_MAX;										\
-	// 				__next_mem_range(&i, nid, flags, type_a, type_b,			\
-	// 						p_start, p_end, p_nid))
-	#define __for_each_mem_range(i, within_type, exclude_type, p_start, p_end)	\
-				for (i = 0, __next_mem_range(&i,								\
-					within_type, exclude_type, p_start, p_end);					\
-					i != (uint64_t)ULLONG_MAX;									\
-					__next_mem_range(&i, within_type, exclude_type,				\
-							p_start, p_end))
+	#define __for_each_mem_range(i, within_type, exclude_type,			\
+					flags, p_start, p_end)								\
+				for (i = 0, __simple_next_mem_range(&i, flags,			\
+					within_type, exclude_type, p_start, p_end);			\
+					i != (uint64_t)ULLONG_MAX;							\
+					__simple_next_mem_range(&i, flags, within_type,		\
+							exclude_type, p_start, p_end))
 
 	/**
-	 * for_each_reserved_mem_range - iterate over all reserved memblock areas
+	 * for_each_free_mem_range - iterate through free memblock areas
 	 * @i: u64 used as loop variable
+	 * @nid: node selector, %NUMA_NO_NODE for all nodes
+	 * @flags: pick from blocks based on memory attributes
 	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
 	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+	 * @p_nid: ptr to int for nid of the range, can be %NULL
 	 *
-	 * Walks over reserved areas of memblock. Available as soon as memblock
-	 * is initialized.
+	 * Walks over free (memory && !reserved) areas of memblock.  Available as
+	 * soon as memblock is initialized.
 	 */
-	#define for_each_reserved_mem_range(i, p_start, p_end)		\
-				__for_each_mem_range(i, &memblock.reserved,		\
-						NULL, p_start, p_end)
+	#define for_each_free_mem_range(i, flags, p_start, p_end)			\
+				__for_each_mem_range(i, &memblock.memory,				\
+						&memblock.reserved, flags, p_start, p_end)
+
 
 	void __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
 			unsigned long *out_end_pfn);
@@ -174,32 +192,17 @@
 				for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
 					i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
 
-	/**
-	 * for_each_free_mem_range - iterate through free memblock areas
-	 * @i: u64 used as loop variable
-	 * @nid: node selector, %NUMA_NO_NODE for all nodes
-	 * @flags: pick from blocks based on memory attributes
-	 * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
-	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
-	 * @p_nid: ptr to int for nid of the range, can be %NULL
-	 *
-	 * Walks over free (memory && !reserved) areas of memblock.  Available as
-	 * soon as memblock is initialized.
-	 */
-	#define for_each_free_mem_range(i, p_start, p_end)			\
-				__for_each_mem_range(i, &memblock.memory,		\
-						&memblock.reserved, p_start, p_end)
 
 	/* Flags for memblock allocation APIs */
-	#define MEMBLOCK_ALLOC_ANYWHERE		(~(phys_addr_t)0)
-	#define MEMBLOCK_ALLOC_ACCESSIBLE	0
-	#define MEMBLOCK_ALLOC_NOLEAKTRACE	1
+	#define MEMBLOCK_ALLOC_ANYWHERE			(~(phys_addr_t)0)
+	#define MEMBLOCK_ALLOC_ACCESSIBLE		0
+	#define MEMBLOCK_ALLOC_NOLEAKTRACE		1
 
 	/* We are using top down, so it is safe to use 0 here */
-	#define MEMBLOCK_LOW_LIMIT			0
+	#define MEMBLOCK_LOW_LIMIT				0
 
 	#ifndef ARCH_LOW_ADDRESS_LIMIT
-	#	define ARCH_LOW_ADDRESS_LIMIT	0xffffffffUL
+	#	define ARCH_LOW_ADDRESS_LIMIT		0xffffffffUL
 	#endif
 
 	// phys_addr_t
