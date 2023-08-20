@@ -237,15 +237,24 @@
 	}
 
 	/**
-	 * for_each_mem_region - itereate over memory regions
+	 * for_each_memory_region - itereate over memory regions
 	 * @region: loop variable
 	 */
-	#define for_each_mem_region(region)					\
+	#define for_each_memory_region(region)				\
 				for (region = memblock.memory.regions;	\
 					region < (memblock.memory.regions +	\
 								memblock.memory.cnt);	\
 					region++)
 
+	/**
+	 * for_each_memory_region - itereate over memory regions topdown
+	 * @region: loop variable
+	 */
+	#define for_each_memory_region_topdown(region)			\
+				for (region = &memblock.memory.regions[		\
+								memblock.memory.cnt - 1];	\
+					region >= memblock.memory.regions;		\
+					region--)
 
 	void * myos_memblock_alloc_DMA(size_t size, size_t align);
 	void * myos_memblock_alloc_normal(size_t size, size_t align);

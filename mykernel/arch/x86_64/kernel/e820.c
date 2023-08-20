@@ -66,90 +66,66 @@ extern efi_machine_conf_s	*machine_info;
  */
 e820_table_s e820_table	__initdata;
 
-// static e820_table_s e820_table_init		__initdata;
-// static e820_table_s e820_table_kexec_init		__initdata;
-// static e820_table_s e820_table_firmware_init	__initdata;
-
-// e820_table_s *e820_table __refdata			= &e820_table_init;
-// e820_table_s *e820_table_kexec __refdata		= &e820_table_kexec_init;
-// e820_table_s *e820_table_firmware __refdata	= &e820_table_firmware_init;
-
-
 #define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
-
 
 void __init e820__memory_setup(void)
 {
 	int i = 0;
 	e820_table.nr_entries = 0;
-	// char *__init e820__memory_setup_default(void)
-	// {
-	//							||
-	//							\/
-	// static int __init append_e820_table(struct boot_e820_entry *entries, u32 nr_entries)
-	// {
-		for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
-			i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
-			i++, mmap_entp++)
+	for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
+		i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
+		i++, mmap_entp++)
+	{
+		if (mmap_entp->len == 0)
 		{
-			if (mmap_entp->len == 0)
-			{
-				e820_table.nr_entries = i;
-				break;
-			}
-			
-			e820_entry_s *e820_entp = &e820_table.entries[i];
-			e820_entp->addr = mmap_entp->addr;
-			e820_entp->size = mmap_entp->len;
-			e820_entp->type = mmap_entp->type;
+			e820_table.nr_entries = i;
+			break;
 		}
-	// }
-	// }
+		
+		e820_entry_s *e820_entp = &e820_table.entries[i];
+		e820_entp->addr = mmap_entp->addr;
+		e820_entp->size = mmap_entp->len;
+		e820_entp->type = mmap_entp->type;
+	}
 }
 
 
 unsigned long __init e820__end_of_ram_pfn(void)
 {
-	// /*
-	// * Find the highest page frame number we have available
-	// */
-	// static unsigned long __init e820_end_pfn(unsigned long limit_pfn, enum e820_type type)
-	// {
-		int i;
-		unsigned long last_pfn = 0;
-		unsigned long limit_pfn = MAX_ARCH_PFN;
-		unsigned long max_arch_pfn = MAX_ARCH_PFN;
+	int i;
+	unsigned long last_pfn = 0;
+	unsigned long limit_pfn = MAX_ARCH_PFN;
+	unsigned long max_arch_pfn = MAX_ARCH_PFN;
 
-		for (i = 0; i < e820_table.nr_entries; i++)
+	for (i = 0; i < e820_table.nr_entries; i++)
+	{
+		e820_entry_s *entry = &e820_table.entries[i];
+		unsigned long start_pfn;
+		unsigned long end_pfn;
+
+		if (entry->size == 0)
+			break;
+		if (entry->type != E820_TYPE_RAM)
+			continue;
+
+		start_pfn = entry->addr >> PAGE_SHIFT;
+		end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
+
+		if (start_pfn >= limit_pfn)
+			continue;
+		if (end_pfn > limit_pfn)
 		{
-			e820_entry_s *entry = &e820_table.entries[i];
-			unsigned long start_pfn;
-			unsigned long end_pfn;
-
-			if (entry->size == 0)
-				break;
-			if (entry->type != E820_TYPE_RAM)
-				continue;
-
-			start_pfn = entry->addr >> PAGE_SHIFT;
-			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-
-			if (start_pfn >= limit_pfn)
-				continue;
-			if (end_pfn > limit_pfn)
-			{
-				last_pfn = limit_pfn;
-				break;
-			}
-			if (end_pfn > last_pfn)
-				last_pfn = end_pfn;
+			last_pfn = limit_pfn;
+			break;
 		}
+		if (end_pfn > last_pfn)
+			last_pfn = end_pfn;
+	}
 
-		if (last_pfn > max_arch_pfn)
-			last_pfn = max_arch_pfn;
+	if (last_pfn > max_arch_pfn)
+		last_pfn = max_arch_pfn;
 
-		return last_pfn;
-	// }
+	return last_pfn;
 }
 
 void __init e820__memblock_setup(void)

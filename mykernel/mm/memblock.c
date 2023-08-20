@@ -730,7 +730,7 @@ memblock_trim_memory(phys_addr_t align)
 	phys_addr_t start, end, orig_start, orig_end;
 	mmblk_rgn_s *r;
 
-	for_each_mem_region(r) {
+	for_each_memory_region_topdown(r) {
 		orig_start = r->base;
 		orig_end = r->base + r->size;
 		start = round_up(orig_start, align);
@@ -765,7 +765,7 @@ memmap_init_reserved_pages(void)
 		reserve_bootmem_region(start, end);
 
 	/* and also treat struct pages for the NOMAP regions as PageReserved */
-	for_each_mem_region(region) {
+	for_each_memory_region(region) {
 		if (region->flags & MEMBLOCK_NOMAP) {
 			start = region->base;
 			end = start + region->size;
