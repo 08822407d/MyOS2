@@ -107,14 +107,16 @@
 	// void memblock_free(void *ptr, size_t size);
 
 	/* Low level functions */
-	// void __next_mem_range(u64 *idx, int nid, enum mmblk_flags flags,
-	// 			struct memblock_type *type_a,
-	// 			struct memblock_type *type_b, phys_addr_t *out_start,
-	// 			phys_addr_t *out_end, int *out_nid);
 	void
 	__next_mem_range(uint64_t *idx, mmblk_type_s *type_a,
 			mmblk_type_s *type_b, phys_addr_t *out_start,
 			phys_addr_t *out_end);
+
+
+	#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)			\
+				for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
+					rgn_idx < memblock_type->cnt + 1;						\
+					rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
 
 	/**
 	 * __for_each_mem_range - iterate through memblock areas from type_a and not
@@ -128,19 +130,19 @@
 	 * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
 	 * @p_nid: ptr to int for nid of the range, can be %NULL
 	 */
-	// #define __for_each_mem_range(i, type_a, type_b, nid, flags,		\
-	// 			p_start, p_end, p_nid)			\
-	// 	for (i = 0, __next_mem_range(&i, nid, flags, type_a, type_b,	\
-	// 					p_start, p_end, p_nid);		\
-	// 		i != (u64)ULLONG_MAX;					\
-	// 		__next_mem_range(&i, nid, flags, type_a, type_b,		\
-	// 				p_start, p_end, p_nid))
-	#define __for_each_mem_range(i, type_a, type_b, p_start, p_end)	\
-				for (i = 0, __next_mem_range(&i,					\
-					type_a, type_b,	p_start, p_end);				\
-					i != (uint64_t)ULLONG_MAX;						\
-					__next_mem_range(&i, type_a, type_b,			\
-									p_start, p_end))
+	// #define __for_each_mem_range(i, type_a, type_b, nid, flags,					\
+	// 				p_start, p_end, p_nid)										\
+	// 			for (i = 0, __next_mem_range(&i, nid, flags, type_a, type_b,	\
+	// 						p_start, p_end, p_nid);								\
+	// 				i != (u64)ULLONG_MAX;										\
+	// 				__next_mem_range(&i, nid, flags, type_a, type_b,			\
+	// 						p_start, p_end, p_nid))
+	#define __for_each_mem_range(i, within_type, exclude_type, p_start, p_end)	\
+				for (i = 0, __next_mem_range(&i,								\
+					within_type, exclude_type, p_start, p_end);					\
+					i != (uint64_t)ULLONG_MAX;									\
+					__next_mem_range(&i, within_type, exclude_type,				\
+							p_start, p_end))
 
 	/**
 	 * for_each_reserved_mem_range - iterate over all reserved memblock areas
@@ -151,17 +153,11 @@
 	 * Walks over reserved areas of memblock. Available as soon as memblock
 	 * is initialized.
 	 */
-	// #define for_each_reserved_mem_range(i, p_start, p_end)			\
-	// __for_each_mem_range(i, &memblock.reserved, NULL, NUMA_NO_NODE,	\
-	// 		     MEMBLOCK_NONE, p_start, p_end, NULL)
-	#define for_each_reserved_mem_range(i, p_start, p_end)	\
-				__for_each_mem_range(i, &memblock.reserved,	\
-					NULL, p_start, p_end)
+	#define for_each_reserved_mem_range(i, p_start, p_end)		\
+				__for_each_mem_range(i, &memblock.reserved,		\
+						NULL, p_start, p_end)
 
-	// void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
-	// 			unsigned long *out_end_pfn, int *out_nid);
-	void
-	__next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
+	void __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
 			unsigned long *out_end_pfn);
 
 	/**
@@ -174,9 +170,6 @@
 	 *
 	 * Walks over configured memory ranges.
 	 */
-	// #define for_each_mem_pfn_range(i, nid, p_start, p_end, p_nid)	\
-	// 	for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
-	// 		i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
 	#define for_each_mem_pfn_range(i, p_start, p_end)					\
 				for (i = -1, __next_mem_pfn_range(&i, p_start, p_end);	\
 					i >= 0; __next_mem_pfn_range(&i, p_start, p_end))
@@ -193,13 +186,9 @@
 	 * Walks over free (memory && !reserved) areas of memblock.  Available as
 	 * soon as memblock is initialized.
 	 */
-	// #define for_each_free_mem_range(i, nid, flags, p_start, p_end, p_nid)	\
-	// 	__for_each_mem_range(i, &memblock.memory, &memblock.reserved,	\
-	// 				nid, flags, p_start, p_end, p_nid)
-	#define for_each_free_mem_range(i, p_start, p_end)		\
-				__for_each_mem_range(i, &memblock.memory,	\
-								&memblock.reserved,			\
-								p_start, p_end)
+	#define for_each_free_mem_range(i, p_start, p_end)			\
+				__for_each_mem_range(i, &memblock.memory,		\
+						&memblock.reserved, p_start, p_end)
 
 	/* Flags for memblock allocation APIs */
 	#define MEMBLOCK_ALLOC_ANYWHERE		(~(phys_addr_t)0)
@@ -213,17 +202,17 @@
 	#	define ARCH_LOW_ADDRESS_LIMIT	0xffffffffUL
 	#endif
 
-	// phys_addr_t memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
-	// 				phys_addr_t start, phys_addr_t end, int nid, bool exact_nid);
-	// phys_addr_t memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
-	phys_addr_t memblock_alloc_range(phys_addr_t size,
-			phys_addr_t align, phys_addr_t start, phys_addr_t end);
+	// phys_addr_t
+	// memblock_alloc_range_nid(phys_addr_t size, phys_addr_t align,
+	// 		phys_addr_t start, phys_addr_t end, int nid, bool exact_nid);
+	// phys_addr_t
+	// memblock_phys_alloc_try_nid(phys_addr_t size, phys_addr_t align, int nid);
+	phys_addr_t
+	memblock_alloc_range(phys_addr_t size, phys_addr_t align,
+			phys_addr_t start, phys_addr_t end);
 
-	// static __always_inline void *memblock_alloc(phys_addr_t size, phys_addr_t align)
-	// {
-	// 	return memblock_alloc_try_nid(size, align, MEMBLOCK_LOW_LIMIT,
-	// 					MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE);
-	// }
+	// static __always_inline void
+	// *memblock_alloc(phys_addr_t size, phys_addr_t align)
 	void *memblock_alloc(phys_addr_t size, phys_addr_t align);
 
 	/*
@@ -240,10 +229,10 @@
 	 * for_each_memory_region - itereate over memory regions
 	 * @region: loop variable
 	 */
-	#define for_each_memory_region(region)				\
-				for (region = memblock.memory.regions;	\
-					region < (memblock.memory.regions +	\
-								memblock.memory.cnt);	\
+	#define for_each_memory_region(region)					\
+				for (region = memblock.memory.regions;		\
+					region < (memblock.memory.regions +		\
+								memblock.memory.cnt);		\
 					region++)
 
 	/**
@@ -255,6 +244,7 @@
 								memblock.memory.cnt - 1];	\
 					region >= memblock.memory.regions;		\
 					region--)
+
 
 	void * myos_memblock_alloc_DMA(size_t size, size_t align);
 	void * myos_memblock_alloc_normal(size_t size, size_t align);

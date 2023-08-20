@@ -122,83 +122,14 @@ memblock_s memblock __initdata_memblock = {
 };
 
 /*==============================================================================================*
- *								sub fuctions for add/remove regions								*
+ *									fuctions for add/remove regions								*
  *==============================================================================================*/
-#define for_each_memblock_type(rgn_idx, memblock_type, rgn_ptr)			\
-			for (rgn_idx = 0, rgn_ptr = &memblock_type->regions[0];		\
-				rgn_idx < memblock_type->cnt + 1;						\
-				rgn_idx++, rgn_ptr = &memblock_type->regions[rgn_idx])
-
 /* adjust *@size so that (@base + *@size) doesn't overflow, return new size */
 static inline phys_addr_t
 memblock_cap_size(phys_addr_t base, phys_addr_t *size) {
 	return *size = min(*size, PHYS_ADDR_MAX - base);
 }
 
-/**
- * __memblock_find_range_bottom_up - find free area utility in bottom-up
- * @start: start of candidate range
- * @end: end of candidate range, can be %MEMBLOCK_ALLOC_ANYWHERE or
- *       %MEMBLOCK_ALLOC_ACCESSIBLE
- * @size: size of free area to find
- * @align: alignment of free area to find
- * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
- * @flags: pick from blocks based on memory attributes
- *
- * Utility called from memblock_find_in_range_node(), find free area bottom-up.
- *
- * Return:
- * Found address on success, 0 on failure.
- */
-static phys_addr_t __init_memblock
-__memblock_find_range_bottom_up(phys_addr_t start,
-		phys_addr_t end, phys_addr_t size, phys_addr_t align)
-{
-	phys_addr_t this_start, this_end, cand;
-	uint64_t i;
-
-	for_each_free_mem_range (i, &this_start, &this_end) {
-		this_start = clamp(this_start, start, end);
-		this_end = clamp(this_end, start, end);
-
-		cand = (phys_addr_t)round_up((size_t)this_start, (size_t)align);
-		if (cand < this_end && this_end - cand >= size)
-			return cand;
-	}
-
-	return 0;
-}
-
-/**
- * memblock_find_in_range_node - find free area in given range and node
- * @size: size of free area to find
- * @align: alignment of free area to find
- * @start: start of candidate range
- * @end: end of candidate range, can be %MEMBLOCK_ALLOC_ANYWHERE or
- *       %MEMBLOCK_ALLOC_ACCESSIBLE
- * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
- * @flags: pick from blocks based on memory attributes
- *
- * Find @size free area aligned to @align in the specified range and node.
- *
- * Return:
- * Found address on success, 0 on failure.
- */
-static phys_addr_t __init_memblock
-memblock_find_in_range(phys_addr_t size, phys_addr_t align,
-		phys_addr_t start, phys_addr_t end)
-{
-	/* pump up @end */
-	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
-		end == MEMBLOCK_ALLOC_NOLEAKTRACE)
-		end = memblock.current_limit;
-
-	/* avoid allocating the first page */
-	start = max_t(phys_addr_t, start, PAGE_SIZE);
-	end = max(start, end);
-
-	return __memblock_find_range_bottom_up(start, end, size, align);
-}
 
 static void __init_memblock
 simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long rgn_idx)
@@ -381,90 +312,6 @@ simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
 	return simple_mmblk_add_range(&memblock.reserved, base, size, 0);
 }
 
-// /**
-//  * memblock_isolate_range - isolate given range into disjoint memblocks
-//  * @type: memblock type to isolate range for
-//  * @base: base of range to isolate
-//  * @size: size of range to isolate
-//  * @start_rgn: out parameter for the start of isolated region
-//  * @end_rgn: out parameter for the end of isolated region
-//  *
-//  * Walk @type and ensure that regions don't cross the boundaries defined by
-//  * [@base, @base + @size).  Crossing regions are split at the boundaries,
-//  * which may create at most two more regions.  The index of the first
-//  * region inside the range is returned in *@start_rgn and end in *@end_rgn.
-//  *
-//  * Return:
-//  * 0 on success, -errno on failure.
-//  */
-// static int __init_memblock
-// memblock_isolate_range(mmblk_type_s *type, phys_addr_t base,
-// 		phys_addr_t size, int *start_rgn, int *end_rgn)
-// {
-// 	phys_addr_t end = base + memblock_cap_size(base, &size);
-// 	int idx;
-// 	mmblk_rgn_s *rgn;
-// 	*start_rgn = *end_rgn = 0;
-// 	if (!size)
-// 		return 0;
-// 	/* we'll create at most two more regions */
-// 	while (type->cnt >= type->max - 2);
-
-// 	for_each_memblock_type(idx, type, rgn) {
-// 		phys_addr_t rbase = rgn->base;
-// 		phys_addr_t rend = rbase + rgn->size;
-// 		if (rbase >= end)
-// 			break;
-// 		if (rend <= base)
-// 			continue;
-
-// 		if (rbase < base)
-// 		{
-// 			/*
-// 			 * @rgn intersects from below.  Split and continue
-// 			 * to process the next region - the new top half.
-// 			 */
-// 			rgn->base = base;
-// 			rgn->size -= base - rbase;
-// 			type->total_size -= base - rbase;
-// 			memblock_insert_region(type, idx,
-// 					rbase, base - rbase, rgn->flags);
-// 		} else if (rend > end) {
-// 			/*
-// 			 * @rgn intersects from above.  Split and redo the
-// 			 * current region - the new bottom half.
-// 			 */
-// 			rgn->base = end;
-// 			rgn->size -= end - rbase;
-// 			type->total_size -= end - rbase;
-// 			memblock_insert_region(type, idx--,
-// 					rbase, end - rbase, rgn->flags);
-// 		} else {
-// 			/* @rgn is fully contained, record it */
-// 			if (!*end_rgn)
-// 				*start_rgn = idx;
-// 			*end_rgn = idx + 1;
-// 		}
-// 	}
-
-// 	return 0;
-// }
-
-// static int __init_memblock
-// memblock_remove_range(mmblk_type_s *type,
-// 		phys_addr_t base, phys_addr_t size)
-// {
-// 	int start_rgn, end_rgn;
-// 	int ret = memblock_isolate_range(type, base, size, &start_rgn, &end_rgn);
-// 	if (ret)
-// 		return ret;
-
-// 	for (int i = end_rgn - 1; i >= start_rgn; i--)
-// 		simple_mmblk_remove_rgn(type, i);
-// 	return 0;
-// }
-
-
 
 /*==============================================================================================*
  *									core fuctions for alloc/free								*
@@ -587,6 +434,40 @@ __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
 }
 
 /**
+ * __memblock_find_range_bottom_up - find free area utility in bottom-up
+ * @start: start of candidate range
+ * @end: end of candidate range, can be %MEMBLOCK_ALLOC_ANYWHERE or
+ *       %MEMBLOCK_ALLOC_ACCESSIBLE
+ * @size: size of free area to find
+ * @align: alignment of free area to find
+ * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+ * @flags: pick from blocks based on memory attributes
+ *
+ * Utility called from memblock_find_in_range_node(), find free area bottom-up.
+ *
+ * Return:
+ * Found address on success, 0 on failure.
+ */
+static phys_addr_t __init_memblock
+__memblock_find_range_bottom_up(phys_addr_t start,
+		phys_addr_t end, phys_addr_t size, phys_addr_t align)
+{
+	phys_addr_t this_start, this_end, cand;
+	uint64_t i;
+
+	for_each_free_mem_range (i, &this_start, &this_end) {
+		this_start = clamp(this_start, start, end);
+		this_end = clamp(this_end, start, end);
+
+		cand = (phys_addr_t)round_up((size_t)this_start, (size_t)align);
+		if (cand < this_end && this_end - cand >= size)
+			return cand;
+	}
+
+	return 0;
+}
+
+/**
  * memblock_alloc_range_nid - allocate boot memory block
  * @size: size of memory block to be allocated in bytes
  * @align: alignment of the region and block's size
@@ -618,11 +499,19 @@ memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 		phys_addr_t start, phys_addr_t end)
 {
 	phys_addr_t found;
-
 	if (align == 0)
 		align = SMP_CACHE_BYTES;
 
-	found = memblock_find_in_range(size, align, start, end);
+	/* pump up @end */
+	if (end == MEMBLOCK_ALLOC_ACCESSIBLE ||
+		end == MEMBLOCK_ALLOC_NOLEAKTRACE)
+		end = memblock.current_limit;
+
+	/* avoid allocating the first page */
+	start = max_t(phys_addr_t, start, PAGE_SIZE);
+	end = max(start, end);
+
+	found = __memblock_find_range_bottom_up(start, end, size, align);
 	if (found && !simple_mmblk_reserve(found, size))
 		return found;
 	else
