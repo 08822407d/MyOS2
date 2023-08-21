@@ -245,10 +245,11 @@
 		return oldbit;
 	}
 
-	// #define arch_test_bit(nr, addr)            \
-	// 	(__builtin_constant_p((nr))            \
-	// 		? constant_test_bit((nr), (addr)) \
-	// 		: variable_test_bit((nr), (addr)))
+	#define arch_test_bit(nr, addr) (				\
+				__builtin_constant_p((nr))			\
+				? constant_test_bit((nr), (addr))	\
+				: variable_test_bit((nr), (addr))	\
+			)
 
 	/**
 	 * __ffs - find first set bit in word

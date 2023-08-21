@@ -248,7 +248,8 @@
 		"tlbflush.h": "c",
 		"page_64_types.h": "c",
 		"pgalloc.h": "c",
-		"percpu-defs.h": "c"
+		"percpu-defs.h": "c",
+		"cpufeatures.h": "c"
 	},
 	"cmake.configureOnOpen": true
 }

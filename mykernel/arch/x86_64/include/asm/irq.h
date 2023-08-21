@@ -10,7 +10,7 @@
 	 *	<tomsoft@informatik.tu-chemnitz.de>
 	 */
 
-	// #include <asm/apicdef.h>
+	#include <asm/apicdef.h>
 	#include <asm/irq_vectors.h>
 
 

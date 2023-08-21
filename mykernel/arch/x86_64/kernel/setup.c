@@ -83,39 +83,39 @@ unsigned long _brk_end   = (unsigned long)__brk_base;
 
 // struct boot_params boot_params;
 
-/*
- * These are the four main kernel memory regions, we put them into
- * the resource tree so that kdump tools and other debugging tools
- * recover it:
- */
+// /*
+//  * These are the four main kernel memory regions, we put them into
+//  * the resource tree so that kdump tools and other debugging tools
+//  * recover it:
+//  */
 
-static resource_s rodata_resource = {
-	.name	= "Kernel rodata",
-	.start	= 0,
-	.end	= 0,
-	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-};
+// static resource_s rodata_resource = {
+// 	.name	= "Kernel rodata",
+// 	.start	= 0,
+// 	.end	= 0,
+// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+// };
 
-static resource_s data_resource = {
-	.name	= "Kernel data",
-	.start	= 0,
-	.end	= 0,
-	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-};
+// static resource_s data_resource = {
+// 	.name	= "Kernel data",
+// 	.start	= 0,
+// 	.end	= 0,
+// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+// };
 
-static resource_s code_resource = {
-	.name	= "Kernel code",
-	.start	= 0,
-	.end	= 0,
-	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-};
+// static resource_s code_resource = {
+// 	.name	= "Kernel code",
+// 	.start	= 0,
+// 	.end	= 0,
+// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+// };
 
-static resource_s bss_resource = {
-	.name	= "Kernel bss",
-	.start	= 0,
-	.end	= 0,
-	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
-};
+// static resource_s bss_resource = {
+// 	.name	= "Kernel bss",
+// 	.start	= 0,
+// 	.end	= 0,
+// 	.flags	= IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM
+// };
 
 
 cpuinfo_x86_s boot_cpu_data __read_mostly;
@@ -243,14 +243,14 @@ void __init setup_arch(char **cmdline_p)
 
 	setup_initial_init_mm(_text, _etext, _edata, (void *)-1ULL);
 
-	code_resource.start = __pa(_text);
-	code_resource.end = __pa(_etext)-1;
-	rodata_resource.start = __pa(__start_rodata);
-	rodata_resource.end = __pa(__end_rodata)-1;
-	data_resource.start = __pa(_sdata);
-	data_resource.end = __pa(_edata)-1;
-	bss_resource.start = __pa(__bss_start);
-	bss_resource.end = __pa(__bss_stop)-1;
+	// code_resource.start = __pa(_text);
+	// code_resource.end = __pa(_etext)-1;
+	// rodata_resource.start = __pa(__start_rodata);
+	// rodata_resource.end = __pa(__end_rodata)-1;
+	// data_resource.start = __pa(_sdata);
+	// data_resource.end = __pa(_edata)-1;
+	// bss_resource.start = __pa(__bss_start);
+	// bss_resource.end = __pa(__bss_stop)-1;
 
 	/*
 	 * partially used pages are not usable - thus
@@ -286,5 +286,5 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 
 	// x86_init.paging.pagetable_init()
-	paging_init();
+	zone_sizes_init();
 }

@@ -14,6 +14,7 @@
 ***************************************************/
 #include <linux/lib/string.h>
 #include <linux/mm/mm.h>
+#include <asm/apic.h>
 
 #include <asm/processor.h>
 
@@ -241,23 +242,16 @@ inline __always_inline unsigned get_lvt_ppr()
 void IOAPIC_pagetable_remap()
 {
 	unsigned long * tmp;
-	uint8_t *IOAPIC_addr = (uint8_t *)phys_to_virt((phys_addr_t)0xfec00000);
-	mm_s *curr_mm = current->mm;
+	uint8_t *IOAPIC_addr =
+		(uint8_t *)phys_to_virt((phys_addr_t)IO_APIC_DEFAULT_PHYS_BASE);
 
-	ioapic_map.phys_addr = (phys_addr_t)0xfec00000;
+	ioapic_map.phys_addr = (phys_addr_t)IO_APIC_DEFAULT_PHYS_BASE;
 	ioapic_map.virt_idx_addr = IOAPIC_addr;
 	ioapic_map.virt_data_addr = (uint32_t *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
 	
 	phys_addr_t pa = (phys_addr_t)ioapic_map.phys_addr;
 	myos_kernel_physical_mapping_init(pa, pa + SZ_2M);
-	// uint64_t page_attr = PAGE_KERNEL | _PAGE_CACHE_MASK;
-	// for (int i = 0; i < SZ_2M / PAGE_SIZE; i++)
-	// {
-	// 	phys_addr_t pa = (phys_addr_t)ioapic_map.phys_addr + i * PAGE_SIZE;
-	// 	virt_addr_t va = (virt_addr_t)ioapic_map.virt_idx_addr + i * PAGE_SIZE;
-	// 	arch_page_domap(va, pa ,page_attr, (reg_t *)&curr_mm->pgd);
-	// }
 }
 
 void init_lapic()

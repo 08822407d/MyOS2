@@ -38,6 +38,7 @@ static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
 
 
+
 static void __meminit
 __init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
 {

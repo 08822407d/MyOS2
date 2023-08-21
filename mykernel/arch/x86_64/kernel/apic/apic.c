@@ -236,14 +236,14 @@ static int x2apic_state;
 
 void __init check_x2apic(void)
 {
-	// if (x2apic_enabled()) {
-	// 	pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
-	// 	x2apic_mode = 1;
-	// 	if (x2apic_hw_locked())
-	// 		x2apic_state = X2APIC_ON_LOCKED;
-	// 	else
-	// 		x2apic_state = X2APIC_ON;
-	// } else if (!boot_cpu_has(X86_FEATURE_X2APIC)) {
-	// 	x2apic_state = X2APIC_DISABLED;
-	// }
+	if (x2apic_enabled()) {
+		// pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
+		x2apic_mode = 1;
+		// if (x2apic_hw_locked())
+		// 	x2apic_state = X2APIC_ON_LOCKED;
+		// else
+			x2apic_state = X2APIC_ON;
+	} else if (!boot_cpu_has(X86_FEATURE_X2APIC)) {
+		x2apic_state = X2APIC_DISABLED;
+	}
 }
