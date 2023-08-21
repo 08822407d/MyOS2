@@ -61,6 +61,8 @@
 // #include "ident_map.c"
 
 
+extern int after_bootmem;
+
 /*
  * NOTE: pagetable_init alloc all the fixmap pagetables contiguous on the
  * physical space so we can cache the place of the first one and move
@@ -140,7 +142,7 @@ void __init mem_init(void)
 
 	/* this will put all memory onto the freelists */
 	memblock_free_all();
-	// after_bootmem = 1;
+	after_bootmem = 1;
 	// x86_init.hyper.init_after_bootmem();
 
 	// /*

@@ -642,6 +642,9 @@ memblock_trim_memory(phys_addr_t align)
 }
 
 
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
 /*
  * Common iterator interface used to define for_each_mem_pfn_range().
  */
@@ -667,10 +670,6 @@ __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
 		*out_end_pfn = PFN_DOWN(r->base + r->size);
 }
 
-
-/*==============================================================================================*
- *								early init fuctions for buddy system							*
- *==============================================================================================*/
 static void __init
 memmap_init_reserved_pages(void)
 {

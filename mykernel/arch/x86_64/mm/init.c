@@ -37,6 +37,9 @@
 
 // #define MAP_LOWHALF
 
+int after_bootmem;
+
+
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
 

@@ -116,6 +116,7 @@
 	// {
 	// 	set_page_count(page, 1);
 	// }
+	#define init_page_count(page) set_page_count(page, 1)
 
 	// static inline void page_ref_add(page_s *page, int nr)
 	// {

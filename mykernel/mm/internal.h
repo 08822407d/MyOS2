@@ -173,6 +173,9 @@
 	// /*
 	// * in mm/page_alloc.c
 	// */
+	#define K(x) ((x) << (PAGE_SHIFT-10))
+
+	extern char * const zone_names[MAX_NR_ZONES];
 
 	// /*
 	// * Structure for holding the mostly immutable allocation parameters passed
