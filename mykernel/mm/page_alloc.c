@@ -636,7 +636,6 @@ unsigned long get_zeroed_page(gfp_t gfp_mask)
 }
 
 
-
 /**
  * get_pfn_range_for_nid - Return the start and end page frames for a node
  * @nid: The nid to return the range for. If MAX_NUMNODES, the min and max PFN are returned.
@@ -665,8 +664,6 @@ get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
 	if (*start_pfn == -1UL)
 		*start_pfn = 0;
 }
-
-
 
 /*==============================================================================================*
  *									myos page funcs for buddy system							*
