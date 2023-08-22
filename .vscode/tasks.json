@@ -23,19 +23,26 @@
     {
       "label": "startup vmw",
       "type": "shell",
-      "isBackground": true,
-      "command": "vmware -x /home/cheyh/vmware/grub2-test/grub2-test.vmx",
-      "problemMatcher": {
-        "pattern": {
-          "regexp": "^(vmware)",
-          "line": 1
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "^(vmware)",
-          "endsPattern": "^(vmware)"
-        }
-      }
-    },
+      "isBackground": false,
+      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test.vmx&; sleep 5",
+      // "command": "echo prelaunchtask test; sleep 5; echo post test",
+      // "problemMatcher": [
+      //   {
+      //     "pattern": [
+      //       {
+      //         "regexp": ".",
+      //         "file": 1,
+      //         "location": 2,
+      //         "message": 3
+      //       }
+      //     ],
+      //     "background": {
+      //       "activeOnStart": true,
+      //       "beginsPattern": ".",
+      //       "endsPattern": ".",
+      //     }
+      //   }
+      // ]
+    }
   ]
 }

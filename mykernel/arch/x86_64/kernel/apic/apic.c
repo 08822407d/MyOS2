@@ -105,16 +105,16 @@ static int x2apic_state;
 // 	printk_once(KERN_INFO "x2apic disabled\n");
 // }
 
-// static void __x2apic_enable(void)
-// {
-// 	u64 msr;
+static void __x2apic_enable(void)
+{
+	u64 msr;
 
-// 	rdmsrl(MSR_IA32_APICBASE, msr);
-// 	if (msr & X2APIC_ENABLE)
-// 		return;
-// 	wrmsrl(MSR_IA32_APICBASE, msr | X2APIC_ENABLE);
-// 	printk_once(KERN_INFO "x2apic enabled\n");
-// }
+	rdmsrl(MSR_IA32_APICBASE, msr);
+	if (msr & X2APIC_ENABLE)
+		return;
+	wrmsrl(MSR_IA32_APICBASE, msr | X2APIC_ENABLE);
+	// printk_once(KERN_INFO "x2apic enabled\n");
+}
 
 // static int __init setup_nox2apic(char *str)
 // {
@@ -236,14 +236,15 @@ static int x2apic_state;
 
 void __init check_x2apic(void)
 {
-	// if (x2apic_enabled()) {
-	// 	// pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
-	// 	x2apic_mode = 1;
-	// 	// if (x2apic_hw_locked())
-	// 	// 	x2apic_state = X2APIC_ON_LOCKED;
-	// 	// else
-	// 		x2apic_state = X2APIC_ON;
-	// } else if (!boot_cpu_has(X86_FEATURE_X2APIC)) {
-	// 	x2apic_state = X2APIC_DISABLED;
-	// }
+	if (boot_cpu_data.x86_capa_bits.x2APIC &&
+		apic_is_x2apic_enabled()) {
+		// pr_info("x2apic: enabled by BIOS, switching to x2apic ops\n");
+		x2apic_mode = 1;
+		// if (x2apic_hw_locked())
+		// 	x2apic_state = X2APIC_ON_LOCKED;
+		// else
+			x2apic_state = X2APIC_ON;
+	} else if (!boot_cpu_data.x86_capa_bits.x2APIC) {
+		x2apic_state = X2APIC_DISABLED;
+	}
 }

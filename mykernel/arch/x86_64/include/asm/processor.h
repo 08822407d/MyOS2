@@ -111,7 +111,7 @@
 		 */
 		union
 		{
-			struct x86_cap_bits x86_capability_bits;
+			struct x86_cap_bits x86_capa_bits;
 			__u32 x86_capability[NCAPINTS + NBUGINTS];
 			unsigned long x86_capability_alignment;
 		};
