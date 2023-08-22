@@ -8,7 +8,7 @@
       "name": "MyOS2 debug",
       "type": "cppdbg",
       "request": "launch",
-      // "preLaunchTask": "startup vmw",
+      "preLaunchTask": "startup vmw",
       "program": "${workspaceRoot}/build/kernel.debug",
       "miDebuggerServerAddress": "localhost:8864",
       "stopAtEntry": false,
@@ -18,12 +18,6 @@
       "miDebuggerPath": "/usr/bin/gdb",
       "miDebuggerArgs": "",
       "targetArchitecture": "x64",
-      // "customLaunchSetupCommands": [
-      //     {
-      //         "text": "target remote localhost:1234",
-      //         "description": "Connect to QEMU remote debugger"
-      //     }
-      // ],
       "setupCommands": [
         {
           "text": "set arch i386:x86-64:intel",

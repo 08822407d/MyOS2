@@ -23,26 +23,25 @@
     {
       "label": "startup vmw",
       "type": "shell",
-      "isBackground": false,
-      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test.vmx&; sleep 5",
-      // "command": "echo prelaunchtask test; sleep 5; echo post test",
-      // "problemMatcher": [
-      //   {
-      //     "pattern": [
-      //       {
-      //         "regexp": ".",
-      //         "file": 1,
-      //         "location": 2,
-      //         "message": 3
-      //       }
-      //     ],
-      //     "background": {
-      //       "activeOnStart": true,
-      //       "beginsPattern": ".",
-      //       "endsPattern": ".",
-      //     }
-      //   }
-      // ]
+      "isBackground": true,
+      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test.vmx",
+      "problemMatcher": [
+        {
+          "pattern": [
+            {
+              "regexp": ".",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": ".",
+            "endsPattern": ".",
+          }
+        }
+      ]
     }
   ]
 }
