@@ -103,6 +103,7 @@
 		/* Maximum supported CPUID level, -1=no CPUID: */
 		/* or to say maximum CPUID basic opcode */
 		int		cpuid_level;
+
 		/*
 		 * Align to size of unsigned long because the x86_capability array
 		 * is passed to bitops which require the alignment. Use unnamed
@@ -110,139 +111,7 @@
 		 */
 		union
 		{
-			/*
-			 * Bits defination according to Intel®64 and IA-32 Manual
-			 * Volume 2, Chapter 3, 3.3 Instructions - CPUID
-			 */
-			struct
-			{
-				// CPUID_1_EDX;
-				struct
-				{
-					__u32
-						X87FPU_On_Chip			: 1,
-						VME						: 1,	/* Virtual 8086 Mode Enhancements */
-						Debugging_Ext			: 1,
-						PageSize_Ext			: 1,
-						TSC_Ins					: 1,
-						MSR_Ins					: 1,
-						PhysAddr_Ext			: 1,
-						MCE						: 1,	/* Machine Check Exception */
-						CX8_Ins					: 1,	/* CMPXCHG8B Instruction */
-						APIC_On_Chip			: 1,
-						SYSENTER_SYSEXIT_Ins	: 1,
-						MTRR					: 1,	/* Memory Type Range Registers */
-						PGE						: 1,	/* Page Global Bit */
-						MCA						: 1,	/* Machine Check Architecture */
-						CMOV_Ins				: 1,	/* Conditional Move Instructions */
-						PAT						: 1,	/* Page Attribute Table */
-						PSE_36					: 1,	/* 36-Bit Page Size Extension */
-						PSN						: 1,	/* Processor Serial Number */
-						CLFSH_Ins				: 1,	/* CLFLUSH Instruction */
-												: 1,
-						Debug_Store				: 1,
-						ACPI					: 1,	/* Thermal Monitor and Software
-														   Controlled Clock Facilities */
-						MMX						: 1,
-						FXSR_Ins				: 1,
-						SSE						: 1,
-						SSE2					: 1,
-						Self_Snoop				: 1,
-						HTT						: 1,	/* Max APIC IDs reserved field is Valid */
-						Thermal_Monitor			: 1,
-												: 1,
-						PBE						: 1;	/* Pending Break Enable */
-				};
-
-
-				// CPUID_8000_0001_EDX;
-				struct
-				{
-					__u32
-												: 11,
-						SYSCALL_SYSRET_Ins		: 1,
-												: 8,
-						Exec_Disable			: 1,	/* Execute Disable Bit available */
-												: 5,
-						Page_1GB				: 1,	/* 1-GByte page available */
-						RDTSCP					: 1,	/* RDTSCP and IA32_TSC_AUX available */
-												: 1,
-						Intel64					: 1,
-												: 2;
-				};
-
-				// CPUID_8086_0001_EDX;
-				__u32 CPUID_8086_0001_EDX;
-				// CPUID_LNX_1;
-				__u32 CPUID_LNX_1;
-
-				// CPUID_1_ECX;
-				struct
-				{
-					__u32
-						SSE3					: 1,
-						PCLMULQDQ_Ins			: 1,
-						DTES64					: 1,	/* 64-bit DS Area */
-						MONITOR_MWAIT			: 1,
-						DS_CPL					: 1,	/* CPL Qualified Debug Store */
-						VMX						: 1,	/* Virtual Machine Extensions */
-						SMX						: 1,	/* Safer Mode Extensions */
-						EIST					: 1,	/* Enhanced Intel SpeedStep® technology */
-						Thermal_Monitor_2		: 1,
-						SSSE3					: 1,
-						CNXT_ID					: 1,	/* L1 Context ID */
-						SDBG					: 1,	/* IA32_DEBUG_INTERFACE MSR */
-						FMA						: 1,
-						CX16_Ins				: 1,	/* CMPXCHG16B Instruction */
-						xTPR_Update_Control		: 1,
-						PDCM					: 1,	/* Perfmon and Debug Capability */
-												: 1,
-						PCID					: 1,	/* Process-context identifiers */
-						DCA						: 1,
-						SSE4_1					: 1,
-						SSE4_2					: 1,
-						x2APIC					: 1,
-						MOVBE_Ins				: 1,
-						POPCNT_Ins				: 1,
-						TSC_Deadline			: 1,
-						AESNI_Ext				: 1,
-						XSAVE_Ins				: 1,
-						OSXSAVE_Ins				: 1,
-						AVX_Ext					: 1,
-						F16C_Ins				: 1,
-						RDRAND_Ins				: 1,
-												: 1;
-				};
-
-				// CPUID_C000_0001_EDX;
-				__u32 CPUID_C000_0001_EDX;
-
-				// CPUID_8000_0001_ECX;
-				struct
-				{
-					__u32
-						LAHF_SAHF				: 1,
-												: 4,
-						LZCNT					: 1,
-												: 2,
-						PREFETCHW				: 1,
-												: 23;
-				};
-
-				// CPUID_LNX_2;
-				// CPUID_LNX_3;
-				// CPUID_7_0_EBX;
-				// CPUID_D_1_EAX;
-				// CPUID_LNX_4;
-				// CPUID_7_1_EAX;
-				// CPUID_8000_0008_EBX;
-				// CPUID_6_EAX;
-				// CPUID_8000_000A_EDX;
-				// CPUID_7_ECX;
-				// CPUID_8000_0007_EBX;
-				// CPUID_7_EDX;
-				// CPUID_8000_001F_EAX;
-			} __attribute__((packed));
+			struct x86_cap_bits x86_capability_bits;
 			__u32 x86_capability[NCAPINTS + NBUGINTS];
 			unsigned long x86_capability_alignment;
 		};
