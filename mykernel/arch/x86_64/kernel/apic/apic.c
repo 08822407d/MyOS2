@@ -49,7 +49,7 @@
 // #include <asm/traps.h>
 #include <asm/apic.h>
 // #include <asm/acpi.h>
-// #include <asm/io_apic.h>
+#include <asm/io_apic.h>
 #include <asm/desc.h>
 // #include <asm/hpet.h>
 // #include <asm/mtrr.h>
@@ -247,4 +247,54 @@ void __init check_x2apic(void)
 	} else if (!boot_cpu_data.x86_capa_bits.x2APIC) {
 		x2apic_state = X2APIC_DISABLED;
 	}
+}
+
+
+/**
+ * init_apic_mappings - initialize APIC mappings
+ */
+void __init init_apic_mappings(void)
+{
+	// unsigned int new_apicid;
+
+	// if (apic_validate_deadline_timer())
+	// 	pr_info("TSC deadline timer available\n");
+
+	// if (x2apic_mode) {
+	// 	boot_cpu_physical_apicid = read_apic_id();
+	// 	return;
+	// }
+
+	// /* If no local APIC can be found return early */
+	// if (!smp_found_config && detect_init_APIC()) {
+	// 	/* lets NOP'ify apic operations */
+	// 	pr_info("APIC: disable apic facility\n");
+	// 	apic_disable();
+	// } else {
+	// 	apic_phys = mp_lapic_addr;
+
+	// 	/*
+	// 	 * If the system has ACPI MADT tables or MP info, the LAPIC
+	// 	 * address is already registered.
+	// 	 */
+	// 	if (!acpi_lapic && !smp_found_config)
+	// 		register_lapic_address(apic_phys);
+	// }
+
+	// /*
+	//  * Fetch the APIC ID of the BSP in case we have a
+	//  * default configuration (or the MP table is broken).
+	//  */
+	// new_apicid = read_apic_id();
+	// if (boot_cpu_physical_apicid != new_apicid) {
+	// 	boot_cpu_physical_apicid = new_apicid;
+	// 	/*
+	// 	 * yeah -- we lie about apic_version
+	// 	 * in case if apic was disabled via boot option
+	// 	 * but it's not a problem for SMP compiled kernel
+	// 	 * since apic_intr_mode_select is prepared for such
+	// 	 * a case and disable smp mode
+	// 	 */
+	// 	boot_cpu_apic_version = GET_APIC_VERSION(apic_read(APIC_LVR));
+	// }
 }

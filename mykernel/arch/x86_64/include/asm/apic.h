@@ -139,7 +139,7 @@
 	// extern void init_bsp_APIC(void);
 	// extern void apic_intr_mode_select(void);
 	// extern void apic_intr_mode_init(void);
-	// extern void init_apic_mappings(void);
+	extern void init_apic_mappings(void);
 	// void register_lapic_address(unsigned long address);
 	// extern void setup_boot_APIC_clock(void);
 	// extern void setup_secondary_APIC_clock(void);

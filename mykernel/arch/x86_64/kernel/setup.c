@@ -41,7 +41,7 @@
 // #include <asm/efi.h>
 // #include <asm/gart.h>
 // #include <asm/hypervisor.h>
-// #include <asm/io_apic.h>
+#include <asm/io_apic.h>
 // #include <asm/kasan.h>
 // #include <asm/kaslr.h>
 // #include <asm/mce.h>
@@ -286,5 +286,18 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 
 	// x86_init.paging.pagetable_init()
-	zone_sizes_init();
+	// void __init paging_init(void)
+	// {
+		zone_sizes_init();
+	// }
+
+
+	/*
+	 * Systems w/o ACPI and mptables might not have it mapped the local
+	 * APIC yet, but prefill_possible_map() might need to access it.
+	 */
+	init_apic_mappings();
+
+
+	init_io_apic_mappings();
 }

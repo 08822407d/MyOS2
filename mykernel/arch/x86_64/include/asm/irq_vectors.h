@@ -136,10 +136,11 @@
 	#define IO_APIC_VECTOR_LIMIT			(32 * MAX_IO_APICS)
 
 	#if defined(CONFIG_X86_IO_APIC) && defined(CONFIG_PCI_MSI)
-	#	define NR_IRQS										\
-				(CPU_VECTOR_LIMIT > IO_APIC_VECTOR_LIMIT ?	\
-					(NR_VECTORS + CPU_VECTOR_LIMIT)  :		\
-					(NR_VECTORS + IO_APIC_VECTOR_LIMIT))
+	#	define NR_IRQS (										\
+					CPU_VECTOR_LIMIT > IO_APIC_VECTOR_LIMIT ?	\
+					(NR_VECTORS + CPU_VECTOR_LIMIT)  :			\
+					(NR_VECTORS + IO_APIC_VECTOR_LIMIT)			\
+				)
 	#elif defined(CONFIG_X86_IO_APIC)
 	#	define NR_IRQS						(NR_VECTORS + IO_APIC_VECTOR_LIMIT)
 	#elif defined(CONFIG_PCI_MSI)
