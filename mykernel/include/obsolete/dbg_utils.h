@@ -1,7 +1,6 @@
 #ifndef _DBG_UTILS_H_
 #define _DBG_UTILS_H_
 
-#include <obsolete/archtypes.h>
 #include <asm/pgtable_types.h>
 
 	typedef struct pgmapset

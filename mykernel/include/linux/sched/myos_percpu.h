@@ -5,8 +5,6 @@
 #include <linux/lib/list.h>
 #include <linux/kernel/sizes.h>
 
-#include <obsolete/archtypes.h>
-
 	struct task_struct;
 	typedef struct task_struct task_s;
 

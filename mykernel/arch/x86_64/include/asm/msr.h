@@ -82,6 +82,7 @@
 							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
 						:	EAX_EDX_RET(val, low, high)
 						:	"c" (msr)
+						:
 						);
 
 			return EAX_EDX_VAL(val, low, high);

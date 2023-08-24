@@ -119,7 +119,6 @@
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
-#include <obsolete/apic.h>
 #include <obsolete/device.h>
 
 /*
@@ -219,10 +218,6 @@ asmlinkage void __init start_kernel(void)
 	
 	// enable bsp's apic
 	myos_init_bsp_intr();
-
-#ifdef START_WAIT
-	myos_delay_full_u32(1000);
-#endif
 	
 	// post init
 	myos_softirq_init();

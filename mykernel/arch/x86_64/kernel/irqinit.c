@@ -32,6 +32,7 @@
 
 
 #include <asm/irq.h>
+#include <asm/apic.h>
 
 // /*
 //  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
@@ -53,26 +54,6 @@
 // 	[0 ... NR_VECTORS - 1] = VECTOR_UNUSED,
 // };
 
-// void __init init_ISA_irqs(void)
-// {
-// 	struct irq_chip *chip = legacy_pic->chip;
-// 	int i;
-
-// 	/*
-// 	 * Try to set up the through-local-APIC virtual wire mode earlier.
-// 	 *
-// 	 * On some 32-bit UP machines, whose APIC has been disabled by BIOS
-// 	 * and then got re-enabled by "lapic", it hangs at boot time without this.
-// 	 */
-// 	init_bsp_APIC();
-
-// 	legacy_pic->init(0);
-
-// 	for (i = 0; i < nr_legacy_irqs(); i++) {
-// 		irq_set_chip_and_handler(i, chip, handle_level_irq);
-// 		irq_set_status_flags(i, IRQ_LEVEL);
-// 	}
-// }
 
 void __init init_IRQ(void)
 {
@@ -91,21 +72,40 @@ void __init init_IRQ(void)
 
 	// BUG_ON(irq_init_percpu_irqstack(smp_processor_id()));
 
-	// x86_init.irqs.intr_init();
-	native_init_IRQ();
-}
+	// x86_init.irqs.intr_init(); = 
+	// void __init native_init_IRQ(void)
+	// {
+		// /* Execute any quirks before the call gates are initialised: */
+		// x86_init.irqs.pre_vector_init(); =
+		// void __init init_ISA_irqs(void)
+		// {
+		// 	struct irq_chip *chip = legacy_pic->chip;
+		// 	int i;
 
-void __init native_init_IRQ(void)
-{
-	// /* Execute any quirks before the call gates are initialised: */
-	// x86_init.irqs.pre_vector_init();
+			/*
+			* Try to set up the through-local-APIC virtual wire mode earlier.
+			*
+			* On some 32-bit UP machines, whose APIC has been disabled by BIOS
+			* and then got re-enabled by "lapic", it hangs at boot time without this.
+			*/
+			init_bsp_APIC();
 
-	idt_setup_apic_and_irq_gates();
-	// lapic_assign_system_vectors();
+		// 	legacy_pic->init(0);
 
-	// if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
-	// 	/* IRQ2 is cascade interrupt to second interrupt controller */
-	// 	if (request_irq(2, no_action, IRQF_NO_THREAD, "cascade", NULL))
-	// 		pr_err("%s: request_irq() failed\n", "cascade");
+		// 	for (i = 0; i < nr_legacy_irqs(); i++) {
+		// 		irq_set_chip_and_handler(i, chip, handle_level_irq);
+		// 		irq_set_status_flags(i, IRQ_LEVEL);
+		// 	}
+		// }
+
+		idt_setup_apic_and_irq_gates();
+		// lapic_assign_system_vectors();
+
+		// if (!acpi_ioapic && !of_ioapic && nr_legacy_irqs()) {
+		// 	/* IRQ2 is cascade interrupt to second interrupt controller */
+		// 	if (request_irq(2, no_action, IRQF_NO_THREAD, "cascade", NULL))
+		// 		pr_err("%s: request_irq() failed\n", "cascade");
+		// }
 	// }
 }
+

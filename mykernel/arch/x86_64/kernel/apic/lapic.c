@@ -64,8 +64,171 @@
 #include <asm/cpu.h>
 
 
-
 int x2apic_mode;
+
+
+
+/*
+ * Local APIC start and shutdown
+ */
+
+/**
+ * clear_local_APIC - shutdown the local APIC
+ *
+ * This is called, when a CPU is disabled and before rebooting, so the state of
+ * the local APIC has no dangling leftovers. Also used to cleanout any BIOS
+ * leftovers during boot.
+ */
+void clear_local_APIC(void)
+{
+// 	int maxlvt;
+// 	u32 v;
+
+// 	/* APIC hasn't been mapped yet */
+// 	if (!x2apic_mode && !apic_phys)
+// 		return;
+
+// 	maxlvt = lapic_get_maxlvt();
+// 	/*
+// 	 * Masking an LVT entry can trigger a local APIC error
+// 	 * if the vector is zero. Mask LVTERR first to prevent this.
+// 	 */
+// 	if (maxlvt >= 3) {
+// 		v = ERROR_APIC_VECTOR; /* any non-zero vector will do */
+// 		apic_write(APIC_LVTERR, v | APIC_LVT_MASKED);
+// 	}
+// 	/*
+// 	 * Careful: we have to set masks only first to deassert
+// 	 * any level-triggered sources.
+// 	 */
+// 	v = apic_read(APIC_LVTT);
+// 	apic_write(APIC_LVTT, v | APIC_LVT_MASKED);
+// 	v = apic_read(APIC_LVT0);
+// 	apic_write(APIC_LVT0, v | APIC_LVT_MASKED);
+// 	v = apic_read(APIC_LVT1);
+// 	apic_write(APIC_LVT1, v | APIC_LVT_MASKED);
+// 	if (maxlvt >= 4) {
+// 		v = apic_read(APIC_LVTPC);
+// 		apic_write(APIC_LVTPC, v | APIC_LVT_MASKED);
+// 	}
+
+// 	/* lets not touch this if we didn't frob it */
+// #ifdef CONFIG_X86_THERMAL_VECTOR
+// 	if (maxlvt >= 5) {
+// 		v = apic_read(APIC_LVTTHMR);
+// 		apic_write(APIC_LVTTHMR, v | APIC_LVT_MASKED);
+// 	}
+// #endif
+// #ifdef CONFIG_X86_MCE_INTEL
+// 	if (maxlvt >= 6) {
+// 		v = apic_read(APIC_LVTCMCI);
+// 		if (!(v & APIC_LVT_MASKED))
+// 			apic_write(APIC_LVTCMCI, v | APIC_LVT_MASKED);
+// 	}
+// #endif
+
+// 	/*
+// 	 * Clean APIC state for other OSs:
+// 	 */
+// 	apic_write(APIC_LVTT, APIC_LVT_MASKED);
+// 	apic_write(APIC_LVT0, APIC_LVT_MASKED);
+// 	apic_write(APIC_LVT1, APIC_LVT_MASKED);
+// 	if (maxlvt >= 3)
+// 		apic_write(APIC_LVTERR, APIC_LVT_MASKED);
+// 	if (maxlvt >= 4)
+// 		apic_write(APIC_LVTPC, APIC_LVT_MASKED);
+
+// 	/* Integrated APIC (!82489DX) ? */
+// 	if (lapic_is_integrated()) {
+// 		if (maxlvt > 3)
+// 			/* Clear ESR due to Pentium errata 3AP and 11AP */
+// 			apic_write(APIC_ESR, 0);
+// 		apic_read(APIC_ESR);
+// 	}
+}
+
+
+/*
+ * An initial setup of the virtual wire mode.
+ */
+void __init init_bsp_APIC(void)
+{
+	unsigned int value;
+
+	/*
+	 * Don't do the setup now if we have a SMP BIOS as the
+	 * through-I/O-APIC virtual wire mode might be active.
+	 */
+	// if (smp_found_config || !boot_cpu_has(X86_FEATURE_APIC))
+	if (!boot_cpu_data.x86_capa_bits.APIC_On_Chip)
+		return;
+
+	/*
+	 * Do not trust the local APIC being empty at bootup.
+	 */
+	clear_local_APIC();
+
+	/*
+	 * Enable APIC.
+	 */
+	value = apic_msr_read(APIC_SPIV);
+	value &= ~APIC_VECTOR_MASK;
+	value |= APIC_SPIV_APIC_ENABLED;
+
+	// value |= APIC_SPIV_FOCUS_DISABLED;
+	value |= APIC_SPIV_DIRECTED_EOI;
+	// value |= SPURIOUS_APIC_VECTOR;
+	apic_msr_write(APIC_SPIV, value);
+
+	/*
+	 * Set up the virtual wire mode.
+	 */
+	apic_msr_write(APIC_LVT0, APIC_DM_EXTINT);
+	value = APIC_DM_NMI;
+	// if (!lapic_is_integrated())		/* 82489DX */
+	// 	value |= APIC_LVT_LEVEL_TRIGGER;
+	// if (apic_extnmi == APIC_EXTNMI_NONE)
+	// 	value |= APIC_LVT_MASKED;
+	apic_msr_write(APIC_LVT1, value);
+}
+
+// /* Init the interrupt delivery mode for the BSP */
+// // void __init apic_intr_mode_init(void)
+// void intr_mode_init(void)
+// {
+// 	// bool upmode = IS_ENABLED(CONFIG_UP_LATE_INIT);
+
+// 	// switch (apic_intr_mode) {
+// 	// case APIC_PIC:
+// 	// 	pr_info("APIC: Keep in PIC mode(8259)\n");
+// 	// 	return;
+// 	// case APIC_VIRTUAL_WIRE:
+// 	// 	pr_info("APIC: Switch to virtual wire mode setup\n");
+// 	// 	break;
+// 	// case APIC_VIRTUAL_WIRE_NO_CONFIG:
+// 	// 	pr_info("APIC: Switch to virtual wire mode setup with no configuration\n");
+// 	// 	upmode = true;
+// 	// 	break;
+// 	// case APIC_SYMMETRIC_IO:
+// 	// 	pr_info("APIC: Switch to symmetric I/O mode setup\n");
+// 	// 	break;
+// 	// case APIC_SYMMETRIC_IO_NO_ROUTING:
+// 	// 	pr_info("APIC: Switch to symmetric I/O mode setup in no SMP routine\n");
+// 	// 	break;
+// 	// }
+
+// 	// default_setup_apic_routing();
+// 	// void __init default_setup_apic_routing(void)
+// 	// {
+// 		try_to_enable_x2apic(0);
+// 	// }
+
+// 	// if (x86_platform.apic_post_init)
+// 	// 	x86_platform.apic_post_init();
+
+// 	// apic_bsp_setup(upmode);
+// }
+
 
 enum {
 	X2APIC_OFF,
@@ -122,13 +285,14 @@ static void __x2apic_enable(void)
 /* Called from cpu_init() to enable x2apic on (secondary) cpus */
 void x2apic_setup(void)
 {
-	// /*
-	//  * Try to make the AP's APIC state match that of the BSP,  but if the
-	//  * BSP is unlocked and the AP is locked then there is a state mismatch.
-	//  * Warn about the mismatch in case a GP fault occurs due to a locked AP
-	//  * trying to be turned off.
-	//  */
-	// if (x2apic_state != X2APIC_ON_LOCKED && x2apic_hw_locked())
+	/*
+	 * Try to make the AP's APIC state match that of the BSP,  but if the
+	 * BSP is unlocked and the AP is locked then there is a state mismatch.
+	 * Warn about the mismatch in case a GP fault occurs due to a locked AP
+	 * trying to be turned off.
+	 */
+	if (x2apic_state != X2APIC_ON_LOCKED && x2apic_hw_locked())
+		x2apic_state = X2APIC_ON_LOCKED;
 	// 	pr_warn("x2apic lock mismatch between BSP and AP.\n");
 	/*
 	 * If x2apic is not in ON or LOCKED state, disable it if already enabled
@@ -136,81 +300,81 @@ void x2apic_setup(void)
 	 */
 	if (x2apic_state < X2APIC_ON) {
 		__x2apic_disable();
-		return;
+		// return;
 	}
 	__x2apic_enable();
 }
 
 
 
-static __init void try_to_enable_x2apic(int remap_mode)
-{
-	// if (x2apic_state == X2APIC_DISABLED)
-	// 	return;
+// static __init void try_to_enable_x2apic(int remap_mode)
+// {
+// 	if (x2apic_state == X2APIC_DISABLED)
+// 		return;
 
-	// if (remap_mode != IRQ_REMAP_X2APIC_MODE) {
-	// 	u32 apic_limit = 255;
+// 	// if (remap_mode != IRQ_REMAP_X2APIC_MODE) {
+// 	// 	u32 apic_limit = 255;
 
-	// 	/*
-	// 	 * Using X2APIC without IR is not architecturally supported
-	// 	 * on bare metal but may be supported in guests.
-	// 	 */
-	// 	if (!x86_init.hyper.x2apic_available()) {
-	// 		pr_info("x2apic: IRQ remapping doesn't support X2APIC mode\n");
-	// 		static __init void x2apic_disable(void)
-	// 		{
-	// 			u32 x2apic_id, state = x2apic_state;
+// 	// 	/*
+// 	// 	 * Using X2APIC without IR is not architecturally supported
+// 	// 	 * on bare metal but may be supported in guests.
+// 	// 	 */
+// 	// 	if (!x86_init.hyper.x2apic_available()) {
+// 	// 		pr_info("x2apic: IRQ remapping doesn't support X2APIC mode\n");
+// 	// 		static __init void x2apic_disable(void)
+// 	// 		{
+// 	// 			u32 x2apic_id, state = x2apic_state;
 
-	// 			x2apic_mode = 0;
-	// 			x2apic_state = X2APIC_DISABLED;
+// 	// 			x2apic_mode = 0;
+// 	// 			x2apic_state = X2APIC_DISABLED;
 
-	// 			if (state != X2APIC_ON)
-	// 				return;
+// 	// 			if (state != X2APIC_ON)
+// 	// 				return;
 
-	// 			x2apic_id = read_apic_id();
-	// 			if (x2apic_id >= 255)
-	// 				panic("Cannot disable x2apic, id: %08x\n", x2apic_id);
+// 	// 			x2apic_id = read_apic_id();
+// 	// 			if (x2apic_id >= 255)
+// 	// 				panic("Cannot disable x2apic, id: %08x\n", x2apic_id);
 
-	// 			if (x2apic_hw_locked()) {
-	// 				pr_warn("Cannot disable locked x2apic, id: %08x\n", x2apic_id);
-	// 				return;
-	// 			}
+// 	// 			if (x2apic_hw_locked()) {
+// 	// 				pr_warn("Cannot disable locked x2apic, id: %08x\n", x2apic_id);
+// 	// 				return;
+// 	// 			}
 
-	// 			__x2apic_disable();
-	// 			register_lapic_address(mp_lapic_addr);
-	// 		}
-	// 		return;
-	// 	}
+// 	// 			__x2apic_disable();
+// 	// 			register_lapic_address(mp_lapic_addr);
+// 	// 		}
+// 	// 		return;
+// 	// 	}
 
-	// 	/*
-	// 	 * If the hypervisor supports extended destination ID in
-	// 	 * MSI, that increases the maximum APIC ID that can be
-	// 	 * used for non-remapped IRQ domains.
-	// 	 */
-	// 	if (x86_init.hyper.msi_ext_dest_id()) {
-	// 		virt_ext_dest_id = 1;
-	// 		apic_limit = 32767;
-	// 	}
+// 	// 	/*
+// 	// 	 * If the hypervisor supports extended destination ID in
+// 	// 	 * MSI, that increases the maximum APIC ID that can be
+// 	// 	 * used for non-remapped IRQ domains.
+// 	// 	 */
+// 	// 	if (x86_init.hyper.msi_ext_dest_id()) {
+// 	// 		virt_ext_dest_id = 1;
+// 	// 		apic_limit = 32767;
+// 	// 	}
 
-	// 	/*
-	// 	 * Without IR, all CPUs can be addressed by IOAPIC/MSI only
-	// 	 * in physical mode, and CPUs with an APIC ID that cannot
-	// 	 * be addressed must not be brought online.
-	// 	 */
-	// 	x2apic_set_max_apicid(apic_limit);
-	// 	x2apic_phys = 1;
-	// }
+// 	// 	/*
+// 	// 	 * Without IR, all CPUs can be addressed by IOAPIC/MSI only
+// 	// 	 * in physical mode, and CPUs with an APIC ID that cannot
+// 	// 	 * be addressed must not be brought online.
+// 	// 	 */
+// 	// 	x2apic_set_max_apicid(apic_limit);
+// 	// 	x2apic_phys = 1;
+// 	// }
 
-	// static __init void x2apic_enable(void)
-	// {
-		if (x2apic_state != X2APIC_OFF)
-			return;
+// 	// static __init void x2apic_enable(void)
+// 	// {
+// 		if (x2apic_state != X2APIC_OFF)
+// 			return;
 
-		x2apic_mode = 1;
-		x2apic_state = X2APIC_ON;
-		__x2apic_enable();
-	// }
-}
+// 		x2apic_mode = 1;
+// 		x2apic_state = X2APIC_ON;
+// 		__x2apic_enable();
+// 	// }
+// }
 
 void __init check_x2apic(void)
 {

@@ -17,11 +17,9 @@
 
 #include <linux/kernel/cache.h>
 
-#include <obsolete/archtypes.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
 #include <obsolete/glo.h>
-#include <obsolete/archtypes.h>
 
 
 #define DPL0		0x0

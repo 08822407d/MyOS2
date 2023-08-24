@@ -127,7 +127,7 @@
 	// extern void apic_soft_disable(void);
 	// extern void lapic_shutdown(void);
 	// extern void sync_Arb_IDs(void);
-	// extern void init_bsp_APIC(void);
+	extern void init_bsp_APIC(void);
 	// extern void apic_intr_mode_select(void);
 	// extern void apic_intr_mode_init(void);
 	extern void init_apic_mappings(void);
@@ -159,13 +159,12 @@
 	// extern void apic_send_IPI_allbutself(unsigned int vector);
 
 	// static inline void native_apic_msr_write(u32 reg, u32 v)
-	// {
-	// 	if (reg == APIC_DFR || reg == APIC_ID || reg == APIC_LDR ||
-	// 		reg == APIC_LVR)
-	// 		return;
-
-	// 	wrmsr(APIC_BASE_MSR + (reg >> 4), v, 0);
-	// }
+	static inline void apic_msr_write(u32 reg, u32 v) {
+		if (reg == APIC_DFR || reg == APIC_ID || reg == APIC_LDR ||
+			reg == APIC_LVR)
+			return;
+		wrmsr(APIC_BASE_MSR + (reg >> 4), v, 0);
+	}
 
 	// static inline void native_apic_msr_eoi_write(u32 reg, u32 v)
 	// {
@@ -173,15 +172,13 @@
 	// }
 
 	// static inline u32 native_apic_msr_read(u32 reg)
-	// {
-	// 	u64 msr;
-
-	// 	if (reg == APIC_DFR)
-	// 		return -1;
-
-	// 	rdmsrl(APIC_BASE_MSR + (reg >> 4), msr);
-	// 	return (u32)msr;
-	// }
+	static inline u32 apic_msr_read(u32 reg) {
+		u64 msr;
+		if (reg == APIC_DFR)
+			return -1;
+		rdmsrl(APIC_BASE_MSR + (reg >> 4), msr);
+		return (u32)msr;
+	}
 
 	// static inline void native_x2apic_wait_icr_idle(void)
 	// {

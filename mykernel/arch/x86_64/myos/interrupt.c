@@ -5,7 +5,6 @@
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
-#include <obsolete/apic.h>
 #include <obsolete/device.h>
 
 #include <asm/idtentry.h>
@@ -260,8 +259,6 @@ int unregister_IPI(unsigned long irq)
 void myos_init_bsp_intr()
 {
 	init_lapic();
-	//init local apic
-	IOAPIC_pagetable_remap();
 
 	i8259_disable();
 

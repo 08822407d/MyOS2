@@ -4,6 +4,7 @@
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
 #include <asm/io.h>
+#include <asm/apic.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -12,7 +13,6 @@
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
-#include <obsolete/apic.h>
 #include <obsolete/device.h>
 
 hw_int_controller_s HPET_int_controller = 
@@ -62,13 +62,8 @@ void HPET_init()
 
 	//init I/O APIC IRQ2 => HPET Timer 0
 	entry.vector = VECTOR_IRQ(HPET_TIMER0_IRQ);
-	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
-	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
-	entry.deliver_status = APIC_ICR_IOAPIC_Idle;
-	entry.polarity = APIC_IOAPIC_POLARITY_HIGH;
-	entry.irr = APIC_IOAPIC_IRR_RESET;
-	entry.trigger = APIC_ICR_IOAPIC_Edge;
-	entry.mask = APIC_ICR_IOAPIC_Masked;
+	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
+	entry.mask = APIC_LVT_MASKED >> 16;
 	entry.reserved = 0;
 
 	entry.dst.physical.reserved1 = 0;

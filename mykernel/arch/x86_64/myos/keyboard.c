@@ -6,6 +6,7 @@
 #include <linux/device/tty.h>
 #include <asm/processor.h>
 #include <asm/io.h>
+#include <asm/apic.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -13,7 +14,6 @@
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
-#include <obsolete/apic.h>
 #include <obsolete/keyboard.h>
 #include <obsolete/device.h>
 
@@ -46,13 +46,8 @@ void init_keyboard()
 	p_kb->count  = 0;
 
 	entry.vector = VECTOR_IRQ(KEYBOARD_IRQ);
-	entry.deliver_mode = APIC_ICR_IOAPIC_Fixed ;
-	entry.dest_mode = ICR_IOAPIC_DELV_PHYSICAL;
-	entry.deliver_status = APIC_ICR_IOAPIC_Idle;
-	entry.polarity = APIC_IOAPIC_POLARITY_HIGH;
-	entry.irr = APIC_IOAPIC_IRR_RESET;
-	entry.trigger = APIC_ICR_IOAPIC_Edge;
-	entry.mask = APIC_ICR_IOAPIC_Masked;
+	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
+	entry.mask = APIC_LVT_MASKED >> 16;
 	entry.reserved = 0;
 
 	entry.dst.physical.reserved1 = 0;

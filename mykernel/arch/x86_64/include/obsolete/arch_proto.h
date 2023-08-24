@@ -6,7 +6,6 @@
 #include <linux/kernel/ptrace.h>
 #include <linux/sched/task.h>
 
-#include "archtypes.h"
 #include "mutex.h"
 
 /*==============================================================================================*
@@ -161,7 +160,6 @@
 	void i8259_eoi(int);
 	void i8259_do_irq(pt_regs_s *sf_regs);
 	/* apic.c */
-	void IOAPIC_pagetable_remap(void);
 	void init_lapic(void);
 	void LVT_ack(unsigned long lvt_nr);
 	void IOAPIC_init(void);
