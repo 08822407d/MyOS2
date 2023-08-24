@@ -8,25 +8,28 @@
       "name": "MyOS2 debug",
       "type": "cppdbg",
       "request": "launch",
-      "preLaunchTask": "startup vmw",
-      "program": "${workspaceRoot}/build/kernel.debug",
-      "miDebuggerServerAddress": "localhost:8864",
-      "stopAtEntry": false,
+      "preLaunchTask": "startup vmw",                   // 开始debug前要执行的任务，名称对应task.json中的"label"
+      "program": "${workspaceRoot}/build/kernel.debug", // 内核的调试文件
+      "miDebuggerServerAddress": "localhost:8864",      //　远程端口
+      "stopAtEntry": false,                             // 默认将名称为main的函数当作入口
       "cwd": "${workspaceRoot}",
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerPath": "/usr/bin/gdb",                 // 调试器路径
       "miDebuggerArgs": "",
       "targetArchitecture": "x64",
       "setupCommands": [
+        // 设置目标架构
         {
           "text": "set arch i386:x86-64:intel",
           "ignoreFailures": false
         },
+        // 设置gdb的pwd
         {
           "text": "dir .",
           "ignoreFailures": false
         },
+        // 加入其他程序的调试符号文件
         {
           "text": "add-symbol-file ${workspaceRoot}/build/initd.debug",
           "ignoreFailures": false
@@ -35,10 +38,12 @@
         //   "text": "add-symbol-file ${workspaceRoot}/build/sh.debug",
         //   "ignoreFailures": false
         // },
+        // 设置信任路径，执行带文件操作的gdb命令时，免去gdb询问文件路径安全性
         {
           "text": "add-auto-load-safe-path ./",
           "ignoreFailures": false
         },
+        // 设置gdb console的美化显示，vscode的debug console无效，可能是有bug
         {
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
