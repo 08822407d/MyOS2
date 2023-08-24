@@ -4,7 +4,7 @@
 #ifndef _ASM_X86_MSR_INDEX_H
 #define _ASM_X86_MSR_INDEX_H
 
-	// #include <linux/bits.h>
+	#include <linux/kernel/bits.h>
 
 	/*
 	 * CPU model specific register (MSR) numbers.
@@ -1117,11 +1117,11 @@
 	// #define MSR_IA32_HW_FEEDBACK_CONFIG     0x17d1
 
 	// /* x2APIC locked status */
-	// #define MSR_IA32_XAPIC_DISABLE_STATUS	0xBD
-	// #define LEGACY_XAPIC_DISABLED		BIT(0) /*
-	// 						* x2APIC mode is locked and
-	// 						* disabling x2APIC will cause
-	// 						* a #GP
-	// 						*/
+	#define MSR_IA32_XAPIC_DISABLE_STATUS	0xBD
+	#define LEGACY_XAPIC_DISABLED			BIT(0) /*
+							* x2APIC mode is locked and
+							* disabling x2APIC will cause
+							* a #GP
+							*/
 
 #endif /* _ASM_X86_MSR_INDEX_H */

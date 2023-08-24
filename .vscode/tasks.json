@@ -7,7 +7,7 @@
       "label": "startup vmw",
       "type": "shell",
       "isBackground": true,   // 后台执行，使launch.json不用等待本task.json执行完毕
-      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test.vmx", // 启动VMware的命令
+      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test_dbg.vmx", // 启动VMware的命令
       "problemMatcher": [     // 自动接收task.json的输出信息和错误信息，确保后台执行顺利
         {
           "pattern": [

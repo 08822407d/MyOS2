@@ -31,10 +31,8 @@
 
 #include "cpu.h"
 
-#ifdef CONFIG_X86_LOCAL_APIC
-// #	include <asm/mpspec.h>
-// #	include <asm/apic.h>
-#endif
+// #include <asm/mpspec.h>
+#include <asm/apic.h>
 
 
 static const cpu_dev_s intel_cpu_dev = {

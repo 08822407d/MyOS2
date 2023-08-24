@@ -8,11 +8,7 @@
 
 	extern void check_bugs(void);
 
-	// #if defined(CONFIG_CPU_SUP_INTEL) && defined(CONFIG_X86_32)
-	// 	int ppro_with_ram_bug(void);
-	// #else
-	// 	static inline int ppro_with_ram_bug(void) { return 0; }
-	// #endif
+	static inline int ppro_with_ram_bug(void) { return 0; }
 
 	// extern void cpu_bugs_smt_update(void);
 

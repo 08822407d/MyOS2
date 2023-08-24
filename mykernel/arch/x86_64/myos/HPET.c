@@ -1,5 +1,6 @@
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/kernel.h>
+#include <linux/mm/mm.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
 #include <asm/io.h>
@@ -40,8 +41,9 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 void HPET_init()
 {
 	unsigned int x;
-	unsigned int * p = NULL;
-	unsigned char * HPET_addr = (unsigned char *)phys_to_virt((phys_addr_t)0xfed00000);
+	unsigned int *p = (unsigned int *)0xfed00000;
+	unsigned char *HPET_addr = (unsigned char *)phys_to_virt((phys_addr_t)p);
+	myos_kernel_physical_mapping_init((unsigned long)p, (unsigned long)p + PAGE_SIZE);
 	ioapic_retentry_T entry;
 	
 	//get RCBA address

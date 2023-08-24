@@ -465,7 +465,6 @@
 	// 		.endr
 	// 	SYM_CODE_END(irq_entries_start)
 
-	// #	ifdef CONFIG_X86_LOCAL_APIC
 	// 		.align IDT_ALIGN
 	// 	SYM_CODE_START(spurious_entries_start)
 	// 		vector=FIRST_SYSTEM_VECTOR
@@ -480,7 +479,6 @@
 	// 		vector = vector+1
 	// 		.endr
 	// 	SYM_CODE_END(spurious_entries_start)
-	// #	endif
 
 	#endif /* __ASSEMBLY__ */
 
@@ -582,17 +580,13 @@
 
 	// /* Device interrupts common/spurious */
 	// DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	common_interrupt);
-	// #ifdef CONFIG_X86_LOCAL_APIC
 	// DECLARE_IDTENTRY_IRQ(X86_TRAP_OTHER,	spurious_interrupt);
-	// #endif
 
 	// /* System vector entry points */
-	// #ifdef CONFIG_X86_LOCAL_APIC
 	// DECLARE_IDTENTRY_SYSVEC(ERROR_APIC_VECTOR,		sysvec_error_interrupt);
 	// DECLARE_IDTENTRY_SYSVEC(SPURIOUS_APIC_VECTOR,		sysvec_spurious_apic_interrupt);
 	// DECLARE_IDTENTRY_SYSVEC(LOCAL_TIMER_VECTOR,		sysvec_apic_timer_interrupt);
 	// DECLARE_IDTENTRY_SYSVEC(X86_PLATFORM_IPI_VECTOR,	sysvec_x86_platform_ipi);
-	// #endif
 
 	// DECLARE_IDTENTRY(RESCHEDULE_VECTOR,			sysvec_reschedule_ipi);
 	// DECLARE_IDTENTRY_SYSVEC(IRQ_MOVE_CLEANUP_VECTOR,	sysvec_irq_move_cleanup);
@@ -600,7 +594,6 @@
 	// DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_SINGLE_VECTOR,	sysvec_call_function_single);
 	// DECLARE_IDTENTRY_SYSVEC(CALL_FUNCTION_VECTOR,		sysvec_call_function);
 
-	// #ifdef CONFIG_X86_LOCAL_APIC
 	// # ifdef CONFIG_X86_MCE_THRESHOLD
 	// DECLARE_IDTENTRY_SYSVEC(THRESHOLD_APIC_VECTOR,		sysvec_threshold);
 	// # endif
@@ -616,7 +609,6 @@
 	// # ifdef CONFIG_IRQ_WORK
 	// DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);
 	// # endif
-	// #endif
 
 	// #ifdef CONFIG_HAVE_KVM
 	// DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);

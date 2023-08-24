@@ -124,15 +124,14 @@ void __init idt_setup_apic_and_irq_gates(void)
 	#endif
 	// }
 
-// #ifdef CONFIG_X86_LOCAL_APIC
-// 	for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
-// 		/*
-// 		 * Don't set the non assigned system vectors in the
-// 		 * system_vectors bitmap. Otherwise they show up in
-// 		 * /proc/interrupts.
-// 		 */
-// 		entry = spurious_entries_start + IDT_ALIGN * (i - FIRST_SYSTEM_VECTOR);
-// 		set_intr_gate(i, entry);
+	// for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
+	// 	/*
+	// 	 * Don't set the non assigned system vectors in the
+	// 	 * system_vectors bitmap. Otherwise they show up in
+	// 	 * /proc/interrupts.
+	// 	 */
+	// 	entry = spurious_entries_start + IDT_ALIGN * (i - FIRST_SYSTEM_VECTOR);
+	// 	set_intr_gate(i, entry);
 	pack_gate(&idt_table[VECTOR_IPI( 0)], GATE_INTERRUPT, lapic_ipi00, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_IPI( 1)], GATE_INTERRUPT, lapic_ipi01, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_IPI( 2)], GATE_INTERRUPT, lapic_ipi02, KRNL_RPL, 0);
@@ -141,8 +140,7 @@ void __init idt_setup_apic_and_irq_gates(void)
 	pack_gate(&idt_table[VECTOR_IPI( 5)], GATE_INTERRUPT, lapic_ipi05, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_IPI( 6)], GATE_INTERRUPT, lapic_ipi06, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_IPI( 7)], GATE_INTERRUPT, lapic_ipi07, KRNL_RPL, 0);
-// 	}
-// #endif
+	// }
 	// /* Map IDT into CPU entry area and reload it. */
 	// idt_map_in_cea();
 	load_idt(&idt_descr);

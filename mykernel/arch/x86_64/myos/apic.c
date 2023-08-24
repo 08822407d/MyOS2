@@ -249,9 +249,6 @@ void IOAPIC_pagetable_remap()
 	ioapic_map.virt_idx_addr = IOAPIC_addr;
 	ioapic_map.virt_data_addr = (uint32_t *)(IOAPIC_addr + 0x10);
 	ioapic_map.virt_EOI_addr = (uint32_t *)(IOAPIC_addr + 0x40);
-	
-	phys_addr_t pa = (phys_addr_t)ioapic_map.phys_addr;
-	myos_kernel_physical_mapping_init(pa, pa + SZ_2M);
 }
 
 void init_lapic()

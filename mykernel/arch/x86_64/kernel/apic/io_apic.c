@@ -92,6 +92,8 @@ void __init init_io_apic_mappings(void)
 	// 		ioapic_phys = __pa(ioapic_phys);
 	// 	}
 	// 	io_apic_set_fixmap(idx, ioapic_phys);
+		phys_addr_t pa = IO_APIC_DEFAULT_PHYS_BASE;
+		myos_kernel_physical_mapping_init(pa, pa + PAGE_SIZE);
 	// 	apic_printk(APIC_VERBOSE, "mapped IOAPIC to %08lx (%08lx)\n",
 	// 		__fix_to_virt(idx) + (ioapic_phys & ~PAGE_MASK),
 	// 		ioapic_phys);

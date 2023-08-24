@@ -47,11 +47,9 @@
 
 	extern void __init init_IRQ(void);
 
-	// #ifdef CONFIG_X86_LOCAL_APIC
 	// void arch_trigger_cpumask_backtrace(const struct cpumask *mask,
 	// 					bool exclude_self);
 
 	// #define arch_trigger_cpumask_backtrace arch_trigger_cpumask_backtrace
-	// #endif
 
 #endif /* _ASM_X86_IRQ_H */

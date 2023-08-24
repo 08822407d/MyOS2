@@ -10,7 +10,7 @@
 	 */
 
 	#define IO_APIC_DEFAULT_PHYS_BASE	0xfec00000
-	// #define	APIC_DEFAULT_PHYS_BASE		0xfee00000
+	#define	LAPIC_DEFAULT_PHYS_BASE		0xfee00000
 
 	// /*
 	// * This is the IO-APIC register space as specified

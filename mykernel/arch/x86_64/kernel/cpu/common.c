@@ -718,7 +718,7 @@ void cpu_init(void)
 	wrmsrl(MSR_KERNEL_GS_BASE, 0);
 	barrier();
 
-	// x2apic_setup();
+	x2apic_setup();
 
 	// mmgrab(&init_mm);
 	curr->active_mm = &init_mm;
