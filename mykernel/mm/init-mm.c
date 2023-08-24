@@ -16,9 +16,6 @@
 // #include <asm/mmu.h>
 
 
-#include <obsolete/arch_glo.h>
-
-
 #ifndef INIT_MM_CONTEXT
 #	define INIT_MM_CONTEXT(name)
 #endif
@@ -69,7 +66,7 @@ void setup_initial_init_mm(void *start_code,
 	init_mm.mmap		= &init_vma;
 	init_mm.map_count	= 1;
 	init_vma.vm_mm		= &init_mm;
-	init_vma.vm_start	= USERADDR_LIMIT - SZ_16M;
-	init_vma.vm_end		= USERADDR_LIMIT;
+	init_vma.vm_start	= TASK_SIZE_MAX - SZ_16M;
+	init_vma.vm_end		= TASK_SIZE_MAX;
 	init_vma.vm_flags	|= VM_WRITE;
 }

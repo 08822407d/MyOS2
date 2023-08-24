@@ -258,16 +258,13 @@ int unregister_IPI(unsigned long irq)
  *==============================================================================================*/
 void myos_init_bsp_intr()
 {
-	init_lapic();
-
 	i8259_disable();
-
 	//init ioapic
 	IOAPIC_init();
 }
 
 void myos_init_percpu_intr()
 {
-	init_lapic();
+	// init_lapic();
 	// LVT_timer_init();
 }

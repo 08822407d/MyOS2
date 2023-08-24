@@ -20,7 +20,6 @@
 
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
-#include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
 
@@ -106,58 +105,43 @@ void ioapic_rte_write(uint8_t index, uint64_t value)
 /*==============================================================================================*
  *										once functions 1										*
  *==============================================================================================*/
-inline __always_inline unsigned get_x2apic_id()
-{
-	return apic_msr_read(APIC_ID);
-}
+// inline __always_inline unsigned get_x2apic_id()
+// {
+// 	return apic_msr_read(APIC_ID);
+// }
 
-inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
-{
-	u32 x;
-	x = apic_msr_read(APIC_LVR);
-	lapic_info->lapic_ver = x & 0xFF;
-	lapic_info->max_lvt = (x >> 16 & 0xff) + 1;
-	lapic_info->svr12_support = x >> 24 & 0x1;
-}
+// inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
+// {
+// 	u32 x;
+// 	x = apic_msr_read(APIC_LVR);
+// 	lapic_info->lapic_ver = x & 0xFF;
+// 	lapic_info->max_lvt = (x >> 16 & 0xff) + 1;
+// 	lapic_info->svr12_support = x >> 24 & 0x1;
+// }
 
-inline __always_inline void disable_lvt(lapic_info_s * lapic_info)
-{
-	u32 val = 0x10000;
-	if (lapic_info->max_lvt >= 7)
-		apic_msr_write(APIC_LVTCMCI, val);
-	apic_msr_write(APIC_LVTT, val);
-	apic_msr_write(APIC_LVTTHMR, val);
-	apic_msr_write(APIC_LVTPC, val);
-	apic_msr_write(APIC_LVT0, val);
-	apic_msr_write(APIC_LVT1, val);
-	apic_msr_write(APIC_LVTERR, val);
-}
+// inline __always_inline unsigned get_lvt_tpr()
+// {
+// 	return apic_msr_read(APIC_TASKPRI);
+// }
 
-inline __always_inline unsigned get_lvt_tpr()
-{
-	return apic_msr_read(APIC_TASKPRI);
-}
-
-inline __always_inline unsigned get_lvt_ppr()
-{
-	return apic_msr_read(APIC_PROCPRI);
-}
+// inline __always_inline unsigned get_lvt_ppr()
+// {
+// 	return apic_msr_read(APIC_PROCPRI);
+// }
 
 /*==============================================================================================*
  *										once functions 2								 		*
  *==============================================================================================*/
 void init_lapic()
 {
-	lapic_info_s lapic_info;
-	unsigned x2apic_id = get_x2apic_id();
+	// lapic_info_s lapic_info;
+	// unsigned x2apic_id = get_x2apic_id();
 
-	get_lapic_ver(&lapic_info);
+	// get_lapic_ver(&lapic_info);
 
-	disable_lvt(&lapic_info);
+	// unsigned lvt_tpr = get_lvt_tpr();
 
-	unsigned lvt_tpr = get_lvt_tpr();
-
-	unsigned lvt_ppr = get_lvt_ppr();
+	// unsigned lvt_ppr = get_lvt_ppr();
 }
 
 

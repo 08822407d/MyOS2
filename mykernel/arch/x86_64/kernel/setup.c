@@ -260,7 +260,7 @@ void __init setup_arch(char **cmdline_p)
 	max_pfn = e820__end_of_ram_pfn();
 	max_possible_pfn = max_pfn;
 
-	check_x2apic();
+	myos_try_enable_x2apic();
 
 	// /* need this before calling reserve_initrd */
 	max_low_pfn = max_pfn;
@@ -290,14 +290,4 @@ extern void myos_init_smp(size_t lcpu_nr);
 	// {
 		zone_sizes_init();
 	// }
-
-
-	/*
-	 * Systems w/o ACPI and mptables might not have it mapped the local
-	 * APIC yet, but prefill_possible_map() might need to access it.
-	 */
-	init_apic_mappings();
-
-
-	init_io_apic_mappings();
 }

@@ -10,8 +10,6 @@
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
-#include <obsolete/arch_glo.h>
-
 
 size_t			cpustack_off;
 PCB_u **		idle_tasks;

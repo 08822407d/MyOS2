@@ -107,13 +107,12 @@ static void __init myos_memory_map()
 
 	kernel_cr3 = virt_to_phys((virt_addr_t)init_top_pgt);
 
-
-	// map VBE frame_buffer, this part should not be
-	// add into any memory manage unit
-extern framebuffer_s framebuffer;
-	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
-	end = start + PFN_PHYS(PFN_UP(framebuffer.FB_size));
-	myos_kernel_physical_mapping_init(start, end);
+extern void myos_init_VBE_mapping(void);
+	myos_init_VBE_mapping();
+// 默认支持x2APIC，所以无需映射MMIO空间
+	// init_apic_mappings();
+extern void __init init_io_apic_mappings(void);
+	init_io_apic_mappings();
 }
 
 void __init init_mem_mapping(void)

@@ -767,20 +767,20 @@
 	 */
 	enum vm_fault_reason
 	{
-		VM_FAULT_OOM = (__force vm_fault_t)0x000001,
-		VM_FAULT_SIGBUS = (__force vm_fault_t)0x000002,
-		VM_FAULT_MAJOR = (__force vm_fault_t)0x000004,
-		VM_FAULT_WRITE = (__force vm_fault_t)0x000008,
-		VM_FAULT_HWPOISON = (__force vm_fault_t)0x000010,
-		VM_FAULT_HWPOISON_LARGE = (__force vm_fault_t)0x000020,
-		VM_FAULT_SIGSEGV = (__force vm_fault_t)0x000040,
-		VM_FAULT_NOPAGE = (__force vm_fault_t)0x000100,
-		VM_FAULT_LOCKED = (__force vm_fault_t)0x000200,
-		VM_FAULT_RETRY = (__force vm_fault_t)0x000400,
-		VM_FAULT_FALLBACK = (__force vm_fault_t)0x000800,
-		VM_FAULT_DONE_COW = (__force vm_fault_t)0x001000,
-		VM_FAULT_NEEDDSYNC = (__force vm_fault_t)0x002000,
-		VM_FAULT_HINDEX_MASK = (__force vm_fault_t)0x0f0000,
+		VM_FAULT_OOM			= (__force vm_fault_t)0x000001,
+		VM_FAULT_SIGBUS			= (__force vm_fault_t)0x000002,
+		VM_FAULT_MAJOR			= (__force vm_fault_t)0x000004,
+		VM_FAULT_WRITE			= (__force vm_fault_t)0x000008,
+		VM_FAULT_HWPOISON		= (__force vm_fault_t)0x000010,
+		VM_FAULT_HWPOISON_LARGE	= (__force vm_fault_t)0x000020,
+		VM_FAULT_SIGSEGV		= (__force vm_fault_t)0x000040,
+		VM_FAULT_NOPAGE			= (__force vm_fault_t)0x000100,
+		VM_FAULT_LOCKED			= (__force vm_fault_t)0x000200,
+		VM_FAULT_RETRY			= (__force vm_fault_t)0x000400,
+		VM_FAULT_FALLBACK		= (__force vm_fault_t)0x000800,
+		VM_FAULT_DONE_COW		= (__force vm_fault_t)0x001000,
+		VM_FAULT_NEEDDSYNC		= (__force vm_fault_t)0x002000,
+		VM_FAULT_HINDEX_MASK	= (__force vm_fault_t)0x0f0000,
 	};
 
 	/* Encode hstate index for a hwpoisoned large page */

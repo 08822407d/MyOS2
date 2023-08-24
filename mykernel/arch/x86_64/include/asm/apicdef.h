@@ -26,7 +26,7 @@
 	// #define		APIC_LVR_MASK		0xFF00FF
 	// #define		APIC_LVR_DIRECTED_EOI	(1 << 24)
 	// #define		GET_APIC_VERSION(x)	((x) & 0xFFu)
-	// #define		GET_APIC_MAXLVT(x)	(((x) >> 16) & 0xFFu)
+	#define		GET_APIC_MAXLVT(x)			(((x) >> 16) & 0xFFu)
 	// #define	APIC_INTEGRATED(x)	(1)
 	// #define		APIC_XAPIC(x)		((x) >= 0x14)
 	// #define		APIC_EXT_SPACE(x)	((x) & 0x80000000)

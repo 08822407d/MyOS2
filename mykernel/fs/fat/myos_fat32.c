@@ -23,7 +23,6 @@
 #include <obsolete/printk.h>
 #include <obsolete/device.h>
 #include <obsolete/ide.h>
-#include <obsolete/arch_glo.h>
 
 bool FAT32_ent_empty(const msdos_dirent_s *de)
 {
@@ -151,7 +150,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
-		if((unsigned long)buf < USERADDR_LIMIT)
+		if((unsigned long)buf < TASK_SIZE_MAX)
 			copy_to_user(buf, buffer + offset, length);
 		else
 			memcpy(buf, buffer + offset, length);
@@ -224,7 +223,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
-		if((unsigned long)buf < USERADDR_LIMIT)
+		if((unsigned long)buf < TASK_SIZE_MAX)
 			copy_from_user(buffer + offset, (void *)buf, length);
 		else
 			memcpy(buffer + offset, buf, length);

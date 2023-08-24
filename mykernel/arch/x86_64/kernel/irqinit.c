@@ -34,26 +34,25 @@
 #include <asm/irq.h>
 #include <asm/apic.h>
 
-// /*
-//  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
-//  * (these are usually mapped to vectors 0x30-0x3f)
-//  */
+/*
+ * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
+ * (these are usually mapped to vectors 0x30-0x3f)
+ */
 
-// /*
-//  * The IO-APIC gives us many more interrupt sources. Most of these
-//  * are unused but an SMP system is supposed to have enough memory ...
-//  * sometimes (mostly wrt. hw bugs) we get corrupted vectors all
-//  * across the spectrum, so we really want to be prepared to get all
-//  * of these. Plus, more powerful systems might have more than 64
-//  * IO-APIC registers.
-//  *
-//  * (these are usually mapped into the 0x30-0xff vector range)
-//  */
+/*
+ * The IO-APIC gives us many more interrupt sources. Most of these
+ * are unused but an SMP system is supposed to have enough memory ...
+ * sometimes (mostly wrt. hw bugs) we get corrupted vectors all
+ * across the spectrum, so we really want to be prepared to get all
+ * of these. Plus, more powerful systems might have more than 64
+ * IO-APIC registers.
+ *
+ * (these are usually mapped into the 0x30-0xff vector range)
+ */
 
 // DEFINE_PER_CPU(vector_irq_t, vector_irq) = {
 // 	[0 ... NR_VECTORS - 1] = VECTOR_UNUSED,
 // };
-
 
 void __init init_IRQ(void)
 {
@@ -81,17 +80,7 @@ void __init init_IRQ(void)
 		// {
 		// 	struct irq_chip *chip = legacy_pic->chip;
 		// 	int i;
-
-			/*
-			* Try to set up the through-local-APIC virtual wire mode earlier.
-			*
-			* On some 32-bit UP machines, whose APIC has been disabled by BIOS
-			* and then got re-enabled by "lapic", it hangs at boot time without this.
-			*/
-			init_bsp_APIC();
-
 		// 	legacy_pic->init(0);
-
 		// 	for (i = 0; i < nr_legacy_irqs(); i++) {
 		// 		irq_set_chip_and_handler(i, chip, handle_level_irq);
 		// 		irq_set_status_flags(i, IRQ_LEVEL);

@@ -23,7 +23,6 @@
 #include <obsolete/printk.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/arch_glo.h>
 #include <obsolete/device.h>
 
 #define	USER_CODE_ADDR		0x6000000

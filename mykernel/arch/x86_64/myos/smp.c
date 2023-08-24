@@ -10,9 +10,10 @@
 #include <linux/mm/memblock.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/arch_glo.h>
 #include <obsolete/mutex.h>
 
+extern phys_addr_t 		kernel_cr3;
+extern uint64_t	apic_id[CONFIG_NR_CPUS];
 cpudata_u bsp_cpudata;
 cpudata_u **percpu_data;
 extern u32	cr3_paddr;

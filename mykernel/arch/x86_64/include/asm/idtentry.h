@@ -602,9 +602,7 @@
 	// DECLARE_IDTENTRY_SYSVEC(DEFERRED_ERROR_VECTOR,		sysvec_deferred_error);
 	// # endif
 
-	// # ifdef CONFIG_X86_THERMAL_VECTOR
 	// DECLARE_IDTENTRY_SYSVEC(THERMAL_APIC_VECTOR,		sysvec_thermal);
-	// # endif
 
 	// # ifdef CONFIG_IRQ_WORK
 	// DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		sysvec_irq_work);

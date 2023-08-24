@@ -6,7 +6,6 @@
 #include <obsolete/proto.h>
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
-#include <obsolete/arch_glo.h>
 #include <obsolete/arch_proto.h>
 
 extern position_t Pos;
@@ -33,4 +32,14 @@ void myos_init_video()
 		linebuf[i] = ' ';
 	color_printk(BLACK, GREEN, "%s", linebuf);
 	color_printk(BLACK, GREEN, "\n");
+}
+
+// map VBE frame_buffer, this part should not be
+// add into any memory manage unit
+void myos_init_VBE_mapping()
+{
+	u64 start, end;
+	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
+	end = start + PFN_PHYS(PFN_UP(framebuffer.FB_size));
+	myos_kernel_physical_mapping_init(start, end);
 }

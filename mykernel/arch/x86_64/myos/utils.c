@@ -9,11 +9,10 @@
 #include <linux/fs/fs.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/arch_glo.h>
 
 inline __always_inline bool verify_area(unsigned char *addr, unsigned long size)
 {
-	if(((unsigned long)addr + size) <= (unsigned long)USERADDR_LIMIT)
+	if(((unsigned long)addr + size) <= (unsigned long)TASK_SIZE_MAX)
 		return true;
 	else
 		return false;
