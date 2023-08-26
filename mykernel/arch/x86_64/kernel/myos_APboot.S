@@ -110,7 +110,7 @@ l1:
 
 SYM_CODE_START(AP_DEBUG)
 	// get idle_task_PCB for current AP and set rsp to task's kstack
-	movabsq	idle_tasks,		%rax
+	// movabsq	idle_tasks,		%rax
 	movq	(%rax, %rbx, 8),%rax
 	addq	$THREAD_SIZE,	%rax
 	movq	%rax,		%rsp

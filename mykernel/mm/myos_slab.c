@@ -74,8 +74,6 @@ void myos_init_slab()
 		bslp->virt_addr = page_to_virt(page);
 		bslp->page->private = (unsigned long)bslp;
 	}
-	// set init flag
-	kparam.init_flags.slab = 1;
 }
 
 slab_s * slab_alloc(slab_s *cslp)
@@ -114,7 +112,7 @@ void * __kmalloc(size_t size, gfp_t flags)
 {
 	#ifdef DEBUG
 		// make sure have init slab
-		while (!kparam.init_flags.slab);
+		while (!init_flags.slab);
 	#endif
 
 	void *ret_val = NULL;
@@ -214,7 +212,7 @@ void kfree(const void *objp)
 {
 	#ifdef DEBUG
 		// make sure have init slab
-		while (!kparam.init_flags.slab);
+		while (!init_flags.slab);
 	#endif
 
 	if (objp == NULL)

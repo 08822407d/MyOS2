@@ -14,7 +14,7 @@
 extern uint64_t	boot_from_grub2;
 
 efi_machine_conf_s	*machine_info;
-kinfo_s			kparam;
+unsigned		nr_lcpu;
 framebuffer_s	framebuffer;
 
 uint64_t		apic_id[CONFIG_NR_CPUS];
@@ -33,7 +33,7 @@ static void get_VBE_info(mb_fb_common_s * vbe_info)
 
 static void get_SMP_info(efi_smpinfo_s * smp_info)
 {
-	kparam.nr_lcpu = smp_info->core_available;
+	nr_lcpu = smp_info->core_available;
 	uint64_t lcpu_count = 0;
 	for (int i = 0; i < smp_info->core_num; i++)
 	{

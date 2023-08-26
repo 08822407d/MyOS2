@@ -23,29 +23,13 @@
 		void * data;
 	} softirq_s;
 
-	extern uint64_t		softirq_status;
-	extern softirq_s	softirq_vector[64];
 	extern List_hdr_s	timer_lhdr;
 
-	/* main.c */
-	void start_kernel(void);
-
-	/* mod_test.c */
-	unsigned long module_test(unsigned long);
-
-	/* start.c */
-	void cstart(void);
-
 	/* memory.c */
-	page_s * alloc_pages(enum zone_type ,unsigned int order);
 	page_s * paddr_to_page(phys_addr_t paddr);
-	void page_free(page_s *);
 
 	/* video.c */
 	void myos_init_video(void);
-
-	/* functions defined in architecture-dependent files. */
-	void prot_bsp_init(void);
 
 	/* softirq.c */
 	void register_softirq(unsigned sirq, void (*action)(void * data), void * data);

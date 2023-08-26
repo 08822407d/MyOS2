@@ -1,5 +1,37 @@
+#include <linux/kernel/sched.h>
+#include <linux/lib/list.h>
+
 #include <asm/processor.h>
 #include <asm/desc.h>
+
+
+
+__visible DEFINE_PER_CPU_PAGE_ALIGNED(files_struct_s, idle_taskfilps);
+
+__visible DEFINE_PER_CPU_PAGE_ALIGNED(taskfs_s, idle_taskfs) = {
+	.in_exec		= 0,
+	.umask			= 0,
+	.users			= 0,
+	.pwd.mnt		= NULL,
+	.root.mnt		= NULL,
+};
+
+__visible DEFINE_PER_CPU_PAGE_ALIGNED(PCB_u, idletsk)  __aligned(THREAD_SIZE) = {
+	.task.tasks				= LIST_INIT(idletsk.task.tasks),
+	.task.parent			= &idletsk.task,
+	.task.sibling			= LIST_INIT(idletsk.task.sibling),
+	.task.children			= LIST_HEADER_INIT(idletsk.task.children),
+	.task.__state			= TASK_RUNNING,
+	.task.flags				= PF_KTHREAD,
+	.task.rt.time_slice		= 20,
+	.task.se.vruntime		= -1,
+	.task.mm				= &init_mm,
+	.task.fs				= &idle_taskfs,
+	.task.files				= &idle_taskfilps,
+	.task.pid_links 		= LIST_INIT(idletsk.task.pid_links),
+	.task.stack				= (void *)&idletsk + THREAD_SIZE,
+};
+
 
 /*
  * per-CPU TSS segments. Threads are completely 'soft' on Linux,
@@ -17,7 +49,8 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw) = {
 		 * but ring 0 code, there is no need for a valid value here.
 		 * Poison it.
 		 */
-		.sp0 = (1UL << (BITS_PER_LONG-1)) + 1,
+		// .sp0 = (1UL << (BITS_PER_LONG-1)) + 1,
+		.sp0 = (reg_t)(&idletsk + 1),
 		.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
 	 },
 };

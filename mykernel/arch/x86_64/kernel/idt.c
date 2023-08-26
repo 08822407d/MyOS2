@@ -27,7 +27,6 @@
 
 #define DEFAULT_STACK	0
 
-
 #define IDT_TABLE_SIZE		(IDT_ENTRIES * sizeof(gate_desc))
 
 
@@ -38,11 +37,11 @@ struct desc_ptr idt_descr __ro_after_init = {
 	.address	= (unsigned long)&idt_table,
 };
 
-void load_current_idt(void)
-{
-	// lockdep_assert_irqs_disabled();
-	load_idt(&idt_descr);
-}
+// void load_current_idt(void)
+// {
+// 	// lockdep_assert_irqs_disabled();
+// 	load_idt(&idt_descr);
+// }
 
 /**
  * idt_setup_early_handler - Initializes the idt table with early handlers
@@ -147,10 +146,5 @@ void __init idt_setup_apic_and_irq_gates(void)
 	// set_memory_ro((unsigned long)&idt_table, 1);
 
 	// idt_setup_done = true;
-}
-
-void myos_init_arch(size_t cpu_idx)
-{
-	cpu_tss_rw.x86_tss.sp0 = (reg_t)(idle_tasks[0] + 1);
 }
 

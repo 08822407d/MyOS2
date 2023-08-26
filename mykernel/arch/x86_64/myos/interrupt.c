@@ -265,6 +265,5 @@ void myos_init_bsp_intr()
 
 void myos_init_percpu_intr()
 {
-	// init_lapic();
 	// LVT_timer_init();
 }

@@ -13,8 +13,6 @@
 #include <asm/apic.h>
 
 #include <obsolete/printk.h>
-#include <obsolete/block_dev.h>
-
 #include <obsolete/arch_proto.h>
 #include <obsolete/interrupt.h>
 #include <obsolete/device.h>

@@ -2397,24 +2397,9 @@
 		task_s task;
 		reg_t stack[THREAD_SIZE / sizeof(reg_t)];
 	} PCB_u __attribute__((aligned(8)));
-
-	typedef struct task_queue {
-		task_s **queue;
-		task_s *sched_task;
-		unsigned nr_max;
-		unsigned nr_curr;
-		unsigned head; // point to the firt non-null unit in queue
-		unsigned tail; // point to next unit of the last non-null
-	} task_queue_s;
 	
-	void myos_early_init_task(size_t lcpu_nr);
 	void myos_init_task(size_t lcpu_nr);
-	void myos_preinit_arch_task(void);
-	void myos_init_arch_task(size_t cpu_idx);
+	void myos_init_pid_allocator(void);
 	unsigned long myos_pid_nr(void);
-	void __myos_switch_to(task_s *curr, task_s *target);
-	void myos_switch_to(task_s *curr, task_s *target);
-	void myos_idle_enqueue(task_s *idle);
-	task_s *idle_dequeue(void);
 
 #endif

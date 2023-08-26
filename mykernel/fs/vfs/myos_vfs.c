@@ -20,18 +20,29 @@
 #include <linux/fs/mount.h>
 #include <uapi/linux/mount.h>
 
-mount_s myos_root_mnt;
+#define BOOT_FS_IDX 0
+
+super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
+
+MBR_s		*boot_sec;
+GPT_H_s		*gpt_hdr;
+GPT_PE_s	*gpt_pes;
+
+super_block_s *myos_root_sb = NULL;
+
+mount_s myos_root_mnt =
+{
+	.mnt_parent		= &myos_root_mnt,
+	.mnt_mp			= NULL,
+	.mnt_mounts		= LIST_HEADER_INIT(myos_root_mnt.mnt_mounts),
+	.mnt_child		= LIST_INIT(myos_root_mnt.mnt_child),
+};
 
 void set_init_mount()
 {
-	list_hdr_init(&myos_root_mnt.mnt_mounts);
-	list_init(&myos_root_mnt.mnt_child, &myos_root_mnt);
-
 	myos_root_mnt.mnt.mnt_sb = myos_root_sb;
-	myos_root_mnt.mnt_parent = &myos_root_mnt;
 	myos_root_mnt.mnt_mountpoint =
 	myos_root_mnt.mnt.mnt_root = myos_root_sb->s_root;
-	myos_root_mnt.mnt_mp = NULL;
 }
 
 void set_init_taskfs()
@@ -44,19 +55,10 @@ void set_init_taskfs()
 	taskfs_p->pwd.mnt = 
 	taskfs_p->root.mnt = &myos_root_mnt.mnt;
 
-	memcpy(task0_PCB.task.fs, taskfs_p, sizeof(taskfs_s));
+	memcpy(idletsk.task.fs, taskfs_p, sizeof(taskfs_s));
 }
 
 
-#define BOOT_FS_IDX 0
-
-super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
-
-MBR_s		*boot_sec;
-GPT_H_s		*gpt_hdr;
-GPT_PE_s	*gpt_pes;
-
-super_block_s *myos_root_sb = NULL;
 fs_type_s filesystem = { .name = "filesystem", .fs_flags = 0};
 extern fs_type_s *file_systems;
 
@@ -72,8 +74,8 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		unsigned long blk_idx, long count, unsigned char * buffer);
 unsigned long myos_switch_to_root_disk()
 {
-	// int test = kparam.init_flags.vfs;
-	// kparam.init_flags.vfs = 0;
+	// int test = init_flags.vfs;
+	// init_flags.vfs = 0;
 	// load the boot sector
 	boot_sec = (MBR_s *)kzalloc(sizeof(MBR_s), GFP_KERNEL);
 	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
@@ -128,7 +130,6 @@ unsigned long myos_switch_to_root_disk()
 			break;
 		}
 	}
-	kparam.init_flags.vfs = 1;
 
 	set_init_mount();
 	set_init_taskfs();

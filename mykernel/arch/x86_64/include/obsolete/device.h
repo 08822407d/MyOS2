@@ -5,7 +5,6 @@
 #include <linux/fs/fs.h>
 
 #include <obsolete/ktypes.h>
-#include <obsolete/block_dev.h>
 #include "arch_proto.h"
 #include "interrupt.h"
 
@@ -26,6 +25,17 @@
 
 	/* disk.c */
 	void init_disk(void);
+
+	typedef struct blkdev_ops
+	{
+		long (* open)(unsigned controller, unsigned disk);
+		long (* close)(unsigned controller, unsigned disk);
+		long (* ioctl)(unsigned controller, unsigned disk,
+						long cmd, long arg);
+		long (* transfer)(unsigned controller, unsigned disk,
+						long cmd, unsigned long blk_idx,
+						long count, unsigned char * buffer);
+	} blkdev_ops_s;
 	extern blkdev_ops_s ATA_master_ops;
 
 #endif /* _AMD64_PC_DEVICE_H_ */

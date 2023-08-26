@@ -21,24 +21,6 @@
 		unsigned char buf[KB_BUF_SIZE];
 	} kbd_inbuf_s;
 
-/* Number of processes contained in the system image. */
-	typedef struct
-	{
-		// mm
-		int		slab;
-		// task
-		int		idle_task;
-		// vfs
-		int		vfs;
-	} init_flags_s;
-	
-/* This is used to obtain system information through SYS_GETINFO. */
-
-	typedef struct kinfo {
-		unsigned		nr_lcpu;
-		init_flags_s	init_flags;
-	} kinfo_s;
-
 	typedef struct framebuffer
 	{
 		phys_addr_t	FB_phybase;

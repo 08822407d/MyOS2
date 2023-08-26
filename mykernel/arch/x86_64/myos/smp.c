@@ -31,31 +31,6 @@ void myos_early_init_smp(void)
 	cr3_paddr = kernel_cr3;
 }
 
-static void init_percpu_data(size_t cpu_idx)
-{
-	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(percpu_data[cpu_idx]->cpudata);
-	cpudata_p->cpu_idx = cpu_idx;
-	cpudata_p->last_jiffies = 0;
-	cpudata_p->is_idle_flag = 1;
-	cpudata_p->scheduleing_flag = 0;
-	cpudata_p->curr_task =
-	cpudata_p->idle_task = &(idle_tasks[cpu_idx]->task);
-	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
-	cpudata_p->preempt_count = 0;
-	cpudata_p->cpustack_p = (reg_t)percpu_data[cpu_idx] + sizeof(cpudata_u);
-	list_hdr_init(&cpudata_p->running_lhdr);
-
-	// fill architechture part
-	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
-	arch_cpuinfo->lcpu_addr = apic_id[cpu_idx];
-	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[cpu_idx].thd_id;
-	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[cpu_idx].core_id;
-	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[cpu_idx].pack_id;
-	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[cpu_idx].not_use;
-	arch_cpuinfo->tss = &cpu_tss_rw;
-}
-
 void myos_init_smp(size_t lcpu_nr)
 {
 	percpu_data	= myos_memblock_alloc_normal(
@@ -70,7 +45,27 @@ void myos_init_smp(size_t lcpu_nr)
 	// init basic data for percpu
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
-		init_percpu_data(0);
+	// create percpu_data for current lcpu
+	per_cpudata_s * cpudata_p = &(percpu_data[0]->cpudata);
+	cpudata_p->cpu_idx = 0;
+	cpudata_p->last_jiffies = 0;
+	cpudata_p->is_idle_flag = 1;
+	cpudata_p->scheduleing_flag = 0;
+	cpudata_p->curr_task =
+	cpudata_p->idle_task = &(idletsk.task);
+	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
+	cpudata_p->preempt_count = 0;
+	cpudata_p->cpustack_p = (reg_t)percpu_data[0] + sizeof(cpudata_u);
+	list_hdr_init(&cpudata_p->running_lhdr);
+
+	// fill architechture part
+	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
+	arch_cpuinfo->lcpu_addr = apic_id[0];
+	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[0].thd_id;
+	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[0].core_id;
+	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[0].pack_id;
+	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[0].not_use;
+	arch_cpuinfo->tss = &cpu_tss_rw;
 	// }
 }
 

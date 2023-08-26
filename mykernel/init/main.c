@@ -214,7 +214,7 @@ asmlinkage void __init start_kernel(void)
 
 	myos_init_slab();
 
-	myos_init_task(kparam.nr_lcpu);
+	myos_init_task(nr_lcpu);
 	
 	// enable bsp's apic
 	myos_init_bsp_intr();
@@ -242,7 +242,7 @@ void idle(size_t cpu_idx)
 	myos_percpu_self_config(cpu_idx);
 
 	atomic_inc(&lcpu_boot_count);
-	while (atomic_read(&lcpu_boot_count) != kparam.nr_lcpu);
+	while (atomic_read(&lcpu_boot_count) != nr_lcpu);
 
 	if (cpu_idx == 0)
 	{

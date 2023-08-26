@@ -30,7 +30,6 @@
 #define MAX_PID				0x8000
 
 extern char		ist_stack0;
-extern PCB_u	task0_PCB;
 
 static DEFINE_SPINLOCK(newpid_lock);
 bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
@@ -43,22 +42,13 @@ extern int myos_exit_thread(task_s * new_task);
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-void myos_preinit_arch_task()
+void myos_init_pid_allocator()
 {
 	// init pid bitmap
 	memset(&pid_bm, 0, sizeof(pid_bm));
 	curr_pid = 0;
 }
 
-void myos_init_arch_task(size_t cpu_idx)
-{
-	PCB_u * idle_pcb = idle_tasks[cpu_idx];
-	idle_pcb->task.stack = (void *)idle_pcb + THREAD_SIZE;
-}
-
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/
 unsigned long myos_pid_nr()
 {
 	spin_lock(&newpid_lock);
@@ -79,19 +69,9 @@ unsigned long myos_pid_nr()
 	return curr_pid;
 }
 
-static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
-{
-	load_cr3(target->mm->pgd);
-	wrmsrl(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
-}
-
-inline __always_inline void __myos_switch_to(task_s * curr, task_s * target)
-{
-	per_cpudata_s * cpudata_p = curr_cpu;
-	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
-	curr_tss->x86_tss.sp0 = (reg_t)target->stack;
-}
-
+/*==============================================================================================*
+ *																								*
+ *==============================================================================================*/
 void kjmp_to_doexecve()
 {
 	// here if derictly use macro:current will cause unexpected rewriting memory
@@ -164,6 +144,12 @@ inline __always_inline task_s * myos_get_current()
 				:
 				);
 	return curr_task;
+}
+
+static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
+{
+	load_cr3(target->mm->pgd);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (unsigned long)target->stack);
 }
 
 void myos_schedule(void)

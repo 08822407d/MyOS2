@@ -617,7 +617,7 @@ void syscall_init(void)
 	// init MSR sf_regs related to sysenter/sysexit
 	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
-	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task0_PCB.task.stack);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)idletsk.task.stack);
 	uint64_t kstack;
 	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
 #else

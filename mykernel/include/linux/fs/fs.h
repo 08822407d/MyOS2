@@ -3526,10 +3526,6 @@
 	// }
 
 
-
-	extern super_block_s *myos_root_sb;
-	extern mount_s myos_root_mnt;
-
 	super_block_s *alloc_super(fs_type_s *type, int flags);
 	unsigned long myos_switch_to_root_disk(void);
 

@@ -103,48 +103,8 @@ void ioapic_rte_write(uint8_t index, uint64_t value)
 }
 
 /*==============================================================================================*
- *										once functions 1										*
+ *											once functions 										*
  *==============================================================================================*/
-// inline __always_inline unsigned get_x2apic_id()
-// {
-// 	return apic_msr_read(APIC_ID);
-// }
-
-// inline __always_inline void get_lapic_ver(lapic_info_s * lapic_info)
-// {
-// 	u32 x;
-// 	x = apic_msr_read(APIC_LVR);
-// 	lapic_info->lapic_ver = x & 0xFF;
-// 	lapic_info->max_lvt = (x >> 16 & 0xff) + 1;
-// 	lapic_info->svr12_support = x >> 24 & 0x1;
-// }
-
-// inline __always_inline unsigned get_lvt_tpr()
-// {
-// 	return apic_msr_read(APIC_TASKPRI);
-// }
-
-// inline __always_inline unsigned get_lvt_ppr()
-// {
-// 	return apic_msr_read(APIC_PROCPRI);
-// }
-
-/*==============================================================================================*
- *										once functions 2								 		*
- *==============================================================================================*/
-void init_lapic()
-{
-	// lapic_info_s lapic_info;
-	// unsigned x2apic_id = get_x2apic_id();
-
-	// get_lapic_ver(&lapic_info);
-
-	// unsigned lvt_tpr = get_lvt_tpr();
-
-	// unsigned lvt_ppr = get_lvt_ppr();
-}
-
-
 void IOAPIC_init()
 {
 	uint8_t *IOAPIC_addr =

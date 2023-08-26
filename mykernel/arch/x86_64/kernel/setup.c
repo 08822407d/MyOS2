@@ -272,16 +272,12 @@ void __init setup_arch(char **cmdline_p)
 	myos_init_early_memory_allocator();
 	// 现在可以使用memblock分配内存了
 
-extern void myos_init_arch(size_t cpu_idx);
-	myos_init_arch(0);
-
 	// 初始化x86架构物理页映射
 	init_mem_mapping();
 
 
-	myos_early_init_task(kparam.nr_lcpu);
 extern void myos_init_smp(size_t lcpu_nr);
-	myos_init_smp(kparam.nr_lcpu);
+	myos_init_smp(nr_lcpu);
 	myos_init_video();
 
 

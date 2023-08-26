@@ -676,7 +676,7 @@ int myos_load_balance()
 	int i;
 	int min_load = 99999999;
 	int min_idx = 0;
-	for (i = 0; i < kparam.nr_lcpu; i++)
+	for (i = 0; i < nr_lcpu; i++)
 	{
 		per_cpudata_s * cpu_p = &(percpu_data[i]->cpudata);
 		if (cpu_p->running_lhdr.count < min_load)

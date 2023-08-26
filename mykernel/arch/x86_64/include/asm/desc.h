@@ -20,6 +20,7 @@
 	#include <asm/processor.h>
 	#include <asm/page_types.h>
 
+	extern struct desc_ptr idt_descr;
 	extern struct gdt_page gdt_page;
 	extern struct tss_struct cpu_tss_rw;
 
@@ -444,7 +445,8 @@
 
 	// extern unsigned long system_vectors[];
 
-	extern void load_current_idt(void);
+	// extern void load_current_idt(void);
+	#define load_current_idt() load_idt(&idt_descr)
 	extern void idt_setup_early_handler(void);
 	// extern void idt_setup_early_traps(void);
 	// extern void idt_setup_traps(void);
