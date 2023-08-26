@@ -37,7 +37,7 @@
 	} per_cpudata_s;
 
 	typedef union cpudata {
-		per_cpudata_s	cpudata;
+		per_cpudata_s	data;
 		reg_t			cpu_stack[SZ_2M / sizeof(reg_t)];
 	} cpudata_u;
 

@@ -5,7 +5,6 @@
 #include <asm/desc.h>
 
 
-
 __visible DEFINE_PER_CPU_PAGE_ALIGNED(files_struct_s, idle_taskfilps);
 
 __visible DEFINE_PER_CPU_PAGE_ALIGNED(taskfs_s, idle_taskfs) = {
@@ -30,6 +29,19 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(PCB_u, idletsk)  __aligned(THREAD_SIZE) = 
 	.task.files				= &idle_taskfilps,
 	.task.pid_links 		= LIST_INIT(idletsk.task.pid_links),
 	.task.stack				= (void *)&idletsk + THREAD_SIZE,
+};
+
+__visible DEFINE_PER_CPU_PAGE_ALIGNED(cpudata_u, cpudata) ={
+	.data = {
+		.idle_task			= &idletsk.task,
+		.curr_task			= &idletsk.task,
+		.running_lhdr		= LIST_HEADER_INIT(cpudata.data.running_lhdr),
+		.is_idle_flag		= 1,
+		.scheduleing_flag	= 0,
+		.preempt_count		= 0,
+		.last_jiffies		= 0,
+		.cpustack_p			= (reg_t)(&cpudata + 1),
+	},
 };
 
 

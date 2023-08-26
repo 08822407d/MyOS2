@@ -86,7 +86,7 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	// __set_task_cpu(p, new_cpu);
 
-	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->cpudata);
+	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->data);
 	p->__state = TASK_RUNNING;
 	if (!list_in_lhdr(&target_cpu_p->running_lhdr, &p->tasks))
 		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
@@ -607,7 +607,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 
 	per_cpudata_s * target_cpu_p =
-			&(percpu_data[select_task_rq(p)]->cpudata);
+			&(percpu_data[select_task_rq(p)]->data);
 	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 
 	return 0;
@@ -678,7 +678,7 @@ int myos_load_balance()
 	int min_idx = 0;
 	for (i = 0; i < nr_lcpu; i++)
 	{
-		per_cpudata_s * cpu_p = &(percpu_data[i]->cpudata);
+		per_cpudata_s * cpu_p = &(percpu_data[i]->data);
 		if (cpu_p->running_lhdr.count < min_load)
 		{
 			min_load = cpu_p->running_lhdr.count;

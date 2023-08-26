@@ -14,7 +14,7 @@
 
 extern phys_addr_t 		kernel_cr3;
 extern uint64_t	apic_id[CONFIG_NR_CPUS];
-cpudata_u bsp_cpudata;
+extern cpudata_u cpudata;
 cpudata_u **percpu_data;
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
@@ -37,7 +37,7 @@ void myos_init_smp(size_t lcpu_nr)
 			lcpu_nr * sizeof(cpudata_u *), sizeof(void *));
 	cpudata_u *pcpudata_arr = myos_memblock_alloc_normal(
 			(lcpu_nr - 1) * sizeof(cpudata_u), sizeof(long));
-	percpu_data[0] = &bsp_cpudata;
+	percpu_data[0] = &cpudata;
 	wrgsbase((unsigned long)percpu_data[0]);
 	for (int i = 1; i < lcpu_nr; i++)
 		percpu_data[i] = &(pcpudata_arr[i - 1]);
@@ -46,17 +46,9 @@ void myos_init_smp(size_t lcpu_nr)
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
 	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(percpu_data[0]->cpudata);
+	per_cpudata_s * cpudata_p = &(percpu_data[0]->data);
 	cpudata_p->cpu_idx = 0;
-	cpudata_p->last_jiffies = 0;
-	cpudata_p->is_idle_flag = 1;
-	cpudata_p->scheduleing_flag = 0;
-	cpudata_p->curr_task =
-	cpudata_p->idle_task = &(idletsk.task);
 	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
-	cpudata_p->preempt_count = 0;
-	cpudata_p->cpustack_p = (reg_t)percpu_data[0] + sizeof(cpudata_u);
-	list_hdr_init(&cpudata_p->running_lhdr);
 
 	// fill architechture part
 	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
@@ -72,8 +64,10 @@ void myos_init_smp(size_t lcpu_nr)
 void myos_percpu_self_config(size_t cpu_idx)
 {
 	cpudata_u *cpudata_u_p = percpu_data[cpu_idx];
-	per_cpudata_s * cpudata_p = &(cpudata_u_p->cpudata);
+	per_cpudata_s * cpudata_p = &(cpudata_u_p->data);
 	task_s *	current_task = current;
+	cpudata_p->curr_task =
+	cpudata_p->idle_task = current_task;
 	wrgsbase((unsigned long)cpudata_u_p);
 
 	__flush_tlb_all();
@@ -88,5 +82,5 @@ void myos_startup_smp()
 inline __always_inline per_cpudata_s * get_current_cpu()
 {
 	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
-	return &(cpudata_u_p->cpudata);
+	return &(cpudata_u_p->data);
 }
