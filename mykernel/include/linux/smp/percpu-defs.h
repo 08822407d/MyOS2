@@ -158,8 +158,8 @@
 	// #define DECLARE_PER_CPU_READ_MOSTLY(type, name)			\
 	// 	DECLARE_PER_CPU_SECTION(type, name, "..read_mostly")
 
-	// #define DEFINE_PER_CPU_READ_MOSTLY(type, name)				\
-	// 	DEFINE_PER_CPU_SECTION(type, name, "..read_mostly")
+	#define DEFINE_PER_CPU_READ_MOSTLY(type, name)				\
+				DEFINE_PER_CPU_SECTION(type, name, "..read_mostly")
 
 	// /*
 	// * Declaration/definition used for per-CPU variables that should be accessed
@@ -188,59 +188,61 @@
 	// #define EXPORT_PER_CPU_SYMBOL_GPL(var)
 	// #endif
 
-	// /*
-	// * Accessors and operations.
-	// */
-	// #ifndef __ASSEMBLY__
+	/*
+	 * Accessors and operations.
+	 */
+	#ifndef __ASSEMBLY__
 
-	// /*
-	// * __verify_pcpu_ptr() verifies @ptr is a percpu pointer without evaluating
-	// * @ptr and is invoked once before a percpu area is accessed by all
-	// * accessors and operations.  This is performed in the generic part of
-	// * percpu and arch overrides don't need to worry about it; however, if an
-	// * arch wants to implement an arch-specific percpu accessor or operation,
-	// * it may use __verify_pcpu_ptr() to verify the parameters.
-	// *
-	// * + 0 is required in order to convert the pointer type from a
-	// * potential array type to a pointer to a single item of the array.
-	// */
-	// #define __verify_pcpu_ptr(ptr)						\
-	// do {									\
-	// 	const void __percpu *__vpp_verify = (typeof((ptr) + 0))NULL;	\
-	// 	(void)__vpp_verify;						\
-	// } while (0)
+	/*
+	 * __verify_pcpu_ptr() verifies @ptr is a percpu pointer without evaluating
+	 * @ptr and is invoked once before a percpu area is accessed by all
+	 * accessors and operations.  This is performed in the generic part of
+	 * percpu and arch overrides don't need to worry about it; however, if an
+	 * arch wants to implement an arch-specific percpu accessor or operation,
+	 * it may use __verify_pcpu_ptr() to verify the parameters.
+	 *
+	 * + 0 is required in order to convert the pointer type from a
+	 * potential array type to a pointer to a single item of the array.
+	 */
+	// #	define __verify_pcpu_ptr(ptr)						\
+	// 			do {										\
+	// 				const void __percpu *__vpp_verify =		\
+	// 					(typeof((ptr) + 0))NULL;			\
+	// 				(void)__vpp_verify;						\
+	// 			} while (0)
+	#	define __verify_pcpu_ptr(ptr)
 
-	// /*
-	// * Add an offset to a pointer but keep the pointer as-is.  Use RELOC_HIDE()
-	// * to prevent the compiler from making incorrect assumptions about the
-	// * pointer value.  The weird cast keeps both GCC and sparse happy.
-	// */
-	// #define SHIFT_PERCPU_PTR(__p, __offset)					\
-	// 	RELOC_HIDE((typeof(*(__p)) __kernel __force *)(__p), (__offset))
+	/*
+	 * Add an offset to a pointer but keep the pointer as-is.  Use RELOC_HIDE()
+	 * to prevent the compiler from making incorrect assumptions about the
+	 * pointer value.  The weird cast keeps both GCC and sparse happy.
+	 */
+	#	define SHIFT_PERCPU_PTR(__p, __offset)	RELOC_HIDE(					\
+					(typeof(*(__p)) __kernel __force *)(__p), (__offset)	\
+				)
 
-	// #define per_cpu_ptr(ptr, cpu)						\
-	// ({									\
-	// 	__verify_pcpu_ptr(ptr);						\
-	// 	SHIFT_PERCPU_PTR((ptr), per_cpu_offset((cpu)));			\
-	// })
+	#	define per_cpu_ptr(ptr, cpu)	({		\
+					__verify_pcpu_ptr(ptr);		\
+					SHIFT_PERCPU_PTR((ptr),		\
+						per_cpu_offset((cpu)));	\
+				})
 
-	// #define raw_cpu_ptr(ptr)						\
-	// ({									\
-	// 	__verify_pcpu_ptr(ptr);						\
-	// 	arch_raw_cpu_ptr(ptr);						\
-	// })
+	#	define raw_cpu_ptr(ptr)	({				\
+					__verify_pcpu_ptr(ptr);		\
+					arch_raw_cpu_ptr(ptr);		\
+				})
 
-	// #ifdef CONFIG_DEBUG_PREEMPT
-	// #define this_cpu_ptr(ptr)						\
-	// ({									\
-	// 	__verify_pcpu_ptr(ptr);						\
-	// 	SHIFT_PERCPU_PTR(ptr, my_cpu_offset);				\
-	// })
-	// #else
-	// #define this_cpu_ptr(ptr) raw_cpu_ptr(ptr)
-	// #endif
+	// #	ifdef CONFIG_DEBUG_PREEMPT
+	// #		define this_cpu_ptr(ptr)						\
+	// 				({									\
+	// 					__verify_pcpu_ptr(ptr);						\
+	// 					SHIFT_PERCPU_PTR(ptr, my_cpu_offset);		\
+	// 				})
+	// #	else
+	#		define this_cpu_ptr(ptr) raw_cpu_ptr(ptr)
+	// #	endif
 
-	// #define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
+	#define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 
 	// /*
 	// * Must be an lvalue. Since @var must be a simple identifier,
@@ -497,6 +499,6 @@
 	// #define this_cpu_inc_return(pcp)	this_cpu_add_return(pcp, 1)
 	// #define this_cpu_dec_return(pcp)	this_cpu_add_return(pcp, -1)
 
-	// #endif /* __ASSEMBLY__ */
+	#endif /* __ASSEMBLY__ */
 
 #endif /* _LINUX_PERCPU_DEFS_H */

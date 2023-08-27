@@ -62,6 +62,95 @@ SECTIONS
 		*(.bss* COMMON)
 		__bss_stop = .;
 	}
+	__per_cpu_load = .;
+	.data..percpu 0 : AT(__per_cpu_load - _k_offset)
+	{
+		__per_cpu_start = .;
+		*(.data..percpu..first) . = ALIGN(0x1000);
+		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
+		*(.data..percpu..read_mostly) . = ALIGN((1 << 6));
+		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(0x1000);
+		*(.data..percpu..decrypted) . = ALIGN(0x1000);
+		__per_cpu_end = .;
+	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
+	}
+	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
+		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
+	. = ALIGN(0x1000);
+	/* .init.text : AT(ADDR(.init.text) - _k_offset)
+	{
+		_sinittext = .;
+		*(.init.text .init.text.*)
+		*(.text.startup) _einittext = .;
+	} :init
+	.init.data : AT(ADDR(.init.data) - _k_offset)
+	{
+		KEEP(*(SORT(___kentry+*))) *(.init.data init.data.*) . = ALIGN(8);
+		__start_mcount_loc = .;
+		KEEP(*(__mcount_loc)) __stop_mcount_loc = .;
+		ftrace_ops_list_func = arch_ftrace_ops_list_func;
+		*(.init.rodata .init.rodata.*) . = ALIGN(8);
+		__start_ftrace_events = .;
+		KEEP(*(_ftrace_events)) __stop_ftrace_events = .;
+		__start_ftrace_eval_maps = .;
+		KEEP(*(_ftrace_eval_map)) __stop_ftrace_eval_maps = .;
+		. = ALIGN(8);
+		__start_syscalls_metadata = .;
+		KEEP(*(__syscalls_metadata)) __stop_syscalls_metadata = .;
+		. = ALIGN(8); __start_kprobe_blacklist = .;
+		KEEP(*(_kprobe_blacklist)) __stop_kprobe_blacklist = .;
+		. = ALIGN(32);
+		__start_error_injection_whitelist = .;
+		KEEP(*(_error_injection_whitelist)) __stop_error_injection_whitelist = .;
+		. = ALIGN(8);
+		__clk_of_table = .;
+		KEEP(*(__clk_of_table)) KEEP(*(__clk_of_table_end)) . = ALIGN(8);
+		__cpu_method_of_table = .;
+		KEEP(*(__cpu_method_of_table)) KEEP(*(__cpu_method_of_table_end)) . = ALIGN(8);
+		__cpuidle_method_of_table = .;
+		KEEP(*(__cpuidle_method_of_table)) KEEP(*(__cpuidle_method_of_table_end)) . = ALIGN(32);
+		__dtb_start = .;
+		KEEP(*(.dtb.init.rodata)) __dtb_end = .;
+		. = ALIGN(8);
+		__irqchip_acpi_probe_table = .;
+		KEEP(*(__irqchip_acpi_probe_table)) __irqchip_acpi_probe_table_end = .;
+		. = ALIGN(8);
+		__timer_acpi_probe_table = .;
+		KEEP(*(__timer_acpi_probe_table)) __timer_acpi_probe_table_end = .;
+		. = ALIGN(8);
+		__governor_thermal_table = .;
+		KEEP(*(__governor_thermal_table)) __governor_thermal_table_end = .;
+		. = ALIGN(8);
+		__earlycon_table = .;
+		KEEP(*(__earlycon_table)) __earlycon_table_end = .;
+		. = ALIGN(8);
+		__start_lsm_info = .;
+		KEEP(*(.lsm_info.init)) __end_lsm_info = .;
+		. = ALIGN(8);
+		__start_early_lsm_info = .;
+		KEEP(*(.early_lsm_info.init)) __end_early_lsm_info = .;
+		. = ALIGN(8);
+		__kunit_suites_start = .;
+		KEEP(*(.kunit_test_suites)) __kunit_suites_end = .;
+		. = ALIGN(16); __setup_start = .;
+		KEEP(*(.init.setup)) __setup_end = .;
+		__initcall_start = .;
+		KEEP(*(.initcallearly.init)) __initcall0_start = .;
+		KEEP(*(.initcall0.init)) KEEP(*(.initcall0s.init)) __initcall1_start = .;
+		KEEP(*(.initcall1.init)) KEEP(*(.initcall1s.init)) __initcall2_start = .;
+		KEEP(*(.initcall2.init)) KEEP(*(.initcall2s.init)) __initcall3_start = .;
+		KEEP(*(.initcall3.init)) KEEP(*(.initcall3s.init)) __initcall4_start = .;
+		KEEP(*(.initcall4.init)) KEEP(*(.initcall4s.init)) __initcall5_start = .;
+		KEEP(*(.initcall5.init)) KEEP(*(.initcall5s.init)) __initcallrootfs_start = .;
+		KEEP(*(.initcallrootfs.init)) KEEP(*(.initcallrootfss.init)) __initcall6_start = .;
+		KEEP(*(.initcall6.init)) KEEP(*(.initcall6s.init)) __initcall7_start = .;
+		KEEP(*(.initcall7.init)) KEEP(*(.initcall7s.init)) __initcall_end = .;
+		__con_initcall_start = .;
+		KEEP(*(.con_initcall.init)) __con_initcall_end = .;
+		. = ALIGN(4); __initramfs_start = .;
+		KEEP(*(.init.ramfs)) . = ALIGN(8);
+		KEEP(*(.init.ramfs.info))
+	} */
 	.brk ALIGN(0x1000) : AT(ADDR(.brk) - _k_offset)
 	{
 		__brk_base = .;

@@ -13,28 +13,24 @@
 
 	#else /* ...!ASSEMBLY */
 
-	// #include <linux/kernel.h>
-	// #include <linux/stringify.h>
+	#	include <linux/kernel/kernel.h>
+	// #	include <linux/stringify.h>
 
-	// #ifdef CONFIG_SMP
 	// #define __percpu_prefix		"%%"__stringify(__percpu_seg)":"
 	// #define __my_cpu_offset		this_cpu_read(this_cpu_off)
 
-	// /*
-	//  * Compared to the generic __my_cpu_offset version, the following
-	//  * saves one instruction and avoids clobbering a temp register.
-	//  */
-	// #define arch_raw_cpu_ptr(ptr)				\
-	// ({							\
-	// 	unsigned long tcp_ptr__;			\
-	// 	asm ("add " __percpu_arg(1) ", %0"		\
-	// 		 : "=r" (tcp_ptr__)				\
-	// 		 : "m" (this_cpu_off), "0" (ptr));		\
-	// 	(typeof(*(ptr)) __kernel __force *)tcp_ptr__;	\
-	// })
-	// #else
-	// #define __percpu_prefix		""
-	// #endif
+	/*
+	 * Compared to the generic __my_cpu_offset version, the following
+	 * saves one instruction and avoids clobbering a temp register.
+	 */
+	#	define arch_raw_cpu_ptr(ptr)	({							\
+					unsigned long tcp_ptr__;						\
+					asm (	"add " __percpu_arg(1) ", %0"			\
+						:	"=r" (tcp_ptr__)						\
+						:	"m" (this_cpu_off),						\
+							"0" (ptr));								\
+					(typeof(*(ptr)) __kernel __force *)tcp_ptr__;	\
+				})
 
 	// #define __percpu_arg(x)		__percpu_prefix "%" #x
 
@@ -48,11 +44,7 @@
 	// #define DECLARE_INIT_PER_CPU(var) \
 	// 	   extern typeof(var) init_per_cpu_var(var)
 
-	// #ifdef CONFIG_X86_64_SMP
 	// #define init_per_cpu_var(var)  init_per_cpu__##var
-	// #else
-	// #define init_per_cpu_var(var)  var
-	// #endif
 
 	// /* For arch-specific code, we can use direct single-insn ops (they
 	//  * don't give an lvalue though). */
@@ -411,26 +403,6 @@
 	// #define	early_per_cpu(_name, _cpu) 				\
 	// 	*(early_per_cpu_ptr(_name) ?				\
 	// 		&early_per_cpu_ptr(_name)[_cpu] :		\
-	// 		&per_cpu(_name, _cpu))
-
-	// #else	/* !CONFIG_SMP */
-	// #define	DEFINE_EARLY_PER_CPU(_type, _name, _initvalue)		\
-	// 	DEFINE_PER_CPU(_type, _name) = _initvalue
-
-	// #define DEFINE_EARLY_PER_CPU_READ_MOSTLY(_type, _name, _initvalue)	\
-	// 	DEFINE_PER_CPU_READ_MOSTLY(_type, _name) = _initvalue
-
-	// #define EXPORT_EARLY_PER_CPU_SYMBOL(_name)			\
-	// 	EXPORT_PER_CPU_SYMBOL(_name)
-
-	// #define DECLARE_EARLY_PER_CPU(_type, _name)			\
-	// 	DECLARE_PER_CPU(_type, _name)
-
-	// #define DECLARE_EARLY_PER_CPU_READ_MOSTLY(_type, _name)		\
-	// 	DECLARE_PER_CPU_READ_MOSTLY(_type, _name)
-
-	// #define	early_per_cpu(_name, _cpu) per_cpu(_name, _cpu)
-	// #define	early_per_cpu_ptr(_name) NULL
-	// /* no early_per_cpu_map() */
+			&per_cpu(_name, _cpu))
 
 #endif /* _ASM_X86_PERCPU_H */

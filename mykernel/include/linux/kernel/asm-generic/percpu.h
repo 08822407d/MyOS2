@@ -3,21 +3,21 @@
 #define _ASM_GENERIC_PERCPU_H_
 
 	#include <linux/kernel/compiler.h>
-	// #include <linux/threads.h>
+	#include <linux/kernel/threads.h>
 	#include <linux/smp/percpu-defs.h>
 
-	// /*
-	// * per_cpu_offset() is the offset that has to be added to a
-	// * percpu variable to get to the instance for a certain processor.
-	// *
-	// * Most arches use the __per_cpu_offset array for those offsets but
-	// * some arches have their own ways of determining the offset (x86_64, s390).
-	// */
-	// #ifndef __per_cpu_offset
-	// extern unsigned long __per_cpu_offset[NR_CPUS];
+	/*
+	 * per_cpu_offset() is the offset that has to be added to a
+	 * percpu variable to get to the instance for a certain processor.
+	 *
+	 * Most arches use the __per_cpu_offset array for those offsets but
+	 * some arches have their own ways of determining the offset (x86_64, s390).
+	 */
+	#ifndef __per_cpu_offset
+		extern unsigned long __per_cpu_offset[NR_CPUS];
 
-	// #define per_cpu_offset(x) (__per_cpu_offset[x])
-	// #endif
+	#	define per_cpu_offset(x) (__per_cpu_offset[x])
+	#endif
 
 	// /*
 	// * Determine the offset for the currently active processor.
