@@ -15,9 +15,10 @@
 extern phys_addr_t 		kernel_cr3;
 extern uint64_t	apic_id[CONFIG_NR_CPUS];
 extern cpudata_u cpudata;
-cpudata_u **percpu_data;
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
+
+cpudata_u **percpu_data;
 
 void myos_early_init_smp(void)
 {
