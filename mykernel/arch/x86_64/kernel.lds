@@ -55,7 +55,8 @@ SECTIONS
 	.data ALIGN(_Page_Size) : AT(ADDR(.data) - _k_offset)
 	{
 		_sdata = .;
-		*(.data*)
+		*(.data)
+		*(.data.rel*)
 		_edata = .;
 	}
 	. = ALIGN(_Page_Size);
@@ -64,11 +65,12 @@ SECTIONS
 	.data..percpu ALIGN(_Page_Size) : AT(__per_cpu_load - _k_offset)
 	{
 		__per_cpu_start = .;
-		*(.data..percpu..first) . = ALIGN(_Page_Size);
+		*(.data..percpu*) . = ALIGN(_Page_Size);
+		/* *(.data..percpu..first) . = ALIGN(_Page_Size);
 		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
 		*(.data..percpu..read_mostly) . = ALIGN((1 << 6));
 		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(_Page_Size);
-		*(.data..percpu..decrypted) . = ALIGN(_Page_Size);
+		*(.data..percpu..decrypted) . = ALIGN(_Page_Size); */
 		__per_cpu_end = .;
 	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
 	}

@@ -81,19 +81,6 @@ void load_direct_gdt(int cpu)
 	refresh_segment_registers();
 }
 
-/* Load a fixmap remapping of the per-cpu GDT */
-void load_fixmap_gdt(int cpu)
-{
-	struct desc_ptr gdt_descr;
-
-	gdt_descr.address = (long)get_cpu_gdt_ro(cpu);
-	gdt_descr.size = GDT_SIZE - 1;
-	load_gdt(&gdt_descr);
-
-	refresh_segment_registers();
-}
-
-
 static void get_model_name(cpuinfo_x86_s *c)
 {
 	unsigned int *v;
@@ -179,31 +166,6 @@ static const cpu_dev_s *cpu_devs[X86_VENDOR_NUM] = {};
 __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 __u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 
-static void get_cpu_vendor(cpuinfo_x86_s *c)
-{
-	// char *v = c->x86_vendor_id;
-	// int i;
-
-	// for (i = 0; i < X86_VENDOR_NUM; i++) {
-	// 	if (!cpu_devs[i])
-	// 		break;
-
-	// 	if (!strcmp(v, cpu_devs[i]->c_ident[0]) ||
-	// 	    (cpu_devs[i]->c_ident[1] &&
-	// 	     !strcmp(v, cpu_devs[i]->c_ident[1]))) {
-
-	// 		this_cpu = cpu_devs[i];
-	// 		c->x86_vendor = this_cpu->c_x86_vendor;
-	// 		return;
-	// 	}
-	// }
-
-	// // pr_err_once("CPU: vendor_id '%s' unknown, using generic init.\n" \
-	// // 	    "CPU: Your system may be unstable.\n", v);
-
-	// c->x86_vendor = X86_VENDOR_UNKNOWN;
-	// this_cpu = &default_cpu;
-}
 
 void cpu_detect(cpuinfo_x86_s *c)
 {
@@ -338,8 +300,8 @@ void get_cpu_address_sizes(cpuinfo_x86_s *c)
 
 void __init early_cpu_init(void)
 {
-// 	const struct cpu_dev *const *cdev;
-// 	int count = 0;
+	// const struct cpu_dev *const *cdev;
+	// int count = 0;
 
 // #ifdef CONFIG_PROCESSOR_SELECT
 // 	pr_info("KERNEL supported cpus:\n");
@@ -390,7 +352,7 @@ void __init early_cpu_init(void)
 
 		/* cyrix could have cpuid enabled via c_identify()*/
 		cpu_detect(&boot_cpu_data);
-		get_cpu_vendor(&boot_cpu_data);
+		// get_cpu_vendor(&boot_cpu_data);
 		get_cpu_cap(&boot_cpu_data);
 		get_cpu_address_sizes(&boot_cpu_data);
 		// setup_force_cpu_cap(X86_FEATURE_CPUID);
@@ -439,7 +401,7 @@ static void generic_identify(cpuinfo_x86_s *c)
 	c->extended_cpuid_level = 0;
 
 	cpu_detect(c);
-	get_cpu_vendor(c);
+	// get_cpu_vendor(c);
 	get_cpu_cap(c);
 	get_cpu_address_sizes(c);
 
@@ -451,23 +413,6 @@ static void generic_identify(cpuinfo_x86_s *c)
 	get_model_name(c); /* Default name */
 }
 
-// /*
-//  * Validate that ACPI/mptables have the same information about the
-//  * effective APIC id and update the package map.
-//  */
-// static void validate_apic_and_package_id(cpuinfo_x86_s *c)
-// {
-// 	unsigned int apicid, cpu = smp_processor_id();
-
-// 	apicid = apic->cpu_present_to_apicid(cpu);
-
-// 	if (apicid != c->apicid) {
-// 		pr_err(FW_BUG "CPU%u: APIC id mismatch. Firmware: %x APIC: %x\n",
-// 		       cpu, apicid, c->initial_apicid);
-// 	}
-// 	BUG_ON(topology_update_package_map(c->phys_proc_id, cpu));
-// 	BUG_ON(topology_update_die_map(c->cpu_die_id, cpu));
-// }
 
 /*
  * This does the hard work of actually picking apart the CPU stuff...
@@ -742,5 +687,5 @@ void cpu_init(void)
 	// if (is_uv_system())
 	// 	uv_cpu_init();
 
-	load_fixmap_gdt(cpu);
+	load_direct_gdt(cpu);
 }
