@@ -10,6 +10,8 @@ _k_phys_ebss	= __bss_stop - _k_offset;
 
 _APboot_phys_start			= 0x4000;
 
+_Page_Size		= 0x1000;
+
 SECTIONS
 {
 	/* the head of kernel running in low-half mem */
@@ -18,16 +20,16 @@ SECTIONS
 	{
 		*(.unpaged.text);
 	}
-	.head.data ALIGN(0x1000) :
+	.head.data ALIGN(_Page_Size) :
 	{
 		*(.unpaged.data);
 	}
 
 	/* AP boot from real-mode, related code and data will be copied to */
 	/* begin 1MB of memory, so the symbols need relocated */
-	apb_start_viraddr = ALIGN(0x1000);
+	apb_start_viraddr = ALIGN(_Page_Size);
 	. = _APboot_phys_start;
-	.APboot.text ALIGN(0x1000) : AT(apb_start_viraddr)
+	.APboot.text ALIGN(_Page_Size) : AT(apb_start_viraddr)
 	{
 		_APboot_text = apb_start_viraddr - _APboot_phys_start;
 		KEEP(*(.AP_boot.text));
@@ -38,45 +40,41 @@ SECTIONS
 
 	/* here is the kernel in high-half meme */
 	. += _k_offset;
-	.text ALIGN(0x1000) : AT(ADDR(.text) - _k_offset)
+	.text ALIGN(_Page_Size) : AT(ADDR(.text) - _k_offset)
 	{
 		_text = .;
 		*(.text*)
 		_etext = .;
 	}
-	.rodata ALIGN(0x1000) : AT(ADDR(.rodata) - _k_offset)
+	.rodata ALIGN(_Page_Size) : AT(ADDR(.rodata) - _k_offset)
 	{
 		__start_rodata = .;
 		*(.rodata*)
 		__end_rodata = .;
 	}
-	.data ALIGN(0x1000) : AT(ADDR(.data) - _k_offset)
+	.data ALIGN(_Page_Size) : AT(ADDR(.data) - _k_offset)
 	{
 		_sdata = .;
 		*(.data*)
 		_edata = .;
 	}
-	.bss ALIGN(0x1000) : AT(ADDR(.bss) - _k_offset)
-	{
-		__bss_start = .;
-		*(.bss* COMMON)
-		__bss_stop = .;
-	}
+	. = ALIGN(_Page_Size);
 	__per_cpu_load = .;
-	.data..percpu 0 : AT(__per_cpu_load - _k_offset)
+	/* .data..percpu 0 : AT(__per_cpu_load - _k_offset) */
+	.data..percpu ALIGN(_Page_Size) : AT(__per_cpu_load - _k_offset)
 	{
 		__per_cpu_start = .;
-		*(.data..percpu..first) . = ALIGN(0x1000);
+		*(.data..percpu..first) . = ALIGN(_Page_Size);
 		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
 		*(.data..percpu..read_mostly) . = ALIGN((1 << 6));
-		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(0x1000);
-		*(.data..percpu..decrypted) . = ALIGN(0x1000);
+		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(_Page_Size);
+		*(.data..percpu..decrypted) . = ALIGN(_Page_Size);
 		__per_cpu_end = .;
 	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
 	}
 	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
 		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
-	. = ALIGN(0x1000);
+	. = ALIGN(_Page_Size);
 	/* .init.text : AT(ADDR(.init.text) - _k_offset)
 	{
 		_sinittext = .;
@@ -151,19 +149,25 @@ SECTIONS
 		KEEP(*(.init.ramfs)) . = ALIGN(8);
 		KEEP(*(.init.ramfs.info))
 	} */
-	.brk ALIGN(0x1000) : AT(ADDR(.brk) - _k_offset)
+	.bss ALIGN(_Page_Size) : AT(ADDR(.bss) - _k_offset)
+	{
+		__bss_start = .;
+		*(.bss* COMMON)
+		__bss_stop = .;
+	}
+	.brk ALIGN(_Page_Size) : AT(ADDR(.brk) - _k_offset)
 	{
 		__brk_base = .;
 		*(.brk*)
 		__brk_limit = .;
 	}
-	.eh_frame ALIGN(0x1000) : AT(ADDR(.eh_frame) - _k_offset)
+	.eh_frame ALIGN(_Page_Size) : AT(ADDR(.eh_frame) - _k_offset)
 	{
 		_eh_frame = .;
 		*(.eh_frame)
 		_eeh_frame = .;
 	}
 
-	. = ALIGN((0x1000));
+	. = ALIGN((_Page_Size));
 	_end = .;
 }

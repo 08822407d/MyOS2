@@ -61,8 +61,8 @@
 
 	/* Provide the original GDT */
 	static inline desc_s *get_cpu_gdt_rw(unsigned int cpu) {
-		return per_cpu(gdt_page, cpu).gdt;
-		// return &gdt_page.gdt[0];
+		// return per_cpu(gdt_page, cpu).gdt;
+		return &gdt_page.gdt[0];
 	}
 
 	// /* Provide the current original GDT */
