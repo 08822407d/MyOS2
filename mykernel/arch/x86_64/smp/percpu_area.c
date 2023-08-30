@@ -5,9 +5,9 @@
 #include <asm/desc.h>
 
 
-__visible DEFINE_PER_CPU_PAGE_ALIGNED(files_struct_s, idle_taskfilps);
+__visible DEFINE_PER_CPU(files_struct_s, idle_taskfilps);
 
-__visible DEFINE_PER_CPU_PAGE_ALIGNED(taskfs_s, idle_taskfs) = {
+__visible DEFINE_PER_CPU(taskfs_s, idle_taskfs) = {
 	.in_exec		= 0,
 	.umask			= 0,
 	.users			= 0,
@@ -15,7 +15,7 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(taskfs_s, idle_taskfs) = {
 	.root.mnt		= NULL,
 };
 
-__visible DEFINE_PER_CPU_PAGE_ALIGNED(PCB_u, idletsk)  __aligned(THREAD_SIZE) = {
+__visible DEFINE_PER_CPU(PCB_u, idletsk)  __aligned(THREAD_SIZE) = {
 	.task.tasks				= LIST_INIT(idletsk.task.tasks),
 	.task.parent			= &idletsk.task,
 	.task.sibling			= LIST_INIT(idletsk.task.sibling),
@@ -31,7 +31,7 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(PCB_u, idletsk)  __aligned(THREAD_SIZE) = 
 	.task.stack				= (void *)&idletsk + THREAD_SIZE,
 };
 
-__visible DEFINE_PER_CPU_PAGE_ALIGNED(cpudata_u, cpudata) ={
+__visible DEFINE_PER_CPU(cpudata_u, cpudata) ={
 	.data = {
 		.idle_task			= &idletsk.task,
 		.curr_task			= &idletsk.task,

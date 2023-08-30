@@ -38,7 +38,7 @@
 #include <asm/sections.h>
 // #include <asm/vsyscall.h>
 // #include <linux/topology.h>
-// #include <linux/cpumask.h>
+#include <linux/kernel/cpumask.h>
 #include <linux/kernel/atomic.h>
 // #include <asm/proto.h>
 #include <asm/setup.h>
@@ -303,43 +303,25 @@ void __init early_cpu_init(void)
 	// const struct cpu_dev *const *cdev;
 	// int count = 0;
 
-// #ifdef CONFIG_PROCESSOR_SELECT
-// 	pr_info("KERNEL supported cpus:\n");
-// #endif
+	// for (cdev = __x86_cpu_dev_start; cdev < __x86_cpu_dev_end; cdev++)
+	// {
+	// 	const struct cpu_dev *cpudev = *cdev;
 
-// 	for (cdev = __x86_cpu_dev_start; cdev < __x86_cpu_dev_end; cdev++)
-// 	{
-// 		const struct cpu_dev *cpudev = *cdev;
-
-// 		if (count >= X86_VENDOR_NUM)
-// 			break;
-// 		cpu_devs[count] = cpudev;
-// 		count++;
-
-// #ifdef CONFIG_PROCESSOR_SELECT
-// 		{
-// 			unsigned int j;
-
-// 			for (j = 0; j < 2; j++)
-// 			{
-// 				if (!cpudev->c_ident[j])
-// 					continue;
-// 				pr_info("  %s %s\n", cpudev->c_vendor,
-// 						cpudev->c_ident[j]);
-// 			}
-// 		}
-// #endif
-// 	}
+	// 	if (count >= X86_VENDOR_NUM)
+	// 		break;
+	// 	cpu_devs[count] = cpudev;
+	// 	count++;
+	// }
 
 	/*
-	* Do minimum CPU detection early.
-	* Fields really needed: vendor, cpuid_level, family, model, mask,
-	* cache alignment.
-	* The others are not touched to avoid unwanted side effects.
-	*
-	* WARNING: this function is only called on the boot CPU.  Don't add code
-	* here that is supposed to run on all CPUs.
-	*/
+	 * Do minimum CPU detection early.
+	 * Fields really needed: vendor, cpuid_level, family, model, mask,
+	 * cache alignment.
+	 * The others are not touched to avoid unwanted side effects.
+	 *
+	 * WARNING: this function is only called on the boot CPU.  Don't add code
+	 * here that is supposed to run on all CPUs.
+	 */
 	// static void __init early_identify_cpu(cpuinfo_x86_s *c)
 	// {
 		boot_cpu_data.x86_clflush_size		= 64;
@@ -562,7 +544,7 @@ void syscall_init(void)
 	// init MSR sf_regs related to sysenter/sysexit
 	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
-	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)idletsk.task.stack);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)per_cpu(idletsk, 0).task.stack);
 	uint64_t kstack;
 	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
 #else
@@ -619,7 +601,7 @@ void cpu_init_exception_handling(void)
 	// tss_setup_ist(tss);
 	// tss_setup_io_bitmap(tss);
 	// set_tss_desc(cpu, &get_cpu_entry_area(cpu)->tss.x86_tss);
-	set_tss_desc(cpu, &cpu_tss_rw.x86_tss);
+	set_tss_desc(cpu, &(per_cpu(cpu_tss_rw, cpu).x86_tss));
 
 	load_TR_desc();
 

@@ -28,8 +28,6 @@
 
 #define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
 
-DEFINE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off) = BOOT_PERCPU_OFFSET;
-
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
 };
@@ -38,6 +36,8 @@ void __init setup_per_cpu_areas(void)
 {
 	unsigned int cpu;
 	unsigned long delta;
+	unsigned long pcpuarea_size =
+		(unsigned long)__per_cpu_end - (unsigned long)__per_cpu_start;
 	int rc;
 
 	// pr_info("NR_CPUS:%d nr_cpumask_bits:%d nr_cpu_ids:%u nr_node_ids:%u\n",
@@ -80,24 +80,32 @@ void __init setup_per_cpu_areas(void)
 
 	// /* alrighty, percpu areas up and running */
 	// delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
-	// for_each_possible_cpu(cpu) {
-	// 	per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
-	// 	per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
-	// 	per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
-	// 	setup_percpu_segment(cpu);
-	// 	/*
-	// 	 * Copy data used in early init routines from the
-	// 	 * initial arrays to the per cpu data areas.  These
-	// 	 * arrays then become expendable and the *_early_ptr's
-	// 	 * are zeroed indicating that the static arrays are
-	// 	 * gone.
-	// 	 */
-	// 	per_cpu(x86_cpu_to_apicid, cpu) =
-	// 		early_per_cpu_map(x86_cpu_to_apicid, cpu);
-	// 	per_cpu(x86_bios_cpu_apicid, cpu) =
-	// 		early_per_cpu_map(x86_bios_cpu_apicid, cpu);
-	// 	per_cpu(x86_cpu_to_acpiid, cpu) =
-	// 		early_per_cpu_map(x86_cpu_to_acpiid, cpu);
+	for_each_possible_cpu(cpu) {
+		// MYOS2 alloc percpu area memory here
+		if (cpu == 0)
+			per_cpu_offset(cpu) = 0;
+		else
+			per_cpu_offset(cpu) =
+					myos_memblock_alloc_normal(pcpuarea_size, SMP_CACHE_BYTES) -
+						(void *)__per_cpu_load;
+
+		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
+		// per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
+		// setup_percpu_segment(cpu);
+		// /*
+		//  * Copy data used in early init routines from the
+		//  * initial arrays to the per cpu data areas.  These
+		//  * arrays then become expendable and the *_early_ptr's
+		//  * are zeroed indicating that the static arrays are
+		//  * gone.
+		//  */
+		// per_cpu(x86_cpu_to_apicid, cpu) =
+		// 	early_per_cpu_map(x86_cpu_to_apicid, cpu);
+		// per_cpu(x86_bios_cpu_apicid, cpu) =
+		// 	early_per_cpu_map(x86_bios_cpu_apicid, cpu);
+		// per_cpu(x86_cpu_to_acpiid, cpu) =
+		// 	early_per_cpu_map(x86_cpu_to_acpiid, cpu);
 
 // #ifdef CONFIG_NUMA
 		// per_cpu(x86_cpu_to_node_map, cpu) =
@@ -112,10 +120,10 @@ void __init setup_per_cpu_areas(void)
 		//  */
 		// set_cpu_numa_node(cpu, early_cpu_to_node(cpu));
 // #endif
-	// 	/*
-	// 	 * Up to this point, the boot CPU has been using .init.data
-	// 	 * area.  Reload any changed state for the boot CPU.
-	// 	 */
+		/*
+		 * Up to this point, the boot CPU has been using .init.data
+		 * area.  Reload any changed state for the boot CPU.
+		 */
 		if (cpu == 0)
 		{
 			/**
@@ -148,7 +156,7 @@ void __init setup_per_cpu_areas(void)
 				// wrmsrl(MSR_GS_BASE, cpu_kernelmode_gs_base(cpu));
 			// }
 		}
-	// }
+	}
 
 	// /* indicate the early static arrays will soon be gone */
 	// early_per_cpu_ptr(x86_cpu_to_apicid) = NULL;

@@ -16,8 +16,7 @@
 	#ifndef __per_cpu_offset
 		extern unsigned long __per_cpu_offset[NR_CPUS];
 
-	// #	define per_cpu_offset(x) (__per_cpu_offset[x])
-	#	define per_cpu_offset(x) (__per_cpu_offset[x] - __per_cpu_offset[0])
+	#	define per_cpu_offset(x) (__per_cpu_offset[x])
 	#endif
 
 	// /*
@@ -51,9 +50,9 @@
 	#	define PER_CPU_BASE_SECTION ".data..percpu"
 	#endif
 
-	#ifndef PER_CPU_ATTRIBUTES
-	#	define PER_CPU_ATTRIBUTES
-	#endif
+	// #ifndef PER_CPU_ATTRIBUTES
+	// #	define PER_CPU_ATTRIBUTES
+	// #endif
 
 	// #define raw_cpu_generic_read(pcp)					\
 	// ({									\

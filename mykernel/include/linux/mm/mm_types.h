@@ -11,7 +11,7 @@
 	// #include <linux/rbtree.h>
 	// #include <linux/rwsem.h>
 	#include <linux/kernel/completion.h>
-	// #include <linux/cpumask.h>
+	#include <linux/kernel/cpumask.h>
 	// #include <linux/uprobes.h>
 	// #include <linux/rcupdate.h>
 	// #include <linux/page-flags-layout.h>

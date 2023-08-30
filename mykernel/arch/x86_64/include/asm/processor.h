@@ -362,8 +362,6 @@
 		x86_io_bitmap_s io_bitmap;
 	} __aligned(PAGE_SIZE);
 
-	// DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
-
 	// /* Per CPU interrupt stacks */
 	// struct irq_stack
 	// {

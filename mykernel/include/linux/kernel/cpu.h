@@ -16,7 +16,7 @@
 
 	// #include <linux/node.h>
 	#include <linux/kernel/compiler.h>
-	// #include <linux/cpumask.h>
+	#include <linux/kernel/cpumask.h>
 	// #include <linux/cpuhotplug.h>
 
 	// struct device;

@@ -6,7 +6,7 @@
 // #include <linux/rwsem.h>
 #include <linux/kernel/spinlock.h>
 #include <linux/lib/list.h>
-// #include <linux/cpumask.h>
+#include <linux/kernel/cpumask.h>
 #include <linux/mm/mman.h>
 #include <linux/mm/pgtable.h>
 

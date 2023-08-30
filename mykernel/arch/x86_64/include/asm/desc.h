@@ -72,12 +72,12 @@
 
 		memset(desc, 0, sizeof(*desc));
 
-		desc->limit0		= (u16) size;
+		desc->limit0	= (u16) size;
 		desc->base0		= (u16) addr;
 		desc->base1		= (addr >> 16) & 0xFF;
 		desc->type		= type;
 		desc->p			= 1;
-		desc->limit1		= (size >> 16) & 0xF;
+		desc->limit1	= (size >> 16) & 0xF;
 		desc->base2		= (addr >> 24) & 0xFF;
 		desc->base3		= (u32) (addr >> 32);
 	}
@@ -86,7 +86,7 @@
 	// __set_tss_desc(unsigned cpu, unsigned int entry, x86_hw_tss_s *addr)
 	static inline void
 	set_tss_desc(unsigned cpu, x86_hw_tss_s *addr) {
-		desc_s *d = gdt_page.gdt;
+		desc_s *d = get_cpu_gdt_rw(cpu);
 		tss_desc tss;
 
 		set_tssldt_descriptor(&tss, (unsigned long)addr, DESC_TSS,

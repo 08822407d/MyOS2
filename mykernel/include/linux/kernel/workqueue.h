@@ -12,7 +12,7 @@
 	// #include <linux/lockdep.h>
 	// #include <linux/threads.h>
 	#include <linux/kernel/atomic.h>
-	// #include <linux/cpumask.h>
+	#include <linux/kernel/cpumask.h>
 	// #include <linux/rcupdate.h>
 
 
