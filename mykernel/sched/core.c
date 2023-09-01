@@ -86,7 +86,7 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	// __set_task_cpu(p, new_cpu);
 
-	per_cpudata_s * target_cpu_p = &(percpu_data[new_cpu]->data);
+	per_cpudata_s *target_cpu_p = &cpudata.data;
 	p->__state = TASK_RUNNING;
 	if (!list_in_lhdr(&target_cpu_p->running_lhdr, &p->tasks))
 		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
@@ -96,7 +96,7 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 /*
  * The caller (fork, wakeup) owns p->pi_lock, ->cpus_ptr is stable.
  */
-static inline int select_task_rq(task_s *p) {
+static inline int select_task_rq(task_s *p, int cpu, int wake_flags) {
 	// lockdep_assert_held(&p->pi_lock);
 
 	// if (p->nr_cpus_allowed > 1 && !is_migration_disabled(p))
@@ -116,9 +116,6 @@ static inline int select_task_rq(task_s *p) {
 	//  */
 	// if (unlikely(!is_cpu_allowed(p, cpu)))
 	// 	cpu = select_fallback_rq(task_cpu(p), p);
-
-	extern int myos_load_balance();
-	int cpu = myos_load_balance();
 
 	return cpu;
 }
@@ -378,7 +375,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 	// smp_cond_load_acquire(&p->on_cpu, !VAL);
 
 	// cpu = select_task_rq(p, p->wake_cpu, wake_flags | WF_TTWU);
-	cpu = select_task_rq(p);
+	cpu = select_task_rq(p, cpu, wake_flags | WF_TTWU);
 	// if (task_cpu(p) != cpu) {
 	// 	if (p->in_iowait) {
 	// 		delayacct_blkio_end(p);
@@ -606,8 +603,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 
-	per_cpudata_s * target_cpu_p =
-			&(percpu_data[select_task_rq(p)]->data);
+	per_cpudata_s * target_cpu_p = &(cpudata.data);
 	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 
 	return 0;
@@ -668,22 +664,4 @@ void schedule_preempt_disabled(void)
 	sched_preempt_enable_no_resched();
 	schedule();
 	preempt_disable();
-}
-
-
-int myos_load_balance()
-{
-	int i;
-	int min_load = 99999999;
-	int min_idx = 0;
-	for (i = 0; i < nr_lcpu; i++)
-	{
-		per_cpudata_s * cpu_p = &(percpu_data[i]->data);
-		if (cpu_p->running_lhdr.count < min_load)
-		{
-			min_load = cpu_p->running_lhdr.count;
-			min_idx = i;
-		}
-	}
-	return min_idx;
 }

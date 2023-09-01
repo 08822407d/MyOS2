@@ -85,9 +85,8 @@ void __init setup_per_cpu_areas(void)
 		if (cpu == 0)
 			per_cpu_offset(cpu) = 0;
 		else
-			per_cpu_offset(cpu) =
-					myos_memblock_alloc_normal(pcpuarea_size, SMP_CACHE_BYTES) -
-						(void *)__per_cpu_load;
+			per_cpu_offset(cpu) = myos_memblock_alloc_normal(pcpuarea_size,
+					SMP_CACHE_BYTES) - (void *)__per_cpu_load;
 
 		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
 		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
@@ -154,6 +153,8 @@ void __init setup_per_cpu_areas(void)
 				 * per CPU stack canary is 0 in both per CPU areas.
 				 */
 				// wrmsrl(MSR_GS_BASE, cpu_kernelmode_gs_base(cpu));
+				wrmsrl(MSR_GS_BASE, per_cpu_offset(cpu) +
+						(unsigned long)__per_cpu_load);
 			// }
 		}
 	}

@@ -8,7 +8,6 @@
 	struct task_struct;
 	typedef struct task_struct task_s;
 
-
 	typedef struct arch_percpu_info
 	{
 		uint64_t	lcpu_addr;			// local apic_id
@@ -40,6 +39,9 @@
 		per_cpudata_s	data;
 		reg_t			cpu_stack[SZ_2M / sizeof(reg_t)];
 	} cpudata_u;
+
+
+	extern cpudata_u cpudata;
 
 	per_cpudata_s * get_current_cpu(void);
 	#define curr_cpu get_current_cpu()

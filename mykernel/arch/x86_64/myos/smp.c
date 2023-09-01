@@ -3,6 +3,7 @@
 #include <asm/setup.h>
 #include <asm/tlbflush.h>
 #include <asm/desc.h>
+#include <asm/percpu.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
@@ -14,11 +15,8 @@
 
 extern phys_addr_t 		kernel_cr3;
 extern uint64_t	apic_id[CONFIG_NR_CPUS];
-extern cpudata_u cpudata;
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
-
-cpudata_u **percpu_data;
 
 void myos_early_init_smp(void)
 {
@@ -34,20 +32,12 @@ void myos_early_init_smp(void)
 
 void myos_init_smp(size_t lcpu_nr)
 {
-	percpu_data	= myos_memblock_alloc_normal(
-			lcpu_nr * sizeof(cpudata_u *), sizeof(void *));
-	cpudata_u *pcpudata_arr = myos_memblock_alloc_normal(
-			(lcpu_nr - 1) * sizeof(cpudata_u), sizeof(long));
-	percpu_data[0] = &cpudata;
-	wrgsbase((unsigned long)percpu_data[0]);
-	for (int i = 1; i < lcpu_nr; i++)
-		percpu_data[i] = &(pcpudata_arr[i - 1]);
-
 	// init basic data for percpu
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
 	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(percpu_data[0]->data);
+	wrgsbase((unsigned long)&cpudata);
+	per_cpudata_s * cpudata_p = &(cpudata.data);
 	cpudata_p->cpu_idx = 0;
 	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
 
@@ -64,7 +54,7 @@ void myos_init_smp(size_t lcpu_nr)
 
 void myos_percpu_self_config(size_t cpu_idx)
 {
-	cpudata_u *cpudata_u_p = percpu_data[cpu_idx];
+	cpudata_u *cpudata_u_p = &(per_cpu(cpudata, cpu_idx));
 	per_cpudata_s * cpudata_p = &(cpudata_u_p->data);
 	task_s *	current_task = current;
 	cpudata_p->curr_task =

@@ -405,4 +405,5 @@
 	// 		&early_per_cpu_ptr(_name)[_cpu] :		\
 			&per_cpu(_name, _cpu))
 
+
 #endif /* _ASM_X86_PERCPU_H */
