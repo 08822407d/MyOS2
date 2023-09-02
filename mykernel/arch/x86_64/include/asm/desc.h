@@ -12,7 +12,7 @@
 	// #include <asm/cpu_entry_area.h>
 
 	// #include <linux/debug_locks.h>
-	// #include <linux/smp.h>
+	#include <linux/kernel/smp.h>
 	#include <linux/smp/percpu.h>
 
 
@@ -122,8 +122,7 @@
 	// static inline void native_load_tr_desc(void)
 	static inline void load_TR_desc(void)
 	{
-		int cpu = 0;
-		// int cpu = raw_smp_processor_id();
+		int cpu = raw_smp_processor_id();
 
 		load_direct_gdt(cpu);
 		asm volatile(	"ltr	%w0		\t\n"

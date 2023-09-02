@@ -100,7 +100,7 @@ _AP_code64:
 
 	// compair lapic_id in table to get current AP's index
 	movq	%rax,		%r8
-	movabsq	$apic_id,	%rax
+	movabsq	$apicid_to_cpunr,	%rax
 	movq	$0,			%rbx
 l1:
 	incq	%rbx	//	here is a pre-requisit that BSP's apic_id is 0

@@ -24,7 +24,7 @@
 
 #include <asm/processor.h>
 // #include <asm/proto.h>
-// #include <asm/smp.h>
+#include <asm/smp.h>
 #include <asm/setup.h>
 #include <asm/desc.h>
 #include <asm/tlbflush.h>

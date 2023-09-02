@@ -14,7 +14,6 @@
 #include <obsolete/mutex.h>
 
 extern phys_addr_t 		kernel_cr3;
-extern uint64_t	apic_id[CONFIG_NR_CPUS];
 extern u32	cr3_paddr;
 extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
@@ -42,7 +41,7 @@ void myos_init_smp(size_t lcpu_nr)
 
 	// fill architechture part
 	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
-	arch_cpuinfo->lcpu_addr = apic_id[0];
+	arch_cpuinfo->lcpu_addr = apicid_to_cpunr[0];
 	arch_cpuinfo->lcpu_topo_flag[0] = smp_topos[0].thd_id;
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[0].core_id;
 	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[0].pack_id;

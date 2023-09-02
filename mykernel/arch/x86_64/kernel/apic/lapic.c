@@ -33,7 +33,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/cpu.h>
 // #include <linux/dmi.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 #include <linux/mm/mm.h>
 
 // #include <asm/trace/irq_vectors.h>
@@ -54,7 +54,7 @@
 // #include <asm/hpet.h>
 // #include <asm/mtrr.h>
 // #include <asm/time.h>
-// #include <asm/smp.h>
+#include <asm/smp.h>
 // #include <asm/mce.h>
 // #include <asm/tsc.h>
 // #include <asm/hypervisor.h>
@@ -65,6 +65,10 @@
 
 
 int x2apic_mode;
+
+uint64_t apicid_to_cpunr[CONFIG_NR_CPUS] = {
+	[0 ... CONFIG_NR_CPUS-1] = -1,
+};
 
 
 /**

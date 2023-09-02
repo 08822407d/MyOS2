@@ -23,7 +23,7 @@
 // #include <asm/timer.h>
 // #include <asm/mwait.h>
 
-// #include <asm/smp.h>
+#include <asm/smp.h>
 
 
 #include <asm-generic/param.h>

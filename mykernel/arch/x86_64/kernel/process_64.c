@@ -24,7 +24,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
 // #include <linux/elfcore.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 #include <linux/kernel/slab.h>
 // #include <linux/user.h>
 // #include <linux/interrupt.h>

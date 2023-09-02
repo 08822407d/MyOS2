@@ -38,7 +38,7 @@
 // #include <linux/kernel_stat.h>
 #include <linux/kernel/start_kernel.h>
 // #include <linux/security.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 // #include <linux/profile.h>
 // #include <linux/kfence.h>
 // #include <linux/rcupdate.h>
@@ -230,7 +230,7 @@ extern void myos_init_smp(size_t lcpu_nr);
 	myos_timer_init();
 	myos_devices_init();
 
-	myos_startup_smp();
+	// myos_startup_smp();
 
 	vfs_caches_init();
 
@@ -247,8 +247,8 @@ void idle(size_t cpu_idx)
 	myos_init_percpu_intr();
 	myos_percpu_self_config(cpu_idx);
 
-	atomic_inc(&lcpu_boot_count);
-	while (atomic_read(&lcpu_boot_count) != nr_lcpu);
+	// atomic_inc(&lcpu_boot_count);
+	// while (atomic_read(&lcpu_boot_count) != nr_lcpu);
 
 	if (cpu_idx == 0)
 	{

@@ -17,7 +17,6 @@ efi_machine_conf_s	*machine_info;
 unsigned		nr_lcpu;
 framebuffer_s	framebuffer;
 
-uint64_t		apic_id[CONFIG_NR_CPUS];
 struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 static void get_VBE_info(mb_fb_common_s * vbe_info)
@@ -40,7 +39,7 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 		efi_cpudesc_s * this_cpu = &smp_info->cpus[i];
 		if ((this_cpu->status & 0x4) > 0)
 		{
-			apic_id[lcpu_count] = this_cpu->proccessor_id & 0xFF;
+			apicid_to_cpunr[this_cpu->proccessor_id & 0xFF] = i;
 			smp_topos[lcpu_count].not_use = 0;
 			smp_topos[lcpu_count].pack_id = this_cpu->pack_id;
 			smp_topos[lcpu_count].core_id = this_cpu->core_id;

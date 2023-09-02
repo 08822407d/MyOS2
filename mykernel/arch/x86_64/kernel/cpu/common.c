@@ -20,7 +20,7 @@
 #include <linux/init/init.h>
 // #include <linux/kprobes.h>
 // #include <linux/kgdb.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 // #include <linux/kernel/io.h>
 // #include <linux/syscore_ops.h>
 #include <linux/mm/pgtable.h>
@@ -591,8 +591,7 @@ void syscall_init(void)
 void cpu_init_exception_handling(void)
 {
 	// struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-	// int cpu = raw_smp_processor_id();
-	int cpu = 0;
+	int cpu = raw_smp_processor_id();
 
 	// /* paranoid_entry() gets the CPU number from the GDT */
 	// setup_getcpu(cpu);
@@ -621,8 +620,7 @@ void cpu_init_exception_handling(void)
 void cpu_init(void)
 {
 	task_s *curr = current;
-	// int cpu = raw_smp_processor_id();
-	int cpu = 0;
+	int cpu = raw_smp_processor_id();
 
 	// wait_for_master_cpu(cpu);
 

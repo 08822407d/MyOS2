@@ -360,7 +360,29 @@
 	// 	 : x86_this_cpu_variable_test_bit((nr), (addr)))
 
 
-	#include <asm-generic/percpu.h>
+	// #include <asm-generic/percpu.h>
+	// {
+		#include <linux/kernel/compiler.h>
+		#include <linux/kernel/threads.h>
+		#include <linux/smp/percpu-defs.h>
+		/*
+		 * per_cpu_offset() is the offset that has to be added to a
+		 * percpu variable to get to the instance for a certain processor.
+		 *
+		 * Most arches use the __per_cpu_offset array for those offsets but
+		 * some arches have their own ways of determining the offset (x86_64, s390).
+		 */
+		#ifndef __per_cpu_offset
+			extern unsigned long __per_cpu_offset[NR_CPUS];
+
+		#	define per_cpu_offset(x) (__per_cpu_offset[x])
+		#endif
+
+		#ifndef PER_CPU_BASE_SECTION
+		#	define PER_CPU_BASE_SECTION ".data..percpu"
+		#endif
+	// }
+
 
 	// /* We can use this directly for local CPU (faster). */
 	// DECLARE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);

@@ -10,7 +10,7 @@
 	// #ifdef CONFIG_NUMA
 
 	// #include <linux/mmdebug.h>
-	// #include <asm/smp.h>
+	#include <asm/smp.h>
 
 	#	define MAX_NUMNODES	1
 

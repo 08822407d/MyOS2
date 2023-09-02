@@ -8,7 +8,7 @@
 #include <linux/smp/percpu.h>
 // #include <linux/kexec.h>
 // #include <linux/crash_dump.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 // #include <linux/topology.h>
 #include <linux/mm/pfn.h>
 // #include <linux/stackprotector.h>

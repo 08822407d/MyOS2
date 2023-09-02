@@ -3,6 +3,14 @@
         "cpu.h": "c",
         "kernel.h": "c",
         "sections.h": "c",
-        "myos_percpu.h": "c"
+        "myos_percpu.h": "c",
+        "percpu.h": "c",
+        "smp.h": "c",
+        "multiboot2.h": "c",
+        "e820-types.h": "c",
+        "apic.h": "c",
+        "types.h": "c",
+        "memblock.h": "c",
+        "atomic.h": "c"
     }
 }

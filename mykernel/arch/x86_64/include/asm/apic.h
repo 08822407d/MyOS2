@@ -390,7 +390,7 @@
 
 	// extern void generic_bigsmp_probe(void);
 
-	// #include <asm/smp.h>
+	#include <asm/smp.h>
 
 	// #define APIC_DFR_VALUE	(APIC_DFR_FLAT)
 
@@ -427,5 +427,9 @@
 	// 				bool dmar);
 
 	// extern void ioapic_zap_locks(void);
+
+
+	
+	extern uint64_t apicid_to_cpunr[CONFIG_NR_CPUS];
 
 #endif /* _ASM_X86_APIC_H */

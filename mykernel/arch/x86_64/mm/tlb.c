@@ -5,7 +5,7 @@
 
 #include <linux/mm/mm.h>
 #include <linux/kernel/spinlock.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 // #include <linux/interrupt.h>
 // #include <linux/export.h>
 #include <linux/kernel/cpu.h>

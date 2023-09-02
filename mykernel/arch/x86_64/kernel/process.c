@@ -4,7 +4,7 @@
 #include <linux/lib/errno.h>
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
-// #include <linux/smp.h>
+#include <linux/kernel/smp.h>
 // #include <linux/prctl.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/sched.h>
