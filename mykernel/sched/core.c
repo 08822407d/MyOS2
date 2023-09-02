@@ -86,7 +86,7 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	// __set_task_cpu(p, new_cpu);
 
-	per_cpudata_s *target_cpu_p = &cpudata.data;
+	per_cpudata_s *target_cpu_p = &(per_cpu(cpudata, new_cpu).data);
 	p->__state = TASK_RUNNING;
 	if (!list_in_lhdr(&target_cpu_p->running_lhdr, &p->tasks))
 		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
@@ -245,7 +245,7 @@ static int
 try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 {
 	unsigned long flags;
-	int cpu, success = 0;
+	int cpu = 0, success = 0;
 
 	// if (p == current) {
 	// 	/*
@@ -603,7 +603,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 
-	per_cpudata_s * target_cpu_p = &(cpudata.data);
+	per_cpudata_s * target_cpu_p = &(per_cpu(cpudata, 0).data);
 	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
 
 	return 0;

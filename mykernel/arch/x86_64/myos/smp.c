@@ -36,8 +36,7 @@ void myos_init_smp(size_t lcpu_nr)
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
 	// create percpu_data for current lcpu
-	wrgsbase((unsigned long)&cpudata);
-	per_cpudata_s * cpudata_p = &(cpudata.data);
+	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0).data);
 	cpudata_p->cpu_idx = 0;
 	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
 
@@ -48,7 +47,7 @@ void myos_init_smp(size_t lcpu_nr)
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[0].core_id;
 	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[0].pack_id;
 	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[0].not_use;
-	arch_cpuinfo->tss = &cpu_tss_rw;
+	arch_cpuinfo->tss = &(per_cpu(cpu_tss_rw, 0));
 	// }
 }
 

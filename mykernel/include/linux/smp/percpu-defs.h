@@ -138,11 +138,8 @@
 						per_cpu_offset((cpu)));	\
 				})
 
-	#	define raw_cpu_ptr(ptr)	({				\
-					arch_raw_cpu_ptr(ptr);		\
-				})
 
-	#	define this_cpu_ptr(ptr)	raw_cpu_ptr(ptr)
+	#	define this_cpu_ptr(ptr)	arch_raw_cpu_ptr(ptr)
 
 	#	define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 

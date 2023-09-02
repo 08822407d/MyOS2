@@ -275,12 +275,6 @@ void __init setup_arch(char **cmdline_p)
 	// 初始化x86架构物理页映射
 	init_mem_mapping();
 
-
-extern void myos_init_smp(size_t lcpu_nr);
-	myos_init_smp(nr_lcpu);
-	myos_init_video();
-
-
 	// x86_init.paging.pagetable_init()
 	// void __init paging_init(void)
 	// {

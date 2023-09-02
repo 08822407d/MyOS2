@@ -205,7 +205,13 @@ asmlinkage void __init start_kernel(void)
 
 	setup_per_cpu_areas();
 
+
+extern void myos_init_smp(size_t lcpu_nr);
+	myos_init_smp(nr_lcpu);
+	myos_init_video();
+
 	myos_preinit_slab();
+
 
 	trap_init();
 	mm_core_init();
