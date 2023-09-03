@@ -33,7 +33,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/cpu.h>
 // #include <linux/dmi.h>
-#include <linux/kernel/smp.h>
+#include <linux/smp/smp.h>
 #include <linux/mm/mm.h>
 
 // #include <asm/trace/irq_vectors.h>

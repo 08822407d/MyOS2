@@ -12,7 +12,7 @@
 	// #include <asm/cpu_entry_area.h>
 
 	// #include <linux/debug_locks.h>
-	#include <linux/kernel/smp.h>
+	#include <linux/smp/smp.h>
 	#include <linux/smp/percpu.h>
 
 

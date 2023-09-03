@@ -38,7 +38,7 @@
 // #include <linux/kernel_stat.h>
 #include <linux/kernel/start_kernel.h>
 // #include <linux/security.h>
-#include <linux/kernel/smp.h>
+#include <linux/smp/smp.h>
 // #include <linux/profile.h>
 // #include <linux/kfence.h>
 // #include <linux/rcupdate.h>

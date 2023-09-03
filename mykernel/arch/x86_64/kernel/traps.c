@@ -38,7 +38,7 @@
 // #include <linux/bug.h>
 #include <linux/kernel/nmi.h>
 // #include <linux/mm.h>
-#include <linux/kernel/smp.h>
+#include <linux/smp/smp.h>
 // #include <linux/io.h>
 // #include <linux/hardirq.h>
 // #include <linux/atomic.h>

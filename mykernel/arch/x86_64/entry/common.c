@@ -12,7 +12,7 @@
 #include <linux/sched/task_stack.h>
 // #include <linux/entry-common.h>
 #include <linux/mm/mm.h>
-#include <linux/kernel/smp.h>
+#include <linux/smp/smp.h>
 #include <uapi/linux/errno.h>
 #include <linux/kernel/ptrace.h>
 // #include <linux/export.h>

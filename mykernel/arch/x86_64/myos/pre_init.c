@@ -39,6 +39,7 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 		efi_cpudesc_s * this_cpu = &smp_info->cpus[i];
 		if ((this_cpu->status & 0x4) > 0)
 		{
+			/// BUG注意，UEFI获取的ProcessorId并不是initial apic id
 			apicid_to_cpunr[this_cpu->proccessor_id & 0xFF] = i;
 			smp_topos[lcpu_count].not_use = 0;
 			smp_topos[lcpu_count].pack_id = this_cpu->pack_id;

@@ -65,32 +65,31 @@ SECTIONS
 	.data..percpu ALIGN(_Page_Size) : AT(__per_cpu_load - _k_offset)
 	{
 		__per_cpu_start = .;
-		*(.data..percpu*) . = ALIGN(_Page_Size);
-		/* *(.data..percpu..first) . = ALIGN(_Page_Size);
 		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
 		*(.data..percpu..read_mostly) . = ALIGN((1 << 6));
 		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(_Page_Size);
-		*(.data..percpu..decrypted) . = ALIGN(_Page_Size); */
 		__per_cpu_end = .;
 	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
 	}
 	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
 		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
 	. = ALIGN(_Page_Size);
-	/* .init.text : AT(ADDR(.init.text) - _k_offset)
+	.init.text : AT(ADDR(.init.text) - _k_offset)
 	{
 		_sinittext = .;
 		*(.init.text .init.text.*)
 		*(.text.startup) _einittext = .;
-	} :init
+	/* } :init */
+	}
 	.init.data : AT(ADDR(.init.data) - _k_offset)
 	{
-		KEEP(*(SORT(___kentry+*))) *(.init.data init.data.*) . = ALIGN(8);
+		*(.init.data init.data.*) . = ALIGN(8);
+		/* KEEP(*(SORT(___kentry+*))) *(.init.data init.data.*) . = ALIGN(8);
 		__start_mcount_loc = .;
 		KEEP(*(__mcount_loc)) __stop_mcount_loc = .;
-		ftrace_ops_list_func = arch_ftrace_ops_list_func;
+		ftrace_ops_list_func = arch_ftrace_ops_list_func; */
 		*(.init.rodata .init.rodata.*) . = ALIGN(8);
-		__start_ftrace_events = .;
+		/* __start_ftrace_events = .;
 		KEEP(*(_ftrace_events)) __stop_ftrace_events = .;
 		__start_ftrace_eval_maps = .;
 		KEEP(*(_ftrace_eval_map)) __stop_ftrace_eval_maps = .;
@@ -149,8 +148,8 @@ SECTIONS
 		KEEP(*(.con_initcall.init)) __con_initcall_end = .;
 		. = ALIGN(4); __initramfs_start = .;
 		KEEP(*(.init.ramfs)) . = ALIGN(8);
-		KEEP(*(.init.ramfs.info))
-	} */
+		KEEP(*(.init.ramfs.info)) */
+	}
 	.bss ALIGN(_Page_Size) : AT(ADDR(.bss) - _k_offset)
 	{
 		__bss_start = .;

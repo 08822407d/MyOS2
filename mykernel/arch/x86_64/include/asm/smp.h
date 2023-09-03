@@ -23,9 +23,6 @@
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_cpu_to_apicid);
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid);
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_bios_cpu_apicid);
-		// #if defined(CONFIG_X86_LOCAL_APIC) && defined(CONFIG_X86_32)
-		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(int, x86_cpu_to_logical_apicid);
-		// #endif
 
 		// struct task_struct;
 
@@ -156,11 +153,7 @@
 		// #define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
 		// #define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
 
-		// #ifdef CONFIG_X86_32
-		// extern int safe_smp_processor_id(void);
-		// #else
 		// # define safe_smp_processor_id()	smp_processor_id()
-		// #endif
 
 		// static inline struct cpumask *cpu_llc_shared_mask(int cpu)
 		// {
@@ -174,12 +167,7 @@
 
 		// extern unsigned disabled_cpus;
 
-		// #ifdef CONFIG_X86_LOCAL_APIC
 		// extern int hard_smp_processor_id(void);
-
-		// #else /* CONFIG_X86_LOCAL_APIC */
-		// #define hard_smp_processor_id()	0
-		// #endif /* CONFIG_X86_LOCAL_APIC */
 
 		// #ifdef CONFIG_DEBUG_NMI_SELFTEST
 		// extern void nmi_selftest(void);
