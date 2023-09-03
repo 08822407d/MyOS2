@@ -596,9 +596,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// if (likely(sched_info_on()))
 	// 	memset(&p->sched_info, 0, sizeof(p->sched_info));
 // #endif
-// #if defined(CONFIG_SMP)
 	// p->on_cpu = 0;
-// #endif
 	init_task_preempt_count(p);
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);

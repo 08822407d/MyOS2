@@ -50,7 +50,6 @@
 		// /* Globals due to paravirt */
 		// extern void set_cpu_sibling_map(int cpu);
 
-		// #ifdef CONFIG_SMP
 		// extern struct smp_ops smp_ops;
 
 		// static inline void smp_send_stop(void)
@@ -173,20 +172,6 @@
 		// 	return per_cpu(cpu_l2c_shared_map, cpu);
 		// }
 
-		// #else /* !CONFIG_SMP */
-		// #define wbinvd_on_cpu(cpu)     wbinvd()
-		// static inline int wbinvd_on_all_cpus(void)
-		// {
-		// 	wbinvd();
-		// 	return 0;
-		// }
-
-		// static inline struct cpumask *cpu_llc_shared_mask(int cpu)
-		// {
-		// 	return (struct cpumask *)cpumask_of(0);
-		// }
-		// #endif /* CONFIG_SMP */
-
 		// extern unsigned disabled_cpus;
 
 		// #ifdef CONFIG_X86_LOCAL_APIC
@@ -208,7 +193,7 @@
 		#include <asm/apic.h>
 		#include <linux/debug/bug.h>
 		#define raw_smp_processor_id() ({								\
-					int cpu = apicid_to_cpunr[apic_msr_read(APIC_ID)];	\
+					int cpu = apicid_to_cpunr[cpuid_ebx(1) >> 24];		\
 					BUG_ON(cpu >= CONFIG_NR_CPUS);						\
 					cpu;												\
 				})

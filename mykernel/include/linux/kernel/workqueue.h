@@ -624,7 +624,6 @@
 	// 	return queue_delayed_work(system_wq, dwork, delay);
 	// }
 
-	// #ifndef CONFIG_SMP
 	// static inline long work_on_cpu(int cpu, long (*fn)(void *), void *arg)
 	// {
 	// 	return fn(arg);
@@ -633,10 +632,6 @@
 	// {
 	// 	return fn(arg);
 	// }
-	// #else
-	// long work_on_cpu(int cpu, long (*fn)(void *), void *arg);
-	// long work_on_cpu_safe(int cpu, long (*fn)(void *), void *arg);
-	// #endif /* CONFIG_SMP */
 
 	// #ifdef CONFIG_FREEZER
 	// extern void freeze_workqueues_begin(void);
