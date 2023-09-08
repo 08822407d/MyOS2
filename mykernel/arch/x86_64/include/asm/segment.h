@@ -134,8 +134,23 @@
 	#define IDT_ENTRIES						256
 	#define NUM_EXCEPTION_VECTORS			32
 
-	// /* Bitmask of exception vectors which push an error code on the stack: */
-	// #define EXCEPTION_ERRCODE_MASK		0x20027d00
+	/* Bitmask of exception vectors which push an error code on the stack: */
+	#define EXCEPTION_ERRCODE_MASK		0x20027d00
+	/*
+	 * According to Intel Manual Volume 3 - June 2023
+	 * CHAPTER 6 : NTERRUPT AND EXCEPTION HANDLING - 6.15
+	 */
+	// #define EXCEPTION_ERRCODE_MASK	(	\
+	// 			(1 << X86_TRAP_DF)	|	\
+	// 			(1 << X86_TRAP_TS)	|	\
+	// 			(1 << X86_TRAP_NP)	|	\
+	// 			(1 << X86_TRAP_SS)	|	\
+	// 			(1 << X86_TRAP_GP)	|	\
+	// 			(1 << X86_TRAP_PF)	|	\
+	// 			(1 << X86_TRAP_AC)	|	\
+	// 			(1 << X86_TRAP_CP)	|	\
+	// 		)
+
 
 	#define GDT_SIZE						(GDT_ENTRIES * 8)
 	// #define GDT_ENTRY_TLS_ENTRIES			3

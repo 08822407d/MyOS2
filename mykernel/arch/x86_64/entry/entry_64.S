@@ -46,8 +46,6 @@
 .code64
 .section .entry.text, "ax"
 
-
-
 /*
  * %rdi: prev task
  * %rsi: next task

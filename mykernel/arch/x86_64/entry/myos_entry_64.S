@@ -352,4 +352,3 @@ SYM_CODE_START(lapic_ipi06) /* IPI routine for irq 5 (LVT lint1) */
 
 SYM_CODE_START(lapic_ipi07) /* IPI routine for irq 6 (LVT error) */
 	lapic_ipi_entry(7)
-

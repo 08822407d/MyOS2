@@ -15,6 +15,7 @@
         "spinlock_types.h": "c",
         "tspinlock_types.h": "c",
         "qspinlock_types.h": "c",
-        "spinlock_api_smp.h": "c"
+        "spinlock_api_smp.h": "c",
+        "idtentry.h": "c"
     }
 }

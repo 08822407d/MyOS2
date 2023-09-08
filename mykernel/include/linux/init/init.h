@@ -97,23 +97,23 @@
 	#define __memexitdata	__section(".memexit.data")
 	#define __memexitconst	__section(".memexit.rodata")
 
-	// /* For assembly routines */
-	// #define __HEAD		.section	".head.text","ax"
-	// #define __INIT		.section	".init.text","ax"
-	// #define __FINIT		.previous
+	/* For assembly routines */
+	#define __HEAD			.section	".head.text","ax"
+	#define __INIT			.section	".init.text","ax"
+	#define __FINIT			.previous
 
-	// #define __INITDATA	.section	".init.data","aw",%progbits
+	// #define __INITDATA		.section	".init.data","aw",%progbits
 	// #define __INITRODATA	.section	".init.rodata","a",%progbits
-	// #define __FINITDATA	.previous
+	// #define __FINITDATA		.previous
 
-	// #define __MEMINIT        .section	".meminit.text", "ax"
-	// #define __MEMINITDATA    .section	".meminit.data", "aw"
-	// #define __MEMINITRODATA  .section	".meminit.rodata", "a"
+	// #define __MEMINIT		.section	".meminit.text", "ax"
+	// #define __MEMINITDATA	.section	".meminit.data", "aw"
+	// #define __MEMINITRODATA	.section	".meminit.rodata", "a"
 
 	// /* silence warnings when references are OK */
-	// #define __REF            .section       ".ref.text", "ax"
-	// #define __REFDATA        .section       ".ref.data", "aw"
-	// #define __REFCONST       .section       ".ref.rodata", "a"
+	// #define __REF			.section	".ref.text", "ax"
+	// #define __REFDATA		.section	".ref.data", "aw"
+	// #define __REFCONST		.section	".ref.rodata", "a"
 
 	#ifndef __ASSEMBLY__
 		// /*

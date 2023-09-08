@@ -14,7 +14,7 @@
 
 
 	/*
-	 * Bits defination according to Intel®64 and IA-32 Manual
+	 * According to Intel®64 and IA-32 Manual - June 2023
 	 * Volume 2, Chapter 3, 3.3 Instructions - CPUID
 	 */
 	struct x86_cap_bits {

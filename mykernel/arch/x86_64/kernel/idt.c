@@ -48,8 +48,10 @@ struct desc_ptr idt_descr __ro_after_init = {
  */
 void __init idt_setup_early_handler(void)
 {
-	// for (int i = 0; i < NUM_EXCEPTION_VECTORS; i++)
-	// 	set_intr_gate(i, early_idt_handler_array[i]);
+	for (int i = 0; i < NUM_EXCEPTION_VECTORS; i++)
+		// set_intr_gate(i, early_idt_handler_array[i]);
+		pack_gate(&idt_table[VECTOR_EXCEP_00], GATE_TRAP,
+				early_idt_handler_array[i], KRNL_RPL, 0);
 
 	pack_gate(&idt_table[VECTOR_EXCEP_00], GATE_TRAP     , cpu_excep_handler_00, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_EXCEP_01], GATE_TRAP     , cpu_excep_handler_01, KRNL_RPL, 0);

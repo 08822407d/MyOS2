@@ -14,7 +14,8 @@
 
 	#	include <linux/kernel/types.h>
 
-		// Intel Manual Volume 3 Chapter 5: Protection
+		// Intel Manual Volume 3 - June 2023
+		// Chapter 5: Protection
 		/* 8 byte segment descriptor */
 		typedef struct desc_struct {
 			u16	limit0;
