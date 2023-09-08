@@ -79,7 +79,7 @@
 	// #define LOCK_SECTION_END						\
 	// 			".previous\n\t"
 
-	// #define __lockfunc	__section(".spinlock.text")
+	#define __lockfunc	__section(".spinlock.text")
 
 	/*
 	 * Pull the arch_spinlock_t and arch_rwlock_t definitions:
@@ -278,44 +278,17 @@
 	// #	include <linux/rwlock.h>
 	// #endif
 
-	// /*
-	//  * Pull the _spin_*()/_read_*()/_write_*() functions/declarations:
-	//  */
+	/*
+	 * Pull the _spin_*()/_read_*()/_write_*() functions/declarations:
+	 */
 	# include <linux/kernel/spinlock_api_smp.h>
 
 	// /* Non PREEMPT_RT kernel, map to raw spinlocks: */
 	// #ifndef CONFIG_PREEMPT_RT
 
-	// 	/*
-	// 	 * Map the spin_lock functions to the raw variants for PREEMPT_RT=n
-	// 	 */
+		#define spin_lock_init raw_spin_lock_init
 
-		static __always_inline arch_spinlock_t
-		*spinlock_check(spinlock_t *lock) {
-			return &lock->rlock;
-		}
-
-	// #	ifdef CONFIG_DEBUG_SPINLOCK
-	// #		define spin_lock_init(lock)								\
-	// 				do {											\
-	// 					static struct lock_class_key __key;			\
-	// 					__raw_spin_lock_init(spinlock_check(lock),	\
-	// 						#lock, &__key, LD_WAIT_CONFIG);			\
-	// 				} while (0)
-	// #	else
-	// #	define spin_lock_init(_lock)						\
-	// 			do {										\
-	// 				spinlock_check(_lock);					\
-	// 				*(_lock) = __SPIN_LOCK_UNLOCKED(_lock);	\
-	// 			} while (0)
-	// #	endif
-		static __always_inline void spin_lock_init(spinlock_t *lock) {
-			raw_spin_lock_init(&lock->rlock);
-		}
-
-		static __always_inline void spin_lock(spinlock_t *lock) {
-			raw_spin_lock(&lock->rlock);
-		}
+		#define spin_lock raw_spin_lock
 
 	// 	static __always_inline void spin_lock_bh(spinlock_t *lock) {
 	// 		raw_spin_lock_bh(&lock->rlock);
@@ -337,9 +310,7 @@
 	// 					spinlock_check(lock), nest_lock);	\
 	// 			} while (0)
 
-		static __always_inline void spin_lock_irq(spinlock_t *lock) {
-			raw_spin_lock_irq(&lock->rlock);
-		}
+		#define spin_lock_irq raw_spin_lock_irq
 
 	// #	define spin_lock_irqsave(lock, flags)			\
 	// 			do {									\
@@ -353,21 +324,15 @@
 	// 					spinlock_check(lock), flags, subclass);		\
 	// 			} while (0)
 
-		static __always_inline void spin_unlock(spinlock_t *lock) {
-			raw_spin_unlock(&lock->rlock);
-		}
+		#define spin_unlock raw_spin_unlock
 
-		static __always_inline void spin_unlock_no_resched(spinlock_t *lock) {
-			raw_spin_unlock_no_resched(&lock->rlock);
-		}
+		#define spin_unlock_no_resched raw_spin_unlock_no_resched
 
 	// 	static __always_inline void spin_unlock_bh(spinlock_t *lock) {
 	// 		raw_spin_unlock_bh(&lock->rlock);
 	// 	}
 
-		static __always_inline void spin_unlock_irq(spinlock_t *lock) {
-			raw_spin_unlock_irq(&lock->rlock);
-		}
+		#define spin_unlock_irq raw_spin_unlock_irq
 
 	// 	static __always_inline void
 	// 	spin_unlock_irqrestore(spinlock_t *lock, unsigned long flags) {

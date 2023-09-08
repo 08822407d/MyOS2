@@ -16,34 +16,10 @@
 	// #ifndef CONFIG_PREEMPT_RT
 
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
-	typedef struct spinlock {
-	// 	union {
-			arch_spinlock_t	rlock;
+	typedef arch_spinlock_t spinlock_t;
 
-	// #ifdef CONFIG_DEBUG_LOCK_ALLOC
-	// # define LOCK_PADSIZE (offsetof(struct raw_spinlock, dep_map))
-	// 		struct {
-	// 			u8 __padding[LOCK_PADSIZE];
-	// 			struct lockdep_map dep_map;
-	// 		};
-	// #endif
-	// 	};
-	} spinlock_t;
-
-	// #define ___SPIN_LOCK_INITIALIZER(lockname)	\
-	// 	.raw_lock = __ARCH_SPIN_LOCK_UNLOCKED,	\
-	// 	SPIN_DEBUG_INIT(lockname)		\
-	// 	SPIN_DEP_MAP_INIT(lockname) }
-	#define __SPIN_LOCK_UNLOCKED(lockname)	{		\
-				.rlock = __ARCH_SPIN_LOCK_UNLOCKED	\
-			}
-
-	// #define __SPIN_LOCK_INITIALIZER(lockname) \
-	// 	{ { .rlock = ___SPIN_LOCK_INITIALIZER(lockname) } }
-
-	// #define __SPIN_LOCK_UNLOCKED(lockname) \
-	// 	(spinlock_t) __SPIN_LOCK_INITIALIZER(lockname)
-
+	#define ___SPIN_LOCK_INITIALIZER(lockname) __ARCH_SPIN_LOCK_UNLOCKED
+	#define __SPIN_LOCK_UNLOCKED(lockname) __ARCH_SPIN_LOCK_UNLOCKED
 	#define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
 
 	// #else /* !CONFIG_PREEMPT_RT */

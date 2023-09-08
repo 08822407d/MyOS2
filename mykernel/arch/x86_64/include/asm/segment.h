@@ -204,11 +204,6 @@
 					[NUM_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
 	// 		extern void early_ignore_irq(void);
 
-	// #		ifdef CONFIG_XEN_PV
-	// 			extern const char xen_early_idt_handler_array
-	// 					[NUM_EXCEPTION_VECTORS][XEN_EARLY_IDT_HANDLER_SIZE];
-	// #		endif
-
 	/*
 	 * Load a segment. Fall back on loading the zero segment if something goes
 	 * wrong.  This variant assumes that loading zero fully clears the segment.
@@ -216,20 +211,11 @@
 	 * failure to fully clear the cached descriptor is only observable for
 	 * FS and GS.
 	 */
-	// #		define __loadsegment_simple(seg, value)						\
-	// 				do {												\
-	// 					unsigned short __val = (value);					\
-	// 					asm volatile(	"							\n"	\
-	// 									"1:	movl %k0,%%" #seg "		\n"	\
-	// 									_ASM_EXTABLE_TYPE_REG(1b, 1b, EX_TYPE_ZERO_REG, %k0)\
-	// 								:	"+r" (__val)					\
-	// 								:									\
-	// 								:	"memory");						\
-	// 				} while (0)
 	#		define __loadsegment_simple(seg, value)						\
 					do {												\
 						unsigned short __val = (value);					\
 						asm volatile(	"movl	%k0,	%%" #seg "	\n"	\
+			/* _ASM_EXTABLE_TYPE_REG(1b, 1b, EX_TYPE_ZERO_REG, %k0) */	\
 									:	"+r" (__val)					\
 									:									\
 									:	"memory");						\
@@ -251,7 +237,6 @@
 			}
 
 	/* __loadsegment_gs is intentionally undefined.  Use load_gs_index instead. */
-
 	#		define loadsegment(seg, value) __loadsegment_ ## seg (value)
 
 	/*
