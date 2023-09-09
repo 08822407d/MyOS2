@@ -9,7 +9,6 @@
 
 	extern PCB_u			idletsk;
 	extern unsigned			nr_lcpu;
-	extern framebuffer_s	framebuffer;
 
 	extern kbd_inbuf_s		*p_kb;
 	extern time_s 			time;

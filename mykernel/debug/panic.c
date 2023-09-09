@@ -29,7 +29,7 @@
 // #include <linux/sysrq.h>
 #include <linux/init/init.h>
 #include <linux/kernel/nmi.h>
-// #include <linux/console.h>
+#include <linux/device/console.h>
 #include <linux/debug/bug.h>
 // #include <linux/ratelimit.h>
 // #include <linux/debugfs.h>

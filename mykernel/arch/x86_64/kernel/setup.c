@@ -8,7 +8,7 @@
  * parts of early kernel initialization.
  */
 // #include <linux/acpi.h>
-// #include <linux/console.h>
+#include <linux/device/console.h>
 // #include <linux/crash_dump.h>
 // #include <linux/dma-map-ops.h>
 // #include <linux/dmi.h>

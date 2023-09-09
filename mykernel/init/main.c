@@ -29,7 +29,7 @@
 #include <linux/mm/memblock.h>
 // #include <linux/acpi.h>
 // #include <linux/bootconfig.h>
-// #include <linux/console.h>
+#include <linux/device/console.h>
 #include <linux/kernel/nmi.h>
 #include <linux/smp/percpu.h>
 // #include <linux/kmod.h>
@@ -208,7 +208,6 @@ asmlinkage void __init start_kernel(void)
 
 extern void myos_init_smp(size_t lcpu_nr);
 	myos_init_smp(nr_lcpu);
-	myos_init_video();
 
 	myos_preinit_slab();
 
@@ -231,6 +230,10 @@ extern void myos_init_smp(size_t lcpu_nr);
 	myos_devices_init();
 
 	// myos_startup_smp();
+
+
+	console_init();
+
 
 	vfs_caches_init();
 

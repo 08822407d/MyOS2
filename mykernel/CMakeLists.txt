@@ -39,6 +39,7 @@ add_subdirectory(device)
 add_subdirectory(drivers)
 add_subdirectory(block)
 add_subdirectory(lib)
+add_subdirectory(printk)
 
 add_subdirectory(klib)
 add_subdirectory(mechanics)

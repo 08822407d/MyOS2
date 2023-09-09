@@ -79,7 +79,7 @@
 // #include <linux/devpts_fs.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-// #include <linux/console.h>
+#include <linux/device/console.h>
 // #include <linux/timer.h>
 #include <linux/kernel/ctype.h>
 // #include <linux/kd.h>

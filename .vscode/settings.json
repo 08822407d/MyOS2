@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.S": "gas",
         "cpu.h": "c",
         "kernel.h": "c",
         "sections.h": "c",
@@ -16,6 +17,7 @@
         "tspinlock_types.h": "c",
         "qspinlock_types.h": "c",
         "spinlock_api_smp.h": "c",
-        "idtentry.h": "c"
+        "idtentry.h": "c",
+        "keyboard.h": "c"
     }
 }

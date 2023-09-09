@@ -391,11 +391,5 @@ void init_ATArqd()
 {
 	thread = kthread_run(ATArq_deamon, NULL, "ATArqd");
 
-	color_printk(WHITE, BLACK, "ATA disk: initialized\n");
+	// color_printk(WHITE, BLACK, "ATA disk: initialized\n");
 }
-
-
-		// extern unsigned long jiffies;
-		// color_printk(YELLOW, BLACK, "DEBUG delay:( %ld <---> ", jiffies);
-		// myos_delay_full_u32(500);
-		// color_printk(YELLOW, BLACK, "%ld )\n", jiffies);

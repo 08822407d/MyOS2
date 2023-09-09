@@ -133,10 +133,9 @@ void * __kmalloc(size_t size, gfp_t flags)
 	else if (scgp->normal_slab_free.count > 0)
 		slp_lp = list_hdr_pop(&scgp->normal_slab_free);
 	else
-	{
-		color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
-		while (1);
-	}
+		// color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
+		BUG();
+
 	while (slp_lp == 0);
 	slp = container_of(slp_lp, slab_s, slab_list);
 
@@ -163,10 +162,9 @@ void * __kmalloc(size_t size, gfp_t flags)
 		slab_s *new_slab = slab_alloc(slp);
 		scgp->normal_slab_free.count--;
 		if (new_slab == NULL)
-		{
-			color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
-			while (1);
-		}
+			// color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
+			BUG();
+
 		new_slab->slabcache_ptr = scgp;
 		list_hdr_push(&scgp->normal_slab_free, &new_slab->slab_list);
 		scgp->normal_slab_total++;
@@ -232,17 +230,14 @@ void kfree(const void *objp)
 		slab_cache_s * scgp = slp->slabcache_ptr;
 		// of coures it should not in an empty-slab
 		if (slp->free == slp->total)
-		{
-			color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
-			while (1);
-		}
+			// color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
+			BUG();
 
 		unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
 		if (!bm_get_assigned_bit(slp->colormap, obj_idx))
-		{
-			color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
-			while (1);
-		}
+			// color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
+			BUG();
+
 		lock_recurs_lock(&slab_alloc_lock);
 		bm_clear_bit(slp->colormap, obj_idx);
 		slp->free++;
