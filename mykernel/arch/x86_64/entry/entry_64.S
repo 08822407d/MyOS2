@@ -26,7 +26,7 @@
 #include <asm/msr.h>
 #include <asm/unistd.h>
 // #include <asm/thread_info.h>
-// #include <asm/hw_irq.h>
+#include <asm/hw_irq.h>
 #include <asm/page_types.h>
 // #include <asm/irqflags.h>
 // #include <asm/paravirt.h>
@@ -42,6 +42,7 @@
 #include <linux/kernel/err.h>
 
 // #include "calling.h"
+
 
 .code64
 .section .entry.text, "ax"
@@ -137,3 +138,51 @@ SYM_CODE_START(ret_from_fork)
 	jmp		.
 SYM_CODE_END(ret_from_fork)
 .popsection
+
+
+#include <asm/idtentry.h>
+/*
+ * ASM code to emit the common vector entry stubs where each stub is
+ * packed into IDT_ALIGN bytes.
+ *
+ * Note, that the 'pushq imm8' is emitted via '.byte 0x6a, vector' because
+ * GCC treats the local vector variable as unsigned int and would expand
+ * all vectors above 0x7F to a 5 byte push. The original code did an
+ * adjustment of the vector number to be in the signed byte range to avoid
+ * this. While clever it's mindboggling counterintuitive and requires the
+ * odd conversion back to a real vector number in the C entry points. Using
+ * .byte achieves the same thing and the only fixup needed in the C entry
+ * point is to mask off the bits above bit 7 because the push is sign
+ * extending.
+ */
+	.align IDT_ALIGN
+SYM_CODE_START(irq_entries_start)
+	vector=0
+	.rept NR_VECTORS
+0 :
+	cli
+	.byte	0x6a, vector
+	/* External hardware interrupts has no error code */
+	.byte	0x6a, 0x0
+	jmp	sa_entintr_retp
+	sti
+	/* Ensure that the above is IDT_ALIGN bytes max */
+	.fill 0b + IDT_ALIGN - ., 1, 0x90
+	vector = vector+1
+	.endr
+SYM_CODE_END(irq_entries_start)
+SYM_CODE_START_NOALIGN(irq_entries_end)
+
+// 	.align IDT_ALIGN
+// SYM_CODE_START(spurious_entries_start)
+// 	vector=FIRST_SYSTEM_VECTOR
+// 	.rept NR_SYSTEM_VECTORS
+// 0 :
+// 	.byte	0x6a, vector
+// 	jmp	sa_entintr_retp
+// 	/* Ensure that the above is IDT_ALIGN bytes max */
+// 	.fill 0b + IDT_ALIGN - ., 1, 0x90
+// 	vector = vector+1
+// 	.endr
+// SYM_CODE_END(spurious_entries_start)
+// SYM_CODE_START_NOALIGN(spurious_entries_end)

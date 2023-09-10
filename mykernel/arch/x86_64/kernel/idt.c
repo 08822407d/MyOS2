@@ -11,7 +11,7 @@
 #include <asm/traps.h>
 // #include <asm/proto.h>
 #include <asm/desc.h>
-// #include <asm/hw_irq.h>
+#include <asm/hw_irq.h>
 #include <asm/idtentry.h>
 
 
@@ -43,6 +43,21 @@ struct desc_ptr idt_descr __ro_after_init = {
 // 	load_idt(&idt_descr);
 // }
 
+static __init void set_intr_gate(unsigned int n, const void *addr)
+{
+	struct idt_data data;
+	gate_desc desc;
+
+	init_idt_data(&data, n, addr);
+
+	// idt_setup_from_table(idt_table, &data, 1, false);
+	// {
+		idt_init_desc(&desc, &data);
+		write_idt_entry(idt_table, data.vector, &desc);
+	// }
+}
+
+
 /**
  * idt_setup_early_handler - Initializes the idt table with early handlers
  */
@@ -51,7 +66,7 @@ void __init idt_setup_early_handler(void)
 	for (int i = 0; i < NUM_EXCEPTION_VECTORS; i++)
 		// set_intr_gate(i, early_idt_handler_array[i]);
 		pack_gate(&idt_table[VECTOR_EXCEP_00], GATE_TRAP,
-				early_idt_handler_array[i], KRNL_RPL, 0);
+				(void (*)(void))early_idt_handler_array[i], KRNL_RPL, 0);
 
 	pack_gate(&idt_table[VECTOR_EXCEP_00], GATE_TRAP     , cpu_excep_handler_00, KRNL_RPL, 0);
 	pack_gate(&idt_table[VECTOR_EXCEP_01], GATE_TRAP     , cpu_excep_handler_01, KRNL_RPL, 0);
@@ -84,44 +99,46 @@ void __init idt_setup_early_handler(void)
  */
 void __init idt_setup_apic_and_irq_gates(void)
 {
-	// int i = FIRST_EXTERNAL_VECTOR;
-	// void *entry;
+	int i = FIRST_EXTERNAL_VECTOR;
+	void *entry;
 
 	// static __init void
 	// idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
 	// {
 	// }
 
-	// for_each_clear_bit_from(i, system_vectors, FIRST_SYSTEM_VECTOR) {
-	// 	entry = irq_entries_start + IDT_ALIGN * (i - FIRST_EXTERNAL_VECTOR);
-	// 	set_intr_gate(i, entry);
-		pack_gate(&idt_table[VECTOR_IRQ( 0)], GATE_INTERRUPT, hwint00, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 1)], GATE_INTERRUPT, hwint01, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 2)], GATE_INTERRUPT, hwint02, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 3)], GATE_INTERRUPT, hwint03, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 4)], GATE_INTERRUPT, hwint04, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 5)], GATE_INTERRUPT, hwint05, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 6)], GATE_INTERRUPT, hwint06, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 7)], GATE_INTERRUPT, hwint07, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 8)], GATE_INTERRUPT, hwint08, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ( 9)], GATE_INTERRUPT, hwint09, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(10)], GATE_INTERRUPT, hwint10, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(11)], GATE_INTERRUPT, hwint11, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(12)], GATE_INTERRUPT, hwint12, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(13)], GATE_INTERRUPT, hwint13, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(14)], GATE_INTERRUPT, hwint14, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(15)], GATE_INTERRUPT, hwint15, KRNL_RPL, 0);
-	#ifndef USE_I8259
-		pack_gate(&idt_table[VECTOR_IRQ(16)], GATE_INTERRUPT, hwint16, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(17)], GATE_INTERRUPT, hwint17, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(18)], GATE_INTERRUPT, hwint18, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(19)], GATE_INTERRUPT, hwint19, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(20)], GATE_INTERRUPT, hwint20, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(21)], GATE_INTERRUPT, hwint21, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(22)], GATE_INTERRUPT, hwint22, KRNL_RPL, 0);
-		pack_gate(&idt_table[VECTOR_IRQ(23)], GATE_INTERRUPT, hwint23, KRNL_RPL, 0);
-	#endif
-	// }
+	pack_gate(&idt_table[VECTOR_IRQ( 0)], GATE_INTERRUPT, hwint00, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 1)], GATE_INTERRUPT, hwint01, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 2)], GATE_INTERRUPT, hwint02, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 3)], GATE_INTERRUPT, hwint03, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 4)], GATE_INTERRUPT, hwint04, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 5)], GATE_INTERRUPT, hwint05, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 6)], GATE_INTERRUPT, hwint06, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 7)], GATE_INTERRUPT, hwint07, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 8)], GATE_INTERRUPT, hwint08, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ( 9)], GATE_INTERRUPT, hwint09, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(10)], GATE_INTERRUPT, hwint10, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(11)], GATE_INTERRUPT, hwint11, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(12)], GATE_INTERRUPT, hwint12, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(13)], GATE_INTERRUPT, hwint13, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(14)], GATE_INTERRUPT, hwint14, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(15)], GATE_INTERRUPT, hwint15, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(16)], GATE_INTERRUPT, hwint16, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(17)], GATE_INTERRUPT, hwint17, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(18)], GATE_INTERRUPT, hwint18, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(19)], GATE_INTERRUPT, hwint19, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(20)], GATE_INTERRUPT, hwint20, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(21)], GATE_INTERRUPT, hwint21, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(22)], GATE_INTERRUPT, hwint22, KRNL_RPL, 0);
+	pack_gate(&idt_table[VECTOR_IRQ(23)], GATE_INTERRUPT, hwint23, KRNL_RPL, 0);
+	int entry_length = (irq_entries_end - irq_entries_start) / NR_VECTORS;
+	// for (size_t i = 0; i < NR_EXTERNAL_VECTORS; i++)
+	for (; i < 24 + FIRST_EXTERNAL_VECTOR; i++)
+	{
+		entry = irq_entries_start + IDT_ALIGN * i;
+		set_intr_gate(i, entry);
+	}
+	
 
 	// for_each_clear_bit_from(i, system_vectors, NR_VECTORS) {
 	// 	/*

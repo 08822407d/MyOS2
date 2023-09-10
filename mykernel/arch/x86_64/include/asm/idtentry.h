@@ -8,7 +8,8 @@
 	#include <asm/trapnr.h>
 	#include <asm/irq_vectors.h>
 
-	#define IDT_ALIGN	(8 * (1 + HAS_KERNEL_IBT))
+	#define HAS_KERNEL_IBT	0
+	#define IDT_ALIGN	(8 * (2 + HAS_KERNEL_IBT))
 
 	#ifndef __ASSEMBLY__
 	// #	include <linux/entry-common.h>
@@ -390,6 +391,9 @@
 	// #	define DEFINE_IDTENTRY_DEBUG		DEFINE_IDTENTRY_IST
 	// #	define DEFINE_IDTENTRY_DEBUG_USER	DEFINE_IDTENTRY_NOIST
 
+	#include <asm/ptrace.h>
+	extern void exc_page_fault(pt_regs_s *regs, unsigned long error_code);
+
 	#else /* !__ASSEMBLY__ */
 
 	// 	/*
@@ -633,9 +637,5 @@
 	// #endif
 
 	// #undef X86_TRAP_OTHER
-
-
-	#include <asm/ptrace.h>
-	extern void exc_page_fault(pt_regs_s *regs, unsigned long error_code);
 
 #endif

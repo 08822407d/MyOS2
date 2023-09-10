@@ -51,6 +51,14 @@
 	#define load_tr(tr)					asm volatile("ltr %0"::"m" (tr))
 	#define load_ldt(ldt)				asm volatile("lldt %0"::"m" (ldt))
 
+
+	// static inline void
+	// native_write_idt_entry(gate_desc *idt, int entry, const gate_desc *gate)
+	static inline void
+	write_idt_entry(gate_desc *idt, int entry, const gate_desc *gate) {
+		memcpy(&idt[entry], gate, sizeof(*gate));
+	}
+
 	// static inline void
 	// native_write_gdt_entry(desc_s *gdt, int entry, const void *desc, int type)
 	static inline void
@@ -131,6 +139,32 @@
 					);
 	}
 
+
+	static inline void
+	init_idt_data(struct idt_data *data, unsigned int n, const void *addr) {
+		BUG_ON(n > 0xFF);
+
+		memset(data, 0, sizeof(*data));
+		data->vector		= n;
+		data->addr			= addr;
+		data->segment		= __KERNEL_CS;
+		data->bits.type		= GATE_INTERRUPT;
+		data->bits.p		= 1;
+	}
+
+	static inline void
+	idt_init_desc(gate_desc *gate, const struct idt_data *d) {
+		unsigned long addr	= (unsigned long) d->addr;
+
+		gate->offset_low	= (u16) addr;
+		gate->segment		= (u16) d->segment;
+		gate->bits			= d->bits;
+		gate->offset_middle	= (u16) (addr >> 16);
+		gate->offset_high	= (u32) (addr >> 32);
+		gate->reserved		= 0;
+	}
+
+	extern unsigned long system_vectors[];
 
 	#define load_current_idt() load_idt(&idt_descr)
 	extern void idt_setup_early_handler(void);

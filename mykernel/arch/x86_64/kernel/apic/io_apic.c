@@ -63,7 +63,7 @@
 // #include <asm/i8259.h>
 #include <asm/setup.h>
 // #include <asm/irq_remapping.h>
-// #include <asm/hw_irq.h>
+#include <asm/hw_irq.h>
 #include <asm/apic.h>
 #include <asm/pgtable.h>
 // #include <asm/x86_init.h>

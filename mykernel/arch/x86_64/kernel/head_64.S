@@ -36,12 +36,7 @@ SYM_CODE_START(early_idt_handler_array)
 	i = 0
 	.rept NUM_EXCEPTION_VECTORS
 	.if ((EXCEPTION_ERRCODE_MASK >> i) & 1) == 0
-		// UNWIND_HINT_IRET_REGS
-		// endbr64
 		pushq	$0	# Dummy error code, to make stack frame uniform
-	// .else
-		// UNWIND_HINT_IRET_REGS offset=8
-		// endbr64
 	.endif
 	pushq	$i		# 72(%rsp) Vector number
 	jmp		early_idt_handler_common
@@ -86,5 +81,3 @@ SYM_CODE_START_LOCAL(early_idt_handler_common)
 	// decl early_recursion_flag(%rip)
 	// jmp restore_regs_and_return_to_kernel
 SYM_CODE_END(early_idt_handler_common)
-
-

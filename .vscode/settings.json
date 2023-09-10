@@ -18,6 +18,8 @@
         "qspinlock_types.h": "c",
         "spinlock_api_smp.h": "c",
         "idtentry.h": "c",
-        "keyboard.h": "c"
+        "keyboard.h": "c",
+        "ptrace.h": "c",
+        "irq_vectors.h": "c"
     }
 }
