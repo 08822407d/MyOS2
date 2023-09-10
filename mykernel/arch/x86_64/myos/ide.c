@@ -14,7 +14,7 @@
 
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
-#include <obsolete/interrupt.h>
+#include <obsolete/myos_irq_vectors.h>
 #include <obsolete/device.h>
 #include <obsolete/ide.h>
 

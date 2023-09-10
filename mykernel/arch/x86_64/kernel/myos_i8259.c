@@ -1,7 +1,7 @@
 #include <asm/io.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/interrupt.h>
+#include <obsolete/myos_irq_vectors.h>
 
 void init_i8259()
 {

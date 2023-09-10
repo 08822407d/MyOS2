@@ -20,6 +20,7 @@
         "idtentry.h": "c",
         "keyboard.h": "c",
         "ptrace.h": "c",
-        "irq_vectors.h": "c"
+        "irq_vectors.h": "c",
+        "glo.h": "c"
     }
 }

@@ -132,7 +132,7 @@
 	#define __TSS_SEG				(GDT_ENTRY_TSS * 8)
 
 	#define IDT_ENTRIES						256
-	#define NUM_EXCEPTION_VECTORS			32
+	#define NR_EXCEPTION_VECTORS			32
 
 	/* Bitmask of exception vectors which push an error code on the stack: */
 	#define EXCEPTION_ERRCODE_MASK		0x20027d00
@@ -216,7 +216,7 @@
 	#	ifndef __ASSEMBLY__
 
 			extern const char early_idt_handler_array
-					[NUM_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
+					[NR_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
 	// 		extern void early_ignore_irq(void);
 
 	/*

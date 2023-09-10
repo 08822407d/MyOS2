@@ -21,7 +21,7 @@
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
-#include <obsolete/interrupt.h>
+#include <obsolete/myos_irq_vectors.h>
 
 ioapic_map_s ioapic_map;
 
