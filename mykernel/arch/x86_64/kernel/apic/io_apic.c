@@ -37,7 +37,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/sched.h>
-// #include <linux/pci.h>
+#include <linux/device/pci.h>
 // #include <linux/mc146818rtc.h>
 #include <linux/kernel/compiler.h>
 // #include <linux/acpi.h>

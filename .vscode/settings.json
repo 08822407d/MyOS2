@@ -21,6 +21,8 @@
         "keyboard.h": "c",
         "ptrace.h": "c",
         "irq_vectors.h": "c",
-        "glo.h": "c"
+        "glo.h": "c",
+        "pci.h": "c",
+        "device.h": "c"
     }
 }

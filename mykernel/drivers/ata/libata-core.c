@@ -27,7 +27,7 @@
 
 #include <linux/kernel/kernel.h>
 // #include <linux/module.h>
-// #include <linux/pci.h>
+#include <linux/device/pci.h>
 #include <linux/init/init.h>
 #include <linux/lib/list.h>
 #include <linux/mm/mm.h>

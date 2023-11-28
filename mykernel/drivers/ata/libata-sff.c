@@ -14,7 +14,7 @@
 
 #include <linux/kernel/kernel.h>
 #include <linux/mm/gfp.h>
-// #include <linux/pci.h>
+#include <linux/device/pci.h>
 // #include <linux/module.h>
 #include <linux/drivers/libata.h>
 // #include <linux/highmem.h>

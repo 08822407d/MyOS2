@@ -19,7 +19,7 @@
 // #include <linux/iscsi_ibft.h>
 #include <linux/mm/memblock.h>
 // #include <linux/panic_notifier.h>
-// #include <linux/pci.h>
+#include <linux/device/pci.h>
 // #include <linux/root_dev.h>
 // #include <linux/hugetlb.h>
 // #include <linux/tboot.h>
