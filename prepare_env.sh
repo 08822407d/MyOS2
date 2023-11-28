@@ -1,7 +1,8 @@
 #! /usr/bin/bash
 
 # ZBOOK="$HOME/vmware/grub2-test/grub2-test-flat.vmdk"
-HOME_ASUS="$HOME/vmware/myos2test/myos2test-flat.vmdk"
+IDE_0_1="$HOME/vmware/myos2test/myos2test-flat.vmdk"
+NVME_0="$HOME/vmware/myos2test/myos2test_nvme0-flat.vmdk"
 
 source ./scripts/map_vdisk.sh
 
@@ -11,4 +12,5 @@ source ./scripts/map_vdisk.sh
 # 	main $HOME_ASUS
 # fi
 
-main $HOME_ASUS
+main $IDE_0_1
+main $NVME_0
