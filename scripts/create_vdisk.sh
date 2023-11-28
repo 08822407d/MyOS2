@@ -1,10 +1,16 @@
 #! /usr/bin/bash
 # This script get helped by document https://www.rodsbooks.com/gdisk/sgdisk-walkthrough.html
 
-declare -A PART_PARAM=()
+declare -A PART_PARAM_IDE=()
 PART_PARAM[2]="1:0:+1G 1:ef00 1:\"UEFI BOOT\""
 PART_PARAM[1]="2:0:+2G 2:8300 2:\"ROOT\""
 PART_PARAM[0]="3:0:+4G 3:ef00 3:\"FAT32 TEST\""
+
+declare -A PART_PARAM_NVME=()
+PART_PARAM[3]="1:0:+2G 1:ef00 1:\"UEFI BOOT\""
+PART_PARAM[2]="2:0:+8G 2:8300 2:\"ROOT\""
+PART_PARAM[1]="3:0:+8G 3:8300 3:\"HOME\""
+PART_PARAM[0]="4:0:+14G 4:ef00 4:\"FAT32 TEST\""
 
 function part_vdisk() {
 	sudo	sgdisk -og "$1"
