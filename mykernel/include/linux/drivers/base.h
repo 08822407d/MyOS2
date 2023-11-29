@@ -110,7 +110,6 @@
 // 	container_of(obj, struct device_private, knode_class)
 
 // /* initialisation functions */
-// extern int myos_devices_init(void);
 // extern int buses_init(void);
 // extern int classes_init(void);
 // extern int firmware_init(void);

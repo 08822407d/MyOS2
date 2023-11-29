@@ -75,7 +75,7 @@
 		u8		Interrupt_Pin;
 		u8		Min_Grant;
 		u8		Max_Latency;
-	}
+	} PCI_comp_confspace_type0_s;
 
 	typedef struct PCI_compatible_conf_space_type1
 	{
@@ -120,7 +120,7 @@
 		u8		Interrupt_Line;
 		u8		Interrupt_Pin;
 		u16		Bridge_Control;
-	}
+	} PCI_comp_confspace_type1_s;
 
 	typedef struct PCI_compatible_conf_space
 	{
@@ -136,13 +136,13 @@
 		u8		BIST;
 
 		// +010h ~ +027h
+		u32		Bar0;
+		u32		Bar1;
 		union
 		{
 			// type 0
 			struct
 			{
-				u32		Bar0;
-				u32		Bar1;
 				u32		Bar2;
 				u32		Bar3;
 				u32		Bar4;
@@ -153,15 +153,12 @@
 				u16		Subsystem_Vendor_ID;
 				u16		Subsystem_ID;
 
-				u32		Expansion_ROM_Base_Address;
+				u32		Expansion_ROM_Base_Address_0;
 			};
 			
 			// type 1
 			struct
 			{
-				u32		Bar0;
-				u32		Bar1;
-
 				u8		Primary_Bus_Number;
 				u8		Secondary_Bus_Number;
 				u8		Subordinate_Bus_Number;
@@ -199,8 +196,8 @@
 			// type 1
 			struct
 			{
-				u8		reserved_0[3];
-				u32		Expansion_ROM_Base_Address;
+				u8		reserved_1[3];
+				u32		Expansion_ROM_Base_Address_1;
 			};
 		};
 
