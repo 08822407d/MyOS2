@@ -1,16 +1,23 @@
 #! /usr/bin/bash
 # This script get helped by document https://www.rodsbooks.com/gdisk/sgdisk-walkthrough.html
 
-declare -A PART_PARAM_IDE=()
-PART_PARAM[2]="1:0:+1G 1:ef00 1:\"UEFI BOOT\""
-PART_PARAM[1]="2:0:+2G 2:8300 2:\"ROOT\""
-PART_PARAM[0]="3:0:+4G 3:ef00 3:\"FAT32 TEST\""
+PARAM_COUNT=6
+# part_no, start, size, part_type, name, fs_name
 
-declare -A PART_PARAM_NVME=()
-PART_PARAM[3]="1:0:+2G 1:ef00 1:\"UEFI BOOT\""
-PART_PARAM[2]="2:0:+8G 2:8300 2:\"ROOT\""
-PART_PARAM[1]="3:0:+8G 3:8300 3:\"HOME\""
-PART_PARAM[0]="4:0:+14G 4:ef00 4:\"FAT32 TEST\""
+MYOS_VMDK_IDE0="/home/cheyh/vmware/myos2test/myos2test-flat.vmdk"
+PART_PARAM_IDE=(
+	"1, 0, +1G, ef00, \"UEFI BOOT\" , vfat"
+	"2, 0, +2G, 8300, \"ROOT\"      , ext2"
+	"3, 0, 0  , ef00, \"FAT32 TEST\", vfat"
+)
+
+MYOS_VMDK_NVME0="/home/cheyh/vmware/myos2test/myos2test_nvme0-flat.vmdk"
+PART_PARAM_NVME=(
+	"1, 0, +2G, ef00, \"UEFI BOOT\" , vfat"
+	"2, 0, +8G, 8300, \"ROOT\"      , ext2"
+	"3, 0, +8G, 8300, \"HOME\"      , ext4"
+	"4, 0, 0  , ef00, \"FAT32 TEST\", vfat"
+)
 
 function part_vdisk() {
 	sudo	sgdisk -og "$1"
@@ -30,5 +37,44 @@ function format_vdisk() {
 	done
 }
 
+function do_part() {
+	# parse and check whether partition params is right
+	local allparam=("$@")
+	local disk=$1
+	local in_part_params=("${allparam[@]:1}")
+	local gdisk_opt=()
+	for line in "${in_part_params[@]}"; do
+		IFS=',' read -a params <<< "$line"
+		if [ ${#params[@]} -ne $PARAM_COUNT ]; then
+			echo "Wrong param count : $line"
+			exit 1
+		fi
+	done
+	# handle partition param array to trim blank char
+	for i in "${!in_part_params[@]}"; do
+		local params=()
+		IFS=',' read -ra tmparr <<< "${in_part_params[$i]}"
+		for j in "${!tmparr[@]}"; do
+			params[$j]=$(echo "${tmparr[$j]}" | xargs)
+		done
+		gdisk_opt[$i]=" -n ${params[0]}:${params[1]}:${params[2]} -t ${params[0]}:${params[3]} -c ${params[0]}:\"${params[4]}\""
+	done
+
+	# check target disk needs reparted
+	local part_count=$[$# - 1]
+	local gdisktmp=$(gdisk -l "$disk" | grep -E '^(\s+[0-9]+){3}')
+	readarray -t partitions <<< "$gdisktmp"
+	# if partition number not equal then delete partition table and repart
+	if [ ${#partitions[@]} -ne ${#part_params[@]} ]; then
+		echo "The disk need repart : $disk"
+		sudo sgdisk -og "$disk"
+		for line in "${gdisk_opt[@]}"; do
+			# echo "$line"
+			sudo sgdisk "$line $disk"
+		done
+	fi
+}
+
 # format_vdisk
-part_vdisk "/home/cheyh/vmware/myos2test/myos2test-flat.vmdk"
+# part_vdisk "/home/cheyh/vmware/myos2test/myos2test-flat.vmdk"
+do_part $MYOS_VMDK_NVME0 "${PART_PARAM_NVME[@]}"
