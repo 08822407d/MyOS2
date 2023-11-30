@@ -1,4 +1,5 @@
 #include <linux/device/pci.h>
+#include <linux/mm/mm.h>
 #include <uapi/asm-generic/pci_regs.h>
 #include "pci.h"
 
@@ -12,6 +13,8 @@ PCI_comp_confspace_s *pci_get_comp_confspace(int bus, int dev, int func);
 
 void detect_PCIe_devs()
 {
+    myos_kernel_physical_mapping_init(PCIe_CONFSPACE_MMIO_ADDR, PCIe_CONFSPACE_MMIO_ADDR + SZ_256M);
+
     int bus, dev, func;
     for (bus = 0; bus < BUS_PER_HOST; bus++) {
         for (dev = 0; dev < DEVICE_PER_BUS; dev++) {
@@ -25,6 +28,6 @@ void detect_PCIe_devs()
 
 PCI_comp_confspace_s *pci_get_comp_confspace(int bus, int dev, int func)
 {
-    return (PCI_comp_confspace_s *)PCIe_CONFSPACE_MMIO_ADDR +
+    return (PCI_comp_confspace_s *)phys_to_virt(PCIe_CONFSPACE_MMIO_ADDR) +
         (bus * DEVICE_PER_BUS * FUNC_PER_DEVICE + dev * FUNC_PER_DEVICE + func);
 }

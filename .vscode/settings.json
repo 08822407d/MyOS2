@@ -23,6 +23,8 @@
         "irq_vectors.h": "c",
         "glo.h": "c",
         "pci.h": "c",
-        "device.h": "c"
+        "device.h": "c",
+        "stdio.h": "c",
+        "stdlib.h": "c"
     }
 }

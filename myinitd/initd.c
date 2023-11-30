@@ -18,7 +18,16 @@ void dirtest(void);
 
 int main(int argc, const char *argv[])
 {
+	// stdin = fopen("/dev/console", "r");
+	stdout = fopen("/dev/console", "w");
+	// stderr = fopen("/dev/console", "w");
+	
 	printf("Welcome to MyOS2\n\n");
+
+	// close(stderr->_fileno);
+	close(stdout->_fileno);
+	// close(stdin->_fileno);
+
 	char *args[] = {NULL};
 
 	int rv = fork();
