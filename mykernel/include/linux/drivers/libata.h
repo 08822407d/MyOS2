@@ -1258,7 +1258,7 @@
 
 	// /* PCI */
 	// #ifdef CONFIG_PCI
-	// struct pci_dev;
+	// pci_dev_s;
 
 	// struct pci_bits {
 	// 	unsigned int		reg;	/* PCI config register to read */
@@ -1267,15 +1267,15 @@
 	// 	unsigned long		val;
 	// };
 
-	// extern int pci_test_config_bits(struct pci_dev *pdev, const struct pci_bits *bits);
-	// extern void ata_pci_shutdown_one(struct pci_dev *pdev);
-	// extern void ata_pci_remove_one(struct pci_dev *pdev);
+	// extern int pci_test_config_bits(pci_dev_s *pdev, const struct pci_bits *bits);
+	// extern void ata_pci_shutdown_one(pci_dev_s *pdev);
+	// extern void ata_pci_remove_one(pci_dev_s *pdev);
 
 	// #ifdef CONFIG_PM
-	// extern void ata_pci_device_do_suspend(struct pci_dev *pdev, pm_message_t mesg);
-	// extern int __must_check ata_pci_device_do_resume(struct pci_dev *pdev);
-	// extern int ata_pci_device_suspend(struct pci_dev *pdev, pm_message_t mesg);
-	// extern int ata_pci_device_resume(struct pci_dev *pdev);
+	// extern void ata_pci_device_do_suspend(pci_dev_s *pdev, pm_message_t mesg);
+	// extern int __must_check ata_pci_device_do_resume(pci_dev_s *pdev);
+	// extern int ata_pci_device_suspend(pci_dev_s *pdev, pm_message_t mesg);
+	// extern int ata_pci_device_resume(pci_dev_s *pdev);
 	// #endif /* CONFIG_PM */
 	// #endif /* CONFIG_PCI */
 
@@ -1943,13 +1943,13 @@
 	// 	extern void ata_sff_std_ports(struct ata_ioports *ioaddr);
 	// 	#ifdef CONFIG_PCI
 	// 	extern int ata_pci_sff_init_host(struct ata_host *host);
-	// 	extern int ata_pci_sff_prepare_host(struct pci_dev *pdev,
+	// 	extern int ata_pci_sff_prepare_host(pci_dev_s *pdev,
 	// 						const ata_port_info_s * const * ppi,
 	// 						struct ata_host **r_host);
 	// 	extern int ata_pci_sff_activate_host(struct ata_host *host,
 	// 						irq_handler_t irq_handler,
 	// 						struct scsi_host_template *sht);
-	// 	extern int ata_pci_sff_init_one(struct pci_dev *pdev,
+	// 	extern int ata_pci_sff_init_one(pci_dev_s *pdev,
 	// 			const ata_port_info_s * const * ppi,
 	// 			struct scsi_host_template *sht, void *host_priv, int hflags);
 	// 	#endif /* CONFIG_PCI */
@@ -1980,12 +1980,12 @@
 	// 	extern int ata_bmdma_port_start32(ata_port_s *ap);
 
 	// 	#ifdef CONFIG_PCI
-	// 	extern int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev);
+	// 	extern int ata_pci_bmdma_clear_simplex(pci_dev_s *pdev);
 	// 	extern void ata_pci_bmdma_init(struct ata_host *host);
-	// 	extern int ata_pci_bmdma_prepare_host(struct pci_dev *pdev,
+	// 	extern int ata_pci_bmdma_prepare_host(pci_dev_s *pdev,
 	// 						const ata_port_info_s * const * ppi,
 	// 						struct ata_host **r_host);
-	// 	extern int ata_pci_bmdma_init_one(struct pci_dev *pdev,
+	// 	extern int ata_pci_bmdma_init_one(pci_dev_s *pdev,
 	// 					const ata_port_info_s * const * ppi,
 	// 					struct scsi_host_template *sht,
 	// 					void *host_priv, int hflags);

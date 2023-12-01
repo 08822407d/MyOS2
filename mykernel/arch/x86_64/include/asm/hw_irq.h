@@ -30,7 +30,7 @@
 
 	// #ifdef	CONFIG_X86_LOCAL_APIC
 	// struct irq_data;
-	// struct pci_dev;
+	// pci_dev_s;
 	// struct msi_desc;
 
 	// enum irq_alloc_type {

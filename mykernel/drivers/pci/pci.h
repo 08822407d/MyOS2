@@ -14,15 +14,15 @@
 	// extern const unsigned char pcie_link_speed[];
 	// extern bool pci_early_dump;
 
-	// bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
-	// bool pcie_cap_has_lnkctl2(const struct pci_dev *dev);
-	// bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+	// bool pcie_cap_has_lnkctl(const pci_dev_s *dev);
+	// bool pcie_cap_has_lnkctl2(const pci_dev_s *dev);
+	// bool pcie_cap_has_rtctl(const pci_dev_s *dev);
 
 	// /* Functions internal to the PCI core code */
 
-	// int pci_create_sysfs_dev_files(struct pci_dev *pdev);
-	// void pci_remove_sysfs_dev_files(struct pci_dev *pdev);
-	// void pci_cleanup_rom(struct pci_dev *dev);
+	// int pci_create_sysfs_dev_files(pci_dev_s *pdev);
+	// void pci_remove_sysfs_dev_files(pci_dev_s *pdev);
+	// void pci_cleanup_rom(pci_dev_s *dev);
 	// #ifdef CONFIG_DMI
 	// extern const struct attribute_group pci_dev_smbios_attr_group;
 	// #endif
@@ -31,13 +31,13 @@
 	// 	PCI_MMAP_SYSFS,	/* mmap on /sys/bus/pci/devices/<BDF>/resource<N> */
 	// 	PCI_MMAP_PROCFS	/* mmap on /proc/bus/pci/<BDF> */
 	// };
-	// int pci_mmap_fits(struct pci_dev *pdev, int resno, struct vm_area_struct *vmai,
+	// int pci_mmap_fits(pci_dev_s *pdev, int resno, struct vm_area_struct *vmai,
 	// 		  enum pci_mmap_api mmap_api);
 
-	// bool pci_reset_supported(struct pci_dev *dev);
-	// void pci_init_reset_methods(struct pci_dev *dev);
-	// int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
-	// int pci_bus_error_reset(struct pci_dev *dev);
+	// bool pci_reset_supported(pci_dev_s *dev);
+	// void pci_init_reset_methods(pci_dev_s *dev);
+	// int pci_bridge_secondary_bus_reset(pci_dev_s *dev);
+	// int pci_bus_error_reset(pci_dev_s *dev);
 
 	// struct pci_cap_saved_data {
 	// 	u16		cap_nr;
@@ -51,13 +51,13 @@
 	// 	struct pci_cap_saved_data	cap;
 	// };
 
-	// void pci_allocate_cap_save_buffers(struct pci_dev *dev);
-	// void pci_free_cap_save_buffers(struct pci_dev *dev);
-	// int pci_add_cap_save_buffer(struct pci_dev *dev, char cap, unsigned int size);
-	// int pci_add_ext_cap_save_buffer(struct pci_dev *dev,
+	// void pci_allocate_cap_save_buffers(pci_dev_s *dev);
+	// void pci_free_cap_save_buffers(pci_dev_s *dev);
+	// int pci_add_cap_save_buffer(pci_dev_s *dev, char cap, unsigned int size);
+	// int pci_add_ext_cap_save_buffer(pci_dev_s *dev,
 	// 				u16 cap, unsigned int size);
-	// struct pci_cap_saved_state *pci_find_saved_cap(struct pci_dev *dev, char cap);
-	// struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
+	// struct pci_cap_saved_state *pci_find_saved_cap(pci_dev_s *dev, char cap);
+	// struct pci_cap_saved_state *pci_find_saved_ext_cap(pci_dev_s *dev,
 	// 						   u16 cap);
 
 	// #define PCI_PM_D2_DELAY         200	/* usec; see PCIe r4.0, sec 5.9.1 */
@@ -71,43 +71,43 @@
 	//  */
 	// #define PCI_RESET_WAIT		1000	/* msec */
 
-	// void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
-	// void pci_refresh_power_state(struct pci_dev *dev);
-	// int pci_power_up(struct pci_dev *dev);
-	// void pci_disable_enabled_device(struct pci_dev *dev);
-	// int pci_finish_runtime_suspend(struct pci_dev *dev);
-	// void pcie_clear_device_status(struct pci_dev *dev);
-	// void pcie_clear_root_pme_status(struct pci_dev *dev);
-	// bool pci_check_pme_status(struct pci_dev *dev);
+	// void pci_update_current_state(pci_dev_s *dev, pci_power_t state);
+	// void pci_refresh_power_state(pci_dev_s *dev);
+	// int pci_power_up(pci_dev_s *dev);
+	// void pci_disable_enabled_device(pci_dev_s *dev);
+	// int pci_finish_runtime_suspend(pci_dev_s *dev);
+	// void pcie_clear_device_status(pci_dev_s *dev);
+	// void pcie_clear_root_pme_status(pci_dev_s *dev);
+	// bool pci_check_pme_status(pci_dev_s *dev);
 	// void pci_pme_wakeup_bus(struct pci_bus *bus);
-	// int __pci_pme_wakeup(struct pci_dev *dev, void *ign);
-	// void pci_pme_restore(struct pci_dev *dev);
-	// bool pci_dev_need_resume(struct pci_dev *dev);
-	// void pci_dev_adjust_pme(struct pci_dev *dev);
-	// void pci_dev_complete_resume(struct pci_dev *pci_dev);
-	// void pci_config_pm_runtime_get(struct pci_dev *dev);
-	// void pci_config_pm_runtime_put(struct pci_dev *dev);
-	// void pci_pm_init(struct pci_dev *dev);
-	// void pci_ea_init(struct pci_dev *dev);
-	// void pci_msi_init(struct pci_dev *dev);
-	// void pci_msix_init(struct pci_dev *dev);
-	// bool pci_bridge_d3_possible(struct pci_dev *dev);
-	// void pci_bridge_d3_update(struct pci_dev *dev);
-	// void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
-	// int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
+	// int __pci_pme_wakeup(pci_dev_s *dev, void *ign);
+	// void pci_pme_restore(pci_dev_s *dev);
+	// bool pci_dev_need_resume(pci_dev_s *dev);
+	// void pci_dev_adjust_pme(pci_dev_s *dev);
+	// void pci_dev_complete_resume(pci_dev_s *pci_dev);
+	// void pci_config_pm_runtime_get(pci_dev_s *dev);
+	// void pci_config_pm_runtime_put(pci_dev_s *dev);
+	// void pci_pm_init(pci_dev_s *dev);
+	// void pci_ea_init(pci_dev_s *dev);
+	// void pci_msi_init(pci_dev_s *dev);
+	// void pci_msix_init(pci_dev_s *dev);
+	// bool pci_bridge_d3_possible(pci_dev_s *dev);
+	// void pci_bridge_d3_update(pci_dev_s *dev);
+	// void pci_bridge_reconfigure_ltr(pci_dev_s *dev);
+	// int pci_bridge_wait_for_secondary_bus(pci_dev_s *dev, char *reset_type);
 
-	// static inline void pci_wakeup_event(struct pci_dev *dev)
+	// static inline void pci_wakeup_event(pci_dev_s *dev)
 	// {
 	// 	/* Wait 100 ms before the system can be put into a sleep state. */
 	// 	pm_wakeup_event(&dev->dev, 100);
 	// }
 
-	// static inline bool pci_has_subordinate(struct pci_dev *pci_dev)
+	// static inline bool pci_has_subordinate(pci_dev_s *pci_dev)
 	// {
 	// 	return !!(pci_dev->subordinate);
 	// }
 
-	// static inline bool pci_power_manageable(struct pci_dev *pci_dev)
+	// static inline bool pci_power_manageable(pci_dev_s *pci_dev)
 	// {
 	// 	/*
 	// 	 * Currently we allow normal PCI devices and PCI bridges transition
@@ -116,7 +116,7 @@
 	// 	return !pci_has_subordinate(pci_dev) || pci_dev->bridge_d3;
 	// }
 
-	// static inline bool pcie_downstream_port(const struct pci_dev *dev)
+	// static inline bool pcie_downstream_port(const pci_dev_s *dev)
 	// {
 	// 	int type = pci_pcie_type(dev);
 
@@ -125,28 +125,28 @@
 	// 		   type == PCI_EXP_TYPE_PCIE_BRIDGE;
 	// }
 
-	// void pci_vpd_init(struct pci_dev *dev);
-	// void pci_vpd_release(struct pci_dev *dev);
+	// void pci_vpd_init(pci_dev_s *dev);
+	// void pci_vpd_release(pci_dev_s *dev);
 	// extern const struct attribute_group pci_dev_vpd_attr_group;
 
 	// /* PCI Virtual Channel */
-	// int pci_save_vc_state(struct pci_dev *dev);
-	// void pci_restore_vc_state(struct pci_dev *dev);
-	// void pci_allocate_vc_save_buffers(struct pci_dev *dev);
+	// int pci_save_vc_state(pci_dev_s *dev);
+	// void pci_restore_vc_state(pci_dev_s *dev);
+	// void pci_allocate_vc_save_buffers(pci_dev_s *dev);
 
 	// /* PCI /proc functions */
 	// #ifdef CONFIG_PROC_FS
-	// int pci_proc_attach_device(struct pci_dev *dev);
-	// int pci_proc_detach_device(struct pci_dev *dev);
+	// int pci_proc_attach_device(pci_dev_s *dev);
+	// int pci_proc_detach_device(pci_dev_s *dev);
 	// int pci_proc_detach_bus(struct pci_bus *bus);
 	// #else
-	// static inline int pci_proc_attach_device(struct pci_dev *dev) { return 0; }
-	// static inline int pci_proc_detach_device(struct pci_dev *dev) { return 0; }
+	// static inline int pci_proc_attach_device(pci_dev_s *dev) { return 0; }
+	// static inline int pci_proc_detach_device(pci_dev_s *dev) { return 0; }
 	// static inline int pci_proc_detach_bus(struct pci_bus *bus) { return 0; }
 	// #endif
 
 	// /* Functions for PCI Hotplug drivers to use */
-	// int pci_hp_add_bridge(struct pci_dev *dev);
+	// int pci_hp_add_bridge(pci_dev_s *dev);
 
 	// #ifdef HAVE_PCI_LEGACY
 	// void pci_create_legacy_files(struct pci_bus *bus);
@@ -172,7 +172,7 @@
 
 	// void pci_realloc_get_opt(char *);
 
-	// static inline int pci_no_d1d2(struct pci_dev *dev)
+	// static inline int pci_no_d1d2(pci_dev_s *dev)
 	// {
 	// 	unsigned int parent_dstates = 0;
 
@@ -200,7 +200,7 @@
 	//  * Returns the matching pci_device_id structure or %NULL if there is no match.
 	//  */
 	// static inline const struct pci_device_id *
-	// pci_match_one_device(const struct pci_device_id *id, const struct pci_dev *dev)
+	// pci_match_one_device(const struct pci_device_id *id, const pci_dev_s *dev)
 	// {
 	// 	if ((id->vendor == PCI_ANY_ID || id->vendor == dev->vendor) &&
 	// 		(id->device == PCI_ANY_ID || id->device == dev->device) &&
@@ -230,29 +230,29 @@
 	// 	pci_bar_mem64,		/* A 64-bit memory BAR */
 	// };
 
-	// struct device *pci_get_host_bridge_device(struct pci_dev *dev);
+	// struct device *pci_get_host_bridge_device(pci_dev_s *dev);
 	// void pci_put_host_bridge_device(struct device *dev);
 
-	// int pci_configure_extended_tags(struct pci_dev *dev, void *ign);
+	// int pci_configure_extended_tags(pci_dev_s *dev, void *ign);
 	// bool pci_bus_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *pl,
 	// 				int crs_timeout);
 	// bool pci_bus_generic_read_dev_vendor_id(struct pci_bus *bus, int devfn, u32 *pl,
 	// 					int crs_timeout);
 	// int pci_idt_bus_quirk(struct pci_bus *bus, int devfn, u32 *pl, int crs_timeout);
 
-	// int pci_setup_device(struct pci_dev *dev);
-	// int __pci_read_base(struct pci_dev *dev, enum pci_bar_type type,
+	// int pci_setup_device(pci_dev_s *dev);
+	// int __pci_read_base(pci_dev_s *dev, enum pci_bar_type type,
 	// 			struct resource *res, unsigned int reg);
-	// void pci_configure_ari(struct pci_dev *dev);
+	// void pci_configure_ari(pci_dev_s *dev);
 	// void __pci_bus_size_bridges(struct pci_bus *bus,
 	// 			struct list_head *realloc_head);
 	// void __pci_bus_assign_resources(const struct pci_bus *bus,
 	// 				struct list_head *realloc_head,
 	// 				struct list_head *fail_head);
-	// bool pci_bus_clip_resource(struct pci_dev *dev, int idx);
+	// bool pci_bus_clip_resource(pci_dev_s *dev, int idx);
 
-	// void pci_reassigndev_resource_alignment(struct pci_dev *dev);
-	// void pci_disable_bridge_window(struct pci_dev *dev);
+	// void pci_reassigndev_resource_alignment(pci_dev_s *dev);
+	// void pci_disable_bridge_window(pci_dev_s *dev);
 	// struct pci_bus *pci_bus_get(struct pci_bus *bus);
 	// void pci_bus_put(struct pci_bus *bus);
 
@@ -277,12 +277,12 @@
 	// 	 0)
 
 	// const char *pci_speed_string(enum pci_bus_speed speed);
-	// enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
-	// enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
-	// u32 pcie_bandwidth_capable(struct pci_dev *dev, enum pci_bus_speed *speed,
+	// enum pci_bus_speed pcie_get_speed_cap(pci_dev_s *dev);
+	// enum pcie_link_width pcie_get_width_cap(pci_dev_s *dev);
+	// u32 pcie_bandwidth_capable(pci_dev_s *dev, enum pci_bus_speed *speed,
 	// 			   enum pcie_link_width *width);
-	// void __pcie_print_link_status(struct pci_dev *dev, bool verbose);
-	// void pcie_report_downtraining(struct pci_dev *dev);
+	// void __pcie_print_link_status(pci_dev_s *dev, bool verbose);
+	// void pcie_report_downtraining(pci_dev_s *dev);
 	// void pcie_update_link_speed(struct pci_bus *bus, u16 link_status);
 
 	// /* Single Root I/O Virtualization */
@@ -301,8 +301,8 @@
 	// 	u8		link;		/* Function Dependency Link */
 	// 	u8		max_VF_buses;	/* Max buses consumed by VFs */
 	// 	u16		driver_max_VFs;	/* Max num VFs driver supports */
-	// 	struct pci_dev	*dev;		/* Lowest numbered PF */
-	// 	struct pci_dev	*self;		/* This PF */
+	// 	pci_dev_s	*dev;		/* Lowest numbered PF */
+	// 	pci_dev_s	*self;		/* This PF */
 	// 	u32		class;		/* VF device */
 	// 	u8		hdr_type;	/* VF header type */
 	// 	u16		subsystem_vendor; /* VF subsystem vendor */
@@ -312,13 +312,13 @@
 	// };
 
 	// #ifdef CONFIG_PCI_DOE
-	// void pci_doe_init(struct pci_dev *pdev);
-	// void pci_doe_destroy(struct pci_dev *pdev);
-	// void pci_doe_disconnected(struct pci_dev *pdev);
+	// void pci_doe_init(pci_dev_s *pdev);
+	// void pci_doe_destroy(pci_dev_s *pdev);
+	// void pci_doe_disconnected(pci_dev_s *pdev);
 	// #else
-	// static inline void pci_doe_init(struct pci_dev *pdev) { }
-	// static inline void pci_doe_destroy(struct pci_dev *pdev) { }
-	// static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
+	// static inline void pci_doe_init(pci_dev_s *pdev) { }
+	// static inline void pci_doe_destroy(pci_dev_s *pdev) { }
+	// static inline void pci_doe_disconnected(pci_dev_s *pdev) { }
 	// #endif
 
 	// /**
@@ -332,7 +332,7 @@
 	//  *
 	//  * Returns true if state has been changed to the requested state.
 	//  */
-	// static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+	// static inline bool pci_dev_set_io_state(pci_dev_s *dev,
 	// 					pci_channel_state_t new)
 	// {
 	// 	pci_channel_state_t old;
@@ -354,7 +354,7 @@
 	// 	}
 	// }
 
-	// static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+	// static inline int pci_dev_set_disconnected(pci_dev_s *dev, void *unused)
 	// {
 	// 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
 	// 	pci_doe_disconnected(dev);
@@ -362,7 +362,7 @@
 	// 	return 0;
 	// }
 
-	// static inline bool pci_dev_is_disconnected(const struct pci_dev *dev)
+	// static inline bool pci_dev_is_disconnected(const pci_dev_s *dev)
 	// {
 	// 	return dev->error_state == pci_channel_io_perm_failure;
 	// }
@@ -372,12 +372,12 @@
 	// #define PCI_DPC_RECOVERED 1
 	// #define PCI_DPC_RECOVERING 2
 
-	// static inline void pci_dev_assign_added(struct pci_dev *dev, bool added)
+	// static inline void pci_dev_assign_added(pci_dev_s *dev, bool added)
 	// {
 	// 	assign_bit(PCI_DEV_ADDED, &dev->priv_flags, added);
 	// }
 
-	// static inline bool pci_dev_is_added(const struct pci_dev *dev)
+	// static inline bool pci_dev_is_added(const pci_dev_s *dev)
 	// {
 	// 	return test_bit(PCI_DEV_ADDED, &dev->priv_flags);
 	// }
@@ -388,7 +388,7 @@
 	// #define AER_MAX_MULTI_ERR_DEVICES	5	/* Not likely to have more */
 
 	// struct aer_err_info {
-	// 	struct pci_dev *dev[AER_MAX_MULTI_ERR_DEVICES];
+	// 	pci_dev_s *dev[AER_MAX_MULTI_ERR_DEVICES];
 	// 	int error_dev_num;
 
 	// 	unsigned int id:16;
@@ -406,8 +406,8 @@
 	// 	struct aer_header_log_regs tlp;	/* TLP Header */
 	// };
 
-	// int aer_get_device_error_info(struct pci_dev *dev, struct aer_err_info *info);
-	// void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
+	// int aer_get_device_error_info(pci_dev_s *dev, struct aer_err_info *info);
+	// void aer_print_error(pci_dev_s *dev, struct aer_err_info *info);
 	// #endif	/* CONFIG_PCIEAER */
 
 	// #ifdef CONFIG_PCIEPORTBUS
@@ -420,83 +420,83 @@
 	// #endif
 
 	// #ifdef CONFIG_PCIE_DPC
-	// void pci_save_dpc_state(struct pci_dev *dev);
-	// void pci_restore_dpc_state(struct pci_dev *dev);
-	// void pci_dpc_init(struct pci_dev *pdev);
-	// void dpc_process_error(struct pci_dev *pdev);
-	// pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
-	// bool pci_dpc_recovered(struct pci_dev *pdev);
+	// void pci_save_dpc_state(pci_dev_s *dev);
+	// void pci_restore_dpc_state(pci_dev_s *dev);
+	// void pci_dpc_init(pci_dev_s *pdev);
+	// void dpc_process_error(pci_dev_s *pdev);
+	// pci_ers_result_t dpc_reset_link(pci_dev_s *pdev);
+	// bool pci_dpc_recovered(pci_dev_s *pdev);
 	// #else
-	// static inline void pci_save_dpc_state(struct pci_dev *dev) {}
-	// static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-	// static inline void pci_dpc_init(struct pci_dev *pdev) {}
-	// static inline bool pci_dpc_recovered(struct pci_dev *pdev) { return false; }
+	// static inline void pci_save_dpc_state(pci_dev_s *dev) {}
+	// static inline void pci_restore_dpc_state(pci_dev_s *dev) {}
+	// static inline void pci_dpc_init(pci_dev_s *pdev) {}
+	// static inline bool pci_dpc_recovered(pci_dev_s *pdev) { return false; }
 	// #endif
 
 	// #ifdef CONFIG_PCIEPORTBUS
-	// void pci_rcec_init(struct pci_dev *dev);
-	// void pci_rcec_exit(struct pci_dev *dev);
-	// void pcie_link_rcec(struct pci_dev *rcec);
-	// void pcie_walk_rcec(struct pci_dev *rcec,
-	// 			int (*cb)(struct pci_dev *, void *),
+	// void pci_rcec_init(pci_dev_s *dev);
+	// void pci_rcec_exit(pci_dev_s *dev);
+	// void pcie_link_rcec(pci_dev_s *rcec);
+	// void pcie_walk_rcec(pci_dev_s *rcec,
+	// 			int (*cb)(pci_dev_s *, void *),
 	// 			void *userdata);
 	// #else
-	// static inline void pci_rcec_init(struct pci_dev *dev) {}
-	// static inline void pci_rcec_exit(struct pci_dev *dev) {}
-	// static inline void pcie_link_rcec(struct pci_dev *rcec) {}
-	// static inline void pcie_walk_rcec(struct pci_dev *rcec,
-	// 				  int (*cb)(struct pci_dev *, void *),
+	// static inline void pci_rcec_init(pci_dev_s *dev) {}
+	// static inline void pci_rcec_exit(pci_dev_s *dev) {}
+	// static inline void pcie_link_rcec(pci_dev_s *rcec) {}
+	// static inline void pcie_walk_rcec(pci_dev_s *rcec,
+	// 				  int (*cb)(pci_dev_s *, void *),
 	// 				  void *userdata) {}
 	// #endif
 
 	// #ifdef CONFIG_PCI_ATS
 	// /* Address Translation Service */
-	// void pci_ats_init(struct pci_dev *dev);
-	// void pci_restore_ats_state(struct pci_dev *dev);
+	// void pci_ats_init(pci_dev_s *dev);
+	// void pci_restore_ats_state(pci_dev_s *dev);
 	// #else
-	// static inline void pci_ats_init(struct pci_dev *d) { }
-	// static inline void pci_restore_ats_state(struct pci_dev *dev) { }
+	// static inline void pci_ats_init(pci_dev_s *d) { }
+	// static inline void pci_restore_ats_state(pci_dev_s *dev) { }
 	// #endif /* CONFIG_PCI_ATS */
 
 	// #ifdef CONFIG_PCI_PRI
-	// void pci_pri_init(struct pci_dev *dev);
-	// void pci_restore_pri_state(struct pci_dev *pdev);
+	// void pci_pri_init(pci_dev_s *dev);
+	// void pci_restore_pri_state(pci_dev_s *pdev);
 	// #else
-	// static inline void pci_pri_init(struct pci_dev *dev) { }
-	// static inline void pci_restore_pri_state(struct pci_dev *pdev) { }
+	// static inline void pci_pri_init(pci_dev_s *dev) { }
+	// static inline void pci_restore_pri_state(pci_dev_s *pdev) { }
 	// #endif
 
 	// #ifdef CONFIG_PCI_PASID
-	// void pci_pasid_init(struct pci_dev *dev);
-	// void pci_restore_pasid_state(struct pci_dev *pdev);
+	// void pci_pasid_init(pci_dev_s *dev);
+	// void pci_restore_pasid_state(pci_dev_s *pdev);
 	// #else
-	// static inline void pci_pasid_init(struct pci_dev *dev) { }
-	// static inline void pci_restore_pasid_state(struct pci_dev *pdev) { }
+	// static inline void pci_pasid_init(pci_dev_s *dev) { }
+	// static inline void pci_restore_pasid_state(pci_dev_s *pdev) { }
 	// #endif
 
 	// #ifdef CONFIG_PCI_IOV
-	// int pci_iov_init(struct pci_dev *dev);
-	// void pci_iov_release(struct pci_dev *dev);
-	// void pci_iov_remove(struct pci_dev *dev);
-	// void pci_iov_update_resource(struct pci_dev *dev, int resno);
-	// resource_size_t pci_sriov_resource_alignment(struct pci_dev *dev, int resno);
-	// void pci_restore_iov_state(struct pci_dev *dev);
+	// int pci_iov_init(pci_dev_s *dev);
+	// void pci_iov_release(pci_dev_s *dev);
+	// void pci_iov_remove(pci_dev_s *dev);
+	// void pci_iov_update_resource(pci_dev_s *dev, int resno);
+	// resource_size_t pci_sriov_resource_alignment(pci_dev_s *dev, int resno);
+	// void pci_restore_iov_state(pci_dev_s *dev);
 	// int pci_iov_bus_range(struct pci_bus *bus);
 	// extern const struct attribute_group sriov_pf_dev_attr_group;
 	// extern const struct attribute_group sriov_vf_dev_attr_group;
 	// #else
-	// static inline int pci_iov_init(struct pci_dev *dev)
+	// static inline int pci_iov_init(pci_dev_s *dev)
 	// {
 	// 	return -ENODEV;
 	// }
-	// static inline void pci_iov_release(struct pci_dev *dev)
+	// static inline void pci_iov_release(pci_dev_s *dev)
 
 	// {
 	// }
-	// static inline void pci_iov_remove(struct pci_dev *dev)
+	// static inline void pci_iov_remove(pci_dev_s *dev)
 	// {
 	// }
-	// static inline void pci_restore_iov_state(struct pci_dev *dev)
+	// static inline void pci_restore_iov_state(pci_dev_s *dev)
 	// {
 	// }
 	// static inline int pci_iov_bus_range(struct pci_bus *bus)
@@ -507,22 +507,22 @@
 	// #endif /* CONFIG_PCI_IOV */
 
 	// #ifdef CONFIG_PCIE_PTM
-	// void pci_ptm_init(struct pci_dev *dev);
-	// void pci_save_ptm_state(struct pci_dev *dev);
-	// void pci_restore_ptm_state(struct pci_dev *dev);
-	// void pci_suspend_ptm(struct pci_dev *dev);
-	// void pci_resume_ptm(struct pci_dev *dev);
+	// void pci_ptm_init(pci_dev_s *dev);
+	// void pci_save_ptm_state(pci_dev_s *dev);
+	// void pci_restore_ptm_state(pci_dev_s *dev);
+	// void pci_suspend_ptm(pci_dev_s *dev);
+	// void pci_resume_ptm(pci_dev_s *dev);
 	// #else
-	// static inline void pci_ptm_init(struct pci_dev *dev) { }
-	// static inline void pci_save_ptm_state(struct pci_dev *dev) { }
-	// static inline void pci_restore_ptm_state(struct pci_dev *dev) { }
-	// static inline void pci_suspend_ptm(struct pci_dev *dev) { }
-	// static inline void pci_resume_ptm(struct pci_dev *dev) { }
+	// static inline void pci_ptm_init(pci_dev_s *dev) { }
+	// static inline void pci_save_ptm_state(pci_dev_s *dev) { }
+	// static inline void pci_restore_ptm_state(pci_dev_s *dev) { }
+	// static inline void pci_suspend_ptm(pci_dev_s *dev) { }
+	// static inline void pci_resume_ptm(pci_dev_s *dev) { }
 	// #endif
 
 	// unsigned long pci_cardbus_resource_alignment(struct resource *);
 
-	// static inline resource_size_t pci_resource_alignment(struct pci_dev *dev,
+	// static inline resource_size_t pci_resource_alignment(pci_dev_s *dev,
 	// 							 struct resource *res)
 	// {
 	// #ifdef CONFIG_PCI_IOV
@@ -536,66 +536,66 @@
 	// 	return resource_alignment(res);
 	// }
 
-	// void pci_acs_init(struct pci_dev *dev);
+	// void pci_acs_init(pci_dev_s *dev);
 	// #ifdef CONFIG_PCI_QUIRKS
-	// int pci_dev_specific_acs_enabled(struct pci_dev *dev, u16 acs_flags);
-	// int pci_dev_specific_enable_acs(struct pci_dev *dev);
-	// int pci_dev_specific_disable_acs_redir(struct pci_dev *dev);
+	// int pci_dev_specific_acs_enabled(pci_dev_s *dev, u16 acs_flags);
+	// int pci_dev_specific_enable_acs(pci_dev_s *dev);
+	// int pci_dev_specific_disable_acs_redir(pci_dev_s *dev);
 	// #else
-	// static inline int pci_dev_specific_acs_enabled(struct pci_dev *dev,
+	// static inline int pci_dev_specific_acs_enabled(pci_dev_s *dev,
 	// 						   u16 acs_flags)
 	// {
 	// 	return -ENOTTY;
 	// }
-	// static inline int pci_dev_specific_enable_acs(struct pci_dev *dev)
+	// static inline int pci_dev_specific_enable_acs(pci_dev_s *dev)
 	// {
 	// 	return -ENOTTY;
 	// }
-	// static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+	// static inline int pci_dev_specific_disable_acs_redir(pci_dev_s *dev)
 	// {
 	// 	return -ENOTTY;
 	// }
 	// #endif
 
 	// /* PCI error reporting and recovery */
-	// pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+	// pci_ers_result_t pcie_do_recovery(pci_dev_s *dev,
 	// 		pci_channel_state_t state,
-	// 		pci_ers_result_t (*reset_subordinates)(struct pci_dev *pdev));
+	// 		pci_ers_result_t (*reset_subordinates)(pci_dev_s *pdev));
 
-	// bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+	// bool pcie_wait_for_link(pci_dev_s *pdev, bool active);
 	// #ifdef CONFIG_PCIEASPM
-	// void pcie_aspm_init_link_state(struct pci_dev *pdev);
-	// void pcie_aspm_exit_link_state(struct pci_dev *pdev);
-	// void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
+	// void pcie_aspm_init_link_state(pci_dev_s *pdev);
+	// void pcie_aspm_exit_link_state(pci_dev_s *pdev);
+	// void pcie_aspm_powersave_config_link(pci_dev_s *pdev);
 	// #else
-	// static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
-	// static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
-	// static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
+	// static inline void pcie_aspm_init_link_state(pci_dev_s *pdev) { }
+	// static inline void pcie_aspm_exit_link_state(pci_dev_s *pdev) { }
+	// static inline void pcie_aspm_powersave_config_link(pci_dev_s *pdev) { }
 	// #endif
 
 	// #ifdef CONFIG_PCIE_ECRC
-	// void pcie_set_ecrc_checking(struct pci_dev *dev);
+	// void pcie_set_ecrc_checking(pci_dev_s *dev);
 	// void pcie_ecrc_get_policy(char *str);
 	// #else
-	// static inline void pcie_set_ecrc_checking(struct pci_dev *dev) { }
+	// static inline void pcie_set_ecrc_checking(pci_dev_s *dev) { }
 	// static inline void pcie_ecrc_get_policy(char *str) { }
 	// #endif
 
 	// struct pci_dev_reset_methods {
 	// 	u16 vendor;
 	// 	u16 device;
-	// 	int (*reset)(struct pci_dev *dev, bool probe);
+	// 	int (*reset)(pci_dev_s *dev, bool probe);
 	// };
 
 	// struct pci_reset_fn_method {
-	// 	int (*reset_fn)(struct pci_dev *pdev, bool probe);
+	// 	int (*reset_fn)(pci_dev_s *pdev, bool probe);
 	// 	char *name;
 	// };
 
 	// #ifdef CONFIG_PCI_QUIRKS
-	// int pci_dev_specific_reset(struct pci_dev *dev, bool probe);
+	// int pci_dev_specific_reset(pci_dev_s *dev, bool probe);
 	// #else
-	// static inline int pci_dev_specific_reset(struct pci_dev *dev, bool probe)
+	// static inline int pci_dev_specific_reset(pci_dev_s *dev, bool probe)
 	// {
 	// 	return -ENOTTY;
 	// }
@@ -612,8 +612,8 @@
 	// }
 	// #endif
 
-	// int pci_rebar_get_current_size(struct pci_dev *pdev, int bar);
-	// int pci_rebar_set_size(struct pci_dev *pdev, int bar, int size);
+	// int pci_rebar_get_current_size(pci_dev_s *pdev, int bar);
+	// int pci_rebar_set_size(pci_dev_s *pdev, int bar, int size);
 	// static inline u64 pci_rebar_size_to_bytes(int size)
 	// {
 	// 	return 1ULL << (size + 20);
@@ -628,8 +628,8 @@
 	// u32 of_pci_get_slot_power_limit(struct device_node *node,
 	// 				u8 *slot_power_limit_value,
 	// 				u8 *slot_power_limit_scale);
-	// int pci_set_of_node(struct pci_dev *dev);
-	// void pci_release_of_node(struct pci_dev *dev);
+	// int pci_set_of_node(pci_dev_s *dev);
+	// void pci_release_of_node(pci_dev_s *dev);
 	// void pci_set_bus_of_node(struct pci_bus *bus);
 	// void pci_release_bus_of_node(struct pci_bus *bus);
 
@@ -666,8 +666,8 @@
 	// 	return 0;
 	// }
 
-	// static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
-	// static inline void pci_release_of_node(struct pci_dev *dev) { }
+	// static inline int pci_set_of_node(pci_dev_s *dev) { return 0; }
+	// static inline void pci_release_of_node(pci_dev_s *dev) { }
 	// static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
 	// static inline void pci_release_bus_of_node(struct pci_bus *bus) { }
 
@@ -680,70 +680,70 @@
 
 	// #ifdef CONFIG_PCIEAER
 	// void pci_no_aer(void);
-	// void pci_aer_init(struct pci_dev *dev);
-	// void pci_aer_exit(struct pci_dev *dev);
+	// void pci_aer_init(pci_dev_s *dev);
+	// void pci_aer_exit(pci_dev_s *dev);
 	// extern const struct attribute_group aer_stats_attr_group;
-	// void pci_aer_clear_fatal_status(struct pci_dev *dev);
-	// int pci_aer_clear_status(struct pci_dev *dev);
-	// int pci_aer_raw_clear_status(struct pci_dev *dev);
+	// void pci_aer_clear_fatal_status(pci_dev_s *dev);
+	// int pci_aer_clear_status(pci_dev_s *dev);
+	// int pci_aer_raw_clear_status(pci_dev_s *dev);
 	// #else
 	// static inline void pci_no_aer(void) { }
-	// static inline void pci_aer_init(struct pci_dev *d) { }
-	// static inline void pci_aer_exit(struct pci_dev *d) { }
-	// static inline void pci_aer_clear_fatal_status(struct pci_dev *dev) { }
-	// static inline int pci_aer_clear_status(struct pci_dev *dev) { return -EINVAL; }
-	// static inline int pci_aer_raw_clear_status(struct pci_dev *dev) { return -EINVAL; }
+	// static inline void pci_aer_init(pci_dev_s *d) { }
+	// static inline void pci_aer_exit(pci_dev_s *d) { }
+	// static inline void pci_aer_clear_fatal_status(pci_dev_s *dev) { }
+	// static inline int pci_aer_clear_status(pci_dev_s *dev) { return -EINVAL; }
+	// static inline int pci_aer_raw_clear_status(pci_dev_s *dev) { return -EINVAL; }
 	// #endif
 
 	// #ifdef CONFIG_ACPI
-	// int pci_acpi_program_hp_params(struct pci_dev *dev);
+	// int pci_acpi_program_hp_params(pci_dev_s *dev);
 	// extern const struct attribute_group pci_dev_acpi_attr_group;
-	// void pci_set_acpi_fwnode(struct pci_dev *dev);
-	// int pci_dev_acpi_reset(struct pci_dev *dev, bool probe);
-	// bool acpi_pci_power_manageable(struct pci_dev *dev);
-	// bool acpi_pci_bridge_d3(struct pci_dev *dev);
-	// int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state);
-	// pci_power_t acpi_pci_get_power_state(struct pci_dev *dev);
-	// void acpi_pci_refresh_power_state(struct pci_dev *dev);
-	// int acpi_pci_wakeup(struct pci_dev *dev, bool enable);
-	// bool acpi_pci_need_resume(struct pci_dev *dev);
-	// pci_power_t acpi_pci_choose_state(struct pci_dev *pdev);
+	// void pci_set_acpi_fwnode(pci_dev_s *dev);
+	// int pci_dev_acpi_reset(pci_dev_s *dev, bool probe);
+	// bool acpi_pci_power_manageable(pci_dev_s *dev);
+	// bool acpi_pci_bridge_d3(pci_dev_s *dev);
+	// int acpi_pci_set_power_state(pci_dev_s *dev, pci_power_t state);
+	// pci_power_t acpi_pci_get_power_state(pci_dev_s *dev);
+	// void acpi_pci_refresh_power_state(pci_dev_s *dev);
+	// int acpi_pci_wakeup(pci_dev_s *dev, bool enable);
+	// bool acpi_pci_need_resume(pci_dev_s *dev);
+	// pci_power_t acpi_pci_choose_state(pci_dev_s *pdev);
 	// #else
-	// static inline int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
+	// static inline int pci_dev_acpi_reset(pci_dev_s *dev, bool probe)
 	// {
 	// 	return -ENOTTY;
 	// }
-	// static inline void pci_set_acpi_fwnode(struct pci_dev *dev) {}
-	// static inline int pci_acpi_program_hp_params(struct pci_dev *dev)
+	// static inline void pci_set_acpi_fwnode(pci_dev_s *dev) {}
+	// static inline int pci_acpi_program_hp_params(pci_dev_s *dev)
 	// {
 	// 	return -ENODEV;
 	// }
-	// static inline bool acpi_pci_power_manageable(struct pci_dev *dev)
+	// static inline bool acpi_pci_power_manageable(pci_dev_s *dev)
 	// {
 	// 	return false;
 	// }
-	// static inline bool acpi_pci_bridge_d3(struct pci_dev *dev)
+	// static inline bool acpi_pci_bridge_d3(pci_dev_s *dev)
 	// {
 	// 	return false;
 	// }
-	// static inline int acpi_pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+	// static inline int acpi_pci_set_power_state(pci_dev_s *dev, pci_power_t state)
 	// {
 	// 	return -ENODEV;
 	// }
-	// static inline pci_power_t acpi_pci_get_power_state(struct pci_dev *dev)
+	// static inline pci_power_t acpi_pci_get_power_state(pci_dev_s *dev)
 	// {
 	// 	return PCI_UNKNOWN;
 	// }
-	// static inline void acpi_pci_refresh_power_state(struct pci_dev *dev) {}
-	// static inline int acpi_pci_wakeup(struct pci_dev *dev, bool enable)
+	// static inline void acpi_pci_refresh_power_state(pci_dev_s *dev) {}
+	// static inline int acpi_pci_wakeup(pci_dev_s *dev, bool enable)
 	// {
 	// 	return -ENODEV;
 	// }
-	// static inline bool acpi_pci_need_resume(struct pci_dev *dev)
+	// static inline bool acpi_pci_need_resume(pci_dev_s *dev)
 	// {
 	// 	return false;
 	// }
-	// static inline pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+	// static inline pci_power_t acpi_pci_choose_state(pci_dev_s *pdev)
 	// {
 	// 	return PCI_POWER_ERROR;
 	// }
@@ -757,18 +757,18 @@
 
 	// #ifdef CONFIG_X86_INTEL_MID
 	// bool pci_use_mid_pm(void);
-	// int mid_pci_set_power_state(struct pci_dev *pdev, pci_power_t state);
-	// pci_power_t mid_pci_get_power_state(struct pci_dev *pdev);
+	// int mid_pci_set_power_state(pci_dev_s *pdev, pci_power_t state);
+	// pci_power_t mid_pci_get_power_state(pci_dev_s *pdev);
 	// #else
 	// static inline bool pci_use_mid_pm(void)
 	// {
 	// 	return false;
 	// }
-	// static inline int mid_pci_set_power_state(struct pci_dev *pdev, pci_power_t state)
+	// static inline int mid_pci_set_power_state(pci_dev_s *pdev, pci_power_t state)
 	// {
 	// 	return -ENODEV;
 	// }
-	// static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
+	// static inline pci_power_t mid_pci_get_power_state(pci_dev_s *pdev)
 	// {
 	// 	return PCI_UNKNOWN;
 	// }
