@@ -23,7 +23,7 @@ void myos_devices_init()
 	init_cdev_intr();
 	init_bdev_intr();
 
-	detect_PCIe_devs();
+	// detect_PCIe_devs();
 }
 
 void init_intr()
