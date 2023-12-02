@@ -34,7 +34,7 @@ DEFINE_SPINLOCK(pci_lock);
 
 // #define PCI_OP_READ(size, type, len) \
 // int noinline pci_bus_read_config_##size \
-// 	(struct pci_bus *bus, unsigned int devfn, int pos, type *value)	\
+// 	(pci_bus_s *bus, unsigned int devfn, int pos, type *value)	\
 // {									\
 // 	int res;							\
 // 	unsigned long flags;						\
@@ -52,7 +52,7 @@ DEFINE_SPINLOCK(pci_lock);
 
 // #define PCI_OP_WRITE(size, type, len) \
 // int noinline pci_bus_write_config_##size \
-// 	(struct pci_bus *bus, unsigned int devfn, int pos, type value)	\
+// 	(pci_bus_s *bus, unsigned int devfn, int pos, type value)	\
 // {									\
 // 	int res;							\
 // 	unsigned long flags;						\
@@ -77,7 +77,7 @@ DEFINE_SPINLOCK(pci_lock);
 // EXPORT_SYMBOL(pci_bus_write_config_word);
 // EXPORT_SYMBOL(pci_bus_write_config_dword);
 
-// int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+// int pci_generic_config_read(pci_bus_s *bus, unsigned int devfn,
 // 				int where, int size, u32 *val)
 // {
 // 	void __iomem *addr;
@@ -97,7 +97,7 @@ DEFINE_SPINLOCK(pci_lock);
 // }
 // EXPORT_SYMBOL_GPL(pci_generic_config_read);
 
-// int pci_generic_config_write(struct pci_bus *bus, unsigned int devfn,
+// int pci_generic_config_write(pci_bus_s *bus, unsigned int devfn,
 // 				 int where, int size, u32 val)
 // {
 // 	void __iomem *addr;
@@ -117,7 +117,7 @@ DEFINE_SPINLOCK(pci_lock);
 // }
 // EXPORT_SYMBOL_GPL(pci_generic_config_write);
 
-// int pci_generic_config_read32(struct pci_bus *bus, unsigned int devfn,
+// int pci_generic_config_read32(pci_bus_s *bus, unsigned int devfn,
 // 				  int where, int size, u32 *val)
 // {
 // 	void __iomem *addr;
@@ -135,7 +135,7 @@ DEFINE_SPINLOCK(pci_lock);
 // }
 // EXPORT_SYMBOL_GPL(pci_generic_config_read32);
 
-// int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+// int pci_generic_config_write32(pci_bus_s *bus, unsigned int devfn,
 // 				   int where, int size, u32 val)
 // {
 // 	void __iomem *addr;
@@ -182,9 +182,9 @@ DEFINE_SPINLOCK(pci_lock);
 //  *
 //  * Return previous raw operations
 //  */
-// struct pci_ops *pci_bus_set_ops(struct pci_bus *bus, struct pci_ops *ops)
+// pci_ops_s *pci_bus_set_ops(pci_bus_s *bus, pci_ops_s *ops)
 // {
-// 	struct pci_ops *old_ops;
+// 	pci_ops_s *old_ops;
 // 	unsigned long flags;
 
 // 	raw_spin_lock_irqsave(&pci_lock, flags);

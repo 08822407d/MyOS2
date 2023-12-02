@@ -60,10 +60,10 @@
 // void pcibios_resource_survey(void);
 // void pcibios_set_cache_line_size(void);
 
-// /* pci-pc.c */
+/* pci-pc.c */
 
 // extern int pcibios_last_bus;
-// extern struct pci_ops pci_root_ops;
+extern pci_ops_s pci_root_ops;
 
 // void pcibios_scan_specific_bus(int busn);
 
@@ -129,10 +129,10 @@ extern const pci_raw_ops_s	pci_mmcfg;
 extern const pci_raw_ops_s	pci_direct_conf1;
 // extern bool port_cf9_safe;
 
-// /* arch_initcall level */
+/* arch_initcall level */
 // #ifdef CONFIG_PCI_DIRECT
-// extern int pci_direct_probe(void);
-// extern void pci_direct_init(int type);
+extern int pci_direct_probe(void);
+extern void pci_direct_init(int type);
 // #else
 // static inline int pci_direct_probe(void) { return -1; }
 // static inline  void pci_direct_init(int type) { }

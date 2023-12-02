@@ -24,26 +24,26 @@ pci_conf1_read(unsigned int seg, unsigned int bus,
 {
 	unsigned long flags;
 
-	// if (seg || (bus > 255) || (devfn > 255) || (reg > 4095)) {
-	// 	*value = -1;
-	// 	return -EINVAL;
-	// }
+	if (seg || (bus > 255) || (devfn > 255) || (reg > 4095)) {
+		*value = -1;
+		return -EINVAL;
+	}
 
 	// raw_spin_lock_irqsave(&pci_config_lock, flags);
 
-	// outl(PCI_CONF1_ADDRESS(bus, devfn, reg), 0xCF8);
+	outl(PCI_CONF1_ADDRESS(bus, devfn, reg), 0xCF8);
 
-	// switch (len) {
-	// case 1:
-	// 	*value = inb(0xCFC + (reg & 3));
-	// 	break;
-	// case 2:
-	// 	*value = inw(0xCFC + (reg & 2));
-	// 	break;
-	// case 4:
-	// 	*value = inl(0xCFC);
-	// 	break;
-	// }
+	switch (len) {
+	case 1:
+		*value = inb(0xCFC + (reg & 3));
+		break;
+	case 2:
+		*value = inw(0xCFC + (reg & 2));
+		break;
+	case 4:
+		*value = inl(0xCFC);
+		break;
+	}
 
 	// raw_spin_unlock_irqrestore(&pci_config_lock, flags);
 
@@ -56,24 +56,24 @@ pci_conf1_write(unsigned int seg, unsigned int bus,
 {
 	unsigned long flags;
 
-	// if (seg || (bus > 255) || (devfn > 255) || (reg > 4095))
-	// 	return -EINVAL;
+	if (seg || (bus > 255) || (devfn > 255) || (reg > 4095))
+		return -EINVAL;
 
 	// raw_spin_lock_irqsave(&pci_config_lock, flags);
 
-	// outl(PCI_CONF1_ADDRESS(bus, devfn, reg), 0xCF8);
+	outl(PCI_CONF1_ADDRESS(bus, devfn, reg), 0xCF8);
 
-	// switch (len) {
-	// case 1:
-	// 	outb((u8)value, 0xCFC + (reg & 3));
-	// 	break;
-	// case 2:
-	// 	outw((u16)value, 0xCFC + (reg & 2));
-	// 	break;
-	// case 4:
-	// 	outl((u32)value, 0xCFC);
-	// 	break;
-	// }
+	switch (len) {
+	case 1:
+		outb((u8)value, 0xCFC + (reg & 3));
+		break;
+	case 2:
+		outw((u16)value, 0xCFC + (reg & 2));
+		break;
+	case 4:
+		outl((u32)value, 0xCFC);
+		break;
+	}
 
 	// raw_spin_unlock_irqrestore(&pci_config_lock, flags);
 
@@ -88,102 +88,102 @@ const pci_raw_ops_s pci_direct_conf1 = {
 };
 
 
-/*
- * Functions for accessing PCI configuration space with type 2 accesses
- */
+// /*
+//  * Functions for accessing PCI configuration space with type 2 accesses
+//  */
 
-#define PCI_CONF2_ADDRESS(dev, reg)	(u16)(0xC000 | (dev << 8) | reg)
+// #define PCI_CONF2_ADDRESS(dev, reg)	(u16)(0xC000 | (dev << 8) | reg)
 
-static int
-pci_conf2_read(unsigned int seg, unsigned int bus,
-		unsigned int devfn, int reg, int len, u32 *value)
-{
-	unsigned long flags;
-	int dev, fn;
+// static int
+// pci_conf2_read(unsigned int seg, unsigned int bus,
+// 		unsigned int devfn, int reg, int len, u32 *value)
+// {
+// 	unsigned long flags;
+// 	int dev, fn;
 
-	// WARN_ON(seg);
-	// if ((bus > 255) || (devfn > 255) || (reg > 255)) {
-	// 	*value = -1;
-	// 	return -EINVAL;
-	// }
+// 	WARN_ON(seg);
+// 	if ((bus > 255) || (devfn > 255) || (reg > 255)) {
+// 		*value = -1;
+// 		return -EINVAL;
+// 	}
 
-	// dev = PCI_SLOT(devfn);
-	// fn = PCI_FUNC(devfn);
+// 	dev = PCI_SLOT(devfn);
+// 	fn = PCI_FUNC(devfn);
 
-	// if (dev & 0x10) 
-	// 	return PCIBIOS_DEVICE_NOT_FOUND;
+// 	if (dev & 0x10) 
+// 		return PCIBIOS_DEVICE_NOT_FOUND;
 
-	// raw_spin_lock_irqsave(&pci_config_lock, flags);
+// 	raw_spin_lock_irqsave(&pci_config_lock, flags);
 
-	// outb((u8)(0xF0 | (fn << 1)), 0xCF8);
-	// outb((u8)bus, 0xCFA);
+// 	outb((u8)(0xF0 | (fn << 1)), 0xCF8);
+// 	outb((u8)bus, 0xCFA);
 
-	// switch (len) {
-	// case 1:
-	// 	*value = inb(PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// case 2:
-	// 	*value = inw(PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// case 4:
-	// 	*value = inl(PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// }
+// 	switch (len) {
+// 	case 1:
+// 		*value = inb(PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	case 2:
+// 		*value = inw(PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	case 4:
+// 		*value = inl(PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	}
 
-	// outb(0, 0xCF8);
+// 	outb(0, 0xCF8);
 
-	// raw_spin_unlock_irqrestore(&pci_config_lock, flags);
+// 	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
 
-	return 0;
-}
+// 	return 0;
+// }
 
-static int
-pci_conf2_write(unsigned int seg, unsigned int bus,
-		unsigned int devfn, int reg, int len, u32 value)
-{
-	unsigned long flags;
-	int dev, fn;
+// static int
+// pci_conf2_write(unsigned int seg, unsigned int bus,
+// 		unsigned int devfn, int reg, int len, u32 value)
+// {
+// 	unsigned long flags;
+// 	int dev, fn;
 
-	// WARN_ON(seg);
-	// if ((bus > 255) || (devfn > 255) || (reg > 255)) 
-	// 	return -EINVAL;
+// 	WARN_ON(seg);
+// 	if ((bus > 255) || (devfn > 255) || (reg > 255)) 
+// 		return -EINVAL;
 
-	// dev = PCI_SLOT(devfn);
-	// fn = PCI_FUNC(devfn);
+// 	dev = PCI_SLOT(devfn);
+// 	fn = PCI_FUNC(devfn);
 
-	// if (dev & 0x10) 
-	// 	return PCIBIOS_DEVICE_NOT_FOUND;
+// 	if (dev & 0x10) 
+// 		return PCIBIOS_DEVICE_NOT_FOUND;
 
-	// raw_spin_lock_irqsave(&pci_config_lock, flags);
+// 	raw_spin_lock_irqsave(&pci_config_lock, flags);
 
-	// outb((u8)(0xF0 | (fn << 1)), 0xCF8);
-	// outb((u8)bus, 0xCFA);
+// 	outb((u8)(0xF0 | (fn << 1)), 0xCF8);
+// 	outb((u8)bus, 0xCFA);
 
-	// switch (len) {
-	// case 1:
-	// 	outb((u8)value, PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// case 2:
-	// 	outw((u16)value, PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// case 4:
-	// 	outl((u32)value, PCI_CONF2_ADDRESS(dev, reg));
-	// 	break;
-	// }
+// 	switch (len) {
+// 	case 1:
+// 		outb((u8)value, PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	case 2:
+// 		outw((u16)value, PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	case 4:
+// 		outl((u32)value, PCI_CONF2_ADDRESS(dev, reg));
+// 		break;
+// 	}
 
-	// outb(0, 0xCF8);    
+// 	outb(0, 0xCF8);    
 
-	// raw_spin_unlock_irqrestore(&pci_config_lock, flags);
+// 	raw_spin_unlock_irqrestore(&pci_config_lock, flags);
 
-	return 0;
-}
+// 	return 0;
+// }
 
-#undef PCI_CONF2_ADDRESS
+// #undef PCI_CONF2_ADDRESS
 
-static const pci_raw_ops_s pci_direct_conf2 = {
-	.read	= pci_conf2_read,
-	.write	= pci_conf2_write,
-};
+// static const pci_raw_ops_s pci_direct_conf2 = {
+// 	.read	= pci_conf2_read,
+// 	.write	= pci_conf2_write,
+// };
 
 
 /*
@@ -224,65 +224,65 @@ static int __init pci_sanity_check(const pci_raw_ops_s *o)
 	// return 0;
 }
 
-static int __init pci_check_type1(void)
-{
-	unsigned long flags;
-	unsigned int tmp;
-	int works = 0;
-
-	local_irq_save(flags);
-
-	outb(0x01, 0xCFB);
-	tmp = inl(0xCF8);
-	outl(0x80000000, 0xCF8);
-	if (inl(0xCF8) == 0x80000000 && pci_sanity_check(&pci_direct_conf1)) {
-		works = 1;
-	}
-	outl(tmp, 0xCF8);
-	local_irq_restore(flags);
-
-	return works;
-}
-
-static int __init pci_check_type2(void)
-{
-	unsigned long flags;
-	int works = 0;
-
-	local_irq_save(flags);
-
-	outb(0x00, 0xCFB);
-	outb(0x00, 0xCF8);
-	outb(0x00, 0xCFA);
-	if (inb(0xCF8) == 0x00 && inb(0xCFA) == 0x00 &&
-		pci_sanity_check(&pci_direct_conf2)) {
-		works = 1;
-	}
-
-	local_irq_restore(flags);
-
-	return works;
-}
-
-// void __init pci_direct_init(int type)
+// static int __init pci_check_type1(void)
 // {
-// 	if (type == 0)
-// 		return;
-// 	printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
-// 		 type);
-// 	if (type == 1) {
-// 		raw_pci_ops = &pci_direct_conf1;
-// 		if (raw_pci_ext_ops)
-// 			return;
-// 		if (!(pci_probe & PCI_HAS_IO_ECS))
-// 			return;
-// 		printk(KERN_INFO "PCI: Using configuration type 1 "
-// 			   "for extended access\n");
-// 		raw_pci_ext_ops = &pci_direct_conf1;
-// 		return;
+// 	unsigned long flags;
+// 	unsigned int tmp;
+// 	int works = 0;
+
+// 	local_irq_save(flags);
+
+// 	outb(0x01, 0xCFB);
+// 	tmp = inl(0xCF8);
+// 	outl(0x80000000, 0xCF8);
+// 	if (inl(0xCF8) == 0x80000000 && pci_sanity_check(&pci_direct_conf1)) {
+// 		works = 1;
 // 	}
-// 	raw_pci_ops = &pci_direct_conf2;
+// 	outl(tmp, 0xCF8);
+// 	local_irq_restore(flags);
+
+// 	return works;
 // }
+
+// static int __init pci_check_type2(void)
+// {
+// 	unsigned long flags;
+// 	int works = 0;
+
+// 	local_irq_save(flags);
+
+// 	outb(0x00, 0xCFB);
+// 	outb(0x00, 0xCF8);
+// 	outb(0x00, 0xCFA);
+// 	if (inb(0xCF8) == 0x00 && inb(0xCFA) == 0x00 &&
+// 		pci_sanity_check(&pci_direct_conf2)) {
+// 		works = 1;
+// 	}
+
+// 	local_irq_restore(flags);
+
+// 	return works;
+// }
+
+void __init pci_direct_init(int type)
+{
+	// if (type == 0)
+	// 	return;
+	// printk(KERN_INFO "PCI: Using configuration type %d for base access\n",
+	// 	 type);
+	// if (type == 1) {
+		raw_pci_ops = &pci_direct_conf1;
+		if (raw_pci_ext_ops)
+			return;
+		// if (!(pci_probe & PCI_HAS_IO_ECS))
+		// 	return;
+		// printk(KERN_INFO "PCI: Using configuration type 1 "
+		// 	   "for extended access\n");
+		raw_pci_ext_ops = &pci_direct_conf1;
+		return;
+	// }
+	// raw_pci_ops = &pci_direct_conf2;
+}
 
 int __init pci_direct_probe(void)
 {
@@ -316,4 +316,10 @@ int __init pci_direct_probe(void)
 //  fail2:
 // 	release_region(0xCF8, 4);
 // 	return 0;
+
+
+	// type2 is too old, in 2023 that kind of machines can hardly fine
+	// so here directly return type1
+	raw_pci_ops = &pci_direct_conf1;
+	return 1;
 }

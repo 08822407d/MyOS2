@@ -227,6 +227,10 @@
 	} PCIe_ExtCS_s;
 
 
+	struct pci_bus;
+	typedef struct pci_bus pci_bus_s;
+	struct pci_ops;
+	typedef struct pci_ops pci_ops_s;
 
 	// #define PCI_STATUS_ERROR_BITS (PCI_STATUS_DETECTED_PARITY  | \
 	// 				   PCI_STATUS_SIG_SYSTEM_ERROR | \
@@ -259,7 +263,7 @@
 
 	// /* pci_slot represents a physical slot */
 	// struct pci_slot {
-	// 	struct pci_bus		*bus;		/* Bus this slot is on */
+	// 	pci_bus_s		*bus;		/* Bus this slot is on */
 	// 	struct list_head	list;		/* Node in list of slots */
 	// 	struct hotplug_slot	*hotplug;	/* Hotplug info (move here) */
 	// 	unsigned char		number;		/* PCI_SLOT(pci_dev->devfn) */
@@ -506,8 +510,8 @@
 	/* The pci_dev structure describes PCI devices */
 	typedef struct pci_dev {
 		// struct list_head bus_list;	/* Node in per-bus list */
-		// struct pci_bus	*bus;		/* Bus this device is on */
-		// struct pci_bus	*subordinate;	/* Bus this device bridges to */
+		pci_bus_s		*bus;		/* Bus this device is on */
+		// pci_bus_s	*subordinate;	/* Bus this device bridges to */
 
 		// void		*sysdata;	/* Hook for sys-specific extension */
 		// struct proc_dir_entry *procent;	/* Device entry in /proc/bus/pci */
@@ -724,7 +728,7 @@
 	// 	return dev;
 	// }
 
-	// pci_dev_s *pci_alloc_dev(struct pci_bus *bus);
+	// pci_dev_s *pci_alloc_dev(pci_bus_s *bus);
 
 	// #define	to_pci_dev(n) container_of(n, pci_dev_s, dev)
 	// #define for_each_pci_dev(d) while ((d = pci_get_device(PCI_ANY_ID, PCI_ANY_ID, d)) != NULL)
@@ -746,9 +750,9 @@
 
 	// struct pci_host_bridge {
 	// 	struct device	dev;
-	// 	struct pci_bus	*bus;		/* Root bus */
-	// 	struct pci_ops	*ops;
-	// 	struct pci_ops	*child_ops;
+	// 	pci_bus_s	*bus;		/* Root bus */
+	// 	pci_ops_s	*ops;
+	// 	pci_ops_s	*child_ops;
 	// 	void		*sysdata;
 	// 	int		busnr;
 	// 	int		domain_nr;
@@ -797,7 +801,7 @@
 	// struct pci_host_bridge *devm_pci_alloc_host_bridge(struct device *dev,
 	// 						   size_t priv);
 	// void pci_free_host_bridge(struct pci_host_bridge *bridge);
-	// struct pci_host_bridge *pci_find_host_bridge(struct pci_bus *bus);
+	// struct pci_host_bridge *pci_find_host_bridge(pci_bus_s *bus);
 
 	// void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
 	// 				 void (*release_fn)(struct pci_host_bridge *),
@@ -820,7 +824,7 @@
 	//  */
 	// #define PCI_SUBTRACTIVE_DECODE	0x1
 
-	// struct pci_bus_resource {
+	// pci_bus_s_resource {
 	// 	struct list_head	list;
 	// 	struct resource		*res;
 	// 	unsigned int		flags;
@@ -828,43 +832,43 @@
 
 	// #define PCI_REGION_FLAG_MASK	0x0fU	/* These bits of resource flags tell us the PCI region flags */
 
-	// struct pci_bus {
-	// 	struct list_head node;		/* Node in list of buses */
-	// 	struct pci_bus	*parent;	/* Parent bus this bridge is on */
-	// 	struct list_head children;	/* List of child buses */
-	// 	struct list_head devices;	/* List of devices on this bus */
-	// 	pci_dev_s	*self;		/* Bridge device as seen by parent */
-	// 	struct list_head slots;		/* List of slots on this bus;
-	// 					   protected by pci_slot_mutex */
-	// 	struct resource *resource[PCI_BRIDGE_RESOURCE_NUM];
-	// 	struct list_head resources;	/* Address space routed to this bus */
-	// 	struct resource busn_res;	/* Bus numbers routed to this bus */
+	typedef struct pci_bus {
+		// struct list_head node;		/* Node in list of buses */
+		pci_bus_s		*parent;		/* Parent bus this bridge is on */
+		// struct list_head children;	/* List of child buses */
+		// struct list_head devices;	/* List of devices on this bus */
+		pci_dev_s		*self;			/* Bridge device as seen by parent */
+		// struct list_head slots;		/* List of slots on this bus;
+		// 				   protected by pci_slot_mutex */
+		// struct resource *resource[PCI_BRIDGE_RESOURCE_NUM];
+		// struct list_head resources;	/* Address space routed to this bus */
+		// struct resource busn_res;	/* Bus numbers routed to this bus */
 
-	// 	struct pci_ops	*ops;		/* Configuration access functions */
-	// 	void		*sysdata;	/* Hook for sys-specific extension */
-	// 	struct proc_dir_entry *procdir;	/* Directory entry in /proc/bus/pci */
+		pci_ops_s		*ops;			/* Configuration access functions */
+		// void		*sysdata;	/* Hook for sys-specific extension */
+		// struct proc_dir_entry *procdir;	/* Directory entry in /proc/bus/pci */
 
-	// 	unsigned char	number;		/* Bus number */
-	// 	unsigned char	primary;	/* Number of primary bridge */
-	// 	unsigned char	max_bus_speed;	/* enum pci_bus_speed */
-	// 	unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
+		unsigned char	number;			/* Bus number */
+		unsigned char	primary;		/* Number of primary bridge */
+		unsigned char	max_bus_speed;	/* enum pci_bus_speed */
+		unsigned char	cur_bus_speed;	/* enum pci_bus_speed */
 	// #ifdef CONFIG_PCI_DOMAINS_GENERIC
 	// 	int		domain_nr;
 	// #endif
 
-	// 	char		name[48];
+		char			name[48];
 
-	// 	unsigned short	bridge_ctl;	/* Manage NO_ISA/FBB/et al behaviors */
-	// 	pci_bus_flags_t bus_flags;	/* Inherited by child buses */
-	// 	struct device		*bridge;
-	// 	struct device		dev;
-	// 	struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
-	// 	struct bin_attribute	*legacy_mem;	/* Legacy mem */
-	// 	unsigned int		is_added:1;
-	// 	unsigned int		unsafe_warn:1;	/* warned about RW1C config write */
-	// };
+		// unsigned short	bridge_ctl;	/* Manage NO_ISA/FBB/et al behaviors */
+		// pci_bus_flags_t bus_flags;	/* Inherited by child buses */
+		device_s		*bridge;
+		device_s		dev;
+		// struct bin_attribute	*legacy_io;	/* Legacy I/O for this bus */
+		// struct bin_attribute	*legacy_mem;	/* Legacy mem */
+		unsigned int	is_added:1;
+		unsigned int	unsafe_warn:1;	/* warned about RW1C config write */
+	} pci_bus_s;
 
-	// #define to_pci_bus(n)	container_of(n, struct pci_bus, dev)
+	// #define to_pci_bus(n)	container_of(n, pci_bus_s, dev)
 
 	// static inline u16 pci_dev_id(pci_dev_s *dev)
 	// {
@@ -879,7 +883,7 @@
 	//  * This is incorrect because "virtual" buses added for SR-IOV (via
 	//  * virtfn_add_bus()) have "bus->self == NULL" but are not root buses.
 	//  */
-	// static inline bool pci_is_root_bus(struct pci_bus *pbus)
+	// static inline bool pci_is_root_bus(pci_bus_s *pbus)
 	// {
 	// 	return !(pbus->parent);
 	// }
@@ -952,15 +956,15 @@
 	// 	return -ERANGE;
 	// }
 
-	// /* Low-level architecture-dependent routines */
+	/* Low-level architecture-dependent routines */
 
-	// struct pci_ops {
-	// 	int (*add_bus)(struct pci_bus *bus);
-	// 	void (*remove_bus)(struct pci_bus *bus);
-	// 	void __iomem *(*map_bus)(struct pci_bus *bus, unsigned int devfn, int where);
-	// 	int (*read)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *val);
-	// 	int (*write)(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 val);
-	// };
+	typedef struct pci_ops {
+		// int (*add_bus)(pci_bus_s *bus);
+		// void (*remove_bus)(pci_bus_s *bus);
+		// void __iomem *(*map_bus)(pci_bus_s *bus, unsigned int devfn, int where);
+		int		(*read)(pci_bus_s *bus, unsigned int devfn, int where, int size, u32 *val);
+		int		(*write)(pci_bus_s *bus, unsigned int devfn, int where, int size, u32 val);
+	} pci_ops_s;
 
 	/*
 	 * ACPI needs to be able to access PCI config space before we've done a
@@ -977,7 +981,7 @@
 	// typedef u32 pci_bus_addr_t;
 	// #endif
 
-	// struct pci_bus_region {
+	// pci_bus_s_region {
 	// 	pci_bus_addr_t	start;
 	// 	pci_bus_addr_t	end;
 	// };
@@ -1248,7 +1252,7 @@
 	// static inline void pci_clear_flags(int flags) { pci_flags &= ~flags; }
 	// static inline int pci_has_flag(int flag) { return pci_flags & flag; }
 
-	// void pcie_bus_configure_settings(struct pci_bus *bus);
+	// void pcie_bus_configure_settings(pci_bus_s *bus);
 
 	// enum pcie_bus_config_types {
 	// 	PCIE_BUS_TUNE_OFF,	/* Don't touch MPS at all */
@@ -1268,11 +1272,11 @@
 	// /* Some device drivers need know if PCI is initiated */
 	// int no_pci_devices(void);
 
-	// void pcibios_resource_survey_bus(struct pci_bus *bus);
+	// void pcibios_resource_survey_bus(pci_bus_s *bus);
 	// void pcibios_bus_add_device(pci_dev_s *pdev);
-	// void pcibios_add_bus(struct pci_bus *bus);
-	// void pcibios_remove_bus(struct pci_bus *bus);
-	// void pcibios_fixup_bus(struct pci_bus *);
+	// void pcibios_add_bus(pci_bus_s *bus);
+	// void pcibios_remove_bus(pci_bus_s *bus);
+	// void pcibios_fixup_bus(pci_bus_s *);
 	// int __must_check pcibios_enable_device(pci_dev_s *, int mask);
 	// /* Architecture-specific versions may override this (weak) */
 	// char *pcibios_setup(char *str);
@@ -1283,32 +1287,32 @@
 	// 				resource_size_t);
 
 	// /* Weak but can be overridden by arch */
-	// void pci_fixup_cardbus(struct pci_bus *);
+	// void pci_fixup_cardbus(pci_bus_s *);
 
 	// /* Generic PCI functions used internally */
 
-	// void pcibios_resource_to_bus(struct pci_bus *bus, struct pci_bus_region *region,
+	// void pcibios_resource_to_bus(pci_bus_s *bus, pci_bus_s_region *region,
 	// 				 struct resource *res);
-	// void pcibios_bus_to_resource(struct pci_bus *bus, struct resource *res,
-	// 				 struct pci_bus_region *region);
+	// void pcibios_bus_to_resource(pci_bus_s *bus, struct resource *res,
+	// 				 pci_bus_s_region *region);
 	// void pcibios_scan_specific_bus(int busn);
-	// struct pci_bus *pci_find_bus(int domain, int busnr);
-	// void pci_bus_add_devices(const struct pci_bus *bus);
-	// struct pci_bus *pci_scan_bus(int bus, struct pci_ops *ops, void *sysdata);
-	// struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-	// 					struct pci_ops *ops, void *sysdata,
+	// pci_bus_s *pci_find_bus(int domain, int busnr);
+	// void pci_bus_add_devices(const pci_bus_s *bus);
+	// pci_bus_s *pci_scan_bus(int bus, pci_ops_s *ops, void *sysdata);
+	// pci_bus_s *pci_create_root_bus(struct device *parent, int bus,
+	// 					pci_ops_s *ops, void *sysdata,
 	// 					struct list_head *resources);
 	// int pci_host_probe(struct pci_host_bridge *bridge);
-	// int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
-	// int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
-	// void pci_bus_release_busn_res(struct pci_bus *b);
-	// struct pci_bus *pci_scan_root_bus(struct device *parent, int bus,
-	// 				  struct pci_ops *ops, void *sysdata,
+	// int pci_bus_insert_busn_res(pci_bus_s *b, int bus, int busmax);
+	// int pci_bus_update_busn_res_end(pci_bus_s *b, int busmax);
+	// void pci_bus_release_busn_res(pci_bus_s *b);
+	// pci_bus_s *pci_scan_root_bus(struct device *parent, int bus,
+	// 				  pci_ops_s *ops, void *sysdata,
 	// 				  struct list_head *resources);
 	// int pci_scan_root_bus_bridge(struct pci_host_bridge *bridge);
-	// struct pci_bus *pci_add_new_bus(struct pci_bus *parent, pci_dev_s *dev,
+	// pci_bus_s *pci_add_new_bus(pci_bus_s *parent, pci_dev_s *dev,
 	// 				int busnr);
-	// struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
+	// struct pci_slot *pci_create_slot(pci_bus_s *parent, int slot_nr,
 	// 				 const char *name,
 	// 				 struct hotplug_slot *hotplug);
 	// void pci_destroy_slot(struct pci_slot *slot);
@@ -1317,12 +1321,12 @@
 	// #else
 	// static inline void pci_dev_assign_slot(pci_dev_s *dev) { }
 	// #endif
-	// int pci_scan_slot(struct pci_bus *bus, int devfn);
-	// pci_dev_s *pci_scan_single_device(struct pci_bus *bus, int devfn);
-	// void pci_device_add(pci_dev_s *dev, struct pci_bus *bus);
-	// unsigned int pci_scan_child_bus(struct pci_bus *bus);
+	// int pci_scan_slot(pci_bus_s *bus, int devfn);
+	// pci_dev_s *pci_scan_single_device(pci_bus_s *bus, int devfn);
+	// void pci_device_add(pci_dev_s *dev, pci_bus_s *bus);
+	// unsigned int pci_scan_child_bus(pci_bus_s *bus);
 	// void pci_bus_add_device(pci_dev_s *dev);
-	// void pci_read_bridge_bases(struct pci_bus *child);
+	// void pci_read_bridge_bases(pci_bus_s *child);
 	// struct resource *pci_find_parent_resource(const pci_dev_s *dev,
 	// 					  struct resource *res);
 	// u8 pci_swizzle_interrupt_pin(const pci_dev_s *dev, u8 pin);
@@ -1330,27 +1334,27 @@
 	// u8 pci_common_swizzle(pci_dev_s *dev, u8 *pinp);
 	// pci_dev_s *pci_dev_get(pci_dev_s *dev);
 	// void pci_dev_put(pci_dev_s *dev);
-	// void pci_remove_bus(struct pci_bus *b);
+	// void pci_remove_bus(pci_bus_s *b);
 	// void pci_stop_and_remove_bus_device(pci_dev_s *dev);
 	// void pci_stop_and_remove_bus_device_locked(pci_dev_s *dev);
-	// void pci_stop_root_bus(struct pci_bus *bus);
-	// void pci_remove_root_bus(struct pci_bus *bus);
-	// void pci_setup_cardbus(struct pci_bus *bus);
-	// void pcibios_setup_bridge(struct pci_bus *bus, unsigned long type);
+	// void pci_stop_root_bus(pci_bus_s *bus);
+	// void pci_remove_root_bus(pci_bus_s *bus);
+	// void pci_setup_cardbus(pci_bus_s *bus);
+	// void pcibios_setup_bridge(pci_bus_s *bus, unsigned long type);
 	// void pci_sort_breadthfirst(void);
 	// #define dev_is_pci(d) ((d)->bus == &pci_bus_type)
 	// #define dev_is_pf(d) ((dev_is_pci(d) ? to_pci_dev(d)->is_physfn : false))
 
 	// /* Generic PCI functions exported to card drivers */
 
-	// u8 pci_bus_find_capability(struct pci_bus *bus, unsigned int devfn, int cap);
+	// u8 pci_bus_find_capability(pci_bus_s *bus, unsigned int devfn, int cap);
 	// u8 pci_find_capability(pci_dev_s *dev, int cap);
 	// u8 pci_find_next_capability(pci_dev_s *dev, u8 pos, int cap);
 	// u8 pci_find_ht_capability(pci_dev_s *dev, int ht_cap);
 	// u8 pci_find_next_ht_capability(pci_dev_s *dev, u8 pos, int ht_cap);
 	// u16 pci_find_ext_capability(pci_dev_s *dev, int cap);
 	// u16 pci_find_next_ext_capability(pci_dev_s *dev, u16 pos, int cap);
-	// struct pci_bus *pci_find_next_bus(const struct pci_bus *from);
+	// pci_bus_s *pci_find_next_bus(const pci_bus_s *from);
 	// u16 pci_find_vsec_capability(pci_dev_s *dev, u16 vendor, int cap);
 	// u16 pci_find_dvsec_capability(pci_dev_s *dev, u16 vendor, u16 dvsec);
 
@@ -1361,35 +1365,35 @@
 	// pci_dev_s *pci_get_subsys(unsigned int vendor, unsigned int device,
 	// 				   unsigned int ss_vendor, unsigned int ss_device,
 	// 				   pci_dev_s *from);
-	// pci_dev_s *pci_get_slot(struct pci_bus *bus, unsigned int devfn);
+	// pci_dev_s *pci_get_slot(pci_bus_s *bus, unsigned int devfn);
 	// pci_dev_s *pci_get_domain_bus_and_slot(int domain, unsigned int bus,
 	// 						unsigned int devfn);
 	// pci_dev_s *pci_get_class(unsigned int class, pci_dev_s *from);
 	// int pci_dev_present(const struct pci_device_id *ids);
 
-	// int pci_bus_read_config_byte(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_read_config_byte(pci_bus_s *bus, unsigned int devfn,
 	// 				 int where, u8 *val);
-	// int pci_bus_read_config_word(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_read_config_word(pci_bus_s *bus, unsigned int devfn,
 	// 				 int where, u16 *val);
-	// int pci_bus_read_config_dword(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_read_config_dword(pci_bus_s *bus, unsigned int devfn,
 	// 				  int where, u32 *val);
-	// int pci_bus_write_config_byte(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_write_config_byte(pci_bus_s *bus, unsigned int devfn,
 	// 				  int where, u8 val);
-	// int pci_bus_write_config_word(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_write_config_word(pci_bus_s *bus, unsigned int devfn,
 	// 				  int where, u16 val);
-	// int pci_bus_write_config_dword(struct pci_bus *bus, unsigned int devfn,
+	// int pci_bus_write_config_dword(pci_bus_s *bus, unsigned int devfn,
 	// 				   int where, u32 val);
 
-	// int pci_generic_config_read(struct pci_bus *bus, unsigned int devfn,
+	// int pci_generic_config_read(pci_bus_s *bus, unsigned int devfn,
 	// 				int where, int size, u32 *val);
-	// int pci_generic_config_write(struct pci_bus *bus, unsigned int devfn,
+	// int pci_generic_config_write(pci_bus_s *bus, unsigned int devfn,
 	// 				int where, int size, u32 val);
-	// int pci_generic_config_read32(struct pci_bus *bus, unsigned int devfn,
+	// int pci_generic_config_read32(pci_bus_s *bus, unsigned int devfn,
 	// 				  int where, int size, u32 *val);
-	// int pci_generic_config_write32(struct pci_bus *bus, unsigned int devfn,
+	// int pci_generic_config_write32(pci_bus_s *bus, unsigned int devfn,
 	// 				   int where, int size, u32 val);
 
-	// struct pci_ops *pci_bus_set_ops(struct pci_bus *bus, struct pci_ops *ops);
+	// pci_ops_s *pci_bus_set_ops(pci_bus_s *bus, pci_ops_s *ops);
 
 	int pci_read_config_byte(const pci_dev_s *dev, int where, u8 *val);
 	int pci_read_config_word(const pci_dev_s *dev, int where, u16 *val);
@@ -1501,7 +1505,7 @@
 	// int pci_reset_function_locked(pci_dev_s *dev);
 	// int pci_try_reset_function(pci_dev_s *dev);
 	// int pci_probe_reset_slot(struct pci_slot *slot);
-	// int pci_probe_reset_bus(struct pci_bus *bus);
+	// int pci_probe_reset_bus(pci_bus_s *bus);
 	// int pci_reset_bus(pci_dev_s *dev);
 	// void pci_reset_secondary_bus(pci_dev_s *dev);
 	// void pcibios_reset_secondary_bus(pci_dev_s *dev);
@@ -1557,8 +1561,8 @@
 	// void pci_d3cold_enable(pci_dev_s *dev);
 	// void pci_d3cold_disable(pci_dev_s *dev);
 	// bool pcie_relaxed_ordering_enabled(pci_dev_s *dev);
-	// void pci_resume_bus(struct pci_bus *bus);
-	// void pci_bus_set_current_state(struct pci_bus *bus, pci_power_t state);
+	// void pci_resume_bus(pci_bus_s *bus);
+	// void pci_bus_set_current_state(pci_bus_s *bus, pci_power_t state);
 
 	// /* For use by arch with custom probe code */
 	// void set_pcie_port_type(pci_dev_s *pdev);
@@ -1566,7 +1570,7 @@
 
 	// /* Functions for PCI Hotplug drivers to use */
 	// unsigned int pci_rescan_bus_bridge_resize(pci_dev_s *bridge);
-	// unsigned int pci_rescan_bus(struct pci_bus *bus);
+	// unsigned int pci_rescan_bus(pci_bus_s *bus);
 	// void pci_lock_rescan_remove(void);
 	// void pci_unlock_rescan_remove(void);
 
@@ -1578,15 +1582,15 @@
 
 	// /* Helper functions for low-level code (drivers/pci/setup-[bus,res].c) */
 	// resource_size_t pcibios_retrieve_fw_addr(pci_dev_s *dev, int idx);
-	// void pci_bus_assign_resources(const struct pci_bus *bus);
-	// void pci_bus_claim_resources(struct pci_bus *bus);
-	// void pci_bus_size_bridges(struct pci_bus *bus);
+	// void pci_bus_assign_resources(const pci_bus_s *bus);
+	// void pci_bus_claim_resources(pci_bus_s *bus);
+	// void pci_bus_size_bridges(pci_bus_s *bus);
 	// int pci_claim_resource(pci_dev_s *, int);
 	// int pci_claim_bridge_resource(pci_dev_s *bridge, int i);
 	// void pci_assign_unassigned_resources(void);
 	// void pci_assign_unassigned_bridge_resources(pci_dev_s *bridge);
-	// void pci_assign_unassigned_bus_resources(struct pci_bus *bus);
-	// void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus);
+	// void pci_assign_unassigned_bus_resources(pci_bus_s *bus);
+	// void pci_assign_unassigned_root_bus_resources(pci_bus_s *bus);
 	// int pci_reassign_bridge_resources(pci_dev_s *bridge, unsigned long type);
 	// void pdev_enable_device(pci_dev_s *);
 	// int pci_enable_resources(pci_dev_s *, int mask);
@@ -1622,11 +1626,11 @@
 	// void pci_add_resource_offset(struct list_head *resources, struct resource *res,
 	// 				 resource_size_t offset);
 	// void pci_free_resource_list(struct list_head *resources);
-	// void pci_bus_add_resource(struct pci_bus *bus, struct resource *res,
+	// void pci_bus_add_resource(pci_bus_s *bus, struct resource *res,
 	// 			  unsigned int flags);
-	// struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n);
-	// void pci_bus_remove_resources(struct pci_bus *bus);
-	// void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res);
+	// struct resource *pci_bus_resource_n(const pci_bus_s *bus, int n);
+	// void pci_bus_remove_resources(pci_bus_s *bus);
+	// void pci_bus_remove_resource(pci_bus_s *bus, struct resource *res);
 	// int devm_request_pci_bus_resources(struct device *dev,
 	// 				   struct list_head *resources);
 
@@ -1656,7 +1660,7 @@
 	//  *
 	//  * Possible usage:
 	//  *
-	//  *	struct pci_bus *bus = ...;
+	//  *	pci_bus_s *bus = ...;
 	//  *	struct resource *res;
 	//  *	unsigned int i;
 	//  *
@@ -1672,7 +1676,7 @@
 	// 	CONCATENATE(__pci_bus_for_each_res, COUNT_ARGS(__VA_ARGS__))	\
 	// 			(bus, res, __VA_ARGS__)
 
-	// int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+	// int __must_check pci_bus_alloc_resource(pci_bus_s *bus,
 	// 			struct resource *res, resource_size_t size,
 	// 			resource_size_t align, resource_size_t min,
 	// 			unsigned long type_mask,
@@ -1699,7 +1703,7 @@
 
 	// static inline pci_bus_addr_t pci_bus_address(pci_dev_s *pdev, int bar)
 	// {
-	// 	struct pci_bus_region region;
+	// 	pci_bus_s_region region;
 
 	// 	pcibios_resource_to_bus(pdev->bus, &region, &pdev->resource[bar]);
 	// 	return region.start;
@@ -1745,15 +1749,15 @@
 	// 		  unsigned long driver_data);
 	// const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
 	// 					 pci_dev_s *dev);
-	// int pci_scan_bridge(struct pci_bus *bus, pci_dev_s *dev, int max,
+	// int pci_scan_bridge(pci_bus_s *bus, pci_dev_s *dev, int max,
 	// 			int pass);
 
-	// void pci_walk_bus(struct pci_bus *top, int (*cb)(pci_dev_s *, void *),
+	// void pci_walk_bus(pci_bus_s *top, int (*cb)(pci_dev_s *, void *),
 	// 		  void *userdata);
 	// int pci_cfg_space_size(pci_dev_s *dev);
-	// unsigned char pci_bus_max_busnr(struct pci_bus *bus);
-	// void pci_setup_bridge(struct pci_bus *bus);
-	// resource_size_t pcibios_window_alignment(struct pci_bus *bus,
+	// unsigned char pci_bus_max_busnr(pci_bus_s *bus);
+	// void pci_setup_bridge(pci_bus_s *bus);
+	// resource_size_t pcibios_window_alignment(pci_bus_s *bus,
 	// 					 unsigned long type);
 
 	// #define PCI_VGA_STATE_CHANGE_BRIDGE (1 << 0)
@@ -1985,8 +1989,8 @@
 	// extern int pci_domains_supported;
 	// #else
 	// enum { pci_domains_supported = 0 };
-	// static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
-	// static inline int pci_proc_domain(struct pci_bus *bus) { return 0; }
+	static inline int pci_domain_nr(pci_bus_s *bus) { return 0; }
+	static inline int pci_proc_domain(pci_bus_s *bus) { return 0; }
 	// #endif /* CONFIG_PCI_DOMAINS */
 
 	// /*
@@ -1995,18 +1999,18 @@
 	//  * domains then this implementation will be used
 	//  */
 	// #ifdef CONFIG_PCI_DOMAINS_GENERIC
-	// static inline int pci_domain_nr(struct pci_bus *bus)
+	// static inline int pci_domain_nr(pci_bus_s *bus)
 	// {
 	// 	return bus->domain_nr;
 	// }
 	// #ifdef CONFIG_ACPI
-	// int acpi_pci_bus_find_domain_nr(struct pci_bus *bus);
+	// int acpi_pci_bus_find_domain_nr(pci_bus_s *bus);
 	// #else
-	// static inline int acpi_pci_bus_find_domain_nr(struct pci_bus *bus)
+	// static inline int acpi_pci_bus_find_domain_nr(pci_bus_s *bus)
 	// { return 0; }
 	// #endif
-	// int pci_bus_find_domain_nr(struct pci_bus *bus, struct device *parent);
-	// void pci_bus_release_domain_nr(struct pci_bus *bus, struct device *parent);
+	// int pci_bus_find_domain_nr(pci_bus_s *bus, struct device *parent);
+	// void pci_bus_release_domain_nr(pci_bus_s *bus, struct device *parent);
 	// #endif
 
 	// /* Some architectures require additional setup to direct VGA traffic */
@@ -2139,16 +2143,16 @@
 
 	// static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
 
-	// static inline struct pci_bus *pci_find_next_bus(const struct pci_bus *from)
+	// static inline pci_bus_s *pci_find_next_bus(const pci_bus_s *from)
 	// { return NULL; }
-	// static inline pci_dev_s *pci_get_slot(struct pci_bus *bus,
+	// static inline pci_dev_s *pci_get_slot(pci_bus_s *bus,
 	// 						unsigned int devfn)
 	// { return NULL; }
 	// static inline pci_dev_s *pci_get_domain_bus_and_slot(int domain,
 	// 					unsigned int bus, unsigned int devfn)
 	// { return NULL; }
 
-	// static inline int pci_domain_nr(struct pci_bus *bus) { return 0; }
+	// static inline int pci_domain_nr(pci_bus_s *bus) { return 0; }
 	// static inline pci_dev_s *pci_dev_get(pci_dev_s *dev) { return NULL; }
 
 	// #define dev_is_pci(d) (false)
@@ -2668,15 +2672,15 @@
 	// #ifdef CONFIG_OF
 	// struct device_node;
 	// struct irq_domain;
-	// struct irq_domain *pci_host_bridge_of_msi_domain(struct pci_bus *bus);
+	// struct irq_domain *pci_host_bridge_of_msi_domain(pci_bus_s *bus);
 	// bool pci_host_of_has_msi_map(struct device *dev);
 
 	// /* Arch may override this (weak) */
-	// struct device_node *pcibios_get_phb_of_node(struct pci_bus *bus);
+	// struct device_node *pcibios_get_phb_of_node(pci_bus_s *bus);
 
 	// #else	/* CONFIG_OF */
 	// static inline struct irq_domain *
-	// pci_host_bridge_of_msi_domain(struct pci_bus *bus) { return NULL; }
+	// pci_host_bridge_of_msi_domain(pci_bus_s *bus) { return NULL; }
 	// static inline bool pci_host_of_has_msi_map(struct device *dev) { return false; }
 	// #endif  /* CONFIG_OF */
 
@@ -2686,20 +2690,20 @@
 	// 	return pdev ? pdev->dev.of_node : NULL;
 	// }
 
-	// static inline struct device_node *pci_bus_to_OF_node(struct pci_bus *bus)
+	// static inline struct device_node *pci_bus_to_OF_node(pci_bus_s *bus)
 	// {
 	// 	return bus ? bus->dev.of_node : NULL;
 	// }
 
 	// #ifdef CONFIG_ACPI
-	// struct irq_domain *pci_host_bridge_acpi_msi_domain(struct pci_bus *bus);
+	// struct irq_domain *pci_host_bridge_acpi_msi_domain(pci_bus_s *bus);
 
 	// void
 	// pci_msi_register_fwnode_provider(struct fwnode_handle *(*fn)(struct device *));
 	// bool pci_pr3_present(pci_dev_s *pdev);
 	// #else
 	// static inline struct irq_domain *
-	// pci_host_bridge_acpi_msi_domain(struct pci_bus *bus) { return NULL; }
+	// pci_host_bridge_acpi_msi_domain(pci_bus_s *bus) { return NULL; }
 	// static inline bool pci_pr3_present(pci_dev_s *pdev) { return false; }
 	// #endif
 
@@ -2736,7 +2740,7 @@
 	//  *
 	//  * Returns true if ARI forwarding is enabled.
 	//  */
-	// static inline bool pci_ari_enabled(struct pci_bus *bus)
+	// static inline bool pci_ari_enabled(pci_bus_s *bus)
 	// {
 	// 	return bus->self && bus->self->ari_enabled;
 	// }
@@ -2804,4 +2808,18 @@
 	// 	WARN_ONCE(condition, "%s %s: " fmt, \
 	// 		  dev_driver_string(&(pdev)->dev), pci_name(pdev), ##arg)
 
+
+	#define pci_read_config_byte(dev, where, val)	\
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 1, val)
+	#define pci_read_config_word(dev, where, val)	\
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 2, val)
+	#define pci_read_config_dword(dev, where, val)	\
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 4, val)
+
+	#define pci_write_config_byte(dev, where, val)	\
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 1, val)
+	#define pci_write_config_word(dev, where, val)	\
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 2, val)
+	#define pci_write_config_dword(dev, where, val)	\
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 4, val)
 #endif /* LINUX_PCI_H */

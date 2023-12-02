@@ -57,20 +57,20 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
 	return -EINVAL;
 }
 
-// static int pci_read(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 *value)
-// {
-// 	return raw_pci_read(pci_domain_nr(bus), bus->number, devfn, where, size, value);
-// }
+static int pci_read(pci_bus_s *bus, unsigned int devfn, int where, int size, u32 *value)
+{
+	return raw_pci_read(pci_domain_nr(bus), bus->number, devfn, where, size, value);
+}
 
-// static int pci_write(struct pci_bus *bus, unsigned int devfn, int where, int size, u32 value)
-// {
-// 	return raw_pci_write(pci_domain_nr(bus), bus->number, devfn, where, size, value);
-// }
+static int pci_write(pci_bus_s *bus, unsigned int devfn, int where, int size, u32 value)
+{
+	return raw_pci_write(pci_domain_nr(bus), bus->number, devfn, where, size, value);
+}
 
-// struct pci_ops pci_root_ops = {
-// 	.read = pci_read,
-// 	.write = pci_write,
-// };
+pci_ops_s pci_root_ops = {
+	.read	= pci_read,
+	.write	= pci_write,
+};
 
 // /*
 //  * This interrupt-safe spinlock protects all accesses to PCI configuration
@@ -159,7 +159,7 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
 //  *  are examined.
 //  */
 
-// void pcibios_fixup_bus(struct pci_bus *b)
+// void pcibios_fixup_bus(pci_bus_s *b)
 // {
 // 	struct pci_dev *dev;
 
@@ -168,12 +168,12 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
 // 		pcibios_fixup_device_resources(dev);
 // }
 
-// void pcibios_add_bus(struct pci_bus *bus)
+// void pcibios_add_bus(pci_bus_s *bus)
 // {
 // 	acpi_pci_add_bus(bus);
 // }
 
-// void pcibios_remove_bus(struct pci_bus *bus)
+// void pcibios_remove_bus(pci_bus_s *bus)
 // {
 // 	acpi_pci_remove_bus(bus);
 // }
@@ -455,7 +455,7 @@ int raw_pci_write(unsigned int domain, unsigned int bus,
 
 // void pcibios_scan_root(int busnum)
 // {
-// 	struct pci_bus *bus;
+// 	pci_bus_s *bus;
 // 	struct pci_sysdata *sd;
 // 	LIST_HEAD(resources);
 

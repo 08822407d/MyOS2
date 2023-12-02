@@ -268,12 +268,17 @@ void idle(size_t cpu_idx)
 /*==============================================================================================*
  *										task2 -- init()											*
  *==============================================================================================*/
+void pci_arch_init(void);
+void myos_scan_pci_devices(void);
 void register_diskfs(void);
 int tty_class_init(void);
 int chr_dev_init(void);
 int init_elf_binfmt(void);
 static void do_initcalls(void)
 {
+	pci_arch_init();
+	myos_scan_pci_devices();
+
 	register_diskfs();
 
 	tty_class_init();

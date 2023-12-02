@@ -42,8 +42,8 @@ static int pci_cfg_space_size_ext(pci_dev_s *dev)
 	u32 status;
 	int pos = PCI_CFG_SPACE_SIZE;
 
-	// if (pci_read_config_dword(dev, pos, &status) != PCIBIOS_SUCCESSFUL)
-	// 	return PCI_CFG_SPACE_SIZE;
+	if (pci_read_config_dword(dev, pos, &status) != PCIBIOS_SUCCESSFUL)
+		return PCI_CFG_SPACE_SIZE;
 	// if (PCI_POSSIBLE_ERROR(status) || pci_ext_cfg_is_aliased(dev))
 	// 	return PCI_CFG_SPACE_SIZE;
 
@@ -79,22 +79,22 @@ int pci_cfg_space_size(pci_dev_s *dev)
 
 static u32 pci_class(pci_dev_s *dev)
 {
-	// u32 class;
-	// pci_read_config_dword(dev, PCI_CLASS_REVISION, &class);
-	// return class;
+	u32 class;
+	pci_read_config_dword(dev, PCI_CLASS_REVISION, &class);
+	return class;
 }
 
 static void pci_subsystem_ids(pci_dev_s *dev, u16 *vendor, u16 *device)
 {
-	// pci_read_config_word(dev, PCI_SUBSYSTEM_VENDOR_ID, vendor);
-	// pci_read_config_word(dev, PCI_SUBSYSTEM_ID, device);
+	pci_read_config_word(dev, PCI_SUBSYSTEM_VENDOR_ID, vendor);
+	pci_read_config_word(dev, PCI_SUBSYSTEM_ID, device);
 }
 
 static u8 pci_hdr_type(pci_dev_s *dev)
 {
-	// u8 hdr_type;
-	// pci_read_config_byte(dev, PCI_HEADER_TYPE, &hdr_type);
-	// return hdr_type;
+	u8 hdr_type;
+	pci_read_config_byte(dev, PCI_HEADER_TYPE, &hdr_type);
+	return hdr_type;
 }
 
 
@@ -114,10 +114,10 @@ int pci_setup_device(pci_dev_s *dev)
 	u16 cmd;
 	u8 hdr_type;
 	int err, pos = 0;
-	// struct pci_bus_region region;
+	// pci_bus_s_region region;
 	// struct resource *res;
 
-	// hdr_type = pci_hdr_type(dev);
+	hdr_type = pci_hdr_type(dev);
 
 	// dev->sysdata = dev->bus->sysdata;
 	// dev->dev.parent = dev->bus->bridge;
@@ -280,4 +280,21 @@ int pci_setup_device(pci_dev_s *dev)
 
 	/* We found a fine healthy device, go go go... */
 	return 0;
+}
+
+
+
+
+extern pci_ops_s pci_root_ops;
+void myos_scan_pci_devices()
+{
+	for (int bus = 0; bus < 256; bus++) {
+		for (int dev = 0; dev < 32; dev++) {
+			pci_dev_s pdev;
+			pdev.bus->number = bus;
+			pdev.devfn = dev;
+			pdev.bus->ops = &pci_root_ops;
+			pci_setup_device(&pdev);
+		}
+	}
 }
