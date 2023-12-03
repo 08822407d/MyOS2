@@ -555,29 +555,29 @@
 		// pci_power_t	current_state;	/* Current operating state. In ACPI,
 		// 							   this is D0-D3, D0 being fully
 		// 							   functional, and D3 being off. */
-		unsigned int	imm_ready:1;		/* Supports Immediate Readiness */
-		u8				pm_cap;				/* PM capability offset */
-		unsigned int	pme_support:5;		/* Bitmask of states from which PME#
+		unsigned int	imm_ready:1;			/* Supports Immediate Readiness */
+		u8				pm_cap;					/* PM capability offset */
+		unsigned int	pme_support:5;			/* Bitmask of states from which PME#
 											   can be generated */
-		unsigned int	pme_poll:1;			/* Poll device's PME status bit */
-		unsigned int	d1_support:1;		/* Low power state D1 is supported */
-		unsigned int	d2_support:1;		/* Low power state D2 is supported */
-		unsigned int	no_d1d2:1;			/* D1 and D2 are forbidden */
-		unsigned int	no_d3cold:1;		/* D3cold is forbidden */
-		unsigned int	bridge_d3:1;		/* Allow D3 for bridge */
-		unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
-		unsigned int	mmio_always_on:1;	/* Disallow turning off io/mem
+		unsigned int	pme_poll:1;				/* Poll device's PME status bit */
+		unsigned int	d1_support:1;			/* Low power state D1 is supported */
+		unsigned int	d2_support:1;			/* Low power state D2 is supported */
+		unsigned int	no_d1d2:1;				/* D1 and D2 are forbidden */
+		unsigned int	no_d3cold:1;			/* D3cold is forbidden */
+		unsigned int	bridge_d3:1;			/* Allow D3 for bridge */
+		unsigned int	d3cold_allowed:1;		/* D3cold is allowed by user */
+		unsigned int	mmio_always_on:1;		/* Disallow turning off io/mem
 											   decoding during BAR sizing */
 		unsigned int	wakeup_prepared:1;
-		unsigned int	skip_bus_pm:1;		/* Internal: Skip bus-level PM */
-		unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+		unsigned int	skip_bus_pm:1;			/* Internal: Skip bus-level PM */
+		unsigned int	ignore_hotplug:1;		/* Ignore hotplug events */
 		unsigned int	hotplug_user_indicators:1;	/* SlotCtl indicators
 													  controlled exclusively by
 													  user sysfs */
 		unsigned int	clear_retrain_link:1;	/* Need to clear Retrain Link
 												   bit manually */
-		unsigned int	d3hot_delay;		/* D3hot->D0 transition time in ms */
-		unsigned int	d3cold_delay;		/* D3cold->D0 transition time in ms */
+		unsigned int	d3hot_delay;			/* D3hot->D0 transition time in ms */
+		unsigned int	d3cold_delay;			/* D3cold->D0 transition time in ms */
 
 	// #ifdef CONFIG_PCIEASPM
 	// 	struct pcie_link_state	*link_state;	/* ASPM link state */
@@ -585,13 +585,13 @@
 	// 					   supported from root to here */
 	// 	u16		l1ss;		/* L1SS Capability pointer */
 	// #endif
-		unsigned int	pasid_no_tlp:1;		/* PASID works without TLP Prefix */
-		unsigned int	eetlp_prefix_path:1;/* End-to-End TLP Prefix */
+		unsigned int	pasid_no_tlp:1;			/* PASID works without TLP Prefix */
+		unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
 
-		// pci_channel_state_t error_state;	/* Current connectivity state */
-		device_s		dev;				/* Generic device interface */
+		// pci_channel_state_t error_state;		/* Current connectivity state */
+		device_s		dev;					/* Generic device interface */
 
-		int				cfg_size;			/* Size of config space */
+		int				cfg_size;				/* Size of config space */
 
 		/*
 		 * Instead of touching interrupt line and base address registers
@@ -601,35 +601,35 @@
 		// struct resource resource[DEVICE_COUNT_RESOURCE]; /* I/O and memory regions + expansion ROMs */
 		// struct resource driver_exclusive_resource;	 /* driver exclusive resource ranges */
 
-		bool			match_driver;		/* Skip attaching driver */
+		bool			match_driver;			/* Skip attaching driver */
 
-		unsigned int	transparent:1;		/* Subtractive decode bridge */
-		unsigned int	io_window:1;		/* Bridge has I/O window */
-		unsigned int	pref_window:1;		/* Bridge has pref mem window */
-		unsigned int	pref_64_window:1;	/* Pref mem window is 64-bit */
-		unsigned int	multifunction:1;	/* Multi-function device */
+		unsigned int	transparent:1;			/* Subtractive decode bridge */
+		unsigned int	io_window:1;			/* Bridge has I/O window */
+		unsigned int	pref_window:1;			/* Bridge has pref mem window */
+		unsigned int	pref_64_window:1;		/* Pref mem window is 64-bit */
+		unsigned int	multifunction:1;		/* Multi-function device */
 
-		unsigned int	is_busmaster:1;		/* Is busmaster */
-		unsigned int	no_msi:1;			/* May not use MSI */
-		unsigned int	no_64bit_msi:1;		/* May only use 32-bit MSIs */
-		unsigned int	block_cfg_access:1;	/* Config space access blocked */
+		unsigned int	is_busmaster:1;			/* Is busmaster */
+		unsigned int	no_msi:1;				/* May not use MSI */
+		unsigned int	no_64bit_msi:1;			/* May only use 32-bit MSIs */
+		unsigned int	block_cfg_access:1;		/* Config space access blocked */
 		unsigned int	broken_parity_status:1;	/* Generates false positive parity */
 		unsigned int	irq_reroute_variant:2;	/* Needs IRQ rerouting variant */
 		unsigned int	msi_enabled:1;
 		unsigned int	msix_enabled:1;
-		unsigned int	ari_enabled:1;		/* ARI forwarding */
-		unsigned int	ats_enabled:1;		/* Address Translation Svc */
-		unsigned int	pasid_enabled:1;	/* Process Address Space ID */
-		unsigned int	pri_enabled:1;		/* Page Request Interface */
-		unsigned int	is_managed:1;		/* Managed via devres */
-		unsigned int	is_msi_managed:1;	/* MSI release via devres installed */
-		unsigned int	needs_freset:1;		/* Requires fundamental reset */
+		unsigned int	ari_enabled:1;			/* ARI forwarding */
+		unsigned int	ats_enabled:1;			/* Address Translation Svc */
+		unsigned int	pasid_enabled:1;		/* Process Address Space ID */
+		unsigned int	pri_enabled:1;			/* Page Request Interface */
+		unsigned int	is_managed:1;			/* Managed via devres */
+		unsigned int	is_msi_managed:1;		/* MSI release via devres installed */
+		unsigned int	needs_freset:1;			/* Requires fundamental reset */
 		unsigned int	state_saved:1;
 		unsigned int	is_physfn:1;
 		unsigned int	is_virtfn:1;
 		unsigned int	is_hotplug_bridge:1;
-		unsigned int	shpc_managed:1;		/* SHPC owned by shpchp */
-		unsigned int	is_thunderbolt:1;	/* Thunderbolt controller */
+		unsigned int	shpc_managed:1;			/* SHPC owned by shpchp */
+		unsigned int	is_thunderbolt:1;		/* Thunderbolt controller */
 		/*
 		 * Devices marked being untrusted are the ones that can potentially
 		 * execute DMA attacks and similar. They are typically connected
@@ -653,7 +653,7 @@
 		unsigned int	no_vf_scan:1;			/* Don't scan for VFs after IOV enablement */
 		unsigned int	no_command_memory:1;	/* No PCI_COMMAND_MEMORY */
 		unsigned int	rom_bar_overlap:1;		/* ROM BAR disable broken */
-		// pci_dev_flags_t dev_flags;
+		pci_dev_flags_t dev_flags;
 		atomic_t		enable_cnt;				/* pci_enable_device has been called */
 
 		u32				saved_config_space[16]; /* Config space saved at suspend time */
@@ -2555,16 +2555,17 @@
 	// 	return dev->pcie_cap;
 	// }
 
-	// /**
-	//  * pci_is_pcie - check if the PCI device is PCI Express capable
-	//  * @dev: PCI device
-	//  *
-	//  * Returns: true if the PCI device is PCI Express capable, false otherwise.
-	//  */
-	// static inline bool pci_is_pcie(pci_dev_s *dev)
-	// {
-	// 	return pci_pcie_cap(dev);
-	// }
+	/**
+	 * pci_is_pcie - check if the PCI device is PCI Express capable
+	 * @dev: PCI device
+	 *
+	 * Returns: true if the PCI device is PCI Express capable, false otherwise.
+	 */
+	static inline bool pci_is_pcie(pci_dev_s *dev)
+	{
+		// return pci_pcie_cap(dev);
+		return dev->pcie_cap;
+	}
 
 	// /**
 	//  * pcie_caps_reg - get the PCIe Capabilities Register
@@ -2810,16 +2811,16 @@
 
 
 	#define pci_read_config_byte(dev, where, val)	\
-				dev->bus->ops->read(dev->bus, dev->devfn, where, 1, val)
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 1, (u32 *)val)
 	#define pci_read_config_word(dev, where, val)	\
-				dev->bus->ops->read(dev->bus, dev->devfn, where, 2, val)
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 2, (u32 *)val)
 	#define pci_read_config_dword(dev, where, val)	\
-				dev->bus->ops->read(dev->bus, dev->devfn, where, 4, val)
+				dev->bus->ops->read(dev->bus, dev->devfn, where, 4, (u32 *)val)
 
 	#define pci_write_config_byte(dev, where, val)	\
-				dev->bus->ops->write(dev->bus, dev->devfn, where, 1, val)
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 1, (u32 *)val)
 	#define pci_write_config_word(dev, where, val)	\
-				dev->bus->ops->write(dev->bus, dev->devfn, where, 2, val)
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 2, (u32 *)val)
 	#define pci_write_config_dword(dev, where, val)	\
-				dev->bus->ops->write(dev->bus, dev->devfn, where, 4, val)
+				dev->bus->ops->write(dev->bus, dev->devfn, where, 4, (u32 *)val)
 #endif /* LINUX_PCI_H */

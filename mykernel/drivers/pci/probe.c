@@ -144,7 +144,7 @@ int pci_setup_device(pci_dev_s *dev)
 	// 	     dev->bus->number, PCI_SLOT(dev->devfn),
 	// 	     PCI_FUNC(dev->devfn));
 
-	// class = pci_class(dev);
+	class = pci_class(dev);
 
 	dev->revision = class & 0xff;
 	dev->class = class >> 8;		    /* upper 3 bytes */
@@ -152,8 +152,8 @@ int pci_setup_device(pci_dev_s *dev)
 	// if (pci_early_dump)
 	// 	early_dump_pci_device(dev);
 
-	// /* Need to have dev->class ready */
-	// dev->cfg_size = pci_cfg_space_size(dev);
+	/* Need to have dev->class ready */
+	dev->cfg_size = pci_cfg_space_size(dev);
 
 	// /* Need to have dev->cfg_size ready */
 	// set_pcie_thunderbolt(dev);
@@ -193,7 +193,7 @@ int pci_setup_device(pci_dev_s *dev)
 	// 	pci_read_irq(dev);
 	// 	pci_read_bases(dev, 6, PCI_ROM_ADDRESS);
 
-	// 	pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
+		pci_subsystem_ids(dev, &dev->subsystem_vendor, &dev->subsystem_device);
 
 	// 	/*
 	// 	 * Do the ugly legacy mode stuff here rather than broken chip
@@ -291,6 +291,8 @@ void myos_scan_pci_devices()
 	for (int bus = 0; bus < 256; bus++) {
 		for (int dev = 0; dev < 32; dev++) {
 			pci_dev_s pdev;
+			pci_bus_s pbus;
+			pdev.bus = &pbus;
 			pdev.bus->number = bus;
 			pdev.devfn = dev;
 			pdev.bus->ops = &pci_root_ops;

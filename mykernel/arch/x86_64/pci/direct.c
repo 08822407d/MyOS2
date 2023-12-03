@@ -35,13 +35,16 @@ pci_conf1_read(unsigned int seg, unsigned int bus,
 
 	switch (len) {
 	case 1:
-		*value = inb(0xCFC + (reg & 3));
+		u8 *tmp8 = (u8 *)value;
+		*tmp8 = inb(0xCFC + (reg & 3));
 		break;
 	case 2:
-		*value = inw(0xCFC + (reg & 2));
+		u16 *tmp16 = (u16 *)value;
+		*tmp16 = inw(0xCFC + (reg & 2));
 		break;
 	case 4:
-		*value = inl(0xCFC);
+		u32 *tmp32 = value;
+		*tmp32 = inl(0xCFC);
 		break;
 	}
 

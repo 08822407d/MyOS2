@@ -25,6 +25,12 @@
         "pci.h": "c",
         "device.h": "c",
         "stdio.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "tty.h": "c",
+        "string.h": "c",
+        "processor.h": "c",
+        "io.h": "c",
+        "pci_regs.h": "c",
+        "pci_ids.h": "c"
     }
 }

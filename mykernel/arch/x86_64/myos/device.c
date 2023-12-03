@@ -15,6 +15,7 @@ void init_cdev_intr(void);
 void init_bdev_intr(void);
 
 extern void detect_PCIe_devs();
+extern void scan_PCI_devices(void);
 
 void myos_devices_init()
 {
@@ -23,7 +24,7 @@ void myos_devices_init()
 	init_cdev_intr();
 	init_bdev_intr();
 
-	// detect_PCIe_devs();
+	scan_PCI_devices();
 }
 
 void init_intr()

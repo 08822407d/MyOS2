@@ -276,8 +276,8 @@ int chr_dev_init(void);
 int init_elf_binfmt(void);
 static void do_initcalls(void)
 {
-	pci_arch_init();
-	myos_scan_pci_devices();
+	// pci_arch_init();
+	// myos_scan_pci_devices();
 
 	register_diskfs();
 
