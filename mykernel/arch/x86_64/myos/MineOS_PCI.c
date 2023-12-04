@@ -10,6 +10,7 @@
 #include <linux/device/pci_ids.h>
 #include <linux/kernel/slab.h>
 #include <asm/io.h>
+#include <asm/bitops.h>
 #include <uapi/asm-generic/pci_regs.h>
 
 #include <obsolete/printk.h>
@@ -35,9 +36,9 @@ void Write_PCI_Config(unsigned int bus,unsigned int device,unsigned int function
 
 int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned int device,unsigned int function)
 {
-	unsigned int value = 0;
-	unsigned int index = 0;
-	unsigned int tmp = 0;
+	u32 value = 0;
+	u32 index = 0;
+	u32 tmp = 0;
 
 	memset(PCI_HDR,0,sizeof(struct PCI_Header_00));
 	PCI_HDR->BDF = ((bus & 0xff) << 16) | ((device & 0x1f) << 11) | ((function & 0x7) << 8); 
@@ -65,6 +66,55 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 	PCI_HDR->HeaderType = (value >> 16) & 0xff;
 	PCI_HDR->BIST = (value >> 24) & 0xff;
 	// color_printk(RED,BLACK,"BIST:%#04x,Header Type:%#04x,Latency Timer:%#04x,Cache LineSize:%#04x\n",PCI_HDR->BIST,PCI_HDR->HeaderType,PCI_HDR->LatencyTimer,PCI_HDR->CacheLineSize);
+
+	for (int i = 0; i < 6; i++)
+	{
+		u32 offset = 0x10 + i * 4;
+		value = Read_PCI_Config(bus, device, function, offset);
+		PCI_HDR->BARs_raw[i] = value;
+		Write_PCI_Config(bus, device, function, offset, 0xffffffff);
+		u32 limit = Read_PCI_Config(bus, device, function, offset) & 0xfffffff0;
+		PCI_HDR->BARs_limit_max[i] = ~limit + 1;
+		u32 lowest_bit = ffs(PCI_HDR->BARs_limit_max[i]);
+		PCI_HDR->BARs_limit_min[i] = 1ULL << (lowest_bit - 1);
+
+
+		// 64-bit MainMem space address
+		if (value & 4)
+		{
+			PCI_HDR->BARs_raw[i] = 0;
+			PCI_HDR->BARs_limit_max[i] = 0;
+
+			u32 offset1 = offset + 4;
+			u64 value1 = ((u64)Read_PCI_Config(bus, device, function, offset1) << 32) | value;
+			PCI_HDR->BARs_raw[i] = value1;
+			PCI_HDR->BARs_addr[i] = value1 & (u64)0xfffffffffffffff0;
+
+			Write_PCI_Config(bus, device, function, offset1, 0xffffffff);
+			u64 limit1 = ((u64)Read_PCI_Config(bus, device, function, offset1) << 32) | limit;
+			PCI_HDR->BARs_limit_max[i] = ~limit1 + 1;
+			if (lowest_bit == 0)
+			{
+				lowest_bit = ffs((u32)(PCI_HDR->BARs_limit_max[i] >> 32));
+				PCI_HDR->BARs_limit_min[i] = 1ULL << (lowest_bit + 32 - 1);
+			}
+
+			Write_PCI_Config(bus, device, function, offset1, value1);
+			i++;
+		}
+		// 32-bit MainMem space address
+		else if (!(value & 1))
+		{
+			PCI_HDR->BARs_addr[i] = PCI_HDR->BARs_raw[i] & (u32)0xfffffff0;
+		}
+		// I/O space address
+		else
+		{
+			PCI_HDR->BARs_addr[i] = PCI_HDR->BARs_raw[i] & (u16)0xfffffffc;
+		}
+
+		Write_PCI_Config(bus, device, function, offset, value);
+	}
 
 	PCI_HDR->Base32RAWData0 = Read_PCI_Config(bus,device,function,0x10);	//////BAR0
 	if(PCI_HDR->Base32RAWData0 & 1)
@@ -99,28 +149,6 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 		Write_PCI_Config(bus,device,function,0x14,PCI_HDR->Base32RAWData1);
 	}
 	// color_printk(RED,BLACK,"Base Address #1:%#010x,Base Limit #1:%#010x\n",PCI_HDR->Base32Address1,PCI_HDR->Base32Limit1);
-
-/*
-	if(PCI_HDR->Base32RAWData0 & 0x4)	//base address register for 64bit memory
-	{
-		PCI_HDR->Base64RAWData0 = ((unsigned long)PCI_HDR->Base32RAWData1 << 32) | PCI_HDR->Base32RAWData0;
-		PCI_HDR->Base64Address0 = PCI_HDR->Base64RAWData0 & (unsigned long)0xfffffffffffffff0;
-
-		//////BAR0
-		Write_PCI_Config(bus,device,function,0x10,0xffffffff);
-		PCI_HDR->Base32Limit0 = Read_PCI_Config(bus,device,function,0x10);
-		Write_PCI_Config(bus,device,function,0x10,PCI_HDR->Base32RAWData0);
-
-		//////BAR1
-		Write_PCI_Config(bus,device,function,0x14,0xffffffff);
-		PCI_HDR->Base32Limit1 = Read_PCI_Config(bus,device,function,0x14);
-		Write_PCI_Config(bus,device,function,0x14,PCI_HDR->Base32RAWData1);
-
-		PCI_HDR->Base64Limit0 = ((unsigned long)PCI_HDR->Base32Limit1 << 32) | PCI_HDR->Base32Limit0;
-		PCI_HDR->Base64Limit0 = PCI_HDR->Base64Limit0 & (unsigned long)0xfffffffffffffff0;
-		PCI_HDR->Base64Limit0 = ~PCI_HDR->Base64Limit0 + 1;
-	}
-*/
 
 	PCI_HDR->Base32RAWData2 = Read_PCI_Config(bus,device,function,0x18);	//////BAR2
 	if(PCI_HDR->Base32RAWData2 & 1)
@@ -190,6 +218,26 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 	}
 	// color_printk(RED,BLACK,"Base Address #5:%#010x,Base Limit #5:%#010x\n",PCI_HDR->Base32Address5,PCI_HDR->Base32Limit5);
 
+	// if(PCI_HDR->Base32RAWData0 & 0x4)	//base address register for 64bit memory
+	// {
+	// 	PCI_HDR->Base64RAWData0 = ((unsigned long)PCI_HDR->Base32RAWData1 << 32) | PCI_HDR->Base32RAWData0;
+	// 	PCI_HDR->Base64Address0 = PCI_HDR->Base64RAWData0 & (unsigned long)0xfffffffffffffff0;
+
+	// 	//////BAR0
+	// 	Write_PCI_Config(bus,device,function,0x10,0xffffffff);
+	// 	PCI_HDR->Base32Limit0 = Read_PCI_Config(bus,device,function,0x10);
+	// 	Write_PCI_Config(bus,device,function,0x10,PCI_HDR->Base32RAWData0);
+
+	// 	//////BAR1
+	// 	Write_PCI_Config(bus,device,function,0x14,0xffffffff);
+	// 	PCI_HDR->Base32Limit1 = Read_PCI_Config(bus,device,function,0x14);
+	// 	Write_PCI_Config(bus,device,function,0x14,PCI_HDR->Base32RAWData1);
+
+	// 	PCI_HDR->Base64Limit0 = ((unsigned long)PCI_HDR->Base32Limit1 << 32) | PCI_HDR->Base32Limit0;
+	// 	PCI_HDR->Base64Limit0 = PCI_HDR->Base64Limit0 & (unsigned long)0xfffffffffffffff0;
+	// 	PCI_HDR->Base64Limit0 = ~PCI_HDR->Base64Limit0 + 1;
+	// }
+
 	value = Read_PCI_Config(bus,device,function,0x28);
 	PCI_HDR->CardBusCISPointer = value;
 	// color_printk(RED,BLACK,"CardBus CIS Pointer:%#010x,",PCI_HDR->CardBusCISPointer);
@@ -239,6 +287,7 @@ void scan_PCI_devices(void)
 	int bus,device,function;
 	unsigned int index = 0;
 	unsigned int value = 0;
+	char *DevType_name;
 
 	for(bus = 0;bus <= 255;bus++)
 		for(device = 0;device <= 31;device++)
@@ -255,9 +304,31 @@ void scan_PCI_devices(void)
 				u16 CCSC = (PCI_HDR->ClassCode << 8) | PCI_HDR->SubClass;
 				switch (CCSC)
 				{
-				case PCI_CLASS_STORAGE_EXPRESS:
+				case PCI_CLASS_STORAGE_NVM:
 					if (PCI_HDR->ProgIF == 2)
+					{
+						DevType_name = "NVMe";
 						NVMe_init(PCI_HDR);
+					}
+					break;
+				
+				case PCI_CLASS_SERIAL_USB:
+					if (PCI_HDR->ProgIF == 0x00)
+					{
+						DevType_name = "USB_uHCI";
+					}
+					else if (PCI_HDR->ProgIF == 0x10)
+					{
+						DevType_name = "USB_oHCI";
+					}
+					else if (PCI_HDR->ProgIF == 0x20)
+					{
+						DevType_name = "USB_eHCI";
+					}
+					else if (PCI_HDR->ProgIF == 0x30)
+					{
+						DevType_name = "USB_xHCI";
+					}
 					break;
 				
 				default:

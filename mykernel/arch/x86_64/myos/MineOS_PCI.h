@@ -11,6 +11,8 @@
 
 #define __PCI_H__
 
+#include <linux/kernel/types.h>
+
 struct PCI_Header_00
 {
 	unsigned int	BDF;
@@ -30,6 +32,11 @@ struct PCI_Header_00
 	unsigned char	LatencyTimer;
 	unsigned char	HeaderType;
 	unsigned char	BIST;
+
+	u64				BARs_addr[6];
+	u64				BARs_limit_max[6];
+	u64				BARs_limit_min[6];
+	u64				BARs_raw[6];
 /////////////////32-bit BAR * 6
 	unsigned int	Base32Address0;
 	unsigned int	Base32Limit0;
