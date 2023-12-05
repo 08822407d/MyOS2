@@ -7,6 +7,7 @@
 *
 ***************************************************/
 #include <linux/kernel/stddef.h>
+#include <linux/mm/mm.h>
 
 #include "MineOS_NVMe.h"
 // #include "block.h"
@@ -16,6 +17,7 @@
 #include "MineOS_PCI.h"
 #include <asm/io.h>
 #include <asm/apic.h>
+#include <asm/tlbflush.h>
 // #include "memory.h"
 
 // struct request_queue NVMe_request;
@@ -296,58 +298,11 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	// NVMe_request.block_request_count = 0;
 
 	///get NVMe Controller register
-	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_PCI_HBA->Base32Address0);
-
-	// ///Initialization Admin Submission Queue Base Address in MMU
-	// tmp = Phy_To_Virt(Get_gdt() + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ASQ) >> PAGE_GDT_SHIFT) & 0x1ff));
-	// if (*tmp == 0)
-	// {
-	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-	// 	memset(virtual,0,PAGE_4K_SIZE);
-	// 	set_mpl4t(tmp,mk_mpl4t(Virt_To_Phy(virtual),PAGE_KERNEL_GDT));
-	// }
-
-	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ASQ) >> PAGE_1G_SHIFT) & 0x1ff));
-	// if(*tmp == 0)
-	// {
-	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-	// 	memset(virtual,0,PAGE_4K_SIZE);
-	// 	set_pdpt(tmp,mk_pdpt(Virt_To_Phy(virtual),PAGE_KERNEL_Dir));
-	// }
-
-	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ASQ) >> PAGE_2M_SHIFT) & 0x1ff));
-
-	// if(*tmp == 0)
-	// {
-	// 	set_pdt(tmp,mk_pdt(NVMe_CTRL_REG->ASQ & PAGE_2M_MASK,PAGE_KERNEL_Page | PAGE_PWT | PAGE_PCD));
-	// }
-
-	// flush_tlb();
-
-	// ///Initialization Admin Completion Queue Base Address in MMU
-	// tmp = Phy_To_Virt(Get_gdt() + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ACQ) >> PAGE_GDT_SHIFT) & 0x1ff));
-	// if (*tmp == 0)
-	// {
-	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-	// 	memset(virtual,0,PAGE_4K_SIZE);
-	// 	set_mpl4t(tmp,mk_mpl4t(Virt_To_Phy(virtual),PAGE_KERNEL_GDT));
-	// }
-
-	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ACQ) >> PAGE_1G_SHIFT) & 0x1ff));
-	// if(*tmp == 0)
-	// {
-	// 	unsigned long * virtual = kmalloc(PAGE_4K_SIZE,0);
-	// 	memset(virtual,0,PAGE_4K_SIZE);
-	// 	set_pdpt(tmp,mk_pdpt(Virt_To_Phy(virtual),PAGE_KERNEL_Dir));
-	// }
-
-	// tmp = Phy_To_Virt((unsigned long *)(*tmp & (~ 0xfffUL)) + (((unsigned long)Phy_To_Virt(NVMe_CTRL_REG->ACQ) >> PAGE_2M_SHIFT) & 0x1ff));
-	// if(*tmp == 0)
-	// {
-	// 	set_pdt(tmp,mk_pdt(NVMe_CTRL_REG->ACQ & PAGE_2M_MASK,PAGE_KERNEL_Page | PAGE_PWT | PAGE_PCD));
-	// }
-
-	// flush_tlb();
+	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_PCI_HBA->BAR_base_addr[0]);
+	u64 map_start = NVMe_PCI_HBA->BAR_base_addr[0];
+	u64 map_end = map_start + NVMe_PCI_HBA->BAR_space_limit[0];
+	myos_kernel_mapping_mmio(map_start, map_end);
+	flush_tlb_local();
 
 	///	set NVMe Controller register
 	NVMe_CTRL_REG->CC = 0;

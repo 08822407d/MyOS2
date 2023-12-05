@@ -50,6 +50,7 @@
 
 // #include <linux/uaccess.h>
 #include <asm/sections.h>
+#include <asm/tlbflush.h>
 
 // #include <trace/events/initcall.h>
 // #define CREATE_TRACE_POINTS
@@ -135,5 +136,6 @@ void myos_init_VBE_mapping()
 	u64 start, end;
 	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
 	end = start + PFN_PHYS(PFN_UP(framebuffer.FB_size));
-	myos_kernel_physical_mapping_init(start, end);
+	myos_kernel_mapping_mmio(start, end);
+	flush_tlb_local();
 }

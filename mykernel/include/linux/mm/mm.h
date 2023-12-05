@@ -3454,9 +3454,11 @@
 		}
 	}
 
-	extern unsigned long
-	myos_kernel_physical_mapping_init(
-			unsigned long paddr_start, unsigned long paddr_end);
+
+	extern unsigned long __meminit
+	myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end);
+	extern unsigned long __meminit
+	myos_kernel_mapping_mmio(size_t paddr_start, size_t paddr_end);
 	extern int
 	myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
 

@@ -43,7 +43,7 @@ void HPET_init()
 	unsigned int x;
 	unsigned int *p = (unsigned int *)0xfed00000;
 	unsigned char *HPET_addr = (unsigned char *)phys_to_virt((phys_addr_t)p);
-	myos_kernel_physical_mapping_init((unsigned long)p, (unsigned long)p + PAGE_SIZE);
+	myos_kernel_mapping_mmio((unsigned long)p, (unsigned long)p + PAGE_SIZE);
 	ioapic_retentry_T entry;
 	
 	//get RCBA address

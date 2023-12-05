@@ -133,16 +133,33 @@
 	 * right now and likely would break too much if changed.
 	 */
 	#ifndef __ASSEMBLY__
-		enum page_cache_mode {
-			_PAGE_CACHE_MODE_WB			= 0,
-			_PAGE_CACHE_MODE_WC			= 1,
-			_PAGE_CACHE_MODE_UC_MINUS	= 2,
-			_PAGE_CACHE_MODE_UC			= 3,
-			_PAGE_CACHE_MODE_WT			= 4,
-			_PAGE_CACHE_MODE_WP			= 5,
+		// enum page_cache_mode {
+		// 	_PAGE_CACHE_MODE_WB			= 0,
+		// 	_PAGE_CACHE_MODE_WC			= 1,
+		// 	_PAGE_CACHE_MODE_UC_MINUS	= 2,
+		// 	_PAGE_CACHE_MODE_UC			= 3,
+		// 	_PAGE_CACHE_MODE_WT			= 4,
+		// 	_PAGE_CACHE_MODE_WP			= 5,
 
-			_PAGE_CACHE_MODE_NUM		= 8
-		};
+		// 	_PAGE_CACHE_MODE_NUM		= 8
+		// };
+
+		// 取值对照表, 源码的取值过于罗嗦就直接拉过来对照着改值
+		// static uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
+		// 	[_PAGE_CACHE_MODE_WB      ]	= 0         | 0        ,
+		// 	[_PAGE_CACHE_MODE_WC      ]	= 0         | _PAGE_PCD,
+		// 	[_PAGE_CACHE_MODE_UC_MINUS]	= 0         | _PAGE_PCD,
+		// 	[_PAGE_CACHE_MODE_UC      ]	= _PAGE_PWT | _PAGE_PCD,
+		// 	[_PAGE_CACHE_MODE_WT      ]	= 0         | _PAGE_PCD,
+		// 	[_PAGE_CACHE_MODE_WP      ]	= 0         | _PAGE_PCD,
+		// };
+
+		// unsigned long cachemode2protval(enum page_cache_mode pcm)
+		// {
+		// 	if (likely(pcm == 0))
+		// 		return 0;
+		// 	return __cachemode2pte_tbl[pcm];
+		// }
 	#endif
 
 	// #define _PAGE_ENC					(_AT(pteval_t, sme_me_mask))
@@ -152,8 +169,8 @@
 	#define _PAGE_CACHE_MASK			(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT)
 	#define _PAGE_LARGE_CACHE_MASK		(_PAGE_PWT | _PAGE_PCD | _PAGE_PAT_LARGE)
 
-	#define _PAGE_NOCACHE				(cachemode2protval(_PAGE_CACHE_MODE_UC))
-	#define _PAGE_CACHE_WP				(cachemode2protval(_PAGE_CACHE_MODE_WP))
+	#define _PAGE_NOCACHE				(_PAGE_PWT | _PAGE_PCD)
+	#define _PAGE_CACHE_WP				(_PAGE_PCD)
 
 	#define __PP	_PAGE_PRESENT
 	#define __RW	_PAGE_RW
@@ -190,7 +207,8 @@
 	#define _PAGE_TABLE					(__PP|__RW|_USR|___A|   0|___D|   0|   0| _ENC)
 	#define __PAGE_KERNEL_RO			(__PP|   0|   0|___A|__NX|___D|   0|___G)
 	#define __PAGE_KERNEL_ROX			(__PP|   0|   0|___A|   0|___D|   0|___G)
-	#define __PAGE_KERNEL_NOCACHE		(__PP|__RW|   0|___A|__NX|___D|   0|___G| __NC)
+	// #define __PAGE_KERNEL_NOCACHE		(__PP|__RW|   0|___A|__NX|___D|   0|___G| __NC)
+	#define __PAGE_KERNEL_NOCACHE		(__PP|__RW|   0|___A|	0|___D|   0|___G| __NC)
 	#define __PAGE_KERNEL_VVAR			(__PP|   0|_USR|___A|__NX|___D|   0|___G)
 	#define __PAGE_KERNEL_LARGE			(__PP|__RW|   0|___A|__NX|___D|_PSE|___G)
 	#define __PAGE_KERNEL_LARGE_EXEC	(__PP|__RW|   0|___A|   0|___D|_PSE|___G)

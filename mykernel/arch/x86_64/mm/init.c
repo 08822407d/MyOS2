@@ -101,7 +101,7 @@ static void __init myos_memory_map()
 		if (start >= end)
 			continue;
 
-		myos_kernel_physical_mapping_init(start, end);
+		myos_kernel_mapping_normal(start, end);
 		mapped_ram_size += end - start;
 	}
 
@@ -167,9 +167,9 @@ pteval_t __default_kernel_pte_mask __read_mostly = ~0;
 // kernel_physical_mapping_init(unsigned long paddr_start,
 // 			     unsigned long paddr_end,
 // 			     unsigned long page_size_mask, pgprot_t prot)
-unsigned long __meminit
-myos_kernel_physical_mapping_init(
-		unsigned long paddr_start, unsigned long paddr_end)
+static unsigned long __meminit
+__myos_kernel_physical_mapping_init(
+	size_t paddr_start, size_t paddr_end, unsigned long prot)
 {
 	unsigned long pg_addr = PFN_ALIGN(paddr_start);
 	do
@@ -187,11 +187,24 @@ myos_kernel_physical_mapping_init(
 		pmd_t *pmdp = pmd_ent_offset(pudp, kv_addr);
 		while (pmdp == 0);
 		pte_t *ptep = pte_ent_offset(pmdp, kv_addr);
-		*ptep = arch_make_pte(__PAGE_KERNEL_EXEC | _PAGE_PAT | pg_addr);
+		*ptep = arch_make_pte(prot | _PAGE_PAT | pg_addr);
 
 		pg_addr += PAGE_SIZE;
 	} while (pg_addr < paddr_end);
 }
+unsigned long __meminit
+myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end)
+{
+	return __myos_kernel_physical_mapping_init(
+				paddr_start, paddr_end, __PAGE_KERNEL_EXEC);
+}
+unsigned long __meminit
+myos_kernel_mapping_mmio(size_t paddr_start, size_t paddr_end)
+{
+	return __myos_kernel_physical_mapping_init(
+				paddr_start, paddr_end, __PAGE_KERNEL_NOCACHE);
+}
+
 
 void __init zone_sizes_init(void)
 {

@@ -54,7 +54,7 @@ unsigned long IOAPIC_install(unsigned long irq_nr, void * arg)
 
 void IOAPIC_uninstall(unsigned long irq_nr)
 {
-	ioapic_rte_write(irq_nr * 2 + 0x10,0x10000UL);
+	ioapic_rte_write(irq_nr * 2 + 0x10, 0x10000UL);
 }
 
 void IOAPIC_level_ack(unsigned long irq_nr)
