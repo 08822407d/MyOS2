@@ -39,6 +39,7 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 	u32 value = 0;
 	u32 index = 0;
 	u32 tmp = 0;
+	u32 cmdstatus_bak = 0;
 
 	memset(PCI_HDR,0,sizeof(struct PCI_Header_00));
 	PCI_HDR->BDF = ((bus & 0xff) << 16) | ((device & 0x1f) << 11) | ((function & 0x7) << 8); 
@@ -48,7 +49,7 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 	PCI_HDR->DeviceID = (value >> 16) & 0xffff;
 	// color_printk(RED,BLACK,"PCI Bus:%#04x,Dev:%#04x,Func:%#03x,DID:%#06x,VID:%#06x\n",bus,device,function,PCI_HDR->DeviceID,PCI_HDR->VendorID);
 
-	value = Read_PCI_Config(bus,device,function,0x04);
+	cmdstatus_bak = value = Read_PCI_Config(bus,device,function,0x04);
 	PCI_HDR->Command = value & 0xffff;
 	PCI_HDR->Status = (value >> 16) & 0xffff;
 	// color_printk(RED,BLACK,"Status:%#06x,Commond:%#06x,",PCI_HDR->Status,PCI_HDR->Command);
@@ -67,6 +68,7 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 	PCI_HDR->BIST = (value >> 24) & 0xff;
 	// color_printk(RED,BLACK,"BIST:%#04x,Header Type:%#04x,Latency Timer:%#04x,Cache LineSize:%#04x\n",PCI_HDR->BIST,PCI_HDR->HeaderType,PCI_HDR->LatencyTimer,PCI_HDR->CacheLineSize);
 
+	Write_PCI_Config(bus, device, function, PCI_COMMAND, cmdstatus_bak & 0xfffc);
 	int BAR_count = 6;
 	if (PCI_HDR->HeaderType == 1)
 		BAR_count = 2;
@@ -80,6 +82,7 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 		// Assert BAR value not changed
 		while (PCI_HDR->BAR_base_raw[i] != Read_PCI_Config(bus, device, function, offset));
 	}
+	Write_PCI_Config(bus, device, function, PCI_COMMAND, cmdstatus_bak);
 
 	for (int i = 0; i < BAR_count; i++)
 	{
@@ -106,6 +109,109 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned
 			PCI_HDR->BAR_space_limit[i] = 0;
 		}
 	}
+
+	// PCI_HDR->Base32RAWData0 = Read_PCI_Config(bus,device,function,0x10);	//////BAR0
+	// if(PCI_HDR->Base32RAWData0 & 1)
+	// 	PCI_HDR->Base32Address0 = PCI_HDR->Base32RAWData0 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address0 = PCI_HDR->Base32RAWData0 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address0)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x10,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x10);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit0 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData0 & 1)
+	// 		PCI_HDR->Base32Limit0 = PCI_HDR->Base32Limit0 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x10,PCI_HDR->Base32RAWData0);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #0:%#010x,Base Limit #0:%#010x\n",PCI_HDR->Base32Address0,PCI_HDR->Base32Limit0);
+
+	// PCI_HDR->Base32RAWData1 = Read_PCI_Config(bus,device,function,0x14);	//////BAR1
+	// if(PCI_HDR->Base32RAWData1 & 1)
+	// 	PCI_HDR->Base32Address1 = PCI_HDR->Base32RAWData1 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address1 = PCI_HDR->Base32RAWData1 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address1)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x14,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x14);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit1 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData1 & 1)
+	// 		PCI_HDR->Base32Limit1 = PCI_HDR->Base32Limit1 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x14,PCI_HDR->Base32RAWData1);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #1:%#010x,Base Limit #1:%#010x\n",PCI_HDR->Base32Address1,PCI_HDR->Base32Limit1);
+
+	// PCI_HDR->Base32RAWData2 = Read_PCI_Config(bus,device,function,0x18);	//////BAR2
+	// if(PCI_HDR->Base32RAWData2 & 1)
+	// 	PCI_HDR->Base32Address2 = PCI_HDR->Base32RAWData2 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address2 = PCI_HDR->Base32RAWData2 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address2)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x18,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x18);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit2 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData2 & 1)
+	// 		PCI_HDR->Base32Limit2 = PCI_HDR->Base32Limit2 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x18,PCI_HDR->Base32RAWData2);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #2:%#010x,Base Limit #2:%#010x\n",PCI_HDR->Base32Address2,PCI_HDR->Base32Limit2);
+
+	// PCI_HDR->Base32RAWData3 = Read_PCI_Config(bus,device,function,0x1c);	//////BAR3
+	// if(PCI_HDR->Base32RAWData3 & 1)
+	// 	PCI_HDR->Base32Address3 = PCI_HDR->Base32RAWData3 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address3 = PCI_HDR->Base32RAWData3 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address3)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x1c,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x1c);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit3 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData3 & 1)
+	// 		PCI_HDR->Base32Limit3 = PCI_HDR->Base32Limit3 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x1c,PCI_HDR->Base32RAWData3);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #3:%#010x,Base Limit #3:%#010x\n",PCI_HDR->Base32Address3,PCI_HDR->Base32Limit3);
+
+	// PCI_HDR->Base32RAWData4 = Read_PCI_Config(bus,device,function,0x20);	//////BAR4
+	// if(PCI_HDR->Base32RAWData4 & 1)
+	// 	PCI_HDR->Base32Address4 = PCI_HDR->Base32RAWData4 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address4 = PCI_HDR->Base32RAWData4 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address4)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x20,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x20);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit4 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData4 & 1)
+	// 		PCI_HDR->Base32Limit4 = PCI_HDR->Base32Limit4 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x20,PCI_HDR->Base32RAWData4);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #4:%#010x,Base Limit #4:%#010x\n",PCI_HDR->Base32Address4,PCI_HDR->Base32Limit4);
+
+	// PCI_HDR->Base32RAWData5 = Read_PCI_Config(bus,device,function,0x24);	//////BAR5
+	// if(PCI_HDR->Base32RAWData5 & 1)
+	// 	PCI_HDR->Base32Address5 = PCI_HDR->Base32RAWData5 & 0xfffffffc;
+	// else
+	// 	PCI_HDR->Base32Address5 = PCI_HDR->Base32RAWData5 & 0xfffffff0;
+	// if(PCI_HDR->Base32Address5)
+	// {
+	// 	Write_PCI_Config(bus,device,function,0x24,0xffffffff);
+	// 	tmp = Read_PCI_Config(bus,device,function,0x24);
+	// 	tmp = tmp & 0xfffffff0;
+	// 	PCI_HDR->Base32Limit5 = ~tmp + 1;
+	// 	if(PCI_HDR->Base32RAWData5 & 1)
+	// 		PCI_HDR->Base32Limit5 = PCI_HDR->Base32Limit5 & 0x0000ffff;
+	// 	Write_PCI_Config(bus,device,function,0x24,PCI_HDR->Base32RAWData5);
+	// }
+	// // color_printk(RED,BLACK,"Base Address #5:%#010x,Base Limit #5:%#010x\n",PCI_HDR->Base32Address5,PCI_HDR->Base32Limit5);
+
 
 	value = Read_PCI_Config(bus,device,function,0x28);
 	PCI_HDR->CardBusCISPointer = value;
@@ -167,7 +273,7 @@ void scan_PCI_devices(void)
 					continue;
 
 				struct PCI_Header_00 *PCI_HDR = kzalloc(sizeof(struct PCI_Header_00), GFP_KERNEL);
-				analysis_PCI_Config(PCI_HDR,bus,device,function);
+				analysis_PCI_Config(PCI_HDR, bus, device, function);
 
 				u32 CCSCPIF = Read_PCI_Config(bus, device, function, PCI_CLASS_REVISION) >> 8;
 				u16 CCSC = (PCI_HDR->ClassCode << 8) | PCI_HDR->SubClass;
@@ -176,6 +282,8 @@ void scan_PCI_devices(void)
 				case PCI_CLASS_STORAGE_NVM:
 					if (PCI_HDR->ProgIF == 2)
 					{
+						// u32 value0 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_0);
+						// u32 value1 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_1);
 						DevType_name = "NVMe";
 						NVMe_init(PCI_HDR);
 					}
