@@ -20,6 +20,8 @@
 #include <asm/tlbflush.h>
 // #include "memory.h"
 
+#include <obsolete/printk.h>
+
 // struct request_queue NVMe_request;
 
 struct Submission_Queue_Entry * ADMIN_Submission_Queue = NULL;
@@ -303,6 +305,11 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	u64 map_end = map_start + NVMe_PCI_HBA->BAR_space_limit[0];
 	myos_kernel_mapping_mmio(map_start, map_end);
 	flush_tlb_local();
+	//
+	// color_printk(BLUE, BLACK, "DEBUG - NVMe Controller registers\n");
+	// color_printk(BLUE, BLACK, "%#018lx %#018lx %#018lx %#018lx \n\n", *((u64 *)NVMe_CTRL_REG + 0), *((u64 *)NVMe_CTRL_REG + 1), *((u64 *)NVMe_CTRL_REG + 2), *((u64 *)NVMe_CTRL_REG + 3));
+	// u64 cap = NVMe_CTRL_REG->CAP;
+
 
 	///	set NVMe Controller register
 	NVMe_CTRL_REG->CC = 0;

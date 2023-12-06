@@ -15,6 +15,12 @@
 
 struct PCI_Header_00
 {
+	u32				bus;
+	u32				device;
+	u32				function;
+	char			*devtype_name;
+
+
 	unsigned int	BDF;
 
 	unsigned short	VendorID;

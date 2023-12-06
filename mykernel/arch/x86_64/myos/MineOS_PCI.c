@@ -16,6 +16,14 @@
 #include <obsolete/printk.h>
 #include "MineOS_PCI.h"
 
+void Print_PCIHDR(struct PCI_Header_00 * PCI_HDR)
+{
+	color_printk(WHITE, BLACK, "PCI : %#04d:%#02d:%#02d - %s\n", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function, PCI_HDR->devtype_name);
+	color_printk(WHITE, BLACK, "----------------------------------------------\n");
+	color_printk(WHITE, BLACK, "\tBAR0 base : %#018lx , BAR0 limit : %#010x\n", PCI_HDR->BAR_base_addr[0], PCI_HDR->BAR_space_limit[0]);
+	color_printk(WHITE, BLACK, "----------------------------------------------\n\n");
+}
+
 unsigned int Read_PCI_Config(unsigned int bus,unsigned int device,unsigned int function,unsigned int offset)
 {
 	unsigned int address = 0x80000000 | ((bus & 0xff) << 16) | ((device & 0x1f) << 11) | ((function & 0x7) << 8) | (offset & 0xfc);
@@ -34,14 +42,17 @@ void Write_PCI_Config(unsigned int bus,unsigned int device,unsigned int function
 	outl(value, 0xcfc);
 }
 
-int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR,unsigned int bus,unsigned int device,unsigned int function)
+int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR, unsigned int bus, unsigned int device, unsigned int function)
 {
 	u32 value = 0;
 	u32 index = 0;
 	u32 tmp = 0;
 	u32 cmdstatus_bak = 0;
 
-	memset(PCI_HDR,0,sizeof(struct PCI_Header_00));
+	PCI_HDR->bus = bus;
+	PCI_HDR->device = device;
+	PCI_HDR->function = function;
+
 	PCI_HDR->BDF = ((bus & 0xff) << 16) | ((device & 0x1f) << 11) | ((function & 0x7) << 8); 
 
 	value = Read_PCI_Config(bus,device,function,0x00);
@@ -284,7 +295,8 @@ void scan_PCI_devices(void)
 					{
 						// u32 value0 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_0);
 						// u32 value1 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_1);
-						DevType_name = "NVMe";
+						PCI_HDR->devtype_name = "NVMe storage";
+						Print_PCIHDR(PCI_HDR);
 						NVMe_init(PCI_HDR);
 					}
 					break;

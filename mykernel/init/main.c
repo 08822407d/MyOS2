@@ -227,13 +227,12 @@ extern void myos_init_smp(size_t lcpu_nr);
 	// post init
 	myos_softirq_init();
 	myos_timer_init();
-	myos_devices_init();
 
 	// myos_startup_smp();
 
-
 	console_init();
 
+	myos_devices_init();
 
 	vfs_caches_init();
 
