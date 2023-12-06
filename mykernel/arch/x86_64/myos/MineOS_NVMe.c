@@ -284,9 +284,10 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	unsigned long * tmp = NULL;
 	unsigned int * ptr = NULL;
 
-	unsigned int TBIR = 0;
+	int BIR_idx;
+	u64 TBIR = 0;
 	unsigned int * TADDR = NULL;
-	unsigned int PBIR = 0;
+	u64 PBIR = 0;
 	unsigned int * PADDR = NULL;
 
 	int i;
@@ -310,8 +311,13 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	// color_printk(BLUE, BLACK, "%#018lx %#018lx %#018lx %#018lx \n\n", *((u64 *)NVMe_CTRL_REG + 0), *((u64 *)NVMe_CTRL_REG + 1), *((u64 *)NVMe_CTRL_REG + 2), *((u64 *)NVMe_CTRL_REG + 3));
 	// u64 cap = NVMe_CTRL_REG->CAP;
 
-	void *ASQ = (void *)phys_to_virt(NVMe_CTRL_REG->ASQ);
-	void *ACQ = (void *)phys_to_virt(NVMe_CTRL_REG->ACQ);
+	void *ASQ = (void *)NVMe_CTRL_REG->ASQ;
+	void *ACQ = (void *)NVMe_CTRL_REG->ACQ;
+	u64 QSZ = abs(ACQ - ASQ);
+	myos_ioremap((phys_addr_t)ASQ, QSZ);
+	myos_ioremap((phys_addr_t)ACQ, QSZ);
+	flush_tlb_local();
+
 	// set NVMe Controller register
 	NVMe_CTRL_REG->CC = 0;
 	__mb();
@@ -319,8 +325,8 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	while(NVMe_CTRL_REG->CSTS & 1)
 		barrier();
 
-	NVMe_CTRL_REG->AQA = 0x30003;	////ACQS=3,ASQS=3
-	NVMe_CTRL_REG->CC = 0x460001;	////IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
+	NVMe_CTRL_REG->AQA = 0x00030003;	//ACQS=3,ASQS=3
+	NVMe_CTRL_REG->CC = 0x00460001;		//IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
 	__mb();
 
 	while(!(NVMe_CTRL_REG->CSTS & 1))
@@ -351,65 +357,43 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 	value = Read_PCI_Config(bus, device, function, index + 4);
 	// color_printk(INDIGO,BLACK,"MTAB:%#010x(TO:%#010x,TBIR:%#04x),",value,value & (~0x7),value & 0x7);
-	// switch(value & 0x7)
-	// {
-	// 	case 0:
-	// 		TBIR = NVMe_PCI_HBA->Base32Address0;
-	// 		break;
-	// 	case 4:
-	// 		TBIR = NVMe_PCI_HBA->Base32Address4;
-	// 		break;
-	// 	case 5:
-	// 		TBIR = NVMe_PCI_HBA.->Base32Address5;
-	// 		break;
-	// 	default:
-	// 		color_printk(RED,BLACK,"ERROR:TBIR:%#04x\n",value & 0x7);
-	// }
-	// TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
+	BIR_idx = value & 0x7;
+	while (BIR_idx > 5);
+	TBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+	TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
 	// color_printk(INDIGO,BLACK,"TADDR:%#018lx\n",TADDR);
 
-	// value = Read_PCI_Config(bus,device,function,index + 8);
+	value = Read_PCI_Config(bus, device, function, index + 8);
 	// color_printk(INDIGO,BLACK,"MPAB:%#010x(PBAO:%#010x,PBIR:%#04x),",value,value & (~0x7),value & 0x7);
-	// switch(value & 0x7)
-	// {
-	// 	case 0:
-	// 		PBIR = NVMe_PCI_HBA.Base32Address0;
-	// 		break;
-	// 	case 4:
-	// 		PBIR = NVMe_PCI_HBA.Base32Address4;
-	// 		break;
-	// 	case 5:
-	// 		PBIR = NVMe_PCI_HBA.Base32Address5;
-	// 		break;
-	// 	default:
-	// 		color_printk(RED,BLACK,"ERROR:PBIR:%#04x\n",value & 0x7);
-	// }
-	// PADDR = (unsigned int *)Phy_To_Virt(PBIR + (value & (~0x7)));
+	BIR_idx = value & 0x7;
+	while (BIR_idx > 5);
+	PBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
 	// color_printk(INDIGO,BLACK,"PADDR:%#018lx\n",PADDR);
 
-// ////Configuration MSI-X
-// /*	////MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
-// 	*TADDR = 0xfee00000;
-// 	*(TADDR + 1) = 0;
-// 	*(TADDR + 2) = 0x2d;
-// 	*(TADDR + 3) = 0;
-// */
-// 	////MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
-// 	*(TADDR + 4) = 0xfee00000;
-// 	*(TADDR + 5) = 0;
-// 	*(TADDR + 6) = 0x2e;
-// 	*(TADDR + 7) = 0;
+	//Configuration MSI-X
+	// //MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
+	// *TADDR = 0xfee00000;
+	// *(TADDR + 1) = 0;
+	// *(TADDR + 2) = 0x2d;
+	// *(TADDR + 3) = 0;
 
-// 	////MSI-X Pending Table Entry 0~127
-// 	*PADDR = 1;
-// 	*(PADDR + 1) = 0;
-// 	*(PADDR + 2) = 0;
-// 	*(PADDR + 3) = 0;
+	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
+	*(TADDR + 4) = 0xfee00000;
+	*(TADDR + 5) = 0;
+	*(TADDR + 6) = 0x2e;
+	*(TADDR + 7) = 0;
 
-// 	////MSI-X MXC.MXE=1,MXC.FM=0
-// 	value = Read_PCI_Config(bus,device,function,index) & 0xbfffffff;
-// 	value = value | 0x80000000;
-// 	Write_PCI_Config(bus,device,function,index,value);
+	//MSI-X Pending Table Entry 0~127
+	*PADDR = 1;
+	*(PADDR + 1) = 0;
+	*(PADDR + 2) = 0;
+	*(PADDR + 3) = 0;
+
+	// enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
+	value = Read_PCI_Config(bus, device, function, index) & 0xbfffffff;
+	value = value | 0x80000000;
+	Write_PCI_Config(bus, device, function, index, value);
 
 // ////	register interrupt
 // //	register_irq(0x2d, NULL , &NVMe_ADMIN_handler, (unsigned long)&NVMe_request, &NVMe_int_controller, "NVMe_ADMIN");	////Admin Completion_Queue_Entry Interrupt Handler
