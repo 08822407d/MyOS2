@@ -46,43 +46,6 @@ struct PCI_Header_00
 	u64				BAR_base_addr[6];
 	u64				BAR_space_limit[6];
 
-/////////////////32-bit BAR * 6
-	unsigned int	Base32Address0;
-	unsigned int	Base32Limit0;
-	unsigned int	Base32RAWData0;
-
-	unsigned int	Base32Address1;
-	unsigned int	Base32Limit1;
-	unsigned int	Base32RAWData1;
-
-	unsigned int	Base32Address2;
-	unsigned int	Base32Limit2;
-	unsigned int	Base32RAWData2;
-
-	unsigned int	Base32Address3;
-	unsigned int	Base32Limit3;
-	unsigned int	Base32RAWData3;
-
-	unsigned int	Base32Address4;
-	unsigned int	Base32Limit4;
-	unsigned int	Base32RAWData4;
-
-	unsigned int	Base32Address5;
-	unsigned int	Base32Limit5;
-	unsigned int	Base32RAWData5;
-// /////////////////64-bit BAR * 3
-// 	unsigned int	Base64Address0;
-// 	unsigned int	Base64Limit0;
-// 	unsigned int	Base64RAWData0;
-
-// 	unsigned int	Base64Address1;
-// 	unsigned int	Base64Limit1;
-// 	unsigned int	Base64RAWData1;
-
-// 	unsigned int	Base64Address2;
-// 	unsigned int	Base64Limit2;
-// 	unsigned int	Base64RAWData2;
-
 	unsigned int	CardBusCISPointer;
 
 	unsigned short	SubSystemVendorID;

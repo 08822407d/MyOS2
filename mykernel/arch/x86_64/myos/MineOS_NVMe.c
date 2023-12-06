@@ -294,97 +294,98 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	struct NVMe_Controller_Registers * NVMe_CTRL_REG= NULL;
 	struct NVMe_Identify_Controller_Data_Structure * NVMeID = NULL;
 
-	///init wait queue
+	//// init wait queue
 	// wait_queue_init(&NVMe_request.wait_queue_list,NULL);
 	// NVMe_request.in_using = NULL;
 	// NVMe_request.block_request_count = 0;
 
-	///get NVMe Controller register
+	// get NVMe Controller register
 	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_PCI_HBA->BAR_base_addr[0]);
 	u64 map_start = NVMe_PCI_HBA->BAR_base_addr[0];
-	u64 map_end = map_start + NVMe_PCI_HBA->BAR_space_limit[0];
-	myos_kernel_mapping_mmio(map_start, map_end);
+	u64 map_size = NVMe_PCI_HBA->BAR_space_limit[0];
+	myos_ioremap(map_start, map_size);
 	flush_tlb_local();
 	//
 	// color_printk(BLUE, BLACK, "DEBUG - NVMe Controller registers\n");
 	// color_printk(BLUE, BLACK, "%#018lx %#018lx %#018lx %#018lx \n\n", *((u64 *)NVMe_CTRL_REG + 0), *((u64 *)NVMe_CTRL_REG + 1), *((u64 *)NVMe_CTRL_REG + 2), *((u64 *)NVMe_CTRL_REG + 3));
 	// u64 cap = NVMe_CTRL_REG->CAP;
 
-
-	///	set NVMe Controller register
+	void *ASQ = (void *)phys_to_virt(NVMe_CTRL_REG->ASQ);
+	void *ACQ = (void *)phys_to_virt(NVMe_CTRL_REG->ACQ);
+	// set NVMe Controller register
 	NVMe_CTRL_REG->CC = 0;
 	__mb();
 
-// 	while(NVMe_CTRL_REG->CSTS & 1)
-// 		barrier();
+	while(NVMe_CTRL_REG->CSTS & 1)
+		barrier();
 
-// 	NVMe_CTRL_REG->AQA = 0x30003;	////ACQS=3,ASQS=3
-// 	NVMe_CTRL_REG->CC = 0x460001;	////IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
-// 	io_mfence();
+	NVMe_CTRL_REG->AQA = 0x30003;	////ACQS=3,ASQS=3
+	NVMe_CTRL_REG->CC = 0x460001;	////IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
+	__mb();
 
-// 	while(!(NVMe_CTRL_REG->CSTS & 1))
-// 		barrier();
+	while(!(NVMe_CTRL_REG->CSTS & 1))
+		barrier();
 
-// ////	get NVMe Controller register
-// 	color_printk(BLUE,BLACK,"NVMe Controller register(00h ~ 4fh)\n");
-// 	color_printk(BLUE,BLACK,"%#018lx(CAP),%#010x(VS),%#010x(INTMS),%#010x(INTMC)\n",NVMe_CTRL_REG->CAP,NVMe_CTRL_REG->VS,NVMe_CTRL_REG->INTMS,NVMe_CTRL_REG->INTMC);
-// 	color_printk(BLUE,BLACK,"%#010x(CC),%#010x(CSTS),%#010x(NSSR),%#010x(AQA)\n",NVMe_CTRL_REG->CC,NVMe_CTRL_REG->CSTS,NVMe_CTRL_REG->NSSR,NVMe_CTRL_REG->AQA);
-// 	color_printk(BLUE,BLACK,"%#018lx(ASQ),%#018lx(ACQ),%#010x(CMBLOC),%#010x(CMBSZ)\n",NVMe_CTRL_REG->ASQ,NVMe_CTRL_REG->ACQ,NVMe_CTRL_REG->CMBLOC,NVMe_CTRL_REG->CMBSZ);
-// 	color_printk(BLUE,BLACK,"%#010x(BPINFO),%#010x(BPRSEL),%#018lx(BPMBL)\n",NVMe_CTRL_REG->BPINFO,NVMe_CTRL_REG->BPRSEL,NVMe_CTRL_REG->BPMBL);
+	// // get NVMe Controller register
+	// color_printk(BLUE,BLACK,"NVMe Controller register(00h ~ 4fh)\n");
+	// color_printk(BLUE,BLACK,"%#018lx(CAP),%#010x(VS),%#010x(INTMS),%#010x(INTMC)\n",NVMe_CTRL_REG->CAP,NVMe_CTRL_REG->VS,NVMe_CTRL_REG->INTMS,NVMe_CTRL_REG->INTMC);
+	// color_printk(BLUE,BLACK,"%#010x(CC),%#010x(CSTS),%#010x(NSSR),%#010x(AQA)\n",NVMe_CTRL_REG->CC,NVMe_CTRL_REG->CSTS,NVMe_CTRL_REG->NSSR,NVMe_CTRL_REG->AQA);
+	// color_printk(BLUE,BLACK,"%#018lx(ASQ),%#018lx(ACQ),%#010x(CMBLOC),%#010x(CMBSZ)\n",NVMe_CTRL_REG->ASQ,NVMe_CTRL_REG->ACQ,NVMe_CTRL_REG->CMBLOC,NVMe_CTRL_REG->CMBSZ);
+	// color_printk(BLUE,BLACK,"%#010x(BPINFO),%#010x(BPRSEL),%#018lx(BPMBL)\n",NVMe_CTRL_REG->BPINFO,NVMe_CTRL_REG->BPRSEL,NVMe_CTRL_REG->BPMBL);
 
-// ////	detect MSI-X capability
-// 	bus = (NVMe_PCI_HBA.BDF >> 16) & 0xff;
-// 	device = (NVMe_PCI_HBA.BDF >> 11) & 0x1f;
-// 	function = (NVMe_PCI_HBA.BDF >> 8) & 0x7;
-// 	index = NVMe_PCI_HBA.CapabilitiesPointer;
+	// detect MSI-X capability
+	bus = (NVMe_PCI_HBA->BDF >> 16) & 0xff;
+	device = (NVMe_PCI_HBA->BDF >> 11) & 0x1f;
+	function = (NVMe_PCI_HBA->BDF >> 8) & 0x7;
+	index = NVMe_PCI_HBA->CapabilitiesPointer;
 
-// 	while(index != 0)
-// 	{
-// 		value = Read_PCI_Config(bus,device,function,index);
-// 		if((value & 0xff) == 0x11)
-// 			break;
+	while(index != 0)
+	{
+		value = Read_PCI_Config(bus, device, function, index);
+		if((value & 0xff) == 0x11)
+			break;
 
-// 		index = (value >> 8) & 0xff;
-// 	}
-// 	color_printk(GREEN,BLACK,"Capability ID:%#04x,Pointer:%#04x,%#06x\n",value & 0xff,((value >> 8) & 0xff),(value >> 16) & 0xffff);
+		index = (value >> 8) & 0xff;
+	}
+	// color_printk(GREEN,BLACK,"Capability ID:%#04x,Pointer:%#04x,%#06x\n",value & 0xff,((value >> 8) & 0xff),(value >> 16) & 0xffff);
 
-// 	value = Read_PCI_Config(bus,device,function,index + 4);
-// 	color_printk(INDIGO,BLACK,"MTAB:%#010x(TO:%#010x,TBIR:%#04x),",value,value & (~0x7),value & 0x7);
-// 	switch(value & 0x7)
-// 	{
-// 		case 0:
-// 			TBIR = NVMe_PCI_HBA.Base32Address0;
-// 			break;
-// 		case 4:
-// 			TBIR = NVMe_PCI_HBA.Base32Address4;
-// 			break;
-// 		case 5:
-// 			TBIR = NVMe_PCI_HBA.Base32Address5;
-// 			break;
-// 		default:
-// 			color_printk(RED,BLACK,"ERROR:TBIR:%#04x\n",value & 0x7);
-// 	}
-// 	TADDR = (unsigned int *)Phy_To_Virt(TBIR + (value & (~0x7)));
-// 	color_printk(INDIGO,BLACK,"TADDR:%#018lx\n",TADDR);
+	value = Read_PCI_Config(bus, device, function, index + 4);
+	// color_printk(INDIGO,BLACK,"MTAB:%#010x(TO:%#010x,TBIR:%#04x),",value,value & (~0x7),value & 0x7);
+	// switch(value & 0x7)
+	// {
+	// 	case 0:
+	// 		TBIR = NVMe_PCI_HBA->Base32Address0;
+	// 		break;
+	// 	case 4:
+	// 		TBIR = NVMe_PCI_HBA->Base32Address4;
+	// 		break;
+	// 	case 5:
+	// 		TBIR = NVMe_PCI_HBA.->Base32Address5;
+	// 		break;
+	// 	default:
+	// 		color_printk(RED,BLACK,"ERROR:TBIR:%#04x\n",value & 0x7);
+	// }
+	// TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
+	// color_printk(INDIGO,BLACK,"TADDR:%#018lx\n",TADDR);
 
-// 	value = Read_PCI_Config(bus,device,function,index + 8);
-// 	color_printk(INDIGO,BLACK,"MPAB:%#010x(PBAO:%#010x,PBIR:%#04x),",value,value & (~0x7),value & 0x7);
-// 	switch(value & 0x7)
-// 	{
-// 		case 0:
-// 			PBIR = NVMe_PCI_HBA.Base32Address0;
-// 			break;
-// 		case 4:
-// 			PBIR = NVMe_PCI_HBA.Base32Address4;
-// 			break;
-// 		case 5:
-// 			PBIR = NVMe_PCI_HBA.Base32Address5;
-// 			break;
-// 		default:
-// 			color_printk(RED,BLACK,"ERROR:PBIR:%#04x\n",value & 0x7);
-// 	}
-// 	PADDR = (unsigned int *)Phy_To_Virt(PBIR + (value & (~0x7)));
-// 	color_printk(INDIGO,BLACK,"PADDR:%#018lx\n",PADDR);
+	// value = Read_PCI_Config(bus,device,function,index + 8);
+	// color_printk(INDIGO,BLACK,"MPAB:%#010x(PBAO:%#010x,PBIR:%#04x),",value,value & (~0x7),value & 0x7);
+	// switch(value & 0x7)
+	// {
+	// 	case 0:
+	// 		PBIR = NVMe_PCI_HBA.Base32Address0;
+	// 		break;
+	// 	case 4:
+	// 		PBIR = NVMe_PCI_HBA.Base32Address4;
+	// 		break;
+	// 	case 5:
+	// 		PBIR = NVMe_PCI_HBA.Base32Address5;
+	// 		break;
+	// 	default:
+	// 		color_printk(RED,BLACK,"ERROR:PBIR:%#04x\n",value & 0x7);
+	// }
+	// PADDR = (unsigned int *)Phy_To_Virt(PBIR + (value & (~0x7)));
+	// color_printk(INDIGO,BLACK,"PADDR:%#018lx\n",PADDR);
 
 // ////Configuration MSI-X
 // /*	////MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler

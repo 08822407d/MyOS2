@@ -135,7 +135,6 @@ void myos_init_VBE_mapping()
 {
 	u64 start, end;
 	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
-	end = start + PFN_PHYS(PFN_UP(framebuffer.FB_size));
-	myos_kernel_mapping_mmio(start, end);
+	myos_ioremap(start, PFN_PHYS(PFN_UP(framebuffer.FB_size)));
 	flush_tlb_local();
 }

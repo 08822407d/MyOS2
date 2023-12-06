@@ -198,11 +198,11 @@ myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end)
 	return __myos_kernel_physical_mapping_init(
 				paddr_start, paddr_end, __PAGE_KERNEL_EXEC);
 }
-unsigned long __meminit
-myos_kernel_mapping_mmio(size_t paddr_start, size_t paddr_end)
+void __iomem
+*myos_ioremap(size_t paddr_start, unsigned long size)
 {
-	return __myos_kernel_physical_mapping_init(
-				paddr_start, paddr_end, __PAGE_KERNEL_NOCACHE);
+	return (void *)__myos_kernel_physical_mapping_init(paddr_start,
+				PFN_PHYS(PFN_UP(paddr_start + size)), __PAGE_KERNEL_NOCACHE);
 }
 
 
