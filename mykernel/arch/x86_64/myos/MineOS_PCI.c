@@ -18,10 +18,8 @@
 
 void Print_PCIHDR(struct PCI_Header_00 * PCI_HDR)
 {
-	color_printk(WHITE, BLACK, "PCI : %#04d:%#02d:%#02d - %s\n", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function, PCI_HDR->devtype_name);
-	color_printk(WHITE, BLACK, "----------------------------------------------\n");
+	color_printk(WHITE, BLACK, "PCI : %#04d:%#02d:%#02d - %-32s", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function, PCI_HDR->devtype_name);
 	color_printk(WHITE, BLACK, "\tBAR0 base : %#018lx , BAR0 limit : %#010x\n", PCI_HDR->BAR_base_addr[0], PCI_HDR->BAR_space_limit[0]);
-	color_printk(WHITE, BLACK, "----------------------------------------------\n\n");
 }
 
 unsigned int Read_PCI_Config(unsigned int bus,unsigned int device,unsigned int function,unsigned int offset)
@@ -170,7 +168,6 @@ void scan_PCI_devices(void)
 	int bus,device,function;
 	unsigned int index = 0;
 	unsigned int value = 0;
-	char *DevType_name;
 
 	for(bus = 0;bus <= 255;bus++)
 		for(device = 0;device <= 31;device++)
@@ -184,41 +181,78 @@ void scan_PCI_devices(void)
 				analysis_PCI_Config(PCI_HDR, bus, device, function);
 
 				u32 CCSCPIF = Read_PCI_Config(bus, device, function, PCI_CLASS_REVISION) >> 8;
-				u16 CCSC = (PCI_HDR->ClassCode << 8) | PCI_HDR->SubClass;
-				switch (CCSC)
+
+				pci_ids_s *idname;
+				int idname_idx = 0;
+				while ((idname = &pci_idnames[idname_idx])->class != 0xFFFFFF)
 				{
-				case PCI_CLASS_STORAGE_NVM:
-					if (PCI_HDR->ProgIF == 2)
+					if (CCSCPIF == idname->class)
 					{
-						// u32 value0 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_0);
-						// u32 value1 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_1);
-						PCI_HDR->devtype_name = "NVMe storage";
-						// Print_PCIHDR(PCI_HDR);
-						NVMe_init(PCI_HDR);
+						PCI_HDR->devtype_name = idname->name;
 					}
-					break;
-				
-				case PCI_CLASS_SERIAL_USB:
-					if (PCI_HDR->ProgIF == 0x00)
-					{
-						DevType_name = "USB_uHCI";
-					}
-					else if (PCI_HDR->ProgIF == 0x10)
-					{
-						DevType_name = "USB_oHCI";
-					}
-					else if (PCI_HDR->ProgIF == 0x20)
-					{
-						DevType_name = "USB_eHCI";
-					}
-					else if (PCI_HDR->ProgIF == 0x30)
-					{
-						DevType_name = "USB_xHCI";
-					}
-					break;
-				
-				default:
-					break;
+					idname_idx++;
 				}
+				
+				// switch (CCSC)
+				// {
+				// case PCI_CLASS_STORAGE_IDE:
+				// 	PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_IDE";
+				// 	break;
+
+				// case PCI_BASE_CLASS_DISPLAY:
+				// 	if (PCI_HDR->ProgIF == 1)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_VGA";
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 2)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_XGA";
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 3)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_3D";
+				// 	}
+				// 	break;
+
+				// case PCI_CLASS_STORAGE_NVM:
+				// 	if (PCI_HDR->ProgIF == 2)
+				// 	{
+				// 		// u32 value0 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_0);
+				// 		// u32 value1 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_1);
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_NVM_IO";
+				// 		// NVMe_init(PCI_HDR);
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 3)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_NVM_ADMIN";
+				// 	}
+				// 	break;
+				
+				// case PCI_CLASS_SERIAL_USB:
+				// 	if (PCI_HDR->ProgIF == 0x00)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_UHCI";
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 0x10)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_OHCI";
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 0x20)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_EHCI";
+				// 	}
+				// 	else if (PCI_HDR->ProgIF == 0x30)
+				// 	{
+				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_XHCI";
+				// 	}
+				// 	break;
+				
+				// default:
+				// 	break;
+				// }
+				if (PCI_HDR->ClassCode != PCI_BASE_CLASS_BRIDGE)
+					Print_PCIHDR(PCI_HDR);
 			}
+
+	color_printk(GREEN, BLACK, "\n");
 }
