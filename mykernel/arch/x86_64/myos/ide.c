@@ -17,27 +17,11 @@
 #include <obsolete/myos_irq_vectors.h>
 #include <obsolete/device.h>
 #include <obsolete/ide.h>
+#include "myos_block.h"
 
 static task_s *thread;
 
 static DEFINE_SPINLOCK(req_lock);
-
-struct blkbuf_node;
-typedef struct blkbuf_node blkbuf_node_s;
-typedef struct blkbuf_node
-{
-	List_s			req_list;
-	unsigned		ATA_controller;
-	unsigned		ATA_disk;
-
-	completion_s	*done;
-	task_s			*task;
-	unsigned int	count;
-	unsigned char	cmd;
-	unsigned long	LBA;
-	unsigned char	*buffer;
-	void			(*end_handler)(unsigned long parameter);
-} blkbuf_node_s;
 
 static blkbuf_node_s *req_in_using;
 LIST_HDR_S(IDEreq_lhdr);
@@ -311,7 +295,7 @@ blkdev_ops_s ATA_master_ops =
  *																								*
  *==============================================================================================*/
 hw_int_controller_s ATA_disk_ioapic_controller =
-	{
+{
 		.enable = IOAPIC_enable,
 		.disable = IOAPIC_disable,
 		.install = IOAPIC_install,

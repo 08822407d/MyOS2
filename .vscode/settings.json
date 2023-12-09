@@ -33,6 +33,7 @@
         "pci_regs.h": "c",
         "pci_ids.h": "c",
         "task_stack.h": "c",
-        "printk.h": "c"
+        "printk.h": "c",
+        "arch_proto.h": "c"
     }
 }

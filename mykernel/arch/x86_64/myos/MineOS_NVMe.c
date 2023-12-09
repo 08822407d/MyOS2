@@ -21,6 +21,8 @@
 // #include "memory.h"
 
 #include <obsolete/printk.h>
+#include <obsolete/arch_proto.h>
+#include "myos_block.h"
 
 // struct request_queue NVMe_request;
 
@@ -250,14 +252,14 @@ unsigned short IO_CQ_Head_DoorBell = 0;
 // {
 // }
 
-// hw_int_controller NVMe_int_controller =
-// {
-// 	.enable = NVMe_enable,
-// 	.disable = NULL,
-// 	.install = NVMe_install,
-// 	.uninstall = NULL,
-// 	.ack = Local_APIC_edge_level_ack,
-// };
+hw_int_controller_s NVMe_int_controller =
+{
+	// .enable = NVMe_enable,
+	// .disable = NULL,
+	// .install = NVMe_install,
+	// .uninstall = NULL,
+	.ack = IOAPIC_edge_ack,
+};
 
 // /*
 // void NVMe_ADMIN_handler(unsigned long nr, unsigned long parameter, struct pt_regs * regs)
@@ -268,12 +270,12 @@ unsigned short IO_CQ_Head_DoorBell = 0;
 // }
 // */
 
-// void NVMe_IO_handler(unsigned long nr, unsigned long parameter, struct pt_regs * regs)
-// {
-// 	struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-// //	color_printk(BLACK,WHITE,"NVMe_IO_handler,IO_CQ_Head_DoorBell:%d,IO_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",IO_CQ_Head_DoorBell,IO_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
-// 	node->end_handler(nr,parameter);
-// }
+void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
+{
+	// blkbuf_node_s *node = ((blkbuf_node_s *)parameter)->in_using;
+	// // color_printk(BLACK,WHITE,"NVMe_IO_handler,IO_CQ_Head_DoorBell:%d,IO_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",IO_CQ_Head_DoorBell,IO_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
+	// node->end_handler(nr, parameter);
+}
 
 
 void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
@@ -395,45 +397,44 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	value = value | 0x80000000;
 	Write_PCI_Config(bus, device, function, index, value);
 
-// ////	register interrupt
-// //	register_irq(0x2d, NULL , &NVMe_ADMIN_handler, (unsigned long)&NVMe_request, &NVMe_int_controller, "NVMe_ADMIN");	////Admin Completion_Queue_Entry Interrupt Handler
-// 	register_irq(0x2e, NULL , &NVMe_IO_handler, (unsigned long)&NVMe_request, &NVMe_int_controller, "NVMe_IO");		////I/O Completion_Queue_Entry Interrupt Handler
+	//// register interrupt
+	// register_irq(0x2d, NULL , &NVMe_ADMIN_handler, (unsigned long)&NVMe_request, &NVMe_int_controller, "NVMe_ADMIN");	////Admin Completion_Queue_Entry Interrupt Handler
+	register_irq(0x2e, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);		////I/O Completion_Queue_Entry Interrupt Handler
 
-// ////	get struct Submission Queue and Completion Queue
-// 	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)Phy_To_Virt(NVMe_CTRL_REG->ASQ);
-// 	ADMIN_Completion_Queue = (struct Completion_Queue_Entry *)Phy_To_Virt(NVMe_CTRL_REG->ACQ);
-// 	color_printk(BLACK,WHITE,"Admin Submission Queue:%#018lx,%02d\n",ADMIN_Submission_Queue,sizeof(struct Submission_Queue_Entry));
-// 	color_printk(BLACK,WHITE,"Admin Completion Queue:%#018lx,%02d\n",ADMIN_Completion_Queue,sizeof(struct Completion_Queue_Entry));
+	//// get struct Submission Queue and Completion Queue
+	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ASQ);
+	ADMIN_Completion_Queue = (struct Completion_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ACQ);
+	// color_printk(BLACK,WHITE,"Admin Submission Queue:%#018lx,%02d\n",ADMIN_Submission_Queue,sizeof(struct Submission_Queue_Entry));
+	// color_printk(BLACK,WHITE,"Admin Completion Queue:%#018lx,%02d\n",ADMIN_Completion_Queue,sizeof(struct Completion_Queue_Entry));
 
-// ////	clean struct Submission Queue and Completion Queue
-// 	memset(ADMIN_Submission_Queue,0,sizeof(struct Submission_Queue_Entry) * 4);
-// 	memset(ADMIN_Completion_Queue,0,sizeof(struct Completion_Queue_Entry) * 4);
+	//// clean struct Submission Queue and Completion Queue
+	memset(ADMIN_Submission_Queue, 0, sizeof(struct Submission_Queue_Entry) * 4);
+	memset(ADMIN_Completion_Queue, 0, sizeof(struct Completion_Queue_Entry) * 4);
 
-// ////	Set ADMIN_SQ_TDBL & ADMIN_CQ_HDBL Address
-// 	ADMIN_SQ_TDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x1000);
-// 	ADMIN_CQ_HDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x1004);
+	//// Set ADMIN_SQ_TDBL & ADMIN_CQ_HDBL Address
+	ADMIN_SQ_TDBL = (unsigned int *)((char *)phys_to_virt((unsigned long)NVMe_PCI_HBA->BAR_base_addr[0]) + 0x1000);
+	ADMIN_CQ_HDBL = (unsigned int *)((char *)phys_to_virt((unsigned long)NVMe_PCI_HBA->BAR_base_addr[0]) + 0x1004);
 
-// 	*ADMIN_CQ_HDBL = ADMIN_CQ_Head_DoorBell & 0x3;	////CQ index
-// 	ADMIN_CQ_Head_DoorBell++;
-// 	io_mfence();
+	*ADMIN_CQ_HDBL = ADMIN_CQ_Head_DoorBell & 0x3;	////CQ index
+	ADMIN_CQ_Head_DoorBell++;
+	__mb();
 
-// 	////	Set Features command
-// 	ADMIN_Submission_Queue->CID = 0xA5A5;
-// 	ADMIN_Submission_Queue->NSID = 0;
-// 	ADMIN_Submission_Queue->OPC = 0x09;	////Features command
-// 	ADMIN_Submission_Queue->PRP_SGL_Entry1 = 0;
-// 	ADMIN_Submission_Queue->Dword10 = 0x07;		////SV=0,FID=7
-// 	ADMIN_Submission_Queue->Dword11 = 0x50005;	////NCQR=5,NSQR=5
+	//// Set Features command
+	ADMIN_Submission_Queue->CID				= 0xA5A5;
+	ADMIN_Submission_Queue->NSID			= 0;
+	ADMIN_Submission_Queue->OPC				= 0x09;		////Features command
+	ADMIN_Submission_Queue->PRP_SGL_Entry1	= 0;
+	ADMIN_Submission_Queue->Dword10			= 0x07;		////SV=0,FID=7
+	ADMIN_Submission_Queue->Dword11			= 0x50005;	////NCQR=5,NSQR=5
 
-// 	////	Send Identify Command
-// 	(ADMIN_Submission_Queue + 1)->CID = 0x5A5A;
-// 	(ADMIN_Submission_Queue + 1)->NSID = 0;
-// 	(ADMIN_Submission_Queue + 1)->OPC = 0x06;	////Identify command
-// 	NVMeID = (struct NVMe_Identify_Controller_Data_Structure *)kmalloc(PAGE_4K_SIZE,0);
-// 	memset(NVMeID,0,4096);
-// 	(ADMIN_Submission_Queue + 1)->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(NVMeID);
-// 	(ADMIN_Submission_Queue + 1)->Dword10 = 0x01;	////CNTID=0,CNS=1
-// 	io_mfence();
+	//// Send Identify Command
+	(ADMIN_Submission_Queue + 1)->CID		= 0x5A5A;
+	(ADMIN_Submission_Queue + 1)->NSID		= 0;
+	(ADMIN_Submission_Queue + 1)->OPC		= 0x06;		////Identify command
+	NVMeID = (struct NVMe_Identify_Controller_Data_Structure *)kzalloc(PAGE_SIZE, GFP_KERNEL);
+	(ADMIN_Submission_Queue + 1)->PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID);
+	(ADMIN_Submission_Queue + 1)->Dword10	= 0x01;		////CNTID=0,CNS=1
+	__mb();
 
 // ////	print struct Submission_Queue_Entry
 // 	ptr = (unsigned int *)(ADMIN_Submission_Queue + 0);

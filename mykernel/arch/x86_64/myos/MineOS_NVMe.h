@@ -11,6 +11,7 @@
 
 #define __NVMe_H__
 
+#include <linux/kernel/types.h>
 // #include "block.h"
 
 ////Opcodes for Admin Commands
@@ -80,39 +81,39 @@ struct NVMe_Controller_Registers
 struct Submission_Queue_Entry
 {
 	///Dword 00
-	unsigned int	OPC:8,		///Opcode
-			FUSE:2,		///Fused Operation
-			R:4,		///Reserved
-			PSDT:2,		///PRP or SGL for Data Transfer
-			CID:16;		///Command Identifier
+	u32		OPC		:8,		///Opcode
+			FUSE	:2,		///Fused Operation
+			R		:4,		///Reserved
+			PSDT	:2,		///PRP or SGL for Data Transfer
+			CID		:16;	///Command Identifier
 	///Dword 01
-	unsigned int 	NSID;		///Namespace Identifier
+	u32 	NSID;			///Namespace Identifier
 
 	///Dword 02~03
-	unsigned int	Dword02;
-	unsigned int	Dword03;
+	u32		Dword02;
+	u32		Dword03;
 
 	///Dword 04~05
-	unsigned long	MPTR;		///Metadata Pointer
+	u64		MPTR;			///Metadata Pointer
 
 	///Dword 06~09
-	unsigned long	PRP_SGL_Entry1;	///PRP Entry 1 | SGL Entry 1
-	unsigned long	PRP_SGL_Entry2;	///PRP Entry 2 | SGL Entry 2
+	u64		PRP_SGL_Entry1;	///PRP Entry 1 | SGL Entry 1
+	u64		PRP_SGL_Entry2;	///PRP Entry 2 | SGL Entry 2
 
 	///Dword 10~15
-	unsigned int	Dword10;
-	unsigned int	Dword11;
-	unsigned int	Dword12;
-	unsigned int	Dword13;
-	unsigned int	Dword14;
-	unsigned int	Dword15;
+	u32		Dword10;
+	u32		Dword11;
+	u32		Dword12;
+	u32		Dword13;
+	u32		Dword14;
+	u32		Dword15;
 }__attribute__((packed));
 
 ///Physical Region Page Entry and List
 
 struct Physical_Region_Page_Entry
 {
-	unsigned long	R:2,
+	u64		R:2,
 			PBAO:62;	///Page Base Address and Offset
 }__attribute__((packed));
 
