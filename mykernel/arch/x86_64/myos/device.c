@@ -39,5 +39,5 @@ void init_cdev_intr()
 
 void init_bdev_intr()
 {
-	init_disk();
+	init_IDE_disk();
 }

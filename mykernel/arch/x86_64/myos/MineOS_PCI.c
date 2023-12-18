@@ -193,63 +193,6 @@ void scan_PCI_devices(void)
 					idname_idx++;
 				}
 				
-				// switch (CCSC)
-				// {
-				// case PCI_CLASS_STORAGE_IDE:
-				// 	PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_IDE";
-				// 	break;
-
-				// case PCI_BASE_CLASS_DISPLAY:
-				// 	if (PCI_HDR->ProgIF == 1)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_VGA";
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 2)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_XGA";
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 3)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_DISPLAY_3D";
-				// 	}
-				// 	break;
-
-				// case PCI_CLASS_STORAGE_NVM:
-				// 	if (PCI_HDR->ProgIF == 2)
-				// 	{
-				// 		// u32 value0 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_0);
-				// 		// u32 value1 = Read_PCI_Config(bus, device, function, PCI_BASE_ADDRESS_1);
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_NVM_IO";
-				// 		// NVMe_init(PCI_HDR);
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 3)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_STORAGE_NVM_ADMIN";
-				// 	}
-				// 	break;
-				
-				// case PCI_CLASS_SERIAL_USB:
-				// 	if (PCI_HDR->ProgIF == 0x00)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_UHCI";
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 0x10)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_OHCI";
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 0x20)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_EHCI";
-				// 	}
-				// 	else if (PCI_HDR->ProgIF == 0x30)
-				// 	{
-				// 		PCI_HDR->devtype_name = "PCI_CLASS_SERIAL_USB_XHCI";
-				// 	}
-				// 	break;
-				
-				// default:
-				// 	break;
-				// }
 				if (PCI_HDR->ClassCode != PCI_BASE_CLASS_BRIDGE)
 					Print_PCIHDR(PCI_HDR);
 			}

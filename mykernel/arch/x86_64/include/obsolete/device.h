@@ -24,7 +24,7 @@
 
 
 	/* disk.c */
-	void init_disk(void);
+	void init_IDE_disk(void);
 
 	typedef struct blkdev_ops
 	{

@@ -312,7 +312,7 @@ void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 		end_request(node);
 }
 
-void init_disk()
+void init_IDE_disk()
 {
 	ioapic_retentry_T entry;
 

@@ -261,14 +261,12 @@ hw_int_controller_s NVMe_int_controller =
 	.ack = IOAPIC_edge_ack,
 };
 
-// /*
-// void NVMe_ADMIN_handler(unsigned long nr, unsigned long parameter, struct pt_regs * regs)
-// {
-// 	struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-// //	color_printk(BLACK,WHITE,"NVMe_ADMIN_handler,ADMIN_CQ_Head_DoorBell:%d,ADMIN_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",ADMIN_CQ_Head_DoorBell,ADMIN_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
-// //	node->end_handler(nr,parameter);
-// }
-// */
+void NVMe_ADMIN_handler(unsigned long parameter, pt_regs_s * regs)
+{
+	// struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
+	// color_printk(BLACK,WHITE,"NVMe_ADMIN_handler,ADMIN_CQ_Head_DoorBell:%d,ADMIN_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",ADMIN_CQ_Head_DoorBell,ADMIN_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
+	// node->end_handler(nr,parameter);
+}
 
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 {
@@ -373,12 +371,12 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
 	// color_printk(INDIGO,BLACK,"PADDR:%#018lx\n",PADDR);
 
-	//Configuration MSI-X
-	// //MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
-	// *TADDR = 0xfee00000;
-	// *(TADDR + 1) = 0;
-	// *(TADDR + 2) = 0x2d;
-	// *(TADDR + 3) = 0;
+	/// Configuration MSI-X
+	//MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
+	*TADDR = 0xfee00000;
+	*(TADDR + 1) = 0;
+	*(TADDR + 2) = 0x2d;
+	*(TADDR + 3) = 0;
 
 	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
 	*(TADDR + 4) = 0xfee00000;
@@ -387,7 +385,7 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	*(TADDR + 7) = 0;
 
 	//MSI-X Pending Table Entry 0~127
-	*PADDR = 1;
+	*PADDR = 0;
 	*(PADDR + 1) = 0;
 	*(PADDR + 2) = 0;
 	*(PADDR + 3) = 0;
@@ -397,8 +395,8 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	value = value | 0x80000000;
 	Write_PCI_Config(bus, device, function, index, value);
 
-	//// register interrupt
-	// register_irq(0x2d, NULL , &NVMe_ADMIN_handler, (unsigned long)&NVMe_request, &NVMe_int_controller, "NVMe_ADMIN");	////Admin Completion_Queue_Entry Interrupt Handler
+	// register interrupt
+	register_irq(0x2d, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);	////Admin Completion_Queue_Entry Interrupt Handler
 	register_irq(0x2e, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);		////I/O Completion_Queue_Entry Interrupt Handler
 
 	//// get struct Submission Queue and Completion Queue
@@ -436,42 +434,42 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	(ADMIN_Submission_Queue + 1)->Dword10	= 0x01;		////CNTID=0,CNS=1
 	__mb();
 
-// ////	print struct Submission_Queue_Entry
-// 	ptr = (unsigned int *)(ADMIN_Submission_Queue + 0);
-// 	color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 0:");
-// 	for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-// 	ptr = (unsigned int *)(ADMIN_Submission_Queue + 1);
-// 	color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 1:");
-// 	for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
+	// //// print struct Submission_Queue_Entry
+	// ptr = (unsigned int *)(ADMIN_Submission_Queue + 0);
+	// color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 0:");
+	// for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
+	// 	color_printk(RED,WHITE,"%#010x,",*ptr);
+	// color_printk(RED,WHITE,"\n");
+	// ptr = (unsigned int *)(ADMIN_Submission_Queue + 1);
+	// color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 1:");
+	// for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
+	// 	color_printk(RED,WHITE,"%#010x,",*ptr);
+	// color_printk(RED,WHITE,"\n");
 
-// ////	print Complete DoorBell index
-// 	ADMIN_SQ_Tail_DoorBell++;
-// 	*ADMIN_SQ_TDBL = ADMIN_SQ_Tail_DoorBell & 0x3;	////SQ index
-// 	io_mfence();
-// 	color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-// 	color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
+	//// print Complete DoorBell index
+	ADMIN_SQ_Tail_DoorBell++;
+	*ADMIN_SQ_TDBL = ADMIN_SQ_Tail_DoorBell & 0x3;	////SQ index
+	__mb();
+	// color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
+	// color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
 
-// ////	print struct Completion_Queue_Entry
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 0:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",ADMIN_Completion_Queue->CMD,ADMIN_Completion_Queue->SQHD,ADMIN_Completion_Queue->SQID,ADMIN_Completion_Queue->CID,ADMIN_Completion_Queue->P,ADMIN_Completion_Queue->SC,ADMIN_Completion_Queue->SCT,ADMIN_Completion_Queue->M,ADMIN_Completion_Queue->DNR);
-// ////
-// 	ptr = (unsigned int *)ADMIN_Completion_Queue;
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 0:");
-// 	for(i = 0;i < sizeof(struct Completion_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
+	//// print struct Completion_Queue_Entry
+	// color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 0:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",ADMIN_Completion_Queue->CMD,ADMIN_Completion_Queue->SQHD,ADMIN_Completion_Queue->SQID,ADMIN_Completion_Queue->CID,ADMIN_Completion_Queue->P,ADMIN_Completion_Queue->SC,ADMIN_Completion_Queue->SCT,ADMIN_Completion_Queue->M,ADMIN_Completion_Queue->DNR);
+	////
+	// ptr = (unsigned int *)ADMIN_Completion_Queue;
+	// color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 0:");
+	// for(i = 0;i < sizeof(struct Completion_Queue_Entry) / 4;i++,ptr++)
+	// 	color_printk(RED,WHITE,"%#010x,",*ptr);
+	// color_printk(RED,WHITE,"\n");
 
-// ////	print Complete DoorBell index
-// 	*ADMIN_CQ_HDBL = ADMIN_CQ_Head_DoorBell & 0x3;	////CQ index
-// 	ADMIN_CQ_Head_DoorBell++;
-// 	ADMIN_SQ_Tail_DoorBell++;
-// 	*ADMIN_SQ_TDBL = ADMIN_SQ_Tail_DoorBell & 0x3;	////SQ index
-// 	io_mfence();
-// 	color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-// 	color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
+	//// print Complete DoorBell index
+	*ADMIN_CQ_HDBL = ADMIN_CQ_Head_DoorBell & 0x3;	////CQ index
+	ADMIN_CQ_Head_DoorBell++;
+	ADMIN_SQ_Tail_DoorBell++;
+	*ADMIN_SQ_TDBL = ADMIN_SQ_Tail_DoorBell & 0x3;	////SQ index
+	__mb();
+	// color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
+	// color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
 
 // ////	print struct Completion_Queue_Entry
 // 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 1:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",(ADMIN_Completion_Queue + 1)->CMD,(ADMIN_Completion_Queue + 1)->SQHD,(ADMIN_Completion_Queue + 1)->SQID,(ADMIN_Completion_Queue + 1)->CID,(ADMIN_Completion_Queue + 1)->P,(ADMIN_Completion_Queue + 1)->SC,(ADMIN_Completion_Queue + 1)->SCT,(ADMIN_Completion_Queue + 1)->M,(ADMIN_Completion_Queue + 1)->DNR);
