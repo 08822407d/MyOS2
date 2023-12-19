@@ -244,6 +244,12 @@ blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
 // 	return 1;
 // }
 
+// long ATA_disk_ioctl(unsigned controller, unsigned disk,
+// 				long cmd, long arg)
+// {
+// 	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
+// }
+
 long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 					   unsigned long blk_idx, long count, unsigned char *buffer)
 {
@@ -277,18 +283,12 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 	}
 }
 
-// long ATA_disk_ioctl(unsigned controller, unsigned disk,
-// 				long cmd, long arg)
-// {
-// 	ATA_disk_transfer(controller, disk, cmd, 0, 0, NULL);
-// }
-
 blkdev_ops_s ATA_master_ops =
-	{
-		// .open	= ATA_disk_open,
-		// .close	= ATA_disk_close,
-		// .ioctl	= ATA_disk_ioctl,
-		.transfer = ATA_disk_transfer,
+{
+	// .open		= ATA_disk_open,
+	// .close		= ATA_disk_close,
+	// .ioctl		= ATA_disk_ioctl,
+	.transfer	= ATA_disk_transfer,
 };
 
 /*==============================================================================================*
@@ -296,11 +296,11 @@ blkdev_ops_s ATA_master_ops =
  *==============================================================================================*/
 hw_int_controller_s ATA_disk_ioapic_controller =
 {
-		.enable = IOAPIC_enable,
-		.disable = IOAPIC_disable,
-		.install = IOAPIC_install,
-		.uninstall = IOAPIC_uninstall,
-		.ack = IOAPIC_edge_ack,
+	.enable		= IOAPIC_enable,
+	.disable	= IOAPIC_disable,
+	.install	= IOAPIC_install,
+	.uninstall	= IOAPIC_uninstall,
+	.ack		= IOAPIC_edge_ack,
 };
 
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
@@ -324,11 +324,11 @@ void init_IDE_disk()
 	entry.dst.physical.phy_dest = 0;
 	entry.dst.physical.reserved2 = 0;
 
-	entry.vector = VECTOR_IRQ(SATA_MAST_IRQ);
+	entry.vector = SATA_MAST_IRQ;
 	register_irq(SATA_MAST_IRQ, &entry, "ATA-master", 0,
 					&ATA_disk_ioapic_controller, ATA_disk_handler);
 
-	entry.vector = VECTOR_IRQ(SATA_SLAV_IRQ);
+	entry.vector = SATA_SLAV_IRQ;
 	register_irq(SATA_SLAV_IRQ, &entry, "ATA-slave", 0,
 					&ATA_disk_ioapic_controller, &ATA_disk_handler);
 

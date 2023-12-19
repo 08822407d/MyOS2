@@ -6,6 +6,7 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
+#include <linux/kernel/kthread.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
 
@@ -23,6 +24,15 @@
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
 #include "myos_block.h"
+
+
+static task_s *thread;
+static DEFINE_SPINLOCK(req_lock);
+static blkbuf_node_s *req_in_using;
+LIST_HDR_S(NVMEreq_lhdr);
+
+struct NVMe_Controller_Registers * NVMe_CTRL_REG = NULL;
+struct NVMe_Identify_Controller_Data_Structure * NVMeID = NULL;
 
 // struct request_queue NVMe_request;
 
@@ -292,9 +302,6 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 	int i;
 
-	struct NVMe_Controller_Registers * NVMe_CTRL_REG= NULL;
-	struct NVMe_Identify_Controller_Data_Structure * NVMeID = NULL;
-
 	//// init wait queue
 	// wait_queue_init(&NVMe_request.wait_queue_list,NULL);
 	// NVMe_request.in_using = NULL;
@@ -307,9 +314,7 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	myos_ioremap(map_start, map_size);
 	flush_tlb_local();
 	//
-	// color_printk(BLUE, BLACK, "DEBUG - NVMe Controller registers\n");
-	// color_printk(BLUE, BLACK, "%#018lx %#018lx %#018lx %#018lx \n\n", *((u64 *)NVMe_CTRL_REG + 0), *((u64 *)NVMe_CTRL_REG + 1), *((u64 *)NVMe_CTRL_REG + 2), *((u64 *)NVMe_CTRL_REG + 3));
-	// u64 cap = NVMe_CTRL_REG->CAP;
+	u64 cap = NVMe_CTRL_REG->CAP;
 
 	void *ASQ = (void *)NVMe_CTRL_REG->ASQ;
 	void *ACQ = (void *)NVMe_CTRL_REG->ACQ;
@@ -332,12 +337,6 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	while(!(NVMe_CTRL_REG->CSTS & 1))
 		barrier();
 
-	// // get NVMe Controller register
-	// color_printk(BLUE,BLACK,"NVMe Controller register(00h ~ 4fh)\n");
-	// color_printk(BLUE,BLACK,"%#018lx(CAP),%#010x(VS),%#010x(INTMS),%#010x(INTMC)\n",NVMe_CTRL_REG->CAP,NVMe_CTRL_REG->VS,NVMe_CTRL_REG->INTMS,NVMe_CTRL_REG->INTMC);
-	// color_printk(BLUE,BLACK,"%#010x(CC),%#010x(CSTS),%#010x(NSSR),%#010x(AQA)\n",NVMe_CTRL_REG->CC,NVMe_CTRL_REG->CSTS,NVMe_CTRL_REG->NSSR,NVMe_CTRL_REG->AQA);
-	// color_printk(BLUE,BLACK,"%#018lx(ASQ),%#018lx(ACQ),%#010x(CMBLOC),%#010x(CMBSZ)\n",NVMe_CTRL_REG->ASQ,NVMe_CTRL_REG->ACQ,NVMe_CTRL_REG->CMBLOC,NVMe_CTRL_REG->CMBSZ);
-	// color_printk(BLUE,BLACK,"%#010x(BPINFO),%#010x(BPRSEL),%#018lx(BPMBL)\n",NVMe_CTRL_REG->BPINFO,NVMe_CTRL_REG->BPRSEL,NVMe_CTRL_REG->BPMBL);
 
 	// detect MSI-X capability
 	bus = (NVMe_PCI_HBA->BDF >> 16) & 0xff;
@@ -353,23 +352,18 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 		index = (value >> 8) & 0xff;
 	}
-	// color_printk(GREEN,BLACK,"Capability ID:%#04x,Pointer:%#04x,%#06x\n",value & 0xff,((value >> 8) & 0xff),(value >> 16) & 0xffff);
 
 	value = Read_PCI_Config(bus, device, function, index + 4);
-	// color_printk(INDIGO,BLACK,"MTAB:%#010x(TO:%#010x,TBIR:%#04x),",value,value & (~0x7),value & 0x7);
 	BIR_idx = value & 0x7;
 	while (BIR_idx > 5);
 	TBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
 	TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
-	// color_printk(INDIGO,BLACK,"TADDR:%#018lx\n",TADDR);
 
 	value = Read_PCI_Config(bus, device, function, index + 8);
-	// color_printk(INDIGO,BLACK,"MPAB:%#010x(PBAO:%#010x,PBIR:%#04x),",value,value & (~0x7),value & 0x7);
 	BIR_idx = value & 0x7;
 	while (BIR_idx > 5);
 	PBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
 	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
-	// color_printk(INDIGO,BLACK,"PADDR:%#018lx\n",PADDR);
 
 	/// Configuration MSI-X
 	//MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
@@ -395,15 +389,15 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	value = value | 0x80000000;
 	Write_PCI_Config(bus, device, function, index, value);
 
-	// register interrupt
-	register_irq(0x2d, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);	////Admin Completion_Queue_Entry Interrupt Handler
-	register_irq(0x2e, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);		////I/O Completion_Queue_Entry Interrupt Handler
+	/// register interrupt
+	//Admin Completion_Queue_Entry Interrupt Handler
+	register_irq(0x2d, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);
+	//I/O Completion_Queue_Entry Interrupt Handler
+	register_irq(0x2e, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
 
 	//// get struct Submission Queue and Completion Queue
 	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ASQ);
 	ADMIN_Completion_Queue = (struct Completion_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ACQ);
-	// color_printk(BLACK,WHITE,"Admin Submission Queue:%#018lx,%02d\n",ADMIN_Submission_Queue,sizeof(struct Submission_Queue_Entry));
-	// color_printk(BLACK,WHITE,"Admin Completion Queue:%#018lx,%02d\n",ADMIN_Completion_Queue,sizeof(struct Completion_Queue_Entry));
 
 	//// clean struct Submission Queue and Completion Queue
 	memset(ADMIN_Submission_Queue, 0, sizeof(struct Submission_Queue_Entry) * 4);
@@ -416,22 +410,71 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	*ADMIN_CQ_HDBL = ADMIN_CQ_Head_DoorBell & 0x3;	////CQ index
 	ADMIN_CQ_Head_DoorBell++;
 	__mb();
+}
 
+void NVMe_exit()
+{
+	unregister_irq(0x2e);
+}
+
+static int NVMErq_deamon(void *param)
+{
+	current->flags |= PF_NOFREEZE;
+
+	for (;;) {
+		set_current_state(TASK_INTERRUPTIBLE);
+		if (NVMEreq_lhdr.count == 0)
+			schedule();
+		__set_current_state(TASK_RUNNING);
+
+		while (NVMEreq_lhdr.count != 0)
+		{		
+			spin_lock(&req_lock);
+			if (req_in_using == NULL)
+			{
+				List_s *wq_lp = list_hdr_dequeue(&NVMEreq_lhdr);
+				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
+				req_in_using = node;
+				spin_unlock_no_resched(&req_lock);
+
+				// cmd_out(node);
+
+				spin_lock(&req_lock);
+			}
+			spin_unlock_no_resched(&req_lock);
+			break;
+		}
+	}
+	return 1;
+}
+
+void init_NVMErqd()
+{
+	thread = kthread_run(NVMErq_deamon, NULL, "NVMErqd");
+
+	// color_printk(WHITE, BLACK, "ATA disk: initialized\n");
+}
+
+
+void NVMe_IOqueue_init()
+{
+	struct Submission_Queue_Entry *ASQ_ptr = ADMIN_Submission_Queue;
 	//// Set Features command
-	ADMIN_Submission_Queue->CID				= 0xA5A5;
-	ADMIN_Submission_Queue->NSID			= 0;
-	ADMIN_Submission_Queue->OPC				= 0x09;		////Features command
-	ADMIN_Submission_Queue->PRP_SGL_Entry1	= 0;
-	ADMIN_Submission_Queue->Dword10			= 0x07;		////SV=0,FID=7
-	ADMIN_Submission_Queue->Dword11			= 0x50005;	////NCQR=5,NSQR=5
+	ASQ_ptr->CID			= 0xA5A5;
+	ASQ_ptr->NSID			= 0;
+	ASQ_ptr->OPC			= 0x09;		////Features command
+	ASQ_ptr->PRP_SGL_Entry1	= 0;
+	ASQ_ptr->Dword10		= 0x07;		////SV=0,FID=7
+	ASQ_ptr->Dword11		= 0x50005;	////NCQR=5,NSQR=5
 
-	//// Send Identify Command
-	(ADMIN_Submission_Queue + 1)->CID		= 0x5A5A;
-	(ADMIN_Submission_Queue + 1)->NSID		= 0;
-	(ADMIN_Submission_Queue + 1)->OPC		= 0x06;		////Identify command
 	NVMeID = (struct NVMe_Identify_Controller_Data_Structure *)kzalloc(PAGE_SIZE, GFP_KERNEL);
-	(ADMIN_Submission_Queue + 1)->PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID);
-	(ADMIN_Submission_Queue + 1)->Dword10	= 0x01;		////CNTID=0,CNS=1
+	ASQ_ptr++;
+	//// Send Identify Command
+	ASQ_ptr->CID			= 0x5A5A;
+	ASQ_ptr->NSID			= 0;
+	ASQ_ptr->OPC			= 0x06;		////Identify command
+	ASQ_ptr->PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID);
+	ASQ_ptr->Dword10		= 0x01;		////CNTID=0,CNS=1
 	__mb();
 
 	// //// print struct Submission_Queue_Entry
@@ -450,8 +493,6 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	ADMIN_SQ_Tail_DoorBell++;
 	*ADMIN_SQ_TDBL = ADMIN_SQ_Tail_DoorBell & 0x3;	////SQ index
 	__mb();
-	// color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-	// color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
 
 	//// print struct Completion_Queue_Entry
 	// color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 0:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",ADMIN_Completion_Queue->CMD,ADMIN_Completion_Queue->SQHD,ADMIN_Completion_Queue->SQID,ADMIN_Completion_Queue->CID,ADMIN_Completion_Queue->P,ADMIN_Completion_Queue->SC,ADMIN_Completion_Queue->SCT,ADMIN_Completion_Queue->M,ADMIN_Completion_Queue->DNR);
@@ -511,11 +552,11 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 // 	color_printk(RED,BLACK,"NN:%#010x\n",NVMeID->NN);
 // 	color_printk(RED,BLACK,"SGLS:%#010x\n",NVMeID->SGLS);
 
+// 	IO_Completion_Queue = (struct Completion_Queue_Entry *)kmalloc(PAGE_4K_SIZE,0);
+// 	memset(IO_Completion_Queue,0x00,4096);
 // 	///Create Completion
 // 	(ADMIN_Submission_Queue + 2)->OPC = 0x05;	////Create I/O Completion Queue command
 // 	(ADMIN_Submission_Queue + 2)->CID = 0x55AA;
-// 	IO_Completion_Queue = (struct Completion_Queue_Entry *)kmalloc(PAGE_4K_SIZE,0);
-// 	memset(IO_Completion_Queue,0x00,4096);
 // 	(ADMIN_Submission_Queue + 2)->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(IO_Completion_Queue);
 // 	(ADMIN_Submission_Queue + 2)->Dword10 = 0x10001;		////QSIZE=2,QID=1
 // 	(ADMIN_Submission_Queue + 2)->Dword11 = 0x10003;		////IV=1,IEN=1,PC=1
@@ -593,8 +634,3 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 // 	io_mfence();
 }
-
-// void NVMe_exit()
-// {
-// 	unregister_irq(0x2e);
-// }

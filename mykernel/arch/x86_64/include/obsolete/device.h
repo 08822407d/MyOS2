@@ -8,7 +8,7 @@
 #include "arch_proto.h"
 #include "myos_irq_vectors.h"
 
-	extern irq_desc_s	irq_descriptors[NR_IRQ_VECS];
+	extern myos_irq_desc_s	irq_descriptors[NR_VECTORS];
 
 	/* device.c */
 	void myos_devices_init(void);

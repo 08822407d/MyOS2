@@ -45,7 +45,7 @@ void init_keyboard()
 	p_kb->p_tail = p_kb->buf;
 	p_kb->count  = 0;
 
-	entry.vector = VECTOR_IRQ(KEYBOARD_IRQ);
+	entry.vector = KEYBOARD_IRQ;
 	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
 	entry.mask = APIC_LVT_MASKED >> 16;
 	entry.reserved = 0;

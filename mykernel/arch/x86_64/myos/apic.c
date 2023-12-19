@@ -32,29 +32,28 @@ ioapic_map_s ioapic_map;
 void IOAPIC_enable(unsigned long irq_nr)
 {
 	unsigned long value = 0;
-	value = ioapic_rte_read(irq_nr * 2 + 0x10);
+	value = ioapic_rte_read((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10);
 	value = value & (~0x10000UL); 
-	ioapic_rte_write(irq_nr * 2 + 0x10, value);
+	ioapic_rte_write((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10, value);
 }
 
 void IOAPIC_disable(unsigned long irq_nr)
 {
 	unsigned long value = 0;
-	value = ioapic_rte_read(irq_nr * 2 + 0x10);
+	value = ioapic_rte_read((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10);
 	value = value | 0x10000UL; 
-	ioapic_rte_write(irq_nr * 2 + 0x10, value);
+	ioapic_rte_write((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10, value);
 }
 
 unsigned long IOAPIC_install(unsigned long irq_nr, void * arg)
 {
-	// ioapic_retentry_T *entry = (ioapic_retentry_T *)arg;
-	ioapic_rte_write(irq_nr * 2 + 0x10, *(unsigned long *)arg);
+	ioapic_rte_write((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10, *(unsigned long *)arg);
 	return 1;
 }
 
 void IOAPIC_uninstall(unsigned long irq_nr)
 {
-	ioapic_rte_write(irq_nr * 2 + 0x10, 0x10000UL);
+	ioapic_rte_write((irq_nr - FIRST_EXTERNAL_VECTOR) * 2 + 0x10, 0x10000UL);
 }
 
 void IOAPIC_level_ack(unsigned long irq_nr)
@@ -130,5 +129,5 @@ void IOAPIC_init()
 
 	//RTE	
 	for(i = 0x10;i < 0x40;i += 2)
-		ioapic_rte_write(i, 0x10000 + APIC_IRQ0_VEC + ((i - 0x10) >> 1));
+		ioapic_rte_write(i, 0x10000 + FIRST_EXTERNAL_VECTOR + ((i - 0x10) >> 1));
 }

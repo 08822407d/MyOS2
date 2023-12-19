@@ -190,6 +190,10 @@ void scan_PCI_devices(void)
 					{
 						PCI_HDR->devtype_name = idname->name;
 					}
+
+					// if (CCSCPIF == PCI_CLASS_STORAGE_NVM_IO)
+					// 	NVMe_init(PCI_HDR);
+
 					idname_idx++;
 				}
 				

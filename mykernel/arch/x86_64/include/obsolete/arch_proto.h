@@ -44,7 +44,7 @@
 
 		void (*handler)(unsigned long parameter,
 						pt_regs_s *stack_frame);
-	} irq_desc_s;
+	} myos_irq_desc_s;
 
 	/* cpu info */
 	struct cputopo

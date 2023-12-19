@@ -61,7 +61,7 @@ void HPET_init()
 	mb();
 
 	//init I/O APIC IRQ2 => HPET Timer 0
-	entry.vector = VECTOR_IRQ(HPET_TIMER0_IRQ);
+	entry.vector = HPET_TIMER0_IRQ;
 	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
 	entry.mask = APIC_LVT_MASKED >> 16;
 	entry.reserved = 0;
