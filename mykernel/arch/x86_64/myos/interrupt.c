@@ -10,7 +10,6 @@
 #include <asm/idtentry.h>
 
 myos_irq_desc_s	irq_descriptors[NR_VECTORS];
-myos_irq_desc_s	ipi_descriptors[NR_LAPIC_IPI_VECS];
 
 /*==============================================================================================*
  *										exception handlers								 		*
@@ -163,16 +162,7 @@ void hwint_irq_handler(pt_regs_s *sf_regs)
 {
 	unsigned long vec = (unsigned long)sf_regs->irq_nr;
 	int irq_nr = 0;
-	myos_irq_desc_s * irq_d = NULL;
-	if (vec < APIC_IPI0_VEC)
-	{
-		irq_d = &irq_descriptors[vec];	
-	}
-	else
-	{
-		irq_nr = vec - APIC_IPI0_VEC;
-		irq_d = &ipi_descriptors[irq_nr];	
-	}
+	myos_irq_desc_s *irq_d = &irq_descriptors[vec];	
 
 	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
@@ -198,8 +188,13 @@ int register_irq(unsigned long irq,
 	p->parameter = parameter;
 	p->flags = 0;
 	p->handler = handler;
-	p->controller->install(irq, arg);
-	p->controller->enable(irq);
+	if (p->controller != NULL)
+	{
+		if (p->controller->install != NULL)
+			p->controller->install(irq, arg);
+		if (p->controller->enable != NULL)
+			p->controller->enable(irq);
+	}
 	return 1;
 }
 
@@ -207,41 +202,14 @@ int unregister_irq(unsigned long irq)
 {
 	myos_irq_desc_s *p = &irq_descriptors[irq];
 
-	p->controller->disable(irq);
-	p->controller->uninstall(irq);
-
-	p->controller = 0;
-	p->irq_name = 0;
-	p->parameter = 0;
-	p->flags = 0;
-	p->handler = 0;
-
-	return 1; 
-}
-
-/*==============================================================================================*
- *											hwint handlers							    		*
- *==============================================================================================*/
-int register_IPI(unsigned long irq,
-				 void *arg,
-				 char *irq_name,
-				 unsigned long parameter,
-				 hw_int_controller_s *controller,
-				 void (*handler)(unsigned long parameter, pt_regs_s *sf_regs))
-{
-	myos_irq_desc_s *p = &ipi_descriptors[irq];
-
-	p->controller = controller;
-	p->irq_name = irq_name;
-	p->parameter = parameter;
-	p->flags = 0;
-	p->handler = handler;
-	return 1;
-}
-
-int unregister_IPI(unsigned long irq)
-{
-	myos_irq_desc_s *p = &ipi_descriptors[irq];
+	if (p->controller != NULL)
+	{
+		if (p->controller->disable != NULL)
+			p->controller->disable(irq);
+		if (p->controller->uninstall != NULL)
+			p->controller->uninstall(irq);
+	}
+	
 
 	p->controller = 0;
 	p->irq_name = 0;

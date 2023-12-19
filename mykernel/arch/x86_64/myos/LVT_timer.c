@@ -43,10 +43,10 @@ void LVT_timer_handler(unsigned long parameter, pt_regs_s *sf_regs)
 
 void LVT_timer_init()
 {
-	*((u32 *)&lvt_timer) = VECTOR_IPI(LAPIC_LVT_TIMER_IRQ);
+	*((u32 *)&lvt_timer) = LAPIC_LVT_TIMER_IRQ;
 	*((u32 *)&lvt_timer) |= APIC_LVT_TIMER_PERIODIC;
 	
-	register_IPI(LAPIC_LVT_TIMER_IRQ, &lvt_timer, "LVT_timer",
+	register_irq(LAPIC_LVT_TIMER_IRQ, &lvt_timer, "LVT_timer",
 				 *((u32 *)&lvt_timer), &LVT_timer_int_controller,
 				 &LVT_timer_handler);
 

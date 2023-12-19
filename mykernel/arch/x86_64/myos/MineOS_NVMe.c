@@ -21,6 +21,7 @@
 #include <asm/tlbflush.h>
 // #include "memory.h"
 
+#include <obsolete/myos_irq_vectors.h>
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
 #include "myos_block.h"
@@ -274,15 +275,17 @@ hw_int_controller_s NVMe_int_controller =
 void NVMe_ADMIN_handler(unsigned long parameter, pt_regs_s * regs)
 {
 	// struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-	// color_printk(BLACK,WHITE,"NVMe_ADMIN_handler,ADMIN_CQ_Head_DoorBell:%d,ADMIN_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",ADMIN_CQ_Head_DoorBell,ADMIN_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
 	// node->end_handler(nr,parameter);
+	color_printk(RED, BLACK, "NVME Admin Handler\n");
+	while (1);
 }
 
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 {
 	// blkbuf_node_s *node = ((blkbuf_node_s *)parameter)->in_using;
-	// // color_printk(BLACK,WHITE,"NVMe_IO_handler,IO_CQ_Head_DoorBell:%d,IO_SQ_Tail_DoorBell:%d,preempt:%d,pid:%d,cRSP:%#018lx,RSP:%#018lx,RIP:%#018lx\n",IO_CQ_Head_DoorBell,IO_SQ_Tail_DoorBell,current->preempt_count,current->pid,get_rsp(),regs->rsp,regs->rip);
 	// node->end_handler(nr, parameter);
+	color_printk(RED, BLACK, "NVME IO Handler\n");
+	while (1);
 }
 
 
@@ -369,13 +372,13 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	//MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
 	*TADDR = 0xfee00000;
 	*(TADDR + 1) = 0;
-	*(TADDR + 2) = 0x2d;
+	*(TADDR + 2) = APIC_PIRQA;
 	*(TADDR + 3) = 0;
 
 	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
 	*(TADDR + 4) = 0xfee00000;
 	*(TADDR + 5) = 0;
-	*(TADDR + 6) = 0x2e;
+	*(TADDR + 6) = APIC_PIRQA;
 	*(TADDR + 7) = 0;
 
 	//MSI-X Pending Table Entry 0~127
@@ -391,9 +394,9 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 	/// register interrupt
 	//Admin Completion_Queue_Entry Interrupt Handler
-	register_irq(0x2d, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);
+	register_irq(APIC_PIRQA, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);
 	//I/O Completion_Queue_Entry Interrupt Handler
-	register_irq(0x2e, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
+	register_irq(APIC_PIRQB, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
 
 	//// get struct Submission Queue and Completion Queue
 	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ASQ);
@@ -414,7 +417,8 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 void NVMe_exit()
 {
-	unregister_irq(0x2e);
+	unregister_irq(APIC_PIRQA);
+	unregister_irq(APIC_PIRQB);
 }
 
 static int NVMErq_deamon(void *param)
