@@ -78,7 +78,7 @@ struct NVMe_Controller_Registers
 
 ///Submission Queue Entry – Command Format
 
-struct Submission_Queue_Entry
+typedef struct Submission_Queue_Entry
 {
 	///Dword 00
 	u32		OPC		:8,		///Opcode
@@ -107,7 +107,7 @@ struct Submission_Queue_Entry
 	u32		Dword13;
 	u32		Dword14;
 	u32		Dword15;
-}__attribute__((packed));
+} __attribute__((packed)) NVMe_SQ_Ent_s;
 
 ///Physical Region Page Entry and List
 
@@ -172,7 +172,7 @@ struct Scatter_Gather_List_Descriptor
 
 ///Completion Queue Entry
 
-struct Completion_Queue_Entry
+typedef struct Completion_Queue_Entry
 {
 	unsigned int	CMD;	///Command Specific
 	unsigned int	Reserved;
@@ -185,7 +185,7 @@ struct Completion_Queue_Entry
 			R:2,	///Reserved
 			M:1,	///More
 			DNR:1;	///Do Not Retry
-}__attribute__((packed));
+}__attribute__((packed)) NVMe_CQ_Ent_s;
 
 struct NVMe_Identify_Controller_Data_Structure
 {

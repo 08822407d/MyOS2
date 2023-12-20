@@ -326,6 +326,9 @@ int kernel_init(void *unused)
 	
 	myos_ata_probe();
 
+extern void NVMe_IOqueue_init();
+	NVMe_IOqueue_init();
+
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
