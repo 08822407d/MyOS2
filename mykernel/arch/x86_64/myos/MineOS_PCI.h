@@ -53,8 +53,8 @@ struct PCI_Header_00
 
 	unsigned int	ExpansionROMBaseAddress;
 
-	unsigned int	CapabilitiesPointer:8,
-			Reserved0:24;
+	unsigned int	CapabilitiesPointer	:8,
+					Reserved0			:24;
 
 	unsigned int	Reserved1;
 

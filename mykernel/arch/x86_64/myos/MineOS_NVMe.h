@@ -187,7 +187,7 @@ typedef struct Completion_Queue_Entry
 			DNR:1;	///Do Not Retry
 }__attribute__((packed)) NVMe_CQ_Ent_s;
 
-struct NVMe_Identify_Controller_Data_Structure
+typedef struct NVMe_Identify_Controller_Data_Structure
 {
 	////////////////Controller Capabilities and Features 0-255
 	unsigned short	VID;
@@ -294,7 +294,7 @@ struct NVMe_Identify_Controller_Data_Structure
 	unsigned char	PSD31[32];
 	////////////////Vendor Specific 3072-4095
 	unsigned char	Reserved9[1024];
-}__attribute__((packed));
+} __attribute__((packed)) NVMe_ID_Ctrl_Data_s;
 
 ///Status Code – Generic Command Status Values
 

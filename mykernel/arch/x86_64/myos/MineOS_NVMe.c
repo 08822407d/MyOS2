@@ -26,8 +26,8 @@
 #include <obsolete/arch_proto.h>
 #include "myos_block.h"
 
-#define ASQ_SIZE_SHIFT	1
-#define ACQ_SIZE_SHIFT	1
+#define ASQ_SIZE_SHIFT	2
+#define ACQ_SIZE_SHIFT	2
 #define ASQ_SIZE		(1UL << ASQ_SIZE_SHIFT)
 #define ACQ_SIZE		(1UL << ACQ_SIZE_SHIFT)
 #define ASQ_SIZE_MASK	(ASQ_SIZE - 1)
@@ -278,21 +278,25 @@ hw_int_controller_s NVMe_int_controller =
 	.ack = IOAPIC_edge_ack,
 };
 
-void NVMe_submit_ASQ(NVMe_SQ_Ent_s *ASQ_ptr)
+NVMe_SQ_Ent_s *NVMe_submit_ASQ(NVMe_SQ_Ent_s *ASQ_ptr)
 {
-	ASQ_Tail_Idx++;
+	NVMe_SQ_Ent_s *retval = &ADMIN_Submission_Queue[ASQ_Tail_Idx];
+	*retval = *ASQ_ptr;
+	ASQ_Tail_Idx = (ASQ_Tail_Idx + 1) & ASQ_SIZE_MASK;
 	*ADMIN_SQ_TDBL = ASQ_Tail_Idx & ASQ_SIZE_MASK;	////SQ index
 	__mb();
+	return retval;
 }
 
 void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 {
 	NVMe_CQ_Ent_s *ACQ_ptr = &ADMIN_Completion_Queue[ACQ_Head_Idx];
-	while (ACQ_ptr->P != 1 &&
-		ACQ_ptr->CID != ASQ_ptr->CID &&
+	while (ACQ_ptr->CID != ASQ_ptr->CID &&
 		ACQ_ptr->CMD != ASQ_ptr->Dword11);
 	*ADMIN_CQ_HDBL = ACQ_Head_Idx & ACQ_SIZE_MASK;	////CQ index
-	ACQ_Head_Idx++;
+	ACQ_Head_Idx = (ACQ_Head_Idx + 1) & ACQ_SIZE_MASK;
+	__mb();
+	// clear finished queries
 	memset(ACQ_ptr, 0, sizeof(NVMe_CQ_Ent_s));
 	memset(ASQ_ptr, 0, sizeof(NVMe_SQ_Ent_s));
 }
@@ -477,166 +481,76 @@ void init_NVMErqd()
 
 void NVMe_IOqueue_init()
 {
-	struct Completion_Queue_Entry *ACQ_ptr = &ADMIN_Completion_Queue[ACQ_Head_Idx];
-	struct Submission_Queue_Entry *ASQ_ptr = ADMIN_Submission_Queue;
+	NVMeID = (NVMe_ID_Ctrl_Data_s *)kzalloc(PAGE_SIZE, GFP_KERNEL);
+	NVMe_SQ_Ent_s *curr_AsqEnt = NULL;
 
-	//// Set Features command
-	ASQ_ptr->CID			= 0xA5A5;
-	ASQ_ptr->NSID			= 0;
-	ASQ_ptr->OPC			= 0x09;		////Features command
-	ASQ_ptr->PRP_SGL_Entry1	= 0;
-	ASQ_ptr->Dword10		= 0x07;		////SV=0,FID=7
-	ASQ_ptr->Dword11		= 0x50005;	////NCQR=5,NSQR=5
-	// submit ASQ command
-	NVMe_submit_ASQ(ASQ_ptr);
-	// ASQ_Tail_Idx++;
-	// *ADMIN_SQ_TDBL = ASQ_Tail_Idx & 0x3;	////SQ index
-	// __mb();
-	// wait for completion
-	while (ACQ_ptr->P != 1 && ACQ_ptr->CID != 0xA5A5);
-	*ADMIN_CQ_HDBL = ACQ_Head_Idx & 0x3;	////CQ index
-	ACQ_Head_Idx++;
+	/// Set Features command
+	NVMe_SQ_Ent_s ASQ_SetFeature =
+	{
+		.CID			= 0xA5A5,
+		.NSID			= 0,
+		.OPC			= 0x09,		////Features command
+		.PRP_SGL_Entry1	= 0,
+		.Dword10		= 0x07,		////SV=0,FID=7
+		.Dword11		= 0x50005,	////NCQR=5,NSQR=5
+	};
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_SetFeature);
+	NVMe_wait_new_ACQ(curr_AsqEnt);
+	/// Send Identify Command
+	NVMe_SQ_Ent_s ASQ_Identify =
+	{
+		.CID			= 0x5A5A,
+		.NSID			= 0,
+		.OPC			= 0x06,		////Identify command
+		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID),
+		.Dword10		= 0x01,		////CNTID=0,CNS=1
+	};
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify);
+	NVMe_wait_new_ACQ(curr_AsqEnt);
+
+	// // queue warp test
+	// for (size_t i = 0; i < 6; i++)
+	// {
+	// 	memset(NVMeID, 0, sizeof(NVMe_ID_Ctrl_Data_s));
+	// 	// submit ASQ command
+	// 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify);
+	// 	// wait for completion
+	// 	NVMe_wait_new_ACQ(curr_AsqEnt);
+	// }
+	
+
+	IO_Completion_Queue = (NVMe_CQ_Ent_s *)kzalloc(PAGE_SIZE, 0);
+	IO_Submission_Queue = (NVMe_SQ_Ent_s *)kzalloc(PAGE_SIZE, 0);
+	///Create Completion
+	NVMe_SQ_Ent_s ASQ_NewIOCQ =
+	{
+	    .OPC			= 0x05,		////Create I/O Completion Queue command
+	    .CID			= 0x55AA,
+	    .PRP_SGL_Entry1	= (unsigned long)Virt_To_Phy(IO_Completion_Queue),
+	    .Dword10		= 0x10001,	////QSIZE=2,QID=1
+	    .Dword11		= 0x10003,	////IV=1,IEN=1,PC=1
+	};
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOCQ);
+	NVMe_wait_new_ACQ(curr_AsqEnt);
+	///Create Submission
+	NVMe_SQ_Ent_s ASQ_NewIOCQ =
+	{
+		.OPC			= 0x01,		//Create I/O Submission Queue command
+		.CID			= 0xAA55,
+		.PRP_SGL_Entry1	= (unsigned long)Virt_To_Phy(IO_Submission_Queue),
+		.Dword10		= 0x10001,	////QSIZE=2,QID=1
+		.Dword11		= 0x10001,	////CQID=1,QPRIO=0,PC=1
+	};
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOCQ);
+	NVMe_wait_new_ACQ(curr_AsqEnt);
 
 
-	NVMeID = (struct NVMe_Identify_Controller_Data_Structure *)kzalloc(PAGE_SIZE, GFP_KERNEL);
-	ASQ_ptr++;
-	//// Send Identify Command
-	ASQ_ptr->CID			= 0x5A5A;
-	ASQ_ptr->NSID			= 0;
-	ASQ_ptr->OPC			= 0x06;		////Identify command
-	ASQ_ptr->PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID);
-	ASQ_ptr->Dword10		= 0x01;		////CNTID=0,CNS=1
+	// /// Set IO_SQ_TDBL & IO_CQ_HDBL Address
+	// IO_SQ_TDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x1008);
+	// IO_CQ_HDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x100c);
+
+	// *IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
+	// IO_CQ_Head_DoorBell++;
+
 	__mb();
-	// submit ASQ command
-	NVMe_submit_ASQ(ASQ_ptr);
-	// ASQ_Tail_Idx++;
-	// *ADMIN_SQ_TDBL = ASQ_Tail_Idx & 0x3;	////SQ index
-	// __mb();
-	// wait for completion
-	while (ACQ_ptr->P != 1 && ACQ_ptr->CID != 0x5A5A);
-	*ADMIN_CQ_HDBL = ACQ_Head_Idx & 0x3;	////CQ index
-	ACQ_Head_Idx++;
-
-
-// ////	print struct Completion_Queue_Entry
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 1:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",(ADMIN_Completion_Queue + 1)->CMD,(ADMIN_Completion_Queue + 1)->SQHD,(ADMIN_Completion_Queue + 1)->SQID,(ADMIN_Completion_Queue + 1)->CID,(ADMIN_Completion_Queue + 1)->P,(ADMIN_Completion_Queue + 1)->SC,(ADMIN_Completion_Queue + 1)->SCT,(ADMIN_Completion_Queue + 1)->M,(ADMIN_Completion_Queue + 1)->DNR);
-// ////
-// 	ptr = (unsigned int *)(ADMIN_Completion_Queue + 1);
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 1:");
-// 	for(i = 0;i < sizeof(struct Completion_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-
-// /////	print The Identify Controller data structure of Identify Command
-// 	color_printk(RED,BLACK,"The Identify Controller data structure (size:%d):\n",sizeof(struct NVMe_Identify_Controller_Data_Structure));
-// 	color_printk(RED,BLACK,"VID:%#06x\n",NVMeID->VID);
-// 	color_printk(RED,BLACK,"SSVID:%#06x\n",NVMeID->SSVID);
-// 	color_printk(RED,BLACK,"SN:");
-// 	for(i = 0;i < 20;i++)
-// 		color_printk(RED,BLACK,"%c",NVMeID->SN[i]);
-// 	color_printk(RED,BLACK,"\n");
-// 	color_printk(RED,BLACK,"MN:");
-// 	for(i = 0;i < 40;i++)
-// 		color_printk(RED,BLACK,"%c",NVMeID->MN[i]);
-// 	color_printk(RED,BLACK,"\n");
-// 	color_printk(RED,BLACK,"FR:");
-// 	for(i = 0;i < 8;i++)
-// 		color_printk(RED,BLACK,"%c",NVMeID->FR[i]);
-// 	color_printk(RED,BLACK,"\n");
-// 	color_printk(RED,BLACK,"MDTS:%#04x\n",NVMeID->MDTS);
-// 	color_printk(RED,BLACK,"CNTLID:%#06x\n",NVMeID->CNTLID);
-// 	color_printk(RED,BLACK,"VER:%#010x\n",NVMeID->VER);
-// 	color_printk(RED,BLACK,"CTRATT:%#010x\n",NVMeID->CTRATT);
-// 	color_printk(RED,BLACK,"FGUID:%#010x,%08x,%08x,%08x\n",NVMeID->FGUID[3],NVMeID->FGUID[2],NVMeID->FGUID[1],NVMeID->FGUID[0]);
-// 	color_printk(RED,BLACK,"OACS:%#06x\n",NVMeID->OACS);
-// 	color_printk(RED,BLACK,"HMPRE:%#010x\n",NVMeID->HMPRE);
-// 	color_printk(RED,BLACK,"HMMIN:%#010x\n",NVMeID->HMMIN);
-// 	color_printk(RED,BLACK,"DSTO:%#04x\n",NVMeID->DSTO);
-// 	color_printk(RED,BLACK,"SANICAP:%#010x\n",NVMeID->SANICAP);
-// 	color_printk(RED,BLACK,"SQES:%#04x\n",NVMeID->SQES);
-// 	color_printk(RED,BLACK,"CQES:%#04x\n",NVMeID->CQES);
-// 	color_printk(RED,BLACK,"NN:%#010x\n",NVMeID->NN);
-// 	color_printk(RED,BLACK,"SGLS:%#010x\n",NVMeID->SGLS);
-
-// 	IO_Completion_Queue = (struct Completion_Queue_Entry *)kmalloc(PAGE_4K_SIZE,0);
-// 	memset(IO_Completion_Queue,0x00,4096);
-// 	///Create Completion
-// 	(ADMIN_Submission_Queue + 2)->OPC = 0x05;	////Create I/O Completion Queue command
-// 	(ADMIN_Submission_Queue + 2)->CID = 0x55AA;
-// 	(ADMIN_Submission_Queue + 2)->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(IO_Completion_Queue);
-// 	(ADMIN_Submission_Queue + 2)->Dword10 = 0x10001;		////QSIZE=2,QID=1
-// 	(ADMIN_Submission_Queue + 2)->Dword11 = 0x10003;		////IV=1,IEN=1,PC=1
-// 	color_printk(BLACK,WHITE,"IO_Completion_Queue:%#018lx\n",IO_Completion_Queue);
-
-// ////	print struct Submission_Queue_Entry
-// 	ptr = (unsigned int *)(ADMIN_Submission_Queue + 2);
-// 	color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 2:");
-// 	for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-
-// ////	print Complete DoorBell index
-// 	*ADMIN_CQ_HDBL = ACQ_Head_Idx & 0x3;	////CQ index
-// 	ACQ_Head_Idx++;
-// 	ASQ_Tail_Idx++;
-// 	*ADMIN_SQ_TDBL = ASQ_Tail_Idx & 0x3;	////SQ index
-// 	io_mfence();
-// 	color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-// 	color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
-
-// ////	print struct Completion_Queue_Entry
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 2:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",(ADMIN_Completion_Queue + 2)->CMD,(ADMIN_Completion_Queue + 2)->SQHD,(ADMIN_Completion_Queue + 2)->SQID,(ADMIN_Completion_Queue + 2)->CID,(ADMIN_Completion_Queue + 2)->P,(ADMIN_Completion_Queue + 2)->SC,(ADMIN_Completion_Queue + 2)->SCT,(ADMIN_Completion_Queue + 2)->M,(ADMIN_Completion_Queue + 2)->DNR);
-// ////
-// 	ptr = (unsigned int *)(ADMIN_Completion_Queue + 2);
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 2:");
-// 	for(i = 0;i < sizeof(struct Completion_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-
-// 	///Create Submission
-// 	(ADMIN_Submission_Queue + 3)->OPC = 0x01;	//Create I/O Submission Queue command
-// 	(ADMIN_Submission_Queue + 3)->CID = 0xAA55;
-// 	IO_Submission_Queue = (struct Submission_Queue_Entry *)kmalloc(PAGE_4K_SIZE,0);
-// 	memset(IO_Submission_Queue,0x00,4096);
-// 	(ADMIN_Submission_Queue + 3)->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(IO_Submission_Queue);
-// 	(ADMIN_Submission_Queue + 3)->Dword10 = 0x10001;	////QSIZE=2,QID=1
-// 	(ADMIN_Submission_Queue + 3)->Dword11 = 0x10001;	////CQID=1,QPRIO=0,PC=1
-// 	color_printk(BLACK,WHITE,"IO_Submission_Queue:%#018lx\n",IO_Submission_Queue);
-
-// ////	print struct Submission_Queue_Entry
-// 	ptr = (unsigned int *)(ADMIN_Submission_Queue + 3);
-// 	color_printk(RED,WHITE,"ADMIN_Submission_Queue Entry 3:");
-// 	for(i = 0;i < sizeof(struct Submission_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-
-// ////	print Complete DoorBell index
-// 	*ADMIN_CQ_HDBL = ACQ_Head_Idx & 0x3;	////CQ index
-// 	ACQ_Head_Idx++;
-// 	ASQ_Tail_Idx++;
-// 	*ADMIN_SQ_TDBL = ASQ_Tail_Idx & 0x3;	////SQ index
-// 	io_mfence();
-// 	color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-// 	color_printk(BLACK,WHITE,"ADMIN_SQ_TDBL:%#010x\n",*ADMIN_SQ_TDBL);
-
-// ////	print struct Completion_Queue_Entry
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 3:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",(ADMIN_Completion_Queue + 3)->CMD,(ADMIN_Completion_Queue + 3)->SQHD,(ADMIN_Completion_Queue + 3)->SQID,(ADMIN_Completion_Queue + 3)->CID,(ADMIN_Completion_Queue + 3)->P,(ADMIN_Completion_Queue + 3)->SC,(ADMIN_Completion_Queue + 3)->SCT,(ADMIN_Completion_Queue + 3)->M,(ADMIN_Completion_Queue + 3)->DNR);
-// ////
-// 	ptr = (unsigned int *)(ADMIN_Completion_Queue + 3);
-// 	color_printk(RED,WHITE,"ADMIN_Completion_Queue Entry 3:");
-// 	for(i = 0;i < sizeof(struct Completion_Queue_Entry) / 4;i++,ptr++)
-// 		color_printk(RED,WHITE,"%#010x,",*ptr);
-// 	color_printk(RED,WHITE,"\n");
-// 	*ADMIN_CQ_HDBL = ACQ_Head_Idx & 0x3;	////CQ index
-// 	ACQ_Head_Idx++;
-// 	color_printk(BLUE,WHITE,"ADMIN_CQ_HDBL:%#010x\n",*ADMIN_CQ_HDBL);
-
-// ////	Set IO_SQ_TDBL & IO_CQ_HDBL Address
-// 	IO_SQ_TDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x1008);
-// 	IO_CQ_HDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x100c);
-
-// 	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
-// 	IO_CQ_Head_DoorBell++;
-
-// 	io_mfence();
 }
