@@ -26,22 +26,23 @@
 #include <obsolete/arch_proto.h>
 #include "myos_block.h"
 
-#define ASQ_SIZE_SHIFT	2
-#define ACQ_SIZE_SHIFT	2
-#define ASQ_SIZE		(1UL << ASQ_SIZE_SHIFT)
-#define ACQ_SIZE		(1UL << ACQ_SIZE_SHIFT)
-#define ASQ_SIZE_MASK	(ASQ_SIZE - 1)
-#define ACQ_SIZE_MASK	(ACQ_SIZE - 1)
+#define AQA_SIZE_SHIFT	2
+#define IOQ_SIZE_SHIFT	1
+#define AQA_SIZE		(1UL << AQA_SIZE_SHIFT)
+#define IOQ_SIZE		(1UL << IOQ_SIZE_SHIFT)
+#define AQA_SIZE_MASK	(AQA_SIZE - 1)
+#define IOQ_SIZE_MASK	(IOQ_SIZE - 1)
 
 static task_s *thread;
 static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
 LIST_HDR_S(NVMEreq_lhdr);
 
+
+u64 NVMe_BAR0_base = 0;
+
 struct NVMe_Controller_Registers * NVMe_CTRL_REG = NULL;
 struct NVMe_Identify_Controller_Data_Structure * NVMeID = NULL;
-
-// struct request_queue NVMe_request;
 
 struct Submission_Queue_Entry * ADMIN_Submission_Queue = NULL;
 struct Completion_Queue_Entry * ADMIN_Completion_Queue = NULL;
@@ -282,8 +283,8 @@ NVMe_SQ_Ent_s *NVMe_submit_ASQ(NVMe_SQ_Ent_s *ASQ_ptr)
 {
 	NVMe_SQ_Ent_s *retval = &ADMIN_Submission_Queue[ASQ_Tail_Idx];
 	*retval = *ASQ_ptr;
-	ASQ_Tail_Idx = (ASQ_Tail_Idx + 1) & ASQ_SIZE_MASK;
-	*ADMIN_SQ_TDBL = ASQ_Tail_Idx & ASQ_SIZE_MASK;	////SQ index
+	ASQ_Tail_Idx = (ASQ_Tail_Idx + 1) & IOQ_SIZE_MASK;
+	*ADMIN_SQ_TDBL = ASQ_Tail_Idx & IOQ_SIZE_MASK;	////SQ index
 	__mb();
 	return retval;
 }
@@ -293,8 +294,8 @@ void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 	NVMe_CQ_Ent_s *ACQ_ptr = &ADMIN_Completion_Queue[ACQ_Head_Idx];
 	while (ACQ_ptr->CID != ASQ_ptr->CID &&
 		ACQ_ptr->CMD != ASQ_ptr->Dword11);
-	*ADMIN_CQ_HDBL = ACQ_Head_Idx & ACQ_SIZE_MASK;	////CQ index
-	ACQ_Head_Idx = (ACQ_Head_Idx + 1) & ACQ_SIZE_MASK;
+	*ADMIN_CQ_HDBL = ACQ_Head_Idx & IOQ_SIZE_MASK;	////CQ index
+	ACQ_Head_Idx = (ACQ_Head_Idx + 1) & IOQ_SIZE_MASK;
 	__mb();
 	// clear finished queries
 	memset(ACQ_ptr, 0, sizeof(NVMe_CQ_Ent_s));
@@ -334,8 +335,9 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 
 	// get NVMe Controller register
-	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_PCI_HBA->BAR_base_addr[0]);
-	u64 map_start = NVMe_PCI_HBA->BAR_base_addr[0];
+	NVMe_BAR0_base = NVMe_PCI_HBA->BAR_base_addr[0];
+	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_BAR0_base);
+	u64 map_start = NVMe_BAR0_base;
 	u64 map_size = NVMe_PCI_HBA->BAR_space_limit[0];
 	myos_ioremap(map_start, map_size);
 	flush_tlb_local();
@@ -356,7 +358,7 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	while(NVMe_CTRL_REG->CSTS & 1)
 		barrier();
 
-	NVMe_CTRL_REG->AQA = ACQ_SIZE << 16 | ASQ_SIZE;	//ACQS=3,ASQS=3
+	NVMe_CTRL_REG->AQA = AQA_SIZE << 16 | AQA_SIZE;	//ACQS=3,ASQS=3
 	NVMe_CTRL_REG->CC = 0x00460001;		//IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
 	__mb();
 
@@ -430,8 +432,8 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	memset(ADMIN_Completion_Queue, 0, sizeof(struct Completion_Queue_Entry) * 4);
 
 	//// Set ADMIN_SQ_TDBL & ADMIN_CQ_HDBL Address
-	ADMIN_SQ_TDBL = (unsigned int *)((char *)phys_to_virt((unsigned long)NVMe_PCI_HBA->BAR_base_addr[0]) + 0x1000);
-	ADMIN_CQ_HDBL = (unsigned int *)((char *)phys_to_virt((unsigned long)NVMe_PCI_HBA->BAR_base_addr[0]) + 0x1004);
+	ADMIN_SQ_TDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1000);
+	ADMIN_CQ_HDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1004);
 }
 
 void NVMe_exit()
@@ -526,31 +528,31 @@ void NVMe_IOqueue_init()
 	{
 	    .OPC			= 0x05,		////Create I/O Completion Queue command
 	    .CID			= 0x55AA,
-	    .PRP_SGL_Entry1	= (unsigned long)Virt_To_Phy(IO_Completion_Queue),
-	    .Dword10		= 0x10001,	////QSIZE=2,QID=1
+	    .PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Completion_Queue),
+	    .Dword10		= IOQ_SIZE << 16 | 0x0001,	////QSIZE=2,QID=1
 	    .Dword11		= 0x10003,	////IV=1,IEN=1,PC=1
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOCQ);
 	NVMe_wait_new_ACQ(curr_AsqEnt);
 	///Create Submission
-	NVMe_SQ_Ent_s ASQ_NewIOCQ =
+	NVMe_SQ_Ent_s ASQ_NewIOSQ =
 	{
 		.OPC			= 0x01,		//Create I/O Submission Queue command
 		.CID			= 0xAA55,
-		.PRP_SGL_Entry1	= (unsigned long)Virt_To_Phy(IO_Submission_Queue),
-		.Dword10		= 0x10001,	////QSIZE=2,QID=1
+		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Submission_Queue),
+		.Dword10		= IOQ_SIZE << 16 | 0x0001,	////QSIZE=2,QID=1
 		.Dword11		= 0x10001,	////CQID=1,QPRIO=0,PC=1
 	};
-	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOCQ);
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOSQ);
 	NVMe_wait_new_ACQ(curr_AsqEnt);
 
 
-	// /// Set IO_SQ_TDBL & IO_CQ_HDBL Address
-	// IO_SQ_TDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x1008);
-	// IO_CQ_HDBL = (unsigned int *)((char *)Phy_To_Virt((unsigned long)NVMe_PCI_HBA.Base32Address0) + 0x100c);
+	/// Set IO_SQ_TDBL & IO_CQ_HDBL Address
+	IO_SQ_TDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1008);
+	IO_CQ_HDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x100c);
 
-	// *IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
-	// IO_CQ_Head_DoorBell++;
+	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & IOQ_SIZE_MASK;	////CQ index
+	IO_CQ_Head_DoorBell++;
 
 	__mb();
 }
