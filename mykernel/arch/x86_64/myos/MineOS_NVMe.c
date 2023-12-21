@@ -62,146 +62,115 @@ unsigned int * IO_CQ_HDBL = NULL;
 unsigned short IO_SQ_Tail_DoorBell = 0;
 unsigned short IO_CQ_Head_DoorBell = 0;
 
-// long NVMe_cmd_out()
-// {
-// 	struct Submission_Queue_Entry * sqptr = NULL;
-// 	wait_queue_T *wait_queue_tmp = container_of(list_next(&NVMe_request.wait_queue_list.wait_list),wait_queue_T,wait_list);
-// 	struct block_buffer_node * node = NVMe_request.in_using = container_of(wait_queue_tmp,struct block_buffer_node,wait_queue);
-// 	list_del(&NVMe_request.in_using->wait_queue.wait_list);
-// 	NVMe_request.block_request_count--;
+long NVMe_cmd_out(blkbuf_node_s *node)
+{
+	NVMe_SQ_Ent_s *sqptr = NULL;
 
-// 	switch(node->cmd)
-// 	{
-// 		case NVM_CMD_WRITE:
-// 			sqptr = IO_Submission_Queue + (IO_SQ_Tail_DoorBell & 0x1);
-// 			memset(sqptr,0,sizeof(struct Submission_Queue_Entry));
-// 			IO_SQ_Tail_DoorBell++;
+	switch(node->cmd)
+	{
+		case NVM_CMD_WRITE:
+			sqptr = IO_Submission_Queue + (IO_SQ_Tail_DoorBell & 0x1);
+			memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
+			IO_SQ_Tail_DoorBell++;
 
-// 			sqptr->CID = IO_SQ_Tail_DoorBell;
-// 			sqptr->OPC = NVM_CMD_WRITE;	//Write command 0x01;
-// 			sqptr->NSID = 1;		//NSID=1
-// 			sqptr->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(node->buffer);
-// 			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
-// 			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
-// 			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,DTYPE=0,NLB=1
-// 			io_mfence();
+			sqptr->CID = IO_SQ_Tail_DoorBell;
+			sqptr->OPC = NVM_CMD_WRITE;	//Write command 0x01;
+			sqptr->NSID = 1;		//NSID=1
+			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
+			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
+			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
+			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,DTYPE=0,NLB=1
+			__mb();
 
-// 			*IO_SQ_TDBL = IO_SQ_Tail_DoorBell & 0x1;	////SQ index
-// 			io_mfence();
-// 			break;
+			*IO_SQ_TDBL = IO_SQ_Tail_DoorBell & 0x1;	////SQ index
+			__mb();
+			break;
 
-// 		case NVM_CMD_READ:
-// 			sqptr = IO_Submission_Queue + (IO_SQ_Tail_DoorBell & 0x1);
-// 			memset(sqptr,0,sizeof(struct Submission_Queue_Entry));
-// 			IO_SQ_Tail_DoorBell++;
+		case NVM_CMD_READ:
+			sqptr = IO_Submission_Queue + (IO_SQ_Tail_DoorBell & 0x1);
+			memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
+			IO_SQ_Tail_DoorBell++;
 
-// 			sqptr->CID = IO_SQ_Tail_DoorBell;
-// 			sqptr->OPC = NVM_CMD_READ;	//Read command 0x02;
-// 			sqptr->NSID = 1;		//NSID=1
-// 			sqptr->PRP_SGL_Entry1 = (unsigned long)Virt_To_Phy(node->buffer);
-// 			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
-// 			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
-// 			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,NLB=1
-// 			io_mfence();
+			sqptr->CID = IO_SQ_Tail_DoorBell;
+			sqptr->OPC = NVM_CMD_READ;	//Read command 0x02;
+			sqptr->NSID = 1;		//NSID=1
+			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
+			sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
+			sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
+			sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,NLB=1
+			__mb();
 
-// 			*IO_SQ_TDBL = IO_SQ_Tail_DoorBell & 0x1;	////SQ index
-// 			io_mfence();
-// 			break;
+			*IO_SQ_TDBL = IO_SQ_Tail_DoorBell & 0x1;	////SQ index
+			__mb();
+			break;
 
-// 		default:
-// 			break;
-// 	}
+		default:
+			break;
+	}
 
-// 	return 1;
-// }
+	return 1;
+}
 
-// void NVMe_end_request(struct block_buffer_node * node)
-// {
-// 	if(node == NULL)
-// 		color_printk(RED,BLACK,"end_request error\n");
+void NVMe_end_request(blkbuf_node_s *node)
+{
+	if (node == NULL)
+		color_printk(RED, BLACK, "end_request error\n");
 
-// 	node->wait_queue.tsk->state = TASK_RUNNING;
-// 	insert_task_queue(node->wait_queue.tsk);
-// //	node->wait_queue.tsk->flags |= NEED_SCHEDULE;
-// 	current->flags |= NEED_SCHEDULE;
+	// complete(node->done);
+	// spin_lock(&req_lock);
+	wake_up_process(node->task);
+	req_in_using = NULL;
+	current->flags |= PF_NEED_SCHEDULE;
+	// spin_unlock_no_resched(&req_lock);
+}
 
-// 	kfree((unsigned long *)NVMe_request.in_using);
-// 	NVMe_request.in_using = NULL;
+void NVMe_read_handler(unsigned long parameter)
+{
+	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
+	IO_CQ_Head_DoorBell++;
+}
 
-// 	if(NVMe_request.block_request_count)
-// 		NVMe_cmd_out();
-// }
+void NVMe_write_handler(unsigned long parameter)
+{
+	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
+	IO_CQ_Head_DoorBell++;
+}
 
-// void NVMe_add_request(struct block_buffer_node * node)
-// {
-// 	list_add_to_before(&NVMe_request.wait_queue_list.wait_list,&node->wait_queue.wait_list);
-// 	NVMe_request.block_request_count++;
-// }
-
-// void NVMe_read_handler(unsigned long nr, unsigned long parameter)
-// {
-// 	struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-
-// 	color_printk(RED,WHITE,"IO_Completion_Queue Entry READ:%#010x:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",IO_CQ_Head_DoorBell,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CMD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQHD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->P,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SC,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SCT,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->M,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->DNR);
-
-// 	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
-// 	IO_CQ_Head_DoorBell++;
-
-// 	NVMe_end_request(node);
-// }
-
-// void NVMe_write_handler(unsigned long nr, unsigned long parameter)
-// {
-// 	struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-
-// 	color_printk(RED,WHITE,"IO_Completion_Queue Entry WRITE:%#010x:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",IO_CQ_Head_DoorBell,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CMD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQHD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->P,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SC,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SCT,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->M,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->DNR);
-
-// 	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
-// 	IO_CQ_Head_DoorBell++;
-
-// 	NVMe_end_request(node);
-// }
-
-// void NVMe_other_handler(unsigned long nr, unsigned long parameter)
-// {
-// 	struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-
-// 	color_printk(RED,WHITE,"IO_Completion_Queue Entry OTHER:%#010x:%#010x,SQHD:%#06x,SQID:%#06x,CID:%#06x,P:%#03x,SC:%#04x,SCT:%#03x,M:%#03x,DNR:%#03x\n",IO_CQ_Head_DoorBell,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CMD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQHD,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SQID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->CID,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->P,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SC,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->SCT,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->M,(IO_Completion_Queue + (IO_CQ_Head_DoorBell & 0x1))->DNR);
-
-// 	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
-// 	IO_CQ_Head_DoorBell++;
-
-// 	NVMe_end_request(node);
-// }
+void NVMe_other_handler(unsigned long parameter)
+{
+	*IO_CQ_HDBL = IO_CQ_Head_DoorBell & 0x1;	////CQ index
+	IO_CQ_Head_DoorBell++;
+}
 
 blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	// struct block_buffer_node * node = (struct block_buffer_node *)kmalloc(sizeof(struct block_buffer_node),0);
-	// wait_queue_init(&node->wait_queue,current);
+	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s),0);
+	list_init(&node->req_list, node);
+	node->buffer = buffer;
 
-	// switch(cmd)
-	// {
-	// 	case NVM_CMD_READ:
-	// 		node->end_handler = NVMe_read_handler;
-	// 		node->cmd = NVM_CMD_READ;
-	// 		break;
+	switch(cmd)
+	{
+		case NVM_CMD_READ:
+			node->end_handler = NVMe_read_handler;
+			node->cmd = NVM_CMD_READ;
+			break;
 
-	// 	case NVM_CMD_WRITE:
-	// 		node->end_handler = NVMe_write_handler;
-	// 		node->cmd = NVM_CMD_WRITE;
-	// 		break;
+		case NVM_CMD_WRITE:
+			node->end_handler = NVMe_write_handler;
+			node->cmd = NVM_CMD_WRITE;
+			break;
 
-	// 	default:
-	// 		node->end_handler = NVMe_other_handler;
-	// 		node->cmd = cmd;
-	// 		break;
-	// }
+		default:
+			node->end_handler = NVMe_other_handler;
+			node->cmd = cmd;
+			break;
+	}
 
-	// node->LBA = blocks;
-	// node->count = count;
-	// node->buffer = buffer;
+	node->LBA = blk_idx;
+	node->count = count;
+	node->buffer = buffer;
 
-	// return node;
+	return node;
 }
 
 // void NVMe_submit(struct block_buffer_node * node)
@@ -322,8 +291,9 @@ void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 {
-	// blkbuf_node_s *node = ((blkbuf_node_s *)parameter)->in_using;
-	// node->end_handler(nr, parameter);
+	blkbuf_node_s *node = req_in_using;
+	node->end_handler(parameter);
+	NVMe_end_request(node);
 	color_printk(RED, BLACK, "NVME IO Handler\n");
 	while (1);
 }
@@ -471,7 +441,7 @@ static int NVMErq_deamon(void *param)
 				req_in_using = node;
 				spin_unlock_no_resched(&req_lock);
 
-				// cmd_out(node);
+				NVMe_cmd_out(node);
 
 				spin_lock(&req_lock);
 			}

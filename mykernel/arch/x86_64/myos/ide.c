@@ -115,8 +115,7 @@ static bool myos_ata_devchk(unsigned controller, unsigned disk)
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-// long cmd_out(unsigned controller, unsigned disk)
-long cmd_out(blkbuf_node_s *node)
+long IDE_cmd_out(blkbuf_node_s *node)
 {
 	unsigned controller = node->ATA_controller;
 	unsigned disk = node->ATA_disk;
@@ -160,10 +159,10 @@ void end_request(blkbuf_node_s *node)
 	// spin_unlock_no_resched(&req_lock);
 }
 
-void read_handler(unsigned long parameter)
+void IDE_read_handler(unsigned long parameter)
 {
 	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "read_handler:%#010x\n",
+		color_printk(RED, BLACK, "IDE_read_handler:%#010x\n",
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
 		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
@@ -173,10 +172,10 @@ void read_handler(unsigned long parameter)
 		req_in_using->buffer += 512;
 }
 
-void write_handler(unsigned long parameter)
+void IDE_write_handler(unsigned long parameter)
 {
 	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "write_handler:%#010x\n",
+		color_printk(RED, BLACK, "IDE_write_handler:%#010x\n",
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 
 	req_in_using->count--;
@@ -189,16 +188,16 @@ void write_handler(unsigned long parameter)
 	}
 }
 
-void other_handler(unsigned long parameter)
+void IDE_other_handler(unsigned long parameter)
 {
 	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "other_handler:%#010x\n",
+		color_printk(RED, BLACK, "IDE_other_handler:%#010x\n",
 					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
 	else
 		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
 }
 
-blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
+blkbuf_node_s *IDE_make_request(unsigned controller, unsigned disk, long cmd,
 							unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
@@ -208,17 +207,17 @@ blkbuf_node_s *make_request(unsigned controller, unsigned disk, long cmd,
 	switch (cmd)
 	{
 	case ATA_READ_CMD:
-		node->end_handler = read_handler;
+		node->end_handler = IDE_read_handler;
 		node->cmd = ATA_READ_CMD;
 		break;
 
 	case ATA_WRITE_CMD:
-		node->end_handler = write_handler;
+		node->end_handler = IDE_write_handler;
 		node->cmd = ATA_WRITE_CMD;
 		break;
 
 	default: ///
-		node->end_handler = other_handler;
+		node->end_handler = IDE_other_handler;
 		node->cmd = cmd;
 		break;
 	}
@@ -258,7 +257,7 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		cmd == ATA_WRITE_CMD ||
 		cmd == ATA_INFO_CMD)
 	{
-		node = make_request(controller, disk, cmd,
+		node = IDE_make_request(controller, disk, cmd,
 							blk_idx, count, buffer);
 		// DECLARE_COMPLETION_ONSTACK(done);
 		// node->done = &done;
@@ -360,7 +359,7 @@ static int ATArq_deamon(void *param)
 				req_in_using = node;
 				spin_unlock_no_resched(&req_lock);
 
-				cmd_out(node);
+				IDE_cmd_out(node);
 
 				spin_lock(&req_lock);
 			}
