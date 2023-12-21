@@ -174,35 +174,35 @@ unsigned short IO_CQ_Head_DoorBell = 0;
 // 	NVMe_end_request(node);
 // }
 
-// struct block_buffer_node * NVMe_make_request(long cmd,unsigned long blocks,long count,unsigned char * buffer)
-// {
-// 	struct block_buffer_node * node = (struct block_buffer_node *)kmalloc(sizeof(struct block_buffer_node),0);
-// 	wait_queue_init(&node->wait_queue,current);
+blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+{
+	// struct block_buffer_node * node = (struct block_buffer_node *)kmalloc(sizeof(struct block_buffer_node),0);
+	// wait_queue_init(&node->wait_queue,current);
 
-// 	switch(cmd)
-// 	{
-// 		case NVM_CMD_READ:
-// 			node->end_handler = NVMe_read_handler;
-// 			node->cmd = NVM_CMD_READ;
-// 			break;
+	// switch(cmd)
+	// {
+	// 	case NVM_CMD_READ:
+	// 		node->end_handler = NVMe_read_handler;
+	// 		node->cmd = NVM_CMD_READ;
+	// 		break;
 
-// 		case NVM_CMD_WRITE:
-// 			node->end_handler = NVMe_write_handler;
-// 			node->cmd = NVM_CMD_WRITE;
-// 			break;
+	// 	case NVM_CMD_WRITE:
+	// 		node->end_handler = NVMe_write_handler;
+	// 		node->cmd = NVM_CMD_WRITE;
+	// 		break;
 
-// 		default:
-// 			node->end_handler = NVMe_other_handler;
-// 			node->cmd = cmd;
-// 			break;
-// 	}
+	// 	default:
+	// 		node->end_handler = NVMe_other_handler;
+	// 		node->cmd = cmd;
+	// 		break;
+	// }
 
-// 	node->LBA = blocks;
-// 	node->count = count;
-// 	node->buffer = buffer;
+	// node->LBA = blocks;
+	// node->count = count;
+	// node->buffer = buffer;
 
-// 	return node;
-// }
+	// return node;
+}
 
 // void NVMe_submit(struct block_buffer_node * node)
 // {
@@ -236,22 +236,40 @@ unsigned short IO_CQ_Head_DoorBell = 0;
 // 	return 0;
 // }
 
-// long NVMe_transfer(long cmd,unsigned long blocks,long count,unsigned char * buffer)
-// {
-// 	struct block_buffer_node * node = NULL;
-// 	if(cmd == NVM_CMD_READ || cmd == NVM_CMD_WRITE)
-// 	{
-// 		node = NVMe_make_request(cmd,blocks,count,buffer);
-// 		NVMe_submit(node);
-// 		NVMe_wait_for_finish();
-// 	}
-// 	else
-// 	{
-// 		return 0;
-// 	}
+long NVMe_transfer(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+{
+	blkbuf_node_s *node = NULL;
+	if(cmd == NVM_CMD_READ || cmd == NVM_CMD_WRITE)
+	{
+		// node = NVMe_make_request(cmd,blocks,count,buffer);
+		// NVMe_submit(node);
+		// NVMe_wait_for_finish();
 
-// 	return 1;
-// }
+		node = NVMe_make_request(cmd, blk_idx, count, buffer);
+		// DECLARE_COMPLETION_ONSTACK(done);
+		// node->done = &done;
+		node->task = current;
+
+		spin_lock(&req_lock);
+		list_hdr_enqueue(&NVMEreq_lhdr, &node->req_list);
+		spin_unlock_no_resched(&req_lock);
+
+		__set_current_state(TASK_UNINTERRUPTIBLE);
+		wake_up_process(thread);
+		// wait_for_completion(&done);
+		schedule();
+
+		if (node != NULL)
+			kfree(node);
+		return -ENOERR;
+	}
+	else
+	{
+		return -EINVAL;
+	}
+
+	return 1;
+}
 
 // struct block_device_operation NVMe_device_operation =
 // {
@@ -261,21 +279,21 @@ unsigned short IO_CQ_Head_DoorBell = 0;
 // 	.transfer = NVMe_transfer,
 // };
 
-// unsigned long NVMe_install(unsigned long irq,void * arg)
-// {
-// 	return 0;
-// }
+unsigned long NVMe_install(unsigned long irq,void * arg)
+{
+	return 0;
+}
 
-// void NVMe_enable(unsigned long irq)
-// {
-// }
+void NVMe_enable(unsigned long irq)
+{
+}
 
 hw_int_controller_s NVMe_int_controller =
 {
-	// .enable = NVMe_enable,
-	// .disable = NULL,
-	// .install = NVMe_install,
-	// .uninstall = NULL,
+	.enable = NVMe_enable,
+	.disable = NULL,
+	.install = NVMe_install,
+	.uninstall = NULL,
 	.ack = IOAPIC_edge_ack,
 };
 
@@ -301,14 +319,6 @@ void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 	memset(ACQ_ptr, 0, sizeof(NVMe_CQ_Ent_s));
 	memset(ASQ_ptr, 0, sizeof(NVMe_SQ_Ent_s));
 }
-
-// void NVMe_ADMIN_handler(unsigned long parameter, pt_regs_s * regs)
-// {
-// 	// struct block_buffer_node * node = ((struct request_queue *)parameter)->in_using;
-// 	// node->end_handler(nr,parameter);
-// 	color_printk(RED, BLACK, "NVME Admin Handler\n");
-// 	while (1);
-// }
 
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 {
@@ -419,7 +429,6 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 
 	/// register interrupt
 	//Admin Completion_Queue_Entry Interrupt Handler
-	// register_irq(APIC_PIRQA, NULL , "NVMe_ADMIN", 0, &NVMe_int_controller, &NVMe_ADMIN_handler);
 	//I/O Completion_Queue_Entry Interrupt Handler
 	register_irq(APIC_PIRQB, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
 
