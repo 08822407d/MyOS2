@@ -76,6 +76,156 @@ struct NVMe_Controller_Registers
 	unsigned long	BPMBL;
 }__attribute__((packed));
 
+////	NVMe Controller Registers
+////Offset 00h: CAP – Controller Capabilities
+#define NVMe_CTR_CAP_CRMS(val)			((val) << 59)
+#define NVMe_CTR_CAP_NSSS				(1 << 58)
+#define NVMe_CTR_CAP_CMBS				(1 << 57)
+#define NVMe_CTR_CAP_PMRS				(1 << 56)
+#define NVMe_CTR_CAP_MPSMAX(val)			((val) << 52)
+#define NVMe_CTR_CAP_MPSMIN(val)			((val) << 48)
+#define NVMe_CTR_CAP_CPS(val)				((val) << 46)
+#define NVMe_CTR_CAP_BPS				(1 << 45)
+#define NVMe_CTR_CAP_CSS(val)				((val) << 37)
+#define NVMe_CTR_CAP_NSSRS				(1 << 36)
+#define NVMe_CTR_CAP_DSTRD(val)			((val) << 32)
+#define NVMe_CTR_CAP_TO(val)				((val) << 24)
+#define NVMe_CTR_CAP_AMS(val)				((val) << 17)
+#define NVMe_CTR_CAP_CQR				(1 << 16)
+#define NVMe_CTR_CAP_MQES(val)			((val) << 0)
+
+////Offset 08h: VS – Version
+#define NVMe_CTR_VS_MJR(val)				((val) << 16)
+#define NVMe_CTR_VS_MNR(val)				((val) << 8)
+
+////Offset 0Ch: INTMS – Interrupt Mask Set
+#define NVMe_CTR_INTMS_IVMS(val)			((val) << 8)
+
+////Offset 10h: INTMC – Interrupt Mask Clear
+#define NVMe_CTR_INTMC_IVMC(val)			((val) << 8)
+
+////Offset 14h: CC – Controller Configuration
+#define NVMe_CTR_CC_CRIME				(1 << 24)
+#define NVMe_CTR_CC_IOCQES(val)			((val) << 20)
+#define NVMe_CTR_CC_IOSQES(val)			((val) << 16)
+#define NVMe_CTR_CC_SHN(val)				((val) << 14)
+#define NVMe_CTR_CC_AMS(val)				((val) << 11)
+#define NVMe_CTR_CC_MPS(val)				((val) << 7)
+#define NVMe_CTR_CC_CSS(val)				((val) << 4)
+#define NVMe_CTR_CC_EN					(1 << 0)
+
+////Offset 1Ch: CSTS – Controller Status
+#define NVMe_CTR_CTST_ST				(1 << 6)
+#define NVMe_CTR_CTST_PP				(1 << 5)
+#define NVMe_CTR_CTST_NSSRO				(1 << 4)
+#define NVMe_CTR_CTST_SHST(val)			((val) << 2)
+#define NVMe_CTR_CTST_CFS				(1 << 1)
+#define NVMe_CTR_CTST_RDY				(1 << 0)
+
+////Offset 20h: NSSR – NVM Subsystem Reset
+#define NVMe_CTR_NSSR_NSSRC(val)			((val) << 0)
+
+////Offset 24h: AQA – Admin Queue Attributes
+#define NVMe_CTR_AQA_ACQS(val)			((val) << 16)
+#define NVMe_CTR_AQA_ASQS(val)			((val) << 0)
+
+////Offset 28h: ASQ – Admin Submission Queue Base Address
+#define NVMe_CTR_ASQ_ASQB(val)			((val) << 12)
+
+////Offset 30h: ACQ – Admin Completion Queue Base Address
+#define NVMe_CTR_ACQ_ACQB(val)			((val) << 12)
+
+////Offset 38h: CMBLOC – Controller Memory Buffer Location
+#define NVMe_CTR_CMBLOC_OFST(val)			((val) << 12)
+#define NVMe_CTR_CMBLOC_CQDA				(1 << 8)
+#define NVMe_CTR_CMBLOC_CDMMMS			(1 << 7)
+#define NVMe_CTR_CMBLOC_CDPCILS			(1 << 6)
+#define NVMe_CTR_CMBLOC_CDPMLS			(1 << 5)
+#define NVMe_CTR_CMBLOC_CQPDS				(1 << 4)
+#define NVMe_CTR_CMBLOC_CQMMS				(1 << 3)
+#define NVMe_CTR_CMBLOC_BIR(val)			((val) << 0)
+
+////Offset 3Ch: CMBSZ – Controller Memory Buffer Size
+#define NVMe_CTR_CMBSZ_SZ(val)			((val) << 12)
+#define NVMe_CTR_CMBSZ_SZU(val)			((val) << 8)
+#define NVMe_CTR_CMBSZ_WDS				(1 << 4)
+#define NVMe_CTR_CMBSZ_RDS				(1 << 3)
+#define NVMe_CTR_CMBSZ_LISTS				(1 << 2)
+#define NVMe_CTR_CMBSZ_CQS				(1 << 1)
+#define NVMe_CTR_CMBSZ_SQS				(1 << 0)
+
+////Offset 40h: BPINFO – Boot Partition Information
+#define NVMe_CTR_BPINFO_ABPID				(1 << 31)
+#define NVMe_CTR_BPINFO_BRS(val)			((val) << 24)
+#define NVMe_CTR_BPINFO_BPSZ(val)			((val) << 0)
+
+////Offset 44h: BPRSEL – Boot Partition Read Select
+#define NVMe_CTR_BPRSEL_BPID				(1 << 31)
+#define NVMe_CTR_BPRSEL_BPRO(val)			((val) << 10)
+#define NVMe_CTR_BPRSEL_BPRSZ(val)			((val) << 0)
+
+////Offset 48h: BPMBL – Boot Partition Memory Buffer Location (Optional)
+#define NVMe_CTR_BPMBL_BMBBA(val)			((val) << 12)
+
+////Offset 50h: CMBMSC – Controller Memory Buffer Memory Space Control
+#define NVMe_CTR_CMBMSC_CBA(val)			((val) << 12)
+#define NVMe_CTR_CMBMSC_CMSE				(1 << 1)
+#define NVMe_CTR_CMBMSC_CRE				(1 << 0)
+
+////Offset 58h: CMBSTS – Controller Memory Buffer Status
+#define NVMe_CTR_CMBSTS_CBAI				(1 << 0)
+
+////Offset 5Ch: CMBEBS – Controller Memory Buffer Elasticity Buffer Size
+#define NVMe_CTR_CMBEBS_CMBWBZ(val)			((val) << 8)
+#define NVMe_CTR_CMBEBS_RBB				(1 << 4)
+#define NVMe_CTR_CMBEBS_CMBSZU(val)			((val) << 0)
+
+////Offset 60h: CMBSWTP – Controller Memory Buffer Sustained Write Throughput
+#define NVMe_CTR_CMBSWTP_CMBSWTV(val)		((val) << 8)
+#define NVMe_CTR_CMBSWTP_CMBSWTU(val)		((val) << 0)
+
+////Offset 64h: NSSD – NVM Subsystem Shutdown
+#define NVMe_CTR_NSSD_NSSC(val)			((val) << 0)
+
+////Offset 68h: CRTO – Controller Ready Timeouts
+#define NVMe_CTR_CRTO_CRIMT(val)			((val) << 16)
+#define NVMe_CTR_CRTO_CRWMT(val)			((val) << 0)
+
+////Offset E00h: PMRCAP – Persistent Memory Region Capabilities
+#define NVMe_CTR_PMRCAP_CMSS				(1 << 24)
+#define NVMe_CTR_PMRCAP_PMRTO(val)			((val) << 16)
+#define NVMe_CTR_PMRCAP_PMRWBM(val)			((val) << 10)
+#define NVMe_CTR_PMRCAP_PMRTU(val)			((val) << 8)
+#define NVMe_CTR_PMRCAP_BIR(val)			((val) << 5)
+#define NVMe_CTR_PMRCAP_WDS				(1 << 4)
+#define NVMe_CTR_PMRCAP_RDS				(1 << 3)
+
+////Offset E04h: PMRCTL – Persistent Memory Region Control
+#define NVMe_CTR_PMRCTL_EN				(1 << 0)
+
+////Offset E08h: PMRSTS – Persistent Memory Region Status
+#define NVMe_CTR_PMRSTS_CBAI				(1 << 12)
+#define NVMe_CTR_PMRSTS_HSTS(val)			((val) << 9)
+#define NVMe_CTR_PMRSTS_NRDY				(1 << 8)
+#define NVMe_CTR_PMRSTS_ERR(val)			((val) << 0)
+
+////Offset E0Ch: PMREBS – Persistent Memory Region Elasticity Buffer Size
+#define NVMe_CTR_PMREBS_PMRWBZ(val)			((val) << 8)
+#define NVMe_CTR_PMREBS_RBB				(1 << 4)
+#define NVMe_CTR_PMREBS_PMRSZU(val)			((val) << 0)
+
+////Offset E10h: PMRSWTP – Persistent Memory Region Sustained Write Throughput
+#define NVMe_CTR_PMRSWTP_PMRSWTV(val)		((val) << 8)
+#define NVMe_CTR_PMRSWTP_PMRSWTU(val)		((val) << 0)
+
+////Offset E14h: PMRMSCL – Persistent Memory Region Memory Space Control Lower
+#define NVMe_CTR_PMRMSCL_CBA(val)			((val) << 12)
+#define NVMe_CTR_PMRMSCL_CMSE				(1 << 1)
+
+////Offset E18h: PMRMSCU – Persistent Memory Region Memory Space Control Upper
+#define NVMe_CTR_PMRMSCU_CBA(val)			((val) << 0)
+
+
 ///Submission Queue Entry – Command Format
 
 typedef struct Submission_Queue_Entry
