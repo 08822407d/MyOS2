@@ -303,8 +303,8 @@ void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 
 void NVMe_Admin_handler(unsigned long parameter, pt_regs_s * regs)
 {
-	color_printk(RED, BLACK, "NVME Admin Handler\n");
-	while (1);
+	// color_printk(RED, BLACK, "NVME Admin Handler\n");
+	// while (1);
 }
 
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
@@ -313,7 +313,7 @@ void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 	node->end_handler(parameter);
 	NVMe_end_request(node);
 	color_printk(RED, BLACK, "NVME IO Handler\n");
-	while (1);
+	// while (1);
 }
 
 
