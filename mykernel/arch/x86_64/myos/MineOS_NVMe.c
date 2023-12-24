@@ -24,10 +24,11 @@
 #include <obsolete/myos_irq_vectors.h>
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
+#include <obsolete/device.h>
 #include "myos_block.h"
 
 #define AdmQ_SIZE_SHIFT	2
-#define IOQ_SIZE_SHIFT	1
+#define IOQ_SIZE_SHIFT	2
 #define AdmQ_SIZE		((1UL << AdmQ_SIZE_SHIFT) - 1)
 #define IOQ_SIZE		((1UL << IOQ_SIZE_SHIFT) - 1)
 #define AdmQ_SIZE_MASK	AdmQ_SIZE
@@ -98,7 +99,7 @@ long NVMe_cmd_out(blkbuf_node_s *node)
 			memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
 			IOSQ_Tail_Idx++;
 
-			sqptr->CID = IOSQ_Tail_Idx;
+			sqptr->CID = 0x1F00 | IOSQ_Tail_Idx;
 			sqptr->OPC = NVM_CMD_WRITE;	//Write command 0x01;
 			sqptr->NSID = 1;		//NSID=1
 			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
@@ -116,7 +117,7 @@ long NVMe_cmd_out(blkbuf_node_s *node)
 			memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
 			IOSQ_Tail_Idx++;
 
-			sqptr->CID = IOSQ_Tail_Idx;
+			sqptr->CID = 0x2F00 | IOSQ_Tail_Idx;
 			sqptr->OPC = NVM_CMD_READ;	//Read command 0x02;
 			sqptr->NSID = 1;		//NSID=1
 			sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
@@ -198,39 +199,25 @@ blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, un
 	return node;
 }
 
-// void NVMe_submit(struct block_buffer_node * node)
-// {
-// 	NVMe_add_request(node);
-
-// 	if(NVMe_request.in_using == NULL)
-// 		NVMe_cmd_out();
-// }
-
-// void NVMe_wait_for_finish()
-// {
-// 	current->state = TASK_UNINTERRUPTIBLE;
-// 	schedule();
-// }
-
 // long NVMe_open()
 // {
-// 	color_printk(BLACK,WHITE,"NVMe Opened\n");
+// 	// color_printk(BLACK,WHITE,"NVMe Opened\n");
 // 	return 1;
 // }
 
 // long NVMe_close()
 // {
-// 	color_printk(BLACK,WHITE,"NVMe Closed\n");
+// 	// color_printk(BLACK,WHITE,"NVMe Closed\n");
 // 	return 1;
 // }
 
-// long NVMe_ioctl(long cmd,long arg)
+// long NVMe_ioctl(long cmd, long arg)
 // {
-// 	struct block_buffer_node * node = NULL;
+// 	blkbuf_node_s *node = NULL;
 // 	return 0;
 // }
 
-long NVMe_transfer(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+long NVMe_transfer(unsigned controller, unsigned disk, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = NULL;
 	if(cmd == NVM_CMD_READ || cmd == NVM_CMD_WRITE)
@@ -265,13 +252,13 @@ long NVMe_transfer(long cmd, unsigned long blk_idx, long count, unsigned char *b
 	return 1;
 }
 
-// struct block_device_operation NVMe_device_operation =
-// {
-// 	.open = NVMe_open,
-// 	.close = NVMe_close,
-// 	.ioctl = NVMe_ioctl,
-// 	.transfer = NVMe_transfer,
-// };
+blkdev_ops_s NVMe_ops =
+{
+	// .open = NVMe_open,
+	// .close = NVMe_close,
+	// .ioctl = NVMe_ioctl,
+	.transfer = NVMe_transfer,
+};
 
 unsigned long NVMe_install(unsigned long irq,void * arg)
 {
@@ -314,6 +301,12 @@ void NVMe_wait_new_ACQ(NVMe_SQ_Ent_s *ASQ_ptr)
 	memset(ASQ_ptr, 0, sizeof(NVMe_SQ_Ent_s));
 }
 
+void NVMe_Admin_handler(unsigned long parameter, pt_regs_s * regs)
+{
+	color_printk(RED, BLACK, "NVME Admin Handler\n");
+	while (1);
+}
+
 void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 {
 	blkbuf_node_s *node = req_in_using;
@@ -324,6 +317,138 @@ void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 }
 
 
+// void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
+// {
+// 	int bus,device,function;
+// 	unsigned int index = 0;
+// 	unsigned int value = 0;
+// 	unsigned long * tmp = NULL;
+// 	unsigned int * ptr = NULL;
+
+// 	int BIR_idx;
+// 	u64 TBIR = 0;
+// 	unsigned int * TADDR = NULL;
+// 	u64 PBIR = 0;
+// 	unsigned int * PADDR = NULL;
+
+
+// 	// get NVMe Controller register
+// 	NVMe_BAR0_base = NVMe_PCI_HBA->BAR_base_addr[0];
+// 	u64 map_start = NVMe_BAR0_base;
+// 	u64 map_size = NVMe_PCI_HBA->BAR_space_limit[0];
+// 	myos_ioremap(map_start, map_size);
+// 	flush_tlb_local();
+
+
+// 	// detect MSI-X capability
+// 	bus = (NVMe_PCI_HBA->BDF >> 16) & 0xff;
+// 	device = (NVMe_PCI_HBA->BDF >> 11) & 0x1f;
+// 	function = (NVMe_PCI_HBA->BDF >> 8) & 0x7;
+// 	index = NVMe_PCI_HBA->CapabilitiesPointer;
+// 	while(index != 0)
+// 	{
+// 		value = Read_PCI_Config(bus, device, function, index);
+// 		if((value & 0xff) == 0x11)
+// 			break;
+
+// 		index = (value >> 8) & 0xff;
+// 	}
+// 	// // enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
+// 	// value = Read_PCI_Config(bus, device, function, index) & 0xbfffffff;
+// 	// value = value | 0x80000000;
+// 	// Write_PCI_Config(bus, device, function, index, value);
+// 	//
+// 	value = Read_PCI_Config(bus, device, function, index + 4);
+// 	BIR_idx = value & 0x7;
+// 	while (BIR_idx > 5);
+// 	TBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+// 	TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
+// 	//
+// 	value = Read_PCI_Config(bus, device, function, index + 8);
+// 	BIR_idx = value & 0x7;
+// 	while (BIR_idx > 5);
+// 	PBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+// 	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
+
+// 	/// Configuration MSI-X
+// 	//MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
+// 	*TADDR = 0xfee00000;
+// 	*(TADDR + 1) = 0;
+// 	*(TADDR + 2) = APIC_PIRQA;
+// 	*(TADDR + 3) = 0;
+// 	__mb();
+// 	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
+// 	*(TADDR + 4) = 0xfee00000;
+// 	*(TADDR + 5) = 0;
+// 	*(TADDR + 6) = APIC_PIRQB;
+// 	*(TADDR + 7) = 0;
+// 	__mb();
+// 	// //MSI-X Table Entry End
+// 	// *(TADDR + 4) = 0;
+// 	// *(TADDR + 5) = 0;
+// 	// *(TADDR + 6) = 0;
+// 	// *(TADDR + 7) = 0;
+// 	// __mb();
+
+// 	// enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
+// 	// value = Read_PCI_Config(bus, device, function, index) & 0xb7ffffff;
+// 	value = Read_PCI_Config(bus, device, function, index) & 0xbfffffff;
+// 	value = value | 0x80000000;
+// 	Write_PCI_Config(bus, device, function, index, value);
+
+// 	/// register interrupt
+// 	//Admin Completion_Queue_Entry Interrupt Handler
+// 	register_irq(APIC_PIRQA, NULL, "NVMe0_Admin", 0, &NVMe_int_controller, &NVMe_Admin_handler);
+// 	//I/O Completion_Queue_Entry Interrupt Handler
+// 	register_irq(APIC_PIRQB, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
+
+
+// 	/// configure nvme
+// 	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_BAR0_base);
+// 	u64 cap = NVMe_CTRL_REG->CAP;
+
+// 	/// set NVMe Controller register
+// 	value = NVMe_CTRL_REG->CC;
+// 	NVMe_CTRL_REG->CC = value & (~ NVMe_CTR_CC_EN); //	NVMe_CTRL_REG->CC = 0x460000;	////IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=0
+// 	__mb();
+
+// 	while(NVMe_CTRL_REG->CSTS & NVMe_CTR_CTST_RDY)
+// 		__mb();
+
+
+// 	void *ASQ = (void *)NVMe_CTRL_REG->ASQ;
+// 	void *ACQ = (void *)NVMe_CTRL_REG->ACQ;
+// 	u64 QSZ = abs(ACQ - ASQ);
+// 	myos_ioremap((phys_addr_t)ASQ, QSZ);
+// 	myos_ioremap((phys_addr_t)ACQ, QSZ);
+// 	flush_tlb_local();
+
+// 	NVMe_CTRL_REG->AQA = NVMe_CTR_AQA_ACQS(AdmQ_SIZE) | NVMe_CTR_AQA_ASQS(AdmQ_SIZE);			//ACQS=4,ASQS=4
+// 	__mb();
+// 	NVMe_CTRL_REG->CC = NVMe_CTR_CC_IOCQES(4) | NVMe_CTR_CC_IOSQES(6) | NVMe_CTR_CC_EN;		//IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
+// 	__mb();
+
+// 	while(!(NVMe_CTRL_REG->CSTS & NVMe_CTR_CTST_RDY))
+// 		__mb();
+
+
+// 	/// get struct Submission Queue and Completion Queue
+// 	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ASQ);
+// 	ADMIN_Completion_Queue = (struct Completion_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ACQ);
+
+// 	/// clean struct Submission Queue and Completion Queue
+// 	memset(ADMIN_Submission_Queue, 0, sizeof(struct Submission_Queue_Entry) * 4);
+// 	memset(ADMIN_Completion_Queue, 0, sizeof(struct Completion_Queue_Entry) * 4);
+
+// 	//// Set ADMIN_SQ_TDBL & ADMIN_CQ_HDBL Address
+// 	ADMIN_SQ_TDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1000);
+// 	ADMIN_CQ_HDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1004);
+
+// 	ASQ_Tail_Idx = 0;
+// 	ACQ_Head_Idx = 0;
+// 	__mb();
+// }
+
 void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 {
 	int bus,device,function;
@@ -331,89 +456,21 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	unsigned int value = 0;
 	unsigned long * tmp = NULL;
 	unsigned int * ptr = NULL;
-
 	int BIR_idx;
 	u64 TBIR = 0;
 	unsigned int * TADDR = NULL;
 	u64 PBIR = 0;
 	unsigned int * PADDR = NULL;
 
-
 	// get NVMe Controller register
 	NVMe_BAR0_base = NVMe_PCI_HBA->BAR_base_addr[0];
+	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_BAR0_base);
 	u64 map_start = NVMe_BAR0_base;
 	u64 map_size = NVMe_PCI_HBA->BAR_space_limit[0];
 	myos_ioremap(map_start, map_size);
 	flush_tlb_local();
-
-
-	// detect MSI-X capability
-	bus = (NVMe_PCI_HBA->BDF >> 16) & 0xff;
-	device = (NVMe_PCI_HBA->BDF >> 11) & 0x1f;
-	function = (NVMe_PCI_HBA->BDF >> 8) & 0x7;
-	index = NVMe_PCI_HBA->CapabilitiesPointer;
-	while(index != 0)
-	{
-		value = Read_PCI_Config(bus, device, function, index);
-		if((value & 0xff) == 0x11)
-			break;
-
-		index = (value >> 8) & 0xff;
-	}
-	// enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
-	value = Read_PCI_Config(bus, device, function, index) & 0xbfffffff;
-	value = value | 0x80000000;
-	Write_PCI_Config(bus, device, function, index, value);
 	//
-	value = Read_PCI_Config(bus, device, function, index + 4);
-	BIR_idx = value & 0x7;
-	while (BIR_idx > 5);
-	TBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
-	TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
-	//
-	value = Read_PCI_Config(bus, device, function, index + 8);
-	BIR_idx = value & 0x7;
-	while (BIR_idx > 5);
-	PBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
-	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
-
-	/// Configuration MSI-X
-	// //MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
-	// *TADDR = 0xfee00000;
-	// *(TADDR + 1) = 0;
-	// *(TADDR + 2) = APIC_PIRQA;
-	// *(TADDR + 3) = 0;
-	// __mb();
-	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
-	*(TADDR + 4) = 0xfee00000;
-	*(TADDR + 5) = 0;
-	*(TADDR + 6) = APIC_PIRQA;
-	*(TADDR + 7) = 0;
-	__mb();
-
-	// enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
-	value = Read_PCI_Config(bus, device, function, index) & 0xb7ffffff;
-	value = value | 0x80000000;
-	Write_PCI_Config(bus, device, function, index, value);
-
-	/// register interrupt
-	//Admin Completion_Queue_Entry Interrupt Handler
-	//I/O Completion_Queue_Entry Interrupt Handler
-	register_irq(APIC_PIRQB, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
-
-
-	/// configure nvme
-	NVMe_CTRL_REG = (struct NVMe_Controller_Registers *)phys_to_virt(NVMe_BAR0_base);
 	u64 cap = NVMe_CTRL_REG->CAP;
-
-	/// set NVMe Controller register
-	value = NVMe_CTRL_REG->CC;
-	NVMe_CTRL_REG->CC = value & (~ NVMe_CTR_CC_EN); //	NVMe_CTRL_REG->CC = 0x460000;	////IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=0
-	__mb();
-
-	while(NVMe_CTRL_REG->CSTS & NVMe_CTR_CTST_RDY)
-		__mb();
-
 
 	void *ASQ = (void *)NVMe_CTRL_REG->ASQ;
 	void *ACQ = (void *)NVMe_CTRL_REG->ACQ;
@@ -422,35 +479,96 @@ void NVMe_init(struct PCI_Header_00 *NVMe_PCI_HBA)
 	myos_ioremap((phys_addr_t)ACQ, QSZ);
 	flush_tlb_local();
 
-	NVMe_CTRL_REG->AQA = NVMe_CTR_AQA_ACQS(AdmQ_SIZE) | NVMe_CTR_AQA_ASQS(AdmQ_SIZE);			//ACQS=4,ASQS=4
+	// set NVMe Controller register
+	NVMe_CTRL_REG->CC = 0;
 	__mb();
-	NVMe_CTRL_REG->CC = NVMe_CTR_CC_IOCQES(4) | NVMe_CTR_CC_IOSQES(6) | NVMe_CTR_CC_EN;		//IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
+
+	while(NVMe_CTRL_REG->CSTS & 1)
+		barrier();
+
+	NVMe_CTRL_REG->AQA = AdmQ_SIZE << 16 | AdmQ_SIZE;	//ACQS=3,ASQS=3
+	NVMe_CTRL_REG->CC = 0x00460001;		//IOCQES=4,IOSQES=6,SHN=0,AMS=0,MPS=0,CSS=0,EN=1
 	__mb();
 
-	while(!(NVMe_CTRL_REG->CSTS & NVMe_CTR_CTST_RDY))
-		__mb();
+	while(!(NVMe_CTRL_REG->CSTS & 1))
+		barrier();
 
 
-	/// get struct Submission Queue and Completion Queue
+	// detect MSI-X capability
+	bus = (NVMe_PCI_HBA->BDF >> 16) & 0xff;
+	device = (NVMe_PCI_HBA->BDF >> 11) & 0x1f;
+	function = (NVMe_PCI_HBA->BDF >> 8) & 0x7;
+	index = NVMe_PCI_HBA->CapabilitiesPointer;
+
+	while(index != 0)
+	{
+		value = Read_PCI_Config(bus, device, function, index);
+		if((value & 0xff) == 0x11)
+			break;
+
+		index = (value >> 8) & 0xff;
+	}
+
+	value = Read_PCI_Config(bus, device, function, index + 4);
+	BIR_idx = value & 0x7;
+	while (BIR_idx > 5);
+	TBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+	TADDR = (unsigned int *)phys_to_virt(TBIR + (value & (~0x7)));
+	value = Read_PCI_Config(bus, device, function, index + 8);
+	BIR_idx = value & 0x7;
+	while (BIR_idx > 5);
+	PBIR = NVMe_PCI_HBA->BAR_base_addr[BIR_idx];
+	PADDR = (unsigned int *)phys_to_virt(PBIR + (value & (~0x7)));
+	/// Configuration MSI-X
+	//MSI-X Table Entry 0	-> Admin Completion_Queue_Entry Interrupt Handler
+	*TADDR = 0xfee00000;
+	*(TADDR + 1) = 0;
+	*(TADDR + 2) = APIC_PIRQA;
+	*(TADDR + 3) = 0;
+
+	//MSI-X Table Entry 1 -> I/O Completion_Queue_Entry Interrupt Handler
+	*(TADDR + 4) = 0xfee00000;
+	*(TADDR + 5) = 0;
+	*(TADDR + 6) = APIC_PIRQB;
+	*(TADDR + 7) = 0;
+
+	//MSI-X Pending Table Entry 0~127
+	*PADDR = 0;
+	*(PADDR + 1) = 0;
+	*(PADDR + 2) = 0;
+	*(PADDR + 3) = 0;
+	__mb();
+
+	// enable msi-x : MSI-X MXC.MXE=1,MXC.FM=0
+	value = Read_PCI_Config(bus, device, function, index) & 0xbfffffff;
+	value = value | 0x80000000;
+	Write_PCI_Config(bus, device, function, index, value);
+
+	/// register interrupt
+	//Admin Completion_Queue_Entry Interrupt Handler
+	register_irq(APIC_PIRQA, NULL, "NVMe0_Admin", 0, &NVMe_int_controller, &NVMe_Admin_handler);
+	//I/O Completion_Queue_Entry Interrupt Handler
+	register_irq(APIC_PIRQB, NULL, "NVMe0_IO", 0, &NVMe_int_controller, &NVMe_IO_handler);
+
+	//// get struct Submission Queue and Completion Queue
 	ADMIN_Submission_Queue = (struct Submission_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ASQ);
 	ADMIN_Completion_Queue = (struct Completion_Queue_Entry *)phys_to_virt(NVMe_CTRL_REG->ACQ);
 
-	/// clean struct Submission Queue and Completion Queue
+	//// clean struct Submission Queue and Completion Queue
 	memset(ADMIN_Submission_Queue, 0, sizeof(struct Submission_Queue_Entry) * 4);
 	memset(ADMIN_Completion_Queue, 0, sizeof(struct Completion_Queue_Entry) * 4);
-
 	//// Set ADMIN_SQ_TDBL & ADMIN_CQ_HDBL Address
 	ADMIN_SQ_TDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1000);
 	ADMIN_CQ_HDBL = (unsigned int *)((char *)phys_to_virt(NVMe_BAR0_base) + 0x1004);
 
-	ASQ_Tail_Idx = 0;
-	ACQ_Head_Idx = 0;
-	__mb();
+	// ADMIN_SQ_Tail_DoorBell = 0;
+	// ADMIN_CQ_Head_DoorBell = 0;
+	// io_mfence();
 }
 
 void NVMe_exit()
 {
-	// unregister_irq(APIC_PIRQA);
+	unregister_irq(APIC_PIRQA);
 	unregister_irq(APIC_PIRQB);
 }
 
@@ -541,7 +659,7 @@ void NVMe_IOqueue_init()
 	    .OPC			= 0x05,		////Create I/O Completion Queue command
 	    .CID			= 0x55AA,
 	    .PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Completion_Queue),
-	    .Dword10		= IOQ_SIZE << 16 | 0x0001,	////QSIZE=2,QID=1
+	    .Dword10		= NVMe_CTR_AQA_ACQS(IOQ_SIZE) | 0x0001,	////QSIZE=2,QID=1
 	    .Dword11		= 0x10003,	////IV=1,IEN=1,PC=1
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOCQ);
@@ -552,7 +670,7 @@ void NVMe_IOqueue_init()
 		.OPC			= 0x01,		//Create I/O Submission Queue command
 		.CID			= 0xAA55,
 		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)IO_Submission_Queue),
-		.Dword10		= IOQ_SIZE << 16 | 0x0001,	////QSIZE=2,QID=1
+		.Dword10		= NVMe_CTR_AQA_ACQS(IOQ_SIZE) | 0x0001,	////QSIZE=2,QID=1
 		.Dword11		= 0x10001,	////CQID=1,QPRIO=0,PC=1
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_NewIOSQ);

@@ -309,6 +309,7 @@ static noinline void __init kernel_init_freeable(void);
 
 void myos_ata_probe();
 extern void init_ATArqd();
+extern void init_NVMErqd();
 extern void kjmp_to_doexecve();
 int kernel_init(void *unused)
 {
@@ -323,9 +324,9 @@ int kernel_init(void *unused)
 
 	// do_name();
 	init_ATArqd();
-	
 	myos_ata_probe();
 
+	init_NVMErqd();
 extern void NVMe_IOqueue_init();
 	NVMe_IOqueue_init();
 

@@ -15,13 +15,13 @@
 #include <obsolete/device.h>
 #include <obsolete/ide.h>
 
-
 #include <linux/kernel/init_syscalls.h>
 #include <linux/fs/mount.h>
 #include <uapi/linux/mount.h>
 
 #define BOOT_FS_IDX 0
 
+extern blkdev_ops_s NVMe_ops;
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf);
 
 MBR_s		*boot_sec;
@@ -139,6 +139,8 @@ unsigned long myos_switch_to_root_disk()
 	// id_def_s	id_def;
 	// ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
 	// ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
+	unsigned char *buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+	NVMe_ops.transfer(0, 0, 0x02, 0, 1, buf);
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)
