@@ -16,6 +16,9 @@
 #include <obsolete/printk.h>
 #include "MineOS_PCI.h"
 
+#include "MineOS_NVMe.h"
+#include "myos_XHCI.h"
+
 void Print_PCIHDR(struct PCI_Header_00 * PCI_HDR)
 {
 	color_printk(WHITE, BLACK, "PCI : %#04d:%#02d:%#02d - %-32s", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function, PCI_HDR->devtype_name);
@@ -162,7 +165,6 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR, unsigned int bus, unsign
 	return 1;
 }
 
-extern void NVMe_init(struct PCI_Header_00 *PCI_HDR);
 void scan_PCI_devices(void)
 {
 	int bus,device,function;
@@ -192,6 +194,9 @@ void scan_PCI_devices(void)
 
 						if (CCSCPIF == PCI_CLASS_STORAGE_NVM_IO)
 							NVMe_init(PCI_HDR);
+
+						if (CCSCPIF == PCI_CLASS_SERIAL_USB_XHCI)
+							XHCI_init(PCI_HDR);
 					}
 
 					idname_idx++;

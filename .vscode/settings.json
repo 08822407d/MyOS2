@@ -34,6 +34,8 @@
         "pci_ids.h": "c",
         "task_stack.h": "c",
         "printk.h": "c",
-        "arch_proto.h": "c"
+        "arch_proto.h": "c",
+        "myos_block.h": "c",
+        "myos_irq_vectors.h": "c"
     }
 }

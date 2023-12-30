@@ -549,7 +549,6 @@ typedef struct NVMe_Identify_Controller_Data_Structure
 extern struct block_device_operation NVMe_device_operation;
 
 void NVMe_init();
-
 void NVMe_exit();
 
 #endif
