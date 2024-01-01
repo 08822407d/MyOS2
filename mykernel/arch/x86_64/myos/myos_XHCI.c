@@ -29,7 +29,8 @@ u64				XHCI_BAR0_base = 0;
 XHCI_HCCR_s		*XHCI_HostCtrl_Cap_Regs_ptr = NULL;
 XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
 XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
-u32				*XHCI_DoorBell_Regptr = NULL;
+XHCI_DBReg_s	*XHCI_DoorBell_Regptr = NULL;
+XHCI_DevCtx_s	**DCBAAP = NULL;
 
 // NVMe_SQ_Ent_s *NVMe_submit_IOSQ(NVMe_SQ_Ent_s *IOSQ_ptr)
 // {
@@ -310,12 +311,27 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_Cap_Regs_ptr = (XHCI_HCCR_s *)phys_to_virt(XHCI_BAR0_base);
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
-	XHCI_DoorBell_Regptr = (u32 *)phys_to_virt(XHCI_BAR0_base + XHCI_HostCtrl_Cap_Regs_ptr->DBOFF);
+	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + XHCI_HostCtrl_Cap_Regs_ptr->DBOFF);
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF);
 
 	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
 	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
 	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+
+	u8 Max_Slots = XHCI_HCCR_val.HCSPARAMS1.def.MaxSlots;
+	u8 Max_Interrupts = XHCI_HCCR_val.HCSPARAMS1.def.MaxIntrs;
+	u8 Max_Ports = XHCI_HCCR_val.HCSPARAMS1.def.MaxPorts;
+	u8 Max_Device_Slots_Enabled = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.def.MaxSlotsEn + 1;
+	DCBAAP = (XHCI_DevCtx_s **)phys_to_virt((phys_addr_t)XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
+	for (int i = 0; i < Max_Device_Slots_Enabled; i++)
+	{
+		XHCI_DevCtx_s *DCBA_ptr = DCBAAP[i];
+		if (DCBA_ptr == NULL)
+			continue;
+		
+		DCBA_ptr = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
+		XHCI_DevCtx_s DCBA = *DCBA_ptr;
+	}
 }
 
 void XHCI_exit()

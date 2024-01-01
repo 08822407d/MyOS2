@@ -96,7 +96,7 @@
 		} HCCPARAMS2;
 
 		u8		*Rsvd2;
-	} XHCI_HCCR_s;
+	} __attribute__((packed)) XHCI_HCCR_s;
 
 
 	typedef struct USB_Port_Reg_Set {
@@ -180,96 +180,94 @@
 	} USB_PRS_s;
 
 	typedef struct XHCI_HostCtrl_Ops_Regs {
-		// union
-		// {
-		// 	u32		val;
-		// 	struct
-		// 	{
-		// 		u32
-		// 			RunStop		: 1,
-		// 			HCRST		: 1,
-		// 			INTE		: 1,
-		// 			HSEE		: 1,
-		// 			RsvdP1		: 3,
-		// 			LHCRST		: 1,
-		// 			CSS			: 1,
-		// 			CRS			: 1,
-		// 			EWE			: 1,
-		// 			EU3S		: 1,
-		// 			RsvdP2		: 1,
-		// 			CME			: 1,
-		// 			ETE			: 1,
-		// 			TSC_EN		: 1,
-		// 			VTIOE		: 1,
-		// 			RsvdP3		: 15;
-		// 	} def;
-		// } USBCMD;
+		union
+		{
+			u32		val;
+			struct
+			{
+				u32
+					RunStop		: 1,
+					HCRST		: 1,
+					INTE		: 1,
+					HSEE		: 1,
+					RsvdP1		: 3,
+					LHCRST		: 1,
+					CSS			: 1,
+					CRS			: 1,
+					EWE			: 1,
+					EU3S		: 1,
+					RsvdP2		: 1,
+					CME			: 1,
+					ETE			: 1,
+					TSC_EN		: 1,
+					VTIOE		: 1,
+					RsvdP3		: 15;
+			} def;
+		} USBCMD;
+		// u32		USBCMD;
 
-		u32		USBCMD;
+		union
+		{
+			u32		val;
+			struct
+			{
+				u32
+					HCH			: 1,
+					RsvdZ1		: 1,
+					HSE			: 1,
+					EINT		: 1,
+					PCD			: 1,
+					RsvdZ2		: 3,
+					SSS			: 1,
+					RSS			: 1,
+					SRE			: 1,
+					CNR			: 1,
+					HCE			: 1,
+					RsvdZ3		: 19;
+			} def;
+		} USBSTS;
+		// u32		USBSTS;
 
-		// union
-		// {
-		// 	u32		val;
-		// 	struct
-		// 	{
-		// 		u32
-		// 			HCH			: 1,
-		// 			RsvdZ1		: 1,
-		// 			HSE			: 1,
-		// 			EINT		: 1,
-		// 			PCD			: 1,
-		// 			RsvdZ2		: 3,
-		// 			SSS			: 1,
-		// 			RSS			: 1,
-		// 			SRE			: 1,
-		// 			CNR			: 1,
-		// 			HCE			: 1,
-		// 			RsvdZ3		: 19;
-		// 	} def;
-		// } USBSTS;
-
-		u32		USBSTS;
 		u32		PAGESIZE;
 		u32		RsvdZ1[2];
 		u32		DNCTRL;
 
-		// union
-		// {
-		// 	u64		val;
-		// 	struct
-		// 	{
-		// 		u64
-		// 			RCS			: 1,
-		// 			CS			: 1,
-		// 			CA			: 1,
-		// 			CRR			: 1,
-		// 			RsvdP		: 2,
-		// 			CmdRing_Ptr	: 58;
-		// 	} def;
-		// } CRCR;
+		union
+		{
+			u64		val;
+			struct
+			{
+				u64
+					RCS			: 1,
+					CS			: 1,
+					CA			: 1,
+					CRR			: 1,
+					RsvdP		: 60;
+			} def;
+		} CRCR;
+		// u64		CRCR;
 
-		u64		CRCR;
 		u32		RsvdZ2[4];
 		u64		DCBAAP;
 
-		// union
-		// {
-		// 	u32		val;
-		// 	struct
-		// 	{
-		// 		u32
-		// 			MaxSlotsEn	: 8,
-		// 			U3E			: 1,
-		// 			CIE			: 1,
-		// 			RsvdP		: 22;
-		// 	} def;
-		// } CONFIG;
+		union
+		{
+			u32		val;
+			struct
+			{
+				u32
+					MaxSlotsEn	: 8,
+					U3E			: 1,
+					CIE			: 1,
+					RsvdP		: 22;
+			} def;
+		} CONFIG;
+		// u32		CONFIG;
 
-		u32		CONFIG;
 		u32		RsvdZ3[241];
 
 		USB_PRS_s	USB_Port_Reg_Sets[256];
-	} XHCI_HCOR_s;
+	} __attribute__((packed)) XHCI_HCOR_s;
 
 
 	typedef struct Intr_Reg_Set {
@@ -277,8 +275,8 @@
 		u32		IMOD;
 		u32		ERSTSZ;
 		u32		RsvdP;
-		u32		ERSTBA;
-		u32		ERDP;
+		u64		ERSTBA;
+		u64		ERDP;
 	} XHCI_IRS_s;
 
 	typedef struct XHCI_HostCtrl_RunTime_Regs {
@@ -286,6 +284,72 @@
 		u8		RsvdZ[28];
 		XHCI_IRS_s		IRS_Arr[1024];
 	} XHCI_HCRTR_s;
+
+
+	typedef struct XHCI_Slot_Context {
+		u32		Route_Str		: 20,
+				Speed			: 4,
+				RsvdZ1			: 1,
+				Multi_TT		: 1,
+				Hub				: 1,
+				Ctx_Ents		: 5;
+
+		u32		Max_ExitLatency	: 15,
+				RHP_Num			: 8,
+				Num_Ports		: 8;
+
+		u32		PHS_ID			: 8,
+				PP_Num			: 8,
+				TTT				: 2,
+				RsvdZ2			: 4,
+				Intr_Target		: 10;
+
+		u32		USB_Dev_Addr	: 8,
+				RsvdZ3			: 19,
+				Slot_State		: 5;
+
+		u32		RsvdO[4];
+	} __attribute__((packed)) XHCI_SlotCtx_s;
+
+	typedef struct XHCI_Endpoint_Context {
+		u32		EP_State		: 3,
+				RsvdZ1			: 5,
+				Mult			: 2,
+				MaxPStreams		: 5,
+				LSA				: 1,
+				Interval		: 8,
+				Max_ESIT_PldHi	: 8;
+
+		u32		RsvdZ2			: 1,
+				CErr			: 2,
+				EP_Type			: 3,
+				RsvdZ3			: 1,
+				HID				: 1,
+				MaxBurstSize	: 8,
+				MaxPacketSize	: 16;
+		
+		u64		TR_Dequeue_Ptr;
+
+		u32		AvgTRBLen		: 16,
+				Max_ESIT_PldLo	: 16;
+
+		u32		RsvdO[3];
+	} __attribute__((packed)) XHCI_EPCtx_s;
+
+	typedef struct XHCI_Device_Context {
+		XHCI_SlotCtx_s	Slot_Context;
+		XHCI_EPCtx_s	BiDir;
+		XHCI_EPCtx_s	EPCtxs[30];
+	} XHCI_DevCtx_s;
+	
+
+	typedef struct XHCI_DoorBell_Reg
+	{
+		u32		DB_Target		: 8,
+				RsvdZ			: 8,
+				DB_Stream_ID	: 16;
+	} XHCI_DBReg_s;
+	
 
 	void XHCI_init();
 	void XHCI_exit();
