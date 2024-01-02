@@ -318,10 +318,10 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
 	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
 
-	u8 Max_Slots = XHCI_HCCR_val.HCSPARAMS1.def.MaxSlots;
-	u8 Max_Interrupts = XHCI_HCCR_val.HCSPARAMS1.def.MaxIntrs;
-	u8 Max_Ports = XHCI_HCCR_val.HCSPARAMS1.def.MaxPorts;
-	u8 Max_Device_Slots_Enabled = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.def.MaxSlotsEn + 1;
+	u8 Max_Slots = XHCI_HCCR_val.HCSPARAMS1.MaxSlots;
+	u8 Max_Interrupts = XHCI_HCCR_val.HCSPARAMS1.MaxIntrs;
+	u8 Max_Ports = XHCI_HCCR_val.HCSPARAMS1.MaxPorts;
+	u8 Max_Device_Slots_Enabled = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn + 1;
 	DCBAAP = (XHCI_DevCtx_s **)phys_to_virt((phys_addr_t)XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
 	for (int i = 0; i < Max_Device_Slots_Enabled; i++)
 	{
