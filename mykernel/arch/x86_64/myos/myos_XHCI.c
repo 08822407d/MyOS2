@@ -311,8 +311,8 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_Cap_Regs_ptr = (XHCI_HCCR_s *)phys_to_virt(XHCI_BAR0_base);
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
-	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + XHCI_HostCtrl_Cap_Regs_ptr->DBOFF);
-	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF);
+	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
+	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x5));
 
 	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
 	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
@@ -331,6 +331,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 		
 		DCBA_ptr = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
 		XHCI_DevCtx_s DCBA = *DCBA_ptr;
+		u8 Slot_State = DCBA.Slot_Context.Slot_State;
 	}
 }
 
