@@ -3,6 +3,8 @@
 
 #include <linux/kernel/types.h>
 
+#include "myos_XHCI_TRBdef.h"
+
 
 	typedef struct XHCI_HostCtrl_Cap_Regs {
 		u8		CAPLENGTH;
@@ -193,6 +195,12 @@
 	} __attribute__((packed)) XHCI_HCOR_s;
 
 
+	typedef struct XHCI_Event_Ring_SegTable_Ent {
+		u64		RingSeg_Base;
+		u16		RingSeg_Size;
+		u16		RsvdZ[3];
+	} XHCI_ERSegTblEnt_s;
+
 	typedef struct Intr_Reg_Set {
 		struct __attribute__((packed))
 		{
@@ -210,7 +218,7 @@
 		} IMOD;
 
 		u64		ERSTSZ;
-		u64		ERSTBA;
+		XHCI_ERSegTblEnt_s	*ERSTBA;
 		u64		ERDP;
 	} XHCI_IRS_s;
 

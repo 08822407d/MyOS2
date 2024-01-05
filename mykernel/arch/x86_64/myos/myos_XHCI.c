@@ -32,6 +32,9 @@ XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
 XHCI_DBReg_s	*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
 
+XHCI_CmdCompEvt_TRB_s	*XHCI_CmdCompEvt_TRB_ptr = NULL;
+u16						XHCI_CmdCompEvt_TRB_Size = 0;
+
 // NVMe_SQ_Ent_s *NVMe_submit_IOSQ(NVMe_SQ_Ent_s *IOSQ_ptr)
 // {
 // 	NVMe_SQ_Ent_s *retval = &IO_Submission_Queue[IOSQ_Tail_Idx];
@@ -317,6 +320,11 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
 	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
 	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+
+	XHCI_ERSegTblEnt_s XHCI_Event_Ring_SegTable_Ent_0 = *(XHCI_ERSegTblEnt_s *)phys_to_virt((phys_addr_t)XHCI_HCRTR_val.IRS_Arr[0].ERSTBA);
+	XHCI_CmdCompEvt_TRB_Size = XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Size;
+	XHCI_CmdCompEvt_TRB_ptr = (XHCI_CmdCompEvt_TRB_s *)phys_to_virt((phys_addr_t)XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Base & ~0x5);
+	XHCI_LinkTRB_s EndOfEventRing = *(XHCI_LinkTRB_s *)(XHCI_CmdCompEvt_TRB_ptr + XHCI_CmdCompEvt_TRB_Size);
 
 	u8 Max_Slots = XHCI_HCCR_val.HCSPARAMS1.MaxSlots;
 	u8 Max_Interrupts = XHCI_HCCR_val.HCSPARAMS1.MaxIntrs;
