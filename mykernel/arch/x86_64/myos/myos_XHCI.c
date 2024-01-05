@@ -31,9 +31,13 @@ XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
 XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
 XHCI_DBReg_s	*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
+	
+XHCI_CmdTRB_s	*Host_CommandRing_ptr = NULL;
+u16				Host_CommandRing_Size = 0;
 
-XHCI_CmdCompEvt_TRB_s	*XHCI_CmdCompEvt_TRB_ptr = NULL;
-u16						XHCI_CmdCompEvt_TRB_Size = 0;
+XHCI_IRS_s		*Main_Intr_RegSet_ptr = NULL;
+XHCI_EvtTRB_s	*MainEventRing_ptr = NULL;
+u16				MainEventRing_Size = 0;
 
 // NVMe_SQ_Ent_s *NVMe_submit_IOSQ(NVMe_SQ_Ent_s *IOSQ_ptr)
 // {
@@ -315,22 +319,44 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
 	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
-	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x5));
+	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 
 	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
 	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
 	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
 
-	XHCI_ERSegTblEnt_s XHCI_Event_Ring_SegTable_Ent_0 = *(XHCI_ERSegTblEnt_s *)phys_to_virt((phys_addr_t)XHCI_HCRTR_val.IRS_Arr[0].ERSTBA);
-	XHCI_CmdCompEvt_TRB_Size = XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Size;
-	XHCI_CmdCompEvt_TRB_ptr = (XHCI_CmdCompEvt_TRB_s *)phys_to_virt((phys_addr_t)XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Base & ~0x5);
-	XHCI_LinkTRB_s EndOfEventRing = *(XHCI_LinkTRB_s *)(XHCI_CmdCompEvt_TRB_ptr + XHCI_CmdCompEvt_TRB_Size);
+	// 获取(主控)命令环相关参数
+	Host_CommandRing_ptr = (XHCI_CmdTRB_s *)phys_to_virt((XHCI_HostCtrl_Ops_Regs_ptr->CRCR & ~0x1F));
+	for (unsigned short i = 0; i < 65536 / 16; i++)
+	{
+		XHCI_CmdTRB_s *CmdTRB_ptr = Host_CommandRing_ptr + i;
+		if (CmdTRB_ptr->TRB_Type == 6)
+		{
+			XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)CmdTRB_ptr;
+			if ((LinkTRB_ptr->CmdTRB_ptr & 0xF) ==
+				(XHCI_HostCtrl_Ops_Regs_ptr->CRCR & ~0x1F))
+			{
+				Host_CommandRing_Size = i;
+				break;
+			}
+		}
+	}
+	// 获取0号中断事件环相关参数
+	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
+	// 当事件段多于一个时，应当进行进一步的设置
+	while (Main_Intr_RegSet_ptr->ERSTSZ != 1);
+	// XHCI_IRS_s IRS0_val = *Main_Intr_RegSet_ptr;
+	XHCI_ERSegTblEnt_s XHCI_Event_Ring_SegTable_Ent_0 = *(XHCI_ERSegTblEnt_s *)phys_to_virt((phys_addr_t)Main_Intr_RegSet_ptr->ERSTBA);
+	MainEventRing_Size = XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Size;
+	MainEventRing_ptr = (XHCI_EvtTRB_s *)phys_to_virt(XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Base & ~0x1F);
 
-	u8 Max_Slots = XHCI_HCCR_val.HCSPARAMS1.MaxSlots;
-	u8 Max_Interrupts = XHCI_HCCR_val.HCSPARAMS1.MaxIntrs;
-	u8 Max_Ports = XHCI_HCCR_val.HCSPARAMS1.MaxPorts;
+
+
+	u8 Max_Slots = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxSlots;
+	u8 Max_Interrupts = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxIntrs;
+	u8 Max_Ports = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxPorts;
 	u8 Max_Device_Slots_Enabled = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn + 1;
-	DCBAAP = (XHCI_DevCtx_s **)phys_to_virt((phys_addr_t)XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
+	DCBAAP = (XHCI_DevCtx_s **)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
 	for (int i = 0; i < Max_Device_Slots_Enabled; i++)
 	{
 		XHCI_DevCtx_s *DCBA_ptr = DCBAAP[i];
