@@ -3,7 +3,7 @@
 
 #include <linux/kernel/types.h>
 
-#include "myos_XHCI_TRBdef.h"
+#include "myos_XHCI_TRB.h"
 
 
 	typedef struct XHCI_HostCtrl_Cap_Regs {

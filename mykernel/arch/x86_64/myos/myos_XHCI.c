@@ -321,26 +321,15 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 
-	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
-	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
-	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+	// 重设主控命令环
+	Host_CommandRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
+	Host_CommandRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
+	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CommandRing_ptr) | 0x1;
+	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CommandRing_ptr + Host_CommandRing_Size - 2);
+	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CommandRing_ptr);
+	LinkTRB_ptr->Cycle_Bit = 1;
+	LinkTRB_ptr->TRB_Type = LINK;
 
-	// 获取(主控)命令环相关参数
-	Host_CommandRing_ptr = (XHCI_CmdTRB_s *)phys_to_virt((XHCI_HostCtrl_Ops_Regs_ptr->CRCR & ~0x1F));
-	for (unsigned short i = 0; i < 65536 / 16; i++)
-	{
-		XHCI_CmdTRB_s *CmdTRB_ptr = Host_CommandRing_ptr + i;
-		if (CmdTRB_ptr->TRB_Type == 6)
-		{
-			XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)CmdTRB_ptr;
-			if ((LinkTRB_ptr->CmdTRB_ptr & 0xF) ==
-				(XHCI_HostCtrl_Ops_Regs_ptr->CRCR & ~0x1F))
-			{
-				Host_CommandRing_Size = i;
-				break;
-			}
-		}
-	}
 	// 获取0号中断事件环相关参数
 	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
 	// 当事件段多于一个时，应当进行进一步的设置
@@ -350,6 +339,11 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	MainEventRing_Size = XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Size;
 	MainEventRing_ptr = (XHCI_EvtTRB_s *)phys_to_virt(XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Base & ~0x1F);
 
+
+
+	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
+	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
+	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
 
 
 	u8 Max_Slots = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxSlots;

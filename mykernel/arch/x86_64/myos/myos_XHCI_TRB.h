@@ -3,6 +3,44 @@
 
 #include <linux/kernel/types.h>
 
+	// Common TRB types
+	enum {
+		NORMAL					= 1,
+		SETUP_STAGE,
+		DATA_STAGE,
+		STATUS_STAGE,
+		ISOCH,
+		LINK,
+		EVENT_DATA,
+		NO_OP,
+		ENABLE_SLOT				= 9,
+		DISABLE_SLOT,
+		ADDRESS_DEVICE,
+		CONFIG_EP,
+		EVALUATE_CONTEXT,
+		RESET_EP,
+		STOP_EP					= 15,
+		SET_TR_DEQUEUE,
+		RESET_DEVICE,
+		FORCE_EVENT,
+		DEG_BANDWIDTH,
+		SET_LAT_TOLERANCE,
+		GET_PORT_BAND			= 21,
+		FORCE_HEADER,
+		NO_OP_CMD,
+		// 24 - 31 = reserved
+		TRANS_EVENT				=32,
+		COMMAND_COMPLETION,
+		PORT_STATUS_CHANGE,
+		BANDWIDTH_REQUEST,
+		DOORBELL_EVENT,
+		HOST_CONTROLLER_EVENT	= 37,
+		DEVICE_NOTIFICATION,
+		MFINDEX_WRAP, 
+		// 40 - 47 = reserved
+		// 48 - 63 = Vendor Defined
+	};
+
 	typedef struct XHCI_TRB_Common {
 		u32		Fields[4];
 	} XHCI_TRB_s;
