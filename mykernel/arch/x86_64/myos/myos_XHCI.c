@@ -321,24 +321,27 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 
-	// 重设主控命令环
+	/// 重设主控命令环
 	Host_CommandRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
-	Host_CommandRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
+	Host_CommandRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * Host_CommandRing_Size, GFP_KERNEL);
 	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CommandRing_ptr) | 0x1;
 	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CommandRing_ptr + Host_CommandRing_Size - 2);
 	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CommandRing_ptr);
 	LinkTRB_ptr->Cycle_Bit = 1;
 	LinkTRB_ptr->TRB_Type = LINK;
 
-	// 获取0号中断事件环相关参数
-	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
-	// 当事件段多于一个时，应当进行进一步的设置
-	while (Main_Intr_RegSet_ptr->ERSTSZ != 1);
-	// XHCI_IRS_s IRS0_val = *Main_Intr_RegSet_ptr;
-	XHCI_ERSegTblEnt_s XHCI_Event_Ring_SegTable_Ent_0 = *(XHCI_ERSegTblEnt_s *)phys_to_virt((phys_addr_t)Main_Intr_RegSet_ptr->ERSTBA);
-	MainEventRing_Size = XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Size;
-	MainEventRing_ptr = (XHCI_EvtTRB_s *)phys_to_virt(XHCI_Event_Ring_SegTable_Ent_0.RingSeg_Base & ~0x1F);
-
+	/// 重设0号中断事件环
+	// 创建环
+	MainEventRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
+	MainEventRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
+	// 创建并设置段表
+	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
+	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_ptr);
+	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
+	// 设置0号中断表项
+	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
+	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTSZ = 1;		// 段表大小
+	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
 
 
 	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
