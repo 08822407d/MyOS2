@@ -310,7 +310,10 @@ static noinline void __init kernel_init_freeable(void);
 void myos_ata_probe();
 extern void init_ATArqd();
 extern void init_NVMErqd();
+extern void init_XHCIrqd();
 extern void kjmp_to_doexecve();
+extern void NVMe_IOqueue_init();
+extern void USB_Keyborad_init();
 int kernel_init(void *unused)
 {
 	int ret;
@@ -327,8 +330,9 @@ int kernel_init(void *unused)
 	myos_ata_probe();
 
 	init_NVMErqd();
-extern void NVMe_IOqueue_init();
+	init_XHCIrqd();
 	NVMe_IOqueue_init();
+	USB_Keyborad_init();
 
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();

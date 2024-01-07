@@ -29,7 +29,7 @@ u64				XHCI_BAR0_base = 0;
 XHCI_HCCR_s		*XHCI_HostCtrl_Cap_Regs_ptr = NULL;
 XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
 XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
-XHCI_DBReg_s	*XHCI_DoorBell_Regptr = NULL;
+u32				*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
 	
 XHCI_CmdTRB_s	*Host_CommandRing_ptr = NULL;
@@ -39,90 +39,38 @@ XHCI_IRS_s		*Main_Intr_RegSet_ptr = NULL;
 XHCI_EvtTRB_s	*MainEventRing_ptr = NULL;
 u16				MainEventRing_Size = 0;
 
-// NVMe_SQ_Ent_s *NVMe_submit_IOSQ(NVMe_SQ_Ent_s *IOSQ_ptr)
-// {
-// 	NVMe_SQ_Ent_s *retval = &IO_Submission_Queue[IOSQ_Tail_Idx];
-// 	*retval = *IOSQ_ptr;
-// 	IOSQ_Tail_Idx = (IOSQ_Tail_Idx + 1) & IOQ_SIZE_MASK;
-// 	*IO_SQ_TDBL = IOSQ_Tail_Idx & IOQ_SIZE_MASK;	////SQ index
-// 	__mb();
-// 	return retval;
-// }
 
-// void NVMe_wait_new_IOCQ(NVMe_SQ_Ent_s *IOSQ_ptr)
-// {
-// 	NVMe_CQ_Ent_s *IOCQ_ptr = &IO_Completion_Queue[IOCQ_Head_Idx];
-// 	while (IOCQ_ptr->CID != IOSQ_ptr->CID &&
-// 		IOCQ_ptr->CMD != IOSQ_ptr->Dword11);
-// 	*IO_CQ_HDBL = IOCQ_Head_Idx & IOQ_SIZE_MASK;	////CQ index
-// 	IOCQ_Head_Idx = (IOCQ_Head_Idx + 1) & IOQ_SIZE_MASK;
-// 	__mb();
-// 	// clear finished queries
-// 	memset(IOCQ_ptr, 0, sizeof(NVMe_CQ_Ent_s));
-// 	memset(IOSQ_ptr, 0, sizeof(NVMe_SQ_Ent_s));
-// }
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
-	// NVMe_SQ_Ent_s *sqptr = NULL;
+	switch(node->cmd)
+	{
+		case NO_OP:
+			Host_CommandRing_ptr->Cycle_Bit = 1;
+			Host_CommandRing_ptr->TRB_Type = NO_OP;
+			Host_CommandRing_ptr++;
+			*(XHCI_DoorBell_Regptr + 0) = 0;
+			break;
 
-	// switch(node->cmd)
-	// {
-	// 	case NVM_CMD_WRITE:
-	// 		sqptr = IO_Submission_Queue + (IOSQ_Tail_Idx & 0x1);
-	// 		memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
-	// 		IOSQ_Tail_Idx++;
+		default:
+			break;
+	}
 
-	// 		sqptr->CID = 0x1F00 | IOSQ_Tail_Idx;
-	// 		sqptr->OPC = NVM_CMD_WRITE;	//Write command 0x01;
-	// 		sqptr->NSID = 1;		//NSID=1
-	// 		sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
-	// 		sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
-	// 		sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
-	// 		sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,DTYPE=0,NLB=1
-	// 		__mb();
-
-	// 		*IO_SQ_TDBL = IOSQ_Tail_Idx & 0x1;	////SQ index
-	// 		__mb();
-	// 		break;
-
-	// 	case NVM_CMD_READ:
-	// 		sqptr = IO_Submission_Queue + (IOSQ_Tail_Idx & 0x1);
-	// 		memset(sqptr,0,sizeof(NVMe_SQ_Ent_s));
-	// 		IOSQ_Tail_Idx++;
-
-	// 		sqptr->CID = 0x2F00 | IOSQ_Tail_Idx;
-	// 		sqptr->OPC = NVM_CMD_READ;	//Read command 0x02;
-	// 		sqptr->NSID = 1;		//NSID=1
-	// 		sqptr->PRP_SGL_Entry1 = (unsigned long)virt_to_phys((virt_addr_t)node->buffer);
-	// 		sqptr->Dword10 = node->LBA & 0xffffffff;		//SLBA-lower = 0
-	// 		sqptr->Dword11 = (node->LBA >> 32) & 0xffffffff;	//SLBA-upper = 0
-	// 		sqptr->Dword12 = node->count;	//LR=0,FUA=0,PRINFO=0,NLB=1
-	// 		__mb();
-
-	// 		*IO_SQ_TDBL = IOSQ_Tail_Idx & 0x1;	////SQ index
-	// 		__mb();
-	// 		break;
-
-	// 	default:
-	// 		break;
-	// }
-
-	// return 1;
+	return 1;
 }
 
-// void NVMe_end_request(blkbuf_node_s *node)
-// {
-// 	if (node == NULL)
-// 		color_printk(RED, BLACK, "end_request error\n");
+void XHCI_end_request(blkbuf_node_s *node)
+{
+	if (node == NULL)
+		color_printk(RED, BLACK, "end_request error\n");
 
-// 	// complete(node->done);
-// 	// spin_lock(&req_lock);
-// 	wake_up_process(node->task);
-// 	req_in_using = NULL;
-// 	current->flags |= PF_NEED_SCHEDULE;
-// 	// spin_unlock_no_resched(&req_lock);
-// }
+	// complete(node->done);
+	// spin_lock(&req_lock);
+	wake_up_process(node->task);
+	req_in_using = NULL;
+	current->flags |= PF_NEED_SCHEDULE;
+	// spin_unlock_no_resched(&req_lock);
+}
 
 void XHCI_read_handler(unsigned long parameter)
 {
@@ -142,36 +90,62 @@ void XHCI_other_handler(unsigned long parameter)
 	// IOCQ_Head_Idx++;
 }
 
-// blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
-// {
-// 	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s),0);
-// 	list_init(&node->req_list, node);
-// 	node->buffer = buffer;
+blkbuf_node_s *XHCI_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+{
+	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s),0);
+	list_init(&node->req_list, node);
+	node->buffer = buffer;
 
-// 	switch(cmd)
-// 	{
-// 		case NVM_CMD_READ:
-// 			node->end_handler = NVMe_read_handler;
-// 			node->cmd = NVM_CMD_READ;
-// 			break;
+	switch(cmd)
+	{
+		// case NVM_CMD_READ:
+		// 	node->end_handler = XHCI_read_handler;
+		// 	node->cmd = NVM_CMD_READ;
+		// 	break;
 
-// 		case NVM_CMD_WRITE:
-// 			node->end_handler = NVMe_write_handler;
-// 			node->cmd = NVM_CMD_WRITE;
-// 			break;
+		// case NVM_CMD_WRITE:
+		// 	node->end_handler = XHCI_write_handler;
+		// 	node->cmd = NVM_CMD_WRITE;
+		// 	break;
 
-// 		default:
-// 			node->end_handler = NVMe_other_handler;
-// 			node->cmd = cmd;
-// 			break;
-// 	}
+		default:
+			node->end_handler = XHCI_other_handler;
+			node->cmd = cmd;
+			break;
+	}
 
-// 	node->LBA = blk_idx;
-// 	node->count = count;
-// 	node->buffer = buffer;
+	node->LBA = blk_idx;
+	node->count = count;
+	node->buffer = buffer;
 
-// 	return node;
-// }
+	return node;
+}
+
+
+long XHCI_ioctl(unsigned controller, unsigned disk, long cmd, long arg)
+{
+	blkbuf_node_s *node = NULL;
+
+	node = XHCI_make_request(cmd, 0, 0, 0);
+	// DECLARE_COMPLETION_ONSTACK(done);
+	// node->done = &done;
+	node->task = current;
+
+	spin_lock(&req_lock);
+	list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
+	spin_unlock_no_resched(&req_lock);
+
+	__set_current_state(TASK_UNINTERRUPTIBLE);
+	wake_up_process(thread);
+	// wait_for_completion(&done);
+	schedule();
+
+	if (node != NULL)
+		kfree(node);
+	return -ENOERR;
+
+	return 1;
+}
 
 long XHCI_transfer(unsigned controller, unsigned disk, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
@@ -233,7 +207,10 @@ hw_int_controller_s XHCI_int_controller =
 
 void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 {
-	// color_printk(RED, BLACK, "NVME Admin Handler\n");
+	blkbuf_node_s *node = req_in_using;
+	node->end_handler(parameter);
+	XHCI_end_request(node);
+	color_printk(RED, BLACK, "XHCI Handler\n");
 	// while (1);
 }
 
@@ -318,7 +295,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_Cap_Regs_ptr = (XHCI_HCCR_s *)phys_to_virt(XHCI_BAR0_base);
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
-	XHCI_DoorBell_Regptr = (XHCI_DBReg_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
+	XHCI_DoorBell_Regptr = (u32 *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 
 	/// 重设主控命令环
@@ -344,26 +321,9 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
 
 
-	XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
-	XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
-	XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
-
-
-	u8 Max_Slots = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxSlots;
-	u8 Max_Interrupts = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxIntrs;
-	u8 Max_Ports = XHCI_HostCtrl_Cap_Regs_ptr->HCSPARAMS1.MaxPorts;
-	u8 Max_Device_Slots_Enabled = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn + 1;
-	DCBAAP = (XHCI_DevCtx_s **)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
-	for (int i = 0; i < Max_Device_Slots_Enabled; i++)
-	{
-		XHCI_DevCtx_s *DCBA_ptr = DCBAAP[i];
-		if (DCBA_ptr == NULL)
-			continue;
-		
-		DCBA_ptr = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
-		XHCI_DevCtx_s DCBA = *DCBA_ptr;
-		u8 Slot_State = DCBA.Slot_Context.Slot_State;
-	}
+	// XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
+	// XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
+	// XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
 }
 
 void XHCI_exit()
@@ -371,68 +331,46 @@ void XHCI_exit()
 	unregister_irq(APIC_PIRQC);
 }
 
-// static int XHCIrq_deamon(void *param)
-// {
-// 	current->flags |= PF_NOFREEZE;
+static int XHCIrq_deamon(void *param)
+{
+	current->flags |= PF_NOFREEZE;
 
-// 	for (;;) {
-// 		set_current_state(TASK_INTERRUPTIBLE);
-// 		if (XHCIreq_lhdr.count == 0)
-// 			schedule();
-// 		__set_current_state(TASK_RUNNING);
+	for (;;) {
+		set_current_state(TASK_INTERRUPTIBLE);
+		if (XHCIreq_lhdr.count == 0)
+			schedule();
+		__set_current_state(TASK_RUNNING);
 
-// 		while (XHCIreq_lhdr.count != 0)
-// 		{		
-// 			spin_lock(&req_lock);
-// 			if (req_in_using == NULL)
-// 			{
-// 				List_s *wq_lp = list_hdr_dequeue(&XHCIreq_lhdr);
-// 				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
-// 				req_in_using = node;
-// 				spin_unlock_no_resched(&req_lock);
+		while (XHCIreq_lhdr.count != 0)
+		{		
+			spin_lock(&req_lock);
+			if (req_in_using == NULL)
+			{
+				List_s *wq_lp = list_hdr_dequeue(&XHCIreq_lhdr);
+				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
+				req_in_using = node;
+				spin_unlock_no_resched(&req_lock);
 
-// 				XHCI_cmd_out(node);
+				XHCI_cmd_out(node);
 
-// 				spin_lock(&req_lock);
-// 			}
-// 			spin_unlock_no_resched(&req_lock);
-// 			break;
-// 		}
-// 	}
-// 	return 1;
-// }
-// 	current->flags |= PF_NOFREEZE;
+				spin_lock(&req_lock);
+			}
+			spin_unlock_no_resched(&req_lock);
+			break;
+		}
+	}
+	return 1;
+}
 
-// 	for (;;) {
-// 		set_current_state(TASK_INTERRUPTIBLE);
-// 		if (XHCIreq_lhdr.count == 0)
-// 			schedule();
-// 		__set_current_state(TASK_RUNNING);
 
-// 		while (XHCIreq_lhdr.count != 0)
-// 		{		
-// 			spin_lock(&req_lock);
-// 			if (req_in_using == NULL)
-// 			{
-// 				List_s *wq_lp = list_hdr_dequeue(&XHCIreq_lhdr);
-// 				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
-// 				req_in_using = node;
-// 				spin_unlock_no_resched(&req_lock);
+void init_XHCIrqd()
+{
+	thread = kthread_run(XHCIrq_deamon, NULL, "XHCIrqd");
 
-// 				XHCI_cmd_out(node);
+	// color_printk(WHITE, BLACK, "ATA disk: initialized\n");
+}
 
-// 				spin_lock(&req_lock);
-// 			}
-// 			spin_unlock_no_resched(&req_lock);
-// 			break;
-// 		}
-// 	}
-// 	return 1;
-// }
-
-// void init_XHCIrqd()
-// {
-// 	thread = kthread_run(XHCIrq_deamon, NULL, "XHCIrqd");
-
-// 	// color_printk(WHITE, BLACK, "ATA disk: initialized\n");
-// }
+void USB_Keyborad_init()
+{
+	XHCI_ioctl(0, 0, NO_OP, 0);
+}

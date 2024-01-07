@@ -286,14 +286,6 @@
 	} XHCI_DevCtx_s;
 	
 
-	typedef struct XHCI_DoorBell_Reg
-	{
-		u32		DB_Target		: 8,
-				RsvdZ			: 8,
-				DB_Stream_ID	: 16;
-	} XHCI_DBReg_s;
-	
-
 	void XHCI_init();
 	void XHCI_exit();
 
