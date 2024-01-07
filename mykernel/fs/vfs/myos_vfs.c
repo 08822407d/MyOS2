@@ -141,6 +141,7 @@ unsigned long myos_switch_to_root_disk()
 	// ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
 	unsigned char *buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
 	NVMe_ops.transfer(0, 0, 0x02, 0, 1, buf);
+	NVMe_ops.transfer(0, 0, 0x02, 0, 2, buf);
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)

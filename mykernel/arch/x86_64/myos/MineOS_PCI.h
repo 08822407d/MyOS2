@@ -64,6 +64,8 @@ struct PCI_Header_00
 	unsigned char	MaxLatency;
 };
 
+extern u32	*APIC_MSI_Base;
+
 unsigned int Read_PCI_Config(unsigned int bus,unsigned int device,unsigned int function,unsigned int offset);
 
 void Write_PCI_Config(unsigned int bus,unsigned int device,unsigned int function,unsigned int offset,unsigned int value);

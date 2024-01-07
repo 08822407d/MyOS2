@@ -307,7 +307,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	LinkTRB_ptr->Cycle_Bit = 1;
 	LinkTRB_ptr->TRB_Type = LINK;
 
-	/// 重设0号中断事件环
+	/// 重设主中断事件环
 	// 创建环
 	MainEventRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
 	MainEventRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
@@ -315,10 +315,12 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
 	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_ptr);
 	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
-	// 设置0号中断表项
+	// 设置主中断表项
 	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
 	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTSZ = 1;		// 段表大小
 	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
+	// 使能主中断
+	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].IMAN.IE = 1;
 
 
 	// XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
@@ -372,5 +374,6 @@ void init_XHCIrqd()
 
 void USB_Keyborad_init()
 {
+	// *APIC_MSI_Base = APIC_PIRQC;
 	XHCI_ioctl(0, 0, NO_OP, 0);
 }

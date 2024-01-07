@@ -8,7 +8,8 @@
 ***************************************************/
 #include <linux/device/pci.h>
 #include <linux/device/pci_ids.h>
-#include <linux/kernel/slab.h>
+#include <linux/kernel/slab.h>	
+#include <linux/mm/mm.h>
 #include <asm/io.h>
 #include <asm/bitops.h>
 #include <uapi/asm-generic/pci_regs.h>
@@ -18,6 +19,9 @@
 
 #include "MineOS_NVMe.h"
 #include "myos_XHCI.h"
+
+u32 *APIC_MSI_Base = NULL;
+
 
 void Print_PCIHDR(struct PCI_Header_00 * PCI_HDR)
 {
@@ -167,6 +171,10 @@ int analysis_PCI_Config(struct PCI_Header_00 * PCI_HDR, unsigned int bus, unsign
 
 void scan_PCI_devices(void)
 {
+	u32 *MSI_Memrange_Base = (u32 *)0xfee00000;
+	myos_ioremap((size_t)MSI_Memrange_Base, SZ_1M);
+	APIC_MSI_Base = (u32 *)phys_to_virt((phys_addr_t)MSI_Memrange_Base);
+
 	int bus,device,function;
 	unsigned int index = 0;
 	unsigned int value = 0;
