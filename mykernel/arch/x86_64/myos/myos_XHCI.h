@@ -133,43 +133,45 @@
 	} USB_PRS_s;
 
 	typedef struct XHCI_HostCtrl_Ops_Regs {
-		struct __attribute__((packed))
-		{
-			u32
-				RunStop		: 1,
-				HCRST		: 1,
-				INTE		: 1,
-				HSEE		: 1,
-				RsvdP1		: 3,
-				LHCRST		: 1,
-				CSS			: 1,
-				CRS			: 1,
-				EWE			: 1,
-				EU3S		: 1,
-				RsvdP2		: 1,
-				CME			: 1,
-				ETE			: 1,
-				TSC_EN		: 1,
-				VTIOE		: 1,
-				RsvdP3		: 15;
-		} USBCMD;
+		// struct __attribute__((packed))
+		// {
+		// 	u32
+		// 		RunStop		: 1,
+		// 		HCRST		: 1,
+		// 		INTE		: 1,
+		// 		HSEE		: 1,
+		// 		RsvdP1		: 3,
+		// 		LHCRST		: 1,
+		// 		CSS			: 1,
+		// 		CRS			: 1,
+		// 		EWE			: 1,
+		// 		EU3S		: 1,
+		// 		RsvdP2		: 1,
+		// 		CME			: 1,
+		// 		ETE			: 1,
+		// 		TSC_EN		: 1,
+		// 		VTIOE		: 1,
+		// 		RsvdP3		: 15;
+		// } USBCMD;
+		u32		USBCMD;
 
-		struct __attribute__((packed))
-		{
-			u32
-				HCH			: 1,
-				RsvdZ1		: 1,
-				HSE			: 1,
-				EINT		: 1,
-				PCD			: 1,
-				RsvdZ2		: 3,
-				SSS			: 1,
-				RSS			: 1,
-				SRE			: 1,
-				CNR			: 1,
-				HCE			: 1,
-				RsvdZ3		: 19;
-		} USBSTS;
+		// struct __attribute__((packed))
+		// {
+		// 	u32
+		// 		HCH			: 1,
+		// 		RsvdZ1		: 1,
+		// 		HSE			: 1,
+		// 		EINT		: 1,
+		// 		PCD			: 1,
+		// 		RsvdZ2		: 3,
+		// 		SSS			: 1,
+		// 		RSS			: 1,
+		// 		SRE			: 1,
+		// 		CNR			: 1,
+		// 		HCE			: 1,
+		// 		RsvdZ3		: 19;
+		// } USBSTS;
+		u32		USBSTS;
 
 		u32		PAGESIZE;
 		u32		RsvdZ1[2];
@@ -192,7 +194,7 @@
 		u32		RsvdZ3[241];
 
 		USB_PRS_s	USB_Port_Reg_Sets[256];
-	} __attribute__((packed)) XHCI_HCOR_s;
+	} XHCI_HCOR_s;
 
 
 	typedef struct XHCI_Event_Ring_SegTable_Ent {
@@ -202,13 +204,14 @@
 	} XHCI_ERSegTblEnt_s;
 
 	typedef struct Intr_Reg_Set {
-		struct __attribute__((packed))
-		{
-			u32
-				IP			: 1,
-				IE			: 1,
-				RsvdP		: 30;
-		} IMAN;
+		// struct __attribute__((packed))
+		// {
+		// 	u32
+		// 		IP			: 1,
+		// 		IE			: 1,
+		// 		RsvdP		: 30;
+		// } IMAN;
+		u32		IMAN;
 
 		struct __attribute__((packed))
 		{

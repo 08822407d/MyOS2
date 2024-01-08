@@ -39,7 +39,16 @@ XHCI_IRS_s		*Main_Intr_RegSet_ptr = NULL;
 XHCI_EvtTRB_s	*MainEventRing_ptr = NULL;
 u16				MainEventRing_Size = 0;
 
+XHCI_HCCR_s XHCI_HCCR_val;
+XHCI_HCOR_s XHCI_HCOR_val;
+XHCI_HCRTR_s XHCI_HCRTR_val;
 
+void XHCI_test_getRegVals()
+{
+	XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
+	XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
+	XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+}
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
@@ -50,6 +59,7 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 			Host_CommandRing_ptr->TRB_Type = NO_OP;
 			Host_CommandRing_ptr++;
 			*(XHCI_DoorBell_Regptr + 0) = 0;
+			__mb();
 			break;
 
 		default:
@@ -207,9 +217,29 @@ hw_int_controller_s XHCI_int_controller =
 
 void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 {
+	XHCI_HostCtrl_Ops_Regs_ptr->USBSTS |= 1 << 3;	// 该位是RW1C
+	__mb();
+
+	XHCI_test_getRegVals();
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler(parameter);
 	XHCI_end_request(node);
+
+	u32 regval_32;
+	u64 regval_64;
+
+	Main_Intr_RegSet_ptr->IMAN |= 1 << 0;	// 该位是RW1C
+	__mb();
+
+	regval_64 = Main_Intr_RegSet_ptr->ERDP;
+	regval_64 += sizeof(XHCI_TRB_s);
+	// MainEventRing_ptr += sizeof(XHCI_TRB_s);
+	regval_64 |= 1 << 3;	// 该位是RW1C
+	Main_Intr_RegSet_ptr->ERDP = regval_64;
+	__mb();
+
+	XHCI_test_getRegVals();
+
 	color_printk(RED, BLACK, "XHCI Handler\n");
 	// while (1);
 }
@@ -308,6 +338,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	LinkTRB_ptr->TRB_Type = LINK;
 
 	/// 重设主中断事件环
+	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
 	// 创建环
 	MainEventRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
 	MainEventRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
@@ -316,16 +347,13 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_ptr);
 	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
 	// 设置主中断表项
-	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
-	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERSTSZ = 1;		// 段表大小
-	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
+	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
+	Main_Intr_RegSet_ptr->ERSTSZ = 1;		// 段表大小
+	Main_Intr_RegSet_ptr->ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
 	// 使能主中断
-	XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0].IMAN.IE = 1;
+	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
 
-
-	// XHCI_HCCR_s XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
-	// XHCI_HCOR_s XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
-	// XHCI_HCRTR_s XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+	XHCI_test_getRegVals();
 }
 
 void XHCI_exit()
@@ -374,6 +402,6 @@ void init_XHCIrqd()
 
 void USB_Keyborad_init()
 {
-	// *APIC_MSI_Base = APIC_PIRQC;
+	XHCI_ioctl(0, 0, NO_OP, 0);
 	XHCI_ioctl(0, 0, NO_OP, 0);
 }
