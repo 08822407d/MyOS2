@@ -37,6 +37,7 @@
         "arch_proto.h": "c",
         "myos_block.h": "c",
         "myos_irq_vectors.h": "c",
-        "mineos_nvme.h": "c"
+        "mineos_nvme.h": "c",
+        "delay.h": "c"
     }
 }

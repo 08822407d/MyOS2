@@ -1,6 +1,7 @@
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
+#include <linux/kernel/delay.h>
 
 #include "myos_XHCI.h"
 // #include "block.h"
@@ -25,6 +26,11 @@ static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
 LIST_HDR_S(XHCIreq_lhdr);
 
+u16 RingSegMinSize = 16;
+u16 RingSegMaxSize = SZ_64K / sizeof(XHCI_TRB_s);
+#define RING_SIZE	16
+
+// 主控寄存器组
 u64				XHCI_BAR0_base = 0;
 XHCI_HCCR_s		*XHCI_HostCtrl_Cap_Regs_ptr = NULL;
 XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
@@ -32,13 +38,18 @@ XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
 u32				*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
 	
-XHCI_CmdTRB_s	*Host_CommandRing_ptr = NULL;
-u16				Host_CommandRing_Size = 0;
+// 命令环
+XHCI_CmdTRB_s	*Host_CmdRing_Base = NULL;
+XHCI_CmdTRB_s	*Host_CmdRing_Curr = NULL;
+u16				Host_CmdRing_Size = 0;
 
+// 主中断
 XHCI_IRS_s		*Main_Intr_RegSet_ptr = NULL;
-XHCI_EvtTRB_s	*MainEventRing_ptr = NULL;
+XHCI_EvtTRB_s	*MainEventRing_Base = NULL;
+XHCI_EvtTRB_s	*MainEventRing_Curr = NULL;
 u16				MainEventRing_Size = 0;
 
+// 测试用
 XHCI_HCCR_s XHCI_HCCR_val;
 XHCI_HCOR_s XHCI_HCOR_val;
 XHCI_HCRTR_s XHCI_HCRTR_val;
@@ -55,9 +66,14 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 	switch(node->cmd)
 	{
 		case NO_OP:
-			Host_CommandRing_ptr->Cycle_Bit = 1;
-			Host_CommandRing_ptr->TRB_Type = NO_OP;
-			Host_CommandRing_ptr++;
+			Host_CmdRing_Curr->Cycle_Bit = 1;
+			Host_CmdRing_Curr->TRB_Type = NO_OP;
+			Host_CmdRing_Curr++;
+			if (Host_CmdRing_Curr->TRB_Type == LINK)
+			{
+				XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
+				Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
+			}
 			*(XHCI_DoorBell_Regptr + 0) = 0;
 			__mb();
 			break;
@@ -233,7 +249,9 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 
 	regval_64 = Main_Intr_RegSet_ptr->ERDP;
 	regval_64 += sizeof(XHCI_TRB_s);
-	// MainEventRing_ptr += sizeof(XHCI_TRB_s);
+	regval_64 = phys_to_virt(regval_64);
+	if (regval_64 >= (u64)(MainEventRing_Base + MainEventRing_Size))
+		regval_64 = virt_to_phys((phys_addr_t)MainEventRing_Base);
 	regval_64 |= 1 << 3;	// 该位是RW1C
 	Main_Intr_RegSet_ptr->ERDP = regval_64;
 	__mb();
@@ -329,22 +347,25 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 
 	/// 重设主控命令环
-	Host_CommandRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
-	Host_CommandRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * Host_CommandRing_Size, GFP_KERNEL);
-	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CommandRing_ptr) | 0x1;
-	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CommandRing_ptr + Host_CommandRing_Size - 2);
-	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CommandRing_ptr);
+	Host_CmdRing_Size = RING_SIZE;
+	Host_CmdRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
+		((Host_CmdRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
+	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CmdRing_Base) | 0x1;
+	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CmdRing_Base + Host_CmdRing_Size - 1);
+	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CmdRing_Base);
 	LinkTRB_ptr->Cycle_Bit = 1;
 	LinkTRB_ptr->TRB_Type = LINK;
+	Host_CmdRing_Curr = Host_CmdRing_Base;
 
 	/// 重设主中断事件环
 	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
 	// 创建环
-	MainEventRing_Size = SZ_64K / sizeof(XHCI_EvtTRB_s);
-	MainEventRing_ptr = kzalloc(sizeof(XHCI_EvtTRB_s) * MainEventRing_Size, GFP_KERNEL);
+	MainEventRing_Size = RING_SIZE;
+	MainEventRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
+		((MainEventRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
 	// 创建并设置段表
 	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
-	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_ptr);
+	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_Base);
 	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
 	// 设置主中断表项
 	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
@@ -353,6 +374,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	// 使能主中断
 	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
 
+	MainEventRing_Curr = MainEventRing_Base;
 	XHCI_test_getRegVals();
 }
 
@@ -402,6 +424,9 @@ void init_XHCIrqd()
 
 void USB_Keyborad_init()
 {
-	XHCI_ioctl(0, 0, NO_OP, 0);
-	XHCI_ioctl(0, 0, NO_OP, 0);
+	for (int i = 0; i < 2; i++)
+	{
+		XHCI_ioctl(0, 0, NO_OP, 0);
+		mdelay(100);
+	}
 }
