@@ -37,6 +37,7 @@ XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
 XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
 u32				*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
+u8				MaxSlotEnts = 0;
 	
 // 命令环
 XHCI_CmdTRB_s	*Host_CmdRing_Base = NULL;
@@ -345,6 +346,8 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
 	XHCI_DoorBell_Regptr = (u32 *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
+	DCBAAP = (XHCI_DevCtx_s	**)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
+	MaxSlotEnts = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn;
 
 	/// 重设主控命令环
 	Host_CmdRing_Size = RING_SIZE;
@@ -369,7 +372,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
 	// 设置主中断表项
 	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
-	Main_Intr_RegSet_ptr->ERSTSZ = 1;		// 段表大小
+	Main_Intr_RegSet_ptr->ERSTSZ = 1;		//段表大小
 	Main_Intr_RegSet_ptr->ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
 	// 使能主中断
 	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
@@ -420,6 +423,24 @@ void init_XHCIrqd()
 	thread = kthread_run(XHCIrq_deamon, NULL, "XHCIrqd");
 
 	// color_printk(WHITE, BLACK, "ATA disk: initialized\n");
+}
+
+void scan_XHCI_devices()
+{
+	for (int i = 1; i <= MaxSlotEnts; i++)
+	{
+		if (DCBAAP[i] == NULL)
+			continue;
+		
+		XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
+		u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
+		while (EP_count < 2);
+		
+		XHCI_SlotCtx_s *Slot_Context = &DCBA->Slot_Context;
+		XHCI_EPCtx_s *Bidir_EP_Context = &DCBA->BiDir;
+		XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(Bidir_EP_Context->TR_Dequeue_Ptr & ~0xF);
+		u16 TransferRing_Size = 0;
+	}
 }
 
 void USB_Keyborad_init()

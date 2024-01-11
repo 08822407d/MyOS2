@@ -307,6 +307,8 @@ static void do_basic_setup(void)
 static noinline void __init kernel_init_freeable(void);
 
 
+extern void scan_PCI_devices(void);
+extern void scan_XHCI_devices();
 void myos_ata_probe();
 extern void init_ATArqd();
 extern void init_NVMErqd();
@@ -325,6 +327,9 @@ int kernel_init(void *unused)
 
 	kernel_init_freeable();
 
+
+	scan_PCI_devices();
+	scan_XHCI_devices();
 	// do_name();
 	init_ATArqd();
 	myos_ata_probe();

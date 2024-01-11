@@ -14,17 +14,12 @@ void init_intr(void);
 void init_cdev_intr(void);
 void init_bdev_intr(void);
 
-extern void detect_PCIe_devs();
-extern void scan_PCI_devices(void);
-
 void myos_devices_init()
 {
 	init_intr();
 
 	init_cdev_intr();
 	init_bdev_intr();
-
-	scan_PCI_devices();
 }
 
 void init_intr()
