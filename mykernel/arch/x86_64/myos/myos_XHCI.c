@@ -54,6 +54,7 @@ u16				MainEventRing_Size = 0;
 XHCI_HCCR_s XHCI_HCCR_val;
 XHCI_HCOR_s XHCI_HCOR_val;
 XHCI_HCRTR_s XHCI_HCRTR_val;
+u64				EventData_Test[4];
 
 void XHCI_test_getRegVals()
 {
@@ -64,24 +65,33 @@ void XHCI_test_getRegVals()
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
+	memset(Host_CmdRing_Curr, 0, sizeof(XHCI_CmdTRB_s));
+	Host_CmdRing_Curr->Cycle_Bit = 1;
+	Host_CmdRing_Curr->TRB_Type = node->cmd;
+
 	switch(node->cmd)
 	{
+		case EVENT_DATA:
+			XHCI_EvtDataTRB_s *EvtData_TRB = (XHCI_EvtDataTRB_s *)Host_CmdRing_Curr;
+			EvtData_TRB->Chain_Bit = 0;
+			EvtData_TRB->IntrOnComp = 1;
+			EvtData_TRB->CmdTRB_ptr = (u64)&EventData_Test;
+			break;
 		case NO_OP:
-			Host_CmdRing_Curr->Cycle_Bit = 1;
-			Host_CmdRing_Curr->TRB_Type = NO_OP;
-			Host_CmdRing_Curr++;
-			if (Host_CmdRing_Curr->TRB_Type == LINK)
-			{
-				XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
-				Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
-			}
-			*(XHCI_DoorBell_Regptr + 0) = 0;
-			__mb();
 			break;
 
 		default:
 			break;
 	}
+
+	Host_CmdRing_Curr++;
+	if (Host_CmdRing_Curr->TRB_Type == LINK)
+	{
+		XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
+		Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
+	}
+	*(XHCI_DoorBell_Regptr + 0) = 0;
+	__mb();
 
 	return 1;
 }
@@ -378,7 +388,11 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
 
 	MainEventRing_Curr = MainEventRing_Base;
+
+
+	// 测试
 	XHCI_test_getRegVals();
+	memset(&EventData_Test, 0, sizeof(EventData_Test));
 }
 
 void XHCI_exit()
@@ -450,4 +464,5 @@ void USB_Keyborad_init()
 		XHCI_ioctl(0, 0, NO_OP, 0);
 		mdelay(100);
 	}
+	XHCI_ioctl(0, 0, EVENT_DATA, 0);
 }
