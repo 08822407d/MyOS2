@@ -42,7 +42,12 @@
 	};
 
 	typedef struct XHCI_TRB_Common {
-		u32		Fields[4];
+		u32		Fields[3];
+
+		u32		Cycle_Bit		: 1,
+				Fields2			: 9,
+				TRB_Type		: 6,
+				Fields3			: 16;
 	} XHCI_TRB_s;
 
 	typedef struct XHCI_TransferTRB_Common
@@ -60,14 +65,7 @@
 				Fields5			: 16;
 	} __attribute__((packed)) XHCI_TransTRB_s;
 	
-	typedef struct XHCI_EventTRB_Common {
-		u32		Fields1[3];
-
-		u32		Cycle_Bit		: 1,
-				Fields2			: 9,
-				TRB_Type		: 6,
-				Fields3			: 16;
-	} __attribute__((packed)) XHCI_EvtTRB_s;
+	typedef XHCI_TRB_s XHCI_EvtTRB_s;
 	
 	typedef struct XHCI_CommandTRB_Common {
 		u32		Fields1[3];

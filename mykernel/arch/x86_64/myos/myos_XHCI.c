@@ -4,6 +4,7 @@
 #include <linux/kernel/delay.h>
 
 #include "myos_XHCI.h"
+#include "myos_USB.h"
 // #include "block.h"
 // #include "lib.h"
 // #include "printk.h"
@@ -54,7 +55,8 @@ u16				MainEventRing_Size = 0;
 XHCI_HCCR_s XHCI_HCCR_val;
 XHCI_HCOR_s XHCI_HCOR_val;
 XHCI_HCRTR_s XHCI_HCRTR_val;
-u64				EventData_Test[4];
+u32			EventData_Test = 0;
+u32			Intr_Count = 0;
 
 void XHCI_test_getRegVals()
 {
@@ -62,6 +64,52 @@ void XHCI_test_getRegVals()
 	XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
 	XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
 }
+
+
+void XHCI_AdvanceRingPtr(XHCI_TRB_s **Ring_ptr)
+{
+	(*Ring_ptr)++;
+	if ((*Ring_ptr)->TRB_Type == LINK)
+	{
+		XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)*Ring_ptr;
+		*Ring_ptr = (XHCI_TRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
+	}
+}
+
+void XHCI_MakeTRB_EventData(XHCI_TRB_s *Ring_ptr)
+{
+	memset(Ring_ptr, 0, sizeof(XHCI_CmdTRB_s));
+	Ring_ptr->Cycle_Bit = 1;	
+
+	XHCI_EvtDataTRB_s *EvtData_TRB = (XHCI_EvtDataTRB_s *)Ring_ptr;
+	EvtData_TRB->Chain_Bit = 0;
+	EvtData_TRB->IntrOnComp = 1;
+	EvtData_TRB->CmdTRB_ptr = (u64)&EventData_Test;
+}
+
+void XHCI_MakeTRB_SetupStage(XHCI_TRB_s *Ring_ptr, USB_ReqPack_s *request, u8 transtype)
+{
+	XHCI_SetupStage_s *SetupStageTRB = (XHCI_SetupStage_s *)Ring_ptr;
+	memset(SetupStageTRB, 0, sizeof(XHCI_SetupStage_s));
+
+	SetupStageTRB->bmRequestType = request->request_type;
+	SetupStageTRB->bRequest = request->request;
+	SetupStageTRB->wValue = request->value;
+	SetupStageTRB->wIndex = request->index;
+	SetupStageTRB->wLength = request->length;
+
+	SetupStageTRB->TRB_TransLeng = 8;
+	SetupStageTRB->Trans_Type = transtype;
+
+	SetupStageTRB->Cycle_Bit = 1;
+	SetupStageTRB->Immediate_Data = 1;
+	SetupStageTRB->TRB_Type = SETUP_STAGE;
+}
+  
+  
+  
+
+
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
@@ -84,12 +132,13 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 			break;
 	}
 
-	Host_CmdRing_Curr++;
-	if (Host_CmdRing_Curr->TRB_Type == LINK)
-	{
-		XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
-		Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
-	}
+	// Host_CmdRing_Curr++;
+	// if (Host_CmdRing_Curr->TRB_Type == LINK)
+	// {
+	// 	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
+	// 	Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
+	// }
+	XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
 	*(XHCI_DoorBell_Regptr + 0) = 0;
 	__mb();
 
@@ -269,7 +318,8 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 
 	XHCI_test_getRegVals();
 
-	color_printk(RED, BLACK, "XHCI Handler\n");
+	color_printk(RED, BLACK, "XHCI Handler: %d\n", Intr_Count);
+	Intr_Count++;
 	// while (1);
 }
 
@@ -392,7 +442,6 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 
 	// 测试
 	XHCI_test_getRegVals();
-	memset(&EventData_Test, 0, sizeof(EventData_Test));
 }
 
 void XHCI_exit()
@@ -459,7 +508,7 @@ void scan_XHCI_devices()
 
 void USB_Keyborad_init()
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 24; i++)
 	{
 		XHCI_ioctl(0, 0, NO_OP, 0);
 		mdelay(100);
