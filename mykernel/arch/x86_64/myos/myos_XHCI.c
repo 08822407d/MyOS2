@@ -29,7 +29,7 @@ LIST_HDR_S(XHCIreq_lhdr);
 
 u16 RingSegMinSize = 16;
 u16 RingSegMaxSize = SZ_64K / sizeof(XHCI_TRB_s);
-#define RING_SIZE	16
+#define RING_SIZE	RingSegMaxSize
 
 // 主控寄存器组
 u64				XHCI_BAR0_base = 0;
@@ -76,20 +76,22 @@ void XHCI_AdvanceRingPtr(XHCI_TRB_s **Ring_ptr)
 	}
 }
 
-void XHCI_MakeTRB_EventData(XHCI_TRB_s *Ring_ptr)
+void XHCI_MakeTRB_EventData(XHCI_TRB_s **Ring_ptr)
 {
-	memset(Ring_ptr, 0, sizeof(XHCI_CmdTRB_s));
-	Ring_ptr->Cycle_Bit = 1;	
+	memset((*Ring_ptr), 0, sizeof(XHCI_CmdTRB_s));
+	(*Ring_ptr)->Cycle_Bit = 1;	
 
-	XHCI_EvtDataTRB_s *EvtData_TRB = (XHCI_EvtDataTRB_s *)Ring_ptr;
+	XHCI_EvtDataTRB_s *EvtData_TRB = (XHCI_EvtDataTRB_s *)(*Ring_ptr);
 	EvtData_TRB->Chain_Bit = 0;
 	EvtData_TRB->IntrOnComp = 1;
 	EvtData_TRB->CmdTRB_ptr = (u64)&EventData_Test;
+
+	XHCI_AdvanceRingPtr(Ring_ptr);
 }
 
-void XHCI_MakeTRB_SetupStage(XHCI_TRB_s *Ring_ptr, USB_ReqPack_s *request, u8 transtype)
+void XHCI_MakeTRB_SetupStage(XHCI_TRB_s **Ring_ptr, USB_ReqPack_s *request, u8 transtype)
 {
-	XHCI_SetupStage_s *SetupStageTRB = (XHCI_SetupStage_s *)Ring_ptr;
+	XHCI_SetupStage_s *SetupStageTRB = (XHCI_SetupStage_s *)(*Ring_ptr);
 	memset(SetupStageTRB, 0, sizeof(XHCI_SetupStage_s));
 
 	SetupStageTRB->bmRequestType = request->request_type;
@@ -104,10 +106,49 @@ void XHCI_MakeTRB_SetupStage(XHCI_TRB_s *Ring_ptr, USB_ReqPack_s *request, u8 tr
 	SetupStageTRB->Cycle_Bit = 1;
 	SetupStageTRB->Immediate_Data = 1;
 	SetupStageTRB->TRB_Type = SETUP_STAGE;
+
+	XHCI_AdvanceRingPtr(Ring_ptr);
 }
-  
-  
-  
+
+void XHCI_MakeTRB_DataStage(XHCI_TRB_s **Ring_ptr, u8 *buffer, u32 bufsize, u8 DIR, u16 MaxPackSize)
+{
+	u8 *bufptr = buffer;
+	u32 size = bufsize;
+	int remaining = (int) (((size + (MaxPackSize - 1)) / MaxPackSize) - 1);
+	if (remaining < 0)
+		remaining = 0;
+
+	while (size > 0)
+	{
+		XHCI_DataStage_s *DataStageTRB = (XHCI_DataStage_s *)(Ring_ptr);
+		memset(DataStageTRB, 0, sizeof(XHCI_DataStage_s));
+
+		DataStageTRB->Data_Buffer = (u64)bufptr;
+		DataStageTRB->TD_Size = remaining;
+		DataStageTRB->TRB_TransLeng = ((size < MaxPackSize) ? size : MaxPackSize);
+
+		DataStageTRB->Direction = DIR;
+		DataStageTRB->TRB_Type = DATA_STAGE;
+		DataStageTRB->Chain_Bit = 1;
+		DataStageTRB->Eval_Next_TRB = (remaining == 0);
+		DataStageTRB->Cycle_Bit = 1;
+
+		XHCI_AdvanceRingPtr(Ring_ptr);
+	}
+}
+
+void XHCI_MakeTRB_StatusStage(u8 DIR, XHCI_TRB_s **Ring_ptr, u32 *status_addr)
+{
+	XHCI_StatusStage_s *StatusStageTRB = (XHCI_StatusStage_s *)(*Ring_ptr);
+	memset(StatusStageTRB, 0, sizeof(XHCI_StatusStage_s));
+
+	StatusStageTRB->TRB_Type = STATUS_STAGE;
+	StatusStageTRB->Direction = DIR;
+	StatusStageTRB->IntrOnComp = 1;
+	StatusStageTRB->Cycle_Bit = 1;
+
+	XHCI_AdvanceRingPtr(Ring_ptr);
+}
 
 
 
@@ -120,25 +161,17 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 	switch(node->cmd)
 	{
 		case EVENT_DATA:
-			XHCI_EvtDataTRB_s *EvtData_TRB = (XHCI_EvtDataTRB_s *)Host_CmdRing_Curr;
-			EvtData_TRB->Chain_Bit = 0;
-			EvtData_TRB->IntrOnComp = 1;
-			EvtData_TRB->CmdTRB_ptr = (u64)&EventData_Test;
+			XHCI_MakeTRB_EventData((XHCI_TRB_s **)&Host_CmdRing_Curr);
 			break;
 		case NO_OP:
+			XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
 			break;
 
 		default:
 			break;
 	}
 
-	// Host_CmdRing_Curr++;
-	// if (Host_CmdRing_Curr->TRB_Type == LINK)
-	// {
-	// 	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Host_CmdRing_Curr;
-	// 	Host_CmdRing_Curr = (XHCI_CmdTRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
-	// }
-	XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
+	// XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
 	*(XHCI_DoorBell_Regptr + 0) = 0;
 	__mb();
 
@@ -508,10 +541,14 @@ void scan_XHCI_devices()
 
 void USB_Keyborad_init()
 {
-	for (int i = 0; i < 24; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		XHCI_ioctl(0, 0, NO_OP, 0);
 		mdelay(100);
 	}
-	XHCI_ioctl(0, 0, EVENT_DATA, 0);
+	for (int i = 0; i < 2; i++)
+	{
+		XHCI_ioctl(0, 0, EVENT_DATA, 0);
+		mdelay(100);
+	}
 }

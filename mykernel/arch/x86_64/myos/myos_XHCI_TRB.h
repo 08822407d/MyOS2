@@ -122,7 +122,7 @@
 
 	typedef struct XHCI_Data_Stage_TRB
 	{
-		u64		Data_BUffer;
+		u64		Data_Buffer;
 
 		u32		TRB_TransLeng	: 17,		
 				TD_Size			: 5,
