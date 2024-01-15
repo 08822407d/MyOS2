@@ -6,6 +6,12 @@
 #include "myos_XHCI_TRB.h"
 
 
+	enum {
+		XHCI_OP_READ,
+		XHCI_OP_WRITE,
+		XHCI_OP_NOP,
+	};
+
 	typedef struct XHCI_HostCtrl_Cap_Regs {
 		u8		CAPLENGTH;
 		u8		Rsvd1;

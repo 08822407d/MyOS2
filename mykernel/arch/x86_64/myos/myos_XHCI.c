@@ -154,16 +154,26 @@ void XHCI_MakeTRB_StatusStage(u8 DIR, XHCI_TRB_s **Ring_ptr, u32 *status_addr)
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
+	u8 dev_addr = node->ATA_controller;
+	u8 end_point = node->ATA_disk;
+
 	memset(Host_CmdRing_Curr, 0, sizeof(XHCI_CmdTRB_s));
 	Host_CmdRing_Curr->Cycle_Bit = 1;
 	Host_CmdRing_Curr->TRB_Type = node->cmd;
 
 	switch(node->cmd)
 	{
-		case EVENT_DATA:
-			XHCI_MakeTRB_EventData((XHCI_TRB_s **)&Host_CmdRing_Curr);
+		case XHCI_OP_READ:
 			break;
-		case NO_OP:
+
+		case XHCI_OP_WRITE:
+			break;
+
+		// case EVENT_DATA:
+		// 	XHCI_MakeTRB_EventData((XHCI_TRB_s **)&Host_CmdRing_Curr);
+		// 	break;
+
+		case XHCI_OP_NOP:
 			XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
 			break;
 
@@ -172,7 +182,7 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 	}
 
 	// XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
-	*(XHCI_DoorBell_Regptr + 0) = 0;
+	*(XHCI_DoorBell_Regptr + dev_addr) = end_point;
 	__mb();
 
 	return 1;
@@ -241,7 +251,7 @@ blkbuf_node_s *XHCI_make_request(long cmd, unsigned long blk_idx, long count, un
 }
 
 
-long XHCI_ioctl(unsigned controller, unsigned disk, long cmd, long arg)
+long XHCI_ioctl(unsigned dev_addr, unsigned end_point, long cmd, long arg)
 {
 	blkbuf_node_s *node = NULL;
 
@@ -249,6 +259,8 @@ long XHCI_ioctl(unsigned controller, unsigned disk, long cmd, long arg)
 	// DECLARE_COMPLETION_ONSTACK(done);
 	// node->done = &done;
 	node->task = current;
+	node->ATA_controller = dev_addr;
+	node->ATA_disk = end_point;
 
 	spin_lock(&req_lock);
 	list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
@@ -266,39 +278,39 @@ long XHCI_ioctl(unsigned controller, unsigned disk, long cmd, long arg)
 	return 1;
 }
 
-long XHCI_transfer(unsigned controller, unsigned disk, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+long XHCI_transfer(unsigned dev_addr, unsigned end_point, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	// blkbuf_node_s *node = NULL;
-	// if(cmd == NVM_CMD_READ || cmd == NVM_CMD_WRITE)
-	// {
-	// 	// node = NVMe_make_request(cmd,blocks,count,buffer);
-	// 	// NVMe_submit(node);
-	// 	// NVMe_wait_for_finish();
+	blkbuf_node_s *node = NULL;
+	if(cmd == XHCI_OP_READ || cmd == XHCI_OP_WRITE)
+	{
+		node = XHCI_make_request(cmd, 0, 0, 0);
 
-	// 	node = NVMe_make_request(cmd, blk_idx, count, buffer);
-	// 	// DECLARE_COMPLETION_ONSTACK(done);
-	// 	// node->done = &done;
-	// 	node->task = current;
+		node = NVMe_make_request(cmd, blk_idx, count, buffer);
+		// DECLARE_COMPLETION_ONSTACK(done);
+		// node->done = &done;
+		node->task = current;
+		node->ATA_controller = dev_addr;
+		node->ATA_disk = end_point;
 
-	// 	spin_lock(&req_lock);
-	// 	list_hdr_enqueue(&NVMEreq_lhdr, &node->req_list);
-	// 	spin_unlock_no_resched(&req_lock);
+		spin_lock(&req_lock);
+		list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
+		spin_unlock_no_resched(&req_lock);
 
-	// 	__set_current_state(TASK_UNINTERRUPTIBLE);
-	// 	wake_up_process(thread);
-	// 	// wait_for_completion(&done);
-	// 	schedule();
+		__set_current_state(TASK_UNINTERRUPTIBLE);
+		wake_up_process(thread);
+		// wait_for_completion(&done);
+		schedule();
 
-	// 	if (node != NULL)
-	// 		kfree(node);
-	// 	return -ENOERR;
-	// }
-	// else
-	// {
-	// 	return -EINVAL;
-	// }
+		if (node != NULL)
+			kfree(node);
+		return -ENOERR;
+	}
+	else
+	{
+		return -EINVAL;
+	}
 
-	// return 1;
+	return 1;
 }
 
 blkdev_ops_s XHCI_ops =
@@ -543,12 +555,7 @@ void USB_Keyborad_init()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		XHCI_ioctl(0, 0, NO_OP, 0);
-		mdelay(100);
-	}
-	for (int i = 0; i < 2; i++)
-	{
-		XHCI_ioctl(0, 0, EVENT_DATA, 0);
+		XHCI_ioctl(0, 0, XHCI_OP_NOP, 0);
 		mdelay(100);
 	}
 }
