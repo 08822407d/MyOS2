@@ -169,9 +169,13 @@
 	#define STDRD_SET_REQUEST	(HOST_TO_DEV | REQ_TYPE_STNDRD | RECPT_DEVICE)
 	#define STDRD_SET_INTERFACE	(HOST_TO_DEV | REQ_TYPE_STNDRD | RECPT_INTERFACE)
 
+	enum {
+		USB_TRANSFER_OUT		= 0,
+		USB_TRANSFER_IN,
+	};
 
 	enum {
-		XHCI_TRT_NoData		= 0,
+		XHCI_TRT_NoData			= 0,
 		XHCI_TRT_Reserved,
 		XHCI_TRT_OutDataStage,
 		XHCI_TRT_InDataStage,

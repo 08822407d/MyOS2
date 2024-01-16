@@ -74,8 +74,8 @@ unsigned long myos_pid_nr()
  *==============================================================================================*/
 void kjmp_to_doexecve()
 {
-	// color_printk(BLUE, BLACK, "Hang Here\n");
-	// while (1);
+	color_printk(BLUE, BLACK, "Hang Here\n");
+	while (1);
 	
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;

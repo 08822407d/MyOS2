@@ -296,8 +296,8 @@
 
 	typedef struct XHCI_Device_Context {
 		XHCI_SlotCtx_s	Slot_Context;
-		XHCI_EPCtx_s	BiDir;
-		XHCI_EPCtx_s	EPCtxs[30];
+		XHCI_EPCtx_s	Ctrl_EP;
+		XHCI_EPCtx_s	IO_EPs[30];
 	} XHCI_DevCtx_s;
 	
 
