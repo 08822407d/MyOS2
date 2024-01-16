@@ -120,6 +120,7 @@ void XHCI_MakeTRB_SetupStage(XHCI_TRB_s **Ring_ptr, USB_ReqPack_s *request, u8 t
 
 void XHCI_MakeTRB_DataStage(XHCI_TRB_s **Ring_ptr, u8 *buffer, u32 bufsize, u8 DIR, u16 MaxPackSize)
 {
+	u8 TRB_type = DATA_STAGE;
 	u8 *bufptr = buffer;
 	u32 size = bufsize;
 	int remaining = (int) (((size + (MaxPackSize - 1)) / MaxPackSize) - 1);
@@ -136,12 +137,20 @@ void XHCI_MakeTRB_DataStage(XHCI_TRB_s **Ring_ptr, u8 *buffer, u32 bufsize, u8 D
 		DataStageTRB->TRB_TransLeng = ((size < MaxPackSize) ? size : MaxPackSize);
 
 		DataStageTRB->Direction = DIR;
-		DataStageTRB->TRB_Type = DATA_STAGE;
+		DataStageTRB->TRB_Type = TRB_type;
 		DataStageTRB->Chain_Bit = 1;
 		DataStageTRB->Eval_Next_TRB = (remaining == 0);
 		DataStageTRB->Cycle_Bit = 1;
 
 		XHCI_AdvanceRingPtr(Ring_ptr);
+
+		bufptr += MaxPackSize;
+		if (size < MaxPackSize)
+			size = 0;
+		else
+			size -= MaxPackSize;
+		TRB_type = NORMAL;
+		DIR = 0;
 	}
 }
 
@@ -566,13 +575,13 @@ void scan_XHCI_devices()
 		if (DCBAAP[i] == NULL)
 			continue;
 		
-		// XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
-		// u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
-		// while (EP_count < 2);
+		XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[i]);
+		u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
+		while (EP_count < 2);
 		
-		// XHCI_SlotCtx_s *Slot_Context = &DCBA->Slot_Context;
-		// XHCI_EPCtx_s *CtrlEP_Context = &DCBA->Ctrl_EP;
-		// XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(CtrlEP_Context->TR_Dequeue_Ptr & ~0xF);
+		XHCI_SlotCtx_s *Slot_Context = &DCBA->Slot_Context;
+		XHCI_EPCtx_s *CtrlEP_Context = &DCBA->Ctrl_EP;
+		XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(CtrlEP_Context->TR_Dequeue_Ptr & ~0xF);
 
 		USB_DevDesc_s devdesc;
 		memset(&devdesc, 0, sizeof(USB_DevDesc_s));
