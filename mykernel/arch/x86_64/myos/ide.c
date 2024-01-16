@@ -19,10 +19,14 @@
 #include <obsolete/ide.h>
 #include "myos_block.h"
 
+typedef struct IDE_Spec_Params
+{
+	u8		ATA_controller;
+	u8		ATA_disk;
+} IDE_Params_s;
+
 static task_s *thread;
-
 static DEFINE_SPINLOCK(req_lock);
-
 static blkbuf_node_s *req_in_using;
 LIST_HDR_S(IDEreq_lhdr);
 
@@ -117,8 +121,9 @@ static bool myos_ata_devchk(unsigned controller, unsigned disk)
  *==============================================================================================*/
 long IDE_cmd_out(blkbuf_node_s *node)
 {
-	unsigned controller = node->ATA_controller;
-	unsigned disk = node->ATA_disk;
+	IDE_Params_s *IdeParam = (IDE_Params_s *)node->DevSpecParams;
+	unsigned controller = IdeParam->ATA_controller;
+	unsigned disk = IdeParam->ATA_disk;
 
 	while (inb(IDE_PIO_CMD_STAT(controller)) & DISK_STATUS_BUSY)
 		nop();
@@ -161,48 +166,70 @@ void end_request(blkbuf_node_s *node)
 
 void IDE_read_handler(unsigned long parameter)
 {
-	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "IDE_read_handler:%#010x\n",
-					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
-	else
-		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
+	blkbuf_node_s *node = (blkbuf_node_s *)parameter;
+	IDE_Params_s *IdeParam = (IDE_Params_s *)node->DevSpecParams;
+	unsigned controller = IdeParam->ATA_controller;
+	unsigned disk = IdeParam->ATA_disk;
 
-	req_in_using->count--;
-	if (req_in_using->count)
-		req_in_using->buffer += 512;
+	if (inb(IDE_PIO_CMD_STAT(IdeParam->ATA_controller)) & DISK_STATUS_ERROR)
+		color_printk(RED, BLACK, "IDE_read_handler:%#010x\n",
+					 inb(IDE_PIO_ERR_STAT(IdeParam->ATA_controller)));
+	else
+		insw(IDE_PIO_DATA(IdeParam->ATA_controller), (uint16_t *)node->buffer, 256);
+
+	node->count--;
+	if (node->count)
+		node->buffer += 512;
 }
 
 void IDE_write_handler(unsigned long parameter)
 {
-	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
-		color_printk(RED, BLACK, "IDE_write_handler:%#010x\n",
-					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
+	blkbuf_node_s *node = (blkbuf_node_s *)parameter;
+	IDE_Params_s *IdeParam = (IDE_Params_s *)node->DevSpecParams;
+	unsigned controller = IdeParam->ATA_controller;
+	unsigned disk = IdeParam->ATA_disk;
 
-	req_in_using->count--;
-	if (req_in_using->count)
+	if (inb(IDE_PIO_CMD_STAT(IdeParam->ATA_controller)) & DISK_STATUS_ERROR)
+		color_printk(RED, BLACK, "IDE_write_handler:%#010x\n",
+					 inb(IDE_PIO_ERR_STAT(IdeParam->ATA_controller)));
+
+	node->count--;
+	if (node->count)
 	{
-		req_in_using->buffer += 512;
-		while (!(inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_REQ))
+		node->buffer += 512;
+		while (!(inb(IDE_PIO_CMD_STAT(IdeParam->ATA_controller)) & DISK_STATUS_REQ))
 			nop();
-		outsw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
+		outsw(IDE_PIO_DATA(IdeParam->ATA_controller), (uint16_t *)node->buffer, 256);
 	}
 }
 
 void IDE_other_handler(unsigned long parameter)
 {
-	if (inb(IDE_PIO_CMD_STAT(req_in_using->ATA_controller)) & DISK_STATUS_ERROR)
+	blkbuf_node_s *node = (blkbuf_node_s *)parameter;
+	IDE_Params_s *IdeParam = (IDE_Params_s *)node->DevSpecParams;
+	unsigned controller = IdeParam->ATA_controller;
+	unsigned disk = IdeParam->ATA_disk;
+
+	if (inb(IDE_PIO_CMD_STAT(IdeParam->ATA_controller)) & DISK_STATUS_ERROR)
 		color_printk(RED, BLACK, "IDE_other_handler:%#010x\n",
-					 inb(IDE_PIO_ERR_STAT(req_in_using->ATA_controller)));
+					 inb(IDE_PIO_ERR_STAT(IdeParam->ATA_controller)));
 	else
-		insw(IDE_PIO_DATA(req_in_using->ATA_controller), (uint16_t *)req_in_using->buffer, 256);
+		insw(IDE_PIO_DATA(IdeParam->ATA_controller), (uint16_t *)node->buffer, 256);
 }
 
-blkbuf_node_s *IDE_make_request(unsigned controller, unsigned disk, long cmd,
-							unsigned long blk_idx, long count, unsigned char *buffer)
+blkbuf_node_s *IDE_make_request(unsigned controller, unsigned disk,
+		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
+	IDE_Params_s *IdeParam = (IDE_Params_s *)kzalloc(sizeof(IDE_Params_s), GFP_KERNEL);
 	list_init(&node->req_list, node);
+
+	node->LBA = blk_idx;
+	node->count = count;
 	node->buffer = buffer;
+	node->DevSpecParams = IdeParam;
+	IdeParam->ATA_controller = controller;
+	IdeParam->ATA_disk = disk;
 
 	switch (cmd)
 	{
@@ -221,12 +248,6 @@ blkbuf_node_s *IDE_make_request(unsigned controller, unsigned disk, long cmd,
 		node->cmd = cmd;
 		break;
 	}
-
-	node->ATA_controller = controller;
-	node->ATA_disk = disk;
-	node->LBA = blk_idx;
-	node->count = count;
-	node->buffer = buffer;
 
 	return node;
 }
@@ -272,6 +293,8 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 		// wait_for_completion(&done);
 		schedule();
 
+		if (node->DevSpecParams != NULL)
+			kfree(node->DevSpecParams);
 		if (node != NULL)
 			kfree(node);
 		return -ENOERR;
@@ -305,7 +328,7 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
 {
 	blkbuf_node_s *node = req_in_using;
-	node->end_handler(parameter);
+	node->end_handler((unsigned long)node);
 	
 	if (node->count == 0)
 		end_request(node);

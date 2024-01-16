@@ -22,6 +22,12 @@
 #include "myos_block.h"
 
 
+typedef struct XHCI_Spec_Params
+{
+	u8		dev_addr;
+	u8		end_point;
+} XHCI_Params_s;
+
 static task_s *thread;
 static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
@@ -150,12 +156,15 @@ void XHCI_MakeTRB_StatusStage(u8 DIR, XHCI_TRB_s **Ring_ptr, u32 *status_addr)
 	XHCI_AdvanceRingPtr(Ring_ptr);
 }
 
+void XHCI_MakeTRB_NoOp(XHCI_TRB_s **Ring_ptr)
+{
+	XHCI_AdvanceRingPtr(Ring_ptr);
+}
 
 
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
-	u8 dev_addr = node->ATA_controller;
-	u8 end_point = node->ATA_disk;
+	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 
 	memset(Host_CmdRing_Curr, 0, sizeof(XHCI_CmdTRB_s));
 	Host_CmdRing_Curr->Cycle_Bit = 1;
@@ -163,26 +172,39 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 
 	switch(node->cmd)
 	{
-		case XHCI_OP_READ:
+		case XHCI_OP_CtrlRead:
 			break;
 
-		case XHCI_OP_WRITE:
+		case XHCI_OP_CtrlWrite:
 			break;
 
-		// case EVENT_DATA:
-		// 	XHCI_MakeTRB_EventData((XHCI_TRB_s **)&Host_CmdRing_Curr);
-		// 	break;
+		case XHCI_OP_IsochRead:
+			break;
+
+		case XHCI_OP_IsochWrite:
+			break;
+
+		case XHCI_OP_BulkRead:
+			break;
+
+		case XHCI_OP_BulkWrite:
+			break;
+
+		case XHCI_OP_IntrRead:
+			break;
+
+		case XHCI_OP_IntrWrite:
+			break;
 
 		case XHCI_OP_NOP:
-			XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
+			XHCI_MakeTRB_NoOp((XHCI_TRB_s **)&Host_CmdRing_Curr);
 			break;
 
 		default:
 			break;
 	}
 
-	// XHCI_AdvanceRingPtr((XHCI_TRB_s **)&Host_CmdRing_Curr);
-	*(XHCI_DoorBell_Regptr + dev_addr) = end_point;
+	*(XHCI_DoorBell_Regptr + XHCIparam->dev_addr) = XHCIparam->end_point;
 	__mb();
 
 	return 1;
@@ -219,11 +241,19 @@ void XHCI_other_handler(unsigned long parameter)
 	// IOCQ_Head_Idx++;
 }
 
-blkbuf_node_s *XHCI_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
+blkbuf_node_s *XHCI_make_request(unsigned dev_addr, unsigned end_point,
+		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s),0);
+	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
+	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)kzalloc(sizeof(XHCI_Params_s), GFP_KERNEL);
 	list_init(&node->req_list, node);
+
+	node->LBA = blk_idx;
+	node->count = count;
 	node->buffer = buffer;
+	node->DevSpecParams = XHCIparam;
+	XHCIparam->dev_addr = dev_addr;
+	XHCIparam->end_point = end_point;
 
 	switch(cmd)
 	{
@@ -243,24 +273,17 @@ blkbuf_node_s *XHCI_make_request(long cmd, unsigned long blk_idx, long count, un
 			break;
 	}
 
-	node->LBA = blk_idx;
-	node->count = count;
-	node->buffer = buffer;
-
 	return node;
 }
 
 
-long XHCI_ioctl(unsigned dev_addr, unsigned end_point, long cmd, long arg)
+long XHCI_transfer(unsigned dev_addr, unsigned end_point,
+		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	blkbuf_node_s *node = NULL;
-
-	node = XHCI_make_request(cmd, 0, 0, 0);
+	blkbuf_node_s *node = XHCI_make_request(dev_addr, end_point, cmd, blk_idx, count, buffer);
 	// DECLARE_COMPLETION_ONSTACK(done);
 	// node->done = &done;
 	node->task = current;
-	node->ATA_controller = dev_addr;
-	node->ATA_disk = end_point;
 
 	spin_lock(&req_lock);
 	list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
@@ -271,44 +294,11 @@ long XHCI_ioctl(unsigned dev_addr, unsigned end_point, long cmd, long arg)
 	// wait_for_completion(&done);
 	schedule();
 
+	if (node->DevSpecParams != NULL)
+		kfree(node->DevSpecParams);
 	if (node != NULL)
 		kfree(node);
 	return -ENOERR;
-
-	return 1;
-}
-
-long XHCI_transfer(unsigned dev_addr, unsigned end_point, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
-{
-	blkbuf_node_s *node = NULL;
-	if(cmd == XHCI_OP_READ || cmd == XHCI_OP_WRITE)
-	{
-		node = XHCI_make_request(cmd, 0, 0, 0);
-
-		node = NVMe_make_request(cmd, blk_idx, count, buffer);
-		// DECLARE_COMPLETION_ONSTACK(done);
-		// node->done = &done;
-		node->task = current;
-		node->ATA_controller = dev_addr;
-		node->ATA_disk = end_point;
-
-		spin_lock(&req_lock);
-		list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
-		spin_unlock_no_resched(&req_lock);
-
-		__set_current_state(TASK_UNINTERRUPTIBLE);
-		wake_up_process(thread);
-		// wait_for_completion(&done);
-		schedule();
-
-		if (node != NULL)
-			kfree(node);
-		return -ENOERR;
-	}
-	else
-	{
-		return -EINVAL;
-	}
 
 	return 1;
 }
@@ -555,7 +545,7 @@ void USB_Keyborad_init()
 {
 	for (int i = 0; i < 2; i++)
 	{
-		XHCI_ioctl(0, 0, XHCI_OP_NOP, 0);
+		XHCI_transfer(0, 0, XHCI_OP_NOP, 0, 0, NULL);
 		mdelay(100);
 	}
 }

@@ -240,6 +240,8 @@ long NVMe_transfer(unsigned controller, unsigned disk, long cmd, unsigned long b
 		// wait_for_completion(&done);
 		schedule();
 
+		if (node->DevSpecParams != NULL)
+			kfree(node->DevSpecParams);
 		if (node != NULL)
 			kfree(node);
 		return -ENOERR;

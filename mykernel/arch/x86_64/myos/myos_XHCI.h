@@ -7,8 +7,14 @@
 
 
 	enum {
-		XHCI_OP_READ,
-		XHCI_OP_WRITE,
+		XHCI_OP_CtrlRead,
+		XHCI_OP_CtrlWrite,
+		XHCI_OP_IsochRead,
+		XHCI_OP_IsochWrite,
+		XHCI_OP_BulkRead,
+		XHCI_OP_BulkWrite,
+		XHCI_OP_IntrRead,
+		XHCI_OP_IntrWrite,
 		XHCI_OP_NOP,
 	};
 
