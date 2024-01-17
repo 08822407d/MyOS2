@@ -24,8 +24,8 @@
 
 typedef struct XHCI_Spec_Params
 {
-	u8		dev_addr;
-	u8		end_point;
+	u8		Slot_ID;
+	u8		DevCtx_Idx;
 
 	XHCI_TRB_s	*TRenqueue_Ptr;
 } XHCI_Params_s;
@@ -169,11 +169,11 @@ void XHCI_MakeTRB_StatusStage(XHCI_TRB_s **Ring_ptr, u32 *status_addr, u8 DIR)
 }
 
 
-void XHCI_MakeTD_CtrlEP(u8 dev_addr, u8 *buffer, u32 bufsize, u8 DIR)
+void XHCI_MakeTD_CtrlEP(u8 Slot_ID, u8 *buffer, u32 bufsize, u8 DIR)
 {
-	while (DCBAAP[dev_addr] == NULL);
+	while (DCBAAP[Slot_ID] == NULL);
 	
-	XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[dev_addr]);
+	XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[Slot_ID]);
 	u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
 	while (EP_count < 2);
 	
@@ -202,6 +202,7 @@ void XHCI_MakeTD_CtrlEP(u8 dev_addr, u8 *buffer, u32 bufsize, u8 DIR)
 
 void XHCI_MakeTRB_NoOp(XHCI_TRB_s **Ring_ptr)
 {
+	memset(Ring_ptr, 0, sizeof(XHCI_TRB_s));
 	XHCI_AdvanceRingPtr(Ring_ptr);
 }
 
@@ -209,19 +210,35 @@ void XHCI_MakeTRB_NoOp(XHCI_TRB_s **Ring_ptr)
 long XHCI_cmd_out(blkbuf_node_s *node)
 {
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
+	u8 Slot_ID = XHCIparam->Slot_ID;
+	u8 DevCtx_Idx = XHCIparam->DevCtx_Idx;
 
-	memset(Host_CmdRing_Curr, 0, sizeof(XHCI_CmdTRB_s));
-	Host_CmdRing_Curr->Cycle_Bit = 1;
-	Host_CmdRing_Curr->TRB_Type = node->cmd;
+	if (Slot_ID == 0)
+	{
+
+	}
+	else
+	{
+		while (DCBAAP[Slot_ID] == NULL);
+		XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[Slot_ID]);
+		u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
+		while (EP_count < 2);
+		u8 MaxPackSize = 8;
+		XHCI_SlotCtx_s *Slot_Context = &DCBA->Slot_Context;
+		XHCI_EPCtx_s *CtrlEP_Context = &DCBA->Ctrl_EP;
+		while ((CtrlEP_Context->TR_Dequeue_Ptr & ~0xF) == 0);
+		XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(CtrlEP_Context->TR_Dequeue_Ptr & ~0xF);
+	}
+
 
 	switch(node->cmd)
 	{
 		case XHCI_OP_CtrlRead:
-			XHCI_MakeTD_CtrlEP(XHCIparam->dev_addr, node->buffer, node->count, USB_TRANSFER_IN);
+			XHCI_MakeTD_CtrlEP(XHCIparam->Slot_ID, node->buffer, node->count, USB_TRANSFER_IN);
 			break;
 
 		case XHCI_OP_CtrlWrite:
-			XHCI_MakeTD_CtrlEP(XHCIparam->dev_addr, node->buffer, node->count, USB_TRANSFER_OUT);
+			XHCI_MakeTD_CtrlEP(XHCIparam->Slot_ID, node->buffer, node->count, USB_TRANSFER_OUT);
 			break;
 
 		case XHCI_OP_IsochRead:
@@ -250,7 +267,7 @@ long XHCI_cmd_out(blkbuf_node_s *node)
 			break;
 	}
 
-	*(XHCI_DoorBell_Regptr + XHCIparam->dev_addr) = XHCIparam->end_point;
+	*(XHCI_DoorBell_Regptr + XHCIparam->Slot_ID) = (u32)XHCIparam->DevCtx_Idx;
 	__mb();
 
 	return 1;
@@ -287,7 +304,7 @@ void XHCI_other_handler(unsigned long parameter)
 	// IOCQ_Head_Idx++;
 }
 
-blkbuf_node_s *XHCI_make_request(unsigned dev_addr, unsigned end_point,
+blkbuf_node_s *XHCI_make_request(unsigned Slot_ID, unsigned DevCtx_Idx,
 		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
@@ -298,8 +315,8 @@ blkbuf_node_s *XHCI_make_request(unsigned dev_addr, unsigned end_point,
 	node->count = count;
 	node->buffer = buffer;
 	node->DevSpecParams = XHCIparam;
-	XHCIparam->dev_addr = dev_addr;
-	XHCIparam->end_point = end_point;
+	XHCIparam->Slot_ID = Slot_ID;
+	XHCIparam->DevCtx_Idx = DevCtx_Idx;
 
 	switch(cmd)
 	{
@@ -323,10 +340,10 @@ blkbuf_node_s *XHCI_make_request(unsigned dev_addr, unsigned end_point,
 }
 
 
-long XHCI_transfer(unsigned dev_addr, unsigned end_point,
+long XHCI_transfer(unsigned Slot_ID, unsigned DevCtx_Idx,
 		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
-	blkbuf_node_s *node = XHCI_make_request(dev_addr, end_point, cmd, blk_idx, count, buffer);
+	blkbuf_node_s *node = XHCI_make_request(Slot_ID, DevCtx_Idx, cmd, blk_idx, count, buffer);
 	// DECLARE_COMPLETION_ONSTACK(done);
 	// node->done = &done;
 	node->task = current;
@@ -596,9 +613,9 @@ void scan_XHCI_devices()
 		XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(CtrlEP_Context->TR_Dequeue_Ptr & ~0xF);
 
 		USB_DevDesc_s devdesc;
-		// memset(&devdesc, 0, sizeof(USB_DevDesc_s));
-		// XHCI_transfer(i, 1, XHCI_OP_CtrlRead, 0, sizeof(USB_DevDesc_s), (unsigned char *)&devdesc);
-		// __mb();
+		memset(&devdesc, 0, sizeof(USB_DevDesc_s));
+		XHCI_transfer(i, 1, XHCI_OP_CtrlRead, 0, sizeof(USB_DevDesc_s), (unsigned char *)&devdesc);
+		__mb();
 	}
 }
 
