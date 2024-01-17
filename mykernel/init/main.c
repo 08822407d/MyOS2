@@ -329,13 +329,13 @@ int kernel_init(void *unused)
 
 
 	init_NVMErqd();
-	init_XHCIrqd();
 	init_ATArqd();
+	init_XHCIrqd();
 
 	scan_PCI_devices();
-	scan_XHCI_devices();
 	// do_name();
 	myos_ata_probe();
+	scan_XHCI_devices();
 
 	NVMe_IOqueue_init();
 	USB_Keyborad_init();

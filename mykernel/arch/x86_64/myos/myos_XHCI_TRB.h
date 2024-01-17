@@ -48,7 +48,7 @@
 				Fields2			: 9,
 				TRB_Type		: 6,
 				Fields3			: 16;
-	} XHCI_TRB_s;
+	} __packed __aligned(16) XHCI_TRB_s;
 
 	typedef struct XHCI_TransferTRB_Common
 	{
@@ -63,7 +63,7 @@
 				Fields4			: 3,
 				TRB_Type		: 6,
 				Fields5			: 16;
-	} __attribute__((packed)) XHCI_TransTRB_s;
+	} __packed __aligned(16) XHCI_TransTRB_s;
 	
 	typedef XHCI_TRB_s XHCI_EvtTRB_s;
 	
@@ -75,7 +75,7 @@
 				TRB_Type		: 6,
 				Fields3			: 8,
 				Slot_ID			: 8;
-	} __attribute__((packed)) XHCI_CmdTRB_s;
+	} __packed __aligned(16) XHCI_CmdTRB_s;
 
 	typedef struct XHCI_OtherTRB_Common
 	{
@@ -92,7 +92,7 @@
 				Fields3			: 4,
 				TRB_Type		: 6,
 				RsvdZ3			: 16;
-	} __attribute__((packed)) XHCI_OtherTRB_s;
+	} __packed __aligned(16) XHCI_OtherTRB_s;
 
 
 /*==============================================================================================*
@@ -118,7 +118,7 @@
 				TRB_Type		: 6,
 				Trans_Type		: 2,
 				RsvdZ4			: 14;
-	} __attribute__((packed)) XHCI_SetupStage_s;
+	} __packed __aligned(16) XHCI_SetupStage_s;
 
 	typedef struct XHCI_Data_Stage_TRB
 	{
@@ -139,7 +139,7 @@
 				TRB_Type		: 6,
 				Direction		: 1,
 				RsvdZ2			: 15;
-	} __attribute__((packed)) XHCI_DataStage_s;
+	} __packed __aligned(16) XHCI_DataStage_s;
 
 	typedef struct XHCI_Statue_Stage_TRB
 	{
@@ -157,7 +157,7 @@
 				TRB_Type		: 6,
 				Direction		: 1,
 				RsvdZ5			: 15;
-	} __attribute__((packed)) XHCI_StatusStage_s;
+	} __packed __aligned(16) XHCI_StatusStage_s;
 
 
 /*==============================================================================================*
@@ -178,7 +178,7 @@
 				EndPt_ID		: 5,
 				RsvdZ3			: 3,
 				Slot_ID			: 8;
-	} __attribute__((packed)) XHCI_TransEvt_s;
+	} __packed __aligned(16) XHCI_TransEvt_s;
 
 	typedef struct XHCI_Command_Completion_Event_TRB {
 		u64		CmdTRB_ptr;
@@ -191,7 +191,7 @@
 				TRB_Type		: 6,
 				VF_ID			: 8,
 				Slot_ID			: 8;
-	} __attribute__((packed)) XHCI_CmdComplEvt_TRB_s;
+	} __packed __aligned(16) XHCI_CmdComplEvt_TRB_s;
 
 	typedef struct XHCI_Status_Change_Event_TRB {
 		u32		RsvdZ1			: 24,
@@ -206,7 +206,7 @@
 				RsvdZ4			: 9,
 				TRB_Type		: 6,
 				RsvdZ5			: 16;
-	} __attribute__((packed)) XHCI_StChEvt_TRB_s;
+	} __packed __aligned(16) XHCI_StChEvt_TRB_s;
 
 
 /*==============================================================================================*
@@ -220,7 +220,7 @@
 				TRB_Type		: 6,
 				VF_ID			: 8,
 				RsvdZ2			: 8;
-	} __attribute__((packed)) XHCI_NoOpCmd_TRB_s;
+	} __packed __aligned(16) XHCI_NoOpCmd_TRB_s;
 
 
 /*==============================================================================================*
@@ -240,7 +240,7 @@
 				RsvdZ3			: 4,
 				TRB_Type		: 6,
 				RsvdZ4			: 16;
-	} __attribute__((packed)) XHCI_LinkTRB_s;
+	} __packed __aligned(16) XHCI_LinkTRB_s;
 
 	typedef struct XHCI_EventData_TRB {
 		u64		CmdTRB_ptr;
@@ -257,6 +257,6 @@
 				Blk_Evt_Intr	: 1,
 				TRB_Type		: 6,
 				RsvdZ4			: 16;
-	} __attribute__((packed)) XHCI_EvtDataTRB_s;
+	} __packed __aligned(16) XHCI_EvtDataTRB_s;
 
 #endif
