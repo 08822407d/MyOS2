@@ -296,8 +296,7 @@
 
 	typedef struct XHCI_Device_Context {
 		XHCI_SlotCtx_s	Slot_Context;
-		XHCI_EPCtx_s	Ctrl_EP;
-		XHCI_EPCtx_s	IO_EPs[30];
+		XHCI_EPCtx_s	EP_Contexts[31];
 	} XHCI_DevCtx_s;
 	
 	typedef struct XHCI_Extended_Capabilitie_Entry {
@@ -306,7 +305,20 @@
 		u16		Cap_Specific;
 	} __attribute__((packed)) XHCI_xECP_s;
 
+
 	void XHCI_init();
 	void XHCI_exit();
+
+	typedef struct EndPoint_Params {
+		XHCI_TRB_s		*Ring_EnqueuePtr;
+		XHCI_TRB_s		*Ring_DequeuePtr;
+		XHCI_LinkTRB_s	*Ring_LinkTRB;
+		u8		Cycle_Bit;
+		u8		Cycle_Toggled;
+	} EP_Param_s;
+
+	typedef struct DevSlot_Params {
+		EP_Param_s	*SlotEP_Params[32];
+	} Slot_Param_s;
 
 #endif
