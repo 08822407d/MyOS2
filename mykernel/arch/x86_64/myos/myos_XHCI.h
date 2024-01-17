@@ -300,6 +300,11 @@
 		XHCI_EPCtx_s	IO_EPs[30];
 	} XHCI_DevCtx_s;
 	
+	typedef struct XHCI_Extended_Capabilitie_Entry {
+		u8		Cap_ID;
+		u8		Next_xECP;
+		u16		Cap_Specific;
+	} __attribute__((packed)) XHCI_xECP_s;
 
 	void XHCI_init();
 	void XHCI_exit();

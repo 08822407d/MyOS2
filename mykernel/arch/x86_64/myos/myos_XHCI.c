@@ -44,6 +44,7 @@ u64				XHCI_BAR0_base = 0;
 XHCI_HCCR_s		*XHCI_HostCtrl_Cap_Regs_ptr = NULL;
 XHCI_HCOR_s		*XHCI_HostCtrl_Ops_Regs_ptr = NULL;
 XHCI_HCRTR_s	*XHCI_HostCtrl_RunTime_Regs_ptr = NULL;
+XHCI_xECP_s		*xECP_Base = NULL;
 u32				*XHCI_DoorBell_Regptr = NULL;
 XHCI_DevCtx_s	**DCBAAP = NULL;
 u8				MaxSlotEnts = 0;
@@ -480,7 +481,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	register_irq(APIC_PIRQC, NULL, "XHCI", 0, &XHCI_int_controller, &XHCI_handler);
 
 
-	/// configure XHCI
+	/// configure XHCIXHCI_xECP_s *xECP_Base
 	XHCI_HostCtrl_Cap_Regs_ptr = (XHCI_HCCR_s *)phys_to_virt(XHCI_BAR0_base);
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
@@ -488,6 +489,17 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
 	DCBAAP = (XHCI_DevCtx_s	**)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
 	MaxSlotEnts = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn;
+
+	XHCI_test_getRegVals();
+	/// 遍历XHCI扩展功能
+	xECP_Base = (XHCI_xECP_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->HCCPARAMS1.xECP << 2));
+	XHCI_xECP_s *xECP_next = xECP_Base;
+	while (xECP_next->Next_xECP != 0)
+	{
+		XHCI_xECP_s xECP_val = *xECP_next;
+		xECP_next = (XHCI_xECP_s *)((u64)xECP_next + (xECP_next->Next_xECP << 2));
+	}
+	
 
 	/// 重设主控命令环
 	Host_CmdRing_Size = RING_SIZE;
@@ -584,9 +596,9 @@ void scan_XHCI_devices()
 		XHCI_TRB_s *TR_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(CtrlEP_Context->TR_Dequeue_Ptr & ~0xF);
 
 		USB_DevDesc_s devdesc;
-		memset(&devdesc, 0, sizeof(USB_DevDesc_s));
-		XHCI_transfer(i, 1, XHCI_OP_CtrlRead, 0, sizeof(USB_DevDesc_s), (unsigned char *)&devdesc);
-		__mb();
+		// memset(&devdesc, 0, sizeof(USB_DevDesc_s));
+		// XHCI_transfer(i, 1, XHCI_OP_CtrlRead, 0, sizeof(USB_DevDesc_s), (unsigned char *)&devdesc);
+		// __mb();
 	}
 }
 
