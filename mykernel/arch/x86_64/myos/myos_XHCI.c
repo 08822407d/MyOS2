@@ -518,9 +518,20 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	/// 遍历XHCI扩展功能
 	xECP_Base = (XHCI_xECP_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->HCCPARAMS1.xECP << 2));
 	XHCI_xECP_s *xECP_next = xECP_Base;
-	while (xECP_next->Next_xECP != 0)
+	while (1)
 	{
 		XHCI_xECP_s xECP_val = *xECP_next;
+		switch (xECP_next->Cap_ID)
+		{
+		case 2:
+			XHCI_xECP_SupProt_s SupProt = *(XHCI_xECP_SupProt_s *)xECP_next;
+			break;
+		
+		default:
+			break;
+		}
+		if (xECP_next->Next_xECP == 0)
+			break;
 		xECP_next = (XHCI_xECP_s *)((u64)xECP_next + (xECP_next->Next_xECP << 2));
 	}
 	

@@ -305,6 +305,23 @@
 		u16		Cap_Specific;
 	} __attribute__((packed)) XHCI_xECP_s;
 
+	typedef struct XHCI_xECP_Supported_Protocal {
+		u8		Cap_ID;
+		u8		Next_xECP;
+		u8		RevMinor;
+		u8		RevMajor;
+
+		char	NameStr[4];
+
+		u8		CompPort_Off;
+		u8		CompPort_Count;
+		u8		Protocol_Defined;
+		u8		ProtocolSpeedID_Count;
+
+		u32		Protocol_Slot_Types	:5,
+				RsvdP				:27;
+	} __attribute__((packed)) XHCI_xECP_SupProt_s;
+
 
 	void XHCI_init();
 	void XHCI_exit();
