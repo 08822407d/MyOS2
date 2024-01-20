@@ -27,6 +27,7 @@ typedef struct XHCI_Spec_Params
 	u8		Slot_ID;
 	u8		DevCtx_Idx;
 	EP_Param_s	*EP_Param;
+	XHCI_EvtTRB_s	*EvtTRB;
 } XHCI_Params_s;
 
 static task_s *thread;
@@ -414,6 +415,7 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 	blkbuf_node_s *node = req_in_using;
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 	EP_Param_s *EP_Param = (EP_Param_s *)XHCIparam->EP_Param;
+	XHCI_EvtTRB_s *EvtTRB = (XHCI_EvtTRB_s *)phys_to_virt(Main_Intr_RegSet_ptr->ERDP & ~0xF);
 
 	node->end_handler(parameter);
 	XHCI_end_request(node);
@@ -557,6 +559,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	HostParam->Ring_DequeuePtr = (XHCI_TRB_s *)Host_CmdRing_Base;
 	HostParam->Ring_LinkTRB = LinkTRB_ptr;
 
+	XHCI_test_getRegVals();
 	/// 重设主中断事件环
 	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
 	// 创建环
@@ -570,7 +573,7 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	// 设置主中断表项
 	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
 	Main_Intr_RegSet_ptr->ERSTSZ = 1;		//段表大小
-	Main_Intr_RegSet_ptr->ERDP = (virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp) | (1 << 3));		//事件环出队指针
+	Main_Intr_RegSet_ptr->ERDP = MainEventRing_SegTable_Entp->RingSeg_Base | (1 << 3);		//事件环出队指针
 	// 使能主中断
 	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
 
@@ -659,7 +662,7 @@ void scan_XHCI_devices()
 
 void USB_Keyborad_init()
 {
-	for (int i = 0; i < 33; i++)
+	for (int i = 0; i < 1; i++)
 	{
 		XHCI_transfer(0, 0, XHCI_OP_NOP, 0, 0, NULL);
 		mdelay(100);
