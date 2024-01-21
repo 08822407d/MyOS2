@@ -52,7 +52,6 @@ u8				MaxSlotEnts = 0;
 // 主中断
 XHCI_IRS_s		*Main_Intr_RegSet_ptr = NULL;
 XHCI_EvtTRB_s	*MainEventRing_Base = NULL;
-XHCI_EvtTRB_s	*MainEventRing_Curr = NULL;
 u16				MainEventRing_Size = 0;
 
 // 传输环
@@ -62,18 +61,25 @@ XHCI_TRB_s		*TR_DeqPtr_Curr = NULL;
 // 全局参数缓存
 Slot_Param_s *Slot_Params[256];
 
+typedef struct XHCI_Values_for_Test
+{
+    XHCI_HCCR_s		HostCtrl_Cap_Regs;
+    XHCI_HCOR_s		HostCtrl_Ops_Regs;
+    XHCI_HCRTR_s	HostCtrl_RunTime_Regs;
+} XHCI_ValTest_s;
+
+XHCI_ValTest_s Initial_Values;
+XHCI_ValTest_s Reset_Values;
+
 // 测试用
-XHCI_HCCR_s XHCI_HCCR_val;
-XHCI_HCOR_s XHCI_HCOR_val;
-XHCI_HCRTR_s XHCI_HCRTR_val;
 u32			EventData_Test = 0;
 u32			Intr_Count = 0;
 
-void XHCI_test_getRegVals()
+void XHCI_test_getRegVals(XHCI_ValTest_s *Val)
 {
-	XHCI_HCCR_val = *XHCI_HostCtrl_Cap_Regs_ptr;
-	XHCI_HCOR_val = *XHCI_HostCtrl_Ops_Regs_ptr;
-	XHCI_HCRTR_val = *XHCI_HostCtrl_RunTime_Regs_ptr;
+	Val->HostCtrl_Cap_Regs = *XHCI_HostCtrl_Cap_Regs_ptr;
+	Val->HostCtrl_Ops_Regs = *XHCI_HostCtrl_Ops_Regs_ptr;
+	Val->HostCtrl_RunTime_Regs = *XHCI_HostCtrl_RunTime_Regs_ptr;
 }
 
 
@@ -424,7 +430,7 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 	XHCI_HostCtrl_Ops_Regs_ptr->USBSTS |= 1 << 3;	// 该位是RW1C
 	__mb();
 
-	XHCI_test_getRegVals();
+	XHCI_test_getRegVals(&Reset_Values);
 	blkbuf_node_s *node = req_in_using;
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 	EP_Param_s *EP_Param = (EP_Param_s *)XHCIparam->EP_Param;
@@ -441,11 +447,90 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 	// 处理命令环/传输环翻转
 	XHCI_ToggleCycleBit(EP_Param);
 
-	XHCI_test_getRegVals();
+	XHCI_test_getRegVals(&Reset_Values);
 
 	color_printk(RED, BLACK, "XHCI Handler: %d\n", Intr_Count);
 	Intr_Count++;
 	// while (1);
+}
+
+
+void XHCI_ResetHostController()
+{
+	// /// 遍历XHCI扩展功能
+	// xECP_Base = (XHCI_xECP_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->HCCPARAMS1.xECP << 2));
+	// XHCI_xECP_s *xECP_next = xECP_Base;
+	// while (1)
+	// {
+	// 	XHCI_xECP_s xECP_val = *xECP_next;
+	// 	switch (xECP_next->Cap_ID)
+	// 	{
+	// 	case 2:
+	// 		XHCI_xECP_SupProt_s SupProt = *(XHCI_xECP_SupProt_s *)xECP_next;
+	// 		break;
+		
+	// 	default:
+	// 		break;
+	// 	}
+	// 	if (xECP_next->Next_xECP == 0)
+	// 		break;
+	// 	xECP_next = (XHCI_xECP_s *)((u64)xECP_next + (xECP_next->Next_xECP << 2));
+	// }
+	
+	/// 停止主控
+	XHCI_HostCtrl_Ops_Regs_ptr->USBCMD &= ~(1 << 0);
+	while ((XHCI_HostCtrl_Ops_Regs_ptr->USBSTS & (1 << 0)) == 0);
+	XHCI_HostCtrl_Ops_Regs_ptr->USBCMD |= 1 << 1;
+	while ((XHCI_HostCtrl_Ops_Regs_ptr->USBCMD & (1 << 1)) != 0);
+	memset(Slot_Params, 0, sizeof(Slot_Params));
+	
+	/// 停止命令环
+	XHCI_HostCtrl_Ops_Regs_ptr->CRCR &= 1 << 1;
+	while ((XHCI_HostCtrl_Ops_Regs_ptr->CRCR & (1 << 3)) == 1);
+	XHCI_test_getRegVals(&Reset_Values);
+	/// 重设主控命令环
+	u16 Host_CmdRing_Size = RING_SIZE;
+	XHCI_CmdTRB_s *Host_CmdRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
+		((Host_CmdRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
+	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CmdRing_Base) | 0x1;
+	// 主控环尾
+	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CmdRing_Base + RING_SIZE - 1);
+	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CmdRing_Base);
+	LinkTRB_ptr->Cycle_Bit = 1;
+	LinkTRB_ptr->Toggle_Cycle = 1;
+	LinkTRB_ptr->TRB_Type = LINK;
+	// 端点参数列表中的主控环
+	Slot_Params[0] = (Slot_Param_s *)kzalloc(sizeof(Slot_Param_s), GFP_KERNEL);
+	Slot_Params[0]->SlotEP_Params[0] = (EP_Param_s *)kzalloc(sizeof(EP_Param_s), GFP_KERNEL);
+	EP_Param_s *HostParam = Slot_Params[0]->SlotEP_Params[0];
+	HostParam->Cycle_Bit = LinkTRB_ptr->Cycle_Bit;
+	HostParam->Cycle_Toggled = 0;
+	HostParam->Ring_EnqueuePtr =
+	HostParam->Ring_DequeuePtr = (XHCI_TRB_s *)Host_CmdRing_Base;
+	HostParam->Ring_LinkTRB = LinkTRB_ptr;
+
+	XHCI_test_getRegVals(&Reset_Values);
+	/// 重设主中断事件环
+	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
+	// 创建环
+	MainEventRing_Size = RING_SIZE;
+	MainEventRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
+		((MainEventRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
+	// 创建并设置段表
+	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
+	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_Base);
+	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
+	// 设置主中断表项
+	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
+	Main_Intr_RegSet_ptr->ERSTSZ = 1;		//段表大小
+	Main_Intr_RegSet_ptr->ERDP = MainEventRing_SegTable_Entp->RingSeg_Base | (1 << 3);		//事件环出队指针
+
+
+	XHCI_test_getRegVals(&Reset_Values);
+	// 重启主控
+	XHCI_HostCtrl_Ops_Regs_ptr->USBCMD |= 1 << 0;
+	// 测试
+	XHCI_test_getRegVals(&Reset_Values);
 }
 
 void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
@@ -524,82 +609,23 @@ void XHCI_init(struct PCI_Header_00 *XHCI_PCI_HBA)
 	//Admin Completion_Queue_Entry Interrupt Handler
 	register_irq(APIC_PIRQC, NULL, "XHCI", 0, &XHCI_int_controller, &XHCI_handler);
 
-
 	/// configure XHCI
 	XHCI_HostCtrl_Cap_Regs_ptr = (XHCI_HCCR_s *)phys_to_virt(XHCI_BAR0_base);
 	u8 CAPLENGTH = XHCI_HostCtrl_Cap_Regs_ptr->CAPLENGTH;
 	XHCI_HostCtrl_Ops_Regs_ptr = (XHCI_HCOR_s *)phys_to_virt(XHCI_BAR0_base + CAPLENGTH);
 	XHCI_DoorBell_Regptr = (u32 *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->DBOFF & ~0x3));
 	XHCI_HostCtrl_RunTime_Regs_ptr = (XHCI_HCRTR_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->RTSOFF & ~0x1F));
-	DCBAAP = (XHCI_DevCtx_s	**)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
-	MaxSlotEnts = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn;
+	/// 保存寄存器组初始值
+	XHCI_test_getRegVals(&Initial_Values);
 
-	XHCI_test_getRegVals();
-	/// 遍历XHCI扩展功能
-	xECP_Base = (XHCI_xECP_s *)phys_to_virt(XHCI_BAR0_base + (XHCI_HostCtrl_Cap_Regs_ptr->HCCPARAMS1.xECP << 2));
-	XHCI_xECP_s *xECP_next = xECP_Base;
-	while (1)
-	{
-		XHCI_xECP_s xECP_val = *xECP_next;
-		switch (xECP_next->Cap_ID)
-		{
-		case 2:
-			XHCI_xECP_SupProt_s SupProt = *(XHCI_xECP_SupProt_s *)xECP_next;
-			break;
-		
-		default:
-			break;
-		}
-		if (xECP_next->Next_xECP == 0)
-			break;
-		xECP_next = (XHCI_xECP_s *)((u64)xECP_next + (xECP_next->Next_xECP << 2));
-	}
-	
-	memset(Slot_Params, 0, sizeof(Slot_Params));
-	/// 重设主控命令环
-	u16 Host_CmdRing_Size = RING_SIZE;
-	XHCI_CmdTRB_s *Host_CmdRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
-		((Host_CmdRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
-	XHCI_HostCtrl_Ops_Regs_ptr->CRCR = virt_to_phys((virt_addr_t)Host_CmdRing_Base) | 0x1;
-	// 主控环尾
-	XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)(Host_CmdRing_Base + RING_SIZE - 1);
-	LinkTRB_ptr->CmdTRB_ptr = virt_to_phys((virt_addr_t)Host_CmdRing_Base);
-	LinkTRB_ptr->Cycle_Bit = 1;
-	LinkTRB_ptr->Toggle_Cycle = 1;
-	LinkTRB_ptr->TRB_Type = LINK;
-	// 端点参数列表中的主控环
-	Slot_Params[0] = (Slot_Param_s *)kzalloc(sizeof(Slot_Param_s), GFP_KERNEL);
-	Slot_Params[0]->SlotEP_Params[0] = (EP_Param_s *)kzalloc(sizeof(EP_Param_s), GFP_KERNEL);
-	EP_Param_s *HostParam = Slot_Params[0]->SlotEP_Params[0];
-	HostParam->Cycle_Bit = LinkTRB_ptr->Cycle_Bit;
-	HostParam->Cycle_Toggled = 0;
-	HostParam->Ring_EnqueuePtr =
-	HostParam->Ring_DequeuePtr = (XHCI_TRB_s *)Host_CmdRing_Base;
-	HostParam->Ring_LinkTRB = LinkTRB_ptr;
+	XHCI_ResetHostController();
 
-	XHCI_test_getRegVals();
-	/// 重设主中断事件环
-	Main_Intr_RegSet_ptr = &(XHCI_HostCtrl_RunTime_Regs_ptr->IRS_Arr[0]);
-	// 创建环
-	MainEventRing_Size = RING_SIZE;
-	MainEventRing_Base = kzalloc(sizeof(XHCI_EvtTRB_s) *
-		((MainEventRing_Size + RingSegMaxSize - 1) / RingSegMaxSize) * RingSegMaxSize, GFP_KERNEL);
-	// 创建并设置段表
-	XHCI_ERSegTblEnt_s *MainEventRing_SegTable_Entp = (XHCI_ERSegTblEnt_s *)kzalloc(sizeof(XHCI_ERSegTblEnt_s), GFP_KERNEL);
-	MainEventRing_SegTable_Entp->RingSeg_Base = virt_to_phys((virt_addr_t)MainEventRing_Base);
-	MainEventRing_SegTable_Entp->RingSeg_Size = MainEventRing_Size;
-	// 设置主中断表项
-	Main_Intr_RegSet_ptr->ERSTBA = (XHCI_ERSegTblEnt_s *)virt_to_phys((virt_addr_t)MainEventRing_SegTable_Entp);		//段表基址
-	Main_Intr_RegSet_ptr->ERSTSZ = 1;		//段表大小
-	Main_Intr_RegSet_ptr->ERDP = MainEventRing_SegTable_Entp->RingSeg_Base | (1 << 3);		//事件环出队指针
 	// 使能主中断
+	Main_Intr_RegSet_ptr->IMAN |= 1 << 0;
 	Main_Intr_RegSet_ptr->IMAN |= 1 << 1;
 
-	MainEventRing_Curr = MainEventRing_Base;
-
-
-	// 测试
-	XHCI_test_getRegVals();
+	DCBAAP = (XHCI_DevCtx_s	**)phys_to_virt(XHCI_HostCtrl_Ops_Regs_ptr->DCBAAP);
+	MaxSlotEnts = XHCI_HostCtrl_Ops_Regs_ptr->CONFIG.MaxSlotsEn;
 }
 
 void XHCI_exit()
@@ -648,34 +674,32 @@ void init_XHCIrqd()
 
 void scan_XHCI_devices()
 {
-
-
-	for (int Slot_Idx = 1; Slot_Idx <= MaxSlotEnts; Slot_Idx++)
-	{
-		if (DCBAAP[Slot_Idx] == NULL)
-			continue;
+	// for (int Slot_Idx = 1; Slot_Idx <= MaxSlotEnts; Slot_Idx++)
+	// {
+	// 	if (DCBAAP[Slot_Idx] == NULL)
+	// 		continue;
 		
-		XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[Slot_Idx]);
-		u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
-		while (EP_count < 2);
+	// 	XHCI_DevCtx_s *DCBA = (XHCI_DevCtx_s *)phys_to_virt((phys_addr_t)DCBAAP[Slot_Idx]);
+	// 	u8 EP_count = DCBA->Slot_Context.Ctx_Ents;
+	// 	while (EP_count < 2);
 
-		XHCI_SlotCtx_s *Slot_Ctx = &DCBA->Slot_Context;
-		Slot_Param_s *SlotParam = (Slot_Param_s *)kzalloc(sizeof(Slot_Param_s), GFP_KERNEL);
-		Slot_Params[Slot_Idx] = SlotParam;
-		for (int EP_Idx = 1; EP_Idx < 32; EP_Idx++)
-		{
-			XHCI_EPCtx_s *EP_Ctx = &DCBA->EP_Contexts[EP_Idx];
-			if (EP_Ctx->EP_State > 0 && EP_Ctx->EP_State < 5)
-			{
-				EP_Param_s *EP = (EP_Param_s *)kzalloc(sizeof(EP_Param_s), GFP_KERNEL);
-				SlotParam->SlotEP_Params[1] = EP;
+	// 	XHCI_SlotCtx_s *Slot_Ctx = &DCBA->Slot_Context;
+	// 	Slot_Param_s *SlotParam = (Slot_Param_s *)kzalloc(sizeof(Slot_Param_s), GFP_KERNEL);
+	// 	Slot_Params[Slot_Idx] = SlotParam;
+	// 	for (int EP_Idx = 1; EP_Idx < 32; EP_Idx++)
+	// 	{
+	// 		XHCI_EPCtx_s *EP_Ctx = &DCBA->EP_Contexts[EP_Idx];
+	// 		if (EP_Ctx->EP_State > 0 && EP_Ctx->EP_State < 5)
+	// 		{
+	// 			EP_Param_s *EP = (EP_Param_s *)kzalloc(sizeof(EP_Param_s), GFP_KERNEL);
+	// 			SlotParam->SlotEP_Params[1] = EP;
 
-				EP->Cycle_Bit = 1;
-				EP->Ring_EnqueuePtr =
-				EP->Ring_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(EP_Ctx->TR_Dequeue_Ptr & ~0xF);
-			}
-		}
-	}
+	// 			EP->Cycle_Bit = 1;
+	// 			EP->Ring_EnqueuePtr =
+	// 			EP->Ring_DequeuePtr = (XHCI_TRB_s *)phys_to_virt(EP_Ctx->TR_Dequeue_Ptr & ~0xF);
+	// 		}
+	// 	}
+	// }
 }
 
 void USB_Keyborad_init()

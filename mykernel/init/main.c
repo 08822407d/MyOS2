@@ -335,10 +335,10 @@ int kernel_init(void *unused)
 	scan_PCI_devices();
 	// do_name();
 	myos_ata_probe();
-	scan_XHCI_devices();
+	// scan_XHCI_devices();
 
 	NVMe_IOqueue_init();
-	USB_Keyborad_init();
+	// USB_Keyborad_init();
 
 	// color_printk(GREEN, BLACK, "Enter task init.\n");
 	myos_switch_to_root_disk();
