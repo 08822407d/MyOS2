@@ -65,7 +65,17 @@
 				Fields5			: 16;
 	} __packed __aligned(16) XHCI_TransTRB_s;
 	
-	typedef XHCI_TRB_s XHCI_EvtTRB_s;
+	typedef struct XHCI_EventTRB_Common {
+		u32		Fields[2];
+
+		u32		Fields2			: 24,
+				Comp_Code		: 8;
+
+		u32		Cycle_Bit		: 1,
+				Fields3			: 9,
+				TRB_Type		: 6,
+				Fields4			: 16;
+	} __packed __aligned(16) XHCI_EvtTRB_s;
 	
 	typedef struct XHCI_CommandTRB_Common {
 		u32		Fields1[3];

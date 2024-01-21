@@ -27,7 +27,7 @@ typedef struct XHCI_Spec_Params
 	u8		Slot_ID;
 	u8		DevCtx_Idx;
 	EP_Param_s	*EP_Param;
-	XHCI_EvtTRB_s	*EvtTRB;
+	XHCI_EvtTRB_s	EvtTRB;
 } XHCI_Params_s;
 
 static task_s *thread;
@@ -83,7 +83,7 @@ bool XHCI_RingIsFull(EP_Param_s *EP_Param)
 		((EP_Param->Ring_EnqueuePtr + 1) == EP_Param->Ring_DequeuePtr);
 }
 
-void XHCI_AdvanceRingPtr(EP_Param_s *EP_Param)
+void XHCI_AdvanceRingEnqPtr(EP_Param_s *EP_Param)
 {
 	EP_Param->Ring_EnqueuePtr++;
 	XHCI_TRB_s *Ring_ptr = EP_Param->Ring_EnqueuePtr;
@@ -93,6 +93,17 @@ void XHCI_AdvanceRingPtr(EP_Param_s *EP_Param)
 		EP_Param->Ring_EnqueuePtr = (XHCI_TRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
 		EP_Param->Cycle_Bit = 0x1 & !EP_Param->Cycle_Bit;
 		EP_Param->Cycle_Toggled = 1;
+	}
+}
+
+void XHCI_AdvanceRingDeqPtr(EP_Param_s *EP_Param)
+{
+	EP_Param->Ring_DequeuePtr++;
+	XHCI_TRB_s *Ring_ptr = EP_Param->Ring_DequeuePtr;
+	if (Ring_ptr->TRB_Type == LINK)
+	{
+		XHCI_LinkTRB_s *LinkTRB_ptr = (XHCI_LinkTRB_s *)Ring_ptr;
+		EP_Param->Ring_EnqueuePtr = (XHCI_TRB_s *)phys_to_virt(LinkTRB_ptr->CmdTRB_ptr);
 	}
 }
 
@@ -116,7 +127,7 @@ void XHCI_ToggleCycleBit(EP_Param_s *EP_Param)
 // 	EvtData_TRB->IntrOnComp = 1;
 // 	EvtData_TRB->CmdTRB_ptr = (u64)&EventData_Test;
 
-// 	XHCI_AdvanceRingPtr(Ring_ptr);
+// 	XHCI_AdvanceRingEnqPtr(Ring_ptr);
 // }
 
 // void XHCI_MakeTRB_SetupStage(XHCI_TRB_s **Ring_ptr, USB_ReqPack_s *request, u8 transtype)
@@ -137,7 +148,7 @@ void XHCI_ToggleCycleBit(EP_Param_s *EP_Param)
 // 	SetupStageTRB->Immediate_Data = 1;
 // 	SetupStageTRB->TRB_Type = SETUP_STAGE;
 
-// 	XHCI_AdvanceRingPtr(Ring_ptr);
+// 	XHCI_AdvanceRingEnqPtr(Ring_ptr);
 // }
 
 // void XHCI_MakeTRB_DataStage(XHCI_TRB_s **Ring_ptr, u8 *buffer, u32 bufsize, u8 DIR, u16 MaxPackSize)
@@ -164,7 +175,7 @@ void XHCI_ToggleCycleBit(EP_Param_s *EP_Param)
 // 		DataStageTRB->Eval_Next_TRB = (remaining == 0);
 // 		DataStageTRB->Cycle_Bit = 1;
 
-// 		XHCI_AdvanceRingPtr(Ring_ptr);
+// 		XHCI_AdvanceRingEnqPtr(Ring_ptr);
 
 // 		bufptr += MaxPackSize;
 // 		if (size < MaxPackSize)
@@ -186,7 +197,7 @@ void XHCI_ToggleCycleBit(EP_Param_s *EP_Param)
 // 	StatusStageTRB->IntrOnComp = 1;
 // 	StatusStageTRB->Cycle_Bit = 1;
 
-// 	XHCI_AdvanceRingPtr(Ring_ptr);
+// 	XHCI_AdvanceRingEnqPtr(Ring_ptr);
 // }
 
 
@@ -219,7 +230,7 @@ void XHCI_MakeTRB_NoOp(EP_Param_s *EP_Param)
 	Ring_ptr->TRB_Type = NO_OP;
 	Ring_ptr->Cycle_Bit = EP_Param->Cycle_Bit;
 
-	XHCI_AdvanceRingPtr(EP_Param);
+	XHCI_AdvanceRingEnqPtr(EP_Param);
 }
 
 
@@ -278,13 +289,6 @@ void XHCI_end_request(blkbuf_node_s *node)
 	if (node == NULL)
 		color_printk(RED, BLACK, "end_request error\n");
 
-	// complete(node->done);
-	// spin_lock(&req_lock);
-	wake_up_process(node->task);
-	req_in_using = NULL;
-	current->flags |= PF_NEED_SCHEDULE;
-	// spin_unlock_no_resched(&req_lock);
-
 	// 设置xhci主控中断位以允许主控发出下一次中断
 	u32 regval_32;
 	u64 regval_64;
@@ -298,8 +302,16 @@ void XHCI_end_request(blkbuf_node_s *node)
 	if (regval_64 >= (u64)(MainEventRing_Base + MainEventRing_Size))
 		regval_64 = virt_to_phys((phys_addr_t)MainEventRing_Base);
 	regval_64 |= 1 << 3;	// 该位是RW1C
-	Main_Intr_RegSet_ptr->ERDP = regval_64;
+	Main_Intr_RegSet_ptr->ERDP = virt_to_phys(regval_64);
 	__mb();
+
+
+	// complete(node->done);
+	// spin_lock(&req_lock);
+	wake_up_process(node->task);
+	req_in_using = NULL;
+	current->flags |= PF_NEED_SCHEDULE;
+	// spin_unlock_no_resched(&req_lock);
 }
 
 void XHCI_read_handler(unsigned long parameter)
@@ -374,6 +386,7 @@ long XHCI_transfer(unsigned Slot_ID, unsigned DevCtx_Idx,
 	// wait_for_completion(&done);
 	schedule();
 
+	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 	if (node->DevSpecParams != NULL)
 		kfree(node->DevSpecParams);
 	if (node != NULL)
@@ -415,11 +428,16 @@ void XHCI_handler(unsigned long parameter, pt_regs_s * regs)
 	blkbuf_node_s *node = req_in_using;
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 	EP_Param_s *EP_Param = (EP_Param_s *)XHCIparam->EP_Param;
+	// 检查并返回事件TRB
 	XHCI_EvtTRB_s *EvtTRB = (XHCI_EvtTRB_s *)phys_to_virt(Main_Intr_RegSet_ptr->ERDP & ~0xF);
+	XHCI_TRB_s *CmdTRB_ptr = (XHCI_TRB_s *)phys_to_virt(*(phys_addr_t *)EvtTRB->Fields);
+	while (CmdTRB_ptr != EP_Param->Ring_DequeuePtr);
+	XHCIparam->EvtTRB = *EvtTRB;
 
 	node->end_handler(parameter);
 	XHCI_end_request(node);
 
+	XHCI_AdvanceRingDeqPtr(EP_Param);
 	// 处理命令环/传输环翻转
 	XHCI_ToggleCycleBit(EP_Param);
 
@@ -662,7 +680,7 @@ void scan_XHCI_devices()
 
 void USB_Keyborad_init()
 {
-	for (int i = 0; i < 1; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		XHCI_transfer(0, 0, XHCI_OP_NOP, 0, 0, NULL);
 		mdelay(100);

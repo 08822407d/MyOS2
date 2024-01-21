@@ -23,7 +23,7 @@
 		u8		Rsvd1;
 		u16		HCIVERSION;
 
-		struct __attribute__((packed))
+		struct __packed
 		{
 			u32
 				MaxSlots	: 8,
@@ -32,7 +32,7 @@
 				MaxPorts	: 8;
 		} HCSPARAMS1;
 
-		struct __attribute__((packed))
+		struct __packed
 		{
 			u32
 				IST			: 4,
@@ -43,7 +43,7 @@
 				MaxSB_Lo	: 5;
 		} HCSPARAMS2;
 
-		struct __attribute__((packed))
+		struct __packed
 		{
 			u32
 				U1_DEL		: 8,
@@ -51,7 +51,7 @@
 				U2_DEL		: 16;
 		} HCSPARAMS3;
 
-		struct __attribute__((packed))
+		struct __packed
 		{
 			u32
 				AC_64		: 1,
@@ -73,7 +73,7 @@
 		u32		DBOFF;
 		u32		RTSOFF;
 		
-		struct __attribute__((packed))
+		struct __packed
 		{
 			u32
 				U3C			: 1,
@@ -90,7 +90,7 @@
 		} HCCPARAMS2;
 
 		u8		*Rsvd2;
-	} __attribute__((packed)) XHCI_HCCR_s;
+	} __packed XHCI_HCCR_s;
 
 
 	typedef struct USB_Port_Reg_Set {
