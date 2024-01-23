@@ -21,7 +21,8 @@
 	#include <asm/div64.h>
 	#include <asm/io.h>
 
-	// struct clocksource;
+	struct clocksource;
+	typedef struct clocksource clocksrc_s;
 	// struct module;
 
 	// #if defined(CONFIG_ARCH_CLOCKSOURCE_DATA) || \
@@ -32,8 +33,6 @@
 	// #include <vdso/clocksource.h>
 
 
-	struct clocksource;
-	typedef struct clocksource clocksource_s;
 
 	/**
 	 * struct clocksource - hardware abstraction for a free running counter
@@ -98,30 +97,30 @@
 	 * structure.
 	 */
 	typedef struct clocksource {
-		u64			(*read)(clocksource_s *cs);
-		u64			mask;
-		u32			mult;
-		u32			shift;
-		u64			max_idle_ns;
-		u32			maxadj;
-		u32			uncertainty_margin;
+		u64				(*read)(clocksrc_s *cs);
+		u64				mask;
+		u32				mult;
+		u32				shift;
+		u64				max_idle_ns;
+		u32				maxadj;
+		u32				uncertainty_margin;
 	// #ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
 	// 	struct arch_clocksource_data archdata;
 	// #endif
-		u64			max_cycles;
-		const char	*name;
-		List_s		list;
-		int			rating;
+		u64				max_cycles;
+		const char		*name;
+		List_s			list;
+		int				rating;
 		// enum clocksource_ids	id;
 		// enum vdso_clock_mode	vdso_clock_mode;
-		unsigned long		flags;
+		unsigned long	flags;
 
-		// int			(*enable)(struct clocksource *cs);
-		// void			(*disable)(struct clocksource *cs);
-		// void			(*suspend)(struct clocksource *cs);
-		// void			(*resume)(struct clocksource *cs);
-		// void			(*mark_unstable)(struct clocksource *cs);
-		// void			(*tick_stable)(struct clocksource *cs);
+		// int			(*enable)(clocksrc_s *cs);
+		// void			(*disable)(clocksrc_s *cs);
+		// void			(*suspend)(clocksrc_s *cs);
+		// void			(*resume)(clocksrc_s *cs);
+		// void			(*mark_unstable)(clocksrc_s *cs);
+		// void			(*tick_stable)(clocksrc_s *cs);
 
 	// 	/* private: */
 	// #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
@@ -131,20 +130,20 @@
 	// 	u64			wd_last;
 	// #endif
 	// 	struct module		*owner;
-	} clocksource_s;
+	} clocksrc_s;
 
-	// /*
-	// * Clock source flags bits::
-	// */
-	// #define CLOCK_SOURCE_IS_CONTINUOUS		0x01
-	// #define CLOCK_SOURCE_MUST_VERIFY		0x02
+	/*
+	 * Clock source flags bits::
+	 */
+	#define CLOCK_SOURCE_IS_CONTINUOUS		0x01
+	#define CLOCK_SOURCE_MUST_VERIFY		0x02
 
-	// #define CLOCK_SOURCE_WATCHDOG			0x10
-	// #define CLOCK_SOURCE_VALID_FOR_HRES		0x20
-	// #define CLOCK_SOURCE_UNSTABLE			0x40
-	// #define CLOCK_SOURCE_SUSPEND_NONSTOP		0x80
-	// #define CLOCK_SOURCE_RESELECT			0x100
-	// #define CLOCK_SOURCE_VERIFY_PERCPU		0x200
+	#define CLOCK_SOURCE_WATCHDOG			0x10
+	#define CLOCK_SOURCE_VALID_FOR_HRES		0x20
+	#define CLOCK_SOURCE_UNSTABLE			0x40
+	#define CLOCK_SOURCE_SUSPEND_NONSTOP	0x80
+	#define CLOCK_SOURCE_RESELECT			0x100
+	#define CLOCK_SOURCE_VERIFY_PERCPU		0x200
 	// /* simplify initialization of mask field */
 	// #define CLOCKSOURCE_MASK(bits) GENMASK_ULL((bits) - 1, 0)
 
@@ -211,16 +210,16 @@
 	// }
 
 
-	// extern int clocksource_unregister(struct clocksource*);
+	// extern int clocksource_unregister(clocksrc_s*);
 	// extern void clocksource_touch_watchdog(void);
-	// extern void clocksource_change_rating(struct clocksource *cs, int rating);
+	// extern void clocksource_change_rating(clocksrc_s *cs, int rating);
 	// extern void clocksource_suspend(void);
 	// extern void clocksource_resume(void);
-	// extern struct clocksource * __init clocksource_default_clock(void);
-	// extern void clocksource_mark_unstable(struct clocksource *cs);
+	// extern clocksrc_s * __init clocksource_default_clock(void);
+	// extern void clocksource_mark_unstable(clocksrc_s *cs);
 	// extern void
-	// clocksource_start_suspend_timing(struct clocksource *cs, u64 start_cycles);
-	// extern u64 clocksource_stop_suspend_timing(struct clocksource *cs, u64 now);
+	// clocksource_start_suspend_timing(clocksrc_s *cs, u64 start_cycles);
+	// extern u64 clocksource_stop_suspend_timing(clocksrc_s *cs, u64 now);
 
 	// extern u64
 	// clocks_calc_max_nsecs(u32 mult, u32 shift, u32 maxadj, u64 mask, u64 *max_cycles);
@@ -232,54 +231,54 @@
 	// * clocksource_register_hz/khz
 	// */
 	// extern int
-	// __clocksource_register_scale(struct clocksource *cs, u32 scale, u32 freq);
+	// __clocksource_register_scale(clocksrc_s *cs, u32 scale, u32 freq);
 	// extern void
-	// __clocksource_update_freq_scale(struct clocksource *cs, u32 scale, u32 freq);
+	// __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq);
 
 	// /*
 	// * Don't call this unless you are a default clocksource
 	// * (AKA: jiffies) and absolutely have to.
 	// */
-	// static inline int __clocksource_register(struct clocksource *cs)
+	// static inline int __clocksource_register(clocksrc_s *cs)
 	// {
 	// 	return __clocksource_register_scale(cs, 1, 0);
 	// }
 
-	// static inline int clocksource_register_hz(struct clocksource *cs, u32 hz)
+	// static inline int clocksource_register_hz(clocksrc_s *cs, u32 hz)
 	// {
 	// 	return __clocksource_register_scale(cs, 1, hz);
 	// }
 
-	// static inline int clocksource_register_khz(struct clocksource *cs, u32 khz)
+	// static inline int clocksource_register_khz(clocksrc_s *cs, u32 khz)
 	// {
 	// 	return __clocksource_register_scale(cs, 1000, khz);
 	// }
 
-	// static inline void __clocksource_update_freq_hz(struct clocksource *cs, u32 hz)
+	// static inline void __clocksource_update_freq_hz(clocksrc_s *cs, u32 hz)
 	// {
 	// 	__clocksource_update_freq_scale(cs, 1, hz);
 	// }
 
-	// static inline void __clocksource_update_freq_khz(struct clocksource *cs, u32 khz)
+	// static inline void __clocksource_update_freq_khz(clocksrc_s *cs, u32 khz)
 	// {
 	// 	__clocksource_update_freq_scale(cs, 1000, khz);
 	// }
 
 	// #ifdef CONFIG_ARCH_CLOCKSOURCE_INIT
-	// extern void clocksource_arch_init(struct clocksource *cs);
+	// extern void clocksource_arch_init(clocksrc_s *cs);
 	// #else
-	// static inline void clocksource_arch_init(struct clocksource *cs) { }
+	// static inline void clocksource_arch_init(clocksrc_s *cs) { }
 	// #endif
 
-	// extern int timekeeping_notify(struct clocksource *clock);
+	// extern int timekeeping_notify(clocksrc_s *clock);
 
-	// extern u64 clocksource_mmio_readl_up(struct clocksource *);
-	// extern u64 clocksource_mmio_readl_down(struct clocksource *);
-	// extern u64 clocksource_mmio_readw_up(struct clocksource *);
-	// extern u64 clocksource_mmio_readw_down(struct clocksource *);
+	// extern u64 clocksource_mmio_readl_up(clocksrc_s *);
+	// extern u64 clocksource_mmio_readl_down(clocksrc_s *);
+	// extern u64 clocksource_mmio_readw_up(clocksrc_s *);
+	// extern u64 clocksource_mmio_readw_down(clocksrc_s *);
 
 	// extern int clocksource_mmio_init(void __iomem *, const char *,
-	// 	unsigned long, int, unsigned, u64 (*)(struct clocksource *));
+	// 	unsigned long, int, unsigned, u64 (*)(clocksrc_s *));
 
 	// extern int clocksource_i8253_init(void);
 
@@ -296,6 +295,6 @@
 	// 	ACPI_DECLARE_PROBE_ENTRY(timer, name, table_id, 0, NULL, 0, fn)
 
 	// extern ulong max_cswd_read_retries;
-	// void clocksource_verify_percpu(struct clocksource *cs);
+	// void clocksource_verify_percpu(clocksrc_s *cs);
 
 #endif /* _LINUX_CLOCKSOURCE_H */

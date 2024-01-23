@@ -32,7 +32,7 @@
 	 * realtime from any context.
 	 */
 	typedef struct tk_read_base {
-		clocksource_s	*clock;
+		clocksrc_s	*clock;
 		u64				mask;
 		u64				cycle_last;
 		u32				mult;

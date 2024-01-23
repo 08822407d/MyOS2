@@ -13,7 +13,7 @@
 // #include "tick-internal.h"
 
 
-static u64 jiffies_read(clocksource_s *cs)
+static u64 jiffies_read(clocksrc_s *cs)
 {
 	return (u64) jiffies;
 }
@@ -29,7 +29,7 @@ static u64 jiffies_read(clocksource_s *cs)
 //  * requested HZ value. It is also not recommended
 //  * for "tick-less" systems.
 //  */
-// static struct clocksource clocksource_jiffies = {
+// static clocksrc_s clocksource_jiffies = {
 // 	.name			= "jiffies",
 // 	.rating			= 1, /* lowest valid rating*/
 // 	.uncertainty_margin	= 32 * NSEC_PER_MSEC,
