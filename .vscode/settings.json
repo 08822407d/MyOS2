@@ -39,6 +39,7 @@
         "myos_irq_vectors.h": "c",
         "mineos_nvme.h": "c",
         "delay.h": "c",
-        "ide.h": "c"
+        "ide.h": "c",
+        "linkage.h": "c"
     }
 }
