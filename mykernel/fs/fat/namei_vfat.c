@@ -194,7 +194,7 @@ out_free:
 }
 
 // static int vfat_add_entry(struct inode *dir, const struct qstr *qname,
-// 			  int is_dir, int cluster, struct timespec64 *ts,
+// 			  int is_dir, int cluster, timespec64_s *ts,
 // 			  struct fat_slot_info *sinfo)
 int vfat_add_entry(inode_s *dir, const qstr_s *qname,
 		int is_dir, int cluster, fat_slot_info_s *sinfo)

@@ -94,7 +94,7 @@
 		tk_readbase_s	tkr_raw;
 		u64				xtime_sec;
 	// 	unsigned long		ktime_sec;
-	// 	struct timespec64	wall_to_monotonic;
+	// 	timespec64_s	wall_to_monotonic;
 	// 	ktime_t			offs_real;
 	// 	ktime_t			offs_boot;
 	// 	ktime_t			offs_tai;
@@ -103,7 +103,7 @@
 	// 	u8			cs_was_changed_seq;
 	// 	ktime_t			next_leap_ktime;
 	// 	u64			raw_sec;
-	// 	struct timespec64	monotonic_to_boot;
+	// 	timespec64_s	monotonic_to_boot;
 
 	// 	/* The following members are for timekeeping internal use */
 	// 	u64			cycle_interval;

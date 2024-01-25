@@ -420,9 +420,9 @@
 	// 	}
 	// }
 
-	// extern unsigned long timespec64_to_jiffies(const struct timespec64 *value);
+	// extern unsigned long timespec64_to_jiffies(const timespec64_s *value);
 	// extern void jiffies_to_timespec64(const unsigned long jiffies,
-	// 				struct timespec64 *value);
+	// 				timespec64_s *value);
 	// extern clock_t jiffies_to_clock_t(unsigned long x);
 	// static inline clock_t jiffies_delta_to_clock_t(long delta)
 	// {

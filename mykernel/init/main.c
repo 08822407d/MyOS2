@@ -116,6 +116,7 @@
 #include <asm/tlbflush.h>
 #include <linux/mm/myos_slab.h>
 #include <linux/kernel/completion.h>
+#include <linux/kernel/timekeeping.h>
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
@@ -216,6 +217,7 @@ extern void myos_init_smp(size_t lcpu_nr);
 	mm_core_init();
 
 	init_IRQ();
+	timekeeping_init();
 
 	myos_init_slab();
 

@@ -40,6 +40,8 @@
         "mineos_nvme.h": "c",
         "delay.h": "c",
         "ide.h": "c",
-        "linkage.h": "c"
+        "linkage.h": "c",
+        "timekeeping_internal.h": "c",
+        "timekeeper_internal.h": "c"
     }
 }

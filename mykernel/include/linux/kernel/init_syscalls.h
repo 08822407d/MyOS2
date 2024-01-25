@@ -31,6 +31,6 @@ init_mkdir(const char *pathname, umode_t mode);
 int __init
 init_rmdir(const char *pathname);
 int __init
-init_utimes(char *filename, struct timespec64 *ts);
+init_utimes(char *filename, timespec64_s *ts);
 int __init
 init_dup(file_s *file);

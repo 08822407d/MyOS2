@@ -435,13 +435,13 @@
 	// 	} while (0)
 	// extern int fat_clusters_flush(struct super_block *sb);
 	// extern int fat_chain_add(struct inode *inode, int new_dclus, int nr_cluster);
-	// extern void fat_time_fat2unix(struct msdos_sb_info *sbi, struct timespec64 *ts,
+	// extern void fat_time_fat2unix(struct msdos_sb_info *sbi, timespec64_s *ts,
 	// 				u16 __time, u16 __date, u8 time_cs);
-	// extern void fat_time_unix2fat(struct msdos_sb_info *sbi, struct timespec64 *ts,
+	// extern void fat_time_unix2fat(struct msdos_sb_info *sbi, timespec64_s *ts,
 	// 				u16 *time, u16 *date, u8 *time_cs);
-	// extern int fat_truncate_time(struct inode *inode, struct timespec64 *now,
+	// extern int fat_truncate_time(struct inode *inode, timespec64_s *now,
 	// 				int flags);
-	// extern int fat_update_time(struct inode *inode, struct timespec64 *now,
+	// extern int fat_update_time(struct inode *inode, timespec64_s *now,
 	// 			int flags);
 	// extern int fat_sync_bhs(struct buffer_head **bhs, int nr_bhs);
 
