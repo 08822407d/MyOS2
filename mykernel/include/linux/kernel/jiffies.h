@@ -168,11 +168,11 @@
 	// #define time_is_after_eq_jiffies(a) time_before_eq(jiffies, a)
 	// #define time_is_after_eq_jiffies64(a) time_before_eq64(get_jiffies_64(), a)
 
-	// /*
-	//  * Have the 32 bit jiffies value wrap 5 minutes after boot
-	//  * so jiffies wrap bugs show up earlier.
-	//  */
-	// #define INITIAL_JIFFIES ((unsigned long)(unsigned int) (-300*HZ))
+	/*
+	 * Have the 32 bit jiffies value wrap 5 minutes after boot
+	 * so jiffies wrap bugs show up earlier.
+	 */
+	#define INITIAL_JIFFIES ((unsigned long)(unsigned int) (-300*HZ))
 
 	// /*
 	//  * Change timeval to jiffies, trying to avoid the

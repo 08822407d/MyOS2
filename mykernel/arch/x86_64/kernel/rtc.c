@@ -44,7 +44,7 @@ void read_persistent_clock64(timespec64_s *ts)
 
 		mc146818_get_time(&tm);
 
-		// ts->tv_sec = rtc_tm_to_time64(&tm);
-		// ts->tv_nsec = 0;
+		ts->tv_sec = rtc_tm_to_time64(&tm);
+		ts->tv_nsec = 0;
 	// }
 }

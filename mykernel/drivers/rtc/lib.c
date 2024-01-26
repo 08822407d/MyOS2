@@ -149,12 +149,10 @@ void rtc_time64_to_tm(time64_t time, rtc_time_s *tm)
  */
 int rtc_valid_tm(rtc_time_s *tm)
 {
-	if (tm->tm_year < 70 ||
-		tm->tm_year > (INT_MAX - 1900) ||
-		((unsigned int)tm->tm_mon) >= 12 ||
-		tm->tm_mday < 1 ||
+	if (tm->tm_year < 70 || tm->tm_year > (INT_MAX - 1900) ||
+		((unsigned int)tm->tm_mon) >= 12 || tm->tm_mday < 1 ||
 		tm->tm_mday > rtc_month_days(tm->tm_mon,
-					 ((unsigned int)tm->tm_year + 1900)) ||
+			((unsigned int)tm->tm_year + 1900)) ||
 		((unsigned int)tm->tm_hour) >= 24 ||
 		((unsigned int)tm->tm_min) >= 60 ||
 		((unsigned int)tm->tm_sec) >= 60)

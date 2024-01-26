@@ -44,6 +44,7 @@
         "timekeeping_internal.h": "c",
         "timekeeper_internal.h": "c",
         "mc146818rtc.h": "c",
-        "rtc.h": "c"
+        "rtc.h": "c",
+        "stddef.h": "c"
     }
 }

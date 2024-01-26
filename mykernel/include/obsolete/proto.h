@@ -43,7 +43,7 @@
 	void add_timer(timer_s * timer);
 	void del_timer(timer_s * timer);
 	void myos_timer_init(void);
-	void do_timer(void * data);
+	void myos_do_timer(void * data);
 
 
 #endif /* _PROTO_H_ */

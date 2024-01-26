@@ -75,3 +75,14 @@ void __init timekeeping_init(void)
 	read_persistent_clock64(&wall_time);
 	// boot_offset = ns_to_timespec64(local_clock());
 }
+
+
+
+/*
+ * Must hold jiffies_lock
+ */
+void do_timer(unsigned long ticks)
+{
+	jiffies_64 += ticks;
+	// calc_global_load();
+}

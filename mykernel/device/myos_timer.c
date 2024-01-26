@@ -70,14 +70,14 @@ void myos_timer_init()
 	timer_s * tmr = kzalloc(sizeof(timer_s), GFP_KERNEL);
 	init_timer(tmr, NULL, NULL, ~(unsigned long)0);
 	add_timer(tmr);
-	register_softirq(HPET_TIMER0_IRQ, &do_timer, NULL);
+	register_softirq(HPET_TIMER0_IRQ, &myos_do_timer, NULL);
 
 	// timer_s * tmp = (timer_s *)kmalloc(sizeof(timer_s));
 	// init_timer(tmp, &test_timer, NULL, 3);
 	// add_timer(tmp);
 }
 
-void do_timer(void * data)
+void myos_do_timer(void * data)
 {
 	timer_s * tmp = timer_lhdr.header.next->owner_p;
 	while (tmp->tmr_list.next != &timer_lhdr.header &&

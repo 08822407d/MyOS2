@@ -24,9 +24,11 @@ hw_int_controller_s HPET_int_controller =
 	.ack		= IOAPIC_edge_ack,
 };
 
+extern void do_timer(unsigned long ticks);
 void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 {
 	jiffies++;
+	do_timer(1);
 
 	timer_s * tmr = timer_lhdr.header.next->owner_p;
 	if(tmr->expire_jiffies <= jiffies)

@@ -26,8 +26,8 @@
 	extern int rtc_month_days(unsigned int month, unsigned int year);
 	extern int rtc_year_days(unsigned int day, unsigned int month, unsigned int year);
 	extern int rtc_valid_tm(rtc_time_s *tm);
-	// extern time64_t rtc_tm_to_time64(rtc_time_s *tm);
-	// extern void rtc_time64_to_tm(time64_t time, rtc_time_s *tm);
+	extern time64_t rtc_tm_to_time64(rtc_time_s *tm);
+	extern void rtc_time64_to_tm(time64_t time, rtc_time_s *tm);
 	// ktime_t rtc_tm_to_ktime(rtc_time_s tm);
 	// rtc_time_s rtc_ktime_to_tm(ktime_t kt);
 
