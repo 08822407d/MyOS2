@@ -18,18 +18,23 @@
 	// #include <linux/nvmem-provider.h>
 	#include <uapi/linux/rtc.h>
 
-	// extern int rtc_month_days(unsigned int month, unsigned int year);
-	// extern int rtc_year_days(unsigned int day, unsigned int month, unsigned int year);
-	// extern int rtc_valid_tm(struct rtc_time *tm);
-	// extern time64_t rtc_tm_to_time64(struct rtc_time *tm);
-	// extern void rtc_time64_to_tm(time64_t time, struct rtc_time *tm);
+
+	#include <linux/kernel/kernel.h>
+	#include <linux/kernel/time64.h>
+	#include <linux/lib/errno.h>
+
+	extern int rtc_month_days(unsigned int month, unsigned int year);
+	extern int rtc_year_days(unsigned int day, unsigned int month, unsigned int year);
+	extern int rtc_valid_tm(rtc_time_s *tm);
+	// extern time64_t rtc_tm_to_time64(rtc_time_s *tm);
+	// extern void rtc_time64_to_tm(time64_t time, rtc_time_s *tm);
 	// ktime_t rtc_tm_to_ktime(rtc_time_s tm);
-	// struct rtc_time rtc_ktime_to_tm(ktime_t kt);
+	// rtc_time_s rtc_ktime_to_tm(ktime_t kt);
 
 	// /*
 	//  * rtc_tm_sub - Return the difference in seconds.
 	//  */
-	// static inline time64_t rtc_tm_sub(struct rtc_time *lhs, struct rtc_time *rhs)
+	// static inline time64_t rtc_tm_sub(rtc_time_s *lhs, rtc_time_s *rhs)
 	// {
 	// 	return rtc_tm_to_time64(lhs) - rtc_tm_to_time64(rhs);
 	// }
@@ -58,8 +63,8 @@
 	//  */
 	// struct rtc_class_ops {
 	// 	int (*ioctl)(struct device *, unsigned int, unsigned long);
-	// 	int (*read_time)(struct device *, struct rtc_time *);
-	// 	int (*set_time)(struct device *, struct rtc_time *);
+	// 	int (*read_time)(struct device *, rtc_time_s *);
+	// 	int (*set_time)(struct device *, rtc_time_s *);
 	// 	int (*read_alarm)(struct device *, struct rtc_wkalrm *);
 	// 	int (*set_alarm)(struct device *, struct rtc_wkalrm *);
 	// 	int (*proc)(struct device *, struct seq_file *);
@@ -183,8 +188,8 @@
 	// struct rtc_device *devm_rtc_allocate_device(struct device *dev);
 	// int __devm_rtc_register_device(struct module *owner, struct rtc_device *rtc);
 
-	// extern int rtc_read_time(struct rtc_device *rtc, struct rtc_time *tm);
-	// extern int rtc_set_time(struct rtc_device *rtc, struct rtc_time *tm);
+	// extern int rtc_read_time(struct rtc_device *rtc, rtc_time_s *tm);
+	// extern int rtc_set_time(struct rtc_device *rtc, rtc_time_s *tm);
 	// int __rtc_read_alarm(struct rtc_device *rtc, struct rtc_wkalrm *alarm);
 	// extern int rtc_read_alarm(struct rtc_device *rtc,
 	// 			struct rtc_wkalrm *alrm);
@@ -219,10 +224,9 @@
 	// int rtc_set_offset(struct rtc_device *rtc, long offset);
 	// void rtc_timer_do_work(struct work_struct *work);
 
-	// static inline bool is_leap_year(unsigned int year)
-	// {
-	// 	return (!(year % 4) && (year % 100)) || !(year % 400);
-	// }
+	static inline bool is_leap_year(unsigned int year) {
+		return (!(year % 4) && (year % 100)) || !(year % 400);
+	}
 
 	// #define devm_rtc_register_device(device) \
 	// 	__devm_rtc_register_device(THIS_MODULE, device)

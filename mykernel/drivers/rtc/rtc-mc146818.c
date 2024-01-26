@@ -69,7 +69,7 @@ int mc146818_get_time(rtc_time_s *time)
 
 	/*
 	 * Account for differences between how the RTC uses the values
-	 * and how they are defined in a struct rtc_time;
+	 * and how they are defined in a rtc_time;
 	 */
 	if (time->tm_year <= 69)
 		time->tm_year += 100;

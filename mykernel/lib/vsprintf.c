@@ -1758,7 +1758,7 @@
 // }
 
 // static noinline_for_stack
-// char *date_str(char *buf, char *end, const struct rtc_time *tm, bool r)
+// char *date_str(char *buf, char *end, const rtc_time_s *tm, bool r)
 // {
 // 	int year = tm->tm_year + (r ? 0 : 1900);
 // 	int mon = tm->tm_mon + (r ? 0 : 1);
@@ -1777,7 +1777,7 @@
 // }
 
 // static noinline_for_stack
-// char *time_str(char *buf, char *end, const struct rtc_time *tm, bool r)
+// char *time_str(char *buf, char *end, const rtc_time_s *tm, bool r)
 // {
 // 	buf = number(buf, end, tm->tm_hour, default_dec02_spec);
 // 	if (buf < end)
@@ -1793,7 +1793,7 @@
 // }
 
 // static noinline_for_stack
-// char *rtc_str(char *buf, char *end, const struct rtc_time *tm,
+// char *rtc_str(char *buf, char *end, const rtc_time_s *tm,
 // 	      struct printf_spec spec, const char *fmt)
 // {
 // 	bool have_t = true, have_d = true;
@@ -1846,7 +1846,7 @@
 // char *time64_str(char *buf, char *end, const time64_t time,
 // 		 struct printf_spec spec, const char *fmt)
 // {
-// 	struct rtc_time rtc_time;
+// 	rtc_time_s rtc_time;
 // 	struct tm tm;
 
 // 	time64_to_tm(time, 0, &tm);
@@ -1871,7 +1871,7 @@
 // {
 // 	switch (fmt[1]) {
 // 	case 'R':
-// 		return rtc_str(buf, end, (const struct rtc_time *)ptr, spec, fmt);
+// 		return rtc_str(buf, end, (const rtc_time_s *)ptr, spec, fmt);
 // 	case 'T':
 // 		return time64_str(buf, end, *(const time64_t *)ptr, spec, fmt);
 // 	default:
@@ -2280,7 +2280,7 @@
 //  * - 'D[234]' Same as 'd' but for a file_s
 //  * - 'g' For block_device name (gendisk + partition number)
 //  * - 't[RT][dt][r][s]' For time and date as represented by:
-//  *      R    struct rtc_time
+//  *      R    rtc_time_s
 //  *      T    time64_t
 //  * - 'C' For a clock, it prints the name (Common Clock Framework) or address
 //  *       (legacy clock framework) of the clock

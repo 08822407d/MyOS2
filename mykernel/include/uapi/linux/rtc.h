@@ -92,10 +92,10 @@
 	#define RTC_WIE_ON		_IO('p', 0x0f)  /* Watchdog int. enable on	*/
 	#define RTC_WIE_OFF		_IO('p', 0x10)  /* ... off			*/
 
-	#define RTC_ALM_SET		_IOW('p', 0x07, struct rtc_time)	/* Set alarm time  */
-	#define RTC_ALM_READ	_IOR('p', 0x08, struct rtc_time)	/* Read alarm time */
-	#define RTC_RD_TIME		_IOR('p', 0x09, struct rtc_time)	/* Read RTC time   */
-	#define RTC_SET_TIME	_IOW('p', 0x0a, struct rtc_time)	/* Set RTC time    */
+	#define RTC_ALM_SET		_IOW('p', 0x07, rtc_time_s)	/* Set alarm time  */
+	#define RTC_ALM_READ	_IOR('p', 0x08, rtc_time_s)	/* Read alarm time */
+	#define RTC_RD_TIME		_IOR('p', 0x09, rtc_time_s)	/* Read RTC time   */
+	#define RTC_SET_TIME	_IOW('p', 0x0a, rtc_time_s)	/* Set RTC time    */
 	#define RTC_IRQP_READ	_IOR('p', 0x0b, unsigned long)		/* Read IRQ rate   */
 	#define RTC_IRQP_SET	_IOW('p', 0x0c, unsigned long)		/* Set IRQ rate    */
 	#define RTC_EPOCH_READ	_IOR('p', 0x0d, unsigned long)		/* Read epoch      */

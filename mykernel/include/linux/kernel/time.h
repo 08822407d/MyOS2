@@ -8,18 +8,19 @@
 
 	// extern struct timezone sys_tz;
 
-	// int get_timespec64(timespec64_s *ts,
-	// 		const struct __kernel_timespec __user *uts);
-	// int put_timespec64(const timespec64_s *ts,
-	// 		struct __kernel_timespec __user *uts);
-	// int get_itimerspec64(itimerspec64_s *it,
-	// 			const struct __kernel_itimerspec __user *uit);
-	// int put_itimerspec64(const itimerspec64_s *it,
-	// 			struct __kernel_itimerspec __user *uit);
+	int get_timespec64(timespec64_s *ts,
+			const struct __kernel_timespec __user *uts);
+	int put_timespec64(const timespec64_s *ts,
+			struct __kernel_timespec __user *uts);
+	int get_itimerspec64(itimerspec64_s *it,
+			const struct __kernel_itimerspec __user *uit);
+	int put_itimerspec64(const itimerspec64_s *it,
+			struct __kernel_itimerspec __user *uit);
 
-	// extern time64_t mktime64(const unsigned int year, const unsigned int mon,
-	// 			const unsigned int day, const unsigned int hour,
-	// 			const unsigned int min, const unsigned int sec);
+	extern time64_t
+	mktime64(const unsigned int year, const unsigned int mon,
+			const unsigned int day, const unsigned int hour,
+			const unsigned int min, const unsigned int sec);
 
 	// #ifdef CONFIG_POSIX_TIMERS
 	// extern void clear_itimer(void);
