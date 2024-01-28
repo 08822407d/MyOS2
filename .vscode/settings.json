@@ -48,6 +48,8 @@
         "stddef.h": "c",
         "hpet.h": "c",
         "time.h": "c",
-        "clocksource.h": "c"
+        "clocksource.h": "c",
+        "mm.h": "c",
+        "proto.h": "c"
     }
 }
