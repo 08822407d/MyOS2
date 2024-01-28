@@ -164,8 +164,7 @@
 		// 	void mark_rodata_ro(void);
 		// #endif
 
-		// extern void (*late_time_init)(void);
-		extern void late_time_init(void);
+		extern void (*late_time_init)(void);
 
 		// extern bool initcall_debug;
 	#endif

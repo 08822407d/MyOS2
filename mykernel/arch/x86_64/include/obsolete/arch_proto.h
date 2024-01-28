@@ -80,7 +80,6 @@
 	/* arch_task.c */
 	unsigned long do_exit(unsigned long exit_code);
 	void try_sched(void);
-	int kernel_init(void *arg);
 
 	/* interrupt.c */
 	void excep_hwint_context(pt_regs_s *sf_regs);

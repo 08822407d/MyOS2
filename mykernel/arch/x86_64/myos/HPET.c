@@ -5,6 +5,7 @@
 #include <linux/device/tty.h>
 #include <asm/io.h>
 #include <asm/apic.h>
+#include <asm/hpet.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
@@ -14,6 +15,9 @@
 #include <obsolete/arch_proto.h>
 #include <obsolete/myos_irq_vectors.h>
 #include <obsolete/device.h>
+
+extern unsigned long	hpet_address;
+extern void				*hpet_virt_address;
 
 hw_int_controller_s HPET_int_controller = 
 {
@@ -42,24 +46,8 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 	
 void HPET_init()
 {
-	unsigned int x;
-	unsigned int *p = (unsigned int *)0xfed00000;
-	unsigned char *HPET_addr = (unsigned char *)phys_to_virt((phys_addr_t)p);
-	myos_ioremap((unsigned long)p, PAGE_SIZE);
+	hpet_virt_address = myos_ioremap(hpet_address, HPET_MMAP_SIZE);
 	ioapic_retentry_T entry;
-	
-	//get RCBA address
-	outl(0x8000f8f0, 0xcf8);
-	x = inl(0xcfc);
-	x = x & 0xffffc000;	
-
-	//get HPTC address
-	if(x > 0xfec00000 && x < 0xfee00000)
-	{
-		p = (unsigned int *)phys_to_virt((phys_addr_t)(x + 0x3404UL));
-		//enable HPET
-		*p = 0x80;
-	}
 	mb();
 
 	//init I/O APIC IRQ2 => HPET Timer 0
@@ -76,24 +64,24 @@ void HPET_init()
 				 0, &HPET_int_controller,
 				 &HPET_handler);
 	
-	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)HPET_addr);
-	uint64_t accuracy = *(uint64_t *)HPET_addr >> 32;
+	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)hpet_virt_address);
+	uint64_t accuracy = *(uint64_t *)hpet_virt_address >> 32;
 
-	*(unsigned long *)(HPET_addr + 0x10) = 3;
+	*(unsigned long *)(hpet_virt_address + 0x10) = 3;
 	mb();
 
 	//edge triggered & periodic
-	*(unsigned long *)(HPET_addr + 0x100) = 0x004c;
+	*(unsigned long *)(hpet_virt_address + 0x100) = 0x004c;
 	mb();
 
 	// 1S qemu may have a different precision so here need a calculate
 	// 0x38D7EA4C680 is hex value of 1*10^15
 	unsigned long period = 0x38D7EA4C680 / accuracy;
-	*(unsigned long *)(HPET_addr + 0x108) = period * 10;
+	*(unsigned long *)(hpet_virt_address + 0x108) = period * 10;
 	mb();
 
 	//init MAIN_CNT & get CMOS time
 	get_cmos_time(&time);
-	*(unsigned long *)(HPET_addr + 0xf0) = 0;
+	*(unsigned long *)(hpet_virt_address + 0xf0) = 0;
 	mb();
 }

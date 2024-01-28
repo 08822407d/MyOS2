@@ -16,15 +16,8 @@ void init_bdev_intr(void);
 
 void myos_devices_init()
 {
-	init_intr();
-
 	init_cdev_intr();
 	init_bdev_intr();
-}
-
-void init_intr()
-{
-	HPET_init();
 }
 
 void init_cdev_intr()

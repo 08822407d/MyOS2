@@ -191,6 +191,8 @@ __myos_kernel_physical_mapping_init(
 
 		pg_addr += PAGE_SIZE;
 	} while (pg_addr < paddr_end);
+
+	return phys_to_virt(paddr_start);
 }
 unsigned long __meminit
 myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end)

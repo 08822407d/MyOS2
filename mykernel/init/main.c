@@ -122,6 +122,17 @@
 #include <obsolete/printk.h>
 #include <obsolete/device.h>
 
+
+static int kernel_init(void *);
+
+extern void init_IRQ(void);
+
+
+extern void time_init(void);
+/* Default late time init is NULL. archs can override this later. */
+void (*__initdata late_time_init)(void);
+
+
 /*
  * This should be approx 2 Bo*oMips to start (note initial shift), and will
  * still work even if initially too large, it will just take slightly longer
@@ -218,6 +229,7 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 	init_IRQ();
 	timekeeping_init();
+	time_init();
 
 	myos_init_slab();
 
@@ -233,6 +245,9 @@ extern void myos_init_smp(size_t lcpu_nr);
 	// myos_startup_smp();
 
 	console_init();
+
+	if (late_time_init)
+		late_time_init();
 
 	myos_devices_init();
 

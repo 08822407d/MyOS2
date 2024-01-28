@@ -45,6 +45,9 @@
         "timekeeper_internal.h": "c",
         "mc146818rtc.h": "c",
         "rtc.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "hpet.h": "c",
+        "time.h": "c",
+        "clocksource.h": "c"
     }
 }

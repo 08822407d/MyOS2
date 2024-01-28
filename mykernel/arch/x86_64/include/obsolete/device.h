@@ -20,7 +20,6 @@
 
 	/* clock.c, HPET.c */
 	void get_cmos_time(time_s *time);
-	void HPET_init(void);
 
 
 	/* disk.c */
