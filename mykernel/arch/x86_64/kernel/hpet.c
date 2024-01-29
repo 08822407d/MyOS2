@@ -232,7 +232,6 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 	
 void HPET_init()
 {
-	hpet_virt_address = myos_ioremap(hpet_address, HPET_MMAP_SIZE);
 	ioapic_retentry_T entry;
 	mb();
 

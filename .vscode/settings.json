@@ -50,6 +50,7 @@
         "time.h": "c",
         "clocksource.h": "c",
         "mm.h": "c",
-        "proto.h": "c"
+        "proto.h": "c",
+        "unistd.h": "c"
     }
 }
