@@ -126,39 +126,40 @@ int __init hpet_enable(void)
 	// 	goto out_nohpet;
 
 	// hc = kcalloc(channels, sizeof(*hc), GFP_KERNEL);
-	// if (!hc) {
-	// 	pr_warn("Disabling HPET.\n");
-	// 	goto out_nohpet;
-	// }
-	// hpet_base.channels = hc;
-	// hpet_base.nr_channels = channels;
+	hc = kzalloc(channels * sizeof(hpet_channel_s), GFP_KERNEL);
+	if (!hc) {
+		// pr_warn("Disabling HPET.\n");
+		goto out_nohpet;
+	}
+	hpet_base.channels = hc;
+	hpet_base.nr_channels = channels;
 
 	/* Read, store and sanitize the global configuration */
 	cfg = hpet_readl(HPET_CFG);
-	// hpet_base.boot_cfg = cfg;
+	hpet_base.boot_cfg = cfg;
 	cfg &= ~(HPET_CFG_ENABLE | HPET_CFG_LEGACY);
-	// hpet_writel(cfg, HPET_CFG);
+	hpet_writel(cfg, HPET_CFG);
 	// if (cfg)
 	// 	pr_warn("Global config: Unknown bits %#x\n", cfg);
 
-	// /* Read, store and sanitize the per channel configuration */
-	// for (i = 0; i < channels; i++, hc++) {
-	// 	hc->num = i;
+	/* Read, store and sanitize the per channel configuration */
+	for (i = 0; i < channels; i++, hc++) {
+		// hc->num = i;
 
-	// 	cfg = hpet_readl(HPET_Tn_CFG(i));
-	// 	hc->boot_cfg = cfg;
-	// 	irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
-	// 	hc->irq = irq;
+		// cfg = hpet_readl(HPET_Tn_CFG(i));
+		// hc->boot_cfg = cfg;
+		// irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
+		// hc->irq = irq;
 
-	// 	cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
-	// 	hpet_writel(cfg, HPET_Tn_CFG(i));
+		// cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
+		// hpet_writel(cfg, HPET_Tn_CFG(i));
 
-	// 	cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
-	// 		 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
-	// 		 | HPET_TN_FSB | HPET_TN_FSB_CAP);
-	// 	if (cfg)
-	// 		pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
-	// }
+		// cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
+		// 	 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
+		// 	 | HPET_TN_FSB | HPET_TN_FSB_CAP);
+		// if (cfg)
+		// 	pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
+	}
 	// hpet_print_config();
 
 	// /*
@@ -233,8 +234,6 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 void HPET_init()
 {
 	ioapic_retentry_T entry;
-	mb();
-
 	//init I/O APIC IRQ2 => HPET Timer 0
 	entry.vector = HPET_TIMER0_IRQ;
 	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
@@ -246,14 +245,10 @@ void HPET_init()
 	entry.dst.physical.reserved2 = 0;
 
 	register_irq(HPET_TIMER0_IRQ, &entry , "HPET0",
-				 0, &HPET_int_controller,
-				 &HPET_handler);
+			0, &HPET_int_controller, &HPET_handler);
 	
 	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)hpet_virt_address);
 	uint64_t accuracy = *(uint64_t *)hpet_virt_address >> 32;
-
-	*(unsigned long *)(hpet_virt_address + 0x10) = 3;
-	mb();
 
 	//edge triggered & periodic
 	*(unsigned long *)(hpet_virt_address + 0x100) = 0x004c;

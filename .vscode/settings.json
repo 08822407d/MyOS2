@@ -51,6 +51,7 @@
         "clocksource.h": "c",
         "mm.h": "c",
         "proto.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "uidgid.h": "c"
     }
 }
