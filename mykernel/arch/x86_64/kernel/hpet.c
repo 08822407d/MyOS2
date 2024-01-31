@@ -9,7 +9,7 @@
 
 // #include <asm/irq_remapping.h>
 #include <asm/hpet.h>
-// #include <asm/time.h>
+#include <asm/time.h>
 // #include <asm/mwait.h>
 
 
@@ -44,7 +44,7 @@ typedef struct hpet_base {
 	hpet_channel_s		*channels;
 } hpet_base_s;
 
-// #define HPET_MASK			CLOCKSOURCE_MASK(32)
+#define HPET_MASK				CLOCKSOURCE_MASK(32)
 
 #define HPET_MIN_CYCLES			128
 #define HPET_MIN_PROG_DELTA		(HPET_MIN_CYCLES + (HPET_MIN_CYCLES >> 1))
@@ -72,6 +72,104 @@ static inline void hpet_set_mapping(void) {
 	hpet_address = 0xfed00000;
 	hpet_virt_address = myos_ioremap(hpet_address, HPET_MMAP_SIZE);
 }
+
+
+/*
+ * Reading the HPET counter is a very slow operation. If a large number of
+ * CPUs are trying to access the HPET counter simultaneously, it can cause
+ * massive delays and slow down system performance dramatically. This may
+ * happen when HPET is the default clock source instead of TSC. For a
+ * really large system with hundreds of CPUs, the slowdown may be so
+ * severe, that it can actually crash the system because of a NMI watchdog
+ * soft lockup, for example.
+ *
+ * If multiple CPUs are trying to access the HPET counter at the same time,
+ * we don't actually need to read the counter multiple times. Instead, the
+ * other CPUs can use the counter value read by the first CPU in the group.
+ *
+ * This special feature is only enabled on x86-64 systems. It is unlikely
+ * that 32-bit x86 systems will have enough CPUs to require this feature
+ * with its associated locking overhead. We also need 64-bit atomic read.
+ *
+ * The lock and the HPET value are stored together and can be read in a
+ * single atomic 64-bit read. It is explicitly assumed that arch_spinlock_t
+ * is 32 bits in size.
+ */
+union hpet_lock {
+	struct {
+		arch_spinlock_t	lock;
+		u32				value;
+	};
+	u64					lockval;
+};
+
+static union hpet_lock hpet __cacheline_aligned = {
+	{ .lock = __ARCH_SPIN_LOCK_UNLOCKED, },
+};
+
+static u64 read_hpet(clocksrc_s *cs)
+{
+	// unsigned long flags;
+	// union hpet_lock old, new;
+
+	// BUILD_BUG_ON(sizeof(union hpet_lock) != 8);
+
+	// /*
+	//  * Read HPET directly if in NMI.
+	//  */
+	// if (in_nmi())
+		return (u64)hpet_readl(HPET_COUNTER);
+
+// 	/*
+// 	 * Read the current state of the lock and HPET value atomically.
+// 	 */
+// 	old.lockval = READ_ONCE(hpet.lockval);
+
+// 	if (arch_spin_is_locked(&old.lock))
+// 		goto contended;
+
+// 	local_irq_save(flags);
+// 	if (arch_spin_trylock(&hpet.lock)) {
+// 		new.value = hpet_readl(HPET_COUNTER);
+// 		/*
+// 		 * Use WRITE_ONCE() to prevent store tearing.
+// 		 */
+// 		WRITE_ONCE(hpet.value, new.value);
+// 		arch_spin_unlock(&hpet.lock);
+// 		local_irq_restore(flags);
+// 		return (u64)new.value;
+// 	}
+// 	local_irq_restore(flags);
+
+// contended:
+// 	/*
+// 	 * Contended case
+// 	 * --------------
+// 	 * Wait until the HPET value change or the lock is free to indicate
+// 	 * its value is up-to-date.
+// 	 *
+// 	 * It is possible that old.value has already contained the latest
+// 	 * HPET value while the lock holder was in the process of releasing
+// 	 * the lock. Checking for lock state change will enable us to return
+// 	 * the value immediately instead of waiting for the next HPET reader
+// 	 * to come along.
+// 	 */
+// 	do {
+// 		cpu_relax();
+// 		new.lockval = READ_ONCE(hpet.lockval);
+// 	} while ((new.value == old.value) && arch_spin_is_locked(&new.lock));
+
+// 	return (u64)new.value;
+}
+
+static clocksrc_s clocksource_hpet = {
+	.name		= "hpet",
+	.rating		= 250,
+	.read		= read_hpet,
+	.mask		= HPET_MASK,
+	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+	// .resume		= hpet_resume_counter,
+};
 
 
 
@@ -172,7 +270,7 @@ int __init hpet_enable(void)
 
 	// if (tsc_clocksource_watchdog_disabled())
 	// 	clocksource_hpet.flags |= CLOCK_SOURCE_MUST_VERIFY;
-	// clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
 
 	// if (id & HPET_ID_LEGSUP) {
 	// 	hpet_legacy_clockevent_register(&hpet_base.channels[0]);

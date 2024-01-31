@@ -23,7 +23,7 @@
 // #include <asm/i8259.h>
 // #include <asm/timer.h>
 #include <asm/hpet.h>
-// #include <asm/time.h>
+#include <asm/time.h>
 
 
 

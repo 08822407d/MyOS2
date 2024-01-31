@@ -59,7 +59,7 @@
 // #include <asm/acpi.h>
 #include <asm/dma.h>
 // #include <asm/timer.h>
-// #include <asm/time.h>
+#include <asm/time.h>
 // #include <asm/i8259.h>
 #include <asm/setup.h>
 // #include <asm/irq_remapping.h>

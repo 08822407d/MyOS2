@@ -144,8 +144,8 @@
 	#define CLOCK_SOURCE_SUSPEND_NONSTOP	0x80
 	#define CLOCK_SOURCE_RESELECT			0x100
 	#define CLOCK_SOURCE_VERIFY_PERCPU		0x200
-	// /* simplify initialization of mask field */
-	// #define CLOCKSOURCE_MASK(bits) GENMASK_ULL((bits) - 1, 0)
+	/* simplify initialization of mask field */
+	#define CLOCKSOURCE_MASK(bits)	GENMASK_ULL((bits) - 1, 0)
 
 	// static inline u32 clocksource_freq2mult(u32 freq, u32 shift_constant, u64 from)
 	// {
@@ -226,43 +226,43 @@
 	// extern void
 	// clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 minsec);
 
-	// /*
-	// * Don't call __clocksource_register_scale directly, use
-	// * clocksource_register_hz/khz
-	// */
-	// extern int
-	// __clocksource_register_scale(clocksrc_s *cs, u32 scale, u32 freq);
-	// extern void
-	// __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq);
+	/*
+	 * Don't call __clocksource_register_scale directly, use
+	 * clocksource_register_hz/khz
+	 */
+	extern int
+	__clocksource_register_scale(clocksrc_s *cs, u32 scale, u32 freq);
+	extern void
+	__clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq);
 
-	// /*
-	// * Don't call this unless you are a default clocksource
-	// * (AKA: jiffies) and absolutely have to.
-	// */
-	// static inline int __clocksource_register(clocksrc_s *cs)
-	// {
-	// 	return __clocksource_register_scale(cs, 1, 0);
-	// }
+	/*
+	 * Don't call this unless you are a default clocksource
+	 * (AKA: jiffies) and absolutely have to.
+	 */
+	static inline int
+	__clocksource_register(clocksrc_s *cs) {
+		return __clocksource_register_scale(cs, 1, 0);
+	}
 
-	// static inline int clocksource_register_hz(clocksrc_s *cs, u32 hz)
-	// {
-	// 	return __clocksource_register_scale(cs, 1, hz);
-	// }
+	static inline int
+	clocksource_register_hz(clocksrc_s *cs, u32 hz) {
+		return __clocksource_register_scale(cs, 1, hz);
+	}
 
-	// static inline int clocksource_register_khz(clocksrc_s *cs, u32 khz)
-	// {
-	// 	return __clocksource_register_scale(cs, 1000, khz);
-	// }
+	static inline int
+	clocksource_register_khz(clocksrc_s *cs, u32 khz) {
+		return __clocksource_register_scale(cs, 1000, khz);
+	}
 
-	// static inline void __clocksource_update_freq_hz(clocksrc_s *cs, u32 hz)
-	// {
-	// 	__clocksource_update_freq_scale(cs, 1, hz);
-	// }
+	static inline void
+	__clocksource_update_freq_hz(clocksrc_s *cs, u32 hz) {
+		__clocksource_update_freq_scale(cs, 1, hz);
+	}
 
-	// static inline void __clocksource_update_freq_khz(clocksrc_s *cs, u32 khz)
-	// {
-	// 	__clocksource_update_freq_scale(cs, 1000, khz);
-	// }
+	static inline void
+	__clocksource_update_freq_khz(clocksrc_s *cs, u32 khz) {
+		__clocksource_update_freq_scale(cs, 1000, khz);
+	}
 
 	// #ifdef CONFIG_ARCH_CLOCKSOURCE_INIT
 	// extern void clocksource_arch_init(clocksrc_s *cs);
