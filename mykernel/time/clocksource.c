@@ -226,7 +226,7 @@ void __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq)
 	// 	"timekeeping: Clocksource %s might overflow on 11%% adjustment\n",
 	// 	cs->name);
 
-	// clocksource_update_max_deferment(cs);
+	clocksource_update_max_deferment(cs);
 
 	// pr_info("%s: mask: 0x%llx max_cycles: 0x%llx, max_idle_ns: %lld ns\n",
 	// 	cs->name, cs->mask, cs->max_cycles, cs->max_idle_ns);

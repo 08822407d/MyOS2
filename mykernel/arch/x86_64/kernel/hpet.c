@@ -3,7 +3,7 @@
 // #include <linux/interrupt.h>
 // #include <linux/export.h>
 #include <linux/kernel/delay.h>
-// #include <linux/hpet.h>
+#include <linux/kernel/hpet.h>
 #include <linux/kernel/cpu.h>
 // #include <linux/irq.h>
 
@@ -237,28 +237,29 @@ int __init hpet_enable(void)
 	hpet_base.boot_cfg = cfg;
 	cfg &= ~(HPET_CFG_ENABLE | HPET_CFG_LEGACY);
 	hpet_writel(cfg, HPET_CFG);
+	while (cfg != 0);
 	// if (cfg)
 	// 	pr_warn("Global config: Unknown bits %#x\n", cfg);
 
 	/* Read, store and sanitize the per channel configuration */
 	for (i = 0; i < channels; i++, hc++) {
-		// hc->num = i;
+		hc->num = i;
 
-		// cfg = hpet_readl(HPET_Tn_CFG(i));
-		// hc->boot_cfg = cfg;
-		// irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
-		// hc->irq = irq;
+		cfg = hpet_readl(HPET_Tn_CFG(i));
+		hc->boot_cfg = cfg;
+		irq = (cfg & Tn_INT_ROUTE_CNF_MASK) >> Tn_INT_ROUTE_CNF_SHIFT;
+		hc->irq = irq;
 
-		// cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
-		// hpet_writel(cfg, HPET_Tn_CFG(i));
+		cfg &= ~(HPET_TN_ENABLE | HPET_TN_LEVEL | HPET_TN_FSB);
+		hpet_writel(cfg, HPET_Tn_CFG(i));
 
-		// cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
-		// 	 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
-		// 	 | HPET_TN_FSB | HPET_TN_FSB_CAP);
+		cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
+			 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
+			 | HPET_TN_FSB | HPET_TN_FSB_CAP);
+		while (cfg != 0);
 		// if (cfg)
 		// 	pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
 	}
-	// hpet_print_config();
 
 	// /*
 	//  * Validate that the counter is counting. This needs to be done
@@ -270,25 +271,24 @@ int __init hpet_enable(void)
 
 	// if (tsc_clocksource_watchdog_disabled())
 	// 	clocksource_hpet.flags |= CLOCK_SOURCE_MUST_VERIFY;
-	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+	// clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
 
-	// if (id & HPET_ID_LEGSUP) {
-	// 	hpet_legacy_clockevent_register(&hpet_base.channels[0]);
-	// 	hpet_base.channels[0].mode = HPET_MODE_LEGACY;
-	// 	if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
-	// 		hpet_base.channels[1].mode = HPET_MODE_LEGACY;
-	// 	return 1;
-	// }
-	// return 0;
+	if (id & HPET_ID_LEGSUP) {
+		HPET_init();
+		// hpet_legacy_clockevent_register(&hpet_base.channels[0]);
+		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
+		// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
+		// 	hpet_base.channels[1].mode = HPET_MODE_LEGACY;
+		return 1;
+	}
+	return 0;
 
-
-	HPET_init();
 out_nohpet:
-	// kfree(hpet_base.channels);
-	// hpet_base.channels = NULL;
-	// hpet_base.nr_channels = 0;
+	kfree(hpet_base.channels);
+	hpet_base.channels = NULL;
+	hpet_base.nr_channels = 0;
 	// hpet_clear_mapping();
-	// hpet_address = 0;
+	hpet_address = 0;
 	return 0;
 }
 
@@ -345,8 +345,7 @@ void HPET_init()
 	register_irq(HPET_TIMER0_IRQ, &entry , "HPET0",
 			0, &HPET_int_controller, &HPET_handler);
 	
-	// color_printk(RED,BLACK,"HPET - GCAP_ID:<%#018lx>\n",*(unsigned long *)hpet_virt_address);
-	uint64_t accuracy = *(uint64_t *)hpet_virt_address >> 32;
+	u32 accuracy = *(u32 *)(hpet_virt_address + 4);
 
 	//edge triggered & periodic
 	*(unsigned long *)(hpet_virt_address + 0x100) = 0x004c;
@@ -359,7 +358,6 @@ void HPET_init()
 	mb();
 
 	//init MAIN_CNT & get CMOS time
-	get_cmos_time(&time);
 	*(unsigned long *)(hpet_virt_address + 0xf0) = 0;
 	mb();
 }
