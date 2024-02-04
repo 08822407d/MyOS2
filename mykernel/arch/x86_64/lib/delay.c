@@ -20,7 +20,7 @@
 
 #include <asm/processor.h>
 #include <asm/delay.h>
-// #include <asm/timer.h>
+#include <asm/timer.h>
 // #include <asm/mwait.h>
 
 #include <asm/smp.h>

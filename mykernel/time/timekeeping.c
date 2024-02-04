@@ -12,7 +12,7 @@
 #include <linux/kernel/nmi.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/loadavg.h>
-// #include <linux/sched/clock.h>
+#include <linux/sched/clock.h>
 // #include <linux/syscore_ops.h>
 #include <linux/kernel/clocksource.h>
 #include <linux/kernel/jiffies.h>
@@ -73,7 +73,7 @@ void __init timekeeping_init(void)
 	unsigned long flags;
 
 	read_persistent_clock64(&wall_time);
-	// boot_offset = ns_to_timespec64(local_clock());
+	boot_offset = ns_to_timespec64(local_clock());
 }
 
 

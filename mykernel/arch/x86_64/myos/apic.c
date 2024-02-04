@@ -12,6 +12,7 @@
 *
 *
 ***************************************************/
+#include <linux/kernel/delay.h>
 #include <linux/lib/string.h>
 #include <linux/mm/mm.h>
 #include <asm/apic.h>
@@ -83,6 +84,8 @@ uint64_t ioapic_rte_read(uint8_t index)
 	ret |= *ioapic_map.virt_data_addr;
 	mb();
 
+	udelay(1);
+
 	return ret;
 }
 
@@ -99,6 +102,8 @@ void ioapic_rte_write(uint8_t index, uint64_t value)
 	mb();
 	*ioapic_map.virt_data_addr = value & 0xffffffff;
 	mb();
+
+	udelay(1);
 }
 
 /*==============================================================================================*

@@ -19,7 +19,7 @@
 // #include <linux/pgtable.h>
 
 // #include <linux/atomic.h>
-// #include <asm/timer.h>
+#include <asm/timer.h>
 #include <asm/hw_irq.h>
 #include <asm/desc.h>
 #include <asm/io_apic.h>

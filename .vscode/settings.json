@@ -52,6 +52,9 @@
         "mm.h": "c",
         "proto.h": "c",
         "unistd.h": "c",
-        "uidgid.h": "c"
+        "uidgid.h": "c",
+        "param.h": "c",
+        "tlbflush.h": "c",
+        "sched.h": "c"
     }
 }

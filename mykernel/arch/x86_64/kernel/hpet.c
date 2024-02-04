@@ -15,6 +15,8 @@
 
 #include <linux/mm/mm.h>
 #include <linux/kernel/io.h>
+#include <linux/kernel/jiffies.h>
+#include <asm/tlbflush.h>
 
 // #undef  pr_fmt
 // #define pr_fmt(fmt) "hpet: " fmt
@@ -71,6 +73,116 @@ static inline void hpet_writel(unsigned int d, unsigned int a) {
 static inline void hpet_set_mapping(void) {
 	hpet_address = 0xfed00000;
 	hpet_virt_address = myos_ioremap(hpet_address, HPET_MMAP_SIZE);
+	flush_tlb_local();
+}
+
+static inline void hpet_clear_mapping(void) {
+	// iounmap(hpet_virt_address);
+	// hpet_virt_address = NULL;
+}
+
+
+/* Common HPET functions */
+static void hpet_stop_counter(void)
+{
+	u32 cfg = hpet_readl(HPET_CFG);
+
+	cfg &= ~HPET_CFG_ENABLE;
+	hpet_writel(cfg, HPET_CFG);
+}
+
+static void hpet_reset_counter(void)
+{
+	hpet_writel(0, HPET_COUNTER);
+	hpet_writel(0, HPET_COUNTER + 4);
+}
+
+static void hpet_start_counter(void)
+{
+	unsigned int cfg = hpet_readl(HPET_CFG);
+
+	cfg |= HPET_CFG_ENABLE;
+	hpet_writel(cfg, HPET_CFG);
+}
+
+static void hpet_restart_counter(void)
+{
+	hpet_stop_counter();
+	hpet_reset_counter();
+	hpet_start_counter();
+}
+
+
+static void hpet_enable_legacy_int(void)
+{
+	unsigned int cfg = hpet_readl(HPET_CFG);
+
+	cfg |= HPET_CFG_LEGACY;
+	hpet_writel(cfg, HPET_CFG);
+	// hpet_legacy_int_enabled = true;
+}
+
+// static int hpet_clkevt_set_state_periodic(struct clock_event_device *evt)
+// {
+// 	unsigned int channel = clockevent_to_channel(evt)->num;
+// 	unsigned int cfg, cmp, now;
+// 	uint64_t delta;
+
+// 	hpet_stop_counter();
+// 	delta = ((uint64_t)(NSEC_PER_SEC / HZ)) * evt->mult;
+// 	delta >>= evt->shift;
+// 	now = hpet_readl(HPET_COUNTER);
+// 	cmp = now + (unsigned int)delta;
+// 	cfg = hpet_readl(HPET_Tn_CFG(channel));
+// 	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL |
+// 	       HPET_TN_32BIT;
+// 	hpet_writel(cfg, HPET_Tn_CFG(channel));
+// 	hpet_writel(cmp, HPET_Tn_CMP(channel));
+// 	udelay(1);
+// 	/*
+// 	 * HPET on AMD 81xx needs a second write (with HPET_TN_SETVAL
+// 	 * cleared) to T0_CMP to set the period. The HPET_TN_SETVAL
+// 	 * bit is automatically cleared after the first write.
+// 	 * (See AMD-8111 HyperTransport I/O Hub Data Sheet,
+// 	 * Publication # 24674)
+// 	 */
+// 	hpet_writel((unsigned int)delta, HPET_Tn_CMP(channel));
+// 	hpet_start_counter();
+// 	hpet_print_config();
+
+// 	return 0;
+// }
+static int myos_hpet_clkevt_set_state_periodic(void)
+{
+	unsigned int channel = 0;
+	u32 mult = 429496730;
+	u32 shift = 32;
+	unsigned int cfg, cmp, now;
+	uint64_t delta;
+
+	hpet_stop_counter();
+	delta = ((uint64_t)(NSEC_PER_SEC / HZ)) * mult;
+	delta >>= shift;
+	now = hpet_readl(HPET_COUNTER);
+	cmp = now + (unsigned int)delta;
+	cfg = hpet_readl(HPET_Tn_CFG(channel));
+	// cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL | HPET_TN_32BIT;
+	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL;
+	hpet_writel(cfg, HPET_Tn_CFG(channel));
+	hpet_writel(cmp, HPET_Tn_CMP(channel));
+	udelay(1);
+	/*
+	 * HPET on AMD 81xx needs a second write (with HPET_TN_SETVAL
+	 * cleared) to T0_CMP to set the period. The HPET_TN_SETVAL
+	 * bit is automatically cleared after the first write.
+	 * (See AMD-8111 HyperTransport I/O Hub Data Sheet,
+	 * Publication # 24674)
+	 */
+	hpet_writel((unsigned int)delta, HPET_Tn_CMP(channel));
+	hpet_start_counter();
+	// hpet_print_config();
+
+	return 0;
 }
 
 
@@ -173,7 +285,7 @@ static clocksrc_s clocksource_hpet = {
 
 
 
-extern void HPET_init(void);
+extern void myos_HPET_init(void);
 /**
  * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
  */
@@ -271,11 +383,12 @@ int __init hpet_enable(void)
 
 	// if (tsc_clocksource_watchdog_disabled())
 	// 	clocksource_hpet.flags |= CLOCK_SOURCE_MUST_VERIFY;
-	// clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
+	clocksource_register_hz(&clocksource_hpet, (u32)hpet_freq);
 
 	if (id & HPET_ID_LEGSUP) {
-		HPET_init();
 		// hpet_legacy_clockevent_register(&hpet_base.channels[0]);
+		myos_hpet_clkevt_set_state_periodic();
+		myos_HPET_init();
 		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
 		// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
 		// 	hpet_base.channels[1].mode = HPET_MODE_LEGACY;
@@ -329,7 +442,7 @@ void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
 	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 48, 0);
 }
 	
-void HPET_init()
+void myos_HPET_init()
 {
 	ioapic_retentry_T entry;
 	//init I/O APIC IRQ2 => HPET Timer 0
@@ -346,18 +459,4 @@ void HPET_init()
 			0, &HPET_int_controller, &HPET_handler);
 	
 	u32 accuracy = *(u32 *)(hpet_virt_address + 4);
-
-	//edge triggered & periodic
-	*(unsigned long *)(hpet_virt_address + 0x100) = 0x004c;
-	mb();
-
-	// 1S qemu may have a different precision so here need a calculate
-	// 0x38D7EA4C680 is hex value of 1*10^15
-	unsigned long period = 0x38D7EA4C680 / accuracy;
-	*(unsigned long *)(hpet_virt_address + 0x108) = period * 10;
-	mb();
-
-	//init MAIN_CNT & get CMOS time
-	*(unsigned long *)(hpet_virt_address + 0xf0) = 0;
-	mb();
 }

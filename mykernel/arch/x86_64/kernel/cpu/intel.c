@@ -6,7 +6,7 @@
 #include <linux/kernel/bitops.h>
 #include <linux/smp/smp.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/clock.h>
+#include <linux/sched/clock.h>
 // #include <linux/thread_info.h>
 #include <linux/init/init.h>
 #include <linux/kernel/uaccess.h>
