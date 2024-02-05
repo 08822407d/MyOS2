@@ -176,4 +176,7 @@
 	extern timespec64_s
 	timespec64_add_safe(const timespec64_s lhs, const timespec64_s rhs);
 
+
+	#include <linux/kernel/ktime.h>
+
 #endif /* _LINUX_TIME64_H */

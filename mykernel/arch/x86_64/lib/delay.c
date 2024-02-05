@@ -14,7 +14,7 @@
 
 // #include <linux/export.h>
 #include <linux/kernel/sched.h>
-// #include <linux/timex.h>
+#include <linux/kernel/timex.h>
 // #include <linux/preempt.h>
 #include <linux/kernel/delay.h>
 

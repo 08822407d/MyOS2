@@ -8,12 +8,16 @@
 	#include <linux/kernel/minmax.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/time.h>
-	// #include <linux/timex.h>
+	#include <linux/kernel/timex.h>
 	// #include <vdso/jiffies.h>
 	// #include <asm/param.h>			/* for HZ */
 	// #include <generated/timeconst.h>
 
 	#include <asm-generic/param.h>			/* for HZ */
+
+	// <vdso/jiffies.h> contents
+	/* TICK_NSEC is the time between ticks in nsec assuming SHIFTED_HZ */
+	#define TICK_NSEC	((NSEC_PER_SEC+HZ/2)/HZ)
 
 	/*
 	 * The following defines establish the engineering parameters of the PLL

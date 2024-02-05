@@ -17,7 +17,7 @@
 #include <linux/kernel/clocksource.h>
 #include <linux/kernel/jiffies.h>
 #include <linux/kernel/time.h>
-// #include <linux/timex.h>
+#include <linux/kernel/timex.h>
 // #include <linux/tick.h>
 // #include <linux/stop_machine.h>
 // #include <linux/pvclock_gtod.h>
@@ -63,6 +63,103 @@ int __read_mostly timekeeping_suspended;
 
 
 /*
+ * tk_clock_read - atomic clocksource read() helper
+ *
+ * This helper is necessary to use in the read paths because, while the
+ * seqcount ensures we don't return a bad value while structures are updated,
+ * it doesn't protect from potential crashes. There is the possibility that
+ * the tkr's clocksource may change between the read reference, and the
+ * clock reference passed to the read function.  This can cause crashes if
+ * the wrong clocksource is passed to the wrong read function.
+ * This isn't necessary to use when holding the timekeeper_lock or doing
+ * a read of the fast-timekeeper tkrs (which is protected by its own locking
+ * and update logic).
+ */
+static inline u64 tk_clock_read(const tk_readbase_s *tkr) {
+	clocksrc_s *clock = READ_ONCE(tkr->clock);
+
+	return clock->read(clock);
+}
+
+
+/**
+ * tk_setup_internals - Set up internals to use clocksource clock.
+ *
+ * @tk:		The target timekeeper to setup.
+ * @clock:		Pointer to clocksource.
+ *
+ * Calculates a fixed cycle/nsec interval for a given clocksource/adjustment
+ * pair and interval request.
+ *
+ * Unless you're the timekeeping code, you should not be using this!
+ */
+static void tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock)
+{
+	u64 interval;
+	u64 tmp, ntpinterval;
+	clocksrc_s *old_clock;
+
+	++tk->cs_was_changed_seq;
+	old_clock = tk->tkr_mono.clock;
+	tk->tkr_mono.clock = clock;
+	tk->tkr_mono.mask = clock->mask;
+	tk->tkr_mono.cycle_last = tk_clock_read(&tk->tkr_mono);
+
+	tk->tkr_raw.clock = clock;
+	tk->tkr_raw.mask = clock->mask;
+	tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
+
+	/* Do the ns -> cycle conversion first, using original mult */
+	tmp = NTP_INTERVAL_LENGTH;
+	tmp <<= clock->shift;
+	ntpinterval = tmp;
+	tmp += clock->mult/2;
+	do_div(tmp, clock->mult);
+	if (tmp == 0)
+		tmp = 1;
+
+	interval = (u64) tmp;
+	tk->cycle_interval = interval;
+
+	/* Go back from cycles -> shifted ns */
+	tk->xtime_interval = interval * clock->mult;
+	tk->xtime_remainder = ntpinterval - tk->xtime_interval;
+	tk->raw_interval = interval * clock->mult;
+
+	 /* if changing clocks, convert xtime_nsec shift units */
+	if (old_clock) {
+		int shift_change = clock->shift - old_clock->shift;
+		if (shift_change < 0) {
+			tk->tkr_mono.xtime_nsec >>= -shift_change;
+			tk->tkr_raw.xtime_nsec >>= -shift_change;
+		} else {
+			tk->tkr_mono.xtime_nsec <<= shift_change;
+			tk->tkr_raw.xtime_nsec <<= shift_change;
+		}
+	}
+
+	tk->tkr_mono.shift = clock->shift;
+	tk->tkr_raw.shift = clock->shift;
+
+	// tk->ntp_error = 0;
+	// tk->ntp_error_shift = NTP_SCALE_SHIFT - clock->shift;
+	// tk->ntp_tick = ntpinterval << tk->ntp_error_shift;
+
+	/*
+	 * The timekeeper keeps its own mult values for the currently
+	 * active clocksource. These value will be adjusted via NTP
+	 * to counteract clock drifting.
+	 */
+	tk->tkr_mono.mult = clock->mult;
+	tk->tkr_raw.mult = clock->mult;
+	// tk->ntp_err_mult = 0;
+	// tk->skip_second_overflow = 0;
+}
+
+
+
+
+/*
  * timekeeping_init - Initializes the clocksource and common timekeeping values
  */
 void __init timekeeping_init(void)
@@ -74,6 +171,12 @@ void __init timekeeping_init(void)
 
 	read_persistent_clock64(&wall_time);
 	boot_offset = ns_to_timespec64(local_clock());
+
+
+	clock = clocksource_default_clock();
+	if (clock->enable)
+		clock->enable(clock);	
+	tk_setup_internals(tk, clock);
 }
 
 

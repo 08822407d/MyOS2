@@ -12,7 +12,7 @@
 #include <linux/kernel/delay.h>
 #include <linux/kernel/clocksource.h>
 #include <linux/smp/percpu.h>
-// #include <linux/timex.h>
+#include <linux/kernel/timex.h>
 // #include <linux/static_key.h>
 // #include <linux/static_call.h>
 

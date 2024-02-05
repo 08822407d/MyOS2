@@ -27,7 +27,7 @@
 // #include <linux/export.h>
 // #include <linux/syscore_ops.h>
 #include <linux/kernel/delay.h>
-// #include <linux/timex.h>
+#include <linux/kernel/timex.h>
 // #include <linux/i8253.h>
 // #include <linux/dmar.h>
 #include <linux/init/init.h>

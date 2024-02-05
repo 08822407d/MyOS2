@@ -55,6 +55,9 @@
         "uidgid.h": "c",
         "param.h": "c",
         "tlbflush.h": "c",
-        "sched.h": "c"
+        "sched.h": "c",
+        "time64.h": "c",
+        "ktime.h": "c",
+        "jiffies.h": "c"
     }
 }

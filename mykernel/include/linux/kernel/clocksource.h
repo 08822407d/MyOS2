@@ -10,7 +10,7 @@
 #define _LINUX_CLOCKSOURCE_H
 
 	#include <linux/kernel/types.h>
-	// #include <linux/timex.h>
+	#include <linux/kernel/timex.h>
 	#include <linux/kernel/time.h>
 	#include <linux/lib/list.h>
 	#include <linux/kernel/cache.h>
@@ -115,12 +115,12 @@
 		// enum vdso_clock_mode	vdso_clock_mode;
 		unsigned long	flags;
 
-		// int			(*enable)(clocksrc_s *cs);
-		// void			(*disable)(clocksrc_s *cs);
-		// void			(*suspend)(clocksrc_s *cs);
-		// void			(*resume)(clocksrc_s *cs);
-		// void			(*mark_unstable)(clocksrc_s *cs);
-		// void			(*tick_stable)(clocksrc_s *cs);
+		int				(*enable)(clocksrc_s *cs);
+		void			(*disable)(clocksrc_s *cs);
+		void			(*suspend)(clocksrc_s *cs);
+		void			(*resume)(clocksrc_s *cs);
+		void			(*mark_unstable)(clocksrc_s *cs);
+		void			(*tick_stable)(clocksrc_s *cs);
 
 	// 	/* private: */
 	// #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
@@ -215,7 +215,7 @@
 	// extern void clocksource_change_rating(clocksrc_s *cs, int rating);
 	// extern void clocksource_suspend(void);
 	// extern void clocksource_resume(void);
-	// extern clocksrc_s * __init clocksource_default_clock(void);
+	extern clocksrc_s * __init clocksource_default_clock(void);
 	// extern void clocksource_mark_unstable(clocksrc_s *cs);
 	// extern void
 	// clocksource_start_suspend_timing(clocksrc_s *cs, u64 start_cycles);
