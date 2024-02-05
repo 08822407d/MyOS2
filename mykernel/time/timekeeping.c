@@ -62,6 +62,67 @@ int __read_mostly timekeeping_suspended;
 
 
 
+static inline void
+tk_normalize_xtime(timekeeper_s *tk) {
+	while (tk->tkr_mono.xtime_nsec >= ((u64)NSEC_PER_SEC << tk->tkr_mono.shift)) {
+		tk->tkr_mono.xtime_nsec -= (u64)NSEC_PER_SEC << tk->tkr_mono.shift;
+		tk->xtime_sec++;
+	}
+	while (tk->tkr_raw.xtime_nsec >= ((u64)NSEC_PER_SEC << tk->tkr_raw.shift)) {
+		tk->tkr_raw.xtime_nsec -= (u64)NSEC_PER_SEC << tk->tkr_raw.shift;
+		tk->raw_sec++;
+	}
+}
+
+static inline timespec64_s
+tk_xtime(const timekeeper_s *tk) {
+	timespec64_s ts;
+
+	ts.tv_sec = tk->xtime_sec;
+	ts.tv_nsec = (long)(tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift);
+	return ts;
+}
+
+static void tk_set_xtime(timekeeper_s *tk, const timespec64_s *ts)
+{
+	tk->xtime_sec = ts->tv_sec;
+	tk->tkr_mono.xtime_nsec = (u64)ts->tv_nsec << tk->tkr_mono.shift;
+}
+
+static void tk_xtime_add(timekeeper_s *tk, const timespec64_s *ts)
+{
+	tk->xtime_sec += ts->tv_sec;
+	tk->tkr_mono.xtime_nsec += (u64)ts->tv_nsec << tk->tkr_mono.shift;
+	tk_normalize_xtime(tk);
+}
+
+static void tk_set_wall_to_mono(timekeeper_s *tk, timespec64_s wtm)
+{
+	// timespec64_s tmp;
+
+	// /*
+	//  * Verify consistency of: offset_real = -wall_to_monotonic
+	//  * before modifying anything
+	//  */
+	// set_normalized_timespec64(&tmp, -tk->wall_to_monotonic.tv_sec,
+	// 				-tk->wall_to_monotonic.tv_nsec);
+	// WARN_ON_ONCE(tk->offs_real != timespec64_to_ktime(tmp));
+	// tk->wall_to_monotonic = wtm;
+	// set_normalized_timespec64(&tmp, -wtm.tv_sec, -wtm.tv_nsec);
+	// tk->offs_real = timespec64_to_ktime(tmp);
+	// tk->offs_tai = ktime_add(tk->offs_real, ktime_set(tk->tai_offset, 0));
+}
+
+static inline void
+tk_update_sleep_time(timekeeper_s *tk, ktime_t delta) {
+	// tk->offs_boot = ktime_add(tk->offs_boot, delta);
+	// /*
+	//  * Timespec representation for VDSO update to avoid 64bit division
+	//  * on every update.
+	//  */
+	// tk->monotonic_to_boot = ktime_to_timespec64(tk->offs_boot);
+}
+
 /*
  * tk_clock_read - atomic clocksource read() helper
  *
@@ -77,9 +138,41 @@ int __read_mostly timekeeping_suspended;
  */
 static inline u64 tk_clock_read(const tk_readbase_s *tkr) {
 	clocksrc_s *clock = READ_ONCE(tkr->clock);
-
 	return clock->read(clock);
 }
+
+
+
+/* must hold timekeeper_lock */
+static void timekeeping_update(timekeeper_s *tk, unsigned int action)
+{
+	// if (action & TK_CLEAR_NTP) {
+	// 	tk->ntp_error = 0;
+	// 	ntp_clear();
+	// }
+
+	// tk_update_leap_state(tk);
+	// tk_update_ktime_data(tk);
+
+	// update_vsyscall(tk);
+	// update_pvclock_gtod(tk, action & TK_CLOCK_WAS_SET);
+
+	// tk->tkr_mono.base_real = tk->tkr_mono.base + tk->offs_real;
+	// update_fast_timekeeper(&tk->tkr_mono, &tk_fast_mono);
+	// update_fast_timekeeper(&tk->tkr_raw,  &tk_fast_raw);
+
+	// if (action & TK_CLOCK_WAS_SET)
+	// 	tk->clock_was_set_seq++;
+	// /*
+	//  * The mirroring of the data to the shadow-timekeeper needs
+	//  * to happen last here to ensure we don't over-write the
+	//  * timekeeper structure on the next update with stale data
+	//  */
+	// if (action & TK_MIRROR)
+	// 	memcpy(&shadow_timekeeper, &tk_core.timekeeper,
+	// 	       sizeof(tk_core.timekeeper));
+}
+
 
 
 /**
@@ -177,6 +270,13 @@ void __init timekeeping_init(void)
 	if (clock->enable)
 		clock->enable(clock);	
 	tk_setup_internals(tk, clock);
+
+	tk_set_xtime(tk, &wall_time);
+	tk->raw_sec = 0;
+
+	tk_set_wall_to_mono(tk, wall_to_mono);
+
+	timekeeping_update(tk, TK_MIRROR | TK_CLOCK_WAS_SET);
 }
 
 
