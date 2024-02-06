@@ -60,6 +60,7 @@
 
 #include <asm/sections.h>
 #include <asm/e820-api.h>
+#include <asm/tsc.h>
 
 #include <obsolete/proto.h>
 #include <obsolete/glo.h>
@@ -251,6 +252,9 @@ void __init setup_arch(char **cmdline_p)
 	// data_resource.end = __pa(_edata)-1;
 	// bss_resource.start = __pa(__bss_start);
 	// bss_resource.end = __pa(__bss_stop)-1;
+
+
+	tsc_early_init();
 
 	/*
 	 * partially used pages are not usable - thus

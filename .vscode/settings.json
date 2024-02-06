@@ -58,6 +58,7 @@
         "sched.h": "c",
         "time64.h": "c",
         "ktime.h": "c",
-        "jiffies.h": "c"
+        "jiffies.h": "c",
+        "desc.h": "c"
     }
 }
