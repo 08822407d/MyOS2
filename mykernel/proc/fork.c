@@ -53,7 +53,7 @@
 // #include <linux/seccomp.h>
 // #include <linux/swap.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/jiffies.h>
+#include <linux/kernel/jiffies.h>
 // #include <linux/futex.h>
 // #include <linux/compat.h>
 #include <linux/kernel/kthread.h>

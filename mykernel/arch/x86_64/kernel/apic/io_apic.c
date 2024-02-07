@@ -45,7 +45,7 @@
 // #include <linux/syscore_ops.h>
 // #include <linux/freezer.h>
 #include <linux/kernel/kthread.h>
-// #include <linux/jiffies.h>	/* time_after() */
+#include <linux/kernel/jiffies.h>	/* time_after() */
 #include <linux/kernel/slab.h>
 #include <linux/mm/memblock.h>
 // #include <linux/msi.h>

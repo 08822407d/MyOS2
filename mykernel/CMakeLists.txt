@@ -43,5 +43,4 @@ add_subdirectory(printk)
 
 add_subdirectory(klib)
 add_subdirectory(mechanics)
-add_subdirectory(myos_test)
 add_subdirectory(debug)

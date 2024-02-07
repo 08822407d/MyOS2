@@ -22,7 +22,7 @@
 // #include <linux/swapops.h>
 // #include <linux/interrupt.h>
 #include <linux/mm/pagemap.h>
-// #include <linux/jiffies.h>
+#include <linux/kernel/jiffies.h>
 #include <linux/mm/memblock.h>
 #include <linux/kernel/compiler.h>
 #include <linux/kernel/kernel.h>

@@ -59,6 +59,10 @@
         "time64.h": "c",
         "ktime.h": "c",
         "jiffies.h": "c",
-        "desc.h": "c"
+        "desc.h": "c",
+        "nmi.h": "c",
+        "ctype.h": "c",
+        "clock.h": "c",
+        "kthread.h": "c"
     }
 }
