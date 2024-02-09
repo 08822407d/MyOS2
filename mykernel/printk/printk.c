@@ -56,7 +56,7 @@
 // #define CREATE_TRACE_POINTS
 // #include <trace/events/printk.h>
 
-// #include "printk_ringbuffer.h"
+#include "printk_ringbuffer.h"
 // #include "console_cmdline.h"
 // #include "braille.h"
 #include "internal.h"
@@ -107,7 +107,7 @@
  *   record.info.dev_info.subsystem = "pci" (terminated)
  *   record.info.dev_info.device    = "+pci:0000:00:01.0" (terminated)
  *
- * The 'struct printk_info' buffer must never be directly exported to
+ * The 'printk_info_s' buffer must never be directly exported to
  * userspace, it is a kernel-private implementation detail that might
  * need to be changed in the future, when the requirements change.
  *
@@ -158,23 +158,24 @@
 static char		__log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
 static char		*log_buf = __log_buf;
 static u32		log_buf_len = __LOG_BUF_LEN;
+	
 
-// /*
-//  * Define the average message size. This only affects the number of
-//  * descriptors that will be available. Underestimating is better than
-//  * overestimating (too many available descriptors is better than not enough).
-//  */
-// #define PRB_AVGBITS 5	/* 32 character average length */
+/*
+ * Define the average message size. This only affects the number of
+ * descriptors that will be available. Underestimating is better than
+ * overestimating (too many available descriptors is better than not enough).
+ */
+#define PRB_AVGBITS 5	/* 32 character average length */
 
-// #if CONFIG_LOG_BUF_SHIFT <= PRB_AVGBITS
-// #error CONFIG_LOG_BUF_SHIFT value too small.
-// #endif
-// _DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
-// 		 PRB_AVGBITS, &__log_buf[0]);
+#if CONFIG_LOG_BUF_SHIFT <= PRB_AVGBITS
+#error CONFIG_LOG_BUF_SHIFT value too small.
+#endif
+_DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
+		PRB_AVGBITS, &__log_buf[0]);
 
-// static struct printk_ringbuffer printk_rb_dynamic;
+static prb_s printk_rb_dynamic;
 
-// static struct printk_ringbuffer *prb = &printk_rb_static;
+static prb_s *prb = &printk_rb_static;
 
 
 
@@ -259,121 +260,121 @@ int vprintk_store(int facility, int level,
 		const dev_printk_info_s *dev_info,
 		const char *fmt, va_list args)
 {
-// 	struct prb_reserved_entry e;
-// 	enum printk_info_flags flags = 0;
-// 	struct printk_record r;
-// 	unsigned long irqflags;
-// 	u16 trunc_msg_len = 0;
-// 	char prefix_buf[8];
-// 	u8 *recursion_ptr;
-// 	u16 reserve_size;
-// 	va_list args2;
-// 	u32 caller_id;
-// 	u16 text_len;
-// 	int ret = 0;
-// 	u64 ts_nsec;
+	prb_rsvd_ent_s e;
+	enum printk_info_flags flags = 0;
+	printk_record_s r;
+	unsigned long irqflags;
+	u16 trunc_msg_len = 0;
+	char prefix_buf[8];
+	u8 *recursion_ptr;
+	u16 reserve_size;
+	va_list args2;
+	u32 caller_id;
+	u16 text_len;
+	int ret = 0;
+	u64 ts_nsec;
 
-// 	if (!printk_enter_irqsave(recursion_ptr, irqflags))
-// 		return 0;
+	// if (!printk_enter_irqsave(recursion_ptr, irqflags))
+	// 	return 0;
 
-// 	/*
-// 	 * Since the duration of printk() can vary depending on the message
-// 	 * and state of the ringbuffer, grab the timestamp now so that it is
-// 	 * close to the call of printk(). This provides a more deterministic
-// 	 * timestamp with respect to the caller.
-// 	 */
-// 	ts_nsec = local_clock();
+	/*
+	 * Since the duration of printk() can vary depending on the message
+	 * and state of the ringbuffer, grab the timestamp now so that it is
+	 * close to the call of printk(). This provides a more deterministic
+	 * timestamp with respect to the caller.
+	 */
+	ts_nsec = local_clock();
 
-// 	caller_id = printk_caller_id();
+	// caller_id = printk_caller_id();
 
-// 	/*
-// 	 * The sprintf needs to come first since the syslog prefix might be
-// 	 * passed in as a parameter. An extra byte must be reserved so that
-// 	 * later the vscnprintf() into the reserved buffer has room for the
-// 	 * terminating '\0', which is not counted by vsnprintf().
-// 	 */
-// 	va_copy(args2, args);
-// 	reserve_size = vsnprintf(&prefix_buf[0], sizeof(prefix_buf), fmt, args2) + 1;
-// 	va_end(args2);
+	/*
+	 * The sprintf needs to come first since the syslog prefix might be
+	 * passed in as a parameter. An extra byte must be reserved so that
+	 * later the vscnprintf() into the reserved buffer has room for the
+	 * terminating '\0', which is not counted by vsnprintf().
+	 */
+	va_copy(args2, args);
+	reserve_size = vsnprintf(&prefix_buf[0], sizeof(prefix_buf), fmt, args2) + 1;
+	va_end(args2);
 
-// 	if (reserve_size > PRINTKRB_RECORD_MAX)
-// 		reserve_size = PRINTKRB_RECORD_MAX;
+	if (reserve_size > PRINTKRB_RECORD_MAX)
+		reserve_size = PRINTKRB_RECORD_MAX;
 
-// 	/* Extract log level or control flags. */
-// 	if (facility == 0)
-// 		printk_parse_prefix(&prefix_buf[0], &level, &flags);
+	/* Extract log level or control flags. */
+	if (facility == 0)
+		printk_parse_prefix(&prefix_buf[0], &level, &flags);
 
-// 	if (level == LOGLEVEL_DEFAULT)
-// 		level = default_message_loglevel;
+	// if (level == LOGLEVEL_DEFAULT)
+	// 	level = default_message_loglevel;
 
-// 	if (dev_info)
-// 		flags |= LOG_NEWLINE;
+	if (dev_info)
+		flags |= LOG_NEWLINE;
 
-// 	if (flags & LOG_CONT) {
-// 		prb_rec_init_wr(&r, reserve_size);
-// 		if (prb_reserve_in_last(&e, prb, &r, caller_id, PRINTKRB_RECORD_MAX)) {
-// 			text_len = printk_sprint(&r.text_buf[r.info->text_len], reserve_size,
-// 						 facility, &flags, fmt, args);
-// 			r.info->text_len += text_len;
+	// if (flags & LOG_CONT) {
+	// 	prb_rec_init_wr(&r, reserve_size);
+	// 	if (prb_reserve_in_last(&e, prb, &r, caller_id, PRINTKRB_RECORD_MAX)) {
+	// 		text_len = printk_sprint(&r.text_buf[r.info->text_len], reserve_size,
+	// 					 facility, &flags, fmt, args);
+	// 		r.info->text_len += text_len;
 
-// 			if (flags & LOG_NEWLINE) {
-// 				r.info->flags |= LOG_NEWLINE;
-// 				prb_final_commit(&e);
-// 			} else {
-// 				prb_commit(&e);
-// 			}
+	// 		if (flags & LOG_NEWLINE) {
+	// 			r.info->flags |= LOG_NEWLINE;
+	// 			prb_final_commit(&e);
+	// 		} else {
+	// 			prb_commit(&e);
+	// 		}
 
-// 			ret = text_len;
-// 			goto out;
-// 		}
-// 	}
+	// 		ret = text_len;
+	// 		goto out;
+	// 	}
+	// }
 
-// 	/*
-// 	 * Explicitly initialize the record before every prb_reserve() call.
-// 	 * prb_reserve_in_last() and prb_reserve() purposely invalidate the
-// 	 * structure when they fail.
-// 	 */
-// 	prb_rec_init_wr(&r, reserve_size);
-// 	if (!prb_reserve(&e, prb, &r)) {
-// 		/* truncate the message if it is too long for empty buffer */
-// 		truncate_msg(&reserve_size, &trunc_msg_len);
+	/*
+	 * Explicitly initialize the record before every prb_reserve() call.
+	 * prb_reserve_in_last() and prb_reserve() purposely invalidate the
+	 * structure when they fail.
+	 */
+	prb_rec_init_wr(&r, reserve_size);
+	// if (!prb_reserve(&e, prb, &r)) {
+	// 	/* truncate the message if it is too long for empty buffer */
+	// 	truncate_msg(&reserve_size, &trunc_msg_len);
 
-// 		prb_rec_init_wr(&r, reserve_size + trunc_msg_len);
-// 		if (!prb_reserve(&e, prb, &r))
-// 			goto out;
-// 	}
+	// 	prb_rec_init_wr(&r, reserve_size + trunc_msg_len);
+	// 	if (!prb_reserve(&e, prb, &r))
+	// 		goto out;
+	// }
 
-// 	/* fill message */
-// 	text_len = printk_sprint(&r.text_buf[0], reserve_size, facility, &flags, fmt, args);
-// 	if (trunc_msg_len)
-// 		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
-// 	r.info->text_len = text_len + trunc_msg_len;
-// 	r.info->facility = facility;
-// 	r.info->level = level & 7;
-// 	r.info->flags = flags & 0x1f;
-// 	r.info->ts_nsec = ts_nsec;
-// 	r.info->caller_id = caller_id;
-// 	if (dev_info)
-// 		memcpy(&r.info->dev_info, dev_info, sizeof(r.info->dev_info));
+	/* fill message */
+	text_len = printk_sprint(&r.text_buf[0], reserve_size, facility, &flags, fmt, args);
+	// if (trunc_msg_len)
+	// 	memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
+	r.info->text_len = text_len + trunc_msg_len;
+	r.info->facility = facility;
+	r.info->level = level & 7;
+	r.info->flags = flags & 0x1f;
+	r.info->ts_nsec = ts_nsec;
+	r.info->caller_id = caller_id;
+	if (dev_info)
+		memcpy(&r.info->dev_info, dev_info, sizeof(r.info->dev_info));
 
-// 	/* A message without a trailing newline can be continued. */
-// 	if (!(flags & LOG_NEWLINE))
-// 		prb_commit(&e);
-// 	else
-// 		prb_final_commit(&e);
+	// /* A message without a trailing newline can be continued. */
+	// if (!(flags & LOG_NEWLINE))
+	// 	prb_commit(&e);
+	// else
+	// 	prb_final_commit(&e);
 
-// 	ret = text_len + trunc_msg_len;
-// out:
-// 	printk_exit_irqrestore(recursion_ptr, irqflags);
-// 	return ret;
+	// ret = text_len + trunc_msg_len;
+out:
+	// printk_exit_irqrestore(recursion_ptr, irqflags);
+	return ret;
 }
 
 asmlinkage int vprintk_emit(int facility, int level,
 		const dev_printk_info_s *dev_info,
 		const char *fmt, va_list args)
 {
-	// int printed_len;
-	// bool in_sched = false;
+	int printed_len;
+	bool in_sched = false;
 
 	// /* Suppress unimportant messages after panic happens */
 	// if (unlikely(suppress_printk))
@@ -383,14 +384,14 @@ asmlinkage int vprintk_emit(int facility, int level,
 	//     atomic_read(&panic_cpu) != raw_smp_processor_id())
 	// 	return 0;
 
-	// if (level == LOGLEVEL_SCHED) {
-	// 	level = LOGLEVEL_DEFAULT;
-	// 	in_sched = true;
-	// }
+	if (level == LOGLEVEL_SCHED) {
+		level = LOGLEVEL_DEFAULT;
+		in_sched = true;
+	}
 
 	// printk_delay(level);
 
-	// printed_len = vprintk_store(facility, level, dev_info, fmt, args);
+	printed_len = vprintk_store(facility, level, dev_info, fmt, args);
 
 	// /* If called from the scheduler, we can not call up(). */
 	// if (!in_sched) {
@@ -414,13 +415,9 @@ asmlinkage int vprintk_emit(int facility, int level,
 	// }
 
 	// wake_up_klogd();
-	// return printed_len;
+	return printed_len;
 }
 
-int vprintk_default(const char *fmt, va_list args)
-{
-	return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, fmt, args);
-}
 
 
 /*
@@ -456,7 +453,10 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 	// }
 
 	/* No obstacles. */
-	return vprintk_default(fmt, args);
+	// int vprintk_default(const char *fmt, va_list args)
+	// {
+		return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, fmt, args);
+	// }
 }
 // /*
 //  *===================================================================================

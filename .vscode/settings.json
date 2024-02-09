@@ -63,6 +63,8 @@
         "nmi.h": "c",
         "ctype.h": "c",
         "clock.h": "c",
-        "kthread.h": "c"
+        "kthread.h": "c",
+        "internal.h": "c",
+        "kconfig.h": "c"
     }
 }

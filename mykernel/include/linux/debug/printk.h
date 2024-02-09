@@ -335,12 +335,12 @@
 	#define CONSOLE_LOGLEVEL_DEFAULT	CONFIG_CONSOLE_LOGLEVEL_DEFAULT
 	#define CONSOLE_LOGLEVEL_QUIET		CONFIG_CONSOLE_LOGLEVEL_QUIET
 
-	extern int console_printk[];
+	// extern int console_printk[];
 
-	#define console_loglevel			(console_printk[0])
-	#define default_message_loglevel	(console_printk[1])
-	#define minimum_console_loglevel	(console_printk[2])
-	#define default_console_loglevel	(console_printk[3])
+	// #define console_loglevel			(console_printk[0])
+	// #define default_message_loglevel	(console_printk[1])
+	// #define minimum_console_loglevel	(console_printk[2])
+	// #define default_console_loglevel	(console_printk[3])
 
 	extern void console_verbose(void);
 

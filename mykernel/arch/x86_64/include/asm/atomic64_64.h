@@ -8,7 +8,7 @@
 
 	/* The 64-bit atomic type */
 
-	// #define ATOMIC64_INIT(i)	{ (i) }
+	#define ATOMIC64_INIT(i)	{ (i) }
 
 	/**
 	 * arch_atomic64_read - read atomic64 variable

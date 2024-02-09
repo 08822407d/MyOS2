@@ -72,6 +72,9 @@ void __init e820__memory_setup(void)
 {
 	int i = 0;
 	e820_table.nr_entries = 0;
+
+	pr_info("BIOS-provided physical RAM map:\n");
+
 	for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
 		i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
 		i++, mmap_entp++)

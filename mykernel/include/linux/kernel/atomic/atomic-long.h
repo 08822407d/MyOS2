@@ -12,7 +12,7 @@
 	#include <asm/atomic64_64.h>
 
 	typedef atomic64_t atomic_long_t;
-	// #define ATOMIC_LONG_INIT(i)		ATOMIC64_INIT(i)
+	#define ATOMIC_LONG_INIT(i)		ATOMIC64_INIT(i)
 	// #define atomic_long_cond_read_acquire	atomic64_cond_read_acquire
 	// #define atomic_long_cond_read_relaxed	atomic64_cond_read_relaxed
 
