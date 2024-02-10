@@ -68,7 +68,7 @@
 	// #ifndef __HAVE_ARCH_STRRCHR
 		extern char * strrchr(const char *, int);
 	// #endif
-	// extern char * __must_check skip_spaces(const char *);
+	extern char * __must_check skip_spaces(const char *);
 
 	// extern char *strim(char *);
 

@@ -9,7 +9,7 @@
 	//  */
 	// #include <linux/kernel.h>
 	// #include <linux/threads.h>
-	// #include <linux/bitmap.h>
+	#include <linux/lib/bitmap.h>
 	// #include <linux/atomic.h>
 	// #include <linux/bug.h>
 	// #include <linux/gfp_types.h>

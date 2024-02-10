@@ -9,7 +9,7 @@
 #include <linux/device/pci.h>
 #include <linux/init/init.h>
 // #include <linux/acpi.h>
-// #include <linux/bitmap.h>
+#include <linux/lib/bitmap.h>
 // #include <linux/rcupdate.h>
 #include <asm/e820-api.h>
 #include <asm/pci_x86.h>

@@ -76,6 +76,8 @@
         "swab.h": "c",
         "export.h": "c",
         "compiler.h": "c",
-        "unaligned.h": "c"
+        "unaligned.h": "c",
+        "page.h": "c",
+        "init.h": "c"
     }
 }
