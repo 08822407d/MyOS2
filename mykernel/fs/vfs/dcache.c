@@ -25,7 +25,7 @@
 #include <linux/init/init.h>
 // #include <linux/hash.h>
 #include <linux/kernel/cache.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/security.h>
 // #include <linux/seqlock.h>
 #include <linux/mm/memblock.h>

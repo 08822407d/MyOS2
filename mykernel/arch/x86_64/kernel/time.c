@@ -16,7 +16,7 @@
 // #include <linux/irq.h>
 // #include <linux/i8253.h>
 #include <linux/kernel/time.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 
 // #include <asm/vsyscall.h>
 // #include <asm/x86_init.h>

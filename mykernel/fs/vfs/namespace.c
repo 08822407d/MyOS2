@@ -9,7 +9,7 @@
  */
 
 #include <linux/kernel/syscalls.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/capability.h>
 // #include <linux/mnt_namespace.h>
 // #include <linux/user_namespace.h>

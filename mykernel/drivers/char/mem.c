@@ -25,7 +25,7 @@
 #include <linux/mm/shmem_fs.h>
 // #include <linux/splice.h>
 #include <linux/mm/pfn.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/io.h>
 // #include <linux/uio.h>
 #include <linux/kernel/uaccess.h>

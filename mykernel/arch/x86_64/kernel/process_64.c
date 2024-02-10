@@ -29,7 +29,7 @@
 // #include <linux/user.h>
 // #include <linux/interrupt.h>
 #include <linux/kernel/delay.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/ptrace.h>
 // #include <linux/notifier.h>
 // #include <linux/kprobes.h>

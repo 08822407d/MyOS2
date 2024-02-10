@@ -34,6 +34,9 @@
 
 	#include <uapi/linux/kernel.h>
 
+
+	#include <linux/kernel/hex.h>
+
 	#define STACK_MAGIC	0xdeadbeef
 
 	/**
@@ -221,51 +224,51 @@
 	extern __printf(2, 0)
 	const char *kvasprintf_const(gfp_t gfp, const char *fmt, va_list args);
 
-	// extern __scanf(2, 3)
-	// int sscanf(const char *, const char *, ...);
-	// extern __scanf(2, 0)
-	// int vsscanf(const char *, const char *, va_list);
+	extern __scanf(2, 3)
+	int sscanf(const char *, const char *, ...);
+	extern __scanf(2, 0)
+	int vsscanf(const char *, const char *, va_list);
 
-	// extern int no_hash_pointers_enable(char *str);
+	extern int no_hash_pointers_enable(char *str);
 
-	// extern int get_option(char **str, int *pint);
-	// extern char *get_options(const char *str, int nints, int *ints);
-	// extern unsigned long long memparse(const char *ptr, char **retptr);
-	// extern bool parse_option_str(const char *str, const char *option);
-	// extern char *next_arg(char *args, char **param, char **val);
+	extern int get_option(char **str, int *pint);
+	extern char *get_options(const char *str, int nints, int *ints);
+	extern unsigned long long memparse(const char *ptr, char **retptr);
+	extern bool parse_option_str(const char *str, const char *option);
+	extern char *next_arg(char *args, char **param, char **val);
 
-	// extern int core_kernel_text(unsigned long addr);
-	// extern int __kernel_text_address(unsigned long addr);
-	// extern int kernel_text_address(unsigned long addr);
-	// extern int func_ptr_is_kernel_text(void *ptr);
+	extern int core_kernel_text(unsigned long addr);
+	extern int __kernel_text_address(unsigned long addr);
+	extern int kernel_text_address(unsigned long addr);
+	extern int func_ptr_is_kernel_text(void *ptr);
 
-	// extern void bust_spinlocks(int yes);
+	extern void bust_spinlocks(int yes);
 
-	// extern int root_mountflags;
+	extern int root_mountflags;
 
-	// extern bool early_boot_irqs_disabled;
+	extern bool early_boot_irqs_disabled;
 
-	// /*
-	// * Values used for system_state. Ordering of the states must not be changed
-	// * as code checks for <, <=, >, >= STATE.
-	// */
-	// extern enum system_states {
-	// 	SYSTEM_BOOTING,
-	// 	SYSTEM_SCHEDULING,
-	// 	SYSTEM_FREEING_INITMEM,
-	// 	SYSTEM_RUNNING,
-	// 	SYSTEM_HALT,
-	// 	SYSTEM_POWER_OFF,
-	// 	SYSTEM_RESTART,
-	// 	SYSTEM_SUSPEND,
-	// } system_state;
+	/*
+	 * Values used for system_state. Ordering of the states must not be changed
+	 * as code checks for <, <=, >, >= STATE.
+	 */
+	extern enum system_states {
+		SYSTEM_BOOTING,
+		SYSTEM_SCHEDULING,
+		SYSTEM_FREEING_INITMEM,
+		SYSTEM_RUNNING,
+		SYSTEM_HALT,
+		SYSTEM_POWER_OFF,
+		SYSTEM_RESTART,
+		SYSTEM_SUSPEND,
+	} system_state;
 
 	// extern const char hex_asc[];
 	// #define hex_asc_lo(x)	hex_asc[((x) & 0x0f)]
 	// #define hex_asc_hi(x)	hex_asc[((x) & 0xf0) >> 4]
 
-	// static inline char *hex_byte_pack(char *buf, u8 byte)
-	// {
+	// static inline char
+	// *hex_byte_pack(char *buf, u8 byte) {
 	// 	*buf++ = hex_asc_hi(byte);
 	// 	*buf++ = hex_asc_lo(byte);
 	// 	return buf;
@@ -275,8 +278,8 @@
 	// #define hex_asc_upper_lo(x)	hex_asc_upper[((x) & 0x0f)]
 	// #define hex_asc_upper_hi(x)	hex_asc_upper[((x) & 0xf0) >> 4]
 
-	// static inline char *hex_byte_pack_upper(char *buf, u8 byte)
-	// {
+	// static inline char
+	// *hex_byte_pack_upper(char *buf, u8 byte) {
 	// 	*buf++ = hex_asc_upper_hi(byte);
 	// 	*buf++ = hex_asc_upper_lo(byte);
 	// 	return buf;

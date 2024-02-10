@@ -3,7 +3,7 @@
 #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/compiler.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/err.h>
 #include <linux/kernel/sched.h>
 #include <linux/sched/mm.h>

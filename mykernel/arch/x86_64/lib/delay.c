@@ -12,7 +12,7 @@
  *	we have to worry about.
  */
 
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/timex.h>
 // #include <linux/preempt.h>

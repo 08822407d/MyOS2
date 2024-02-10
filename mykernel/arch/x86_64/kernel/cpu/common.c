@@ -8,7 +8,7 @@
 #include <linux/kernel/linkage.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/smp/percpu.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>

@@ -10,7 +10,7 @@
  * most "normal" filesystems (but you don't /have/ to use this:
  * the NFS filesystem used to do this differently, for example)
  */
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/compiler.h>
 // #include <linux/dax.h>
 #include <linux/fs/fs.h>

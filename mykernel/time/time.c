@@ -24,7 +24,7 @@
  *	with nanosecond accuracy
  */
 
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/timex.h>
 // #include <linux/capability.h>

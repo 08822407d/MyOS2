@@ -19,7 +19,7 @@
  */
 
 // #include <linux/kernel_stat.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/interrupt.h>
 #include <linux/smp/percpu.h>
 #include <linux/init/init.h>

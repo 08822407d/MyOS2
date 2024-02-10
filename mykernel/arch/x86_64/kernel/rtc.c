@@ -4,7 +4,7 @@
  */
 // #include <linux/platform_device.h>
 #include <linux/kernel/mc146818rtc.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/pnp.h>
 
 // #include <asm/vsyscall.h>

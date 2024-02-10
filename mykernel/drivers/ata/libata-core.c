@@ -50,7 +50,7 @@
 // #include <scsi/scsi_host.h>
 #include <linux/drivers/libata.h>
 // #include <asm/byteorder.h>
-// #include <asm/unaligned.h>
+#include <asm-generic/unaligned.h>
 // #include <linux/cdrom.h>
 // #include <linux/ratelimit.h>
 // #include <linux/leds.h>

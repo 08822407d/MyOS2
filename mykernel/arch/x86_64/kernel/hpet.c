@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 // #include <linux/clockchips.h>
 // #include <linux/interrupt.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/hpet.h>
 #include <linux/kernel/cpu.h>

@@ -65,6 +65,17 @@
         "clock.h": "c",
         "kthread.h": "c",
         "internal.h": "c",
-        "kconfig.h": "c"
+        "kconfig.h": "c",
+        "printk_ringbuffer.h": "c",
+        "math64.h": "c",
+        "uuid.h": "c",
+        "dcache.h": "c",
+        "blkdev.h": "c",
+        "byteorder.h": "c",
+        "little_endian.h": "c",
+        "swab.h": "c",
+        "export.h": "c",
+        "compiler.h": "c",
+        "unaligned.h": "c"
     }
 }

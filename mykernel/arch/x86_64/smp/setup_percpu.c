@@ -2,7 +2,7 @@
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel/kernel.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/init/init.h>
 #include <linux/mm/memblock.h>
 #include <linux/smp/percpu.h>

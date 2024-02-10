@@ -54,7 +54,7 @@
 // #include <linux/memremap.h>
 // #include <linux/ksm.h>
 #include <linux/mm/rmap.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/delayacct.h>
 #include <linux/init/init.h>
 // #include <linux/pfn_t.h>

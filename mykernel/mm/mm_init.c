@@ -11,7 +11,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/init/init.h>
 // #include <linux/kobject.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/memory.h>
 // #include <linux/notifier.h>
 #include <linux/kernel/sched.h>

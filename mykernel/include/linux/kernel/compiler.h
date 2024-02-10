@@ -245,8 +245,8 @@
 		// }
 	#endif /* __ASSEMBLY__ */
 
-	// /* &a[0] degrades to a pointer: a different type from an array */
-	// #define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
+	/* &a[0] degrades to a pointer: a different type from an array */
+	#define __must_be_array(a)	BUILD_BUG_ON_ZERO(__same_type((a), &(a)[0]))
 
 	/*
 	 * This is needed in functions which generate the stack canary, see

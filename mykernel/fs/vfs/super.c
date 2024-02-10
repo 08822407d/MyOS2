@@ -21,7 +21,7 @@
  *  Heavily rewritten for 'one fs - one tree' dcache architecture. AV, Mar 2000
  */
 
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/slab.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/mount.h>

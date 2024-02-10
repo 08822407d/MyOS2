@@ -203,3 +203,83 @@ int tty_init(void)
 // #endif
 	return 0;
 }
+
+
+
+
+/*
+ * Initialize the console device. This is called *early*, so
+ * we can't necessarily depend on lots of kernel help here.
+ * Just do some early initializations, and do the complex setup
+ * later.
+ */
+void __init console_init(void)
+{
+extern void myos_init_video();
+	myos_init_video();
+
+
+	// int ret;
+	// initcall_t call;
+	// initcall_entry_t *ce;
+
+	// /* Setup the default TTY line discipline. */
+	// n_tty_init();
+
+	// /*
+	//  * set up the console device so that later boot sequences can
+	//  * inform about problems etc..
+	//  */
+	// ce = __con_initcall_start;
+	// trace_initcall_level("console");
+	// while (ce < __con_initcall_end) {
+	// 	call = initcall_from_entry(ce);
+	// 	trace_initcall_start(call);
+	// 	ret = call();
+	// 	trace_initcall_finish(call, ret);
+	// 	ce++;
+	// }
+}
+
+
+#include <asm/tlbflush.h>
+
+#include <obsolete/ktypes.h>
+#include <obsolete/printk.h>
+
+extern framebuffer_s	framebuffer;
+extern position_t Pos;
+
+void myos_init_video()
+{	
+	Pos.FB_addr = (unsigned int *)framebuffer.FB_virbase;
+	Pos.FB_length = framebuffer.FB_size;
+	Pos.XResolution = framebuffer.X_Resolution;
+	Pos.YResolution = framebuffer.Y_Resolution;
+
+	Pos.XPosition = 0;
+	Pos.YPosition = 0;
+	Pos.XCharSize = 8;
+	Pos.YCharSize = 16;
+
+	spin_lock_init(&Pos.lock);
+	// clean screen
+	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
+
+	char linebuf[4096] = {0};
+	int i;
+	for (i = 0; i < Pos.XResolution / Pos.XCharSize ; i++)
+		linebuf[i] = ' ';
+	color_printk(BLACK, GREEN, "%s", linebuf);
+	color_printk(BLACK, GREEN, "\n");
+}
+
+// map VBE frame_buffer, this part should not be
+// add into any memory manage unit
+void myos_init_VBE_mapping()
+{
+	u64 start, end;
+	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
+	myos_ioremap(start, PFN_PHYS(PFN_UP(framebuffer.FB_size)));
+	flush_tlb_local();
+}

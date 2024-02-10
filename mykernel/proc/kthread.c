@@ -20,7 +20,7 @@
 // #include <linux/cpuset.h>
 #include <uapi/linux/unistd.h>
 #include <linux/fs/file.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/mutex.h>
 #include <linux/kernel/slab.h>
 // #include <linux/freezer.h>

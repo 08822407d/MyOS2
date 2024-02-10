@@ -56,417 +56,252 @@
 // #define CREATE_TRACE_POINTS
 // #include <trace/events/printk.h>
 
-#include "printk_ringbuffer.h"
+// #include "printk_ringbuffer.h"
 // #include "console_cmdline.h"
 // #include "braille.h"
-#include "internal.h"
+// #include "internal.h"
 
 
 #include <linux/kernel/kconfig.h>
 
 
-
 /*
- * The printk log buffer consists of a sequenced collection of records, each
- * containing variable length message text. Every record also contains its
- * own meta-data (@info).
- *
- * Every record meta-data carries the timestamp in microseconds, as well as
- * the standard userspace syslog level and syslog facility. The usual kernel
- * messages use LOG_KERN; userspace-injected messages always carry a matching
- * syslog facility, by default LOG_USER. The origin of every message can be
- * reliably determined that way.
- *
- * The human readable log message of a record is available in @text, the
- * length of the message text in @text_len. The stored message is not
- * terminated.
- *
- * Optionally, a record can carry a dictionary of properties (key/value
- * pairs), to provide userspace with a machine-readable message context.
- *
- * Examples for well-defined, commonly used property names are:
- *   DEVICE=b12:8               device identifier
- *                                b12:8         block dev_t
- *                                c127:3        char dev_t
- *                                n8            netdev ifindex
- *                                +sound:card0  subsystem:devname
- *   SUBSYSTEM=pci              driver-core subsystem name
- *
- * Valid characters in property names are [a-zA-Z0-9.-_]. Property names
- * and values are terminated by a '\0' character.
- *
- * Example of record values:
- *   record.text_buf                = "it's a line" (unterminated)
- *   record.info.seq                = 56
- *   record.info.ts_nsec            = 36863
- *   record.info.text_len           = 11
- *   record.info.facility           = 0 (LOG_KERN)
- *   record.info.flags              = 0
- *   record.info.level              = 3 (LOG_ERR)
- *   record.info.caller_id          = 299 (task 299)
- *   record.info.dev_info.subsystem = "pci" (terminated)
- *   record.info.dev_info.device    = "+pci:0000:00:01.0" (terminated)
- *
- * The 'printk_info_s' buffer must never be directly exported to
- * userspace, it is a kernel-private implementation detail that might
- * need to be changed in the future, when the requirements change.
- *
- * /dev/kmsg exports the structured data in the following line format:
- *   "<level>,<sequnum>,<timestamp>,<contflag>[,additional_values, ... ];<message text>\n"
- *
- * Users of the export format should ignore possible additional values
- * separated by ',', and find the message after the ';' character.
- *
- * The optional key/value pairs are attached as continuation lines starting
- * with a space character and terminated by a newline. All possible
- * non-prinatable characters are escaped in the "\xff" notation.
+ * Architectures can override it:
  */
+void asmlinkage early_printk(const char *fmt, ...)
+{
+}
 
-// /* syslog_lock protects syslog_* variables and write access to clear_seq. */
-// static DEFINE_MUTEX(syslog_lock);
+#define __LOG_BUF_LEN				(1 << CONFIG_LOG_BUF_SHIFT)
+
+/* printk's without a loglevel use this.. */
+// #define DEFAULT_MESSAGE_LOGLEVEL CONFIG_DEFAULT_MESSAGE_LOGLEVEL
+#define DEFAULT_MESSAGE_LOGLEVEL	7
+
+/* We show everything that is MORE important than this.. */
+#define MINIMUM_CONSOLE_LOGLEVEL	1 /* Minimum loglevel we let people use */
+#define DEFAULT_CONSOLE_LOGLEVEL	7 /* anything MORE serious than KERN_DEBUG */
 
 // DECLARE_WAIT_QUEUE_HEAD(log_wait);
-// /* All 3 protected by @syslog_lock. */
-// /* the next printk record to read by syslog(READ) or /proc/kmsg */
-// static u64 syslog_seq;
-// static size_t syslog_partial;
-// static bool syslog_time;
 
-// struct latched_seq {
-// 	seqcount_latch_t	latch;
-// 	u64			val[2];
-// };
+int console_printk[4] = {
+	DEFAULT_CONSOLE_LOGLEVEL,	/* console_loglevel */
+	DEFAULT_MESSAGE_LOGLEVEL,	/* default_message_loglevel */
+	MINIMUM_CONSOLE_LOGLEVEL,	/* minimum_console_loglevel */
+	DEFAULT_CONSOLE_LOGLEVEL,	/* default_console_loglevel */
+};
 
 // /*
-//  * The next printk record to read after the last 'clear' command. There are
-//  * two copies (updated with seqcount_latch) so that reads can locklessly
-//  * access a valid value. Writers are synchronized by @syslog_lock.
+//  * Low level drivers may need that to know if they can schedule in
+//  * their unblank() callback or not. So let's export it.
 //  */
-// static struct latched_seq clear_seq = {
-// 	.latch		= SEQCNT_LATCH_ZERO(clear_seq.latch),
-// 	.val[0]		= 0,
-// 	.val[1]		= 0,
-// };
+// int oops_in_progress;
 
-#define LOG_LEVEL(v)		((v) & 0x07)
-#define LOG_FACILITY(v)		((v) >> 3 & 0xff)
-
-/* record buffer */
-#define LOG_ALIGN			__alignof__(unsigned long)
-#define __LOG_BUF_LEN		(1 << CONFIG_LOG_BUF_SHIFT)
-#define LOG_BUF_LEN_MAX		(u32)(1 << 31)
-static char		__log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
-static char		*log_buf = __log_buf;
-static u32		log_buf_len = __LOG_BUF_LEN;
-	
+// /*
+//  * console_sem protects the console_drivers list, and also
+//  * provides serialisation for access to the entire console
+//  * driver system.
+//  */
+// static DEFINE_SEMAPHORE(console_sem);
+// struct console *console_drivers;
 
 /*
- * Define the average message size. This only affects the number of
- * descriptors that will be available. Underestimating is better than
- * overestimating (too many available descriptors is better than not enough).
+ * This is used for debugging the mess that is the VT code by
+ * keeping track if we have the console semaphore held. It's
+ * definitely not the perfect debug tool (we don't know if _WE_
+ * hold it are racing, but it helps tracking those weird code
+ * path in the console code where we end up in places I want
+ * locked without the console sempahore held
  */
-#define PRB_AVGBITS 5	/* 32 character average length */
+static int console_locked, console_suspended;
 
-#if CONFIG_LOG_BUF_SHIFT <= PRB_AVGBITS
-#error CONFIG_LOG_BUF_SHIFT value too small.
-#endif
-_DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
-		PRB_AVGBITS, &__log_buf[0]);
+/*
+ * logbuf_lock protects log_buf, log_start, log_end, con_start and logged_chars
+ * It is also used in interesting ways to provide interlocking in
+ * console_unlock();.
+ */
+static DEFINE_SPINLOCK(logbuf_lock);
 
-static prb_s printk_rb_dynamic;
+/*
+ * The indices into log_buf are not constrained to log_buf_len - they
+ * must be masked before subscripting
+ */
+static unsigned log_start;	/* Index into log_buf: next char to be read by syslog() */
+static unsigned con_start;	/* Index into log_buf: next char to be sent to consoles */
+static unsigned log_end;	/* Index into log_buf: most-recently-written-char + 1 */
 
-static prb_s *prb = &printk_rb_static;
 
+
+static char		__log_buf[__LOG_BUF_LEN];
+static char		*log_buf = __log_buf;
+static int		log_buf_len = __LOG_BUF_LEN;
+static unsigned	logged_chars; /* Number of chars produced since last read+clear operation */
+static int		saved_console_loglevel = -1;
+
+#define LOG_BUF_MASK	(log_buf_len-1)
+#define LOG_BUF(idx)	(log_buf[(idx) & LOG_BUF_MASK])
+
+
+
+
+/*
+ * Parse the syslog header <[0-9]*>. The decimal value represents 32bit, the
+ * lower 3 bit are the log level, the rest are the log facility. In case
+ * userspace passes usual userspace syslog messages to /dev/kmsg or
+ * /dev/ttyprintk, the log prefix might contain the facility. Printk needs
+ * to extract the correct log level for in-kernel processing, and not mangle
+ * the original value.
+ *
+ * If a prefix is found, the length of the prefix is returned. If 'level' is
+ * passed, it will be filled in with the log level without a possible facility
+ * value. If 'special' is passed, the special printk prefix chars are accepted
+ * and returned. If no valid header is found, 0 is returned and the passed
+ * variables are not touched.
+ */
+static size_t log_prefix(const char *p, unsigned int *level, char *special)
+{
+	// unsigned int lev = 0;
+	// char sp = '\0';
+	// size_t len;
+
+	// if (p[0] != '<' || !p[1])
+	// 	return 0;
+	// if (p[2] == '>') {
+	// 	/* usual single digit level number or special char */
+	// 	switch (p[1]) {
+	// 	case '0' ... '7':
+	// 		lev = p[1] - '0';
+	// 		break;
+	// 	case 'c': /* KERN_CONT */
+	// 	case 'd': /* KERN_DEFAULT */
+	// 		sp = p[1];
+	// 		break;
+	// 	default:
+	// 		return 0;
+	// 	}
+	// 	len = 3;
+	// } else {
+	// 	/* multi digit including the level and facility number */
+	// 	char *endp = NULL;
+
+	// 	if (p[1] < '0' && p[1] > '9')
+	// 		return 0;
+
+	// 	lev = (simple_strtoul(&p[1], &endp, 10) & 7);
+	// 	if (endp == NULL || endp[0] != '>')
+	// 		return 0;
+	// 	len = (endp + 1) - p;
+	// }
+
+	// /* do not accept special char if not asked for */
+	// if (sp && !special)
+	// 	return 0;
+
+	// if (special) {
+	// 	*special = sp;
+	// 	/* return special char, do not touch level */
+	// 	if (sp)
+	// 		return len;
+	// }
+
+	// if (level)
+	// 	*level = lev;
+	// return len;
+	return 1;
+}
+
+/*
+ * Call the console drivers, asking them to write out
+ * log_buf[start] to log_buf[end - 1].
+ * The console_lock must be held.
+ */
+static void call_console_drivers(unsigned start, unsigned end)
+{
+	unsigned cur_index, start_print;
+	static int msg_level = -1;
+
+	BUG_ON(((int)(start - end)) > 0);
+
+	cur_index = start;
+	start_print = start;
+	while (cur_index != end) {
+		if (msg_level < 0 && ((end - cur_index) > 2)) {
+			/* strip log prefix */
+			cur_index += log_prefix(&LOG_BUF(cur_index), &msg_level, NULL);
+			start_print = cur_index;
+		}
+		while (cur_index != end) {
+			char c = LOG_BUF(cur_index);
+
+			cur_index++;
+			if (c == '\n') {
+				if (msg_level < 0) {
+					/*
+					 * printk() has already given us loglevel tags in
+					 * the buffer.  This code is here in case the
+					 * log buffer has wrapped right round and scribbled
+					 * on those tags
+					 */
+					msg_level = default_message_loglevel;
+				}
+				// _call_console_drivers(start_print, cur_index, msg_level);
+				msg_level = -1;
+				start_print = cur_index;
+				break;
+			}
+		}
+	}
+	// _call_console_drivers(start_print, end, msg_level);
+}
+
+static void emit_log_char(char c)
+{
+	LOG_BUF(log_end) = c;
+	log_end++;
+	if (log_end - log_start > log_buf_len)
+		log_start = log_end - log_buf_len;
+	if (log_end - con_start > log_buf_len)
+		con_start = log_end - log_buf_len;
+	if (logged_chars < log_buf_len)
+		logged_chars++;
+}
 
 
 /**
- * printk_parse_prefix - Parse level and control flags.
+ * printk - print a kernel message
+ * @fmt: format string
  *
- * @text:     The terminated text message.
- * @level:    A pointer to the current level value, will be updated.
- * @flags:    A pointer to the current printk_info flags, will be updated.
+ * This is printk().  It can be called from any context.  We want it to work.
  *
- * @level may be NULL if the caller is not interested in the parsed value.
- * Otherwise the variable pointed to by @level must be set to
- * LOGLEVEL_DEFAULT in order to be updated with the parsed value.
+ * We try to grab the console_lock.  If we succeed, it's easy - we log the output and
+ * call the console drivers.  If we fail to get the semaphore we place the output
+ * into the log buffer and return.  The current holder of the console_sem will
+ * notice the new output in console_unlock(); and will send it to the
+ * consoles before releasing the lock.
  *
- * @flags may be NULL if the caller is not interested in the parsed value.
- * Otherwise the variable pointed to by @flags will be OR'd with the parsed
- * value.
+ * One effect of this deferred printing is that code which calls printk() and
+ * then changes console_loglevel may break. This is because console_loglevel
+ * is inspected when the actual printing occurs.
  *
- * Return: The length of the parsed level and control flags.
+ * See also:
+ * printf(3)
+ *
+ * See the vsnprintf() documentation for format string extensions over C99.
  */
-u16 printk_parse_prefix(const char *text, int *level,
-			enum printk_info_flags *flags)
-{
-	u16 prefix_len = 0;
-	int kern_level;
 
-	while (*text) {
-		kern_level = printk_get_level(text);
-		if (!kern_level)
-			break;
-
-		switch (kern_level) {
-		case '0' ... '7':
-			if (level && *level == LOGLEVEL_DEFAULT)
-				*level = kern_level - '0';
-			break;
-		case 'c':	/* KERN_CONT */
-			if (flags)
-				*flags |= LOG_CONT;
-		}
-
-		prefix_len += 2;
-		text += 2;
-	}
-
-	return prefix_len;
-}
-
-__printf(5, 0)
-static u16 printk_sprint(char *text, u16 size, int facility,
-			 enum printk_info_flags *flags, const char *fmt,
-			 va_list args)
-{
-	u16 text_len;
-
-	text_len = vscnprintf(text, size, fmt, args);
-
-	/* Mark and strip a trailing newline. */
-	if (text_len && text[text_len - 1] == '\n') {
-		text_len--;
-		*flags |= LOG_NEWLINE;
-	}
-
-	/* Strip log level and control flags. */
-	if (facility == 0) {
-		u16 prefix_len;
-
-		prefix_len = printk_parse_prefix(text, NULL, NULL);
-		if (prefix_len) {
-			text_len -= prefix_len;
-			memmove(text, text + prefix_len, text_len);
-		}
-	}
-
-	// trace_console(text, text_len);
-
-	return text_len;
-}
-
-__printf(4, 0)
-int vprintk_store(int facility, int level,
-		const dev_printk_info_s *dev_info,
-		const char *fmt, va_list args)
-{
-	prb_rsvd_ent_s e;
-	enum printk_info_flags flags = 0;
-	printk_record_s r;
-	unsigned long irqflags;
-	u16 trunc_msg_len = 0;
-	char prefix_buf[8];
-	u8 *recursion_ptr;
-	u16 reserve_size;
-	va_list args2;
-	u32 caller_id;
-	u16 text_len;
-	int ret = 0;
-	u64 ts_nsec;
-
-	// if (!printk_enter_irqsave(recursion_ptr, irqflags))
-	// 	return 0;
-
-	/*
-	 * Since the duration of printk() can vary depending on the message
-	 * and state of the ringbuffer, grab the timestamp now so that it is
-	 * close to the call of printk(). This provides a more deterministic
-	 * timestamp with respect to the caller.
-	 */
-	ts_nsec = local_clock();
-
-	// caller_id = printk_caller_id();
-
-	/*
-	 * The sprintf needs to come first since the syslog prefix might be
-	 * passed in as a parameter. An extra byte must be reserved so that
-	 * later the vscnprintf() into the reserved buffer has room for the
-	 * terminating '\0', which is not counted by vsnprintf().
-	 */
-	va_copy(args2, args);
-	reserve_size = vsnprintf(&prefix_buf[0], sizeof(prefix_buf), fmt, args2) + 1;
-	va_end(args2);
-
-	if (reserve_size > PRINTKRB_RECORD_MAX)
-		reserve_size = PRINTKRB_RECORD_MAX;
-
-	/* Extract log level or control flags. */
-	if (facility == 0)
-		printk_parse_prefix(&prefix_buf[0], &level, &flags);
-
-	// if (level == LOGLEVEL_DEFAULT)
-	// 	level = default_message_loglevel;
-
-	if (dev_info)
-		flags |= LOG_NEWLINE;
-
-	// if (flags & LOG_CONT) {
-	// 	prb_rec_init_wr(&r, reserve_size);
-	// 	if (prb_reserve_in_last(&e, prb, &r, caller_id, PRINTKRB_RECORD_MAX)) {
-	// 		text_len = printk_sprint(&r.text_buf[r.info->text_len], reserve_size,
-	// 					 facility, &flags, fmt, args);
-	// 		r.info->text_len += text_len;
-
-	// 		if (flags & LOG_NEWLINE) {
-	// 			r.info->flags |= LOG_NEWLINE;
-	// 			prb_final_commit(&e);
-	// 		} else {
-	// 			prb_commit(&e);
-	// 		}
-
-	// 		ret = text_len;
-	// 		goto out;
-	// 	}
-	// }
-
-	/*
-	 * Explicitly initialize the record before every prb_reserve() call.
-	 * prb_reserve_in_last() and prb_reserve() purposely invalidate the
-	 * structure when they fail.
-	 */
-	prb_rec_init_wr(&r, reserve_size);
-	// if (!prb_reserve(&e, prb, &r)) {
-	// 	/* truncate the message if it is too long for empty buffer */
-	// 	truncate_msg(&reserve_size, &trunc_msg_len);
-
-	// 	prb_rec_init_wr(&r, reserve_size + trunc_msg_len);
-	// 	if (!prb_reserve(&e, prb, &r))
-	// 		goto out;
-	// }
-
-	/* fill message */
-	text_len = printk_sprint(&r.text_buf[0], reserve_size, facility, &flags, fmt, args);
-	// if (trunc_msg_len)
-	// 	memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
-	r.info->text_len = text_len + trunc_msg_len;
-	r.info->facility = facility;
-	r.info->level = level & 7;
-	r.info->flags = flags & 0x1f;
-	r.info->ts_nsec = ts_nsec;
-	r.info->caller_id = caller_id;
-	if (dev_info)
-		memcpy(&r.info->dev_info, dev_info, sizeof(r.info->dev_info));
-
-	// /* A message without a trailing newline can be continued. */
-	// if (!(flags & LOG_NEWLINE))
-	// 	prb_commit(&e);
-	// else
-	// 	prb_final_commit(&e);
-
-	// ret = text_len + trunc_msg_len;
-out:
-	// printk_exit_irqrestore(recursion_ptr, irqflags);
-	return ret;
-}
-
-asmlinkage int vprintk_emit(int facility, int level,
-		const dev_printk_info_s *dev_info,
-		const char *fmt, va_list args)
-{
-	int printed_len;
-	bool in_sched = false;
-
-	// /* Suppress unimportant messages after panic happens */
-	// if (unlikely(suppress_printk))
-	// 	return 0;
-
-	// if (unlikely(suppress_panic_printk) &&
-	//     atomic_read(&panic_cpu) != raw_smp_processor_id())
-	// 	return 0;
-
-	if (level == LOGLEVEL_SCHED) {
-		level = LOGLEVEL_DEFAULT;
-		in_sched = true;
-	}
-
-	// printk_delay(level);
-
-	printed_len = vprintk_store(facility, level, dev_info, fmt, args);
-
-	// /* If called from the scheduler, we can not call up(). */
-	// if (!in_sched) {
-	// 	/*
-	// 	 * The caller may be holding system-critical or
-	// 	 * timing-sensitive locks. Disable preemption during
-	// 	 * printing of all remaining records to all consoles so that
-	// 	 * this context can return as soon as possible. Hopefully
-	// 	 * another printk() caller will take over the printing.
-	// 	 */
-	// 	preempt_disable();
-	// 	/*
-	// 	 * Try to acquire and then immediately release the console
-	// 	 * semaphore. The release will print out buffers. With the
-	// 	 * spinning variant, this context tries to take over the
-	// 	 * printing from another printing context.
-	// 	 */
-	// 	if (console_trylock_spinning())
-	// 		console_unlock();
-	// 	preempt_enable();
-	// }
-
-	// wake_up_klogd();
-	return printed_len;
-}
-
-
-
-/*
- * content of <printk/printk_safe.c>
- *===================================================================================
- */
-// static DEFINE_PER_CPU(int, printk_context);
-
-// /* Can be preempted by NMI. */
-// void __printk_safe_enter(void)
-// {
-// 	this_cpu_inc(printk_context);
-// }
-
-// /* Can be preempted by NMI. */
-// void __printk_safe_exit(void)
-// {
-// 	this_cpu_dec(printk_context);
-// }
-
-asmlinkage int vprintk(const char *fmt, va_list args)
-{
-	// /*
-	//  * Use the main logbuf even in NMI. But avoid calling console
-	//  * drivers that might have their own locks.
-	//  */
-	// if (this_cpu_read(printk_context) || in_nmi()) {
-	// 	int len;
-
-	// 	len = vprintk_store(0, LOGLEVEL_DEFAULT, NULL, fmt, args);
-	// 	defer_console_output();
-	// 	return len;
-	// }
-
-	/* No obstacles. */
-	// int vprintk_default(const char *fmt, va_list args)
-	// {
-		return vprintk_emit(0, LOGLEVEL_DEFAULT, NULL, fmt, args);
-	// }
-}
-// /*
-//  *===================================================================================
-//  */
-
-asmlinkage __visible int _printk(const char *fmt, ...)
+asmlinkage int printk(const char *fmt, ...)
 {
 	va_list args;
 	int r;
 
+// #ifdef CONFIG_KGDB_KDB
+// 	if (unlikely(kdb_trap_printk)) {
+// 		va_start(args, fmt);
+// 		r = vkdb_printf(fmt, args);
+// 		va_end(args);
+// 		return r;
+// 	}
+// #endif
 	va_start(args, fmt);
 	r = vprintk(fmt, args);
 	va_end(args);
@@ -475,79 +310,164 @@ asmlinkage __visible int _printk(const char *fmt, ...)
 }
 
 
+static const char	recursion_bug_msg [] =
+		KERN_CRIT "BUG: recent printk recursion!\n";
+static int		recursion_bug;
+static int		new_text_line = 1;
+static char		printk_buf[1024];
 
-/*
- * Initialize the console device. This is called *early*, so
- * we can't necessarily depend on lots of kernel help here.
- * Just do some early initializations, and do the complex setup
- * later.
- */
-void __init console_init(void)
+int printk_delay_msec __read_mostly;
+
+static inline void printk_delay(void)
 {
-extern void myos_init_video();
-	myos_init_video();
+	if (unlikely(printk_delay_msec)) {
+		int m = printk_delay_msec;
 
+		while (m--) {
+			mdelay(1);
+			// touch_nmi_watchdog();
+		}
+	}
+}
 
-	// int ret;
-	// initcall_t call;
-	// initcall_entry_t *ce;
+asmlinkage int vprintk(const char *fmt, va_list args)
+{
+	int printed_len = 0;
+	int current_log_level = default_message_loglevel;
+	unsigned long flags;
+	int this_cpu;
+	char *p;
+	size_t plen;
+	char special;
 
-	// /* Setup the default TTY line discipline. */
-	// n_tty_init();
+	// boot_delay_msec();
+	printk_delay();
+
+	// preempt_disable();
+	// /* This stops the holder of console_sem just where we want him */
+	// raw_local_irq_save(flags);
+	// this_cpu = smp_processor_id();
 
 	// /*
-	//  * set up the console device so that later boot sequences can
-	//  * inform about problems etc..
+	//  * Ouch, printk recursed into itself!
 	//  */
-	// ce = __con_initcall_start;
-	// trace_initcall_level("console");
-	// while (ce < __con_initcall_end) {
-	// 	call = initcall_from_entry(ce);
-	// 	trace_initcall_start(call);
-	// 	ret = call();
-	// 	trace_initcall_finish(call, ret);
-	// 	ce++;
+	// if (unlikely(printk_cpu == this_cpu)) {
+	// 	/*
+	// 	 * If a crash is occurring during printk() on this CPU,
+	// 	 * then try to get the crash message out but make sure
+	// 	 * we can't deadlock. Otherwise just return to avoid the
+	// 	 * recursion and return - but flag the recursion so that
+	// 	 * it can be printed at the next appropriate moment:
+	// 	 */
+	// 	if (!oops_in_progress) {
+	// 		recursion_bug = 1;
+	// 		goto out_restore_irqs;
+	// 	}
+	// 	zap_locks();
 	// }
-}
 
+	// lockdep_off();
+	// spin_lock(&logbuf_lock);
+	// printk_cpu = this_cpu;
 
+	if (recursion_bug) {
+		recursion_bug = 0;
+		strcpy(printk_buf, recursion_bug_msg);
+		printed_len = strlen(recursion_bug_msg);
+	}
+	/* Emit the output into the temporary buffer */
+	printed_len += vscnprintf(printk_buf + printed_len,
+				  sizeof(printk_buf) - printed_len, fmt, args);
 
-#include <obsolete/ktypes.h>
-#include <obsolete/printk.h>
+	p = printk_buf;
 
-extern framebuffer_s	framebuffer;
-extern position_t Pos;
+	/* Read log level and handle special printk prefix */
+	plen = log_prefix(p, &current_log_level, &special);
+	if (plen) {
+		p += plen;
 
-void myos_init_video()
-{	
-	Pos.FB_addr = (unsigned int *)framebuffer.FB_virbase;
-	Pos.FB_length = framebuffer.FB_size;
-	Pos.XResolution = framebuffer.X_Resolution;
-	Pos.YResolution = framebuffer.Y_Resolution;
+		switch (special) {
+		case 'c': /* Strip <c> KERN_CONT, continue line */
+			plen = 0;
+			break;
+		case 'd': /* Strip <d> KERN_DEFAULT, start new line */
+			plen = 0;
+		default:
+			if (!new_text_line) {
+				emit_log_char('\n');
+				new_text_line = 1;
+			}
+		}
+	}
 
-	Pos.XPosition = 0;
-	Pos.YPosition = 0;
-	Pos.XCharSize = 8;
-	Pos.YCharSize = 16;
+	/*
+	 * Copy the output into log_buf. If the caller didn't provide
+	 * the appropriate log prefix, we insert them here
+	 */
+	for (; *p; p++) {
+		if (new_text_line) {
+			new_text_line = 0;
 
-	spin_lock_init(&Pos.lock);
-	// clean screen
-	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
+			if (plen) {
+				/* Copy original log prefix */
+				int i;
 
-	char linebuf[4096] = {0};
-	int i;
-	for (i = 0; i < Pos.XResolution / Pos.XCharSize ; i++)
-		linebuf[i] = ' ';
-	color_printk(BLACK, GREEN, "%s", linebuf);
-	color_printk(BLACK, GREEN, "\n");
-}
+				for (i = 0; i < plen; i++)
+					emit_log_char(printk_buf[i]);
+				printed_len += plen;
+			} else {
+				/* Add log prefix */
+				emit_log_char('<');
+				emit_log_char(current_log_level + '0');
+				emit_log_char('>');
+				printed_len += 3;
+			}
 
-// map VBE frame_buffer, this part should not be
-// add into any memory manage unit
-void myos_init_VBE_mapping()
-{
-	u64 start, end;
-	start = PFN_PHYS(PFN_DOWN(framebuffer.FB_phybase));
-	myos_ioremap(start, PFN_PHYS(PFN_UP(framebuffer.FB_size)));
-	flush_tlb_local();
+			// if (printk_time) {
+				/* Add the current time stamp */
+				char tbuf[50], *tp;
+				unsigned tlen;
+				unsigned long long t;
+				unsigned long nanosec_rem;
+
+				// t = cpu_clock(printk_cpu);
+				t = local_clock();
+				nanosec_rem = do_div(t, 1000000000);
+				tlen = sprintf(tbuf, "[%5lu.%06lu] ",
+						(unsigned long) t,
+						nanosec_rem / 1000);
+
+				for (tp = tbuf; tp < tbuf + tlen; tp++)
+					emit_log_char(*tp);
+				printed_len += tlen;
+			// }
+
+			if (!*p)
+				break;
+		}
+
+		emit_log_char(*p);
+		if (*p == '\n')
+			new_text_line = 1;
+	}
+
+	// /*
+	//  * Try to acquire and then immediately release the
+	//  * console semaphore. The release will do all the
+	//  * actual magic (print out buffers, wake up klogd,
+	//  * etc). 
+	//  *
+	//  * The console_trylock_for_printk() function
+	//  * will release 'logbuf_lock' regardless of whether it
+	//  * actually gets the semaphore or not.
+	//  */
+	// if (console_trylock_for_printk(this_cpu))
+	// 	console_unlock();
+
+	// lockdep_on();
+out_restore_irqs:
+// 	raw_local_irq_restore(flags);
+
+// 	preempt_enable();
+	return printed_len;
 }

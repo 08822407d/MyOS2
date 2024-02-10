@@ -5,7 +5,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/sched/clock.h>
 #include <linux/init/init.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/timer.h>
 // #include <linux/acpi_pmtmr.h>
 // #include <linux/cpufreq.h>

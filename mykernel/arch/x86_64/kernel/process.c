@@ -13,7 +13,7 @@
 #include <linux/sched/task.h>
 // #include <linux/sched/task_stack.h>
 #include <linux/init/init.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/pm.h>
 // #include <linux/tick.h>
 // #include <linux/random.h>

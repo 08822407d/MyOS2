@@ -19,12 +19,12 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/debug/bug.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/slab.h>
 
-// #include <asm/unaligned.h>
+#include <asm-generic/unaligned.h>
 // #include <asm/byteorder.h>
 // #include <asm/word-at-a-time.h>
 #include <asm/page.h>

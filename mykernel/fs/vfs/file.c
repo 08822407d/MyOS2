@@ -8,7 +8,7 @@
  */
 
 #include <linux/kernel/syscalls.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>

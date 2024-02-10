@@ -110,6 +110,7 @@
 	// 						unlikely(__ret_warn_on);				\
 	// 					})
 	// #		endif
+	#			define WARN_ON_ONCE(condition) (condition)
 	
 	// /* used internally by panic.c */
 	// 		struct warn_args;
@@ -150,6 +151,7 @@
 	
 	// #		define WARN_ONCE(condition, format...)	\
 	// 				DO_ONCE_LITE_IF(condition, WARN, 1, format)
+	#		define WARN_ONCE(condition, format...)	(condition)
 	
 	// #		define WARN_TAINT_ONCE(condition, taint, format...)	\
 	// 				DO_ONCE_LITE_IF(condition, WARN_TAINT, 1, taint, format)

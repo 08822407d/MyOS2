@@ -16,7 +16,7 @@
  */
 
 #include <linux/init/init.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>

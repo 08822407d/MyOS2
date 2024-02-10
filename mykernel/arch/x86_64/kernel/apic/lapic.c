@@ -24,7 +24,7 @@
 #include <linux/mm/memblock.h>
 // #include <linux/ftrace.h>
 #include <linux/kernel/ioport.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/syscore_ops.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/timex.h>

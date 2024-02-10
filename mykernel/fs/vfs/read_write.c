@@ -13,7 +13,7 @@
 // #include <linux/uio.h>
 // #include <linux/fsnotify.h>
 // #include <linux/security.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/mm/pagemap.h>
 // #include <linux/splice.h>

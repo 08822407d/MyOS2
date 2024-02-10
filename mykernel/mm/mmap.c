@@ -29,7 +29,7 @@
 // #include <linux/hugetlb.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/profile.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/mount.h>
 // #include <linux/mempolicy.h>
 #include <linux/mm/rmap.h>

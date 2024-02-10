@@ -20,7 +20,7 @@
 // #include <linux/uio.h>
 #include <linux/block/blkdev.h>
 // #include <linux/backing-dev.h>
-// #include <asm/unaligned.h>
+#include <asm-generic/unaligned.h>
 // #include <linux/random.h>
 // #include <linux/iversion.h>
 #include <linux/fs/fat.h>

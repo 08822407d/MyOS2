@@ -5,7 +5,7 @@
  */
 
 #include <linux/block/blkdev.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/mm/pagemap.h>
 #include <linux/kernel/slab.h>
 #include <linux/kernel/cred.h>

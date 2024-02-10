@@ -41,7 +41,7 @@
 // #include <linux/mc146818rtc.h>
 #include <linux/kernel/compiler.h>
 // #include <linux/acpi.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/syscore_ops.h>
 // #include <linux/freezer.h>
 #include <linux/kernel/kthread.h>

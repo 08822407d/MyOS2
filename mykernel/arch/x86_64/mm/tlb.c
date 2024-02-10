@@ -7,7 +7,7 @@
 #include <linux/kernel/spinlock.h>
 #include <linux/smp/smp.h>
 // #include <linux/interrupt.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/cpu.h>
 // #include <linux/debugfs.h>
 // #include <linux/sched/smt.h>

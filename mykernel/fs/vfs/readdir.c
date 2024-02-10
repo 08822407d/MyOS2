@@ -7,7 +7,7 @@
 
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/time.h>
 #include <linux/mm/mm.h>
 #include <linux/lib/errno.h>
@@ -22,7 +22,7 @@
 // #include <linux/compat.h>
 #include <linux/kernel/uaccess.h>
 
-// #include <asm/unaligned.h>
+#include <asm-generic/unaligned.h>
 
 
 #include <obsolete/arch_proto.h>

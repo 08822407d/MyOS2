@@ -63,7 +63,7 @@
 // #include <linux/ksm.h>
 #include <linux/mm/rmap.h>
 // #include <linux/rcupdate.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/memcontrol.h>
 // #include <linux/mmu_notifier.h>
 // #include <linux/migrate.h>

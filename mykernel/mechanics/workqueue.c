@@ -25,7 +25,7 @@
  * Please read Documentation/core-api/workqueue.rst for details.
  */
 
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/sched.h>
 #include <linux/init/init.h>

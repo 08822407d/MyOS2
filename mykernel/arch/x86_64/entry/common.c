@@ -15,7 +15,7 @@
 #include <linux/smp/smp.h>
 #include <uapi/linux/errno.h>
 #include <linux/kernel/ptrace.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/nospec.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/uaccess.h>

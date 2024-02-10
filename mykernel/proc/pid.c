@@ -28,7 +28,7 @@
  */
 
 #include <linux/mm/mm.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 #include <linux/kernel/slab.h>
 #include <linux/init/init.h>
 // #include <linux/rculist.h>

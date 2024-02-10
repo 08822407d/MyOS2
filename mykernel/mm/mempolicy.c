@@ -81,7 +81,7 @@
 // #include <linux/cpuset.h>
 #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/nsproxy.h>
 // #include <linux/interrupt.h>
 #include <linux/init/init.h>

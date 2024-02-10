@@ -25,7 +25,7 @@
 // #include <linux/kexec.h>
 // #include <linux/panic_notifier.h>
 #include <linux/kernel/sched.h>
-// #include <linux/string_helpers.h>
+#include <linux/kernel/string_helpers.h>
 // #include <linux/sysrq.h>
 #include <linux/init/init.h>
 #include <linux/kernel/nmi.h>

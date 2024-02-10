@@ -31,7 +31,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/random.h>
 #include <linux/sched/signal.h>
-// #include <linux/export.h>
+#include <linux/kernel/export.h>
 // #include <linux/swap.h>
 // #include <linux/uio.h>
 // #include <linux/khugepaged.h>
