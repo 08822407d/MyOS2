@@ -4,7 +4,7 @@
 
 	#include <linux/lib/stdarg.h>
 	#include <linux/init/init.h>
-	#include <linux/debug/kern_levels.h>
+	// #include <linux/debug/kern_levels.h>
 	#include <linux/kernel/linkage.h>
 	// #include <linux/ratelimit_types.h>
 	// #include <linux/once_lite.h>
@@ -17,23 +17,23 @@
 	extern const char linux_banner[];
 	extern const char linux_proc_banner[];
 
-	// #define KERN_EMERG		"<0>"	/* system is unusable			*/
-	// #define KERN_ALERT		"<1>"	/* action must be taken immediately	*/
-	// #define KERN_CRIT		"<2>"	/* critical conditions			*/
-	// #define KERN_ERR		"<3>"	/* error conditions			*/
-	// #define KERN_WARNING	"<4>"	/* warning conditions			*/
-	// #define KERN_NOTICE		"<5>"	/* normal but significant condition	*/
-	// #define KERN_INFO		"<6>"	/* informational			*/
-	// #define KERN_DEBUG		"<7>"	/* debug-level messages			*/
+	#define KERN_EMERG		"<0>"	/* system is unusable			*/
+	#define KERN_ALERT		"<1>"	/* action must be taken immediately	*/
+	#define KERN_CRIT		"<2>"	/* critical conditions			*/
+	#define KERN_ERR		"<3>"	/* error conditions			*/
+	#define KERN_WARNING	"<4>"	/* warning conditions			*/
+	#define KERN_NOTICE		"<5>"	/* normal but significant condition	*/
+	#define KERN_INFO		"<6>"	/* informational			*/
+	#define KERN_DEBUG		"<7>"	/* debug-level messages			*/
 
-	// /* Use the default kernel loglevel */
-	// #define KERN_DEFAULT	"<d>"
-	// /*
-	//  * Annotation for a "continued" line of log printout (only done after a
-	//  * line that had no enclosing \n). Only to be used by core/arch code
-	//  * during early bootup (a continued line is not SMP-safe otherwise).
-	//  */
-	// #define KERN_CONT		"<c>"
+	/* Use the default kernel loglevel */
+	#define KERN_DEFAULT	"<d>"
+	/*
+	 * Annotation for a "continued" line of log printout (only done after a
+	 * line that had no enclosing \n). Only to be used by core/arch code
+	 * during early bootup (a continued line is not SMP-safe otherwise).
+	 */
+	#define KERN_CONT		"<c>"
 
 	extern int console_printk[];
 
@@ -87,15 +87,15 @@
 	 */
 	#define HW_ERR		"[Hardware Error]: "
 
-	// /*
-	//  * Dummy printk for disabled debugging statements to use whilst maintaining
-	//  * gcc's format and side-effect checking.
-	//  */
-	// static inline __attribute__ ((format (printf, 1, 2)))
-	// int no_printk(const char *fmt, ...)
-	// {
-	// 	return 0;
-	// }
+	/*
+	 * Dummy printk for disabled debugging statements to use whilst maintaining
+	 * gcc's format and side-effect checking.
+	 */
+	static inline __attribute__ ((format (printf, 1, 2)))
+	int no_printk(const char *fmt, ...)
+	{
+		return 0;
+	}
 
 	extern asmlinkage __printf(1, 2)
 	void early_printk(const char *fmt, ...);

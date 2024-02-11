@@ -20,7 +20,7 @@
 	#include <linux/kernel/compiler.h>
 	// #include <linux/container_of.h>
 	#include <linux/kernel/bitops.h>
-	// #include <linux/kstrtox.h>
+	#include <linux/lib/kstrtox.h>
 	// #include <linux/log2.h>
 	#include <linux/kernel/math.h>
 	#include <linux/kernel/minmax.h>

@@ -15,7 +15,7 @@
 #include <linux/kernel/ctype.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/export.h>
-// #include <linux/kstrtox.h>
+#include <linux/lib/kstrtox.h>
 #include <linux/kernel/math64.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/uaccess.h>
