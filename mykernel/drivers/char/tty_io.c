@@ -247,6 +247,7 @@ extern void myos_init_video();
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 
+bool myos_console_available = false;
 extern framebuffer_s	framebuffer;
 extern position_t Pos;
 
@@ -272,6 +273,8 @@ void myos_init_video()
 		linebuf[i] = ' ';
 	color_printk(BLACK, GREEN, "%s", linebuf);
 	color_printk(BLACK, GREEN, "\n");
+
+	myos_console_available = true;
 }
 
 // map VBE frame_buffer, this part should not be

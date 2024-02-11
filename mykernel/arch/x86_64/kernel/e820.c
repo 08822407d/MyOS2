@@ -64,16 +64,48 @@ extern efi_machine_conf_s	*machine_info;
  * re-propagated. So itsmain role is a temporary bootstrap storage of firmware
  * specific memory layout data during early bootup.
  */
-e820_table_s e820_table	__initdata;
+static e820_table_s e820_table_init		__initdata;
+
+e820_table_s *e820_table __refdata			= &e820_table_init;
 
 #define MAX_ARCH_PFN MAXMEM >> PAGE_SHIFT
+
+static void __init e820_print_type(enum e820_type type)
+{
+	switch (type) {
+	case E820_TYPE_RAM:				/* Fall through: */
+	case E820_TYPE_RESERVED_KERN:	pr_cont("usable");						break;
+	case E820_TYPE_RESERVED:		pr_cont("reserved");					break;
+	case E820_TYPE_SOFT_RESERVED:	pr_cont("soft reserved");				break;
+	case E820_TYPE_ACPI:			pr_cont("ACPI data");					break;
+	case E820_TYPE_NVS:				pr_cont("ACPI NVS");					break;
+	case E820_TYPE_UNUSABLE:		pr_cont("unusable");					break;
+	case E820_TYPE_PMEM:			/* Fall through: */
+	case E820_TYPE_PRAM:			pr_cont("persistent (type %u)", type);	break;
+	default:						pr_cont("type %u", type);				break;
+	}
+}
+
+void __init e820__print_table(char *who)
+{
+	int i;
+
+	for (i = 0; i < e820_table->nr_entries; i++) {
+		pr_info("%s: [mem %#018Lx-%#018Lx] ",
+			who,
+			e820_table->entries[i].addr,
+			e820_table->entries[i].addr + e820_table->entries[i].size - 1);
+
+		e820_print_type(e820_table->entries[i].type);
+		pr_cont("\n");
+	}
+}
 
 void __init e820__memory_setup(void)
 {
 	int i = 0;
-	e820_table.nr_entries = 0;
-
-	pr_info("BIOS-provided physical RAM map:\n");
+	e820_table->nr_entries = 0;
+	char *who = "BIOS-e820";
 
 	for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
 		i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
@@ -81,15 +113,18 @@ void __init e820__memory_setup(void)
 	{
 		if (mmap_entp->len == 0)
 		{
-			e820_table.nr_entries = i;
+			e820_table->nr_entries = i;
 			break;
 		}
 		
-		e820_entry_s *e820_entp = &e820_table.entries[i];
+		e820_entry_s *e820_entp = &(e820_table->entries[i]);
 		e820_entp->addr = mmap_entp->addr;
 		e820_entp->size = mmap_entp->len;
 		e820_entp->type = mmap_entp->type;
 	}
+
+	pr_info("BIOS-provided physical RAM map:\n");
+	e820__print_table(who);
 }
 
 
@@ -100,9 +135,9 @@ unsigned long __init e820__end_of_ram_pfn(void)
 	unsigned long limit_pfn = MAX_ARCH_PFN;
 	unsigned long max_arch_pfn = MAX_ARCH_PFN;
 
-	for (i = 0; i < e820_table.nr_entries; i++)
+	for (i = 0; i < e820_table->nr_entries; i++)
 	{
-		e820_entry_s *entry = &e820_table.entries[i];
+		e820_entry_s *entry = &(e820_table->entries[i]);
 		unsigned long start_pfn;
 		unsigned long end_pfn;
 
@@ -147,9 +182,9 @@ void __init e820__memblock_setup(void)
 	 */
 	// memblock_allow_resize();
 
-	for (i = 0; i < e820_table.nr_entries; i++)
+	for (i = 0; i < e820_table->nr_entries; i++)
 	{
-		e820_entry_s *entry = &e820_table.entries[i];
+		e820_entry_s *entry = &(e820_table->entries[i]);
 		enum e820_type type = entry->type;
 
 		end = entry->addr + entry->size;

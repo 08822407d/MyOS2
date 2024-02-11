@@ -22,7 +22,7 @@
 	// extern u64  e820__range_update(u64 start, u64 size, enum e820_type old_type, enum e820_type new_type);
 	// extern u64  e820__range_remove(u64 start, u64 size, enum e820_type old_type, bool check_type);
 
-	// extern void e820__print_table(char *who);
+	extern void e820__print_table(char *who);
 	// extern int  e820__update_table(e820_table_s *table);
 	// extern void e820__update_table_print(void);
 

@@ -60,6 +60,7 @@
 
 
 #include <linux/kernel/kconfig.h>
+#include <obsolete/printk.h>
 
 
 /*
@@ -73,7 +74,7 @@ void asmlinkage early_printk(const char *fmt, ...)
 
 /* printk's without a loglevel use this.. */
 // #define DEFAULT_MESSAGE_LOGLEVEL CONFIG_DEFAULT_MESSAGE_LOGLEVEL
-#define DEFAULT_MESSAGE_LOGLEVEL	7
+#define DEFAULT_MESSAGE_LOGLEVEL	4
 
 /* We show everything that is MORE important than this.. */
 #define MINIMUM_CONSOLE_LOGLEVEL	1 /* Minimum loglevel we let people use */
@@ -140,6 +141,25 @@ static int		saved_console_loglevel = -1;
 
 
 
+/*
+ * Write out chars from start to end - 1 inclusive
+ */
+static void _call_console_drivers(unsigned start,
+		unsigned end, int msg_log_level)
+{
+	color_printk(WHITE, BLACK, "%s", start);
+	// if ((msg_log_level < console_loglevel || ignore_loglevel) &&
+	// 		console_drivers && start != end) {
+	// 	if ((start & LOG_BUF_MASK) > (end & LOG_BUF_MASK)) {
+	// 		/* wrapped write */
+	// 		__call_console_drivers(start & LOG_BUF_MASK,
+	// 					log_buf_len);
+	// 		__call_console_drivers(0, end & LOG_BUF_MASK);
+	// 	} else {
+	// 		__call_console_drivers(start, end);
+	// 	}
+	// }
+}
 
 /*
  * Parse the syslog header <[0-9]*>. The decimal value represents 32bit, the
@@ -240,7 +260,7 @@ static void call_console_drivers(unsigned start, unsigned end)
 					 */
 					msg_level = default_message_loglevel;
 				}
-				// _call_console_drivers(start_print, cur_index, msg_level);
+				_call_console_drivers(start_print, cur_index, msg_level);
 				msg_level = -1;
 				start_print = cur_index;
 				break;
@@ -290,14 +310,6 @@ asmlinkage int printk(const char *fmt, ...)
 	va_list args;
 	int r;
 
-// #ifdef CONFIG_KGDB_KDB
-// 	if (unlikely(kdb_trap_printk)) {
-// 		va_start(args, fmt);
-// 		r = vkdb_printf(fmt, args);
-// 		va_end(args);
-// 		return r;
-// 	}
-// #endif
 	va_start(args, fmt);
 	r = vprintk(fmt, args);
 	va_end(args);
@@ -306,6 +318,55 @@ asmlinkage int printk(const char *fmt, ...)
 }
 
 
+/* cpu currently holding logbuf_lock */
+static volatile unsigned int printk_cpu = UINT_MAX;
+
+/*
+ * Can we actually use the console at this time on this cpu?
+ *
+ * Console drivers may assume that per-cpu resources have
+ * been allocated. So unless they're explicitly marked as
+ * being able to cope (CON_ANYTIME) don't call them until
+ * this CPU is officially up.
+ */
+static inline int can_use_console(unsigned int cpu) {
+	// return cpu_online(cpu) || have_callable_console();
+	return myos_console_available;
+}
+
+/*
+ * Try to get console ownership to actually show the kernel
+ * messages from a 'printk'. Return true (and with the
+ * console_lock held, and 'console_locked' set) if it
+ * is successful, false otherwise.
+ *
+ * This gets called with the 'logbuf_lock' spinlock held and
+ * interrupts disabled. It should return with 'lockbuf_lock'
+ * released but interrupts still disabled.
+ */
+static int console_trylock_for_printk(unsigned int cpu)
+{
+	int retval = 0;
+
+	// if (console_trylock()) {
+		retval = 1;
+
+		/*
+		 * If we can't use the console, we need to release
+		 * the console semaphore by hand to avoid flushing
+		 * the buffer. We need to hold the console semaphore
+		 * in order to do this test safely.
+		 */
+		if (!can_use_console(cpu)) {
+			console_locked = 0;
+			// up(&console_sem);
+			retval = 0;
+		}
+	// }
+	// printk_cpu = UINT_MAX;
+	// spin_unlock(&logbuf_lock);
+	return retval;
+}
 static const char	recursion_bug_msg [] =
 		KERN_CRIT "BUG: recent printk recursion!\n";
 static int		recursion_bug;
@@ -447,23 +508,80 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 			new_text_line = 1;
 	}
 
-	// /*
-	//  * Try to acquire and then immediately release the
-	//  * console semaphore. The release will do all the
-	//  * actual magic (print out buffers, wake up klogd,
-	//  * etc). 
-	//  *
-	//  * The console_trylock_for_printk() function
-	//  * will release 'logbuf_lock' regardless of whether it
-	//  * actually gets the semaphore or not.
-	//  */
-	// if (console_trylock_for_printk(this_cpu))
-	// 	console_unlock();
+	/*
+	 * Try to acquire and then immediately release the
+	 * console semaphore. The release will do all the
+	 * actual magic (print out buffers, wake up klogd,
+	 * etc). 
+	 *
+	 * The console_trylock_for_printk() function
+	 * will release 'logbuf_lock' regardless of whether it
+	 * actually gets the semaphore or not.
+	 */
+	if (console_trylock_for_printk(this_cpu))
+		console_unlock();
 
 	// lockdep_on();
 out_restore_irqs:
-// 	raw_local_irq_restore(flags);
+	// raw_local_irq_restore(flags);
 
-// 	preempt_enable();
+	// preempt_enable();
 	return printed_len;
 }
+
+
+
+
+/**
+ * console_unlock - unlock the console system
+ *
+ * Releases the console_lock which the caller holds on the console system
+ * and the console driver list.
+ *
+ * While the console_lock was held, console output may have been buffered
+ * by printk().  If this is the case, console_unlock(); emits
+ * the output prior to releasing the lock.
+ *
+ * If there is output waiting for klogd, we wake it up.
+ *
+ * console_unlock(); may be called from any context.
+ */
+void console_unlock(void)
+{
+	unsigned long flags;
+	unsigned _con_start, _log_end;
+	unsigned wake_klogd = 0;
+
+	// if (console_suspended) {
+	// 	up(&console_sem);
+	// 	return;
+	// }
+
+	// console_may_schedule = 0;
+
+	for ( ; ; ) {
+		// spin_lock_irqsave(&logbuf_lock, flags);
+		wake_klogd |= log_start - log_end;
+		if (con_start == log_end)
+			break;			/* Nothing to print */
+		_con_start = con_start;
+		_log_end = log_end;
+		con_start = log_end;		/* Flush */
+		// spin_unlock(&logbuf_lock);
+		// stop_critical_timings();	/* don't trace print latency */
+		call_console_drivers(_con_start, _log_end);
+		// start_critical_timings();
+		// local_irq_restore(flags);
+	}
+	// console_locked = 0;
+
+	// /* Release the exclusive_console once it is used */
+	// if (unlikely(exclusive_console))
+	// 	exclusive_console = NULL;
+
+	// up(&console_sem);
+	// spin_unlock_irqrestore(&logbuf_lock, flags);
+	// if (wake_klogd)
+	// 	wake_up_klogd();
+}
+EXPORT_SYMBOL(console_unlock);

@@ -62,10 +62,7 @@ typedef struct
 	spinlock_t		lock;
 } position_t;
 
-/*
-
-*/
-char * number(char * str, long num, int base, int size, int precision, int type);
+extern bool myos_console_available;
 
 /*
 
