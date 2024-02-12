@@ -339,17 +339,18 @@ asmlinkage int printk(const char *fmt, ...)
 /* cpu currently holding logbuf_lock */
 static volatile unsigned int printk_cpu = UINT_MAX;
 
-// /*
-//  * Can we actually use the console at this time on this cpu?
-//  *
-//  * Console drivers may assume that per-cpu resources have
-//  * been allocated. So unless they're explicitly marked as
-//  * being able to cope (CON_ANYTIME) don't call them until
-//  * this CPU is officially up.
-//  */
-// static inline int can_use_console(unsigned int cpu) {
-// 	return cpu_online(cpu) || have_callable_console();
-// }
+/*
+ * Can we actually use the console at this time on this cpu?
+ *
+ * Console drivers may assume that per-cpu resources have
+ * been allocated. So unless they're explicitly marked as
+ * being able to cope (CON_ANYTIME) don't call them until
+ * this CPU is officially up.
+ */
+static inline int can_use_console(unsigned int cpu) {
+	// return cpu_online(cpu) || have_callable_console();
+	return (console_list_hdr.count > 0);
+}
 
 /*
  * Try to get console ownership to actually show the kernel
@@ -374,11 +375,11 @@ static int console_trylock_for_printk(unsigned int cpu)
 		//  * the buffer. We need to hold the console semaphore
 		//  * in order to do this test safely.
 		//  */
-		// if (!can_use_console(cpu)) {
-		// 	console_locked = 0;
-		// 	// up(&console_sem);
-		// 	retval = 0;
-		// }
+		if (!can_use_console(cpu)) {
+			console_locked = 0;
+			// up(&console_sem);
+			retval = 0;
+		}
 	// }
 	// printk_cpu = UINT_MAX;
 	// spin_unlock(&logbuf_lock);
@@ -842,6 +843,8 @@ extern void myos_init_video();
 	// 	trace_initcall_finish(call, ret);
 	// 	ce++;
 	// }
+
+	pr_info("Printk available now.");
 }
 
 

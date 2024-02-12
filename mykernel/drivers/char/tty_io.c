@@ -236,6 +236,8 @@ void myos_init_video()
 		linebuf[i] = ' ';
 	color_printk(BLACK, GREEN, "%s", linebuf);
 	color_printk(BLACK, GREEN, "\n");
+
+	pr_info("MyOS Templete Console Initiated.");
 }
 
 // map VBE frame_buffer, this part should not be
