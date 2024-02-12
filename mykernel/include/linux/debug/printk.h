@@ -1,3 +1,5 @@
+// Linux-2.6.39.4
+
 #ifndef __KERNEL_PRINTK__
 #define __KERNEL_PRINTK__
 

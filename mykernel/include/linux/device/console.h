@@ -1,3 +1,4 @@
+// Linux-5.17.4
 /*
  *  linux/include/linux/console.h
  *
@@ -25,6 +26,8 @@
 	// struct module;
 	// struct tty_struct;
 	// struct notifier_block;
+	struct console;
+	typedef struct console console_s;
 
 	// enum con_scroll {
 	// 	SM_UP,
@@ -165,45 +168,45 @@
 	// 	CON_EXTENDED		= BIT(6),
 	// };
 
-	// /**
-	//  * struct console - The console descriptor structure
-	//  * @name:		The name of the console driver
-	//  * @write:		Write callback to output messages (Optional)
-	//  * @read:		Read callback for console input (Optional)
-	//  * @device:		The underlying TTY device driver (Optional)
-	//  * @unblank:		Callback to unblank the console (Optional)
-	//  * @setup:		Callback for initializing the console (Optional)
-	//  * @exit:		Callback for teardown of the console (Optional)
-	//  * @match:		Callback for matching a console (Optional)
-	//  * @flags:		Console flags. See enum cons_flags
-	//  * @index:		Console index, e.g. port number
-	//  * @cflag:		TTY control mode flags
-	//  * @ispeed:		TTY input speed
-	//  * @ospeed:		TTY output speed
-	//  * @seq:		Sequence number of the next ringbuffer record to print
-	//  * @dropped:		Number of unreported dropped ringbuffer records
-	//  * @data:		Driver private data
-	//  * @node:		hlist node for the console list
-	//  */
-	// struct console {
-	// 	char			name[16];
-	// 	void			(*write)(struct console *co, const char *s, unsigned int count);
-	// 	int			(*read)(struct console *co, char *s, unsigned int count);
-	// 	struct tty_driver	*(*device)(struct console *co, int *index);
-	// 	void			(*unblank)(void);
-	// 	int			(*setup)(struct console *co, char *options);
-	// 	int			(*exit)(struct console *co);
-	// 	int			(*match)(struct console *co, char *name, int idx, char *options);
-	// 	short			flags;
-	// 	short			index;
-	// 	int			cflag;
-	// 	uint			ispeed;
-	// 	uint			ospeed;
-	// 	u64			seq;
-	// 	unsigned long		dropped;
-	// 	void			*data;
-	// 	struct hlist_node	node;
-	// };
+	/**
+	 * console_s - The console descriptor structure
+	 * @name:		The name of the console driver
+	 * @write:		Write callback to output messages (Optional)
+	 * @read:		Read callback for console input (Optional)
+	 * @device:		The underlying TTY device driver (Optional)
+	 * @unblank:		Callback to unblank the console (Optional)
+	 * @setup:		Callback for initializing the console (Optional)
+	 * @exit:		Callback for teardown of the console (Optional)
+	 * @match:		Callback for matching a console (Optional)
+	 * @flags:		Console flags. See enum cons_flags
+	 * @index:		Console index, e.g. port number
+	 * @cflag:		TTY control mode flags
+	 * @ispeed:		TTY input speed
+	 * @ospeed:		TTY output speed
+	 * @seq:		Sequence number of the next ringbuffer record to print
+	 * @dropped:		Number of unreported dropped ringbuffer records
+	 * @data:		Driver private data
+	 * @node:		hlist node for the console list
+	 */
+	typedef struct console {
+		char			name[32];
+		void			(*write)(console_s *co, const char *s, unsigned int count);
+		int				(*read)(console_s *co, char *s, unsigned int count);
+		// struct tty_driver	*(*device)(console_s *co, int *index);
+		// void			(*unblank)(void);
+		// int				(*setup)(console_s *co, char *options);
+		// int				(*exit)(console_s *co);
+		// int				(*match)(console_s *co, char *name, int idx, char *options);
+		// short			flags;
+		// short			index;
+		// int				cflag;
+		// uint			ispeed;
+		// uint			ospeed;
+		// u64				seq;
+		// unsigned long	dropped;
+		// void			*data;
+		List_s			node;
+	} console_s;
 
 	// #ifdef CONFIG_LOCKDEP
 	// extern void lockdep_assert_console_list_lock_held(void);
@@ -232,7 +235,7 @@
 
 	// /**
 	//  * console_srcu_read_flags - Locklessly read the console flags
-	//  * @con:	struct console pointer of console to read flags from
+	//  * @con:	console_s pointer of console to read flags from
 	//  *
 	//  * This function provides the necessary READ_ONCE() and data_race()
 	//  * notation for locklessly reading the console flags. The READ_ONCE()
@@ -244,7 +247,7 @@
 	//  *
 	//  * Context: Any context.
 	//  */
-	// static inline short console_srcu_read_flags(const struct console *con)
+	// static inline short console_srcu_read_flags(const console_s *con)
 	// {
 	// 	WARN_ON_ONCE(!console_srcu_read_lock_is_held());
 
@@ -259,7 +262,7 @@
 
 	// /**
 	//  * console_srcu_write_flags - Write flags for a registered console
-	//  * @con:	struct console pointer of console to write flags to
+	//  * @con:	console_s pointer of console to write flags to
 	//  * @flags:	new flags value to write
 	//  *
 	//  * Only use this function to write flags for registered consoles. It
@@ -267,7 +270,7 @@
 	//  *
 	//  * Context: Any context.
 	//  */
-	// static inline void console_srcu_write_flags(struct console *con, short flags)
+	// static inline void console_srcu_write_flags(console_s *con, short flags)
 	// {
 	// 	lockdep_assert_console_list_lock_held();
 
@@ -276,7 +279,7 @@
 	// }
 
 	// /* Variant of console_is_registered() when the console_list_lock is held. */
-	// static inline bool console_is_registered_locked(const struct console *con)
+	// static inline bool console_is_registered_locked(const console_s *con)
 	// {
 	// 	lockdep_assert_console_list_lock_held();
 	// 	return !hlist_unhashed(&con->node);
@@ -284,7 +287,7 @@
 
 	// /*
 	//  * console_is_registered - Check if the console is registered
-	//  * @con:	struct console pointer of console to check
+	//  * @con:	console_s pointer of console to check
 	//  *
 	//  * Context: Process context. May sleep while acquiring console list lock.
 	//  * Return: true if the console is in the console list, otherwise false.
@@ -293,7 +296,7 @@
 	//  * can be assumed that the console's unregistration is fully completed,
 	//  * including the exit() callback after console list removal.
 	//  */
-	// static inline bool console_is_registered(const struct console *con)
+	// static inline bool console_is_registered(const console_s *con)
 	// {
 	// 	bool ret;
 
@@ -305,10 +308,10 @@
 
 	// /**
 	//  * for_each_console_srcu() - Iterator over registered consoles
-	//  * @con:	struct console pointer used as loop cursor
+	//  * @con:	console_s pointer used as loop cursor
 	//  *
 	//  * Although SRCU guarantees the console list will be consistent, the
-	//  * struct console fields may be updated by other CPUs while iterating.
+	//  * console_s fields may be updated by other CPUs while iterating.
 	//  *
 	//  * Requires console_srcu_read_lock to be held. Can be invoked from
 	//  * any context.
@@ -317,20 +320,24 @@
 	// 	hlist_for_each_entry_srcu(con, &console_list, node,		\
 	// 				  console_srcu_read_lock_is_held())
 
-	// /**
-	//  * for_each_console() - Iterator over registered consoles
-	//  * @con:	struct console pointer used as loop cursor
-	//  *
-	//  * The console list and the console->flags are immutable while iterating.
-	//  *
-	//  * Requires console_list_lock to be held.
-	//  */
+	/**
+	 * for_each_console() - Iterator over registered consoles
+	 * @con:	console_s pointer used as loop cursor
+	 *
+	 * The console list and the console->flags are immutable while iterating.
+	 *
+	 * Requires console_list_lock to be held.
+	 */
 	// #define for_each_console(con)						\
 	// 	lockdep_assert_console_list_lock_held();			\
 	// 	hlist_for_each_entry(con, &console_list, node)
+	#define for_each_console(con)						\
+			list_for_each_entry(						\
+				con, (&console_list_hdr), node		\
+			)
 
 	// extern int console_set_on_cmdline;
-	// extern struct console *early_console;
+	// extern console_s *early_console;
 
 	// enum con_flush_mode {
 	// 	CONSOLE_FLUSH_PENDING,
@@ -338,9 +345,9 @@
 	// };
 
 	// extern int add_preferred_console(char *name, int idx, char *options);
-	// extern void console_force_preferred_locked(struct console *con);
-	// extern void register_console(struct console *);
-	// extern int unregister_console(struct console *);
+	// extern void console_force_preferred_locked(console_s *con);
+	// extern void register_console(console_s *);
+	// extern int unregister_console(console_s *);
 	// extern void console_lock(void);
 	// extern int console_trylock(void);
 	extern void console_unlock(void);
@@ -348,12 +355,12 @@
 	// extern void console_unblank(void);
 	// extern void console_flush_on_panic(enum con_flush_mode mode);
 	// extern struct tty_driver *console_device(int *);
-	// extern void console_stop(struct console *);
-	// extern void console_start(struct console *);
+	// extern void console_stop(console_s *);
+	// extern void console_start(console_s *);
 	// extern int is_console_locked(void);
-	// extern int braille_register_console(struct console *, int index,
+	// extern int braille_register_console(console_s *, int index,
 	// 		char *console_options, char *braille_options);
-	// extern int braille_unregister_console(struct console *);
+	// extern int braille_unregister_console(console_s *);
 	// #ifdef CONFIG_TTY
 	// extern void console_sysfs_notify(void);
 	// #else

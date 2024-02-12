@@ -244,6 +244,12 @@ extern void myos_init_smp(size_t lcpu_nr);
 
 	// myos_startup_smp();
 
+
+	/*
+	 * HACK ALERT! This is early. We're enabling the console before
+	 * we've done PCI setups etc, and console_init() must be aware of
+	 * this. But we do want output early, in case something goes wrong.
+	 */
 	console_init();
 
 	if (late_time_init)

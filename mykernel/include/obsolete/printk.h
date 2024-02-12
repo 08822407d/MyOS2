@@ -62,8 +62,6 @@ typedef struct
 	spinlock_t		lock;
 } position_t;
 
-extern bool myos_console_available;
-
 /*
 
 */

@@ -252,44 +252,43 @@
 	// 	head->prev = last;
 	// }
 
-	// /**
-	//  * list_is_first -- tests whether @list is the first entry in list @head
-	//  * @list: the entry to test
-	//  * @head: the head of the list
-	//  */
-	// static inline int list_is_first(const List_s *list, const List_s *head)
-	// {
-	// 	return list->prev == head;
-	// }
+	/**
+	 * list_is_first -- tests whether @list is the first entry in list @head
+	 * @list: the entry to test
+	 * @head: the head of the list
+	 */
+	static inline int
+	list_is_first(const List_s *list, const List_s *head) {
+		return list->prev == head;
+	}
 
-	// /**
-	//  * list_is_last - tests whether @list is the last entry in list @head
-	//  * @list: the entry to test
-	//  * @head: the head of the list
-	//  */
-	// static inline int list_is_last(const List_s *list, const List_s *head)
-	// {
-	// 	return list->next == head;
-	// }
+	/**
+	 * list_is_last - tests whether @list is the last entry in list @head
+	 * @list: the entry to test
+	 * @head: the head of the list
+	 */
+	static inline int
+	list_is_last(const List_s *list, const List_s *head) {
+		return list->next == head;
+	}
 
-	// /**
-	//  * list_is_head - tests whether @list is the list @head
-	//  * @list: the entry to test
-	//  * @head: the head of the list
-	//  */
-	// static inline int list_is_head(const List_s *list, const List_s *head)
-	// {
-	// 	return list == head;
-	// }
+	/**
+	 * list_is_head - tests whether @list is the list @head
+	 * @list: the entry to test
+	 * @head: the head of the list
+	 */
+	static inline int
+	list_is_head(const List_s *list, const List_s *head) {
+		return list == head;
+	}
 
-	// /**
-	//  * list_empty - tests whether a list is empty
-	//  * @head: the list to test.
-	//  */
-	// static inline int list_empty(const List_s *head)
-	// {
-	// 	return READ_ONCE(head->next) == head;
-	// }
+	/**
+	 * list_empty - tests whether a list is empty
+	 * @head: the list to test.
+	 */
+	static inline int list_empty(const List_s *head) {
+		return READ_ONCE(head->next) == head;
+	}
 
 	// /**
 	//  * list_del_init_careful - deletes entry from list and reinitialize it.
@@ -562,21 +561,21 @@
 	#define list_next_entry(pos, member) \
 		list_entry((pos)->member.next, typeof(*(pos)), member)
 
-	// /**
-	//  * list_prev_entry - get the prev element in list
-	//  * @pos:	the type * to cursor
-	//  * @member:	the name of the list_head within the struct.
-	//  */
-	// #define list_prev_entry(pos, member) \
-	// 	list_entry((pos)->member.prev, typeof(*(pos)), member)
+	/**
+	 * list_prev_entry - get the prev element in list
+	 * @pos:	the type * to cursor
+	 * @member:	the name of the list_head within the struct.
+	 */
+	#define list_prev_entry(pos, member) \
+		list_entry((pos)->member.prev, typeof(*(pos)), member)
 
-	// /**
-	//  * list_for_each	-	iterate over a list
-	//  * @pos:	the &List_s to use as a loop cursor.
-	//  * @head:	the head for your list.
-	//  */
-	// #define list_for_each(pos, head) \
-	// 	for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
+	/**
+	 * list_for_each	-	iterate over a list
+	 * @pos:	the &List_s to use as a loop cursor.
+	 * @head:	the head for your list.
+	 */
+	#define list_for_each(pos, head) \
+		for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
 
 	// /**
 	//  * list_for_each_continue - continue iteration over a list
@@ -625,7 +624,7 @@
 	 * @member:	the name of the list_head within the struct.
 	 */
 	#define list_entry_is_head(pos, head, member)				\
-		(&pos->member == &((head)->header))
+				(&pos->member == &((head)->header))
 
 	/**
 	 * list_for_each_entry	-	iterate over list of given type
@@ -634,9 +633,9 @@
 	 * @member:	the name of the list_head within the struct.
 	 */
 	#define list_for_each_entry(pos, head, member)				\
-		for (pos = list_first_entry(head, typeof(*pos), member);	\
-			!list_entry_is_head(pos, head, member);			\
-			pos = list_next_entry(pos, member))
+				for (pos = list_first_entry(head, typeof(*pos), member);	\
+					!list_entry_is_head(pos, head, member);			\
+					pos = list_next_entry(pos, member))
 
 	// /**
 	//  * list_for_each_entry_reverse - iterate backwards over list of given type.
@@ -1043,7 +1042,6 @@
 	void list_insert_prev(List_s * src, List_s * dst);
 	void list_insert_next(List_s * src, List_s * dst);
 	void list_delete(List_s * src);
-	bool list_empty(List_s *l_p);
 	
 	bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p);
 	void list_hdr_init(List_hdr_s * lh_p);
@@ -1064,9 +1062,23 @@
 			list_traverse_check chk_hdlr, list_traverse_do do_hdlr,
 			list_traverse_end end_hdlr);
 
+	#define list_hdr_foreach(pos, lhdr)	\
+				list_for_each(pos, (&(lhdr->header)))
+
 	#define list_hdr_foreach_entry(lhdr, member)		\
 			for ((member) = (lhdr)->header.next;		\
 				(member) != &(lhdr)->header;		\
 				(member) = (member)->next)
+
+	static inline bool
+	list_hdr_contains(List_hdr_s * lhdr, List_s * target) {
+		List_s *tmp = NULL;
+		list_hdr_foreach(tmp, lhdr)
+		{
+			if (tmp == target)
+				return true;
+		}
+		return false;
+	}
 
 #endif /* _LINUX_LIST_H */

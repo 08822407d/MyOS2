@@ -55,11 +55,6 @@ void list_delete(List_s *src)
 	list_init(src, src->owner_p);
 }
 
-bool list_empty(List_s *l_p)
-{
-	return (l_p == l_p->next);
-}
-
 bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	if (lhdr_p->count > 0)
