@@ -14,26 +14,24 @@
 		struct task_struct;
 		typedef struct task_struct task_s;
 
-		// struct pcpu_hot {
-		// 	union {
-		// 		struct {
-		// 			struct task_struct	*current_task;
-		// 			int			preempt_count;
-		// 			int			cpu_number;
-		// #ifdef CONFIG_CALL_DEPTH_TRACKING
-		// 			u64			call_depth;
-		// #endif
-		// 			unsigned long		top_of_stack;
-		// 			void			*hardirq_stack_ptr;
-		// 			u16			softirq_pending;
-		// 			bool			hardirq_stack_inuse;
-		// 		};
-		// 		u8	pad[64];
-		// 	};
-		// };
+		typedef struct pcpu_hot {
+			union {
+				struct {
+					task_s			*current_task;
+					int				preempt_count;
+					int				cpu_number;
+					u64				call_depth;
+					unsigned long	top_of_stack;
+					void			*hardirq_stack_ptr;
+					u16				softirq_pending;
+					bool			hardirq_stack_inuse;
+				};
+				u8	pad[64];
+			};
+		} pcpu_hot_s;
 		// static_assert(sizeof(struct pcpu_hot) == 64);
 
-		// DECLARE_PER_CPU_ALIGNED(struct pcpu_hot, pcpu_hot);
+		DECLARE_PER_CPU_ALIGNED(pcpu_hot_s, pcpu_hot);
 
 		// static __always_inline struct task_struct *get_current(void)
 		// {

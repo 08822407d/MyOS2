@@ -537,10 +537,31 @@ void identify_secondary_cpu(cpuinfo_x86_s *c)
 
 
 
+DEFINE_PER_CPU_ALIGNED(pcpu_hot_s, pcpu_hot) = {
+	// .current_task	= &init_task,
+	.preempt_count	= INIT_PREEMPT_COUNT,
+	// .top_of_stack	= TOP_OF_INIT_STACK,
+};
+// EXPORT_PER_CPU_SYMBOL(pcpu_hot);
+
+// DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
+// 		     fixed_percpu_data) __aligned(PAGE_SIZE) __visible;
+// EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
+
+static void wrmsrl_cstar(unsigned long val) {
+	/*
+	 * Intel CPUs do not support 32-bit SYSCALL. Writing to MSR_CSTAR
+	 * is so far ignored by the CPU, but raises a #VE trap in a TDX
+	 * guest. Avoid the pointless write on all Intel CPUs.
+	 */
+	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+		wrmsrl(MSR_CSTAR, val);
+}
+
 /* May not be marked __init: used by software suspend */
 void syscall_init(void)
 {
-#if defined(CONFIG_INTER_X64_GDT_LAYOUT)
+#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 	// init MSR sf_regs related to sysenter/sysexit
 	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
@@ -625,17 +646,6 @@ void cpu_init(void)
 	// wait_for_master_cpu(cpu);
 
 	// ucode_cpu_init(cpu);
-
-// #ifdef CONFIG_NUMA
-	// if (this_cpu_read(numa_node) == 0 &&
-	// 	early_cpu_to_node(cpu) != NUMA_NO_NODE)
-	// 	set_numa_node(early_cpu_to_node(cpu));
-// #endif
-	// pr_debug("Initializing CPU#%d\n", cpu);
-
-	// cr4_clear_bits(X86_CR4_VME|X86_CR4_PVI|X86_CR4_TSD|X86_CR4_DE);
-
-	loadsegment(fs, 0);
 	// memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
 	syscall_init();
 

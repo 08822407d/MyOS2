@@ -388,7 +388,7 @@
     // {
 		// #ifdef MODULE
 		// #define PER_CPU_SHARED_ALIGNED_SECTION ""
-		// #define PER_CPU_ALIGNED_SECTION ""
+		#define PER_CPU_ALIGNED_SECTION ""
 		// #else
 		// #define PER_CPU_SHARED_ALIGNED_SECTION "..shared_aligned"
 		// #define PER_CPU_ALIGNED_SECTION "..shared_aligned"
@@ -414,8 +414,8 @@
 		/*
 		* Normal declaration and definition macros.
 		*/
-		// #define DECLARE_PER_CPU_SECTION(type, name, sec)			\
-		// 			extern __PCPU_ATTRS(sec) __typeof__(type) name
+		#define DECLARE_PER_CPU_SECTION(type, name, sec)			\
+					extern __PCPU_ATTRS(sec) __typeof__(type) name
 
 		#define DEFINE_PER_CPU_SECTION(type, name, sec)				\
 					__PCPU_ATTRS(sec) __typeof__(type) name
@@ -459,32 +459,32 @@
 		// 	DEFINE_PER_CPU_SECTION(type, name, PER_CPU_SHARED_ALIGNED_SECTION) \
 		// 	____cacheline_aligned_in_smp
 
-		// #define DECLARE_PER_CPU_ALIGNED(type, name)				\
-		// 	DECLARE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)	\
-		// 	____cacheline_aligned
+		#define DECLARE_PER_CPU_ALIGNED(type, name)	\
+					DECLARE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)	\
+					____cacheline_aligned
 
-		// #define DEFINE_PER_CPU_ALIGNED(type, name)				\
-		// 	DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)	\
-		// 	____cacheline_aligned
+		#define DEFINE_PER_CPU_ALIGNED(type, name)	\
+					DEFINE_PER_CPU_SECTION(type, name, PER_CPU_ALIGNED_SECTION)		\
+					____cacheline_aligned
 
-		// /*
-		//  * Declaration/definition used for per-CPU variables that must be page aligned.
-		//  */
-		// #define DECLARE_PER_CPU_PAGE_ALIGNED(type, name)			\
-		// 	DECLARE_PER_CPU_SECTION(type, name, "..page_aligned")		\
-		// 	__aligned(PAGE_SIZE)
+		/*
+		 * Declaration/definition used for per-CPU variables that must be page aligned.
+		 */
+		#define DECLARE_PER_CPU_PAGE_ALIGNED(type, name)	\
+					DECLARE_PER_CPU_SECTION(type, name, "..page_aligned")	\
+					__aligned(PAGE_SIZE)
 
-		#define DEFINE_PER_CPU_PAGE_ALIGNED(type, name)						\
+		#define DEFINE_PER_CPU_PAGE_ALIGNED(type, name)		\
 					DEFINE_PER_CPU_SECTION(type, name, "..page_aligned")	\
 					__aligned(PAGE_SIZE)
 
-		// /*
-		//  * Declaration/definition used for per-CPU variables that must be read mostly.
-		//  */
-		// #define DECLARE_PER_CPU_READ_MOSTLY(type, name)			\
-		// 	DECLARE_PER_CPU_SECTION(type, name, "..read_mostly")
+		/*
+		 * Declaration/definition used for per-CPU variables that must be read mostly.
+		 */
+		#define DECLARE_PER_CPU_READ_MOSTLY(type, name)	\
+					DECLARE_PER_CPU_SECTION(type, name, "..read_mostly")
 
-		#define DEFINE_PER_CPU_READ_MOSTLY(type, name)				\
+		#define DEFINE_PER_CPU_READ_MOSTLY(type, name)	\
 					DEFINE_PER_CPU_SECTION(type, name, "..read_mostly")
 
 

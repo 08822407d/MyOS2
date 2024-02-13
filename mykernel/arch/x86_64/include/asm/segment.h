@@ -60,7 +60,7 @@
 
 	#include <asm/cache.h>
 
-	#if defined(CONFIG_INTER_X64_GDT_LAYOUT)
+	#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 	#	define GDT_ENTRY_KERNEL_CS				1
 	#	define GDT_ENTRY_KERNEL_DS				2
 	#	define GDT_ENTRY_DEFAULT_USER_DS		3
@@ -106,7 +106,7 @@
 	 */
 	#define GDT_ENTRIES						16
 
-	#if defined(CONFIG_INTER_X64_GDT_LAYOUT)
+	#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 	#	define __KERNEL_CS			(GDT_ENTRY_KERNEL_CS * 8)
 	#	define __KERNEL_DS			(GDT_ENTRY_KERNEL_DS * 8)
 	#	define __USER_DS			(GDT_ENTRY_DEFAULT_USER_DS * 8 + 3)
