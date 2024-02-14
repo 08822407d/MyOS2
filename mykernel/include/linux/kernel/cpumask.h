@@ -13,7 +13,7 @@
 	// #include <linux/atomic.h>
 	// #include <linux/bug.h>
 	// #include <linux/gfp_types.h>
-	// #include <linux/numa.h>
+	#include <linux/kernel/numa.h>
 
 	// /* Don't assign or return these: may not be this big! */
 	// typedef struct cpumask { DECLARE_BITMAP(bits, NR_CPUS); } cpumask_t;

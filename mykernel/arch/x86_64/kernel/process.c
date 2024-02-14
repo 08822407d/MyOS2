@@ -11,7 +11,7 @@
 // #include <linux/sched/idle.h>
 #include <linux/sched/debug.h>
 #include <linux/sched/task.h>
-// #include <linux/sched/task_stack.h>
+#include <linux/sched/task_stack.h>
 #include <linux/init/init.h>
 #include <linux/kernel/export.h>
 // #include <linux/pm.h>

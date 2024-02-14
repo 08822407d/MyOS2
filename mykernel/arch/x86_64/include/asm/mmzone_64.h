@@ -12,8 +12,6 @@
 	// #include <linux/mmdebug.h>
 	#include <asm/smp.h>
 
-	#	define MAX_NUMNODES	1
-
 		extern struct pglist_data	*node_data[];
 
 	#	define NODE_DATA(nid)		(node_data[nid])

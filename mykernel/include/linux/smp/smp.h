@@ -141,7 +141,7 @@
 	// /*
 	//  * Bring a CPU up
 	//  */
-	// extern int __cpu_up(unsigned int cpunum, struct task_struct *tidle);
+	// extern int __cpu_up(unsigned int cpunum, task_s *tidle);
 
 	// /*
 	//  * Final polishing of CPUs

@@ -26,7 +26,7 @@
 // #include <linux/freezer.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/kernel/uaccess.h>
-// #include <linux/numa.h>
+#include <linux/kernel/numa.h>
 // #include <linux/sched/isolation.h>
 // #include <trace/events/sched.h>
 

@@ -133,14 +133,14 @@
 	// #endif
 
 	// #define enter_lazy_tlb enter_lazy_tlb
-	// extern void enter_lazy_tlb(mm_s *mm, struct task_struct *tsk);
+	// extern void enter_lazy_tlb(mm_s *mm, task_s *tsk);
 
 	// /*
 	// * Init a new mm.  Used on mm copies, like at fork()
 	// * and on mm's that are brand-new, like at execve().
 	// */
 	// #define init_new_context init_new_context
-	// static inline int init_new_context(struct task_struct *tsk,
+	// static inline int init_new_context(task_s *tsk,
 	// 				mm_s *mm)
 	// {
 	// 	mutex_init(&mm->context.lock);
@@ -168,7 +168,7 @@
 	// }
 
 	extern void switch_mm(mm_s *prev, mm_s *next,
-				struct task_struct *tsk);
+				task_s *tsk);
 
 	extern void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk);
 	// #define switch_mm_irqs_off switch_mm_irqs_off

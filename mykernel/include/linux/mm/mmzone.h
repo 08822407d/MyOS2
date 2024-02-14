@@ -10,7 +10,7 @@
 	#		include <linux/kernel/bitops.h>
 	#		include <linux/kernel/cache.h>
 	// #include <linux/threads.h>
-	// #include <linux/numa.h>
+	#include <linux/kernel/numa.h>
 	#		include <linux/init/init.h>
 	// #include <linux/seqlock.h>
 	// #include <linux/nodemask.h>

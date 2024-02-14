@@ -234,3 +234,10 @@ void myos_init_percpu_intr()
 {
 	// LVT_timer_init();
 }
+
+// __attribute__ ((interrupt)) __attribute__ ((target("general-regs-only")))
+// void intr_call_test(pt_regs_s *sf_regs, unsigned long errcode)
+// {
+// 	sf_regs->irq_nr = 14;
+// 	excep_hwint_context(sf_regs);
+// }

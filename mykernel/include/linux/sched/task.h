@@ -10,8 +10,8 @@
 	#include <linux/kernel/sched.h>
 	#include <linux/kernel/uaccess.h>
 
-	// struct task_struct;
-	// typedef struct task_struct task_s;
+	// task_s;
+	// typedef task_s task_s;
 	// struct rusage;
 	// union thread_union;
 	// struct css_set;

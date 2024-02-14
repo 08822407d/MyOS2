@@ -113,10 +113,10 @@
 	// 	return files_lookup_fd_rcu(current->files, fd);
 	// }
 
-	// file_s *task_lookup_fd_rcu(struct task_struct *task, unsigned int fd);
-	// file_s *task_lookup_next_fd_rcu(struct task_struct *task, unsigned int *fd);
+	// file_s *task_lookup_fd_rcu(task_s *task, unsigned int fd);
+	// file_s *task_lookup_next_fd_rcu(task_s *task, unsigned int *fd);
 
-	// struct task_struct;
+	// task_s;
 
 	void put_files_struct(files_struct_s *fs);
 	int unshare_files(void);

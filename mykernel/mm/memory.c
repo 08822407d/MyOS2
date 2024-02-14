@@ -70,7 +70,7 @@
 // #include <linux/userfaultfd_k.h>
 // #include <linux/dax.h>
 // #include <linux/oom.h>
-// #include <linux/numa.h>
+#include <linux/kernel/numa.h>
 // #include <linux/perf_event.h>
 #include <linux/kernel/ptrace.h>
 // #include <linux/vmalloc.h>

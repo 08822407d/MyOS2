@@ -749,7 +749,7 @@ static int exec_mmap(mm_s *mm)
  * so that a new one can be started
  */
 
-// void __set_task_comm(struct task_struct *tsk, const char *buf, bool exec)
+// void __set_task_comm(task_s *tsk, const char *buf, bool exec)
 void set_task_comm(task_s *tsk, const char *buf)
 {
 	// task_lock(tsk);

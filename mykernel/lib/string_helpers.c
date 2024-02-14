@@ -663,7 +663,7 @@
 //  * command line, with inter-argument NULLs replaced with spaces,
 //  * and other special characters escaped.
 //  */
-// char *kstrdup_quotable_cmdline(struct task_struct *task, gfp_t gfp)
+// char *kstrdup_quotable_cmdline(task_s *task, gfp_t gfp)
 // {
 // 	char *buffer, *quoted;
 // 	int i, res;

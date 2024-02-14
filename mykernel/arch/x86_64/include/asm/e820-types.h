@@ -91,7 +91,7 @@
 	//  * this size.
 	//  */
 
-	// // #include <linux/numa.h>
+	#include <linux/kernel/numa.h>
 
 	// #define E820_MAX_ENTRIES	(E820_MAX_ENTRIES_ZEROPAGE + 3*MAX_NUMNODES)
 	#define E820_MAX_ENTRIES	128

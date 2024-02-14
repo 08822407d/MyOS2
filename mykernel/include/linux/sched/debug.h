@@ -38,9 +38,9 @@
 
 	// #ifdef CONFIG_SCHED_DEBUG
 	// 	struct seq_file;
-	// 	extern void proc_sched_show_task(struct task_struct *p,
+	// 	extern void proc_sched_show_task(task_s *p,
 	// 					struct pid_namespace *ns, struct seq_file *m);
-	// 	extern void proc_sched_set_task(struct task_struct *p);
+	// 	extern void proc_sched_set_task(task_s *p);
 	// #endif
 
 	/* Attach to any functions which should be ignored in wchan output. */

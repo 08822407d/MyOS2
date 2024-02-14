@@ -280,7 +280,7 @@
 	// 	struct preempt_ops {
 	// 		void (*sched_in)(struct preempt_notifier *notifier, int cpu);
 	// 		void (*sched_out)(struct preempt_notifier *notifier,
-	// 				struct task_struct *next);
+	// 				task_s *next);
 	// 	};
 
 	// /**

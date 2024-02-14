@@ -78,6 +78,7 @@
         "compiler.h": "c",
         "unaligned.h": "c",
         "page.h": "c",
-        "init.h": "c"
+        "init.h": "c",
+        "mmu_context.h": "c"
     }
 }

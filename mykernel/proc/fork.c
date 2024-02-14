@@ -21,7 +21,7 @@
 // #include <linux/sched/numa_balancing.h>
 // #include <linux/sched/stat.h>
 #include <linux/sched/task.h>
-// #include <linux/sched/task_stack.h>
+#include <linux/sched/task_stack.h>
 // #include <linux/sched/cputime.h>
 // #include <linux/seq_file.h>
 // #include <linux/rtmutex.h>
@@ -110,7 +110,28 @@
 // #include <trace/events/task.h>
 
 
-static inline task_s *myos_alloc_task_struct() {
+/*
+ * Minimum number of threads to boot the kernel
+ */
+#define MIN_THREADS 20
+
+/*
+ * Maximum number of threads
+ */
+#define MAX_THREADS FUTEX_TID_MASK
+
+/*
+ * Protected counters by write_lock_irq(&tasklist_lock)
+ */
+unsigned long total_forks;	/* Handle normal Linux uptimes. */
+int nr_threads;			/* The idle threads do not count.. */
+
+static int max_threads;		/* tunable limit on nr_threads */
+
+DEFINE_PER_CPU(unsigned long, process_counts) = 0;
+
+
+static inline task_s *alloc_task_struct_node(int node) {
 	PCB_u *ret_val = kmalloc(sizeof(PCB_u), GFP_KERNEL);
 	memset(&(ret_val->task), 0, sizeof(task_s));
 	return &ret_val->task;
@@ -118,6 +139,69 @@ static inline task_s *myos_alloc_task_struct() {
 
 static inline void free_task_struct(task_s *tsk) {
 	kfree(tsk);
+}
+
+
+static int alloc_thread_stack_node(task_s *tsk, int node)
+{
+	// struct vm_struct *vm;
+	void *stack;
+	int i;
+
+	// for (i = 0; i < NR_CACHED_STACKS; i++) {
+	// 	struct vm_struct *s;
+
+	// 	s = this_cpu_xchg(cached_stacks[i], NULL);
+
+	// 	if (!s)
+	// 		continue;
+
+	// 	/* Reset stack metadata. */
+	// 	kasan_unpoison_range(s->addr, THREAD_SIZE);
+
+	// 	stack = kasan_reset_tag(s->addr);
+
+	// 	/* Clear stale pointers from reused stack. */
+	// 	memset(stack, 0, THREAD_SIZE);
+
+	// 	if (memcg_charge_kernel_stack(s)) {
+	// 		vfree(s->addr);
+	// 		return -ENOMEM;
+	// 	}
+
+	// 	tsk->stack_vm_area = s;
+	// 	tsk->stack = stack;
+	// 	return 0;
+	// }
+
+	// /*
+	//  * Allocated stacks are cached and later reused by new threads,
+	//  * so memcg accounting is performed manually on assigning/releasing
+	//  * stacks to tasks. Drop __GFP_ACCOUNT.
+	//  */
+	// stack = __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,
+	// 			     VMALLOC_START, VMALLOC_END,
+	// 			     THREADINFO_GFP & ~__GFP_ACCOUNT,
+	// 			     PAGE_KERNEL,
+	// 			     0, node, __builtin_return_address(0));
+	// if (!stack)
+	// 	return -ENOMEM;
+	stack = (unsigned long *)((unsigned long)tsk + THREAD_SIZE);
+
+	// vm = find_vm_area(stack);
+	// if (memcg_charge_kernel_stack(vm)) {
+	// 	vfree(stack);
+	// 	return -ENOMEM;
+	// }
+	// /*
+	//  * We can't call find_vm_area() in interrupt context, and
+	//  * free_thread_stack() can be called in interrupt context,
+	//  * so cache the vm_struct.
+	//  */
+	// tsk->stack_vm_area = vm;
+	// stack = kasan_reset_tag(stack);
+	tsk->stack = stack;
+	return 0;
 }
 
 
@@ -374,51 +458,39 @@ void set_task_stack_end_magic(task_s *tsk)
 {
 	unsigned long *stackend;
 
-	// stackend = end_of_stack(tsk);
+	stackend = end_of_stack(tsk);
 	// *stackend = STACK_END_MAGIC;	/* for overflow detection */
 }
 
-static task_s *dup_task_struct(task_s *orig)
+static task_s *dup_task_struct(task_s *orig, int node)
 {
 	task_s *tsk;
 	unsigned long *stack;
-	// struct vm_struct *stack_vm_area __maybe_unused;
 	int err;
 
-	// tsk = alloc_task_struct_node(node);
-	tsk = myos_alloc_task_struct();
+	if (node == NUMA_NO_NODE)
+		// node = tsk_fork_get_node(orig);
+	tsk = alloc_task_struct_node(node);
 	if (!tsk)
 		return NULL;
 
-	// stack = alloc_thread_stack_node(tsk, node);
-	stack = (unsigned long *)((unsigned long)tsk + THREAD_SIZE);
-	if (!stack)
+	// err = arch_dup_task_struct(tsk, orig);
+	// int __weak arch_dup_task_struct(task_s *dst, task_s *src)
+	// {
+		*tsk = *orig;
+		err = 0;
+	// }
+	if (err)
 		goto free_tsk;
 
-	// if (memcg_charge_kernel_stack(tsk))
-	// 	goto free_stack;
+	err = alloc_thread_stack_node(tsk, node);
+	if (err)
+		goto free_tsk;
 
-	// stack_vm_area = task_stack_vm_area(tsk);
-
-	// err = arch_dup_task_struct(tsk, orig);
-	*tsk = *orig;
-	err = 0;
-
-	/*
-	 * arch_dup_task_struct() clobbers the stack-related fields.  Make
-	 * sure they're properly initialized before using any stack-related
-	 * functions again.
-	 */
-	tsk->stack = stack;
-// #ifdef CONFIG_VMAP_STACK
-	// tsk->stack_vm_area = stack_vm_area;
-// #endif
 // #ifdef CONFIG_THREAD_INFO_IN_TASK
 	// refcount_set(&tsk->stack_refcount, 1);
 // #endif
-
-	if (err)
-		goto free_stack;
+	// account_kernel_stack(tsk, 1);
 
 	// err = scs_prepare(tsk, node);
 	// if (err)
@@ -673,7 +745,7 @@ mm_s *get_task_mm(task_s *task)
 	return mm;
 }
 
-// mm_s *mm_access(struct task_struct *task, unsigned int mode)
+// mm_s *mm_access(task_s *task, unsigned int mode)
 // {
 // 	mm_s *mm;
 // 	int err;
@@ -693,7 +765,7 @@ mm_s *get_task_mm(task_s *task)
 // 	return mm;
 // }
 
-// static void complete_vfork_done(struct task_struct *tsk)
+// static void complete_vfork_done(task_s *tsk)
 // {
 // 	completion_s *vfork;
 
@@ -706,7 +778,7 @@ mm_s *get_task_mm(task_s *task)
 // 	task_unlock(tsk);
 // }
 
-// static int wait_for_vfork_done(struct task_struct *child,
+// static int wait_for_vfork_done(task_s *child,
 // 				completion_s *vfork)
 // {
 // 	int killed;
@@ -772,13 +844,13 @@ mm_s *get_task_mm(task_s *task)
 // 		complete_vfork_done(tsk);
 // }
 
-// void exit_mm_release(struct task_struct *tsk, mm_s *mm)
+// void exit_mm_release(task_s *tsk, mm_s *mm)
 // {
 // 	futex_exit_release(tsk);
 // 	mm_release(tsk, mm);
 // }
 
-// void exec_mm_release(struct task_struct *tsk, mm_s *mm)
+// void exec_mm_release(task_s *tsk, mm_s *mm)
 // {
 // 	futex_exec_release(tsk);
 // 	mm_release(tsk, mm);
@@ -1038,7 +1110,7 @@ static inline void init_task_pid_links(task_s *task) {
 
 // static void __delayed_free_task(struct rcu_head *rhp)
 // {
-// 	struct task_struct *tsk = container_of(rhp, struct task_struct, rcu);
+// 	task_s *tsk = container_of(rhp, task_s, rcu);
 
 // 	free_task(tsk);
 // }
@@ -1066,7 +1138,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
  * flags). The actual kick-off is left to the caller.
  */
 static __latent_entropy task_s
-*copy_process(pid_s *pid, int trace, kclone_args_s *args)
+*copy_process(pid_s *pid, int trace, int node, kclone_args_s *args)
 {
 	int pidfd = -1, retval;
 	task_s *p, *curr = current;
@@ -1158,7 +1230,7 @@ static __latent_entropy task_s
 	// 	goto fork_out;
 
 	retval = -ENOMEM;
-	p = dup_task_struct(current);
+	p = dup_task_struct(current, node);
 	if (!p)
 		goto fork_out;
 	// if (args->io_thread) {
@@ -1682,7 +1754,7 @@ pid_t kernel_clone(kclone_args_s *args)
 	// 		trace = 0;
 	// }
 
-	p = copy_process(NULL, trace, args);
+	p = copy_process(NULL, trace, NUMA_NO_NODE, args);
 	// add_latent_entropy();
 
 	if (IS_ERR(p))
@@ -1776,7 +1848,7 @@ int unshare_fd(unsigned long unshare_flags,
 	int error = 0;
 
 	if ((unshare_flags & CLONE_FILES) &&
-	    (fd && atomic_read(&fd->refcount) > 1)) {
+		(fd && atomic_read(&fd->refcount) > 1)) {
 		*new_fdp = dup_fd(fd, max_fds, &error);
 		if (!*new_fdp)
 			return error;

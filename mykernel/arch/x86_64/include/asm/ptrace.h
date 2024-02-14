@@ -53,12 +53,12 @@
 	// #	include <asm/proto.h>
 
 	// 	cpuinfo_x86_s;
-	// 	struct task_struct;
+	// 	task_s;
 
 	// 	extern unsigned long profile_pc(pt_regs_s *regs);
 
 	// 	extern unsigned long
-	// 	convert_ip_to_linear(struct task_struct *child, pt_regs_s *regs);
+	// 	convert_ip_to_linear(task_s *child, pt_regs_s *regs);
 	// 	extern void send_sigtrap(pt_regs_s *regs, int error_code, int si_code);
 
 

@@ -73,7 +73,7 @@
 	// };
 
 	// struct core_thread {
-	// 	struct task_struct *task;
+	// 	task_s *task;
 	// 	struct core_thread *next;
 	// };
 
@@ -99,7 +99,7 @@
 		// wait_queue_head_t	wait_chldexit;	/* for wait4() */
 
 		/* current thread group signal load-balancing target: */
-		// struct task_struct	*curr_target;
+		// task_s	*curr_target;
 
 		/* shared signal handling: */
 		// struct sigpending	shared_pending;
@@ -111,7 +111,7 @@
 		// int			group_exit_code;
 		/* notify group_exec_task when notify_count is less or equal to 0 */
 		// int			notify_count;
-		// struct task_struct	*group_exec_task;
+		// task_s	*group_exec_task;
 
 		/* thread group stop support, overloads group_exit_code too */
 		// int			group_stop_count;
@@ -271,15 +271,15 @@
 	// 	sig->flags = (sig->flags & ~SIGNAL_STOP_MASK) | flags;
 	// }
 
-	// extern void flush_signals(struct task_struct *);
-	// extern void ignore_signals(struct task_struct *);
-	// extern void flush_signal_handlers(struct task_struct *, int force_default);
-	// extern int dequeue_signal(struct task_struct *task, sigset_t *mask,
+	// extern void flush_signals(task_s *);
+	// extern void ignore_signals(task_s *);
+	// extern void flush_signal_handlers(task_s *, int force_default);
+	// extern int dequeue_signal(task_s *task, sigset_t *mask,
 	// 			kernel_siginfo_t *info, enum pid_type *type);
 
 	// static inline int kernel_dequeue_signal(void)
 	// {
-	// 	struct task_struct *task = current;
+	// 	task_s *task = current;
 	// 	kernel_siginfo_t __info;
 	// 	enum pid_type __type;
 	// 	int ret;
@@ -308,15 +308,15 @@
 
 	// int force_sig_fault_to_task(int sig, int code, void __user *addr
 	// 	___ARCH_SI_IA64(int imm, unsigned int flags, unsigned long isr)
-	// 	, struct task_struct *t);
+	// 	, task_s *t);
 	// int force_sig_fault(int sig, int code, void __user *addr
 	// 	___ARCH_SI_IA64(int imm, unsigned int flags, unsigned long isr));
 	// int send_sig_fault(int sig, int code, void __user *addr
 	// 	___ARCH_SI_IA64(int imm, unsigned int flags, unsigned long isr)
-	// 	, struct task_struct *t);
+	// 	, task_s *t);
 
 	// int force_sig_mceerr(int code, void __user *, short);
-	// int send_sig_mceerr(int code, void __user *, short, struct task_struct *);
+	// int send_sig_mceerr(int code, void __user *, short, task_s *);
 
 	// int force_sig_bnderr(void __user *addr, void __user *lower, void __user *upper);
 	// int force_sig_pkuerr(void __user *addr, u32 pkey);
@@ -325,10 +325,10 @@
 	// int force_sig_ptrace_errno_trap(int errno, void __user *addr);
 	// int force_sig_fault_trapno(int sig, int code, void __user *addr, int trapno);
 	// int send_sig_fault_trapno(int sig, int code, void __user *addr, int trapno,
-	// 			struct task_struct *t);
+	// 			task_s *t);
 	// int force_sig_seccomp(int syscall, int reason, bool force_coredump);
 
-	// extern int send_sig_info(int, struct kernel_siginfo *, struct task_struct *);
+	// extern int send_sig_info(int, struct kernel_siginfo *, task_s *);
 	// extern void force_sigsegv(int sig);
 	// extern int force_sig_info(struct kernel_siginfo *);
 	// extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
@@ -337,13 +337,13 @@
 	// 				const struct cred *);
 	// extern int kill_pgrp(struct pid *pid, int sig, int priv);
 	// extern int kill_pid(struct pid *pid, int sig, int priv);
-	// extern __must_check bool do_notify_parent(struct task_struct *, int);
-	// extern void __wake_up_parent(struct task_struct *p, struct task_struct *parent);
+	// extern __must_check bool do_notify_parent(task_s *, int);
+	// extern void __wake_up_parent(task_s *p, task_s *parent);
 	// extern void force_sig(int);
 	// extern void force_fatal_sig(int);
 	// extern void force_exit_sig(int);
-	// extern int send_sig(int, struct task_struct *, int);
-	// extern int zap_other_threads(struct task_struct *p);
+	// extern int send_sig(int, task_s *, int);
+	// extern int zap_other_threads(task_s *p);
 	// extern struct sigqueue *sigqueue_alloc(void);
 	// extern void sigqueue_free(struct sigqueue *);
 	// extern int send_sigqueue(struct sigqueue *, struct pid *, enum pid_type);
@@ -355,12 +355,12 @@
 	// 	return -ERESTARTNOINTR;
 	// }
 
-	// static inline int task_sigpending(struct task_struct *p)
+	// static inline int task_sigpending(task_s *p)
 	// {
 	// 	return unlikely(test_tsk_thread_flag(p,TIF_SIGPENDING));
 	// }
 
-	// static inline int signal_pending(struct task_struct *p)
+	// static inline int signal_pending(task_s *p)
 	// {
 	// 	/*
 	// 	* TIF_NOTIFY_SIGNAL isn't really a signal, but it requires the same
@@ -372,17 +372,17 @@
 	// 	return task_sigpending(p);
 	// }
 
-	// static inline int __fatal_signal_pending(struct task_struct *p)
+	// static inline int __fatal_signal_pending(task_s *p)
 	// {
 	// 	return unlikely(sigismember(&p->pending.signal, SIGKILL));
 	// }
 
-	// static inline int fatal_signal_pending(struct task_struct *p)
+	// static inline int fatal_signal_pending(task_s *p)
 	// {
 	// 	return task_sigpending(p) && __fatal_signal_pending(p);
 	// }
 
-	// static inline int signal_pending_state(unsigned int state, struct task_struct *p)
+	// static inline int signal_pending_state(unsigned int state, task_s *p)
 	// {
 	// 	if (!(state & (TASK_INTERRUPTIBLE | TASK_WAKEKILL)))
 	// 		return 0;
@@ -412,22 +412,22 @@
 	// * This is required every time the blocked sigset_t changes.
 	// * callers must hold sighand->siglock.
 	// */
-	// extern void recalc_sigpending_and_wake(struct task_struct *t);
+	// extern void recalc_sigpending_and_wake(task_s *t);
 	// extern void recalc_sigpending(void);
 	// extern void calculate_sigpending(void);
 
-	// extern void signal_wake_up_state(struct task_struct *t, unsigned int state);
+	// extern void signal_wake_up_state(task_s *t, unsigned int state);
 
-	// static inline void signal_wake_up(struct task_struct *t, bool resume)
+	// static inline void signal_wake_up(task_s *t, bool resume)
 	// {
 	// 	signal_wake_up_state(t, resume ? TASK_WAKEKILL : 0);
 	// }
-	// static inline void ptrace_signal_wake_up(struct task_struct *t, bool resume)
+	// static inline void ptrace_signal_wake_up(task_s *t, bool resume)
 	// {
 	// 	signal_wake_up_state(t, resume ? __TASK_TRACED : 0);
 	// }
 
-	// void task_join_group_stop(struct task_struct *task);
+	// void task_join_group_stop(task_s *task);
 
 	// #ifdef TIF_RESTORE_SIGMASK
 	// /*
@@ -451,7 +451,7 @@
 	// 	set_thread_flag(TIF_RESTORE_SIGMASK);
 	// }
 
-	// static inline void clear_tsk_restore_sigmask(struct task_struct *task)
+	// static inline void clear_tsk_restore_sigmask(task_s *task)
 	// {
 	// 	clear_tsk_thread_flag(task, TIF_RESTORE_SIGMASK);
 	// }
@@ -460,7 +460,7 @@
 	// {
 	// 	clear_thread_flag(TIF_RESTORE_SIGMASK);
 	// }
-	// static inline bool test_tsk_restore_sigmask(struct task_struct *task)
+	// static inline bool test_tsk_restore_sigmask(task_s *task)
 	// {
 	// 	return test_tsk_thread_flag(task, TIF_RESTORE_SIGMASK);
 	// }
@@ -480,7 +480,7 @@
 	// {
 	// 	current->restore_sigmask = true;
 	// }
-	// static inline void clear_tsk_restore_sigmask(struct task_struct *task)
+	// static inline void clear_tsk_restore_sigmask(task_s *task)
 	// {
 	// 	task->restore_sigmask = false;
 	// }
@@ -492,7 +492,7 @@
 	// {
 	// 	return current->restore_sigmask;
 	// }
-	// static inline bool test_tsk_restore_sigmask(struct task_struct *task)
+	// static inline bool test_tsk_restore_sigmask(task_s *task)
 	// {
 	// 	return task->restore_sigmask;
 	// }
@@ -577,7 +577,7 @@
 	// 	return on_sig_stack(sp) ? SS_ONSTACK : 0;
 	// }
 
-	// static inline void sas_ss_reset(struct task_struct *p)
+	// static inline void sas_ss_reset(task_s *p)
 	// {
 	// 	p->sas_ss_sp = 0;
 	// 	p->sas_ss_size = 0;
@@ -602,7 +602,7 @@
 	// 	list_empty(&init_task.tasks)
 
 	// #define next_task(p) \
-	// 	list_entry_rcu((p)->tasks.next, struct task_struct, tasks)
+	// 	list_entry_rcu((p)->tasks.next, task_s, tasks)
 
 	// #define for_each_process(p) \
 	// 	for (p = &init_task ; (p = next_task(p)) != &init_task ; )
@@ -629,11 +629,11 @@
 	// #define for_each_process_thread(p, t)	\
 	// 	for_each_process(p) for_each_thread(p, t)
 
-	// typedef int (*proc_visitor)(struct task_struct *p, void *data);
-	// void walk_process_tree(struct task_struct *top, proc_visitor, void *);
+	// typedef int (*proc_visitor)(task_s *p, void *data);
+	// void walk_process_tree(task_s *top, proc_visitor, void *);
 
 	// static inline
-	// struct pid *task_pid_type(struct task_struct *task, enum pid_type type)
+	// struct pid *task_pid_type(task_s *task, enum pid_type type)
 	// {
 	// 	struct pid *pid;
 	// 	if (type == PIDTYPE_PID)
@@ -643,7 +643,7 @@
 	// 	return pid;
 	// }
 
-	// static inline struct pid *task_tgid(struct task_struct *task)
+	// static inline struct pid *task_tgid(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_TGID];
 	// }
@@ -653,17 +653,17 @@
 	// * the result of task_pgrp/task_session even if task == current,
 	// * we can race with another thread doing sys_setsid/sys_setpgid.
 	// */
-	// static inline struct pid *task_pgrp(struct task_struct *task)
+	// static inline struct pid *task_pgrp(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_PGID];
 	// }
 
-	// static inline struct pid *task_session(struct task_struct *task)
+	// static inline struct pid *task_session(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_SID];
 	// }
 
-	// static inline int get_nr_threads(struct task_struct *task)
+	// static inline int get_nr_threads(task_s *task)
 	// {
 	// 	return task->signal->nr_threads;
 	// }
@@ -673,18 +673,18 @@
 	}
 
 	// static inline
-	// bool same_thread_group(struct task_struct *p1, struct task_struct *p2)
+	// bool same_thread_group(task_s *p1, task_s *p2)
 	// {
 	// 	return p1->signal == p2->signal;
 	// }
 
-	// static inline struct task_struct *next_thread(const struct task_struct *p)
+	// static inline task_s *next_thread(const task_s *p)
 	// {
 	// 	return list_entry_rcu(p->thread_group.next,
-	// 				struct task_struct, thread_group);
+	// 				task_s, thread_group);
 	// }
 
-	// static inline int thread_group_empty(struct task_struct *p)
+	// static inline int thread_group_empty(task_s *p)
 	// {
 	// 	return list_empty(&p->thread_group);
 	// }
@@ -694,10 +694,10 @@
 
 	// extern bool thread_group_exited(struct pid *pid);
 
-	// extern struct sighand_struct *__lock_task_sighand(struct task_struct *task,
+	// extern struct sighand_struct *__lock_task_sighand(task_s *task,
 	// 							unsigned long *flags);
 
-	// static inline struct sighand_struct *lock_task_sighand(struct task_struct *task,
+	// static inline struct sighand_struct *lock_task_sighand(task_s *task,
 	// 							unsigned long *flags)
 	// {
 	// 	struct sighand_struct *ret;
@@ -707,16 +707,16 @@
 	// 	return ret;
 	// }
 
-	// static inline void unlock_task_sighand(struct task_struct *task,
+	// static inline void unlock_task_sighand(task_s *task,
 	// 						unsigned long *flags)
 	// {
 	// 	spin_unlock_irqrestore(&task->sighand->siglock, *flags);
 	// }
 
 	// #ifdef CONFIG_LOCKDEP
-	// extern void lockdep_assert_task_sighand_held(struct task_struct *task);
+	// extern void lockdep_assert_task_sighand_held(task_s *task);
 	// #else
-	// static inline void lockdep_assert_task_sighand_held(struct task_struct *task) { }
+	// static inline void lockdep_assert_task_sighand_held(task_s *task) { }
 	// #endif
 
 	static inline unsigned long rlimit(unsigned int limit) {

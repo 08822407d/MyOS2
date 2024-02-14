@@ -24,7 +24,7 @@
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid);
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_bios_cpu_apicid);
 
-		// struct task_struct;
+		// task_s;
 
 		// struct smp_ops {
 		// 	void (*smp_prepare_boot_cpu)(void);
@@ -35,7 +35,7 @@
 		// 	void (*crash_stop_other_cpus)(void);
 		// 	void (*smp_send_reschedule)(int cpu);
 
-		// 	int (*cpu_up)(unsigned cpu, struct task_struct *tidle);
+		// 	int (*cpu_up)(unsigned cpu, task_s *tidle);
 		// 	int (*cpu_disable)(void);
 		// 	void (*cpu_die)(unsigned int cpu);
 		// 	void (*play_dead)(void);
@@ -74,7 +74,7 @@
 		// 	smp_ops.smp_cpus_done(max_cpus);
 		// }
 
-		// static inline int __cpu_up(unsigned int cpu, struct task_struct *tidle)
+		// static inline int __cpu_up(unsigned int cpu, task_s *tidle)
 		// {
 		// 	return smp_ops.cpu_up(cpu, tidle);
 		// }
@@ -116,8 +116,8 @@
 		// void native_smp_prepare_cpus(unsigned int max_cpus);
 		// void calculate_max_logical_packages(void);
 		// void native_smp_cpus_done(unsigned int max_cpus);
-		// int common_cpu_up(unsigned int cpunum, struct task_struct *tidle);
-		// int native_cpu_up(unsigned int cpunum, struct task_struct *tidle);
+		// int common_cpu_up(unsigned int cpunum, task_s *tidle);
+		// int native_cpu_up(unsigned int cpunum, task_s *tidle);
 		// int native_cpu_disable(void);
 		// int common_cpu_die(unsigned int cpu);
 		// void native_cpu_die(unsigned int cpu);
@@ -133,7 +133,7 @@
 		// void native_smp_send_reschedule(int cpu);
 		// void native_send_call_func_ipi(const struct cpumask *mask);
 		// void native_send_call_func_single_ipi(int cpu);
-		// void x86_idle_thread_init(unsigned int cpu, struct task_struct *idle);
+		// void x86_idle_thread_init(unsigned int cpu, task_s *idle);
 
 		// void smp_store_boot_cpu_info(void);
 		// void smp_store_cpu_info(int id);

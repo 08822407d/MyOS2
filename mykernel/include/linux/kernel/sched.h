@@ -810,26 +810,26 @@
 
 		void			*stack;
 		// refcount_t usage;
-		// /* Per task flags (PF_*), defined further below: */
+		/* Per task flags (PF_*), defined further below: */
 		unsigned int	flags;
 		// unsigned int ptrace;
 
-		// int on_cpu;
+		int				on_cpu;
 		// struct __call_single_node wake_entry;
 		// unsigned int wakee_flips;
 		// unsigned long wakee_flip_decay_ts;
 		// task_s *last_wakee;
 
-		// /*
-		// * recent_used_cpu is initially set as the last CPU used by a task
-		// * that wakes affine another task. Waker/wakee relationships can
-		// * push tasks around a CPU where each wakeup moves to the next one.
-		// * Tracking a recently used CPU allows a quick search for a recently
-		// * used CPU that may be idle.
-		// */
-		// int recent_used_cpu;
-		// int wake_cpu;
-		// int on_rq;
+		/*
+		 * recent_used_cpu is initially set as the last CPU used by a task
+		 * that wakes affine another task. Waker/wakee relationships can
+		 * push tasks around a CPU where each wakeup moves to the next one.
+		 * Tracking a recently used CPU allows a quick search for a recently
+		 * used CPU that may be idle.
+		 */
+		int				recent_used_cpu;
+		int				wake_cpu;
+		int				on_rq;
 
 		// int prio;
 		// int static_prio;
@@ -1052,13 +1052,13 @@
 		// /* PF_KTHREAD | PF_IO_WORKER */
 		// void *worker_private;
 
-		// u64				utime;
-		// u64				stime;
+		u64				utime;
+		u64				stime;
 	// #ifdef CONFIG_ARCH_HAS_SCALED_CPUTIME
 		// u64				utimescaled;
 		// u64				stimescaled;
 	// #endif
-		// u64				gtime;
+		u64				gtime;
 		// struct prev_cputime prev_cputime;
 	// #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
 		// struct vtime vtime;

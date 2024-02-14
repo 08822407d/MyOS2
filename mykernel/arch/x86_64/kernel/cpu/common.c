@@ -47,7 +47,7 @@
 // #include <asm/fpu/api.h>
 // #include <asm/mtrr.h>
 // #include <asm/hwcap2.h>
-// #include <linux/numa.h>
+#include <linux/kernel/numa.h>
 // #include <asm/numa.h>
 #include <asm/asm.h>
 #include <asm/bugs.h>
