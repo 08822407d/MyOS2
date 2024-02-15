@@ -107,8 +107,8 @@ code_64_start:
 	movq	%rax,		%fs
 	movq	%rax,		%gs
 
-	movq    $tmp_kstack_top,	%rax
-	movq    %rax,		%rsp
+	movq	$tmp_kstack_top,	%rax
+	movq	%rax,		%rsp
 	// set page map
 	callq	creat_higher_half_pagemap
 
@@ -135,7 +135,7 @@ skip_set_pde:
 	movq	%cs,		%rax
 	pushq	%rax
 	movabsq	$higher_half_entry,	%rax
-	pushq   %rax
+	pushq	%rax
 	lretq
 
 hang:
@@ -164,9 +164,9 @@ creat_higher_half_pagemap:
 .code64
 .balign 8
 SYM_CODE_START(higher_half_entry)
-	movabsq	$idletsk,		%rbx
+	movabsq	$idle_threads,	%rbx
 	addq	$THREAD_SIZE,	%rbx
-	movq    %rbx,		%rsp
+	movq	%rbx,		%rsp
 
 	pushq   $0
 	popfq

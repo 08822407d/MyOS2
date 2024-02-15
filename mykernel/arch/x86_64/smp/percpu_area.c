@@ -15,11 +15,11 @@ __visible DEFINE_PER_CPU(taskfs_s, idle_taskfs) = {
 	.root.mnt		= NULL,
 };
 
-__visible DEFINE_PER_CPU(PCB_u, idletsk)  __aligned(THREAD_SIZE) = {
-	.task.tasks				= LIST_INIT(idletsk.task.tasks),
-	.task.parent			= &idletsk.task,
-	.task.sibling			= LIST_INIT(idletsk.task.sibling),
-	.task.children			= LIST_HEADER_INIT(idletsk.task.children),
+__visible DEFINE_PER_CPU(PCB_u, idle_threads)  __aligned(THREAD_SIZE) = {
+	.task.tasks				= LIST_INIT(idle_threads.task.tasks),
+	.task.parent			= &idle_threads.task,
+	.task.sibling			= LIST_INIT(idle_threads.task.sibling),
+	.task.children			= LIST_HEADER_INIT(idle_threads.task.children),
 	.task.__state			= TASK_RUNNING,
 	.task.flags				= PF_KTHREAD,
 	.task.rt.time_slice		= 20,
@@ -27,14 +27,14 @@ __visible DEFINE_PER_CPU(PCB_u, idletsk)  __aligned(THREAD_SIZE) = {
 	.task.mm				= &init_mm,
 	.task.fs				= &idle_taskfs,
 	.task.files				= &idle_taskfilps,
-	.task.pid_links 		= LIST_INIT(idletsk.task.pid_links),
-	.task.stack				= (void *)&idletsk + THREAD_SIZE,
+	.task.pid_links 		= LIST_INIT(idle_threads.task.pid_links),
+	.task.stack				= (void *)&idle_threads + THREAD_SIZE,
 };
 
 __visible DEFINE_PER_CPU(cpudata_u, cpudata) ={
 	.data = {
-		.idle_task			= &idletsk.task,
-		.curr_task			= &idletsk.task,
+		.idle_task			= &idle_threads.task,
+		.curr_task			= &idle_threads.task,
 		.running_lhdr		= LIST_HEADER_INIT(cpudata.data.running_lhdr),
 		.is_idle_flag		= 1,
 		.scheduleing_flag	= 0,
@@ -62,7 +62,7 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw) = {
 		 * Poison it.
 		 */
 		// .sp0 = (1UL << (BITS_PER_LONG-1)) + 1,
-		.sp0 = (reg_t)(&idletsk + 1),
+		.sp0 = (reg_t)(&idle_threads + 1),
 		.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
 	 },
 };
