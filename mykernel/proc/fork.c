@@ -128,8 +128,6 @@ int nr_threads;			/* The idle threads do not count.. */
 
 static int max_threads;		/* tunable limit on nr_threads */
 
-DEFINE_PER_CPU(unsigned long, process_counts) = 0;
-
 
 static inline task_s *alloc_task_struct_node(int node) {
 	PCB_u *ret_val = kmalloc(sizeof(PCB_u), GFP_KERNEL);
@@ -184,9 +182,10 @@ static int alloc_thread_stack_node(task_s *tsk, int node)
 	// 			     THREADINFO_GFP & ~__GFP_ACCOUNT,
 	// 			     PAGE_KERNEL,
 	// 			     0, node, __builtin_return_address(0));
-	// if (!stack)
-	// 	return -ENOMEM;
-	stack = (unsigned long *)((unsigned long)tsk + THREAD_SIZE);
+	// stack = (unsigned long *)((unsigned long)tsk + THREAD_SIZE);
+	stack = kmalloc(THREAD_SIZE, GFP_KERNEL);
+	if (!stack)
+		return -ENOMEM;
 
 	// vm = find_vm_area(stack);
 	// if (memcg_charge_kernel_stack(vm)) {

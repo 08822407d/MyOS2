@@ -5,6 +5,16 @@
 #include <asm/desc.h>
 
 
+#include <obsolete/glo.h>
+
+char init_stack[THREAD_SIZE] __page_aligned_data;
+
+DEFINE_PER_CPU_ALIGNED(pcpu_hot_s, pcpu_hot) = {
+	.current_task	= &idle_threads.task,
+	.preempt_count	= INIT_PREEMPT_COUNT,
+	// .top_of_stack	= TOP_OF_INIT_STACK,
+};
+
 __visible DEFINE_PER_CPU(files_struct_s, idle_taskfilps);
 
 __visible DEFINE_PER_CPU(taskfs_s, idle_taskfs) = {
@@ -28,7 +38,7 @@ __visible DEFINE_PER_CPU(PCB_u, idle_threads)  __aligned(THREAD_SIZE) = {
 	.task.fs				= &idle_taskfs,
 	.task.files				= &idle_taskfilps,
 	.task.pid_links 		= LIST_INIT(idle_threads.task.pid_links),
-	.task.stack				= (void *)&idle_threads + THREAD_SIZE,
+	.task.stack				= (void *)init_stack + THREAD_SIZE,
 };
 
 __visible DEFINE_PER_CPU(cpudata_u, cpudata) ={
@@ -62,7 +72,7 @@ __visible DEFINE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw) = {
 		 * Poison it.
 		 */
 		// .sp0 = (1UL << (BITS_PER_LONG-1)) + 1,
-		.sp0 = (reg_t)(&idle_threads + 1),
+		.sp0 = (reg_t)init_stack + THREAD_SIZE,
 		.io_bitmap_base	= IO_BITMAP_OFFSET_INVALID,
 	 },
 };

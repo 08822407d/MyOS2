@@ -38,6 +38,7 @@
 
 
 	#include <asm/ptrace.h>
+	#include <asm/thread_info.h>
 
 	// /*
 	// * We handle most unaligned accesses in hardware.  On the other hand
@@ -659,15 +660,10 @@
 
 	#define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1))
 
-	// #define task_pt_regs(task)                                       \
-	// 	({                                                              \
-	// 		unsigned long __ptr = (unsigned long)task_stack_page(task); \
-	// 		__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;         \
-	// 		((pt_regs_s *)__ptr) - 1;                              \
-	// 	})
-	#define task_pt_regs(task) ({							\
-				loff_t __ptr = (loff_t)task + THREAD_SIZE;	\
-				((pt_regs_s *)__ptr) - 1;				\
+	#define task_pt_regs(task)	({									\
+				loff_t __ptr = (loff_t)task_stack_page(task);		\
+				__ptr += THREAD_SIZE - TOP_OF_KERNEL_STACK_PADDING;	\
+				((pt_regs_s *)__ptr) - 1;							\
 			})
 
 	// #define INIT_THREAD \

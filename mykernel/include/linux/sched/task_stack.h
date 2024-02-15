@@ -11,20 +11,20 @@
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
 
-	// /*
-	// * When accessing the stack of a non-current task that might exit, use
-	// * try_get_task_stack() instead.  task_stack_page will return a pointer
-	// * that could get freed out from under you.
-	// */
-	// static inline void *task_stack_page(const task_s *task)
-	// {
-	// 	return task->stack;
-	// }
+	/*
+	 * When accessing the stack of a non-current task that might exit, use
+	 * try_get_task_stack() instead.  task_stack_page will return a pointer
+	 * that could get freed out from under you.
+	 */
+	static inline void
+	*task_stack_page(const task_s *task) {
+		return task->stack;
+	}
 
 	// #define setup_thread_stack(new,old)	do { } while(0)
 
-	static inline unsigned long *end_of_stack(const task_s *task)
-	{
+	static inline unsigned long
+	*end_of_stack(const task_s *task) {
 		return task->stack;
 	}
 

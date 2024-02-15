@@ -57,6 +57,7 @@ SECTIONS
 		_sdata = .;
 		*(.data)
 		*(.data.rel*)
+		*(.data..page_aligned*)
 		_edata = .;
 	}
 	. = ALIGN(_Page_Size);

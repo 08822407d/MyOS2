@@ -164,7 +164,7 @@ creat_higher_half_pagemap:
 .code64
 .balign 8
 SYM_CODE_START(higher_half_entry)
-	movabsq	$idle_threads,	%rbx
+	movabsq	$init_stack,	%rbx
 	addq	$THREAD_SIZE,	%rbx
 	movq	%rbx,		%rsp
 

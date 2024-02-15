@@ -25,7 +25,7 @@
 // #include <asm/asm-offsets.h>
 #include <asm/msr.h>
 #include <asm/unistd.h>
-// #include <asm/thread_info.h>
+#include <asm/thread_info.h>
 #include <asm/hw_irq.h>
 #include <asm/page_types.h>
 // #include <asm/irqflags.h>

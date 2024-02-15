@@ -16,7 +16,7 @@
 	// #include <uapi/linux/audit.h>
 	#include <linux/kernel/sched.h>
 	#include <linux/kernel/err.h>
-	// #include <asm/thread_info.h> /* for TS_COMPAT */
+	#include <asm/thread_info.h> /* for TS_COMPAT */
 	#include <asm/unistd.h>
 
 

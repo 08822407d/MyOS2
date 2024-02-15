@@ -79,6 +79,8 @@
         "unaligned.h": "c",
         "page.h": "c",
         "init.h": "c",
-        "mmu_context.h": "c"
+        "mmu_context.h": "c",
+        "list.h": "c",
+        "thread_info.h": "c"
     }
 }

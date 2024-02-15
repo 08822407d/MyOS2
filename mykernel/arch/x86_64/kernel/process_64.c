@@ -105,7 +105,6 @@ start_thread_common(pt_regs_s *regs,
 void
 start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
 {
-	// start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
 	start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
 }
 
@@ -124,6 +123,8 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	per_cpudata_s *cpudata_p = curr_cpu;
 	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->x86_tss.sp0 = (reg_t)next_p->stack;
+	pcpu_hot.current_task = next_p;
+	pcpu_hot.top_of_stack = task_top_of_stack(next_p);
 
 
 	// struct thread_struct *prev = &prev_p->thread;

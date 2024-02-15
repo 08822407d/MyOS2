@@ -428,7 +428,7 @@
 		// 	DECLARE_PER_CPU_SECTION(type, name, "")
 
 		#define DEFINE_PER_CPU(type, name)					\
-			DEFINE_PER_CPU_SECTION(type, name, "")
+					DEFINE_PER_CPU_SECTION(type, name, "")
 
 		// /*
 		//  * Declaration/definition used for per-CPU variables that must come first in
