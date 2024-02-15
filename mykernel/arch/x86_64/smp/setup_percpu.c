@@ -25,8 +25,12 @@
 
 
 #include <asm-generic/sections.h>
+#include <asm/debug_func.h>
 
 #define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
+
+DEFINE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off) = BOOT_PERCPU_OFFSET;
+// EXPORT_PER_CPU_SYMBOL(this_cpu_off);
 
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
@@ -34,6 +38,9 @@ unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 
 void __init setup_per_cpu_areas(void)
 {
+	void *test = func_rdgsbase();
+	test = func_rdfsbase();
+
 	unsigned int cpu;
 	unsigned long delta;
 	unsigned long pcpuarea_size =
@@ -89,7 +96,7 @@ void __init setup_per_cpu_areas(void)
 					SMP_CACHE_BYTES) - (void *)__per_cpu_load;
 
 		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
-		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
+		per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
 		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
 		// setup_percpu_segment(cpu);
 		// /*

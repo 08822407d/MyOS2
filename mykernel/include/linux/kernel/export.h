@@ -7,7 +7,7 @@
 	#define EXPORT_SYMBOL_NS(sym, ns)
 	#define EXPORT_SYMBOL_NS_GPL(sym, ns)
 
-	// #include <linux/stringify.h>
+	#include <linux/kernel/stringify.h>
 
 	// /*
 	//  * Export symbols from the kernel to modules.  Forked from module.h

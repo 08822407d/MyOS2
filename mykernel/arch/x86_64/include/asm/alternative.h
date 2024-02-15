@@ -3,7 +3,7 @@
 #define _ASM_X86_ALTERNATIVE_H
 
 	#include <linux/kernel/types.h>
-	// #include <linux/stringify.h>
+	#include <linux/kernel/stringify.h>
 	#include <asm/asm.h>
 
 	// #define ALTINSTR_FLAG_INV	(1 << 15)

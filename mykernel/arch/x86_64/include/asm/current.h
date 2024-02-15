@@ -35,13 +35,10 @@
 
 		static __always_inline task_s *get_current(void) {
 			// return this_cpu_read_stable(pcpu_hot.current_task);
-			return pcpu_hot.current_task;
 		}
 
 	#	define current get_current()
 
-	// 	extern task_s *myos_get_current(void);
-	// #	define current myos_get_current()
 	#endif /* __ASSEMBLY__ */
 
 #endif /* _ASM_X86_CURRENT_H */

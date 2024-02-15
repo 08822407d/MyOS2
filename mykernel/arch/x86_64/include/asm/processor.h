@@ -655,8 +655,10 @@
 	// 	prefetchw(x);
 	// }
 
-	// #define TOP_OF_INIT_STACK ((unsigned long)&init_stack + sizeof(init_stack) - \
-	// 						TOP_OF_KERNEL_STACK_PADDING)
+	#define TOP_OF_INIT_STACK (										\
+				(unsigned long)&init_stack + sizeof(init_stack) -	\
+					TOP_OF_KERNEL_STACK_PADDING						\
+			)
 
 	#define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1))
 

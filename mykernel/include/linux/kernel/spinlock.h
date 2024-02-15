@@ -57,7 +57,7 @@
 	#include <linux/kernel/compiler.h>
 	#include <linux/kernel/irqflags.h>
 	// #include <linux/thread_info.h>
-	// #include <linux/stringify.h>
+	#include <linux/kernel/stringify.h>
 	// #include <linux/bottom_half.h>
 	// #include <linux/lockdep.h>
 	#include <asm/barrier.h>

@@ -12,7 +12,7 @@ char init_stack[THREAD_SIZE] __page_aligned_data;
 DEFINE_PER_CPU_ALIGNED(pcpu_hot_s, pcpu_hot) = {
 	.current_task	= &idle_threads.task,
 	.preempt_count	= INIT_PREEMPT_COUNT,
-	// .top_of_stack	= TOP_OF_INIT_STACK,
+	.top_of_stack	= TOP_OF_INIT_STACK,
 };
 
 __visible DEFINE_PER_CPU(files_struct_s, idle_taskfilps);

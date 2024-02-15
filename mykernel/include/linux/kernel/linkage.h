@@ -3,7 +3,7 @@
 #define _LINUX_LINKAGE_H
 
 	#include <linux/kernel/compiler_types.h>
-	// #include <linux/stringify.h>
+	#include <linux/kernel/stringify.h>
 	#include <linux/kernel/export.h>
 	// #include <asm/linkage.h>
 

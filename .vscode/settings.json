@@ -81,6 +81,11 @@
         "init.h": "c",
         "mmu_context.h": "c",
         "list.h": "c",
-        "thread_info.h": "c"
+        "thread_info.h": "c",
+        "stringify.h": "c",
+        "apicdef.h": "c",
+        "page_types.h": "c",
+        "debug_func.h": "c",
+        "fsgsbase.h": "c"
     }
 }

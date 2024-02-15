@@ -123,9 +123,6 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	per_cpudata_s *cpudata_p = curr_cpu;
 	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->x86_tss.sp0 = (reg_t)next_p->stack;
-	pcpu_hot.current_task = next_p;
-	pcpu_hot.top_of_stack = task_top_of_stack(next_p);
-
 
 	// struct thread_struct *prev = &prev_p->thread;
 	// struct thread_struct *next = &next_p->thread;
@@ -133,7 +130,7 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	// int cpu = smp_processor_id();
 
 	// WARN_ON_ONCE(IS_ENABLED(CONFIG_DEBUG_ENTRY) &&
-	// 	     this_cpu_read(hardirq_stack_inuse));
+	// 	     this_cpu_read(pcpu_hot.hardirq_stack_inuse));
 
 	// if (!test_thread_flag(TIF_NEED_FPU_LOAD))
 	// 	switch_fpu_prepare(prev_fpu, cpu);
@@ -184,11 +181,11 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 
 	// x86_pkru_load(prev, next);
 
-	// /*
-	//  * Switch the PDA and FPU contexts.
-	//  */
-	// this_cpu_write(current_task, next_p);
-	// this_cpu_write(cpu_current_top_of_stack, task_top_of_stack(next_p));
+	/*
+	 * Switch the PDA and FPU contexts.
+	 */
+	// raw_cpu_write(pcpu_hot.current_task, next_p);
+	// raw_cpu_write(pcpu_hot.top_of_stack, task_top_of_stack(next_p));
 
 	// switch_fpu_finish();
 
@@ -226,7 +223,7 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	// }
 
 	// /* Load the Intel cache allocation PQR MSR. */
-	// resctrl_sched_in();
+	// resctrl_sched_in(next_p);
 
 	// return prev_p;
 }

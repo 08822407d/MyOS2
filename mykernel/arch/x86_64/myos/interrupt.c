@@ -132,7 +132,6 @@ void exception_handler(pt_regs_s *sf_regs)
 {
 	per_cpudata_s *cpudata_p = curr_cpu;
 	unsigned long vec = (unsigned long)sf_regs->irq_nr;
-	task_s *curr = current;
 
 	switch (vec)
 	{

@@ -14,10 +14,12 @@
 	#else /* ...!ASSEMBLY */
 
 	#	include <linux/kernel/kernel.h>
-	// #	include <linux/stringify.h>
+	#	include <linux/kernel/stringify.h>
 
-	// #define __percpu_prefix		"%%"__stringify(__percpu_seg)":"
+	#define __percpu_prefix		"%%"__stringify(__percpu_seg)":"
 	// #define __my_cpu_offset		this_cpu_read(this_cpu_off)
+
+	#define __percpu_arg(x)		__percpu_prefix "%" #x
 
 	/*
 	 * Compared to the generic __my_cpu_offset version, the following
@@ -32,7 +34,6 @@
 					(typeof(*(ptr)) __kernel __force *)tcp_ptr__;	\
 				})
 
-	// #define __percpu_arg(x)		__percpu_prefix "%" #x
 
 	// /*
 	//  * Initialized pointers to per-cpu variables needed for the boot
@@ -507,15 +508,18 @@
 							per_cpu_offset((cpu)));	\
 					})
 
-		#	define this_cpu_ptr(ptr)	arch_raw_cpu_ptr(ptr)
+		// #	define this_cpu_ptr(ptr)	arch_raw_cpu_ptr(ptr)
+			extern virt_addr_t calc_pcpu_var_addr(void *proto_addr);
+		#	define this_cpu_ptr(ptr) \
+						(typeof(*(ptr)) __kernel __force *)calc_pcpu_var_addr(ptr)
 		#	define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 
 		#endif /* __ASSEMBLY__ */
     // }
 
 
-	// /* We can use this directly for local CPU (faster). */
-	// DECLARE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
+	/* We can use this directly for local CPU (faster). */
+	DECLARE_PER_CPU_READ_MOSTLY(unsigned long, this_cpu_off);
 
 	#endif /* !__ASSEMBLY__ */
 
