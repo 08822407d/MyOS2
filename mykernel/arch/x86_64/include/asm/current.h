@@ -35,7 +35,9 @@
 
 		static __always_inline task_s *get_current(void) {
 			// return this_cpu_read_stable(pcpu_hot.current_task);
+			return *this_cpu_ptr(&pcpu_hot.current_task);
 		}
+		// task_s *get_current(void);
 
 	#	define current get_current()
 

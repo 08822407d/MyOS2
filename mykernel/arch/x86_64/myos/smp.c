@@ -57,8 +57,6 @@ void myos_percpu_self_config(size_t cpu_idx)
 	task_s *	current_task = current;
 	cpudata_p->curr_task =
 	cpudata_p->idle_task = current_task;
-	wrgsbase((unsigned long)cpudata_u_p);
-
 	__flush_tlb_all();
 }
 
