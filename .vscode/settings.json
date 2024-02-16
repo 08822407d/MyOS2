@@ -86,6 +86,7 @@
         "apicdef.h": "c",
         "page_types.h": "c",
         "debug_func.h": "c",
-        "fsgsbase.h": "c"
+        "fsgsbase.h": "c",
+        "qspinlock.h": "c"
     }
 }

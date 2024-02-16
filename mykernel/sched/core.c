@@ -658,7 +658,7 @@ void wake_up_new_task(task_s *p)
  */
 void schedule_preempt_disabled(void)
 {
-	sched_preempt_enable_no_resched();
+	// sched_preempt_enable_no_resched();
 	schedule();
 	preempt_disable();
 }
