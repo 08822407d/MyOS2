@@ -29,12 +29,10 @@
 				u8	pad[64];
 			};
 		} pcpu_hot_s;
-		// static_assert(sizeof(struct pcpu_hot) == 64);
 
-		DECLARE_PER_CPU_ALIGNED(pcpu_hot_s, pcpu_hot);
+		DECLARE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot);
 
 		static __always_inline task_s *get_current(void) {
-			// return this_cpu_read_stable(pcpu_hot.current_task);
 			return *this_cpu_ptr(&pcpu_hot.current_task);
 		}
 		// task_s *get_current(void);

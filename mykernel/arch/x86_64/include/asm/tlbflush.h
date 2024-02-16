@@ -154,7 +154,7 @@
 	// 	*/
 	// 	struct tlb_context ctxs[TLB_NR_DYN_ASIDS];
 	// };
-	// DECLARE_PER_CPU_ALIGNED(struct tlb_state, cpu_tlbstate);
+	// DECLARE_PER_CPU_CACHE_ALIGNED(struct tlb_state, cpu_tlbstate);
 
 	// struct tlb_state_shared {
 	// 	/*

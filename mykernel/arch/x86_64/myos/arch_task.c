@@ -218,7 +218,7 @@ void try_sched()
 	if (((curr_task->__state == TASK_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
 		return;
 
-	if (cpudata_p->preempt_count != 0)
+	if (preempt_count() != 0)
 		return;
 
 	// normal sched
