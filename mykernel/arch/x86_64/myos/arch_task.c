@@ -116,7 +116,7 @@ static void exit_notify(void)
 
 unsigned long do_exit(unsigned long exit_code)
 {
-	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
+	per_cpudata_s	*cpudata_p = this_cpu_ptr(&cpudata);
 	task_s * curr = current;
 	color_printk(RED, WHITE, "Core-%d: task:%d exited.\n", cpudata_p->cpu_idx, curr->pid);
 
@@ -146,7 +146,7 @@ static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 
 void myos_schedule(void)
 {
-	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
+	per_cpudata_s	*cpudata_p = this_cpu_ptr(&cpudata);
 	task_s *		curr_task = cpudata_p->curr_task;
 	task_s *		next_task = NULL;
 	// curr_task must exists
@@ -204,7 +204,7 @@ void myos_schedule(void)
 
 void try_sched()
 {
-	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
+	per_cpudata_s	*cpudata_p = this_cpu_ptr(&cpudata);
 	task_s			*curr_task = current;
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;

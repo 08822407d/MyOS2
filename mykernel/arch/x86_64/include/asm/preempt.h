@@ -29,7 +29,7 @@
 	// 	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
 	// }
 	static __always_inline int preempt_count(void) {
-		per_cpudata_s *cpudata_p = &this_cpu_ptr(&cpudata)->data;
+		per_cpudata_s *cpudata_p = this_cpu_ptr(&cpudata);
 		return cpudata_p->preempt_count;
 	}
 
@@ -80,7 +80,7 @@
 	// 	raw_cpu_add_4(__preempt_count, val);
 	// }
 	static __always_inline void preempt_count_add(int val) {
-		per_cpudata_s *cpudata_p = &this_cpu_ptr(&cpudata)->data;
+		per_cpudata_s *cpudata_p = this_cpu_ptr(&cpudata);
 		cpudata_p->preempt_count += val;
 	}
 
@@ -88,7 +88,7 @@
 	// 	raw_cpu_add_4(__preempt_count, -val);
 	// }
 	static __always_inline void preempt_count_sub(int val) {
-		per_cpudata_s *cpudata_p = &this_cpu_ptr(&cpudata)->data;
+		per_cpudata_s *cpudata_p = this_cpu_ptr(&cpudata);
 		cpudata_p->preempt_count -= val;
 	}
 
@@ -108,7 +108,7 @@
 	// 	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
 	// }
 	static __always_inline bool should_resched(int preempt_offset) {
-		per_cpudata_s *cpudata_p = &this_cpu_ptr(&cpudata)->data;
+		per_cpudata_s *cpudata_p = this_cpu_ptr(&cpudata);
 		return unlikely(cpudata_p->preempt_count == preempt_offset);
 	}
 

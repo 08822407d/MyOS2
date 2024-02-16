@@ -31,16 +31,10 @@
 		arch_cpudata_s	arch_info;
 
 		unsigned long	preempt_count;
-
 	} per_cpudata_s;
 
-	typedef union cpudata {
-		per_cpudata_s	data;
-		reg_t			cpu_stack[SZ_2M / sizeof(reg_t)];
-	} cpudata_u;
 
-
-	extern cpudata_u cpudata;
+	extern per_cpudata_s cpudata;
 
 	// per_cpudata_s * get_current_cpu(void);
 	// #define curr_cpu get_current_cpu()

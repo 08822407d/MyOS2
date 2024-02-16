@@ -41,16 +41,14 @@ __visible DEFINE_PER_CPU(PCB_u, idle_threads)  __aligned(THREAD_SIZE) = {
 	.task.stack				= (void *)init_stack + THREAD_SIZE,
 };
 
-__visible DEFINE_PER_CPU(cpudata_u, cpudata) ={
-	.data = {
-		.idle_task			= &idle_threads.task,
-		.curr_task			= &idle_threads.task,
-		.running_lhdr		= LIST_HEADER_INIT(cpudata.data.running_lhdr),
-		.is_idle_flag		= 1,
-		.scheduleing_flag	= 0,
-		.preempt_count		= 0,
-		.last_jiffies		= 0,
-	},
+__visible DEFINE_PER_CPU(per_cpudata_s, cpudata) ={
+	.idle_task			= &idle_threads.task,
+	.curr_task			= &idle_threads.task,
+	.running_lhdr		= LIST_HEADER_INIT(cpudata.running_lhdr),
+	.is_idle_flag		= 1,
+	.scheduleing_flag	= 0,
+	.preempt_count		= 0,
+	.last_jiffies		= 0,
 };
 
 

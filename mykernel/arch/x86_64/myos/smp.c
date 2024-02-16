@@ -35,7 +35,7 @@ void myos_init_smp(size_t lcpu_nr)
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
 	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0).data);
+	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0));
 	cpudata_p->cpu_idx = 0;
 	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
 
@@ -52,8 +52,7 @@ void myos_init_smp(size_t lcpu_nr)
 
 void myos_percpu_self_config(size_t cpu_idx)
 {
-	cpudata_u *cpudata_u_p = &(per_cpu(cpudata, cpu_idx));
-	per_cpudata_s * cpudata_p = &(cpudata_u_p->data);
+	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0));
 	task_s *	current_task = current;
 	cpudata_p->curr_task =
 	cpudata_p->idle_task = current_task;
@@ -65,9 +64,3 @@ void myos_startup_smp()
 	wrmsrl(0x830,0xc4500);	//INIT IPI
 	wrmsrl(0x830,0xc4620);	//Start-up IPI
 }
-
-// inline __always_inline per_cpudata_s * get_current_cpu()
-// {
-// 	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
-// 	return &(cpudata_u_p->data);
-// }
