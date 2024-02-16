@@ -120,7 +120,7 @@ start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
  */
 __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 {
-	per_cpudata_s *cpudata_p = curr_cpu;
+	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
 	struct tss_struct *curr_tss = cpudata_p->arch_info.tss;
 	curr_tss->x86_tss.sp0 = (reg_t)next_p->stack;
 
@@ -184,8 +184,9 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	/*
 	 * Switch the PDA and FPU contexts.
 	 */
-	// raw_cpu_write(pcpu_hot.current_task, next_p);
 	// raw_cpu_write(pcpu_hot.top_of_stack, task_top_of_stack(next_p));
+	*this_cpu_ptr(&pcpu_hot.current_task) = next_p;
+	*this_cpu_ptr(&pcpu_hot.top_of_stack) = task_top_of_stack(next_p);
 
 	// switch_fpu_finish();
 

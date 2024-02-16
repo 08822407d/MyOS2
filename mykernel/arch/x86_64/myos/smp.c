@@ -66,8 +66,8 @@ void myos_startup_smp()
 	wrmsrl(0x830,0xc4620);	//Start-up IPI
 }
 
-inline __always_inline per_cpudata_s * get_current_cpu()
-{
-	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
-	return &(cpudata_u_p->data);
-}
+// inline __always_inline per_cpudata_s * get_current_cpu()
+// {
+// 	cpudata_u * cpudata_u_p = (cpudata_u *)rdgsbase();
+// 	return &(cpudata_u_p->data);
+// }

@@ -116,7 +116,7 @@ static void exit_notify(void)
 
 unsigned long do_exit(unsigned long exit_code)
 {
-	per_cpudata_s * cpudata_p = curr_cpu;
+	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
 	task_s * curr = current;
 	color_printk(RED, WHITE, "Core-%d: task:%d exited.\n", cpudata_p->cpu_idx, curr->pid);
 
@@ -138,17 +138,6 @@ do_exit_again:
 /*==============================================================================================*
  *									schedule functions											*
  *==============================================================================================*/
-// inline __always_inline task_s * myos_get_current()
-// {
-// 	task_s * curr_task = NULL;
-// 	asm volatile(	"andq 	%%rsp,	%1		\n\t"
-// 				:	"=r"(curr_task)
-// 				:	"r"(~(THREAD_SIZE - 1))
-// 				:
-// 				);
-// 	return curr_task;
-// }
-
 static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 {
 	load_cr3(target->mm->pgd);
@@ -157,7 +146,7 @@ static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 
 void myos_schedule(void)
 {
-	per_cpudata_s *	cpudata_p = curr_cpu;
+	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
 	task_s *		curr_task = cpudata_p->curr_task;
 	task_s *		next_task = NULL;
 	// curr_task must exists
@@ -215,8 +204,8 @@ void myos_schedule(void)
 
 void try_sched()
 {
-	per_cpudata_s *	cpudata_p = curr_cpu;
-	task_s *		curr_task = cpudata_p->curr_task;
+	per_cpudata_s	*cpudata_p = &this_cpu_ptr(&cpudata)->data;
+	task_s			*curr_task = current;
 
 	unsigned long used_jiffies = jiffies - cpudata_p->last_jiffies;
 	// if running time out, make the need_schedule flag of current task

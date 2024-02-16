@@ -511,7 +511,7 @@
 		// #	define this_cpu_ptr(ptr)	arch_raw_cpu_ptr(ptr)
 			extern virt_addr_t calc_pcpu_var_addr(void *proto_addr);
 		#	define this_cpu_ptr(ptr) \
-						(typeof(*(ptr)) __kernel __force *)calc_pcpu_var_addr(ptr)
+						((typeof(*(ptr)) __kernel __force *)calc_pcpu_var_addr(ptr))
 		#	define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 
 		#endif /* __ASSEMBLY__ */

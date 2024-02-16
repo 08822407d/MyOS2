@@ -28,7 +28,6 @@
 		unsigned long	time_slice;		// max jiffies for running of this task
 
 		size_t			cpu_idx;
-		reg_t			cpustack_p;
 		arch_cpudata_s	arch_info;
 
 		unsigned long	preempt_count;
@@ -43,7 +42,7 @@
 
 	extern cpudata_u cpudata;
 
-	per_cpudata_s * get_current_cpu(void);
-	#define curr_cpu get_current_cpu()
+	// per_cpudata_s * get_current_cpu(void);
+	// #define curr_cpu get_current_cpu()
 
 #endif /* _MYOS_PERCPU_H_ */

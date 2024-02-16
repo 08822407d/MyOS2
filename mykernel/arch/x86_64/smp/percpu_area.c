@@ -50,7 +50,6 @@ __visible DEFINE_PER_CPU(cpudata_u, cpudata) ={
 		.scheduleing_flag	= 0,
 		.preempt_count		= 0,
 		.last_jiffies		= 0,
-		.cpustack_p			= (reg_t)(&cpudata + 1),
 	},
 };
 
