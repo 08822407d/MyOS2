@@ -6,7 +6,7 @@
 
 void __init_swait_queue_head(swqueue_hdr_s *q)
 {
-	raw_spin_lock_init(&q->lock);
+	spin_lock_init(&q->lock);
 	INIT_LIST_HDR_S(&q->task_list_hdr);
 }
 

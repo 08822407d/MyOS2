@@ -29,8 +29,6 @@
 
 		size_t			cpu_idx;
 		arch_cpudata_s	arch_info;
-
-		unsigned long	preempt_count;
 	} per_cpudata_s;
 
 
