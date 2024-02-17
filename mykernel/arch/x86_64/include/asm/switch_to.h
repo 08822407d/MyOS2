@@ -42,12 +42,12 @@
 				__switch_to_asm((prev), (next));	\
 			} while (0)
 
-	// /* This is used when switching tasks or entering/exiting vm86 mode. */
-	// static inline void update_task_stack(task_s *task) {
-	// 	/* Xen PV enters the kernel on the thread stack. */
-	// 	if (static_cpu_has(X86_FEATURE_XENPV))
-	// 		load_sp0(task_top_of_stack(task));
-	// }
+	/* This is used when switching tasks or entering/exiting vm86 mode. */
+	static inline void update_task_stack(task_s *task) {
+		/* Xen PV enters the kernel on the thread stack. */
+		// if (static_cpu_has(X86_FEATURE_XENPV))
+			load_sp0(task_top_of_stack(task));
+	}
 
 	static inline void
 	kthread_frame_init(task_kframe_s *frame, unsigned long fun, unsigned long arg) {

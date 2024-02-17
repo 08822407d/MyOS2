@@ -35,9 +35,10 @@ void myos_init_smp(size_t lcpu_nr)
 	// for (int i = 0; i < lcpu_nr; i++)
 	// {
 	// create percpu_data for current lcpu
-	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0));
-	cpudata_p->cpu_idx = 0;
-	cpudata_p->time_slice = cpudata_p->curr_task->rt.time_slice;
+	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
+	per_cpudata_s	*cpudata_p = &(per_cpu(cpudata, 0));
+	pcpu->cpu_number = 0;
+	cpudata_p->time_slice = pcpu->current_task->rt.time_slice;
 
 	// fill architechture part
 	arch_cpudata_s * arch_cpuinfo = &(cpudata_p->arch_info);
@@ -54,7 +55,6 @@ void myos_percpu_self_config(size_t cpu_idx)
 {
 	per_cpudata_s * cpudata_p = &(per_cpu(cpudata, 0));
 	task_s *	current_task = current;
-	cpudata_p->curr_task =
 	cpudata_p->idle_task = current_task;
 	__flush_tlb_all();
 }

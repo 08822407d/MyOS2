@@ -7,7 +7,7 @@
 
 	extern unsigned long volatile	jiffies;
 
-	extern PCB_u			idle_threads;
+	extern task_s			idle_threads;
 	extern unsigned			nr_lcpu;
 
 	extern kbd_inbuf_s		*p_kb;

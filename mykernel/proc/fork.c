@@ -130,9 +130,7 @@ static int max_threads;		/* tunable limit on nr_threads */
 
 
 static inline task_s *alloc_task_struct_node(int node) {
-	PCB_u *ret_val = kmalloc(sizeof(PCB_u), GFP_KERNEL);
-	memset(&(ret_val->task), 0, sizeof(task_s));
-	return &ret_val->task;
+	return kzalloc(sizeof(task_s), GFP_KERNEL);
 }
 
 static inline void free_task_struct(task_s *tsk) {

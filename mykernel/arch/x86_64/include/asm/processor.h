@@ -363,6 +363,8 @@
 		x86_io_bitmap_s io_bitmap;
 	} __aligned(PAGE_SIZE);
 
+	DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
+
 	// /* Per CPU interrupt stacks */
 	// struct irq_stack
 	// {
@@ -467,12 +469,6 @@
 	// 	fpu_thread_struct_whitelist(offset, size);
 	// }
 
-	// static inline void
-	// native_load_sp0(unsigned long sp0)
-	// {
-	// 	this_cpu_write(cpu_tss_rw.x86_tss.sp0, sp0);
-	// }
-
 	// static __always_inline void native_swapgs(void)
 	// {
 	// 	asm volatile("swapgs" ::
@@ -500,10 +496,12 @@
 	// #else
 	#define __cpuid	native_cpuid
 
-	// static inline void load_sp0(unsigned long sp0)
-	// {
-	// 	native_load_sp0(sp0);
-	// }
+	static inline void load_sp0(unsigned long sp0) {
+		// static inline void
+		// native_load_sp0(unsigned long sp0) {
+			this_cpu_ptr(&cpu_tss_rw)->x86_tss.sp0 = sp0;
+		// }
+	}
 
 	// #endif /* CONFIG_PARAVIRT_XXL */
 

@@ -10,7 +10,7 @@
 char init_stack[THREAD_SIZE] __page_aligned_data;
 
 DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {
-	.current_task	= &idle_threads.task,
+	.current_task	= &idle_threads,
 	.preempt_count	= INIT_PREEMPT_COUNT,
 	.top_of_stack	= TOP_OF_INIT_STACK,
 };
@@ -25,25 +25,24 @@ __visible DEFINE_PER_CPU(taskfs_s, idle_taskfs) = {
 	.root.mnt		= NULL,
 };
 
-__visible DEFINE_PER_CPU(PCB_u, idle_threads)  __aligned(THREAD_SIZE) = {
-	.task.tasks				= LIST_INIT(idle_threads.task.tasks),
-	.task.parent			= &idle_threads.task,
-	.task.sibling			= LIST_INIT(idle_threads.task.sibling),
-	.task.children			= LIST_HEADER_INIT(idle_threads.task.children),
-	.task.__state			= TASK_RUNNING,
-	.task.flags				= PF_KTHREAD,
-	.task.rt.time_slice		= 20,
-	.task.se.vruntime		= -1,
-	.task.mm				= &init_mm,
-	.task.fs				= &idle_taskfs,
-	.task.files				= &idle_taskfilps,
-	.task.pid_links 		= LIST_INIT(idle_threads.task.pid_links),
-	.task.stack				= (void *)init_stack + THREAD_SIZE,
+__visible DEFINE_PER_CPU(task_s, idle_threads)  __aligned(THREAD_SIZE) = {
+	.tasks				= LIST_INIT(idle_threads.tasks),
+	.parent				= &idle_threads,
+	.sibling			= LIST_INIT(idle_threads.sibling),
+	.children			= LIST_HEADER_INIT(idle_threads.children),
+	.__state			= TASK_RUNNING,
+	.flags				= PF_KTHREAD,
+	.rt.time_slice		= 20,
+	.se.vruntime		= -1,
+	.mm					= &init_mm,
+	.fs					= &idle_taskfs,
+	.files				= &idle_taskfilps,
+	.pid_links 			= LIST_INIT(idle_threads.pid_links),
+	.stack				= (void *)init_stack + THREAD_SIZE,
 };
 
 __visible DEFINE_PER_CPU(per_cpudata_s, cpudata) ={
-	.idle_task			= &idle_threads.task,
-	.curr_task			= &idle_threads.task,
+	.idle_task			= &idle_threads,
 	.running_lhdr		= LIST_HEADER_INIT(cpudata.running_lhdr),
 	.is_idle_flag		= 1,
 	.scheduleing_flag	= 0,

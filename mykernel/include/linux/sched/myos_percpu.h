@@ -16,7 +16,6 @@
 	} arch_cpudata_s;
 
 	typedef struct per_cpudata {
-		task_s *	curr_task;
 		task_s *	idle_task;
 
 		List_hdr_s	running_lhdr;
@@ -26,8 +25,6 @@
 
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
 		unsigned long	time_slice;		// max jiffies for running of this task
-
-		size_t			cpu_idx;
 		arch_cpudata_s	arch_info;
 	} per_cpudata_s;
 

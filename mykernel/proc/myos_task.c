@@ -16,7 +16,7 @@
 
 void myos_init_task(size_t lcpu_nr)
 {
-	task_s *task0 = &per_cpu(idle_threads, 0).task;
+	task_s *task0 = &per_cpu(idle_threads, 0);
 
 	myos_init_pid_allocator();
 	attach_pid(task0, PIDTYPE_PID);

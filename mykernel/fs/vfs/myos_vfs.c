@@ -55,7 +55,7 @@ void set_init_taskfs()
 	taskfs_p->pwd.mnt = 
 	taskfs_p->root.mnt = &myos_root_mnt.mnt;
 
-	memcpy(per_cpu(idle_threads, 0).task.fs, taskfs_p, sizeof(taskfs_s));
+	memcpy(per_cpu(idle_threads, 0).fs, taskfs_p, sizeof(taskfs_s));
 }
 
 

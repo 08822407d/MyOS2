@@ -2393,10 +2393,10 @@
 	}
 
 // myos obsolete defines
-	typedef union PCB {
-		task_s task;
-		reg_t stack[THREAD_SIZE / sizeof(reg_t)];
-	} PCB_u __attribute__((aligned(8)));
+	// typedef union PCB {
+	// 	task_s task;
+	// 	reg_t stack[THREAD_SIZE / sizeof(reg_t)];
+	// } PCB_u __attribute__((aligned(8)));
 	
 	void myos_init_task(size_t lcpu_nr);
 	void myos_init_pid_allocator(void);
