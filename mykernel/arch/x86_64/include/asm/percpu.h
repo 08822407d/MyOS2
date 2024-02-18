@@ -21,6 +21,9 @@
 		#include <linux/kernel/compiler.h>
 		#include <linux/kernel/threads.h>
 		// #include <linux/smp/percpu-defs.h>
+
+		#include <asm/page.h>
+
 		/*
 		 * per_cpu_offset() is the offset that has to be added to a
 		 * percpu variable to get to the instance for a certain processor.
@@ -96,34 +99,31 @@
 	/*
 	 * Accessors and operations.
 	 */
-	#ifndef __ASSEMBLY__
 
 	/*
 	 * Add an offset to a pointer but keep the pointer as-is.  Use RELOC_HIDE()
 	 * to prevent the compiler from making incorrect assumptions about the
 	 * pointer value.  The weird cast keeps both GCC and sparse happy.
 	 */
-	#	define SHIFT_PERCPU_PTR(__p, __offset)	RELOC_HIDE(					\
-					(typeof(*(__p)) __kernel __force *)(__p), (__offset)	\
-				)
+	#define SHIFT_PERCPU_PTR(__p, __offset)	RELOC_HIDE(					\
+				(typeof(*(__p)) __kernel __force *)(__p), (__offset)	\
+			)
 
-	#	define per_cpu_ptr(ptr, cpu)	({		\
-					SHIFT_PERCPU_PTR((ptr),		\
-						per_cpu_offset((cpu)));	\
-				})
+	#define per_cpu_ptr(ptr, cpu)	({		\
+				SHIFT_PERCPU_PTR((ptr),		\
+					per_cpu_offset((cpu)));	\
+			})
 
-		extern virt_addr_t calc_pcpu_var_addr(void *proto_addr);
-	#	define this_cpu_ptr(ptr)	(					\
-					(typeof(*(ptr)) __kernel __force *)	\
-						calc_pcpu_var_addr(ptr)			\
-				)
-	#	define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
-
-	#endif /* __ASSEMBLY__ */
+	extern virt_addr_t calc_pcpu_var_addr(void *proto_addr);
+	#define this_cpu_ptr(ptr)	(					\
+				(typeof(*(ptr)) __kernel __force *)	\
+					calc_pcpu_var_addr(ptr)			\
+			)
+	#define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 
 
-	/* We can use this directly for local CPU (faster). */
-	DECLARE_PER_CPU(unsigned long, this_cpu_off);
+	#include <asm-generic/sections.h>
+	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
 
 	#endif /* !__ASSEMBLY__ */
 

@@ -10,6 +10,7 @@
 
 	#	include <linux/kernel/cache.h>
 	#	include <asm/percpu.h>
+	#	include <asm/percpu_area.h>
 
 		struct task_struct;
 		typedef struct task_struct task_s;
@@ -29,8 +30,6 @@
 				u8	pad[64];
 			};
 		} pcpu_hot_s;
-
-		DECLARE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot);
 
 		static __always_inline task_s *get_current(void) {
 			return *this_cpu_ptr(&pcpu_hot.current_task);

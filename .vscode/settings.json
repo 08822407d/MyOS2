@@ -88,6 +88,9 @@
         "debug_func.h": "c",
         "fsgsbase.h": "c",
         "qspinlock.h": "c",
-        "threads.h": "c"
+        "threads.h": "c",
+        "cache.h": "c",
+        "task.h": "c",
+        "percpu_area.h": "c"
     }
 }

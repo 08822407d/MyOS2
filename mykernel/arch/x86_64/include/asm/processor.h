@@ -187,7 +187,6 @@
 	// extern __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS];
 	// extern __u32 cpu_caps_set[NCAPINTS + NBUGINTS];
 
-	// DECLARE_PER_CPU_READ_MOSTLY(cpuinfo_x86_s, cpu_info);
 	// #define cpu_data(cpu) per_cpu(cpu_info, cpu)
 
 	// extern const struct seq_operations cpuinfo_op;
@@ -362,8 +361,6 @@
 
 		x86_io_bitmap_s io_bitmap;
 	} __aligned(PAGE_SIZE);
-
-	DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);
 
 	// /* Per CPU interrupt stacks */
 	// struct irq_stack

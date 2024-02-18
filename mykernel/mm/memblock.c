@@ -595,6 +595,16 @@ memblock_alloc(phys_addr_t size, phys_addr_t align)
 	return ptr;
 }
 
+void *myos_memblock_alloc_DMA32(size_t size, size_t align)
+{
+	void *ptr = memblock_alloc_internal(size, align,
+			MAX_DMA_PFN << PAGE_SHIFT, MAX_DMA32_PFN << PAGE_SHIFT);
+	if (ptr)
+		memset(ptr, 0, size);
+
+	return ptr;
+}
+
 void *myos_memblock_alloc_DMA(size_t size, size_t align)
 {
 	void *ptr = memblock_alloc_internal(size, align,

@@ -155,8 +155,8 @@ void myos_schedule(void)
 
 	if (cpudata_p->running_lhdr.count > 0)
 	{
-		cpudata_p->scheduleing_flag = 1;
-
+		// preempt_disable();
+		
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&cpudata_p->running_lhdr);
 		while (next_lp == 0);
@@ -191,7 +191,6 @@ void myos_schedule(void)
 		cpudata_p->time_slice = next_task->rt.time_slice;
 
 		cpudata_p->last_jiffies = jiffies;
-		cpudata_p->scheduleing_flag = 0;
 
 		curr_task->flags &= ~PF_NEED_SCHEDULE;
 
@@ -199,6 +198,8 @@ void myos_schedule(void)
 		
 		myos_switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task);
+
+		// preempt_enable();
 	}
 }
 

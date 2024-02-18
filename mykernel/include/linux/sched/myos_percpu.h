@@ -19,11 +19,9 @@
 
 		List_hdr_s	running_lhdr;
 
-		unsigned long	scheduleing_flag;
-
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
 		unsigned long	time_slice;		// max jiffies for running of this task
-		arch_cpudata_s	arch_info;
+		// arch_cpudata_s	arch_info;
 	} per_cpudata_s;
 
 

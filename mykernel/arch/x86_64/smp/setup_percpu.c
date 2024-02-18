@@ -1,3 +1,5 @@
+// source: linux-6.4.9
+
 // SPDX-License-Identifier: GPL-2.0
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
@@ -27,10 +29,6 @@
 #include <asm-generic/sections.h>
 #include <asm/debug_func.h>
 
-#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
-
-DEFINE_PER_CPU(unsigned long, this_cpu_off) = BOOT_PERCPU_OFFSET;
-// EXPORT_PER_CPU_SYMBOL(this_cpu_off);
 
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
@@ -43,8 +41,6 @@ void __init setup_per_cpu_areas(void)
 
 	unsigned int cpu;
 	unsigned long delta;
-	unsigned long pcpuarea_size =
-		(unsigned long)__per_cpu_end - (unsigned long)__per_cpu_start;
 	int rc;
 
 	// pr_info("NR_CPUS:%d nr_cpumask_bits:%d nr_cpu_ids:%u nr_node_ids:%u\n",
@@ -85,18 +81,12 @@ void __init setup_per_cpu_areas(void)
 	// if (rc < 0)
 	// 	panic("cannot initialize percpu area (err=%d)", rc);
 
+	simple_pcpu_setup_first_chunk();
 	// /* alrighty, percpu areas up and running */
-	// delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
+	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
 	for_each_possible_cpu(cpu) {
-		// MYOS2 alloc percpu area memory here
-		if (cpu == 0)
-			per_cpu_offset(cpu) = 0;
-		else
-			per_cpu_offset(cpu) = myos_memblock_alloc_normal(pcpuarea_size,
-					SMP_CACHE_BYTES) - (void *)__per_cpu_load;
-
-		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
-		per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
+		per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
 		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
 		// setup_percpu_segment(cpu);
 		// /*
@@ -132,6 +122,10 @@ void __init setup_per_cpu_areas(void)
 		 */
 		if (cpu == 0)
 		{
+			// 为了简化percpu变量声明代码文件，这里用代码动态初始化
+			extern void myos_init_per_cpu_var(void);
+			myos_init_per_cpu_var();
+			
 			/**
 			 * switch_gdt_and_percpu_base - Switch to direct GDT and runtime per CPU base
 			 * @cpu:	The CPU number for which this is invoked

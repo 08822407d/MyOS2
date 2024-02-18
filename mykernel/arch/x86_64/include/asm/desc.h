@@ -21,8 +21,6 @@
 	#include <asm/page_types.h>
 
 	extern struct desc_ptr idt_descr;
-	extern struct gdt_page gdt_page;
-	extern struct tss_struct cpu_tss_rw;
 
 
 	struct gdt_page {

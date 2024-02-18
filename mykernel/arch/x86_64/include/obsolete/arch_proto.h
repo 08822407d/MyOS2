@@ -98,7 +98,6 @@
 
 	/* smp.c */
 	void myos_early_init_smp(void);
-	void myos_init_smp(size_t lcpu_nr);
 	void myos_startup_smp(void);
 	void myos_percpu_self_config(size_t cpu_idx);
 

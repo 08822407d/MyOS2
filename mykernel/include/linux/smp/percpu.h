@@ -12,7 +12,10 @@
 	#include <asm/percpu.h>
 
 	extern void *pcpu_base_addr;
+	extern const unsigned long *pcpu_unit_offsets;
 
 	extern void __init setup_per_cpu_areas(void);
+
+	extern void __init simple_pcpu_setup_first_chunk(void);
 
 #endif /* __LINUX_PERCPU_H */

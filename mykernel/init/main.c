@@ -218,9 +218,6 @@ asmlinkage void __init start_kernel(void)
 	setup_per_cpu_areas();
 
 
-extern void myos_init_smp(size_t lcpu_nr);
-	myos_init_smp(nr_lcpu);
-
 	myos_preinit_slab();
 
 
@@ -270,7 +267,6 @@ extern void myos_init_smp(size_t lcpu_nr);
 void idle(size_t cpu_idx)
 {	
 	myos_init_percpu_intr();
-	myos_percpu_self_config(cpu_idx);
 
 	// atomic_inc(&lcpu_boot_count);
 	// while (atomic_read(&lcpu_boot_count) != nr_lcpu);

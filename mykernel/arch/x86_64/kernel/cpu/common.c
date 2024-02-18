@@ -65,6 +65,8 @@
 #include "cpu.h"
 
 
+
+#include <linux/sched/task_stack.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/glo.h>
 
@@ -559,7 +561,7 @@ void syscall_init(void)
 	// init MSR sf_regs related to sysenter/sysexit
 	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
-	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)per_cpu(idle_threads, 0).stack);
+	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task_top_of_stack(current));
 	uint64_t kstack;
 	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
 #else

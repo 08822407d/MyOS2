@@ -10,8 +10,6 @@
 
 	#include <linux/sched/myos_percpu.h>
 
-	// DECLARE_PER_CPU(int, __preempt_count);
-
 	// /* We use the MSB mostly because its available */
 	// #define PREEMPT_NEED_RESCHED	0x80000000
 

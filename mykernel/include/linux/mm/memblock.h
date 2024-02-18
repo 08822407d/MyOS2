@@ -249,7 +249,8 @@
 					region--)
 
 
-	void * myos_memblock_alloc_DMA(size_t size, size_t align);
-	void * myos_memblock_alloc_normal(size_t size, size_t align);
+	void *myos_memblock_alloc_DMA(size_t size, size_t align);
+	void *myos_memblock_alloc_DMA32(size_t size, size_t align);
+	void *myos_memblock_alloc_normal(size_t size, size_t align);
 
 #endif /* _LINUX_MEMBLOCK_H_ */
