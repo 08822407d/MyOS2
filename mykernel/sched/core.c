@@ -10,8 +10,7 @@
 // #include <trace/events/sched.h>
 // #undef CREATE_TRACE_POINTS
 
-#include "sched.h"
-
+#include <linux/sched/sched.h>
 // #include <linux/nospec.h>
 #include <linux/block/blkdev.h>
 // #include <linux/kcov.h>
@@ -28,7 +27,6 @@
 // #include "smp.h"
 
 
-#include <linux/sched/myos_percpu.h>
 #include <obsolete/glo.h>
 
 
@@ -86,10 +84,10 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	// __set_task_cpu(p, new_cpu);
 
-	per_cpudata_s *target_cpu_p = &(per_cpu(cpudata, new_cpu));
+	rq_s *target_rq = &(per_cpu(runqueues, new_cpu));
 	p->__state = TASK_RUNNING;
-	if (!list_in_lhdr(&target_cpu_p->running_lhdr, &p->tasks))
-		list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+	if (!list_in_lhdr(&target_rq->running_lhdr, &p->tasks))
+		list_hdr_push(&target_rq->running_lhdr, &p->tasks);
 }
 
 
@@ -413,7 +411,7 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 //  */
 // int task_call_func(task_s *p, task_call_f func, void *arg)
 // {
-// 	struct rq *rq = NULL;
+// 	rq_s *rq = NULL;
 // 	unsigned int state;
 // 	struct rq_flags rf;
 // 	int ret;
@@ -600,8 +598,8 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 
-	per_cpudata_s * target_cpu_p = &(per_cpu(cpudata, 0));
-	list_hdr_push(&target_cpu_p->running_lhdr, &p->tasks);
+	rq_s * target_rq = &(per_cpu(runqueues, 0));
+	list_hdr_push(&target_rq->running_lhdr, &p->tasks);
 
 	return 0;
 }
@@ -616,7 +614,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 void wake_up_new_task(task_s *p)
 {
 	// struct rq_flags rf;
-	// struct rq *rq;
+	// rq_s *rq;
 
 	// raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
 	WRITE_ONCE(p->__state, TASK_RUNNING);

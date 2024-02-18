@@ -62,8 +62,6 @@
 
 // #include "process.h"
 
-#include <linux/sched/myos_percpu.h>
-
 
 void x86_fsbase_write_task(task_s* task, unsigned long fsbase)
 {

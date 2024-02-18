@@ -3,6 +3,7 @@
 
 #include <linux/kernel/sched.h>
 #include <linux/sched/task_stack.h>
+#include <linux/sched/sched.h>
 #include <linux/lib/list.h>
 
 #include <asm/processor.h>
@@ -19,7 +20,7 @@ files_struct_s idle_taskfilps;
 taskfs_s idle_taskfs;
 __visible DEFINE_PER_CPU(task_s, idle_threads);
 
-__visible DEFINE_PER_CPU(per_cpudata_s, cpudata);
+__visible DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
 
 /*
  * per-CPU TSS segments. Threads are completely 'soft' on Linux,
@@ -93,9 +94,9 @@ void myos_init_per_cpu_var(void)
 	memcpy(this_gdt_page, &gdt_page, sizeof(struct gdt_page));
 
 
-	per_cpudata_s *this_cpudata = &per_cpu(cpudata, 0);
-	memset(this_cpudata, 0, sizeof(per_cpudata_s));
-	list_hdr_init(&this_cpudata->running_lhdr);
-	this_cpudata->idle_task			= this_idle_thread;
-	this_cpudata->time_slice		= this_idle_thread->rt.time_slice;
+	rq_s *this_runqueues = &per_cpu(runqueues, 0);
+	memset(this_runqueues, 0, sizeof(rq_s));
+	list_hdr_init(&this_runqueues->running_lhdr);
+	this_runqueues->idle			= this_idle_thread;
+	this_runqueues->time_slice		= this_idle_thread->rt.time_slice;
 }

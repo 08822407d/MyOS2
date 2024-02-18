@@ -67,7 +67,7 @@
 	// struct reclaim_state;
 	// struct robust_list_head;
 	// struct root_domain;
-	// struct rq;
+	// rq_s;
 	// struct sched_attr;
 	// struct sched_param;
 	// struct seq_file;
@@ -2351,13 +2351,13 @@
 	// char *sched_trace_cfs_rq_path(struct cfs_rq *cfs_rq, char *str, int len);
 	// int sched_trace_cfs_rq_cpu(struct cfs_rq *cfs_rq);
 
-	// const struct sched_avg *sched_trace_rq_avg_rt(struct rq *rq);
-	// const struct sched_avg *sched_trace_rq_avg_dl(struct rq *rq);
-	// const struct sched_avg *sched_trace_rq_avg_irq(struct rq *rq);
+	// const struct sched_avg *sched_trace_rq_avg_rt(rq_s *rq);
+	// const struct sched_avg *sched_trace_rq_avg_dl(rq_s *rq);
+	// const struct sched_avg *sched_trace_rq_avg_irq(rq_s *rq);
 
-	// int sched_trace_rq_cpu(struct rq *rq);
-	// int sched_trace_rq_cpu_capacity(struct rq *rq);
-	// int sched_trace_rq_nr_running(struct rq *rq);
+	// int sched_trace_rq_cpu(rq_s *rq);
+	// int sched_trace_rq_cpu_capacity(rq_s *rq);
+	// int sched_trace_rq_nr_running(rq_s *rq);
 
 	// const struct cpumask *sched_trace_rd_span(struct root_domain *rd);
 

@@ -91,6 +91,9 @@
         "threads.h": "c",
         "cache.h": "c",
         "task.h": "c",
-        "percpu_area.h": "c"
+        "percpu_area.h": "c",
+        "sizes.h": "c",
+        "swait.h": "c",
+        "rmwcc.h": "c"
     }
 }
