@@ -87,6 +87,7 @@
         "page_types.h": "c",
         "debug_func.h": "c",
         "fsgsbase.h": "c",
-        "qspinlock.h": "c"
+        "qspinlock.h": "c",
+        "threads.h": "c"
     }
 }

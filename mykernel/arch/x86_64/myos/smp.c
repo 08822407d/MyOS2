@@ -47,7 +47,6 @@ void myos_init_smp(size_t lcpu_nr)
 	arch_cpuinfo->lcpu_topo_flag[1] = smp_topos[0].core_id;
 	arch_cpuinfo->lcpu_topo_flag[2] = smp_topos[0].pack_id;
 	arch_cpuinfo->lcpu_topo_flag[3] = smp_topos[0].not_use;
-	arch_cpuinfo->tss = &(per_cpu(cpu_tss_rw, 0));
 	// }
 }
 

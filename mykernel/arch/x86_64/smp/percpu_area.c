@@ -44,7 +44,6 @@ __visible DEFINE_PER_CPU(task_s, idle_threads)  __aligned(THREAD_SIZE) = {
 __visible DEFINE_PER_CPU(per_cpudata_s, cpudata) ={
 	.idle_task			= &idle_threads,
 	.running_lhdr		= LIST_HEADER_INIT(cpudata.running_lhdr),
-	.is_idle_flag		= 1,
 	.scheduleing_flag	= 0,
 	.last_jiffies		= 0,
 };

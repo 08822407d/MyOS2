@@ -12,7 +12,6 @@
 	{
 		uint64_t	lcpu_addr;			// local apic_id
 		uint16_t	lcpu_topo_flag[4];	// 3 = flag, 2 = package_id, 1 = core_id, 0 = thread_id
-		struct tss_struct	*tss;
 	} arch_cpudata_s;
 
 	typedef struct per_cpudata {
@@ -20,7 +19,6 @@
 
 		List_hdr_s	running_lhdr;
 
-		unsigned long	is_idle_flag;
 		unsigned long	scheduleing_flag;
 
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
