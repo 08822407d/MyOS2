@@ -6,8 +6,14 @@
 
 	// #include <asm-generic/tspinlock_types.h>
 	typedef struct tspinlock {
-		u32		head;
-		u32		tail;
+		union {
+			atomic64_t	val;
+
+			struct {
+				u32		head;
+				u32		tail;
+			};
+		};
 	} arch_spinlock_t;
 
 	/*

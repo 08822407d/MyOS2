@@ -14,7 +14,6 @@
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
 	typedef arch_spinlock_t spinlock_t;
 
-	#define ___SPIN_LOCK_INITIALIZER(lockname) __ARCH_SPIN_LOCK_UNLOCKED
 	#define __SPIN_LOCK_UNLOCKED(lockname) __ARCH_SPIN_LOCK_UNLOCKED
 	#define DEFINE_SPINLOCK(x)	spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
 

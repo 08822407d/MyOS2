@@ -13,8 +13,24 @@
 	// #include <asm/tspinlock.h>
 	/* Function prototypes */
 	static inline void arch_spin_init(arch_spinlock_t *lock) {
-		(void)memset(lock, 0U, sizeof(arch_spinlock_t));
+		// (void)memset(lock, 0U, sizeof(arch_spinlock_t));
+		*lock = (arch_spinlock_t)__ARCH_SPIN_LOCK_UNLOCKED;
 	}
+
+	static inline int arch_spin_is_locked(arch_spinlock_t *lock)
+	{
+		u64 old = atomic_long_read(&lock->val);
+		return ((old >> 32) != (old & 0xffffffff));
+	}
+
+	// static inline bool arch_spin_trylock(arch_spinlock_t *lock)
+	// {
+	// 	u64 old = atomic_long_read(&lock->val);
+	// 	if ((old >> 32) != (old & 0xffffffff))
+	// 		return false;
+	// 	else
+	// 		return true;
+	// }
 
 	static inline void arch_spin_lock(arch_spinlock_t *lock) {
 		/* The lock function atomically increments and exchanges the head
