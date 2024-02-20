@@ -116,7 +116,7 @@ MYOS_SYSCALL_DEFINE0(fork)
 
 MYOS_SYSCALL_DEFINE1(exit, int, error_code)
 {
-	return do_exit(error_code);
+	do_exit(error_code);
 }
 
 extern int myos_exit_mm(task_s * new_tsk);

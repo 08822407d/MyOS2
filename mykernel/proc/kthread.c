@@ -31,25 +31,24 @@
 // #include <trace/events/sched.h>
 
 
-#include <obsolete/arch_proto.h>
-
 static DEFINE_SPINLOCK(kthread_create_lock);
 static LIST_HDR_S(kthread_create_list);
 task_s *kthreadd_task;
 
-// typedef struct kthread_create_info
-// {
-// 	/* Information passed to kthread() from kthreadd. */
-// 	int		(*threadfn)(void *data);
-// 	void	*data;
-// 	int		node;
 
-// 	/* Result passed back to kthread_create() from kthreadd. */
-// 	task_s	*result;
-// 	// completion_s *done;
+typedef struct kthread_create_info {
+	/* Information passed to kthread() from kthreadd. */
+	char			*full_name;
+	int				(*threadfn)(void *data);
+	void			*data;
+	int				node;
 
-// 	List_s	list;
-// } kthd_create_info_s;
+	/* Result passed back to kthread_create() from kthreadd. */
+	task_s			*result;
+	completion_s	*done;
+
+	List_s			list;
+} kthd_create_info_s;
 
 typedef struct kthread {
 	unsigned long	flags;
@@ -86,8 +85,7 @@ static inline kthread_s *to_kthread(task_s *k) {
  * PF_KTHREAD on it's own is not, kernel_thread() can exec() (See umh.c and
  * begin_new_exec()).
  */
-static inline kthread_s *__to_kthread(task_s *p)
-{
+static inline kthread_s *__to_kthread(task_s *p) {
 	void *kthread = p->worker_private;
 	if (kthread && !(p->flags & PF_KTHREAD))
 		kthread = NULL;
@@ -141,6 +139,47 @@ void free_kthread_struct(task_s *k)
 	kfree(kthread);
 }
 
+
+
+/**
+ * kthread_exit - Cause the current kthread return @result to kthread_stop().
+ * @result: The integer value to return to kthread_stop().
+ *
+ * While kthread_exit can be called directly, it exists so that
+ * functions which do some additional work in non-modular code such as
+ * module_put_and_kthread_exit can be implemented.
+ *
+ * Does not return.
+ */
+void __noreturn kthread_exit(long result)
+{
+	kthread_s *kthread = to_kthread(current);
+	kthread->result = result;
+	do_exit(0);
+}
+
+/**
+ * kthread_complete_and_exit - Exit the current kthread.
+ * @comp: Completion to complete
+ * @code: The integer value to return to kthread_stop().
+ *
+ * If present complete @comp and the reuturn code to kthread_stop().
+ *
+ * A kernel thread whose module may be removed after the completion of
+ * @comp can use this function exit safely.
+ *
+ * Does not return.
+ */
+void __noreturn kthread_complete_and_exit(
+		completion_s *comp, long code)
+{
+	if (comp)
+		complete(comp);
+
+	kthread_exit(code);
+}
+EXPORT_SYMBOL(kthread_complete_and_exit);
+
 int kthread(void *_create)
 {
 	// static const struct sched_param param = { .sched_priority = 0 };
@@ -159,7 +198,7 @@ int kthread(void *_create)
 	if (!done) {
 		kfree(create->full_name);
 		kfree(create);
-	// 	kthread_exit(-EINTR);
+		kthread_exit(-EINTR);
 	}
 
 	self->full_name = create->full_name;
@@ -186,12 +225,12 @@ int kthread(void *_create)
 	preempt_enable();
 
 	ret = -EINTR;
-	// if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
-	// 	cgroup_kthread_ready();
-	// 	__kthread_parkme(self);
+	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
+		// cgroup_kthread_ready();
+		// __kthread_parkme(self);
 		ret = threadfn(data);
-	// }
-	// kthread_exit(ret);
+	}
+	kthread_exit(ret);
 }
 
 static void create_kthread(kthd_create_info_s *create)
@@ -199,11 +238,13 @@ static void create_kthread(kthd_create_info_s *create)
 	int pid;
 
 	/* We want our own signal handler (we take no signals by default). */
-	pid = kernel_thread(kthread, create, CLONE_FS | CLONE_FILES | SIGCHLD);
+	pid = kernel_thread(kthread, create, create->full_name,
+			CLONE_FS | CLONE_FILES | SIGCHLD);
 	if (pid < 0) {
 		/* If user was SIGKILLed, I release the structure. */
 		completion_s *done = xchg(&create->done, NULL);
 
+		kfree(create->full_name);
 		if (!done) {
 			kfree(create);
 			return;

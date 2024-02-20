@@ -78,7 +78,6 @@
 	void LVT_timer_init(void);
 
 	/* arch_task.c */
-	unsigned long do_exit(unsigned long exit_code);
 	void try_sched(void);
 
 	/* interrupt.c */

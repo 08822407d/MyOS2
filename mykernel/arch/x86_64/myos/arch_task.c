@@ -115,7 +115,7 @@ static void exit_notify(void)
 	}
 }
 
-unsigned long do_exit(unsigned long exit_code)
+void __noreturn do_exit(long exit_code)
 {
 	pcpu_hot_s *pcpu = this_cpu_ptr(&pcpu_hot);
 	task_s * curr = current;
@@ -133,7 +133,6 @@ do_exit_again:
 	schedule();
 
 	goto do_exit_again;
-	return 0;
 }
 
 /*==============================================================================================*
