@@ -76,6 +76,9 @@ void myos_init_per_cpu_var(void)
 	this_idle_thread->fs			= &idle_taskfs;
 	this_idle_thread->files			= &idle_taskfilps;
 	this_idle_thread->stack			= (void *)init_stack;
+	set_task_comm(this_idle_thread, "cpu0_idle");
+	myos_init_pid_allocator();
+	attach_pid(this_idle_thread, PIDTYPE_PID);
 
 
 	x86_hw_tss_s *this_x86_tss = &(per_cpu(cpu_tss_rw, 0).x86_tss);

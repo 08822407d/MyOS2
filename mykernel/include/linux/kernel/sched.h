@@ -809,7 +809,7 @@
 		// randomized_struct_fields_start
 
 		void			*stack;
-		// refcount_t usage;
+		atomic_t		usage;
 		/* Per task flags (PF_*), defined further below: */
 		unsigned int	flags;
 		// unsigned int ptrace;
@@ -980,9 +980,6 @@
 	// 	/* task is frozen/stopped (used by the cgroup freezer) */
 	// 	unsigned frozen : 1;
 	// #endif
-	// #ifdef CONFIG_BLK_CGROUP
-	// 	unsigned use_memdelay : 1;
-	// #endif
 	// #ifdef CONFIG_PSI
 	// 	/* Stalled due to lack of memory */
 	// 	unsigned in_memstall : 1;
@@ -1041,7 +1038,7 @@
 		// List_s thread_group;
 		// List_s thread_node;
 
-		// completion_s *vfork_done;
+		completion_s	*vfork_done;
 
 		// /* CLONE_CHILD_SETTID: */
 		// int __user *set_child_tid;
@@ -1049,8 +1046,8 @@
 		// /* CLONE_CHILD_CLEARTID: */
 		// int __user *clear_child_tid;
 
-		// /* PF_KTHREAD | PF_IO_WORKER */
-		// void *worker_private;
+		/* PF_KTHREAD | PF_IO_WORKER */
+		void			*worker_private;
 
 		u64				utime;
 		u64				stime;
@@ -1475,10 +1472,6 @@
 
 		// /* Used by memcontrol for targeted memcg charge: */
 		// struct mem_cgroup *active_memcg;
-	// #endif
-
-	// #ifdef CONFIG_BLK_CGROUP
-		// struct request_queue *throttle_queue;
 	// #endif
 
 	// #ifdef CONFIG_UPROBES
@@ -1977,7 +1970,6 @@
 	// extern void kick_process(task_s *tsk);
 
 	// extern void __set_task_comm(task_s *tsk, const char *from, bool exec);
-
 	// static inline void set_task_comm(task_s *tsk, const char *from)
 	// {
 	// 	__set_task_comm(tsk, from, false);
@@ -1989,6 +1981,7 @@
 	// 	BUILD_BUG_ON(sizeof(buf) != TASK_COMM_LEN); \
 	// 	__get_task_comm(buf, sizeof(buf), tsk);     \
 	// })
+	extern char *get_task_comm(char *to, size_t len, task_s *tsk);
 
 	// static __always_inline void scheduler_ipi(void)
 	// {
@@ -2398,7 +2391,6 @@
 	// 	reg_t stack[THREAD_SIZE / sizeof(reg_t)];
 	// } PCB_u __attribute__((aligned(8)));
 	
-	void myos_init_task(size_t lcpu_nr);
 	void myos_init_pid_allocator(void);
 	unsigned long myos_pid_nr(void);
 

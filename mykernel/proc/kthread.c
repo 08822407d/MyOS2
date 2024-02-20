@@ -52,19 +52,16 @@ task_s *kthreadd_task;
 // } kthd_create_info_s;
 
 typedef struct kthread {
-	unsigned long flags;
-	unsigned int cpu;
-	int result;
-	int (*threadfn)(void *);
-	void *data;
+	unsigned long	flags;
+	unsigned int	cpu;
+	int				result;
+	int				(*threadfn)(void *);
+	void			*data;
 	// mm_segment_t oldfs;
-	// completion_s parked;
-	// completion_s exited;
-// #ifdef CONFIG_BLK_CGROUP
-	// struct cgroup_subsys_state *blkcg_css;
-// #endif
+	completion_s	parked;
+	completion_s	exited;
 	/* To store the full name if task comm is truncated. */
-	char *full_name;
+	char			*full_name;
 } kthread_s;
 
 enum KTHREAD_BITS {
@@ -73,6 +70,76 @@ enum KTHREAD_BITS {
 	KTHREAD_SHOULD_PARK,
 };
 
+static inline kthread_s *to_kthread(task_s *k) {
+	// WARN_ON(!(k->flags & PF_KTHREAD));
+	return k->worker_private;
+}
+
+/*
+ * Variant of to_kthread() that doesn't assume @p is a kthread.
+ *
+ * Per construction; when:
+ *
+ *   (p->flags & PF_KTHREAD) && p->worker_private
+ *
+ * the task is both a kthread and struct kthread is persistent. However
+ * PF_KTHREAD on it's own is not, kernel_thread() can exec() (See umh.c and
+ * begin_new_exec()).
+ */
+static inline kthread_s *__to_kthread(task_s *p)
+{
+	void *kthread = p->worker_private;
+	if (kthread && !(p->flags & PF_KTHREAD))
+		kthread = NULL;
+	return kthread;
+}
+
+void get_kthread_comm(char *buf, size_t buf_size, task_s *tsk)
+{
+	kthread_s *kthread = to_kthread(tsk);
+
+	if (!kthread || !kthread->full_name) {
+		get_task_comm(buf, buf_size, tsk);
+		return;
+	}
+
+	strscpy_pad(buf, kthread->full_name, buf_size);
+}
+
+bool set_kthread_struct(task_s *p)
+{
+	kthread_s *kthread;
+
+	if (WARN_ON_ONCE(to_kthread(p)))
+		return false;
+
+	kthread = kzalloc(sizeof(*kthread), GFP_KERNEL);
+	if (!kthread)
+		return false;
+
+	init_completion(&kthread->exited);
+	init_completion(&kthread->parked);
+	p->vfork_done = &kthread->exited;
+
+	p->worker_private = kthread;
+	return true;
+}
+
+void free_kthread_struct(task_s *k)
+{
+	kthread_s *kthread;
+
+	/*
+	 * Can be NULL if kmalloc() in set_kthread_struct() failed.
+	 */
+	kthread = to_kthread(k);
+	if (!kthread)
+		return;
+
+	k->worker_private = NULL;
+	kfree(kthread->full_name);
+	kfree(kthread);
+}
 
 int kthread(void *_create)
 {
@@ -85,17 +152,19 @@ int kthread(void *_create)
 	kthread_s *self;
 	int ret;
 
-	// self = to_kthread(current);
+	self = to_kthread(current);
 
 	/* If user was SIGKILLed, I release the structure. */
 	done = xchg(&create->done, NULL);
 	if (!done) {
+		kfree(create->full_name);
 		kfree(create);
 	// 	kthread_exit(-EINTR);
 	}
 
-	// self->threadfn = threadfn;
-	// self->data = data;
+	self->full_name = create->full_name;
+	self->threadfn = threadfn;
+	self->data = data;
 
 	// /*
 	//  * The new thread inherited kthreadd's priority and CPU mask. Reset
@@ -105,7 +174,7 @@ int kthread(void *_create)
 	// set_cpus_allowed_ptr(current, housekeeping_cpumask(HK_FLAG_KTHREAD));
 
 	/* OK, tell user we're spawned, wait for stop or wakeup */
-	// __set_current_state(TASK_UNINTERRUPTIBLE);
+	__set_current_state(TASK_UNINTERRUPTIBLE);
 	create->result = current;
 	/*
 	 * Thread is going to call schedule(), do not preempt it,
@@ -114,9 +183,9 @@ int kthread(void *_create)
 	preempt_disable();
 	complete(done);
 	schedule_preempt_disabled();
-	preempt_enable_no_resched();
+	preempt_enable();
 
-	// ret = -EINTR;
+	ret = -EINTR;
 	// if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
 	// 	cgroup_kthread_ready();
 	// 	__kthread_parkme(self);
@@ -144,79 +213,102 @@ static void create_kthread(kthd_create_info_s *create)
 	}
 }
 
-task_s *myos_kthread_create(int (*threadfn)(void *data),
-		void *data, char *threadname)
+static __printf(4, 0)
+task_s *__kthread_create_on_node(int (*threadfn)(void *data),
+		void *data, int node, const char namefmt[], va_list args)
 {
 	DECLARE_COMPLETION_ONSTACK(done);
 	task_s *task;
 	kthd_create_info_s *create =
-			kmalloc(sizeof(kthd_create_info_s), GFP_KERNEL);
+		kmalloc(sizeof(kthd_create_info_s), GFP_KERNEL);
 
 	if (!create)
 		return ERR_PTR(-ENOMEM);
-	create->threadfn = threadfn;
-	create->data = data;
-	create->done = &done;
+	create->threadfn	= threadfn;
+	create->data		= data;
+	create->node		= node;
+	create->done		= &done;
+	create->full_name	= kvasprintf(GFP_KERNEL, namefmt, args);
+	if (!create->full_name) {
+		task = ERR_PTR(-ENOMEM);
+		goto free_create;
+	}
 	list_init(&create->list, create);
 
 	spin_lock(&kthread_create_lock);
 	list_hdr_enqueue(&kthread_create_list, &create->list);
-	spin_unlock_no_resched(&kthread_create_lock);
+	spin_unlock(&kthread_create_lock);
 
 	wake_up_process(kthreadd_task);
-	// /*
-	//  * Wait for completion in killable state, for I might be chosen by
-	//  * the OOM killer while kthreadd is trying to allocate memory for
-	//  * new kernel thread.
-	//  */
+	/*
+	 * Wait for completion in killable state, for I might be chosen by
+	 * the OOM killer while kthreadd is trying to allocate memory for
+	 * new kernel thread.
+	 */
 	// if (unlikely(wait_for_completion_killable(&done))) {
 	// 	/*
-	// 	 * If I was SIGKILLed before kthreadd (or new kernel thread)
-	// 	 * calls complete(), leave the cleanup of this structure to
-	// 	 * that thread.
+	// 	 * If I was killed by a fatal signal before kthreadd (or new
+	// 	 * kernel thread) calls complete(), leave the cleanup of this
+	// 	 * structure to that thread.
 	// 	 */
 	// 	if (xchg(&create->done, NULL))
 	// 		return ERR_PTR(-EINTR);
-	// 	/*
-	// 	 * kthreadd (or new kernel thread) will call complete()
-	// 	 * shortly.
-	// 	 */
+		/*
+		 * kthreadd (or new kernel thread) will call complete()
+		 * shortly.
+		 */
 		wait_for_completion(&done);
 	// }
 	task = create->result;
-	if (!IS_ERR(task)) {
-		// char name[TASK_COMM_LEN];
-		// va_list aq;
-		// int len;
-
-		// /*
-		//  * task is already visible to other tasks, so updating
-		//  * COMM must be protected.
-		//  */
-		// va_copy(aq, args);
-		// len = vsnprintf(name, sizeof(name), namefmt, aq);
-		// va_end(aq);
-		// if (len >= TASK_COMM_LEN) {
-		// 	struct kthread *kthread = to_kthread(task);
-
-		// 	/* leave it truncated when out of memory. */
-		// 	kthread->full_name = kvasprintf(GFP_KERNEL, namefmt, args);
-		// }
-		// set_task_comm(task, name);
-		set_task_comm(task, threadname);
-	}
+free_create:
 	kfree(create);
 	return task;
 }
 
+/**
+ * kthread_create_on_node - create a kthread.
+ * @threadfn: the function to run until signal_pending(current).
+ * @data: data ptr for @threadfn.
+ * @node: task and thread structures for the thread are allocated on this node
+ * @namefmt: printf-style name for the thread.
+ *
+ * Description: This helper function creates and names a kernel
+ * thread.  The thread will be stopped: use wake_up_process() to start
+ * it.  See also kthread_run().  The new thread has SCHED_NORMAL policy and
+ * is affine to all CPUs.
+ *
+ * If thread is going to be bound on a particular cpu, give its node
+ * in @node, to get NUMA affinity for kthread stack, or else give NUMA_NO_NODE.
+ * When woken, the thread will run @threadfn() with @data as its
+ * argument. @threadfn() can either return directly if it is a
+ * standalone thread for which no one will call kthread_stop(), or
+ * return when 'kthread_should_stop()' is true (which means
+ * kthread_stop() has been called).  The return value should be zero
+ * or a negative error number; it will be passed to kthread_stop().
+ *
+ * Returns a task_struct or ERR_PTR(-ENOMEM) or ERR_PTR(-EINTR).
+ */
+task_s *kthread_create_on_node(int (*threadfn)(void *data),
+		void *data, int node, const char namefmt[], ...)
+{
+	task_s *task;
+	va_list args;
+
+	va_start(args, namefmt);
+	task = __kthread_create_on_node(threadfn, data, node, namefmt, args);
+	va_end(args);
+
+	return task;
+}
+EXPORT_SYMBOL(kthread_create_on_node);
 
 
 int kthreadd(void *unused)
 {
-	// task_s *tsk = current;
+	task_s *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
-	// set_task_comm(tsk, "kthreadd");
+	set_task_comm(tsk, "kthreadd");
 	// ignore_signals(tsk);
 	// set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
 	// set_mems_allowed(node_states[N_MEMORY]);
@@ -226,23 +318,23 @@ int kthreadd(void *unused)
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		if (kthread_create_list.count == 0)
+		if (list_hdr_empty(&kthread_create_list))
 			schedule();
 		__set_current_state(TASK_RUNNING);
 
 		spin_lock(&kthread_create_lock);
-		while (kthread_create_list.count != 0) {
+		while (!list_hdr_empty(&kthread_create_list)) {
 			kthd_create_info_s *create;
 
 			List_s *lp = list_hdr_dequeue(&kthread_create_list);
 			create = container_of(lp, kthd_create_info_s, list);
-			spin_unlock_no_resched(&kthread_create_lock);
+			spin_unlock(&kthread_create_lock);
 
 			create_kthread(create);
 
 			spin_lock(&kthread_create_lock);
 		}
-		spin_unlock_no_resched(&kthread_create_lock);
+		spin_unlock(&kthread_create_lock);
 	}
 
 	return 0;

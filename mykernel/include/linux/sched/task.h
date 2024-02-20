@@ -10,8 +10,8 @@
 	#include <linux/kernel/sched.h>
 	#include <linux/kernel/uaccess.h>
 
-	// task_s;
-	// typedef task_s task_s;
+	struct task_struct;
+	typedef struct task_struct task_s;
 	// struct rusage;
 	// union thread_union;
 	// struct css_set;
@@ -100,9 +100,8 @@
 	// /* sched_exec is called by processes performing an exec */
 	// extern void sched_exec(void);
 
-	// static inline task_s *get_task_struct(task_s *t)
-	// {
-	// 	refcount_inc(&t->usage);
+	// static inline task_s *get_task_struct(task_s *t) {
+	// 	atomic_inc(&t->usage);
 	// 	return t;
 	// }
 

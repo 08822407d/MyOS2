@@ -8,11 +8,9 @@
 
 	// mm_s;
 
-	// __printf(4, 5)
-	// task_s *kthread_create_on_node(int (*threadfn)(void *data),
-	// 					void *data,
-	// 					int node,
-	// 					const char namefmt[], ...);
+	__printf(4, 5)
+	task_s *kthread_create_on_node(int (*threadfn)(void *data),
+			void *data, int node, const char namefmt[], ...);
 
 	/**
 	 * kthread_create - create a kthread on the current node
@@ -25,11 +23,9 @@
 	 * the stopped state.  This is just a helper for kthread_create_on_node();
 	 * see the documentation there for more details.
 	 */
-	// #define kthread_create(threadfn, data, namefmt, arg...) \
-	// 	kthread_create_on_node(threadfn, data, NUMA_NO_NODE, namefmt, ##arg)
-    task_s *myos_kthread_create(int (*threadfn)(void *data),
-    		void *data, char *threadname);
-
+	#define kthread_create(threadfn, data, namefmt, arg...)	\
+				kthread_create_on_node(threadfn, data,		\
+					NUMA_NO_NODE, namefmt, ##arg)
 
 	// task_s *kthread_create_on_cpu(int (*threadfn)(void *data),
 	// 					void *data,
@@ -37,7 +33,7 @@
 	// 					const char *namefmt);
 
 	// void get_kthread_comm(char *buf, size_t buf_size, task_s *tsk);
-	// bool set_kthread_struct(task_s *p);
+	bool set_kthread_struct(task_s *p);
 
 	// void kthread_set_per_cpu(task_s *k, int cpu);
 	// bool kthread_is_per_cpu(task_s *k);
@@ -51,19 +47,12 @@
 	 * Description: Convenient wrapper for kthread_create() followed by
 	 * myos_wake_up_new_task().  Returns the kthread or ERR_PTR(-ENOMEM).
 	 */
-	// #define kthread_run(threadfn, data, namefmt, ...)			   \
-	// ({									   \
-	// 	task_s *__k						   \
-	// 		= kthread_create(threadfn, data, namefmt, ## __VA_ARGS__); \
-	// 	if (!IS_ERR(__k))						   \
-	// 		myos_wake_up_new_task(__k);					   \
-	// 	__k;								   \
-	// })
-	#define kthread_run(threadfn, data, name) ({					\
-				task_s *__k											\
-					= myos_kthread_create(threadfn, data, name);	\
-				if (!IS_ERR(__k)) wake_up_new_task(__k);			\
-				__k;												\
+	#define kthread_run(threadfn, data, namefmt, ...)	({	\
+				task_s *__k									\
+					= kthread_create(threadfn, data,		\
+						namefmt, ## __VA_ARGS__);			\
+				if (!IS_ERR(__k)) wake_up_process(__k);		\
+				__k;										\
 			})
 
 	// /**
@@ -248,20 +237,15 @@
 
 	// struct cgroup_subsys_state;
 
-	// #ifdef CONFIG_BLK_CGROUP
-	// void kthread_associate_blkcg(struct cgroup_subsys_state *css);
-	// struct cgroup_subsys_state *kthread_blkcg(void);
-	// #else
 	// static inline void kthread_associate_blkcg(struct cgroup_subsys_state *css) { }
 	// static inline struct cgroup_subsys_state *kthread_blkcg(void)
 	// {
 	// 	return NULL;
 	// }
-	// #endif
-
 
 	typedef struct kthread_create_info {
 		/* Information passed to kthread() from kthreadd. */
+		char			*full_name;
 		int				(*threadfn)(void *data);
 		void			*data;
 		int				node;

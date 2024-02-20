@@ -94,6 +94,7 @@
         "percpu_area.h": "c",
         "sizes.h": "c",
         "swait.h": "c",
-        "rmwcc.h": "c"
+        "rmwcc.h": "c",
+        "fdtable.h": "c"
     }
 }

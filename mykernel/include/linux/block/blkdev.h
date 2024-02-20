@@ -263,11 +263,6 @@
 	// 	struct blk_mq_tags	*sched_shared_tags;
 
 	// 	List_s	icq_list;
-	// #ifdef CONFIG_BLK_CGROUP
-	// 	DECLARE_BITMAP		(blkcg_pols, BLKCG_MAX_POLS);
-	// 	struct blkcg_gq		*root_blkg;
-	// 	List_s	blkg_list;
-	// #endif
 
 	// 	struct queue_limits	limits;
 

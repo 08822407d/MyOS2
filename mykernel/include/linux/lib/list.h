@@ -105,12 +105,12 @@
 	}
 
 	/*
-	* Delete a list entry by making the prev/next entries
-	* point to each other.
-	*
-	* This is only for internal list manipulation where we know
-	* the prev/next entries already!
-	*/
+	 * Delete a list entry by making the prev/next entries
+	 * point to each other.
+	 *
+	 * This is only for internal list manipulation where we know
+	 * the prev/next entries already!
+	 */
 	static inline void __list_del(List_s * prev, List_s * next) {
 		next->prev = prev;
 		WRITE_ONCE(prev->next, next);
@@ -1035,7 +1035,12 @@
 
 
 
+
 	// MyOS defined protos
+	static inline int list_hdr_empty(const List_hdr_s *header) {
+		return READ_ONCE(header->count) == 0;
+	}
+
 	void list_init(List_s * src, void * owner_p);
 	List_s * list_get_prev(List_s * src);
 	List_s * list_get_next(List_s * src);

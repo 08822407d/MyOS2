@@ -516,20 +516,20 @@ static task_s *dup_task_struct(task_s *orig, int node)
 	// 	tsk->cpus_ptr = &tsk->cpus_mask;
 	// dup_user_cpus_ptr(tsk, orig, node);
 
-	// /*
-	//  * One for the user space visible state that goes away when reaped.
-	//  * One for the scheduler.
-	//  */
+	/*
+	 * One for the user space visible state that goes away when reaped.
+	 * One for the scheduler.
+	 */
 	// refcount_set(&tsk->rcu_users, 2);
-	// /* One for the rcu users */
-	// refcount_set(&tsk->usage, 1);
+	/* One for the rcu users */
+	atomic_set(&tsk->usage, 1);
 // #ifdef CONFIG_BLK_DEV_IO_TRACE
 	// tsk->btrace_seq = 0;
 // #endif
 	// tsk->splice_pipe = NULL;
 	// tsk->task_frag.page = NULL;
 	// tsk->wake_q.next = NULL;
-	// tsk->worker_private = NULL;
+	tsk->worker_private = NULL;
 
 	// account_kernel_stack(tsk, 1);
 
@@ -538,11 +538,6 @@ static task_s *dup_task_struct(task_s *orig, int node)
 
 // #ifdef CONFIG_FAULT_INJECTION
 	// tsk->fail_nth = 0;
-// #endif
-
-// #ifdef CONFIG_BLK_CGROUP
-	// tsk->throttle_queue = NULL;
-	// tsk->use_memdelay = 0;
 // #endif
 
 // #ifdef CONFIG_MEMCG
@@ -1282,7 +1277,7 @@ static __latent_entropy task_s
 	list_init(&p->sibling, p);
 	myos_pcb_init(p, clone_flags);
 	// rcu_copy_process(p);
-	// p->vfork_done = NULL;
+	p->vfork_done = NULL;
 	// spin_lock_init(&p->alloc_lock);
 
 	// init_sigpending(&p->pending);
@@ -1321,10 +1316,10 @@ static __latent_entropy task_s
 	// p->io_context = NULL;
 	// audit_set_context(p, NULL);
 	// cgroup_fork(p);
-	// if (p->flags & PF_KTHREAD) {
-	// 	if (!set_kthread_struct(p))
-	// 		goto bad_fork_cleanup_delayacct;
-	// }
+	if (p->flags & PF_KTHREAD) {
+		if (!set_kthread_struct(p))
+			goto bad_fork_cleanup_delayacct;
+	}
 // #ifdef CONFIG_NUMA
 	// p->mempolicy = mpol_dup(p->mempolicy);
 	// if (IS_ERR(p->mempolicy)) {
@@ -1713,8 +1708,8 @@ static inline void init_idle_pids(task_s *idle) {
 pid_t kernel_clone(kclone_args_s *args)
 {
 	u64 clone_flags = args->flags;
-	// completion_s vfork;
-	// pid_s *pid;
+	completion_s vfork;
+	pid_s *pid;
 	task_s *p;
 	int trace = 0;
 	pid_t nr;
@@ -1770,11 +1765,11 @@ pid_t kernel_clone(kclone_args_s *args)
 	// if (clone_flags & CLONE_PARENT_SETTID)
 	// 	put_user(nr, args->parent_tid);
 
-	// if (clone_flags & CLONE_VFORK) {
-	// 	p->vfork_done = &vfork;
-	// 	init_completion(&vfork);
-	// 	get_task_struct(p);
-	// }
+	if (clone_flags & CLONE_VFORK) {
+		p->vfork_done = &vfork;
+		init_completion(&vfork);
+		// get_task_struct(p);
+	}
 
 	wake_up_new_task(p);
 

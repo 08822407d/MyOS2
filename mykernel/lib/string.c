@@ -145,91 +145,91 @@
 // // EXPORT_SYMBOL(strlcpy);
 // // #endif
 
-// // #ifndef __HAVE_ARCH_STRSCPY
-// /**
-//  * strscpy - Copy a C-string into a sized buffer
-//  * @dest: Where to copy the string to
-//  * @src: Where to copy the string from
-//  * @count: Size of destination buffer
-//  *
-//  * Copy the string, or as much of it as fits, into the dest buffer.  The
-//  * behavior is undefined if the string buffers overlap.  The destination
-//  * buffer is always NUL terminated, unless it's zero-sized.
-//  *
-//  * Preferred to strlcpy() since the API doesn't require reading memory
-//  * from the src string beyond the specified "count" bytes, and since
-//  * the return value is easier to error-check than strlcpy()'s.
-//  * In addition, the implementation is robust to the string changing out
-//  * from underneath it, unlike the current strlcpy() implementation.
-//  *
-//  * Preferred to strncpy() since it always returns a valid string, and
-//  * doesn't unnecessarily force the tail of the destination buffer to be
-//  * zeroed.  If zeroing is desired please use strscpy_pad().
-//  *
-//  * Returns:
-//  * * The number of characters copied (not including the trailing %NUL)
-//  * * -E2BIG if count is 0 or @src was truncated.
-//  */
-// ssize_t strscpy(char *dest, const char *src, size_t count)
-// {
-// 	const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
-// 	size_t max = count;
-// 	long res = 0;
+// #ifndef __HAVE_ARCH_STRSCPY
+	/**
+	 * strscpy - Copy a C-string into a sized buffer
+	 * @dest: Where to copy the string to
+	 * @src: Where to copy the string from
+	 * @count: Size of destination buffer
+	 *
+	 * Copy the string, or as much of it as fits, into the dest buffer.  The
+	 * behavior is undefined if the string buffers overlap.  The destination
+	 * buffer is always NUL terminated, unless it's zero-sized.
+	 *
+	 * Preferred to strlcpy() since the API doesn't require reading memory
+	 * from the src string beyond the specified "count" bytes, and since
+	 * the return value is easier to error-check than strlcpy()'s.
+	 * In addition, the implementation is robust to the string changing out
+	 * from underneath it, unlike the current strlcpy() implementation.
+	 *
+	 * Preferred to strncpy() since it always returns a valid string, and
+	 * doesn't unnecessarily force the tail of the destination buffer to be
+	 * zeroed.  If zeroing is desired please use strscpy_pad().
+	 *
+	 * Returns:
+	 * * The number of characters copied (not including the trailing %NUL)
+	 * * -E2BIG if count is 0 or @src was truncated.
+	 */
+	ssize_t strscpy(char *dest, const char *src, size_t count)
+	{
+		// const struct word_at_a_time constants = WORD_AT_A_TIME_CONSTANTS;
+		size_t max = count;
+		long res = 0;
 
-// 	if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
-// 		return -E2BIG;
+		if (count == 0 || WARN_ON_ONCE(count > INT_MAX))
+			return -E2BIG;
 
-// #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-// 	/*
-// 	 * If src is unaligned, don't cross a page boundary,
-// 	 * since we don't know if the next page is mapped.
-// 	 */
-// 	if ((long)src & (sizeof(long) - 1)) {
-// 		size_t limit = PAGE_SIZE - ((long)src & (PAGE_SIZE - 1));
-// 		if (limit < max)
-// 			max = limit;
-// 	}
-// #else
-// 	/* If src or dest is unaligned, don't do word-at-a-time. */
-// 	if (((long) dest | (long) src) & (sizeof(long) - 1))
-// 		max = 0;
+	#ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+		/*
+		* If src is unaligned, don't cross a page boundary,
+		* since we don't know if the next page is mapped.
+		*/
+		if ((long)src & (sizeof(long) - 1)) {
+			size_t limit = PAGE_SIZE - ((long)src & (PAGE_SIZE - 1));
+			if (limit < max)
+				max = limit;
+		}
+	#else
+		/* If src or dest is unaligned, don't do word-at-a-time. */
+		if (((long) dest | (long) src) & (sizeof(long) - 1))
+			max = 0;
+	#endif
+
+		// while (max >= sizeof(unsigned long)) {
+		// 	unsigned long c, data;
+
+		// 	c = read_word_at_a_time(src+res);
+		// 	if (has_zero(c, &data, &constants)) {
+		// 		data = prep_zero_mask(c, data, &constants);
+		// 		data = create_zero_mask(data);
+		// 		*(unsigned long *)(dest+res) = c & zero_bytemask(data);
+		// 		return res + find_zero(data);
+		// 	}
+		// 	*(unsigned long *)(dest+res) = c;
+		// 	res += sizeof(unsigned long);
+		// 	count -= sizeof(unsigned long);
+		// 	max -= sizeof(unsigned long);
+		// }
+
+		while (count) {
+			char c;
+
+			c = src[res];
+			dest[res] = c;
+			if (!c)
+				return res;
+			res++;
+			count--;
+		}
+
+		/* Hit buffer length without finding a NUL; force NUL-termination. */
+		if (res)
+			dest[res-1] = '\0';
+
+		return -E2BIG;
+	}
+	EXPORT_SYMBOL(strscpy);
 // #endif
-
-// 	while (max >= sizeof(unsigned long)) {
-// 		unsigned long c, data;
-
-// 		c = read_word_at_a_time(src+res);
-// 		if (has_zero(c, &data, &constants)) {
-// 			data = prep_zero_mask(c, data, &constants);
-// 			data = create_zero_mask(data);
-// 			*(unsigned long *)(dest+res) = c & zero_bytemask(data);
-// 			return res + find_zero(data);
-// 		}
-// 		*(unsigned long *)(dest+res) = c;
-// 		res += sizeof(unsigned long);
-// 		count -= sizeof(unsigned long);
-// 		max -= sizeof(unsigned long);
-// 	}
-
-// 	while (count) {
-// 		char c;
-
-// 		c = src[res];
-// 		dest[res] = c;
-// 		if (!c)
-// 			return res;
-// 		res++;
-// 		count--;
-// 	}
-
-// 	/* Hit buffer length without finding a NUL; force NUL-termination. */
-// 	if (res)
-// 		dest[res-1] = '\0';
-
-// 	return -E2BIG;
-// }
-// // EXPORT_SYMBOL(strscpy);
-// // #endif
 
 // /**
 //  * stpcpy - copy a string from src to dest returning a pointer to the new end
@@ -271,7 +271,7 @@
 			;
 		return tmp;
 	}
-// EXPORT_SYMBOL(strcat);
+EXPORT_SYMBOL(strcat);
 #endif
 
 // // #ifndef __HAVE_ARCH_STRNCAT
