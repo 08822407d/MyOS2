@@ -20,14 +20,16 @@
 	#define CLONE_LEGACY_FLAGS 0xffffffffULL
 
 	typedef struct kernel_clone_args {
-		char			*thread_name;
-
-
 		u64				flags;
-		int				*pidfd;
-		int				*child_tid;
-		int				*parent_tid;
+		int __user		*pidfd;
+		int __user		*child_tid;
+		int __user		*parent_tid;
+		const char		*name;
 		int				exit_signal;
+		u32				kthread			: 1;
+		u32				io_thread		: 1;
+		u32				user_worker		: 1;
+		u32				no_files		: 1;
 		unsigned long	stack;
 		unsigned long	stack_size;
 		unsigned long	tls;
@@ -35,7 +37,9 @@
 		/* Number of elements in *set_tid */
 		size_t			set_tid_size;
 		int				cgroup;
-		int				io_thread;
+		int				idle;
+		int				(*fn)(void *);
+		void			*fn_arg;
 		// struct cgroup *cgrp;
 		// struct css_set *cset;
 	} kclone_args_s;
@@ -71,7 +75,7 @@
 
 	// extern void release_task(task_s * p);
 
-	extern int copy_thread(unsigned long, unsigned long, unsigned long, task_s *);
+	extern int copy_thread(task_s *p, const kclone_args_s *args);
 
 	// extern void flush_thread(void);
 

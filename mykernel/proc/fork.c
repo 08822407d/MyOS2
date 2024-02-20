@@ -1116,7 +1116,6 @@ static __always_inline void delayed_free_task(task_s *tsk) {
 
 static void myos_pcb_init(task_s *p, u64 clone_flags)
 {
-	memset(p->comm, 0, sizeof(p->comm));
 	list_hdr_init(&p->wait_childexit);
 	list_init(&p->tasks, p);
 }
@@ -1164,7 +1163,7 @@ static __latent_entropy task_s
 	if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
 		return ERR_PTR(-EINVAL);
 
-	/*
+	// /*
 	//  * Siblings of global init remain as zombies on exit since they are
 	//  * not reaped by their parent (swapper). To solve this and to avoid
 	//  * multi-rooted process trees, prevent global and container-inits
@@ -1234,6 +1233,9 @@ static __latent_entropy task_s
 	// 	siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
 	// }
 
+	if (args->name)
+		strscpy_pad(p->comm, args->name, sizeof(p->comm));
+
 	// p->set_child_tid = (clone_flags & CLONE_CHILD_SETTID) ? args->child_tid : NULL;
 	// /*
 	//  * Clear TID on mm_release()?
@@ -1278,11 +1280,11 @@ static __latent_entropy task_s
 	myos_pcb_init(p, clone_flags);
 	// rcu_copy_process(p);
 	p->vfork_done = NULL;
-	// spin_lock_init(&p->alloc_lock);
+	spin_lock_init(&p->alloc_lock);
 
 	// init_sigpending(&p->pending);
 
-	// p->utime = p->stime = p->gtime = 0;
+	p->utime = p->stime = p->gtime = 0;
 // #ifdef CONFIG_ARCH_HAS_SCALED_CPUTIME
 	// p->utimescaled = p->stimescaled = 0;
 // #endif
@@ -1400,7 +1402,7 @@ static __latent_entropy task_s
 	// retval = copy_io(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_namespaces;
-	retval = copy_thread(clone_flags, args->stack, args->stack_size, p);
+	retval = copy_thread(p, args);
 	if (retval)
 		goto bad_fork_cleanup_io;
 
@@ -1463,16 +1465,16 @@ static __latent_entropy task_s
 // #endif
 	// clear_tsk_latency_tracing(p);
 
-	// /* ok, now we should be set up.. */
+	/* ok, now we should be set up.. */
 	// p->pid = pid_nr(pid);
 	p->pid = myos_pid_nr();
-	// if (clone_flags & CLONE_THREAD) {
-	// 	p->group_leader = current->group_leader;
-	// 	p->tgid = current->tgid;
-	// } else {
-	// 	p->group_leader = p;
-	// 	p->tgid = p->pid;
-	// }
+	if (clone_flags & CLONE_THREAD) {
+		// p->group_leader = current->group_leader;
+		// p->tgid = current->tgid;
+	} else {
+		// p->group_leader = p;
+		// p->tgid = p->pid;
+	}
 
 	// p->nr_dirtied = 0;
 	// p->nr_dirtied_pause = 128 >> (PAGE_SHIFT - 10);
@@ -1607,7 +1609,7 @@ static __latent_entropy task_s
 		attach_pid(p, PIDTYPE_PID);
 		// nr_threads++;
 	}
-	// total_forks++;
+	total_forks++;
 	// hlist_del_init(&delayed.node);
 	// spin_unlock(&current->sighand->siglock);
 	// syscall_tracepoint_update(p);
@@ -1734,17 +1736,17 @@ pid_t kernel_clone(kclone_args_s *args)
 	 * requested, no event is reported; otherwise, report if the event
 	 * for the type of forking is enabled.
 	 */
-	// if (!(clone_flags & CLONE_UNTRACED)) {
-	// 	if (clone_flags & CLONE_VFORK)
-	// 		trace = PTRACE_EVENT_VFORK;
-	// 	else if (args->exit_signal != SIGCHLD)
-	// 		trace = PTRACE_EVENT_CLONE;
-	// 	else
-	// 		trace = PTRACE_EVENT_FORK;
+	if (!(clone_flags & CLONE_UNTRACED)) {
+		if (clone_flags & CLONE_VFORK)
+			trace = PTRACE_EVENT_VFORK;
+		else if (args->exit_signal != SIGCHLD)
+			trace = PTRACE_EVENT_CLONE;
+		else
+			trace = PTRACE_EVENT_FORK;
 
-	// 	if (likely(!ptrace_event_enabled(current, trace)))
-	// 		trace = 0;
-	// }
+		// if (likely(!ptrace_event_enabled(current, trace)))
+		// 	trace = 0;
+	}
 
 	p = copy_process(NULL, trace, NUMA_NO_NODE, args);
 	// add_latent_entropy();
@@ -1804,6 +1806,10 @@ pid_t kernel_thread(int (*fn)(void *), void *arg,
 		.flags			= ((lower_32_bits(flags) | CLONE_VM |
 							CLONE_UNTRACED) & ~CSIGNAL),
 		.exit_signal	= (lower_32_bits(flags) & CSIGNAL),
+		.fn				= fn,
+		.fn_arg			= arg,
+		.name			= name,
+		.kthread		= 1,
 		.stack			= (unsigned long)fn,
 		.stack_size		= (unsigned long)arg,
 	};

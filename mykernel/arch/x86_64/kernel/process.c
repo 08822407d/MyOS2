@@ -52,9 +52,12 @@
 
 #include <linux/kernel/ptrace.h>
 
-int copy_thread(unsigned long clone_flags,
-		unsigned long sp, unsigned long arg, task_s *p)
+int copy_thread(task_s *p, const kclone_args_s *args)
 {
+	unsigned long clone_flags = args->flags;
+	unsigned long sp = args->stack;
+	unsigned long tls = args->tls;
+	// struct inactive_task_frame *frame;
 	task_kframe_s *frame;
 	fork_frame_s *fork_frame;
 	pt_regs_s *childregs;
@@ -80,13 +83,17 @@ int copy_thread(unsigned long clone_flags,
 	// savesegment(es, p->thread.es);
 	// savesegment(ds, p->thread.ds);
 
+	// if (p->mm && (clone_flags & (CLONE_VM | CLONE_VFORK)) == CLONE_VM)
+	// 	set_bit(MM_CONTEXT_LOCK_LAM, &p->mm->context.flags);
+
+
 	// fpu_clone(p, clone_flags);
 
 	/* Kernel thread ? */
 	if (unlikely(p->flags & PF_KTHREAD)) {
-	// 	p->thread.pkru = pkru_get_init_value();
+		// p->thread.pkru = pkru_get_init_value();
 		memset(childregs, 0, sizeof(pt_regs_s));
-		kthread_frame_init(frame, sp, arg);
+		kthread_frame_init(frame, args->fn, args->fn_arg);
 		return 0;
 	}
 

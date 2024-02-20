@@ -6,6 +6,8 @@
 	// #include <linux/wait.h>
 	// #include <linux/refcount.h>
 
+	#include <linux/kernel/spinlock.h>
+
 	enum pid_type
 	{
 		PIDTYPE_PID,
@@ -46,28 +48,27 @@
 
 
 	/*
-	* struct upid is used to get the id of the pid_s, as it is
-	* seen in particular namespace. Later the pid_s is found with
-	* find_pid_ns() using the int nr and struct pid_namespace *ns.
-	*/
-
-	// struct upid {
-	// 	int nr;
-	// 	struct pid_namespace *ns;
-	// };
+	 * struct upid is used to get the id of the pid_s, as it is
+	 * seen in particular namespace. Later the pid_s is found with
+	 * find_pid_ns() using the int nr and struct pid_namespace *ns.
+	 */
+	typedef struct upid {
+		int nr;
+		// struct pid_namespace *ns;
+	} upid_s;
 
 	typedef struct pid
 	{
-		// refcount_t count;
-		// unsigned int level;
-		// spinlock_t lock;
+		atomic_t		count;
+		unsigned int	level;
+		spinlock_t		lock;
 		// /* lists of tasks that use this pid */
 		// struct hlist_head tasks[PIDTYPE_MAX];
 		// struct hlist_head inodes;
 		// /* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
 		// struct rcu_head rcu;
-		// struct upid numbers[1];
+		upid_s			numbers[1];
 	} pid_s;
 
 	// extern pid_s init_struct_pid;
@@ -167,24 +168,22 @@
 	// 	return pid->numbers[pid->level].nr == 1;
 	// }
 
-	// /*
-	// * the helpers to get the pid's id seen from different namespaces
-	// *
-	// * pid_nr()    : global id, i.e. the id seen from the init namespace;
-	// * pid_vnr()   : virtual id, i.e. the id seen from the pid namespace of
-	// *               current.
-	// * pid_nr_ns() : id seen from the ns specified.
-	// *
-	// * see also task_xid_nr() etc in include/linux/sched.h
-	// */
-
-	// static inline pid_t pid_nr(pid_s *pid)
-	// {
-	// 	pid_t nr = 0;
-	// 	if (pid)
-	// 		nr = pid->numbers[0].nr;
-	// 	return nr;
-	// }
+	/*
+	 * the helpers to get the pid's id seen from different namespaces
+	 *
+	 * pid_nr()    : global id, i.e. the id seen from the init namespace;
+	 * pid_vnr()   : virtual id, i.e. the id seen from the pid namespace of
+	 *               current.
+	 * pid_nr_ns() : id seen from the ns specified.
+	 *
+	 * see also task_xid_nr() etc in include/linux/sched.h
+	 */
+	static inline pid_t pid_nr(pid_s *pid) {
+		pid_t nr = 0;
+		if (pid)
+			nr = pid->numbers[0].nr;
+		return nr;
+	}
 
 	// pid_t pid_nr_ns(pid_s *pid, struct pid_namespace *ns);
 	// pid_t pid_vnr(pid_s *pid);
