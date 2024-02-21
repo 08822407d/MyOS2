@@ -28,47 +28,12 @@
 
 #define	USER_CODE_ADDR		0x6000000
 #define USER_MEM_LENGTH		0x800000
-#define MAX_PID				0x8000
 
 extern char		ist_stack0;
-
-static DEFINE_SPINLOCK(newpid_lock);
-bitmap_t		pid_bm[MAX_PID / sizeof(bitmap_t)];
-unsigned long	curr_pid;
 
 #define LOAD_ELF
 
 extern int myos_exit_thread(task_s * new_task);
-
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/
-void myos_init_pid_allocator()
-{
-	// init pid bitmap
-	memset(&pid_bm, 0, sizeof(pid_bm));
-	curr_pid = 0;
-}
-
-unsigned long myos_pid_nr()
-{
-	spin_lock(&newpid_lock);
-	unsigned long newpid = bm_get_freebit_idx(pid_bm, curr_pid, MAX_PID);
-	if (newpid >= MAX_PID || newpid < curr_pid)
-	{
-		newpid = bm_get_freebit_idx(pid_bm, 0, curr_pid);
-		if (newpid >= curr_pid || newpid == 0)
-		{
-			// pid bitmap used out
-			while (1);
-		}
-	}
-	curr_pid = newpid;
-	bm_set_bit(pid_bm, newpid);
-	spin_unlock_no_resched(&newpid_lock);
-
-	return curr_pid;
-}
 
 /*==============================================================================================*
  *																								*

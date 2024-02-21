@@ -22,17 +22,17 @@
 
 	// #define MIN_THREADS_LEFT_FOR_ROOT	4
 
-	// /*
-	//  * This controls the default maximum pid allocated to a process
-	//  */
-	// #define PID_MAX_DEFAULT (CONFIG_BASE_SMALL ? 0x1000 : 0x8000)
+	/*
+	 * This controls the default maximum pid allocated to a process
+	 */
+	#define PID_MAX_DEFAULT (CONFIG_BASE_SMALL ? 0x1000 : 0x8000)
 
-	// /*
-	//  * A maximum of 4 million PIDs should be enough for a while.
-	//  * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
-	//  */
-	// #define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
-	// 			(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
+	/*
+	 * A maximum of 4 million PIDs should be enough for a while.
+	 * [NOTE: PID/TIDs are limited to 2^30 ~= 1 billion, see FUTEX_TID_MASK.]
+	 */
+	#define PID_MAX_LIMIT (CONFIG_BASE_SMALL ? PAGE_SIZE * 8 : \
+				(sizeof(long) > 4 ? 4 * 1024 * 1024 : PID_MAX_DEFAULT))
 
 	// /*
 	//  * Define a minimum number of pids per cpu.  Heuristically based

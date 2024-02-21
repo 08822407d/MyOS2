@@ -171,7 +171,7 @@
 	//  *
 	//  * Called without locks.
 	//  */
-	// static inline void ptrace_event_pid(int event, struct pid *pid) {
+	// static inline void ptrace_event_pid(int event, pid_s *pid) {
 	// 	/*
 	// 	* FIXME: There's a potential race if a ptracer in a different pid
 	// 	* namespace than parent attaches between computing message below and

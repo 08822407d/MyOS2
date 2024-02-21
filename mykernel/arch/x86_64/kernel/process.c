@@ -109,22 +109,22 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 	if (sp)
 		childregs->sp = (reg_t)sp;
 
-	// if (unlikely(p->flags & PF_IO_WORKER)) {
-	// 	/*
-	// 	 * An IO thread is a user space thread, but it doesn't
-	// 	 * return to ret_after_fork().
-	// 	 *
-	// 	 * In order to indicate that to tools like gdb,
-	// 	 * we reset the stack and instruction pointers.
-	// 	 *
-	// 	 * It does the same kernel frame setup to return to a kernel
-	// 	 * function that a kernel thread does.
-	// 	 */
-	// 	childregs->sp = 0;
-	// 	childregs->ip = 0;
-	// 	kthread_frame_init(frame, sp, arg);
-	// 	return 0;
-	// }
+	if (unlikely(args->fn)) {
+		/*
+		 * A user space thread, but it doesn't return to
+		 * ret_after_fork().
+		 *
+		 * In order to indicate that to tools like gdb,
+		 * we reset the stack and instruction pointers.
+		 *
+		 * It does the same kernel frame setup to return to a kernel
+		 * function that a kernel thread does.
+		 */
+		childregs->sp = 0;
+		childregs->ip = 0;
+		kthread_frame_init(frame, args->fn, args->fn_arg);
+		return 0;
+	}
 
 	// /* Set a new TLS for the child thread? */
 	// if (clone_flags & CLONE_SETTLS)

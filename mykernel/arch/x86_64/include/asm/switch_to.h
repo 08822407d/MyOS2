@@ -50,7 +50,7 @@
 	}
 
 	static inline void
-	kthread_frame_init(task_kframe_s *frame, unsigned long fun, unsigned long arg) {
+	kthread_frame_init(task_kframe_s *frame, int (*fun)(void *), void *arg) {
 		frame->bx = (reg_t)fun;
 		frame->r12 = (reg_t)arg;
 	}

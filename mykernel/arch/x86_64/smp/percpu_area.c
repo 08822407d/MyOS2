@@ -10,6 +10,7 @@
 #include <asm/desc.h>
 
 
+#include <linux/kernel/pid.h>
 #include <obsolete/glo.h>
 
 char init_stack[THREAD_SIZE] __page_aligned_data;
@@ -61,6 +62,8 @@ DEFINE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page) = { .gdt = {
 
 void myos_init_per_cpu_var(void)
 {
+	myos_init_pid_allocator();
+
 	task_s *this_idle_thread = &per_cpu(idle_threads, 0);
 	memset(this_idle_thread, 0, sizeof(task_s));
 	list_init(&this_idle_thread->tasks, this_idle_thread);
@@ -76,8 +79,9 @@ void myos_init_per_cpu_var(void)
 	this_idle_thread->fs			= &idle_taskfs;
 	this_idle_thread->files			= &idle_taskfilps;
 	this_idle_thread->stack			= (void *)init_stack;
+	this_idle_thread->pid			= pid_nr(&init_struct_pid);
+	this_idle_thread->thread_pid	= &init_struct_pid;
 	set_task_comm(this_idle_thread, "cpu0_idle");
-	myos_init_pid_allocator();
 	attach_pid(this_idle_thread, PIDTYPE_PID);
 
 

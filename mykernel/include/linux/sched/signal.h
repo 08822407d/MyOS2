@@ -159,13 +159,13 @@
 		// struct posix_cputimers posix_cputimers;
 
 		// /* PID/PID hash table linkage. */
-		// struct pid *pids[PIDTYPE_MAX];
+		// pid_s *pids[PIDTYPE_MAX];
 
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
 	// #endif
 
-		// struct pid *tty_old_pgrp;
+		// pid_s *tty_old_pgrp;
 
 		/* boolean value for session group leader */
 		// int leader;
@@ -331,12 +331,12 @@
 	// extern int send_sig_info(int, struct kernel_siginfo *, task_s *);
 	// extern void force_sigsegv(int sig);
 	// extern int force_sig_info(struct kernel_siginfo *);
-	// extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, struct pid *pgrp);
-	// extern int kill_pid_info(int sig, struct kernel_siginfo *info, struct pid *pid);
-	// extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, struct pid *,
+	// extern int __kill_pgrp_info(int sig, struct kernel_siginfo *info, pid_s *pgrp);
+	// extern int kill_pid_info(int sig, struct kernel_siginfo *info, pid_s *pid);
+	// extern int kill_pid_usb_asyncio(int sig, int errno, sigval_t addr, pid_s *,
 	// 				const struct cred *);
-	// extern int kill_pgrp(struct pid *pid, int sig, int priv);
-	// extern int kill_pid(struct pid *pid, int sig, int priv);
+	// extern int kill_pgrp(pid_s *pid, int sig, int priv);
+	// extern int kill_pid(pid_s *pid, int sig, int priv);
 	// extern __must_check bool do_notify_parent(task_s *, int);
 	// extern void __wake_up_parent(task_s *p, task_s *parent);
 	// extern void force_sig(int);
@@ -346,7 +346,7 @@
 	// extern int zap_other_threads(task_s *p);
 	// extern struct sigqueue *sigqueue_alloc(void);
 	// extern void sigqueue_free(struct sigqueue *);
-	// extern int send_sigqueue(struct sigqueue *, struct pid *, enum pid_type);
+	// extern int send_sigqueue(struct sigqueue *, pid_s *, enum pid_type);
 	// extern int do_sigaction(int, struct k_sigaction *, struct k_sigaction *);
 
 	// static inline int restart_syscall(void)
@@ -633,9 +633,9 @@
 	// void walk_process_tree(task_s *top, proc_visitor, void *);
 
 	// static inline
-	// struct pid *task_pid_type(task_s *task, enum pid_type type)
+	// pid_s *task_pid_type(task_s *task, enum pid_type type)
 	// {
-	// 	struct pid *pid;
+	// 	pid_s *pid;
 	// 	if (type == PIDTYPE_PID)
 	// 		pid = task_pid(task);
 	// 	else
@@ -643,7 +643,7 @@
 	// 	return pid;
 	// }
 
-	// static inline struct pid *task_tgid(task_s *task)
+	// static inline pid_s *task_tgid(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_TGID];
 	// }
@@ -653,12 +653,12 @@
 	// * the result of task_pgrp/task_session even if task == current,
 	// * we can race with another thread doing sys_setsid/sys_setpgid.
 	// */
-	// static inline struct pid *task_pgrp(task_s *task)
+	// static inline pid_s *task_pgrp(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_PGID];
 	// }
 
-	// static inline struct pid *task_session(task_s *task)
+	// static inline pid_s *task_session(task_s *task)
 	// {
 	// 	return task->signal->pids[PIDTYPE_SID];
 	// }
@@ -692,7 +692,7 @@
 	// #define delay_group_leader(p) \
 	// 		(thread_group_leader(p) && !thread_group_empty(p))
 
-	// extern bool thread_group_exited(struct pid *pid);
+	// extern bool thread_group_exited(pid_s *pid);
 
 	// extern struct sighand_struct *__lock_task_sighand(task_s *task,
 	// 							unsigned long *flags);

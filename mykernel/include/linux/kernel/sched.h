@@ -1032,7 +1032,7 @@
 		// List_s ptrace_entry;
 
 		/* PID/PID hash table linkage. */
-		// pid_s			*thread_pid;
+		pid_s			*thread_pid;
 		// struct hlist_node pid_links[PIDTYPE_MAX];
 		List_s			pid_links;
 		// List_s thread_group;
@@ -2392,6 +2392,6 @@
 	// } PCB_u __attribute__((aligned(8)));
 	
 	void myos_init_pid_allocator(void);
-	unsigned long myos_pid_nr(void);
+	unsigned long myos_idr_alloc(void);
 
 #endif

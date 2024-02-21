@@ -1091,13 +1091,13 @@ static inline void init_task_pid_links(task_s *task) {
 	list_init(&task->pid_links, task);
 }
 
-// static inline void
-// init_task_pid(task_s *task, enum pid_type type, struct pid *pid) {
-// 	// if (type == PIDTYPE_PID)
-// 	// 	task->thread_pid = pid;
-// 	// else
-// 	// 	task->signal->pids[type] = pid;
-// }
+static inline void
+init_task_pid(task_s *task, enum pid_type type, pid_s *pid_struct) {
+	if (type == PIDTYPE_PID)
+		task->thread_pid = pid_struct;
+	// else
+	// 	task->signal->pids[type] = pid_struct;
+}
 
 
 // static void __delayed_free_task(struct rcu_head *rhp)
@@ -1129,7 +1129,7 @@ int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk);
  * flags). The actual kick-off is left to the caller.
  */
 static __latent_entropy task_s
-*copy_process(pid_s *pid, int trace, int node, kclone_args_s *args)
+*copy_process(pid_s *pid_struct, int trace, int node, kclone_args_s *args)
 {
 	int pidfd = -1, retval;
 	task_s *p, *curr = current;
@@ -1408,14 +1408,13 @@ static __latent_entropy task_s
 
 	// stackleak_task_init(p);
 
-	// if (pid != &init_struct_pid) {
-	// 	pid = alloc_pid(p->nsproxy->pid_ns_for_children, args->set_tid,
-	// 			args->set_tid_size);
-	// 	if (IS_ERR(pid)) {
-	// 		retval = PTR_ERR(pid);
-	// 		goto bad_fork_cleanup_thread;
-	// 	}
-	// }
+	if (pid_struct != &init_struct_pid) {
+		pid_struct = alloc_pid(args->set_tid, args->set_tid_size);
+		if (IS_ERR(pid_struct)) {
+			retval = PTR_ERR(pid_struct);
+			goto bad_fork_cleanup_thread;
+		}
+	}
 
 	// /*
 	//  * This has to happen after we've potentially unshared the file
@@ -1429,14 +1428,14 @@ static __latent_entropy task_s
 
 	// 	pidfd = retval;
 
-	// 	pidfile = anon_inode_getfile("[pidfd]", &pidfd_fops, pid,
+	// 	pidfile = anon_inode_getfile("[pidfd]", &pidfd_fops, pid_struct,
 	// 					  O_RDWR | O_CLOEXEC);
 	// 	if (IS_ERR(pidfile)) {
 	// 		put_unused_fd(pidfd);
 	// 		retval = PTR_ERR(pidfile);
 	// 		goto bad_fork_free_pid;
 	// 	}
-	// 	get_pid(pid);	/* held by pidfile now */
+	// 	get_pid(pid_struct);	/* held by pidfile now */
 
 	// 	retval = put_user(pidfd, args->pidfd);
 	// 	if (retval)
@@ -1466,8 +1465,7 @@ static __latent_entropy task_s
 	// clear_tsk_latency_tracing(p);
 
 	/* ok, now we should be set up.. */
-	// p->pid = pid_nr(pid);
-	p->pid = myos_pid_nr();
+	p->pid = pid_nr(pid_struct);
 	if (clone_flags & CLONE_THREAD) {
 		// p->group_leader = current->group_leader;
 		// p->tgid = current->tgid;
@@ -1556,7 +1554,7 @@ static __latent_entropy task_s
 	// rseq_fork(p, clone_flags);
 
 	// /* Don't start children in a dying pid namespace */
-	// if (unlikely(!(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING))) {
+	// if (unlikely(!(ns_of_pid(pid_struct)->pid_allocated & PIDNS_ADDING))) {
 	// 	retval = -ENOMEM;
 	// 	goto bad_fork_cancel_cgroup;
 	// }
@@ -1571,14 +1569,14 @@ static __latent_entropy task_s
 	if (likely(p->pid)) {
 		ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
-		// init_task_pid(p, PIDTYPE_PID, pid);
+		init_task_pid(p, PIDTYPE_PID, pid_struct);
 		if (thread_group_leader(p)) {
-			// init_task_pid(p, PIDTYPE_TGID, pid);
+			// init_task_pid(p, PIDTYPE_TGID, pid_struct);
 			// init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
 			// init_task_pid(p, PIDTYPE_SID, task_session(current));
 
-			// if (is_child_reaper(pid)) {
-			// 	ns_of_pid(pid)->child_reaper = p;
+			// if (is_child_reaper(pid_struct)) {
+			// 	ns_of_pid(pid_struct)->child_reaper = p;
 			// 	p->signal->flags |= SIGNAL_UNKILLABLE;
 			// }
 			// p->signal->shared_pending.signal = delayed.signal;
@@ -1641,8 +1639,8 @@ bad_fork_put_pidfd:
 	// 	put_unused_fd(pidfd);
 	// }
 bad_fork_free_pid:
-	// if (pid != &init_struct_pid)
-	// 	free_pid(pid);
+	if (pid_struct != &init_struct_pid)
+		free_pid(pid_struct);
 bad_fork_cleanup_thread:
 	// exit_thread(p);
 bad_fork_cleanup_io:
@@ -1711,7 +1709,7 @@ pid_t kernel_clone(kclone_args_s *args)
 {
 	u64 clone_flags = args->flags;
 	completion_s vfork;
-	pid_s *pid;
+	pid_s *pid_struct;
 	task_s *p;
 	int trace = 0;
 	pid_t nr;
@@ -1760,9 +1758,8 @@ pid_t kernel_clone(kclone_args_s *args)
 	//  */
 	// trace_sched_process_fork(current, p);
 
-	// pid = get_task_pid(p, PIDTYPE_PID);
-	// nr = pid_vnr(pid);
-	nr = p->pid;
+	pid_struct = get_task_pid(p, PIDTYPE_PID);
+	nr = pid_vnr(pid_struct);
 
 	// if (clone_flags & CLONE_PARENT_SETTID)
 	// 	put_user(nr, args->parent_tid);
@@ -1784,14 +1781,14 @@ pid_t kernel_clone(kclone_args_s *args)
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))
-	// 	ptrace_event_pid(trace, pid);
+	// 	ptrace_event_pid(trace, pid_struct);
 
 	// if (clone_flags & CLONE_VFORK) {
 	// 	if (!wait_for_vfork_done(p, &vfork))
-	// 		ptrace_event_pid(PTRACE_EVENT_VFORK_DONE, pid);
+	// 		ptrace_event_pid(PTRACE_EVENT_VFORK_DONE, pid_struct);
 	// }
 
-	// put_pid(pid);
+	put_pid(pid_struct);
 
 	return nr;
 }

@@ -57,8 +57,7 @@
 		// struct pid_namespace *ns;
 	} upid_s;
 
-	typedef struct pid
-	{
+	typedef struct pid {
 		atomic_t		count;
 		unsigned int	level;
 		spinlock_t		lock;
@@ -71,7 +70,7 @@
 		upid_s			numbers[1];
 	} pid_s;
 
-	// extern pid_s init_struct_pid;
+	extern pid_s init_struct_pid;
 
 	// extern const struct file_operations pidfd_fops;
 
@@ -82,14 +81,12 @@
 	// task_s *pidfd_get_task(int pidfd, unsigned int *flags);
 	// int pidfd_create(pid_s *pid, unsigned int flags);
 
-	// static inline pid_s *get_pid(pid_s *pid)
-	// {
-	// 	if (pid)
-	// 		refcount_inc(&pid->count);
-	// 	return pid;
-	// }
+	static inline pid_s *get_pid(pid_s *pid) {
+		if (pid) atomic_inc(&pid->count);
+		return pid;
+	}
 
-	// extern void put_pid(pid_s *pid);
+	extern void put_pid(pid_s *pid);
 	// extern task_s *pid_task(pid_s *pid, enum pid_type);
 	// static inline bool pid_has_task(pid_s *pid, enum pid_type type)
 	// {
@@ -97,7 +94,7 @@
 	// }
 	// extern task_s *get_pid_task(pid_s *pid, enum pid_type);
 
-	// extern pid_s *get_task_pid(task_s *task, enum pid_type type);
+	extern pid_s *get_task_pid(task_s *task, enum pid_type type);
 
 	// /*
 	// * these helpers must be called with the tasklist_lock write-held.
@@ -136,7 +133,8 @@
 
 	// extern pid_s *alloc_pid(struct pid_namespace *ns, pid_t *set_tid,
 	// 				size_t set_tid_size);
-	// extern void free_pid(pid_s *pid);
+	extern pid_s *alloc_pid(pid_t *set_tid, size_t set_tid_size);
+	extern void free_pid(pid_s *pid);
 	// extern void disable_pid_allocation(struct pid_namespace *ns);
 
 	// /*
@@ -186,7 +184,7 @@
 	}
 
 	// pid_t pid_nr_ns(pid_s *pid, struct pid_namespace *ns);
-	// pid_t pid_vnr(pid_s *pid);
+	pid_t pid_vnr(pid_s *pid);
 
 	// #define do_each_pid_task(pid, type, task)				\
 	// 	do {								\
