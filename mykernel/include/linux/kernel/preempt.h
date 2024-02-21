@@ -53,7 +53,7 @@
 
 	// #define SOFTIRQ_DISABLE_OFFSET	(2 * SOFTIRQ_OFFSET)
 
-	// #define PREEMPT_DISABLED		(PREEMPT_DISABLE_OFFSET + PREEMPT_ENABLED)
+	#define PREEMPT_DISABLED		(PREEMPT_DISABLE_OFFSET + PREEMPT_ENABLED)
 
 	/*
 	 * Disable preemption until the scheduler is running -- use an unconditional
@@ -132,7 +132,7 @@
 	/*
 	 * The preempt_count offset after preempt_disable();
 	 */
-	// #define PREEMPT_DISABLE_OFFSET	PREEMPT_OFFSET
+	#define PREEMPT_DISABLE_OFFSET	PREEMPT_OFFSET
 
 	/*
 	 * The preempt_count offset after spin_lock()
@@ -172,7 +172,7 @@
 	 * Check whether we were atomic before we did preempt_disable():
 	 * (used by the scheduler)
 	 */
-	// #define in_atomic_preempt_off()	(preempt_count() != PREEMPT_DISABLE_OFFSET)
+	#define in_atomic_preempt_off()	(preempt_count() != PREEMPT_DISABLE_OFFSET)
 
 	extern void preempt_count_add(int val);
 	extern void preempt_count_sub(int val);

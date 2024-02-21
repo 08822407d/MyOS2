@@ -95,6 +95,7 @@
         "sizes.h": "c",
         "swait.h": "c",
         "rmwcc.h": "c",
-        "fdtable.h": "c"
+        "fdtable.h": "c",
+        "current.h": "c"
     }
 }

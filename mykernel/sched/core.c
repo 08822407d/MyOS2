@@ -245,26 +245,26 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 	unsigned long flags;
 	int cpu = 0, success = 0;
 
-	// if (p == current) {
-	// 	/*
-	// 	 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
-	// 	 * == smp_processor_id()'. Together this means we can special
-	// 	 * case the whole 'p->on_rq && ttwu_runnable()' case below
-	// 	 * without taking any locks.
-	// 	 *
-	// 	 * In particular:
-	// 	 *  - we rely on Program-Order guarantees for all the ordering,
-	// 	 *  - we're serialized against set_special_state() by virtue of
-	// 	 *    it disabling IRQs (this allows not taking ->pi_lock).
-	// 	 */
-	// 	if (!ttwu_state_match(p, state, &success))
-	// 		goto out;
+	if (p == current) {
+		/*
+		 * We're waking current, this means 'p->on_rq' and 'task_cpu(p)
+		 * == smp_processor_id()'. Together this means we can special
+		 * case the whole 'p->on_rq && ttwu_runnable()' case below
+		 * without taking any locks.
+		 *
+		 * In particular:
+		 *  - we rely on Program-Order guarantees for all the ordering,
+		 *  - we're serialized against set_special_state() by virtue of
+		 *    it disabling IRQs (this allows not taking ->pi_lock).
+		 */
+		// if (!ttwu_state_match(p, state, &success))
+		// 	goto out;
 
-	// 	trace_sched_waking(p);
-	// 	WRITE_ONCE(p->__state, TASK_RUNNING);
-	// 	trace_sched_wakeup(p);
-	// 	goto out;
-	// }
+		// trace_sched_waking(p);
+		WRITE_ONCE(p->__state, TASK_RUNNING);
+		// trace_sched_wakeup(p);
+		goto out;
+	}
 
 	// /*
 	//  * If we are going to wake up a thread waiting for CONDITION we
@@ -279,29 +279,29 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 
 	// trace_sched_waking(p);
 
-	// /*
-	//  * Ensure we load p->on_rq _after_ p->state, otherwise it would
-	//  * be possible to, falsely, observe p->on_rq == 0 and get stuck
-	//  * in smp_cond_load_acquire() below.
-	//  *
-	//  * sched_ttwu_pending()			try_to_wake_up()
-	//  *   STORE p->on_rq = 1			  LOAD p->state
-	//  *   UNLOCK rq->lock
-	//  *
-	//  * __schedule() (switch to task 'p')
-	//  *   LOCK rq->lock			  smp_rmb();
-	//  *   smp_mb__after_spinlock();
-	//  *   UNLOCK rq->lock
-	//  *
-	//  * [task p]
-	//  *   STORE p->state = UNINTERRUPTIBLE	  LOAD p->on_rq
-	//  *
-	//  * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
-	//  * __schedule().  See the comment for smp_mb__after_spinlock().
-	//  *
-	//  * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
-	//  */
-	// smp_rmb();
+	/*
+	 * Ensure we load p->on_rq _after_ p->state, otherwise it would
+	 * be possible to, falsely, observe p->on_rq == 0 and get stuck
+	 * in smp_cond_load_acquire() below.
+	 *
+	 * sched_ttwu_pending()			try_to_wake_up()
+	 *   STORE p->on_rq = 1			  LOAD p->state
+	 *   UNLOCK rq->lock
+	 *
+	 * __schedule() (switch to task 'p')
+	 *   LOCK rq->lock			  smp_rmb();
+	 *   smp_mb__after_spinlock();
+	 *   UNLOCK rq->lock
+	 *
+	 * [task p]
+	 *   STORE p->state = UNINTERRUPTIBLE	  LOAD p->on_rq
+	 *
+	 * Pairs with the LOCK+smp_mb__after_spinlock() on rq->lock in
+	 * __schedule().  See the comment for smp_mb__after_spinlock().
+	 *
+	 * A similar smb_rmb() lives in try_invoke_on_locked_down_task().
+	 */
+	smp_rmb();
 	// if (READ_ONCE(p->on_rq) && ttwu_runnable(p, wake_flags))
 	// 	goto unlock;
 
@@ -386,9 +386,9 @@ try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
 	// }
 
 	// ttwu_queue(p, cpu, wake_flags);
-// unlock:
+unlock:
 	// raw_spin_unlock_irqrestore(&p->pi_lock, flags);
-// out:
+out:
 	// if (success)
 	// 	ttwu_stat(p, task_cpu(p), wake_flags);
 
@@ -648,6 +648,297 @@ void wake_up_new_task(task_s *p)
 	// task_rq_unlock(rq, p, &rf);
 }
 
+
+
+/*
+ * Print scheduling while atomic bug:
+ */
+static noinline void __schedule_bug(task_s *prev)
+{
+	// /* Save this before calling printk(), since that will clobber it */
+	// unsigned long preempt_disable_ip = get_preempt_disable_ip(current);
+
+	// if (oops_in_progress)
+	// 	return;
+
+	// printk(KERN_ERR "BUG: scheduling while atomic: %s/%d/0x%08x\n",
+	// 	prev->comm, prev->pid, preempt_count());
+
+	// debug_show_held_locks(prev);
+	// print_modules();
+	// if (irqs_disabled())
+	// 	print_irqtrace_events(prev);
+	// if (IS_ENABLED(CONFIG_DEBUG_PREEMPT)
+	// 	&& in_atomic_preempt_off()) {
+	// 	pr_err("Preemption disabled at:");
+	// 	print_ip_sym(KERN_ERR, preempt_disable_ip);
+	// }
+	// check_panic_on_warn("scheduling while atomic");
+
+	// dump_stack();
+	// add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+}
+
+/*
+ * Various schedule()-time debugging checks and statistics:
+ */
+static inline void
+schedule_debug(task_s *prev, bool preempt) {
+// #ifdef CONFIG_SCHED_STACK_END_CHECK
+// 	if (task_stack_end_corrupted(prev))
+// 		panic("corrupted stack end detected inside scheduler\n");
+
+// 	if (task_scs_end_corrupted(prev))
+// 		panic("corrupted shadow stack detected inside scheduler\n");
+// #endif
+
+// #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+// 	if (!preempt && READ_ONCE(prev->__state) && prev->non_block_count) {
+// 		printk(KERN_ERR "BUG: scheduling in a non-blocking section: %s/%d/%i\n",
+// 			prev->comm, prev->pid, prev->non_block_count);
+// 		dump_stack();
+// 		add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
+// 	}
+// #endif
+
+	if (unlikely(in_atomic_preempt_off())) {
+		__schedule_bug(prev);
+		preempt_count_set(PREEMPT_DISABLED);
+	}
+	// rcu_sleep_check();
+	// SCHED_WARN_ON(ct_state() == CONTEXT_USER);
+
+	// profile_hit(SCHED_PROFILING, __builtin_return_address(0));
+
+	// schedstat_inc(this_rq()->sched_count);
+}
+
+
+/*
+ * Constants for the sched_mode argument of __schedule().
+ *
+ * The mode argument allows RT enabled kernels to differentiate a
+ * preemption from blocking on an 'sleeping' spin/rwlock. Note that
+ * SM_MASK_PREEMPT for !RT has all bits set, which allows the compiler to
+ * optimize the AND operation out and just check for zero.
+ */
+#define SM_NONE				0x0
+#define SM_PREEMPT			0x1
+#define SM_RTLOCK_WAIT		0x2
+
+#ifndef CONFIG_PREEMPT_RT
+#	define SM_MASK_PREEMPT	(~0U)
+#else
+#	define SM_MASK_PREEMPT	SM_PREEMPT
+#endif
+
+/*
+ * __schedule() is the main scheduler function.
+ *
+ * The main means of driving the scheduler and thus entering this function are:
+ *
+ *   1. Explicit blocking: mutex, semaphore, waitqueue, etc.
+ *
+ *   2. TIF_NEED_RESCHED flag is checked on interrupt and userspace return
+ *      paths. For example, see arch/x86/entry_64.S.
+ *
+ *      To drive preemption between tasks, the scheduler sets the flag in timer
+ *      interrupt handler scheduler_tick().
+ *
+ *   3. Wakeups don't really cause entry into schedule(). They add a
+ *      task to the run-queue and that's it.
+ *
+ *      Now, if the new task added to the run-queue preempts the current
+ *      task, then the wakeup sets TIF_NEED_RESCHED and schedule() gets
+ *      called on the nearest possible occasion:
+ *
+ *       - If the kernel is preemptible (CONFIG_PREEMPTION=y):
+ *
+ *         - in syscall or exception context, at the next outmost
+ *           preempt_enable(). (this might be as soon as the wake_up()'s
+ *           spin_unlock()!)
+ *
+ *         - in IRQ context, return from interrupt-handler to
+ *           preemptible context
+ *
+ *       - If the kernel is not preemptible (CONFIG_PREEMPTION is not set)
+ *         then at the next:
+ *
+ *          - cond_resched() call
+ *          - explicit schedule() call
+ *          - return from syscall or exception to user-space
+ *          - return from interrupt-handler to user-space
+ *
+ * WARNING: must be called with preemption disabled!
+ */
+static void __sched notrace
+__schedule(unsigned int sched_mode) {
+	task_s *prev, *next;
+	// unsigned long *switch_count;
+	// unsigned long prev_state;
+	// struct rq_flags rf;
+	// struct rq *rq;
+	// int cpu;
+
+	// cpu = smp_processor_id();
+	// rq = cpu_rq(cpu);
+	// prev = rq->curr;
+
+	schedule_debug(prev, !!sched_mode);
+
+	// if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
+	// 	hrtick_clear(rq);
+
+	// local_irq_disable();
+	// rcu_note_context_switch(!!sched_mode);
+
+	// /*
+	//  * Make sure that signal_pending_state()->signal_pending() below
+	//  * can't be reordered with __set_current_state(TASK_INTERRUPTIBLE)
+	//  * done by the caller to avoid the race with signal_wake_up():
+	//  *
+	//  * __set_current_state(@state)		signal_wake_up()
+	//  * schedule()				  set_tsk_thread_flag(p, TIF_SIGPENDING)
+	//  *					  wake_up_state(p, state)
+	//  *   LOCK rq->lock			    LOCK p->pi_state
+	//  *   smp_mb__after_spinlock()		    smp_mb__after_spinlock()
+	//  *     if (signal_pending_state())	    if (p->state & @state)
+	//  *
+	//  * Also, the membarrier system call requires a full memory barrier
+	//  * after coming from user-space, before storing to rq->curr.
+	//  */
+	// rq_lock(rq, &rf);
+	// smp_mb__after_spinlock();
+
+	// /* Promote REQ to ACT */
+	// rq->clock_update_flags <<= 1;
+	// update_rq_clock(rq);
+
+	// switch_count = &prev->nivcsw;
+
+	// /*
+	//  * We must load prev->state once (task_struct::state is volatile), such
+	//  * that we form a control dependency vs deactivate_task() below.
+	//  */
+	// prev_state = READ_ONCE(prev->__state);
+	// if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
+	// 	if (signal_pending_state(prev_state, prev)) {
+	// 		WRITE_ONCE(prev->__state, TASK_RUNNING);
+	// 	} else {
+	// 		prev->sched_contributes_to_load =
+	// 			(prev_state & TASK_UNINTERRUPTIBLE) &&
+	// 			!(prev_state & TASK_NOLOAD) &&
+	// 			!(prev_state & TASK_FROZEN);
+
+	// 		if (prev->sched_contributes_to_load)
+	// 			rq->nr_uninterruptible++;
+
+	// 		/*
+	// 		 * __schedule()			ttwu()
+	// 		 *   prev_state = prev->state;    if (p->on_rq && ...)
+	// 		 *   if (prev_state)		    goto out;
+	// 		 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
+	// 		 *				  p->state = TASK_WAKING
+	// 		 *
+	// 		 * Where __schedule() and ttwu() have matching control dependencies.
+	// 		 *
+	// 		 * After this, schedule() must not care about p->state any more.
+	// 		 */
+	// 		deactivate_task(rq, prev, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
+
+	// 		if (prev->in_iowait) {
+	// 			atomic_inc(&rq->nr_iowait);
+	// 			delayacct_blkio_start();
+	// 		}
+	// 	}
+	// 	switch_count = &prev->nvcsw;
+	// }
+
+	// next = pick_next_task(rq, prev, &rf);
+	// clear_tsk_need_resched(prev);
+	// clear_preempt_need_resched();
+// #ifdef CONFIG_SCHED_DEBUG
+// 	rq->last_seen_need_resched_ns = 0;
+// #endif
+
+	// if (likely(prev != next)) {
+	// 	rq->nr_switches++;
+	// 	/*
+	// 	 * RCU users of rcu_dereference(rq->curr) may not see
+	// 	 * changes to task_struct made by pick_next_task().
+	// 	 */
+	// 	RCU_INIT_POINTER(rq->curr, next);
+	// 	/*
+	// 	 * The membarrier system call requires each architecture
+	// 	 * to have a full memory barrier after updating
+	// 	 * rq->curr, before returning to user-space.
+	// 	 *
+	// 	 * Here are the schemes providing that barrier on the
+	// 	 * various architectures:
+	// 	 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC.
+	// 	 *   switch_mm() rely on membarrier_arch_switch_mm() on PowerPC.
+	// 	 * - finish_lock_switch() for weakly-ordered
+	// 	 *   architectures where spin_unlock is a full barrier,
+	// 	 * - switch_to() for arm64 (weakly-ordered, spin_unlock
+	// 	 *   is a RELEASE barrier),
+	// 	 */
+	// 	++*switch_count;
+
+	// 	migrate_disable_switch(rq, prev);
+	// 	psi_sched_switch(prev, next, !task_on_rq_queued(prev));
+
+	// 	trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next, prev_state);
+
+	// 	/* Also unlocks the rq: */
+	// 	rq = context_switch(rq, prev, next, &rf);
+	// } else {
+	// 	rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
+
+	// 	rq_unpin_lock(rq, &rf);
+	// 	__balance_callbacks(rq);
+	// 	raw_spin_rq_unlock_irq(rq);
+	// }
+}
+
+
+// asmlinkage __visible void __sched schedule(void)
+// {
+// 	task_s *tsk = current;
+
+// 	sched_submit_work(tsk);
+// 	do {
+// 		preempt_disable();
+// 		__schedule(SM_NONE);
+// 		sched_preempt_enable_no_resched();
+// 	} while (need_resched());
+// 	sched_update_worker(tsk);
+// }
+// EXPORT_SYMBOL(schedule);
+
+/*
+ * synchronize_rcu_tasks() makes sure that no task is stuck in preempted
+ * state (have scheduled out non-voluntarily) by making sure that all
+ * tasks have either left the run queue or have gone into user space.
+ * As idle tasks do not do either, they must not ever be preempted
+ * (schedule out non-voluntarily).
+ *
+ * schedule_idle() is similar to schedule_preempt_disable() except that it
+ * never enables preemption because it does not call sched_submit_work().
+ */
+void __sched schedule_idle(void)
+{
+	/*
+	 * As this skips calling sched_submit_work(), which the idle task does
+	 * regardless because that function is a nop when the task is in a
+	 * TASK_RUNNING state, make sure this isn't used someplace that the
+	 * current task can be in any other state. Note, idle is always in the
+	 * TASK_RUNNING state.
+	 */
+	WARN_ON_ONCE(current->__state);
+	do {
+		__schedule(SM_NONE);
+	} while (need_resched());
+}
 
 /**
  * schedule_preempt_disabled - called with preemption disabled

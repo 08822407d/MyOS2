@@ -2163,10 +2163,9 @@
 	// #endif
 	// }
 
-	// static __always_inline bool need_resched(void)
-	// {
-	// 	return unlikely(tif_need_resched());
-	// }
+	static __always_inline bool need_resched(void) {
+		// return unlikely(tif_need_resched());
+	}
 
 	// /*
 	// * Wrappers for p->thread_info->cpu access. No-op on UP.

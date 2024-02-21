@@ -46,52 +46,52 @@
 	#		define dma_wmb()	do { __dma_wmb(); } while (0)
 	#	endif
 
-	// /*
-	//  * Force strict CPU ordering. And yes, this is required on UP too when we're
-	//  * talking to devices.
-	//  *
-	//  * Fall back to compiler barriers if nothing better is provided.
-	//  */
+	/*
+	 * Force strict CPU ordering. And yes, this is required on UP too when we're
+	 * talking to devices.
+	 *
+	 * Fall back to compiler barriers if nothing better is provided.
+	 */
 
-	// #	ifndef mb
-	// #		define mb()			barrier()
-	// #	endif
+	#	ifndef mb
+	#		define mb()			barrier()
+	#	endif
 
-	// #	ifndef rmb
-	// #		define rmb()		mb()
-	// #	endif
+	#	ifndef rmb
+	#		define rmb()		mb()
+	#	endif
 
-	// #	ifndef wmb
-	// #		define wmb()		mb()
-	// #	endif
+	#	ifndef wmb
+	#		define wmb()		mb()
+	#	endif
 
-	// #	ifndef dma_rmb
-	// #		define dma_rmb()	rmb()
-	// #	endif
+	#	ifndef dma_rmb
+	#		define dma_rmb()	rmb()
+	#	endif
 
-	// #	ifndef dma_wmb
-	// #		define dma_wmb()	wmb()
-	// #	endif
+	#	ifndef dma_wmb
+	#		define dma_wmb()	wmb()
+	#	endif
 
-	// #	ifndef __smp_mb
-	// #		define __smp_mb()	mb()
-	// #	endif
+	#	ifndef __smp_mb
+	#		define __smp_mb()	mb()
+	#	endif
 
-	// #	ifndef __smp_rmb
-	// #		define __smp_rmb()	rmb()
-	// #	endif
+	#	ifndef __smp_rmb
+	#		define __smp_rmb()	rmb()
+	#	endif
 
-	// #	ifndef __smp_wmb
-	// #		define __smp_wmb()	wmb()
-	// #	endif
+	#	ifndef __smp_wmb
+	#		define __smp_wmb()	wmb()
+	#	endif
 
-	// #	ifndef smp_mb
-	// #		define smp_mb()		do { __smp_mb(); } while (0)
-	// #	endif
+	#	ifndef smp_mb
+	#		define smp_mb()		do { __smp_mb(); } while (0)
+	#	endif
 
-	// #	ifndef smp_rmb
-	// #		define smp_rmb()	do { __smp_rmb(); } while (0)
-	// #	endif
+	#	ifndef smp_rmb
+	#		define smp_rmb()	do { __smp_rmb(); } while (0)
+	#	endif
 
 	#	ifndef smp_wmb
 	#		define smp_wmb()	do { __smp_wmb(); } while (0)

@@ -41,7 +41,7 @@
 	//  * - this struct shares the supervisor stack pages
 	//  */
 	// #ifndef __ASSEMBLY__
-	// struct task_struct;
+	// task_s;
 	// #include <asm/cpufeature.h>
 	// #include <linux/atomic.h>
 
@@ -225,8 +225,8 @@
 	// #endif
 
 	// extern void arch_task_cache_init(void);
-	// extern int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src);
-	// extern void arch_release_task_struct(struct task_struct *tsk);
+	// extern int arch_dup_task_struct(task_s *dst, task_s *src);
+	// extern void arch_release_task_struct(task_s *tsk);
 	// extern void arch_setup_new_exec(void);
 	// #define arch_setup_new_exec arch_setup_new_exec
 	// #endif	/* !__ASSEMBLY__ */

@@ -9,14 +9,14 @@
 
 	#include <asm/processor.h>
 
-	// /* We use the MSB mostly because its available */
-	// #define PREEMPT_NEED_RESCHED	0x80000000
+	/* We use the MSB mostly because its available */
+	#define PREEMPT_NEED_RESCHED	0x80000000
 
-	// /*
-	//  * We use the PREEMPT_NEED_RESCHED bit as an inverted NEED_RESCHED such
-	//  * that a decrement hitting 0 means we can and should reschedule.
-	//  */
-	// #define PREEMPT_ENABLED			(0 + PREEMPT_NEED_RESCHED)
+	/*
+	 * We use the PREEMPT_NEED_RESCHED bit as an inverted NEED_RESCHED such
+	 * that a decrement hitting 0 means we can and should reschedule.
+	 */
+	#define PREEMPT_ENABLED			(0 + PREEMPT_NEED_RESCHED)
 
 	/*
 	 * We mask the PREEMPT_NEED_RESCHED bit so as not to confuse all current users
@@ -37,6 +37,9 @@
 	// 			(pc & ~PREEMPT_NEED_RESCHED);
 	// 	} while (raw_cpu_cmpxchg_4(__preempt_count, old, new) != old);
 	// }
+	static __always_inline void preempt_count_set(int val) {
+		this_cpu_ptr(&pcpu_hot)->preempt_count = val;
+	}
 
 	/*
 	 * must be macros to avoid header recursion hell

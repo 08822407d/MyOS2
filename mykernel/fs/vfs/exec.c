@@ -744,7 +744,7 @@ static int exec_mmap(mm_s *mm)
 }
 
 
-char *get_task_comm(char *buf, size_t buf_size, struct task_struct *tsk)
+char *get_task_comm(char *buf, size_t buf_size, task_s *tsk)
 {
 	task_lock(tsk);
 	/* Always NUL terminated and zero-padded */
