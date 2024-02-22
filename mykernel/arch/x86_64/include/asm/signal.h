@@ -5,7 +5,7 @@
 	#ifndef __ASSEMBLY__
 	#	include <linux/kernel/types.h>
 	#	include <linux/kernel/time.h>
-	#	include <linux/kernel/compiler.h>
+	#	include <linux/compiler/compiler.h>
 
 		// /* Avoid too many header ordering problems.  */
 		// struct siginfo;

@@ -39,7 +39,7 @@
 	#define ARCH_HAS_IOREMAP_WT
 
 	#include <linux/lib/string.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/cc_platform.h>
 	#include <asm/page.h>
 	// #include <asm/early_ioremap.h>

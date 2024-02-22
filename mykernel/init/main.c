@@ -75,7 +75,7 @@
 #include <linux/kernel/signal.h>
 // #include <linux/idr.h>
 // #include <linux/kgdb.h>
-// #include <linux/ftrace.h>
+#include <linux/debug/ftrace.h>
 // #include <linux/async.h>
 // #include <linux/shmem_fs.h>
 #include <linux/kernel/slab.h>

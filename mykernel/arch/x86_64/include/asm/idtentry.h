@@ -35,7 +35,7 @@
 	// #	define DECLARE_IDTENTRY(vector, func)					\
 	// 		asmlinkage void asm_##func(void);				\
 	// 		asmlinkage void xen_asm_##func(void);				\
-	// 		__visible void func(struct pt_regs *regs)
+	// 		__visible void func(pt_regs_s *regs)
 
 	// 	/**
 	// 	 * DEFINE_IDTENTRY - Emit code for simple IDT entry points
@@ -51,9 +51,9 @@
 	// 	 * which has to run before returning to the low level assembly code.
 	// 	 */
 	// #	define DEFINE_IDTENTRY(func)						\
-	// 	static __always_inline void __##func(struct pt_regs *regs);		\
+	// 	static __always_inline void __##func(pt_regs_s *regs);		\
 	// 										\
-	// 	__visible noinstr void func(struct pt_regs *regs)			\
+	// 	__visible noinstr void func(pt_regs_s *regs)			\
 	// 	{									\
 	// 		irqentry_state_t state = irqentry_enter(regs);			\
 	// 										\
@@ -63,7 +63,7 @@
 	// 		irqentry_exit(regs, state);					\
 	// 	}									\
 	// 										\
-	// 	static __always_inline void __##func(struct pt_regs *regs)
+	// 	static __always_inline void __##func(pt_regs_s *regs)
 
 	// 	/* Special case for 32bit IRET 'trap' */
 	// #	define DECLARE_IDTENTRY_SW	DECLARE_IDTENTRY
@@ -86,7 +86,7 @@
 	// #	define DECLARE_IDTENTRY_ERRORCODE(vector, func)			\
 	// 		asmlinkage void asm_##func(void);				\
 	// 		asmlinkage void xen_asm_##func(void);				\
-	// 		__visible void func(struct pt_regs *regs, unsigned long error_code)
+	// 		__visible void func(pt_regs_s *regs, unsigned long error_code)
 
 	// 	/**
 	// 	 * DEFINE_IDTENTRY_ERRORCODE - Emit code for simple IDT entry points
@@ -96,10 +96,10 @@
 	// 	 * Same as DEFINE_IDTENTRY, but has an extra error_code argument
 	// 	 */
 	// #	define DEFINE_IDTENTRY_ERRORCODE(func)					\
-	// 	static __always_inline void __##func(struct pt_regs *regs,		\
+	// 	static __always_inline void __##func(pt_regs_s *regs,		\
 	// 						unsigned long error_code);		\
 	// 										\
-	// 	__visible noinstr void func(struct pt_regs *regs,			\
+	// 	__visible noinstr void func(pt_regs_s *regs,			\
 	// 					unsigned long error_code)			\
 	// 	{									\
 	// 		irqentry_state_t state = irqentry_enter(regs);			\
@@ -110,7 +110,7 @@
 	// 		irqentry_exit(regs, state);					\
 	// 	}									\
 	// 										\
-	// 	static __always_inline void __##func(struct pt_regs *regs,		\
+	// 	static __always_inline void __##func(pt_regs_s *regs,		\
 	// 						unsigned long error_code)
 
 	// 	/**
@@ -139,7 +139,7 @@
 	// 	 * is required before the enter/exit() helpers are invoked.
 	// 	 */
 	// #	define DEFINE_IDTENTRY_RAW(func)					\
-	// 	__visible noinstr void func(struct pt_regs *regs)
+	// 	__visible noinstr void func(pt_regs_s *regs)
 
 	// 	/**
 	// 	 * DECLARE_IDTENTRY_RAW_ERRORCODE - Declare functions for raw IDT entry points
@@ -167,7 +167,7 @@
 	// 	 * is required before the enter/exit() helpers are invoked.
 	// 	 */
 	// #	define DEFINE_IDTENTRY_RAW_ERRORCODE(func)				\
-	// 	__visible noinstr void func(struct pt_regs *regs, unsigned long error_code)
+	// 	__visible noinstr void func(pt_regs_s *regs, unsigned long error_code)
 
 	// 	/**
 	// 	 * DECLARE_IDTENTRY_IRQ - Declare functions for device interrupt IDT entry
@@ -193,9 +193,9 @@
 	// 	 * has to be done in the function body if necessary.
 	// 	 */
 	// #	define DEFINE_IDTENTRY_IRQ(func)					\
-	// 	static void __##func(struct pt_regs *regs, u32 vector);			\
+	// 	static void __##func(pt_regs_s *regs, u32 vector);			\
 	// 										\
-	// 	__visible noinstr void func(struct pt_regs *regs,			\
+	// 	__visible noinstr void func(pt_regs_s *regs,			\
 	// 					unsigned long error_code)			\
 	// 	{									\
 	// 		irqentry_state_t state = irqentry_enter(regs);			\
@@ -208,7 +208,7 @@
 	// 		irqentry_exit(regs, state);					\
 	// 	}									\
 	// 										\
-	// 	static noinline void __##func(struct pt_regs *regs, u32 vector)
+	// 	static noinline void __##func(pt_regs_s *regs, u32 vector)
 
 	// 	/**
 	// 	 * DECLARE_IDTENTRY_SYSVEC - Declare functions for system vector entry points
@@ -235,9 +235,9 @@
 	// 	 * Runs the function on the interrupt stack if the entry hit kernel mode
 	// 	 */
 	// #	define DEFINE_IDTENTRY_SYSVEC(func)					\
-	// 	static void __##func(struct pt_regs *regs);				\
+	// 	static void __##func(pt_regs_s *regs);				\
 	// 										\
-	// 	__visible noinstr void func(struct pt_regs *regs)			\
+	// 	__visible noinstr void func(pt_regs_s *regs)			\
 	// 	{									\
 	// 		irqentry_state_t state = irqentry_enter(regs);			\
 	// 										\
@@ -248,7 +248,7 @@
 	// 		irqentry_exit(regs, state);					\
 	// 	}									\
 	// 										\
-	// 	static noinline void __##func(struct pt_regs *regs)
+	// 	static noinline void __##func(pt_regs_s *regs)
 
 	// 	/**
 	// 	 * DEFINE_IDTENTRY_SYSVEC_SIMPLE - Emit code for simple system vector IDT
@@ -262,9 +262,9 @@
 	// 	* interrupt vectors.
 	// 	*/
 	// #	define DEFINE_IDTENTRY_SYSVEC_SIMPLE(func)				\
-	// 	static __always_inline void __##func(struct pt_regs *regs);		\
+	// 	static __always_inline void __##func(pt_regs_s *regs);		\
 	// 										\
-	// 	__visible noinstr void func(struct pt_regs *regs)			\
+	// 	__visible noinstr void func(pt_regs_s *regs)			\
 	// 	{									\
 	// 		irqentry_state_t state = irqentry_enter(regs);			\
 	// 										\
@@ -277,7 +277,7 @@
 	// 		irqentry_exit(regs, state);					\
 	// 	}									\
 	// 										\
-	// 	static __always_inline void __##func(struct pt_regs *regs)
+	// 	static __always_inline void __##func(pt_regs_s *regs)
 
 	// 	/**
 	// 	 * DECLARE_IDTENTRY_XENCB - Declare functions for XEN HV callback entry point
@@ -305,7 +305,7 @@
 	// 	 */
 	// #	define DECLARE_IDTENTRY_IST(vector, func)				\
 	// 		DECLARE_IDTENTRY_RAW(vector, func);				\
-	// 		__visible void noist_##func(struct pt_regs *regs)
+	// 		__visible void noist_##func(pt_regs_s *regs)
 
 	// 	/**
 	// 	 * DECLARE_IDTENTRY_VC - Declare functions for the VC entry point
@@ -317,8 +317,8 @@
 	// 	 */
 	// #	define DECLARE_IDTENTRY_VC(vector, func)				\
 	// 		DECLARE_IDTENTRY_RAW_ERRORCODE(vector, func);			\
-	// 		__visible noinstr void kernel_##func(struct pt_regs *regs, unsigned long error_code);	\
-	// 		__visible noinstr void   user_##func(struct pt_regs *regs, unsigned long error_code)
+	// 		__visible noinstr void kernel_##func(pt_regs_s *regs, unsigned long error_code);	\
+	// 		__visible noinstr void   user_##func(pt_regs_s *regs, unsigned long error_code)
 
 	// 	/**
 	// 	 * DEFINE_IDTENTRY_IST - Emit code for IST entry points

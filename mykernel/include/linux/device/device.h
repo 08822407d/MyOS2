@@ -19,7 +19,7 @@
 	// #include <linux/klist.h>
 		#include <linux/lib/list.h>
 	// #include <linux/lockdep.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/mutex.h>
 	// #include <linux/pm.h>

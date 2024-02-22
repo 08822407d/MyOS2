@@ -29,7 +29,7 @@
 	#include <linux/init/init.h>
 	// #include <linux/ioport.h>
 	#include <linux/lib/list.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/lib/errno.h>
 	#include <linux/kernel/kobject.h>
 	#include <linux/kernel/atomic.h>

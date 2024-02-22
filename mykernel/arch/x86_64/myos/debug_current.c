@@ -1,4 +1,4 @@
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 
 #include <asm/current.h>
 #include <asm/percpu.h>

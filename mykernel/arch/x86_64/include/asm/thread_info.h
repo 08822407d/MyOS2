@@ -8,7 +8,7 @@
 #ifndef _ASM_X86_THREAD_INFO_H
 #define _ASM_X86_THREAD_INFO_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <asm/page.h>
 	#include <asm/percpu.h>
 	// #include <asm/types.h>
@@ -17,7 +17,7 @@
 	 * TOP_OF_KERNEL_STACK_PADDING is a number of unused bytes that we
 	 * reserve at the top of the kernel stack.  We do it because of a nasty
 	 * 32-bit corner case.  On x86_32, the hardware stack frame is
-	 * variable-length.  Except for vm86 mode, struct pt_regs assumes a
+	 * variable-length.  Except for vm86 mode, pt_regs_s assumes a
 	 * maximum-length frame.  If we enter from CPL 0, the top 8 bytes of
 	 * pt_regs don't actually exist.  Ordinarily this doesn't matter, but it
 	 * does in at least one case:

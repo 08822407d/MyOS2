@@ -162,7 +162,7 @@ void myos_schedule(void)
 		while (curr_task == next_task);
 		
 		myos_switch_mm(curr_task, next_task);
-		switch_to(curr_task, next_task);
+		switch_to(curr_task, next_task, curr_task);
 
 		// preempt_enable();
 	}

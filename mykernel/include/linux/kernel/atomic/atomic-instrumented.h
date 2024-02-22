@@ -18,7 +18,7 @@
 #define _LINUX_ATOMIC_INSTRUMENTED_H
 
 	// #include <linux/build_bug.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/instrumented.h>
 
 	// static __always_inline int

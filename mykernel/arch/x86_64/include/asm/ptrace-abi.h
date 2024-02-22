@@ -7,7 +7,7 @@
 	#	define REG_SIZE		8
 	/*
 	 * C ABI says these regs are callee-preserved. They aren't saved on kernel entry
-	 * unless syscall needs a complete, fully filled "struct pt_regs".
+	 * unless syscall needs a complete, fully filled "pt_regs_s".
 	 */
 	#	define FRAME_BASE	0
 	#	define R15			FRAME_BASE

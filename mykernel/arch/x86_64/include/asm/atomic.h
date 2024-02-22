@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_ATOMIC_H
 #define _ASM_X86_ATOMIC_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 	#include <asm/alternative.h>
 	#include <asm/cmpxchg.h>

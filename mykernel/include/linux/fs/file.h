@@ -6,7 +6,7 @@
 #ifndef __LINUX_FILE_H_
 #define __LINUX_FILE_H_
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 	#include <uapi/linux/posix_types.h>
 	#include <linux/lib/errno.h>

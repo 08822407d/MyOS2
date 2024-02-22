@@ -14,7 +14,7 @@
 	#include <asm/irq_vectors.h>
 
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 
 	// /*
 	//  * The irq entry code is in the noinstr section and the start/end of
@@ -41,7 +41,7 @@
 	// extern void (*x86_platform_ipi_callback)(void);
 	extern void native_init_IRQ(void);
 
-	// extern void __handle_irq(struct irq_desc *desc, struct pt_regs *regs);
+	// extern void __handle_irq(struct irq_desc *desc, pt_regs_s *regs);
 
 	// extern void init_ISA_irqs(void);
 

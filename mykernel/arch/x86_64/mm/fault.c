@@ -6,7 +6,7 @@
  */
 #include <linux/kernel/sched.h>		/* test_thread_flag(), ...	*/
 #include <linux/sched/task_stack.h>	/* task_stack_*(), ...		*/
-// #include <linux/kdebug.h>		/* oops_begin/end, ...		*/
+#include <linux/debug/kdebug.h>		/* oops_begin/end, ...		*/
 // #include <linux/extable.h>		/* search_exception_tables	*/
 #include <linux/mm/memblock.h>		/* max_low_pfn			*/
 // #include <linux/kfence.h>		/* kfence_handle_page_fault	*/

@@ -6,7 +6,7 @@
 	#include <linux/kernel/atomic.h>
 	#include <asm/page.h>
 	#include <asm/processor.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <asm/paravirt.h>
 	#include <asm/bitops.h>
 

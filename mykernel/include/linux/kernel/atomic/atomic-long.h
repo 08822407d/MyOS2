@@ -6,7 +6,7 @@
 #ifndef _LINUX_ATOMIC_LONG_H
 #define _LINUX_ATOMIC_LONG_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <asm/types.h>
 
 	#include <asm/atomic64_64.h>

@@ -18,7 +18,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/lib/list.h>
 	// #include <linux/sysfs.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/container_of.h>
 	#include <linux/kernel/spinlock.h>
 	// #include <linux/kref.h>

@@ -4,7 +4,7 @@
 #ifndef _ASM_FSGSBASE_H
 #define _ASM_FSGSBASE_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 
 	#ifndef __ASSEMBLY__
 

@@ -2,7 +2,7 @@
 #ifndef _ASM_GENERIC_BUG_H
 #define _ASM_GENERIC_BUG_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/instrumentation.h>
 	// #include <linux/once_lite.h>
 
@@ -114,10 +114,10 @@
 	
 	// /* used internally by panic.c */
 	// 		struct warn_args;
-	// 		struct pt_regs;
+	// 		pt_regs_s;
 	
 	// 		void __warn(const char *file, int line, void *caller, unsigned taint,
-	// 				struct pt_regs *regs, struct warn_args *args);
+	// 				pt_regs_s *regs, struct warn_args *args);
 	
 	// #		ifndef WARN_ON
 	// #			define WARN_ON(condition) ({						\

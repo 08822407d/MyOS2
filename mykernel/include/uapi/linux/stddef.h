@@ -2,7 +2,7 @@
 #ifndef _UAPI_LINUX_STDDEF_H
 #define _UAPI_LINUX_STDDEF_H
 
-	#include <linux/kernel/compiler_types.h>
+	#include <linux/compiler/compiler_types.h>
 
 	#ifndef _CONTAINER_OF
 	#define _CONTAINER_OF

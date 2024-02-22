@@ -38,7 +38,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/device/pci.h>
 // #include <linux/mc146818rtc.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/acpi.h>
 #include <linux/kernel/export.h>
 // #include <linux/syscore_ops.h>

@@ -29,7 +29,7 @@
 #include <asm/desc.h>
 #include <asm/tlbflush.h>
 #include <asm/sections.h>
-// #include <asm/kdebug.h>
+#include <asm/kdebug.h>
 #include <asm/e820-api.h>
 // #include <asm/bios_ebda.h>
 // #include <asm/bootparam_utils.h>

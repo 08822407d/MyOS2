@@ -24,7 +24,7 @@
 #include <linux/mm/pagemap.h>
 #include <linux/kernel/jiffies.h>
 #include <linux/mm/memblock.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/kasan.h>
 // #include <linux/module.h>
@@ -67,7 +67,7 @@
 // #include <linux/page_table_check.h>
 #include <linux/kernel/kthread.h>
 // #include <linux/memcontrol.h>
-// #include <linux/ftrace.h>
+#include <linux/debug/ftrace.h>
 // #include <linux/lockdep.h>
 #include <linux/kernel/nmi.h>
 // #include <linux/psi.h>

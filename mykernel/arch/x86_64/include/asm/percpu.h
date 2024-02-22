@@ -18,7 +18,7 @@
 	// #include <asm-generic/percpu.h>
 	//<asm-generic/percpu.h>
 	// {
-		#include <linux/kernel/compiler.h>
+		#include <linux/compiler/compiler.h>
 		#include <linux/kernel/threads.h>
 		// #include <linux/smp/percpu-defs.h>
 

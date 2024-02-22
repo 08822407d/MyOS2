@@ -2,7 +2,7 @@
 #ifndef _LINUX_KSTRTOX_H
 #define _LINUX_KSTRTOX_H
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 
 	/* Internal, do not use. */

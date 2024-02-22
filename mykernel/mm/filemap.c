@@ -11,7 +11,7 @@
  * the NFS filesystem used to do this differently, for example)
  */
 #include <linux/kernel/export.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/dax.h>
 #include <linux/fs/fs.h>
 #include <linux/sched/signal.h>

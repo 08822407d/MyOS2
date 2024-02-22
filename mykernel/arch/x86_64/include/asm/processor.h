@@ -397,8 +397,8 @@
 	// DECLARE_PER_CPU(bool, hardirq_stack_inuse);
 	// extern asmlinkage void ignore_sysret(void);
 
-	// /* Save actual FS/GS selectors and bases to current->thread */
-	// void current_save_fsgs(void);
+	/* Save actual FS/GS selectors and bases to current->thread */
+	void current_save_fsgs(void);
 
 	// struct perf_event;
 

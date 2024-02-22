@@ -21,7 +21,7 @@
 // #include <linux/tick.h>
 // #include <linux/stop_machine.h>
 // #include <linux/pvclock_gtod.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/audit.h>
 // #include <linux/random.h>
 

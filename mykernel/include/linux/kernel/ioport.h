@@ -11,7 +11,7 @@
 
 	#ifndef __ASSEMBLY__
 	#	include <linux/kernel/bits.h>
-	#	include <linux/kernel/compiler.h>
+	#	include <linux/compiler/compiler.h>
 	#	include <linux/kernel/minmax.h>
 	#	include <linux/kernel/types.h>
 		struct resource;

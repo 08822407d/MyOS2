@@ -39,7 +39,7 @@
 // #include <linux/of.h>
 // #include <net/addrconf.h>
 // #include <linux/siphash.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/property.h>
 // #ifdef CONFIG_BLOCK
 #include <linux/block/blkdev.h>

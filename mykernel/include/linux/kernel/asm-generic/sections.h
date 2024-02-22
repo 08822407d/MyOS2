@@ -4,7 +4,7 @@
 
 	/* References to section boundaries */
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 
 	/*

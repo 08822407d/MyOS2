@@ -3,7 +3,7 @@
 #define _LINUX_BUG_H
 
 	// #include <asm/bug.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/build_bug.h>
 
 	// enum bug_trap_type {
@@ -12,7 +12,7 @@
 	// 	BUG_TRAP_TYPE_BUG = 2,
 	// };
 
-	// struct pt_regs;
+	// pt_regs_s;
 
 	// #ifdef __CHECKER__
 	// #define MAYBE_BUILD_BUG_ON(cond) (0)
@@ -41,7 +41,7 @@
 
 	// struct bug_entry *find_bug(unsigned long bugaddr);
 
-	// enum bug_trap_type report_bug(unsigned long bug_addr, struct pt_regs *regs);
+	// enum bug_trap_type report_bug(unsigned long bug_addr, pt_regs_s *regs);
 
 	// /* These are defined by the architecture */
 	// int is_valid_bugaddr(unsigned long addr);
@@ -56,7 +56,7 @@
 	// }
 
 	// static inline enum bug_trap_type report_bug(unsigned long bug_addr,
-	// 						struct pt_regs *regs)
+	// 						pt_regs_s *regs)
 	// {
 	// 	return BUG_TRAP_TYPE_BUG;
 	// }

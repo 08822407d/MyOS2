@@ -15,7 +15,7 @@
 #define _LINUX_CPU_H_
 
 	// #include <linux/node.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/cpumask.h>
 	// #include <linux/cpuhotplug.h>
 
@@ -155,8 +155,8 @@
 
 	// void cpu_idle_poll_ctrl(bool enable);
 
-	/* Attach to any functions which should be considered cpuidle. */
-	#define __cpuidle	__section(".cpuidle.text")
+	// /* Attach to any functions which should be considered cpuidle. */
+	// #define __cpuidle	__section(".cpuidle.text")
 
 	// bool cpu_in_idle(unsigned long pc);
 

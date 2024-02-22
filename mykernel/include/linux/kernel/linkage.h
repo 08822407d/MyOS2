@@ -2,7 +2,7 @@
 #ifndef _LINUX_LINKAGE_H
 #define _LINUX_LINKAGE_H
 
-	#include <linux/kernel/compiler_types.h>
+	#include <linux/compiler/compiler_types.h>
 	#include <linux/kernel/stringify.h>
 	#include <linux/kernel/export.h>
 	// #include <asm/linkage.h>

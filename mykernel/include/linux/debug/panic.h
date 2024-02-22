@@ -2,7 +2,7 @@
 #ifndef _LINUX_PANIC_H
 #define _LINUX_PANIC_H
 
-	#include <linux/kernel/compiler_attributes.h>
+	#include <linux/compiler/compiler_attributes.h>
 	#include <linux/kernel/types.h>
 
 	struct pt_regs;
@@ -12,7 +12,7 @@
 	__printf(1, 2)
 	// void panic(const char *fmt, ...) __noreturn __cold;
 	void panic(const char *fmt, ...);
-	void nmi_panic(struct pt_regs *regs, const char *msg);
+	void nmi_panic(pt_regs_s *regs, const char *msg);
 	void check_panic_on_warn(const char *origin);
 	extern void oops_enter(void);
 	extern void oops_exit(void);

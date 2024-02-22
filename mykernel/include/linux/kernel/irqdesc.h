@@ -15,7 +15,7 @@
 	struct module;
 	struct irq_desc;
 	struct irq_domain;
-	struct pt_regs;
+	pt_regs_s;
 
 	/**
 	 * struct irq_desc - interrupt descriptor

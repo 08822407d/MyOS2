@@ -17,7 +17,7 @@
 	#include <linux/kernel/linkage.h>
 	#include <linux/kernel/stddef.h>
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/container_of.h>
 	#include <linux/kernel/bitops.h>
 	#include <linux/lib/kstrtox.h>

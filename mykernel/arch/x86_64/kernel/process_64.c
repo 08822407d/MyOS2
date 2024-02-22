@@ -33,11 +33,11 @@
 #include <linux/kernel/ptrace.h>
 // #include <linux/notifier.h>
 // #include <linux/kprobes.h>
-// #include <linux/kdebug.h>
+#include <linux/debug/kdebug.h>
 // #include <linux/prctl.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/io.h>
-// #include <linux/ftrace.h>
+#include <linux/debug/ftrace.h>
 #include <linux/kernel/syscalls.h>
 
 #include <asm/processor.h>
@@ -62,16 +62,134 @@
 
 // #include "process.h"
 
+/* Prints also some state that isn't saved in the pt_regs */
+void __show_regs(pt_regs_s *regs, enum show_regs_mode mode,
+		 const char *log_lvl)
+{
+	// unsigned long cr0 = 0L, cr2 = 0L, cr3 = 0L, cr4 = 0L, fs, gs, shadowgs;
+	// unsigned long d0, d1, d2, d3, d6, d7;
+	// unsigned int fsindex, gsindex;
+	// unsigned int ds, es;
+
+	// show_iret_regs(regs, log_lvl);
+
+	// if (regs->orig_ax != -1)
+	// 	pr_cont(" ORIG_RAX: %016lx\n", regs->orig_ax);
+	// else
+	// 	pr_cont("\n");
+
+	// printk("%sRAX: %016lx RBX: %016lx RCX: %016lx\n",
+	//        log_lvl, regs->ax, regs->bx, regs->cx);
+	// printk("%sRDX: %016lx RSI: %016lx RDI: %016lx\n",
+	//        log_lvl, regs->dx, regs->si, regs->di);
+	// printk("%sRBP: %016lx R08: %016lx R09: %016lx\n",
+	//        log_lvl, regs->bp, regs->r8, regs->r9);
+	// printk("%sR10: %016lx R11: %016lx R12: %016lx\n",
+	//        log_lvl, regs->r10, regs->r11, regs->r12);
+	// printk("%sR13: %016lx R14: %016lx R15: %016lx\n",
+	//        log_lvl, regs->r13, regs->r14, regs->r15);
+
+	// if (mode == SHOW_REGS_SHORT)
+	// 	return;
+
+	// if (mode == SHOW_REGS_USER) {
+	// 	rdmsrl(MSR_FS_BASE, fs);
+	// 	rdmsrl(MSR_KERNEL_GS_BASE, shadowgs);
+	// 	printk("%sFS:  %016lx GS:  %016lx\n",
+	// 	       log_lvl, fs, shadowgs);
+	// 	return;
+	// }
+
+	// asm("movl %%ds,%0" : "=r" (ds));
+	// asm("movl %%es,%0" : "=r" (es));
+	// asm("movl %%fs,%0" : "=r" (fsindex));
+	// asm("movl %%gs,%0" : "=r" (gsindex));
+
+	// rdmsrl(MSR_FS_BASE, fs);
+	// rdmsrl(MSR_GS_BASE, gs);
+	// rdmsrl(MSR_KERNEL_GS_BASE, shadowgs);
+
+	// cr0 = read_cr0();
+	// cr2 = read_cr2();
+	// cr3 = __read_cr3();
+	// cr4 = __read_cr4();
+
+	// printk("%sFS:  %016lx(%04x) GS:%016lx(%04x) knlGS:%016lx\n",
+	//        log_lvl, fs, fsindex, gs, gsindex, shadowgs);
+	// printk("%sCS:  %04lx DS: %04x ES: %04x CR0: %016lx\n",
+	// 	log_lvl, regs->cs, ds, es, cr0);
+	// printk("%sCR2: %016lx CR3: %016lx CR4: %016lx\n",
+	// 	log_lvl, cr2, cr3, cr4);
+
+	// get_debugreg(d0, 0);
+	// get_debugreg(d1, 1);
+	// get_debugreg(d2, 2);
+	// get_debugreg(d3, 3);
+	// get_debugreg(d6, 6);
+	// get_debugreg(d7, 7);
+
+	// /* Only print out debug registers if they are in their non-default state. */
+	// if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+	//     (d6 == DR6_RESERVED) && (d7 == 0x400))) {
+	// 	printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
+	// 	       log_lvl, d0, d1, d2);
+	// 	printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
+	// 	       log_lvl, d3, d6, d7);
+	// }
+
+	// if (cpu_feature_enabled(X86_FEATURE_OSPKE))
+	// 	printk("%sPKRU: %08x\n", log_lvl, read_pkru());
+}
+
+
+enum which_selector {
+	FS,
+	GS
+};
+
+
+
+static __always_inline void save_fsgs(task_s *task) {
+	savesegment(fs, task->thread.fsindex);
+	savesegment(gs, task->thread.gsindex);
+	// if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
+	// 	/*
+	// 	 * If FSGSBASE is enabled, we can't make any useful guesses
+	// 	 * about the base, and user code expects us to save the current
+	// 	 * value.  Fortunately, reading the base directly is efficient.
+	// 	 */
+	// 	task->thread.fsbase = rdfsbase();
+	// 	task->thread.gsbase = __rdgsbase_inactive();
+	// } else {
+	// 	save_base_legacy(task, task->thread.fsindex, FS);
+	// 	save_base_legacy(task, task->thread.gsindex, GS);
+	// }
+}
+
+/*
+ * While a process is running,current->thread.fsbase and current->thread.gsbase
+ * may not match the corresponding CPU registers (see save_base_legacy()).
+ */
+void current_save_fsgs(void)
+{
+	unsigned long flags;
+
+	/* Interrupts need to be off for FSGSBASE */
+	local_irq_save(flags);
+	save_fsgs(current);
+	local_irq_restore(flags);
+}
+
 
 void x86_fsbase_write_task(task_s* task, unsigned long fsbase)
 {
-	// WARN_ON_ONCE(task == current);
+	WARN_ON_ONCE(task == current);
 	task->thread.fsbase = fsbase;
 }
 
 void x86_gsbase_write_task(task_s *task, unsigned long gsbase)
 {
-	// WARN_ON_ONCE(task == current);
+	WARN_ON_ONCE(task == current);
 	task->thread.gsbase = gsbase;
 }
 
@@ -116,10 +234,12 @@ start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
  * Kprobes not supported here. Set the probe on schedule instead.
  * Function graph tracer not supported too.
  */
-__visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
+__no_kmsan_checks
+__visible __notrace_funcgraph task_s
+*__switch_to(task_s *prev_p, task_s *next_p)
 {
-	// struct thread_struct *prev = &prev_p->thread;
-	// struct thread_struct *next = &next_p->thread;
+	thread_s *prev = &prev_p->thread;
+	thread_s *next = &next_p->thread;
 	// struct fpu *prev_fpu = &prev->fpu;
 	// int cpu = smp_processor_id();
 
@@ -129,12 +249,12 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	// if (!test_thread_flag(TIF_NEED_FPU_LOAD))
 	// 	switch_fpu_prepare(prev_fpu, cpu);
 
-	// /* We must save %fs and %gs before load_TLS() because
-	//  * %fs and %gs may be cleared by load_TLS().
-	//  *
-	//  * (e.g. xen_load_tls())
-	//  */
-	// save_fsgs(prev_p);
+	/* We must save %fs and %gs before load_TLS() because
+	 * %fs and %gs may be cleared by load_TLS().
+	 *
+	 * (e.g. xen_load_tls())
+	 */
+	save_fsgs(prev_p);
 
 	// /*
 	//  * Load TLS before restoring any segments so that segment loads
@@ -149,27 +269,27 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	//  */
 	// arch_end_context_switch(next_p);
 
-	// /* Switch DS and ES.
-	//  *
-	//  * Reading them only returns the selectors, but writing them (if
-	//  * nonzero) loads the full descriptor from the GDT or LDT.  The
-	//  * LDT for next is loaded in switch_mm, and the GDT is loaded
-	//  * above.
-	//  *
-	//  * We therefore need to write new values to the segment
-	//  * registers on every context switch unless both the new and old
-	//  * values are zero.
-	//  *
-	//  * Note that we don't need to do anything for CS and SS, as
-	//  * those are saved and restored as part of pt_regs.
-	//  */
-	// savesegment(es, prev->es);
-	// if (unlikely(next->es | prev->es))
-	// 	loadsegment(es, next->es);
+	/* Switch DS and ES.
+	 *
+	 * Reading them only returns the selectors, but writing them (if
+	 * nonzero) loads the full descriptor from the GDT or LDT.  The
+	 * LDT for next is loaded in switch_mm, and the GDT is loaded
+	 * above.
+	 *
+	 * We therefore need to write new values to the segment
+	 * registers on every context switch unless both the new and old
+	 * values are zero.
+	 *
+	 * Note that we don't need to do anything for CS and SS, as
+	 * those are saved and restored as part of pt_regs.
+	 */
+	savesegment(es, prev->es);
+	if (unlikely(next->es | prev->es))
+		loadsegment(es, next->es);
 
-	// savesegment(ds, prev->ds);
-	// if (unlikely(next->ds | prev->ds))
-	// 	loadsegment(ds, next->ds);
+	savesegment(ds, prev->ds);
+	if (unlikely(next->ds | prev->ds))
+		loadsegment(ds, next->ds);
 
 	// x86_fsgsbase_load(prev, next);
 
@@ -219,5 +339,5 @@ __visible notrace void __switch_to(task_s *prev_p, task_s *next_p)
 	// /* Load the Intel cache allocation PQR MSR. */
 	// resctrl_sched_in(next_p);
 
-	// return prev_p;
+	return prev_p;
 }

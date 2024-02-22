@@ -57,7 +57,6 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 	unsigned long clone_flags = args->flags;
 	unsigned long sp = args->stack;
 	unsigned long tls = args->tls;
-	// struct inactive_task_frame *frame;
 	task_kframe_s *frame;
 	fork_frame_s *fork_frame;
 	pt_regs_s *childregs;
@@ -74,14 +73,14 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 	// p->thread.iopl_warn = 0;
 	// memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
 
-	// current_save_fsgs();
+	current_save_fsgs();
 	p->thread.fsindex = current->thread.fsindex;
 	p->thread.fsbase = current->thread.fsbase;
 	p->thread.gsindex = current->thread.gsindex;
 	p->thread.gsbase = current->thread.gsbase;
 
-	// savesegment(es, p->thread.es);
-	// savesegment(ds, p->thread.ds);
+	savesegment(es, p->thread.es);
+	savesegment(ds, p->thread.ds);
 
 	// if (p->mm && (clone_flags & (CLONE_VM | CLONE_VFORK)) == CLONE_VM)
 	// 	set_bit(MM_CONTEXT_LOCK_LAM, &p->mm->context.flags);

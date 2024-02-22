@@ -54,7 +54,7 @@
 	// #include <linux/typecheck.h>
 	#include <linux/kernel/preempt.h>
 	#include <linux/kernel/linkage.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/irqflags.h>
 	// #include <linux/thread_info.h>
 	#include <linux/kernel/stringify.h>

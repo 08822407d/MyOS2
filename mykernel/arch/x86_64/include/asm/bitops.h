@@ -13,7 +13,7 @@
 	#	error only <linux/bitops.h> can be included directly
 	#endif
 
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <asm/alternative.h>
 	#include <asm/rmwcc.h>
 	#include <asm/barrier.h>

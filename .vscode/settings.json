@@ -96,6 +96,10 @@
         "swait.h": "c",
         "rmwcc.h": "c",
         "fdtable.h": "c",
-        "current.h": "c"
+        "current.h": "c",
+        "syscalls.h": "c",
+        "rwonce.h": "c",
+        "compiler-gcc.h": "c",
+        "bitops.h": "c"
     }
 }

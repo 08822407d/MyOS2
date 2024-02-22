@@ -24,7 +24,7 @@
  */
 
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 
 
 	/**

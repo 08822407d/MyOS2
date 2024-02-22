@@ -83,7 +83,7 @@
 	// #endif
 
 	// #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
-	// void watchdog_hardlockup_check(struct pt_regs *regs);
+	// void watchdog_hardlockup_check(pt_regs_s *regs);
 	// #endif
 
 	// #if defined(CONFIG_HARDLOCKUP_DETECTOR_PERF)
@@ -163,7 +163,7 @@
 	// void nmi_trigger_cpumask_backtrace(const cpumask_t *mask,
 	// 				bool exclude_self,
 	// 				void (*raise)(cpumask_t *mask));
-	// bool nmi_cpu_backtrace(struct pt_regs *regs);
+	// bool nmi_cpu_backtrace(pt_regs_s *regs);
 
 	// #else
 	// static inline bool trigger_all_cpu_backtrace(void)

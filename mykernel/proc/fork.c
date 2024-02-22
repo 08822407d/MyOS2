@@ -63,7 +63,7 @@
 #include <linux/kernel/mount.h>
 // #include <linux/audit.h>
 // #include <linux/memcontrol.h>
-// #include <linux/ftrace.h>
+#include <linux/debug/ftrace.h>
 // #include <linux/proc_fs.h>
 // #include <linux/profile.h>
 #include <linux/mm/rmap.h>
@@ -87,7 +87,7 @@
 // #include <linux/signalfd.h>
 // #include <linux/uprobes.h>
 // #include <linux/aio.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/sysctl.h>
 // #include <linux/kcov.h>
 // #include <linux/livepatch.h>

@@ -12,15 +12,15 @@
 	// #include <asm/siginfo.h>			/* TRAP_TRACE, ... */
 	#include <asm/trap_pf.h>
 
-	// asmlinkage __visible notrace struct pt_regs *sync_regs(struct pt_regs *eregs);
+	// asmlinkage __visible notrace pt_regs_s *sync_regs(pt_regs_s *eregs);
 	// asmlinkage __visible notrace
 	// struct bad_iret_stack *fixup_bad_iret(struct bad_iret_stack *s);
 	// void __init trap_init(void);
-	// asmlinkage __visible noinstr struct pt_regs *vc_switch_off_ist(struct pt_regs *eregs);
+	// asmlinkage __visible noinstr pt_regs_s *vc_switch_off_ist(pt_regs_s *eregs);
 
 	// #ifdef CONFIG_X86_F00F_BUG
 	// /* For handling the FOOF bug */
-	// void handle_invalid_op(struct pt_regs *regs);
+	// void handle_invalid_op(pt_regs_s *regs);
 	// #endif
 
 	// static inline int get_si_code(unsigned long condition)
@@ -40,7 +40,7 @@
 	// bool fault_in_kernel_space(unsigned long address);
 
 	// #ifdef CONFIG_VMAP_STACK
-	// void __noreturn handle_stack_overflow(struct pt_regs *regs,
+	// void __noreturn handle_stack_overflow(pt_regs_s *regs,
 	// 					unsigned long fault_address,
 	// 					struct stack_info *info);
 	// #endif

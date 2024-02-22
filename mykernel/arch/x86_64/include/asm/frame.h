@@ -48,7 +48,7 @@
 	// #define ENCODE_FRAME_POINTER			\
 	// 	"lea 1(%rsp), %rbp\n\t"
 
-	// static inline unsigned long encode_frame_pointer(struct pt_regs *regs)
+	// static inline unsigned long encode_frame_pointer(pt_regs_s *regs)
 	// {
 	// 	return (unsigned long)regs + 1;
 	// }
@@ -68,7 +68,7 @@
 
 	// #define ENCODE_FRAME_POINTER
 
-	// static inline unsigned long encode_frame_pointer(struct pt_regs *regs)
+	// static inline unsigned long encode_frame_pointer(pt_regs_s *regs)
 	// {
 	// 	return 0;
 	// }

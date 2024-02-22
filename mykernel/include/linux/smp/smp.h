@@ -60,7 +60,7 @@
 	// * Architecture-dependent code may override them.
 	// */
 	// void __noreturn panic_smp_self_stop(void);
-	// void __noreturn nmi_panic_self_stop(struct pt_regs *regs);
+	// void __noreturn nmi_panic_self_stop(pt_regs_s *regs);
 	// void crash_smp_send_stop(void);
 
 	// /*
@@ -106,7 +106,7 @@
 	// }
 
 	#include <linux/kernel/preempt.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	// #include <linux/thread_info.h>
 	#include <asm/smp.h>
 

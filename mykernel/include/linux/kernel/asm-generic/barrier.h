@@ -13,7 +13,7 @@
 
 	#ifndef __ASSEMBLY__
 
-	#	include <linux/kernel/compiler.h>
+	#	include <linux/compiler/compiler.h>
 	// #	include <linux/kcsan-checks.h>
 	// #	include <asm/rwonce.h>
 

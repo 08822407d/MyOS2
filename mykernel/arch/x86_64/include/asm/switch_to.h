@@ -10,7 +10,7 @@
 
 	task_s *__switch_to_asm(task_s *prev, task_s *next);
 
-	__visible void __switch_to(task_s *prev, task_s *next);
+	__visible task_s *__switch_to(task_s *prev, task_s *next);
 
 	asmlinkage void ret_from_fork(void);
 
@@ -37,15 +37,17 @@
 		pt_regs_s		regs;
 	} fork_frame_s;
 
-	#define switch_to(prev, next)					\
-			do {									\
-				__switch_to_asm((prev), (next));	\
+	#define switch_to(prev, next, last)						\
+			do {											\
+				((last) = __switch_to_asm((prev), (next)));	\
 			} while (0)
 
 	/* This is used when switching tasks or entering/exiting vm86 mode. */
-	static inline void update_task_stack(task_s *task) {
+	static inline void update_task_stack(task_s *task)
+	{
+		/* sp0 always points to the entry trampoline stack, which is constant: */
 		/* Xen PV enters the kernel on the thread stack. */
-		// if (static_cpu_has(X86_FEATURE_XENPV))
+		// if (cpu_feature_enabled(X86_FEATURE_XENPV))
 			load_sp0(task_top_of_stack(task));
 	}
 

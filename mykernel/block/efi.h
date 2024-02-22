@@ -18,7 +18,7 @@
 	#include <uapi/linux/major.h>
 	#include <linux/lib/string.h>
 	#include <linux/block/efi.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 
 	#define MSDOS_MBR_SIGNATURE		0xaa55
 	#define EFI_PMBR_OSTYPE_EFI		0xEF

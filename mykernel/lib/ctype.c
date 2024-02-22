@@ -6,7 +6,7 @@
  */
 
 #include <linux/kernel/ctype.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 
 const unsigned char _ctype[] = {
 _C,_C,_C,_C,_C,_C,_C,_C,				/* 0-7 */

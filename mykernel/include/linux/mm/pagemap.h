@@ -9,7 +9,7 @@
 	#include <linux/fs/fs.h>
 	#include <linux/lib/list.h>
 	// #include <linux/highmem.h>
-	#include <linux/kernel/compiler.h>
+	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/uaccess.h>
 	#include <linux/mm/gfp.h>
 	#include <linux/kernel/bitops.h>

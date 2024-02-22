@@ -2,7 +2,7 @@
 #ifndef _LINUX_STRING_H_
 #define _LINUX_STRING_H_
 
-	#include <linux/kernel/compiler.h>	/* for inline */
+	#include <linux/compiler/compiler.h>	/* for inline */
 	#include <linux/kernel/types.h>	/* for size_t */
 	#include <linux/kernel/stddef.h>	/* for NULL */
 	#include <linux/lib/errno.h>	/* for E2BIG */

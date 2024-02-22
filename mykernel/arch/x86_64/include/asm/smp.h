@@ -139,9 +139,9 @@
 		// void smp_store_cpu_info(int id);
 
 		// asmlinkage __visible void smp_reboot_interrupt(void);
-		// __visible void smp_reschedule_interrupt(struct pt_regs *regs);
-		// __visible void smp_call_function_interrupt(struct pt_regs *regs);
-		// __visible void smp_call_function_single_interrupt(struct pt_regs *r);
+		// __visible void smp_reschedule_interrupt(pt_regs_s *regs);
+		// __visible void smp_call_function_interrupt(pt_regs_s *regs);
+		// __visible void smp_call_function_single_interrupt(pt_regs_s *r);
 
 		// #define cpu_physical_id(cpu)	per_cpu(x86_cpu_to_apicid, cpu)
 		// #define cpu_acpi_id(cpu)	per_cpu(x86_cpu_to_acpiid, cpu)

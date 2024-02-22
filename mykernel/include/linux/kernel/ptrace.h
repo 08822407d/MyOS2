@@ -2,7 +2,7 @@
 #ifndef _LINUX_PTRACE_H
 #define _LINUX_PTRACE_H
 
-	#include <linux/kernel/compiler.h>		/* For unlikely.  */
+	#include <linux/compiler/compiler.h>		/* For unlikely.  */
 	#include <linux/kernel/sched.h>		/* For task_s.  */
 	#include <linux/sched/signal.h>		/* For send_sig(), same_thread_group(), etc. */
 	#include <linux/kernel/err.h>			/* for IS_ERR_VALUE */

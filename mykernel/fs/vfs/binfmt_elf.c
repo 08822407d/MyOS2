@@ -26,7 +26,7 @@
 // #include <linux/elfcore.h>
 #include <linux/init/init.h>
 // #include <linux/highuid.h>
-#include <linux/kernel/compiler.h>
+#include <linux/compiler/compiler.h>
 // #include <linux/highmem.h>
 // #include <linux/hugetlb.h>
 #include <linux/mm/pagemap.h>

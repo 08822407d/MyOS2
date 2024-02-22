@@ -2,7 +2,7 @@
 #ifndef _UAPI_ASM_X86_PTRACE_H
 #define _UAPI_ASM_X86_PTRACE_H
 
-	#include <linux/kernel/compiler.h>	/* For __user */
+	#include <linux/compiler/compiler.h>	/* For __user */
 	#include <asm/ptrace-abi.h>
 	#include <asm/processor-flags.h>
 
@@ -11,10 +11,10 @@
 
 	// #	ifndef __KERNEL__
 
-	// 		struct pt_regs {
+	// 		pt_regs_s {
 	// 		/*
 	// 		* C ABI says these regs are callee-preserved. They aren't saved on kernel entry
-	// 		* unless syscall needs a complete, fully filled "struct pt_regs".
+	// 		* unless syscall needs a complete, fully filled "pt_regs_s".
 	// 		*/
 	// 			unsigned long r15;
 	// 			unsigned long r14;
