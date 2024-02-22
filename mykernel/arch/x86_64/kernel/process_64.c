@@ -241,7 +241,7 @@ __visible __notrace_funcgraph task_s
 	thread_s *prev = &prev_p->thread;
 	thread_s *next = &next_p->thread;
 	// struct fpu *prev_fpu = &prev->fpu;
-	// int cpu = smp_processor_id();
+	int cpu = smp_processor_id();
 
 	// WARN_ON_ONCE(IS_ENABLED(CONFIG_DEBUG_ENTRY) &&
 	// 	     this_cpu_read(pcpu_hot.hardirq_stack_inuse));

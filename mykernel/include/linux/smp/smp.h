@@ -193,27 +193,27 @@
 	//  * CPU id.
 	//  */
 
-	// /**
-	//  * smp_processor_id() - get the current (stable) CPU id
-	//  *
-	//  * This is the normal accessor to the CPU id and should be used
-	//  * whenever possible.
-	//  *
-	//  * The CPU id is stable when:
-	//  *
-	//  *  - IRQs are disabled;
-	//  *  - preemption is disabled;
-	//  *  - the task is CPU affine.
-	//  *
-	//  * When CONFIG_DEBUG_PREEMPT; we verify these assumption and WARN
-	//  * when smp_processor_id() is used when the CPU id is not stable.
-	//  */
+	/**
+	 * smp_processor_id() - get the current (stable) CPU id
+	 *
+	 * This is the normal accessor to the CPU id and should be used
+	 * whenever possible.
+	 *
+	 * The CPU id is stable when:
+	 *
+	 *  - IRQs are disabled;
+	 *  - preemption is disabled;
+	 *  - the task is CPU affine.
+	 *
+	 * When CONFIG_DEBUG_PREEMPT; we verify these assumption and WARN
+	 * when smp_processor_id() is used when the CPU id is not stable.
+	 */
 
-	// /*
-	// * Allow the architecture to differentiate between a stable and unstable read.
-	// * For example, x86 uses an IRQ-safe asm-volatile read for the unstable but a
-	// * regular asm read for the stable.
-	// */
+	/*
+	 * Allow the architecture to differentiate between a stable and unstable read.
+	 * For example, x86 uses an IRQ-safe asm-volatile read for the unstable but a
+	 * regular asm read for the stable.
+	 */
 	// #ifndef __smp_processor_id
 	// #define __smp_processor_id(x) raw_smp_processor_id(x)
 	// #endif
@@ -223,6 +223,7 @@
 	// # define smp_processor_id() debug_smp_processor_id()
 	// #else
 	// # define smp_processor_id() __smp_processor_id()
+	# define smp_processor_id() raw_smp_processor_id()
 	// #endif
 
 	// #define get_cpu()		({ preempt_disable(); __smp_processor_id(); })

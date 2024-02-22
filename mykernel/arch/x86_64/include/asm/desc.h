@@ -16,6 +16,7 @@
 	#include <linux/smp/percpu.h>
 
 
+	#include <asm-generic/bug.h>
 	#include <asm/segment.h>
 	#include <asm/processor.h>
 	#include <asm/page_types.h>

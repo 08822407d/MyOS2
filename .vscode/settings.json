@@ -100,6 +100,8 @@
         "syscalls.h": "c",
         "rwonce.h": "c",
         "compiler-gcc.h": "c",
-        "bitops.h": "c"
+        "bitops.h": "c",
+        "preempt.h": "c",
+        "bug.h": "c"
     }
 }

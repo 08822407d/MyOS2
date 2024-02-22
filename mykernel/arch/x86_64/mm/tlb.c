@@ -65,7 +65,7 @@ void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 	// u16 prev_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
 	// unsigned long new_lam = mm_lam_cr3_mask(next);
 	// bool was_lazy = this_cpu_read(cpu_tlbstate_shared.is_lazy);
-	// unsigned cpu = smp_processor_id();
+	unsigned cpu = smp_processor_id();
 	// u64 next_tlb_gen;
 	bool need_flush = false;
 	u16 new_asid = 0;

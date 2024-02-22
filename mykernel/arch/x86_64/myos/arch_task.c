@@ -121,7 +121,7 @@ void myos_schedule(void)
 	if (this_rq->running_lhdr.count > 0)
 	{
 		// preempt_disable();
-		
+
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&this_rq->running_lhdr);
 		while (next_lp == 0);

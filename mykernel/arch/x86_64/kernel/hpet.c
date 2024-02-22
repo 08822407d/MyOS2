@@ -410,6 +410,8 @@ out_nohpet:
 #include <linux/device/tty.h>
 #include <linux/kernel/jiffies.h>
 
+#include <asm/apicdef.h>
+
 #include <obsolete/glo.h>
 #include <obsolete/printk.h>
 #include <obsolete/proto.h>

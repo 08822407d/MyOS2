@@ -25,9 +25,7 @@
 	// static __always_inline int preempt_count(void) {
 	// 	return raw_cpu_read_4(__preempt_count) & ~PREEMPT_NEED_RESCHED;
 	// }
-	static __always_inline int preempt_count(void) {
-		return this_cpu_ptr(&pcpu_hot)->preempt_count;
-	}
+	extern int preempt_count(void);
 
 	// static __always_inline void preempt_count_set(int pc) {
 	// 	int old, new;
@@ -36,10 +34,7 @@
 	// 		new = (old & PREEMPT_NEED_RESCHED) |
 	// 			(pc & ~PREEMPT_NEED_RESCHED);
 	// 	} while (raw_cpu_cmpxchg_4(__preempt_count, old, new) != old);
-	// }
-	static __always_inline void preempt_count_set(int val) {
-		this_cpu_ptr(&pcpu_hot)->preempt_count = val;
-	}
+	extern void preempt_count_set(int val);
 
 	/*
 	 * must be macros to avoid header recursion hell
@@ -62,14 +57,17 @@
 	// static __always_inline void set_preempt_need_resched(void) {
 	// 	raw_cpu_and_4(__preempt_count, ~PREEMPT_NEED_RESCHED);
 	// }
+	void set_preempt_need_resched(void);
 
 	// static __always_inline void clear_preempt_need_resched(void) {
 	// 	raw_cpu_or_4(__preempt_count, PREEMPT_NEED_RESCHED);
 	// }
+	void clear_preempt_need_resched(void);
 
 	// static __always_inline bool test_preempt_need_resched(void) {
 	// 	return !(raw_cpu_read_4(__preempt_count) & PREEMPT_NEED_RESCHED);
 	// }
+	bool test_preempt_need_resched(void);
 
 	// /*
 	//  * The various preempt_count add/sub methods
@@ -78,16 +76,12 @@
 	// static __always_inline void __preempt_count_add(int val) {
 	// 	raw_cpu_add_4(__preempt_count, val);
 	// }
-	static __always_inline void preempt_count_add(int val) {
-		this_cpu_ptr(&pcpu_hot)->preempt_count += val;
-	}
+	extern void preempt_count_add(int val);
 
 	// static __always_inline void __preempt_count_sub(int val) {
 	// 	raw_cpu_add_4(__preempt_count, -val);
 	// }
-	static __always_inline void preempt_count_sub(int val) {
-		this_cpu_ptr(&pcpu_hot)->preempt_count -= val;
-	}
+	extern void preempt_count_sub(int val);
 
 	// /*
 	//  * Because we keep PREEMPT_NEED_RESCHED set when we do _not_ need to reschedule
@@ -104,57 +98,52 @@
 	// static __always_inline bool should_resched(int preempt_offset) {
 	// 	return unlikely(raw_cpu_read_4(__preempt_count) == preempt_offset);
 	// }
-	static __always_inline bool should_resched(int preempt_offset) {
-		return unlikely(this_cpu_ptr(&pcpu_hot)->preempt_count == preempt_offset);
-	}
+	extern bool should_resched(int preempt_offset);
 
-	// #ifdef CONFIG_PREEMPTION
+	// extern asmlinkage void preempt_schedule(void);
+	// extern asmlinkage void preempt_schedule_thunk(void);
 
-	// 	extern asmlinkage void preempt_schedule(void);
-	// 	extern asmlinkage void preempt_schedule_thunk(void);
+	// #define __preempt_schedule_func preempt_schedule_thunk
 
-	// #	define __preempt_schedule_func preempt_schedule_thunk
+	// extern asmlinkage void preempt_schedule_notrace(void);
+	// extern asmlinkage void preempt_schedule_notrace_thunk(void);
 
-	// 	extern asmlinkage void preempt_schedule_notrace(void);
-	// 	extern asmlinkage void preempt_schedule_notrace_thunk(void);
+	// #define __preempt_schedule_notrace_func preempt_schedule_notrace_thunk
 
-	// #	define __preempt_schedule_notrace_func preempt_schedule_notrace_thunk
+	// #ifdef CONFIG_PREEMPT_DYNAMIC
 
-	// #	ifdef CONFIG_PREEMPT_DYNAMIC
+	// 	DECLARE_STATIC_CALL(preempt_schedule, __preempt_schedule_func);
 
-	// 		DECLARE_STATIC_CALL(preempt_schedule, __preempt_schedule_func);
+	// #	define __preempt_schedule()								\
+	// 	do {													\
+	// 		__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule);	\
+	// 		asm volatile ("call "								\
+	// 			STATIC_CALL_TRAMP_STR(preempt_schedule) :		\
+	// 			ASM_CALL_CONSTRAINT);							\
+	// 	} while (0)
 
-	// #		define __preempt_schedule()								\
-	// 		do {													\
-	// 			__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule);	\
-	// 			asm volatile ("call "								\
-	// 				STATIC_CALL_TRAMP_STR(preempt_schedule) :		\
-	// 				ASM_CALL_CONSTRAINT);							\
-	// 		} while (0)
+	// 	DECLARE_STATIC_CALL(preempt_schedule_notrace, __preempt_schedule_notrace_func);
 
-	// 		DECLARE_STATIC_CALL(preempt_schedule_notrace, __preempt_schedule_notrace_func);
+	// #	define __preempt_schedule_notrace()								\
+	// 	do {															\
+	// 		__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule_notrace);	\
+	// 		asm volatile ("call "										\
+	// 			STATIC_CALL_TRAMP_STR(preempt_schedule_notrace) :		\
+	// 			ASM_CALL_CONSTRAINT);									\
+	// 	} while (0)
 
-	// #		define __preempt_schedule_notrace()								\
-	// 		do {															\
-	// 			__STATIC_CALL_MOD_ADDRESSABLE(preempt_schedule_notrace);	\
-	// 			asm volatile ("call "										\
-	// 				STATIC_CALL_TRAMP_STR(preempt_schedule_notrace) :		\
-	// 				ASM_CALL_CONSTRAINT);									\
-	// 		} while (0)
+	// #else /* PREEMPT_DYNAMIC */
 
-	// #	else /* PREEMPT_DYNAMIC */
+	// #	define __preempt_schedule()								\
+	// 			asm volatile ("call preempt_schedule_thunk" :	\
+	// 				ASM_CALL_CONSTRAINT);
 
-	// #		define __preempt_schedule()								\
-	// 				asm volatile ("call preempt_schedule_thunk" :	\
-	// 					ASM_CALL_CONSTRAINT);
+	// #	define __preempt_schedule_notrace()								\
+	// 			asm volatile ("call preempt_schedule_notrace_thunk" :	\
+	// 				ASM_CALL_CONSTRAINT);
 
-	// #		define __preempt_schedule_notrace()								\
-	// 				asm volatile ("call preempt_schedule_notrace_thunk" :	\
-	// 					ASM_CALL_CONSTRAINT);
+	// #endif /* PREEMPT_DYNAMIC */
 
-	// #	endif /* PREEMPT_DYNAMIC */
-
-	// #endif /* PREEMPTION */
 	extern void myos_schedule(void);
 	#define __preempt_schedule myos_schedule
 

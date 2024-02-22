@@ -682,7 +682,7 @@ static noinline void __schedule_bug(task_s *prev)
 /*
  * Various schedule()-time debugging checks and statistics:
  */
-static inline void
+inline void
 schedule_debug(task_s *prev, bool preempt) {
 // #ifdef CONFIG_SCHED_STACK_END_CHECK
 // 	if (task_stack_end_corrupted(prev))
@@ -703,6 +703,7 @@ schedule_debug(task_s *prev, bool preempt) {
 
 	if (unlikely(in_atomic_preempt_off())) {
 		__schedule_bug(prev);
+		while (1);
 		preempt_count_set(PREEMPT_DISABLED);
 	}
 	// rcu_sleep_check();
@@ -774,22 +775,22 @@ schedule_debug(task_s *prev, bool preempt) {
 static void __sched notrace
 __schedule(unsigned int sched_mode) {
 	task_s *prev, *next;
-	// unsigned long *switch_count;
-	// unsigned long prev_state;
+	unsigned long *switch_count;
+	unsigned long prev_state;
 	// struct rq_flags rf;
-	// struct rq *rq;
-	// int cpu;
+	rq_s *rq;
+	int cpu;
 
-	// cpu = smp_processor_id();
-	// rq = cpu_rq(cpu);
-	// prev = rq->curr;
+	cpu = smp_processor_id();
+	rq = cpu_rq(cpu);
+	prev = rq->curr;
 
 	schedule_debug(prev, !!sched_mode);
 
 	// if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
 	// 	hrtick_clear(rq);
 
-	// local_irq_disable();
+	local_irq_disable();
 	// rcu_note_context_switch(!!sched_mode);
 
 	// /*

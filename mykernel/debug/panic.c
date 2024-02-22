@@ -56,7 +56,7 @@ void panic(const char *fmt, ...)
 	va_list args;
 	long i, i_next = 0, len;
 	int state = 0;
-	// int old_cpu, this_cpu;
+	int old_cpu, this_cpu;
 	// bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
 
 	// if (panic_on_warn) {
@@ -75,8 +75,8 @@ void panic(const char *fmt, ...)
 	 * there is nothing to prevent an interrupt handler (that runs
 	 * after setting panic_cpu) from invoking panic() again.
 	 */
-	// local_irq_disable();
-	// preempt_disable_notrace();
+	local_irq_disable();
+	preempt_disable_notrace();
 
 	/*
 	 * It's possible to come here directly from a panic-assertion and
@@ -93,7 +93,7 @@ void panic(const char *fmt, ...)
 	 * `old_cpu == this_cpu' means we came from nmi_panic() which sets
 	 * panic_cpu to this CPU.  In this case, this is also the 1st CPU.
 	 */
-	// this_cpu = raw_smp_processor_id();
+	this_cpu = raw_smp_processor_id();
 	// old_cpu  = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
 
 	// if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu)

@@ -11,6 +11,9 @@
 // #include <trace/events/power.h>
 
 
+#include <linux/smp/smp.h>
+
+
 /*
  * Generic idle loop implementation
  *
@@ -18,7 +21,7 @@
  */
 static void do_idle(void)
 {
-	// int cpu = smp_processor_id();
+	int cpu = smp_processor_id();
 
 	// /*
 	//  * Check if we need to update blocked load

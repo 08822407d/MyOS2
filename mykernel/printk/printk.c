@@ -421,7 +421,7 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 	// preempt_disable();
 	// /* This stops the holder of console_sem just where we want him */
 	// raw_local_irq_save(flags);
-	// this_cpu = smp_processor_id();
+	this_cpu = smp_processor_id();
 
 	// /*
 	//  * Ouch, printk recursed into itself!

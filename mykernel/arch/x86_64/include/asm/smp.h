@@ -146,11 +146,12 @@
 		// #define cpu_physical_id(cpu)	per_cpu(x86_cpu_to_apicid, cpu)
 		// #define cpu_acpi_id(cpu)	per_cpu(x86_cpu_to_acpiid, cpu)
 
-		// /*
-		// * This function is needed by all SMP systems. It must _always_ be valid
-		// * from the initial startup.
-		// */
+		/*
+		 * This function is needed by all SMP systems. It must _always_ be valid
+		 * from the initial startup.
+		 */
 		// #define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
+		#define raw_smp_processor_id()  (this_cpu_ptr(&pcpu_hot)->cpu_number)
 		// #define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
 
 		// # define safe_smp_processor_id()	smp_processor_id()
@@ -176,15 +177,6 @@
 		// #endif
 
 		// extern unsigned int smpboot_control;
-
-
-		#include <asm/apic.h>
-		#include <linux/debug/bug.h>
-		#define raw_smp_processor_id() ({								\
-					int cpu = apicid_to_cpunr[cpuid_ebx(1) >> 24];		\
-					BUG_ON(cpu >= CONFIG_NR_CPUS);						\
-					cpu;												\
-				})
 
 	#endif /* !__ASSEMBLY__ */
 

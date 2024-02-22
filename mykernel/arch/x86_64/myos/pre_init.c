@@ -4,6 +4,7 @@
 #include <linux/lib/string.h>
 
 #include <asm/e820-types.h>
+#include <asm/apic.h>
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/proto.h>
