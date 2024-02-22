@@ -973,7 +973,7 @@ typedef struct runqueue {
 	task_s          *idle;
 	task_s          *stop;
 // 	unsigned long next_balance;
-// 	mm_s *prev_mm;
+	mm_s			*prev_mm;
 
 // 	unsigned int clock_update_flags;
 // 	u64 clock;
@@ -1485,9 +1485,8 @@ typedef struct runqueue {
 // 	rq->clock_update_flags &= ~RQCF_REQ_SKIP;
 // }
 
-// struct rq_flags
-// {
-// 	unsigned long flags;
+struct rq_flags {
+	unsigned long flags;
 // 	struct pin_cookie cookie;
 // #ifdef CONFIG_SCHED_DEBUG
 // 	/*
@@ -1497,7 +1496,7 @@ typedef struct runqueue {
 // 	 */
 // 	unsigned int clock_update_flags;
 // #endif
-// };
+};
 
 // extern struct callback_head balance_push_callback;
 

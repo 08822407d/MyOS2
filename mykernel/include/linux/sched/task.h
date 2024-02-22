@@ -58,7 +58,7 @@
 
 	// extern int lockdep_tasklist_lock_is_held(void);
 
-	// extern asmlinkage void schedule_tail(task_s *prev);
+	extern asmlinkage void schedule_tail(task_s *prev);
 	// extern void init_idle(task_s *idle, int cpu);
 
 	extern int sched_fork(unsigned long clone_flags, task_s *p);

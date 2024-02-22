@@ -1070,9 +1070,9 @@
 	// 			 unsigned long frame_pointer, unsigned long *retp);
 
 	// struct ftrace_ret_stack *
-	// ftrace_graph_get_ret_stack(struct task_struct *task, int idx);
+	// ftrace_graph_get_ret_stack(task_s *task, int idx);
 
-	// unsigned long ftrace_graph_ret_addr(struct task_struct *task, int *idx,
+	// unsigned long ftrace_graph_ret_addr(task_s *task, int *idx,
 	// 					unsigned long ret, unsigned long *retp);
 
 	// /*
@@ -1108,9 +1108,9 @@
 	// extern trace_func_graph_ret_t ftrace_graph_return;
 	// extern trace_func_graph_ent_t ftrace_graph_entry;
 
-	// extern void ftrace_graph_init_task(struct task_struct *t);
-	// extern void ftrace_graph_exit_task(struct task_struct *t);
-	// extern void ftrace_graph_init_idle_task(struct task_struct *t, int cpu);
+	// extern void ftrace_graph_init_task(task_s *t);
+	// extern void ftrace_graph_exit_task(task_s *t);
+	// extern void ftrace_graph_init_idle_task(task_s *t, int cpu);
 
 	// static inline void pause_graph_tracing(void)
 	// {
@@ -1125,16 +1125,16 @@
 
 	#define __notrace_funcgraph
 
-	// static inline void ftrace_graph_init_task(struct task_struct *t) { }
-	// static inline void ftrace_graph_exit_task(struct task_struct *t) { }
-	// static inline void ftrace_graph_init_idle_task(struct task_struct *t, int cpu) { }
+	// static inline void ftrace_graph_init_task(task_s *t) { }
+	// static inline void ftrace_graph_exit_task(task_s *t) { }
+	// static inline void ftrace_graph_init_idle_task(task_s *t, int cpu) { }
 
 	// /* Define as macros as fgraph_ops may not be defined */
 	// #define register_ftrace_graph(ops) ({ -1; })
 	// #define unregister_ftrace_graph(ops) do { } while (0)
 
 	// static inline unsigned long
-	// ftrace_graph_ret_addr(struct task_struct *task, int *idx, unsigned long ret,
+	// ftrace_graph_ret_addr(task_s *task, int *idx, unsigned long ret,
 	// 			  unsigned long *retp)
 	// {
 	// 	return ret;

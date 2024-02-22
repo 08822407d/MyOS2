@@ -120,7 +120,9 @@ void myos_schedule(void)
 
 	if (this_rq->running_lhdr.count > 0)
 	{
-		// preempt_disable();
+		preempt_disable();
+// extern void schedule_debug(task_s *prev, bool preempt);
+// 		schedule_debug(curr_task, false);
 
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&this_rq->running_lhdr);
@@ -164,7 +166,7 @@ void myos_schedule(void)
 		myos_switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task, curr_task);
 
-		// preempt_enable();
+		preempt_enable_no_resched();
 	}
 }
 

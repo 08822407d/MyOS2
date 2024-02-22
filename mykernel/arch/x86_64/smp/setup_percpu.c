@@ -34,6 +34,14 @@ unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
 };
 
+
+int *debug_preempt_count_0;
+
+void myos_debug_percpu_vars(void)
+{
+	debug_preempt_count_0 = &(this_cpu_ptr(&pcpu_hot)->preempt_count);
+}
+
 void __init setup_per_cpu_areas(void)
 {
 	void *test = func_rdgsbase();
@@ -186,4 +194,7 @@ void __init setup_per_cpu_areas(void)
 	//  * this call?
 	//  */
 	// sync_initial_page_table();
+
+
+	myos_debug_percpu_vars();
 }

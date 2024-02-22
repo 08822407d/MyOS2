@@ -249,12 +249,12 @@ __visible __notrace_funcgraph task_s
 	// if (!test_thread_flag(TIF_NEED_FPU_LOAD))
 	// 	switch_fpu_prepare(prev_fpu, cpu);
 
-	/* We must save %fs and %gs before load_TLS() because
-	 * %fs and %gs may be cleared by load_TLS().
-	 *
-	 * (e.g. xen_load_tls())
-	 */
-	save_fsgs(prev_p);
+	// /* We must save %fs and %gs before load_TLS() because
+	//  * %fs and %gs may be cleared by load_TLS().
+	//  *
+	//  * (e.g. xen_load_tls())
+	//  */
+	// save_fsgs(prev_p);
 
 	// /*
 	//  * Load TLS before restoring any segments so that segment loads
@@ -269,27 +269,27 @@ __visible __notrace_funcgraph task_s
 	//  */
 	// arch_end_context_switch(next_p);
 
-	/* Switch DS and ES.
-	 *
-	 * Reading them only returns the selectors, but writing them (if
-	 * nonzero) loads the full descriptor from the GDT or LDT.  The
-	 * LDT for next is loaded in switch_mm, and the GDT is loaded
-	 * above.
-	 *
-	 * We therefore need to write new values to the segment
-	 * registers on every context switch unless both the new and old
-	 * values are zero.
-	 *
-	 * Note that we don't need to do anything for CS and SS, as
-	 * those are saved and restored as part of pt_regs.
-	 */
-	savesegment(es, prev->es);
-	if (unlikely(next->es | prev->es))
-		loadsegment(es, next->es);
+	// /* Switch DS and ES.
+	//  *
+	//  * Reading them only returns the selectors, but writing them (if
+	//  * nonzero) loads the full descriptor from the GDT or LDT.  The
+	//  * LDT for next is loaded in switch_mm, and the GDT is loaded
+	//  * above.
+	//  *
+	//  * We therefore need to write new values to the segment
+	//  * registers on every context switch unless both the new and old
+	//  * values are zero.
+	//  *
+	//  * Note that we don't need to do anything for CS and SS, as
+	//  * those are saved and restored as part of pt_regs.
+	//  */
+	// savesegment(es, prev->es);
+	// if (unlikely(next->es | prev->es))
+	// 	loadsegment(es, next->es);
 
-	savesegment(ds, prev->ds);
-	if (unlikely(next->ds | prev->ds))
-		loadsegment(ds, next->ds);
+	// savesegment(ds, prev->ds);
+	// if (unlikely(next->ds | prev->ds))
+	// 	loadsegment(ds, next->ds);
 
 	// x86_fsgsbase_load(prev, next);
 

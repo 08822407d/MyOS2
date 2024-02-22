@@ -963,8 +963,8 @@
 	// 	unsigned sched_remote_wakeup : 1;
 
 		/* Bit to tell LSMs we're in execve(): */
-		unsigned in_execve : 1;
-		unsigned in_iowait : 1;
+		unsigned		in_execve : 1;
+		unsigned		in_iowait : 1;
 	// #ifndef TIF_RESTORE_SIGMASK
 	// 	unsigned restore_sigmask : 1;
 	// #endif
@@ -1064,15 +1064,15 @@
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
 	// #endif
-		// /* Context switch counts: */
-		// unsigned long nvcsw;
-		// unsigned long nivcsw;
+		/* Context switch counts: */
+		unsigned long	nvcsw;
+		unsigned long	nivcsw;
 
-		// /* Monotonic time in nsecs: */
-		// u64				start_time;
+		/* Monotonic time in nsecs: */
+		u64				start_time;
 
-		// /* Boot based time in nsecs: */
-		// u64				start_boottime;
+		/* Boot based time in nsecs: */
+		u64				start_boottime;
 
 		// /* MM fault and swap info: this can arguably be seen as either mm-specific or thread-specific: */
 		// unsigned long min_flt;

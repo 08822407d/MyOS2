@@ -102,6 +102,8 @@
         "compiler-gcc.h": "c",
         "bitops.h": "c",
         "preempt.h": "c",
-        "bug.h": "c"
+        "bug.h": "c",
+        "switch_to.h": "c",
+        "spinlock.h": "c"
     }
 }
