@@ -114,7 +114,8 @@
 	/*
 	 * For spinlocks, etc:
 	 */
-	static __always_inline unsigned long arch_local_irq_save(void) {
+	static __always_inline unsigned long
+	arch_local_irq_save(void) {
 		unsigned long flags = arch_save_fl();
 		arch_irq_disable();
 		return flags;

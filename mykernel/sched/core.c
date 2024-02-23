@@ -795,8 +795,7 @@ schedule_tail(task_s *prev) __releases(rq->lock)
 	 */
 
 	// finish_task_switch(prev);
-	// preempt_enable();
-	// preempt_enable_no_resched();
+	preempt_enable();
 
 	// if (current->set_child_tid)
 	// 	put_user(task_pid_vnr(current), current->set_child_tid);
@@ -1172,3 +1171,52 @@ void schedule_preempt_disabled(void)
 	schedule();
 	preempt_disable();
 }
+
+static void __sched notrace
+preempt_schedule_common(void)
+{
+	// do {
+	// 	/*
+	// 	 * Because the function tracer can trace preempt_count_sub()
+	// 	 * and it also uses preempt_enable/disable_notrace(), if
+	// 	 * NEED_RESCHED is set, the preempt_enable_notrace() called
+	// 	 * by the function tracer will call this function again and
+	// 	 * cause infinite recursion.
+	// 	 *
+	// 	 * Preemption must be disabled here before the function
+	// 	 * tracer can trace. Break up preempt_disable() into two
+	// 	 * calls. One to disable preemption without fear of being
+	// 	 * traced. The other to still record the preemption latency,
+	// 	 * which can also be traced by the function tracer.
+	// 	 */
+	// 	preempt_disable_notrace();
+	// 	preempt_latency_start(1);
+	// 	__schedule(SM_PREEMPT);
+	// 	preempt_latency_stop(1);
+	// 	preempt_enable_no_resched_notrace();
+
+	// 	/*
+	// 	 * Check again in case we missed a preemption opportunity
+	// 	 * between schedule and now.
+	// 	 */
+	// } while (need_resched());
+	myos_schedule();
+}
+
+/*
+ * This is the entry point to schedule() from in-kernel preemption
+ * off of preempt_enable.
+ */
+asmlinkage __visible void __sched notrace
+preempt_schedule(void)
+{
+	/*
+	 * If there is a non-zero preempt_count or interrupts are disabled,
+	 * we do not want to preempt the current task. Just return..
+	 */
+	if (likely(!preemptible()))
+		return;
+	preempt_schedule_common();
+}
+// NOKPROBE_SYMBOL(preempt_schedule);
+EXPORT_SYMBOL(preempt_schedule);

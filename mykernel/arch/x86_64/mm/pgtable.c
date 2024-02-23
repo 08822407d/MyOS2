@@ -59,7 +59,7 @@ pgd_t *pgd_alloc(mm_s *mm)
 	// pgd_prepopulate_pmd(mm, pgd, pmds);
 	// pgd_prepopulate_user_pmd(mm, pgd, u_pmds);
 
-	spin_unlock_no_resched(&pgd_lock);
+	spin_unlock(&pgd_lock);
 
 	return pgd;
 
@@ -76,7 +76,7 @@ void pgd_free(mm_s *mm, pgd_t *pgd)
 	// {
 		spin_lock(&pgd_lock);
 		pgd_list_del(pgd);
-		spin_unlock_no_resched(&pgd_lock);
+		spin_unlock(&pgd_lock);
 	// }
 	_pgd_free(pgd);
 }

@@ -378,7 +378,7 @@ unsigned long myos_idr_alloc()
 	}
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
-	spin_unlock_no_resched(&pidmap_lock);
+	spin_unlock(&pidmap_lock);
 
 	return curr_pid;
 }

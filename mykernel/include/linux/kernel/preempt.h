@@ -207,7 +207,7 @@
 			do {									\
 				barrier();							\
 				if (preempt_count_dec_and_test())	\
-					__preempt_schedule();			\
+					preempt_schedule();				\
 			} while (0)
 
 	// #define preempt_enable_notrace()				\

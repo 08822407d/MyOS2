@@ -167,7 +167,7 @@ void myos_tty_write_color(const char *buf, size_t length, unsigned int FRcolor, 
 			Pos.YPosition = 0;
 		}
 	}
-	spin_unlock_no_resched(&Pos.lock);
+	spin_unlock(&Pos.lock);
 }
 
 void myos_tty_write_color_at(const char *buf, size_t length,

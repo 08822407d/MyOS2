@@ -380,13 +380,13 @@ static int ATArq_deamon(void *param)
 				List_s *wq_lp = list_hdr_dequeue(&IDEreq_lhdr);
 				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
 				req_in_using = node;
-				spin_unlock_no_resched(&req_lock);
+				spin_unlock(&req_lock);
 
 				IDE_cmd_out(node);
 
 				spin_lock(&req_lock);
 			}
-			spin_unlock_no_resched(&req_lock);
+			spin_unlock(&req_lock);
 			break;
 		}
 	}

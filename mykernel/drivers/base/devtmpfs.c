@@ -99,7 +99,7 @@ static int devtmpfs_submit_req(req_s *req, const char *tmp)
 	spin_lock(&req_lock);
 	req->next = requests;
 	requests = req;
-	spin_unlock_no_resched(&req_lock);
+	spin_unlock(&req_lock);
 
 	wake_up_process(thread);
 	wait_for_completion(&req->done);
@@ -362,7 +362,7 @@ static void devtmpfs_work_loop(void)
 		while (requests) {
 			req_s *req = requests;
 			requests = NULL;
-			spin_unlock_no_resched(&req_lock);
+			spin_unlock(&req_lock);
 			while (req) {
 				req_s *next = req->next;
 				req->err = handle(req->name, req->mode,
@@ -374,7 +374,7 @@ static void devtmpfs_work_loop(void)
 			spin_lock(&req_lock);
 		}
 		__set_current_state(TASK_INTERRUPTIBLE);
-		spin_unlock_no_resched(&req_lock);
+		spin_unlock(&req_lock);
 		schedule();
 	}
 }

@@ -100,7 +100,7 @@
 	// }
 	extern bool should_resched(int preempt_offset);
 
-	// extern asmlinkage void preempt_schedule(void);
+	extern asmlinkage void preempt_schedule(void);
 	// extern asmlinkage void preempt_schedule_thunk(void);
 
 	// #define __preempt_schedule_func preempt_schedule_thunk

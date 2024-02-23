@@ -166,7 +166,7 @@ void myos_schedule(void)
 		myos_switch_mm(curr_task, next_task);
 		switch_to(curr_task, next_task, curr_task);
 
-		preempt_enable_no_resched();
+		preempt_enable();
 	}
 }
 

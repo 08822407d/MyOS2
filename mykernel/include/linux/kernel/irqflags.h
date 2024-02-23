@@ -259,13 +259,14 @@
 	 * to avoid build issues.
 	 */
 	// #ifdef CONFIG_TRACE_IRQFLAGS_SUPPORT
-	#define irqs_disabled() ({						\
-				unsigned long _flags;				\
-				arch_save_fl(_flags);		\
-				arch_irqs_disabled_flags(_flags);	\
-			})
+	// #define irqs_disabled() ({						\
+	// 			unsigned long _flags;				\
+	// 			arch_save_fl(_flags);		\
+	// 			arch_irqs_disabled_flags(_flags);	\
+	// 		})
 	// #else /* !CONFIG_TRACE_IRQFLAGS_SUPPORT */
 	// #define irqs_disabled()	raw_irqs_disabled()
+	#define irqs_disabled()	arch_irqs_disabled()
 	// #endif /* CONFIG_TRACE_IRQFLAGS_SUPPORT */
 
 	// #define irqs_disabled_flags(flags) raw_irqs_disabled_flags(flags)
