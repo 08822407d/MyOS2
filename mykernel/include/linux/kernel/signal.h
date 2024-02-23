@@ -6,7 +6,7 @@
 	#include <linux/kernel/signal_types.h>
 	#include <linux/lib/string.h>
 
-	// task_s;
+	// struct task_struct;
 
 	// /* for sysctl */
 	// extern int print_fatal_signals;

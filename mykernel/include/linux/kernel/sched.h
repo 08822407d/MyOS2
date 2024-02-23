@@ -837,7 +837,7 @@
 		sched_entity_s		se;
 		sched_rt_entity_s	rt;
 		// struct sched_dl_entity dl;
-		// const struct sched_class *sched_class;
+		// const sched_class_s *sched_class;
 
 	// #ifdef CONFIG_SCHED_CORE
 		// struct rb_node core_node;

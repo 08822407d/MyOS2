@@ -5,7 +5,7 @@
 	#include <asm/processor-flags.h>
 
 	// /* Forward declaration, a strange C thing */
-	// task_s;
+	// struct task_struct;
 	// mm_s;
 	// struct io_bitmap;
 	// struct vm86;

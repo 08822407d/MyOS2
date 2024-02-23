@@ -116,7 +116,7 @@
 	// file_s *task_lookup_fd_rcu(task_s *task, unsigned int fd);
 	// file_s *task_lookup_next_fd_rcu(task_s *task, unsigned int *fd);
 
-	// task_s;
+	// struct task_struct;
 
 	void put_files_struct(files_struct_s *fs);
 	int unshare_files(void);

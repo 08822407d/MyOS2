@@ -24,7 +24,7 @@
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u32, x86_cpu_to_acpiid);
 		// DECLARE_EARLY_PER_CPU_READ_MOSTLY(u16, x86_bios_cpu_apicid);
 
-		// task_s;
+		// struct task_struct;
 
 		// struct smp_ops {
 		// 	void (*smp_prepare_boot_cpu)(void);

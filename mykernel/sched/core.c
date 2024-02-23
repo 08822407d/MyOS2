@@ -27,6 +27,7 @@
 // #include "smp.h"
 
 
+#include <linux/smp/smp.h>
 #include <obsolete/glo.h>
 
 
@@ -86,8 +87,8 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	rq_s *target_rq = &(per_cpu(runqueues, new_cpu));
 	p->__state = TASK_RUNNING;
-	if (!list_in_lhdr(&target_rq->running_lhdr, &p->tasks))
-		list_hdr_push(&target_rq->running_lhdr, &p->tasks);
+	if (!list_in_lhdr(&target_rq->myos.running_lhdr, &p->tasks))
+		list_hdr_push(&target_rq->myos.running_lhdr, &p->tasks);
 }
 
 
@@ -599,7 +600,7 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
 
 	rq_s * target_rq = &(per_cpu(runqueues, 0));
-	list_hdr_push(&target_rq->running_lhdr, &p->tasks);
+	list_hdr_push(&target_rq->myos.running_lhdr, &p->tasks);
 
 	return 0;
 }
@@ -942,7 +943,7 @@ schedule_debug(task_s *prev, bool preempt) {
 static void put_prev_task_balance(rq_s *rq,
 		task_s *prev, struct rq_flags *rf)
 {
-	// const struct sched_class *class;
+	// const sched_class_s *class;
 	// /*
 	//  * We must do the balancing pass before put_prev_task(), such
 	//  * that when we release the rq->lock the task is in the same
@@ -965,41 +966,41 @@ static void put_prev_task_balance(rq_s *rq,
 static inline task_s *
 __pick_next_task(rq_s *rq, task_s *prev, struct rq_flags *rf)
 {
-// 	const struct sched_class *class;
-// 	task_s *p;
+	const sched_class_s *class;
+	task_s *p;
 
-// 	/*
-// 	 * Optimization: we know that if all tasks are in the fair class we can
-// 	 * call that function directly, but only if the @prev task wasn't of a
-// 	 * higher scheduling class, because otherwise those lose the
-// 	 * opportunity to pull in more work from other CPUs.
-// 	 */
-// 	if (likely(!sched_class_above(prev->sched_class, &fair_sched_class) &&
-// 		   rq->nr_running == rq->cfs.h_nr_running)) {
+	// /*
+	//  * Optimization: we know that if all tasks are in the fair class we can
+	//  * call that function directly, but only if the @prev task wasn't of a
+	//  * higher scheduling class, because otherwise those lose the
+	//  * opportunity to pull in more work from other CPUs.
+	//  */
+	// if (likely(!sched_class_above(prev->sched_class, &fair_sched_class) &&
+	// 	   rq->nr_running == rq->cfs.h_nr_running)) {
 
-// 		p = pick_next_task_fair(rq, prev, rf);
-// 		if (unlikely(p == RETRY_TASK))
-// 			goto restart;
+	// 	p = pick_next_task_fair(rq, prev, rf);
+	// 	if (unlikely(p == RETRY_TASK))
+	// 		goto restart;
 
-// 		/* Assume the next prioritized class is idle_sched_class */
-// 		if (!p) {
-// 			put_prev_task(rq, prev);
-// 			p = pick_next_task_idle(rq);
-// 		}
+	// 	/* Assume the next prioritized class is idle_sched_class */
+	// 	if (!p) {
+	// 		put_prev_task(rq, prev);
+	// 		p = pick_next_task_idle(rq);
+	// 	}
 
-// 		return p;
-// 	}
+	// 	return p;
+	// }
 
-// restart:
-// 	put_prev_task_balance(rq, prev, rf);
+restart:
+	// put_prev_task_balance(rq, prev, rf);
 
-// 	for_each_class(class) {
-// 		p = class->pick_next_task(rq);
-// 		if (p)
-// 			return p;
-// 	}
+	for_each_class(class) {
+		p = class->pick_next_task(rq);
+		if (p)
+			return p;
+	}
 
-// 	BUG(); /* The idle class should always have a runnable task. */
+	BUG(); /* The idle class should always have a runnable task. */
 }
 
 

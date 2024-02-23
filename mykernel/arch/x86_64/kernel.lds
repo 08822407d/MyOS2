@@ -60,6 +60,12 @@ SECTIONS
 		*(.data..page_aligned*)
 		_edata = .;
 	}
+	.data.sched_class ALIGN(8) : AT(ADDR(.data.sched_class) - _k_offset)
+	{
+		__sched_class_highest = .;
+		KEEP(*(.data.sched_class))
+		__sched_class_lowest = .;
+	}
 	. = ALIGN(_Page_Size);
 	__per_cpu_load = .;
 	/* .data..percpu 0 : AT(__per_cpu_load - _k_offset) */

@@ -103,7 +103,7 @@ void myos_init_per_cpu_var(void)
 
 	rq_s *this_runqueues = &per_cpu(runqueues, 0);
 	memset(this_runqueues, 0, sizeof(rq_s));
-	list_hdr_init(&this_runqueues->running_lhdr);
+	list_hdr_init(&this_runqueues->myos.running_lhdr);
 	this_runqueues->idle			= this_idle_thread;
-	this_runqueues->time_slice		= this_idle_thread->rt.time_slice;
+	this_runqueues->myos.time_slice	= this_idle_thread->rt.time_slice;
 }

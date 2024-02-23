@@ -41,7 +41,7 @@
 	//  * - this struct shares the supervisor stack pages
 	//  */
 	// #ifndef __ASSEMBLY__
-	// task_s;
+	// struct task_struct;
 	// #include <asm/cpufeature.h>
 	// #include <linux/atomic.h>
 

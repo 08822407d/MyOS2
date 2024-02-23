@@ -53,7 +53,7 @@
 	// #	include <asm/proto.h>
 
 	// 	cpuinfo_x86_s;
-	// 	task_s;
+	// 	struct task_struct;
 
 	// 	extern unsigned long profile_pc(pt_regs_s *regs);
 
