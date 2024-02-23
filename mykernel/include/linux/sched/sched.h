@@ -54,7 +54,7 @@
 #include <linux/kernel/kthread.h>
 // #include <linux/membarrier.h>
 // #include <linux/migrate.h>
-// #include <linux/mmu_context.h>
+#include <linux/mm/mmu_context.h>
 #include <linux/kernel/nmi.h>
 // #include <linux/proc_fs.h>
 #include <linux/kernel/prefetch.h>
@@ -915,7 +915,7 @@
  */
 typedef struct runqueue {
 	// MyOS2 variables
-	List_hdr_s	running_lhdr;
+	List_hdr_s		running_lhdr;
 	unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
 	unsigned long	time_slice;		// max jiffies for running of this task
 
@@ -942,7 +942,7 @@ typedef struct runqueue {
 // #endif /* CONFIG_NO_HZ_COMMON */
 
 // 	unsigned int ttwu_pending;
-// 	u64 nr_switches;
+	u64 			nr_switches;
 
 // #ifdef CONFIG_UCLAMP_TASK
 // 	/* Utilization clamp values based on CPU's RUNNABLE tasks */
@@ -2103,7 +2103,7 @@ struct rq_flags {
 
 // 	void (*check_preempt_curr)(rq_s *rq, task_s *p, int flags);
 
-// 	task_s *(*pick_next_task)(rq_s *rq);
+	// task_s *(*pick_next_task)(rq_s *rq);
 
 // 	void (*put_prev_task)(rq_s *rq, task_s *p);
 // 	void (*set_next_task)(rq_s *rq, task_s *p, bool first);

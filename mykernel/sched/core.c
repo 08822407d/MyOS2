@@ -809,52 +809,55 @@ schedule_tail(task_s *prev) __releases(rq->lock)
 static __always_inline rq_s *
 context_switch(rq_s *rq, task_s *prev,
 		task_s *next, struct rq_flags *rf) {
-	// prepare_task_switch(rq, prev, next);
+	prepare_task_switch(rq, prev, next);
 
-	// /*
-	//  * For paravirt, this is coupled with an exit in switch_to to
-	//  * combine the page table reload and the switch backend into
-	//  * one hypercall.
-	//  */
+	/*
+	 * For paravirt, this is coupled with an exit in switch_to to
+	 * combine the page table reload and the switch backend into
+	 * one hypercall.
+	 */
 	// arch_start_context_switch(prev);
 
-	// /*
-	//  * kernel -> kernel   lazy + transfer active
-	//  *   user -> kernel   lazy + mmgrab_lazy_tlb() active
-	//  *
-	//  * kernel ->   user   switch + mmdrop_lazy_tlb() active
-	//  *   user ->   user   switch
-	//  *
-	//  * switch_mm_cid() needs to be updated if the barriers provided
-	//  * by context_switch() are modified.
-	//  */
-	// if (!next->mm) {                                // to kernel
-	// 	enter_lazy_tlb(prev->active_mm, next);
+	/*
+	 * kernel -> kernel   lazy + transfer active
+	 *   user -> kernel   lazy + mmgrab_lazy_tlb() active
+	 *
+	 * kernel ->   user   switch + mmdrop_lazy_tlb() active
+	 *   user ->   user   switch
+	 *
+	 * switch_mm_cid() needs to be updated if the barriers provided
+	 * by context_switch() are modified.
+	 */
+	if (!next->mm) {                                // to kernel
+		// enter_lazy_tlb(prev->active_mm, next);
 
-	// 	next->active_mm = prev->active_mm;
-	// 	if (prev->mm)                           // from user
-	// 		mmgrab_lazy_tlb(prev->active_mm);
-	// 	else
-	// 		prev->active_mm = NULL;
-	// } else {                                        // to user
-	// 	membarrier_switch_mm(rq, prev->active_mm, next->mm);
-	// 	/*
-	// 	 * sys_membarrier() requires an smp_mb() between setting
-	// 	 * rq->curr / membarrier_switch_mm() and returning to userspace.
-	// 	 *
-	// 	 * The below provides this either through switch_mm(), or in
-	// 	 * case 'prev->active_mm == next->mm' through
-	// 	 * finish_task_switch()'s mmdrop().
-	// 	 */
-	// 	switch_mm_irqs_off(prev->active_mm, next->mm, next);
-	// 	lru_gen_use_mm(next->mm);
+		next->active_mm = prev->active_mm;
+		// if (prev->mm)                           // from user
+		// 	mmgrab_lazy_tlb(prev->active_mm);
+		// else
+		// 	prev->active_mm = NULL;
+	} else {                                        // to user
+		// membarrier_switch_mm(rq, prev->active_mm, next->mm);
+		/*
+		 * sys_membarrier() requires an smp_mb() between setting
+		 * rq->curr / membarrier_switch_mm() and returning to userspace.
+		 *
+		 * The below provides this either through switch_mm(), or in
+		 * case 'prev->active_mm == next->mm' through
+		 * finish_task_switch()'s mmdrop().
+		 */
+		switch_mm_irqs_off(prev->active_mm, next->mm, next);
+		// lru_gen_use_mm(next->mm);
 
-	// 	if (!prev->mm) {                        // from kernel
-	// 		/* will mmdrop_lazy_tlb() in finish_task_switch(). */
-	// 		rq->prev_mm = prev->active_mm;
-	// 		prev->active_mm = NULL;
-	// 	}
-	// }
+		// if (!prev->mm) {                        // from kernel
+		// 	/* will mmdrop_lazy_tlb() in finish_task_switch(). */
+		// 	rq->prev_mm = prev->active_mm;
+		// 	prev->active_mm = NULL;
+		// }
+	}
+#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
+	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next));
+#endif
 
 	// /* switch_mm_cid() requires the memory barriers above. */
 	// switch_mm_cid(rq, prev, next);
@@ -863,9 +866,9 @@ context_switch(rq_s *rq, task_s *prev,
 
 	// prepare_lock_switch(rq, next, rf);
 
-	// /* Here we just switch the register state and the stack. */
-	// switch_to(prev, next, prev);
-	// barrier();
+	/* Here we just switch the register state and the stack. */
+	switch_to(prev, next, prev);
+	barrier();
 
 	// return finish_task_switch(prev);
 }
@@ -936,6 +939,71 @@ schedule_debug(task_s *prev, bool preempt) {
 	// schedstat_inc(this_rq()->sched_count);
 }
 
+static void put_prev_task_balance(rq_s *rq,
+		task_s *prev, struct rq_flags *rf)
+{
+	// const struct sched_class *class;
+	// /*
+	//  * We must do the balancing pass before put_prev_task(), such
+	//  * that when we release the rq->lock the task is in the same
+	//  * state as before we took rq->lock.
+	//  *
+	//  * We can terminate the balance pass as soon as we know there is
+	//  * a runnable task of @class priority or higher.
+	//  */
+	// for_class_range(class, prev->sched_class, &idle_sched_class) {
+	// 	if (class->balance(rq, prev, rf))
+	// 		break;
+	// }
+
+	// put_prev_task(rq, prev);
+}
+
+/*
+ * Pick up the highest-prio task:
+ */
+static inline task_s *
+__pick_next_task(rq_s *rq, task_s *prev, struct rq_flags *rf)
+{
+// 	const struct sched_class *class;
+// 	task_s *p;
+
+// 	/*
+// 	 * Optimization: we know that if all tasks are in the fair class we can
+// 	 * call that function directly, but only if the @prev task wasn't of a
+// 	 * higher scheduling class, because otherwise those lose the
+// 	 * opportunity to pull in more work from other CPUs.
+// 	 */
+// 	if (likely(!sched_class_above(prev->sched_class, &fair_sched_class) &&
+// 		   rq->nr_running == rq->cfs.h_nr_running)) {
+
+// 		p = pick_next_task_fair(rq, prev, rf);
+// 		if (unlikely(p == RETRY_TASK))
+// 			goto restart;
+
+// 		/* Assume the next prioritized class is idle_sched_class */
+// 		if (!p) {
+// 			put_prev_task(rq, prev);
+// 			p = pick_next_task_idle(rq);
+// 		}
+
+// 		return p;
+// 	}
+
+// restart:
+// 	put_prev_task_balance(rq, prev, rf);
+
+// 	for_each_class(class) {
+// 		p = class->pick_next_task(rq);
+// 		if (p)
+// 			return p;
+// 	}
+
+// 	BUG(); /* The idle class should always have a runnable task. */
+}
+
+
+#define pick_next_task	__pick_next_task
 
 /*
  * Constants for the sched_mode argument of __schedule().
@@ -999,7 +1067,7 @@ __schedule(unsigned int sched_mode) {
 	task_s *prev, *next;
 	unsigned long *switch_count;
 	unsigned long prev_state;
-	// struct rq_flags rf;
+	struct rq_flags rf;
 	rq_s *rq;
 	int cpu;
 
@@ -1077,12 +1145,12 @@ __schedule(unsigned int sched_mode) {
 	// 	switch_count = &prev->nvcsw;
 	// }
 
-	// next = pick_next_task(rq, prev, &rf);
+	next = pick_next_task(rq, prev, &rf);
 	// clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
 
 	if (likely(prev != next)) {
-		// rq->nr_switches++;
+		rq->nr_switches++;
 		/*
 		 * RCU users of rcu_dereference(rq->curr) may not see
 		 * changes to task_struct made by pick_next_task().
@@ -1102,15 +1170,15 @@ __schedule(unsigned int sched_mode) {
 		 * - switch_to() for arm64 (weakly-ordered, spin_unlock
 		 *   is a RELEASE barrier),
 		 */
-		// ++*switch_count;
+		++*switch_count;
 
 		// migrate_disable_switch(rq, prev);
 		// psi_sched_switch(prev, next, !task_on_rq_queued(prev));
 
 		// trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next, prev_state);
 
-		// /* Also unlocks the rq: */
-		// rq = context_switch(rq, prev, next, &rf);
+		/* Also unlocks the rq: */
+		rq = context_switch(rq, prev, next, &rf);
 	} else {
 		// rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
 
@@ -1121,19 +1189,20 @@ __schedule(unsigned int sched_mode) {
 }
 
 
-// asmlinkage __visible void __sched schedule(void)
-// {
-// 	task_s *tsk = current;
+asmlinkage __visible void __sched schedule(void)
+{
+	task_s *tsk = current;
 
-// 	sched_submit_work(tsk);
-// 	do {
-// 		preempt_disable();
-// 		__schedule(SM_NONE);
-// 		sched_preempt_enable_no_resched();
-// 	} while (need_resched());
-// 	sched_update_worker(tsk);
-// }
-// EXPORT_SYMBOL(schedule);
+	// sched_submit_work(tsk);
+	do {
+		preempt_disable();
+		// __schedule(SM_NONE);
+		myos_schedule();
+		sched_preempt_enable_no_resched();
+	} while (need_resched());
+	// sched_update_worker(tsk);
+}
+EXPORT_SYMBOL(schedule);
 
 /*
  * synchronize_rcu_tasks() makes sure that no task is stuck in preempted
@@ -1175,32 +1244,32 @@ void schedule_preempt_disabled(void)
 static void __sched notrace
 preempt_schedule_common(void)
 {
-	// do {
-	// 	/*
-	// 	 * Because the function tracer can trace preempt_count_sub()
-	// 	 * and it also uses preempt_enable/disable_notrace(), if
-	// 	 * NEED_RESCHED is set, the preempt_enable_notrace() called
-	// 	 * by the function tracer will call this function again and
-	// 	 * cause infinite recursion.
-	// 	 *
-	// 	 * Preemption must be disabled here before the function
-	// 	 * tracer can trace. Break up preempt_disable() into two
-	// 	 * calls. One to disable preemption without fear of being
-	// 	 * traced. The other to still record the preemption latency,
-	// 	 * which can also be traced by the function tracer.
-	// 	 */
-	// 	preempt_disable_notrace();
-	// 	preempt_latency_start(1);
-	// 	__schedule(SM_PREEMPT);
-	// 	preempt_latency_stop(1);
-	// 	preempt_enable_no_resched_notrace();
+	do {
+		/*
+		 * Because the function tracer can trace preempt_count_sub()
+		 * and it also uses preempt_enable/disable_notrace(), if
+		 * NEED_RESCHED is set, the preempt_enable_notrace() called
+		 * by the function tracer will call this function again and
+		 * cause infinite recursion.
+		 *
+		 * Preemption must be disabled here before the function
+		 * tracer can trace. Break up preempt_disable() into two
+		 * calls. One to disable preemption without fear of being
+		 * traced. The other to still record the preemption latency,
+		 * which can also be traced by the function tracer.
+		 */
+		preempt_disable_notrace();
+		// preempt_latency_start(1);
+		// __schedule(SM_PREEMPT);
+		myos_schedule();
+		// preempt_latency_stop(1);
+		preempt_enable_no_resched_notrace();
 
-	// 	/*
-	// 	 * Check again in case we missed a preemption opportunity
-	// 	 * between schedule and now.
-	// 	 */
-	// } while (need_resched());
-	myos_schedule();
+		// /*
+		//  * Check again in case we missed a preemption opportunity
+		//  * between schedule and now.
+		//  */
+	} while (need_resched());
 }
 
 /*

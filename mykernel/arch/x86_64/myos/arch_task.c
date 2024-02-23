@@ -106,7 +106,9 @@ do_exit_again:
 static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 {
 	load_cr3(target->mm->pgd);
+#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(target));
+#endif
 }
 
 void myos_schedule(void)
@@ -120,10 +122,6 @@ void myos_schedule(void)
 
 	if (this_rq->running_lhdr.count > 0)
 	{
-		preempt_disable();
-// extern void schedule_debug(task_s *prev, bool preempt);
-// 		schedule_debug(curr_task, false);
-
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&this_rq->running_lhdr);
 		while (next_lp == 0);
@@ -163,10 +161,12 @@ void myos_schedule(void)
 
 		while (curr_task == next_task);
 		
-		myos_switch_mm(curr_task, next_task);
+		// myos_switch_mm(curr_task, next_task);
+		switch_mm_irqs_off(curr_task->mm, next_task->mm, next_task);
+#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
+		wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next_task));
+#endif
 		switch_to(curr_task, next_task, curr_task);
-
-		preempt_enable();
 	}
 }
 
@@ -192,5 +192,9 @@ void try_sched()
 
 	// normal sched
 	if (curr_task->flags & PF_NEED_SCHEDULE)
-		schedule();
+	{
+		preempt_disable();
+		myos_schedule();
+		preempt_enable();
+	}
 }

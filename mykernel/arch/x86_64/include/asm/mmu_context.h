@@ -167,11 +167,9 @@
 	// 	destroy_context_ldt(mm);
 	// }
 
-	extern void switch_mm(mm_s *prev, mm_s *next,
-				task_s *tsk);
+	extern void switch_mm(mm_s *prev, mm_s *next, task_s *tsk);
 
 	extern void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk);
-	// #define switch_mm_irqs_off switch_mm_irqs_off
 
 	// #define activate_mm(prev, next)			\
 	// do {						\

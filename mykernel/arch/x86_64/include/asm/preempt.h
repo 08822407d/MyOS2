@@ -144,7 +144,4 @@
 
 	// #endif /* PREEMPT_DYNAMIC */
 
-	extern void myos_schedule(void);
-	#define __preempt_schedule myos_schedule
-
 #endif /* __ASM_PREEMPT_H */

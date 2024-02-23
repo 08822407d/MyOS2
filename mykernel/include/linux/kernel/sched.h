@@ -331,9 +331,7 @@
 	// extern long schedule_timeout_killable(long timeout);
 	// extern long schedule_timeout_uninterruptible(long timeout);
 	// extern long schedule_timeout_idle(long timeout);
-	// asmlinkage void schedule(void);
-	extern asmlinkage void myos_schedule(void);
-	#define schedule() myos_schedule();
+	asmlinkage void schedule(void);
 
 	extern void schedule_preempt_disabled(void);
 	// asmlinkage void preempt_schedule_irq(void);
@@ -2384,13 +2382,9 @@
 		spin_unlock(&p->alloc_lock);
 	}
 
-// myos obsolete defines
-	// typedef union PCB {
-	// 	task_s task;
-	// 	reg_t stack[THREAD_SIZE / sizeof(reg_t)];
-	// } PCB_u __attribute__((aligned(8)));
 	
-	void myos_init_pid_allocator(void);
-	unsigned long myos_idr_alloc(void);
+	extern void myos_init_pid_allocator(void);
+	extern unsigned long myos_idr_alloc(void);
+	extern void myos_schedule(void);
 
 #endif
