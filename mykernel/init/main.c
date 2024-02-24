@@ -204,7 +204,6 @@ noinline void __ref rest_init(void)
 }
 
 
-atomic_t lcpu_boot_count;
 atomic_t lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
@@ -253,8 +252,6 @@ asmlinkage void __init start_kernel(void)
 	vfs_caches_init();
 
 	check_bugs();
-
-	atomic_set(&lcpu_boot_count, 0);
 }
 
 /*==============================================================================================*
@@ -263,9 +260,6 @@ asmlinkage void __init start_kernel(void)
 void idle(size_t cpu_idx)
 {	
 	myos_init_percpu_intr();
-
-	// atomic_inc(&lcpu_boot_count);
-	// while (atomic_read(&lcpu_boot_count) != nr_lcpu);
 
 	if (cpu_idx == 0)
 	{

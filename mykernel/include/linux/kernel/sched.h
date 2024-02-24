@@ -2163,6 +2163,7 @@
 
 	static __always_inline bool need_resched(void) {
 		// return unlikely(tif_need_resched());
+		return false;
 	}
 
 	// /*

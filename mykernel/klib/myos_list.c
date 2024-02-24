@@ -50,6 +50,11 @@ void list_insert_next(List_s * dst, List_s * src)
 
 void list_delete(List_s *src)
 {
+	while (IS_INVAL_PTR(src->prev));
+	while (IS_INVAL_PTR(src->prev->next));
+	while (IS_INVAL_PTR(src->next));
+	while (IS_INVAL_PTR(src->next->prev));
+	
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
 	list_init(src, src->owner_p);

@@ -19,6 +19,10 @@
 					(size_t)(void *)(x) >= (size_t)-MAX_ERRNO	\
 				)
 
+	#	define IS_INVAL_VALUE(x) (								\
+					(size_t)(void *)(x) <= (size_t)MAX_ERRNO	\
+				)
+
 		static inline void *
 		ERR_PTR(long error) {
 			return (void *) error;
@@ -38,6 +42,12 @@
 		IS_ERR_OR_NULL(const void *ptr) {
 			return (!ptr) || IS_ERR_VALUE((size_t)ptr);
 		}
+
+		static inline bool
+		IS_INVAL_PTR(const void *ptr) {
+			return (!ptr) || IS_INVAL_VALUE((size_t)ptr);
+		}
+
 
 		/**
 		 * ERR_CAST - Explicitly cast an error-valued pointer to another pointer type

@@ -104,6 +104,9 @@
         "preempt.h": "c",
         "bug.h": "c",
         "switch_to.h": "c",
-        "spinlock.h": "c"
+        "spinlock.h": "c",
+        "err.h": "c",
+        "utils.h": "c",
+        "int-ll64.h": "c"
     }
 }

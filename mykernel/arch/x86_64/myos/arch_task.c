@@ -114,17 +114,17 @@ static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
 void myos_schedule(void)
 {
 	rq_s			*this_rq = this_cpu_ptr(&runqueues);
-	myos_rq_s		myos_rq = this_rq->myos;
+	myos_rq_s		*myos_rq = &(this_rq->myos);
 	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
 	task_s *		curr_task = pcpu->current_task;
 	task_s *		next_task = NULL;
 	// curr_task must exists
 	while (curr_task == NULL);
 
-	if (myos_rq.running_lhdr.count > 0)
+	if (myos_rq->running_lhdr.count > 0)
 	{
 		// fetch a task from running_list
-		List_s * next_lp = list_hdr_pop(&myos_rq.running_lhdr);
+		List_s * next_lp = list_hdr_pop(&myos_rq->running_lhdr);
 		while (next_lp == 0);
 
 		// and insert curr_task back to running_list
@@ -133,30 +133,30 @@ void myos_schedule(void)
 			if (curr_task == this_rq->idle)
 			{
 				// insert idle task to cpu's running-list tail
-				list_hdr_enqueue(&myos_rq.running_lhdr, &curr_task->tasks);
+				list_hdr_enqueue(&myos_rq->running_lhdr, &curr_task->tasks);
 			}
 			else
 			{
-				List_s * tmp_list = myos_rq.running_lhdr.header.next;
+				List_s * tmp_list = myos_rq->running_lhdr.header.next;
 				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, tasks)->se.vruntime) &&
-						tmp_list != &myos_rq.running_lhdr.header)
+						tmp_list != &myos_rq->running_lhdr.header)
 				{
 					tmp_list = tmp_list->next;
 				}
 				list_insert_prev(tmp_list, &curr_task->tasks);
-				myos_rq.running_lhdr.count++;
+				myos_rq->running_lhdr.count++;
 			}
 		}
 
-		unsigned long used_jiffies = jiffies - myos_rq.last_jiffies;
+		unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
 		curr_task->total_jiffies += used_jiffies;
 		if (curr_task != this_rq->idle)
 			curr_task->se.vruntime += used_jiffies;
 
 		next_task = container_of(next_lp, task_s, tasks);
-		myos_rq.time_slice = next_task->rt.time_slice;
+		myos_rq->time_slice = next_task->rt.time_slice;
 
-		myos_rq.last_jiffies = jiffies;
+		myos_rq->last_jiffies = jiffies;
 
 		curr_task->flags &= ~PF_NEED_SCHEDULE;
 
@@ -174,13 +174,13 @@ void myos_schedule(void)
 void try_sched()
 {
 	rq_s			*this_rq = this_cpu_ptr(&runqueues);
-	myos_rq_s		myos_rq = this_rq->myos;
+	myos_rq_s		*myos_rq = &(this_rq->myos);
 	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
 	task_s			*curr_task = current;
 
-	unsigned long used_jiffies = jiffies - myos_rq.last_jiffies;
+	unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
 	// if running time out, make the need_schedule flag of current task
-	if (used_jiffies >= myos_rq.time_slice)
+	if (used_jiffies >= myos_rq->time_slice)
 		pcpu->current_task->flags |= PF_NEED_SCHEDULE;
 
 	// normal sched
