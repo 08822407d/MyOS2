@@ -35,63 +35,60 @@
 	 */
 	#define TOP_OF_KERNEL_STACK_PADDING	0
 
-	// /*
-	//  * low level task data that entry.S needs immediate access to
-	//  * - this struct should fit entirely inside of one cache line
-	//  * - this struct shares the supervisor stack pages
-	//  */
-	// #ifndef __ASSEMBLY__
-	// struct task_struct;
-	// #include <asm/cpufeature.h>
-	// #include <linux/atomic.h>
+	/*
+	 * low level task data that entry.S needs immediate access to
+	 * - this struct should fit entirely inside of one cache line
+	 * - this struct shares the supervisor stack pages
+	 */
+	#ifndef __ASSEMBLY__
+		struct task_struct;
+	#	include <asm/cpufeature.h>
+	#	include <linux/kernel/atomic.h>
 
-	// struct thread_info {
-	// 	unsigned long		flags;		/* low level flags */
-	// 	unsigned long		syscall_work;	/* SYSCALL_WORK_ flags */
-	// 	u32			status;		/* thread synchronous flags */
-	// #ifdef CONFIG_SMP
-	// 	u32			cpu;		/* current CPU */
-	// #endif
-	// };
+		typedef struct thread_info {
+			unsigned long	flags;		/* low level flags */
+			unsigned long	syscall_work;	/* SYSCALL_WORK_ flags */
+			u32				status;		/* thread synchronous flags */
+			u32				cpu;		/* current CPU */
+		} thread_info_s;
 
-	// #define INIT_THREAD_INFO(tsk)			\
-	// {						\
-	// 	.flags		= 0,			\
-	// }
+	#	define INIT_THREAD_INFO(tsk)	{	\
+					.flags		= 0,		\
+				}
 
-	// #else /* !__ASSEMBLY__ */
+	#else /* !__ASSEMBLY__ */
 
-	// #include <asm/asm-offsets.h>
+	// #	include <asm/asm-offsets.h>
 
-	// #endif
+	#endif
 
-	// /*
-	//  * thread information flags
-	//  * - these are process state flags that various assembly files
-	//  *   may need to access
-	//  */
-	// #define TIF_NOTIFY_RESUME	1	/* callback before returning to user */
-	// #define TIF_SIGPENDING		2	/* signal pending */
-	// #define TIF_NEED_RESCHED	3	/* rescheduling necessary */
-	// #define TIF_SINGLESTEP		4	/* reenable singlestep on user return*/
-	// #define TIF_SSBD		5	/* Speculative store bypass disable */
-	// #define TIF_SPEC_IB		9	/* Indirect branch speculation mitigation */
-	// #define TIF_SPEC_L1D_FLUSH	10	/* Flush L1D on mm switches (processes) */
-	// #define TIF_USER_RETURN_NOTIFY	11	/* notify kernel of userspace return */
-	// #define TIF_UPROBE		12	/* breakpointed or singlestepping */
-	// #define TIF_PATCH_PENDING	13	/* pending live patching update */
-	// #define TIF_NEED_FPU_LOAD	14	/* load FPU on return to userspace */
-	// #define TIF_NOCPUID		15	/* CPUID is not accessible in userland */
-	// #define TIF_NOTSC		16	/* TSC is not accessible in userland */
-	// #define TIF_NOTIFY_SIGNAL	17	/* signal notifications exist */
-	// #define TIF_MEMDIE		20	/* is terminating due to OOM killer */
-	// #define TIF_POLLING_NRFLAG	21	/* idle is polling for TIF_NEED_RESCHED */
-	// #define TIF_IO_BITMAP		22	/* uses I/O bitmap */
-	// #define TIF_SPEC_FORCE_UPDATE	23	/* Force speculation MSR update in context switch */
-	// #define TIF_FORCED_TF		24	/* true if TF in eflags artificially */
-	// #define TIF_BLOCKSTEP		25	/* set when we want DEBUGCTLMSR_BTF */
-	// #define TIF_LAZY_MMU_UPDATES	27	/* task is updating the mmu lazily */
-	// #define TIF_ADDR32		29	/* 32-bit address space on 64 bits */
+	/*
+	 * thread information flags
+	 * - these are process state flags that various assembly files
+	 *   may need to access
+	 */
+	#define TIF_NOTIFY_RESUME			1	/* callback before returning to user */
+	#define TIF_SIGPENDING				2	/* signal pending */
+	#define TIF_NEED_RESCHED			3	/* rescheduling necessary */
+	#define TIF_SINGLESTEP				4	/* reenable singlestep on user return*/
+	#define TIF_SSBD					5	/* Speculative store bypass disable */
+	#define TIF_SPEC_IB					9	/* Indirect branch speculation mitigation */
+	#define TIF_SPEC_L1D_FLUSH			10	/* Flush L1D on mm switches (processes) */
+	#define TIF_USER_RETURN_NOTIFY		11	/* notify kernel of userspace return */
+	#define TIF_UPROBE					12	/* breakpointed or singlestepping */
+	#define TIF_PATCH_PENDING			13	/* pending live patching update */
+	#define TIF_NEED_FPU_LOAD			14	/* load FPU on return to userspace */
+	#define TIF_NOCPUID					15	/* CPUID is not accessible in userland */
+	#define TIF_NOTSC					16	/* TSC is not accessible in userland */
+	#define TIF_NOTIFY_SIGNAL			17	/* signal notifications exist */
+	#define TIF_MEMDIE					20	/* is terminating due to OOM killer */
+	#define TIF_POLLING_NRFLAG			21	/* idle is polling for TIF_NEED_RESCHED */
+	#define TIF_IO_BITMAP				22	/* uses I/O bitmap */
+	#define TIF_SPEC_FORCE_UPDATE		23	/* Force speculation MSR update in context switch */
+	#define TIF_FORCED_TF				24	/* true if TF in eflags artificially */
+	#define TIF_BLOCKSTEP				25	/* set when we want DEBUGCTLMSR_BTF */
+	#define TIF_LAZY_MMU_UPDATES		27	/* task is updating the mmu lazily */
+	#define TIF_ADDR32					29	/* 32-bit address space on 64 bits */
 
 	// #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
 	// #define _TIF_SIGPENDING		(1 << TIF_SIGPENDING)

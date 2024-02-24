@@ -78,7 +78,7 @@
 	void LVT_timer_init(void);
 
 	/* arch_task.c */
-	void try_sched(void);
+	// void try_sched(void);
 
 	/* interrupt.c */
 	void excep_hwint_context(pt_regs_s *sf_regs);

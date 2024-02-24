@@ -107,6 +107,7 @@
         "spinlock.h": "c",
         "err.h": "c",
         "utils.h": "c",
-        "int-ll64.h": "c"
+        "int-ll64.h": "c",
+        "cpufeature.h": "c"
     }
 }

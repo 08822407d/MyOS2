@@ -73,7 +73,7 @@ void myos_init_per_cpu_var(void)
 	this_idle_thread->parent		= this_idle_thread;
 	this_idle_thread->__state		= TASK_RUNNING;
 	this_idle_thread->flags			= PF_KTHREAD;
-	this_idle_thread->rt.time_slice	= 20;
+	this_idle_thread->rt.time_slice	= 2;
 	this_idle_thread->se.vruntime	= -1;
 	this_idle_thread->mm			= &init_mm;
 	this_idle_thread->fs			= &idle_taskfs;

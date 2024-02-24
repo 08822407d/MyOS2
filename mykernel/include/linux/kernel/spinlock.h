@@ -56,7 +56,7 @@
 	#include <linux/kernel/linkage.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/irqflags.h>
-	// #include <linux/thread_info.h>
+	// #include <linux/sched/thread_info.h>
 	#include <linux/kernel/stringify.h>
 	// #include <linux/bottom_half.h>
 	// #include <linux/lockdep.h>

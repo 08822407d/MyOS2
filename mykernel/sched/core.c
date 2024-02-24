@@ -731,7 +731,7 @@ finish_task_switch(task_s *prev) __releases(rq->lock) {
 	 * running on another CPU and we could rave with its RUNNING -> DEAD
 	 * transition, resulting in a double drop.
 	 */
-	prev_state = READ_ONCE(prev->__state);
+	// prev_state = READ_ONCE(prev->__state);
 	// vtime_task_switch(prev);
 	// perf_event_task_sched_in(prev, current);
 	// finish_task(prev);
@@ -871,7 +871,7 @@ context_switch(rq_s *rq, task_s *prev,
 	switch_to(prev, next, prev);
 	barrier();
 
-	// return finish_task_switch(prev);
+	return finish_task_switch(prev);
 }
 
 
@@ -1074,7 +1074,8 @@ __schedule(unsigned int sched_mode) {
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
-	prev = rq->curr;
+	// prev = rq->curr;
+	prev = current;
 
 	schedule_debug(prev, !!sched_mode);
 
@@ -1112,7 +1113,7 @@ __schedule(unsigned int sched_mode) {
 	 * We must load prev->state once (task_struct::state is volatile), such
 	 * that we form a control dependency vs deactivate_task() below.
 	 */
-	prev_state = READ_ONCE(prev->__state);
+	// prev_state = READ_ONCE(prev->__state);
 	// if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
 	// 	if (signal_pending_state(prev_state, prev)) {
 	// 		WRITE_ONCE(prev->__state, TASK_RUNNING);
@@ -1147,7 +1148,7 @@ __schedule(unsigned int sched_mode) {
 	// }
 
 	next = pick_next_task(rq, prev, &rf);
-	// clear_tsk_need_resched(prev);
+	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
 
 	if (likely(prev != next)) {
@@ -1197,8 +1198,8 @@ asmlinkage __visible void __sched schedule(void)
 	// sched_submit_work(tsk);
 	do {
 		preempt_disable();
-		// __schedule(SM_NONE);
-		myos_schedule();
+		__schedule(SM_NONE);
+		// myos_schedule();
 		sched_preempt_enable_no_resched();
 	} while (need_resched());
 	// sched_update_worker(tsk);
@@ -1261,8 +1262,7 @@ preempt_schedule_common(void)
 		 */
 		preempt_disable_notrace();
 		// preempt_latency_start(1);
-		// __schedule(SM_PREEMPT);
-		myos_schedule();
+		__schedule(SM_PREEMPT);
 		// preempt_latency_stop(1);
 		preempt_enable_no_resched_notrace();
 

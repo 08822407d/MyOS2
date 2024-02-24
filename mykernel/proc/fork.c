@@ -91,7 +91,7 @@
 // #include <linux/sysctl.h>
 // #include <linux/kcov.h>
 // #include <linux/livepatch.h>
-// #include <linux/thread_info.h>
+// #include <linux/sched/thread_info.h>
 // #include <linux/stackleak.h>
 // #include <linux/kasan.h>
 // #include <linux/scs.h>
@@ -505,7 +505,7 @@ static task_s *dup_task_struct(task_s *orig, int node)
 
 	// setup_thread_stack(tsk, orig);
 	// clear_user_return_notifier(tsk);
-	// clear_tsk_need_resched(tsk);
+	clear_tsk_need_resched(tsk);
 	set_task_stack_end_magic(tsk);
 	// clear_syscall_work_syscall_user_dispatch(tsk);
 

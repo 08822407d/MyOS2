@@ -6,7 +6,7 @@
 	// #include <linux/instrumented.h>
 	#include <linux/kernel/minmax.h>
 	#include <linux/kernel/sched.h>
-	// #include <linux/thread_info.h>
+	// #include <linux/sched/thread_info.h>
 
 	#include <asm/uaccess.h>
 

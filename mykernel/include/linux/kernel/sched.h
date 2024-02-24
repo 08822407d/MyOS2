@@ -39,8 +39,7 @@
 
 	#include <linux/sched/fs_struct.h>
 	#include <linux/kernel/fdtable.h>
-
-	#define PF_NEED_SCHEDULE (1UL << 1)
+	#include <linux/sched/thread_info.h>
 
 
 	// /* task_struct member predeclarations (sorted alphabetically): */
@@ -783,15 +782,14 @@
 	typedef struct task_struct {
 		// myos obsolete contents
 		List_hdr_s		wait_childexit;
-		u64				total_jiffies;
 
 
 	// #ifdef CONFIG_THREAD_INFO_IN_TASK
-		// /*
-		// * For reasons of header soup (see current_thread_info()), this
-		// * must be the first element of task_struct.
-		// */
-		// struct thread_info thread_info;
+		/*
+		* For reasons of header soup (see current_thread_info()), this
+		* must be the first element of task_struct.
+		*/
+		thread_info_s	thread_info;
 	// #endif
 		unsigned int	__state;
 
@@ -1992,19 +1990,21 @@
 	// }
 	// extern unsigned long wait_task_inactive(task_s *, unsigned int match_state);
 
-	// /*
-	// * Set thread flags in other task's structures.
-	// * See asm/thread_info.h for TIF_xxxx flags available:
-	// */
-	// static inline void set_tsk_thread_flag(task_s *tsk, int flag)
-	// {
-	// 	set_ti_thread_flag(task_thread_info(tsk), flag);
-	// }
+	/*
+	 * Set thread flags in other task's structures.
+	 * See asm/thread_info.h for TIF_xxxx flags available:
+	 */
+	static inline void
+	set_tsk_thread_flag(task_s *tsk, int flag) {
+		// while (IS_INVAL_PTR(tsk));
+		set_bit(flag, &(tsk->thread_info.flags));
+	}
 
-	// static inline void clear_tsk_thread_flag(task_s *tsk, int flag)
-	// {
-	// 	clear_ti_thread_flag(task_thread_info(tsk), flag);
-	// }
+	static inline void
+	clear_tsk_thread_flag(task_s *tsk, int flag) {
+		// while (IS_INVAL_PTR(tsk));
+		clear_bit(flag, &(tsk->thread_info.flags));
+	}
 
 	// static inline void update_tsk_thread_flag(task_s *tsk, int flag,
 	// 										bool value)
@@ -2022,25 +2022,20 @@
 	// 	return test_and_clear_ti_thread_flag(task_thread_info(tsk), flag);
 	// }
 
-	// static inline int test_tsk_thread_flag(task_s *tsk, int flag)
-	// {
-	// 	return test_ti_thread_flag(task_thread_info(tsk), flag);
-	// }
+	static inline int
+	test_tsk_thread_flag(task_s *tsk, int flag) {
+		// while (IS_INVAL_PTR(tsk));
+		return arch_test_bit(flag, &(tsk->thread_info.flags));
+	}
 
-	// static inline void set_tsk_need_resched(task_s *tsk)
-	// {
-	// 	set_tsk_thread_flag(tsk, TIF_NEED_RESCHED);
-	// }
+	#define set_tsk_need_resched(tsk)	\
+				set_tsk_thread_flag(tsk, TIF_NEED_RESCHED)
 
-	// static inline void clear_tsk_need_resched(task_s *tsk)
-	// {
-	// 	clear_tsk_thread_flag(tsk, TIF_NEED_RESCHED);
-	// }
+	#define clear_tsk_need_resched(tsk)	\
+				clear_tsk_thread_flag(tsk, TIF_NEED_RESCHED)
 
-	// static inline int test_tsk_need_resched(task_s *tsk)
-	// {
-	// 	return unlikely(test_tsk_thread_flag(tsk, TIF_NEED_RESCHED));
-	// }
+	#define test_tsk_need_resched(tsk)	\
+				test_tsk_thread_flag(tsk, TIF_NEED_RESCHED)
 
 	// /*
 	// * cond_resched() and cond_resched_lock(): latency reduction via
@@ -2161,10 +2156,8 @@
 	// #endif
 	// }
 
-	static __always_inline bool need_resched(void) {
-		// return unlikely(tif_need_resched());
-		return false;
-	}
+	#define need_resched()	\
+				test_tsk_need_resched(current)
 
 	// /*
 	// * Wrappers for p->thread_info->cpu access. No-op on UP.

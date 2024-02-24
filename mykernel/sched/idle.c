@@ -6,7 +6,7 @@
  * (NOTE: these are not related to SCHED_IDLE batch scheduled
  *        tasks which are handled in sched/fair.c )
  */
-#include "sched.h"
+#include <linux/sched/sched.h>
 
 // #include <trace/events/power.h>
 
@@ -69,14 +69,14 @@ static void do_idle(void)
 	// 	arch_cpu_idle_exit();
 	// }
 
-	// /*
-	//  * Since we fell out of the loop above, we know TIF_NEED_RESCHED must
-	//  * be set, propagate it into PREEMPT_NEED_RESCHED.
-	//  *
-	//  * This is required because for polling idle loops we will not have had
-	//  * an IPI to fold the state for us.
-	//  */
-	// preempt_set_need_resched();
+	/*
+	 * Since we fell out of the loop above, we know TIF_NEED_RESCHED must
+	 * be set, propagate it into PREEMPT_NEED_RESCHED.
+	 *
+	 * This is required because for polling idle loops we will not have had
+	 * an IPI to fold the state for us.
+	 */
+	set_preempt_need_resched();
 	// tick_nohz_idle_exit();
 	// __current_clr_polling();
 
@@ -92,13 +92,10 @@ static void do_idle(void)
 	//  * critical section.
 	//  */
 	// flush_smp_call_function_from_idle();
-	// schedule_idle();
+	schedule_idle();
 
 	// if (unlikely(klp_patch_pending(current)))
 	// 	klp_update_patch_state(current);
-
-
-	asm volatile("hlt");
 }
 
 
@@ -110,7 +107,7 @@ void cpu_startup_entry()
 	// arch_cpu_idle_prepare();
 	// cpuhp_online_idle(state);
 
-	// preempt_enable();
+	preempt_enable();
 	while (1)
 		do_idle();
 }

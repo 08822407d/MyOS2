@@ -103,14 +103,6 @@ do_exit_again:
 /*==============================================================================================*
  *									schedule functions											*
  *==============================================================================================*/
-static __always_inline void myos_switch_mm(task_s * curr, task_s * target)
-{
-	load_cr3(target->mm->pgd);
-#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(target));
-#endif
-}
-
 void myos_schedule(void)
 {
 	rq_s			*this_rq = this_cpu_ptr(&runqueues);
@@ -149,7 +141,6 @@ void myos_schedule(void)
 		}
 
 		unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
-		curr_task->total_jiffies += used_jiffies;
 		if (curr_task != this_rq->idle)
 			curr_task->se.vruntime += used_jiffies;
 
@@ -158,36 +149,14 @@ void myos_schedule(void)
 
 		myos_rq->last_jiffies = jiffies;
 
-		curr_task->flags &= ~PF_NEED_SCHEDULE;
+		clear_tsk_need_resched(curr_task);
 
 		while (curr_task == next_task);
 		
-		// myos_switch_mm(curr_task, next_task);
 		switch_mm_irqs_off(curr_task->mm, next_task->mm, next_task);
 #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 		wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next_task));
 #endif
 		switch_to(curr_task, next_task, curr_task);
-	}
-}
-
-void try_sched()
-{
-	rq_s			*this_rq = this_cpu_ptr(&runqueues);
-	myos_rq_s		*myos_rq = &(this_rq->myos);
-	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
-	task_s			*curr_task = current;
-
-	unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
-	// if running time out, make the need_schedule flag of current task
-	if (used_jiffies >= myos_rq->time_slice)
-		pcpu->current_task->flags |= PF_NEED_SCHEDULE;
-
-	// normal sched
-	if (curr_task->flags & PF_NEED_SCHEDULE)
-	{
-		preempt_disable();
-		myos_schedule();
-		preempt_enable();
 	}
 }

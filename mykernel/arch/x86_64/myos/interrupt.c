@@ -125,7 +125,7 @@ void excep_hwint_context(pt_regs_s *sf_regs)
 	else
 		hwint_irq_handler(sf_regs);
 
-	try_sched();
+	schedule();
 }
 
 void exception_handler(pt_regs_s *sf_regs)

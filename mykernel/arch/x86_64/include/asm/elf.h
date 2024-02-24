@@ -4,10 +4,10 @@
 #ifndef _ASM_X86_ELF_H
 #define _ASM_X86_ELF_H
 
-	// /*
-	// * ELF register definitions..
-	// */
-	// #include <linux/thread_info.h>
+	/*
+	 * ELF register definitions..
+	 */
+	// #include <linux/sched/thread_info.h>
 
 	#include <asm/ptrace.h>
 	// #include <asm/user.h>

@@ -107,7 +107,7 @@
 
 	#include <linux/kernel/preempt.h>
 	#include <linux/compiler/compiler.h>
-	// #include <linux/thread_info.h>
+	// #include <linux/sched/thread_info.h>
 	#include <asm/smp.h>
 
 	// /*

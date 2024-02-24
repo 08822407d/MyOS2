@@ -27,7 +27,7 @@
 // #include <linux/swap.h>
 // #include <linux/pid_namespace.h>
 // #include <linux/notifier.h>
-// #include <linux/thread_info.h>
+// #include <linux/sched/thread_info.h>
 #include <linux/kernel/time.h>
 #include <linux/kernel/jiffies.h>
 // #include <linux/posix-timers.h>

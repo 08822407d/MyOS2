@@ -15,7 +15,7 @@
 #include <linux/mm/mm.h>
 #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
-// #include <linux/thread_info.h>
+// #include <linux/sched/thread_info.h>
 #include <linux/kernel/uaccess.h>
 
 #include <asm/page.h>

@@ -2331,7 +2331,7 @@
 	// }
 	// #endif
 
-	// extern void schedule_idle(void);
+	extern void schedule_idle(void);
 
 	// extern void sysrq_sched_debug_show(void);
 	// extern void sched_init_granularity(void);

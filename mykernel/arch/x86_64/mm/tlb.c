@@ -61,6 +61,9 @@ void switch_mm(mm_s *prev, mm_s *next, task_s*tsk)
 
 void switch_mm_irqs_off(mm_s *prev, mm_s *next, task_s *tsk)
 {
+	if (prev == next)
+		return;
+
 	// mm_s *real_prev = this_cpu_read(cpu_tlbstate.loaded_mm);
 	// u16 prev_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
 	// unsigned long new_lam = mm_lam_cr3_mask(next);

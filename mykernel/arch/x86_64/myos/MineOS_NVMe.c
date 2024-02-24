@@ -146,7 +146,7 @@ void NVMe_end_request(blkbuf_node_s *node)
 	// spin_lock(&req_lock);
 	wake_up_process(node->task);
 	req_in_using = NULL;
-	current->flags |= PF_NEED_SCHEDULE;
+	set_tsk_need_resched(current);
 	// spin_unlock_no_resched(&req_lock);
 }
 

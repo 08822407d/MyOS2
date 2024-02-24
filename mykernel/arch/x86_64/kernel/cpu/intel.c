@@ -7,7 +7,7 @@
 #include <linux/smp/smp.h>
 #include <linux/kernel/sched.h>
 #include <linux/sched/clock.h>
-// #include <linux/thread_info.h>
+// #include <linux/sched/thread_info.h>
 #include <linux/init/init.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/delay.h>

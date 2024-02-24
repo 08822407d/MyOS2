@@ -237,7 +237,8 @@
 		bool oldbit;
 
 		asm volatile(	"btq	%2,		%1	\n\t"
-					:	"=r"(oldbit)
+						"setc	%0			\n\t"
+					:	"=qm"(oldbit)
 					:	"m"(*(unsigned long *)addr),
 						"Ir"(nr)
 					:	"memory");
