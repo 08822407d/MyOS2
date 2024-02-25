@@ -77,6 +77,7 @@ static void do_idle(void)
 	 * an IPI to fold the state for us.
 	 */
 	set_preempt_need_resched();
+	set_tsk_need_resched(current);
 	// tick_nohz_idle_exit();
 	// __current_clr_polling();
 

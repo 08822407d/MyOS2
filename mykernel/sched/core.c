@@ -31,6 +31,19 @@
 #include <obsolete/glo.h>
 
 
+
+void update_rq_clock(rq_s *rq)
+{
+	s64 delta;
+
+	delta = local_clock() - rq->clock;
+	if (delta < 0)
+		return;
+	rq->clock += delta;
+}
+
+
+
 void set_task_cpu(task_s *p, unsigned int new_cpu)
 {
 // #ifdef CONFIG_SCHED_DEBUG
@@ -1105,7 +1118,7 @@ __schedule(unsigned int sched_mode) {
 
 	// /* Promote REQ to ACT */
 	// rq->clock_update_flags <<= 1;
-	// update_rq_clock(rq);
+	update_rq_clock(rq);
 
 	switch_count = &prev->nivcsw;
 

@@ -95,6 +95,7 @@
 
 	#include <linux/kernel/swait.h>
 	#include <linux/sched/debug.h>
+	#include <linux/sched/clock.h>
 	#include <linux/mm/mmu_context.h>
 
 
@@ -1415,7 +1416,7 @@
 	// }
 	// #endif
 
-	// extern void update_rq_clock(rq_s *rq);
+	extern void update_rq_clock(rq_s *rq);
 
 	// /*
 	//  * rq::clock_update_flags bits
