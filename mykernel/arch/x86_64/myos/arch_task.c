@@ -26,18 +26,9 @@
 #include <obsolete/arch_proto.h>
 #include <obsolete/device.h>
 
-#define	USER_CODE_ADDR		0x6000000
-#define USER_MEM_LENGTH		0x800000
-
-extern char		ist_stack0;
-
 #define LOAD_ELF
 
-extern int myos_exit_thread(task_s * new_task);
 
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/
 void kjmp_to_doexecve()
 {
 	// color_printk(BLUE, BLACK, "Hang Here\n");
@@ -80,6 +71,7 @@ static void exit_notify(void)
 	}
 }
 
+extern int myos_exit_thread(task_s * new_task);
 void __noreturn do_exit(long exit_code)
 {
 	pcpu_hot_s *pcpu = this_cpu_ptr(&pcpu_hot);
@@ -100,63 +92,61 @@ do_exit_again:
 	goto do_exit_again;
 }
 
-/*==============================================================================================*
- *									schedule functions											*
- *==============================================================================================*/
-void myos_schedule(void)
-{
-	rq_s			*this_rq = this_cpu_ptr(&runqueues);
-	myos_rq_s		*myos_rq = &(this_rq->myos);
-	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
-	task_s *		curr_task = pcpu->current_task;
-	task_s *		next_task = NULL;
-	// curr_task must exists
-	while (curr_task == NULL);
 
-	if (myos_rq->running_lhdr.count > 0)
-	{
-		// fetch a task from running_list
-		List_s * next_lp = list_hdr_pop(&myos_rq->running_lhdr);
-		while (next_lp == 0);
+// void myos_schedule(void)
+// {
+// 	rq_s			*this_rq = this_cpu_ptr(&runqueues);
+// 	myos_rq_s		*myos_rq = &(this_rq->myos);
+// 	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
+// 	task_s *		curr_task = pcpu->current_task;
+// 	task_s *		next_task = NULL;
+// 	// curr_task must exists
+// 	while (curr_task == NULL);
 
-		// and insert curr_task back to running_list
-		if (curr_task->__state == TASK_RUNNING)
-		{
-			if (curr_task == this_rq->idle)
-			{
-				// insert idle task to cpu's running-list tail
-				list_hdr_enqueue(&myos_rq->running_lhdr, &curr_task->tasks);
-			}
-			else
-			{
-				List_s * tmp_list = myos_rq->running_lhdr.header.next;
-				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, tasks)->se.vruntime) &&
-						tmp_list != &myos_rq->running_lhdr.header)
-				{
-					tmp_list = tmp_list->next;
-				}
-				list_insert_prev(tmp_list, &curr_task->tasks);
-				myos_rq->running_lhdr.count++;
-			}
-		}
+// 	if (myos_rq->running_lhdr.count > 0)
+// 	{
+// 		// fetch a task from running_list
+// 		List_s * next_lp = list_hdr_pop(&myos_rq->running_lhdr);
+// 		while (next_lp == 0);
 
-		unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
-		if (curr_task != this_rq->idle)
-			curr_task->se.vruntime += used_jiffies;
+// 		// and insert curr_task back to running_list
+// 		if (curr_task->__state == TASK_RUNNING)
+// 		{
+// 			if (curr_task == this_rq->idle)
+// 			{
+// 				// insert idle task to cpu's running-list tail
+// 				list_hdr_enqueue(&myos_rq->running_lhdr, &curr_task->tasks);
+// 			}
+// 			else
+// 			{
+// 				List_s * tmp_list = myos_rq->running_lhdr.header.next;
+// 				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, tasks)->se.vruntime) &&
+// 						tmp_list != &myos_rq->running_lhdr.header)
+// 				{
+// 					tmp_list = tmp_list->next;
+// 				}
+// 				list_insert_prev(tmp_list, &curr_task->tasks);
+// 				myos_rq->running_lhdr.count++;
+// 			}
+// 		}
 
-		next_task = container_of(next_lp, task_s, tasks);
-		myos_rq->time_slice = next_task->rt.time_slice;
+// 		unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
+// 		if (curr_task != this_rq->idle)
+// 			curr_task->se.vruntime += used_jiffies;
 
-		myos_rq->last_jiffies = jiffies;
+// 		next_task = container_of(next_lp, task_s, tasks);
+// 		myos_rq->time_slice = next_task->rt.time_slice;
 
-		clear_tsk_need_resched(curr_task);
+// 		myos_rq->last_jiffies = jiffies;
 
-		while (curr_task == next_task);
+// 		clear_tsk_need_resched(curr_task);
+
+// 		while (curr_task == next_task);
 		
-		switch_mm_irqs_off(curr_task->mm, next_task->mm, next_task);
-#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-		wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next_task));
-#endif
-		switch_to(curr_task, next_task, curr_task);
-	}
-}
+// 		switch_mm_irqs_off(curr_task->mm, next_task->mm, next_task);
+// #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
+// 		wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next_task));
+// #endif
+// 		switch_to(curr_task, next_task, curr_task);
+// 	}
+// }

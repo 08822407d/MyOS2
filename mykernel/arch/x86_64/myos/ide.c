@@ -156,12 +156,10 @@ void end_request(blkbuf_node_s *node)
 	if (node == NULL)
 		color_printk(RED, BLACK, "end_request error\n");
 
-	// complete(node->done);
-	// spin_lock(&req_lock);
-	wake_up_process(node->task);
+	complete(node->done);
+	spin_lock(&req_lock);
 	req_in_using = NULL;
-	set_tsk_need_resched(current);
-	// spin_unlock_no_resched(&req_lock);
+	spin_unlock(&req_lock);
 }
 
 void IDE_read_handler(unsigned long parameter)
@@ -280,18 +278,16 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 	{
 		node = IDE_make_request(controller, disk, cmd,
 							blk_idx, count, buffer);
-		// DECLARE_COMPLETION_ONSTACK(done);
-		// node->done = &done;
+		DECLARE_COMPLETION_ONSTACK(done);
+		node->done = &done;
 		node->task = current;
 
 		spin_lock(&req_lock);
 		list_hdr_enqueue(&IDEreq_lhdr, &node->req_list);
-		spin_unlock_no_resched(&req_lock);
+		spin_unlock(&req_lock);
 
-		__set_current_state(TASK_UNINTERRUPTIBLE);
 		wake_up_process(thread);
-		// wait_for_completion(&done);
-		schedule();
+		wait_for_completion(&done);
 
 		if (node->DevSpecParams != NULL)
 			kfree(node->DevSpecParams);

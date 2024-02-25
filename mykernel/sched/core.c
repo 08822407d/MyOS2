@@ -866,6 +866,7 @@ context_switch(rq_s *rq, task_s *prev,
 	// rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
 
 	// prepare_lock_switch(rq, next, rf);
+	rq->curr = next;
 
 	/* Here we just switch the register state and the stack. */
 	switch_to(prev, next, prev);
@@ -1074,8 +1075,7 @@ __schedule(unsigned int sched_mode) {
 
 	cpu = smp_processor_id();
 	rq = cpu_rq(cpu);
-	// prev = rq->curr;
-	prev = current;
+	prev = rq->curr;
 
 	schedule_debug(prev, !!sched_mode);
 

@@ -312,12 +312,10 @@ void XHCI_end_request(blkbuf_node_s *node)
 	__mb();
 
 
-	// complete(node->done);
-	// spin_lock(&req_lock);
-	wake_up_process(node->task);
+	complete(node->done);
+	spin_lock(&req_lock);
 	req_in_using = NULL;
-	set_tsk_need_resched(current);
-	// spin_unlock_no_resched(&req_lock);
+	spin_unlock(&req_lock);
 }
 
 void XHCI_read_handler(unsigned long parameter)
@@ -379,18 +377,16 @@ long XHCI_transfer(unsigned Slot_ID, unsigned DevCtx_Idx,
 		long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = XHCI_make_request(Slot_ID, DevCtx_Idx, cmd, blk_idx, count, buffer);
-	// DECLARE_COMPLETION_ONSTACK(done);
-	// node->done = &done;
+	DECLARE_COMPLETION_ONSTACK(done);
+	node->done = &done;
 	node->task = current;
 
 	spin_lock(&req_lock);
 	list_hdr_enqueue(&XHCIreq_lhdr, &node->req_list);
-	spin_unlock_no_resched(&req_lock);
+	spin_unlock(&req_lock);
 
-	__set_current_state(TASK_UNINTERRUPTIBLE);
 	wake_up_process(thread);
-	// wait_for_completion(&done);
-	schedule();
+	wait_for_completion(&done);
 
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)node->DevSpecParams;
 	if (node->DevSpecParams != NULL)
