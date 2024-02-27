@@ -463,6 +463,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 
 	list_init(&sbp->s_root->d_child, sbp->s_root);
 	list_hdr_init(&sbp->s_root->d_subdirs);
+	sbp->s_root->d_sb = sbp;
 	sbp->s_root->d_parent = sbp->s_root;
 	sbp->s_root->d_op = &vfat_dentry_ops;
 	sbp->s_root->d_name.name = (char *)kmalloc(2, GFP_KERNEL);

@@ -13,6 +13,9 @@ FILE *stderr;
 __attribute__((section(".crt1.text"))) void _start(int argc, const char * argv[])
 {
 	// void *malloctest = malloc(0x20000);
-
+	stdin = fopen("/dev/console", "r");
+	stdout = fopen("/dev/console", "w");
+	stderr = fopen("/dev/console", "w");
+	
 	exit(main(argc, argv));
 }

@@ -334,6 +334,8 @@ int kernel_init(void *unused)
 	 */
 	wait_for_completion(&kthreadd_done);
 
+extern void do_name(void);
+	do_name();
 	kernel_init_freeable();
 
 
@@ -342,7 +344,6 @@ int kernel_init(void *unused)
 	init_XHCIrqd();
 
 	scan_PCI_devices();
-	// do_name();
 	myos_ata_probe();
 	// scan_XHCI_devices();
 

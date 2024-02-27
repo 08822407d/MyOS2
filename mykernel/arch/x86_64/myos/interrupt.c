@@ -163,8 +163,6 @@ void hwint_irq_handler(pt_regs_s *regs)
 	int irq_nr = 0;
 	myos_irq_desc_s *irq_d = &irq_descriptors[vec];	
 
-	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
-
 	if(irq_d->handler != NULL)
 		irq_d->handler(irq_d->parameter, regs);
 	if(irq_d->controller != NULL && irq_d->controller->ack != NULL)
@@ -209,7 +207,6 @@ int unregister_irq(unsigned long irq)
 			p->controller->uninstall(irq);
 	}
 	
-
 	p->controller = 0;
 	p->irq_name = 0;
 	p->parameter = 0;

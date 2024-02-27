@@ -902,32 +902,6 @@ int vfs_mknod(inode_s *dir, dentry_s *dentry, umode_t mode, dev_t dev)
 /*==============================================================================================*
  *										fuctions for mkdir										*
  *==============================================================================================*/
-/**
- * vfs_mkdir - create directory
- * @mnt_userns:	user namespace of the mount the inode was found from
- * @dir:	inode of @dentry
- * @dentry:	pointer to dentry of the base directory
- * @mode:	mode of the new directory
- *
- * Create a directory.
- *
- * If the inode has been found through an idmapped mount the user namespace of
- * the vfsmount must be passed through @mnt_userns. This function will then take
- * care to map the inode according to @mnt_userns before checking permissions.
- * On non-idmapped mounts or if permission checking is to be performed on the
- * raw inode simply passs init_user_ns.
- */
-// int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
-// {
-// 	int error = -ENOENT;
-// 	if (!dir->i_op->mkdir)
-// 		return -EPERM;
-
-// 	mode &= (S_IRWXUGO|S_ISVTX);
-// 	error = dir->i_op->mkdir(dir, dentry, mode);
-// 	return error;
-// }
-
 long do_creatat(int dfd, filename_s *name, umode_t mode)
 {
 	dentry_s *dentry;
@@ -984,16 +958,16 @@ MYOS_SYSCALL_DEFINE2(creat, const char *, pathname, umode_t, mode)
  * On non-idmapped mounts or if permission checking is to be performed on the
  * raw inode simply passs init_user_ns.
  */
-// int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
-// {
-// 	int error = -ENOENT;
-// 	if (!dir->i_op->mkdir)
-// 		return -EPERM;
+int vfs_mkdir(inode_s *dir, dentry_s *dentry, umode_t mode)
+{
+	int error = -ENOENT;
+	if (!dir->i_op->mkdir)
+		return -EPERM;
 
-// 	mode &= (S_IRWXUGO|S_ISVTX);
-// 	error = dir->i_op->mkdir(dir, dentry, mode);
-// 	return error;
-// }
+	mode &= (S_IRWXUGO|S_ISVTX);
+	error = dir->i_op->mkdir(dir, dentry, mode);
+	return error;
+}
 
 long do_mkdirat(int dfd, filename_s *name, umode_t mode)
 {
