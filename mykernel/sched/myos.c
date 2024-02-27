@@ -7,10 +7,12 @@ static task_s *pick_next_task_myos(rq_s *rq)
 	retval = curr_task = current;
 
 	unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
+
 	// if running time out, make the need_schedule flag of current task
-	if ((used_jiffies >= myos_rq->time_slice &&
-		myos_rq->running_lhdr.count > 0) ||
-		curr_task->__state != TASK_RUNNING)
+	if ((curr_task == rq->idle ||
+		used_jiffies >= myos_rq->time_slice ||
+		curr_task->__state != TASK_RUNNING) &&
+		myos_rq->running_lhdr.count > 0)
 	{
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&myos_rq->running_lhdr);

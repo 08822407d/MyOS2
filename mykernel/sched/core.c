@@ -655,7 +655,6 @@ void wake_up_new_task(task_s *p)
 
 
 
-
 /**
  * prepare_task_switch - prepare to switch tasks
  * @rq: the runqueue preparing to switch
@@ -934,7 +933,7 @@ schedule_debug(task_s *prev, bool preempt) {
 
 	if (unlikely(in_atomic_preempt_off())) {
 		__schedule_bug(prev);
-		while (1);
+		// while (1);
 		preempt_count_set(PREEMPT_DISABLED);
 	}
 	// rcu_sleep_check();
@@ -1203,7 +1202,6 @@ asmlinkage __visible void __sched schedule(void)
 	do {
 		preempt_disable();
 		__schedule(SM_NONE);
-		// myos_schedule();
 		sched_preempt_enable_no_resched();
 	} while (need_resched());
 	// sched_update_worker(tsk);

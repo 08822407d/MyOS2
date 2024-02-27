@@ -92,10 +92,13 @@ static void do_idle(void)
 	//  * critical section.
 	//  */
 	// flush_smp_call_function_from_idle();
-	schedule_idle();
+	// schedule_idle();
 
 	// if (unlikely(klp_patch_pending(current)))
 	// 	klp_update_patch_state(current);
+
+
+	arch_halt();
 }
 
 

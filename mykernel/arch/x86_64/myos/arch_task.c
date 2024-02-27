@@ -150,3 +150,28 @@ do_exit_again:
 // 		switch_to(curr_task, next_task, curr_task);
 // 	}
 // }
+
+// void try_sched()
+// {
+// 	rq_s			*this_rq = this_cpu_ptr(&runqueues);
+// 	pcpu_hot_s		*pcpu = this_cpu_ptr(&pcpu_hot);
+// 	task_s			*curr_task = current;
+
+// 	unsigned long used_jiffies = jiffies - this_rq->last_jiffies;
+// 	// if running time out, make the need_schedule flag of current task
+// 	if (used_jiffies >= this_rq->time_slice)
+// 		pcpu->current_task->flags |= PF_NEED_SCHEDULE;
+
+// 	if ((curr_task == this_rq->idle) && (this_rq->running_lhdr.count == 0))
+// 		return;
+
+// 	if (((curr_task->__state == TASK_RUNNING) && !(curr_task->flags & PF_NEED_SCHEDULE)))
+// 		return;
+
+// 	if (preempt_count() != 0)
+// 		return;
+
+// 	// normal sched
+// 	if (curr_task->flags & PF_NEED_SCHEDULE)
+// 		schedule();
+// }
