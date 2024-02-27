@@ -14,9 +14,9 @@ myos_irq_desc_s	irq_descriptors[NR_VECTORS];
 /*==============================================================================================*
  *										exception handlers								 		*
  *==============================================================================================*/
-void excep_inval_tss(pt_regs_s *sf_regs)
+void excep_inval_tss(pt_regs_s *regs)
 {
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)regs->orig_ax;
 	color_printk(RED,BLACK,"do_invalid_TSS(10),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -39,9 +39,9 @@ void excep_inval_tss(pt_regs_s *sf_regs)
 	while (1);
 }
 
-void excep_seg_not_pres(pt_regs_s *sf_regs)
+void excep_seg_not_pres(pt_regs_s *regs)
 {
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)regs->orig_ax;
 	color_printk(RED,BLACK,"do_segment_not_present(11),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -63,9 +63,9 @@ void excep_seg_not_pres(pt_regs_s *sf_regs)
 	while (1);
 }
 
-void excep_stack_segfault(pt_regs_s *sf_regs)
+void excep_stack_segfault(pt_regs_s *regs)
 {
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)regs->orig_ax;
 	color_printk(RED,BLACK,"do_stack_segment_fault(12),ERROR_CODE:%#018lx\n",error_code);
 
 	if(error_code & 0x01)
@@ -87,10 +87,10 @@ void excep_stack_segfault(pt_regs_s *sf_regs)
 	while (1);
 }
 
-void excep_gen_prot(pt_regs_s *sf_regs)
+void excep_gen_prot(pt_regs_s *regs)
 {
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
-	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, sf_regs->ip);
+	unsigned long error_code = (unsigned long)regs->orig_ax;
+	color_printk(RED,BLACK,"do_general_protection(13),ERROR_CODE:%#018lx , code address:%#018lx\n",error_code, regs->ip);
 
 	if(error_code & 0x01)
 		color_printk(RED,BLACK,"The exception occurred during delivery of an event external to the program,such as an interrupt or an earlier exception.\n");
@@ -116,39 +116,39 @@ void excep_gen_prot(pt_regs_s *sf_regs)
  *											entrys									 			*
  *==============================================================================================*/
 extern void do_softirq(void);
-void excep_hwint_context(pt_regs_s *sf_regs)
+void excep_hwint_context(pt_regs_s *regs)
 {
-	unsigned long vec = (unsigned long)sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)regs->irq_nr;
 
 	if (vec < FIRST_EXTERNAL_VECTOR)
-		exception_handler(sf_regs);
+		exception_handler(regs);
 	else
-		hwint_irq_handler(sf_regs);
+		hwint_irq_handler(regs);
 
 	if (!in_atomic())
 		schedule();
 }
 
-void exception_handler(pt_regs_s *sf_regs)
+void exception_handler(pt_regs_s *regs)
 {
-	unsigned long vec = (unsigned long)sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)regs->irq_nr;
 
 	switch (vec)
 	{
 	case INVAL_TSS_VEC:
-		excep_inval_tss(sf_regs);
+		excep_inval_tss(regs);
 		break;
 	case SEG_NOT_PRES_VEC:
-		excep_seg_not_pres(sf_regs);
+		excep_seg_not_pres(regs);
 		break;
 	case STACK_SEGFAULT_VEC:
-		excep_stack_segfault(sf_regs);
+		excep_stack_segfault(regs);
 		break;
 	case GEN_PROT_VEC:
-		excep_gen_prot(sf_regs);
+		excep_gen_prot(regs);
 		break;
 	case PAGE_FAULT_VEC:
-		exc_page_fault(sf_regs, sf_regs->orig_ax);
+		exc_page_fault(regs, regs->orig_ax);
 		break;
 
 	default:
@@ -157,16 +157,16 @@ void exception_handler(pt_regs_s *sf_regs)
 	}
 }
 
-void hwint_irq_handler(pt_regs_s *sf_regs)
+void hwint_irq_handler(pt_regs_s *regs)
 {
-	unsigned long vec = (unsigned long)sf_regs->irq_nr;
+	unsigned long vec = (unsigned long)regs->irq_nr;
 	int irq_nr = 0;
 	myos_irq_desc_s *irq_d = &irq_descriptors[vec];	
 
 	// color_printk(WHITE, BLUE,"Recieved by core-%d INTR: 0x%02x - %s ; ", cpudata_p->cpu_idx, vec, irq_descriptors[irq_nr].irq_name);
 
 	if(irq_d->handler != NULL)
-		irq_d->handler(irq_d->parameter, sf_regs);
+		irq_d->handler(irq_d->parameter, regs);
 	if(irq_d->controller != NULL && irq_d->controller->ack != NULL)
 		irq_d->controller->ack(irq_nr);
 }
@@ -179,7 +179,7 @@ int register_irq(unsigned long irq,
 				 char *irq_name,
 				 unsigned long parameter,
 				 hw_int_controller_s *controller,
-				 void (*handler)(unsigned long parameter, pt_regs_s *sf_regs))
+				 void (*handler)(unsigned long parameter, pt_regs_s *regs))
 {
 	myos_irq_desc_s *p = &irq_descriptors[irq];
 	p->controller = controller;
@@ -235,8 +235,8 @@ void myos_init_percpu_intr()
 }
 
 // __attribute__ ((interrupt)) __attribute__ ((target("general-regs-only")))
-// void intr_call_test(pt_regs_s *sf_regs, unsigned long errcode)
+// void intr_call_test(pt_regs_s *regs, unsigned long errcode)
 // {
-// 	sf_regs->irq_nr = 14;
-// 	excep_hwint_context(sf_regs);
+// 	regs->irq_nr = 14;
+// 	excep_hwint_context(regs);
 // }

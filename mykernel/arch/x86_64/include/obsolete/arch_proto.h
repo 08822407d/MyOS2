@@ -81,16 +81,16 @@
 	// void try_sched(void);
 
 	/* interrupt.c */
-	void excep_hwint_context(pt_regs_s *sf_regs);
-	void exception_handler(pt_regs_s *sf_regs);
-	void hwint_irq_handler(pt_regs_s *sf_regs);
+	void excep_hwint_context(pt_regs_s *regs);
+	void exception_handler(pt_regs_s *regs);
+	void hwint_irq_handler(pt_regs_s *regs);
 	int register_irq(unsigned long irq, void * arg, char * irq_name,
 			unsigned long parameter, hw_int_controller_s * controller,
-			void (*handler)(unsigned long parameter, pt_regs_s *sf_regs));
+			void (*handler)(unsigned long parameter, pt_regs_s *regs));
 	int unregister_irq(unsigned long irq);
 	int register_IPI(unsigned long irq, void * arg, char * irq_name,
 			unsigned long parameter, hw_int_controller_s * controller,
-			void (*handler)(unsigned long parameter, pt_regs_s *sf_regs));
+			void (*handler)(unsigned long parameter, pt_regs_s *regs));
 	int unregister_IPI(unsigned long irq);
 	void myos_init_bsp_intr(void);
 	void myos_init_percpu_intr(void);

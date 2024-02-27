@@ -540,13 +540,8 @@
 
 	// static inline int __on_sig_stack(unsigned long sp)
 	// {
-	// #ifdef CONFIG_STACK_GROWSUP
-	// 	return sp >= current->sas_ss_sp &&
-	// 		sp - current->sas_ss_sp < current->sas_ss_size;
-	// #else
 	// 	return sp > current->sas_ss_sp &&
 	// 		sp - current->sas_ss_sp <= current->sas_ss_size;
-	// #endif
 	// }
 
 	// /*
@@ -587,11 +582,7 @@
 	// static inline unsigned long sigsp(unsigned long sp, struct ksignal *ksig)
 	// {
 	// 	if (unlikely((ksig->ka.sa.sa_flags & SA_ONSTACK)) && ! sas_ss_flags(sp))
-	// #ifdef CONFIG_STACK_GROWSUP
-	// 		return current->sas_ss_sp;
-	// #else
 	// 		return current->sas_ss_sp + current->sas_ss_size;
-	// #endif
 	// 	return sp;
 	// }
 

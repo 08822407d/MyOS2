@@ -558,7 +558,7 @@ static void wrmsrl_cstar(unsigned long val) {
 void syscall_init(void)
 {
 #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-	// init MSR sf_regs related to sysenter/sysexit
+	// init MSR regs related to sysenter/sysexit
 	wrmsrl(MSR_IA32_SYSENTER_CS, __KERNEL_CS);
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
 	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task_top_of_stack(current));

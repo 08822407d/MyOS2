@@ -321,7 +321,7 @@ hw_int_controller_s ATA_disk_ioapic_controller =
 	.ack		= IOAPIC_edge_ack,
 };
 
-void ATA_disk_handler(unsigned long parameter, pt_regs_s *sf_regs)
+void ATA_disk_handler(unsigned long parameter, pt_regs_s *regs)
 {
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler((unsigned long)node);

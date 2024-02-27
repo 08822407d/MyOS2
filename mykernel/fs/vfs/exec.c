@@ -119,14 +119,6 @@ static page_s
 // 	int ret;
 // 	unsigned int gup_flags = FOLL_FORCE;
 
-// #ifdef CONFIG_STACK_GROWSUP
-// 	if (write) {
-// 		ret = expand_downwards(bprm->vma, pos);
-// 		if (ret < 0)
-// 			return NULL;
-// 	}
-// #endif
-
 // 	if (write)
 // 		gup_flags |= FOLL_WRITE;
 
@@ -510,25 +502,6 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	unsigned long stack_expand;
 	// unsigned long rlim_stack;
 
-// #ifdef CONFIG_STACK_GROWSUP
-	// /* Limit stack size */
-	// stack_base = bprm->rlim_stack.rlim_max;
-
-	// stack_base = calc_max_stack_size(stack_base);
-
-	// /* Add space for stack randomization. */
-	// stack_base += (STACK_RND_MASK << PAGE_SHIFT);
-
-	// /* Make sure we didn't let the argument array grow too large. */
-	// if (vma->vm_end - vma->vm_start > stack_base)
-	// 	return -ENOMEM;
-
-	// stack_base = PAGE_ALIGN(stack_top - stack_base);
-
-	// stack_shift = vma->vm_start - stack_base;
-	// mm->arg_start = bprm->p - stack_shift;
-	// bprm->p = vma->vm_end - stack_shift;
-// #else
 	// stack_top = arch_align_stack(stack_top);
 	stack_top = PAGE_ALIGN(stack_top);
 
@@ -540,7 +513,6 @@ int setup_arg_pages(linux_bprm_s *bprm,
 
 	// bprm->p -= stack_shift;
 	mm->arg_start = bprm->p;
-// #endif
 
 	// if (bprm->loader)
 	// 	bprm->loader -= stack_shift;

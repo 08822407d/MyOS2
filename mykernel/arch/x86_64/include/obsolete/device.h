@@ -15,7 +15,7 @@
 
 	/* keyboard.c */
 	void init_keyboard(void);
-	void keyboard_handler(unsigned long param, pt_regs_s * sf_regs);
+	void keyboard_handler(unsigned long param, pt_regs_s * regs);
 	char kbd_parse_scancode(void);
 
 	/* clock.c, HPET.c */

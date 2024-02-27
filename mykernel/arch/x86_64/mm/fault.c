@@ -78,10 +78,10 @@ finish:
 
 
 static void
-parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
+parse_PF_errcode(pt_regs_s *regs, unsigned long cr2, char *buf)
 {
 	char tempbuf[100];
-	unsigned long error_code = (unsigned long)sf_regs->orig_ax;
+	unsigned long error_code = (unsigned long)regs->orig_ax;
 
 	memset(tempbuf, 0, 100);
 	snprintf(tempbuf, 45, "do_page_fault(14),ERROR_CODE: %#018lx", error_code);
@@ -108,7 +108,7 @@ parse_PF_errcode(pt_regs_s *sf_regs, unsigned long cr2, char *buf)
 
 	memset(tempbuf, 0, 100);
 	snprintf(tempbuf, 100, "Code address: %#018lx, CR2:%#018lx\n",
-				sf_regs->ip, cr2);
+				regs->ip, cr2);
 	strcat(buf, tempbuf);
 }
 

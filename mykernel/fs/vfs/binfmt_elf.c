@@ -110,6 +110,9 @@ set_brk(unsigned long start, unsigned long end, int prot)
 }
 
 
+#define STACK_ROUND(sp, items) \
+			(((unsigned long) (sp - items)) &~ 15UL)
+
 #ifndef ELF_BASE_PLATFORM
 /*
  * AT_BASE_PLATFORM indicates the "real" hardware/microarchitecture.
@@ -128,14 +131,14 @@ create_elf_tables(linux_bprm_s *bprm,
 	unsigned long p = bprm->p;
 	int argc = bprm->argc;
 	int envc = bprm->envc;
-	elf_addr_t __user *sp;
+	elf_addr_t __user *sp = (void *)p;
 	// elf_addr_t __user *u_platform;
 	// elf_addr_t __user *u_base_platform;
 	// elf_addr_t __user *u_rand_bytes;
 	// const char *k_platform = ELF_PLATFORM;
 	// const char *k_base_platform = ELF_BASE_PLATFORM;
 	// unsigned char k_rand_bytes[16];
-	// int items;
+	int items;
 	// elf_addr_t *elf_info;
 	// elf_addr_t flags = 0;
 	// int ei_index;
@@ -248,17 +251,11 @@ create_elf_tables(linux_bprm_s *bprm,
 	// ei_index = elf_info - (elf_addr_t *)mm->saved_auxv;
 	// sp = STACK_ADD(p, ei_index);
 
-	// items = (argc + 1) + (envc + 1) + 1;
-	// bprm->p = STACK_ROUND(sp, items);
+	items = (argc + 1) + (envc + 1) + 1;
+	bprm->p = STACK_ROUND(sp, items);
 
 	// /* Point sp at the lowest address on the stack */
-// #ifdef CONFIG_STACK_GROWSUP
-// 	sp = (elf_addr_t __user *)bprm->p - items - ei_index;
-// 	bprm->exec = (unsigned long)sp; /* XXX: PARISC HACK */
-// #else
 	sp = (elf_addr_t __user *)bprm->p;
-// #endif
-
 
 	// /*
 	//  * Grow the stack manually; some architectures have a limit on how
@@ -927,8 +924,8 @@ out_free_interp:
 	// 	goto out;
 // #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
 
-	// retval = create_elf_tables(bprm, elf_ex, interp_load_addr,
-	// 			   e_entry, phdr_addr);
+	retval = create_elf_tables(bprm, elf_ex,
+					interp_load_addr, e_entry, phdr_addr);
 	// if (retval < 0)
 	// 	goto out;
 

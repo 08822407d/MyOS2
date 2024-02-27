@@ -429,7 +429,7 @@ hw_int_controller_s HPET_int_controller =
 };
 
 extern void do_timer(unsigned long ticks);
-void HPET_handler(unsigned long parameter, pt_regs_s * sf_regs)
+void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 {
 	jiffies++;
 	do_timer(1);

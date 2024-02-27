@@ -29,7 +29,7 @@ hw_int_controller_s LVT_timer_int_controller =
 	.ack		= LVT_timer_ack,
 };
 
-void LVT_timer_handler(unsigned long parameter, pt_regs_s *sf_regs)
+void LVT_timer_handler(unsigned long parameter, pt_regs_s *regs)
 {
 	lvt_count++;
 	if ((lvt_count % SCALE) == 0)

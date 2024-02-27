@@ -81,7 +81,7 @@ void keyboard_exit()
 	kfree((unsigned long *)p_kb);
 }
 
-void keyboard_handler(unsigned long param, pt_regs_s * sf_regs)
+void keyboard_handler(unsigned long param, pt_regs_s * regs)
 {
 	unsigned char x;
 	x = inb(0x60);

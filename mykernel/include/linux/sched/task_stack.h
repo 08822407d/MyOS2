@@ -49,11 +49,7 @@
 	// */
 	// static inline unsigned long *end_of_stack(task_s *p)
 	// {
-	// #ifdef CONFIG_STACK_GROWSUP
-	// 	return (unsigned long *)((unsigned long)task_thread_info(p) + THREAD_SIZE) - 1;
-	// #else
 	// 	return (unsigned long *)(task_thread_info(p) + 1);
-	// #endif
 	// }
 
 	// #endif
@@ -93,18 +89,10 @@
 	// 	unsigned long *n = end_of_stack(p);
 
 	// 	do { 	/* Skip over canary */
-	// # ifdef CONFIG_STACK_GROWSUP
-	// 		n--;
-	// # else
 	// 		n++;
-	// # endif
 	// 	} while (!*n);
 
-	// # ifdef CONFIG_STACK_GROWSUP
-	// 	return (unsigned long)end_of_stack(p) - (unsigned long)n;
-	// # else
 	// 	return (unsigned long)n - (unsigned long)end_of_stack(p);
-	// # endif
 	// }
 	// #endif
 	// extern void set_task_stack_end_magic(task_s *tsk);
