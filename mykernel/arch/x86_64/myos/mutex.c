@@ -23,7 +23,7 @@ void lock_recurs_lock(recurs_lock_T * lock)
 		owner = lock->owner;
 		if (lock->owner == NULL)
 			lock->owner = current;
-		spin_unlock_no_resched(&lock->selflock);
+		spin_unlock(&lock->selflock);
 	} while(owner != current);
 	lock->counter++;
 }

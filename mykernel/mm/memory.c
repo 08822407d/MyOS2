@@ -1668,7 +1668,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(new);
-	// spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1690,7 +1690,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	} else {	/* Another has populated it */
 		pmd_free(new);
 	}
-	// spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1707,7 +1707,7 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
 	} else {	/* Another has populated it */
 		pte_free(new);
 	}
-	// spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 

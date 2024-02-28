@@ -14,6 +14,9 @@ static task_s *pick_next_task_myos(rq_s *rq)
 		curr_task->__state != TASK_RUNNING) &&
 		myos_rq->running_lhdr.count > 0)
 	{
+		BUG_ON(curr_task->__state != TASK_RUNNING &&
+				myos_rq->running_lhdr.count <= 0);
+
 		// fetch a task from running_list
 		List_s * next_lp = list_hdr_pop(&myos_rq->running_lhdr);
 		while (next_lp == 0);
@@ -50,6 +53,6 @@ static task_s *pick_next_task_myos(rq_s *rq)
 	return retval;
 }
 
-DEFINE_SCHED_CLASS(myos) = {
+DEFINE_SCHED_CLASS(myos_timeslice) = {
 	.pick_next_task = pick_next_task_myos,
 };
