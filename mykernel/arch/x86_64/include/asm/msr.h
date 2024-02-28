@@ -50,7 +50,7 @@
 	/*
 	 * Be very careful with includes. This header is prone to include loops.
 	 */
-	#	include <asm/atomic.h>
+	#	include <asm/lock_ipc.h>
 	// #include <linux/tracepoint-defs.h>
 
 	// #	ifdef CONFIG_TRACEPOINTS

@@ -5,7 +5,7 @@
 	#include <linux/kernel/preempt.h>
 	#include <linux/kernel/irqflags.h>
 
-	#include <asm/spinlock.h>
+	#include <asm/lock_ipc.h>
 
 	#include "simple_spinlock_types.h"
 

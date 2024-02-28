@@ -50,31 +50,17 @@
 	 *
 	 *  linux/spinlock.h:     builds the final spin_*() APIs.
 	 */
+	#include <asm/lock_ipc.h>
 
-	#include <linux/kernel/linkage.h>
-	#include <linux/compiler/compiler.h>
-	#include <linux/kernel/stringify.h>
-	#include <asm/barrier.h>
-
-
-	/*
-	 * Pull the arch_spinlock_t and arch_rwlock_t definitions:
-	 */
 	#include "spinlock/simple_spinlock_types.h"
+	#include "spinlock/simple_spinlock_smp.h"
+
 
 	/*
 	 * Pull the arch_spin*() functions/declarations (UP-nondebug doesn't need them):
 	 */
-	#include <asm/spinlock.h>
-
 	#define raw_spin_lock_init(lock)	arch_spin_init(lock)
 	#define raw_spin_is_locked(lock)	arch_spin_is_locked(lock)
-
-	// #ifdef arch_spin_is_contended
-	// #	define raw_spin_is_contended(lock)	arch_spin_is_contended(&(lock)->raw_lock)
-	// #else
-	// #	define raw_spin_is_contended(lock)	(((void)(lock), 0))
-	// #endif /*arch_spin_is_contended*/
 
 	/*
 	 * smp_mb__after_spinlock() provides the equivalent of a full memory barrier
@@ -127,11 +113,6 @@
 	 *
 	 * Architectures that can implement ACQUIRE better need to take care.
 	 */
-
-	/*
-	 * Pull the _spin_*()/_read_*()/_write_*() functions/declarations:
-	 */
-	#include "spinlock/simple_spinlock_smp.h"
 
 	/* Non PREEMPT_RT kernel, map to raw spinlocks: */
 
@@ -195,68 +176,5 @@
 	// 			raw_spin_trylock_irqsave(spinlock_check(lock), flags);	\
 	// 		})
 
-	// /**
-	//  * spin_is_locked() - Check whether a spinlock is locked.
-	//  * @lock: Pointer to the spinlock.
-	//  *
-	//  * This function is NOT required to provide any memory ordering
-	//  * guarantees; it could be used for debugging purposes or, when
-	//  * additional synchronization is needed, accompanied with other
-	//  * constructs (memory barriers) enforcing the synchronization.
-	//  *
-	//  * Returns: 1 if @lock is locked, 0 otherwise.
-	//  *
-	//  * Note that the function only tells you that the spinlock is
-	//  * seen to be locked, not that it is locked on your CPU.
-	//  *
-	//  * Further, on CONFIG_SMP=n builds with CONFIG_DEBUG_SPINLOCK=n,
-	//  * the return value is always 0 (see include/linux/spinlock_up.h).
-	//  * Therefore you should not rely heavily on the return value.
-	//  */
-	// static __always_inline int spin_is_locked(spinlock_t *lock) {
-	// 	return raw_spin_is_locked(&lock->rlock);
-	// }
-
-	// static __always_inline int spin_is_contended(spinlock_t *lock) {
-	// 	return raw_spin_is_contended(&lock->rlock);
-	// }
-
-	// #define assert_spin_locked(lock)	assert_raw_spin_locked(&(lock)->rlock)
-
-	// /*
-	//  * Pull the atomic_t declaration:
-	//  * (asm-mips/atomic.h needs above definitions)
-	//  */
-	// #
-	// /**
-	//  * atomic_dec_and_lock - lock on reaching reference count zero
-	//  * @atomic: the atomic counter
-	//  * @lock: the spinlock in question
-	//  *
-	//  * Decrements @atomic by 1.  If the result is 0, returns true and locks
-	//  * @lock.  Returns false for all other cases.
-	//  */
-	// extern int _atomic_dec_and_lock(atomic_t *atomic, spinlock_t *lock);
-	// #define atomic_dec_and_lock(atomic, lock) \
-	// 			__cond_lock(lock, _atomic_dec_and_lock(atomic, lock))
-
-	// extern int _atomic_dec_and_lock_irqsave(atomic_t *atomic,
-	// 		spinlock_t *lock, unsigned long *flags);
-	// #define atomic_dec_and_lock_irqsave(atomic, lock, flags) \
-	// 			__cond_lock(lock, _atomic_dec_and_lock_irqsave(atomic, lock, &(flags)))
-
-	// int __alloc_bucket_spinlocks(spinlock_t **locks, unsigned int *lock_mask,
-	// 		size_t max_size, unsigned int cpu_mult, gfp_t gfp, const char *name,
-	// 		struct lock_class_key *key);
-
-	// #define alloc_bucket_spinlocks(locks, lock_mask, max_size, cpu_mult, gfp) ({	\
-	// 			static struct lock_class_key key;									\
-	// 			int ret;															\
-	// 			ret = __alloc_bucket_spinlocks(locks, lock_mask, max_size,			\
-	// 					cpu_mult, gfp, #locks, &key);								\
-	// 			ret;																\
-	// 		})
-
-	// void free_bucket_spinlocks(spinlock_t *locks);
 
 #endif /* __LINUX_SPINLOCK_H */

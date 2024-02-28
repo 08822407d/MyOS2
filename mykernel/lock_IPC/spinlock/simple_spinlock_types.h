@@ -8,8 +8,7 @@
 	 * portions Copyright 2005, Red Hat, Inc., Ingo Molnar
 	 * Released under the General Public License (GPL).
 	 */
-
-	#include <asm/spinlock_types.h>
+	#include <asm/lock_ipc.h>
 
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
 	typedef arch_spinlock_t spinlock_t;

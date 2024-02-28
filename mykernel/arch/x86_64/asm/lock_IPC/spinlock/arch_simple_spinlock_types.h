@@ -4,7 +4,6 @@
 
 	#include <linux/kernel/types.h>
 
-	// #include <asm-generic/tspinlock_types.h>
 	typedef struct tspinlock {
 		union {
 			atomic64_t	val;
@@ -23,7 +22,5 @@
 				.head = 0U,					\
 				.tail = 0U,					\
 			}
-
-	// #include <asm-generic/qrwlock_types.h>
 
 #endif /* _ASM_X86_SPINLOCK_TYPES_H */

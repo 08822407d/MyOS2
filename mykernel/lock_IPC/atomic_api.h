@@ -5,8 +5,11 @@
 
 	#include <linux/kernel/types.h>
 
-	#include <asm/atomic.h>
+	#include <asm/lock_ipc.h>
 	#include <asm/barrier.h>
+
+	#include "atomic/simple_atomic.h"
+	#include "atomic/simple_atomic-long.h"
 
 	// /*
 	//  * Relaxed variants of xchg, cmpxchg and some atomic operations.
@@ -76,8 +79,64 @@
 	// 			__ret;								\
 	// 		})
 
-	// #include <linux/kernel/atomic/atomic-arch-fallback.h>
-	#include "atomic/atomic-long.h"
-	#include "atomic/atomic-instrumented.h"
+	#define arch_atomic_long_read(v)	\
+				arch_atomic64_read(v)
+
+	#define arch_atomic_long_set(v ,i)	\
+				arch_atomic64_set(v, i)
+
+	#define arch_atomic_long_add(i, v)	\
+				arch_atomic64_add(i, v)
+
+	#define arch_atomic_long_add_return(i, v)	\
+				arch_atomic64_add_return(i, v)
+
+	#define arch_atomic_long_fetch_add(i, v)	\
+				arch_atomic64_fetch_add(i, v)
+
+	#define arch_atomic_long_sub(i, v)	\
+				arch_atomic64_sub(i, v)
+
+	#define arch_atomic_long_sub_return(i, v)	\
+				arch_atomic64_sub_return(i, v)
+
+	#define arch_atomic_long_fetch_sub(i, v)	\
+				arch_atomic64_fetch_sub(i, v)
+
+	#define arch_atomic_long_inc(v)	\
+				arch_atomic64_inc(v)
+
+	#define arch_atomic_long_dec(v)	\
+				arch_atomic64_dec(v)
+
+	#define arch_atomic_long_and(i, v)	\
+				arch_atomic64_and(i, v)
+
+	#define arch_atomic_long_or(i, v)	\
+				arch_atomic64_or(i, v)
+
+	#define arch_atomic_long_xor(i, v)	\
+				arch_atomic64_xor(i, v)
+
+	#define arch_atomic_long_xchg(v, new)	\
+				arch_atomic64_xchg(v, new)
+
+	#define arch_atomic_long_cmpxchg(v, old, new)	\
+				arch_atomic64_cmpxchg(v, old, new)
+
+	#define arch_atomic_long_try_cmpxchg(v, old, new)	\
+				arch_atomic64_try_cmpxchg(v, old, new)
+
+	#define arch_atomic_long_sub_and_test(i, v)	\
+				arch_atomic64_sub_and_test(i, v)
+
+	#define arch_atomic_long_dec_and_test(v)	\
+				arch_atomic64_dec_and_test(v)
+
+	#define arch_atomic_long_inc_and_test(v)	\
+				arch_atomic64_inc_and_test(v)
+
+	#define arch_atomic_long_add_negative(i, v)	\
+				arch_atomic64_add_negative(i, v)
 
 #endif /* _LINUX_ATOMIC_H */

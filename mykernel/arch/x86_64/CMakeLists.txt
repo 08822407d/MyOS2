@@ -14,4 +14,5 @@ add_subdirectory(pci)
 
 
 add_subdirectory(smp)
+add_subdirectory(asm)
 add_subdirectory(myos)

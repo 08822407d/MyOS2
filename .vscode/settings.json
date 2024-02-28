@@ -113,6 +113,10 @@
         "barrier.h": "c",
         "simple_spinlock_smp.h": "c",
         "spinlock_api.h": "c",
-        "setup.h": "c"
+        "setup.h": "c",
+        "alternative.h": "c",
+        "myos_optimize_option.h": "c",
+        "atomic-long.h": "c",
+        "arch_simple_atomic.h": "c"
     }
 }
