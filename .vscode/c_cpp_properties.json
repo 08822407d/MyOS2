@@ -4,6 +4,7 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/mylib/include",
+                "${workspaceFolder}/mykernel",
                 "${workspaceFolder}/mykernel/arch",
                 "${workspaceFolder}/mykernel/arch/x86_64/include",
                 "${workspaceFolder}/mykernel/include",

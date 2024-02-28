@@ -3,12 +3,15 @@
 #define _ASM_X86_SPINLOCK_H
 
 	// #include <linux/jump_label.h>
-	#include <linux/kernel/atomic.h>
 	#include <asm/page.h>
 	#include <asm/processor.h>
 	#include <linux/compiler/compiler.h>
 	// #include <asm/paravirt.h>
 	#include <asm/bitops.h>
+
+	#include "spinlock_types.h"
+
+	#include <linux/kernel/lock_ipc.h>
 
 	// #include <asm/tspinlock.h>
 	/* Function prototypes */

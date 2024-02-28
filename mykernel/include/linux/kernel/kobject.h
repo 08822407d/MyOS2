@@ -20,11 +20,11 @@
 	// #include <linux/sysfs.h>
 	#include <linux/compiler/compiler.h>
 	// #include <linux/container_of.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	// #include <linux/kref.h>
 	// #include <linux/kobject_ns.h>
 	// #include <linux/wait.h>
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/kernel/workqueue.h>
 	#include <linux/kernel/uidgid.h>
 

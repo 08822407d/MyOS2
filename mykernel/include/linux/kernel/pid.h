@@ -6,7 +6,7 @@
 	// #include <linux/wait.h>
 	// #include <linux/refcount.h>
 
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 
 	enum pid_type
 	{

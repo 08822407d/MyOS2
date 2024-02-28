@@ -3,7 +3,7 @@
 #define _TIMEKEEPING_INTERNAL_H
 
 	#include <linux/kernel/clocksource.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	#include <linux/kernel/time.h>
 
 	/*

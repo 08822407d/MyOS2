@@ -7,7 +7,7 @@
 	// #include <linux/auxvec.h>
 	// #include <linux/kref.h>
 	#include <linux/lib/list.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	// #include <linux/rbtree.h>
 	// #include <linux/rwsem.h>
 	#include <linux/kernel/completion.h>

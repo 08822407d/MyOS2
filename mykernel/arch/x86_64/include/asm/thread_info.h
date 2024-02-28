@@ -43,7 +43,6 @@
 	#ifndef __ASSEMBLY__
 		struct task_struct;
 	#	include <asm/cpufeature.h>
-	#	include <linux/kernel/atomic.h>
 
 		typedef struct thread_info {
 			unsigned long	flags;		/* low level flags */

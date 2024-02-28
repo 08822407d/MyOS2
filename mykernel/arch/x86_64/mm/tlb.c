@@ -4,7 +4,7 @@
 #include <linux/init/init.h>
 
 #include <linux/mm/mm.h>
-#include <linux/kernel/spinlock.h>
+#include <linux/kernel/lock_ipc.h>
 #include <linux/smp/smp.h>
 // #include <linux/interrupt.h>
 #include <linux/kernel/export.h>

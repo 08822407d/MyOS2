@@ -1,12 +1,12 @@
 #ifndef _LINUX_DCACHE_H_
 #define _LINUX_DCACHE_H_
 
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/lib/list.h>
 	#include <linux/kernel/math.h>
 	// #include <linux/rculist.h>
 	// #include <linux/rculist_bl.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	// #include <linux/seqlock.h>
 	#include <linux/kernel/cache.h>
 	// #include <linux/rcupdate.h>

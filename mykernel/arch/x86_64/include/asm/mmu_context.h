@@ -5,7 +5,6 @@
 #define _ASM_X86_MMU_CONTEXT_H
 
 	#include <asm/desc.h>
-	#include <linux/kernel/atomic.h>
 	#include <linux/mm/mm_types.h>
 	// #include <linux/pkeys.h>
 

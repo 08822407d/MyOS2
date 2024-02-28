@@ -39,7 +39,6 @@
 // #include <asm/vsyscall.h>
 // #include <linux/topology.h>
 #include <linux/kernel/cpumask.h>
-#include <linux/kernel/atomic.h>
 // #include <asm/proto.h>
 #include <asm/setup.h>
 #include <asm/apic.h>

@@ -15,7 +15,7 @@
 	#include <linux/lib/list.h>
 	// #include <linux/spinlock_types.h>
 	// #include <linux/lockdep.h>
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <asm/processor.h>
 	// #include <linux/osq_lock.h>
 	// #include <linux/debug_locks.h>

@@ -8,7 +8,7 @@
 #include <linux/lib/errno.h>
 #include <linux/init/init.h>
 #include <linux/kernel/ioport.h>
-#include <linux/kernel/spinlock.h>
+#include <linux/kernel/lock_ipc.h>
 
 // #undef DEBUG
 

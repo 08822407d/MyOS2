@@ -32,7 +32,7 @@
 	#include <linux/compiler/compiler.h>
 	#include <linux/lib/errno.h>
 	#include <linux/kernel/kobject.h>
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/device/device.h>
 	// #include <linux/interrupt.h>
 	#include <linux/kernel/io.h>

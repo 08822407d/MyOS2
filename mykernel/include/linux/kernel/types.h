@@ -10,11 +10,11 @@
 	/*
 	 *	definations for MyOS2
 	 */
-	#ifdef DEBUG
-		typedef void			*reg_t;
-	#else
+	// #ifdef DEBUG
+	// 	typedef void			*reg_t;
+	// #else
 		typedef __UINT64_TYPE__ reg_t;
-	#endif
+	// #endif
 		typedef __UINT64_TYPE__ bitmap_t;
 	#	define BITMAP_UNITSIZE (sizeof(bitmap_t) * 8)
 		// indicate the param for input

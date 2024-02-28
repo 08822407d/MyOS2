@@ -23,6 +23,7 @@ file(GLOB_RECURSE KERNEL_ASM_SRCS *.S)
 add_executable(kernel)
 target_sources(kernel PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
 target_include_directories(kernel PRIVATE
+				${CMAKE_CURRENT_SOURCE_DIR}
 				${CMAKE_CURRENT_SOURCE_DIR}/include
 				${CMAKE_CURRENT_SOURCE_DIR}/include/linux/kernel
 				${PROJECT_SOURCE_DIR}/myloader
@@ -44,3 +45,4 @@ add_subdirectory(printk)
 add_subdirectory(klib)
 add_subdirectory(mechanics)
 add_subdirectory(debug)
+add_subdirectory(lock_IPC)

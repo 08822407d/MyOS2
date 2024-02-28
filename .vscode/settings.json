@@ -108,6 +108,11 @@
         "err.h": "c",
         "utils.h": "c",
         "int-ll64.h": "c",
-        "cpufeature.h": "c"
+        "cpufeature.h": "c",
+        "simple_spinlock_types.h": "c",
+        "barrier.h": "c",
+        "simple_spinlock_smp.h": "c",
+        "spinlock_api.h": "c",
+        "setup.h": "c"
     }
 }

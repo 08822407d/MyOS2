@@ -72,12 +72,6 @@
 						);
 		}
 
-	#endif
-
-	// #ifdef CONFIG_PARAVIRT_XXL
-	// #include <asm/paravirt.h>
-	// #else
-	#ifndef __ASSEMBLY__
 	#	include <linux/kernel/types.h>
 
 	// static __always_inline unsigned long

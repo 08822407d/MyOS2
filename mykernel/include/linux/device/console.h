@@ -15,7 +15,7 @@
 #ifndef _LINUX_CONSOLE_H_
 #define _LINUX_CONSOLE_H_ 1
 
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/kernel/bits.h>
 	// #include <linux/rculist.h>
 	#include <linux/kernel/types.h>

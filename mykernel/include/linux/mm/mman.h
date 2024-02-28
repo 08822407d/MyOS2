@@ -5,7 +5,7 @@
 	#include <linux/mm/mm.h>
 	// #include <linux/percpu_counter.h>
 
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <uapi/linux/mman.h>
 
 	// /*

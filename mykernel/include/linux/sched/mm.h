@@ -3,7 +3,7 @@
 #define _LINUX_SCHED_MM_H
 
 	#include <linux/kernel/kernel.h>
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/kernel/sched.h>
 	#include <linux/mm/mm_types.h>
 	#include <linux/mm/gfp.h>

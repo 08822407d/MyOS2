@@ -2,7 +2,7 @@
 #ifndef _LINUX_PAGE_REF_H
 #define _LINUX_PAGE_REF_H
 
-	#include <linux/kernel/atomic.h>
+	// #
 	#include <linux/mm/mm_types.h>
 	#include <linux/mm/page-flags.h>
 	// #include <linux/tracepoint-defs.h>

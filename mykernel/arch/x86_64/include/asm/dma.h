@@ -11,7 +11,7 @@
 #ifndef _ASM_X86_DMA_H
 #define _ASM_X86_DMA_H
 
-	#include <linux/kernel/spinlock.h>	/* And spinlocks */
+	#include <linux/kernel/lock_ipc.h>	/* And spinlocks */
 	#include <asm/io.h>		/* need byte IO */
 
 	#ifdef HAVE_REALLY_SLOW_DMA_CONTROLLER

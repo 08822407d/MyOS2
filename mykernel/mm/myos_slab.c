@@ -110,11 +110,6 @@ void slab_free(slab_s *slp)
 
 void * __kmalloc(size_t size, gfp_t flags)
 {
-	#ifdef DEBUG
-		// make sure have init slab
-		while (!init_flags.slab);
-	#endif
-
 	void *ret_val = NULL;
 	while (size > KMALLOC_MAX_CACHE_SIZE);
 
@@ -208,11 +203,6 @@ void *kmalloc(size_t size, gfp_t flags)
 
 void kfree(const void *objp)
 {
-	#ifdef DEBUG
-		// make sure have init slab
-		while (!init_flags.slab);
-	#endif
-
 	if (objp == NULL)
 		return;
 

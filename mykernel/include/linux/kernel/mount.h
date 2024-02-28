@@ -13,9 +13,9 @@
 	#include <linux/kernel/types.h>
 	#include <linux/lib/list.h>
 	// #include <linux/nodemask.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	// #include <linux/seqlock.h>
-	#include <linux/kernel/atomic.h>
+	// #
 
 	#include <linux/fs/vfs_s_defs.h>
 

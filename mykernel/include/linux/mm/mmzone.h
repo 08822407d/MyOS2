@@ -4,7 +4,7 @@
 
 	#ifndef __ASSEMBLY__
 	#	ifndef __GENERATING_BOUNDS_H
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	#		include <linux/lib/list.h>
 	// #include <linux/wait.h>
 	#		include <linux/kernel/bitops.h>
@@ -16,7 +16,7 @@
 	// #include <linux/nodemask.h>
 	// #include <linux/pageblock-flags.h>
 	// #include <linux/page-flags-layout.h>
-	#include <linux/kernel/atomic.h>
+	// #
 	#		include <linux/mm/mm_types.h>
 	#		include <linux/mm/page-flags.h>
 	// #include <linux/local_lock.h>

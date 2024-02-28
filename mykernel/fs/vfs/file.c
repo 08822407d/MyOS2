@@ -17,7 +17,7 @@
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/kernel/bitops.h>
-#include <linux/kernel/spinlock.h>
+#include <linux/kernel/lock_ipc.h>
 // #include <linux/rcupdate.h>
 // #include <linux/close_range.h>
 // #include <net/sock.h>

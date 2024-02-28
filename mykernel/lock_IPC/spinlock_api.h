@@ -51,23 +51,16 @@
 	 *  linux/spinlock.h:     builds the final spin_*() APIs.
 	 */
 
-	// #include <linux/typecheck.h>
-	#include <linux/kernel/preempt.h>
 	#include <linux/kernel/linkage.h>
 	#include <linux/compiler/compiler.h>
-	#include <linux/kernel/irqflags.h>
-	// #include <linux/sched/thread_info.h>
 	#include <linux/kernel/stringify.h>
-	// #include <linux/bottom_half.h>
-	// #include <linux/lockdep.h>
 	#include <asm/barrier.h>
-	// #include <asm/mmiowb.h>
 
 
 	/*
 	 * Pull the arch_spinlock_t and arch_rwlock_t definitions:
 	 */
-	#include <linux/kernel/spinlock_types.h>
+	#include "spinlock/simple_spinlock_types.h"
 
 	/*
 	 * Pull the arch_spin*() functions/declarations (UP-nondebug doesn't need them):
@@ -138,102 +131,7 @@
 	/*
 	 * Pull the _spin_*()/_read_*()/_write_*() functions/declarations:
 	 */
-	// # include <linux/kernel/spinlock_api_smp.h>
-	// {
-
-		// static inline int __raw_spin_trylock(raw_spinlock_t *lock) {
-		// static inline int raw_spin_trylock(arch_spinlock_t *lock) {
-		// 	preempt_disable();
-		// 	if (arch_spin_trylock(lock)) {
-		// 		// spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
-		// 		return 1;
-		// 	}
-		// 	preempt_enable();
-		// 	return 0;
-		// }
-
-		/*
-		 * If lockdep is enabled then we use the non-preemption spin-ops
-		 * even on CONFIG_PREEMPTION, because lockdep assumes that interrupts are
-		 * not re-enabled during lock-acquire (which the preempt-spin-ops do):
-		 */
-		// static inline unsigned long
-		// __raw_spin_lock_irqsave(raw_spinlock_t *lock)
-		static inline unsigned long
-		raw_spin_lock_irqsave(arch_spinlock_t *lock) {
-			unsigned long flags;
-
-			local_irq_save(flags);
-			preempt_disable();
-			arch_spin_lock(lock);
-			return flags;
-		}
-
-		// static inline void __raw_spin_lock_irq(raw_spinlock_t *lock)
-		static inline void
-		raw_spin_lock_irq(arch_spinlock_t *lock) {
-			local_irq_disable();
-			preempt_disable();
-			arch_spin_lock(lock);
-		}
-
-		// static inline void __raw_spin_lock_bh(raw_spinlock_t *lock) {
-		static inline void
-		raw_spin_lock_bh(arch_spinlock_t *lock) {
-			arch_spin_lock(lock);
-		}
-
-		// static inline void __raw_spin_lock(raw_spinlock_t *lock)
-		static inline void
-		raw_spin_lock(arch_spinlock_t *lock) {
-			preempt_disable();
-			arch_spin_lock(lock);
-		}
-
-
-		// static inline void __raw_spin_unlock(raw_spinlock_t *lock) {
-		static inline void
-		raw_spin_unlock(arch_spinlock_t *lock) {
-			arch_spin_unlock(lock);
-			preempt_enable();
-		}
-
-		// static inline void __raw_spin_unlock_irqrestore(
-		// 		raw_spinlock_t *lock, unsigned long flags)
-		static inline void
-		raw_spin_unlock_irqrestore(arch_spinlock_t *lock,
-				unsigned long flags) {
-			arch_spin_unlock(lock);
-			local_irq_restore(flags);
-			preempt_enable();
-		}
-
-		// static inline void __raw_spin_unlock_irq(raw_spinlock_t *lock) {
-		static inline void
-		raw_spin_unlock_irq(arch_spinlock_t *lock) {
-			arch_spin_unlock(lock);
-			local_irq_enable();
-			preempt_enable();
-		}
-
-		// static inline void __raw_spin_unlock_bh(raw_spinlock_t *lock) {
-		static inline void
-		__raw_spin_unlock_bh(arch_spinlock_t *lock) {
-			arch_spin_unlock(lock);
-		}
-
-		// static inline int __raw_spin_trylock_bh(raw_spinlock_t *lock) {
-		// 	__local_bh_disable_ip(_RET_IP_, SOFTIRQ_LOCK_OFFSET);
-		// 	if (do_raw_spin_trylock(lock)) {
-		// 		spin_acquire(&lock->dep_map, 0, 1, _RET_IP_);
-		// 		return 1;
-		// 	}
-		// 	__local_bh_enable_ip(_RET_IP_, SOFTIRQ_LOCK_OFFSET);
-		// 	return 0;
-		// }
-
-	// }
-
+	#include "spinlock/simple_spinlock_smp.h"
 
 	/* Non PREEMPT_RT kernel, map to raw spinlocks: */
 
@@ -325,11 +223,11 @@
 
 	// #define assert_spin_locked(lock)	assert_raw_spin_locked(&(lock)->rlock)
 
-	/*
-	 * Pull the atomic_t declaration:
-	 * (asm-mips/atomic.h needs above definitions)
-	 */
-	#include <linux/kernel/atomic.h>
+	// /*
+	//  * Pull the atomic_t declaration:
+	//  * (asm-mips/atomic.h needs above definitions)
+	//  */
+	// #
 	// /**
 	//  * atomic_dec_and_lock - lock on reaching reference count zero
 	//  * @atomic: the atomic counter

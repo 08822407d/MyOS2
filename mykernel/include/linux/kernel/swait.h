@@ -4,7 +4,7 @@
 
 	#include <linux/lib/list.h>
 	#include <linux/kernel/stddef.h>
-	#include <linux/kernel/spinlock.h>
+	#include <linux/kernel/lock_ipc.h>
 	// #include <linux/wait.h>
 	#include <asm/current.h>
 

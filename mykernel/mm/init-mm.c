@@ -4,13 +4,13 @@
 #include <linux/mm/mm_types.h>
 // #include <linux/maple_tree.h>
 // #include <linux/rwsem.h>
-#include <linux/kernel/spinlock.h>
+#include <linux/kernel/lock_ipc.h>
 #include <linux/lib/list.h>
 #include <linux/kernel/cpumask.h>
 #include <linux/mm/mman.h>
 #include <linux/mm/pgtable.h>
 
-#include <linux/kernel/atomic.h>
+// #
 // #include <linux/user_namespace.h>
 // #include <linux/iommu.h>
 // #include <asm/mmu.h>
