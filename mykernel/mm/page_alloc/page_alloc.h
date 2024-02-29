@@ -19,6 +19,12 @@
 
 	#ifdef DEBUG
 
+		extern void
+		set_page_count(page_s *page, int v);
+
+		extern void
+		init_page_count(page_s *page);
+
 		extern bool
 		page_is_guard(page_s *page);
 		
@@ -37,6 +43,22 @@
 	#endif
 	
 	#if defined(PAGEALLOC_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void
+		set_page_count(page_s *page, int v) {
+			atomic_set(&page->_refcount, v);
+		}
+
+		/*
+		 * Setup the page count before being freed into the page allocator for
+		 * the first time (boot or memory hotplug)
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		init_page_count(page_s *page) {
+			set_page_count(page, 1);
+		}
 
 		PREFIX_STATIC_INLINE
 		bool
