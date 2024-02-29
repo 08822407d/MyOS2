@@ -12,7 +12,6 @@
 // #include <linux/crash_dump.h>
 #include <linux/smp/smp.h>
 // #include <linux/topology.h>
-#include <linux/mm/pfn.h>
 // #include <linux/stackprotector.h>
 #include <asm/sections.h>
 #include <asm/processor.h>

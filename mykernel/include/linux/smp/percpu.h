@@ -6,7 +6,6 @@
 	#include <linux/kernel/preempt.h>
 	#include <linux/smp/smp.h>
 	#include <linux/kernel/cpumask.h>
-	#include <linux/mm/pfn.h>
 	#include <linux/init/init.h>
 
 	#include <asm/percpu.h>

@@ -8,7 +8,6 @@
 	#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
 	#include <linux/mm/mm_types.h>
-	#include <linux/mm/pfn.h>
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/err.h>
 	#include <linux/mm/page-flags.h>
