@@ -80,7 +80,6 @@ static vfsmount_s *shm_mnt;
 #include <linux/mm/rmap.h>
 #include <linux/kernel/uuid.h>
 #include <linux/kernel/uaccess.h>
-#include "internal.h"
 
 
 #define BLOCKS_PER_PAGE  (PAGE_SIZE/512)

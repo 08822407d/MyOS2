@@ -2,23 +2,11 @@
 #ifndef _LINUX_MM_TYPES_H
 #define _LINUX_MM_TYPES_H
 
-	// #include <linux/mm_types_task.h>
-
-	// #include <linux/auxvec.h>
-	// #include <linux/kref.h>
 	#include <linux/lib/list.h>
 	#include <linux/kernel/lock_ipc.h>
-	// #include <linux/rbtree.h>
-	// #include <linux/rwsem.h>
 	#include <linux/kernel/completion.h>
 	#include <linux/kernel/cpumask.h>
-	// #include <linux/uprobes.h>
-	// #include <linux/rcupdate.h>
-	// #include <linux/page-flags-layout.h>
 	#include <linux/kernel/workqueue.h>
-	// #include <linux/seqlock.h>
-
-	// #include <asm/mmu.h>
 
 	// #ifndef AT_VECTOR_SIZE_ARCH
 	// #define AT_VECTOR_SIZE_ARCH 0

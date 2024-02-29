@@ -9,7 +9,6 @@
 	#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
 	// #include <linux/rbtree.h>
-	// #
 	// #include <linux/debug_locks.h>
 	#include <linux/mm/mm_types.h>
 	// #include <linux/mmap_lock.h>
@@ -33,6 +32,7 @@
 
 
 	#include <mm/early/memblock_api.h>
+	#include <mm/vm_map/vm_map_api.h>
 
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
@@ -2661,40 +2661,6 @@
 	// #define anon_vma_interval_tree_foreach(avc, root, start, last)		 \
 	// 	for (avc = anon_vma_interval_tree_iter_first(root, start, last); \
 	// 		avc; avc = anon_vma_interval_tree_iter_next(avc, start, last))
-
-	// /* mmap.c */
-	// extern int __vm_enough_memory(mm_s *mm, long pages, int cap_sys_admin);
-	// extern int __vma_adjust(vma_s *vma, unsigned long start,
-	// 		unsigned long end, pgoff_t pgoff, vma_s *insert,
-	// 		vma_s *expand);
-	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,
-			unsigned long end, pgoff_t pgoff, vma_s *insert,
-			vma_s *expand);
-	// static inline int vma_adjust(vma_s *vma, unsigned long start,
-	// 	unsigned long end, pgoff_t pgoff, vma_s *insert)
-	// {
-	// 	return __vma_adjust(vma, start, end, pgoff, insert, NULL);
-	// }
-	// extern vma_s *vma_merge(mm_s *,
-	// 	vma_s *prev, unsigned long addr, unsigned long end,
-	// 	unsigned long vm_flags, anon_vma_s *, file_s *, pgoff_t,
-	// 	struct mempolicy *, struct vm_userfaultfd_ctx, struct anon_vma_name *);
-	vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr, unsigned long end,
-			unsigned long vm_flags, file_s *file, pgoff_t pgoff);
-	// extern anon_vma_s *find_mergeable_anon_vma(vma_s *);
-	// extern int __split_vma(mm_s *, vma_s *,
-	// 	unsigned long addr, int new_below);
-	// extern int split_vma(mm_s *, vma_s *,
-	// 	unsigned long addr, int new_below);
-	extern int insert_vm_struct(mm_s *, vma_s *);
-	// extern void __vma_link_rb(mm_s *, vma_s *,
-	// 	struct rb_node **, struct rb_node *);
-	// extern void unlink_file_vma(vma_s *);
-	// extern vma_s *copy_vma(vma_s **,
-	// 	unsigned long addr, unsigned long len, pgoff_t pgoff,
-	// 	bool *need_rmap_locks);
-	// extern void exit_mmap(mm_s *);
-
 	// static inline int check_data_rlimit(unsigned long rlim,
 	// 					unsigned long new,
 	// 					unsigned long start,
@@ -2737,17 +2703,11 @@
 
 	// extern unsigned long mmap_region(file_s *file, unsigned long addr, unsigned long len,
 	// 		vm_flags_t vm_flags, unsigned long pgoff, List_s *uf);
-	extern unsigned long myos_mmap_region(file_s *file, unsigned long addr,
-			unsigned long len, vm_flags_t vm_flags, unsigned long pgoff);
 	// extern unsigned long do_mmap(file_s *file, unsigned long addr,
 	// 	unsigned long len, unsigned long prot, unsigned long flags,
 	// 	unsigned long pgoff, unsigned long *populate, List_s *uf);
-	extern unsigned long do_mmap(file_s *file, unsigned long addr,
-			unsigned long len, unsigned long prot, unsigned long flags,
-			unsigned long pgoff, unsigned long *populate);
 	// extern int __do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf, bool downgrade);
-	extern int __do_munmap(mm_s *, unsigned long, size_t, bool downgrade);
 	// extern int do_munmap(mm_s *, unsigned long, size_t,
 	// 			List_s *uf);
 	// extern int do_madvise(mm_s *mm, unsigned long start, size_t len_in, int behavior);
@@ -2764,14 +2724,7 @@
 	// static inline void mm_populate(unsigned long addr, unsigned long len) {}
 	// #endif
 
-	// /* These take the mm semaphore themselves */
-	// extern int __must_check vm_brk(unsigned long, unsigned long);
-	extern int __must_check vm_brk_flags(unsigned long, unsigned long, unsigned long);
-	extern int vm_munmap(unsigned long, size_t);
-	int __vm_munmap(unsigned long start, size_t len, bool downgrade);
-	extern unsigned long __must_check vm_mmap(file_s *,
-			unsigned long, unsigned long, unsigned long,
-			unsigned long, unsigned long);
+
 
 	// struct vm_unmapped_area_info {
 	// #define VM_UNMAPPED_AREA_TOPDOWN 1
@@ -2791,29 +2744,6 @@
 	// 					loff_t lstart, loff_t lend);
 	// extern void truncate_inode_pages_final(struct address_space *);
 
-	// /* generic vm_area_ops exported for stackable file systems */
-	// extern vm_fault_t filemap_fault(vm_fault_s *vmf);
-	// extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
-	// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
-	// extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
-
-	extern unsigned long stack_guard_gap;
-	/* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
-	extern int expand_stack(vma_s *vma, unsigned long address);
-
-	// /* CONFIG_STACK_GROWSUP still needs to grow downwards at some places */
-	// extern int expand_downwards(vma_s *vma,
-	// 		unsigned long address);
-	// #if VM_GROWSUP
-	// extern int expand_upwards(vma_s *vma, unsigned long address);
-	// #else
-	// #define expand_upwards(vma, address) (0)
-	// #endif
-
-	/* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
-	// extern vma_s * find_vma(mm_s * mm, unsigned long addr);
-	extern vma_s * myos_find_vma(mm_s * mm, unsigned long addr);
-	// extern vma_s * find_vma_prev(mm_s * mm, unsigned long addr, vma_s **pprev);
 
 	/**
 	 * find_vma_intersection() - Look up the first VMA which intersects the interval
@@ -3436,10 +3366,11 @@
 	// }
 	// #endif
 
- 
-
-	int
-	do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags);
+	// from <linux/mm/internal.h>
+	// {
+		extern unsigned long highest_memmap_pfn;
+		extern char *const zone_names[MAX_NR_ZONES];
+	// }
 
 	static inline zone_s *myos_page_zone(const page_s * page)
 	{

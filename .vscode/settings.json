@@ -122,6 +122,14 @@
         "irqflags.h": "c",
         "pgtable_64_types.h": "c",
         "spinlock_smp.h": "c",
-        "slab.h": "c"
+        "slab.h": "c",
+        "mmzone.h": "c",
+        "overflow.h": "c",
+        "memblock_const.h": "c",
+        "mm_types.h": "c",
+        "pgtable.h": "c",
+        "gfp.h": "c",
+        "workqueue.h": "c",
+        "vm_map_api.h": "c"
     }
 }

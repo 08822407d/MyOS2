@@ -26,9 +26,6 @@
 
 #include <linux/kernel/uaccess.h>
 
-#include "internal.h"
-
-
 
 void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
@@ -62,9 +59,9 @@ void __vma_unlink_list(mm_s *mm, vma_s *vma)
 }
 
 
-unsigned long vm_mmap_pgoff(file_s *file, unsigned long addr,
-		unsigned long len, unsigned long prot,
-		unsigned long flag, unsigned long pgoff)
+unsigned long
+vm_mmap_pgoff(file_s *file, unsigned long addr, unsigned long len,
+		unsigned long prot, unsigned long flag, unsigned long pgoff)
 {
 	unsigned long ret;
 	mm_s *mm = current->mm;
@@ -84,9 +81,9 @@ unsigned long vm_mmap_pgoff(file_s *file, unsigned long addr,
 	return ret;
 }
 
-unsigned long vm_mmap(file_s *file, unsigned long addr,
-		unsigned long len, unsigned long prot,
-		unsigned long flag, unsigned long offset)
+unsigned long
+vm_mmap(file_s *file, unsigned long addr, unsigned long len,
+		unsigned long prot, unsigned long flag, unsigned long offset)
 {
 	if (unlikely(offset + PAGE_ALIGN(len) < offset))
 		return -EINVAL;

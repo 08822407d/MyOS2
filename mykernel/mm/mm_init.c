@@ -17,6 +17,7 @@
 #include <linux/kernel/sched.h>
 // #include <linux/mman.h>
 // #include <linux/mm/memblock.h>
+#include <linux/mm/mm.h>
 // #include <linux/page-isolation.h>
 // #include <linux/padata.h>
 #include <linux/kernel/nmi.h>
@@ -28,9 +29,6 @@
 #include <linux/mm/pgtable.h>
 // #include <linux/swap.h>
 // #include <linux/cma.h>
-#include "internal.h"
-// #include "slab.h"
-// #include "shuffle.h"
 
 // #include <asm/setup.h>
 

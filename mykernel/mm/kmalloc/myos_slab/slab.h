@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef MM_SLAB_H
-#define MM_SLAB_H
+#ifndef _LINUX_SLAB_H
+#define _LINUX_SLAB_H
 	// /*
 	// * Internal slab definitions
 	// */
@@ -865,4 +865,4 @@
 	// }
 	// #endif
 
-#endif /* MM_SLAB_H */
+#endif /* _LINUX_SLAB_H */

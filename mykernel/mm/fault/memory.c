@@ -84,8 +84,6 @@
 // #include <asm/tlb.h>
 #include <asm/tlbflush.h>
 
-// #include "pgalloc-track.h"
-#include "internal.h"
 
 #ifndef CONFIG_NUMA
 	unsigned long	max_mapnr;

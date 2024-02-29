@@ -3046,7 +3046,6 @@
 	// extern int sb_set_blocksize(super_block_s *, int);
 	// extern int sb_min_blocksize(super_block_s *, int);
 
-	extern int generic_file_mmap(file_s *, vma_s *);
 	// extern int generic_file_readonly_mmap(file_s *, vma_s *);
 	// extern ssize_t generic_write_checks(struct kiocb *, struct iov_iter *);
 	// extern int generic_write_check_limits(file_s *file, loff_t pos,

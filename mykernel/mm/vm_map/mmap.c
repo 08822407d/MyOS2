@@ -54,12 +54,6 @@
 // #include <asm/tlb.h>
 #include <asm/mmu_context.h>
 
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/mmap.h>
-
-#include "internal.h"
-
-
 #include <linux/sched/signal.h>
 
 
@@ -590,7 +584,8 @@ myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
 // 		struct mempolicy *policy,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
-vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
+vma_s
+*myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
 		unsigned long end, unsigned long vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
@@ -662,8 +657,9 @@ vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
  * The caller must write-lock current->mm->mmap_lock.
  */
 // 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
-unsigned long do_mmap(file_s *file, unsigned long addr,
-		unsigned long len, unsigned long prot, unsigned long flags,
+unsigned long
+do_mmap(file_s *file, unsigned long addr, unsigned long len,
+		unsigned long prot, unsigned long flags,
 		unsigned long pgoff, unsigned long *populate)
 {
 	mm_s *mm = current->mm;
@@ -1497,11 +1493,6 @@ int vm_brk_flags(unsigned long addr, unsigned long request, unsigned long flags)
 	// if (populate && !ret)
 	// 	mm_populate(addr, len);
 	return ret;
-}
-
-int vm_brk(unsigned long addr, unsigned long len)
-{
-	return vm_brk_flags(addr, len, 0);
 }
 
 // /* Release all mmaps. */

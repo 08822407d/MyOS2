@@ -12,48 +12,23 @@
  */
 #include <linux/kernel/export.h>
 #include <linux/compiler/compiler.h>
-// #include <linux/dax.h>
 #include <linux/fs/fs.h>
 #include <linux/sched/signal.h>
 #include <linux/kernel/uaccess.h>
-// #include <linux/capability.h>
-// #include <linux/kernel_stat.h>
 #include <linux/mm/gfp.h>
 #include <linux/mm/mm.h>
-// #include <linux/swap.h>
-// #include <linux/swapops.h>
 #include <linux/mm/mman.h>
 #include <linux/mm/pagemap.h>
 #include <linux/fs/file.h>
-// #include <linux/uio.h>
-// #include <linux/error-injection.h>
-// #include <linux/hash.h>
-// #include <linux/writeback.h>
-// #include <linux/backing-dev.h>
-// #include <linux/pagevec.h>
-// #include <linux/security.h>
-// #include <linux/cpuset.h>
-// #include <linux/hugetlb.h>
-// #include <linux/memcontrol.h>
 #include <linux/mm/shmem_fs.h>
 #include <linux/mm/rmap.h>
-// #include <linux/delayacct.h>
-// #include <linux/psi.h>
-// #include <linux/ramfs.h>
-// #include <linux/page_idle.h>
-// #include <linux/migrate.h>
 #include <asm/pgalloc.h>
 #include <asm/tlbflush.h>
-#include "internal.h"
 
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/filemap.h>
 
 /*
  * FIXME: remove all knowledge of the buffer layer from the core VM
  */
-// #include <linux/buffer_head.h> /* for try_to_free_buffers */
-
 #include <asm/uapi_mman.h>
 
 /*
@@ -122,7 +97,8 @@
  */
 
 
-page_s *myos_readpage(vm_fault_s *vmf)
+static page_s
+*myos_readpage(vm_fault_s *vmf)
 {
 	vma_s *vma = vmf->vma;
 	file_s *filp = vma->vm_file;
@@ -312,7 +288,7 @@ vm_fault_t filemap_fault(vm_fault_s *vmf)
 
 
 vm_fault_t filemap_map_pages(vm_fault_s *vmf,
-				 pgoff_t start_pgoff, pgoff_t end_pgoff)
+		pgoff_t start_pgoff, pgoff_t end_pgoff)
 {
 // 	vma_s *vma = vmf->vma;
 // 	file_s *file = vma->vm_file;
