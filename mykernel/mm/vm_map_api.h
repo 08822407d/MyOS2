@@ -11,6 +11,18 @@
 
 	extern int generic_file_mmap(file_s *, vma_s *);
 
+	/*
+	 * Linux kernel virtual memory manager primitives.
+	 * The idea being to have a "virtual" mm in the same way
+	 * we have a virtual fs - giving a cleaner interface to the
+	 * mm details, and allowing different kinds of memory mappings
+	 * (from shared memory to executable loading to arbitrary
+	 * mmap() functions).
+	 */
+	vma_s *vm_area_alloc(mm_s *);
+	vma_s *vm_area_dup(vma_s *);
+	void vm_area_free(vma_s *);
+
 	// /* mmap.c */
 	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,
 			unsigned long end, pgoff_t pgoff, vma_s *insert, vma_s *expand);

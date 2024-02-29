@@ -203,42 +203,6 @@ static int alloc_thread_stack_node(task_s *tsk, int node)
 
 
 
-vma_s *vm_area_alloc(mm_s *mm)
-{
-	vma_s *vma;
-	vma = kmalloc(sizeof(vma_s), GFP_KERNEL);
-	if (vma)
-		vma_init(vma, mm);
-	return vma;
-}
-
-vma_s *vm_area_dup(vma_s *orig)
-{
-	vma_s *new = kmalloc(sizeof(vma_s), GFP_KERNEL);
-
-	if (new) {
-		// ASSERT_EXCLUSIVE_WRITER(orig->vm_flags);
-		// ASSERT_EXCLUSIVE_WRITER(orig->vm_file);
-		// /*
-		//  * orig->shared.rb may be modified concurrently, but the clone
-		//  * will be reinitialized.
-		//  */
-		// *new = data_race(*orig);
-		*new = *orig;
-		// INIT_LIST_HEAD(&new->anon_vma_chain);
-		new->vm_next = new->vm_prev = NULL;
-		// dup_anon_vma_name(orig, new);
-	}
-	return new;
-}
-
-void vm_area_free(vma_s *vma)
-{
-	// free_anon_vma_name(vma);
-	kfree(vma);
-}
-
-
 static void release_task_stack(task_s *tsk)
 {
 // 	if (WARN_ON(READ_ONCE(tsk->__state) != TASK_DEAD))
