@@ -498,24 +498,24 @@
 
 		PAGEFLAG(Checked, checked, PF_NO_COMPOUND) /* Used by some filesystems */
 
-		/* Xen */
-		PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
-		TESTSCFLAG(Pinned, pinned, PF_NO_COMPOUND)
+		// /* Xen */
+		// PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
+		// TESTSCFLAG(Pinned, pinned, PF_NO_COMPOUND)
 
-		PAGEFLAG(SavePinned, savepinned, PF_NO_COMPOUND);
+		// PAGEFLAG(SavePinned, savepinned, PF_NO_COMPOUND);
 
-		PAGEFLAG(Foreign, foreign, PF_NO_COMPOUND);
+		// PAGEFLAG(Foreign, foreign, PF_NO_COMPOUND);
 
-		PAGEFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
-		TESTCLEARFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
+		// PAGEFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
+		// TESTCLEARFLAG(XenRemapped, xen_remapped, PF_NO_COMPOUND)
 
 		PAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
 		__CLEARPAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
 		__SETPAGEFLAG(Reserved, reserved, PF_NO_COMPOUND)
 
-		PAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
-		__CLEARPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
-		__SETPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
+		// PAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
+		// __CLEARPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
+		// __SETPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
 
 		/*
 		 * Private page markings that may be used by the filesystem that owns the page

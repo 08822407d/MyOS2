@@ -6,7 +6,7 @@
 
 	// #include <linux/threads.h>
 	#include <linux/mm/mm.h>
-	#include <linux/mm/pagemap.h>
+	// #include <linux/mm/pagemap.h>
 
 	#define __HAVE_ARCH_PTE_ALLOC_ONE
 	#define __HAVE_ARCH_PGD_FREE

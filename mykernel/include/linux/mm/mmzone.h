@@ -18,7 +18,6 @@
 	// #include <linux/page-flags-layout.h>
 	// #
 	#		include <linux/mm/mm.h>
-	#		include <linux/mm/page-flags.h>
 	// #include <linux/local_lock.h>
 	#		include <asm/page.h>
 

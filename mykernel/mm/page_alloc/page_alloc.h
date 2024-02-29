@@ -37,6 +37,9 @@
 		extern void
 		put_page(page_s *page);
 
+		extern pgoff_t
+		linear_page_index(vma_s *vma, unsigned long address);
+
 		extern zone_s
 		*myos_page_zone(const page_s * page);
 
@@ -83,6 +86,17 @@
 		void
 		put_page(page_s *page) {
 			atomic_dec(&page->_refcount);
+		}
+
+		PREFIX_STATIC_INLINE
+		pgoff_t
+		linear_page_index(vma_s *vma, unsigned long address) {
+			pgoff_t pgoff;
+			// if (unlikely(is_vm_hugetlb_page(vma)))
+			// 	return linear_hugepage_index(vma, address);
+			pgoff = (address - vma->vm_start) >> PAGE_SHIFT;
+			pgoff += vma->vm_pgoff;
+			return pgoff;
 		}
 
 		PREFIX_STATIC_INLINE

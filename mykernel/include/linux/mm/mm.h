@@ -10,7 +10,6 @@
 	#include <linux/mm/mm_types.h>
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/err.h>
-	#include <linux/mm/page-flags.h>
 	#include <linux/kernel/overflow.h>
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>

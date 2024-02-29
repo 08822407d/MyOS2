@@ -3,6 +3,7 @@
 
 	#include "page_alloc/page_alloc_const.h"
 	#include "page_alloc/page_alloc_types.h"
+	#include "page_alloc/page-flags.h"
 	#include "page_alloc/page_alloc.h"
 
 	#define ENT_PER_TABLE	(PAGE_SIZE / sizeof(pgd_t))
