@@ -145,6 +145,13 @@
         "vm_map_const.h": "c",
         "vm_map.h": "c",
         "vm_map_types.h": "c",
-        "mmfault.h": "c"
+        "mmfault.h": "c",
+        "pfn.h": "c",
+        "uaccess.h": "c",
+        "pid.h": "c",
+        "resource.h": "c",
+        "page-flags.h": "c",
+        "signal.h": "c",
+        "page_ref.h": "c"
     }
 }

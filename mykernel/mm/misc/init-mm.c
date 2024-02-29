@@ -1,7 +1,7 @@
 // source: linux-6.4.9
 
 // SPDX-License-Identifier: GPL-2.0
-#include <linux/mm/mm_types.h>
+#include <linux/mm/mm.h>
 #include <linux/kernel/lock_ipc.h>
 #include <linux/lib/list.h>
 #include <linux/kernel/cpumask.h>

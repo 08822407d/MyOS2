@@ -8,7 +8,7 @@
 	// #ifndef __ASSEMBLY__
 	// #ifdef CONFIG_MMU
 
-	#include <linux/mm/mm_types.h>
+	#include <linux/mm/mm.h>
 	#include <linux/debug/bug.h>
 	#include <linux/lib/errno.h>
 	// #include <asm-generic/pgtable_uffd.h>

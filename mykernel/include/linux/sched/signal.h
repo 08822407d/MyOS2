@@ -10,7 +10,7 @@
 	#include <linux/kernel/cred.h>
 	// #include <linux/refcount.h>
 	// #include <linux/posix-timers.h>
-	#include <linux/mm/mm_types.h>
+	#include <linux/mm/mm.h>
 	#include <asm/ptrace.h>
 
 	// /*

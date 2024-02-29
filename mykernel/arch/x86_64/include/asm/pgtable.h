@@ -687,7 +687,7 @@
 	#include <asm/pgtable_64.h>
 
 	#ifndef __ASSEMBLY__
-		#include <linux/mm/mm_types.h>
+		#include <linux/mm/mm.h>
 		// #include <linux/mmdebug.h>
 		// #include <linux/log2.h>
 		// #include <asm/fixmap.h>

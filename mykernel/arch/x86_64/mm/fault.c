@@ -19,7 +19,7 @@
 // #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
 #include <linux/kernel/uaccess.h>		/* faulthandler_disabled()	*/
 // #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
-#include <linux/mm/mm_types.h>
+#include <linux/mm/mm.h>
 
 // #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
 #include <asm/traps.h>			/* dotraplinkage, ...		*/

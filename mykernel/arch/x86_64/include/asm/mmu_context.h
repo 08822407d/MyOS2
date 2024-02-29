@@ -5,7 +5,7 @@
 #define _ASM_X86_MMU_CONTEXT_H
 
 	#include <asm/desc.h>
-	#include <linux/mm/mm_types.h>
+	#include <linux/mm/mm.h>
 	// #include <linux/pkeys.h>
 
 	// #include <trace/events/tlb.h>
