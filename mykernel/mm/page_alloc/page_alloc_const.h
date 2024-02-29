@@ -1,0 +1,5 @@
+#ifndef _LINUX_PAGE_ALLOC_CONST_H_
+#define _LINUX_PAGE_ALLOC_CONST_H_
+
+
+#endif /* _LINUX_PAGE_ALLOC_CONST_H_ */

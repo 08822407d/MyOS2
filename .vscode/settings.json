@@ -134,6 +134,10 @@
         "lock_ipc.h": "c",
         "page_alloc_types.h": "c",
         "mmfault_const.h": "c",
-        "mmfault_types.h": "c"
+        "mmfault_types.h": "c",
+        "memfault_types.h": "c",
+        "memfault_const.h": "c",
+        "compiler_types.h": "c",
+        "kmalloc_api.h": "c"
     }
 }

@@ -4,31 +4,8 @@
  *
  * (C) 2012 Christoph Lameter <cl@linux.com>
  */
-#include <linux/kernel/slab.h>
-
 #include <linux/mm/mm.h>
-// #include <linux/poison.h>
-// #include <linux/interrupt.h>
-// #include <linux/memory.h>
-#include <linux/kernel/cache.h>
-#include <linux/compiler/compiler.h>
-// #include <linux/kfence.h>
-// #include <linux/module.h>
-#include <linux/kernel/cpu.h>
-#include <linux/kernel/uaccess.h>
-// #include <linux/seq_file.h>
-// #include <linux/proc_fs.h>
-// #include <linux/debugfs.h>
-// #include <linux/kasan.h>
-// #include <asm/cacheflush.h>
-#include <asm/tlbflush.h>
-#include <asm/page.h>
-// #include <linux/memcontrol.h>
 
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/kmem.h>
-
-#include "slab.h"
 
 /*
  * To avoid unnecessary overhead, we pass through large allocation requests

@@ -85,28 +85,9 @@ const char * const migratetype_names[MIGRATE_TYPES] = {
  */
 static inline unsigned long
 buddy_order(page_s *page) {
+
 	/* PageBuddy() must be checked by the caller */
 	return page_private(page);
-}
-
-/*
- * Higher-order pages are called "compound pages".  They are structured thusly:
- *
- * The first PAGE_SIZE page is called the "head page" and have PG_head set.
- *
- * The remaining PAGE_SIZE pages are called "tail pages". PageTail() is encoded
- * in bit 0 of page->compound_head. The rest of bits is pointer to head page.
- *
- * The first tail page's ->compound_dtor holds the offset in array of compound
- * page destructors. See compound_page_dtors.
- *
- * The first tail page's ->compound_order holds the order of allocation.
- * This usage means that zero-order pages may not be compound.
- */
-void free_compound_page(page_s *page)
-{
-	// mem_cgroup_uncharge(page_folio(page));
-	// free_the_page(page, compound_order(page));
 }
 
 static void prep_compound_head(page_s *page, unsigned int order)
@@ -141,31 +122,32 @@ void prep_compound_page(page_s *page, unsigned int order)
 
 static inline void
 set_buddy_order(page_s *page, unsigned int order) {
+
 	page->private = (unsigned long)order;
 	__SetPageBuddy(page);
 }
 
 /* Used for pages not on another list */
 static inline void
-add_to_free_list(page_s *page, zone_s *zone,
-		unsigned int order)
-{
+add_to_free_list(page_s *page,
+		zone_s *zone, unsigned int order) {
+
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_hdr_push(fa_lhdr, &page->lru);
 }
 
 /* Used for pages not on another list */
 static inline void
-add_to_free_list_tail(page_s *page, zone_s *zone,
-		unsigned int order)
-{
+add_to_free_list_tail(page_s *page,
+		zone_s *zone, unsigned int order) {
+
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_hdr_append(fa_lhdr, &page->lru);
 }
 
-static inline page_s *
-get_page_from_free_area(List_hdr_s *area)
-{
+static inline page_s
+*get_page_from_free_area(List_hdr_s *area) {
+
 	List_s *pg_lp = list_hdr_pop(area);
 	if (pg_lp == NULL)
 		return NULL;
@@ -173,10 +155,10 @@ get_page_from_free_area(List_hdr_s *area)
 		return container_of(pg_lp, page_s, lru);
 }
 
-static inline page_s *
-del_page_from_free_list(page_s *page, zone_s * zone,
-		unsigned int order)
-{
+static inline page_s
+*del_page_from_free_list(page_s *page,
+		zone_s * zone, unsigned int order) {
+
 	List_s * pg_lp = list_hdr_delete(&zone->free_area[order],
 			&page->lru);
 	if (pg_lp == NULL)
@@ -200,8 +182,8 @@ del_page_from_free_list(page_s *page, zone_s * zone,
  * -- nyc
  */
 static inline void
-expand(zone_s *zone, page_s *page, int low, int high)
-{
+expand(zone_s *zone, page_s *page, int low, int high) {
+
 	unsigned long size = 1 << high;
 	while (high > low) {
 		high--;
@@ -232,6 +214,7 @@ expand(zone_s *zone, page_s *page, int low, int high)
  */
 static inline unsigned long
 __find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
+
 	return page_pfn ^ (1 << order);
 }
 
@@ -249,8 +232,8 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
  * For recording page's order, we use page_private(page).
  */
 static inline bool
-page_is_buddy(page_s *page, page_s *buddy, unsigned int order)
-{
+page_is_buddy(page_s *page, page_s *buddy, unsigned int order) {
+
 	if (!page_is_guard(page) && !PageBuddy(buddy)) return false;
 
 	if (buddy_order(buddy) != order) return false;

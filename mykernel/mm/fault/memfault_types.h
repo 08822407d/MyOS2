@@ -3,7 +3,11 @@
 
 	#include <linux/compiler/compiler_types.h>
 
-	#include "mmfault_const.h"
+	#include "memfault_const.h"
+
+	struct vm_area_struct;
+	typedef struct vm_area_struct vma_s;
+
 
 	typedef unsigned long	vm_flags_t;
 
@@ -100,5 +104,63 @@
 		FAULT_FLAG_INSTRUCTION		= 1 << 8,
 		FAULT_FLAG_INTERRUPTIBLE	= 1 << 9,
 	};
+
+	/*
+	 * vm_fault is filled by the pagefault handler and passed to the vma's
+	 * ->fault function. The vma's ->fault is responsible for returning a bitmask
+	 * of VM_FAULT_xxx flags that give details about how the fault was handled.
+	 *
+	 * MM layer fills up gfp_mask for page allocations but fault handler might
+	 * alter it if its implementation requires a different allocation context.
+	 *
+	 * pgoff should be used in favour of virtual_address, if possible.
+	 */
+	typedef struct vm_fault {
+		const struct {
+			vma_s			*vma;		/* Target VMA */
+			gfp_t			gfp_mask;	/* gfp mask to be used for allocations */
+			pgoff_t			pgoff;		/* Logical page offset based on vma */
+			unsigned long	address;	/* Faulting virtual address */
+		};
+		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
+									 * XXX: should really be 'const' */
+
+		p4d_t			*p4d;
+		pud_t			*pud;		/* Pointer to pud entry matching
+									 * the 'address'
+									 */
+		pmd_t			*pmd;		/* Pointer to pmd entry matching
+									 * the 'address' */
+		pte_t			*pte;		/* Pointer to pte entry matching
+									 * the 'address'. NULL if the page
+									 * table hasn't been allocated.
+									 */
+		// union {
+			pte_t		orig_pte;	/* Value of PTE at the time of fault */
+		// 	pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
+		// 							 * used by PMD fault only.
+		// 							 */
+		// };
+
+		page_s			*cow_page;	/* Page handler may use for COW fault */
+		page_s			*page;		/* ->fault handlers should return a
+									 * page here, unless VM_FAULT_NOPAGE
+									 * is set (which is also implied by
+									 * VM_FAULT_ERROR).
+									 */
+		/* These three entries are valid only while holding ptl lock */
+		// spinlock_t		*ptl;		/* Page table lock.
+		// 							 * Protects pte page table if 'pte'
+		// 							 * is not NULL, otherwise pmd.
+		// 							 */
+		// pgtable_t		prealloc_pte;
+		// 							/* Pre-allocated pte page table.
+		// 							 * vm_ops->map_pages() sets up a page
+		// 							 * table from atomic context.
+		// 							 * do_fault_around() pre-allocates
+		// 							 * page table to avoid allocation from
+		// 							 * atomic context.
+		// 							 */
+	} vm_fault_s;
 
 #endif /* _MMFAULT_TYPES_H_ */

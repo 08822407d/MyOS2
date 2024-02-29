@@ -1,14 +1,8 @@
-#include <linux/kernel/slab.h>
 #include <linux/mm/mm.h>
-// #include <linux/mm/memblock.h>
-#include <linux/mm/myos_slab.h>
-#include <linux/lib/string.h>
 
 #include <klib/utils.h>
 #include <obsolete/glo.h>
-#include <obsolete/proto.h>
 #include <obsolete/printk.h>
-
 
 #define SLAB_SIZE_BASE		32
 
@@ -76,7 +70,7 @@ void myos_init_slab()
 	}
 }
 
-slab_s * slab_alloc(slab_s *cslp)
+static slab_s * slab_alloc(slab_s *cslp)
 {
 	page_s *page = alloc_page(ZONE_NORMAL);
 	
@@ -95,7 +89,7 @@ slab_s * slab_alloc(slab_s *cslp)
 	return nslp;
 }
 
-void slab_free(slab_s *slp)
+static void slab_free(slab_s *slp)
 {
 	while (!PageSlab(slp->page));
 	
@@ -108,7 +102,7 @@ void slab_free(slab_s *slp)
 	kfree(slp);
 }
 
-void * __kmalloc(size_t size, gfp_t flags)
+void *__kmalloc(size_t size, gfp_t flags)
 {
 	void *ret_val = NULL;
 	while (size > KMALLOC_MAX_CACHE_SIZE);

@@ -3,7 +3,6 @@
 
 #include <linux/kernel/types.h>
 #include <linux/kernel/stddef.h>
-#include <linux/mm/page.h>
 
 #include <obsolete/keyboard.h>
 

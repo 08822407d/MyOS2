@@ -232,7 +232,6 @@
 	#define pte_free(ptep) __myos_pgtable_free((void *)(ptep))
 	#define pmd_free(pmdp) __myos_pgtable_free((void *)(pmdp))
 	#define pud_free(pudp) __myos_pgtable_free((void *)(pudp))
-	// #define pgd_free(mmp, pgdp) free_page((unsigned long)(pgdp))
 
 	// #endif /* CONFIG_MMU */
 

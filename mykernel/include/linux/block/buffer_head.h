@@ -9,11 +9,9 @@
 #define _LINUX_BUFFER_HEAD_H
 
 	#include <linux/kernel/types.h>
-	#include <linux/mm/page.h>
 	#include <linux/kernel/linkage.h>
 	#include <linux/mm/pagemap.h>
 	// #include <linux/wait.h>
-	// #
 
 	enum bh_state_bits {
 		BH_Uptodate,		/* Contains valid data */

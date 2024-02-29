@@ -1,6 +1,7 @@
 #ifndef _PAGE_ALLOC_TYPES_H_
 #define _PAGE_ALLOC_TYPES_H_
 
+	#include <linux/kernel/types.h>
 	#include <linux/kernel/lock_ipc.h>
 
 

@@ -45,8 +45,8 @@
 
 #include <asm/pgalloc.h>
 
-#include "mmfault_const.h"
-#include "mmfault_types.h"
+#include "memfault_const.h"
+#include "memfault_types.h"
 
 
 #ifndef CONFIG_NUMA

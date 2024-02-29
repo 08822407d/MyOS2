@@ -1,9 +1,9 @@
 #ifndef _LINUX_MEMBLOCK_API_H_
 #define _LINUX_MEMBLOCK_API_H_
 
-    #include "memblock/memblock_const.h"
-    #include "memblock/memblock_types.h"
-    #include "memblock/memblock.h"
+    #include "early/memblock_const.h"
+    #include "early/memblock_types.h"
+    #include "early/memblock.h"
 
 	int simple_mmblk_add(phys_addr_t base, phys_addr_t size);
 	int simple_mmblk_reserve(phys_addr_t base, phys_addr_t size);

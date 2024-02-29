@@ -10,7 +10,6 @@
 #define MEMBLOCK_DEFINATION
 
 #include <linux/mm/mm.h>
-#include <linux/mm/page.h>
 
 #include "memblock.h"
 

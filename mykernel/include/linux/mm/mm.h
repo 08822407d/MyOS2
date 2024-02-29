@@ -20,8 +20,11 @@
 	#include <linux/kernel/slab.h>
 
 
-	#include <mm/early/memblock_api.h>
-	#include <mm/vm_map/vm_map_api.h>
+	#include <mm/memblock_api.h>
+	#include <mm/page_alloc_api.h>
+	#include <mm/kmalloc_api.h>
+	#include <mm/memfault_api.h>
+	#include <mm/vm_map_api.h>
 
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
@@ -517,63 +520,6 @@
 	// 	{ FAULT_FLAG_INSTRUCTION,	"INSTRUCTION" }, \
 	// 	{ FAULT_FLAG_INTERRUPTIBLE,	"INTERRUPTIBLE" }
 
-	/*
-	 * vm_fault is filled by the pagefault handler and passed to the vma's
-	 * ->fault function. The vma's ->fault is responsible for returning a bitmask
-	 * of VM_FAULT_xxx flags that give details about how the fault was handled.
-	 *
-	 * MM layer fills up gfp_mask for page allocations but fault handler might
-	 * alter it if its implementation requires a different allocation context.
-	 *
-	 * pgoff should be used in favour of virtual_address, if possible.
-	 */
-	typedef struct vm_fault {
-		const struct {
-			vma_s			*vma;		/* Target VMA */
-			gfp_t			gfp_mask;	/* gfp mask to be used for allocations */
-			pgoff_t			pgoff;		/* Logical page offset based on vma */
-			unsigned long	address;	/* Faulting virtual address */
-		};
-		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
-									 * XXX: should really be 'const' */
-
-		p4d_t			*p4d;
-		pud_t			*pud;		/* Pointer to pud entry matching
-									 * the 'address'
-									 */
-		pmd_t			*pmd;		/* Pointer to pmd entry matching
-									 * the 'address' */
-		pte_t			*pte;		/* Pointer to pte entry matching
-									 * the 'address'. NULL if the page
-									 * table hasn't been allocated.
-									 */
-		// union {
-			pte_t		orig_pte;	/* Value of PTE at the time of fault */
-		// 	pmd_t		orig_pmd;	/* Value of PMD at the time of fault,
-		// 							 * used by PMD fault only.
-		// 							 */
-		// };
-
-		page_s			*cow_page;	/* Page handler may use for COW fault */
-		page_s			*page;		/* ->fault handlers should return a
-									 * page here, unless VM_FAULT_NOPAGE
-									 * is set (which is also implied by
-									 * VM_FAULT_ERROR).
-									 */
-		/* These three entries are valid only while holding ptl lock */
-		// spinlock_t		*ptl;		/* Page table lock.
-		// 							 * Protects pte page table if 'pte'
-		// 							 * is not NULL, otherwise pmd.
-		// 							 */
-		// pgtable_t		prealloc_pte;
-		// 							/* Pre-allocated pte page table.
-		// 							 * vm_ops->map_pages() sets up a page
-		// 							 * table from atomic context.
-		// 							 * do_fault_around() pre-allocates
-		// 							 * page table to avoid allocation from
-		// 							 * atomic context.
-		// 							 */
-	} vm_fault_s;
 
 	/* page entry size for vm->huge_fault() */
 	enum page_entry_size {
@@ -1010,7 +956,6 @@
 	// vm_fault_t do_set_pmd(vm_fault_s *vmf, page_s *page);
 	// void do_set_pte(vm_fault_s *vmf, page_s *page, unsigned long addr);
 
-	// vm_fault_t finish_fault(vm_fault_s *vmf);
 	// vm_fault_t finish_mkwrite_fault(vm_fault_s *vmf);
 	// #endif
 
@@ -1877,7 +1822,6 @@
 	// extern int user_shm_lock(size_t, struct ucounts *);
 	// extern void user_shm_unlock(size_t, struct ucounts *);
 
-	page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte);
 	// page_s *vm_normal_page_pmd(vma_s *vma, unsigned long addr,
 	// 				pmd_t pmd);
 
@@ -1892,8 +1836,6 @@
 
 	// void free_pgd_range(struct mmu_gather *tlb, unsigned long addr,
 	// 		unsigned long end, unsigned long floor, unsigned long ceiling);
-	int
-	copy_page_range(vma_s *dst_vma, vma_s *src_vma);
 	// int follow_invalidate_pte(mm_s *mm, unsigned long address,
 	// 			struct mmu_notifier_range *range, pte_t **ptepp,
 	// 			pmd_t **pmdpp, spinlock_t **ptlp);
@@ -1917,9 +1859,6 @@
 	// extern vm_fault_t
 	// handle_mm_fault(vma_s *vma, unsigned long address,
 	// 		unsigned int flags, pt_regs_s *regs);
-	extern vm_fault_t
-	myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
-			unsigned long address, unsigned int flags);
 	// extern int fixup_user_fault(mm_s *mm,
 	// 				unsigned long address, unsigned int fault_flags,
 	// 				bool *unlocked);
@@ -2195,7 +2134,6 @@
 	// }
 
 	// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
-	int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
 
 	// static inline void mm_inc_nr_puds(mm_s *mm) {
 	// 	// if (mm_pud_folded(mm))
@@ -2210,7 +2148,6 @@
 	// }
 
 	// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
-	int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
 
 	// static inline void mm_inc_nr_pmds(mm_s *mm) {
 	// 	// if (mm_pmd_folded(mm))
@@ -2257,7 +2194,6 @@
 	// #endif
 
 	// int __pte_alloc(mm_s *mm, pmd_t *pmd);
-	int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address);
 	// int __pte_alloc_kernel(pmd_t *pmd);
 
 	// #if defined(CONFIG_MMU)
@@ -2572,7 +2508,6 @@
 	// 						unsigned long end_pfn);
 	// extern void get_pfn_range_for_nid(unsigned int nid,
 	// 			unsigned long *start_pfn, unsigned long *end_pfn);
-	extern void get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn);
 	// extern unsigned long find_min_pfn_with_active_regions(void);
 
 	// #ifndef CONFIG_NUMA
@@ -3378,8 +3313,6 @@
 	myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end);
 	extern void __iomem
 	*myos_ioremap(size_t paddr_start, unsigned long size);
-	extern int
-	myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
 
 	extern vm_fault_s myos_dump_pagetable(unsigned long address);
 

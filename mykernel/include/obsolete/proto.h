@@ -23,8 +23,6 @@
 		void * data;
 	} softirq_s;
 
-	/* memory.c */
-	page_s * paddr_to_page(phys_addr_t paddr);
 
 	/* video.c */
 	void myos_init_video(void);

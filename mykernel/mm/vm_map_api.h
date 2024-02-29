@@ -1,13 +1,13 @@
 #ifndef _LINUX_VM_MAP_API_H_
 #define _LINUX_VM_MAP_API_H_
 
-    #include <linux/mm/mm_types.h>
+	#include <linux/mm/mm_types.h>
 
-	// /* generic vm_area_ops exported for stackable file systems */
-	// extern vm_fault_t filemap_fault(vm_fault_s *vmf);
-	// extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
-	// 		pgoff_t start_pgoff, pgoff_t end_pgoff);
-	// // extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
+	/* generic vm_area_ops exported for stackable file systems */
+	extern vm_fault_t filemap_fault(vm_fault_s *vmf);
+	extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
+			pgoff_t start_pgoff, pgoff_t end_pgoff);
+	// extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
 
 	extern int generic_file_mmap(file_s *, vma_s *);
 
@@ -15,7 +15,7 @@
 	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,
 			unsigned long end, pgoff_t pgoff, vma_s *insert, vma_s *expand);
 	vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
-            unsigned long end, unsigned long vm_flags, file_s *file, pgoff_t pgoff);
+			unsigned long end, unsigned long vm_flags, file_s *file, pgoff_t pgoff);
 	extern int insert_vm_struct(mm_s *, vma_s *);
 	extern unsigned long myos_mmap_region(file_s *file, unsigned long addr,
 			unsigned long len, vm_flags_t vm_flags, unsigned long pgoff);
