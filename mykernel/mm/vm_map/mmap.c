@@ -10,7 +10,7 @@
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel/kernel.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/mm/mm.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/init/init.h>

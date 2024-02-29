@@ -14,7 +14,7 @@
 	#include <linux/kernel/pid.h>
 	// #include <linux/sem.h>
 	// #include <linux/shm.h>
-	#include <linux/kernel/mutex.h>
+	// #include <linux/kernel/mutex.h>
 	// #include <linux/plist.h>
 	// #include <linux/hrtimer.h>
 	#include <linux/kernel/irqflags.h>
@@ -26,7 +26,6 @@
 	// #include <linux/latencytop.h>
 	// #include <linux/sched/prio.h>
 	// #include <linux/sched/types.h>
-	#include <linux/kernel/signal_types.h>
 	// #include <linux/syscall_user_dispatch.h>
 	// #include <linux/mm_types_task.h>
 	// #include <linux/task_io_accounting.h>

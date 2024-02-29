@@ -10,7 +10,7 @@
 	// #include <linux/tty_driver.h>
 	// #include <linux/tty_ldisc.h>
 	// #include <linux/tty_port.h>
-	#include <linux/kernel/mutex.h>
+	// #include <linux/kernel/mutex.h>
 	// #include <linux/tty_flags.h>
 	#include <uapi/linux/tty.h>
 	// #include <linux/rwsem.h>

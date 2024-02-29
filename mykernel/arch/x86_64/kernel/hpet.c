@@ -14,7 +14,6 @@
 
 
 #include <linux/mm/mm.h>
-#include <linux/kernel/io.h>
 #include <linux/kernel/jiffies.h>
 #include <asm/tlbflush.h>
 

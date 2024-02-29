@@ -8,7 +8,7 @@
  */
 #include <linux/fs/fs.h>
 #include <uapi/linux/major.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/kernel/ctype.h>
 #include <linux/block/genhd.h>
 // #include <linux/vmalloc.h>

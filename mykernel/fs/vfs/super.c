@@ -22,13 +22,13 @@
  */
 
 #include <linux/kernel/export.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/mount.h>
 // #include <linux/security.h>
 // #include <linux/writeback.h>		/* for the emergency remount stuff */
 // #include <linux/idr.h>
-#include <linux/kernel/mutex.h>
+// #include <linux/kernel/mutex.h>
 // #include <linux/backing-dev.h>
 // #include <linux/rculist_bl.h>
 // #include <linux/fscrypt.h>

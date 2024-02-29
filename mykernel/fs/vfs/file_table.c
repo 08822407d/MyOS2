@@ -7,7 +7,7 @@
  */
 
 #include <linux/lib/string.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/init/init.h>

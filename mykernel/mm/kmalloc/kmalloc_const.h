@@ -1,21 +1,5 @@
-/* SPDX-License-Identifier: GPL-2.0 */
-/*
- * Written by Mark Hemment, 1996 (markhe@nextd.demon.co.uk).
- *
- * (C) SGI 2006, Christoph Lameter
- * 	Cleaned up and restructured to ease the addition of alternative
- * 	implementations of SLAB allocators.
- * (C) Linux Foundation 2008-2013
- *      Unified interface for all slab allocators
- */
-
-#ifndef _LINUX_SLAB_H
-#define _LINUX_SLAB_H
-
-	#include <linux/kernel/overflow.h>
-
-	#include <mm/kmalloc_api.h>
-
+#ifndef _KMALLOC_CONST_H_
+#define _KMALLOC_CONST_H_
 
 	#ifdef CONFIG_SLAB
 		/*
@@ -70,30 +54,4 @@
 	 */
 	#define SLAB_OBJ_MIN_SIZE		(KMALLOC_MIN_SIZE < 16 ? (KMALLOC_MIN_SIZE) : 16)
 
-	/*
-	 * Whenever changing this, take care of that kmalloc_type() and
-	 * create_kmalloc_caches() still work as intended.
-	 *
-	 * KMALLOC_NORMAL can contain only unaccounted objects whereas KMALLOC_CGROUP
-	 * is for accounted but unreclaimable and non-dma objects. All the other
-	 * kmem caches can have both accounted and unaccounted objects.
-	 */
-	enum kmalloc_cache_type
-	{
-		KMALLOC_NORMAL = 0,
-	#ifndef CONFIG_ZONE_DMA
-		KMALLOC_DMA = KMALLOC_NORMAL,
-	#endif
-	#ifndef CONFIG_MEMCG_KMEM
-		KMALLOC_CGROUP = KMALLOC_NORMAL,
-	#else
-		KMALLOC_CGROUP,
-	#endif
-		KMALLOC_RECLAIM,
-	#ifdef CONFIG_ZONE_DMA
-		KMALLOC_DMA,
-	#endif
-		NR_KMALLOC_TYPES
-	};
-
-#endif /* _LINUX_SLAB_H */
+#endif /* _KMALLOC_CONST_H_ */

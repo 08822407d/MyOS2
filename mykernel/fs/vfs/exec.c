@@ -24,7 +24,7 @@
  */
 
 // #include <linux/kernel_read_file.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/mm/mm.h>

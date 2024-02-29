@@ -15,7 +15,6 @@
 	// #include <linux/interrupt.h>
 	// #include <linux/dma-mapping.h>
 	// #include <linux/scatterlist.h>
-	#include <linux/kernel/io.h>
 	#include <linux/drivers/ata.h>
 	#include <linux/kernel/workqueue.h>
 	// #include <scsi/scsi_host.h>

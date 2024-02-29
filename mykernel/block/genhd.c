@@ -17,10 +17,10 @@
 #include <linux/kernel/lock_ipc.h>
 // #include <linux/proc_fs.h>
 // #include <linux/seq_file.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 #include <uapi/linux/major.h>
-#include <linux/kernel/mutex.h>
+// #include <linux/kernel/mutex.h>
 // #include <linux/idr.h>
 #include <linux/kernel/log2.h>
 // #include <linux/pm_runtime.h>

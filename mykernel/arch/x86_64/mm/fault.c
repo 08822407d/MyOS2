@@ -40,7 +40,7 @@
 
 
 #include <linux/kernel/kernel.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <asm/idtentry.h>
 #include <obsolete/printk.h>
 #include <obsolete/myos_irq_vectors.h>

@@ -8,6 +8,7 @@
 
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
+	#include <linux/fs/fs.h>
 	#include <uapi/linux/posix_types.h>
 	#include <linux/lib/errno.h>
 

@@ -23,7 +23,7 @@
 #include <linux/mm/shmem_fs.h>
 // #include <linux/ramfs.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/init_syscalls.h>
 #include <uapi/linux/mount.h>

@@ -55,7 +55,7 @@ static vfsmount_s *shm_mnt;
 // #include <linux/posix_acl.h>
 // #include <linux/posix_acl_xattr.h>
 #include <linux/lib/string.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/backing-dev.h>
 #include <linux/mm/shmem_fs.h>
 // #include <linux/writeback.h>

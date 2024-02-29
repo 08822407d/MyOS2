@@ -15,14 +15,14 @@
 // #include <linux/fwnode.h>
 #include <linux/init/init.h>
 // #include <linux/module.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/kdev_t.h>
 // #include <linux/notifier.h>
 // #include <linux/of.h>
 // #include <linux/of_device.h>
 #include <linux/block/genhd.h>
-#include <linux/kernel/mutex.h>
+// #include <linux/kernel/mutex.h>
 // #include <linux/pm_runtime.h>
 // #include <linux/netdevice.h>
 #include <linux/sched/signal.h>

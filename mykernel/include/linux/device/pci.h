@@ -23,24 +23,13 @@
 #ifndef LINUX_PCI_H
 #define LINUX_PCI_H
 
-	// #include <linux/mod_devicetable.h>
-
 	#include <linux//kernel/types.h>
 	#include <linux/init/init.h>
-	// #include <linux/ioport.h>
 	#include <linux/lib/list.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/lib/errno.h>
 	#include <linux/kernel/kobject.h>
-	// #
 	#include <linux/device/device.h>
-	// #include <linux/interrupt.h>
-	#include <linux/kernel/io.h>
-	// #include <linux/resource_ext.h>
-	// #include <linux/msi_api.h>
-	// #include <uapi/linux/pci.h>
-
-	// #include <linux/pci_ids.h>
 
 
 	// typedef struct PCI_compatible_conf_space_type0

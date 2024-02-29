@@ -24,7 +24,7 @@
 #include "internal.h"
 
 
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <obsolete/printk.h>
 
 /*

@@ -7,7 +7,7 @@
 
 #include <linux/init/init.h>
 #include <linux/mm/mm.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 #include <uapi/linux/major.h>
 // #include <linux/device_cgroup.h>

@@ -25,7 +25,7 @@
 #include <linux/mm/mm.h>
 // #include <linux/elfcore.h>
 #include <linux/smp/smp.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/user.h>
 // #include <linux/interrupt.h>
 #include <linux/kernel/delay.h>
@@ -36,7 +36,6 @@
 #include <linux/debug/kdebug.h>
 // #include <linux/prctl.h>
 #include <linux/kernel/uaccess.h>
-#include <linux/kernel/io.h>
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/syscalls.h>
 

@@ -10,7 +10,7 @@
 #include <linux/init/init.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kdev_t.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 
 #include <uapi/linux/major.h>
@@ -20,7 +20,7 @@
 #include <linux/kernel/kobject.h>
 #include <linux/kernel/kobj_map.h>
 #include <linux/device/cdev.h>
-#include <linux/kernel/mutex.h>
+// #include <linux/kernel/mutex.h>
 // #include <linux/backing-dev.h>
 #include <linux/device/tty.h>
 

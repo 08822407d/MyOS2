@@ -3,7 +3,6 @@
 #define _LINUX_SIGNAL_H
 
 	#include <linux/debug/bug.h>
-	#include <linux/kernel/signal_types.h>
 	#include <linux/lib/string.h>
 
 	// struct task_struct;

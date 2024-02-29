@@ -16,7 +16,7 @@
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>
 	#include <linux/mm/pgtable.h>
-	#include <linux/kernel/slab.h>
+	// #include <linux/kernel/slab.h>
 
 
 	#include <mm/earlymem_api.h>

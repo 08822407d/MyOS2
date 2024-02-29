@@ -18,7 +18,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
 // #include <linux/mm/pagemap.h>

@@ -4,7 +4,7 @@
 
 	// #include <linux/rcupdate.h>
 	#include <linux/kernel/kobject.h>
-	#include <linux/kernel/mutex.h>
+	// #include <linux/kernel/mutex.h>
 
 	/*
 	 * Core internal functions to deal with irq descriptors

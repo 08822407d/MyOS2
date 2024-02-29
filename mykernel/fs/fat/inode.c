@@ -26,7 +26,7 @@
 #include <linux/fs/fat.h>
 
 
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <uapi/linux/magic.h>
 
 extern file_ops_s FAT32_file_ops;

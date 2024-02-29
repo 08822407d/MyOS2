@@ -11,7 +11,7 @@
 
 #include <linux/mm/mm.h>
 // #include <linux/miscdevice.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/vmalloc.h>
 // #include <linux/random.h>
 #include <linux/init/init.h>
@@ -24,7 +24,6 @@
 #include <linux/mm/shmem_fs.h>
 // #include <linux/splice.h>
 #include <linux/kernel/export.h>
-#include <linux/kernel/io.h>
 // #include <linux/uio.h>
 #include <linux/kernel/uaccess.h>
 // #include <linux/security.h>

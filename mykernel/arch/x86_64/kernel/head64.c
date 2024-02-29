@@ -17,13 +17,9 @@
 #include <linux/lib/string.h>
 #include <linux/smp/percpu.h>
 #include <linux/kernel/start_kernel.h>
-#include <linux/kernel/io.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/cc_platform.h>
 #include <linux/mm/pgtable.h>
 
 #include <asm/processor.h>
-// #include <asm/proto.h>
 #include <asm/smp.h>
 #include <asm/setup.h>
 #include <asm/desc.h>

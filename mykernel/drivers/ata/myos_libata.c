@@ -1,4 +1,4 @@
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/drivers/libata.h>
 #include <linux/block/genhd.h>
 #include <linux/block/blkdev.h>

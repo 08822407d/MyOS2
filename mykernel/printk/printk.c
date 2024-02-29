@@ -60,7 +60,7 @@
 // #include "internal.h"
 
 
-#include <linux/kernel/kconfig.h>
+#include <generated/conf.h>
 #include <obsolete/printk.h>
 
 

@@ -13,7 +13,7 @@
  */
 
 // #include <linux/anon_inodes.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/sched/autogroup.h>
 // #include <linux/sched/mm.h>
 #include <linux/sched/coredump.h>
@@ -102,6 +102,7 @@
 #include <asm/mmu_context.h>
 // #include <asm/cacheflush.h>
 // #include <asm/tlbflush.h>
+#include <asm/signal.h>
 
 // #include <trace/events/sched.h>
 

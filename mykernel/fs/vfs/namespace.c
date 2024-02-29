@@ -36,7 +36,7 @@
 #include "internal.h"
 
 
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/fs/mount.h>
 #include <obsolete/printk.h>
 

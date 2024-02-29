@@ -1,7 +1,8 @@
 #ifndef _LINUX_KMALLOC_API_H_
 #define _LINUX_KMALLOC_API_H_
 
-	#include "kmalloc/slab.h"
+	#include "kmalloc/kmalloc_const.h"
+	#include "kmalloc/kmalloc_types.h"
 	#include "kmalloc/kmalloc.h"
 
 	extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order);

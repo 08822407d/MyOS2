@@ -15,7 +15,7 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/limits.h>
 #include <linux/mm/mm.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 #include <linux/lib/string_helpers.h>
 

@@ -32,7 +32,6 @@
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/ioport.h>
 #include <linux/fs/dcache.h>
-#include <linux/kernel/cred.h>
 #include <linux/kernel/rtc.h>
 #include <linux/kernel/time.h>
 #include <linux/kernel/uuid.h>

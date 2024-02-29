@@ -88,7 +88,7 @@
 // #include <linux/crc32.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/math64.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include "part_check.h"
 #include "efi.h"
 

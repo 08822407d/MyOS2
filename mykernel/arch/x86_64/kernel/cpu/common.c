@@ -21,7 +21,6 @@
 // #include <linux/kprobes.h>
 // #include <linux/kgdb.h>
 #include <linux/smp/smp.h>
-// #include <linux/kernel/io.h>
 // #include <linux/syscore_ops.h>
 #include <linux/mm/pgtable.h>
 

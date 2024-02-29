@@ -20,14 +20,15 @@
 #include <uapi/linux/unistd.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/export.h>
-#include <linux/kernel/mutex.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/mutex.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/freezer.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/numa.h>
 // #include <linux/sched/isolation.h>
 // #include <trace/events/sched.h>
+#include <asm/signal.h>
 
 
 static DEFINE_SPINLOCK(kthread_create_lock);

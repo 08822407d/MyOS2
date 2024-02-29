@@ -7,12 +7,11 @@
 #include <linux/block/blkdev.h>
 #include <linux/kernel/export.h>
 // #include <linux/mm/pagemap.h>
-#include <linux/kernel/slab.h>
-#include <linux/kernel/cred.h>
+// #include <linux/kernel/slab.h>
 #include <linux/kernel/mount.h>
 // #include <linux/vfs.h>
 // #include <linux/quotaops.h>
-#include <linux/kernel/mutex.h>
+// #include <linux/kernel/mutex.h>
 #include <linux/fs/namei.h>
 // #include <linux/exportfs.h>
 // #include <linux/writeback.h>

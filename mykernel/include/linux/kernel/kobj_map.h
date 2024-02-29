@@ -6,7 +6,7 @@
 #ifndef _KOBJ_MAP_H_
 #define _KOBJ_MAP_H_
 
-	#include <linux/kernel/mutex.h>
+	// #include <linux/kernel/mutex.h>
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/kobject.h>

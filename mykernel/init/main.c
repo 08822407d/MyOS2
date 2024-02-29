@@ -78,7 +78,7 @@
 #include <linux/debug/ftrace.h>
 // #include <linux/async.h>
 // #include <linux/shmem_fs.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/perf_event.h>
 #include <linux/kernel/ptrace.h>
 // #include <linux/pti.h>
@@ -91,7 +91,6 @@
 #include <linux/lib/list.h>
 // #include <linux/integrity.h>
 // #include <linux/proc_ns.h>
-#include <linux/kernel/io.h>
 #include <linux/kernel/cache.h>
 // #include <linux/rodata_test.h>
 // #include <linux/jump_label.h>

@@ -6,7 +6,7 @@
  */
 
 	#include <linux/lib/list.h>
-	#include <linux/kernel/slab.h>
+	// #include <linux/kernel/slab.h>
 	#include <linux/mm/mm.h>
 	// #include <linux/rwsem.h>
 	// #include <linux/memcontrol.h>

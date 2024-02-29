@@ -18,7 +18,7 @@
 
 // #include <linux/module.h>
 #include <linux/kernel/ctype.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/fs/namei.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/iversion.h>

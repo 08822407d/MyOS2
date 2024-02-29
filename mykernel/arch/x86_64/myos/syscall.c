@@ -1,5 +1,5 @@
 #include <linux/sched/task.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
@@ -11,6 +11,7 @@
 #include <asm/syscall.h>
 #include <asm/setup.h>
 #include <asm/io.h>
+#include <asm/signal.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>

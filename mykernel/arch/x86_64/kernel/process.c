@@ -6,7 +6,7 @@
 #include <linux/mm/mm.h>
 #include <linux/smp/smp.h>
 // #include <linux/prctl.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/idle.h>
 #include <linux/sched/debug.h>

@@ -20,7 +20,7 @@
 #include <linux/fs/binfmts.h>
 #include <linux/lib/string.h>
 #include <linux/fs/file.h>
-#include <linux/kernel/slab.h>
+// #include <linux/kernel/slab.h>
 // #include <linux/personality.h>
 // #include <linux/elfcore.h>
 #include <linux/init/init.h>

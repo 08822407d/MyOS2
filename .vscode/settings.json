@@ -154,6 +154,13 @@
         "signal.h": "c",
         "page_ref.h": "c",
         "errno.h": "c",
-        "completion.h": "c"
+        "completion.h": "c",
+        "errname.h": "c",
+        "ftrace.h": "c",
+        "log2.h": "c",
+        "ata.h": "c",
+        "start_kernel.h": "c",
+        "kobject.h": "c",
+        "posix_types.h": "c"
     }
 }
