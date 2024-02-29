@@ -10,7 +10,7 @@
 	// #	include <linux/bug.h>
 	// #	include <linux/mmdebug.h>
 	#ifndef __GENERATING_BOUNDS_H
-	#	include <linux/mm/mm_types.h>
+	#	include <linux/mm/mm.h>
 	#	include <generated/bounds.h>
 	#endif /* !__GENERATING_BOUNDS_H */
 

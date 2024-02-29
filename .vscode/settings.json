@@ -153,6 +153,7 @@
         "page-flags.h": "c",
         "signal.h": "c",
         "page_ref.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "completion.h": "c"
     }
 }

@@ -15,7 +15,6 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/log2.h>
 #include <linux/mm/mm.h>
-#include <linux/mm/mman.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/signal.h>
 #include <linux/fs/binfmts.h>

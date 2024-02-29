@@ -11,50 +11,22 @@
 
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/slab.h>
-// #include <linux/backing-dev.h>
 #include <linux/mm/mm.h>
-// #include <linux/mm_inline.h>
-// #include <linux/vmacache.h>
-// #include <linux/shm.h>
-#include <linux/mm/mman.h>
-// #include <linux/mm/pagemap.h>
-// #include <linux/swap.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/capability.h>
 #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
-// #include <linux/personality.h>
-// #include <linux/security.h>
-// #include <linux/hugetlb.h>
 #include <linux/mm/shmem_fs.h>
-// #include <linux/profile.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/mount.h>
-// #include <linux/mempolicy.h>
 #include <linux/mm/rmap.h>
-// #include <linux/mmu_notifier.h>
-// #include <linux/mmdebug.h>
-// #include <linux/perf_event.h>
-// #include <linux/audit.h>
-// #include <linux/khugepaged.h>
-// #include <linux/uprobes.h>
-// #include <linux/rbtree_augmented.h>
-// #include <linux/notifier.h>
-// #include <linux/memory.h>
 #include <linux/debug/printk.h>
-// #include <linux/userfaultfd_k.h>
-// #include <linux/moduleparam.h>
-// #include <linux/pkeys.h>
-// #include <linux/oom.h>
-// #include <linux/sched/mm.h>
-
 #include <linux/kernel/uaccess.h>
-// #include <asm/cacheflush.h>
-// #include <asm/tlb.h>
 #include <asm/mmu_context.h>
 
 #include <linux/sched/signal.h>
+
+#include "vm_map_types.h"
 
 
 static bool ignore_rlimit_data = false;

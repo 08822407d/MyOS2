@@ -5,7 +5,6 @@
 #include <linux/kernel/lock_ipc.h>
 #include <linux/lib/list.h>
 #include <linux/kernel/cpumask.h>
-#include <linux/mm/mman.h>
 #include <linux/mm/pgtable.h>
 
 #ifndef INIT_MM_CONTEXT

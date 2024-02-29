@@ -2,12 +2,14 @@
 #ifndef _LINUX_MM_H
 #define _LINUX_MM_H
 
+	#include <mm/mm_types.h>
+
 	#include <linux/lib/errno.h>
 	#include <linux/mm/gfp.h>
 	#include <linux/debug/bug.h>
 	#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
-	#include <linux/mm/mm_types.h>
+	#include <linux/kernel/completion.h>
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/err.h>
 	#include <linux/kernel/overflow.h>

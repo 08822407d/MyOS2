@@ -342,38 +342,38 @@
 	#define GFP_MOVABLE_MASK		(__GFP_RECLAIMABLE|__GFP_MOVABLE)
 	#define GFP_MOVABLE_SHIFT		3
 
-	// /*
-	// * GFP_ZONE_TABLE is a word size bitstring that is used for looking up the
-	// * zone to use given the lowest 4 bits of gfp_t. Entries are GFP_ZONES_SHIFT
-	// * bits long and there are 16 of them to cover all possible combinations of
-	// * __GFP_DMA, __GFP_DMA32, __GFP_MOVABLE and __GFP_HIGHMEM.
-	// *
-	// * The zone fallback order is MOVABLE=>HIGHMEM=>NORMAL=>DMA32=>DMA.
-	// * But GFP_MOVABLE is not only a zone specifier but also an allocation
-	// * policy. Therefore __GFP_MOVABLE plus another zone selector is valid.
-	// * Only 1 bit of the lowest 3 bits (DMA,DMA32,HIGHMEM) can be set to "1".
-	// *
-	// *       bit       result
-	// *       =================
-	// *       0x0    => NORMAL
-	// *       0x1    => DMA or NORMAL
-	// *       0x2    => HIGHMEM or NORMAL
-	// *       0x3    => BAD (DMA+HIGHMEM)
-	// *       0x4    => DMA32 or NORMAL
-	// *       0x5    => BAD (DMA+DMA32)
-	// *       0x6    => BAD (HIGHMEM+DMA32)
-	// *       0x7    => BAD (HIGHMEM+DMA32+DMA)
-	// *       0x8    => NORMAL (MOVABLE+0)
-	// *       0x9    => DMA or NORMAL (MOVABLE+DMA)
-	// *       0xa    => MOVABLE (Movable is valid only if HIGHMEM is set too)
-	// *       0xb    => BAD (MOVABLE+HIGHMEM+DMA)
-	// *       0xc    => DMA32 or NORMAL (MOVABLE+DMA32)
-	// *       0xd    => BAD (MOVABLE+DMA32+DMA)
-	// *       0xe    => BAD (MOVABLE+DMA32+HIGHMEM)
-	// *       0xf    => BAD (MOVABLE+DMA32+HIGHMEM+DMA)
-	// *
-	// * GFP_ZONES_SHIFT must be <= 2 on 32 bit platforms.
-	// */
+	/*
+	 * GFP_ZONE_TABLE is a word size bitstring that is used for looking up the
+	 * zone to use given the lowest 4 bits of gfp_t. Entries are GFP_ZONES_SHIFT
+	 * bits long and there are 16 of them to cover all possible combinations of
+	 * __GFP_DMA, __GFP_DMA32, __GFP_MOVABLE and __GFP_HIGHMEM.
+	 *
+	 * The zone fallback order is MOVABLE=>HIGHMEM=>NORMAL=>DMA32=>DMA.
+	 * But GFP_MOVABLE is not only a zone specifier but also an allocation
+	 * policy. Therefore __GFP_MOVABLE plus another zone selector is valid.
+	 * Only 1 bit of the lowest 3 bits (DMA,DMA32,HIGHMEM) can be set to "1".
+	 *
+	 *       bit       result
+	 *       =================
+	 *       0x0    => NORMAL
+	 *       0x1    => DMA or NORMAL
+	 *       0x2    => HIGHMEM or NORMAL
+	 *       0x3    => BAD (DMA+HIGHMEM)
+	 *       0x4    => DMA32 or NORMAL
+	 *       0x5    => BAD (DMA+DMA32)
+	 *       0x6    => BAD (HIGHMEM+DMA32)
+	 *       0x7    => BAD (HIGHMEM+DMA32+DMA)
+	 *       0x8    => NORMAL (MOVABLE+0)
+	 *       0x9    => DMA or NORMAL (MOVABLE+DMA)
+	 *       0xa    => MOVABLE (Movable is valid only if HIGHMEM is set too)
+	 *       0xb    => BAD (MOVABLE+HIGHMEM+DMA)
+	 *       0xc    => DMA32 or NORMAL (MOVABLE+DMA32)
+	 *       0xd    => BAD (MOVABLE+DMA32+DMA)
+	 *       0xe    => BAD (MOVABLE+DMA32+HIGHMEM)
+	 *       0xf    => BAD (MOVABLE+DMA32+HIGHMEM+DMA)
+	 *
+	 * GFP_ZONES_SHIFT must be <= 2 on 32 bit platforms.
+	 */
 
 	// #define GFP_ZONE_TABLE ( \
 	// 	(ZONE_NORMAL << 0 * GFP_ZONES_SHIFT)				       \

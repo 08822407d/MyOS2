@@ -2,8 +2,32 @@
 #define _LINUX_VM_MAP_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
+	#include <uapi/linux/mman.h>
 
 	#include "vm_map_types.h"
+
+
+	#ifndef arch_calc_vm_prot_bits
+	#	define arch_calc_vm_prot_bits(prot, pkey)	0
+	#endif
+
+	#ifndef arch_calc_vm_flag_bits
+	#	define arch_calc_vm_flag_bits(flags)		0
+	#endif
+
+	/*
+	 * Optimisation macro.  It is equivalent to:
+	 *      (x & bit1) ? bit2 : 0
+	 * but this version is faster.
+	 * ("bit1" and "bit2" must be single bits)
+	 */
+	#define _calc_vm_trans(x, bit1, bit2) (						\
+				(!(bit1) || !(bit2)) ? 0 : 						\
+					((bit1) <= (bit2) ?							\
+						((x) & (bit1)) * ((bit2) / (bit1))		\
+						: ((x) & (bit1)) / ((bit1) / (bit2)))	\
+			)
+
 
 	#ifdef DEBUG
 	
@@ -33,6 +57,12 @@
 
 		extern vma_s
 		*find_exact_vma(mm_s *mm, unsigned long vm_start, unsigned long vm_end);
+
+		extern unsigned long
+		calc_vm_prot_bits(unsigned long prot, unsigned long pkey);
+
+		extern unsigned long
+		calc_vm_flag_bits(unsigned long flags);
 
 	#endif
 	
@@ -140,6 +170,31 @@
 				vma = NULL;
 
 			return vma;
+		}
+
+
+		/*
+		 * Combine the mmap "prot" argument into "vm_flags" used internally.
+		 */
+		PREFIX_STATIC_INLINE
+		unsigned long
+		calc_vm_prot_bits(unsigned long prot, unsigned long pkey) {
+			return _calc_vm_trans(prot, PROT_READ, VM_READ) |
+					_calc_vm_trans(prot, PROT_WRITE, VM_WRITE) |
+					_calc_vm_trans(prot, PROT_EXEC, VM_EXEC) |
+					arch_calc_vm_prot_bits(prot, pkey);
+		}
+
+		/*
+		 * Combine the mmap "flags" argument into "vm_flags" used internally.
+		 */
+		PREFIX_STATIC_INLINE
+		unsigned long
+		calc_vm_flag_bits(unsigned long flags) {
+			return _calc_vm_trans(flags, MAP_GROWSDOWN, VM_GROWSDOWN) |
+					_calc_vm_trans(flags, MAP_LOCKED, VM_LOCKED) |
+					_calc_vm_trans(flags, MAP_SYNC, VM_SYNC) |
+					arch_calc_vm_flag_bits(flags);
 		}
 
 	#endif

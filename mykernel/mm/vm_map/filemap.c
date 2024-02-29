@@ -17,7 +17,6 @@
 #include <linux/kernel/uaccess.h>
 #include <linux/mm/gfp.h>
 #include <linux/mm/mm.h>
-#include <linux/mm/mman.h>
 // #include <linux/mm/pagemap.h>
 #include <linux/fs/file.h>
 #include <linux/mm/shmem_fs.h>

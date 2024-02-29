@@ -238,4 +238,33 @@
 	// #endif
 	// #define VM_FLAGS_CLEAR	(ARCH_VM_PKEY_FLAGS | VM_ARCH_CLEAR)
 
+	/*
+	 * The historical set of flags that all mmap implementations implicitly
+	 * support when a ->mmap_validate() op is not provided in file_operations.
+	 *
+	 * MAP_EXECUTABLE and MAP_DENYWRITE are completely ignored throughout the
+	 * kernel.
+	 */
+	#define LEGACY_MAP_MASK	(		\
+				MAP_SHARED			\
+				| MAP_PRIVATE		\
+				| MAP_FIXED			\
+				| MAP_ANONYMOUS		\
+				| MAP_DENYWRITE		\
+				| MAP_EXECUTABLE	\
+				| MAP_UNINITIALIZED	\
+				| MAP_GROWSDOWN		\
+				| MAP_LOCKED		\
+				| MAP_NORESERVE		\
+				| MAP_POPULATE		\
+				| MAP_NONBLOCK		\
+				| MAP_STACK			\
+				| MAP_HUGETLB		\
+				| MAP_32BIT			\
+				| MAP_HUGE_2MB		\
+				| MAP_HUGE_1GB		\
+			)
+
+
+
 #endif /* _LINUX_VM_MAP_CONST_H_ */
