@@ -1,9 +1,9 @@
-#ifndef _LINUX_MEMBLOCK_API_H_
-#define _LINUX_MEMBLOCK_API_H_
+#ifndef _LINUX_EARLYMEM_API_H_
+#define _LINUX_EARLYMEM_API_H_
 
-    #include "early/memblock_const.h"
-    #include "early/memblock_types.h"
-    #include "early/memblock.h"
+	#include "early/memblock_const.h"
+	#include "early/memblock_types.h"
+	#include "early/memblock.h"
 
 	int simple_mmblk_add(phys_addr_t base, phys_addr_t size);
 	int simple_mmblk_reserve(phys_addr_t base, phys_addr_t size);
@@ -25,4 +25,6 @@
 	void *myos_memblock_alloc_DMA32(size_t size, size_t align);
 	void *myos_memblock_alloc_normal(size_t size, size_t align);
 
-#endif /* _LINUX_MEMBLOCK_API_H_ */
+	void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
+
+#endif /* _LINUX_EARLYMEM_API_H_ */

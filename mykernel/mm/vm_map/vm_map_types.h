@@ -1,5 +1,7 @@
-#ifndef _VM_MAP_TYPES_H_
-#define _VM_MAP_TYPES_H_
+#ifndef _LINUX_VM_MAP_TYPES_H_
+#define _LINUX_VM_MAP_TYPES_H_
+
+	#include <linux/mm/mm.h>
 
 	#include "vm_map_const.h"
 
@@ -179,4 +181,4 @@
 		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
 	} vm_ops_s;
 
-#endif /* _VM_MAP_TYPES_H_ */
+#endif /* _LINUX_VM_MAP_TYPES_H_ */

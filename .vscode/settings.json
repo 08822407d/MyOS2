@@ -138,6 +138,13 @@
         "memfault_types.h": "c",
         "memfault_const.h": "c",
         "compiler_types.h": "c",
-        "kmalloc_api.h": "c"
+        "kmalloc_api.h": "c",
+        "memfault_api.h": "c",
+        "earlymem_api.h": "c",
+        "page_alloc_api.h": "c",
+        "vm_map_const.h": "c",
+        "vm_map.h": "c",
+        "vm_map_types.h": "c",
+        "mmfault.h": "c"
     }
 }

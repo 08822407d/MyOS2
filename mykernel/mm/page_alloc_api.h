@@ -3,6 +3,7 @@
 
 	#include "page_alloc/page_alloc_const.h"
 	#include "page_alloc/page_alloc_types.h"
+	#include "page_alloc/page_alloc.h"
 
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
@@ -13,6 +14,8 @@
 	#ifndef page_to_virt
 	#	define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
 	#endif
+
+	#define offset_in_page(p)		((unsigned long)(p) & ~PAGE_MASK)
 
 	page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	#define alloc_page(gfp_mask)	alloc_pages(gfp_mask, 0)

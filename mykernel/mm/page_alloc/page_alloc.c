@@ -1,3 +1,7 @@
+#define PAGEALLOC_DEFINATION
+
+#include "page_alloc.h"
+
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  *  linux/mm/page_alloc.c

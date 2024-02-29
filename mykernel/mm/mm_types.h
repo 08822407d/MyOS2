@@ -1,14 +1,12 @@
 #ifndef _LINUX_MM_TYPES_H_
 #define _LINUX_MM_TYPES_H_
 
+	#include "early/memblock_types.h"
     #include "page_alloc/page_alloc_types.h"
 	#include "kmalloc/myos_slab_types.h"
 	#include "fault/memfault_types.h"
     #include "vm_map/vm_map_types.h"
 
-
-	struct mm_struct;
-	typedef struct mm_struct mm_s;
 
 	typedef struct mm_struct {
 		size_t				entry_point;
@@ -202,5 +200,25 @@
 	} mm_s;
 
 	extern mm_s init_mm;
+
+	/**
+	 * mmget() - Pin the address space associated with a &mm_s.
+	 * @mm: The address space to pin.
+	 *
+	 * Make sure that the address space of the given &mm_s doesn't
+	 * go away. This does not protect against parts of the address space being
+	 * modified or freed, however.
+	 *
+	 * Never use this function to pin this address space for an
+	 * unbounded/indefinite amount of time.
+	 *
+	 * Use mmput() to release the reference acquired by mmget().
+	 *
+	 * See also <Documentation/vm/active_mm.rst> for an in-depth explanation
+	 * of &mm_struct.mm_count vs &mm_struct.mm_users.
+	 */
+	static inline void mmget(mm_s *mm) {
+		atomic_inc(&mm->mm_users);
+	}
 
 #endif /* _LINUX_MM_TYPES_H_ */

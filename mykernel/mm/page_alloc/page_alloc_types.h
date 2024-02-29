@@ -4,6 +4,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lock_ipc.h>
 
+	#include "page_alloc_const.h"
 
 	struct mm_struct;
 	typedef struct mm_struct mm_s;

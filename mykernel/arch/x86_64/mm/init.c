@@ -38,6 +38,10 @@
 
 // #define MAP_LOWHALF
 
+
+unsigned long
+myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end);
+
 int after_bootmem;
 
 

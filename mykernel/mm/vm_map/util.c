@@ -6,7 +6,7 @@
 #include <linux/kernel/export.h>
 #include <linux/kernel/err.h>
 #include <linux/kernel/sched.h>
-#include <linux/sched/mm.h>
+// #include <linux/sched/mm.h>
 #include <linux/sched/signal.h>
 #include <linux/sched/task_stack.h>
 // #include <linux/security.h>
@@ -95,5 +95,3 @@ vm_mmap(file_s *file, unsigned long addr, unsigned long len,
 
 
 int sysctl_max_map_count __read_mostly = DEFAULT_MAX_MAP_COUNT;
-unsigned long sysctl_user_reserve_kbytes __read_mostly = 1UL << 17; /* 128MB */
-unsigned long sysctl_admin_reserve_kbytes __read_mostly = 1UL << 13; /* 8MB */

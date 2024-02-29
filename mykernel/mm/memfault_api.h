@@ -3,6 +3,7 @@
 
     #include "fault/memfault_const.h"
     #include "fault/memfault_types.h"
+	#include "fault/mmfault.h"
 
 	page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte);
 
@@ -18,5 +19,6 @@
 	int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address);
 
 	extern int myos_map_range(mm_s *mm, unsigned long start, unsigned long end);
+	extern vm_fault_s myos_dump_pagetable(unsigned long address);
 
 #endif /* _LINUX_MEM_FAULT_API_H_ */

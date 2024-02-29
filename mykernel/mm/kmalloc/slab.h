@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_SLAB_H
-#define _LINUX_SLAB_H
+#ifndef _LINUX_SLAB_SLAB_H
+#define _LINUX_SLAB_SLAB_H
 	// /*
 	// * Internal slab definitions
 	// */
@@ -230,7 +230,7 @@
 	// #include <linux/kasan.h>
 	// #include <linux/kmemleak.h>
 	// #include <linux/random.h>
-	#include <linux/sched/mm.h>
+	// #include <linux/sched/mm.h>
 
 	// /*
 	// * State of the slab allocator.
@@ -865,4 +865,4 @@
 	// }
 	// #endif
 
-#endif /* _LINUX_SLAB_H */
+#endif /* _LINUX_SLAB_SLAB_H */

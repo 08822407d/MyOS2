@@ -2,6 +2,9 @@
 #ifndef __LINUX_SPINLOCK_H
 #define __LINUX_SPINLOCK_H
 
+	#include "spinlock/spinlock_types.h"
+	#include "spinlock/spinlock_smp.h"
+
 	/*
 	 * include/linux/spinlock.h - generic spinlock/rwlock declarations
 	 *
@@ -51,9 +54,6 @@
 	 *  linux/spinlock.h:     builds the final spin_*() APIs.
 	 */
 	#include <asm/lock_ipc.h>
-
-	#include "spinlock/spinlock_types.h"
-	#include "spinlock/spinlock_smp.h"
 
 
 	/*

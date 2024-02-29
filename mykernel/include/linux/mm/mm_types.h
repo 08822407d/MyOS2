@@ -8,7 +8,6 @@
 	#include <linux/kernel/cpumask.h>
 	#include <linux/kernel/workqueue.h>
 
-
 	#include <mm/mm_types.h>
 
 	/*
@@ -18,5 +17,6 @@
 	 * buffer heads to tail pages after attaching buffer heads to the head page)
 	 */
 	#define page_private(page)	((page)->private)
+
 
 #endif /* _LINUX_MM_TYPES_H */

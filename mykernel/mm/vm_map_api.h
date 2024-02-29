@@ -1,7 +1,9 @@
 #ifndef _LINUX_VM_MAP_API_H_
 #define _LINUX_VM_MAP_API_H_
 
-	#include <linux/mm/mm_types.h>
+	#include "vm_map/vm_map_const.h"
+	#include "vm_map/vm_map_types.h"
+	#include "vm_map/vm_map.h"
 
 	/* generic vm_area_ops exported for stackable file systems */
 	extern vm_fault_t filemap_fault(vm_fault_s *vmf);

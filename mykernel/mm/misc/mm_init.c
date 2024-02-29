@@ -35,6 +35,7 @@
 static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
 
+extern char *const zone_names[MAX_NR_ZONES];
 
 
 static void __meminit
