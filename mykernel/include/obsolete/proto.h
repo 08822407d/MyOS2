@@ -23,8 +23,6 @@
 		void * data;
 	} softirq_s;
 
-	extern List_hdr_s	timer_lhdr;
-
 	/* memory.c */
 	page_s * paddr_to_page(phys_addr_t paddr);
 
@@ -36,14 +34,6 @@
 	void unregister_softirq(unsigned sirq);
 	void set_softirq_status(unsigned sirq);
 	uint64_t get_softirq_status(void);
-	void myos_softirq_init(void);
-
-	/* timer.c */
-	void init_timer(timer_s * timer,void (* func)(void * data),void *data,unsigned long expire_jiffies);
-	void add_timer(timer_s * timer);
-	void del_timer(timer_s * timer);
-	void myos_timer_init(void);
-	void myos_do_timer(void * data);
 
 
 #endif /* _PROTO_H_ */

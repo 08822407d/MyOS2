@@ -229,10 +229,6 @@ asmlinkage void __init start_kernel(void)
 
 	// enable bsp's apic
 	myos_init_bsp_intr();
-	
-	// post init
-	myos_softirq_init();
-	myos_timer_init();
 
 	// myos_startup_smp();
 

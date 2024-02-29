@@ -3,22 +3,13 @@
 #define _LINUX_MM_H
 
 	#include <linux/lib/errno.h>
-	// #include <linux/mmdebug.h>
 	#include <linux/mm/gfp.h>
 	#include <linux/debug/bug.h>
 	#include <linux/lib/list.h>
 	#include <linux/mm/mmzone.h>
-	// #include <linux/rbtree.h>
-	// #include <linux/debug_locks.h>
 	#include <linux/mm/mm_types.h>
-	// #include <linux/mmap_lock.h>
-	// #include <linux/range.h>
 	#include <linux/mm/pfn.h>
-	// #include <linux/percpu-refcount.h>
-	// #include <linux/bit_spinlock.h>
-	// #include <linux/shrinker.h>
 	#include <linux/kernel/resource.h>
-	// #include <linux/page_ext.h>
 	#include <linux/kernel/err.h>
 	#include <linux/mm/page-flags.h>
 	#include <linux/mm/page_ref.h>
@@ -26,8 +17,6 @@
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>
 	#include <linux/mm/pgtable.h>
-	// #include <linux/kasan.h>
-	// #include <linux/memremap.h>
 	#include <linux/kernel/slab.h>
 
 

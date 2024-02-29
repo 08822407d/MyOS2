@@ -39,50 +39,14 @@
  * Aug/Sep 2004 Changed to four level page tables (Andi Kleen)
  */
 
-// #include <linux/kernel_stat.h>
 #include <linux/mm/mm.h>
-// #include <linux/mm_inline.h>
-#include <linux/sched/mm.h>
 #include <linux/sched/coredump.h>
-// #include <linux/sched/numa_balancing.h>
-#include <linux/sched/task.h>
-// #include <linux/hugetlb.h>
-#include <linux/mm/mman.h>
-// #include <linux/swap.h>
-// #include <linux/highmem.h>
 #include <linux/mm/pagemap.h>
-// #include <linux/memremap.h>
-// #include <linux/ksm.h>
-#include <linux/mm/rmap.h>
-#include <linux/kernel/export.h>
-// #include <linux/delayacct.h>
-#include <linux/init/init.h>
-// #include <linux/pfn_t.h>
-// #include <linux/writeback.h>
-// #include <linux/memcontrol.h>
-// #include <linux/mmu_notifier.h>
-// #include <linux/swapops.h>
-#include <linux/kernel/elf.h>
-#include <linux/mm/gfp.h>
-// #include <linux/migrate.h>
-#include <linux/lib/string.h>
-// #include <linux/debugfs.h>
-// #include <linux/userfaultfd_k.h>
-// #include <linux/dax.h>
-// #include <linux/oom.h>
-#include <linux/kernel/numa.h>
-// #include <linux/perf_event.h>
-#include <linux/kernel/ptrace.h>
-// #include <linux/vmalloc.h>
 
-// #include <trace/events/kmem.h>
-
-#include <asm/io.h>
-#include <asm/mmu_context.h>
 #include <asm/pgalloc.h>
-#include <linux/kernel/uaccess.h>
-// #include <asm/tlb.h>
-#include <asm/tlbflush.h>
+
+#include "mmfault_const.h"
+#include "mmfault_types.h"
 
 
 #ifndef CONFIG_NUMA
@@ -894,7 +858,7 @@ static vm_fault_t wp_page_copy(vm_fault_s *vmf)
 		// 	free_swap_cache(old_page);
 		put_page(old_page);
 	}
-	return page_copied ? VM_FAULT_WRITE : 0;
+	return 0;
 oom_free_new:
 	put_page(new_page);
 oom:

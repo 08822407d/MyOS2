@@ -115,7 +115,6 @@ void excep_gen_prot(pt_regs_s *regs)
 /*==============================================================================================*
  *											entrys									 			*
  *==============================================================================================*/
-extern void do_softirq(void);
 void excep_hwint_context(pt_regs_s *regs)
 {
 	unsigned long vec = (unsigned long)regs->irq_nr;

@@ -14,74 +14,7 @@
  *  Per cpu hot/cold page lists, bulk allocation, Martin J. Bligh, Sept 2002
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
-
-#include <linux/kernel/stddef.h>
 #include <linux/mm/mm.h>
-// #include <linux/highmem.h>
-// #include <linux/swap.h>
-// #include <linux/swapops.h>
-// #include <linux/interrupt.h>
-#include <linux/mm/pagemap.h>
-#include <linux/kernel/jiffies.h>
-// #include <linux/mm/memblock.h>
-#include <linux/compiler/compiler.h>
-#include <linux/kernel/kernel.h>
-// #include <linux/kasan.h>
-// #include <linux/module.h>
-// #include <linux/suspend.h>
-// #include <linux/pagevec.h>
-#include <linux/block/blkdev.h>
-#include <linux/kernel/slab.h>
-// #include <linux/ratelimit.h>
-// #include <linux/oom.h>
-// #include <linux/topology.h>
-// #include <linux/sysctl.h>
-#include <linux/kernel/cpu.h>
-// #include <linux/cpuset.h>
-// #include <linux/memory_hotplug.h>
-// #include <linux/nodemask.h>
-// #include <linux/vmalloc.h>
-// #include <linux/vmstat.h>
-// #include <linux/mempolicy.h>
-// #include <linux/memremap.h>
-// #include <linux/stop_machine.h>
-// #include <linux/random.h>
-// #include <linux/sort.h>
-#include <linux/mm/pfn.h>
-// #include <linux/backing-dev.h>
-// #include <linux/fault-inject.h>
-// #include <linux/page-isolation.h>
-// #include <linux/debugobjects.h>
-// #include <linux/kmemleak.h>
-// #include <linux/compaction.h>
-// #include <trace/events/kmem.h>
-// #include <trace/events/oom.h>
-#include <linux/kernel/prefetch.h>
-// #include <linux/mm_inline.h>
-// #include <linux/mmu_notifier.h>
-// #include <linux/migrate.h>
-// #include <linux/hugetlb.h>
-// #include <linux/sched/rt.h>
-#include <linux/sched/mm.h>
-// #include <linux/page_owner.h>
-// #include <linux/page_table_check.h>
-#include <linux/kernel/kthread.h>
-// #include <linux/memcontrol.h>
-#include <linux/debug/ftrace.h>
-// #include <linux/lockdep.h>
-#include <linux/kernel/nmi.h>
-// #include <linux/psi.h>
-// #include <linux/padata.h>
-// #include <linux/khugepaged.h>
-// #include <linux/buffer_head.h>
-// #include <linux/delayacct.h>
-#include <asm/sections.h>
-#include <asm/tlbflush.h>
-#include <asm/div64.h>
-// #include "internal.h"
-// #include "shuffle.h"
-// #include "page_reporting.h"
-
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:

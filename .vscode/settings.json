@@ -130,6 +130,10 @@
         "pgtable.h": "c",
         "gfp.h": "c",
         "workqueue.h": "c",
-        "vm_map_api.h": "c"
+        "vm_map_api.h": "c",
+        "lock_ipc.h": "c",
+        "page_alloc_types.h": "c",
+        "mmfault_const.h": "c",
+        "mmfault_types.h": "c"
     }
 }

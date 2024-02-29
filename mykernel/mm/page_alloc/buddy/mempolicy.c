@@ -67,43 +67,7 @@
    make bind policy root only? It can trigger oom much faster and the
    kernel is not always grateful with that.
 */
-
-// #include <linux/mempolicy.h>
-// #include <linux/pagewalk.h>
-// #include <linux/highmem.h>
-// #include <linux/hugetlb.h>
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/sched.h>
 #include <linux/sched/mm.h>
-// #include <linux/sched/numa_balancing.h>
-#include <linux/sched/task.h>
-// #include <linux/nodemask.h>
-// #include <linux/cpuset.h>
-#include <linux/kernel/slab.h>
-#include <linux/lib/string.h>
-#include <linux/kernel/export.h>
-// #include <linux/nsproxy.h>
-// #include <linux/interrupt.h>
-#include <linux/init/init.h>
-// #include <linux/compat.h>
-#include <linux/kernel/ptrace.h>
-// #include <linux/swap.h>
-// #include <linux/seq_file.h>
-// #include <linux/proc_fs.h>
-// #include <linux/migrate.h>
-// #include <linux/ksm.h>
-#include <linux/mm/rmap.h>
-// #include <linux/security.h>
-#include <linux/kernel/syscalls.h>
-#include <linux/kernel/ctype.h>
-// #include <linux/mm_inline.h>
-// #include <linux/mmu_notifier.h>
-#include <linux/debug/printk.h>
-// #include <linux/swapops.h>
-
-#include <asm/tlbflush.h>
-#include <linux/kernel/uaccess.h>
-
 
 /**
  * alloc_pages - Allocate pages.
