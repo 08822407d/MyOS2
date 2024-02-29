@@ -4,7 +4,8 @@
 // #include <linux/initrd.h>
 #include <linux/kernel/ioport.h>
 // #include <linux/swap.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
+#include <linux/mm/mm.h>
 // #include <linux/swapfile.h>
 // #include <linux/swapops.h>
 // #include <linux/kmemleak.h>

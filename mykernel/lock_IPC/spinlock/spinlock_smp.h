@@ -7,7 +7,7 @@
 
 	#include <asm/lock_ipc.h>
 
-	#include "simple_spinlock_types.h"
+	#include "spinlock_types.h"
 
 	#ifdef DEBUG
 
@@ -40,7 +40,7 @@
 
 	#endif
 	
-	#if defined(SIMPLE_SPINLOCK_SMP_DEFINATION) || !(DEBUG)
+	#if defined(SPINLOCK_SMP_DEFINATION) || !(DEBUG)
 
 		// static inline int __raw_spin_trylock(raw_spinlock_t *lock) {
 		// static inline int raw_spin_trylock(arch_spinlock_t *lock) {

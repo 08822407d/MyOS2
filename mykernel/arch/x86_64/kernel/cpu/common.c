@@ -4,7 +4,7 @@
 /* cpu_feature_enabled() cannot be used this early */
 // #define USE_EARLY_PGTABLE_L5
 
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/kernel/linkage.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/kernel.h>

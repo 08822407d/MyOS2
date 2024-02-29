@@ -11,7 +11,7 @@
 // #include <linux/swap.h>
 // #include <linux/security.h>
 #include <linux/device/cdev.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 // #include <linux/fsnotify.h>
 #include <linux/kernel/mount.h>
 // #include <linux/posix_acl.h>

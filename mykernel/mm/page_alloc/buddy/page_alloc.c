@@ -23,7 +23,7 @@
 // #include <linux/interrupt.h>
 #include <linux/mm/pagemap.h>
 #include <linux/kernel/jiffies.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/compiler/compiler.h>
 #include <linux/kernel/kernel.h>
 // #include <linux/kasan.h>
@@ -78,7 +78,7 @@
 #include <asm/sections.h>
 #include <asm/tlbflush.h>
 #include <asm/div64.h>
-#include "internal.h"
+// #include "internal.h"
 // #include "shuffle.h"
 // #include "page_reporting.h"
 

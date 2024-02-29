@@ -8,8 +8,8 @@
 	#include <asm/lock_ipc.h>
 	#include <asm/barrier.h>
 
-	#include "atomic/simple_atomic.h"
-	#include "atomic/simple_atomic-long.h"
+	#include "atomic/atomic.h"
+	#include "atomic/atomic-long.h"
 
 	// /*
 	//  * Relaxed variants of xchg, cmpxchg and some atomic operations.

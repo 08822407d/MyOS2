@@ -6,7 +6,7 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/lock_ipc.h>
 
-	#include "arch_simple_spinlock_types.h"
+	#include "spinlock_types_arch.h"
 
 
 	#ifdef DEBUG

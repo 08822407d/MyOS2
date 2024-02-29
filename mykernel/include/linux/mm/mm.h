@@ -32,6 +32,9 @@
 	#include <linux/kernel/slab.h>
 
 
+	#include <mm/early/memblock_api.h>
+
+
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 

@@ -21,7 +21,7 @@
 // #include <linux/acpi_pmtmr.h>
 // #include <linux/clockchips.h>
 // #include <linux/interrupt.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/ioport.h>
 #include <linux/kernel/export.h>

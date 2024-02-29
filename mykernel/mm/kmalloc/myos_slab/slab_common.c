@@ -28,8 +28,6 @@
 // #define CREATE_TRACE_POINTS
 // #include <trace/events/kmem.h>
 
-#include "internal.h"
-
 #include "slab.h"
 
 /*

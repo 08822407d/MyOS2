@@ -17,7 +17,8 @@
 // #include <linux/init_ohci1394_dma.h>
 // #include <linux/initrd.h>
 // #include <linux/iscsi_ibft.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
+#include <linux/mm/mm.h>
 // #include <linux/panic_notifier.h>
 #include <linux/device/pci.h>
 // #include <linux/root_dev.h>

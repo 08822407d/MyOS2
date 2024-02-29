@@ -72,7 +72,7 @@
 
 // #include <linux/bitmap.h>
 // #include <linux/cpumask.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/kernel/err.h>
 #include <linux/lib/list.h>
 // #include <linux/log2.h>

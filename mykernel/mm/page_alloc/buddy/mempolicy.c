@@ -104,8 +104,6 @@
 #include <asm/tlbflush.h>
 #include <linux/kernel/uaccess.h>
 
-#include "internal.h"
-
 
 /**
  * alloc_pages - Allocate pages.

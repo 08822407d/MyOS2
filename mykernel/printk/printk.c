@@ -30,7 +30,7 @@
 #include <linux/kernel/delay.h>
 #include <linux/smp/smp.h>
 // #include <linux/security.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/kernel/syscalls.h>
 // #include <linux/crash_core.h>
 // #include <linux/ratelimit.h>

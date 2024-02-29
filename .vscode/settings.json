@@ -117,6 +117,11 @@
         "alternative.h": "c",
         "myos_optimize_option.h": "c",
         "atomic-long.h": "c",
-        "arch_simple_atomic.h": "c"
+        "arch_simple_atomic.h": "c",
+        "spinlock_smp_arch.h": "c",
+        "irqflags.h": "c",
+        "pgtable_64_types.h": "c",
+        "spinlock_smp.h": "c",
+        "slab.h": "c"
     }
 }

@@ -1,6 +1,6 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/math.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/lib/string.h>
 
 #include <asm/e820-types.h>

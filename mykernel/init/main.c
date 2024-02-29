@@ -26,7 +26,7 @@
 #include <linux/kernel/ioport.h>
 #include <linux/init/init.h>
 // #include <linux/initrd.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 // #include <linux/acpi.h>
 // #include <linux/bootconfig.h>
 #include <linux/device/console.h>

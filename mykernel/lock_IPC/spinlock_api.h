@@ -52,8 +52,8 @@
 	 */
 	#include <asm/lock_ipc.h>
 
-	#include "spinlock/simple_spinlock_types.h"
-	#include "spinlock/simple_spinlock_smp.h"
+	#include "spinlock/spinlock_types.h"
+	#include "spinlock/spinlock_smp.h"
 
 
 	/*

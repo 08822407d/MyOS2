@@ -6,7 +6,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/export.h>
 #include <linux/init/init.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/smp/percpu.h>
 // #include <linux/kexec.h>
 // #include <linux/crash_dump.h>

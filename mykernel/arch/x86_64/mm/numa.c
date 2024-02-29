@@ -5,7 +5,7 @@
 #include <linux/mm/mm.h>
 #include <linux/lib/string.h>
 #include <linux/init/init.h>
-#include <linux/mm/memblock.h>
+// #include <linux/mm/memblock.h>
 #include <linux/mm/mmzone.h>
 #include <linux/kernel/ctype.h>
 // #include <linux/nodemask.h>

@@ -8,7 +8,8 @@
 #include <linux/sched/task_stack.h>	/* task_stack_*(), ...		*/
 #include <linux/debug/kdebug.h>		/* oops_begin/end, ...		*/
 // #include <linux/extable.h>		/* search_exception_tables	*/
-#include <linux/mm/memblock.h>		/* max_low_pfn			*/
+// #include <linux/mm/memblock.h>		/* max_low_pfn			*/
+#include <linux/mm/mm.h>		/* max_low_pfn			*/
 // #include <linux/kfence.h>		/* kfence_handle_page_fault	*/
 // #include <linux/kprobes.h>		/* NOKPROBE_SYMBOL, ...		*/
 // #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/

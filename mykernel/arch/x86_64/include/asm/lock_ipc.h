@@ -1,6 +1,6 @@
 
-#include <asm/lock_IPC/atomic/arch_simple_atomic.h>
-#include <asm/lock_IPC/atomic/arch_simple_atomic64.h>
+#include <asm/lock_IPC/atomic/atomic_arch.h>
+#include <asm/lock_IPC/atomic/atomic64_arch.h>
 
-#include <asm/lock_IPC/spinlock/arch_simple_spinlock_types.h>
-#include <asm/lock_IPC/spinlock/arch_simple_spinlock_smp.h>
+#include <asm/lock_IPC/spinlock/spinlock_types_arch.h>
+#include <asm/lock_IPC/spinlock/spinlock_smp_arch.h>
