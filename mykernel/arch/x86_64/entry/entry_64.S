@@ -32,9 +32,6 @@
 // #include <asm/paravirt.h>
 #include <asm/percpu.h>
 #include <asm/asm.h>
-// #include <asm/smap.h>
-#include <asm/pgtable_types.h>
-// #include <asm/export.h>
 #include <asm/frame.h>
 #include <asm/trapnr.h>
 // #include <asm/nospec-branch.h>

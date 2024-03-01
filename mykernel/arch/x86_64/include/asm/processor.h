@@ -17,7 +17,6 @@
 	#include <asm/current.h>
 	#include <asm/cpufeatures.h>
 	#include <asm/page.h>
-	#include <asm/pgtable_types.h>
 	#include <asm/percpu.h>
 	#include <asm/msr.h>
 	#include <asm/desc_defs.h>
@@ -39,6 +38,7 @@
 
 	#include <asm/ptrace.h>
 	#include <asm/thread_info.h>
+	#include <asm/mm.h>
 
 	// /*
 	// * We handle most unaligned accesses in hardware.  On the other hand

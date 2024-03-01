@@ -23,4 +23,4 @@
 				.tail = 0U,					\
 			}
 
-#endif /* _ASM_X86_SPINLOCK_TYPES_H */
+#endif /* _ASM_X86_SPINLOCK_TYPES_H_ */

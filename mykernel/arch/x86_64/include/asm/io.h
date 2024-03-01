@@ -40,10 +40,7 @@
 
 	#include <linux/lib/string.h>
 	#include <linux/compiler/compiler.h>
-	// #include <linux/cc_platform.h>
 	#include <asm/page.h>
-	// #include <asm/early_ioremap.h>
-	#include <asm/pgtable_types.h>
 
 	#define build_mmio_read(name, size, type, reg, barrier)					\
 				static inline type											\

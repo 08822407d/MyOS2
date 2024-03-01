@@ -169,6 +169,7 @@
         "pgtable_const_arch.h": "c",
         "pgtable_types_arch.h": "c",
         "atomic64_arch.h": "c",
-        "atomic_arch.h": "c"
+        "atomic_arch.h": "c",
+        "const.h": "c"
     }
 }

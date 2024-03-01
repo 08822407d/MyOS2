@@ -165,11 +165,11 @@
 			// 	List_s deferred_list;
 			// };
 			struct
-			{							 /* Page table pages */
-				unsigned long _pt_pad_1; /* compound_head */
-				pgtable_t pmd_huge_pte;	 /* protected by page->ptl */
-				unsigned long _pt_pad_2; /* mapping */
-				mm_s			*pt_mm;   /* x86 pgds only */
+			{									/* Page table pages */
+				unsigned long	_pt_pad_1;		/* compound_head */
+				pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
+				unsigned long	_pt_pad_2;		/* mapping */
+				mm_s			*pt_mm;			/* x86 pgds only */
 	// #if ALLOC_SPLIT_PTLOCKS
 				// spinlock_t *ptl;
 	// #else

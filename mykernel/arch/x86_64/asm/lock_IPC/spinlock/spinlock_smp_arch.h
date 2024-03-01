@@ -91,4 +91,4 @@
 
 	#endif
 
-#endif /* _ASM_X86_SPINLOCK_H */
+#endif /* _ASM_X86_SPINLOCK_H_ */
