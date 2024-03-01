@@ -16,7 +16,7 @@
 // #include "printk.h"
 // #include "interrupt.h"
 #include "MineOS_PCI.h"
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/apic.h>
 #include <asm/tlbflush.h>
 // #include "memory.h"

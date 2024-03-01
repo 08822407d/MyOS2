@@ -10,7 +10,7 @@
 #include <uapi/linux/myos_sysreboot.h>
 #include <asm/syscall.h>
 #include <asm/setup.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/signal.h>
 
 #include <obsolete/printk.h>

@@ -24,7 +24,7 @@
 // #include "mm_internal.h"
 
 
-#include <asm/io.h>
+#include <asm/insns.h>
 
 // static void load_new_mm_cr3(pgd_t *pgdir,
 // 		u16 new_asid, unsigned long lam, bool need_flush)

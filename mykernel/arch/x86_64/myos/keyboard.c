@@ -5,7 +5,7 @@
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
 #include <asm/processor.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/apic.h>
 
 #include <obsolete/glo.h>

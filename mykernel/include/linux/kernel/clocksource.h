@@ -15,7 +15,7 @@
 	#include <linux/kernel/cache.h>
 	#include <linux/lib/list.h>
 	#include <linux/init/init.h>
-	#include <asm/io.h>
+	#include <asm/insns.h>
 
 	struct clocksource;
 	typedef struct clocksource clocksrc_s;

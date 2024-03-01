@@ -16,7 +16,7 @@
 #ifndef __KEYBOARD_H__
 #define __KEYBOARD_H__
 
-#include <asm/io.h>
+#include <asm/insns.h>
 
 	extern struct keyboard_inputbuffer * p_kb;
 

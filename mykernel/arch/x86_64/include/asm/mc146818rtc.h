@@ -5,7 +5,7 @@
 #ifndef _ASM_X86_MC146818RTC_H
 #define _ASM_X86_MC146818RTC_H
 
-	#include <asm/io.h>
+	#include <asm/insns.h>
 	#include <asm/processor.h>
 	
 

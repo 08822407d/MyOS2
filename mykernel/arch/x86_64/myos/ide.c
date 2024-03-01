@@ -9,7 +9,7 @@
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>
 #include <asm/processor.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/apic.h>
 
 #include <obsolete/printk.h>

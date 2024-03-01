@@ -178,6 +178,8 @@
         "console.h": "c",
         "shmem_fs.h": "c",
         "msr.h": "c",
-        "insns.h": "c"
+        "insns.h": "c",
+        "special_insns.h": "c",
+        "io_arch.h": "c"
     }
 }

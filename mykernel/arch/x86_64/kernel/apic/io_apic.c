@@ -50,7 +50,7 @@
 // #include <linux/msi.h>
 
 // #include <asm/irqdomain.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/smp.h>
 #include <asm/cpu.h>
 #include <asm/desc.h>

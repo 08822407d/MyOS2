@@ -58,6 +58,12 @@
 	#define set_p4d(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
 	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
+		/*
+		 * Currently stuck as a macro due to indirect forward reference to
+		 * linux/mmzone.h's __section_mem_map_addr() definition:
+		 */
+	#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+
 
 	#ifdef DEBUG
 
@@ -198,13 +204,6 @@
 
 	#endif
 
-		/*
-		 * Currently stuck as a macro due to indirect forward reference to
-		 * linux/mmzone.h's __section_mem_map_addr() definition:
-		 */
-	#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
-
-	
 	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE

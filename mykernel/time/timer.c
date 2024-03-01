@@ -32,7 +32,7 @@
 #include <linux/mm/mm.h>
 
 #include <asm/unistd.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 
 // #include "tick-internal.h"
 

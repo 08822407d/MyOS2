@@ -1,4 +1,4 @@
-#include <asm/io.h>
+#include <asm/insns.h>
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/myos_irq_vectors.h>

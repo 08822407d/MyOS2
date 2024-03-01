@@ -93,7 +93,7 @@
 // #include <asm/cacheflush.h>
 #include <asm/sections.h>
 // #include <asm/tlbflush.h>
-// #include <asm/io.h>
+// #include <asm/insns.h>
 
 // #define CREATE_TRACE_POINTS
 // #include <trace/events/percpu.h>

@@ -11,7 +11,7 @@
 #ifndef _MC146818RTC_H
 #define _MC146818RTC_H
 
-	#include <asm/io.h>
+	#include <asm/insns.h>
 	#include <linux/kernel/rtc.h>			/* get the user-level API */
 	#include <asm/mc146818rtc.h>		/* register access macros */
 	#include <linux/kernel/bcd.h>

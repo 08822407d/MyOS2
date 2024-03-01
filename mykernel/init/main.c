@@ -74,7 +74,7 @@
 // #include <linux/stackdepot.h>
 // #include <net/net_namespace.h>
 
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/bugs.h>
 #include <asm/setup.h>
 #include <asm/sections.h>

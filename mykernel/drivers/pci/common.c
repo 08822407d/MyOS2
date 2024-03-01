@@ -15,7 +15,7 @@
 
 // #include <asm/acpi.h>
 #include <asm/segment.h>
-#include <asm/io.h>
+#include <asm/insns.h>
 #include <asm/smp.h>
 #include <asm/pci_x86.h>
 #include <asm/setup.h>
