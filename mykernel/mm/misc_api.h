@@ -1,9 +1,16 @@
 #ifndef _LINUX_MEMBLOCK_API_H_
 #define _LINUX_MEMBLOCK_API_H_
 
+	extern void *high_memory;
+	extern int sysctl_max_map_count;
+	extern unsigned long highest_memmap_pfn;
+
 	void mm_core_init(void);
 	void setup_initial_init_mm(void *start_code,
 			void *end_code, void *end_data, void *brk);
+	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
+	extern void __iomem *myos_ioremap(size_t paddr_start,
+			unsigned long size);
 
 	/*
 	 * Using memblock node mappings, an architecture may initialise its

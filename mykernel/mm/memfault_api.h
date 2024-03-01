@@ -3,7 +3,7 @@
 
     #include "fault/memfault_const.h"
     #include "fault/memfault_types.h"
-	#include "fault/mmfault.h"
+	#include "fault/pgtable.h"
 
 	page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte);
 

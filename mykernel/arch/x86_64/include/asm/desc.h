@@ -4,18 +4,11 @@
 #ifndef _ASM_X86_DESC_H
 #define _ASM_X86_DESC_H
 
-	#include <asm/desc_defs.h>
-	// #include <asm/ldt.h>
-	// #include <asm/mmu.h>
-	// #include <asm/fixmap.h>
-	#include <asm/irq_vectors.h>
-	// #include <asm/cpu_entry_area.h>
-
-	// #include <linux/debug_locks.h>
 	#include <linux/smp/smp.h>
 	#include <linux/smp/percpu.h>
 
-
+	#include <asm/desc_defs.h>
+	#include <asm/irq_vectors.h>
 	#include <asm-generic/bug.h>
 	#include <asm/segment.h>
 	#include <asm/processor.h>

@@ -94,6 +94,12 @@ buddy_order(page_s *page) {
 	return page_private(page);
 }
 
+static inline void
+set_compound_order(page_s *page, unsigned int order) {
+	page[1].compound_order = order;
+	page[1].compound_nr = 1U << order;
+}
+
 static void prep_compound_head(page_s *page, unsigned int order)
 {
 	// set_compound_page_dtor(page, COMPOUND_PAGE_DTOR);

@@ -9,28 +9,12 @@
  *
  */
 #include <linux/kernel/kernel.h>
-#include <linux/init/init.h>
-// #include <linux/kobject.h>
 #include <linux/kernel/export.h>
-// #include <linux/memory.h>
-// #include <linux/notifier.h>
 #include <linux/kernel/sched.h>
-// #include <linux/mman.h>
-// #include <linux/mm/memblock.h>
-#include <linux/mm/mm.h>
-// #include <linux/page-isolation.h>
-// #include <linux/padata.h>
 #include <linux/kernel/nmi.h>
-// #include <linux/buffer_head.h>
-// #include <linux/kmemleak.h>
-// #include <linux/kfence.h>
-// #include <linux/page_ext.h>
-// #include <linux/pti.h>
-#include <linux/mm/pgtable.h>
-// #include <linux/swap.h>
-// #include <linux/cma.h>
+#include <linux/init/init.h>
+#include <linux/mm/mm.h>
 
-// #include <asm/setup.h>
 
 static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
 static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;

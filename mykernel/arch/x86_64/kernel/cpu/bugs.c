@@ -9,29 +9,14 @@
  *	- Andrew D. Balsa (code cleanup).
  */
 #include <linux/init/init.h>
-// #include <linux/utsname.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/module.h>
-// #include <linux/nospec.h>
-// #include <linux/prctl.h>
-// #include <linux/sched/smt.h>
-#include <linux/mm/pgtable.h>
-// #include <linux/bpf.h>
 
-// #include <asm/spec-ctrl.h>
-// #include <asm/cmdline.h>
 #include <asm/bugs.h>
 #include <asm/processor.h>
 #include <asm/processor-flags.h>
-// #include <asm/fpu/api.h>
 #include <asm/msr.h>
-// #include <asm/vmx.h>
-// #include <asm/paravirt.h>
 #include <asm/alternative.h>
-// #include <asm/set_memory.h>
-// #include <asm/intel-family.h>
 #include <asm/e820-api.h>
-// #include <asm/hypervisor.h>
 #include <asm/tlbflush.h>
 
 #include "cpu.h"

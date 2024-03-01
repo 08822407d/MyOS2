@@ -1,11 +1,10 @@
 // source: linux-6.4.9
 
 // SPDX-License-Identifier: GPL-2.0
-#include <linux/mm/mm.h>
 #include <linux/kernel/lock_ipc.h>
-#include <linux/lib/list.h>
 #include <linux/kernel/cpumask.h>
-#include <linux/mm/pgtable.h>
+#include <linux/mm/mm.h>
+#include <linux/lib/list.h>
 
 #ifndef INIT_MM_CONTEXT
 #	define INIT_MM_CONTEXT(name)

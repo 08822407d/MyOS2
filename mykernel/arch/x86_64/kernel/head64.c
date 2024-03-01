@@ -17,7 +17,6 @@
 #include <linux/lib/string.h>
 #include <linux/smp/percpu.h>
 #include <linux/kernel/start_kernel.h>
-#include <linux/mm/pgtable.h>
 
 #include <asm/processor.h>
 #include <asm/smp.h>
@@ -27,15 +26,7 @@
 #include <asm/sections.h>
 #include <asm/kdebug.h>
 #include <asm/e820-api.h>
-// #include <asm/bios_ebda.h>
-// #include <asm/bootparam_utils.h>
-// #include <asm/microcode.h>
-// #include <asm/kasan.h>
-// #include <asm/fixmap.h>
-// #include <asm/realmode.h>
-// #include <asm/extable.h>
 #include <asm/trapnr.h>
-// #include <asm/sev.h>
 
 
 /* Don't add a printk in there. printk relies on the PDA which is not initialized 

@@ -66,6 +66,7 @@
 
 		extern int
 		pte_write(pte_t pte);
+		#define pte_writable(ptep)	pte_write(ptep)
 
 		extern pte_t
 		pte_set_flags(pte_t pte, pteval_t set);
@@ -203,7 +204,6 @@
 		 */
 	#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
 
-	#define pte_writable(ptep)	pte_write(ptep)
 	
 	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
 

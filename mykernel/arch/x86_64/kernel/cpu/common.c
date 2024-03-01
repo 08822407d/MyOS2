@@ -4,7 +4,6 @@
 /* cpu_feature_enabled() cannot be used this early */
 // #define USE_EARLY_PGTABLE_L5
 
-// #include <linux/mm/memblock.h>
 #include <linux/kernel/linkage.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/kernel.h>
@@ -13,56 +12,26 @@
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
-// #include <linux/sched/mm.h>
 #include <linux/sched/clock.h>
 #include <linux/sched/task.h>
-// #include <linux/sched/smt.h>
 #include <linux/init/init.h>
-// #include <linux/kprobes.h>
-// #include <linux/kgdb.h>
 #include <linux/smp/smp.h>
-// #include <linux/syscore_ops.h>
-#include <linux/mm/pgtable.h>
 
-// #include <asm/alternative.h>
-// #include <asm/cmdline.h>
-// #include <asm/perf_event.h>
 #include <asm/mmu_context.h>
-// #include <asm/doublefault.h>
-// #include <asm/archrandom.h>
-// #include <asm/hypervisor.h>
 #include <asm/processor.h>
 #include <asm/tlbflush.h>
-// #include <asm/debugreg.h>
 #include <asm/sections.h>
-// #include <asm/vsyscall.h>
-// #include <linux/topology.h>
 #include <linux/kernel/cpumask.h>
-// #include <asm/proto.h>
 #include <asm/setup.h>
 #include <asm/apic.h>
 #include <asm/desc.h>
-// #include <asm/fpu/api.h>
-// #include <asm/mtrr.h>
-// #include <asm/hwcap2.h>
 #include <linux/kernel/numa.h>
-// #include <asm/numa.h>
 #include <asm/asm.h>
 #include <asm/bugs.h>
 #include <asm/cpu.h>
-// #include <asm/mce.h>
 #include <asm/msr.h>
-// #include <asm/memtype.h>
-// #include <asm/microcode.h>
-// #include <asm/microcode_intel.h>
-// #include <asm/intel-family.h>
-// #include <asm/cpu_device_id.h>
-// #include <asm/uv/uv.h>
-// #include <asm/sigframe.h>
 
 #include "cpu.h"
-
-
 
 #include <linux/sched/task_stack.h>
 #include <obsolete/arch_proto.h>
