@@ -14,59 +14,14 @@
 
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-// #include <linux/context_tracking.h>
-// #include <linux/interrupt.h>
-// #include <linux/kallsyms.h>
-// #include <linux/kmsan.h>
-// #include <linux/spinlock.h>
-// #include <linux/kprobes.h>
-// #include <linux/uaccess.h>
 #include <linux/debug/kdebug.h>
-// #include <linux/kgdb.h>
-// #include <linux/kernel.h>
 #include <linux/kernel/export.h>
-// #include <linux/ptrace.h>
-// #include <linux/uprobes.h>
-// #include <linux/string.h>
-// #include <linux/delay.h>
-// #include <linux/errno.h>
-// #include <linux/kexec.h>
-// #include <linux/sched.h>
 #include <linux/sched/task_stack.h>
-// #include <linux/timer.h>
-// #include <linux/init.h>
-// #include <linux/bug.h>
 #include <linux/kernel/nmi.h>
-// #include <linux/mm.h>
 #include <linux/smp/smp.h>
-// #include <linux/io.h>
-// #include <linux/hardirq.h>
-// #include <linux/atomic.h>
-// #include <linux/iommu.h>
 
-// #include <asm/stacktrace.h>
-// #include <asm/processor.h>
-// #include <asm/debugreg.h>
-// #include <asm/realmode.h>
-// #include <asm/text-patching.h>
-// #include <asm/ftrace.h>
-// #include <asm/traps.h>
-#include <asm/desc.h>
-// #include <asm/fpu/api.h>
 #include <asm/cpu.h>
-// #include <asm/cpu_entry_area.h>
-// #include <asm/mce.h>
-// #include <asm/fixmap.h>
-// #include <asm/mach_traps.h>
-// #include <asm/alternative.h>
-// #include <asm/fpu/xstate.h>
-// #include <asm/vm86.h>
-// #include <asm/umip.h>
-// #include <asm/insn.h>
-// #include <asm/insn-eval.h>
-// #include <asm/vdso.h>
-// #include <asm/tdx.h>
-// #include <asm/cfi.h>
+
 
 // #include <asm/x86_init.h>
 

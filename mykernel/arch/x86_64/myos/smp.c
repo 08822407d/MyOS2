@@ -2,13 +2,11 @@
 #include <asm/fsgsbase.h>
 #include <asm/setup.h>
 #include <asm/tlbflush.h>
-#include <asm/desc.h>
 #include <asm/percpu.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>
 #include <linux/kernel/sched.h>
-// #include <linux/mm/memblock.h>
 
 #include <obsolete/arch_proto.h>
 #include <obsolete/mutex.h>

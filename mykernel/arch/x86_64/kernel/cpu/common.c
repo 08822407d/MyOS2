@@ -24,12 +24,12 @@
 #include <linux/kernel/cpumask.h>
 #include <asm/setup.h>
 #include <asm/apic.h>
-#include <asm/desc.h>
 #include <linux/kernel/numa.h>
 #include <asm/asm.h>
 #include <asm/bugs.h>
 #include <asm/cpu.h>
 #include <asm/msr.h>
+#include <asm/insns.h>
 
 #include "cpu.h"
 

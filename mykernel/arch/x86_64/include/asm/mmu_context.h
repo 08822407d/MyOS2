@@ -4,17 +4,8 @@
 #ifndef _ASM_X86_MMU_CONTEXT_H
 #define _ASM_X86_MMU_CONTEXT_H
 
-	#include <asm/desc.h>
 	#include <linux/mm/mm.h>
-	// #include <linux/pkeys.h>
-
-	// #include <trace/events/tlb.h>
-
 	#include <asm/tlbflush.h>
-	// #include <asm/paravirt.h>
-	// #include <asm/debugreg.h>
-	// #include <asm/gsseg.h>
-
 	// extern atomic64_t last_mm_ctx_id;
 
 	// #ifdef CONFIG_PERF_EVENTS

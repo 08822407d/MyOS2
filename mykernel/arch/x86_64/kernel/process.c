@@ -5,47 +5,18 @@
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
 #include <linux/smp/smp.h>
-// #include <linux/prctl.h>
-// #include <linux/kernel/slab.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/idle.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/sched/debug.h>
 #include <linux/sched/task.h>
 #include <linux/sched/task_stack.h>
 #include <linux/init/init.h>
 #include <linux/kernel/export.h>
-// #include <linux/pm.h>
-// #include <linux/tick.h>
-// #include <linux/random.h>
-// #include <linux/user-return-notifier.h>
-// #include <linux/dmi.h>
-// #include <linux/utsname.h>
-// #include <linux/stackprotector.h>
-// #include <linux/cpuidle.h>
-// #include <linux/acpi.h>
-// #include <linux/elf-randomize.h>
-// #include <trace/events/power.h>
-// #include <linux/hw_breakpoint.h>
 #include <asm/cpu.h>
 #include <asm/apic.h>
-#include <linux/kernel/uaccess.h>
-// #include <asm/mwait.h>
-// #include <asm/fpu/api.h>
-// #include <asm/fpu/sched.h>
-// #include <asm/fpu/xstate.h>
-// #include <asm/debugreg.h>
-// #include <asm/nmi.h>
 #include <asm/tlbflush.h>
-// #include <asm/mce.h>
-// #include <asm/vm86.h>
 #include <asm/switch_to.h>
-#include <asm/desc.h>
-// #include <asm/prctl.h>
-// #include <asm/spec-ctrl.h>
-// #include <asm/io_bitmap.h>
-// #include <asm/proto.h>
 #include <asm/frame.h>
-// #include <asm/unwind.h>
 
 // #include "process.h"
 

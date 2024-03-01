@@ -15,51 +15,22 @@
  *	Mikael Pettersson	:	PM converted to driver model.
  */
 
-// #include <linux/perf_event.h>
-// #include <linux/kernel_stat.h>
-// #include <linux/mc146818rtc.h>
-// #include <linux/acpi_pmtmr.h>
-// #include <linux/clockchips.h>
-// #include <linux/interrupt.h>
-// #include <linux/mm/memblock.h>
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/ioport.h>
 #include <linux/kernel/export.h>
-// #include <linux/syscore_ops.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/timex.h>
-// #include <linux/i8253.h>
-// #include <linux/dmar.h>
 #include <linux/init/init.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/dmi.h>
 #include <linux/smp/smp.h>
 #include <linux/mm/mm.h>
 
-// #include <asm/trace/irq_vectors.h>
-// #include <asm/irq_remapping.h>
-// #include <asm/pc-conf-reg.h>
-// #include <asm/perf_event.h>
-// #include <asm/x86_init.h>
 #include <asm/barrier.h>
-// #include <asm/mpspec.h>
-// #include <asm/i8259.h>
-// #include <asm/proto.h>
-// #include <asm/traps.h>
 #include <asm/apic.h>
-// #include <asm/acpi.h>
 #include <asm/io_apic.h>
-#include <asm/desc.h>
-// #include <asm/hpet.h>
-// #include <asm/mtrr.h>
 #include <asm/time.h>
 #include <asm/smp.h>
-// #include <asm/mce.h>
 #include <asm/tsc.h>
-// #include <asm/hypervisor.h>
-// #include <asm/cpu_device_id.h>
-// #include <asm/intel-family.h>
-// #include <asm/irq_regs.h>
 #include <asm/cpu.h>
 
 

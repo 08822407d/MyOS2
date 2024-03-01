@@ -7,40 +7,16 @@
 #include <linux/kernel/sched.h>		/* test_thread_flag(), ...	*/
 #include <linux/sched/task_stack.h>	/* task_stack_*(), ...		*/
 #include <linux/debug/kdebug.h>		/* oops_begin/end, ...		*/
-// #include <linux/extable.h>		/* search_exception_tables	*/
-// #include <linux/mm/memblock.h>		/* max_low_pfn			*/
 #include <linux/mm/mm.h>		/* max_low_pfn			*/
-// #include <linux/kfence.h>		/* kfence_handle_page_fault	*/
-// #include <linux/kprobes.h>		/* NOKPROBE_SYMBOL, ...		*/
-// #include <linux/mmiotrace.h>		/* kmmio_handler, ...		*/
-// #include <linux/perf_event.h>		/* perf_sw_event		*/
-// #include <linux/hugetlb.h>		/* hstate_index_to_shift	*/
 #include <linux/kernel/prefetch.h>		/* prefetchw			*/
-// #include <linux/context_tracking.h>	/* exception_enter(), ...	*/
 #include <linux/kernel/uaccess.h>		/* faulthandler_disabled()	*/
-// #include <linux/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
 #include <linux/mm/mm.h>
 
-// #include <asm/cpufeature.h>		/* boot_cpu_has, ...		*/
 #include <asm/traps.h>			/* dotraplinkage, ...		*/
-// #include <asm/fixmap.h>			/* VSYSCALL_ADDR		*/
-// #include <asm/vsyscall.h>		/* emulate_vsyscall		*/
-// #include <asm/vm86.h>			/* struct vm86			*/
 #include <asm/mmu_context.h>		/* vma_pkey()			*/
-// #include <asm/efi.h>			/* efi_crash_gracefully_on_page_fault()*/
-#include <asm/desc.h>			/* store_idt(), ...		*/
-// #include <asm/cpu_entry_area.h>		/* exception stack		*/
-// #include <asm/pgtable_areas.h>		/* VMALLOC_START, ...		*/
-// #include <asm/kvm_para.h>		/* kvm_handle_async_pf		*/
-// #include <asm/vdso.h>			/* fixup_vdso_exception()	*/
-// #include <asm/irq_stack.h>
-
-// #define CREATE_TRACE_POINTS
-// #include <asm/trace/exceptions.h>
 
 
 #include <linux/kernel/kernel.h>
-// #include <linux/kernel/slab.h>
 #include <asm/idtentry.h>
 #include <obsolete/printk.h>
 #include <obsolete/myos_irq_vectors.h>

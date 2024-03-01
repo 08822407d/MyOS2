@@ -180,6 +180,13 @@
         "msr.h": "c",
         "insns.h": "c",
         "special_insns.h": "c",
-        "io_arch.h": "c"
+        "io_arch.h": "c",
+        "insns_arch_api.h": "c",
+        "timex.h": "c",
+        "segment.h": "c",
+        "processor_types.h": "c",
+        "special_insns_arch.h": "c",
+        "desc_arch.h": "c",
+        "processor_const.h": "c"
     }
 }

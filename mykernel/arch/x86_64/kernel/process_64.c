@@ -23,41 +23,19 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
 #include <linux/mm/mm.h>
-// #include <linux/elfcore.h>
 #include <linux/smp/smp.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/user.h>
-// #include <linux/interrupt.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/ptrace.h>
-// #include <linux/notifier.h>
-// #include <linux/kprobes.h>
 #include <linux/debug/kdebug.h>
-// #include <linux/prctl.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/syscalls.h>
 
 #include <asm/processor.h>
-// #include <asm/pkru.h>
-// #include <asm/fpu/sched.h>
 #include <asm/mmu_context.h>
-// #include <asm/prctl.h>
-#include <asm/desc.h>
-// #include <asm/proto.h>
-// #include <asm/ia32.h>
-// #include <asm/debugreg.h>
 #include <asm/switch_to.h>
-// #include <asm/xen/hypervisor.h>
-// #include <asm/vdso.h>
-// #include <asm/resctrl.h>
-// #include <asm/unistd.h>
 #include <asm/fsgsbase.h>
-// #ifdef CONFIG_IA32_EMULATION
-// /* Not included via unistd.h */
-// #	include <asm/unistd_32_ia32.h>
-// #endif
 
 // #include "process.h"
 

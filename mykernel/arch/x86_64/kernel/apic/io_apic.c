@@ -31,41 +31,25 @@
  *	workaround has been removed.
  */
 #include <linux/mm/mm.h>
-// #include <linux/interrupt.h>
-// #include <linux/irq.h>
 #include <linux/init/init.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/sched.h>
 #include <linux/device/pci.h>
-// #include <linux/mc146818rtc.h>
 #include <linux/compiler/compiler.h>
-// #include <linux/acpi.h>
 #include <linux/kernel/export.h>
-// #include <linux/syscore_ops.h>
-// #include <linux/freezer.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/jiffies.h>	/* time_after() */
-// #include <linux/kernel/slab.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/msi.h>
 
-// #include <asm/irqdomain.h>
 #include <asm/insns.h>
 #include <asm/smp.h>
 #include <asm/cpu.h>
-#include <asm/desc.h>
-// #include <asm/proto.h>
-// #include <asm/acpi.h>
 #include <asm/dma.h>
 #include <asm/timer.h>
 #include <asm/time.h>
-// #include <asm/i8259.h>
 #include <asm/setup.h>
-// #include <asm/irq_remapping.h>
 #include <asm/hw_irq.h>
 #include <asm/apic.h>
 #include <asm/mm.h>
-// #include <asm/x86_init.h>
 
 
 #include <asm/tlbflush.h>

@@ -3,6 +3,7 @@
 #define _ASM_X86_SPECIAL_INSNS_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
+	#include <asm/mm.h>
 
 	#include <asm/processor-flags.h>
 	#include <linux/kernel/irqflags.h>
@@ -32,6 +33,10 @@
 		__read_cr3(void);
 		extern void
 		write_cr3(unsigned long val);
+		extern unsigned long
+		read_cr3_pa(void);
+		extern void
+		load_cr3(pgd_t *pgdir);
 		
 		extern unsigned long
 		read_cr4(void);
@@ -99,6 +104,22 @@
 						:	"r"(val)
 						:	"memory"
 						);
+		}
+
+		/*
+		 * Friendlier CR3 helpers.
+		 */
+		// static inline unsigned long native_read_cr3_pa(void)
+		PREFIX_STATIC_INLINE
+		unsigned long
+		read_cr3_pa(void) {
+			return __read_cr3() & CR3_ADDR_MASK;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		load_cr3(pgd_t *pgdir) {
+			write_cr3(__pa(pgdir));
 		}
 
 		// static inline unsigned long native_read_cr4(void) {

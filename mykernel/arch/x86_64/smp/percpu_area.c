@@ -7,8 +7,7 @@
 #include <linux/lib/list.h>
 
 #include <asm/processor.h>
-#include <asm/desc.h>
-
+#include <asm/insns.h>
 
 #include <linux/kernel/pid.h>
 #include <obsolete/glo.h>

@@ -6,22 +6,12 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/export.h>
 #include <linux/init/init.h>
-// #include <linux/mm/memblock.h>
 #include <linux/smp/percpu.h>
-// #include <linux/kexec.h>
-// #include <linux/crash_dump.h>
 #include <linux/smp/smp.h>
-// #include <linux/topology.h>
-// #include <linux/stackprotector.h>
 #include <asm/sections.h>
 #include <asm/processor.h>
-#include <asm/desc.h>
 #include <asm/setup.h>
-// #include <asm/mpspec.h>
 #include <asm/apicdef.h>
-// #include <asm/highmem.h>
-// #include <asm/proto.h>
-// #include <asm/cpumask.h>
 #include <asm/cpu.h>
 
 

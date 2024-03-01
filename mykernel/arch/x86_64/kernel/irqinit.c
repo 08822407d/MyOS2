@@ -1,34 +1,12 @@
 // // SPDX-License-Identifier: GPL-2.0
-// #include <linux/linkage.h>
 #include <linux/lib/errno.h>
-// #include <linux/signal.h>
 #include <linux/kernel/sched.h>
-// #include <linux/ioport.h>
-// #include <linux/interrupt.h>
-// #include <linux/irq.h>
 #include <linux/kernel/timex.h>
-// #include <linux/random.h>
-// #include <linux/kprobes.h>
-// #include <linux/init.h>
-// #include <linux/kernel_stat.h>
-// #include <linux/device.h>
 #include <linux/kernel/bitops.h>
-// #include <linux/acpi.h>
-// #include <linux/io.h>
-// #include <linux/delay.h>
-// #include <linux/pgtable.h>
 
-// #include <linux/atomic.h>
 #include <asm/timer.h>
 #include <asm/hw_irq.h>
-#include <asm/desc.h>
 #include <asm/io_apic.h>
-// #include <asm/acpi.h>
-// #include <asm/apic.h>
-// #include <asm/setup.h>
-// #include <asm/i8259.h>
-// #include <asm/traps.h>
-// #include <asm/prom.h>
 
 
 #include <asm/irq.h>
