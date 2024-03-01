@@ -164,6 +164,11 @@
         "posix_types.h": "c",
         "pgtable_arch.h": "c",
         "pgtable_64.h": "c",
-        "spinlock_types_arch.h": "c"
+        "spinlock_types_arch.h": "c",
+        "pgtable_types.h": "c",
+        "pgtable_const_arch.h": "c",
+        "pgtable_types_arch.h": "c",
+        "atomic64_arch.h": "c",
+        "atomic_arch.h": "c"
     }
 }

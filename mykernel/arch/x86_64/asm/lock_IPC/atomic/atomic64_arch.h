@@ -75,7 +75,7 @@
 
 	#endif
 
-	#if defined(ARCH_SIMPLE_ATOMIC_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_ATOMIC_DEFINATION) || !(DEBUG)
 
 		/**
 		 * arch_atomic64_read - read atomic64 variable

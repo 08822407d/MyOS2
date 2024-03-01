@@ -1,8 +1,11 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_PGTABLE_H
-#define _ASM_X86_PGTABLE_H
+#ifndef _ASM_X86_PGTABLE_H_
+#define _ASM_X86_PGTABLE_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
+
+	#include "pgtable_const_arch.h"
+	#include "pgtable_types_arch.h"
 
 	#include <asm/page.h>
 	#include <asm/pgtable_types.h>
@@ -12,8 +15,8 @@
 	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
 
 	#ifndef __ASSEMBLY__
-	#  include <linux/kernel/lock_ipc.h>
-	#  include <linux/mm/mm.h>
+	// #  include <linux/kernel/lock_ipc.h>
+	// #  include <linux/mm/mm.h>
 
 		extern spinlock_t	pgd_lock;
 		extern List_hdr_s	pgd_list_hdr;
@@ -1368,4 +1371,4 @@
 		// }
 	#endif	/* __ASSEMBLY__ */
 
-#endif /* _ASM_X86_PGTABLE_H */
+#endif /* _ASM_X86_PGTABLE_H_ */

@@ -5,8 +5,6 @@
 #define CONFIG_PGTABLE_LEVELS 4
 
 	#include <linux/kernel/const.h>
-	// #include <linux/mem_encrypt.h>
-
 	#include <asm/page_types.h>
 
 	#define _PAGE_BIT_PRESENT			0	/* is present */
@@ -297,15 +295,18 @@
 	/* No need to mask any bits for !PAE */
 	#	define PGD_ALLOWED_BITS	(~0ULL)
 
-		static inline pgd_t arch_make_pgd(pgdval_t val) {
+		static inline pgd_t
+		arch_make_pgd(pgdval_t val) {
 			return (pgd_t) { .val = val & PGD_ALLOWED_BITS };
 		}
 
-		static inline pgdval_t arch_pgd_val(pgd_t pgd) {
+		static inline pgdval_t 
+		arch_pgd_val(pgd_t pgd) {
 			return pgd.val & PGD_ALLOWED_BITS;
 		}
 
-		static inline pgdval_t arch_pgd_flags(pgd_t pgd) {
+		static inline pgdval_t
+		arch_pgd_flags(pgd_t pgd) {
 			return arch_pgd_val(pgd) & PTE_FLAGS_MASK;
 		}
 
@@ -377,72 +378,72 @@
 			arch_pud_T	defs;
 		} pud_t;
 
-		static inline pud_t arch_make_pud(pmdval_t val) {
+		static inline pud_t
+		arch_make_pud(pmdval_t val) {
 			return (pud_t) { .val = val };
 		}
-
-		// static inline pudval_t arch_pud_val(pud_t pud) {
-		// 	return pud.pud;
-		// }
-		#define arch_pud_val(pud)	(((pud_t)pud).val)
+		static inline pudval_t
+		arch_pud_val(pud_t pud) {
+			return pud.val;
+		}
 
 		typedef union {
 			pmdval_t	val;
 			arch_pmd_T	defs;
 		} pmd_t;
 
-		static inline pmd_t arch_make_pmd(pmdval_t val) {
+		static inline pmd_t
+		arch_make_pmd(pmdval_t val) {
 			return (pmd_t) { .val = val };
 		}
+		static inline pmdval_t
+		arch_pmd_val(pmd_t pmd) {
+			return pmd.val;
+		}
 
-		// static inline pmdval_t arch_pmd_val(pmd_t pmd) {
-		// 	return pmd.pmd;
-		// }
-		#define arch_pmd_val(pmd)	(((pmd_t)pmd).val)
-
-		// static inline p4dval_t arch_p4d_pfn_mask(p4d_t p4d) {
-		// 	/* No 512 GiB huge pages yet */
-		// 	return PTE_PFN_MASK;
-		// }
-		// static inline p4dval_t P4D_FLAG_MASK(p4d_t p4d) {
-		// 	return ~arch_p4d_pfn_mask(p4d);
-		// }
-		#define arch_p4d_pfn_mask(n)	PTE_PFN_MASK	
-		#define P4D_FLAG_MASK(n)		(~arch_p4d_pfn_mask(n))
-
-		static inline p4dval_t arch_p4d_flags(p4d_t p4d) {
+		static inline p4dval_t
+		arch_p4d_pfn_mask(p4d_t p4d) {
+			/* No 512 GiB huge pages yet */
+			return PTE_PFN_MASK;
+		}
+		static inline p4dval_t
+		P4D_FLAG_MASK(p4d_t p4d) {
+			return ~arch_p4d_pfn_mask(p4d);
+		}
+		static inline p4dval_t
+		arch_p4d_flags(p4d_t p4d) {
 			return arch_p4d_val(p4d) & P4D_FLAG_MASK(p4d);
 		}
 
-		// static inline pudval_t arch_pud_pfn_mask(pud_t pud) {
-		// 	if (arch_pud_val(pud) & _PAGE_PSE)
-		// 		return PHYSICAL_PUD_PAGE_MASK;
-		// 	else
-		// 		return PTE_PFN_MASK;
-		// }
-		// static inline pudval_t PUD_FLAG_MASK(pud_t pud) {
-		// 	return ~arch_pud_pfn_mask(pud);
-		// }
-		#define arch_pud_pfn_mask(n)	PTE_PFN_MASK
-		#define PUD_FLAG_MASK(n)		(~arch_pud_pfn_mask(n))
-
-		static inline pudval_t arch_pud_flags(pud_t pud) {
+		static inline pudval_t
+		arch_pud_pfn_mask(pud_t pud) {
+			// if (arch_pud_val(pud) & _PAGE_PSE)
+			// 	return PHYSICAL_PUD_PAGE_MASK;
+			// else
+				return PTE_PFN_MASK;
+		}
+		static inline pudval_t
+		PUD_FLAG_MASK(pud_t pud) {
+			return ~arch_pud_pfn_mask(pud);
+		}
+		static inline pudval_t
+		arch_pud_flags(pud_t pud) {
 			return arch_pud_val(pud) & PUD_FLAG_MASK(pud);
 		}
 
-		// static inline pmdval_t arch_pmd_pfn_mask(pmd_t pmd) {
-		// 	if (arch_pmd_val(pmd) & _PAGE_PSE)
-		// 		return PHYSICAL_PMD_PAGE_MASK;
-		// 	else
-		// 		return PTE_PFN_MASK;
-		// }
-		// static inline pmdval_t PMD_FLAG_MASK(pmd_t pmd) {
-		// 	return ~arch_pmd_pfn_mask(pmd);
-		// }	
-		#define arch_pmd_pfn_mask(n)	PTE_PFN_MASK
-		#define PMD_FLAG_MASK(n)		(~arch_pmd_pfn_mask(n))
-
-		static inline pmdval_t arch_pmd_flags(pmd_t pmd) {
+		static inline pmdval_t 
+		arch_pmd_pfn_mask(pmd_t pmd) {
+			// if (arch_pmd_val(pmd) & _PAGE_PSE)
+			// 	return PHYSICAL_PMD_PAGE_MASK;
+			// else
+				return PTE_PFN_MASK;
+		}
+		static inline pmdval_t
+		PMD_FLAG_MASK(pmd_t pmd) {
+			return ~arch_pmd_pfn_mask(pmd);
+		}	
+		static inline pmdval_t
+		arch_pmd_flags(pmd_t pmd) {
 			return arch_pmd_val(pmd) & PMD_FLAG_MASK(pmd);
 		}
 
@@ -451,16 +452,17 @@
 			arch_pte_T	defs;
 		} pte_t;
 
-		static inline pte_t arch_make_pte(pteval_t val) {
+		static inline pte_t
+		arch_make_pte(pteval_t val) {
 			return (pte_t) { .val = val };
 		}
-
-		// static inline pteval_t arch_pte_val(pte_t pte) {
-		// 	return pte.pte;
-		// }
-		#define arch_pte_val(pte)	(((pte_t)pte).val)
+		static inline pteval_t
+		arch_pte_val(pte_t pte) {
+			return pte.val;
+		}
 		
-		static inline pteval_t arch_pte_flags(pte_t pte) {
+		static inline pteval_t
+		arch_pte_flags(pte_t pte) {
 			return arch_pte_val(pte) & PTE_FLAGS_MASK;
 		}
 

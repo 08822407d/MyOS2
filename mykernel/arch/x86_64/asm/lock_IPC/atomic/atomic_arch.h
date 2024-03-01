@@ -74,7 +74,7 @@
 
 	#endif
 
-	#if defined(ARCH_SIMPLE_ATOMIC_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_ATOMIC_DEFINATION) || !(DEBUG)
 
 		/*
 		 * Atomic operations that C can't guarantee us.  Useful for

@@ -3,6 +3,12 @@
 #define _LINUX_MM_H
 
 	#include <mm/mm_types.h>
+	#include <mm/earlymem_api.h>
+	#include <mm/page_alloc_api.h>
+	#include <mm/kmalloc_api.h>
+	#include <mm/memfault_api.h>
+	#include <mm/vm_map_api.h>
+	#include <mm/misc_api.h>
 	#include <asm/mm.h>
 
 	#include <linux/lib/errno.h>
@@ -17,15 +23,7 @@
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>
 	#include <linux/mm/pgtable.h>
-	// #include <linux/kernel/slab.h>
 
-
-	#include <mm/earlymem_api.h>
-	#include <mm/page_alloc_api.h>
-	#include <mm/kmalloc_api.h>
-	#include <mm/memfault_api.h>
-	#include <mm/vm_map_api.h>
-	#include <mm/misc_api.h>
 
 
 	extern void *high_memory;

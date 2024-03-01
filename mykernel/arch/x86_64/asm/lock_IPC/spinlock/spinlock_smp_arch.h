@@ -28,7 +28,7 @@
 
 	#endif
 	
-	#if defined(ARCH_SIMPLE_SPINLOCK_SMP_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_SPINLOCK_SMP_DEFINATION) || !(DEBUG)
 
 		/* Function prototypes */
 		PREFIX_STATIC_INLINE

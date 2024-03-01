@@ -40,12 +40,13 @@
 		return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
 	}
 
-	// static inline pte_t
-	// *pte_offset(pmd_t *pmd, unsigned long address) {
-	// 	return arch_pmd_pgtable(*pmd) + pte_index(address);
-	// }
-	#define pte_ent_offset(pmdp, address)	\
-				(pte_t *)(arch_pmd_pgtable(*pmdp) + pte_index(address))
+	// *pte_offset(pmd_t *pmd, unsigned long address)
+	static inline pte_t
+	*pte_ent_offset(pmd_t *pmdp, unsigned long address) {
+		return arch_pmd_pgtable(*pmdp) + pte_index(address);
+	}
+	// #define pte_ent_offset(pmdp, address)	\
+	// 			(pte_t *)(arch_pmd_pgtable(*pmdp) + pte_index(address))
 
 	#define pte_unmap(pte) ((void)(pte))	/* NOP */
 
