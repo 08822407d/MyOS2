@@ -5,6 +5,7 @@
 	#include <linux/kernel/types.h>
 
 	#include <asm/mm.h>
+	#include <asm/sparsemem.h>
 
 	#define _PAGE_BIT_PRESENT			0	/* is present */
 	#define _PAGE_BIT_RW				1	/* writeable */

@@ -6,6 +6,13 @@
 	#include "page_alloc/page-flags.h"
 	#include "page_alloc/page_alloc.h"
 
+	/*
+	 * The array of struct pages for flatmem.
+	 * It must be declared for SPARSEMEM as well because there are configurations
+	 * that rely on that.
+	 */
+	extern page_s	*mem_map;
+
 	#define ENT_PER_TABLE	(PAGE_SIZE / sizeof(pgd_t))
 	#define PFN_ALIGN(x)	(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
 	#define PFN_UP(x)		(((x) + PAGE_SIZE-1) >> PAGE_SHIFT)

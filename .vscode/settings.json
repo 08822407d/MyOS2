@@ -170,6 +170,10 @@
         "pgtable_types_arch.h": "c",
         "atomic64_arch.h": "c",
         "atomic_arch.h": "c",
-        "const.h": "c"
+        "const.h": "c",
+        "ioport.h": "c",
+        "kdev_t.h": "c",
+        "myos_slab_types.h": "c",
+        "sparsemem.h": "c"
     }
 }

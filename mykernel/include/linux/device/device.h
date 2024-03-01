@@ -12,25 +12,15 @@
 #ifndef _DEVICE_H_
 #define _DEVICE_H_
 
-	// #include <linux/dev_printk.h>
-	// #include <linux/energy_model.h>
 	#include <linux/kernel/ioport.h>
 	#include <linux/kernel/kobject.h>
-	// #include <linux/klist.h>
-		#include <linux/lib/list.h>
-	// #include <linux/lockdep.h>
+	#include <linux/lib/list.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
-	// #include <linux/kernel/mutex.h>
-	// #include <linux/pm.h>
-	// #
 	#include <linux/kernel/uidgid.h>
-	#include <linux/mm/gfp.h>
 	#include <linux/kernel/overflow.h>
-	// #include <linux/device/bus.h>
 	#include <linux/device/class.h>
 	#include <linux/device/driver.h>
-	// #include <asm/device.h>
 
 
 	#include <linux/device/dev_s_defs.h>

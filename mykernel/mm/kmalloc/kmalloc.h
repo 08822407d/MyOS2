@@ -2,8 +2,11 @@
 #define _LINUX_KMALLOC_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/mm/gfp.h>
+	#include <linux/kernel/overflow.h>
+	#include <linux/mm/mm.h>
 
+	#include "kmalloc_const.h"
+	#include "kmalloc_types.h"
 	#include "myos_slab_types.h"
 
 	#define kmalloc_index(s) __kmalloc_index(s, true)

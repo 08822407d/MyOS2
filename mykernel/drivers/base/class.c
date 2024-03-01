@@ -8,17 +8,14 @@
  * Copyright (c) 2003-2004 IBM Corp.
  */
 
-#include <linux/device/class.h>
-#include <linux/device/device.h>
-// #include <linux/module.h>
-#include <linux/init/init.h>
-#include <linux/lib/string.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/err.h>
-// #include <linux/kernel/slab.h>
+#include <linux/device/class.h>
+#include <linux/device/device.h>
+#include <linux/init/init.h>
+#include <linux/lib/string.h>
 #include <linux/block/genhd.h>
-// #include <linux/kernel/mutex.h>
-// #include "base.h"
+#include <linux/mm/mm.h>
 
 /**
  * __class_create - create a struct class structure

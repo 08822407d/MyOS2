@@ -15,7 +15,6 @@
 #include <linux/fs/fs.h>
 #include <linux/sched/signal.h>
 #include <linux/kernel/uaccess.h>
-#include <linux/mm/gfp.h>
 #include <linux/mm/mm.h>
 #include <linux/fs/file.h>
 #include <linux/mm/shmem_fs.h>

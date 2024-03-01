@@ -9,6 +9,9 @@
 	struct	slab_cache;
 	typedef struct slab_cache slab_cache_s;
 
+	struct page;
+	typedef struct page page_s;
+
 	typedef struct slab
 	{
 		List_s			slab_list;

@@ -14,5 +14,6 @@
 	#include <linux/kernel/completion.h>
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>
+	#include <linux/mm/mmzone.h>
 
 #endif /* _LINUX_MM_H */
