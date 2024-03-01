@@ -39,35 +39,9 @@
 #include <linux/kernel/start_kernel.h>
 // #include <linux/security.h>
 #include <linux/smp/smp.h>
-// #include <linux/profile.h>
-// #include <linux/kfence.h>
-// #include <linux/rcupdate.h>
-// #include <linux/srcu.h>
-// #include <linux/moduleparam.h>
-// #include <linux/kallsyms.h>
-// #include <linux/buildid.h>
-// #include <linux/writeback.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/cpuset.h>
-// #include <linux/cgroup.h>
 #include <linux/block/efi.h>
-// #include <linux/tick.h>
-// #include <linux/sched/isolation.h>
-// #include <linux/interrupt.h>
-// #include <linux/taskstats_kern.h>
-// #include <linux/delayacct.h>
 #include <uapi/linux/unistd.h>
-// #include <linux/utsname.h>
-#include <linux/mm/rmap.h>
-// #include <linux/mempolicy.h>
-// #include <linux/key.h>
-// #include <linux/page_ext.h>
-// #include <linux/debug_locks.h>
-// #include <linux/debugobjects.h>
-// #include <linux/lockdep.h>
-// #include <linux/kmemleak.h>
-// #include <linux/padata.h>
-// #include <linux/pid_namespace.h>
 #include <linux/device/driver.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/sched.h>

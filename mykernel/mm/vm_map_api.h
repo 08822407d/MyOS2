@@ -24,6 +24,8 @@
 	vma_s *vm_area_alloc(mm_s *);
 	vma_s *vm_area_dup(vma_s *);
 	void vm_area_free(vma_s *);
+	void unlink_anon_vmas(vma_s *);
+	int anon_vma_clone(vma_s *, vma_s *);
 
 	// /* mmap.c */
 	extern int __myos_vma_adjust(vma_s *vma, unsigned long start,

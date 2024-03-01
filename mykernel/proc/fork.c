@@ -27,45 +27,19 @@
 // #include <linux/rtmutex.h>
 #include <linux/init/init.h>
 #include <uapi/linux/unistd.h>
-// #include <linux/module.h>
-// #include <linux/vmalloc.h>
 #include <linux/kernel/completion.h>
-// #include <linux/personality.h>
-// #include <linux/mempolicy.h>
-// #include <linux/sem.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-// #include <linux/iocontext.h>
-// #include <linux/key.h>
 #include <linux/fs/binfmts.h>
-// #include <linux/mmu_notifier.h>
 #include <linux/fs/fs.h>
 #include <linux/mm/mm.h>
-// #include <linux/mm_inline.h>
-// #include <linux/vmacache.h>
-// #include <linux/nsproxy.h>
-// #include <linux/capability.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/cgroup.h>
-// #include <linux/security.h>
-// #include <linux/hugetlb.h>
-// #include <linux/seccomp.h>
-// #include <linux/swap.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/jiffies.h>
-// #include <linux/futex.h>
-// #include <linux/compat.h>
 #include <linux/kernel/kthread.h>
-// #include <linux/task_io_accounting_ops.h>
-// #include <linux/rcupdate.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/kernel/mount.h>
-// #include <linux/audit.h>
-// #include <linux/memcontrol.h>
 #include <linux/debug/ftrace.h>
-// #include <linux/proc_fs.h>
-// #include <linux/profile.h>
-#include <linux/mm/rmap.h>
 #include <linux/device/tty.h>
 #include <linux/sched/fs_struct.h>
 #include <uapi/linux/magic.h>

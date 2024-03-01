@@ -174,6 +174,8 @@
         "ioport.h": "c",
         "kdev_t.h": "c",
         "myos_slab_types.h": "c",
-        "sparsemem.h": "c"
+        "sparsemem.h": "c",
+        "console.h": "c",
+        "shmem_fs.h": "c"
     }
 }

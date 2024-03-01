@@ -18,7 +18,6 @@
 #include <linux/mm/mm.h>
 #include <linux/fs/file.h>
 #include <linux/mm/shmem_fs.h>
-#include <linux/mm/rmap.h>
 #include <asm/tlbflush.h>
 
 

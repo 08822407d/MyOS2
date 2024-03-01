@@ -50,33 +50,12 @@ static vfsmount_s *shm_mnt;
  * which makes it a completely usable filesystem.
  */
 
-// #include <linux/xattr.h>
-// #include <linux/exportfs.h>
-// #include <linux/posix_acl.h>
-// #include <linux/posix_acl_xattr.h>
 #include <linux/lib/string.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/backing-dev.h>
 #include <linux/mm/shmem_fs.h>
-// #include <linux/writeback.h>
-// #include <linux/pagevec.h>
-// #include <linux/percpu_counter.h>
-// #include <linux/falloc.h>
-// #include <linux/splice.h>
-// #include <linux/security.h>
-// #include <linux/swapops.h>
-// #include <linux/mempolicy.h>
 #include <linux/fs/namei.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/migrate.h>
-// #include <linux/highmem.h>
-// #include <linux/seq_file.h>
-// #include <linux/magic.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/fcntl.h>
-// #include <uapi/linux/memfd.h>
-// #include <linux/userfaultfd_k.h>
-#include <linux/mm/rmap.h>
 #include <linux/kernel/uuid.h>
 #include <linux/kernel/uaccess.h>
 

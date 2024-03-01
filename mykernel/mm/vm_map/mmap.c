@@ -10,18 +10,16 @@
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel/kernel.h>
-// #include <linux/kernel/slab.h>
-#include <linux/mm/mm.h>
 #include <linux/kernel/syscalls.h>
+#include <linux/kernel/export.h>
+#include <linux/kernel/mount.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
+#include <linux/mm/mm.h>
 #include <linux/mm/shmem_fs.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/mount.h>
-#include <linux/mm/rmap.h>
 #include <linux/debug/printk.h>
-#include <linux/kernel/uaccess.h>
 #include <asm/mmu_context.h>
 
 #include <linux/sched/signal.h>
