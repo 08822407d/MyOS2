@@ -3,6 +3,7 @@
 #define _LINUX_MM_H
 
 	#include <mm/mm_types.h>
+	#include <asm/mm.h>
 
 	#include <linux/lib/errno.h>
 	#include <linux/mm/gfp.h>

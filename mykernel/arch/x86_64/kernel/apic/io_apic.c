@@ -64,7 +64,7 @@
 // #include <asm/irq_remapping.h>
 #include <asm/hw_irq.h>
 #include <asm/apic.h>
-#include <asm/pgtable.h>
+#include <asm/mm.h>
 // #include <asm/x86_init.h>
 
 

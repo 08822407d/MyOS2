@@ -1,0 +1,2 @@
+add_subdirectory(page_alloc)
+add_subdirectory(pgtable)

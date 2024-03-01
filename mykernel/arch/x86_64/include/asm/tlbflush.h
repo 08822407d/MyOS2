@@ -12,7 +12,7 @@
 	// #include <asm/invpcid.h>
 	// #include <asm/pti.h>
 	#include <asm/processor-flags.h>
-	#include <asm/pgtable.h>
+	#include <asm/mm.h>
 
 	void __flush_tlb_all(void);
 

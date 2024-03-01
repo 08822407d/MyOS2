@@ -2,7 +2,6 @@
 #ifndef _LINUX_PGTABLE_H
 #define _LINUX_PGTABLE_H
 
-	#include <asm/pgtable.h>
 	#include <linux/mm/mm.h>
 	#include <linux/debug/bug.h>
 	#include <linux/lib/errno.h>
@@ -20,39 +19,26 @@
 	 * because in such cases PTRS_PER_PxD equals 1.
 	 */
 
-	// static inline unsigned long
-	// 	pte_index(unsigned long address) {
-	// 		return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-	// 	}
-	// #define pte_index		pte_index
-	#define pte_index(address)	\
-				(((address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1))
+	static inline unsigned long
+	pte_index(unsigned long address) {
+		return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
+	}
 
-	#ifndef pmd_index
-		// static inline unsigned long
-		// pmd_index(unsigned long address) {
-		// 	return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-		// }
-	// #	define pmd_index	pmd_index
-	#	define pmd_index(address)	\
-				(((address) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-	#endif
+	static inline unsigned long
+	pmd_index(unsigned long address) {
+		return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
+	}
 
-	#ifndef pud_index
-		// static inline unsigned long
-		// pud_index(unsigned long address) {
-		// 	return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-		// }
-	// #	define pud_index	pud_index
-	#	define pud_index(address)	\
-				(((address) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
-	#endif
+	static inline unsigned long
+	pud_index(unsigned long address) {
+		return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
+	}
 
-	#ifndef pgd_index
 	/* Must be a compile-time constant, so implement it as a macro */
-	#	define pgd_index(address)	\
-				(((address) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-	#endif
+	static inline unsigned long
+	pgd_index(unsigned long address) {
+		return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
+	}
 
 	// static inline pte_t
 	// *pte_offset(pmd_t *pmd, unsigned long address) {
@@ -122,7 +108,8 @@
 				})
 	#endif
 
-	static inline int pgd_none_or_clear_bad(pgd_t *pgd) {
+	static inline int
+	pgd_none_or_clear_bad(pgd_t *pgd) {
 		if (pgd_none(*pgd))
 			return 1;
 		if (pgd_bad(*pgd)) {
@@ -132,7 +119,8 @@
 		return 0;
 	}
 
-	static inline int p4d_none_or_clear_bad(p4d_t *p4d) {
+	static inline int
+	p4d_none_or_clear_bad(p4d_t *p4d) {
 		if (arch_p4d_none(*p4d))
 			return 1;
 		if (arch_p4d_bad(*p4d)) {
@@ -142,7 +130,8 @@
 		return 0;
 	}
 
-	static inline int pud_none_or_clear_bad(pud_t *pud) {
+	static inline int
+	pud_none_or_clear_bad(pud_t *pud) {
 		if (arch_pud_none(*pud))
 			return 1;
 		if (arch_pud_bad(*pud)) {

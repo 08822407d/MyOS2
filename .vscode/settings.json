@@ -161,6 +161,9 @@
         "ata.h": "c",
         "start_kernel.h": "c",
         "kobject.h": "c",
-        "posix_types.h": "c"
+        "posix_types.h": "c",
+        "pgtable_arch.h": "c",
+        "pgtable_64.h": "c",
+        "spinlock_types_arch.h": "c"
     }
 }

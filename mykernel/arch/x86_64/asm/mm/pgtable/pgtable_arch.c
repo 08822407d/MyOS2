@@ -1,12 +1,11 @@
-// SPDX-License-Identifier: GPL-2.0
-#include <linux/mm/mm.h>
-#include <linux/mm/gfp.h>
-// #include <linux/hugetlb.h>
-#include <asm/pgalloc.h>
-// #include <asm/tlb.h>
-// #include <asm/fixmap.h>
-// #include <asm/mtrr.h>
+#define ARCH_PGTABLE_DEFINATION
 
+#include "pgtable_arch.h"
+
+
+// SPDX-License-Identifier: GPL-2.0
+#include <linux/mm/gfp.h>
+#include <asm/pgalloc.h>
 
 #include <linux/lib/list.h>
 
