@@ -2,9 +2,9 @@
 #ifndef _ASM_X86_PGTABLE_CONST_H_
 #define _ASM_X86_PGTABLE_CONST_H_
 
-    #include <linux/kernel/types.h>
+	#include <linux/kernel/types.h>
 
-    #include <asm/mm.h>
+	#include <asm/mm.h>
 
 	#define _PAGE_BIT_PRESENT			0	/* is present */
 	#define _PAGE_BIT_RW				1	/* writeable */
@@ -53,17 +53,11 @@
 	#define _PAGE_PAT_LARGE				(_AT(pteval_t, 1) << _PAGE_BIT_PAT_LARGE)
 	#define _PAGE_SPECIAL				(_AT(pteval_t, 1) << _PAGE_BIT_SPECIAL)
 	#define _PAGE_CPA_TEST				(_AT(pteval_t, 1) << _PAGE_BIT_CPA_TEST)
-	#ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-	#  define _PAGE_PKEY_BIT0			(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT0)
-	#  define _PAGE_PKEY_BIT1			(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT1)
-	#  define _PAGE_PKEY_BIT2			(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT2)
-	#  define _PAGE_PKEY_BIT3			(_AT(pteval_t, 1) << _PAGE_BIT_PKEY_BIT3)
-	#else
-	#  define _PAGE_PKEY_BIT0			(_AT(pteval_t, 0))
-	#  define _PAGE_PKEY_BIT1			(_AT(pteval_t, 0))
-	#  define _PAGE_PKEY_BIT2			(_AT(pteval_t, 0))
-	#  define _PAGE_PKEY_BIT3			(_AT(pteval_t, 0))
-	#endif
+
+	#define _PAGE_PKEY_BIT0				(_AT(pteval_t, 0))
+	#define _PAGE_PKEY_BIT1				(_AT(pteval_t, 0))
+	#define _PAGE_PKEY_BIT2				(_AT(pteval_t, 0))
+	#define _PAGE_PKEY_BIT3				(_AT(pteval_t, 0))
 
 	#define _PAGE_PKEY_MASK (						\
 				_PAGE_PKEY_BIT0 | _PAGE_PKEY_BIT1 | \
@@ -128,37 +122,27 @@
 	 * to have the WB mode at index 0 (all bits clear). This is the default
 	 * right now and likely would break too much if changed.
 	 */
-	#ifndef __ASSEMBLY__
-		// enum page_cache_mode {
-		// 	_PAGE_CACHE_MODE_WB			= 0,
-		// 	_PAGE_CACHE_MODE_WC			= 1,
-		// 	_PAGE_CACHE_MODE_UC_MINUS	= 2,
-		// 	_PAGE_CACHE_MODE_UC			= 3,
-		// 	_PAGE_CACHE_MODE_WT			= 4,
-		// 	_PAGE_CACHE_MODE_WP			= 5,
+	// enum page_cache_mode {
+	// 	_PAGE_CACHE_MODE_WB			= 0,
+	// 	_PAGE_CACHE_MODE_WC			= 1,
+	// 	_PAGE_CACHE_MODE_UC_MINUS	= 2,
+	// 	_PAGE_CACHE_MODE_UC			= 3,
+	// 	_PAGE_CACHE_MODE_WT			= 4,
+	// 	_PAGE_CACHE_MODE_WP			= 5,
+	// 	_PAGE_CACHE_MODE_NUM		= 8
+	// };
 
-		// 	_PAGE_CACHE_MODE_NUM		= 8
-		// };
+	// 取值对照表, 源码的取值过于罗嗦就直接拉过来对照着改值
+	// static uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
+	// 	[_PAGE_CACHE_MODE_WB      ]	= 0         | 0        ,
+	// 	[_PAGE_CACHE_MODE_WC      ]	= 0         | _PAGE_PCD,
+	// 	[_PAGE_CACHE_MODE_UC_MINUS]	= 0         | _PAGE_PCD,
+	// 	[_PAGE_CACHE_MODE_UC      ]	= _PAGE_PWT | _PAGE_PCD,
+	// 	[_PAGE_CACHE_MODE_WT      ]	= 0         | _PAGE_PCD,
+	// 	[_PAGE_CACHE_MODE_WP      ]	= 0         | _PAGE_PCD,
+	// };
 
-		// 取值对照表, 源码的取值过于罗嗦就直接拉过来对照着改值
-		// static uint16_t __cachemode2pte_tbl[_PAGE_CACHE_MODE_NUM] = {
-		// 	[_PAGE_CACHE_MODE_WB      ]	= 0         | 0        ,
-		// 	[_PAGE_CACHE_MODE_WC      ]	= 0         | _PAGE_PCD,
-		// 	[_PAGE_CACHE_MODE_UC_MINUS]	= 0         | _PAGE_PCD,
-		// 	[_PAGE_CACHE_MODE_UC      ]	= _PAGE_PWT | _PAGE_PCD,
-		// 	[_PAGE_CACHE_MODE_WT      ]	= 0         | _PAGE_PCD,
-		// 	[_PAGE_CACHE_MODE_WP      ]	= 0         | _PAGE_PCD,
-		// };
 
-		// unsigned long cachemode2protval(enum page_cache_mode pcm)
-		// {
-		// 	if (likely(pcm == 0))
-		// 		return 0;
-		// 	return __cachemode2pte_tbl[pcm];
-		// }
-	#endif
-
-	// #define _PAGE_ENC					(_AT(pteval_t, sme_me_mask))
 	// memory encypt not supported
 	#define _PAGE_ENC					(_AT(pteval_t, 0))
 
@@ -180,7 +164,6 @@
 	#define _PSE	_PAGE_PSE
 
 	#define pgprot_val(x)				((x).pgprot)
-	// #define __pgprot(x)					((pgprot_t) { (x) } )
 	#define __pgprot(x)					((u64) { (x) } )
 	#define __pg(x)						__pgprot(x)
 
