@@ -18,38 +18,20 @@
  *              Designed by David S. Miller, Alexey Kuznetsov and Ingo Molnar
  */
 
-// #include <linux/kernel_stat.h>
 #include <linux/kernel/export.h>
-// #include <linux/interrupt.h>
-#include <linux/smp/percpu.h>
-#include <linux/init/init.h>
-#include <linux/mm/mm.h>
-// #include <linux/swap.h>
-// #include <linux/pid_namespace.h>
-// #include <linux/notifier.h>
-// #include <linux/sched/thread_info.h>
 #include <linux/kernel/time.h>
 #include <linux/kernel/jiffies.h>
-// #include <linux/posix-timers.h>
 #include <linux/kernel/cpu.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/delay.h>
-// #include <linux/tick.h>
-// #include <linux/kallsyms.h>
-// #include <linux/irq_work.h>
-#include <linux/sched/signal.h>
-// #include <linux/sched/sysctl.h>
-// #include <linux/sched/nohz.h>
-#include <linux/sched/debug.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/compat.h>
-// #include <linux/random.h>
-// #include <linux/sysctl.h>
-
 #include <linux/kernel/uaccess.h>
+#include <linux/sched/signal.h>
+#include <linux/sched/debug.h>
+#include <linux/smp/percpu.h>
+#include <linux/init/init.h>
+#include <linux/mm/mm.h>
+
 #include <asm/unistd.h>
-#include <asm/div64.h>
-// #include <asm/timex.h>
 #include <asm/io.h>
 
 // #include "tick-internal.h"

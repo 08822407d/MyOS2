@@ -12,13 +12,9 @@
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/timex.h>
 	#include <linux/kernel/time.h>
-	#include <linux/lib/list.h>
 	#include <linux/kernel/cache.h>
-	// #include <linux/timer.h>
+	#include <linux/lib/list.h>
 	#include <linux/init/init.h>
-	// #include <linux/of.h>
-	// #include <linux/clocksource_ids.h>
-	#include <asm/div64.h>
 	#include <asm/io.h>
 
 	struct clocksource;

@@ -7,10 +7,8 @@
 
 	#include <asm/processor.h>
 	#include <asm/cpufeature.h>
-	#include <asm/special_insns.h>
+	#include <asm/insns.h>
 	#include <asm/smp.h>
-	// #include <asm/invpcid.h>
-	// #include <asm/pti.h>
 	#include <asm/processor-flags.h>
 	#include <asm/mm.h>
 

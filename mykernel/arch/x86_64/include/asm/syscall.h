@@ -81,43 +81,43 @@
 	// 	regs->ax = (long)error ?: val;
 	// }
 
-		// static inline void syscall_get_arguments(task_s *task,
-		// 										pt_regs_s *regs,
-		// 										unsigned long *args)
-		// {
-		// #ifdef CONFIG_IA32_EMULATION
-		// 	if (task->thread_info.status & TS_COMPAT)
-		// 	{
-		// 		*args++ = regs->bx;
-		// 		*args++ = regs->cx;
-		// 		*args++ = regs->dx;
-		// 		*args++ = regs->si;
-		// 		*args++ = regs->di;
-		// 		*args = regs->bp;
-		// 	}
-		// 	else
-		// #endif
-		// 	{
-		// 		*args++ = regs->di;
-		// 		*args++ = regs->si;
-		// 		*args++ = regs->dx;
-		// 		*args++ = regs->r10;
-		// 		*args++ = regs->r8;
-		// 		*args = regs->r9;
-		// 	}
-		// }
+	// static inline void syscall_get_arguments(task_s *task,
+	// 										pt_regs_s *regs,
+	// 										unsigned long *args)
+	// {
+	// #ifdef CONFIG_IA32_EMULATION
+	// 	if (task->thread_info.status & TS_COMPAT)
+	// 	{
+	// 		*args++ = regs->bx;
+	// 		*args++ = regs->cx;
+	// 		*args++ = regs->dx;
+	// 		*args++ = regs->si;
+	// 		*args++ = regs->di;
+	// 		*args = regs->bp;
+	// 	}
+	// 	else
+	// #endif
+	// 	{
+	// 		*args++ = regs->di;
+	// 		*args++ = regs->si;
+	// 		*args++ = regs->dx;
+	// 		*args++ = regs->r10;
+	// 		*args++ = regs->r8;
+	// 		*args = regs->r9;
+	// 	}
+	// }
 
-		// static inline int syscall_get_arch(task_s *task)
-		// {
-		// 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
-		// 	return (IS_ENABLED(CONFIG_IA32_EMULATION) &&
-		// 			task->thread_info.status & TS_COMPAT)
-		// 			? AUDIT_ARCH_I386
-		// 			: AUDIT_ARCH_X86_64;
-		// }
+	// static inline int syscall_get_arch(task_s *task)
+	// {
+	// 	/* x32 tasks should be considered AUDIT_ARCH_X86_64. */
+	// 	return (IS_ENABLED(CONFIG_IA32_EMULATION) &&
+	// 			task->thread_info.status & TS_COMPAT)
+	// 			? AUDIT_ARCH_I386
+	// 			: AUDIT_ARCH_X86_64;
+	// }
 
-		void do_syscall_64(pt_regs_s *regs, int nr);
-		// void do_int80_syscall_32(pt_regs_s *regs);
-		// long do_fast_syscall_32(pt_regs_s *regs);
+	void do_syscall_64(pt_regs_s *regs, int nr);
+	// void do_int80_syscall_32(pt_regs_s *regs);
+	// long do_fast_syscall_32(pt_regs_s *regs);
 
 #endif /* _ASM_X86_SYSCALL_H */

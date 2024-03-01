@@ -1,4 +1,6 @@
 // source: linux-6.4.9
+#define MEMBLOCK_DEFINATION
+#include "memblock.h"
 
 // SPDX-License-Identifier: GPL-2.0-or-later
 /*
@@ -7,11 +9,8 @@
  * Peter Bergner, IBM Corp.	June 2001.
  * Copyright (C) 2001 Peter Bergner.
  */
-#define MEMBLOCK_DEFINATION
 
 #include <linux/mm/mm.h>
-
-#include "memblock.h"
 
 /**
  * DOC: memblock overview

@@ -2,6 +2,6 @@
 #ifndef _LINUX_X86_MM_H_
 #define _LINUX_X86_MM_H_
 
-	#include <asm/mm/pgtable_arch_api.h>
+	#include <mm/pgtable_arch_api.h>
 
 #endif /* _LINUX_X86_MM_H_ */

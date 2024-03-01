@@ -4,6 +4,7 @@
 #ifndef _X86_IRQFLAGS_H_
 #define _X86_IRQFLAGS_H_
 
+	#include <linux/compiler/compiler_types.h>
 	#include <asm/processor-flags.h>
 
 	#ifndef __ASSEMBLY__

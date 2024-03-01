@@ -2,7 +2,7 @@
 #ifndef _LINUX_MATH_H
 #define _LINUX_MATH_H
 
-	#include <asm/div64.h>
+	#include <linux/kernel/types.h>
 	#include <uapi/linux/kernel.h>
 
 	/*

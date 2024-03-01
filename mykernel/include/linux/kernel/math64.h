@@ -4,7 +4,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/math.h>
-	#include <asm/div64.h>
+	#include <linux/kernel/asm-generic/div64.h>
 
 
 	// <vdso/math64.h> contents

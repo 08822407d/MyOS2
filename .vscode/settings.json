@@ -176,6 +176,8 @@
         "myos_slab_types.h": "c",
         "sparsemem.h": "c",
         "console.h": "c",
-        "shmem_fs.h": "c"
+        "shmem_fs.h": "c",
+        "msr.h": "c",
+        "insns.h": "c"
     }
 }

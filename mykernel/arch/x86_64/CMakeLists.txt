@@ -12,6 +12,8 @@ add_subdirectory(lib)
 add_subdirectory(pci)
 
 
+add_subdirectory(lock_IPC)
+add_subdirectory(mm)
 add_subdirectory(smp)
-add_subdirectory(asm)
+add_subdirectory(insns)
 add_subdirectory(myos)
