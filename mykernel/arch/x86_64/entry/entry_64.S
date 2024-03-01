@@ -19,24 +19,19 @@
  * - idtentry:		Define exception entry points.
  */
 #include <linux/kernel/linkage.h>
-#include <asm/segment.h>
 #include <asm/cache.h>
-// #include <asm/errno.h>
-// #include <asm/asm-offsets.h>
 #include <asm/msr.h>
 #include <asm/unistd.h>
 #include <asm/thread_info.h>
 #include <asm/hw_irq.h>
 #include <asm/page_types.h>
-// #include <asm/irqflags.h>
-// #include <asm/paravirt.h>
 #include <asm/percpu.h>
 #include <asm/asm.h>
 #include <asm/frame.h>
 #include <asm/trapnr.h>
-// #include <asm/nospec-branch.h>
 #include <asm/fsgsbase.h>
 #include <linux/kernel/err.h>
+#include <processor/desc_const_arch.h>
 
 // #include "calling.h"
 

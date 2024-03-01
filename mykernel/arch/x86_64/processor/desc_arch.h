@@ -5,24 +5,19 @@
 #define _ASM_X86_DESC_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-
-	#include <linux/smp/smp.h>
 	#include <linux/smp/percpu.h>
 
-	#include <asm/desc_defs.h>
-	#include <asm/irq_vectors.h>
 	#include <asm-generic/bug.h>
-	#include <asm/segment.h>
-	#include <asm/page_types.h>
 
-	#include "processor_const.h"
-	#include "processor_types.h"
+	#include "desc_const_arch.h"
+	#include "desc_types_arch.h"
 
-	struct x86_hw_tss;
-	typedef struct x86_hw_tss x86_hw_tss_s;
 
 	extern struct desc_ptr idt_descr;
 	extern unsigned long system_vectors[];
+
+	extern const char early_idt_handler_array
+			[NR_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
 
 	#define load_current_idt() load_idt(&idt_descr)
 	extern void idt_setup_early_handler(void);
@@ -35,10 +30,63 @@
 	#define load_tr(tr)					asm volatile("ltr %0"::"m" (tr))
 	#define load_ldt(ldt)				asm volatile("lldt %0"::"m" (ldt))
 
-	struct gdt_page {
-		desc_s gdt[GDT_ENTRIES];
-	} __attribute__((aligned(PAGE_SIZE)));
+	/*
+	 * Constructor for a conventional segment GDT (or LDT) entry.
+	 * This is a macro so it can be used in initializers.
+	 */
+	#define GDT_ENTRY(flags, base, limit)	(					\
+				(((base)  & _AC(0xff000000,ULL)) << (56-24)) |	\
+				(((flags) & _AC(0x0000f0ff,ULL)) << 40) |		\
+				(((limit) & _AC(0x000f0000,ULL)) << (48-16)) |	\
+				(((base)  & _AC(0x00ffffff,ULL)) << 16) |		\
+				(((limit) & _AC(0x0000ffff,ULL)))				\
+			)
 
+	#  define GDT_ENTRY_INIT(flags, base, limit)	{		\
+					.limit0		= (u16) (limit),			\
+					.limit1		= ((limit) >> 16) & 0x0F,	\
+					.base0		= (u16) (base),				\
+					.base1		= ((base) >> 16) & 0xFF,	\
+					.base2		= ((base) >> 24) & 0xFF,	\
+					.type		= (flags & 0x0f),			\
+					.s			= (flags >> 4) & 0x01,		\
+					.dpl		= (flags >> 5) & 0x03,		\
+					.p			= (flags >> 7) & 0x01,		\
+					.avl		= (flags >> 12) & 0x01,		\
+					.l			= (flags >> 13) & 0x01,		\
+					.d			= (flags >> 14) & 0x01,		\
+					.g			= (flags >> 15) & 0x01,		\
+				}
+
+	/*
+	 * Load a segment. Fall back on loading the zero segment if something goes
+	 * wrong.  This variant assumes that loading zero fully clears the segment.
+	 * This is always the case on Intel CPUs and, even on 64-bit AMD CPUs, any
+	 * failure to fully clear the cached descriptor is only observable for
+	 * FS and GS.
+	 */
+	#define __loadsegment_simple(seg, value)					\
+			do {												\
+				unsigned short __val = (value);					\
+				asm volatile(	"movl	%k0,	%%" #seg "	\n"	\
+							:	"+r" (__val)					\
+							:									\
+							:	"memory");						\
+			} while (0)
+
+	#define __loadsegment_ss(value) __loadsegment_simple(ss, (value))
+	#define __loadsegment_ds(value) __loadsegment_simple(ds, (value))
+	#define __loadsegment_es(value) __loadsegment_simple(es, (value))
+
+
+	/* __loadsegment_gs is intentionally undefined.  Use load_gs_index instead. */
+	#define loadsegment(seg, value) __loadsegment_ ## seg (value)
+
+	/*
+	 * Save a segment register away:
+	 */
+	#define savesegment(seg, value) \
+				asm("mov %%" #seg ",%0":"=r" (value) : : "memory")
 
 	#ifdef DEBUG
 
@@ -62,6 +110,12 @@
 		extern void
 		set_tss_desc(unsigned cpu, x86_hw_tss_s *addr);
 
+		extern unsigned long
+		gate_offset(const gate_desc *g);
+
+		extern unsigned long
+		gate_segment(const gate_desc *g);
+
 		extern void
 		load_gdt(const struct desc_ptr *dtr);
 
@@ -70,6 +124,9 @@
 
 		extern void
 		load_TR_desc(void);
+
+		extern void
+		__loadsegment_fs(unsigned short value);
 
 		extern void
 		init_idt_data(struct idt_data *data,
@@ -83,7 +140,7 @@
 
 	#endif
 
-	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_PROCESSOR_DEFINATION) || !(DEBUG)
 	
 		/* Provide the original GDT */
 		PREFIX_STATIC_INLINE
@@ -164,6 +221,19 @@
 			write_gdt_entry(d, GDT_ENTRY_TSS, &tss, DESC_TSS);
 		}
 
+		PREFIX_STATIC_INLINE
+		unsigned long
+		gate_offset(const gate_desc *g) {
+			return g->offset_low | ((unsigned long)g->offset_middle << 16) |
+					((unsigned long) g->offset_high << 32);
+		}
+
+		PREFIX_STATIC_INLINE
+		unsigned long
+		gate_segment(const gate_desc *g) {
+			return g->segment;
+		}
+
 		// static inline void native_load_gdt(const struct desc_ptr *dtr)
 		PREFIX_STATIC_INLINE
 		void
@@ -198,6 +268,18 @@
 			asm volatile(	"ltr	%w0		\t\n"
 						:
 						:	"q" (GDT_ENTRY_TSS*8)
+						);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		__loadsegment_fs(unsigned short value) {
+			asm volatile(	"						\n"
+							"1:	movw %0, %%fs		\n"
+							"2:						\n"
+						:
+						:	"rm" (value)
+						:	"memory"
 						);
 		}
 

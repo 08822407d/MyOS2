@@ -3,13 +3,11 @@
 #define _ASM_X86_PROCESSOR_H
 
 	#include <asm/processor-flags.h>
-	#include <asm/segment.h>
 	#include <asm/current.h>
 	#include <asm/cpufeatures.h>
 	#include <asm/page.h>
 	#include <asm/percpu.h>
 	#include <asm/msr.h>
-	#include <asm/desc_defs.h>
 	#include <asm/insns.h>
 
 	#include <linux/kernel/cache.h>

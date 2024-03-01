@@ -187,6 +187,9 @@
         "processor_types.h": "c",
         "special_insns_arch.h": "c",
         "desc_arch.h": "c",
-        "processor_const.h": "c"
+        "processor_const.h": "c",
+        "processor_arch_api.h": "c",
+        "desc_const_arch.h": "c",
+        "processor-flags.h": "c"
     }
 }

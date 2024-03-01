@@ -5,6 +5,8 @@
 #ifndef _ASM_X86_DESC_DEFS_H
 #define _ASM_X86_DESC_DEFS_H
 
+	#include "desc_const_arch.h"
+
 	/*
 	 * Segment descriptor structure definitions, usable from both x86_64 and i386
 	 * archs.
@@ -12,7 +14,7 @@
 
 	#ifndef __ASSEMBLY__
 
-	#	include <linux/kernel/types.h>
+	#  include <linux/kernel/types.h>
 
 		// Intel Manual Volume 3 - June 2023
 		// Chapter 5: Protection
@@ -33,21 +35,6 @@
 				base2	: 8;
 		} __attribute__((packed)) desc_s;
 
-	#	define GDT_ENTRY_INIT(flags, base, limit)	{		\
-					.limit0		= (u16) (limit),			\
-					.limit1		= ((limit) >> 16) & 0x0F,	\
-					.base0		= (u16) (base),				\
-					.base1		= ((base) >> 16) & 0xFF,	\
-					.base2		= ((base) >> 24) & 0xFF,	\
-					.type		= (flags & 0x0f),			\
-					.s			= (flags >> 4) & 0x01,		\
-					.dpl		= (flags >> 5) & 0x03,		\
-					.p			= (flags >> 7) & 0x01,		\
-					.avl		= (flags >> 12) & 0x01,		\
-					.l			= (flags >> 13) & 0x01,		\
-					.d			= (flags >> 14) & 0x01,		\
-					.g			= (flags >> 15) & 0x01,		\
-				}
 
 		enum {
 			GATE_INTERRUPT	= 0xE,
@@ -108,46 +95,16 @@
 		} __attribute__((packed));
 		typedef struct gate_struct gate_desc;
 
-		// static inline unsigned long gate_offset(const gate_desc *g) {
-		// 	return g->offset_low | ((unsigned long)g->offset_middle << 16) |
-		// 		((unsigned long) g->offset_high << 32);
-		// }
-
-		// static inline unsigned long gate_segment(const gate_desc *g) {
-		// 	return g->segment;
-		// }
 
 		struct desc_ptr {
 			unsigned short size;
 			unsigned long address;
 		} __attribute__((packed)) ;
 
+		struct gdt_page {
+			desc_s gdt[GDT_ENTRIES];
+		} __attribute__((aligned(PAGE_SIZE)));
+
 	#endif /* !__ASSEMBLY__ */
-
-	/* Boot IDT definitions */
-	#define	BOOT_IDT_ENTRIES	32
-
-	/* Access rights as returned by LAR */
-	#define AR_TYPE_RODATA			(0 * (1 << 9))
-	#define AR_TYPE_RWDATA			(1 * (1 << 9))
-	#define AR_TYPE_RODATA_EXPDOWN	(2 * (1 << 9))
-	#define AR_TYPE_RWDATA_EXPDOWN	(3 * (1 << 9))
-	#define AR_TYPE_XOCODE			(4 * (1 << 9))
-	#define AR_TYPE_XRCODE			(5 * (1 << 9))
-	#define AR_TYPE_XOCODE_CONF		(6 * (1 << 9))
-	#define AR_TYPE_XRCODE_CONF		(7 * (1 << 9))
-	#define AR_TYPE_MASK			(7 * (1 << 9))
-
-	#define AR_DPL0					(0 * (1 << 13))
-	#define AR_DPL3					(3 * (1 << 13))
-	#define AR_DPL_MASK				(3 * (1 << 13))
-
-	#define AR_A					(1 << 8)   /* "Accessed" */
-	#define AR_S					(1 << 12)  /* If clear, "System" segment */
-	#define AR_P					(1 << 15)  /* "Present" */
-	#define AR_AVL					(1 << 20)  /* "AVaiLable" (no HW effect) */
-	#define AR_L					(1 << 21)  /* "Long mode" for code segments */
-	#define AR_DB					(1 << 22)  /* D/B, effect depends on type */
-	#define AR_G					(1 << 23)  /* "Granularity" (limit in pages) */
 
 #endif /* _ASM_X86_DESC_DEFS_H */

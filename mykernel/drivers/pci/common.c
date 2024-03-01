@@ -7,19 +7,12 @@
 
 #include <linux/kernel/sched.h>
 #include <linux/device/pci.h>
-// #include <linux/pci-acpi.h>
-// #include <linux/ioport.h>
 #include <linux/init/init.h>
-// #include <linux/dmi.h>
-// #include <linux/kernel/slab.h>
 
-// #include <asm/acpi.h>
-#include <asm/segment.h>
 #include <asm/insns.h>
 #include <asm/smp.h>
 #include <asm/pci_x86.h>
 #include <asm/setup.h>
-// #include <asm/irqdomain.h>
 
 // unsigned int pci_probe = PCI_PROBE_BIOS | PCI_PROBE_CONF1 | PCI_PROBE_CONF2 |
 // 				PCI_PROBE_MMCONF;

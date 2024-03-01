@@ -2,7 +2,6 @@
 #ifndef _ASM_X86_PTRACE_H
 #define _ASM_X86_PTRACE_H
 
-	#include <asm/segment.h>
 	#include <asm/page_types.h>
 	#include <asm/uapi_ptrace.h>
 

@@ -11,20 +11,14 @@
 
 
 #include <linux/kernel/linkage.h>
-// #include <linux/threads.h>
 #include <linux/init/init.h>
-// #include <linux/pgtable.h>
-#include <asm/segment.h>
 #include <asm/page.h>
 #include <asm/msr.h>
 #include <asm/cache.h>
 #include <asm/processor-flags.h>
 #include <asm/percpu.h>
-// #include <asm/nops.h>
-// #include "../entry/calling.h"
-// #include <asm/export.h>
-// #include <asm/nospec-branch.h>
-// #include <asm/fixmap.h>
+#include <processor/desc_const_arch.h>
+
 
 
 	.text
