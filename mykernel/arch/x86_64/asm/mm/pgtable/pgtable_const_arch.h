@@ -359,4 +359,11 @@
 	#define P4D_SIZE			(1UL << P4D_SHIFT)
 	#define P4D_MASK			(~(P4D_SIZE-1))
 
+	/*
+	 * Instead of one PGD, we acquire two PGDs.  Being order-1, it is
+	 * both 8k in size and 8k-aligned.  That lets us just flip bit 12
+	 * in a pointer to swap between the two 4k halves.
+	 */
+	#define PGD_ALLOCATION_ORDER 0
+
 #endif /* _ASM_X86_PGTABLE_CONST_H_ */

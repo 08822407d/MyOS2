@@ -3,25 +3,16 @@
 #define _ASM_X86_PGTABLE_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/kernel/lock_ipc.h>
 
 	#include "pgtable_const_arch.h"
 	#include "pgtable_types_arch.h"
 
-	#include <asm/page.h>
-	#include <asm/pgtable_64.h>
 
 	#define KERNEL_PGD_BOUNDARY		pgd_index(PAGE_OFFSET)
 	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
 
 	#ifndef __ASSEMBLY__
-	// #  include <linux/kernel/lock_ipc.h>
-	// #  include <linux/mm/mm.h>
-
-		extern spinlock_t	pgd_lock;
-		extern List_hdr_s	pgd_list_hdr;
-
-		extern pteval_t __supported_pte_mask;
-		extern pteval_t __default_kernel_pte_mask;
 
 		/*
 		 * We only update the dirty/accessed state if we set
@@ -32,10 +23,8 @@
 		 */
 		struct vm_area_struct;
 		typedef struct vm_area_struct vma_s;
-
-		void init_mem_mapping(void);
-		void early_alloc_pgt_buf(void);
-
+		struct mm_struct;
+		typedef struct mm_struct mm_s;
 
 	/*
 	 * The "pgd_xxx()" functions here are trivial for a folded two-level
@@ -55,9 +44,7 @@
 	 * but the define is needed for a generic inline function.)
 	 */
 	#	define set_pgd(pgdptr, pgdval)		set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
-
 	#	define p4d_ent_offset(pgd, addr)	((p4d_t *)pgd);
-
 	#	define arch_p4d_val(x)		(arch_pgd_val((x).pgd))
 	#	define arch_make_p4d(x)		((p4d_t) { arch_make_pgd(x) })
 
@@ -74,6 +61,29 @@
 
 	// #	undef  next_p4d_addr_end
 	// #	define next_p4d_addr_end(addr, end)			(end)
+
+	// extern p4d_t level4_kernel_pgt[512];
+	// extern p4d_t level4_ident_pgt[512];
+	// extern pud_t level3_kernel_pgt[512];
+	// extern pud_t level3_ident_pgt[512];
+	// extern pmd_t level2_kernel_pgt[512];
+	// extern pmd_t level2_fixmap_pgt[512];
+	// extern pmd_t level2_ident_pgt[512];
+	// extern pte_t level1_fixmap_pgt[512 * FIXMAP_PMD_NUM];
+	extern pgd_t init_top_pgt[];
+	#define swapper_pg_dir init_top_pgt
+
+	#define set_pte(ptep, pte)	WRITE_ONCE(*(ptep), (pte))
+	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))
+
+	#define set_pmd(pmdp, pmd)	WRITE_ONCE(*(pmdp), (pmd))
+	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmd(0))
+
+	#define set_pud(pudp, pud)	WRITE_ONCE(*(pudp), (pud))
+	#define pud_clear(pudp)		set_pud((pudp), arch_make_pud(0))
+
+	#define set_p4d(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
+	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
 
 	#  ifdef DEBUG

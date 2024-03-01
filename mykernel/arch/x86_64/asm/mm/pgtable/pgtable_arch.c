@@ -3,9 +3,8 @@
 
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/mm/gfp.h>
-#include <asm/pgalloc.h>
-
 #include <linux/lib/list.h>
+#include <asm-generic/pgalloc.h>
 
 
 static inline void pgd_list_add(pgd_t *pgd) {

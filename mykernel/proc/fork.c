@@ -66,38 +66,12 @@
 // #include <linux/proc_fs.h>
 // #include <linux/profile.h>
 #include <linux/mm/rmap.h>
-// #include <linux/ksm.h>
-// #include <linux/acct.h>
-// #include <linux/userfaultfd_k.h>
-// #include <linux/tsacct_kern.h>
-// #include <linux/cn_proc.h>
-// #include <linux/freezer.h>
-// #include <linux/delayacct.h>
-// #include <linux/taskstats_kern.h>
-// #include <linux/random.h>
 #include <linux/device/tty.h>
 #include <linux/sched/fs_struct.h>
 #include <uapi/linux/magic.h>
-// #include <linux/perf_event.h>
-// #include <linux/posix-timers.h>
-// #include <linux/user-return-notifier.h>
-// #include <linux/oom.h>
-// #include <linux/khugepaged.h>
-// #include <linux/signalfd.h>
-// #include <linux/uprobes.h>
-// #include <linux/aio.h>
 #include <linux/compiler/compiler.h>
-// #include <linux/sysctl.h>
-// #include <linux/kcov.h>
-// #include <linux/livepatch.h>
-// #include <linux/sched/thread_info.h>
-// #include <linux/stackleak.h>
-// #include <linux/kasan.h>
-// #include <linux/scs.h>
-// #include <linux/io_uring.h>
-// #include <linux/bpf.h>
 
-#include <asm/pgalloc.h>
+
 #include <linux/kernel/uaccess.h>
 #include <asm/mmu_context.h>
 // #include <asm/cacheflush.h>
