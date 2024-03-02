@@ -17,8 +17,6 @@
 #include <linux/mm/mm.h>
 #include <asm/apic.h>
 
-#include <asm/processor.h>
-
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>

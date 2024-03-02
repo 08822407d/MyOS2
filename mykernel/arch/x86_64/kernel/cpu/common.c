@@ -18,7 +18,6 @@
 #include <linux/smp/smp.h>
 
 #include <asm/mmu_context.h>
-#include <asm/processor.h>
 #include <asm/tlbflush.h>
 #include <asm/sections.h>
 #include <linux/kernel/cpumask.h>
@@ -30,6 +29,7 @@
 #include <asm/cpu.h>
 #include <asm/msr.h>
 #include <asm/insns.h>
+#include <asm/processor.h>
 
 #include "cpu.h"
 

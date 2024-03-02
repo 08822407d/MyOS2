@@ -2,11 +2,10 @@
 #ifndef _LINUX_PID_H
 #define _LINUX_PID_H
 
-	// #include <linux/rculist.h>
-	// #include <linux/wait.h>
-	// #include <linux/refcount.h>
-
 	#include <linux/kernel/lock_ipc.h>
+
+	#include <asm/processor.h>
+	#include <asm/insns.h>
 
 	enum pid_type
 	{

@@ -2,7 +2,6 @@
 #include <linux/kernel/kernel.h>
 #include <linux/device/tty.h>
 #include <linux/lib/string.h>
-#include <asm/processor.h>
 #include <asm/apic.h>
 
 #include <obsolete/glo.h>

@@ -3,6 +3,9 @@
 #include <asm/setup.h>
 #include <asm/tlbflush.h>
 #include <asm/percpu.h>
+#include <asm/processor.h>
+#include <asm/insns.h>
+#include <asm/msr.h>
 
 #include <obsolete/glo.h>
 #include <obsolete/proto.h>

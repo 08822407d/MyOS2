@@ -4,7 +4,6 @@
 
 	#include <linux/compiler/compiler.h>	/* For __user */
 	#include <asm/ptrace-abi.h>
-	#include <asm/processor-flags.h>
 
 
 	// #ifndef __ASSEMBLY__

@@ -2,6 +2,7 @@
 #define _MMFAULT_TYPES_H_
 
 	#include <linux/compiler/compiler_types.h>
+	#include <asm/insns.h>
 
 	#include "memfault_const.h"
 

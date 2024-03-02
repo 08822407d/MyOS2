@@ -7,6 +7,7 @@
 	#include "fault/memfault_types.h"
     #include "vm_map/vm_map_types.h"
 
+	#include <asm/processor.h>
 
 	typedef struct mm_struct {
 		size_t				entry_point;

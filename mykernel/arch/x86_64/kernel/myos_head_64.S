@@ -15,14 +15,14 @@
 #include <asm/page.h>
 #include <asm/msr.h>
 #include <asm/cache.h>
-#include <asm/processor-flags.h>
 #include <asm/percpu.h>
 
 #include <linux/kernel/linkage.h>
 #include <linux/init/init.h>
-#include <asm/processor-flags.h>
 #include <asm/page.h>
 #include <asm/msr.h>
+
+#include <processor/processor_const_arch.h>
 
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386

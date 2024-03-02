@@ -60,8 +60,6 @@
 				((x)->e_machine == EM_486)		\
 			)
 
-	#include <asm/processor.h>
-
 	/*
 	 * This is used to ensure we don't load something for the wrong architecture.
 	 */

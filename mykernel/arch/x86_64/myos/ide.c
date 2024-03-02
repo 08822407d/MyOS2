@@ -8,7 +8,6 @@
 #include <linux/device/tty.h>
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>
-#include <asm/processor.h>
 #include <asm/insns.h>
 #include <asm/apic.h>
 

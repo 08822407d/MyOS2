@@ -20,7 +20,6 @@
 	// {
 		#include <linux/compiler/compiler.h>
 		#include <linux/kernel/threads.h>
-		// #include <linux/smp/percpu-defs.h>
 
 		#include <asm/page.h>
 

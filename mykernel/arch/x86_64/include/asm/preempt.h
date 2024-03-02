@@ -7,7 +7,6 @@
 	// #include <linux/sched/thread_info.h>
 	// #include <linux/static_call_types.h>
 
-	#include <asm/processor.h>
 
 	/* We use the MSB mostly because its available */
 	#define PREEMPT_NEED_RESCHED	0x80000000

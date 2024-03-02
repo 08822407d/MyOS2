@@ -51,6 +51,7 @@
 // #include <asm/cacheflush.h>
 // #include <asm/tlbflush.h>
 #include <asm/signal.h>
+#include <asm/insns.h>
 
 // #include <trace/events/sched.h>
 

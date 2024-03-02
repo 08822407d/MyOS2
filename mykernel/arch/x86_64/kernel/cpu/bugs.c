@@ -12,8 +12,6 @@
 #include <linux/kernel/cpu.h>
 
 #include <asm/bugs.h>
-#include <asm/processor.h>
-#include <asm/processor-flags.h>
 #include <asm/msr.h>
 #include <asm/alternative.h>
 #include <asm/e820-api.h>

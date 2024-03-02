@@ -4,7 +4,6 @@
 #include <linux/kernel/completion.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
-#include <asm/processor.h>
 #include <asm/insns.h>
 #include <asm/apic.h>
 

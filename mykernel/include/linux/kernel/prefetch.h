@@ -12,7 +12,6 @@
 #define _LINUX_PREFETCH_H
 
 	#include <linux/kernel/types.h>
-	#include <asm/processor.h>
 	#include <asm/cache.h>
 
 	struct page;

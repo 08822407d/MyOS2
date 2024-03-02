@@ -4,8 +4,6 @@
 #ifndef _ASM_X86_CPUFEATURE_H
 #define _ASM_X86_CPUFEATURE_H
 
-	#include <asm/processor.h>
-
 	#if defined(__KERNEL__) && !defined(__ASSEMBLY__)
 
 	#	include <asm/asm.h>

@@ -5,11 +5,8 @@
 #define _X86_IRQFLAGS_H_
 
 	#include <linux/compiler/compiler_types.h>
-	#include <asm/processor-flags.h>
 
 	#ifndef __ASSEMBLY__
-
-	// #	include <asm/nospec-branch.h>
 
 		/*
 		 * Interrupt control:
@@ -125,6 +122,7 @@
 	// #endif /* CONFIG_PARAVIRT_XXL */
 
 	#ifndef __ASSEMBLY__
+	#  include <processor/processor_const_arch.h>
 		static __always_inline int
 		arch_irqs_disabled_flags(unsigned long flags) {
 			return !(flags & X86_EFLAGS_IF);

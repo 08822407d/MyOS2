@@ -18,7 +18,6 @@
 #include <linux/smp/percpu.h>
 #include <linux/kernel/start_kernel.h>
 
-#include <asm/processor.h>
 #include <asm/smp.h>
 #include <asm/setup.h>
 #include <asm/tlbflush.h>

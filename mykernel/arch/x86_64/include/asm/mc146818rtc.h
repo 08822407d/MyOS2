@@ -6,8 +6,6 @@
 #define _ASM_X86_MC146818RTC_H
 
 	#include <asm/insns.h>
-	#include <asm/processor.h>
-	
 
 	#include <linux/kernel/time64.h>
 

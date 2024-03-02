@@ -5,11 +5,9 @@
 	#include <linux/mm/mm.h>
 	#include <linux/kernel/sched.h>
 
-	#include <asm/processor.h>
 	#include <asm/cpufeature.h>
 	#include <asm/insns.h>
 	#include <asm/smp.h>
-	#include <asm/processor-flags.h>
 	#include <asm/mm.h>
 
 	void __flush_tlb_all(void);

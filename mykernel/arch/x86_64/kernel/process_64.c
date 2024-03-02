@@ -32,7 +32,6 @@
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/syscalls.h>
 
-#include <asm/processor.h>
 #include <asm/mmu_context.h>
 #include <asm/switch_to.h>
 #include <asm/fsgsbase.h>

@@ -3,10 +3,8 @@
 #define _ASM_X86_SPECIAL_INSNS_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
+	#include <asm/insns.h>
 	#include <asm/mm.h>
-
-	#include <asm/processor-flags.h>
-	#include <linux/kernel/irqflags.h>
 
 	/*
 	 * The compiler should not reorder volatile asm statements with respect to each

@@ -1,3 +1,5 @@
+#include <asm/insns.h>
+#include <asm/processor.h>
 #include <asm/preempt.h>
 
 #define __preempt_count_ref	(this_cpu_ptr(&pcpu_hot)->preempt_count)

@@ -190,6 +190,11 @@
         "processor_const.h": "c",
         "processor_arch_api.h": "c",
         "desc_const_arch.h": "c",
-        "processor-flags.h": "c"
+        "processor-flags.h": "c",
+        "desc_types_arch.h": "c",
+        "processor_types_arch.h": "c",
+        "major.h": "c",
+        "cpufeatures.h": "c",
+        "processor_arch.h": "c"
     }
 }

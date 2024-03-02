@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_PROCESSOR_CONST_H_
-#define _ASM_X86_PROCESSOR_CONST_H_
+#ifndef _ASM_X86_PROCESSOR_TYPES_H_
+#define _ASM_X86_PROCESSOR_TYPES_H_
 
     #include <linux/compiler/compiler_types.h>
     #include <linux/kernel/types.h>
@@ -177,32 +177,29 @@
 		reg_t			fsbase;
 		reg_t			gsbase;
 
-	// 	/* Save middle states of ptrace breakpoints */
-	// 	struct perf_event *ptrace_bps[HBP_NUM];
-	// 	/* Debug status used for traps, single steps, etc... */
-	// 	unsigned long virtual_dr6;
-	// 	/* Keep track of the exact dr7 value set by the user */
-	// 	unsigned long ptrace_dr7;
+		// /* Save middle states of ptrace breakpoints */
+		// struct perf_event *ptrace_bps[HBP_NUM];
+		// /* Debug status used for traps, single steps, etc... */
+		// unsigned long virtual_dr6;
+		// /* Keep track of the exact dr7 value set by the user */
+		// unsigned long ptrace_dr7;
 		/* Fault info: */
 		reg_t			cr2;
 		unsigned long	trap_nr;
 		unsigned long	error_code;
-	// #ifdef CONFIG_VM86
-	// 	/* Virtual 86 mode info */
-	// 	struct vm86 *vm86;
-	// #endif
-	// 	/* IO permissions: */
-	// 	struct io_bitmap *io_bitmap;
 
-	// 	/*
-	// 	* IOPL. Privilege level dependent I/O permission which is
-	// 	* emulated via the I/O bitmap to prevent user space from disabling
-	// 	* interrupts.
-	// 	*/
-	// 	unsigned long iopl_emul;
+		// /* IO permissions: */
+		// struct io_bitmap *io_bitmap;
 
-	// 	unsigned int iopl_warn : 1;
-	// 	unsigned int sig_on_uaccess_err : 1;
+		// /*
+		// * IOPL. Privilege level dependent I/O permission which is
+		// * emulated via the I/O bitmap to prevent user space from disabling
+		// * interrupts.
+		// */
+		// unsigned long iopl_emul;
+
+		// unsigned int iopl_warn : 1;
+		// unsigned int sig_on_uaccess_err : 1;
 
 		// /*
 		// * Protection Keys Register for Userspace.  Loaded immediately on

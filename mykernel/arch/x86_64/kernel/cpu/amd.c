@@ -6,21 +6,8 @@
 
 #include <linux/kernel/sched.h>
 #include <linux/sched/clock.h>
-// #include <linux/random.h>
-// #include <linux/topology.h>
-#include <asm/processor.h>
-// #include <asm/apic.h>
-// #include <asm/cacheinfo.h>
 #include <asm/cpu.h>
-// #include <asm/spec-ctrl.h>
 #include <asm/smp.h>
-// #include <asm/numa.h>
-// #include <asm/pci-direct.h>
-// #include <asm/delay.h>
-// #include <asm/debugreg.h>
-// #include <asm/resctrl.h>
-
-// #include <asm/mmconfig.h>
 
 #include "cpu.h"
 

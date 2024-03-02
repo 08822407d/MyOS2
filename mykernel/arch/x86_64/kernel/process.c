@@ -17,6 +17,7 @@
 #include <asm/tlbflush.h>
 #include <asm/switch_to.h>
 #include <asm/frame.h>
+#include <asm/insns.h>
 
 // #include "process.h"
 

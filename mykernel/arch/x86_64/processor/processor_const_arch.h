@@ -1,9 +1,34 @@
-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-#ifndef _UAPI_ASM_X86_PROCESSOR_FLAGS_H
-#define _UAPI_ASM_X86_PROCESSOR_FLAGS_H
-/* Various flags defined: can be included from assembler. */
+/* SPDX-License-Identifier: GPL-2.0 */
+#ifndef _ASM_X86_PROCESSOR_CONST_H_
+#define _ASM_X86_PROCESSOR_CONST_H_
 
-	#include <linux/kernel/const.h>
+	#include <linux/kernel/bits.h>
+
+	#define X86_VENDOR_INTEL		0
+	#define X86_VENDOR_CYRIX		1
+	#define X86_VENDOR_AMD			2
+	#define X86_VENDOR_UMC			3
+	#define X86_VENDOR_CENTAUR		5
+	#define X86_VENDOR_TRANSMETA	7
+	#define X86_VENDOR_NSC			8
+	#define X86_VENDOR_HYGON		9
+	#define X86_VENDOR_ZHAOXIN		10
+	#define X86_VENDOR_VORTEX		11
+	#define X86_VENDOR_NUM			12
+
+	#define X86_VENDOR_UNKNOWN		0xff
+
+	/*
+	 * IO-bitmap sizes:
+	 */
+	#define IO_BITMAP_BITS 65536
+	#define IO_BITMAP_BYTES (IO_BITMAP_BITS / BITS_PER_BYTE)
+	#define IO_BITMAP_LONGS (IO_BITMAP_BYTES / sizeof(long))
+
+
+	/* Base offset outside of TSS_LIMIT so unpriviledged IO causes #GP */
+	#define IO_BITMAP_OFFSET_INVALID (__KERNEL_TSS_LIMIT + 1)
+	
 
 	/*
 	 * EFLAGS bits
@@ -163,21 +188,6 @@
 							X86_CR0_NE | X86_CR0_WP | X86_CR0_AM |	\
 							X86_CR0_PG)
 
-#endif /* _UAPI_ASM_X86_PROCESSOR_FLAGS_H */
-
-/* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_PROCESSOR_FLAGS_H
-#define _ASM_X86_PROCESSOR_FLAGS_H
-
-	// #include <uapi/asm/processor-flags.h>
-	// #include <linux/mem_encrypt.h>
-
-	// #ifdef CONFIG_VM86
-	// #	define X86_VM_MASK	X86_EFLAGS_VM
-	// #else
-	// #	define X86_VM_MASK	0 /* No VM86 support */
-	// #endif
-
 	/*
 	 * CR3's layout varies depending on several things.
 	 *
@@ -204,5 +214,5 @@
 	#define CR3_ADDR_MASK	0x7FFFFFFFFFFFF000ull
 	#define CR3_PCID_MASK	0xFFFull
 	#define CR3_NOFLUSH		BIT_ULL(63)
-
-#endif /* _ASM_X86_PROCESSOR_FLAGS_H */
+	
+#endif /* _ASM_X86_PROCESSOR_TYPES_H_ */

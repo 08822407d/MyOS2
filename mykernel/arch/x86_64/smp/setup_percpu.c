@@ -9,10 +9,12 @@
 #include <linux/smp/percpu.h>
 #include <linux/smp/smp.h>
 #include <asm/sections.h>
-#include <asm/processor.h>
 #include <asm/setup.h>
 #include <asm/apicdef.h>
 #include <asm/cpu.h>
+#include <asm/insns.h>
+#include <asm/processor.h>
+#include <asm/msr.h>
 
 
 #include <asm-generic/sections.h>

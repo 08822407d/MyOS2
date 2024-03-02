@@ -10,6 +10,7 @@
 	#include <uapi/linux/sched.h>
 
 	#include <asm/current.h>
+	#include <asm/processor.h>
 
 	#include <linux/kernel/pid.h>
 	// #include <linux/sem.h>
