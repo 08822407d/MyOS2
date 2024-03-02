@@ -44,7 +44,7 @@
 
 	#endif
 
-	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_INSTRUCTION_DEFINATION) || !(DEBUG)
 	
 		// static inline unsigned long native_read_cr0(void) {
 		PREFIX_STATIC_INLINE

@@ -1,5 +1,4 @@
 #include <linux/lib/string.h>
-#include <asm/fsgsbase.h>
 #include <asm/setup.h>
 #include <asm/tlbflush.h>
 #include <asm/percpu.h>

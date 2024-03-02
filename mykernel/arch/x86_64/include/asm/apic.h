@@ -5,13 +5,8 @@
 	#include <linux/kernel/cpumask.h>
 
 	#include <asm/alternative.h>
-	#include <asm/cpufeature.h>
 	#include <asm/apicdef.h>
-	// #include <asm/fixmap.h>
-	// #include <asm/mpspec.h>
 	#include <asm/msr.h>
-	// #include <asm/hardirq.h>
-
 
 	#include <asm/cpufeatures.h>
 

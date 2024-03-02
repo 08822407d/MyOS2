@@ -1,5 +1,4 @@
-#include <asm/fsgsbase.h>
-
+#include <asm/insns.h>
 #include <asm/debug_func.h>
 
 void *func_rdgsbase()

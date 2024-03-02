@@ -13,14 +13,9 @@
 #include <linux/kernel/linkage.h>
 #include <linux/init/init.h>
 #include <asm/page.h>
-#include <asm/msr.h>
 #include <asm/cache.h>
 #include <asm/percpu.h>
-
-#include <linux/kernel/linkage.h>
-#include <linux/init/init.h>
-#include <asm/page.h>
-#include <asm/msr.h>
+#include <asm/msr-index.h>
 
 #include <processor/processor_const_arch.h>
 

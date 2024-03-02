@@ -34,7 +34,7 @@
 
 #include <asm/mmu_context.h>
 #include <asm/switch_to.h>
-#include <asm/fsgsbase.h>
+#include <asm/insns.h>
 
 // #include "process.h"
 

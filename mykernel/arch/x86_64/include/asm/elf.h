@@ -10,9 +10,7 @@
 	// #include <linux/sched/thread_info.h>
 
 	#include <asm/ptrace.h>
-	// #include <asm/user.h>
-	// #include <asm/auxvec.h>
-	#include <asm/fsgsbase.h>
+	#include <asm/insns.h>
 
 	// typedef unsigned long elf_greg_t;
 

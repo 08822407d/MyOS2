@@ -5,28 +5,6 @@
 #ifndef _ASM_X86_TSC_H
 #define _ASM_X86_TSC_H
 
-	#include <asm/cpufeature.h>
-
-	/*
-	 * Standard way to access the cycle counter.
-	 */
-	typedef unsigned long long cycles_t;
-
-	extern unsigned int cpu_khz;
-	extern unsigned int tsc_khz;
-
-	// extern void disable_TSC(void);
-
-	// static inline cycles_t get_cycles(void)
-	// {
-	// 	if (!IS_ENABLED(CONFIG_X86_TSC) &&
-	// 		!cpu_feature_enabled(X86_FEATURE_TSC))
-	// 		return 0;
-	// 	return rdtsc();
-	// }
-	// #define get_cycles get_cycles
-
-	// extern struct system_counterval_t convert_art_to_tsc(u64 art);
 	// extern struct system_counterval_t convert_art_ns_to_tsc(u64 art_ns);
 
 	extern void tsc_early_init(void);

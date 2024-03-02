@@ -20,7 +20,6 @@
  */
 #include <linux/kernel/linkage.h>
 #include <asm/cache.h>
-#include <asm/msr.h>
 #include <asm/unistd.h>
 #include <asm/thread_info.h>
 #include <asm/hw_irq.h>
@@ -29,7 +28,6 @@
 #include <asm/asm.h>
 #include <asm/frame.h>
 #include <asm/trapnr.h>
-#include <asm/fsgsbase.h>
 #include <linux/kernel/err.h>
 #include <processor/desc_const_arch.h>
 

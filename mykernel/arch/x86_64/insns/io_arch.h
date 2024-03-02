@@ -4,6 +4,7 @@
 
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/types.h>
+	#include <asm/page.h>
 
 	#ifdef DEBUG
 	
@@ -18,7 +19,7 @@
 
 	#endif
 
-	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
+	#if defined(ARCH_INSTRUCTION_DEFINATION) || !(DEBUG)
 
 		/**
 		 *	virt_to_phys	-	map virtual addresses to physical

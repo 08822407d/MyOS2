@@ -1,7 +1,7 @@
 #include <linux/kernel/types.h>
 
 #include <asm/sections.h>
-#include <asm/fsgsbase.h>
+#include <asm/insns.h>
 
 virt_addr_t calc_pcpu_var_addr(void *proto_addr)
 {

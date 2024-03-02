@@ -14,6 +14,7 @@
 
 #include <asm/traps.h>			/* dotraplinkage, ...		*/
 #include <asm/mmu_context.h>		/* vma_pkey()			*/
+#include <asm/insns.h>
 
 
 #include <linux/kernel/kernel.h>

@@ -235,22 +235,19 @@
 		// 	return EAX_EDX_VAL(val, low, high);
 		// }
 
-		// #ifdef CONFIG_PARAVIRT_XXL
-		// #include <asm/paravirt.h>
-		// #else
 		#include <linux/lib/errno.h>
-		// /*
-		// * Access to machine-specific registers (available on 586 and better only)
-		// * Note: the rd* operations modify the parameters directly (without using
-		// * pointer indirection), this allows gcc to optimize better
-		// */
+		/*
+		* Access to machine-specific registers (available on 586 and better only)
+		* Note: the rd* operations modify the parameters directly (without using
+		* pointer indirection), this allows gcc to optimize better
+		*/
 
-		// #define rdmsr(msr, low, high)					\
-		// do {								\
-		// 	u64 __val = native_read_msr((msr));			\
-		// 	(void)((low) = (u32)__val);				\
-		// 	(void)((high) = (u32)(__val >> 32));			\
-		// } while (0)
+		#define rdmsr(msr, low, high)					\
+		do {								\
+			u64 __val = native_read_msr((msr));			\
+			(void)((low) = (u32)__val);				\
+			(void)((high) = (u32)(__val >> 32));			\
+		} while (0)
 
 			static inline void
 			wrmsr(unsigned int msr, u32 low, u32 high) {
@@ -258,46 +255,44 @@
 				__wrmsr(msr, low, high);
 			}
 
-	#		define rdmsrl(msr, val)	\
-					((val) = __rdmsr((msr)))
-					// ((val) = native_read_msr((msr)))
+		#define rdmsrl(msr, val)	\
+				((val) = __rdmsr((msr)))
+				// ((val) = native_read_msr((msr)))
 
-			static inline void
-			wrmsrl(unsigned int msr, u64 val) {
-				// native_write_msr(msr, (u32)(val & 0xffffffffULL),
-				// 		(u32)(val >> 32));
-				__wrmsr(msr, (u32)(val & 0xffffffffULL),
-						(u32)(val >> 32));
-			}
+		static inline void
+		wrmsrl(unsigned int msr, u64 val) {
+			// native_write_msr(msr, (u32)(val & 0xffffffffULL),
+			// 		(u32)(val >> 32));
+			__wrmsr(msr, (u32)(val & 0xffffffffULL),
+					(u32)(val >> 32));
+		}
 
-		// 	/* rdmsr with exception handling */
-		// 	#define rdmsr_safe(msr, low, high)				\
-		// 	({								\
-		// 		int __err;						\
-		// 		u64 __val = native_read_msr_safe((msr), &__err);	\
-		// 		(*low) = (u32)__val;					\
-		// 		(*high) = (u32)(__val >> 32);				\
-		// 		__err;							\
-		// 	})
+		// /* rdmsr with exception handling */
+		// #define rdmsr_safe(msr, low, high)				\
+		// ({								\
+		// 	int __err;						\
+		// 	u64 __val = native_read_msr_safe((msr), &__err);	\
+		// 	(*low) = (u32)__val;					\
+		// 	(*high) = (u32)(__val >> 32);				\
+		// 	__err;							\
+		// })
 
-		// 	static inline int rdmsrl_safe(unsigned int msr, unsigned long long *p)
-		// 	{
-		// 		int err;
+		// static inline int rdmsrl_safe(unsigned int msr, unsigned long long *p)
+		// {
+		// 	int err;
 
-		// 		*p = native_read_msr_safe(msr, &err);
-		// 		return err;
-		// 	}
+		// 	*p = native_read_msr_safe(msr, &err);
+		// 	return err;
+		// }
 
-		// 	#define rdpmc(counter, low, high)			\
-		// 	do {							\
-		// 		u64 _l = native_read_pmc((counter));		\
-		// 		(low)  = (u32)_l;				\
-		// 		(high) = (u32)(_l >> 32);			\
-		// 	} while (0)
+		// #define rdpmc(counter, low, high)			\
+		// do {							\
+		// 	u64 _l = native_read_pmc((counter));		\
+		// 	(low)  = (u32)_l;				\
+		// 	(high) = (u32)(_l >> 32);			\
+		// } while (0)
 
-		// 	#define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
-
-		// #endif	/* !CONFIG_PARAVIRT_XXL */
+		// #define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
 
 		// /*
 		// * 64-bit version of wrmsr_safe():

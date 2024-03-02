@@ -18,7 +18,6 @@
 #include <linux/kernel/uaccess.h>
 
 #include <asm/traps.h>
-#include <asm/cpufeature.h>
 #include <asm/syscall.h>
 
 

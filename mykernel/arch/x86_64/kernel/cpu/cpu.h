@@ -2,6 +2,8 @@
 #ifndef ARCH_X86_CPU_H
 #define ARCH_X86_CPU_H
 
+	#include <asm/processor.h>
+
 	/* attempt to consolidate cpu attributes */
 	typedef struct cpu_dev
 	{
