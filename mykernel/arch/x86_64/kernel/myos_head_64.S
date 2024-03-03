@@ -15,7 +15,7 @@
 #include <asm/page.h>
 #include <asm/cache.h>
 #include <asm/percpu.h>
-#include <asm/msr-index.h>
+#include <insns/x86_msr_const.h>
 
 #include <processor/processor_const_arch.h>
 

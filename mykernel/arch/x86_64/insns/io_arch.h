@@ -110,8 +110,6 @@
 	 *  isa_read[wl] and isa_write[wl] fixed
 	 *  - Arnaldo Carvalho de Melo <acme@conectiva.com.br>
 	 */
-	#include <linux/compiler/compiler.h>
-
 	#define build_mmio_read(name, size, type, reg, barrier)					\
 				static inline type											\
 				name(const volatile void *addr) {							\

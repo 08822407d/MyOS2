@@ -69,8 +69,8 @@ void __show_regs(pt_regs_s *regs, enum show_regs_mode mode,
 	// 	return;
 
 	// if (mode == SHOW_REGS_USER) {
-	// 	rdmsrl(MSR_FS_BASE, fs);
-	// 	rdmsrl(MSR_KERNEL_GS_BASE, shadowgs);
+	// 	rdmsrl(MSR_FS_BASE, &fs);
+	// 	rdmsrl(MSR_KERNEL_GS_BASE, &shadowgs);
 	// 	printk("%sFS:  %016lx GS:  %016lx\n",
 	// 	       log_lvl, fs, shadowgs);
 	// 	return;
@@ -81,9 +81,9 @@ void __show_regs(pt_regs_s *regs, enum show_regs_mode mode,
 	// asm("movl %%fs,%0" : "=r" (fsindex));
 	// asm("movl %%gs,%0" : "=r" (gsindex));
 
-	// rdmsrl(MSR_FS_BASE, fs);
-	// rdmsrl(MSR_GS_BASE, gs);
-	// rdmsrl(MSR_KERNEL_GS_BASE, shadowgs);
+	// rdmsrl(MSR_FS_BASE, &fs);
+	// rdmsrl(MSR_GS_BASE, &gs);
+	// rdmsrl(MSR_KERNEL_GS_BASE, &shadowgs);
 
 	// cr0 = read_cr0();
 	// cr2 = read_cr2();

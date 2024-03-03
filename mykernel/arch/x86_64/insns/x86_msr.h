@@ -4,7 +4,143 @@
 #ifndef _ASM_X86_MSR_H
 #define _ASM_X86_MSR_H
 
-	#include "msr-index.h"
+	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/kernel/types.h>
+
+	#include "x86_msr_const.h"
+
+
+	/*
+	 * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+	 * constraint has different meanings. For i386, "A" means exactly
+	 * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+	 * it means rax *or* rdx.
+	 */
+	/* Using 64-bit values saves one instruction clearing the high half of low */
+	#define DECLARE_ARGS(val, low, high)	unsigned long low, high
+	#define EAX_EDX_VAL(val, low, high)		((low) | (high) << 32)
+	#define EAX_EDX_RET(val, low, high)		"=a" (low), "=d" (high)
+
+
+	#ifdef DEBUG
+	
+		extern unsigned long long
+		rdtsc(void);
+
+		extern unsigned long long
+		__rdmsr(unsigned int msr);
+
+		extern void
+		__wrmsr(unsigned int msr, u32 low, u32 high);
+
+		extern void
+		rdmsr(unsigned int msr, u32 *low, u32 *high);
+
+		extern void
+		wrmsr(unsigned int msr, u32 low, u32 high);
+
+		extern void
+		rdmsrl(unsigned int msr, u64 *val);
+
+		extern void
+		wrmsrl(unsigned int msr, u64 val);
+
+	#endif
+
+	#if defined(ARCH_INSTRUCTION_DEFINATION) || !(DEBUG)
+
+		/**
+		 * rdtsc() - returns the current TSC without ordering constraints
+		 *
+		 * rdtsc() returns the result of RDTSC as a 64-bit integer.  The
+		 * only ordering constraint it supplies is the ordering implied by
+		 * "asm volatile": it will put the RDTSC in the place you expect.  The
+		 * CPU can and will speculatively execute that RDTSC, though, so the
+		 * results can be non-monotonic if compared on different CPUs.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		unsigned long long
+		rdtsc(void) {
+			DECLARE_ARGS(val, low, high);
+
+			asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
+
+			return EAX_EDX_VAL(val, low, high);
+		}
+
+
+		/*
+		 * __rdmsr() and __wrmsr() are the two primitives which are the bare minimum MSR
+		 * accessors and should not have any tracing or other functionality piggybacking
+		 * on them - those are *purely* for accessing MSRs and nothing more. So don't even
+		 * think of extending them - you will be slapped with a stinking trout or a frozen
+		 * shark will reach you, wherever you are! You've been warned.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		unsigned long long
+		__rdmsr(unsigned int msr) {
+			DECLARE_ARGS(val, low, high);
+
+			asm volatile(	"1: rdmsr			\n"
+							"2:					\n"
+							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
+						:	EAX_EDX_RET(val, low, high)
+						:	"c" (msr)
+						:
+						);
+
+			return EAX_EDX_VAL(val, low, high);
+		}
+
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		__wrmsr(unsigned int msr, u32 low, u32 high) {
+			asm volatile(	"1: wrmsr			\n"
+							"2:					\n"
+							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
+						:
+						:	"c" (msr),
+							"a" (low),
+							"d" (high)
+						:	"memory"
+						);
+		}
+
+		/*
+		 * Access to machine-specific registers (available on 586 and better only)
+		 * Note: the rd* operations modify the parameters directly (without using
+		 * pointer indirection), this allows gcc to optimize better
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		rdmsr(unsigned int msr, u32 *low, u32 *high) {
+			u64 __val = __rdmsr(msr);
+			*low = (u32)__val;
+			*high = (u32)(__val >> 32);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		wrmsr(unsigned int msr, u32 low, u32 high) {
+			__wrmsr(msr, low, high);
+		}
+
+		// #define rdmsrl(msr, val)	\
+		// 		((val) = __rdmsr((msr)))
+		PREFIX_STATIC_INLINE
+		void
+		rdmsrl(unsigned int msr, u64 *val) {
+			*val = __rdmsr(msr);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		wrmsrl(unsigned int msr, u64 val) {
+			__wrmsr(msr, (u32)(val & 0xffffffffULL),
+					(u32)(val >> 32));
+		}
+
+	#endif
 
 	#ifndef __ASSEMBLY__
 
@@ -36,16 +172,6 @@
 		// 	struct saved_msr *array;
 		// };
 
-	/*
-	 * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
-	 * constraint has different meanings. For i386, "A" means exactly
-	 * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
-	 * it means rax *or* rdx.
-	 */
-	/* Using 64-bit values saves one instruction clearing the high half of low */
-	#	define DECLARE_ARGS(val, low, high)		unsigned long low, high
-	#	define EAX_EDX_VAL(val, low, high)		((low) | (high) << 32)
-	#	define EAX_EDX_RET(val, low, high)		"=a" (low), "=d" (high)
 
 	/*
 	 * Be very careful with includes. This header is prone to include loops.
@@ -66,40 +192,7 @@
 	// 		static inline void do_trace_rdpmc(unsigned int msr, u64 val, int failed) {}
 	// #	endif
 
-		/*
-		 * __rdmsr() and __wrmsr() are the two primitives which are the bare minimum MSR
-		 * accessors and should not have any tracing or other functionality piggybacking
-		 * on them - those are *purely* for accessing MSRs and nothing more. So don't even
-		 * think of extending them - you will be slapped with a stinking trout or a frozen
-		 * shark will reach you, wherever you are! You've been warned.
-		 */
-		static __always_inline unsigned long long
-		__rdmsr(unsigned int msr) {
-			DECLARE_ARGS(val, low, high);
 
-			asm volatile(	"1: rdmsr			\n"
-							"2:					\n"
-							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_RDMSR)
-						:	EAX_EDX_RET(val, low, high)
-						:	"c" (msr)
-						:
-						);
-
-			return EAX_EDX_VAL(val, low, high);
-		}
-
-		static __always_inline void
-		__wrmsr(unsigned int msr, u32 low, u32 high) {
-			asm volatile(	"1: wrmsr			\n"
-							"2:					\n"
-							// _ASM_EXTABLE_TYPE(1b, 2b, EX_TYPE_WRMSR)
-						:
-						:	"c" (msr),
-							"a" (low),
-							"d" (high)
-						:	"memory"
-						);
-		}
 
 		// #define native_rdmsr(msr, val1, val2)			\
 		// do {							\
@@ -172,23 +265,6 @@
 		// extern int rdmsr_safe_regs(u32 regs[8]);
 		// extern int wrmsr_safe_regs(u32 regs[8]);
 
-		/**
-		* rdtsc() - returns the current TSC without ordering constraints
-		*
-		* rdtsc() returns the result of RDTSC as a 64-bit integer.  The
-		* only ordering constraint it supplies is the ordering implied by
-		* "asm volatile": it will put the RDTSC in the place you expect.  The
-		* CPU can and will speculatively execute that RDTSC, though, so the
-		* results can be non-monotonic if compared on different CPUs.
-		*/
-		static __always_inline unsigned long long rdtsc(void) {
-			DECLARE_ARGS(val, low, high);
-
-			asm volatile("rdtsc" : EAX_EDX_RET(val, low, high));
-
-			return EAX_EDX_VAL(val, low, high);
-		}
-
 		// /**
 		// * rdtsc_ordered() - read the current TSC in program order
 		// *
@@ -236,36 +312,7 @@
 		// }
 
 		#include <linux/lib/errno.h>
-		/*
-		* Access to machine-specific registers (available on 586 and better only)
-		* Note: the rd* operations modify the parameters directly (without using
-		* pointer indirection), this allows gcc to optimize better
-		*/
 
-		#define rdmsr(msr, low, high)					\
-		do {								\
-			u64 __val = native_read_msr((msr));			\
-			(void)((low) = (u32)__val);				\
-			(void)((high) = (u32)(__val >> 32));			\
-		} while (0)
-
-			static inline void
-			wrmsr(unsigned int msr, u32 low, u32 high) {
-				// native_write_msr(msr, low, high);
-				__wrmsr(msr, low, high);
-			}
-
-		#define rdmsrl(msr, val)	\
-				((val) = __rdmsr((msr)))
-				// ((val) = native_read_msr((msr)))
-
-		static inline void
-		wrmsrl(unsigned int msr, u64 val) {
-			// native_write_msr(msr, (u32)(val & 0xffffffffULL),
-			// 		(u32)(val >> 32));
-			__wrmsr(msr, (u32)(val & 0xffffffffULL),
-					(u32)(val >> 32));
-		}
 
 		// /* rdmsr with exception handling */
 		// #define rdmsr_safe(msr, low, high)				\

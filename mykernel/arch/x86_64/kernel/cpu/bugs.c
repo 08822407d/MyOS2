@@ -12,7 +12,7 @@
 #include <linux/kernel/cpu.h>
 
 #include <asm/bugs.h>
-#include <asm/msr.h>
+#include <asm/insns.h>
 #include <asm/alternative.h>
 #include <asm/e820-api.h>
 #include <asm/tlbflush.h>
@@ -39,7 +39,7 @@ void __init check_bugs(void)
 	//  * init code as it is not enumerated and depends on the family.
 	//  */
 	// if (boot_cpu_has(X86_FEATURE_MSR_SPEC_CTRL))
-	// 	rdmsrl(MSR_IA32_SPEC_CTRL, x86_spec_ctrl_base);
+	// 	rdmsrl(MSR_IA32_SPEC_CTRL, &x86_spec_ctrl_base);
 
 	// /* Allow STIBP in MSR_SPEC_CTRL if supported */
 	// if (boot_cpu_has(X86_FEATURE_STIBP))

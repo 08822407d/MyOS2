@@ -7,7 +7,7 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <asm/processor.h>
 
-	#include <asm/msr.h>
+	#include "x86_msr.h"
 
 	#ifdef DEBUG
 	
@@ -81,15 +81,15 @@
 		PREFIX_STATIC_INLINE
 		unsigned long
 		x86_fsbase_read_cpu(void) {
-			unsigned long fsbase;
+			u64 fsbase;
 
 			// if (boot_cpu_has(X86_FEATURE_FSGSBASE))
 			if (boot_cpu_data.x86_capa_bits.FSGSBASE)
 				fsbase = rdfsbase();
 			else
-				rdmsrl(MSR_FS_BASE, fsbase);
+				rdmsrl(MSR_FS_BASE, &fsbase);
 
-			return fsbase;
+			return (unsigned long)fsbase;
 		}
 
 		PREFIX_STATIC_INLINE

@@ -14,7 +14,6 @@
 #include <asm/cpu.h>
 #include <asm/insns.h>
 #include <asm/processor.h>
-#include <asm/msr.h>
 
 
 #include <asm-generic/sections.h>

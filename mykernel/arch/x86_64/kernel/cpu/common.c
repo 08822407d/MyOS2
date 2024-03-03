@@ -27,7 +27,6 @@
 #include <asm/asm.h>
 #include <asm/bugs.h>
 #include <asm/cpu.h>
-#include <asm/msr.h>
 #include <asm/insns.h>
 #include <asm/processor.h>
 
@@ -530,7 +529,7 @@ void syscall_init(void)
 	wrmsrl(MSR_IA32_SYSENTER_EIP, (u64)sysenter_entp);
 	wrmsrl(MSR_IA32_SYSENTER_ESP, (u64)task_top_of_stack(current));
 	uint64_t kstack;
-	rdmsrl(MSR_IA32_SYSENTER_ESP, kstack);
+	rdmsrl(MSR_IA32_SYSENTER_ESP, &kstack);
 #else
 		wrmsr(MSR_STAR, 0, (__USER32_CS << 16) | __KERNEL_CS);
 		wrmsrl(MSR_LSTAR, (unsigned long)entry_SYSCALL_64);

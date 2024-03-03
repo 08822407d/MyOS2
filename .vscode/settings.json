@@ -197,6 +197,7 @@
         "cpufeatures.h": "c",
         "processor_arch.h": "c",
         "kdebug.h": "c",
-        "ktypes.h": "c"
+        "ktypes.h": "c",
+        "x86_msr.h": "c"
     }
 }

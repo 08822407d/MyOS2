@@ -6,7 +6,7 @@
 
 	#include <asm/alternative.h>
 	#include <asm/apicdef.h>
-	#include <asm/msr.h>
+	#include <asm/insns.h>
 
 	#include <asm/cpufeatures.h>
 
@@ -106,7 +106,7 @@
 
 	static inline bool apic_is_x2apic_enabled(void) {
 		u64 msr;
-		rdmsrl(MSR_IA32_APICBASE, msr);
+		rdmsrl(MSR_IA32_APICBASE, &msr);
 		return msr & X2APIC_ENABLE;
 	}
 
@@ -170,7 +170,7 @@
 		u64 msr;
 		if (reg == APIC_DFR)
 			return -1;
-		rdmsrl(APIC_BASE_MSR + (reg >> 4), msr);
+		rdmsrl(APIC_BASE_MSR + (reg >> 4), &msr);
 		return (u32)msr;
 	}
 
@@ -195,7 +195,7 @@
 	// {
 	// 	unsigned long val;
 
-	// 	rdmsrl(APIC_BASE_MSR + (APIC_ICR >> 4), val);
+	// 	rdmsrl(APIC_BASE_MSR + (APIC_ICR >> 4), &val);
 	// 	return val;
 	// }
 

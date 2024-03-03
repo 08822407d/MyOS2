@@ -185,7 +185,7 @@ static bool x2apic_hw_locked(void)
 	u64 msr;
 
 	if (boot_cpu_data.x86_capa_bits.ARCH_CAPABILITIES_MSR) {
-		rdmsrl(MSR_IA32_XAPIC_DISABLE_STATUS, msr);
+		rdmsrl(MSR_IA32_XAPIC_DISABLE_STATUS, &msr);
 		return (msr & LEGACY_XAPIC_DISABLED);
 	}
 	return false;
@@ -198,7 +198,7 @@ static void __x2apic_disable(void)
 	if (!boot_cpu_data.x86_capa_bits.APIC_On_Chip)
 		return;
 
-	rdmsrl(MSR_IA32_APICBASE, msr);
+	rdmsrl(MSR_IA32_APICBASE, &msr);
 	if (!(msr & X2APIC_ENABLE))
 		return;
 	/* Disable xapic and x2apic first and then reenable xapic mode */
@@ -211,7 +211,7 @@ static void __x2apic_enable(void)
 {
 	u64 msr;
 
-	rdmsrl(MSR_IA32_APICBASE, msr);
+	rdmsrl(MSR_IA32_APICBASE, &msr);
 	if (msr & X2APIC_ENABLE)
 		return;
 	if (!(msr & XAPIC_ENABLE))
