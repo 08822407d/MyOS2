@@ -161,8 +161,8 @@
 	#define spin_unlock_irq(lock)	\
 				raw_spin_unlock_irq(lock)
 
-	#define spin_unlock_irqrestore(lock)	\
-				raw_spin_unlock_irqrestore(lock)
+	#define spin_unlock_irqrestore(lock, flags)	\
+				raw_spin_unlock_irqrestore(lock, flags)
 
 	// static __always_inline int spin_trylock_bh(spinlock_t *lock) {
 	// 	return raw_spin_trylock_bh(&lock->rlock);

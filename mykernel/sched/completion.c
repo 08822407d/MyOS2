@@ -11,7 +11,8 @@
  * typically be used for exclusion which gives rise to priority inversion.
  * Waiting for completion is a typically sync point, but not an exclusion point.
  */
-#include "sched.h"
+#include <linux/kernel/sched.h>
+#include <linux/kernel/completion.h>
 
 /**
  * complete: - signals a single thread waiting on this completion

@@ -16,7 +16,8 @@
 #include <obsolete/keyboard.h>
 #include <obsolete/device.h>
 
-// DECLARE_COMPLETION(getcode_done);
+DECLARE_COMPLETION(getcode_done);
+DEFINE_SPINLOCK(kbdbuf_lock);
 DECLARE_SWAIT_QUEUE_HEAD(kbd_swq_hdr);
 
 kbd_inbuf_s * p_kb = NULL;
@@ -102,15 +103,15 @@ void keyboard_handler(unsigned long param, pt_regs_s * regs)
 	snprintf(buf, 32, "%s : (K:%02x) ", prompt, x);
 	myos_tty_write_color_at(buf, strlen(buf), BLACK, GREEN, xpos, ypos);
 
+	spin_lock(&kbdbuf_lock);
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;
-
 	*p_kb->p_head = x;
 	p_kb->count++;
 	p_kb->p_head ++;	
+	spin_unlock(&kbdbuf_lock);
 
-	// complete(&getcode_done);
-	swake_up_locked(&kbd_swq_hdr);
+	complete(&getcode_done);
 }
 
 /*==============================================================================================*
@@ -121,20 +122,15 @@ unsigned char kbd_get_scancode()
 	unsigned char ret  = 0;
 
 	if(p_kb->count == 0)
-	{
-		// wait_for_completion(&getcode_done);
-		DECLARE_SWAITQUEUE(sw_node);
-		set_current_state(TASK_UNINTERRUPTIBLE);
-		__prepare_to_swait(&kbd_swq_hdr, &sw_node);
-		schedule();
-	}
+		wait_for_completion(&getcode_done);
 	
+	spin_lock(&kbdbuf_lock);
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	
 		p_kb->p_tail = p_kb->buf;
-
 	ret = *p_kb->p_tail;
 	p_kb->count--;
 	p_kb->p_tail++;
+	spin_unlock(&kbdbuf_lock);
 
 	return ret;
 }
