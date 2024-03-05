@@ -238,8 +238,7 @@ void __init mem_init(void)
 	// preallocate_vmalloc_pages();
 }
 
-void myos_unmap_kernel_lowhalf(atomic_t *um_flag)
+void myos_unmap_kernel_lowhalf()
 {
 	memset(init_top_pgt, 0, PAGE_SIZE / 2);
-	atomic_inc(um_flag);
 }

@@ -177,7 +177,6 @@ noinline void __ref rest_init(void)
 }
 
 
-atomic_t lower_half_unmapped;
 asmlinkage void __init start_kernel(void)
 {
 	char *command_line;
@@ -221,24 +220,13 @@ asmlinkage void __init start_kernel(void)
 	vfs_caches_init();
 
 	check_bugs();
-}
 
-/*==============================================================================================*
- *										task0 -- idle()											*
- *==============================================================================================*/
-void idle(size_t cpu_idx)
-{	
 	myos_init_percpu_intr();
 
-	if (cpu_idx == 0)
-	{
-		atomic_set(&lower_half_unmapped, 0);
-		myos_unmap_kernel_lowhalf(&lower_half_unmapped);
-	}
+	myos_unmap_kernel_lowhalf();
 
-	if (cpu_idx == 0)
-		rest_init();
-	
+	rest_init();
+
 	prevent_tail_call_optimization();
 }
 

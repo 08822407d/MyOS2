@@ -115,12 +115,13 @@ SYM_CODE_START(AP_DEBUG)
 	addq	$THREAD_SIZE,	%rax
 	movq	%rax,		%rsp
 
-	movq	%rbx,		%rdi
-	movabsq $idle,		%rax
-	pushq   $0x08
-	pushq   %rax
-	lretq
+	// movq	%rbx,		%rdi
+	// movabsq $idle,		%rax
+	// pushq   $0x08
+	// pushq   %rax
+	// lretq
 
+	jmp		.
 
 
 /*==============================================================================================*

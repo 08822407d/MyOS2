@@ -56,7 +56,7 @@
 	};
 
 	/* init.c */
-	void myos_unmap_kernel_lowhalf(atomic_t *um_flag);
+	void myos_unmap_kernel_lowhalf();
 
 	/* i8259.c */
 	void init_i8259(void);
