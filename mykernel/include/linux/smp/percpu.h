@@ -3,7 +3,6 @@
 #define __LINUX_PERCPU_H
 
 	// #include <linux/mmdebug.h>
-	#include <linux/kernel/preempt.h>
 	#include <linux/smp/smp.h>
 	#include <linux/kernel/cpumask.h>
 	#include <linux/init/init.h>

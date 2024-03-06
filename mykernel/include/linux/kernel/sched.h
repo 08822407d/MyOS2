@@ -11,6 +11,7 @@
 	#include <sched/task_api.h>
 	#include <sched/runqueue_api.h>
 	#include <sched/scheduler_api.h>
+	#include <sched/preempt_api.h>
 	#include <sched/sched_misc_api.h>
 
 #endif

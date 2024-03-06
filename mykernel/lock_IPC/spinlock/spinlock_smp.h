@@ -2,12 +2,13 @@
 #define __LINUX_SPINLOCK_API_SMP_H
  
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/kernel/preempt.h>
 	#include <linux/kernel/irqflags.h>
 
 	#include <asm/lock_ipc.h>
 
 	#include "spinlock_types.h"
+
+	#include <sched/preempt_api.h>
 
 	#ifdef DEBUG
 

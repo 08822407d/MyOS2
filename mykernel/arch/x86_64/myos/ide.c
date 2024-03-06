@@ -1,7 +1,6 @@
 // #include <linux/kernel/slab.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/preempt.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/completion.h>

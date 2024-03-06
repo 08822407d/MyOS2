@@ -105,7 +105,6 @@
 	// 	on_each_cpu_cond_mask(cond_func, func, info, wait, cpu_online_mask);
 	// }
 
-	#include <linux/kernel/preempt.h>
 	#include <linux/compiler/compiler.h>
 	// #include <linux/sched/thread_info.h>
 	#include <asm/smp.h>

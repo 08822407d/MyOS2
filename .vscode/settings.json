@@ -215,6 +215,8 @@
         "scheduler_api.h": "c",
         "path.h": "c",
         "numa.h": "c",
-        "mount.h": "c"
+        "mount.h": "c",
+        "preempt_const.h": "c",
+        "cpumask.h": "c"
     }
 }
