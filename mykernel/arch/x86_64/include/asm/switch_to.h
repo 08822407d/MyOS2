@@ -1,8 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_SWITCH_TO_H
-#define _ASM_X86_SWITCH_TO_H
+#ifndef _ASM_X86_SWITCH_TO_H_
+#define _ASM_X86_SWITCH_TO_H_
 
-	#include <linux/sched/task_stack.h>
 	#include <asm/processor.h>
 	#include <asm/insns.h>
 	#include <asm/ptrace.h>
@@ -57,4 +56,4 @@
 		frame->r12 = (reg_t)arg;
 	}
 
-#endif /* _ASM_X86_SWITCH_TO_H */
+#endif /* _ASM_X86_SWITCH_TO_H_ */

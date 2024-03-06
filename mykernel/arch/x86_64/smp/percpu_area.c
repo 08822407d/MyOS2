@@ -3,7 +3,6 @@
 
 #include <linux/kernel/sched.h>
 #include <linux/kernel/pid.h>
-#include <linux/sched/task_stack.h>
 #include <linux/lib/list.h>
 #include <asm/insns.h>
 

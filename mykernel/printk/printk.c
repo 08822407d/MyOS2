@@ -20,44 +20,21 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/mm.h>
 #include <linux/device/tty.h>
-// #include <linux/tty_driver.h>
 #include <linux/device/console.h>
 #include <linux/init/init.h>
 #include <linux/kernel/jiffies.h>
 #include <linux/kernel/nmi.h>
-// #include <linux/module.h>
-// #include <linux/moduleparam.h>
 #include <linux/kernel/delay.h>
 #include <linux/smp/smp.h>
-// #include <linux/security.h>
-// #include <linux/mm/memblock.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/crash_core.h>
-// #include <linux/ratelimit.h>
-// #include <linux/kmsg_dump.h>
-// #include <linux/syslog.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/rculist.h>
-// #include <linux/poll.h>
-// #include <linux/irq_work.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/uio.h>
 #include <linux/sched/clock.h>
 #include <linux/sched/debug.h>
-#include <linux/sched/task_stack.h>
 
-// #include <linux/uaccess.h>
 #include <asm/sections.h>
 #include <asm/tlbflush.h>
 
-// #include <trace/events/initcall.h>
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/printk.h>
-
-// #include "printk_ringbuffer.h"
-// #include "console_cmdline.h"
-// #include "braille.h"
-// #include "internal.h"
 
 
 #include <generated/conf.h>

@@ -18,8 +18,6 @@
 #include <linux/kernel/cpu.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/sched.h>
-#include <linux/sched/task.h>
-#include <linux/sched/task_stack.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/mm.h>

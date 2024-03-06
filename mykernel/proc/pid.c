@@ -29,21 +29,9 @@
 
 #include <linux/kernel/mm.h>
 #include <linux/kernel/export.h>
-// #include <linux/kernel/slab.h>
 #include <linux/init/init.h>
-// #include <linux/rculist.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/pid_namespace.h>
-// #include <linux/init_task.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/proc_ns.h>
-// #include <linux/refcount.h>
-// #include <linux/anon_inodes.h>
 #include <linux/sched/signal.h>
-#include <linux/sched/task.h>
-// #include <linux/idr.h>
-// #include <net/sock.h>
-// #include <uapi/linux/pidfd.h>
 
 
 #include <generated/conf.h>

@@ -12,19 +12,7 @@
  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
  */
 
-// #include <linux/anon_inodes.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/sched/autogroup.h>
-// #include <linux/sched/mm.h>
 #include <linux/sched/coredump.h>
-// #include <linux/sched/user.h>
-// #include <linux/sched/numa_balancing.h>
-// #include <linux/sched/stat.h>
-#include <linux/sched/task.h>
-#include <linux/sched/task_stack.h>
-// #include <linux/sched/cputime.h>
-// #include <linux/seq_file.h>
-// #include <linux/rtmutex.h>
 #include <linux/init/init.h>
 #include <uapi/linux/unistd.h>
 #include <linux/kernel/completion.h>
@@ -49,11 +37,6 @@
 #include <asm/mmu_context.h>
 #include <asm/signal.h>
 #include <asm/insns.h>
-
-// #include <trace/events/sched.h>
-
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/task.h>
 
 
 /*

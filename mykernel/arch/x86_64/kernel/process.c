@@ -8,8 +8,6 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/sched/debug.h>
-#include <linux/sched/task.h>
-#include <linux/sched/task_stack.h>
 #include <linux/init/init.h>
 #include <linux/kernel/export.h>
 #include <asm/cpu.h>

@@ -71,43 +71,18 @@
 #include <linux/kernel/signal.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/sched/signal.h>
-#include <linux/sched/task.h>
-// #include <linux/interrupt.h>
 #include <linux/device/tty.h>
-// #include <linux/tty_driver.h>
-// #include <linux/tty_flip.h>
-// #include <linux/devpts_fs.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/device/console.h>
-// #include <linux/timer.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/kd.h>
 #include <linux/kernel/mm.h>
 #include <linux/lib/string.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/poll.h>
-// #include <linux/ppp-ioctl.h>
-// #include <linux/proc_fs.h>
 #include <linux/init/init.h>
-// #include <linux/module.h>
 #include <linux/device/device.h>
-// #include <linux/wait.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/delay.h>
-// #include <linux/seq_file.h>
-// #include <linux/serial.h>
-// #include <linux/ratelimit.h>
-// #include <linux/compat.h>
-
 #include <linux/kernel/uaccess.h>
-
-// #include <linux/kbd_kern.h>
-// #include <linux/vt_kern.h>
-// #include <linux/selection.h>
-
-// #include <linux/kmod.h>
-// #include <linux/nsproxy.h>
 #include <linux/device/tty.h>
 
 

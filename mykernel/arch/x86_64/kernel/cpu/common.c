@@ -13,7 +13,6 @@
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
 #include <linux/sched/clock.h>
-#include <linux/sched/task.h>
 #include <linux/init/init.h>
 #include <linux/smp/smp.h>
 
@@ -32,7 +31,6 @@
 
 #include "cpu.h"
 
-#include <linux/sched/task_stack.h>
 #include <obsolete/arch_proto.h>
 #include <obsolete/glo.h>
 

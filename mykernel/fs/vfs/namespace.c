@@ -15,7 +15,6 @@
 #include <linux/fs/file.h>
 #include <linux/kernel/uaccess.h>
 #include <uapi/linux/magic.h>
-#include <linux/sched/task.h>
 #include <uapi/linux/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/fs/shmem_fs.h>

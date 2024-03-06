@@ -2,7 +2,6 @@
 
 #include <linux/kernel/ioport.h>
 #include <linux/kernel/mm.h>
-#include <linux/sched/task.h>
 
 #include <asm/e820-api.h>
 #include <asm/page.h>

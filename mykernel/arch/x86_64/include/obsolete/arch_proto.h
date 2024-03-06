@@ -4,7 +4,6 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ptrace.h>
-#include <linux/sched/task.h>
 
 #include "mutex.h"
 

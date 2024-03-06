@@ -13,31 +13,18 @@
 // #define DEBUG		/* Enable initcall_debug */
 
 #include <linux/kernel/types.h>
-// #include <linux/extable.h>
-// #include <linux/module.h>
-// #include <linux/proc_fs.h>
 #include <linux/fs/binfmts.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/stackprotector.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/ioport.h>
 #include <linux/init/init.h>
-// #include <linux/initrd.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/acpi.h>
-// #include <linux/bootconfig.h>
 #include <linux/device/console.h>
 #include <linux/kernel/nmi.h>
 #include <linux/smp/percpu.h>
-// #include <linux/kmod.h>
-// #include <linux/kprobes.h>
-// #include <linux/vmalloc.h>
-// #include <linux/kernel_stat.h>
 #include <linux/kernel/start_kernel.h>
-// #include <linux/security.h>
 #include <linux/smp/smp.h>
 #include <linux/kernel/cpu.h>
 #include <linux/block/efi.h>
@@ -45,45 +32,19 @@
 #include <linux/device/driver.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/init.h>
 #include <linux/kernel/signal.h>
-// #include <linux/idr.h>
-// #include <linux/kgdb.h>
 #include <linux/debug/ftrace.h>
-// #include <linux/async.h>
-// #include <linux/shmem_fs.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/perf_event.h>
 #include <linux/kernel/ptrace.h>
-// #include <linux/pti.h>
 #include <linux/block/blkdev.h>
 #include <linux/sched/clock.h>
-#include <linux/sched/task.h>
-#include <linux/sched/task_stack.h>
-// #include <linux/context_tracking.h>
-// #include <linux/random.h>
 #include <linux/lib/list.h>
-// #include <linux/integrity.h>
-// #include <linux/proc_ns.h>
 #include <linux/kernel/cache.h>
-// #include <linux/rodata_test.h>
-// #include <linux/jump_label.h>
-// #include <linux/mem_encrypt.h>
-// #include <linux/kcsan.h>
-// #include <linux/init_syscalls.h>
-// #include <linux/stackdepot.h>
-// #include <net/net_namespace.h>
+
 
 #include <asm/insns.h>
 #include <asm/bugs.h>
 #include <asm/setup.h>
 #include <asm/sections.h>
-// #include <asm/cacheflush.h>
-
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/initcall.h>
-
-// #include <kunit/test.h>
 
 
 #include <asm/tlbflush.h>

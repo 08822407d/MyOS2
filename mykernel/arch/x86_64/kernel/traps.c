@@ -16,7 +16,6 @@
 
 #include <linux/debug/kdebug.h>
 #include <linux/kernel/export.h>
-#include <linux/sched/task_stack.h>
 #include <linux/kernel/nmi.h>
 #include <linux/smp/smp.h>
 

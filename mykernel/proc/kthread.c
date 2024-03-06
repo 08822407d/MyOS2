@@ -7,27 +7,17 @@
  * even if we're invoked from userspace (think modprobe, hotplug cpu,
  * etc.).
  */
-// #include <uapi/linux/sched/types.h>
 #include <linux/kernel/mm.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/mm.h>
-#include <linux/sched/task.h>
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/err.h>
-// #include <linux/cgroup.h>
-// #include <linux/cpuset.h>
 #include <uapi/linux/unistd.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/export.h>
-// #include <linux/kernel/mutex.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/freezer.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/numa.h>
-// #include <linux/sched/isolation.h>
-// #include <trace/events/sched.h>
 #include <asm/signal.h>
 
 

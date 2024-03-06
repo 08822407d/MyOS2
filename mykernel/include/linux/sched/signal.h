@@ -2,13 +2,8 @@
 #ifndef _LINUX_SCHED_SIGNAL_H
 #define _LINUX_SCHED_SIGNAL_H
 
-	// #include <linux/rculist.h>
 	#include <linux/kernel/signal.h>
 	#include <linux/kernel/sched.h>
-	// #include <linux/sched/jobctl.h>
-	#include <linux/sched/task.h>
-	// #include <linux/refcount.h>
-	// #include <linux/posix-timers.h>
 	#include <linux/kernel/mm.h>
 	#include <asm/ptrace.h>
 

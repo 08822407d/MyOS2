@@ -213,6 +213,8 @@
         "fcntl.h": "c",
         "fs_struct.h": "c",
         "scheduler_api.h": "c",
-        "path.h": "c"
+        "path.h": "c",
+        "numa.h": "c",
+        "mount.h": "c"
     }
 }

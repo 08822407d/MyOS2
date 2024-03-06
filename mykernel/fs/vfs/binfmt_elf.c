@@ -10,7 +10,6 @@
  * Copyright 1993, 1994: Eric Youngdale (ericy@cais.com).
  */
 
-// #include <linux/module.h>
 #include <linux/kernel/kernel.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/log2.h>
@@ -20,32 +19,14 @@
 #include <linux/fs/binfmts.h>
 #include <linux/lib/string.h>
 #include <linux/fs/file.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/personality.h>
-// #include <linux/elfcore.h>
 #include <linux/init/init.h>
-// #include <linux/highuid.h>
 #include <linux/compiler/compiler.h>
-// #include <linux/highmem.h>
-// #include <linux/hugetlb.h>
-// #include <linux/mm/pagemap.h>
-// #include <linux/vmalloc.h>
-// #include <linux/security.h>
-// #include <linux/random.h>
 #include <linux/kernel/elf.h>
-// #include <linux/elf-randomize.h>
-// #include <linux/utsname.h>
-// #include <linux/coredump.h>
 #include <linux/kernel/sched.h>
 #include <linux/sched/coredump.h>
-#include <linux/sched/task_stack.h>
-// #include <linux/sched/cputime.h>
 #include <linux/kernel/sizes.h>
 #include <linux/kernel/types.h>
-// #include <linux/cred.h>
-// #include <linux/dax.h>
 #include <linux/kernel/uaccess.h>
-// #include <asm/param.h>
 #include <asm/page.h>
 
 

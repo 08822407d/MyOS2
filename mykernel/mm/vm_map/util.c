@@ -1,27 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include <linux/kernel/mm.h>
-// #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 #include <linux/compiler/compiler.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/err.h>
 #include <linux/kernel/sched.h>
-// #include <linux/sched/mm.h>
 #include <linux/sched/signal.h>
-#include <linux/sched/task_stack.h>
-// #include <linux/security.h>
-// #include <linux/swap.h>
-// #include <linux/swapops.h>
-// #include <linux/hugetlb.h>
-// #include <linux/vmalloc.h>
-// #include <linux/userfaultfd_k.h>
 #include <linux/kernel/elf.h>
-// #include <linux/elf-randomize.h>
-// #include <linux/personality.h>
-// #include <linux/random.h>
-// #include <linux/processor.h>
 #include <linux/kernel/sizes.h>
-// #include <linux/compat.h>
 
 #include <linux/kernel/uaccess.h>
 

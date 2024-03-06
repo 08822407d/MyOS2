@@ -5,7 +5,6 @@
  *  Copyright (C) 2008-2009, Red Hat Inc., Ingo Molnar
  */
 #include <linux/kernel/sched.h>		/* test_thread_flag(), ...	*/
-#include <linux/sched/task_stack.h>	/* task_stack_*(), ...		*/
 #include <linux/debug/kdebug.h>		/* oops_begin/end, ...		*/
 #include <linux/kernel/mm.h>		/* max_low_pfn			*/
 #include <linux/kernel/prefetch.h>		/* prefetchw			*/

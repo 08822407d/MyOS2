@@ -32,7 +32,6 @@
 #include <linux/init/init.h>
 #include <linux/sched/coredump.h>
 #include <linux/sched/signal.h>
-#include <linux/sched/task.h>
 #include <linux/kernel/lock_ipc.h>
 #include <linux/fs/binfmts.h>
 #include <linux/fs/namei.h>
