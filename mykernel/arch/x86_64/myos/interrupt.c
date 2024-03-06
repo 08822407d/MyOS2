@@ -123,6 +123,9 @@ void excep_hwint_context(pt_regs_s *regs)
 		exception_handler(regs);
 	else
 		hwint_irq_handler(regs);
+
+	if (!in_atomic())
+		schedule();
 }
 
 void exception_handler(pt_regs_s *regs)

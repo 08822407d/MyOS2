@@ -1193,6 +1193,8 @@ __schedule(unsigned int sched_mode) {
 		// __balance_callbacks(rq);
 		// raw_spin_rq_unlock_irq(rq);
 	}
+
+	local_irq_enable();
 }
 
 

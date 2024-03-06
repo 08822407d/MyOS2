@@ -94,7 +94,7 @@ static void do_idle(void)
 	// flush_smp_call_function_from_idle();
 	preempt_disable();
 	schedule_idle();
-	preempt_enable_no_resched();
+	preempt_enable();
 
 	// if (unlikely(klp_patch_pending(current)))
 	// 	klp_update_patch_state(current);
@@ -104,8 +104,6 @@ static void do_idle(void)
 // void cpu_startup_entry(enum cpuhp_state state)
 void cpu_startup_entry()
 {	
-	asm volatile("sti");
-
 	// arch_cpu_idle_prepare();
 	// cpuhp_online_idle(state);
 
