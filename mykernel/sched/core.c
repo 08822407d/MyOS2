@@ -6,28 +6,13 @@
  *
  *  Copyright (C) 1991-2002  Linus Torvalds
  */
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/sched.h>
-// #undef CREATE_TRACE_POINTS
-
-#include <linux/sched/sched.h>
-// #include <linux/nospec.h>
+#include <linux/sched/clock.h>
+#include <linux/sched/debug.h>
 #include <linux/block/blkdev.h>
-// #include <linux/kcov.h>
-// #include <linux/scs.h>
 
 #include <asm/switch_to.h>
-// #include <asm/tlb.h>
 #include <asm/mmu_context.h>
 #include <asm/insns.h>
-
-// #include "../workqueue_internal.h"
-// #include "../../fs/io-wq.h"
-// #include "../smpboot.h"
-
-// #include "pelt.h"
-// #include "smp.h"
-
 
 #include <linux/smp/smp.h>
 #include <obsolete/glo.h>

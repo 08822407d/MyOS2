@@ -1,4 +1,4 @@
-#include <linux/sched/sched.h>
+#include <linux/kernel/sched.h>
 
 static task_s *pick_next_task_myos(rq_s *rq)
 {

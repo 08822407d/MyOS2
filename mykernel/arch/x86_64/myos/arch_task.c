@@ -8,7 +8,6 @@
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/binfmts.h>
-#include <linux/sched/sched.h>
 #include <linux/lib/string.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>

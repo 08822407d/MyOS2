@@ -1,5 +1,5 @@
-#ifndef _LINUX_MEMBLOCK_API_H_
-#define _LINUX_MEMBLOCK_API_H_
+#ifndef _LINUX_MM_MISC_API_H_
+#define _LINUX_MM_MISC_API_H_
 
 	extern void *high_memory;
 	extern int sysctl_max_map_count;
@@ -39,4 +39,4 @@
 	/* mmput gets rid of the mappings and all user-space */
 	extern void mmput(mm_s *);
 
-#endif /* _LINUX_MEMBLOCK_API_H_ */
+#endif /* _LINUX_MM_MISC_API_H_ */

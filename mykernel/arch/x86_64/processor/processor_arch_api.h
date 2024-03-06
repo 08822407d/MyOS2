@@ -7,6 +7,8 @@
 	#include "processor_arch.h"
     #include "desc_arch.h"
 
+	#include <asm/ptrace.h>
+
 	/*
 	 * capabilities of CPUs
 	 */

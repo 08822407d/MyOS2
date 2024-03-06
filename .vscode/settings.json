@@ -208,6 +208,9 @@
         "task_api.h": "c",
         "task_types.h": "c",
         "runqueue_const.h": "c",
-        "task_const.h": "c"
+        "task_const.h": "c",
+        "fs.h": "c",
+        "fcntl.h": "c",
+        "fs_struct.h": "c"
     }
 }

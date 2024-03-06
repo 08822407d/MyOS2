@@ -8,7 +8,7 @@
 	#include <mm/kmalloc_api.h>
 	#include <mm/memfault_api.h>
 	#include <mm/vm_map_api.h>
-	#include <mm/misc_api.h>
+	#include <mm/mm_misc_api.h>
 	#include <asm/mm.h>
 
 	#include <linux/kernel/completion.h>
