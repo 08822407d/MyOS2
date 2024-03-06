@@ -9,31 +9,14 @@
 #include <linux/kernel/mm.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-// #include <linux/fsnotify.h>
-// #include <linux/module.h>
 #include <linux/device/tty.h>
 #include <linux/fs/namei.h>
-// #include <linux/backing-dev.h>
-// #include <linux/capability.h>
-// #include <linux/securebits.h>
-// #include <linux/security.h>
 #include <linux/kernel/mount.h>
 #include <linux/kernel/fcntl.h>
-// #include <linux/kernel/slab.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/fs/fs.h>
-// #include <linux/personality.h>
-// #include <linux/mm/pagemap.h>
 #include <linux/kernel/syscalls.h>
-#include <linux/sched/fs_struct.h>
-// #include <linux/rcupdate.h>
-// #include <linux/audit.h>
-// #include <linux/falloc.h>
-// #include <linux/fs_struct.h>
-// #include <linux/ima.h>
-// #include <linux/dnotify.h>
-// #include <linux/compat.h>
-// #include <linux/mnt_idmapping.h>
+
 #include "internal.h"
 
 

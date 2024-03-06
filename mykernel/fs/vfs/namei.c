@@ -18,26 +18,13 @@
 #include <linux/init/init.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/kernel/slab.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
-// #include <linux/mm/pagemap.h>
-// #include <linux/fsnotify.h>
-// #include <linux/personality.h>
-// #include <linux/security.h>
-// #include <linux/ima.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/mount.h>
-// #include <linux/audit.h>
-// #include <linux/capability.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fcntl.h>
-// #include <linux/device_cgroup.h>
-#include <linux/sched/fs_struct.h>
-// #include <linux/posix_acl.h>
-// #include <linux/hash.h>
 #include <linux/kernel/bitops.h>
-// #include <linux/init_task.h>
 #include <linux/kernel/uaccess.h>
 #include "internal.h"
 #include <linux/fs/mount.h>

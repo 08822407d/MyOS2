@@ -211,6 +211,8 @@
         "task_const.h": "c",
         "fs.h": "c",
         "fcntl.h": "c",
-        "fs_struct.h": "c"
+        "fs_struct.h": "c",
+        "scheduler_api.h": "c",
+        "path.h": "c"
     }
 }

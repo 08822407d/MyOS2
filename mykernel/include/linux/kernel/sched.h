@@ -8,7 +8,9 @@
 	 * Define 'task_s' and provide the main scheduler
 	 * APIs (schedule(), wakeup variants, etc.)
 	 */
-	#include <sched/runqueue_api.h>
 	#include <sched/task_api.h>
+	#include <sched/runqueue_api.h>
+	#include <sched/scheduler_api.h>
+	#include <sched/sched_misc_api.h>
 
 #endif

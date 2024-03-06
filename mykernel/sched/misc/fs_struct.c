@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0-only
-#include <linux/kernel/export.h>
-#include <linux/sched/signal.h>
-#include <linux/sched/task.h>
-#include <linux/fs/fs.h>
-#include <linux/fs/path.h>
-// #include <linux/kernel/slab.h>
-#include <linux/sched/fs_struct.h>
-#include "internal.h"
+#define FS_STRUCT_DEFINATION
+#include "fs_struct.h"
 
 /*
  * Replace the fs->{rootmnt,root} with {mnt,dentry}. Put the old values.
@@ -73,16 +67,25 @@ taskfs_s *copy_fs_struct(taskfs_s *old)
 	if (fs) {
 		fs->users = 1;
 		fs->in_exec = 0;
-		// spin_lock_init(&fs->lock);
+		spin_lock_init(&fs->lock);
 		// seqcount_spinlock_init(&fs->seq, &fs->lock);
 		fs->umask = old->umask;
 
-		// spin_lock(&old->lock);
+		spin_lock(&old->lock);
 		fs->root = old->root;
 		path_get(&fs->root);
 		fs->pwd = old->pwd;
 		path_get(&fs->pwd);
-		// spin_unlock(&old->lock);
+		spin_unlock(&old->lock);
 	}
 	return fs;
 }
+
+
+/* to be mentioned only in INIT_TASK */
+taskfs_s init_fs = {
+	.users		= 1,
+	.lock		= __SPIN_LOCK_UNLOCKED(init_fs.lock),
+	// .seq		= SEQCNT_SPINLOCK_ZERO(init_fs.seq, &init_fs.lock),
+	.umask		= 0022,
+};

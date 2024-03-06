@@ -4,7 +4,6 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/pid.h>
 #include <linux/sched/task_stack.h>
-#include <linux/sched/fs_struct.h>
 #include <linux/lib/list.h>
 #include <asm/insns.h>
 
@@ -15,7 +14,6 @@ char init_stack[THREAD_SIZE] __page_aligned_data;
 __visible DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot);
 
 files_struct_s idle_taskfilps;
-taskfs_s idle_taskfs;
 __visible DEFINE_PER_CPU(task_s, idle_threads);
 
 __visible DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
@@ -73,7 +71,7 @@ void myos_init_per_cpu_var(void)
 	this_idle_thread->rt.time_slice	= 2;
 	this_idle_thread->se.vruntime	= -1;
 	this_idle_thread->mm			= &init_mm;
-	this_idle_thread->fs			= &idle_taskfs;
+	this_idle_thread->fs			= &init_fs;
 	this_idle_thread->files			= &idle_taskfilps;
 	this_idle_thread->stack			= (void *)init_stack;
 	this_idle_thread->pid			= pid_nr(&init_struct_pid);

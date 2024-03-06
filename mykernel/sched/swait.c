@@ -2,7 +2,8 @@
 /*
  * <linux/swait.h> (simple wait queues ) implementation:
  */
-#include "sched.h"
+#include <linux/kernel/sched.h>
+
 
 void __init_swait_queue_head(swqueue_hdr_s *q)
 {

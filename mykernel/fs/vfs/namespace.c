@@ -10,33 +10,17 @@
 
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/export.h>
-// #include <linux/capability.h>
-// #include <linux/mnt_namespace.h>
-// #include <linux/user_namespace.h>
 #include <linux/fs/namei.h>
-// #include <linux/security.h>
-// #include <linux/cred.h>
-// #include <linux/idr.h>
 #include <linux/init/init.h>		/* init_rootfs */
-#include <linux/sched/fs_struct.h>	/* get_fs_root et.al. */
-// #include <linux/fsnotify.h>	/* fsnotify_vfsmount_delete */
 #include <linux/fs/file.h>
 #include <linux/kernel/uaccess.h>
-// #include <linux/proc_ns.h>
 #include <uapi/linux/magic.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/proc_fs.h>
-// #include <linux/task_work.h>
 #include <linux/sched/task.h>
 #include <uapi/linux/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/fs/shmem_fs.h>
-// #include <linux/mnt_idmapping.h>
-// #include "pnode.h"
 #include "internal.h"
 
-
-// #include <linux/kernel/slab.h>
 #include <linux/fs/mount.h>
 #include <obsolete/printk.h>
 

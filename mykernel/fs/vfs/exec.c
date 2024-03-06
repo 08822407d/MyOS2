@@ -23,58 +23,26 @@
  * formats.
  */
 
-// #include <linux/kernel_read_file.h>
-// #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/kernel/mm.h>
-// #include <linux/vmacache.h>
 #include <linux/kernel/stat.h>
 #include <linux/kernel/fcntl.h>
-// #include <linux/swap.h>
 #include <linux/lib/string.h>
 #include <linux/init/init.h>
-// #include <linux/sched/mm.h>
 #include <linux/sched/coredump.h>
 #include <linux/sched/signal.h>
-// #include <linux/sched/numa_balancing.h>
 #include <linux/sched/task.h>
-// #include <linux/mm/pagemap.h>
-// #include <linux/perf_event.h>
-// #include <linux/highmem.h>
 #include <linux/kernel/lock_ipc.h>
-// #include <linux/key.h>
-// #include <linux/personality.h>
 #include <linux/fs/binfmts.h>
-// #include <linux/utsname.h>
-// #include <linux/pid_namespace.h>
-// #include <linux/module.h>
 #include <linux/fs/namei.h>
 #include <linux/kernel/mount.h>
-// #include <linux/security.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/tsacct_kern.h>
-// #include <linux/cn_proc.h>
-// #include <linux/audit.h>
-// #include <linux/tracehook.h>
-// #include <linux/kmod.h>
-// #include <linux/fsnotify.h>
-#include <linux/sched/fs_struct.h>
-// #include <linux/oom.h>
-// #include <linux/compat.h>
-// #include <linux/vmalloc.h>
-// #include <linux/io_uring.h>
-// #include <linux/syscall_user_dispatch.h>
-// #include <linux/coredump.h>
 
 #include <linux/kernel/uaccess.h>
 #include <asm/mmu_context.h>
-// #include <asm/tlb.h>
 
-// #include <trace/events/task.h>
 #include "internal.h"
-
-// #include <trace/events/sched.h>
 
 
 static LIST_HDR_S(formats);

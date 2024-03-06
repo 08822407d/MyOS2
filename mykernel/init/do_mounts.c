@@ -1,29 +1,15 @@
 // SPDX-License-Identifier: GPL-2.0-only
-// #include <linux/module.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ctype.h>
-// #include <linux/fd.h>
 #include <linux/device/tty.h>
-// #include <linux/suspend.h>
-// #include <linux/root_dev.h>
-// #include <linux/security.h>
 #include <linux/kernel/delay.h>
 #include <linux/block/genhd.h>
 #include <linux/kernel/mount.h>
 #include <linux/device/device.h>
 #include <linux/init/init.h>
 #include <linux/fs/fs.h>
-// #include <linux/initrd.h>
-// #include <linux/async.h>
-#include <linux/sched/fs_struct.h>
-// #include <linux/kernel/slab.h>
-// #include <linux/ramfs.h>
 #include <linux/fs/shmem_fs.h>
 
-// #include <linux/nfs_fs.h>
-// #include <linux/nfs_fs_sb.h>
-// #include <linux/nfs_mount.h>
-// #include <linux/raid/detect.h>
 #include <uapi/linux/mount.h>
 
 #include <linux/init/do_mounts.h>

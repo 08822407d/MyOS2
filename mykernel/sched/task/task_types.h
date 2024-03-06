@@ -4,13 +4,15 @@
 
 	#include <linux/kernel/lock_ipc.h>
 	#include <linux/kernel/mm.h>
+	#include <linux/lib/list.h>
+
 	#include <linux/kernel/pid.h>
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/fdtable.h>
-	#include <linux/lib/list.h>
 
 	#include <asm/thread_info.h>
 
+	#include "../scheduler/scheduler_types.h"
 
 	/* task_struct member predeclarations (sorted alphabetically): */
 	struct signal_struct;
@@ -19,6 +21,7 @@
 	typedef struct fs_struct taskfs_s;
 	struct rlimit;
 	typedef struct rlimit rlimit_s;
+
 
 	/*
 	 * Define the task command name length as enum, then it can be visible to
