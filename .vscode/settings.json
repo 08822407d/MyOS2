@@ -202,6 +202,12 @@
         "coredump.h": "c",
         "namei.h": "c",
         "mmzone_64.h": "c",
-        "bounds.h": "c"
+        "bounds.h": "c",
+        "runqueue_types.h": "c",
+        "runqueue_api.h": "c",
+        "task_api.h": "c",
+        "task_types.h": "c",
+        "runqueue_const.h": "c",
+        "task_const.h": "c"
     }
 }

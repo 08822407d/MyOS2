@@ -8,6 +8,7 @@
 #include <linux/lib/string.h>
 #include <linux/init/init.h>
 #include <linux/drivers/myos_ide.h>
+#include <linux/sched/fs_struct.h>
 
 
 #include <obsolete/printk.h>

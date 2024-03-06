@@ -5,6 +5,7 @@
 #include <linux/kernel/pid.h>
 #include <linux/sched/task_stack.h>
 #include <linux/sched/sched.h>
+#include <linux/sched/fs_struct.h>
 #include <linux/lib/list.h>
 #include <asm/insns.h>
 

@@ -25,6 +25,7 @@
 // #include <linux/personality.h>
 // #include <linux/mm/pagemap.h>
 #include <linux/kernel/syscalls.h>
+#include <linux/sched/fs_struct.h>
 // #include <linux/rcupdate.h>
 // #include <linux/audit.h>
 // #include <linux/falloc.h>

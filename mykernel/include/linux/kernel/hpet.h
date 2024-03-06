@@ -107,4 +107,4 @@
 
 	// int hpet_alloc(struct hpet_data *);
 
-#endif				/* !__HPET__ */
+#endif /* !__HPET__ */

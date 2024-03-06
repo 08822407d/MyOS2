@@ -4,6 +4,8 @@
 #include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/mm.h>
+#include <linux/kernel/sched.h>
+#include <linux/sched/fs_struct.h>
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>

@@ -14,7 +14,6 @@
 	// #include <linux/restart_block.h>
 	// #include <linux/errno.h>
 
-	// #ifdef CONFIG_THREAD_INFO_IN_TASK
 	// /*
 	//  * For CONFIG_THREAD_INFO_IN_TASK kernels we need <asm/current.h> for the
 	//  * definition of current, but for !CONFIG_THREAD_INFO_IN_TASK kernels,
@@ -24,7 +23,6 @@
 	#include <asm/thread_info.h>
 	// #define current_thread_info() ((struct thread_info *)current)
 	#define current_thread_info() (&(current->thread_info))
-	// #endif
 
 	// #include <linux/bitops.h>
 
