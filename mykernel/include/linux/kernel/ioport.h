@@ -291,9 +291,6 @@
 	// #ifdef CONFIG_MEMORY_HOTREMOVE
 	// extern void release_mem_region_adjustable(resource_size_t, resource_size_t);
 	// #endif
-	// #ifdef CONFIG_MEMORY_HOTPLUG
-	// extern void merge_system_ram_resource(struct resource *res);
-	// #endif
 
 	// /* Wrappers for managed devices */
 	// struct device;

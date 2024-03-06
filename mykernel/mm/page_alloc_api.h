@@ -1,6 +1,9 @@
 #ifndef _LINUX_PAGE_ALLOC_API_H_
 #define _LINUX_PAGE_ALLOC_API_H_
 
+	#include <asm/mmzone_64.h>
+	#include <asm/sparsemem.h>
+
 	#include "page_alloc/page_alloc_const.h"
 	#include "page_alloc/page_alloc_types.h"
 	#include "page_alloc/page-flags.h"
@@ -13,23 +16,23 @@
 	 */
 	extern page_s	*mem_map;
 
-	#define ENT_PER_TABLE	(PAGE_SIZE / sizeof(pgd_t))
-	#define PFN_ALIGN(x)	(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
-	#define PFN_UP(x)		(((x) + PAGE_SIZE-1) >> PAGE_SHIFT)
-	#define PFN_DOWN(x)		((x) >> PAGE_SHIFT)
-	#define PFN_PHYS(x)		((phys_addr_t)(x) << PAGE_SHIFT)
-	#define PHYS_PFN(x)		((unsigned long)((x) >> PAGE_SHIFT))
+	#define ENT_PER_TABLE		(PAGE_SIZE / sizeof(pgd_t))
+	#define PFN_ALIGN(x)		(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
+	#define PFN_UP(x)			(((x) + PAGE_SIZE-1) >> PAGE_SHIFT)
+	#define PFN_DOWN(x)			((x) >> PAGE_SHIFT)
+	#define PFN_PHYS(x)			((phys_addr_t)(x) << PAGE_SHIFT)
+	#define PHYS_PFN(x)			((unsigned long)((x) >> PAGE_SHIFT))
 	#define page_to_pfn(page)	((unsigned long)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
 
 	#ifndef page_to_phys
-	#	define page_to_phys(x)	(page_to_pfn(x) << PAGE_SHIFT)
+	#  define page_to_phys(x)	(page_to_pfn(x) << PAGE_SHIFT)
 	#endif
 	#ifndef page_to_virt
-	#	define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
+	#  define page_to_virt(x)	__va(PFN_PHYS(page_to_pfn(x)))
 	#endif
 
-	#define offset_in_page(p)		((unsigned long)(p) & ~PAGE_MASK)
+	#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
 
 	page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	#define alloc_page(gfp_mask)	alloc_pages(gfp_mask, 0)

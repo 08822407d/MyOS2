@@ -2,7 +2,6 @@
 #define _PROTO_H_
 
 #include <linux/kernel/types.h>
-#include <linux/mm/mmzone.h>
 
 #include "ktypes.h"
 		

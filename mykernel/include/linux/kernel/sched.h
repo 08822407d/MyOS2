@@ -1223,9 +1223,6 @@
 
 		// struct io_context *io_context;
 
-	// #ifdef CONFIG_COMPACTION
-		// struct capture_control *capture_control;
-	// #endif
 		// /* Ptrace state: */
 		// unsigned long ptrace_message;
 		// kernel_siginfo_t *last_siginfo;

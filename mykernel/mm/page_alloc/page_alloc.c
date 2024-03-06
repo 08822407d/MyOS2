@@ -32,34 +32,18 @@
  * don't need any ZONE_NORMAL reservation
  */
 int sysctl_lowmem_reserve_ratio[MAX_NR_ZONES] = {
-#ifdef CONFIG_ZONE_DMA
 	[ZONE_DMA] = 256,
-#endif
-#ifdef CONFIG_ZONE_DMA32
 	[ZONE_DMA32] = 256,
-#endif
 	[ZONE_NORMAL] = 32,
-// #ifdef CONFIG_HIGHMEM
-// 	[ZONE_HIGHMEM] = 0,
-// #endif
-	// [ZONE_MOVABLE] = 0,
+	[ZONE_MOVABLE] = 0,
 };
 
 char * const zone_names[MAX_NR_ZONES] = {
-#ifdef CONFIG_ZONE_DMA
-	 "DMA",
-#endif
-#ifdef CONFIG_ZONE_DMA32
-	 "DMA32",
-#endif
-	 "Normal",
-// #ifdef CONFIG_HIGHMEM
-// 	 "HighMem",
-// #endif
-	//  "Movable",
-#ifdef CONFIG_ZONE_DEVICE
-	 "Device",
-#endif
+	"DMA",
+	"DMA32",
+	"Normal",
+	"Movable",
+	"Device",
 };
 
 

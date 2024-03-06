@@ -47,10 +47,8 @@
 #include "memfault_types.h"
 
 
-#ifndef CONFIG_NUMA
-	unsigned long	max_mapnr;
-	page_s	*mem_map;
-#endif
+unsigned long	max_mapnr;
+page_s	*mem_map;
 
 /*
  * A number of key systems in x86 including ioremap() rely on the assumption
@@ -110,41 +108,41 @@ page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte)
 {
 	unsigned long pfn = pte_pfn(pte);
 
-// 	if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
-// 		if (likely(!pte_special(pte)))
-// 			goto check_pfn;
-// 		if (vma->vm_ops && vma->vm_ops->find_special_page)
-// 			return vma->vm_ops->find_special_page(vma, addr);
-// 		if (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP))
-// 			return NULL;
-// 		if (is_zero_pfn(pfn))
-// 			return NULL;
-// 		if (pte_devmap(pte))
-// 			return NULL;
+	// if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
+	// 	if (likely(!pte_special(pte)))
+	// 		goto check_pfn;
+	// 	if (vma->vm_ops && vma->vm_ops->find_special_page)
+	// 		return vma->vm_ops->find_special_page(vma, addr);
+	// 	if (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP))
+	// 		return NULL;
+	// 	if (is_zero_pfn(pfn))
+	// 		return NULL;
+	// 	if (pte_devmap(pte))
+	// 		return NULL;
 
-// 		print_bad_pte(vma, addr, pte, NULL);
-// 		return NULL;
-// 	}
+	// 	print_bad_pte(vma, addr, pte, NULL);
+	// 	return NULL;
+	// }
 
-// 	/* !CONFIG_ARCH_HAS_PTE_SPECIAL case follows: */
+	// /* !CONFIG_ARCH_HAS_PTE_SPECIAL case follows: */
 
-// 	if (unlikely(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP))) {
-// 		if (vma->vm_flags & VM_MIXEDMAP) {
-// 			if (!pfn_valid(pfn))
-// 				return NULL;
-// 			goto out;
-// 		} else {
-// 			unsigned long off;
-// 			off = (addr - vma->vm_start) >> PAGE_SHIFT;
-// 			if (pfn == vma->vm_pgoff + off)
-// 				return NULL;
-// 			if (!is_cow_mapping(vma->vm_flags))
-// 				return NULL;
-// 		}
-// 	}
+	// if (unlikely(vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP))) {
+	// 	if (vma->vm_flags & VM_MIXEDMAP) {
+	// 		if (!pfn_valid(pfn))
+	// 			return NULL;
+	// 		goto out;
+	// 	} else {
+	// 		unsigned long off;
+	// 		off = (addr - vma->vm_start) >> PAGE_SHIFT;
+	// 		if (pfn == vma->vm_pgoff + off)
+	// 			return NULL;
+	// 		if (!is_cow_mapping(vma->vm_flags))
+	// 			return NULL;
+	// 	}
+	// }
 
-// 	if (is_zero_pfn(pfn))
-// 		return NULL;
+	// if (is_zero_pfn(pfn))
+	// 	return NULL;
 
 check_pfn:
 	if (unlikely(pfn > highest_memmap_pfn)) {

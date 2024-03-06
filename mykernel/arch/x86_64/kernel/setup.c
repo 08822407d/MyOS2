@@ -283,6 +283,8 @@ void __init setup_arch(char **cmdline_p)
 	// x86_init.paging.pagetable_init()
 	// void __init paging_init(void)
 	// {
+
+extern void zone_sizes_init(void);
 		zone_sizes_init();
 	// }
 }

@@ -7,12 +7,10 @@
 #define PAGE_FLAGS_H
 
 	#include <linux/kernel/types.h>
-	// #	include <linux/bug.h>
-	// #	include <linux/mmdebug.h>
-	#ifndef __GENERATING_BOUNDS_H
-	#	include <linux/kernel/mm.h>
-	#	include <generated/bounds.h>
-	#endif /* !__GENERATING_BOUNDS_H */
+	// #include <linux/bug.h>
+	// #include <linux/mmdebug.h>
+	#include <linux/kernel/mm.h>
+	#include <generated/bounds.h>
 
 	/*
 	 * Various page->flags bits:

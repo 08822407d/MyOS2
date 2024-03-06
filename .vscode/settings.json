@@ -201,6 +201,7 @@
         "x86_msr.h": "c",
         "coredump.h": "c",
         "namei.h": "c",
-        "mmzone_64.h": "c"
+        "mmzone_64.h": "c",
+        "bounds.h": "c"
     }
 }

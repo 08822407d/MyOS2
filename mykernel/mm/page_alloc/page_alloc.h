@@ -4,6 +4,8 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/mm.h>
 
+	#include "mmzone_const.h"
+	#include "mmzone_types.h"
 	#include "page_alloc_types.h"
 
 	struct zone;

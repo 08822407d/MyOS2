@@ -1,4 +1,5 @@
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm.h>
+#include <linux/kernel/err.h>
 #include <linux/lib/list.h>
 
 #include <obsolete/proto.h>
