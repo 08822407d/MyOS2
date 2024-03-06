@@ -1,4 +1,4 @@
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <klib/utils.h>
 #include <obsolete/glo.h>

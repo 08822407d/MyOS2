@@ -30,7 +30,7 @@
 #include <linux/sched/task.h>
 #include <uapi/linux/mount.h>
 #include <linux/fs/fs_context.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/fs/shmem_fs.h>
 // #include <linux/mnt_idmapping.h>
 // #include "pnode.h"
 #include "internal.h"

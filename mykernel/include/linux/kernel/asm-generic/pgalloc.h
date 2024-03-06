@@ -2,7 +2,7 @@
 #ifndef __ASM_GENERIC_PGALLOC_H
 #define __ASM_GENERIC_PGALLOC_H
 
-	#include <linux/mm/mm.h>		/* for page_s */
+	#include <linux/kernel/mm.h>		/* for page_s */
 
 	// #ifdef CONFIG_MMU
 

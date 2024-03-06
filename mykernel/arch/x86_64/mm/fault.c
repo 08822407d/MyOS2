@@ -7,10 +7,10 @@
 #include <linux/kernel/sched.h>		/* test_thread_flag(), ...	*/
 #include <linux/sched/task_stack.h>	/* task_stack_*(), ...		*/
 #include <linux/debug/kdebug.h>		/* oops_begin/end, ...		*/
-#include <linux/mm/mm.h>		/* max_low_pfn			*/
+#include <linux/kernel/mm.h>		/* max_low_pfn			*/
 #include <linux/kernel/prefetch.h>		/* prefetchw			*/
 #include <linux/kernel/uaccess.h>		/* faulthandler_disabled()	*/
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <asm/traps.h>			/* dotraplinkage, ...		*/
 #include <asm/mmu_context.h>		/* vma_pkey()			*/

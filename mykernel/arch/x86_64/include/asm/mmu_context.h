@@ -4,7 +4,7 @@
 #ifndef _ASM_X86_MMU_CONTEXT_H
 #define _ASM_X86_MMU_CONTEXT_H
 
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 	#include <asm/tlbflush.h>
 	// extern atomic64_t last_mm_ctx_id;
 

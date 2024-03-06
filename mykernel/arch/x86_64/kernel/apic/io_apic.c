@@ -30,7 +30,7 @@
  *	setup for the read already. We cache the data now, so that
  *	workaround has been removed.
  */
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/init/init.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/sched.h>

@@ -12,7 +12,7 @@
 #include <linux/lib/errno.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/kernel/slab.h>
 #include <linux/lib/string.h>
 // #include <linux/sched/thread_info.h>

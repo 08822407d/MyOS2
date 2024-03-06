@@ -27,7 +27,7 @@
  *
  */
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/export.h>
 // #include <linux/kernel/slab.h>
 #include <linux/init/init.h>

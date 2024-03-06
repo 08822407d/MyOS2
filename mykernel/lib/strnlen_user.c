@@ -2,7 +2,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/uaccess.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/bitops.h>
 
 // #include <asm/word-at-a-time.h>

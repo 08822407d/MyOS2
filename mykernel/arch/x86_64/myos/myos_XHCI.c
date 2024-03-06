@@ -1,6 +1,6 @@
 #include <linux/kernel/kthread.h>
 #include <linux/kernel/stddef.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/delay.h>
 
 #include "myos_XHCI.h"

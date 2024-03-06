@@ -2,7 +2,7 @@
 #define _LINUX_PAGE_ALLOC_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 
 	#include "page_alloc_types.h"
 

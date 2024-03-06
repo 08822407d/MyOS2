@@ -32,7 +32,7 @@
 #include <linux/kernel/fdtable.h>
 #include <linux/fs/binfmts.h>
 #include <linux/fs/fs.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/cpu.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/jiffies.h>
@@ -364,13 +364,6 @@ void __mmdrop(mm_s *mm)
 	free_mm(mm);
 }
 
-void set_task_stack_end_magic(task_s *tsk)
-{
-	unsigned long *stackend;
-
-	stackend = end_of_stack(tsk);
-	// *stackend = STACK_END_MAGIC;	/* for overflow detection */
-}
 
 static task_s *dup_task_struct(task_s *orig, int node)
 {
@@ -419,7 +412,7 @@ static task_s *dup_task_struct(task_s *orig, int node)
 	// setup_thread_stack(tsk, orig);
 	// clear_user_return_notifier(tsk);
 	clear_tsk_need_resched(tsk);
-	set_task_stack_end_magic(tsk);
+	// set_task_stack_end_magic(tsk);
 	// clear_syscall_work_syscall_user_dispatch(tsk);
 
 // #ifdef CONFIG_STACKPROTECTOR

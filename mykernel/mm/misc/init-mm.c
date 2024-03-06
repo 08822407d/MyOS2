@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/kernel/lock_ipc.h>
 #include <linux/kernel/cpumask.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/lib/list.h>
 
 #ifndef INIT_MM_CONTEXT

@@ -198,6 +198,9 @@
         "processor_arch.h": "c",
         "kdebug.h": "c",
         "ktypes.h": "c",
-        "x86_msr.h": "c"
+        "x86_msr.h": "c",
+        "coredump.h": "c",
+        "namei.h": "c",
+        "mmzone_64.h": "c"
     }
 }

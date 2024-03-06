@@ -27,7 +27,7 @@
 // #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/vmacache.h>
 #include <linux/kernel/stat.h>
 #include <linux/kernel/fcntl.h>

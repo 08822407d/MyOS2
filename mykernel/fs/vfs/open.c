@@ -6,7 +6,7 @@
  */
 
 #include <linux/lib/string.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 // #include <linux/fsnotify.h>

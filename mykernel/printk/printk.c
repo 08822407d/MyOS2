@@ -18,7 +18,7 @@
  *	01Mar01 Andrew Morton
  */
 #include <linux/kernel/kernel.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/device/tty.h>
 // #include <linux/tty_driver.h>
 #include <linux/device/console.h>

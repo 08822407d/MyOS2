@@ -87,7 +87,7 @@
 
 
 #include <asm/tlbflush.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/timekeeping.h>
 #include <obsolete/glo.h>

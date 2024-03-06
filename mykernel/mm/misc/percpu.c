@@ -76,7 +76,7 @@
 #include <linux/kernel/err.h>
 #include <linux/lib/list.h>
 // #include <linux/log2.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/module.h>
 // #include <linux/mutex.h>
 #include <linux/smp/percpu.h>

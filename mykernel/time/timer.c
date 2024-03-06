@@ -29,7 +29,7 @@
 #include <linux/sched/debug.h>
 #include <linux/smp/percpu.h>
 #include <linux/init/init.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <asm/unistd.h>
 #include <asm/insns.h>

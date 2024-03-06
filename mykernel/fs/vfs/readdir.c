@@ -9,7 +9,7 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/time.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/stat.h>
 #include <linux/fs/file.h>

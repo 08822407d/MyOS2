@@ -23,11 +23,6 @@
 
 	// #define setup_thread_stack(new,old)	do { } while(0)
 
-	static inline unsigned long
-	*end_of_stack(const task_s *task) {
-		return task->stack;
-	}
-
 	// #elif !defined(__HAVE_THREAD_FUNCTIONS)
 
 	// #define task_stack_page(task)	((void *)(task)->stack)

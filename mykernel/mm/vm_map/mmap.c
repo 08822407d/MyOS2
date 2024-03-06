@@ -17,8 +17,8 @@
 #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
-#include <linux/mm/mm.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/kernel/mm.h>
+#include <linux/fs/shmem_fs.h>
 #include <linux/debug/printk.h>
 #include <asm/mmu_context.h>
 

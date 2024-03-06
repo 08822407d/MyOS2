@@ -13,7 +13,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/nmi.h>
 #include <linux/init/init.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 
 static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;

@@ -15,7 +15,7 @@
 #include <linux/init/init.h>
 #include <linux/lib/string.h>
 #include <linux/block/genhd.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 /**
  * __class_create - create a struct class structure

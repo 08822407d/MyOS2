@@ -39,7 +39,7 @@
  * Aug/Sep 2004 Changed to four level page tables (Andi Kleen)
  */
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/sched/coredump.h>
 #include <asm-generic/pgalloc.h>
 

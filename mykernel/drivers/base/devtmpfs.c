@@ -20,7 +20,7 @@
 #include <linux/block/genhd.h>
 #include <linux/fs/namei.h>
 #include <linux/fs/fs.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/fs/shmem_fs.h>
 // #include <linux/ramfs.h>
 #include <linux/kernel/sched.h>
 // #include <linux/kernel/slab.h>

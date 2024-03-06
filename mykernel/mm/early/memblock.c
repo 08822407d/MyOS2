@@ -10,7 +10,7 @@
  * Copyright (C) 2001 Peter Bergner.
  */
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 /**
  * DOC: memblock overview

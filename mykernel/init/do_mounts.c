@@ -18,7 +18,7 @@
 #include <linux/sched/fs_struct.h>
 // #include <linux/kernel/slab.h>
 // #include <linux/ramfs.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/fs/shmem_fs.h>
 
 // #include <linux/nfs_fs.h>
 // #include <linux/nfs_fs_sb.h>

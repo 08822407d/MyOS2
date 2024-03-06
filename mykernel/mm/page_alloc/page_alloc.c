@@ -18,7 +18,7 @@
  *  Per cpu hot/cold page lists, bulk allocation, Martin J. Bligh, Sept 2002
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:
@@ -59,19 +59,6 @@ char * const zone_names[MAX_NR_ZONES] = {
 	//  "Movable",
 #ifdef CONFIG_ZONE_DEVICE
 	 "Device",
-#endif
-};
-
-const char * const migratetype_names[MIGRATE_TYPES] = {
-	"Unmovable",
-	"Movable",
-	"Reclaimable",
-	"HighAtomic",
-#ifdef CONFIG_CMA
-	"CMA",
-#endif
-#ifdef CONFIG_MEMORY_ISOLATION
-	"Isolate",
 #endif
 };
 

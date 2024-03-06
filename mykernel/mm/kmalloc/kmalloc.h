@@ -3,7 +3,7 @@
 
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/overflow.h>
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 
 	#include "kmalloc_const.h"
 	#include "kmalloc_types.h"

@@ -4,7 +4,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/delay.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/mount.h>
 #include <linux/fs/binfmts.h>

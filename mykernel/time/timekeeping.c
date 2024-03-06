@@ -8,7 +8,7 @@
 // #include <linux/interrupt.h>
 #include <linux/smp/percpu.h>
 #include <linux/init/init.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/nmi.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/loadavg.h>

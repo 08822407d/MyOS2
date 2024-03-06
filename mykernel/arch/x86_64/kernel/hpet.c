@@ -13,7 +13,7 @@
 // #include <asm/mwait.h>
 
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/jiffies.h>
 #include <asm/tlbflush.h>
 

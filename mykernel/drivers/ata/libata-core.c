@@ -30,7 +30,7 @@
 #include <linux/device/pci.h>
 #include <linux/init/init.h>
 #include <linux/lib/list.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/lock_ipc.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/delay.h>

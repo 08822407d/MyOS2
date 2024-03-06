@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: GPL-2.0-only
 #include <linux/init/init.h>
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/lock_ipc.h>
 #include <linux/smp/smp.h>
 // #include <linux/interrupt.h>

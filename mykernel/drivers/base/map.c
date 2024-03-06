@@ -12,7 +12,7 @@
 // #include <linux/module.h>
 // #include <linux/kernel/slab.h>
 // #include <linux/kernel/mutex.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/kobject.h>
 #include <linux/kernel/kobj_map.h>

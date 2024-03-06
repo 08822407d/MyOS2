@@ -2,76 +2,34 @@
 #ifndef _LINUX_MMZONE_H
 #define _LINUX_MMZONE_H
 
-	#ifndef __GENERATING_BOUNDS_H
 	#include <linux/kernel/lock_ipc.h>
-	#	include <linux/lib/list.h>
-	#	include <linux/kernel/bitops.h>
-	#	include <linux/kernel/cache.h>
-	#	include <linux/kernel/numa.h>
-	#	include <linux/init/init.h>
-	#	include <linux/mm/mm.h>
-	#	include <asm/page.h>
+	#include <linux/lib/list.h>
+	#include <linux/kernel/bitops.h>
+	#include <linux/kernel/cache.h>
+	#include <linux/kernel/numa.h>
+	#include <linux/init/init.h>
+	#include <linux/kernel/mm.h>
+	#include <asm/page.h>
 
 	/* Free memory management - zoned buddy allocator.  */
-	#	ifndef CONFIG_FORCE_MAX_ZONEORDER
-	#		define MAX_ORDER	11
-	#	else
-	#		define MAX_ORDER	CONFIG_FORCE_MAX_ZONEORDER
-	#	endif
-	#	define MAX_ORDER_NR_PAGES	(1 << (MAX_ORDER - 1))
-
-	/*
-	* PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
-	* costly to service.  That is between allocation orders which should
-	* coalesce naturally under reasonable reclaim pressure and those which
-	* will not.
-	*/
-	#	define PAGE_ALLOC_COSTLY_ORDER 3
-
-		enum migratetype {
-			MIGRATE_UNMOVABLE,
-			MIGRATE_MOVABLE,
-			MIGRATE_RECLAIMABLE,
-			MIGRATE_PCPTYPES, /* the number of types on the pcp lists */
-			MIGRATE_HIGHATOMIC = MIGRATE_PCPTYPES,
-		#ifdef CONFIG_CMA
-			/*
-			* MIGRATE_CMA migration type is designed to mimic the way
-			* ZONE_MOVABLE works.  Only movable pages can be allocated
-			* from MIGRATE_CMA pageblocks and page allocator never
-			* implicitly change migration type of MIGRATE_CMA pageblock.
-			*
-			* The way to use it is to change migratetype of a range of
-			* pageblocks to MIGRATE_CMA which can be done by
-			* __free_pageblock_cma() function.  What is important though
-			* is that a range of pageblocks must be aligned to
-			* MAX_ORDER_NR_PAGES should biggest page be bigger than
-			* a single pageblock.
-			*/
-			MIGRATE_CMA,
-		#endif
-		#ifdef CONFIG_MEMORY_ISOLATION
-			MIGRATE_ISOLATE, /* can't allocate from here */
-		#endif
-			MIGRATE_TYPES
-		};
-
-		/* In mm/page_alloc.c; keep in sync also with show_migration_types() there */
-		extern const char *const migratetype_names[MIGRATE_TYPES];
-
-	#endif /* !__GENERATING_BOUNDS.H */
+	#ifndef CONFIG_FORCE_MAX_ZONEORDER
+	#  define MAX_ORDER	11
+	#else
+	#  define MAX_ORDER	CONFIG_FORCE_MAX_ZONEORDER
+	#endif
+	#define MAX_ORDER_NR_PAGES	(1 << (MAX_ORDER - 1))
 
 	enum zone_type {
 	/*
-	* ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
-	* to DMA to all of the addressable memory (ZONE_NORMAL).
-	* On architectures where this area covers the whole 32 bit address
-	* space ZONE_DMA32 is used. ZONE_DMA is left for the ones with smaller
-	* DMA addressing constraints. This distinction is important as a 32bit
-	* DMA mask is assumed when ZONE_DMA32 is defined. Some 64-bit
-	* platforms may need both zones as they support peripherals with
-	* different DMA addressing limitations.
-	*/
+	 * ZONE_DMA and ZONE_DMA32 are used when there are peripherals not able
+	 * to DMA to all of the addressable memory (ZONE_NORMAL).
+	 * On architectures where this area covers the whole 32 bit address
+	 * space ZONE_DMA32 is used. ZONE_DMA is left for the ones with smaller
+	 * DMA addressing constraints. This distinction is important as a 32bit
+	 * DMA mask is assumed when ZONE_DMA32 is defined. Some 64-bit
+	 * platforms may need both zones as they support peripherals with
+	 * different DMA addressing limitations.
+	 */
 	#ifdef CONFIG_ZONE_DMA
 		ZONE_DMA,
 	#endif
@@ -140,309 +98,304 @@
 		__MAX_NR_ZONES
 	};
 
-	#ifndef __GENERATING_BOUNDS_H
-	#	define ASYNC_AND_SYNC 2
+	struct pglist_data;
+	typedef struct pglist_data pg_data_t;
+	typedef struct zone {
+		/* Read-mostly fields */
 
-		struct pglist_data;
-		typedef struct pglist_data pg_data_t;
-		typedef struct zone {
-			/* Read-mostly fields */
+		// /* zone watermarks, access with *_wmark_pages(zone) macros */
+		// unsigned long _watermark[NR_WMARK];
+		// unsigned long watermark_boost;
 
-			// /* zone watermarks, access with *_wmark_pages(zone) macros */
-			// unsigned long _watermark[NR_WMARK];
-			// unsigned long watermark_boost;
+		// unsigned long nr_reserved_highatomic;
 
-			// unsigned long nr_reserved_highatomic;
+		// /*
+		// * We don't know if the memory that we're going to allocate will be
+		// * freeable or/and it will be released eventually, so to avoid totally
+		// * wasting several GB of ram we must reserve some of the lower zone
+		// * memory (otherwise we risk to run OOM on the lower zones despite
+		// * there being tons of freeable ram on the higher zones).  This array is
+		// * recalculated at runtime if the sysctl_lowmem_reserve_ratio sysctl
+		// * changes.
+		// */
+		// long lowmem_reserve[MAX_NR_ZONES];
 
-			// /*
-			// * We don't know if the memory that we're going to allocate will be
-			// * freeable or/and it will be released eventually, so to avoid totally
-			// * wasting several GB of ram we must reserve some of the lower zone
-			// * memory (otherwise we risk to run OOM on the lower zones despite
-			// * there being tons of freeable ram on the higher zones).  This array is
-			// * recalculated at runtime if the sysctl_lowmem_reserve_ratio sysctl
-			// * changes.
-			// */
-			// long lowmem_reserve[MAX_NR_ZONES];
+	// #ifdef CONFIG_NUMA
+	// 	int node;
+	// #endif
+		pg_data_t *zone_pgdat;
+		// struct per_cpu_pages __percpu *per_cpu_pageset;
+		// struct per_cpu_zonestat __percpu *per_cpu_zonestats;
+		// /*
+		// * the high and batch values are copied to individual pagesets for
+		// * faster access
+		// */
+		// int pageset_high;
+		// int pageset_batch;
 
-		// #ifdef CONFIG_NUMA
-		// 	int node;
-		// #endif
-			pg_data_t *zone_pgdat;
-			// struct per_cpu_pages __percpu *per_cpu_pageset;
-			// struct per_cpu_zonestat __percpu *per_cpu_zonestats;
-			// /*
-			// * the high and batch values are copied to individual pagesets for
-			// * faster access
-			// */
-			// int pageset_high;
-			// int pageset_batch;
+	// #ifndef CONFIG_SPARSEMEM
+	// 	/*
+	// 	* Flags for a pageblock_nr_pages block. See pageblock-flags.h.
+	// 	* In SPARSEMEM, this map is stored in struct mem_section
+	// 	*/
+	// 	unsigned long *pageblock_flags;
+	// #endif /* CONFIG_SPARSEMEM */
 
-		// #ifndef CONFIG_SPARSEMEM
-		// 	/*
-		// 	* Flags for a pageblock_nr_pages block. See pageblock-flags.h.
-		// 	* In SPARSEMEM, this map is stored in struct mem_section
-		// 	*/
-		// 	unsigned long *pageblock_flags;
-		// #endif /* CONFIG_SPARSEMEM */
-
-			/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
-			unsigned long zone_start_pfn;
-
-			/*
-			 * spanned_pages is the total pages spanned by the zone, including
-			 * holes, which is calculated as:
-			 * 	spanned_pages = zone_end_pfn - zone_start_pfn;
-			 *
-			 * present_pages is physical pages existing within the zone, which
-			 * is calculated as:
-			 *	present_pages = spanned_pages - absent_pages(pages in holes);
-			 *
-			 * present_early_pages is present pages existing within the zone
-			 * located on memory available since early boot, excluding hotplugged
-			 * memory.
-			 *
-			 * managed_pages is present pages managed by the buddy system, which
-			 * is calculated as (reserved_pages includes pages allocated by the
-			 * bootmem allocator):
-			 *	managed_pages = present_pages - reserved_pages;
-			 *
-			 * cma pages is present pages that are assigned for CMA use
-			 * (MIGRATE_CMA).
-			 *
-			 * So present_pages may be used by memory hotplug or memory power
-			 * management logic to figure out unmanaged pages by checking
-			 * (present_pages - managed_pages). And managed_pages should be used
-			 * by page allocator and vm scanner to calculate all kinds of watermarks
-			 * and thresholds.
-			 *
-			 * Locking rules:
-			 *
-			 * zone_start_pfn and spanned_pages are protected by span_seqlock.
-			 * It is a seqlock because it has to be read outside of zone->lock,
-			 * and it is done in the main allocator path.  But, it is written
-			 * quite infrequently.
-			 *
-			 * The span_seq lock is declared along with zone->lock because it is
-			 * frequently read in proximity to zone->lock.  It's good to
-			 * give them a chance of being in the same cacheline.
-			 *
-			 * Write access to present_pages at runtime should be protected by
-			 * mem_hotplug_begin/end(). Any reader who can't tolerant drift of
-			 * present_pages should get_online_mems() to get a stable value.
-			 */
-			atomic_long_t managed_pages;
-			unsigned long spanned_pages;
-			unsigned long present_pages;
-		// #if defined(CONFIG_MEMORY_HOTPLUG)
-		// 	unsigned long present_early_pages;
-		// #endif
-		// #ifdef CONFIG_CMA
-		// 	unsigned long cma_pages;
-		// #endif
-
-			const char *name;
-
-		// #ifdef CONFIG_MEMORY_ISOLATION
-		// 	/*
-		// 	* Number of isolated pageblock. It is used to solve incorrect
-		// 	* freepage counting problem due to racy retrieving migratetype
-		// 	* of pageblock. Protected by zone->lock.
-		// 	*/
-		// 	unsigned long nr_isolate_pageblock;
-		// #endif
-
-		// #ifdef CONFIG_MEMORY_HOTPLUG
-		// 	/* see spanned/present_pages for more description */
-		// 	seqlock_t span_seqlock;
-		// #endif
-
-			int initialized;
-
-		// 	/* Write-intensive fields used from the page allocator */
-		// 	ZONE_PADDING(_pad1_)
-
-			/* free areas of different sizes */
-			// struct free_area free_area[MAX_ORDER];
-			List_hdr_s free_area[MAX_ORDER];
-
-			/* zone flags, see below */
-			unsigned long flags;
-
-			// /* Primarily protects free_area */
-			// spinlock_t lock;
-
-			// /* Write-intensive fields used by compaction and vmstats. */
-			// ZONE_PADDING(_pad2_)
-
-			// /*
-			// * When free pages are below this point, additional steps are taken
-			// * when reading the number of free pages to avoid per-cpu counter
-			// * drift allowing watermarks to be breached
-			// */
-			// unsigned long percpu_drift_mark;
-
-		// #if defined CONFIG_COMPACTION || defined CONFIG_CMA
-		// 	/* pfn where compaction free scanner should start */
-		// 	unsigned long compact_cached_free_pfn;
-		// 	/* pfn where compaction migration scanner should start */
-		// 	unsigned long compact_cached_migrate_pfn[ASYNC_AND_SYNC];
-		// 	unsigned long compact_init_migrate_pfn;
-		// 	unsigned long compact_init_free_pfn;
-		// #endif
-
-		// #ifdef CONFIG_COMPACTION
-		// 	/*
-		// 	* On compaction failure, 1<<compact_defer_shift compactions
-		// 	* are skipped before trying again. The number attempted since
-		// 	* last failure is tracked with compact_considered.
-		// 	* compact_order_failed is the minimum compaction failed order.
-		// 	*/
-		// 	unsigned int compact_considered;
-		// 	unsigned int compact_defer_shift;
-		// 	int compact_order_failed;
-		// #endif
-
-		// #if defined CONFIG_COMPACTION || defined CONFIG_CMA
-		// 	/* Set to true when the PG_migrate_skip bits should be cleared */
-		// 	bool compact_blockskip_flush;
-		// #endif
-
-			// bool contiguous;
-
-			// ZONE_PADDING(_pad3_)
-			// /* Zone statistics */
-			// atomic_long_t vm_stat[NR_VM_ZONE_STAT_ITEMS];
-			// atomic_long_t vm_numa_event[NR_VM_NUMA_EVENT_ITEMS];
-		} zone_s;
-		// } ____cacheline_internodealigned_in_smp;
+		/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
+		unsigned long zone_start_pfn;
 
 		/*
-		* On NUMA machines, each NUMA node would have a pg_data_t to describe
-		* it's memory layout. On UMA machines there is a single pglist_data which
-		* describes the whole memory.
-		*
-		* Memory statistics and page replacement data structures are maintained on a
-		* per-zone basis.
+			* spanned_pages is the total pages spanned by the zone, including
+			* holes, which is calculated as:
+			* 	spanned_pages = zone_end_pfn - zone_start_pfn;
+			*
+			* present_pages is physical pages existing within the zone, which
+			* is calculated as:
+			*	present_pages = spanned_pages - absent_pages(pages in holes);
+			*
+			* present_early_pages is present pages existing within the zone
+			* located on memory available since early boot, excluding hotplugged
+			* memory.
+			*
+			* managed_pages is present pages managed by the buddy system, which
+			* is calculated as (reserved_pages includes pages allocated by the
+			* bootmem allocator):
+			*	managed_pages = present_pages - reserved_pages;
+			*
+			* cma pages is present pages that are assigned for CMA use
+			* (MIGRATE_CMA).
+			*
+			* So present_pages may be used by memory hotplug or memory power
+			* management logic to figure out unmanaged pages by checking
+			* (present_pages - managed_pages). And managed_pages should be used
+			* by page allocator and vm scanner to calculate all kinds of watermarks
+			* and thresholds.
+			*
+			* Locking rules:
+			*
+			* zone_start_pfn and spanned_pages are protected by span_seqlock.
+			* It is a seqlock because it has to be read outside of zone->lock,
+			* and it is done in the main allocator path.  But, it is written
+			* quite infrequently.
+			*
+			* The span_seq lock is declared along with zone->lock because it is
+			* frequently read in proximity to zone->lock.  It's good to
+			* give them a chance of being in the same cacheline.
+			*
+			* Write access to present_pages at runtime should be protected by
+			* mem_hotplug_begin/end(). Any reader who can't tolerant drift of
+			* present_pages should get_online_mems() to get a stable value.
+			*/
+		atomic_long_t managed_pages;
+		unsigned long spanned_pages;
+		unsigned long present_pages;
+	// #if defined(CONFIG_MEMORY_HOTPLUG)
+	// 	unsigned long present_early_pages;
+	// #endif
+	// #ifdef CONFIG_CMA
+	// 	unsigned long cma_pages;
+	// #endif
+
+		const char *name;
+
+	// #ifdef CONFIG_MEMORY_ISOLATION
+	// 	/*
+	// 	* Number of isolated pageblock. It is used to solve incorrect
+	// 	* freepage counting problem due to racy retrieving migratetype
+	// 	* of pageblock. Protected by zone->lock.
+	// 	*/
+	// 	unsigned long nr_isolate_pageblock;
+	// #endif
+
+	// #ifdef CONFIG_MEMORY_HOTPLUG
+	// 	/* see spanned/present_pages for more description */
+	// 	seqlock_t span_seqlock;
+	// #endif
+
+		int initialized;
+
+	// 	/* Write-intensive fields used from the page allocator */
+	// 	ZONE_PADDING(_pad1_)
+
+		/* free areas of different sizes */
+		// struct free_area free_area[MAX_ORDER];
+		List_hdr_s free_area[MAX_ORDER];
+
+		/* zone flags, see below */
+		unsigned long flags;
+
+		// /* Primarily protects free_area */
+		// spinlock_t lock;
+
+		// /* Write-intensive fields used by compaction and vmstats. */
+		// ZONE_PADDING(_pad2_)
+
+		// /*
+		// * When free pages are below this point, additional steps are taken
+		// * when reading the number of free pages to avoid per-cpu counter
+		// * drift allowing watermarks to be breached
+		// */
+		// unsigned long percpu_drift_mark;
+
+	// #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+	// 	/* pfn where compaction free scanner should start */
+	// 	unsigned long compact_cached_free_pfn;
+	// 	/* pfn where compaction migration scanner should start */
+	// 	unsigned long compact_cached_migrate_pfn[ASYNC_AND_SYNC];
+	// 	unsigned long compact_init_migrate_pfn;
+	// 	unsigned long compact_init_free_pfn;
+	// #endif
+
+	// #ifdef CONFIG_COMPACTION
+	// 	/*
+	// 	* On compaction failure, 1<<compact_defer_shift compactions
+	// 	* are skipped before trying again. The number attempted since
+	// 	* last failure is tracked with compact_considered.
+	// 	* compact_order_failed is the minimum compaction failed order.
+	// 	*/
+	// 	unsigned int compact_considered;
+	// 	unsigned int compact_defer_shift;
+	// 	int compact_order_failed;
+	// #endif
+
+	// #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+	// 	/* Set to true when the PG_migrate_skip bits should be cleared */
+	// 	bool compact_blockskip_flush;
+	// #endif
+
+		// bool contiguous;
+
+		// ZONE_PADDING(_pad3_)
+		// /* Zone statistics */
+		// atomic_long_t vm_stat[NR_VM_ZONE_STAT_ITEMS];
+		// atomic_long_t vm_numa_event[NR_VM_NUMA_EVENT_ITEMS];
+	} zone_s;
+	// } ____cacheline_internodealigned_in_smp;
+
+	/*
+	* On NUMA machines, each NUMA node would have a pg_data_t to describe
+	* it's memory layout. On UMA machines there is a single pglist_data which
+	* describes the whole memory.
+	*
+	* Memory statistics and page replacement data structures are maintained on a
+	* per-zone basis.
+	*/
+	typedef struct pglist_data {
+		/*
+		* node_zones contains just the zones for THIS node. Not all of the
+		* zones may be populated, but it is the full list. It is referenced by
+		* this node's node_zonelists as well as other node's node_zonelists.
 		*/
-		typedef struct pglist_data {
-			/*
-			* node_zones contains just the zones for THIS node. Not all of the
-			* zones may be populated, but it is the full list. It is referenced by
-			* this node's node_zonelists as well as other node's node_zonelists.
-			*/
-			// struct zone node_zones[MAX_NR_ZONES];
-			zone_s node_zones[MAX_NR_ZONES];
+		// struct zone node_zones[MAX_NR_ZONES];
+		zone_s node_zones[MAX_NR_ZONES];
 
-			/*
-			* node_zonelists contains references to all zones in all nodes.
-			* Generally the first zones will be references to this node's
-			* node_zones.
-			*/
-			// struct zonelist node_zonelists[MAX_ZONELISTS];
+		/*
+		* node_zonelists contains references to all zones in all nodes.
+		* Generally the first zones will be references to this node's
+		* node_zones.
+		*/
+		// struct zonelist node_zonelists[MAX_ZONELISTS];
 
-			int nr_zones;	  /* number of populated zones in this node */
-		#ifdef CONFIG_FLATMEM /* means !SPARSEMEM */
-			// page_s *node_mem_map;
-			page_s *node_mem_map;
-		// #ifdef CONFIG_PAGE_EXTENSION
-		// 	struct page_ext *node_page_ext;
-		// #endif
-		#endif
-		// #if defined(CONFIG_MEMORY_HOTPLUG) || defined(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
-		// 	/*
-		// 	* Must be held any time you expect node_start_pfn,
-		// 	* node_present_pages, node_spanned_pages or nr_zones to stay constant.
-		// 	* Also synchronizes pgdat->first_deferred_pfn during deferred page
-		// 	* init.
-		// 	*
-		// 	* pgdat_resize_lock() and pgdat_resize_unlock() are provided to
-		// 	* manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
-		// 	* or CONFIG_DEFERRED_STRUCT_PAGE_INIT.
-		// 	*
-		// 	* Nests above zone->lock and zone->span_seqlock
-		// 	*/
-		// 	spinlock_t node_size_lock;
-		// #endif
-			unsigned long node_start_pfn;
-			unsigned long node_present_pages; /* total number of physical pages */
-			unsigned long node_spanned_pages; /* total size of physical page
-												range, including holes */
-			// int node_id;
-			// wait_queue_head_t kswapd_wait;
-			// wait_queue_head_t pfmemalloc_wait;
+		int nr_zones;	  /* number of populated zones in this node */
+	#ifdef CONFIG_FLATMEM /* means !SPARSEMEM */
+		// page_s *node_mem_map;
+		page_s *node_mem_map;
+	// #ifdef CONFIG_PAGE_EXTENSION
+	// 	struct page_ext *node_page_ext;
+	// #endif
+	#endif
+	// #if defined(CONFIG_MEMORY_HOTPLUG) || defined(CONFIG_DEFERRED_STRUCT_PAGE_INIT)
+	// 	/*
+	// 	* Must be held any time you expect node_start_pfn,
+	// 	* node_present_pages, node_spanned_pages or nr_zones to stay constant.
+	// 	* Also synchronizes pgdat->first_deferred_pfn during deferred page
+	// 	* init.
+	// 	*
+	// 	* pgdat_resize_lock() and pgdat_resize_unlock() are provided to
+	// 	* manipulate node_size_lock without checking for CONFIG_MEMORY_HOTPLUG
+	// 	* or CONFIG_DEFERRED_STRUCT_PAGE_INIT.
+	// 	*
+	// 	* Nests above zone->lock and zone->span_seqlock
+	// 	*/
+	// 	spinlock_t node_size_lock;
+	// #endif
+		unsigned long node_start_pfn;
+		unsigned long node_present_pages; /* total number of physical pages */
+		unsigned long node_spanned_pages; /* total size of physical page
+											range, including holes */
+		// int node_id;
+		// wait_queue_head_t kswapd_wait;
+		// wait_queue_head_t pfmemalloc_wait;
 
-			// /* workqueues for throttling reclaim for different reasons. */
-			// wait_queue_head_t reclaim_wait[NR_VMSCAN_THROTTLE];
+		// /* workqueues for throttling reclaim for different reasons. */
+		// wait_queue_head_t reclaim_wait[NR_VMSCAN_THROTTLE];
 
-			// atomic_t nr_writeback_throttled; /* nr of writeback-throttled tasks */
-			// unsigned long nr_reclaim_start;	 /* nr pages written while throttled
-			// 								* when throttling started. */
-			// task_s *kswapd;		 /* Protected by
-			// 					mem_hotplug_begin/end() */
-			// int kswapd_order;
-			// enum zone_type kswapd_highest_zoneidx;
+		// atomic_t nr_writeback_throttled; /* nr of writeback-throttled tasks */
+		// unsigned long nr_reclaim_start;	 /* nr pages written while throttled
+		// 								* when throttling started. */
+		// task_s *kswapd;		 /* Protected by
+		// 					mem_hotplug_begin/end() */
+		// int kswapd_order;
+		// enum zone_type kswapd_highest_zoneidx;
 
-			// int kswapd_failures; /* Number of 'reclaimed == 0' runs */
+		// int kswapd_failures; /* Number of 'reclaimed == 0' runs */
 
-		// #ifdef CONFIG_COMPACTION
-		// 	int kcompactd_max_order;
-		// 	enum zone_type kcompactd_highest_zoneidx;
-		// 	wait_queue_head_t kcompactd_wait;
-		// 	task_s *kcompactd;
-		// 	bool proactive_compact_trigger;
-		// #endif
-			/*
-			* This is a per-node reserve of pages that are not available
-			* to userspace allocations.
-			*/
-			unsigned long totalreserve_pages;
+	// #ifdef CONFIG_COMPACTION
+	// 	int kcompactd_max_order;
+	// 	enum zone_type kcompactd_highest_zoneidx;
+	// 	wait_queue_head_t kcompactd_wait;
+	// 	task_s *kcompactd;
+	// 	bool proactive_compact_trigger;
+	// #endif
+		/*
+		* This is a per-node reserve of pages that are not available
+		* to userspace allocations.
+		*/
+		unsigned long totalreserve_pages;
 
-		// #ifdef CONFIG_NUMA
-		// 	/*
-		// 	* node reclaim becomes active if more unmapped pages exist.
-		// 	*/
-		// 	unsigned long min_unmapped_pages;
-		// 	unsigned long min_slab_pages;
-		// #endif /* CONFIG_NUMA */
+	// #ifdef CONFIG_NUMA
+	// 	/*
+	// 	* node reclaim becomes active if more unmapped pages exist.
+	// 	*/
+	// 	unsigned long min_unmapped_pages;
+	// 	unsigned long min_slab_pages;
+	// #endif /* CONFIG_NUMA */
 
-			// /* Write-intensive fields used by page reclaim */
-			// ZONE_PADDING(_pad1_)
+		// /* Write-intensive fields used by page reclaim */
+		// ZONE_PADDING(_pad1_)
 
-		// #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
-		// 	/*
-		// 	* If memory initialisation on large machines is deferred then this
-		// 	* is the first PFN that needs to be initialised.
-		// 	*/
-		// 	unsigned long first_deferred_pfn;
-		// #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+	// #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+	// 	/*
+	// 	* If memory initialisation on large machines is deferred then this
+	// 	* is the first PFN that needs to be initialised.
+	// 	*/
+	// 	unsigned long first_deferred_pfn;
+	// #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
 
-		// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-		// 	struct deferred_split deferred_split_queue;
-		// #endif
+	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+	// 	struct deferred_split deferred_split_queue;
+	// #endif
 
-			// /* Fields commonly accessed by the page reclaim scanner */
+		// /* Fields commonly accessed by the page reclaim scanner */
 
-			// /*
-			// * NOTE: THIS IS UNUSED IF MEMCG IS ENABLED.
-			// *
-			// * Use mem_cgroup_lruvec() to look up lruvecs.
-			// */
-			// struct lruvec __lruvec;
+		// /*
+		// * NOTE: THIS IS UNUSED IF MEMCG IS ENABLED.
+		// *
+		// * Use mem_cgroup_lruvec() to look up lruvecs.
+		// */
+		// struct lruvec __lruvec;
 
-			unsigned long flags;
+		unsigned long flags;
 
-			// ZONE_PADDING(_pad2_)
+		// ZONE_PADDING(_pad2_)
 
-			// /* Per-node vmstats */
-			// struct per_cpu_nodestat __percpu *per_cpu_nodestats;
-			// atomic_long_t vm_stat[NR_VM_NODE_STAT_ITEMS];
-		} pg_data_t;
+		// /* Per-node vmstats */
+		// struct per_cpu_nodestat __percpu *per_cpu_nodestats;
+		// atomic_long_t vm_stat[NR_VM_NODE_STAT_ITEMS];
+	} pg_data_t;
 
-		#include <asm/mmzone_64.h>
-		#include <asm/sparsemem.h>
-
-	#endif /* !__GENERATING_BOUNDS.H */
+	#include <asm/mmzone_64.h>
+	#include <asm/sparsemem.h>
 
 	void zone_sizes_init(void);
 

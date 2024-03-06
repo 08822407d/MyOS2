@@ -23,7 +23,7 @@
 #include <linux/init/init.h>
 #include <linux/kernel/cpu.h>
 #include <linux/smp/smp.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <asm/barrier.h>
 #include <asm/apic.h>

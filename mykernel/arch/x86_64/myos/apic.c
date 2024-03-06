@@ -14,7 +14,7 @@
 ***************************************************/
 #include <linux/kernel/delay.h>
 #include <linux/lib/string.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <asm/apic.h>
 
 #include <obsolete/ktypes.h>

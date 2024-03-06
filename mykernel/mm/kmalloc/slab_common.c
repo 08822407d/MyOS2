@@ -4,7 +4,7 @@
  *
  * (C) 2012 Christoph Lameter <cl@linux.com>
  */
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 
 /*

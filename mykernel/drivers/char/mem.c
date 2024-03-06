@@ -9,7 +9,7 @@
  *  Shared /dev/zero mmapping support, Feb 2000, Kanoj Sarcar <kanoj@sgi.com>
  */
 
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/miscdevice.h>
 // #include <linux/kernel/slab.h>
 // #include <linux/vmalloc.h>
@@ -21,7 +21,7 @@
 #include <linux/device/device.h>
 // #include <linux/highmem.h>
 // #include <linux/backing-dev.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/fs/shmem_fs.h>
 // #include <linux/splice.h>
 #include <linux/kernel/export.h>
 // #include <linux/uio.h>

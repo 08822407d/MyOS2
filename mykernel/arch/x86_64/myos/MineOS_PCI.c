@@ -9,7 +9,7 @@
 #include <linux/device/pci.h>
 #include <linux/device/pci_ids.h>
 // #include <linux/kernel/slab.h>	
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <asm/insns.h>
 #include <asm/bitops.h>
 #include <uapi/asm-generic/pci_regs.h>

@@ -22,7 +22,7 @@
 #include <linux/sched/task_stack.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kernel.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/smp/smp.h>
 #include <linux/kernel/delay.h>
 #include <linux/kernel/export.h>

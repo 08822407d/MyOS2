@@ -3,7 +3,7 @@
 
 #include <linux/lib/errno.h>
 #include <linux/kernel/kernel.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/smp/smp.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/uaccess.h>

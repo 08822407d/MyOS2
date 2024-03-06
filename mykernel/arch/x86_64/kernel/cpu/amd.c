@@ -2,7 +2,7 @@
 #include <linux/kernel/export.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/elf.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <linux/kernel/sched.h>
 #include <linux/sched/clock.h>

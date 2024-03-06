@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_TLBFLUSH_H
 #define _ASM_X86_TLBFLUSH_H
 
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 	#include <linux/kernel/sched.h>
 
 	#include <asm/insns.h>

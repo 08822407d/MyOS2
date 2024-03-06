@@ -1,7 +1,7 @@
 #ifndef _LINUX_VM_MAP_TYPES_H_
 #define _LINUX_VM_MAP_TYPES_H_
 
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 
 	#include "vm_map_const.h"
 

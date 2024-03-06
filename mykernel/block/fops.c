@@ -5,7 +5,7 @@
  * Copyright (C) 2016 - 2020 Christoph Hellwig
  */
 #include <linux/init/init.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/block/blkdev.h>
 // #include <linux/block/buffer_head.h>
 // #include <linux/mpage.h>

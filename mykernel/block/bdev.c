@@ -6,7 +6,7 @@
  */
 
 #include <linux/init/init.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/kernel/slab.h>
 // #include <linux/kmod.h>
 #include <uapi/linux/major.h>

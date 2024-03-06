@@ -43,7 +43,7 @@
 	// #include <linux/lockdep_api.h>
 	// #include <linux/lockdep.h>
 	// #include <linux/minmax.h>
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 	// #include <linux/module.h>
 	// #include <linux/mutex_api.h>
 	// #include <linux/plist.h>

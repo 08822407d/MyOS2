@@ -18,7 +18,7 @@
 // #include <linux/firmware-map.h>
 // #include <linux/sort.h>
 // #include <linux/memory_hotplug.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 
 #include <asm/e820-api.h>
 #include <asm/setup.h>

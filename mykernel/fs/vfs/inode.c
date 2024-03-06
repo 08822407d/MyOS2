@@ -5,7 +5,7 @@
  */
 #include <linux/kernel/export.h>
 #include <linux/fs/fs.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/backing-dev.h>
 // #include <linux/hash.h>
 // #include <linux/swap.h>

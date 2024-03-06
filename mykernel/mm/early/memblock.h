@@ -11,7 +11,7 @@
 #define _LINUX_MEMBLOCK_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/mm/mm.h>
+	#include <linux/kernel/mm.h>
 	#include <asm/dma.h>
 
 	/*

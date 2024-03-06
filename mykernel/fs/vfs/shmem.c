@@ -28,7 +28,7 @@
 // #include <linux/ramfs.h>
 // #include <linux/mm/pagemap.h>
 #include <linux/fs/file.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 // #include <linux/random.h>
 #include <linux/sched/signal.h>
 #include <linux/kernel/export.h>
@@ -51,7 +51,7 @@ static vfsmount_s *shm_mnt;
  */
 
 #include <linux/lib/string.h>
-#include <linux/mm/shmem_fs.h>
+#include <linux/fs/shmem_fs.h>
 #include <linux/fs/namei.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/syscalls.h>

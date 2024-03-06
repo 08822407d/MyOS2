@@ -8,7 +8,7 @@
  * etc.).
  */
 // #include <uapi/linux/sched/types.h>
-#include <linux/mm/mm.h>
+#include <linux/kernel/mm.h>
 #include <linux/kernel/sched.h>
 // #include <linux/sched/mm.h>
 #include <linux/sched/task.h>
