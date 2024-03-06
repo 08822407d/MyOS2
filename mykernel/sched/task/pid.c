@@ -26,6 +26,9 @@
  *     Many thanks to Oleg Nesterov for comments and help
  *
  */
+#define PID_DEFINATION
+#include "pid.h"
+
 
 #include <linux/kernel/mm.h>
 #include <linux/kernel/export.h>

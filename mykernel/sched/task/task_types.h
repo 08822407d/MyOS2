@@ -6,7 +6,6 @@
 	#include <linux/kernel/mm.h>
 	#include <linux/lib/list.h>
 
-	#include <linux/kernel/pid.h>
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/fdtable.h>
 
@@ -21,6 +20,8 @@
 	typedef struct fs_struct taskfs_s;
 	struct rlimit;
 	typedef struct rlimit rlimit_s;
+	struct pid;
+	typedef struct pid pid_s;
 
 
 	/*

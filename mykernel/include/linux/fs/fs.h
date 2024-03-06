@@ -3,46 +3,21 @@
 #define _LINUX_FS_H
 
 	#include <linux/kernel/linkage.h>
-	// #include <linux/wait_bit.h>
 	#include <linux/kernel/kdev_t.h>
 	#include <linux/fs/dcache.h>
 	#include <linux/fs/path.h>
 	#include <linux/kernel/stat.h>
 	#include <linux/kernel/cache.h>
 	#include <linux/lib/list.h>
-	// #include <linux/list_lru.h>
-	// #include <linux/llist.h>
-	// #include <linux/radix-tree.h>
-	// #include <linux/xarray.h>
-	// #include <linux/rbtree.h>
 	#include <linux/init/init.h>
-	#include <linux/kernel/pid.h>
 	#include <linux/debug/bug.h>
-	// #include <linux/kernel/mutex.h>
-	// #include <linux/rwsem.h>
 	#include <linux/kernel/mm.h>
-	// #include <linux/capability.h>
-	// #include <linux/semaphore.h>
 	#include <linux/kernel/fcntl.h>
-	// #include <linux/rculist_bl.h>
-	// #
-	// #include <linux/shrinker.h>
-	// #include <linux/migrate_mode.h>
 	#include <linux/kernel/uidgid.h>
-	// #include <linux/lockdep.h>
-	// #include <linux/percpu-rwsem.h>
 	#include <linux/kernel/workqueue.h>
-	// #include <linux/delayed_call.h>
 	#include <linux/kernel/uuid.h>
-	// #include <linux/errseq.h>
-	// #include <linux/ioprio.h>
-	// #include <linux/fs_types.h>
-	// #include <linux/build_bug.h>
 	#include <linux/kernel/stddef.h>
 	#include <linux/kernel/mount.h>
-	// #include <linux/cred.h>
-	// #include <linux/mnt_idmapping.h>
-	// #include <asm/byteorder.h>
 	#include <uapi/linux/fs.h>
 
 
