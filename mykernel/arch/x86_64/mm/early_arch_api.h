@@ -1,8 +1,8 @@
 #ifndef _ASM_X86_EARLY_API_H_
 #define _ASM_X86_EARLY_API_H_
 
-    #include "early/e820_const.h"
-    #include "early/e820_types.h"
+	#include "early/e820_const.h"
+	#include "early/e820_types.h"
 
 
 	extern void e820__print_table(char *who);

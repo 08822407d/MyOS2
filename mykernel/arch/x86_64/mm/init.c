@@ -7,7 +7,6 @@
 #include <asm/page_types.h>
 #include <asm/sections.h>
 #include <asm/setup.h>
-#include <asm/tlbflush.h>
 
 
 #include <obsolete/ktypes.h>

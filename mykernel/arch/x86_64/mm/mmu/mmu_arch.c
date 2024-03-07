@@ -1,29 +1,18 @@
 // source: linux-6.4.9
+#define ARCH_MMU_ARCH_DEFINATION
+#include "mmu_arch.h"
+
 
 // SPDX-License-Identifier: GPL-2.0-only
 #include <linux/init/init.h>
-
 #include <linux/kernel/mm.h>
 #include <linux/kernel/lock_ipc.h>
 #include <linux/smp/smp.h>
-// #include <linux/interrupt.h>
 #include <linux/kernel/export.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/debugfs.h>
-// #include <linux/sched/smt.h>
-// #include <linux/task_work.h>
 
-#include <asm/tlbflush.h>
-#include <asm/mmu_context.h>
-// #include <asm/nospec-branch.h>
 #include <asm/cache.h>
-// #include <asm/cacheflush.h>
 #include <asm/apic.h>
-// #include <asm/perf_event.h>
-
-// #include "mm_internal.h"
-
-
 #include <asm/insns.h>
 
 // static void load_new_mm_cr3(pgd_t *pgdir,

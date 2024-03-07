@@ -16,8 +16,6 @@
 #include <linux/init/init.h>
 #include <linux/smp/smp.h>
 
-#include <asm/mmu_context.h>
-#include <asm/tlbflush.h>
 #include <asm/sections.h>
 #include <linux/kernel/cpumask.h>
 #include <asm/setup.h>

@@ -226,6 +226,10 @@
         "preempt_api.h": "c",
         "bits.h": "c",
         "bitops_arch.h": "c",
-        "bitmap.h": "c"
+        "bitmap.h": "c",
+        "thread_info_types.h": "c",
+        "mmu_const_arch.h": "c",
+        "file.h": "c",
+        "conf.h": "c"
     }
 }

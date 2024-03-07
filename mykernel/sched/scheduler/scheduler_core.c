@@ -10,8 +10,6 @@
 #include <linux/sched/debug.h>
 #include <linux/block/blkdev.h>
 
-#include <asm/switch_to.h>
-#include <asm/mmu_context.h>
 #include <asm/insns.h>
 
 #include <linux/smp/smp.h>

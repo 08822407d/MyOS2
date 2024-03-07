@@ -31,10 +31,9 @@
 #include <linux/device/tty.h>
 #include <uapi/linux/magic.h>
 #include <linux/compiler/compiler.h>
-
-
 #include <linux/kernel/uaccess.h>
-#include <asm/mmu_context.h>
+
+
 #include <asm/signal.h>
 #include <asm/insns.h>
 

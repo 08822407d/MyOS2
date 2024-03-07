@@ -181,8 +181,6 @@ int tty_init(void)
 
 
 
-#include <asm/tlbflush.h>
-
 #include <obsolete/ktypes.h>
 #include <obsolete/printk.h>
 

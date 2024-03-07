@@ -52,8 +52,6 @@
 #include <asm/mm.h>
 
 
-#include <asm/tlbflush.h>
-
 // #define	for_each_ioapic(idx) \
 // 			for ((idx) = 0; (idx) < nr_ioapics; (idx)++)
 

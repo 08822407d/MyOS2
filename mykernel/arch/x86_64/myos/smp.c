@@ -1,6 +1,5 @@
 #include <linux/lib/string.h>
 #include <asm/setup.h>
-#include <asm/tlbflush.h>
 #include <asm/percpu.h>
 #include <asm/processor.h>
 #include <asm/insns.h>

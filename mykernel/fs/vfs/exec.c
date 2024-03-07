@@ -37,9 +37,7 @@
 #include <linux/fs/namei.h>
 #include <linux/kernel/mount.h>
 #include <linux/kernel/syscalls.h>
-
 #include <linux/kernel/uaccess.h>
-#include <asm/mmu_context.h>
 
 #include "internal.h"
 

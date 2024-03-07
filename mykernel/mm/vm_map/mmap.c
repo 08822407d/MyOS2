@@ -20,8 +20,6 @@
 #include <linux/kernel/mm.h>
 #include <linux/fs/shmem_fs.h>
 #include <linux/debug/printk.h>
-#include <asm/mmu_context.h>
-
 #include <linux/sched/signal.h>
 
 #include "vm_map_types.h"

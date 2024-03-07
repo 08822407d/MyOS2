@@ -5,15 +5,9 @@
 
 #include "myos_XHCI.h"
 #include "myos_USB.h"
-// #include "block.h"
-// #include "lib.h"
-// #include "printk.h"
-// #include "interrupt.h"
 #include "MineOS_PCI.h"
 #include <asm/insns.h>
 #include <asm/apic.h>
-#include <asm/tlbflush.h>
-// #include "memory.h"
 
 #include <obsolete/myos_irq_vectors.h>
 #include <obsolete/printk.h>

@@ -12,7 +12,6 @@
 #include <linux/lib/errno.h>
 #include <linux/lib/list.h>
 #include <asm/setup.h>
-#include <asm/switch_to.h>
 #include <asm/insns.h>
 
 

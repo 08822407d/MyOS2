@@ -47,7 +47,6 @@
 #include <asm/sections.h>
 
 
-#include <asm/tlbflush.h>
 #include <linux/kernel/mm.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/timekeeping.h>

@@ -1,26 +1,9 @@
 // SPDX-License-Identifier: GPL-2.0
 #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <linux/lib/errno.h>
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/mm.h>
-#include <linux/smp/smp.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/uaccess.h>
-#include <linux/sched/debug.h>
-#include <linux/init/init.h>
-#include <linux/kernel/export.h>
-#include <asm/cpu.h>
-#include <asm/apic.h>
-#include <asm/tlbflush.h>
-#include <asm/switch_to.h>
-#include <asm/frame.h>
-#include <asm/insns.h>
-
-// #include "process.h"
-
-
 #include <linux/kernel/ptrace.h>
+
 
 int copy_thread(task_s *p, const kclone_args_s *args)
 {

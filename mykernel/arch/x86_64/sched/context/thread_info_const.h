@@ -4,13 +4,8 @@
  * Copyright (C) 2002  David Howells (dhowells@redhat.com)
  * - Incorporating suggestions made by Linus Torvalds and Dave Miller
  */
-
-#ifndef _ASM_X86_THREAD_INFO_H
-#define _ASM_X86_THREAD_INFO_H
-
-	#include <linux/compiler/compiler.h>
-	#include <asm/page.h>
-	#include <asm/percpu.h>
+#ifndef _ASM_X86_THREAD_INFO_CONST_H_
+#define _ASM_X86_THREAD_INFO_CONST_H_
 
 	/*
 	 * TOP_OF_KERNEL_STACK_PADDING is a number of unused bytes that we
@@ -33,27 +28,6 @@
 	 * x86_64 has a fixed-length stack frame.
 	 */
 	#define TOP_OF_KERNEL_STACK_PADDING	0
-
-	/*
-	 * low level task data that entry.S needs immediate access to
-	 * - this struct should fit entirely inside of one cache line
-	 * - this struct shares the supervisor stack pages
-	 */
-	#ifndef __ASSEMBLY__
-		struct task_struct;
-
-		typedef struct thread_info {
-			unsigned long	flags;		/* low level flags */
-			unsigned long	syscall_work;	/* SYSCALL_WORK_ flags */
-			u32				status;		/* thread synchronous flags */
-			u32				cpu;		/* current CPU */
-		} thread_info_s;
-
-	#	define INIT_THREAD_INFO(tsk)	{	\
-					.flags		= 0,		\
-				}
-
-	#endif
 
 	/*
 	 * thread information flags
@@ -105,4 +79,4 @@
 	#define _TIF_LAZY_MMU_UPDATES		(1 << TIF_LAZY_MMU_UPDATES)
 	#define _TIF_ADDR32					(1 << TIF_ADDR32)
 
-#endif /* _ASM_X86_THREAD_INFO_H */
+#endif /* _ASM_X86_THREAD_INFO_CONST_H_ */

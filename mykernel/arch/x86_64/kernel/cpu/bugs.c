@@ -14,7 +14,6 @@
 #include <asm/bugs.h>
 #include <asm/insns.h>
 #include <asm/alternative.h>
-#include <asm/tlbflush.h>
 
 #include "cpu.h"
 

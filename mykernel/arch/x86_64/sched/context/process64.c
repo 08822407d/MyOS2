@@ -14,24 +14,11 @@
 /*
  * This file handles the architecture-dependent parts of process handling..
  */
-
-#include <linux/kernel/cpu.h>
-#include <linux/lib/errno.h>
 #include <linux/kernel/sched.h>
-#include <linux/fs/fs.h>
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/mm.h>
-#include <linux/smp/smp.h>
-#include <linux/kernel/delay.h>
-#include <linux/kernel/export.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/debug/kdebug.h>
-#include <linux/kernel/uaccess.h>
 #include <linux/debug/ftrace.h>
-#include <linux/kernel/syscalls.h>
 
-#include <asm/mmu_context.h>
-#include <asm/switch_to.h>
 #include <asm/insns.h>
 
 // #include "process.h"

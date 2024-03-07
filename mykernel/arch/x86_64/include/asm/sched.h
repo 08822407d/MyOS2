@@ -4,4 +4,6 @@
 
 	#include <sched/preempt_arch_api.h>
 
+	#include <sched/context_arch_api.h>
+
 #endif /* _ARCH_X86_SCHED_H_ */

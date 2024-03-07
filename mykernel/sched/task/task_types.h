@@ -9,8 +9,6 @@
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/fdtable.h>
 
-	#include <asm/thread_info.h>
-
 	#include "../scheduler/scheduler_types.h"
 
 	/* task_struct member predeclarations (sorted alphabetically): */
