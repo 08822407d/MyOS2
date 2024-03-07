@@ -1,8 +1,8 @@
 // source: linux-6.4.9
 
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_MSR_INDEX_H
-#define _ASM_X86_MSR_INDEX_H
+#ifndef _ASM_X86_MSR_CONST_H_
+#define _ASM_X86_MSR_CONST_H_
 
 	#include <linux/kernel/bits.h>
 
@@ -1124,4 +1124,4 @@
 							* a #GP
 							*/
 
-#endif /* _ASM_X86_MSR_INDEX_H */
+#endif /* _ASM_X86_MSR_CONST_H_ */

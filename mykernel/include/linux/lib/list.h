@@ -8,7 +8,7 @@
 	// #include <linux/poison.h>
 	#include <linux/kernel/const.h>
 
-	#include <asm/barrier.h>
+	#include <asm/insns.h>
 
 	/*
 	 * Circular doubly linked list implementation.

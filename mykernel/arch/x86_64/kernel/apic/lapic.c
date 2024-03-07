@@ -25,7 +25,6 @@
 #include <linux/smp/smp.h>
 #include <linux/kernel/mm.h>
 
-#include <asm/barrier.h>
 #include <asm/apic.h>
 #include <asm/io_apic.h>
 #include <asm/time.h>

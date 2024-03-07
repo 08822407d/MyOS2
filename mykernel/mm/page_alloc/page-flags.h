@@ -12,6 +12,8 @@
 	#include <linux/kernel/mm.h>
 	#include <generated/bounds.h>
 
+	#include <asm/insns.h>
+
 	/*
 	 * Various page->flags bits:
 	 *

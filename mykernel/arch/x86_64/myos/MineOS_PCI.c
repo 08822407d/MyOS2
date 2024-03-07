@@ -11,7 +11,6 @@
 // #include <linux/kernel/slab.h>	
 #include <linux/kernel/mm.h>
 #include <asm/insns.h>
-#include <asm/bitops.h>
 #include <uapi/asm-generic/pci_regs.h>
 
 #include <obsolete/printk.h>

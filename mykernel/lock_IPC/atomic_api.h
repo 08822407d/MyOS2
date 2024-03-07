@@ -6,7 +6,6 @@
 	#include <linux/kernel/types.h>
 
 	#include <asm/lock_ipc.h>
-	#include <asm/barrier.h>
 
 	#include "atomic/atomic.h"
 	#include "atomic/atomic-long.h"

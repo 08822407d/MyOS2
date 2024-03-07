@@ -18,10 +18,6 @@
 	#define BITS_TO_U32(nr)		__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(u32))
 	#define BITS_TO_BYTES(nr)	__KERNEL_DIV_ROUND_UP(nr, BITS_PER_TYPE(char))
 
-	/*
-	* Include this here because some architectures need generic_ffs/fls in
-	* scope
-	*/
-	#include <asm/bitops.h>
+	#include <insns/bitops_arch.h>
 
 #endif
