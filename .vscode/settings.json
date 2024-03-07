@@ -219,6 +219,10 @@
         "preempt_const.h": "c",
         "cpumask.h": "c",
         "pid_types.h": "c",
-        "scheduler_types.h": "c"
+        "scheduler_types.h": "c",
+        "desc_arch_api.h": "c",
+        "pgtable_arch_api.h": "c",
+        "preempt_arch.h": "c",
+        "preempt_api.h": "c"
     }
 }

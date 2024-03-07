@@ -36,6 +36,7 @@
 	extern long schedule_timeout(long timeout);
 	asmlinkage void schedule(void);
 	extern void schedule_preempt_disabled(void);
+	extern void preempt_schedule(void);
 
 	extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
 

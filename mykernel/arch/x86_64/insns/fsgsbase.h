@@ -7,7 +7,7 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <asm/processor.h>
 
-	#include "x86_msr.h"
+	#include "x86msr.h"
 
 	#ifdef DEBUG
 	

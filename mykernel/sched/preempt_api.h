@@ -4,7 +4,10 @@
 
     #include "scheduler/preempt_const.h"
 
-    #include <asm/preempt.h>
+    #include <asm/sched.h>
+
+
+	extern void preempt_schedule(void);
 
 	/*
 	 * Are we running in atomic context?  WARNING: this macro cannot

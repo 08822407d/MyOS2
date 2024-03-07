@@ -2,10 +2,10 @@
 #ifndef _ASM_X86_PROCESSOR_TYPES_H_
 #define _ASM_X86_PROCESSOR_TYPES_H_
 
-    #include <linux/compiler/compiler_types.h>
-    #include <linux/kernel/types.h>
+	#include <linux/compiler/compiler_types.h>
+	#include <linux/kernel/types.h>
 
-    #include <asm/cpufeatures.h>
+	#include <asm/cpufeatures.h>
 	#include <asm/page_types.h>
 
 	/*

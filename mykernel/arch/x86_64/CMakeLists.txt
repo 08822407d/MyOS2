@@ -17,4 +17,6 @@ add_subdirectory(mm)
 add_subdirectory(smp)
 add_subdirectory(insns)
 add_subdirectory(processor)
+add_subdirectory(sched)
+
 add_subdirectory(myos)

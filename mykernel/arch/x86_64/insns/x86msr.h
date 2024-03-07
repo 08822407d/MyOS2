@@ -7,19 +7,7 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/types.h>
 
-	#include "x86_msr_const.h"
-
-
-	/*
-	 * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
-	 * constraint has different meanings. For i386, "A" means exactly
-	 * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
-	 * it means rax *or* rdx.
-	 */
-	/* Using 64-bit values saves one instruction clearing the high half of low */
-	#define DECLARE_ARGS(val, low, high)	unsigned long low, high
-	#define EAX_EDX_VAL(val, low, high)		((low) | (high) << 32)
-	#define EAX_EDX_RET(val, low, high)		"=a" (low), "=d" (high)
+	#include "x86msr_const.h"
 
 
 	#ifdef DEBUG
@@ -48,6 +36,17 @@
 	#endif
 
 	#if defined(ARCH_INSTRUCTION_DEFINATION) || !(DEBUG)
+
+		/*
+		 * both i386 and x86_64 returns 64-bit value in edx:eax, but gcc's "A"
+		 * constraint has different meanings. For i386, "A" means exactly
+		 * edx:eax, while for x86_64 it doesn't mean rdx:rax or edx:eax. Instead,
+		 * it means rax *or* rdx.
+		 */
+		/* Using 64-bit values saves one instruction clearing the high half of low */
+		#define DECLARE_ARGS(val, low, high)	unsigned long low, high
+		#define EAX_EDX_VAL(val, low, high)		((low) | (high) << 32)
+		#define EAX_EDX_RET(val, low, high)		"=a" (low), "=d" (high)
 
 		/**
 		 * rdtsc() - returns the current TSC without ordering constraints
@@ -310,62 +309,6 @@
 		// 		do_trace_rdpmc(counter, EAX_EDX_VAL(val, low, high), 0);
 		// 	return EAX_EDX_VAL(val, low, high);
 		// }
-
-		#include <linux/lib/errno.h>
-
-
-		// /* rdmsr with exception handling */
-		// #define rdmsr_safe(msr, low, high)				\
-		// ({								\
-		// 	int __err;						\
-		// 	u64 __val = native_read_msr_safe((msr), &__err);	\
-		// 	(*low) = (u32)__val;					\
-		// 	(*high) = (u32)(__val >> 32);				\
-		// 	__err;							\
-		// })
-
-		// static inline int rdmsrl_safe(unsigned int msr, unsigned long long *p)
-		// {
-		// 	int err;
-
-		// 	*p = native_read_msr_safe(msr, &err);
-		// 	return err;
-		// }
-
-		// #define rdpmc(counter, low, high)			\
-		// do {							\
-		// 	u64 _l = native_read_pmc((counter));		\
-		// 	(low)  = (u32)_l;				\
-		// 	(high) = (u32)(_l >> 32);			\
-		// } while (0)
-
-		// #define rdpmcl(counter, val) ((val) = native_read_pmc(counter))
-
-		// /*
-		// * 64-bit version of wrmsr_safe():
-		// */
-		// static inline int wrmsrl_safe(u32 msr, u64 val)
-		// {
-		// 	return wrmsr_safe(msr, (u32)val,  (u32)(val >> 32));
-		// }
-
-		// struct msr *msrs_alloc(void);
-		// void msrs_free(struct msr *msrs);
-		// int msr_set_bit(u32 msr, u8 bit);
-		// int msr_clear_bit(u32 msr, u8 bit);
-
-		// int rdmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
-		// int wrmsr_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
-		// int rdmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
-		// int wrmsrl_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
-		// void rdmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
-		// void wrmsr_on_cpus(const struct cpumask *mask, u32 msr_no, struct msr *msrs);
-		// int rdmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 *l, u32 *h);
-		// int wrmsr_safe_on_cpu(unsigned int cpu, u32 msr_no, u32 l, u32 h);
-		// int rdmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 *q);
-		// int wrmsrl_safe_on_cpu(unsigned int cpu, u32 msr_no, u64 q);
-		// int rdmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
-		// int wrmsr_safe_regs_on_cpu(unsigned int cpu, u32 regs[8]);
 
 	#endif /* __ASSEMBLY__ */
 

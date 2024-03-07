@@ -4,7 +4,8 @@
 
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <asm/alternative.h>
-	#include <asm/cmpxchg.h>
+
+	#include <insns/cmpxchg_api.h>
 
 
 	/* The 64-bit atomic type */

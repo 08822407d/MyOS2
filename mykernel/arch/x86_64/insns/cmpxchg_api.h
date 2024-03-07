@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef ASM_X86_CMPXCHG_H
-#define ASM_X86_CMPXCHG_H
+#ifndef ASM_X86_CMPXCHG_API_H_
+#define ASM_X86_CMPXCHG_API_H_
 
 	#include <linux/compiler/compiler.h>
 	#include <asm/cpufeatures.h>
@@ -134,7 +134,7 @@
 	#define __cmpxchg_local(ptr, old, new, size)	\
 				__raw_cmpxchg((ptr), (old), (new), (size), "")
 
-	#include <asm/cmpxchg_64.h>
+	#include "cmpxchg64_api.h"
 
 	#define arch_cmpxchg(ptr, old, new)	\
 				__cmpxchg(ptr, old, new, sizeof(*(ptr)))
