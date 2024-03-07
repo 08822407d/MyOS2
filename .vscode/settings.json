@@ -225,6 +225,7 @@
         "preempt_arch.h": "c",
         "preempt_api.h": "c",
         "bits.h": "c",
-        "bitops_arch.h": "c"
+        "bitops_arch.h": "c",
+        "bitmap.h": "c"
     }
 }

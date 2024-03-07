@@ -3,7 +3,6 @@
 #include <linux/kernel/ioport.h>
 #include <linux/kernel/mm.h>
 
-#include <asm/e820-api.h>
 #include <asm/page.h>
 #include <asm/page_types.h>
 #include <asm/sections.h>

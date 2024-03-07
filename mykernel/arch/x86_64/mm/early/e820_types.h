@@ -3,13 +3,12 @@
 // arch/x86/include/asm/e820/types.h
 
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_E820_TYPES_H
-#define _ASM_E820_TYPES_H
-
-	// #include <uapi/asm/bootparam.h>
-
+#ifndef _ASM_E820_TYPES_H_
+#define _ASM_E820_TYPES_H_
 
 	#include <linux/kernel/types.h>
+
+	#include "e820_const.h"
 	
 	/*
 	 * These are the E820 types known to the kernel:
@@ -65,33 +64,33 @@
 		enum e820_type	type;
 	} e820_entry_s;
 
-	// /*
-	//  * The legacy E820 BIOS limits us to 128 (E820_MAX_ENTRIES_ZEROPAGE) nodes
-	//  * due to the constrained space in the zeropage.
-	//  *
-	//  * On large systems we can easily have thousands of nodes with RAM,
-	//  * which cannot be fit into so few entries - so we have a mechanism
-	//  * to extend the e820 table size at build-time, via the E820_MAX_ENTRIES
-	//  * define below.
-	//  *
-	//  * ( Those extra entries are enumerated via the EFI memory map, not
-	//  *   via the legacy zeropage mechanism. )
-	//  *
-	//  * Size our internal memory map tables to have room for these additional
-	//  * entries, based on a heuristic calculation: up to three entries per
-	//  * NUMA node, plus E820_MAX_ENTRIES_ZEROPAGE for some extra space.
-	//  *
-	//  * This allows for bootstrap/firmware quirks such as possible duplicate
-	//  * E820 entries that might need room in the same arrays, prior to the
-	//  * call to e820__update_table() to remove duplicates.  The allowance
-	//  * of three memory map entries per node is "enough" entries for
-	//  * the initial hardware platform motivating this mechanism to make
-	//  * use of additional EFI map entries.  Future platforms may want
-	//  * to allow more than three entries per node or otherwise refine
-	//  * this size.
-	//  */
+	/*
+	 * The legacy E820 BIOS limits us to 128 (E820_MAX_ENTRIES_ZEROPAGE) nodes
+	 * due to the constrained space in the zeropage.
+	 *
+	 * On large systems we can easily have thousands of nodes with RAM,
+	 * which cannot be fit into so few entries - so we have a mechanism
+	 * to extend the e820 table size at build-time, via the E820_MAX_ENTRIES
+	 * define below.
+	 *
+	 * ( Those extra entries are enumerated via the EFI memory map, not
+	 *   via the legacy zeropage mechanism. )
+	 *
+	 * Size our internal memory map tables to have room for these additional
+	 * entries, based on a heuristic calculation: up to three entries per
+	 * NUMA node, plus E820_MAX_ENTRIES_ZEROPAGE for some extra space.
+	 *
+	 * This allows for bootstrap/firmware quirks such as possible duplicate
+	 * E820 entries that might need room in the same arrays, prior to the
+	 * call to e820__update_table() to remove duplicates.  The allowance
+	 * of three memory map entries per node is "enough" entries for
+	 * the initial hardware platform motivating this mechanism to make
+	 * use of additional EFI map entries.  Future platforms may want
+	 * to allow more than three entries per node or otherwise refine
+	 * this size.
+	 */
 
-	#include <linux/kernel/numa.h>
+	// #include <linux/kernel/numa.h>
 
 	// #define E820_MAX_ENTRIES	(E820_MAX_ENTRIES_ZEROPAGE + 3*MAX_NUMNODES)
 	#define E820_MAX_ENTRIES	128
@@ -103,19 +102,5 @@
 		__u32			nr_entries;
 		e820_entry_s	entries[E820_MAX_ENTRIES];
 	} e820_table_s;
-
-	/*
-	 * Various well-known legacy memory ranges in physical memory:
-	 */
-	#define ISA_START_ADDRESS	0x000a0000
-	#define ISA_END_ADDRESS		0x00100000
-
-	#define BIOS_BEGIN			0x000a0000
-	#define BIOS_END			0x00100000
-
-	#define HIGH_MEMORY			0x00100000
-
-	#define BIOS_ROM_BASE		0xffe00000
-	#define BIOS_ROM_END		0xffffffff
 
 #endif /* _ASM_E820_TYPES_H */

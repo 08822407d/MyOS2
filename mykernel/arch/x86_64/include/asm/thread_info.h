@@ -53,8 +53,6 @@
 					.flags		= 0,		\
 				}
 
-	#else /* !__ASSEMBLY__ */
-
 	#endif
 
 	/*

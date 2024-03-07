@@ -17,7 +17,6 @@
 
 
 #include <asm-generic/sections.h>
-#include <asm/debug_func.h>
 
 
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
@@ -34,9 +33,6 @@ void myos_debug_percpu_vars(void)
 
 void __init setup_per_cpu_areas(void)
 {
-	void *test = func_rdgsbase();
-	test = func_rdfsbase();
-
 	unsigned int cpu;
 	unsigned long delta;
 	int rc;

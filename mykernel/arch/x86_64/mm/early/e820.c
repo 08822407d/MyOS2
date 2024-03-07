@@ -11,16 +11,10 @@
  * quirks and other tweaks, and feeds that into the generic Linux memory
  * allocation code routines via a platform independent interface (memblock, etc.).
  */
-// #include <linux/crash_dump.h>
-// #include <linux/mm/memblock.h>
-// #include <linux/suspend.h>
-// #include <linux/acpi.h>
-// #include <linux/firmware-map.h>
-// #include <linux/sort.h>
-// #include <linux/memory_hotplug.h>
-#include <linux/kernel/mm.h>
+#include "e820_const.h"
+#include "e820_types.h"
 
-#include <asm/e820-api.h>
+#include <linux/kernel/mm.h>
 #include <asm/setup.h>
 
 

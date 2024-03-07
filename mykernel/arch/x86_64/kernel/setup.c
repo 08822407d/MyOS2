@@ -7,60 +7,18 @@
  * This file contains the setup_arch() code, which handles the architecture-dependent
  * parts of early kernel initialization.
  */
-// #include <linux/acpi.h>
 #include <linux/device/console.h>
-// #include <linux/crash_dump.h>
-// #include <linux/dma-map-ops.h>
-// #include <linux/dmi.h>
 #include <linux/block/efi.h>
-// #include <linux/ima.h>
-// #include <linux/init_ohci1394_dma.h>
-// #include <linux/initrd.h>
-// #include <linux/iscsi_ibft.h>
-// #include <linux/mm/memblock.h>
 #include <linux/kernel/mm.h>
-// #include <linux/panic_notifier.h>
 #include <linux/device/pci.h>
-// #include <linux/root_dev.h>
-// #include <linux/hugetlb.h>
-// #include <linux/tboot.h>
-// #include <linux/usb/xhci-dbgp.h>
-// #include <linux/static_call.h>
-// #include <linux/swiotlb.h>
-// #include <linux/random.h>
-
 #include <uapi/linux/mount.h>
 
-// #include <xen/xen.h>
-
 #include <asm/apic.h>
-// #include <asm/numa.h>
-// #include <asm/bios_ebda.h>
 #include <asm/bugs.h>
-// #include <asm/cacheinfo.h>
 #include <asm/cpu.h>
-// #include <asm/efi.h>
-// #include <asm/gart.h>
-// #include <asm/hypervisor.h>
 #include <asm/io_apic.h>
-// #include <asm/kasan.h>
-// #include <asm/kaslr.h>
-// #include <asm/mce.h>
-// #include <asm/memtype.h>
-// #include <asm/mtrr.h>
-// #include <asm/realmode.h>
-// #include <asm/olpc_ofw.h>
-// #include <asm/pci-direct.h>
-// #include <asm/prom.h>
-// #include <asm/proto.h>
-// #include <asm/thermal.h>
-// #include <asm/unwind.h>
-// #include <asm/vsyscall.h>
-// #include <linux/vmalloc.h>
-
 
 #include <asm/sections.h>
-#include <asm/e820-api.h>
 #include <asm/tsc.h>
 
 #include <obsolete/proto.h>

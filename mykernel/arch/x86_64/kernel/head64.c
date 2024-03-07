@@ -23,7 +23,6 @@
 #include <asm/tlbflush.h>
 #include <asm/sections.h>
 #include <asm/kdebug.h>
-#include <asm/e820-api.h>
 #include <asm/trapnr.h>
 
 
