@@ -10,7 +10,15 @@
 
 	extern asmlinkage void schedule_tail(task_s *prev);
 	extern int sched_fork(unsigned long clone_flags, task_s *p);
+	void __noreturn do_task_dead(void);
+
+	extern void fork_init(void);
+	extern void release_task(task_s * p);
 	extern int copy_thread(task_s *p, const kclone_args_s *args);
+
+	extern void flush_thread(void);
+	extern void exit_thread(task_s *tsk);
+
 	extern void exit_files(task_s *);
 	extern pid_t kernel_clone(kclone_args_s *kargs);
 	extern pid_t kernel_thread(int (*fn)(void *), void *arg,

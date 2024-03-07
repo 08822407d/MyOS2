@@ -4,6 +4,53 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ptrace.h>
 
+// /*
+//  * this gets called so that we can store lazy state into memory and copy the
+//  * current task into the new thread.
+//  */
+// int arch_dup_task_struct(task_s *dst, task_s *src)
+// {
+// 	memcpy(dst, src, arch_task_struct_size);
+// #ifdef CONFIG_VM86
+// 	dst->thread.vm86 = NULL;
+// #endif
+// 	/* Drop the copied pointer to current's fpstate */
+// 	dst->thread.fpu.fpstate = NULL;
+
+// 	return 0;
+// }
+
+// void arch_release_task_struct(task_s *tsk)
+// {
+// 	if (fpu_state_size_dynamic())
+// 		fpstate_free(&tsk->thread.fpu);
+// }
+
+/*
+ * Free thread data structures etc..
+ */
+void exit_thread(task_s *tsk)
+{
+	// struct thread_struct *t = &tsk->thread;
+	// struct fpu *fpu = &t->fpu;
+
+	// if (test_thread_flag(TIF_IO_BITMAP))
+	// 	io_bitmap_exit(tsk);
+
+	// free_vm86(t);
+
+	// fpu__drop(fpu);
+}
+
+// static int set_new_tls(task_s *p, unsigned long tls)
+// {
+// 	struct user_desc __user *utls = (struct user_desc __user *)tls;
+
+// 	if (in_ia32_syscall())
+// 		return do_set_thread_area(p, -1, utls, 0);
+// 	else
+// 		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
+// }
 
 int copy_thread(task_s *p, const kclone_args_s *args)
 {

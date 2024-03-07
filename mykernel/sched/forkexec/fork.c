@@ -1514,7 +1514,7 @@ bad_fork_free_pid:
 	if (pid_struct != &init_struct_pid)
 		free_pid(pid_struct);
 bad_fork_cleanup_thread:
-	// exit_thread(p);
+	exit_thread(p);
 bad_fork_cleanup_io:
 	// if (p->io_context)
 	// 	exit_io_context(p);
@@ -1793,10 +1793,5 @@ int myos_exit_mm(task_s *new_tsk)
 	if(new_tsk->flags & CLONE_VFORK)
 		err = -ENOERR;
 
-	return err;
-}
-int myos_exit_thread(task_s * new_task)
-{
-	int err = -ENOERR;
 	return err;
 }

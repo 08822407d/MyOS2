@@ -59,7 +59,24 @@
 				WRITE_ONCE(current->__state, (state_value));	\
 			} while (0)
 
-	#define set_current_state __set_current_state
+	#define set_current_state(val) __set_current_state(val)
+
+	/*
+	 * set_special_state() should be used for those states when the blocking task
+	 * can not use the regular condition based wait-loop. In that case we must
+	 * serialize against wakeups such that any possible in-flight TASK_RUNNING
+	 * stores will not collide with our state change.
+	 */
+	// #define set_special_state(state_value)								\
+	// 		do {														\
+	// 			unsigned long flags; /* may shadow */					\
+	// 			raw_spin_lock_irqsave(&current->pi_lock, flags);		\
+	// 			debug_special_state_change((state_value));				\
+	// 			WRITE_ONCE(current->__state, (state_value));			\
+	// 			raw_spin_unlock_irqrestore(&current->pi_lock, flags);	\
+	// 		} while (0)
+	#define set_special_state(val) __set_current_state(val)
+
 
 	#define cpu_rq(cpu)		(&per_cpu(runqueues, (cpu)))
 	#define this_rq()		this_cpu_ptr(&runqueues)

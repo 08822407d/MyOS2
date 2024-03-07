@@ -1177,18 +1177,77 @@ __schedule(unsigned int sched_mode) {
 	local_irq_enable();
 }
 
+void __noreturn do_task_dead(void)
+{
+	/* Causes final put_task_struct in finish_task_switch(): */
+	set_special_state(TASK_DEAD);
+
+	/* Tell freezer to ignore us: */
+	current->flags |= PF_NOFREEZE;
+
+	__schedule(SM_NONE);
+	BUG();
+
+	/* Avoid "noreturn function does return" - but don't continue if BUG() is a NOP: */
+	// for (;;)
+	// 	cpu_relax();
+	while (1);
+}
+
+static inline void sched_submit_work(task_s *tsk)
+{
+	// unsigned int task_flags;
+
+	// if (task_is_running(tsk))
+	// 	return;
+
+	// task_flags = tsk->flags;
+	// /*
+	//  * If a worker goes to sleep, notify and ask workqueue whether it
+	//  * wants to wake up a task to maintain concurrency.
+	//  */
+	// if (task_flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+	// 	if (task_flags & PF_WQ_WORKER)
+	// 		wq_worker_sleeping(tsk);
+	// 	else
+	// 		io_wq_worker_sleeping(tsk);
+	// }
+
+	// /*
+	//  * spinlock and rwlock must not flush block requests.  This will
+	//  * deadlock if the callback attempts to acquire a lock which is
+	//  * already acquired.
+	//  */
+	// SCHED_WARN_ON(current->__state & TASK_RTLOCK_WAIT);
+
+	// /*
+	//  * If we are going to sleep and we have plugged IO queued,
+	//  * make sure to submit it to avoid deadlocks.
+	//  */
+	// blk_flush_plug(tsk->plug, true);
+}
+
+static void sched_update_worker(task_s *tsk)
+{
+	// if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+	// 	if (tsk->flags & PF_WQ_WORKER)
+	// 		wq_worker_running(tsk);
+	// 	else
+	// 		io_wq_worker_running(tsk);
+	// }
+}
 
 asmlinkage __visible void __sched schedule(void)
 {
 	task_s *tsk = current;
 
-	// sched_submit_work(tsk);
+	sched_submit_work(tsk);
 	do {
 		preempt_disable();
 		__schedule(SM_NONE);
 		sched_preempt_enable_no_resched();
 	} while (need_resched());
-	// sched_update_worker(tsk);
+	sched_update_worker(tsk);
 }
 EXPORT_SYMBOL(schedule);
 
