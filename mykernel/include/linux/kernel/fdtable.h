@@ -9,8 +9,6 @@
 	#include <uapi/linux/posix_types.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/lock_ipc.h>
-	// #include <linux/rcupdate.h>
-	// #include <linux/nospec.h>
 	#include <linux/kernel/types.h>
 	#include <linux/init/init.h>
 	#include <linux/fs/fs.h>

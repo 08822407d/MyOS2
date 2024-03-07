@@ -230,6 +230,8 @@
         "thread_info_types.h": "c",
         "mmu_const_arch.h": "c",
         "file.h": "c",
-        "conf.h": "c"
+        "conf.h": "c",
+        "myos_usb.h": "c",
+        "init_syscalls.h": "c"
     }
 }

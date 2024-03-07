@@ -32,27 +32,10 @@
 #include <linux/kernel/signal.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/workqueue.h>
-// #include <linux/kernel/slab.h>
 #include <linux/kernel/cpu.h>
-// #include <linux/notifier.h>
-#include <linux/kernel/kthread.h>
-// #include <linux/hardirq.h>
-// #include <linux/mempolicy.h>
-// #include <linux/freezer.h>
-// #include <linux/debug_locks.h>
-// #include <linux/lockdep.h>
-// #include <linux/idr.h>
-// #include <linux/jhash.h>
-// #include <linux/hashtable.h>
-// #include <linux/rculist.h>
-// #include <linux/nodemask.h>
-// #include <linux/moduleparam.h>
 #include <linux/kernel/uaccess.h>
-// #include <linux/sched/isolation.h>
 #include <linux/kernel/nmi.h>
-// #include <linux/kvm_para.h>
 
-// #include "workqueue_internal.h"
 
 // enum {
 // 	/*

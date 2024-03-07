@@ -9,7 +9,6 @@
  */
 #include <linux/kernel/mm.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/kthread.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/err.h>
 #include <uapi/linux/unistd.h>

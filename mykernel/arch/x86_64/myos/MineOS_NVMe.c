@@ -6,7 +6,6 @@
 * License as published by the Free Software Foundation.
 *
 ***************************************************/
-#include <linux/kernel/kthread.h>
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/mm.h>
 

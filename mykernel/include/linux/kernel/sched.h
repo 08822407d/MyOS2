@@ -9,6 +9,7 @@
 	 * APIs (schedule(), wakeup variants, etc.)
 	 */
 	#include <sched/task_api.h>
+	#include <sched/forkexec_api.h>
 	#include <sched/runqueue_api.h>
 	#include <sched/scheduler_api.h>
 	#include <sched/preempt_api.h>

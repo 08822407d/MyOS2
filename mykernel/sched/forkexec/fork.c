@@ -24,7 +24,6 @@
 #include <linux/kernel/cpu.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/jiffies.h>
-#include <linux/kernel/kthread.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/kernel/mount.h>
 #include <linux/debug/ftrace.h>

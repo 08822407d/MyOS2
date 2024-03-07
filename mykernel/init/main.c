@@ -30,7 +30,6 @@
 #include <linux/block/efi.h>
 #include <uapi/linux/unistd.h>
 #include <linux/device/driver.h>
-#include <linux/kernel/kthread.h>
 #include <linux/kernel/sched.h>
 #include <linux/kernel/signal.h>
 #include <linux/debug/ftrace.h>

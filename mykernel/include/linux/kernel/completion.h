@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef __LINUX_COMPLETION_H
-#define __LINUX_COMPLETION_H
+#ifndef __LINUX_COMPLETION_H_
+#define __LINUX_COMPLETION_H_
 
 	/*
 	 * (C) Copyright 2001 Linus Torvalds
@@ -115,4 +115,4 @@
 	extern void complete(completion_s *);
 	// extern void complete_all(completion_s *);
 
-#endif
+#endif /* __LINUX_COMPLETION_H_ */
