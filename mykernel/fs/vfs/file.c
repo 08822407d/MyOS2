@@ -13,7 +13,6 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/mm.h>
 #include <linux/sched/signal.h>
-// #include <linux/kernel/slab.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/kernel/bitops.h>
@@ -34,7 +33,6 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 	files_struct_s *newf;
 	file_s **old_fds, **new_fds;
 	unsigned int open_files, i;
-	// fdtable_s *old_fdt, *new_fdt;
 
 	*errorp = -ENOMEM;
 	// newf = kmem_cache_alloc(files_cachep, GFP_KERNEL);
@@ -45,76 +43,13 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 	atomic_set(&newf->refcount, 1);
 	newf->fd_count = NR_OPEN_DEFAULT;
 
-	// spin_lock_init(&newf->file_lock);
+	spin_lock_init(&newf->file_lock);
 	// newf->resize_in_progress = false;
 	// init_waitqueue_head(&newf->resize_wait);
 	// newf->next_fd = 0;
-	// new_fdt = &newf->fdtab;
-	// new_fdt->max_fds = NR_OPEN_DEFAULT;
-	// new_fdt->close_on_exec = newf->close_on_exec_init;
-	// new_fdt->open_fds = newf->open_fds_init;
-	// new_fdt->full_fds_bits = newf->full_fds_bits_init;
-	// new_fdt->fd = &newf->fd_array[0];
 
-	// spin_lock(&oldf->file_lock);
-	// old_fdt = files_fdtable(oldf);
-	// open_files = sane_fdtable_size(old_fdt, max_fds);
-
-	/*
-	 * Check whether we need to allocate a larger fd array and fd set.
-	 */
-	// while (unlikely(open_files > new_fdt->max_fds)) {
-	// 	spin_unlock(&oldf->file_lock);
-
-	// 	if (new_fdt != &newf->fdtab)
-	// 		__free_fdtable(new_fdt);
-
-	// 	new_fdt = alloc_fdtable(open_files - 1);
-	// 	if (!new_fdt) {
-	// 		*errorp = -ENOMEM;
-	// 		goto out_release;
-	// 	}
-
-	// 	/* beyond sysctl_nr_open; nothing to do */
-	// 	if (unlikely(new_fdt->max_fds < open_files)) {
-	// 		__free_fdtable(new_fdt);
-	// 		*errorp = -EMFILE;
-	// 		goto out_release;
-	// 	}
-
-	// 	/*
-	// 	 * Reacquire the oldf lock and a pointer to its fd table
-	// 	 * who knows it may have a new bigger fd table. We need
-	// 	 * the latest pointer.
-	// 	 */
-	// 	spin_lock(&oldf->file_lock);
-	// 	old_fdt = files_fdtable(oldf);
-	// 	open_files = sane_fdtable_size(old_fdt, max_fds);
-	// }
-
-	// copy_fd_bitmaps(new_fdt, old_fdt, open_files);
-
-	// old_fds = old_fdt->fd;
-	// new_fds = new_fdt->fd;
 	old_fds = oldf->fd_array;
 	new_fds = newf->fd_array;
-
-	// for (i = open_files; i != 0; i--) {
-	// 	file_s *f = *old_fds++;
-	// 	if (f) {
-	// 		get_file(f);
-	// 	} else {
-	// 		/*
-	// 		 * The fd may be claimed in the fd bitmap but not yet
-	// 		 * instantiated in the files array if a sibling thread
-	// 		 * is partway through open().  So make sure that this
-	// 		 * fd is available to the new process.
-	// 		 */
-	// 		__clear_open_fd(open_files - i, new_fdt);
-	// 	}
-	// 	rcu_assign_pointer(*new_fds++, f);
-	// }
-	// spin_unlock(&oldf->file_lock);
 
 	for (i = 0; i < max_fds; i++)
 	{
@@ -126,9 +61,6 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 			new_fds[i] = new_fp;
 		}	
 	}
-
-	// /* clear the remainder */
-	// memset(new_fds, 0, (new_fdt->max_fds - open_files) * sizeof(file_s *));
 
 	// rcu_assign_pointer(newf->fdt, new_fdt);
 
@@ -201,17 +133,19 @@ files_struct_s init_files = {
  */
 static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 {
-	task_s *curr = current;
-	file_s ** fps = current->files->fd_array;
-	int fd = -1;
+	files_struct_s *files = current->files;
+	unsigned int fd;
+	int error;
 
+	spin_lock(&files->file_lock);
 	for(int i = start; i < end; i++)
-		if(fps[i] == NULL)
+		if(files->fd_array[i] == NULL)
 		{
 			fd = i;
 			break;
 		}
 
+	spin_unlock(&files->file_lock);
 	return fd;
 }
 
@@ -219,6 +153,22 @@ int get_unused_fd_flags(unsigned flags)
 {
 	return alloc_fd(0, current->files->fd_count, flags);
 }
+EXPORT_SYMBOL(get_unused_fd_flags);
+
+void put_unused_fd(unsigned int fd)
+{
+	files_struct_s *files = current->files;
+	spin_lock(&files->file_lock);
+// static void __put_unused_fd(struct files_struct *files, unsigned int fd)
+// {
+	// struct fdtable *fdt = files_fdtable(files);
+	// __clear_open_fd(fd, fdt);
+	// if (fd < files->next_fd)
+	// 	files->next_fd = fd;
+// }
+	spin_unlock(&files->file_lock);
+}
+EXPORT_SYMBOL(put_unused_fd);
 
 /*
  * Install a file pointer in the fd array.
@@ -236,18 +186,18 @@ int get_unused_fd_flags(unsigned flags)
  * as if they had called fput(file).
  */
 
-void myos_fd_install(unsigned int fd, file_s *file)
+void fd_install(unsigned int fd, file_s *file)
 {
-	file_s ** fps = current->files->fd_array;
-	if (fps[fd] == NULL)
-	{
-		fps[fd] = file;
-	}
-	else
-	{
-		while (1);
-	}
+	files_struct_s *files = current->files;
+	file_s ** fps = files->fd_array;
+
+	/* coupled with smp_wmb() in expand_fdtable() */
+	smp_rmb();
+	BUG_ON(fps[fd] != NULL);
+	fps[fd] = file;
 }
+EXPORT_SYMBOL(fd_install);
+
 
 fd_s myos_fdget_pos(int fd)
 {
