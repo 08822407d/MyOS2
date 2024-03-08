@@ -22,7 +22,7 @@
 // #include <linux/unicode.h>
 // #include <linux/fscrypt.h>
 #include <linux/kernel/uaccess.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 int simple_statfs(dentry_s *dentry, kstatfs_s *buf)

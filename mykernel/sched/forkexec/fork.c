@@ -1265,7 +1265,6 @@ static __latent_entropy task_s
 	if (retval)
 		goto bad_fork_cleanup_sighand;
 	retval = copy_mm(clone_flags, p);
-	retval = myos_copy_mm(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_signal;
 	// retval = copy_namespaces(clone_flags, p);
@@ -1760,32 +1759,6 @@ int unshare_files(void)
 /*==============================================================================================*
  *									subcopy & exit funcstions									*
  *==============================================================================================*/
-int myos_copy_mm(unsigned long clone_flags, task_s * new_tsk)
-{
-	int err = -ENOERR;
-	task_s *curr = current;
-	mm_s *curr_mm = current->mm;
-	mm_s *new_mm = new_tsk->mm;
-
-	page_s *page = NULL;
-	pgd_t *new_cr3 = NULL;
-	reg_t curr_endstack = task_pt_regs(current)->sp;
-
-	if(clone_flags & CLONE_VM)
-		new_mm = curr_mm;
-	else
-	{
-		new_mm->pgd = curr_mm->pgd;
-		pt_regs_s *oldregs = task_pt_regs(curr);
-		pt_regs_s *newregs = task_pt_regs(new_tsk);
-		memcpy(newregs, oldregs, sizeof(pt_regs_s));
-
-		__flush_tlb_all();
-	}
-
-exit_cpmm:
-	return err;
-}
 int myos_exit_mm(task_s *new_tsk)
 {
 	int err = -ENOERR;

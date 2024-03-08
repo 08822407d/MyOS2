@@ -39,7 +39,8 @@
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/uaccess.h>
 
-#include "internal.h"
+
+#include <linux/fs/internal.h>
 
 
 static LIST_HDR_S(formats);

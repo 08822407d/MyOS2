@@ -21,7 +21,7 @@
 // #include <linux/list_lru.h>
 // #include <linux/iversion.h>
 // #include <trace/events/writeback.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 // #include <linux/kernel/slab.h>

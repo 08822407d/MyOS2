@@ -8,7 +8,7 @@
 #include <linux/fs/namei.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/file.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 #include <linux/kernel/sched.h>

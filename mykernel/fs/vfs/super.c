@@ -37,7 +37,7 @@
 // #include <linux/user_namespace.h>
 #include <linux/fs/fs_context.h>
 #include <uapi/linux/mount.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 #include <obsolete/printk.h>

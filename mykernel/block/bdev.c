@@ -26,7 +26,7 @@
 #include <linux/fs/namei.h>
 // #include <linux/part_stat.h>
 #include <linux/kernel/uaccess.h>
-#include "../fs/vfs/internal.h"
+#include <linux/fs/internal.h>
 #include "blk.h"
 
 

@@ -81,15 +81,12 @@ void keyboard_exit()
 	kfree((unsigned long *)p_kb);
 }
 
-void keyboard_handler(unsigned long param, pt_regs_s * regs)
+void keycode_debug(unsigned char code)
 {
-	unsigned char x;
-	x = inb(0x60);
-
 	int xpos;
 	int ypos = 0;
 	char *prompt;
-	if (x & FLAG_BREAK)
+	if (code & FLAG_BREAK)
 	{
 		xpos = 18;
 		prompt = "Key Up";
@@ -100,15 +97,23 @@ void keyboard_handler(unsigned long param, pt_regs_s * regs)
 		prompt = "Key Down";
 	}
 	char buf[32] = {0};
-	snprintf(buf, 32, "%s : (K:%02x) ", prompt, x);
+	snprintf(buf, 32, "%s : (K:%02x) ", prompt, code);
 	myos_tty_write_color_at(buf, strlen(buf), BLACK, GREEN, xpos, ypos);
+}
+
+void keyboard_handler(unsigned long param, pt_regs_s * regs)
+{
+	unsigned char x;
+	x = inb(0x60);
+
+	keycode_debug(x);
 
 	spin_lock(&kbdbuf_lock);
 	if(p_kb->p_head == p_kb->buf + KB_BUF_SIZE)
 		p_kb->p_head = p_kb->buf;
 	*p_kb->p_head = x;
-	p_kb->count++;
 	p_kb->p_head ++;	
+	p_kb->count++;
 	spin_unlock(&kbdbuf_lock);
 
 	complete(&getcode_done);
@@ -121,16 +126,17 @@ unsigned char kbd_get_scancode()
 {
 	unsigned char ret  = 0;
 
-	if(p_kb->count == 0)
+	if(p_kb->count <= 0)
 		wait_for_completion(&getcode_done);
 	
-	spin_lock(&kbdbuf_lock);
+	spin_lock_irq(&kbdbuf_lock);
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	
 		p_kb->p_tail = p_kb->buf;
 	ret = *p_kb->p_tail;
-	p_kb->count--;
+	*p_kb->p_tail = 0;
 	p_kb->p_tail++;
-	spin_unlock(&kbdbuf_lock);
+	p_kb->count--;
+	spin_unlock_irq(&kbdbuf_lock);
 
 	return ret;
 }

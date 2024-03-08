@@ -26,7 +26,7 @@
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/bitops.h>
 #include <linux/kernel/uaccess.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 #include <linux/fs/mount.h>
 
 

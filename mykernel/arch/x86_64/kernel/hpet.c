@@ -430,9 +430,9 @@ void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 	// if(tmr->expire_jiffies <= jiffies)
 	// 	set_softirq_status(HPET_TIMER0_IRQ);
 
-	char buf[12];
+	char buf[20];
 	memset(buf, 0 , sizeof(buf));
-	snprintf(buf, sizeof(buf), "(HPET: %ld)   ", jiffies);
+	snprintf(buf, sizeof(buf), "(HPET: %08ld)   ", jiffies);
 	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 48, 0);
 }
 	

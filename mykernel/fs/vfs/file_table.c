@@ -28,7 +28,7 @@
 // #include <linux/ima.h>
 // #include <linux/swap.h>
 // #include <linux/kmemleak.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 // static struct file *__alloc_file(int flags, const struct cred *cred)

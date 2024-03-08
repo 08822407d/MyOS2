@@ -32,8 +32,8 @@
 // #include <linux/bit_spinlock.h>
 // #include <linux/rculist_bl.h>
 // #include <linux/list_lru.h>
-#include "internal.h"
 #include <linux/fs/mount.h>
+#include <linux/fs/internal.h>
 
 
 /*

@@ -24,7 +24,7 @@
 // #include <linux/backing-dev.h>
 #include <linux/device/tty.h>
 
-#include "../fs/vfs/internal.h"
+#include <linux/fs/internal.h>
 
 
 static kobj_map_s *cdev_map;

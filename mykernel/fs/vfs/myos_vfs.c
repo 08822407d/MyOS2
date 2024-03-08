@@ -4,7 +4,7 @@
 #include <linux/fs/GPT.h>
 #include <linux/fs/fat32.h>
 #include <linux/fs/namei.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 #include <linux/lib/string.h>
 #include <linux/init/init.h>
 #include <linux/drivers/myos_ide.h>

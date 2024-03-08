@@ -18,7 +18,7 @@
 #include <uapi/linux/mount.h>
 #include <linux/fs/fs_context.h>
 #include <linux/fs/shmem_fs.h>
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 #include <linux/fs/mount.h>
 #include <obsolete/printk.h>

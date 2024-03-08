@@ -17,7 +17,7 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/syscalls.h>
 
-#include "internal.h"
+#include <linux/fs/internal.h>
 
 
 #define WILL_CREATE(flags)	(flags & (O_CREAT | __O_TMPFILE))
