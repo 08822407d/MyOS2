@@ -105,9 +105,9 @@
 	// #		define __smp_mb__before_atomic()	__smp_mb()
 	// #	endif
 
-	// #	ifndef __smp_mb__after_atomic
-	// #		define __smp_mb__after_atomic()		__smp_mb()
-	// #	endif
+	#	ifndef __smp_mb__after_atomic
+	#		define __smp_mb__after_atomic()		__smp_mb()
+	#	endif
 
 	// #	ifndef __smp_store_release
 	// #		define __smp_store_release(p, v)				\
@@ -135,9 +135,9 @@
 	// #		define smp_mb__before_atomic()	do { __smp_mb__before_atomic(); } while (0)
 	// #	endif
 
-	// #	ifndef smp_mb__after_atomic
-	// #		define smp_mb__after_atomic()	do { __smp_mb__after_atomic(); } while (0)
-	// #	endif
+	#	ifndef smp_mb__after_atomic
+	#		define smp_mb__after_atomic()	do { __smp_mb__after_atomic(); } while (0)
+	#	endif
 
 	// #	ifndef smp_store_release
 	// #		define smp_store_release(p, v)	do { __smp_store_release(p, v); } while (0)

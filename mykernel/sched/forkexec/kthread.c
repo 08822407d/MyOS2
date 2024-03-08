@@ -24,7 +24,6 @@ static DEFINE_SPINLOCK(kthread_create_lock);
 static LIST_HDR_S(kthread_create_list);
 task_s *kthreadd_task;
 
-
 typedef struct kthread_create_info {
 	/* Information passed to kthread() from kthreadd. */
 	char			*full_name;
@@ -46,7 +45,7 @@ typedef struct kthread {
 	int				(*threadfn)(void *);
 	void			*data;
 	// mm_segment_t oldfs;
-	completion_s	parked;
+	// completion_s	parked;
 	completion_s	exited;
 	/* To store the full name if task comm is truncated. */
 	char			*full_name;
@@ -59,7 +58,7 @@ enum KTHREAD_BITS {
 };
 
 static inline kthread_s *to_kthread(task_s *k) {
-	// WARN_ON(!(k->flags & PF_KTHREAD));
+	WARN_ON(!(k->flags & PF_KTHREAD));
 	return k->worker_private;
 }
 
@@ -105,7 +104,7 @@ bool set_kthread_struct(task_s *p)
 		return false;
 
 	init_completion(&kthread->exited);
-	init_completion(&kthread->parked);
+	// init_completion(&kthread->parked);
 	p->vfork_done = &kthread->exited;
 
 	p->worker_private = kthread;

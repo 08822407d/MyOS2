@@ -110,7 +110,7 @@
 	// 						unlikely(__ret_warn_on);				\
 	// 					})
 	// #		endif
-	#			define WARN_ON_ONCE(condition) (condition)
+	#		define WARN_ON_ONCE(condition) (condition)
 	
 	// /* used internally by panic.c */
 	// 		struct warn_args;
@@ -127,6 +127,7 @@
 	// 						unlikely(__ret_warn_on);				\
 	// 					})
 	// #		endif
+	#		define WARN_ON(condition) (condition)
 	
 	// #		ifndef WARN
 	// #			define WARN(condition, format...) ({				\
@@ -158,20 +159,20 @@
 	
 	#	else /* !CONFIG_BUG */
 
-	#		ifndef HAVE_ARCH_BUG
-	#			define BUG() do {} while (1)
-	#		endif
+	// #		ifndef HAVE_ARCH_BUG
+	// #			define BUG() do {} while (1)
+	// #		endif
 
-	#		ifndef HAVE_ARCH_BUG_ON
-	#			define BUG_ON(condition) do {				\
-							if (unlikely(condition)) BUG();	\
-						} while (0)
-	#		endif
+	// #		ifndef HAVE_ARCH_BUG_ON
+	// #			define BUG_ON(condition) do {				\
+	// 						if (unlikely(condition)) BUG();	\
+	// 					} while (0)
+	// #		endif
 
 	// #		ifndef HAVE_ARCH_WARN_ON
-	// #			define WARN_ON(condition) ({						\
-	// 						int __ret_warn_on = !!(condition);		\
-	// 						unlikely(__ret_warn_on);				\
+	// #			define WARN_ON(condition) ({					\
+	// 						int __ret_warn_on = !!(condition);	\
+	// 						unlikely(__ret_warn_on);			\
 	// 					})
 	// #		endif
 
