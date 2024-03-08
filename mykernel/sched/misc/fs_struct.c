@@ -8,13 +8,19 @@
  */
 void set_fs_root(taskfs_s *fs, const path_s *path)
 {
-	struct path old_root;
+	path_s old_root;
 
-	// path_get(path);
-	// old_root = fs->root;
+	path_get(path);
+	spin_lock(&fs->lock);
+	// write_seqcount_begin(&fs->seq);
+
+	old_root = fs->root;
 	fs->root = *path;
-	// if (old_root.dentry)
-	// 	path_put(&old_root);
+
+	// write_seqcount_end(&fs->seq);
+	spin_unlock(&fs->lock);
+	if (old_root.dentry)
+		path_put(&old_root);
 }
 
 /*
@@ -23,16 +29,58 @@ void set_fs_root(taskfs_s *fs, const path_s *path)
  */
 void set_fs_pwd(taskfs_s *fs, const path_s *path)
 {
-	struct path old_pwd;
+	path_s old_pwd;
 
-	// path_get(path);
-	// old_pwd = fs->pwd;
+	path_get(path);
+	spin_lock(&fs->lock);
+	// write_seqcount_begin(&fs->seq);
+
+	old_pwd = fs->pwd;
 	fs->pwd = *path;
-	// if (old_pwd.dentry)
-	// 	path_put(&old_pwd);
+
+	// write_seqcount_end(&fs->seq);
+	spin_unlock(&fs->lock);
+	if (old_pwd.dentry)
+		path_put(&old_pwd);
 }
 
+static inline int
+replace_path(path_s *p, const path_s *old, const path_s *new) {
+	if (likely(p->dentry != old->dentry || p->mnt != old->mnt))
+		return 0;
+	*p = *new;
+	return 1;
+}
 
+void chroot_fs_refs(const path_s *old_root, const path_s *new_root)
+{
+	task_s *g, *p;
+	taskfs_s *fs;
+	int count = 0;
+
+	// read_lock(&tasklist_lock);
+	// do_each_thread(g, p) {
+	// 	task_lock(p);
+	// 	fs = p->fs;
+	// 	if (fs) {
+	// 		int hits = 0;
+	// 		spin_lock(&fs->lock);
+	// 		write_seqcount_begin(&fs->seq);
+	// 		hits += replace_path(&fs->root, old_root, new_root);
+	// 		hits += replace_path(&fs->pwd, old_root, new_root);
+	// 		write_seqcount_end(&fs->seq);
+	// 		while (hits--) {
+	// 			count++;
+	// 			path_get(new_root);
+	// 		}
+	// 		spin_unlock(&fs->lock);
+	// 	}
+	// 	task_unlock(p);
+	// } while_each_thread(g, p);
+	// read_unlock(&tasklist_lock);
+	// while (count--)
+	// 	path_put(old_root);
+}
 
 void free_fs_struct(taskfs_s *fs)
 {
@@ -48,12 +96,14 @@ void exit_fs(task_s *tsk)
 
 	if (fs) {
 		int kill;
-		// task_lock(tsk);
-		// spin_lock(&fs->lock);
+		task_lock(tsk);
+		spin_lock(&fs->lock);
+
 		tsk->fs = NULL;
 		kill = !--fs->users;
-		// spin_unlock(&fs->lock);
-		// task_unlock(tsk);
+
+		spin_unlock(&fs->lock);
+		task_unlock(tsk);
 		if (kill)
 			free_fs_struct(fs);
 	}
@@ -67,6 +117,7 @@ taskfs_s *copy_fs_struct(taskfs_s *old)
 	if (fs) {
 		fs->users = 1;
 		fs->in_exec = 0;
+
 		spin_lock_init(&fs->lock);
 		// seqcount_spinlock_init(&fs->seq, &fs->lock);
 		fs->umask = old->umask;
