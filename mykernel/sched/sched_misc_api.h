@@ -4,9 +4,6 @@
     #include "misc/sched_misc_types.h"
     #include "misc/sched_misc.h"
 
-    #include "misc/fs_struct_types.h"
-    #include "misc/fs_struct.h"
-
 
 	extern asmlinkage void schedule_tail(task_s *prev);
 	extern int sched_fork(unsigned long clone_flags, task_s *p);
@@ -33,5 +30,23 @@
 	// #include <asm/current.h>
 	// #define current_thread_info() ((struct thread_info *)current)
 	#define current_thread_info() (&(current->thread_info))
+
+
+
+    #include "misc/fs_struct_types.h"
+    #include "misc/fs_struct.h"
+
+	#include <linux/kernel/fdtable.h>
+
+
+	extern files_struct_s init_files;
+	extern taskfs_s init_fs;
+
+	extern void set_fs_root(taskfs_s *, const path_s *);
+	extern void set_fs_pwd(taskfs_s *, const path_s *);
+	extern void free_fs_struct(taskfs_s *);
+	extern void exit_fs(task_s *);
+	extern taskfs_s *copy_fs_struct(taskfs_s *);
+
 
 #endif /* _LINUX_SCHED_MISC_API_H_ */

@@ -141,28 +141,24 @@ out:
 	return NULL;
 }
 
-void myos_close_files(files_struct_s * files)
-{
-	/*
-	 * It is safe to dereference the fd table without RCU or
-	 * ->file_lock because this is the last reference to the
-	 * files structure.
-	 */
-	// fdtable_s *fdt = rcu_dereference_raw(files->fdt);
-	unsigned int i = 0;
-
-	for(i = 0; i < files->fd_count; i++)
-	{
-		file_s *file = files->fd_array[i];
-		if(file != NULL)
-			filp_close(file);
-	}
-}
-
 void put_files_struct(files_struct_s *files)
 {
 	if (atomic_dec_and_test(&files->refcount)) {
-		myos_close_files(files);
+	// static fdtable_s *close_files(files_struct_s * files)
+	// {
+		/*
+		 * It is safe to dereference the fd table without RCU or
+		 * ->file_lock because this is the last reference to the
+		 * files structure.
+		 */
+		// fdtable_s *fdt = rcu_dereference_raw(files->fdt);
+		unsigned int i = 0;
+		for(i = 0; i < files->fd_count; i++) {
+			file_s *file = files->fd_array[i];
+			if(file != NULL)
+				filp_close(file);
+		}
+	// }
 
 		/* free the arrays if they are not embedded */
 		// if (fdt != &files->fdtab)
@@ -177,12 +173,27 @@ void exit_files(task_s *tsk)
 	files_struct_s * files = tsk->files;
 
 	if (files) {
-		// task_lock(tsk);
+		task_lock(tsk);
 		tsk->files = NULL;
-		// task_unlock(tsk);
+		task_unlock(tsk);
 		put_files_struct(files);
 	}
 }
+
+files_struct_s init_files = {
+	.refcount		= ATOMIC_INIT(1),
+	// .resize_wait	= __WAIT_QUEUE_HEAD_INITIALIZER(init_files.resize_wait),
+	// .fdt			= &init_files.fdtab,
+	// .fdtab			= {
+	// 	.max_fds		= NR_OPEN_DEFAULT,
+	// 	.fd				= &init_files.fd_array[0],
+	// 	.close_on_exec	= init_files.close_on_exec_init,
+	// 	.open_fds		= init_files.open_fds_init,
+	// 	.full_fds_bits	= init_files.full_fds_bits_init,
+	// },
+	.file_lock		= __SPIN_LOCK_UNLOCKED(init_files.file_lock),
+	.fd_count		= 0,
+};
 
 
 /*

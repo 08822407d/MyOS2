@@ -13,7 +13,6 @@
 	#include <linux/init/init.h>
 	#include <linux/fs/fs.h>
 
-	// #
 
 	/*
 	 * The default fd array needs to be at least BITS_PER_LONG,
@@ -47,19 +46,20 @@
 	 * Open file table structure
 	 */
 	typedef struct files_struct {
-	/*
-	 * read mostly part
-	 */
-		atomic_t refcount;
+		/*
+		 * read mostly part
+		 */
+		atomic_t		refcount;
 		// bool resize_in_progress;
 		// wait_queue_head_t resize_wait;
 
 		// fdtable_s __rcu	*fdt;
-		// struct fdtable fdtab;
-	/*
-	 * written part on a separate cache line in SMP
-	 */
+		// fdtable_s fdtab;
+		/*
+		 * written part on a separate cache line in SMP
+		 */
 		// spinlock_t file_lock ____cacheline_aligned_in_smp;
+		spinlock_t		file_lock;
 		// unsigned int	next_fd;
 		// unsigned long	close_on_exec_init[1];
 		// unsigned long	open_fds_init[1];
