@@ -32,10 +32,6 @@
 	};
 
 	typedef struct task_struct {
-		// myos obsolete contents
-		List_hdr_s		wait_childexit;
-
-
 		/*
 		 * For reasons of header soup (see current_thread_info()), this
 		 * must be the first element of task_struct.
@@ -213,9 +209,6 @@
 		unsigned		in_iowait : 1;
 	// #ifndef TIF_RESTORE_SIGMASK
 	// 	unsigned restore_sigmask : 1;
-	// #endif
-	// #ifdef CONFIG_MEMCG
-	// 	unsigned in_user_fault : 1;
 	// #endif
 	// #ifdef CONFIG_COMPAT_BRK
 	// 	unsigned brk_randomized : 1;
@@ -703,18 +696,6 @@
 
 		// /* Collect coverage from softirq context: */
 		// unsigned int kcov_softirq;
-	// #endif
-
-	// #ifdef CONFIG_MEMCG
-		// struct mem_cgroup *memcg_in_oom;
-		// gfp_t memcg_oom_gfp_mask;
-		// int memcg_oom_order;
-
-		// /* Number of pages to reclaim on returning to userland: */
-		// unsigned int memcg_nr_pages_over_high;
-
-		// /* Used by memcontrol for targeted memcg charge: */
-		// struct mem_cgroup *active_memcg;
 	// #endif
 
 	// #ifdef CONFIG_UPROBES

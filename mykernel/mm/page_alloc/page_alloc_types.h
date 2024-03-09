@@ -217,10 +217,6 @@
 		/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
 		atomic_t _refcount;
 
-	// #ifdef CONFIG_MEMCG
-	// 	unsigned long memcg_data;
-	// #endif
-
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
 	// #endif
@@ -265,9 +261,6 @@
 				void 			*private;
 				atomic_t		_mapcount;
 				atomic_t		_refcount;
-	// #ifdef CONFIG_MEMCG
-	// 			unsigned long	memcg_data;
-	// #endif
 				/* private: the union with page_s is transitional */
 			};
 			page_s page;
