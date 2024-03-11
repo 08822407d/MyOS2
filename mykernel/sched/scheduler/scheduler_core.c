@@ -576,17 +576,13 @@ int sched_fork(unsigned long clone_flags, task_s *p)
 
 	// init_entity_runnable_average(&p->se);
 
-
 // #ifdef CONFIG_SCHED_INFO
 	// if (likely(sched_info_on()))
 	// 	memset(&p->sched_info, 0, sizeof(p->sched_info));
 // #endif
-	// p->on_cpu = 0;
+	p->on_cpu = 0;
 	// plist_node_init(&p->pushable_tasks, MAX_PRIO);
 	// RB_CLEAR_NODE(&p->pushable_dl_tasks);
-
-	rq_s * target_rq = &(per_cpu(runqueues, 0));
-	list_hdr_push(&target_rq->myos.running_lhdr, &p->tasks);
 
 	return 0;
 }
@@ -602,6 +598,7 @@ void wake_up_new_task(task_s *p)
 {
 	// struct rq_flags rf;
 	// rq_s *rq;
+	rq_s *rq = &(per_cpu(runqueues, 0));
 
 	// raw_spin_lock_irqsave(&p->pi_lock, rf.flags);
 	WRITE_ONCE(p->__state, TASK_RUNNING);
@@ -633,6 +630,8 @@ void wake_up_new_task(task_s *p)
 	// 	rq_repin_lock(rq, &rf);
 	// }
 	// task_rq_unlock(rq, p, &rf);
+
+	list_hdr_push(&rq->myos.running_lhdr, &p->tasks);
 }
 
 

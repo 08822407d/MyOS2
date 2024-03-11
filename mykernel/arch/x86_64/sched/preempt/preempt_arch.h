@@ -65,8 +65,6 @@
 		/*
 		 * must be macros to avoid header recursion hell
 		 */
-		// #define init_task_preempt_count(p) do { } while (0)
-
 		// #define init_idle_preempt_count(p, cpu) do {					\
 		// 			per_cpu(__preempt_count, (cpu)) = PREEMPT_DISABLED; \
 		// 		} while (0)

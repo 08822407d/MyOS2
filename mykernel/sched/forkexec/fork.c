@@ -307,7 +307,6 @@ void __mmdrop(mm_s *mm)
 static task_s *dup_task_struct(task_s *orig, int node)
 {
 	task_s *tsk;
-	unsigned long *stack;
 	int err;
 
 	if (node == NUMA_NO_NODE)
