@@ -290,7 +290,8 @@ static inline void free_mm(mm_s *mm) {
  * is dropped: either by a lazy thread or by
  * mmput. Free the page directory and the mm.
  */
-void __mmdrop(mm_s *mm)
+// void __mmdrop(struct mm_struct *mm)
+void mmdrop(mm_s *mm)
 {
 	BUG_ON(mm == &init_mm);
 	while (mm == &init_mm);

@@ -870,34 +870,6 @@
 	// 	 * can provide stricter non-posted write semantics if the architecture
 	// 	 * implements them.
 	// 	 */
-	// 	#ifndef CONFIG_MMU
-	// 	#ifndef ioremap
-	// 	#define ioremap ioremap
-	// 	static inline void __iomem *ioremap(phys_addr_t offset, size_t size)
-	// 	{
-	// 		return (void __iomem *)(unsigned long)offset;
-	// 	}
-	// 	#endif
-
-	// 	#ifndef iounmap
-	// 	#define iounmap iounmap
-	// 	static inline void iounmap(volatile void __iomem *addr)
-	// 	{
-	// 	}
-	// 	#endif
-	// 	#elif defined(CONFIG_GENERIC_IOREMAP)
-	// 	#include <linux/pgtable.h>
-
-	// 	void __iomem *ioremap_prot(phys_addr_t addr, size_t size, unsigned long prot);
-	// 	void iounmap(volatile void __iomem *addr);
-
-	// 	static inline void __iomem *ioremap(phys_addr_t addr, size_t size)
-	// 	{
-	// 		/* _PAGE_IOREMAP needs to be supplied by the architecture */
-	// 		return ioremap_prot(addr, size, _PAGE_IOREMAP);
-	// 	}
-	// 	#endif /* !CONFIG_MMU || CONFIG_GENERIC_IOREMAP */
-
 	// 	#ifndef ioremap_wc
 	// 	#define ioremap_wc ioremap
 	// 	#endif

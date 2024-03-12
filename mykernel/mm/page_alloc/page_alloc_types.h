@@ -67,9 +67,7 @@
 			PG_reclaim		:1,
 			PG_swapbacked	:1,
 			PG_unevictable	:1,
-		#ifdef CONFIG_MMU
 			PG_mlocked		:1,/* Page is vma mlocked */
-		#endif
 		#ifdef CONFIG_ARCH_USES_PG_UNCACHED
 			PG_uncached		:1,/* Page has been mapped as uncached */
 		#endif

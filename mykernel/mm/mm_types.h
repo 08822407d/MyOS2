@@ -16,11 +16,9 @@
 			vma_s			*mmap;				/* list of VMAs */
 			// struct rb_root mm_rb;
 			// u64 vmacache_seqnum; /* per-thread vmacache */
-	// #ifdef CONFIG_MMU
 			// unsigned long (*get_unmapped_area)(file_s *filp,
 			// 								unsigned long addr, unsigned long len,
 			// 								unsigned long pgoff, unsigned long flags);
-	// #endif
 			unsigned long	mmap_base;			/* base of mmap area */
 			// unsigned long mmap_legacy_base; /* base of mmap area in bottom-up allocations */
 	// #ifdef CONFIG_HAVE_ARCH_COMPAT_MMAP_BASES
@@ -61,12 +59,8 @@
 			 * &mm_s is freed.
 			 */
 			atomic_t		mm_refcount;
-
-	// #ifdef CONFIG_MMU
 			atomic_long_t	pgtables_bytes;		/* PTE page table pages */
-	// #endif
 			int				map_count;			/* number of VMAs */
-
 			spinlock_t		page_table_lock;	/* Protects page tables and some
 												   counters */
 			// /*

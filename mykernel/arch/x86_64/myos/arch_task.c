@@ -16,8 +16,10 @@ void kjmp_to_doexecve()
 #else
 	const char *initd_name = "/initd.bin";
 #endif
-	const char *const argv[] = { initd_name, NULL };
-	const char *const envp[] = { NULL };
+	const char *const argv[] =
+			{ "arg_test_1", "arg_test_1", NULL };
+	const char *const envp[] =
+			{ "env_test_1", "env_test_2", "env_test_3", NULL };
 
 	kernel_execve(initd_name, argv, envp);
 

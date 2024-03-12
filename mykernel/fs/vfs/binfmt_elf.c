@@ -248,43 +248,52 @@ create_elf_tables(linux_bprm_s *bprm,
 	// if (!vma)
 	// 	return -EFAULT;
 
-	// /* Now, let's put argc (and argv, envp if appropriate) on the stack */
-	// if (put_user(argc, sp++))
-	// 	return -EFAULT;
+	/* Now, let's put argc (and argv, envp if appropriate) on the stack */
+	if (put_user(argc, sp++))
+		return -EFAULT;
 
 	/* Populate list of argv pointers back to argv strings. */
 	p = mm->arg_end = mm->arg_start;
 	while (argc-- > 0) {
 		size_t len;
-		// if (put_user((elf_addr_t)p, sp++))
-		// 	return -EFAULT;
+		if (put_user((elf_addr_t)p, sp++))
+			return -EFAULT;
 		len = strnlen_user((void __user *)p, MAX_ARG_STRLEN);
 		if (!len || len > MAX_ARG_STRLEN)
 			return -EINVAL;
 		p += len;
 	}
-	// if (put_user(0, sp++))
-	// 	return -EFAULT;
+	if (put_user(0, sp++))
+		return -EFAULT;
 	mm->arg_end = p;
 
 	/* Populate list of envp pointers back to envp strings. */
 	mm->env_end = mm->env_start = p;
 	while (envc-- > 0) {
 		size_t len;
-		// if (put_user((elf_addr_t)p, sp++))
-		// 	return -EFAULT;
+		if (put_user((elf_addr_t)p, sp++))
+			return -EFAULT;
 		len = strnlen_user((void __user *)p, MAX_ARG_STRLEN);
 		if (!len || len > MAX_ARG_STRLEN)
 			return -EINVAL;
 		p += len;
 	}
-	// if (put_user(0, sp++))
-	// 	return -EFAULT;
+	if (put_user(0, sp++))
+		return -EFAULT;
 	mm->env_end = p;
 
 	// /* Put the elf_info on the stack in the right place.  */
 	// if (copy_to_user(sp, mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
 	// 	return -EFAULT;
+
+	// 暂时不支持从解释器启动程序和动态链接，所以在这里把argc和argv直接放到用户栈上，
+	// 传参寄存器规范是sysv-abi
+	pt_regs_s *regs = current_pt_regs();
+	sp -= items;
+	regs->di = (reg_t)*sp;	// argc
+	sp++;
+	regs->si = (reg_t)sp;	// argv
+
 	return 0;
 }
 
@@ -906,8 +915,8 @@ out_free_interp:
 
 	retval = create_elf_tables(bprm, elf_ex,
 					interp_load_addr, e_entry, phdr_addr);
-	// if (retval < 0)
-	// 	goto out;
+	if (retval < 0)
+		goto out;
 
 	mm = current->mm;
 	mm->end_code = end_code;

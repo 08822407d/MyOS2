@@ -5,10 +5,7 @@
 	 * Generic page.h implementation, for NOMMU architectures.
 	 * This provides the dummy definitions for the memory management.
 	 */
-
-	// #ifdef CONFIG_MMU
-	// #	error need to provide a real asm/page.h
-	// #endif
+	// #error need to provide a real asm/page.h
 
 	// /* PAGE_SHIFT determines the page size */
 

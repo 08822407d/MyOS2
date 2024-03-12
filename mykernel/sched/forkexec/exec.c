@@ -202,7 +202,7 @@ static int bprm_mm_init(linux_bprm_s *bprm)
 err:
 	if (mm) {
 		bprm->mm = NULL;
-		// mmdrop(mm);
+		mmdrop(mm);
 	}
 
 	return err;
@@ -331,10 +331,8 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 		pos = bprm->p;
 		str += len;
 		bprm->p -= len;
-// #ifdef CONFIG_MMU
 		if (bprm->p < bprm->argmin)
 			goto out;
-// #endif
 
 		while (len > 0) {
 			// int offset, bytes_to_copy;
@@ -409,7 +407,6 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 	/* We're going to work our way backwards. */
 	arg += len;
 	bprm->p -= len;
-	// if (IS_ENABLED(CONFIG_MMU) && bprm->p < bprm->argmin)
 	if (bprm->p < bprm->argmin)
 		return -E2BIG;
 
@@ -549,13 +546,14 @@ int setup_arg_pages(linux_bprm_s *bprm,
 // #endif
 	current->mm->start_stack = bprm->p;
 	ret = expand_stack(vma, stack_base);
-	// if (ret)
-	// 	ret = -EFAULT;
+	if (ret)
+		ret = -EFAULT;
 
 out_unlock:
 // 	mmap_write_unlock(mm);
 	return ret;
 }
+EXPORT_SYMBOL(setup_arg_pages);
 
 
 static file_s
@@ -685,7 +683,7 @@ static int exec_mmap(mm_s *mm)
 		mmput(old_mm);
 		return 0;
 	}
-	// mmdrop(active_mm);
+	mmdrop(active_mm);
 	return 0;
 }
 
@@ -708,13 +706,10 @@ EXPORT_SYMBOL_GPL(__get_task_comm);
 // void __set_task_comm(task_s *tsk, const char *buf, bool exec)
 void set_task_comm(task_s *tsk, const char *buf)
 {
-	// task_lock(tsk);
+	task_lock(tsk);
 	// trace_task_rename(tsk, buf);
-	// strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
-	memset(tsk->comm, 0, sizeof(tsk->comm));
-	strncpy(tsk->comm, buf, sizeof(tsk->comm));
-	
-	// task_unlock(tsk);
+	strscpy_pad(tsk->comm, buf, sizeof(tsk->comm));
+	task_unlock(tsk);
 	// perf_event_comm(tsk, exec);
 }
 

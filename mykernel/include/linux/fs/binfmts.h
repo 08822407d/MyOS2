@@ -15,13 +15,8 @@
 	 * This structure is used to hold the arguments that are used when loading binaries.
 	 */
 	typedef struct linux_binprm {
-	// #ifdef CONFIG_MMU
-		vma_s *vma;
-		unsigned long vma_pages;
-	// #else
-	// # define MAX_ARG_PAGES	32
-	// 	page_s *page[MAX_ARG_PAGES];
-	// #endif
+		vma_s			*vma;
+		unsigned long	vma_pages;
 		mm_s			*mm;
 		unsigned long	p; /* current top of mem */
 		unsigned long	argmin; /* rlimit marker for copy_strings() */

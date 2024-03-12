@@ -94,9 +94,6 @@
 	// #ifdef CONFIG_SWAP
 	// 	atomic_long_t swap_readahead_info;
 	// #endif
-	// #ifndef CONFIG_MMU
-	// 	struct vm_region *vm_region; /* NOMMU mapping region */
-	// #endif
 	// #ifdef CONFIG_NUMA
 	// 	struct mempolicy *vm_policy; /* NUMA policy for the VMA */
 	// #endif

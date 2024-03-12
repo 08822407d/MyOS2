@@ -237,6 +237,10 @@
 	//  * Return: zero on success, or -EFAULT on error.
 	//  */
 	// #define put_user(x, ptr) ({ might_fault(); do_put_user_call(put_user,x,ptr); })
+	#define put_user(x, ptr) ({					\
+				*ptr = (__typeof(*(ptr)))(x);	\
+				-ENOERR;						\
+			})
 
 	// /**
 	//  * __put_user - Write a simple value into user space, with less checking.

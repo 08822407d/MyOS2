@@ -120,10 +120,6 @@ static const file_ops_s mem_fops = {
 	// .write	= write_mem,
 	// .mmap	= mmap_mem,
 	// .open	= open_mem,
-	// #ifndef CONFIG_MMU
-	// 	.get_unmapped_area	= get_unmapped_area_mem,
-	// 	.mmap_capabilities	= memory_mmap_capabilities,
-	// #endif
 };
 
 static const file_ops_s null_fops = {
@@ -150,9 +146,6 @@ static const file_ops_s zero_fops = {
 	// 	.write_iter	= write_iter_zero,
 	// 	.mmap		= mmap_zero,
 	// 	.get_unmapped_area	= get_unmapped_area_zero,
-	// #ifndef CONFIG_MMU
-	// 	.mmap_capabilities	= zero_mmap_capabilities,
-	// #endif
 };
 
 static const file_ops_s full_fops = {

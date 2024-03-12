@@ -1902,9 +1902,6 @@
 	// 	long		(*fallocate)(file_s *file, int mode, loff_t offset,
 	// 						loff_t len);
 	// 	void		(*show_fdinfo)(struct seq_file *m, file_s *f);
-	// #ifndef CONFIG_MMU
-	// 	unsigned	(*mmap_capabilities)(file_s *);
-	// #endif
 	// 	ssize_t		(*copy_file_range)(file_s *, loff_t, file_s *,
 	// 						loff_t, size_t, unsigned int);
 	// 	loff_t		(*remap_file_range)(file_s *file_in, loff_t pos_in,

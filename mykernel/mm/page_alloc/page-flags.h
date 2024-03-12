@@ -121,9 +121,7 @@
 		PG_reclaim,			/* To be reclaimed asap */
 		PG_swapbacked,		/* Page is backed by RAM/swap */
 		PG_unevictable,		/* Page is "unevictable"  */
-	#ifdef CONFIG_MMU
 		PG_mlocked,			/* Page is vma mlocked */
-	#endif
 	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
 		PG_uncached,		/* Page has been mapped as uncached */
 	#endif
@@ -567,14 +565,9 @@
 		__CLEARPAGEFLAG(Unevictable, unevictable, PF_HEAD)
 		TESTCLEARFLAG(Unevictable, unevictable, PF_HEAD)
 
-	// 	#ifdef CONFIG_MMU
 	// 		PAGEFLAG(Mlocked, mlocked, PF_NO_TAIL)
 	// 		__CLEARPAGEFLAG(Mlocked, mlocked, PF_NO_TAIL)
 	// 		TESTSCFLAG(Mlocked, mlocked, PF_NO_TAIL)
-	// 	#else
-	// 		PAGEFLAG_FALSE(Mlocked, mlocked) __CLEARPAGEFLAG_NOOP(Mlocked, mlocked)
-	// 		TESTSCFLAG_FALSE(Mlocked, mlocked)
-	// 	#endif
 
 	// 	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
 	// 		PAGEFLAG(Uncached, uncached, PF_NO_COMPOUND)
@@ -990,11 +983,7 @@
 
 	// 	__PAGEFLAG(Isolated, isolated, PF_ANY);
 
-	// 	#ifdef CONFIG_MMU
 	// 		#define __PG_MLOCKED	(1UL << PG_mlocked)
-	// 	#else
-	// 		#define __PG_MLOCKED	0
-	// 	#endif
 
 	// 	/*
 	// 	* Flags checked when a page is freed.  Pages being freed should not have
