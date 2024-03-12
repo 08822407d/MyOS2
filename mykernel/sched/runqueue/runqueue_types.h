@@ -196,7 +196,6 @@
 		// MyOS2 variables
 		List_hdr_s		running_lhdr;
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-		unsigned long	time_slice;		// max jiffies for running of this task
 	} myos_rq_s;
 
 	/*

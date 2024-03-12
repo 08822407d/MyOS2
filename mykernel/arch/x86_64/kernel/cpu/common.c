@@ -615,7 +615,7 @@ void cpu_init(void)
 
 	// mmgrab(&init_mm);
 	curr->active_mm = &init_mm;
-	// BUG_ON(curr->mm);
+	BUG_ON(curr->mm);
 	// initialize_tlbstate_and_flush();
 	// enter_lazy_tlb(&init_mm, cur);
 

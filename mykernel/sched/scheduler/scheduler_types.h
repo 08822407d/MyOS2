@@ -41,10 +41,10 @@
 	} sched_entity_s;
 
 	typedef struct sched_rt_entity {
-		// List_s run_list;
+		List_s			run_list;
 		// unsigned long timeout;
 		// unsigned long watchdog_stamp;
-		unsigned int time_slice;
+		unsigned int	time_slice;
 		// unsigned short on_rq;
 		// unsigned short on_list;
 

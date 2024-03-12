@@ -190,6 +190,13 @@ static int bprm_mm_init(linux_bprm_s *bprm)
 	err = __bprm_mm_init(bprm);
 	if (err)
 		goto err;
+
+	// 针对后续copy_string时触发#PF获取到的current->mm是旧mm的临时的解决方案，
+	// 在这里把current->mm设置为新mm
+	if (current->mm != NULL)
+		mmput(current->mm);
+	current->mm = mm;
+
 	return 0;
 
 err:
@@ -647,13 +654,14 @@ static int exec_mmap(mm_s *mm)
 	// 	}
 	// }
 
-	// task_lock(tsk);
+	task_lock(tsk);
 	// membarrier_exec_mmap(mm);
 
 	// local_irq_disable();
 	active_mm = tsk->active_mm;
 	tsk->active_mm = mm;
 	tsk->mm = mm;
+	// mm_init_cid(mm);
 	// /*
 	//  * This prevents preemption while active_mm is being loaded and
 	//  * it and mm are being updated, which could cause problems for
@@ -668,7 +676,7 @@ static int exec_mmap(mm_s *mm)
 	// 	local_irq_enable();
 	// tsk->mm->vmacache_seqnum = 0;
 	// vmacache_flush(tsk);
-	// task_unlock(tsk);
+	task_unlock(tsk);
 	if (old_mm) {
 		// mmap_read_unlock(old_mm);
 		BUG_ON(active_mm != old_mm);
@@ -916,6 +924,8 @@ static void free_bprm(linux_bprm_s *bprm)
 
 static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
 {
+	task_s * curr = current;
+
 	linux_bprm_s *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
 	int retval = -ENOMEM;
 	if (!bprm)
@@ -1181,6 +1191,8 @@ int kernel_execve(const char *kernel_filename,
 		const char *const *argv,
 		const char *const *envp)
 {
+	task_s * curr = current;
+
 	filename_s *filename;
 	linux_bprm_s *bprm;
 	int fd = AT_FDCWD;

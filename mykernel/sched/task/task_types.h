@@ -151,8 +151,7 @@
 
 		// struct sched_info sched_info;
 
-		List_s			tasks;	// 调度链节点，与状态相关。
-								// 例如PS_RUNNING的进程就在CPU的调度链里。
+		// List_s			tasks;	// 全局task_s链表的节点
 		// struct plist_node pushable_tasks;
 		// struct rb_node pushable_dl_tasks;
 

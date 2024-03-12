@@ -110,6 +110,7 @@ static void release_task_stack(task_s *tsk)
 
 	// account_kernel_stack(tsk, -1);
 	// free_thread_stack(tsk);
+	kfree(tsk->stack);
 	tsk->stack = NULL;
 	// tsk->stack_vm_area = NULL;
 }
@@ -293,8 +294,8 @@ void __mmdrop(mm_s *mm)
 {
 	BUG_ON(mm == &init_mm);
 	while (mm == &init_mm);
-	// WARN_ON_ONCE(mm == current->mm);
-	// WARN_ON_ONCE(mm == current->active_mm);
+	WARN_ON_ONCE(mm == current->mm);
+	WARN_ON_ONCE(mm == current->active_mm);
 	mm_free_pgd(mm);
 	// destroy_context(mm);
 	// mmu_notifier_subscriptions_destroy(mm);
@@ -422,13 +423,13 @@ static mm_s *mm_init(mm_s *mm, task_s *p)
 	// mm_init_uprobes_state(mm);
 	// hugetlb_count_init(mm);
 
-	// if (current->mm) {
-	// 	mm->flags = current->mm->flags & MMF_INIT_MASK;
+	if (current->mm) {
+		mm->flags = current->mm->flags & MMF_INIT_MASK;
 		mm->def_flags = current->mm->def_flags & VM_INIT_DEF_MASK;
-	// } else {
-	// 	mm->flags = default_dump_filter;
-	// 	mm->def_flags = 0;
-	// }
+	} else {
+		// mm->flags = default_dump_filter;
+		mm->def_flags = 0;
+	}
 
 	mm->pgd = pgd_alloc(mm);
 	if (!mm->pgd)
@@ -827,10 +828,6 @@ static __always_inline void delayed_free_task(task_s *tsk) {
 	free_task(tsk);
 }
 
-static void myos_pcb_init(task_s *p, u64 clone_flags)
-{
-	list_init(&p->tasks, p);
-}
 /*
  * This creates a new process as a copy of the old one,
  * but does not actually start it yet.
@@ -988,7 +985,6 @@ static __latent_entropy task_s
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
 	list_init(&p->sibling, p);
-	myos_pcb_init(p, clone_flags);
 	// rcu_copy_process(p);
 	p->vfork_done = NULL;
 	spin_lock_init(&p->alloc_lock);
@@ -1338,6 +1334,7 @@ static __latent_entropy task_s
 
 	return p;
 
+
 bad_fork_cancel_cgroup:
 	// sched_core_free(p);
 	// spin_unlock(&current->sighand->siglock);
@@ -1398,14 +1395,6 @@ fork_out:
 	return ERR_PTR(retval);
 }
 
-static inline void init_idle_pids(task_s *idle) {
-	// enum pid_type type;
-
-	// for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type) {
-	// 	INIT_HLIST_NODE(&idle->pid_links[type]); /* not really needed */
-	// 	init_task_pid(idle, type, &init_struct_pid);
-	// }
-}
 
 /*
  *  Ok, this is the main fork-routine.

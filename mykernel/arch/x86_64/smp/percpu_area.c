@@ -58,7 +58,7 @@ void myos_init_per_cpu_var(void)
 
 	task_s *this_idle_thread = &per_cpu(idle_threads, 0);
 	memset(this_idle_thread, 0, sizeof(task_s));
-	list_init(&this_idle_thread->tasks, this_idle_thread);
+	list_init(&this_idle_thread->rt.run_list, this_idle_thread);
 	list_init(&this_idle_thread->sibling, this_idle_thread);
 	list_init(&this_idle_thread->pid_links, this_idle_thread);
 	list_hdr_init(&this_idle_thread->children);
@@ -67,7 +67,7 @@ void myos_init_per_cpu_var(void)
 	this_idle_thread->flags			= PF_KTHREAD;
 	this_idle_thread->rt.time_slice	= 2;
 	this_idle_thread->se.vruntime	= -1;
-	this_idle_thread->mm			= &init_mm;
+	// this_idle_thread->mm			= &init_mm;
 	this_idle_thread->fs			= &init_fs;
 	this_idle_thread->files			= &init_files;
 	this_idle_thread->stack			= (void *)init_stack;
@@ -98,5 +98,4 @@ void myos_init_per_cpu_var(void)
 	list_hdr_init(&this_runqueues->myos.running_lhdr);
 	this_runqueues->curr			=
 	this_runqueues->idle			= this_idle_thread;
-	this_runqueues->myos.time_slice	= this_idle_thread->rt.time_slice;
 }

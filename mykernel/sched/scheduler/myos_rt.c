@@ -5,12 +5,13 @@ static task_s *pick_next_task_myos(rq_s *rq)
 	myos_rq_s	*myos_rq = &rq->myos;
 	task_s		*retval, *curr_task;
 	retval = curr_task = current;
+	sched_rt_entity_s *rt = &curr_task->rt;
 
 	unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
 
 	// if running time out, make the need_schedule flag of current task
 	if ((curr_task == rq->idle ||
-		used_jiffies >= myos_rq->time_slice ||
+		used_jiffies >= rt->time_slice ||
 		curr_task->__state != TASK_RUNNING) &&
 		myos_rq->running_lhdr.count > 0)
 	{
@@ -27,17 +28,18 @@ static task_s *pick_next_task_myos(rq_s *rq)
 			if (curr_task == rq->idle)
 			{
 				// insert idle task to cpu's running-list tail
-				list_hdr_enqueue(&myos_rq->running_lhdr, &curr_task->tasks);
+				list_hdr_enqueue(&myos_rq->running_lhdr, &rt->run_list);
 			}
 			else
 			{
 				List_s * tmp_list = myos_rq->running_lhdr.header.next;
-				while ((curr_task->se.vruntime > container_of(tmp_list, task_s, tasks)->se.vruntime) &&
+				sched_rt_entity_s *tmp_rt = container_of(tmp_list, sched_rt_entity_s, run_list);
+				while ((curr_task->se.vruntime > container_of(tmp_rt, task_s, rt)->se.vruntime) &&
 						tmp_list != &myos_rq->running_lhdr.header)
 				{
 					tmp_list = tmp_list->next;
 				}
-				list_insert_prev(tmp_list, &curr_task->tasks);
+				list_insert_prev(tmp_list, &rt->run_list);
 				myos_rq->running_lhdr.count++;
 			}
 		}
@@ -45,14 +47,14 @@ static task_s *pick_next_task_myos(rq_s *rq)
 		if (curr_task != rq->idle)
 			curr_task->se.vruntime += used_jiffies;
 
-		retval = container_of(next_lp, task_s, tasks);
-		myos_rq->time_slice = retval->rt.time_slice;
-		if (used_jiffies >= myos_rq->time_slice)
+		sched_rt_entity_s *next_rt = container_of(next_lp, sched_rt_entity_s, run_list);
+		retval = container_of(next_rt, task_s, rt);
+		if (used_jiffies >= rt->time_slice)
 			myos_rq->last_jiffies = jiffies;
 	}
 	return retval;
 }
 
-DEFINE_SCHED_CLASS(myos_timeslice) = {
+DEFINE_SCHED_CLASS(myos_rt) = {
 	.pick_next_task = pick_next_task_myos,
 };

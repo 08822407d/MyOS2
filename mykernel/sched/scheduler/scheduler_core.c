@@ -85,8 +85,8 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 
 	rq_s *target_rq = &(per_cpu(runqueues, new_cpu));
 	p->__state = TASK_RUNNING;
-	if (!list_in_lhdr(&target_rq->myos.running_lhdr, &p->tasks))
-		list_hdr_push(&target_rq->myos.running_lhdr, &p->tasks);
+	if (!list_in_lhdr(&target_rq->myos.running_lhdr, &p->rt.run_list))
+		list_hdr_push(&target_rq->myos.running_lhdr, &p->rt.run_list);
 }
 
 
@@ -511,6 +511,7 @@ static void __sched_fork(unsigned long clone_flags, task_s *p)
 	// __dl_clear_params(p);
 
 	// INIT_LIST_HEAD(&p->rt.run_list);
+	list_init(&p->rt.run_list, &p->rt);
 	// p->rt.timeout		= 0;
 	// p->rt.time_slice	= sched_rr_timeslice;
 	// p->rt.on_rq		= 0;
@@ -631,7 +632,7 @@ void wake_up_new_task(task_s *p)
 	// }
 	// task_rq_unlock(rq, p, &rf);
 
-	list_hdr_push(&rq->myos.running_lhdr, &p->tasks);
+	list_hdr_push(&rq->myos.running_lhdr, &p->rt.run_list);
 }
 
 
@@ -820,7 +821,7 @@ context_switch(rq_s *rq, task_s *prev,
 		// if (prev->mm)                           // from user
 		// 	mmgrab_lazy_tlb(prev->active_mm);
 		// else
-		// 	prev->active_mm = NULL;
+			prev->active_mm = NULL;
 	} else {                                        // to user
 		// membarrier_switch_mm(rq, prev->active_mm, next->mm);
 		/*
@@ -834,11 +835,11 @@ context_switch(rq_s *rq, task_s *prev,
 		switch_mm_irqs_off(prev->active_mm, next->mm, next);
 		// lru_gen_use_mm(next->mm);
 
-		// if (!prev->mm) {                        // from kernel
-		// 	/* will mmdrop_lazy_tlb() in finish_task_switch(). */
-		// 	rq->prev_mm = prev->active_mm;
-		// 	prev->active_mm = NULL;
-		// }
+		if (!prev->mm) {                        // from kernel
+			/* will mmdrop_lazy_tlb() in finish_task_switch(). */
+			rq->prev_mm = prev->active_mm;
+			prev->active_mm = NULL;
+		}
 	}
 #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
 	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next));
@@ -872,8 +873,8 @@ static noinline void __schedule_bug(task_s *prev)
 	// if (oops_in_progress)
 	// 	return;
 
-	// printk(KERN_ERR "BUG: scheduling while atomic: %s/%d/0x%08x\n",
-	// 	prev->comm, prev->pid, preempt_count());
+	printk(KERN_ERR "BUG: scheduling while atomic: %s/%d/0x%08x\n",
+		prev->comm, prev->pid, preempt_count());
 
 	// debug_show_held_locks(prev);
 	// print_modules();
@@ -914,7 +915,6 @@ schedule_debug(task_s *prev, bool preempt) {
 
 	if (unlikely(in_atomic_preempt_off())) {
 		__schedule_bug(prev);
-		// while (1);
 		preempt_count_set(PREEMPT_DISABLED);
 	}
 	// rcu_sleep_check();
