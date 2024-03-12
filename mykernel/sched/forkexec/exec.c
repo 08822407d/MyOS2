@@ -679,7 +679,7 @@ static int exec_mmap(mm_s *mm)
 	task_unlock(tsk);
 	if (old_mm) {
 		// mmap_read_unlock(old_mm);
-		BUG_ON(active_mm != old_mm);
+		// BUG_ON(active_mm != old_mm);
 		// setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
 		// mm_update_next_owner(old_mm);
 		mmput(old_mm);
