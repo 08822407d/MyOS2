@@ -218,7 +218,8 @@ static int count(const char *const *argv, int max)
 
 	if (argv != NULL) {
 		for (;;) {
-			const char *p = *argv + i;
+			const char *p = *(argv + i);
+			// const char __user *p = get_user_arg_ptr(argv, i);
 
 			if (!p)
 				break;
@@ -1130,9 +1131,9 @@ static int do_execveat_common(int fd, filename_s *filename,
 	}
 
 	retval = count(argv, MAX_ARG_STRINGS);
-	// if (retval == 0)
-	// 	pr_warn_once("process '%s' launched '%s' with NULL argv: empty string added\n",
-	// 		     current->comm, bprm->filename);
+	if (retval == 0)
+		pr_warn_once("process '%s' launched '%s' with NULL argv:"
+				" empty string added\n", current->comm, bprm->filename);
 	if (retval < 0)
 		goto out_free;
 	bprm->argc = retval;

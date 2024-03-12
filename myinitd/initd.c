@@ -20,11 +20,11 @@ int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
 
-	// close(stderr->_fileno);
-	close(stdout->_fileno);
-	// close(stdin->_fileno);
-
-	char *args[] = {NULL};
+	char prog_name[] = "/sh";
+	char *const args[] =
+			{ prog_name , "arg_test_1", "arg_test_2", NULL };
+	char *const envs[] =
+			{ "env_test_1", "env_test_2", "env_test_3", NULL };
 
 	int rv = fork();
 	if (rv != 0)
@@ -35,7 +35,7 @@ int main(int argc, const char *argv[])
 	else
 	{
 		// printf("child task, %d\n", rv);
-		execve("/sh", args, NULL);
+		execve(prog_name, args, envs);
 		// malloc_free_test();
 		// file_io_test();
 		// dirtest();
