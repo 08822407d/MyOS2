@@ -63,6 +63,7 @@
 	// #		define __boot_va(x)	__va(x)
 	// #		define __boot_pa(x)	__pa(x)
 
+	#		define phys_to_page(kaddr) pfn_to_page(kaddr >> PAGE_SHIFT)
 			/*
 			 * virt_to_page(kaddr) returns a valid pointer if and only if
 			 * virt_addr_valid(kaddr) returns true.

@@ -22,9 +22,9 @@ int main(int argc, const char *argv[])
 
 	char prog_name[] = "/sh";
 	char *const args[] =
-			{ prog_name , "arg_test_1", "arg_test_2", NULL };
+			{ prog_name , "userarg_test_1", "userarg_test_2", NULL };
 	char *const envs[] =
-			{ "env_test_1", "env_test_2", "env_test_3", NULL };
+			{ "userenv_test_1", "userenv_test_2", "userenv_test_3", NULL };
 
 	int rv = fork();
 	if (rv != 0)

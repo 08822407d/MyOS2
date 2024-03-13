@@ -191,12 +191,6 @@ static int bprm_mm_init(linux_bprm_s *bprm)
 	if (err)
 		goto err;
 
-	// 针对后续copy_string时触发#PF获取到的current->mm是旧mm的临时的解决方案，
-	// 在这里把current->mm设置为新mm
-	if (current->mm != NULL)
-		mmput(current->mm);
-	current->mm = mm;
-
 	return 0;
 
 err:
@@ -209,6 +203,16 @@ err:
 }
 
 
+static const char __user
+*get_user_arg_ptr(const char __user *const __user *argv, int nr)
+{
+	const char __user *native;
+	if (get_user(native, argv + nr))
+		return ERR_PTR(-EFAULT);
+
+	return native;
+}
+
 /*
  * count() counts the number of strings in array ARGV.
  */
@@ -218,8 +222,9 @@ static int count(const char *const *argv, int max)
 
 	if (argv != NULL) {
 		for (;;) {
-			const char *p = *(argv + i);
-			// const char __user *p = get_user_arg_ptr(argv, i);
+			// const char *p = *(argv + i);
+			const char __user *p =
+					get_user_arg_ptr(argv, i);
 
 			if (!p)
 				break;
@@ -316,9 +321,9 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 		unsigned long pos;
 
 		ret = -EFAULT;
-		// str = get_user_arg_ptr(argv, argc);
-		// if (IS_ERR(str))
-		// 	goto out;
+		str = get_user_arg_ptr(argv, argc);
+		if (IS_ERR(str))
+			goto out;
 
 		len = strnlen_user(str, MAX_ARG_STRLEN);
 		if (!len)
@@ -336,7 +341,8 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 			goto out;
 
 		while (len > 0) {
-			// int offset, bytes_to_copy;
+			int offset, bytes_to_copy;
+			bytes_to_copy = len;
 
 			// if (fatal_signal_pending(current)) {
 			// 	ret = -ERESTARTNOHAND;
@@ -353,9 +359,11 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 			// 	bytes_to_copy = len;
 
 			// offset -= bytes_to_copy;
-			// pos -= bytes_to_copy;
-			// str -= bytes_to_copy;
-			// len -= bytes_to_copy;
+			pos -= bytes_to_copy;
+			str -= bytes_to_copy;
+			len -= bytes_to_copy;
+
+			memcpy((void *)pos, str, bytes_to_copy);
 
 			// if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
 			// 	page_s *page;
@@ -384,11 +392,11 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 	}
 	ret = 0;
 out:
-// 	if (kmapped_page) {
-// 		flush_dcache_page(kmapped_page);
-// 		kunmap(kmapped_page);
-// 		put_arg_page(kmapped_page);
-// 	}
+	// if (kmapped_page) {
+	// 	flush_dcache_page(kmapped_page);
+	// 	kunmap(kmapped_page);
+	// 	put_arg_page(kmapped_page);
+	// }
 	return ret;
 }
 
@@ -416,8 +424,8 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 		// 	min_t(unsigned int, len,
 		// 		min_not_zero(offset_in_page(pos), PAGE_SIZE));
 		unsigned int bytes_to_copy = len;
-		page_s *page;
-		char *kaddr;
+		// page_s *page;
+		// char *kaddr;
 
 		pos -= bytes_to_copy;
 		arg -= bytes_to_copy;
@@ -841,7 +849,6 @@ int begin_new_exec(linux_bprm_s * bprm)
 	// 	set_dumpable(current->mm, SUID_DUMP_USER);
 
 	// perf_event_exec();
-	// __set_task_comm(me, kbasename(bprm->filename), true);
 	set_task_comm(me, bprm->filename);
 
 	// /* An exec changes our domain. We are no longer part of the thread

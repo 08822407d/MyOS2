@@ -1669,6 +1669,78 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
 	return 0;
 }
 
+pte_t *myos_creat_one_page_mapping(mm_s *mm,
+		virt_addr_t addr, page_s *page)
+{
+	pgd_t *pgd;
+	p4d_t *p4d;
+	pud_t *pud;
+	pmd_t *pmd;
+	pte_t *pte;
+
+	pgd = pgd_ent_offset(mm, addr);
+	p4d = p4d_alloc(mm, pgd, addr);
+	if (!p4d) {
+		goto fail;
+	}
+	pud = pud_alloc(mm, p4d, addr);
+	if (!pud) {
+		goto fail;
+	}
+	pmd = pmd_alloc(mm, pud, addr);
+	if (!pmd) {
+		goto fail;
+	}
+	pte = pte_alloc(mm, pmd, addr);
+	if (!pmd) {
+		goto fail;
+	}
+	if (page != NULL)
+	{
+		atomic_inc(&(page->_mapcount));
+		unsigned long page_addr = page_to_phys(page);
+		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
+	}
+	return pte;
+
+fail:
+	return ERR_PTR(-ENOMEM);
+}
+
+page_s *myos_get_one_page(mm_s *mm, virt_addr_t addr)
+{
+	page_s *retval = NULL;
+	pgd_t *pgd;
+	p4d_t *p4d;
+	pud_t *pud;
+	pmd_t *pmd;
+	pte_t *pte;
+
+	pgd = pgd_ent_offset(mm, addr);
+	p4d = p4d_ent_offset(pgd, addr);
+	if (!p4d) {
+		goto fail;
+	}
+	pud = pud_ent_offset(p4d, addr);
+	if (!pud) {
+		goto fail;
+	}
+	pmd = pmd_ent_offset(pud, addr);
+	if (!pmd) {
+		goto fail;
+	}
+	pte = pte_ent_offset(pmd, addr);
+	if (!pmd) {
+		goto fail;
+	}
+
+	phys_addr_t page_paddr = arch_pte_addr(*pte);
+	retval = phys_to_page(page_paddr);
+
+fail:
+	return retval;
+}
+
 int myos_map_range(mm_s *mm, unsigned long start, unsigned long end)
 {
 	int ret = 0;

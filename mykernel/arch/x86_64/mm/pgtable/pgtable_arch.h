@@ -201,6 +201,8 @@
 		arch_pte_val(pte_t pte);
 		extern pteval_t
 		arch_pte_flags(pte_t pte);
+		extern phys_addr_t
+		arch_pte_addr(pte_t pte);
 
 	#endif
 
@@ -518,6 +520,11 @@
 		pteval_t
 		arch_pte_flags(pte_t pte) {
 			return arch_pte_val(pte) & PTE_FLAGS_MASK;
+		}
+		PREFIX_STATIC_INLINE
+		phys_addr_t
+		arch_pte_addr(pte_t pte) {
+			return arch_pte_val(pte) & ~PTE_FLAGS_MASK;
 		}
 
 	#endif

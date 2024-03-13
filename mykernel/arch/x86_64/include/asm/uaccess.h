@@ -134,25 +134,29 @@
 	// 	__builtin_expect(__ret_gu, 0);					\
 	// })
 
-	// /**
-	//  * get_user - Get a simple variable from user space.
-	//  * @x:   Variable to store result.
-	//  * @ptr: Source address, in user space.
-	//  *
-	//  * Context: User context only. This function may sleep if pagefaults are
-	//  *          enabled.
-	//  *
-	//  * This macro copies a single simple variable from user space to kernel
-	//  * space.  It supports simple types like char and int, but not larger
-	//  * data types like structures or arrays.
-	//  *
-	//  * @ptr must have pointer-to-simple-variable type, and the result of
-	//  * dereferencing @ptr must be assignable to @x without a cast.
-	//  *
-	//  * Return: zero on success, or -EFAULT on error.
-	//  * On error, the variable @x is set to zero.
-	//  */
+	/**
+	 * get_user - Get a simple variable from user space.
+	 * @x:   Variable to store result.
+	 * @ptr: Source address, in user space.
+	 *
+	 * Context: User context only. This function may sleep if pagefaults are
+	 *          enabled.
+	 *
+	 * This macro copies a single simple variable from user space to kernel
+	 * space.  It supports simple types like char and int, but not larger
+	 * data types like structures or arrays.
+	 *
+	 * @ptr must have pointer-to-simple-variable type, and the result of
+	 * dereferencing @ptr must be assignable to @x without a cast.
+	 *
+	 * Return: zero on success, or -EFAULT on error.
+	 * On error, the variable @x is set to zero.
+	 */
 	// #define get_user(x,ptr) ({ might_fault(); do_get_user_call(get_user,x,ptr); })
+	#define get_user(x, ptr) ({					\
+				(x) = *(__typeof(&(x)))(ptr);	\
+				-ENOERR;						\
+			})
 
 	// /**
 	//  * __get_user - Get a simple variable from user space, with less checking.
@@ -219,26 +223,26 @@
 	// 	__builtin_expect(__ret_pu, 0);					\
 	// })
 
-	// /**
-	//  * put_user - Write a simple value into user space.
-	//  * @x:   Value to copy to user space.
-	//  * @ptr: Destination address, in user space.
-	//  *
-	//  * Context: User context only. This function may sleep if pagefaults are
-	//  *          enabled.
-	//  *
-	//  * This macro copies a single simple value from kernel space to user
-	//  * space.  It supports simple types like char and int, but not larger
-	//  * data types like structures or arrays.
-	//  *
-	//  * @ptr must have pointer-to-simple-variable type, and @x must be assignable
-	//  * to the result of dereferencing @ptr.
-	//  *
-	//  * Return: zero on success, or -EFAULT on error.
-	//  */
+	/**
+	 * put_user - Write a simple value into user space.
+	 * @x:   Value to copy to user space.
+	 * @ptr: Destination address, in user space.
+	 *
+	 * Context: User context only. This function may sleep if pagefaults are
+	 *          enabled.
+	 *
+	 * This macro copies a single simple value from kernel space to user
+	 * space.  It supports simple types like char and int, but not larger
+	 * data types like structures or arrays.
+	 *
+	 * @ptr must have pointer-to-simple-variable type, and @x must be assignable
+	 * to the result of dereferencing @ptr.
+	 *
+	 * Return: zero on success, or -EFAULT on error.
+	 */
 	// #define put_user(x, ptr) ({ might_fault(); do_put_user_call(put_user,x,ptr); })
 	#define put_user(x, ptr) ({					\
-				*ptr = (__typeof(*(ptr)))(x);	\
+				*(ptr) = (__typeof(*(ptr)))(x);	\
 				-ENOERR;						\
 			})
 
