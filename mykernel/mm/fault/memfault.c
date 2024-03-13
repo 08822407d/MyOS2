@@ -1707,7 +1707,7 @@ fail:
 	return ERR_PTR(-ENOMEM);
 }
 
-page_s *myos_get_one_page(mm_s *mm, virt_addr_t addr)
+page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr)
 {
 	page_s *retval = NULL;
 	pgd_t *pgd;
@@ -1718,19 +1718,19 @@ page_s *myos_get_one_page(mm_s *mm, virt_addr_t addr)
 
 	pgd = pgd_ent_offset(mm, addr);
 	p4d = p4d_ent_offset(pgd, addr);
-	if (!p4d) {
+	if (arch_p4d_none(*p4d)) {
 		goto fail;
 	}
 	pud = pud_ent_offset(p4d, addr);
-	if (!pud) {
+	if (arch_pud_none(*pud)) {
 		goto fail;
 	}
 	pmd = pmd_ent_offset(pud, addr);
-	if (!pmd) {
+	if (arch_pmd_none(*pmd)) {
 		goto fail;
 	}
 	pte = pte_ent_offset(pmd, addr);
-	if (!pmd) {
+	if (arch_pte_none(*pte)) {
 		goto fail;
 	}
 
@@ -1741,7 +1741,7 @@ fail:
 	return retval;
 }
 
-int myos_map_range(mm_s *mm, unsigned long start, unsigned long end)
+int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 {
 	int ret = 0;
 	pgd_t *pgd;

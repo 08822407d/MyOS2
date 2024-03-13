@@ -41,4 +41,12 @@
 	/* mmput gets rid of the mappings and all user-space */
 	extern void mmput(mm_s *);
 
+
+	// gup.c
+	long
+	myos_get_user_pages(mm_s *mm, virt_addr_t start,
+		unsigned long nr_pages, page_s **pages);
+
+	#include "highmem/highmem.h"
+
 #endif /* _LINUX_MM_MISC_API_H_ */

@@ -5,6 +5,7 @@
 	#include <mm/mm_types.h>
 	#include <mm/earlymem_api.h>
 	#include <mm/page_alloc_api.h>
+	#include <mm/mm_highmem_api.h>
 	#include <mm/kmalloc_api.h>
 	#include <mm/memfault_api.h>
 	#include <mm/vm_map_api.h>

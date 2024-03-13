@@ -59,63 +59,51 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 }
 
 
+static page_s *get_arg_page(linux_bprm_s *bprm,
+		unsigned long pos, int write) {
 
-/*
- * The nascent bprm->mm is not visible until exec_mmap() but it can
- * use a lot of memory, account these pages in current->mm temporary
- * for oom_badness()->get_mm_rss(). Once exec succeeds or fails, we
- * change the counter back via acct_arg_size(0).
- */
-// static void acct_arg_size(linux_bprm_s *bprm, unsigned long pages)
-// {
-// 	mm_s *mm = current->mm;
-// 	long diff = (long)(pages - bprm->vma_pages);
+	page_s *page;
+	vma_s *vma = bprm->vma;
+	mm_s *mm = bprm->mm;
+	int ret;
 
-// 	if (!mm || !diff)
-// 		return;
+	// /*
+	//  * Avoid relying on expanding the stack down in GUP (which
+	//  * does not work for STACK_GROWSUP anyway), and just do it
+	//  * by hand ahead of time.
+	//  */
+	// if (write && pos < vma->vm_start) {
+	// 	mmap_write_lock(mm);
+	// 	ret = expand_downwards(vma, pos);
+	// 	if (unlikely(ret < 0)) {
+	// 		mmap_write_unlock(mm);
+	// 		return NULL;
+	// 	}
+	// 	mmap_write_downgrade(mm);
+	// } else
+	// 	mmap_read_lock(mm);
 
-// 	bprm->vma_pages = pages;
-// 	add_mm_counter(mm, MM_ANONPAGES, diff);
-// }
+	// /*
+	//  * We are doing an exec().  'current' is the process
+	//  * doing the exec and 'mm' is the new process's mm.
+	//  */
+	// ret = get_user_pages_remote(mm, pos, 1,
+	// 		write ? FOLL_WRITE : 0,
+	// 		&page, NULL, NULL);
+	myos_get_user_pages(mm, pos, 1, &page);
+	// mmap_read_unlock(mm);
+	// if (ret <= 0)
+	// 	return NULL;
 
-static page_s
-*get_arg_page(linux_bprm_s *bprm, unsigned long pos, int write)
-{
-// 	struct page *page;
-// 	int ret;
-// 	unsigned int gup_flags = FOLL_FORCE;
+	// if (write)
+	// 	acct_arg_size(bprm, vma_pages(vma));
 
-// 	if (write)
-// 		gup_flags |= FOLL_WRITE;
-
-// 	/*
-// 	 * We are doing an exec().  'current' is the process
-// 	 * doing the exec and bprm->mm is the new process's mm.
-// 	 */
-// 	mmap_read_lock(bprm->mm);
-// 	ret = get_user_pages_remote(bprm->mm, pos, 1, gup_flags,
-// 			&page, NULL, NULL);
-// 	mmap_read_unlock(bprm->mm);
-// 	if (ret <= 0)
-// 		return NULL;
-
-// 	if (write)
-// 		acct_arg_size(bprm, vma_pages(bprm->vma));
-
-// 	return page;
+	return page;
 }
 
-static void put_arg_page(page_s *page)
-{
+static void put_arg_page(page_s *page) {
 	put_page(page);
 }
-
-
-// static void
-// flush_arg_page(linux_bprm_s *bprm, unsigned long pos, page_s *page)
-// {
-// 	flush_cache_page(bprm->vma, pos, page_to_pfn(page));
-// }
 
 static int __bprm_mm_init(linux_bprm_s *bprm)
 {
@@ -310,7 +298,7 @@ static int bprm_stack_limits(linux_bprm_s *bprm)
 static int
 copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 {
-// 	page_s *kmapped_page = NULL;
+	// page_s *kmapped_page = NULL;
 	char *kaddr = NULL;
 	unsigned long kpos = 0;
 	int ret;
@@ -363,26 +351,27 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 			str -= bytes_to_copy;
 			len -= bytes_to_copy;
 
-			memcpy((void *)pos, str, bytes_to_copy);
-
 			// if (!kmapped_page || kpos != (pos & PAGE_MASK)) {
-			// 	page_s *page;
+				page_s *page;
 
-			// 	page = get_arg_page(bprm, pos, 1);
-			// 	if (!page) {
-			// 		ret = -E2BIG;
-			// 		goto out;
-			// 	}
+				page = get_arg_page(bprm, pos, 1);
+				if (!page) {
+					ret = -E2BIG;
+					goto out;
+				}
 
-			// 	if (kmapped_page) {
-			// 		flush_dcache_page(kmapped_page);
-			// 		kunmap(kmapped_page);
-			// 		put_arg_page(kmapped_page);
-			// 	}
-			// 	kmapped_page = page;
-			// 	kaddr = kmap(kmapped_page);
-			// 	kpos = pos & PAGE_MASK;
-			// 	flush_arg_page(bprm, kpos, kmapped_page);
+			memcpy_to_page(page, offset_in_page(pos), str, bytes_to_copy);
+			put_arg_page(page);
+
+				// if (kmapped_page) {
+				// 	flush_dcache_page(kmapped_page);
+				// 	kunmap(kmapped_page);
+				// 	put_arg_page(kmapped_page);
+				// }
+				// kmapped_page = page;
+				// kaddr = kmap(kmapped_page);
+				// kpos = pos & PAGE_MASK;
+				// flush_arg_page(bprm, kpos, kmapped_page);
 			// }
 			// if (copy_from_user(kaddr+offset, str, bytes_to_copy)) {
 			// 	ret = -EFAULT;
@@ -420,28 +409,20 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 		return -E2BIG;
 
 	while (len > 0) {
-		// unsigned int bytes_to_copy =
-		// 	min_t(unsigned int, len,
-		// 		min_not_zero(offset_in_page(pos), PAGE_SIZE));
-		unsigned int bytes_to_copy = len;
-		// page_s *page;
-		// char *kaddr;
+		unsigned int bytes_to_copy = min_t(unsigned int, len,
+				min_not_zero(offset_in_page(pos), PAGE_SIZE));
+		page_s *page;
 
 		pos -= bytes_to_copy;
 		arg -= bytes_to_copy;
 		len -= bytes_to_copy;
 
-		memcpy((void *)pos, arg, bytes_to_copy);
-
-		// page = get_arg_page(bprm, pos, 1);
-		// if (!page)
-		// 	return -E2BIG;
-		// kaddr = kmap_atomic(page);
+		page = get_arg_page(bprm, pos, 1);
+		if (!page)
+			return -E2BIG;
 		// flush_arg_page(bprm, pos & PAGE_MASK, page);
-		// memcpy(kaddr + offset_in_page(pos), arg, bytes_to_copy);
-		// flush_dcache_page(page);
-		// kunmap_atomic(kaddr);
-		// put_arg_page(page);
+		memcpy_to_page(page, offset_in_page(pos), arg, bytes_to_copy);
+		put_arg_page(page);
 	}
 
 	return 0;

@@ -20,13 +20,13 @@ __attribute__((section(".crt1.text"))) void _start(int argc, const char **argv)
 	stdout = fopen("/dev/console", "w");
 	stderr = fopen("/dev/console", "w");
 
-	printf("Cmd args - ");
-	for (int i = 0; i < argc; i++)
-		printf("[%d]:%s -> ", i, argv[i]);
-	printf("\nEnv vars - ");
-	for (int i = 0; envs[i] != NULL; i++)
-		printf("[%d]:%s -> ", i, envs[i]);
-	printf("\n");
+	// printf("Cmd args - ");
+	// for (int i = 0; i < argc; i++)
+	// 	printf("[%d]:%s ; ", i, argv[i]);
+	// printf("\nEnv vars - ");
+	// for (int i = 0; envs[i] != NULL; i++)
+	// 	printf("[%d]:%s ; ", i, envs[i]);
+	// printf("\n");
 	
 	exit(main(argc, argv));
 }

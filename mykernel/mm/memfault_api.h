@@ -20,8 +20,8 @@
 
 	extern pte_t *myos_creat_one_page_mapping(mm_s *mm,
 			virt_addr_t addr, page_s *page);
-	extern int myos_map_range(mm_s *mm,
-			unsigned long start, unsigned long end);
+	extern page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr);
+	extern int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end);
 	extern vm_fault_s myos_dump_pagetable(unsigned long address);
 
 #endif /* _LINUX_MEM_FAULT_API_H_ */
