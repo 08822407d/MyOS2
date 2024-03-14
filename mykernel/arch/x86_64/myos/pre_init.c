@@ -11,6 +11,7 @@
 #include <uefi/bootloader.h>
 
 extern uint64_t	boot_from_grub2;
+extern struct multiboot_tag_framebuffer *multiboot_tag_framebuffer_start;
 
 efi_machine_conf_s	*machine_info;
 unsigned		nr_lcpu;
@@ -51,6 +52,7 @@ static void get_SMP_info(efi_smpinfo_s * smp_info)
 
 void myos_early_init_system(void)
 {
+	struct multiboot_tag_framebuffer *mb_fb = multiboot_tag_framebuffer_start;
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 	get_VBE_info(&machine_info->mb_fb_common);
 	get_SMP_info(&machine_info->efi_smp_info);
