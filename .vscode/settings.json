@@ -233,6 +233,7 @@
         "conf.h": "c",
         "myos_usb.h": "c",
         "init_syscalls.h": "c",
-        "fs_struct_types.h": "c"
+        "fs_struct_types.h": "c",
+        "bootloader.h": "c"
     }
 }

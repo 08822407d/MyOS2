@@ -6,6 +6,7 @@ _k_phys_start	= 0x1000000;
 _k_virt_start	= 0xffff800001000000;
 _k_offset		= _k_virt_start - _k_phys_start;
 _k_phys_edata	= _edata - _k_offset;
+_k_phys_loadend	= __bss_start - _k_offset;
 _k_phys_ebss	= __bss_stop - _k_offset;
 
 _APboot_phys_start			= 0x4000;

@@ -22,6 +22,7 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
+
 .section .unpaged.text, "ax"
 .code64
 
@@ -44,8 +45,10 @@ multiboot_header:
 	/* Header length. */
 	.long	multiboot_header_end - multiboot_header
 	/* checksum */
-	.long	-(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + (multiboot_header_end - multiboot_header))
+	.long	-(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + \
+			(multiboot_header_end - multiboot_header))
 //===========================================
+// MyOS2 only boot from EFI amd64 mode
 	.align	8
 header_tag_address_start:
 	.short	MULTIBOOT_HEADER_TAG_ADDRESS
@@ -56,36 +59,41 @@ header_tag_address_start:
 	/* load_addr */
 	.long	_k_phys_start
 	/* load_end_addr */
-	.long	_k_phys_edata
+	.long	_k_phys_loadend
 	/* bss end addr */
 	.long	_k_phys_ebss
 header_tag_address_end:
 //===========================================
-
-#ifdef GRUB2_BOOTUP_SUPPORT
-	#include "grub2_boot_tags.S"
-#endif
-
+	.align	8
+header_tag_framebuffer_start:
+	.short	MULTIBOOT_HEADER_TAG_FRAMEBUFFER
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	header_tag_framebuffer_end - header_tag_framebuffer_start
+	.long	1920
+	.long	1080
+	.long	24
+header_tag_framebuffer_end:
 //===========================================
 	.align	8
-SYM_CODE_START(multiboot_tag_framebuffer_start)
-	.long	MULTIBOOT_TAG_TYPE_FRAMEBUFFER
-	.long	multiboot_tag_framebuffer_end - multiboot_tag_framebuffer_start
-	.quad	0
-	.long	0
-	.long	0
-	.long	0
-	.byte	0
-	.byte	0
-	.short	0
-multiboot_tag_framebuffer_common_end:
-	.byte	0
-	.byte	0
-	.byte	0
-	.byte	0
-	.byte	0
-	.byte	0
-multiboot_tag_framebuffer_end:
+efi_boot_service_tag_start:
+	.short	MULTIBOOT_HEADER_TAG_EFI_BS
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	efi_boot_service_tag_end - efi_boot_service_tag_start
+efi_boot_service_tag_end:
+//===========================================
+	.align	8
+efi_amd64_entry_address_tag_start:
+	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS_EFI64
+	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+	.long	efi_amd64_entry_address_tag_end - efi_amd64_entry_address_tag_start
+	.long	code_64_start
+efi_amd64_entry_address_tag_end:
+//===========================================
+
+#ifdef GRUB2_BOOTUP_SUPPORT
+	#include "multiboot2_info_request.S"
+#endif
+
 //===========================================
 	.align	8
 multiboot_header_tag_end_begin:
@@ -96,25 +104,22 @@ multiboot_header_tag_end_end:
 //===========================================
 multiboot_header_end:
 
-
-#ifdef GRUB2_BOOTUP_SUPPORT
-	#include "grub2_boot_code.S"
-#endif
-
 /*==============================================================================================*
  *											long mode code                              		*
  *==============================================================================================*/
 .code64
 .balign 8
 code_64_start:
-	movq	$0,			%rax
-	movq	%rax,		%ds
-	movq	%rax,		%es
-	movq	%rax,		%fs
-	movq	%rax,		%gs
+	movq	%rax,		mbi_magic(%rip)
+	movq	%rbx,		mbi_base(%rip)
+	movq	$0,			%rdx
+	movq	%rdx,		%ds
+	movq	%rdx,		%es
+	movq	%rdx,		%fs
+	movq	%rdx,		%gs
 
-	movq	$tmp_kstack_top,	%rax
-	movq	%rax,		%rsp
+	movq	$tmp_kstack_top,	%rdx
+	movq	%rdx,		%rsp
 	// set page map
 	callq	creat_higher_half_pagemap
 
@@ -145,7 +150,7 @@ skip_set_pde:
 	lretq
 
 hang:
-	jmp     hang
+	jmp		hang
 
 // if boot from UEFI, all physical page all ready mapped
 // to lower half, here duplicate lower 256 PML4 entries to
@@ -174,9 +179,9 @@ SYM_CODE_START(higher_half_entry)
 	addq	$THREAD_SIZE,	%rbx
 	movq	%rbx,		%rsp
 
-	pushq   $0
+	pushq	$0
 	popfq
-	pushq   $0
+	pushq	$0
 
 	// here init single core ia32-e environment
 	callq	x86_64_start_kernel
@@ -191,5 +196,11 @@ SYM_CODE_START(higher_half_entry)
 //=======temp stack
 .align 8
 tmp_kstack_start:
-	.fill  128,8,0
+	.fill	128,8,0
 SYM_CODE_START(tmp_kstack_top)
+
+.balign 8
+SYM_CODE_START(mbi_magic)
+	.quad	0x0
+SYM_CODE_START(mbi_base)
+	.quad	0x0

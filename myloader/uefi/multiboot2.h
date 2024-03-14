@@ -216,6 +216,7 @@
 			multiboot_uint32_t type;
 			multiboot_uint32_t size;
 		};
+		typedef struct multiboot_tag mbi_tag_s;
 
 		struct multiboot_tag_string
 		{
@@ -223,6 +224,7 @@
 			multiboot_uint32_t size;
 			char string[0];
 		};
+		typedef struct multiboot_tag_string mbi_string_s;
 
 		struct multiboot_tag_module
 		{
@@ -232,6 +234,7 @@
 			multiboot_uint32_t mod_end;
 			char cmdline[0];
 		};
+		typedef struct multiboot_tag_module mbi_module_s;
 
 		struct multiboot_tag_basic_meminfo
 		{
@@ -240,6 +243,7 @@
 			multiboot_uint32_t mem_lower;
 			multiboot_uint32_t mem_upper;
 		};
+		typedef struct multiboot_tag_basic_meminfo mbi_basic_meminfo_s;
 
 		struct multiboot_tag_bootdev
 		{
@@ -249,6 +253,8 @@
 			multiboot_uint32_t slice;
 			multiboot_uint32_t part;
 		};
+		typedef struct multiboot_tag_bootdev mbi_bootdev_s;
+
 
 		struct multiboot_tag_mmap
 		{
@@ -258,6 +264,7 @@
 			multiboot_uint32_t entry_version;
 			struct multiboot_mmap_entry entries[0];  
 		};
+		typedef struct multiboot_tag_mmap mbi_mmap_s;
 
 		struct multiboot_vbe_info_block
 		{
@@ -282,6 +289,7 @@
 			struct multiboot_vbe_info_block vbe_control_info;
 			struct multiboot_vbe_mode_info_block vbe_mode_info;
 		};
+		typedef struct multiboot_tag_vbe mbi_vbe_s;
 
 		struct multiboot_tag_framebuffer_common
 		{
@@ -300,7 +308,7 @@
 			multiboot_uint8_t framebuffer_type;
 			multiboot_uint16_t reserved;
 		};
-		typedef struct multiboot_tag_framebuffer_common mb_fb_common_s;
+		typedef struct multiboot_tag_framebuffer_common mbi_fb_common_s;
 
 		struct multiboot_tag_framebuffer
 		{
@@ -324,6 +332,7 @@
 				};
 			};
 		};
+		typedef struct multiboot_tag_framebuffer mbi_framebuffer_s;
 
 		struct multiboot_tag_elf_sections
 		{
@@ -403,6 +412,7 @@
 			multiboot_uint32_t descr_vers;
 			multiboot_uint8_t efi_mmap[0];
 		}; 
+		typedef struct multiboot_tag_efi_mmap mbi_efi_mmap_s;
 
 		struct multiboot_tag_efi32_ih
 		{
@@ -417,6 +427,7 @@
 			multiboot_uint32_t size;
 			multiboot_uint64_t pointer;
 		};
+		typedef struct multiboot_tag_efi64_ih mbi_efi64_ih_s;
 
 		struct multiboot_tag_load_base_addr
 		{
@@ -424,6 +435,7 @@
 			multiboot_uint32_t size;
 			multiboot_uint32_t load_base_addr;
 		};
+		typedef struct multiboot_tag_load_base_addr mbi_load_base_addr_s;
 
 	#endif /*  ! ASM_FILE */
 
