@@ -13,7 +13,6 @@
 
 extern phys_addr_t 		kernel_cr3;
 extern u32	cr3_paddr;
-extern struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 void myos_early_init_smp(void)
 {

@@ -372,6 +372,7 @@
 			multiboot_uint32_t size;
 			multiboot_uint64_t pointer;
 		};
+		typedef struct multiboot_tag_efi64 mbi_efi64_s;
 
 		struct multiboot_tag_smbios
 		{
@@ -396,6 +397,7 @@
 			multiboot_uint32_t size;
 			multiboot_uint8_t rsdp[0];
 		};
+		typedef struct multiboot_tag_new_acpi mbi_acpi_new_s;
 
 		struct multiboot_tag_network
 		{

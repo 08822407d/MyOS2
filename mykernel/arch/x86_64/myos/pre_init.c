@@ -18,7 +18,6 @@ efi_machine_conf_s	*machine_info;
 unsigned		nr_lcpu;
 framebuffer_s	framebuffer;
 
-struct cputopo	smp_topos[CONFIG_NR_CPUS];
 
 void parse_tag (unsigned long magic, unsigned long addr);
 
@@ -41,6 +40,7 @@ void myos_early_init_system(void)
 
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 	get_VBE_info(&machine_info->mb_fb_common);
+	nr_lcpu = 1;
 }
 
 
@@ -90,7 +90,13 @@ parse_tag (unsigned long magic, unsigned long addr)
 			mbi_framebuffer_s *mbi_fb = (mbi_framebuffer_s *)tag;
 			break;
 		case MULTIBOOT_TAG_TYPE_EFI64:
-			mbi_efi64_ih_s *mbi_efi64 = (mbi_efi64_ih_s *)tag;
+			mbi_efi64_s *mbi_efi64 = (mbi_efi64_s *)tag;
+			break;
+		case MULTIBOOT_TAG_TYPE_ACPI_NEW:
+			mbi_acpi_new_s *mbi_acpi_new = (mbi_acpi_new_s *)tag;
+			break;
+		case MULTIBOOT_TAG_TYPE_EFI64_IH:
+			mbi_efi64_ih_s *mbi_efi64_ih = (mbi_efi64_ih_s *)tag;
 			break;
 		case MULTIBOOT_TAG_TYPE_LOAD_BASE_ADDR:
 			mbi_load_base_addr_s *mbi_load_base_addr = (mbi_load_base_addr_s *)tag;
