@@ -48,52 +48,7 @@ multiboot_header:
 	.long	-(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + \
 			(multiboot_header_end - multiboot_header))
 //===========================================
-// MyOS2 only boot from EFI amd64 mode
-	.align	8
-header_tag_address_start:
-	.short	MULTIBOOT_HEADER_TAG_ADDRESS
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	header_tag_address_end - header_tag_address_start
-	/* header_addr */
-	.long	multiboot_header
-	/* load_addr */
-	.long	_k_phys_start
-	/* load_end_addr */
-	.long	_k_phys_loadend
-	/* bss end addr */
-	.long	_k_phys_ebss
-header_tag_address_end:
-//===========================================
-	.align	8
-header_tag_framebuffer_start:
-	.short	MULTIBOOT_HEADER_TAG_FRAMEBUFFER
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	header_tag_framebuffer_end - header_tag_framebuffer_start
-	.long	1920
-	.long	1080
-	.long	24
-header_tag_framebuffer_end:
-//===========================================
-	.align	8
-efi_boot_service_tag_start:
-	.short	MULTIBOOT_HEADER_TAG_EFI_BS
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	efi_boot_service_tag_end - efi_boot_service_tag_start
-efi_boot_service_tag_end:
-//===========================================
-	.align	8
-efi_amd64_entry_address_tag_start:
-	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS_EFI64
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	efi_amd64_entry_address_tag_end - efi_amd64_entry_address_tag_start
-	.long	code_64_start
-efi_amd64_entry_address_tag_end:
-//===========================================
-
-#ifdef GRUB2_BOOTUP_SUPPORT
-	#include "multiboot2_info_request.S"
-#endif
-
+#include "grub2_head_tags.S"
 //===========================================
 	.align	8
 multiboot_header_tag_end_begin:
@@ -103,6 +58,8 @@ multiboot_header_tag_end_begin:
 multiboot_header_tag_end_end:
 //===========================================
 multiboot_header_end:
+
+#include "grub2_boot_code.S"
 
 /*==============================================================================================*
  *											long mode code                              		*
