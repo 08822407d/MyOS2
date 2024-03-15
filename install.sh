@@ -8,8 +8,9 @@ function install_files()
 	if [ ! -d "/mnt/EFI/BOOT" ]; then
 		mkdir /mnt/EFI/BOOT
 	fi
-	cp ../bootloader.efi /mnt/EFI/BOOT/BOOTX64.EFI
-	cp ./kernel.bin /mnt/kernel.bin
+	cp ../elfbinary_loader.efi /mnt/EFI/BOOT/BOOTX64.EFI
+	# cp ./kernel.bin /mnt/kernel.bin
+	cp ./kernel /mnt/kernel
 	cp ./initd /mnt/initd
 	cp ./sh /mnt/sh
 	sync
@@ -29,7 +30,7 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	echo "Working on Linux"
 	# generate kernel debug file and bin
 	objcopy --only-keep-debug kernel kernel.debug
-	objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
+	# objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
 	# generate init debug file
 	objcopy --only-keep-debug initd initd.debug
 	# generate init debug file

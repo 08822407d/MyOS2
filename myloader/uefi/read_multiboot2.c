@@ -33,7 +33,6 @@ void parse_multiboot2(EFI_PHYSICAL_ADDRESS start_addr)
 
 		PHYSICAL_ADDRESS hdr_next = hdr_addr + tag_size;
 
-		// Print(L"MB2 header tag : 0x%X - 0x%X .\n", hdr_addr, tag_size);
 		Print(L"Tag type 0x%X.\n", tag_p->type);
 		switch (tag_p->type)
 		{

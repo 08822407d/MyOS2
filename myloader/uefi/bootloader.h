@@ -12,32 +12,32 @@
 		#include "Protocol/MpService.h"
 	#endif
 
-		#include "multiboot2.h"
+	#include "multiboot2.h"
 
-		#define MACHINE_CONF_ADDR 0x60000
+	#define MACHINE_CONF_ADDR 0x60000
 
-		typedef struct EFI_CPU_DESCRIPTOR
-		{
-			multiboot_uint32_t	pack_id;
-			multiboot_uint32_t	core_id;
-			multiboot_uint32_t	thd_id;
-			multiboot_uint32_t	status;
-			multiboot_uint64_t	proccessor_id;
-		} efi_cpudesc_s;
+	typedef struct EFI_CPU_DESCRIPTOR
+	{
+		multiboot_uint32_t	pack_id;
+		multiboot_uint32_t	core_id;
+		multiboot_uint32_t	thd_id;
+		multiboot_uint32_t	status;
+		multiboot_uint64_t	proccessor_id;
+	} efi_cpudesc_s;
 
-		typedef struct EFI_SMP_INFO
-		{
-			multiboot_uint32_t	core_num;
-			multiboot_uint32_t	core_available;
-			efi_cpudesc_s cpus[256];
-		} efi_smpinfo_s;
+	typedef struct EFI_SMP_INFO
+	{
+		multiboot_uint32_t	core_num;
+		multiboot_uint32_t	core_available;
+		efi_cpudesc_s cpus[256];
+	} efi_smpinfo_s;
 
-		typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
-		{
-			mb_memmap_s mb_mmap[32];
-			mbi_fb_common_s mb_fb_common;
-			efi_smpinfo_s efi_smp_info;
-		} efi_machine_conf_s;
+	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
+	{
+		mb_memmap_s mb_mmap[32];
+		mbi_fb_common_s mb_fb_common;
+		efi_smpinfo_s efi_smp_info;
+	} efi_machine_conf_s;
 
 	// enum e820_type {
 	// 	E820_TYPE_RAM		= 1,
@@ -78,19 +78,20 @@
 	// 	E820_TYPE_RESERVED_KERN	= 128,
 	// };
 
+	extern mb2_hdr_s * mb2_hdr_p;
+	extern mb2_hdr_tag_kaddr_s * mb2_kaddr_p;
+
 	#ifdef __PI_UEFI_H__
-		extern mb2_hdr_s * mb2_hdr_p;
-		extern mb2_hdr_tag_kaddr_s * mb2_kaddr_p;
-
-
 		EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
 		EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info);
-		EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle);
-		EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle);
+		EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage);
 		void get_vbe_info(efi_machine_conf_s * machine_info);
 		void get_machine_memory_info(mb_memmap_s * mb_memmap);
 
 		void parse_multiboot2(EFI_PHYSICAL_ADDRESS start_addr);
+
+		EFI_STATUS load_elf_kernel(IN EFI_LOADED_IMAGE	*LoadedImage,
+			CHAR16 *filename, PHYSICAL_ADDRESS *entry_addr);
 	#endif
 
 #endif /* _BOOTLOADER_H_ */

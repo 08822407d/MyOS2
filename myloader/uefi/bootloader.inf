@@ -7,11 +7,27 @@
   ENTRY_POINT                    = UefiMain
 
 [Sources]
+  bootloader.h
   bootloader.c
+  multiboot2.h
+  read_multiboot2.c
+  utils.h
+  utils.c
+  ElfLib.h
+  ElfLib/ElfLibInternal.h
+  ElfLib/ElfCommon.h
+  ElfLib/Elf32.h
+  ElfLib/Elf64.h
+  ElfLib/ElfLibInternal.h
+  ElfLib/ElfLib.c
+  ElfLib/Elf32Lib.c
+  ElfLib/Elf64Lib.c
 
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
+  PcAtChipsetPkg/PcAtChipsetPkg.dec
+  UefiPayloadPkg/UefiPayloadPkg.dec
 
 [LibraryClasses]
   UefiApplicationEntryPoint
@@ -20,6 +36,10 @@
   DebugLib
   UefiRuntimeServicesTableLib
   BaseMemoryLib
+  PcdLib
+  MemoryAllocationLib
+  HobLib
+  BaseLib
 
 [Protocols]
   gEfiGraphicsOutputProtocolGuid
@@ -28,7 +48,14 @@
   gEfiUnicodeCollation2ProtocolGuid                       # ALWAYS_CONSUMED
   gEfiMpServiceProtocolGuid
 
+[Ppis]
+  gEfiPeiLoadFilePpiGuid                 ## PRODUCES
+
+[Pcd]
+  gPcAtChipsetPkgTokenSpaceGuid.PcdRtcIndexRegister
+  gPcAtChipsetPkgTokenSpaceGuid.PcdRtcTargetRegister
 
 [Guids]
   gEfiFileInfoGuid
+  gUniversalPayloadExtraDataGuid         ## PRODUCES
 

@@ -37,13 +37,13 @@ header_tag_address_start:
 	.long	_k_phys_ebss
 header_tag_address_end:
 //===========================================
-	.align	8
-entry_address_tag_start:
-	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	entry_address_tag_end - entry_address_tag_start
-	.long	multiboot_entry
-entry_address_tag_end:
+// 	.align	8
+// entry_address_tag_start:
+// 	.short	MULTIBOOT_HEADER_TAG_ENTRY_ADDRESS
+// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+// 	.long	entry_address_tag_end - entry_address_tag_start
+// 	.long	multiboot_entry
+// entry_address_tag_end:
 //===========================================
 	.align	8
 efi_boot_service_tag_start:

@@ -59,14 +59,11 @@ multiboot_header_tag_end_end:
 //===========================================
 multiboot_header_end:
 
-#include "grub2_boot_code.S"
-
 /*==============================================================================================*
  *											long mode code                              		*
  *==============================================================================================*/
-.code64
 .balign 8
-code_64_start:
+SYM_CODE_START(code_64_start)
 	movq	%rax,		mbi_magic(%rip)
 	movq	%rbx,		mbi_base(%rip)
 	movq	$0,			%rdx

@@ -36,7 +36,7 @@ void myos_early_init_system(void)
 {
 	virt_addr_t virt_mbi_magic = phys_to_virt((phys_addr_t)&mbi_magic);
 	virt_addr_t virt_mbi_base = phys_to_virt((phys_addr_t)&mbi_base);
-	parse_tag(*(unsigned long *)virt_mbi_magic, *(unsigned long *)virt_mbi_base);
+	// parse_tag(*(unsigned long *)virt_mbi_magic, *(unsigned long *)virt_mbi_base);
 
 	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
 	get_VBE_info(&machine_info->mb_fb_common);

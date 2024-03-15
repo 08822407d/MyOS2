@@ -12,34 +12,36 @@
 *
 *
 ***************************************************/
-
 #include <Uefi.h>
+
+#include "utils.h"
 
 #include "bootloader.h"
 #include "multiboot2.h"
 
 
-EFI_STATUS status = EFI_SUCCESS;
 EFI_MP_SERVICES_PROTOCOL* mpp;
-EFI_LOADED_IMAGE        *LoadedImage;
-EFI_PHYSICAL_ADDRESS pages;
 EFI_GRAPHICS_OUTPUT_PROTOCOL* gGraphicsOutput = 0;
 UINTN MapKey = 0;
 UINTN DescriptorSize = 0;
 UINT32 DesVersion = 0;
 
-PHYSICAL_ADDRESS k_load_addr;
-
 
 EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *SystemTable)
 {
-	efi_machine_conf_s * machine_info = NULL;
+	EFI_LOADED_IMAGE		*LoadedImage;
+	EFI_PHYSICAL_ADDRESS	pages;
+	efi_machine_conf_s		*machine_info = NULL;
+
+	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
 //////////////////////
 
-	status = read_mb2head(ImageHandle);
-	// while (1);
+	read_mb2head(LoadedImage);
+	PHYSICAL_ADDRESS k_load_addr = (PHYSICAL_ADDRESS)mb2_kaddr_p->load_addr;
 	
-	status = load_kernel_image(ImageHandle);
+	// LoadFile(LoadedImage, L"kernel.bin", k_load_addr, 0);
+
+	load_elf_kernel(LoadedImage, L"kernel", &k_load_addr);
 
 ///////////////////
 
@@ -64,14 +66,15 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	gBS->CloseProtocol(LoadedImage->DeviceHandle,&gEfiSimpleFileSystemProtocolGuid,ImageHandle,NULL);
 	gBS->CloseProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,ImageHandle,NULL);
 	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
-	status = gBS->ExitBootServices(ImageHandle,MapKey);
+	gBS->ExitBootServices(ImageHandle,MapKey);
 
 	void (*func)(void);
 	func = (void *)k_load_addr;
 
-	asm volatile("movq	%0, %%rbx"
+	asm volatile(	""
 				:
-				:"rbx"(func)
+				:	"rax" (MULTIBOOT2_BOOTLOADER_MAGIC),
+					"rbx" (machine_info)
 				:
 				);
 
@@ -80,32 +83,13 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *System
 	return EFI_SUCCESS;
 }
 
-EFI_STATUS read_mb2head(IN EFI_HANDLE ImageHandle)
+EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage)
 {
-	EFI_FILE_IO_INTERFACE   *Vol;
-	EFI_FILE_HANDLE         RootFs;
-	EFI_FILE_HANDLE         FileHandle;
-
-	// open kernel file
-	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
-	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
-	Vol->OpenVolume(Vol,&RootFs);
-	status = RootFs->Open(RootFs, &FileHandle, (CHAR16*)L"kernel.bin", EFI_FILE_MODE_READ, 0);
-	if(EFI_ERROR(status))
-	{
-		Print(L"Open kernel.bin Failed.\n");
-		return status;
-	}
-
 	UINT64	bufsize = MULTIBOOT_SEARCH;
 	PHYSICAL_ADDRESS	mb2_load_addr = 0x1000000;
-	gBS->AllocatePages(AllocateAddress,EfiLoaderData, bufsize / 0x1000, &mb2_load_addr);
-	FileHandle->Read(FileHandle, &bufsize, (VOID*)mb2_load_addr);
 
+	LoadFile(LoadedImage, L"kernel.bin", mb2_load_addr, bufsize);
 	parse_multiboot2(mb2_load_addr);
-
-	FileHandle->Close(FileHandle);
-	RootFs->Close(RootFs);
 
 	return EFI_SUCCESS;
 }
@@ -134,57 +118,10 @@ EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
 			   machine_info->efi_smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
 			   machine_info->efi_smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
 			   machine_info->efi_smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
-
-            //    Print(L"CORE %d: ;", i);
-            //    Print(L"  ProcessorId : %d ;", mcpuInfo.ProcessorId);
-            //    Print(L"  StatusFlag : %x ;", mcpuInfo.StatusFlag);
-            //    Print(L"  Location : (%d %d %d)\n", mcpuInfo.Location.Package, mcpuInfo.Location.Core, mcpuInfo.Location.Thread);
            }
         }
     }
 	return Status;
-}
-
-EFI_STATUS load_kernel_image(IN EFI_HANDLE ImageHandle)
-{
-	EFI_FILE_IO_INTERFACE   *Vol;
-	EFI_FILE_HANDLE         RootFs;
-	EFI_FILE_HANDLE         FileHandle;
-	k_load_addr = (PHYSICAL_ADDRESS)mb2_kaddr_p->load_addr;
-
-	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
-	gBS->HandleProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, (VOID*)&Vol);
-	Vol->OpenVolume(Vol,&RootFs);
-	status = RootFs->Open(RootFs, &FileHandle, (CHAR16*)L"kernel.bin", EFI_FILE_MODE_READ, 0);
-	if(EFI_ERROR(status))
-	{
-		Print(L"Open kernel.bin Failed.\n");
-		return status;
-	}
-
-	EFI_FILE_INFO* FileInfo;
-	UINTN BufferSize = 0;
-
-	BufferSize = sizeof(EFI_FILE_INFO) + sizeof(CHAR16) * 100;
-	gBS->AllocatePool(EfiRuntimeServicesData, BufferSize, (VOID**)&FileInfo); 
-	FileHandle->GetInfo(FileHandle, &gEfiFileInfoGuid, &BufferSize, FileInfo);
-
-	gBS->AllocatePages(AllocateAddress, EfiLoaderData,
-					(FileInfo->FileSize + 0x1000 - 1) / 0x1000,
-					&k_load_addr);
-	BufferSize = FileInfo->FileSize;
-	FileHandle->Read(FileHandle, &BufferSize, (VOID*)k_load_addr);
-
-// // #ifdef DEBUG
-// 	Print(L"\tFileName:%s\t Size:%d\t FileSize:%d\t Physical Size:%d\n",FileInfo->FileName,FileInfo->Size,FileInfo->FileSize,FileInfo->PhysicalSize);
-// 	Print(L"Read Kernel File to Memory Address:%018lx\n",pages);
-// // #endif
-
-	gBS->FreePool(FileInfo);
-	FileHandle->Close(FileHandle);
-	RootFs->Close(RootFs);
-
-	return EFI_SUCCESS;
 }
 
 void get_vbe_info(efi_machine_conf_s * machine_info)
@@ -199,7 +136,7 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	long H_V_Resolution = gGraphicsOutput->Mode->Info->HorizontalResolution * gGraphicsOutput->Mode->Info->VerticalResolution;
 	int MaxResolutionMode = gGraphicsOutput->Mode->Mode;
 	// 选择最大分辨率
-	for(i = 0;i < gGraphicsOutput->Mode->MaxMode;i++)
+	for(i = 0; i < gGraphicsOutput->Mode->MaxMode; i++)
 	{
 		gGraphicsOutput->QueryMode(gGraphicsOutput,i,&InfoSize,&Info);
 		if((Info->PixelFormat == 1) && (Info->HorizontalResolution * Info->VerticalResolution > H_V_Resolution))
@@ -220,16 +157,11 @@ void get_vbe_info(efi_machine_conf_s * machine_info)
 	machine_info->mb_fb_common.size = gGraphicsOutput->Mode->FrameBufferSize;
 	machine_info->mb_fb_common.framebuffer_type = MaxResolutionMode;
 	machine_info->mb_fb_common.type = gGraphicsOutput->Mode->Mode;
-
-	// Print(L"Current Mode:%02d, Version:%x, Format:%d, Horizontal:%d, Vertical:%d, ScanLine:%d, FrameBufferBase:%018lx, FrameBufferSize:%018lx\n",
-	// 		gGraphicsOutput->Mode->Mode, gGraphicsOutput->Mode->Info->Version,
-	// 		gGraphicsOutput->Mode->Info->PixelFormat, gGraphicsOutput->Mode->Info->HorizontalResolution,
-	// 		gGraphicsOutput->Mode->Info->VerticalResolution, gGraphicsOutput->Mode->Info->PixelsPerScanLine,
-	// 		gGraphicsOutput->Mode->FrameBufferBase, gGraphicsOutput->Mode->FrameBufferSize);
 }
 
 void get_machine_memory_info(mb_memmap_s * mb_memmap)
 {
+	EFI_STATUS status = EFI_SUCCESS;
 	UINTN MemMapSize = 0;
 	EFI_MEMORY_DESCRIPTOR* MemMap = 0;
 
@@ -335,16 +267,46 @@ void get_machine_memory_info(mb_memmap_s * mb_memmap)
 	}
 	last_mb_mmap = mb_memmap;
 
-// // #ifdef DEBUG
-// 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
-// 	Print(L"Get MemMapSize:%d,DescriptorSize:%d,count:%d\n",MemMapSize,DescriptorSize,MemMapSize/DescriptorSize);
-// 	Print(L"Get EFI_MEMORY_DESCRIPTOR Structure:%018lx\n",MemMap);
-// 	for(i = 0;i < e820_nr;i++)
-// 	{
-// 		Print(L"MemoryMap (%10lx<->%10lx) %4d\n",last_mb_mmap->addr,last_mb_mmap->addr+last_mb_mmap->len,last_mb_mmap->type);
-// 		last_mb_mmap++;
-// 	}
-// // #endif
-	
 	gBS->FreePool(MemMap);
+}
+
+EFI_STATUS load_elf_kernel(IN EFI_LOADED_IMAGE	*LoadedImage,
+	CHAR16 *filename, PHYSICAL_ADDRESS *entry_addr)
+{
+	EFI_STATUS status = EFI_SUCCESS;
+	// Check Format
+	PHYSICAL_ADDRESS raw_img_addr = 0x2000000;
+	LoadFile(LoadedImage, filename, raw_img_addr, 0);
+	BOOLEAN isElf = IsElfFormat((UINT8 *)raw_img_addr);
+	if (!isElf)
+	{
+		Print(L"PANIC: Kernel: %s is NOT Elf format.\n", filename);
+		while (1);
+	}
+
+	// Read info and load
+	ELF_IMAGE_CONTEXT ElfCtx;
+	status = ParseElfImage((VOID *)raw_img_addr, &ElfCtx);
+	if (status != EFI_SUCCESS)
+	{
+		Print(L"PANIC: ElfParse kernel: %s failed.\n", filename);
+		while (1);
+	}
+	Print(L"Elf file size: 0x%llx\n", ElfCtx.FileSize);
+	Print(L"Elf Image size: 0x%llx\n", ElfCtx.ImageSize);
+	Print(L"Elf Image loaded address: 0x%llx\n", ElfCtx.ImageAddress);
+	Print(L"Elf Image preferred address: 0x%llx\n", ElfCtx.PreferredImageAddress);
+	Print(L"Elf Image entry point: 0x%llx\n", ElfCtx.EntryPoint);
+	Print(L"Elf Image need to reload: %d\n", ElfCtx.ReloadRequired);
+	// while (1);
+	
+	EFI_PHYSICAL_ADDRESS loaded_addr = (EFI_PHYSICAL_ADDRESS)ElfCtx.ImageAddress;
+	*entry_addr = (EFI_PHYSICAL_ADDRESS)ElfCtx.EntryPoint;
+	// Alloc Image Memory
+	ElfCtx.ImageAddress = ElfCtx.PreferredImageAddress;
+	gBS->AllocatePages(AllocateAddress, EfiLoaderData,
+			(ElfCtx.ImageSize + PAGE_SIZE - 1) / PAGE_SIZE, &loaded_addr);
+	LoadElfImage(&ElfCtx);
+
+	return status;
 }
