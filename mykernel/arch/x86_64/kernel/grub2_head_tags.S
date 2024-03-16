@@ -21,21 +21,21 @@ header_tag_framebuffer_start:
 	.long	32
 header_tag_framebuffer_end:
 //===========================================
-// MyOS2 only boot from EFI amd64 mode
-	.align	8
-header_tag_address_start:
-	.short	MULTIBOOT_HEADER_TAG_ADDRESS
-	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
-	.long	header_tag_address_end - header_tag_address_start
-	/* header_addr */
-	.long	multiboot_header
-	/* load_addr */
-	.long	_k_phys_start
-	/* load_end_addr */
-	.long	_k_phys_loadend
-	/* bss end addr */
-	.long	_k_phys_ebss
-header_tag_address_end:
+// // MyOS2 only boot from EFI amd64 mode
+// 	.align	8
+// header_tag_address_start:
+// 	.short	MULTIBOOT_HEADER_TAG_ADDRESS
+// 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
+// 	.long	header_tag_address_end - header_tag_address_start
+// 	/* header_addr */
+// 	.long	multiboot_header
+// 	/* load_addr */
+// 	.long	_k_phys_start
+// 	/* load_end_addr */
+// 	.long	_k_phys_loadend
+// 	/* bss end addr */
+// 	.long	_k_phys_ebss
+// header_tag_address_end:
 //===========================================
 // 	.align	8
 // entry_address_tag_start:

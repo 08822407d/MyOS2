@@ -34,11 +34,11 @@ static void get_VBE_info(mbi_fb_common_s * vbe_info)
 
 void myos_early_init_system(void)
 {
-	virt_addr_t virt_mbi_magic = phys_to_virt((phys_addr_t)&mbi_magic);
-	virt_addr_t virt_mbi_base = phys_to_virt((phys_addr_t)&mbi_base);
+	u64 *virt_mbi_magic_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_magic);
+	u64 *virt_mbi_base_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_base);
 	// parse_tag(*(unsigned long *)virt_mbi_magic, *(unsigned long *)virt_mbi_base);
 
-	machine_info = (efi_machine_conf_s *)MACHINE_CONF_ADDR;
+	machine_info = (efi_machine_conf_s *)phys_to_virt((phys_addr_t)*virt_mbi_base_ptr);
 	get_VBE_info(&machine_info->mb_fb_common);
 	nr_lcpu = 1;
 }

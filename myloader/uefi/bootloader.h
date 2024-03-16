@@ -14,8 +14,6 @@
 
 	#include "multiboot2.h"
 
-	#define MACHINE_CONF_ADDR 0x60000
-
 	typedef struct EFI_CPU_DESCRIPTOR
 	{
 		multiboot_uint32_t	pack_id;
