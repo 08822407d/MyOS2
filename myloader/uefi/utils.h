@@ -5,6 +5,7 @@
 	#include <Library/UefiLib.h>
 	#include <Library/UefiBootServicesTableLib.h>
 	#include <Library/UefiRuntimeServicesTableLib.h>
+	#include <Library/BaseMemoryLib.h>
 	#include <Protocol/SimpleFileSystem.h>
 	#include <Protocol/LoadedImage.h>
 	#include <Guid/FileInfo.h>

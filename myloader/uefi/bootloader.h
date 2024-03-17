@@ -84,6 +84,7 @@
 		void set_video_mode(IN EFI_HANDLE ImageHandle, int mode);
 		mbi_tag_s *fill_framebuffer_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
 		mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
+		mbi_tag_s *fill_acpi_RSDT_info(EFI_SYSTEM_TABLE *SystemTable, mbi_tag_s *mb2_infotag_ptr);
 
 		void parse_mb2_header(EFI_PHYSICAL_ADDRESS start_addr);
 		mbi_tag_s *init_info_tag_addr(PHYSICAL_ADDRESS start_addr);

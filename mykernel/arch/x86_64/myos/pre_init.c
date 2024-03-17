@@ -15,9 +15,10 @@ extern u64 mbi_magic;
 extern u64 mbi_base;
 
 efi_machine_conf_s	*machine_info;
-unsigned		nr_lcpu;
-mbi_mmap_ent_s	*ram_map;
-framebuffer_s	framebuffer;
+unsigned			nr_lcpu;
+mbi_mmap_ent_s		*ram_map;
+framebuffer_s		framebuffer;
+mbi_tags_header_s	*mbi_tag_header;
 
 
 void parse_tag (unsigned long magic, unsigned long addr);
@@ -37,6 +38,7 @@ void myos_early_init_system(void)
 {
 	u64 *virt_mbi_magic_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_magic);
 	u64 *virt_mbi_base_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_base);
+
 	parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
 
 	nr_lcpu = 1;
@@ -59,7 +61,8 @@ parse_tag (unsigned long magic, unsigned long addr)
 		return;
 	}
 
-	size = *(unsigned *) addr;
+	mbi_tag_header = (mbi_tags_header_s *) addr;
+	size = mbi_tag_header->total_size;
 	for (tag = (mbi_tag_s *) (addr + 8); tag->type != MULTIBOOT_TAG_TYPE_END;
 		tag = (mbi_tag_s *) ((multiboot_uint8_t *) tag + ((tag->size + 7) & ~7)))
 	{
@@ -105,5 +108,4 @@ parse_tag (unsigned long magic, unsigned long addr)
 			break;
 		}
 	}
-	tag = (struct multiboot_tag *) ((multiboot_uint8_t *) tag + ((tag->size + 7) & ~7));
 }    

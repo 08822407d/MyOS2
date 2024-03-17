@@ -16,8 +16,8 @@ header_tag_framebuffer_start:
 	.short	MULTIBOOT_HEADER_TAG_FRAMEBUFFER
 	.short	MULTIBOOT_HEADER_TAG_OPTIONAL
 	.long	header_tag_framebuffer_end - header_tag_framebuffer_start
-	.long	1920
-	.long	1080
+	.long	2560
+	.long	1440
 	.long	32
 header_tag_framebuffer_end:
 //===========================================

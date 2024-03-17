@@ -13,6 +13,8 @@
 *
 ***************************************************/
 #include <Uefi.h>
+#include <Guid/Acpi.h>
+#include <IndustryStandard/Acpi65.h>
 
 #include "utils.h"
 
@@ -49,12 +51,17 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *Syste
 	
 	mb2_infotag_ptr = fill_framebuffer_info(ImageHandle, mb2_infotag_ptr);
 	mb2_infotag_ptr = fill_mmap_info(ImageHandle, mb2_infotag_ptr);
+	mb2_infotag_ptr = fill_acpi_RSDT_info(SystemTable, mb2_infotag_ptr);
 	
 /////////////////////
 
 	// EFI_MP_SERVICES_PROTOCOL *mpp;
 	// LocateMPP(&mpp);
 	// testMPPInfo(mpp, machine_info);
+
+/////////////////////
+
+	
 
 /////////////////////
 
@@ -303,6 +310,7 @@ mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr)
 		}
 	}
 
+	// 排序e820表，使其按照addr从小到大排列
 	last_mb_mmap = memmap_info->entries;
 	int j = 0;
 	for(i = 0; i< e820_nr; i++)
@@ -328,6 +336,96 @@ mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr)
 	memmap_info->type = MULTIBOOT_TAG_TYPE_MMAP;
 	memmap_info->size = sizeof(mbi_mmap_s) + sizeof(mbi_mmap_ent_s) * e820_nr;
 	memmap_info->entry_size = sizeof(mbi_mmap_ent_s);
+	return next_info_tag_addr(mb2_infotag_ptr);
+}
+
+mbi_tag_s *fill_acpi_RSDT_info(EFI_SYSTEM_TABLE *SystemTable, mbi_tag_s *mb2_infotag_ptr)
+{
+	mbi_acpi_new_s *rsdt_new = (mbi_acpi_new_s *)mb2_infotag_ptr;
+
+	UINTN		i,j;
+	// UINTN		EntryCount;
+	CHAR8		strBuff[20];
+	// UINT64		*EntryPtr;
+	EFI_GUID	AcpiTableGuid  = ACPI_TABLE_GUID;
+	EFI_GUID	Acpi2TableGuid = EFI_ACPI_TABLE_GUID;
+	EFI_CONFIGURATION_TABLE		*configTab=NULL;  
+	EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER  *Root;
+
+	Print(L"\nList ACPI Table:\n");
+	configTab = gST->ConfigurationTable;
+	for (i = 0; i < gST->NumberOfTableEntries; i++)
+	{   
+		//Step1. Find the table for ACPI
+		if ((CompareGuid(&configTab->VendorGuid, &AcpiTableGuid) == 0) ||
+			(CompareGuid(&configTab->VendorGuid, &Acpi2TableGuid) == 0))
+		{ 
+			Print(L"\nFound table: %g\n", &configTab->VendorGuid); 
+			Print(L"Address: @[0x%p]\n", configTab);
+			
+			Root = configTab->VendorTable;
+
+			// Step2. Check the Revision, we olny accept Revision >= 2
+			if (Root->Revision >= EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION)
+			{
+			Print(L"\nRevision >= EFI_ACPI_6_5_RSDP_REVISION\n");
+			Print(L"ROOT SYSTEM DESCRIPTION @[0x%p]\n", Root);
+			ZeroMem(strBuff, sizeof(strBuff));
+			CopyMem(strBuff, &(Root->Signature), sizeof(UINT64));
+			Print(L"RSDP-Signature [%a] (", strBuff);
+			for( j = 0; j < 8; j++)  
+			Print(L"0x%x ", strBuff[j]);
+			Print(L")\n");
+			Print(L"RSDP-Revision [%d]\n", Root->Revision);
+			ZeroMem(strBuff, sizeof(strBuff));
+			for ( j = 0; j < 6; j++) { strBuff[j] = (Root->OemId[j] & 0xFF); }
+			Print(L"RSDP-OEMID [%a]\n", strBuff);
+			
+			Print(L"RSDT address= [0x%p], Length=[0x%X]\n", Root->RsdtAddress, Root->Length);
+			Print(L"XSDT address= [0x%LX]\n", Root->XsdtAddress);
+			// 没找到这个函数的定义，应该不是edk2的东西
+			// WaitKey();
+
+
+				// // Step3. Get XSDT address
+				// XSDT=(EFI_ACPI_DESCRIPTION_HEADER *)(UINTN) Root->XsdtAddress;
+				// EntryCount = (XSDT->Length - sizeof(EFI_ACPI_DESCRIPTION_HEADER)) 
+				// 			/ sizeof(UINT64);
+				// ZeroMem(strBuff,sizeof(strBuff));
+				// CopyMem(strBuff,&(XSDT->Signature),sizeof(UINT32));
+				// Print(L"XSDT-Sign [%a]\n",strBuff);           
+				// Print(L"XSDT-length [%d]\n",XSDT->Length);            
+				// Print(L"XSDT-Counter [%d]\n",EntryCount); 
+						
+				// // Step4. Check the signature of every entry
+				// EntryPtr=(UINT64 *)(XSDT+1);
+				// for (j=0;j<EntryCount; j++,EntryPtr++)
+				// {
+					
+				// 	Entry=(EFI_ACPI_DESCRIPTION_HEADER *)((UINTN)(*EntryPtr));
+					
+				// 	// Step5. Find the FADT table
+				// 	if (Entry->Signature==0x50434146) { //'FACP'
+				// 	FADT = (EFI_ACPI_5_0_FIXED_ACPI_DESCRIPTION_TABLE *)(UINTN) Entry;
+				// 	Print(L"FADT->Dsdt = 0x%X\n",FADT->Dsdt);
+				// 	Print(L"FADT->xDsdt = 0x%LX\n",FADT->XDsdt);
+					
+				// 	// Step6. Get DSDT address
+				// 	DSDT = (EFI_ACPI_DESCRIPTION_HEADER *) (FADT->Dsdt);
+				// 	Print(L"DSDT table @[%X]\n",DSDT);
+				// 	Print(L"DSDT-Length = 0x%x\n",DSDT->Length);
+				// 	Print(L"DSDT-Checksum = 0x%x\n",DSDT->Checksum);
+				// 	}
+				// }
+			}
+		}
+		configTab++;
+	}
+
+	while (1);
+
+	rsdt_new->type = MULTIBOOT_TAG_TYPE_ACPI_NEW;
+	rsdt_new->size = 0;
 	return next_info_tag_addr(mb2_infotag_ptr);
 }
 
