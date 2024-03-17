@@ -21,7 +21,9 @@
 #include <uefi/multiboot2.h>
 #include <uefi/bootloader.h>
 
-extern efi_machine_conf_s	*machine_info;
+
+extern mbi_mmap_ent_s	*ram_map;
+
 
 /*
  * We organize the E820 table into three main data structures:
@@ -102,21 +104,16 @@ void __init e820__memory_setup(void)
 	e820_table->nr_entries = 0;
 	char *who = "BIOS-e820";
 
-	for (mb_memmap_s *mmap_entp = machine_info->mb_mmap;
-		i < sizeof(machine_info->mb_mmap)/sizeof(mb_memmap_s);
+	for (mbi_mmap_ent_s *mmap_entp = ram_map;
+		mmap_entp->len != 0 && mmap_entp->type != 0;
 		i++, mmap_entp++)
 	{
-		if (mmap_entp->len == 0)
-		{
-			e820_table->nr_entries = i;
-			break;
-		}
-		
 		e820_entry_s *e820_entp = &(e820_table->entries[i]);
 		e820_entp->addr = mmap_entp->addr;
 		e820_entp->size = mmap_entp->len;
 		e820_entp->type = mmap_entp->type;
 	}
+	e820_table->nr_entries = i;
 
 	pr_info("BIOS-provided physical RAM map:\n");
 	e820__print_table(who);

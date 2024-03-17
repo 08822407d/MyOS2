@@ -10,7 +10,8 @@
 	#include <Guid/FileInfo.h>
 	#include "ElfLib.h"
 
-	#define PAGE_SIZE	0x1000
+	#define PAGE_SHIFT	12
+	#define PAGE_SIZE	(1 << PAGE_SHIFT)
 
 
     EFI_STATUS LoadFile(IN EFI_LOADED_IMAGE	*LoadedImage,

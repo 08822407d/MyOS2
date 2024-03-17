@@ -32,8 +32,6 @@
 
 	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
 	{
-		mb_memmap_s mb_mmap[32];
-		mbi_fb_common_s mb_fb_common;
 		efi_smpinfo_s efi_smp_info;
 	} efi_machine_conf_s;
 
@@ -81,12 +79,18 @@
 
 	#ifdef __PI_UEFI_H__
 		EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
-		EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info);
+		EFI_STATUS testMPPInfo(EFI_MP_SERVICES_PROTOCOL *mpp, efi_machine_conf_s * machine_info);
 		EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage);
-		void get_vbe_info(efi_machine_conf_s * machine_info);
-		void get_machine_memory_info(mb_memmap_s * mb_memmap);
+		void set_video_mode(IN EFI_HANDLE ImageHandle, int mode);
+		mbi_tag_s *fill_framebuffer_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
+		mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
 
-		void parse_multiboot2(EFI_PHYSICAL_ADDRESS start_addr);
+		void parse_mb2_header(EFI_PHYSICAL_ADDRESS start_addr);
+		mbi_tag_s *init_info_tag_addr(PHYSICAL_ADDRESS start_addr);
+		mbi_tag_s *next_info_tag_addr(mbi_tag_s *prev_info_tag);
+		mbi_tag_s *fill_info_tag_end(mbi_tag_s *info_tag_ptr);
+        void fill_info_tag_header(mbi_tags_header_s *mbi_tags_header_ptr,
+        		PHYSICAL_ADDRESS start_addr, mbi_tag_s *info_tag_end);
 
 		EFI_STATUS load_elf_kernel(IN EFI_LOADED_IMAGE	*LoadedImage,
 			CHAR16 *filename, PHYSICAL_ADDRESS *entry_addr);

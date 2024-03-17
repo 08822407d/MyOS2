@@ -16,31 +16,31 @@ extern u64 mbi_base;
 
 efi_machine_conf_s	*machine_info;
 unsigned		nr_lcpu;
+mbi_mmap_ent_s	*ram_map;
 framebuffer_s	framebuffer;
 
 
 void parse_tag (unsigned long magic, unsigned long addr);
 
-static void get_VBE_info(mbi_fb_common_s * vbe_info)
+static void get_framebuffer_info(mbi_framebuffer_s* framebuffer_info)
 {
-	framebuffer.FB_phybase = vbe_info->framebuffer_addr;
+	mbi_framebuffer_common_s *common = &framebuffer_info->common;
+	framebuffer.FB_phybase = common->framebuffer_addr;
 	framebuffer.FB_virbase = phys_to_virt(framebuffer.FB_phybase);
-	framebuffer.FB_size = vbe_info->size;
-	framebuffer.X_Resolution = vbe_info->framebuffer_pitch;
-	framebuffer.X_Resolution = vbe_info->framebuffer_width;
-	framebuffer.Y_Resolution = vbe_info->framebuffer_height;
-	framebuffer.PixperScanline = vbe_info->framebuffer_pitch;
+	framebuffer.FB_size = common->framebuffer_width * common->framebuffer_height * common->framebuffer_bpp / 8;
+	framebuffer.X_Resolution = common->framebuffer_width;
+	framebuffer.Y_Resolution = common->framebuffer_height;
+	framebuffer.PixperScanline = common->framebuffer_pitch / (common->framebuffer_bpp / 8);
 }
 
 void myos_early_init_system(void)
 {
 	u64 *virt_mbi_magic_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_magic);
 	u64 *virt_mbi_base_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_base);
-	// parse_tag(*(unsigned long *)virt_mbi_magic, *(unsigned long *)virt_mbi_base);
+	parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
 
-	machine_info = (efi_machine_conf_s *)phys_to_virt((phys_addr_t)*virt_mbi_base_ptr);
-	get_VBE_info(&machine_info->mb_fb_common);
 	nr_lcpu = 1;
+	// while (1);
 }
 
 
@@ -81,13 +81,15 @@ parse_tag (unsigned long magic, unsigned long addr)
 			mbi_bootdev_s *mbi_bootdev = (mbi_bootdev_s *)tag;
 			break;
 		case MULTIBOOT_TAG_TYPE_MMAP:
-			mb_memmap_s *mbi_mmap = (mb_memmap_s *)tag;
+			mbi_mmap_s *mbi_mmap = (mbi_mmap_s *)tag;
+			ram_map = (mbi_mmap_ent_s *)phys_to_virt((phys_addr_t)mbi_mmap->entries);
 			break;
 		case MULTIBOOT_TAG_TYPE_VBE:
-			mbi_vbe_s *mbi_vbe = (mbi_vbe_s *)tag;
+			mbi_vbe_s *mbi_mbi_mmap_svbe = (mbi_vbe_s *)tag;
 			break;
 		case MULTIBOOT_TAG_TYPE_FRAMEBUFFER:
 			mbi_framebuffer_s *mbi_fb = (mbi_framebuffer_s *)tag;
+			get_framebuffer_info(mbi_fb);
 			break;
 		case MULTIBOOT_TAG_TYPE_EFI64:
 			mbi_efi64_s *mbi_efi64 = (mbi_efi64_s *)tag;

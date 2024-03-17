@@ -10,7 +10,7 @@
   bootloader.h
   bootloader.c
   multiboot2.h
-  read_multiboot2.c
+  multiboot2_utils.c
   utils.h
   utils.c
   ElfLib.h

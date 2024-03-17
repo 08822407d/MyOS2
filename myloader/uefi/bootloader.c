@@ -20,66 +20,72 @@
 #include "multiboot2.h"
 
 
-EFI_MP_SERVICES_PROTOCOL* mpp;
-EFI_GRAPHICS_OUTPUT_PROTOCOL* gGraphicsOutput = 0;
-UINTN MapKey = 0;
-UINTN DescriptorSize = 0;
-UINT32 DesVersion = 0;
 
 
-EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle,IN EFI_SYSTEM_TABLE *SystemTable)
+EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *SystemTable)
 {
-	EFI_LOADED_IMAGE		*LoadedImage;
-	EFI_PHYSICAL_ADDRESS	pages;
-	efi_machine_conf_s		*machine_info = NULL;
+	EFI_LOADED_IMAGE	*LoadedImage;
+	mbi_tags_header_s	*mbi_tags_header_ptr;
+	mbi_tag_s			*mb2_infotag_ptr;
+	// efi_machine_conf_s		*machine_info = NULL;
 
 	gBS->HandleProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID*)&LoadedImage);
+
 //////////////////////
 
-	read_mb2head(LoadedImage);
-	PHYSICAL_ADDRESS k_load_addr = (PHYSICAL_ADDRESS)mb2_kaddr_p->load_addr;
-	
-	// LoadFile(LoadedImage, L"kernel.bin", k_load_addr, 0);
+	set_video_mode(ImageHandle, -1);
 
+	PHYSICAL_ADDRESS k_load_addr = 0;
 	load_elf_kernel(LoadedImage, L"kernel", &k_load_addr);
 
 ///////////////////
 
-	pages = MACHINE_CONF_ADDR;
-	gBS->AllocatePages(AllocateAddress, EfiLoaderData, 4, &pages);
-	gBS->SetMem((void*)pages, 0x4000, 0);
-	machine_info = (efi_machine_conf_s *)pages;
-
-	get_vbe_info(machine_info);
-	get_machine_memory_info(machine_info->mb_mmap);
+	UINTN page_count = 32;
+	EFI_PHYSICAL_ADDRESS pages = 0;
+	gBS->AllocatePages(AllocateAnyPages, EfiLoaderData, page_count, &pages);
+	gBS->SetMem((void*)pages, page_count * PAGE_SIZE, 0);
+	mbi_tags_header_ptr = (mbi_tags_header_s *)pages;
+	mb2_infotag_ptr = init_info_tag_addr(pages);
+	
+	mb2_infotag_ptr = fill_framebuffer_info(ImageHandle, mb2_infotag_ptr);
+	mb2_infotag_ptr = fill_mmap_info(ImageHandle, mb2_infotag_ptr);
 	
 /////////////////////
 
-    LocateMPP(&mpp);
-    testMPPInfo(machine_info);
+	// EFI_MP_SERVICES_PROTOCOL *mpp;
+	// LocateMPP(&mpp);
+	// testMPPInfo(mpp, machine_info);
 
 /////////////////////
 
+	mb2_infotag_ptr = fill_info_tag_end(mb2_infotag_ptr);
+	fill_info_tag_header(mbi_tags_header_ptr, pages, mb2_infotag_ptr);
+
+	Print(L"Allocate Pages At: 0x%llx.\n", pages);
+	Print(L"Entry Point At: 0x%llx.\n", k_load_addr);
 	Print(L"Call ExitBootServices.\n");
 	Print(L"Jmp to Kernel.\n");
 
-	gBS->CloseProtocol(LoadedImage->DeviceHandle,&gEfiSimpleFileSystemProtocolGuid,ImageHandle,NULL);
-	gBS->CloseProtocol(ImageHandle,&gEfiLoadedImageProtocolGuid,ImageHandle,NULL);
-	gBS->CloseProtocol(gGraphicsOutput,&gEfiGraphicsOutputProtocolGuid,ImageHandle,NULL);
-	gBS->ExitBootServices(ImageHandle,MapKey);
+	gBS->CloseProtocol(LoadedImage->DeviceHandle, &gEfiSimpleFileSystemProtocolGuid, ImageHandle, NULL);
+	gBS->CloseProtocol(ImageHandle, &gEfiLoadedImageProtocolGuid, ImageHandle, NULL);
 
 	void (*func)(void);
 	func = (void *)k_load_addr;
 
-	asm volatile(	""
+	// while (1);
+
+	asm volatile(	"movq	%0,		%%rax		\n"
+					"movq	%1,		%%rbx		\n"
+					"callq	*%2					\n"
 				:
-				:	"rax" (MULTIBOOT2_BOOTLOADER_MAGIC),
-					"rbx" (machine_info)
+				:	"i" (MULTIBOOT2_BOOTLOADER_MAGIC),
+					"m" (pages),
+					"m" (func)
 				:
 				);
 
-	func();
-
+	while (1);
+	
 	return EFI_SUCCESS;
 }
 
@@ -89,104 +95,153 @@ EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage)
 	PHYSICAL_ADDRESS	mb2_load_addr = 0x1000000;
 
 	LoadFile(LoadedImage, L"kernel.bin", mb2_load_addr, bufsize);
-	parse_multiboot2(mb2_load_addr);
+	parse_mb2_header(mb2_load_addr);
 
 	return EFI_SUCCESS;
 }
 
-EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp)
+EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL **mpp)
 {
-    return  gBS->LocateProtocol( &gEfiMpServiceProtocolGuid, NULL, (void**)mpp);
+	return  gBS->LocateProtocol( &gEfiMpServiceProtocolGuid, NULL, (VOID **)mpp);
 }
 
-EFI_STATUS testMPPInfo(efi_machine_conf_s * machine_info)
+EFI_STATUS testMPPInfo(EFI_MP_SERVICES_PROTOCOL *mpp, efi_machine_conf_s *machine_info)
 {
 	EFI_STATUS Status;
-    {
-        UINTN nCores = 0, nRunning = 0;
-        Status = mpp -> GetNumberOfProcessors(mpp, & nCores, &nRunning);
+	{
+		UINTN nCores = 0, nRunning = 0;
+		Status = mpp -> GetNumberOfProcessors(mpp, & nCores, &nRunning);
 		machine_info->efi_smp_info.core_num = nCores;
 		machine_info->efi_smp_info.core_available = nRunning;
-        // Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
-        {
-           UINTN i = 0;
-           for(i =0; i< nCores; i++){
-               EFI_PROCESSOR_INFORMATION mcpuInfo;
-               Status = mpp -> GetProcessorInfo( mpp, i, &mcpuInfo);
+		// Print(L"System has %d cores, %d cores are running\n", nCores, nRunning);
+		{
+		   UINTN i = 0;
+		   for(i =0; i< nCores; i++){
+			   EFI_PROCESSOR_INFORMATION mcpuInfo;
+			   Status = mpp -> GetProcessorInfo( mpp, i, &mcpuInfo);
 			   machine_info->efi_smp_info.cpus[i].proccessor_id = mcpuInfo.ProcessorId;
 			   machine_info->efi_smp_info.cpus[i].status = mcpuInfo.StatusFlag;
 			   machine_info->efi_smp_info.cpus[i].pack_id = mcpuInfo.Location.Package;
 			   machine_info->efi_smp_info.cpus[i].core_id = mcpuInfo.Location.Core;
 			   machine_info->efi_smp_info.cpus[i].thd_id = mcpuInfo.Location.Thread;
-           }
-        }
-    }
+		   }
+		}
+	}
 	return Status;
 }
 
-void get_vbe_info(efi_machine_conf_s * machine_info)
+void set_video_mode(IN EFI_HANDLE ImageHandle, int mode)
 {
-	int i;
-
-	EFI_GRAPHICS_OUTPUT_MODE_INFORMATION* Info = 0;
-	UINTN InfoSize = 0;
-
-	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
-
-	long H_V_Resolution = gGraphicsOutput->Mode->Info->HorizontalResolution * gGraphicsOutput->Mode->Info->VerticalResolution;
-	int MaxResolutionMode = gGraphicsOutput->Mode->Mode;
-	// 选择最大分辨率
-	for(i = 0; i < gGraphicsOutput->Mode->MaxMode; i++)
+	EFI_GRAPHICS_OUTPUT_PROTOCOL *gGraphicsOutput = 0;
+	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&gGraphicsOutput);
+	if (mode != -1)
+		gGraphicsOutput->SetMode(gGraphicsOutput, mode);
+	else
 	{
-		gGraphicsOutput->QueryMode(gGraphicsOutput,i,&InfoSize,&Info);
-		if((Info->PixelFormat == 1) && (Info->HorizontalResolution * Info->VerticalResolution > H_V_Resolution))
+		int i;
+		EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE *Mode = 0;
+		EFI_GRAPHICS_OUTPUT_MODE_INFORMATION *Info = 0;
+		UINTN InfoSize = 0;
+
+		Mode = gGraphicsOutput->Mode;
+
+		long H_V_Resolution = Mode->Info->HorizontalResolution * Mode->Info->VerticalResolution;
+		int MaxResolutionMode = gGraphicsOutput->Mode->Mode;
+		// 选择最大分辨率
+		for(i = 0; i < Mode->MaxMode; i++)
 		{
-			H_V_Resolution = Info->HorizontalResolution * Info->VerticalResolution;
-			MaxResolutionMode = i;
+			gGraphicsOutput->QueryMode(gGraphicsOutput, i, &InfoSize, &Info);
+
+			// Print(L"Mode: %02d, Version: %x, Format: %d, Horizontal: %d, Vertical: %d, ScanLine: %d\n", i, Info->Version, Info->PixelFormat, Info->HorizontalResolution, Info->VerticalResolution, Info->PixelsPerScanLine);
+
+			if((Info->PixelFormat == 1) && (Info->HorizontalResolution * Info->VerticalResolution > H_V_Resolution))
+			{
+				H_V_Resolution = Info->HorizontalResolution * Info->VerticalResolution;
+				MaxResolutionMode = i;
+			}
+			gBS->FreePool(Info);
 		}
-		gBS->FreePool(Info);
+
+		gGraphicsOutput->SetMode(gGraphicsOutput,MaxResolutionMode);
+		gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
+		Mode = gGraphicsOutput->Mode;
+		
+		// 查看所有分辨率
+		for(i = 0; i < Mode->MaxMode; i++)
+		{
+			gGraphicsOutput->QueryMode(gGraphicsOutput, i, &InfoSize, &Info);
+			Print(L"Mode: %02d, Version: %x, Format: %d, Horizontal: %d, Vertical: %d, ScanLine: %d\n", i, Info->Version, Info->PixelFormat, Info->HorizontalResolution, Info->VerticalResolution, Info->PixelsPerScanLine);
+			gBS->FreePool(Info);
+		}
 	}
 
-	gGraphicsOutput->SetMode(gGraphicsOutput,MaxResolutionMode);
-	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid,NULL,(VOID **)&gGraphicsOutput);
+	gBS->CloseProtocol(gGraphicsOutput, &gEfiGraphicsOutputProtocolGuid,ImageHandle, NULL);
 
-	machine_info->mb_fb_common.framebuffer_width = gGraphicsOutput->Mode->Info->HorizontalResolution;
-	machine_info->mb_fb_common.framebuffer_height = gGraphicsOutput->Mode->Info->VerticalResolution;
-	machine_info->mb_fb_common.framebuffer_pitch = gGraphicsOutput->Mode->Info->PixelsPerScanLine;
-	machine_info->mb_fb_common.framebuffer_addr = gGraphicsOutput->Mode->FrameBufferBase;
-	machine_info->mb_fb_common.size = gGraphicsOutput->Mode->FrameBufferSize;
-	machine_info->mb_fb_common.framebuffer_type = MaxResolutionMode;
-	machine_info->mb_fb_common.type = gGraphicsOutput->Mode->Mode;
+	// while (1);
 }
 
-void get_machine_memory_info(mb_memmap_s * mb_memmap)
+mbi_tag_s *fill_framebuffer_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr)
+{
+	EFI_GRAPHICS_OUTPUT_PROTOCOL* gGraphicsOutput = 0;
+	gBS->LocateProtocol(&gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&gGraphicsOutput);
+	EFI_GRAPHICS_OUTPUT_PROTOCOL_MODE *Mode = gGraphicsOutput->Mode;
+
+
+	mbi_framebuffer_s *framebuffer_info = (mbi_framebuffer_s *)mb2_infotag_ptr;
+	mbi_framebuffer_common_s *common = &framebuffer_info->common;
+
+	common->framebuffer_addr = Mode->FrameBufferBase;
+	common->framebuffer_width = Mode->Info->HorizontalResolution;
+	common->framebuffer_height = Mode->Info->VerticalResolution;
+	common->framebuffer_bpp = Mode->FrameBufferSize * 8 /
+			(common->framebuffer_width * common->framebuffer_height);
+	common->framebuffer_pitch = Mode->Info->PixelsPerScanLine * common->framebuffer_bpp / 8;
+	common->framebuffer_type = Mode->Mode;
+	common->reserved = 0;
+
+	gBS->CloseProtocol(gGraphicsOutput, &gEfiGraphicsOutputProtocolGuid,ImageHandle, NULL);
+
+	common->type = MULTIBOOT_TAG_TYPE_FRAMEBUFFER;
+	common->size = sizeof(mbi_framebuffer_s);
+	return next_info_tag_addr(mb2_infotag_ptr);
+}
+
+mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr)
 {
 	EFI_STATUS status = EFI_SUCCESS;
+
+	UINT32 DesVersion = 0;
+	UINTN MapKey = 0;
 	UINTN MemMapSize = 0;
+	UINTN DescriptorSize = 0;
 	EFI_MEMORY_DESCRIPTOR* MemMap = 0;
 
 	int i;
 	int e820_nr = 0;
 	unsigned long last_end = 0;
-	mb_memmap_s *last_mb_mmap = NULL;
-	mb_memmap_s *mb_mmap = mb_memmap;
+	mbi_mmap_s *memmap_info = (mbi_mmap_s *)mb2_infotag_ptr;
+	mbi_mmap_ent_s *last_mb_mmap = NULL;
+	mbi_mmap_ent_s *mb_mmap = memmap_info->entries;
 
 	// 计算缓冲区大小
-	gBS->GetMemoryMap(&MemMapSize,MemMap,&MapKey,&DescriptorSize,&DesVersion);
+	gBS->GetMemoryMap(&MemMapSize, MemMap, &MapKey, &DescriptorSize, &DesVersion);
 	MemMapSize += DescriptorSize * 5;
 	// 申请缓冲区
-	gBS->AllocatePool(EfiRuntimeServicesData,MemMapSize,(VOID**)&MemMap);
-	gBS->SetMem((void*)MemMap,MemMapSize,0);
+	gBS->AllocatePool(EfiRuntimeServicesData, MemMapSize, (VOID **)&MemMap);
+	gBS->SetMem((void*)MemMap, MemMapSize, 0);
 	// 重新获取内存分布
 	status = gBS->GetMemoryMap(&MemMapSize, MemMap, &MapKey, &DescriptorSize, &DesVersion);
 	if(EFI_ERROR(status))
-		Print(L"status:%018lx\n",status);
+	{
+		Print(L"GetMemoryMap FAIL. Status: %018lx\n",status);
+		while (1);
+	}
 
-	for(i = 0;i < MemMapSize / DescriptorSize;i++)
+	for(i = 0; i < MemMapSize / DescriptorSize; i++)
 	{
 		int MemType = 0;
 		// EFI_MEMORY_DESCRIPTOR的大小不一定等于DescriptorSize
-		EFI_MEMORY_DESCRIPTOR* MMap = (EFI_MEMORY_DESCRIPTOR*) ((CHAR8*)MemMap + i * DescriptorSize);
+		EFI_MEMORY_DESCRIPTOR *MMap = (EFI_MEMORY_DESCRIPTOR*) ((CHAR8*)MemMap + i * DescriptorSize);
 		if(MMap->NumberOfPages == 0)
 			continue;
 		switch(MMap->Type)
@@ -226,18 +281,18 @@ void get_machine_memory_info(mb_memmap_s * mb_memmap)
 				continue;
 		}
 
-		// check if same type
-		if((last_mb_mmap != NULL) && (last_mb_mmap->type == MemType) && 
-		// and address contiguous
+		// check if same type and address contiguous
+		if((last_mb_mmap != NULL) &&
+			(last_mb_mmap->type == MemType) && 
 			(MMap->PhysicalStart == last_end))
 		{
-			last_mb_mmap->len += MMap->NumberOfPages << 12;
-			last_end += MMap->NumberOfPages << 12;
+			last_mb_mmap->len += MMap->NumberOfPages << PAGE_SHIFT;
+			last_end += MMap->NumberOfPages << PAGE_SHIFT;
 		}
 		else
 		{
 			mb_mmap->addr = MMap->PhysicalStart;
-			mb_mmap->len = MMap->NumberOfPages << 12;
+			mb_mmap->len = MMap->NumberOfPages << PAGE_SHIFT;
 			mb_mmap->type = MemType;
 
 			last_mb_mmap = mb_mmap;
@@ -248,15 +303,15 @@ void get_machine_memory_info(mb_memmap_s * mb_memmap)
 		}
 	}
 
-	last_mb_mmap = mb_memmap;
+	last_mb_mmap = memmap_info->entries;
 	int j = 0;
 	for(i = 0; i< e820_nr; i++)
 	{
-		mb_memmap_s * e820i = last_mb_mmap + i;
-		mb_memmap_s mmap_ent;
+		mbi_mmap_ent_s * e820i = last_mb_mmap + i;
+		mbi_mmap_ent_s mmap_ent;
 		for(j = i + 1; j < e820_nr; j++)
 		{
-			mb_memmap_s * e820j = last_mb_mmap + j;
+			mbi_mmap_ent_s * e820j = last_mb_mmap + j;
 			if(e820i->addr > e820j->addr)
 			{
 				mmap_ent = *e820i;
@@ -265,13 +320,19 @@ void get_machine_memory_info(mb_memmap_s * mb_memmap)
 			}
 		}
 	}
-	last_mb_mmap = mb_memmap;
+	last_mb_mmap = memmap_info->entries;
 
 	gBS->FreePool(MemMap);
+	gBS->ExitBootServices(ImageHandle, MapKey);
+
+	memmap_info->type = MULTIBOOT_TAG_TYPE_MMAP;
+	memmap_info->size = sizeof(mbi_mmap_s) + sizeof(mbi_mmap_ent_s) * e820_nr;
+	memmap_info->entry_size = sizeof(mbi_mmap_ent_s);
+	return next_info_tag_addr(mb2_infotag_ptr);
 }
 
 EFI_STATUS load_elf_kernel(IN EFI_LOADED_IMAGE	*LoadedImage,
-	CHAR16 *filename, PHYSICAL_ADDRESS *entry_addr)
+	CHAR16 *filename, OUT PHYSICAL_ADDRESS *entry_addr)
 {
 	EFI_STATUS status = EFI_SUCCESS;
 	// Check Format

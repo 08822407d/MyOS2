@@ -190,6 +190,8 @@
 			multiboot_uint32_t preference;
 		};
 
+
+
 		struct multiboot_color
 		{
 			multiboot_uint8_t red;
@@ -209,7 +211,14 @@
 			multiboot_uint32_t type;
 			multiboot_uint32_t zero;
 		};
-		typedef struct multiboot_mmap_entry mb_memmap_s;
+		typedef struct multiboot_mmap_entry mbi_mmap_ent_s;
+
+		struct multiboot_tags_header
+		{
+			multiboot_uint32_t total_size;
+			multiboot_uint32_t reserved;
+		};
+		typedef struct multiboot_tags_header mbi_tags_header_s;
 
 		struct multiboot_tag
 		{
@@ -262,7 +271,7 @@
 			multiboot_uint32_t size;
 			multiboot_uint32_t entry_size;
 			multiboot_uint32_t entry_version;
-			struct multiboot_mmap_entry entries[0];  
+			mbi_mmap_ent_s entries[0];  
 		};
 		typedef struct multiboot_tag_mmap mbi_mmap_s;
 
@@ -308,11 +317,11 @@
 			multiboot_uint8_t framebuffer_type;
 			multiboot_uint16_t reserved;
 		};
-		typedef struct multiboot_tag_framebuffer_common mbi_fb_common_s;
+		typedef struct multiboot_tag_framebuffer_common mbi_framebuffer_common_s;
 
 		struct multiboot_tag_framebuffer
 		{
-			struct multiboot_tag_framebuffer_common common;
+			mbi_framebuffer_common_s common;
 
 			union
 			{
