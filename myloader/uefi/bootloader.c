@@ -343,48 +343,52 @@ mbi_tag_s *fill_acpi_RSDT_info(EFI_SYSTEM_TABLE *SystemTable, mbi_tag_s *mb2_inf
 {
 	mbi_acpi_new_s *rsdt_new = (mbi_acpi_new_s *)mb2_infotag_ptr;
 
-	UINTN		i,j;
+	UINTN		i;
+	// UINTN		j;
 	// UINTN		EntryCount;
-	CHAR8		strBuff[20];
+	// CHAR8		strBuff[20];
 	// UINT64		*EntryPtr;
 	EFI_GUID	AcpiTableGuid  = ACPI_TABLE_GUID;
 	EFI_GUID	Acpi2TableGuid = EFI_ACPI_TABLE_GUID;
 	EFI_CONFIGURATION_TABLE		*configTab=NULL;  
 	EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER  *Root;
+	UINT64		RSDP_SIGNATUR = EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_SIGNATURE;
+	Print(L"\nRSDP Signature: 0x%llx\n", RSDP_SIGNATUR); 
 
-	Print(L"\nList ACPI Table:\n");
+	Print(L"List ACPI Table:\n");
 	configTab = gST->ConfigurationTable;
 	for (i = 0; i < gST->NumberOfTableEntries; i++)
 	{   
 		//Step1. Find the table for ACPI
 		if ((CompareGuid(&configTab->VendorGuid, &AcpiTableGuid) == 0) ||
 			(CompareGuid(&configTab->VendorGuid, &Acpi2TableGuid) == 0))
-		{ 
-			Print(L"\nFound table: %g\n", &configTab->VendorGuid); 
-			Print(L"Address: @[0x%p]\n", configTab);
-			
+		{
 			Root = configTab->VendorTable;
+			Print(L"\nTable Signature: 0x%llx\n", Root->Signature); 
 
 			// Step2. Check the Revision, we olny accept Revision >= 2
-			if (Root->Revision >= EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION)
+			if (Root->Signature == RSDP_SIGNATUR && Root->Revision >= EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER_REVISION)
 			{
-			Print(L"\nRevision >= EFI_ACPI_6_5_RSDP_REVISION\n");
-			Print(L"ROOT SYSTEM DESCRIPTION @[0x%p]\n", Root);
-			ZeroMem(strBuff, sizeof(strBuff));
-			CopyMem(strBuff, &(Root->Signature), sizeof(UINT64));
-			Print(L"RSDP-Signature [%a] (", strBuff);
-			for( j = 0; j < 8; j++)  
-			Print(L"0x%x ", strBuff[j]);
-			Print(L")\n");
-			Print(L"RSDP-Revision [%d]\n", Root->Revision);
-			ZeroMem(strBuff, sizeof(strBuff));
-			for ( j = 0; j < 6; j++) { strBuff[j] = (Root->OemId[j] & 0xFF); }
-			Print(L"RSDP-OEMID [%a]\n", strBuff);
-			
-			Print(L"RSDT address= [0x%p], Length=[0x%X]\n", Root->RsdtAddress, Root->Length);
-			Print(L"XSDT address= [0x%LX]\n", Root->XsdtAddress);
-			// 没找到这个函数的定义，应该不是edk2的东西
-			// WaitKey();
+				// Print(L"\nFound table: %g\n", &configTab->VendorGuid); 
+				// Print(L"Address: @[0x%p]\n", configTab);
+				
+				// Print(L"\nRevision >= EFI_ACPI_6_5_RSDP_REVISION\n");
+				// Print(L"ROOT SYSTEM DESCRIPTION @[0x%p]\n", Root);
+				// ZeroMem(strBuff, sizeof(strBuff));
+				// CopyMem(strBuff, &(Root->Signature), sizeof(UINT64));
+				// Print(L"RSDP-Signature [%a] (", strBuff);
+				// for( j = 0; j < 8; j++)  
+				// Print(L"0x%x ", strBuff[j]);
+				// Print(L")\n");
+				// Print(L"RSDP-Revision [%d]\n", Root->Revision);
+				// ZeroMem(strBuff, sizeof(strBuff));
+				// for ( j = 0; j < 6; j++) { strBuff[j] = (Root->OemId[j] & 0xFF); }
+				// Print(L"RSDP-OEMID [%a]\n", strBuff);
+				
+				// Print(L"RSDT address= [0x%p], Length=[0x%X]\n", Root->RsdtAddress, Root->Length);
+				// Print(L"XSDT address= [0x%LX]\n", Root->XsdtAddress);
+				// // 没找到这个函数的定义，应该不是edk2的东西
+				// // WaitKey();
 
 
 				// // Step3. Get XSDT address
@@ -417,15 +421,19 @@ mbi_tag_s *fill_acpi_RSDT_info(EFI_SYSTEM_TABLE *SystemTable, mbi_tag_s *mb2_inf
 				// 	Print(L"DSDT-Checksum = 0x%x\n",DSDT->Checksum);
 				// 	}
 				// }
+
+				ZeroMem(&rsdt_new->rsdp, sizeof(EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER));
+				CopyMem(&rsdt_new->rsdp, Root, sizeof(EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER));
+				break;
 			}
 		}
 		configTab++;
 	}
 
-	while (1);
+	// while (1);
 
 	rsdt_new->type = MULTIBOOT_TAG_TYPE_ACPI_NEW;
-	rsdt_new->size = 0;
+	rsdt_new->size = 8 + sizeof(EFI_ACPI_6_5_ROOT_SYSTEM_DESCRIPTION_POINTER);
 	return next_info_tag_addr(mb2_infotag_ptr);
 }
 
