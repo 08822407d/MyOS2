@@ -14,7 +14,6 @@ extern uint64_t	boot_from_grub2;
 extern u64 mbi_magic;
 extern u64 mbi_base;
 
-efi_machine_conf_s	*machine_info;
 unsigned			nr_lcpu;
 mbi_mmap_ent_s		*ram_map;
 framebuffer_s		framebuffer;
@@ -23,7 +22,12 @@ mbi_tags_header_s	*mbi_tag_header;
 
 void parse_tag (unsigned long magic, unsigned long addr);
 
-static void get_framebuffer_info(mbi_framebuffer_s* framebuffer_info)
+static void get_smpinfo(myos2_tag_smpinfo_s *smp_info)
+{
+	nr_lcpu = smp_info->core_num;
+}
+
+static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)
 {
 	mbi_framebuffer_common_s *common = &framebuffer_info->common;
 	framebuffer.FB_phybase = common->framebuffer_addr;
@@ -41,10 +45,8 @@ void myos_early_init_system(void)
 
 	parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
 
-	nr_lcpu = 1;
 	// while (1);
 }
-
 
 void
 parse_tag (unsigned long magic, unsigned long addr)
@@ -105,6 +107,10 @@ parse_tag (unsigned long magic, unsigned long addr)
 			break;
 		case MULTIBOOT_TAG_TYPE_LOAD_BASE_ADDR:
 			mbi_load_base_addr_s *mbi_load_base_addr = (mbi_load_base_addr_s *)tag;
+			break;
+		case MYOS2_TAG_TYPE_CPU_TOPO:
+			myos2_tag_smpinfo_s *smpinfo = (myos2_tag_smpinfo_s *)tag;
+			get_smpinfo(smpinfo);
 			break;
 		}
 	}

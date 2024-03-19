@@ -14,27 +14,6 @@
 
 	#include "multiboot2.h"
 
-	typedef struct EFI_CPU_DESCRIPTOR
-	{
-		multiboot_uint32_t	pack_id;
-		multiboot_uint32_t	core_id;
-		multiboot_uint32_t	thd_id;
-		multiboot_uint32_t	status;
-		multiboot_uint64_t	proccessor_id;
-	} efi_cpudesc_s;
-
-	typedef struct EFI_SMP_INFO
-	{
-		multiboot_uint32_t	core_num;
-		multiboot_uint32_t	core_available;
-		efi_cpudesc_s cpus[256];
-	} efi_smpinfo_s;
-
-	typedef struct KERNEL_BOOT_PARAMETER_INFORMATION
-	{
-		efi_smpinfo_s efi_smp_info;
-	} efi_machine_conf_s;
-
 	// enum e820_type {
 	// 	E820_TYPE_RAM		= 1,
 	// 	E820_TYPE_RESERVED	= 2,
@@ -78,8 +57,7 @@
 	extern mb2_hdr_tag_kaddr_s * mb2_kaddr_p;
 
 	#ifdef __PI_UEFI_H__
-		EFI_STATUS LocateMPP(EFI_MP_SERVICES_PROTOCOL** mpp);
-		EFI_STATUS testMPPInfo(EFI_MP_SERVICES_PROTOCOL *mpp, efi_machine_conf_s * machine_info);
+		mbi_tag_s *fill_cputopo_info(mbi_tag_s *mb2_infotag_ptr);
 		EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage);
 		void set_video_mode(IN EFI_HANDLE ImageHandle, int mode);
 		mbi_tag_s *fill_framebuffer_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
