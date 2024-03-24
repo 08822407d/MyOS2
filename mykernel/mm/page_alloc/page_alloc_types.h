@@ -220,48 +220,103 @@
 	// #endif
 	} page_s _struct_page_alignment;
 
-	/**
-	 * struct folio - Represents a contiguous set of bytes.
-	 * @flags: Identical to the page flags.
-	 * @lru: Least Recently Used list; tracks how recently this folio was used.
-	 * @mapping: The file this page belongs to, or refers to the anon_vma for
-	 *    anonymous memory.
-	 * @index: Offset within the file, in units of pages.  For anonymous memory,
-	 *    this is the index from the beginning of the mmap.
-	 * @private: Filesystem per-folio data (see folio_attach_private()).
-	 *    Used for swp_entry_t if folio_test_swapcache().
-	 * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
-	 *    find out how many times this folio is mapped by userspace.
-	 * @_refcount: Do not access this member directly.  Use folio_ref_count()
-	 *    to find how many references there are to this folio.
-	 * @memcg_data: Memory Control Group data.
-	 *
-	 * A folio is a physically, virtually and logically contiguous set
-	 * of bytes.  It is a power-of-two in size, and it is aligned to that
-	 * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
-	 * in the page cache, it is at a file offset which is a multiple of that
-	 * power-of-two.  It may be mapped into userspace at an address which is
-	 * at an arbitrary page offset, but its kernel virtual address is aligned
-	 * to its size.
-	 */
+/**
+ * struct folio - Represents a contiguous set of bytes.
+ * @flags: Identical to the page flags.
+ * @lru: Least Recently Used list; tracks how recently this folio was used.
+ * @mlock_count: Number of times this folio has been pinned by mlock().
+ * @mapping: The file this page belongs to, or refers to the anon_vma for
+ *    anonymous memory.
+ * @index: Offset within the file, in units of pages.  For anonymous memory,
+ *    this is the index from the beginning of the mmap.
+ * @private: Filesystem per-folio data (see folio_attach_private()).
+ *    Used for swp_entry_t if folio_test_swapcache().
+ * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
+ *    find out how many times this folio is mapped by userspace.
+ * @_refcount: Do not access this member directly.  Use folio_ref_count()
+ *    to find how many references there are to this folio.
+ * @memcg_data: Memory Control Group data.
+ * @_folio_dtor: Which destructor to use for this folio.
+ * @_folio_order: Do not use directly, call folio_order().
+ * @_entire_mapcount: Do not use directly, call folio_entire_mapcount().
+ * @_nr_pages_mapped: Do not use directly, call folio_mapcount().
+ * @_pincount: Do not use directly, call folio_maybe_dma_pinned().
+ * @_folio_nr_pages: Do not use directly, call folio_nr_pages().
+ * @_hugetlb_subpool: Do not use directly, use accessor in hugetlb.h.
+ * @_hugetlb_cgroup: Do not use directly, use accessor in hugetlb_cgroup.h.
+ * @_hugetlb_cgroup_rsvd: Do not use directly, use accessor in hugetlb_cgroup.h.
+ * @_hugetlb_hwpoison: Do not use directly, call raw_hwp_list_head().
+ * @_deferred_list: Folios to be split under memory pressure.
+ *
+ * A folio is a physically, virtually and logically contiguous set
+ * of bytes.  It is a power-of-two in size, and it is aligned to that
+ * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
+ * in the page cache, it is at a file offset which is a multiple of that
+ * power-of-two.  It may be mapped into userspace at an address which is
+ * at an arbitrary page offset, but its kernel virtual address is aligned
+ * to its size.
+ */
 	typedef struct folio
 	{
 		/* private: don't document the anon union */
-		union
-		{
-			struct
-			{
-				/* public: */
-				unsigned long	flags;
-				// List_s		lru;
-				// struct address_space	*mapping;
-				pgoff_t			index;
-				void 			*private;
-				atomic_t		_mapcount;
-				atomic_t		_refcount;
-				/* private: the union with page_s is transitional */
-			};
-			page_s page;
+		union {
+		// 	struct {
+		// /* public: */
+		// 		unsigned long flags;
+		// 		union {
+		// 			struct list_head lru;
+		// /* private: avoid cluttering the output */
+		// 			struct {
+		// 				void *__filler;
+		// /* public: */
+		// 				unsigned int mlock_count;
+		// /* private: */
+		// 			};
+		// /* public: */
+		// 		};
+		// 		struct address_space *mapping;
+		// 		pgoff_t index;
+		// 		void *private;
+		// 		atomic_t _mapcount;
+		// 		atomic_t _refcount;
+		// /* private: the union with struct page is transitional */
+		// 	};
+			struct page page;
+		};
+		union {
+		// 	struct {
+		// 		unsigned long _flags_1;
+		// 		unsigned long _head_1;
+		// /* public: */
+		// 		unsigned char _folio_dtor;
+		// 		unsigned char _folio_order;
+		// 		atomic_t _entire_mapcount;
+		// 		atomic_t _nr_pages_mapped;
+		// 		atomic_t _pincount;
+		// 		unsigned int _folio_nr_pages;
+		// /* private: the union with struct page is transitional */
+		// 	};
+			struct page __page_1;
+		};
+		union {
+		// 	struct {
+		// 		unsigned long _flags_2;
+		// 		unsigned long _head_2;
+		// /* public: */
+		// 		void *_hugetlb_subpool;
+		// 		void *_hugetlb_cgroup;
+		// 		void *_hugetlb_cgroup_rsvd;
+		// 		void *_hugetlb_hwpoison;
+		// /* private: the union with struct page is transitional */
+		// 	};
+		// 	struct {
+		// 		unsigned long _flags_2a;
+		// 		unsigned long _head_2a;
+		// /* public: */
+		// 		struct list_head _deferred_list;
+		// /* private: the union with struct page is transitional */
+		// 	};
+			struct page __page_2;
 		};
 	} folio_s;
 
