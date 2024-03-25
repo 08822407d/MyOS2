@@ -1037,6 +1037,10 @@
 
 
 	// MyOS defined protos
+	#define LIST_HEAD_INIT(name)	LIST_INIT(name)
+	#define LIST_HEAD(name)			LIST_S(name)
+
+
 	static inline int list_hdr_empty(const List_hdr_s *header) {
 		return READ_ONCE(header->count) == 0;
 	}

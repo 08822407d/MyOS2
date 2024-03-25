@@ -70,8 +70,16 @@
 	// 				__attribute__((__aligned__(1 << (INTERNODE_CACHE_SHIFT))))
 	// #endif
 
-	// #ifndef CONFIG_ARCH_HAS_CACHE_LINE_SIZE
-	// #	define cache_line_size()	L1_CACHE_BYTES
-	// #endif
+	#ifndef CONFIG_ARCH_HAS_CACHE_LINE_SIZE
+	#	define cache_line_size()	L1_CACHE_BYTES
+	#endif
+	/*
+	 * Setting ARCH_SLAB_MINALIGN in arch headers allows a different alignment.
+	 * Intended for arches that get misalignment faults even for 64 bit integer
+	 * aligned buffers.
+	 */
+	#ifndef ARCH_SLAB_MINALIGN
+	#	define ARCH_SLAB_MINALIGN	__alignof__(unsigned long long)
+	#endif
 
 #endif /* __LINUX_CACHE_H */

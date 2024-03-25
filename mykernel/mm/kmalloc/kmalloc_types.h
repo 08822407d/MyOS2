@@ -13,7 +13,7 @@
 	 */
 	enum kmalloc_cache_type
 	{
-		KMALLOC_NORMAL = 0,
+		KMALLOC_NORMAL		= 0,
 		KMALLOC_RECLAIM,
 		KMALLOC_DMA,
 		NR_KMALLOC_TYPES

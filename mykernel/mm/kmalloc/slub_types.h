@@ -11,6 +11,23 @@
 	#include <linux/kernel/kobject.h>
 	#include <linux/lib/list.h>
 
+	#include "slub_const.h"
+	/*
+	 * State of the slab allocator.
+	 *
+	 * This is used to describe the states of the allocator during bootup.
+	 * Allocators use this to gradually bootstrap themselves. Most allocators
+	 * have the problem that the structures used for managing slab caches are
+	 * allocated from slab caches themselves.
+	 */
+	enum slab_state {
+		DOWN,			/* No slab functionality yet */
+		PARTIAL,		/* SLUB: kmem_cache_node available */
+		PARTIAL_NODE,	/* SLAB: kmalloc size for node struct available */
+		UP,				/* Slab caches usable but not all extras yet */
+		FULL			/* Everything is working */
+	};
+
 	/*
 	 * The slab lists for all objects.
 	 */
@@ -107,18 +124,11 @@
 		List_s			list;			/* List of slab caches */
 		kobj_s			kobj;			/* For sysfs */
 
-	#ifdef CONFIG_SLAB_FREELIST_HARDENED
-		unsigned long	random;
-	#endif
 	#ifdef CONFIG_SLAB_FREELIST_RANDOM
 		unsigned int	*random_seq;
 	#endif
 	#ifdef CONFIG_KASAN_GENERIC
 		struct kasan_cache	kasan_info;
-	#endif
-	#ifdef CONFIG_HARDENED_USERCOPY
-		unsigned int	useroffset;	/* Usercopy region offset */
-		unsigned int	usersize;		/* Usercopy region size */
 	#endif
 
 		kmem_cache_node_s	*node[MAX_NUMNODES];
