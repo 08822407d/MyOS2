@@ -793,7 +793,7 @@ void __init console_init(void)
 extern console_s myos_tempcon;
 extern void myos_init_video();
 	myos_init_video();
-	list_init(&myos_tempcon.node, &myos_tempcon);
+	list_init(&myos_tempcon.node);
 	register_console(&myos_tempcon);
 
 

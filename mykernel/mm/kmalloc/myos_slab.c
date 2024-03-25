@@ -42,7 +42,7 @@ void myos_init_slab()
 	for (int i = 0; i < slab_level; i++)
 	{
 		slab_cache_s *scgp = slab_cache_groups_p + i;
-		list_init(&scgp->slabcache_list, scgp);
+		list_init(&scgp->slabcache_list);
 		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
 		list_hdr_init(&scgp->normal_slab_free);
@@ -50,7 +50,7 @@ void myos_init_slab()
 		list_hdr_init(&scgp->normal_slab_full);
 
 		slab_s *bslp = base_slabs_p + i;
-		list_init(&bslp->slab_list, bslp);
+		list_init(&bslp->slab_list);
 
 		// init 3 status of slab list
 		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
@@ -76,7 +76,7 @@ static slab_s * slab_alloc(slab_s *cslp)
 	
 	__SetPageSlab(page);
 	slab_s *nslp = (slab_s *)kzalloc(sizeof(slab_s), GFP_KERNEL);
-	list_init(&nslp->slab_list, nslp);
+	list_init(&nslp->slab_list);
 
 	nslp->page = page;
 	page->private = (unsigned long)nslp;

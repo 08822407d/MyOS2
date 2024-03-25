@@ -155,7 +155,7 @@ cdev_s *cdev_alloc(void)
 {
 	cdev_s *p = kzalloc(sizeof(cdev_s), GFP_KERNEL);
 	if (p)
-		list_init(&p->list, p);
+		list_init(&p->list);
 
 	return p;
 }
@@ -171,7 +171,7 @@ cdev_s *cdev_alloc(void)
 void cdev_init(cdev_s *cdev, const file_ops_s *fops)
 {
 	memset(cdev, 0, sizeof(cdev_s));
-	list_init(&cdev->list, cdev);
+	list_init(&cdev->list);
 	cdev->ops = fops;
 }
 

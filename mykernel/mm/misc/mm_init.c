@@ -32,7 +32,7 @@ __init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
 	// page_cpupid_reset_last(page);
 	// page_kasan_tag_reset(page);
 
-	list_init(&page->lru, page);
+	list_init(&page->lru);
 // #ifdef WANT_PAGE_VIRTUAL
 	// /* The shift won't overflow because ZONE_NORMAL is below 4G. */
 	// if (!is_highmem_idx(zone))
@@ -340,7 +340,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++)
 	{
 		page_s *page = &(NODE_DATA(0)->node_mem_map[i]);
-		list_init(&page->lru, page);
+		list_init(&page->lru);
 	}
 }
 

@@ -36,7 +36,7 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 				free_cluster_chain(clus_lhdrp);
 				return ERR_PTR(-ENOMEM);
 			}
-			list_init(&clus_sp->list, clus_sp);
+			list_init(&clus_sp->list);
 
 			clus_sp->cluster = cluster;
 			list_hdr_enqueue(clus_lhdrp, &clus_sp->list);

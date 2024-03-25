@@ -262,7 +262,7 @@ task_s *__kthread_create_on_node(int (*threadfn)(void *data),
 		task = ERR_PTR(-ENOMEM);
 		goto free_create;
 	}
-	list_init(&create->list, create);
+	list_init(&create->list);
 
 	spin_lock(&kthread_create_lock);
 	list_hdr_enqueue(&kthread_create_list, &create->list);

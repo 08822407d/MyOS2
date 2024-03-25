@@ -1041,7 +1041,7 @@
 		return READ_ONCE(header->count) == 0;
 	}
 
-	void list_init(List_s * src, void * owner_p);
+	void list_init(List_s * src);
 	List_s * list_get_prev(List_s * src);
 	List_s * list_get_next(List_s * src);
 	void list_insert_prev(List_s * src, List_s * dst);

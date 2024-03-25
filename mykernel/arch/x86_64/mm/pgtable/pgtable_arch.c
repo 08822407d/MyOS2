@@ -48,7 +48,7 @@ pgd_t *pgd_alloc(mm_s *mm)
 			KERNEL_PGD_PTRS * sizeof(pgd_t));
 
 		/* list required to sync kernel mapping updates */
-		virt_to_page(pgd)->pt_mm = mm;
+		// virt_to_page(pgd)->pt_mm = mm;
 		pgd_list_add(pgd);
 	// }
 	// pgd_prepopulate_pmd(mm, pgd, pmds);

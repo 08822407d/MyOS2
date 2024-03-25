@@ -232,7 +232,7 @@
 	// /*
 	// * oh the beauties of C type declarations.
 	// */
-	// addr_space_s;
+	// addr_spc_s;
 	// struct writeback_control;
 	// struct readahead_control;
 
@@ -309,12 +309,12 @@
 	// typedef int (*read_actor_t)(read_descriptor_t *, page_s *,
 	// 		unsigned long, unsigned long);
 
-	typedef struct addr_space_ops {
+	typedef struct address_space_operations {
 		// int (*writepage)(page_s *page, struct writeback_control *wbc);
 		// int (*readpage)(file_s *, page_s *);
 
 		// /* Write back some dirty pages from this mapping. */
-		// int (*writepages)(addr_space_s *, struct writeback_control *);
+		// int (*writepages)(addr_spc_s *, struct writeback_control *);
 
 		// /* Set a page dirty.  Return true if this dirtied it */
 		// int (*set_page_dirty)(page_s *page);
@@ -323,19 +323,19 @@
 		// * Reads in the requested pages. Unlike ->readpage(), this is
 		// * PURELY used for read-ahead!.
 		// */
-		// int (*readpages)(file_s *filp, addr_space_s *mapping,
+		// int (*readpages)(file_s *filp, addr_spc_s *mapping,
 		// 		list_head_s *pages, unsigned nr_pages);
 		// void (*readahead)(struct readahead_control *);
 
-		// int (*write_begin)(file_s *, addr_space_s *mapping,
+		// int (*write_begin)(file_s *, addr_spc_s *mapping,
 		// 			loff_t pos, unsigned len, unsigned flags,
 		// 			page_s **pagep, void **fsdata);
-		// int (*write_end)(file_s *, addr_space_s *mapping,
+		// int (*write_end)(file_s *, addr_spc_s *mapping,
 		// 			loff_t pos, unsigned len, unsigned copied,
 		// 			page_s *page, void *fsdata);
 
 		// /* Unfortunately this kludge is needed for FIBMAP. Don't use it */
-		// sector_t (*bmap)(addr_space_s *, sector_t);
+		// sector_t (*bmap)(addr_spc_s *, sector_t);
 		// void (*invalidatepage) (page_s *, unsigned int, unsigned int);
 		// int (*releasepage) (page_s *, gfp_t);
 		// void (*freepage)(page_s *);
@@ -344,7 +344,7 @@
 		// * migrate the contents of a page to the specified target. If
 		// * migrate_mode is MIGRATE_ASYNC, it must not block.
 		// */
-		// int (*migratepage) (addr_space_s *,
+		// int (*migratepage) (addr_spc_s *,
 		// 		page_s *, page_s *, enum migrate_mode);
 		// bool (*isolate_page)(page_s *, isolate_mode_t);
 		// void (*putback_page)(page_s *);
@@ -352,30 +352,30 @@
 		// int (*is_partially_uptodate) (page_s *, unsigned long,
 		// 				unsigned long);
 		// void (*is_dirty_writeback) (page_s *, bool *, bool *);
-		// int (*error_remove_page)(addr_space_s *, page_s *);
+		// int (*error_remove_page)(addr_spc_s *, page_s *);
 
 		// /* swapfile support */
 		// int (*swap_activate)(struct swap_info_struct *sis, file_s *file,
 		// 			sector_t *span);
 		// void (*swap_deactivate)(file_s *file);
-	} addr_space_ops_s;
+	} addr_spc_ops_s;
 
-	// extern const addr_space_ops_s empty_aops;
+	// extern const addr_spc_ops_s empty_aops;
 
 	// /*
 	// * pagecache_write_begin/pagecache_write_end must be used by general code
 	// * to write into the pagecache.
 	// */
-	// int pagecache_write_begin(file_s *, addr_space_s *mapping,
+	// int pagecache_write_begin(file_s *, addr_spc_s *mapping,
 	// 				loff_t pos, unsigned len, unsigned flags,
 	// 				page_s **pagep, void **fsdata);
 
-	// int pagecache_write_end(file_s *, addr_space_s *mapping,
+	// int pagecache_write_end(file_s *, addr_spc_s *mapping,
 	// 				loff_t pos, unsigned len, unsigned copied,
 	// 				page_s *page, void *fsdata);
 
 	/**
-	 * addr_space_s - Contents of a cacheable, mappable object.
+	 * addr_spc_s - Contents of a cacheable, mappable object.
 	 * @host: Owner, either the inode or the block_device.
 	 * @i_pages: Cached pages.
 	 * @invalidate_lock: Guards coherency between page cache contents and
@@ -396,7 +396,7 @@
 	 * @private_list: For use by the owner of the address_space.
 	 * @private_data: For use by the owner of the address_space.
 	 */
-	typedef struct addr_space {
+	typedef struct address_space {
 		inode_s				*host;
 		// xarray_s			i_pages;
 		// rw_semaphore_s		invalidate_lock;
@@ -410,13 +410,13 @@
 		// rw_semaphore_s		i_mmap_rwsem;
 		unsigned long		nrpages;
 		pgoff_t				writeback_index;
-		const addr_space_ops_s	*a_ops;
+		const addr_spc_ops_s	*a_ops;
 		// unsigned long		flags;
 		// errseq_t			wb_err;
 		// spinlock_t			private_lock;
 		// list_head_s			private_list;
 		// void				*private_data;
-	} __attribute__((aligned(sizeof(long)))) addr_space_s;
+	} __attribute__((aligned(sizeof(long)))) addr_spc_s;
 		/*
 		* On most architectures that alignment is already the case; but
 		* must be enforced here for CRIS, to let the least significant bit
@@ -431,42 +431,42 @@
 	// /*
 	// * Returns true if any of the pages in the mapping are marked with the tag.
 	// */
-	// static inline bool mapping_tagged(addr_space_s *mapping, xa_mark_t tag)
+	// static inline bool mapping_tagged(addr_spc_s *mapping, xa_mark_t tag)
 	// {
 	// 	return xa_marked(&mapping->i_pages, tag);
 	// }
 
-	// static inline void i_mmap_lock_write(addr_space_s *mapping)
+	// static inline void i_mmap_lock_write(addr_spc_s *mapping)
 	// {
 	// 	down_write(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline int i_mmap_trylock_write(addr_space_s *mapping)
+	// static inline int i_mmap_trylock_write(addr_spc_s *mapping)
 	// {
 	// 	return down_write_trylock(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_unlock_write(addr_space_s *mapping)
+	// static inline void i_mmap_unlock_write(addr_spc_s *mapping)
 	// {
 	// 	up_write(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_lock_read(addr_space_s *mapping)
+	// static inline void i_mmap_lock_read(addr_spc_s *mapping)
 	// {
 	// 	down_read(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_unlock_read(addr_space_s *mapping)
+	// static inline void i_mmap_unlock_read(addr_spc_s *mapping)
 	// {
 	// 	up_read(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_assert_locked(addr_space_s *mapping)
+	// static inline void i_mmap_assert_locked(addr_spc_s *mapping)
 	// {
 	// 	lockdep_assert_held(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_assert_write_locked(addr_space_s *mapping)
+	// static inline void i_mmap_assert_write_locked(addr_spc_s *mapping)
 	// {
 	// 	lockdep_assert_held_write(&mapping->i_mmap_rwsem);
 	// }
@@ -474,7 +474,7 @@
 	// /*
 	// * Might pages of this file be mapped into userspace?
 	// */
-	// static inline int mapping_mapped(addr_space_s *mapping)
+	// static inline int mapping_mapped(addr_spc_s *mapping)
 	// {
 	// 	return	!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root);
 	// }
@@ -488,29 +488,29 @@
 	// * If i_mmap_writable is negative, no new writable mappings are allowed. You
 	// * can only deny writable mappings, if none exists right now.
 	// */
-	// static inline int mapping_writably_mapped(addr_space_s *mapping)
+	// static inline int mapping_writably_mapped(addr_spc_s *mapping)
 	// {
 	// 	return atomic_read(&mapping->i_mmap_writable) > 0;
 	// }
 
-	// static inline int mapping_map_writable(addr_space_s *mapping)
+	// static inline int mapping_map_writable(addr_spc_s *mapping)
 	// {
 	// 	return atomic_inc_unless_negative(&mapping->i_mmap_writable) ?
 	// 		0 : -EPERM;
 	// }
 
-	// static inline void mapping_unmap_writable(addr_space_s *mapping)
+	// static inline void mapping_unmap_writable(addr_spc_s *mapping)
 	// {
 	// 	atomic_dec(&mapping->i_mmap_writable);
 	// }
 
-	// static inline int mapping_deny_writable(addr_space_s *mapping)
+	// static inline int mapping_deny_writable(addr_spc_s *mapping)
 	// {
 	// 	return atomic_dec_unless_positive(&mapping->i_mmap_writable) ?
 	// 		0 : -EBUSY;
 	// }
 
-	// static inline void mapping_allow_writable(addr_space_s *mapping)
+	// static inline void mapping_allow_writable(addr_spc_s *mapping)
 	// {
 	// 	atomic_inc(&mapping->i_mmap_writable);
 	// }
@@ -571,7 +571,7 @@
 
 		const inode_ops_s	*i_op;
 		super_block_s		*i_sb;
-		addr_space_s		*i_mapping;
+		addr_spc_s		*i_mapping;
 
 	// #ifdef CONFIG_SECURITY
 	// 	void			*i_security;
@@ -643,7 +643,7 @@
 			void				(*free_inode)(inode_s *);
 		};
 	// 	file_s_lock_context	*i_flctx;
-	// 	addr_space_s		i_data;
+	// 	addr_spc_s		i_data;
 		List_hdr_s		i_devices;
 		union {
 			// pipe_inode_info_s	*i_pipe;
@@ -764,29 +764,29 @@
 	// 	down_read_nested(&inode->i_rwsem, subclass);
 	// }
 
-	// static inline void filemap_invalidate_lock(addr_space_s *mapping)
+	// static inline void filemap_invalidate_lock(addr_spc_s *mapping)
 	// {
 	// 	down_write(&mapping->invalidate_lock);
 	// }
 
-	// static inline void filemap_invalidate_unlock(addr_space_s *mapping)
+	// static inline void filemap_invalidate_unlock(addr_spc_s *mapping)
 	// {
 	// 	up_write(&mapping->invalidate_lock);
 	// }
 
-	// static inline void filemap_invalidate_lock_shared(addr_space_s *mapping)
+	// static inline void filemap_invalidate_lock_shared(addr_spc_s *mapping)
 	// {
 	// 	down_read(&mapping->invalidate_lock);
 	// }
 
 	// static inline int filemap_invalidate_trylock_shared(
-	// 					addr_space_s *mapping)
+	// 					addr_spc_s *mapping)
 	// {
 	// 	return down_read_trylock(&mapping->invalidate_lock);
 	// }
 
 	// static inline void filemap_invalidate_unlock_shared(
-	// 					addr_space_s *mapping)
+	// 					addr_spc_s *mapping)
 	// {
 	// 	up_read(&mapping->invalidate_lock);
 	// }
@@ -794,10 +794,10 @@
 	// void lock_two_nondirectories(inode_s *, inode_s*);
 	// void unlock_two_nondirectories(inode_s *, inode_s*);
 
-	// void filemap_invalidate_lock_two(addr_space_s *mapping1,
-	// 				addr_space_s *mapping2);
-	// void filemap_invalidate_unlock_two(addr_space_s *mapping1,
-	// 				addr_space_s *mapping2);
+	// void filemap_invalidate_lock_two(addr_spc_s *mapping1,
+	// 				addr_spc_s *mapping2);
+	// void filemap_invalidate_unlock_two(addr_spc_s *mapping1,
+	// 				addr_spc_s *mapping2);
 
 
 	/*
@@ -902,7 +902,7 @@
 	// 	/* Used by fs/eventpoll.c to link all the hooks to this file */
 	// 	hlist_head_s	*f_ep;
 	// #endif /* #ifdef CONFIG_EPOLL */
-	// 	addr_space_s	*f_mapping;
+	// 	addr_spc_s	*f_mapping;
 	// 	errseq_t		f_wb_err;
 	// 	errseq_t		f_sb_err; /* for syncfs */
 	} file_s
@@ -2637,10 +2637,10 @@
 	// extern void make_bad_inode(inode_s *);
 	// extern bool is_bad_inode(inode_s *);
 
-	// unsigned long invalidate_mapping_pages(addr_space_s *mapping,
+	// unsigned long invalidate_mapping_pages(addr_spc_s *mapping,
 	// 					pgoff_t start, pgoff_t end);
 
-	// void invalidate_mapping_pagevec(addr_space_s *mapping,
+	// void invalidate_mapping_pagevec(addr_spc_s *mapping,
 	// 				pgoff_t start, pgoff_t end,
 	// 				unsigned long *nr_pagevec);
 
@@ -2650,37 +2650,37 @@
 	// 		S_ISLNK(inode->i_mode))
 	// 		invalidate_mapping_pages(inode->i_mapping, 0, -1);
 	// }
-	// extern int invalidate_inode_pages2(addr_space_s *mapping);
-	// extern int invalidate_inode_pages2_range(addr_space_s *mapping,
+	// extern int invalidate_inode_pages2(addr_spc_s *mapping);
+	// extern int invalidate_inode_pages2_range(addr_spc_s *mapping,
 	// 					pgoff_t start, pgoff_t end);
 	// extern int write_inode_now(inode_s *, int);
-	// extern int filemap_fdatawrite(addr_space_s *);
-	// extern int filemap_flush(addr_space_s *);
-	// extern int filemap_fdatawait_keep_errors(addr_space_s *mapping);
-	// extern int filemap_fdatawait_range(addr_space_s *, loff_t lstart,
+	// extern int filemap_fdatawrite(addr_spc_s *);
+	// extern int filemap_flush(addr_spc_s *);
+	// extern int filemap_fdatawait_keep_errors(addr_spc_s *mapping);
+	// extern int filemap_fdatawait_range(addr_spc_s *, loff_t lstart,
 	// 				loff_t lend);
-	// extern int filemap_fdatawait_range_keep_errors(addr_space_s *mapping,
+	// extern int filemap_fdatawait_range_keep_errors(addr_spc_s *mapping,
 	// 		loff_t start_byte, loff_t end_byte);
 
-	// static inline int filemap_fdatawait(addr_space_s *mapping)
+	// static inline int filemap_fdatawait(addr_spc_s *mapping)
 	// {
 	// 	return filemap_fdatawait_range(mapping, 0, LLONG_MAX);
 	// }
 
-	// extern bool filemap_range_has_page(addr_space_s *, loff_t lstart,
+	// extern bool filemap_range_has_page(addr_spc_s *, loff_t lstart,
 	// 				loff_t lend);
-	// extern int filemap_write_and_wait_range(addr_space_s *mapping,
+	// extern int filemap_write_and_wait_range(addr_spc_s *mapping,
 	// 						loff_t lstart, loff_t lend);
-	// extern int __filemap_fdatawrite_range(addr_space_s *mapping,
+	// extern int __filemap_fdatawrite_range(addr_spc_s *mapping,
 	// 				loff_t start, loff_t end, int sync_mode);
-	// extern int filemap_fdatawrite_range(addr_space_s *mapping,
+	// extern int filemap_fdatawrite_range(addr_spc_s *mapping,
 	// 				loff_t start, loff_t end);
-	// extern int filemap_check_errors(addr_space_s *mapping);
-	// extern void __filemap_set_wb_err(addr_space_s *mapping, int err);
-	// int filemap_fdatawrite_wbc(addr_space_s *mapping,
+	// extern int filemap_check_errors(addr_spc_s *mapping);
+	// extern void __filemap_set_wb_err(addr_spc_s *mapping, int err);
+	// int filemap_fdatawrite_wbc(addr_spc_s *mapping,
 	// 			struct writeback_control *wbc);
 
-	// static inline int filemap_write_and_wait(addr_space_s *mapping)
+	// static inline int filemap_write_and_wait(addr_spc_s *mapping)
 	// {
 	// 	return filemap_write_and_wait_range(mapping, 0, LLONG_MAX);
 	// }
@@ -2710,7 +2710,7 @@
 	//  * filemap_set_wb_err to record the error in the mapping so that it will be
 	//  * automatically reported whenever fsync is called on the file.
 	//  */
-	// static inline void filemap_set_wb_err(addr_space_s *mapping, int err)
+	// static inline void filemap_set_wb_err(addr_spc_s *mapping, int err)
 	// {
 	// 	/* Fastpath for common case of no error */
 	// 	if (unlikely(err))
@@ -2727,7 +2727,7 @@
 	//  *
 	//  * If it has then report the latest error set, otherwise return 0.
 	//  */
-	// static inline int filemap_check_wb_err(addr_space_s *mapping,
+	// static inline int filemap_check_wb_err(addr_spc_s *mapping,
 	// 					errseq_t since)
 	// {
 	// 	return errseq_check(&mapping->wb_err, since);
@@ -2740,7 +2740,7 @@
 	//  * Writeback errors are always reported relative to a particular sample point
 	//  * in the past. This function provides those sample points.
 	//  */
-	// static inline errseq_t filemap_sample_wb_err(addr_space_s *mapping)
+	// static inline errseq_t filemap_sample_wb_err(addr_spc_s *mapping)
 	// {
 	// 	return errseq_sample(&mapping->wb_err);
 	// }
@@ -2929,7 +2929,7 @@
 
 	extern int inode_init_always(super_block_s *, inode_s *);
 	extern void inode_init_once(inode_s *);
-	// extern void address_space_init_once(addr_space_s *mapping);
+	// extern void address_space_init_once(addr_spc_s *mapping);
 	// extern inode_s * igrab(inode_s *);
 	// extern ino_t iunique(super_block_s *, ino_t);
 	// extern int inode_needs_sync(inode_s *inode);
@@ -2972,7 +2972,7 @@
 	// extern void discard_new_inode(inode_s *);
 	// extern unsigned int get_next_ino(void);
 	// extern void evict_inodes(super_block_s *sb);
-	// void dump_mapping(const addr_space_s *);
+	// void dump_mapping(const addr_spc_s *);
 
 	// /*
 	// * Userspace may rely on the the inode number being non-zero. For example, glibc
@@ -3052,7 +3052,7 @@
 
 
 	// extern void
-	// file_ra_state_init(file_s_ra_state *ra, addr_space_s *mapping);
+	// file_ra_state_init(file_s_ra_state *ra, addr_spc_s *mapping);
 	extern loff_t noop_llseek(file_s *file, loff_t offset, int whence);
 	// extern loff_t no_llseek(file_s *file, loff_t offset, int whence);
 	// extern loff_t vfs_setpos(file_s *file, loff_t offset, loff_t maxsize);
@@ -3216,10 +3216,10 @@
 	// 		unsigned int length);
 	// extern ssize_t noop_direct_IO(struct kiocb *iocb, struct iov_iter *iter);
 	// extern int simple_empty(dentry_s *);
-	// extern int simple_write_begin(file_s *file, addr_space_s *mapping,
+	// extern int simple_write_begin(file_s *file, addr_spc_s *mapping,
 	// 			loff_t pos, unsigned len, unsigned flags,
 	// 			page_s **pagep, void **fsdata);
-	// extern const addr_space_ops_s ram_aops;
+	// extern const addr_spc_ops_s ram_aops;
 	// extern int always_delete_dentry(const dentry_s *);
 	// extern inode_s *alloc_anon_inode(super_block_s *);
 	// extern int simple_nosetlease(file_s *, long, file_s_lock **, void **);
@@ -3252,10 +3252,10 @@
 	// extern void generic_set_encrypted_ci_d_ops(dentry_s *dentry);
 
 	// #ifdef CONFIG_MIGRATION
-	// extern int buffer_migrate_page(addr_space_s *,
+	// extern int buffer_migrate_page(addr_spc_s *,
 	// 				page_s *, page_s *,
 	// 				enum migrate_mode);
-	// extern int buffer_migrate_page_norefs(addr_space_s *,
+	// extern int buffer_migrate_page_norefs(addr_spc_s *,
 	// 				page_s *, page_s *,
 	// 				enum migrate_mode);
 	// #else

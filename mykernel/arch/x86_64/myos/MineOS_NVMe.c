@@ -162,7 +162,7 @@ void NVMe_other_handler(unsigned long parameter)
 blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s),0);
-	list_init(&node->req_list, node);
+	list_init(&node->req_list);
 	node->buffer = buffer;
 
 	switch(cmd)

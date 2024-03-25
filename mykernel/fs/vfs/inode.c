@@ -234,7 +234,7 @@ inode_s *new_inode(super_block_s *sb)
 	if (inode != NULL)
 	{
 		inode->i_sb = sb;
-		list_init(&inode->i_sb_list, inode);
+		list_init(&inode->i_sb_list);
 	}
 	// }
 

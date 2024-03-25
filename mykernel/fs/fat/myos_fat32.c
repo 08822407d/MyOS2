@@ -461,7 +461,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	//directory entry
 	sbp->s_root = kzalloc(sizeof(dentry_s), GFP_KERNEL);
 
-	list_init(&sbp->s_root->d_child, sbp->s_root);
+	list_init(&sbp->s_root->d_child);
 	list_hdr_init(&sbp->s_root->d_subdirs);
 	sbp->s_root->d_sb = sbp;
 	sbp->s_root->d_parent = sbp->s_root;

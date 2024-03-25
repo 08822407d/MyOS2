@@ -813,7 +813,7 @@ static inline void init_task_pid_links(task_s *task) {
 	// for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type)
 	// 	INIT_HLIST_NODE(&task->pid_links[type]);
 
-	list_init(&task->pid_links, task);
+	list_init(&task->pid_links);
 }
 
 static inline void
@@ -985,7 +985,7 @@ static __latent_entropy task_s
 					PF_IDLE | PF_NO_SETAFFINITY);
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
-	list_init(&p->sibling, p);
+	list_init(&p->sibling);
 	// rcu_copy_process(p);
 	p->vfork_done = NULL;
 	spin_lock_init(&p->alloc_lock);

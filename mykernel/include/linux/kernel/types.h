@@ -193,7 +193,6 @@
 		typedef struct List {
 			List_s *	prev;
 			List_s *	next;
-			void *		owner_p;
 		} List_s;
 
 		typedef struct List_hdr {

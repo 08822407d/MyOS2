@@ -41,7 +41,7 @@ static mount_s *alloc_vfsmnt(const char *name)
 	}
 
 	list_hdr_init(&mnt->mnt_mounts);
-	list_init(&mnt->mnt_child, mnt);
+	list_init(&mnt->mnt_child);
 
 	return mnt;
 
@@ -382,7 +382,7 @@ static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 		return ERR_PTR(-ENOMEM);
 
 	list_hdr_init(&mnt->mnt_mounts);
-	list_init(&mnt->mnt_child, mnt);
+	list_init(&mnt->mnt_child/* , mnt */);
 	mnt->mnt.mnt_sb = sb;
 	mnt->mnt.mnt_root = root;
 	mnt->mnt_mountpoint = mnt->mnt.mnt_root;

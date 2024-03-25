@@ -991,7 +991,7 @@ out_free_ph:
 // static int __init init_elf_binfmt(void)
 int __init init_elf_binfmt(void)
 {
-	list_init(&elf_format.lh, &elf_format);
+	list_init(&elf_format.lh);
 	register_binfmt(&elf_format);
 	return 0;
 }

@@ -134,8 +134,8 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
 			dir_lp != &parent->d_subdirs.header;
 			dir_lp = dir_lp->next)
 	{
-		if ((dir_p = dir_lp->owner_p) != NULL &&
-			!strncmp(name->name, dir_p->d_name.name, name->len))
+		dir_p = container_of(dir_lp, dentry_s, d_child);
+		if (dir_p != NULL && !strncmp(name->name, dir_p->d_name.name, name->len))
 		{
 			dentry = dir_p;
 			break;
@@ -177,7 +177,7 @@ dentry_s * __myos_d_alloc(super_block_s *sb, const qstr_s * name)
 	dentry->d_sb = sb;
 	dentry->d_op = NULL;
 
-	list_init(&dentry->d_child, dentry);
+	list_init(&dentry->d_child);
 	list_hdr_init(&dentry->d_subdirs);
 
 	// d_set_d_op(dentry, dentry->d_sb->s_d_op);

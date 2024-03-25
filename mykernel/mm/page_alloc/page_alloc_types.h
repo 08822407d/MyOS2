@@ -8,6 +8,8 @@
 
 	struct mm_struct;
 	typedef struct mm_struct mm_s;
+	struct address_space;
+	typedef struct address_space addr_spc_s;
 
 	/*
 	 * Each physical page in the system has a page_s associated with
@@ -87,31 +89,38 @@
 	} pgflag_defs_s;
 
 	typedef struct page {
-		union
-		{
-			unsigned long	flags;	/* Atomic flags, some possibly
-									 * updated asynchronously */
-			pgflag_defs_s	flag_defs;
+		union {	// 为了方便debug，增加了按位定义的union
+			unsigned long	flags;		/* Atomic flags, some possibly */
+			pgflag_defs_s	flag_defs;	/* updated asynchronously */
 		};
-		
 		/*
 		 * Five words (20/40 bytes) are available in this union.
 		 * WARNING: bit 0 of the first word is used for PageTail(). That
 		 * means the other users of this union MUST NOT use the bit to
 		 * avoid collision and false-positive PageTail().
 		 */
-		union
-		{
-			struct
-			{	/* Page cache and anonymous pages */
+		union {
+			struct {	/* Page cache and anonymous pages */
 				/**
 				 * @lru: Pageout list, eg. active_list protected by
 				 * lruvec->lru_lock.  Sometimes used as a generic list
 				 * by the page owner.
 				 */
-				List_s		lru;
-				// /* See page-flags.h for PAGE_MAPPING_FLAGS */
-				// struct address_space *mapping;
+				union {
+					List_s		lru;
+					/* Or, for the Unevictable "LRU list" slot */
+					struct {
+						/* Always even, to negate PageTail */
+						void	*__filler;
+						/* Count page's or folio's mlocks */
+						unsigned int	mlock_count;
+					};
+					/* Or, free page */
+					List_s		buddy_list;
+					List_s		pcp_list;
+				};
+				/* See page-flags.h for PAGE_MAPPING_FLAGS */
+				addr_spc_s	*mapping;
 				pgoff_t		index; /* Our offset within mapping. */
 				/**
 				 * @private: Mapping-private opaque data.
@@ -145,8 +154,7 @@
 			// 		atomic_long_t pp_frag_count;
 			// 	};
 			// };
-			struct
-			{	/* Tail pages of compound page */
+			struct {	/* Tail pages of compound page */
 				unsigned long	compound_head;		/* Bit zero is set */
 
 				/* First tail page only */
@@ -162,18 +170,18 @@
 			// 	/* For both global and memcg */
 			// 	List_s deferred_list;
 			// };
-			struct
-			{									/* Page table pages */
-				unsigned long	_pt_pad_1;		/* compound_head */
-				pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
-				unsigned long	_pt_pad_2;		/* mapping */
-				mm_s			*pt_mm;			/* x86 pgds only */
+	// 		struct
+	// 		{									/* Page table pages */
+	// 			unsigned long	_pt_pad_1;		/* compound_head */
+	// 			pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
+	// 			unsigned long	_pt_pad_2;		/* mapping */
+	// 			mm_s			*pt_mm;			/* x86 pgds only */
 	// #if ALLOC_SPLIT_PTLOCKS
-				// spinlock_t *ptl;
+	// 			spinlock_t *ptl;
 	// #else
-				// spinlock_t ptl;
+	// 			spinlock_t ptl;
 	// #endif
-			};
+	// 		};
 			// struct
 			// { /* ZONE_DEVICE pages */
 			// 	/** @pgmap: Points to the hosting device page map. */
@@ -191,12 +199,13 @@
 			// 	*/
 			// };
 
+
+
 			// /** @rcu_head: You can use this to free a page by RCU. */
 			// struct rcu_head rcu_head;
 		};
 
-		union
-		{ /* This union is 4 bytes in size. */
+		union { /* This union is 4 bytes in size. */
 			/*
 			 * If the page can be mapped to userspace, encodes the number
 			 * of times this page is referenced by a page table.
@@ -220,42 +229,42 @@
 	// #endif
 	} page_s _struct_page_alignment;
 
-/**
- * struct folio - Represents a contiguous set of bytes.
- * @flags: Identical to the page flags.
- * @lru: Least Recently Used list; tracks how recently this folio was used.
- * @mlock_count: Number of times this folio has been pinned by mlock().
- * @mapping: The file this page belongs to, or refers to the anon_vma for
- *    anonymous memory.
- * @index: Offset within the file, in units of pages.  For anonymous memory,
- *    this is the index from the beginning of the mmap.
- * @private: Filesystem per-folio data (see folio_attach_private()).
- *    Used for swp_entry_t if folio_test_swapcache().
- * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
- *    find out how many times this folio is mapped by userspace.
- * @_refcount: Do not access this member directly.  Use folio_ref_count()
- *    to find how many references there are to this folio.
- * @memcg_data: Memory Control Group data.
- * @_folio_dtor: Which destructor to use for this folio.
- * @_folio_order: Do not use directly, call folio_order().
- * @_entire_mapcount: Do not use directly, call folio_entire_mapcount().
- * @_nr_pages_mapped: Do not use directly, call folio_mapcount().
- * @_pincount: Do not use directly, call folio_maybe_dma_pinned().
- * @_folio_nr_pages: Do not use directly, call folio_nr_pages().
- * @_hugetlb_subpool: Do not use directly, use accessor in hugetlb.h.
- * @_hugetlb_cgroup: Do not use directly, use accessor in hugetlb_cgroup.h.
- * @_hugetlb_cgroup_rsvd: Do not use directly, use accessor in hugetlb_cgroup.h.
- * @_hugetlb_hwpoison: Do not use directly, call raw_hwp_list_head().
- * @_deferred_list: Folios to be split under memory pressure.
- *
- * A folio is a physically, virtually and logically contiguous set
- * of bytes.  It is a power-of-two in size, and it is aligned to that
- * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
- * in the page cache, it is at a file offset which is a multiple of that
- * power-of-two.  It may be mapped into userspace at an address which is
- * at an arbitrary page offset, but its kernel virtual address is aligned
- * to its size.
- */
+	/**
+	 * struct folio - Represents a contiguous set of bytes.
+	 * @flags: Identical to the page flags.
+	 * @lru: Least Recently Used list; tracks how recently this folio was used.
+	 * @mlock_count: Number of times this folio has been pinned by mlock().
+	 * @mapping: The file this page belongs to, or refers to the anon_vma for
+	 *    anonymous memory.
+	 * @index: Offset within the file, in units of pages.  For anonymous memory,
+	 *    this is the index from the beginning of the mmap.
+	 * @private: Filesystem per-folio data (see folio_attach_private()).
+	 *    Used for swp_entry_t if folio_test_swapcache().
+	 * @_mapcount: Do not access this member directly.  Use folio_mapcount() to
+	 *    find out how many times this folio is mapped by userspace.
+	 * @_refcount: Do not access this member directly.  Use folio_ref_count()
+	 *    to find how many references there are to this folio.
+	 * @memcg_data: Memory Control Group data.
+	 * @_folio_dtor: Which destructor to use for this folio.
+	 * @_folio_order: Do not use directly, call folio_order().
+	 * @_entire_mapcount: Do not use directly, call folio_entire_mapcount().
+	 * @_nr_pages_mapped: Do not use directly, call folio_mapcount().
+	 * @_pincount: Do not use directly, call folio_maybe_dma_pinned().
+	 * @_folio_nr_pages: Do not use directly, call folio_nr_pages().
+	 * @_hugetlb_subpool: Do not use directly, use accessor in hugetlb.h.
+	 * @_hugetlb_cgroup: Do not use directly, use accessor in hugetlb_cgroup.h.
+	 * @_hugetlb_cgroup_rsvd: Do not use directly, use accessor in hugetlb_cgroup.h.
+	 * @_hugetlb_hwpoison: Do not use directly, call raw_hwp_list_head().
+	 * @_deferred_list: Folios to be split under memory pressure.
+	 *
+	 * A folio is a physically, virtually and logically contiguous set
+	 * of bytes.  It is a power-of-two in size, and it is aligned to that
+	 * same power-of-two.  It is at least as large as %PAGE_SIZE.  If it is
+	 * in the page cache, it is at a file offset which is a multiple of that
+	 * power-of-two.  It may be mapped into userspace at an address which is
+	 * at an arbitrary page offset, but its kernel virtual address is aligned
+	 * to its size.
+	 */
 	typedef struct folio
 	{
 		/* private: don't document the anon union */

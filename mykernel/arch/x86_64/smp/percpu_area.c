@@ -59,9 +59,9 @@ void myos_init_per_cpu_var(void)
 	task_s *this_idle_thread = &per_cpu(idle_threads, 0);
 	memset(this_idle_thread, 0, sizeof(task_s));
 	spin_lock_init(&this_idle_thread->alloc_lock);
-	list_init(&this_idle_thread->rt.run_list, this_idle_thread);
-	list_init(&this_idle_thread->sibling, this_idle_thread);
-	list_init(&this_idle_thread->pid_links, this_idle_thread);
+	list_init(&this_idle_thread->rt.run_list);
+	list_init(&this_idle_thread->sibling);
+	list_init(&this_idle_thread->pid_links);
 	list_hdr_init(&this_idle_thread->children);
 	this_idle_thread->parent		= this_idle_thread;
 	this_idle_thread->__state		= TASK_RUNNING;

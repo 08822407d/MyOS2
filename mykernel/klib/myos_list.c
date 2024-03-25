@@ -8,11 +8,10 @@
 /*==============================================================================================*/
 /*										list operations											*/
 /*==============================================================================================*/
-void list_init(List_s * src, void * owner_p)
+void list_init(List_s * src)
 {
 	src->prev = src;
 	src->next = src;
-	src->owner_p = owner_p;
 }
 
 inline __always_inline List_s * list_get_prev(List_s * src)
@@ -58,7 +57,7 @@ void list_delete(List_s *src)
 	
 	src->prev->next = src->next;
 	src->next->prev = src->prev;
-	list_init(src, src->owner_p);
+	list_init(src);
 }
 
 bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
@@ -85,7 +84,7 @@ bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
 void list_hdr_init(List_hdr_s * lhdr_p)
 {
 	lhdr_p->count = 0;
-	list_init(&lhdr_p->header, NULL);
+	list_init(&lhdr_p->header);
 }
 
 void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p)
