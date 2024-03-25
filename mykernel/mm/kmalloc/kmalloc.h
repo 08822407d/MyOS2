@@ -9,6 +9,8 @@
 	#include "kmalloc_types.h"
 	#include "myos_slab_types.h"
 
+	#include "slub_types.h"
+
 	#define kmalloc_index(s) __kmalloc_index(s, true)
 
 	#ifdef DEBUG

@@ -8,6 +8,8 @@
 
 	struct mm_struct;
 	typedef struct mm_struct mm_s;
+	struct kmem_cache;
+	typedef struct kmem_cache kmem_cache_s;
 	struct address_space;
 	typedef struct address_space addr_spc_s;
 
@@ -120,8 +122,8 @@
 					List_s		pcp_list;
 				};
 				/* See page-flags.h for PAGE_MAPPING_FLAGS */
-				addr_spc_s	*mapping;
-				pgoff_t		index; /* Our offset within mapping. */
+				addr_spc_s		*mapping;
+				pgoff_t			index; /* Our offset within mapping. */
 				/**
 				 * @private: Mapping-private opaque data.
 				 * Usually used for buffer_heads if PagePrivate.
@@ -170,18 +172,14 @@
 			// 	/* For both global and memcg */
 			// 	List_s deferred_list;
 			// };
-	// 		struct
-	// 		{									/* Page table pages */
-	// 			unsigned long	_pt_pad_1;		/* compound_head */
-	// 			pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
-	// 			unsigned long	_pt_pad_2;		/* mapping */
-	// 			mm_s			*pt_mm;			/* x86 pgds only */
-	// #if ALLOC_SPLIT_PTLOCKS
-	// 			spinlock_t *ptl;
-	// #else
-	// 			spinlock_t ptl;
-	// #endif
-	// 		};
+			// struct
+			// {									/* Page table pages */
+			// 	unsigned long	_pt_pad_1;		/* compound_head */
+			// 	pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
+			// 	unsigned long	_pt_pad_2;		/* mapping */
+			// 	mm_s			*pt_mm;			/* x86 pgds only */
+			// 	spinlock_t ptl;
+			// };
 			// struct
 			// { /* ZONE_DEVICE pages */
 			// 	/** @pgmap: Points to the hosting device page map. */
@@ -198,7 +196,26 @@
 			// 	* pmem backed DAX files are mapped.
 			// 	*/
 			// };
-
+			struct {	/* Slub pages, copy the defination from Linux struct slab */
+				kmem_cache_s	*slab_cache;
+				union {
+					List_s		slab_list;
+					struct {
+						page_s	*next;
+						int		slabs;	/* Nr of slabs left */
+					};
+				};
+				/* Double-word boundary */
+				void			*freelist;		/* first free object */
+				union {
+					unsigned long	counters;
+					struct {
+						unsigned	inuse:16;
+						unsigned	objects:15;
+						unsigned	frozen:1;
+					};
+				};
+			};
 
 
 			// /** @rcu_head: You can use this to free a page by RCU. */
@@ -211,7 +228,6 @@
 			 * of times this page is referenced by a page table.
 			 */
 			atomic_t _mapcount;
-
 			/*
 			 * If the page is neither PageSlab nor mappable to userspace,
 			 * the value stored here may help determine what this page

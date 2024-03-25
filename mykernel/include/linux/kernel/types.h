@@ -191,8 +191,8 @@
 		// };
 		typedef struct List List_s;
 		typedef struct List {
-			List_s *	prev;
 			List_s *	next;
+			List_s *	prev;
 		} List_s;
 
 		typedef struct List_hdr {
