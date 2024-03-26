@@ -186,11 +186,10 @@
 			s64 counter;
 		} atomic64_t;
 
-		// struct list_head {
-		// 	struct list_head *next, *prev;
-		// };
-		typedef struct List List_s;
-		typedef struct List {
+
+		struct list_head;
+		typedef struct list_head List_s;
+		typedef struct list_head {
 			List_s *	next;
 			List_s *	prev;
 		} List_s;

@@ -237,6 +237,9 @@
         "bootloader.h": "c",
         "kmalloc.h": "c",
         "slub_types.h": "c",
-        "slub_const.h": "c"
+        "slub_const.h": "c",
+        "hlist.h": "c",
+        "double_linked_list.h": "c",
+        "hash_list.h": "c"
     }
 }
