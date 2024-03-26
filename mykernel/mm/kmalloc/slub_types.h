@@ -34,11 +34,11 @@
 	 */
 	typedef struct kmem_cache_node {
 		spinlock_t		list_lock;
-		unsigned long	nr_partial;
-		List_s			partial;
+		ulong			nr_partial;
+		List_hdr_s		partial;
 		atomic_long_t	nr_slabs;
 		atomic_long_t	total_objects;
-		List_s			full;
+		List_hdr_s		full;
 	} kmem_cache_node_s;
 
 	enum stat_item {
@@ -93,7 +93,7 @@
 	 */
 	typedef struct kmem_cache_order_objects {
 		// unsigned int x;
-		unsigned int
+		uint
 			obj_nr	: OO_SHIFT,
 			order	: 32 - OO_SHIFT;
 	} __attribute__((packed)) kmem_cache_order_obj_s;
@@ -105,15 +105,15 @@
 		// kmem_cache_cpu_s	__percpu *cpu_slab;
 		/* Used for retrieving partial slabs, etc. */
 		slab_flags_t	flags;
-		unsigned long	min_partial;
-		unsigned int	size;			/* The size of an object including metadata */
-		unsigned int	object_size;	/* The size of an object without metadata */
+		ulong			min_partial;
+		uint			size;			/* The size of an object including metadata */
+		uint			object_size;	/* The size of an object without metadata */
 		// struct reciprocal_value reciprocal_size;
-		unsigned int	offset;			/* Free pointer offset */
+		uint			offset;			/* Free pointer offset */
 		// /* Number of per cpu partial objects to keep around */
-		// unsigned int cpu_partial;
+		// uint			cpu_partial;
 		// /* Number of per cpu partial slabs to keep around */
-		// unsigned int cpu_partial_slabs;
+		// uint			cpu_partial_slabs;
 		kmem_cache_order_obj_s	oo;
 
 		/* Allocation and freeing of slabs */
@@ -121,15 +121,15 @@
 		gfp_t			allocflags;		/* gfp flags to use on each alloc */
 		int				refcount;		/* Refcount for slab cache destroy */
 		// void			(*ctor)(void *);
-		unsigned int	inuse;			/* Offset to metadata */
-		unsigned int	align;			/* Alignment */
-		unsigned int	red_left_pad;	/* Left redzone padding size */
+		uint			inuse;			/* Offset to metadata */
+		uint			align;			/* Alignment */
+		uint			red_left_pad;	/* Left redzone padding size */
 		const char		*name;			/* Name (only for display!) */
 		List_s			list;			/* List of slab caches */
 		kobj_s			kobj;			/* For sysfs */
 
 	#ifdef CONFIG_SLAB_FREELIST_RANDOM
-		unsigned int	*random_seq;
+		uint			*random_seq;
 	#endif
 	#ifdef CONFIG_KASAN_GENERIC
 		struct kasan_cache	kasan_info;

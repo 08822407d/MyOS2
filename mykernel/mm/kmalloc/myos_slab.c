@@ -70,7 +70,7 @@ void myos_init_slab()
 	}
 }
 
-static slab_s * slab_alloc(slab_s *cslp)
+static slab_s * myos_slab_alloc(slab_s *cslp)
 {
 	page_s *page = alloc_page(ZONE_NORMAL);
 	
@@ -89,7 +89,7 @@ static slab_s * slab_alloc(slab_s *cslp)
 	return nslp;
 }
 
-static void slab_free(slab_s *slp)
+static void myos_slab_free(slab_s *slp)
 {
 	while (!PageSlab(slp->page));
 	
@@ -148,7 +148,7 @@ void *__kmalloc(size_t size, gfp_t flags)
 	if (scgp->normal_slab_free.count == 0)
 	{
 		scgp->normal_slab_free.count++;
-		slab_s *new_slab = slab_alloc(slp);
+		slab_s *new_slab = myos_slab_alloc(slp);
 		scgp->normal_slab_free.count--;
 		if (new_slab == NULL)
 			// color_printk(RED, WHITE, "Alloc new slab :%#x-bytes failed!\n", scgp->obj_size);
@@ -250,7 +250,7 @@ void kfree(const void *objp)
 		{
 			slab_s * tmp_slp = container_of(scgp->normal_slab_free.header.prev, slab_s, slab_list);
 			scgp->normal_slab_free.count--;
-			slab_free(tmp_slp);
+			myos_slab_free(tmp_slp);
 			scgp->normal_slab_total;
 			scgp->nsobj_free_count -= tmp_slp->total;
 		}

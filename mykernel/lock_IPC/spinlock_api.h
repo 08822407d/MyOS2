@@ -144,7 +144,7 @@
 				raw_spin_lock_irq(lock)
 
 	#define spin_lock_irqsave(lock, flags)	\
-				raw_spin_lock_irqsave(lock, flags)
+				raw_spin_lock_irqsave(lock, &flags)
 
 	// #define spin_lock_irqsave_nested(lock, flags, subclass)	\
 	// 		do {												\
@@ -162,7 +162,7 @@
 				raw_spin_unlock_irq(lock)
 
 	#define spin_unlock_irqrestore(lock, flags)	\
-				raw_spin_unlock_irqrestore(lock, flags)
+				raw_spin_unlock_irqrestore(lock, &flags)
 
 	// static __always_inline int spin_trylock_bh(spinlock_t *lock) {
 	// 	return raw_spin_trylock_bh(&lock->rlock);

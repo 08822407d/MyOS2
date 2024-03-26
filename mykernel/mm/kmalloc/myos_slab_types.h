@@ -17,8 +17,8 @@
 		List_s			slab_list;
 		slab_cache_s *	slabcache_ptr;
 
-		unsigned long	total;
-		unsigned long	free;
+		ulong			total;
+		ulong			free;
 
 		virt_addr_t		virt_addr;
 		page_s *		page;

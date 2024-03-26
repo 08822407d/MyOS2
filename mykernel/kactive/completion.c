@@ -28,14 +28,12 @@
  */
 void complete(completion_s *x)
 {
-	unsigned long flags;
-
-	flags = raw_spin_lock_irqsave(&x->wait.lock);
-
+	ulong flags;
+	raw_spin_lock_irqsave(&x->wait.lock, &flags);
 	if (x->done != UINT_MAX)
 		x->done++;
 	swake_up_locked(&x->wait);
-	raw_spin_unlock_irqrestore(&x->wait.lock, flags);
+	raw_spin_unlock_irqrestore(&x->wait.lock, &flags);
 }
 
 
