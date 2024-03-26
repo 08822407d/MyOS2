@@ -216,7 +216,7 @@ blkbuf_node_s *IDE_make_request(unsigned controller, unsigned disk,
 {
 	blkbuf_node_s *node = (blkbuf_node_s *)kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
 	IDE_Params_s *IdeParam = (IDE_Params_s *)kzalloc(sizeof(IDE_Params_s), GFP_KERNEL);
-	list_init(&node->req_list);
+	INIT_LIST_S(&node->req_list);
 
 	node->LBA = blk_idx;
 	node->count = count;

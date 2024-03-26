@@ -173,7 +173,7 @@ void inode_sb_list_add(inode_s *inode)
 
 static inline void inode_sb_list_del(inode_s *inode)
 {
-	if (!list_empty(&inode->i_sb_list)) {
+	if (!list_node_empty(&inode->i_sb_list)) {
 	// 	spin_lock(&inode->i_sb->s_inode_list_lock);
 	// 	list_del_init(&inode->i_sb_list);
 	list_hdr_delete(&inode->i_sb->s_inodes, &inode->i_sb_list);
@@ -234,7 +234,7 @@ inode_s *new_inode(super_block_s *sb)
 	if (inode != NULL)
 	{
 		inode->i_sb = sb;
-		list_init(&inode->i_sb_list);
+		INIT_LIST_S(&inode->i_sb_list);
 	}
 	// }
 

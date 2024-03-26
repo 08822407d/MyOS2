@@ -176,7 +176,7 @@ expand(zone_s *zone, page_s *page, int low, int high) {
 		high--;
 		size >>= 1;
 		page_s *p = &page[size];
-		list_init(&p->lru);
+		INIT_LIST_S(&p->lru);
 		add_to_free_list(p, zone, high);
 		set_buddy_order(p, high);
 	}

@@ -262,7 +262,7 @@ task_s *__kthread_create_on_node(int (*threadfn)(void *data),
 		task = ERR_PTR(-ENOMEM);
 		goto free_create;
 	}
-	list_init(&create->list);
+	INIT_LIST_S(&create->list);
 
 	spin_lock(&kthread_create_lock);
 	list_hdr_enqueue(&kthread_create_list, &create->list);
@@ -347,12 +347,12 @@ int kthreadd(void *unused)
 
 	for (;;) {
 		set_current_state(TASK_INTERRUPTIBLE);
-		if (list_hdr_empty(&kthread_create_list))
+		if (list_hdr_is_empty(&kthread_create_list))
 			schedule();
 		__set_current_state(TASK_RUNNING);
 
 		spin_lock(&kthread_create_lock);
-		while (!list_hdr_empty(&kthread_create_list)) {
+		while (!list_hdr_is_empty(&kthread_create_list)) {
 			kthd_create_info_s *create;
 
 			List_s *lp = list_hdr_dequeue(&kthread_create_list);

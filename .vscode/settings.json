@@ -240,6 +240,8 @@
         "slub_const.h": "c",
         "hlist.h": "c",
         "double_linked_list.h": "c",
-        "hash_list.h": "c"
+        "hash_list.h": "c",
+        "lib.h": "c",
+        "stdbool.h": "c"
     }
 }

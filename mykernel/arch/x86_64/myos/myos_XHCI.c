@@ -334,7 +334,7 @@ blkbuf_node_s *XHCI_make_request(unsigned Slot_ID, unsigned DevCtx_Idx,
 {
 	blkbuf_node_s *node = kzalloc(sizeof(blkbuf_node_s), GFP_KERNEL);
 	XHCI_Params_s *XHCIparam = (XHCI_Params_s *)kzalloc(sizeof(XHCI_Params_s), GFP_KERNEL);
-	list_init(&node->req_list);
+	INIT_LIST_S(&node->req_list);
 
 	node->LBA = blk_idx;
 	node->count = count;

@@ -53,7 +53,7 @@ void register_binfmt(linux_bfmt_s * fmt) {
 
 void unregister_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
-	// list_del(&fmt->lh);
+	// list_del_init(&fmt->lh);
 	list_hdr_delete(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }

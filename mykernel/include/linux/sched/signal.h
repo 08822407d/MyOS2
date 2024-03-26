@@ -584,7 +584,7 @@
 	// extern void flush_itimer_signals(void);
 
 	// #define tasklist_empty() \
-	// 	list_empty(&init_task.tasks)
+	// 	list_node_empty(&init_task.tasks)
 
 	// #define next_task(p) \
 	// 	list_entry_rcu((p)->tasks.next, task_s, tasks)
@@ -671,7 +671,7 @@
 
 	// static inline int thread_group_empty(task_s *p)
 	// {
-	// 	return list_empty(&p->thread_group);
+	// 	return list_node_empty(&p->thread_group);
 	// }
 
 	// #define delay_group_leader(p) \

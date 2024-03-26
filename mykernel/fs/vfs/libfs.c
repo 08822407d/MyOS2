@@ -237,7 +237,7 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 
 	if (ctx->pos == 2)
 		p = &file->f_path.dentry->d_subdirs.header;
-	else if (!list_empty(&cursor->d_child))
+	else if (!list_node_empty(&cursor->d_child))
 		p = &cursor->d_child;
 	else
 		return 0;
@@ -252,7 +252,7 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 	if (next)
 		list_insert_prev(&next->d_child, &cursor->d_child);
 	else
-		list_delete(&cursor->d_child);
+		list_del_init(&cursor->d_child);
 	dput(next);
 
 	return 0;

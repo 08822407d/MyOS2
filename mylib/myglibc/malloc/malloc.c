@@ -127,7 +127,7 @@ uPage_s *upage_alloc()
 		{
 			brk_end += PAGE_SIZE;
 			upgp->vaddr = pg_vaddr;
-			list_init(&upgp->upage_list, upgp);
+			INIT_LIST_S(&upgp->upage_list);
 			list_hdr_append(&used_upage_lhdr, &upgp->upage_list);
 			ret_val = upgp;
 		}
@@ -142,7 +142,7 @@ uPage_s *upage_alloc()
 
 void upage_free(uPage_s * upgp)
 {
-	list_delete(&upgp->upage_list);
+	list_del_init(&upgp->upage_list);
 	used_upage_lhdr.count--;
 	list_hdr_push(&free_upage_lhdr, &upgp->upage_list);
 	upgp->uslab_p = NULL;
@@ -181,7 +181,7 @@ void init_uslab()
 	for (int i = 0; i < USLAB_LEVEL; i++)
 	{
 		uslab_cache_s * scgp = &uslab_cache_groups[i];
-		list_init(&scgp->uslabcache_list, scgp);
+		INIT_LIST_S(&scgp->uslabcache_list);
 		list_hdr_append(&uslabcache_lhdr, &scgp->uslabcache_list);
 
 		list_hdr_init(&scgp->normal_slab_free);
@@ -189,7 +189,7 @@ void init_uslab()
 		list_hdr_init(&scgp->normal_slab_full);
 
 		uslab_s * bslp = &base_uslabs[i];
-		list_init(&bslp->uslab_list, bslp);
+		INIT_LIST_S(&bslp->uslab_list);
 
 		scgp->obj_size = USLAB_SIZE_BASE << i;
 		unsigned long obj_nr = PAGE_SIZE / scgp->obj_size;
@@ -208,7 +208,7 @@ void init_uslab()
 
 		// init upages
 		uPage_s * upgp = &base_upages[i];
-		list_init(&upgp->upage_list, upgp);
+		INIT_LIST_S(&upgp->upage_list);
 		upgp->vaddr =
 		brk_end = brk(brk_end + PAGE_SIZE);
 		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
@@ -223,7 +223,7 @@ void init_uslab()
 uslab_s * uslab_alloc(uslab_s * cslp)
 {
 	uslab_s * nslp = (uslab_s *)malloc(sizeof(uslab_s));
-	list_init(&nslp->uslab_list, nslp);
+	INIT_LIST_S(&nslp->uslab_list);
 
 	nslp->colormap = (bitmap_t *)malloc(cslp->total / sizeof(bitmap_t) + sizeof(bitmap_t));
 	nslp->total =
@@ -240,7 +240,7 @@ void uslab_free(uslab_s * slp)
 	upage_free(slp->upage_p);
 
 	free(slp->colormap);
-	list_delete(&slp->uslab_list);
+	list_del_init(&slp->uslab_list);
 	slp->uslabcache_p->normal_slab_free.count--;
 
 	free(slp);
@@ -261,7 +261,7 @@ void * malloc(size_t size)
 		// find suitable slab group
 		uslab_cache_s *	uscgp = &uslab_cache_groups[0];
 		while (size > uscgp->obj_size)
-			uscgp = container_of(list_get_next(&uscgp->uslabcache_list), uslab_cache_s, uslabcache_list);
+			uscgp = container_of((uscgp->uslabcache_list.next), uslab_cache_s, uslabcache_list);
 
 		// lock_recurs_lock(&slab_alloc_lock);
 
@@ -367,13 +367,13 @@ void free(void * obj_p)
 	// or if it is in used list and only use one slot, move it to free list
 	if (uslp->free == 1)
 	{
-		list_delete(&uslp->uslab_list);
+		list_del_init(&uslp->uslab_list);
 		uscgp->normal_slab_full.count--;
 		list_hdr_push(&uscgp->normal_slab_used, &uslp->uslab_list);
 	}
 	else if (uslp->free == 0)
 	{
-		list_delete(&uslp->uslab_list);
+		list_del_init(&uslp->uslab_list);
 		uscgp->normal_slab_used.count--;
 		// if slp is base-slab, add it to tail
 		if (uslp != uscgp->normal_base_slab_p)

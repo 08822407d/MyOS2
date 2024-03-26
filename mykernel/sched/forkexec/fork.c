@@ -473,9 +473,9 @@ static inline void __mmput(mm_s *mm) {
 	// exit_mmap(mm);
 	// mm_put_huge_zero_page(mm);
 	// set_mm_exe_file(mm, NULL);
-	// if (!list_empty(&mm->mmlist)) {
+	// if (!list_node_empty(&mm->mmlist)) {
 	// 	spin_lock(&mmlist_lock);
-	// 	list_del(&mm->mmlist);
+	// 	list_del_init(&mm->mmlist);
 	// 	spin_unlock(&mmlist_lock);
 	// }
 	// if (mm->binfmt)
@@ -813,7 +813,7 @@ static inline void init_task_pid_links(task_s *task) {
 	// for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type)
 	// 	INIT_HLIST_NODE(&task->pid_links[type]);
 
-	list_init(&task->pid_links);
+	INIT_LIST_S(&task->pid_links);
 }
 
 static inline void
@@ -985,7 +985,7 @@ static __latent_entropy task_s
 					PF_IDLE | PF_NO_SETAFFINITY);
 	p->flags |= PF_FORKNOEXEC;
 	list_hdr_init(&p->children);
-	list_init(&p->sibling);
+	INIT_LIST_S(&p->sibling);
 	// rcu_copy_process(p);
 	p->vfork_done = NULL;
 	spin_lock_init(&p->alloc_lock);

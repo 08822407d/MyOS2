@@ -511,7 +511,7 @@ static void __sched_fork(unsigned long clone_flags, task_s *p)
 	// __dl_clear_params(p);
 
 	// INIT_LIST_HEAD(&p->rt.run_list);
-	list_init(&p->rt.run_list);
+	INIT_LIST_S(&p->rt.run_list);
 	// p->rt.timeout		= 0;
 	// p->rt.time_slice	= sched_rr_timeslice;
 	// p->rt.on_rq		= 0;

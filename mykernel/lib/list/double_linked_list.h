@@ -2,13 +2,13 @@
 #ifndef _LINUX_LIST_H_
 #define _LINUX_LIST_H_
 
+	#include <linux/compiler/myos_optimize_option.h>
 	// #include <linux/container_of.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/stddef.h>
 	// #include <linux/poison.h>
 	#include <linux/kernel/const.h>
-
-	#include <asm/insns.h>
+	#include <linux/kernel/err.h>
 
 	/*
 	 * Circular doubly linked list implementation.
@@ -20,25 +20,10 @@
 	 * using the generic single-entry routines.
 	 */
 
-	#define LIST_INIT(name) { &(name), &(name) }
-	#define LIST_HEADER_INIT(name) {			\
-				.header	= { &(name.header), &(name.header) },	\
-				.count	= 0,					\
-			}
-
-	#define LIST_S(name) \
-				List_s name = LIST_INIT(name)
-	#define LIST_HDR_S(name) \
-				List_hdr_s name = LIST_HEADER_INIT(name)
-
-
-
-	#include <linux/compiler/myos_optimize_option.h>
 	#ifdef DEBUG
 
 		extern void
 		INIT_LIST_S(List_s *list);
-		#define INIT_LIST_HEAD(list) INIT_LIST_S(list)
 		extern void
 		INIT_LIST_HDR_S(List_hdr_s *lhdr);
 
@@ -61,7 +46,7 @@
 		extern void
 		__list_del_entry(List_s *entry);
 		extern void
-		list_del(List_s *entry);
+		list_del_init(List_s *entry);
 		extern void
 		list_del_init(List_s *entry);
 		extern void
@@ -83,15 +68,15 @@
 		list_bulk_move_tail(List_s *head, List_s *first, List_s *last);
 
 		extern bool
-		list_is_first(const List_s *list, const List_s *head);
+		list_node_is_first(const List_s *list, const List_s *head);
 		extern bool
-		list_is_last(const List_s *list, const List_s *head);
+		list_node_is_last(const List_s *list, const List_s *head);
 		extern bool
-		list_is_head(const List_s *list, const List_s *head);
+		list_node_is_head(const List_s *list, const List_s *head);
 		extern bool
-		list_empty(const List_s *head);
+		list_node_empty(const List_s *head);
 		extern bool
-		list_empty_careful(const List_s *head);
+		list_node_empty_careful(const List_s *head);
 
 		extern void
 		list_rotate_left(List_s *head);
@@ -121,9 +106,19 @@
 
 
 		extern bool
-		list_hdr_empty(const List_hdr_s *header);
+		list_hdr_is_empty(const List_hdr_s *header);
 
 	#endif
+
+		#define INIT_LIST_HEAD(list) INIT_LIST_S(list)
+
+		#define list_add_head list_add
+
+		#define list_is_first list_node_is_first
+		#define list_is_last list_node_is_last
+		#define list_is_head list_node_is_head
+		#define list_empty list_node_empty
+		#define list_empty_careful list_node_empty_careful
 	
 	#if defined(LIST_DEFINATION) || !(DEBUG)
 
@@ -222,7 +217,7 @@
 		 * This is a special-purpose list clearing method used in the networking code
 		 * for lists allocated as per-cpu, where we don't want to incur the extra
 		 * WRITE_ONCE() overhead of a regular list_del_init(). The code that uses this
-		 * needs to check the node 'prev' pointer instead of calling list_empty().
+		 * needs to check the node 'prev' pointer instead of calling list_node_empty().
 		 */
 		PREFIX_STATIC_INLINE
 		void
@@ -241,7 +236,7 @@
 		/**
 		 * list_del - deletes entry from list.
 		 * @entry: the element to delete from the list.
-		 * Note: list_empty() on entry does not return true after this, the entry is
+		 * Note: list_node_empty() on entry does not return true after this, the entry is
 		 * in an undefined state.
 		 */
 		PREFIX_STATIC_INLINE
@@ -266,11 +261,11 @@
 		//  * @entry: the element to delete from the list.
 		//  *
 		//  * This is the same as list_del_init(), except designed to be used
-		//  * together with list_empty_careful() in a way to guarantee ordering
+		//  * together with list_node_empty_careful() in a way to guarantee ordering
 		//  * of other memory operations.
 		//  *
 		//  * Any memory operations done before a list_del_init_careful() are
-		//  * guaranteed to be visible after a list_empty_careful() test.
+		//  * guaranteed to be visible after a list_node_empty_careful() test.
 		//  */
 		// PREFIX_STATIC_INLINE
 		// void
@@ -320,7 +315,7 @@
 		list_swap(List_s *entry1, List_s *entry2) {
 			List_s *pos = entry2->prev;
 
-			list_del(entry2);
+			list_del_init(entry2);
 			list_replace(entry1, entry2);
 			if (pos == entry1)
 				pos = entry2;
@@ -372,62 +367,62 @@
 		}
 
 		/**
-		 * list_is_first -- tests whether @list is the first entry in list @head
+		 * list_node_is_first -- tests whether @list is the first entry in list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_is_first(const List_s *list, const List_s *head) {
+		list_node_is_first(const List_s *list, const List_s *head) {
 			return list->prev == head;
 		}
 		/**
-		 * list_is_last - tests whether @list is the last entry in list @head
+		 * list_node_is_last - tests whether @list is the last entry in list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_is_last(const List_s *list, const List_s *head) {
+		list_node_is_last(const List_s *list, const List_s *head) {
 			return list->next == head;
 		}
 		/**
-		 * list_is_head - tests whether @list is the list @head
+		 * list_node_is_head - tests whether @list is the list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_is_head(const List_s *list, const List_s *head) {
+		list_node_is_head(const List_s *list, const List_s *head) {
 			return list == head;
 		}
 		/**
-		 * list_empty - tests whether a list is empty
+		 * list_node_empty - tests whether a list is empty
 		 * @head: the list to test.
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_empty(const List_s *head) {
+		list_node_empty(const List_s *head) {
 			return READ_ONCE(head->next) == head;
 		}
 		// /**
-		//  * list_empty_careful - tests whether a list is empty and not being modified
+		//  * list_node_empty_careful - tests whether a list is empty and not being modified
 		//  * @head: the list to test
 		//  *
 		//  * Description:
 		//  * tests whether a list is empty _and_ checks that no other CPU might be
 		//  * in the process of modifying either member (next or prev)
 		//  *
-		//  * NOTE: using list_empty_careful() without synchronization
+		//  * NOTE: using list_node_empty_careful() without synchronization
 		//  * can only be safe if the only activity that can happen
 		//  * to the list entry is list_del_init(). Eg. it cannot be used
 		//  * if another CPU could re-list_add() it.
 		//  */
 		// PREFIX_STATIC_INLINE
 		// bool
-		// list_empty_careful(const List_s *head) {
+		// list_node_empty_careful(const List_s *head) {
 		// 	List_s *next = smp_load_acquire(&head->next);
-		// 	return list_is_head(next, head) && (next == head->prev);
+		// 	return list_node_is_head(next, head) && (next == head->prev);
 		// }
 
 		// /**
@@ -439,7 +434,7 @@
 		// list_rotate_left(List_s *head) {
 		// 	List_s *first;
 
-		// 	if (!list_empty(head)) {
+		// 	if (!list_node_empty(head)) {
 		// 		first = head->next;
 		// 		list_move_tail(first, head);
 		// 	}
@@ -469,7 +464,7 @@
 		// PREFIX_STATIC_INLINE
 		// bool
 		// list_is_singular(const List_s *head) {
-		// 	return !list_empty(head) && (head->next == head->prev);
+		// 	return !list_node_empty(head) && (head->next == head->prev);
 		// }
 
 		// PREFIX_STATIC_INLINE
@@ -500,11 +495,11 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_cut_position(List_s *list, List_s *head, List_s *entry) {
-		// 	if (list_empty(head))
+		// 	if (list_node_empty(head))
 		// 		return;
-		// 	if (list_is_singular(head) && !list_is_head(entry, head) && (entry != head->next))
+		// 	if (list_is_singular(head) && !list_node_is_head(entry, head) && (entry != head->next))
 		// 		return;
-		// 	if (list_is_head(entry, head))
+		// 	if (list_node_is_head(entry, head))
 		// 		INIT_LIST_HEAD(list);
 		// 	else
 		// 		__list_cut_position(list, head, entry);
@@ -558,7 +553,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice(const List_s *list, List_s *head) {
-		// 	if (!list_empty(list))
+		// 	if (!list_node_empty(list))
 		// 		__list_splice(list, head, head->next);
 		// }
 		// /**
@@ -569,7 +564,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_tail(List_s *list, List_s *head) {
-		// 	if (!list_empty(list))
+		// 	if (!list_node_empty(list))
 		// 		__list_splice(list, head->prev, head);
 		// }
 		// /**
@@ -582,7 +577,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_init(List_s *list, List_s *head) {
-		// 	if (!list_empty(list)) {
+		// 	if (!list_node_empty(list)) {
 		// 		__list_splice(list, head, head->next);
 		// 		INIT_LIST_HEAD(list);
 		// 	}
@@ -598,7 +593,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_tail_init(List_s *list, List_s *head) {
-		// 	if (!list_empty(list)) {
+		// 	if (!list_node_empty(list)) {
 		// 		__list_splice(list, head->prev, head);
 		// 		INIT_LIST_HEAD(list);
 		// 	}
@@ -608,342 +603,11 @@
 
 		PREFIX_STATIC_INLINE
 		bool
-		list_hdr_empty(const List_hdr_s *header) {
+		list_hdr_is_empty(const List_hdr_s *header) {
 			return READ_ONCE(header->count) == 0;
 		}
 
 	#endif
 
-
-		/**
-		 * list_entry - get the struct for this entry
-		 * @ptr:	the &List_s pointer.
-		 * @type:	the type of the struct this is embedded in.
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_entry(ptr, type, member) \
-					container_of(ptr, type, member)
-
-		/**
-		 * list_first_entry - get the first element from a list
-		 * @ptr:	the list head to take the element from.
-		 * @type:	the type of the struct this is embedded in.
-		 * @member:	the name of the list_head within the struct.
-		 *
-		 * Note, that list is expected to be not empty.
-		 */
-		#define list_first_entry(ptr, type, member) \
-					list_entry((ptr)->header.next, type, member)
-
-		/**
-		 * list_last_entry - get the last element from a list
-		 * @ptr:	the list head to take the element from.
-		 * @type:	the type of the struct this is embedded in.
-		 * @member:	the name of the list_head within the struct.
-		 *
-		 * Note, that list is expected to be not empty.
-		 */
-		#define list_last_entry(ptr, type, member) \
-					list_entry((ptr)->header.prev, type, member)
-
-		// /**
-		//  * list_first_entry_or_null - get the first element from a list
-		//  * @ptr:	the list head to take the element from.
-		//  * @type:	the type of the struct this is embedded in.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Note that if the list is empty, it returns NULL.
-		//  */
-		// #define list_first_entry_or_null(ptr, type, member) ({ \
-		// 	List_s *head__ = (ptr); \
-		// 	List_s *pos__ = READ_ONCE(head__->next); \
-		// 	pos__ != head__ ? list_entry(pos__, type, member) : NULL; \
-		// })
-
-		/**
-		 * list_next_entry - get the next element in list
-		 * @pos:	the type * to cursor
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_next_entry(pos, member) \
-			list_entry((pos)->member.next, typeof(*(pos)), member)
-
-		/**
-		 * list_prev_entry - get the prev element in list
-		 * @pos:	the type * to cursor
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_prev_entry(pos, member) \
-			list_entry((pos)->member.prev, typeof(*(pos)), member)
-
-		/**
-		 * list_for_each	-	iterate over a list
-		 * @pos:	the &List_s to use as a loop cursor.
-		 * @head:	the head for your list.
-		 */
-		#define list_for_each(pos, head) \
-			for (pos = (head)->next; !list_is_head(pos, (head)); pos = pos->next)
-
-		// /**
-		//  * list_for_each_continue - continue iteration over a list
-		//  * @pos:	the &List_s to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  *
-		//  * Continue to iterate over a list, continuing after the current position.
-		//  */
-		// #define list_for_each_continue(pos, head) \
-		// 	for (pos = pos->next; !list_is_head(pos, (head)); pos = pos->next)
-
-		// /**
-		//  * list_for_each_prev	-	iterate over a list backwards
-		//  * @pos:	the &List_s to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  */
-		// #define list_for_each_prev(pos, head) \
-		// 	for (pos = (head)->prev; !list_is_head(pos, (head)); pos = pos->prev)
-
-		// /**
-		//  * list_for_each_safe - iterate over a list safe against removal of list entry
-		//  * @pos:	the &List_s to use as a loop cursor.
-		//  * @n:		another &List_s to use as temporary storage
-		//  * @head:	the head for your list.
-		//  */
-		// #define list_for_each_safe(pos, n, head) \
-		// 	for (pos = (head)->next, n = pos->next; \
-		// 		!list_is_head(pos, (head)); \
-		// 		pos = n, n = pos->next)
-
-		// /**
-		//  * list_for_each_prev_safe - iterate over a list backwards safe against removal of list entry
-		//  * @pos:	the &List_s to use as a loop cursor.
-		//  * @n:		another &List_s to use as temporary storage
-		//  * @head:	the head for your list.
-		//  */
-		// #define list_for_each_prev_safe(pos, n, head) \
-		// 	for (pos = (head)->prev, n = pos->prev; \
-		// 		!list_is_head(pos, (head)); \
-		// 		pos = n, n = pos->prev)
-
-		/**
-		 * list_entry_is_head - test if the entry points to the head of the list
-		 * @pos:	the type * to cursor
-		 * @head:	the head for your list.
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_entry_is_head(pos, head, member)				\
-					(&pos->member == &((head)->header))
-
-		/**
-		 * list_for_each_entry	-	iterate over list of given type
-		 * @pos:	the type * to use as a loop cursor.
-		 * @head:	the head for your list.
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_for_each_entry(pos, head, member)				\
-					for (pos = list_first_entry(head, typeof(*pos), member);	\
-						!list_entry_is_head(pos, head, member);			\
-						pos = list_next_entry(pos, member))
-
-		// /**
-		//  * list_for_each_entry_reverse - iterate backwards over list of given type.
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  */
-		// #define list_for_each_entry_reverse(pos, head, member)			\
-		// 	for (pos = list_last_entry(head, typeof(*pos), member);		\
-		// 		!list_entry_is_head(pos, head, member); 			\
-		// 		pos = list_prev_entry(pos, member))
-
-		// /**
-		//  * list_prepare_entry - prepare a pos entry for use in list_for_each_entry_continue()
-		//  * @pos:	the type * to use as a start point
-		//  * @head:	the head of the list
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Prepares a pos entry for use as a start point in list_for_each_entry_continue().
-		//  */
-		// #define list_prepare_entry(pos, head, member) \
-		// 	((pos) ? : list_entry(head, typeof(*pos), member))
-
-		// /**
-		//  * list_for_each_entry_continue - continue iteration over list of given type
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Continue to iterate over list of given type, continuing after
-		//  * the current position.
-		//  */
-		// #define list_for_each_entry_continue(pos, head, member) 		\
-		// 	for (pos = list_next_entry(pos, member);			\
-		// 		!list_entry_is_head(pos, head, member);			\
-		// 		pos = list_next_entry(pos, member))
-
-		// /**
-		//  * list_for_each_entry_continue_reverse - iterate backwards from the given point
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Start to iterate over list of given type backwards, continuing after
-		//  * the current position.
-		//  */
-		// #define list_for_each_entry_continue_reverse(pos, head, member)		\
-		// 	for (pos = list_prev_entry(pos, member);			\
-		// 		!list_entry_is_head(pos, head, member);			\
-		// 		pos = list_prev_entry(pos, member))
-
-		// /**
-		//  * list_for_each_entry_from - iterate over list of given type from the current point
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Iterate over list of given type, continuing from current position.
-		//  */
-		// #define list_for_each_entry_from(pos, head, member) 			\
-		// 	for (; !list_entry_is_head(pos, head, member);			\
-		// 		pos = list_next_entry(pos, member))
-
-		// /**
-		//  * list_for_each_entry_from_reverse - iterate backwards over list of given type
-		//  *                                    from the current point
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Iterate backwards over list of given type, continuing from current position.
-		//  */
-		// #define list_for_each_entry_from_reverse(pos, head, member)		\
-		// 	for (; !list_entry_is_head(pos, head, member);			\
-		// 		pos = list_prev_entry(pos, member))
-
-		/**
-		 * list_for_each_entry_safe - iterate over list of given type safe against removal of list entry
-		 * @pos:	the type * to use as a loop cursor.
-		 * @n:		another type * to use as temporary storage
-		 * @head:	the head for your list.
-		 * @member:	the name of the list_head within the struct.
-		 */
-		#define list_for_each_entry_safe(pos, n, head, member)			\
-			for (pos = list_first_entry(head, typeof(*pos), member),	\
-				n = list_next_entry(pos, member);			\
-				!list_entry_is_head(pos, head, member); 			\
-				pos = n, n = list_next_entry(n, member))
-
-		// /**
-		//  * list_for_each_entry_safe_continue - continue list iteration safe against removal
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @n:		another type * to use as temporary storage
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Iterate over list of given type, continuing after current point,
-		//  * safe against removal of list entry.
-		//  */
-		// #define list_for_each_entry_safe_continue(pos, n, head, member) 		\
-		// 	for (pos = list_next_entry(pos, member), 				\
-		// 		n = list_next_entry(pos, member);				\
-		// 		!list_entry_is_head(pos, head, member);				\
-		// 		pos = n, n = list_next_entry(n, member))
-
-		// /**
-		//  * list_for_each_entry_safe_from - iterate over list from current point safe against removal
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @n:		another type * to use as temporary storage
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Iterate over list of given type from current point, safe against
-		//  * removal of list entry.
-		//  */
-		// #define list_for_each_entry_safe_from(pos, n, head, member) 			\
-		// 	for (n = list_next_entry(pos, member);					\
-		// 		!list_entry_is_head(pos, head, member);				\
-		// 		pos = n, n = list_next_entry(n, member))
-
-		// /**
-		//  * list_for_each_entry_safe_reverse - iterate backwards over list safe against removal
-		//  * @pos:	the type * to use as a loop cursor.
-		//  * @n:		another type * to use as temporary storage
-		//  * @head:	the head for your list.
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * Iterate backwards over list of given type, safe against removal
-		//  * of list entry.
-		//  */
-		// #define list_for_each_entry_safe_reverse(pos, n, head, member)		\
-		// 	for (pos = list_last_entry(head, typeof(*pos), member),		\
-		// 		n = list_prev_entry(pos, member);			\
-		// 		!list_entry_is_head(pos, head, member); 			\
-		// 		pos = n, n = list_prev_entry(n, member))
-
-		// /**
-		//  * list_safe_reset_next - reset a stale list_for_each_entry_safe loop
-		//  * @pos:	the loop cursor used in the list_for_each_entry_safe loop
-		//  * @n:		temporary storage used in list_for_each_entry_safe
-		//  * @member:	the name of the list_head within the struct.
-		//  *
-		//  * list_safe_reset_next is not safe to use in general if the list may be
-		//  * modified concurrently (eg. the lock is dropped in the loop body). An
-		//  * exception to this is if the cursor element (pos) is pinned in the list,
-		//  * and list_safe_reset_next is called after re-taking the lock and before
-		//  * completing the current iteration of the loop body.
-		//  */
-		// #define list_safe_reset_next(pos, n, member)				\
-		// 	n = list_next_entry(pos, member)
-
-
-	// MyOS defined protos
-	#define LIST_HEAD_INIT(name)	LIST_INIT(name)
-	#define LIST_HEAD(name)			LIST_S(name)
-
-
-
-	void list_init(List_s * src);
-	List_s * list_get_prev(List_s * src);
-	List_s * list_get_next(List_s * src);
-	void list_insert_prev(List_s * src, List_s * dst);
-	void list_insert_next(List_s * src, List_s * dst);
-	void list_delete(List_s * src);
-	
-	bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_hdr_init(List_hdr_s * lh_p);
-	void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_hdr_pop(List_hdr_s * lhdr_p);
-	void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_hdr_dequeue(List_hdr_s * lhdr_p);
-	List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_hdr_dump(List_hdr_s *lhdr_p);
-
-	typedef int(* list_traverse_do)(List_s * curr, List_s * target);
-	typedef	list_traverse_do	list_traverse_check;
-	typedef	list_traverse_do	list_traverse_end;
-	void list_foreach_do(List_hdr_s * lhdr,
-			List_s * target, list_traverse_do do_hdlr);
-	void list_search_and_do(List_hdr_s * lhdr, List_s * target,
-			list_traverse_check chk_hdlr, list_traverse_do do_hdlr,
-			list_traverse_end end_hdlr);
-
-	#define list_hdr_foreach(pos, lhdr)	\
-				list_for_each(pos, (&(lhdr->header)))
-
-	#define list_hdr_foreach_entry(lhdr, member)		\
-			for ((member) = (lhdr)->header.next;		\
-				(member) != &(lhdr)->header;		\
-				(member) = (member)->next)
-
-	static inline bool
-	list_hdr_contains(List_hdr_s * lhdr, List_s * target) {
-		List_s *tmp = NULL;
-		list_hdr_foreach(tmp, lhdr)
-		{
-			if (tmp == target)
-				return true;
-		}
-		return false;
-	}
 
 #endif /* _LINUX_LIST_H_ */

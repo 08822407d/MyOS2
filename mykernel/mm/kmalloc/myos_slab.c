@@ -42,7 +42,7 @@ void myos_init_slab()
 	for (int i = 0; i < slab_level; i++)
 	{
 		slab_cache_s *scgp = slab_cache_groups_p + i;
-		list_init(&scgp->slabcache_list);
+		INIT_LIST_S(&scgp->slabcache_list);
 		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
 
 		list_hdr_init(&scgp->normal_slab_free);
@@ -50,7 +50,7 @@ void myos_init_slab()
 		list_hdr_init(&scgp->normal_slab_full);
 
 		slab_s *bslp = base_slabs_p + i;
-		list_init(&bslp->slab_list);
+		INIT_LIST_S(&bslp->slab_list);
 
 		// init 3 status of slab list
 		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
@@ -76,7 +76,7 @@ static slab_s * myos_slab_alloc(slab_s *cslp)
 	
 	__SetPageSlab(page);
 	slab_s *nslp = (slab_s *)kzalloc(sizeof(slab_s), GFP_KERNEL);
-	list_init(&nslp->slab_list);
+	INIT_LIST_S(&nslp->slab_list);
 
 	nslp->page = page;
 	page->private = (unsigned long)nslp;
@@ -96,7 +96,7 @@ static void myos_slab_free(slab_s *slp)
 	kfree(slp->colormap);
 	__ClearPageSlab(slp->page);
 	slp->page->private = 0;
-	list_delete(&slp->slab_list);
+	list_del_init(&slp->slab_list);
 	slp->slabcache_ptr->normal_slab_free.count--;
 
 	kfree(slp);
@@ -110,7 +110,7 @@ void *__kmalloc(size_t size, gfp_t flags)
 	// find suitable slab group
 	slab_cache_s *scgp = slab_cache_groups_p;
 	while (size > scgp->obj_size)
-		scgp = container_of(list_get_next(&scgp->slabcache_list), slab_cache_s, slabcache_list);
+		scgp = container_of((scgp->slabcache_list.next), slab_cache_s, slabcache_list);
 
 	lock_recurs_lock(&slab_alloc_lock);
 	// find a usable slab and if it is in free list, move it to used list
@@ -231,13 +231,13 @@ void kfree(const void *objp)
 		// or if it is in used list and only use one slot, move it to free list
 		if (slp->free == 1)
 		{
-			list_delete(&slp->slab_list);
+			list_del_init(&slp->slab_list);
 			scgp->normal_slab_full.count--;
 			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
 		}
 		else if (slp->free == 0)
 		{
-			list_delete(&slp->slab_list);
+			list_del_init(&slp->slab_list);
 			scgp->normal_slab_used.count--;
 			// if slp is base-slab, add it to tail
 			if (slp != scgp->normal_base_slab)

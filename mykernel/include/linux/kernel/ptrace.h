@@ -227,9 +227,9 @@
 	//  * Called with write_lock(&tasklist_lock) held.
 	//  */
 	// static inline void ptrace_release_task(task_s *task) {
-	// 	BUG_ON(!list_empty(&task->ptraced));
+	// 	BUG_ON(!list_node_empty(&task->ptraced));
 	// 	ptrace_unlink(task);
-	// 	BUG_ON(!list_empty(&task->ptrace_entry));
+	// 	BUG_ON(!list_node_empty(&task->ptrace_entry));
 	// }
 
 	// #ifndef force_successful_syscall_return

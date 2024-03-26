@@ -75,7 +75,7 @@
 		void
 		clear_page_pfmemalloc(page_s *page) {
 			// page->lru.next = NULL;
-			list_init(&page->lru);
+			INIT_LIST_S(&page->lru);
 		}
 
 		PREFIX_STATIC_INLINE

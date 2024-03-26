@@ -120,7 +120,7 @@
 	 * which (when the lock is uncontended) are of roughly equal cost.
 	 */
 	// static inline int swait_active(swqueue_hdr_s *wq) {
-	// 	return !list_empty(&wq->task_list);
+	// 	return !list_node_empty(&wq->task_list);
 	// }
 
 	/**
