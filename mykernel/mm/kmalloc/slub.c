@@ -59,7 +59,7 @@ order_objects(unsigned int order, unsigned int size) {
 static inline struct kmem_cache_order_objects
 oo_make(unsigned int order, unsigned int size) {
 	struct kmem_cache_order_objects x = {
-		.order		= OO_SHIFT,
+		.order		= order,
 		.obj_nr		= order_objects(order, size),
 	};
 	return x;
@@ -323,7 +323,8 @@ oo_make(unsigned int order, unsigned int size) {
 // 	return p;
 // }
 
-// static __always_inline void *__slab_alloc_node(struct kmem_cache *s,
+// static __always_inline void
+// *__slab_alloc_node(struct kmem_cache *s,
 // 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
 // {
 // 	struct kmem_cache_cpu *c;
@@ -401,33 +402,6 @@ oo_make(unsigned int order, unsigned int size) {
 
 // 	return object;
 // }
-// #else /* CONFIG_SLUB_TINY */
-// static void *__slab_alloc_node(struct kmem_cache *s,
-// 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
-// {
-// 	struct partial_context pc;
-// 	struct slab *slab;
-// 	void *object;
-
-// 	pc.flags = gfpflags;
-// 	pc.slab = &slab;
-// 	pc.orig_size = orig_size;
-// 	object = get_partial(s, node, &pc);
-
-// 	if (object)
-// 		return object;
-
-// 	slab = new_slab(s, gfpflags, node);
-// 	if (unlikely(!slab)) {
-// 		slab_out_of_memory(s, gfpflags, node);
-// 		return NULL;
-// 	}
-
-// 	object = alloc_single_from_new_slab(s, slab, orig_size);
-
-// 	return object;
-// }
-// #endif /* CONFIG_SLUB_TINY */
 
 // /*
 //  * If the object has been wiped upon free, make sure it's fully initialized by
@@ -451,7 +425,8 @@ oo_make(unsigned int order, unsigned int size) {
 //  *
 //  * Otherwise we can simply pick the next object from the lockless free list.
 //  */
-// static __fastpath_inline void *slab_alloc_node(struct kmem_cache *s, struct list_lru *lru,
+// static __always_inline void
+// *slab_alloc_node(struct kmem_cache *s, struct list_lru *lru,
 // 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
 // {
 // 	void *object;
@@ -481,7 +456,8 @@ oo_make(unsigned int order, unsigned int size) {
 // 	return object;
 // }
 
-// static __fastpath_inline void *slab_alloc(struct kmem_cache *s, struct list_lru *lru,
+// static __always_inline void
+// *slab_alloc(struct kmem_cache *s, struct list_lru *lru,
 // 		gfp_t gfpflags, unsigned long addr, size_t orig_size)
 // {
 // 	return slab_alloc_node(s, lru, gfpflags, NUMA_NO_NODE, addr, orig_size);
@@ -618,7 +594,7 @@ static int simple_kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
 {
 	s->flags = flags;
 
-	if (!calculate_sizes(s))
+	if (calculate_sizes(s) <= 0)
 		goto error;
 
 	/*
@@ -633,6 +609,7 @@ static int simple_kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
 	// 	if (init_cache_random_seq(s))
 	// 		goto error;
 	// }
+	return 0;
 
 error:
 	// __kmem_cache_release(s);
@@ -657,25 +634,7 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
 {
 	int node;
 	// struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
-	// struct kmem_cache_node *n;
-
 	// memcpy(s, static_cache, kmem_cache->object_size);
-
-	// /*
-	//  * This runs very early, and only the boot processor is supposed to be
-	//  * up.  Even if it weren't true, IRQs are not up so we couldn't fire
-	//  * IPIs around.
-	//  */
-	// __flush_cpu_slab(s, smp_processor_id());
-	// for_each_kmem_cache_node(s, node, n) {
-	// 	struct slab *p;
-
-	// 	list_for_each_entry(p, &n->partial, slab_list)
-	// 		p->slab_cache = s;
-
-	// 	list_for_each_entry(p, &n->full, slab_list)
-	// 		p->slab_cache = s;
-	// }
 	// list_add(&s->list, &slab_caches);
 	// return s;
 }
@@ -683,15 +642,10 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
 void __init kmem_cache_init(void)
 {
 	static __initdata kmem_cache_s
-		boot_kmem_cache,
-		boot_kmem_cache_node;
+		boot_kmem_cache;
 	int node;
 
-	kmem_cache_node = &boot_kmem_cache_node;
 	kmem_cache = &boot_kmem_cache;
-
-	// create_boot_cache(kmem_cache_node, "kmem_cache_node",
-	// 	sizeof(struct kmem_cache_node), SLAB_HWCACHE_ALIGN, 0, 0);
 
 	/* Able to allocate the per node structures */
 	slab_state = PARTIAL;
@@ -702,7 +656,6 @@ void __init kmem_cache_init(void)
 			SLAB_HWCACHE_ALIGN, 0, 0);
 
 	kmem_cache = bootstrap(&boot_kmem_cache);
-	kmem_cache_node = bootstrap(&boot_kmem_cache_node);
 
 	// /* Now we can use the kmem_cache to allocate kmalloc slabs */
 	// setup_kmalloc_cache_index_table();
