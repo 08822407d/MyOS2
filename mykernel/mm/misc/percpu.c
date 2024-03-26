@@ -546,10 +546,10 @@ void simple_pcpu_setup_first_chunk()
 		(unsigned long)__per_cpu_end - (unsigned long)__per_cpu_load;
 	pcpuarea_size = ALIGN(pcpuarea_size, PAGE_SIZE);
 
-	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_lcpu * 8, 8);
+	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_cpu_ids * 8, 8);
 	pcpu_base_addr = __per_cpu_start;
 	// 不为bsp的percpu变量重新申请空间，直接使用初始声明的
-	for (int i = 0; i < nr_lcpu; i++)
+	for (int i = 0; i < nr_cpu_ids; i++)
 		((unsigned long *)pcpu_unit_offsets)[i] =
 			(unsigned long)myos_memblock_alloc_DMA32(pcpuarea_size, PAGE_SIZE) -
 				(unsigned long)__per_cpu_load;

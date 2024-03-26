@@ -8,7 +8,7 @@
 	extern unsigned long volatile	jiffies;
 
 	extern task_s			idle_threads;
-	extern unsigned			nr_lcpu;
+	extern unsigned			nr_cpu_ids;
 
 	extern kbd_inbuf_s		*p_kb;
 	extern time_s 			time;

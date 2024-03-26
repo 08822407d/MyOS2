@@ -14,7 +14,7 @@ extern uint64_t	boot_from_grub2;
 extern u64 mbi_magic;
 extern u64 mbi_base;
 
-unsigned			nr_lcpu;
+unsigned			nr_cpu_ids;
 mbi_mmap_ent_s		*ram_map;
 framebuffer_s		framebuffer;
 mbi_tags_header_s	*mbi_tag_header;
@@ -24,7 +24,7 @@ void parse_tag (unsigned long magic, unsigned long addr);
 
 static void get_smpinfo(myos2_tag_smpinfo_s *smp_info)
 {
-	nr_lcpu = smp_info->core_num;
+	nr_cpu_ids = smp_info->core_num;
 }
 
 static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)

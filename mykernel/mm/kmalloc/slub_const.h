@@ -4,6 +4,11 @@
 
 	#include <linux/kernel/types.h>
 
+	#define OO_SHIFT			16
+	#define OO_MASK				((1 << OO_SHIFT) - 1)
+	#define MAX_OBJS_PER_PAGE	32767 /* since slab.objects is u15 */
+
+
 	/*
 	 * Flags to pass to kmem_cache_create().
 	 * The ones marked DEBUG are only valid if CONFIG_DEBUG_SLAB is set.

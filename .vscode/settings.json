@@ -236,6 +236,7 @@
         "fs_struct_types.h": "c",
         "bootloader.h": "c",
         "kmalloc.h": "c",
-        "slub_types.h": "c"
+        "slub_types.h": "c",
+        "slub_const.h": "c"
     }
 }

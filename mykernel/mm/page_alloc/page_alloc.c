@@ -2,6 +2,8 @@
 
 #include "page_alloc.h"
 
+#include <linux/kernel/nodemask.h>
+
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  *  linux/mm/page_alloc.c
@@ -46,6 +48,10 @@ char * const zone_names[MAX_NR_ZONES] = {
 	"Device",
 };
 
+unsigned int nr_node_ids __read_mostly = MAX_NUMNODES;
+unsigned int nr_online_nodes __read_mostly = 1;
+EXPORT_SYMBOL(nr_node_ids);
+EXPORT_SYMBOL(nr_online_nodes);
 
 /*==============================================================================================*
  *								private fuctions for buddy system								*

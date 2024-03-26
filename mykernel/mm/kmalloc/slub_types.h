@@ -12,6 +12,7 @@
 	#include <linux/lib/list.h>
 
 	#include "slub_const.h"
+
 	/*
 	 * State of the slab allocator.
 	 *
@@ -91,8 +92,11 @@
 	 * given order would contain.
 	 */
 	typedef struct kmem_cache_order_objects {
-		unsigned int x;
-	} kmem_cache_order_obj_s;
+		// unsigned int x;
+		unsigned int
+			obj_nr	: OO_SHIFT,
+			order	: 32 - OO_SHIFT;
+	} __attribute__((packed)) kmem_cache_order_obj_s;
 
 	/*
 	 * Slab cache management.
@@ -131,7 +135,8 @@
 		struct kasan_cache	kasan_info;
 	#endif
 
-		kmem_cache_node_s	*node[MAX_NUMNODES];
+		// kmem_cache_node_s	*node[MAX_NUMNODES];
+		kmem_cache_node_s	node;
 	} kmem_cache_s;
 
 #endif /* _SLUB_TYPES_H_ */

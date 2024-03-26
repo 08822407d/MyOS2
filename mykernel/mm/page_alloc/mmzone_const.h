@@ -9,4 +9,12 @@
 	#endif
 	#define MAX_ORDER_NR_PAGES	(1 << (MAX_ORDER - 1))
 
+	/*
+	 * PAGE_ALLOC_COSTLY_ORDER is the order at which allocations are deemed
+	 * costly to service.  That is between allocation orders which should
+	 * coalesce naturally under reasonable reclaim pressure and those which
+	 * will not.
+	 */
+	#define PAGE_ALLOC_COSTLY_ORDER 3
+
 #endif /* _LINUX_MMZONE_CONST_H_ */
