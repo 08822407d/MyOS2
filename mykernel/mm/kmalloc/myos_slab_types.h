@@ -1,7 +1,7 @@
 #ifndef _SLAB_H_
 #define _SLAB_H_
 
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 
 	struct  slab;
 	typedef struct slab slab_s;

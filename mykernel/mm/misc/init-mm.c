@@ -4,7 +4,7 @@
 #include <linux/kernel/lock_ipc.h>
 #include <linux/kernel/cpumask.h>
 #include <linux/kernel/mm.h>
-#include <linux/lib/list.h>
+#include <linux/kernel/lib.h>
 
 #ifndef INIT_MM_CONTEXT
 #	define INIT_MM_CONTEXT(name)

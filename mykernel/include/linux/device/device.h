@@ -14,7 +14,7 @@
 
 	#include <linux/kernel/ioport.h>
 	#include <linux/kernel/kobject.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/uidgid.h>

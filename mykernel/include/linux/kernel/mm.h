@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_MM_H
-#define _LINUX_MM_H
+#ifndef _LINUX_MM_H_
+#define _LINUX_MM_H_
 
 	#include <mm/mm_types.h>
 	#include <mm/earlymem_api.h>
@@ -16,4 +16,4 @@
 	#include <linux/kernel/sizes.h>
 	#include <linux/kernel/sched.h>
 
-#endif /* _LINUX_MM_H */
+#endif /* _LINUX_MM_H_ */

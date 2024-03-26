@@ -1,6 +1,6 @@
 #include <linux/kernel/mm.h>
 #include <linux/kernel/err.h>
-#include <linux/lib/list.h>
+#include <linux/kernel/lib.h>
 
 #include <obsolete/proto.h>
 #include <klib/stdbool.h>

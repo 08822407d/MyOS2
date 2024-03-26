@@ -16,7 +16,7 @@
 #define _KOBJECT_H_
 
 	#include <linux/kernel/types.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	// #include <linux/sysfs.h>
 	#include <linux/compiler/compiler.h>
 	// #include <linux/container_of.h>

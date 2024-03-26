@@ -9,7 +9,7 @@
 
 	#include <linux/kernel/lock_ipc.h>
 	#include <linux/kernel/kobject.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 
 	#include "slub_const.h"
 

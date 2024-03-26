@@ -9,7 +9,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/fs/vfs_s_defs.h>
 	#include <linux/block/block_s_defs.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 
 
 	#include <linux/device/device.h>

@@ -5,7 +5,7 @@
 	#include <linux/kernel/kobject.h>
 	#include <linux/kernel/kdev_t.h>
 	#include <linux/device/device.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 
 	typedef struct cdev {
 		kobj_s				kobj;

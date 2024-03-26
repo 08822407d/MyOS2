@@ -5,7 +5,7 @@
  * (C) 2012 Christoph Lameter <cl@linux.com>
  */
 #include <linux/kernel/mm.h>
-#include <linux/lib/list.h>
+#include <linux/kernel/lib.h>
 
 #include "kmalloc.h"
 

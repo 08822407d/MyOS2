@@ -8,7 +8,7 @@
 	#include <linux/fs/path.h>
 	#include <linux/kernel/stat.h>
 	#include <linux/kernel/cache.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	#include <linux/init/init.h>
 	#include <linux/debug/bug.h>
 	#include <linux/kernel/mm.h>

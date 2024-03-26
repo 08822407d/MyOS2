@@ -13,7 +13,7 @@
 	#include <linux/kernel/timex.h>
 	#include <linux/kernel/time.h>
 	#include <linux/kernel/cache.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	#include <linux/init/init.h>
 	#include <asm/insns.h>
 

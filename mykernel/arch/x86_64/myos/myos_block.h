@@ -1,4 +1,4 @@
-#include <linux/lib/list.h>
+#include <linux/kernel/lib.h>
 #include <linux/kernel/completion.h>
 
 struct blkbuf_node;

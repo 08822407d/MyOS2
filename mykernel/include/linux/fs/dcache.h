@@ -2,7 +2,7 @@
 #define _LINUX_DCACHE_H_
 
 	// #
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	#include <linux/kernel/math.h>
 	// #include <linux/rculist.h>
 	// #include <linux/rculist_bl.h>

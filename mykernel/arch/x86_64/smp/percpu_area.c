@@ -2,7 +2,7 @@
 
 
 #include <linux/kernel/sched.h>
-#include <linux/lib/list.h>
+#include <linux/kernel/lib.h>
 #include <asm/insns.h>
 
 #include <obsolete/glo.h>

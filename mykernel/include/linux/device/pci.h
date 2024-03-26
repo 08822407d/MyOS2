@@ -25,7 +25,7 @@
 
 	#include <linux//kernel/types.h>
 	#include <linux/init/init.h>
-	#include <linux/lib/list.h>
+	#include <linux/kernel/lib.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/lib/errno.h>
 	#include <linux/kernel/kobject.h>
