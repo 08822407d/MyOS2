@@ -63,14 +63,12 @@ static kmem_cache_s *kmem_cache_node;
 
 static inline void
 *get_freepointer(struct kmem_cache *s, void *object) {
-	// object = kasan_reset_tag(object);
 	return object + s->offset;
 }
 
 static inline void
 set_freepointer(struct kmem_cache *s, void *object, void *fp) {
 	unsigned long freeptr_addr = (unsigned long)object + s->offset;
-	// freeptr_addr = (unsigned long)kasan_reset_tag((void *)freeptr_addr);
 	*(void **)freeptr_addr = fp;
 }
 
@@ -103,19 +101,13 @@ oo_make(unsigned int order, unsigned int size) {
  * Slab allocation and freeing
  */
 static inline page_s
-*alloc_slab_page(gfp_t flags,
-		struct kmem_cache_order_objects oo) {
-	unsigned int order = oo_order(oo);
-	return alloc_pages(flags, order);
+*alloc_slab_page(gfp_t flags, struct kmem_cache_order_objects oo) {
+	return alloc_pages(flags, oo_order(oo));
 }
 
 
 static page_s
 *new_slab(struct kmem_cache *s, gfp_t flags) {
-	// if (unlikely(flags & GFP_SLAB_BUG_MASK))
-	// 	flags = kmalloc_fix_flags(flags);
-
-	// WARN_ON_ONCE(s->ctor && (flags & __GFP_ZERO));
 	flags = flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK);
 // static struct slab *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
 // {
@@ -128,23 +120,20 @@ static page_s
 	flags &= gfp_allowed_mask;
 	flags |= s->allocflags;
 
-	// /*
-	//  * Let the initial higher-order allocation fail under memory pressure
-	//  * so we fall-back to the minimum order allocation.
-	//  */
-	// alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
-	// if ((alloc_gfp & __GFP_DIRECT_RECLAIM) && oo_order(oo) > oo_order(s->min))
-	// 	alloc_gfp = (alloc_gfp | __GFP_NOMEMALLOC) & ~__GFP_RECLAIM;
+	/*
+	 * Let the initial higher-order allocation fail under memory pressure
+	 * so we fall-back to the minimum order allocation.
+	 */
+	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
 
 	slab = alloc_slab_page(alloc_gfp, oo);
 	if (unlikely(!slab)) {
 		oo = s->min;
-		alloc_gfp = flags;
 		/*
 		 * Allocation may have failed due to fragmentation.
 		 * Try a lower order alloc if possible
 		 */
-		slab = alloc_slab_page(alloc_gfp, oo);
+		slab = alloc_slab_page(flags, oo);
 		if (unlikely(!slab))
 			return NULL;
 	}
@@ -242,6 +231,44 @@ static void *alloc_single_from_partial(struct kmem_cache *s,
 
 	return object;
 }
+/*
+ * Called only for kmem_cache_debug() caches to allocate from a freshly
+ * allocated slab. Allocate a single object instead of whole freelist
+ * and put the slab to the partial (or full) list.
+ */
+static void *alloc_single_from_new_slab(struct kmem_cache *s,
+					page_s *slab, int orig_size)
+{
+	// int nid = slab_nid(slab);
+	// struct kmem_cache_node *n = get_node(s, nid);
+	unsigned long flags;
+	void *object;
+
+
+	// object = slab->freelist;
+	// slab->freelist = get_freepointer(s, object);
+	// slab->inuse = 1;
+
+	// if (!alloc_debug_processing(s, slab, object, orig_size))
+	// 	/*
+	// 	 * It's not really expected that this would fail on a
+	// 	 * freshly allocated slab, but a concurrent memory
+	// 	 * corruption in theory could cause that.
+	// 	 */
+	// 	return NULL;
+
+	// spin_lock_irqsave(&n->list_lock, flags);
+
+	// if (slab->inuse == slab->objects)
+	// 	add_full(s, n, slab);
+	// else
+	// 	add_partial(n, slab, DEACTIVATE_TO_HEAD);
+
+	// inc_slabs_node(s, nid, slab->objects);
+	// spin_unlock_irqrestore(&n->list_lock, flags);
+
+	return object;
+}
 
 /*
  * Get a partial slab, lock it and return it.
@@ -278,7 +305,7 @@ static void
 // static void *__slab_alloc_node(struct kmem_cache *s,
 // 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
 static void
-*__slab_alloc(struct kmem_cache *s, gfp_t gfpflags, size_t orig_size) {
+*slab_alloc(struct kmem_cache *s, gfp_t gfpflags, size_t orig_size) {
 	struct partial_context pc;
 	page_s *slab;
 	void *object;
@@ -286,7 +313,6 @@ static void
 	pc.flags = gfpflags;
 	pc.slab = &slab;
 	pc.orig_size = orig_size;
-retry:
 	object = get_partial(s, &pc);
 
 	if (object)
@@ -298,23 +324,9 @@ retry:
 		return NULL;
 	}
 
-	add_partial(&s->node, slab, DEACTIVATE_TO_HEAD);
-	goto retry;
-	// object = alloc_single_from_new_slab(s, slab, orig_size);
+	object = alloc_single_from_new_slab(s, slab, orig_size);
 
 	return object;
-}
-
-// static __fastpath_inline void *slab_alloc(struct kmem_cache *s, struct list_lru *lru,
-// 		gfp_t gfpflags, unsigned long addr, size_t orig_size)
-static __always_inline void
-*slab_alloc(struct kmem_cache *s, gfp_t gfpflags, size_t orig_size) {
-// slab_alloc_node(s, lru, gfpflags, NUMA_NO_NODE, addr, orig_size);
-// {
-//						 ...
-	return __slab_alloc(s, gfpflags, orig_size);
-//						 ...
-// }
 }
 
 void *kmem_cache_alloc(struct kmem_cache *s, gfp_t gfpflags)
