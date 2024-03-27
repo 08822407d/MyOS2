@@ -153,7 +153,7 @@ super_block_s *alloc_super(fs_type_s *type, int flags)
 	// INIT_HLIST_BL_HEAD(&s->s_roots);
 	// mutex_init(&s->s_sync_lock);
 	// INIT_LIST_HEAD(&s->s_inodes);
-	list_hdr_init(&s->s_inodes);
+	INIT_LIST_HEADER_S(&s->s_inodes);
 	// spin_lock_init(&s->s_inode_list_lock);
 	// INIT_LIST_HEAD(&s->s_inodes_wb);
 	// spin_lock_init(&s->s_inode_wblist_lock);
@@ -179,7 +179,7 @@ static void __put_super(super_block_s *s)
 	// 	list_del_init(&s->s_list);
 	// 	WARN_ON(s->s_dentry_lru.node);
 	// 	WARN_ON(s->s_inode_lru.node);
-	// 	WARN_ON(!list_node_empty(&s->s_mounts));
+	// 	WARN_ON(!list_is_empty_entry(&s->s_mounts));
 	// 	security_sb_free(s);
 	// 	fscrypt_sb_free(s);
 	// 	put_user_ns(s->s_user_ns);
@@ -239,7 +239,7 @@ super_block_s *sget_fc(fs_ctxt_s *fc)
 	fc->s_fs_info = NULL;
 	s->s_type = fc->fs_type;
 	s->s_iflags |= fc->s_iflags;
-	// list_add_tail(&s->s_list, &super_blocks);
+	// list_add_to_prev(&s->s_list, &super_blocks);
 	// hlist_add_head(&s->s_instances, &s->s_type->fs_supers);
 	// get_filesystem(s->s_type);
 	return s;

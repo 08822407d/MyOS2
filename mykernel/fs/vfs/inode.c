@@ -150,7 +150,7 @@ void inode_init_once(inode_s *inode)
 	memset(inode, 0, sizeof(inode_s));
 
 	// INIT_HLIST_NODE(&inode->i_hash);
-	list_hdr_init(&inode->i_devices);
+	INIT_LIST_HEADER_S(&inode->i_devices);
 	// INIT_LIST_HEAD(&inode->i_io_list);
 	// INIT_LIST_HEAD(&inode->i_wb_list);
 	// INIT_LIST_HEAD(&inode->i_lru);
@@ -166,17 +166,17 @@ void inode_init_once(inode_s *inode)
 void inode_sb_list_add(inode_s *inode)
 {
 	// spin_lock(&inode->i_sb->s_inode_list_lock);
-	// list_add(&inode->i_sb_list, &inode->i_sb->s_inodes);
-	list_hdr_append(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	// list_add_to_next(&inode->i_sb_list, &inode->i_sb->s_inodes);
+	list_header_enqueue(&inode->i_sb->s_inodes, &inode->i_sb_list);
 	// spin_unlock(&inode->i_sb->s_inode_list_lock);
 }
 
 static inline void inode_sb_list_del(inode_s *inode)
 {
-	if (!list_node_empty(&inode->i_sb_list)) {
+	if (!list_is_empty_entry(&inode->i_sb_list)) {
 	// 	spin_lock(&inode->i_sb->s_inode_list_lock);
 	// 	list_del_init(&inode->i_sb_list);
-	list_hdr_delete(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	list_delete_from_header(&inode->i_sb->s_inodes, &inode->i_sb_list);
 	// 	spin_unlock(&inode->i_sb->s_inode_list_lock);
 	}
 }
@@ -191,7 +191,7 @@ static inode_s *find_inode_fast(super_block_s *sb, unsigned long ino)
 	List_s *lp = NULL;
 repeat:
 	// hlist_for_each_entry(inode, head, i_hash) {
-	list_hdr_foreach_entry(&sb->s_inodes, lp) {
+	list_header_foreach_entry(&sb->s_inodes, lp) {
 		inode = container_of(lp, inode_s, i_sb_list);
 		if (inode->i_ino != ino)
 			continue;

@@ -44,12 +44,12 @@ void list_del_init(List_s *src)
 	INIT_LIST_S(src);
 }
 
-bool list_node_empty(List_s *l_p)
+bool list_is_empty_entry(List_s *l_p)
 {
 	return (l_p == l_p->next);
 }
 
-bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
+bool list_header_contains(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	if (lhdr_p->count > 0)
 	{
@@ -70,19 +70,19 @@ bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p)
 /*==============================================================================================*/
 /*										list header operations									*/
 /*==============================================================================================*/
-void list_hdr_init(List_hdr_s * lhdr_p)
+void INIT_LIST_HEADER_S(List_hdr_s * lhdr_p)
 {
 	lhdr_p->count = 0;
 	INIT_LIST_S(&lhdr_p->header);
 }
 
-void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p)
+void list_header_push(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	list_insert_next(&lhdr_p->header, l_p);
 	lhdr_p->count++;
 }
 
-List_s * list_hdr_pop(List_hdr_s * lhdr_p)
+List_s * list_header_pop(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{
@@ -95,18 +95,13 @@ List_s * list_hdr_pop(List_hdr_s * lhdr_p)
 	return NULL;
 }
 
-void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p)
+void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	list_insert_prev(&lhdr_p->header, l_p);
 	lhdr_p->count++;
 }
 
-inline void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
-{
-	list_hdr_append(lhdr_p, l_p);
-}
-
-List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
+List_s * list_header_dequeue(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{
@@ -119,9 +114,9 @@ List_s * list_hdr_dequeue(List_hdr_s * lhdr_p)
 	return NULL;
 }
 
-List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p)
+List_s * list_delete_from_header(List_hdr_s * lhdr_p, List_s * l_p)
 {
-	if (list_in_lhdr(lhdr_p, l_p))
+	if (list_header_contains(lhdr_p, l_p))
 	{
 		list_del_init(l_p);
 		lhdr_p->count--;

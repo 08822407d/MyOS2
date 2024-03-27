@@ -1,14 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_LIST_H_
-#define _LINUX_LIST_H_
+#ifndef _LINUX_DOUBLE_LIST_H_
+#define _LINUX_DOUBLE_LIST_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	// #include <linux/container_of.h>
-	#include <linux/kernel/types.h>
-	#include <linux/kernel/stddef.h>
-	// #include <linux/poison.h>
-	#include <linux/kernel/const.h>
-	#include <linux/kernel/err.h>
+
+	#include "double_list_types.h"
 
 	/*
 	 * Circular doubly linked list implementation.
@@ -25,7 +21,7 @@
 		extern void
 		INIT_LIST_S(List_s *list);
 		extern void
-		INIT_LIST_HDR_S(List_hdr_s *lhdr);
+		INIT_LIST_HEADER_S(List_hdr_s *lhdr);
 
 		extern bool
 		__list_add_valid(List_s *new, List_s *prev, List_s *next);
@@ -33,11 +29,11 @@
 		__list_del_entry_valid(List_s *entry);
 
 		extern void
-		__list_add(List_s *new, List_s *prev, List_s *next);
+		__list_add_between(List_s *new, List_s *prev, List_s *next);
 		extern void
-		list_add(List_s *new, List_s *head);
+		list_add_to_next(List_s *new, List_s *head);
 		extern void
-		list_add_tail(List_s *new, List_s *head);
+		list_add_to_prev(List_s *new, List_s *head);
 
 		extern void
 		__list_del(List_s * prev, List_s * next);
@@ -68,23 +64,22 @@
 		list_bulk_move_tail(List_s *head, List_s *first, List_s *last);
 
 		extern bool
-		list_node_is_first(const List_s *list, const List_s *head);
+		list_is_first_entry(const List_s *list, const List_s *head);
 		extern bool
-		list_node_is_last(const List_s *list, const List_s *head);
+		list_is_last_entry(const List_s *list, const List_s *head);
 		extern bool
-		list_node_is_head(const List_s *list, const List_s *head);
+		list_is_head_anchor(const List_s *list, const List_s *head);
 		extern bool
-		list_node_empty(const List_s *head);
+		list_is_empty_entry(const List_s *head);
 		extern bool
-		list_node_empty_careful(const List_s *head);
+		list_is_empty_entry_careful(const List_s *head);
+		extern bool
+		list_is_singular(const List_s *head);
 
 		extern void
 		list_rotate_left(List_s *head);
 		extern void
 		list_rotate_to_front(List_s *list, List_s *head);
-
-		extern bool
-		list_is_singular(const List_s *head);
 
 		extern void
 		__list_cut_position(List_s *list, List_s *head, List_s *entry);
@@ -104,21 +99,38 @@
 		extern void
 		list_splice_tail_init(List_s *list, List_s *head);
 
-
 		extern bool
-		list_hdr_is_empty(const List_hdr_s *header);
+		list_header_is_empty(const List_hdr_s *lhdr_p);
+		extern bool
+		list_header_contains(List_hdr_s *lhdr_p, List_s *l_p);
+
+		extern void
+		list_header_push(List_hdr_s *lhdr_p, List_s *l_p);
+		extern List_s
+		*list_header_pop(List_hdr_s *lhdr_p);
+		
+		extern void
+		list_header_enqueue(List_hdr_s *lhdr_p, List_s *l_p);
+		extern List_s
+		*list_header_dequeue(List_hdr_s *lhdr_p);
+
+		extern List_s
+		*list_delete_from_header(List_hdr_s *lhdr_p, List_s *l_p);
 
 	#endif
 
 		#define INIT_LIST_HEAD(list) INIT_LIST_S(list)
 
-		#define list_add_head list_add
+		#define list_add list_add_to_next
+		#define list_add_tail list_add_to_prev
 
-		#define list_is_first list_node_is_first
-		#define list_is_last list_node_is_last
-		#define list_is_head list_node_is_head
-		#define list_empty list_node_empty
-		#define list_empty_careful list_node_empty_careful
+		#define list_is_first list_is_first_entry
+		#define list_is_last list_is_last_entry
+		#define list_is_head list_is_head_anchor
+		#define list_empty list_is_empty_entry
+		#define list_empty_careful list_is_empty_entry_careful
+
+	#include "double_list_macros.h"
 	
 	#if defined(LIST_DEFINATION) || !(DEBUG)
 
@@ -137,7 +149,7 @@
 		}
 		PREFIX_STATIC_INLINE
 		void
-		INIT_LIST_HDR_S(List_hdr_s *lhdr) {
+		INIT_LIST_HEADER_S(List_hdr_s *lhdr) {
 			WRITE_ONCE(lhdr->count, 0);
 			INIT_LIST_S(&lhdr->header);
 		}
@@ -161,7 +173,7 @@
 		 */
 		PREFIX_STATIC_INLINE
 		void
-		__list_add(List_s *new, List_s *prev, List_s *next) {
+		__list_add_between(List_s *new, List_s *prev, List_s *next) {
 			if (!__list_add_valid(new, prev, next))
 				return;
 
@@ -171,7 +183,7 @@
 			WRITE_ONCE(prev->next, new);
 		}
 		/**
-		 * list_add - add a new entry
+		 * list_add_to_next - add a new entry
 		 * @new: new entry to be added
 		 * @head: list head to add it after
 		 *
@@ -180,11 +192,11 @@
 		 */
 		PREFIX_STATIC_INLINE
 		void
-		list_add(List_s *new, List_s *head) {
-			__list_add(new, head, head->next);
+		list_add_to_next(List_s *new, List_s *head) {
+			__list_add_between(new, head, head->next);
 		}
 		/**
-		 * list_add_tail - add a new entry
+		 * list_add_to_prev - add a new entry
 		 * @new: new entry to be added
 		 * @head: list head to add it before
 		 *
@@ -193,8 +205,8 @@
 		 */
 		PREFIX_STATIC_INLINE
 		void
-		list_add_tail(List_s *new, List_s *head) {
-			__list_add(new, head->prev, head);
+		list_add_to_prev(List_s *new, List_s *head) {
+			__list_add_between(new, head->prev, head);
 		}
 
 
@@ -217,7 +229,7 @@
 		 * This is a special-purpose list clearing method used in the networking code
 		 * for lists allocated as per-cpu, where we don't want to incur the extra
 		 * WRITE_ONCE() overhead of a regular list_del_init(). The code that uses this
-		 * needs to check the node 'prev' pointer instead of calling list_node_empty().
+		 * needs to check the node 'prev' pointer instead of calling list_is_empty_entry().
 		 */
 		PREFIX_STATIC_INLINE
 		void
@@ -236,7 +248,7 @@
 		/**
 		 * list_del - deletes entry from list.
 		 * @entry: the element to delete from the list.
-		 * Note: list_node_empty() on entry does not return true after this, the entry is
+		 * Note: list_is_empty_entry() on entry does not return true after this, the entry is
 		 * in an undefined state.
 		 */
 		PREFIX_STATIC_INLINE
@@ -261,11 +273,11 @@
 		//  * @entry: the element to delete from the list.
 		//  *
 		//  * This is the same as list_del_init(), except designed to be used
-		//  * together with list_node_empty_careful() in a way to guarantee ordering
+		//  * together with list_is_empty_entry_careful() in a way to guarantee ordering
 		//  * of other memory operations.
 		//  *
 		//  * Any memory operations done before a list_del_init_careful() are
-		//  * guaranteed to be visible after a list_node_empty_careful() test.
+		//  * guaranteed to be visible after a list_is_empty_entry_careful() test.
 		//  */
 		// PREFIX_STATIC_INLINE
 		// void
@@ -276,51 +288,51 @@
 		// }
 
 
-		/**
-		 * list_replace - replace old entry by new one
-		 * @old : the element to be replaced
-		 * @new : the new element to insert
-		 *
-		 * If @old was empty, it will be overwritten.
-		 */
-		PREFIX_STATIC_INLINE
-		void
-		list_replace(List_s *old, List_s *new) {
-			new->next = old->next;
-			new->next->prev = new;
-			new->prev = old->prev;
-			new->prev->next = new;
-		}
-		/**
-		 * list_replace_init - replace old entry by new one and initialize the old one
-		 * @old : the element to be replaced
-		 * @new : the new element to insert
-		 *
-		 * If @old was empty, it will be overwritten.
-		 */
-		PREFIX_STATIC_INLINE
-		void
-		list_replace_init(List_s *old, List_s *new) {
-			list_replace(old, new);
-			INIT_LIST_HEAD(old);
-		}
+		// /**
+		//  * list_replace - replace old entry by new one
+		//  * @old : the element to be replaced
+		//  * @new : the new element to insert
+		//  *
+		//  * If @old was empty, it will be overwritten.
+		//  */
+		// PREFIX_STATIC_INLINE
+		// void
+		// list_replace(List_s *old, List_s *new) {
+		// 	new->next = old->next;
+		// 	new->next->prev = new;
+		// 	new->prev = old->prev;
+		// 	new->prev->next = new;
+		// }
+		// /**
+		//  * list_replace_init - replace old entry by new one and initialize the old one
+		//  * @old : the element to be replaced
+		//  * @new : the new element to insert
+		//  *
+		//  * If @old was empty, it will be overwritten.
+		//  */
+		// PREFIX_STATIC_INLINE
+		// void
+		// list_replace_init(List_s *old, List_s *new) {
+		// 	list_replace(old, new);
+		// 	INIT_LIST_HEAD(old);
+		// }
 
-		/**
-		 * list_swap - replace entry1 with entry2 and re-add entry1 at entry2's position
-		 * @entry1: the location to place entry2
-		 * @entry2: the location to place entry1
-		 */
-		PREFIX_STATIC_INLINE
-		void
-		list_swap(List_s *entry1, List_s *entry2) {
-			List_s *pos = entry2->prev;
+		// /**
+		//  * list_swap - replace entry1 with entry2 and re-add entry1 at entry2's position
+		//  * @entry1: the location to place entry2
+		//  * @entry2: the location to place entry1
+		//  */
+		// PREFIX_STATIC_INLINE
+		// void
+		// list_swap(List_s *entry1, List_s *entry2) {
+		// 	List_s *pos = entry2->prev;
 
-			list_del_init(entry2);
-			list_replace(entry1, entry2);
-			if (pos == entry1)
-				pos = entry2;
-			list_add(entry1, pos);
-		}
+		// 	list_del_init(entry2);
+		// 	list_replace(entry1, entry2);
+		// 	if (pos == entry1)
+		// 		pos = entry2;
+		// 	list_add_to_next(entry1, pos);
+		// }
 
 		/**
 		 * list_move - delete from one list and add as another's head
@@ -331,7 +343,7 @@
 		void
 		list_move(List_s *list, List_s *head) {
 			__list_del_entry(list);
-			list_add(list, head);
+			list_add_to_next(list, head);
 		}
 		/**
 		 * list_move_tail - delete from one list and add as another's tail
@@ -342,7 +354,7 @@
 		void
 		list_move_tail(List_s *list, List_s *head) {
 			__list_del_entry(list);
-			list_add_tail(list, head);
+			list_add_to_prev(list, head);
 		}
 		/**
 		 * list_bulk_move_tail - move a subsection of a list to its tail
@@ -367,62 +379,71 @@
 		}
 
 		/**
-		 * list_node_is_first -- tests whether @list is the first entry in list @head
+		 * list_is_first_entry -- tests whether @list is the first entry in list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_node_is_first(const List_s *list, const List_s *head) {
+		list_is_first_entry(const List_s *list, const List_s *head) {
 			return list->prev == head;
 		}
 		/**
-		 * list_node_is_last - tests whether @list is the last entry in list @head
+		 * list_is_last_entry - tests whether @list is the last entry in list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_node_is_last(const List_s *list, const List_s *head) {
+		list_is_last_entry(const List_s *list, const List_s *head) {
 			return list->next == head;
 		}
 		/**
-		 * list_node_is_head - tests whether @list is the list @head
+		 * list_is_head_anchor - tests whether @list is the list @head
 		 * @list: the entry to test
 		 * @head: the head of the list
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_node_is_head(const List_s *list, const List_s *head) {
+		list_is_head_anchor(const List_s *list, const List_s *head) {
 			return list == head;
 		}
 		/**
-		 * list_node_empty - tests whether a list is empty
+		 * list_is_empty_entry - tests whether a list is empty
 		 * @head: the list to test.
 		 */
 		PREFIX_STATIC_INLINE
 		bool
-		list_node_empty(const List_s *head) {
+		list_is_empty_entry(const List_s *head) {
 			return READ_ONCE(head->next) == head;
 		}
 		// /**
-		//  * list_node_empty_careful - tests whether a list is empty and not being modified
+		//  * list_is_empty_entry_careful - tests whether a list is empty and not being modified
 		//  * @head: the list to test
 		//  *
 		//  * Description:
 		//  * tests whether a list is empty _and_ checks that no other CPU might be
 		//  * in the process of modifying either member (next or prev)
 		//  *
-		//  * NOTE: using list_node_empty_careful() without synchronization
+		//  * NOTE: using list_is_empty_entry_careful() without synchronization
 		//  * can only be safe if the only activity that can happen
 		//  * to the list entry is list_del_init(). Eg. it cannot be used
-		//  * if another CPU could re-list_add() it.
+		//  * if another CPU could re-list_add_to_next() it.
 		//  */
 		// PREFIX_STATIC_INLINE
 		// bool
-		// list_node_empty_careful(const List_s *head) {
+		// list_is_empty_entry_careful(const List_s *head) {
 		// 	List_s *next = smp_load_acquire(&head->next);
-		// 	return list_node_is_head(next, head) && (next == head->prev);
+		// 	return list_is_head_anchor(next, head) && (next == head->prev);
+		// }
+		// /**
+		//  * list_is_singular - tests whether a list has just one entry.
+		//  * @head: the list to test.
+		//  */
+		// PREFIX_STATIC_INLINE
+		// bool
+		// list_is_singular(const List_s *head) {
+		// 	return !list_is_empty_entry(head) && (head->next == head->prev);
 		// }
 
 		// /**
@@ -434,7 +455,7 @@
 		// list_rotate_left(List_s *head) {
 		// 	List_s *first;
 
-		// 	if (!list_node_empty(head)) {
+		// 	if (!list_is_empty_entry(head)) {
 		// 		first = head->next;
 		// 		list_move_tail(first, head);
 		// 	}
@@ -455,16 +476,6 @@
 		// 	 * list so that @list is at the front.
 		// 	 */
 		// 	list_move_tail(head, list);
-		// }
-
-		// /**
-		//  * list_is_singular - tests whether a list has just one entry.
-		//  * @head: the list to test.
-		//  */
-		// PREFIX_STATIC_INLINE
-		// bool
-		// list_is_singular(const List_s *head) {
-		// 	return !list_node_empty(head) && (head->next == head->prev);
 		// }
 
 		// PREFIX_STATIC_INLINE
@@ -495,11 +506,11 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_cut_position(List_s *list, List_s *head, List_s *entry) {
-		// 	if (list_node_empty(head))
+		// 	if (list_is_empty_entry(head))
 		// 		return;
-		// 	if (list_is_singular(head) && !list_node_is_head(entry, head) && (entry != head->next))
+		// 	if (list_is_singular(head) && !list_is_head_anchor(entry, head) && (entry != head->next))
 		// 		return;
-		// 	if (list_node_is_head(entry, head))
+		// 	if (list_is_head_anchor(entry, head))
 		// 		INIT_LIST_HEAD(list);
 		// 	else
 		// 		__list_cut_position(list, head, entry);
@@ -553,7 +564,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice(const List_s *list, List_s *head) {
-		// 	if (!list_node_empty(list))
+		// 	if (!list_is_empty_entry(list))
 		// 		__list_splice(list, head, head->next);
 		// }
 		// /**
@@ -564,7 +575,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_tail(List_s *list, List_s *head) {
-		// 	if (!list_node_empty(list))
+		// 	if (!list_is_empty_entry(list))
 		// 		__list_splice(list, head->prev, head);
 		// }
 		// /**
@@ -577,7 +588,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_init(List_s *list, List_s *head) {
-		// 	if (!list_node_empty(list)) {
+		// 	if (!list_is_empty_entry(list)) {
 		// 		__list_splice(list, head, head->next);
 		// 		INIT_LIST_HEAD(list);
 		// 	}
@@ -593,7 +604,7 @@
 		// PREFIX_STATIC_INLINE
 		// void
 		// list_splice_tail_init(List_s *list, List_s *head) {
-		// 	if (!list_node_empty(list)) {
+		// 	if (!list_is_empty_entry(list)) {
 		// 		__list_splice(list, head->prev, head);
 		// 		INIT_LIST_HEAD(list);
 		// 	}
@@ -603,11 +614,69 @@
 
 		PREFIX_STATIC_INLINE
 		bool
-		list_hdr_is_empty(const List_hdr_s *header) {
-			return READ_ONCE(header->count) == 0;
+		list_header_is_empty(const List_hdr_s *lhdr_p) {
+			return READ_ONCE(lhdr_p->count) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		list_header_contains(List_hdr_s *lhdr_p, List_s *l_p) {
+			List_s *tmp = NULL;
+			list_header_foreach(tmp, lhdr_p) {
+				if (tmp == l_p)
+					return true;
+			}
+			return false;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		list_header_push(List_hdr_s *lhdr_p, List_s *l_p) {
+			list_add_to_next(l_p, &lhdr_p->header);
+			lhdr_p->count++;
+		}
+		PREFIX_STATIC_INLINE
+		List_s
+		*list_header_pop(List_hdr_s *lhdr_p) {
+			if (lhdr_p->count > 0) {
+				List_s *ret_val = lhdr_p->header.next;
+				list_del_init(ret_val);
+				lhdr_p->count--;
+				return ret_val;
+			}
+			return NULL;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		list_header_enqueue(List_hdr_s *lhdr_p, List_s *l_p) {
+			list_add_to_prev(l_p, &lhdr_p->header);
+			lhdr_p->count++;
+		}
+		PREFIX_STATIC_INLINE
+		List_s
+		*list_header_dequeue(List_hdr_s *lhdr_p) {
+			if (lhdr_p->count > 0) {
+				List_s *ret_val = lhdr_p->header.prev;
+				list_del_init(ret_val);
+				lhdr_p->count--;
+				return ret_val;
+			}
+
+			return NULL;
+		}
+
+		PREFIX_STATIC_INLINE
+		List_s
+		*list_delete_from_header(List_hdr_s *lhdr_p, List_s *l_p) {
+			if (list_header_contains(lhdr_p, l_p)) {
+				list_del_init(l_p);
+				lhdr_p->count--;
+				return l_p;
+			}
+
+			return NULL;
 		}
 
 	#endif
 
-
-#endif /* _LINUX_LIST_H_ */
+#endif /* _LINUX_DOUBLE_LIST_H_ */

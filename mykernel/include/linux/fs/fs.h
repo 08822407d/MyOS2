@@ -2434,7 +2434,7 @@
 	// 	* file.
 	// 	*/
 	// 	smp_mb();
-	// 	if (inode->i_flctx && !list_node_empty_careful(&inode->i_flctx->flc_lease))
+	// 	if (inode->i_flctx && !list_is_empty_entry_careful(&inode->i_flctx->flc_lease))
 	// 		return __break_lease(inode, mode, FL_LEASE);
 	// 	return 0;
 	// }
@@ -2448,7 +2448,7 @@
 	// 	* file.
 	// 	*/
 	// 	smp_mb();
-	// 	if (inode->i_flctx && !list_node_empty_careful(&inode->i_flctx->flc_lease))
+	// 	if (inode->i_flctx && !list_is_empty_entry_careful(&inode->i_flctx->flc_lease))
 	// 		return __break_lease(inode, mode, FL_DELEG);
 	// 	return 0;
 	// }
@@ -2478,7 +2478,7 @@
 	// static inline int break_layout(inode_s *inode, bool wait)
 	// {
 	// 	smp_mb();
-	// 	if (inode->i_flctx && !list_node_empty_careful(&inode->i_flctx->flc_lease))
+	// 	if (inode->i_flctx && !list_is_empty_entry_careful(&inode->i_flctx->flc_lease))
 	// 		return __break_lease(inode,
 	// 				wait ? O_WRONLY : O_WRONLY | O_NONBLOCK,
 	// 				FL_LAYOUT);

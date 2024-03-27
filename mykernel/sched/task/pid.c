@@ -297,13 +297,13 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
 	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-	list_hdr_append(&pid_list_hdr, &task->pid_links);
+	list_header_enqueue(&pid_list_hdr, &task->pid_links);
 }
 
 
 void detach_pid(task_s *task, enum pid_type type) {
 	// __change_pid(task, type, NULL);
-	list_hdr_delete(&pid_list_hdr, &task->pid_links);
+	list_delete_from_header(&pid_list_hdr, &task->pid_links);
 }
 
 

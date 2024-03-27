@@ -37,23 +37,23 @@ void myos_preinit_slab()
 void myos_init_slab()
 {
 	init_recurs_lock(&slab_alloc_lock);
-	list_hdr_init(&slabcache_lhdr);
+	INIT_LIST_HEADER_S(&slabcache_lhdr);
 
 	for (int i = 0; i < slab_level; i++)
 	{
 		slab_cache_s *scgp = slab_cache_groups_p + i;
 		INIT_LIST_S(&scgp->slabcache_list);
-		list_hdr_append(&slabcache_lhdr, &scgp->slabcache_list);
+		list_header_enqueue(&slabcache_lhdr, &scgp->slabcache_list);
 
-		list_hdr_init(&scgp->normal_slab_free);
-		list_hdr_init(&scgp->normal_slab_used);
-		list_hdr_init(&scgp->normal_slab_full);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_free);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_used);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_full);
 
 		slab_s *bslp = base_slabs_p + i;
 		INIT_LIST_S(&bslp->slab_list);
 
 		// init 3 status of slab list
-		list_hdr_append(&scgp->normal_slab_free, &bslp->slab_list);
+		list_header_enqueue(&scgp->normal_slab_free, &bslp->slab_list);
 		scgp->normal_base_slab = bslp;
 		scgp->nsobj_used_count = 0;
 		scgp->nsobj_free_count += bslp->total;
@@ -118,9 +118,9 @@ void *__kmalloc(size_t size, gfp_t flags)
 	slab_s *slp = NULL;
 	List_s *slp_lp = NULL;
 	if (scgp->normal_slab_used.count > 0)
-		slp_lp = list_hdr_pop(&scgp->normal_slab_used);
+		slp_lp = list_header_pop(&scgp->normal_slab_used);
 	else if (scgp->normal_slab_free.count > 0)
-		slp_lp = list_hdr_pop(&scgp->normal_slab_free);
+		slp_lp = list_header_pop(&scgp->normal_slab_free);
 	else
 		// color_printk(WHITE, RED, "Slab %#x-bytes used out!\n", scgp->obj_size);
 		BUG();
@@ -129,9 +129,9 @@ void *__kmalloc(size_t size, gfp_t flags)
 	slp = container_of(slp_lp, slab_s, slab_list);
 
 	if (slp->free == 1)
-		list_hdr_push(&scgp->normal_slab_full, &slp->slab_list);
+		list_header_push(&scgp->normal_slab_full, &slp->slab_list);
 	else
-		list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
+		list_header_push(&scgp->normal_slab_used, &slp->slab_list);
 		
 	// count the virtual addr of suitable object
 	unsigned long obj_idx = bm_get_freebit_idx(slp->colormap, 0, slp->total);
@@ -155,7 +155,7 @@ void *__kmalloc(size_t size, gfp_t flags)
 			BUG();
 
 		new_slab->slabcache_ptr = scgp;
-		list_hdr_push(&scgp->normal_slab_free, &new_slab->slab_list);
+		list_header_push(&scgp->normal_slab_free, &new_slab->slab_list);
 		scgp->normal_slab_total++;
 		scgp->nsobj_free_count += new_slab->total;
 	}
@@ -233,7 +233,7 @@ void kfree(const void *objp)
 		{
 			list_del_init(&slp->slab_list);
 			scgp->normal_slab_full.count--;
-			list_hdr_push(&scgp->normal_slab_used, &slp->slab_list);
+			list_header_push(&scgp->normal_slab_used, &slp->slab_list);
 		}
 		else if (slp->free == 0)
 		{
@@ -241,9 +241,9 @@ void kfree(const void *objp)
 			scgp->normal_slab_used.count--;
 			// if slp is base-slab, add it to tail
 			if (slp != scgp->normal_base_slab)
-				list_hdr_push(&scgp->normal_slab_free, &slp->slab_list);
+				list_header_push(&scgp->normal_slab_free, &slp->slab_list);
 			else
-				list_hdr_append(&scgp->normal_slab_free, &slp->slab_list);
+				list_header_enqueue(&scgp->normal_slab_free, &slp->slab_list);
 		}
 		// if there is too many free slab, free some of them
 		if (scgp->normal_slab_free.count > 2)

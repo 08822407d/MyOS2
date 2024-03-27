@@ -40,7 +40,7 @@ static mount_s *alloc_vfsmnt(const char *name)
 		memcpy((char *)mnt->mnt_devname, name, len);
 	}
 
-	list_hdr_init(&mnt->mnt_mounts);
+	INIT_LIST_HEADER_S(&mnt->mnt_mounts);
 	INIT_LIST_S(&mnt->mnt_child);
 
 	return mnt;
@@ -151,7 +151,7 @@ void mnt_set_mountpoint(mount_s *parent_mnt,
 	child_mnt->mnt_mountpoint = mp->m_dentry;
 	child_mnt->mnt_parent = parent_mnt;
 	child_mnt->mnt_mp = mp;
-	list_hdr_append(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
+	list_header_enqueue(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
 }
 
 /**
@@ -182,7 +182,7 @@ vfsmount_s *vfs_create_mount(fs_ctxt_s *fc)
 	mnt->mnt_mountpoint	= mnt->mnt.mnt_root;
 	mnt->mnt_parent		= mnt;
 
-	// list_add_tail(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
+	// list_add_to_prev(&mnt->mnt_instance, &mnt->mnt.mnt_sb->s_mounts);
 	return &mnt->mnt;
 }
 
@@ -381,7 +381,7 @@ static mount_s *clone_mnt(IN mount_s *old, IN dentry_s *root)
 	if (mnt == NULL)
 		return ERR_PTR(-ENOMEM);
 
-	list_hdr_init(&mnt->mnt_mounts);
+	INIT_LIST_HEADER_S(&mnt->mnt_mounts);
 	INIT_LIST_S(&mnt->mnt_child/* , mnt */);
 	mnt->mnt.mnt_sb = sb;
 	mnt->mnt.mnt_root = root;

@@ -186,29 +186,6 @@
 			s64 counter;
 		} atomic64_t;
 
-
-		struct list_head;
-		typedef struct list_head List_s;
-		typedef struct list_head {
-			List_s *	next;
-			List_s *	prev;
-		} List_s;
-
-		typedef struct List_hdr {
-			unsigned long	count;
-			List_s			header;
-		} List_hdr_s;
-
-		struct hlist_node;
-		typedef struct hlist_node hlist_s;
-		typedef struct hlist_head {
-			hlist_s *first;
-		} hlist_hdr_s;
-
-		typedef struct hlist_node {
-			hlist_s *next, **pprev;
-		} hlist_s;
-
 		struct ustat {
 			__kernel_daddr_t	f_tfree;
 	#	ifdef CONFIG_ARCH_32BIT_USTAT_F_TINODE

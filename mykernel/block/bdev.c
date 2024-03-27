@@ -104,7 +104,7 @@ void bdev_cache_init(void)
 	int err;
 	static vfsmount_s *bd_mnt;
 
-	list_hdr_init(&bd_type.fs_supers);
+	INIT_LIST_HEADER_S(&bd_type.fs_supers);
 	err = register_filesystem(&bd_type);
 	if (err)
 		color_printk(RED, BLACK, "Cannot register bdev pseudo-fs");

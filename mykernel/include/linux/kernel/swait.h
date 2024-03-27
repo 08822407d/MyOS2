@@ -120,7 +120,7 @@
 	 * which (when the lock is uncontended) are of roughly equal cost.
 	 */
 	// static inline int swait_active(swqueue_hdr_s *wq) {
-	// 	return !list_node_empty(&wq->task_list);
+	// 	return !list_is_empty_entry(&wq->task_list);
 	// }
 
 	/**
@@ -133,7 +133,7 @@
 	 */
 	// static inline bool swq_has_sleeper(swqueue_hdr_s *wq) {
 	// 	/*
-	// 	* We need to be sure we are in sync with the list_add()
+	// 	* We need to be sure we are in sync with the list_add_to_next()
 	// 	* modifications to the wait queue (task_list).
 	// 	*
 	// 	* This memory barrier should be paired with one on the

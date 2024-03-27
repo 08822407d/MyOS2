@@ -73,7 +73,7 @@ int register_filesystem(fs_type_s *fs)
 	if (fs->fs_supers.count == 0 &&
 		(si_hdr->next != si_hdr ||
 		si_hdr->prev != si_hdr))
-		list_hdr_init(&fs->fs_supers);
+		INIT_LIST_HEADER_S(&fs->fs_supers);
 
 	if (fs->next)
 		return -EBUSY;

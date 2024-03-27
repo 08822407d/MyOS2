@@ -113,11 +113,11 @@ uPage_s *upage_alloc()
 	uPage_s *ret_val = NULL;
 	if (free_upage_lhdr.count > 0)
 	{
-		List_s * upg_lp = list_hdr_pop(&free_upage_lhdr);
+		List_s * upg_lp = list_header_pop(&free_upage_lhdr);
 		while (upg_lp == 0);
 		
 		ret_val = container_of(upg_lp, uPage_s, upage_list);
-		list_hdr_push(&used_upage_lhdr, &ret_val->upage_list);
+		list_header_push(&used_upage_lhdr, &ret_val->upage_list);
 	}
 	else
 	{
@@ -128,7 +128,7 @@ uPage_s *upage_alloc()
 			brk_end += PAGE_SIZE;
 			upgp->vaddr = pg_vaddr;
 			INIT_LIST_S(&upgp->upage_list);
-			list_hdr_append(&used_upage_lhdr, &upgp->upage_list);
+			list_header_enqueue(&used_upage_lhdr, &upgp->upage_list);
 			ret_val = upgp;
 		}
 		else
@@ -144,7 +144,7 @@ void upage_free(uPage_s * upgp)
 {
 	list_del_init(&upgp->upage_list);
 	used_upage_lhdr.count--;
-	list_hdr_push(&free_upage_lhdr, &upgp->upage_list);
+	list_header_push(&free_upage_lhdr, &upgp->upage_list);
 	upgp->uslab_p = NULL;
 }
 
@@ -174,19 +174,19 @@ uPage_s * upage_search(void * vaddr)
 void init_uslab()
 {
 	brk_end = brk(0);
-	list_hdr_init(&uslabcache_lhdr);
-	list_hdr_init(&free_upage_lhdr);
-	list_hdr_init(&used_upage_lhdr);
+	INIT_LIST_HEADER_S(&uslabcache_lhdr);
+	INIT_LIST_HEADER_S(&free_upage_lhdr);
+	INIT_LIST_HEADER_S(&used_upage_lhdr);
 
 	for (int i = 0; i < USLAB_LEVEL; i++)
 	{
 		uslab_cache_s * scgp = &uslab_cache_groups[i];
 		INIT_LIST_S(&scgp->uslabcache_list);
-		list_hdr_append(&uslabcache_lhdr, &scgp->uslabcache_list);
+		list_header_enqueue(&uslabcache_lhdr, &scgp->uslabcache_list);
 
-		list_hdr_init(&scgp->normal_slab_free);
-		list_hdr_init(&scgp->normal_slab_used);
-		list_hdr_init(&scgp->normal_slab_full);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_free);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_used);
+		INIT_LIST_HEADER_S(&scgp->normal_slab_full);
 
 		uslab_s * bslp = &base_uslabs[i];
 		INIT_LIST_S(&bslp->uslab_list);
@@ -195,7 +195,7 @@ void init_uslab()
 		unsigned long obj_nr = PAGE_SIZE / scgp->obj_size;
 		unsigned long cm_size = (obj_nr + sizeof(bitmap_t) - 1) / sizeof(bitmap_t);
 		// init 3 status of slab list
-		list_hdr_append(&scgp->normal_slab_free, &bslp->uslab_list);
+		list_header_enqueue(&scgp->normal_slab_free, &bslp->uslab_list);
 		scgp->normal_base_slab_p = bslp;
 		scgp->nsobj_free_count = obj_nr;
 		scgp->nsobj_used_count = 0;
@@ -211,7 +211,7 @@ void init_uslab()
 		INIT_LIST_S(&upgp->upage_list);
 		upgp->vaddr =
 		brk_end = brk(brk_end + PAGE_SIZE);
-		list_hdr_append(&free_upage_lhdr, &upgp->upage_list);
+		list_header_enqueue(&free_upage_lhdr, &upgp->upage_list);
 
 		bslp->upage_p = upage_alloc();
 		bslp->virt_addr = bslp->upage_p->vaddr;
@@ -270,22 +270,22 @@ void * malloc(size_t size)
 		uslab_s *	uslp = NULL;
 		if (uscgp->normal_slab_used.count > 0)
 		{
-			List_s * uslp_lp = list_hdr_pop(&uscgp->normal_slab_used);
+			List_s * uslp_lp = list_header_pop(&uscgp->normal_slab_used);
 			while (uslp_lp == 0);
 			
 			uslp = container_of(uslp_lp, uslab_s, uslab_list);
 			if (uslp->free == 1)
-				list_hdr_push(&uscgp->normal_slab_full, &uslp->uslab_list);
+				list_header_push(&uscgp->normal_slab_full, &uslp->uslab_list);
 			else
-				list_hdr_push(&uscgp->normal_slab_used, &uslp->uslab_list);
+				list_header_push(&uscgp->normal_slab_used, &uslp->uslab_list);
 		}
 		else if (uscgp->normal_slab_free.count > 0)
 		{
-			List_s * uslp_lp = list_hdr_pop(&uscgp->normal_slab_free);
+			List_s * uslp_lp = list_header_pop(&uscgp->normal_slab_free);
 			while (uslp_lp == 0);
 			
 			uslp = container_of(uslp_lp, uslab_s, uslab_list);
-			list_hdr_push(&uscgp->normal_slab_used, &uslp->uslab_list);
+			list_header_push(&uscgp->normal_slab_used, &uslp->uslab_list);
 		}
 		else
 		{
@@ -318,7 +318,7 @@ void * malloc(size_t size)
 				while (1);
 			}
 			new_uslp->uslabcache_p = uscgp;
-			list_hdr_push(&uscgp->normal_slab_free, &new_uslp->uslab_list);
+			list_header_push(&uscgp->normal_slab_free, &new_uslp->uslab_list);
 			uscgp->normal_slab_total++;
 			uscgp->nsobj_free_count += new_uslp->total;
 		}
@@ -369,7 +369,7 @@ void free(void * obj_p)
 	{
 		list_del_init(&uslp->uslab_list);
 		uscgp->normal_slab_full.count--;
-		list_hdr_push(&uscgp->normal_slab_used, &uslp->uslab_list);
+		list_header_push(&uscgp->normal_slab_used, &uslp->uslab_list);
 	}
 	else if (uslp->free == 0)
 	{
@@ -377,9 +377,9 @@ void free(void * obj_p)
 		uscgp->normal_slab_used.count--;
 		// if slp is base-slab, add it to tail
 		if (uslp != uscgp->normal_base_slab_p)
-			list_hdr_push(&uscgp->normal_slab_free, &uslp->uslab_list);
+			list_header_push(&uscgp->normal_slab_free, &uslp->uslab_list);
 		else
-			list_hdr_append(&uscgp->normal_slab_free, &uslp->uslab_list);
+			list_header_enqueue(&uscgp->normal_slab_free, &uslp->uslab_list);
 	}
 	// if there is too many free slab, free some of them
 	if (uscgp->normal_slab_free.count > 2)

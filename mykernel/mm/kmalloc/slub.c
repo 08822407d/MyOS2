@@ -315,7 +315,7 @@ static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
 	int node;
 	// struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
 	// memcpy(s, static_cache, kmem_cache->object_size);
-	// list_add(&s->list, &slab_caches);
+	// list_add_to_next(&s->list, &slab_caches);
 	// return s;
 }
 

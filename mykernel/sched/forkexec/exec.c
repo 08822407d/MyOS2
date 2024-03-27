@@ -47,14 +47,14 @@ static LIST_HDR_S(formats);
 
 void register_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
-	list_hdr_append(&formats, &fmt->lh);
+	list_header_enqueue(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 
 void unregister_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
 	// list_del_init(&fmt->lh);
-	list_hdr_delete(&formats, &fmt->lh);
+	list_delete_from_header(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 

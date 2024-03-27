@@ -411,7 +411,7 @@ int devtmpfs_init(void)
 	char opts[] = "mode=0755";
 	int err;
 
-	list_hdr_init(&internal_fs_type.fs_supers);
+	INIT_LIST_HEADER_S(&internal_fs_type.fs_supers);
 	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
 	if (IS_ERR(mnt)) {
 		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",

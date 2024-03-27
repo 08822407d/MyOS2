@@ -74,7 +74,7 @@ static struct kmem_cache *create_cache(const char *name,
 		goto out_free_cache;
 
 	s->refcount = 1;
-	list_add(&s->list, &slab_caches);
+	list_add_to_next(&s->list, &slab_caches);
 out:
 	if (err)
 		return ERR_PTR(err);

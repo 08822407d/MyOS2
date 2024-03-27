@@ -1,15 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_HLIST_H_
-#define _LINUX_HLIST_H_
+#ifndef _LINUX_HASH_LIST_H_
+#define _LINUX_HASH_LIST_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	// #include <linux/container_of.h>
-	#include <linux/kernel/types.h>
-	#include <linux/kernel/stddef.h>
-	// #include <linux/poison.h>
-	#include <linux/kernel/const.h>
 
-	#include <asm/insns.h>
+	#include "hash_list_types.h"
 
 	/*
 	 * Double linked lists with a single pointer list head.
@@ -23,6 +18,8 @@
 
 
 	#endif
+
+	#include "hash_list_macros.h"
 	
 	#if defined(HLIST_DEFINATION) || !(DEBUG)
 
@@ -211,4 +208,4 @@
 
 	#endif
 
-#endif /* _LINUX_HLIST_H_ */
+#endif /* _LINUX_HASH_LIST_H_ */

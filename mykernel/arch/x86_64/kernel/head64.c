@@ -24,6 +24,7 @@
 #include <asm/kdebug.h>
 #include <asm/trapnr.h>
 
+#include <asm/mm.h>
 
 /* Don't add a printk in there. printk relies on the PDA which is not initialized 
    yet. */

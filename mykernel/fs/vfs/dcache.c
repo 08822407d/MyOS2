@@ -178,7 +178,7 @@ dentry_s * __myos_d_alloc(super_block_s *sb, const qstr_s * name)
 	dentry->d_op = NULL;
 
 	INIT_LIST_S(&dentry->d_child);
-	list_hdr_init(&dentry->d_subdirs);
+	INIT_LIST_HEADER_S(&dentry->d_subdirs);
 
 	// d_set_d_op(dentry, dentry->d_sb->s_d_op);
 
@@ -204,7 +204,7 @@ dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 	 * to concurrency here
 	 */
 	dentry->d_parent = parent;
-	list_hdr_push(&parent->d_subdirs, &dentry->d_child);
+	list_header_push(&parent->d_subdirs, &dentry->d_child);
 
 	return dentry;
 }

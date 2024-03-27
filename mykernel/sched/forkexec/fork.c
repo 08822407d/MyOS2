@@ -473,7 +473,7 @@ static inline void __mmput(mm_s *mm) {
 	// exit_mmap(mm);
 	// mm_put_huge_zero_page(mm);
 	// set_mm_exe_file(mm, NULL);
-	// if (!list_node_empty(&mm->mmlist)) {
+	// if (!list_is_empty_entry(&mm->mmlist)) {
 	// 	spin_lock(&mmlist_lock);
 	// 	list_del_init(&mm->mmlist);
 	// 	spin_unlock(&mmlist_lock);
@@ -984,7 +984,7 @@ static __latent_entropy task_s
 	p->flags &= ~(PF_SUPERPRIV | PF_WQ_WORKER |
 					PF_IDLE | PF_NO_SETAFFINITY);
 	p->flags |= PF_FORKNOEXEC;
-	list_hdr_init(&p->children);
+	INIT_LIST_HEADER_S(&p->children);
 	INIT_LIST_S(&p->sibling);
 	// rcu_copy_process(p);
 	p->vfork_done = NULL;
@@ -1295,7 +1295,7 @@ static __latent_entropy task_s
 			//  */
 			// p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
 			// 				 p->real_parent->signal->is_child_subreaper;
-			list_hdr_append(&p->real_parent->children, &p->sibling);
+			list_header_enqueue(&p->real_parent->children, &p->sibling);
 			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
 			// attach_pid(p, PIDTYPE_TGID);
 			// attach_pid(p, PIDTYPE_PGID);

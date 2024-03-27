@@ -62,7 +62,7 @@ void myos_init_per_cpu_var(void)
 	INIT_LIST_S(&this_idle_thread->rt.run_list);
 	INIT_LIST_S(&this_idle_thread->sibling);
 	INIT_LIST_S(&this_idle_thread->pid_links);
-	list_hdr_init(&this_idle_thread->children);
+	INIT_LIST_HEADER_S(&this_idle_thread->children);
 	this_idle_thread->parent		= this_idle_thread;
 	this_idle_thread->__state		= TASK_RUNNING;
 	this_idle_thread->flags			= PF_KTHREAD;
@@ -95,7 +95,7 @@ void myos_init_per_cpu_var(void)
 
 	rq_s *this_runqueues = &per_cpu(runqueues, 0);
 	memset(this_runqueues, 0, sizeof(rq_s));
-	list_hdr_init(&this_runqueues->myos.running_lhdr);
+	INIT_LIST_HEADER_S(&this_runqueues->myos.running_lhdr);
 	this_runqueues->curr			=
 	this_runqueues->idle			= this_idle_thread;
 }

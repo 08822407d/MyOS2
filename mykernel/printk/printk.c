@@ -605,10 +605,10 @@ void register_console(console_s *newcon)
 	unsigned long flags;
 	console_s *bcon = NULL;
 
-	if (list_hdr_contains(&console_list_hdr, &newcon->node))
+	if (list_header_contains(&console_list_hdr, &newcon->node))
 		return;
 	else
-		list_hdr_append(&console_list_hdr, &newcon->node);
+		list_header_enqueue(&console_list_hdr, &newcon->node);
 
 	// /*
 	//  * before we register a new CON_BOOT console, make sure we don't

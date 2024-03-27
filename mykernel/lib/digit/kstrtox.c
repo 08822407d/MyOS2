@@ -20,7 +20,7 @@
 #include <linux/kernel/types.h>
 #include <linux/kernel/uaccess.h>
 
-#include "kstrtox.h"
+#include "../kstrtox.h"
 
 noinline const char
 *_parse_integer_fixup_radix(const char *s, unsigned int *base) {

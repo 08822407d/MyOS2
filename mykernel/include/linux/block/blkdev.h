@@ -772,7 +772,7 @@
 	// 	struct blk_plug *plug = tsk->plug;
 
 	// 	return plug &&
-	// 		(plug->mq_list || !list_node_empty(&plug->cb_list));
+	// 		(plug->mq_list || !list_is_empty_entry(&plug->cb_list));
 	// }
 
 	// int blkdev_issue_flush(blk_dev_s *bdev);

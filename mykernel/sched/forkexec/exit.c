@@ -14,11 +14,11 @@ static void exit_notify(task_s *tsk, int group_dead)
 {
 	while (tsk->children.count != 0)
 	{
-		List_s * child_lp = list_hdr_pop(&tsk->children);
+		List_s * child_lp = list_header_pop(&tsk->children);
 		while (child_lp == 0);
 
 		task_s *task_initd = myos_find_task_by_pid(1);
-		list_hdr_append(&task_initd->children, child_lp);
+		list_header_enqueue(&task_initd->children, child_lp);
 	}
 
 
@@ -48,7 +48,7 @@ static void exit_notify(task_s *tsk, int group_dead)
 
 	// if (autoreap) {
 	// 	tsk->exit_state = EXIT_DEAD;
-	// 	list_add(&tsk->ptrace_entry, &dead);
+	// 	list_add_to_next(&tsk->ptrace_entry, &dead);
 	// }
 
 	// /* mt-exec, de_thread() is waiting for group leader */

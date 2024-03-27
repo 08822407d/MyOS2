@@ -49,15 +49,15 @@
 	void list_insert_prev(List_s * src, List_s * dst);
 	void list_insert_next(List_s * src, List_s * dst);
 	void list_del_init(List_s * src);
-	bool list_node_empty(List_s *l_p);
+	bool list_is_empty_entry(List_s *l_p);
 	
-	bool list_in_lhdr(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_hdr_init(List_hdr_s * lh_p);
-	void list_hdr_push(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_hdr_pop(List_hdr_s * lhdr_p);
-	void list_hdr_append(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_hdr_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_hdr_dequeue(List_hdr_s * lhdr_p);
-	List_s * list_hdr_delete(List_hdr_s * lhdr_p, List_s * l_p);
+	bool list_header_contains(List_hdr_s * lhdr_p, List_s * l_p);
+	void INIT_LIST_HEADER_S(List_hdr_s * lh_p);
+	void list_header_push(List_hdr_s * lhdr_p, List_s * l_p);
+	List_s * list_header_pop(List_hdr_s * lhdr_p);
+	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
+	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
+	List_s * list_header_dequeue(List_hdr_s * lhdr_p);
+	List_s * list_delete_from_header(List_hdr_s * lhdr_p, List_s * l_p);
 
 #endif /* _LIB_UTILS_H_ */

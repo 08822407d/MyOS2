@@ -120,7 +120,7 @@ add_to_free_list(page_s *page,
 		zone_s *zone, unsigned int order) {
 
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_hdr_push(fa_lhdr, &page->lru);
+	list_header_push(fa_lhdr, &page->lru);
 }
 
 /* Used for pages not on another list */
@@ -129,13 +129,13 @@ add_to_free_list_tail(page_s *page,
 		zone_s *zone, unsigned int order) {
 
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_hdr_append(fa_lhdr, &page->lru);
+	list_header_enqueue(fa_lhdr, &page->lru);
 }
 
 static inline page_s
 *get_page_from_free_area(List_hdr_s *area) {
 
-	List_s *pg_lp = list_hdr_pop(area);
+	List_s *pg_lp = list_header_pop(area);
 	if (pg_lp == NULL)
 		return NULL;
 	else
@@ -146,7 +146,7 @@ static inline page_s
 *del_page_from_free_list(page_s *page,
 		zone_s * zone, unsigned int order) {
 
-	List_s * pg_lp = list_hdr_delete(&zone->free_area[order],
+	List_s * pg_lp = list_delete_from_header(&zone->free_area[order],
 			&page->lru);
 	if (pg_lp == NULL)
 		return NULL;
@@ -268,7 +268,7 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 		if (zone->free_area[current_order].count == 0)
 			continue;
 
-		List_s * page_lp = list_hdr_pop(&zone->free_area[current_order]);
+		List_s * page_lp = list_header_pop(&zone->free_area[current_order]);
 		while (page_lp == NULL);
 
 		page = container_of(page_lp, page_s, lru);
@@ -326,10 +326,10 @@ __myos_free_one_page(page_s *page, unsigned long pfn,
 		buddy = page + (buddy_pfn - pfn);
 
 		if (page_is_buddy(page, buddy, order) == false ||
-			!list_in_lhdr(&zone->free_area[order], &page->lru))
+			!list_header_contains(&zone->free_area[order], &page->lru))
 			break;
 
-		list_hdr_delete(&zone->free_area[order], &page->lru);
+		list_delete_from_header(&zone->free_area[order], &page->lru);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;

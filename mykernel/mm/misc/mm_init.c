@@ -103,7 +103,7 @@ memmap_init(unsigned long *max_zone_pfn)
 			highest_memmap_pfn = end_pfn - 1;
 
 		for (int j = 0; j < MAX_ORDER; j++)
-			list_hdr_init(&zone->free_area[j]);
+			INIT_LIST_HEADER_S(&zone->free_area[j]);
 
 		for (unsigned long pfn = start_pfn; pfn < end_pfn; pfn++)
 		{

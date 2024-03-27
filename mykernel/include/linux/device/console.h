@@ -20,6 +20,9 @@
 	// #include <linux/rculist.h>
 	#include <linux/kernel/types.h>
 
+
+	#include <linux/kernel/lib.h>
+
 	// struct vc_data;
 	// struct console_font_op;
 	// struct console_font;
