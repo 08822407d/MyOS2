@@ -96,8 +96,8 @@ static void
 	spin_lock_irqsave(&n->list_lock, flags);
 	// list_for_each_entry_safe(slab, slab_next, &n->partial, slab_list) {
 	// 	void *t;
-	// 	object = alloc_single_from_partial(s, n, slab,
-	// 					pc->orig_size);
+	// 	// object = alloc_single_from_partial(s, n, slab,
+	// 	// 				pc->orig_size);
 	// 	if (object)
 	// 		break;
 	// 	continue;

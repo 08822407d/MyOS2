@@ -32,10 +32,10 @@ static task_s *pick_next_task_myos(rq_s *rq)
 			}
 			else
 			{
-				List_s * tmp_list = myos_rq->running_lhdr.header.next;
+				List_s * tmp_list = myos_rq->running_lhdr.anchor.next;
 				sched_rt_entity_s *tmp_rt = container_of(tmp_list, sched_rt_entity_s, run_list);
 				while ((curr_task->se.vruntime > container_of(tmp_rt, task_s, rt)->se.vruntime) &&
-						tmp_list != &myos_rq->running_lhdr.header)
+						tmp_list != &myos_rq->running_lhdr.anchor)
 				{
 					tmp_list = tmp_list->next;
 				}

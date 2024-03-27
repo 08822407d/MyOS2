@@ -130,8 +130,8 @@ dentry_s * __d_lookup(const dentry_s * parent, const qstr_s * name)
 
 	dentry_s * dir_p;
 	List_s * dir_lp;
-	for (dir_lp = parent->d_subdirs.header.next;
-			dir_lp != &parent->d_subdirs.header;
+	for (dir_lp = parent->d_subdirs.anchor.next;
+			dir_lp != &parent->d_subdirs.anchor;
 			dir_lp = dir_lp->next)
 	{
 		dir_p = container_of(dir_lp, dentry_s, d_child);

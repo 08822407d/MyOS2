@@ -41,7 +41,7 @@
 	typedef struct List_hdr
 	{
 		unsigned long	count;
-		List_s			header;
+		List_s			anchor;
 	} List_hdr_s;
 	
 

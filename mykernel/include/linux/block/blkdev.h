@@ -434,7 +434,7 @@
 	// extern void blk_set_pm_only(struct request_queue *q);
 	// extern void blk_clear_pm_only(struct request_queue *q);
 
-	// #define list_entry_rq(ptr)	list_entry((ptr), struct request, queuelist)
+	// #define list_entry_rq(ptr)	list_container((ptr), struct request, queuelist)
 
 	// #define dma_map_bvec(dev, bv, dir, attrs) \
 	// 	dma_map_page_attrs(dev, (bv)->bv_page, (bv)->bv_offset, (bv)->bv_len, \

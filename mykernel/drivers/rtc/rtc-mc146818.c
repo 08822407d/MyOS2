@@ -25,7 +25,7 @@ static void simple_mc146818_gettime(rtc_time_s *time)
 // 	p->real_year = CMOS_READ(RTC_DEC_YEAR);
 // #endif
 // #ifdef CONFIG_ACPI
-// 	if (acpi_gbl_FADT.header.revision >= FADT2_REVISION_ID &&
+// 	if (acpi_gbl_FADT.anchor.revision >= FADT2_REVISION_ID &&
 // 	    acpi_gbl_FADT.century) {
 // 		p->century = CMOS_READ(acpi_gbl_FADT.century);
 // 	} else {

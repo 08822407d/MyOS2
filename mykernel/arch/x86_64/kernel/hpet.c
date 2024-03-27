@@ -426,7 +426,7 @@ void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 	jiffies++;
 	do_timer(1);
 
-	// timer_s * tmr = timer_lhdr.header.next->owner_p;
+	// timer_s * tmr = timer_lhdr.anchor.next->owner_p;
 	// if(tmr->expire_jiffies <= jiffies)
 	// 	set_softirq_status(HPET_TIMER0_IRQ);
 

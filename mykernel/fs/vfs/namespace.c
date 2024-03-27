@@ -63,7 +63,7 @@ mount_s *__lookup_mnt(IN vfsmount_s *mnt, IN dentry_s *dentry)
 	List_hdr_s *child_lhdr = &p->mnt_mounts;
 
 	List_s *mnt_lp;
-	for (mnt_lp = child_lhdr->header.next; mnt_lp != &child_lhdr->header; mnt_lp = mnt_lp->next)
+	for (mnt_lp = child_lhdr->anchor.next; mnt_lp != &child_lhdr->anchor; mnt_lp = mnt_lp->next)
 	{
 		p = container_of(mnt_lp, mount_s, mnt_child);
 		if (&p->mnt_parent->mnt == mnt && p->mnt_mountpoint == dentry)

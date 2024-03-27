@@ -13,7 +13,7 @@
 
 	typedef struct List_hdr {
 		ulong		count;
-		List_s		header;
+		List_s		anchor;
 	} List_hdr_s;
 
 #endif /* _LINUX_DOUBLE_LIST_TYPES_H_ */

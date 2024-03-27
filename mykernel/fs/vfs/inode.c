@@ -191,8 +191,7 @@ static inode_s *find_inode_fast(super_block_s *sb, unsigned long ino)
 	List_s *lp = NULL;
 repeat:
 	// hlist_for_each_entry(inode, head, i_hash) {
-	list_header_foreach_entry(&sb->s_inodes, lp) {
-		inode = container_of(lp, inode_s, i_sb_list);
+	list_header_for_each_container(inode, &sb->s_inodes, i_sb_list) {
 		if (inode->i_ino != ino)
 			continue;
 		if (inode->i_sb != sb)

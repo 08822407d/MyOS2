@@ -335,7 +335,7 @@
 	// 	lockdep_assert_console_list_lock_held();			\
 	// 	hlist_for_each_entry(con, &console_list, node)
 	#define for_each_console(con)						\
-			list_for_each_entry(						\
+			list_header_for_each_container(						\
 				con, (&console_list_hdr), node		\
 			)
 

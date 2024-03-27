@@ -153,8 +153,8 @@ uPage_s * upage_search(void * vaddr)
 	uPage_s * ret_val = NULL;
 	vaddr = (void *)PAGE_ROUND_DOWN((size_t)vaddr);
 	List_s * upg_lp;
-	for (upg_lp = used_upage_lhdr.header.next;
-		 upg_lp != &used_upage_lhdr.header;
+	for (upg_lp = used_upage_lhdr.anchor.next;
+		 upg_lp != &used_upage_lhdr.anchor;
 		 upg_lp = upg_lp->next)
 	{
 		uPage_s * upgp = container_of(upg_lp, uPage_s, upage_list);
@@ -384,7 +384,7 @@ void free(void * obj_p)
 	// if there is too many free slab, free some of them
 	if (uscgp->normal_slab_free.count > 2)
 	{
-		uslab_s * tmp_uslp = container_of(uscgp->normal_slab_free.header.prev, uslab_s, uslab_list);
+		uslab_s * tmp_uslp = container_of(uscgp->normal_slab_free.anchor.prev, uslab_s, uslab_list);
 		uscgp->normal_slab_free.count--;
 		uslab_free(tmp_uslp);
 		uscgp->normal_slab_total;

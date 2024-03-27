@@ -151,7 +151,7 @@
 		void
 		INIT_LIST_HEADER_S(List_hdr_s *lhdr) {
 			WRITE_ONCE(lhdr->count, 0);
-			INIT_LIST_S(&lhdr->header);
+			INIT_LIST_S(&lhdr->anchor);
 		}
 
 		PREFIX_STATIC_INLINE
@@ -631,14 +631,14 @@
 		PREFIX_STATIC_INLINE
 		void
 		list_header_push(List_hdr_s *lhdr_p, List_s *l_p) {
-			list_add_to_next(l_p, &lhdr_p->header);
+			list_add_to_next(l_p, &lhdr_p->anchor);
 			lhdr_p->count++;
 		}
 		PREFIX_STATIC_INLINE
 		List_s
 		*list_header_pop(List_hdr_s *lhdr_p) {
 			if (lhdr_p->count > 0) {
-				List_s *ret_val = lhdr_p->header.next;
+				List_s *ret_val = lhdr_p->anchor.next;
 				list_del_init(ret_val);
 				lhdr_p->count--;
 				return ret_val;
@@ -649,14 +649,14 @@
 		PREFIX_STATIC_INLINE
 		void
 		list_header_enqueue(List_hdr_s *lhdr_p, List_s *l_p) {
-			list_add_to_prev(l_p, &lhdr_p->header);
+			list_add_to_prev(l_p, &lhdr_p->anchor);
 			lhdr_p->count++;
 		}
 		PREFIX_STATIC_INLINE
 		List_s
 		*list_header_dequeue(List_hdr_s *lhdr_p) {
 			if (lhdr_p->count > 0) {
-				List_s *ret_val = lhdr_p->header.prev;
+				List_s *ret_val = lhdr_p->anchor.prev;
 				list_del_init(ret_val);
 				lhdr_p->count--;
 				return ret_val;

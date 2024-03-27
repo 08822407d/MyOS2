@@ -310,7 +310,7 @@ void detach_pid(task_s *task, enum pid_type type) {
 task_s *myos_find_task_by_pid(pid_t nr) {
 	task_s *tsk;
 
-	list_for_each_entry(tsk, &pid_list_hdr, pid_links) {
+	list_header_for_each_container(tsk, &pid_list_hdr, pid_links) {
 		if (tsk->pid == nr) return tsk;
 	}
 	return NULL;

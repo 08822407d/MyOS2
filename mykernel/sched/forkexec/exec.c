@@ -981,7 +981,7 @@ static int search_binary_handler(linux_bprm_s *bprm)
 	retval = -ENOENT;
 //  retry:
 	// read_lock(&binfmt_lock);
-	list_for_each_entry(fmt, &formats, lh) {
+	list_header_for_each_container(fmt, &formats, lh) {
 		// if (!try_module_get(fmt->module))
 		// 	continue;
 		// read_unlock(&binfmt_lock);

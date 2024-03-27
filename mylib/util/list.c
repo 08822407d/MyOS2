@@ -53,8 +53,8 @@ bool list_header_contains(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	if (lhdr_p->count > 0)
 	{
-		List_s * next = lhdr_p->header.next;
-		while (next != &lhdr_p->header)
+		List_s * next = lhdr_p->anchor.next;
+		while (next != &lhdr_p->anchor)
 		{
 			if (next == l_p)
 			{
@@ -73,12 +73,12 @@ bool list_header_contains(List_hdr_s * lhdr_p, List_s * l_p)
 void INIT_LIST_HEADER_S(List_hdr_s * lhdr_p)
 {
 	lhdr_p->count = 0;
-	INIT_LIST_S(&lhdr_p->header);
+	INIT_LIST_S(&lhdr_p->anchor);
 }
 
 void list_header_push(List_hdr_s * lhdr_p, List_s * l_p)
 {
-	list_insert_next(&lhdr_p->header, l_p);
+	list_insert_next(&lhdr_p->anchor, l_p);
 	lhdr_p->count++;
 }
 
@@ -86,7 +86,7 @@ List_s * list_header_pop(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{
-		List_s * ret_val = lhdr_p->header.next;
+		List_s * ret_val = lhdr_p->anchor.next;
 		list_del_init(ret_val);
 		lhdr_p->count--;
 		return ret_val;
@@ -97,7 +97,7 @@ List_s * list_header_pop(List_hdr_s * lhdr_p)
 
 void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
 {
-	list_insert_prev(&lhdr_p->header, l_p);
+	list_insert_prev(&lhdr_p->anchor, l_p);
 	lhdr_p->count++;
 }
 
@@ -105,7 +105,7 @@ List_s * list_header_dequeue(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{
-		List_s * ret_val = lhdr_p->header.prev;
+		List_s * ret_val = lhdr_p->anchor.prev;
 		list_del_init(ret_val);
 		lhdr_p->count--;
 		return ret_val;

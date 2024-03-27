@@ -223,7 +223,7 @@ super_block_s *sget_fc(fs_ctxt_s *fc)
 	super_block_s *s = NULL;
 	super_block_s *old;
 
-	List_s *s_lp = &fc->fs_type->fs_supers.header;
+	List_s *s_lp = &fc->fs_type->fs_supers.anchor;
 	for (List_s *lp = s_lp->next; lp != s_lp; lp = lp->next)
 	{
 		super_block_s *sbp = container_of(lp, super_block_s, s_instances);

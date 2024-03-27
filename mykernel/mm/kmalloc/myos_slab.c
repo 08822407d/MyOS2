@@ -248,7 +248,7 @@ void kfree(const void *objp)
 		// if there is too many free slab, free some of them
 		if (scgp->normal_slab_free.count > 2)
 		{
-			slab_s * tmp_slp = container_of(scgp->normal_slab_free.header.prev, slab_s, slab_list);
+			slab_s * tmp_slp = container_of(scgp->normal_slab_free.anchor.prev, slab_s, slab_list);
 			scgp->normal_slab_free.count--;
 			myos_slab_free(tmp_slp);
 			scgp->normal_slab_total;

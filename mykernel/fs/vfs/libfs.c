@@ -156,7 +156,7 @@ static dentry_s *scan_positives(dentry_s *cursor, List_s *p)
 
 	// spin_lock(&dentry->d_lock);
 	List_s *lp = p;
-	while ((lp = lp->next) != &(dentry->d_subdirs.header)) {
+	while ((lp = lp->next) != &(dentry->d_subdirs.anchor)) {
 		dentry_s *d = container_of(lp, dentry_s, d_child);
 		// we must at least skip cursors, to avoid livelocks
 		if (d->d_flags & DCACHE_DENTRY_CURSOR)
@@ -236,7 +236,7 @@ int dcache_readdir(file_s *file, dir_ctxt_s *ctx)
 		return 0;
 
 	if (ctx->pos == 2)
-		p = &file->f_path.dentry->d_subdirs.header;
+		p = &file->f_path.dentry->d_subdirs.anchor;
 	else if (!list_is_empty_entry(&cursor->d_child))
 		p = &cursor->d_child;
 	else

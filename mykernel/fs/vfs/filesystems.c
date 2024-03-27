@@ -69,7 +69,7 @@ int register_filesystem(fs_type_s *fs)
 	int res = 0;
 	fs_type_s **p;
 
-	List_s *si_hdr = &fs->fs_supers.header;
+	List_s *si_hdr = &fs->fs_supers.anchor;
 	if (fs->fs_supers.count == 0 &&
 		(si_hdr->next != si_hdr ||
 		si_hdr->prev != si_hdr))
