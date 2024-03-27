@@ -95,13 +95,14 @@ static void
 
 	spin_lock_irqsave(&n->list_lock, flags);
 	// list_for_each_entry_safe(slab, slab_next, &n->partial, slab_list) {
-	// 	void *t;
-	// 	// object = alloc_single_from_partial(s, n, slab,
-	// 	// 				pc->orig_size);
-	// 	if (object)
-	// 		break;
-	// 	continue;
-	// }
+	list_header_for_each_container_safe(slab, slab_next, &n->partial, slab_list) {
+		void *t;
+		// object = alloc_single_from_partial(s, n, slab,
+		// 				pc->orig_size);
+		if (object)
+			break;
+		continue;
+	}
 	spin_unlock_irqrestore(&n->list_lock, flags);
 	return object;
 // }
