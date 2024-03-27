@@ -42,7 +42,7 @@
 		extern void
 		__list_del_entry(List_s *entry);
 		extern void
-		list_del_init(List_s *entry);
+		list_del(List_s *entry);
 		extern void
 		list_del_init(List_s *entry);
 		extern void
@@ -115,7 +115,7 @@
 		*list_header_dequeue(List_hdr_s *lhdr_p);
 
 		extern List_s
-		*list_delete_from_header(List_hdr_s *lhdr_p, List_s *l_p);
+		*list_header_delete_node(List_hdr_s *lhdr_p, List_s *l_p);
 
 	#endif
 
@@ -667,7 +667,7 @@
 
 		PREFIX_STATIC_INLINE
 		List_s
-		*list_delete_from_header(List_hdr_s *lhdr_p, List_s *l_p) {
+		*list_header_delete_node(List_hdr_s *lhdr_p, List_s *l_p) {
 			if (list_header_contains(lhdr_p, l_p)) {
 				list_del_init(l_p);
 				lhdr_p->count--;

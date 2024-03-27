@@ -34,6 +34,16 @@
 
 	#define offset_in_page(p)	((unsigned long)(p) & ~PAGE_MASK)
 
+
+	/*
+	 * gfp_allowed_mask is set to GFP_BOOT_MASK during early boot to restrict what
+	 * GFP flags are used before interrupts are enabled. Once interrupts are
+	 * enabled, it is set to __GFP_BITS_MASK while the system is running. During
+	 * hibernation, it is used by PM to avoid I/O during memory allocation while
+	 * devices are suspended.
+	 */
+	extern gfp_t gfp_allowed_mask;
+
 	page_s *alloc_pages(gfp_t gfp, unsigned int order);
 	#define alloc_page(gfp_mask)	alloc_pages(gfp_mask, 0)
 

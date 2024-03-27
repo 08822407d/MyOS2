@@ -14,7 +14,7 @@
 	// extern struct mutex slab_mutex;
 
 	/* The list of all slab caches on the system */
-	extern List_s slab_caches;
+	extern List_hdr_s slab_caches;
 
 	/* The slab cache that manages slab cache information */
 	extern struct kmem_cache *kmem_cache;

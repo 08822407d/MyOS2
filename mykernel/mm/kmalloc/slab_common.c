@@ -14,7 +14,7 @@
 
 
 enum slab_state slab_state;
-LIST_HEAD(slab_caches);
+LIST_HDR_S(slab_caches);
 // DEFINE_MUTEX(slab_mutex);
 struct kmem_cache *kmem_cache;
 
@@ -74,7 +74,7 @@ static struct kmem_cache *create_cache(const char *name,
 		goto out_free_cache;
 
 	s->refcount = 1;
-	list_add_to_next(&s->list, &slab_caches);
+	list_header_push(&slab_caches, &s->list);
 out:
 	if (err)
 		return ERR_PTR(err);

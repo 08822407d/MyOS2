@@ -303,7 +303,7 @@ void attach_pid(task_s *task, enum pid_type type) {
 
 void detach_pid(task_s *task, enum pid_type type) {
 	// __change_pid(task, type, NULL);
-	list_delete_from_header(&pid_list_hdr, &task->pid_links);
+	list_header_delete_node(&pid_list_hdr, &task->pid_links);
 }
 
 

@@ -176,7 +176,7 @@ static inline void inode_sb_list_del(inode_s *inode)
 	if (!list_is_empty_entry(&inode->i_sb_list)) {
 	// 	spin_lock(&inode->i_sb->s_inode_list_lock);
 	// 	list_del_init(&inode->i_sb_list);
-	list_delete_from_header(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	list_header_delete_node(&inode->i_sb->s_inodes, &inode->i_sb_list);
 	// 	spin_unlock(&inode->i_sb->s_inode_list_lock);
 	}
 }

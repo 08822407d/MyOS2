@@ -285,63 +285,63 @@
 	{
 		/* private: don't document the anon union */
 		union {
-		// 	struct {
-		// /* public: */
-		// 		unsigned long flags;
-		// 		union {
-		// 			struct list_head lru;
-		// /* private: avoid cluttering the output */
-		// 			struct {
-		// 				void *__filler;
-		// /* public: */
-		// 				unsigned int mlock_count;
-		// /* private: */
-		// 			};
-		// /* public: */
-		// 		};
-		// 		struct address_space *mapping;
-		// 		pgoff_t index;
-		// 		void *private;
-		// 		atomic_t _mapcount;
-		// 		atomic_t _refcount;
-		// /* private: the union with struct page is transitional */
-		// 	};
-			struct page page;
+			struct {
+		/* public: */
+				ulong	flags;
+				union {
+					List_s	lru;
+		/* private: avoid cluttering the output */
+					struct {
+						void	*__filler;
+		/* public: */
+						uint	mlock_count;
+		/* private: */
+					};
+		/* public: */
+				};
+				addr_spc_s	*mapping;
+				pgoff_t		index;
+				void		*private;
+				atomic_t	_mapcount;
+				atomic_t	_refcount;
+		/* private: the union with struct page is transitional */
+			};
+			page_s	page;
 		};
 		union {
-		// 	struct {
-		// 		unsigned long _flags_1;
-		// 		unsigned long _head_1;
-		// /* public: */
-		// 		unsigned char _folio_dtor;
-		// 		unsigned char _folio_order;
-		// 		atomic_t _entire_mapcount;
-		// 		atomic_t _nr_pages_mapped;
-		// 		atomic_t _pincount;
-		// 		unsigned int _folio_nr_pages;
-		// /* private: the union with struct page is transitional */
-		// 	};
-			struct page __page_1;
+			struct {
+				ulong	_flags_1;
+				ulong	_head_1;
+		/* public: */
+				unchar		_folio_dtor;
+				unchar		_folio_order;
+				atomic_t	_entire_mapcount;
+				atomic_t	_nr_pages_mapped;
+				atomic_t	_pincount;
+				uint		_folio_nr_pages;
+		/* private: the union with struct page is transitional */
+			};
+			page_s	__page_1;
 		};
 		union {
-		// 	struct {
-		// 		unsigned long _flags_2;
-		// 		unsigned long _head_2;
-		// /* public: */
-		// 		void *_hugetlb_subpool;
-		// 		void *_hugetlb_cgroup;
-		// 		void *_hugetlb_cgroup_rsvd;
-		// 		void *_hugetlb_hwpoison;
-		// /* private: the union with struct page is transitional */
-		// 	};
-		// 	struct {
-		// 		unsigned long _flags_2a;
-		// 		unsigned long _head_2a;
-		// /* public: */
-		// 		struct list_head _deferred_list;
-		// /* private: the union with struct page is transitional */
-		// 	};
-			struct page __page_2;
+			struct {
+				ulong	_flags_2;
+				ulong	_head_2;
+		/* public: */
+				void		*_hugetlb_subpool;
+				void		*_hugetlb_cgroup;
+				void		*_hugetlb_cgroup_rsvd;
+				void		*_hugetlb_hwpoison;
+		/* private: the union with struct page is transitional */
+			};
+			struct {
+				ulong	_flags_2a;
+				ulong	_head_2a;
+		/* public: */
+				List_s	_deferred_list;
+		/* private: the union with struct page is transitional */
+			};
+			page_s	__page_2;
 		};
 	} folio_s;
 

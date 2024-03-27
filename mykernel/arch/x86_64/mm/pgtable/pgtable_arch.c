@@ -13,7 +13,7 @@ static inline void pgd_list_add(pgd_t *pgd) {
 
 static inline void pgd_list_del(pgd_t *pgd) {
 	page_s *page = virt_to_page(pgd);
-	list_delete_from_header(&pgd_list_hdr, &page->lru);
+	list_header_delete_node(&pgd_list_hdr, &page->lru);
 }
 
 

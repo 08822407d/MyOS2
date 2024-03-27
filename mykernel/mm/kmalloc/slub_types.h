@@ -13,6 +13,8 @@
 
 	#include "slub_const.h"
 
+
+	typedef slab_s	pages;
 	/*
 	 * State of the slab allocator.
 	 *

@@ -58,6 +58,6 @@
 	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
 	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
 	List_s * list_header_dequeue(List_hdr_s * lhdr_p);
-	List_s * list_delete_from_header(List_hdr_s * lhdr_p, List_s * l_p);
+	List_s * list_header_delete_node(List_hdr_s * lhdr_p, List_s * l_p);
 
 #endif /* _LIB_UTILS_H_ */

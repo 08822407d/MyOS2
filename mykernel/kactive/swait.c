@@ -50,7 +50,7 @@ void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait) {
 void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
 	__set_current_state(TASK_RUNNING);
 	if (!list_is_empty_entry(&wait->task_list))
-		list_delete_from_header(&q->task_list_hdr, &wait->task_list);
+		list_header_delete_node(&q->task_list_hdr, &wait->task_list);
 }
 
 // void finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {

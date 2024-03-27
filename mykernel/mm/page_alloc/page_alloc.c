@@ -1,6 +1,7 @@
 #define PAGEALLOC_DEFINATION
-
 #include "page_alloc.h"
+
+#include "page_alloc_const.h"
 
 #include <linux/kernel/nodemask.h>
 
@@ -21,6 +22,10 @@
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
 #include <linux/kernel/mm.h>
+
+
+gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
+
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:
@@ -146,7 +151,7 @@ static inline page_s
 *del_page_from_free_list(page_s *page,
 		zone_s * zone, unsigned int order) {
 
-	List_s * pg_lp = list_delete_from_header(&zone->free_area[order],
+	List_s * pg_lp = list_header_delete_node(&zone->free_area[order],
 			&page->lru);
 	if (pg_lp == NULL)
 		return NULL;
@@ -329,7 +334,7 @@ __myos_free_one_page(page_s *page, unsigned long pfn,
 			!list_header_contains(&zone->free_area[order], &page->lru))
 			break;
 
-		list_delete_from_header(&zone->free_area[order], &page->lru);
+		list_header_delete_node(&zone->free_area[order], &page->lru);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;

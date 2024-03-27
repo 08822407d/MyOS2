@@ -229,7 +229,8 @@
 	#define __GFP_NOLOCKDEP			((__force gfp_t)___GFP_NOLOCKDEP)
 
 	/* Room for N __GFP_FOO bits */
-	#define __GFP_BITS_SHIFT		(25 + IS_ENABLED(CONFIG_LOCKDEP))
+	// #define __GFP_BITS_SHIFT		(25 + IS_ENABLED(CONFIG_LOCKDEP))
+	#define __GFP_BITS_SHIFT		(25)
 	#define __GFP_BITS_MASK			((__force gfp_t)((1 << __GFP_BITS_SHIFT) - 1))
 
 	/**
@@ -383,5 +384,26 @@
 	// 	| 1 << (___GFP_MOVABLE | ___GFP_DMA32 | ___GFP_HIGHMEM)		      \
 	// 	| 1 << (___GFP_MOVABLE | ___GFP_DMA32 | ___GFP_DMA | ___GFP_HIGHMEM)  \
 	// )
+
+
+	/*
+	 * The set of flags that only affect watermark checking and reclaim
+	 * behaviour. This is used by the MM to obey the caller constraints
+	 * about IO, FS and watermark checking while ignoring placement
+	 * hints such as HIGHMEM usage.
+	 */
+	#define GFP_RECLAIM_MASK (__GFP_RECLAIM|__GFP_HIGH|__GFP_IO|__GFP_FS|\
+				__GFP_NOWARN|__GFP_RETRY_MAYFAIL|__GFP_NOFAIL|\
+				__GFP_NORETRY|__GFP_MEMALLOC|__GFP_NOMEMALLOC|\
+				__GFP_NOLOCKDEP)
+
+	/* The GFP flags allowed during early boot */
+	#define GFP_BOOT_MASK (__GFP_BITS_MASK & ~(__GFP_RECLAIM|__GFP_IO|__GFP_FS))
+
+	/* Control allocation cpuset and node placement constraints */
+	#define GFP_CONSTRAINT_MASK (__GFP_HARDWALL|__GFP_THISNODE)
+
+	/* Do not use these with a slab allocator */
+	#define GFP_SLAB_BUG_MASK (__GFP_DMA32|__GFP_HIGHMEM|~__GFP_BITS_MASK)
 
 #endif /* _LINUX_PAGE_ALLOC_CONST_H_ */

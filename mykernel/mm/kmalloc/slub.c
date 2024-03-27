@@ -2,6 +2,7 @@
 #include <linux/kernel/nodemask.h>
 
 #include "kmalloc.h"
+#include "slub.h"
 #include "slub_types.h"
 
 
@@ -59,6 +60,26 @@ typedef struct partial_context {
 static kmem_cache_s *kmem_cache_node;
 
 
+
+static inline void
+*get_freepointer(struct kmem_cache *s, void *object) {
+	// object = kasan_reset_tag(object);
+	return object + s->offset;
+}
+
+static inline void
+set_freepointer(struct kmem_cache *s, void *object, void *fp) {
+	unsigned long freeptr_addr = (unsigned long)object + s->offset;
+	// freeptr_addr = (unsigned long)kasan_reset_tag((void *)freeptr_addr);
+	*(void **)freeptr_addr = fp;
+}
+
+/* Loop over all objects in a slab */
+#define for_each_object(__p, __s, __addr, __objects)		\
+			for (__p = __addr;								\
+				__p < (__addr) + (__objects) * (__s)->size;	\
+				__p += (__s)->size)
+
 static inline unsigned int
 order_objects(unsigned int order, unsigned int size) {
 	return ((unsigned int)PAGE_SIZE << order) / size;
@@ -75,6 +96,152 @@ oo_make(unsigned int order, unsigned int size) {
 
 #define oo_order(x)		((x).order)
 #define oo_objects(x)	((x).obj_nr)
+
+
+
+/*
+ * Slab allocation and freeing
+ */
+static inline page_s
+*alloc_slab_page(gfp_t flags,
+		struct kmem_cache_order_objects oo) {
+	unsigned int order = oo_order(oo);
+	return alloc_pages(flags, order);
+}
+
+
+static page_s
+*new_slab(struct kmem_cache *s, gfp_t flags) {
+	// if (unlikely(flags & GFP_SLAB_BUG_MASK))
+	// 	flags = kmalloc_fix_flags(flags);
+
+	// WARN_ON_ONCE(s->ctor && (flags & __GFP_ZERO));
+	flags = flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK);
+// static struct slab *allocate_slab(struct kmem_cache *s, gfp_t flags, int node)
+// {
+	page_s *slab;
+	struct kmem_cache_order_objects oo = s->oo;
+	gfp_t alloc_gfp;
+	void *start, *p, *next;
+	int idx;
+
+	flags &= gfp_allowed_mask;
+	flags |= s->allocflags;
+
+	// /*
+	//  * Let the initial higher-order allocation fail under memory pressure
+	//  * so we fall-back to the minimum order allocation.
+	//  */
+	// alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
+	// if ((alloc_gfp & __GFP_DIRECT_RECLAIM) && oo_order(oo) > oo_order(s->min))
+	// 	alloc_gfp = (alloc_gfp | __GFP_NOMEMALLOC) & ~__GFP_RECLAIM;
+
+	slab = alloc_slab_page(alloc_gfp, oo);
+	if (unlikely(!slab)) {
+		oo = s->min;
+		alloc_gfp = flags;
+		/*
+		 * Allocation may have failed due to fragmentation.
+		 * Try a lower order alloc if possible
+		 */
+		slab = alloc_slab_page(alloc_gfp, oo);
+		if (unlikely(!slab))
+			return NULL;
+	}
+
+	slab->objects = oo_objects(oo);
+	slab->inuse = 0;
+	slab->frozen = 0;
+	slab->slab_cache = s;
+
+	start = (void *)page_to_virt(slab);
+	slab->freelist = start;
+	for (idx = 0, p = start; idx < slab->objects - 1; idx++) {
+		next = p + s->size;
+		set_freepointer(s, p, next);
+		p = next;
+	}
+	set_freepointer(s, p, NULL);
+
+	return slab;
+// }
+}
+
+
+/*
+ * Tracking of fully allocated slabs for debugging purposes.
+ */
+static void add_full(struct kmem_cache *s,
+	struct kmem_cache_node *n, page_s *slab)
+{
+	if (!(s->flags & SLAB_STORE_USER))
+		return;
+
+	// lockdep_assert_held(&n->list_lock);
+	list_header_push(&n->full, &slab->slab_list);
+}
+
+static void remove_full(struct kmem_cache *s, struct kmem_cache_node *n, page_s *slab)
+{
+	if (!(s->flags & SLAB_STORE_USER))
+		return;
+
+	// lockdep_assert_held(&n->list_lock);
+	list_header_delete_node(&n->full, &slab->slab_list);
+}
+
+/*
+ * Management of partially allocated slabs.
+ */
+static inline void
+__add_partial(struct kmem_cache_node *n, page_s *slab, int tail)
+{
+	n->nr_partial++;
+	if (tail == DEACTIVATE_TO_TAIL)
+		list_header_enqueue(&n->partial, &slab->slab_list);
+	else
+		list_header_push(&n->partial, &slab->slab_list);
+}
+
+static inline void add_partial(struct kmem_cache_node *n,
+				page_s *slab, int tail)
+{
+	// lockdep_assert_held(&n->list_lock);
+	__add_partial(n, slab, tail);
+}
+
+static inline void remove_partial(struct kmem_cache_node *n,
+					page_s *slab)
+{
+	// lockdep_assert_held(&n->list_lock);
+	list_header_delete_node(&n->partial, &slab->slab_list);
+	n->nr_partial--;
+}
+
+/*
+ * Called only for kmem_cache_debug() caches instead of acquire_slab(), with a
+ * slab from the n->partial list. Remove only a single object from the slab, do
+ * the alloc_debug_processing() checks and leave the slab on the list, or move
+ * it to full list if it was the last free object.
+ */
+static void *alloc_single_from_partial(struct kmem_cache *s,
+		struct kmem_cache_node *n, page_s *slab, int orig_size)
+{
+	void *object;
+
+	// lockdep_assert_held(&n->list_lock);
+
+	object = slab->freelist;
+	slab->freelist = get_freepointer(s, object);
+	slab->inuse++;
+
+	if (slab->inuse == slab->objects) {
+		remove_partial(n, slab);
+		add_full(s, n, slab);
+	}
+
+	return object;
+}
 
 /*
  * Get a partial slab, lock it and return it.
@@ -96,9 +263,7 @@ static void
 	spin_lock_irqsave(&n->list_lock, flags);
 	// list_for_each_entry_safe(slab, slab_next, &n->partial, slab_list) {
 	list_header_for_each_container_safe(slab, slab_next, &n->partial, slab_list) {
-		void *t;
-		// object = alloc_single_from_partial(s, n, slab,
-		// 				pc->orig_size);
+		object = alloc_single_from_partial(s, n, slab, pc->orig_size);
 		if (object)
 			break;
 		continue;
@@ -121,17 +286,20 @@ static void
 	pc.flags = gfpflags;
 	pc.slab = &slab;
 	pc.orig_size = orig_size;
-	// object = get_partial(s, &pc);
+retry:
+	object = get_partial(s, &pc);
 
 	if (object)
 		return object;
 
-	// slab = new_slab(s, gfpflags);
-	// if (unlikely(!slab)) {
-	// 	slab_out_of_memory(s, gfpflags, node);
-	// 	return NULL;
-	// }
+	slab = new_slab(s, gfpflags);
+	if (unlikely(!slab)) {
+		// slab_out_of_memory(s, gfpflags, node);
+		return NULL;
+	}
 
+	add_partial(&s->node, slab, DEACTIVATE_TO_HEAD);
+	goto retry;
 	// object = alloc_single_from_new_slab(s, slab, orig_size);
 
 	return object;
@@ -290,6 +458,13 @@ static int simple_kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
 	// 	if (init_cache_random_seq(s))
 	// 		goto error;
 	// }
+
+// static int init_kmem_cache_nodes(struct kmem_cache *s)
+// {
+	kmem_cache_node_s *node_cache = &kmem_cache->node;
+	INIT_LIST_HEADER_S(&node_cache->partial);
+	INIT_LIST_HEADER_S(&node_cache->full);
+// }
 	return 0;
 
 error:
@@ -314,10 +489,10 @@ error:
 static struct kmem_cache * __init bootstrap(struct kmem_cache *static_cache)
 {
 	int node;
-	// struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
-	// memcpy(s, static_cache, kmem_cache->object_size);
-	// list_add_to_next(&s->list, &slab_caches);
-	// return s;
+	struct kmem_cache *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
+	memcpy(s, static_cache, kmem_cache->object_size);
+	list_header_push(&slab_caches, &s->list);
+	return s;
 }
 
 void __init kmem_cache_init(void)

@@ -280,7 +280,7 @@ extern void do_name(void);
 static noinline void __init kernel_init_freeable(void)
 {
 	/* Now the scheduler is fully set up and can do blocking allocations */
-	// gfp_allowed_mask = __GFP_BITS_MASK;
+	gfp_allowed_mask = __GFP_BITS_MASK;
 
 	/*
 	 * init can allocate pages on any node
