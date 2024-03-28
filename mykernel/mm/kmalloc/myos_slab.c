@@ -102,7 +102,7 @@ static void myos_slab_free(slab_s *slp)
 	kfree(slp);
 }
 
-void *__kmalloc(size_t size, gfp_t flags)
+void *__myos_kmalloc(size_t size, gfp_t flags)
 {
 	void *ret_val = NULL;
 	while (size > KMALLOC_MAX_CACHE_SIZE);
@@ -163,39 +163,8 @@ void *__kmalloc(size_t size, gfp_t flags)
 	unlock_recurs_lock(&slab_alloc_lock);
 	return ret_val;
 }
-void *kmalloc(size_t size, gfp_t flags)
-{
-	void *ret_val = 0;
-// 	if (__builtin_constant_p(size))
-// 	{
-	// unsigned int index;
-	if (size > KMALLOC_MAX_CACHE_SIZE)
-	{
-		unsigned int order = get_order(size);
-		ret_val = kmalloc_order(size, flags, order);
-	}
-	else
-	{
-		// index = kmalloc_index(size);
 
-		// if (!index)
-		// 	return ZERO_SIZE_PTR;
-
-		// return kmem_cache_alloc_trace(
-		// 	kmalloc_caches[kmalloc_type(flags)][index],
-		// 	flags, size);
-		ret_val = __kmalloc(size, flags);
-	}
-// 	}
-
-	if (flags & __GFP_ZERO)
-		memset(ret_val, 0, size);
-
-	return ret_val;
-}
-
-
-void kfree(const void *objp)
+void myos_kfree(const void *objp)
 {
 	if (objp == NULL)
 		return;

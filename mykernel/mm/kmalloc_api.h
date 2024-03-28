@@ -46,8 +46,12 @@
 					int node, size_t orig_size, unsigned long caller);
 	void __kmem_cache_free(kmem_cache_s *s, void *x, unsigned long caller);
 
+
 	/* Functions provided by the slab allocators */
 	int __kmem_cache_create(kmem_cache_s *, slab_flags_t flags);
+
+	void *kmalloc_large(size_t size, gfp_t flags) __alloc_size(1);
+
 
 	kmem_cache_s *create_kmalloc_cache(const char *name,
 			unsigned int size, slab_flags_t flags);
@@ -55,9 +59,10 @@
 			unsigned int size, slab_flags_t flags);
 
 
-	void *__kmalloc(size_t size, gfp_t flags);
-	void *kmalloc(size_t size, gfp_t flags);
-	void kfree(const void *objp);
+	void *__myos_kmalloc(size_t size, gfp_t flags);
+	#define __kmalloc __myos_kmalloc
+	void myos_kfree(const void *objp);
+	#define kfree myos_kfree
 
 	void myos_preinit_slab(void);
 	void myos_init_slab(void);

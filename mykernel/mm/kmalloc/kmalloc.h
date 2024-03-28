@@ -18,13 +18,16 @@
 		extern unsigned int
 		__kmalloc_index(size_t size, bool size_is_constant);
 
-		extern void
+		extern __alloc_size(1) void
+		*kmalloc(size_t size, gfp_t flags);
+
+		extern __alloc_size(1, 2) void
 		*kmalloc_array(size_t n, size_t size, gfp_t flags);
 
-		extern void
+		extern __alloc_size(1, 2) void
 		*kcalloc(size_t n, size_t size, gfp_t flags);
 
-		extern void
+		extern __alloc_size(1) void
 		*kzalloc(size_t size, gfp_t flags);
 
 	#endif
@@ -114,13 +117,82 @@
 		}
 
 		/**
+		 * kmalloc - allocate kernel memory
+		 * @size: how many bytes of memory are required.
+		 * @flags: describe the allocation context
+		 *
+		 * kmalloc is the normal method of allocating memory
+		 * for objects smaller than page size in the kernel.
+		 *
+		 * The allocated object address is aligned to at least ARCH_KMALLOC_MINALIGN
+		 * bytes. For @size of power of two bytes, the alignment is also guaranteed
+		 * to be at least to the size.
+		 *
+		 * The @flags argument may be one of the GFP flags defined at
+		 * include/linux/gfp_types.h and described at
+		 * :ref:`Documentation/core-api/mm-api.rst <mm-api-gfp-flags>`
+		 *
+		 * The recommended usage of the @flags is described at
+		 * :ref:`Documentation/core-api/memory-allocation.rst <memory_allocation>`
+		 *
+		 * Below is a brief outline of the most useful GFP flags
+		 *
+		 * %GFP_KERNEL
+		 *	Allocate normal kernel ram. May sleep.
+		 *
+		 * %GFP_NOWAIT
+		 *	Allocation will not sleep.
+		 *
+		 * %GFP_ATOMIC
+		 *	Allocation will not sleep.  May use emergency pools.
+		 *
+		 * Also it is possible to set different flags by OR'ing
+		 * in one or more of the following additional @flags:
+		 *
+		 * %__GFP_ZERO
+		 *	Zero the allocated memory before returning. Also see kzalloc().
+		 *
+		 * %__GFP_HIGH
+		 *	This allocation has high priority and may use emergency pools.
+		 *
+		 * %__GFP_NOFAIL
+		 *	Indicate that this allocation is in no way allowed to fail
+		 *	(think twice before using).
+		 *
+		 * %__GFP_NORETRY
+		 *	If memory is not immediately available,
+		 *	then give up at once.
+		 *
+		 * %__GFP_NOWARN
+		 *	If allocation fails, don't issue any warnings.
+		 *
+		 * %__GFP_RETRY_MAYFAIL
+		 *	Try really hard to succeed the allocation but fail
+		 *	eventually.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		__alloc_size(1) void
+		*kmalloc(size_t size, gfp_t flags) {
+			void *ret_val = NULL;
+			if (size > KMALLOC_MAX_CACHE_SIZE)
+				ret_val = kmalloc_large(size, flags);
+			else
+				ret_val = __kmalloc(size, flags);
+
+			if (flags & __GFP_ZERO)
+				memset(ret_val, 0, size);
+
+			return ret_val;
+		}
+
+		/**
 		 * kmalloc_array - allocate memory for an array.
 		 * @n: number of elements.
 		 * @size: element size.
 		 * @flags: the type of memory to allocate (see kmalloc).
 		 */
 		PREFIX_STATIC_INLINE
-		void
+		__alloc_size(1, 2) void
 		*kmalloc_array(size_t n, size_t size, gfp_t flags) {
 			size_t bytes;
 
@@ -138,7 +210,7 @@
 		 * @flags: the type of memory to allocate (see kmalloc).
 		 */
 		PREFIX_STATIC_INLINE
-		void
+		__alloc_size(1, 2) void
 		*kcalloc(size_t n, size_t size, gfp_t flags) {
 			return kmalloc_array(n, size, flags | __GFP_ZERO);
 		}
@@ -150,10 +222,34 @@
 		 * @flags: the type of memory to allocate (see kmalloc).
 		 */
 		PREFIX_STATIC_INLINE
-		void
+		__alloc_size(1) void
 		*kzalloc(size_t size, gfp_t flags) {
 			return kmalloc(size, flags | __GFP_ZERO);
 		}
+
+
+		/**
+		 * kfree - free previously allocated memory
+		 * @object: pointer returned by kmalloc() or kmem_cache_alloc()
+		 *
+		 * If @object is NULL, no operation is performed.
+		 */
+		// PREFIX_STATIC_INLINE
+		// void
+		// kfree(const void *object) {
+		// 	page_s *slab;
+		// 	kmem_cache_s *s;
+
+		// 	if (unlikely(object == NULL))
+		// 		return;
+
+		// 	slab = virt_to_page(object);
+		// 	// if (unlikely(!folio_test_slab(folio)))
+		// 	if (PageHead(page))
+		// 		free_large_kmalloc(folio, (void *)object);
+		// 	else
+		// 		__kmem_cache_free(slab->slab_cache, (void *)object);
+		// }
 
 	#endif
 

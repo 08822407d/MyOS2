@@ -270,6 +270,9 @@ extern void do_name(void);
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 
+	void *large_test = kmalloc(0x4000, GFP_KERNEL);
+	kfree(large_test);
+
 	kjmp_to_doexecve();
 
 	while (true);
