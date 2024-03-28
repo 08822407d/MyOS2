@@ -8,6 +8,7 @@
 #include <linux/kernel/lib.h>
 
 #include "kmalloc.h"
+#include "slub.h"
 
 
 #include "../kmalloc_api.h"
@@ -225,9 +226,8 @@ EXPORT_SYMBOL(kmem_cache_create);
 
 
 /* Create a cache during boot when no slab services are available yet */
-void __init create_boot_cache(kmem_cache_s *s, const char *name,
-		unsigned int size, slab_flags_t flags,
-		unsigned int useroffset, unsigned int usersize)
+void __init create_boot_cache(kmem_cache_s *s,
+		const char *name, unsigned int size, slab_flags_t flags)
 {
 	int err;
 	unsigned int align = ARCH_KMALLOC_MINALIGN;
@@ -252,156 +252,98 @@ void __init create_boot_cache(kmem_cache_s *s, const char *name,
 	s->refcount = -1;	/* Exempt from merging for now */
 }
 
+kmem_cache_s __init
+*create_kmalloc_cache(const char *name,
+		unsigned int size, slab_flags_t flags)
+{
+	kmem_cache_s *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
 
-// #define INIT_KMALLOC_INFO(__size, __short_size)			\
-// {								\
-// 	.name[KMALLOC_NORMAL]  = "kmalloc-" #__short_size,	\
-// 	KMALLOC_RCL_NAME(__short_size)				\
-// 	KMALLOC_CGROUP_NAME(__short_size)			\
-// 	KMALLOC_DMA_NAME(__short_size)				\
-// 	.size = __size,						\
-// }
+	if (!s)
+		panic("Out of memory when creating slab %s\n", name);
 
-// /*
-//  * kmalloc_info[] is to make slub_debug=,kmalloc-xx option work at boot time.
-//  * kmalloc_index() supports up to 2^21=2MB, so the final entry of the table is
-//  * kmalloc-2M.
-//  */
-// const struct kmalloc_info_struct kmalloc_info[] __initconst = {
-// 	INIT_KMALLOC_INFO(0, 0),
-// 	INIT_KMALLOC_INFO(96, 96),
-// 	INIT_KMALLOC_INFO(192, 192),
-// 	INIT_KMALLOC_INFO(8, 8),
-// 	INIT_KMALLOC_INFO(16, 16),
-// 	INIT_KMALLOC_INFO(32, 32),
-// 	INIT_KMALLOC_INFO(64, 64),
-// 	INIT_KMALLOC_INFO(128, 128),
-// 	INIT_KMALLOC_INFO(256, 256),
-// 	INIT_KMALLOC_INFO(512, 512),
-// 	INIT_KMALLOC_INFO(1024, 1k),
-// 	INIT_KMALLOC_INFO(2048, 2k),
-// 	INIT_KMALLOC_INFO(4096, 4k),
-// 	INIT_KMALLOC_INFO(8192, 8k),
-// 	INIT_KMALLOC_INFO(16384, 16k),
-// 	INIT_KMALLOC_INFO(32768, 32k),
-// 	INIT_KMALLOC_INFO(65536, 64k),
-// 	INIT_KMALLOC_INFO(131072, 128k),
-// 	INIT_KMALLOC_INFO(262144, 256k),
-// 	INIT_KMALLOC_INFO(524288, 512k),
-// 	INIT_KMALLOC_INFO(1048576, 1M),
-// 	INIT_KMALLOC_INFO(2097152, 2M)
-// };
+	create_boot_cache(s, name, size, flags | SLAB_KMALLOC);
+	list_header_push(&slab_caches, &s->list);
+	s->refcount = 1;
+	return s;
+}
 
-// /*
-//  * Patch up the size_index table if we have strange large alignment
-//  * requirements for the kmalloc array. This is only the case for
-//  * MIPS it seems. The standard arches will not generate any code here.
-//  *
-//  * Largest permitted alignment is 256 bytes due to the way we
-//  * handle the index determination for the smaller caches.
-//  *
-//  * Make sure that nothing crazy happens if someone starts tinkering
-//  * around with ARCH_KMALLOC_MINALIGN
-//  */
-// void __init setup_kmalloc_cache_index_table(void)
-// {
-// 	unsigned int i;
+kmem_cache_s *
+kmalloc_caches[KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
+{ /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
+EXPORT_SYMBOL(kmalloc_caches);
 
-// 	BUILD_BUG_ON(KMALLOC_MIN_SIZE > 256 ||
-// 		!is_power_of_2(KMALLOC_MIN_SIZE));
 
-// 	for (i = 8; i < KMALLOC_MIN_SIZE; i += 8) {
-// 		unsigned int elem = size_index_elem(i);
+#define INIT_KMALLOC_INFO(__size, __short_size) {	\
+			.name	= "kmalloc-" #__short_size,		\
+			.size	= __size,						\
+		}
 
-// 		if (elem >= ARRAY_SIZE(size_index))
-// 			break;
-// 		size_index[elem] = KMALLOC_SHIFT_LOW;
-// 	}
+/*
+ * kmalloc_info[] is to make slub_debug=,kmalloc-xx option work at boot time.
+ * kmalloc_index() supports up to 2^21=2MB, so the final entry of the table is
+ * kmalloc-2M.
+ */
+const kmalloc_info_s kmalloc_info[] __initconst = {
+	INIT_KMALLOC_INFO(0,		0),
+	INIT_KMALLOC_INFO(96,		96),
+	INIT_KMALLOC_INFO(192,		192),
+	INIT_KMALLOC_INFO(8,		8),
+	INIT_KMALLOC_INFO(16,		16),
+	INIT_KMALLOC_INFO(32,		32),
+	INIT_KMALLOC_INFO(64,		64),
+	INIT_KMALLOC_INFO(128,		128),
+	INIT_KMALLOC_INFO(256,		256),
+	INIT_KMALLOC_INFO(512,		512),
+	INIT_KMALLOC_INFO(1024,		1k),
+	INIT_KMALLOC_INFO(2048,		2k),
+	INIT_KMALLOC_INFO(4096,		4k),
+	INIT_KMALLOC_INFO(8192,		8k),
+	INIT_KMALLOC_INFO(16384,	16k),
+	INIT_KMALLOC_INFO(32768,	32k),
+	INIT_KMALLOC_INFO(65536,	64k),
+	INIT_KMALLOC_INFO(131072,	128k),
+	INIT_KMALLOC_INFO(262144,	256k),
+	INIT_KMALLOC_INFO(524288,	512k),
+	INIT_KMALLOC_INFO(1048576,	1M),
+	INIT_KMALLOC_INFO(2097152,	2M)
+};
 
-// 	if (KMALLOC_MIN_SIZE >= 64) {
-// 		/*
-// 		 * The 96 byte sized cache is not used if the alignment
-// 		 * is 64 byte.
-// 		 */
-// 		for (i = 64 + 8; i <= 96; i += 8)
-// 			size_index[size_index_elem(i)] = 7;
+static void __init
+new_kmalloc_cache(int idx, slab_flags_t flags) {
+	kmalloc_caches[idx] = create_kmalloc_cache(
+			kmalloc_info[idx].name, kmalloc_info[idx].size, flags);
+}
 
-// 	}
+/*
+ * Create the kmalloc array. Some of the regular kmalloc arrays
+ * may already have been created because they were needed to
+ * enable allocations for slab creation.
+ */
+void __init create_kmalloc_caches(slab_flags_t flags)
+{
+	/*
+	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
+	 */
+	for (int i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
+		if (!kmalloc_caches[i])
+			new_kmalloc_cache(i, flags);
 
-// 	if (KMALLOC_MIN_SIZE >= 128) {
-// 		/*
-// 		 * The 192 byte sized cache is not used if the alignment
-// 		 * is 128 byte. Redirect kmalloc to use the 256 byte cache
-// 		 * instead.
-// 		 */
-// 		for (i = 128 + 8; i <= 192; i += 8)
-// 			size_index[size_index_elem(i)] = 8;
-// 	}
-// }
+		/*
+			* Caches that are not of the two-to-the-power-of size.
+			* These have to be created immediately after the
+			* earlier power of two caches
+			*/
+		if (KMALLOC_MIN_SIZE <= 32 && i == 6 &&
+				!kmalloc_caches[1])
+			new_kmalloc_cache(1, flags);
+		if (KMALLOC_MIN_SIZE <= 64 && i == 7 &&
+				!kmalloc_caches[2])
+			new_kmalloc_cache(2, flags);
+	}
 
-// static void __init
-// new_kmalloc_cache(int idx, enum kmalloc_cache_type type, slab_flags_t flags)
-// {
-// 	if ((KMALLOC_RECLAIM != KMALLOC_NORMAL) && (type == KMALLOC_RECLAIM)) {
-// 		flags |= SLAB_RECLAIM_ACCOUNT;
-// 	} else if (IS_ENABLED(CONFIG_MEMCG_KMEM) && (type == KMALLOC_CGROUP)) {
-// 		if (mem_cgroup_kmem_disabled()) {
-// 			kmalloc_caches[type][idx] = kmalloc_caches[KMALLOC_NORMAL][idx];
-// 			return;
-// 		}
-// 		flags |= SLAB_ACCOUNT;
-// 	} else if (IS_ENABLED(CONFIG_ZONE_DMA) && (type == KMALLOC_DMA)) {
-// 		flags |= SLAB_CACHE_DMA;
-// 	}
-
-// 	kmalloc_caches[type][idx] = create_kmalloc_cache(
-// 					kmalloc_info[idx].name[type],
-// 					kmalloc_info[idx].size, flags, 0,
-// 					kmalloc_info[idx].size);
-
-// 	/*
-// 	 * If CONFIG_MEMCG_KMEM is enabled, disable cache merging for
-// 	 * KMALLOC_NORMAL caches.
-// 	 */
-// 	if (IS_ENABLED(CONFIG_MEMCG_KMEM) && (type == KMALLOC_NORMAL))
-// 		kmalloc_caches[type][idx]->refcount = -1;
-// }
-
-// /*
-//  * Create the kmalloc array. Some of the regular kmalloc arrays
-//  * may already have been created because they were needed to
-//  * enable allocations for slab creation.
-//  */
-// void __init create_kmalloc_caches(slab_flags_t flags)
-// {
-// 	int i;
-// 	enum kmalloc_cache_type type;
-
-// 	/*
-// 	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
-// 	 */
-// 	for (type = KMALLOC_NORMAL; type < NR_KMALLOC_TYPES; type++) {
-// 		for (i = KMALLOC_SHIFT_LOW; i <= KMALLOC_SHIFT_HIGH; i++) {
-// 			if (!kmalloc_caches[type][i])
-// 				new_kmalloc_cache(i, type, flags);
-
-// 			/*
-// 			 * Caches that are not of the two-to-the-power-of size.
-// 			 * These have to be created immediately after the
-// 			 * earlier power of two caches
-// 			 */
-// 			if (KMALLOC_MIN_SIZE <= 32 && i == 6 &&
-// 					!kmalloc_caches[type][1])
-// 				new_kmalloc_cache(1, type, flags);
-// 			if (KMALLOC_MIN_SIZE <= 64 && i == 7 &&
-// 					!kmalloc_caches[type][2])
-// 				new_kmalloc_cache(2, type, flags);
-// 		}
-// 	}
-
-// 	/* Kmalloc array is now usable */
-// 	slab_state = UP;
-// }
+	/* Kmalloc array is now usable */
+	slab_state = UP;
+}
 
 
 

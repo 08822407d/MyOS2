@@ -7,6 +7,8 @@
 
 	#include <linux/kernel/cache.h>
 
+	void __init kmem_cache_init(void);
+
 
 	extern enum slab_state slab_state;
 
@@ -33,15 +35,24 @@
 		}
 	#endif
 
-	void __init kmem_cache_init(void);
+	/* Kmalloc array related functions */
+	void setup_kmalloc_cache_index_table(void);
+	void create_kmalloc_caches(slab_flags_t);
+
+	/* Find the kmalloc slab corresponding for a certain size */
+	kmem_cache_s *kmalloc_slab(size_t, gfp_t);
+
+	void *__kmem_cache_alloc_node(kmem_cache_s *s, gfp_t gfpflags,
+					int node, size_t orig_size, unsigned long caller);
+	void __kmem_cache_free(kmem_cache_s *s, void *x, unsigned long caller);
+
 	/* Functions provided by the slab allocators */
 	int __kmem_cache_create(kmem_cache_s *, slab_flags_t flags);
 
-	kmem_cache_s *create_kmalloc_cache(const char *name, unsigned int size,
-			slab_flags_t flags, unsigned int useroffset, unsigned int usersize);
-	extern void create_boot_cache(kmem_cache_s *, const char *name,
-			unsigned int size, slab_flags_t flags,
-			unsigned int useroffset, unsigned int usersize);
+	kmem_cache_s *create_kmalloc_cache(const char *name,
+			unsigned int size, slab_flags_t flags);
+	extern void create_boot_cache(kmem_cache_s *s, const char *name,
+			unsigned int size, slab_flags_t flags);
 
 
 	void *__kmalloc(size_t size, gfp_t flags);

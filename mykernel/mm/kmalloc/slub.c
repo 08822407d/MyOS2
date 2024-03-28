@@ -174,8 +174,7 @@ remove_from_partial(kmem_cache_node_s *n, page_s *slab) {
  * Slab allocation and freeing
  */
 static inline page_s
-*alloc_slab_page(gfp_t flags, struct kmem_cache_order_objects oo)
-{
+*alloc_slab_page(gfp_t flags, kmem_cache_order_obj_s oo) {
 	struct folio *folio;
 	page_s *slab;
 	unsigned int order = oo_order(oo);
@@ -332,7 +331,7 @@ EXPORT_SYMBOL(kmem_cache_alloc);
  *						slub alloc functions
  *******************************************************************/
 static void
-free_slab(struct kmem_cache *s, page_s *slab) {
+free_slab(kmem_cache_s *s, page_s *slab) {
 	struct folio *folio = (struct folio *)(slab);
 	int order = folio->_folio_order;
 	int pages = 1 << order;
@@ -348,7 +347,7 @@ free_slab(struct kmem_cache *s, page_s *slab) {
 }
 
 static noinline void
-free_to_partial_list(struct kmem_cache *s, page_s *slab,
+free_to_partial_list(kmem_cache_s *s, page_s *slab,
 		void *head, void *tail, int bulk_cnt) {
 	page_s *slab_free = NULL;
 	int cnt = bulk_cnt;
@@ -395,7 +394,7 @@ free_to_partial_list(struct kmem_cache *s, page_s *slab,
 }
 
 static __always_inline void
-slab_free(struct kmem_cache *s, page_s *slab,
+slab_free(kmem_cache_s *s, page_s *slab,
 		void *head, void *tail, void **p, int cnt) {
 	void *prior, *tail_obj = tail ? : head;
 
@@ -403,8 +402,7 @@ slab_free(struct kmem_cache *s, page_s *slab,
 	return;
 }
 
-void kmem_cache_free(struct kmem_cache *s, void *x)
-{
+void kmem_cache_free(kmem_cache_s *s, void *x) {
 	// s = cache_from_obj(s, x);
 	// if (!s)
 	// 	return;
@@ -574,7 +572,6 @@ void __init kmem_cache_init(void)
 {
 	static __initdata kmem_cache_s
 		boot_kmem_cache;
-	int node;
 
 	kmem_cache = &boot_kmem_cache;
 
@@ -584,7 +581,7 @@ void __init kmem_cache_init(void)
 	create_boot_cache(kmem_cache, "kmem_cache",
 			offsetof(kmem_cache_s, node) +
 				nr_node_ids * sizeof(kmem_cache_node_s *),
-			SLAB_HWCACHE_ALIGN, 0, 0);
+			SLAB_HWCACHE_ALIGN);
 
 	kmem_cache = bootstrap(&boot_kmem_cache);
 

@@ -12,9 +12,17 @@
 	#include <linux/kernel/lib.h>
 
 	#include "slub_const.h"
+	#include "kmalloc_types.h"
 
 
 	typedef slab_s	pages;
+	/* A table of kmalloc cache names and sizes */
+	typedef struct kmalloc_info_struct {
+		const char	*name;
+		uint		size;
+	} kmalloc_info_s;
+	extern const kmalloc_info_s kmalloc_info[];
+
 	/*
 	 * State of the slab allocator.
 	 *
@@ -36,7 +44,6 @@
 	 */
 	typedef struct kmem_cache_node {
 		spinlock_t		list_lock;
-		// ulong			nr_partial;
 		List_hdr_s		partial;
 		atomic_long_t	nr_slabs;
 		atomic_long_t	total_objects;
@@ -72,21 +79,6 @@
 		CPU_PARTIAL_DRAIN,			/* Drain cpu partial to node partial */
 		NR_SLUB_STAT_ITEMS
 	};
-
-	/*
-	 * When changing the layout, make sure freelist and tid are still compatible
-	 * with this_cpu_cmpxchg_double() alignment requirements.
-	 */
-	typedef struct kmem_cache_cpu {
-	// 	void **freelist;	/* Pointer to next available object */
-	// 	unsigned long tid;	/* Globally unique transaction id */
-	// 	struct slab *slab;	/* The slab from which we are allocating */
-	// 	struct slab *partial;	/* Partially allocated frozen slabs */
-	// 	local_lock_t lock;	/* Protects the fields above */
-	// #ifdef CONFIG_SLUB_STATS
-	// 	unsigned stat[NR_SLUB_STAT_ITEMS];
-	// #endif
-	} kmem_cache_cpu_s;
 
 	/*
 	 * Word size structure that can be atomically updated or read and that
