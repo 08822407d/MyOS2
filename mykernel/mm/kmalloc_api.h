@@ -17,7 +17,7 @@
 	extern List_hdr_s slab_caches;
 
 	/* The slab cache that manages slab cache information */
-	extern struct kmem_cache *kmem_cache;
+	extern kmem_cache_s *kmem_cache;
 
 	#define ARCH_KMALLOC_MINALIGN __alignof__(unsigned long long)
 
@@ -35,11 +35,11 @@
 
 	void __init kmem_cache_init(void);
 	/* Functions provided by the slab allocators */
-	int __kmem_cache_create(struct kmem_cache *, slab_flags_t flags);
+	int __kmem_cache_create(kmem_cache_s *, slab_flags_t flags);
 
-	struct kmem_cache *create_kmalloc_cache(const char *name, unsigned int size,
+	kmem_cache_s *create_kmalloc_cache(const char *name, unsigned int size,
 			slab_flags_t flags, unsigned int useroffset, unsigned int usersize);
-	extern void create_boot_cache(struct kmem_cache *, const char *name,
+	extern void create_boot_cache(kmem_cache_s *, const char *name,
 			unsigned int size, slab_flags_t flags,
 			unsigned int useroffset, unsigned int usersize);
 

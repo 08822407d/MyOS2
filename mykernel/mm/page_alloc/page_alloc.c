@@ -78,8 +78,11 @@ buddy_order(page_s *page) {
 
 static inline void
 set_compound_order(page_s *page, unsigned int order) {
-	page[1].compound_order = order;
-	page[1].compound_nr = 1U << order;
+	// page[1].compound_order = order;
+	// page[1].compound_nr = 1U << order;
+	struct folio *folio = (struct folio *)page;
+	folio->_folio_order = order;
+	folio->_folio_nr_pages = 1U << order;
 }
 
 static void prep_compound_head(page_s *page, unsigned int order)

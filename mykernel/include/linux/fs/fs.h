@@ -2586,7 +2586,7 @@
 	// extern void __init vfs_caches_init_early(void);
 	extern void vfs_caches_init(void);
 
-	// extern struct kmem_cache *names_cachep;
+	// extern kmem_cache_s *names_cachep;
 
 	// #define __getname()		kmem_cache_alloc(names_cachep, GFP_KERNEL)
 	// #define __putname(name)		kmem_cache_free(names_cachep, (void *)(name))

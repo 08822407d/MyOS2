@@ -26,8 +26,8 @@
 	// 	spinlock_t		mq_flush_lock;
 	// };
 
-	// extern struct kmem_cache *blk_requestq_cachep;
-	// extern struct kmem_cache *blk_requestq_srcu_cachep;
+	// extern kmem_cache_s *blk_requestq_cachep;
+	// extern kmem_cache_s *blk_requestq_srcu_cachep;
 	// extern struct kobj_type blk_queue_ktype;
 	// extern struct ida blk_queue_ida;
 
@@ -431,7 +431,7 @@
 	// 		page_s *page, unsigned int len, unsigned int offset,
 	// 		unsigned int max_sectors, bool *same_page);
 
-	// static inline struct kmem_cache *blk_get_queue_kmem_cache(bool srcu)
+	// static inline kmem_cache_s *blk_get_queue_kmem_cache(bool srcu)
 	// {
 	// 	if (srcu)
 	// 		return blk_requestq_srcu_cachep;

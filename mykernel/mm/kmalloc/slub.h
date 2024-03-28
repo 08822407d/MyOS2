@@ -28,17 +28,17 @@
 	 *
 	 * Return: pointer to the new object or %NULL in case of error
 	 */
-	void *kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags) __malloc;
-	// void *kmem_cache_alloc_lru(struct kmem_cache *s, struct list_lru *lru,
+	void *kmem_cache_alloc(kmem_cache_s *cachep, gfp_t flags) __malloc;
+	// void *kmem_cache_alloc_lru(kmem_cache_s *s, struct list_lru *lru,
 	// 			gfp_t gfpflags) __assume_slab_alignment __malloc;
-	void kmem_cache_free(struct kmem_cache *s, void *objp);
+	void kmem_cache_free(kmem_cache_s *s, void *objp);
 
 
 	/*
 	 * Shortcuts
 	 */
 	static inline void
-	*kmem_cache_zalloc(struct kmem_cache *k, gfp_t flags) {
+	*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags) {
 		return kmem_cache_alloc(k, flags | __GFP_ZERO);
 	}
 

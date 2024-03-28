@@ -158,12 +158,6 @@
 			// };
 			struct {	/* Tail pages of compound page */
 				unsigned long	compound_head;		/* Bit zero is set */
-
-				/* First tail page only */
-				unsigned char	compound_dtor;
-				unsigned char	compound_order;
-				atomic_t		compound_mapcount;
-				unsigned int	compound_nr;		/* 1 << compound_order */
 			};
 			// struct
 			// {	/* Second tail page of compound page */

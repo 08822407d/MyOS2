@@ -321,7 +321,7 @@
 	// 	kernel_sigaction(sig, SIG_IGN);
 	// }
 
-	// extern struct kmem_cache *sighand_cachep;
+	// extern kmem_cache_s *sighand_cachep;
 
 	// extern bool unhandled_signal(task_s *tsk, int sig);
 

@@ -1334,7 +1334,7 @@
 	// 	instrument_atomic_read_write(v, sizeof(*v));
 	// 	arch_atomic_long_add(i, v);
 	// }
-	#define atomic_long_add arch_atomic64_add
+	#define atomic_long_add arch_atomic_long_add
 
 	// static __always_inline long
 	// atomic_long_add_return(long i, atomic_long_t *v)
@@ -1402,6 +1402,7 @@
 	// 	instrument_atomic_read_write(v, sizeof(*v));
 	// 	arch_atomic_long_sub(i, v);
 	// }
+	#define atomic_long_sub arch_atomic_long_sub
 
 	// static __always_inline long
 	// atomic_long_sub_return(long i, atomic_long_t *v)
@@ -1537,6 +1538,7 @@
 	// 	instrument_atomic_read_write(v, sizeof(*v));
 	// 	arch_atomic_long_dec(v);
 	// }
+	#define atomic_long_dec arch_atomic_long_dec
 
 	// static __always_inline long
 	// atomic_long_dec_return(atomic_long_t *v)

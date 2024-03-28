@@ -130,6 +130,6 @@
 	// extern int unshare_fd(unsigned long unshare_flags, unsigned int max_fds,
 	// 			files_struct_s **new_fdp);
 
-	// extern struct kmem_cache *files_cachep;
+	// extern kmem_cache_s *files_cachep;
 
 #endif /* __LINUX_FDTABLE_H */

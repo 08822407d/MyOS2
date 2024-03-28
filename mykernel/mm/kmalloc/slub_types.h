@@ -36,7 +36,7 @@
 	 */
 	typedef struct kmem_cache_node {
 		spinlock_t		list_lock;
-		ulong			nr_partial;
+		// ulong			nr_partial;
 		List_hdr_s		partial;
 		atomic_long_t	nr_slabs;
 		atomic_long_t	total_objects;
