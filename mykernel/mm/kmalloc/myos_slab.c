@@ -166,64 +166,54 @@ void *__myos_kmalloc(size_t size, gfp_t flags)
 
 void myos_kfree(const void *objp)
 {
-	if (objp == NULL)
-		return;
-
 	page_s *page = virt_to_page(objp);
-	if (PageHead(page))
+	while (PageHead(page));
+
+	// find which slab does the pointer belonged to
+	slab_s *slp = (slab_s *)page->private;
+	slab_cache_s * scgp = slp->slabcache_ptr;
+	// of coures it should not in an empty-slab
+	if (slp->free == slp->total)
+		// color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
+		BUG();
+
+	unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
+	if (!bm_get_assigned_bit(slp->colormap, obj_idx))
+		// color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
+		BUG();
+
+	lock_recurs_lock(&slab_alloc_lock);
+	bm_clear_bit(slp->colormap, obj_idx);
+	slp->free++;
+	scgp->nsobj_free_count++;
+	scgp->nsobj_used_count--;
+	// if the corresponding slab in full list, move it to used list
+	// or if it is in used list and only use one slot, move it to free list
+	if (slp->free == 1)
 	{
-		unsigned int order = page->private;
-		__free_pages(page, order);
-		__ClearPageHead(page);
+		list_del_init(&slp->slab_list);
+		scgp->normal_slab_full.count--;
+		list_header_push(&scgp->normal_slab_used, &slp->slab_list);
 	}
-	else if (PageSlab(page))
+	else if (slp->free == 0)
 	{
-		// find which slab does the pointer belonged to
-		slab_s *slp = (slab_s *)page->private;
-		slab_cache_s * scgp = slp->slabcache_ptr;
-		// of coures it should not in an empty-slab
-		if (slp->free == slp->total)
-			// color_printk(WHITE, RED, "Free obj in a free %d-byte slab!\n", scgp->obj_size);
-			BUG();
-
-		unsigned long obj_idx = ((virt_addr_t)objp - slp->virt_addr) / scgp->obj_size;
-		if (!bm_get_assigned_bit(slp->colormap, obj_idx))
-			// color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", objp);
-			BUG();
-
-		lock_recurs_lock(&slab_alloc_lock);
-		bm_clear_bit(slp->colormap, obj_idx);
-		slp->free++;
-		scgp->nsobj_free_count++;
-		scgp->nsobj_used_count--;
-		// if the corresponding slab in full list, move it to used list
-		// or if it is in used list and only use one slot, move it to free list
-		if (slp->free == 1)
-		{
-			list_del_init(&slp->slab_list);
-			scgp->normal_slab_full.count--;
-			list_header_push(&scgp->normal_slab_used, &slp->slab_list);
-		}
-		else if (slp->free == 0)
-		{
-			list_del_init(&slp->slab_list);
-			scgp->normal_slab_used.count--;
-			// if slp is base-slab, add it to tail
-			if (slp != scgp->normal_base_slab)
-				list_header_push(&scgp->normal_slab_free, &slp->slab_list);
-			else
-				list_header_enqueue(&scgp->normal_slab_free, &slp->slab_list);
-		}
-		// if there is too many free slab, free some of them
-		if (scgp->normal_slab_free.count > 2)
-		{
-			slab_s * tmp_slp = container_of(scgp->normal_slab_free.anchor.prev, slab_s, slab_list);
-			scgp->normal_slab_free.count--;
-			myos_slab_free(tmp_slp);
-			scgp->normal_slab_total;
-			scgp->nsobj_free_count -= tmp_slp->total;
-		}
-
-		unlock_recurs_lock(&slab_alloc_lock);
+		list_del_init(&slp->slab_list);
+		scgp->normal_slab_used.count--;
+		// if slp is base-slab, add it to tail
+		if (slp != scgp->normal_base_slab)
+			list_header_push(&scgp->normal_slab_free, &slp->slab_list);
+		else
+			list_header_enqueue(&scgp->normal_slab_free, &slp->slab_list);
 	}
+	// if there is too many free slab, free some of them
+	if (scgp->normal_slab_free.count > 2)
+	{
+		slab_s * tmp_slp = container_of(scgp->normal_slab_free.anchor.prev, slab_s, slab_list);
+		scgp->normal_slab_free.count--;
+		myos_slab_free(tmp_slp);
+		scgp->normal_slab_total;
+		scgp->nsobj_free_count -= tmp_slp->total;
+	}
+
+	unlock_recurs_lock(&slab_alloc_lock);
 }

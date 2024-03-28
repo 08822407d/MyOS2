@@ -18,20 +18,6 @@
 	#include "slub_const.h"
 	#include "slub_types.h"
 
-	/**
-	 * kmem_cache_alloc - Allocate an object
-	 * @cachep: The cache to allocate from.
-	 * @flags: See kmalloc().
-	 *
-	 * Allocate an object from this cache.
-	 * See kmem_cache_zalloc() for a shortcut of adding __GFP_ZERO to flags.
-	 *
-	 * Return: pointer to the new object or %NULL in case of error
-	 */
-	void *kmem_cache_alloc(kmem_cache_s *cachep, gfp_t flags) __malloc;
-	// void *kmem_cache_alloc_lru(kmem_cache_s *s, struct list_lru *lru,
-	// 			gfp_t gfpflags) __assume_slab_alignment __malloc;
-	void kmem_cache_free(kmem_cache_s *s, void *objp);
 
 
 	/*

@@ -183,6 +183,7 @@ static inline page_s
 	if (!slab)
 		return NULL;
 
+	INIT_LIST_S(&slab->slab_list);
 	folio = (struct folio *)slab;
 	// __folio_set_slab(folio);
 	/* Make the flag visible before any changes to folio->mapping */
@@ -310,8 +311,11 @@ static void
 
 retry:
 	object = get_partial(s, &pc);
-	if (object)
+	if (object) {
+		if (gfpflags & __GFP_ZERO)
+			memset(object, 0, s->size);
 		return object;
+	}
 
 	slab = new_slab(s, gfpflags);
 	if (unlikely(!slab))
@@ -326,6 +330,11 @@ void *kmem_cache_alloc(kmem_cache_s *s, gfp_t gfpflags) {
 }
 EXPORT_SYMBOL(kmem_cache_alloc);
 
+void
+*__kmem_cache_alloc_node(kmem_cache_s *s,
+		gfp_t gfpflags, size_t orig_size) {
+	return slab_alloc(s, gfpflags, orig_size);
+}
 
 /********************************************************************
  *						slub alloc functions
@@ -536,7 +545,7 @@ simple_kmem_cache_open(kmem_cache_s *s, slab_flags_t flags) {
 
 	// static int init_kmem_cache_nodes(kmem_cache_s *s)
 	// {
-		kmem_cache_node_s *node_cache = &kmem_cache->node;
+		kmem_cache_node_s *node_cache = &s->node;
 		INIT_LIST_HEADER_S(&node_cache->partial);
 		INIT_LIST_HEADER_S(&node_cache->full);
 	// }
@@ -577,10 +586,12 @@ void __init kmem_cache_init(void)
 	/* Able to allocate the per node structures */
 	slab_state = PARTIAL;
 
+	// create_boot_cache(kmem_cache, "kmem_cache",
+	// 		offsetof(struct kmem_cache, node) +
+	// 			nr_node_ids * sizeof(struct kmem_cache_node *),
+	// 		SLAB_HWCACHE_ALIGN);
 	create_boot_cache(kmem_cache, "kmem_cache",
-			offsetof(kmem_cache_s, node) +
-				nr_node_ids * sizeof(kmem_cache_node_s *),
-			SLAB_HWCACHE_ALIGN);
+			sizeof(kmem_cache_s), SLAB_HWCACHE_ALIGN);
 
 	kmem_cache = bootstrap(&boot_kmem_cache);
 

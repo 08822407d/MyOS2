@@ -201,6 +201,60 @@ kmalloc_caches[KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
 { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
 EXPORT_SYMBOL(kmalloc_caches);
 
+/*
+ * Conversion table for small slabs sizes / 8 to the index in the
+ * kmalloc array. This is necessary for slabs < 192 since we have non power
+ * of two cache sizes there. The size of larger slabs can be determined using
+ * fls.
+ */
+static u8 size_index[24] __ro_after_init = {
+	3,	/* 8 */
+	4,	/* 16 */
+	5,	/* 24 */
+	5,	/* 32 */
+	6,	/* 40 */
+	6,	/* 48 */
+	6,	/* 56 */
+	6,	/* 64 */
+	1,	/* 72 */
+	1,	/* 80 */
+	1,	/* 88 */
+	1,	/* 96 */
+	7,	/* 104 */
+	7,	/* 112 */
+	7,	/* 120 */
+	7,	/* 128 */
+	2,	/* 136 */
+	2,	/* 144 */
+	2,	/* 152 */
+	2,	/* 160 */
+	2,	/* 168 */
+	2,	/* 176 */
+	2,	/* 184 */
+	2	/* 192 */
+};
+
+static inline unsigned int
+size_index_elem(unsigned int bytes) {
+	return (bytes - 1) / 8;
+}
+
+/*
+ * Find the kmem_cache structure that serves a given size of
+ * allocation
+ */
+kmem_cache_s *kmalloc_slab(size_t size, gfp_t flags)
+{
+	unsigned int index;
+	if (size == 0 || WARN_ON_ONCE(size > KMALLOC_MAX_CACHE_SIZE))
+		return NULL;
+	else if (size <= 192)
+		index = size_index[size_index_elem(size)];
+	else
+		index = fls(size - 1);
+
+	return kmalloc_caches[index];
+}
 
 #define INIT_KMALLOC_INFO(__size, __short_size) {	\
 			.name	= "kmalloc-" #__short_size,		\
@@ -258,6 +312,22 @@ void __init create_kmalloc_caches(slab_flags_t flags)
 
 
 
+void *__kmalloc(size_t size, gfp_t flags)
+{
+	while (unlikely(size > KMALLOC_MAX_CACHE_SIZE));
+
+	void *ret;
+	kmem_cache_s *s = kmalloc_slab(size, flags);
+	if (unlikely(s == NULL))
+		return s;
+
+	ret = __kmem_cache_alloc_node(s, flags, size);
+	// ret = kasan_kmalloc(s, ret, size, flags);
+	// trace_kmalloc(caller, ret, size, s->size, flags, node);
+	return ret;
+}
+EXPORT_SYMBOL(__kmalloc);
+
 /*
  * To avoid unnecessary overhead, we pass through large allocation requests
  * directly to the page allocator. We use __GFP_COMP, because we will need to
@@ -272,8 +342,9 @@ void *kmalloc_large(size_t size, gfp_t flags) {
 	page = alloc_pages(flags, order);
 	if (page)
 	{
-
 		ptr = (void *)page_to_virt(page);
+		if (flags & __GFP_ZERO)
+			memset(ptr, 0, size);
 	}
 
 	// ptr = kasan_kmalloc_large(ptr, size, flags);
@@ -285,30 +356,22 @@ void *kmalloc_large(size_t size, gfp_t flags) {
 }
 EXPORT_SYMBOL(kmalloc_large);
 
-
-/*
- * To avoid unnecessary overhead, we pass through large allocation requests
- * directly to the page allocator. We use __GFP_COMP, because we will need to
- * know the allocation order to free the pages properly in kfree.
- */
-void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
+void free_large_kmalloc(folio_s *folio, void *object)
 {
-	void *ret = NULL;
-	page_s *page;
+	// unsigned int order = folio_order(folio);
+	unsigned int order = folio->_folio_order;
 
-	// if (unlikely(flags & GFP_SLAB_BUG_MASK))
-	// 	flags = kmalloc_fix_flags(flags);
+	// if (WARN_ON_ONCE(order == 0))
+	// 	pr_warn_once("object pointer: 0x%p\n", object);
 
-	flags |= __GFP_COMP;
-	page = alloc_pages(flags, order);
-	if (likely(page)) {
-	// 	ret = page_address(page);
-		ret = (void *)page_to_virt(page);
-	// 	mod_lruvec_page_state(page, NR_SLAB_UNRECLAIMABLE_B,
-	// 			      PAGE_SIZE << order);
-	}
-	// ret = kasan_kmalloc_large(ret, size, flags);
-	// /* As ret might get tagged, call kmemleak hook after KASAN. */
-	// kmemleak_alloc(ret, size, 1, flags);
-	return ret;
+	// kmemleak_free(object);
+	// kasan_kfree_large(object);
+	// kmsan_kfree_large(object);
+
+	// mod_lruvec_page_state(folio_page(folio, 0), NR_SLAB_UNRECLAIMABLE_B,
+	// 		      -(PAGE_SIZE << order));
+	__free_pages((page_s *)folio, order);
 }
+EXPORT_SYMBOL(free_large_kmalloc);
+
+

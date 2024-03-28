@@ -403,8 +403,7 @@ page_s *__myos_alloc_pages(gfp_t gfp, unsigned order)
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
 		// {
 			page = __rmqueue_smallest(zone, order);
-			if (likely(page))
-			{
+			if (likely(page)) {
 				prep_new_page(page, order, gfp);
 				return page;
 			}

@@ -30,6 +30,9 @@
 		extern __alloc_size(1) void
 		*kzalloc(size_t size, gfp_t flags);
 
+		extern void
+		kfree(const void *object);
+
 	#endif
 	
 	#if defined(KMALLOC_DEFINATION) || !(DEBUG)
@@ -179,41 +182,38 @@
 			else
 				ret_val = __kmalloc(size, flags);
 
-			if (flags & __GFP_ZERO)
-				memset(ret_val, 0, size);
-
 			return ret_val;
 		}
 
-		/**
-		 * kmalloc_array - allocate memory for an array.
-		 * @n: number of elements.
-		 * @size: element size.
-		 * @flags: the type of memory to allocate (see kmalloc).
-		 */
-		PREFIX_STATIC_INLINE
-		__alloc_size(1, 2) void
-		*kmalloc_array(size_t n, size_t size, gfp_t flags) {
-			size_t bytes;
+		// /**
+		//  * kmalloc_array - allocate memory for an array.
+		//  * @n: number of elements.
+		//  * @size: element size.
+		//  * @flags: the type of memory to allocate (see kmalloc).
+		//  */
+		// PREFIX_STATIC_INLINE
+		// __alloc_size(1, 2) void
+		// *kmalloc_array(size_t n, size_t size, gfp_t flags) {
+		// 	size_t bytes;
 
-			if (unlikely(check_mul_overflow(n, size, &bytes)))
-				return NULL;
-			if (__builtin_constant_p(n) && __builtin_constant_p(size))
-				return kmalloc(bytes, flags);
-			return __kmalloc(bytes, flags);
-		}
+		// 	if (unlikely(check_mul_overflow(n, size, &bytes)))
+		// 		return NULL;
+		// 	if (__builtin_constant_p(n) && __builtin_constant_p(size))
+		// 		return kmalloc(bytes, flags);
+		// 	return __kmalloc(bytes, flags);
+		// }
 
-		/**
-		 * kcalloc - allocate memory for an array. The memory is set to zero.
-		 * @n: number of elements.
-		 * @size: element size.
-		 * @flags: the type of memory to allocate (see kmalloc).
-		 */
-		PREFIX_STATIC_INLINE
-		__alloc_size(1, 2) void
-		*kcalloc(size_t n, size_t size, gfp_t flags) {
-			return kmalloc_array(n, size, flags | __GFP_ZERO);
-		}
+		// /**
+		//  * kcalloc - allocate memory for an array. The memory is set to zero.
+		//  * @n: number of elements.
+		//  * @size: element size.
+		//  * @flags: the type of memory to allocate (see kmalloc).
+		//  */
+		// PREFIX_STATIC_INLINE
+		// __alloc_size(1, 2) void
+		// *kcalloc(size_t n, size_t size, gfp_t flags) {
+		// 	return kmalloc_array(n, size, flags | __GFP_ZERO);
+		// }
 
 
 		/**
@@ -234,22 +234,23 @@
 		 *
 		 * If @object is NULL, no operation is performed.
 		 */
-		// PREFIX_STATIC_INLINE
-		// void
-		// kfree(const void *object) {
-		// 	page_s *slab;
-		// 	kmem_cache_s *s;
+		PREFIX_STATIC_INLINE
+		void
+		kfree(const void *object) {
+			page_s *slab;
+			kmem_cache_s *s;
 
-		// 	if (unlikely(object == NULL))
-		// 		return;
+			if (unlikely(object == NULL))
+				return;
 
-		// 	slab = virt_to_page(object);
-		// 	// if (unlikely(!folio_test_slab(folio)))
-		// 	if (PageHead(page))
-		// 		free_large_kmalloc(folio, (void *)object);
-		// 	else
-		// 		__kmem_cache_free(slab->slab_cache, (void *)object);
-		// }
+			slab = virt_to_page(object);
+			// if (unlikely(!folio_test_slab(folio)))
+			if (PageHead(slab))
+				free_large_kmalloc((folio_s *)slab, (void *)object);
+			else
+				// myos_kfree(object);
+				kmem_cache_free(slab->slab_cache, (void *)object);
+		}
 
 	#endif
 

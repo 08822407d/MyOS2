@@ -42,8 +42,24 @@
 	/* Find the kmalloc slab corresponding for a certain size */
 	kmem_cache_s *kmalloc_slab(size_t, gfp_t);
 
-	void *__kmem_cache_alloc_node(kmem_cache_s *s, gfp_t gfpflags,
-					int node, size_t orig_size, unsigned long caller);
+	void *__kmalloc(size_t size, gfp_t flags) __alloc_size(1);
+
+	/**
+	 * kmem_cache_alloc - Allocate an object
+	 * @cachep: The cache to allocate from.
+	 * @flags: See kmalloc().
+	 *
+	 * Allocate an object from this cache.
+	 * See kmem_cache_zalloc() for a shortcut of adding __GFP_ZERO to flags.
+	 *
+	 * Return: pointer to the new object or %NULL in case of error
+	 */
+	void *kmem_cache_alloc(kmem_cache_s *cachep, gfp_t flags) __malloc;
+	// void *kmem_cache_alloc_lru(kmem_cache_s *s, struct list_lru *lru,
+	// 			gfp_t gfpflags) __assume_slab_alignment __malloc;
+	void kmem_cache_free(kmem_cache_s *s, void *objp);
+
+	void *__kmem_cache_alloc_node(kmem_cache_s *s, gfp_t gfpflags, size_t orig_size);
 	void __kmem_cache_free(kmem_cache_s *s, void *x, unsigned long caller);
 
 
@@ -58,16 +74,13 @@
 	extern void create_boot_cache(kmem_cache_s *s, const char *name,
 			unsigned int size, slab_flags_t flags);
 
+	void free_large_kmalloc(folio_s *folio, void *object);
 
 	void *__myos_kmalloc(size_t size, gfp_t flags);
-	#define __kmalloc __myos_kmalloc
 	void myos_kfree(const void *objp);
-	#define kfree myos_kfree
 
 	void myos_preinit_slab(void);
 	void myos_init_slab(void);
 
-
-	extern void *kmalloc_order(size_t size, gfp_t flags, unsigned int order);
 
 #endif /* _LINUX_KMALLOC_API_H_ */
