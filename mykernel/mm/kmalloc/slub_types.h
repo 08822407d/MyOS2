@@ -15,7 +15,32 @@
 	#include "kmalloc_types.h"
 
 
-	typedef slab_s	pages;
+	typedef struct slab {
+		ulong __page_flags;
+
+		struct {
+			kmem_cache_s	*slab_cache;
+			union {
+				List_s		slab_list;
+				struct {
+					page_s	*next;
+					int		slabs;	/* Nr of slabs left */
+				};
+			};
+			/* Double-word boundary */
+			void			*freelist;		/* first free object */
+			union {
+				ulong		counters;
+				struct {
+					uint	inuse	: 16;
+					uint	objects	: 15;
+					uint	frozen	: 1;
+				} __attribute__((packed));
+			};
+		};
+	} slab_s;
+
+
 	/* A table of kmalloc cache names and sizes */
 	typedef struct kmalloc_info_struct {
 		const char	*name;

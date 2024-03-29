@@ -190,27 +190,6 @@
 			// 	* pmem backed DAX files are mapped.
 			// 	*/
 			// };
-			struct {	/* Slub pages, copy the defination from Linux struct slab */
-				kmem_cache_s	*slab_cache;
-				union {
-					List_s		slab_list;
-					struct {
-						page_s	*next;
-						int		slabs;	/* Nr of slabs left */
-					};
-				};
-				/* Double-word boundary */
-				void			*freelist;		/* first free object */
-				union {
-					unsigned long	counters;
-					struct {
-						unsigned	inuse:16;
-						unsigned	objects:15;
-						unsigned	frozen:1;
-					};
-				};
-			};
-
 
 			// /** @rcu_head: You can use this to free a page by RCU. */
 			// struct rcu_head rcu_head;

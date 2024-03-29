@@ -21,6 +21,11 @@
 
 	#ifdef DEBUG
 
+		extern folio_s
+		*virt_to_folio(const void *x);
+		extern slab_s
+		*virt_to_slab(const void *addr);
+
 		extern void
 		set_page_count(page_s *page, int v);
 
@@ -50,33 +55,20 @@
 	#if defined(PAGEALLOC_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE
-		void
-		set_page_count(page_s *page, int v) {
-			atomic_set(&page->_refcount, v);
+		folio_s
+		*virt_to_folio(const void *x) {
+			page_s *page = virt_to_page(x);
+			return page_folio(page);
+		}
+		PREFIX_STATIC_INLINE
+		slab_s
+		*virt_to_slab(const void *addr) {
+			folio_s *folio = virt_to_folio(addr);
+			if (!folio_test_slab(folio))
+				return NULL;
+			return (slab_s *)folio;
 		}
 
-		/*
-		 * Setup the page count before being freed into the page allocator for
-		 * the first time (boot or memory hotplug)
-		 */
-		PREFIX_STATIC_INLINE
-		void
-		init_page_count(page_s *page) {
-			set_page_count(page, 1);
-		}
-
-		PREFIX_STATIC_INLINE
-		bool
-		page_is_guard(page_s *page) {
-			return false;
-		}
-
-		PREFIX_STATIC_INLINE
-		void
-		clear_page_pfmemalloc(page_s *page) {
-			// page->lru.next = NULL;
-			INIT_LIST_S(&page->lru);
-		}
 
 		PREFIX_STATIC_INLINE
 		void
@@ -91,6 +83,13 @@
 		}
 
 		PREFIX_STATIC_INLINE
+		void
+		clear_page_pfmemalloc(page_s *page) {
+			// page->lru.next = NULL;
+			INIT_LIST_S(&page->lru);
+		}
+
+		PREFIX_STATIC_INLINE
 		pgoff_t
 		linear_page_index(vma_s *vma, unsigned long address) {
 			pgoff_t pgoff;
@@ -99,6 +98,29 @@
 			pgoff = (address - vma->vm_start) >> PAGE_SHIFT;
 			pgoff += vma->vm_pgoff;
 			return pgoff;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		set_page_count(page_s *page, int v) {
+			atomic_set(&page->_refcount, v);
+		}
+		
+		PREFIX_STATIC_INLINE
+		bool
+		page_is_guard(page_s *page) {
+			return false;
+		}
+
+
+		/*
+		 * Setup the page count before being freed into the page allocator for
+		 * the first time (boot or memory hotplug)
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		init_page_count(page_s *page) {
+			set_page_count(page, 1);
 		}
 
 		PREFIX_STATIC_INLINE

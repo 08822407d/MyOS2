@@ -10,7 +10,7 @@
 
 /* Structure holding parameters for get_partial() call chain */
 typedef struct partial_context {
-	page_s	**slab;
+	slab_s	**slab;
 	gfp_t	flags;
 	uint	orig_size;
 } partial_ctx_s;
@@ -128,14 +128,14 @@ dec_slabs_node(kmem_cache_s *s, int objects) {
  * Tracking of fully allocated slabs for debugging purposes.
  */
 static void
-add_to_full(kmem_cache_s *s, kmem_cache_node_s *n, page_s *slab) {
+add_to_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
 	// lockdep_assert_held(&n->list_lock);
 	list_header_push(&n->full, &slab->slab_list);
 }
 #define add_full add_to_full
 
 static void
-remove_to_full(kmem_cache_s *s, kmem_cache_node_s *n, page_s *slab) {
+remove_to_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
 	// lockdep_assert_held(&n->list_lock);
 	list_header_delete_node(&n->full, &slab->slab_list);
 }
@@ -145,21 +145,21 @@ remove_to_full(kmem_cache_s *s, kmem_cache_node_s *n, page_s *slab) {
  * Management of partially allocated slabs.
  */
 static inline void
-__add_to_partial(kmem_cache_node_s *n, page_s *slab) {
+__add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
 	// n->nr_partial++;
 	list_header_push(&n->partial, &slab->slab_list);
 }
 #define __add_partial __add_to_partial
 
 static inline void
-add_to_partial(kmem_cache_node_s *n, page_s *slab) {
+add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
 	// lockdep_assert_held(&n->list_lock);
 	__add_to_partial(n, slab);
 }
 #define add_partial add_to_partial
 
 static inline void
-remove_from_partial(kmem_cache_node_s *n, page_s *slab) {
+remove_from_partial(kmem_cache_node_s *n, slab_s *slab) {
 	// lockdep_assert_held(&n->list_lock);
 	list_header_delete_node(&n->partial, &slab->slab_list);
 	// n->nr_partial--;
@@ -173,19 +173,19 @@ remove_from_partial(kmem_cache_node_s *n, page_s *slab) {
 /*
  * Slab allocation and freeing
  */
-static inline page_s
+static inline slab_s
 *alloc_slab_page(gfp_t flags, kmem_cache_order_obj_s oo) {
-	struct folio *folio;
-	page_s *slab;
+	folio_s *folio;
+	slab_s *slab;
 	unsigned int order = oo_order(oo);
 
-	slab = alloc_pages(flags, order);
-	if (!slab)
+	folio = (folio_s *)alloc_pages(flags, order);
+	if (!folio)
 		return NULL;
 
+	slab = (slab_s *)folio;
 	INIT_LIST_S(&slab->slab_list);
-	folio = (struct folio *)slab;
-	// __folio_set_slab(folio);
+	__folio_set_slab(folio);
 	/* Make the flag visible before any changes to folio->mapping */
 	smp_wmb();
 	// if (folio_is_pfmemalloc(folio))
@@ -194,9 +194,9 @@ static inline page_s
 	return slab;
 }
 
-static page_s
+static slab_s
 *new_slab(kmem_cache_s *s, gfp_t flags) {
-	page_s *slab;
+	slab_s *slab;
 	kmem_cache_node_s *n = &s->node;
 	kmem_cache_order_obj_s oo = s->oo;
 	gfp_t alloc_gfp;
@@ -231,7 +231,8 @@ static page_s
 	slab->frozen = 0;
 	slab->slab_cache = s;
 
-	start = (void *)page_to_virt(slab);
+	// start = slab_address(slab);
+	start = (void *)page_to_virt(&((folio_s *)slab)->page);
 	slab->freelist = start;
 	for (idx = 0, p = start; idx < slab->objects - 1; idx++) {
 		next = p + s->size;
@@ -256,7 +257,7 @@ static page_s
  */
 static void
 *alloc_single_from_partial(kmem_cache_s *s,
-		kmem_cache_node_s *n, page_s *slab) {
+		kmem_cache_node_s *n, slab_s *slab) {
 
 	void *object;
 
@@ -278,7 +279,7 @@ static void
 // static void *get_partial(kmem_cache_s *s, int node, partial_ctx_s *pc)
 static void
 *get_partial(kmem_cache_s *s, partial_ctx_s *pc) {
-	page_s *slab, *slab_next;
+	slab_s *slab, *slab_next;
 	void *object = NULL;
 	ulong flags;
 	uint partial_slabs = 0;
@@ -301,7 +302,7 @@ static void
 // 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
 static void
 *slab_alloc(kmem_cache_s *s, gfp_t gfpflags, size_t orig_size) {
-	page_s *slab;
+	slab_s *slab;
 	void *object;
 	partial_ctx_s pc = {
 		.flags = gfpflags,
@@ -340,25 +341,25 @@ void
  *						slub alloc functions
  *******************************************************************/
 static void
-free_slab(kmem_cache_s *s, page_s *slab) {
-	struct folio *folio = (struct folio *)(slab);
+free_slab(kmem_cache_s *s, slab_s *slab) {
+	folio_s *folio = (folio_s *)(slab);
 	int order = folio->_folio_order;
 	int pages = 1 << order;
 
 	// __slab_clear_pfmemalloc(slab);
-	// folio->mapping = NULL;
+	folio->mapping = NULL;
 	/* Make the mapping reset visible before clearing the flag */
 	smp_wmb();
-	// __folio_clear_slab(folio);
+	__folio_clear_slab(folio);
 	// mm_account_reclaimed_pages(pages);
 	// unaccount_slab(slab, order, s);
 	__free_pages(&folio->page, order);
 }
 
 static noinline void
-free_to_partial_list(kmem_cache_s *s, page_s *slab,
+free_to_partial_list(kmem_cache_s *s, slab_s *slab,
 		void *head, void *tail, int bulk_cnt) {
-	page_s *slab_free = NULL;
+	slab_s *slab_free = NULL;
 	int cnt = bulk_cnt;
 	ulong flags;
 	kmem_cache_node_s *n = &s->node;
@@ -403,7 +404,7 @@ free_to_partial_list(kmem_cache_s *s, page_s *slab,
 }
 
 static __always_inline void
-slab_free(kmem_cache_s *s, page_s *slab,
+slab_free(kmem_cache_s *s, slab_s *slab,
 		void *head, void *tail, void **p, int cnt) {
 	void *prior, *tail_obj = tail ? : head;
 
@@ -415,7 +416,7 @@ void kmem_cache_free(kmem_cache_s *s, void *x) {
 	// s = cache_from_obj(s, x);
 	// if (!s)
 	// 	return;
-	slab_free(s, virt_to_page(x), x, NULL, &x, 1);
+	slab_free(s, virt_to_slab(x), x, NULL, &x, 1);
 }
 EXPORT_SYMBOL(kmem_cache_free);
 

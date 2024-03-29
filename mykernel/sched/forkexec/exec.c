@@ -1172,8 +1172,7 @@ out_ret:
 
 
 int kernel_execve(const char *kernel_filename,
-		const char *const *argv,
-		const char *const *envp)
+		const char *const *argv, const char *const *envp)
 {
 	task_s * curr = current;
 
@@ -1230,17 +1229,14 @@ out_ret:
 	return retval;
 }
 
-static int do_execve(filename_s *filename,
-		const char *const *__argv,
-		const char *const *__envp)
-{
+static int
+do_execve(filename_s *filename,
+		const char *const *__argv, const char *const *__envp) {
 	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
 }
 
 
 MYOS_SYSCALL_DEFINE3(execve, const char *,filename,
-		const char *const __user *, argv,
-		const char *const __user *, envp)
-{
+		const char *const __user *, argv, const char *const __user *, envp) {
 	return do_execve(getname(filename), argv, envp);
 }

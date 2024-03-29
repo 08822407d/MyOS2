@@ -182,13 +182,11 @@
 		static inline unsigned long
 		_compound_head(const page_s *page) {
 			unsigned long head = READ_ONCE(page->compound_head);
-
 			if (head & 1) return head - 1;
-
 			return (unsigned long)page;
 		}
-
-		#define compound_head(page) ((typeof(page))_compound_head(page))
+		#define compound_head(page)	((typeof(page))_compound_head(page))
+		#define page_folio(p)		((folio_s *)_compound_head(p))
 
 	// 	/**
 	// 	 * page_folio - Converts from page to folio.
@@ -1034,5 +1032,9 @@
 	#	undef PF_SECOND
 
 	#endif /* !__GENERATING_BOUNDS_H */
+
+	#define __folio_set_slab(folio)		__SetPageSlab(&(folio)->page)
+	#define __folio_clear_slab(folio)	__ClearPageSlab(&(folio)->page)
+	#define folio_test_slab(folio)		PageSlab(&(folio)->page)
 
 #endif /* PAGE_FLAGS_H */

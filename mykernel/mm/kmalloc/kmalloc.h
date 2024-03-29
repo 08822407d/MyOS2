@@ -10,13 +10,10 @@
 	#include "myos_slab_types.h"
 
 	#include "slub_types.h"
+	#include "../page_alloc_api.h"
 
-	#define kmalloc_index(s) __kmalloc_index(s, true)
 
 	#ifdef DEBUG
-
-		extern unsigned int
-		__kmalloc_index(size_t size, bool size_is_constant);
 
 		extern __alloc_size(1) void
 		*kmalloc(size_t size, gfp_t flags);
@@ -36,88 +33,6 @@
 	#endif
 	
 	#if defined(KMALLOC_DEFINATION) || !(DEBUG)
-
-		/*
-		 * Figure out which kmalloc slab an allocation of a certain size
-		 * belongs to.
-		 * 0 = zero alloc
-		 * 1 =  65 .. 96 bytes
-		 * 2 = 129 .. 192 bytes
-		 * n = 2^(n-1)+1 .. 2^n
-		 *
-		 * Note: __kmalloc_index() is compile-time optimized, and not runtime optimized;
-		 * typical usage is via kmalloc_index() and therefore evaluated at compile-time.
-		 * Callers where !size_is_constant should only be test modules, where runtime
-		 * overheads of __kmalloc_index() can be tolerated.  Also see kmalloc_slab().
-		 */
-		PREFIX_STATIC_AWLWAYS_INLINE
-		unsigned int
-		__kmalloc_index(size_t size, bool size_is_constant) {
-			if (!size)
-				return 0;
-
-			if (size <= KMALLOC_MIN_SIZE)
-				return KMALLOC_SHIFT_LOW;
-
-			if (KMALLOC_MIN_SIZE <= 32 && size > 64 && size <= 96)
-				return 1;
-			if (KMALLOC_MIN_SIZE <= 64 && size > 128 && size <= 192)
-				return 2;
-			if (size <= 8)
-				return 3;
-			if (size <= 16)
-				return 4;
-			if (size <= 32)
-				return 5;
-			if (size <= 64)
-				return 6;
-			if (size <= 128)
-				return 7;
-			if (size <= 256)
-				return 8;
-			if (size <= 512)
-				return 9;
-			if (size <= 1024)
-				return 10;
-			if (size <= 2 * 1024)
-				return 11;
-			if (size <= 4 * 1024)
-				return 12;
-			if (size <= 8 * 1024)
-				return 13;
-			if (size <= 16 * 1024)
-				return 14;
-			if (size <= 32 * 1024)
-				return 15;
-			if (size <= 64 * 1024)
-				return 16;
-			if (size <= 128 * 1024)
-				return 17;
-			if (size <= 256 * 1024)
-				return 18;
-			if (size <= 512 * 1024)
-				return 19;
-			if (size <= 1024 * 1024)
-				return 20;
-			if (size <= 2 * 1024 * 1024)
-				return 21;
-			if (size <= 4 * 1024 * 1024)
-				return 22;
-			if (size <= 8 * 1024 * 1024)
-				return 23;
-			if (size <= 16 * 1024 * 1024)
-				return 24;
-			if (size <= 32 * 1024 * 1024)
-				return 25;
-
-			// if (!IS_ENABLED(CONFIG_PROFILE_ALL_BRANCHES) && size_is_constant)
-			// 	BUILD_BUG_ON_MSG(1, "unexpected size in kmalloc_index()");
-			// else
-			// 	BUG();
-
-			/* Will never be reached. Needed because the compiler may complain */
-			return -1;
-		}
 
 		/**
 		 * kmalloc - allocate kernel memory
@@ -237,19 +152,18 @@
 		PREFIX_STATIC_INLINE
 		void
 		kfree(const void *object) {
+			folio_s *folio;
 			page_s *slab;
 			kmem_cache_s *s;
 
 			if (unlikely(object == NULL))
 				return;
 
-			slab = virt_to_page(object);
-			// if (unlikely(!folio_test_slab(folio)))
-			if (PageHead(slab))
-				free_large_kmalloc((folio_s *)slab, (void *)object);
+			folio = virt_to_folio(object);
+			if (unlikely(folio_test_slab(folio)))
+				free_large_kmalloc(folio, (void *)object);
 			else
-				// myos_kfree(object);
-				kmem_cache_free(slab->slab_cache, (void *)object);
+				kmem_cache_free(((slab_s *)folio)->slab_cache, (void *)object);
 		}
 
 	#endif
