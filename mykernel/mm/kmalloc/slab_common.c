@@ -41,15 +41,13 @@ calculate_alignment(slab_flags_t flags, uint align, uint size) {
 			ralign /= 2;
 		align = max(align, ralign);
 	}
-
 	align = max(align, arch_slab_minalign());
 
 	return ALIGN(align, sizeof(void *));
 }
 
 static kmem_cache_s
-*create_cache(const char *name, uint object_size, uint align,
-		slab_flags_t flags, kmem_cache_s *root_cache) {
+*create_cache(const char *name, uint object_size, uint align, slab_flags_t flags) {
 	kmem_cache_s *s;
 	int err;
 
@@ -108,7 +106,7 @@ kmem_cache_create(const char *name, uint size, uint align,
 		slab_flags_t flags, void (*ctor)(void *)) {
 
 	kmem_cache_s *s = NULL;
-	const char *cache_name;
+	const char *cache_name = name;
 	int err;
 
 	// mutex_lock(&slab_mutex);
@@ -128,22 +126,18 @@ kmem_cache_create(const char *name, uint size, uint align,
 	flags &= CACHE_CREATE_MASK;
 
 	s = create_cache(cache_name, size,
-			calculate_alignment(flags, align, size), flags, NULL);
-	if (IS_ERR(s)) {
+			calculate_alignment(flags, align, size), flags);
+	if (IS_ERR(s))
 		err = PTR_ERR(s);
-		// kfree_const(cache_name);
-	}
 
 out_unlock:
 	// mutex_unlock(&slab_mutex);
 
 	if (err) {
 		if (flags & SLAB_PANIC)
-			panic("%s: Failed to create slab '%s'. Error %d\n",
-				__func__, name, err);
+			panic("%s: Failed to create slab '%s'. Error %d\n", __func__, name, err);
 		else {
-			pr_warn("%s(%s) failed with error %d\n",
-				__func__, name, err);
+			pr_warn("%s(%s) failed with error %d\n", __func__, name, err);
 			// dump_stack();
 		}
 		return NULL;
@@ -151,8 +145,6 @@ out_unlock:
 	return s;
 }
 EXPORT_SYMBOL(kmem_cache_create);
-
-
 
 
 /* Create a cache during boot when no slab services are available yet */
@@ -174,7 +166,6 @@ void __init create_boot_cache(kmem_cache_s *s,
 	s->align = calculate_alignment(flags, align, size);
 
 	err = __kmem_cache_create(s, flags);
-
 	if (err)
 		panic("Creation of kmalloc slab %s size=%u failed. Reason %d\n",
 				name, size, err);
@@ -321,7 +312,7 @@ void *__kmalloc(size_t size, gfp_t flags)
 	if (unlikely(s == NULL))
 		return s;
 
-	ret = __kmem_cache_alloc_node(s, flags, size);
+	ret = kmem_cache_alloc(s, flags);
 	// ret = kasan_kmalloc(s, ret, size, flags);
 	// trace_kmalloc(caller, ret, size, s->size, flags, node);
 	return ret;
@@ -358,11 +349,10 @@ EXPORT_SYMBOL(kmalloc_large);
 
 void free_large_kmalloc(folio_s *folio, void *object)
 {
-	// unsigned int order = folio_order(folio);
 	unsigned int order = folio->_folio_order;
 
-	// if (WARN_ON_ONCE(order == 0))
-	// 	pr_warn_once("object pointer: 0x%p\n", object);
+	if (WARN_ON_ONCE(order == 0))
+		pr_warn_once("object pointer: 0x%p\n", object);
 
 	// kmemleak_free(object);
 	// kasan_kfree_large(object);

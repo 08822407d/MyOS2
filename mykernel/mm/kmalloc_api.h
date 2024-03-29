@@ -59,7 +59,6 @@
 	// 			gfp_t gfpflags) __assume_slab_alignment __malloc;
 	void kmem_cache_free(kmem_cache_s *s, void *objp);
 
-	void *__kmem_cache_alloc_node(kmem_cache_s *s, gfp_t gfpflags, size_t orig_size);
 	void __kmem_cache_free(kmem_cache_s *s, void *x, unsigned long caller);
 
 

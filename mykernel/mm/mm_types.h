@@ -5,7 +5,6 @@
 
 	#include "page_alloc/page_alloc_types.h"
 
-	#include "kmalloc/myos_slab_types.h"
 	#include "kmalloc/slub_types.h"
 
 	#include "fault/memfault_types.h"

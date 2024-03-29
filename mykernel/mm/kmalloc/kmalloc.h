@@ -7,7 +7,6 @@
 
 	#include "kmalloc_const.h"
 	#include "kmalloc_types.h"
-	#include "myos_slab_types.h"
 
 	#include "slub_types.h"
 	#include "../page_alloc_api.h"

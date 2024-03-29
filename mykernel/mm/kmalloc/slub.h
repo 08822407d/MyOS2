@@ -19,7 +19,6 @@
 	#include "slub_types.h"
 
 
-
 	/*
 	 * Shortcuts
 	 */

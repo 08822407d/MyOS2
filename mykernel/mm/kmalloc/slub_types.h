@@ -135,24 +135,17 @@
 		// uint			cpu_partial_slabs;
 		kmem_cache_order_obj_s	oo;
 
-		/* Allocation and freeing of slabs */
-		kmem_cache_order_obj_s	min;
+		// /* Allocation and freeing of slabs */
+		// kmem_cache_order_obj_s	min;
 		gfp_t			allocflags;		/* gfp flags to use on each alloc */
 		int				refcount;		/* Refcount for slab cache destroy */
 		// void			(*ctor)(void *);
 		uint			inuse;			/* Offset to metadata */
 		uint			align;			/* Alignment */
-		uint			red_left_pad;	/* Left redzone padding size */
+		// uint			red_left_pad;	/* Left redzone padding size */
 		const char		*name;			/* Name (only for display!) */
 		List_s			list;			/* List of slab caches */
 		kobj_s			kobj;			/* For sysfs */
-
-	#ifdef CONFIG_SLAB_FREELIST_RANDOM
-		uint			*random_seq;
-	#endif
-	#ifdef CONFIG_KASAN_GENERIC
-		struct kasan_cache	kasan_info;
-	#endif
 
 		// kmem_cache_node_s	*node[MAX_NUMNODES];
 		kmem_cache_node_s	node;

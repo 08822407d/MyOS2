@@ -8,11 +8,11 @@
 
 #include "../kmalloc_api.h"
 
-/* Structure holding parameters for get_partial() call chain */
+/* Structure holding parameters for get_from_partial_list() call chain */
 typedef struct partial_context {
 	slab_s	**slab;
 	gfp_t	flags;
-	uint	orig_size;
+	// uint	orig_size;
 } partial_ctx_s;
 
 /*
@@ -53,7 +53,6 @@ typedef struct partial_context {
 static kmem_cache_s *kmem_cache_node;
 
 
-
 static inline void
 *get_freepointer(kmem_cache_s *s, void *object) {
 	return (void *)*(ulong *)(object + s->offset);
@@ -64,12 +63,6 @@ set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
 	ulong freeptr_addr = (ulong)this_obj + s->offset;
 	*(void **)freeptr_addr = next_obj;
 }
-
-/* Loop over all objects in a slab */
-#define for_each_object(__p, __s, __addr, __objects)		\
-			for (__p = __addr;								\
-				__p < (__addr) + (__objects) * (__s)->size;	\
-				__p += (__s)->size)
 
 static inline unsigned int
 order_objects(uint order, uint size) {
@@ -89,19 +82,6 @@ oo_make(uint order, uint size) {
 #define oo_objects(x)	((x).obj_nr)
 
 
-
-
-/* Tracking of the number of slabs for debugging purposes */
-static inline unsigned long
-slabs_node(kmem_cache_s *s) {
-	return atomic_long_read(&s->node.nr_slabs);
-}
-
-static inline unsigned long
-node_nr_slabs(kmem_cache_node_s *n) {
-	return atomic_long_read(&n->nr_slabs);
-}
-
 static inline void
 inc_slabs_node(kmem_cache_s *s, int objects) {
 	kmem_cache_node_s *n = &s->node;
@@ -111,10 +91,8 @@ inc_slabs_node(kmem_cache_s *s, int objects) {
 	 * dilemma by deferring the increment of the count during
 	 * bootstrap (see early_kmem_cache_node_alloc).
 	 */
-	if (likely(n)) {
-		atomic_long_inc(&n->nr_slabs);
-		atomic_long_add(objects, &n->total_objects);
-	}
+	atomic_long_inc(&n->nr_slabs);
+	atomic_long_add(objects, &n->total_objects);
 }
 static inline void
 dec_slabs_node(kmem_cache_s *s, int objects) {
@@ -123,114 +101,50 @@ dec_slabs_node(kmem_cache_s *s, int objects) {
 	atomic_long_sub(objects, &n->total_objects);
 }
 
-
 /*
  * Tracking of fully allocated slabs for debugging purposes.
  */
 static void
 add_to_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
-	// lockdep_assert_held(&n->list_lock);
 	list_header_push(&n->full, &slab->slab_list);
 }
-#define add_full add_to_full
-
 static void
-remove_to_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
-	// lockdep_assert_held(&n->list_lock);
+remove_from_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
 	list_header_delete_node(&n->full, &slab->slab_list);
 }
-#define remove_full remove_to_full
 
 /*
  * Management of partially allocated slabs.
  */
 static inline void
-__add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
-	// n->nr_partial++;
+add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
 	list_header_push(&n->partial, &slab->slab_list);
 }
-#define __add_partial __add_to_partial
-
-static inline void
-add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
-	// lockdep_assert_held(&n->list_lock);
-	__add_to_partial(n, slab);
-}
-#define add_partial add_to_partial
-
 static inline void
 remove_from_partial(kmem_cache_node_s *n, slab_s *slab) {
-	// lockdep_assert_held(&n->list_lock);
 	list_header_delete_node(&n->partial, &slab->slab_list);
-	// n->nr_partial--;
 }
-#define remove_partial remove_from_partial
 
+static void
+test_move_full_slab(kmem_cache_s *s, kmem_cache_node_s *n,
+		slab_s *slab, bool move_to_full_list) {
+	if (slab->inuse == slab->objects)
+		if (move_to_full_list) {
+			remove_from_partial(n, slab);
+			add_to_full(s, n, slab);
+		} else {
+			remove_from_full(s, n, slab);
+			add_to_partial(n, slab);
+		}
+}
 
 /********************************************************************
  *						slub alloc functions
  *******************************************************************/
-/*
- * Slab allocation and freeing
- */
-static inline slab_s
-*alloc_slab_page(gfp_t flags, kmem_cache_order_obj_s oo) {
-	folio_s *folio;
-	slab_s *slab;
-	unsigned int order = oo_order(oo);
-
-	folio = (folio_s *)alloc_pages(flags, order);
-	if (!folio)
-		return NULL;
-
-	slab = (slab_s *)folio;
-	INIT_LIST_S(&slab->slab_list);
-	__folio_set_slab(folio);
-	/* Make the flag visible before any changes to folio->mapping */
-	smp_wmb();
-	// if (folio_is_pfmemalloc(folio))
-	// 	slab_set_pfmemalloc(slab);
-
-	return slab;
-}
-
-static slab_s
-*new_slab(kmem_cache_s *s, gfp_t flags) {
-	slab_s *slab;
-	kmem_cache_node_s *n = &s->node;
-	kmem_cache_order_obj_s oo = s->oo;
-	gfp_t alloc_gfp;
-	ulong irqflags;
-	void *start, *p, *next;
+static inline void
+init_slab_objects(kmem_cache_s *s, slab_s *slab) {
 	int idx;
-
-	flags = flags & (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK);
-	flags &= gfp_allowed_mask;
-	flags |= s->allocflags;
-
-	/*
-	 * Let the initial higher-order allocation fail under memory pressure
-	 * so we fall-back to the minimum order allocation.
-	 */
-	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
-
-	slab = alloc_slab_page(alloc_gfp, oo);
-	if (unlikely(!slab)) {
-		oo = s->min;
-		/*
-		 * Allocation may have failed due to fragmentation.
-		 * Try a lower order alloc if possible
-		 */
-		slab = alloc_slab_page(flags, oo);
-		if (unlikely(!slab))
-			return NULL;
-	}
-
-	slab->objects = oo_objects(oo);
-	slab->inuse = 0;
-	slab->frozen = 0;
-	slab->slab_cache = s;
-
+	void *start, *p, *next;
 	// start = slab_address(slab);
 	start = (void *)page_to_virt(&((folio_s *)slab)->page);
 	slab->freelist = start;
@@ -240,6 +154,51 @@ static slab_s
 		p = next;
 	}
 	set_freepointer(s, p, NULL);
+}
+/*
+ * Slab allocation and freeing
+ */
+static inline slab_s
+*alloc_slab(gfp_t flags, kmem_cache_order_obj_s oo) {
+	folio_s *folio = (folio_s *)alloc_pages(flags, oo_order(oo));
+	slab_s *slab = (slab_s *)folio;
+	if (!folio)
+		return NULL;
+
+	__folio_set_slab(folio);
+	/* Make the flag visible before any changes to folio->mapping */
+	smp_wmb();
+	// if (folio_is_pfmemalloc(folio))
+	// 	slab_set_pfmemalloc(slab);
+	return slab;
+}
+
+static slab_s
+*new_slab(kmem_cache_s *s, gfp_t flags) {
+	slab_s *slab;
+	gfp_t alloc_gfp;
+	ulong irqflags;
+	kmem_cache_node_s *n = &s->node;
+
+	flags &= (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK) & gfp_allowed_mask;
+	flags |= s->allocflags;
+
+	/*
+	 * Let the initial higher-order allocation fail under memory pressure
+	 * so we fall-back to the minimum order allocation.
+	 */
+	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
+
+	slab = alloc_slab(alloc_gfp, s->oo);
+	if (unlikely(!slab))
+			return NULL;
+
+	slab->objects = oo_objects(s->oo);
+	slab->inuse = 0;
+	slab->frozen = 0;
+	slab->slab_cache = s;
+
+	init_slab_objects(s, slab);
 
 	spin_lock_irqsave(&n->list_lock, irqflags);
 	add_to_partial(n, slab);
@@ -256,41 +215,34 @@ static slab_s
  * it to full list if it was the last free object.
  */
 static void
-*alloc_single_from_partial(kmem_cache_s *s,
-		kmem_cache_node_s *n, slab_s *slab) {
-
-	void *object;
-
-	object = slab->freelist;
+*alloc_single_from_partial(kmem_cache_s *s, slab_s *slab) {
+	void *object = slab->freelist;
 	slab->freelist = get_freepointer(s, object);
 	slab->inuse++;
-
-	if (slab->inuse == slab->objects) {
-		remove_from_partial(n, slab);
-		add_to_full(s, n, slab);
-	}
-
 	return object;
 }
+
 
 /*
  * Get a partial slab, lock it and return it.
  */
 // static void *get_partial(kmem_cache_s *s, int node, partial_ctx_s *pc)
 static void
-*get_partial(kmem_cache_s *s, partial_ctx_s *pc) {
-	slab_s *slab, *slab_next;
+*get_from_partial_list(kmem_cache_s *s, partial_ctx_s *pc) {
 	void *object = NULL;
 	ulong flags;
-	uint partial_slabs = 0;
+	slab_s *slab, *slab_next;
 	kmem_cache_node_s *n = &s->node;
 
 	spin_lock_irqsave(&n->list_lock, flags);
-	list_header_for_each_container_safe(slab,
-			slab_next, &n->partial, slab_list) {
-		object = alloc_single_from_partial(s, n, slab);
-		if (object)
+	list_header_for_each_container_safe(
+			slab, slab_next, &n->partial, slab_list) {
+
+		object = alloc_single_from_partial(s, slab);
+		if (object) {
+			test_move_full_slab(s, n, slab, true);
 			break;
+		}
 		continue;
 	}
 	spin_unlock_irqrestore(&n->list_lock, flags);
@@ -301,17 +253,16 @@ static void
 // static void *__slab_alloc_node(kmem_cache_s *s,
 // 		gfp_t gfpflags, int node, unsigned long addr, size_t orig_size)
 static void
-*slab_alloc(kmem_cache_s *s, gfp_t gfpflags, size_t orig_size) {
+*slab_alloc(kmem_cache_s *s, gfp_t gfpflags) {
 	slab_s *slab;
 	void *object;
 	partial_ctx_s pc = {
 		.flags = gfpflags,
 		.slab = &slab,
-		.orig_size = orig_size,
 	};
 
 retry:
-	object = get_partial(s, &pc);
+	object = get_from_partial_list(s, &pc);
 	if (object) {
 		if (gfpflags & __GFP_ZERO)
 			memset(object, 0, s->size);
@@ -327,15 +278,10 @@ retry:
 }
 
 void *kmem_cache_alloc(kmem_cache_s *s, gfp_t gfpflags) {
-	return slab_alloc(s, gfpflags, s->object_size);
+	return slab_alloc(s, gfpflags);
 }
 EXPORT_SYMBOL(kmem_cache_alloc);
 
-void
-*__kmem_cache_alloc_node(kmem_cache_s *s,
-		gfp_t gfpflags, size_t orig_size) {
-	return slab_alloc(s, gfpflags, orig_size);
-}
 
 /********************************************************************
  *						slub alloc functions
@@ -356,59 +302,52 @@ free_slab(kmem_cache_s *s, slab_s *slab) {
 	__free_pages(&folio->page, order);
 }
 
+/* Perform the actual freeing while we still hold the locks */
+static void
+free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
+	slab->inuse--;
+	set_freepointer(s, object, slab->freelist);
+	slab->freelist = object;
+}
+
 static noinline void
-free_to_partial_list(kmem_cache_s *s, slab_s *slab,
-		void *head, void *tail, int bulk_cnt) {
-	slab_s *slab_free = NULL;
-	int cnt = bulk_cnt;
+free_to_partial_list(kmem_cache_s *s, slab_s *slab, void *head) {
 	ulong flags;
+	bool slab_need_free = false;
+	bool slab_is_full = false;
 	kmem_cache_node_s *n = &s->node;
 
 	spin_lock_irqsave(&n->list_lock, flags);
 
-	void *prior = slab->freelist;
-	/* Perform the actual freeing while we still hold the locks */
-	slab->inuse -= cnt;
-	set_freepointer(s, tail, prior);
-	slab->freelist = head;
+	test_move_full_slab(s, n, slab, false);
 
+	free_single_to_partial(s, slab, head);
 	/*
 	 * If the slab is empty, and node's partial list is full,
 	 * it should be discarded anyway no matter it's on full or
 	 * partial list.
 	 */
 	if (slab->inuse == 0 && n->partial.count >= s->min_partial)
-		slab_free = slab;
-
-	if (!prior) {
-		/* was on full list */
-		remove_full(s, n, slab);
-		if (!slab_free)
-			add_partial(n, slab);
-	} else if (slab_free) {
-		remove_partial(n, slab);
-	}
-
-	if (slab_free) {
+		slab_need_free = true;
+	if (slab_need_free) {
+		remove_from_partial(n, slab);
 		/*
 		 * Update the counters while still holding n->list_lock to
 		 * prevent spurious validation warnings
 		 */
-		dec_slabs_node(s, slab_free->objects);
+		dec_slabs_node(s, slab->objects);
 	}
-
+	
 	spin_unlock_irqrestore(&n->list_lock, flags);
 
-	if (slab_free)
-		free_slab(s, slab_free);
+	if (slab_need_free)
+		free_slab(s, slab);
 }
 
 static __always_inline void
-slab_free(kmem_cache_s *s, slab_s *slab,
-		void *head, void *tail, void **p, int cnt) {
-	void *prior, *tail_obj = tail ? : head;
+slab_free(kmem_cache_s *s, slab_s *slab, void *head) {
 
-	free_to_partial_list(s, slab, head, tail_obj, cnt);
+	free_to_partial_list(s, slab, head);
 	return;
 }
 
@@ -416,7 +355,7 @@ void kmem_cache_free(kmem_cache_s *s, void *x) {
 	// s = cache_from_obj(s, x);
 	// if (!s)
 	// 	return;
-	slab_free(s, virt_to_slab(x), x, NULL, &x, 1);
+	slab_free(s, virt_to_slab(x), x);
 }
 EXPORT_SYMBOL(kmem_cache_free);
 
@@ -518,7 +457,6 @@ simple_calculate_sizes(kmem_cache_s *s) {
 	 * Determine the number of objects per slab
 	 */
 	s->oo = oo_make(order, size);
-	s->min = oo_make(get_order(size), size);
 
 	return !!oo_objects(s->oo);
 }
@@ -566,10 +504,11 @@ error:
  *******************************************************************/
 static void kmalloc_test()
 {
-	void *kmalloc_testp[8];
-	for (int i = 0; i < 8; i++)
+	int test_count = 64;
+	void *kmalloc_testp[test_count];
+	for (int i = 0; i < test_count; i++)
 		kmalloc_testp[i] = kmalloc(4096, GFP_KERNEL);
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < test_count; i++)
 		kfree(kmalloc_testp[i]);
 }
 
@@ -619,7 +558,7 @@ void __init kmem_cache_init(void)
 			cache_line_size(), slub_min_order, slub_max_order, slub_min_objects,
 			nr_cpu_ids, nr_node_ids);
 
-	// kmalloc_test();
+	kmalloc_test();
 }
 
 
