@@ -52,18 +52,6 @@ typedef struct partial_context {
 
 static kmem_cache_s *kmem_cache_node;
 
-
-static inline void
-*get_freepointer(kmem_cache_s *s, void *object) {
-	return (void *)*(ulong *)(object + s->offset);
-}
-
-static inline void
-set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
-	ulong freeptr_addr = (ulong)this_obj + s->offset;
-	*(void **)freeptr_addr = next_obj;
-}
-
 static inline unsigned int
 order_objects(uint order, uint size) {
 	return ((uint)PAGE_SIZE << order) / size;
@@ -81,6 +69,17 @@ oo_make(uint order, uint size) {
 #define oo_order(x)		((x).order)
 #define oo_objects(x)	((x).obj_nr)
 
+
+static inline void
+*get_freepointer(kmem_cache_s *s, void *object) {
+	return (void *)*(ulong *)(object + s->offset);
+}
+
+static inline void
+set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
+	ulong freeptr_addr = (ulong)this_obj + s->offset;
+	*(void **)freeptr_addr = next_obj;
+}
 
 static inline void
 inc_slabs_node(kmem_cache_s *s, int objects) {
@@ -141,20 +140,6 @@ test_move_full_slab(kmem_cache_s *s, kmem_cache_node_s *n,
 /********************************************************************
  *						slub alloc functions
  *******************************************************************/
-static inline void
-init_slab_objects(kmem_cache_s *s, slab_s *slab) {
-	int idx;
-	void *start, *p, *next;
-	// start = slab_address(slab);
-	start = (void *)page_to_virt(&((folio_s *)slab)->page);
-	slab->freelist = start;
-	for (idx = 0, p = start; idx < slab->objects - 1; idx++) {
-		next = p + s->size;
-		set_freepointer(s, p, next);
-		p = next;
-	}
-	set_freepointer(s, p, NULL);
-}
 /*
  * Slab allocation and freeing
  */
@@ -171,6 +156,21 @@ static inline slab_s
 	// if (folio_is_pfmemalloc(folio))
 	// 	slab_set_pfmemalloc(slab);
 	return slab;
+}
+
+static inline void
+init_slab_objects(kmem_cache_s *s, slab_s *slab) {
+	int idx;
+	void *start, *p, *next;
+	// start = slab_address(slab);
+	start = (void *)page_to_virt(&((folio_s *)slab)->page);
+	slab->freelist = start;
+	for (idx = 0, p = start; idx < slab->objects - 1; idx++) {
+		next = p + s->size;
+		set_freepointer(s, p, next);
+		p = next;
+	}
+	set_freepointer(s, p, NULL);
 }
 
 static slab_s
@@ -222,7 +222,6 @@ static void
 	return object;
 }
 
-
 /*
  * Get a partial slab, lock it and return it.
  */
@@ -273,8 +272,6 @@ retry:
 	if (unlikely(!slab))
 		return NULL;
 	goto retry;
-
-	return object;
 }
 
 void *kmem_cache_alloc(kmem_cache_s *s, gfp_t gfpflags) {
@@ -302,6 +299,19 @@ free_slab(kmem_cache_s *s, slab_s *slab) {
 	__free_pages(&folio->page, order);
 }
 
+static void
+recycle_exceeded_empty_slab(kmem_cache_s *s,
+		kmem_cache_node_s *n, slab_s *slab) {
+
+	ulong flags;
+	spin_lock_irqsave(&n->list_lock, flags);
+	remove_from_partial(&s->node, slab);
+	dec_slabs_node(s, slab->objects);
+	spin_unlock_irqrestore(&n->list_lock, flags);
+
+	free_slab(s, slab);
+}
+
 /* Perform the actual freeing while we still hold the locks */
 static void
 free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
@@ -310,45 +320,32 @@ free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
 	slab->freelist = object;
 }
 
-static noinline void
-free_to_partial_list(kmem_cache_s *s, slab_s *slab, void *head) {
+static noinline bool
+free_to_partial_list(kmem_cache_s *s, kmem_cache_node_s *n,
+		slab_s *slab, void *object) {
 	ulong flags;
 	bool slab_need_free = false;
-	bool slab_is_full = false;
-	kmem_cache_node_s *n = &s->node;
 
 	spin_lock_irqsave(&n->list_lock, flags);
-
 	test_move_full_slab(s, n, slab, false);
+	free_single_to_partial(s, slab, object);
+	spin_unlock_irqrestore(&n->list_lock, flags);
+}
 
-	free_single_to_partial(s, slab, head);
+static __always_inline void
+slab_free(kmem_cache_s *s, slab_s *slab, void *object) {
+
+	kmem_cache_node_s *n = &s->node;
+	free_to_partial_list(s, n, slab, object);
 	/*
 	 * If the slab is empty, and node's partial list is full,
 	 * it should be discarded anyway no matter it's on full or
 	 * partial list.
 	 */
-	if (slab->inuse == 0 && n->partial.count >= s->min_partial)
-		slab_need_free = true;
-	if (slab_need_free) {
-		remove_from_partial(n, slab);
-		/*
-		 * Update the counters while still holding n->list_lock to
-		 * prevent spurious validation warnings
-		 */
-		dec_slabs_node(s, slab->objects);
-	}
-	
-	spin_unlock_irqrestore(&n->list_lock, flags);
+	if (slab->inuse =! 0 || n->partial.count < s->min_partial);
+		return;
 
-	if (slab_need_free)
-		free_slab(s, slab);
-}
-
-static __always_inline void
-slab_free(kmem_cache_s *s, slab_s *slab, void *head) {
-
-	free_to_partial_list(s, slab, head);
-	return;
+	recycle_exceeded_empty_slab(s, n, slab);
 }
 
 void kmem_cache_free(kmem_cache_s *s, void *x) {
@@ -358,6 +355,7 @@ void kmem_cache_free(kmem_cache_s *s, void *x) {
 	slab_free(s, virt_to_slab(x), x);
 }
 EXPORT_SYMBOL(kmem_cache_free);
+
 
 /********************************************************************
  *					create kmem_cache functions
