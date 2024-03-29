@@ -160,7 +160,7 @@
 				return;
 
 			folio = virt_to_folio(object);
-			if (unlikely(folio_test_slab(folio)))
+			if (unlikely(!folio_test_slab(folio)))
 				free_large_kmalloc(folio, (void *)object);
 			else
 				kmem_cache_free(((slab_s *)folio)->slab_cache, (void *)object);

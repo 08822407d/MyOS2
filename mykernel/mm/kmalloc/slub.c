@@ -564,6 +564,15 @@ error:
 /********************************************************************
  *			Basic setup of slabs
  *******************************************************************/
+static void kmalloc_test()
+{
+	void *kmalloc_testp[8];
+	for (int i = 0; i < 8; i++)
+		kmalloc_testp[i] = kmalloc(4096, GFP_KERNEL);
+	for (int i = 0; i < 8; i++)
+		kfree(kmalloc_testp[i]);
+}
+
 /*
  * Used for early kmem_cache structures that were allocated using
  * the page allocator. Allocate them properly then fix up the pointers
@@ -609,6 +618,8 @@ void __init kmem_cache_init(void)
 	pr_info("SLUB: HWalign=%d, Order=%u-%u, MinObjects=%u, CPUs=%u, Nodes=%u\n",
 			cache_line_size(), slub_min_order, slub_max_order, slub_min_objects,
 			nr_cpu_ids, nr_node_ids);
+
+	// kmalloc_test();
 }
 
 
