@@ -44,6 +44,10 @@
 
 	void *__kmalloc(size_t size, gfp_t flags) __alloc_size(1);
 
+	kmem_cache_s *
+    kmem_cache_create(const char *name, uint size,
+    		uint align, slab_flags_t flags);
+			
 	/**
 	 * kmem_cache_alloc - Allocate an object
 	 * @cachep: The cache to allocate from.

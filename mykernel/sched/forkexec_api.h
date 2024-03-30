@@ -78,4 +78,6 @@
 	int kthreadd(void *unused);
 	extern task_s *kthreadd_task;
 
+	extern void proc_caches_init(void);
+
 #endif /* _LINUX_FORK_EXEC_API_H_ */

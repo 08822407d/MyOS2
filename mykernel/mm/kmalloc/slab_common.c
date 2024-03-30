@@ -102,8 +102,8 @@ out_free_cache:
  * Return: a pointer to the cache on success, NULL on failure.
  */
 kmem_cache_s *
-kmem_cache_create(const char *name, uint size, uint align,
-		slab_flags_t flags, void (*ctor)(void *)) {
+kmem_cache_create(const char *name, uint size,
+		uint align, slab_flags_t flags) {
 
 	kmem_cache_s *s = NULL;
 	const char *cache_name = name;

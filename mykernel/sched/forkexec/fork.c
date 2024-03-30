@@ -55,6 +55,23 @@ int nr_threads;			/* The idle threads do not count.. */
 
 static int max_threads;		/* tunable limit on nr_threads */
 
+/* SLAB cache for signal_struct structures (tsk->signal) */
+static kmem_cache_s *signal_cachep;
+
+/* SLAB cache for sighand_struct structures (tsk->sighand) */
+kmem_cache_s *sighand_cachep;
+
+/* SLAB cache for files_struct structures (tsk->files) */
+kmem_cache_s *files_cachep;
+
+/* SLAB cache for fs_struct structures (tsk->fs) */
+kmem_cache_s *fs_cachep;
+
+/* SLAB cache for vm_area_struct structures */
+static kmem_cache_s *vm_area_cachep;
+
+/* SLAB cache for mm_struct structures (tsk->mm) */
+static kmem_cache_s *mm_cachep;
 
 static inline task_s *alloc_task_struct_node(int node) {
 	return kzalloc(sizeof(task_s), GFP_KERNEL);
@@ -1581,6 +1598,37 @@ int unshare_files(void)
 	put_files_struct(old);
 	return 0;
 }
+
+
+
+
+void __init proc_caches_init(void)
+{
+	// sighand_cachep = kmem_cache_create("sighand_cache",
+	// 		sizeof(struct sighand_struct), 1,
+	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
+	// 		SLAB_ACCOUNT, sighand_ctor);
+	// signal_cachep = kmem_cache_create("signal_cache",
+	// 		sizeof(struct signal_struct), 1,
+	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+	// 		NULL);
+	files_cachep = kmem_cache_create("files_cache",
+			sizeof(files_struct_s), 0,
+			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+	fs_cachep = kmem_cache_create("fs_cache",
+			sizeof(taskfs_s), 0,
+			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+
+	// vm_area_cachep = KMEM_CACHE(vma_s, SLAB_PANIC|SLAB_ACCOUNT);
+	vm_area_cachep = kmem_cache_create("vm_area_struct",
+			sizeof(vma_s), __alignof__(vma_s),
+			SLAB_PANIC|SLAB_ACCOUNT);
+
+	// mmap_init();
+	// nsproxy_cache_init();
+}
+
+
 
 
 

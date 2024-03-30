@@ -91,6 +91,24 @@
 	/* Avoid kmemleak tracing */
 	#define SLAB_NOLEAKTRACE		((slab_flags_t __force)0x00800000U)
 
+	/* Fault injection mark */
+	#ifdef CONFIG_FAILSLAB
+	#	define SLAB_FAILSLAB		((slab_flags_t __force)0x02000000U)
+	#else
+	#	define SLAB_FAILSLAB		0
+	#endif
+	/* Account to memcg */
+	#ifdef CONFIG_MEMCG_KMEM
+	#	define SLAB_ACCOUNT			((slab_flags_t __force)0x04000000U)
+	#else
+	#	define SLAB_ACCOUNT			0
+	#endif
+
+	#ifdef CONFIG_KASAN_GENERIC
+	#	define SLAB_KASAN			((slab_flags_t __force)0x08000000U)
+	#else
+	#	define SLAB_KASAN			0
+	#endif
 
 	/*
 	 * Ignore user specified debugging flags.

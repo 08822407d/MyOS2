@@ -176,6 +176,7 @@ asmlinkage void __init start_kernel(void)
 
 	myos_devices_init();
 
+	proc_caches_init();
 	vfs_caches_init();
 
 	check_bugs();
