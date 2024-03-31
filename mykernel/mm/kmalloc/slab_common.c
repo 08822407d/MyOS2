@@ -107,7 +107,7 @@ kmem_cache_create(const char *name, uint size,
 
 	kmem_cache_s *s = NULL;
 	const char *cache_name = name;
-	int err;
+	int err = -ENOERR;
 
 	// mutex_lock(&slab_mutex);
 

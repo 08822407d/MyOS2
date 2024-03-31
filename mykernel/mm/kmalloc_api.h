@@ -79,11 +79,5 @@
 
 	void free_large_kmalloc(folio_s *folio, void *object);
 
-	void *__myos_kmalloc(size_t size, gfp_t flags);
-	void myos_kfree(const void *objp);
-
-	void myos_preinit_slab(void);
-	void myos_init_slab(void);
-
 
 #endif /* _LINUX_KMALLOC_API_H_ */

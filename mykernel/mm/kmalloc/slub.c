@@ -72,12 +72,14 @@ oo_make(uint order, uint size) {
 
 static inline void
 *get_freepointer(kmem_cache_s *s, void *object) {
+	while (IS_INVAL_PTR((const void *)(object + s->offset)));
 	return (void *)*(ulong *)(object + s->offset);
 }
 
 static inline void
 set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
 	ulong freeptr_addr = (ulong)this_obj + s->offset;
+	while (IS_INVAL_PTR((const void *)freeptr_addr));
 	*(void **)freeptr_addr = next_obj;
 }
 
@@ -104,11 +106,11 @@ dec_slabs_node(kmem_cache_s *s, int objects) {
  * Tracking of fully allocated slabs for debugging purposes.
  */
 static void
-add_to_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
+add_to_full(kmem_cache_node_s *n, slab_s *slab) {
 	list_header_push(&n->full, &slab->slab_list);
 }
 static void
-remove_from_full(kmem_cache_s *s, kmem_cache_node_s *n, slab_s *slab) {
+remove_from_full(kmem_cache_node_s *n, slab_s *slab) {
 	list_header_delete_node(&n->full, &slab->slab_list);
 }
 
@@ -130,9 +132,9 @@ test_move_full_slab(kmem_cache_s *s, kmem_cache_node_s *n,
 	if (slab->inuse == slab->objects)
 		if (move_to_full_list) {
 			remove_from_partial(n, slab);
-			add_to_full(s, n, slab);
+			add_to_full(n, slab);
 		} else {
-			remove_from_full(s, n, slab);
+			remove_from_full(n, slab);
 			add_to_partial(n, slab);
 		}
 }
@@ -556,7 +558,7 @@ void __init kmem_cache_init(void)
 			cache_line_size(), slub_min_order, slub_max_order, slub_min_objects,
 			nr_cpu_ids, nr_node_ids);
 
-	kmalloc_test();
+	// kmalloc_test();
 }
 
 

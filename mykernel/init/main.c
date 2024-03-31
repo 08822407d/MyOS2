@@ -146,17 +146,12 @@ asmlinkage void __init start_kernel(void)
 	setup_per_cpu_areas();
 
 
-	// myos_preinit_slab();
-
-
 	trap_init();
 	mm_core_init();
 
 	init_IRQ();
 	timekeeping_init();
 	time_init();
-
-	// myos_init_slab();
 
 	// enable bsp's apic
 	myos_init_bsp_intr();
