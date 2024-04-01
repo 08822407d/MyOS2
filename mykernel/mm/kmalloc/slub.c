@@ -322,11 +322,10 @@ free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
 	slab->freelist = object;
 }
 
-static noinline bool
+static noinline void
 free_to_partial_list(kmem_cache_s *s, kmem_cache_node_s *n,
 		slab_s *slab, void *object) {
 	ulong flags;
-	bool slab_need_free = false;
 
 	spin_lock_irqsave(&n->list_lock, flags);
 	test_move_full_slab(s, n, slab, false);
@@ -344,7 +343,7 @@ slab_free(kmem_cache_s *s, slab_s *slab, void *object) {
 	 * it should be discarded anyway no matter it's on full or
 	 * partial list.
 	 */
-	if (slab->inuse =! 0 || n->partial.count < s->min_partial);
+	if (slab->inuse != 0 || n->partial.count < s->min_partial);
 		return;
 
 	recycle_exceeded_empty_slab(s, n, slab);
