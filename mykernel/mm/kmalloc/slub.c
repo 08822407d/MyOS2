@@ -8,12 +8,6 @@
 
 #include "../kmalloc_api.h"
 
-/* Structure holding parameters for get_from_partial_list() call chain */
-typedef struct partial_context {
-	slab_s	**slab;
-	gfp_t	flags;
-	// uint	orig_size;
-} partial_ctx_s;
 
 /*
  * Minimum number of partial slabs. These will be left on the partial
@@ -124,28 +118,45 @@ remove_from_partial(kmem_cache_node_s *n, slab_s *slab) {
 	list_header_delete_node(&n->partial, &slab->slab_list);
 }
 
-static void
-test_move_full_slab(kmem_cache_s *s, kmem_cache_node_s *n,
-		slab_s *slab, bool move_to_full_list) {
-	if (slab->inuse == slab->objects)
-		if (move_to_full_list) {
-			remove_from_partial(n, slab);
-			add_to_full(n, slab);
-		} else {
-			remove_from_full(n, slab);
-			add_to_partial(n, slab);
-		}
+static inline void
+test_full_move_to_partial(kmem_cache_s *s,
+		kmem_cache_node_s *n, slab_s *slab) {
+	if (slab->inuse == slab->objects) {
+		remove_from_full(n, slab);
+		add_to_partial(n, slab);
+	}
+}
+
+static inline void
+test_full_remove_from_partial(kmem_cache_s *s,
+		kmem_cache_node_s *n, slab_s *slab) {
+	if (slab->inuse == slab->objects) {
+		remove_from_partial(n, slab);
+		add_to_full(n, slab);
+	}
 }
 
 /********************************************************************
  *						slub alloc functions
  *******************************************************************/
+static inline gfp_t
+prepare_alloc_flags(kmem_cache_s *s, gfp_t flags) {
+	flags &= (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK) & gfp_allowed_mask;
+	flags |= s->allocflags;
+	/*
+	 * Let the initial higher-order allocation fail under memory pressure
+	 * so we fall-back to the minimum order allocation.
+	 */
+	return (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
+}
+
 /*
  * Slab allocation and freeing
  */
 static inline slab_s
-*alloc_slab(gfp_t flags, kmem_cache_order_obj_s oo) {
-	folio_s *folio = (folio_s *)alloc_pages(flags, oo_order(oo));
+*alloc_slab(kmem_cache_s *s, gfp_t flags) {
+	gfp_t alloc_gfp = prepare_alloc_flags(s, flags);
+	folio_s *folio = (folio_s *)alloc_pages(alloc_gfp, oo_order(s->oo));
 	slab_s *slab = (slab_s *)folio;
 	if (!folio)
 		return NULL;
@@ -173,39 +184,24 @@ init_slab_objects(kmem_cache_s *s, slab_s *slab) {
 	set_freepointer(s, p, NULL);
 }
 
-static slab_s
-*new_slab(kmem_cache_s *s, gfp_t flags) {
-	slab_s *slab;
-	gfp_t alloc_gfp;
-	ulong irqflags;
-	kmem_cache_node_s *n = &s->node;
-
-	flags &= (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK) & gfp_allowed_mask;
-	flags |= s->allocflags;
-
-	/*
-	 * Let the initial higher-order allocation fail under memory pressure
-	 * so we fall-back to the minimum order allocation.
-	 */
-	alloc_gfp = (flags | __GFP_NOWARN | __GFP_NORETRY) & ~__GFP_NOFAIL;
-
-	slab = alloc_slab(alloc_gfp, s->oo);
-	if (unlikely(!slab))
-			return NULL;
-
+static inline void
+init_new_empty_slab(kmem_cache_s *s, slab_s *slab) {
 	slab->objects = oo_objects(s->oo);
 	slab->inuse = 0;
 	slab->frozen = 0;
 	slab->slab_cache = s;
 
 	init_slab_objects(s, slab);
+}
 
+static noinline void
+online_new_empty_slab(kmem_cache_s *s,
+		kmem_cache_node_s *n, slab_s *slab) {
+	ulong irqflags;
 	spin_lock_irqsave(&n->list_lock, irqflags);
 	add_to_partial(n, slab);
 	inc_slabs_node(s, slab->objects);
 	spin_unlock_irqrestore(&n->list_lock, irqflags);
-
-	return slab;
 }
 
 /*
@@ -214,7 +210,7 @@ static slab_s
  * the alloc_debug_processing() checks and leave the slab on the list, or move
  * it to full list if it was the last free object.
  */
-static void
+static inline void
 *alloc_single_from_partial(kmem_cache_s *s, slab_s *slab) {
 	void *object = slab->freelist;
 	slab->freelist = get_freepointer(s, object);
@@ -226,12 +222,11 @@ static void
  * Get a partial slab, lock it and return it.
  */
 // static void *get_partial(kmem_cache_s *s, int node, partial_ctx_s *pc)
-static void
-*get_from_partial_list(kmem_cache_s *s, partial_ctx_s *pc) {
+static noinline void
+*get_from_partial_list(kmem_cache_s *s, kmem_cache_node_s *n) {
 	void *object = NULL;
 	ulong flags;
 	slab_s *slab, *slab_next;
-	kmem_cache_node_s *n = &s->node;
 
 	spin_lock_irqsave(&n->list_lock, flags);
 	list_header_for_each_container_safe(
@@ -239,10 +234,9 @@ static void
 
 		object = alloc_single_from_partial(s, slab);
 		if (object) {
-			test_move_full_slab(s, n, slab, true);
+			test_full_remove_from_partial(s, n, slab);
 			break;
 		}
-		continue;
 	}
 	spin_unlock_irqrestore(&n->list_lock, flags);
 
@@ -255,23 +249,24 @@ static void
 *slab_alloc(kmem_cache_s *s, gfp_t gfpflags) {
 	slab_s *slab;
 	void *object;
-	partial_ctx_s pc = {
-		.flags = gfpflags,
-		.slab = &slab,
-	};
+	kmem_cache_node_s *n = &s->node;
 
 retry:
-	object = get_from_partial_list(s, &pc);
-	if (object) {
-		if (gfpflags & __GFP_ZERO)
-			memset(object, 0, s->size);
-		return object;
+	object = get_from_partial_list(s, n);
+	if (!object) {
+		slab_s *slab = alloc_slab(s, gfpflags);
+		if (unlikely(!slab))
+				return NULL;
+
+		init_new_empty_slab(s, slab);
+		online_new_empty_slab(s, n, slab);
+
+		goto retry;
 	}
 
-	slab = new_slab(s, gfpflags);
-	if (unlikely(!slab))
-		return NULL;
-	goto retry;
+	if (gfpflags & __GFP_ZERO)
+		memset(object, 0, s->size);
+	return object;
 }
 
 void *kmem_cache_alloc(kmem_cache_s *s, gfp_t gfpflags) {
@@ -300,21 +295,19 @@ free_slab(kmem_cache_s *s, slab_s *slab) {
 }
 
 static void
-recycle_exceeded_empty_slab(kmem_cache_s *s,
+offline_exceeded_empty_slab(kmem_cache_s *s,
 		kmem_cache_node_s *n, slab_s *slab) {
-
 	ulong flags;
 	spin_lock_irqsave(&n->list_lock, flags);
 	remove_from_partial(&s->node, slab);
 	dec_slabs_node(s, slab->objects);
 	spin_unlock_irqrestore(&n->list_lock, flags);
-
-	free_slab(s, slab);
 }
 
 /* Perform the actual freeing while we still hold the locks */
 static void
-free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
+free_single_to_partial(kmem_cache_s *s,
+		slab_s *slab, void *object) {
 	slab->inuse--;
 	set_freepointer(s, object, slab->freelist);
 	slab->freelist = object;
@@ -323,28 +316,29 @@ free_single_to_partial(kmem_cache_s *s, slab_s *slab, void *object) {
 static noinline void
 free_to_partial_list(kmem_cache_s *s, kmem_cache_node_s *n,
 		slab_s *slab, void *object) {
-	ulong flags;
 
+	ulong flags;
 	spin_lock_irqsave(&n->list_lock, flags);
-	test_move_full_slab(s, n, slab, false);
+	test_full_move_to_partial(s, n, slab);
 	free_single_to_partial(s, slab, object);
 	spin_unlock_irqrestore(&n->list_lock, flags);
 }
 
-static __always_inline void
+static void
 slab_free(kmem_cache_s *s, slab_s *slab, void *object) {
 
 	kmem_cache_node_s *n = &s->node;
 	free_to_partial_list(s, n, slab, object);
+
 	/*
 	 * If the slab is empty, and node's partial list is full,
 	 * it should be discarded anyway no matter it's on full or
 	 * partial list.
 	 */
-	if (slab->inuse != 0 || n->partial.count < s->min_partial);
-		return;
-
-	recycle_exceeded_empty_slab(s, n, slab);
+	if (slab->inuse == 0 || n->partial.count >= s->min_partial) {
+	    offline_exceeded_empty_slab(s, n, slab);
+	    free_slab(s, slab);
+	}
 }
 
 void kmem_cache_free(kmem_cache_s *s, void *x) {
