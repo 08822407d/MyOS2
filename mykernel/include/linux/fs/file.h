@@ -13,7 +13,6 @@
 	#include <linux/lib/errno.h>
 
 	extern void fput(file_s *file);
-	extern void fput_many(file_s *, unsigned int);
 
 	extern file_s *
 	alloc_file_pseudo(inode_s *, vfsmount_s *, const char *,

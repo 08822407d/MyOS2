@@ -5,6 +5,7 @@
 	#include "kmalloc/kmalloc_types.h"
 	#include "kmalloc/kmalloc.h"
 
+
 	#include <linux/kernel/cache.h>
 
 	void __init kmem_cache_init(void);
@@ -79,5 +80,8 @@
 
 	void free_large_kmalloc(folio_s *folio, void *object);
 
+	#include "kmalloc/slub_const.h"
+	#include "kmalloc/slub_types.h"
+	#include "kmalloc/slub.h"
 
 #endif /* _LINUX_KMALLOC_API_H_ */

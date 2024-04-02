@@ -96,6 +96,8 @@ typedef struct shmem_options {
 #define SHMEM_SEEN_INUMS 8
 } shmem_opts_s;
 
+static kmem_cache_s *shmem_inode_cachep;
+
 static inline shmem_sb_info_s *SHMEM_SB(super_block_s *sb)
 {
 	return sb->s_fs_info;
@@ -327,15 +329,20 @@ static const fs_ctxt_ops_s shmem_fs_context_ops = {
 	// .reconfigure		= shmem_reconfigure,
 };
 
-static inode_s *shmem_alloc_inode(super_block_s *sb)
-{
+static inode_s *shmem_alloc_inode(super_block_s *sb) {
 	shmem_inode_info_s *info;
-	info = kmalloc(sizeof(shmem_inode_info_s), GFP_KERNEL);
+	info = kmem_cache_alloc(shmem_inode_cachep, GFP_KERNEL);
 	if (info == NULL)
 		return ERR_PTR(-ENOMEM);
 	
 	inode_init_once(&info->vfs_inode);
 	return &info->vfs_inode;
+}
+
+static void shmem_free_in_core_inode(inode_s *inode) {
+	// if (S_ISLNK(inode->i_mode))
+	// 	kfree(inode->i_link);
+	kmem_cache_free(shmem_inode_cachep, SHMEM_I(inode));
 }
 
 static void shmem_destroy_inode(inode_s *inode)
@@ -348,6 +355,14 @@ static void shmem_init_inode(void *foo)
 {
 	shmem_inode_info_s *info = foo;
 	inode_init_once(&info->vfs_inode);
+}
+
+static void shmem_init_inodecache(void)
+{
+	shmem_inode_cachep =
+			kmem_cache_create("shmem_inode_cache",
+				sizeof(shmem_inode_info_s), 0,
+				SLAB_PANIC|SLAB_ACCOUNT);
 }
 
 static const file_ops_s shmem_file_operations = {
@@ -421,8 +436,11 @@ static fs_type_s shmem_fs_type = {
 };
 
 
-int shmem_init(void)
+int __init shmem_init(void)
 {
+	int error;
+	shmem_init_inodecache();
+
 	BUG_ON(register_filesystem(&shmem_fs_type) != 0);
 
 	shm_mnt = kern_mount(&shmem_fs_type);

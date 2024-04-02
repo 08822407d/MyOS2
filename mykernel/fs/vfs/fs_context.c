@@ -160,7 +160,7 @@ const fs_ctxt_ops_s legacy_fs_context_ops = {
  */
 static int legacy_init_fs_context(fs_ctxt_s *fc)
 {
-	fc->fs_private = kmalloc(sizeof(legacy_fs_ctx_s), GFP_KERNEL);
+	fc->fs_private = kzalloc(sizeof(legacy_fs_ctx_s), GFP_KERNEL);
 	if (fc->fs_private == NULL)
 		return -ENOMEM;
 	fc->ops = &legacy_fs_context_ops;

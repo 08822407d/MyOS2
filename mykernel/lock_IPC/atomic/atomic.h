@@ -1858,6 +1858,7 @@
 	// 	instrument_atomic_read_write(v, sizeof(*v));
 	// 	return arch_atomic_long_dec_and_test(v);
 	// }
+	#define atomic_long_dec_and_test arch_atomic_long_dec_and_test
 
 	// static __always_inline bool
 	// atomic_long_inc_and_test(atomic_long_t *v)

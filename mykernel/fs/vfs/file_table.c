@@ -31,14 +31,17 @@
 #include <linux/fs/internal.h>
 
 
+/* SLAB cache for file structures */
+static kmem_cache_s *filp_cachep __read_mostly;
+
+
 // static struct file *__alloc_file(int flags, const struct cred *cred)
 static file_s *__alloc_file(int flags)
 {
 	struct file *f;
 	int error;
 
-	// f = kmem_cache_zalloc(filp_cachep, GFP_KERNEL);
-	f = kzalloc(sizeof(file_s), GFP_KERNEL);
+	f = kmem_cache_zalloc(filp_cachep, GFP_KERNEL);
 	if (unlikely(!f))
 		return ERR_PTR(-ENOMEM);
 
@@ -102,11 +105,9 @@ over:
 	return ERR_PTR(-ENFILE);
 }
 
-void fput_many(file_s *file, unsigned int refs)
+void fput(file_s *file)
 {
-	if (atomic_long_sub_and_test(refs, &file->f_count)) {
-		kfree (file);
-
+	if (atomic_long_dec_and_test(&file->f_count)) {
 		task_s *task = current;
 
 		// if (likely(!in_interrupt() && !(task->flags & PF_KTHREAD))) {
@@ -122,10 +123,15 @@ void fput_many(file_s *file, unsigned int refs)
 
 		// if (llist_add(&file->f_u.fu_llist, &delayed_fput_list))
 		// 	schedule_delayed_work(&delayed_fput_work, 1);
+
+		kmem_cache_free(filp_cachep, file);
 	}
 }
 
-void fput(file_s *file)
+
+void __init files_init(void)
 {
-	fput_many(file, 1);
+	filp_cachep = kmem_cache_create("filp", sizeof(file_s), 0,
+					SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+	// percpu_counter_init(&nr_files, 0, GFP_KERNEL);
 }

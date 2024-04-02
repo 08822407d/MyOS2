@@ -72,7 +72,7 @@ out:
 	return s;
 
 out_free_cache:
-	// kmem_cache_free(kmem_cache, s);
+	kmem_cache_free(kmem_cache, s);
 	goto out;
 }
 

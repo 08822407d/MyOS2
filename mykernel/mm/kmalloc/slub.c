@@ -50,8 +50,6 @@ typedef struct partial_context {
 #define __CMPXCHG_DOUBLE	((slab_flags_t __force)0x40000000U)
 
 
-static kmem_cache_s *kmem_cache_node;
-
 static inline unsigned int
 order_objects(uint order, uint size) {
 	return ((uint)PAGE_SIZE << order) / size;
