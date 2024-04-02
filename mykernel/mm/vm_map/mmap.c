@@ -33,7 +33,7 @@ static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
 vma_s *vm_area_alloc(mm_s *mm)
 {
 	vma_s *vma;
-	vma = kmalloc(sizeof(vma_s), GFP_KERNEL);
+	vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 	if (vma)
 		vma_init(vma, mm);
 	return vma;
@@ -41,7 +41,7 @@ vma_s *vm_area_alloc(mm_s *mm)
 
 vma_s *vm_area_dup(vma_s *orig)
 {
-	vma_s *new = kmalloc(sizeof(vma_s), GFP_KERNEL);
+	vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 
 	if (new) {
 		// ASSERT_EXCLUSIVE_WRITER(orig->vm_flags);
@@ -62,7 +62,7 @@ vma_s *vm_area_dup(vma_s *orig)
 void vm_area_free(vma_s *vma)
 {
 	// free_anon_vma_name(vma);
-	kfree(vma);
+	kmem_cache_free(vm_area_cachep, vma);
 }
 
 

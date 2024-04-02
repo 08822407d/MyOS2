@@ -5,6 +5,8 @@
 	#include "vm_map/vm_map_types.h"
 	#include "vm_map/vm_map.h"
 
+	extern kmem_cache_s *vm_area_cachep;
+
 	/* generic vm_area_ops exported for stackable file systems */
 	extern vm_fault_t filemap_fault(vm_fault_s *vmf);
 	extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,

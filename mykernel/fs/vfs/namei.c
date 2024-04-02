@@ -55,7 +55,7 @@ typedef struct nameidata
 /*==============================================================================================*
  *								relative fuctions for vfs										*
  *==============================================================================================*/
-static inline filename_s *__getname()
+static inline filename_s *__myos_getname()
 {
 	filename_s *name = kmalloc(sizeof(filename_s), GFP_KERNEL);
 	if (name == NULL)
@@ -77,7 +77,7 @@ filename_s *getname(const char *u_filename)
 	
 	//					int flags, int *empty)
 	// {
-		filename_s *name = __getname();
+		filename_s *name = __myos_getname();
 	// }
 
 	name->len = len;
@@ -103,7 +103,7 @@ filename_s *getname(const char *u_filename)
 // struct filename *getname_kernel(const char __user *filename)
 filename_s *getname_kernel(const char *k_filename)
 {
-	filename_s *name = __getname();
+	filename_s *name = __myos_getname();
 
 	size_t len = strlen((void *)k_filename);
 	if (len > PAGE_SIZE)

@@ -37,6 +37,8 @@ typedef struct bdev_inode {
 	inode_s vfs_inode;
 } bdev_inode_s;
 
+static kmem_cache_s *bdev_cachep __read_mostly;
+
 static inline bdev_inode_s *BDEV_I(inode_s *inode)
 {
 	return container_of(inode, bdev_inode_s, vfs_inode);
@@ -47,9 +49,8 @@ blk_dev_s *I_BDEV(inode_s *inode)
 	return &BDEV_I(inode)->bdev;
 }
 
-static inode_s *bdev_alloc_inode(super_block_s *sb)
-{
-	bdev_inode_s *ei = kmalloc(sizeof(bdev_inode_s), GFP_KERNEL);
+static inode_s *bdev_alloc_inode(super_block_s *sb) {
+	bdev_inode_s *ei = kmem_cache_alloc(bdev_cachep, GFP_KERNEL);
 
 	if (!ei)
 		return NULL;
@@ -57,8 +58,7 @@ static inode_s *bdev_alloc_inode(super_block_s *sb)
 	return &ei->vfs_inode;
 }
 
-static void bdev_free_inode(inode_s *inode)
-{
+static void bdev_free_inode(inode_s *inode) {
 	blk_dev_s *bdev = I_BDEV(inode);
 
 	// if (!bdev_is_partition(bdev)) {
@@ -70,7 +70,7 @@ static void bdev_free_inode(inode_s *inode)
 	// if (MAJOR(bdev->bd_dev) == BLOCK_EXT_MAJOR)
 	// 	blk_free_ext_minor(MINOR(bdev->bd_dev));
 
-	kfree(BDEV_I(inode));
+	kmem_cache_free(bdev_cachep, BDEV_I(inode));
 }
 
 static const super_ops_s bdev_sops = {
@@ -81,8 +81,7 @@ static const super_ops_s bdev_sops = {
 	// .evict_inode	= bdev_evict_inode,
 };
 
-static int bd_init_fs_context(fs_ctxt_s *fc)
-{
+static int bd_init_fs_context(fs_ctxt_s *fc) {
 	pseudo_fs_ctxt_s *ctx = init_pseudo(fc, BDEVFS_MAGIC);
 	if (!ctx)
 		return -ENOMEM;
@@ -95,6 +94,7 @@ static fs_type_s bd_type = {
 	.name				= "bdev",
 	.init_fs_context	= bd_init_fs_context,
 	.kill_sb			= kill_anon_super,
+	.fs_supers			= LIST_HEADER_INIT(bd_type.fs_supers),
 };
 
 super_block_s *blockdev_superblock;
@@ -104,7 +104,9 @@ void bdev_cache_init(void)
 	int err;
 	static vfsmount_s *bd_mnt;
 
-	INIT_LIST_HEADER_S(&bd_type.fs_supers);
+	bdev_cachep = kmem_cache_create("bdev_cache", sizeof(bdev_inode_s),
+					0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
+						SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC));
 	err = register_filesystem(&bd_type);
 	if (err)
 		color_printk(RED, BLACK, "Cannot register bdev pseudo-fs");
@@ -273,12 +275,12 @@ blk_dev_s *blkdev_get_by_dev(dev_t dev, fmode_t mode)
 	gendisk_s *disk;
 	int ret;
 
-// 	ret = devcgroup_check_permission(DEVCG_DEV_BLOCK,
-// 			MAJOR(dev), MINOR(dev),
-// 			((mode & FMODE_READ) ? DEVCG_ACC_READ : 0) |
-// 			((mode & FMODE_WRITE) ? DEVCG_ACC_WRITE : 0));
-// 	if (ret)
-// 		return ERR_PTR(ret);
+	// ret = devcgroup_check_permission(DEVCG_DEV_BLOCK,
+	// 		MAJOR(dev), MINOR(dev),
+	// 		((mode & FMODE_READ) ? DEVCG_ACC_READ : 0) |
+	// 		((mode & FMODE_WRITE) ? DEVCG_ACC_WRITE : 0));
+	// if (ret)
+	// 	return ERR_PTR(ret);
 
 	bdev = blkdev_get_no_open(dev);
 	if (!bdev)

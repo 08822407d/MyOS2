@@ -42,6 +42,9 @@
 	extern files_struct_s init_files;
 	extern taskfs_s init_fs;
 
+	extern kmem_cache_s *files_cachep;
+	extern kmem_cache_s *fs_cachep;
+
 	extern void set_fs_root(taskfs_s *, const path_s *);
 	extern void set_fs_pwd(taskfs_s *, const path_s *);
 	extern void free_fs_struct(taskfs_s *);

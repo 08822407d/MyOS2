@@ -36,6 +36,12 @@
 #include <linux/fs/internal.h>
 
 
+/* SLAB cache for __getname() consumers */
+kmem_cache_s *names_cachep __read_mostly;
+EXPORT_SYMBOL(names_cachep);
+
+static kmem_cache_s *dentry_cache __read_mostly;
+
 /*
  * Usage:
  * dcache->d_inode->i_lock protects:
@@ -369,9 +375,45 @@ dentry_s *d_make_root(inode_s *root_inode)
 
 
 
+
+static void __init dcache_init(void) {
+	/*
+	 * A constructor could be added for stable state like the lists,
+	 * but it is probably not worth it because of the cache nature
+	 * of the dcache.
+	 */
+	// dentry_cache = KMEM_CACHE_USERCOPY(dentry,
+	// 	SLAB_RECLAIM_ACCOUNT|SLAB_PANIC|SLAB_MEM_SPREAD|SLAB_ACCOUNT,
+	// 	d_iname);
+	dentry_cache = kmem_cache_create("dentry",
+					sizeof(dentry_s), __alignof__(dentry_s),
+					SLAB_RECLAIM_ACCOUNT | SLAB_PANIC |
+						SLAB_MEM_SPREAD | SLAB_ACCOUNT);
+
+	// /* Hash may have been set up in dcache_init_early */
+	// if (!hashdist)
+	// 	return;
+
+	// dentry_hashtable =
+	// 	alloc_large_system_hash("Dentry cache",
+	// 				sizeof(struct hlist_bl_head),
+	// 				dhash_entries,
+	// 				13,
+	// 				HASH_ZERO,
+	// 				&d_hash_shift,
+	// 				NULL,
+	// 				0,
+	// 				0);
+	// d_hash_shift = 32 - d_hash_shift;
+}
+
+
 void vfs_caches_init(void)
 {
-	// dcache_init();
+	names_cachep = kmem_cache_create("names_cache", PATH_MAX, 0,
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC);
+
+	dcache_init();
 	// inode_init();
 	// files_init();
 	// files_maxfiles_init();

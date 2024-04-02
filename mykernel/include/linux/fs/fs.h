@@ -2586,10 +2586,10 @@
 	// extern void __init vfs_caches_init_early(void);
 	extern void vfs_caches_init(void);
 
-	// extern kmem_cache_s *names_cachep;
+	extern kmem_cache_s *names_cachep;
 
-	// #define __getname()		kmem_cache_alloc(names_cachep, GFP_KERNEL)
-	// #define __putname(name)		kmem_cache_free(names_cachep, (void *)(name))
+	#define __getname()			kmem_cache_alloc(names_cachep, GFP_KERNEL)
+	#define __putname(name)		kmem_cache_free(names_cachep, (void *)(name))
 
 	// extern super_block_s *blockdev_superblock;
 	// static inline bool sb_is_blkdev_sb(super_block_s *sb)

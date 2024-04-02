@@ -68,7 +68,7 @@ kmem_cache_s *files_cachep;
 kmem_cache_s *fs_cachep;
 
 /* SLAB cache for vm_area_struct structures */
-static kmem_cache_s *vm_area_cachep;
+kmem_cache_s *vm_area_cachep;
 
 /* SLAB cache for mm_struct structures (tsk->mm) */
 static kmem_cache_s *mm_cachep;
@@ -293,14 +293,8 @@ static inline void mm_free_pgd(mm_s *mm) {
 	pgd_free(mm, mm->pgd);
 }
 
-
-static inline mm_s *allocate_mm() {
-	return kzalloc(sizeof(mm_s), GFP_KERNEL);
-}
-
-static inline void free_mm(mm_s *mm) {
-	kfree(mm);
-}
+#define allocate_mm()	(kmem_cache_alloc(mm_cachep, GFP_KERNEL))
+#define free_mm(mm)		(kmem_cache_free(mm_cachep, (mm)))
 
 /*
  * Called when the last reference to the mm
@@ -1601,6 +1595,22 @@ int unshare_files(void)
 
 
 
+void __init mm_cache_init(void)
+{
+	unsigned int mm_size;
+
+	/*
+	 * The mm_cpumask is located at the end of mm_struct, and is
+	 * dynamically sized based on the maximum CPU number this system
+	 * can have, taking hotplug into account (nr_cpu_ids).
+	 */
+	// mm_size = sizeof(struct mm_struct) + cpumask_size() + mm_cid_size();
+	mm_size = sizeof(mm_s);
+
+	mm_cachep = kmem_cache_create("mm_struct",
+					mm_size, L1_CACHE_BYTES,
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+}
 
 void __init proc_caches_init(void)
 {
@@ -1613,16 +1623,16 @@ void __init proc_caches_init(void)
 	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
 	// 		NULL);
 	files_cachep = kmem_cache_create("files_cache",
-			sizeof(files_struct_s), 0,
-			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+					sizeof(files_struct_s), 0,
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
 	fs_cachep = kmem_cache_create("fs_cache",
-			sizeof(taskfs_s), 0,
-			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+					sizeof(taskfs_s), 0,
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
 
 	// vm_area_cachep = KMEM_CACHE(vma_s, SLAB_PANIC|SLAB_ACCOUNT);
 	vm_area_cachep = kmem_cache_create("vm_area_struct",
-			sizeof(vma_s), __alignof__(vma_s),
-			SLAB_PANIC|SLAB_ACCOUNT);
+						sizeof(vma_s), __alignof__(vma_s),
+						SLAB_PANIC|SLAB_ACCOUNT);
 
 	// mmap_init();
 	// nsproxy_cache_init();

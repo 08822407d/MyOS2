@@ -3,9 +3,9 @@
 #define _LINUX_DOUBLE_LIST_MACROS_H_
 
 	#define LIST_INIT(name) { &(name), &(name) }
-	#define LIST_HEADER_INIT(name) {			\
-				.anchor	= { &(name.anchor), &(name.anchor) },	\
-				.count	= 0,					\
+	#define LIST_HEADER_INIT(name) {				\
+				.anchor	= LIST_INIT(name.anchor),	\
+				.count	= 0,						\
 			}
 
 	#define LIST_S(name) \

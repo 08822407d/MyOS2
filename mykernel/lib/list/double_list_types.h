@@ -12,8 +12,8 @@
 	} List_s;
 
 	typedef struct List_hdr {
-		ulong		count;
 		List_s		anchor;
+		ulong		count;
 	} List_hdr_s;
 
 #endif /* _LINUX_DOUBLE_LIST_TYPES_H_ */

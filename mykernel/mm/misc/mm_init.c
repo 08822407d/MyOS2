@@ -440,5 +440,5 @@ void __init mm_core_init(void)
 	// /* Should be run after espfix64 is set up. */
 	// pti_init();
 	// kmsan_init_runtime();
-	// mm_cache_init();
+	mm_cache_init();
 }

@@ -35,8 +35,7 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 	unsigned int open_files, i;
 
 	*errorp = -ENOMEM;
-	// newf = kmem_cache_alloc(files_cachep, GFP_KERNEL);
-	newf = kzalloc(sizeof(files_struct_s), GFP_KERNEL);
+	newf = kmem_cache_alloc(files_cachep, GFP_KERNEL);
 	if (!newf)
 		goto out;
 
@@ -67,8 +66,7 @@ files_struct_s *dup_fd(files_struct_s *oldf, unsigned int max_fds, int *errorp)
 	return newf;
 
 out_release:
-	// kmem_cache_free(files_cachep, newf);
-	kfree(newf);
+	kmem_cache_free(files_cachep, newf);
 out:
 	return NULL;
 }
@@ -95,8 +93,7 @@ void put_files_struct(files_struct_s *files)
 		/* free the arrays if they are not embedded */
 		// if (fdt != &files->fdtab)
 		// 	__free_fdtable(fdt);
-		// kmem_cache_free(files_cachep, files);
-		kfree(files);
+		kmem_cache_free(files_cachep, files);
 	}
 }
 

@@ -86,8 +86,7 @@ void free_fs_struct(taskfs_s *fs)
 {
 	path_put(&fs->root);
 	path_put(&fs->pwd);
-	// kmem_cache_free(fs_cachep, fs);
-	kfree(fs);
+	kmem_cache_free(fs_cachep, fs);
 }
 
 void exit_fs(task_s *tsk)
@@ -111,8 +110,7 @@ void exit_fs(task_s *tsk)
 
 taskfs_s *copy_fs_struct(taskfs_s *old)
 {
-	// taskfs_s *fs = kmem_cache_alloc(fs_cachep, GFP_KERNEL);
-	taskfs_s *fs = kzalloc(sizeof(taskfs_s), GFP_KERNEL);
+	taskfs_s *fs = kmem_cache_alloc(fs_cachep, GFP_KERNEL);
 	/* We don't need to lock fs - think why ;-) */
 	if (fs) {
 		fs->users = 1;
