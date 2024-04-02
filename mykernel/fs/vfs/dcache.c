@@ -414,7 +414,7 @@ void vfs_caches_init(void)
 					SLAB_HWCACHE_ALIGN|SLAB_PANIC);
 
 	dcache_init();
-	// inode_init();
+	inode_init();
 	// files_init();
 	// files_maxfiles_init();
 	mnt_init();

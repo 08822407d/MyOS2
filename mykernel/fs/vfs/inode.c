@@ -27,6 +27,9 @@
 // #include <linux/kernel/slab.h>
 #include <obsolete/printk.h>
 
+
+static kmem_cache_s *inode_cachep __read_mostly;
+
 /*
  * Inode locking rules:
  *
@@ -94,20 +97,20 @@ int inode_init_always(super_block_s *sb, inode_s *inode)
 	// if (security_inode_alloc(inode))
 	// 	goto out;
 
-// 	mapping->a_ops = &empty_aops;
-// 	mapping->host = inode;
-// 	mapping->flags = 0;
-// 	mapping->wb_err = 0;
-// 	atomic_set(&mapping->i_mmap_writable, 0);
+	// mapping->a_ops = &empty_aops;
+	// mapping->host = inode;
+	// mapping->flags = 0;
+	// mapping->wb_err = 0;
+	// atomic_set(&mapping->i_mmap_writable, 0);
 // #ifdef CONFIG_READ_ONLY_THP_FOR_FS
 // 	atomic_set(&mapping->nr_thps, 0);
 // #endif
-// 	mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
-// 	mapping->private_data = NULL;
-// 	mapping->writeback_index = 0;
+	// mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
+	// mapping->private_data = NULL;
+	// mapping->writeback_index = 0;
 	inode->i_private = NULL;
-// 	inode->i_mapping = mapping;
-// 	INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
+	// inode->i_mapping = mapping;
+	// INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
 
 	return 0;
 out:
@@ -122,7 +125,7 @@ static inode_s *alloc_inode(super_block_s *sb)
 	if (ops->alloc_inode != NULL)
 		inode = ops->alloc_inode(sb);
 	else
-		inode = kmalloc(sizeof(inode_s), GFP_KERNEL);
+		inode = kmem_cache_alloc(inode_cachep, GFP_KERNEL);
 
 	if (inode == NULL)
 		return NULL;
@@ -133,7 +136,10 @@ static inode_s *alloc_inode(super_block_s *sb)
 			if (!ops->free_inode)
 				return NULL;
 		}
-		// inode->free_inode = ops->free_inode;
+		if (ops->free_inode)
+			ops->free_inode(inode);
+		else
+			kmem_cache_free(inode_cachep, inode);
 		return NULL;
 	}
 
@@ -300,6 +306,32 @@ void iput(inode_s *inode)
 	// 	}
 	// 	iput_final(inode);
 	// }
+}
+
+
+
+void __init inode_init(void)
+{
+	/* inode slab cache */
+	inode_cachep = kmem_cache_create("inode_cache",
+					sizeof(inode_s), 0,
+					(SLAB_RECLAIM_ACCOUNT | SLAB_PANIC |
+						SLAB_MEM_SPREAD | SLAB_ACCOUNT));
+
+	// /* Hash may have been set up in inode_init_early */
+	// if (!hashdist)
+	// 	return;
+
+	// inode_hashtable =
+	// 	alloc_large_system_hash("Inode-cache",
+	// 				sizeof(struct hlist_head),
+	// 				ihash_entries,
+	// 				14,
+	// 				HASH_ZERO,
+	// 				&i_hash_shift,
+	// 				&i_hash_mask,
+	// 				0,
+	// 				0);
 }
 
 void init_special_inode(inode_s *inode, umode_t mode, dev_t rdev)

@@ -519,7 +519,16 @@ static void kmalloc_test()
 static kmem_cache_s __init
 *bootstrap(kmem_cache_s *static_cache) {
 	kmem_cache_s *s = kmem_cache_zalloc(kmem_cache, GFP_NOWAIT);
+
+	kmem_cache_node_s *tmp_n = &static_cache->node;
+	kmem_cache_node_s *n = &s->node;
+	slab_s *slab = container_of(tmp_n->partial.anchor.next, slab_s, slab_list);
+
+	remove_from_partial(tmp_n, slab);
 	memcpy(s, static_cache, sizeof(kmem_cache_s));
+	INIT_LIST_HEADER_S(&n->partial);
+	INIT_LIST_HEADER_S(&n->full);
+	add_to_partial(n, slab);
 	list_header_push(&slab_caches, &s->list);
 	return s;
 }
