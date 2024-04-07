@@ -1,7 +1,6 @@
 #ifndef _LINUX_VM_MAP_API_H_
 #define _LINUX_VM_MAP_API_H_
 
-	#include "vm_map/vm_map_const.h"
 	#include "vm_map/vm_map_types.h"
 	#include "vm_map/vm_map.h"
 

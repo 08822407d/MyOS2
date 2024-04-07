@@ -1,10 +1,8 @@
 #ifndef _LINUX_KMALLOC_API_H_
 #define _LINUX_KMALLOC_API_H_
 
-	#include "kmalloc/kmalloc_const.h"
 	#include "kmalloc/kmalloc_types.h"
 	#include "kmalloc/kmalloc.h"
-
 
 	#include <linux/kernel/cache.h>
 
@@ -80,7 +78,6 @@
 
 	void free_large_kmalloc(folio_s *folio, void *object);
 
-	#include "kmalloc/slub_const.h"
 	#include "kmalloc/slub_types.h"
 	#include "kmalloc/slub.h"
 

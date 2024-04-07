@@ -4,8 +4,6 @@
 	#include <linux/compiler/compiler_types.h>
 	#include <asm/insns.h>
 
-	#include "memfault_const.h"
-
 	struct vm_area_struct;
 	typedef struct vm_area_struct vma_s;
 

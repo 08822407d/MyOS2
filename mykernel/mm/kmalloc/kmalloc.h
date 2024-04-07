@@ -5,7 +5,6 @@
 	#include <linux/kernel/overflow.h>
 	#include <linux/kernel/mm.h>
 
-	#include "kmalloc_const.h"
 	#include "kmalloc_types.h"
 
 	#include "slub_types.h"
@@ -13,6 +12,9 @@
 
 
 	#ifdef DEBUG
+
+		extern void
+		*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags);
 
 		extern __alloc_size(1) void
 		*kmalloc(size_t size, gfp_t flags);
@@ -32,6 +34,12 @@
 	#endif
 	
 	#if defined(KMALLOC_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void
+		*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags) {
+			return kmem_cache_alloc(k, flags | __GFP_ZERO);
+		}
 
 		/**
 		 * kmalloc - allocate kernel memory
@@ -99,36 +107,35 @@
 			return ret_val;
 		}
 
-		// /**
-		//  * kmalloc_array - allocate memory for an array.
-		//  * @n: number of elements.
-		//  * @size: element size.
-		//  * @flags: the type of memory to allocate (see kmalloc).
-		//  */
-		// PREFIX_STATIC_INLINE
-		// __alloc_size(1, 2) void
-		// *kmalloc_array(size_t n, size_t size, gfp_t flags) {
-		// 	size_t bytes;
+		/**
+		 * kmalloc_array - allocate memory for an array.
+		 * @n: number of elements.
+		 * @size: element size.
+		 * @flags: the type of memory to allocate (see kmalloc).
+		 */
+		PREFIX_STATIC_INLINE
+		__alloc_size(1, 2) void
+		*kmalloc_array(size_t n, size_t size, gfp_t flags) {
+			size_t bytes;
 
-		// 	if (unlikely(check_mul_overflow(n, size, &bytes)))
-		// 		return NULL;
-		// 	if (__builtin_constant_p(n) && __builtin_constant_p(size))
-		// 		return kmalloc(bytes, flags);
-		// 	return __kmalloc(bytes, flags);
-		// }
+			if (unlikely(check_mul_overflow(n, size, &bytes)))
+				return NULL;
+			if (__builtin_constant_p(n) && __builtin_constant_p(size))
+				return kmalloc(bytes, flags);
+			return __kmalloc(bytes, flags);
+		}
 
-		// /**
-		//  * kcalloc - allocate memory for an array. The memory is set to zero.
-		//  * @n: number of elements.
-		//  * @size: element size.
-		//  * @flags: the type of memory to allocate (see kmalloc).
-		//  */
-		// PREFIX_STATIC_INLINE
-		// __alloc_size(1, 2) void
-		// *kcalloc(size_t n, size_t size, gfp_t flags) {
-		// 	return kmalloc_array(n, size, flags | __GFP_ZERO);
-		// }
-
+		/**
+		 * kcalloc - allocate memory for an array. The memory is set to zero.
+		 * @n: number of elements.
+		 * @size: element size.
+		 * @flags: the type of memory to allocate (see kmalloc).
+		 */
+		PREFIX_STATIC_INLINE
+		__alloc_size(1, 2) void
+		*kcalloc(size_t n, size_t size, gfp_t flags) {
+			return kmalloc_array(n, size, flags | __GFP_ZERO);
+		}
 
 		/**
 		 * kzalloc - allocate memory. The memory is set to zero.

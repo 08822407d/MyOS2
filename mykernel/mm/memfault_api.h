@@ -1,7 +1,6 @@
 #ifndef _LINUX_MEM_FAULT_API_H_
 #define _LINUX_MEM_FAULT_API_H_
 
-    #include "fault/memfault_const.h"
     #include "fault/memfault_types.h"
 	#include "fault/pgtable.h"
 

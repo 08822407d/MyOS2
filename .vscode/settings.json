@@ -246,6 +246,12 @@
         "hash_list_types.h": "c",
         "double_list_macros.h": "c",
         "double_list.h": "c",
-        "slub.h": "c"
+        "slub.h": "c",
+        "kmalloc_const.h": "c",
+        "kmalloc_types.h": "c",
+        "nodemask.h": "c",
+        "mm_consts.h": "c",
+        "mmzone_const.h": "c",
+        "page_alloc_const.h": "c"
     }
 }

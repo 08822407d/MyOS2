@@ -1,7 +1,7 @@
 #ifndef _LINUX_MEMBLOCK_TYPES_H_
 #define _LINUX_MEMBLOCK_TYPES_H_
 
-	#include "memblock_const.h"
+	// #include <linux/kernel/mm_consts.h>
 
 	#define __init_memblock __meminit
 	#define __initdata_memblock __meminitdata

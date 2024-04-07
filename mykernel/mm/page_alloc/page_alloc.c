@@ -1,8 +1,6 @@
 #define PAGEALLOC_DEFINATION
 #include "page_alloc.h"
 
-#include "page_alloc_const.h"
-
 #include <linux/kernel/nodemask.h>
 
 // SPDX-License-Identifier: GPL-2.0-only

@@ -1,7 +1,6 @@
 #ifndef _LINUX_EARLYMEM_API_H_
 #define _LINUX_EARLYMEM_API_H_
 
-	#include "early/memblock_const.h"
 	#include "early/memblock_types.h"
 	#include "early/memblock.h"
 

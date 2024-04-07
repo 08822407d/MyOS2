@@ -3,8 +3,6 @@
 
 	#include <linux/kernel/mm.h>
 
-	#include "vm_map_const.h"
-
 	struct mm_struct;
 	typedef struct mm_struct mm_s;
 	struct vm_operations_struct;

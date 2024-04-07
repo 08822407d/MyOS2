@@ -4,6 +4,18 @@
 
 	#include <linux/kernel/types.h>
 
+	/*
+	 * Minimum number of partial slabs. These will be left on the partial
+	 * lists even if they are empty. kmem_cache_shrink may reclaim them.
+	 */
+	#define MIN_PARTIAL 4
+	/*
+	 * Maximum number of desirable partial slabs.
+	 * The existence of more partial slabs makes kmem_cache_shrink
+	 * sort the partial list by the number of objects in use.
+	 */
+	#define MAX_PARTIAL 8
+
 	#define OO_SHIFT			16
 	#define OO_MASK				((1 << OO_SHIFT) - 1)
 	#define MAX_OBJS_PER_PAGE	32767 /* since slab.objects is u15 */
@@ -84,19 +96,11 @@
 	#define SLAB_MEM_SPREAD			((slab_flags_t __force)0x00100000U)
 	/* Trace allocations and frees */
 	#define SLAB_TRACE				((slab_flags_t __force)0x00200000U)
-
 	/* Flag to prevent checks on free */
 	#define SLAB_DEBUG_OBJECTS		((slab_flags_t __force)0x00400000U)
-
 	/* Avoid kmemleak tracing */
 	#define SLAB_NOLEAKTRACE		((slab_flags_t __force)0x00800000U)
 
-	/* Fault injection mark */
-	#ifdef CONFIG_FAILSLAB
-	#	define SLAB_FAILSLAB		((slab_flags_t __force)0x02000000U)
-	#else
-	#	define SLAB_FAILSLAB		0
-	#endif
 	/* Account to memcg */
 	#ifdef CONFIG_MEMCG_KMEM
 	#	define SLAB_ACCOUNT			((slab_flags_t __force)0x04000000U)
@@ -104,11 +108,6 @@
 	#	define SLAB_ACCOUNT			0
 	#endif
 
-	#ifdef CONFIG_KASAN_GENERIC
-	#	define SLAB_KASAN			((slab_flags_t __force)0x08000000U)
-	#else
-	#	define SLAB_KASAN			0
-	#endif
 
 	/*
 	 * Ignore user specified debugging flags.

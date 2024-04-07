@@ -15,16 +15,6 @@
 	#include <linux/kernel/types.h>
 	#include <linux/compiler/compiler_types.h>
 
-	#include "slub_const.h"
 	#include "slub_types.h"
-
-
-	/*
-	 * Shortcuts
-	 */
-	static inline void
-	*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags) {
-		return kmem_cache_alloc(k, flags | __GFP_ZERO);
-	}
 
 #endif	/* _LINUX_SLUB_H_ */

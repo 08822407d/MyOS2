@@ -2,7 +2,10 @@
 #ifndef _LINUX_MM_H_
 #define _LINUX_MM_H_
 
+	#include <mm/mm_consts.h>
 	#include <mm/mm_types.h>
+	#include <asm/mm.h>
+
 	#include <mm/earlymem_api.h>
 	#include <mm/page_alloc_api.h>
 	#include <mm/mm_highmem_api.h>
@@ -10,7 +13,6 @@
 	#include <mm/memfault_api.h>
 	#include <mm/vm_map_api.h>
 	#include <mm/mm_misc_api.h>
-	#include <asm/mm.h>
 
 	#include <linux/kernel/completion.h>
 	#include <linux/kernel/sizes.h>

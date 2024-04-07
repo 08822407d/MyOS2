@@ -43,7 +43,6 @@
 #include <linux/sched/coredump.h>
 #include <asm-generic/pgalloc.h>
 
-#include "memfault_const.h"
 #include "memfault_types.h"
 
 

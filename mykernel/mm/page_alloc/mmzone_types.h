@@ -3,8 +3,6 @@
 
 	#include <linux/kernel/lock_ipc.h>
 
-	#include "mmzone_const.h"
-
 	struct pglist_data;
 	typedef struct pglist_data pg_data_t;
 

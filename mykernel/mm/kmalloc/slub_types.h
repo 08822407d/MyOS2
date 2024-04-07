@@ -11,7 +11,6 @@
 	#include <linux/kernel/kobject.h>
 	#include <linux/kernel/lib.h>
 
-	#include "slub_const.h"
 	#include "kmalloc_types.h"
 
 

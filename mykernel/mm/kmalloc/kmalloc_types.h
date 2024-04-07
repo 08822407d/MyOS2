@@ -1,8 +1,6 @@
 #ifndef _KMALLOC_TYPES_H_
 #define _KMALLOC_TYPES_H_
 
-	#include "kmalloc_const.h"
-
 	/*
 	 * Whenever changing this, take care of that kmalloc_type() and
 	 * create_kmalloc_caches() still work as intended.

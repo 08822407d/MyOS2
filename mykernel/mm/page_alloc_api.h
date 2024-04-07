@@ -4,7 +4,6 @@
 	#include <asm/mmzone_64.h>
 	#include <asm/sparsemem.h>
 
-	#include "page_alloc/page_alloc_const.h"
 	#include "page_alloc/page_alloc_types.h"
 	#include "page_alloc/page-flags.h"
 	#include "page_alloc/page_alloc.h"
