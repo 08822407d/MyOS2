@@ -38,17 +38,13 @@
  *
  * Aug/Sep 2004 Changed to four level page tables (Andi Kleen)
  */
-
-#include <linux/kernel/mm.h>
 #include <linux/sched/coredump.h>
 #include <asm-generic/pgalloc.h>
 
-#include "memfault_types.h"
+#include "../mm_types.h"
 
-
-unsigned long	max_mapnr;
+ulong	max_mapnr;
 page_s	*mem_map;
-
 /*
  * A number of key systems in x86 including ioremap() rely on the assumption
  * that high_memory defines the upper bound on direct map memory, then end
@@ -57,8 +53,7 @@ page_s	*mem_map;
  * and ZONE_HIGHMEM.
  */
 void	*high_memory;
-
-unsigned long highest_memmap_pfn __read_mostly;
+ulong	highest_memmap_pfn __read_mostly;
 
 
 /*
@@ -103,9 +98,9 @@ unsigned long highest_memmap_pfn __read_mostly;
  * PFNMAP mappings in order to support COWable mappings.
  *
  */
-page_s *vm_normal_page(vma_s *vma, unsigned long addr, pte_t pte)
+page_s *vm_normal_page(vma_s *vma, ulong addr, pte_t pte)
 {
-	unsigned long pfn = pte_pfn(pte);
+	ulong pfn = pte_pfn(pte);
 
 	// if (IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL)) {
 	// 	if (likely(!pte_special(pte)))
@@ -180,7 +175,7 @@ out:
  */
 static inline int
 copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
-		pte_t *src_pte, unsigned long addr, pte_t pte, page_s *page) {
+		pte_t *src_pte, ulong addr, pte_t pte, page_s *page) {
 	page_s *new_page;
 
 	/*
@@ -241,9 +236,9 @@ copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
  */
 static inline int
 copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
-		pte_t *dst_pte, pte_t *src_pte, unsigned long addr) {
+		pte_t *dst_pte, pte_t *src_pte, ulong addr) {
 	mm_s *src_mm = src_vma->vm_mm;
-	unsigned long vm_flags = src_vma->vm_flags;
+	ulong vm_flags = src_vma->vm_flags;
 	pte_t pte = *src_pte;
 	page_s *page;
 
@@ -287,8 +282,9 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 
 
 static int
-copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_ent,
-		pmd_t *src_pmd_ent, unsigned long addr, unsigned long end) {
+copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t
+		*dst_pmd_ent, pmd_t *src_pmd_ent, ulong addr, ulong end) {
+
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pte_t *orig_src_pte, *orig_dst_pte;
@@ -409,11 +405,11 @@ out:
 
 static inline int
 copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_ent,
-		pud_t *src_pud_ent, unsigned long addr, unsigned long end) {
+		pud_t *src_pud_ent, ulong addr, ulong end) {
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pmd_t *src_pmd_ent, *dst_pmd_ent;
-	unsigned long next;
+	ulong next;
 
 	dst_pmd_ent = pmd_alloc(dst_mm, dst_pud_ent, addr);
 	if (!dst_pmd_ent)
@@ -444,11 +440,12 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_ent,
 
 static inline int
 copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_ent,
-		p4d_t *src_p4d_ent, unsigned long addr, unsigned long end) {
+		p4d_t *src_p4d_ent, ulong addr, ulong end) {
+
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pud_t *src_pud_ent, *dst_pud_ent;
-	unsigned long next;
+	ulong next;
 
 	dst_pud_ent = pud_alloc(dst_mm, dst_p4d_ent, addr);
 	if (!dst_pud_ent)
@@ -479,10 +476,11 @@ copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_ent,
 
 static inline int
 copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_ent,
-		pgd_t *src_pgd_ent, unsigned long addr, unsigned long end) {
+		pgd_t *src_pgd_ent, ulong addr, ulong end) {
+
 	mm_s *dst_mm = dst_vma->vm_mm;
 	p4d_t *src_p4d_ent, *dst_p4d_ent;
-	unsigned long next;
+	ulong next;
 
 	dst_p4d_ent = p4d_alloc(dst_mm, dst_pgd_ent, addr);
 	if (!dst_p4d_ent)
@@ -504,9 +502,9 @@ int
 copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 {
 	pgd_t *src_pgd_ent, *dst_pgd_ent;
-	unsigned long next;
-	unsigned long addr = src_vma->vm_start;
-	unsigned long end = src_vma->vm_end;
+	ulong next;
+	ulong addr = src_vma->vm_start;
+	ulong end = src_vma->vm_end;
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	// struct mmu_notifier_range range;
@@ -588,7 +586,7 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	// bool locked = false;
 	vma_s *vma = vmf->vma;
 	mm_s *mm = vma->vm_mm;
-	unsigned long addr = vmf->address;
+	ulong addr = vmf->address;
 
 	if (likely(src)) {
 		// copy_user_highpage(dst, src, addr, vma);
@@ -676,8 +674,8 @@ pte_unlock:
 	return ret;
 }
 
-static gfp_t __get_fault_gfp_mask(vma_s *vma)
-{
+static gfp_t
+__get_fault_gfp_mask(vma_s *vma) {
 	file_s *vm_file = vma->vm_file;
 
 	// if (vm_file)
@@ -708,8 +706,8 @@ static gfp_t __get_fault_gfp_mask(vma_s *vma)
  *   held to the old page, as well as updating the rmap.
  * - In any case, unlock the PTL and drop the reference we took to the old page.
  */
-static vm_fault_t wp_page_copy(vm_fault_s *vmf)
-{
+static vm_fault_t
+wp_page_copy(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	mm_s *mm = vma->vm_mm;
 	page_s *old_page = vmf->page;
@@ -774,7 +772,8 @@ static vm_fault_t wp_page_copy(vm_fault_s *vmf)
 		// }
 		// flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
 		// entry = mk_pte(new_page, vma->vm_page_prot);
-		entry = arch_make_pte(page_to_phys(new_page) | _PAGE_ACCESSED |  _PAGE_PRESENT | _PAGE_USER);
+		entry = arch_make_pte(page_to_phys(new_page) |
+					_PAGE_ACCESSED |  _PAGE_PRESENT | _PAGE_USER);
 		// entry = pte_sw_mkyoung(entry);
 		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
 
@@ -881,8 +880,8 @@ oom:
  * but allow concurrent faults), with pte both mapped and locked.
  * We return with mmap_lock still held, but pte unmapped and unlocked.
  */
-static vm_fault_t do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl)
-{
+static vm_fault_t
+do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	vma_s *vma = vmf->vma;
 
 	// if (userfaultfd_pte_wp(vma, *vmf->pte)) {
@@ -959,8 +958,8 @@ copy:
  * but allow concurrent faults), and pte mapped but not yet locked.
  * We return with mmap_lock still held, but pte unmapped and unlocked.
  */
-static vm_fault_t do_anonymous_page(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_anonymous_page(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	page_s *page;
 	vm_fault_t ret = 0;
@@ -1030,7 +1029,8 @@ static vm_fault_t do_anonymous_page(vm_fault_s *vmf)
 	// __SetPageUptodate(page);
 
 	// entry = mk_pte(page, vma->vm_page_prot);
-	entry = arch_make_pte(page_to_phys(page) | _PAGE_PRESENT | _PAGE_USER | _PAGE_PAT);
+	entry = arch_make_pte(page_to_phys(page) |
+				_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT);
 	// entry = pte_sw_mkyoung(entry);
 	if (vma->vm_flags & VM_WRITE)
 		entry = pte_mkwrite(pte_mkdirty(entry));
@@ -1079,8 +1079,8 @@ oom:
  * released depending on flags and vma->vm_ops->fault() return value.
  * See filemap_fault() and __lock_page_retry().
  */
-static vm_fault_t __do_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+__do_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	vm_fault_t ret;
 
@@ -1156,7 +1156,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	vma_s *vma = vmf->vma;
 	page_s *page;
 	vm_fault_t ret;
-	unsigned long page_addr = 0;
+	ulong page_addr = 0;
 
 	/* Did we COW the page? */
 	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
@@ -1242,8 +1242,8 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
  * (and therefore to page order).  This way it's easier to guarantee
  * that we don't cross page table boundaries.
  */
-static vm_fault_t do_fault_around(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_fault_around(vm_fault_s *vmf) {
 	// unsigned long address = vmf->address, nr_pages, mask;
 	// pgoff_t start_pgoff = vmf->pgoff;
 	// pgoff_t end_pgoff;
@@ -1275,8 +1275,8 @@ static vm_fault_t do_fault_around(vm_fault_s *vmf)
 	// return vmf->vma->vm_ops->map_pages(vmf, start_pgoff, end_pgoff);
 }
 
-static vm_fault_t do_read_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_read_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	vm_fault_t ret = 0;
 
@@ -1304,8 +1304,8 @@ static vm_fault_t do_read_fault(vm_fault_s *vmf)
 	return ret;
 }
 
-static vm_fault_t do_cow_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_cow_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	vm_fault_t ret;
 
@@ -1344,8 +1344,8 @@ uncharge_out:
 	return ret;
 }
 
-static vm_fault_t do_shared_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_shared_fault(vm_fault_s *vmf) {
 	// vma_s *vma = vmf->vma;
 	// vm_fault_t ret, tmp;
 
@@ -1387,8 +1387,8 @@ static vm_fault_t do_shared_fault(vm_fault_s *vmf)
  * If mmap_lock is released, vma may become invalid (for example
  * by other thread calling munmap()).
  */
-static vm_fault_t do_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+do_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	mm_s *vm_mm = vma->vm_mm;
 	vm_fault_t ret;
@@ -1453,8 +1453,8 @@ static vm_fault_t do_fault(vm_fault_s *vmf)
  * The mmap_lock may have been released depending on flags and our return value.
  * See filemap_fault() and __folio_lock_or_retry().
  */
-static vm_fault_t handle_pte_fault(vm_fault_s *vmf)
-{
+static vm_fault_t
+handle_pte_fault(vm_fault_s *vmf) {
 	pte_t entry;
 
 	if (unlikely(arch_pmd_none(*vmf->pmd))) {
@@ -1559,8 +1559,8 @@ unlock:
  */
 // vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,
 // 		unsigned int flags, pt_regs_s *regs)
-vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
-		unsigned long address, unsigned int flags)
+vm_fault_t myos_handle_mm_fault(vma_s *vma,
+		pt_regs_s *regs, ulong address, uint flags)
 {
 	vm_fault_t ret;
 	__set_current_state(TASK_RUNNING);
@@ -1572,7 +1572,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma, pt_regs_s *regs,
 		.pgoff		= linear_page_index(vma, address),
 		.gfp_mask	= __get_fault_gfp_mask(vma),
 	};
-	unsigned int dirty = flags & FAULT_FLAG_WRITE;
+	uint dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
 	pgd_t *pgd = pgd_ent_offset(mm, address);
 
@@ -1613,7 +1613,7 @@ fail:
  * We've already handled the fast-path in-line.
  */
 // int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
-int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
+int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 {
 	pud_t *new = pud_alloc_one(mm);
 	if (!new)
@@ -1634,7 +1634,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
  * We've already handled the fast-path in-line.
  */
 // int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
-int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
+int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 {
 	pmd_t *new = pmd_alloc_one(mm);
 	if (!new)
@@ -1651,7 +1651,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
 	return 0;
 }
 
-int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address)
+int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 {
 	pte_t *new = pte_alloc_one(mm);
 	if (!new)
@@ -1697,7 +1697,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	if (page != NULL)
 	{
 		atomic_inc(&(page->_mapcount));
-		unsigned long page_addr = page_to_phys(page);
+		ulong page_addr = page_to_phys(page);
 		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
 	}
 	return pte;
@@ -1749,7 +1749,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 	pmd_t *pmd;
 	pte_t *pte;
 	pte_t *pte_ent;
-	unsigned long addr = start;
+	ulong addr = start;
 
 	do
 	{
@@ -1776,7 +1776,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 		}
 		page_s *newpage = alloc_page(GFP_USER);
 		atomic_inc(&(newpage->_mapcount));
-		unsigned long page_addr = page_to_phys(newpage);
+		ulong page_addr = page_to_phys(newpage);
 		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
 
 		addr += PAGE_SIZE;

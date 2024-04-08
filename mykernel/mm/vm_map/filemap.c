@@ -15,7 +15,6 @@
 #include <linux/fs/fs.h>
 #include <linux/sched/signal.h>
 #include <linux/kernel/uaccess.h>
-#include <linux/kernel/mm.h>
 #include <linux/fs/file.h>
 #include <linux/fs/shmem_fs.h>
 
@@ -92,8 +91,7 @@
 
 
 static page_s
-*myos_readpage(vm_fault_s *vmf)
-{
+*myos_readpage(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	file_s *filp = vma->vm_file;
 	if (filp == NULL)

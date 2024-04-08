@@ -2,7 +2,10 @@
 #define _LINUX_HIGHMEM_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/kernel/mm.h>
+
+	#include "../mm_const.h"
+	#include "../mm_types.h"
+	#include "../mm_api.h"
 
 
 	#ifdef DEBUG
@@ -25,6 +28,8 @@
 		memzero_page(page_s *page, size_t offset, size_t len);
 
 	#endif
+
+	#include "highmem_macro.h"
 	
 	#if defined(HIGHMEM_DEFINATION) || !(DEBUG)
 

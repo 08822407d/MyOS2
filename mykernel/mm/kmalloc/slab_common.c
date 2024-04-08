@@ -4,14 +4,7 @@
  *
  * (C) 2012 Christoph Lameter <cl@linux.com>
  */
-#include <linux/kernel/mm.h>
-#include <linux/kernel/lib.h>
-
 #include "kmalloc.h"
-#include "slub.h"
-
-
-#include "../kmalloc_api.h"
 
 
 enum slab_state slab_state;
@@ -47,11 +40,12 @@ calculate_alignment(slab_flags_t flags, uint align, uint size) {
 }
 
 static kmem_cache_s
-*create_cache(const char *name, uint object_size, uint align, slab_flags_t flags) {
-	kmem_cache_s *s;
-	int err;
+*create_cache(const char *name, uint object_size,
+		uint align, slab_flags_t flags) {
 
-	err = -ENOMEM;
+	kmem_cache_s *s;
+	int err = -ENOMEM;
+
 	s = kmem_cache_zalloc(kmem_cache, GFP_KERNEL);
 	if (!s)
 		goto out;
@@ -152,7 +146,7 @@ void __init create_boot_cache(kmem_cache_s *s,
 		const char *name, uint size, slab_flags_t flags)
 {
 	int err;
-	unsigned int align = ARCH_KMALLOC_MINALIGN;
+	uint align = ARCH_KMALLOC_MINALIGN;
 
 	s->name = name;
 	s->size = s->object_size = size;
@@ -225,8 +219,8 @@ static u8 size_index[24] __ro_after_init = {
 	2	/* 192 */
 };
 
-static inline unsigned int
-size_index_elem(unsigned int bytes) {
+static inline uint
+size_index_elem(uint bytes) {
 	return (bytes - 1) / 8;
 }
 
@@ -258,6 +252,7 @@ kmem_cache_s *kmalloc_slab(size_t size, gfp_t flags)
  * kmalloc-2M.
  */
 const kmalloc_info_s kmalloc_info[] __initconst = {
+
 	INIT_KMALLOC_INFO(0,		0),
 	INIT_KMALLOC_INFO(96,		96),
 	INIT_KMALLOC_INFO(192,		192),
@@ -313,7 +308,6 @@ void *__kmalloc(size_t size, gfp_t flags)
 		return s;
 
 	ret = kmem_cache_alloc(s, flags);
-	// ret = kasan_kmalloc(s, ret, size, flags);
 	// trace_kmalloc(caller, ret, size, s->size, flags, node);
 	return ret;
 }
@@ -324,15 +318,15 @@ EXPORT_SYMBOL(__kmalloc);
  * directly to the page allocator. We use __GFP_COMP, because we will need to
  * know the allocation order to free the pages properly in kfree.
  */
-void *kmalloc_large(size_t size, gfp_t flags) {
+void *kmalloc_large(size_t size, gfp_t flags)
+{
 	page_s *page;
 	void *ptr = NULL;
-	unsigned int order = get_order(size);
+	uint order = get_order(size);
 
 	flags |= __GFP_COMP;
 	page = alloc_pages(flags, order);
-	if (page)
-	{
+	if (page) {
 		ptr = (void *)page_to_virt(page);
 		if (flags & __GFP_ZERO)
 			memset(ptr, 0, size);
@@ -349,7 +343,7 @@ EXPORT_SYMBOL(kmalloc_large);
 
 void free_large_kmalloc(folio_s *folio, void *object)
 {
-	unsigned int order = folio->_folio_order;
+	uint order = folio->_folio_order;
 
 	if (WARN_ON_ONCE(order == 0))
 		pr_warn_once("object pointer: 0x%p\n", object);

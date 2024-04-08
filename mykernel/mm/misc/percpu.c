@@ -72,13 +72,13 @@
 
 #include <linux/kernel/err.h>
 #include <linux/kernel/lib.h>
-#include <linux/kernel/mm.h>
 #include <linux/smp/percpu.h>
 
 #include <asm/sections.h>
 
 #include <linux/smp/percpu.h>
 
+#include "mm_misc.h"
 
 
 // static int pcpu_unit_pages __ro_after_init;
@@ -95,7 +95,7 @@
 void *pcpu_base_addr __ro_after_init;
 
 // static const int *pcpu_unit_map __ro_after_init;		/* cpu -> unit */
-const unsigned long *pcpu_unit_offsets __ro_after_init;	/* cpu -> unit offset */
+const ulong *pcpu_unit_offsets __ro_after_init;	/* cpu -> unit offset */
 
 
 
@@ -542,15 +542,14 @@ const unsigned long *pcpu_unit_offsets __ro_after_init;	/* cpu -> unit offset */
 // }
 void simple_pcpu_setup_first_chunk()
 {
-	unsigned long pcpuarea_size =
-		(unsigned long)__per_cpu_end - (unsigned long)__per_cpu_load;
+	ulong pcpuarea_size = (ulong)__per_cpu_end - (ulong)__per_cpu_load;
 	pcpuarea_size = ALIGN(pcpuarea_size, PAGE_SIZE);
 
 	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_cpu_ids * 8, 8);
 	pcpu_base_addr = __per_cpu_start;
 	// 不为bsp的percpu变量重新申请空间，直接使用初始声明的
 	for (int i = 0; i < nr_cpu_ids; i++)
-		((unsigned long *)pcpu_unit_offsets)[i] =
-			(unsigned long)myos_memblock_alloc_DMA32(pcpuarea_size, PAGE_SIZE) -
-				(unsigned long)__per_cpu_load;
+		((ulong *)pcpu_unit_offsets)[i] =
+			(ulong)myos_memblock_alloc_DMA32(pcpuarea_size, PAGE_SIZE) -
+				(ulong)__per_cpu_load;
 }

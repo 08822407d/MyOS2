@@ -1,9 +1,12 @@
-#ifndef _LINUX_MM_MISC_API_H_
-#define _LINUX_MM_MISC_API_H_
+#ifndef _MM_MISC_API_H_
+#define _MM_MISC_API_H_
 
-	extern void *high_memory;
-	extern int sysctl_max_map_count;
-	extern unsigned long highest_memmap_pfn;
+	#include "mm_misc.h"
+
+	extern mm_s		init_mm;
+	extern void		*high_memory;
+	extern int		sysctl_max_map_count;
+	extern ulong	highest_memmap_pfn;
 
 	void mm_core_init(void);
 	void setup_initial_init_mm(void *start_code,
@@ -11,8 +14,7 @@
 
 	extern void mmdrop(mm_s *mm);
 	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
-	extern void __iomem *myos_ioremap(size_t paddr_start,
-			unsigned long size);
+	extern void __iomem *myos_ioremap(size_t paddr_start, ulong size);
 
 	/*
 	 * Using memblock node mappings, an architecture may initialise its
@@ -30,7 +32,7 @@
 	 *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
 	 * free_area_init(max_zone_pfns);
 	 */
-	void free_area_init(unsigned long *max_zone_pfn);
+	void free_area_init(ulong *max_zone_pfn);
 	extern void mem_init(void);
 
 	/*
@@ -45,8 +47,6 @@
 	// gup.c
 	long
 	myos_get_user_pages(mm_s *mm, virt_addr_t start,
-		unsigned long nr_pages, page_s **pages);
+		ulong nr_pages, page_s **pages);
 
-	#include "highmem/highmem.h"
-
-#endif /* _LINUX_MM_MISC_API_H_ */
+#endif /* _MM_MISC_API_H_ */

@@ -1,16 +1,11 @@
 #ifndef _LINUX_VM_MAP_TYPES_H_
 #define _LINUX_VM_MAP_TYPES_H_
 
-	#include <linux/kernel/mm.h>
+	#include "../mm_type_declaration.h"
 
-	struct mm_struct;
-	typedef struct mm_struct mm_s;
-	struct vm_operations_struct;
-	typedef struct vm_operations_struct vm_ops_s;
+
 	struct file;
 	typedef struct file file_s;
-	struct vm_area_struct;
-	typedef struct vm_area_struct vma_s;
 
 	/*
 	 * This struct describes a virtual memory area. There is one of these
@@ -21,8 +16,8 @@
 	typedef struct vm_area_struct {
 		/* The first cache line has the info for VMA tree walking. */
 
-		unsigned long	vm_start;	/* Our start address within vm_mm. */
-		unsigned long	vm_end;		/* The first byte after our end address
+		ulong			vm_start;	/* Our start address within vm_mm. */
+		ulong			vm_end;		/* The first byte after our end address
 									   within vm_mm. */
 
 		/* linked list of VM areas per task, sorted by address */
@@ -47,7 +42,7 @@
 		* See vmf_insert_mixed_prot() for discussion.
 		*/
 		// pgprot_t vm_page_prot;
-		unsigned long	vm_flags;	/* Flags, see mm.h. */
+		ulong			vm_flags;	/* Flags, see mm.h. */
 
 		/*
 		 * For areas with an address space and backing store,
@@ -85,7 +80,7 @@
 		const vm_ops_s	*vm_ops;
 
 		/* Information about our backing store: */
-		unsigned long	vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */
+		ulong			vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */
 		file_s			*vm_file;	/* File we map to (can be NULL). */
 		// void *vm_private_data;	/* was vm_pte (shared mem) */
 
@@ -104,15 +99,15 @@
 	 * to the functions called when a no-page or a wp-page exception occurs.
 	 */
 	typedef struct vm_operations_struct {
-		void	(*open)(vma_s * area);
+		void		(*open)(vma_s * area);
 		/**
 		 * @close: Called when the VMA is being removed from the MM.
 		 * Context: User context.  May sleep.  Caller holds mmap_lock.
 		 */
-		void	(*close)(vma_s * area);
+		void		(*close)(vma_s * area);
 		/* Called any time before splitting to check if it's allowed */
-		int		(*may_split)(vma_s *area, unsigned long addr);
-		int		(*mremap)(vma_s *area);
+		int			(*may_split)(vma_s *area, ulong addr);
+		int			(*mremap)(vma_s *area);
 		// /*
 		//  * Called by mprotect() to make driver-specific permission
 		//  * checks before mprotect() is finalised.   The VMA must not
@@ -120,16 +115,16 @@
 		//  */
 		// int (*mprotect)(vma_s *vma, unsigned long start,
 		// 		unsigned long end, unsigned long newflags);
-		vm_fault_t (*fault)(vm_fault_s *vmf);
+		vm_fault_t	(*fault)(vm_fault_s *vmf);
 		// vm_fault_t (*huge_fault)(vm_fault_s *vmf,
 		// 		enum page_entry_size pe_size);
-		vm_fault_t (*map_pages)(vm_fault_s *vmf,
-				pgoff_t start_pgoff, pgoff_t end_pgoff);
+		vm_fault_t	(*map_pages)(vm_fault_s *vmf,
+						pgoff_t start_pgoff, pgoff_t end_pgoff);
 		// unsigned long (*pagesize)(vma_s * area);
 
 		/* notification that a previously read-only page is about to become
 		 * writable, if an error is returned it will cause a SIGBUS */
-		vm_fault_t (*page_mkwrite)(vm_fault_s *vmf);
+		vm_fault_t	(*page_mkwrite)(vm_fault_s *vmf);
 
 		// /* same as page_mkwrite when using VM_PFNMAP|VM_MIXEDMAP */
 		// vm_fault_t (*pfn_mkwrite)(vm_fault_s *vmf);
@@ -176,10 +171,6 @@
 		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
 	} vm_ops_s;
 
-
-	struct anon_vma;
-	typedef struct anon_vma anon_vma_s;
-
 	/*
 	 * The anon_vma heads a list of private "related" vmas, to scan if
 	 * an anonymous page pointing to this anon_vma needs to be unmapped:
@@ -212,7 +203,7 @@
 		 * This counter is used for making decision about reusing anon_vma
 		 * instead of forking new one. See comments in function anon_vma_clone.
 		 */
-		unsigned	degree;
+		uint		degree;
 
 		anon_vma_s	*parent;	/* Parent of this anon_vma */
 

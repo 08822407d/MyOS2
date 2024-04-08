@@ -4,29 +4,9 @@
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <uapi/linux/mman.h>
 
-	#include "vm_map_types.h"
-
-
-	#ifndef arch_calc_vm_prot_bits
-	#	define arch_calc_vm_prot_bits(prot, pkey)	0
-	#endif
-
-	#ifndef arch_calc_vm_flag_bits
-	#	define arch_calc_vm_flag_bits(flags)		0
-	#endif
-
-	/*
-	 * Optimisation macro.  It is equivalent to:
-	 *      (x & bit1) ? bit2 : 0
-	 * but this version is faster.
-	 * ("bit1" and "bit2" must be single bits)
-	 */
-	#define _calc_vm_trans(x, bit1, bit2) (						\
-				(!(bit1) || !(bit2)) ? 0 : 						\
-					((bit1) <= (bit2) ?							\
-						((x) & (bit1)) * ((bit2) / (bit1))		\
-						: ((x) & (bit1)) / ((bit1) / (bit2)))	\
-			)
+	#include "../mm_const.h"
+	#include "../mm_types.h"
+	#include "../mm_api.h"
 
 
 	#ifdef DEBUG
@@ -41,30 +21,32 @@
 		vma_is_anonymous(vma_s *vma);
 
 		extern vma_s
-		*find_vma_intersection(mm_s *mm, unsigned long start_addr, unsigned long end_addr);
+		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr);
 
 		extern vma_s
-		*vma_lookup(mm_s *mm, unsigned long addr);
+		*vma_lookup(mm_s *mm, ulong addr);
 		
-		extern unsigned long
+		extern ulong
 		vm_start_gap(vma_s *vma);
 
-		extern unsigned long
+		extern ulong
 		vm_end_gap(vma_s *vma);
 
-		extern unsigned long
+		extern ulong
 		vma_pages(vma_s *vma);
 
 		extern vma_s
-		*find_exact_vma(mm_s *mm, unsigned long vm_start, unsigned long vm_end);
+		*find_exact_vma(mm_s *mm, ulong vm_start, ulong vm_end);
 
-		extern unsigned long
-		calc_vm_prot_bits(unsigned long prot, unsigned long pkey);
+		extern ulong
+		calc_vm_prot_bits(ulong prot, ulong pkey);
 
-		extern unsigned long
-		calc_vm_flag_bits(unsigned long flags);
+		extern ulong
+		calc_vm_flag_bits(ulong flags);
 
 	#endif
+
+	#include "vm_map_macro.h"
 	
 	#if defined(VM_MAP_DEFINATION) || !(DEBUG)
 
@@ -102,7 +84,7 @@
 		 */
 		PREFIX_STATIC_INLINE
 		vma_s
-		*find_vma_intersection(mm_s *mm, unsigned long start_addr, unsigned long end_addr) {
+		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr) {
 			vma_s *vma = myos_find_vma(mm, start_addr);
 
 			if (vma && end_addr <= vma->vm_start)
@@ -119,7 +101,7 @@
 		 */
 		PREFIX_STATIC_INLINE
 		vma_s
-		*vma_lookup(mm_s *mm, unsigned long addr) {
+		*vma_lookup(mm_s *mm, ulong addr) {
 			vma_s *vma = myos_find_vma(mm, addr);
 
 			if (vma && addr < vma->vm_start)
@@ -129,9 +111,9 @@
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		vm_start_gap(vma_s *vma) {
-			unsigned long vm_start = vma->vm_start;
+			ulong vm_start = vma->vm_start;
 
 			if (vma->vm_flags & VM_GROWSDOWN) {
 				vm_start -= stack_guard_gap;
@@ -142,9 +124,9 @@
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		vm_end_gap(vma_s *vma) {
-			unsigned long vm_end = vma->vm_end;
+			ulong vm_end = vma->vm_end;
 
 			if (vma->vm_flags & VM_GROWSUP) {
 				vm_end += stack_guard_gap;
@@ -155,7 +137,7 @@
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		vma_pages(vma_s *vma) {
 			return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
 		}
@@ -163,7 +145,7 @@
 		/* Look up the first VMA which exactly match the interval vm_start ... vm_end */
 		PREFIX_STATIC_INLINE
 		vma_s
-		*find_exact_vma(mm_s *mm, unsigned long vm_start, unsigned long vm_end) {
+		*find_exact_vma(mm_s *mm, ulong vm_start, ulong vm_end) {
 			vma_s *vma = myos_find_vma(mm, vm_start);
 
 			if (vma && (vma->vm_start != vm_start || vma->vm_end != vm_end))
@@ -177,8 +159,8 @@
 		 * Combine the mmap "prot" argument into "vm_flags" used internally.
 		 */
 		PREFIX_STATIC_INLINE
-		unsigned long
-		calc_vm_prot_bits(unsigned long prot, unsigned long pkey) {
+		ulong
+		calc_vm_prot_bits(ulong prot, ulong pkey) {
 			return _calc_vm_trans(prot, PROT_READ, VM_READ) |
 					_calc_vm_trans(prot, PROT_WRITE, VM_WRITE) |
 					_calc_vm_trans(prot, PROT_EXEC, VM_EXEC) |
@@ -189,8 +171,8 @@
 		 * Combine the mmap "flags" argument into "vm_flags" used internally.
 		 */
 		PREFIX_STATIC_INLINE
-		unsigned long
-		calc_vm_flag_bits(unsigned long flags) {
+		ulong
+		calc_vm_flag_bits(ulong flags) {
 			return _calc_vm_trans(flags, MAP_GROWSDOWN, VM_GROWSDOWN) |
 					_calc_vm_trans(flags, MAP_LOCKED, VM_LOCKED) |
 					_calc_vm_trans(flags, MAP_SYNC, VM_SYNC) |

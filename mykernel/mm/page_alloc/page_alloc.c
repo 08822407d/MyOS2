@@ -51,8 +51,8 @@ char * const zone_names[MAX_NR_ZONES] = {
 	"Device",
 };
 
-unsigned int nr_node_ids __read_mostly = MAX_NUMNODES;
-unsigned int nr_online_nodes __read_mostly = 1;
+uint nr_node_ids __read_mostly = MAX_NUMNODES;
+uint nr_online_nodes __read_mostly = 1;
 EXPORT_SYMBOL(nr_node_ids);
 EXPORT_SYMBOL(nr_online_nodes);
 
@@ -67,7 +67,7 @@ EXPORT_SYMBOL(nr_online_nodes);
  * page cannot be allocated or merged in parallel. Alternatively, it must
  * handle invalid values gracefully, and use buddy_order_unsafe() below.
  */
-static inline unsigned long
+static inline ulong
 buddy_order(page_s *page) {
 
 	/* PageBuddy() must be checked by the caller */
@@ -75,16 +75,16 @@ buddy_order(page_s *page) {
 }
 
 static inline void
-set_compound_order(page_s *page, unsigned int order) {
+set_compound_order(page_s *page, uint order) {
 	// page[1].compound_order = order;
 	// page[1].compound_nr = 1U << order;
-	struct folio *folio = (struct folio *)page;
+	folio_s *folio = (folio_s *)page;
 	folio->_folio_order = order;
 	folio->_folio_nr_pages = 1U << order;
 }
 
-static void prep_compound_head(page_s *page, unsigned int order)
-{
+static void
+prep_compound_head(page_s *page, uint order) {
 	// set_compound_page_dtor(page, COMPOUND_PAGE_DTOR);
 	set_compound_order(page, order);
 	// atomic_set(compound_mapcount_ptr(page), -1);
@@ -92,15 +92,15 @@ static void prep_compound_head(page_s *page, unsigned int order)
 	// 	atomic_set(compound_pincount_ptr(page), 0);
 }
 
-static void prep_compound_tail(page_s *head, int tail_idx)
-{
+static void
+prep_compound_tail(page_s *head, int tail_idx) {
 	page_s *p = head + tail_idx;
 
 	// p->mapping = TAIL_MAPPING;
 	set_compound_head(p, head);
 }
 
-void prep_compound_page(page_s *page, unsigned int order)
+void prep_compound_page(page_s *page, uint order)
 {
 	int i;
 	int nr_pages = 1 << order;
@@ -114,33 +114,27 @@ void prep_compound_page(page_s *page, unsigned int order)
 
 
 static inline void
-set_buddy_order(page_s *page, unsigned int order) {
-
-	page->private = (unsigned long)order;
+set_buddy_order(page_s *page, uint order) {
+	page->private = (ulong)order;
 	__SetPageBuddy(page);
 }
 
 /* Used for pages not on another list */
 static inline void
-add_to_free_list(page_s *page,
-		zone_s *zone, unsigned int order) {
-
+add_to_free_list(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_header_push(fa_lhdr, &page->lru);
 }
 
 /* Used for pages not on another list */
 static inline void
-add_to_free_list_tail(page_s *page,
-		zone_s *zone, unsigned int order) {
-
+add_to_free_list_tail(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
 	list_header_enqueue(fa_lhdr, &page->lru);
 }
 
 static inline page_s
 *get_page_from_free_area(List_hdr_s *area) {
-
 	List_s *pg_lp = list_header_pop(area);
 	if (pg_lp == NULL)
 		return NULL;
@@ -149,9 +143,7 @@ static inline page_s
 }
 
 static inline page_s
-*del_page_from_free_list(page_s *page,
-		zone_s * zone, unsigned int order) {
-
+*del_page_from_free_list(page_s *page, zone_s * zone, uint order) {
 	List_s * pg_lp = list_header_delete_node(&zone->free_area[order],
 			&page->lru);
 	if (pg_lp == NULL)
@@ -176,8 +168,7 @@ static inline page_s
  */
 static inline void
 expand(zone_s *zone, page_s *page, int low, int high) {
-
-	unsigned long size = 1 << high;
+	ulong size = 1 << high;
 	while (high > low) {
 		high--;
 		size >>= 1;
@@ -205,9 +196,8 @@ expand(zone_s *zone, page_s *page, int low, int high) {
  *
  * Assumption: *_mem_map is contiguous at least up to MAX_ORDER
  */
-static inline unsigned long
-__find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
-
+static inline ulong
+__find_buddy_pfn(ulong page_pfn, uint order) {
 	return page_pfn ^ (1 << order);
 }
 
@@ -225,20 +215,15 @@ __find_buddy_pfn(unsigned long page_pfn, unsigned int order) {
  * For recording page's order, we use page_private(page).
  */
 static inline bool
-page_is_buddy(page_s *page, page_s *buddy, unsigned int order) {
-
+page_is_buddy(page_s *page, page_s *buddy, uint order) {
 	if (!page_is_guard(page) && !PageBuddy(buddy)) return false;
-
 	if (buddy_order(buddy) != order) return false;
-
 	if (myos_page_zone(page) != myos_page_zone(buddy)) return false;
-
 	return true;
 }
 
 static void
-prep_new_page(page_s *page, unsigned int order, gfp_t gfp_flags)
-{
+prep_new_page(page_s *page, uint order, gfp_t gfp_flags) {
 	// post_alloc_hook(page, order, gfp_flags);
 
 	if (order && (gfp_flags & __GFP_COMP))
@@ -263,10 +248,9 @@ prep_new_page(page_s *page, unsigned int order, gfp_t gfp_flags)
 // Linux function proto :
 // static __always_inline page_s *__rmqueue_smallest(struct zone *zone,
 //					unsigned int order, int migratetype)
-static inline page_s *
-__rmqueue_smallest(zone_s *zone, unsigned int order)
-{
-	unsigned int current_order;
+static inline page_s
+*__rmqueue_smallest(zone_s *zone, uint order) {
+	uint current_order;
 	page_s *page;
 
 	/* Find a page of the appropriate size in the preferred list */
@@ -320,11 +304,9 @@ __rmqueue_smallest(zone_s *zone, unsigned int order)
 //					struct zone *zone, unsigned int order, int migratetype,
 //					fpi_t fpi_flags)
 static inline void
-__myos_free_one_page(page_s *page, unsigned long pfn,
-		zone_s *zone, unsigned int order)
-{
-	unsigned long buddy_pfn;
-	unsigned long combined_pfn;
+__myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
+	ulong buddy_pfn;
+	ulong combined_pfn;
 	page_s *buddy;
 
 	while (order < MAX_ORDER) {
@@ -363,7 +345,7 @@ __myos_free_one_page(page_s *page, unsigned long pfn,
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
-page_s *__myos_alloc_pages(gfp_t gfp, unsigned order)
+page_s *__myos_alloc_pages(gfp_t gfp, uint order)
 {
 	page_s *page;
 	zone_s *zone = NULL;
@@ -393,8 +375,7 @@ page_s *__myos_alloc_pages(gfp_t gfp, unsigned order)
 		else
 			start_prefered_idx = 0;
 
-		for (i = start_prefered_idx; i < max_prefered_idx; i++)
-		{
+		for (i = start_prefered_idx; i < max_prefered_idx; i++) {
 			zone = &(NODE_DATA(0)->node_zones[prefered_zone_list[i]]);
 		// static inline page_s
 		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
@@ -434,9 +415,9 @@ page_s *__myos_alloc_pages(gfp_t gfp, unsigned order)
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
 // Linux function proto :
-void __free_pages(page_s *page, unsigned int order)
+void __free_pages(page_s *page, uint order)
 {
-	unsigned long pfn = page_to_pfn(page);
+	ulong pfn = page_to_pfn(page);
 	zone_s *zone = myos_page_zone(page);
 
 	// linux call stack :
@@ -453,7 +434,7 @@ void __free_pages(page_s *page, unsigned int order)
 	__myos_free_one_page(page, pfn, zone, order);
 }
 
-void free_pages(unsigned long addr, unsigned int order) {
+void free_pages(ulong addr, uint order) {
 	if (addr != 0) {
 		// VM_BUG_ON(!virt_addr_valid((void *)addr));
 		__free_pages(virt_to_page((void *)addr), order);
@@ -464,11 +445,10 @@ void free_pages(unsigned long addr, unsigned int order) {
  *								early init fuctions for buddy system							*
  *==============================================================================================*/
 static void
-__free_pages_ok(page_s *page, unsigned int order)
-{
-	unsigned long flags;
+__free_pages_ok(page_s *page, uint order) {
+	ulong flags;
 	int migratetype;
-	unsigned long pfn = page_to_pfn(page);
+	ulong pfn = page_to_pfn(page);
 	zone_s *zone = myos_page_zone(page);
 
 	// if (!free_pages_prepare(page, order, true, fpi_flags))
@@ -488,12 +468,12 @@ __free_pages_ok(page_s *page, unsigned int order)
 }
 
 void __init
-memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
+memblock_free_pages(page_s *page, ulong pfn, uint order)
 {
 	// {
-		unsigned int nr_pages = 1 << order;
+		uint nr_pages = 1 << order;
 		page_s *p = page;
-		unsigned int loop;
+		uint loop;
 
 		/*
 		 * When initializing the memmap, __init_single_page() sets the refcount
@@ -526,19 +506,19 @@ memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
  * address cannot represent highmem pages. Use alloc_pages and then kmap if
  * you need to access high mem.
  */
-unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order)
+ulong __get_free_pages(gfp_t gfp_mask, uint order)
 {
 	page_s *page;
 
 	page = alloc_pages(gfp_mask & ~__GFP_HIGHMEM, order);
 	if (!page)
 		return 0;
-	return (unsigned long)page_to_virt(page);
+	return (ulong)page_to_virt(page);
 }
 
-unsigned long get_zeroed_page(gfp_t gfp_mask)
+ulong get_zeroed_page(gfp_t gfp_mask)
 {
-	unsigned long retval = __get_free_pages(gfp_mask | __GFP_ZERO, 0);
+	ulong retval = __get_free_pages(gfp_mask | __GFP_ZERO, 0);
 	memset((void *)retval, 0, PAGE_SIZE);
 	return retval;
 }
@@ -556,9 +536,9 @@ unsigned long get_zeroed_page(gfp_t gfp_mask)
  * PFNs will be 0.
  */
 void __init
-get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
+get_pfn_range(ulong *start_pfn, ulong *end_pfn)
 {
-	unsigned long this_start_pfn, this_end_pfn;
+	ulong this_start_pfn, this_end_pfn;
 	int i;
 
 	*start_pfn = -1UL;
@@ -578,7 +558,7 @@ get_pfn_range( unsigned long *start_pfn, unsigned long *end_pfn)
  *==============================================================================================*/
 page_s *paddr_to_page(phys_addr_t paddr)
 {
-	unsigned long pfn = round_up((uint64_t)paddr, PAGE_SIZE) / PAGE_SIZE;
+	ulong pfn = round_up((uint64_t)paddr, PAGE_SIZE) / PAGE_SIZE;
 	// return &mem_info.pages[pg_idx];
 	return pfn_to_page(pfn);
 }

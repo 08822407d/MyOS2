@@ -17,18 +17,18 @@
 #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
-#include <linux/kernel/mm.h>
 #include <linux/fs/shmem_fs.h>
 #include <linux/debug/printk.h>
 #include <linux/sched/signal.h>
 
-#include "vm_map_types.h"
+
+#include "../mm_types.h"
 
 
 static bool ignore_rlimit_data = false;
 
-static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
-		unsigned long start, unsigned long end);
+static void unmap_region(mm_s *mm, vma_s *vma,
+		vma_s *prev, ulong start, ulong end);
 
 vma_s *vm_area_alloc(mm_s *mm)
 {
@@ -66,11 +66,11 @@ void vm_area_free(vma_s *vma)
 }
 
 
-static void validate_mm(mm_s *mm)
-{
+static void
+validate_mm(mm_s *mm) {
 	int bug = 0;
 	int i = 0;
-	unsigned long highest_address = 0;
+	ulong highest_address = 0;
 	vma_s *vma = mm->mmap;
 
 	while (vma) {
@@ -101,9 +101,7 @@ static void validate_mm(mm_s *mm)
 // 		unsigned long end, vma_s **pprev,
 // 		struct rb_node ***rb_link, struct rb_node **rb_parent)
 static int
-myos_find_vma_links(mm_s *mm, unsigned long addr,
-		unsigned long end, vma_s **pprev)
-{
+myos_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 	int		retval = 0;
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
@@ -161,9 +159,7 @@ static inline vma_s
  * Returns: -ENOMEM on munmap failure or 0 on success.
  */
 static inline int
-munmap_vma_range(mm_s *mm, unsigned long start,
-		unsigned long len, vma_s **pprev) {
-
+munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
 	while (myos_find_vma_links(mm, start, start + len, pprev))
 		if (__do_munmap(mm, start, len, false))
 			return -ENOMEM;
@@ -172,8 +168,8 @@ munmap_vma_range(mm_s *mm, unsigned long start,
 }
 
 
-static void __vma_link_file(vma_s *vma)
-{
+static void
+__vma_link_file(vma_s *vma) {
 	file_s *file;
 
 	file = vma->vm_file;
@@ -192,8 +188,8 @@ static void __vma_link_file(vma_s *vma)
 // static void vma_link(mm_s *mm, vma_s *vma,
 // 			vma_s *prev, struct rb_node **rb_link,
 // 			struct rb_node *rb_parent)
-static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
-{
+static void
+vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 	// struct address_space *mapping = NULL;
 
 	if (vma->vm_file) {
@@ -229,7 +225,7 @@ static void vma_link(mm_s *mm, vma_s *vma, vma_s *prev)
 //	int __vma_adjust(vma_s *vma, unsigned long start,
 // 	unsigned long end, pgoff_t pgoff, vma_s *insert,
 // 	vma_s *expand)
-int __myos_vma_adjust(vma_s *vma, unsigned long start, unsigned long end,
+int __myos_vma_adjust(vma_s *vma, ulong start, ulong end,
 		pgoff_t pgoff, vma_s *insert, vma_s *expand)
 {
 	mm_s *mm = vma->vm_mm;
@@ -466,7 +462,7 @@ again:
 // 				struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 				struct anon_vma_name *anon_name)
 static inline int
-myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
+myos_is_mergeable_vma(vma_s *vma, file_s *file, ulong vm_flags) {
 	/*
 	 * VM_SOFTDIRTY should not prevent from VMA merging, if we
 	 * match the flags but dirty bit -- the caller should mark
@@ -502,9 +498,9 @@ myos_is_mergeable_vma(vma_s *vma, file_s *file, unsigned long vm_flags) {
 // 		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		     struct anon_vma_name *anon_name)
 static int
-myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
-		file_s *file, pgoff_t vm_pgoff)
-{
+myos_can_vma_merge_before(vma_s *vma, ulong vm_flags,
+		file_s *file, pgoff_t vm_pgoff) {
+
 	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
 		if (vma->vm_pgoff == vm_pgoff)
 			return 1;
@@ -526,9 +522,9 @@ myos_can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
 // 		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		    struct anon_vma_name *anon_name)
 static int
-myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
-		file_s *file, pgoff_t vm_pgoff)
-{
+myos_can_vma_merge_after(vma_s *vma, ulong vm_flags,
+		file_s *file, pgoff_t vm_pgoff) {
+
 	if (myos_is_mergeable_vma(vma, file, vm_flags)) {
 		pgoff_t vm_pglen;
 		vm_pglen = vma_pages(vma);
@@ -588,8 +584,8 @@ myos_can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
 vma_s
-*myos_vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
-		unsigned long end, unsigned long vm_flags, file_s *file, pgoff_t pgoff)
+*myos_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
+		ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
 	vma_s *area, *next;
@@ -660,10 +656,9 @@ vma_s
  * The caller must write-lock current->mm->mmap_lock.
  */
 // 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
-unsigned long
-do_mmap(file_s *file, unsigned long addr, unsigned long len,
-		unsigned long prot, unsigned long flags,
-		unsigned long pgoff, unsigned long *populate)
+ulong
+do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
+		ulong flags, ulong pgoff, ulong *populate)
 {
 	mm_s *mm = current->mm;
 	vm_flags_t vm_flags;
@@ -844,14 +839,14 @@ do_mmap(file_s *file, unsigned long addr, unsigned long len,
 //	unsigned long mmap_region(file_s *file, unsigned long addr,
 // 		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
 // 		struct list_head *uf)
-unsigned long
-myos_mmap_region(file_s *file, unsigned long addr,
-		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff)
+ulong
+myos_mmap_region(file_s *file, ulong addr,
+		ulong len, vm_flags_t vm_flags, ulong pgoff)
 {
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev, *merge;
 	int error;
-	unsigned long charged = 0;
+	ulong charged = 0;
 
 	/* Clear old maps, set up prev */
 	if (munmap_vma_range(mm, addr, len, &prev))
@@ -1005,7 +1000,7 @@ unacct_error:
 
 
 /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
-vma_s *myos_find_vma(mm_s *mm, unsigned long addr)
+vma_s *myos_find_vma(mm_s *mm, ulong addr)
 {
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
@@ -1026,7 +1021,7 @@ vma_s *myos_find_vma(mm_s *mm, unsigned long addr)
 /*
  * Same as find_vma, but also return a pointer to the previous VMA in *pprev.
  */
-vma_s *find_vma_prev(mm_s *mm, unsigned long addr, vma_s **pprev)
+vma_s *find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev)
 {
 	vma_s *vma = NULL;
 
@@ -1039,9 +1034,9 @@ vma_s *find_vma_prev(mm_s *mm, unsigned long addr, vma_s **pprev)
 
 
 /* enforced gap between the expanding stack and other mappings. */
-unsigned long stack_guard_gap = 256UL<<PAGE_SHIFT;
+ulong stack_guard_gap = 256UL<<PAGE_SHIFT;
 
-int expand_stack(vma_s *vma, unsigned long address)
+int expand_stack(vma_s *vma, ulong address)
 {
 	/*
 	 * vma is the first one with address < vma->vm_start.  Have to extend vma.
@@ -1079,7 +1074,7 @@ int expand_stack(vma_s *vma, unsigned long address)
 
 		/* Somebody else might have raced and expanded it already */
 		if (address < vma->vm_start) {
-			unsigned long size, grow;
+			ulong size, grow;
 
 			size = vma->vm_end - address;
 			grow = (vma->vm_start - address) >> PAGE_SHIFT;
@@ -1127,9 +1122,9 @@ int expand_stack(vma_s *vma, unsigned long address)
  *
  * Called with the mm semaphore held.
  */
-static void remove_vma_list(mm_s *mm, vma_s *vma)
-{
-	unsigned long nr_accounted = 0;
+static void
+remove_vma_list(mm_s *mm, vma_s *vma) {
+	ulong nr_accounted = 0;
 
 	// /* Update high watermark before we lower total_vm */
 	// update_hiwater_vm(mm);
@@ -1150,9 +1145,8 @@ static void remove_vma_list(mm_s *mm, vma_s *vma)
  *
  * Called with the mm semaphore held.
  */
-static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
-		unsigned long start, unsigned long end)
-{
+static void
+unmap_region(mm_s *mm, vma_s *vma, vma_s *prev, ulong start, ulong end) {
 	vma_s *next = vma_next(mm, prev);
 	// struct mmu_gather tlb;
 
@@ -1171,9 +1165,8 @@ static void unmap_region(mm_s *mm, vma_s *vma, vma_s *prev,
  * Create a list of vma's touched by the unmap, removing them from the mm's
  * vma list as we go..
  */
-static bool myos_detach_vmas_to_be_unmapped(mm_s *mm,
-		vma_s *vma, vma_s *prev, unsigned long end)
-{
+static bool
+myos_detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma, vma_s *prev, ulong end) {
 	vma_s **insertion_point;
 	vma_s *tail_vma = NULL;
 
@@ -1207,8 +1200,7 @@ static bool myos_detach_vmas_to_be_unmapped(mm_s *mm,
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
  * has already been checked or doesn't make sense to fail.
  */
-int __split_vma(mm_s *mm, vma_s *vma,
-		unsigned long addr, int new_below)
+int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 {
 	vma_s *new;
 	int err;
@@ -1279,10 +1271,9 @@ int __split_vma(mm_s *mm, vma_s *vma,
  * work.  This now handles partial unmappings.
  * Jeremy Fitzhardinge <jeremy@goop.org>
  */
-int __do_munmap(mm_s *mm, unsigned long start,
-		size_t len, bool downgrade)
+int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 {
-	unsigned long end;
+	ulong end;
 	vma_s *vma, *prev, *last;
 
 	if ((offset_in_page(start)) || start > TASK_SIZE ||
@@ -1371,7 +1362,7 @@ int __do_munmap(mm_s *mm, unsigned long start,
 	return downgrade ? 1 : 0;
 }
 
-int __vm_munmap(unsigned long start, size_t len, bool downgrade)
+int __vm_munmap(ulong start, size_t len, bool downgrade)
 {
 	int ret;
 	mm_s *mm = current->mm;
@@ -1405,14 +1396,14 @@ int __vm_munmap(unsigned long start, size_t len, bool downgrade)
 // static int do_brk_flags(unsigned long addr, unsigned long len,
 // 		unsigned long flags, struct list_head *uf)
 int
-do_brk_flags(unsigned long addr, unsigned long len, unsigned long flags)
+do_brk_flags(ulong addr, ulong len, ulong flags)
 {
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev;
 	// struct rb_node **rb_link, *rb_parent;
 	pgoff_t pgoff = addr >> PAGE_SHIFT;
 	int error;
-	unsigned long mapped_addr;
+	ulong mapped_addr;
 
 	/* Until we need other flags, refuse anything except VM_EXEC. */
 	if ((flags & (~VM_EXEC)) != 0)
@@ -1472,10 +1463,10 @@ out:
 	return 0;
 }
 
-int vm_brk_flags(unsigned long addr, unsigned long request, unsigned long flags)
+int vm_brk_flags(ulong addr, ulong request, ulong flags)
 {
 	mm_s *mm = current->mm;
-	unsigned long len;
+	ulong len;
 	int ret;
 	bool populate;
 	// LIST_HEAD(uf);

@@ -2,16 +2,16 @@
 #define _LINUX_KMALLOC_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/kernel/overflow.h>
-	#include <linux/kernel/mm.h>
 
-	#include "kmalloc_types.h"
-
-	#include "slub_types.h"
-	#include "../page_alloc_api.h"
+	#include "../mm_const.h"
+	#include "../mm_types.h"
+	#include "../mm_api.h"
 
 
 	#ifdef DEBUG
+
+		extern uint
+		arch_slab_minalign(void);
 
 		extern void
 		*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags);
@@ -34,6 +34,17 @@
 	#endif
 	
 	#if defined(KMALLOC_DEFINATION) || !(DEBUG)
+
+		/*
+		 * Arches can define this function if they want to decide the minimum slab
+		 * alignment at runtime. The value returned by the function must be a power
+		 * of two and >= ARCH_SLAB_MINALIGN.
+		 */
+		PREFIX_STATIC_INLINE
+		uint
+		arch_slab_minalign(void) {
+			return ARCH_SLAB_MINALIGN;
+		}
 
 		PREFIX_STATIC_INLINE
 		void

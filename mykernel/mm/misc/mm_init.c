@@ -13,18 +13,19 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/nmi.h>
 #include <linux/init/init.h>
-#include <linux/kernel/mm.h>
+
+#include <asm/dma.h>
+
+#include "mm_misc.h"
 
 
-static unsigned long arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
-static unsigned long arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
-
+static ulong arch_zone_lowest_possible_pfn[MAX_NR_ZONES] __initdata;
+static ulong arch_zone_highest_possible_pfn[MAX_NR_ZONES] __initdata;
 extern char *const zone_names[MAX_NR_ZONES];
 
 
 static void __meminit
-__init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
-{
+__init_single_page(page_s *page, ulong pfn, ulong zone) {
 	// mm_zero_struct_page(page);
 	// set_page_links(page, zone, nid, pfn);
 	init_page_count(page);
@@ -44,8 +45,8 @@ __init_single_page(page_s *page, unsigned long pfn, unsigned long zone)
 void __meminit
 reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 {
-	unsigned long start_pfn = PFN_DOWN(start);
-	unsigned long end_pfn = PFN_UP(end);
+	ulong start_pfn = PFN_DOWN(start);
+	ulong end_pfn = PFN_UP(end);
 
 	for (; start_pfn < end_pfn; start_pfn++) {
 		if (pfn_valid(start_pfn)) {
@@ -84,9 +85,8 @@ reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
 
 
 static void __init
-memmap_init(unsigned long *max_zone_pfn)
-{
-	unsigned long start_pfn, end_pfn;
+memmap_init(ulong *max_zone_pfn) {
+	ulong start_pfn, end_pfn;
 	start_pfn = 1;
 
 	for (int i = 0; i < MAX_NR_ZONES; i++) {
@@ -105,8 +105,7 @@ memmap_init(unsigned long *max_zone_pfn)
 		for (int j = 0; j < MAX_ORDER; j++)
 			INIT_LIST_HEADER_S(&zone->free_area[j]);
 
-		for (unsigned long pfn = start_pfn; pfn < end_pfn; pfn++)
-		{
+		for (ulong pfn = start_pfn; pfn < end_pfn; pfn++) {
 			page_s *page = pfn_to_page(pfn);
 			__init_single_page(page, pfn, i);
 		}
@@ -116,14 +115,14 @@ memmap_init(unsigned long *max_zone_pfn)
 }
 
 
-static unsigned long __init
-__myos_calculate_node_pages(unsigned long zone_type,
-		unsigned long node_start_pfn, unsigned long node_end_pfn,
-		unsigned long *zone_start_pfn, unsigned long *zone_end_pfn,
-		unsigned long *nr_absent, unsigned long *nr_spanned)
-{
-	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
-	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
+static ulong __init
+__myos_calculate_node_pages(ulong zone_type,
+		ulong node_start_pfn, ulong node_end_pfn,
+		ulong *zone_start_pfn, ulong *zone_end_pfn,
+		ulong *nr_absent, ulong *nr_spanned) {
+
+	ulong zone_low = arch_zone_lowest_possible_pfn[zone_type];
+	ulong zone_high = arch_zone_highest_possible_pfn[zone_type];
 	/* When hotadd a new node from cpu_up(), the node should be empty */
 	if (!node_start_pfn && !node_end_pfn)
 		return 0;
@@ -141,7 +140,7 @@ __myos_calculate_node_pages(unsigned long zone_type,
 	// 	unsigned long range_start_pfn, unsigned long range_end_pfn)
 	// {
 		*nr_absent = *zone_end_pfn - *zone_start_pfn;
-		unsigned long start_pfn, end_pfn;
+		ulong start_pfn, end_pfn;
 		int i;
 
 		for_each_mem_pfn_range(i, &start_pfn, &end_pfn) {
@@ -160,17 +159,17 @@ __myos_calculate_node_pages(unsigned long zone_type,
 
 static void __init
 calculate_node_totalpages(pg_data_t *pgdat,
-		unsigned long node_start_pfn, unsigned long node_end_pfn)
-{
-	unsigned long realtotalpages = 0, totalpages = 0;
+		ulong node_start_pfn, ulong node_end_pfn) {
+
+	ulong realtotalpages = 0, totalpages = 0;
 	enum zone_type i;
 
 	for (i = 0; i < MAX_NR_ZONES; i++) {
 		zone_s *zone = pgdat->node_zones + i;
 		zone->zone_pgdat = pgdat;
-		unsigned long zone_start_pfn, zone_end_pfn;
-		unsigned long spanned, absent;
-		unsigned long real_size;
+		ulong zone_start_pfn, zone_end_pfn;
+		ulong spanned, absent;
+		ulong real_size;
 
 		__myos_calculate_node_pages(i,
 				node_start_pfn, node_end_pfn,
@@ -198,8 +197,7 @@ calculate_node_totalpages(pg_data_t *pgdat,
 
 
 static void __meminit
-pgdat_init_internals(pg_data_t *pgdat)
-{
+pgdat_init_internals(pg_data_t *pgdat) {
 	// int i;
 
 	// pgdat_resize_init(pgdat);
@@ -218,9 +216,9 @@ pgdat_init_internals(pg_data_t *pgdat)
 }
 
 static void __meminit
-zone_init_internals(zone_s *zone, enum zone_type idx,
-		unsigned long remaining_pages)
-{
+zone_init_internals(zone_s *zone,
+		enum zone_type idx, ulong remaining_pages) {
+
 	// atomic_long_set(&zone->managed_pages, remaining_pages);
 	zone->name = zone_names[idx];
 	zone->zone_pgdat = NODE_DATA(0);
@@ -239,17 +237,15 @@ zone_init_internals(zone_s *zone, enum zone_type idx,
  * NOTE: this function is only called during early init.
  */
 static void __init
-free_area_init_core(pg_data_t *pgdat)
-{
+free_area_init_core(pg_data_t *pgdat) {
 	enum zone_type j;
 
 	pgdat_init_internals(pgdat);
 	// pgdat->per_cpu_nodestats = &boot_nodestats;
 
-	for (j = 0; j < MAX_NR_ZONES; j++)
-	{
+	for (j = 0; j < MAX_NR_ZONES; j++) {
 		zone_s *zone = pgdat->node_zones + j;
-		unsigned long size, freesize, memmap_pages;
+		ulong size, freesize, memmap_pages;
 
 		size = zone->spanned_pages;
 		freesize = zone->present_pages;
@@ -296,10 +292,9 @@ free_area_init_core(pg_data_t *pgdat)
 }
 
 static void __init
-alloc_node_mem_map(pg_data_t *pgdat)
-{
-	unsigned long __maybe_unused start = 0;
-	unsigned long __maybe_unused offset = 0;
+alloc_node_mem_map(pg_data_t *pgdat) {
+	ulong __maybe_unused start = 0;
+	ulong __maybe_unused offset = 0;
 
 	/* Skip empty nodes */
 	if (!pgdat->node_spanned_pages)
@@ -308,7 +303,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 	start = pgdat->node_start_pfn & ~(MAX_ORDER_NR_PAGES - 1);
 	offset = pgdat->node_start_pfn - start;
 	if (!pgdat->node_mem_map) {
-		unsigned long size, end;
+		ulong size, end;
 		page_s *map;
 
 		/*
@@ -320,10 +315,9 @@ alloc_node_mem_map(pg_data_t *pgdat)
 		end = ALIGN(end, MAX_ORDER_NR_PAGES);
 		size =  (end - start) * sizeof(page_s);
 
-		map = (void *)phys_to_virt(memblock_alloc_range(
-				size, SMP_CACHE_BYTES, MAX_DMA_PFN, 0));
-		if (!map)
-		{
+		map = (void *)phys_to_virt(memblock_alloc_range(size,
+							SMP_CACHE_BYTES, MAX_DMA_PFN, 0));
+		if (!map) {
 			while (1);
 			
 			// panic("Failed to allocate %ld bytes for node %d memory map\n",
@@ -337,8 +331,7 @@ alloc_node_mem_map(pg_data_t *pgdat)
 	// 			(unsigned long)pgdat->node_mem_map);
 
 
-	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++)
-	{
+	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++) {
 		page_s *page = &(NODE_DATA(0)->node_mem_map[i]);
 		INIT_LIST_S(&page->lru);
 	}
@@ -360,15 +353,15 @@ alloc_node_mem_map(pg_data_t *pgdat)
  */
 // static void __init free_area_init_node(int nid)
 void __init
-free_area_init(unsigned long *max_zone_pfn)
+free_area_init(ulong *max_zone_pfn)
 {
-	unsigned long start_pfn = 1;
-	unsigned long end_pfn = 0;
+	ulong start_pfn = 1;
+	ulong end_pfn = 0;
 	/* Record where the zone boundaries are */
 	memset(arch_zone_lowest_possible_pfn, 0,
-				sizeof(arch_zone_lowest_possible_pfn));
+			sizeof(arch_zone_lowest_possible_pfn));
 	memset(arch_zone_highest_possible_pfn, 0,
-				sizeof(arch_zone_highest_possible_pfn));
+			sizeof(arch_zone_highest_possible_pfn));
 
 	for (int i = 0; i < MAX_NR_ZONES; i++) {
 		end_pfn = max(max_zone_pfn[i], start_pfn);

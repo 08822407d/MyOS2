@@ -252,6 +252,18 @@
         "nodemask.h": "c",
         "mm_consts.h": "c",
         "mmzone_const.h": "c",
-        "page_alloc_const.h": "c"
+        "page_alloc_const.h": "c",
+        "memblock_types.h": "c",
+        "highmem.h": "c",
+        "highmem_api.h": "c",
+        "dma.h": "c",
+        "mm_type_declarations.h": "c",
+        "mm_type_declaration.h": "c",
+        "mm_const.h": "c",
+        "mm_api.h": "c",
+        "page_alloc.h": "c",
+        "mmzone_types.h": "c",
+        "pgalloc.h": "c",
+        "mm_misc.h": "c"
     }
 }

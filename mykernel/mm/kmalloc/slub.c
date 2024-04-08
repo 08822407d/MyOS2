@@ -2,14 +2,9 @@
 #include <linux/kernel/nodemask.h>
 
 #include "kmalloc.h"
-#include "slub.h"
-#include "slub_types.h"
 
 
-#include "../kmalloc_api.h"
-
-
-static inline unsigned int
+static inline uint
 order_objects(uint order, uint size) {
 	return ((uint)PAGE_SIZE << order) / size;
 }
@@ -327,7 +322,7 @@ static uint slub_min_objects	= 4;
 
 // static inline int calculate_order(unsigned int size)
 static inline int
-simple_calculate_order(unsigned int size) {
+simple_calculate_order(uint size) {
 	int
 		order,
 		min_order = (int)slub_min_order;

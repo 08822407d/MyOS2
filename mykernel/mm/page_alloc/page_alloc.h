@@ -2,13 +2,12 @@
 #define _LINUX_PAGE_ALLOC_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
-	#include <linux/kernel/mm.h>
 
+	#include "../mm_const.h"
+	#include "../mm_types.h"
+	#include "../mm_api.h"
 	#include "mmzone_types.h"
-	#include "page_alloc_types.h"
 
-	struct zone;
-	typedef struct zone zone_s;
 
 	/*
 	 * page_private can be used on tail pages.  However, PagePrivate is only
@@ -44,7 +43,7 @@
 		put_page(page_s *page);
 
 		extern pgoff_t
-		linear_page_index(vma_s *vma, unsigned long address);
+		linear_page_index(vma_s *vma, ulong address);
 
 		extern zone_s
 		*myos_page_zone(const page_s * page);
@@ -90,7 +89,7 @@
 
 		PREFIX_STATIC_INLINE
 		pgoff_t
-		linear_page_index(vma_s *vma, unsigned long address) {
+		linear_page_index(vma_s *vma, ulong address) {
 			pgoff_t pgoff;
 			// if (unlikely(is_vm_hugetlb_page(vma)))
 			// 	return linear_hugepage_index(vma, address);
@@ -125,7 +124,7 @@
 		PREFIX_STATIC_INLINE
 		zone_s
 		*myos_page_zone(const page_s * page) {
-			unsigned long pfn = page_to_pfn(page);
+			ulong pfn = page_to_pfn(page);
 			for (int i = 0 ; i < MAX_NR_ZONES; i ++)
 			{
 				zone_s * zone = &(NODE_DATA(0)->node_zones[i]);

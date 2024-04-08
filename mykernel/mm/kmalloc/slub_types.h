@@ -6,16 +6,13 @@
  *
  * (C) 2007 SGI, Christoph Lameter
  */
-
-	#include <linux/kernel/lock_ipc.h>
 	#include <linux/kernel/kobject.h>
-	#include <linux/kernel/lib.h>
 
-	#include "kmalloc_types.h"
+	#include "../mm_type_declaration.h"
 
 
 	typedef struct slab {
-		ulong __page_flags;
+		ulong				__page_flags;
 
 		struct {
 			kmem_cache_s	*slab_cache;
@@ -45,7 +42,6 @@
 		const char	*name;
 		uint		size;
 	} kmalloc_info_s;
-	extern const kmalloc_info_s kmalloc_info[];
 
 	/*
 	 * State of the slab allocator.
@@ -110,10 +106,9 @@
 	 * given order would contain.
 	 */
 	typedef struct kmem_cache_order_objects {
-		// unsigned int x;
 		uint
-			obj_nr	: OO_SHIFT,
-			order	: 32 - OO_SHIFT;
+			obj_nr	: 16,
+			order	: 16;
 	} __attribute__((packed)) kmem_cache_order_obj_s;
 
 	/*
@@ -126,7 +121,6 @@
 		ulong			min_partial;
 		uint			size;			/* The size of an object including metadata */
 		uint			object_size;	/* The size of an object without metadata */
-		// struct reciprocal_value reciprocal_size;
 		uint			offset;			/* Free pointer offset */
 		// /* Number of per cpu partial objects to keep around */
 		// uint			cpu_partial;
@@ -135,13 +129,10 @@
 		kmem_cache_order_obj_s	oo;
 
 		// /* Allocation and freeing of slabs */
-		// kmem_cache_order_obj_s	min;
 		gfp_t			allocflags;		/* gfp flags to use on each alloc */
 		int				refcount;		/* Refcount for slab cache destroy */
-		// void			(*ctor)(void *);
 		uint			inuse;			/* Offset to metadata */
 		uint			align;			/* Alignment */
-		// uint			red_left_pad;	/* Left redzone padding size */
 		const char		*name;			/* Name (only for display!) */
 		List_s			list;			/* List of slab caches */
 		kobj_s			kobj;			/* For sysfs */

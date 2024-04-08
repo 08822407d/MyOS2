@@ -4,18 +4,8 @@
 	#include <linux/compiler/compiler_types.h>
 	#include <asm/insns.h>
 
-	struct vm_area_struct;
-	typedef struct vm_area_struct vma_s;
+	#include "../mm_type_declaration.h"
 
-
-	typedef unsigned long	vm_flags_t;
-
-	/**
-	 * typedef vm_fault_t - Return type for page fault handlers.
-	 *
-	 * Page fault handlers return a bitmask of %VM_FAULT values.
-	 */
-	typedef __bitwise unsigned int vm_fault_t;
 
 	/**
 	 * enum vm_fault_reason - Page fault handlers return a bitmask of
@@ -116,10 +106,10 @@
 	 */
 	typedef struct vm_fault {
 		const struct {
-			vma_s			*vma;		/* Target VMA */
-			gfp_t			gfp_mask;	/* gfp mask to be used for allocations */
-			pgoff_t			pgoff;		/* Logical page offset based on vma */
-			unsigned long	address;	/* Faulting virtual address */
+			vma_s		*vma;		/* Target VMA */
+			gfp_t		gfp_mask;	/* gfp mask to be used for allocations */
+			pgoff_t		pgoff;		/* Logical page offset based on vma */
+			ulong		address;	/* Faulting virtual address */
 		};
 		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
 									 * XXX: should really be 'const' */

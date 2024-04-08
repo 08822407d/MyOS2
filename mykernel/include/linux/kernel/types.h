@@ -96,12 +96,14 @@
 		typedef unsigned short		u_short;
 		typedef unsigned int		u_int;
 		typedef unsigned long		u_long;
+		typedef unsigned long long	u_longlong;
 
 		/* sysv */
 		typedef unsigned char		unchar;
 		typedef unsigned short		ushort;
 		typedef unsigned int		uint;
 		typedef unsigned long		ulong;
+		typedef unsigned long long	ulonglong;
 
 	#	ifndef __BIT_TYPES_DEFINED__
 	#		define __BIT_TYPES_DEFINED__

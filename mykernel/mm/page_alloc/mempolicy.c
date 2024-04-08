@@ -84,7 +84,7 @@
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
-page_s *alloc_pages(gfp_t gfp, unsigned order)
+page_s *alloc_pages(gfp_t gfp, uint order)
 {
 	// struct mempolicy *pol = &default_policy;
 	page_s *page;

@@ -1,13 +1,9 @@
 #ifndef _PAGE_ALLOC_TYPES_H_
 #define _PAGE_ALLOC_TYPES_H_
 
-	#include <linux/kernel/types.h>
-	#include <linux/kernel/lock_ipc.h>
+	#include "../mm_type_declaration.h"
 
-	struct mm_struct;
-	typedef struct mm_struct mm_s;
-	struct kmem_cache;
-	typedef struct kmem_cache kmem_cache_s;
+
 	struct address_space;
 	typedef struct address_space addr_spc_s;
 
@@ -44,7 +40,7 @@
 	 * bits of page_s, we align all page_ss to double-word boundaries,
 	 * and ensure that 'freelist' is aligned within struct slab.
 	 */
-	#define _struct_page_alignment __aligned(2 * sizeof(unsigned long))
+	#define _struct_page_alignment __aligned(2 * sizeof(ulong))
 
 	typedef struct __attribute__((packed)) {
 		unsigned long
@@ -90,7 +86,7 @@
 
 	typedef struct page {
 		union {	// 为了方便debug，增加了按位定义的union
-			unsigned long	flags;		/* Atomic flags, some possibly */
+			ulong			flags;		/* Atomic flags, some possibly */
 			pgflag_defs_s	flag_defs;	/* updated asynchronously */
 		};
 		/*
@@ -113,7 +109,7 @@
 						/* Always even, to negate PageTail */
 						void	*__filler;
 						/* Count page's or folio's mlocks */
-						unsigned int	mlock_count;
+						uint	mlock_count;
 					};
 					/* Or, free page */
 					List_s		buddy_list;
@@ -128,7 +124,7 @@
 				 * Used for swp_entry_t if PageSwapCache.
 				 * Indicates order in the buddy system if PageBuddy.
 				 */
-				unsigned long	private;
+				ulong			private;
 			};
 			// struct
 			// { /* page_pool used by netstack */
@@ -155,7 +151,7 @@
 			// 	};
 			// };
 			struct {	/* Tail pages of compound page */
-				unsigned long	compound_head;		/* Bit zero is set */
+				ulong			compound_head;		/* Bit zero is set */
 			};
 			// struct
 			// {	/* Second tail page of compound page */
@@ -198,18 +194,18 @@
 			 * If the page can be mapped to userspace, encodes the number
 			 * of times this page is referenced by a page table.
 			 */
-			atomic_t _mapcount;
+			atomic_t	_mapcount;
 			/*
 			 * If the page is neither PageSlab nor mappable to userspace,
 			 * the value stored here may help determine what this page
 			 * is used for.  See page-flags.h for a list of page types
 			 * which are currently stored here.
 			 */
-			unsigned int page_type;
+			uint		page_type;
 		};
 
 		/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
-		atomic_t _refcount;
+		atomic_t		_refcount;
 
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
@@ -252,8 +248,7 @@
 	 * at an arbitrary page offset, but its kernel virtual address is aligned
 	 * to its size.
 	 */
-	typedef struct folio
-	{
+	typedef struct folio {
 		/* private: don't document the anon union */
 		union {
 			struct {
@@ -299,10 +294,10 @@
 				ulong	_flags_2;
 				ulong	_head_2;
 		/* public: */
-				void		*_hugetlb_subpool;
-				void		*_hugetlb_cgroup;
-				void		*_hugetlb_cgroup_rsvd;
-				void		*_hugetlb_hwpoison;
+				void	*_hugetlb_subpool;
+				void	*_hugetlb_cgroup;
+				void	*_hugetlb_cgroup_rsvd;
+				void	*_hugetlb_hwpoison;
 		/* private: the union with struct page is transitional */
 			};
 			struct {

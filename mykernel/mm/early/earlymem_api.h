@@ -1,8 +1,20 @@
-#ifndef _LINUX_EARLYMEM_API_H_
-#define _LINUX_EARLYMEM_API_H_
+#ifndef _EARLYMEM_API_H_
+#define _EARLYMEM_API_H_
 
-	#include "early/memblock_types.h"
-	#include "early/memblock.h"
+	#include "memblock.h"
+
+	/*
+	 * highest page
+	 */
+	extern ulong		max_pfn;
+	/*
+	 * highest possible page
+	 */
+	extern ulonglong	max_possible_pfn;
+	extern ulong		max_low_pfn;
+	extern ulong		min_low_pfn;
+	extern memblock_s	memblock;
+
 
 	int simple_mmblk_add(phys_addr_t base, phys_addr_t size);
 	int simple_mmblk_reserve(phys_addr_t base, phys_addr_t size);
@@ -14,8 +26,8 @@
 			mmblk_type_s *type_a, mmblk_type_s *type_b,
 			phys_addr_t *out_start, phys_addr_t *out_end);
 
-	void __next_mem_pfn_range(int *idx, unsigned long *out_start_pfn,
-			unsigned long *out_end_pfn);
+	void __next_mem_pfn_range(int *idx,
+			ulong *out_start_pfn, ulong *out_end_pfn);
 
 	phys_addr_t memblock_alloc_range(phys_addr_t size,
 			phys_addr_t align, phys_addr_t start, phys_addr_t end);
@@ -26,4 +38,4 @@
 
 	void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
 
-#endif /* _LINUX_EARLYMEM_API_H_ */
+#endif /* _EARLYMEM_API_H_ */

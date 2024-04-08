@@ -9,8 +9,7 @@
  * Peter Bergner, IBM Corp.	June 2001.
  * Copyright (C) 2001 Peter Bergner.
  */
-
-#include <linux/kernel/mm.h>
+#include <asm/dma.h>
 
 /**
  * DOC: memblock overview
@@ -75,10 +74,10 @@
  * system initialization completes.
  */
 
-unsigned long max_low_pfn;
-unsigned long min_low_pfn;
-unsigned long max_pfn;
-unsigned long long max_possible_pfn;
+ulong		max_low_pfn;
+ulong		min_low_pfn;
+ulong		max_pfn;
+ulonglong	max_possible_pfn;
 
 static mmblk_rgn_s mmblk_memory_regions[INIT_MMBLK_MEMORY_REGIONS] __initdata_memblock; 
 static mmblk_rgn_s mmblk_reserved_regions[INIT_MMBLK_RESERVED_REGIONS] __initdata_memblock;
@@ -101,9 +100,14 @@ memblock_s memblock __initdata_memblock = {
 /*==============================================================================================*
  *									fuctions for add/remove regions								*
  *==============================================================================================*/
+static inline phys_addr_t
+memblock_cap_size(phys_addr_t base, IN OUT phys_addr_t *size) {
+	return *size = min(*size, PHYS_ADDR_MAX - base);
+}
+
 /* adjust *@size so that (@base + *@size) doesn't overflow, return new size */
 __init_memblock static void
-simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long rgn_idx) {
+simple_mmblk_remove_rgn(mmblk_type_s *type, ulong rgn_idx) {
 
 	type->total_size -= type->regions[rgn_idx].size;
 	memmove(&type->regions[rgn_idx], &type->regions[rgn_idx + 1],
@@ -127,7 +131,7 @@ simple_mmblk_remove_rgn(mmblk_type_s *type, unsigned long rgn_idx) {
 // 		unsigned long start_rgn, unsigned long end_rgn)
 __init_memblock static void
 simple_mmblk_merge_rgn(IN mmblk_type_s *type,
-		unsigned long start_rgn, unsigned long end_rgn) {
+		ulong start_rgn, ulong end_rgn) {
 
 	int i = 0;
 	if (start_rgn)
@@ -485,7 +489,8 @@ memblock_alloc_range(phys_addr_t size, phys_addr_t align,
 	start = max_t(phys_addr_t, start, PAGE_SIZE);
 	end = max(start, end);
 
-	found = __memblock_find_range_bottom_up(start, end, size, align, flags);
+	found = __memblock_find_range_bottom_up(
+				start, end, size, align, flags);
 	if (found && !simple_mmblk_reserve(found, size))
 		return found;
 	else
@@ -634,8 +639,9 @@ memblock_trim_memory(phys_addr_t align)
  * Common iterator interface used to define for_each_mem_pfn_range().
  */
 __init_memblock void
-__next_mem_pfn_range(OUT int *idx, OUT unsigned long *out_start_pfn,
-		OUT unsigned long *out_end_pfn)
+__next_mem_pfn_range(OUT int *idx,
+		OUT ulong *out_start_pfn,
+		OUT ulong *out_end_pfn)
 {
 	mmblk_type_s *type = &memblock.memory;
 	mmblk_rgn_s *r;
@@ -657,7 +663,6 @@ __next_mem_pfn_range(OUT int *idx, OUT unsigned long *out_start_pfn,
 
 __init static void
 memmap_init_reserved_pages(void) {
-
 	mmblk_rgn_s *region;
 	phys_addr_t start, end;
 	u64 i = 0;
@@ -678,8 +683,7 @@ memmap_init_reserved_pages(void) {
 
 __init static unsigned long
 free_low_memory_core_early(void) {
-
-	unsigned long count = 0;
+	ulong count = 0;
 	phys_addr_t start, end;
 	uint64_t i = 0;
 
@@ -689,15 +693,13 @@ free_low_memory_core_early(void) {
 	 *  because in some case like Node0 doesn't have RAM installed
 	 *  low ram will be on Node1
 	 */
-	for_each_free_mem_range (i, MEMBLOCK_NONE, &start, &end)
-	{
+	for_each_free_mem_range (i, MEMBLOCK_NONE, &start, &end) {
 	// count += __free_memory_core(start, end);
 	// static unsigned long __init __free_memory_core(
 	// 		phys_addr_t start, phys_addr_t end)
 	// {
-		unsigned long start_pfn = PFN_UP(start);
-		unsigned long end_pfn = min_t(unsigned long,
-				PFN_DOWN(end), max_low_pfn);
+		ulong start_pfn = PFN_UP(start);
+		ulong end_pfn = min_t(ulong, PFN_DOWN(end), max_low_pfn);
 
 		if (start_pfn >= end_pfn)
 			continue;
@@ -727,7 +729,7 @@ free_low_memory_core_early(void) {
 __init void
 memblock_free_all(void)
 {
-	unsigned long pages;
+	ulong pages;
 
 	// free_unused_memmap();
 	// reset_all_zones_managed_pages();

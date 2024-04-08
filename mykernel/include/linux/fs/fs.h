@@ -12,6 +12,7 @@
 	#include <linux/init/init.h>
 	#include <linux/debug/bug.h>
 	#include <linux/kernel/mm.h>
+	#include <linux/kernel/mm_types.h>
 	#include <linux/kernel/fcntl.h>
 	#include <linux/kernel/uidgid.h>
 	#include <linux/kernel/workqueue.h>

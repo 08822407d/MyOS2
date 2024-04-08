@@ -1,10 +1,8 @@
 #ifndef _LINUX_MMZONE_TYPES_H_
 #define _LINUX_MMZONE_TYPES_H_
 
-	#include <linux/kernel/lock_ipc.h>
+	#include "../mm_type_declaration.h"
 
-	struct pglist_data;
-	typedef struct pglist_data pg_data_t;
 
 	enum zone_type {
 		/*
@@ -99,7 +97,7 @@
 		// */
 		// long lowmem_reserve[MAX_NR_ZONES];
 
-		pg_data_t *zone_pgdat;
+		pg_data_t		*zone_pgdat;
 		// struct per_cpu_pages __percpu *per_cpu_pageset;
 		// struct per_cpu_zonestat __percpu *per_cpu_zonestats;
 		// /*
@@ -116,7 +114,7 @@
 		// unsigned long *pageblock_flags;
 
 		/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
-		unsigned long zone_start_pfn;
+		ulong			zone_start_pfn;
 
 		/*
 		 * spanned_pages is the total pages spanned by the zone, including
@@ -160,29 +158,29 @@
 		 * mem_hotplug_begin/end(). Any reader who can't tolerant drift of
 		 * present_pages should get_online_mems() to get a stable value.
 		 */
-		atomic_long_t managed_pages;
-		unsigned long spanned_pages;
-		unsigned long present_pages;
+		atomic_long_t	managed_pages;
+		ulong			spanned_pages;
+		ulong			present_pages;
 	// #ifdef CONFIG_CMA
 	// 	unsigned long cma_pages;
 	// #endif
 
-		const char *name;
+		const char		*name;
 
-		int initialized;
+		int				initialized;
 
 		// /* Write-intensive fields used from the page allocator */
 		// ZONE_PADDING(_pad1_)
 
 		/* free areas of different sizes */
 		// struct free_area free_area[MAX_ORDER];
-		List_hdr_s free_area[MAX_ORDER];
+		List_hdr_s		free_area[MAX_ORDER];
 
 		/* zone flags, see below */
-		unsigned long flags;
+		ulong			flags;
 
 		/* Primarily protects free_area */
-		spinlock_t lock;
+		spinlock_t		lock;
 
 		// /* Write-intensive fields used by compaction and vmstats. */
 		// ZONE_PADDING(_pad2_)
@@ -228,7 +226,7 @@
 		 * this node's node_zonelists as well as other node's node_zonelists.
 		 */
 		// struct zone node_zones[MAX_NR_ZONES];
-		zone_s node_zones[MAX_NR_ZONES];
+		zone_s		node_zones[MAX_NR_ZONES];
 
 		/*
 		 * node_zonelists contains references to all zones in all nodes.
@@ -237,15 +235,15 @@
 		 */
 		// struct zonelist node_zonelists[MAX_ZONELISTS];
 
-		int nr_zones;	  /* number of populated zones in this node */
+		int			nr_zones;	  /* number of populated zones in this node */
 		// page_s *node_mem_map;
-		page_s *node_mem_map;
+		page_s		*node_mem_map;
 	// #ifdef CONFIG_PAGE_EXTENSION
 	// 	struct page_ext *node_page_ext;
 	// #endif
-		unsigned long node_start_pfn;
-		unsigned long node_present_pages; /* total number of physical pages */
-		unsigned long node_spanned_pages; /* total size of physical page
+		ulong		node_start_pfn;
+		ulong		node_present_pages; /* total number of physical pages */
+		ulong		node_spanned_pages; /* total size of physical page
 											range, including holes */
 		// int node_id;
 		// wait_queue_head_t kswapd_wait;
@@ -268,7 +266,7 @@
 		 * This is a per-node reserve of pages that are not available
 		 * to userspace allocations.
 		 */
-		unsigned long totalreserve_pages;
+		ulong		totalreserve_pages;
 
 		// /* Write-intensive fields used by page reclaim */
 		// ZONE_PADDING(_pad1_)
@@ -294,7 +292,7 @@
 		// */
 		// struct lruvec __lruvec;
 
-		unsigned long flags;
+		ulong		flags;
 
 		// ZONE_PADDING(_pad2_)
 

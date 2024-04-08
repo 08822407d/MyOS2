@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-2.0-only
-#include <linux/kernel/mm.h>
 #include <linux/lib/string.h>
 #include <linux/compiler/compiler.h>
 #include <linux/kernel/export.h>
@@ -44,13 +43,13 @@ void __vma_unlink_list(mm_s *mm, vma_s *vma)
 }
 
 
-unsigned long
-vm_mmap_pgoff(file_s *file, unsigned long addr, unsigned long len,
-		unsigned long prot, unsigned long flag, unsigned long pgoff)
+ulong
+vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
+		ulong prot, ulong flag, ulong pgoff)
 {
-	unsigned long ret;
+	ulong ret;
 	mm_s *mm = current->mm;
-	unsigned long populate;
+	ulong populate;
 	// LIST_HEAD(uf);
 
 	// ret = security_mmap_file(file, prot, flag);
@@ -66,9 +65,9 @@ vm_mmap_pgoff(file_s *file, unsigned long addr, unsigned long len,
 	return ret;
 }
 
-unsigned long
-vm_mmap(file_s *file, unsigned long addr, unsigned long len,
-		unsigned long prot, unsigned long flag, unsigned long offset)
+ulong
+vm_mmap(file_s *file, ulong addr, ulong len,
+		ulong prot, ulong flag, ulong offset)
 {
 	if (unlikely(offset + PAGE_ALIGN(len) < offset))
 		return -EINVAL;

@@ -1,6 +1,8 @@
 #ifndef _LINUX_SCHED_MISC_API_H_
 #define _LINUX_SCHED_MISC_API_H_
 
+	#include <linux/kernel/mm_types.h>
+
     #include "misc/sched_misc_types.h"
     #include "misc/sched_misc.h"
 
@@ -30,8 +32,6 @@
 	// #include <asm/current.h>
 	// #define current_thread_info() ((struct thread_info *)current)
 	#define current_thread_info() (&(current->thread_info))
-
-
 
     #include "misc/fs_struct_types.h"
     #include "misc/fs_struct.h"

@@ -19,7 +19,7 @@
 
 	#endif
 
-	#include "hash_list_macros.h"
+	#include "hash_list_macro.h"
 	
 	#if defined(HLIST_DEFINATION) || !(DEBUG)
 

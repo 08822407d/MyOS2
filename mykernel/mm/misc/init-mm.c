@@ -1,13 +1,13 @@
 // source: linux-6.4.9
 
 // SPDX-License-Identifier: GPL-2.0
-#include <linux/kernel/lock_ipc.h>
 #include <linux/kernel/cpumask.h>
-#include <linux/kernel/mm.h>
-#include <linux/kernel/lib.h>
+
+#include "mm_misc.h"
+
 
 #ifndef INIT_MM_CONTEXT
-#	define INIT_MM_CONTEXT(name)
+#  define INIT_MM_CONTEXT(name)
 #endif
 
 pgd_t	init_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE);
@@ -47,10 +47,10 @@ vma_s init_vma;
 void setup_initial_init_mm(void *start_code,
 		void *end_code, void *end_data, void *brk)
 {
-	init_mm.start_code	= (unsigned long)start_code;
-	init_mm.end_code	= (unsigned long)end_code;
-	init_mm.end_data	= (unsigned long)end_data;
-	init_mm.brk			= (unsigned long)brk;
+	init_mm.start_code	= (ulong)start_code;
+	init_mm.end_code	= (ulong)end_code;
+	init_mm.end_data	= (ulong)end_data;
+	init_mm.brk			= (ulong)brk;
 
 	memset(&init_vma, 0, sizeof(vma_s));
 	init_mm.mmap		= &init_vma;
