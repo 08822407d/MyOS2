@@ -5,7 +5,7 @@
 	#include "../mm_type_declaration_arch.h"
 
 
-	typedef struct __attribute__((packed)) {
+	typedef struct arch_pgd {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -17,9 +17,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} arch_pgd_T;
+	} __attribute__((packed)) arch_pgd_T;
 
-	typedef struct __attribute__((packed)) {
+	typedef struct arch_pud {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -34,9 +34,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} arch_pud_T;
+	} __attribute__((packed)) arch_pud_T;
 
-	typedef struct __attribute__((packed)) {
+	typedef struct arch_pmd {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -51,9 +51,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} arch_pmd_T;
+	} __attribute__((packed)) arch_pmd_T;
 
-	typedef struct __attribute__((packed)) {
+	typedef struct arch_pte {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -68,29 +68,29 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} arch_pte_T;
+	} __attribute__((packed)) arch_pte_T;
 
-	typedef union {
+	typedef union pgd_union {
 		pgdval_t	val;
 		arch_pgd_T	defs;
 	} pgd_t;
 
-	typedef union {
+	typedef union p4d_union {
 		pgd_t		pgd;
 		arch_pgd_T	defs;
 	} p4d_t;
 
-	typedef union {
+	typedef union pud_union {
 		pudval_t	val;
 		arch_pud_T	defs;
 	} pud_t;
 
-	typedef union {
+	typedef union pmd_union {
 		pmdval_t	val;
 		arch_pmd_T	defs;
 	} pmd_t;
 
-	typedef union {
+	typedef union pte_union {
 		pteval_t	val;
 		arch_pte_T	defs;
 	} pte_t;

@@ -272,6 +272,7 @@
         "mmu_types_arch.h": "c",
         "mmu_arch.h": "c",
         "mmu_macro_arch.h": "c",
-        "mm_types_arch.h": "c"
+        "mm_types_arch.h": "c",
+        "mm_type_declaration_arch.h": "c"
     }
 }

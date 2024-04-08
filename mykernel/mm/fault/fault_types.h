@@ -2,7 +2,7 @@
 #define _MMFAULT_TYPES_H_
 
 	#include <linux/compiler/compiler_types.h>
-	#include <asm/insns.h>
+	#include <mm/pgtable/pgtable_types_arch.h>
 
 	#include "../mm_type_declaration.h"
 
