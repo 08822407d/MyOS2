@@ -3,6 +3,7 @@
 
 	#include <linux/compiler/myos_optimize_option.h>
 
+	#include "../mm_const.h"
 	#include "../mm_types.h"
 	#include "../mm_api.h"
 

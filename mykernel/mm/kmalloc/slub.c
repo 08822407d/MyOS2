@@ -1,7 +1,8 @@
+#define SLUB_DEFINATION
+#include "slub.h"
+
 #include <linux/init/init.h>
 #include <linux/kernel/nodemask.h>
-
-#include "kmalloc.h"
 
 
 static inline uint
@@ -88,10 +89,10 @@ static inline slab_s
 *alloc_slab(kmem_cache_s *s, gfp_t flags) {
 	gfp_t alloc_gfp = prepare_alloc_flags(s, flags);
 	folio_s *folio = (folio_s *)alloc_pages(alloc_gfp, oo_order(s->oo));
-	slab_s *slab = (slab_s *)folio;
 	if (!folio)
 		return NULL;
 
+	slab_s *slab = folio_slab(folio);
 	__folio_set_slab(folio);
 	/* Make the flag visible before any changes to folio->mapping */
 	smp_wmb();
@@ -214,8 +215,8 @@ EXPORT_SYMBOL(kmem_cache_alloc);
  *******************************************************************/
 static void
 free_slab(kmem_cache_s *s, slab_s *slab) {
-	folio_s *folio = (folio_s *)(slab);
-	int order = folio->_folio_order;
+	folio_s *folio = slab_folio(slab);
+	int order = folio_order(folio);
 	int pages = 1 << order;
 
 	// __slab_clear_pfmemalloc(slab);

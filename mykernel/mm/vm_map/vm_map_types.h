@@ -3,9 +3,8 @@
 
 	#include "../mm_type_declaration.h"
 
+	#include <linux/fs/fs.h>
 
-	struct file;
-	typedef struct file file_s;
 
 	/*
 	 * This struct describes a virtual memory area. There is one of these

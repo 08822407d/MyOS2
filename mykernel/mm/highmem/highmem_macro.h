@@ -12,6 +12,7 @@
 	#define PHYS_PFN(x)			((ulong)((x) >> PAGE_SHIFT))
 	#define page_to_pfn(page)	((ulong)((page) - mem_map))
 	#define pfn_to_page(pfn)	((pfn) + mem_map)
+	#define nth_page(page,n)	pfn_to_page(page_to_pfn((page)) + (n))
 
 	#ifndef page_to_phys
 	#  define page_to_phys(x)	(page_to_pfn(x) << PAGE_SHIFT)

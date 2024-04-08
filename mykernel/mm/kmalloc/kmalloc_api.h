@@ -1,7 +1,7 @@
 #ifndef _KMALLOC_API_H_
 #define _KMALLOC_API_H_
 
-	#include "kmalloc.h"
+	#include "slub.h"
 
 	#include <linux/kernel/cache.h>
 

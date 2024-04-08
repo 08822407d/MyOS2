@@ -1,5 +1,5 @@
-#ifndef _LINUX_KMALLOC_H_
-#define _LINUX_KMALLOC_H_
+#ifndef _LINUX_SLUB_H_
+#define _LINUX_SLUB_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
 
@@ -10,21 +10,24 @@
 
 	#ifdef DEBUG
 
-		extern uint
-		arch_slab_minalign(void);
+		extern slab_s
+		*virt_to_slab(const void *addr);
+		extern int
+		slab_order(const slab_s *slab);
+		extern size_t
+		slab_size(const slab_s *slab);
+
 
 		extern void
 		*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags);
 
+
 		extern __alloc_size(1) void
 		*kmalloc(size_t size, gfp_t flags);
-
 		extern __alloc_size(1, 2) void
 		*kmalloc_array(size_t n, size_t size, gfp_t flags);
-
 		extern __alloc_size(1, 2) void
 		*kcalloc(size_t n, size_t size, gfp_t flags);
-
 		extern __alloc_size(1) void
 		*kzalloc(size_t size, gfp_t flags);
 
@@ -32,25 +35,37 @@
 		kfree(const void *object);
 
 	#endif
-	
-	#if defined(KMALLOC_DEFINATION) || !(DEBUG)
 
-		/*
-		 * Arches can define this function if they want to decide the minimum slab
-		 * alignment at runtime. The value returned by the function must be a power
-		 * of two and >= ARCH_SLAB_MINALIGN.
-		 */
+	#include "slub_macro.h"
+	
+	#if defined(SLUB_DEFINATION) || !(DEBUG)
+
 		PREFIX_STATIC_INLINE
-		uint
-		arch_slab_minalign(void) {
-			return ARCH_SLAB_MINALIGN;
+		slab_s
+		*virt_to_slab(const void *addr) {
+			folio_s *folio = virt_to_folio(addr);
+			if (!folio_test_slab(folio))
+				return NULL;
+			return folio_slab(folio);
 		}
+		PREFIX_STATIC_INLINE
+		int
+		slab_order(const slab_s *slab) {
+			return folio_order((folio_s *)slab_folio(slab));
+		}
+		PREFIX_STATIC_INLINE
+		size_t
+		slab_size(const slab_s *slab) {
+			return PAGE_SIZE << slab_order(slab);
+		}
+
 
 		PREFIX_STATIC_INLINE
 		void
 		*kmem_cache_zalloc(kmem_cache_s *k, gfp_t flags) {
 			return kmem_cache_alloc(k, flags | __GFP_ZERO);
 		}
+
 
 		/**
 		 * kmalloc - allocate kernel memory
@@ -117,7 +132,6 @@
 
 			return ret_val;
 		}
-
 		/**
 		 * kmalloc_array - allocate memory for an array.
 		 * @n: number of elements.
@@ -135,7 +149,6 @@
 				return kmalloc(bytes, flags);
 			return __kmalloc(bytes, flags);
 		}
-
 		/**
 		 * kcalloc - allocate memory for an array. The memory is set to zero.
 		 * @n: number of elements.
@@ -147,7 +160,6 @@
 		*kcalloc(size_t n, size_t size, gfp_t flags) {
 			return kmalloc_array(n, size, flags | __GFP_ZERO);
 		}
-
 		/**
 		 * kzalloc - allocate memory. The memory is set to zero.
 		 * @size: how many bytes of memory are required.
@@ -180,9 +192,9 @@
 			if (unlikely(!folio_test_slab(folio)))
 				free_large_kmalloc(folio, (void *)object);
 			else
-				kmem_cache_free(((slab_s *)folio)->slab_cache, (void *)object);
+				kmem_cache_free(folio_slab(folio)->slab_cache, (void *)object);
 		}
 
 	#endif
 
-#endif /* _LINUX_KMALLOC_H_ */
+#endif /* _LINUX_SLUB_H_ */

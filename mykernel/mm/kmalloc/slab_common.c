@@ -4,7 +4,7 @@
  *
  * (C) 2012 Christoph Lameter <cl@linux.com>
  */
-#include "kmalloc.h"
+#include "slub.h"
 
 
 enum slab_state slab_state;
@@ -27,47 +27,38 @@ calculate_alignment(slab_flags_t flags, uint align, uint size) {
 	 * alignment though. If that is greater then use it.
 	 */
 	if (flags & SLAB_HWCACHE_ALIGN) {
-		uint ralign;
-
-		ralign = cache_line_size();
+		uint ralign = cache_line_size();
 		while (size <= ralign / 2)
 			ralign /= 2;
 		align = max(align, ralign);
 	}
-	align = max(align, arch_slab_minalign());
-
-	return ALIGN(align, sizeof(void *));
+	return ALIGN(max(align, ARCH_SLAB_MINALIGN), sizeof(void *));
 }
 
 static kmem_cache_s
 *create_cache(const char *name, uint object_size,
 		uint align, slab_flags_t flags) {
 
-	kmem_cache_s *s;
-	int err = -ENOMEM;
-
-	s = kmem_cache_zalloc(kmem_cache, GFP_KERNEL);
-	if (!s)
+	kmem_cache_s *s = kmem_cache_zalloc(kmem_cache, GFP_KERNEL);
+	if (s == NULL)
 		goto out;
 
 	s->name = name;
 	s->size = s->object_size = object_size;
 	s->align = align;
 
-	err = __kmem_cache_create(s, flags);
-	if (err)
-		goto out_free_cache;
+	int err = __kmem_cache_create(s, flags);
+	if (err) {
+		kmem_cache_free(kmem_cache, s);
+		s = ERR_PTR(err);
+		goto out;
+	}
 
 	s->refcount = 1;
 	list_header_push(&slab_caches, &s->list);
-out:
-	if (err)
-		return ERR_PTR(err);
-	return s;
 
-out_free_cache:
-	kmem_cache_free(kmem_cache, s);
-	goto out;
+out:
+	return s;
 }
 
 /**
@@ -99,18 +90,7 @@ kmem_cache_s *
 kmem_cache_create(const char *name, uint size,
 		uint align, slab_flags_t flags) {
 
-	kmem_cache_s *s = NULL;
-	const char *cache_name = name;
-	int err = -ENOERR;
-
 	// mutex_lock(&slab_mutex);
-
-	/* Refuse requests with allocator specific flags */
-	if (flags & ~SLAB_FLAGS_PERMITTED) {
-		err = -EINVAL;
-		goto out_unlock;
-	}
-
 	/*
 	 * Some allocators will constraint the set of valid flags to a subset
 	 * of all flags. We expect them to define CACHE_CREATE_MASK in this
@@ -118,23 +98,19 @@ kmem_cache_create(const char *name, uint size,
 	 * passed flags.
 	 */
 	flags &= CACHE_CREATE_MASK;
-
-	s = create_cache(cache_name, size,
+	kmem_cache_s *s = create_cache(name, size,
 			calculate_alignment(flags, align, size), flags);
-	if (IS_ERR(s))
-		err = PTR_ERR(s);
-
-out_unlock:
 	// mutex_unlock(&slab_mutex);
 
-	if (err) {
+	if (IS_ERR(s)) {
 		if (flags & SLAB_PANIC)
-			panic("%s: Failed to create slab '%s'. Error %d\n", __func__, name, err);
-		else {
-			pr_warn("%s(%s) failed with error %d\n", __func__, name, err);
-			// dump_stack();
-		}
-		return NULL;
+			panic("%s: Failed to create slab '%s'. Error %d\n",
+					__func__, name, (int)PTR_ERR(s));
+		else
+			pr_warn("%s(%s) failed with error %d\n",
+					__func__, name, (int)PTR_ERR(s));
+
+		s = NULL;
 	}
 	return s;
 }
@@ -145,21 +121,11 @@ EXPORT_SYMBOL(kmem_cache_create);
 void __init create_boot_cache(kmem_cache_s *s,
 		const char *name, uint size, slab_flags_t flags)
 {
-	int err;
-	uint align = ARCH_KMALLOC_MINALIGN;
-
 	s->name = name;
 	s->size = s->object_size = size;
+	s->align = calculate_alignment(flags, ARCH_KMALLOC_MINALIGN, size);
 
-	/*
-	 * For power of two sizes, guarantee natural alignment for kmalloc
-	 * caches, regardless of SL*B debugging options.
-	 */
-	if (is_power_of_2(size))
-		align = max(align, size);
-	s->align = calculate_alignment(flags, align, size);
-
-	err = __kmem_cache_create(s, flags);
+	int err = __kmem_cache_create(s, flags);
 	if (err)
 		panic("Creation of kmalloc slab %s size=%u failed. Reason %d\n",
 				name, size, err);
@@ -181,47 +147,26 @@ kmem_cache_s __init
 	return s;
 }
 
+
 kmem_cache_s *
 kmalloc_caches[KMALLOC_SHIFT_HIGH + 1] __ro_after_init =
 { /* initialization for https://bugs.llvm.org/show_bug.cgi?id=42570 */ };
 EXPORT_SYMBOL(kmalloc_caches);
 
-/*
- * Conversion table for small slabs sizes / 8 to the index in the
- * kmalloc array. This is necessary for slabs < 192 since we have non power
- * of two cache sizes there. The size of larger slabs can be determined using
- * fls.
- */
-static u8 size_index[24] __ro_after_init = {
-	3,	/* 8 */
-	4,	/* 16 */
-	5,	/* 24 */
-	5,	/* 32 */
-	6,	/* 40 */
-	6,	/* 48 */
-	6,	/* 56 */
-	6,	/* 64 */
-	1,	/* 72 */
-	1,	/* 80 */
-	1,	/* 88 */
-	1,	/* 96 */
-	7,	/* 104 */
-	7,	/* 112 */
-	7,	/* 120 */
-	7,	/* 128 */
-	2,	/* 136 */
-	2,	/* 144 */
-	2,	/* 152 */
-	2,	/* 160 */
-	2,	/* 168 */
-	2,	/* 176 */
-	2,	/* 184 */
-	2	/* 192 */
-};
-
-static inline uint
-size_index_elem(uint bytes) {
-	return (bytes - 1) / 8;
+static inline u8
+size_to_index(uint bytes) {
+	while (bytes <= 0 || bytes > 192);
+	
+	switch ((bytes - 1) / 8) {
+		case 0:			return 3;
+		case 1:			return 4;
+		case 2 ... 3:	return 5;
+		case 4 ... 7:	return 6;
+		case 8 ... 11:	return 1;
+		case 12 ... 15:	return 7;
+		case 16 ... 23:	return 2;
+		default:		return (u8)-1;
+	}
 }
 
 /*
@@ -230,11 +175,11 @@ size_index_elem(uint bytes) {
  */
 kmem_cache_s *kmalloc_slab(size_t size, gfp_t flags)
 {
-	unsigned int index;
+	uint index;
 	if (size == 0 || WARN_ON_ONCE(size > KMALLOC_MAX_CACHE_SIZE))
 		return NULL;
 	else if (size <= 192)
-		index = size_index[size_index_elem(size)];
+		index = size_to_index(size);
 	else
 		index = fls(size - 1);
 
@@ -245,7 +190,6 @@ kmem_cache_s *kmalloc_slab(size_t size, gfp_t flags)
 			.name	= "kmalloc-" #__short_size,		\
 			.size	= __size,						\
 		}
-
 /*
  * kmalloc_info[] is to make slub_debug=,kmalloc-xx option work at boot time.
  * kmalloc_index() supports up to 2^21=2MB, so the final entry of the table is
@@ -297,17 +241,15 @@ void __init create_kmalloc_caches(slab_flags_t flags)
 }
 
 
-
 void *__kmalloc(size_t size, gfp_t flags)
 {
 	while (unlikely(size > KMALLOC_MAX_CACHE_SIZE));
 
-	void *ret;
+	void *ret = NULL;
 	kmem_cache_s *s = kmalloc_slab(size, flags);
-	if (unlikely(s == NULL))
-		return s;
+	if (s != NULL)
+		ret = kmem_cache_alloc(s, flags);
 
-	ret = kmem_cache_alloc(s, flags);
 	// trace_kmalloc(caller, ret, size, s->size, flags, node);
 	return ret;
 }
@@ -320,41 +262,23 @@ EXPORT_SYMBOL(__kmalloc);
  */
 void *kmalloc_large(size_t size, gfp_t flags)
 {
-	page_s *page;
 	void *ptr = NULL;
-	uint order = get_order(size);
-
-	flags |= __GFP_COMP;
-	page = alloc_pages(flags, order);
+	page_s *page = alloc_pages(flags | __GFP_COMP, get_order(size));
 	if (page) {
 		ptr = (void *)page_to_virt(page);
 		if (flags & __GFP_ZERO)
 			memset(ptr, 0, size);
 	}
-
-	// ptr = kasan_kmalloc_large(ptr, size, flags);
-	// /* As ptr might get tagged, call kmemleak hook after KASAN. */
-	// kmemleak_alloc(ptr, size, 1, flags);
-	// kmsan_kmalloc_large(ptr, size, flags);
-
 	return ptr;
 }
 EXPORT_SYMBOL(kmalloc_large);
 
 void free_large_kmalloc(folio_s *folio, void *object)
 {
-	uint order = folio->_folio_order;
-
+	uint order = folio_order(folio);
 	if (WARN_ON_ONCE(order == 0))
 		pr_warn_once("object pointer: 0x%p\n", object);
-
-	// kmemleak_free(object);
-	// kasan_kfree_large(object);
-	// kmsan_kfree_large(object);
-
-	// mod_lruvec_page_state(folio_page(folio, 0), NR_SLAB_UNRECLAIMABLE_B,
-	// 		      -(PAGE_SIZE << order));
-	__free_pages((page_s *)folio, order);
+	__free_pages(folio_page(folio, 0), order);
 }
 EXPORT_SYMBOL(free_large_kmalloc);
 

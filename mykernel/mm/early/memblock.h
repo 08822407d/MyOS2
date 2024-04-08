@@ -6,7 +6,6 @@
  *
  * Copyright (C) 2001 Peter Bergner, IBM Corp.
  */
-
 #ifndef _LINUX_MEMBLOCK_H_
 #define _LINUX_MEMBLOCK_H_
 

@@ -209,16 +209,16 @@
 	// 				)														\
 	// 			)
 
-	// 	/**
-	// 	 * folio_page - Return a page from a folio.
-	// 	 * @folio: The folio.
-	// 	 * @n: The page number to return.
-	// 	 *
-	// 	 * @n is relative to the start of the folio.  This function does not
-	// 	 * check that the page number lies within @folio; the caller is presumed
-	// 	 * to have a reference to the page.
-	// 	 */
-	// #	define folio_page(folio, n) nth_page(&(folio)->page, n)
+		/**
+		 * folio_page - Return a page from a folio.
+		 * @folio: The folio.
+		 * @n: The page number to return.
+		 *
+		 * @n is relative to the start of the folio.  This function does not
+		 * check that the page number lies within @folio; the caller is presumed
+		 * to have a reference to the page.
+		 */
+	#	define folio_page(folio, n)	nth_page(&(folio)->page, n)
 
 		static __always_inline int PageTail(page_s *page)
 		{
