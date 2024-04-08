@@ -2,17 +2,8 @@
 #ifndef _ASM_X86_PGTABLE_TYPES_H_
 #define _ASM_X86_PGTABLE_TYPES_H_
 
-	#include <linux/kernel/types.h>
+	#include "../mm_type_declaration_arch.h"
 
-	/*
-	 * These are used to make use of C type-checking..
-	 */
-	typedef unsigned long pteval_t;
-	typedef unsigned long pmdval_t;
-	typedef unsigned long pudval_t;
-	typedef unsigned long p4dval_t;
-	typedef unsigned long pgdval_t;
-	typedef unsigned long pgprotval_t;
 
 	typedef struct __attribute__((packed)) {
 		unsigned long

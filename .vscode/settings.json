@@ -264,6 +264,14 @@
         "page_alloc.h": "c",
         "mmzone_types.h": "c",
         "pgalloc.h": "c",
-        "mm_misc.h": "c"
+        "mm_misc.h": "c",
+        "buddy_types.h": "c",
+        "earlymem_api_arch.h": "c",
+        "mm_api_arch.h": "c",
+        "mm_const_arch.h": "c",
+        "mmu_types_arch.h": "c",
+        "mmu_arch.h": "c",
+        "mmu_macro_arch.h": "c",
+        "mm_types_arch.h": "c"
     }
 }

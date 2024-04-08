@@ -67,8 +67,7 @@
    make bind policy root only? It can trigger oom much faster and the
    kernel is not always grateful with that.
 */
-#include <linux/kernel/mm.h>
-// #include <linux/sched/mm.h>
+#include "buddy.h"
 
 /**
  * alloc_pages - Allocate pages.

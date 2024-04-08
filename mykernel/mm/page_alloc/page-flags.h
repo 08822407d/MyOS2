@@ -7,8 +7,6 @@
 #define PAGE_FLAGS_H
 
 	#include <linux/kernel/types.h>
-	// #include <linux/bug.h>
-	// #include <linux/mmdebug.h>
 	#include <linux/kernel/mm.h>
 	#include <generated/bounds.h>
 

@@ -6,7 +6,6 @@
 	#include "../mm_const.h"
 	#include "../mm_types.h"
 	#include "../mm_api.h"
-	#include "mmzone_types.h"
 
 
 	/*
@@ -52,7 +51,7 @@
 
 	#endif
 	
-	#if defined(PAGEALLOC_DEFINATION) || !(DEBUG)
+	#if defined(BUDDY_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE
 		page_s

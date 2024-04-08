@@ -4,9 +4,6 @@
 	#include "../mm_type_declaration.h"
 
 
-	struct address_space;
-	typedef struct address_space addr_spc_s;
-
 	/*
 	 * Each physical page in the system has a page_s associated with
 	 * it to keep track of whatever it is we are using the page for at the

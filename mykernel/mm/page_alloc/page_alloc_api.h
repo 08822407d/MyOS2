@@ -4,9 +4,9 @@
 	#include <asm/mmzone_64.h>
 	#include <asm/sparsemem.h>
 
-	#include "page_alloc_types.h"
+	#include "buddy.h"
+
 	#include "page-flags.h"
-	#include "page_alloc.h"
 
 	/*
 	 * The array of struct pages for flatmem.
@@ -23,6 +23,11 @@
 	 * devices are suspended.
 	 */
 	extern gfp_t gfp_allowed_mask;
+
+
+	extern void zone_sizes_init(void);
+
+
 
 	page_s *alloc_pages(gfp_t gfp, uint order);
 

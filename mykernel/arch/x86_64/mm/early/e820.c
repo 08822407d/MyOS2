@@ -11,8 +11,7 @@
  * quirks and other tweaks, and feeds that into the generic Linux memory
  * allocation code routines via a platform independent interface (memblock, etc.).
  */
-#include "e820_const.h"
-#include "e820_types.h"
+#include "e820.h"
 
 #include <linux/kernel/mm.h>
 #include <asm/setup.h>

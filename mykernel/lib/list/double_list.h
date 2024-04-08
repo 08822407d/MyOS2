@@ -157,19 +157,21 @@
 		PREFIX_STATIC_INLINE
 		bool
 		__list_add_valid(List_s *new, List_s *prev, List_s *next) {
-			// while ((prev == NULL) || (next == NULL) ||
-			// 		(next->prev != prev) || (prev->next != next) ||
-			// 		(new == prev || new == next));
+			while ((prev == NULL) || (next == NULL) ||
+					(next->prev != prev) || (prev->next != next) ||
+					(new == prev || new == next));
+
 			return true;
 		}
 		PREFIX_STATIC_INLINE
 		bool
 		__list_del_entry_valid(List_s *entry) {
-			// List_s	*prev = entry->prev,
-			// 		*next = entry->next;
-			// while ((next == NULL) || (prev == NULL) ||
-			// 		// (next == LIST_POISON1) || (prev == LIST_POISON2) ||
-			// 		(prev->next != entry) || (next->prev != entry));
+			List_s	*prev = entry->prev,
+					*next = entry->next;
+			while ((next == NULL) || (prev == NULL) ||
+					// (next == LIST_POISON1) || (prev == LIST_POISON2) ||
+					(prev->next != entry) || (next->prev != entry));
+
 			return true;
 		}
 

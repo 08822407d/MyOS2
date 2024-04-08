@@ -6,18 +6,21 @@
 #include <asm-generic/pgalloc.h>
 
 
-static inline void pgd_list_add(pgd_t *pgd) {
+static inline void
+pgd_list_add(pgd_t *pgd) {
 	page_s *page = virt_to_page(pgd);
 	list_header_enqueue(&pgd_list_hdr, &page->lru);
 }
 
-static inline void pgd_list_del(pgd_t *pgd) {
+static inline void
+pgd_list_del(pgd_t *pgd) {
 	page_s *page = virt_to_page(pgd);
 	list_header_delete_node(&pgd_list_hdr, &page->lru);
 }
 
 
-static inline void _pgd_free(pgd_t *pgd) {
+static inline void
+_pgd_free(pgd_t *pgd) {
 	free_pages((unsigned long)pgd, PGD_ALLOCATION_ORDER);
 }
 

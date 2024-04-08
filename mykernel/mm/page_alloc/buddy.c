@@ -1,7 +1,5 @@
-#define PAGEALLOC_DEFINATION
-#include "page_alloc.h"
-
-#include <linux/kernel/nodemask.h>
+#define BUDDY_DEFINATION
+#include "buddy.h"
 
 // SPDX-License-Identifier: GPL-2.0-only
 /*
@@ -19,11 +17,7 @@
  *  Per cpu hot/cold page lists, bulk allocation, Martin J. Bligh, Sept 2002
  *          (lots of bits borrowed from Ingo Molnar & Andrew Morton)
  */
-#include <linux/kernel/mm.h>
-
-
 gfp_t gfp_allowed_mask __read_mostly = GFP_BOOT_MASK;
-
 
 /*
  * results with 256, 32 in the lowmem_reserve sysctl:

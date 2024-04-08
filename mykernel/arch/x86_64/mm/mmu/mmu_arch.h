@@ -4,14 +4,9 @@
 
 	#include <linux/compiler/myos_optimize_option.h>
 
-	#include "mmu_const_arch.h"
-	#include "mmu_types_arch.h"
-
-
-	struct task_struct;
-	typedef struct task_struct task_s;
-	struct mm_struct;
-	typedef struct mm_struct mm_s;
+    #include "../mm_const_arch.h"
+    #include "../mm_types_arch.h"
+    #include "../mm_api_arch.h"
 
 
 	#ifdef DEBUG
@@ -20,6 +15,8 @@
 		init_new_context(task_s *tsk, mm_s *mm);
 
 	#endif
+
+	#include "mmu_macro_arch.h"
 	
 	#if defined(ARCH_MMU_ARCH_DEFINATION) || !(DEBUG)
 

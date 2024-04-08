@@ -1,7 +1,11 @@
-#ifndef _MM_TYPE_DECLARATIONS_H_
-#define _MM_TYPE_DECLARATIONS_H_
+#ifndef _MM_TYPE_DECLARATION_H_
+#define _MM_TYPE_DECLARATION_H_
+
+	struct address_space;
+	typedef struct address_space addr_spc_s;
 
 	#include <linux/kernel/types.h>
+	#include <asm/mm_type_declaration_arch.h>
 
 
 	/* memblock */
@@ -57,4 +61,4 @@
 	struct anon_vma_chain;
 	typedef struct anon_vma_chain anon_vma_chain_s;
 
-#endif /* _MM_TYPE_DECLARATIONS_H_ */
+#endif /* _MM_TYPE_DECLARATION_H_ */

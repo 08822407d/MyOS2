@@ -1,9 +1,6 @@
 #ifndef _LINUX_HIGHMEM_MACRO_H_
 #define _LINUX_HIGHMEM_MACRO_H_
 
-	#include <asm/page.h>
-
-
 	#define ENT_PER_TABLE		(PAGE_SIZE / sizeof(pgd_t))
 	#define PFN_ALIGN(x)		(((unsigned long)(x) + (PAGE_SIZE - 1)) & PAGE_MASK)
 	#define PFN_UP(x)			(((x) + PAGE_SIZE-1) >> PAGE_SHIFT)

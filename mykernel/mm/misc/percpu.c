@@ -70,12 +70,6 @@
 
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <linux/kernel/err.h>
-#include <linux/kernel/lib.h>
-#include <linux/smp/percpu.h>
-
-#include <asm/sections.h>
-
 #include <linux/smp/percpu.h>
 
 #include "mm_misc.h"

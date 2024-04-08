@@ -2,7 +2,7 @@
 #define _LINUX_MMZONE_TYPES_H_
 
 	#include "../mm_type_declaration.h"
-
+	#include "../mm_const.h"
 
 	enum zone_type {
 		/*

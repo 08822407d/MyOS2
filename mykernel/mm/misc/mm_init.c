@@ -8,12 +8,6 @@
  * Author Mel Gorman <mel@csn.ul.ie>
  *
  */
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/sched.h>
-#include <linux/kernel/nmi.h>
-#include <linux/init/init.h>
-
 #include <asm/dma.h>
 
 #include "mm_misc.h"

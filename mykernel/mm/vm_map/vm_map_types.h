@@ -3,8 +3,6 @@
 
 	#include "../mm_type_declaration.h"
 
-	#include <linux/fs/fs.h>
-
 
 	/*
 	 * This struct describes a virtual memory area. There is one of these

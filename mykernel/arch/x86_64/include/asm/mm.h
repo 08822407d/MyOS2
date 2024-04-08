@@ -2,10 +2,8 @@
 #ifndef _ARCH_X86_MM_H_
 #define _ARCH_X86_MM_H_
 
-	#include <mm/early_arch_api.h>
-
-	#include <mm/pgtable_arch_api.h>
-
-	#include <mm/mmu_arch_api.h>
+	#include "mm_api_arch.h"
+	#include "mm_const_arch.h"
+	#include "mm_types_arch.h"
 
 #endif /* _ARCH_X86_MM_H_ */
