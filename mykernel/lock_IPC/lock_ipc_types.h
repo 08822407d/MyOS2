@@ -3,6 +3,7 @@
 
 	#include "lock_ipc_type_declaration.h"
 
+	#include "atomic/atomic_types.h"
 	#include "spinlock/spinlock_types.h"
 
 #endif /* _LOCK_IPC_TYPES_H_ */

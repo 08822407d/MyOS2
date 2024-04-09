@@ -23,6 +23,7 @@
 #include <asm/sections.h>
 #include <asm/kdebug.h>
 #include <asm/trapnr.h>
+#include <asm/processor.h>
 
 #include <asm/mm.h>
 

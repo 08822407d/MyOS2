@@ -2,8 +2,8 @@
 #ifndef _ARCH_X86_MM_H_
 #define _ARCH_X86_MM_H_
 
-	#include "mm_api_arch.h"
-	#include "mm_const_arch.h"
-	#include "mm_types_arch.h"
+	#include "mm_api.h"
+	#include "mm_const.h"
+	#include "mm_types.h"
 
 #endif /* _ARCH_X86_MM_H_ */

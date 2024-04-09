@@ -6,7 +6,9 @@
 	#include <linux/kernel/types.h>
 
 	#include <asm/cpufeatures.h>
-	#include <asm/page_types.h>
+
+
+	#include <asm/mm_const.h>
 
 	/*
 	 *  CPU type and hardware bug flags. Kept separately for each CPU.

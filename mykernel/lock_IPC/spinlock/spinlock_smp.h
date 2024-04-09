@@ -1,14 +1,13 @@
-#ifndef __LINUX_SPINLOCK_API_SMP_H
-#define __LINUX_SPINLOCK_API_SMP_H
+#ifndef __LINUX_SPINLOCK_SMP_H_
+#define __LINUX_SPINLOCK_SMP_H_
  
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <linux/kernel/irqflags.h>
-
-	#include <asm/lock_ipc.h>
-
-	#include "spinlock_types.h"
-
 	#include <sched/preempt_api.h>
+
+	#include "../lock_ipc_types.h"
+	#include "../lock_ipc_api.h"
+
 
 	#ifdef DEBUG
 
@@ -40,6 +39,8 @@
 		// raw_spin_trylock_bh(arch_spinlock_t *lock);
 
 	#endif
+
+	#include "spinlock_smp_macro.h"
 	
 	#if defined(SPINLOCK_SMP_DEFINATION) || !(DEBUG)
 
@@ -140,4 +141,4 @@
 
 	#endif /* !DEBUG */
 
-#endif /* __LINUX_SPINLOCK_API_SMP_H */
+#endif /* __LINUX_SPINLOCK_SMP_H_ */

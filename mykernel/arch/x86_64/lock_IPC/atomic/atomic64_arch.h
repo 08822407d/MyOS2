@@ -1,11 +1,14 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_ATOMIC64_64_H
-#define _ASM_X86_ATOMIC64_64_H
+#ifndef _ASM_X86_ATOMIC64_64_H_
+#define _ASM_X86_ATOMIC64_64_H_
 
 	#include <linux/compiler/myos_optimize_option.h>
 	#include <asm/alternative.h>
-
 	#include <insns/cmpxchg_api.h>
+	#include <linux/kernel/lock_ipc_types.h>
+
+	#include "../lock_ipc_types_arch.h"
+	#include "../lock_ipc_api_arch.h"
 
 
 	/* The 64-bit atomic type */
@@ -381,4 +384,4 @@
 
 	#endif
 
-#endif /* _ASM_X86_ATOMIC64_64_H */
+#endif /* _ASM_X86_ATOMIC64_64_H_ */

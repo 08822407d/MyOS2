@@ -7,7 +7,6 @@
 	// #define COMMAND_LINE_SIZE 2048
 
 	#include <linux/kernel/linkage.h>
-	#include <asm/page_types.h>
 
 	#ifdef __i386__
 		/*

@@ -178,16 +178,6 @@
 	 */
 		typedef unsigned long	irq_hw_number_t;
 
-		typedef struct {
-			int counter;
-		} atomic_t;
-
-	#	define ATOMIC_INIT(i) { (i) }
-
-		typedef struct {
-			s64 counter;
-		} atomic64_t;
-
 		struct ustat {
 			__kernel_daddr_t	f_tfree;
 	#	ifdef CONFIG_ARCH_32BIT_USTAT_F_TINODE

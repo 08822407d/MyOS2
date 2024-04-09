@@ -3,6 +3,8 @@
 
 	#include "pgtable_arch.h"
 
+	#include <asm/lock_ipc.h>
+	#include <lib/lib_types.h>
 
 	extern spinlock_t	pgd_lock;
 	extern List_hdr_s	pgd_list_hdr;

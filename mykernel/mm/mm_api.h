@@ -1,6 +1,8 @@
 #ifndef _MM_API_H_
 #define _MM_API_H_
 
+	#include <asm/mm_api.h>
+
 	#include "early/earlymem_api.h"
 	#include "fault/memfault_api.h"
 	#include "highmem/highmem_api.h"

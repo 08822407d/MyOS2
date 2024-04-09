@@ -5,7 +5,7 @@
 	typedef struct address_space addr_spc_s;
 
 	#include <linux/kernel/types.h>
-	#include <asm/mm_type_declaration_arch.h>
+	#include <asm/mm_types.h>
 
 
 	/* memblock */

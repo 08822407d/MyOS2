@@ -2,7 +2,6 @@
 #include "pgtable_arch.h"
 
 // SPDX-License-Identifier: GPL-2.0
-#include <linux/kernel/lib.h>
 #include <asm-generic/pgalloc.h>
 
 

@@ -1,14 +1,10 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /* Atomic operations usable in machine independent code */
-#ifndef _LINUX_ATOMIC_H
-#define _LINUX_ATOMIC_H
+#ifndef _LINUX_ATOMIC_API_H_
+#define _LINUX_ATOMIC_API_H_
 
-	#include <linux/kernel/types.h>
-
-	#include <asm/lock_ipc.h>
-
-	#include "atomic/atomic.h"
-	#include "atomic/atomic-long.h"
+	#include "atomic.h"
+	#include "atomic-long.h"
 
 	// /*
 	//  * Relaxed variants of xchg, cmpxchg and some atomic operations.
@@ -138,4 +134,4 @@
 	#define arch_atomic_long_add_negative(i, v)	\
 				arch_atomic64_add_negative(i, v)
 
-#endif /* _LINUX_ATOMIC_H */
+#endif /* _LINUX_ATOMIC_API_H_ */

@@ -2,7 +2,10 @@
 #ifndef _ASM_X86_SPINLOCK_TYPES_H_
 #define _ASM_X86_SPINLOCK_TYPES_H_
 
-	#include <linux/kernel/types.h>
+	#include "../lock_ipc_type_declaration_arch.h"
+
+	#include <lock_IPC/atomic/atomic_types.h>
+
 
 	typedef struct tspinlock {
 		union {

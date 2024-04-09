@@ -1,6 +1,8 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 #ifndef __ASM_GENERIC_PAGE_H
 #define __ASM_GENERIC_PAGE_H
+
+	#include <asm/mm_const.h>
 	/*
 	 * Generic page.h implementation, for NOMMU architectures.
 	 * This provides the dummy definitions for the memory management.

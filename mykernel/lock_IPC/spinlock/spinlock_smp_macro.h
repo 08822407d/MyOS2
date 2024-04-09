@@ -1,9 +1,16 @@
-/* SPDX-License-Identifier: GPL-2.0 */
-#ifndef __LINUX_SPINLOCK_H
-#define __LINUX_SPINLOCK_H
+#ifndef __LINUX_SPINLOCK_SMP_MACRO_H_
+#define __LINUX_SPINLOCK_SMP_MACRO_H_
 
-	#include "spinlock/spinlock_types.h"
-	#include "spinlock/spinlock_smp.h"
+	/*
+	 * include/linux/spinlock_types.h - generic spinlock type definitions
+	 *                                  and initializers
+	 *
+	 * portions Copyright 2005, Red Hat, Inc., Ingo Molnar
+	 * Released under the General Public License (GPL).
+	 */
+	#define __SPIN_LOCK_UNLOCKED(lockname)	__ARCH_SPIN_LOCK_UNLOCKED
+	#define DEFINE_SPINLOCK(x)				spinlock_t x = __SPIN_LOCK_UNLOCKED(x)
+
 
 	/*
 	 * include/linux/spinlock.h - generic spinlock/rwlock declarations
@@ -53,8 +60,6 @@
 	 *
 	 *  linux/spinlock.h:     builds the final spin_*() APIs.
 	 */
-	#include <asm/lock_ipc.h>
-
 
 	/*
 	 * Pull the arch_spin*() functions/declarations (UP-nondebug doesn't need them):
@@ -176,5 +181,4 @@
 	// 			raw_spin_trylock_irqsave(spinlock_check(lock), flags);	\
 	// 		})
 
-
-#endif /* __LINUX_SPINLOCK_H */
+#endif /* __LINUX_SPINLOCK_SMP_MACRO_H_ */

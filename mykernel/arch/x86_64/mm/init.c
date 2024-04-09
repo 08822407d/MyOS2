@@ -4,7 +4,6 @@
 #include <linux/kernel/mm.h>
 
 #include <asm/page.h>
-#include <asm/page_types.h>
 #include <asm/sections.h>
 #include <asm/setup.h>
 #include <asm/dma.h>

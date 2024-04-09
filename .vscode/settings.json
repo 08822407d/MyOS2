@@ -273,6 +273,18 @@
         "mmu_arch.h": "c",
         "mmu_macro_arch.h": "c",
         "mm_types_arch.h": "c",
-        "mm_type_declaration_arch.h": "c"
+        "mm_type_declaration_arch.h": "c",
+        "lock_ipc_api.h": "c",
+        "lock_ipc_types.h": "c",
+        "lock_ipc_type_declaration.h": "c",
+        "atomic_types.h": "c",
+        "lock_ipc_type_declaration_arch.h": "c",
+        "lock_ipc_types_arch.h": "c",
+        "atomic_api.h": "c",
+        "atomic_api_arch.h": "c",
+        "atomic-long_macro.h": "c",
+        "e820_types.h": "c",
+        "page_64_types.h": "c",
+        "lock_ipc_api_arch.h": "c"
     }
 }

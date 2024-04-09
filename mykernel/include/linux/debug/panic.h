@@ -4,6 +4,7 @@
 
 	#include <linux/compiler/compiler_attributes.h>
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/lock_ipc_types.h>
 
 	struct pt_regs;
 	typedef struct pt_regs pt_regs_s;

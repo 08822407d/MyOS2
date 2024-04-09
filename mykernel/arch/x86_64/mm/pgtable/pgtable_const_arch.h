@@ -2,10 +2,6 @@
 #ifndef _ASM_X86_PGTABLE_CONST_H_
 #define _ASM_X86_PGTABLE_CONST_H_
 
-	#include <linux/kernel/types.h>
-
-	#include <asm/mm.h>
-	#include <asm/sparsemem.h>
 
 	#define _PAGE_BIT_PRESENT			0	/* is present */
 	#define _PAGE_BIT_RW				1	/* writeable */
