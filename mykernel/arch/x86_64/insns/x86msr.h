@@ -4,7 +4,7 @@
 #ifndef _ASM_X86_MSR_H
 #define _ASM_X86_MSR_H
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/kernel/types.h>
 
 	#include "x86msr_const.h"

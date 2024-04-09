@@ -1,6 +1,7 @@
 #ifndef _LINUX_MMZONE_CONST_H_
 #define _LINUX_MMZONE_CONST_H_
 
+
 	/* Free memory management - zoned buddy allocator.  */
 	#ifndef CONFIG_FORCE_MAX_ZONEORDER
 	#  define MAX_ORDER	11

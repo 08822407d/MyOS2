@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_SPECIAL_INSNS_H_
 #define _ASM_X86_SPECIAL_INSNS_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/insns.h>
 	#include <asm/mm.h>
 

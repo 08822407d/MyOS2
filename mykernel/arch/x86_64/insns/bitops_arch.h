@@ -11,7 +11,7 @@
 	 * Note: inlines with more than a single statement should be marked
 	 * __always_inline to avoid problems with older gcc's inlining heuristics.
 	 */
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/compiler/compiler.h>
 	#include <asm/alternative.h>
 	#include <asm/rmwcc.h>

@@ -3,7 +3,7 @@
 #define _ASM_X86_SPINLOCK_H_
 
 	#include <linux/compiler/compiler.h>
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/kernel/lock_ipc.h>
 
 	#include "spinlock_types_arch.h"

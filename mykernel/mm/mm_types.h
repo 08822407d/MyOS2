@@ -6,11 +6,10 @@
 	#include "early/memblock_types.h"
 	#include "fault/fault_types.h"
 	#include "kmalloc/slub_types.h"
-	#include "misc/memfault_types.h"
+	#include "misc/mm_misc_types.h"
 	#include "page_alloc/buddy_types.h"
 	#include "page_alloc/mmzone_types.h"
 	#include "vm_map/vm_map_types.h"
 
-	#include <asm/processor.h>
 
 #endif /* _MM_TYPES_H_ */

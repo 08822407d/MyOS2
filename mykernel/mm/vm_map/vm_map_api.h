@@ -3,6 +3,7 @@
 
 	#include "vm_map.h"
 
+
 	extern kmem_cache_s *vm_area_cachep;
 
 	/* generic vm_area_ops exported for stackable file systems */

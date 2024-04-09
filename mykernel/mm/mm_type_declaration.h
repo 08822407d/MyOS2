@@ -3,9 +3,15 @@
 
 	struct address_space;
 	typedef struct address_space addr_spc_s;
+	struct file;
+	typedef struct file file_s;
 
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/lib_types.h>
+	#include <linux/kernel/lock_ipc_types.h>
 	#include <asm/mm_types.h>
+
+	#include "mm_const.h"
 
 
 	/* memblock */

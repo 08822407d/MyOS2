@@ -1,8 +1,6 @@
 #ifndef _MMFAULT_TYPES_H_
 #define _MMFAULT_TYPES_H_
 
-	#include <linux/compiler/compiler_types.h>
-
 	#include "../mm_type_declaration.h"
 
 

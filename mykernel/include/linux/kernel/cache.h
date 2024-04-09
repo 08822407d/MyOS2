@@ -10,7 +10,7 @@
 	// #endif
 
 	#ifndef SMP_CACHE_BYTES
-	#	define SMP_CACHE_BYTES		L1_CACHE_BYTES
+	#  define SMP_CACHE_BYTES		L1_CACHE_BYTES
 	#endif
 
 	// /*
@@ -34,25 +34,25 @@
 	 * but may get written to during init, so can't live in .rodata (via "const").
 	 */
 	#ifndef __ro_after_init
-	#	define __ro_after_init	__section(".data..ro_after_init")
+	#  define __ro_after_init	__section(".data..ro_after_init")
 	#endif
 
 	#ifndef ____cacheline_aligned
-	#	define ____cacheline_aligned	__attribute__((__aligned__(SMP_CACHE_BYTES)))
+	#  define ____cacheline_aligned	__attribute__((__aligned__(SMP_CACHE_BYTES)))
 	#endif
 
 	#ifndef ____cacheline_aligned_in_smp
-	#	define ____cacheline_aligned_in_smp	____cacheline_aligned
+	#  define ____cacheline_aligned_in_smp	____cacheline_aligned
 	#endif
 
 	#ifndef __cacheline_aligned
-	#	define __cacheline_aligned									\
-					__attribute__((__aligned__(SMP_CACHE_BYTES),	\
-					__section__(".data..cacheline_aligned")))
+	#  define __cacheline_aligned								\
+				__attribute__((__aligned__(SMP_CACHE_BYTES),	\
+				__section__(".data..cacheline_aligned")))
 	#endif /* __cacheline_aligned */
 
 	#ifndef __cacheline_aligned_in_smp
-	#	define __cacheline_aligned_in_smp	__cacheline_aligned
+	#  define __cacheline_aligned_in_smp	__cacheline_aligned
 	// #	define __cacheline_aligned_in_smp
 	#endif
 
@@ -71,7 +71,7 @@
 	// #endif
 
 	#ifndef CONFIG_ARCH_HAS_CACHE_LINE_SIZE
-	#	define cache_line_size()	L1_CACHE_BYTES
+	#  define cache_line_size()	L1_CACHE_BYTES
 	#endif
 	/*
 	 * Setting ARCH_SLAB_MINALIGN in arch headers allows a different alignment.
@@ -79,7 +79,7 @@
 	 * aligned buffers.
 	 */
 	#ifndef ARCH_SLAB_MINALIGN
-	#	define ARCH_SLAB_MINALIGN	__alignof__(unsigned long long)
+	#  define ARCH_SLAB_MINALIGN	__alignof__(unsigned long long)
 	#endif
 
 #endif /* __LINUX_CACHE_H */

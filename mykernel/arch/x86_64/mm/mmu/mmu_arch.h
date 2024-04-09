@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_MMU_H_
 #define _ASM_X86_MMU_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
     #include "../mm_const_arch.h"
     #include "../mm_types_arch.h"

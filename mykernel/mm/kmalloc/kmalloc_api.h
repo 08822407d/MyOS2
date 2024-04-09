@@ -3,7 +3,6 @@
 
 	#include "slub.h"
 
-	#include <linux/kernel/cache.h>
 
 	extern const kmalloc_info_s kmalloc_info[];
 	extern enum slab_state slab_state;

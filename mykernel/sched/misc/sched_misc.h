@@ -2,7 +2,7 @@
 #ifndef _LINUX_SCHED_MISC_H_
 #define _LINUX_SCHED_MISC_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include <linux/kernel/sched.h>
 

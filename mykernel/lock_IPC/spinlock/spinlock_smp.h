@@ -1,7 +1,7 @@
 #ifndef __LINUX_SPINLOCK_SMP_H_
 #define __LINUX_SPINLOCK_SMP_H_
  
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/kernel/irqflags.h>
 	#include <sched/preempt_api.h>
 

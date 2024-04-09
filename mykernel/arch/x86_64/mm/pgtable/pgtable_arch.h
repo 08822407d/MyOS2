@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_PGTABLE_H_
 #define _ASM_X86_PGTABLE_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/page.h>
 
     #include "../mm_const_arch.h"

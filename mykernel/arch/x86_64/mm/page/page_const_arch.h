@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_CONST_CONST_H_
-#define _ASM_X86_CONST_CONST_H_
+#ifndef _ASM_X86_PAGE_CONST_H_
+#define _ASM_X86_PAGE_CONST_H_
 
 	#include <uapi/linux/const.h>
 
@@ -131,4 +131,4 @@
 	#	define KERNEL_IMAGE_SIZE	(512 * 1024 * 1024)
 	#endif
 
-#endif /* _ASM_X86_CONST_CONST_H_ */
+#endif /* _ASM_X86_PAGE_CONST_H_ */

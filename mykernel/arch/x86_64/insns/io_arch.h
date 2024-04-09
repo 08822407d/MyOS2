@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_IO_H_
 #define _ASM_X86_IO_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/kernel/types.h>
 	#include <asm/page.h>
 

@@ -6,8 +6,6 @@
  *
  * (C) 2007 SGI, Christoph Lameter
  */
-	#include <linux/kernel/kobject.h>
-
 	#include "../mm_type_declaration.h"
 
 
@@ -135,7 +133,7 @@
 		uint			align;			/* Alignment */
 		const char		*name;			/* Name (only for display!) */
 		List_s			list;			/* List of slab caches */
-		kobj_s			kobj;			/* For sysfs */
+		// kobj_s			kobj;			/* For sysfs */
 
 		// kmem_cache_node_s	*node[MAX_NUMNODES];
 		kmem_cache_node_s	node;

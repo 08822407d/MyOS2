@@ -2,7 +2,7 @@
 #ifndef _LINUX_TASK_H_
 #define _LINUX_TASK_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
     #include "task_const.h"
     #include "task_types.h"

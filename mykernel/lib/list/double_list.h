@@ -2,7 +2,7 @@
 #ifndef _LINUX_DOUBLE_LIST_H_
 #define _LINUX_DOUBLE_LIST_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include "double_list_types.h"
 

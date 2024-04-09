@@ -1,20 +1,12 @@
 #ifndef _LINUX_PAGE_ALLOC_H_
 #define _LINUX_PAGE_ALLOC_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include "../mm_const.h"
 	#include "../mm_types.h"
 	#include "../mm_api.h"
 
-
-	/*
-	 * page_private can be used on tail pages.  However, PagePrivate is only
-	 * checked by the VM on the head page.  So page_private on the tail pages
-	 * should be used for data that's ancillary to the head page (eg attaching
-	 * buffer heads to tail pages after attaching buffer heads to the head page)
-	 */
-	#define page_private(page)	((page)->private)
 
 	#ifdef DEBUG
 
@@ -50,6 +42,8 @@
 		*myos_page_zone(const page_s * page);
 
 	#endif
+
+	#include "buddy_macro.h"
 	
 	#if defined(BUDDY_DEFINATION) || !(DEBUG)
 

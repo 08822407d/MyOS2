@@ -2,7 +2,7 @@
 #ifndef _LINUX_HASH_LIST_H_
 #define _LINUX_HASH_LIST_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include "hash_list_types.h"
 

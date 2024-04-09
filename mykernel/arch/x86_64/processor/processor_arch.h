@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_PROCESSOR_H_
 #define _ASM_X86_PROCESSOR_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/current.h>
 	#include <asm/percpu.h>
 

@@ -9,7 +9,7 @@
 #ifndef _LINUX_MEMBLOCK_H_
 #define _LINUX_MEMBLOCK_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include "../mm_const.h"
 	#include "../mm_types.h"

@@ -8,8 +8,6 @@
  * Author Mel Gorman <mel@csn.ul.ie>
  *
  */
-#include <asm/dma.h>
-
 #include "mm_misc.h"
 
 

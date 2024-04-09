@@ -1,6 +1,7 @@
 #ifndef _LINUX_MEMBLOCK_CONST_H_
 #define _LINUX_MEMBLOCK_CONST_H_
 
+
 	/* Flags for memblock allocation APIs */
 	#define MEMBLOCK_ALLOC_ANYWHERE			(~(phys_addr_t)0)
 	#define MEMBLOCK_ALLOC_ACCESSIBLE		0

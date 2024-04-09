@@ -1,5 +1,3 @@
-#include <asm/dma.h>
-
 #include "buddy.h"
 
 void __init zone_sizes_init(void)

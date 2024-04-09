@@ -2,7 +2,7 @@
 #ifndef _ASM_X86_ATOMIC64_64_H_
 #define _ASM_X86_ATOMIC64_64_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/alternative.h>
 	#include <insns/cmpxchg_api.h>
 	#include <linux/kernel/lock_ipc_types.h>

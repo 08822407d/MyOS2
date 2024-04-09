@@ -9,7 +9,6 @@
  * Peter Bergner, IBM Corp.	June 2001.
  * Copyright (C) 2001 Peter Bergner.
  */
-#include <asm/dma.h>
 
 /**
  * DOC: memblock overview

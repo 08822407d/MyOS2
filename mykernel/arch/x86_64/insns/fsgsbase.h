@@ -4,7 +4,7 @@
 #ifndef _ASM_X86_FSGSBASE_H_
 #define _ASM_X86_FSGSBASE_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/processor.h>
 
 	#include "x86msr.h"

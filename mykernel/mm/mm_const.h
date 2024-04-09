@@ -8,4 +8,7 @@
     #include "page_alloc/buddy_const.h"
     #include "vm_map/vm_map_const.h"
 
+
+	#include "generated/bounds.h"
+
 #endif /* _MM_CONSTS_H_ */

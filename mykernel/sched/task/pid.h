@@ -2,7 +2,7 @@
 #ifndef _LINUX_PID_H_
 #define _LINUX_PID_H_
 
-	#include <linux/compiler/myos_optimize_option.h>
+	#include <linux/compiler/myos_debug_option.h>
 
 	#include "pid_types.h"
 

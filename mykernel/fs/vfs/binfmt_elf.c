@@ -27,6 +27,7 @@
 #include <linux/kernel/sizes.h>
 #include <linux/kernel/types.h>
 #include <linux/kernel/uaccess.h>
+#include <uapi/linux/mman.h>
 #include <asm/page.h>
 
 

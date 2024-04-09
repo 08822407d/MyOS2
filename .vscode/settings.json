@@ -285,6 +285,10 @@
         "atomic-long_macro.h": "c",
         "e820_types.h": "c",
         "page_64_types.h": "c",
-        "lock_ipc_api_arch.h": "c"
+        "lock_ipc_api_arch.h": "c",
+        "fault_types.h": "c",
+        "lib_types.h": "c",
+        "fault_const.h": "c",
+        "mman.h": "c"
     }
 }
