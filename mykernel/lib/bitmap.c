@@ -18,7 +18,6 @@
 // #include <linux/sched/thread_info.h>
 #include <linux/kernel/uaccess.h>
 
-#include <asm/page.h>
 
 #include "kstrtox.h"
 

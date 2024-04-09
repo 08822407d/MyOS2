@@ -12,7 +12,6 @@
 
 #include <linux/kernel/linkage.h>
 #include <linux/init/init.h>
-#include <asm/page.h>
 #include <asm/cache.h>
 #include <asm/percpu.h>
 #include <processor/desc_const_arch.h>

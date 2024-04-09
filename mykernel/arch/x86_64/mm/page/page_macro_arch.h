@@ -1,41 +1,6 @@
-// source: linux-6.4.9
-
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _ASM_X86_PAGE_H
-#define _ASM_X86_PAGE_H
-
-	#include <linux/kernel/types.h>
-
-
-	#include <asm-generic/page.h>
-
-	#ifdef __KERNEL__
-
-	#	include <asm/page_64.h>
-
-	#	ifndef __ASSEMBLY__
-
-			struct page;
-			typedef struct page page_s;
-
-			extern char _k_offset;
-
-			// #include <linux/range.h>
-			// extern struct range pfn_mapped[];
-			// extern int nr_pfn_mapped;
-
-			static inline void
-			clear_user_page(void *page, unsigned long vaddr, page_s *pg) {
-				clear_page(page);
-			}
-
-			static inline void
-			copy_user_page(void *to, void *from, unsigned long vaddr, page_s *topage) {
-				copy_page(to, from);
-			}
-
-	// #		define vma_alloc_zeroed_movable_folio(vma, vaddr) \
-	// 				vma_alloc_folio(GFP_HIGHUSER_MOVABLE | __GFP_ZERO, 0, vma, vaddr, false)
+#ifndef _ASM_X86_PAGE_MACRO_H_
+#define _ASM_X86_PAGE_MACRO_H_
 
 	#	ifndef __pa
 	#		define __pa(x)	((unsigned long)(x) - (unsigned long)&_k_offset)
@@ -71,23 +36,4 @@
 			// extern bool __virt_addr_valid(unsigned long kaddr);
 			// #define virt_addr_valid(kaddr) __virt_addr_valid((unsigned long)(kaddr))
 
-			// static __always_inline u64
-			// __canonical_address(u64 vaddr, u8 vaddr_bits) {
-			// 	return ((s64)vaddr << (64 - vaddr_bits)) >> (64 - vaddr_bits);
-			// }
-
-			// static __always_inline u64
-			// __is_canonical_address(u64 vaddr, u8 vaddr_bits) {
-			// 	return __canonical_address(vaddr, vaddr_bits) == vaddr;
-			// }
-
-	#	endif /* __ASSEMBLY__ */
-
-		// #include <asm-generic/memory_model.h>
-	#	include <asm-generic/getorder.h>
-
-		// #define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-
-	#endif /* __KERNEL__ */
-
-#endif /* _ASM_X86_PAGE_H */
+#endif /* _ASM_X86_PAGE_MACRO_H_ */

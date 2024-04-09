@@ -3,6 +3,7 @@
 #ifndef _LOCK_IPC_API_H_
 #define _LOCK_IPC_API_H_
 
+	#include "lock_ipc_type_declaration.h"
 	#include <asm/lock_ipc_api.h>
 
 

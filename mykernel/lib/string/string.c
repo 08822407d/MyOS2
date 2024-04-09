@@ -27,7 +27,6 @@
 #include <asm-generic/unaligned.h>
 // #include <asm/byteorder.h>
 // #include <asm/word-at-a-time.h>
-#include <asm/page.h>
 
 // // #ifndef __HAVE_ARCH_STRNCASECMP
 // /**

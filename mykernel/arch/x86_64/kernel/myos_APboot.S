@@ -1,5 +1,5 @@
 #include <linux/kernel/linkage.h>
-#include <asm/page.h>
+#include <mm/mm_const_arch.h>
 
 .balign	0x1000
 .section .AP_boot.text, "ax"

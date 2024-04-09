@@ -4,9 +4,9 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-    #include "../mm_const_arch.h"
-    #include "../mm_types_arch.h"
-    #include "../mm_api_arch.h"
+	#include "../mm_const_arch.h"
+	#include "../mm_types_arch.h"
+	#include "../mm_api_arch.h"
 
 
 	#ifdef DEBUG

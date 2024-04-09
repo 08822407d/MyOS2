@@ -5,6 +5,8 @@
 	typedef struct address_space addr_spc_s;
 	struct file;
 	typedef struct file file_s;
+	struct pt_regs;
+	typedef struct pt_regs pt_regs_s;
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>

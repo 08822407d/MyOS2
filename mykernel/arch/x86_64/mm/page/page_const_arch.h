@@ -2,16 +2,21 @@
 #ifndef _ASM_X86_PAGE_CONST_H_
 #define _ASM_X86_PAGE_CONST_H_
 
+
 	#include <uapi/linux/const.h>
-
-
-	#define IOREMAP_MAX_ORDER       (PUD_SHIFT)
-	#define __PHYSICAL_MASK			((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
 
 	/* PAGE_SHIFT determines the page size */
 	#define PAGE_SHIFT				12
 	#define PAGE_SIZE				(_AC(1,UL) << PAGE_SHIFT)
 	#define PAGE_MASK				(~(PAGE_SIZE-1))
+
+	#define THREAD_SIZE_ORDER		3
+	#define THREAD_SIZE				(PAGE_SIZE << THREAD_SIZE_ORDER)
+
+
+	#define IOREMAP_MAX_ORDER		(PUD_SHIFT)
+	#define __PHYSICAL_MASK			((phys_addr_t)((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
+
 
 	// #define __VIRTUAL_MASK			((1UL << __VIRTUAL_MASK_SHIFT) - 1)
 
@@ -39,19 +44,6 @@
 	// #define __START_KERNEL			(__START_KERNEL_map + __PHYSICAL_START)
 
 
-	// #ifndef __ASSEMBLY__
-	// #	include <asm/kaslr.h>
-	// #endif
-
-	// #ifdef CONFIG_KASAN
-	// #	define KASAN_STACK_ORDER	1
-	// #else
-	// #	define KASAN_STACK_ORDER	0
-	// #endif
-
-	// #define THREAD_SIZE_ORDER		(2 + KASAN_STACK_ORDER)
-	#define THREAD_SIZE_ORDER		3
-	#define THREAD_SIZE				(PAGE_SIZE << THREAD_SIZE_ORDER)
 
 	// #define EXCEPTION_STACK_ORDER	(1 + KASAN_STACK_ORDER)
 	// #define EXCEPTION_STKSZ			(PAGE_SIZE << EXCEPTION_STACK_ORDER)
@@ -88,13 +80,8 @@
 
 	#define __PHYSICAL_MASK_SHIFT	52
 
-	#ifdef CONFIG_X86_5LEVEL
-	#	define __VIRTUAL_MASK_SHIFT (pgtable_l5_enabled() ? 56 : 47)
-	/* See task_size_max() in <asm/page_64.h> */
-	#else
-	#	define __VIRTUAL_MASK_SHIFT	47
-	#	define task_size_max()		((_AC(1, UL) << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
-	#endif
+	#define __VIRTUAL_MASK_SHIFT	47
+	#define task_size_max()			((_AC(1, UL) << __VIRTUAL_MASK_SHIFT) - PAGE_SIZE)
 
 	#define TASK_SIZE_MAX			task_size_max()
 	#define DEFAULT_MAP_WINDOW		((1UL << 47) - PAGE_SIZE)
@@ -112,23 +99,5 @@
 
 	#define STACK_TOP				TASK_SIZE_LOW
 	#define STACK_TOP_MAX			TASK_SIZE_MAX
-
-	/*
-	 * In spite of the name, KERNEL_IMAGE_SIZE is a limit on the maximum virtual
-	 * address for the kernel image, rather than the limit on the size itself.
-	 * This can be at most 1 GiB, due to the fixmap living in the next 1 GiB (see
-	 * level2_kernel_pgt in arch/x86/kernel/head_64.S).
-	 *
-	 * On KASLR use 1 GiB by default, leaving 1 GiB for modules once the
-	 * page tables are fully set up.
-	 *
-	 * If KASLR is disabled we can shrink it to 0.5 GiB and increase the size
-	 * of the modules area to 1.5 GiB.
-	 */
-	#ifdef CONFIG_RANDOMIZE_BASE
-	#	define KERNEL_IMAGE_SIZE	(1024 * 1024 * 1024)
-	#else
-	#	define KERNEL_IMAGE_SIZE	(512 * 1024 * 1024)
-	#endif
 
 #endif /* _ASM_X86_PAGE_CONST_H_ */

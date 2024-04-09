@@ -11,5 +11,4 @@
 	#include "page_alloc/mmzone_types.h"
 	#include "vm_map/vm_map_types.h"
 
-
 #endif /* _MM_TYPES_H_ */

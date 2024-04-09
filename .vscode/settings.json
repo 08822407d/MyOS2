@@ -291,6 +291,12 @@
         "fault_const.h": "c",
         "mman.h": "c",
         "mm_misc_types.h": "c",
-        "atomic_types_arch.h": "c"
+        "atomic_types_arch.h": "c",
+        "page_const_arch.h": "c",
+        "myos_debug_option.h": "c",
+        "page_api_arch.h": "c",
+        "kstrtox.h": "c",
+        "e820_const.h": "c",
+        "mmzone_const_arch.h": "c"
     }
 }

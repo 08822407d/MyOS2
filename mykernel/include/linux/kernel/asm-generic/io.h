@@ -7,7 +7,6 @@
 #ifndef __ASM_GENERIC_IO_H
 #define __ASM_GENERIC_IO_H
 
-	#include <asm/page.h> /* I/O is all done through memory accesses */
 	#include <linux/lib/string.h> /* for memset() and memcpy() */
 	#include <linux/kernel/types.h>
 

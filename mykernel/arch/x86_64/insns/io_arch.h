@@ -4,7 +4,8 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 	#include <linux/kernel/types.h>
-	#include <asm/page.h>
+	#include <asm/mm_api.h>
+
 
 	#ifdef DEBUG
 	

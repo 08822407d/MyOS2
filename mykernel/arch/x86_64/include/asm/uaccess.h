@@ -8,7 +8,6 @@
 	// #include <linux/kasan-checks.h>
 	#include <linux/lib/string.h>
 	#include <asm/asm.h>
-	#include <asm/page.h>
 	// #include <asm/smap.h>
 	// #include <asm/extable.h>
 

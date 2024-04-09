@@ -46,7 +46,6 @@
 
 // #include "../mm/internal.h"	/* For the trace_print_flags arrays */
 
-#include <asm/page.h>		/* for PAGE_SIZE */
 #include <asm/byteorder.h>	/* cpu_to_le16 */
 #include <asm-generic/unaligned.h>
 

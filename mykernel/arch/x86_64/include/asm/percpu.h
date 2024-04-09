@@ -20,8 +20,7 @@
 	// {
 		#include <linux/compiler/compiler.h>
 		#include <linux/kernel/threads.h>
-
-		#include <asm/page.h>
+		#include <asm/mm_const.h>
 
 		/*
 		 * per_cpu_offset() is the offset that has to be added to a

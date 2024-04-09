@@ -1,9 +1,6 @@
 #ifndef _PAGE_ALLOC_API_H_
 #define _PAGE_ALLOC_API_H_
 
-	#include <asm/mmzone_64.h>
-	#include <asm/sparsemem.h>
-
 	#include "buddy.h"
 
 	#include "page-flags.h"
