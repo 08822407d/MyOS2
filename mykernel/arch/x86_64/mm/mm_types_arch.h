@@ -7,4 +7,7 @@
 	#include "mmu/mmu_types_arch.h"
 	#include "pgtable/pgtable_types_arch.h"
 
+
+	#include <linux/kernel/mm_types.h>
+
 #endif /* _ASM_X86_MM_TYPES_H_ */

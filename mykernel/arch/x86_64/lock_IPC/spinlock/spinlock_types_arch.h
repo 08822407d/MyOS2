@@ -4,8 +4,6 @@
 
 	#include "../lock_ipc_type_declaration_arch.h"
 
-	#include <lock_IPC/atomic/atomic_types.h>
-
 
 	typedef struct tspinlock {
 		union {

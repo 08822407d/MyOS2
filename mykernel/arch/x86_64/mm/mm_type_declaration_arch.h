@@ -5,7 +5,6 @@
 	typedef struct task_struct task_s;
 
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/mm_type_declaration.h>
 
 
 	/* earlymem arch */
@@ -42,5 +41,8 @@
 	typedef union pmd_union pmd_t;
 	union pte_union;
 	typedef union pte_union pte_t;
+
+
+	#include <linux/kernel/mm_type_declaration.h>
 
 #endif /* _ASM_X86_MM_TYPE_DECLARATION_H_ */

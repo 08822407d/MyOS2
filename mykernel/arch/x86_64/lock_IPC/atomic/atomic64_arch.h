@@ -5,7 +5,6 @@
 	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/alternative.h>
 	#include <insns/cmpxchg_api.h>
-	#include <linux/kernel/lock_ipc_types.h>
 
 	#include "../lock_ipc_types_arch.h"
 	#include "../lock_ipc_api_arch.h"

@@ -2,11 +2,10 @@
 #ifndef _ASM_X86_SPINLOCK_H_
 #define _ASM_X86_SPINLOCK_H_
 
-	#include <linux/compiler/compiler.h>
 	#include <linux/compiler/myos_debug_option.h>
-	#include <linux/kernel/lock_ipc.h>
 
-	#include "spinlock_types_arch.h"
+	#include "../lock_ipc_types_arch.h"
+	#include "../lock_ipc_api_arch.h"
 
 
 	#ifdef DEBUG
@@ -27,6 +26,8 @@
 		arch_spin_unlock(arch_spinlock_t *lock);
 
 	#endif
+
+	#include "spinlock_smp_macro_arch.h"
 	
 	#if defined(ARCH_SPINLOCK_SMP_DEFINATION) || !(DEBUG)
 
@@ -40,14 +41,14 @@
 		PREFIX_STATIC_INLINE
 		int
 		arch_spin_is_locked(arch_spinlock_t *lock) {
-			u64 old = atomic_long_read(&lock->val);
+			u64 old = arch_atomic64_read(&lock->val);
 			return ((old >> 32) != (old & 0xffffffff));
 		}
 
 		PREFIX_STATIC_INLINE
 		bool
 		arch_spin_trylock(arch_spinlock_t *lock) {
-			u64 old = atomic_long_read(&lock->val);
+			u64 old = arch_atomic64_read(&lock->val);
 			if ((old >> 32) != (old & 0xffffffff))
 				return false;
 			else

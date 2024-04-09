@@ -289,6 +289,8 @@
         "fault_types.h": "c",
         "lib_types.h": "c",
         "fault_const.h": "c",
-        "mman.h": "c"
+        "mman.h": "c",
+        "mm_misc_types.h": "c",
+        "atomic_types_arch.h": "c"
     }
 }

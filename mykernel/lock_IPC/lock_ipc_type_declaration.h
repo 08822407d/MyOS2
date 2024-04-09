@@ -1,19 +1,11 @@
 #ifndef _LOCK_IPC_TYPE_DECLARATIONS_H_
 #define _LOCK_IPC_TYPE_DECLARATIONS_H_
 
-	struct tspinlock;
-	typedef struct tspinlock arch_spinlock_t;
-
 	#include <linux/kernel/types.h>
-
 	#include <asm/lock_ipc_types.h>
 
 
 	/* atomic */
-	struct atomic;
-	typedef struct atomic atomic_t;
-	struct atomic64;
-	typedef struct atomic64 atomic64_t;
 	typedef atomic64_t atomic_long_t;
 
 	/* spinlock */
