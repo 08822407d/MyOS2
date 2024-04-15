@@ -98,3 +98,7 @@ target_link_libraries(initd mylibc mycrt)
 #===============================================================================================#
 add_subdirectory(myshell)
 target_link_libraries(sh mylibc mycrt)
+
+install(TARGETS kernel DESTINATION boot)
+install(TARGETS initd DESTINATION boot)
+install(TARGETS sh DESTINATION boot)

@@ -18,23 +18,9 @@ function install_files()
 
 if [ "$(uname)" == "Darwin" ]; then
 	echo "Working on MAC"
-	# hdiutil attach -imagekey diskimage-class=CRawDiskImage -nomount ../myos_vdisk-flat.vmdk
-	x86_64-elf-objcopy --only-keep-debug kern kernel.debug
-	x86_64-elf-objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kern kernel.bin
-	sudo mount -t msdos /dev/disk2s1 /Users/cheyuho/mount
-	cp ./kernel.bin ~/mount/kernel.bin
-	sync
-	sleep 1
-	diskutil unmount ~/mount
+
 elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	echo "Working on Linux"
-	# generate kernel debug file and bin
-	objcopy --only-keep-debug kernel kernel.debug
-	# objcopy -S -R ".eh_frame" -I elf64-x86-64 -O binary kernel kernel.bin
-	# generate init debug file
-	objcopy --only-keep-debug initd initd.debug
-	# generate init debug file
-	objcopy --only-keep-debug sh sh.debug
 	# copy files to virt-disk
 	if [ -e "/dev/dm-0" ]; then
 		echo "installing on virtual disk"
@@ -49,9 +35,6 @@ elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
 	# 	install_files
 	# 	sudo umount /mnt
 	# fi
-	objdump -S kernel > kern_dasm.txt
-	objdump -S initd > initd_dasm.txt
-	objdump -S sh > sh_dasm.txt
 elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
 	echo "Working on MinGW"
 fi

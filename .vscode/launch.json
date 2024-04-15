@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "preLaunchTask": "startup vmw",                   // 开始debug前要执行的任务，名称对应task.json中的"label"
-      "program": "${workspaceRoot}/build/kernel.debug", // 内核的调试文件
+      "program": "${workspaceRoot}/build/kernel",       // 内核的调试文件
       "miDebuggerServerAddress": "localhost:8864",      //　远程端口
       "stopAtEntry": false,                             // 默认将名称为main的函数当作入口
       "cwd": "${workspaceRoot}",
@@ -31,11 +31,11 @@
         },
         // 加入其他程序的调试符号文件
         // {
-        //   "text": "add-symbol-file ${workspaceRoot}/build/initd.debug",
+        //   "text": "add-symbol-file ${workspaceRoot}/build/initd",
         //   "ignoreFailures": false
         // },
         {
-          "text": "add-symbol-file ${workspaceRoot}/build/sh.debug",
+          "text": "add-symbol-file ${workspaceRoot}/build/sh",
           "ignoreFailures": false
         },
         // 设置信任路径，执行带文件操作的gdb命令时，免去gdb询问文件路径安全性
