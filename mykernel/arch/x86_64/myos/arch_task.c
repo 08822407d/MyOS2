@@ -6,6 +6,8 @@
 
 void kjmp_to_doexecve()
 {
+	// while (1);
+	
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;
 	pt_regs_s *curr_ptregs = task_pt_regs(curr);

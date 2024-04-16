@@ -1,16 +1,19 @@
 add_library(mylibc STATIC)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__USE_GNU -D_GNU_SOURCE -I${CC_INC_PATH}")
 target_include_directories(mylibc PUBLIC
-                    ${CMAKE_CURRENT_SOURCE_DIR}
-                    ${CMAKE_CURRENT_SOURCE_DIR}/include
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sys
-                    ${CMAKE_CURRENT_SOURCE_DIR}/string
-                    ${CMAKE_CURRENT_SOURCE_DIR}/misc
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sysdeps/x86
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sysdeps/generic
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sysdeps/gnu
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sysdeps/unix/sysv_linux
-                    ${CMAKE_CURRENT_SOURCE_DIR}/sysdeps/unix/sysv_linux/x86)
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/include
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sys
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/string
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/misc
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/x86
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/generic
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/gnu
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux
+                    ${PROJECT_SOURCE_DIR}/mylib/myglibc/sysdeps/unix/sysv_linux/x86
+                    ${PROJECT_SOURCE_DIR}/../mykernel/include
+                    ${PROJECT_SOURCE_DIR}/../mykernel/arch/${ARCH}/include
+                    )
 
 add_subdirectory(stdio)
 add_subdirectory(malloc)

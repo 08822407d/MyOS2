@@ -299,5 +299,6 @@
         "e820_const.h": "c",
         "mmzone_const_arch.h": "c",
         "syscalls_64.h": "c"
-    }
+    },
+    "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -20,6 +20,8 @@ int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
 
+	// while (1);
+
 	char prog_name[] = "/boot/sh";
 	char *const args[] =
 			{ prog_name , "userarg_test_1", "userarg_test_2", NULL };
