@@ -80,7 +80,7 @@ link_directories(${LIBRARY_OUTPUT_PATH})
 #===============================================================================================#
 #                                       libc.a                                                  #
 #===============================================================================================#
-add_subdirectory(mylib)
+add_subdirectory(myinitramfs)
 
 #===============================================================================================#
 #                                       kernel.bin                                              #
@@ -90,15 +90,15 @@ add_subdirectory(mykernel)
 #===============================================================================================#
 #                                       init.bin                                                #
 #===============================================================================================#
-add_subdirectory(myinitd)
-target_link_libraries(initd mylibc mycrt)
+# add_subdirectory(myinit)
+target_link_libraries(init mylibc mycrt)
 
 #===============================================================================================#
 #                                       shell.bin                                               #
 #===============================================================================================#
-add_subdirectory(myshell)
+# add_subdirectory(myshell)
 target_link_libraries(sh mylibc mycrt)
 
 install(TARGETS kernel DESTINATION boot)
-install(TARGETS initd DESTINATION boot)
+install(TARGETS init DESTINATION boot)
 install(TARGETS sh DESTINATION boot)

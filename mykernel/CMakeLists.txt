@@ -27,9 +27,10 @@ target_include_directories(kernel PRIVATE
 				${CMAKE_CURRENT_SOURCE_DIR}
 				${CMAKE_CURRENT_SOURCE_DIR}/include
 				${CMAKE_CURRENT_SOURCE_DIR}/include/linux/kernel
-				${PROJECT_SOURCE_DIR}/myloader
 				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}
-				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/include)
+				${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/include
+				${PROJECT_SOURCE_DIR}/myloader
+				)
 
 add_subdirectory(arch)
 add_subdirectory(init)

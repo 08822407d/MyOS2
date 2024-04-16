@@ -13,11 +13,18 @@ if [ ! -d "/mnt/boot" ]; then
 	mkdir /mnt/boot
 fi
 make install
+if [ ! -d "/mnt/EFI" ]; then
+	mkdir /mnt/EFI
+fi
+if [ ! -d "/mnt/EFI/BOOT" ]; then
+	mkdir /mnt/EFI/BOOT
+fi
+cp ../elf_loader.efi /mnt/EFI/BOOT/BOOTX64.EFI
 sync
 sudo umount /mnt
 
 objdump -S kernel > kern_dasm.txt
-objdump -S initd > initd_dasm.txt
+objdump -S init > initd_dasm.txt
 objdump -S sh > sh_dasm.txt
 
-bash ../install.sh
+# bash ../install.sh

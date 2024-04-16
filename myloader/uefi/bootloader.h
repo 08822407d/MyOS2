@@ -58,7 +58,6 @@
 
 	#ifdef __PI_UEFI_H__
 		mbi_tag_s *fill_cputopo_info(mbi_tag_s *mb2_infotag_ptr);
-		EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage);
 		void set_video_mode(IN EFI_HANDLE ImageHandle, int mode);
 		mbi_tag_s *fill_framebuffer_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);
 		mbi_tag_s *fill_mmap_info(IN EFI_HANDLE ImageHandle, mbi_tag_s *mb2_infotag_ptr);

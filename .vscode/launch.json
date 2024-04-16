@@ -31,7 +31,7 @@
         },
         // 加入其他程序的调试符号文件
         // {
-        //   "text": "add-symbol-file ${workspaceRoot}/build/initd",
+        //   "text": "add-symbol-file ${workspaceRoot}/build/init",
         //   "ignoreFailures": false
         // },
         {

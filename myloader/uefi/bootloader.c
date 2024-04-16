@@ -36,7 +36,7 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *Syste
 //////////////////////
 
 	set_video_mode(ImageHandle, -1);
-	load_elf_kernel(LoadedImage, L"kernel", &k_load_addr);
+	load_elf_kernel(LoadedImage, L"\\boot\\kernel", &k_load_addr);
 
 ///////////////////
 
@@ -87,16 +87,6 @@ EFI_STATUS EFIAPI UefiMain(IN EFI_HANDLE ImageHandle, IN EFI_SYSTEM_TABLE *Syste
 	return EFI_SUCCESS;
 }
 
-EFI_STATUS read_mb2head(IN EFI_LOADED_IMAGE	*LoadedImage)
-{
-	UINT64	bufsize = MULTIBOOT_SEARCH;
-	PHYSICAL_ADDRESS	mb2_load_addr = 0x1000000;
-
-	LoadFile(LoadedImage, L"kernel.bin", mb2_load_addr, bufsize);
-	parse_mb2_header(mb2_load_addr);
-
-	return EFI_SUCCESS;
-}
 
 void set_video_mode(IN EFI_HANDLE ImageHandle, int mode)
 {

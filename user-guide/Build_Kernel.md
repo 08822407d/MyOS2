@@ -10,7 +10,7 @@
 
 just build : `cmake && make` , or
 
-build and install : `cmake -D/mnt && make && make install` to install all assets - the kernel, initd and sh elf-binaries - to your boot partition
+build and install : `cmake -D/mnt && make && make install` to install all assets - the kernel, init and sh elf-binaries - to your boot partition
 
 More detail about installation path can be get [here](https://github.com/08822407d/MyOS2/blob/master/user-guide/Installation.md).
 
