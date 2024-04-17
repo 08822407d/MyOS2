@@ -1,0 +1,1 @@
+#include <sched/sched_type_declaration_arch.h>

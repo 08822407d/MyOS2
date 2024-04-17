@@ -298,7 +298,13 @@
         "kstrtox.h": "c",
         "e820_const.h": "c",
         "mmzone_const_arch.h": "c",
-        "syscalls_64.h": "c"
+        "syscalls_64.h": "c",
+        "mmu_api_arch.h": "c",
+        "preempt_arch_api.h": "c",
+        "pgtable_api_arch.h": "c",
+        "context_api_arch.h": "c",
+        "switch_to_types_arch.h": "c",
+        "sched_const_arch.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

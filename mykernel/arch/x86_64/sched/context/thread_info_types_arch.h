@@ -8,24 +8,19 @@
 #ifndef _ASM_X86_THREAD_INFO_TYPES_H_
 #define _ASM_X86_THREAD_INFO_TYPES_H_
 
-	#include "thread_info_const.h"
+	#include "../sched_type_declaration_arch.h"
+
 
 	/*
 	 * low level task data that entry.S needs immediate access to
 	 * - this struct should fit entirely inside of one cache line
 	 * - this struct shares the supervisor stack pages
 	 */
-	struct task_struct;
-
 	typedef struct thread_info {
 		unsigned long	flags;		/* low level flags */
 		unsigned long	syscall_work;	/* SYSCALL_WORK_ flags */
 		u32				status;		/* thread synchronous flags */
 		u32				cpu;		/* current CPU */
 	} thread_info_s;
-
-	#define INIT_THREAD_INFO(tsk)	{	\
-				.flags		= 0,		\
-			}
 
 #endif /* _ASM_X86_THREAD_INFO_TYPES_H_ */

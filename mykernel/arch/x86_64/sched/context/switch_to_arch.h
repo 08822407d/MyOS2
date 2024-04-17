@@ -5,11 +5,9 @@
 	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/processor.h>
 
-	#include "switch_to_types.h"
-
-
-	struct task_struct;
-	typedef struct task_struct task_s;
+	#include "../sched_const_arch.h"
+	#include "../sched_types_arch.h"
+	#include "../sched_api_arch.h"
 
 
 	#ifdef DEBUG
@@ -22,9 +20,9 @@
 
 	#endif
 
-	#if defined(ARCH_SWITCH_TO_DEFINATION) || !(DEBUG)
+	#include "switch_to_macro_arch.h"
 
-    #  define __preempt_count_ref	(this_cpu_ptr(&pcpu_hot)->preempt_count)
+	#if defined(ARCH_SWITCH_TO_DEFINATION) || !(DEBUG)
 
 		/* This is used when switching tasks or entering/exiting vm86 mode. */
 		PREFIX_STATIC_INLINE

@@ -2,7 +2,10 @@
 #ifndef _ASM_X86_SWITCH_TO_TYPES_H_
 #define _ASM_X86_SWITCH_TO_TYPES_H_
 
+	#include "../sched_type_declaration_arch.h"
+
 	#include <asm/ptrace.h>
+
 
 	/*
 	 * This is the structure pointed to by thread.sp for an inactive task.  The

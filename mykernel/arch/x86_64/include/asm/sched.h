@@ -2,8 +2,8 @@
 #ifndef _ARCH_X86_SCHED_H_
 #define _ARCH_X86_SCHED_H_
 
-	#include <sched/preempt_arch_api.h>
-
-	#include <sched/context_arch_api.h>
+	#include "sched_api.h"
+	#include "sched_const.h"
+	#include "sched_types.h"
 
 #endif /* _ARCH_X86_SCHED_H_ */
