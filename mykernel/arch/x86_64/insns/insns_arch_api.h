@@ -7,7 +7,7 @@
     #include "x86msr.h"
 
     #include "bitops_const_arch.h"
-    #include "bitops.h"
+    #include "bitops_arch.h"
 
     #include "cmpxchg_api.h"
     #include "cmpxchg64_api.h"

@@ -7,7 +7,7 @@ function make_install_initranfs() {
 	fi
 	cd $CMAKE_GEN_DIR
 	sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
-	cmake $1/myinitramfs -DCMAKE_INSTALL_PREFIX=/mnt && make && make install
+	cmake $1/myinitramfs $2 -DCMAKE_INSTALL_PREFIX=/mnt && make && make install
 	sync
 	sudo umount /mnt
 
