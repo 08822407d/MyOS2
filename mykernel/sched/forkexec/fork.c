@@ -11,30 +11,17 @@
  * Fork is rather simple, once you get the hang of it, but the memory
  * management can be a bitch. See 'mm/memory.c': 'copy_page_range()'
  */
+#include "../sched_api.h"
+
 
 #include <linux/sched/coredump.h>
-#include <linux/init/init.h>
-#include <uapi/linux/unistd.h>
-#include <linux/kernel/completion.h>
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-#include <linux/fs/binfmts.h>
-#include <linux/fs/fs.h>
-#include <linux/kernel/mm.h>
-#include <linux/kernel/cpu.h>
-#include <linux/kernel/syscalls.h>
-#include <linux/kernel/jiffies.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/ptrace.h>
-#include <linux/kernel/mount.h>
-#include <linux/debug/ftrace.h>
-#include <linux/device/tty.h>
-#include <uapi/linux/magic.h>
-#include <linux/compiler/compiler.h>
-#include <linux/kernel/uaccess.h>
 
 
 #include <asm/signal.h>
-#include <asm/insns.h>
 
 
 /*

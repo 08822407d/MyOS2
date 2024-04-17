@@ -38,6 +38,7 @@
  *
  * Aug/Sep 2004 Changed to four level page tables (Andi Kleen)
  */
+#include <linux/kernel/sched_const.h>
 #include <linux/sched/coredump.h>
 #include <asm-generic/pgalloc.h>
 

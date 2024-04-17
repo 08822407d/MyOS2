@@ -7,6 +7,7 @@ function make_install_kernel() {
 	fi
 	cd $CMAKE_GEN_DIR
 	sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
+	rm /mnt/boot/kernel
 	cmake $1/mykernel $2 -DCMAKE_INSTALL_PREFIX=/mnt && make && make install
 	sync
 	sudo umount /mnt

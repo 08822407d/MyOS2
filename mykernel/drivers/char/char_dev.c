@@ -10,7 +10,7 @@
 #include <linux/init/init.h>
 #include <linux/fs/fs.h>
 #include <linux/kernel/kdev_t.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/lib/string.h>
 
 #include <uapi/linux/major.h>

@@ -263,8 +263,6 @@ void * malloc(size_t size)
 		while (size > uscgp->obj_size)
 			uscgp = container_of((uscgp->uslabcache_list.next), uslab_cache_s, uslabcache_list);
 
-		// lock_recurs_lock(&slab_alloc_lock);
-
 		// find a usable slab and if it is in free list, move it to used list
 		// or if it is in used list and has only one free slot, move it to full list
 		uslab_s *	uslp = NULL;
@@ -356,8 +354,6 @@ void free(void * obj_p)
 		// color_printk(WHITE, RED, "The obj already been freed : %#018lx\n!", obj_p);
 		while (1);
 	}
-
-	// lock_recurs_lock(&slab_alloc_lock);
 
 	bm_clear_bit(uslp->colormap, obj_idx);
 	uslp->free++;

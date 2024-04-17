@@ -22,7 +22,7 @@
  */
 
 #include <linux/kernel/export.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/block/blkdev.h>
 #include <linux/kernel/mount.h>
 // #include <linux/security.h>
@@ -35,6 +35,7 @@
 // #include <linux/fsnotify.h>
 // #include <linux/lockdep.h>
 // #include <linux/user_namespace.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/fs_context.h>
 #include <uapi/linux/mount.h>
 #include <linux/fs/internal.h>

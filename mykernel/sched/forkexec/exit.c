@@ -1,4 +1,6 @@
-#include <linux/kernel/sched.h>
+#include "../sched_api.h"
+
+
 #include <linux/debug/bug.h>
 
 #include <obsolete/printk.h>

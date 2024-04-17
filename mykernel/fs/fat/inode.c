@@ -13,6 +13,7 @@
 
 // #include <linux/module.h>
 // #include <linux/mm/pagemap.h>
+#include <linux/kernel/mm_api.h>
 // #include <linux/mpage.h>
 // #include <linux/vfs.h>
 // #include <linux/seq_file.h>
@@ -26,7 +27,7 @@
 #include <linux/fs/fat.h>
 
 
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <uapi/linux/magic.h>
 
 extern file_ops_s FAT32_file_ops;

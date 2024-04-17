@@ -7,17 +7,9 @@
  * in ptrace.c and signal.c.
  */
 
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/sched.h>
-#include <linux/smp/smp.h>
-#include <uapi/linux/errno.h>
-#include <linux/kernel/ptrace.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/syscalls.h>
-#include <linux/kernel/uaccess.h>
-
-#include <asm/traps.h>
+#include <linux/compiler/compiler.h>
 #include <asm/syscall.h>
+#include <asm/unistd.h>
 
 
 __visible noinstr void do_syscall_64(pt_regs_s *regs, int nr)

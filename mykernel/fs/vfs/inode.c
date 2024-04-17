@@ -24,7 +24,7 @@
 #include <linux/fs/internal.h>
 
 
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <obsolete/printk.h>
 
 

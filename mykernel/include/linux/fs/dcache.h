@@ -6,7 +6,7 @@
 	#include <linux/kernel/math.h>
 	// #include <linux/rculist.h>
 	// #include <linux/rculist_bl.h>
-	#include <linux/kernel/lock_ipc.h>
+	#include <linux/kernel/lock_ipc_types.h>
 	// #include <linux/seqlock.h>
 	#include <linux/kernel/cache.h>
 	// #include <linux/rcupdate.h>

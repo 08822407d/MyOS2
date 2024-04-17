@@ -18,16 +18,12 @@
 //  */
 
 #include <linux/lib/stdarg.h>
-// #include <linux/build_bug.h>
-// #include <linux/clk.h>
-// #include <linux/clk-provider.h>
 #include <linux/lib/errname.h>
-// #include <linux/module.h>	/* for KSYM_SYMBOL_LEN */
 #include <linux/kernel/types.h>
 #include <linux/lib/string.h>
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/kernel.h>
-// #include <linux/kallsyms.h>
+#include <linux/kernel/err.h>
 #include <linux/kernel/math64.h>
 #include <linux/kernel/uaccess.h>
 #include <linux/kernel/ioport.h>
@@ -35,14 +31,8 @@
 #include <linux/kernel/rtc.h>
 #include <linux/kernel/time.h>
 #include <linux/kernel/uuid.h>
-// #include <linux/of.h>
-// #include <net/addrconf.h>
-// #include <linux/siphash.h>
 #include <linux/compiler/compiler.h>
-// #include <linux/property.h>
-// #ifdef CONFIG_BLOCK
 #include <linux/block/blkdev.h>
-// #endif
 
 // #include "../mm/internal.h"	/* For the trace_print_flags arrays */
 
@@ -616,7 +606,7 @@ static const char *check_pointer_msg(const void *ptr)
 	if (!ptr)
 		return "(null)";
 
-	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
+	if ((ulong)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
 		return "(efault)";
 
 	return NULL;

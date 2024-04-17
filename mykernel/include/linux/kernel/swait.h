@@ -4,7 +4,7 @@
 
 	#include <linux/kernel/lib.h>
 	#include <linux/kernel/stddef.h>
-	#include <linux/kernel/lock_ipc.h>
+	#include <linux/kernel/lock_ipc_types.h>
 	// #include <linux/wait.h>
 	#include <asm/current.h>
 

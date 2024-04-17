@@ -6,15 +6,11 @@
  *
  *  Copyright (C) 1991-2002  Linus Torvalds
  */
+#include "../sched_api.h"
+
+
 #include <linux/sched/clock.h>
 #include <linux/sched/debug.h>
-#include <linux/block/blkdev.h>
-
-#include <asm/insns.h>
-
-#include <linux/smp/smp.h>
-#include <obsolete/glo.h>
-
 
 
 void update_rq_clock(rq_s *rq)

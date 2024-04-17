@@ -2,9 +2,9 @@
 #ifndef _LINUX_FS_STRUCT_TYPES_H_
 #define _LINUX_FS_STRUCT_TYPES_H_
 
-	#include <linux/kernel/sched.h>
+	#include "../sched_type_declaration.h"
 	#include <linux/fs/path.h>
-	#include <linux/kernel/lock_ipc.h>
+
 
 	typedef struct fs_struct {
 		int			users;

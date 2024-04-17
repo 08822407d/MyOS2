@@ -15,5 +15,9 @@
 
 
 	#include <asm-generic/getorder.h>
+	#include <linux/kernel/err.h>
+	#include <linux/kernel/overflow.h>
+	#include <linux/kernel/sched_api.h>
+	#include <linux/kernel/irqflags.h>
 
 #endif /* _MM_API_H_ */

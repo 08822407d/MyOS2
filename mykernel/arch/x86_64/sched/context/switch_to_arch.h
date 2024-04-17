@@ -3,7 +3,6 @@
 #define _ASM_X86_SWITCH_TO_H_
 
 	#include <linux/compiler/myos_debug_option.h>
-	#include <asm/processor.h>
 
 	#include "../sched_const_arch.h"
 	#include "../sched_types_arch.h"

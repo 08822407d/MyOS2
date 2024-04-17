@@ -8,6 +8,8 @@
 ***************************************************/
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/mm.h>
+#include <linux/kernel/sched_const.h>
+#include <linux/kernel/sched_api.h>
 
 #include "MineOS_NVMe.h"
 #include "MineOS_PCI.h"

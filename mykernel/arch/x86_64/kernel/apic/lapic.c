@@ -14,23 +14,27 @@
  *	Pavel Machek and
  *	Mikael Pettersson	:	PM converted to driver model.
  */
-
-#include <linux/debug/ftrace.h>
-#include <linux/kernel/ioport.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/delay.h>
-#include <linux/kernel/timex.h>
+#include <linux/kernel/types.h>
+// #include <linux/debug/ftrace.h>
+// #include <linux/kernel/ioport.h>
+// #include <linux/kernel/export.h>
+// #include <linux/kernel/delay.h>
+// #include <linux/kernel/timex.h>
 #include <linux/init/init.h>
-#include <linux/kernel/cpu.h>
-#include <linux/smp/smp.h>
-#include <linux/kernel/mm.h>
+// #include <linux/kernel/cpu.h>
+// #include <linux/smp/smp.h>
+// #include <linux/kernel/mm.h>
 
 #include <asm/apic.h>
-#include <asm/io_apic.h>
-#include <asm/time.h>
-#include <asm/smp.h>
-#include <asm/tsc.h>
-#include <asm/cpu.h>
+// #include <asm/io_apic.h>
+// #include <asm/time.h>
+// #include <asm/smp.h>
+// #include <asm/tsc.h>
+// #include <asm/cpu.h>
+#include <asm/apicdef.h>
+#include <asm/irq_vectors.h>
+#include <insns/x86msr_const.h>
+#include <processor/processor_arch_api.h>
 
 
 int x2apic_mode;

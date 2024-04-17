@@ -1,6 +1,7 @@
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/mm.h>
 #include <linux/kernel/delay.h>
+#include <linux/kernel/sched_api.h>
 
 #include "myos_XHCI.h"
 #include "myos_USB.h"

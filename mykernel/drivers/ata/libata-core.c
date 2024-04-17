@@ -42,7 +42,7 @@
 #include <linux/kernel/workqueue.h>
 // #include <linux/scatterlist.h>
 #include <linux/kernel/log2.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 // #include <linux/glob.h>
 // #include <scsi/scsi.h>
 // #include <scsi/scsi_cmnd.h>

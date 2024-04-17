@@ -1,5 +1,5 @@
-#ifndef __LINUX_SPINLOCK_SMP_MACRO_H_
-#define __LINUX_SPINLOCK_SMP_MACRO_H_
+#ifndef _LINUX_SPINLOCK_SMP_MACRO_H_
+#define _LINUX_SPINLOCK_SMP_MACRO_H_
 
 	/*
 	 * include/linux/spinlock_types.h - generic spinlock type definitions
@@ -181,4 +181,4 @@
 	// 			raw_spin_trylock_irqsave(spinlock_check(lock), flags);	\
 	// 		})
 
-#endif /* __LINUX_SPINLOCK_SMP_MACRO_H_ */
+#endif /* _LINUX_SPINLOCK_SMP_MACRO_H_ */

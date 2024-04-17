@@ -14,7 +14,7 @@
 #include <linux/fs/fs.h>
 #include <linux/kernel/mount.h>
 // #include <linux/nsproxy.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <uapi/linux/magic.h>
 // #include <linux/security.h>
 // #include <linux/mnt_namespace.h>

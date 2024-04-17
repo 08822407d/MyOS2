@@ -4,11 +4,11 @@
 
 	#include <linux/compiler/compiler_types.h>
 	#include <linux/kernel/types.h>
-
 	#include <asm/cpufeatures.h>
-
-
 	#include <asm/mm_const.h>
+
+	#include "processor_const_arch.h"
+
 
 	/*
 	 *  CPU type and hardware bug flags. Kept separately for each CPU.
@@ -43,24 +43,23 @@
 		 * is passed to bitops which require the alignment. Use unnamed
 		 * union to enforce the array is aligned to size of unsigned long.
 		 */
-		union
-		{
+		union {
 			struct x86_cap_bits x86_capa_bits;
 			__u32 x86_capability[NCAPINTS + NBUGINTS];
-			unsigned long x86_capability_alignment;
+			ulong x86_capability_alignment;
 		};
 
 		char	x86_vendor_id[16];
 		char	x86_model_id[64];
 		/* in KB - valid for CPUS which support this call: */
-		unsigned int	x86_cache_size;
+		uint	x86_cache_size;
 		int		x86_cache_alignment;		/* In bytes */
 		/* Cache QoS architectural values, valid only on the BSP: */
 		int		x86_cache_max_rmid;			/* max index */
 		int		x86_cache_occ_scale;		/* scale to bytes */
 		int		x86_cache_mbm_width_offset;
 		int		x86_power;
-		unsigned long	loops_per_jiffy;
+		ulong	loops_per_jiffy;
 		/* cpuid returned max cores value: */
 		u16		x86_max_cores;
 		u16		apicid;
@@ -83,7 +82,7 @@
 		u32		microcode;
 		/* Address space bits used by the cache internally */
 		u8		x86_cache_bits;
-		unsigned	initialized : 1;
+		uint	initialized : 1;
 	} cpuinfo_x86_s;
 
 	typedef struct cpuid_regs {

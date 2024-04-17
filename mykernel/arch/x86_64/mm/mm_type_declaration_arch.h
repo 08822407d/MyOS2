@@ -5,6 +5,7 @@
 	typedef struct task_struct task_s;
 
 	#include <linux/kernel/types.h>
+	// #include <linux/kernel/sched_types.h>
 
 
 	/* earlymem arch */

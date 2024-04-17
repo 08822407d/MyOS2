@@ -2,6 +2,7 @@
 #define _ASM_X86_MM_API_H_
 
 	#include <asm-generic/page.h>
+	#include <linux/kernel/lock_ipc_api.h>
 
 
 	#include "early/earlymem_api_arch.h"

@@ -1,12 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_RUNQUEUE_API_H_
-#define _LINUX_RUNQUEUE_API_H_
-
-	#include <linux/kernel/linkage.h>
-	#include <linux/kernel/swait.h>
-
-	#include "runqueue/runqueue_const.h"
-	#include "runqueue/runqueue_types.h"
+#ifndef _LINUX_RUNQUEUE_MACRO_H_
+#define _LINUX_RUNQUEUE_MACRO_H_
 
 	/*
 	 * Special states are those that do not use the normal wait-loop pattern. See
@@ -84,6 +78,4 @@
 	#define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
 	// #define raw_rq()		raw_cpu_ptr(&runqueues)
 
-	extern void update_rq_clock(rq_s *rq);
-
-#endif /* _LINUX_RUNQUEUE_API_H_ */
+#endif /* _LINUX_RUNQUEUE_MACRO_H_ */

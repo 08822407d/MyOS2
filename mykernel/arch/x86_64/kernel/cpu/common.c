@@ -4,28 +4,15 @@
 /* cpu_feature_enabled() cannot be used this early */
 // #define USE_EARLY_PGTABLE_L5
 
-#include <linux/kernel/linkage.h>
-#include <linux/kernel/bitops.h>
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/export.h>
-#include <linux/smp/percpu.h>
-#include <linux/lib/string.h>
+
 #include <linux/kernel/ctype.h>
 #include <linux/kernel/delay.h>
-#include <linux/sched/clock.h>
-#include <linux/init/init.h>
-#include <linux/smp/smp.h>
+#include <linux/kernel/mm_api.h>
+#include <linux/kernel/sched_api.h>
 
-#include <asm/sections.h>
-#include <linux/kernel/cpumask.h>
-#include <asm/setup.h>
 #include <asm/apic.h>
-#include <linux/kernel/numa.h>
-#include <asm/asm.h>
-#include <asm/bugs.h>
 #include <asm/cpu.h>
-#include <asm/insns.h>
-#include <asm/processor.h>
+
 
 #include "cpu.h"
 

@@ -304,7 +304,23 @@
         "pgtable_api_arch.h": "c",
         "context_api_arch.h": "c",
         "switch_to_types_arch.h": "c",
-        "sched_const_arch.h": "c"
+        "sched_const_arch.h": "c",
+        "sched_type_declaration_arch.h": "c",
+        "sched_api_arch.h": "c",
+        "preempt_api_arch.h": "c",
+        "sched_api.h": "c",
+        "sched_type_declaration.h": "c",
+        "forkexec_api.h": "c",
+        "vfs_s_defs.h": "c",
+        "sched_types.h": "c",
+        "scheduler_macro.h": "c",
+        "scheduler.h": "c",
+        "sched_const.h": "c",
+        "syscall.h": "c",
+        "sched_misc.h": "c",
+        "processor_const_arch.h": "c",
+        "getorder.h": "c",
+        "sched_misc_api.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

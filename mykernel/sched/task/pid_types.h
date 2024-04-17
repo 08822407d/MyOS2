@@ -2,11 +2,10 @@
 #ifndef _LINUX_PID_TYPES_H_
 #define _LINUX_PID_TYPES_H_
 
-	#include <linux/kernel/lock_ipc.h>
+	#include "../sched_type_declaration.h"
 
 
-	enum pid_type
-	{
+	enum pid_type {
 		PIDTYPE_PID,
 		PIDTYPE_TGID,
 		PIDTYPE_PGID,

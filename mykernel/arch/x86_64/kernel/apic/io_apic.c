@@ -30,25 +30,26 @@
  *	setup for the read already. We cache the data now, so that
  *	workaround has been removed.
  */
-#include <linux/kernel/mm.h>
 #include <linux/init/init.h>
-#include <linux/kernel/delay.h>
-#include <linux/kernel/sched.h>
-#include <linux/device/pci.h>
-#include <linux/compiler/compiler.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/jiffies.h>	/* time_after() */
+#include <linux/kernel/mm_api.h>
+// #include <linux/kernel/delay.h>
+// #include <linux/device/pci.h>
+// #include <linux/compiler/compiler.h>
+// #include <linux/kernel/export.h>
+// #include <linux/kernel/jiffies.h>	/* time_after() */
 
-#include <asm/insns.h>
-#include <asm/smp.h>
-#include <asm/cpu.h>
-#include <asm/dma.h>
-#include <asm/timer.h>
-#include <asm/time.h>
-#include <asm/setup.h>
-#include <asm/hw_irq.h>
-#include <asm/apic.h>
-#include <asm/mm.h>
+// #include <asm/insns.h>
+// #include <asm/smp.h>
+// #include <asm/cpu.h>
+// #include <asm/dma.h>
+// #include <asm/timer.h>
+// #include <asm/time.h>
+// #include <asm/setup.h>
+// #include <asm/hw_irq.h>
+// #include <asm/apic.h>
+// #include <asm/mm.h>
+#include <asm/apicdef.h>
+#include <asm/mm_const.h>
 
 
 // #define	for_each_ioapic(idx) \

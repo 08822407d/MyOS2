@@ -4,7 +4,10 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-	#include <linux/kernel/sched.h>
+	#include "../sched_const.h"
+	#include "../sched_types.h"
+	#include "../sched_api.h"
+
 
 	#ifdef DEBUG
 

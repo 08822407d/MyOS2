@@ -1,8 +1,9 @@
 #include <linux/kernel/fcntl.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
-#include <linux/kernel/mm.h>
-#include <linux/kernel/sched.h>
+#include <linux/kernel/mm_api.h>
+#include <linux/kernel/sched_api.h>
+#include <linux/kernel/fdtable.h>
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>

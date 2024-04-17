@@ -11,7 +11,7 @@
 
 #include <linux/kernel/mm.h>
 // #include <linux/miscdevice.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 // #include <linux/vmalloc.h>
 // #include <linux/random.h>
 #include <linux/init/init.h>

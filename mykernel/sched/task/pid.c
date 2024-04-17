@@ -30,7 +30,7 @@
 #include "pid.h"
 
 
-#include <linux/kernel/mm.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/export.h>
 #include <linux/init/init.h>
 #include <linux/kernel/syscalls.h>

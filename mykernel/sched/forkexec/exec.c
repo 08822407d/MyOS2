@@ -25,17 +25,11 @@
 
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
-#include <linux/kernel/mm.h>
-#include <linux/kernel/stat.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/fcntl.h>
-#include <linux/lib/string.h>
-#include <linux/init/init.h>
-#include <linux/sched/coredump.h>
-#include <linux/sched/signal.h>
-#include <linux/kernel/lock_ipc.h>
 #include <linux/fs/binfmts.h>
+#include <linux/fs/fs.h>
 #include <linux/fs/namei.h>
-#include <linux/kernel/mount.h>
 #include <linux/kernel/syscalls.h>
 #include <linux/kernel/uaccess.h>
 

@@ -2,8 +2,7 @@
 #ifndef _LINUX_SCHEDULER_TYPES_H_
 #define _LINUX_SCHEDULER_TYPES_H_
 
-	#include <linux/kernel/sched.h>
-	#include <linux/kernel/lock_ipc.h>
+	#include "../sched_type_declaration.h"
 
 
 	typedef struct sched_entity {

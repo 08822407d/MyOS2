@@ -12,8 +12,8 @@
 #define _ASM_X86_SYSCALL_H
 
 
-	#include <linux/kernel/sched.h>
 	#include <linux/kernel/err.h>
+	#include <asm/ptrace.h>
 	#include <asm/unistd.h>
 
 

@@ -10,6 +10,7 @@ source ./scripts/make_install_bootloader.sh
 if [ ! -d "./build" ]; then
 	mkdir ./build
 fi
+rm -rf ./build/*
 
 make_install_kernel $PROJ_ROOT $DEBUG_FLAG
 make_install_initranfs $PROJ_ROOT $DEBUG_FLAG

@@ -2,9 +2,7 @@
 #ifndef _LINUX_RUNQUEUE_TYPES_H_
 #define _LINUX_RUNQUEUE_TYPES_H_
 
-	#include <linux/kernel/sched.h>
-	#include <linux/kernel/lock_ipc.h>
-	#include <linux/kernel/mm.h>
+	#include "../sched_type_declaration.h"
 
 
 	/* CFS-related fields in a runqueue */
@@ -265,7 +263,7 @@
 		unsigned int	clock_update_flags;
 		u64				clock;
 		/* Ensure that all clocks are in the same cache line */
-		u64				clock_task ____cacheline_aligned;
+		u64				clock_task;
 		u64				clock_pelt;
 		unsigned long	lost_idle_time;
 		u64				clock_pelt_idle;
@@ -383,7 +381,7 @@
 	// #endif
 	} rq_s;
 
-	struct rq_flags {
+	typedef struct rq_flags {
 		unsigned long flags;
 		// struct pin_cookie cookie;
 	// #ifdef CONFIG_SCHED_DEBUG
@@ -394,6 +392,6 @@
 		//  */
 		// unsigned int clock_update_flags;
 	// #endif
-	};
+	} rq_flags_s;
 
 #endif /* _LINUX_RUNQUEUE_TYPES_H_ */

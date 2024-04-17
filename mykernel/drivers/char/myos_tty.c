@@ -1,4 +1,4 @@
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/stddef.h>
 #include <linux/lib/string.h>
 
@@ -10,7 +10,6 @@
 
 #include <obsolete/keyboard.h>
 #include <obsolete/device.h>
-#include <obsolete/mutex.h>
 
 position_t Pos;
 List_hdr_s kbd_wqhdr;

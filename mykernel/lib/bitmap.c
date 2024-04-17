@@ -13,7 +13,7 @@
 #include <linux/kernel/export.h>
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/mm.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/lib/string.h>
 // #include <linux/sched/thread_info.h>
 #include <linux/kernel/uaccess.h>

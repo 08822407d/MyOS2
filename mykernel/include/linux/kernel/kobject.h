@@ -17,16 +17,11 @@
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib.h>
-	// #include <linux/sysfs.h>
 	#include <linux/compiler/compiler.h>
-	// #include <linux/container_of.h>
-	#include <linux/kernel/lock_ipc.h>
-	// #include <linux/kref.h>
-	// #include <linux/kobject_ns.h>
-	// #include <linux/wait.h>
-	// #
+	#include <linux/kernel/lock_ipc_types.h>
 	#include <linux/kernel/workqueue.h>
 	#include <linux/kernel/uidgid.h>
+
 
 	#define UEVENT_HELPER_PATH_LEN	256
 	#define UEVENT_NUM_ENVP			64		/* number of env pointers */
@@ -85,8 +80,8 @@
 	// extern __printf(2, 0) int kobject_set_name_vargs(struct kobject *kobj, const char *fmt,
 	// 												va_list vargs);
 
-	static inline const char *
-	kobject_name(const kobj_s *kobj) {
+	static inline const char
+	*kobject_name(const kobj_s *kobj) {
 		return kobj->name;
 	}
 

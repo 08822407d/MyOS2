@@ -10,4 +10,8 @@
 	#include "atomic/atomic_api.h"
 	#include "spinlock/spinlock_api.h"
 
+
+	#include <linux/kernel/irqflags.h>
+	#include <linux/kernel/sched_api.h>
+
 #endif /* _LOCK_IPC_API_H_ */

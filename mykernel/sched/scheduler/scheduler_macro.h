@@ -1,9 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_SCHEDULER_API_H_
-#define _LINUX_SCHEDULER_API_H_
-
-    #include "scheduler/scheduler_const.h"
-    #include "scheduler/scheduler_types.h"
+#ifndef _LINUX_SCHEDULER_MACRO_H_
+#define _LINUX_SCHEDULER_MACRO_H_
 
 	/*
 	 * Helper to define a sched_class instance; each one is placed in a separate
@@ -20,10 +17,6 @@
 		__aligned(__alignof__(sched_class_s)) \
 			__section(".data.sched_class")
 
-	/* Defined in include/asm-generic/vmlinux.lds.h */
-	extern sched_class_s __sched_class_highest[];
-	extern sched_class_s __sched_class_lowest[];
-
 	#define for_class_range(class, _from, _to) \
 		for (class = (_from); class < (_to); class++)
 
@@ -32,13 +25,4 @@
 
 	#define sched_class_above(_a, _b)	((_a) < (_b))
 
-	extern void schedule_idle(void);
-	extern long schedule_timeout(long timeout);
-	asmlinkage void schedule(void);
-	extern void schedule_preempt_disabled(void);
-	extern void preempt_schedule(void);
-
-	extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
-
-
-#endif /* _LINUX_SCHEDULER_API_H_ */
+#endif /* _LINUX_SCHEDULER_MACRO_H_ */

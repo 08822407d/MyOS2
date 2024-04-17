@@ -6,7 +6,8 @@
  * (NOTE: these are not related to SCHED_IDLE batch scheduled
  *        tasks which are handled in sched/fair.c )
  */
-#include <linux/kernel/sched.h>
+#include "../sched_api.h"
+
 #include <linux/smp/smp.h>
 
 

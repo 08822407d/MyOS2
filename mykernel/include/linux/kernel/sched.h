@@ -4,15 +4,8 @@
 
 	#include <uapi/linux/sched.h>
 
-	/*
-	 * Define 'task_s' and provide the main scheduler
-	 * APIs (schedule(), wakeup variants, etc.)
-	 */
-	#include <sched/task_api.h>
-	#include <sched/forkexec_api.h>
-	#include <sched/runqueue_api.h>
-	#include <sched/scheduler_api.h>
-	#include <sched/preempt_api.h>
-	#include <sched/sched_misc_api.h>
+	#include "sched_const.h"
+	#include "sched_types.h"
+	#include "sched_api.h"
 
 #endif

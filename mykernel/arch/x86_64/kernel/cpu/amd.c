@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-2.0-only
-#include <linux/kernel/export.h>
-#include <linux/kernel/bitops.h>
-#include <linux/kernel/elf.h>
-#include <linux/kernel/mm.h>
+// #include <linux/kernel/export.h>
+// #include <linux/kernel/bitops.h>
+// #include <linux/kernel/elf.h>
+// #include <linux/kernel/mm.h>
 
-#include <linux/kernel/sched.h>
-#include <linux/sched/clock.h>
-#include <asm/cpu.h>
-#include <asm/smp.h>
+// #include <linux/kernel/sched.h>
+// #include <linux/sched/clock.h>
+// #include <asm/cpu.h>
+// #include <asm/smp.h>
 
 #include "cpu.h"
 

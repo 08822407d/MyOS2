@@ -17,6 +17,7 @@
 
 
 #include <uapi/linux/msdos_fs.h>
+#include <linux/kernel/sizes.h>
 
 
 	struct FAT32_IO_BUFFER;

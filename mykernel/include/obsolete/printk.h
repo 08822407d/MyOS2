@@ -16,11 +16,10 @@
 #ifndef __PRINTK_H__
 #define __PRINTK_H__
 
+#include <linux/kernel/lock_ipc_types.h>
 #include <linux/lib/stdarg.h>
-
 #include <klib/font.h>
 
-#include <obsolete/mutex.h>
 
 #define ZEROPAD	1		/* pad with zero */
 #define SIGN	2		/* unsigned/signed long */

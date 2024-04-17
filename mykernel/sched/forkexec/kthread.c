@@ -7,16 +7,8 @@
  * even if we're invoked from userspace (think modprobe, hotplug cpu,
  * etc.).
  */
-#include <linux/kernel/mm.h>
-#include <linux/kernel/sched.h>
-#include <linux/kernel/completion.h>
-#include <linux/kernel/err.h>
-#include <uapi/linux/unistd.h>
-#include <linux/fs/file.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/ptrace.h>
-#include <linux/kernel/uaccess.h>
-#include <linux/kernel/numa.h>
+#include "../sched_api.h"
+
 #include <asm/signal.h>
 
 

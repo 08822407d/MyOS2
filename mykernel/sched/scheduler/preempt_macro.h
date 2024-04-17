@@ -1,13 +1,7 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_PREEMPT_API_H_
-#define _LINUX_PREEMPT_API_H_
+#ifndef _LINUX_PREEMPT_MACRO_H_
+#define _LINUX_PREEMPT_MACRO_H_
 
-    #include "scheduler/preempt_const.h"
-
-    #include <asm/sched.h>
-
-
-	extern void preempt_schedule(void);
 
 	/*
 	 * Are we running in atomic context?  WARNING: this macro cannot
@@ -68,10 +62,10 @@
 	// 		} while (0)
 
 	#define preempt_check_resched()				\
-		    do {								\
-		    	if (should_resched(0))			\
-		    		__preempt_schedule();		\
-		    } while (0)
+			do {								\
+				if (should_resched(0))			\
+					__preempt_schedule();		\
+			} while (0)
 
 
 	#define preempt_disable_notrace()			\
@@ -96,4 +90,4 @@
 	#  undef preempt_check_resched
 	#endif
 
-#endif /* _LINUX_PREEMPT_API_H_ */
+#endif /* _LINUX_PREEMPT_MACRO_H_ */

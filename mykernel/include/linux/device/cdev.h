@@ -13,7 +13,7 @@
 		const file_ops_s	*ops;
 		List_s				list;
 		dev_t				dev;
-		unsigned int		count;
+		uint				count;
 	} cdev_s;
 
 	void cdev_init(cdev_s *, const file_ops_s *ops);

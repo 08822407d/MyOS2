@@ -1,5 +1,6 @@
 #include <linux/kernel/delay.h>
-#include <linux/kernel/sched.h>
+#include <linux/kernel/sched_api.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/kdev_t.h>
 #include <linux/kernel/completion.h>
 #include <linux/device/tty.h>

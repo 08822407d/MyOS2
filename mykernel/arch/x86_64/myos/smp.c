@@ -9,7 +9,6 @@
 #include <linux/kernel/sched.h>
 
 #include <obsolete/arch_proto.h>
-#include <obsolete/mutex.h>
 
 extern phys_addr_t 		kernel_cr3;
 extern u32	cr3_paddr;

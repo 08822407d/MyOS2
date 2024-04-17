@@ -9,7 +9,7 @@
 
 	#include <asm-generic/bug.h>
 	#include <asm/processor.h>
-	#include <asm/sched.h>
+	#include <asm/sched_api.h>
 
 	#include "desc_const_arch.h"
 	#include "desc_types_arch.h"

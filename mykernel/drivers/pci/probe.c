@@ -11,7 +11,7 @@
 // #include <linux/of_device.h>
 // #include <linux/of_pci.h>
 // #include <linux/pci_hotplug.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 // #include <linux/module.h>
 // #include <linux/cpumask.h>
 // #include <linux/aer.h>

@@ -5,6 +5,7 @@
 	typedef struct task_struct task_s;
 
 	#include <linux/kernel/types.h>
+	#include <asm/ptrace.h>
 
 
 	/* switch_to */

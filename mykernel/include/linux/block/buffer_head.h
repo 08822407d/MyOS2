@@ -10,6 +10,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/linkage.h>
+	#include <linux/fs/fs.h>
 	// #include <linux/mm/pagemap.h>
 	// #include <linux/wait.h>
 

@@ -1,5 +1,5 @@
 #include <linux/kernel/kernel.h>
-// #include <linux/kernel/slab.h>
+#include <linux/kernel/mm_api.h>
 #include <linux/kernel/stddef.h>
 #include <linux/kernel/completion.h>
 #include <linux/lib/string.h>

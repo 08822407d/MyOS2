@@ -2,10 +2,10 @@
 #define _AMD64_PROTO_H_
 
 #include <linux/kernel/types.h>
-#include <linux/kernel/sched.h>
-#include <linux/kernel/ptrace.h>
 
-#include "mutex.h"
+
+struct pt_regs;
+typedef struct pt_regs pt_regs_s;
 
 /*==============================================================================================*
  *										external symbols							 			*

@@ -3,7 +3,7 @@
 #define _ASM_X86_SWITCH_TO_MACRO_H_
 
 
-    #define __preempt_count_ref	(this_cpu_ptr(&pcpu_hot)->preempt_count)
+	#define __preempt_count_ref	(this_cpu_ptr(&pcpu_hot)->preempt_count)
 
 	#define switch_to(prev, next, last)						\
 			do {											\

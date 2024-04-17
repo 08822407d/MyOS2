@@ -2,32 +2,18 @@
 #ifndef _LINUX_TASK_TYPES_H_
 #define _LINUX_TASK_TYPES_H_
 
-	#include <linux/kernel/lock_ipc.h>
-	#include <linux/kernel/mm.h>
-	#include <linux/kernel/lib.h>
-
-	#include <linux/kernel/resource.h>
-	#include <linux/kernel/fdtable.h>
+	#include "../sched_type_declaration.h"
 
 	#include "../scheduler/scheduler_types.h"
 
-	/* task_struct member predeclarations (sorted alphabetically): */
-	struct signal_struct;
-	typedef struct signal_struct signal_s;
-	struct fs_struct;
-	typedef struct fs_struct taskfs_s;
-	struct rlimit;
-	typedef struct rlimit rlimit_s;
-	struct pid;
-	typedef struct pid pid_s;
+	#include <processor/processor_types_arch.h>
 
 
 	/*
 	 * Define the task command name length as enum, then it can be visible to
 	 * BPF programs.
 	 */
-	enum
-	{
+	enum {
 		TASK_COMM_LEN = 32,
 	};
 

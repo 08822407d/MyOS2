@@ -8,7 +8,7 @@
 ***************************************************/
 #include <linux/device/pci.h>
 #include <linux/device/pci_ids.h>
-// #include <linux/kernel/slab.h>	
+#include <linux/kernel/mm_api.h>	
 #include <linux/kernel/mm.h>
 #include <asm/insns.h>
 #include <uapi/asm-generic/pci_regs.h>

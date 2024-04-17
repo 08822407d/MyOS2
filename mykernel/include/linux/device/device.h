@@ -626,8 +626,8 @@
 	// /* Get the wakeup routines, which depend on struct device */
 	// #include <linux/pm_wakeup.h>
 
-	static inline const char *
-	dev_name(const device_s *dev) {
+	static inline const char
+	*dev_name(const device_s *dev) {
 		/* Use the init name until the kobject becomes available */
 		if (dev->init_name) return dev->init_name;
 

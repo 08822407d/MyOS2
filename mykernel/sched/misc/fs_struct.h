@@ -4,7 +4,9 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-	#include "fs_struct_types.h"
+	#include "../sched_const.h"
+	#include "../sched_types.h"
+	#include "../sched_api.h"
 
 
 	#ifdef DEBUG
@@ -17,7 +19,7 @@
 
 	#endif
 	
-	#if defined(SPINLOCK_SMP_DEFINATION) || !(DEBUG)
+	#if defined(FS_STRUCT_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE
 		void

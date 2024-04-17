@@ -1,4 +1,5 @@
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/sched_api.h>
 
 #include <obsolete/proto.h>
 #include <obsolete/printk.h>
