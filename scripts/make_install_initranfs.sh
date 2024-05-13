@@ -15,4 +15,7 @@ function make_install_initranfs() {
 
 	objdump -S init > $CMAKE_GEN_DIR/../initd_dasm.txt
 	objdump -S sh > $CMAKE_GEN_DIR/../sh_dasm.txt
+
+	cp init $CMAKE_GEN_DIR/../initd
+	cp sh $CMAKE_GEN_DIR/../sh
 }

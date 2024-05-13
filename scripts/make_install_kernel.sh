@@ -13,4 +13,6 @@ function make_install_kernel() {
 	sudo umount /mnt
 
 	objdump -S kernel > $CMAKE_GEN_DIR/../kern_dasm.txt
+
+	cp kernel $CMAKE_GEN_DIR/../kernel
 }
