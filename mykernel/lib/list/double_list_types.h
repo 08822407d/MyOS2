@@ -2,10 +2,9 @@
 #ifndef _LINUX_DOUBLE_LIST_TYPES_H_
 #define _LINUX_DOUBLE_LIST_TYPES_H_
 
-	#include <linux/kernel/types.h>
+	#include "../lib_type_declaration.h"
 
-	struct list_head;
-	typedef struct list_head List_s;
+
 	typedef struct list_head {
 		List_s *	next;
 		List_s *	prev;

@@ -2,6 +2,6 @@
 #ifndef _LINUX_LIB_H_
 #define _LINUX_LIB_H_
 
-    #include <lib/list_api.h>
+    #include <lib/lib_api.h>
 
 #endif /* _LINUX_LIB_H_ */

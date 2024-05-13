@@ -4,7 +4,10 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-	#include "hash_list_types.h"
+	#include "../lib_const.h"
+	#include "../lib_types.h"
+	#include "../lib_api.h"
+
 
 	/*
 	 * Double linked lists with a single pointer list head.

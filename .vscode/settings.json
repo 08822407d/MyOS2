@@ -320,7 +320,8 @@
         "sched_misc.h": "c",
         "processor_const_arch.h": "c",
         "getorder.h": "c",
-        "sched_misc_api.h": "c"
+        "sched_misc_api.h": "c",
+        "double_list_types.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

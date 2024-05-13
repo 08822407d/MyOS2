@@ -4,7 +4,10 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-	#include "double_list_types.h"
+	#include "../lib_const.h"
+	#include "../lib_types.h"
+	#include "../lib_api.h"
+
 
 	/*
 	 * Circular doubly linked list implementation.
