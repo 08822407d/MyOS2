@@ -24,8 +24,16 @@ u32 *APIC_MSI_Base = NULL;
 
 void Print_PCIHDR(struct PCI_Header_00 * PCI_HDR)
 {
-	color_printk(WHITE, BLACK, "PCI : %#04d:%#02d:%#02d - %-32s", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function, PCI_HDR->devtype_name);
-	color_printk(WHITE, BLACK, "\tBAR0 base : %#018lx , BAR0 limit : %#010x\n", PCI_HDR->BAR_base_addr[0], PCI_HDR->BAR_space_limit[0]);
+	char pci_prefix[20];
+	sprintf(pci_prefix, "pci %04x:%02x:%02x: ", PCI_HDR->bus, PCI_HDR->device, PCI_HDR->function);
+
+	pr_info("%s%-32s\n", pci_prefix, PCI_HDR->devtype_name);
+	for (int i = 0; i < 6; i++) {
+		u64 bar_start = PCI_HDR->BAR_base_addr[i];
+		u64 bar_end = PCI_HDR->BAR_space_limit[i] + bar_start;
+		if (bar_end != bar_start)
+			pr_info("%s reg %#02x [mem %#010Lx-%#010Lx]\n", pci_prefix, 0x10 + i * 0x08, bar_start, bar_end);
+	}
 }
 
 unsigned int Read_PCI_Config(unsigned int bus,unsigned int device,unsigned int function,unsigned int offset)

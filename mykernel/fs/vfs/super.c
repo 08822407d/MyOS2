@@ -174,19 +174,18 @@ super_block_s *alloc_super(fs_type_s *type, int flags)
 /*
  * Drop a superblock's refcount.  The caller must hold sb_lock.
  */
-static void __put_super(super_block_s *s)
-{
-	// if (!--s->s_count) {
-	// 	list_del_init(&s->s_list);
-	// 	WARN_ON(s->s_dentry_lru.node);
-	// 	WARN_ON(s->s_inode_lru.node);
-	// 	WARN_ON(!list_is_empty_entry(&s->s_mounts));
-	// 	security_sb_free(s);
-	// 	fscrypt_sb_free(s);
-	// 	put_user_ns(s->s_user_ns);
-	// 	kfree(s->s_subtype);
-	// 	call_rcu(&s->rcu, destroy_super_rcu);
-	// }
+static void __put_super(super_block_s *s) {
+	if (!--s->s_count) {
+		// list_del_init(&s->s_list);
+		// WARN_ON(s->s_dentry_lru.node);
+		// WARN_ON(s->s_inode_lru.node);
+		// WARN_ON(!list_is_empty_entry(&s->s_mounts));
+		// security_sb_free(s);
+		// fscrypt_sb_free(s);
+		// put_user_ns(s->s_user_ns);
+		// kfree(s->s_subtype);
+		// call_rcu(&s->rcu, destroy_super_rcu);
+	}
 }
 
 /**
@@ -198,7 +197,9 @@ static void __put_super(super_block_s *s)
  */
 void put_super(super_block_s *sb)
 {
+	// spin_lock(&sb_lock);
 	__put_super(sb);
+	// spin_unlock(&sb_lock);
 }
 
 /**
@@ -223,28 +224,44 @@ super_block_s *sget_fc(fs_ctxt_s *fc)
 {
 	super_block_s *s = NULL;
 	super_block_s *old;
+	int err;
 
+retry:
+	// spin_lock(&sb_lock);
 	List_s *s_lp = &fc->fs_type->fs_supers.anchor;
-	for (List_s *lp = s_lp->next; lp != s_lp; lp = lp->next)
-	{
+	for (List_s *lp = s_lp->next; lp != s_lp; lp = lp->next) {
 		super_block_s *sbp = container_of(lp, super_block_s, s_instances);
 	}
-	if (s == NULL)
-	{
+	if (s == NULL) {
+		// spin_unlock(&sb_lock);
 		s = alloc_super(fc->fs_type, fc->sb_flags);
 		if (s == NULL)
 			return ERR_PTR(-ENOMEM);
 	}
 
 	s->s_fs_info = fc->s_fs_info;
+	// err = set(s, fc);
+	// if (err) {
+	// 	s->s_fs_info = NULL;
+	// 	spin_unlock(&sb_lock);
+	// 	destroy_unused_super(s);
+	// 	return ERR_PTR(err);
+	// }
 	fc->s_fs_info = NULL;
 	s->s_type = fc->fs_type;
 	s->s_iflags |= fc->s_iflags;
+	// strscpy(s->s_id, s->s_type->name, sizeof(s->s_id));
+	// /*
+	//  * Make the superblock visible on @super_blocks and @fs_supers.
+	//  * It's in a nascent state and users should wait on SB_BORN or
+	//  * SB_DYING to be set.
+	//  */
 	// list_add_to_prev(&s->s_list, &super_blocks);
 	// hlist_add_head(&s->s_instances, &s->s_type->fs_supers);
-	// get_filesystem(s->s_type);
+	get_filesystem(s->s_type);
 	return s;
 }
+EXPORT_SYMBOL(sget_fc);
 
 /**
  * vfs_get_super - Get a superblock with a search key set in s_fs_info.
@@ -271,12 +288,9 @@ super_block_s *sget_fc(fs_ctxt_s *fc)
  * A permissions check is made by sget_fc() unless we're getting a superblock
  * for a kernel-internal mount or a submount.
  */
-// int vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
-// 		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc))
-int myos_vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
-		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc))
-{
-	// int (*test)(super_block_s *, fs_ctxt_s *);
+int vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
+		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc)) {
+
 	super_block_s *sb;
 	int err;
 
@@ -290,21 +304,22 @@ int myos_vfs_get_super(fs_ctxt_s *fc, enum vfs_get_super_keying keying,
 			goto error;
 
 		sb->s_flags |= SB_ACTIVE;
-		fc->root = dget(sb->s_root);
 	}
 
+	fc->root = dget(sb->s_root);
 	return 0;
 
 error:
-// 	deactivate_locked_super(sb);
+	// deactivate_locked_super(sb);
 	return err;
 }
 
 int get_tree_nodev(fs_ctxt_s *fc,
 		int (*fill_super)(super_block_s *sb, fs_ctxt_s *fc))
 {
-	return myos_vfs_get_super(fc, vfs_get_independent_super, fill_super);
+	return vfs_get_super(fc, vfs_get_independent_super, fill_super);
 }
+EXPORT_SYMBOL(get_tree_nodev);
 
 static int set_bdev_super(super_block_s *s, void *data)
 {
@@ -395,6 +410,7 @@ dentry_s *mount_bdev(fs_type_s *fs_type, int flags,
 // error:
 // 	return ERR_PTR(error);
 }
+EXPORT_SYMBOL(mount_bdev);
 
 /**
  * vfs_get_tree - Get the mountable root
@@ -420,9 +436,7 @@ int vfs_get_tree(fs_ctxt_s *fc)
 		return error;
 
 	if (fc->root == NULL) {
-		// pr_err("Filesystem %s get_tree() didn't set fc->root\n", fc->fs_type->name);
-		color_printk(RED, BLACK, "Filesystem %s get_tree() didn't set fc->root\n",
-		       fc->fs_type->name);
+		pr_err("Filesystem %s get_tree() didn't set fc->root\n", fc->fs_type->name);
 		/* We don't know what the locking state of the superblock is -
 		 * if there is a superblock.
 		 */
@@ -432,14 +446,14 @@ int vfs_get_tree(fs_ctxt_s *fc)
 	sb = fc->root->d_sb;
 	// WARN_ON(!sb->s_bdi);
 
-	/*
-	 * Write barrier is for super_cache_count(). We place it before setting
-	 * SB_BORN as the data dependency between the two functions is the
-	 * superblock structure contents that we just set up, not the SB_BORN
-	 * flag.
-	 */
-	smp_wmb();
-	sb->s_flags |= SB_BORN;
+	// /*
+	//  * super_wake() contains a memory barrier which also care of
+	//  * ordering for super_cache_count(). We place it before setting
+	//  * SB_BORN as the data dependency between the two functions is
+	//  * the superblock structure contents that we just set up, not
+	//  * the SB_BORN flag.
+	//  */
+	// super_wake(sb, SB_BORN);
 
 	// error = security_sb_set_mnt_opts(sb, fc->security, 0, NULL);
 	// if (unlikely(error)) {
@@ -458,3 +472,4 @@ int vfs_get_tree(fs_ctxt_s *fc)
 
 	return 0;
 }
+EXPORT_SYMBOL(vfs_get_tree);

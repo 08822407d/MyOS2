@@ -208,6 +208,12 @@ vfsmount_s *vfs_kern_mount(fs_type_s *type, int flags,
 	fc = fs_context_for_mount(type, flags);
 	if (IS_ERR(fc))
 		return ERR_CAST(fc);
+
+	// if (name)
+	// 	ret = vfs_parse_fs_string(fc, "source", name, strlen(name));
+	// if (!ret)
+	// 	ret = parse_monolithic_mount_data(fc, data);
+
 	if (ret == 0)
 		mnt = fc_mount(fc);
 	else

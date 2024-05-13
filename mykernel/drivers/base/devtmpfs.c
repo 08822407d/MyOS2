@@ -410,24 +410,21 @@ int devtmpfs_init(void)
 {
 	char opts[] = "mode=0755";
 	int err;
-
 	INIT_LIST_HEADER_S(&internal_fs_type.fs_supers);
+
 	mnt = vfs_kern_mount(&internal_fs_type, 0, "devtmpfs", opts);
 	if (IS_ERR(mnt)) {
-		color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %ld\n",
-				PTR_ERR(mnt));
+		pr_err("devtmpfs: unable to create devtmpfs %ld\n", PTR_ERR(mnt));
 		return PTR_ERR(mnt);
 	}
 	
 	err = register_filesystem(&dev_fs_type);
 	if (err) {
-		color_printk(RED, BLACK, "devtmpfs: unable to register devtmpfs "
-				"type %i\n", err);
+		pr_err("devtmpfs: unable to register devtmpfs type %d\n", err);
 		return err;
 	}
 
 	thread = kthread_run(devtmpfsd, &err, "kdevtmpfs");
-
 	if (!IS_ERR(thread)) {
 		wait_for_completion(&setup_done);
 	} else {
@@ -437,12 +434,12 @@ int devtmpfs_init(void)
 
 	while (err);
 	
-	// if (err) {
-	// 	color_printk(RED, BLACK, "devtmpfs: unable to create devtmpfs %i\n", err);
-	// 	unregister_filesystem(&dev_fs_type);
-	// 	return err;
-	// }
+	if (err) {
+		pr_err("devtmpfs: unable to create devtmpfs %i\n", err);
+		unregister_filesystem(&dev_fs_type);
+		return err;
+	}
 
-	color_printk(WHITE, BLACK, "devtmpfs: initialized\n");
+	pr_info("devtmpfs: initialized\n");
 	return 0;
 }

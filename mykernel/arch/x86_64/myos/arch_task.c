@@ -7,6 +7,7 @@
 void kjmp_to_doexecve()
 {
 	// while (1);
+	pr_info("Now jump to initd\n");
 	
 	// here if derictly use macro:current will cause unexpected rewriting memory
 	task_s * curr = current;

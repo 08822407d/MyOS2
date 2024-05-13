@@ -36,9 +36,13 @@ static fs_type_s tmp = {.name = "filesystems", .next = NULL, .fs_flags = 0};
 fs_type_s *file_systems = &tmp;
 // static DEFINE_RWLOCK(file_systems_lock);
 
-void put_filesystem(fs_type_s *fs)
-{
-
+/* WARNING: This can be used only if we _already_ own a reference */
+fs_type_s *get_filesystem(fs_type_s *fs) {
+	// __module_get(fs->owner);
+	return fs;
+}
+void put_filesystem(fs_type_s *fs) {
+	// module_put(fs->owner);
 }
 
 static fs_type_s **find_filesystem(const char *name, unsigned len)

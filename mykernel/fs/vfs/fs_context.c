@@ -55,9 +55,9 @@ static int legacy_init_fs_context(fs_ctxt_s *fc);
  * parameters such as namespaces copied across from that superblock.
  */
 static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type,
-		dentry_s *reference, unsigned int sb_flags,
-		unsigned int sb_flags_mask, enum fs_context_purpose purpose)
-{
+		dentry_s *reference, uint sb_flags, uint sb_flags_mask,
+		enum fs_context_purpose purpose) {
+
 	int (*init_fs_context)(fs_ctxt_s *);
 	fs_ctxt_s *fc;
 	int ret = -ENOMEM;
@@ -69,7 +69,10 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type,
 	fc->purpose			= purpose;
 	fc->sb_flags		= sb_flags;
 	fc->sb_flags_mask	= sb_flags_mask;
-	fc->fs_type			= fs_type;
+	fc->fs_type			= get_filesystem(fs_type);
+	// fc->cred			= get_current_cred();
+	// fc->net_ns			= get_net(current->nsproxy->net_ns);
+	// fc->log.prefix		= fs_type->name;
 
 	switch (purpose) {
 	case FS_CONTEXT_FOR_MOUNT:
@@ -79,6 +82,7 @@ static fs_ctxt_s *alloc_fs_context(fs_type_s *fs_type,
 		// fc->user_ns = get_user_ns(reference->d_sb->s_user_ns);
 		break;
 	case FS_CONTEXT_FOR_RECONFIGURE:
+		// atomic_inc(&reference->d_sb->s_active);
 		// fc->user_ns = get_user_ns(reference->d_sb->s_user_ns);
 		fc->root = dget(reference);
 		break;
@@ -118,8 +122,13 @@ void put_fs_context(fs_ctxt_s *fc)
 	if (fc->need_free && fc->ops && fc->ops->free)
 		fc->ops->free(fc);
 
+	// security_free_mnt_opts(&fc->security);
+	// put_net(fc->net_ns);
+	// put_user_ns(fc->user_ns);
+	// put_cred(fc->cred);
+	// put_fc_log(fc);
 	put_filesystem(fc->fs_type);
-	kfree((void *)fc->source);
+	kfree((const void *)fc->source);
 	kfree(fc);
 }
 
@@ -158,8 +167,7 @@ const fs_ctxt_ops_s legacy_fs_context_ops = {
  * Initialise a legacy context for a filesystem that doesn't support
  * fs_context.
  */
-static int legacy_init_fs_context(fs_ctxt_s *fc)
-{
+static int legacy_init_fs_context(fs_ctxt_s *fc) {
 	fc->fs_private = kzalloc(sizeof(legacy_fs_ctx_s), GFP_KERNEL);
 	if (fc->fs_private == NULL)
 		return -ENOMEM;
@@ -167,9 +175,7 @@ static int legacy_init_fs_context(fs_ctxt_s *fc)
 	return 0;
 }
 
-fs_ctxt_s *fs_context_for_mount(fs_type_s *fs_type,
-				unsigned int sb_flags)
-{
-	return alloc_fs_context(fs_type, NULL, sb_flags, 0,
-					FS_CONTEXT_FOR_MOUNT);
+fs_ctxt_s *fs_context_for_mount(fs_type_s *fs_type, uint sb_flags) {
+	return alloc_fs_context(fs_type, NULL, sb_flags,
+				0, FS_CONTEXT_FOR_MOUNT);
 }

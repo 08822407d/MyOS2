@@ -2368,8 +2368,9 @@
 	// int get_anon_bdev(dev_t *);
 	// void free_anon_bdev(dev_t);
 	// super_block_s *sget_fc(fs_ctxt_s *fc,
-	// 				int (*test)(super_block_s *, fs_ctxt_s *),
-	// 				int (*set)(super_block_s *, fs_ctxt_s *));
+	// 		int (*test)(super_block_s *, fs_ctxt_s *),
+	// 		int (*set)(super_block_s *, fs_ctxt_s *));
+	super_block_s *sget_fc(fs_ctxt_s *fc);
 	// super_block_s *sget(fs_type_s *type,
 	// 			int (*test)(super_block_s *,void *),
 	// 			int (*set)(super_block_s *,void *),
@@ -3181,7 +3182,7 @@
 	// extern const char *vfs_get_link(dentry_s *, struct delayed_call *);
 	// extern int vfs_readlink(dentry_s *, char __user *, int);
 
-	// extern fs_type_s *get_filesystem(fs_type_s *fs);
+	extern fs_type_s *get_filesystem(fs_type_s *fs);
 	extern void put_filesystem(fs_type_s *fs);
 	extern fs_type_s *get_fs_type(const char *name);
 	// extern super_block_s *get_super(struct block_device *);

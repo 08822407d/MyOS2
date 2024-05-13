@@ -818,7 +818,7 @@ extern void myos_init_video();
 	// 	ce++;
 	// }
 
-	pr_info("Printk available now.");
+	pr_info("Printk available now.\n");
 }
 
 
