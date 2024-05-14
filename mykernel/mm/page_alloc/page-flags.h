@@ -80,99 +80,6 @@
 	 * not safe since it may cause another machine check. Don't touch!
 	 */
 
-	/*
-	 * Don't use the pageflags directly.  Use the PageFoo macros.
-	 *
-	 * The page flags field is split into two parts, the main flags area
-	 * which extends from the low bits upwards, and the fields area which
-	 * extends from the high bits downwards.
-	 *
-	 *  | FIELD | ... | FLAGS |
-	 *  N-1           ^       0
-	 *               (NR_PAGEFLAGS)
-	 *
-	 * The fields area is reserved for fields mapping zone, node (for NUMA) and
-	 * SPARSEMEM section (for variants of SPARSEMEM that require section ids like
-	 * SPARSEMEM_EXTREME with !SPARSEMEM_VMEMMAP).
-	 */
-	// detailed explanations:
-	// https://www.kernel.org/doc/html/latest/admin-guide/mm/pagemap.html?highlight=kpageflags
-	enum pageflags {
-		PG_locked,			/* Page is locked. Don't touch. */
-		PG_referenced,
-		PG_uptodate,
-		PG_dirty,
-		PG_lru,
-		PG_active,
-		PG_workingset,
-		PG_waiters,			/* Page has waiters, check its waitqueue. Must be bit #7 and in the same byte as "PG_locked" */
-		PG_error,
-		PG_slab,
-		PG_owner_priv_1,	/* Owner use. If pagecache, fs may use*/
-		PG_arch_1,
-		PG_reserved,
-		PG_private,			/* If pagecache, has fs-private data */
-		PG_private_2,		/* If pagecache, has fs aux data */
-		PG_writeback,		/* Page is under writeback */
-		PG_head,			/* A head page */
-		PG_mappedtodisk,	/* Has blocks allocated on-disk */
-		PG_reclaim,			/* To be reclaimed asap */
-		PG_swapbacked,		/* Page is backed by RAM/swap */
-		PG_unevictable,		/* Page is "unevictable"  */
-		PG_mlocked,			/* Page is vma mlocked */
-	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
-		PG_uncached,		/* Page has been mapped as uncached */
-	#endif
-	#ifdef CONFIG_MEMORY_FAILURE
-		PG_hwpoison,		/* hardware poisoned page. Don't touch */
-	#endif
-	#if defined(CONFIG_PAGE_IDLE_FLAG)
-		PG_young,
-		PG_idle,
-	#endif
-		PG_arch_2,
-	#ifdef CONFIG_KASAN_HW_TAGS
-		PG_skip_kasan_poison,
-	#endif
-		__NR_PAGEFLAGS,
-
-		PG_readahead	= PG_reclaim,
-		/* Filesystems */
-		PG_checked		= PG_owner_priv_1,
-		/* SwapBacked */
-		PG_swapcache	= PG_owner_priv_1, /* Swap page: swp_entry_t in private */
-		/* Two page bits are conscripted by FS-Cache to maintain local caching
-		* state.  These bits are set on pages belonging to the netfs's inodes
-		* when those inodes are being locally cached.
-		*/
-		PG_fscache		= PG_private_2, /* page backed by cache */
-		/* XEN */
-		/* Pinned in Xen as a read-only pagetable page. */
-		PG_pinned		= PG_owner_priv_1,
-		/* Pinnedl as part of domain save (see xen_mm_pin_all()). */
-		PG_savepinned	= PG_dirty,
-		/* Has a grant mapping of another (foreign) domain's page. */
-		PG_foreign		= PG_owner_priv_1,
-		/* Remapped by swiotlb-xen. */
-		PG_xen_remapped	= PG_owner_priv_1,
-		/* SLOB */
-		PG_slob_free	= PG_private,
-		/* Compound pages. Stored in first tail page's flags */
-		PG_double_map	= PG_workingset,
-	#ifdef CONFIG_MEMORY_FAILURE
-		/*
-		 * Compound pages. Stored in first tail page's flags.
-		 * Indicates that at least one subpage is hwpoisoned in the
-		 * THP.
-		 */
-		PG_has_hwpoisoned	= PG_mappedtodisk,
-	#endif
-		/* non-lru isolated movable page */
-		PG_isolated		= PG_reclaim,
-		/* Only valid for buddy pages. Used to track pages that are reported */
-		PG_reported		= PG_uptodate,
-	};
-
 	#define PAGEFLAGS_MASK ((1UL << NR_PAGEFLAGS) - 1)
 
 	#ifndef __GENERATING_BOUNDS_H
@@ -218,21 +125,21 @@
 		 */
 	#	define folio_page(folio, n)	nth_page(&(folio)->page, n)
 
-		static __always_inline int PageTail(page_s *page)
-		{
-			return READ_ONCE(page->compound_head) & 1;
-		}
+		// static __always_inline int PageTail(page_s *page)
+		// {
+		// 	return READ_ONCE(page->compound_head) & 1;
+		// }
 
-		static __always_inline int PageCompound(page_s *page)
-		{
-			return test_bit(PG_head, &page->flags) || PageTail(page);
-		}
+		// static __always_inline int PageCompound(page_s *page)
+		// {
+		// 	return test_bit(PG_head, &page->flags) || PageTail(page);
+		// }
 
-	#	define PAGE_POISON_PATTERN -1L
-		static inline int
-		PagePoisoned(const page_s *page) {
-			return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
-		}
+	// #	define PAGE_POISON_PATTERN -1L
+	// 	static inline int
+	// 	PagePoisoned(const page_s *page) {
+	// 		return READ_ONCE(page->flags) == PAGE_POISON_PATTERN;
+	// 	}
 
 	// 	#ifdef CONFIG_DEBUG_VM
 	// 		void page_init_poison(page_s *page, size_t size);
@@ -459,38 +366,36 @@
 					TESTSETFLAG_FALSE(uname, lname)		\
 					TESTCLEARFLAG_FALSE(uname, lname)
 
-		__PAGEFLAG(Locked, locked, PF_NO_TAIL)
+		// __PAGEFLAG(Locked, locked, PF_NO_TAIL)
 
-		PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
-		__CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+		// PAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
+		// __CLEARPAGEFLAG(Waiters, waiters, PF_ONLY_HEAD)
 
-		PAGEFLAG(Error, error, PF_NO_TAIL)
-		TESTCLEARFLAG(Error, error, PF_NO_TAIL)
+		// PAGEFLAG(Error, error, PF_NO_TAIL)
+		// TESTCLEARFLAG(Error, error, PF_NO_TAIL)
 
-		PAGEFLAG(Referenced, referenced, PF_HEAD)
-		TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
-		__SETPAGEFLAG(Referenced, referenced, PF_HEAD)
+		// PAGEFLAG(Referenced, referenced, PF_HEAD)
+		// TESTCLEARFLAG(Referenced, referenced, PF_HEAD)
+		// __SETPAGEFLAG(Referenced, referenced, PF_HEAD)
 
-		PAGEFLAG(Dirty, dirty, PF_HEAD)
-		TESTSCFLAG(Dirty, dirty, PF_HEAD)
-		__CLEARPAGEFLAG(Dirty, dirty, PF_HEAD)
+		// PAGEFLAG(Dirty, dirty, PF_HEAD)
+		// TESTSCFLAG(Dirty, dirty, PF_HEAD)
+		// __CLEARPAGEFLAG(Dirty, dirty, PF_HEAD)
 
-		PAGEFLAG(LRU, lru, PF_HEAD)
-		__CLEARPAGEFLAG(LRU, lru, PF_HEAD)
-		TESTCLEARFLAG(LRU, lru, PF_HEAD)
+		// PAGEFLAG(LRU, lru, PF_HEAD)
+		// __CLEARPAGEFLAG(LRU, lru, PF_HEAD)
+		// TESTCLEARFLAG(LRU, lru, PF_HEAD)
 
-		PAGEFLAG(Active, active, PF_HEAD)
-		__CLEARPAGEFLAG(Active, active, PF_HEAD)
-		TESTCLEARFLAG(Active, active, PF_HEAD)
+		// PAGEFLAG(Active, active, PF_HEAD)
+		// __CLEARPAGEFLAG(Active, active, PF_HEAD)
+		// TESTCLEARFLAG(Active, active, PF_HEAD)
 
-		PAGEFLAG(Workingset, workingset, PF_HEAD)
-		TESTCLEARFLAG(Workingset, workingset, PF_HEAD)
+		// PAGEFLAG(Workingset, workingset, PF_HEAD)
+		// TESTCLEARFLAG(Workingset, workingset, PF_HEAD)
 
 		__PAGEFLAG(Slab, slab, PF_NO_TAIL)
 
-		__PAGEFLAG(SlobFree, slob_free, PF_NO_TAIL)
-
-		PAGEFLAG(Checked, checked, PF_NO_COMPOUND) /* Used by some filesystems */
+		// PAGEFLAG(Checked, checked, PF_NO_COMPOUND) /* Used by some filesystems */
 
 		// /* Xen */
 		// PAGEFLAG(Pinned, pinned, PF_NO_COMPOUND)
@@ -511,36 +416,36 @@
 		// __CLEARPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
 		// __SETPAGEFLAG(SwapBacked, swapbacked, PF_NO_TAIL)
 
-		/*
-		 * Private page markings that may be used by the filesystem that owns the page
-		 * for its own purposes.
-		 * - PG_private and PG_private_2 cause releasepage() and co to be invoked
-		 */
-		PAGEFLAG(Private, private, PF_ANY)
+		// /*
+		//  * Private page markings that may be used by the filesystem that owns the page
+		//  * for its own purposes.
+		//  * - PG_private and PG_private_2 cause releasepage() and co to be invoked
+		//  */
+		// PAGEFLAG(Private, private, PF_ANY)
 
-		PAGEFLAG(Private2, private_2, PF_ANY)
-		TESTSCFLAG(Private2, private_2, PF_ANY)
+		// PAGEFLAG(Private2, private_2, PF_ANY)
+		// TESTSCFLAG(Private2, private_2, PF_ANY)
 
-		PAGEFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
-		TESTCLEARFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
+		// PAGEFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
+		// TESTCLEARFLAG(OwnerPriv1, owner_priv_1, PF_ANY)
 
-		/*
-		 * Only test-and-set exist for PG_writeback.  The unconditional operators are
-		 * risky: they bypass page accounting.
-		 */
-		TESTPAGEFLAG(Writeback, writeback, PF_NO_TAIL)
-		TESTSCFLAG(Writeback, writeback, PF_NO_TAIL)
+		// /*
+		//  * Only test-and-set exist for PG_writeback.  The unconditional operators are
+		//  * risky: they bypass page accounting.
+		//  */
+		// TESTPAGEFLAG(Writeback, writeback, PF_NO_TAIL)
+		// TESTSCFLAG(Writeback, writeback, PF_NO_TAIL)
 
-		PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
+		// PAGEFLAG(MappedToDisk, mappedtodisk, PF_NO_TAIL)
 
-		/* PG_readahead is only used for reads; PG_reclaim is only for writes */
-		PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
-		TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
+		// /* PG_readahead is only used for reads; PG_reclaim is only for writes */
+		// PAGEFLAG(Reclaim, reclaim, PF_NO_TAIL)
+		// TESTCLEARFLAG(Reclaim, reclaim, PF_NO_TAIL)
 
-		PAGEFLAG(Readahead, readahead, PF_NO_COMPOUND)
-		TESTCLEARFLAG(Readahead, readahead, PF_NO_COMPOUND)
+		// PAGEFLAG(Readahead, readahead, PF_NO_COMPOUND)
+		// TESTCLEARFLAG(Readahead, readahead, PF_NO_COMPOUND)
 
-		PAGEFLAG_FALSE(HighMem, highmem)
+		// PAGEFLAG_FALSE(HighMem, highmem)
 
 		// static __always_inline bool
 		// folio_test_swapcache(folio_s *folio) {
@@ -553,13 +458,13 @@
 		// 	return folio_test_swapcache(page_folio(page));
 		// }
 
-		SETPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
-		CLEARPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
+		// SETPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
+		// CLEARPAGEFLAG(SwapCache, swapcache, PF_NO_TAIL)
 
 
-		PAGEFLAG(Unevictable, unevictable, PF_HEAD)
-		__CLEARPAGEFLAG(Unevictable, unevictable, PF_HEAD)
-		TESTCLEARFLAG(Unevictable, unevictable, PF_HEAD)
+		// PAGEFLAG(Unevictable, unevictable, PF_HEAD)
+		// __CLEARPAGEFLAG(Unevictable, unevictable, PF_HEAD)
+		// TESTCLEARFLAG(Unevictable, unevictable, PF_HEAD)
 
 	// 		PAGEFLAG(Mlocked, mlocked, PF_NO_TAIL)
 	// 		__CLEARPAGEFLAG(Mlocked, mlocked, PF_NO_TAIL)
@@ -598,13 +503,13 @@
 	// 		PAGEFLAG_FALSE(SkipKASanPoison, skip_kasan_poison)
 	// 	#endif
 
-		/*
-		 * PageReported() is used to track reported free pages within the Buddy
-		 * allocator. We can use the non-atomic version of the test and set
-		 * operations as both should be shielded with the zone lock to prevent
-		 * any possible races on the setting or clearing of the bit.
-		 */
-		__PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
+		// /*
+		//  * PageReported() is used to track reported free pages within the Buddy
+		//  * allocator. We can use the non-atomic version of the test and set
+		//  * operations as both should be shielded with the zone lock to prevent
+		//  * any possible races on the setting or clearing of the bit.
+		//  */
+		// __PAGEFLAG(Reported, reported, PF_NO_COMPOUND)
 
 	// 	/*
 	// 	* On an anonymous page mapped into a user virtual memory area,
@@ -731,7 +636,7 @@
 	// 		folio_mark_uptodate((folio_s *)page);
 	// 	}
 
-		CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
+		// CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
 
 	// 	bool __folio_start_writeback(folio_s *folio, bool keep_write);
 	// 	bool set_page_writeback(page_s *page);
@@ -909,10 +814,10 @@
 						(PAGE_TYPE_BASE | flag)) ==	\
 					PAGE_TYPE_BASE)
 
-		static inline int
-		page_has_type(page_s *page) {
-			return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
-		}
+		// static inline int
+		// page_has_type(page_s *page) {
+		// 	return (int)page->page_type < PAGE_MAPCOUNT_RESERVE;
+		// }
 
 		#define PAGE_TYPE_OPS(uname, lname)							\
 					static __always_inline int						\
@@ -936,44 +841,44 @@
 		 */
 		PAGE_TYPE_OPS(Buddy, buddy)
 
-		/*
-		 * PageOffline() indicates that the page is logically offline although the
-		 * containing section is online. (e.g. inflated in a balloon driver or
-		 * not onlined when onlining the section).
-		 * The content of these pages is effectively stale. Such pages should not
-		 * be touched (read/write/dump/save) except by their owner.
-		 *
-		 * If a driver wants to allow to offline unmovable PageOffline() pages without
-		 * putting them back to the buddy, it can do so via the memory notifier by
-		 * decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
-		 * reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
-		 * pages (now with a reference count of zero) are treated like free pages,
-		 * allowing the containing memory block to get offlined. A driver that
-		 * relies on this feature is aware that re-onlining the memory block will
-		 * require to re-set the pages PageOffline() and not giving them to the
-		 * buddy via online_page_callback_t.
-		 *
-		 * There are drivers that mark a page PageOffline() and expect there won't be
-		 * any further access to page content. PFN walkers that read content of random
-		 * pages should check PageOffline() and synchronize with such drivers using
-		 * page_offline_freeze()/page_offline_thaw().
-		 */
-		PAGE_TYPE_OPS(Offline, offline)
+	// 	/*
+	// 	 * PageOffline() indicates that the page is logically offline although the
+	// 	 * containing section is online. (e.g. inflated in a balloon driver or
+	// 	 * not onlined when onlining the section).
+	// 	 * The content of these pages is effectively stale. Such pages should not
+	// 	 * be touched (read/write/dump/save) except by their owner.
+	// 	 *
+	// 	 * If a driver wants to allow to offline unmovable PageOffline() pages without
+	// 	 * putting them back to the buddy, it can do so via the memory notifier by
+	// 	 * decrementing the reference count in MEM_GOING_OFFLINE and incrementing the
+	// 	 * reference count in MEM_CANCEL_OFFLINE. When offlining, the PageOffline()
+	// 	 * pages (now with a reference count of zero) are treated like free pages,
+	// 	 * allowing the containing memory block to get offlined. A driver that
+	// 	 * relies on this feature is aware that re-onlining the memory block will
+	// 	 * require to re-set the pages PageOffline() and not giving them to the
+	// 	 * buddy via online_page_callback_t.
+	// 	 *
+	// 	 * There are drivers that mark a page PageOffline() and expect there won't be
+	// 	 * any further access to page content. PFN walkers that read content of random
+	// 	 * pages should check PageOffline() and synchronize with such drivers using
+	// 	 * page_offline_freeze()/page_offline_thaw().
+	// 	 */
+	// 	PAGE_TYPE_OPS(Offline, offline)
 
-	// 	extern void page_offline_freeze(void);
-	// 	extern void page_offline_thaw(void);
-	// 	extern void page_offline_begin(void);
-	// 	extern void page_offline_end(void);
+	// // 	extern void page_offline_freeze(void);
+	// // 	extern void page_offline_thaw(void);
+	// // 	extern void page_offline_begin(void);
+	// // 	extern void page_offline_end(void);
 
 		/*
 		 * Marks pages in use as page tables.
 		 */
 		PAGE_TYPE_OPS(Table, table)
 
-		/*
-		 * Marks guardpages used with debug_pagealloc.
-		 */
-		PAGE_TYPE_OPS(Guard, guard)
+	// 	/*
+	// 	 * Marks guardpages used with debug_pagealloc.
+	// 	 */
+	// 	PAGE_TYPE_OPS(Guard, guard)
 
 	// 	extern bool is_free_buddy_page(page_s *page);
 
