@@ -1,15 +1,15 @@
-//==========================================
-	.align	8
-header_tag_request_info_start:
-	.short	MULTIBOOT_HEADER_TAG_INFORMATION_REQUEST
-	.short	0
-	.long	header_tag_request_info_end - header_tag_request_info_start
-	.long	MULTIBOOT_TAG_TYPE_MMAP
-	.long	MULTIBOOT_TAG_TYPE_VBE
-	.long	MULTIBOOT_TAG_TYPE_FRAMEBUFFER
-	.long	MULTIBOOT_TAG_TYPE_EFI_MMAP
-header_tag_request_info_end:
-//============================================
+// //==========================================
+// 	.align	8
+// header_tag_request_info_start:
+// 	.short	MULTIBOOT_HEADER_TAG_INFORMATION_REQUEST
+// 	.short	0
+// 	.long	header_tag_request_info_end - header_tag_request_info_start
+// 	.long	MULTIBOOT_TAG_TYPE_MMAP
+// 	.long	MULTIBOOT_TAG_TYPE_VBE
+// 	.long	MULTIBOOT_TAG_TYPE_FRAMEBUFFER
+// 	.long	MULTIBOOT_TAG_TYPE_EFI_MMAP
+// header_tag_request_info_end:
+// //============================================
 //===========================================
 	.align	8
 header_tag_framebuffer_start:

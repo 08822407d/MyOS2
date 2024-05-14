@@ -484,7 +484,7 @@ memblock_free_pages(page_s *page, ulong pfn, uint order)
 		// __ClearPageReserved(p);
 		// set_page_count(p, 0);
 
-		atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
+		// atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
 
 		/*
 		 * Bypass PCP and place fresh pages right to the tail, primarily

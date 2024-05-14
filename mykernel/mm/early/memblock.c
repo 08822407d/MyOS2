@@ -1,4 +1,4 @@
-// source: linux-6.4.9
+// source: linux-6.6.30
 #define MEMBLOCK_DEFINATION
 #include "memblock.h"
 
@@ -274,14 +274,12 @@ simple_mmblk_add_range(IN mmblk_type_s *type, phys_addr_t base,
  */
 // int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
 __init_memblock int
-simple_mmblk_add(phys_addr_t base, phys_addr_t size)
-{
+simple_mmblk_add(phys_addr_t base, phys_addr_t size) {
 	return simple_mmblk_add_range(&memblock.memory, base, size, 0);
 }
 // int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
 __init_memblock int
-simple_mmblk_reserve(phys_addr_t base, phys_addr_t size)
-{
+simple_mmblk_reserve(phys_addr_t base, phys_addr_t size) {
 	return simple_mmblk_add_range(&memblock.reserved, base, size, 0);
 }
 
@@ -293,20 +291,13 @@ static bool
 should_skip_region(IN mmblk_type_s *type,
 		IN mmblk_rgn_s *m, enum mmblk_flags flags) {
 
-	// int m_nid = memblock_get_region_node(m);
-
 	/* we never skip regions when iterating memblock.reserved or physmem */
 	if (type != &memblock.memory)
 		return false;
 
-	// /* only memory regions are associated with nodes, check it */
-	// if (nid != NUMA_NO_NODE && nid != m_nid)
-	// 	return true;
-
-	// /* skip hotpluggable memory regions if needed */
-	// if (movable_node_is_enabled() && memblock_is_hotpluggable(m) &&
-	// 	!(flags & MEMBLOCK_HOTPLUG))
-	// 	return true;
+	/* skip hotpluggable memory regions if needed */
+	if (!(flags & MEMBLOCK_HOTPLUG) && memblock_is_hotpluggable(m))
+		return true;
 
 	/* if we want mirror memory skip non-mirror memory regions */
 	if ((flags & MEMBLOCK_MIRROR) && !memblock_is_mirror(m))
@@ -561,8 +552,7 @@ __init static void
 // void *__init memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
 //			    phys_addr_t min_addr, phys_addr_t max_addr, int nid)
 __init void
-*memblock_alloc(phys_addr_t size, phys_addr_t align)
-{
+*memblock_alloc(phys_addr_t size, phys_addr_t align) {
 	void *ptr = memblock_alloc_internal(size, align,
 			MEMBLOCK_LOW_LIMIT, MEMBLOCK_ALLOC_ACCESSIBLE);
 	if (ptr)
@@ -572,8 +562,7 @@ __init void
 }
 
 void *
-myos_memblock_alloc_DMA32(size_t size, size_t align)
-{
+myos_memblock_alloc_DMA32(size_t size, size_t align) {
 	void *ptr = memblock_alloc_internal(size, align,
 			MAX_DMA_PFN << PAGE_SHIFT, MAX_DMA32_PFN << PAGE_SHIFT);
 	if (ptr)
@@ -583,8 +572,7 @@ myos_memblock_alloc_DMA32(size_t size, size_t align)
 }
 
 void *
-myos_memblock_alloc_DMA(size_t size, size_t align)
-{
+myos_memblock_alloc_DMA(size_t size, size_t align) {
 	void *ptr = memblock_alloc_internal(size, align,
 			MEMBLOCK_LOW_LIMIT, MAX_DMA_PFN << PAGE_SHIFT);
 	if (ptr)
@@ -594,8 +582,7 @@ myos_memblock_alloc_DMA(size_t size, size_t align)
 }
 
 void *
-myos_memblock_alloc_normal(size_t size, size_t align)
-{
+myos_memblock_alloc_normal(size_t size, size_t align) {
 	void *ptr = memblock_alloc_internal(size, align,
 			MAX_DMA_PFN << PAGE_SHIFT, MEMBLOCK_ALLOC_ACCESSIBLE);
 	if (ptr)
@@ -605,8 +592,7 @@ myos_memblock_alloc_normal(size_t size, size_t align)
 }
 
 __init_memblock void
-memblock_trim_memory(phys_addr_t align)
-{
+memblock_trim_memory(phys_addr_t align) {
 	phys_addr_t start, end, orig_start, orig_end;
 	mmblk_rgn_s *r;
 
@@ -631,17 +617,14 @@ memblock_trim_memory(phys_addr_t align)
 }
 
 
-/*==============================================================================================*
- *								early init fuctions for buddy system							*
- *==============================================================================================*/
 /*
  * Common iterator interface used to define for_each_mem_pfn_range().
  */
 __init_memblock void
 __next_mem_pfn_range(OUT int *idx,
 		OUT ulong *out_start_pfn,
-		OUT ulong *out_end_pfn)
-{
+		OUT ulong *out_end_pfn) {
+
 	mmblk_type_s *type = &memblock.memory;
 	mmblk_rgn_s *r;
 	while (++*idx < type->cnt) {
@@ -660,79 +643,69 @@ __next_mem_pfn_range(OUT int *idx,
 		*out_end_pfn = PFN_DOWN(r->base + r->size);
 }
 
+
+
+
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
+// Mark all pages in reserved regions "Reserved"
 __init static void
 memmap_init_reserved_pages(void) {
 	mmblk_rgn_s *region;
 	phys_addr_t start, end;
 	u64 i = 0;
 
-	/* initialize struct pages for the reserved regions */
-	for_each_memblock_type(i, &memblock.reserved, region)
-		reserve_bootmem_region(region->base, region->base + region->size);
-
-	/* and also treat struct pages for the NOMAP regions as PageReserved */
-	for_each_memory_region(region) {
-		if (region->flags & MEMBLOCK_NOMAP) {
-			start = region->base;
-			end = start + region->size;
-			reserve_bootmem_region(start, end);
-		}
-	}
-}
-
-__init static unsigned long
-free_low_memory_core_early(void) {
-	ulong count = 0;
-	phys_addr_t start, end;
-	uint64_t i = 0;
-
-	memmap_init_reserved_pages();
-	/*
-	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
-	 *  because in some case like Node0 doesn't have RAM installed
-	 *  low ram will be on Node1
-	 */
-	for_each_free_mem_range (i, MEMBLOCK_NONE, &start, &end) {
-	// count += __free_memory_core(start, end);
-	// static unsigned long __init __free_memory_core(
-	// 		phys_addr_t start, phys_addr_t end)
-	// {
-		ulong start_pfn = PFN_UP(start);
-		ulong end_pfn = min_t(ulong, PFN_DOWN(end), max_low_pfn);
-
-		if (start_pfn >= end_pfn)
-			continue;
-
-		count += end_pfn - start_pfn;
-		// static void __init __free_pages_memory(
-		// 		unsigned long start, unsigned long end)
-		// {
-			int order;
-			while (start_pfn < end_pfn) {
-				order = min(MAX_ORDER - 1UL, __ffs(start_pfn));
-				while (start_pfn + (1UL << order) > end_pfn)
-					order--;
-				memblock_free_pages(pfn_to_page(start_pfn), start_pfn, order);
-				start_pfn += (1UL << order);
-			}
-		// }
+	// /*
+	//  * set nid on all reserved pages and also treat struct
+	//  * pages for the NOMAP regions as PageReserved
+	//  */
+	// for_each_memory_region(region) {
+	// 	start = region->base;
+	// 	end = start + region->size;
+	// 	if (memblock_is_nomap(region))
+	// 		reserve_bootmem_region(start, end);
 	// }
-	}
 
-	return count;
+	/* initialize struct pages for the reserved regions */
+	for_each_memblock_type(i, &memblock.reserved, region) {
+		start = region->base;
+		end = start + region->size;
+		reserve_bootmem_region(region->base, region->base + region->size);
+	}
 }
 
 /**
  * memblock_free_all - release free pages to the buddy allocator
  */
 __init void
-memblock_free_all(void)
-{
+memblock_free_all(void) {
 	ulong pages;
+	uint64_t i = 0;
+	phys_addr_t start, end;
 
-	// free_unused_memmap();
-	// reset_all_zones_managed_pages();
+	memmap_init_reserved_pages();
 
-	pages = free_low_memory_core_early();
-	// totalram_pages_add(pages);
+	/*
+	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
+	 *  because in some case like Node0 doesn't have RAM installed
+	 *  low ram will be on Node1
+	 */
+	for_each_free_mem_range (i, MEMBLOCK_NONE, &start, &end) {
+		ulong start_pfn = PFN_UP(start);
+		ulong end_pfn = min_t(ulong, PFN_DOWN(end), max_low_pfn);
+		if (start_pfn >= end_pfn)
+			continue;
+
+		pages += end_pfn - start_pfn;
+
+		// Cut regions to fit page^order bound
+		while (start_pfn < end_pfn) {
+		int order = min(MAX_ORDER - 1UL, __ffs(start_pfn));
+			while (start_pfn + (1UL << order) > end_pfn)
+				order--;
+			memblock_free_pages(pfn_to_page(start_pfn), start_pfn, order);
+			start_pfn += (1UL << order);
+		}
+	}
 }
