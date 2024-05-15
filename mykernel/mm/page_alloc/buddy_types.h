@@ -3,6 +3,8 @@
 
 	#include "../mm_type_declaration.h"
 
+	#include "page-flags_types.h"
+
 
 	/*
 	 * Each physical page in the system has a page_s associated with
@@ -39,153 +41,6 @@
 	 */
 	#define _struct_page_alignment __aligned(2 * sizeof(ulong))
 
-
-	/*
-	 * Don't use the pageflags directly.  Use the PageFoo macros.
-	 *
-	 * The page flags field is split into two parts, the main flags area
-	 * which extends from the low bits upwards, and the fields area which
-	 * extends from the high bits downwards.
-	 *
-	 *  | FIELD | ... | FLAGS |
-	 *  N-1           ^       0
-	 *               (NR_PAGEFLAGS)
-	 *
-	 * The fields area is reserved for fields mapping zone, node (for NUMA) and
-	 * SPARSEMEM section (for variants of SPARSEMEM that require section ids like
-	 * SPARSEMEM_EXTREME with !SPARSEMEM_VMEMMAP).
-	 */
-	// detailed explanations:
-	// https://www.kernel.org/doc/html/latest/admin-guide/mm/pagemap.html?highlight=kpageflags
-	enum pageflags {
-		PG_locked,			/* Page is locked. Don't touch. */
-		PG_writeback,		/* Page is under writeback */
-		PG_referenced,
-		PG_uptodate,
-		PG_dirty,
-		PG_lru,
-		PG_head,			/* Must be in bit 6 */
-		PG_waiters,			/* Page has waiters, check its waitqueue. Must be bit #7 and in the same byte as "PG_locked" */
-		PG_active,
-		PG_workingset,
-		PG_error,
-		PG_slab,
-		PG_owner_priv_1,	/* Owner use. If pagecache, fs may use*/
-		PG_arch_1,
-		PG_reserved,
-		PG_private,			/* If pagecache, has fs-private data */
-		PG_private_2,		/* If pagecache, has fs aux data */
-		PG_mappedtodisk,	/* Has blocks allocated on-disk */
-		PG_reclaim,			/* To be reclaimed asap */
-		PG_swapbacked,		/* Page is backed by RAM/swap */
-		PG_unevictable,		/* Page is "unevictable"  */
-	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
-		PG_uncached,		/* Page has been mapped as uncached */
-	#endif
-	#ifdef CONFIG_MEMORY_FAILURE
-		PG_hwpoison,		/* hardware poisoned page. Don't touch */
-	#endif
-	#if defined(CONFIG_PAGE_IDLE_FLAG)
-		PG_young,
-		PG_idle,
-	#endif
-	#ifdef CONFIG_ARCH_USES_PG_ARCH_X
-		PG_arch_2,
-		PG_arch_3,
-	#endif
-		__NR_PAGEFLAGS,
-
-		PG_readahead		= PG_reclaim,
-
-		/*
-		* Depending on the way an anonymous folio can be mapped into a page
-		* table (e.g., single PMD/PUD/CONT of the head page vs. PTE-mapped
-		* THP), PG_anon_exclusive may be set only for the head page or for
-		* tail pages of an anonymous folio. For now, we only expect it to be
-		* set on tail pages for PTE-mapped THP.
-		*/
-		PG_anon_exclusive	= PG_mappedtodisk,
-
-		/* Filesystems */
-		PG_checked			= PG_owner_priv_1,
-
-		/* SwapBacked */
-		PG_swapcache		= PG_owner_priv_1,	/* Swap page: swp_entry_t in private */
-
-		/* Two page bits are conscripted by FS-Cache to maintain local caching
-		* state.  These bits are set on pages belonging to the netfs's inodes
-		* when those inodes are being locally cached.
-		*/
-		PG_fscache			= PG_private_2,	/* page backed by cache */
-
-		/* XEN */
-		/* Pinned in Xen as a read-only pagetable page. */
-		PG_pinned			= PG_owner_priv_1,
-		/* Pinned as part of domain save (see xen_mm_pin_all()). */
-		PG_savepinned		= PG_dirty,
-		/* Has a grant mapping of another (foreign) domain's page. */
-		PG_foreign			= PG_owner_priv_1,
-		/* Remapped by swiotlb-xen. */
-		PG_xen_remapped		= PG_owner_priv_1,
-
-		/* non-lru isolated movable page */
-		PG_isolated			= PG_reclaim,
-
-		/* Only valid for buddy pages. Used to track pages that are reported */
-		PG_reported			= PG_uptodate,
-
-		/*
-		* Flags only valid for compound pages.  Stored in first tail page's
-		* flags word.  Cannot use the first 8 flags or any flag marked as
-		* PF_ANY.
-		*/
-
-		/* At least one page in this folio has the hwpoison flag set */
-		PG_has_hwpoisoned	= PG_error,
-		PG_large_rmappable	= PG_workingset, /* anon or file-backed */
-	};
-
-	typedef struct __attribute__((packed)) {
-		unsigned long
-			PG_locked		:1,
-			PG_referenced	:1,
-			PG_uptodate		:1,
-			PG_dirty		:1,
-			PG_lru			:1,
-			PG_active		:1,
-			PG_workingset	:1,
-			PG_waiters		:1,
-			PG_error		:1,
-			PG_slab			:1,
-			PG_owner_priv_1	:1,
-			PG_arch_1		:1,
-			PG_reserved		:1,
-			PG_private		:1,
-			PG_private_2	:1,
-			PG_writeback	:1,
-			PG_head			:1,
-			PG_mappedtodisk	:1,
-			PG_reclaim		:1,
-			PG_swapbacked	:1,
-			PG_unevictable	:1,
-			PG_mlocked		:1,/* Page is vma mlocked */
-		#ifdef CONFIG_ARCH_USES_PG_UNCACHED
-			PG_uncached		:1,/* Page has been mapped as uncached */
-		#endif
-		#ifdef CONFIG_MEMORY_FAILURE
-			PG_hwpoison		:1,/* hardware poisoned page. Don't touch */
-		#endif
-		#if defined(CONFIG_PAGE_IDLE_FLAG)
-			PG_young		:1,
-			PG_idle			:1,
-		#endif
-			PG_arch_2		:1
-		#ifdef CONFIG_KASAN_HW_TAGS
-			,
-			PG_skip_kasan_poison	:1,
-		#endif
-			;
-	} pgflag_defs_s;
 
 	typedef struct page {
 		union {	// 为了方便debug，增加了按位定义的union
@@ -316,7 +171,7 @@
 	} page_s _struct_page_alignment;
 
 	/**
-	 * struct folio - Represents a contiguous set of bytes.
+	 * folio_s - Represents a contiguous set of bytes.
 	 * @flags: Identical to the page flags.
 	 * @lru: Least Recently Used list; tracks how recently this folio was used.
 	 * @mlock_count: Number of times this folio has been pinned by mlock().
@@ -373,7 +228,7 @@
 				void		*private;
 				atomic_t	_mapcount;
 				atomic_t	_refcount;
-		/* private: the union with struct page is transitional */
+		/* private: the union with page_s is transitional */
 			};
 			page_s	page;
 		};
@@ -388,7 +243,7 @@
 				atomic_t	_nr_pages_mapped;
 				atomic_t	_pincount;
 				uint		_folio_nr_pages;
-		/* private: the union with struct page is transitional */
+		/* private: the union with page_s is transitional */
 			};
 			page_s	__page_1;
 		};
@@ -401,14 +256,14 @@
 				void	*_hugetlb_cgroup;
 				void	*_hugetlb_cgroup_rsvd;
 				void	*_hugetlb_hwpoison;
-		/* private: the union with struct page is transitional */
+		/* private: the union with page_s is transitional */
 			};
 			struct {
 				ulong	_flags_2a;
 				ulong	_head_2a;
 		/* public: */
 				List_s	_deferred_list;
-		/* private: the union with struct page is transitional */
+		/* private: the union with page_s is transitional */
 			};
 			page_s	__page_2;
 		};

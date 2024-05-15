@@ -29,10 +29,10 @@ buddy是物理内存页分配器
           {
                   ......
             void __init
-            memblock_free_pages(struct page *page, unsigned long pfn, unsigned int order)
+            memblock_free_pages(page_s *page, unsigned long pfn, unsigned int order)
             {
                     ......
-              void __free_pages_core(struct page *page, unsigned int order)
+              void __free_pages_core(page_s *page, unsigned int order)
               {
                       ......
                 // 清除可分配页的保留标记并初始化页面引用计数器
@@ -57,23 +57,23 @@ buddy是物理内存页分配器
     主要执行流程:
       (mm/mempolicy)alloc_pages() => (mm/page_alloc.c)__alloc_pages()
     调用栈:
-      struct page *
+      page_s *
       __alloc_pages(gfp_t gfp, unsigned int order,
           int preferred_nid, nodemask_t *nodemask)
       {
                         ......
-        static struct page *
+        static page_s *
         get_page_from_freelist(gfp_t gfp_mask, unsigned int order,
             int alloc_flags, const struct alloc_context *ac)
         {
                           ......
-          static inline struct page
+          static inline page_s
           *rmqueue(struct zone *preferred_zone, struct zone *zone,
               unsigned int order, gfp_t gfp_flags, unsigned int alloc_flags,
               int migratetype)
           {
                             ......
-            static __always_inline struct page
+            static __always_inline page_s
             *__rmqueue_smallest(struct zone *zone, unsigned int order, int migratetype)
             {
               get_page_from_free_area();
@@ -83,7 +83,7 @@ buddy是物理内存页分配器
                             ......
           }
 
-          static void prep_new_page(struct page *page, unsigned int order,
+          static void prep_new_page(page_s *page, unsigned int order,
               gfp_t gfp_flags, unsigned int alloc_flags)
           {
                             ......
@@ -102,11 +102,11 @@ buddy是物理内存页分配器
       (mm/page_alloc.c)free_the_page() => __free_pages_ok()
     调用栈:
       static void
-      __free_pages_ok(struct page *page, unsigned int order, fpi_t fpi_flags)
+      __free_pages_ok(page_s *page, unsigned int order, fpi_t fpi_flags)
       {
                         ......
         static inline void
-        __free_one_page(struct page *page, unsigned long pfn, struct zone *zone,
+        __free_one_page(page_s *page, unsigned long pfn, struct zone *zone,
             unsigned int order, int migratetype, fpi_t fpi_flags)
         {
                           ......

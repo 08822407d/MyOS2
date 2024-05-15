@@ -2,7 +2,6 @@
 #define _PAGE_ALLOC_API_H_
 
 	#include "buddy.h"
-
 	#include "page-flags.h"
 
 	/*

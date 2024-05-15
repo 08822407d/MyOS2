@@ -2,6 +2,7 @@
 
 // SPDX-License-Identifier: GPL-2.0
 #include <linux/kernel/cpumask.h>
+#include <linux/kernel/sizes.h>
 
 #include "mm_misc.h"
 

@@ -1,5 +1,6 @@
 #define BUDDY_DEFINATION
 #include "buddy.h"
+#include "page-flags.h"
 
 // SPDX-License-Identifier: GPL-2.0-only
 /*

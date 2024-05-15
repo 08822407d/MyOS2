@@ -58,11 +58,11 @@ ulong	highest_memmap_pfn __read_mostly;
 
 
 /*
- * vm_normal_page -- This function gets the "struct page" associated with a pte.
+ * vm_normal_page -- This function gets the "page_s" associated with a pte.
  *
- * "Special" mappings do not wish to be associated with a "struct page" (either
+ * "Special" mappings do not wish to be associated with a "page_s" (either
  * it doesn't exist, or it exists but they don't want to touch it). In this
- * case, NULL is returned here. "Normal" mappings do have a struct page.
+ * case, NULL is returned here. "Normal" mappings do have a page_s.
  *
  * There are 2 broad cases. Firstly, an architecture may define a pte_special()
  * pte bit, in which case this function is trivial. Secondly, an architecture
@@ -598,7 +598,7 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 
 	// /*
 	//  * If the source page was a PFN mapping, we don't have
-	//  * a "struct page" for it. We do a best-effort copy by
+	//  * a "page_s" for it. We do a best-effort copy by
 	//  * just copying from the original user address. If that
 	//  * fails, we just zero-fill it. Live with it.
 	//  */
@@ -920,7 +920,7 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	//  * not dirty accountable.
 	//  */
 	// if (PageAnon(vmf->page)) {
-	// 	struct page *page = vmf->page;
+	// 	page_s *page = vmf->page;
 
 	// 	/* PageKsm() doesn't necessarily raise the page refcount */
 	// 	if (PageKsm(page) || page_count(page) != 1)
@@ -1112,7 +1112,7 @@ __do_fault(vm_fault_s *vmf) {
 	// 	return ret;
 
 	// if (unlikely(PageHWPoison(vmf->page))) {
-	// 	struct page *page = vmf->page;
+	// 	page_s *page = vmf->page;
 	// 	vm_fault_t poisonret = VM_FAULT_HWPOISON;
 	// 	if (ret & VM_FAULT_LOCKED) {
 	// 		if (page_mapped(page))

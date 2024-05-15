@@ -19,7 +19,7 @@
 	 * @slab: The slab.
 	 *
 	 * Slabs are allocated as folios that contain the individual objects and are
-	 * using some fields in the first struct page of the folio - those fields are
+	 * using some fields in the first page_s of the folio - those fields are
 	 * now accessed by struct slab. It is occasionally necessary to convert back to
 	 * a folio in order to communicate with the rest of the mm.  Please use this
 	 * helper function instead of casting yourself, as the implementation may change
@@ -29,10 +29,10 @@
 	#define slab_folio(slab)		slab_to_folio(slab)
 
 	/**
-	 * page_slab - Converts from first struct page to slab.
+	 * page_slab - Converts from first page_s to slab.
 	 * @p: The first (either head of compound or single) page of slab.
 	 *
-	 * A temporary wrapper to convert struct page to struct slab in situations where
+	 * A temporary wrapper to convert page_s to struct slab in situations where
 	 * we know the page is the compound head, or single order-0 page.
 	 *
 	 * Long-term ideally everything would work with struct slab directly or go
@@ -44,10 +44,10 @@
 	#define page_slab(page)			page_to_slab(page)
 
 	/**
-	 * slab_page - The first struct page allocated for a slab
+	 * slab_page - The first page_s allocated for a slab
 	 * @slab: The slab.
 	 *
-	 * A convenience wrapper for converting slab to the first struct page of the
+	 * A convenience wrapper for converting slab to the first page_s of the
 	 * underlying folio, to communicate with code not yet converted to folio or
 	 * struct slab.
 	 */

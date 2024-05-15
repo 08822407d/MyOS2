@@ -17,7 +17,7 @@
 	// struct bio_set;
 	// struct bio;
 	// struct bio_integrity_payload;
-	// struct page;
+	// page_s;
 	// struct io_context;
 	// struct cgroup_subsys_state;
 	// typedef void (bio_end_io_t) (struct bio *);

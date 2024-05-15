@@ -58,6 +58,8 @@
 	typedef struct page page_s;
 	struct folio;
 	typedef struct folio folio_s;
+	struct pgflag_defs;
+	typedef struct pgflag_defs pgflag_defs_s;
 	
 	/* vm_map */
 	struct vm_area_struct;

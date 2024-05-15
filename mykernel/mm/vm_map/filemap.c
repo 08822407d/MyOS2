@@ -138,7 +138,7 @@ vm_fault_t filemap_fault(vm_fault_s *vmf)
 	// struct address_space *mapping = file->f_mapping;
 	// struct inode *inode = mapping->host;
 	pgoff_t max_idx, index = vmf->pgoff;
-	// struct folio *folio;
+	// folio_s *folio;
 	vm_fault_t ret = 0;
 	// bool mapping_locked = false;
 
@@ -288,8 +288,8 @@ vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 // 	pgoff_t last_pgoff = start_pgoff;
 // 	unsigned long addr;
 // 	XA_STATE(xas, &mapping->i_pages, start_pgoff);
-// 	struct folio *folio;
-// 	struct page *page;
+// 	folio_s *folio;
+// 	page_s *page;
 // 	unsigned int mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
 // 	vm_fault_t ret = 0;
 
@@ -353,7 +353,7 @@ vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
 {
 // 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
-// 	struct folio *folio = page_folio(vmf->page);
+// 	folio_s *folio = page_folio(vmf->page);
 // 	vm_fault_t ret = VM_FAULT_LOCKED;
 
 // 	sb_start_pagefault(mapping->host->i_sb);
