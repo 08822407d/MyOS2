@@ -6,6 +6,7 @@
 	#include "kmalloc/slub_const.h"
 	#include "page_alloc/mmzone_const.h"
 	#include "page_alloc/buddy_const.h"
+	#include "page_alloc/page-flags_const.h"
 	#include "vm_map/vm_map_const.h"
 
 
