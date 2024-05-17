@@ -332,7 +332,7 @@ simple_calculate_order(uint size) {
 
 	// make sure @min_order can hold at least 1 object
 	for (order = max(min_order, get_order(min_objnr * size));
-			order <= MAX_ORDER; order++) {
+			order < NR_PAGE_ORDERS; order++) {
 
 		uint slab_size = (uint)PAGE_SIZE << order;
 		uint rem = slab_size % size;

@@ -26,6 +26,7 @@ __init_single_page(page_s *page, ulong pfn, ulong zone) {
 	// page_kasan_tag_reset(page);
 
 	INIT_LIST_S(&page->lru);
+	INIT_LIST_S(&page->buddy_list);
 // #ifdef WANT_PAGE_VIRTUAL
 	// /* The shift won't overflow because ZONE_NORMAL is below 4G. */
 	// if (!is_highmem_idx(zone))
@@ -94,7 +95,7 @@ memmap_init(ulong *max_zone_pfn) {
 		if (highest_memmap_pfn < end_pfn - 1)
 			highest_memmap_pfn = end_pfn - 1;
 
-		for (int j = 0; j < MAX_ORDER; j++)
+		for (int j = 0; j < NR_PAGE_ORDERS; j++)
 			INIT_LIST_HEADER_S(&zone->free_area[j]);
 
 		for (ulong pfn = start_pfn; pfn < end_pfn; pfn++) {
@@ -326,6 +327,7 @@ alloc_node_mem_map(pg_data_t *pgdat) {
 	for (int i = 0; i < NODE_DATA(0)->node_spanned_pages; i++) {
 		page_s *page = &(NODE_DATA(0)->node_mem_map[i]);
 		INIT_LIST_S(&page->lru);
+		INIT_LIST_S(&page->buddy_list);
 	}
 }
 

@@ -173,8 +173,8 @@
 		// ZONE_PADDING(_pad1_)
 
 		/* free areas of different sizes */
-		// struct free_area free_area[MAX_ORDER];
-		List_hdr_s		free_area[MAX_ORDER];
+		// struct free_area free_area[NR_PAGE_ORDERS];
+		List_hdr_s		free_area[NR_PAGE_ORDERS];
 
 		/* zone flags, see below */
 		ulong			flags;

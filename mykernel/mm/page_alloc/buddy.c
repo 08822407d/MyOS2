@@ -64,27 +64,25 @@ EXPORT_SYMBOL(nr_online_nodes);
  */
 static inline ulong
 buddy_order(page_s *page) {
-
 	/* PageBuddy() must be checked by the caller */
 	return page_private(page);
 }
 
-static inline void
-set_compound_order(page_s *page, uint order) {
-	// page[1].compound_order = order;
-	// page[1].compound_nr = 1U << order;
-	folio_s *folio = (folio_s *)page;
-	folio->_folio_order = order;
-	folio->_folio_nr_pages = 1U << order;
-}
-
 static void
 prep_compound_head(page_s *page, uint order) {
-	// set_compound_page_dtor(page, COMPOUND_PAGE_DTOR);
-	set_compound_order(page, order);
-	// atomic_set(compound_mapcount_ptr(page), -1);
-	// if (hpage_pincount_available(page))
-	// 	atomic_set(compound_pincount_ptr(page), 0);
+	folio_s *folio = (folio_s *)page;
+
+// static inline void folio_set_order(struct folio *folio, unsigned int order)
+// {
+	if (WARN_ON_ONCE(!order || !folio_test_head(folio)))
+		return;
+
+	folio->_flags_1 = (folio->_flags_1 & ~0xffUL) | order;
+	folio->_folio_nr_pages = 1U << order;
+// }
+	atomic_set(&folio->_entire_mapcount, -1);
+	atomic_set(&folio->_nr_pages_mapped, 0);
+	atomic_set(&folio->_pincount, 0);
 }
 
 static void
@@ -93,6 +91,7 @@ prep_compound_tail(page_s *head, int tail_idx) {
 
 	// p->mapping = TAIL_MAPPING;
 	set_compound_head(p, head);
+	p->private = 0;
 }
 
 void prep_compound_page(page_s *page, uint order)
@@ -118,34 +117,34 @@ set_buddy_order(page_s *page, uint order) {
 static inline void
 add_to_free_list(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_header_push(fa_lhdr, &page->lru);
+	list_header_push(fa_lhdr, &page->buddy_list);
 }
 
 /* Used for pages not on another list */
 static inline void
 add_to_free_list_tail(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_header_enqueue(fa_lhdr, &page->lru);
+	list_header_enqueue(fa_lhdr, &page->buddy_list);
 }
 
+static inline void
+del_page_from_free_list(page_s *page, List_hdr_s *area) {
+	list_header_delete_node(area, &page->buddy_list);
+	__ClearPageBuddy(page);
+	page->private = 0;
+}
+
+static inline page_s
+*__list_null_or_page(List_s * pg_lp) {
+	if (pg_lp == NULL) return NULL;
+	else return container_of(pg_lp, page_s, buddy_list);
+}
 static inline page_s
 *get_page_from_free_area(List_hdr_s *area) {
 	List_s *pg_lp = list_header_pop(area);
-	if (pg_lp == NULL)
-		return NULL;
-	else
-		return container_of(pg_lp, page_s, lru);
+	return __list_null_or_page(pg_lp);
 }
 
-static inline page_s
-*del_page_from_free_list(page_s *page, zone_s * zone, uint order) {
-	List_s * pg_lp = list_header_delete_node(&zone->free_area[order],
-			&page->lru);
-	if (pg_lp == NULL)
-		return NULL;
-	else
-		return container_of(pg_lp, page_s, lru);
-}
 
 /*
  * The order of subdivision here is critical for the IO subsystem.
@@ -168,7 +167,8 @@ expand(zone_s *zone, page_s *page, int low, int high) {
 		high--;
 		size >>= 1;
 		page_s *p = &page[size];
-		INIT_LIST_S(&p->lru);
+		INIT_LIST_S(&p->buddy_list);
+
 		add_to_free_list(p, zone, high);
 		set_buddy_order(p, high);
 	}
@@ -211,9 +211,12 @@ __find_buddy_pfn(ulong page_pfn, uint order) {
  */
 static inline bool
 page_is_buddy(page_s *page, page_s *buddy, uint order) {
-	if (!page_is_guard(page) && !PageBuddy(buddy)) return false;
-	if (buddy_order(buddy) != order) return false;
-	if (myos_page_zone(page) != myos_page_zone(buddy)) return false;
+	if (!page_is_guard(page) && !PageBuddy(buddy))
+		return false;
+	if (buddy_order(buddy) != order)
+		return false;
+	if (myos_page_zone(page) != myos_page_zone(buddy))
+		return false;
 	return true;
 }
 
@@ -249,17 +252,13 @@ static inline page_s
 	page_s *page;
 
 	/* Find a page of the appropriate size in the preferred list */
-	for (current_order = order; current_order < MAX_ORDER; ++current_order) {
-		if (zone->free_area[current_order].count == 0)
+	for (current_order = order; current_order < NR_PAGE_ORDERS; ++current_order) {
+		List_hdr_s *area = &zone->free_area[current_order];
+		page = get_page_from_free_area(area);
+		if (page == NULL)
 			continue;
 
-		List_s * page_lp = list_header_pop(&zone->free_area[current_order]);
-		while (page_lp == NULL);
-
-		page = container_of(page_lp, page_s, lru);
-		__ClearPageBuddy(page);
-		page->private = 0;
-
+		del_page_from_free_list(page, area);
 		expand(zone, page, order, current_order);
 		for (int i = 0; i < (1 << order); i++)
 			atomic_inc(&(page[i]._refcount));
@@ -307,12 +306,13 @@ __myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
 	while (order < MAX_ORDER) {
 		buddy_pfn = __find_buddy_pfn(pfn, order);
 		buddy = page + (buddy_pfn - pfn);
+		List_hdr_s *area = &zone->free_area[order];
 
 		if (page_is_buddy(page, buddy, order) == false ||
-			!list_header_contains(&zone->free_area[order], &page->lru))
+			!list_header_contains(area, &page->buddy_list))
 			break;
 
-		list_header_delete_node(&zone->free_area[order], &page->lru);
+		list_header_delete_node(area, &page->buddy_list);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;
@@ -349,7 +349,7 @@ page_s *__myos_alloc_pages(gfp_t gfp, uint order)
 	 * There are several places where we assume that the order value is sane
 	 * so bail out early if the request is out of bound.
 	 */
-	if (unlikely(order >= MAX_ORDER)) {
+	if (unlikely(order > MAX_ORDER)) {
 		// WARN_ON_ONCE(!(gfp & __GFP_NOWARN));
 		return NULL;
 	}

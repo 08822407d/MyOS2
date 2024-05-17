@@ -701,7 +701,7 @@ memblock_free_all(void) {
 
 		// Cut regions to fit page^order bound
 		while (start_pfn < end_pfn) {
-		int order = min(MAX_ORDER - 1UL, __ffs(start_pfn));
+			int order = min_t(int, MAX_ORDER, __ffs(start_pfn));
 			while (start_pfn + (1UL << order) > end_pfn)
 				order--;
 			memblock_free_pages(pfn_to_page(start_pfn), start_pfn, order);

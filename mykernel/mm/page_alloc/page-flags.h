@@ -67,6 +67,8 @@
 
 
 		// compound head
+		extern bool
+		folio_test_head(folio_s *folio);
 		extern void
 		__folio_set_head(folio_s *folio);
 		extern void
@@ -308,6 +310,14 @@
 		// __SETPAGEFLAG(Head, head, PF_ANY)
 		// __CLEARPAGEFLAG(Head, head, PF_ANY)
 		// CLEARPAGEFLAG(Head, head, PF_ANY)
+		PREFIX_STATIC_AWLWAYS_INLINE
+		bool
+		folio_test_head(folio_s *folio) {
+			return (__builtin_constant_p((PG_head)) ?
+						constant_test_bit((PG_head), (folio_flags(folio, 0))) :
+						variable_test_bit((PG_head), (folio_flags(folio, 0)))
+					);
+		}
 		PREFIX_STATIC_AWLWAYS_INLINE
 		void
 		__folio_set_head(folio_s *folio) {
