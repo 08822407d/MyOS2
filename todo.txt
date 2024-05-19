@@ -1,3 +1,6 @@
+2024-5-2
+	1.重新启用并完善AP-core启动和idle
+	2.实现percpu运行时分配功能
 
 2023-9-4
 	拆分进程内核栈和task_struct并修改相应的percpu_area初始化代码

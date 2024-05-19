@@ -271,6 +271,34 @@ static inline page_s
 
 
 /*
+ * Find the buddy of @page and validate it.
+ * @page: The input page
+ * @pfn: The pfn of the page, it saves a call to page_to_pfn() when the
+ *       function is used in the performance-critical __free_one_page().
+ * @order: The order of the page
+ * @buddy_pfn: The output pointer to the buddy pfn, it also saves a call to
+ *             page_to_pfn().
+ *
+ * The found buddy can be a non PageBuddy, out of @page's zone, or its order is
+ * not the same as @page. The validation is necessary before use it.
+ *
+ * Return: the found buddy page or NULL if not found.
+ */
+static inline page_s
+*find_buddy_page_pfn(page_s *page, ulong pfn,
+		uint order, ulong *buddy_pfn) {
+
+	ulong __buddy_pfn = __find_buddy_pfn(pfn, order);
+	page_s *buddy = page + (__buddy_pfn - pfn);
+	if (buddy_pfn)
+		*buddy_pfn = __buddy_pfn;
+
+	if (page_is_buddy(page, buddy, order))
+		return buddy;
+	return NULL;
+}
+
+/*
  * Freeing function for a buddy system allocator.
  *
  * The concept of a buddy system is to maintain direct-mapped table
@@ -304,15 +332,10 @@ __myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
 	page_s *buddy;
 
 	while (order < MAX_ORDER) {
-		buddy_pfn = __find_buddy_pfn(pfn, order);
-		buddy = page + (buddy_pfn - pfn);
-		List_hdr_s *area = &zone->free_area[order];
-
-		if (page_is_buddy(page, buddy, order) == false ||
-			!list_header_contains(area, &page->buddy_list))
+		buddy = find_buddy_page_pfn(page, pfn, order, &buddy_pfn);
+		if (buddy == NULL)
 			break;
 
-		list_header_delete_node(area, &page->buddy_list);
 		combined_pfn = buddy_pfn & pfn;
 		page = page + (combined_pfn - pfn);
 		pfn = combined_pfn;
@@ -340,17 +363,18 @@ __myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
  * flags are used.
  * Return: The page on success or NULL if allocation fails.
  */
+/*
+ * This is the 'heart' of the zoned buddy allocator.
+ */
+// struct page *__alloc_pages(gfp_t gfp, unsigned int order,
+// 		int preferred_nid, nodemask_t *nodemask)
 page_s *__myos_alloc_pages(gfp_t gfp, uint order)
 {
-	page_s *page;
-	zone_s *zone = NULL;
-
 	/*
 	 * There are several places where we assume that the order value is sane
 	 * so bail out early if the request is out of bound.
 	 */
 	if (unlikely(order > MAX_ORDER)) {
-		// WARN_ON_ONCE(!(gfp & __GFP_NOWARN));
 		return NULL;
 	}
 
@@ -371,12 +395,12 @@ page_s *__myos_alloc_pages(gfp_t gfp, uint order)
 			start_prefered_idx = 0;
 
 		for (i = start_prefered_idx; i < max_prefered_idx; i++) {
-			zone = &(NODE_DATA(0)->node_zones[prefered_zone_list[i]]);
+			zone_s *zone = &(NODE_DATA(0)->node_zones[prefered_zone_list[i]]);
 		// static inline page_s
 		// *rmqueue(struct zone *preferred_zone, struct zone *zone, unsigned int order,
 		// 		gfp_t gfp_flags, unsigned int alloc_flags, int migratetype)
 		// {
-			page = __rmqueue_smallest(zone, order);
+			page_s *page = __rmqueue_smallest(zone, order);
 			if (likely(page)) {
 				prep_new_page(page, order, gfp);
 				return page;
