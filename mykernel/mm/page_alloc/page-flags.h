@@ -71,6 +71,8 @@
 		folio_test_head(folio_s *folio);
 		extern void
 		__folio_set_head(folio_s *folio);
+		extern int
+		PageHead(page_s *page);
 		extern void
 		__SetPageHead(page_s *page);
 		extern void
@@ -325,13 +327,19 @@
 		}
 		PREFIX_STATIC_AWLWAYS_INLINE
 		void
-		__SetPageHead(page_s *page) {
-			arch___set_bit(PG_head, &(page)->flags);
+		__folio_clear_head(folio_s *folio) {
+			arch___clear_bit(PG_head, folio_flags(folio, 0));
+		}
+		PREFIX_STATIC_AWLWAYS_INLINE
+		int
+		PageHead(page_s *page) {
+			// PF_POISONED_CHECK(page);
+			return test_bit(PG_head, &page->flags);
 		}
 		PREFIX_STATIC_AWLWAYS_INLINE
 		void
-		__folio_clear_head(folio_s *folio) {
-			arch___clear_bit(PG_head, folio_flags(folio, 0));
+		__SetPageHead(page_s *page) {
+			arch___set_bit(PG_head, &(page)->flags);
 		}
 		PREFIX_STATIC_AWLWAYS_INLINE
 		void

@@ -54,46 +54,6 @@ EXPORT_SYMBOL(nr_online_nodes);
 /*==============================================================================================*
  *								private fuctions for buddy system								*
  *==============================================================================================*/
-/*
- * This function returns the order of a free page in the buddy system. In
- * general, page_zone(page)->lock must be held by the caller to prevent the
- * page from being allocated in parallel and returning garbage as the order.
- * If a caller does not hold page_zone(page)->lock, it must guarantee that the
- * page cannot be allocated or merged in parallel. Alternatively, it must
- * handle invalid values gracefully, and use buddy_order_unsafe() below.
- */
-static inline ulong
-buddy_order(page_s *page) {
-	/* PageBuddy() must be checked by the caller */
-	return page_private(page);
-}
-
-static void
-prep_compound_head(page_s *page, uint order) {
-	folio_s *folio = (folio_s *)page;
-
-// static inline void folio_set_order(struct folio *folio, unsigned int order)
-// {
-	if (WARN_ON_ONCE(!order || !folio_test_head(folio)))
-		return;
-
-	folio->_flags_1 = (folio->_flags_1 & ~0xffUL) | order;
-	folio->_folio_nr_pages = 1U << order;
-// }
-	atomic_set(&folio->_entire_mapcount, -1);
-	atomic_set(&folio->_nr_pages_mapped, 0);
-	atomic_set(&folio->_pincount, 0);
-}
-
-static void
-prep_compound_tail(page_s *head, int tail_idx) {
-	page_s *p = head + tail_idx;
-
-	// p->mapping = TAIL_MAPPING;
-	set_compound_head(p, head);
-	p->private = 0;
-}
-
 void prep_compound_page(page_s *page, uint order)
 {
 	int i;
@@ -105,7 +65,6 @@ void prep_compound_page(page_s *page, uint order)
 
 	prep_compound_head(page, order);
 }
-
 
 static inline void
 set_buddy_order(page_s *page, uint order) {
@@ -174,55 +133,71 @@ expand(zone_s *zone, page_s *page, int low, int high) {
 	}
 }
 
-/*
- * Locate the page_s for both the matching buddy in our
- * pair (buddy1) and the combined O(n+1) page they form (page).
- *
- * 1) Any buddy B1 will have an order O twin B2 which satisfies
- * the following equation:
- *     B2 = B1 ^ (1 << O)
- * For example, if the starting buddy (buddy2) is #8 its order
- * 1 buddy is #10:
- *     B2 = 8 ^ (1 << 1) = 8 ^ 2 = 10
- *
- * 2) Any buddy B will have an order O+1 parent P which
- * satisfies the following equation:
- *     P = B & ~(1 << O)
- *
- * Assumption: *_mem_map is contiguous at least up to MAX_ORDER
- */
-static inline ulong
-__find_buddy_pfn(ulong page_pfn, uint order) {
-	return page_pfn ^ (1 << order);
-}
+inline void
+post_alloc_hook(page_s *page, uint order, gfp_t gfp_flags) {
+	// bool init = !want_init_on_free() && want_init_on_alloc(gfp_flags) &&
+	// 		!should_skip_init(gfp_flags);
+	// bool zero_tags = init && (gfp_flags & __GFP_ZEROTAGS);
+	// int i;
 
-/*
- * This function checks whether a page is free && is the buddy
- * we can coalesce a page and its buddy if
- * (a) the buddy is not in a hole (check before calling!) &&
- * (b) the buddy is in the buddy system &&
- * (c) a page and its buddy have the same order &&
- * (d) a page and its buddy are in the same zone.
- *
- * For recording whether a page is in the buddy system, we set PageBuddy.
- * Setting, clearing, and testing PageBuddy is serialized by zone->lock.
- *
- * For recording page's order, we use page_private(page).
- */
-static inline bool
-page_is_buddy(page_s *page, page_s *buddy, uint order) {
-	if (!page_is_guard(page) && !PageBuddy(buddy))
-		return false;
-	if (buddy_order(buddy) != order)
-		return false;
-	if (myos_page_zone(page) != myos_page_zone(buddy))
-		return false;
-	return true;
+	// set_page_private(page, 0);
+	// set_page_refcounted(page);
+
+	// arch_alloc_page(page, order);
+	// debug_pagealloc_map_pages(page, 1 << order);
+
+	// /*
+	//  * Page unpoisoning must happen before memory initialization.
+	//  * Otherwise, the poison pattern will be overwritten for __GFP_ZERO
+	//  * allocations and the page unpoisoning code will complain.
+	//  */
+	// kernel_unpoison_pages(page, 1 << order);
+
+	// /*
+	//  * As memory initialization might be integrated into KASAN,
+	//  * KASAN unpoisoning and memory initializion code must be
+	//  * kept together to avoid discrepancies in behavior.
+	//  */
+
+	// /*
+	//  * If memory tags should be zeroed
+	//  * (which happens only when memory should be initialized as well).
+	//  */
+	// if (zero_tags) {
+	// 	/* Initialize both memory and memory tags. */
+	// 	for (i = 0; i != 1 << order; ++i)
+	// 		tag_clear_highpage(page + i);
+
+	// 	/* Take note that memory was initialized by the loop above. */
+	// 	init = false;
+	// }
+	// if (!should_skip_kasan_unpoison(gfp_flags) &&
+	//     kasan_unpoison_pages(page, order, init)) {
+	// 	/* Take note that memory was initialized by KASAN. */
+	// 	if (kasan_has_integrated_init())
+	// 		init = false;
+	// } else {
+	// 	/*
+	// 	 * If memory tags have not been set by KASAN, reset the page
+	// 	 * tags to ensure page_address() dereferencing does not fault.
+	// 	 */
+	// 	for (i = 0; i != 1 << order; ++i)
+	// 		page_kasan_tag_reset(page + i);
+	// }
+	/* If memory is still not initialized, initialize it now. */
+	// if (init)
+	// kernel_init_pages(page, 1 << order);
+	if (gfp_flags & __GFP_ZERO)
+		for (int i = 0; i < (1 << order); i++)
+			clear_page((void *)page_to_virt(page) + i);
+
+	// set_page_owner(page, order, gfp_flags);
+	// page_table_check_alloc(page, order);
 }
 
 static void
 prep_new_page(page_s *page, uint order, gfp_t gfp_flags) {
-	// post_alloc_hook(page, order, gfp_flags);
+	post_alloc_hook(page, order, gfp_flags);
 
 	if (order && (gfp_flags & __GFP_COMP))
 		prep_compound_page(page, order);
@@ -266,35 +241,6 @@ static inline page_s
 		return page;
 	}
 
-	return NULL;
-}
-
-
-/*
- * Find the buddy of @page and validate it.
- * @page: The input page
- * @pfn: The pfn of the page, it saves a call to page_to_pfn() when the
- *       function is used in the performance-critical __free_one_page().
- * @order: The order of the page
- * @buddy_pfn: The output pointer to the buddy pfn, it also saves a call to
- *             page_to_pfn().
- *
- * The found buddy can be a non PageBuddy, out of @page's zone, or its order is
- * not the same as @page. The validation is necessary before use it.
- *
- * Return: the found buddy page or NULL if not found.
- */
-static inline page_s
-*find_buddy_page_pfn(page_s *page, ulong pfn,
-		uint order, ulong *buddy_pfn) {
-
-	ulong __buddy_pfn = __find_buddy_pfn(pfn, order);
-	page_s *buddy = page + (__buddy_pfn - pfn);
-	if (buddy_pfn)
-		*buddy_pfn = __buddy_pfn;
-
-	if (page_is_buddy(page, buddy, order))
-		return buddy;
 	return NULL;
 }
 
@@ -345,6 +291,30 @@ __myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
 	set_buddy_order(page, order);
 	add_to_free_list(page, zone, order);
 }
+
+static void
+__free_pages_ok(page_s *page, uint order) {
+	ulong flags;
+	int migratetype;
+	ulong pfn = page_to_pfn(page);
+	zone_s *zone = myos_page_zone(page);
+
+	// if (!free_pages_prepare(page, order, true, fpi_flags))
+	// 	return;
+
+	// migratetype = get_pfnblock_migratetype(page, pfn);
+
+	// spin_lock_irqsave(&zone->lock, flags);
+	// if (unlikely(has_isolate_pageblock(zone) ||
+	// 	is_migrate_isolate(migratetype))) {
+	// 	migratetype = get_pfnblock_migratetype(page, pfn);
+	// }
+	__myos_free_one_page(page, pfn, zone, order);
+	// spin_unlock_irqrestore(&zone->lock, flags);
+
+	// __count_vm_events(PGFREE, 1 << order);
+}
+
 
 /*==============================================================================================*
  *									public fuctions for buddy system							*
@@ -434,91 +404,22 @@ page_s *__myos_alloc_pages(gfp_t gfp, uint order)
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
 // Linux function proto :
-void __free_pages(page_s *page, uint order)
-{
-	ulong pfn = page_to_pfn(page);
-	zone_s *zone = myos_page_zone(page);
+// void __free_pages(struct page *page, unsigned int order)
+void __free_pages(page_s *page, uint order) {
+	/* get PageHead before we drop reference */
+	// int head = PageHead(page);
+	// if (!head)
+	// 	while (order-- > 0)
+	// 		free_the_page(page + (1 << order), order);
 
-	// linux call stack :
-	// static inline void free_the_page(page_s *page, unsigned int order)
-	//								||
-	//								\/
-	// static void __free_pages_ok(page_s *page, unsigned int order, fpi_t fpi_flags)
-	//								||
-	//								\/
-	// static inline void __free_one_page(page_s *page, unsigned long pfn,
-	//					struct zone *zone, unsigned int order, int migratetype,
-	//					fpi_t fpi_flags)
-
-	__myos_free_one_page(page, pfn, zone, order);
+	__free_pages_ok(page, order);
 }
 
 void free_pages(ulong addr, uint order) {
 	if (addr != 0) {
-		// VM_BUG_ON(!virt_addr_valid((void *)addr));
 		__free_pages(virt_to_page((void *)addr), order);
 	}
 }
-
-/*==============================================================================================*
- *								early init fuctions for buddy system							*
- *==============================================================================================*/
-static void
-__free_pages_ok(page_s *page, uint order) {
-	ulong flags;
-	int migratetype;
-	ulong pfn = page_to_pfn(page);
-	zone_s *zone = myos_page_zone(page);
-
-	// if (!free_pages_prepare(page, order, true, fpi_flags))
-	// 	return;
-
-	// migratetype = get_pfnblock_migratetype(page, pfn);
-
-	// spin_lock_irqsave(&zone->lock, flags);
-	// if (unlikely(has_isolate_pageblock(zone) ||
-	// 	is_migrate_isolate(migratetype))) {
-	// 	migratetype = get_pfnblock_migratetype(page, pfn);
-	// }
-	__myos_free_one_page(page, pfn, zone, order);
-	// spin_unlock_irqrestore(&zone->lock, flags);
-
-	// __count_vm_events(PGFREE, 1 << order);
-}
-
-void __init
-memblock_free_pages(page_s *page, ulong pfn, uint order)
-{
-	// {
-		uint nr_pages = 1 << order;
-		page_s *p = page;
-		uint loop;
-
-		/*
-		 * When initializing the memmap, __init_single_page() sets the refcount
-		 * of all pages to 1 ("allocated"/"not free"). We have to set the
-		 * refcount of all involved pages to 0.
-		 */
-		// prefetchw(p);
-		// for (loop = 0; loop < (nr_pages - 1); loop++, p++) {
-		for (loop = 0; loop < nr_pages; loop++, p++) {
-			// prefetchw(p + 1);
-			__ClearPageReserved(p);
-			set_page_count(p, 0);
-		}
-		// __ClearPageReserved(p);
-		// set_page_count(p, 0);
-
-		// atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
-
-		/*
-		 * Bypass PCP and place fresh pages right to the tail, primarily
-		 * relevant for memory onlining.
-		 */
-		__free_pages_ok(page, order);
-	// }
-}
-
 
 /*
  * Common helper functions. Never use with __GFP_HIGHMEM because the returned
@@ -527,21 +428,53 @@ memblock_free_pages(page_s *page, ulong pfn, uint order)
  */
 ulong __get_free_pages(gfp_t gfp_mask, uint order)
 {
-	page_s *page;
-
-	page = alloc_pages(gfp_mask & ~__GFP_HIGHMEM, order);
-	if (!page)
+	page_s *page = alloc_pages(gfp_mask & ~__GFP_HIGHMEM, order);
+	if (page == NULL)
 		return 0;
 	return (ulong)page_to_virt(page);
 }
 
-ulong get_zeroed_page(gfp_t gfp_mask)
-{
-	ulong retval = __get_free_pages(gfp_mask | __GFP_ZERO, 0);
-	memset((void *)retval, 0, PAGE_SIZE);
-	return retval;
+ulong get_zeroed_page(gfp_t gfp_mask) {
+	return __get_free_pages(gfp_mask | __GFP_ZERO, 0);
 }
 
+
+/*==============================================================================================*
+ *								early init fuctions for buddy system							*
+ *==============================================================================================*/
+void __init
+memblock_free_pages(page_s *page, ulong pfn, uint order)
+{
+// void __free_pages_core(struct page *page, unsigned int order)
+// {
+	uint nr_pages = 1 << order;
+	page_s *p = page;
+	uint loop;
+
+	/*
+		* When initializing the memmap, __init_single_page() sets the refcount
+		* of all pages to 1 ("allocated"/"not free"). We have to set the
+		* refcount of all involved pages to 0.
+		*/
+	// prefetchw(p);
+	// for (loop = 0; loop < (nr_pages - 1); loop++, p++) {
+	for (loop = 0; loop < nr_pages; loop++, p++) {
+		// prefetchw(p + 1);
+		__ClearPageReserved(p);
+		set_page_count(p, 0);
+	}
+	// __ClearPageReserved(p);
+	// set_page_count(p, 0);
+
+	// atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
+
+	/*
+		* Bypass PCP and place fresh pages right to the tail, primarily
+		* relevant for memory onlining.
+		*/
+	__free_pages_ok(page, order);
+// }
+}
 
 /**
  * get_pfn_range_for_nid - Return the start and end page frames for a node

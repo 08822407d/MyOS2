@@ -198,8 +198,12 @@ static void
 		online_new_empty_slab(s, n, slab);
 	}
 
-	if (gfpflags & __GFP_ZERO)
-		memset(object, 0, s->size);
+	/*
+	 * When init equals 'true', like for kzalloc() family, only
+	 * @orig_size bytes might be zeroed instead of s->object_size
+	 */
+	slab_post_alloc_hook(s, gfpflags, &object);
+
 	return object;
 }
 

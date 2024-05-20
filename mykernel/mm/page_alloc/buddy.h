@@ -160,4 +160,126 @@
 
 	#endif
 
+
+	/*==================================================================================*
+	 *								"internal" functions								*
+	 *==================================================================================*/
+	#if defined(BUDDY_DEFINATION) || !(DEBUG)
+
+		/*
+		 * This function returns the order of a free page in the buddy system. In
+		 * general, page_zone(page)->lock must be held by the caller to prevent the
+		 * page from being allocated in parallel and returning garbage as the order.
+		 * If a caller does not hold page_zone(page)->lock, it must guarantee that the
+		 * page cannot be allocated or merged in parallel. Alternatively, it must
+		 * handle invalid values gracefully, and use buddy_order_unsafe() below.
+		 */
+		static inline ulong
+		buddy_order(page_s *page) {
+			/* PageBuddy() must be checked by the caller */
+			return page_private(page);
+		}
+
+		static void
+		prep_compound_head(page_s *page, uint order) {
+			folio_s *folio = (folio_s *)page;
+
+		// static inline void folio_set_order(struct folio *folio, unsigned int order)
+		// {
+			if (WARN_ON_ONCE(!order || !folio_test_head(folio)))
+				return;
+
+			folio->_flags_1 = (folio->_flags_1 & ~0xffUL) | order;
+			folio->_folio_nr_pages = 1U << order;
+		// }
+			atomic_set(&folio->_entire_mapcount, -1);
+			atomic_set(&folio->_nr_pages_mapped, 0);
+			atomic_set(&folio->_pincount, 0);
+		}
+
+		static void
+		prep_compound_tail(page_s *head, int tail_idx) {
+			page_s *p = head + tail_idx;
+
+			// p->mapping = TAIL_MAPPING;
+			set_compound_head(p, head);
+			p->private = 0;
+		}
+
+		/*
+		 * Locate the page_s for both the matching buddy in our
+		 * pair (buddy1) and the combined O(n+1) page they form (page).
+		 *
+		 * 1) Any buddy B1 will have an order O twin B2 which satisfies
+		 * the following equation:
+		 *     B2 = B1 ^ (1 << O)
+		 * For example, if the starting buddy (buddy2) is #8 its order
+		 * 1 buddy is #10:
+		 *     B2 = 8 ^ (1 << 1) = 8 ^ 2 = 10
+		 *
+		 * 2) Any buddy B will have an order O+1 parent P which
+		 * satisfies the following equation:
+		 *     P = B & ~(1 << O)
+		 *
+		 * Assumption: *_mem_map is contiguous at least up to MAX_ORDER
+		 */
+		static inline ulong
+		__find_buddy_pfn(ulong page_pfn, uint order) {
+			return page_pfn ^ (1 << order);
+		}
+
+		/*
+		 * This function checks whether a page is free && is the buddy
+		 * we can coalesce a page and its buddy if
+		 * (a) the buddy is not in a hole (check before calling!) &&
+		 * (b) the buddy is in the buddy system &&
+		 * (c) a page and its buddy have the same order &&
+		 * (d) a page and its buddy are in the same zone.
+		 *
+		 * For recording whether a page is in the buddy system, we set PageBuddy.
+		 * Setting, clearing, and testing PageBuddy is serialized by zone->lock.
+		 *
+		 * For recording page's order, we use page_private(page).
+		 */
+		static inline bool
+		page_is_buddy(page_s *page, page_s *buddy, uint order) {
+			if (!page_is_guard(page) && !PageBuddy(buddy))
+				return false;
+			if (buddy_order(buddy) != order)
+				return false;
+			if (myos_page_zone(page) != myos_page_zone(buddy))
+				return false;
+			return true;
+		}
+
+		/*
+		 * Find the buddy of @page and validate it.
+		 * @page: The input page
+		 * @pfn: The pfn of the page, it saves a call to page_to_pfn() when the
+		 *       function is used in the performance-critical __free_one_page().
+		 * @order: The order of the page
+		 * @buddy_pfn: The output pointer to the buddy pfn, it also saves a call to
+		 *             page_to_pfn().
+		 *
+		 * The found buddy can be a non PageBuddy, out of @page's zone, or its order is
+		 * not the same as @page. The validation is necessary before use it.
+		 *
+		 * Return: the found buddy page or NULL if not found.
+		 */
+		static inline page_s
+		*find_buddy_page_pfn(page_s *page, ulong pfn,
+				uint order, ulong *buddy_pfn) {
+
+			ulong __buddy_pfn = __find_buddy_pfn(pfn, order);
+			page_s *buddy = page + (__buddy_pfn - pfn);
+			if (buddy_pfn)
+				*buddy_pfn = __buddy_pfn;
+
+			if (page_is_buddy(page, buddy, order))
+				return buddy;
+			return NULL;
+		}
+
+	#endif
+
 #endif /* _LINUX_PAGE_ALLOC_H_ */

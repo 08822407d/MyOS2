@@ -195,6 +195,59 @@
 				kmem_cache_free(folio_slab(folio)->slab_cache, (void *)object);
 		}
 
+
+		static inline void
+		slab_post_alloc_hook(kmem_cache_s *s, gfp_t flags, void **obj_p) {
+			unsigned int zero_size = s->object_size;
+			// bool kasan_init = init;
+			// size_t i;
+
+			// flags &= gfp_allowed_mask;
+
+			// /*
+			// * For kmalloc object, the allocated memory size(object_size) is likely
+			// * larger than the requested size(orig_size). If redzone check is
+			// * enabled for the extra space, don't zero it, as it will be redzoned
+			// * soon. The redzone operation for this extra space could be seen as a
+			// * replacement of current poisoning under certain debug option, and
+			// * won't break other sanity checks.
+			// */
+			// if (kmem_cache_debug_flags(s, SLAB_STORE_USER | SLAB_RED_ZONE) &&
+			// 	(s->flags & SLAB_KMALLOC))
+			// 	zero_size = orig_size;
+
+			// /*
+			// * When slub_debug is enabled, avoid memory initialization integrated
+			// * into KASAN and instead zero out the memory via the memset below with
+			// * the proper size. Otherwise, KASAN might overwrite SLUB redzones and
+			// * cause false-positive reports. This does not lead to a performance
+			// * penalty on production builds, as slub_debug is not intended to be
+			// * enabled there.
+			// */
+			// if (__slub_debug_enabled())
+			// 	kasan_init = false;
+
+			// /*
+			// * As memory initialization might be integrated into KASAN,
+			// * kasan_slab_alloc and initialization memset must be
+			// * kept together to avoid discrepancies in behavior.
+			// *
+			// * As p[i] might get tagged, memset and kmemleak hook come after KASAN.
+			// */
+			// for (i = 0; i < size; i++) {
+			// 	p[i] = kasan_slab_alloc(s, p[i], flags, kasan_init);
+			// 	if (p[i] && init && (!kasan_init || !kasan_has_integrated_init()))
+			// 		memset(p[i], 0, zero_size);
+			// 	kmemleak_alloc_recursive(p[i], s->object_size, 1,
+			// 				s->flags, flags);
+			// 	kmsan_slab_alloc(s, p[i], flags);
+			// }
+			if (flags & __GFP_ZERO)
+				memset(*obj_p, 0, zero_size);
+
+			// memcg_slab_post_alloc_hook(s, objcg, flags, size, p);
+		}
+
 	#endif
 
 #endif /* _LINUX_SLUB_H_ */
