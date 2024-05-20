@@ -71,10 +71,9 @@
 		uint
 		compound_order(page_s *page) {
 			folio_s *folio = (folio_s *)page;
-
 			if (!test_bit(PG_head, &folio->flags))
 				return 0;
-			return folio->_folio_order;
+			return folio->_flags_1 & 0xff;
 		}
 		/**
 		 * folio_order - The allocation order of a folio.
@@ -88,9 +87,9 @@
 		PREFIX_STATIC_INLINE
 		uint
 		folio_order(folio_s *folio) {
-			// if (!folio_test_large(folio))
-			// 	return 0;
-			return folio->_folio_order;
+			if (!folio_test_large(folio))
+				return 0;
+			return folio->_flags_1 & 0xff;
 		}
 
 

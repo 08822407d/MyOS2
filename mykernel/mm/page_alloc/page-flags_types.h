@@ -180,13 +180,15 @@
 	typedef struct pgflag_defs {
 		unsigned long
 			PG_locked		:1,
+			PG_writeback	:1,
 			PG_referenced	:1,
 			PG_uptodate		:1,
 			PG_dirty		:1,
 			PG_lru			:1,
+			PG_head			:1,
+			PG_waiters		:1,
 			PG_active		:1,
 			PG_workingset	:1,
-			PG_waiters		:1,
 			PG_error		:1,
 			PG_slab			:1,
 			PG_owner_priv_1	:1,
@@ -194,8 +196,6 @@
 			PG_reserved		:1,
 			PG_private		:1,
 			PG_private_2	:1,
-			PG_writeback	:1,
-			PG_head			:1,
 			PG_mappedtodisk	:1,
 			PG_reclaim		:1,
 			PG_swapbacked	:1,
@@ -211,11 +211,8 @@
 			PG_young		:1,
 			PG_idle			:1,
 		#endif
-			PG_arch_2		:1
-		#ifdef CONFIG_KASAN_HW_TAGS
-			,
-			PG_skip_kasan_poison	:1,
-		#endif
+			PG_arch_2		:1,
+			PG_arch_3		:1
 			;
 	}__attribute__((packed)) pgflag_defs_s;
 

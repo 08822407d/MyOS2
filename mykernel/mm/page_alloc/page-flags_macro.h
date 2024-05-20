@@ -22,9 +22,11 @@
 	 * a reference on the folio.
 	 * Return: The folio which contains this page.
 	 */
-	#define page_folio(p)			(_Generic((p),						\
-				const page_s *:		(const folio_s *)_compound_head(p), \
-				page_s *:			(folio_s *)_compound_head(p)))
+	#define page_folio(p)	(											\
+				_Generic((p),											\
+					const page_s *:	(const folio_s *)_compound_head(p), \
+					page_s *:		(folio_s *)_compound_head(p))		\
+			)
 
 	/**
 	 * folio_page - Return a page from a folio.
@@ -247,5 +249,7 @@
 	#undef PF_NO_TAIL
 	#undef PF_NO_COMPOUND
 	#undef PF_SECOND
+
+	#define folio_test_large(folio)	folio_test_head(folio)
 
 #endif /* _LINUX_PAGE_FLAGS_MACRO_H_ */

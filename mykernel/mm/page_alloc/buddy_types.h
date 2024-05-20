@@ -111,37 +111,22 @@
 			struct {	/* Tail pages of compound page */
 				ulong			compound_head;		/* Bit zero is set */
 			};
-			// struct
-			// {	/* Second tail page of compound page */
-			// 	unsigned long _compound_pad_1; /* compound_head */
-			// 	atomic_t hpage_pinned_refcount;
-			// 	/* For both global and memcg */
-			// 	List_s deferred_list;
-			// };
-			// struct
-			// {									/* Page table pages */
-			// 	unsigned long	_pt_pad_1;		/* compound_head */
-			// 	pgtable_t		pmd_huge_pte;	/* protected by page->ptl */
-			// 	unsigned long	_pt_pad_2;		/* mapping */
-			// 	mm_s			*pt_mm;			/* x86 pgds only */
-			// 	spinlock_t ptl;
-			// };
-			// struct
-			// { /* ZONE_DEVICE pages */
+			// struct {	/* ZONE_DEVICE pages */
 			// 	/** @pgmap: Points to the hosting device page map. */
 			// 	struct dev_pagemap *pgmap;
 			// 	void *zone_device_data;
 			// 	/*
-			// 	* ZONE_DEVICE private pages are counted as being
-			// 	* mapped so the next 3 words hold the mapping, index,
-			// 	* and private fields from the source anonymous or
-			// 	* page cache page while the page is migrated to device
-			// 	* private memory.
-			// 	* ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
-			// 	* use the mapping, index, and private fields when
-			// 	* pmem backed DAX files are mapped.
-			// 	*/
+			// 	 * ZONE_DEVICE private pages are counted as being
+			// 	 * mapped so the next 3 words hold the mapping, index,
+			// 	 * and private fields from the source anonymous or
+			// 	 * page cache page while the page is migrated to device
+			// 	 * private memory.
+			// 	 * ZONE_DEVICE MEMORY_DEVICE_FS_DAX pages also
+			// 	 * use the mapping, index, and private fields when
+			// 	 * pmem backed DAX files are mapped.
+			// 	 */
 			// };
+
 
 			// /** @rcu_head: You can use this to free a page by RCU. */
 			// struct rcu_head rcu_head;
@@ -225,9 +210,14 @@
 				};
 				addr_spc_s	*mapping;
 				pgoff_t		index;
-				void		*private;
+				union {
+					void	*private;
+				};
 				atomic_t	_mapcount;
 				atomic_t	_refcount;
+	#ifdef CONFIG_MEMCG
+				ulong		memcg_data;
+	#endif
 		/* private: the union with page_s is transitional */
 			};
 			page_s	page;
@@ -236,9 +226,8 @@
 			struct {
 				ulong	_flags_1;
 				ulong	_head_1;
+				ulong	_folio_avail;
 		/* public: */
-				unchar		_folio_dtor;
-				unchar		_folio_order;
 				atomic_t	_entire_mapcount;
 				atomic_t	_nr_pages_mapped;
 				atomic_t	_pincount;

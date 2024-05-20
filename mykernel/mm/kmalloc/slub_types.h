@@ -12,12 +12,12 @@
 	typedef struct slab {
 		ulong				__page_flags;
 
+		kmem_cache_s		*slab_cache;
 		struct {
-			kmem_cache_s	*slab_cache;
 			union {
 				List_s		slab_list;
 				struct {
-					page_s	*next;
+					slab_s	*next;
 					int		slabs;	/* Nr of slabs left */
 				};
 			};
@@ -32,6 +32,12 @@
 				} __attribute__((packed));
 			};
 		};
+		uint				__unused;
+
+		atomic_t			__page_refcount;
+	#ifdef CONFIG_MEMCG
+		ulong				memcg_data;
+	#endif
 	} slab_s;
 
 

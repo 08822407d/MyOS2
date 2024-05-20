@@ -25,8 +25,13 @@
 	 * helper function instead of casting yourself, as the implementation may change
 	 * in the future.
 	 */
-	#define slab_to_folio(slab)		((folio_s *)(slab))
-	#define slab_folio(slab)		slab_to_folio(slab)
+	// #define slab_to_folio(slab)		((folio_s *)(slab))
+	// #define slab_folio(slab)		slab_to_folio(slab)
+	#define slab_folio(s)	(							\
+				_Generic((s),							\
+					const slab_s *:	(const folio_s *)s,	\
+					slab_s *:		(folio_s *)s)		\
+			)
 
 	/**
 	 * page_slab - Converts from first page_s to slab.
@@ -51,7 +56,6 @@
 	 * underlying folio, to communicate with code not yet converted to folio or
 	 * struct slab.
 	 */
-	#define slab_first_page(slab)	folio_page(slab_folio(slab), 0)
-	#define slab_page(slab)			slab_first_page(slab)
+	#define slab_page(slab)			folio_page(slab_folio(s), 0)
 
 #endif /* _LINUX_SLUB_MACRO_H_ */

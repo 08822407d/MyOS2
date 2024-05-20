@@ -416,9 +416,8 @@ void __free_pages(page_s *page, uint order) {
 }
 
 void free_pages(ulong addr, uint order) {
-	if (addr != 0) {
+	if (addr != 0)
 		__free_pages(virt_to_page((void *)addr), order);
-	}
 }
 
 /*
@@ -449,29 +448,23 @@ memblock_free_pages(page_s *page, ulong pfn, uint order)
 // {
 	uint nr_pages = 1 << order;
 	page_s *p = page;
-	uint loop;
 
 	/*
-		* When initializing the memmap, __init_single_page() sets the refcount
-		* of all pages to 1 ("allocated"/"not free"). We have to set the
-		* refcount of all involved pages to 0.
-		*/
-	// prefetchw(p);
-	// for (loop = 0; loop < (nr_pages - 1); loop++, p++) {
-	for (loop = 0; loop < nr_pages; loop++, p++) {
-		// prefetchw(p + 1);
+	 * When initializing the memmap, __init_single_page() sets the refcount
+	 * of all pages to 1 ("allocated"/"not free"). We have to set the
+	 * refcount of all involved pages to 0.
+	 */
+	for (uint loop = 0; loop < nr_pages; loop++, p++) {
 		__ClearPageReserved(p);
 		set_page_count(p, 0);
 	}
-	// __ClearPageReserved(p);
-	// set_page_count(p, 0);
 
-	// atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
+	atomic_long_add(nr_pages, &myos_page_zone(page)->managed_pages);
 
 	/*
-		* Bypass PCP and place fresh pages right to the tail, primarily
-		* relevant for memory onlining.
-		*/
+	 * Bypass PCP and place fresh pages right to the tail, primarily
+	 * relevant for memory onlining.
+	 */
 	__free_pages_ok(page, order);
 // }
 }
@@ -503,14 +496,4 @@ get_pfn_range(ulong *start_pfn, ulong *end_pfn)
 
 	if (*start_pfn == -1UL)
 		*start_pfn = 0;
-}
-
-/*==============================================================================================*
- *									myos page funcs for buddy system							*
- *==============================================================================================*/
-page_s *paddr_to_page(phys_addr_t paddr)
-{
-	ulong pfn = round_up((uint64_t)paddr, PAGE_SIZE) / PAGE_SIZE;
-	// return &mem_info.pages[pg_idx];
-	return pfn_to_page(pfn);
 }

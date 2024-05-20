@@ -158,7 +158,7 @@
 		 * mem_hotplug_begin/end(). Any reader who can't tolerant drift of
 		 * present_pages should get_online_mems() to get a stable value.
 		 */
-		// atomic_long_t	managed_pages;
+		atomic_long_t	managed_pages;
 		ulong			spanned_pages;
 		ulong			present_pages;
 	// #ifdef CONFIG_CMA

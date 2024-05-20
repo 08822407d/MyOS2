@@ -84,6 +84,8 @@ prepare_alloc_flags(kmem_cache_s *s, gfp_t flags) {
 /*
  * Slab allocation and freeing
  */
+// static inline struct slab *alloc_slab_page(gfp_t flags,
+// 		int node, struct kmem_cache_order_objects oo)
 static inline slab_s
 *alloc_slab(kmem_cache_s *s, gfp_t flags) {
 	gfp_t alloc_gfp = prepare_alloc_flags(s, flags);
@@ -219,6 +221,7 @@ EXPORT_SYMBOL(kmem_cache_alloc);
 static void
 free_slab(kmem_cache_s *s, slab_s *slab) {
 	folio_s *folio = slab_folio(slab);
+	
 	int order = folio_order(folio);
 	int pages = 1 << order;
 

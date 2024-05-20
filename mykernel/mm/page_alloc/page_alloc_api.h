@@ -39,8 +39,4 @@
 
 	void memblock_free_pages(page_s *page, ulong pfn, uint order);
 
-
-	/* memory.c */
-	page_s * paddr_to_page(phys_addr_t paddr);
-
 #endif /* _PAGE_ALLOC_API_H_ */
