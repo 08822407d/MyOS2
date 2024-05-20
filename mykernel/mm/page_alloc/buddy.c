@@ -201,6 +201,8 @@ prep_new_page(page_s *page, uint order, gfp_t gfp_flags) {
 
 	if (order && (gfp_flags & __GFP_COMP))
 		prep_compound_page(page, order);
+	else
+		ClearPageHead(page);
 
 	// /*
 	//  * page is set pfmemalloc when ALLOC_NO_WATERMARKS was necessary to
@@ -211,7 +213,7 @@ prep_new_page(page_s *page, uint order, gfp_t gfp_flags) {
 	// if (alloc_flags & ALLOC_NO_WATERMARKS)
 	// 	set_page_pfmemalloc(page);
 	// else
-		clear_page_pfmemalloc(page);
+	// 	clear_page_pfmemalloc(page);
 }
 
 /*

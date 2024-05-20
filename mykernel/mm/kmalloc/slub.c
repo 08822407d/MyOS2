@@ -94,6 +94,7 @@ static inline slab_s
 		return NULL;
 
 	slab_s *slab = folio_slab(folio);
+	while (oo_order(s->oo) == 0 && folio->page.flag_defs.PG_head != 0);
 	__folio_set_slab(folio);
 	/* Make the flag visible before any changes to folio->mapping */
 	smp_wmb();
@@ -221,6 +222,7 @@ EXPORT_SYMBOL(kmem_cache_alloc);
 static void
 free_slab(kmem_cache_s *s, slab_s *slab) {
 	folio_s *folio = slab_folio(slab);
+	while (oo_order(s->oo) == 0 && folio->page.flag_defs.PG_head != 0);
 	
 	int order = folio_order(folio);
 	int pages = 1 << order;
