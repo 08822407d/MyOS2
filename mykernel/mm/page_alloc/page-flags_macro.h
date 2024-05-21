@@ -6,8 +6,6 @@
 #ifndef _LINUX_PAGE_FLAGS_MACRO_H_
 #define _LINUX_PAGE_FLAGS_MACRO_H_
 
-	#define PAGEFLAGS_MASK ((1UL << NR_PAGEFLAGS) - 1)
-
 	#define compound_head(page)		((typeof(page))_compound_head(page))
 	/**
 	 * page_folio - Converts from page to folio.

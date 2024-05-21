@@ -201,8 +201,6 @@ prep_new_page(page_s *page, uint order, gfp_t gfp_flags) {
 
 	if (order && (gfp_flags & __GFP_COMP))
 		prep_compound_page(page, order);
-	else
-		ClearPageHead(page);
 
 	// /*
 	//  * page is set pfmemalloc when ALLOC_NO_WATERMARKS was necessary to
@@ -294,6 +292,108 @@ __myos_free_one_page(page_s *page, ulong pfn, zone_s *zone, uint order) {
 	add_to_free_list(page, zone, order);
 }
 
+static __always_inline bool
+free_pages_prepare(page_s *page, uint order)
+{
+	// int bad = 0;
+	// bool skip_kasan_poison = should_skip_kasan_poison(page, fpi_flags);
+	// bool init = want_init_on_free();
+
+	// VM_BUG_ON_PAGE(PageTail(page), page);
+
+	// trace_mm_page_free(page, order);
+	// kmsan_free_page(page, order);
+
+	// if (unlikely(PageHWPoison(page)) && !order) {
+	// 	/*
+	// 	 * Do not let hwpoison pages hit pcplists/buddy
+	// 	 * Untie memcg state and reset page's owner
+	// 	 */
+	// 	if (memcg_kmem_online() && PageMemcgKmem(page))
+	// 		__memcg_kmem_uncharge_page(page, order);
+	// 	reset_page_owner(page, order);
+	// 	page_table_check_free(page, order);
+	// 	return false;
+	// }
+
+	// /*
+	//  * Check tail pages before head page information is cleared to
+	//  * avoid checking PageCompound for order-0 pages.
+	//  */
+	// if (unlikely(order)) {
+	// 	bool compound = PageCompound(page);
+
+	// 	// VM_BUG_ON_PAGE(compound && compound_order(page) != order, page);
+
+	// 	if (compound)
+	// 		page[1].flags &= ~PAGE_FLAGS_SECOND;
+	// 	for (int i = 1; i < (1 << order); i++) {
+	// 		if (compound)
+	// 			bad += free_tail_page_prepare(page, page + i);
+	// 		if (is_check_pages_enabled()) {
+	// 			if (free_page_is_bad(page + i)) {
+	// 				bad++;
+	// 				continue;
+	// 			}
+	// 		}
+	// 		(page + i)->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
+	// 	}
+	// }
+	// if (PageMappingFlags(page))
+	// 	page->mapping = NULL;
+	// if (memcg_kmem_online() && PageMemcgKmem(page))
+	// 	__memcg_kmem_uncharge_page(page, order);
+	// if (is_check_pages_enabled()) {
+	// 	if (free_page_is_bad(page))
+	// 		bad++;
+	// 	if (bad)
+	// 		return false;
+	// }
+
+	// page_cpupid_reset_last(page);
+	page->flags &= ~PAGE_FLAGS_CHECK_AT_PREP;
+	// reset_page_owner(page, order);
+	// page_table_check_free(page, order);
+
+	// if (!PageHighMem(page)) {
+	// 	debug_check_no_locks_freed(page_address(page),
+	// 				   PAGE_SIZE << order);
+	// 	debug_check_no_obj_freed(page_address(page),
+	// 				   PAGE_SIZE << order);
+	// }
+
+	// kernel_poison_pages(page, 1 << order);
+
+	// /*
+	//  * As memory initialization might be integrated into KASAN,
+	//  * KASAN poisoning and memory initialization code must be
+	//  * kept together to avoid discrepancies in behavior.
+	//  *
+	//  * With hardware tag-based KASAN, memory tags must be set before the
+	//  * page becomes unavailable via debug_pagealloc or arch_free_page.
+	//  */
+	// if (!skip_kasan_poison) {
+	// 	kasan_poison_pages(page, order, init);
+
+	// 	/* Memory is already initialized if KASAN did it internally. */
+	// 	if (kasan_has_integrated_init())
+	// 		init = false;
+	// }
+	// if (init)
+	// 	kernel_init_pages(page, 1 << order);
+
+	// /*
+	//  * arch_free_page() can make the page's contents inaccessible.  s390
+	//  * does this.  So nothing which can access the page's contents should
+	//  * happen after this.
+	//  */
+	// arch_free_page(page, order);
+
+	// debug_pagealloc_unmap_pages(page, 1 << order);
+
+	// return true;
+}
+
 static void
 __free_pages_ok(page_s *page, uint order) {
 	ulong flags;
@@ -301,18 +401,19 @@ __free_pages_ok(page_s *page, uint order) {
 	ulong pfn = page_to_pfn(page);
 	zone_s *zone = myos_page_zone(page);
 
-	// if (!free_pages_prepare(page, order, true, fpi_flags))
+	free_pages_prepare(page, order);
+	// if (!free_pages_prepare(page, order, fpi_flags))
 	// 	return;
 
 	// migratetype = get_pfnblock_migratetype(page, pfn);
 
-	// spin_lock_irqsave(&zone->lock, flags);
+	spin_lock_irqsave(&zone->lock, flags);
 	// if (unlikely(has_isolate_pageblock(zone) ||
 	// 	is_migrate_isolate(migratetype))) {
 	// 	migratetype = get_pfnblock_migratetype(page, pfn);
 	// }
 	__myos_free_one_page(page, pfn, zone, order);
-	// spin_unlock_irqrestore(&zone->lock, flags);
+	spin_unlock_irqrestore(&zone->lock, flags);
 
 	// __count_vm_events(PGFREE, 1 << order);
 }

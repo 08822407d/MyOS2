@@ -114,9 +114,9 @@
 	#ifdef CONFIG_ARCH_USES_PG_UNCACHED
 		PG_uncached,		/* Page has been mapped as uncached */
 	#endif
-	#ifdef CONFIG_MEMORY_FAILURE
+	// #ifdef CONFIG_MEMORY_FAILURE
 		PG_hwpoison,		/* hardware poisoned page. Don't touch */
-	#endif
+	// #endif
 	#if defined(CONFIG_PAGE_IDLE_FLAG)
 		PG_young,
 		PG_idle,
