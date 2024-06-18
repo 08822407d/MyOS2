@@ -323,7 +323,8 @@
         "sched_misc_api.h": "c",
         "double_list_types.h": "c",
         "page-flags_types.h": "c",
-        "page-flags_macro.h": "c"
+        "page-flags_macro.h": "c",
+        "kbuild.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }
