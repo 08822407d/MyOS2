@@ -51,7 +51,7 @@ output_content += '''
 #endif
 '''
 
-print(output_content)
+# print(output_content)
 with open(args.output, "w") as output_file:
 	output_file.write(output_content)
 	output_file.flush()

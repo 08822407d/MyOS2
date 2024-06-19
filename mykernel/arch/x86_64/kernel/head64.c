@@ -51,11 +51,9 @@ x86_64_start_kernel(char * real_mode_data)
 	idt_setup_early_handler();
 
 
-	extern void __used asm_offsets(void);
 	extern void myos_early_init_system(void);
 	extern void myos_early_init_smp(void);
 
-	asm_offsets();
 	myos_early_init_system();
 	myos_early_init_smp();
 

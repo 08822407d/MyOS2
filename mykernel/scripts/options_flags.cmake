@@ -55,8 +55,8 @@ set(CMAKE_C_FLAGS
 #										kernel settings											#
 #===============================================================================================#
 # define kernel internal option macros
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
-	${UNUSED_MACRO} -D__KERNEL__ \
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${UNUSED_MACRO} \
+	-D__KERNEL__ \
 	-DCONFIG_INTEL_X64_GDT_LAYOUT \
 	-DCONFIG_FLATMEM -DCONFIG_NR_CPUS=256 \
 	-DCONFIG_64BIT -DCONFIG_PHYS_ADDR_T_64BIT \
@@ -65,8 +65,15 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
 	-DCONFIG_ARCH_HAS_SYSCALL_WRAPPER \
 	-DCONFIG_BUG \
 	-DGRUB2_BOOTUP_SUPPORT \
-	-T ${CMAKE_CURRENT_SOURCE_DIR}/arch/${ARCH}/kernel.lds \
 ")
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
+
+set(INCLUDE_DIRS
+	${PROJECT_SOURCE_DIR}
+	${PROJECT_SOURCE_DIR}/include
+	${PROJECT_SOURCE_DIR}/include/linux/kernel
+	${PROJECT_SOURCE_DIR}/arch/${ARCH}
+	${PROJECT_SOURCE_DIR}/arch/${ARCH}/include
+)

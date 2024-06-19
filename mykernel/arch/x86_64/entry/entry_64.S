@@ -55,9 +55,6 @@ SYM_FUNC_START(__switch_to_asm)
 	/* switch stack */
 	movq	%rsp, TASK_threadsp(%rdi)
 	movq	TASK_threadsp(%rsi), %rsp
-	// movq	TASK_threadsp(%rip),	%rbx
-	// movq	%rsp,		(%rbx, %rdi)
-	// movq	(%rbx, %rsi),			%rsp
 
 // #ifdef CONFIG_STACKPROTECTOR
 // 	movq	TASK_stack_canary(%rsi), %rbx
