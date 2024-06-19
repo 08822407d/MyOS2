@@ -588,9 +588,11 @@ void cpu_init(void)
 	task_s *curr = current;
 	int cpu = raw_smp_processor_id();
 
-	// wait_for_master_cpu(cpu);
-
 	// ucode_cpu_init(cpu);
+
+	pr_debug("Initializing CPU#%d\n", cpu);
+
+	loadsegment(fs, 0);
 	// memset(cur->thread.tls_array, 0, GDT_ENTRY_TLS_ENTRIES * 8);
 	syscall_init();
 

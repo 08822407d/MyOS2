@@ -150,13 +150,13 @@
 	#define pr_cont(fmt, ...) \
 		printk(KERN_CONT fmt, ##__VA_ARGS__)
 
-	// /* pr_devel() should produce zero code unless DEBUG is defined */
-	// #define pr_devel(fmt, ...) \
-	// 	printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+	/* pr_devel() should produce zero code unless DEBUG is defined */
+	#define pr_devel(fmt, ...) \
+		printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
 
-	// /* If you are writing a driver, please use dev_dbg instead */
-	// #define pr_debug(fmt, ...) \
-	// 	printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
+	/* If you are writing a driver, please use dev_dbg instead */
+	#define pr_debug(fmt, ...) \
+		printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__)
 
 	/*
 	 * Print a one-time message (analogous to WARN_ONCE() et al):

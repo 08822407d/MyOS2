@@ -17,6 +17,9 @@
 				unsigned int *ecx, unsigned int *edx);
 		#define __cpuid	native_cpuid
 
+		extern ulong
+		cpu_kernelmode_gs_base(int cpu);
+
 		extern void
 		native_swapgs(void);
 
@@ -92,6 +95,12 @@
 						);
 		}
 		
+		PREFIX_STATIC_INLINE
+		ulong
+		cpu_kernelmode_gs_base(int cpu) {
+			// return (ulong)per_cpu(fixed_percpu_data.gs_base, cpu);
+		}
+
 		// static inline void arch_thread_struct_whitelist(unsigned long *offset,
 		// 												unsigned long *size)
 		// {

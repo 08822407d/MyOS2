@@ -154,8 +154,7 @@
 		unsigned long mapall[IO_BITMAP_LONGS + 1];
 	} x86_io_bitmap_s;
 
-	struct tss_struct
-	{
+	struct tss_struct {
 		/*
 		 * The fixed hardware portion.  This must not cross a page boundary
 		 * at risk of violating the SDM's advice and potentially triggering
@@ -165,6 +164,19 @@
 
 		x86_io_bitmap_s io_bitmap;
 	} __aligned(PAGE_SIZE);
+
+	typedef struct fixed_percpu_data {
+		/*
+		 * GCC hardcodes the stack canary as %gs:40.  Since the
+		 * irq_stack is the object at %gs:0, we reserve the bottom
+		 * 48 bytes of the irq stack for the canary.
+		 *
+		 * Once we are willing to require -mstack-protector-guard-symbol=
+		 * support for x86_64 stackprotector, we can get rid of this.
+		 */
+		char	gs_base[40];
+		ulong	stack_canary;
+	} fixed_pcpudata_s;
 
 	typedef struct thread_struct {
 		/* Cached TLS descriptors: */

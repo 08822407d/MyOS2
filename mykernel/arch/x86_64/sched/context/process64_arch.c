@@ -109,19 +109,68 @@ enum which_selector {
 	GS
 };
 
+/*
+ * Out of line to be protected from kprobes and tracing. If this would be
+ * traced or probed than any access to a per CPU variable happens with
+ * the wrong GS.
+ *
+ * It is not used on Xen paravirt. When paravirt support is needed, it
+ * needs to be renamed with native_ prefix.
+ */
+static noinstr unsigned long
+__rdgsbase_inactive(void) {
+	unsigned long gsbase;
+
+	// lockdep_assert_irqs_disabled();
+
+	// if (!cpu_feature_enabled(X86_FEATURE_XENPV)) {
+		native_swapgs();
+		gsbase = rdgsbase();
+		native_swapgs();
+	// } else {
+	// 	instrumentation_begin();
+	// 	rdmsrl(MSR_KERNEL_GS_BASE, gsbase);
+	// 	instrumentation_end();
+	// }
+
+	return gsbase;
+}
+
+/*
+ * Out of line to be protected from kprobes and tracing. If this would be
+ * traced or probed than any access to a per CPU variable happens with
+ * the wrong GS.
+ *
+ * It is not used on Xen paravirt. When paravirt support is needed, it
+ * needs to be renamed with native_ prefix.
+ */
+static noinstr void
+__wrgsbase_inactive(unsigned long gsbase) {
+	// lockdep_assert_irqs_disabled();
+
+	// if (!cpu_feature_enabled(X86_FEATURE_XENPV)) {
+		native_swapgs();
+		wrgsbase(gsbase);
+		native_swapgs();
+	// } else {
+	// 	instrumentation_begin();
+	// 	wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
+	// 	instrumentation_end();
+	// }
+}
 
 
 static __always_inline void save_fsgs(task_s *task) {
 	savesegment(fs, task->thread.fsindex);
 	savesegment(gs, task->thread.gsindex);
 	// if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
-	// 	/*
-	// 	 * If FSGSBASE is enabled, we can't make any useful guesses
-	// 	 * about the base, and user code expects us to save the current
-	// 	 * value.  Fortunately, reading the base directly is efficient.
-	// 	 */
-	// 	task->thread.fsbase = rdfsbase();
-	// 	task->thread.gsbase = __rdgsbase_inactive();
+		/*
+		 * If FSGSBASE is enabled, we can't make any useful guesses
+		 * about the base, and user code expects us to save the current
+		 * value.  Fortunately, reading the base directly is efficient.
+		 */
+		task->thread.fsbase = rdfsbase();
+		task->thread.gsbase = __rdgsbase_inactive();
 	// } else {
 	// 	save_base_legacy(task, task->thread.fsindex, FS);
 	// 	save_base_legacy(task, task->thread.gsindex, GS);
@@ -141,6 +190,28 @@ void current_save_fsgs(void)
 	save_fsgs(current);
 	local_irq_restore(flags);
 }
+
+
+static __always_inline void
+x86_fsgsbase_load(thread_s *prev, thread_s *next) {
+	// if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
+	// 	/* Update the FS and GS selectors if they could have changed. */
+	// 	if (unlikely(prev->fsindex || next->fsindex))
+	// 		loadseg(FS, next->fsindex);
+	// 	if (unlikely(prev->gsindex || next->gsindex))
+	// 		loadseg(GS, next->gsindex);
+
+	// 	/* Update the bases. */
+	// 	wrfsbase(next->fsbase);
+	// 	__wrgsbase_inactive(next->gsbase);
+	// } else {
+	// 	load_seg_legacy(prev->fsindex, prev->fsbase,
+	// 			next->fsindex, next->fsbase, FS);
+	// 	load_seg_legacy(prev->gsindex, prev->gsbase,
+	// 			next->gsindex, next->gsbase, GS);
+	// }
+}
+
 
 
 void x86_fsbase_write_task(task_s* task, unsigned long fsbase)
@@ -211,12 +282,12 @@ __visible __notrace_funcgraph task_s
 	// if (!test_thread_flag(TIF_NEED_FPU_LOAD))
 	// 	switch_fpu_prepare(prev_fpu, cpu);
 
-	// /* We must save %fs and %gs before load_TLS() because
-	//  * %fs and %gs may be cleared by load_TLS().
-	//  *
-	//  * (e.g. xen_load_tls())
-	//  */
-	// save_fsgs(prev_p);
+	/* We must save %fs and %gs before load_TLS() because
+	 * %fs and %gs may be cleared by load_TLS().
+	 *
+	 * (e.g. xen_load_tls())
+	 */
+	save_fsgs(prev_p);
 
 	// /*
 	//  * Load TLS before restoring any segments so that segment loads
@@ -253,7 +324,7 @@ __visible __notrace_funcgraph task_s
 	// if (unlikely(next->ds | prev->ds))
 	// 	loadsegment(ds, next->ds);
 
-	// x86_fsgsbase_load(prev, next);
+	x86_fsgsbase_load(prev, next);
 
 	// x86_pkru_load(prev, next);
 
