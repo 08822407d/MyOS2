@@ -19,6 +19,7 @@
  * - idtentry:		Define exception entry points.
  */
 #include <linux/kernel/linkage.h>
+#include <generated/asm-offsets.h>
 #include <asm/cache.h>
 #include <asm/unistd.h>
 #include <asm/hw_irq.h>
@@ -52,11 +53,11 @@ SYM_FUNC_START(__switch_to_asm)
 	pushq	%r15
 
 	/* switch stack */
-	// movq	%rsp, TASK_threadsp(%rdi)
-	// movq	TASK_threadsp(%rsi), %rsp
-	movq	TASK_threadsp(%rip),	%rbx
-	movq	%rsp,		(%rbx, %rdi)
-	movq	(%rbx, %rsi),			%rsp
+	movq	%rsp, TASK_threadsp(%rdi)
+	movq	TASK_threadsp(%rsi), %rsp
+	// movq	TASK_threadsp(%rip),	%rbx
+	// movq	%rsp,		(%rbx, %rdi)
+	// movq	(%rbx, %rsi),			%rsp
 
 // #ifdef CONFIG_STACKPROTECTOR
 // 	movq	TASK_stack_canary(%rsi), %rbx
