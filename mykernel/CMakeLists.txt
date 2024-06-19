@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 set(HAVE_FLAG_SEARCH_PATHS_FIRST 0)
 project(MyOS2_Kernel ASM C)
 
-add_executable(kernel)
-
 
 set(PROMPT "======>>>")
 set(PROMPT_END "<<<======")
@@ -56,7 +54,7 @@ set(CMAKE_C_FLAGS
 	-mabi=sysv \
 	-mno-red-zone \
 ")
-		# -Wextra
+	# -Wextra
 
 #===============================================================================================#
 #										kernel settings											#
@@ -95,15 +93,16 @@ list(REMOVE_ITEM KERNEL_C_SRCS ${KBUILD_FILES})
 list(REMOVE_ITEM KERNEL_ASM_SRCS ${KBUILD_FILES})
 
 
+add_executable(kernel)
 target_sources(kernel PRIVATE ${KERNEL_C_SRCS} ${KERNEL_ASM_SRCS})
 target_include_directories(kernel PRIVATE
-				${PROJECT_SOURCE_DIR}
-				${PROJECT_SOURCE_DIR}/include
-				${PROJECT_SOURCE_DIR}/include/linux/kernel
-				${PROJECT_SOURCE_DIR}/arch/${ARCH}
-				${PROJECT_SOURCE_DIR}/arch/${ARCH}/include
-				${PROJECT_SOURCE_DIR}/../myloader
-				)
+	${PROJECT_SOURCE_DIR}
+	${PROJECT_SOURCE_DIR}/include
+	${PROJECT_SOURCE_DIR}/include/linux/kernel
+	${PROJECT_SOURCE_DIR}/arch/${ARCH}
+	${PROJECT_SOURCE_DIR}/arch/${ARCH}/include
+	${PROJECT_SOURCE_DIR}/../myloader
+)
 
 add_subdirectory(arch)
 add_subdirectory(init)

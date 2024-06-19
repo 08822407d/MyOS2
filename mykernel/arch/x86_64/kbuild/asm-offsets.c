@@ -1,6 +1,9 @@
 #include <linux/kernel/kbuild.h>
-// #include <linux/kernel/ptrace.h>
+#include <linux/kernel/ptrace.h>
 #include <sched/task/task_types.h>
+
+# include "asm-offsets_64.c"
+
 
 static void __used common(void)
 {
