@@ -8,8 +8,6 @@
 	extern struct desc_ptr idt_descr;
 	extern unsigned long system_vectors[];
 
-	extern const char early_idt_handler_array
-			[NR_EXCEPTION_VECTORS][EARLY_IDT_HANDLER_SIZE];
 
 	#define load_tr(tr)			asm volatile("ltr %0"::"m" (tr))
 	#define load_ldt(ldt)		asm volatile("lldt %0"::"m" (ldt))

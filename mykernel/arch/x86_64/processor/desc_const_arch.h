@@ -145,7 +145,7 @@
 	#define __TSS_SEG			(GDT_ENTRY_TSS * 8)
 
 	#define IDT_ENTRIES				256
-	#define NR_EXCEPTION_VECTORS	32
+	#define NUM_EXCEPTION_VECTORS	32
 
 	/* Bitmask of exception vectors which push an error code on the stack: */
 	#define EXCEPTION_ERRCODE_MASK		0x20027d00
@@ -167,7 +167,5 @@
 	#define GDT_SIZE				(GDT_ENTRIES * 8)
 	#define GDT_ENTRY_TLS_ENTRIES	3
 	#define TLS_SIZE				(GDT_ENTRY_TLS_ENTRIES* 8)
-
-	#define EARLY_IDT_HANDLER_SIZE	9
 
 #endif /* _ASM_X86_DESC_CONST_H_ */

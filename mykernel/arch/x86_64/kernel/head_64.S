@@ -22,20 +22,6 @@
 	__HEAD
 	.code64
 
-	__INIT
-SYM_CODE_START(early_idt_handler_array)
-	i = 0
-	.rept NR_EXCEPTION_VECTORS
-	.if ((EXCEPTION_ERRCODE_MASK >> i) & 1) == 0
-		pushq	$0	# Dummy error code, to make stack frame uniform
-	.endif
-	pushq	$i		# 72(%rsp) Vector number
-	jmp		early_idt_handler_common
-	// UNWIND_HINT_IRET_REGS
-	i = i + 1
-	.fill	early_idt_handler_array + i*EARLY_IDT_HANDLER_SIZE - ., 1, 0x90
-	.endr
-SYM_CODE_END(early_idt_handler_array)
 
 SYM_CODE_START_LOCAL(early_idt_handler_common)
 	// UNWIND_HINT_IRET_REGS offset=16

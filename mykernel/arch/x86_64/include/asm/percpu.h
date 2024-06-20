@@ -4,10 +4,10 @@
 #ifndef _ASM_X86_PERCPU_H
 #define _ASM_X86_PERCPU_H
 
-	#define __percpu_seg		gs
 
 	#ifdef __ASSEMBLY__
 
+	#	define __percpu_seg		gs
 	#	define PER_CPU_VAR(var)			%__percpu_seg:var
 	#	define INIT_PER_CPU_VAR(var)	init_per_cpu__##var
 

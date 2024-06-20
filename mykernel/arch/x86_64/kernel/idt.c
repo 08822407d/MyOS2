@@ -56,8 +56,8 @@ static __init void set_intr_gate(unsigned int n, const void *addr)
  */
 void __init idt_setup_early_handler(void)
 {
-	for (int i = 0; i < NR_EXCEPTION_VECTORS; i++) {
-		void *entry = exc_entries_start + IDT_ALIGN * i;
+	for (int i = 0; i < NUM_EXCEPTION_VECTORS; i++) {
+		void *entry = idt_handler_array + IDT_ALIGN * i;
 		set_intr_gate(i, entry);
 	}
 	load_idt(&idt_descr);
@@ -75,9 +75,9 @@ void __init idt_setup_apic_and_irq_gates(void)
 	// static __init void
 	// idt_setup_from_table(gate_desc *idt, const struct idt_data *t, int size, bool sys)
 	// {
-	for (i = 0; i < NR_EXCEPTION_VECTORS; i++)
+	for (i = 0; i < NUM_EXCEPTION_VECTORS; i++)
 	{
-		entry = exc_entries_start + IDT_ALIGN * i;
+		entry = idt_handler_array + IDT_ALIGN * i;
 		set_intr_gate(i, entry);
 	}
 	// }

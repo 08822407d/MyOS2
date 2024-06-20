@@ -29,8 +29,6 @@
 #include <linux/kernel/err.h>
 #include <processor/desc_const_arch.h>
 
-// #include "calling.h"
-
 
 .code64
 .section .entry.text, "ax"
@@ -227,53 +225,60 @@ SYM_CODE_START(sysexit_entp)
 	REX.W
 	sysexitq
 
-// /*==============================================================================================*/
-// /*									syscall and sysret entry						 			*/
-// /*==============================================================================================*/
-// // user Rflags -> R11
-// // user RIP -> RCX
-// // kernel CS = IA32_STAR[47:32]
-// // kernel SS = IA32_STAR[47:32] + 8
-// // kernel RIP = IA32_LSTAR
-// // kernel Rflags &= IA32_FMASK
-// // !!! user RSP should be store by hand !!!
-// // !!! kernel RSP should be load by hand !!!
-// SYM_CODE_START(enter_syscall)
-// 	cli
-// 	swapgs
-// 	movabsq		$cpustack_off,	%r10
-// 	movq		(%r10),		%r10
-// 	movq		%gs:(%r10),	%r10
-// 	xchgq		%rsp,		%r10
-// 	pushq		%r10				// save user rsp
-// 	pushq		%r11				// save user rflags
-// 	subq		$0x08,		%rsp
-// 	pushq		%rcx
-// 	/////////////////////////////////
-// 	subq		$0x10,		%rsp	// skip vec_nr and err_code
-// 	/////////////////////////////////
+/*==============================================================================================*/
+/*									syscall and sysret entry						 			*/
+/*==============================================================================================*/
+// user Rflags -> R11
+// user RIP -> RCX
+// kernel CS = IA32_STAR[47:32]
+// kernel SS = IA32_STAR[47:32] + 8
+// kernel RIP = IA32_LSTAR
+// kernel Rflags &= IA32_FMASK
+// !!! user RSP should be store by hand !!!
+// !!! kernel RSP should be load by hand !!!
+SYM_CODE_START(entry_SYSCALL_64)
+	cli
+	endbr64
 
-// 	movq		%rsp,		%rdi
+	// swapgs
+	// /* tss.sp2 is scratch space. */
+	// movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+	// // SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+	// movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
 
-// // R11 -> user Rflags
-// // RCX -> user RIP
-// // user CS = IA32_STAR[63:48] + 16
-// // user SS = IA32_STAR[63:48] + 8
-// // !!! user RSP should be restore by hand !!!
-// // !!! kernel RSP should be store by hand !!!
-// SYM_CODE_START(ret_from_syscall)
+	// movabsq		$cpustack_off,	%r10
+	// movq		(%r10),		%r10
+	// movq		%gs:(%r10),	%r10
+	// xchgq		%rsp,		%r10
+	// pushq		%r10				// save user rsp
+	// pushq		%r11				// save user rflags
+	// subq		$0x08,		%rsp
+	// pushq		%rcx
+	// /////////////////////////////////
+	// subq		$0x10,		%rsp	// skip vec_nr and err_code
+	// /////////////////////////////////
 
-// 	/////////////////////////////////
-// 	addq		$0x10,		%rsp	// skip err-code and vec-nr
-// 	/////////////////////////////////
-// 	// now user rip already in rcx, rflags in r11
-// 	popq		%rcx
-// 	addq		$0x10,		%rsp	// skip cs
-// 	popq		%rsp
-// 	swapgs
-// 	sti
+	// movq		%rsp,		%rdi
 
-// 	sysretq
+// R11 -> user Rflags
+// RCX -> user RIP
+// user CS = IA32_STAR[63:48] + 16
+// user SS = IA32_STAR[63:48] + 8
+// !!! user RSP should be restore by hand !!!
+// !!! kernel RSP should be store by hand !!!
+SYM_CODE_START(ret_from_syscall)
+
+	// /////////////////////////////////
+	// addq		$0x10,		%rsp	// skip err-code and vec-nr
+	// /////////////////////////////////
+	// // now user rip already in rcx, rflags in r11
+	// popq		%rcx
+	// addq		$0x10,		%rsp	// skip cs
+	// popq		%rsp
+	// swapgs
+	sti
+
+	sysretq
 
 
 #include <asm/idtentry.h>
@@ -291,23 +296,24 @@ SYM_CODE_START(sa_entintr_retp)
 
 
 	.align IDT_ALIGN
-SYM_CODE_START(exc_entries_start)
-	vector=0
-	.rept NR_EXCEPTION_VECTORS
-0 :
-	cli
+SYM_CODE_START(idt_handler_array)
+	vector = 0
+	.rept	NUM_EXCEPTION_VECTORS
 	/* Push 0 for Error Number placeholder */
 	.if ((EXCEPTION_ERRCODE_MASK >> vector) & 1) == 0
-		.byte	0x6a, 0	# Dummy error code, to make stack frame uniform
+		endbr64
+		pushq	$0		# Dummy error code, to make stack frame uniform
+	.else
+		endbr64
 	.endif
-	.byte	0x6a, vector
-	jmp	sa_entintr_retp
-	/* Ensure that the above is IDT_ALIGN bytes max */
-	.fill 0b + IDT_ALIGN - ., 1, 0x90
-	vector = vector+1
+	pushq	$vector		# 72(%rsp) Vector number
+	jmp		sa_entintr_retp
+	vector = vector + 1
+	.fill	idt_handler_array + vector*IDT_ALIGN - ., 1, 0xcc
 	.endr
-SYM_CODE_END(exc_entries_start)
+SYM_CODE_END(idt_handler_array)
 SYM_CODE_START_NOALIGN(exc_entries_end)
+
 /*
  * ASM code to emit the common vector entry stubs where each stub is
  * packed into IDT_ALIGN bytes.

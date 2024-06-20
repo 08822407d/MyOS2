@@ -116,7 +116,7 @@
 
 	// extern void elcr_set_level_irq(unsigned int irq);
 
-	extern char exc_entries_start[];
+	extern char idt_handler_array[];
 	extern char exc_entries_end[];
 	extern char irq_entries_start[];
 	extern char irq_entries_end[];
