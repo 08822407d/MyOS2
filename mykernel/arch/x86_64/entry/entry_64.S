@@ -242,7 +242,7 @@ SYM_CODE_START(entry_SYSCALL_64)
 
 	// swapgs
 	// /* tss.sp2 is scratch space. */
-	// movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)(%rip)
 	// // SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
 	// movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
 
@@ -292,7 +292,7 @@ SYM_CODE_START(sa_entintr_retp)
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
-	iretq;
+	iretq
 
 
 	.align IDT_ALIGN
@@ -330,17 +330,16 @@ SYM_CODE_START_NOALIGN(exc_entries_end)
  */
 	.align IDT_ALIGN
 SYM_CODE_START(irq_entries_start)
-	vector=FIRST_EXTERNAL_VECTOR
-	.rept NR_VECTORS - FIRST_EXTERNAL_VECTOR
-0 :
-	cli
+	vector = 0
+	.rept	NR_VECTORS - FIRST_EXTERNAL_VECTOR
+	endbr64
 	/* External hardware interrupts has no error code */
-	.byte	0x6a, 0x0
-	.byte	0x6a, vector
-	jmp	sa_entintr_retp
+	pushq	$0
+	pushq	$(vector + FIRST_EXTERNAL_VECTOR)
+	jmp		sa_entintr_retp
 	/* Ensure that the above is IDT_ALIGN bytes max */
-	.fill 0b + IDT_ALIGN - ., 1, 0x90
-	vector = vector+1
+	vector = vector + 1
+	.fill	irq_entries_start + vector*IDT_ALIGN - ., 1, 0xcc
 	.endr
 SYM_CODE_END(irq_entries_start)
 SYM_CODE_START_NOALIGN(irq_entries_end)
