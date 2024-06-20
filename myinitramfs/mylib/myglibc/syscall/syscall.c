@@ -74,6 +74,7 @@ __asm__	(
 	"leaq	sysexit_ret_addr(%rip),	%r10	\n\t"
 	"movq	%rsp,	%r11					\n\t"
 	"sysenter								\n\t"
+	// "syscall								\n\t"
 	"sysexit_ret_addr:						\n\t"
 	"xchgq	%rdx,	%r10					\n\t"
 	"xchgq	%rcx,	%r11					\n\t"

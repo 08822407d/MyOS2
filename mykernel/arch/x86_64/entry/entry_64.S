@@ -78,7 +78,7 @@ SYM_FUNC_START(__switch_to_asm)
 	popq	%rbx
 	popq	%rbp
 
-	jmp	__switch_to
+	jmp		__switch_to
 SYM_FUNC_END(__switch_to_asm)
 .popsection
 
@@ -99,10 +99,11 @@ SYM_CODE_START(ret_from_fork)
 	jnz		1f					/* kernel threads are uncommon */
 
 2:
-// 	UNWIND_HINT_REGS
-// 	movq	%rsp, %rdi
-// 	call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
-// 	jmp	swapgs_restore_regs_and_return_to_usermode
+swapgs_restore_regs_and_return_to_usermode:
+	// UNWIND_HINT_REGS
+	// movq	%rsp, %rdi
+	// call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
+	// jmp	swapgs_restore_regs_and_return_to_usermode
 	jmp		sysexit_entp
 
 1:
@@ -133,8 +134,6 @@ SYM_CODE_END(ret_from_fork)
  * thing is the vector number. From this point on we can continue as if every
  * exception pushes an error code
  */
-#define SAVEALL_SIZE		0x70
-
 .macro PUSH_REGS
 	pushq		%rdi
 	pushq		%rsi
@@ -191,18 +190,13 @@ SYM_CODE_START(sysenter_entp)
 	xchgq		%r10,		RIP(%rsp)
 	xchgq		%r11,		R11(%rsp)
 	xchgq		%r10,		R10(%rsp)
-
 	sti
-
 	/* IRQs are off. */
 	movq		%rsp,		%rdi
 	/* Sign extend the lower 32bit as syscall numbers are treated as int */
 	movslq		%eax,		%rsi
 	call		do_syscall_64		/* returns with IRQs disabled */
 
-	// leaq		sys_call_table(%rip),	%rbx
-	// callq		*(%rbx,%rax,8)
-	// movq		%rax,		(SAVEALL_SIZE - 0x20)(%rsp)	// save return value to stack
 // RDX -> user RSP
 // RCX -> user RIP
 // user CS = IA32_SYSENTER_CS + 32

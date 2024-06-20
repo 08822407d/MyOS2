@@ -25,6 +25,29 @@
 	#define pt_regs_r15 0
 	#define pt_regs_flags 152
 	
+	#define R15 0
+	#define R14 8
+	#define R13 16
+	#define R12 24
+	#define RBP 32
+	#define RBX 40
+	#define R11 48
+	#define R10 56
+	#define R9 64
+	#define R8 72
+	#define RAX 80
+	#define RCX 88
+	#define RDX 96
+	#define RSI 104
+	#define RDI 112
+	#define IRQ_NR 120
+	#define ORIG_RAX 128
+	#define RIP 136
+	#define CS 144
+	#define EFLAGS 152
+	#define RSP 160
+	#define SS 168
+	
 	
 	
 	#define TASK_threadsp 352

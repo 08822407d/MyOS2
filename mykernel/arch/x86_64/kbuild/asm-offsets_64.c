@@ -44,8 +44,34 @@ int main(void)
 	ENTRY(r14);
 	ENTRY(r15);
 	ENTRY(flags);
+
 	BLANK();
 #undef ENTRY
+
+	OFFSET(R15, pt_regs, r15);
+	OFFSET(R14, pt_regs, r14);
+	OFFSET(R13, pt_regs, r13);
+	OFFSET(R12, pt_regs, r12);
+	OFFSET(RBP, pt_regs, bp);
+	OFFSET(RBX, pt_regs, bx);
+	OFFSET(R11, pt_regs, r11);
+	OFFSET(R10, pt_regs, r10);
+	OFFSET(R9, pt_regs, r9);
+	OFFSET(R8, pt_regs, r8);
+	OFFSET(RAX, pt_regs, ax);
+	OFFSET(RCX, pt_regs, cx);
+	OFFSET(RDX, pt_regs, dx);
+	OFFSET(RSI, pt_regs, si);
+	OFFSET(RDI, pt_regs, di);
+	OFFSET(IRQ_NR, pt_regs, irq_nr);
+	OFFSET(ORIG_RAX, pt_regs, orig_ax);
+	OFFSET(RIP, pt_regs, ip);
+	OFFSET(CS, pt_regs, cs);
+	OFFSET(EFLAGS, pt_regs, flags);
+	OFFSET(RSP, pt_regs, sp);
+	OFFSET(SS, pt_regs, ss);
+
+	BLANK();
 
 // #define ENTRY(entry) OFFSET(saved_context_ ## entry, saved_context, entry)
 // 	ENTRY(cr0);

@@ -101,20 +101,135 @@ main:
 	
 .ascii "->pt_regs_flags $152 offsetof(struct pt_regs, flags)"
 # 0 "" 2
-	.loc 1 47 2
-# 47 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	.loc 1 48 2
+# 48 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
 	
 .ascii "->"
+# 0 "" 2
+	.loc 1 51 2
+# 51 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R15 $0 offsetof(struct pt_regs, r15)"
+# 0 "" 2
+	.loc 1 52 2
+# 52 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R14 $8 offsetof(struct pt_regs, r14)"
+# 0 "" 2
+	.loc 1 53 2
+# 53 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R13 $16 offsetof(struct pt_regs, r13)"
+# 0 "" 2
+	.loc 1 54 2
+# 54 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R12 $24 offsetof(struct pt_regs, r12)"
+# 0 "" 2
+	.loc 1 55 2
+# 55 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RBP $32 offsetof(struct pt_regs, bp)"
+# 0 "" 2
+	.loc 1 56 2
+# 56 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RBX $40 offsetof(struct pt_regs, bx)"
+# 0 "" 2
+	.loc 1 57 2
+# 57 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R11 $48 offsetof(struct pt_regs, r11)"
+# 0 "" 2
+	.loc 1 58 2
+# 58 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R10 $56 offsetof(struct pt_regs, r10)"
 # 0 "" 2
 	.loc 1 59 2
 # 59 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
 	
+.ascii "->R9 $64 offsetof(struct pt_regs, r9)"
+# 0 "" 2
+	.loc 1 60 2
+# 60 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->R8 $72 offsetof(struct pt_regs, r8)"
+# 0 "" 2
+	.loc 1 61 2
+# 61 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RAX $80 offsetof(struct pt_regs, ax)"
+# 0 "" 2
+	.loc 1 62 2
+# 62 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RCX $88 offsetof(struct pt_regs, cx)"
+# 0 "" 2
+	.loc 1 63 2
+# 63 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RDX $96 offsetof(struct pt_regs, dx)"
+# 0 "" 2
+	.loc 1 64 2
+# 64 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RSI $104 offsetof(struct pt_regs, si)"
+# 0 "" 2
+	.loc 1 65 2
+# 65 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RDI $112 offsetof(struct pt_regs, di)"
+# 0 "" 2
+	.loc 1 66 2
+# 66 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->IRQ_NR $120 offsetof(struct pt_regs, irq_nr)"
+# 0 "" 2
+	.loc 1 67 2
+# 67 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->ORIG_RAX $128 offsetof(struct pt_regs, orig_ax)"
+# 0 "" 2
+	.loc 1 68 2
+# 68 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RIP $136 offsetof(struct pt_regs, ip)"
+# 0 "" 2
+	.loc 1 69 2
+# 69 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->CS $144 offsetof(struct pt_regs, cs)"
+# 0 "" 2
+	.loc 1 70 2
+# 70 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->EFLAGS $152 offsetof(struct pt_regs, flags)"
+# 0 "" 2
+	.loc 1 71 2
+# 71 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->RSP $160 offsetof(struct pt_regs, sp)"
+# 0 "" 2
+	.loc 1 72 2
+# 72 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->SS $168 offsetof(struct pt_regs, ss)"
+# 0 "" 2
+	.loc 1 74 2
+# 74 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
 .ascii "->"
 # 0 "" 2
-	.loc 1 65 9
+	.loc 1 85 2
+# 85 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets_64.c" 1
+	
+.ascii "->"
+# 0 "" 2
+	.loc 1 91 9
 #NO_APP
 	movl	$0, %eax
-	.loc 1 66 1
+	.loc 1 92 1
 	popq	%rbp
 	.cfi_restore 6
 	.cfi_def_cfa 7, 8
