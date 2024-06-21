@@ -85,11 +85,22 @@ SYM_CODE_START(code_64_start)
 	movl	$0x80000001,%eax
 	cpuid
 	movl	%edx,		%edi
-
+enable_SCE:
 	/* Setup EFER (Extended Feature Enable Register) */
 	movl	$MSR_EFER,	%ecx
 	rdmsr
+	/*
+	 * Preserve current value of EFER for comparison and to skip
+	 * EFER writes if no change was made (for TDX guest)
+	 */
+	movl    %eax,		%edx
 	btsl	$_EFER_SCE,	%eax	/* Enable System Call */
+	/* Avoid writing EFER if no change was made (for TDX guest) */
+	cmpl	%edx,		%eax
+	je		1f
+	xor		%edx,		%edx
+	wrmsr				/* Make changes effective */
+1:
 	/* Setup cr0 */
 	movl	$CR0_STATE,	%eax
 	/* Make changes effective */

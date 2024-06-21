@@ -51,8 +51,8 @@ SYM_FUNC_START(__switch_to_asm)
 	pushq	%r15
 
 	/* switch stack */
-	movq	%rsp, TASK_threadsp(%rdi)
-	movq	TASK_threadsp(%rsi), %rsp
+	movq	%rsp,	TASK_threadsp(%rdi)
+	movq	TASK_threadsp(%rsi),	%rsp
 
 // #ifdef CONFIG_STACKPROTECTOR
 // 	movq	TASK_stack_canary(%rsi), %rbx
@@ -232,10 +232,10 @@ SYM_CODE_START(sysexit_entp)
 // !!! kernel RSP should be load by hand !!!
 SYM_CODE_START(entry_SYSCALL_64)
 	cli
-	endbr64
+	// endbr64
 
 	// swapgs
-	// /* tss.sp2 is scratch space. */
+	/* tss.sp2 is scratch space. */
 	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)(%rip)
 	// // SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
 	// movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
@@ -261,17 +261,20 @@ SYM_CODE_START(entry_SYSCALL_64)
 // !!! user RSP should be restore by hand !!!
 // !!! kernel RSP should be store by hand !!!
 SYM_CODE_START(ret_from_syscall)
-
-	// /////////////////////////////////
-	// addq		$0x10,		%rsp	// skip err-code and vec-nr
-	// /////////////////////////////////
-	// // now user rip already in rcx, rflags in r11
-	// popq		%rcx
-	// addq		$0x10,		%rsp	// skip cs
-	// popq		%rsp
+	cli
+	/* exchange struct pt_reg rip and rsp to corresponding user register */
+	xchgq		%r11,		EFLAGS(%rsp)
+	xchgq		%rcx,		RIP(%rsp)
+	xchgq		%r11,		R11(%rsp)
+	xchgq		%rcx,		RCX(%rsp)
+	xchgq		%r11,		EFLAGS(%rsp)
+	xchgq		%rcx,		RIP(%rsp)
+	POP_REGS
+	addq		$0x28,		%rsp
+	popq		%rsp
 	// swapgs
-	sti
 
+	sti
 	sysretq
 
 

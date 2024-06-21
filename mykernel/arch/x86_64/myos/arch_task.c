@@ -29,9 +29,9 @@ void kjmp_to_doexecve()
 	curr->mm = curr->active_mm;
 	kernel_execve(initd_name, argv, envp);
 
-	asm volatile(	"movq	%0,	%%rsp		\n\t"
-					"sti					\n\t"
-					"jmp	sysexit_entp	\n\t"
+	asm volatile(	"movq	%0,		%%rsp		\n\t"
+					// "jmp	sysexit_entp		\n\t"
+					"jmp	ret_from_syscall	\n\t"
 				:
 				:	"m"(curr_ptregs)
 				:
