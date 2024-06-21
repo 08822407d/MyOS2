@@ -29,7 +29,7 @@ execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
 # kernel common ASM make flags
 set(CMAKE_ASM_FLAGS
 	"${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} ${UNUSED_MACRO} \
-	-fverbose-asm \
+	-m64 -fverbose-asm \
 	-D__KERNEL__ \
 	-D__ASSEMBLY__ -DASM_FILE \
 ")
@@ -45,7 +45,6 @@ set(CMAKE_C_FLAGS
 	-static \
 	-fdata-sections -ffunction-sections \
 	-ggdb \
-	-D__x86_64__ \
 	-mabi=sysv \
 	-mno-red-zone \
 ")
@@ -57,6 +56,7 @@ set(CMAKE_C_FLAGS
 # define kernel internal option macros
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${UNUSED_MACRO} \
 	-D__KERNEL__ \
+	-D__x86_64__ \
 	-DCONFIG_FLATMEM -DCONFIG_NR_CPUS=256 \
 	-DCONFIG_64BIT -DCONFIG_PHYS_ADDR_T_64BIT \
 	-DCONFIG_ZONE_DMA -DCONFIG_ZONE_DMA32 \
@@ -65,9 +65,6 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${UNUSED_MACRO} \
 	-DCONFIG_BUG \
 	-DGRUB2_BOOTUP_SUPPORT \
 ")
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
-# 	-DCONFIG_INTEL_X64_GDT_LAYOUT \
-# ")
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}

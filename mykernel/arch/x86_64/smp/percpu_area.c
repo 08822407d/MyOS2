@@ -77,7 +77,7 @@ void myos_init_per_cpu_var(void)
 	attach_pid(this_idle_thread, PIDTYPE_PID);
 
 
-	x86_hw_tss_s *this_x86_tss = &(per_cpu(cpu_tss_rw, 0).x86_tss);
+	x86_hw_tss_s *this_x86_tss		= &(per_cpu(cpu_tss_rw, 0).x86_tss);
 	this_x86_tss->sp0				= task_top_of_stack(this_idle_thread);
 	this_x86_tss->io_bitmap_base	= IO_BITMAP_OFFSET_INVALID;
 

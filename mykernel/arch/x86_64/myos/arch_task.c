@@ -3,6 +3,8 @@
 
 
 #define LOAD_ELF
+x86_hw_tss_s *hwtss_cpu0 = NULL;
+
 
 void kjmp_to_doexecve()
 {
@@ -28,6 +30,8 @@ void kjmp_to_doexecve()
 	// 需要通过current->mm和active_mm的检查，所以设置下mm
 	curr->mm = curr->active_mm;
 	kernel_execve(initd_name, argv, envp);
+
+	hwtss_cpu0 = this_cpu_ptr(&(cpu_tss_rw.x86_tss));
 
 	asm volatile(	"movq	%0,		%%rsp		\n\t"
 					// "jmp	sysexit_entp		\n\t"

@@ -242,7 +242,7 @@ main:
 common:
 .LFB132:
 	.file 2 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c"
-	.loc 2 9 1
+	.loc 2 11 1
 	.cfi_startproc
 	endbr64
 	pushq	%rbp
@@ -254,58 +254,58 @@ common:
 	leaq	.L5(%rip), %rax
 	movabsq	$_GLOBAL_OFFSET_TABLE_-.L5, %r11
 	addq	%r11, %rax
-	.loc 2 10 2
+	.loc 2 12 2
 #APP
-# 10 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+# 12 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
 .ascii "->"
 # 0 "" 2
-	.loc 2 11 2
-# 11 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	.loc 2 13 2
+# 13 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
 .ascii "->TASK_threadsp $352 offsetof(struct task_struct, thread.sp)"
 # 0 "" 2
-	.loc 2 16 2
-# 16 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	.loc 2 18 2
+# 18 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
 .ascii "->"
 # 0 "" 2
-	.loc 2 76 2
-# 76 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	.loc 2 78 2
+# 78 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
 .ascii "->"
 # 0 "" 2
-	.loc 2 77 2
-# 77 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	.loc 2 79 2
+# 79 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
 .ascii "->PTREGS_SIZE $176 sizeof(struct pt_regs)"
-# 0 "" 2
-	.loc 2 88 2
-# 88 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
-	
-.ascii "->TSS_sp0 $4 offsetof(struct tss_struct, x86_tss.sp0)"
-# 0 "" 2
-	.loc 2 89 2
-# 89 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
-	
-.ascii "->TSS_sp1 $12 offsetof(struct tss_struct, x86_tss.sp1)"
 # 0 "" 2
 	.loc 2 90 2
 # 90 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
-.ascii "->TSS_sp2 $20 offsetof(struct tss_struct, x86_tss.sp2)"
+.ascii "->TSS_sp0 $4 offsetof(struct tss_struct, x86_tss.sp0)"
 # 0 "" 2
 	.loc 2 91 2
 # 91 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
-.ascii "->X86_top_of_stack $24 offsetof(struct pcpu_hot, top_of_stack)"
+.ascii "->TSS_sp1 $12 offsetof(struct tss_struct, x86_tss.sp1)"
 # 0 "" 2
 	.loc 2 92 2
 # 92 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
 	
+.ascii "->TSS_sp2 $20 offsetof(struct tss_struct, x86_tss.sp2)"
+# 0 "" 2
+	.loc 2 93 2
+# 93 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	
+.ascii "->X86_top_of_stack $24 offsetof(struct pcpu_hot, top_of_stack)"
+# 0 "" 2
+	.loc 2 94 2
+# 94 "/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c" 1
+	
 .ascii "->X86_current_task $0 offsetof(struct pcpu_hot, current_task)"
 # 0 "" 2
-	.loc 2 103 1
+	.loc 2 105 1
 #NO_APP
 	nop
 	popq	%rbp
@@ -3245,7 +3245,7 @@ common:
 	.uleb128 0x27
 	.long	.LASF303
 	.byte	0x2
-	.byte	0x8
+	.byte	0xa
 	.byte	0x27
 	.quad	.LFB132
 	.quad	.LFE132-.LFB132

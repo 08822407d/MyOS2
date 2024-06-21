@@ -104,7 +104,8 @@ swapgs_restore_regs_and_return_to_usermode:
 	// movq	%rsp, %rdi
 	// call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
 	// jmp	swapgs_restore_regs_and_return_to_usermode
-	jmp		sysexit_entp
+	// jmp		sysexit_entp
+	jmp		ret_from_syscall
 
 1:
 	/* kernel thread */
@@ -232,22 +233,40 @@ SYM_CODE_START(sysexit_entp)
 // !!! kernel RSP should be load by hand !!!
 SYM_CODE_START(entry_SYSCALL_64)
 	cli
-	// endbr64
+	endbr64
 
 	// swapgs
+	leaq		__per_cpu_load(%rip),	%r10
 	/* tss.sp2 is scratch space. */
-	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)(%rip)
+	// movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+	leaq		cpu_tss_rw(%rip),		%rbx
+	subq		%r10,		%rbx
+	movq		%rsp,		PER_CPU_VAR(TSS_sp2(%rbx))
 	// // SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
 	// movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
+	leaq		pcpu_hot(%rip),			%rbx
+	subq		%r10,		%rbx
+	movq		PER_CPU_VAR(X86_top_of_stack(%rbx)),	%rsp
 
-	// movabsq		$cpustack_off,	%r10
-	// movq		(%r10),		%r10
-	// movq		%gs:(%r10),	%r10
-	// xchgq		%rsp,		%r10
-	// pushq		%r10				// save user rsp
-	// pushq		%r11				// save user rflags
-	// subq		$0x08,		%rsp
-	// pushq		%rcx
+	pushq		$__USER_DS				/* pt_regs->ss */
+	// pushq		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)	/* pt_regs->sp */
+	subq		$0x08,		%rsp
+	pushq		%r11					/* pt_regs->flags */
+	pushq		$__USER_CS				/* pt_regs->cs */
+	pushq		%rcx					/* pt_regs->ip */
+// SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
+	pushq		%rax					/* pt_regs->orig_ax */
+	pushq		$0x80					/* pt_regs->irq_nr */
+	PUSH_REGS
+	sti
+
+	/* IRQs are off. */
+	movq		%rsp,		%rdi
+	/* Sign extend the lower 32bit as syscall numbers are treated as int */
+	movslq		%eax,		%rsi
+	call		do_syscall_64		/* returns with IRQs disabled */
+
+
 	// /////////////////////////////////
 	// subq		$0x10,		%rsp	// skip vec_nr and err_code
 	// /////////////////////////////////
