@@ -238,7 +238,7 @@ SYM_CODE_START(entry_SYSCALL_64)
 	// swapgs
 	leaq		__per_cpu_load(%rip),	%r10
 	/* tss.sp2 is scratch space. */
-	// movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
 	leaq		cpu_tss_rw(%rip),		%rbx
 	subq		%r10,		%rbx
 	movq		%rsp,		PER_CPU_VAR(TSS_sp2(%rbx))

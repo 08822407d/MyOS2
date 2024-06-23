@@ -4300,9 +4300,6 @@ common:
 	.string	"prev_sequence"
 .LASF22:
 	.string	"bool"
-.LASF300:
-	.ascii	"GNU C17 "
-	.string	"11.4.0 -m64 -mcmodel=large -mabi=sysv -mno-red-zone -mtune=generic -march=x86-64 -ggdb -g -fPIC -ffreestanding -fno-stack-protector -fno-unwind-tables -fdata-sections -ffunction-sections -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection"
 .LASF227:
 	.string	"buddy_list"
 .LASF101:
@@ -4373,6 +4370,9 @@ common:
 	.string	"pcpu_hot"
 .LASF7:
 	.string	"short int"
+.LASF300:
+	.ascii	"GNU C17 "
+	.string	"11.4.0 -m64 -mcmodel=large -mabi=sysv -mno-red-zone -mtune=generic -march=x86-64 -ggdb -g -fPIE -ffreestanding -fno-stack-protector -fno-unwind-tables -fdata-sections -ffunction-sections -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection"
 .LASF48:
 	.string	"exit_state"
 .LASF39:

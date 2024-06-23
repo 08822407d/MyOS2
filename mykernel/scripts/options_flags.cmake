@@ -29,7 +29,7 @@ execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
 # kernel common ASM make flags
 set(CMAKE_ASM_FLAGS
 	"${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} ${UNUSED_MACRO} \
-	-m64 -fverbose-asm \
+	-m64 -mcmodel=large -fverbose-asm \
 	-D__KERNEL__ \
 	-D__ASSEMBLY__ -DASM_FILE \
 ")
@@ -37,7 +37,7 @@ set(CMAKE_ASM_FLAGS
 # kernel common C make flags
 set(CMAKE_C_FLAGS
 	"${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
-	-m64 -mcmodel=large -fPIC \
+	-m64 -mcmodel=large -fPIE \
 	-ffreestanding -nostartfiles \
 	-nostdinc -nostdlib \
 	-fno-stack-protector \
