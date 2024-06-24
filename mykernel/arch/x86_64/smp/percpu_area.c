@@ -90,7 +90,7 @@ void myos_init_per_cpu_var(void)
 
 
 	struct gdt_page *this_gdt_page	= &per_cpu(gdt_page, 0);
-	memcpy(this_gdt_page, (const void *)phys_to_virt((phys_addr_t)&gdt_page), sizeof(struct gdt_page));
+	memcpy(this_gdt_page, (const void *)((ulong)__per_cpu_load + (ulong)&gdt_page), sizeof(struct gdt_page));
 
 
 	rq_s *this_runqueues			= &per_cpu(runqueues, 0);

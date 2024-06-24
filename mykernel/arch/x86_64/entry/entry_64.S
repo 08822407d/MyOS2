@@ -253,18 +253,18 @@ SYM_CODE_START(entry_SYSCALL_64)
 	PUSH_REGS
 	sti
 
+	// PUSH_AND_CLEAR_REGS rax=$-ENOSYS
+
 	/* IRQs are off. */
 	movq		%rsp,		%rdi
 	/* Sign extend the lower 32bit as syscall numbers are treated as int */
 	movslq		%eax,		%rsi
+	// /* clobbers %rax, make sure it is after saving the syscall nr */
+	// IBRS_ENTER
+	// UNTRAIN_RET
+	// CLEAR_BRANCH_HISTORY
 	call		do_syscall_64		/* returns with IRQs disabled */
 
-
-	// /////////////////////////////////
-	// subq		$0x10,		%rsp	// skip vec_nr and err_code
-	// /////////////////////////////////
-
-	// movq		%rsp,		%rdi
 
 // R11 -> user Rflags
 // RCX -> user RIP

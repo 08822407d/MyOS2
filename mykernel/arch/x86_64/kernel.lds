@@ -9,8 +9,8 @@ _k_phys_edata	= _edata - _k_offset;
 _k_phys_loadend	= __bss_start - _k_offset;
 _k_phys_ebss	= __bss_stop - _k_offset;
 
-_APboot_phys_start		= 0x4000;
-_PCPU_BASE		= 0x6000;
+_APboot_phys_start		= 0xE000;
+_PCPU_BASE		= 0x0;
 
 _Page_Size		= 0x1000;
 

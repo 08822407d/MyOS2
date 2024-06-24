@@ -148,8 +148,7 @@ void __init setup_per_cpu_areas(void)
 				 * per CPU stack canary is 0 in both per CPU areas.
 				 */
 				// wrmsrl(MSR_GS_BASE, cpu_kernelmode_gs_base(cpu));
-				wrmsrl(MSR_GS_BASE, per_cpu_offset(cpu) +
-						(unsigned long)__per_cpu_load);
+				wrmsrl(MSR_GS_BASE, per_cpu_offset(cpu));
 			// }
 		}
 	}
