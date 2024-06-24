@@ -9,10 +9,19 @@ _k_phys_edata	= _edata - _k_offset;
 _k_phys_loadend	= __bss_start - _k_offset;
 _k_phys_ebss	= __bss_stop - _k_offset;
 
-_APboot_phys_start			= 0x4000;
+_APboot_phys_start		= 0x4000;
+_PCPU_BASE		= 0x6000;
 
 _Page_Size		= 0x1000;
 
+/* PHDRS {
+ text PT_LOAD FLAGS(5);
+ data PT_LOAD FLAGS(6);
+ percpu PT_LOAD FLAGS(6);
+ init PT_LOAD FLAGS(7);
+ APboot PT_LOAD FLAGS(8);
+ note PT_NOTE FLAGS(0);
+} */
 SECTIONS
 {
 	/* the head of kernel running in low-half mem */
@@ -27,16 +36,14 @@ SECTIONS
 	}
 
 	/* AP boot from real-mode, related code and data will be copied to */
-	/* begin 1MB of memory, so the symbols need relocated */
+	/* start 1MB of memory, so the symbols need relocated */
 	apb_start_viraddr = ALIGN(_Page_Size);
-	. = _APboot_phys_start;
-	.APboot.text ALIGN(_Page_Size) : AT(apb_start_viraddr)
+	.APboot.text _APboot_phys_start : AT(apb_start_viraddr)
 	{
 		_APboot_text = apb_start_viraddr - _APboot_phys_start;
 		KEEP(*(.AP_boot.text));
 		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
-	}
-	. = _APboot_etext;
+	} . = apb_start_viraddr + SIZEOF(.APboot.text);
 
 
 	/* here is the kernel in high-half meme */
@@ -69,8 +76,7 @@ SECTIONS
 	}
 	. = ALIGN(_Page_Size);
 	__per_cpu_load = .;
-	/* .data..percpu 0 : AT(__per_cpu_load - _k_offset) */
-	.data..percpu ALIGN(_Page_Size) : AT(__per_cpu_load - _k_offset)
+	.data..percpu _PCPU_BASE : AT(__per_cpu_load - _k_offset)
 	{
 		__per_cpu_start = .;
 		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
@@ -78,7 +84,7 @@ SECTIONS
 		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(_Page_Size);
 		__per_cpu_end = .;
 	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
-	}
+	} . = __per_cpu_load + SIZEOF(.data..percpu);
 	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
 		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
 	. = ALIGN(_Page_Size);

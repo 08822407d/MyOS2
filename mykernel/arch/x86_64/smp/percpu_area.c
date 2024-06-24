@@ -56,7 +56,7 @@ void myos_init_per_cpu_var(void)
 {
 	myos_init_pid_allocator();
 
-	task_s *this_idle_thread = &per_cpu(idle_threads, 0);
+	task_s *this_idle_thread		= &per_cpu(idle_threads, 0);
 	memset(this_idle_thread, 0, sizeof(task_s));
 	spin_lock_init(&this_idle_thread->alloc_lock);
 	INIT_LIST_S(&this_idle_thread->rt.run_list);
@@ -82,18 +82,18 @@ void myos_init_per_cpu_var(void)
 	this_x86_tss->io_bitmap_base	= IO_BITMAP_OFFSET_INVALID;
 
 
-	pcpu_hot_s *this_pcpu_hot = &per_cpu(pcpu_hot, 0);
+	pcpu_hot_s *this_pcpu_hot		= &per_cpu(pcpu_hot, 0);
 	memset(this_pcpu_hot, 0, sizeof(pcpu_hot_s));
 	this_pcpu_hot->current_task		= this_idle_thread;
 	this_pcpu_hot->preempt_count	= INIT_PREEMPT_COUNT;
 	this_pcpu_hot->top_of_stack		= TOP_OF_INIT_STACK;
 
 
-	struct gdt_page *this_gdt_page = &per_cpu(gdt_page, 0);
-	memcpy(this_gdt_page, &gdt_page, sizeof(struct gdt_page));
+	struct gdt_page *this_gdt_page	= &per_cpu(gdt_page, 0);
+	memcpy(this_gdt_page, (const void *)phys_to_virt((phys_addr_t)&gdt_page), sizeof(struct gdt_page));
 
 
-	rq_s *this_runqueues = &per_cpu(runqueues, 0);
+	rq_s *this_runqueues			= &per_cpu(runqueues, 0);
 	memset(this_runqueues, 0, sizeof(rq_s));
 	INIT_LIST_HEADER_S(&this_runqueues->myos.running_lhdr);
 	this_runqueues->curr			=

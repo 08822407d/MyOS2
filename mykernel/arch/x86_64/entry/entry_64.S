@@ -238,19 +238,12 @@ SYM_CODE_START(entry_SYSCALL_64)
 	// swapgs
 	leaq		__per_cpu_load(%rip),	%r10
 	/* tss.sp2 is scratch space. */
-	// movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
-	leaq		cpu_tss_rw(%rip),		%rbx
-	subq		%r10,		%rbx
-	movq		%rsp,		PER_CPU_VAR(TSS_sp2(%rbx))
-	// // SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
-	// movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
-	leaq		pcpu_hot(%rip),			%rbx
-	subq		%r10,		%rbx
-	movq		PER_CPU_VAR(X86_top_of_stack(%rbx)),	%rsp
+	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
+	// SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
+	movq		PER_CPU_VAR(pcpu_hot + X86_top_of_stack),	%rsp
 
 	pushq		$__USER_DS				/* pt_regs->ss */
-	// pushq		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)	/* pt_regs->sp */
-	subq		$0x08,		%rsp
+	pushq		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)	/* pt_regs->sp */
 	pushq		%r11					/* pt_regs->flags */
 	pushq		$__USER_CS				/* pt_regs->cs */
 	pushq		%rcx					/* pt_regs->ip */

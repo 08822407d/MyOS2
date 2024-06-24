@@ -121,7 +121,8 @@
 
 
 	#include <asm-generic/sections.h>
-	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
+	// #define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
+	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_start)
 
 	#endif /* !__ASSEMBLY__ */
 

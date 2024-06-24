@@ -26,7 +26,7 @@ void load_direct_gdt(int cpu)
 {
 	struct desc_ptr gdt_descr;
 
-	gdt_descr.address = (long)get_cpu_gdt_rw(cpu);
+	gdt_descr.address = (ulong)virt_to_phys((virt_addr_t)get_cpu_gdt_rw(cpu));
 	gdt_descr.size = GDT_SIZE - 1;
 	load_gdt(&gdt_descr);
 

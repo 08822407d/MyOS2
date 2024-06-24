@@ -78,10 +78,10 @@
 		} __attribute__((packed)) idt_bits_s;
 
 		struct idt_data {
-			unsigned int	vector;
-			unsigned int	segment;
-			idt_bits_s		bits;
-			const void		*addr;
+			uint		vector;
+			uint		segment;
+			idt_bits_s	bits;
+			const void	*addr;
 		};
 
 		// Intel Manual Volume 3 Chapter 6: Interrupt and Exception Handling
@@ -97,8 +97,8 @@
 
 
 		struct desc_ptr {
-			unsigned short size;
-			unsigned long address;
+			ushort	size;
+			ulong	address;
 		} __attribute__((packed)) ;
 
 		struct gdt_page {
