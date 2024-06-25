@@ -156,7 +156,7 @@ SYM_CODE_START(entry_SYSCALL_64)
 	pushq		%r11					/* pt_regs->flags */
 	pushq		$__USER_CS				/* pt_regs->cs */
 	pushq		%rcx					/* pt_regs->ip */
-// SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
+	// SYM_INNER_LABEL(entry_SYSCALL_64_after_hwframe, SYM_L_GLOBAL)
 	pushq		%rax					/* pt_regs->orig_ax */
 	pushq		$0x80					/* pt_regs->irq_nr */
 	PUSH_REGS
@@ -310,18 +310,22 @@ SYM_CODE_END(ret_from_fork_asm)
 /*==============================================================================================*/
 #include <asm/idtentry.h>
 SYM_CODE_START(sa_entintr_retp)
+	cli
 	PUSH_REGS
 	cld
 	movq		%rsp,		%rdi
+	sti
 
 	callq 		excep_hwint_context
 
+	cli
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr
 	sti
 	iretq
 
 
+/* hardware exceptions entries */
 	.align IDT_ALIGN
 SYM_CODE_START(idt_handler_array)
 	vector = 0
