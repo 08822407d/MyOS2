@@ -13,11 +13,13 @@
 #include <asm/processor.h>
 
 
+
+long __x64_sys_ni_syscall(const pt_regs_s *regs) {
+	while (1);
+}
+
 __visible noinstr void do_syscall_64(pt_regs_s *regs, int nr)
 {
-	x86_hw_tss_s *this_x86_tss		= &(per_cpu(cpu_tss_rw, 0).x86_tss);
-	regs->sp = this_x86_tss->sp2;
-
 	// add_random_kstack_offset();
 	// nr = syscall_enter_from_user_mode(regs, nr);
 
@@ -28,20 +30,12 @@ __visible noinstr void do_syscall_64(pt_regs_s *regs, int nr)
 	// 	regs->ax = __x64_sys_ni_syscall(regs);
 	// }
 
-	// static __always_inline bool do_syscall_x64(pt_regs_s *regs, int nr)
-	// {
-	// 	/*
-	// 	* Convert negative numbers to very high and thus out of range
-	// 	* numbers for comparisons.
-	// 	*/
-		unsigned int unr = nr;
-		if (unr < __NR_syscalls) {
-			// unr = array_index_nospec(unr, NR_syscalls);
-			regs->ax = sys_call_table[unr](regs);
-			// return true;
-		}
-	// 	return false;
-	// }
+	unsigned int unr = nr;
+	if (unr < __NR_syscalls) {
+		// unr = array_index_nospec(unr, NR_syscalls);
+		regs->ax = x64_sys_call(regs, unr);
+		// return true;
+	}
 
 	// instrumentation_end();
 	// syscall_exit_to_user_mode(regs);

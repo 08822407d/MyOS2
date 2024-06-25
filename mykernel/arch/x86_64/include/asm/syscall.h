@@ -23,6 +23,14 @@
 	typedef long (*sys_call_ptr_t)(const pt_regs_s *);
 	extern const sys_call_ptr_t sys_call_table[];
 
+	/*
+	 * These may not exist, but still put the prototypes in so we
+	 * can use IS_ENABLED().
+	 */
+	extern long ia32_sys_call(const pt_regs_s *, unsigned int nr);
+	extern long x32_sys_call(const pt_regs_s *, unsigned int nr);
+	extern long x64_sys_call(const pt_regs_s *, unsigned int nr);
+
 	// /*
 	//  * These may not exist, but still put the prototypes in so we
 	//  * can use IS_ENABLED().

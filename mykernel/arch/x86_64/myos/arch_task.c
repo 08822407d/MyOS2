@@ -35,7 +35,7 @@ void kjmp_to_doexecve()
 
 	asm volatile(	"movq	%0,		%%rsp		\n\t"
 					// "jmp	sysexit_entp		\n\t"
-					"jmp	ret_from_syscall	\n\t"
+					"jmp	syscall_return_via_sysret	\n\t"
 				:
 				:	"m"(curr_ptregs)
 				:

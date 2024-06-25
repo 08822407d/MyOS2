@@ -53,11 +53,31 @@ void exit_thread(task_s *tsk)
 // 		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
 // }
 
+__visible void
+ret_from_fork(task_s *prev, pt_regs_s *regs,
+		int (*fn)(void *), void *fn_arg)
+{
+	schedule_tail(prev);
+
+	/* Is this a kernel thread? */
+	if (unlikely(fn)) {
+		fn(fn_arg);
+		/*
+		 * A kernel thread is allowed to return here after successfully
+		 * calling kernel_execve().  Exit to userspace to complete the
+		 * execve() syscall.
+		 */
+		regs->ax = 0;
+	}
+
+	// syscall_exit_to_user_mode(regs);
+}
+
 int copy_thread(task_s *p, const kclone_args_s *args)
 {
-	unsigned long clone_flags = args->flags;
-	unsigned long sp = args->stack;
-	unsigned long tls = args->tls;
+	ulong clone_flags = args->flags;
+	ulong sp = args->stack;
+	ulong tls = args->tls;
 	task_kframe_s *frame;
 	fork_frame_s *fork_frame;
 	pt_regs_s *childregs;
@@ -68,7 +88,7 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 	frame = &fork_frame->frame;
 
 	// frame->bp = (reg_t)encode_frame_pointer(childregs);
-	frame->ret_addr = (reg_t)ret_from_fork;
+	frame->ret_addr = (reg_t)ret_from_fork_asm;
 	p->thread.sp = (reg_t)fork_frame;
 	// p->thread.io_bitmap = NULL;
 	// p->thread.iopl_warn = 0;

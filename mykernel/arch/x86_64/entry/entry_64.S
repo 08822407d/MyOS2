@@ -33,97 +33,6 @@
 .code64
 .section .entry.text, "ax"
 
-/*
- * %rdi: prev task
- * %rsi: next task
- */
-.pushsection .text, "ax"
-SYM_FUNC_START(__switch_to_asm)
-	/*
-	 * Save callee-saved registers
-	 * This must match the order in inactive_task_frame
-	 */
-	pushq	%rbp
-	pushq	%rbx
-	pushq	%r12
-	pushq	%r13
-	pushq	%r14
-	pushq	%r15
-
-	/* switch stack */
-	movq	%rsp,	TASK_threadsp(%rdi)
-	movq	TASK_threadsp(%rsi),	%rsp
-
-// #ifdef CONFIG_STACKPROTECTOR
-// 	movq	TASK_stack_canary(%rsi), %rbx
-// 	movq	%rbx, PER_CPU_VAR(fixed_percpu_data) + stack_canary_offset
-// #endif
-
-// #ifdef CONFIG_RETPOLINE
-// 	/*
-// 	 * When switching from a shallower to a deeper call stack
-// 	 * the RSB may either underflow or use entries populated
-// 	 * with userspace addresses. On CPUs where those concerns
-// 	 * exist, overwrite the RSB with entries which capture
-// 	 * speculative execution to prevent attack.
-// 	 */
-// 	FILL_RETURN_BUFFER %r12, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_CTXSW
-// #endif
-
-	/* restore callee-saved registers */
-	popq	%r15
-	popq	%r14
-	popq	%r13
-	popq	%r12
-	popq	%rbx
-	popq	%rbp
-
-	jmp		__switch_to
-SYM_FUNC_END(__switch_to_asm)
-.popsection
-
-/*
- * A newly forked process directly context switches into this address.
- *
- * rax: prev task we switched from
- * rbx: kernel thread func (NULL for user thread)
- * r12: kernel thread arg
- */
-.pushsection .text, "ax"
-SYM_CODE_START(ret_from_fork)
-	// UNWIND_HINT_EMPTY
-	movq	%rax,		%rdi
-	call	schedule_tail		/* rdi: 'prev' task parameter */
-
-	testq	%rbx,		%rbx	/* from kernel_thread? */
-	jnz		1f					/* kernel threads are uncommon */
-
-2:
-swapgs_restore_regs_and_return_to_usermode:
-	// UNWIND_HINT_REGS
-	// movq	%rsp, %rdi
-	// call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
-	// jmp	swapgs_restore_regs_and_return_to_usermode
-	// jmp		sysexit_entp
-	jmp		ret_from_syscall
-
-1:
-	/* kernel thread */
-	// UNWIND_HINT_EMPTY
-	movq	%r12,		%rdi
-	// CALL_NOSPEC rbx
-	callq	*%rbx
-	// /*
-	//  * A kernel thread is allowed to return here after successfully
-	//  * calling kernel_execve().  Exit to userspace to complete the execve()
-	//  * syscall.
-	//  */
-	// movq	$0, RAX(%rsp)
-	// jmp	2b
-	jmp		.
-SYM_CODE_END(ret_from_fork)
-.popsection
-
 
 #include <asm/ptrace.h>
 /*==============================================================================================*/
@@ -171,54 +80,55 @@ SYM_CODE_END(ret_from_fork)
 	popq		%rdi
 .endm
 
-/*==============================================================================================*/
-/*									syscenter and sysexit entry						 			*/
-/*==============================================================================================*/
-// user RSP -> R11 by hand
-// user RIP -> R10 by hand
-// kernel CS = IA32_SYSENTER_CS
-// kernel SS = IA32_SYSENTER_CS + 8
-// kernel RIP = IA32_SYSENTER_EIP
-// kernel RSP = IA32_SYSENTER_ESP
-SYM_CODE_START(sysenter_entp)
-	cli
-	subq		$0x38,		%rsp
-	PUSH_REGS
-	/* exchange user rip and rsp to corresponding position in struct pt_reg */
-	xchgq		%r11,		R11(%rsp)
-	xchgq		%r10,		R10(%rsp)
-	xchgq		%r11,		RSP(%rsp)
-	xchgq		%r10,		RIP(%rsp)
-	xchgq		%r11,		R11(%rsp)
-	xchgq		%r10,		R10(%rsp)
-	sti
-	/* IRQs are off. */
-	movq		%rsp,		%rdi
-	/* Sign extend the lower 32bit as syscall numbers are treated as int */
-	movslq		%eax,		%rsi
-	call		do_syscall_64		/* returns with IRQs disabled */
 
-// RDX -> user RSP
-// RCX -> user RIP
-// user CS = IA32_SYSENTER_CS + 32
-// user SS = IA32_SYSENTER_CS + 40
-SYM_CODE_START(sysexit_entp)
-	cli
-	/* exchange struct pt_reg rip and rsp to corresponding user register */
-	xchgq		%r11,		RSP(%rsp)
-	xchgq		%r10,		RIP(%rsp)
-	xchgq		%r11,		R11(%rsp)
-	xchgq		%r10,		R10(%rsp)
-	xchgq		%r11,		RSP(%rsp)
-	xchgq		%r10,		RIP(%rsp)
-	POP_REGS
-	addq		$0x38,		%rsp
-	xchgq		%r10,		%rdx
-	xchgq		%r11,		%rcx
-	sti
+// /*==============================================================================================*/
+// /*									syscenter and sysexit entry						 			*/
+// /*==============================================================================================*/
+// // user RSP -> R11 by hand
+// // user RIP -> R10 by hand
+// // kernel CS = IA32_SYSENTER_CS
+// // kernel SS = IA32_SYSENTER_CS + 8
+// // kernel RIP = IA32_SYSENTER_EIP
+// // kernel RSP = IA32_SYSENTER_ESP
+// SYM_CODE_START(sysenter_entp)
+// 	cli
+// 	subq		$0x38,		%rsp
+// 	PUSH_REGS
+// 	/* exchange user rip and rsp to corresponding position in struct pt_reg */
+// 	xchgq		%r11,		R11(%rsp)
+// 	xchgq		%r10,		R10(%rsp)
+// 	xchgq		%r11,		RSP(%rsp)
+// 	xchgq		%r10,		RIP(%rsp)
+// 	xchgq		%r11,		R11(%rsp)
+// 	xchgq		%r10,		R10(%rsp)
+// 	sti
+// 	/* IRQs are off. */
+// 	movq		%rsp,		%rdi
+// 	/* Sign extend the lower 32bit as syscall numbers are treated as int */
+// 	movslq		%eax,		%rsi
+// 	call		do_syscall_64		/* returns with IRQs disabled */
 
-	REX.W
-	sysexitq
+// // RDX -> user RSP
+// // RCX -> user RIP
+// // user CS = IA32_SYSENTER_CS + 32
+// // user SS = IA32_SYSENTER_CS + 40
+// SYM_CODE_START(sysexit_entp)
+// 	cli
+// 	/* exchange struct pt_reg rip and rsp to corresponding user register */
+// 	xchgq		%r11,		RSP(%rsp)
+// 	xchgq		%r10,		RIP(%rsp)
+// 	xchgq		%r11,		R11(%rsp)
+// 	xchgq		%r10,		R10(%rsp)
+// 	xchgq		%r11,		RSP(%rsp)
+// 	xchgq		%r10,		RIP(%rsp)
+// 	POP_REGS
+// 	addq		$0x38,		%rsp
+// 	xchgq		%r10,		%rdx
+// 	xchgq		%r11,		%rcx
+// 	sti
+
+// 	REX.W
+// 	sysexitq
 
 /*==============================================================================================*/
 /*									syscall and sysret entry						 			*/
@@ -236,7 +146,6 @@ SYM_CODE_START(entry_SYSCALL_64)
 	endbr64
 
 	// swapgs
-	leaq		__per_cpu_load(%rip),	%r10
 	/* tss.sp2 is scratch space. */
 	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
 	// SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
@@ -272,7 +181,7 @@ SYM_CODE_START(entry_SYSCALL_64)
 // user SS = IA32_STAR[63:48] + 8
 // !!! user RSP should be restore by hand !!!
 // !!! kernel RSP should be store by hand !!!
-SYM_CODE_START(ret_from_syscall)
+SYM_CODE_START(syscall_return_via_sysret)
 	cli
 	/* exchange struct pt_reg rip and rsp to corresponding user register */
 	xchgq		%r11,		EFLAGS(%rsp)
@@ -290,6 +199,115 @@ SYM_CODE_START(ret_from_syscall)
 	sysretq
 
 
+/*==============================================================================================*/
+/*									process context switch							 			*/
+/*==============================================================================================*/
+/*
+ * %rdi: prev task
+ * %rsi: next task
+ */
+.pushsection .text, "ax"
+SYM_FUNC_START(__switch_to_asm)
+	/*
+	 * Save callee-saved registers
+	 * This must match the order in inactive_task_frame
+	 */
+	pushq		%rbp
+	pushq		%rbx
+	pushq		%r12
+	pushq		%r13
+	pushq		%r14
+	pushq		%r15
+
+	/* switch stack */
+	movq		%rsp,		TASK_threadsp(%rdi)
+	movq		TASK_threadsp(%rsi),	%rsp
+
+// #ifdef CONFIG_STACKPROTECTOR
+// 	movq	TASK_stack_canary(%rsi), %rbx
+// 	movq	%rbx, PER_CPU_VAR(fixed_percpu_data) + stack_canary_offset
+// #endif
+
+	// /*
+	//  * When switching from a shallower to a deeper call stack
+	//  * the RSB may either underflow or use entries populated
+	//  * with userspace addresses. On CPUs where those concerns
+	//  * exist, overwrite the RSB with entries which capture
+	//  * speculative execution to prevent attack.
+	//  */
+	// FILL_RETURN_BUFFER %r12, RSB_CLEAR_LOOPS, X86_FEATURE_RSB_CTXSW
+
+	/* restore callee-saved registers */
+	popq		%r15
+	popq		%r14
+	popq		%r13
+	popq		%r12
+	popq		%rbx
+	popq		%rbp
+
+	jmp			__switch_to
+SYM_FUNC_END(__switch_to_asm)
+.popsection
+
+/*
+ * A newly forked process directly context switches into this address.
+ *
+ * rax: prev task we switched from
+ * rbx: kernel thread func (NULL for user thread)
+ * r12: kernel thread arg
+ */
+.pushsection .text, "ax"
+SYM_CODE_START(ret_from_fork_asm)
+	// /*
+	//  * This is the start of the kernel stack; even through there's a
+	//  * register set at the top, the regset isn't necessarily coherent
+	//  * (consider kthreads) and one cannot unwind further.
+	//  *
+	//  * This ensures stack unwinds of kernel threads terminate in a known
+	//  * good state.
+	//  */
+	// UNWIND_HINT_END_OF_STACK
+	// ANNOTATE_NOENDBR // copy_thread
+	// CALL_DEPTH_ACCOUNT
+
+	movq		%rax,		%rdi		/* prev */
+	movq		%rsp,		%rsi		/* regs */
+	movq		%rbx,		%rdx		/* fn */
+	movq		%r12,		%rcx		/* fn_arg */
+	call		ret_from_fork			/* rdi: 'prev' task parameter */
+
+	testq		%rbx,		%rbx		/* from kernel_thread? */
+	jnz			1f						/* kernel threads are uncommon */
+
+2:
+swapgs_restore_regs_and_return_to_usermode:
+	// UNWIND_HINT_REGS
+	// movq	%rsp, %rdi
+	// call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
+	// jmp	swapgs_restore_regs_and_return_to_usermode
+	jmp			syscall_return_via_sysret
+
+1:
+	/* kernel thread */
+	// UNWIND_HINT_EMPTY
+	movq		%r12,		%rdi
+	// CALL_NOSPEC rbx
+	callq		*%rbx
+	// /*
+	//  * A kernel thread is allowed to return here after successfully
+	//  * calling kernel_execve().  Exit to userspace to complete the execve()
+	//  * syscall.
+	//  */
+	// movq	$0, RAX(%rsp)
+	// jmp	2b
+	jmp		.
+SYM_CODE_END(ret_from_fork_asm)
+.popsection
+
+
+/*==============================================================================================*/
+/*									hardware interrupt context							 		*/
+/*==============================================================================================*/
 #include <asm/idtentry.h>
 SYM_CODE_START(sa_entintr_retp)
 	PUSH_REGS
@@ -307,7 +325,7 @@ SYM_CODE_START(sa_entintr_retp)
 	.align IDT_ALIGN
 SYM_CODE_START(idt_handler_array)
 	vector = 0
-	.rept	NUM_EXCEPTION_VECTORS
+	.rept		NUM_EXCEPTION_VECTORS
 	/* Push 0 for Error Number placeholder */
 	.if ((EXCEPTION_ERRCODE_MASK >> vector) & 1) == 0
 		endbr64
@@ -315,10 +333,10 @@ SYM_CODE_START(idt_handler_array)
 	.else
 		endbr64
 	.endif
-	pushq	$vector		# 72(%rsp) Vector number
-	jmp		sa_entintr_retp
+	pushq		$vector		# 72(%rsp) Vector number
+	jmp			sa_entintr_retp
 	vector = vector + 1
-	.fill	idt_handler_array + vector*IDT_ALIGN - ., 1, 0xcc
+	.fill		idt_handler_array + vector*IDT_ALIGN - ., 1, 0xcc
 	.endr
 SYM_CODE_END(idt_handler_array)
 SYM_CODE_START_NOALIGN(exc_entries_end)
@@ -340,15 +358,15 @@ SYM_CODE_START_NOALIGN(exc_entries_end)
 	.align IDT_ALIGN
 SYM_CODE_START(irq_entries_start)
 	vector = 0
-	.rept	NR_VECTORS - FIRST_EXTERNAL_VECTOR
+	.rept		NR_VECTORS - FIRST_EXTERNAL_VECTOR
 	endbr64
 	/* External hardware interrupts has no error code */
-	pushq	$0
-	pushq	$(vector + FIRST_EXTERNAL_VECTOR)
-	jmp		sa_entintr_retp
+	pushq		$0
+	pushq		$(vector + FIRST_EXTERNAL_VECTOR)
+	jmp			sa_entintr_retp
 	/* Ensure that the above is IDT_ALIGN bytes max */
 	vector = vector + 1
-	.fill	irq_entries_start + vector*IDT_ALIGN - ., 1, 0xcc
+	.fill		irq_entries_start + vector*IDT_ALIGN - ., 1, 0xcc
 	.endr
 SYM_CODE_END(irq_entries_start)
 SYM_CODE_START_NOALIGN(irq_entries_end)

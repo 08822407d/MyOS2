@@ -8,7 +8,7 @@
 
 	task_s *__switch_to_asm(task_s *prev, task_s *next);
 	__visible task_s *__switch_to(task_s *prev, task_s *next);
-	asmlinkage void ret_from_fork(void);
+	asmlinkage void ret_from_fork_asm(void);
 	extern void *task_stack_page(const task_s *task);
 
 

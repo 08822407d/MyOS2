@@ -8,7 +8,7 @@
 
 	// pt_regs_s;
 
-	// extern long __x64_sys_ni_syscall(const pt_regs_s *regs);
+	extern long __x64_sys_ni_syscall(const pt_regs_s *regs);
 	// extern long __ia32_sys_ni_syscall(const pt_regs_s *regs);
 
 	#define __X86_64_MAP0(m, ...)
