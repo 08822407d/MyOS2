@@ -38,8 +38,6 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
 		-m64 -fPIC \
-		-ffreestanding \
-		-nostdinc -nostdlib \
 		-static \
 		-ggdb \
 		")
@@ -57,8 +55,8 @@ add_subdirectory(myinit)
 add_subdirectory(myshell)
 
 
-target_link_libraries(init mylibc mycrt)
-target_link_libraries(sh mylibc mycrt)
+# target_link_libraries(init mylibc mycrt)
+# target_link_libraries(sh mylibc mycrt)
 
 install(TARGETS init DESTINATION boot)
 install(TARGETS sh DESTINATION boot)

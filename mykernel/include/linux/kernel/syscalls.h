@@ -780,11 +780,11 @@
 		/* kernel/sys.c */
 		asmlinkage long sys_getpid(void);
 		asmlinkage long sys_getppid(void);
-		// asmlinkage long sys_getuid(void);
-		// asmlinkage long sys_geteuid(void);
-		// asmlinkage long sys_getgid(void);
-		// asmlinkage long sys_getegid(void);
-		// asmlinkage long sys_gettid(void);
+		asmlinkage long sys_getuid(void);
+		asmlinkage long sys_geteuid(void);
+		asmlinkage long sys_getgid(void);
+		asmlinkage long sys_getegid(void);
+		asmlinkage long sys_gettid(void);
 		// asmlinkage long sys_sysinfo(struct sysinfo __user *info);
 
 		// /* ipc/mqueue.c */

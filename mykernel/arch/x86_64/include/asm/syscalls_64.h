@@ -30,6 +30,11 @@ __SYSCALL(__NR_creat, sys_creat)
 // __SYSCALL(__NR_link, sys_link)
 __SYSCALL(__NR_unlink, sys_unlink)
 
+__SYSCALL(__NR_getuid, sys_getuid)
+__SYSCALL(__NR_getgid, sys_getuid)
+__SYSCALL(__NR_geteuid, sys_geteuid)
+__SYSCALL(__NR_getegid, sys_geteuid)
+
 __SYSCALL(__NR_getppid, sys_getppid)
 
 __SYSCALL(__NR_reboot, sys_reboot)

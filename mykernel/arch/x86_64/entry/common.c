@@ -12,9 +12,11 @@
 #include <asm/unistd.h>
 #include <asm/processor.h>
 
+#include <obsolete/printk.h>
 
 
 long __x64_sys_ni_syscall(const pt_regs_s *regs) {
+	color_printk(RED, BLACK, "Syscall not implemented: %d", regs->orig_ax);
 	while (1);
 }
 

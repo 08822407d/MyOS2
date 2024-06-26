@@ -218,6 +218,25 @@ MYOS_SYSCALL_DEFINE0(getppid)
 	return current->parent->pid;
 }
 
+MYOS_SYSCALL_DEFINE0(getuid)
+{
+	return 1000;
+}
+
+MYOS_SYSCALL_DEFINE0(geteuid)
+{
+	return 1000;
+}
+
+MYOS_SYSCALL_DEFINE0(getgid)
+{
+	return 1000;
+}
+
+MYOS_SYSCALL_DEFINE0(getegid)
+{
+	return 1000;
+}
 
 /*==============================================================================================*
  *									special functions											*
