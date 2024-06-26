@@ -33,14 +33,16 @@ execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
 
 
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
-		-m64 \
-		")
+	-m64 \
+")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
-		-m64 -fPIC \
-		-static \
-		-ggdb \
-		")
+	-m64 -fPIC \
+	-ffreestanding \
+	-nostdinc -nostdlib \
+	-static \
+	-ggdb \
+")
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 
@@ -49,14 +51,12 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAK
 link_directories(${LIBRARY_OUTPUT_PATH})
 
 
-
 add_subdirectory(mylib)
 add_subdirectory(myinit)
 add_subdirectory(myshell)
 
-
-# target_link_libraries(init mylibc mycrt)
-# target_link_libraries(sh mylibc mycrt)
+target_link_libraries(init mylibc mycrt)
+target_link_libraries(sh mylibc mycrt)
 
 install(TARGETS init DESTINATION boot)
 install(TARGETS sh DESTINATION boot)
