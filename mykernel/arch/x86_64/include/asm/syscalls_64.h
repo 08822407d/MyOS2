@@ -37,6 +37,7 @@ __SYSCALL(__NR_getegid, sys_geteuid)
 
 __SYSCALL(__NR_getppid, sys_getppid)
 
+__SYSCALL(__NR_arch_prctl, sys_arch_prctl)
 __SYSCALL(__NR_reboot, sys_reboot)
 
 // __SYSCALL(__NR_init_module, sys_init_module)
