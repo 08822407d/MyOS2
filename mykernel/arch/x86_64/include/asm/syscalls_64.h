@@ -45,4 +45,10 @@ __SYSCALL(__NR_reboot, sys_reboot)
 
 __SYSCALL(__NR_getdents64, sys_getdents64)
 
+__SYSCALL(__NR_set_tid_address, sys_set_tid_address)
+
+__SYSCALL(__NR_set_robust_list, sys_set_robust_list)
+
+__SYSCALL(__NR_rseq, sys_rseq)
+
 __SYSCALL(__NR_putstring, sys_myos_putstring)

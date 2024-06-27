@@ -18,29 +18,31 @@
 	#ifdef DEBUG
 
 		extern desc_s
-		*get_cpu_gdt_rw(unsigned int cpu);
+		*get_cpu_gdt_rw(uint cpu);
 
 		extern void
-		pack_gate(gate_desc *gate, unsigned type,
-				void (*func)(void), unsigned dpl, unsigned ist);
+		pack_gate(gate_desc *gate, uint type,
+				void (*func)(void), uint dpl, uint ist);
 
 		extern void
-		write_idt_entry(gate_desc *idt, int entry, const gate_desc *gate);
+		write_idt_entry(gate_desc *idt, int entry,
+				const gate_desc *gate);
 
 		extern void
-		write_gdt_entry(desc_s *gdt, int entry,  const void *desc, int type);
+		write_gdt_entry(desc_s *gdt, int entry,
+				const void *desc, int type);
 
 		extern void
-		set_tssldt_descriptor(void *d, unsigned long addr,
-				unsigned type, unsigned size);
+		set_tssldt_descriptor(void *d, ulong addr,
+				uint type, uint size);
 
 		extern void
-		set_tss_desc(unsigned cpu, x86_hw_tss_s *addr);
+		set_tss_desc(uint cpu, x86_hw_tss_s *addr);
 
-		extern unsigned long
+		extern ulong
 		gate_offset(const gate_desc *g);
 
-		extern unsigned long
+		extern ulong
 		gate_segment(const gate_desc *g);
 
 		extern void
@@ -53,11 +55,13 @@
 		load_TR_desc(void);
 
 		extern void
-		__loadsegment_fs(unsigned short value);
+		__loadsegment_fs(ushort value);
+		extern void
+		__loadsegment_gs(ushort value);
 
 		extern void
 		init_idt_data(struct idt_data *data,
-				unsigned int n, const void *addr);
+				uint n, const void *addr);
 
 		extern void
 		idt_init_desc(gate_desc *gate, const struct idt_data *d);
@@ -72,14 +76,14 @@
 		/* Provide the original GDT */
 		PREFIX_STATIC_INLINE
 		desc_s
-		*get_cpu_gdt_rw(unsigned int cpu) {
+		*get_cpu_gdt_rw(uint cpu) {
 			return per_cpu(gdt_page, cpu).gdt;
 		}
 
 		PREFIX_STATIC_INLINE
 		void
-		pack_gate(gate_desc *gate, unsigned type,
-				void (*func)(void), unsigned dpl, unsigned ist) {
+		pack_gate(gate_desc *gate, uint type,
+				void (*func)(void), uint dpl, uint ist) {
 
 			gate->offset_low	= (u16) (u64)func;
 			gate->bits.p		= 1;
@@ -105,8 +109,9 @@
 		// native_write_gdt_entry(desc_s *gdt, int entry, const void *desc, int type)
 		PREFIX_STATIC_INLINE
 		void
-		write_gdt_entry(desc_s *gdt, int entry,  const void *desc, int type) {
-			unsigned int size;
+		write_gdt_entry(desc_s *gdt, int entry,
+				const void *desc, int type) {
+			uint size;
 
 			switch (type) {
 				case DESC_TSS:	size = sizeof(tss_desc);	break;
@@ -119,8 +124,8 @@
 
 		PREFIX_STATIC_INLINE
 		void
-		set_tssldt_descriptor(void *d, unsigned long addr,
-				unsigned type, unsigned size) {
+		set_tssldt_descriptor(void *d, ulong addr,
+				uint type, uint size) {
 
 			struct ldttss_desc *desc = d;
 			memset(desc, 0, sizeof(*desc));
@@ -139,24 +144,24 @@
 		// __set_tss_desc(unsigned cpu, unsigned int entry, x86_hw_tss_s *addr)
 		PREFIX_STATIC_INLINE
 		void
-		set_tss_desc(unsigned cpu, x86_hw_tss_s *addr) {
+		set_tss_desc(uint cpu, x86_hw_tss_s *addr) {
 			desc_s *d = get_cpu_gdt_rw(cpu);
 			tss_desc tss;
 
-			set_tssldt_descriptor(&tss, (unsigned long)addr,
+			set_tssldt_descriptor(&tss, (ulong)addr,
 					DESC_TSS, __KERNEL_TSS_LIMIT);
 			write_gdt_entry(d, GDT_ENTRY_TSS, &tss, DESC_TSS);
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		gate_offset(const gate_desc *g) {
-			return g->offset_low | ((unsigned long)g->offset_middle << 16) |
-					((unsigned long) g->offset_high << 32);
+			return g->offset_low | ((ulong)g->offset_middle << 16) |
+					((ulong) g->offset_high << 32);
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		gate_segment(const gate_desc *g) {
 			return g->segment;
 		}
@@ -182,10 +187,10 @@
 		}
 
 		/*
-		* The LTR instruction marks the TSS GDT entry as busy. On 64-bit, the GDT is
-		* a read-only remapping. To prevent a page fault, the GDT is switched to the
-		* original writeable version when needed.
-		*/
+		 * The LTR instruction marks the TSS GDT entry as busy. On 64-bit, the GDT is
+		 * a read-only remapping. To prevent a page fault, the GDT is switched to the
+		 * original writeable version when needed.
+		 */
 		// static inline void native_load_tr_desc(void)
 		PREFIX_STATIC_INLINE
 		void
@@ -200,7 +205,7 @@
 
 		PREFIX_STATIC_INLINE
 		void
-		__loadsegment_fs(unsigned short value) {
+		__loadsegment_fs(ushort value) {
 			asm volatile(	"						\n"
 							"1:	movw %0, %%fs		\n"
 							"2:						\n"
@@ -212,8 +217,24 @@
 
 		PREFIX_STATIC_INLINE
 		void
+		__loadsegment_gs(ushort value) {
+			ulong flags;
+
+			local_irq_save(flags);
+			asm volatile(	"						\n"
+							"1:	movw %0, %%gs		\n"
+							"2:						\n"
+						:
+						:	"rm" (value)
+						:	"memory"
+						);
+			local_irq_restore(flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
 		init_idt_data(struct idt_data *data,
-				unsigned int n, const void *addr) {
+				uint n, const void *addr) {
 
 			BUG_ON(n > 0xFF);
 
@@ -228,7 +249,7 @@
 		PREFIX_STATIC_INLINE
 		void
 		idt_init_desc(gate_desc *gate, const struct idt_data *d) {
-			unsigned long addr	= (unsigned long) d->addr;
+			ulong addr	= (ulong) d->addr;
 
 			gate->offset_low	= (u16) addr;
 			gate->segment		= (u16) d->segment;

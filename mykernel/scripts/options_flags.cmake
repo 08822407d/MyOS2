@@ -75,4 +75,5 @@ set(INCLUDE_DIRS
 	${PROJECT_SOURCE_DIR}/include/linux/kernel
 	${PROJECT_SOURCE_DIR}/arch/${ARCH}
 	${PROJECT_SOURCE_DIR}/arch/${ARCH}/include
+	${PROJECT_SOURCE_DIR}/arch/${ARCH}/include/uapi
 )

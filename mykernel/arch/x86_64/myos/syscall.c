@@ -12,9 +12,11 @@
 #include <asm/setup.h>
 #include <asm/insns.h>
 #include <asm/signal.h>
+#include <asm/proto.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
+
 
 MYOS_SYSCALL_DEFINE0(no_syscall)
 {
@@ -238,7 +240,31 @@ MYOS_SYSCALL_DEFINE0(getegid)
 	return 1000;
 }
 
-MYOS_SYSCALL_DEFINE2(arch_prctl, int, code, unsigned long, addr)
+MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
+{
+	long ret;
+
+	ret = do_arch_prctl_64(current, option, arg2);
+	// if (ret == -EINVAL)
+	// 	ret = do_arch_prctl_common(option, arg2);
+
+	return ret;
+}
+
+MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
+{
+	// current->clear_child_tid = tidptr;
+
+	// return task_pid_vnr(current);
+	return 0;
+}
+
+MYOS_SYSCALL_DEFINE2(set_robust_list, void *, head, size_t, len)
+{
+	return 0;
+}
+
+MYOS_SYSCALL_DEFINE4(rseq, void *, rseq, u32, rseq_len, int, flags, u32, sig)
 {
 	return 0;
 }

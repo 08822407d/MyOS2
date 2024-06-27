@@ -14,19 +14,18 @@
 /*
  * This file handles the architecture-dependent parts of process handling..
  */
-// #include "../sched_api_arch.h"
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/debug/kdebug.h>
 #include <linux/debug/ftrace.h>
 
 #include <asm/insns.h>
+#include <asm/prctl.h>
 
-// #include "process.h"
 
 /* Prints also some state that isn't saved in the pt_regs */
-void __show_regs(pt_regs_s *regs, enum show_regs_mode mode,
-		 const char *log_lvl)
+void __show_regs(pt_regs_s *regs,
+		enum show_regs_mode mode, const char *log_lvl)
 {
 	// unsigned long cr0 = 0L, cr2 = 0L, cr3 = 0L, cr4 = 0L, fs, gs, shadowgs;
 	// unsigned long d0, d1, d2, d3, d6, d7;
@@ -117,9 +116,9 @@ enum which_selector {
  * It is not used on Xen paravirt. When paravirt support is needed, it
  * needs to be renamed with native_ prefix.
  */
-static noinstr unsigned long
+static noinstr ulong
 __rdgsbase_inactive(void) {
-	unsigned long gsbase;
+	ulong gsbase;
 
 	// lockdep_assert_irqs_disabled();
 
@@ -145,7 +144,7 @@ __rdgsbase_inactive(void) {
  * needs to be renamed with native_ prefix.
  */
 static noinstr void
-__wrgsbase_inactive(unsigned long gsbase) {
+__wrgsbase_inactive(ulong gsbase) {
 	// lockdep_assert_irqs_disabled();
 
 	// if (!cpu_feature_enabled(X86_FEATURE_XENPV)) {
@@ -160,10 +159,12 @@ __wrgsbase_inactive(unsigned long gsbase) {
 }
 
 
-static __always_inline void save_fsgs(task_s *task) {
+static __always_inline void
+save_fsgs(task_s *task) {
 	savesegment(fs, task->thread.fsindex);
 	savesegment(gs, task->thread.gsindex);
 	// if (static_cpu_has(X86_FEATURE_FSGSBASE)) {
+	if (boot_cpu_data.x86_capa_bits.FSGSBASE) {
 		/*
 		 * If FSGSBASE is enabled, we can't make any useful guesses
 		 * about the base, and user code expects us to save the current
@@ -171,10 +172,10 @@ static __always_inline void save_fsgs(task_s *task) {
 		 */
 		task->thread.fsbase = rdfsbase();
 		task->thread.gsbase = __rdgsbase_inactive();
-	// } else {
-	// 	save_base_legacy(task, task->thread.fsindex, FS);
-	// 	save_base_legacy(task, task->thread.gsindex, GS);
-	// }
+	} else {
+		// save_base_legacy(task, task->thread.fsindex, FS);
+		// save_base_legacy(task, task->thread.gsindex, GS);
+	}
 }
 
 /*
@@ -183,7 +184,7 @@ static __always_inline void save_fsgs(task_s *task) {
  */
 void current_save_fsgs(void)
 {
-	unsigned long flags;
+	ulong flags;
 
 	/* Interrupts need to be off for FSGSBASE */
 	local_irq_save(flags);
@@ -191,6 +192,14 @@ void current_save_fsgs(void)
 	local_irq_restore(flags);
 }
 
+static __always_inline void 
+loadseg(enum which_selector which, ushort sel) {
+	if (which == FS)
+		loadsegment(fs, sel);
+	else
+		loadsegment(gs, sel);
+		// load_gs_index(sel);
+}
 
 static __always_inline void
 x86_fsgsbase_load(thread_s *prev, thread_s *next) {
@@ -213,24 +222,36 @@ x86_fsgsbase_load(thread_s *prev, thread_s *next) {
 }
 
 
+void x86_gsbase_write_cpu_inactive(ulong gsbase)
+{
+	// if (boot_cpu_has(X86_FEATURE_FSGSBASE)) {
+	if (boot_cpu_data.x86_capa_bits.FSGSBASE) {
+		ulong flags;
 
-void x86_fsbase_write_task(task_s* task, unsigned long fsbase)
+		local_irq_save(flags);
+		__wrgsbase_inactive(gsbase);
+		local_irq_restore(flags);
+	} else {
+		wrmsrl(MSR_KERNEL_GS_BASE, gsbase);
+	}
+}
+
+
+void x86_fsbase_write_task(task_s* task, ulong fsbase)
 {
 	WARN_ON_ONCE(task == current);
 	task->thread.fsbase = fsbase;
 }
 
-void x86_gsbase_write_task(task_s *task, unsigned long gsbase)
+void x86_gsbase_write_task(task_s *task, ulong gsbase)
 {
 	WARN_ON_ONCE(task == current);
 	task->thread.gsbase = gsbase;
 }
 
 static void
-start_thread_common(pt_regs_s *regs,
-		unsigned long new_ip, unsigned long new_sp,
-		unsigned int _cs, unsigned int _ss, unsigned int _ds)
-{
+start_thread_common(pt_regs_s *regs, ulong new_ip,
+		ulong new_sp, uint _cs, uint _ss, uint _ds) {
 	// WARN_ON_ONCE(regs != current_pt_regs());
 
 	// if (static_cpu_has(X86_BUG_NULL_SEG)) {
@@ -252,7 +273,7 @@ start_thread_common(pt_regs_s *regs,
 }
 
 void
-start_thread(pt_regs_s *regs, unsigned long new_ip, unsigned long new_sp)
+start_thread(pt_regs_s *regs, ulong new_ip, ulong new_sp)
 {
 	start_thread_common(regs, new_ip, new_sp, __USER_CS, __USER_DS, 0);
 }
@@ -373,4 +394,123 @@ __visible __notrace_funcgraph task_s
 	// resctrl_sched_in(next_p);
 
 	return prev_p;
+}
+
+
+
+long do_arch_prctl_64(task_s *task, int option, ulong arg2)
+{
+	int ret = 0;
+
+	switch (option) {
+	case ARCH_SET_GS: {
+		if (unlikely(arg2 >= TASK_SIZE_MAX))
+			return -EPERM;
+
+		preempt_disable();
+		/*
+		 * ARCH_SET_GS has always overwritten the index
+		 * and the base. Zero is the most sensible value
+		 * to put in the index, and is the only value that
+		 * makes any sense if FSGSBASE is unavailable.
+		 */
+		// if (task == current) {
+			loadseg(GS, 0);
+			x86_gsbase_write_cpu_inactive(arg2);
+
+			/*
+			 * On non-FSGSBASE systems, save_base_legacy() expects
+			 * that we also fill in thread.gsbase.
+			 */
+			task->thread.gsbase = arg2;
+		// } else {
+		// 	task->thread.gsindex = 0;
+		// 	x86_gsbase_write_task(task, arg2);
+		// }
+		preempt_enable();
+		break;
+	}
+	case ARCH_SET_FS: {
+		/*
+		 * Not strictly needed for %fs, but do it for symmetry
+		 * with %gs
+		 */
+		if (unlikely(arg2 >= TASK_SIZE_MAX))
+			return -EPERM;
+
+		preempt_disable();
+		/*
+		 * Set the selector to 0 for the same reason
+		 * as %gs above.
+		 */
+		// if (task == current) {
+			loadseg(FS, 0);
+			x86_fsbase_write_cpu(arg2);
+
+			/*
+			 * On non-FSGSBASE systems, save_base_legacy() expects
+			 * that we also fill in thread.fsbase.
+			 */
+			task->thread.fsbase = arg2;
+		// } else {
+		// 	task->thread.fsindex = 0;
+		// 	x86_fsbase_write_task(task, arg2);
+		// }
+		preempt_enable();
+		break;
+	}
+	case ARCH_GET_FS: {
+		// unsigned long base = x86_fsbase_read_task(task);
+
+		// ret = put_user(base, (unsigned long __user *)arg2);
+		break;
+	}
+	case ARCH_GET_GS: {
+		// unsigned long base = x86_gsbase_read_task(task);
+
+		// ret = put_user(base, (unsigned long __user *)arg2);
+		break;
+	}
+
+// #ifdef CONFIG_CHECKPOINT_RESTORE
+// # ifdef CONFIG_X86_X32_ABI
+// 	case ARCH_MAP_VDSO_X32:
+// 		return prctl_map_vdso(&vdso_image_x32, arg2);
+// # endif
+// # if defined CONFIG_X86_32 || defined CONFIG_IA32_EMULATION
+// 	case ARCH_MAP_VDSO_32:
+// 		return prctl_map_vdso(&vdso_image_32, arg2);
+// # endif
+// 	case ARCH_MAP_VDSO_64:
+// 		return prctl_map_vdso(&vdso_image_64, arg2);
+// #endif
+// #ifdef CONFIG_ADDRESS_MASKING
+// 	case ARCH_GET_UNTAG_MASK:
+// 		return put_user(task->mm->context.untag_mask,
+// 				(unsigned long __user *)arg2);
+// 	case ARCH_ENABLE_TAGGED_ADDR:
+// 		return prctl_enable_tagged_addr(task->mm, arg2);
+// 	case ARCH_FORCE_TAGGED_SVA:
+// 		if (current != task)
+// 			return -EINVAL;
+// 		set_bit(MM_CONTEXT_FORCE_TAGGED_SVA, &task->mm->context.flags);
+// 		return 0;
+// 	case ARCH_GET_MAX_TAG_BITS:
+// 		if (!cpu_feature_enabled(X86_FEATURE_LAM))
+// 			return put_user(0, (unsigned long __user *)arg2);
+// 		else
+// 			return put_user(LAM_U57_BITS, (unsigned long __user *)arg2);
+// #endif
+	case ARCH_SHSTK_ENABLE:
+	case ARCH_SHSTK_DISABLE:
+	case ARCH_SHSTK_LOCK:
+	case ARCH_SHSTK_UNLOCK:
+	case ARCH_SHSTK_STATUS:
+		// return shstk_prctl(task, option, arg2);
+	default:
+		ret = -EINVAL;
+		break;
+	}
+
+	return ret;
 }
