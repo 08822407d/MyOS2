@@ -16,6 +16,25 @@ void dirtest(void);
 	int		reboot(int);
 	ssize_t	write(int, const void *, size_t);
 
+ulong rdgsbase(void) {
+	ulong gsbase;
+	asm volatile(	"rdgsbase	%0		\t\n"
+				:	"=r" (gsbase)
+				:
+				:	"memory");
+	return gsbase;
+}
+
+ulong rdfsbase(void) {
+	ulong fsbase;
+	asm volatile(	"rdfsbase	%0		\t\n"
+				:	"=r" (fsbase)
+				:
+				:	"memory");
+	return fsbase;
+}
+
+
 int main(int argc, const char *argv[])
 {
 	printf("Welcome to MyOS2\n\n");
@@ -27,6 +46,10 @@ int main(int argc, const char *argv[])
 			{ prog_name , "userarg_test_1", "userarg_test_2", NULL };
 	char *const envs[] =
 			{ "userenv_test_1", "userenv_test_2", "userenv_test_3", NULL };
+
+
+	ulong gsbase = rdgsbase();
+	printf("gsbase in user space: %p\n", gsbase);
 
 	int rv = fork();
 	if (rv != 0)
