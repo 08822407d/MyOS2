@@ -145,7 +145,7 @@ SYM_CODE_START(entry_SYSCALL_64)
 	cli
 	endbr64
 
-	// swapgs
+	swapgs
 	/* tss.sp2 is scratch space. */
 	movq		%rsp,		PER_CPU_VAR(cpu_tss_rw + TSS_sp2)
 	// SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp
@@ -193,7 +193,7 @@ SYM_CODE_START(syscall_return_via_sysret)
 	POP_REGS
 	addq		$0x28,		%rsp
 	popq		%rsp
-	// swapgs
+	swapgs
 
 	sti
 	sysretq
@@ -312,12 +312,20 @@ SYM_CODE_END(ret_from_fork_asm)
 SYM_CODE_START(sa_entintr_retp)
 	cli
 	PUSH_REGS
+	testb		$3,			CS(%rsp)
+	jz	1f
+	swapgs
+1:
 	cld
 	movq		%rsp,		%rdi
 	sti
 
 	callq 		excep_hwint_context
 
+	testb		$3,			CS(%rsp)
+	jz	2f
+	swapgs
+2:
 	cli
 	POP_REGS
 	addq		$0x10,		%rsp	// skip err-code and vec-nr

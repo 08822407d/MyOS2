@@ -22,6 +22,8 @@ long __x64_sys_ni_syscall(const pt_regs_s *regs) {
 
 __visible noinstr void do_syscall_64(pt_regs_s *regs, int nr)
 {
+	// color_printk(BLUE, BLACK, "Syscall: %d, %#018lx\n", nr, regs->ip);
+
 	// add_random_kstack_offset();
 	// nr = syscall_enter_from_user_mode(regs, nr);
 
