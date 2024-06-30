@@ -7,6 +7,8 @@
 
 	#define PATH_MAX        4096	/* # chars in a path name including nul */
 
+typedef unsigned long ulong;
+
 void file_io_test(void);
 void malloc_free_test(void);
 void dirtest(void);
@@ -37,6 +39,7 @@ ulong rdfsbase(void) {
 
 int main(int argc, const char *argv[])
 {
+	FILE *so = stdout;
 	printf("Welcome to MyOS2\n\n");
 
 	// while (1);
@@ -49,22 +52,24 @@ int main(int argc, const char *argv[])
 
 
 	ulong gsbase = rdgsbase();
-	printf("gsbase in user space: %p\n", gsbase);
+	printf("gsbase in user space: %p\n", (void *)gsbase);
 
 	int rv = fork();
-	if (rv != 0)
-	{
-		// printf("parent task, %d\n", rv);
-		while (1);
-	}
-	else
-	{
-		// printf("child task, %d\n", rv);
-		execve(prog_name, args, envs);
-		// malloc_free_test();
-		// file_io_test();
-		// dirtest();
-	}
+	while (1);
+	
+	// if (rv != 0)
+	// {
+	// 	// printf("parent task, %d\n", rv);
+	// 	while (1);
+	// }
+	// else
+	// {
+	// 	// printf("child task, %d\n", rv);
+	// 	execve(prog_name, args, envs);
+	// 	// malloc_free_test();
+	// 	// file_io_test();
+	// 	// dirtest();
+	// }
 }
 
 // void file_io_test()

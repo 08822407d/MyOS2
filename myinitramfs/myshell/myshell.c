@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <sys/stat.h>
 
 #include "externs.h"
 
@@ -87,13 +88,6 @@ int main(int argc, const char *argv[])
 		else
 			run_cmd(index, __argc, __argv);	//argc,argv
 	}
-}
-
-int fgetc(FILE *fp)
-{
-	char c = '\0';
-	read(fp->_fileno, &c, 1);
-	return c;
 }
 
 int read_line(char *buf)
@@ -199,14 +193,14 @@ int cd_command(int argc, char **argv)
 		getcwd(current_dir, PATH_MAX);
 	}
 	else
-		printf("cd: %s: %s\n", __get_errlist(i),path);
+		printf("cd: %s: %s\n", strerror(errno), path);
 	return 1;
 }
 
 int ls_command(int argc, char **argv)
 {
 	DIR* dir = NULL;
-	struct dirent64* buf = NULL;
+	struct dirent* buf = NULL;
 	char *path = NULL;
 	if (argc <=1)
 		path = ".";
@@ -216,7 +210,7 @@ int ls_command(int argc, char **argv)
 	dir = opendir(path);
 	if (dir == NULL)
 	{
-		printf("ls: %s: %s\n", __get_errlist(-ENOENT), path);
+		printf("ls: %s: %s\n", strerror(errno), path);
 		return -1;
 	}
 
@@ -262,7 +256,7 @@ int cat_command(int argc, char **argv)
 	fd = open(filename, O_RDONLY, 0);	
 	if (fd < 0)
 	{
-		printf("ls: %s: %s\n", __get_errlist(fd), filename);
+		printf("ls: %s: %s\n", strerror(errno), filename);
 		return -1;
 	}
 	i = lseek(fd, 0, SEEK_END);
@@ -347,7 +341,7 @@ int rmdir_command(int argc, char **argv)
 	char *dirname = argv[1];
 	err = rmdir(dirname);
 	if (err != 0)
-		printf("rmdir: %s: %s\n", __get_errlist(err), dirname);
+		printf("rmdir: %s: %s\n", strerror(errno), dirname);
 
 	return err;
 }
@@ -361,7 +355,7 @@ int rm_command(int argc, char **argv)
 	char *filename = argv[1];
 	err = unlink(filename);
 	if (err != 0)
-		printf("rm: %s: %s\n", __get_errlist(err), filename);
+		printf("rm: %s: %s\n", strerror(errno), filename);
 
 	return err;
 }

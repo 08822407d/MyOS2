@@ -37,7 +37,7 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
 ")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
-	-m64 -fPIC \
+	-m64 \
 	-static \
 	-ggdb \
 ")
@@ -45,11 +45,14 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
-set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
-link_directories(${LIBRARY_OUTPUT_PATH})
 
+set(MUSL_PATH /home/cheyh/projs/musl/build)
+set(CMAKE_C_COMPILER ${MUSL_PATH}/exec/bin/musl-gcc)
 
-add_subdirectory(mylib)
+set(MUSL_INC_PATH ${MUSL_PATH}/include)
+set(MUSL_LIB_PATH ${MUSL_PATH}/lib)
+
+include_directories("${MUSL_INC_PATH}")
 add_subdirectory(myinit)
 add_subdirectory(myshell)
 
