@@ -39,7 +39,10 @@ ulong rdfsbase(void) {
 
 int main(int argc, const char *argv[])
 {
-	FILE *so = stdout;
+	freopen("/dev/console", "r", stdin);
+	freopen("/dev/console", "w", stdout);
+	freopen("/dev/console", "w", stderr);
+
 	printf("Welcome to MyOS2\n\n");
 
 	// while (1);
