@@ -20,3 +20,5 @@ rm -rf ./build/*
 make_install_kernel $PROJ_ROOT $DEBUG_FLAG $TARGET_ARCH
 make_install_initranfs $PROJ_ROOT $DEBUG_FLAG $TARGET_ARCH
 make_install_bootloader $PROJ_ROOT $TARGET_ARCH
+
+# bash ./configure --prefix=/home/cheyh/projs/musl/build --enable-debug --enable-static --disable-shared --exec-prefix=/home/cheyh/projs/musl/build/exec --syslibdir=/home/cheyh/projs/musl/build/sys --disable-optimize
