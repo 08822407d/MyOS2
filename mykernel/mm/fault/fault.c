@@ -1505,8 +1505,9 @@ handle_pte_fault(vm_fault_s *vmf) {
 		// }
 	}
 
+	// static vm_fault_t do_pte_missing(struct vm_fault *vmf)
 	if (arch_pte_none(*vmf->pte)) {
-		if (vmf->vma->vm_ops == NULL)
+		if (vma_is_anonymous(vmf->vma))
 			return do_anonymous_page(vmf);
 		else
 			return do_fault(vmf);

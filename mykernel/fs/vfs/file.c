@@ -201,3 +201,22 @@ fd_s myos_fdget_pos(int fd)
 	
 	return (fd_s){.file = fp, .flags = 0};
 }
+
+
+
+static inline file_s
+*__simple_fget(uint fd, fmode_t mask) {
+	// return __fget_files(current->files, fd, mask);
+	file_s *retval = NULL;
+	files_struct_s *files = current->files;
+	if (fd < files->fd_count) {
+		retval = files->fd_array[fd];
+		atomic_long_inc(&retval->f_count);
+	}
+	return retval;
+}
+
+file_s *fget(uint fd) {
+	return __simple_fget(fd, FMODE_PATH);
+}
+EXPORT_SYMBOL(fget);

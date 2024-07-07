@@ -1589,3 +1589,60 @@ int insert_vm_struct(mm_s *mm, vma_s *vma)
 	vma_link(mm, vma, prev);
 	return 0;
 }
+
+
+
+
+MYOS_SYSCALL_DEFINE6(mmap,
+		unsigned long, addr, unsigned long, len,
+		unsigned long, prot, unsigned long, flags,
+		unsigned long, fd, unsigned long, off)
+{
+	if (off & ~PAGE_MASK)
+		return -EINVAL;
+
+	// return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
+	ulong pgoff = off >> PAGE_SHIFT;
+	file_s *file = NULL;
+	unsigned long retval;
+
+	if (!(flags & MAP_ANONYMOUS)) {
+		// audit_mmap_fd(fd, flags);
+		file = fget(fd);
+		if (!file)
+			return -EBADF;
+		// if (is_file_hugepages(file)) {
+		// 	len = ALIGN(len, huge_page_size(hstate_file(file)));
+		// } else if (unlikely(flags & MAP_HUGETLB)) {
+		// 	retval = -EINVAL;
+		// 	goto out_fput;
+		// }
+	} else if (flags & MAP_HUGETLB) {
+		// currently unsupported
+		while (1);
+		
+		// struct hstate *hs;
+
+		// hs = hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+		// if (!hs)
+		// 	return -EINVAL;
+
+		// len = ALIGN(len, huge_page_size(hs));
+		// /*
+		//  * VM_NORESERVE is used because the reservations will be
+		//  * taken when vm_ops->mmap() is called
+		//  */
+		// file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
+		// 		VM_NORESERVE,
+		// 		HUGETLB_ANONHUGE_INODE,
+		// 		(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
+		// if (IS_ERR(file))
+		// 	return PTR_ERR(file);
+	}
+
+	retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);
+out_fput:
+	if (file != NULL)
+		fput(file);
+	return retval;
+}

@@ -38,7 +38,7 @@
 	// 		fput(fd.file);
 	// }
 
-	// extern file_s *fget(unsigned int fd);
+	extern file_s *fget(unsigned int fd);
 	// extern file_s *fget_many(unsigned int fd, unsigned int refs);
 	// extern file_s *fget_raw(unsigned int fd);
 	// extern file_s *fget_task(task_s *task, unsigned int fd);

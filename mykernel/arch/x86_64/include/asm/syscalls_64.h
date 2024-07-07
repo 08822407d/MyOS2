@@ -9,6 +9,7 @@ __SYSCALL(__NR_close, sys_close)
 // __SYSCALL(__NR_newfstat, sys_newfstat)
 
 __SYSCALL(__NR_lseek, sys_lseek)
+__SYSCALL(__NR_mmap, sys_mmap)
 
 __SYSCALL(__NR_brk, sys_brk)
 
