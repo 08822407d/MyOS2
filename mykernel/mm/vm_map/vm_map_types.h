@@ -241,4 +241,14 @@
 	// #endif
 	} anon_vma_chain_s;
 
+	typedef struct vm_unmapped_area_info {
+	#define VM_UNMAPPED_AREA_TOPDOWN 1
+		ulong	flags;
+		ulong	length;
+		ulong	low_limit;
+		ulong	high_limit;
+		ulong	align_mask;
+		ulong	align_offset;
+	} vma_unmapped_info_s;
+
 #endif /* _LINUX_VM_MAP_TYPES_H_ */

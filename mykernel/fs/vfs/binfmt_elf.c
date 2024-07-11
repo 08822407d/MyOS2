@@ -33,7 +33,7 @@
 #include <linux/kernel/ptrace.h>
 
 
-static int load_elf_binary(struct linux_binprm *bprm);
+static int load_elf_binary(linux_bprm_s *bprm);
 
 /*
  * If we don't support core dumping, then supply a NULL so we
@@ -635,7 +635,7 @@ out_free_interp:
 	// if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
 	// 	current->flags |= PF_RANDOMIZE;
 
-	// setup_new_exec(bprm);
+	setup_new_exec(bprm);
 
 	/* Do this so that we can load the interpreter, if need be.  We will
 	   change some of these later */

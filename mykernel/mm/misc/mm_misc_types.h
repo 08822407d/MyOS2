@@ -10,11 +10,10 @@
 			vma_s			*mmap;				/* list of VMAs */
 			// struct rb_root mm_rb;
 			// u64 vmacache_seqnum; /* per-thread vmacache */
-			// ulong (*get_unmapped_area)(file_s *filp,
-			// 								ulong addr, ulong len,
-			// 								ulong pgoff, ulong flags);
+			ulong (*get_unmapped_area)(file_s *filp,
+					ulong addr, ulong len, ulong pgoff, ulong flags);
 			ulong			mmap_base;			/* base of mmap area */
-			// ulong mmap_legacy_base; /* base of mmap area in bottom-up allocations */
+			ulong			mmap_legacy_base; /* base of mmap area in bottom-up allocations */
 	// #ifdef CONFIG_HAVE_ARCH_COMPAT_MMAP_BASES
 			// /* Base addresses for compatible mmap() */
 			// ulong mmap_compat_base;

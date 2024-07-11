@@ -26,6 +26,7 @@
 
 
 static bool ignore_rlimit_data = false;
+ulong mmap_min_addr = PAGE_SIZE;
 
 static void unmap_region(mm_s *mm, vma_s *vma,
 		vma_s *prev, ulong start, ulong end);
@@ -679,9 +680,9 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
 	// 	if (!(file && path_noexec(&file->f_path)))
 	// 		prot |= PROT_EXEC;
 
-	// /* force arch specific MAP_FIXED handling in get_unmapped_area */
-	// if (flags & MAP_FIXED_NOREPLACE)
-	// 	flags |= MAP_FIXED;
+	/* force arch specific MAP_FIXED handling in get_unmapped_area */
+	if (flags & MAP_FIXED_NOREPLACE)
+		flags |= MAP_FIXED;
 
 	// if (!(flags & MAP_FIXED))
 	// 	addr = round_hint_to_min(addr);
@@ -699,12 +700,12 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
 	// if (mm->map_count > sysctl_max_map_count)
 	// 	return -ENOMEM;
 
-	// /* Obtain the address to map to. we verify (or select) it and ensure
-	//  * that it represents a valid section of the address space.
-	//  */
-	// addr = get_unmapped_area(file, addr, len, pgoff, flags);
-	// if (IS_ERR_VALUE(addr))
-	// 	return addr;
+	/* Obtain the address to map to. we verify (or select) it and ensure
+	 * that it represents a valid section of the address space.
+	 */
+	addr = get_unmapped_area(file, addr, len, pgoff, flags);
+	if (IS_ERR_VALUE(addr))
+		return addr;
 
 	// if (flags & MAP_FIXED_NOREPLACE) {
 	// 	if (find_vma_intersection(mm, addr, addr + len))
@@ -997,6 +998,176 @@ unacct_error:
 	// 	vm_unacct_memory(charged);
 	return error;
 }
+
+
+
+/**
+ * unmapped_area() - Find an area between the low_limit and the high_limit with
+ * the correct alignment and offset, all from @info. Note: current->mm is used
+ * for the search.
+ *
+ * @info: The unmapped area information including the range [low_limit -
+ * high_limit), the alignment offset and mask.
+ *
+ * Return: A memory address or -ENOMEM.
+ */
+static ulong
+unmapped_area(vma_unmapped_info_s *info) {
+	ulong length, gap;
+	ulong low_limit, high_limit;
+	vma_s *tmp;
+
+	// MA_STATE(mas, &current->mm->mm_mt, 0, 0);
+	/* Adjust search length to account for worst case alignment overhead */
+	length = info->length + info->align_mask;
+	if (length < info->length)
+		return -ENOMEM;
+
+	low_limit = info->low_limit;
+	if (low_limit < mmap_min_addr)
+		low_limit = mmap_min_addr;
+	high_limit = info->high_limit;
+// retry:
+	// if (mas_empty_area(&mas, low_limit, high_limit - 1, length))
+	// 	return -ENOMEM;
+
+	// gap = mas.index;
+	// gap += (info->align_offset - gap) & info->align_mask;
+	// tmp = mas_next(&mas, ULONG_MAX);
+	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
+	// 	if (vm_start_gap(tmp) < gap + length - 1) {
+	// 		low_limit = tmp->vm_end;
+	// 		mas_reset(&mas);
+	// 		goto retry;
+	// 	}
+	// } else {
+	// 	tmp = mas_prev(&mas, 0);
+	// 	if (tmp && vm_end_gap(tmp) > gap) {
+	// 		low_limit = vm_end_gap(tmp);
+	// 		mas_reset(&mas);
+	// 		goto retry;
+	// 	}
+	// }
+
+	return gap;
+}
+
+/**
+ * unmapped_area_topdown() - Find an area between the low_limit and the
+ * high_limit with the correct alignment and offset at the highest available
+ * address, all from @info. Note: current->mm is used for the search.
+ *
+ * @info: The unmapped area information including the range [low_limit -
+ * high_limit), the alignment offset and mask.
+ *
+ * Return: A memory address or -ENOMEM.
+ */
+static ulong
+unmapped_area_topdown(vma_unmapped_info_s *info) {
+	ulong length, gap, gap_end;
+	ulong low_limit, high_limit;
+	vma_s *tmp;
+
+	// MA_STATE(mas, &current->mm->mm_mt, 0, 0);
+	/* Adjust search length to account for worst case alignment overhead */
+	length = info->length + info->align_mask;
+	if (length < info->length)
+		return -ENOMEM;
+
+	low_limit = info->low_limit;
+	if (low_limit < mmap_min_addr)
+		low_limit = mmap_min_addr;
+	high_limit = info->high_limit;
+// retry:
+	// if (mas_empty_area_rev(&mas, low_limit, high_limit - 1, length))
+	// 	return -ENOMEM;
+
+	// gap = mas.last + 1 - info->length;
+	// gap -= (gap - info->align_offset) & info->align_mask;
+	// gap_end = mas.last;
+	// tmp = mas_next(&mas, ULONG_MAX);
+	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
+	// 	if (vm_start_gap(tmp) <= gap_end) {
+	// 		high_limit = vm_start_gap(tmp);
+	// 		mas_reset(&mas);
+	// 		goto retry;
+	// 	}
+	// } else {
+	// 	tmp = mas_prev(&mas, 0);
+	// 	if (tmp && vm_end_gap(tmp) > gap) {
+	// 		high_limit = tmp->vm_start;
+	// 		mas_reset(&mas);
+	// 		goto retry;
+	// 	}
+	// }
+
+	return gap;
+}
+
+/*
+ * Search for an unmapped address range.
+ *
+ * We are looking for a range that:
+ * - does not intersect with any VMA;
+ * - is contained within the [low_limit, high_limit) interval;
+ * - is at least the desired size.
+ * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
+ */
+ulong vm_unmapped_area(vma_unmapped_info_s *info)
+{
+	ulong addr;
+
+	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
+		addr = unmapped_area_topdown(info);
+	else
+		addr = unmapped_area(info);
+
+	// trace_vm_unmapped_area(addr, info);
+	return addr;
+}
+
+
+ulong
+get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
+{
+	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
+
+	// unsigned long error = arch_mmap_check(addr, len, flags);
+	// if (error)
+	// 	return error;
+
+	/* Careful about overflows.. */
+	if (len > TASK_SIZE)
+		return -ENOMEM;
+
+	get_area = current->mm->get_unmapped_area;
+	// if (file) {
+	// 	if (file->f_op->get_unmapped_area)
+	// 		get_area = file->f_op->get_unmapped_area;
+	// } else if (flags & MAP_SHARED) {
+	// 	/*
+	// 	 * mmap_region() will call shmem_zero_setup() to create a file,
+	// 	 * so use shmem's get_unmapped_area in case it can be huge.
+	// 	 * do_mmap() will clear pgoff, so match alignment.
+	// 	 */
+	// 	pgoff = 0;
+	// 	get_area = shmem_get_unmapped_area;
+	// }
+
+	addr = get_area(file, addr, len, pgoff, flags);
+	if (IS_ERR_VALUE(addr))
+		return addr;
+
+	if (addr > TASK_SIZE - len)
+		return -ENOMEM;
+	if (offset_in_page(addr))
+		return -EINVAL;
+
+	// error = security_mmap_addr(addr);
+	// return error ? error : addr;
+	return addr;
+}
+EXPORT_SYMBOL(get_unmapped_area);
 
 
 /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
@@ -1410,9 +1581,9 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 		return -EINVAL;
 	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
 
-	// mapped_addr = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
-	// if (IS_ERR_VALUE(mapped_addr))
-	// 	return mapped_addr;
+	mapped_addr = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
+	if (IS_ERR_VALUE(mapped_addr))
+		return mapped_addr;
 
 	// error = mlock_future_check(mm, mm->def_flags, len);
 	// if (error)
