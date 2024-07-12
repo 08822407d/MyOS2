@@ -176,7 +176,7 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 	}
 
 	/* Check against existing mmap mappings. */
-	// next = myos_find_vma(mm, oldbrk);
+	// next = simple_find_vma(mm, oldbrk);
 	// if (next && newbrk + PAGE_SIZE > vm_start_gap(next))
 	// 	goto out;
 
@@ -185,7 +185,7 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 		goto out;
 	mm->brk = brk;
 
-	// next = myos_find_vma(mm, oldbrk);
+	// next = simple_find_vma(mm, oldbrk);
 	// while (next == NULL);
 	
 success:

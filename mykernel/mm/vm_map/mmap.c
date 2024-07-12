@@ -104,8 +104,7 @@ validate_mm(mm_s *mm) {
 static int
 myos_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 	int		retval = 0;
-	vma_s	*vma = NULL,
-			*tmp = mm->mmap;
+	vma_s	*tmp = mm->mmap;
 
 	while (tmp) {
 		if (end <= tmp->vm_start)
@@ -186,11 +185,11 @@ __vma_link_file(vma_s *vma) {
 	}
 }
 
-// static void vma_link(mm_s *mm, vma_s *vma,
+// static void simple_vma_link(mm_s *mm, vma_s *vma,
 // 			vma_s *prev, struct rb_node **rb_link,
 // 			struct rb_node *rb_parent)
 static void
-vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
+simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 	// struct address_space *mapping = NULL;
 
 	if (vma->vm_file) {
@@ -198,13 +197,7 @@ vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 		// i_mmap_lock_write(mapping);
 	}
 
-	// static void
-	// __vma_link(mm_s *mm, vma_s *vma,
-	// 	vma_s *prev, struct rb_node **rb_link,
-	// 	struct rb_node *rb_parent)
-	// {
-		__vma_link_list(mm, vma, prev);
-	// }
+	__vma_link_list(mm, vma, prev);
 	__vma_link_file(vma);
 
 	// if (mapping)
@@ -903,7 +896,7 @@ myos_mmap_region(file_s *file, ulong addr,
 		//  * Answer: Yes, several device drivers can do it in their
 		//  *         f_op->mmap method. -DaveM
 		//  * Bug: If addr is changed, prev, rb_link, rb_parent should
-		//  *      be updated for vma_link()
+		//  *      be updated for simple_vma_link()
 		//  */
 		// WARN_ON_ONCE(addr != vma->vm_start);
 
@@ -947,7 +940,7 @@ myos_mmap_region(file_s *file, ulong addr,
 	// 		goto free_vma;
 	// }
 
-	vma_link(mm, vma, prev);
+	simple_vma_link(mm, vma, prev);
 	// /* Once vma denies write, undo our temporary denial count */
 unmap_writable:
 	// if (file && vm_flags & VM_SHARED)
@@ -1002,7 +995,7 @@ unacct_error:
 
 
 /**
- * unmapped_area() - Find an area between the low_limit and the high_limit with
+ * simple_unmapped_area() - Find an area between the low_limit and the high_limit with
  * the correct alignment and offset, all from @info. Note: current->mm is used
  * for the search.
  *
@@ -1012,24 +1005,10 @@ unacct_error:
  * Return: A memory address or -ENOMEM.
  */
 static ulong
-unmapped_area(vma_unmapped_info_s *info) {
-	ulong length, gap;
-	ulong low_limit, high_limit;
+simple_unmapped_area(vma_unmapped_info_s *info,
+		ulong length, ulong low_limit, ulong high_limit) {
+	ulong gap;
 	vma_s *tmp;
-
-	// MA_STATE(mas, &current->mm->mm_mt, 0, 0);
-	/* Adjust search length to account for worst case alignment overhead */
-	length = info->length + info->align_mask;
-	if (length < info->length)
-		return -ENOMEM;
-
-	low_limit = info->low_limit;
-	if (low_limit < mmap_min_addr)
-		low_limit = mmap_min_addr;
-	high_limit = info->high_limit;
-// retry:
-	// if (mas_empty_area(&mas, low_limit, high_limit - 1, length))
-	// 	return -ENOMEM;
 
 	// gap = mas.index;
 	// gap += (info->align_offset - gap) & info->align_mask;
@@ -1053,7 +1032,7 @@ unmapped_area(vma_unmapped_info_s *info) {
 }
 
 /**
- * unmapped_area_topdown() - Find an area between the low_limit and the
+ * simple_unmapped_area_topdown() - Find an area between the low_limit and the
  * high_limit with the correct alignment and offset at the highest available
  * address, all from @info. Note: current->mm is used for the search.
  *
@@ -1063,24 +1042,10 @@ unmapped_area(vma_unmapped_info_s *info) {
  * Return: A memory address or -ENOMEM.
  */
 static ulong
-unmapped_area_topdown(vma_unmapped_info_s *info) {
-	ulong length, gap, gap_end;
-	ulong low_limit, high_limit;
+simple_unmapped_area_topdown(vma_unmapped_info_s *info,
+		ulong length, ulong low_limit, ulong high_limit) {
+	ulong gap, gap_end;
 	vma_s *tmp;
-
-	// MA_STATE(mas, &current->mm->mm_mt, 0, 0);
-	/* Adjust search length to account for worst case alignment overhead */
-	length = info->length + info->align_mask;
-	if (length < info->length)
-		return -ENOMEM;
-
-	low_limit = info->low_limit;
-	if (low_limit < mmap_min_addr)
-		low_limit = mmap_min_addr;
-	high_limit = info->high_limit;
-// retry:
-	// if (mas_empty_area_rev(&mas, low_limit, high_limit - 1, length))
-	// 	return -ENOMEM;
 
 	// gap = mas.last + 1 - info->length;
 	// gap -= (gap - info->align_offset) & info->align_mask;
@@ -1116,11 +1081,22 @@ unmapped_area_topdown(vma_unmapped_info_s *info) {
 ulong vm_unmapped_area(vma_unmapped_info_s *info)
 {
 	ulong addr;
+	ulong length, low_limit, high_limit;
+
+	/* Adjust search length to account for worst case alignment overhead */
+	length = info->length + info->align_mask;
+	if (length < info->length)
+		return -ENOMEM;
+
+	low_limit = info->low_limit;
+	if (low_limit < mmap_min_addr)
+		low_limit = mmap_min_addr;
+	high_limit = info->high_limit;
 
 	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-		addr = unmapped_area_topdown(info);
+		addr = simple_unmapped_area_topdown(info, length, low_limit, high_limit);
 	else
-		addr = unmapped_area(info);
+		addr = simple_unmapped_area(info, length, low_limit, high_limit);
 
 	// trace_vm_unmapped_area(addr, info);
 	return addr;
@@ -1171,7 +1147,7 @@ EXPORT_SYMBOL(get_unmapped_area);
 
 
 /* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
-vma_s *myos_find_vma(mm_s *mm, ulong addr)
+vma_s *simple_find_vma(mm_s *mm, ulong addr)
 {
 	vma_s	*vma = NULL,
 			*tmp = mm->mmap;
@@ -1196,7 +1172,7 @@ vma_s *find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev)
 {
 	vma_s *vma = NULL;
 
-	vma = myos_find_vma(mm, addr);
+	vma = simple_find_vma(mm, addr);
 	if (vma)
 		*pprev = vma->vm_prev;
 
@@ -1489,7 +1465,7 @@ int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 	}
 
 	/* Does it split the last one? */
-	last = myos_find_vma(mm, end);
+	last = simple_find_vma(mm, end);
 	if (last && end > last->vm_start) {
 		int error = __split_vma(mm, last, end, 1);
 		if (error)
@@ -1623,7 +1599,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	vma->vm_pgoff = pgoff;
 	vma->vm_flags = flags;
 	// vma->vm_page_prot = vm_get_page_prot(flags);
-	vma_link(mm, vma, prev);
+	simple_vma_link(mm, vma, prev);
 out:
 	// perf_event_mmap(vma);
 	mm->total_vm += len >> PAGE_SHIFT;
@@ -1757,6 +1733,6 @@ int insert_vm_struct(mm_s *mm, vma_s *vma)
 		vma->vm_pgoff = vma->vm_start >> PAGE_SHIFT;
 	}
 
-	vma_link(mm, vma, prev);
+	simple_vma_link(mm, vma, prev);
 	return 0;
 }

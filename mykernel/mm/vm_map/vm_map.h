@@ -85,7 +85,7 @@
 		PREFIX_STATIC_INLINE
 		vma_s
 		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr) {
-			vma_s *vma = myos_find_vma(mm, start_addr);
+			vma_s *vma = simple_find_vma(mm, start_addr);
 
 			if (vma && end_addr <= vma->vm_start)
 				vma = NULL;
@@ -102,7 +102,7 @@
 		PREFIX_STATIC_INLINE
 		vma_s
 		*vma_lookup(mm_s *mm, ulong addr) {
-			vma_s *vma = myos_find_vma(mm, addr);
+			vma_s *vma = simple_find_vma(mm, addr);
 
 			if (vma && addr < vma->vm_start)
 				vma = NULL;
@@ -146,7 +146,7 @@
 		PREFIX_STATIC_INLINE
 		vma_s
 		*find_exact_vma(mm_s *mm, ulong vm_start, ulong vm_end) {
-			vma_s *vma = myos_find_vma(mm, vm_start);
+			vma_s *vma = simple_find_vma(mm, vm_start);
 
 			if (vma && (vma->vm_start != vm_start || vma->vm_end != vm_end))
 				vma = NULL;

@@ -297,7 +297,7 @@ void do_user_addr_fault(pt_regs_s *regs,
 	// }
 
 	vm_fault_s vmf = myos_dump_pagetable(address);
-	vma = myos_find_vma(mm, address);
+	vma = simple_find_vma(mm, address);
 	if (unlikely(!vma)) {
 		myos_bad_area(regs, error_code, address);
 		return;

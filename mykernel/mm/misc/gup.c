@@ -6,7 +6,7 @@ myos_get_user_pages(mm_s *mm, virt_addr_t start,
 {
 	for (int i = 0; i < nr_pages; i++) {
 		virt_addr_t addr = start + i * PAGE_SIZE;
-		vma_s *vma = myos_find_vma(mm, addr);
+		vma_s *vma = simple_find_vma(mm, addr);
 		if (vma == NULL)
 			continue;
 		

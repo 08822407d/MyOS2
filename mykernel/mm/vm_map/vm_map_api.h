@@ -52,7 +52,7 @@
 	extern int expand_stack(vma_s *vma, ulong address);
 	extern ulong vm_unmapped_area(vma_unmapped_info_s *info);
 	extern ulong get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
-	extern vma_s * myos_find_vma(mm_s * mm, ulong addr);
+	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 
 	/* mm/util.c */
 	void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev);

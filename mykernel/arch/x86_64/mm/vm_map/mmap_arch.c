@@ -116,7 +116,7 @@ arch_get_unmapped_area(file_s *filp, ulong addr,
 
 	if (addr) {
 		addr = PAGE_ALIGN(addr);
-		vma = myos_find_vma(mm, addr);
+		vma = simple_find_vma(mm, addr);
 		if (end - len >= addr &&
 		    (!vma || addr + len <= vm_start_gap(vma)))
 			return addr;
@@ -158,7 +158,7 @@ arch_get_unmapped_area_topdown(file_s *filp, const ulong addr0,
 		if (!mmap_address_hint_valid(addr, len))
 			goto get_unmapped_area;
 
-		vma = myos_find_vma(mm, addr);
+		vma = simple_find_vma(mm, addr);
 		if (!vma || addr + len <= vm_start_gap(vma))
 			return addr;
 	}
