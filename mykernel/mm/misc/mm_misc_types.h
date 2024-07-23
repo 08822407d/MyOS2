@@ -7,7 +7,8 @@
 	typedef struct mm_struct {
 		size_t				entry_point;
 		struct {
-			vma_s			*mmap;				/* list of VMAs */
+			List_hdr_s		mm_mt;
+			// vma_s			*mmap;				/* list of VMAs */
 			// struct rb_root mm_rb;
 			// u64 vmacache_seqnum; /* per-thread vmacache */
 			ulong (*get_unmapped_area)(file_s *filp,

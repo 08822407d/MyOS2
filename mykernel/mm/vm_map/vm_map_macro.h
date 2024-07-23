@@ -22,4 +22,16 @@
 						: ((x) & (bit1)) / ((bit1) / (bit2)))	\
 			)
 
+	#define LIST_TO_VMA(list_p)	\
+				container_of(list_p, vma_s, list)
+
+	#define for_each_vma(mm, __vma)								\
+			while (												\
+				((__vma) = vma_next(mm, __vma)) != NULL			\
+			)
+
+	// /* The MM code likes to work with exclusive end addresses */
+	// #define for_each_vma_range(__vmi, __vma, __end)				\
+	// 	while (((__vma) = vma_find(&(__vmi), (__end))) != NULL)
+
 #endif /* _LINUX_VM_MAP_MACRO_H_ */

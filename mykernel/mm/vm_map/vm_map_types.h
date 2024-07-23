@@ -17,20 +17,8 @@
 		ulong			vm_end;		/* The first byte after our end address
 									   within vm_mm. */
 
-		/* linked list of VM areas per task, sorted by address */
-		vma_s			*vm_next, *vm_prev;
-
-		// struct rb_node vm_rb;
-
-		/*
-		* Largest free memory gap in bytes to the left of this VMA.
-		* Either between this VMA and vma->vm_prev, or between one of the
-		* VMAs below us in the VMA rbtree and its ->vm_prev. This helps
-		* get_unmapped_area find a free area of the right size.
-		*/
-		// unsigned long rb_subtree_gap;
-
-		/* Second cache line starts here. */
+		// /* linked list of VM areas per task, sorted by address */
+		// vma_s			*vm_next, *vm_prev;
 
 		mm_s			*vm_mm;		/* The address space we belong to. */
 
@@ -56,6 +44,7 @@
 		// 		struct rb_node rb;
 		// 		unsigned long rb_subtree_last;
 		// 	} shared;
+		List_s			list;
 		// 	/*
 		// 	* Serialized by mmap_sem. Never use directly because it is
 		// 	* valid only when vm_file is NULL. Use anon_vma_name instead.

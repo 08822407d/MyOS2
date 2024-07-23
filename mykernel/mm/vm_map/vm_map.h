@@ -56,9 +56,10 @@
 			static const vm_ops_s dummy_vm_ops = {};
 
 			memset(vma, 0, sizeof(*vma));
+			INIT_LIST_S(&vma->list);
+			// INIT_LIST_HEAD(&vma->anon_vma_chain);
 			vma->vm_mm = mm;
 			vma->vm_ops = &dummy_vm_ops;
-			// INIT_LIST_HEAD(&vma->anon_vma_chain);
 		}
 
 		PREFIX_STATIC_INLINE

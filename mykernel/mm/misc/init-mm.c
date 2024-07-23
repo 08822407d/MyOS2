@@ -54,7 +54,7 @@ void setup_initial_init_mm(void *start_code,
 	init_mm.brk			= (ulong)brk;
 
 	memset(&init_vma, 0, sizeof(vma_s));
-	init_mm.mmap		= &init_vma;
+	INIT_LIST_HEADER_S(&init_mm.mm_mt);
 	init_mm.map_count	= 1;
 	init_vma.vm_mm		= &init_mm;
 	init_vma.vm_start	= TASK_SIZE_MAX - SZ_16M;

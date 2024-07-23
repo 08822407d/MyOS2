@@ -54,7 +54,8 @@ vma_s *vm_area_dup(vma_s *orig)
 		// *new = data_race(*orig);
 		*new = *orig;
 		// INIT_LIST_HEAD(&new->anon_vma_chain);
-		new->vm_next = new->vm_prev = NULL;
+		INIT_LIST_S(&new->list);
+		// new->vm_next = new->vm_prev = NULL;
 		// dup_anon_vma_name(orig, new);
 	}
 	return new;
@@ -66,68 +67,6 @@ void vm_area_free(vma_s *vma)
 	kmem_cache_free(vm_area_cachep, vma);
 }
 
-
-static void
-validate_mm(mm_s *mm) {
-	int bug = 0;
-	int i = 0;
-	ulong highest_address = 0;
-	vma_s *vma = mm->mmap;
-
-	while (vma) {
-		highest_address = vm_end_gap(vma);
-		vma = vma->vm_next;
-		i++;
-	}
-	if (i != mm->map_count) {
-		// pr_emerg("map_count %d vm_next %d\n", mm->map_count, i);
-		bug = 1;
-	}
-	if (highest_address != mm->highest_vm_end) {
-		// pr_emerg("mm->highest_vm_end %lx, found %lx\n",
-		// 	  mm->highest_vm_end, highest_address);
-		bug = 1;
-	}
-	if (i != mm->map_count) {
-		// if (i != -1)
-		// 	pr_emerg("map_count %d rb %d\n", mm->map_count, i);
-		bug = 1;
-	}
-	// VM_BUG_ON_MM(bug, mm);
-}
-
-
-//	Linux proto:
-//	static int find_vma_links(mm_s *mm, unsigned long addr,
-// 		unsigned long end, vma_s **pprev,
-// 		struct rb_node ***rb_link, struct rb_node **rb_parent)
-static int
-myos_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
-	int		retval = 0;
-	vma_s	*tmp = mm->mmap;
-
-	while (tmp) {
-		if (end <= tmp->vm_start)
-			break;
-
-		if ((addr >= tmp->vm_start && addr < tmp->vm_end) ||
-			(end > tmp->vm_start && end <= tmp->vm_end)) {
-			retval = -ENOMEM;
-			break;
-		}
-		if (tmp->vm_next == NULL)
-			break;
-
-		tmp = tmp->vm_next;
-	}
-
-	*pprev = NULL;
-	if (tmp != NULL)
-		*pprev = tmp->vm_prev;
-
-	return retval;
-}
-
 /*
  * vma_next() - Get the next VMA.
  * @mm: The mm_struct.
@@ -136,13 +75,56 @@ myos_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
  * If @vma is NULL, return the first vma in the mm.
  *
  * Returns: The next VMA after @vma.
+ *			If reach list end, returns NULL
  */
 static inline vma_s
 *vma_next(mm_s *mm, vma_s *vma) {
-	if (!vma)
-		return mm->mmap;
-	return vma->vm_next;
+	BUG_ON(list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+	List_s *lp;
+	if (vma == NULL)
+		lp = mm->mm_mt.anchor.next;
+	else
+		lp = vma->list.next;
+
+	if (lp == &mm->mm_mt.anchor)
+		return NULL;
+	else
+		return LIST_TO_VMA(lp->next);
 }
+
+static void
+validate_mm(mm_s *mm) {
+	// DEBUG_MM usage
+}
+
+
+//	Linux proto:
+//	static int find_vma_links(mm_s *mm, unsigned long addr,
+// 		unsigned long end, vma_s **pprev,
+// 		struct rb_node ***rb_link, struct rb_node **rb_parent)
+static int
+simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
+	int		retval = 0;
+	vma_s	*tmp = NULL;
+
+	for_each_vma(mm, tmp) {
+		if (end <= tmp->vm_start)
+			break;
+
+		if ((addr >= tmp->vm_start && addr < tmp->vm_end) ||
+			(end > tmp->vm_start && end <= tmp->vm_end)) {
+			retval = -ENOMEM;
+			break;
+		}
+	}
+
+	// *pprev = NULL;
+	// if (tmp != NULL)
+	// 	*pprev = tmp->vm_prev;
+
+	return retval;
+}
+
 
 /*
  * munmap_vma_range() - munmap VMAs that overlap a range.
@@ -160,7 +142,7 @@ static inline vma_s
  */
 static inline int
 munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
-	while (myos_find_vma_links(mm, start, start + len, pprev))
+	while (simple_find_vma_links(mm, start, start + len, pprev))
 		if (__do_munmap(mm, start, len, false))
 			return -ENOMEM;
 
@@ -210,7 +192,7 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 
 /*
  * We cannot adjust vm_start, vm_end, vm_pgoff fields of a vma that
- * is already present in an i_mmap tree without adjusting the tree.
+ * is already present in an mm_mt without adjusting the tree.
  * The following helper function should be used when such adjustments
  * are necessary.  The "insert" vma (if any) is to be inserted
  * before we drop the necessary locks.
@@ -219,7 +201,7 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 //	int __vma_adjust(vma_s *vma, unsigned long start,
 // 	unsigned long end, pgoff_t pgoff, vma_s *insert,
 // 	vma_s *expand)
-int __myos_vma_adjust(vma_s *vma, ulong start, ulong end,
+int __simple_vma_adjust(vma_s *vma, ulong start, ulong end,
 		pgoff_t pgoff, vma_s *insert, vma_s *expand)
 {
 	mm_s *mm = vma->vm_mm;
@@ -373,7 +355,7 @@ again:
 		 * (it may either follow vma or precede it).
 		 */
 		vma_s *prev;
-		while (myos_find_vma_links(mm, insert->vm_start, insert->vm_end, &prev));
+		while (simple_find_vma_links(mm, insert->vm_start, insert->vm_end, &prev));
 
 		__vma_link_list(mm, insert, prev);
 		mm->map_count++;
@@ -578,7 +560,7 @@ myos_can_vma_merge_after(vma_s *vma, ulong vm_flags,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
 vma_s
-*myos_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
+*simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
 		ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
@@ -608,10 +590,10 @@ vma_s
 		if (next && end == next->vm_start &&
 				myos_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
 								/* cases 1, 6 */
-			err = __myos_vma_adjust(prev, prev->vm_start,
+			err = __simple_vma_adjust(prev, prev->vm_start,
 					next->vm_end, prev->vm_pgoff, NULL, prev);
 		} else					/* cases 2, 5, 7 */
-			err = __myos_vma_adjust(prev, prev->vm_start,
+			err = __simple_vma_adjust(prev, prev->vm_start,
 					end, prev->vm_pgoff, NULL, prev);
 		if (err)
 			return NULL;
@@ -625,10 +607,10 @@ vma_s
 			myos_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
 		if (prev && addr < prev->vm_end)
 								/* case 4 */
-			err = __myos_vma_adjust(prev, prev->vm_start,
+			err = __simple_vma_adjust(prev, prev->vm_start,
 					addr, prev->vm_pgoff, NULL, next);
 		else {					/* cases 3, 8 */
-			err = __myos_vma_adjust(area, addr, next->vm_end,
+			err = __simple_vma_adjust(area, addr, next->vm_end,
 					next->vm_pgoff - pglen, NULL, next);
 			/*
 			 * In case 3 area is already equal to next and
@@ -858,7 +840,7 @@ myos_mmap_region(file_s *file, ulong addr,
 	/*
 	 * Can we just expand an old mapping?
 	 */
-	vma = myos_vma_merge(mm, prev, addr, addr + len, vm_flags, file, pgoff);
+	vma = simple_vma_merge(mm, prev, addr, addr + len, vm_flags, file, pgoff);
 	if (vma)
 		goto out;
 
@@ -906,7 +888,7 @@ myos_mmap_region(file_s *file, ulong addr,
 		 * as we may succeed this time.
 		 */
 		if (unlikely(vm_flags != vma->vm_flags && prev)) {
-			merge = myos_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
+			merge = simple_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
 					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
 			if (merge) {
 				/* ->mmap() can change vma->vm_file and fput the original file. So
@@ -1150,16 +1132,13 @@ EXPORT_SYMBOL(get_unmapped_area);
 vma_s *simple_find_vma(mm_s *mm, ulong addr)
 {
 	vma_s	*vma = NULL,
-			*tmp = mm->mmap;
+			*tmp = NULL;
 
-	while (tmp) {
+	for_each_vma(mm, tmp) {
 		if (addr >= tmp->vm_start && addr < tmp->vm_end ) {
 			vma = tmp;
 			break;
 		}
-		if (tmp->vm_next == mm->mmap)
-			break;
-		tmp = tmp->vm_next;
 	}
 
 	return vma;
@@ -1170,12 +1149,9 @@ vma_s *simple_find_vma(mm_s *mm, ulong addr)
  */
 vma_s *find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev)
 {
-	vma_s *vma = NULL;
-
-	vma = simple_find_vma(mm, addr);
+	vma_s *vma = simple_find_vma(mm, addr);
 	if (vma)
-		*pprev = vma->vm_prev;
-
+		*pprev = LIST_TO_VMA(vma->list.prev);
 	return vma;
 }
 
@@ -1380,10 +1356,10 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 		new->vm_ops->open(new);
 
 	if (new_below)
-		err = __myos_vma_adjust(vma, addr, vma->vm_end, vma->vm_pgoff +
+		err = __simple_vma_adjust(vma, addr, vma->vm_end, vma->vm_pgoff +
 					((addr - new->vm_start) >> PAGE_SHIFT), new, NULL);
 	else
-		err = __myos_vma_adjust(vma, vma->vm_start, addr,
+		err = __simple_vma_adjust(vma, vma->vm_start, addr,
 					vma->vm_pgoff, new, NULL);
 
 	/* Success. */
@@ -1580,7 +1556,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	// 	return -ENOMEM;
 
 	/* Can we just expand an old private anonymous mapping? */
-	vma = myos_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
+	vma = simple_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
 	if (vma)
 		goto out;
 
@@ -1710,7 +1686,7 @@ int insert_vm_struct(mm_s *mm, vma_s *vma)
 {
 	vma_s *prev;
 
-	if (myos_find_vma_links(mm, vma->vm_start, vma->vm_end, &prev))
+	if (simple_find_vma_links(mm, vma->vm_start, vma->vm_end, &prev))
 		return -ENOMEM;
 	// if ((vma->vm_flags & VM_ACCOUNT) &&
 	//      security_vm_enough_memory_mm(mm, vma_pages(vma)))
