@@ -105,11 +105,14 @@ validate_mm(mm_s *mm) {
 static int
 simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 	int		retval = 0;
-	vma_s	*tmp = NULL;
+	vma_s	*vma = NULL,
+			*tmp = NULL;
 
 	for_each_vma(mm, tmp) {
-		if (end <= tmp->vm_start)
+		if (end <= tmp->vm_start) {
+			vma = tmp;
 			break;
+		}
 
 		if ((addr >= tmp->vm_start && addr < tmp->vm_end) ||
 			(end > tmp->vm_start && end <= tmp->vm_end)) {
@@ -118,9 +121,9 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 		}
 	}
 
-	// *pprev = NULL;
-	// if (tmp != NULL)
-	// 	*pprev = tmp->vm_prev;
+	*pprev = NULL;
+	if (vma != NULL)
+		*pprev = LIST_TO_VMA(vma->list.prev);
 
 	return retval;
 }
