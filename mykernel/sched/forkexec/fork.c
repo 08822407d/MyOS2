@@ -395,7 +395,8 @@ free_tsk:
 
 static mm_s *mm_init(mm_s *mm, task_s *p)
 {
-	mm->mmap = NULL;
+	// mm->mmap = NULL;
+	INIT_LIST_HEADER_S(&mm->mm_mt);
 	// mm->vmacache_seqnum = 0;
 	atomic_set(&mm->mm_users, 1);
 	atomic_set(&mm->mm_refcount, 1);

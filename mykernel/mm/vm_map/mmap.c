@@ -92,6 +92,18 @@ static inline vma_s
 		return LIST_TO_VMA(lp->next);
 }
 
+static inline vma_s
+*vma_prev_vma(vma_s *vma) {
+	BUG_ON(vma == NULL);
+	return LIST_TO_VMA(vma->list.prev);
+}
+
+static inline vma_s
+*vma_next_vma(vma_s *vma) {
+	BUG_ON(vma == NULL);
+	return LIST_TO_VMA(vma->list.next);
+}
+
 static void
 validate_mm(mm_s *mm) {
 	// DEBUG_MM usage
@@ -208,7 +220,7 @@ int __simple_vma_adjust(vma_s *vma, ulong start, ulong end,
 		pgoff_t pgoff, vma_s *insert, vma_s *expand)
 {
 	mm_s *mm = vma->vm_mm;
-	vma_s *next = vma->vm_next, *orig_vma = vma;
+	vma_s *next = vma_next_vma(vma), *orig_vma = vma;
 	file_s *file = vma->vm_file;
 	bool start_changed = false, end_changed = false;
 	long adjust_next = 0;
@@ -260,7 +272,7 @@ int __simple_vma_adjust(vma_s *vma, ulong start, ulong end,
 			 * next, if the vma overlaps with it.
 			 */
 			if (remove_next == 2)
-				exporter = next->vm_next;
+				exporter = vma_next_vma(next);
 
 		} else if (end > next->vm_start) {
 			/*
@@ -382,7 +394,7 @@ again:
 			 * "next->vm_prev->vm_end" changed and the
 			 * "vma->vm_next" gap must be updated.
 			 */
-			next = vma->vm_next;
+			next = vma_next_vma(vma);
 		} else {
 			/*
 			 * For the scope of the comment "next" and
@@ -580,7 +592,7 @@ vma_s
 	next = vma_next(mm, prev);
 	area = next;
 	if (area && area->vm_end == end)		/* cases 6, 7, 8 */
-		next = next->vm_next;
+		next = vma_next_vma(next);
 
 	/*
 	 * Can it merge with the predecessor?
@@ -1293,24 +1305,27 @@ unmap_region(mm_s *mm, vma_s *vma, vma_s *prev, ulong start, ulong end) {
  */
 static bool
 myos_detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma, vma_s *prev, ulong end) {
-	vma_s **insertion_point;
-	vma_s *tail_vma = NULL;
+	// vma_s **insertion_point;
+	// vma_s *tail_vma = NULL;
 
-	insertion_point = (prev ? &prev->vm_next : &mm->mmap);
-	vma->vm_prev = NULL;
-	do {
-		mm->map_count--;
-		tail_vma = vma;
-		vma = vma->vm_next;
-	} while (vma && vma->vm_start < end);
-	*insertion_point = vma;
-	if (vma)
-		vma->vm_prev = prev;
-	tail_vma->vm_next = NULL;
+	// insertion_point = (prev ? &prev->vm_next : &mm->mmap);
+	// vma->vm_prev = NULL;
+	// do {
+	// 	mm->map_count--;
+	// 	tail_vma = vma;
+	// 	vma = vma->vm_next;
+	// } while (vma && vma->vm_start < end);
+	// *insertion_point = vma;
+	// if (vma)
+	// 	vma->vm_prev = prev;
+	// tail_vma->vm_next = NULL;
 
 	// /* Kill the cache */
 	// vmacache_invalidate(mm);
 
+
+	BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
+	list_header_delete_node(&mm->mm_mt, &vma->list);
 	/*
 	 * Do not downgrade mmap_lock if we are next to VM_GROWSDOWN or
 	 * VM_GROWSUP VMA. Such VMAs can change their size under
@@ -1417,7 +1432,7 @@ int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 	vma = find_vma_intersection(mm, start, end);
 	if (!vma)
 		return 0;
-	prev = vma->vm_prev;
+	prev = vma_prev_vma(vma);
 
 	/*
 	 * If we need to split any vma, do it now to save pain later.

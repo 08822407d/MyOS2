@@ -13,33 +13,40 @@
 
 void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
-	vma_s *next;
+	BUG_ON(!list_header_contains(&mm->mm_mt, &prev->list));
+	INIT_LIST_S(&vma->list);
+	list_add_to_next(&vma->list, &prev->list);
 
-	vma->vm_prev = prev;
-	if (prev) {
-		next = prev->vm_next;
-		prev->vm_next = vma;
-	} else {
-		next = mm->mmap;
-		mm->mmap = vma;
-	}
-	vma->vm_next = next;
-	if (next)
-		next->vm_prev = vma;
+	// vma_s *next;
+
+	// vma->vm_prev = prev;
+	// if (prev) {
+	// 	next = prev->vm_next;
+	// 	prev->vm_next = vma;
+	// } else {
+	// 	next = mm->mmap;
+	// 	mm->mmap = vma;
+	// }
+	// vma->vm_next = next;
+	// if (next)
+	// 	next->vm_prev = vma;
 }
 
 void __vma_unlink_list(mm_s *mm, vma_s *vma)
 {
-	vma_s *prev, *next;
+	BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
+	list_header_delete_node(&mm->mm_mt, &vma->list);
 
-	next = vma->vm_next;
-	prev = vma->vm_prev;
-	if (prev)
-		prev->vm_next = next;
-	else
-		mm->mmap = next;
-	if (next)
-		next->vm_prev = prev;
+	// vma_s *prev, *next;
+
+	// next = vma->vm_next;
+	// prev = vma->vm_prev;
+	// if (prev)
+	// 	prev->vm_next = next;
+	// else
+	// 	mm->mmap = next;
+	// if (next)
+	// 	next->vm_prev = prev;
 }
 
 
