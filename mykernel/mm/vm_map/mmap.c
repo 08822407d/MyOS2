@@ -77,8 +77,8 @@ void vm_area_free(vma_s *vma)
  * Returns: The next VMA after @vma.
  *			If reach list end, returns NULL
  */
-static inline vma_s
-*vma_next(mm_s *mm, vma_s *vma) {
+vma_s *vma_next(mm_s *mm, vma_s *vma)
+{
 	BUG_ON(list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
 	List_s *lp;
 	if (vma == NULL)
@@ -89,7 +89,7 @@ static inline vma_s
 	if (lp == &mm->mm_mt.anchor)
 		return NULL;
 	else
-		return LIST_TO_VMA(lp->next);
+		return LIST_TO_VMA(lp);
 }
 
 static inline vma_s

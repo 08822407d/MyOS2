@@ -133,6 +133,8 @@
 		#define list_empty list_is_empty_entry
 		#define list_empty_careful list_is_empty_entry_careful
 
+		#define list_header_append list_header_enqueue
+
 	#include "double_list_macro.h"
 	
 	#if defined(LIST_DEFINATION) || !(DEBUG)

@@ -43,7 +43,13 @@ mm_s init_mm = {
 // #endif
 	INIT_MM_CONTEXT(init_mm)
 };
-vma_s init_vma;
+vma_s init_vma ={
+	.vm_mm				= &init_mm,
+	.vm_start			= TASK_SIZE_MAX - SZ_16M,
+	.vm_end				= TASK_SIZE_MAX,
+	.vm_flags			= VM_WRITE,
+	.list				= LIST_INIT(init_vma.list),
+};
 
 void setup_initial_init_mm(void *start_code,
 		void *end_code, void *end_data, void *brk)
@@ -55,9 +61,6 @@ void setup_initial_init_mm(void *start_code,
 
 	memset(&init_vma, 0, sizeof(vma_s));
 	INIT_LIST_HEADER_S(&init_mm.mm_mt);
+	__vma_link_list(&init_mm, &init_vma, NULL);
 	init_mm.map_count	= 1;
-	init_vma.vm_mm		= &init_mm;
-	init_vma.vm_start	= TASK_SIZE_MAX - SZ_16M;
-	init_vma.vm_end		= TASK_SIZE_MAX;
-	init_vma.vm_flags	|= VM_WRITE;
 }

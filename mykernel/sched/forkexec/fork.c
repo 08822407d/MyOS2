@@ -149,7 +149,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 {
 	vma_s *mpnt, *tmp, *prev, **pprev;
 	int retval = 0;
-	unsigned long charge;
+	// unsigned long charge;
 	// LIST_HEAD(uf);
 
 	// uprobe_start_dup_mmap();
@@ -172,7 +172,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	mm->exec_vm = oldmm->exec_vm;
 	mm->stack_vm = oldmm->stack_vm;
 
-	pprev = &mm->mmap;
+	// pprev = &mm->mm_mt.anchor;
 	// retval = ksm_fork(mm, oldmm);
 	// if (retval)
 	// 	goto out;
@@ -181,14 +181,15 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	// 	goto out;
 
 	prev = NULL;
-	for (mpnt = oldmm->mmap; mpnt != NULL; mpnt = mpnt->vm_next) {
+	for_each_vma(oldmm, mpnt) {
+	// for (mpnt = oldmm->mmap; mpnt != NULL; mpnt = mpnt->vm_next) {
 		file_s *file;
 
 		if (mpnt->vm_flags & VM_DONTCOPY) {
 			// vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
 			continue;
 		}
-		charge = 0;
+		// charge = 0;
 		// /*
 		//  * Don't duplicate many vmas if we've been oom-killed (for
 		//  * example)
@@ -202,7 +203,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 
 			// if (security_vm_enough_memory_mm(oldmm, len)) /* sic */
 			// 	goto fail_nomem;
-			charge = len;
+			// charge = len;
 		}
 		tmp = vm_area_dup(mpnt);
 		if (!tmp)
@@ -242,10 +243,11 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		/*
 		 * Link in the new vma and copy the page table entries.
 		 */
-		*pprev = tmp;
-		pprev = &tmp->vm_next;
-		tmp->vm_prev = prev;
-		prev = tmp;
+		list_header_append(&mm->mm_mt, &tmp->list);
+		// *pprev = tmp;
+		// pprev = &tmp->vm_next;
+		// tmp->vm_prev = prev;
+		// prev = tmp;
 
 		mm->map_count++;
 		if (!(tmp->vm_flags & VM_WIPEONFORK))

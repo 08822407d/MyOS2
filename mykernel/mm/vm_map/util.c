@@ -13,9 +13,13 @@
 
 void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
-	BUG_ON(!list_header_contains(&mm->mm_mt, &prev->list));
 	INIT_LIST_S(&vma->list);
-	list_add_to_next(&vma->list, &prev->list);
+	if (prev == NULL) {
+		list_header_append(&mm->mm_mt, &vma->list);
+	} else {
+		BUG_ON(!list_header_contains(&mm->mm_mt, &prev->list));
+		list_add_to_next(&vma->list, &prev->list);
+	}
 
 	// vma_s *next;
 
