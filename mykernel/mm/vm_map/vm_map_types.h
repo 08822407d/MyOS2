@@ -17,15 +17,12 @@
 		ulong			vm_end;		/* The first byte after our end address
 									   within vm_mm. */
 
-		// /* linked list of VM areas per task, sorted by address */
-		// vma_s			*vm_next, *vm_prev;
-
 		mm_s			*vm_mm;		/* The address space we belong to. */
 
 		/*
-		* Access permissions of this VMA.
-		* See vmf_insert_mixed_prot() for discussion.
-		*/
+		 * Access permissions of this VMA.
+		 * See vmf_insert_mixed_prot() for discussion.
+		 */
 		// pgprot_t vm_page_prot;
 		ulong			vm_flags;	/* Flags, see mm.h. */
 

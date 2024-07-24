@@ -30,6 +30,11 @@
 				((__vma) = vma_next(mm, __vma)) != NULL			\
 			)
 
+	#define for_each_vma_reverse(mm, __vma)								\
+			while (												\
+				((__vma) = vma_prev(mm, __vma)) != NULL			\
+			)
+
 	// /* The MM code likes to work with exclusive end addresses */
 	// #define for_each_vma_range(__vmi, __vma, __end)				\
 	// 	while (((__vma) = vma_find(&(__vmi), (__end))) != NULL)

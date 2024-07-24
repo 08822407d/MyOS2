@@ -40,7 +40,7 @@ vma_s *vm_area_alloc(mm_s *mm)
 	return vma;
 }
 
-vma_s *vm_area_dup(vma_s *orig)
+vma_s *vm_area_creat_dup(vma_s *orig)
 {
 	vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 
@@ -55,7 +55,6 @@ vma_s *vm_area_dup(vma_s *orig)
 		*new = *orig;
 		// INIT_LIST_HEAD(&new->anon_vma_chain);
 		INIT_LIST_S(&new->list);
-		// new->vm_next = new->vm_prev = NULL;
 		// dup_anon_vma_name(orig, new);
 	}
 	return new;
@@ -65,6 +64,47 @@ void vm_area_free(vma_s *vma)
 {
 	// free_anon_vma_name(vma);
 	kmem_cache_free(vm_area_cachep, vma);
+}
+
+
+static inline vma_s
+*__get_vma_test_header(List_s *lp, List_hdr_s *lhdr) {
+	if (lp == &lhdr->anchor)
+		return NULL;
+	else
+		return LIST_TO_VMA(lp);
+}
+
+// static inline vma_s
+// *__prev_vma(vma_s *vma, List_hdr_s *lhdr) {
+// 	List_s *lp = vma->list.prev;
+// 	return __get_vma_test_header(lp, lhdr);
+// }
+
+// static inline vma_s
+// *__next_vma(vma_s *vma, List_hdr_s *lhdr) {
+// 	List_s *lp = vma->list.next;
+// 	return __get_vma_test_header(lp, lhdr);
+// }
+
+static inline vma_s
+*vma_prev_vma(vma_s *vma) {
+	// BUG_ON(vma == NULL);
+	while (vma == NULL);
+	
+	List_hdr_s *lhdr = &vma->vm_mm->mm_mt;
+	List_s *lp = vma->list.prev;
+	return __get_vma_test_header(lp, lhdr);
+}
+
+static inline vma_s
+*vma_next_vma(vma_s *vma) {
+	// BUG_ON(vma == NULL);
+	while (vma == NULL);
+
+	List_hdr_s *lhdr = &vma->vm_mm->mm_mt;
+	List_s *lp = vma->list.next;
+	return __get_vma_test_header(lp, lhdr);
 }
 
 /*
@@ -79,30 +119,32 @@ void vm_area_free(vma_s *vma)
  */
 vma_s *vma_next(mm_s *mm, vma_s *vma)
 {
-	BUG_ON(list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
-	List_s *lp;
-	if (vma == NULL)
-		lp = mm->mm_mt.anchor.next;
-	else
+	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
+	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+	while (list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+
+	List_hdr_s *lhdr = &mm->mm_mt;
+	List_s *lp = lhdr->anchor.next;
+	if (vma != NULL)
 		lp = vma->list.next;
-
-	if (lp == &mm->mm_mt.anchor)
-		return NULL;
-	else
-		return LIST_TO_VMA(lp);
+	return __get_vma_test_header(lp, lhdr);
 }
 
-static inline vma_s
-*vma_prev_vma(vma_s *vma) {
-	BUG_ON(vma == NULL);
-	return LIST_TO_VMA(vma->list.prev);
+vma_s *vma_prev(mm_s *mm, vma_s *vma)
+{
+	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
+	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+	while (list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
+
+	List_hdr_s *lhdr = &mm->mm_mt;
+	List_s *lp = lhdr->anchor.prev;
+	if (vma != NULL)
+		lp = vma->list.prev;
+	return __get_vma_test_header(lp, lhdr);
 }
 
-static inline vma_s
-*vma_next_vma(vma_s *vma) {
-	BUG_ON(vma == NULL);
-	return LIST_TO_VMA(vma->list.next);
-}
 
 static void
 validate_mm(mm_s *mm) {
@@ -135,8 +177,7 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 
 	*pprev = NULL;
 	if (vma != NULL)
-		*pprev = LIST_TO_VMA(vma->list.prev);
-
+		*pprev = vma_prev_vma(vma);
 	return retval;
 }
 
@@ -1352,7 +1393,7 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 			return err;
 	}
 
-	new = vm_area_dup(vma);
+	new = vm_area_creat_dup(vma);
 	if (!new)
 		return -ENOMEM;
 

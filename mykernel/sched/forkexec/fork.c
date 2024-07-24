@@ -147,7 +147,7 @@ void free_task(task_s *tsk)
 static __latent_entropy int
 dup_mmap(mm_s *mm, mm_s *oldmm)
 {
-	vma_s *mpnt, *tmp, *prev, **pprev;
+	vma_s *mpnt = NULL, *tmp;
 	int retval = 0;
 	// unsigned long charge;
 	// LIST_HEAD(uf);
@@ -172,7 +172,6 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	mm->exec_vm = oldmm->exec_vm;
 	mm->stack_vm = oldmm->stack_vm;
 
-	// pprev = &mm->mm_mt.anchor;
 	// retval = ksm_fork(mm, oldmm);
 	// if (retval)
 	// 	goto out;
@@ -180,9 +179,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	// if (retval)
 	// 	goto out;
 
-	prev = NULL;
 	for_each_vma(oldmm, mpnt) {
-	// for (mpnt = oldmm->mmap; mpnt != NULL; mpnt = mpnt->vm_next) {
 		file_s *file;
 
 		if (mpnt->vm_flags & VM_DONTCOPY) {
@@ -205,7 +202,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 			// 	goto fail_nomem;
 			// charge = len;
 		}
-		tmp = vm_area_dup(mpnt);
+		tmp = vm_area_creat_dup(mpnt);
 		if (!tmp)
 			goto fail_nomem;
 		// retval = vma_dup_policy(mpnt, tmp);
@@ -244,10 +241,6 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		 * Link in the new vma and copy the page table entries.
 		 */
 		list_header_append(&mm->mm_mt, &tmp->list);
-		// *pprev = tmp;
-		// pprev = &tmp->vm_next;
-		// tmp->vm_prev = prev;
-		// prev = tmp;
 
 		mm->map_count++;
 		if (!(tmp->vm_flags & VM_WIPEONFORK))
