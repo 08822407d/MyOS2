@@ -55,7 +55,7 @@ static int chrdev_open(inode_s *inode, file_s *filp)
 		p = inode->i_cdev;
 		if (!p) {
 			inode->i_cdev = p = new;
-			list_header_push(&inode->i_devices, &p->list);
+			list_header_add_to_head(&inode->i_devices, &p->list);
 			new = NULL;
 		}
 	}

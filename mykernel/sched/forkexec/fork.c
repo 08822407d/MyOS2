@@ -240,7 +240,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		/*
 		 * Link in the new vma and copy the page table entries.
 		 */
-		list_header_append(&mm->mm_mt, &tmp->list);
+		list_header_add_to_tail(&mm->mm_mt, &tmp->list);
 
 		mm->map_count++;
 		if (!(tmp->vm_flags & VM_WIPEONFORK))
@@ -1289,7 +1289,7 @@ static __latent_entropy task_s
 			//  */
 			// p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
 			// 				 p->real_parent->signal->is_child_subreaper;
-			list_header_enqueue(&p->real_parent->children, &p->sibling);
+			list_header_add_to_tail(&p->real_parent->children, &p->sibling);
 			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
 			// attach_pid(p, PIDTYPE_TGID);
 			// attach_pid(p, PIDTYPE_PGID);

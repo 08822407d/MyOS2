@@ -15,7 +15,7 @@ void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
 	INIT_LIST_S(&vma->list);
 	if (prev == NULL) {
-		list_header_append(&mm->mm_mt, &vma->list);
+		list_header_add_to_head(&mm->mm_mt, &vma->list);
 	} else {
 		// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &prev->list)));
 		while (vma != NULL && !list_header_contains(&mm->mm_mt, &prev->list));

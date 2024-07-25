@@ -151,7 +151,7 @@ void mnt_set_mountpoint(mount_s *parent_mnt,
 	child_mnt->mnt_mountpoint = mp->m_dentry;
 	child_mnt->mnt_parent = parent_mnt;
 	child_mnt->mnt_mp = mp;
-	list_header_enqueue(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
+	list_header_add_to_tail(&parent_mnt->mnt_mounts, &child_mnt->mnt_child);
 }
 
 /**

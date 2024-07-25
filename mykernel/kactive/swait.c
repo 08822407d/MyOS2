@@ -23,7 +23,7 @@ void swake_up_locked(swqueue_hdr_s *q) {
 	if (q->task_list_hdr.count == 0)
 		return;
 
-	List_s *lp = list_header_dequeue(&q->task_list_hdr);
+	List_s *lp = list_header_remove_tail(&q->task_list_hdr);
 	curr = container_of(lp, swqueue_s, task_list);
 	wake_up_process(curr->task);
 }
@@ -44,7 +44,7 @@ void swake_up_all_locked(swqueue_hdr_s *q) {
 void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait) {
 	wait->task = current;
 	if (list_is_empty_entry(&wait->task_list))
-		list_header_enqueue(&q->task_list_hdr, &wait->task_list);
+		list_header_add_to_tail(&q->task_list_hdr, &wait->task_list);
 }
 
 void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {

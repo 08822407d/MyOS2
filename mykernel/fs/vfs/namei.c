@@ -329,7 +329,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name,
 		return ERR_PTR(-ENOENT);
 	}
 
-	list_header_enqueue(&dir->d_subdirs, &dentry->d_child);
+	list_header_add_to_tail(&dir->d_subdirs, &dentry->d_child);
 	dentry->d_parent = dir;
 
 	return dentry;
@@ -360,7 +360,7 @@ static dentry_s *__lookup_hash(const qstr_s *name,
 	if (!dentry)
 		return ERR_PTR(-ENOMEM);
 	dentry->d_parent = base;
-	list_header_enqueue(&base->d_subdirs, &dentry->d_child);
+	list_header_add_to_tail(&base->d_subdirs, &dentry->d_child);
 
 	old = dir->i_op->lookup(dir, dentry, flags);
 	if (old) {

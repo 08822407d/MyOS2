@@ -40,10 +40,10 @@ set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
  */
 // static void
 // add_to_full(kmem_cache_node_s *n, slab_s *slab) {
-// 	list_header_push(&n->full, &slab->slab_list);
+// 	list_header_add_to_head(&n->full, &slab->slab_list);
 // }
 #define add_to_full(n, slab)	\
-			list_header_push(&((n)->full), &((slab)->slab_list))
+			list_header_add_to_head(&((n)->full), &((slab)->slab_list))
 // static void
 // remove_from_full(kmem_cache_node_s *n, slab_s *slab) {
 // 	list_header_delete_node(&n->full, &slab->slab_list);
@@ -56,10 +56,10 @@ set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
  */
 // static inline void
 // add_to_partial(kmem_cache_node_s *n, slab_s *slab) {
-// 	list_header_push(&n->partial, &slab->slab_list);
+// 	list_header_add_to_head(&n->partial, &slab->slab_list);
 // }
 #define add_to_partial(n, slab)	\
-			list_header_push(&((n)->partial), &((slab)->slab_list))
+			list_header_add_to_head(&((n)->partial), &((slab)->slab_list))
 // static inline void
 // remove_from_partial(kmem_cache_node_s *n, slab_s *slab) {
 // 	list_header_delete_node(&n->partial, &slab->slab_list);
@@ -466,7 +466,7 @@ static kmem_cache_s __init
 	INIT_LIST_HEADER_S(&n->partial);
 	INIT_LIST_HEADER_S(&n->full);
 	add_to_partial(n, slab);
-	list_header_push(&slab_caches, &s->list);
+	list_header_add_to_head(&slab_caches, &s->list);
 	return s;
 }
 

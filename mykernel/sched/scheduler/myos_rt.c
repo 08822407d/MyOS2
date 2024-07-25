@@ -19,7 +19,7 @@ static task_s *pick_next_task_myos(rq_s *rq)
 				myos_rq->running_lhdr.count <= 0);
 
 		// fetch a task from running_list
-		List_s * next_lp = list_header_pop(&myos_rq->running_lhdr);
+		List_s * next_lp = list_header_remove_head(&myos_rq->running_lhdr);
 		while (next_lp == 0);
 
 		// and insert curr_task back to running_list
@@ -28,7 +28,7 @@ static task_s *pick_next_task_myos(rq_s *rq)
 			if (curr_task == rq->idle)
 			{
 				// insert idle task to cpu's running-list tail
-				list_header_enqueue(&myos_rq->running_lhdr, &rt->run_list);
+				list_header_add_to_tail(&myos_rq->running_lhdr, &rt->run_list);
 			}
 			else
 			{

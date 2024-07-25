@@ -173,7 +173,7 @@ void inode_sb_list_add(inode_s *inode)
 {
 	// spin_lock(&inode->i_sb->s_inode_list_lock);
 	// list_add_to_next(&inode->i_sb_list, &inode->i_sb->s_inodes);
-	list_header_enqueue(&inode->i_sb->s_inodes, &inode->i_sb_list);
+	list_header_add_to_tail(&inode->i_sb->s_inodes, &inode->i_sb_list);
 	// spin_unlock(&inode->i_sb->s_inode_list_lock);
 }
 

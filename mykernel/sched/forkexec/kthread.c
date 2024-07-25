@@ -257,7 +257,7 @@ task_s *__kthread_create_on_node(int (*threadfn)(void *data),
 	INIT_LIST_S(&create->list);
 
 	spin_lock(&kthread_create_lock);
-	list_header_enqueue(&kthread_create_list, &create->list);
+	list_header_add_to_tail(&kthread_create_list, &create->list);
 	spin_unlock(&kthread_create_lock);
 
 	wake_up_process(kthreadd_task);
@@ -347,7 +347,7 @@ int kthreadd(void *unused)
 		while (!list_header_is_empty(&kthread_create_list)) {
 			kthd_create_info_s *create;
 
-			List_s *lp = list_header_dequeue(&kthread_create_list);
+			List_s *lp = list_header_remove_tail(&kthread_create_list);
 			create = container_of(lp, kthd_create_info_s, list);
 			spin_unlock(&kthread_create_lock);
 

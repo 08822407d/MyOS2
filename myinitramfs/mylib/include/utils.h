@@ -53,11 +53,11 @@
 	
 	bool list_header_contains(List_hdr_s * lhdr_p, List_s * l_p);
 	void INIT_LIST_HEADER_S(List_hdr_s * lh_p);
-	void list_header_push(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_header_pop(List_hdr_s * lhdr_p);
-	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
-	void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p);
-	List_s * list_header_dequeue(List_hdr_s * lhdr_p);
+	void list_header_add_to_head(List_hdr_s * lhdr_p, List_s * l_p);
+	List_s * list_header_remove_head(List_hdr_s * lhdr_p);
+	void list_header_add_to_tail(List_hdr_s * lhdr_p, List_s * l_p);
+	void list_header_add_to_tail(List_hdr_s * lhdr_p, List_s * l_p);
+	List_s * list_header_remove_tail(List_hdr_s * lhdr_p);
 	List_s * list_header_delete_node(List_hdr_s * lhdr_p, List_s * l_p);
 
 #endif /* _LIB_UTILS_H_ */

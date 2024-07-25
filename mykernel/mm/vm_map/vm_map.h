@@ -21,6 +21,12 @@
 		vma_is_anonymous(vma_s *vma);
 
 		extern vma_s
+		*simple_find_vma(mm_s *mm, ulong addr);
+
+		extern vma_s
+		*find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev);
+
+		extern vma_s
 		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr);
 
 		extern vma_s
@@ -54,7 +60,6 @@
 		void
 		vma_init(vma_s *vma, mm_s *mm) {
 			static const vm_ops_s dummy_vm_ops = {};
-
 			memset(vma, 0, sizeof(*vma));
 			INIT_LIST_S(&vma->list);
 			// INIT_LIST_HEAD(&vma->anon_vma_chain);
@@ -74,6 +79,31 @@
 			return !vma->vm_ops;
 		}
 
+		/* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
+		PREFIX_STATIC_INLINE
+		vma_s
+		*simple_find_vma(mm_s *mm, ulong addr) {
+			vma_s *vma = NULL;
+			for_each_vma(mm, vma) {
+				if (addr >= vma->vm_start && addr < vma->vm_end)
+					return vma;
+			}
+			return NULL;
+		}
+
+		/*
+		 * Same as find_vma, but also return a pointer to the previous VMA in *pprev.
+		 */
+		PREFIX_STATIC_INLINE
+		vma_s
+		*find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev) {
+			*pprev = NULL;
+			vma_s *vma = simple_find_vma(mm, addr);
+			if (vma)
+				*pprev = vma_prev_vma(vma);
+			return vma;
+		}
+
 		/**
 		 * find_vma_intersection() - Look up the first VMA which intersects the interval
 		 * @mm: The process address space.
@@ -86,11 +116,8 @@
 		PREFIX_STATIC_INLINE
 		vma_s
 		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr) {
-			vma_s *vma = simple_find_vma(mm, start_addr);
-
-			if (vma && end_addr <= vma->vm_start)
-				vma = NULL;
-			return vma;
+			BUG_ON(start_addr > end_addr);
+			return simple_find_vma(mm, start_addr);
 		}
 
 		/**
@@ -104,10 +131,8 @@
 		vma_s
 		*vma_lookup(mm_s *mm, ulong addr) {
 			vma_s *vma = simple_find_vma(mm, addr);
-
 			if (vma && addr < vma->vm_start)
 				vma = NULL;
-
 			return vma;
 		}
 
@@ -115,7 +140,6 @@
 		ulong
 		vm_start_gap(vma_s *vma) {
 			ulong vm_start = vma->vm_start;
-
 			if (vma->vm_flags & VM_GROWSDOWN) {
 				vm_start -= stack_guard_gap;
 				if (vm_start > vma->vm_start)
@@ -128,7 +152,6 @@
 		ulong
 		vm_end_gap(vma_s *vma) {
 			ulong vm_end = vma->vm_end;
-
 			if (vma->vm_flags & VM_GROWSUP) {
 				vm_end += stack_guard_gap;
 				if (vm_end < vma->vm_end)
@@ -148,10 +171,9 @@
 		vma_s
 		*find_exact_vma(mm_s *mm, ulong vm_start, ulong vm_end) {
 			vma_s *vma = simple_find_vma(mm, vm_start);
-
-			if (vma && (vma->vm_start != vm_start || vma->vm_end != vm_end))
+			if (vma && (vma->vm_start != vm_start ||
+					vma->vm_end != vm_end))
 				vma = NULL;
-
 			return vma;
 		}
 

@@ -55,7 +55,7 @@ static kmem_cache_s
 	}
 
 	s->refcount = 1;
-	list_header_push(&slab_caches, &s->list);
+	list_header_add_to_head(&slab_caches, &s->list);
 
 out:
 	return s;
@@ -142,7 +142,7 @@ kmem_cache_s __init
 		panic("Out of memory when creating slab %s\n", name);
 
 	create_boot_cache(s, name, size, flags | SLAB_KMALLOC);
-	list_header_push(&slab_caches, &s->list);
+	list_header_add_to_head(&slab_caches, &s->list);
 	s->refcount = 1;
 	return s;
 }
