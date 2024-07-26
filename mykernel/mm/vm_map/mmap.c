@@ -189,7 +189,7 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 static inline int
 simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
 	while (simple_find_vma_links(mm, start, start + len, pprev))
-		if (__do_munmap(mm, start, len, false))
+		if (simple_do_vma_munmap(mm, start, start + len))
 			return -ENOMEM;
 	return 0;
 }
@@ -1089,25 +1089,15 @@ int expand_stack(vma_s *vma, ulong address)
  * remove all vmas away from @mm->mm_mt
  * start from @vma, end to the vma's vm_end reaches the @end
  */
-static bool
+static void
 myos_detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma, vma_s *prev, ulong end) {
 	do {
-		vma_s *tail_vma = vma;
+		vma_s *detach_chain_head = vma;
 		mm->map_count--;
 		vma = vma_next_vma(vma);
-		BUG_ON(!list_header_contains(&mm->mm_mt, &tail_vma->list));
-		list_header_delete_node(&mm->mm_mt, &tail_vma->list);
+		BUG_ON(!list_header_contains(&mm->mm_mt, &detach_chain_head->list));
+		list_header_delete_node(&mm->mm_mt, &detach_chain_head->list);
 	} while (vma && vma->vm_start < end);
-
-	/*
-	 * Do not downgrade mmap_lock if we are next to VM_GROWSDOWN or
-	 * VM_GROWSUP VMA. Such VMAs can change their size under
-	 * down_read(mmap_lock) and collide with the VMA we are about to unmap.
-	 */
-	if (vma && (vma->vm_flags & VM_GROWSDOWN) ||
-		prev && (prev->vm_flags & VM_GROWSUP))
-		return false;
-	return true;
 }
 
 /*
@@ -1172,20 +1162,10 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
  * it do nothing
  * 
  */
-int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
+int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 {
-	ulong end;
 	vma_s *vma, *prev, *last;
-
-	if (offset_in_page(start) ||
-			start > TASK_SIZE ||
-			len > (TASK_SIZE-start))
-		return -EINVAL;
-
-	len = PAGE_ALIGN(len);
-	end = start + len;
-	if (len == 0)
-		return -EINVAL;
+	int error = -ENOMEM;
 
 	/* Find the first overlapping VMA where start < vma->vm_end */
 	vma = find_vma_intersection(mm, start, end);
@@ -1199,6 +1179,14 @@ int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 	 * places tmp vma above, and higher split_vma places tmp vma below.
 	 */
 	if (start > vma->vm_start) {
+		/*
+		 * Make sure that map_count on return from munmap() will
+		 * not exceed its limit; but let map_count go just above
+		 * its limit temporarily, to help free resources as expected.
+		 */
+		if (end < vma->vm_end && mm->map_count >= sysctl_max_map_count)
+			goto map_count_exceeded;
+
 		int error = __split_vma(mm, vma, start, 0);
 		if (error != ENOERR)
 			return error;
@@ -1210,29 +1198,27 @@ int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 	if (last && end > last->vm_start) {
 		int error = __split_vma(mm, last, end, 1);
 		if (error != ENOERR)
-			return error;
+			goto end_split_failed;
 	}
 	vma = vma_next_vma(prev);
 
-	// /*
-	//  * unlock any mlock()ed ranges before detaching vmas
-	//  */
-	// if (mm->locked_vm)
-	// 	unlock_range(vma, end);
+	/* Detach vmas from vma list */
+	myos_detach_vmas_to_be_unmapped(mm, vma, prev, end);
 
-	/* Detach vmas from rbtree */
-	if (!myos_detach_vmas_to_be_unmapped(mm, vma, prev, end))
-		downgrade = false;
 
-	// if (downgrade)
-	// 	mmap_write_downgrade(mm);
+clear_tree_failed:
+userfaultfd_error:
+munmap_gather_failed:
+end_split_failed:
+	// mas_set(&mas_detach, 0);
+	// mas_for_each(&mas_detach, next, end)
+	// 	vma_mark_detached(next, false);
 
-	// unmap_region(mm, vma, prev, start, end);
-
-	// /* Fix up all other VM information */
-	// remove_vma_list(mm, vma);
-
-	return downgrade ? 1 : 0;
+	// __mt_destroy(&mt_detach);
+start_split_failed:
+map_count_exceeded:
+	// validate_mm(mm);
+	return error;
 }
 
 int __vm_munmap(ulong start, size_t len, bool downgrade)
@@ -1244,7 +1230,7 @@ int __vm_munmap(ulong start, size_t len, bool downgrade)
 	// if (mmap_write_lock_killable(mm))
 	// 	return -EINTR;
 
-	ret = __do_munmap(mm, start, len, downgrade);
+	ret = simple_do_vma_munmap(mm, start, start + len);
 	// /*
 	//  * Returning 1 indicates mmap_lock is downgraded.
 	//  * But 1 is not legal return value of vm_munmap() and munmap(), reset

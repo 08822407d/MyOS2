@@ -41,7 +41,7 @@
 			ulong len, vm_flags_t vm_flags, ulong pgoff);
 	extern ulong do_mmap(file_s *file, ulong addr, ulong len,
 			ulong prot, ulong flags, ulong pgoff);
-	extern int __do_munmap(mm_s *, ulong, size_t, bool downgrade);
+	extern int simple_do_vma_munmap(mm_s *, ulong start, ulong end);
 
 	// /* These take the mm semaphore themselves */
 	extern int __must_check vm_brk_flags(ulong, ulong, ulong);
