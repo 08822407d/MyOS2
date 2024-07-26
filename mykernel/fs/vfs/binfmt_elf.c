@@ -325,7 +325,7 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 		total_size = ELF_PAGEALIGN(total_size);
 		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
 		if (!BAD_ADDR(map_addr))
-			__vm_munmap(map_addr+size, total_size-size, false);
+			__vm_munmap(map_addr+size, total_size-size);
 	} else
 		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 

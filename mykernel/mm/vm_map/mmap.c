@@ -1084,21 +1084,6 @@ int expand_stack(vma_s *vma, ulong address)
 // 	kfree(prev);
 // }
 
-//	Linux implementation changed, proto not exist in linux-6.6
-/*
- * remove all vmas away from @mm->mm_mt
- * start from @vma, end to the vma's vm_end reaches the @end
- */
-static void
-myos_detach_vmas_to_be_unmapped(mm_s *mm, vma_s *vma, vma_s *prev, ulong end) {
-	do {
-		vma_s *detach_chain_head = vma;
-		mm->map_count--;
-		vma = vma_next_vma(vma);
-		BUG_ON(!list_header_contains(&mm->mm_mt, &detach_chain_head->list));
-		list_header_delete_node(&mm->mm_mt, &detach_chain_head->list);
-	} while (vma && vma->vm_start < end);
-}
 
 /*
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
@@ -1157,11 +1142,11 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 
 
 //	Linux implementation changed, proto not exist in linux-6.6
-/*
- * unmap the area from @start to @end, if no vma has intersection with
- * it do nothing
- * 
- */
+// this its sub function
+// static int
+// do_vmi_align_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
+// 		    struct mm_struct *mm, unsigned long start,
+// 		    unsigned long end, struct list_head *uf, bool unlock)
 int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 {
 	vma_s *vma, *prev, *last;
@@ -1174,10 +1159,13 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 	prev = vma_prev_vma(vma);
 
 	/*
+	 * If we need to split any vma, do it now to save pain later.
+	 *
 	 * Note: mremap's move_vma VM_ACCOUNT handling assumes a partially
 	 * unmapped vm_area_struct will remain in use: so lower split_vma
 	 * places tmp vma above, and higher split_vma places tmp vma below.
 	 */
+
 	if (start > vma->vm_start) {
 		/*
 		 * Make sure that map_count on return from munmap() will
@@ -1203,8 +1191,12 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 	vma = vma_next_vma(prev);
 
 	/* Detach vmas from vma list */
-	myos_detach_vmas_to_be_unmapped(mm, vma, prev, end);
-
+	do {
+		vma_s *tmp = vma;
+		mm->map_count--;
+		// BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
+		list_header_delete_node(&mm->mm_mt, &tmp->list);
+	} for_each_vma_range(mm, vma, end);
 
 clear_tree_failed:
 userfaultfd_error:
@@ -1221,25 +1213,18 @@ map_count_exceeded:
 	return error;
 }
 
-int __vm_munmap(ulong start, size_t len, bool downgrade)
+int __vm_munmap(ulong start, size_t len)
 {
 	int ret;
 	mm_s *mm = current->mm;
 	// LIST_HEAD(uf);
+	// VMA_ITERATOR(vmi, mm, start);
 
 	// if (mmap_write_lock_killable(mm))
 	// 	return -EINTR;
 
 	ret = simple_do_vma_munmap(mm, start, start + len);
-	// /*
-	//  * Returning 1 indicates mmap_lock is downgraded.
-	//  * But 1 is not legal return value of vm_munmap() and munmap(), reset
-	//  * it to 0 before return.
-	//  */
-	// if (ret == 1) {
-	// 	mmap_read_unlock(mm);
-	// 	ret = 0;
-	// } else
+	// if (ret || !unlock)
 	// 	mmap_write_unlock(mm);
 
 	// userfaultfd_unmap_complete(mm, &uf);

@@ -46,7 +46,7 @@
 	// /* These take the mm semaphore themselves */
 	extern int __must_check vm_brk_flags(ulong, ulong, ulong);
 	extern int vm_munmap(ulong, size_t);
-	int __vm_munmap(ulong start, size_t len, bool downgrade);
+	int __vm_munmap(ulong start, size_t len);
 	extern ulong __must_check vm_mmap(file_s *,
 			ulong, ulong, ulong, ulong, ulong);
 
