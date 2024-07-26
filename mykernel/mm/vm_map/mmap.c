@@ -9,34 +9,38 @@
 
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-#include <linux/kernel/kernel.h>
-#include <linux/kernel/syscalls.h>
-#include <linux/kernel/export.h>
-#include <linux/kernel/mount.h>
-#include <linux/kernel/uaccess.h>
-#include <linux/init/init.h>
+// #include <linux/kernel/kernel.h>
+// #include <linux/kernel/syscalls.h>
+// #include <linux/kernel/export.h>
+// #include <linux/kernel/mount.h>
+// #include <linux/kernel/uaccess.h>
+// #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
-#include <linux/fs/shmem_fs.h>
-#include <linux/debug/printk.h>
-#include <linux/sched/signal.h>
+// #include <linux/fs/shmem_fs.h>
+// #include <linux/debug/printk.h>
+// #include <linux/sched/signal.h>
 
 
 #include "../mm_types.h"
+#include "../mm_api.h"
 
 
 static bool ignore_rlimit_data = false;
 ulong mmap_min_addr = PAGE_SIZE;
 
 
-vma_s *vm_area_alloc(mm_s *mm)
+vma_s *
+vm_area_alloc(mm_s *mm)
 {
 	vma_s *vma = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
-	if (vma) vma_init(vma, mm);
+	if (vma)
+		vma_init(vma, mm);
 	return vma;
 }
 
-vma_s *vm_area_creat_dup(vma_s *orig)
+vma_s *
+vm_area_creat_dup(vma_s *orig)
 {
 	vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 
@@ -56,20 +60,25 @@ vma_s *vm_area_creat_dup(vma_s *orig)
 	return new;
 }
 
-void vm_area_free(vma_s *vma)
+void
+vm_area_free(vma_s *vma)
 {
 	// free_anon_vma_name(vma);
 	kmem_cache_free(vm_area_cachep, vma);
 }
 
 
-static inline vma_s
-*__get_vma_test_header(List_s *lp, List_hdr_s *lhdr) {
-	if (lp == &lhdr->anchor) return NULL;
-	else return LIST_TO_VMA(lp);
+static inline vma_s *
+__get_vma_test_header(List_s *lp, List_hdr_s *lhdr) {
+	if (lp == &lhdr->anchor)
+		return NULL;
+	else
+		return LIST_TO_VMA(lp);
 }
 
-vma_s *vma_prev_vma(vma_s *vma) {
+vma_s *
+vma_prev_vma(vma_s *vma)
+{
 	// BUG_ON(vma == NULL);
 	while (vma == NULL);
 	
@@ -78,7 +87,9 @@ vma_s *vma_prev_vma(vma_s *vma) {
 	return __get_vma_test_header(lp, lhdr);
 }
 
-vma_s *vma_next_vma(vma_s *vma) {
+vma_s *
+vma_next_vma(vma_s *vma)
+{
 	// BUG_ON(vma == NULL);
 	while (vma == NULL);
 
@@ -97,7 +108,8 @@ vma_s *vma_next_vma(vma_s *vma) {
  * Returns: The next VMA after @vma.
  *			If reach list end, returns NULL
  */
-vma_s *vma_next(mm_s *mm, vma_s *vma)
+vma_s *
+vma_next(mm_s *mm, vma_s *vma)
 {
 	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
 	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
@@ -111,7 +123,8 @@ vma_s *vma_next(mm_s *mm, vma_s *vma)
 	return __get_vma_test_header(lp, lhdr);
 }
 
-vma_s *vma_prev(mm_s *mm, vma_s *vma)
+vma_s *
+vma_prev(mm_s *mm, vma_s *vma)
 {
 	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
 	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
@@ -184,9 +197,7 @@ simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
 
 static void
 __vma_link_file(vma_s *vma) {
-	file_s *file;
-
-	file = vma->vm_file;
+	file_s *file = vma->vm_file;
 	if (file) {
 		// struct address_space *mapping = file->f_mapping;
 
@@ -230,7 +241,8 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
  * @end vm_end adjust target
  * 
  */
-int __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
+int
+__simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 {
 	mm_s *mm = vma->vm_mm;
 	// file_s *file = vma->vm_file;
@@ -335,7 +347,8 @@ simple_can_vma_merge_after(vma_s *vma, ulong vm_flags,
 	if (simple_is_mergeable_vma(vma, file, vm_flags) &&
 			(vma->vm_pgoff + vma_pages(vma) == vm_pgoff))
 		return true;
-	return false;
+	else
+		return false;
 }
 
 // Only adjust old vmas, won't creat new one for @addr-@end area
@@ -398,8 +411,8 @@ simple_can_vma_merge_after(vma_s *vma, ulong vm_flags,
 // 			pgoff_t pgoff, struct mempolicy *policy,
 // 			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 			struct anon_vma_name *anon_name)
-vma_s
-*simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
+vma_s *
+simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 		ulong vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
@@ -442,66 +455,17 @@ vma_s
 			adjust_target = next;
 		merge_next = true;
 	}
-	if (adjust_target == NULL)
-		adjust_target = curr;
 
 	if (!merge_prev && !merge_next)
 		return NULL; /* Not mergeable. */
-	while (prev == NULL && curr == NULL && next == NULL);
 
+	if (adjust_target == NULL)
+		adjust_target = curr;
+	// while (prev == NULL && curr == NULL && next == NULL);
 	if (__simple_vma_adjust(adjust_target, vma_start, vma_end) != ENOERR)
 		return NULL;
 	else
 		return adjust_target;
-
-	// next = vma_next(mm, prev);
-	// BUG_ON(next->vm_end == end);
-
-	// /*
-	//  * Can it merge with the @prev?
-	//  */
-	// if (prev && prev->vm_end == addr &&
-	// 		simple_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
-	// 	/*
-	// 	 * OK, it can.  Can we now merge in the successor as well?
-	// 	 */
-	// 	if (next && end == next->vm_start &&
-	// 			simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
-	// 		/* cases 1, 6 */
-	// 		err = __simple_vma_adjust(prev, prev->vm_start, next->vm_end);
-	// 	} else {
-	// 		/* cases 2, 5, 7 */
-	// 		err = __simple_vma_adjust(prev, prev->vm_start, end);
-	// 	}
-	// 	if (err)
-	// 		return NULL;
-	// 	return prev;
-	// }
-
-	// /*
-	//  * Can this new request be merged in front of next?
-	//  */
-	// if (next && end == next->vm_start &&
-	// 		simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
-	// 	if (prev && addr < prev->vm_end) {
-	// 		/* case 4 */
-	// 		err = __simple_vma_adjust(prev, prev->vm_start, addr);
-	// 	} else {
-	// 		/* cases 3, 8 */
-	// 		err = __simple_vma_adjust(curr, addr, next->vm_end);
-	// 		/*
-	// 		 * In case 3 area is already equal to next and
-	// 		 * this is a noop, but in case 8 "area" has
-	// 		 * been removed and next was expanded over it.
-	// 		 */
-	// 		curr = next;
-	// 	}
-	// 	if (err)
-	// 		return NULL;
-	// 	return curr;
-	// }
-
-	return NULL;
 }
 
 
@@ -510,14 +474,11 @@ vma_s
  */
 // 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
 ulong
-do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
-		ulong flags, ulong pgoff, ulong *populate)
+do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgoff)
 {
 	mm_s *mm = current->mm;
 	vm_flags_t vm_flags;
 	int pkey = 0;
-
-	*populate = 0;
 
 	if (!len)
 		return -EINVAL;
@@ -681,11 +642,10 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
 	// 		vm_flags |= VM_NORESERVE;
 	// }
 
-	addr = myos_mmap_region(file, addr, len, vm_flags, pgoff);
+	addr = simple_mmap_region(file, addr, len, vm_flags, pgoff);
 	// if (!IS_ERR_VALUE(addr) &&
 	//     ((vm_flags & VM_LOCKED) ||
 	//      (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
-	// 	*populate = len;
 	return addr;
 }
 
@@ -695,7 +655,7 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
 // 		unsigned long len, vm_flags_t vm_flags, unsigned long pgoff,
 // 		struct list_head *uf)
 ulong
-myos_mmap_region(file_s *file, ulong addr,
+simple_mmap_region(file_s *file, ulong addr,
 		ulong len, vm_flags_t vm_flags, ulong pgoff)
 {
 	mm_s *mm = current->mm;
@@ -720,7 +680,7 @@ myos_mmap_region(file_s *file, ulong addr,
 	 * Can we just expand an old mapping?
 	 */
 	vma = simple_vma_merge(mm, prev, addr, addr + len, vm_flags, file, pgoff);
-	if (vma)
+	if (vma != NULL)
 		goto out;
 
 	/*
@@ -729,7 +689,7 @@ myos_mmap_region(file_s *file, ulong addr,
 	 * not unmapped, but the maps are removed from the list.
 	 */
 	vma = vm_area_alloc(mm);
-	if (!vma) {
+	if (vma == NULL) {
 		error = -ENOMEM;
 		goto unacct_error;
 	}
@@ -749,28 +709,30 @@ myos_mmap_region(file_s *file, ulong addr,
 
 		vma->vm_file = get_file(file);
 		error = call_mmap(file, vma);
-		if (error)
+		if (error != -ENOERR)
 			goto unmap_and_free_vma;
 
-		// /* Can addr have changed??
-		//  *
-		//  * Answer: Yes, several device drivers can do it in their
-		//  *         f_op->mmap method. -DaveM
-		//  * Bug: If addr is changed, prev, rb_link, rb_parent should
-		//  *      be updated for simple_vma_link()
-		//  */
-		// WARN_ON_ONCE(addr != vma->vm_start);
-
+		/*
+		 * Can addr have changed??
+		 *
+		 * Answer: Yes, several device drivers can do it in their
+		 *         f_op->mmap method. -DaveM
+		 * Bug: If addr is changed, prev, rb_link, rb_parent should
+		 *      be updated for simple_vma_link()
+		 */
+		WARN_ON_ONCE(addr != vma->vm_start);
 		addr = vma->vm_start;
 
-		/* If vm_flags changed after call_mmap(), we should try merge vma again
+		/*
+		 * If vm_flags changed after call_mmap(), we should try merge vma again
 		 * as we may succeed this time.
 		 */
 		if (unlikely(vm_flags != vma->vm_flags && prev)) {
 			merge = simple_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
 					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
 			if (merge) {
-				/* ->mmap() can change vma->vm_file and fput the original file. So
+				/*
+				 * ->mmap() can change vma->vm_file and fput the original file. So
 				 * fput the vma->vm_file here or we would add an extra fput for file
 				 * and cause general protection fault ultimately.
 				 */
@@ -802,7 +764,7 @@ myos_mmap_region(file_s *file, ulong addr,
 	// }
 
 	simple_vma_link(mm, vma, prev);
-	// /* Once vma denies write, undo our temporary denial count */
+	/* Once vma denies write, undo our temporary denial count */
 unmap_writable:
 	// if (file && vm_flags & VM_SHARED)
 	// 	mapping_unmap_writable(file->f_mapping);
@@ -939,11 +901,10 @@ simple_unmapped_area_topdown(vma_unmapped_info_s *info,
  * - is at least the desired size.
  * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
  */
-ulong vm_unmapped_area(vma_unmapped_info_s *info)
+ulong
+vm_unmapped_area(vma_unmapped_info_s *info)
 {
-	ulong addr;
-	ulong length, low_limit, high_limit;
-
+	ulong addr, length, low_limit, high_limit;
 	/* Adjust search length to account for worst case alignment overhead */
 	length = info->length + info->align_mask;
 	if (length < info->length)
@@ -964,8 +925,8 @@ ulong vm_unmapped_area(vma_unmapped_info_s *info)
 }
 
 
-ulong get_unmapped_area(file_s *file, ulong addr,
-		ulong len, ulong pgoff, ulong flags)
+ulong
+get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
 {
 	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
 
@@ -975,8 +936,8 @@ ulong get_unmapped_area(file_s *file, ulong addr,
 
 	get_area = current->mm->get_unmapped_area;
 	if (file) {
-		// if (file->f_op->get_unmapped_area)
-		// 	get_area = file->f_op->get_unmapped_area;
+		if (file->f_op->get_unmapped_area)
+			get_area = file->f_op->get_unmapped_area;
 	} else if (flags & MAP_SHARED) {
 		/*
 		 * mmap_region() will call shmem_zero_setup() to create a file,
@@ -996,8 +957,6 @@ ulong get_unmapped_area(file_s *file, ulong addr,
 	if (offset_in_page(addr))
 		return -EINVAL;
 
-	// error = security_mmap_addr(addr);
-	// return error ? error : addr;
 	return addr;
 }
 EXPORT_SYMBOL(get_unmapped_area);
@@ -1013,11 +972,11 @@ int expand_stack(vma_s *vma, ulong address)
 	int error = 0;
 
 	address &= PAGE_MASK;
-	// if (address < mmap_min_addr)
-	// 	return -EPERM;
+	if (address < mmap_min_addr)
+		return -EPERM;
 
 	// /* Enforce stack_guard_gap */
-	// prev = vma->vm_prev;
+	// prev = vma_prev_vma(vma);
 	// /* Check that both stack segments have the same anon_vma? */
 	// if (prev && !(prev->vm_flags & VM_GROWSDOWN) &&
 	// 		vma_is_accessible(prev)) {
@@ -1255,21 +1214,6 @@ int __do_munmap(mm_s *mm, ulong start, size_t len, bool downgrade)
 	}
 	vma = vma_next_vma(prev);
 
-	// if (unlikely(uf)) {
-	// 	/*
-	// 	 * If userfaultfd_unmap_prep returns an error the vmas
-	// 	 * will remain split, but userland will get a
-	// 	 * highly unexpected error anyway. This is no
-	// 	 * different than the case where the first of the two
-	// 	 * __split_vma fails, but we don't undo the first
-	// 	 * split, despite we could. This is unlikely enough
-	// 	 * failure that it's not worth optimizing it for.
-	// 	 */
-	// 	int error = userfaultfd_unmap_prep(vma, start, end, uf);
-	// 	if (error)
-	// 		return error;
-	// }
-
 	// /*
 	//  * unlock any mlock()ed ranges before detaching vmas
 	//  */
@@ -1329,7 +1273,6 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 {
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev;
-	// struct rb_node **rb_link, *rb_parent;
 	pgoff_t pgoff = addr >> PAGE_SHIFT;
 	int error;
 	ulong mapped_addr;
@@ -1347,7 +1290,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	// if (error)
 	// 	return error;
 
-	/* Clear old maps, set up prev, rb_link, rb_parent, and uf */
+	/* Clear old maps, set up prev, and uf */
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
 
@@ -1355,8 +1298,8 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	// if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
 	// 	return -ENOMEM;
 
-	// if (mm->map_count > sysctl_max_map_count)
-	// 	return -ENOMEM;
+	if (mm->map_count > sysctl_max_map_count)
+		return -ENOMEM;
 
 	// if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
 	// 	return -ENOMEM;
@@ -1392,12 +1335,13 @@ out:
 	return 0;
 }
 
-int vm_brk_flags(ulong addr, ulong request, ulong flags)
+int
+vm_brk_flags(ulong addr, ulong request, ulong flags)
 {
 	mm_s *mm = current->mm;
 	ulong len;
 	int ret;
-	bool populate;
+	// bool populate;
 	// LIST_HEAD(uf);
 
 	len = PAGE_ALIGN(request);
@@ -1489,7 +1433,8 @@ int vm_brk_flags(ulong addr, ulong request, ulong flags)
  * and into the inode's i_mmap tree.  If vm_file is non-NULL
  * then i_mmap_rwsem is taken here.
  */
-int insert_vm_struct(mm_s *mm, vma_s *vma)
+int
+insert_vm_struct(mm_s *mm, vma_s *vma)
 {
 	vma_s *prev;
 	find_vma_prev(mm, vma->vm_start, &prev);

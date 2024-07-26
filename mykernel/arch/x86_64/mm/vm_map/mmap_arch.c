@@ -5,7 +5,8 @@
 #include "uapi/linux/resource.h"
 
 
-void arch_pick_mmap_layout(mm_s * mm, rlimit_s *rlim_stack)
+void
+arch_pick_mmap_layout(mm_s * mm, rlimit_s *rlim_stack)
 {
 	// if (mmap_is_legacy())
 	// 	mm->get_unmapped_area = arch_get_unmapped_area;
@@ -17,7 +18,8 @@ void arch_pick_mmap_layout(mm_s * mm, rlimit_s *rlim_stack)
 	// 		rlim_stack);
 }
 
-ulong get_mmap_base(int is_legacy)
+ulong
+get_mmap_base(int is_legacy)
 {
 	mm_s *mm = current->mm;
 	return is_legacy ? mm->mmap_legacy_base : mm->mmap_base;
@@ -61,12 +63,14 @@ ulong get_mmap_base(int is_legacy)
  * the failure of such a fixed mapping request, so the restriction is not
  * applied.
  */
-bool mmap_address_hint_valid(ulong addr, ulong len)
+bool
+mmap_address_hint_valid(ulong addr, ulong len)
 {
 	if (TASK_SIZE - len < addr)
 		return false;
 
-	return (addr > DEFAULT_MAP_WINDOW) == (addr + len > DEFAULT_MAP_WINDOW);
+	return (addr > DEFAULT_MAP_WINDOW) ==
+			(addr + len > DEFAULT_MAP_WINDOW);
 }
 
 

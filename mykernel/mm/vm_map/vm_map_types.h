@@ -89,7 +89,7 @@
 		 */
 		void		(*close)(vma_s * area);
 		/* Called any time before splitting to check if it's allowed */
-		int			(*may_split)(vma_s *area, ulong addr);
+		// int			(*may_split)(vma_s *area, ulong addr);
 		int			(*mremap)(vma_s *area);
 		// /*
 		//  * Called by mprotect() to make driver-specific permission

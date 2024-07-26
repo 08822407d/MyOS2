@@ -37,10 +37,10 @@
 	vma_s *simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
 			ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff);
 	extern int insert_vm_struct(mm_s *, vma_s *);
-	extern ulong myos_mmap_region(file_s *file, ulong addr,
+	extern ulong simple_mmap_region(file_s *file, ulong addr,
 			ulong len, vm_flags_t vm_flags, ulong pgoff);
 	extern ulong do_mmap(file_s *file, ulong addr, ulong len,
-			ulong prot, ulong flags, ulong pgoff, ulong *populate);
+			ulong prot, ulong flags, ulong pgoff);
 	extern int __do_munmap(mm_s *, ulong, size_t, bool downgrade);
 
 	// /* These take the mm semaphore themselves */

@@ -33,30 +33,25 @@ void __vma_unlink_list(mm_s *mm, vma_s *vma)
 }
 
 
-ulong
-vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
+ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
 		ulong prot, ulong flag, ulong pgoff)
 {
 	ulong ret;
 	mm_s *mm = current->mm;
-	ulong populate;
 	// LIST_HEAD(uf);
 
 	// ret = security_mmap_file(file, prot, flag);
 	// if (!ret) {
 	// 	if (mmap_write_lock_killable(mm))
 	// 		return -EINTR;
-		ret = do_mmap(file, addr, len, prot, flag, pgoff, &populate);
+		ret = do_mmap(file, addr, len, prot, flag, pgoff);
 	// 	mmap_write_unlock(mm);
 	// 	userfaultfd_unmap_complete(mm, &uf);
-	// 	if (populate)
-	// 		mm_populate(ret, populate);
-	// }
+
 	return ret;
 }
 
-ulong
-vm_mmap(file_s *file, ulong addr, ulong len,
+ulong vm_mmap(file_s *file, ulong addr, ulong len,
 		ulong prot, ulong flag, ulong offset)
 {
 	if (unlikely(offset + PAGE_ALIGN(len) < offset))
