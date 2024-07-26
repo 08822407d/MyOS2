@@ -160,6 +160,7 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 }
 
 
+//	Linux implementation changed, proto not exist in linux-6.6
 /*
  * munmap_vma_range() - munmap VMAs that overlap a range.
  * @mm: The mm struct
@@ -172,7 +173,6 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
  *
  * Returns: -ENOMEM on munmap failure or 0 on success.
  */
-//	Linux implementation changed, proto not exist in linux-6.6
 static inline int
 simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
 	while (simple_find_vma_links(mm, start, start + len, pprev))
@@ -222,233 +222,36 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 
 //	Linux implementation changed, proto not exist in linux-6.6
 /*
- * adjust @vma address bounds to @start and @end
+ * __simple_vma_adjust() - adjust @vma address bounds to @start and @end,
+ * 			simultaneously due with overlapping situations
+ * !!! Assumes that when overlapping situation happens, they are mergable !!!
  * @vma the vm_area to adjust 
  * @start vm_start adjust tartget
  * @end vm_end adjust target
  * 
  */
-int __simple_vma_adjust(vma_s *vma, ulong start, ulong end,
-		pgoff_t pgoff, vma_s *insert, vma_s *expand)
+int __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 {
 	mm_s *mm = vma->vm_mm;
-	vma_s *next = vma_next_vma(vma), *orig_vma = vma;
-	file_s *file = vma->vm_file;
-	bool start_changed = false, end_changed = false;
-	long adjust_next = 0;
-	int remove_next = 0;
+	// file_s *file = vma->vm_file;
+	vma_s *next = vma_next_vma(vma);
 
-	if (next && !insert) {
-		vma_s *exporter = NULL, *importer = NULL;
+	// adjust vma's bounds
+	vma->vm_start = start;
+	vma->vm_pgoff += (start - vma->vm_pgoff) >> PAGE_SHIFT;
+	vma->vm_end = end;
 
-		if (end >= next->vm_end) {
-			/*
-			 * vma expands, overlapping all the next, and
-			 * perhaps the one after too (mprotect case 6).
-			 * The only other cases that gets here are
-			 * case 1, case 7 and case 8.
-			 */
-			if (next == expand) {
-				/*
-				 * The only case where we don't expand "vma"
-				 * and we expand "next" instead is case 8.
-				 */
-				// VM_WARN_ON(end != next->vm_end);
-				while (end != next->vm_end);
-				/*
-				 * remove_next == 3 means we're
-				 * removing "vma" and that to do so we
-				 * swapped "vma" and "next".
-				 */
-				remove_next = 3;
-				// VM_WARN_ON(file != next->vm_file);
-				swap(vma, next);
-			} else {
-				// VM_WARN_ON(expand != vma);
-				/*
-				 * case 1, 6, 7, remove_next == 2 is case 6,
-				 * remove_next == 1 is case 1 or 7.
-				 */
-				remove_next = 1 + (end > next->vm_end);
-				// VM_WARN_ON(remove_next == 2 &&
-				// 	   end != next->vm_next->vm_end);
-				/* trim end to next, for case 6 first pass */
-				end = next->vm_end;
-			}
-
-			exporter = next;
-			importer = vma;
-
-			/*
-			 * If next doesn't have anon_vma, import from vma after
-			 * next, if the vma overlaps with it.
-			 */
-			if (remove_next == 2)
-				exporter = vma_next_vma(next);
-
-		} else if (end > next->vm_start) {
-			/*
-			 * vma expands, overlapping part of the next:
-			 * mprotect case 5 shifting the boundary up.
-			 */
-			adjust_next = (end - next->vm_start);
-			exporter = next;
-			importer = vma;
-			// VM_WARN_ON(expand != importer);
-		} else if (end < vma->vm_end) {
-			/*
-			 * vma shrinks, and !insert tells it's not
-			 * split_vma inserting another: so it must be
-			 * mprotect case 4 shifting the boundary down.
-			 */
-			adjust_next = -(vma->vm_end - end);
-			exporter = vma;
-			importer = next;
-			// VM_WARN_ON(expand != importer);
-		}
+	// due with totally overlapping situation
+	while (next != NULL && end >= next->vm_end) {
+		vma_s *tmp_next = next;
+		next = vma_next_vma(next);
+		__vma_unlink_list(mm, tmp_next);
 	}
-again:
-	// vma_adjust_trans_huge(orig_vma, start, end, adjust_next);
-
-	// if (file) {
-	// 	mapping = file->f_mapping;
-	// 	root = &mapping->i_mmap;
-	// 	uprobe_munmap(vma, vma->vm_start, vma->vm_end);
-
-	// 	if (adjust_next)
-	// 		uprobe_munmap(next, next->vm_start, next->vm_end);
-
-	// 	i_mmap_lock_write(mapping);
-	// 	if (insert) {
-	// 		/*
-	// 		 * Put into interval tree now, so instantiated pages
-	// 		 * are visible to arm/parisc __flush_dcache_page
-	// 		 * throughout; but we cannot insert into address
-	// 		 * space until vma start or end is updated.
-	// 		 */
-	// 		__vma_link_file(insert);
-	// 	}
-	// }
-
-	// if (file) {
-	// 	flush_dcache_mmap_lock(mapping);
-	// 	vma_interval_tree_remove(vma, root);
-	// 	if (adjust_next)
-	// 		vma_interval_tree_remove(next, root);
-	// }
-
-	if (start != vma->vm_start) {
-		vma->vm_start = start;
-		start_changed = true;
-	}
-	if (end != vma->vm_end) {
-		vma->vm_end = end;
-		end_changed = true;
-	}
-	vma->vm_pgoff = pgoff;
-	if (adjust_next) {
-		next->vm_start += adjust_next;
-		next->vm_pgoff += adjust_next >> PAGE_SHIFT;
-	}
-
-	// if (file) {
-	// 	if (adjust_next)
-	// 		vma_interval_tree_insert(next, root);
-	// 	vma_interval_tree_insert(vma, root);
-	// 	flush_dcache_mmap_unlock(mapping);
-	// }
-
-	if (remove_next) {
-		/*
-		 * vma_merge has merged next into vma, and needs
-		 * us to remove next before dropping the locks.
-		 */
-		/*
-			* vma is not before next if they've been
-			* swapped.
-			*
-			* pre-swap() next->vm_start was reduced so
-			* tell validate_mm_rb to ignore pre-swap()
-			* "next" (which is stored in post-swap()
-			* "vma").
-			*/
-		__vma_unlink_list(mm, next);
-		// if (file)
-		// 	__remove_shared_vm_struct(next, file, mapping);
-	} else if (insert) {
-		/*
-		 * split_vma has split insert from vma, and needs
-		 * us to insert it before dropping the locks
-		 * (it may either follow vma or precede it).
-		 */
-		vma_s *prev;
-		while (simple_find_vma_links(mm, insert->vm_start, insert->vm_end, &prev));
-
-		__vma_link_list(mm, insert, prev);
-		mm->map_count++;
-	} else {
-		if (end_changed && !next)
-			mm->highest_vm_end = vm_end_gap(vma);
-	}
-
-	if (remove_next) {
-		mm->map_count--;
-		vm_area_free(next);
-		/*
-		 * In mprotect's case 6 (see comments on vma_merge),
-		 * we must remove another next too. It would clutter
-		 * up the code too much to do both in one go.
-		 */
-		if (remove_next != 3) {
-			/*
-			 * If "next" was removed and vma->vm_end was
-			 * expanded (up) over it, in turn
-			 * "next->vm_prev->vm_end" changed and the
-			 * "vma->vm_next" gap must be updated.
-			 */
-			next = vma_next_vma(vma);
-		} else {
-			/*
-			 * For the scope of the comment "next" and
-			 * "vma" considered pre-swap(): if "vma" was
-			 * removed, next->vm_start was expanded (down)
-			 * over it and the "next" gap must be updated.
-			 * Because of the swap() the post-swap() "vma"
-			 * actually points to pre-swap() "next"
-			 * (post-swap() "next" as opposed is now a
-			 * dangling pointer).
-			 */
-			next = vma;
-		}
-		if (remove_next == 2) {
-			remove_next = 1;
-			end = next->vm_end;
-			goto again;
-		}
-		// else if (next)
-		// 	vma_gap_update(next);
-		// else {
-		// 	/*
-		// 	 * If remove_next == 2 we obviously can't
-		// 	 * reach this path.
-		// 	 *
-		// 	 * If remove_next == 3 we can't reach this
-		// 	 * path because pre-swap() next is always not
-		// 	 * NULL. pre-swap() "next" is not being
-		// 	 * removed and its next->vm_end is not altered
-		// 	 * (and furthermore "end" already matches
-		// 	 * next->vm_end in remove_next == 3).
-		// 	 *
-		// 	 * We reach this only in the remove_next == 1
-		// 	 * case if the "next" vma that was removed was
-		// 	 * the highest vma of the mm. However in such
-		// 	 * case next->vm_end == "end" and the extended
-		// 	 * "vma" has vma->vm_end == next->vm_end so
-		// 	 * mm->highest_vm_end doesn't need any update
-		// 	 * in remove_next == 1 case.
-		// 	 */
-		// 	VM_WARN_ON(mm->highest_vm_end != vm_end_gap(vma));
-		// }
+	next = vma_next_vma(vma);
+	// due with partially overlapping situation
+	if (next != NULL && end > next->vm_start) {
+		next->vm_pgoff += (end - next->vm_start) >> PAGE_SHIFT;
+		next->vm_start = end;
 	}
 
 	// validate_mm(mm);
@@ -493,21 +296,22 @@ simple_is_mergeable_vma(vma_s *vma, file_s *file, ulong vm_flags) {
  * We don't check here for the merged mmap wrapping around the end of pagecache
  * indices (16TB on ia32) because do_mmap() does not permit mmap's which
  * wrap, nor mmaps which cover the final page at index -1UL.
+ *
+ * We assume the vma may be removed as part of the merge.
  */
-// static int
-// can_vma_merge_before(vma_s *vma, unsigned long vm_flags,
-// 		     struct anon_vma *anon_vma, file_s *file,
-// 		     pgoff_t vm_pgoff,
-// 		     struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		     struct anon_vma_name *anon_name)
-static int
+// static bool
+// can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
+// 		struct anon_vma *anon_vma, struct file *file,
+// 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 		struct anon_vma_name *anon_name)
+static bool
 simple_can_vma_merge_before(vma_s *vma, ulong vm_flags,
 		file_s *file, pgoff_t vm_pgoff) {
 
 	if (simple_is_mergeable_vma(vma, file, vm_flags) &&
 			(vma->vm_pgoff == vm_pgoff))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 /*
@@ -516,23 +320,25 @@ simple_can_vma_merge_before(vma_s *vma, ulong vm_flags,
  *
  * We cannot merge two vmas if they have differently assigned (non-NULL)
  * anon_vmas, nor if same anon_vma is assigned but offsets incompatible.
+ *
+ * We assume that vma is not removed as part of the merge.
  */
-// static int
-// can_vma_merge_after(vma_s *vma, unsigned long vm_flags,
-// 		    struct anon_vma *anon_vma, file_s *file,
-// 		    pgoff_t vm_pgoff,
-// 		    struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		    struct anon_vma_name *anon_name)
-static int
+// static bool
+// can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
+// 		struct anon_vma *anon_vma, struct file *file,
+// 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 		struct anon_vma_name *anon_name)
+static bool
 simple_can_vma_merge_after(vma_s *vma, ulong vm_flags,
 		file_s *file, pgoff_t vm_pgoff) {
 
 	if (simple_is_mergeable_vma(vma, file, vm_flags) &&
 			(vma->vm_pgoff + vma_pages(vma) == vm_pgoff))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
+// Only adjust old vmas, won't creat new one for @addr-@end area
 /*
  * Given a mapping request (addr,end,vm_flags,file,pgoff,anon_name),
  * figure out whether that can be merged with its predecessor or its
@@ -545,50 +351,65 @@ simple_can_vma_merge_after(vma_s *vma, ulong vm_flags,
  * this area are about to be changed to vm_flags - and the no-change
  * case has already been eliminated.
  *
- * The following mprotect cases have to be considered, where AAAA is
+ * The following mprotect cases have to be considered, where **** is
  * the area passed down from mprotect_fixup, never extending beyond one
- * vma, PPPPPP is the prev vma specified, and NNNNNN the next vma after:
+ * vma, PPPP is the previous vma, CCCC is a concurrent vma that starts
+ * at the same address as **** and is of the same or larger span, and
+ * NNNN the next vma after ****:
  *
- *     AAAA             AAAA                   AAAA
- *    PPPPPPNNNNNN    PPPPPPNNNNNN       PPPPPPNNNNNN
+ *     ****             ****                   ****
+ *    PPPPPPNNNNNN    PPPPPPNNNNNN       PPPPPPCCCCCC
  *    cannot merge    might become       might become
- *                    PPNNNNNNNNNN       PPPPPPPPPPNN
+ *                    PPNNNNNNNNNN       PPPPPPPPPPCC
  *    mmap, brk or    case 4 below       case 5 below
  *    mremap move:
- *                        AAAA               AAAA
- *                    PPPP    NNNN       PPPPNNNNXXXX
+ *                        ****               ****
+ *                    PPPP    NNNN       PPPPCCCCNNNN
  *                    might become       might become
  *                    PPPPPPPPPPPP 1 or  PPPPPPPPPPPP 6 or
- *                    PPPPPPPPNNNN 2 or  PPPPPPPPXXXX 7 or
- *                    PPPPNNNNNNNN 3     PPPPXXXXXXXX 8
+ *                    PPPPPPPPNNNN 2 or  PPPPPPPPNNNN 7 or
+ *                    PPPPNNNNNNNN 3     PPPPNNNNNNNN 8
  *
- * It is important for case 8 that the vma NNNN overlapping the
- * region AAAA is never going to extended over XXXX. Instead XXXX must
- * be extended in region AAAA and NNNN must be removed. This way in
- * all cases where vma_merge succeeds, the moment vma_adjust drops the
+ * It is important for case 8 that the vma CCCC overlapping the
+ * region **** is never going to extended over NNNN. Instead NNNN must
+ * be extended in region **** and CCCC must be removed. This way in
+ * all cases where vma_merge succeeds, the moment vma_merge drops the
  * rmap_locks, the properties of the merged vma will be already
  * correct for the whole merged range. Some of those properties like
  * vm_page_prot/vm_flags may be accessed by rmap_walks and they must
  * be correct for the whole merged range immediately after the
- * rmap_locks are released. Otherwise if XXXX would be removed and
- * NNNN would be extended over the XXXX range, remove_migration_ptes
+ * rmap_locks are released. Otherwise if NNNN would be removed and
+ * CCCC would be extended over the NNNN range, remove_migration_ptes
  * or other rmap walkers (if working on addresses beyond the "end"
- * parameter) may establish ptes with the wrong permissions of NNNN
- * instead of the right permissions of XXXX.
+ * parameter) may establish ptes with the wrong permissions of CCCC
+ * instead of the right permissions of NNNN.
+ *
+ * In the code below:
+ * PPPP is represented by *prev
+ * CCCC is represented by *curr or not represented at all (NULL)
+ * NNNN is represented by *next or not represented at all (NULL)
+ * **** is not represented - it will be merged and the vma containing the
+ *      area is returned, or the function will return NULL
  */
-// vma_s *vma_merge(mm_s *mm, vma_s *prev, unsigned long addr,
-// 		unsigned long end, unsigned long vm_flags,
-// 		anon_vma_s *anon_vma, file_s *file, pgoff_t pgoff,
-// 		struct mempolicy *policy,
-// 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
-// 		struct anon_vma_name *anon_name)
+// struct vm_area_struct *vma_merge(struct vma_iterator *vmi, struct mm_struct *mm,
+// 			struct vm_area_struct *prev, unsigned long addr,
+// 			unsigned long end, unsigned long vm_flags,
+// 			struct anon_vma *anon_vma, struct file *file,
+// 			pgoff_t pgoff, struct mempolicy *policy,
+// 			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
+// 			struct anon_vma_name *anon_name)
 vma_s
 *simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 		ulong vm_flags, file_s *file, pgoff_t pgoff)
 {
 	pgoff_t pglen = (end - addr) >> PAGE_SHIFT;
-	vma_s *area, *next;
+	vma_s *curr, *next, *adjust_target;
 	int err;
+	pgoff_t vma_pgoff;
+	bool merge_prev = false;
+	bool merge_next = false;
+	ulong vma_start = addr;
+	ulong vma_end = end;
 
 	/*
 	 * We later require that vma->vm_flags == vm_flags,
@@ -597,56 +418,88 @@ vma_s
 	if (vm_flags & VM_SPECIAL)
 		return NULL;
 
-	// here @prev and @next should not overlap with @addr-@end region
-	next = vma_next(mm, prev);
-	area = next;
-	if (area && area->vm_end == end)		/* cases 6, 7, 8 */
-		next = vma_next_vma(next);
-
-	/*
-	 * Can it merge with the predecessor?
-	 */
-	if (prev && prev->vm_end == addr &&
-			simple_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
-		/*
-		 * OK, it can.  Can we now merge in the successor as well?
-		 */
-		if (next && end == next->vm_start &&
-				simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
-								/* cases 1, 6 */
-			err = __simple_vma_adjust(prev, prev->vm_start,
-					next->vm_end, prev->vm_pgoff, NULL, prev);
-		} else					/* cases 2, 5, 7 */
-			err = __simple_vma_adjust(prev, prev->vm_start,
-					end, prev->vm_pgoff, NULL, prev);
-		if (err)
-			return NULL;
-		return prev;
+	/* Does the input range span an existing VMA? (cases 5 - 8) */
+	curr = find_vma_intersection(mm, prev ? prev->vm_end : 0, end);
+	if (curr == NULL ||					/* cases 1 - 4 */
+			end == curr->vm_end)	/* cases 6 - 8, adjacent VMA */
+		next = vma_lookup(mm, end);
+	else
+		next = NULL;				/* case 5 */
+	
+	/* Can we merge the predecessor? */
+	if (prev && addr == prev->vm_end
+			&& simple_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
+		vma_start = prev->vm_start;
+		vma_pgoff = prev->vm_pgoff;
+		adjust_target = prev;
+		merge_prev = true;
 	}
-
-	/*
-	 * Can this new request be merged in front of next?
-	 */
-	if (next && end == next->vm_start &&
-			simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
-		if (prev && addr < prev->vm_end)
-								/* case 4 */
-			err = __simple_vma_adjust(prev, prev->vm_start,
-					addr, prev->vm_pgoff, NULL, next);
-		else {					/* cases 3, 8 */
-			err = __simple_vma_adjust(area, addr, next->vm_end,
-					next->vm_pgoff - pglen, NULL, next);
-			/*
-			 * In case 3 area is already equal to next and
-			 * this is a noop, but in case 8 "area" has
-			 * been removed and next was expanded over it.
-			 */
-			area = next;
-		}
-		if (err)
-			return NULL;
-		return area;
+	/* Can we merge the successor? */
+	if (next && simple_can_vma_merge_before(next,
+			vm_flags, file, pgoff+pglen)) {
+		vma_end = next->vm_end;
+		if (!prev)
+			adjust_target = next;
+		merge_next = true;
 	}
+	if (adjust_target == NULL)
+		adjust_target = curr;
+
+	if (!merge_prev && !merge_next)
+		return NULL; /* Not mergeable. */
+	while (prev == NULL && curr == NULL && next == NULL);
+
+	if (__simple_vma_adjust(adjust_target, vma_start, vma_end) != ENOERR)
+		return NULL;
+	else
+		return adjust_target;
+
+	// next = vma_next(mm, prev);
+	// BUG_ON(next->vm_end == end);
+
+	// /*
+	//  * Can it merge with the @prev?
+	//  */
+	// if (prev && prev->vm_end == addr &&
+	// 		simple_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
+	// 	/*
+	// 	 * OK, it can.  Can we now merge in the successor as well?
+	// 	 */
+	// 	if (next && end == next->vm_start &&
+	// 			simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
+	// 		/* cases 1, 6 */
+	// 		err = __simple_vma_adjust(prev, prev->vm_start, next->vm_end);
+	// 	} else {
+	// 		/* cases 2, 5, 7 */
+	// 		err = __simple_vma_adjust(prev, prev->vm_start, end);
+	// 	}
+	// 	if (err)
+	// 		return NULL;
+	// 	return prev;
+	// }
+
+	// /*
+	//  * Can this new request be merged in front of next?
+	//  */
+	// if (next && end == next->vm_start &&
+	// 		simple_can_vma_merge_before(next, vm_flags, file, pgoff+pglen)) {
+	// 	if (prev && addr < prev->vm_end) {
+	// 		/* case 4 */
+	// 		err = __simple_vma_adjust(prev, prev->vm_start, addr);
+	// 	} else {
+	// 		/* cases 3, 8 */
+	// 		err = __simple_vma_adjust(curr, addr, next->vm_end);
+	// 		/*
+	// 		 * In case 3 area is already equal to next and
+	// 		 * this is a noop, but in case 8 "area" has
+	// 		 * been removed and next was expanded over it.
+	// 		 */
+	// 		curr = next;
+	// 	}
+	// 	if (err)
+	// 		return NULL;
+	// 	return curr;
+	// }
 
 	return NULL;
 }
@@ -1307,22 +1160,15 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 	vma_s *new;
 	int err;
 
-	if (vma->vm_ops && vma->vm_ops->may_split) {
-		err = vma->vm_ops->may_split(vma, addr);
-		if (err)
-			return err;
-	}
+	// if (vma->vm_ops && vma->vm_ops->may_split) {
+	// 	err = vma->vm_ops->may_split(vma, addr);
+	// 	if (err)
+	// 		return err;
+	// }
 
 	new = vm_area_creat_dup(vma);
 	if (!new)
 		return -ENOMEM;
-
-	if (new_below)
-		new->vm_end = addr;
-	else {
-		new->vm_start = addr;
-		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
-	}
 
 	// err = vma_dup_policy(vma, new);
 	// if (err)
@@ -1334,12 +1180,16 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 	if (new->vm_ops && new->vm_ops->open)
 		new->vm_ops->open(new);
 
-	if (new_below)
-		err = __simple_vma_adjust(vma, addr, vma->vm_end, vma->vm_pgoff +
-					((addr - new->vm_start) >> PAGE_SHIFT), new, NULL);
-	else
-		err = __simple_vma_adjust(vma, vma->vm_start, addr,
-					vma->vm_pgoff, new, NULL);
+	if (new_below) {
+		new->vm_end = addr;
+		err = __simple_vma_adjust(vma, addr, vma->vm_end);
+		__vma_link_list(mm, new, vma);
+	} else {
+		new->vm_start = addr;
+		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
+		err = __simple_vma_adjust(vma, vma->vm_start, addr);
+		__vma_link_list(mm, vma, new);
+	}
 
 	/* Success. */
 	if (!err)

@@ -33,8 +33,7 @@
 	int anon_vma_clone(vma_s *, vma_s *);
 
 	// /* mmap.c */
-	extern int __simple_vma_adjust(vma_s *vma, ulong start,
-			ulong end, pgoff_t pgoff, vma_s *insert, vma_s *expand);
+	extern int __simple_vma_adjust(vma_s *vma, ulong start, ulong end);
 	vma_s *simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
 			ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff);
 	extern int insert_vm_struct(mm_s *, vma_s *);
