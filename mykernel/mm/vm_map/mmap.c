@@ -509,9 +509,9 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	if ((pgoff + (len >> PAGE_SHIFT)) < pgoff)
 		return -EOVERFLOW;
 
-	// /* Too many mappings? */
-	// if (mm->map_count > sysctl_max_map_count)
-	// 	return -ENOMEM;
+	/* Too many mappings? */
+	if (mm->map_count > sysctl_max_map_count)
+		return -ENOMEM;
 
 	/*
 	 * Obtain the address to map to. we verify (or select) it and ensure
