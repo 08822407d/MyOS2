@@ -147,9 +147,9 @@ void free_task(task_s *tsk)
 static __latent_entropy int
 dup_mmap(mm_s *mm, mm_s *oldmm)
 {
-	vma_s *mpnt, *tmp, *prev, **pprev;
+	vma_s *mpnt = NULL, *tmp;
 	int retval = 0;
-	unsigned long charge;
+	// unsigned long charge;
 	// LIST_HEAD(uf);
 
 	// uprobe_start_dup_mmap();
@@ -172,7 +172,6 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	mm->exec_vm = oldmm->exec_vm;
 	mm->stack_vm = oldmm->stack_vm;
 
-	pprev = &mm->mmap;
 	// retval = ksm_fork(mm, oldmm);
 	// if (retval)
 	// 	goto out;
@@ -180,15 +179,14 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 	// if (retval)
 	// 	goto out;
 
-	prev = NULL;
-	for (mpnt = oldmm->mmap; mpnt != NULL; mpnt = mpnt->vm_next) {
+	for_each_vma(oldmm, mpnt) {
 		file_s *file;
 
 		if (mpnt->vm_flags & VM_DONTCOPY) {
 			// vm_stat_account(mm, mpnt->vm_flags, -vma_pages(mpnt));
 			continue;
 		}
-		charge = 0;
+		// charge = 0;
 		// /*
 		//  * Don't duplicate many vmas if we've been oom-killed (for
 		//  * example)
@@ -202,9 +200,9 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 
 			// if (security_vm_enough_memory_mm(oldmm, len)) /* sic */
 			// 	goto fail_nomem;
-			charge = len;
+			// charge = len;
 		}
-		tmp = vm_area_dup(mpnt);
+		tmp = vm_area_creat_dup(mpnt);
 		if (!tmp)
 			goto fail_nomem;
 		// retval = vma_dup_policy(mpnt, tmp);
@@ -242,10 +240,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		/*
 		 * Link in the new vma and copy the page table entries.
 		 */
-		*pprev = tmp;
-		pprev = &tmp->vm_next;
-		tmp->vm_prev = prev;
-		prev = tmp;
+		list_header_add_to_tail(&mm->mm_mt, &tmp->list);
 
 		mm->map_count++;
 		if (!(tmp->vm_flags & VM_WIPEONFORK))
@@ -395,7 +390,8 @@ free_tsk:
 
 static mm_s *mm_init(mm_s *mm, task_s *p)
 {
-	mm->mmap = NULL;
+	// mm->mmap = NULL;
+	INIT_LIST_HEADER_S(&mm->mm_mt);
 	// mm->vmacache_seqnum = 0;
 	atomic_set(&mm->mm_users, 1);
 	atomic_set(&mm->mm_refcount, 1);
@@ -1293,7 +1289,7 @@ static __latent_entropy task_s
 			//  */
 			// p->signal->has_child_subreaper = p->real_parent->signal->has_child_subreaper ||
 			// 				 p->real_parent->signal->is_child_subreaper;
-			list_header_enqueue(&p->real_parent->children, &p->sibling);
+			list_header_add_to_tail(&p->real_parent->children, &p->sibling);
 			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
 			// attach_pid(p, PIDTYPE_TGID);
 			// attach_pid(p, PIDTYPE_PGID);

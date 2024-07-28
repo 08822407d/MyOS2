@@ -326,7 +326,9 @@
         "page-flags_macro.h": "c",
         "kbuild.h": "c",
         "kvm_para.h": "c",
-        "elf.h": "c"
+        "elf.h": "c",
+        "vm_map_arch.h": "c",
+        "vm_map_macro_arch.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

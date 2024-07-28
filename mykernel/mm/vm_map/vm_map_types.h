@@ -17,27 +17,12 @@
 		ulong			vm_end;		/* The first byte after our end address
 									   within vm_mm. */
 
-		/* linked list of VM areas per task, sorted by address */
-		vma_s			*vm_next, *vm_prev;
-
-		// struct rb_node vm_rb;
-
-		/*
-		* Largest free memory gap in bytes to the left of this VMA.
-		* Either between this VMA and vma->vm_prev, or between one of the
-		* VMAs below us in the VMA rbtree and its ->vm_prev. This helps
-		* get_unmapped_area find a free area of the right size.
-		*/
-		// unsigned long rb_subtree_gap;
-
-		/* Second cache line starts here. */
-
 		mm_s			*vm_mm;		/* The address space we belong to. */
 
 		/*
-		* Access permissions of this VMA.
-		* See vmf_insert_mixed_prot() for discussion.
-		*/
+		 * Access permissions of this VMA.
+		 * See vmf_insert_mixed_prot() for discussion.
+		 */
 		// pgprot_t vm_page_prot;
 		ulong			vm_flags;	/* Flags, see mm.h. */
 
@@ -56,6 +41,7 @@
 		// 		struct rb_node rb;
 		// 		unsigned long rb_subtree_last;
 		// 	} shared;
+		List_s			list;
 		// 	/*
 		// 	* Serialized by mmap_sem. Never use directly because it is
 		// 	* valid only when vm_file is NULL. Use anon_vma_name instead.
@@ -103,7 +89,7 @@
 		 */
 		void		(*close)(vma_s * area);
 		/* Called any time before splitting to check if it's allowed */
-		int			(*may_split)(vma_s *area, ulong addr);
+		// int			(*may_split)(vma_s *area, ulong addr);
 		int			(*mremap)(vma_s *area);
 		// /*
 		//  * Called by mprotect() to make driver-specific permission
@@ -240,5 +226,15 @@
 	// 	unsigned long cached_vma_start, cached_vma_last;
 	// #endif
 	} anon_vma_chain_s;
+
+	typedef struct vm_unmapped_area_info {
+	#define VM_UNMAPPED_AREA_TOPDOWN 1
+		ulong	flags;
+		ulong	length;
+		ulong	low_limit;
+		ulong	high_limit;
+		ulong	align_mask;
+		ulong	align_offset;
+	} vma_unmapped_info_s;
 
 #endif /* _LINUX_VM_MAP_TYPES_H_ */

@@ -16,11 +16,11 @@
 	 */
 	typedef struct linux_binprm {
 		vma_s			*vma;
-		unsigned long	vma_pages;
+		ulong			vma_pages;
 		mm_s			*mm;
-		unsigned long	p; /* current top of mem */
-		unsigned long	argmin; /* rlimit marker for copy_strings() */
-		unsigned int
+		ulong			p; /* current top of mem */
+		ulong			argmin; /* rlimit marker for copy_strings() */
+		uint
 			/* Should an execfd be passed to userspace? */
 			have_execfd:1,
 
@@ -52,11 +52,11 @@
 								   of the time same as filename, but could be
 								   different for binfmt_{misc,script} */
 		const char		*fdpath;	/* generated filename for execveat */
-		unsigned		interp_flags;
+		uint			interp_flags;
 		int				execfd;		/* File descriptor of the executable */
-		unsigned long	loader, exec;
+		ulong			loader, exec;
 
-	// 	struct rlimit rlim_stack; /* Saved RLIMIT_STACK used during exec. */
+		rlimit_s		rlim_stack; /* Saved RLIMIT_STACK used during exec. */
 
 		char		buf[BINPRM_BUF_SIZE];
 	} linux_bprm_s;
@@ -97,7 +97,7 @@
 		int			(*load_binary)(linux_bprm_s *);
 		int			(*load_shlib)(file_s *);
 		// int			(*core_dump)(struct coredump_params *cprm);
-		unsigned long	min_coredump;	/* minimal dump size */
+		ulong		min_coredump;	/* minimal dump size */
 	} linux_bfmt_s;
 
 	// extern void __register_binfmt(linux_bfmt_s *fmt, int insert);
@@ -116,11 +116,11 @@
 
 	extern void unregister_binfmt(linux_bfmt_s *);
 
-	// extern int __must_check remove_arg_zero(struct linux_binprm *);
+	// extern int __must_check remove_arg_zero(linux_bprm_s *);
 	extern int begin_new_exec(linux_bprm_s * bprm);
-	// extern void setup_new_exec(struct linux_binprm * bprm);
-	// extern void finalize_exec(struct linux_binprm *bprm);
-	// extern void would_dump(struct linux_binprm *, file_s *);
+	extern void setup_new_exec(linux_bprm_s * bprm);
+	// extern void finalize_exec(linux_bprm_s *bprm);
+	// extern void would_dump(linux_bprm_s *, file_s *);
 
 	// extern int suid_dumpable;
 
@@ -130,11 +130,11 @@
 	#define EXSTACK_ENABLE_X	2	/* Enable executable stacks */
 
 	extern int setup_arg_pages(linux_bprm_s * bprm,
-			unsigned long stack_top, int executable_stack);
-	// extern int transfer_args_to_stack(struct linux_binprm *bprm,
+			ulong stack_top, int executable_stack);
+	// extern int transfer_args_to_stack(linux_bprm_s *bprm,
 	// 				unsigned long *sp_location);
-	// extern int bprm_change_interp(const char *interp, struct linux_binprm *bprm);
-	// int copy_string_kernel(const char *arg, struct linux_binprm *bprm);
+	// extern int bprm_change_interp(const char *interp, linux_bprm_s *bprm);
+	// int copy_string_kernel(const char *arg, linux_bprm_s *bprm);
 	// extern void set_binfmt(struct linux_binfmt *new);
 	// extern ssize_t read_code(file_s *, unsigned long, loff_t, size_t);
 

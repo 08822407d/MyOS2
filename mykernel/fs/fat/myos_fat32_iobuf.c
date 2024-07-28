@@ -13,7 +13,7 @@
 static void free_cluster_chain(List_hdr_s *clus_lhdrp)
 {
 	List_s *lp;
-	while ((lp = list_header_pop(clus_lhdrp)) != NULL)
+	while ((lp = list_header_remove_head(clus_lhdrp)) != NULL)
 		kfree(lp);
 	kfree(clus_lhdrp);
 }
@@ -41,7 +41,7 @@ List_hdr_s *get_cluster_chain(inode_s *inode)
 			INIT_LIST_S(&clus_sp->list);
 
 			clus_sp->cluster = cluster;
-			list_header_enqueue(clus_lhdrp, &clus_sp->list);
+			list_header_add_to_tail(clus_lhdrp, &clus_sp->list);
 			cluster = FAT32_read_FAT_Entry(fsbi, cluster);
 		} while (cluster <= MAX_FAT32 && cluster >= FAT_START_ENT);
 
@@ -209,7 +209,7 @@ FAT32_iobuf_s *FAT32_iobuf_init(inode_s *dir)
 	int i = 0;
 	while (clus_lhdrp->count > 0)
 	{
-		List_s *lp = list_header_dequeue(clus_lhdrp);
+		List_s *lp = list_header_remove_tail(clus_lhdrp);
 		clus_list_s *clus_lp = container_of(lp, clus_list_s, list);
 		iobuf->clusters[i] = clus_lp->cluster;
 		iobuf->flags[i] = 0;

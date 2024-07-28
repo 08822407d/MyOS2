@@ -1894,7 +1894,7 @@
 	// 	int			(*fasync) (int, file_s *, int);
 	// 	int			(*lock) (file_s *, int, file_s_lock *);
 	// 	ssize_t		(*sendpage) (file_s *, page_s *, int, size_t, loff_t *, int);
-	// 	unsigned long	(*get_unmapped_area)(file_s *, unsigned long, unsigned long, unsigned long, unsigned long);
+		ulong		(*get_unmapped_area)(file_s *, unsigned long, unsigned long, unsigned long, unsigned long);
 	// 	int			(*check_flags)(int);
 	// 	int			(*flock) (file_s *, int, file_s_lock *);
 	// 	ssize_t		(*splice_write)(struct pipe_inode_info *, file_s *, loff_t *, size_t, unsigned int);

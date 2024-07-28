@@ -76,13 +76,13 @@ void INIT_LIST_HEADER_S(List_hdr_s * lhdr_p)
 	INIT_LIST_S(&lhdr_p->anchor);
 }
 
-void list_header_push(List_hdr_s * lhdr_p, List_s * l_p)
+void list_header_add_to_head(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	list_insert_next(&lhdr_p->anchor, l_p);
 	lhdr_p->count++;
 }
 
-List_s * list_header_pop(List_hdr_s * lhdr_p)
+List_s * list_header_remove_head(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{
@@ -95,13 +95,13 @@ List_s * list_header_pop(List_hdr_s * lhdr_p)
 	return NULL;
 }
 
-void list_header_enqueue(List_hdr_s * lhdr_p, List_s * l_p)
+void list_header_add_to_tail(List_hdr_s * lhdr_p, List_s * l_p)
 {
 	list_insert_prev(&lhdr_p->anchor, l_p);
 	lhdr_p->count++;
 }
 
-List_s * list_header_dequeue(List_hdr_s * lhdr_p)
+List_s * list_header_remove_tail(List_hdr_s * lhdr_p)
 {
 	if (lhdr_p->count > 0)
 	{

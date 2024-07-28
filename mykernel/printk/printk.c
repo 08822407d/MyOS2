@@ -608,7 +608,7 @@ void register_console(console_s *newcon)
 	if (list_header_contains(&console_list_hdr, &newcon->node))
 		return;
 	else
-		list_header_enqueue(&console_list_hdr, &newcon->node);
+		list_header_add_to_tail(&console_list_hdr, &newcon->node);
 
 	// /*
 	//  * before we register a new CON_BOOT console, make sure we don't

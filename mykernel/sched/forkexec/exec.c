@@ -41,7 +41,7 @@ static LIST_HDR_S(formats);
 
 void register_binfmt(linux_bfmt_s * fmt) {
 	// write_lock(&binfmt_lock);
-	list_header_enqueue(&formats, &fmt->lh);
+	list_header_add_to_tail(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 
@@ -122,6 +122,8 @@ static int __bprm_mm_init(linux_bprm_s *bprm)
 	 * configured yet.
 	 */
 	// BUILD_BUG_ON(VM_STACK_FLAGS & VM_STACK_INCOMPLETE_SETUP);
+	// vma->vm_prev = vma;
+	// vma->vm_next = vma;
 	vma->vm_end = STACK_TOP_MAX;
 	vma->vm_start = vma->vm_end - PAGE_SIZE;
 	vma->vm_flags = VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP;
@@ -875,6 +877,26 @@ out:
 	return retval;
 }
 
+void setup_new_exec(linux_bprm_s * bprm)
+{
+	/* Setup things that can depend upon the personality */
+	task_s *me = current;
+
+	arch_pick_mmap_layout(me->mm, &bprm->rlim_stack);
+
+	// arch_setup_new_exec();
+
+	/*
+	 * Set the new mm task size. We have to do that late because it may
+	 * depend on TIF_32BIT which is only updated in flush_thread() on
+	 * some architectures like powerpc
+	 */
+	me->mm->task_size = TASK_SIZE;
+	// up_write(&me->signal->exec_update_lock);
+	// mutex_unlock(&me->signal->cred_guard_mutex);
+}
+EXPORT_SYMBOL(setup_new_exec);
+
 
 static void free_bprm(linux_bprm_s *bprm)
 {
@@ -1047,7 +1069,7 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 	// 	goto out;
 
 	// retval = exec_binprm(bprm);
-	// static int exec_binprm(struct linux_binprm *bprm)
+	// static int exec_binprm(linux_bprm_s *bprm)
 	// {
 		retval = search_binary_handler(bprm);
 	// }

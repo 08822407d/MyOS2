@@ -136,16 +136,28 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 {
 	unsigned long newbrk, oldbrk, origbrk;
 	mm_s *mm = current->mm;
-	vma_s *next;
-	unsigned long min_brk;
-	bool populate;
+	vma_s *brkvma, *next = NULL;
+	ulong min_brk;
+	// bool populate;
 	bool downgraded = false;
 	
+	// if (mmap_write_lock_killable(mm))
+	// 	return -EINTR;
+
 	origbrk = mm->brk;
 	min_brk = mm->start_brk;
-
 	if (brk < min_brk)
 		goto out;
+
+	// /*
+	//  * Check against rlimit here. If this check is done later after the test
+	//  * of oldbrk with newbrk then it can escape the test and let the data
+	//  * segment grow beyond its set limit the in case where the limit is
+	//  * not page aligned -Ram Gupta
+	//  */
+	// if (check_data_rlimit(rlimit(RLIMIT_DATA), brk,
+	// 		mm->start_brk, mm->end_data, mm->start_data))
+	// 	goto out;
 
 	newbrk = PAGE_ALIGN(brk);
 	oldbrk = PAGE_ALIGN(mm->brk);
@@ -154,54 +166,60 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 		goto success;
 	}
 
-	/*
-	 * Always allow shrinking brk.
-	 * __do_munmap() may downgrade mmap_lock to read.
-	 */
+	/* Always allow shrinking brk. */
 	if (brk <= mm->brk) {
-		int ret;
+		// /* Search one past newbrk */
+		// vma_iter_init(&vmi, mm, newbrk);
+		// brkvma = vma_find(&vmi, oldbrk);
+		// if (!brkvma || brkvma->vm_start >= oldbrk)
+		// 	goto out; /* mapping intersects with an existing non-brk vma. */
 
 		/*
-		 * mm->brk must to be protected by write mmap_lock so update it
-		 * before downgrading mmap_lock. When __do_munmap() fails,
-		 * mm->brk will be restored from origbrk.
+		 * mm->brk must be protected by write mmap_lock.
+		 * do_vma_munmap() will drop the lock on success,  so update it
+		 * before calling do_vma_munmap().
 		 */
 		mm->brk = brk;
-		ret = __do_munmap(mm, newbrk, oldbrk-newbrk, true);
-		if (ret < 0) {
-			mm->brk = origbrk;
+		if (simple_do_vma_munmap(mm, newbrk, oldbrk))
 			goto out;
-		} else if (ret == 1) {
-			downgraded = true;
-		}
-		goto success;
+
+		goto success_unlocked;
 	}
 
-	/* Check against existing mmap mappings. */
-	// next = myos_find_vma(mm, oldbrk);
+	// if (check_brk_limits(oldbrk, newbrk - oldbrk))
+	// 	goto out;
+
+	// /*
+	//  * Only check if the next VMA is within the stack_guard_gap of the
+	//  * expansion area
+	//  */
+	// vma_iter_init(&vmi, mm, oldbrk);
+	// next = vma_find(&vmi, newbrk + PAGE_SIZE + stack_guard_gap);
+
 	// if (next && newbrk + PAGE_SIZE > vm_start_gap(next))
 	// 	goto out;
 
 	/* Ok, looks good - let it rip. */
 	if (do_brk_flags(oldbrk, newbrk-oldbrk, 0) < 0)
 		goto out;
-	mm->brk = brk;
 
-	// next = myos_find_vma(mm, oldbrk);
+	mm->brk = brk;
+	// if (mm->def_flags & VM_LOCKED)
+	// 	populate = true;
+
+	// next = simple_find_vma(mm, oldbrk);
 	// while (next == NULL);
 	
 success:
-	// populate = newbrk > oldbrk && (mm->def_flags & VM_LOCKED) != 0;
-	// if (downgraded)
-	// 	mmap_read_unlock(mm);
-	// else
-	// 	mmap_write_unlock(mm);
+	// mmap_write_unlock(mm);
+success_unlocked:
 	// userfaultfd_unmap_complete(mm, &uf);
 	// if (populate)
 	// 	mm_populate(oldbrk, newbrk - oldbrk);
 	return brk;
 
 out:
+	mm->brk = origbrk;
 	// mmap_write_unlock(mm);
 	return origbrk;
 }

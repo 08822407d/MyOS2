@@ -297,7 +297,7 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
 	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-	list_header_enqueue(&pid_list_hdr, &task->pid_links);
+	list_header_add_to_tail(&pid_list_hdr, &task->pid_links);
 }
 
 

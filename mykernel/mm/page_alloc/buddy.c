@@ -76,14 +76,14 @@ set_buddy_order(page_s *page, uint order) {
 static inline void
 add_to_free_list(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_header_push(fa_lhdr, &page->buddy_list);
+	list_header_add_to_head(fa_lhdr, &page->buddy_list);
 }
 
 /* Used for pages not on another list */
 static inline void
 add_to_free_list_tail(page_s *page, zone_s *zone, uint order) {
 	List_hdr_s *fa_lhdr = &zone->free_area[order];
-	list_header_enqueue(fa_lhdr, &page->buddy_list);
+	list_header_add_to_tail(fa_lhdr, &page->buddy_list);
 }
 
 static inline void
@@ -100,7 +100,7 @@ static inline page_s
 }
 static inline page_s
 *get_page_from_free_area(List_hdr_s *area) {
-	List_s *pg_lp = list_header_pop(area);
+	List_s *pg_lp = list_header_remove_head(area);
 	return __list_null_or_page(pg_lp);
 }
 

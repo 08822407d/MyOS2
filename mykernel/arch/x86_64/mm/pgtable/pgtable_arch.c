@@ -8,7 +8,7 @@
 static inline void
 pgd_list_add(pgd_t *pgd) {
 	page_s *page = virt_to_page(pgd);
-	list_header_enqueue(&pgd_list_hdr, &page->lru);
+	list_header_add_to_tail(&pgd_list_hdr, &page->lru);
 }
 
 static inline void

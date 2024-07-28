@@ -23,34 +23,39 @@
 	 * mmap() functions).
 	 */
 	vma_s *vm_area_alloc(mm_s *);
-	vma_s *vm_area_dup(vma_s *);
+	vma_s *vm_area_creat_dup(vma_s *);
 	void vm_area_free(vma_s *);
+	vma_s *vma_prev_vma(vma_s *vma);
+	vma_s *vma_next_vma(vma_s *vma);
+	vma_s *vma_next(mm_s *mm, vma_s *vma);
+	vma_s *vma_prev(mm_s *mm, vma_s *vma);
 	void unlink_anon_vmas(vma_s *);
 	int anon_vma_clone(vma_s *, vma_s *);
 
 	// /* mmap.c */
-	extern int __myos_vma_adjust(vma_s *vma, ulong start,
-			ulong end, pgoff_t pgoff, vma_s *insert, vma_s *expand);
-	vma_s *myos_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
+	extern int __simple_vma_adjust(vma_s *vma, ulong start, ulong end);
+	vma_s *simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
 			ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff);
 	extern int insert_vm_struct(mm_s *, vma_s *);
-	extern ulong myos_mmap_region(file_s *file, ulong addr,
+	extern ulong simple_mmap_region(file_s *file, ulong addr,
 			ulong len, vm_flags_t vm_flags, ulong pgoff);
 	extern ulong do_mmap(file_s *file, ulong addr, ulong len,
-			ulong prot, ulong flags, ulong pgoff, ulong *populate);
-	extern int __do_munmap(mm_s *, ulong, size_t, bool downgrade);
+			ulong prot, ulong flags, ulong pgoff);
+	extern int simple_do_vma_munmap(mm_s *, ulong start, ulong end);
 
 	// /* These take the mm semaphore themselves */
 	extern int __must_check vm_brk_flags(ulong, ulong, ulong);
 	extern int vm_munmap(ulong, size_t);
-	int __vm_munmap(ulong start, size_t len, bool downgrade);
+	int __vm_munmap(ulong start, size_t len);
 	extern ulong __must_check vm_mmap(file_s *,
 			ulong, ulong, ulong, ulong, ulong);
 
 	extern ulong stack_guard_gap;
 	/* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
 	extern int expand_stack(vma_s *vma, ulong address);
-	extern vma_s * myos_find_vma(mm_s * mm, ulong addr);
+	extern ulong vm_unmapped_area(vma_unmapped_info_s *info);
+	extern ulong get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
+	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 
 	/* mm/util.c */
 	void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev);

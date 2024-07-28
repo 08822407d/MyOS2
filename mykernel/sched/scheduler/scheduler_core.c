@@ -82,7 +82,7 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 	rq_s *target_rq = &(per_cpu(runqueues, new_cpu));
 	p->__state = TASK_RUNNING;
 	if (!list_header_contains(&target_rq->myos.running_lhdr, &p->rt.run_list))
-		list_header_push(&target_rq->myos.running_lhdr, &p->rt.run_list);
+		list_header_add_to_head(&target_rq->myos.running_lhdr, &p->rt.run_list);
 }
 
 
@@ -628,7 +628,7 @@ void wake_up_new_task(task_s *p)
 	// }
 	// task_rq_unlock(rq, p, &rf);
 
-	list_header_push(&rq->myos.running_lhdr, &p->rt.run_list);
+	list_header_add_to_head(&rq->myos.running_lhdr, &p->rt.run_list);
 }
 
 

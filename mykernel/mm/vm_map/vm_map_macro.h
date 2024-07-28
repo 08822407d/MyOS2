@@ -22,4 +22,31 @@
 						: ((x) & (bit1)) / ((bit1) / (bit2)))	\
 			)
 
+	#define LIST_TO_VMA(list_p)	\
+				container_of(list_p, vma_s, list)
+
+	#define for_each_vma(mm, __vma)								\
+			while (												\
+				((__vma) = vma_next((mm), (__vma))) != NULL		\
+			)
+
+	#define for_each_vma_topdown(mm, __vma)						\
+			while (												\
+				((__vma) = vma_prev((mm), (__vma))) != NULL		\
+			)
+
+	/* Bottom UP raverse vmas in mm->mm_mt while __vma's end lower than __end */
+	#define for_each_vma_range(mm, __vma, __end)				\
+			while (												\
+				((__vma) = vma_next((mm), (__vma))) != NULL	&&	\
+					__vma->vm_end <= __end						\
+			)
+
+	/* Top Down raverse vmas in mm->mm_mt while __vma's start higher than __start */
+	#define for_each_vma_range_topdown(mm, __vma, __start)		\
+			while (												\
+				((__vma) = vma_prev((mm), (__vma))) != NULL	&&	\
+					__vma->vm_start >= __start					\
+			)
+
 #endif /* _LINUX_VM_MAP_MACRO_H_ */

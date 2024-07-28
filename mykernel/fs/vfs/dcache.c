@@ -210,7 +210,7 @@ dentry_s *d_alloc(dentry_s * parent, const qstr_s *name)
 	 * to concurrency here
 	 */
 	dentry->d_parent = parent;
-	list_header_push(&parent->d_subdirs, &dentry->d_child);
+	list_header_add_to_head(&parent->d_subdirs, &dentry->d_child);
 
 	return dentry;
 }

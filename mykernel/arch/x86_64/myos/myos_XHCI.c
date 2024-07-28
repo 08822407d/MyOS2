@@ -376,7 +376,7 @@ long XHCI_transfer(unsigned Slot_ID, unsigned DevCtx_Idx,
 	node->task = current;
 
 	spin_lock(&req_lock);
-	list_header_enqueue(&XHCIreq_lhdr, &node->req_list);
+	list_header_add_to_tail(&XHCIreq_lhdr, &node->req_list);
 	spin_unlock(&req_lock);
 
 	wake_up_process(thread);
@@ -638,7 +638,7 @@ static int XHCIrq_deamon(void *param)
 			spin_lock(&req_lock);
 			if (req_in_using == NULL)
 			{
-				List_s *wq_lp = list_header_dequeue(&XHCIreq_lhdr);
+				List_s *wq_lp = list_header_remove_tail(&XHCIreq_lhdr);
 				blkbuf_node_s *node = container_of(wq_lp, blkbuf_node_s, req_list);
 				req_in_using = node;
 				spin_unlock(&req_lock);
