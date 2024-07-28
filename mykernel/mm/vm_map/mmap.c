@@ -10,7 +10,7 @@
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 // #include <linux/kernel/kernel.h>
-// #include <linux/kernel/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/kernel/export.h>
 // #include <linux/kernel/mount.h>
 // #include <linux/kernel/uaccess.h>
