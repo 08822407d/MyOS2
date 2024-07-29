@@ -865,7 +865,7 @@ simple_unmapped_area(unmapped_vma_info_s *info,
  * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
  */
 ulong
-simple_vm_unmapped_area(unmapped_vma_info_s *info)
+simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 {
 	ulong addr;
 
@@ -873,29 +873,19 @@ simple_vm_unmapped_area(unmapped_vma_info_s *info)
 	ulong low_limit, high_limit;
 	vma_s *tmp;
 
-	// if (mas_empty_area_rev(&mas, low_limit, high_limit - 1, length))
-	// 	return -ENOMEM;
+	for_each_vma_topdown(mm, tmp) {
+		if (tmp->vm_end >= info->high_limit)
+			continue;
 
-	// gap = mas.last + 1 - info->length;
-	// gap -= (gap - info->align_offset) & info->align_mask;
-	// gap_end = mas.last;
-	// tmp = mas_next(&mas, ULONG_MAX);
-	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
-	// 	if (vm_start_gap(tmp) <= gap_end) {
-	// 		high_limit = vm_start_gap(tmp);
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// } else {
-	// 	tmp = mas_prev(&mas, 0);
-	// 	if (tmp && vm_end_gap(tmp) > gap) {
-	// 		high_limit = tmp->vm_start;
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// }
-
-	// return gap;
+		gap = tmp->vm_end;
+		gap_end = info->high_limit;
+		vma_s * next = vma_next_vma(tmp);
+		if (next != NULL)
+			gap_end = next->vm_start;
+		
+		if (gap_end - gap >= info->length)
+			break;
+	}
 
 	return addr;
 }
@@ -917,8 +907,9 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	/* requesting a specific address */
 	if (addr) {
 		addr &= PAGE_MASK;
-		vma = simple_find_vma(mm, addr);
-		if (!vma || addr + len <= vm_start_gap(vma))
+		// vma = simple_find_vma(mm, addr);
+		// if (!vma || addr + len <= vm_start_gap(vma))
+		if (!simple_find_vma(mm, addr))
 			return addr;
 	}
 
@@ -936,7 +927,7 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	// 	info.align_offset += get_align_bits();
 	// }
 
-	addr = simple_vm_unmapped_area(&info);
+	addr = simple_vm_unmapped_area(mm, &info);
 	// if ((addr & ~PAGE_MASK) != 0)
 		return addr;
 	// BUG_ON(addr != -ENOMEM);
