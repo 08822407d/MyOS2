@@ -24,6 +24,9 @@
 		*simple_find_vma(mm_s *mm, ulong addr);
 
 		extern vma_s
+		*simple_find_vma_topdown(mm_s *mm, ulong addr);
+
+		extern vma_s
 		*find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev);
 
 		extern vma_s
@@ -79,12 +82,37 @@
 			return !vma->vm_ops;
 		}
 
-		/* Look up the first VMA which satisfies  addr < vm_end,  NULL if none. */
+		/**
+		 * find_vma() - Find the VMA for a given address bottom-up.
+		 * @mm: The mm_struct to check
+		 * @addr: The address
+		 *
+		 * Returns: The VMA associated with addr.
+		 * May return %NULL in the case of no VMA at addr.
+		 */
 		PREFIX_STATIC_INLINE
 		vma_s
 		*simple_find_vma(mm_s *mm, ulong addr) {
 			vma_s *vma = NULL;
 			for_each_vma(mm, vma) {
+				if (addr >= vma->vm_start && addr < vma->vm_end)
+					return vma;
+			}
+			return NULL;
+		}
+		/**
+		 * find_vma() - Find the VMA for a given address top-down.
+		 * @mm: The mm_struct to check
+		 * @addr: The address
+		 *
+		 * Returns: The VMA associated with addr.
+		 * May return %NULL in the case of no VMA at addr.
+		 */
+		PREFIX_STATIC_INLINE
+		vma_s
+		*simple_find_vma_topdown(mm_s *mm, ulong addr) {
+			vma_s *vma = NULL;
+			for_each_vma_topdown(mm, vma) {
 				if (addr >= vma->vm_start && addr < vma->vm_end)
 					return vma;
 			}

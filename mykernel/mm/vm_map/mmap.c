@@ -816,82 +816,6 @@ unacct_error:
 }
 
 
-
-/**
- * unmapped_area() - Find an area between the low_limit and the high_limit with
- * the correct alignment and offset, all from @info. Note: current->mm is used
- * for the search.
- *
- * @info: The unmapped area information including the range [low_limit -
- * high_limit), the alignment offset and mask.
- *
- * Return: A memory address or -ENOMEM.
- */
-static ulong
-simple_unmapped_area(vma_unmapped_info_s *info,
-		ulong length, ulong low_limit, ulong high_limit) {
-	ulong gap;
-	vma_s *tmp;
-
-	// gap = mas.index;
-	// gap += (info->align_offset - gap) & info->align_mask;
-	// tmp = mas_next(&mas, ULONG_MAX);
-	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
-	// 	if (vm_start_gap(tmp) < gap + length - 1) {
-	// 		low_limit = tmp->vm_end;
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// } else {
-	// 	tmp = mas_prev(&mas, 0);
-	// 	if (tmp && vm_end_gap(tmp) > gap) {
-	// 		low_limit = vm_end_gap(tmp);
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// }
-
-	return gap;
-}
-
-/**
- * simple_unmapped_area_topdown() - Find an area between the low_limit and the
- * high_limit with the correct alignment and offset at the highest available
- * address, all from @info. Note: current->mm is used for the search.
- *
- * @info: The unmapped area information including the range [low_limit -
- * high_limit), the alignment offset and mask.
- *
- * Return: A memory address or -ENOMEM.
- */
-static ulong
-simple_unmapped_area_topdown(vma_unmapped_info_s *info,
-		ulong length, ulong low_limit, ulong high_limit) {
-	ulong gap, gap_end;
-	vma_s *tmp;
-
-	// gap = mas.last + 1 - info->length;
-	// gap -= (gap - info->align_offset) & info->align_mask;
-	// gap_end = mas.last;
-	// tmp = mas_next(&mas, ULONG_MAX);
-	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
-	// 	if (vm_start_gap(tmp) <= gap_end) {
-	// 		high_limit = vm_start_gap(tmp);
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// } else {
-	// 	tmp = mas_prev(&mas, 0);
-	// 	if (tmp && vm_end_gap(tmp) > gap) {
-	// 		high_limit = tmp->vm_start;
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// }
-
-	return gap;
-}
-
 /*
  * Search for an unmapped address range.
  *
@@ -902,28 +826,70 @@ simple_unmapped_area_topdown(vma_unmapped_info_s *info,
  * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
  */
 ulong
-vm_unmapped_area(vma_unmapped_info_s *info)
+simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 {
-	ulong addr, length, low_limit, high_limit;
-	/* Adjust search length to account for worst case alignment overhead */
-	length = info->length + info->align_mask;
-	if (length < info->length)
-		return -ENOMEM;
+	ulong gap, gap_end;
+	vma_s *tmp;
 
-	low_limit = info->low_limit;
-	if (low_limit < mmap_min_addr)
-		low_limit = mmap_min_addr;
-	high_limit = info->high_limit;
+	for_each_vma_topdown(mm, tmp) {
+		if (tmp->vm_end >= info->high_limit)
+			continue;
 
-	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-		addr = simple_unmapped_area_topdown(info, length, low_limit, high_limit);
-	else
-		addr = simple_unmapped_area(info, length, low_limit, high_limit);
+		gap = tmp->vm_end;
+		gap_end = info->high_limit;
+		vma_s * next = vma_next_vma(tmp);
+		if (next != NULL)
+			gap_end = next->vm_start;
+		
+		if (gap_end - gap >= info->length)
+			break;
+	}
 
-	// trace_vm_unmapped_area(addr, info);
-	return addr;
+	return gap;
 }
 
+ulong
+simple_get_unmapped_area(file_s *filp, const ulong addr0,
+		const ulong len, const ulong pgoff, const ulong flags)
+{
+	vma_s *vma;
+	unmapped_vma_info_s info;
+	ulong addr = addr0;
+	mm_s *mm = current->mm;
+
+	info.align_mask = 0,
+	info.align_offset = pgoff << PAGE_SHIFT,
+	info.low_limit = PAGE_SIZE,
+	info.high_limit = mm->mmap_base;
+
+	/* requesting a specific address */
+	if (addr) {
+		addr &= PAGE_MASK;
+		// vma = simple_find_vma(mm, addr);
+		// if (!vma || addr + len <= vm_start_gap(vma))
+		if (!simple_find_vma(mm, addr))
+			return addr;
+	}
+
+	/*
+	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
+	 * in the full address space.
+	 *
+	 * !in_32bit_syscall() check to avoid high addresses for x32
+	 * (and make it no op on native i386).
+	 */
+	if (addr > DEFAULT_MAP_WINDOW)
+		info.high_limit += TASK_SIZE_MAX - DEFAULT_MAP_WINDOW;
+	// if (filp) {
+	// 	info.align_mask = get_align_mask();
+	// 	info.align_offset += get_align_bits();
+	// }
+
+	addr = simple_vm_unmapped_area(mm, &info);
+	// if ((addr & ~PAGE_MASK) != 0)
+		return addr;
+	// BUG_ON(addr != -ENOMEM);
+}
 
 ulong
 get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
@@ -931,8 +897,13 @@ get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
 	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
 
 	/* Careful about overflows.. */
+	/* requested length too big for entire address space */
 	if (len > TASK_SIZE)
 		return -ENOMEM;
+
+	/* No address checking. See comment at mmap_address_hint_valid() */
+	if (flags & MAP_FIXED)
+		return addr;
 
 	get_area = current->mm->get_unmapped_area;
 	if (file) {
@@ -1038,52 +1009,6 @@ int expand_stack(vma_s *vma, ulong address)
 	return error;
 }
 
-// /*
-//  * Ok - we have the memory areas we should free on the vma list,
-//  * so release them, and do the vma updates.
-//  *
-//  * Called with the mm semaphore held.
-//  */
-// static void
-// remove_vma_list(mm_s *mm, vma_s *vma) {
-// 	ulong nr_accounted = 0;
-
-// 	/* Update high watermark before we lower total_vm */
-// 	update_hiwater_vm(mm);
-// 	do {
-// 		long nrpages = vma_pages(vma);
-
-// 		if (vma->vm_flags & VM_ACCOUNT)
-// 			nr_accounted += nrpages;
-// 		vm_stat_account(mm, vma->vm_flags, -nrpages);
-// 		vma = remove_vma(vma);
-// 	} while (vma);
-// 	vm_unacct_memory(nr_accounted);
-// 	validate_mm(mm);
-// }
-
-// /*
-//  * Get rid of page table information in the indicated region.
-//  *
-//  * Called with the mm semaphore held.
-//  */
-// static void
-// unmap_region(mm_s *mm, vma_s *vma, vma_s *prev, ulong start, ulong end) {
-
-// 	vma_s *next = vma_next(mm, prev);
-// 	struct mmu_gather tlb;
-
-// 	lru_add_drain();
-// 	tlb_gather_mmu(&tlb, mm);
-// 	update_hiwater_rss(mm);
-// 	unmap_vmas(&tlb, vma, start, end);
-// 	free_pgtables(&tlb, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,
-// 				 next ? next->vm_start : USER_PGTABLES_CEILING);
-// 	tlb_finish_mmu(&tlb);
-
-// 	kfree(prev);
-// }
-
 
 /*
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
@@ -1091,16 +1016,9 @@ int expand_stack(vma_s *vma, ulong address)
  */
 int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 {
-	vma_s *new;
 	int err;
 
-	// if (vma->vm_ops && vma->vm_ops->may_split) {
-	// 	err = vma->vm_ops->may_split(vma, addr);
-	// 	if (err)
-	// 		return err;
-	// }
-
-	new = vm_area_creat_dup(vma);
+	vma_s *new = vm_area_creat_dup(vma);
 	if (!new)
 		return -ENOMEM;
 
@@ -1198,7 +1116,6 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 		list_header_delete_node(&mm->mm_mt, &tmp->list);
 	} for_each_vma_range(mm, vma, end);
 
-clear_tree_failed:
 userfaultfd_error:
 munmap_gather_failed:
 end_split_failed:
@@ -1265,15 +1182,8 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
 
-	// /* Check against address space limits *after* clearing old maps... */
-	// if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
-	// 	return -ENOMEM;
-
 	if (mm->map_count > sysctl_max_map_count)
 		return -ENOMEM;
-
-	// if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
-	// 	return -ENOMEM;
 
 	/* Can we just expand an old private anonymous mapping? */
 	vma = simple_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
@@ -1332,72 +1242,6 @@ vm_brk_flags(ulong addr, ulong request, ulong flags)
 	// 	mm_populate(addr, len);
 	return ret;
 }
-
-// /* Release all mmaps. */
-// void exit_mmap(mm_s *mm)
-// {
-// 	struct mmu_gather tlb;
-// 	struct vm_area_struct *vma;
-// 	unsigned long nr_accounted = 0;
-
-// 	/* mm's last user has gone, and its about to be pulled down */
-// 	mmu_notifier_release(mm);
-
-// 	if (unlikely(mm_is_oom_victim(mm))) {
-// 		/*
-// 		 * Manually reap the mm to free as much memory as possible.
-// 		 * Then, as the oom reaper does, set MMF_OOM_SKIP to disregard
-// 		 * this mm from further consideration.  Taking mm->mmap_lock for
-// 		 * write after setting MMF_OOM_SKIP will guarantee that the oom
-// 		 * reaper will not run on this mm again after mmap_lock is
-// 		 * dropped.
-// 		 *
-// 		 * Nothing can be holding mm->mmap_lock here and the above call
-// 		 * to mmu_notifier_release(mm) ensures mmu notifier callbacks in
-// 		 * __oom_reap_task_mm() will not block.
-// 		 *
-// 		 * This needs to be done before calling unlock_range(),
-// 		 * which clears VM_LOCKED, otherwise the oom reaper cannot
-// 		 * reliably test it.
-// 		 */
-// 		(void)__oom_reap_task_mm(mm);
-
-// 		set_bit(MMF_OOM_SKIP, &mm->flags);
-// 	}
-
-// 	mmap_write_lock(mm);
-// 	if (mm->locked_vm)
-// 		unlock_range(mm->mmap, ULONG_MAX);
-
-// 	arch_exit_mmap(mm);
-
-// 	vma = mm->mmap;
-// 	if (!vma) {
-// 		/* Can happen if dup_mmap() received an OOM */
-// 		mmap_write_unlock(mm);
-// 		return;
-// 	}
-
-// 	lru_add_drain();
-// 	flush_cache_mm(mm);
-// 	tlb_gather_mmu_fullmm(&tlb, mm);
-// 	/* update_hiwater_rss(mm) here? but nobody should be looking */
-// 	/* Use -1 here to ensure all VMAs in the mm are unmapped */
-// 	unmap_vmas(&tlb, vma, 0, -1);
-// 	free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, USER_PGTABLES_CEILING);
-// 	tlb_finish_mmu(&tlb);
-
-// 	/* Walk the list again, actually closing and freeing it. */
-// 	while (vma) {
-// 		if (vma->vm_flags & VM_ACCOUNT)
-// 			nr_accounted += vma_pages(vma);
-// 		vma = remove_vma(vma);
-// 		cond_resched();
-// 	}
-// 	mm->mmap = NULL;
-// 	mmap_write_unlock(mm);
-// 	vm_unacct_memory(nr_accounted);
-// }
 
 /*
  * Insert vm structure into process list sorted by address

@@ -71,6 +71,6 @@
 	struct anon_vma_chain;
 	typedef struct anon_vma_chain anon_vma_chain_s;
 	struct vm_unmapped_area_info;
-	typedef struct vm_unmapped_area_info vma_unmapped_info_s;
+	typedef struct vm_unmapped_area_info unmapped_vma_info_s;
 
 #endif /* _MM_TYPE_DECLARATION_H_ */
