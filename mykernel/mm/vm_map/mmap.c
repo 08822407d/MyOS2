@@ -10,7 +10,7 @@
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 // #include <linux/kernel/kernel.h>
-// #include <linux/kernel/syscalls.h>
+#include <linux/kernel/syscalls.h>
 // #include <linux/kernel/export.h>
 // #include <linux/kernel/mount.h>
 // #include <linux/kernel/uaccess.h>
@@ -816,45 +816,6 @@ unacct_error:
 }
 
 
-
-/**
- * unmapped_area() - Find an area between the low_limit and the high_limit with
- * the correct alignment and offset, all from @info. Note: current->mm is used
- * for the search.
- *
- * @info: The unmapped area information including the range [low_limit -
- * high_limit), the alignment offset and mask.
- *
- * Return: A memory address or -ENOMEM.
- */
-static ulong
-simple_unmapped_area(unmapped_vma_info_s *info,
-		ulong length, ulong low_limit, ulong high_limit) {
-	ulong gap;
-	vma_s *tmp;
-
-	// gap = mas.index;
-	// gap += (info->align_offset - gap) & info->align_mask;
-	// tmp = mas_next(&mas, ULONG_MAX);
-	// if (tmp && (tmp->vm_flags & VM_STARTGAP_FLAGS)) { /* Avoid prev check if possible */
-	// 	if (vm_start_gap(tmp) < gap + length - 1) {
-	// 		low_limit = tmp->vm_end;
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// } else {
-	// 	tmp = mas_prev(&mas, 0);
-	// 	if (tmp && vm_end_gap(tmp) > gap) {
-	// 		low_limit = vm_end_gap(tmp);
-	// 		mas_reset(&mas);
-	// 		goto retry;
-	// 	}
-	// }
-
-	return gap;
-}
-
-
 /*
  * Search for an unmapped address range.
  *
@@ -1048,52 +1009,6 @@ int expand_stack(vma_s *vma, ulong address)
 	return error;
 }
 
-// /*
-//  * Ok - we have the memory areas we should free on the vma list,
-//  * so release them, and do the vma updates.
-//  *
-//  * Called with the mm semaphore held.
-//  */
-// static void
-// remove_vma_list(mm_s *mm, vma_s *vma) {
-// 	ulong nr_accounted = 0;
-
-// 	/* Update high watermark before we lower total_vm */
-// 	update_hiwater_vm(mm);
-// 	do {
-// 		long nrpages = vma_pages(vma);
-
-// 		if (vma->vm_flags & VM_ACCOUNT)
-// 			nr_accounted += nrpages;
-// 		vm_stat_account(mm, vma->vm_flags, -nrpages);
-// 		vma = remove_vma(vma);
-// 	} while (vma);
-// 	vm_unacct_memory(nr_accounted);
-// 	validate_mm(mm);
-// }
-
-// /*
-//  * Get rid of page table information in the indicated region.
-//  *
-//  * Called with the mm semaphore held.
-//  */
-// static void
-// unmap_region(mm_s *mm, vma_s *vma, vma_s *prev, ulong start, ulong end) {
-
-// 	vma_s *next = vma_next(mm, prev);
-// 	struct mmu_gather tlb;
-
-// 	lru_add_drain();
-// 	tlb_gather_mmu(&tlb, mm);
-// 	update_hiwater_rss(mm);
-// 	unmap_vmas(&tlb, vma, start, end);
-// 	free_pgtables(&tlb, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,
-// 				 next ? next->vm_start : USER_PGTABLES_CEILING);
-// 	tlb_finish_mmu(&tlb);
-
-// 	kfree(prev);
-// }
-
 
 /*
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
@@ -1267,15 +1182,8 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
 
-	// /* Check against address space limits *after* clearing old maps... */
-	// if (!may_expand_vm(mm, flags, len >> PAGE_SHIFT))
-	// 	return -ENOMEM;
-
 	if (mm->map_count > sysctl_max_map_count)
 		return -ENOMEM;
-
-	// if (security_vm_enough_memory_mm(mm, len >> PAGE_SHIFT))
-	// 	return -ENOMEM;
 
 	/* Can we just expand an old private anonymous mapping? */
 	vma = simple_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
@@ -1334,72 +1242,6 @@ vm_brk_flags(ulong addr, ulong request, ulong flags)
 	// 	mm_populate(addr, len);
 	return ret;
 }
-
-// /* Release all mmaps. */
-// void exit_mmap(mm_s *mm)
-// {
-// 	struct mmu_gather tlb;
-// 	struct vm_area_struct *vma;
-// 	unsigned long nr_accounted = 0;
-
-// 	/* mm's last user has gone, and its about to be pulled down */
-// 	mmu_notifier_release(mm);
-
-// 	if (unlikely(mm_is_oom_victim(mm))) {
-// 		/*
-// 		 * Manually reap the mm to free as much memory as possible.
-// 		 * Then, as the oom reaper does, set MMF_OOM_SKIP to disregard
-// 		 * this mm from further consideration.  Taking mm->mmap_lock for
-// 		 * write after setting MMF_OOM_SKIP will guarantee that the oom
-// 		 * reaper will not run on this mm again after mmap_lock is
-// 		 * dropped.
-// 		 *
-// 		 * Nothing can be holding mm->mmap_lock here and the above call
-// 		 * to mmu_notifier_release(mm) ensures mmu notifier callbacks in
-// 		 * __oom_reap_task_mm() will not block.
-// 		 *
-// 		 * This needs to be done before calling unlock_range(),
-// 		 * which clears VM_LOCKED, otherwise the oom reaper cannot
-// 		 * reliably test it.
-// 		 */
-// 		(void)__oom_reap_task_mm(mm);
-
-// 		set_bit(MMF_OOM_SKIP, &mm->flags);
-// 	}
-
-// 	mmap_write_lock(mm);
-// 	if (mm->locked_vm)
-// 		unlock_range(mm->mmap, ULONG_MAX);
-
-// 	arch_exit_mmap(mm);
-
-// 	vma = mm->mmap;
-// 	if (!vma) {
-// 		/* Can happen if dup_mmap() received an OOM */
-// 		mmap_write_unlock(mm);
-// 		return;
-// 	}
-
-// 	lru_add_drain();
-// 	flush_cache_mm(mm);
-// 	tlb_gather_mmu_fullmm(&tlb, mm);
-// 	/* update_hiwater_rss(mm) here? but nobody should be looking */
-// 	/* Use -1 here to ensure all VMAs in the mm are unmapped */
-// 	unmap_vmas(&tlb, vma, 0, -1);
-// 	free_pgtables(&tlb, vma, FIRST_USER_ADDRESS, USER_PGTABLES_CEILING);
-// 	tlb_finish_mmu(&tlb);
-
-// 	/* Walk the list again, actually closing and freeing it. */
-// 	while (vma) {
-// 		if (vma->vm_flags & VM_ACCOUNT)
-// 			nr_accounted += vma_pages(vma);
-// 		vma = remove_vma(vma);
-// 		cond_resched();
-// 	}
-// 	mm->mmap = NULL;
-// 	mmap_write_unlock(mm);
-// 	vm_unacct_memory(nr_accounted);
-// }
 
 /*
  * Insert vm structure into process list sorted by address
