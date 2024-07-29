@@ -867,10 +867,7 @@ simple_unmapped_area(unmapped_vma_info_s *info,
 ulong
 simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 {
-	ulong addr;
-
-	ulong length, gap, gap_end;
-	ulong low_limit, high_limit;
+	ulong gap, gap_end;
 	vma_s *tmp;
 
 	for_each_vma_topdown(mm, tmp) {
@@ -887,7 +884,7 @@ simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 			break;
 	}
 
-	return addr;
+	return gap;
 }
 
 ulong
