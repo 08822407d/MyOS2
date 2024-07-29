@@ -235,6 +235,6 @@
 		ulong	high_limit;
 		ulong	align_mask;
 		ulong	align_offset;
-	} vma_unmapped_info_s;
+	} unmapped_vma_info_s;
 
 #endif /* _LINUX_VM_MAP_TYPES_H_ */

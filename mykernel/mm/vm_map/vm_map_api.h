@@ -53,7 +53,9 @@
 	extern ulong stack_guard_gap;
 	/* Generic expand stack which grows the stack according to GROWS{UP,DOWN} */
 	extern int expand_stack(vma_s *vma, ulong address);
-	extern ulong vm_unmapped_area(vma_unmapped_info_s *info);
+	extern ulong simple_vm_unmapped_area(unmapped_vma_info_s *info);
+	ulong simple_get_unmapped_area(file_s *filp, const ulong addr,
+			const ulong len, const ulong pgoff, const ulong flags);
 	extern ulong get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
 	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 

@@ -828,7 +828,7 @@ unacct_error:
  * Return: A memory address or -ENOMEM.
  */
 static ulong
-simple_unmapped_area(vma_unmapped_info_s *info,
+simple_unmapped_area(unmapped_vma_info_s *info,
 		ulong length, ulong low_limit, ulong high_limit) {
 	ulong gap;
 	vma_s *tmp;
@@ -854,21 +854,27 @@ simple_unmapped_area(vma_unmapped_info_s *info,
 	return gap;
 }
 
-/**
- * simple_unmapped_area_topdown() - Find an area between the low_limit and the
- * high_limit with the correct alignment and offset at the highest available
- * address, all from @info. Note: current->mm is used for the search.
+
+/*
+ * Search for an unmapped address range.
  *
- * @info: The unmapped area information including the range [low_limit -
- * high_limit), the alignment offset and mask.
- *
- * Return: A memory address or -ENOMEM.
+ * We are looking for a range that:
+ * - does not intersect with any VMA;
+ * - is contained within the [low_limit, high_limit) interval;
+ * - is at least the desired size.
+ * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
  */
-static ulong
-simple_unmapped_area_topdown(vma_unmapped_info_s *info,
-		ulong length, ulong low_limit, ulong high_limit) {
-	ulong gap, gap_end;
+ulong
+simple_vm_unmapped_area(unmapped_vma_info_s *info)
+{
+	ulong addr;
+
+	ulong length, gap, gap_end;
+	ulong low_limit, high_limit;
 	vma_s *tmp;
+
+	// if (mas_empty_area_rev(&mas, low_limit, high_limit - 1, length))
+	// 	return -ENOMEM;
 
 	// gap = mas.last + 1 - info->length;
 	// gap -= (gap - info->align_offset) & info->align_mask;
@@ -889,41 +895,52 @@ simple_unmapped_area_topdown(vma_unmapped_info_s *info,
 	// 	}
 	// }
 
-	return gap;
-}
+	// return gap;
 
-/*
- * Search for an unmapped address range.
- *
- * We are looking for a range that:
- * - does not intersect with any VMA;
- * - is contained within the [low_limit, high_limit) interval;
- * - is at least the desired size.
- * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
- */
-ulong
-vm_unmapped_area(vma_unmapped_info_s *info)
-{
-	ulong addr, length, low_limit, high_limit;
-	/* Adjust search length to account for worst case alignment overhead */
-	length = info->length + info->align_mask;
-	if (length < info->length)
-		return -ENOMEM;
-
-	low_limit = info->low_limit;
-	if (low_limit < mmap_min_addr)
-		low_limit = mmap_min_addr;
-	high_limit = info->high_limit;
-
-	if (info->flags & VM_UNMAPPED_AREA_TOPDOWN)
-		addr = simple_unmapped_area_topdown(info, length, low_limit, high_limit);
-	else
-		addr = simple_unmapped_area(info, length, low_limit, high_limit);
-
-	// trace_vm_unmapped_area(addr, info);
 	return addr;
 }
 
+ulong
+simple_get_unmapped_area(file_s *filp, const ulong addr0,
+		const ulong len, const ulong pgoff, const ulong flags)
+{
+	vma_s *vma;
+	unmapped_vma_info_s info;
+	ulong addr = addr0;
+	mm_s *mm = current->mm;
+
+	info.align_mask = 0,
+	info.align_offset = pgoff << PAGE_SHIFT,
+	info.low_limit = PAGE_SIZE,
+	info.high_limit = mm->mmap_base;
+
+	/* requesting a specific address */
+	if (addr) {
+		addr &= PAGE_MASK;
+		vma = simple_find_vma(mm, addr);
+		if (!vma || addr + len <= vm_start_gap(vma))
+			return addr;
+	}
+
+	/*
+	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
+	 * in the full address space.
+	 *
+	 * !in_32bit_syscall() check to avoid high addresses for x32
+	 * (and make it no op on native i386).
+	 */
+	if (addr > DEFAULT_MAP_WINDOW)
+		info.high_limit += TASK_SIZE_MAX - DEFAULT_MAP_WINDOW;
+	// if (filp) {
+	// 	info.align_mask = get_align_mask();
+	// 	info.align_offset += get_align_bits();
+	// }
+
+	addr = simple_vm_unmapped_area(&info);
+	// if ((addr & ~PAGE_MASK) != 0)
+		return addr;
+	// BUG_ON(addr != -ENOMEM);
+}
 
 ulong
 get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
@@ -931,8 +948,13 @@ get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
 	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
 
 	/* Careful about overflows.. */
+	/* requested length too big for entire address space */
 	if (len > TASK_SIZE)
 		return -ENOMEM;
+
+	/* No address checking. See comment at mmap_address_hint_valid() */
+	if (flags & MAP_FIXED)
+		return addr;
 
 	get_area = current->mm->get_unmapped_area;
 	if (file) {
@@ -1091,16 +1113,9 @@ int expand_stack(vma_s *vma, ulong address)
  */
 int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 {
-	vma_s *new;
 	int err;
 
-	// if (vma->vm_ops && vma->vm_ops->may_split) {
-	// 	err = vma->vm_ops->may_split(vma, addr);
-	// 	if (err)
-	// 		return err;
-	// }
-
-	new = vm_area_creat_dup(vma);
+	vma_s *new = vm_area_creat_dup(vma);
 	if (!new)
 		return -ENOMEM;
 
@@ -1198,7 +1213,6 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 		list_header_delete_node(&mm->mm_mt, &tmp->list);
 	} for_each_vma_range(mm, vma, end);
 
-clear_tree_failed:
 userfaultfd_error:
 munmap_gather_failed:
 end_split_failed:
