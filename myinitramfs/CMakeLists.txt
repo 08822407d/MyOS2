@@ -28,10 +28,6 @@ elseif ()
 	set(UNUSED_MACRO "-Wunused-macros")
 endif()
 
-# execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
-# 				OUTPUT_VARIABLE CC_INC_PATH)
-
-
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
 	-m64 \
 ")
