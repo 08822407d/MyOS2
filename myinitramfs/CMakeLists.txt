@@ -28,21 +28,21 @@ elseif ()
 	set(UNUSED_MACRO "-Wunused-macros")
 endif()
 
-execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
-				OUTPUT_VARIABLE CC_INC_PATH)
-
-
 set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
 	-m64 \
 ")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
-	-m64 -fPIC \
-	-ffreestanding \
-	-nostdinc -nostdlib \
+	-m64 \
 	-static \
 	-ggdb \
+	-fPIC \
+	-ffreestanding \
+	-nostdinc -nostdlib \
 ")
+
+execute_process(COMMAND bash -c "gcc --print-file-name=include | tr -d '\n\r'"
+				OUTPUT_VARIABLE CC_INC_PATH)
 
 set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
 
