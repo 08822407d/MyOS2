@@ -4,9 +4,9 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
-    #include "../mm_const_arch.h"
-    #include "../mm_types_arch.h"
-    #include "../mm_api_arch.h"
+	#include "../mm_const_arch.h"
+	#include "../mm_types_arch.h"
+	#include "../mm_api_arch.h"
 
 
 	#ifdef DEBUG
@@ -129,6 +129,22 @@
 		arch_pte_flags(pte_t pte);
 		extern phys_addr_t
 		arch_pte_addr(pte_t pte);
+
+		extern bool
+		__pte_needs_invert(u64 val);
+		extern u64
+		protnone_mask(u64 val);
+		extern pgprotval_t
+		massage_pgprot(pgprot_t pgprot);
+		extern pgprotval_t
+		check_pgprot(pgprot_t pgprot);
+
+		extern pte_t
+		pfn_pte(ulong page_nr, pgprot_t pgprot);
+		extern pmd_t
+		pfn_pmd(ulong page_nr, pgprot_t pgprot);
+		extern pud_t
+		pfn_pud(ulong page_nr, pgprot_t pgprot);
 
 	#endif
 
@@ -455,6 +471,89 @@
 			return arch_pte_val(pte) & ~PTE_FLAGS_MASK;
 		}
 
+
+		/*
+		 * A clear pte value is special, and doesn't get inverted.
+		 *
+		 * Note that even users that only pass a pgprot_t (rather
+		 * than a full pte) won't trigger the special zero case,
+		 * because even PAGE_NONE has _PAGE_PROTNONE | _PAGE_ACCESSED
+		 * set. So the all zero case really is limited to just the
+		 * cleared page table entry case.
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		__pte_needs_invert(u64 val) {
+			return val && !(val & _PAGE_PRESENT);
+		}
+
+		/* Get a mask to xor with the page table entry to get the correct pfn. */
+		PREFIX_STATIC_INLINE
+		u64
+		protnone_mask(u64 val) {
+			return __pte_needs_invert(val) ?  ~0ull : 0;
+		}
+
+		/*
+		 * Mask out unsupported bits in a present pgprot.  Non-present pgprots
+		 * can use those bits for other purposes, so leave them be.
+		 */
+		PREFIX_STATIC_INLINE
+		pgprotval_t
+		massage_pgprot(pgprot_t pgprot) {
+			pgprotval_t protval = pgprot_val(pgprot);
+
+			if (protval & _PAGE_PRESENT)
+				protval &= __supported_pte_mask;
+
+			return protval;
+		}
+
+		PREFIX_STATIC_INLINE
+		pgprotval_t
+		check_pgprot(pgprot_t pgprot) {
+			pgprotval_t massaged_val = massage_pgprot(pgprot);
+
+		// 	/* mmdebug.h can not be included here because of dependencies */
+		// #ifdef CONFIG_DEBUG_VM
+		// 	WARN_ONCE(pgprot_val(pgprot) != massaged_val,
+		// 		"attempted to set unsupported pgprot: %016llx "
+		// 		"bits: %016llx supported: %016llx\n",
+		// 		(u64)pgprot_val(pgprot),
+		// 		(u64)pgprot_val(pgprot) ^ massaged_val,
+		// 		(u64)__supported_pte_mask);
+		// #endif
+
+			return massaged_val;
+		}
+
+		PREFIX_STATIC_INLINE
+		pte_t
+		pfn_pte(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PTE_PFN_MASK;
+			return __pte(pfn | check_pgprot(pgprot));
+		}
+
+		PREFIX_STATIC_INLINE
+		pmd_t
+		pfn_pmd(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PHYSICAL_PMD_PAGE_MASK;
+			return __pmd(pfn | check_pgprot(pgprot));
+		}
+
+		PREFIX_STATIC_INLINE
+		pud_t
+		pfn_pud(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PHYSICAL_PUD_PAGE_MASK;
+			return __pud(pfn | check_pgprot(pgprot));
+		}
+
 	#endif
 
 
@@ -475,14 +574,6 @@
 	// #define debug_checkwx_user()	do { } while (0)
 	// #endif
 
-	// /*
-	// * ZERO_PAGE is a global shared page that is always zero: used
-	// * for zero-mapped memory areas etc..
-	// */
-	// extern unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
-	// 	__visible;
-	// #define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
-
 	// extern mm_s *pgd_page_get_mm(page_s *page);
 
 	// extern pmdval_t early_pmd_flags;
@@ -493,23 +584,6 @@
 
 	// #define set_pte_atomic(ptep, pte)					\
 	// 	native_set_pte_atomic(ptep, pte)
-
-	// #define set_p4d(p4dp, p4d)		native_set_p4d(p4dp, p4d)
-	// #define set_pud(pudp, pud)		native_set_pud(pudp, pud)
-	// #define set_pmd(pmdp, pmd)		native_set_pmd(pmdp, pmd)
-	// #define set_pte(ptep, pte)		native_set_pte(ptep, pte)
-	// #define p4d_clear(p4d)				native_p4d_clear(p4d)
-	// #define pud_clear(pud)				native_pud_clear(pud)
-	// #define pmd_clear(pmd)				native_pmd_clear(pmd)
-	// #define pte_clear(mm, addr, ptep)	native_pte_clear(mm, addr, ptep)
-	// #define arch_pgd_val(x)		native_pgd_val(x)
-	// #define __pgd(x)		native_make_pgd(x)
-	// #define arch_pud_val(x)		native_pud_val(x)
-	// #define __pud(x)		native_make_pud(x)
-	// #define arch_pmd_val(x)		native_pmd_val(x)
-	// #define __pmd(x)		native_make_pmd(x)
-	// #define arch_pte_val(x)		native_pte_val(x)
-	// #define __pte(x)		native_make_pte(x)
 
 
 
@@ -883,61 +957,6 @@
 
 	// #endif /* CONFIG_HAVE_ARCH_SOFT_DIRTY */
 
-	// /*
-	// * Mask out unsupported bits in a present pgprot.  Non-present pgprots
-	// * can use those bits for other purposes, so leave them be.
-	// */
-	// static inline pgprotval_t massage_pgprot(pgprot_t pgprot)
-	// {
-	// 	pgprotval_t protval = pgprot_val(pgprot);
-
-	// 	if (protval & _PAGE_PRESENT)
-	// 		protval &= __supported_pte_mask;
-
-	// 	return protval;
-	// }
-
-	// static inline pgprotval_t check_pgprot(pgprot_t pgprot)
-	// {
-	// 	pgprotval_t massaged_val = massage_pgprot(pgprot);
-
-	// 	/* mmdebug.h can not be included here because of dependencies */
-	// #ifdef CONFIG_DEBUG_VM
-	// 	WARN_ONCE(pgprot_val(pgprot) != massaged_val,
-	// 		"attempted to set unsupported pgprot: %016llx "
-	// 		"bits: %016llx supported: %016llx\n",
-	// 		(u64)pgprot_val(pgprot),
-	// 		(u64)pgprot_val(pgprot) ^ massaged_val,
-	// 		(u64)__supported_pte_mask);
-	// #endif
-
-	// 	return massaged_val;
-	// }
-
-	// static inline pte_t pfn_pte(unsigned long page_nr, pgprot_t pgprot)
-	// {
-	// 	phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-	// 	pfn ^= protnone_mask(pgprot_val(pgprot));
-	// 	pfn &= PTE_PFN_MASK;
-	// 	return __pte(pfn | check_pgprot(pgprot));
-	// }
-
-	// static inline pmd_t pfn_pmd(unsigned long page_nr, pgprot_t pgprot)
-	// {
-	// 	phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-	// 	pfn ^= protnone_mask(pgprot_val(pgprot));
-	// 	pfn &= PHYSICAL_PMD_PAGE_MASK;
-	// 	return __pmd(pfn | check_pgprot(pgprot));
-	// }
-
-	// static inline pud_t pfn_pud(unsigned long page_nr, pgprot_t pgprot)
-	// {
-	// 	phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-	// 	pfn ^= protnone_mask(pgprot_val(pgprot));
-	// 	pfn &= PHYSICAL_PUD_PAGE_MASK;
-	// 	return __pud(pfn | check_pgprot(pgprot));
-	// }
-
 	// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 	// {
 	// 	return pfn_pmd(pmd_pfn(pmd),
@@ -1080,14 +1099,14 @@
 	// */
 	// #define pmd_page(pmd)	pfn_to_page(pmd_pfn(pmd))
 
-	// /*
-	// * Conversion functions: convert a page and protection to a page entry,
-	// * and a page entry and page directory to the page they refer to.
-	// *
-	// * (Currently stuck as a macro because of indirect forward reference
-	// * to linux/mm.h:page_to_nid())
-	// */
-	// #define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
+	/*
+	 * Conversion functions: convert a page and protection to a page entry,
+	 * and a page entry and page directory to the page they refer to.
+	 *
+	 * (Currently stuck as a macro because of indirect forward reference
+	 * to linux/mm.h:page_to_nid())
+	 */
+	#define mk_pte(page, pgprot)   pfn_pte(page_to_pfn(page), (pgprot))
 
 
 	// /*

@@ -39,10 +39,23 @@
 	#define set_p4d(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
 	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
+	#define __pgd(x)			arch_make_pgd(x)
+	#define __pud(x)			arch_make_pud(x)
+	#define __pmd(x)			arch_make_pmd(x)
+	#define __pte(x)			arch_make_pte(x)
+
 	/*
 	 * Currently stuck as a macro due to indirect forward reference to
 	 * linux/mmzone.h's __section_mem_map_addr() definition:
 	 */
 	#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+
+
+	/*
+	 * ZERO_PAGE is a global shared page that is always zero: used
+	 * for zero-mapped memory areas etc..
+	 */
+	extern ulong empty_zero_page[PAGE_SIZE / sizeof(ulong)] __visible;
+	#define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
 
 #endif /* _ASM_X86_PGTABLE_MACRO_H_ */

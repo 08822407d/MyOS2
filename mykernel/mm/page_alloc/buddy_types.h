@@ -236,26 +236,26 @@
 			};
 			page_s	__page_1;
 		};
-		union {
-			struct {
-				ulong	_flags_2;
-				ulong	_head_2;
-		/* public: */
-				void	*_hugetlb_subpool;
-				void	*_hugetlb_cgroup;
-				void	*_hugetlb_cgroup_rsvd;
-				void	*_hugetlb_hwpoison;
-		/* private: the union with page_s is transitional */
-			};
-			struct {
-				ulong	_flags_2a;
-				ulong	_head_2a;
-		/* public: */
-				List_s	_deferred_list;
-		/* private: the union with page_s is transitional */
-			};
-			page_s	__page_2;
-		};
+		// union {
+		// 	struct {
+		// 		ulong	_flags_2;
+		// 		ulong	_head_2;
+		// /* public: */
+		// 		void	*_hugetlb_subpool;
+		// 		void	*_hugetlb_cgroup;
+		// 		void	*_hugetlb_cgroup_rsvd;
+		// 		void	*_hugetlb_hwpoison;
+		// /* private: the union with page_s is transitional */
+		// 	};
+		// 	struct {
+		// 		ulong	_flags_2a;
+		// 		ulong	_head_2a;
+		// /* public: */
+		// 		List_s	_deferred_list;
+		// /* private: the union with page_s is transitional */
+		// 	};
+		// 	page_s	__page_2;
+		// };
 	} folio_s;
 
 #endif /* _PAGE_ALLOC_TYPES_H_ */

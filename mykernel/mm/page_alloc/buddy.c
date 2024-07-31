@@ -600,3 +600,42 @@ get_pfn_range(ulong *start_pfn, ulong *end_pfn)
 	if (*start_pfn == -1UL)
 		*start_pfn = 0;
 }
+
+
+
+
+
+/*==============================================================================================*
+ *											swap.c												*
+ *==============================================================================================*/
+
+// static void __folio_put_small(struct folio *folio)
+// {
+// 	__page_cache_release(folio);
+// 	mem_cgroup_uncharge(folio);
+// 	free_unref_page(&folio->page, 0);
+// }
+
+// static void __folio_put_large(struct folio *folio)
+// {
+// 	/*
+// 	 * __page_cache_release() is supposed to be called for thp, not for
+// 	 * hugetlb. This is because hugetlb page does never have PageLRU set
+// 	 * (it's never listed to any LRU lists) and no memcg routines should
+// 	 * be called for hugetlb (it has a separate hugetlb_cgroup.)
+// 	 */
+// 	if (!folio_test_hugetlb(folio))
+// 		__page_cache_release(folio);
+// 	destroy_large_folio(folio);
+// }
+
+void __folio_put(folio_s *folio)
+{
+	// if (unlikely(folio_is_zone_device(folio)))
+	// 	free_zone_device_page(&folio->page);
+	// else if (unlikely(folio_test_large(folio)))
+	// 	__folio_put_large(folio);
+	// else
+	// 	__folio_put_small(folio);
+}
+EXPORT_SYMBOL(__folio_put);

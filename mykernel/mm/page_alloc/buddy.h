@@ -10,14 +10,31 @@
 
 	#ifdef DEBUG
 
+		extern page_s
+		*virt_to_head_page(const void *x);
 		extern folio_s
 		*virt_to_folio(const void *x);
+
+		extern void
+		page_ref_inc(page_s *page);
+		extern void
+		page_ref_dec(page_s *page);
+
+		extern void
+		folio_ref_inc(folio_s *folio);
+		extern void
+		folio_ref_dec(folio_s *folio);
 
 		extern uint
 		compound_order(page_s *page);
 
 		extern uint
 		folio_order(folio_s *folio);
+
+		extern void
+		folio_get(folio_s *folio);
+		extern void
+		folio_put(folio_s *folio);
 
 		extern void
 		get_page(page_s *page);
@@ -60,6 +77,33 @@
 			return page_folio(page);
 		}
 
+		PREFIX_STATIC_INLINE
+		void
+		page_ref_inc(page_s *page) {
+			atomic_inc(&page->_refcount);
+			// if (page_ref_tracepoint_active(page_ref_mod))
+			// 	__page_ref_mod(page, 1);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		page_ref_dec(page_s *page) {
+			atomic_dec(&page->_refcount);
+			// if (page_ref_tracepoint_active(page_ref_mod))
+			// 	__page_ref_mod(page, -1);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		folio_ref_inc(folio_s *folio) {
+			page_ref_inc(&folio->page);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		folio_ref_dec(folio_s *folio) {
+			page_ref_dec(&folio->page);
+		}
+
+
 		/*
 		 * compound_order() can be called without holding a reference, which means
 		 * that niceties like page_folio() don't work.  These callers should be
@@ -92,16 +136,56 @@
 			return folio->_flags_1 & 0xff;
 		}
 
+		/**
+		 * folio_get - Increment the reference count on a folio.
+		 * @folio: The folio.
+		 *
+		 * Context: May be called in any context, as long as you know that
+		 * you have a refcount on the folio.  If you do not already have one,
+		 * folio_try_get() may be the right interface for you to use.
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		folio_get(folio_s *folio) {
+			// VM_BUG_ON_FOLIO(folio_ref_zero_or_close_to_overflow(folio), folio);
+			folio_ref_inc(folio);
+		}
+		/**
+		 * folio_put - Decrement the reference count on a folio.
+		 * @folio: The folio.
+		 *
+		 * If the folio's reference count reaches zero, the memory will be
+		 * released back to the page allocator and may be used by another
+		 * allocation immediately.  Do not access the memory or the struct folio
+		 * after calling folio_put() unless you can be sure that it wasn't the
+		 * last reference.
+		 *
+		 * Context: May be called in process or interrupt context, but not in NMI
+		 * context.  May be called while holding a spinlock.
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		folio_put(folio_s *folio) {
+			// Equal to do folio_ref_dec()
+			if (atomic_dec_and_test(&folio->page._refcount))
+				__folio_put(folio);
+		}
 
 		PREFIX_STATIC_INLINE
 		void
 		get_page(page_s *page) {
-			atomic_inc(&page->_refcount);
+			folio_get(page_folio(page));
 		}
 		PREFIX_STATIC_INLINE
 		void
 		put_page(page_s *page) {
-			atomic_dec(&page->_refcount);
+			// /*
+			//  * For some devmap managed pages we need to catch refcount transition
+			//  * from 2 to 1:
+			//  */
+			// if (put_devmap_managed_page(&folio->page))
+			// 	return;
+			folio_put(page_folio(page));
 		}
 
 		PREFIX_STATIC_INLINE

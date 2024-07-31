@@ -161,7 +161,7 @@
 	#define _PSE	_PAGE_PSE
 
 	#define pgprot_val(x)				((x).pgprot)
-	#define __pgprot(x)					((u64) { (x) } )
+	#define __pgprot(x)					((pgprot_t) { (x) } )
 	#define __pg(x)						__pgprot(x)
 
 	#define PAGE_NONE					__pg(   0|   0|   0|___A|   0|   0|   0|___G)
