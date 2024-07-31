@@ -116,11 +116,11 @@
 	// #define __REFCONST		.section	".ref.rodata", "a"
 
 	#ifndef __ASSEMBLY__
-		// /*
-		//  * Used for initialization calls..
-		//  */
-		// typedef int (*initcall_t)(void);
-		// typedef void (*exitcall_t)(void);
+		/*
+		 * Used for initialization calls..
+		 */
+		typedef int (*initcall_t)(void);
+		typedef void (*exitcall_t)(void);
 
 		// #ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
 		// 	typedef int initcall_entry_t;
@@ -171,193 +171,202 @@
 	
 	// #ifndef MODULE
 
-	// 	#ifndef __ASSEMBLY__
+		#ifndef __ASSEMBLY__
 
-	// 		/*
-	// 		* initcalls are now grouped by functionality into separate
-	// 		* subsections. Ordering inside the subsections is determined
-	// 		* by link order. 
-	// 		* For backwards compatibility, initcall() puts the call in 
-	// 		* the device init subsection.
-	// 		*
-	// 		* The `id' arg to __define_initcall() is needed so that multiple initcalls
-	// 		* can point at the same handler without causing duplicate-symbol build errors.
-	// 		*
-	// 		* Initcalls are run by placing pointers in initcall sections that the
-	// 		* kernel iterates at runtime. The linker can do dead code / data elimination
-	// 		* and remove that completely, so the initcall sections have to be marked
-	// 		* as KEEP() in the linker script.
-	// 		*/
+			/*
+			 * initcalls are now grouped by functionality into separate
+			 * subsections. Ordering inside the subsections is determined
+			 * by link order. 
+			 * For backwards compatibility, initcall() puts the call in 
+			 * the device init subsection.
+			 *
+			 * The `id' arg to __define_initcall() is needed so that multiple initcalls
+			 * can point at the same handler without causing duplicate-symbol build errors.
+			 *
+			 * Initcalls are run by placing pointers in initcall sections that the
+			 * kernel iterates at runtime. The linker can do dead code / data elimination
+			 * and remove that completely, so the initcall sections have to be marked
+			 * as KEEP() in the linker script.
+			 */
 
-	// 		/* Format: <modname>__<counter>_<line>_<fn> */
-	// 		#define __initcall_id(fn)					\
-	// 			__PASTE(__KBUILD_MODNAME,				\
-	// 			__PASTE(__,						\
-	// 			__PASTE(__COUNTER__,					\
-	// 			__PASTE(_,						\
-	// 			__PASTE(__LINE__,					\
-	// 			__PASTE(_, fn))))))
+			/* Format: <modname>__<counter>_<line>_<fn> */
+			#define __initcall_id(fn)						\
+						__PASTE(__KBUILD_MODNAME,			\
+							__PASTE(__,						\
+								__PASTE(__COUNTER__,		\
+									__PASTE(_,				\
+										__PASTE(__LINE__,	\
+											__PASTE(_, fn)	\
+										)					\
+									)						\
+								)							\
+							)								\
+						)
 
-	// 		/* Format: __<prefix>__<iid><id> */
-	// 		#define __initcall_name(prefix, __iid, id)			\
-	// 			__PASTE(__,						\
-	// 			__PASTE(prefix,						\
-	// 			__PASTE(__,						\
-	// 			__PASTE(__iid, id))))
+			/* Format: __<prefix>__<iid><id> */
+			#define __initcall_name(prefix, __iid, id)		\
+						__PASTE(__,							\
+							__PASTE(prefix,					\
+								__PASTE(__,					\
+									__PASTE(__iid, id)		\
+								)							\
+							)								\
+						)
 
-	// 		#ifdef CONFIG_LTO_CLANG
-	// 			/*
-	// 			* With LTO, the compiler doesn't necessarily obey link order for
-	// 			* initcalls. In order to preserve the correct order, we add each
-	// 			* variable into its own section and generate a linker script (in
-	// 			* scripts/link-vmlinux.sh) to specify the order of the sections.
-	// 			*/
-	// 			#define __initcall_section(__sec, __iid)			\
-	// 				#__sec ".init.." #__iid
+			#ifdef CONFIG_LTO_CLANG
+				/*
+				 * With LTO, the compiler doesn't necessarily obey link order for
+				 * initcalls. In order to preserve the correct order, we add each
+				 * variable into its own section and generate a linker script (in
+				 * scripts/link-vmlinux.sh) to specify the order of the sections.
+				 */
+				#define __initcall_section(__sec, __iid)			\
+							#__sec ".init.." #__iid
 
-	// 			/*
-	// 			* With LTO, the compiler can rename static functions to avoid
-	// 			* global naming collisions. We use a global stub function for
-	// 			* initcalls to create a stable symbol name whose address can be
-	// 			* taken in inline assembly when PREL32 relocations are used.
-	// 			*/
-	// 			#define __initcall_stub(fn, __iid, id)				\
-	// 				__initcall_name(initstub, __iid, id)
+				/*
+				 * With LTO, the compiler can rename static functions to avoid
+				 * global naming collisions. We use a global stub function for
+				 * initcalls to create a stable symbol name whose address can be
+				 * taken in inline assembly when PREL32 relocations are used.
+				 */
+				#define __initcall_stub(fn, __iid, id)				\
+							__initcall_name(initstub, __iid, id)
 
-	// 			#define __define_initcall_stub(__stub, fn)			\
-	// 				int __init __cficanonical __stub(void);			\
-	// 				int __init __cficanonical __stub(void)			\
-	// 				{ 							\
-	// 					return fn();					\
-	// 				}							\
-	// 				__ADDRESSABLE(__stub)
-	// 		#else
-	// 			#define __initcall_section(__sec, __iid)			\
-	// 				#__sec ".init"
+				#define __define_initcall_stub(__stub, fn)			\
+						int __init __cficanonical __stub(void);		\
+						int __init __cficanonical __stub(void)		\
+						{ 											\
+							return fn();							\
+						}											\
+						__ADDRESSABLE(__stub)
+			#else
+				#define __initcall_section(__sec, __iid)			\
+							#__sec ".init"
 
-	// 			#define __initcall_stub(fn, __iid, id)	fn
+				#define __initcall_stub(fn, __iid, id)	fn
 
-	// 			#define __define_initcall_stub(__stub, fn)			\
-	// 				__ADDRESSABLE(fn)
-	// 		#endif
+				#define __define_initcall_stub(__stub, fn)			\
+							__ADDRESSABLE(fn)
+			#endif
 
-	// 		#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
-	// 			#define ____define_initcall(fn, __stub, __name, __sec)		\
-	// 				__define_initcall_stub(__stub, fn)			\
-	// 				asm(".section	\"" __sec "\", \"a\"		\n"	\
-	// 					__stringify(__name) ":			\n"	\
-	// 					".long	" __stringify(__stub) " - .	\n"	\
-	// 					".previous					\n");	\
-	// 				static_assert(__same_type(initcall_t, &fn));
-	// 		#else
-	// 			#define ____define_initcall(fn, __unused, __name, __sec)	\
-	// 				static initcall_t __name __used 			\
-	// 					__attribute__((__section__(__sec))) = fn;
-	// 		#endif
+			#ifdef CONFIG_HAVE_ARCH_PREL32_RELOCATIONS
+				#define ____define_initcall(fn, __stub, __name, __sec)		\
+							__define_initcall_stub(__stub, fn)				\
+							asm(".section	\"" __sec "\", \"a\"		\n"	\
+								__stringify(__name) ":			\n"			\
+								".long	" __stringify(__stub) " - .	\n"		\
+								".previous					\n");			\
+							static_assert(__same_type(initcall_t, &fn));
+			#else
+				#define ____define_initcall(fn, __unused, __name, __sec)	\
+							static initcall_t __name __used 				\
+								__attribute__((__section__(__sec))) = fn;
+			#endif
 
-	// 		#define __unique_initcall(fn, id, __sec, __iid)			\
-	// 			____define_initcall(fn,					\
-	// 				__initcall_stub(fn, __iid, id),			\
-	// 				__initcall_name(initcall, __iid, id),		\
-	// 				__initcall_section(__sec, __iid))
+			#define __unique_initcall(fn, id, __sec, __iid)			\
+						____define_initcall(fn,						\
+							__initcall_stub(fn, __iid, id),			\
+							__initcall_name(initcall, __iid, id),	\
+							__initcall_section(__sec, __iid)		\
+						)
 
-	// 		#define ___define_initcall(fn, id, __sec)			\
-	// 			__unique_initcall(fn, id, __sec, __initcall_id(fn))
+			#define ___define_initcall(fn, id, __sec)			\
+						__unique_initcall(fn, id, __sec, __initcall_id(fn))
 
-	// 		#define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
+			#define __define_initcall(fn, id) ___define_initcall(fn, id, .initcall##id)
 
-	// 		/*
-	// 		* Early initcalls run before initializing SMP.
-	// 		*
-	// 		* Only for built-in code, not modules.
-	// 		*/
-	// 		#define early_initcall(fn)		__define_initcall(fn, early)
+			/*
+			 * Early initcalls run before initializing SMP.
+			 *
+			 * Only for built-in code, not modules.
+			 */
+			#define early_initcall(fn)		__define_initcall(fn, early)
 
-	// 		/*
-	// 		* A "pure" initcall has no dependencies on anything else, and purely
-	// 		* initializes variables that couldn't be statically initialized.
-	// 		*
-	// 		* This only exists for built-in code, not for modules.
-	// 		* Keep main.c:initcall_level_names[] in sync.
-	// 		*/
-	// 		#define pure_initcall(fn)		__define_initcall(fn, 0)
+			// /*
+			// * A "pure" initcall has no dependencies on anything else, and purely
+			// * initializes variables that couldn't be statically initialized.
+			// *
+			// * This only exists for built-in code, not for modules.
+			// * Keep main.c:initcall_level_names[] in sync.
+			// */
+			// #define pure_initcall(fn)		__define_initcall(fn, 0)
 
-	// 		#define core_initcall(fn)		__define_initcall(fn, 1)
-	// 		#define core_initcall_sync(fn)		__define_initcall(fn, 1s)
-	// 		#define postcore_initcall(fn)		__define_initcall(fn, 2)
-	// 		#define postcore_initcall_sync(fn)	__define_initcall(fn, 2s)
-	// 		#define arch_initcall(fn)		__define_initcall(fn, 3)
-	// 		#define arch_initcall_sync(fn)		__define_initcall(fn, 3s)
-	// 		#define subsys_initcall(fn)		__define_initcall(fn, 4)
-	// 		#define subsys_initcall_sync(fn)	__define_initcall(fn, 4s)
-	// 		#define fs_initcall(fn)			__define_initcall(fn, 5)
-	// 		#define fs_initcall_sync(fn)		__define_initcall(fn, 5s)
-	// 		#define rootfs_initcall(fn)		__define_initcall(fn, rootfs)
-	// 		#define device_initcall(fn)		__define_initcall(fn, 6)
-	// 		#define device_initcall_sync(fn)	__define_initcall(fn, 6s)
-	// 		#define late_initcall(fn)		__define_initcall(fn, 7)
-	// 		#define late_initcall_sync(fn)		__define_initcall(fn, 7s)
+			// #define core_initcall(fn)		__define_initcall(fn, 1)
+			// #define core_initcall_sync(fn)		__define_initcall(fn, 1s)
+			// #define postcore_initcall(fn)		__define_initcall(fn, 2)
+			// #define postcore_initcall_sync(fn)	__define_initcall(fn, 2s)
+			// #define arch_initcall(fn)		__define_initcall(fn, 3)
+			// #define arch_initcall_sync(fn)		__define_initcall(fn, 3s)
+			// #define subsys_initcall(fn)		__define_initcall(fn, 4)
+			// #define subsys_initcall_sync(fn)	__define_initcall(fn, 4s)
+			// #define fs_initcall(fn)			__define_initcall(fn, 5)
+			// #define fs_initcall_sync(fn)		__define_initcall(fn, 5s)
+			// #define rootfs_initcall(fn)		__define_initcall(fn, rootfs)
+			// #define device_initcall(fn)		__define_initcall(fn, 6)
+			// #define device_initcall_sync(fn)	__define_initcall(fn, 6s)
+			// #define late_initcall(fn)		__define_initcall(fn, 7)
+			// #define late_initcall_sync(fn)		__define_initcall(fn, 7s)
 
-	// 		#define __initcall(fn) device_initcall(fn)
+			// #define __initcall(fn) device_initcall(fn)
 
-	// 		#define __exitcall(fn)						\
-	// 			static exitcall_t __exitcall_##fn __exit_call = fn
+			// #define __exitcall(fn)						\
+			// 	static exitcall_t __exitcall_##fn __exit_call = fn
 
-	// 		#define console_initcall(fn)	___define_initcall(fn, con, .con_initcall)
+			// #define console_initcall(fn)	___define_initcall(fn, con, .con_initcall)
 
-	// 		struct obs_kernel_param {
-	// 			const char *str;
-	// 			int (*setup_func)(char *);
-	// 			int early;
-	// 		};
+			// struct obs_kernel_param {
+			// 	const char *str;
+			// 	int (*setup_func)(char *);
+			// 	int early;
+			// };
 
-	// 		/*
-	// 		* Only for really core code.  See moduleparam.h for the normal way.
-	// 		*
-	// 		* Force the alignment so the compiler doesn't space elements of the
-	// 		* obs_kernel_param "array" too far apart in .init.setup.
-	// 		*/
-	// 		#define __setup_param(str, unique_id, fn, early)			\
-	// 			static const char __setup_str_##unique_id[] __initconst		\
-	// 				__aligned(1) = str; 					\
-	// 			static struct obs_kernel_param __setup_##unique_id		\
-	// 				__used __section(".init.setup")				\
-	// 				__aligned(__alignof__(struct obs_kernel_param))		\
-	// 				= { __setup_str_##unique_id, fn, early }
+			// /*
+			// * Only for really core code.  See moduleparam.h for the normal way.
+			// *
+			// * Force the alignment so the compiler doesn't space elements of the
+			// * obs_kernel_param "array" too far apart in .init.setup.
+			// */
+			// #define __setup_param(str, unique_id, fn, early)			\
+			// 	static const char __setup_str_##unique_id[] __initconst		\
+			// 		__aligned(1) = str; 					\
+			// 	static struct obs_kernel_param __setup_##unique_id		\
+			// 		__used __section(".init.setup")				\
+			// 		__aligned(__alignof__(struct obs_kernel_param))		\
+			// 		= { __setup_str_##unique_id, fn, early }
 
-	// 		#define __setup(str, fn)						\
-	// 			__setup_param(str, fn, fn, 0)
+			// #define __setup(str, fn)						\
+			// 	__setup_param(str, fn, fn, 0)
 
-	// 		/*
-	// 		* NOTE: fn is as per module_param, not __setup!
-	// 		* Emits warning if fn returns non-zero.
-	// 		*/
-	// 		#define early_param(str, fn)						\
-	// 			__setup_param(str, fn, fn, 1)
+			// /*
+			// * NOTE: fn is as per module_param, not __setup!
+			// * Emits warning if fn returns non-zero.
+			// */
+			// #define early_param(str, fn)						\
+			// 	__setup_param(str, fn, fn, 1)
 
-	// 		#define early_param_on_off(str_on, str_off, var, config)		\
-	// 											\
-	// 			int var = IS_ENABLED(config);					\
-	// 											\
-	// 			static int __init parse_##var##_on(char *arg)			\
-	// 			{								\
-	// 				var = 1;						\
-	// 				return 0;						\
-	// 			}								\
-	// 			early_param(str_on, parse_##var##_on);				\
-	// 											\
-	// 			static int __init parse_##var##_off(char *arg)			\
-	// 			{								\
-	// 				var = 0;						\
-	// 				return 0;						\
-	// 			}								\
-	// 			early_param(str_off, parse_##var##_off)
+			// #define early_param_on_off(str_on, str_off, var, config)		\
+			// 									\
+			// 	int var = IS_ENABLED(config);					\
+			// 									\
+			// 	static int __init parse_##var##_on(char *arg)			\
+			// 	{								\
+			// 		var = 1;						\
+			// 		return 0;						\
+			// 	}								\
+			// 	early_param(str_on, parse_##var##_on);				\
+			// 									\
+			// 	static int __init parse_##var##_off(char *arg)			\
+			// 	{								\
+			// 		var = 0;						\
+			// 		return 0;						\
+			// 	}								\
+			// 	early_param(str_off, parse_##var##_off)
 
-	// 		/* Relies on boot_command_line being set */
-	// 		void __init parse_early_param(void);
-	// 		void __init parse_early_options(char *cmdline);
+			// /* Relies on boot_command_line being set */
+			// void __init parse_early_param(void);
+			// void __init parse_early_options(char *cmdline);
 
-	// 	#endif /* __ASSEMBLY__ */
+		#endif /* __ASSEMBLY__ */
 
 	// #else /* MODULE */
 

@@ -59,6 +59,12 @@
 		extern int
 		p4d_none_or_clear_bad(p4d_t *p4d);
 
+		extern int
+		is_zero_pfn(ulong pfn);
+
+		extern ulong
+		my_zero_pfn(ulong addr);
+
 	#endif
 
 	#include "pgtable_macro.h"
@@ -208,6 +214,22 @@
 				return 1;
 			}
 			return 0;
+		}
+
+
+
+		PREFIX_STATIC_INLINE
+		int
+		is_zero_pfn(ulong pfn) {
+			extern ulong zero_pfn;
+			return pfn == zero_pfn;
+		}
+
+		PREFIX_STATIC_INLINE
+		ulong
+		my_zero_pfn(ulong addr) {
+			extern ulong zero_pfn;
+			return zero_pfn;
 		}
 
 	#endif

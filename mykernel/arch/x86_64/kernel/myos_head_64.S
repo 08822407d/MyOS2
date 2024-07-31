@@ -22,6 +22,8 @@
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
 
+#define SYM_DATA_START_PAGE_ALIGNED(name)			\
+	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
 
 .section .unpaged.text, "ax"
 .code64
@@ -169,3 +171,10 @@ SYM_CODE_START(mbi_magic)
 	.quad	0x0
 SYM_CODE_START(mbi_base)
 	.quad	0x0
+
+
+	__PAGE_ALIGNED_BSS
+SYM_DATA_START_PAGE_ALIGNED(empty_zero_page)
+	.skip PAGE_SIZE
+SYM_DATA_END(empty_zero_page)
+EXPORT_SYMBOL(empty_zero_page)

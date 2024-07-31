@@ -39,4 +39,9 @@
 
 	void memblock_free_pages(page_s *page, ulong pfn, uint order);
 
+
+	/* swap.c */
+	extern void __folio_put(folio_s *folio);
+
+
 #endif /* _PAGE_ALLOC_API_H_ */

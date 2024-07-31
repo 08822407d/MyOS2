@@ -194,8 +194,8 @@ void register_diskfs(void);
 int tty_class_init(void);
 int chr_dev_init(void);
 int init_elf_binfmt(void);
-static void do_initcalls(void)
-{
+static void
+do_initcalls(void) {
 	// pci_arch_init();
 	// myos_scan_pci_devices();
 
@@ -215,8 +215,8 @@ static void do_initcalls(void)
  *
  * Now we can finally start doing some real work..
  */
-static void do_basic_setup(void)
-{
+static void
+do_basic_setup(void) {
 	// cpuset_init_smp();
 	driver_init();
 	// init_irq_proc();
@@ -224,6 +224,11 @@ static void do_basic_setup(void)
 	do_initcalls();
 }
 
+extern int init_zero_pfn(void);
+static void __init
+do_pre_smp_initcalls(void) {
+	init_zero_pfn();
+}
 
 static noinline void __init kernel_init_freeable(void);
 
@@ -293,7 +298,7 @@ static noinline void __init kernel_init_freeable(void)
 	workqueue_init();
 
 	// rcu_init_tasks_generic();
-	// do_pre_smp_initcalls();
+	do_pre_smp_initcalls();
 	// lockup_detector_init();
 
 	// smp_init();
