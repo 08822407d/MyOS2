@@ -1035,12 +1035,12 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 	if (new_below) {
 		new->vm_end = addr;
 		err = __simple_vma_adjust(vma, addr, vma->vm_end);
-		__vma_link_list(mm, new, vma);
+		__vma_link_list(mm, new, vma_prev_vma(vma));
 	} else {
 		new->vm_start = addr;
 		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
 		err = __simple_vma_adjust(vma, vma->vm_start, addr);
-		__vma_link_list(mm, vma, new);
+		__vma_link_list(mm, new, vma);
 	}
 
 	/* Success. */

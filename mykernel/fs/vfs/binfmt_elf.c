@@ -89,6 +89,25 @@ set_brk(unsigned long start, unsigned long end, int prot)
 	return 0;
 }
 
+/* We need to explicitly zero any fractional pages
+   after the data section (i.e. bss).  This would
+   contain the junk from the file that should not
+   be in memory
+ */
+static int
+padzero(ulong elf_bss) {
+	ulong nbyte;
+
+	nbyte = ELF_PAGEOFFSET(elf_bss);
+	if (nbyte) {
+		nbyte = ELF_MIN_ALIGN - nbyte;
+		// if (clear_user((void __user *) elf_bss, nbyte))
+		// 	return -EFAULT;
+		memset((void *)elf_bss, 0, nbyte);
+	}
+	return 0;
+}
+
 
 #define STACK_ROUND(sp, items) \
 			(((unsigned long) (sp - items)) &~ 15UL)
@@ -863,12 +882,12 @@ out_free_interp:
 	 * up getting placed where the bss needs to go.
 	 */
 	retval = set_brk(elf_bss, elf_brk, bss_prot);
-	// if (retval)
-	// 	goto out_free_dentry;
-	// if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
-	// 	retval = -EFAULT; /* Nobody gets to see this, but.. */
-	// 	goto out_free_dentry;
-	// }
+	if (retval)
+		goto out_free_dentry;
+	if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
+		retval = -EFAULT; /* Nobody gets to see this, but.. */
+		goto out_free_dentry;
+	}
 
 	if (interpreter) {
 		// elf_entry = load_elf_interp(interp_elf_ex,
