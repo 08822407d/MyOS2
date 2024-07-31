@@ -72,6 +72,14 @@ init_zero_pfn(void) {
 }
 early_initcall(init_zero_pfn);
 
+static bool
+vmf_pte_changed(struct vm_fault *vmf) {
+	if (vmf->flags & FAULT_FLAG_ORIG_PTE_VALID)
+		return !pte_same(ptep_get(vmf->pte), vmf->orig_pte);
+
+	return !arch_pte_none(ptep_get(vmf->pte));
+}
+
 /*
  * vm_normal_page -- This function gets the "page_s" associated with a pte.
  *
@@ -985,19 +993,19 @@ do_anonymous_page(vm_fault_s *vmf) {
 	if (vma->vm_flags & VM_SHARED)
 		return VM_FAULT_SIGBUS;
 
-	/*
-	 * Use pte_alloc() instead of pte_alloc_map().  We can't run
-	 * pte_offset_map() on pmds where a huge pmd might be created
-	 * from a different thread.
-	 *
-	 * pte_alloc_map() is safe to use under mmap_write_lock(mm) or when
-	 * parallel threads are excluded by other means.
-	 *
-	 * Here we only have mmap_read_lock(mm).
-	 */
+	// /*
+	//  * Use pte_alloc() instead of pte_alloc_map().  We can't run
+	//  * pte_offset_map() on pmds where a huge pmd might be created
+	//  * from a different thread.
+	//  *
+	//  * pte_alloc_map() is safe to use under mmap_write_lock(mm) or when
+	//  * parallel threads are excluded by other means.
+	//  *
+	//  * Here we only have mmap_read_lock(mm).
+	//  */
 	// if (pte_alloc(vma->vm_mm, vmf->pmd))
-	if (vmf->pte == NULL)
-		return VM_FAULT_OOM;
+	// 	return VM_FAULT_OOM;
+	while (vmf->pte == NULL);
 
 	// /* See comment in handle_pte_fault() */
 	// if (unlikely(pmd_trans_unstable(vmf->pmd)))
@@ -1009,14 +1017,17 @@ do_anonymous_page(vm_fault_s *vmf) {
 	if (!(vmf->flags & FAULT_FLAG_WRITE)) {
 		// entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
 		// 				vma->vm_page_prot));
-		// entry = pfn_pte(my_zero_pfn(vmf->address), vma->vm_page_prot);
+		entry = pfn_pte(my_zero_pfn(vmf->address), __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
 
 		// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 		// 		vmf->address, &vmf->ptl);
-		// if (!pte_none(*vmf->pte)) {
-		// 	update_mmu_tlb(vma, vmf->address, vmf->pte);
-		// 	goto unlock;
-		// }
+		*vmf->pte = entry;
+		if (!vmf->pte)
+			goto unlock;
+		if (vmf_pte_changed(vmf)) {
+			// update_mmu_tlb(vma, vmf->address, vmf->pte);
+			goto unlock;
+		}
 		// ret = check_stable_address_space(vma->vm_mm);
 		// if (ret)
 		// 	goto unlock;
@@ -1048,19 +1059,17 @@ do_anonymous_page(vm_fault_s *vmf) {
 	// __folio_mark_uptodate(folio);
 
 	// entry = mk_pte(page, vma->vm_page_prot);
-	entry = arch_make_pte(page_to_phys(&folio->page) |
-				_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT);
-	// entry = pte_sw_mkyoung(entry);
+	entry = mk_pte(&folio->page, __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
 	if (vma->vm_flags & VM_WRITE)
 		entry = pte_mkwrite(pte_mkdirty(entry));
 
-	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, vmf->address,
-	// 		&vmf->ptl);
-	// if (!vmf->pte)
-	// 	goto release;
+	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
+	// 		vmf->pmd, vmf->address, &vmf->ptl);
 	*vmf->pte = entry;
-	if (!arch_pte_none(*vmf->pte)) {
-		// update_mmu_cache(vma, vmf->address, vmf->pte);
+	if (!vmf->pte)
+		goto release;
+	if (vmf_pte_changed(vmf)) {
+		// update_mmu_tlb(vma, vmf->address, vmf->pte);
 		goto release;
 	}
 
@@ -1079,6 +1088,8 @@ do_anonymous_page(vm_fault_s *vmf) {
 	// folio_add_new_anon_rmap(folio, vma, vmf->address);
 	// folio_add_lru_vma(folio, vma);
 setpte:
+	// if (uffd_wp)
+	// 	entry = pte_mkuffd_wp(entry);
 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
 
 	// /* No need to invalidate - it was non-present before */
@@ -1220,7 +1231,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 	// 			      vmf->address, &vmf->ptl);
-	*vmf->pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
+	*vmf->pte = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
 	ret = 0;
 	// /* Re-check under ptl */
 	// if (likely(!vmf_pte_changed(vmf))) {
@@ -1720,7 +1731,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	{
 		atomic_inc(&(page->_mapcount));
 		ulong page_addr = page_to_phys(page);
-		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
+		*pte = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
 	}
 	return pte;
 
@@ -1799,7 +1810,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 		page_s *newpage = alloc_page(GFP_USER);
 		atomic_inc(&(newpage->_mapcount));
 		ulong page_addr = page_to_phys(newpage);
-		*pte = arch_make_pte(PAGE_SHARED_EXEC | _PAGE_PAT | page_addr);
+		*pte = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
 
 		addr += PAGE_SIZE;
 	} while (addr < end);

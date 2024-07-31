@@ -130,6 +130,22 @@
 		extern phys_addr_t
 		arch_pte_addr(pte_t pte);
 
+		extern bool
+		__pte_needs_invert(u64 val);
+		extern u64
+		protnone_mask(u64 val);
+		extern pgprotval_t
+		massage_pgprot(pgprot_t pgprot);
+		extern pgprotval_t
+		check_pgprot(pgprot_t pgprot);
+
+		extern pte_t
+		pfn_pte(ulong page_nr, pgprot_t pgprot);
+		extern pmd_t
+		pfn_pmd(ulong page_nr, pgprot_t pgprot);
+		extern pud_t
+		pfn_pud(ulong page_nr, pgprot_t pgprot);
+
 	#endif
 
 	#include "pgtable_macro_arch.h"
@@ -940,22 +956,6 @@
 	// }
 
 	// #endif /* CONFIG_HAVE_ARCH_SOFT_DIRTY */
-
-	// /*
-	// * Mask out unsupported bits in a present pgprot.  Non-present pgprots
-	// * can use those bits for other purposes, so leave them be.
-	// */
-	// static inline pgprotval_t massage_pgprot(pgprot_t pgprot)
-	// {
-	// 	pgprotval_t protval = pgprot_val(pgprot);
-
-	// 	if (protval & _PAGE_PRESENT)
-	// 		protval &= __supported_pte_mask;
-
-	// 	return protval;
-	// }
-
-
 
 	// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 	// {

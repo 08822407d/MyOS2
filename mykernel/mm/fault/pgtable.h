@@ -55,13 +55,17 @@
 		#define pgd_offset_pgd pgd_ent_offset
 		extern int
 		pgd_none_or_clear_bad(pgd_t *pgd);
-
 		extern int
 		p4d_none_or_clear_bad(p4d_t *p4d);
 
+
+		extern pte_t
+		ptep_get(pte_t *ptep);
+		extern pmd_t
+		pmdp_get(pmd_t *pmdp);
+
 		extern int
 		is_zero_pfn(ulong pfn);
-
 		extern ulong
 		my_zero_pfn(ulong addr);
 
@@ -217,6 +221,17 @@
 		}
 
 
+		PREFIX_STATIC_INLINE
+		pte_t
+		ptep_get(pte_t *ptep) {
+			return READ_ONCE(*ptep);
+		}
+		PREFIX_STATIC_INLINE
+		pmd_t
+		pmdp_get(pmd_t *pmdp) {
+			return READ_ONCE(*pmdp);
+		}
+
 
 		PREFIX_STATIC_INLINE
 		int
@@ -224,7 +239,6 @@
 			extern ulong zero_pfn;
 			return pfn == zero_pfn;
 		}
-
 		PREFIX_STATIC_INLINE
 		ulong
 		my_zero_pfn(ulong addr) {
