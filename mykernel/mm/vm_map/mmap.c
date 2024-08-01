@@ -829,7 +829,7 @@ ulong
 simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 {
 	ulong gap, gap_end;
-	vma_s *tmp;
+	vma_s *tmp = NULL;
 
 	for_each_vma_topdown(mm, tmp) {
 		if (tmp->vm_end >= info->high_limit)
@@ -1107,14 +1107,17 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 			goto end_split_failed;
 	}
 	vma = vma_next_vma(prev);
+	BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
+	BUG_ON(!(end >= vma->vm_start && end < vma->vm_end));
+	list_header_delete_node(&mm->mm_mt, &vma->list);
 
-	/* Detach vmas from vma list */
-	do {
-		vma_s *tmp = vma;
-		mm->map_count--;
-		// BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
-		list_header_delete_node(&mm->mm_mt, &tmp->list);
-	} for_each_vma_range(mm, vma, end);
+	// /* Detach vmas from vma list */
+	// do {
+	// 	vma_s *tmp = vma;
+	// 	mm->map_count--;
+	// 	// BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
+	// 	list_header_delete_node(&mm->mm_mt, &tmp->list);
+	// } for_each_vma_range(mm, vma, end);
 
 userfaultfd_error:
 munmap_gather_failed:

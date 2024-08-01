@@ -9,6 +9,7 @@ void
 arch_pick_mmap_layout(mm_s * mm, rlimit_s *rlim_stack)
 {
 	mm->get_unmapped_area = simple_get_unmapped_area;
+	mm->mmap_base = TASK_UNMAPPED_BASE;
 
 	// if (mmap_is_legacy())
 	// 	mm->get_unmapped_area = arch_get_unmapped_area;

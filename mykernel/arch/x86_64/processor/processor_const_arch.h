@@ -214,5 +214,12 @@
 	#define CR3_ADDR_MASK	0x7FFFFFFFFFFFF000ull
 	#define CR3_PCID_MASK	0xFFFull
 	#define CR3_NOFLUSH		BIT_ULL(63)
+
+	/*
+	 * This decides where the kernel will search for a free chunk of vm
+	 * space during mmap's.
+	 */
+	#define __TASK_UNMAPPED_BASE(task_size)	(PAGE_ALIGN(task_size / 3))
+	#define TASK_UNMAPPED_BASE				__TASK_UNMAPPED_BASE(TASK_SIZE_LOW)
 	
 #endif /* _ASM_X86_PROCESSOR_TYPES_H_ */

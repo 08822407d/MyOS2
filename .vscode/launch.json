@@ -34,20 +34,20 @@
           "text": "add-symbol-file ${workspaceRoot}/build/initd",
           "ignoreFailures": false
         },
-        {
-          "text": "add-symbol-file ${workspaceRoot}/build/sh",
-          "ignoreFailures": false
-        },
+        // {
+        //   "text": "add-symbol-file ${workspaceRoot}/build/sh",
+        //   "ignoreFailures": false
+        // },
         // 设置信任路径，执行带文件操作的gdb命令时，免去gdb询问文件路径安全性
         {
           "text": "add-auto-load-safe-path ./",
           "ignoreFailures": false
         },
-        // 设置gdb console的美化显示，vscode的debug console无效，可能是有bug
-        {
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        },
+        // // 设置gdb console的美化显示，vscode的debug console无效，可能是有bug
+        // {
+        //   "text": "-enable-pretty-printing",
+        //   "ignoreFailures": true
+        // },
       ]
     },
     {
