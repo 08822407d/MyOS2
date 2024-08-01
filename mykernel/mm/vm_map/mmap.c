@@ -828,7 +828,7 @@ unacct_error:
 ulong
 simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 {
-	ulong gap, gap_end;
+	ulong gap = ~0, gap_end = ~0;
 	vma_s *tmp = NULL;
 
 	for_each_vma_topdown(mm, tmp) {
@@ -845,6 +845,11 @@ simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
 			break;
 	}
 
+	if (gap = ~0) {
+		gap = info->high_limit - info->length;
+		gap &= PAGE_MASK;
+	}
+
 	return gap;
 }
 
@@ -857,6 +862,7 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	ulong addr = addr0;
 	mm_s *mm = current->mm;
 
+	info.length = len;
 	info.align_mask = 0,
 	info.align_offset = pgoff << PAGE_SHIFT,
 	info.low_limit = PAGE_SIZE,
@@ -1107,17 +1113,17 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 			goto end_split_failed;
 	}
 	vma = vma_next_vma(prev);
-	BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
-	BUG_ON(!(end >= vma->vm_start && end < vma->vm_end));
-	list_header_delete_node(&mm->mm_mt, &vma->list);
 
-	// /* Detach vmas from vma list */
-	// do {
-	// 	vma_s *tmp = vma;
-	// 	mm->map_count--;
-	// 	// BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
-	// 	list_header_delete_node(&mm->mm_mt, &tmp->list);
-	// } for_each_vma_range(mm, vma, end);
+	/* Detach vmas from vma list */
+	do {
+		BUG_ON(vma == last);
+		BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
+
+		vma_s *tmp = vma;
+		vma = vma_prev_vma(vma);
+		mm->map_count--;
+		list_header_delete_node(&mm->mm_mt, &tmp->list);
+	} for_each_vma_range(mm, vma, end);
 
 userfaultfd_error:
 munmap_gather_failed:
