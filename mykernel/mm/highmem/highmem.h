@@ -11,6 +11,13 @@
 	#ifdef DEBUG
 
 		extern void
+		copy_user_highpage(page_s *to, page_s *from,
+				ulong vaddr, vma_s *vma);
+
+		extern void
+		copy_highpage(page_s *to, page_s *from);
+
+		extern void
 		memcpy_page(page_s *dst_page, size_t dst_off,
 				page_s *src_page, size_t src_off, size_t len);
 
@@ -32,6 +39,36 @@
 	#include "highmem_macro.h"
 	
 	#if defined(HIGHMEM_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void
+		copy_user_highpage(page_s *to, page_s *from,
+				ulong vaddr, vma_s *vma) {
+
+			// char *vfrom, *vto;
+
+			// vfrom = kmap_local_page(from);
+			// vto = kmap_local_page(to);
+			// copy_user_page(vto, vfrom, vaddr, to);
+			// kmsan_unpoison_memory(page_address(to), PAGE_SIZE);
+			// kunmap_local(vto);
+			// kunmap_local(vfrom);
+			copy_user_page((void *)page_to_virt(to),
+					(void *)page_to_virt(from), vaddr, to);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		copy_highpage(page_s *to, page_s *from) {
+			// char *vfrom, *vto;
+
+			// vfrom = kmap_local_page(from);
+			// vto = kmap_local_page(to);
+			// kmsan_copy_page_meta(to, from);
+			// kunmap_local(vto);
+			// kunmap_local(vfrom);
+			copy_page((void *)page_to_virt(to), (void *)page_to_virt(from));
+		}
 
 		PREFIX_STATIC_INLINE
 		void

@@ -613,9 +613,9 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	ulong addr = vmf->address;
 
 	if (likely(src)) {
-		// copy_user_highpage(dst, src, addr, vma);
-		copy_user_page((void *)page_to_virt(dst),
-				(void *)page_to_virt(src), addr, dst);
+		copy_user_highpage(dst, src, addr, vma);
+		// copy_user_page((void *)page_to_virt(dst),
+		// 		(void *)page_to_virt(src), addr, dst);
 		return true;
 	}
 
@@ -1139,9 +1139,9 @@ __do_fault(vm_fault_s *vmf) {
 	// }
 
 	ret = vma->vm_ops->fault(vmf);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY |
-	// 		    VM_FAULT_DONE_COW)))
-	// 	return ret;
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY |
+			    VM_FAULT_DONE_COW)))
+		return ret;
 
 	// if (unlikely(PageHWPoison(vmf->page))) {
 	// 	page_s *page = vmf->page;
@@ -1165,7 +1165,7 @@ __do_fault(vm_fault_s *vmf) {
 	// else
 	// 	VM_BUG_ON_PAGE(!PageLocked(vmf->page), vmf->page);
 
-	// return ret;
+	return ret;
 }
 
 
@@ -1363,7 +1363,7 @@ do_cow_fault(vm_fault_s *vmf) {
 	// if (ret & VM_FAULT_DONE_COW)
 	// 	return ret;
 
-	// copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
+	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
 	// __SetPageUptodate(vmf->cow_page);
 
 	ret |= finish_fault(vmf);
