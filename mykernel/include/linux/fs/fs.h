@@ -3478,7 +3478,7 @@
 	// 	return !IS_DEADDIR(inode);
 	// }
 
-	// extern bool path_noexec(const path_s *path);
+	extern bool path_noexec(const path_s *path);
 	// extern void inode_nohighmem(inode_s *inode);
 
 	// /* mm/fadvise.c */

@@ -53,6 +53,13 @@ void unregister_binfmt(linux_bfmt_s * fmt) {
 }
 
 
+bool path_noexec(const path_s *path)
+{
+	return (path->mnt->mnt_flags & MNT_NOEXEC) ||
+	       (path->mnt->mnt_sb->s_iflags & SB_I_NOEXEC);
+}
+
+
 static page_s *get_arg_page(linux_bprm_s *bprm,
 		unsigned long pos, int write) {
 

@@ -589,18 +589,18 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 				vm_flags &= ~(VM_MAYWRITE | VM_SHARED);
 			fallthrough;
 		case MAP_PRIVATE:
-			// if (!(file->f_mode & FMODE_READ))
-			// 	return -EACCES;
-			// if (path_noexec(&file->f_path)) {
-			// 	if (vm_flags & VM_EXEC)
-			// 		return -EPERM;
-			// 	vm_flags &= ~VM_MAYEXEC;
-			// }
+			if (!(file->f_mode & FMODE_READ))
+				return -EACCES;
+			if (path_noexec(&file->f_path)) {
+				if (vm_flags & VM_EXEC)
+					return -EPERM;
+				vm_flags &= ~VM_MAYEXEC;
+			}
 
-			// if (!file->f_op->mmap)
-			// 	return -ENODEV;
-			// if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
-			// 	return -EINVAL;
+			if (!file->f_op->mmap)
+				return -ENODEV;
+			if (vm_flags & (VM_GROWSDOWN|VM_GROWSUP))
+				return -EINVAL;
 			break;
 
 		default:
