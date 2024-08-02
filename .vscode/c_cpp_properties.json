@@ -10,7 +10,8 @@
                 "${workspaceFolder}/mykernel/arch/x86_64/include",
                 "${workspaceFolder}/mykernel/include",
                 "${workspaceFolder}/mykernel/include/linux/kernel",
-                "${workspaceFolder}/myloader"
+                "${workspaceFolder}/myloader",
+                "/home/cheyh/projs/musl/build/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",

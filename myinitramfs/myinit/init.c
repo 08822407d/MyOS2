@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sys/types.h>
 
 	#define PATH_MAX        4096	/* # chars in a path name including nul */
 

@@ -228,6 +228,29 @@ out:
 /*==============================================================================================*
  *									get task infomation											*
  *==============================================================================================*/
+MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
+{
+// 	struct fd f = fdget(fd);
+// 	int error;
+
+// 	if (!f.file)
+// 		return -EBADF;
+
+// 	error = security_file_ioctl(f.file, cmd, arg);
+// 	if (error)
+// 		goto out;
+
+// 	error = do_vfs_ioctl(f.file, fd, cmd, arg);
+// 	if (error == -ENOIOCTLCMD)
+// 		error = vfs_ioctl(f.file, cmd, arg);
+
+// out:
+// 	fdput(f);
+// 	return error;
+
+	return 0 ;
+}
+
 MYOS_SYSCALL_DEFINE0(getpid)
 {
 	return current->pid;
