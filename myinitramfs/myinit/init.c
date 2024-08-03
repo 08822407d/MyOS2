@@ -59,21 +59,21 @@ int main(int argc, const char *argv[])
 	printf("gsbase in user space: %p\n", (void *)gsbase);
 
 	int rv = fork();
-	while (1);
+	// while (1);
 	
-	// if (rv != 0)
-	// {
-	// 	// printf("parent task, %d\n", rv);
-	// 	while (1);
-	// }
-	// else
-	// {
-	// 	// printf("child task, %d\n", rv);
-	// 	execve(prog_name, args, envs);
-	// 	// malloc_free_test();
-	// 	// file_io_test();
-	// 	// dirtest();
-	// }
+	if (rv != 0)
+	{
+		printf("parent task, %d\n", rv);
+		while (1);
+	}
+	else
+	{
+		printf("child task, %d\n", rv);
+		execve(prog_name, args, envs);
+		// malloc_free_test();
+		// file_io_test();
+		// dirtest();
+	}
 }
 
 // void file_io_test()

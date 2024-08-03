@@ -228,8 +228,24 @@ out:
 /*==============================================================================================*
  *									get task infomation											*
  *==============================================================================================*/
+/**
+ *  sys_rt_sigprocmask - change the list of currently blocked signals
+ *  @how: whether to add, remove, or set signals
+ *  @nset: stores pending signals
+ *  @oset: previous value of signal mask if non-null
+ *  @sigsetsize: size of sigset_t type
+ */
+MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
+{
+	pr_alert("\t!!! Dummy Syscall --- rt_sigprocmask ---\n");
+
+	return 0;
+}
+
 MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
 {
+	pr_alert("\t!!! Dummy Syscall --- ioctl ---\n");
+
 // 	struct fd f = fdget(fd);
 // 	int error;
 
@@ -248,7 +264,7 @@ MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, 
 // 	fdput(f);
 // 	return error;
 
-	return 0 ;
+	return 0;
 }
 
 MYOS_SYSCALL_DEFINE0(getpid)
@@ -263,21 +279,29 @@ MYOS_SYSCALL_DEFINE0(getppid)
 
 MYOS_SYSCALL_DEFINE0(getuid)
 {
+	pr_alert("\t!!! Dummy Syscall --- getuid ---\n");
+
 	return 1000;
 }
 
 MYOS_SYSCALL_DEFINE0(geteuid)
 {
+	pr_alert("\t!!! Dummy Syscall --- geteuid ---\n");
+
 	return 1000;
 }
 
 MYOS_SYSCALL_DEFINE0(getgid)
 {
+	pr_alert("\t!!! Dummy Syscall --- getgid ---\n");
+
 	return 1000;
 }
 
 MYOS_SYSCALL_DEFINE0(getegid)
 {
+	pr_alert("\t!!! Dummy Syscall --- getegid ---\n");
+
 	return 1000;
 }
 
@@ -294,6 +318,8 @@ MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 
 MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 {
+	pr_alert("\t!!! Dummy Syscall --- set_tid_address ---\n");
+
 	// current->clear_child_tid = tidptr;
 
 	// return task_pid_vnr(current);
@@ -302,11 +328,15 @@ MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 
 MYOS_SYSCALL_DEFINE2(set_robust_list, void *, head, size_t, len)
 {
+	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
+
 	return 0;
 }
 
 MYOS_SYSCALL_DEFINE4(rseq, void *, rseq, u32, rseq_len, int, flags, u32, sig)
 {
+	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
+
 	return 0;
 }
 

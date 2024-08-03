@@ -10,7 +10,7 @@
 // #include <linux/sched/xacct.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/file.h>
-// #include <linux/uio.h>
+#include <linux/kernel/uio.h>
 // #include <linux/fsnotify.h>
 // #include <linux/security.h>
 #include <linux/kernel/export.h>
@@ -175,4 +175,39 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
 		fdput_pos(f);
 	}
 	return ret;
+}
+
+
+
+
+static ssize_t
+do_writev(unsigned long fd, const struct iovec __user *vec,
+		unsigned long vlen, rwf_t flags) {
+	fd_s f = fdget_pos(fd);
+	ssize_t ret = -EBADF;
+
+	if (f.file) {
+		loff_t pos, *ppos = file_ppos(f.file);
+		if (ppos) {
+			pos = *ppos;
+			ppos = &pos;
+		}
+		// ret = vfs_writev(f.file, vec, vlen, ppos, flags);
+		pr_alert("\t!!! Dummy Syscall --- writev ---\n");
+		if (ret >= 0 && ppos)
+			f.file->f_pos = pos;
+		fdput_pos(f);
+	}
+
+	// if (ret > 0)
+	// 	add_wchar(current, ret);
+	// inc_syscw(current);
+	return ret;
+}
+
+
+
+MYOS_SYSCALL_DEFINE3(writev, unsigned long, fd, const struct iovec __user *, vec, unsigned long, vlen)
+{
+	return do_writev(fd, vec, vlen, 0);
 }

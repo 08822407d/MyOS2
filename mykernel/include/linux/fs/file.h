@@ -8,6 +8,7 @@
 
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/fdtable.h>
 	#include <linux/fs/fs.h>
 	#include <uapi/linux/posix_types.h>
 	#include <linux/lib/errno.h>
@@ -47,25 +48,31 @@
 	// extern unsigned long __fdget_pos(unsigned int fd);
 	// extern void __f_unlock_pos(file_s *);
 
-	// static inline fd_s __to_fd(unsigned long v)
-	// {
-	// 	return (fd_s){(file_s *)(v & ~3),v & 3};
-	// }
+	static inline fd_s
+	__to_fd(ulong v) {
+		files_struct_s *files = current->files;
+		file_s *file = files->fd_array[v];
+		// return (fd_s){(file_s *)(v & ~3),v & 3};
+		return (fd_s){file, 3};
+	}
 
-	// static inline fd_s fdget(unsigned int fd)
-	// {
-	// 	return __to_fd(__fdget(fd));
-	// }
+	static inline fd_s
+	fdget(uint fd) {
+		// return __to_fd(__fdget(fd));
+		return __to_fd(fd);
+	}
 
-	// static inline fd_s fdget_raw(unsigned int fd)
-	// {
-	// 	return __to_fd(__fdget_raw(fd));
-	// }
+	static inline fd_s
+	fdget_raw(uint fd) {
+		// return __to_fd(__fdget_raw(fd));
+		return __to_fd(fd);
+	}
 
-	// static inline fd_s fdget_pos(int fd)
-	// {
-	// 	return __to_fd(__fdget_pos(fd));
-	// }
+	static inline fd_s
+	fdget_pos(int fd) {
+		// return __to_fd(__fdget_pos(fd));
+		return __to_fd(fd);
+	}
 
 	static inline void
 	fdput_pos(fd_s f) {

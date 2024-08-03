@@ -2,6 +2,8 @@
 #ifndef _UAPI_ASM_X86_SIGNAL_H
 #define _UAPI_ASM_X86_SIGNAL_H
 
+#include <uapi/asm-generic/signal.h>
+
 	#ifndef __ASSEMBLY__
 	#	include <linux/kernel/types.h>
 	#	include <linux/kernel/time.h>

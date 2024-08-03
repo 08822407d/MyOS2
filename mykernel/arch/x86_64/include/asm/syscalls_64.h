@@ -14,7 +14,11 @@ __SYSCALL(__NR_munmap, sys_munmap)
 
 __SYSCALL(__NR_brk, sys_brk)
 
+__SYSCALL(__NR_rt_sigprocmask, sys_rt_sigprocmask)
+
 __SYSCALL(__NR_ioctl, sys_ioctl)
+
+__SYSCALL(__NR_writev, sys_writev)
 
 __SYSCALL(__NR_getpid, sys_getpid)
 
