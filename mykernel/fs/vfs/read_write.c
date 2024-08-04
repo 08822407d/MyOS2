@@ -181,6 +181,29 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
 
 
 static ssize_t
+vfs_writev(file_s *file, const iov_s  *vec, ulong vlen, loff_t *pos, rwf_t flags) {
+	// pr_alert("\t!!! Dummy Syscall --- writev ---\n");
+
+	iov_s iovstack[UIO_FASTIOV];
+	iov_s *iov = iovstack;
+	// struct iov_iter iter;
+	ssize_t ret;
+
+	// ret = import_iovec(ITER_SOURCE, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
+	// if (ret >= 0) {
+	// 	file_start_write(file);
+	// 	ret = do_iter_write(file, &iter, pos, flags);
+	// 	file_end_write(file);
+	// 	kfree(iov);
+	// }
+
+	for (int i = 0; i < vlen; i++)
+		file->f_op->write(file, vec[i].iov_base, vec[i].iov_len, pos);
+
+	return ret;
+}
+
+static ssize_t
 do_writev(unsigned long fd, const struct iovec __user *vec,
 		unsigned long vlen, rwf_t flags) {
 	fd_s f = fdget_pos(fd);
@@ -192,8 +215,7 @@ do_writev(unsigned long fd, const struct iovec __user *vec,
 			pos = *ppos;
 			ppos = &pos;
 		}
-		// ret = vfs_writev(f.file, vec, vlen, ppos, flags);
-		pr_alert("\t!!! Dummy Syscall --- writev ---\n");
+		ret = vfs_writev(f.file, vec, vlen, ppos, flags);
 		if (ret >= 0 && ppos)
 			f.file->f_pos = pos;
 		fdput_pos(f);
