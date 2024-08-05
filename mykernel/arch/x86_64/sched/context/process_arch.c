@@ -5,6 +5,10 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ptrace.h>
 
+#include <uapi/asm/prctl.h>
+#include <asm/proto.h>
+
+
 // /*
 //  * this gets called so that we can store lazy state into memory and copy the
 //  * current task into the new thread.
@@ -43,15 +47,16 @@ void exit_thread(task_s *tsk)
 	// fpu__drop(fpu);
 }
 
-// static int set_new_tls(task_s *p, unsigned long tls)
-// {
-// 	struct user_desc __user *utls = (struct user_desc __user *)tls;
+static int
+set_new_tls(task_s *p, ulong tls) {
+	// struct user_desc __user *utls = (struct user_desc __user *)tls;
 
-// 	if (in_ia32_syscall())
-// 		return do_set_thread_area(p, -1, utls, 0);
-// 	else
-// 		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
-// }
+	// if (in_ia32_syscall())
+	// 	return do_set_thread_area(p, -1, utls, 0);
+	// else
+	// 	return do_set_thread_area_64(p, ARCH_SET_FS, tls);
+		return do_arch_prctl_64(p, ARCH_SET_FS, tls);
+}
 
 __visible void
 ret_from_fork(task_s *prev, pt_regs_s *regs,
@@ -88,6 +93,7 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 	frame = &fork_frame->frame;
 
 	// frame->bp = (reg_t)encode_frame_pointer(childregs);
+	frame->bp = (reg_t)childregs + 1;
 	frame->ret_addr = (reg_t)ret_from_fork_asm;
 	p->thread.sp = (reg_t)fork_frame;
 	// p->thread.io_bitmap = NULL;

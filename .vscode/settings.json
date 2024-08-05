@@ -330,7 +330,8 @@
         "vm_map_arch.h": "c",
         "vm_map_macro_arch.h": "c",
         "vm_map_api_arch.h": "c",
-        "features.h": "c"
+        "features.h": "c",
+        "prctl.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -14,8 +14,6 @@
 unsigned long
 myos_kernel_mapping_normal(size_t paddr_start, size_t paddr_end);
 
-int after_bootmem;
-
 
 // this value is also loaded by APboot assembly code
 phys_addr_t kernel_cr3 = 0;
@@ -193,7 +191,6 @@ void __init mem_init(void)
 
 	/* this will put all memory onto the freelists */
 	memblock_free_all();
-	after_bootmem = 1;
 	// x86_init.hyper.init_after_bootmem();
 
 	// /*
