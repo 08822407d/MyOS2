@@ -53,6 +53,8 @@ int main(int argc, const char *argv[])
 		// while (1);
 	} else {
 		printf("child task, %d\n", rv);
-		execve(prog_name, args, envs);
+		// while (1);
+		// execve(prog_name, args, envs);
 	}
+	while (1);
 }

@@ -64,7 +64,6 @@ int main(int argc, const char *argv[])
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 
-	// reader_loop();
 
 	memset(current_dir, 0, PATH_MAX);
 	getcwd(current_dir, PATH_MAX);
