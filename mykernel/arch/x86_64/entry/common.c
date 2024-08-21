@@ -22,7 +22,10 @@ long __x64_sys_ni_syscall(const pt_regs_s *regs) {
 
 __visible noinstr void do_syscall_64(pt_regs_s *regs, int nr)
 {
-	// color_printk(BLUE, BLACK, "Syscall: %d, %#018lx\n", nr, regs->ip);
+	task_s *curr = current;
+	pid_s *pid_struct = get_task_pid(curr, PIDTYPE_PID);
+	pid_t pid = pid_vnr(pid_struct);
+	color_printk(BLUE, BLACK, "Syscall: %d from pid-%d, %#018lx\n", nr, pid, regs->ip);
 
 	// add_random_kstack_offset();
 	// nr = syscall_enter_from_user_mode(regs, nr);

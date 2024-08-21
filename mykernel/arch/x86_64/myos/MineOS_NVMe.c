@@ -301,7 +301,7 @@ void NVMe_IO_handler(unsigned long parameter, pt_regs_s * regs)
 	blkbuf_node_s *node = req_in_using;
 	node->end_handler(parameter);
 	NVMe_end_request(node);
-	color_printk(RED, BLACK, "NVME IO Handler\n");
+	// color_printk(RED, BLACK, "NVME IO Handler\n");
 	// while (1);
 }
 

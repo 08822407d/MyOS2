@@ -7,7 +7,7 @@ static task_s *pick_next_task_myos(rq_s *rq)
 	retval = curr_task = current;
 	sched_rt_entity_s *rt = &curr_task->rt;
 
-	unsigned long used_jiffies = jiffies - myos_rq->last_jiffies;
+	ulong used_jiffies = jiffies - myos_rq->last_jiffies;
 
 	// if running time out, make the need_schedule flag of current task
 	if ((curr_task == rq->idle ||
@@ -20,7 +20,7 @@ static task_s *pick_next_task_myos(rq_s *rq)
 
 		// fetch a task from running_list
 		List_s * next_lp = list_header_remove_head(&myos_rq->running_lhdr);
-		while (next_lp == 0);
+		while (next_lp == NULL);
 
 		// and insert curr_task back to running_list
 		if (curr_task->__state == TASK_RUNNING)
@@ -49,8 +49,7 @@ static task_s *pick_next_task_myos(rq_s *rq)
 
 		sched_rt_entity_s *next_rt = container_of(next_lp, sched_rt_entity_s, run_list);
 		retval = container_of(next_rt, task_s, rt);
-		if (used_jiffies >= rt->time_slice)
-			myos_rq->last_jiffies = jiffies;
+		myos_rq->last_jiffies = jiffies;
 	}
 	return retval;
 }

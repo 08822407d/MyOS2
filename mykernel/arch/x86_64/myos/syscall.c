@@ -3,7 +3,7 @@
 #include <linux/fs/file.h>
 #include <linux/kernel/mm_api.h>
 #include <linux/kernel/sched_api.h>
-#include <linux/kernel/fdtable.h>
+#include <linux/kernel/sched_types.h>
 #include <linux/fs/namei.h>
 #include <linux/lib/errno.h>
 #include <linux/lib/string.h>
@@ -269,12 +269,16 @@ MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, 
 
 MYOS_SYSCALL_DEFINE0(getpid)
 {
-	return current->pid;
+	// return current->pid;
+	pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
+	return pid_vnr(pid_struct);
 }
 
 MYOS_SYSCALL_DEFINE0(getppid)
 {
-	return current->parent->pid;
+	// return current->parent->pid;
+	pid_s *pid_struct = get_task_pid(current->parent, PIDTYPE_PID);
+	return pid_vnr(pid_struct);
 }
 
 MYOS_SYSCALL_DEFINE0(getuid)

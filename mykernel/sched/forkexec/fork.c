@@ -23,6 +23,7 @@
 
 #include <asm/signal.h>
 
+task_s *sh_task = NULL;
 
 /*
  * Minimum number of threads to boot the kernel
@@ -1472,6 +1473,10 @@ pid_t kernel_clone(kclone_args_s *args)
 	// }
 
 	wake_up_new_task(p);
+	if (args->fn == NULL) {
+		pr_info("User Fork Parent: %#018Lx, Child: %#018Lx\n", (ulonglong)current, (ulonglong)p);
+		sh_task = p;
+	}
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))
