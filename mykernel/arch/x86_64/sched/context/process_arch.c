@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-2.0
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+// #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 // #include "../sched_api_arch.h"
 #include <linux/kernel/sched.h>
@@ -76,6 +76,8 @@ ret_from_fork(task_s *prev, pt_regs_s *regs,
 	}
 
 	// syscall_exit_to_user_mode(regs);
+
+	pr_info("Executing 'ret_from_fork'\n");
 }
 
 int copy_thread(task_s *p, const kclone_args_s *args)
