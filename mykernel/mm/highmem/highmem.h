@@ -34,6 +34,10 @@
 		extern void
 		memzero_page(page_s *page, size_t offset, size_t len);
 
+
+		extern bool
+		myosDBG_compare_page(page_s *pg1, page_s *pg2);
+
 	#endif
 
 	#include "highmem_macro.h"
@@ -134,6 +138,15 @@
 			// memset(addr + offset, 0, len);
 			// flush_dcache_page(page);
 			// kunmap_local(addr);
+		}
+
+
+		PREFIX_STATIC_INLINE
+		bool
+		myosDBG_compare_page(page_s *pg1, page_s *pg2)
+		{
+			return 0 == memcmp((void *)page_to_virt(pg1),
+					(void *)page_to_virt(pg2), PAGE_SIZE);
 		}
 
 	#endif

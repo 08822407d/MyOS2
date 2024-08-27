@@ -2929,6 +2929,9 @@ common:
 	.string	"__u64"
 .LASF72:
 	.string	"irq_nr"
+.LASF202:
+	.ascii	"GNU C17 "
+	.string	"12.3.0 -m64 -mcmodel=large -mabi=sysv -mno-red-zone -mtune=generic -march=x86-64 -ggdb -g -fPIE -ffreestanding -fno-stack-protector -fno-unwind-tables -fdata-sections -ffunction-sections -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection"
 .LASF6:
 	.string	"unsigned char"
 .LASF30:
@@ -3153,9 +3156,6 @@ common:
 	.string	"pcpu_hot"
 .LASF7:
 	.string	"short int"
-.LASF202:
-	.ascii	"GNU C17 "
-	.string	"11.4.0 -m64 -mcmodel=large -mabi=sysv -mno-red-zone -mtune=generic -march=x86-64 -ggdb -g -fPIE -ffreestanding -fno-stack-protector -fno-unwind-tables -fdata-sections -ffunction-sections -fasynchronous-unwind-tables -fstack-clash-protection -fcf-protection"
 .LASF46:
 	.string	"exit_state"
 .LASF37:
@@ -3243,7 +3243,7 @@ common:
 	.string	"/home/cheyh/projs/MyOS2/mykernel/arch/x86_64/kbuild/asm-offsets.c"
 .LASF1:
 	.string	"/home/cheyh/projs/MyOS2/build/mykernel"
-	.ident	"GCC: (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0"
+	.ident	"GCC: (Ubuntu 12.3.0-1ubuntu1~22.04) 12.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
 	.align 8

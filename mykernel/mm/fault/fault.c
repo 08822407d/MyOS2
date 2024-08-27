@@ -616,6 +616,10 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 		copy_user_highpage(dst, src, addr, vma);
 		// copy_user_page((void *)page_to_virt(dst),
 		// 		(void *)page_to_virt(src), addr, dst);
+
+		if (myosDBG_compare_page(dst, src))
+			pr_alert("COW copied page content changed.\n");
+
 		return true;
 	}
 
