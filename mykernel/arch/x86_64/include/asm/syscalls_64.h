@@ -38,10 +38,10 @@ __SYSCALL(__NR_creat, sys_creat)
 // __SYSCALL(__NR_link, sys_link)
 __SYSCALL(__NR_unlink, sys_unlink)
 
-__SYSCALL(__NR_getuid, sys_getuid)
-__SYSCALL(__NR_getgid, sys_getuid)
-__SYSCALL(__NR_geteuid, sys_geteuid)
-__SYSCALL(__NR_getegid, sys_geteuid)
+// __SYSCALL(__NR_getuid, sys_getuid)
+// __SYSCALL(__NR_getgid, sys_getuid)
+// __SYSCALL(__NR_geteuid, sys_geteuid)
+// __SYSCALL(__NR_getegid, sys_geteuid)
 
 __SYSCALL(__NR_getppid, sys_getppid)
 
@@ -55,8 +55,8 @@ __SYSCALL(__NR_getdents64, sys_getdents64)
 
 __SYSCALL(__NR_set_tid_address, sys_set_tid_address)
 
-__SYSCALL(__NR_set_robust_list, sys_set_robust_list)
+// __SYSCALL(__NR_set_robust_list, sys_set_robust_list)
 
-__SYSCALL(__NR_rseq, sys_rseq)
+// __SYSCALL(__NR_rseq, sys_rseq)
 
 __SYSCALL(__NR_putstring, sys_myos_putstring)

@@ -18,45 +18,51 @@
 
 
 		extern pte_t
-		*pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address);
-		extern unsigned long
-		pte_index(unsigned long address);
+		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
+		extern ulong
+		pte_index(ulong address);
 		extern pte_t
-		*pte_ent_offset(pmd_t *pmdp, unsigned long address);
-		#define pte_offset pte_ent_offset
+		*pte_ent_ptr(pmd_t *pmdp, ulong address);
+		#define pte_offset pte_ent_ptr
 
 
 		extern pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address);
-		extern unsigned long
-		pmd_index(unsigned long address);
+		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
+		extern ulong
+		pmd_index(ulong address);
 		extern pmd_t
-		*pmd_ent_offset(pud_t *pud, unsigned long address);
-		#define pmd_offset pmd_ent_offset
+		*pmd_ent_ptr(pud_t *pud, ulong address);
+		#define pmd_offset pmd_ent_ptr
 		extern int
 		pmd_none_or_clear_bad(pmd_t *pmd);
 
 
 		extern pud_t
-		*pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address);
-		extern unsigned long
-		pud_index(unsigned long address);
+		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
+		extern ulong
+		pud_index(ulong address);
 		extern pud_t
-		*pud_ent_offset(p4d_t *p4dp, unsigned long address);
-		#define pud_offset pud_ent_offset
+		*pud_ent_ptr(p4d_t *p4dp, ulong address);
+		#define pud_offset pud_ent_ptr
 		extern int
 		pud_none_or_clear_bad(pud_t *pud);
 
 
-		extern unsigned long
-		pgd_index(unsigned long address);
-		extern pgd_t
-		*pgd_ent_offset(mm_s *mmp, unsigned long address);
-		#define pgd_offset_pgd pgd_ent_offset
-		extern int
-		pgd_none_or_clear_bad(pgd_t *pgd);
+		extern p4d_t
+		*p4d_ent_ptr(pgd_t *pgdp, ulong address);
+		#define p4d_offset p4d_ent_ptr
 		extern int
 		p4d_none_or_clear_bad(p4d_t *p4d);
+
+
+		extern ulong
+		pgd_index(ulong address);
+		extern pgd_t
+		*pgd_ent_ptr(mm_s *mmp, ulong address);
+		#define pgd_offset_pgd pgd_ent_ptr
+		extern int
+		pgd_none_or_clear_bad(pgd_t *pgd);
+
 
 
 		extern pte_t
@@ -110,37 +116,37 @@
 
 		PREFIX_STATIC_INLINE
 		pte_t
-		*pte_alloc(mm_s *mm, pmd_t *pmd, unsigned long address) {
+		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address) {
 			return (arch_pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
-						NULL : pte_ent_offset(pmd, address);
+						NULL : pte_ent_ptr(pmd, address);
 		}
 		PREFIX_STATIC_INLINE
 		unsigned long
-		pte_index(unsigned long address) {
+		pte_index(ulong address) {
 			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
 		}
 		PREFIX_STATIC_INLINE
 		pte_t
-		*pte_ent_offset(pmd_t *pmdp, unsigned long address) {
+		*pte_ent_ptr(pmd_t *pmdp, ulong address) {
 			return arch_pmd_pgtable(*pmdp) + pte_index(address);
 		}
 
 
 		PREFIX_STATIC_INLINE
 		pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address) {
+		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address) {
 			return (arch_pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
-						NULL: pmd_ent_offset(pud, address);
+						NULL: pmd_ent_ptr(pud, address);
 		}
 		PREFIX_STATIC_INLINE
-		unsigned long
-		pmd_index(unsigned long address) {
+		ulong
+		pmd_index(ulong address) {
 			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
 		}
 		/* Find an entry in the second-level page table.. */
 		PREFIX_STATIC_INLINE
 		pmd_t
-		*pmd_ent_offset(pud_t *pud, unsigned long address) {
+		*pmd_ent_ptr(pud_t *pud, ulong address) {
 			return arch_pud_pgtable(*pud) + pmd_index(address);
 		}
 		PREFIX_STATIC_INLINE
@@ -158,18 +164,18 @@
 
 		PREFIX_STATIC_INLINE
 		pud_t
-		*pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address) {
+		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address) {
 			return (arch_p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
-						NULL : pud_ent_offset(p4d, address);
+						NULL : pud_ent_ptr(p4d, address);
 		}
 		PREFIX_STATIC_INLINE
-		unsigned long
-		pud_index(unsigned long address) {
+		ulong
+		pud_index(ulong address) {
 			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
 		}
 		PREFIX_STATIC_INLINE
 		pud_t
-		*pud_ent_offset(p4d_t *p4dp, unsigned long address) {
+		*pud_ent_ptr(p4d_t *p4dp, ulong address) {
 			return arch_p4d_pgtable(*p4dp) + pud_index(address);
 		}
 		PREFIX_STATIC_INLINE
@@ -185,15 +191,33 @@
 		}
 
 
+		PREFIX_STATIC_INLINE
+		p4d_t
+		*p4d_ent_ptr(pgd_t *pgdp, ulong address) {
+			return ((p4d_t *)pgdp);
+		};
+		PREFIX_STATIC_INLINE
+		int
+		p4d_none_or_clear_bad(p4d_t *p4d) {
+			if (arch_p4d_none(*p4d))
+				return 1;
+			if (arch_p4d_bad(*p4d)) {
+				p4d_clear(p4d);
+				return 1;
+			}
+			return 0;
+		}
+
+
 		/* Must be a compile-time constant, so implement it as a macro */
 		PREFIX_STATIC_INLINE
-		unsigned long
-		pgd_index(unsigned long address) {
+		ulong
+		pgd_index(ulong address) {
 			return (address >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1);
 		}
 		PREFIX_STATIC_INLINE
 		pgd_t
-		*pgd_ent_offset(mm_s *mmp, unsigned long address) {
+		*pgd_ent_ptr(mm_s *mmp, ulong address) {
 			return (mmp->pgd + pgd_index(address));
 		};
 		PREFIX_STATIC_INLINE
@@ -203,18 +227,6 @@
 				return 1;
 			if (pgd_bad(*pgd)) {
 				pgd_clear(pgd);
-				return 1;
-			}
-			return 0;
-		}
-
-		PREFIX_STATIC_INLINE
-		int
-		p4d_none_or_clear_bad(p4d_t *p4d) {
-			if (arch_p4d_none(*p4d))
-				return 1;
-			if (arch_p4d_bad(*p4d)) {
-				p4d_clear(p4d);
 				return 1;
 			}
 			return 0;

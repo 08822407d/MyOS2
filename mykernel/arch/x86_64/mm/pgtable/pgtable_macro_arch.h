@@ -13,16 +13,7 @@
 	static inline int pgd_none(pgd_t pgd)		{ return 0; }
 	static inline int pgd_bad(pgd_t pgd)		{ return 0; }
 	static inline int pgd_present(pgd_t pgd)	{ return 1; }
-	static inline void pgd_clear(pgd_t *pgd)	{ }
 
-	/*
-	 * (p4ds are folded into pgds so this doesn't get actually called,
-	 * but the define is needed for a generic inline function.)
-	 */
-	#define set_pgd(pgdptr, pgdval)		set_p4d((p4d_t *)(pgdptr), (p4d_t) { pgdval })
-	#define p4d_ent_offset(pgd, addr)	((p4d_t *)pgd);
-	#define arch_p4d_val(x)				(arch_pgd_val((x).pgd))
-	#define arch_make_p4d(x)			((p4d_t) { arch_make_pgd(x) })
 
 	extern pgd_t init_top_pgt[];
 	#define swapper_pg_dir init_top_pgt
@@ -39,7 +30,16 @@
 	#define set_p4d(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
 	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d(0))
 
+	/*
+	 * (p4ds are folded into pgds so this doesn't get actually called,
+	 * but the define is needed for a generic inline function.)
+	 */
+	#define set_pgd(pgdp, pgdv)	set_p4d((p4d_t *)(pgdp), (p4d_t) { pgdv })
+	#define pgd_clear(pgdp)
+
+
 	#define __pgd(x)			arch_make_pgd(x)
+	#define __p4d(x)			arch_make_p4d(x)
 	#define __pud(x)			arch_make_pud(x)
 	#define __pmd(x)			arch_make_pmd(x)
 	#define __pte(x)			arch_make_pte(x)
@@ -48,7 +48,7 @@
 	 * Currently stuck as a macro due to indirect forward reference to
 	 * linux/mmzone.h's __section_mem_map_addr() definition:
 	 */
-	#define p4d_page(p4d)	pfn_to_page(p4d_pfn(p4d))
+	#define p4d_page(p4d)		pfn_to_page(p4d_pfn(p4d))
 
 
 	/*

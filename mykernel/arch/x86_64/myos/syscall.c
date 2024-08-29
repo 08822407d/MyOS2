@@ -281,33 +281,33 @@ MYOS_SYSCALL_DEFINE0(getppid)
 	return pid_vnr(pid_struct);
 }
 
-MYOS_SYSCALL_DEFINE0(getuid)
-{
-	pr_alert("\t!!! Dummy Syscall --- getuid ---\n");
+// MYOS_SYSCALL_DEFINE0(getuid)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- getuid ---\n");
 
-	return 1000;
-}
+// 	return 1000;
+// }
 
-MYOS_SYSCALL_DEFINE0(geteuid)
-{
-	pr_alert("\t!!! Dummy Syscall --- geteuid ---\n");
+// MYOS_SYSCALL_DEFINE0(geteuid)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- geteuid ---\n");
 
-	return 1000;
-}
+// 	return 1000;
+// }
 
-MYOS_SYSCALL_DEFINE0(getgid)
-{
-	pr_alert("\t!!! Dummy Syscall --- getgid ---\n");
+// MYOS_SYSCALL_DEFINE0(getgid)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- getgid ---\n");
 
-	return 1000;
-}
+// 	return 1000;
+// }
 
-MYOS_SYSCALL_DEFINE0(getegid)
-{
-	pr_alert("\t!!! Dummy Syscall --- getegid ---\n");
+// MYOS_SYSCALL_DEFINE0(getegid)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- getegid ---\n");
 
-	return 1000;
-}
+// 	return 1000;
+// }
 
 MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 {
@@ -330,19 +330,19 @@ MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 	return 0;
 }
 
-MYOS_SYSCALL_DEFINE2(set_robust_list, void *, head, size_t, len)
-{
-	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
+// MYOS_SYSCALL_DEFINE2(set_robust_list, void *, head, size_t, len)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
 
-	return 0;
-}
+// 	return 0;
+// }
 
-MYOS_SYSCALL_DEFINE4(rseq, void *, rseq, u32, rseq_len, int, flags, u32, sig)
-{
-	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
+// MYOS_SYSCALL_DEFINE4(rseq, void *, rseq, u32, rseq_len, int, flags, u32, sig)
+// {
+// 	pr_alert("\t!!! Dummy Syscall --- set_robust_list ---\n");
 
-	return 0;
-}
+// 	return 0;
+// }
 
 
 /*==============================================================================================*

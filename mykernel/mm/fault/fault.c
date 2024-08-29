@@ -198,8 +198,8 @@ out:
  * lock.
  */
 static inline int
-copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
-		pte_t *src_pte, ulong addr, pte_t pte, page_s *page) {
+copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte_ptr,
+		pte_t *src_pte_ptr, ulong addr, pte_t pte, page_s *page) {
 	page_s *new_page;
 
 	/*
@@ -247,10 +247,10 @@ copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
 	// /* All done, just insert the new page copy in the child */
 	// pte = mk_pte(new_page, dst_vma->vm_page_prot);
 	// pte = maybe_mkwrite(pte_mkdirty(pte), dst_vma);
-	// if (userfaultfd_pte_wp(dst_vma, *src_pte))
+	// if (userfaultfd_pte_wp(dst_vma, *src_pte_ptr))
 	// 	/* Uffd-wp needs to be delivered to dest pte as well */
 	// 	pte = pte_wrprotect(pte_mkuffd_wp(pte));
-	// set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+	// set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
 	return 0;
 }
 
@@ -260,10 +260,10 @@ copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte,
  */
 static inline int
 copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
-		pte_t *dst_pte, pte_t *src_pte, ulong addr) {
+		pte_t *dst_pte_ptr, pte_t *src_pte_ptr, ulong addr) {
 	mm_s *src_mm = src_vma->vm_mm;
 	ulong vm_flags = src_vma->vm_flags;
-	pte_t pte = *src_pte;
+	pte_t pte = *src_pte_ptr;
 	page_s *page;
 
 	page = vm_normal_page(src_vma, addr, pte);
@@ -271,7 +271,7 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 		int retval;
 
 		retval = copy_present_page(dst_vma, src_vma,
-					dst_pte, src_pte, addr, pte, page);
+					dst_pte_ptr, src_pte_ptr, addr, pte, page);
 		if (retval <= 0)
 			return retval;
 
@@ -285,7 +285,7 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	 * in the parent and the child
 	 */
 	if (is_cow_mapping(vm_flags) && pte_writable(pte)) {
-		arch_ptep_set_wrprotect(src_pte);
+		arch_ptep_set_wrprotect(src_pte_ptr);
 		pte = pte_wrprotect(pte);
 	}
 
@@ -300,304 +300,184 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	// if (!userfaultfd_wp(dst_vma))
 	// 	pte = pte_clear_uffd_wp(pte);
 
-	set_pte_at(dst_vma->vm_mm, addr, dst_pte, pte);
+	set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
 	return 0;
 }
 
 
 static int
-copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t
-		*dst_pmd_ent, pmd_t *src_pmd_ent, ulong addr, ulong end) {
+copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
+		pmd_t *src_pmde_ptr, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pte_t *orig_src_pte, *orig_dst_pte;
-	pte_t *src_pte, *dst_pte;
+	pte_t *src_pte_ptr, *dst_pte_ptr;
 	// spinlock_t *src_ptl, *dst_ptl;
-	int progress, ret = 0;
-	// int rss[NR_MM_COUNTERS];
-	// swp_entry_t entry = (swp_entry_t){0};
-	// page_s *prealloc = NULL;
+	int ret = 0;
 
-again:
-	progress = 0;
-	// init_rss_vec(rss);
-
-	// dst_pte = pte_alloc_map_lock(dst_mm, dst_pmd_ent, addr, &dst_ptl);
-	dst_pte = pte_alloc(dst_mm, dst_pmd_ent, addr);
-	// if (!dst_pte) {
-	// 	ret = -ENOMEM;
-	// 	goto out;
-	// }
-	src_pte = pte_ent_offset(src_pmd_ent, addr);
-	// src_ptl = pte_lockptr(src_mm, src_pmd_ent);
-	// spin_lock_nested(src_ptl, SINGLE_DEPTH_NESTING);
-	orig_src_pte = src_pte;
-	orig_dst_pte = dst_pte;
-	// arch_enter_lazy_mmu_mode();
+	dst_pte_ptr = pte_alloc(dst_mm, dst_pmde_ptr, addr);
+	if (!dst_pte_ptr)
+		return -ENOMEM;
+	src_pte_ptr = pte_ent_ptr(src_pmde_ptr, addr);
 
 	do {
-		/*
-		 * We are holding two locks at this point - either of them
-		 * could generate latencies in another task on another CPU.
-		 */
-		// if (progress >= 32) {
-		// 	progress = 0;
-		// 	if (need_resched() ||
-		// 	    spin_needbreak(src_ptl) || spin_needbreak(dst_ptl))
+		if (arch_pte_none(*src_pte_ptr)) {
+			continue;
+		}
+		// if (unlikely(!arch_pte_present(*src_pte_ptr))) {
+		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
+		// 				  dst_pte_ptr, src_pte_ptr,
+		// 				  dst_vma, src_vma,
+		// 				  addr, rss);
+		// 	if (ret == -EIO) {
+		// 		entry = pte_to_swp_entry(*src_pte_ptr);
 		// 		break;
-		// }
-		if (arch_pte_none(*src_pte)) {
-			progress++;
-			continue;
-		}
-		if (unlikely(!arch_pte_present(*src_pte))) {
-			// ret = copy_nonpresent_pte(dst_mm, src_mm,
-			// 			  dst_pte, src_pte,
-			// 			  dst_vma, src_vma,
-			// 			  addr, rss);
-			// if (ret == -EIO) {
-			// 	entry = pte_to_swp_entry(*src_pte);
-			// 	break;
-			// } else if (ret == -EBUSY) {
-			// 	break;
-			// } else if (!ret) {
-			// 	progress += 8;
-				continue;
-			// }
-			// /*
-			//  * Device exclusive entry restored, continue by copying
-			//  * the now present pte.
-			//  */
-			// WARN_ON_ONCE(ret != -ENOENT);
-		}
-		/* copy_present_pte() will clear `*prealloc' if consumed */
-		ret = copy_present_pte(dst_vma, src_vma, dst_pte, src_pte, addr);
-		// /*
-		//  * If we need a pre-allocated page for this pte, drop the
-		//  * locks, allocate, and try again.
-		//  */
-		// if (unlikely(ret == -EAGAIN))
-		// 	break;
-		// if (unlikely(prealloc)) {
+		// 	} else if (ret == -EBUSY) {
+		// 		break;
+		// 	} else if (!ret) {
+		// 		continue;
+		// 	}
 		// 	/*
-		// 	 * pre-alloc page cannot be reused by next time so as
-		// 	 * to strictly follow mempolicy (e.g., alloc_page_vma()
-		// 	 * will allocate page according to address).  This
-		// 	 * could only happen if one pinned pte changed.
+		// 	 * Device exclusive entry restored, continue by copying
+		// 	 * the now present pte.
 		// 	 */
-		// 	put_page(prealloc);
-		// 	prealloc = NULL;
+		// 	WARN_ON_ONCE(ret != -ENOENT);
 		// }
-		// progress += 8;
-	} while (dst_pte++, src_pte++, addr += PAGE_SIZE, addr != end);
+		/* copy_present_pte() will clear `*prealloc' if consumed */
+		ret = copy_present_pte(dst_vma, src_vma,
+				dst_pte_ptr, src_pte_ptr, addr);
+		/*
+		 * If we need a pre-allocated page for this pte, drop the
+		 * locks, allocate, and try again.
+		 */
+		if (unlikely(ret == -EAGAIN))
+			break;
+	} while (dst_pte_ptr++, src_pte_ptr++, addr += PAGE_SIZE, addr != end);
 
-	// arch_leave_lazy_mmu_mode();
-	// spin_unlock(src_ptl);
-	// pte_unmap(orig_src_pte);
-	// add_mm_rss_vec(dst_mm, rss);
-	// pte_unmap_unlock(orig_dst_pte, dst_ptl);
-	// cond_resched();
-
-	// if (ret == -EIO) {
-	// 	VM_WARN_ON_ONCE(!entry.val);
-	// 	if (add_swap_count_continuation(entry, GFP_KERNEL) < 0) {
-	// 		ret = -ENOMEM;
-	// 		goto out;
-	// 	}
-	// 	entry.val = 0;
-	// } else if (ret == -EBUSY) {
-	// 	goto out;
-	// } else if (ret ==  -EAGAIN) {
-	// 	prealloc = page_copy_prealloc(src_mm, src_vma, addr);
-	// 	if (!prealloc)
-	// 		return -ENOMEM;
-	// } else if (ret) {
-	// 	VM_WARN_ON_ONCE(1);
-	// }
-
-	/* We've captured and resolved the error. Reset, try again. */
-	ret = 0;
-
-	// if (addr != end)
-	// 	goto again;
-out:
-	// if (prealloc)
-	// 	put_page(prealloc);
-	return ret;
-}
-
-static inline int
-copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_ent,
-		pud_t *src_pud_ent, ulong addr, ulong end) {
-	mm_s *dst_mm = dst_vma->vm_mm;
-	mm_s *src_mm = src_vma->vm_mm;
-	pmd_t *src_pmd_ent, *dst_pmd_ent;
-	ulong next;
-
-	dst_pmd_ent = pmd_alloc(dst_mm, dst_pud_ent, addr);
-	if (!dst_pmd_ent)
-		return -ENOMEM;
-	src_pmd_ent = pmd_ent_offset(src_pud_ent, addr);
-	do {
-		next = next_pmd_addr_end(addr, end);
-		// if (is_swap_pmd(*src_pmd_ent) || pmd_trans_huge(*src_pmd_ent)
-		// 	|| pmd_devmap(*src_pmd_ent)) {
-		// 	int err;
-		// 	VM_BUG_ON_VMA(next-addr != HPAGE_PMD_SIZE, src_vma);
-		// 	err = copy_huge_pmd(dst_mm, src_mm, dst_pmd_ent, src_pmd_ent,
-		// 			    addr, dst_vma, src_vma);
-		// 	if (err == -ENOMEM)
-		// 		return -ENOMEM;
-		// 	if (!err)
-		// 		continue;
-		// 	/* fall through */
-		// }
-		if (pmd_none_or_clear_bad(src_pmd_ent))
-			continue;
-		if (copy_pte_range(dst_vma, src_vma, dst_pmd_ent, src_pmd_ent,
-				   addr, next))
-			return -ENOMEM;
-	} while (dst_pmd_ent++, src_pmd_ent++, addr = next, addr != end);
 	return 0;
 }
 
 static inline int
-copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_ent,
-		p4d_t *src_p4d_ent, ulong addr, ulong end) {
+copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pude_ptr,
+		pud_t *src_pude_ptr, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pud_t *src_pud_ent, *dst_pud_ent;
+	pmd_t *src_pmde_ptr, *dst_pmde_ptr;
 	ulong next;
 
-	dst_pud_ent = pud_alloc(dst_mm, dst_p4d_ent, addr);
-	if (!dst_pud_ent)
+	dst_pmde_ptr = pmd_alloc(dst_mm, dst_pude_ptr, addr);
+	if (!dst_pmde_ptr)
 		return -ENOMEM;
-	src_pud_ent = pud_ent_offset(src_p4d_ent, addr);
-	do {
-		next = next_pud_addr_end(addr, end);
-		// if (pud_trans_huge(*src_pud_ent) || pud_devmap(*src_pud_ent)) {
-		// 	int err;
+	src_pmde_ptr = pmd_ent_ptr(src_pude_ptr, addr);
 
-		// 	VM_BUG_ON_VMA(next-addr != HPAGE_PUD_SIZE, src_vma);
-		// 	err = copy_huge_pud(dst_mm, src_mm,
-		// 			    dst_pud_ent, src_pud_ent, addr, src_vma);
-		// 	if (err == -ENOMEM)
-		// 		return -ENOMEM;
-		// 	if (!err)
-		// 		continue;
-		// 	/* fall through */
-		// }
-		if (pud_none_or_clear_bad(src_pud_ent))
+	do {
+		next = pmd_ent_bound_end(addr, end);
+		if (pmd_none_or_clear_bad(src_pmde_ptr))
 			continue;
-		if (copy_pmd_range(dst_vma, src_vma, dst_pud_ent, src_pud_ent,
-				   addr, next))
+		if (copy_pte_range(dst_vma, src_vma,
+				dst_pmde_ptr, src_pmde_ptr, addr, next))
 			return -ENOMEM;
-	} while (dst_pud_ent++, src_pud_ent++, addr = next, addr != end);
+	} while (dst_pmde_ptr++, src_pmde_ptr++, addr = next, addr != end);
+
 	return 0;
 }
 
 static inline int
-copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_ent,
-		pgd_t *src_pgd_ent, ulong addr, ulong end) {
+copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4de_ptr,
+		p4d_t *src_p4de_ptr, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
-	p4d_t *src_p4d_ent, *dst_p4d_ent;
+	mm_s *src_mm = src_vma->vm_mm;
+	pud_t *src_pude_ptr, *dst_pude_ptr;
 	ulong next;
 
-	dst_p4d_ent = p4d_alloc(dst_mm, dst_pgd_ent, addr);
-	if (!dst_p4d_ent)
+	dst_pude_ptr = pud_alloc(dst_mm, dst_p4de_ptr, addr);
+	if (!dst_pude_ptr)
 		return -ENOMEM;
-	src_p4d_ent = p4d_ent_offset(src_pgd_ent, addr);
+	src_pude_ptr = pud_ent_ptr(src_p4de_ptr, addr);
+
 	do {
-		next = next_p4d_addr_end(addr, end);
-		// 四级映射下p4d页必有效，所以不检查
-		// if (p4d_none_or_clear_bad(src_p4d_ent))
-		// 	continue;
+		next = pud_ent_bound_end(addr, end);
+		if (pud_none_or_clear_bad(src_pude_ptr))
+			continue;
+		if (copy_pmd_range(dst_vma, src_vma,
+				dst_pude_ptr, src_pude_ptr, addr, next))
+			return -ENOMEM;
+	} while (dst_pude_ptr++, src_pude_ptr++, addr = next, addr != end);
+
+	return 0;
+}
+
+// 在启用四级映射时，实际上本子函数没做任何有意义的工作，
+// 遍历的p4d实际上完全等于上一级的pgd
+// 四级映射下p4d页必有效，所以可以不检查p4d_ent的有效性
+static inline int
+copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgde_ptr,
+		pgd_t *src_pgde_ptr, ulong addr, ulong end) {
+
+	mm_s *dst_mm = dst_vma->vm_mm;
+	mm_s *src_mm = src_vma->vm_mm;
+	p4d_t *src_p4de_ptr, *dst_p4de_ptr;
+	ulong next;
+
+	dst_p4de_ptr = p4d_alloc(dst_mm, dst_pgde_ptr, addr);
+	if (!dst_p4de_ptr)
+		return -ENOMEM;
+	src_p4de_ptr = p4d_ent_ptr(src_pgde_ptr, addr);
+
+	do {
+		next = p4d_ent_bound_end(addr, end);
+		if (p4d_none_or_clear_bad(src_p4de_ptr))
+			continue;
 		if (copy_pud_range(dst_vma, src_vma,
-				dst_p4d_ent, src_p4d_ent, addr, next))
+				dst_p4de_ptr, src_p4de_ptr, addr, next))
 			return -ENOMEM;
-	} while (dst_p4d_ent++, src_p4d_ent++, addr = next, addr != end);
+	} while (dst_p4de_ptr++, src_p4de_ptr++, addr = next, addr != end);
+
 	return 0;
 }
 
 int
 copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 {
-	pgd_t *src_pgd_ent, *dst_pgd_ent;
 	ulong next;
 	ulong addr = src_vma->vm_start;
 	ulong end = src_vma->vm_end;
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	// struct mmu_notifier_range range;
-	bool is_cow;
-	int ret;
-
-	// /*
-	//  * Don't copy ptes where a page fault will fill them correctly.
-	//  * Fork becomes much lighter when there are big shared or private
-	//  * readonly mappings. The tradeoff is that copy_page_range is more
-	//  * efficient than faulting.
-	//  */
-	// if (!(src_vma->vm_flags & (VM_HUGETLB | VM_PFNMAP | VM_MIXEDMAP)))
-	// 	return 0;
-
-	// if (is_vm_hugetlb_page(src_vma))
-	// 	return copy_hugetlb_page_range(dst_mm, src_mm, src_vma);
-
-	// if (unlikely(src_vma->vm_flags & VM_PFNMAP)) {
-	// 	/*
-	// 	 * We do not free on error cases below as remove_vma
-	// 	 * gets called on error from higher level routine
-	// 	 */
-	// 	ret = track_pfn_copy(src_vma);
-	// 	if (ret)
-	// 		return ret;
-	// }
+	pgd_t *src_pgde_ptr, *dst_pgde_ptr;
+	int ret = ENOERR;
 
 	/*
-	 * We need to invalidate the secondary MMU mappings only when
-	 * there could be a permission downgrade on the ptes of the
-	 * parent mm. And a permission downgrade will only happen if
-	 * is_cow_mapping() returns true.
+	 * Don't copy ptes where a page fault will fill them correctly.
+	 * Fork becomes much lighter when there are big shared or private
+	 * readonly mappings. The tradeoff is that copy_page_range is more
+	 * efficient than faulting.
 	 */
-	is_cow = is_cow_mapping(src_vma->vm_flags);
 
-	// if (is_cow) {
-	// 	mmu_notifier_range_init(&range, MMU_NOTIFY_PROTECTION_PAGE,
-	// 				0, src_vma, src_mm, addr, end);
-	// 	mmu_notifier_invalidate_range_start(&range);
-	// 	/*
-	// 	 * Disabling preemption is not needed for the write side, as
-	// 	 * the read side doesn't spin, but goes to the mmap_lock.
-	// 	 *
-	// 	 * Use the raw variant of the seqcount_t write API to avoid
-	// 	 * lockdep complaining about preemptibility.
-	// 	 */
-	// 	mmap_assert_write_locked(src_mm);
-	// 	raw_write_seqcount_begin(&src_mm->write_protect_seq);
-	// }
+	// /*
+	//  * We need to invalidate the secondary MMU mappings only when
+	//  * there could be a permission downgrade on the ptes of the
+	//  * parent mm. And a permission downgrade will only happen if
+	//  * is_cow_mapping() returns true.
+	//  */
+	// bool is_cow = is_cow_mapping(src_vma->vm_flags);
 
-	ret = 0;
-	dst_pgd_ent = pgd_ent_offset(dst_mm, addr);
-	src_pgd_ent = pgd_ent_offset(src_mm, addr);
+	dst_pgde_ptr = pgd_ent_ptr(dst_mm, addr);
+	src_pgde_ptr = pgd_ent_ptr(src_mm, addr);
+
 	do {
-		next = next_pgd_addr_end(addr, end);
-		if (pgd_none_or_clear_bad(src_pgd_ent))
+		next = pgd_ent_bound_end(addr, end);
+		if (pgd_none_or_clear_bad(src_pgde_ptr))
 			continue;
-		if (unlikely(copy_p4d_range(dst_vma, src_vma,
-				dst_pgd_ent, src_pgd_ent, addr, next))) {
+		if (copy_p4d_range(dst_vma, src_vma,
+				dst_pgde_ptr, src_pgde_ptr, addr, next)) {
 			ret = -ENOMEM;
 			break;
 		}
-	} while (dst_pgd_ent++, src_pgd_ent++, addr = next, addr != end);
+	} while (dst_pgde_ptr++, src_pgde_ptr++, addr = next, addr != end);
 
-	// if (is_cow) {
-	// 	raw_write_seqcount_end(&src_mm->write_protect_seq);
-	// 	mmu_notifier_invalidate_range_end(&range);
-	// }
 	return ret;
 }
 
@@ -1619,7 +1499,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	};
 	uint dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
-	pgd_t *pgd = pgd_ent_offset(mm, address);
+	pgd_t *pgd = pgd_ent_ptr(mm, address);
 
 	vmf.p4d = p4d_alloc(mm, pgd, address);
 	if (!vmf.p4d)
@@ -1722,7 +1602,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	pmd_t *pmd;
 	pte_t *pte;
 
-	pgd = pgd_ent_offset(mm, addr);
+	pgd = pgd_ent_ptr(mm, addr);
 	p4d = p4d_alloc(mm, pgd, addr);
 	if (!p4d) {
 		goto fail;
@@ -1760,20 +1640,20 @@ page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr)
 	pmd_t *pmd;
 	pte_t *pte;
 
-	pgd = pgd_ent_offset(mm, addr);
-	p4d = p4d_ent_offset(pgd, addr);
+	pgd = pgd_ent_ptr(mm, addr);
+	p4d = p4d_ent_ptr(pgd, addr);
 	if (arch_p4d_none(*p4d)) {
 		goto fail;
 	}
-	pud = pud_ent_offset(p4d, addr);
+	pud = pud_ent_ptr(p4d, addr);
 	if (arch_pud_none(*pud)) {
 		goto fail;
 	}
-	pmd = pmd_ent_offset(pud, addr);
+	pmd = pmd_ent_ptr(pud, addr);
 	if (arch_pmd_none(*pmd)) {
 		goto fail;
 	}
-	pte = pte_ent_offset(pmd, addr);
+	pte = pte_ent_ptr(pmd, addr);
 	if (arch_pte_none(*pte)) {
 		goto fail;
 	}
@@ -1798,7 +1678,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 
 	do
 	{
-		pgd = pgd_ent_offset(mm, addr);
+		pgd = pgd_ent_ptr(mm, addr);
 		p4d = p4d_alloc(mm, pgd, addr);
 		if (!p4d) {
 			ret = VM_FAULT_OOM;

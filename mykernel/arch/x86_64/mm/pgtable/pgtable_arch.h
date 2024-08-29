@@ -90,6 +90,11 @@
 		extern pgdval_t
 		arch_pgd_flags(pgd_t pgd);
 
+		extern p4d_t
+		arch_make_p4d(pgdval_t val);
+		extern p4dval_t
+		arch_p4d_val(p4d_t p4d);
+
 		extern pud_t
 		arch_make_pud(pmdval_t val);
 		extern pudval_t
@@ -371,6 +376,17 @@
 		pgdval_t
 		arch_pgd_flags(pgd_t pgd) {
 			return arch_pgd_val(pgd) & PTE_FLAGS_MASK;
+		}
+
+		PREFIX_STATIC_INLINE
+		p4d_t
+		arch_make_p4d(p4dval_t val) {
+			return (p4d_t) { arch_make_pgd((pgdval_t)val) };
+		}
+		PREFIX_STATIC_INLINE
+		p4dval_t
+		arch_p4d_val(p4d_t p4d) {
+			return (p4dval_t)arch_pgd_val(p4d.pgd);
 		}
 
 		PREFIX_STATIC_INLINE
