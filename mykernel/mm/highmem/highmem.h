@@ -35,7 +35,7 @@
 		memzero_page(page_s *page, size_t offset, size_t len);
 
 
-		extern bool
+		extern loff_t
 		myosDBG_compare_page(page_s *pg1, page_s *pg2);
 
 	#endif
@@ -142,11 +142,18 @@
 
 
 		PREFIX_STATIC_INLINE
-		bool
+		loff_t
 		myosDBG_compare_page(page_s *pg1, page_s *pg2)
 		{
-			return 0 == memcmp((void *)page_to_virt(pg1),
-					(void *)page_to_virt(pg2), PAGE_SIZE);
+			const void *ct = (const void *)page_to_virt(pg1);
+			const void *cs = (const void *)page_to_virt(pg2);
+			const unsigned char *su1, *su2;
+			loff_t count = 0;
+
+			for (su1 = cs, su2 = ct; count < PAGE_SIZE; ++su1, ++su2, count++)
+				if ((*su1 - *su2) != 0)
+					break;
+			return count;
 		}
 
 	#endif
