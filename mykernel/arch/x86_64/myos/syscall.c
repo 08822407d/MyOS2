@@ -13,6 +13,7 @@
 #include <asm/insns.h>
 #include <asm/signal.h>
 #include <asm/proto.h>
+#include <asm/delay.h>
 
 #include <obsolete/printk.h>
 #include <obsolete/arch_proto.h>
@@ -110,6 +111,13 @@ MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,
 
 MYOS_SYSCALL_DEFINE0(fork)
 {
+	barrier();
+	ulong counter = 0;
+	for (long i = 0; i < 0x1000; i++)
+		for (long j = 0; j < 0x1000; j++)
+			counter++;
+	barrier();
+
 	kclone_args_s args = {
 		// .flags = CLONE_FILES,
 		.exit_signal = SIGCHLD,
