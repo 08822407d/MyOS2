@@ -26,7 +26,7 @@ DEFINE_SPINLOCK(pgd_lock);
 LIST_HDR_S(pgd_list_hdr);
 
 
-vm_fault_s myos_dump_pagetable(unsigned long address)
+vm_fault_s myos_dump_pagetable(ulong address)
 {
 	vm_fault_s vmf;
 	memset(&vmf, 0, sizeof(vm_fault_s));
@@ -54,10 +54,10 @@ finish:
 
 
 static void
-parse_PF_errcode(pt_regs_s *regs, unsigned long cr2, char *buf)
+parse_PF_errcode(pt_regs_s *regs, ulong cr2, char *buf)
 {
 	char tempbuf[100];
-	unsigned long error_code = (unsigned long)regs->orig_ax;
+	ulong error_code = (ulong)regs->orig_ax;
 
 	memset(tempbuf, 0, 100);
 	snprintf(tempbuf, 45, "do_page_fault(14),ERROR_CODE: %#018lx", error_code);
@@ -89,12 +89,12 @@ parse_PF_errcode(pt_regs_s *regs, unsigned long cr2, char *buf)
 }
 
 static noinline void
-myos_bad_area(pt_regs_s *regs, unsigned long error_code, unsigned long address)
+myos_bad_area(pt_regs_s *regs, ulong err_code, ulong address)
 {
 	char *buf = kmalloc(500, GFP_KERNEL);
 	memset(buf, 0, 500);
 	parse_PF_errcode(regs, address, buf);
-	// if (!(error_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
+	// if (!(err_code & (ARCH_PF_EC_WR & ~ARCH_PF_EC_P)))
 	// {
 		color_printk(RED, BLACK, buf);
 		while (1);
@@ -102,7 +102,7 @@ myos_bad_area(pt_regs_s *regs, unsigned long error_code, unsigned long address)
 }
 
 
-bool fault_in_kernel_space(unsigned long address)
+bool fault_in_kernel_space(ulong address)
 {
 	/*
 	 * On 64-bit systems, the vsyscall page is at an address above
@@ -121,21 +121,19 @@ bool fault_in_kernel_space(unsigned long address)
  * ran in userspace or the kernel.
  */
 static void
-do_kern_addr_fault(pt_regs_s *regs,
-		unsigned long hw_error_code, unsigned long address)
-{
+do_kern_addr_fault(pt_regs_s *regs, ulong hw_err_code, ulong address) {
 	// /*
 	//  * Protection keys exceptions only happen on user pages.  We
 	//  * have no user pages in the kernel portion of the address
 	//  * space, so do not expect them here.
 	//  */
-	// WARN_ON_ONCE(hw_error_code & X86_PF_PK);
+	// WARN_ON_ONCE(hw_err_code & X86_PF_PK);
 
-	// if (is_f00f_bug(regs, hw_error_code, address))
+	// if (is_f00f_bug(regs, hw_err_code, address))
 	// 	return;
 
 	// /* Was the fault spurious, caused by lazy TLB invalidation? */
-	// if (spurious_kernel_fault(hw_error_code, address))
+	// if (spurious_kernel_fault(hw_err_code, address))
 	// 	return;
 
 	// /* kprobes don't want to hook the spurious faults: */
@@ -150,7 +148,7 @@ do_kern_addr_fault(pt_regs_s *regs,
 	//  * Don't take the mm semaphore here. If we fixup a prefetch
 	//  * fault we could otherwise deadlock:
 	//  */
-	// bad_area_nosemaphore(regs, hw_error_code, address);
+	// bad_area_nosemaphore(regs, hw_err_code, address);
 }
 
 /*
@@ -162,13 +160,12 @@ do_kern_addr_fault(pt_regs_s *regs,
  * architecture, special for WRUSS.
  */
 static inline
-void do_user_addr_fault(pt_regs_s *regs,
-		unsigned long error_code, unsigned long address) {
+void do_user_addr_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 	vma_s *vma;
 	task_s *tsk;
 	mm_s *mm;
 	vm_fault_t fault;
-	unsigned int flags = FAULT_FLAG_DEFAULT;
+	uint flags = FAULT_FLAG_DEFAULT;
 
 	tsk = current;
 	mm = tsk->mm;
@@ -243,9 +240,9 @@ void do_user_addr_fault(pt_regs_s *regs,
 
 	// perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 
-	if (error_code & X86_PF_WRITE)
+	if (err_code & X86_PF_WRITE)
 		flags |= FAULT_FLAG_WRITE;
-	if (error_code & X86_PF_INSTR)
+	if (err_code & X86_PF_INSTR)
 		flags |= FAULT_FLAG_INSTRUCTION;
 
 	// /*
@@ -299,17 +296,17 @@ void do_user_addr_fault(pt_regs_s *regs,
 	vm_fault_s vmf = myos_dump_pagetable(address);
 	vma = simple_find_vma(mm, address);
 	if (unlikely(!vma)) {
-		myos_bad_area(regs, error_code, address);
+		myos_bad_area(regs, err_code, address);
 		return;
 	}
 	if (likely(vma->vm_start <= address))
 		goto good_area;
 	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
-		myos_bad_area(regs, error_code, address);
+		myos_bad_area(regs, err_code, address);
 		return;
 	}
 	if (unlikely(expand_stack(vma, address))) {
-		myos_bad_area(regs, error_code, address);
+		myos_bad_area(regs, err_code, address);
 		return;
 	}
 
@@ -399,8 +396,7 @@ good_area:
 
 
 static __always_inline void
-handle_page_fault(pt_regs_s *regs,
-		unsigned long error_code, unsigned long address) {
+handle_page_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 	// trace_page_fault_entries(regs, error_code, address);
 
 	// if (kmmio_fault(regs, address))
@@ -408,9 +404,9 @@ handle_page_fault(pt_regs_s *regs,
 
 	/* Was the fault on kernel-controlled part of the address space? */
 	if (unlikely(fault_in_kernel_space(address))) {
-		do_kern_addr_fault(regs, error_code, address);
+		do_kern_addr_fault(regs, err_code, address);
 	} else {
-		do_user_addr_fault(regs, error_code, address);
+		do_user_addr_fault(regs, err_code, address);
 		/*
 		 * User address page fault handling might have reenabled
 		 * interrupts. Fixing up all potential exit points of
@@ -424,11 +420,11 @@ handle_page_fault(pt_regs_s *regs,
 
 
 __visible noinstr void
-exc_page_fault(pt_regs_s *regs, unsigned long error_code)
+exc_page_fault(pt_regs_s *regs, ulong error_code)
 {
 	// myos_excep_page_fault(regs);
 
-	unsigned long address = read_cr2();
+	ulong address = read_cr2();
 	// irqentry_state_t state;
 
 	// prefetchw(&current->mm->mmap_lock);

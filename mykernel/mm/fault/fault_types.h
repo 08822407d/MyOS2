@@ -111,8 +111,26 @@
 			pgoff_t		pgoff;		/* Logical page offset based on vma */
 			ulong		address;	/* Faulting virtual address */
 		};
-		enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
-									 * XXX: should really be 'const' */
+		union {
+			enum fault_flag	flags;		/* FAULT_FLAG_xxx flags
+										* XXX: should really be 'const' */
+			struct {
+				unchar
+					FF_WRITE			: 1,
+					FF_MKWRITE			: 1,
+					FF_ALLOW_RETRY		: 1,
+					FF_RETRY_NOWAIT		: 1,
+					FF_KILLABLE			: 1,
+					FF_TRIED			: 1,
+					FF_USER				: 1,
+					FF_REMOTE			: 1,
+					FF_INSTRUCTION		: 1,
+					FF_INTERRUPTIBLE	: 1,
+					FF_UNSHARE			: 1,
+					FF_ORIG_PTE_VALID	: 1,
+					FF_VMA_LOCK			: 1;
+			} flag_defs;
+		};
 
 		p4d_t			*p4d;
 		pud_t			*pud;		/* Pointer to pud entry matching

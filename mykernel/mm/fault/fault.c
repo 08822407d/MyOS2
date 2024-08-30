@@ -261,6 +261,7 @@ copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte_ptr,
 static inline int
 copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 		pte_t *dst_pte_ptr, pte_t *src_pte_ptr, ulong addr) {
+
 	mm_s *src_mm = src_vma->vm_mm;
 	ulong vm_flags = src_vma->vm_flags;
 	pte_t pte = *src_pte_ptr;
@@ -268,16 +269,14 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 
 	page = vm_normal_page(src_vma, addr, pte);
 	if (page) {
-		int retval;
+		// int retval;
 
-		retval = copy_present_page(dst_vma, src_vma,
-					dst_pte_ptr, src_pte_ptr, addr, pte, page);
-		if (retval <= 0)
-			return retval;
+		// retval = copy_present_page(dst_vma, src_vma,
+		// 			dst_pte_ptr, src_pte_ptr, addr, pte, page);
+		// if (retval <= 0)
+		// 	return retval;
 
 		get_page(page);
-		// page_dup_rmap(page, false);
-		// rss[mm_counter(page)]++;
 	}
 
 	/*
@@ -296,9 +295,6 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	if (vm_flags & VM_SHARED)
 		pte = pte_mkclean(pte);
 	pte = pte_mkold(pte);
-
-	// if (!userfaultfd_wp(dst_vma))
-	// 	pte = pte_clear_uffd_wp(pte);
 
 	set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
 	return 0;
@@ -324,25 +320,25 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
 		if (arch_pte_none(*src_pte_ptr)) {
 			continue;
 		}
-		// if (unlikely(!arch_pte_present(*src_pte_ptr))) {
-		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
-		// 				  dst_pte_ptr, src_pte_ptr,
-		// 				  dst_vma, src_vma,
-		// 				  addr, rss);
-		// 	if (ret == -EIO) {
-		// 		entry = pte_to_swp_entry(*src_pte_ptr);
-		// 		break;
-		// 	} else if (ret == -EBUSY) {
-		// 		break;
-		// 	} else if (!ret) {
-		// 		continue;
-		// 	}
-		// 	/*
-		// 	 * Device exclusive entry restored, continue by copying
-		// 	 * the now present pte.
-		// 	 */
-		// 	WARN_ON_ONCE(ret != -ENOENT);
-		// }
+		if (unlikely(!arch_pte_present(*src_pte_ptr))) {
+			// ret = copy_nonpresent_pte(dst_mm, src_mm,
+			// 			  dst_pte_ptr, src_pte_ptr,
+			// 			  dst_vma, src_vma,
+			// 			  addr, rss);
+			// if (ret == -EIO) {
+			// 	entry = pte_to_swp_entry(*src_pte_ptr);
+			// 	break;
+			// } else if (ret == -EBUSY) {
+			// 	break;
+			// } else if (!ret) {
+			// 	continue;
+			// }
+			// /*
+			//  * Device exclusive entry restored, continue by copying
+			//  * the now present pte.
+			//  */
+			// WARN_ON_ONCE(ret != -ENOENT);
+		}
 		/* copy_present_pte() will clear `*prealloc' if consumed */
 		ret = copy_present_pte(dst_vma, src_vma,
 				dst_pte_ptr, src_pte_ptr, addr);
