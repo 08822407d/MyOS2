@@ -994,7 +994,7 @@ int expand_stack(vma_s *vma, ulong address)
 					* So, we reuse mm->page_table_lock to guard
 					* against concurrent vma expansions.
 					*/
-			// 	spin_lock(&mm->page_table_lock);
+				spin_lock(&mm->page_table_lock);
 			// 	if (vma->vm_flags & VM_LOCKED)
 			// 		mm->locked_vm += grow;
 			// 	vm_stat_account(mm, vma->vm_flags, grow);
@@ -1003,7 +1003,7 @@ int expand_stack(vma_s *vma, ulong address)
 				vma->vm_pgoff -= grow;
 			// 	anon_vma_interval_tree_post_update_vma(vma);
 			// 	vma_gap_update(vma);
-			// 	spin_unlock(&mm->page_table_lock);
+				spin_unlock(&mm->page_table_lock);
 
 			// 	perf_event_mmap(vma);
 			// }

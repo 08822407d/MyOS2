@@ -168,6 +168,8 @@
 		// 							 * page table to avoid allocation from
 		// 							 * atomic context.
 		// 							 */
+
+		task_s			*curr_tsk;
 	} vm_fault_s;
 
 #endif /* _MMFAULT_TYPES_H_ */

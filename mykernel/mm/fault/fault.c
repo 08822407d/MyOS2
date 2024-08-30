@@ -802,7 +802,7 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	// 	     mm_tlb_flush_pending(vmf->vma->vm_mm)))
 	// 	flush_tlb_page(vmf->vma, vmf->address);
 
-	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
+	// vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
 	// if (!vmf->page) {
 	// 	/*
 	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
@@ -1492,6 +1492,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 		.flags		= flags,
 		.pgoff		= linear_page_index(vma, address),
 		.gfp_mask	= __get_fault_gfp_mask(vma),
+		.curr_tsk	= current,
 	};
 	uint dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
@@ -1523,6 +1524,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	}
 	barrier();
 
+	vmf.page = vm_normal_page(vma, vmf.address, *(vmf.pte));
 	ret = handle_pte_fault(&vmf);
 fail:
 	return ret;
@@ -1540,13 +1542,13 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 	if (!new)
 		return -ENOMEM;
 
-	// spin_lock(&mm->page_table_lock);
+	spin_lock(&mm->page_table_lock);
 	if (!arch_p4d_present(*p4d)) {
 		smp_wmb(); /* See comment in pmd_install() */
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(new);
-	// spin_unlock(&mm->page_table_lock);
+	spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1561,14 +1563,14 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 	if (!new)
 		return -ENOMEM;
 
-	// spin_lock(&mm->page_table_lock);
+	spin_lock(&mm->page_table_lock);
 	if (!arch_pud_present(*pud)) {
 		smp_wmb(); /* See comment in pmd_install() */
 		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
 	} else {	/* Another has populated it */
 		pmd_free(new);
 	}
-	// spin_unlock(&mm->page_table_lock);
+	spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1578,14 +1580,14 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 	if (!new)
 		return -ENOMEM;
 
-	// spin_lock(&mm->page_table_lock);
+	spin_lock(&mm->page_table_lock);
 	if (!arch_pmd_present(*pmd)) {
 		smp_wmb(); /* See comment in pmd_install() */
 		*pmd = arch_make_pmd(_PAGE_TABLE | __pa(new));
 	} else {	/* Another has populated it */
 		pte_free(new);
 	}
-	// spin_unlock(&mm->page_table_lock);
+	spin_unlock(&mm->page_table_lock);
 	return 0;
 }
 

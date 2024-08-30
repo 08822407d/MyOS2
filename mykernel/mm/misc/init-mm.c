@@ -30,7 +30,7 @@ mm_s init_mm = {
 	.mm_refcount		= ATOMIC_INIT(1),
 	// .write_protect_seq	= SEQCNT_ZERO(init_mm.write_protect_seq),
 	// MMAP_LOCK_INITIALIZER(init_mm)
-	// .page_table_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
+	.page_table_lock	=  __SPIN_LOCK_UNLOCKED(init_mm.page_table_lock),
 	// .arg_lock			=  __SPIN_LOCK_UNLOCKED(init_mm.arg_lock),
 	// .mmlist				= LIST_HEAD_INIT(init_mm.mmlist),
 // #ifdef CONFIG_PER_VMA_LOCK
