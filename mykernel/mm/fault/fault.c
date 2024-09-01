@@ -493,9 +493,9 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 		// copy_user_page((void *)page_to_virt(dst),
 		// 		(void *)page_to_virt(src), addr, dst);
 
-		loff_t offset;
-		if ((offset = myosDBG_compare_page(dst, src)) != PAGE_SIZE)
-			pr_alert("COW copied page content changed at offset: %#08Lx.\n", offset);
+		// loff_t offset;
+		// if ((offset = myosDBG_compare_page(dst, src)) != PAGE_SIZE)
+		// 	pr_alert("COW copied page content changed at offset: %#08Lx.\n", offset);
 
 		return true;
 	}
@@ -1441,13 +1441,13 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
 		if (!pte_writable(*vmf->pte))
-			// return do_wp_page(vmf);
-		{
-			preempt_disable_notrace();
-			vm_fault_t vmft = do_wp_page(vmf);
-			preempt_enable_no_resched_notrace();
-			return vmft;
-		}
+			return do_wp_page(vmf);
+		// {
+		// 	preempt_disable_notrace();
+		// 	vm_fault_t vmft = do_wp_page(vmf);
+		// 	preempt_enable_no_resched_notrace();
+		// 	return vmft;
+		// }
 		entry = pte_mkdirty(entry);
 	}
 	entry = pte_mkyoung(entry);

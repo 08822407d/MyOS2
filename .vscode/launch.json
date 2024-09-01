@@ -30,14 +30,14 @@
           "ignoreFailures": false
         },
         // 加入其他程序的调试符号文件
-        {
-          "text": "add-symbol-file ${workspaceRoot}/build/initd",
-          "ignoreFailures": false
-        },
         // {
-        //   "text": "add-symbol-file ${workspaceRoot}/build/sh",
+        //   "text": "add-symbol-file ${workspaceRoot}/build/initd",
         //   "ignoreFailures": false
         // },
+        {
+          "text": "add-symbol-file ${workspaceRoot}/build/sh",
+          "ignoreFailures": false
+        },
         // 设置信任路径，执行带文件操作的gdb命令时，免去gdb询问文件路径安全性
         {
           "text": "add-auto-load-safe-path ./",

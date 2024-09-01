@@ -65,8 +65,8 @@ int main(int argc, const char *argv[])
 	printf("You are login as root.\n");
 
 
-	memset(current_dir, 0, PATH_MAX);
-	getcwd(current_dir, PATH_MAX);
+	// memset(current_dir, 0, PATH_MAX);
+	// getcwd(current_dir, PATH_MAX);
 
 	char buf[SZ_1K];
 	int index = -1;
