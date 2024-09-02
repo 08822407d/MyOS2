@@ -17,6 +17,7 @@ void kjmp_to_doexecve()
 	curr->flags &= ~PF_KTHREAD;
 
 	const char *initd_name = "/boot/init";
+	// const char *initd_name = "/boot/sh";
 
 	const char *const argv[] =
 			{ initd_name , "kernarg_test_1", "kernarg_test_1", NULL };

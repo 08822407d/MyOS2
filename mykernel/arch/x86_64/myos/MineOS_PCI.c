@@ -217,8 +217,8 @@ void scan_PCI_devices(void)
 					idname_idx++;
 				}
 				
-				if (PCI_HDR->ClassCode != PCI_BASE_CLASS_BRIDGE)
-					Print_PCIHDR(PCI_HDR);
+				// if (PCI_HDR->ClassCode != PCI_BASE_CLASS_BRIDGE)
+				// 	Print_PCIHDR(PCI_HDR);
 			}
 
 	color_printk(GREEN, BLACK, "\n");

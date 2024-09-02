@@ -126,8 +126,10 @@ unsigned char kbd_get_scancode()
 {
 	unsigned char ret  = 0;
 
-	if(p_kb->count <= 0)
+	do {
 		wait_for_completion(&getcode_done);
+	}
+	while (p_kb->count <= 0);
 	
 	spin_lock_irq(&kbdbuf_lock);
 	if(p_kb->p_tail == p_kb->buf + KB_BUF_SIZE)	

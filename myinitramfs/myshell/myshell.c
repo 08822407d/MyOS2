@@ -12,6 +12,7 @@
 
 	#define PATH_MAX        4096	/* # chars in a path name including nul */
 	#define SZ_1K			1024
+	#define SZ_4K			4096
 
 #define	SYSTEM_REBOOT	(1UL << 0)
 #define	SYSTEM_POWEROFF	(1UL << 1)
@@ -52,6 +53,7 @@ builtincmd_s shell_internal_cmd[] =
 	{"reboot",	reboot_command},
 };
 
+int console_fd = -1;
 char *homedir = "/";
 char current_dir[PATH_MAX];
 
@@ -68,18 +70,22 @@ int main(int argc, const char *argv[])
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 
+	console_fd = open("/dev/console", O_RDWR);
 
-	// memset(current_dir, 0, PATH_MAX);
-	// getcwd(current_dir, PATH_MAX);
+	memset(current_dir, 0, PATH_MAX);
+	getcwd(current_dir, PATH_MAX);
 
-	char buf[SZ_1K];
+	char buf[SZ_4K];
 	int index = -1;
+
+	char *alloc_test = malloc(16);
 
 	while (1)
 	{
 		printf("\n");
 		printf("$ ");
-		memset(buf, 0, SZ_1K);
+		fflush(stdout);
+		memset(buf, 0, SZ_4K);
 		read_line(buf);
 		printf("\n");
 
@@ -98,10 +104,8 @@ int read_line(char *buf)
 	char key = 0;
 	int count = 0;
 
-	while(1)
+	while(read(console_fd, &key, 1) == 1 && key != 4)
 	{
-		key = fgetc(stdin);
-
 		switch (key)
 		{
 		case 0:
@@ -114,13 +118,13 @@ int read_line(char *buf)
 			if (count > 0)
 			{
 				buf[--count] = 0;
-				printf("\b");
+				write(console_fd, "\b", 1);
 			}
 			break;
 
 		default:
 			buf[count++] = key;
-			printf("%c", key);
+			write(console_fd, &key, 1);
 			break;
 		}
 	}
