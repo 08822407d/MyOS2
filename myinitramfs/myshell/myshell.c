@@ -61,6 +61,10 @@ void run_cmd(int index, int argc, char **argv);
 
 int main(int argc, const char *argv[])
 {
+	// freopen("/dev/console", "r", stdin);
+	// freopen("/dev/console", "w", stdout);
+	// freopen("/dev/console", "w", stderr);
+
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 

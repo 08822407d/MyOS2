@@ -20,3 +20,5 @@ compile_commands.json
 *.vmdk
 *.diff
 build
+
+**/asm-offsets.s
