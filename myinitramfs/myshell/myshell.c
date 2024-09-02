@@ -78,15 +78,17 @@ int main(int argc, const char *argv[])
 	char buf[SZ_4K];
 	int index = -1;
 
-	char *alloc_test = malloc(16);
-
 	while (1)
 	{
 		printf("\n");
 		printf("$ ");
 		fflush(stdout);
 		memset(buf, 0, SZ_4K);
-		read_line(buf);
+
+		buf[0] = 'l';
+		buf[1] = 's';
+		// read_line(buf);
+
 		printf("\n");
 
 		int __argc = 0;

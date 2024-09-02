@@ -924,7 +924,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 	// if (unlikely(anon_vma_prepare(vma)))
 	// 	goto oom;
 	// folio = vma_alloc_zeroed_movable_folio(vma, vmf->address);
-	folio = page_folio(alloc_page(GFP_USER));
+	folio = page_folio(alloc_page(GFP_USER | __GFP_ZERO));
 	if (!folio)
 		goto oom;
 

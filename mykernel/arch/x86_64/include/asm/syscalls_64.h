@@ -28,6 +28,8 @@ __SYSCALL(__NR_execve, sys_execve)
 __SYSCALL(__NR_exit, sys_exit)
 __SYSCALL(__NR_wait4, sys_wait4)
 
+__SYSCALL(__NR_fcntl, sys_fcntl)
+
 // __SYSCALL(__NR_getdents, sys_getdents)
 __SYSCALL(__NR_getcwd, sys_getcwd)
 __SYSCALL(__NR_chdir, sys_chdir)

@@ -275,6 +275,34 @@ MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, 
 	return 0;
 }
 
+MYOS_SYSCALL_DEFINE3(fcntl, uint, fd, uint, cmd, ulong, arg)
+{	
+	pr_alert("\t!!! Dummy Syscall --- fcntl ---\n");
+
+// 	struct fd f = fdget_raw(fd);
+// 	long err = -EBADF;
+
+// 	if (!f.file)
+// 		goto out;
+
+// 	if (unlikely(f.file->f_mode & FMODE_PATH)) {
+// 		if (!check_fcntl_cmd(cmd))
+// 			goto out1;
+// 	}
+
+// 	err = security_file_fcntl(f.file, cmd, arg);
+// 	if (!err)
+// 		err = do_fcntl(fd, cmd, arg, f.file);
+
+// out1:
+//  	fdput(f);
+// out:
+// 	return err;
+
+	return 0;
+}
+
+
 MYOS_SYSCALL_DEFINE0(getpid)
 {
 	// return current->pid;
