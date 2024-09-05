@@ -153,12 +153,14 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
 	*pprev = NULL;
 
 	for_each_vma(mm, vma) {
+		// BUG_ON(vma->vm_start >= vma->vm_end);
+		while (vma->vm_start >= vma->vm_end);
+
 		// Update the vma in each iteration. When iteration breaks,
 		// we found the true prev-vma of @addr-@end area
 		*pprev = vma_prev_vma(vma);
 
-		if ((addr >= vma->vm_start && addr < vma->vm_end) ||
-				(end > vma->vm_start && end <= vma->vm_end))
+		if (!((vma->vm_end <= addr) || (vma->vm_start >= end)))
 			// case1:	Found intersected vma
 			return true;
 		else if (end <= vma->vm_start)
@@ -1124,6 +1126,8 @@ int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 		mm->map_count--;
 		list_header_delete_node(&mm->mm_mt, &tmp->list);
 	} for_each_vma_range(mm, vma, end);
+
+	error = -ENOERR;
 
 userfaultfd_error:
 munmap_gather_failed:

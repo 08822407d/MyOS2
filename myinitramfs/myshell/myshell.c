@@ -63,10 +63,6 @@ void run_cmd(int index, int argc, char **argv);
 
 int main(int argc, const char *argv[])
 {
-	// freopen("/dev/console", "r", stdin);
-	// freopen("/dev/console", "w", stdout);
-	// freopen("/dev/console", "w", stderr);
-
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 
@@ -85,9 +81,9 @@ int main(int argc, const char *argv[])
 		fflush(stdout);
 		memset(buf, 0, SZ_4K);
 
-		buf[0] = 'l';
-		buf[1] = 's';
-		// read_line(buf);
+		// buf[0] = 'l';
+		// buf[1] = 's';
+		read_line(buf);
 
 		printf("\n");
 

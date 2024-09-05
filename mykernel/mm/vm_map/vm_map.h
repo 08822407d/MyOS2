@@ -145,7 +145,27 @@
 		vma_s
 		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr) {
 			BUG_ON(start_addr > end_addr);
-			return simple_find_vma(mm, start_addr);
+
+			vma_s *retval = NULL, *vma = NULL;
+
+			for_each_vma(mm, vma) {
+				// BUG_ON(vma->vm_start >= vma->vm_end);
+				while (vma->vm_start >= vma->vm_end);
+
+				if (!((vma->vm_end <= start_addr) || (vma->vm_start >= end_addr))) {
+					// case1:	Found intersected vma
+					retval = vma;
+					break;
+				}
+				else if (end_addr <= vma->vm_start)
+					// case2:	Since we iterate vmas from low-addr to high-addr,
+					//			although there is no intersection, we still found
+					//			a proper postion for @addr-@end area in vma-chain.
+					//			Obviously the latter vmas won't have intersection
+					//			with @addr-@end area, and they are all "next" vmas.
+					break;
+			}
+			return retval;
 		}
 
 		/**
