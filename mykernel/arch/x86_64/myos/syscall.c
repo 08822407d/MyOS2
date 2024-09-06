@@ -19,6 +19,15 @@
 #include <obsolete/arch_proto.h>
 
 
+#define IF_ALERT_DUMMY_SYSCALL 0
+#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)		\
+		if (show_alert) {									\
+			pr_alert("\t!!! Dummy Syscall --- %s ---\n",	\
+				#syscall_name);								\
+		}
+
+
+
 MYOS_SYSCALL_DEFINE0(no_syscall)
 {
 	color_printk(RED, BLACK, "no_system_call is calling\n");
@@ -78,7 +87,7 @@ MYOS_SYSCALL_DEFINE3(write, unsigned int, fd,
 {
 	task_s * curr = current;
 	file_s * fp = NULL;
-	unsigned long ret = 0;
+	ulong ret = 0;
 
 	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
@@ -96,7 +105,7 @@ MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,
 {
 	task_s * curr = current;
 	file_s * fp = NULL;
-	unsigned long ret = 0;
+	ulong ret = 0;
 
 	if(fd < 0 || fd >= curr->files->fd_count)
 		return -EBADF;
@@ -142,7 +151,7 @@ MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
  *==============================================================================================*/
 MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 {
-	unsigned long newbrk, oldbrk, origbrk;
+	ulong newbrk, oldbrk, origbrk;
 	mm_s *mm = current->mm;
 	vma_s *brkvma, *next = NULL;
 	ulong min_brk;
@@ -241,14 +250,14 @@ out:
  */
 MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
 {
-	pr_alert("\t!!! Dummy Syscall --- rt_sigprocmask ---\n");
+	ALERT_DUMMY_SYSCALL(rt_sigprocmask, IF_ALERT_DUMMY_SYSCALL);
 
 	return 0;
 }
 
 MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
 {
-	pr_alert("\t!!! Dummy Syscall --- ioctl ---\n");
+	ALERT_DUMMY_SYSCALL(ioctl, IF_ALERT_DUMMY_SYSCALL);
 
 // 	struct fd f = fdget(fd);
 // 	int error;
@@ -271,9 +280,38 @@ MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, 
 	return 0;
 }
 
+/**
+ * sys_sched_yield - yield the current processor to other threads.
+ *
+ * This function yields the current CPU to other tasks. If there are no
+ * other threads running on this CPU then this function will return.
+ *
+ * Return: 0.
+ */
+MYOS_SYSCALL_DEFINE0(sched_yield)
+{
+	// do_sched_yield();
+	// {
+		// struct rq_flags rf;
+		// struct rq *rq;
+
+		// rq = this_rq_lock_irq(&rf);
+
+		// schedstat_inc(rq->yld_count);
+		// current->sched_class->yield_task(rq);
+
+		preempt_disable();
+		// rq_unlock_irq(rq, &rf);
+		sched_preempt_enable_no_resched();
+
+		schedule();
+	// }
+	return 0;
+}
+
 MYOS_SYSCALL_DEFINE3(fcntl, uint, fd, uint, cmd, ulong, arg)
 {	
-	pr_alert("\t!!! Dummy Syscall --- fcntl ---\n");
+	ALERT_DUMMY_SYSCALL(fcntl, IF_ALERT_DUMMY_SYSCALL);
 
 // 	struct fd f = fdget_raw(fd);
 // 	long err = -EBADF;
@@ -354,7 +392,7 @@ MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 
 MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 {
-	pr_alert("\t!!! Dummy Syscall --- set_tid_address ---\n");
+	ALERT_DUMMY_SYSCALL(set_tid_address, IF_ALERT_DUMMY_SYSCALL);
 
 	// current->clear_child_tid = tidptr;
 

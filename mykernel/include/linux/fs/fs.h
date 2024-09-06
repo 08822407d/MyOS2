@@ -874,36 +874,36 @@
 		// 	llist_node_s	fu_llist;
 		// 	struct rcu_head fu_rcuhead;
 		// } f_u;
-		path_s				f_path;
-		const file_ops_s	*f_op;
 
 		/*
-		* Protects f_ep, f_flags.
-		* Must not be taken from IRQ context.
-		*/
+		 * Protects f_ep, f_flags.
+		 * Must not be taken from IRQ context.
+		 */
 		spinlock_t			f_lock;
-		// enum rw_hint		f_write_hint;
-		atomic_long_t		f_count;
-		unsigned int 		f_flags;
 		fmode_t				f_mode;
+		atomic_long_t		f_count;
 		// mutex_s				f_pos_lock;
 		loff_t				f_pos;
+		uint 				f_flags;
 		// fown_struct_s		f_owner;
 		// const cred_s		*f_cred;
 		// file_s_ra_state		f_ra;
+		path_s				f_path;
+		inode_s				*f_inode;	/* cached value */
+		const file_ops_s	*f_op;
 
-		// u64			f_version;
+		u64					f_version;
 	// #ifdef CONFIG_SECURITY
 	// 	void			*f_security;
 	// #endif
 		/* needed for tty driver, and maybe others */
-		void		*private_data;
+		void				*private_data;
 
 	// #ifdef CONFIG_EPOLL
 	// 	/* Used by fs/eventpoll.c to link all the hooks to this file */
-	// 	hlist_head_s	*f_ep;
+	// 	struct hlist_head	*f_ep;
 	// #endif /* #ifdef CONFIG_EPOLL */
-	// 	addr_spc_s	*f_mapping;
+	// 	struct address_space	*f_mapping;
 	// 	errseq_t		f_wb_err;
 	// 	errseq_t		f_sb_err; /* for syncfs */
 	} file_s
@@ -1225,10 +1225,10 @@
 	// 			file_s *filp, file_ss_struct *files) {}
 	// #endif /* !CONFIG_FILE_LOCKING */
 
-	// static inline inode_s *file_inode(const file_s *f)
-	// {
-	// 	return f->f_inode;
-	// }
+	static inline inode_s *file_inode(const file_s *f)
+	{
+		return f->f_inode;
+	}
 
 	// static inline dentry_s *file_dentry(const file_s *file)
 	// {

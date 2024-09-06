@@ -426,7 +426,7 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	vm_flags_t vm_flags;
 	int pkey = 0;
 
-	if (!len)
+	if (len == 0)
 		return -EINVAL;
 
 	/*
@@ -467,10 +467,10 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	if (IS_ERR_VALUE(addr))
 		return addr;
 
-	// if (flags & MAP_FIXED_NOREPLACE) {
-	// 	if (find_vma_intersection(mm, addr, addr + len))
-	// 		return -EEXIST;
-	// }
+	if (flags & MAP_FIXED_NOREPLACE) {
+		if (find_vma_intersection(mm, addr, addr + len))
+			return -EEXIST;
+	}
 
 	// if (prot == PROT_EXEC) {
 	// 	pkey = execute_only_pkey(mm);
@@ -494,8 +494,8 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	// 	return -EAGAIN;
 
 	if (file) {
-		// inode_s *inode = file_inode(file);
-		// unsigned long flags_mask;
+		inode_s *inode = file_inode(file);
+		ulong flags_mask;
 
 		// if (!file_mmap_ok(file, inode, pgoff, len))
 		// 	return -EOVERFLOW;
@@ -514,21 +514,21 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 			flags &= LEGACY_MAP_MASK;
 			fallthrough;
 		case MAP_SHARED_VALIDATE:
-			// if (flags & ~flags_mask)
-			// 	return -EOPNOTSUPP;
-			// if (prot & PROT_WRITE) {
-			// 	if (!(file->f_mode & FMODE_WRITE))
-			// 		return -EACCES;
-			// 	if (IS_SWAPFILE(file->f_mapping->host))
-			// 		return -ETXTBSY;
-			// }
+			if (flags & ~flags_mask)
+				return -EOPNOTSUPP;
+			if (prot & PROT_WRITE) {
+				if (!(file->f_mode & FMODE_WRITE))
+					return -EACCES;
+				// if (IS_SWAPFILE(file->f_mapping->host))
+				// 	return -ETXTBSY;
+			}
 
-			// /*
-			//  * Make sure we don't allow writing to an append-only
-			//  * file..
-			//  */
-			// if (IS_APPEND(inode) && (file->f_mode & FMODE_WRITE))
-			// 	return -EACCES;
+			/*
+			 * Make sure we don't allow writing to an append-only
+			 * file..
+			 */
+			if (IS_APPEND(inode) && (file->f_mode & FMODE_WRITE))
+				return -EACCES;
 
 			vm_flags |= VM_SHARED | VM_MAYSHARE;
 			if (!(file->f_mode & FMODE_WRITE))
@@ -574,24 +574,8 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 		}
 	}
 
-	// /*
-	//  * Set 'VM_NORESERVE' if we should not account for the
-	//  * memory use of this mapping.
-	//  */
-	// if (flags & MAP_NORESERVE) {
-	// 	/* We honor MAP_NORESERVE if allowed to overcommit */
-	// 	if (sysctl_overcommit_memory != OVERCOMMIT_NEVER)
-	// 		vm_flags |= VM_NORESERVE;
-
-	// 	/* hugetlb applies strict overcommit unless MAP_NORESERVE */
-	// 	if (file && is_file_hugepages(file))
-	// 		vm_flags |= VM_NORESERVE;
-	// }
-
 	addr = simple_mmap_region(file, addr, len, vm_flags, pgoff);
-	// if (!IS_ERR_VALUE(addr) &&
-	//     ((vm_flags & VM_LOCKED) ||
-	//      (flags & (MAP_POPULATE | MAP_NONBLOCK)) == MAP_POPULATE))
+
 	return addr;
 }
 
@@ -1193,7 +1177,7 @@ MYOS_SYSCALL_DEFINE6(mmap,
 	// return ksys_mmap_pgoff(addr, len, prot, flags, fd, off >> PAGE_SHIFT);
 	ulong pgoff = off >> PAGE_SHIFT;
 	file_s *file = NULL;
-	unsigned long retval;
+	ulong retval;
 
 	if (!(flags & MAP_ANONYMOUS)) {
 		// audit_mmap_fd(fd, flags);

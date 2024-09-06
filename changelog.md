@@ -10,10 +10,9 @@
 
     io -- read, write, writev,
 
-    process -- fork, exec,
+    process -- fork, exec, sched_yield
 
     virtmem -- mmap, munmap, brk,
-
 
 ---
 

@@ -38,15 +38,11 @@ ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
 {
 	ulong ret;
 	mm_s *mm = current->mm;
-	// LIST_HEAD(uf);
 
-	// ret = security_mmap_file(file, prot, flag);
-	// if (!ret) {
-	// 	if (mmap_write_lock_killable(mm))
-	// 		return -EINTR;
-		ret = do_mmap(file, addr, len, prot, flag, pgoff);
-	// 	mmap_write_unlock(mm);
-	// 	userfaultfd_unmap_complete(mm, &uf);
+	// if (mmap_write_lock_killable(mm))
+	// 	return -EINTR;
+	ret = do_mmap(file, addr, len, prot, flag, pgoff);
+	// mmap_write_unlock(mm);
 
 	return ret;
 }

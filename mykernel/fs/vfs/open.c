@@ -45,7 +45,11 @@ open_how_s build_open_how(int flags, umode_t mode)
 //			  int (*open)(struct inode *, file_s *))
 static int myos_do_dentry_open(file_s * f, inode_s * inode)
 {
-	unsigned long error = -ENOERR;
+	ulong error = -ENOERR;
+	path_get(&f->f_path);
+	f->f_inode = inode;
+	// f->f_mapping = inode->i_mapping;
+
 	f->f_op = inode->i_fop;
 	if(f->f_op && f->f_op->open)
 		error = f->f_op->open(f->f_path.dentry->d_inode, f);

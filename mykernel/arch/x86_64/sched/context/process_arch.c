@@ -76,8 +76,6 @@ ret_from_fork(task_s *prev, pt_regs_s *regs,
 	}
 
 	// syscall_exit_to_user_mode(regs);
-
-	pr_info("Executing 'ret_from_fork'\n");
 }
 
 int copy_thread(task_s *p, const kclone_args_s *args)

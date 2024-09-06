@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <sched.h>
 #include <sys/types.h>
 
 typedef unsigned long ulong;
@@ -44,17 +45,19 @@ int main(int argc, const char *argv[])
 
 
 	ulong gsbase = rdgsbase();
-	printf("gsbase in user space: %p\n", (void *)gsbase);
+	// printf("gsbase in user space: %p\n", (void *)gsbase);
 
 	int rv = fork();
 	
-	if (rv != 0) {
-		printf("parent task, %d\n", rv);
-		// while (1);
-	} else {
-		printf("child task, %d\n", rv);
+	if (rv == 0)
+	{
+		// printf("child task, %d\n", rv);
 		execve(prog_name, args, envs);
-		// while (1);
 	}
-	while (1);
+	else
+	{
+		// printf("parent task, %d\n", rv);
+		while (1)
+			sched_yield();
+	}
 }
