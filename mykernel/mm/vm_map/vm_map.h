@@ -16,13 +16,11 @@
 
 		extern void
 		vma_set_anonymous(vma_s *vma);
-
 		extern bool
 		vma_is_anonymous(vma_s *vma);
 
 		extern vma_s
 		*simple_find_vma(mm_s *mm, ulong addr);
-
 		extern vma_s
 		*simple_find_vma_topdown(mm_s *mm, ulong addr);
 
@@ -30,7 +28,12 @@
 		*find_vma_prev(mm_s *mm, ulong addr, vma_s **pprev);
 
 		extern vma_s
-		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr);
+		*find_vma_prev_to_addr(mm_s *mm, ulong addr);
+		extern vma_s
+		*find_vma_next_to_addr(mm_s *mm, ulong addr);
+
+		extern vma_s
+		*find_vma_intersection(mm_s *mm, ulong start, ulong end);
 
 		extern vma_s
 		*vma_lookup(mm_s *mm, ulong addr);
@@ -132,6 +135,33 @@
 			return vma;
 		}
 
+		/*
+		 * Find the vma(@retval) whose range is prev to @addr
+		 */
+		PREFIX_STATIC_INLINE
+		vma_s
+		*find_vma_prev_to_addr(mm_s *mm, ulong addr) {
+			vma_s *vma = NULL;
+			for_each_vma(mm, vma) {
+				if (vma->vm_end > addr)
+					return vma_prev_vma(vma);
+			}
+			return NULL;
+		}
+		/*
+		 * Find the vma(@retval) whose range is prev to @addr
+		 */
+		PREFIX_STATIC_INLINE
+		vma_s
+		*find_vma_next_to_addr(mm_s *mm, ulong addr) {
+			vma_s *vma = NULL;
+			for_each_vma(mm, vma) {
+				if (vma->vm_start > addr)
+					return vma;
+			}
+			return NULL;
+		}
+
 		/**
 		 * find_vma_intersection() - Look up the first VMA which intersects the interval
 		 * @mm: The process address space.
@@ -143,29 +173,34 @@
 		 */
 		PREFIX_STATIC_INLINE
 		vma_s
-		*find_vma_intersection(mm_s *mm, ulong start_addr, ulong end_addr) {
-			BUG_ON(start_addr > end_addr);
+		*find_vma_intersection(mm_s *mm, ulong start, ulong end) {
+			// BUG_ON(start> end);
+			while (start > end);
 
-			vma_s *retval = NULL, *vma = NULL;
+			vma_s *vma = find_vma_prev_to_addr(mm, start);
 
-			for_each_vma(mm, vma) {
-				// BUG_ON(vma->vm_start >= vma->vm_end);
-				while (vma->vm_start >= vma->vm_end);
+			// for_each_vma(mm, vma) {
+			// 	// BUG_ON(vma->vm_start >= vma->vm_end);
+			// 	while (vma->vm_start >= vma->vm_end);
 
-				if (!((vma->vm_end <= start_addr) || (vma->vm_start >= end_addr))) {
-					// case1:	Found intersected vma
-					retval = vma;
-					break;
-				}
-				else if (end_addr <= vma->vm_start)
-					// case2:	Since we iterate vmas from low-addr to high-addr,
-					//			although there is no intersection, we still found
-					//			a proper postion for @addr-@end area in vma-chain.
-					//			Obviously the latter vmas won't have intersection
-					//			with @addr-@end area, and they are all "next" vmas.
-					break;
-			}
-			return retval;
+			// 	if (!((vma->vm_end <= start) ||
+			// 			(vma->vm_start >= end))) {
+			// 		// case1:	Found intersected vma
+			// 		retval = vma;
+			// 		break;
+			// 	}
+			// 	else if (end <= vma->vm_start)
+			// 		// case2:	Since we iterate vmas from low-addr to high-addr,
+			// 		//			Obviously the latter vmas won't have intersection
+			// 		//			with @addr-@end area, and they are all "next" vmas.
+			// 		break;
+			// }
+
+			if (vma != NULL && (vma = vma_next_vma(vma)) != NULL &&
+					!((vma->vm_end <= start) || (vma->vm_start >= end)))
+				return vma;
+			else
+				return NULL;
 		}
 
 		/**

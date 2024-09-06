@@ -9,17 +9,9 @@
 
 // #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
-// #include <linux/kernel/kernel.h>
 #include <linux/kernel/syscalls.h>
-// #include <linux/kernel/export.h>
-// #include <linux/kernel/mount.h>
-// #include <linux/kernel/uaccess.h>
-// #include <linux/init/init.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
-// #include <linux/fs/shmem_fs.h>
-// #include <linux/debug/printk.h>
-// #include <linux/sched/signal.h>
 
 
 #include "../mm_types.h"
@@ -45,12 +37,6 @@ vm_area_creat_dup(vma_s *orig)
 	vma_s *new = kmem_cache_alloc(vm_area_cachep, GFP_KERNEL);
 
 	if (new) {
-		// ASSERT_EXCLUSIVE_WRITER(orig->vm_flags);
-		// ASSERT_EXCLUSIVE_WRITER(orig->vm_file);
-		// /*
-		//  * orig->shared.rb may be modified concurrently, but the clone
-		//  * will be reinitialized.
-		//  */
 		// *new = data_race(*orig);
 		*new = *orig;
 		// INIT_LIST_HEAD(&new->anon_vma_chain);
@@ -69,7 +55,7 @@ vm_area_free(vma_s *vma)
 
 
 static inline vma_s *
-__get_vma_test_header(List_s *lp, List_hdr_s *lhdr) {
+__none_header_listnode_to_vma(List_s *lp, List_hdr_s *lhdr) {
 	if (lp == &lhdr->anchor)
 		return NULL;
 	else
@@ -84,7 +70,7 @@ vma_prev_vma(vma_s *vma)
 	
 	List_hdr_s *lhdr = &vma->vm_mm->mm_mt;
 	List_s *lp = vma->list.prev;
-	return __get_vma_test_header(lp, lhdr);
+	return __none_header_listnode_to_vma(lp, lhdr);
 }
 
 vma_s *
@@ -95,11 +81,11 @@ vma_next_vma(vma_s *vma)
 
 	List_hdr_s *lhdr = &vma->vm_mm->mm_mt;
 	List_s *lp = vma->list.next;
-	return __get_vma_test_header(lp, lhdr);
+	return __none_header_listnode_to_vma(lp, lhdr);
 }
 
 /*
- * vma_next() - Get the next VMA.
+ * mm_next_vma() - Get the next VMA.
  * @mm: The mm_struct.
  * @vma: The current vma.
  *
@@ -109,7 +95,7 @@ vma_next_vma(vma_s *vma)
  *			If reach list end, returns NULL
  */
 vma_s *
-vma_next(mm_s *mm, vma_s *vma)
+mm_next_vma(mm_s *mm, vma_s *vma)
 {
 	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
 	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
@@ -120,11 +106,11 @@ vma_next(mm_s *mm, vma_s *vma)
 	List_s *lp = lhdr->anchor.next;
 	if (vma != NULL)
 		lp = vma->list.next;
-	return __get_vma_test_header(lp, lhdr);
+	return __none_header_listnode_to_vma(lp, lhdr);
 }
 
 vma_s *
-vma_prev(mm_s *mm, vma_s *vma)
+mm_prev_vma(mm_s *mm, vma_s *vma)
 {
 	// BUG_ON((vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list)) ||
 	// 		list_is_head_anchor(&vma->list, &mm->mm_mt.anchor));
@@ -135,43 +121,7 @@ vma_prev(mm_s *mm, vma_s *vma)
 	List_s *lp = lhdr->anchor.prev;
 	if (vma != NULL)
 		lp = vma->list.prev;
-	return __get_vma_test_header(lp, lhdr);
-}
-
-
-//	Linux implementation changed, proto not exist in linux-6.6
-/*
- * simple_find_vma_links() - find the lowest vma which has intersection
- * with @addr-@end area and the prev of @vma
- * @mm: The mm struct
- * @pprev: A output variable stores the vma that just below the @addr-@end area
- * Returns: true on found a intersected vma
- */
-static bool
-simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
-	vma_s *vma = NULL;
-	*pprev = NULL;
-
-	for_each_vma(mm, vma) {
-		// BUG_ON(vma->vm_start >= vma->vm_end);
-		while (vma->vm_start >= vma->vm_end);
-
-		// Update the vma in each iteration. When iteration breaks,
-		// we found the true prev-vma of @addr-@end area
-		*pprev = vma_prev_vma(vma);
-
-		if (!((vma->vm_end <= addr) || (vma->vm_start >= end)))
-			// case1:	Found intersected vma
-			return true;
-		else if (end <= vma->vm_start)
-			// case2:	Since we iterate vmas from low-addr to high-addr,
-			//			although there is no intersection, we still found
-			//			a proper postion for @addr-@end area in vma-chain.
-			//			Obviously the latter vmas won't have intersection
-			//			with @addr-@end area, and they are all "next" vmas.
-			break;
-	}
-	return false;
+	return __none_header_listnode_to_vma(lp, lhdr);
 }
 
 
@@ -190,10 +140,8 @@ simple_find_vma_links(mm_s *mm, ulong addr, ulong end, vma_s **pprev) {
  */
 static inline int
 simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
-	while (simple_find_vma_links(mm, start, start + len, pprev))
-		if (simple_do_vma_munmap(mm, start, start + len))
-			return -ENOMEM;
-	return 0;
+	*pprev = find_vma_prev_to_addr(mm, start);
+	return simple_do_vma_munmap(mm, start, start + len);
 }
 
 
@@ -243,7 +191,7 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
  * @end vm_end adjust target
  * 
  */
-int
+void
 __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 {
 	mm_s *mm = vma->vm_mm;
@@ -267,9 +215,7 @@ __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 		next->vm_pgoff += (end - next->vm_start) >> PAGE_SHIFT;
 		next->vm_start = end;
 	}
-
 	// validate_mm(mm);
-	return 0;
 }
 
 /*
@@ -464,10 +410,8 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 	if (adjust_target == NULL)
 		adjust_target = curr;
 	// while (prev == NULL && curr == NULL && next == NULL);
-	if (__simple_vma_adjust(adjust_target, vma_start, vma_end) != ENOERR)
-		return NULL;
-	else
-		return adjust_target;
+	__simple_vma_adjust(adjust_target, vma_start, vma_end);
+	return adjust_target;
 }
 
 
@@ -663,11 +607,11 @@ simple_mmap_region(file_s *file, ulong addr,
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev, *merge;
 	int error;
-	// ulong charged = 0;
 
 	/* Clear old maps, set up prev */
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
+	
 	// /*
 	//  * Private writable mapping: check memory availability
 	//  */
@@ -873,8 +817,6 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	/* requesting a specific address */
 	if (addr) {
 		addr &= PAGE_MASK;
-		// vma = simple_find_vma(mm, addr);
-		// if (!vma || addr + len <= vm_start_gap(vma))
 		if (!simple_find_vma(mm, addr))
 			return addr;
 	}
@@ -944,7 +886,8 @@ EXPORT_SYMBOL(get_unmapped_area);
 /* enforced gap between the expanding stack and other mappings. */
 ulong stack_guard_gap = 256UL<<PAGE_SHIFT;
 
-int expand_stack(vma_s *vma, ulong address)
+int
+expand_stack(vma_s *vma, ulong address)
 {
 	mm_s *mm = vma->vm_mm;
 	vma_s *prev;
@@ -1012,7 +955,6 @@ int expand_stack(vma_s *vma, ulong address)
 		}
 	}
 	// anon_vma_unlock_write(vma->anon_vma);
-	// khugepaged_enter_vma_merge(vma, vma->vm_flags);
 	// validate_mm(mm);
 	return error;
 }
@@ -1022,17 +964,11 @@ int expand_stack(vma_s *vma, ulong address)
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
  * has already been checked or doesn't make sense to fail.
  */
-int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
-{
-	int err;
-
+static int
+__split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below) {
 	vma_s *new = vm_area_creat_dup(vma);
 	if (!new)
 		return -ENOMEM;
-
-	// err = vma_dup_policy(vma, new);
-	// if (err)
-	// 	goto out_free_vma;
 
 	if (new->vm_file)
 		get_file(new->vm_file);
@@ -1040,30 +976,17 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 	if (new->vm_ops && new->vm_ops->open)
 		new->vm_ops->open(new);
 
-	if (new_below) {
+	if (new_below != 0) {
 		new->vm_end = addr;
-		err = __simple_vma_adjust(vma, addr, vma->vm_end);
+		__simple_vma_adjust(vma, addr, vma->vm_end);
 		__vma_link_list(mm, new, vma_prev_vma(vma));
 	} else {
 		new->vm_start = addr;
 		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
-		err = __simple_vma_adjust(vma, vma->vm_start, addr);
+		__simple_vma_adjust(vma, vma->vm_start, addr);
 		__vma_link_list(mm, new, vma);
 	}
-
-	/* Success. */
-	if (!err)
-		return 0;
-
-	/* Clean everything up if vma_adjust failed. */
-	if (new->vm_ops && new->vm_ops->close)
-		new->vm_ops->close(new);
-	if (new->vm_file)
-		fput(new->vm_file);
-	// unlink_anon_vmas(new);
- out_free_vma:
-	vm_area_free(new);
-	return err;
+	return -ENOERR;
 }
 
 
@@ -1073,82 +996,58 @@ int __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below)
 // do_vmi_align_munmap(struct vma_iterator *vmi, struct vm_area_struct *vma,
 // 		    struct mm_struct *mm, unsigned long start,
 // 		    unsigned long end, struct list_head *uf, bool unlock)
-int simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
+int
+simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 {
 	vma_s *vma, *prev, *last;
-	int error = -ENOMEM;
+	int error = -ENOERR;
 
 	/* Find the first overlapping VMA where start < vma->vm_end */
 	vma = find_vma_intersection(mm, start, end);
 	if (vma == NULL)
-		return 0;
-	prev = vma_prev_vma(vma);
+		goto end;
 
 	/*
 	 * If we need to split any vma, do it now to save pain later.
-	 *
-	 * Note: mremap's move_vma VM_ACCOUNT handling assumes a partially
-	 * unmapped vm_area_struct will remain in use: so lower split_vma
-	 * places tmp vma above, and higher split_vma places tmp vma below.
 	 */
-
+	/* Does it split the first one? */
 	if (start > vma->vm_start) {
-		/*
-		 * Make sure that map_count on return from munmap() will
-		 * not exceed its limit; but let map_count go just above
-		 * its limit temporarily, to help free resources as expected.
-		 */
-		if (end < vma->vm_end && mm->map_count >= sysctl_max_map_count)
-			goto map_count_exceeded;
-
-		int error = __split_vma(mm, vma, start, 0);
+		error = __split_vma(mm, vma, start, 1);
 		if (error != ENOERR)
-			return error;
-		prev = vma;
+			goto start_split_failed;
 	}
+	prev = vma_prev_vma(vma);
 
 	/* Does it split the last one? */
 	last = simple_find_vma(mm, end);
-	if (last && end > last->vm_start) {
-		int error = __split_vma(mm, last, end, 1);
+	if (last != NULL && end > last->vm_start) {
+		error = __split_vma(mm, last, end, 1);
 		if (error != ENOERR)
 			goto end_split_failed;
 	}
-	vma = vma_next_vma(prev);
 
 	/* Detach vmas from vma list */
-	do {
-		BUG_ON(vma == last);
-		BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
-
-		vma_s *tmp = vma;
-		vma = vma_prev_vma(vma);
+	vma_s *tmp;
+	while ((tmp = vma_next_vma(prev))->vm_end <= end) {
+		BUG_ON(tmp == last);
+		BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
 		mm->map_count--;
 		list_header_delete_node(&mm->mm_mt, &tmp->list);
-	} for_each_vma_range(mm, vma, end);
-
-	error = -ENOERR;
-
-userfaultfd_error:
-munmap_gather_failed:
-end_split_failed:
-	// mas_set(&mas_detach, 0);
-	// mas_for_each(&mas_detach, next, end)
-	// 	vma_mark_detached(next, false);
-
-	// __mt_destroy(&mt_detach);
-start_split_failed:
-map_count_exceeded:
-	// validate_mm(mm);
+	}
+end:
 	return error;
+
+end_split_failed:
+start_split_failed:
+	// validate_mm(mm);
+	goto end;
 }
 
-int __vm_munmap(ulong start, size_t len)
+int
+__vm_munmap(ulong start, size_t len)
 {
 	int ret;
 	mm_s *mm = current->mm;
-	// LIST_HEAD(uf);
-	// VMA_ITERATOR(vmi, mm, start);
 
 	// if (mmap_write_lock_killable(mm))
 	// 	return -EINTR;
@@ -1157,7 +1056,6 @@ int __vm_munmap(ulong start, size_t len)
 	// if (ret || !unlock)
 	// 	mmap_write_unlock(mm);
 
-	// userfaultfd_unmap_complete(mm, &uf);
 	return ret;
 }
 
@@ -1187,16 +1085,12 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	if (IS_ERR_VALUE(mapped_addr))
 		return mapped_addr;
 
-	// error = mlock_future_check(mm, mm->def_flags, len);
-	// if (error)
-	// 	return error;
-
 	/* Clear old maps, set up prev, and uf */
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
 
-	if (mm->map_count > sysctl_max_map_count)
-		return -ENOMEM;
+	// if (mm->map_count > sysctl_max_map_count)
+	// 	return -ENOMEM;
 
 	/* Can we just expand an old private anonymous mapping? */
 	vma = simple_vma_merge(mm, prev, addr, addr + len, flags, NULL, pgoff);
@@ -1235,8 +1129,6 @@ vm_brk_flags(ulong addr, ulong request, ulong flags)
 	mm_s *mm = current->mm;
 	ulong len;
 	int ret;
-	// bool populate;
-	// LIST_HEAD(uf);
 
 	len = PAGE_ALIGN(request);
 	if (len < request)
@@ -1248,11 +1140,7 @@ vm_brk_flags(ulong addr, ulong request, ulong flags)
 	// 	return -EINTR;
 
 	ret = do_brk_flags(addr, len, flags);
-	// populate = ((mm->def_flags & VM_LOCKED) != 0);
 	// mmap_write_unlock(mm);
-	// userfaultfd_unmap_complete(mm, &uf);
-	// if (populate && !ret)
-	// 	mm_populate(addr, len);
 	return ret;
 }
 
@@ -1312,33 +1200,9 @@ MYOS_SYSCALL_DEFINE6(mmap,
 		file = fget(fd);
 		if (!file)
 			return -EBADF;
-		// if (is_file_hugepages(file)) {
-		// 	len = ALIGN(len, huge_page_size(hstate_file(file)));
-		// } else if (unlikely(flags & MAP_HUGETLB)) {
-		// 	retval = -EINVAL;
-		// 	goto out_fput;
-		// }
 	} else if (flags & MAP_HUGETLB) {
 		// currently unsupported
 		while (1);
-		
-		// struct hstate *hs;
-
-		// hs = hstate_sizelog((flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-		// if (!hs)
-		// 	return -EINVAL;
-
-		// len = ALIGN(len, huge_page_size(hs));
-		// /*
-		//  * VM_NORESERVE is used because the reservations will be
-		//  * taken when vm_ops->mmap() is called
-		//  */
-		// file = hugetlb_file_setup(HUGETLB_ANON_FILE, len,
-		// 		VM_NORESERVE,
-		// 		HUGETLB_ANONHUGE_INODE,
-		// 		(flags >> MAP_HUGE_SHIFT) & MAP_HUGE_MASK);
-		// if (IS_ERR(file))
-		// 	return PTR_ERR(file);
 	}
 
 	retval = vm_mmap_pgoff(file, addr, len, prot, flags, pgoff);
@@ -1351,6 +1215,5 @@ out_fput:
 MYOS_SYSCALL_DEFINE2(munmap, unsigned long, addr, size_t, len)
 {
 	// addr = untagged_addr(addr);
-	// return __vm_munmap(addr, len, true);
 	return __vm_munmap(addr, len);
 }

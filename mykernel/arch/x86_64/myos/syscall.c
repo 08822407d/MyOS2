@@ -146,11 +146,7 @@ MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 	mm_s *mm = current->mm;
 	vma_s *brkvma, *next = NULL;
 	ulong min_brk;
-	// bool populate;
 	bool downgraded = false;
-	
-	// if (mmap_write_lock_killable(mm))
-	// 	return -EINTR;
 
 	origbrk = mm->brk;
 	min_brk = mm->start_brk;

@@ -27,13 +27,13 @@
 	void vm_area_free(vma_s *);
 	vma_s *vma_prev_vma(vma_s *vma);
 	vma_s *vma_next_vma(vma_s *vma);
-	vma_s *vma_next(mm_s *mm, vma_s *vma);
-	vma_s *vma_prev(mm_s *mm, vma_s *vma);
+	vma_s *mm_next_vma(mm_s *mm, vma_s *vma);
+	vma_s *mm_prev_vma(mm_s *mm, vma_s *vma);
 	void unlink_anon_vmas(vma_s *);
 	int anon_vma_clone(vma_s *, vma_s *);
 
 	// /* mmap.c */
-	extern int __simple_vma_adjust(vma_s *vma, ulong start, ulong end);
+	extern void __simple_vma_adjust(vma_s *vma, ulong start, ulong end);
 	vma_s *simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr,
 			ulong end, ulong vm_flags, file_s *file, pgoff_t pgoff);
 	extern int insert_vm_struct(mm_s *, vma_s *);
