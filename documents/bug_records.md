@@ -1,1 +1,0 @@
-多核平台上核唯一ID的获取中，从UEFI中的EFI_PROCESSOR_INFORMATION.ProcessorId获取到的ID是固件重设过的，不是initial APIC ID。而由CPUID.01H:EBX[32:24]获取的是initial APIC ID,根据群里大佬的说法，这个ID不能保证连续性，例如在不支持超线程的处理器上，这个ID全是偶数。在VMware WorkStation pro上运行的结果是UEFI获取的ID是连续的，而CPU拓扑显示该虚拟机并不支持超线程，从VMware社区的几个关于启用超线程问题帖子的回答也可知VMware不支持超线程。

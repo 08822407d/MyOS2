@@ -1,3 +1,6 @@
+2024-9-6
+	整理和简化mmap相关函数，准备加入file-mmap和page cache
+
 2024-5-23
 	分析libata中的分区扫描过程，以此加入相关数据结构和分区扫描流程框架
 
@@ -20,8 +23,3 @@
 2022-04-14
 	1.实现fat32的create,mkdir,rmdir
 	2.完善vfs的文件标志位相关代码
-
-构建edk2
-make -C BaseTools/
-source edksetup.sh BaseTools 
-build -a X64 -t GCC5 -p ShellPkg/ShellPkg.dsc
