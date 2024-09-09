@@ -732,29 +732,102 @@ unacct_error:
  * - satisfies (begin_addr & align_mask) == (align_offset & align_mask)
  */
 ulong
-simple_vm_unmapped_area(mm_s * mm, unmapped_vma_info_s *info)
+simple_find_vm_unmapped_area_topdown(mm_s *mm, unmapped_vma_info_s *info)
 {
 	ulong gap = ~0, gap_end = ~0;
-	vma_s *tmp = NULL;
+	ulong tmp_gap, tmp_gap_end;
+	vma_s *tmp = NULL, *next;
 
 	for_each_vma_topdown(mm, tmp) {
 		if (tmp->vm_end >= info->high_limit)
 			continue;
+		next = vma_next_vma(tmp);
 
-		gap = tmp->vm_end;
-		gap_end = info->high_limit;
-		vma_s * next = vma_next_vma(tmp);
-		if (next != NULL)
-			gap_end = next->vm_start;
-		
-		if (gap_end - gap >= info->length)
+		// get gap start
+		if (tmp->vm_end <= info->low_limit)
+			tmp_gap = info->low_limit;
+		else
+			tmp_gap = tmp->vm_end;
+
+		// get gap end
+		if (next != NULL && next->vm_start <= info->high_limit)
+			tmp_gap_end = next->vm_start;
+		else
+			tmp_gap_end = info->high_limit;
+
+		// calculate gap size
+		if (tmp_gap_end - tmp_gap >= info->length) {
+			gap = tmp_gap;
+			gap_end = tmp_gap_end;
 			break;
+		}
+		if (tmp->vm_start <= info->low_limit)
+			break;
+	}
+	if (tmp == NULL) {
+		next = vma_next_vma(tmp);
+		tmp_gap = info->low_limit;
+		tmp_gap_end = next->vm_start;
+
+		if (tmp_gap_end - tmp_gap >= info->length) {
+			gap = tmp_gap;
+			gap_end = tmp_gap_end;
+		}
 	}
 
 	if (gap = ~0) {
 		gap = info->high_limit - info->length;
 		gap &= PAGE_MASK;
 	}
+
+	return gap;
+}
+ulong
+simple_find_vm_unmapped_area_bottomup(mm_s *mm, unmapped_vma_info_s *info)
+{
+	ulong gap = 0, gap_end = 0;
+	ulong tmp_gap, tmp_gap_end;
+	vma_s *tmp = NULL, *prev;
+
+	for_each_vma(mm, tmp) {
+		if (tmp->vm_start <= info->low_limit)
+			continue;
+		prev = vma_prev_vma(tmp);
+
+		// get gap start
+		if (prev != NULL && prev->vm_end >= info->low_limit)
+			tmp_gap = prev->vm_end;
+		else
+			tmp_gap = info->low_limit;
+
+		// get gap end
+		if (tmp->vm_start >= info->high_limit)
+			tmp_gap_end = info->high_limit;
+		else
+			tmp_gap_end = tmp->vm_start;
+
+		// calculate gap size
+		if (tmp_gap_end - tmp_gap >= info->length) {
+			gap = tmp_gap;
+			gap_end = tmp_gap_end;
+			break;
+		}
+		if (tmp->vm_end >= info->high_limit)
+			break;
+	}
+	if (tmp == NULL) {
+		prev = vma_next_vma(tmp);
+		tmp_gap = info->low_limit;
+		tmp_gap_end = prev->vm_start;
+
+		if (tmp_gap_end - tmp_gap >= info->length) {
+			gap = tmp_gap;
+			gap_end = tmp_gap_end;
+		}
+	}
+
+	if (gap = 0)
+		gap = (info->low_limit & PAGE_MASK);
 
 	return gap;
 }
@@ -775,7 +848,7 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	info.high_limit = mm->mmap_base;
 
 	/* requesting a specific address */
-	if (addr) {
+	if (addr != 0) {
 		addr &= PAGE_MASK;
 		if (!simple_find_vma(mm, addr))
 			return addr;
@@ -784,9 +857,6 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	/*
 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
 	 * in the full address space.
-	 *
-	 * !in_32bit_syscall() check to avoid high addresses for x32
-	 * (and make it no op on native i386).
 	 */
 	if (addr > DEFAULT_MAP_WINDOW)
 		info.high_limit += TASK_SIZE_MAX - DEFAULT_MAP_WINDOW;
@@ -795,10 +865,9 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 	// 	info.align_offset += get_align_bits();
 	// }
 
-	addr = simple_vm_unmapped_area(mm, &info);
+	addr = simple_find_vm_unmapped_area_topdown(mm, &info);
 	// if ((addr & ~PAGE_MASK) != 0)
 		return addr;
-	// BUG_ON(addr != -ENOMEM);
 }
 
 ulong
@@ -851,7 +920,7 @@ expand_stack(vma_s *vma, ulong address)
 {
 	mm_s *mm = vma->vm_mm;
 	vma_s *prev;
-	int error = 0;
+	int error = -ENOERR;
 
 	address &= PAGE_MASK;
 	if (address < mmap_min_addr)
@@ -889,16 +958,16 @@ expand_stack(vma_s *vma, ulong address)
 			// error = acct_stack_growth(vma, size, grow);
 			// if (!error) {
 				/*
-					* vma_gap_update() doesn't support concurrent
-					* updates, but we only hold a shared mmap_lock
-					* lock here, so we need to protect against
-					* concurrent vma expansions.
-					* anon_vma_lock_write() doesn't help here, as
-					* we don't guarantee that all growable vmas
-					* in a mm share the same root anon vma.
-					* So, we reuse mm->page_table_lock to guard
-					* against concurrent vma expansions.
-					*/
+				 * vma_gap_update() doesn't support concurrent
+				 * updates, but we only hold a shared mmap_lock
+				 * lock here, so we need to protect against
+				 * concurrent vma expansions.
+				 * anon_vma_lock_write() doesn't help here, as
+				 * we don't guarantee that all growable vmas
+				 * in a mm share the same root anon vma.
+				 * So, we reuse mm->page_table_lock to guard
+				 * against concurrent vma expansions.
+				 */
 				spin_lock(&mm->page_table_lock);
 			// 	if (vma->vm_flags & VM_LOCKED)
 			// 		mm->locked_vm += grow;

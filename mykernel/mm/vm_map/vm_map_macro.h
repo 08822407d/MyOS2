@@ -27,12 +27,12 @@
 
 	#define for_each_vma(mm, __vma)								\
 			while (												\
-				((__vma) = mm_next_vma((mm), (__vma))) != NULL		\
+				((__vma) = mm_next_vma((mm), (__vma))) != NULL	\
 			)
 
 	#define for_each_vma_topdown(mm, __vma)						\
 			while (												\
-				((__vma) = mm_prev_vma((mm), (__vma))) != NULL		\
+				((__vma) = mm_prev_vma((mm), (__vma))) != NULL	\
 			)
 
 	// /* Bottom UP raverse vmas in mm->mm_mt while __vma's end lower than __end */
