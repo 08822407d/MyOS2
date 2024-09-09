@@ -77,7 +77,7 @@ int main(int argc, const char *argv[])
 	while (1)
 	{
 		printf("\n");
-		printf("$ ");
+		printf("MyOS2:%s # _", current_dir);
 		fflush(stdout);
 		memset(buf, 0, SZ_4K);
 
@@ -104,6 +104,7 @@ int read_line(char *buf)
 
 	while(read(console_fd, &key, 1) == 1 && key != 4)
 	{
+		write(console_fd, "\b", 1);
 		switch (key)
 		{
 		case 0:
@@ -125,6 +126,7 @@ int read_line(char *buf)
 			write(console_fd, &key, 1);
 			break;
 		}
+		write(console_fd, "_", 1);
 	}
 }
 

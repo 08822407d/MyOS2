@@ -11,7 +11,7 @@
 #include <linux/kernel/uaccess.h>
 
 
-void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
+void __vma_link_to_list(mm_s *mm, vma_s *vma, vma_s *prev)
 {
 	INIT_LIST_S(&vma->list);
 	if (prev == NULL) {
@@ -23,12 +23,14 @@ void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev)
 		list_add_to_next(&vma->list, &prev->list);
 		mm->mm_mt.count++;
 	}
+	mm->map_count++;
 }
 
-void __vma_unlink_list(mm_s *mm, vma_s *vma)
+void __vma_unlink_from_list(mm_s *mm, vma_s *vma)
 {
 	// BUG_ON(!list_header_contains(&mm->mm_mt, &vma->list));
 	while (vma != NULL && !list_header_contains(&mm->mm_mt, &vma->list));
+	mm->map_count--;
 	list_header_delete_node(&mm->mm_mt, &vma->list);
 }
 

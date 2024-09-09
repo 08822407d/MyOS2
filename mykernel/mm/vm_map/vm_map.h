@@ -136,20 +136,20 @@
 		}
 
 		/*
-		 * Find the vma(@retval) whose range is prev to @addr
+		 * Find the vma(@retval) whose range is prev to @addr no intersection
 		 */
 		PREFIX_STATIC_INLINE
 		vma_s
 		*find_vma_prev_to_addr(mm_s *mm, ulong addr) {
 			vma_s *vma = NULL;
-			for_each_vma(mm, vma) {
-				if (vma->vm_end > addr)
-					return vma_prev_vma(vma);
+			for_each_vma_topdown(mm, vma) {
+				if (vma->vm_end < addr)
+					return vma;
 			}
 			return NULL;
 		}
 		/*
-		 * Find the vma(@retval) whose range is prev to @addr
+		 * Find the vma(@retval) whose range is next to @addr no intersection
 		 */
 		PREFIX_STATIC_INLINE
 		vma_s
@@ -162,6 +162,11 @@
 			return NULL;
 		}
 
+		PREFIX_STATIC_INLINE
+		bool
+		__vma_intersect_with_range(vma_s *vma, ulong start, ulong end) {
+			return !((vma->vm_end <= start) || (vma->vm_start >= end));
+		}
 		/**
 		 * find_vma_intersection() - Look up the first VMA which intersects the interval
 		 * @mm: The process address space.
@@ -179,25 +184,8 @@
 
 			vma_s *vma = find_vma_prev_to_addr(mm, start);
 
-			// for_each_vma(mm, vma) {
-			// 	// BUG_ON(vma->vm_start >= vma->vm_end);
-			// 	while (vma->vm_start >= vma->vm_end);
-
-			// 	if (!((vma->vm_end <= start) ||
-			// 			(vma->vm_start >= end))) {
-			// 		// case1:	Found intersected vma
-			// 		retval = vma;
-			// 		break;
-			// 	}
-			// 	else if (end <= vma->vm_start)
-			// 		// case2:	Since we iterate vmas from low-addr to high-addr,
-			// 		//			Obviously the latter vmas won't have intersection
-			// 		//			with @addr-@end area, and they are all "next" vmas.
-			// 		break;
-			// }
-
 			if (vma != NULL && (vma = vma_next_vma(vma)) != NULL &&
-					!((vma->vm_end <= start) || (vma->vm_start >= end)))
+					__vma_intersect_with_range(vma, start, end))
 				return vma;
 			else
 				return NULL;
@@ -214,7 +202,7 @@
 		vma_s
 		*vma_lookup(mm_s *mm, ulong addr) {
 			vma_s *vma = simple_find_vma(mm, addr);
-			if (vma && addr < vma->vm_start)
+			if (vma != NULL && addr < vma->vm_start)
 				vma = NULL;
 			return vma;
 		}

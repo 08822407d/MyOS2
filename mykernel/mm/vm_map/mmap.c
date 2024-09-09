@@ -21,6 +21,10 @@
 static bool ignore_rlimit_data = false;
 ulong mmap_min_addr = PAGE_SIZE;
 
+static void
+simple_unmap_region(mm_s *mm, vma_s *vma,
+		vma_s *prev, ulong start, ulong end);
+
 
 vma_s *
 vm_area_alloc(mm_s *mm)
@@ -170,13 +174,12 @@ simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
 		// i_mmap_lock_write(mapping);
 	}
 
-	__vma_link_list(mm, vma, prev);
+	__vma_link_to_list(mm, vma, prev);
 	__vma_link_file(vma);
 
 	// if (mapping)
 	// 	i_mmap_unlock_write(mapping);
 
-	mm->map_count++;
 	// validate_mm(mm);
 }
 
@@ -196,7 +199,7 @@ __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 {
 	mm_s *mm = vma->vm_mm;
 	// file_s *file = vma->vm_file;
-	vma_s *next = vma_next_vma(vma);
+	vma_s *next = NULL;
 
 	// adjust vma's bounds
 	vma->vm_start = start;
@@ -204,12 +207,9 @@ __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
 	vma->vm_end = end;
 
 	// due with totally overlapping situation
-	while (next != NULL && end >= next->vm_end) {
-		vma_s *tmp_next = next;
-		next = vma_next_vma(next);
-		__vma_unlink_list(mm, tmp_next);
+	while ((next = vma_next_vma(vma))!= NULL && end >= next->vm_end) {
+		__vma_unlink_from_list(mm, next);
 	}
-	next = vma_next_vma(vma);
 	// due with partially overlapping situation
 	if (next != NULL && end > next->vm_start) {
 		next->vm_pgoff += (end - next->vm_start) >> PAGE_SHIFT;
@@ -241,7 +241,7 @@ simple_is_mergeable_vma(vma_s *vma, file_s *file, ulong vm_flags) {
 		return false;
 	if (vma->vm_file != file)
 		return false;
-	if (vma->vm_ops && vma->vm_ops->close)
+	if (vma->vm_ops != NULL && vma->vm_ops->close != NULL)
 		return false;
 	return true;
 }
@@ -382,13 +382,13 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 	/* Does the input range span an existing VMA? (cases 5 - 8) */
 	curr = find_vma_intersection(mm, prev ? prev->vm_end : 0, end);
 	if (curr == NULL ||					/* cases 1 - 4 */
-			end == curr->vm_end)	/* cases 6 - 8, adjacent VMA */
+			end == curr->vm_end)		/* cases 6 - 8, adjacent VMA */
 		next = vma_lookup(mm, end);
 	else
-		next = NULL;				/* case 5 */
+		next = NULL;					/* case 5 */
 	
 	/* Can we merge the predecessor? */
-	if (prev && addr == prev->vm_end
+	if (prev != NULL && addr == prev->vm_end
 			&& simple_can_vma_merge_after(prev, vm_flags, file, pgoff)) {
 		vma_start = prev->vm_start;
 		vma_pgoff = prev->vm_pgoff;
@@ -396,7 +396,7 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 		merge_prev = true;
 	}
 	/* Can we merge the successor? */
-	if (next && simple_can_vma_merge_before(next,
+	if (next != NULL && simple_can_vma_merge_before(next,
 			vm_flags, file, pgoff+pglen)) {
 		vma_end = next->vm_end;
 		if (!prev)
@@ -409,7 +409,8 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 
 	if (adjust_target == NULL)
 		adjust_target = curr;
-	// while (prev == NULL && curr == NULL && next == NULL);
+
+	while (prev == NULL && curr == NULL && next == NULL);
 	__simple_vma_adjust(adjust_target, vma_start, vma_end);
 	return adjust_target;
 }
@@ -595,16 +596,6 @@ simple_mmap_region(file_s *file, ulong addr,
 	/* Clear old maps, set up prev */
 	if (simple_munmap_vma_range(mm, addr, len, &prev))
 		return -ENOMEM;
-	
-	// /*
-	//  * Private writable mapping: check memory availability
-	//  */
-	// if (accountable_mapping(file, vm_flags)) {
-	// 	charged = len >> PAGE_SHIFT;
-	// 	if (security_vm_enough_memory_mm(mm, charged))
-	// 		return -ENOMEM;
-	// 	vm_flags |= VM_ACCOUNT;
-	// }
 
 	/*
 	 * Can we just expand an old mapping?
@@ -657,7 +648,7 @@ simple_mmap_region(file_s *file, ulong addr,
 		 * If vm_flags changed after call_mmap(), we should try merge vma again
 		 * as we may succeed this time.
 		 */
-		if (unlikely(vm_flags != vma->vm_flags && prev)) {
+		if (unlikely(vm_flags != vma->vm_flags && prev != NULL)) {
 			merge = simple_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
 					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
 			if (merge) {
@@ -684,24 +675,13 @@ simple_mmap_region(file_s *file, ulong addr,
 		vma_set_anonymous(vma);
 	}
 
-	// /* Allow architectures to sanity-check the vm_flags */
-	// if (!arch_validate_flags(vma->vm_flags)) {
-	// 	error = -EINVAL;
-	// 	if (file)
-	// 		goto unmap_and_free_vma;
-	// 	else
-	// 		goto free_vma;
-	// }
-
 	simple_vma_link(mm, vma, prev);
 	/* Once vma denies write, undo our temporary denial count */
 unmap_writable:
-	// if (file && vm_flags & VM_SHARED)
+	// if (file && (vm_flags & VM_SHARED))
 	// 	mapping_unmap_writable(file->f_mapping);
 	file = vma->vm_file;
 out:
-	// perf_event_mmap(vma);
-
 	// vm_stat_account(mm, vm_flags, len >> PAGE_SHIFT);
 	// if (vm_flags & VM_LOCKED) {
 	// 	if ((vm_flags & VM_SPECIAL) || vma_is_dax(vma) ||
@@ -723,7 +703,6 @@ out:
 	 * a completely new data area).
 	 */
 	vma->vm_flags |= VM_SOFTDIRTY;
-
 	// vma_set_page_prot(vma);
 
 	return addr;
@@ -732,16 +711,13 @@ unmap_and_free_vma:
 	fput(vma->vm_file);
 	vma->vm_file = NULL;
 
-	// /* Undo any partial mapping done by a device driver. */
-	// unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
-	// charged = 0;
+	/* Undo any partial mapping done by a device driver. */
+	simple_unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
 	// if (vm_flags & VM_SHARED)
 	// 	mapping_unmap_writable(file->f_mapping);
 free_vma:
 	vm_area_free(vma);
 unacct_error:
-	// if (charged)
-	// 	vm_unacct_memory(charged);
 	return error;
 }
 
@@ -945,6 +921,29 @@ expand_stack(vma_s *vma, ulong address)
 
 
 /*
+ * Get rid of page table information in the indicated region.
+ *
+ * Called with the mm semaphore held.
+ */
+static void
+simple_unmap_region(mm_s *mm, vma_s *vma,
+		vma_s *prev, ulong start, ulong end) {
+
+	// struct mmu_gather tlb;
+	// unsigned long mt_start = mas->index;
+
+	// lru_add_drain();
+	// tlb_gather_mmu(&tlb, mm);
+	// update_hiwater_rss(mm);
+	// unmap_vmas(&tlb, mas, vma, start, end, tree_end, mm_wr_locked);
+	// mas_set(mas, mt_start);
+	// free_pgtables(&tlb, mas, vma, prev ? prev->vm_end : FIRST_USER_ADDRESS,
+	// 			 next ? next->vm_start : USER_PGTABLES_CEILING,
+	// 			 mm_wr_locked);
+	// tlb_finish_mmu(&tlb);
+}
+
+/*
  * __split_vma() bypasses sysctl_max_map_count checking.  We use this where it
  * has already been checked or doesn't make sense to fail.
  */
@@ -963,12 +962,12 @@ __split_vma(mm_s *mm, vma_s *vma, ulong addr, int new_below) {
 	if (new_below != 0) {
 		new->vm_end = addr;
 		__simple_vma_adjust(vma, addr, vma->vm_end);
-		__vma_link_list(mm, new, vma_prev_vma(vma));
+		__vma_link_to_list(mm, new, vma_prev_vma(vma));
 	} else {
 		new->vm_start = addr;
 		new->vm_pgoff += ((addr - vma->vm_start) >> PAGE_SHIFT);
 		__simple_vma_adjust(vma, vma->vm_start, addr);
-		__vma_link_list(mm, new, vma);
+		__vma_link_to_list(mm, new, vma);
 	}
 	return -ENOERR;
 }
@@ -1012,11 +1011,9 @@ simple_do_vma_munmap(mm_s *mm, ulong start, ulong end)
 
 	/* Detach vmas from vma list */
 	vma_s *tmp;
-	while ((tmp = vma_next_vma(prev))->vm_end <= end) {
+	while ((tmp = vma_next_vma(prev)) != NULL && tmp->vm_end <= end) {
 		BUG_ON(tmp == last);
-		BUG_ON(!list_header_contains(&mm->mm_mt, &tmp->list));
-		mm->map_count--;
-		list_header_delete_node(&mm->mm_mt, &tmp->list);
+		__vma_unlink_from_list(mm, tmp);
 	}
 end:
 	return error;

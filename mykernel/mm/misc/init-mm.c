@@ -61,6 +61,6 @@ void setup_initial_init_mm(void *start_code,
 
 	memset(&init_vma, 0, sizeof(vma_s));
 	INIT_LIST_HEADER_S(&init_mm.mm_mt);
-	__vma_link_list(&init_mm, &init_vma, NULL);
+	__vma_link_to_list(&init_mm, &init_vma, NULL);
 	init_mm.map_count	= 1;
 }

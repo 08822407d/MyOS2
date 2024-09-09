@@ -60,8 +60,8 @@
 	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 
 	/* mm/util.c */
-	void __vma_link_list(mm_s *mm, vma_s *vma, vma_s *prev);
-	void __vma_unlink_list(mm_s *mm, vma_s *vma);
+	void __vma_link_to_list(mm_s *mm, vma_s *vma, vma_s *prev);
+	void __vma_unlink_from_list(mm_s *mm, vma_s *vma);
 	extern ulong  __must_check vm_mmap_pgoff(file_s *,
 			ulong, ulong, ulong, ulong, ulong);
 
