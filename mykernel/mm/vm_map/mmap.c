@@ -153,7 +153,7 @@ static void
 __vma_link_file(vma_s *vma) {
 	file_s *file = vma->vm_file;
 	if (file) {
-		// struct address_space *mapping = file->f_mapping;
+		addr_spc_s *mapping = file->f_mapping;
 
 		// if (vma->vm_flags & VM_SHARED)
 		// 	mapping_allow_writable(mapping);
@@ -167,18 +167,18 @@ __vma_link_file(vma_s *vma) {
 // static int vma_link(struct mm_struct *mm, struct vm_area_struct *vma)
 static void
 simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
-	// struct address_space *mapping = NULL;
+	addr_spc_s *mapping = NULL;
 
 	if (vma->vm_file) {
-		// mapping = vma->vm_file->f_mapping;
-		// i_mmap_lock_write(mapping);
+		mapping = vma->vm_file->f_mapping;
+		i_mmap_lock_write(mapping);
 	}
 
 	__vma_link_to_list(mm, vma, prev);
 	__vma_link_file(vma);
 
-	// if (mapping)
-	// 	i_mmap_unlock_write(mapping);
+	if (mapping)
+		i_mmap_unlock_write(mapping);
 
 	// validate_mm(mm);
 }

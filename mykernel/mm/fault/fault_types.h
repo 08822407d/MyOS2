@@ -156,10 +156,10 @@
 									 * VM_FAULT_ERROR).
 									 */
 		/* These three entries are valid only while holding ptl lock */
-		// spinlock_t		*ptl;		/* Page table lock.
-		// 							 * Protects pte page table if 'pte'
-		// 							 * is not NULL, otherwise pmd.
-		// 							 */
+		spinlock_t		*ptl;		/* Page table lock.
+									 * Protects pte page table if 'pte'
+									 * is not NULL, otherwise pmd.
+									 */
 		// pgtable_t		prealloc_pte;
 		// 							/* Pre-allocated pte page table.
 		// 							 * vm_ops->map_pages() sets up a page

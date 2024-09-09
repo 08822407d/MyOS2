@@ -189,10 +189,10 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 		tmp->vm_flags &= ~(VM_LOCKED | VM_LOCKONFAULT);
 		file = tmp->vm_file;
 		if (file) {
-			// struct address_space *mapping = file->f_mapping;
+			addr_spc_s *mapping = file->f_mapping;
 
 			get_file(file);
-			// i_mmap_lock_write(mapping);
+			i_mmap_lock_write(mapping);
 			// if (tmp->vm_flags & VM_SHARED)
 			// 	mapping_allow_writable(mapping);
 			// flush_dcache_mmap_lock(mapping);
@@ -200,7 +200,7 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 			// vma_interval_tree_insert_after(tmp, mpnt,
 			// 		&mapping->i_mmap);
 			// flush_dcache_mmap_unlock(mapping);
-			// i_mmap_unlock_write(mapping);
+			i_mmap_unlock_write(mapping);
 		}
 
 		/*

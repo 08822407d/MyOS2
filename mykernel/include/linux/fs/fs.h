@@ -409,20 +409,20 @@
 	// #endif
 		// rb_root_cached_s	i_mmap;
 		// rw_semaphore_s		i_mmap_rwsem;
-		unsigned long		nrpages;
+		ulong				nrpages;
 		pgoff_t				writeback_index;
 		const addr_spc_ops_s	*a_ops;
-		// unsigned long		flags;
+		ulong				flags;
 		// errseq_t			wb_err;
 		// spinlock_t			private_lock;
 		// list_head_s			private_list;
-		// void				*private_data;
+		void				*private_data;
 	} __attribute__((aligned(sizeof(long)))) addr_spc_s;
-		/*
-		* On most architectures that alignment is already the case; but
-		* must be enforced here for CRIS, to let the least significant bit
-		* of page_s's "mapping" pointer be used for PAGE_MAPPING_ANON.
-		*/
+	/*
+	 * On most architectures that alignment is already the case; but
+	 * must be enforced here for CRIS, to let the least significant bit
+	 * of page_s's "mapping" pointer be used for PAGE_MAPPING_ANON.
+	 */
 
 	// /* XArray tags, for tagging dirty and writeback pages in the pagecache. */
 	// #define PAGECACHE_TAG_DIRTY	XA_MARK_0
@@ -437,30 +437,30 @@
 	// 	return xa_marked(&mapping->i_pages, tag);
 	// }
 
-	// static inline void i_mmap_lock_write(addr_spc_s *mapping)
-	// {
-	// 	down_write(&mapping->i_mmap_rwsem);
-	// }
+	static inline void i_mmap_lock_write(addr_spc_s *mapping)
+	{
+		// down_write(&mapping->i_mmap_rwsem);
+	}
 
 	// static inline int i_mmap_trylock_write(addr_spc_s *mapping)
 	// {
 	// 	return down_write_trylock(&mapping->i_mmap_rwsem);
 	// }
 
-	// static inline void i_mmap_unlock_write(addr_spc_s *mapping)
-	// {
-	// 	up_write(&mapping->i_mmap_rwsem);
-	// }
+	static inline void i_mmap_unlock_write(addr_spc_s *mapping)
+	{
+		// up_write(&mapping->i_mmap_rwsem);
+	}
 
-	// static inline void i_mmap_lock_read(addr_spc_s *mapping)
-	// {
-	// 	down_read(&mapping->i_mmap_rwsem);
-	// }
+	static inline void i_mmap_lock_read(addr_spc_s *mapping)
+	{
+		// down_read(&mapping->i_mmap_rwsem);
+	}
 
-	// static inline void i_mmap_unlock_read(addr_spc_s *mapping)
-	// {
-	// 	up_read(&mapping->i_mmap_rwsem);
-	// }
+	static inline void i_mmap_unlock_read(addr_spc_s *mapping)
+	{
+		// up_read(&mapping->i_mmap_rwsem);
+	}
 
 	// static inline void i_mmap_assert_locked(addr_spc_s *mapping)
 	// {
@@ -903,7 +903,7 @@
 	// 	/* Used by fs/eventpoll.c to link all the hooks to this file */
 	// 	struct hlist_head	*f_ep;
 	// #endif /* #ifdef CONFIG_EPOLL */
-	// 	struct address_space	*f_mapping;
+	addr_spc_s				*f_mapping;
 	// 	errseq_t		f_wb_err;
 	// 	errseq_t		f_sb_err; /* for syncfs */
 	} file_s

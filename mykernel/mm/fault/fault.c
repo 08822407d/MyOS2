@@ -1379,40 +1379,23 @@ handle_pte_fault(vm_fault_s *vmf) {
 		 * concurrent faults and from rmap lookups.
 		 */
 		vmf->pte = NULL;
+		vmf->flags &= ~FAULT_FLAG_ORIG_PTE_VALID;
 	} else {
-		// /*
-		//  * If a huge pmd materialized under us just retry later.  Use
-		//  * pmd_trans_unstable() via pmd_devmap_trans_unstable() instead
-		//  * of pmd_trans_huge() to ensure the pmd didn't become
-		//  * pmd_trans_huge under us and then back to pmd_none, as a
-		//  * result of MADV_DONTNEED running immediately after a huge pmd
-		//  * fault in a different thread of this mm, in turn leading to a
-		//  * misleading pmd_trans_huge() retval. All we have to ensure is
-		//  * that it is a regular pmd that we can walk with
-		//  * pte_offset_map() and we can do that through an atomic read
-		//  * in C, which is what pmd_trans_unstable() provides.
-		//  */
-		// if (pmd_devmap_trans_unstable(vmf->pmd))
-		// 	return 0;
 		/*
 		 * A regular pmd is established and it can't morph into a huge
-		 * pmd from under us anymore at this point because we hold the
-		 * mmap_lock read mode and khugepaged takes it in write mode.
-		 * So now it's safe to run pte_offset_map().
+		 * pmd by anon khugepaged, since that takes mmap_lock in write
+		 * mode; but shmem or file collapse to THP could still morph
+		 * it into a huge pmd: just retry later if so.
 		 */
-		// vmf->pte = pte_offset_map(vmf->pmd, vmf->address);
+		// vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm, vmf->pmd,
+		// 				 vmf->address, &vmf->ptl);
+		// if (unlikely(!vmf->pte))
+		// 	return 0;
+		// vmf->orig_pte = ptep_get_lockless(vmf->pte);
 		vmf->orig_pte = *vmf->pte;
+		vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
 
-		/*
-		 * some architectures can have larger ptes than wordsize,
-		 * e.g.ppc44x-defconfig has CONFIG_PTE_64BIT=y and
-		 * CONFIG_32BIT=y, so READ_ONCE cannot guarantee atomic
-		 * accesses.  The code below just needs a consistent view
-		 * for the ifs and we later double check anyway with the
-		 * ptl lock held. So here a barrier will do.
-		 */
-		barrier();
-		// if (arch_pte_none(vmf->orig_pte)) {
+		// if (pte_none(vmf->orig_pte)) {
 		// 	pte_unmap(vmf->pte);
 		// 	vmf->pte = NULL;
 		// }
@@ -1432,7 +1415,6 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
 	// 	return do_numa_page(vmf);
 
-	// vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
 	// spin_lock(vmf->ptl);
 	entry = vmf->orig_pte;
 	// if (unlikely(!pte_same(*vmf->pte, entry))) {
@@ -1442,12 +1424,6 @@ handle_pte_fault(vm_fault_s *vmf) {
 	if (vmf->flags & FAULT_FLAG_WRITE) {
 		if (!pte_writable(*vmf->pte))
 			return do_wp_page(vmf);
-		// {
-		// 	preempt_disable_notrace();
-		// 	vm_fault_t vmft = do_wp_page(vmf);
-		// 	preempt_enable_no_resched_notrace();
-		// 	return vmft;
-		// }
 		entry = pte_mkdirty(entry);
 	}
 	entry = pte_mkyoung(entry);
@@ -1548,7 +1524,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else	/* Another has populated it */
 		pud_free(new);
-	spin_unlock(&mm->page_table_lock);
+	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1570,7 +1546,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 	} else {	/* Another has populated it */
 		pmd_free(new);
 	}
-	spin_unlock(&mm->page_table_lock);
+	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
 
@@ -1587,7 +1563,7 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 	} else {	/* Another has populated it */
 		pte_free(new);
 	}
-	spin_unlock(&mm->page_table_lock);
+	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
 }
 
