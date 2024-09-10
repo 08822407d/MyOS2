@@ -1,2 +1,8 @@
+Do in-place C macro expansion in VS code:
+    https://github.com/microsoft/vscode-cpptools/issues/4183
+
 VMware Workstation Update error:
     https://www.reddit.com/r/vmware/comments/1csic8w/comment/l899o8x/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+Explaination to RadixTree XArray and RCU:
+    https://www.cnblogs.com/Linux-tech/p/12961281.html

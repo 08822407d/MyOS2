@@ -161,6 +161,66 @@
 
 
 		// Uptodate Placeholder
+		/**
+		 * folio_test_uptodate - Is this folio up to date?
+		 * @folio: The folio.
+		 *
+		 * The uptodate flag is set on a folio when every byte in the folio is
+		 * at least as new as the corresponding bytes on storage.  Anonymous
+		 * and CoW folios are always uptodate.  If the folio is not uptodate,
+		 * some of the bytes in it may be; see the is_partially_uptodate()
+		 * address_space operation.
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		folio_test_uptodate(folio_s *folio) {
+			bool ret = test_bit(PG_uptodate, folio_flags(folio, 0));
+			/*
+			* Must ensure that the data we read out of the folio is loaded
+			* _after_ we've loaded folio->flags to check the uptodate bit.
+			* We can skip the barrier if the folio is not uptodate, because
+			* we wouldn't be reading anything from it.
+			*
+			* See folio_mark_uptodate() for the other side of the story.
+			*/
+			if (ret)
+				smp_rmb();
+
+			return ret;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		PageUptodate(page_s *page) {
+			return folio_test_uptodate(page_folio(page));
+		}
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		__folio_mark_uptodate(folio_s *folio) {
+			smp_wmb();
+			__set_bit(PG_uptodate, folio_flags(folio, 0));
+		}
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		folio_mark_uptodate(folio_s *folio) {
+			/*
+			* Memory barrier must be issued before setting the PG_uptodate bit,
+			* so that all previous stores issued in order to bring the folio
+			* uptodate are actually visible before folio_test_uptodate becomes true.
+			*/
+			smp_wmb();
+			set_bit(PG_uptodate, folio_flags(folio, 0));
+		}
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		__SetPageUptodate(page_s *page) {
+			__folio_mark_uptodate((folio_s *)page);
+		}
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		SetPageUptodate(page_s *page) {
+			folio_mark_uptodate((folio_s *)page);
+		}
+		// CLEARPAGEFLAG(Uptodate, uptodate, PF_NO_TAIL)
 
 
 		// PAGEFLAG(Dirty, dirty, PF_HEAD)

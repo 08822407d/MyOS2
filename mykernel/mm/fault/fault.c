@@ -1239,19 +1239,19 @@ do_cow_fault(vm_fault_s *vmf) {
 	// cgroup_throttle_swaprate(vmf->cow_page, GFP_KERNEL);
 
 	ret = __do_fault(vmf);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-	// 	goto uncharge_out;
-	// if (ret & VM_FAULT_DONE_COW)
-	// 	return ret;
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		goto uncharge_out;
+	if (ret & VM_FAULT_DONE_COW)
+		return ret;
 
 	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
-	// __SetPageUptodate(vmf->cow_page);
+	__SetPageUptodate(vmf->cow_page);
 
 	ret |= finish_fault(vmf);
 	// unlock_page(vmf->page);
-	// put_page(vmf->page);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-	// 	goto uncharge_out;
+	put_page(vmf->page);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		goto uncharge_out;
 	return ret;
 uncharge_out:
 	put_page(vmf->cow_page);
@@ -1311,6 +1311,9 @@ do_fault(vm_fault_s *vmf) {
 	 * The VMA was not fully populated on mmap() or missing VM_DONTEXPAND
 	 */
 	if (!vma->vm_ops->fault) {
+		pr_alert("VMA has no vm_ops->fault\n");
+		while (1);
+		
 		// /*
 		//  * If we find a migration pmd entry or a none pmd entry, which
 		//  * should never happen, return SIGBUS
@@ -1343,11 +1346,6 @@ do_fault(vm_fault_s *vmf) {
 	else
 		ret = do_shared_fault(vmf);
 
-	// /* preallocated pagetable is unused: free it */
-	// if (vmf->prealloc_pte) {
-	// 	pte_free(vm_mm, vmf->prealloc_pte);
-	// 	vmf->prealloc_pte = NULL;
-	// }
 	return ret;
 }
 
