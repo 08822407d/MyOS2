@@ -132,9 +132,9 @@ ssize_t vfs_read(file_s *file, char __user *buf, size_t count, loff_t *pos)
 	// if (unlikely(!access_ok(buf, count)))
 	// 	return -EFAULT;
 
-	// ret = rw_verify_area(READ, file, pos, count);
-	// if (ret)
-	// 	return ret;
+	ret = rw_verify_area(READ, file, pos, count);
+	if (ret)
+		return ret;
 	if (count > MAX_RW_COUNT)
 		count =  MAX_RW_COUNT;
 
@@ -182,8 +182,6 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
 
 static ssize_t
 vfs_writev(file_s *file, const iov_s  *vec, ulong vlen, loff_t *pos, rwf_t flags) {
-	// pr_alert("\t!!! Dummy Syscall --- writev ---\n");
-
 	iov_s iovstack[UIO_FASTIOV];
 	iov_s *iov = iovstack;
 	// struct iov_iter iter;
