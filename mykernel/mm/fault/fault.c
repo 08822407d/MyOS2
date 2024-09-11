@@ -1140,45 +1140,35 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
  * It uses vm_ops->map_pages() to map the pages, which skips the page if it's
  * not ready to be mapped: not up-to-date, locked, etc.
  *
- * This function is called with the page table lock taken. In the split ptlock
- * case the page table lock only protects only those entries which belong to
- * the page table corresponding to the fault address.
+ * This function doesn't cross VMA or page table boundaries, in order to call
+ * map_pages() and acquire a PTE lock only once.
  *
- * This function doesn't cross the VMA boundaries, in order to call map_pages()
- * only once.
- *
- * fault_around_bytes defines how many bytes we'll try to map.
+ * fault_around_pages defines how many pages we'll try to map.
  * do_fault_around() expects it to be set to a power of two less than or equal
  * to PTRS_PER_PTE.
  *
  * The virtual address of the area that we map is naturally aligned to
- * fault_around_bytes rounded down to the machine page size
+ * fault_around_pages * PAGE_SIZE rounded down to the machine page size
  * (and therefore to page order).  This way it's easier to guarantee
  * that we don't cross page table boundaries.
  */
 static vm_fault_t
 do_fault_around(vm_fault_s *vmf) {
-	// unsigned long address = vmf->address, nr_pages, mask;
-	// pgoff_t start_pgoff = vmf->pgoff;
-	// pgoff_t end_pgoff;
-	// int off;
+	// pgoff_t nr_pages = READ_ONCE(fault_around_pages);
+	pgoff_t nr_pages = 1;
+	pgoff_t pte_off = pte_index(vmf->address);
+	/* The page offset of vmf->address within the VMA. */
+	pgoff_t vma_off = vmf->pgoff - vmf->vma->vm_pgoff;
+	pgoff_t from_pte, to_pte;
+	vm_fault_t ret = 0;
 
-	// nr_pages = READ_ONCE(fault_around_bytes) >> PAGE_SHIFT;
-	// mask = ~(nr_pages * PAGE_SIZE - 1) & PAGE_MASK;
+	/* The PTE offset of the start address, clamped to the VMA. */
+	from_pte = max(ALIGN_DOWN(pte_off, nr_pages),
+				pte_off - min(pte_off, vma_off));
 
-	// address = max(address & mask, vmf->vma->vm_start);
-	// off = ((vmf->address - address) >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-	// start_pgoff -= off;
-
-	// /*
-	//  *  end_pgoff is either the end of the page table, the end of
-	//  *  the vma or nr_pages from start_pgoff, depending what is nearest.
-	//  */
-	// end_pgoff = start_pgoff -
-	// 	((address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1)) +
-	// 	PTRS_PER_PTE - 1;
-	// end_pgoff = min3(end_pgoff, vma_pages(vmf->vma) + vmf->vma->vm_pgoff - 1,
-	// 		start_pgoff + nr_pages - 1);
+	/* The PTE offset of the end address, clamped to the VMA and PTE. */
+	to_pte = min3(from_pte + nr_pages, (pgoff_t)PTRS_PER_PTE,
+				pte_off + vma_pages(vmf->vma) - vma_off) - 1;
 
 	// if (pmd_none(*vmf->pmd)) {
 	// 	vmf->prealloc_pte = pte_alloc_one(vmf->vma->vm_mm);
@@ -1186,25 +1176,36 @@ do_fault_around(vm_fault_s *vmf) {
 	// 		return VM_FAULT_OOM;
 	// }
 
-	// return vmf->vma->vm_ops->map_pages(vmf, start_pgoff, end_pgoff);
+	// rcu_read_lock();
+	// ret = vmf->vma->vm_ops->map_pages(vmf,
+	// 		vmf->pgoff + from_pte - pte_off,
+	// 		vmf->pgoff + to_pte - pte_off);
+	ret = vmf->vma->vm_ops->map_single_page(vmf,
+			vmf->pgoff + from_pte - pte_off);
+	// rcu_read_unlock();
+
+	return ret;
 }
 
 static vm_fault_t
 do_read_fault(vm_fault_s *vmf) {
-	vma_s *vma = vmf->vma;
 	vm_fault_t ret = 0;
+	folio_s *folio;
 
-	// /*
-	//  * Let's call ->map_pages() first and use ->fault() as fallback
-	//  * if page by the offset is not ready to be mapped (cold cache or
-	//  * something).
-	//  */
-	// if (vma->vm_ops->map_pages && fault_around_bytes >> PAGE_SHIFT > 1) {
-	// 	if (likely(!userfaultfd_minor(vmf->vma))) {
-	// 		ret = do_fault_around(vmf);
-	// 		if (ret)
-	// 			return ret;
-	// 	}
+	/*
+	 * Let's call ->map_pages() first and use ->fault() as fallback
+	 * if page by the offset is not ready to be mapped (cold cache or
+	 * something).
+	 */
+	// if (should_fault_around(vmf)) {
+		ret = do_fault_around(vmf);
+		if (ret == 0)
+			return ret;
+	// }
+
+	// if (vmf->flags & FAULT_FLAG_VMA_LOCK) {
+	// 	vma_end_read(vmf->vma);
+	// 	return VM_FAULT_RETRY;
 	// }
 
 	ret = __do_fault(vmf);
@@ -1212,9 +1213,10 @@ do_read_fault(vm_fault_s *vmf) {
 		return ret;
 
 	ret |= finish_fault(vmf);
-	// unlock_page(vmf->page);
+	folio = page_folio(vmf->page);
+	// folio_unlock(folio);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-		put_page(vmf->page);
+		folio_put(folio);
 	return ret;
 }
 
@@ -1245,7 +1247,7 @@ do_cow_fault(vm_fault_s *vmf) {
 		return ret;
 
 	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
-	__SetPageUptodate(vmf->cow_page);
+	// __SetPageUptodate(vmf->cow_page);
 
 	ret |= finish_fault(vmf);
 	// unlock_page(vmf->page);

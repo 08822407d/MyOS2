@@ -250,32 +250,32 @@ static dentry_s *vfat_lookup(inode_s *dir, dentry_s *dentry,
 	}
 
 	inode = fat_build_inode(sb, sinfo.de, sinfo.i_pos);
-// 	brelse(sinfo.bh);
-// 	if (IS_ERR(inode)) {
-// 		err = PTR_ERR(inode);
-// 		goto error;
-// 	}
+	// brelse(sinfo.bh);
+	// if (IS_ERR(inode)) {
+	// 	err = PTR_ERR(inode);
+	// 	goto error;
+	// }
 
-// 	alias = d_find_alias(inode);
-// 	/*
-// 	 * Checking "alias->d_parent == dentry->d_parent" to make sure
-// 	 * FS is not corrupted (especially double linked dir).
-// 	 */
-// 	if (alias && alias->d_parent == dentry->d_parent) {
-// 		/*
-// 		 * This inode has non anonymous-DCACHE_DISCONNECTED
-// 		 * dentry. This means, the user did ->lookup() by an
-// 		 * another name (longname vs 8.3 alias of it) in past.
-// 		 *
-// 		 * Switch to new one for reason of locality if possible.
-// 		 */
-// 		if (!S_ISDIR(inode->i_mode))
-// 			d_move(alias, dentry);
-// 		iput(inode);
-// 		mutex_unlock(&MSDOS_SB(sb)->s_lock);
-// 		return alias;
-// 	} else
-// 		dput(alias);
+	// alias = d_find_alias(inode);
+	// /*
+	//  * Checking "alias->d_parent == dentry->d_parent" to make sure
+	//  * FS is not corrupted (especially double linked dir).
+	//  */
+	// if (alias && alias->d_parent == dentry->d_parent) {
+	// 	/*
+	// 	 * This inode has non anonymous-DCACHE_DISCONNECTED
+	// 	 * dentry. This means, the user did ->lookup() by an
+	// 	 * another name (longname vs 8.3 alias of it) in past.
+	// 	 *
+	// 	 * Switch to new one for reason of locality if possible.
+	// 	 */
+	// 	if (!S_ISDIR(inode->i_mode))
+	// 		d_move(alias, dentry);
+	// 	iput(inode);
+	// 	mutex_unlock(&MSDOS_SB(sb)->s_lock);
+	// 	return alias;
+	// } else
+	// 	dput(alias);
 
 out:
 	if (inode == NULL)

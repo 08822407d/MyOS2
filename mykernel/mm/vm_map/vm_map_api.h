@@ -10,6 +10,7 @@
 	extern vm_fault_t filemap_fault(vm_fault_s *vmf);
 	extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 			pgoff_t start_pgoff, pgoff_t end_pgoff);
+	extern vm_fault_t simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff);
 	// extern vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf);
 
 	extern int generic_file_mmap(file_s *, vma_s *);

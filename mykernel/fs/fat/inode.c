@@ -65,6 +65,21 @@ typedef struct fat_bios_param_block {
 } fat_bios_param_block_s;
 
 
+
+static const addr_spc_ops_s fat_aops = {
+	// .dirty_folio		= block_dirty_folio,
+	// .invalidate_folio	= block_invalidate_folio,
+	// .read_folio			= fat_read_folio,
+	// .readahead			= fat_readahead,
+	// .writepages			= fat_writepages,
+	// .write_begin		= fat_write_begin,
+	// .write_end			= fat_write_end,
+	// .direct_IO			= fat_direct_IO,
+	// .bmap				= _fat_bmap,
+	// .migrate_folio		= buffer_migrate_folio,
+};
+
+
 void fat_attach(inode_s *inode, loff_t i_pos)
 {
 
@@ -127,18 +142,19 @@ int fat_fill_inode(inode_s *inode, msdos_dirent_s *de)
 	int error;
 
 	inode->i_mode = 0;
-	// MSDOS_I(inode)->i_pos = 0;
+	MSDOS_I(inode)->i_pos = 0;
 	// inode->i_uid = sbi->options.fs_uid;
 	// inode->i_gid = sbi->options.fs_gid;
 	// inode_inc_iversion(inode);
+	// inode->i_generation = get_random_u32();
 
 	if ((de->attr & ATTR_DIR) && !FAT32_IS_FREE(de->name)) {
-		// inode->i_mode = fat_make_mode(sbi, de->attr, S_IRWXUGO);
-		inode->i_mode	= S_IFDIR;
-		// inode->i_op = sbi->dir_ops;
+		// inode->i_generation &= ~1;
+		// inode->i_mode	= fat_make_mode(sbi, de->attr, S_IRWXUGO);
+		// inode->i_op		= sbi->dir_ops;
 		// inode->i_fop = &fat_dir_operations;
-		inode->i_fop	= &FAT32_file_ops;
 		inode->i_op		= &vfat_dir_inode_operations;
+		inode->i_fop	= &FAT32_file_ops;
 
 		// MSDOS_I(inode)->i_start = fat_get_start(sbi, de);
 		// MSDOS_I(inode)->i_logstart = MSDOS_I(inode)->i_start;
@@ -149,22 +165,20 @@ int fat_fill_inode(inode_s *inode, msdos_dirent_s *de)
 		// if (error < 0)
 		// 	return error;
 	} else { /* not a directory */
-		// inode->i_mode = fat_make_mode(sbi, de->attr,
-		// 		((sbi->options.showexec && !is_exec(de->name + 8))
-		// 		? S_IRUGO|S_IWUGO : S_IRWXUGO));
-		inode->i_mode	= S_IFREG;
-		if (is_exec(de->name + 8))
-			inode->i_mode |= S_IRWXUGO;
-		else
-			inode->i_mode |= S_IRUGO | S_IWUGO;
+		// inode->i_generation |= 1;
+		// inode->i_mode	= fat_make_mode(sbi, de->attr,
+		// 	((sbi->options.showexec && !is_exec(de->name + 8))
+		// 	 ? S_IRUGO|S_IWUGO : S_IRWXUGO));
 		// MSDOS_I(inode)->i_start = fat_get_start(sbi, de);
 
 		// MSDOS_I(inode)->i_logstart = MSDOS_I(inode)->i_start;
-		inode->i_size = de->size;
+		inode->i_size	= de->size;
 		// inode->i_op = &fat_file_inode_operations;
 		// inode->i_fop = &fat_file_operations;
-		inode->i_fop	= &FAT32_file_ops;
 		inode->i_op		= &vfat_dir_inode_operations;
+		inode->i_fop	= &FAT32_file_ops;
+		inode->i_mapping->a_ops = &fat_aops;
+		// MSDOS_I(inode)->mmu_private = inode->i_size;
 	}
 	// if (de->attr & ATTR_SYS) {
 	// 	if (sbi->options.sys_immutable)
@@ -173,15 +187,16 @@ int fat_fill_inode(inode_s *inode, msdos_dirent_s *de)
 	// fat_save_attrs(inode, de->attr);
 
 	// inode->i_blocks = ((inode->i_size + (sbi->cluster_size - 1))
-	// 				& ~((loff_t)sbi->cluster_size - 1)) >> 9;
+	// 					& ~((loff_t)sbi->cluster_size - 1)) >> 9;
 
 	// fat_time_fat2unix(sbi, &inode->i_mtime, de->time, de->date, 0);
+	// inode_set_ctime_to_ts(inode, inode->i_mtime);
 	// if (sbi->options.isvfat) {
-	// 	fat_time_fat2unix(sbi, &inode->i_ctime, de->ctime,
-	// 			  de->cdate, de->ctime_cs);
 	// 	fat_time_fat2unix(sbi, &inode->i_atime, 0, de->adate, 0);
+	// 	fat_time_fat2unix(sbi, &MSDOS_I(inode)->i_crtime, de->ctime,
+	// 			  de->cdate, de->ctime_cs);
 	// } else
-	// 	fat_truncate_time(inode, &inode->i_mtime, S_ATIME|S_CTIME);
+	// 	inode->i_atime = fat_truncate_atime(sbi, &inode->i_mtime);
 
 	return 0;
 }
@@ -304,8 +319,10 @@ static int fat_read_root(inode_s *inode)
 	int error;
 
 	MSDOS_I(inode)->i_pos = MSDOS_ROOT_INO;
-	// inode->i_uid = sbi->options.fs_uid;
-	// inode->i_gid = sbi->options.fs_gid;
+	inode->i_uid = sbi->options.fs_uid;
+	inode->i_gid = sbi->options.fs_gid;
+	// inode_inc_iversion(inode);
+	// inode->i_generation = 0;
 	inode->i_mode = fat_make_mode(sbi, ATTR_DIR, S_IRWXUGO);
 	inode->i_op = (inode_ops_s *)sbi->dir_ops;
 	inode->i_fop = (file_ops_s *)&fat_dir_operations;
@@ -324,6 +341,8 @@ static int fat_read_root(inode_s *inode)
 	MSDOS_I(inode)->mmu_private = inode->i_size;
 
 	fat_save_attrs(inode, ATTR_DIR);
+	// inode->i_mtime = inode->i_atime = inode_set_ctime(inode, 0, 0);
+	// set_nlink(inode, fat_subdirs(inode)+2);
 
 	return 0;
 }
@@ -495,108 +514,108 @@ int fat_fill_super(super_block_s *sb, void *data, int isvfat,
 		// brelse(fsinfo_bh);
 	}
 
-// 	/* interpret volume ID as a little endian 32 bit integer */
-// 	if (is_fat32(sbi))
-// 		sbi->vol_id = bpb.fat32_vol_id;
-// 	else /* fat 16 or 12 */
-// 		sbi->vol_id = bpb.fat16_vol_id;
+	// /* interpret volume ID as a little endian 32 bit integer */
+	// if (is_fat32(sbi))
+	// 	sbi->vol_id = bpb.fat32_vol_id;
+	// else /* fat 16 or 12 */
+	// 	sbi->vol_id = bpb.fat16_vol_id;
 
-// 	sbi->dir_per_block = sb->s_blocksize / sizeof(struct msdos_dir_entry);
-// 	sbi->dir_per_block_bits = ffs(sbi->dir_per_block) - 1;
+	// sbi->dir_per_block = sb->s_blocksize / sizeof(struct msdos_dir_entry);
+	// sbi->dir_per_block_bits = ffs(sbi->dir_per_block) - 1;
 
-// 	sbi->dir_start = sbi->fat_start + sbi->fats * sbi->fat_length;
-// 	sbi->dir_entries = bpb.fat_dir_entries;
-// 	if (sbi->dir_entries & (sbi->dir_per_block - 1))
-// 		goto out_invalid;
+	// sbi->dir_start = sbi->fat_start + sbi->fats * sbi->fat_length;
+	// sbi->dir_entries = bpb.fat_dir_entries;
+	// if (sbi->dir_entries & (sbi->dir_per_block - 1))
+	// 	goto out_invalid;
 
-// 	rootdir_sectors = sbi->dir_entries
-// 		* sizeof(struct msdos_dir_entry) / sb->s_blocksize;
-// 	sbi->data_start = sbi->dir_start + rootdir_sectors;
-// 	total_sectors = bpb.fat_sectors;
-// 	if (total_sectors == 0)
-// 		total_sectors = bpb.fat_total_sect;
+	// rootdir_sectors = sbi->dir_entries
+	// 	* sizeof(struct msdos_dir_entry) / sb->s_blocksize;
+	// sbi->data_start = sbi->dir_start + rootdir_sectors;
+	// total_sectors = bpb.fat_sectors;
+	// if (total_sectors == 0)
+	// 	total_sectors = bpb.fat_total_sect;
 
-// 	total_clusters = (total_sectors - sbi->data_start) / sbi->sec_per_clus;
+	// total_clusters = (total_sectors - sbi->data_start) / sbi->sec_per_clus;
 
-// 	if (!is_fat32(sbi))
-// 		sbi->fat_bits = (total_clusters > MAX_FAT12) ? 16 : 12;
+	// if (!is_fat32(sbi))
+	// 	sbi->fat_bits = (total_clusters > MAX_FAT12) ? 16 : 12;
 
-// 	/* some OSes set FAT_STATE_DIRTY and clean it on unmount. */
-// 	if (is_fat32(sbi))
-// 		sbi->dirty = bpb.fat32_state & FAT_STATE_DIRTY;
-// 	else /* fat 16 or 12 */
-// 		sbi->dirty = bpb.fat16_state & FAT_STATE_DIRTY;
+	// /* some OSes set FAT_STATE_DIRTY and clean it on unmount. */
+	// if (is_fat32(sbi))
+	// 	sbi->dirty = bpb.fat32_state & FAT_STATE_DIRTY;
+	// else /* fat 16 or 12 */
+	// 	sbi->dirty = bpb.fat16_state & FAT_STATE_DIRTY;
 
-// 	/* check that FAT table does not overflow */
-// 	fat_clusters = calc_fat_clusters(sb);
-// 	total_clusters = min(total_clusters, fat_clusters - FAT_START_ENT);
-// 	if (total_clusters > max_fat(sb))
-// 		goto out_invalid;
+	// /* check that FAT table does not overflow */
+	// fat_clusters = calc_fat_clusters(sb);
+	// total_clusters = min(total_clusters, fat_clusters - FAT_START_ENT);
+	// if (total_clusters > max_fat(sb))
+	// 	goto out_invalid;
 
-// 	sbi->max_cluster = total_clusters + FAT_START_ENT;
-// 	/* check the free_clusters, it's not necessarily correct */
-// 	if (sbi->free_clusters != -1 && sbi->free_clusters > total_clusters)
-// 		sbi->free_clusters = -1;
-// 	/* check the prev_free, it's not necessarily correct */
-// 	sbi->prev_free %= sbi->max_cluster;
-// 	if (sbi->prev_free < FAT_START_ENT)
-// 		sbi->prev_free = FAT_START_ENT;
+	// sbi->max_cluster = total_clusters + FAT_START_ENT;
+	// /* check the free_clusters, it's not necessarily correct */
+	// if (sbi->free_clusters != -1 && sbi->free_clusters > total_clusters)
+	// 	sbi->free_clusters = -1;
+	// /* check the prev_free, it's not necessarily correct */
+	// sbi->prev_free %= sbi->max_cluster;
+	// if (sbi->prev_free < FAT_START_ENT)
+	// 	sbi->prev_free = FAT_START_ENT;
 
-// 	/* set up enough so that it can read an inode */
-// 	fat_hash_init(sb);
-// 	dir_hash_init(sb);
-// 	fat_ent_access_init(sb);
+	// /* set up enough so that it can read an inode */
+	// fat_hash_init(sb);
+	// dir_hash_init(sb);
+	// fat_ent_access_init(sb);
 
-// 	/*
-// 	 * The low byte of the first FAT entry must have the same value as
-// 	 * the media field of the boot sector. But in real world, too many
-// 	 * devices are writing wrong values. So, removed that validity check.
-// 	 *
-// 	 * The removed check compared the first FAT entry to a value dependent
-// 	 * on the media field like this:
-// 	 * == (0x0F00 | media), for FAT12
-// 	 * == (0XFF00 | media), for FAT16
-// 	 * == (0x0FFFFF | media), for FAT32
-// 	 */
+	// /*
+	//  * The low byte of the first FAT entry must have the same value as
+	//  * the media field of the boot sector. But in real world, too many
+	//  * devices are writing wrong values. So, removed that validity check.
+	//  *
+	//  * The removed check compared the first FAT entry to a value dependent
+	//  * on the media field like this:
+	//  * == (0x0F00 | media), for FAT12
+	//  * == (0XFF00 | media), for FAT16
+	//  * == (0x0FFFFF | media), for FAT32
+	//  */
 
-// 	error = -EINVAL;
+	// error = -EINVAL;
 
-// 	/* FIXME: utf8 is using iocharset for upper/lower conversion */
-// 	if (sbi->options.isvfat)
-// 		goto out_fail;
+	// /* FIXME: utf8 is using iocharset for upper/lower conversion */
+	// if (sbi->options.isvfat)
+	// 	goto out_fail;
 
-// 	error = -ENOMEM;
-// 	fat_inode = new_inode(sb);
-// 	if (!fat_inode)
-// 		goto out_fail;
-// 	sbi->fat_inode = fat_inode;
+	// error = -ENOMEM;
+	// fat_inode = new_inode(sb);
+	// if (!fat_inode)
+	// 	goto out_fail;
+	// sbi->fat_inode = fat_inode;
 
-// 	fsinfo_inode = new_inode(sb);
-// 	if (!fsinfo_inode)
-// 		goto out_fail;
-// 	fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
-// 	sbi->fsinfo_inode = fsinfo_inode;
-// 	insert_inode_hash(fsinfo_inode);
+	// fsinfo_inode = new_inode(sb);
+	// if (!fsinfo_inode)
+	// 	goto out_fail;
+	// fsinfo_inode->i_ino = MSDOS_FSINFO_INO;
+	// sbi->fsinfo_inode = fsinfo_inode;
+	// insert_inode_hash(fsinfo_inode);
 
-// 	root_inode = new_inode(sb);
-// 	if (!root_inode)
-// 		goto out_fail;
-// 	root_inode->i_ino = MSDOS_ROOT_INO;
-// 	inode_set_iversion(root_inode, 1);
-// 	error = fat_read_root(root_inode);
-// 	if (error < 0) {
-// 		iput(root_inode);
-// 		goto out_fail;
-// 	}
-// 	error = -ENOMEM;
-// 	insert_inode_hash(root_inode);
-// 	fat_attach(root_inode, 0);
-// 	sb->s_root = d_make_root(root_inode);
-// 	if (!sb->s_root)
-// 		goto out_fail;
+	root_inode = new_inode(sb);
+	if (!root_inode)
+		goto out_fail;
+	root_inode->i_ino = MSDOS_ROOT_INO;
+	// inode_set_iversion(root_inode, 1);
+	error = fat_read_root(root_inode);
+	if (error < 0) {
+		iput(root_inode);
+		goto out_fail;
+	}
+	// error = -ENOMEM;
+	// insert_inode_hash(root_inode);
+	// fat_attach(root_inode, 0);
+	// sb->s_root = d_make_root(root_inode);
+	// if (!sb->s_root)
+	// 	goto out_fail;
 
-// 	fat_set_state(sb, 1, 0);
-// 	return 0;
+	// fat_set_state(sb, 1, 0);
+	// return 0;
 
 out_invalid:
 	error = -EINVAL;

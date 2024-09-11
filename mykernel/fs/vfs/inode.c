@@ -28,6 +28,14 @@
 #include <obsolete/printk.h>
 
 
+/*
+ * Empty aops. Can be used for the cases where the user does not
+ * define any of the address_space operations.
+ */
+const addr_spc_ops_s empty_aops = {
+};
+EXPORT_SYMBOL(empty_aops);
+
 static kmem_cache_s *inode_cachep __read_mostly;
 
 /*
@@ -78,43 +86,58 @@ int inode_init_always(super_block_s *sb, inode_s *inode)
 {
 	static const inode_ops_s empty_iops;
 	static const file_ops_s no_open_fops = {.open = no_open};
-	// struct address_space *const mapping = &inode->i_data;
+	addr_spc_s *const mapping = &inode->i_data;
 
 	inode->i_sb = sb;
 	// inode->i_blkbits = sb->s_blocksize_bits;
 	inode->i_flags = 0;
+	// atomic64_set(&inode->i_sequence, 0);
+	// atomic_set(&inode->i_count, 1);
 	inode->i_op = &empty_iops;
 	inode->i_fop = &no_open_fops;
 	inode->i_ino = 0;
+	// inode->__i_nlink = 1;
 	inode->i_opflags = 0;
+	i_uid_write(inode, 0);
+	i_gid_write(inode, 0);
+	// atomic_set(&inode->i_writecount, 0);
 	inode->i_size = 0;
+	// inode->i_write_hint = WRITE_LIFE_NOT_SET;
 	inode->i_blocks = 0;
-	// inode->i_bytes = 0;
+	inode->i_bytes = 0;
+	// inode->i_generation = 0;
 	// inode->i_pipe = NULL;
 	inode->i_cdev = NULL;
+	inode->i_link = NULL;
+	inode->i_dir_seq = 0;
 	inode->i_rdev = 0;
+	// inode->dirtied_when = 0;
 
-	// if (security_inode_alloc(inode))
-	// 	goto out;
 
-	// mapping->a_ops = &empty_aops;
-	// mapping->host = inode;
-	// mapping->flags = 0;
+	// spin_lock_init(&inode->i_lock);
+	// lockdep_set_class(&inode->i_lock, &sb->s_type->i_lock_key);
+
+	// init_rwsem(&inode->i_rwsem);
+	// lockdep_set_class(&inode->i_rwsem, &sb->s_type->i_mutex_key);
+
+	// atomic_set(&inode->i_dio_count, 0);
+
+	mapping->a_ops = &empty_aops;
+	mapping->host = inode;
+	mapping->flags = 0;
 	// mapping->wb_err = 0;
-	// atomic_set(&mapping->i_mmap_writable, 0);
+	atomic_set(&mapping->i_mmap_writable, 0);
 // #ifdef CONFIG_READ_ONLY_THP_FOR_FS
 // 	atomic_set(&mapping->nr_thps, 0);
 // #endif
 	// mapping_set_gfp_mask(mapping, GFP_HIGHUSER_MOVABLE);
-	// mapping->private_data = NULL;
-	// mapping->writeback_index = 0;
+	mapping->private_data = NULL;
+	mapping->writeback_index = 0;
 	inode->i_private = NULL;
-	// inode->i_mapping = mapping;
+	inode->i_mapping = mapping;
 	// INIT_HLIST_HEAD(&inode->i_dentry);	/* buggered by rcu freeing */
 
 	return 0;
-out:
-	return -ENOMEM;
 }
 
 static inode_s *alloc_inode(super_block_s *sb)

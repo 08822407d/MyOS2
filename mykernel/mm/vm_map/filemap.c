@@ -279,32 +279,51 @@ vm_fault_t filemap_fault(vm_fault_s *vmf)
 }
 
 
-vm_fault_t filemap_map_pages(vm_fault_s *vmf,
+vm_fault_t
+simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff)
+{
+	vma_s *vma = vmf->vma;
+	file_s *file = vma->vm_file;
+	addr_spc_s *mapping = file->f_mapping;
+	page_s *page;
+
+	page = mapping->page_array[pgoff];
+	if (page != NULL) {
+		*vmf->pte = mk_pte(page,
+			__pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+		return 0;
+	}
+	else
+		return VM_FAULT_NOPAGE;
+}
+
+vm_fault_t
+filemap_map_pages(vm_fault_s *vmf,
 		pgoff_t start_pgoff, pgoff_t end_pgoff)
 {
-// 	vma_s *vma = vmf->vma;
-// 	file_s *file = vma->vm_file;
-// 	struct address_space *mapping = file->f_mapping;
-// 	pgoff_t last_pgoff = start_pgoff;
-// 	unsigned long addr;
-// 	XA_STATE(xas, &mapping->i_pages, start_pgoff);
-// 	folio_s *folio;
-// 	page_s *page;
-// 	unsigned int mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
-// 	vm_fault_t ret = 0;
+	vma_s *vma = vmf->vma;
+	file_s *file = vma->vm_file;
+	addr_spc_s *mapping = file->f_mapping;
+	pgoff_t last_pgoff = start_pgoff;
+	ulong addr;
+	// XA_STATE(xas, &mapping->i_pages, start_pgoff);
+	folio_s *folio;
+	page_s *page;
+	// uint mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
+	vm_fault_t ret = 0;
 
-// 	rcu_read_lock();
-// 	folio = first_map_page(mapping, &xas, end_pgoff);
-// 	if (!folio)
-// 		goto out;
+	// rcu_read_lock();
+	// folio = first_map_page(mapping, &xas, end_pgoff);
+	// if (!folio)
+	// 	goto out;
 
-// 	if (filemap_map_pmd(vmf, &folio->page)) {
-// 		ret = VM_FAULT_NOPAGE;
-// 		goto out;
-// 	}
+	// if (filemap_map_pmd(vmf, &folio->page)) {
+	// 	ret = VM_FAULT_NOPAGE;
+	// 	goto out;
+	// }
 
-// 	addr = vma->vm_start + ((start_pgoff - vma->vm_pgoff) << PAGE_SHIFT);
-// 	vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, addr, &vmf->ptl);
+	// addr = vma->vm_start + ((start_pgoff - vma->vm_pgoff) << PAGE_SHIFT);
+	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, addr, &vmf->ptl);
 // 	do {
 // again:
 // 		page = folio_file_page(folio, xas.xa_index);
@@ -344,10 +363,10 @@ vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 // 		folio_put(folio);
 // 	} while ((folio = next_map_page(mapping, &xas, end_pgoff)) != NULL);
 // 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-// out:
-// 	rcu_read_unlock();
-// 	WRITE_ONCE(file->f_ra.mmap_miss, mmap_miss);
-// 	return ret;
+out:
+	// rcu_read_unlock();
+	// WRITE_ONCE(file->f_ra.mmap_miss, mmap_miss);
+	return ret;
 }
 
 vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
@@ -377,9 +396,10 @@ vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
 }
 
 const vm_ops_s generic_file_vm_ops = {
-	.fault			= filemap_fault,
-	.map_pages		= filemap_map_pages,
-	.page_mkwrite	= filemap_page_mkwrite,
+	.fault				= filemap_fault,
+	.map_single_page	= simple_filemap_map_page,
+	.map_pages			= filemap_map_pages,
+	.page_mkwrite		= filemap_page_mkwrite,
 };
 
 /* This is used for a general mmap of a disk file */

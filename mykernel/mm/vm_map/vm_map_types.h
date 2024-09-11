@@ -101,6 +101,7 @@
 		vm_fault_t	(*fault)(vm_fault_s *vmf);
 		// vm_fault_t (*huge_fault)(vm_fault_s *vmf,
 		// 		enum page_entry_size pe_size);
+		vm_fault_t	(*map_single_page)(vm_fault_s *vmf, pgoff_t pgoff);
 		vm_fault_t	(*map_pages)(vm_fault_s *vmf,
 						pgoff_t start_pgoff, pgoff_t end_pgoff);
 		// unsigned long (*pagesize)(vma_s * area);

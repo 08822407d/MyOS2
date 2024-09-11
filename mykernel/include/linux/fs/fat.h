@@ -409,7 +409,7 @@
 	extern int
 	fat_fill_super(super_block_s *sb, void *data,
 			int isvfat, void (*setup)(super_block_s *));
-	// extern int fat_fill_inode(inode_s *inode, msdos_dir_entry_s *de);
+	extern int fat_fill_inode(inode_s *inode, msdos_dirent_s *de);
 
 	// extern int fat_flush_inodes(super_block_s *sb, inode_s *i1,
 	// 				inode_s *i2);

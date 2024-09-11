@@ -309,6 +309,7 @@ static dentry_s *__lookup_slow(IN qstr_s *name,
 		IN dentry_s *dir, unsigned flags)
 {
 	dentry_s *dentry;
+	inode_s *inode;
 
 	// linux call stack :
 	// struct dentry *d_alloc_parallel(struct dentry *parent,
@@ -328,6 +329,12 @@ static dentry_s *__lookup_slow(IN qstr_s *name,
 		kfree(dentry);
 		return ERR_PTR(-ENOENT);
 	}
+
+	inode = dentry->d_inode;
+	inode->i_mapping->nrpages = ALIGN(inode->i_size, PAGE_SIZE) >> PAGE_SHIFT;
+	if (inode->i_mapping->nrpages > 0)
+		inode->i_mapping->page_array =
+			kzalloc(inode->i_mapping->nrpages * sizeof(page_s *), GFP_KERNEL);
 
 	list_header_add_to_tail(&dir->d_subdirs, &dentry->d_child);
 	dentry->d_parent = dir;

@@ -48,7 +48,7 @@ static int myos_do_dentry_open(file_s * f, inode_s * inode)
 	ulong error = -ENOERR;
 	path_get(&f->f_path);
 	f->f_inode = inode;
-	// f->f_mapping = inode->i_mapping;
+	f->f_mapping = inode->i_mapping;
 
 	f->f_op = inode->i_fop;
 	if(f->f_op && f->f_op->open)

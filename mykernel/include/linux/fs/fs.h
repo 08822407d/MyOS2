@@ -399,6 +399,7 @@
 	 */
 	typedef struct address_space {
 		inode_s				*host;
+		page_s				**page_array;
 		// xarray_s			i_pages;
 		// rw_semaphore_s		invalidate_lock;
 		gfp_t				gfp_mask;
@@ -560,10 +561,10 @@
 
 
 		umode_t				i_mode;
-		unsigned short		i_opflags;
+		ushort				i_opflags;
 		kuid_t				i_uid;
 		kgid_t				i_gid;
-		unsigned int		i_flags;
+		uint				i_flags;
 
 	// #ifdef CONFIG_FS_POSIX_ACL
 	// 	struct posix_acl	*i_acl;
@@ -572,14 +573,14 @@
 
 		const inode_ops_s	*i_op;
 		super_block_s		*i_sb;
-		addr_spc_s		*i_mapping;
+		addr_spc_s			*i_mapping;
 
 	// #ifdef CONFIG_SECURITY
 	// 	void			*i_security;
 	// #endif
 
 		/* Stat data, not accessed from path walking */
-		unsigned long		i_ino;
+		ulong				i_ino;
 		/*
 		 * Filesystems may only read i_nlink directly.  They shall use the
 		 * following functions for modification:
@@ -597,7 +598,7 @@
 		// timespec64_s	i_mtime;
 		// timespec64_s	i_ctime;
 		// spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
-		// unsigned short	i_bytes;
+		ushort				i_bytes;
 		// u8				i_blkbits;
 		// u8				i_write_hint;
 		blkcnt_t			i_blocks;
@@ -644,13 +645,13 @@
 			void				(*free_inode)(inode_s *);
 		};
 	// 	file_s_lock_context	*i_flctx;
-	// 	addr_spc_s		i_data;
-		List_hdr_s		i_devices;
+		addr_spc_s			i_data;
+		List_hdr_s			i_devices;
 		union {
 			// pipe_inode_info_s	*i_pipe;
 			cdev_s				*i_cdev;
 			char				*i_link;
-			unsigned			i_dir_seq;
+			uint				i_dir_seq;
 		};
 
 	// 	__u32			i_generation;
@@ -668,7 +669,7 @@
 	// 	struct fsverity_info	*i_verity_info;
 	// #endif
 
-		void			*i_private; /* fs or device private pointer */
+		void				*i_private; /* fs or device private pointer */
 	} inode_s;
 
 	// timespec64_s timestamp_truncate(timespec64_s t, inode_s *inode);
@@ -1485,30 +1486,30 @@
 	// 	return inode->i_sb->s_user_ns;
 	// }
 
-	// /* Helper functions so that in most cases filesystems will
-	// * not need to deal directly with kuid_t and kgid_t and can
-	// * instead deal with the raw numeric values that are stored
-	// * in the filesystem.
-	// */
-	// static inline uid_t i_uid_read(const inode_s *inode)
-	// {
-	// 	return from_kuid(i_user_ns(inode), inode->i_uid);
-	// }
+	/* Helper functions so that in most cases filesystems will
+	* not need to deal directly with kuid_t and kgid_t and can
+	* instead deal with the raw numeric values that are stored
+	* in the filesystem.
+	*/
+	static inline uid_t i_uid_read(const inode_s *inode)
+	{
+		// return from_kuid(i_user_ns(inode), inode->i_uid);
+	}
 
-	// static inline gid_t i_gid_read(const inode_s *inode)
-	// {
-	// 	return from_kgid(i_user_ns(inode), inode->i_gid);
-	// }
+	static inline gid_t i_gid_read(const inode_s *inode)
+	{
+		// return from_kgid(i_user_ns(inode), inode->i_gid);
+	}
 
-	// static inline void i_uid_write(inode_s *inode, uid_t uid)
-	// {
-	// 	inode->i_uid = make_kuid(i_user_ns(inode), uid);
-	// }
+	static inline void i_uid_write(inode_s *inode, uid_t uid)
+	{
+		// inode->i_uid = make_kuid(i_user_ns(inode), uid);
+	}
 
-	// static inline void i_gid_write(inode_s *inode, gid_t gid)
-	// {
-	// 	inode->i_gid = make_kgid(i_user_ns(inode), gid);
-	// }
+	static inline void i_gid_write(inode_s *inode, gid_t gid)
+	{
+		// inode->i_gid = make_kgid(i_user_ns(inode), gid);
+	}
 
 	// /**
 	//  * i_uid_into_mnt - map an inode's i_uid down into a mnt_userns
