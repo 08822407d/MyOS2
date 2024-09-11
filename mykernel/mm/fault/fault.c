@@ -991,7 +991,7 @@ oom:
 /*
  * The mmap_lock must have been held on entry, and may have been
  * released depending on flags and vma->vm_ops->fault() return value.
- * See filemap_fault() and __lock_page_retry().
+ * See simple_filemap_fault() and __lock_page_retry().
  */
 static vm_fault_t
 __do_fault(vm_fault_s *vmf) {
@@ -1299,7 +1299,7 @@ do_shared_fault(vm_fault_s *vmf) {
  * We enter with non-exclusive mmap_lock (to exclude vma changes,
  * but allow concurrent faults).
  * The mmap_lock may have been released depending on flags and our
- * return value.  See filemap_fault() and __folio_lock_or_retry().
+ * return value.  See simple_filemap_fault() and __folio_lock_or_retry().
  * If mmap_lock is released, vma may become invalid (for example
  * by other thread calling munmap()).
  */
@@ -1365,7 +1365,7 @@ do_fault(vm_fault_s *vmf) {
  * concurrent faults).
  *
  * The mmap_lock may have been released depending on flags and our return value.
- * See filemap_fault() and __folio_lock_or_retry().
+ * See simple_filemap_fault() and __folio_lock_or_retry().
  */
 static vm_fault_t
 handle_pte_fault(vm_fault_s *vmf) {
@@ -1452,7 +1452,7 @@ unlock:
  * By the time we get here, we already hold the mm semaphore
  *
  * The mmap_lock may have been released depending on flags and our
- * return value.  See filemap_fault() and __folio_lock_or_retry().
+ * return value.  See simple_filemap_fault() and __folio_lock_or_retry().
  */
 // vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,
 // 		unsigned int flags, pt_regs_s *regs)

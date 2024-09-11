@@ -54,8 +54,8 @@
  *        ->i_pages lock	(arch-dependent flush_dcache_mmap_lock)
  *
  *  ->mmap_lock
- *    ->invalidate_lock		(filemap_fault)
- *      ->lock_page		(filemap_fault, access_process_vm)
+ *    ->invalidate_lock		(simple_filemap_fault)
+ *      ->lock_page		(simple_filemap_fault, access_process_vm)
  *
  *  ->i_rwsem			(generic_perform_write)
  *    ->mmap_lock		(fault_in_readable->do_page_fault)
@@ -90,28 +90,11 @@
  */
 
 
-static page_s
-*myos_readpage(vm_fault_s *vmf) {
-	vma_s *vma = vmf->vma;
-	file_s *filp = vma->vm_file;
-	if (filp == NULL)
-		return NULL;
-
-	int pg_idx = (vmf->address - vma->vm_start) / PAGE_SIZE;
-	loff_t pos = (vma->vm_pgoff + pg_idx) * PAGE_SIZE;
-	page_s *retval = alloc_page(GFP_USER);
-	virt_addr_t vaddr = page_to_virt(retval);
-	memset((void *)vaddr, 0, PAGE_SIZE);
-	filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &pos);
-
-	return retval;
-}
-
 /**
- * filemap_fault - read in file data for page fault handling
+ * simple_filemap_fault - read in file data for page fault handling
  * @vmf:	vm_fault_s containing details of the fault
  *
- * filemap_fault() is invoked via the vma operations vector for a
+ * simple_filemap_fault() is invoked via the vma operations vector for a
  * mapped memory region to read in file data during a page fault.
  *
  * The goto's are kind of ugly, but this streamlines the normal case of having
@@ -130,152 +113,27 @@ static page_s
  *
  * Return: bitwise-OR of %VM_FAULT_ codes.
  */
-vm_fault_t filemap_fault(vm_fault_s *vmf)
+vm_fault_t simple_filemap_fault(vm_fault_s *vmf)
 {
-	int error;
 	file_s *file = vmf->vma->vm_file;
-	file_s *fpin = NULL;
-	// struct address_space *mapping = file->f_mapping;
-	// struct inode *inode = mapping->host;
-	pgoff_t max_idx, index = vmf->pgoff;
-	// folio_s *folio;
-	vm_fault_t ret = 0;
-	// bool mapping_locked = false;
+	if (IS_ERR_OR_NULL(file))
+		return VM_FAULT_ERROR;
+	addr_spc_s *mapping = file->f_mapping;
+	if (IS_ERR_OR_NULL(mapping))
+		return VM_FAULT_ERROR;
 
-	// max_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-	// if (unlikely(index >= max_idx))
-	// 	return VM_FAULT_SIGBUS;
+	pgoff_t index = vmf->pgoff;
+	loff_t pos = index << PAGE_SHIFT;
+	page_s **pgcache_ptr = &mapping->page_array[index];
+	BUG_ON(*pgcache_ptr != NULL);
+	*pgcache_ptr = alloc_page(GFP_USER);
+	virt_addr_t vaddr = page_to_virt(*pgcache_ptr);
 
-	// /*
-	//  * Do we have something in the page cache already?
-	//  */
-	// folio = filemap_get_folio(mapping, index);
-	// if (likely(folio)) {
-	// 	/*
-	// 	 * We found the page, so try async readahead before waiting for
-	// 	 * the lock.
-	// 	 */
-	// 	if (!(vmf->flags & FAULT_FLAG_TRIED))
-	// 		fpin = do_async_mmap_readahead(vmf, folio);
-	// 	if (unlikely(!folio_test_uptodate(folio))) {
-	// 		filemap_invalidate_lock_shared(mapping);
-	// 		mapping_locked = true;
-	// 	}
-	// } else {
-	// 	/* No page in the page cache at all */
-	// 	count_vm_event(PGMAJFAULT);
-	// 	count_memcg_event_mm(vmf->vma->vm_mm, PGMAJFAULT);
-	// 	ret = VM_FAULT_MAJOR;
-	// 	fpin = do_sync_mmap_readahead(vmf);
-// retry_find:
-	// 	/*
-	// 	 * See comment in filemap_create_folio() why we need
-	// 	 * invalidate_lock
-	// 	 */
-	// 	if (!mapping_locked) {
-	// 		filemap_invalidate_lock_shared(mapping);
-	// 		mapping_locked = true;
-	// 	}
-	// 	folio = __filemap_get_folio(mapping, index,
-	// 				  FGP_CREAT|FGP_FOR_MMAP,
-	// 				  vmf->gfp_mask);
-	// 	if (!folio) {
-	// 		if (fpin)
-	// 			goto out_retry;
-	// 		filemap_invalidate_unlock_shared(mapping);
-	// 		return VM_FAULT_OOM;
-	// 	}
-	// }
+	memset((void *)vaddr, 0, PAGE_SIZE);
+	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
+	vmf->page = *pgcache_ptr;
 
-	// if (!lock_folio_maybe_drop_mmap(vmf, folio, &fpin))
-	// 	goto out_retry;
-
-	// /* Did it get truncated? */
-	// if (unlikely(folio->mapping != mapping)) {
-	// 	folio_unlock(folio);
-	// 	folio_put(folio);
-	// 	goto retry_find;
-	// }
-	// VM_BUG_ON_FOLIO(!folio_contains(folio, index), folio);
-
-	// /*
-	//  * We have a locked page in the page cache, now we need to check
-	//  * that it's up-to-date. If not, it is going to be due to an error.
-	//  */
-	// if (unlikely(!folio_test_uptodate(folio))) {
-	// 	/*
-	// 	 * The page was in cache and uptodate and now it is not.
-	// 	 * Strange but possible since we didn't hold the page lock all
-	// 	 * the time. Let's drop everything get the invalidate lock and
-	// 	 * try again.
-	// 	 */
-	// 	if (!mapping_locked) {
-	// 		folio_unlock(folio);
-	// 		folio_put(folio);
-	// 		goto retry_find;
-	// 	}
-	// 	goto page_not_uptodate;
-	// }
-
-	// /*
-	//  * We've made it this far and we had to drop our mmap_lock, now is the
-	//  * time to return to the upper layer and have it re-find the vma and
-	//  * redo the fault.
-	//  */
-	// if (fpin) {
-	// 	folio_unlock(folio);
-	// 	goto out_retry;
-	// }
-	// if (mapping_locked)
-	// 	filemap_invalidate_unlock_shared(mapping);
-
-	// /*
-	//  * Found the page and have a reference on it.
-	//  * We must recheck i_size under page lock.
-	//  */
-	// max_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-	// if (unlikely(index >= max_idx)) {
-	// 	folio_unlock(folio);
-	// 	folio_put(folio);
-	// 	return VM_FAULT_SIGBUS;
-	// }
-
-	// vmf->page = folio_file_page(folio, index);
-	vmf->page = myos_readpage(vmf);
-	return ret | VM_FAULT_LOCKED;
-
-// page_not_uptodate:
-	// /*
-	//  * Umm, take care of errors if the page isn't up-to-date.
-	//  * Try to re-read it _once_. We do this synchronously,
-	//  * because there really aren't any performance issues here
-	//  * and we need to check for errors.
-	//  */
-	// fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-	// error = filemap_read_folio(file, mapping, folio);
-	// if (fpin)
-	// 	goto out_retry;
-	// folio_put(folio);
-
-	// if (!error || error == AOP_TRUNCATED_PAGE)
-	// 	goto retry_find;
-	// filemap_invalidate_unlock_shared(mapping);
-
-	// return VM_FAULT_SIGBUS;
-
-// out_retry:
-	// /*
-	//  * We dropped the mmap_lock, we need to return to the fault handler to
-	//  * re-find the vma and come back and find our hopefully still populated
-	//  * page.
-	//  */
-	// if (folio)
-	// 	folio_put(folio);
-	// if (mapping_locked)
-	// 	filemap_invalidate_unlock_shared(mapping);
-	// if (fpin)
-	// 	fput(fpin);
-	// return ret | VM_FAULT_RETRY;
+	return 0;
 }
 
 
@@ -297,77 +155,6 @@ simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff)
 		return VM_FAULT_NOPAGE;
 }
 
-vm_fault_t
-filemap_map_pages(vm_fault_s *vmf,
-		pgoff_t start_pgoff, pgoff_t end_pgoff)
-{
-	vma_s *vma = vmf->vma;
-	file_s *file = vma->vm_file;
-	addr_spc_s *mapping = file->f_mapping;
-	pgoff_t last_pgoff = start_pgoff;
-	ulong addr;
-	// XA_STATE(xas, &mapping->i_pages, start_pgoff);
-	folio_s *folio;
-	page_s *page;
-	// uint mmap_miss = READ_ONCE(file->f_ra.mmap_miss);
-	vm_fault_t ret = 0;
-
-	// rcu_read_lock();
-	// folio = first_map_page(mapping, &xas, end_pgoff);
-	// if (!folio)
-	// 	goto out;
-
-	// if (filemap_map_pmd(vmf, &folio->page)) {
-	// 	ret = VM_FAULT_NOPAGE;
-	// 	goto out;
-	// }
-
-	// addr = vma->vm_start + ((start_pgoff - vma->vm_pgoff) << PAGE_SHIFT);
-	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, addr, &vmf->ptl);
-// 	do {
-// again:
-// 		page = folio_file_page(folio, xas.xa_index);
-// 		if (PageHWPoison(page))
-// 			goto unlock;
-
-// 		if (mmap_miss > 0)
-// 			mmap_miss--;
-
-// 		addr += (xas.xa_index - last_pgoff) << PAGE_SHIFT;
-// 		vmf->pte += xas.xa_index - last_pgoff;
-// 		last_pgoff = xas.xa_index;
-
-// 		if (!pte_none(*vmf->pte))
-// 			goto unlock;
-
-// 		/* We're about to handle the fault */
-// 		if (vmf->address == addr)
-// 			ret = VM_FAULT_NOPAGE;
-
-// 		do_set_pte(vmf, page, addr);
-// 		/* no need to invalidate: a not-present page won't be cached */
-// 		update_mmu_cache(vma, addr, vmf->pte);
-// 		if (folio_more_pages(folio, xas.xa_index, end_pgoff)) {
-// 			xas.xa_index++;
-// 			folio_ref_inc(folio);
-// 			goto again;
-// 		}
-// 		folio_unlock(folio);
-// 		continue;
-// unlock:
-// 		if (folio_more_pages(folio, xas.xa_index, end_pgoff)) {
-// 			xas.xa_index++;
-// 			goto again;
-// 		}
-// 		folio_unlock(folio);
-// 		folio_put(folio);
-// 	} while ((folio = next_map_page(mapping, &xas, end_pgoff)) != NULL);
-// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-out:
-	// rcu_read_unlock();
-	// WRITE_ONCE(file->f_ra.mmap_miss, mmap_miss);
-	return ret;
-}
 
 vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
 {
@@ -396,9 +183,8 @@ vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
 }
 
 const vm_ops_s generic_file_vm_ops = {
-	.fault				= filemap_fault,
+	.fault				= simple_filemap_fault,
 	.map_single_page	= simple_filemap_map_page,
-	.map_pages			= filemap_map_pages,
 	.page_mkwrite		= filemap_page_mkwrite,
 };
 
@@ -406,7 +192,7 @@ const vm_ops_s generic_file_vm_ops = {
 
 int generic_file_mmap(file_s *file, vma_s *vma)
 {
-	// struct address_space *mapping = file->f_mapping;
+	// addr_spc_s *mapping = file->f_mapping;
 
 	// if (!mapping->a_ops->readpage)
 	// 	return -ENOEXEC;

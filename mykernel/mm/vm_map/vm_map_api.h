@@ -7,7 +7,7 @@
 	extern kmem_cache_s *vm_area_cachep;
 
 	/* generic vm_area_ops exported for stackable file systems */
-	extern vm_fault_t filemap_fault(vm_fault_s *vmf);
+	extern vm_fault_t simple_filemap_fault(vm_fault_s *vmf);
 	extern vm_fault_t filemap_map_pages(vm_fault_s *vmf,
 			pgoff_t start_pgoff, pgoff_t end_pgoff);
 	extern vm_fault_t simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff);

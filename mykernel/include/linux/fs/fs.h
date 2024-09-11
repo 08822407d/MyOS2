@@ -312,7 +312,7 @@
 
 	typedef struct address_space_operations {
 		// int (*writepage)(page_s *page, struct writeback_control *wbc);
-		// int (*readpage)(file_s *, page_s *);
+		int		(*readpage)(file_s *, page_s *);
 
 		// /* Write back some dirty pages from this mapping. */
 		// int (*writepages)(addr_spc_s *, struct writeback_control *);
