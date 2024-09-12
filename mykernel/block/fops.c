@@ -102,7 +102,7 @@ static int blkdev_close(inode_s *inode, file_s *filp)
 //  * Does not take i_mutex for the write and thus is not for general purpose
 //  * use.
 //  */
-// static ssize_t blkdev_write_iter(struct kiocb *iocb, struct iov_iter *from)
+// static ssize_t blkdev_write_iter(kiocb_s *iocb, iov_iter_s *from)
 // {
 // 	struct block_device *bdev = iocb->ki_filp->private_data;
 // 	struct inode *bd_inode = bdev->bd_inode;
@@ -141,7 +141,7 @@ static int blkdev_close(inode_s *inode, file_s *filp)
 // 	return ret;
 // }
 
-// static ssize_t blkdev_read_iter(struct kiocb *iocb, struct iov_iter *to)
+// static ssize_t blkdev_read_iter(kiocb_s *iocb, iov_iter_s *to)
 // {
 // 	struct block_device *bdev = iocb->ki_filp->private_data;
 // 	loff_t size = bdev_nr_bytes(bdev);

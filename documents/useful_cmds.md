@@ -1,3 +1,9 @@
+代码量统计分析
+
+cloc ./ --exclude-dir=.vscode,build,documents,scripts
+
+---
+
 在zsh上构建edk2的命令
 make -C BaseTools/
 source edksetup.sh BaseTools

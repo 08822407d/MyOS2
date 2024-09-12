@@ -591,7 +591,7 @@
 	// /* do not sleep to wait for the expected completion time */
 	// #define BLK_POLL_NOSLEEP		(1 << 1)
 	// int bio_poll(struct bio *bio, struct io_comp_batch *iob, unsigned int flags);
-	// int iocb_bio_iopoll(struct kiocb *kiocb, struct io_comp_batch *iob,
+	// int iocb_bio_iopoll(kiocb_s *kiocb, struct io_comp_batch *iob,
 	// 			unsigned int flags);
 
 	// static inline struct request_queue *bdev_get_queue(blk_dev_s *bdev)

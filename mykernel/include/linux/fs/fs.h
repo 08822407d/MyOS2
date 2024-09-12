@@ -4,6 +4,7 @@
 
 	#include <linux/kernel/linkage.h>
 	#include <linux/kernel/kdev_t.h>
+	#include <linux/kernel/uio.h>
 	#include <linux/fs/dcache.h>
 	#include <linux/fs/path.h>
 	#include <linux/kernel/stat.h>
@@ -38,7 +39,7 @@
 
 	// typedef int (get_block_t)(inode_s *inode, sector_t iblock,
 	// 			buffer_head_s *bh_result, int create);
-	// typedef int (dio_iodone_t)(struct kiocb *iocb, loff_t offset,
+	// typedef int (dio_iodone_t)(kiocb_s *iocb, loff_t offset,
 	// 			ssize_t bytes, void *private);
 
 	#define MAY_EXEC		0x00000001
@@ -267,23 +268,19 @@
 	// /* can use bio alloc cache */
 	// #define IOCB_ALLOC_CACHE	(1 << 21)
 
-	// struct kiocb {
-	// 	file_s		*ki_filp;
+	typedef struct kiocb {
+		file_s		*ki_filp;
+		/* The 'ki_filp' pointer is shared in a union for aio */
+		loff_t		ki_pos;
+		// void		(*ki_complete)(kiocb_s *iocb, long ret);
+		// void		*private;
+		// int			ki_flags;
+		// u16			ki_hint;
+		// u16			ki_ioprio; /* See linux/ioprio.h */
+		// struct wait_page_queue	*ki_waitq; /* for async buffered IO */
+	} kiocb_s;
 
-	// 	/* The 'ki_filp' pointer is shared in a union for aio */
-	// 	// randomized_struct_fields_start
-
-	// 	loff_t		ki_pos;
-	// 	void		(*ki_complete)(struct kiocb *iocb, long ret);
-	// 	void		*private;
-	// 	int			ki_flags;
-	// 	u16			ki_hint;
-	// 	u16			ki_ioprio; /* See linux/ioprio.h */
-	// 	struct wait_page_queue	*ki_waitq; /* for async buffered IO */
-	// 	randomized_struct_fields_end
-	// };
-
-	// static inline bool is_sync_kiocb(struct kiocb *kiocb)
+	// static inline bool is_sync_kiocb(kiocb_s *kiocb)
 	// {
 	// 	return kiocb->ki_complete == NULL;
 	// }
@@ -340,7 +337,7 @@
 		// void (*invalidatepage) (page_s *, unsigned int, unsigned int);
 		// int (*releasepage) (page_s *, gfp_t);
 		// void (*freepage)(page_s *);
-		// ssize_t (*direct_IO)(struct kiocb *, struct iov_iter *iter);
+		// ssize_t (*direct_IO)(kiocb_s *, iov_iter_s *iter);
 		// /*
 		// * migrate the contents of a page to the specified target. If
 		// * migrate_mode is MIGRATE_ASYNC, it must not block.
@@ -1877,9 +1874,9 @@
 		loff_t		(*llseek) (file_s *file, loff_t pos, int);
 		ssize_t		(*read) (file_s *file, char *buf, size_t size, loff_t *pos);
 		ssize_t		(*write) (file_s *file, const char *buf, size_t size, loff_t *pos);
-		// ssize_t		(*read_iter) (struct kiocb *, struct iov_iter *);
-		// ssize_t		(*write_iter) (struct kiocb *, struct iov_iter *);
-		// int			(*iopoll)(struct kiocb *kiocb, struct io_comp_batch *,
+		ssize_t		(*read_iter) (kiocb_s *, iov_iter_s *);
+		ssize_t		(*write_iter) (kiocb_s *, iov_iter_s *);
+		// int			(*iopoll)(kiocb_s *kiocb, struct io_comp_batch *,
 		// 					unsigned int flags);
 		int			(*iterate) (file_s *, dir_ctxt_s *);
 		int			(*iterate_shared) (file_s *, dir_ctxt_s *);
@@ -1944,14 +1941,14 @@
 		// int			(*fileattr_get)(dentry_s *dentry, file_sattr *fa);
 	} inode_ops_s;
 
-	// static inline ssize_t call_read_iter(file_s *file, struct kiocb *kio,
-	// 					struct iov_iter *iter)
+	// static inline ssize_t call_read_iter(file_s *file, kiocb_s *kio,
+	// 					iov_iter_s *iter)
 	// {
 	// 	return file->f_op->read_iter(kio, iter);
 	// }
 
-	// static inline ssize_t call_write_iter(file_s *file, struct kiocb *kio,
-	// 					struct iov_iter *iter)
+	// static inline ssize_t call_write_iter(file_s *file, kiocb_s *kio,
+	// 					iov_iter_s *iter)
 	// {
 	// 	return file->f_op->write_iter(kio, iter);
 	// }
@@ -2115,27 +2112,27 @@
 
 	// static inline u16 ki_hint_validate(enum rw_hint hint)
 	// {
-	// 	typeof(((struct kiocb *)0)->ki_hint) max_hint = -1;
+	// 	typeof(((kiocb_s *)0)->ki_hint) max_hint = -1;
 
 	// 	if (hint <= max_hint)
 	// 		return hint;
 	// 	return 0;
 	// }
 
-	// static inline void init_sync_kiocb(struct kiocb *kiocb, file_s *filp)
-	// {
-	// 	*kiocb = (struct kiocb) {
-	// 		.ki_filp = filp,
-	// 		.ki_flags = iocb_flags(filp),
-	// 		.ki_hint = ki_hint_validate(file_write_hint(filp)),
-	// 		.ki_ioprio = get_current_ioprio(),
-	// 	};
-	// }
+	static inline void init_sync_kiocb(kiocb_s *kiocb, file_s *filp)
+	{
+		*kiocb = (kiocb_s) {
+			.ki_filp = filp,
+			// .ki_flags = iocb_flags(filp),
+			// .ki_hint = ki_hint_validate(file_write_hint(filp)),
+			// .ki_ioprio = get_current_ioprio(),
+		};
+	}
 
-	// static inline void kiocb_clone(struct kiocb *kiocb, struct kiocb *kiocb_src,
+	// static inline void kiocb_clone(kiocb_s *kiocb, kiocb_s *kiocb_src,
 	// 				file_s *filp)
 	// {
-	// 	*kiocb = (struct kiocb) {
+	// 	*kiocb = (kiocb_s) {
 	// 		.ki_filp = filp,
 	// 		.ki_flags = kiocb_src->ki_flags,
 	// 		.ki_hint = kiocb_src->ki_hint,
@@ -2772,7 +2769,7 @@
 	// * to already be updated for the write, and will return either the amount
 	// * of bytes passed in, or an error if syncing the file failed.
 	// */
-	// static inline ssize_t generic_write_sync(struct kiocb *iocb, ssize_t count)
+	// static inline ssize_t generic_write_sync(kiocb_s *iocb, ssize_t count)
 	// {
 	// 	if (iocb->ki_flags & IOCB_DSYNC) {
 	// 		int ret = vfs_fsync_range(iocb->ki_filp,
@@ -3022,26 +3019,26 @@
 	// extern int sb_min_blocksize(super_block_s *, int);
 
 	// extern int generic_file_readonly_mmap(file_s *, vma_s *);
-	// extern ssize_t generic_write_checks(struct kiocb *, struct iov_iter *);
+	// extern ssize_t generic_write_checks(kiocb_s *, iov_iter_s *);
 	// extern int generic_write_check_limits(file_s *file, loff_t pos,
 	// 		loff_t *count);
 	// extern int generic_file_rw_checks(file_s *file_in, file_s *file_out);
-	// ssize_t filemap_read(struct kiocb *iocb, struct iov_iter *to,
+	// ssize_t filemap_read(kiocb_s *iocb, iov_iter_s *to,
 	// 		ssize_t already_read);
-	// extern ssize_t generic_file_read_iter(struct kiocb *, struct iov_iter *);
-	// extern ssize_t __generic_file_write_iter(struct kiocb *, struct iov_iter *);
-	// extern ssize_t generic_file_write_iter(struct kiocb *, struct iov_iter *);
-	// extern ssize_t generic_file_direct_write(struct kiocb *, struct iov_iter *);
-	// extern ssize_t generic_perform_write(file_s *, struct iov_iter *, loff_t);
+	// extern ssize_t generic_file_read_iter(kiocb_s *, iov_iter_s *);
+	// extern ssize_t __generic_file_write_iter(kiocb_s *, iov_iter_s *);
+	// extern ssize_t generic_file_write_iter(kiocb_s *, iov_iter_s *);
+	// extern ssize_t generic_file_direct_write(kiocb_s *, iov_iter_s *);
+	// extern ssize_t generic_perform_write(file_s *, iov_iter_s *, loff_t);
 
-	// ssize_t vfs_iter_read(file_s *file, struct iov_iter *iter, loff_t *ppos,
+	// ssize_t vfs_iter_read(file_s *file, iov_iter_s *iter, loff_t *ppos,
 	// 		rwf_t flags);
-	// ssize_t vfs_iter_write(file_s *file, struct iov_iter *iter, loff_t *ppos,
+	// ssize_t vfs_iter_write(file_s *file, iov_iter_s *iter, loff_t *ppos,
 	// 		rwf_t flags);
-	// ssize_t vfs_iocb_iter_read(file_s *file, struct kiocb *iocb,
-	// 			struct iov_iter *iter);
-	// ssize_t vfs_iocb_iter_write(file_s *file, struct kiocb *iocb,
-	// 				struct iov_iter *iter);
+	// ssize_t vfs_iocb_iter_read(file_s *file, kiocb_s *iocb,
+	// 			iov_iter_s *iter);
+	// ssize_t vfs_iocb_iter_write(file_s *file, kiocb_s *iocb,
+	// 				iov_iter_s *iter);
 
 	// /* fs/splice.c */
 	// extern ssize_t generic_file_splice_read(file_s *, loff_t *,
@@ -3082,15 +3079,15 @@
 	// 	DIO_SKIP_HOLES	= 0x02,
 	// };
 
-	// ssize_t __blockdev_direct_IO(struct kiocb *iocb, inode_s *inode,
-	// 				struct block_device *bdev, struct iov_iter *iter,
+	// ssize_t __blockdev_direct_IO(kiocb_s *iocb, inode_s *inode,
+	// 				struct block_device *bdev, iov_iter_s *iter,
 	// 				get_block_t get_block,
 	// 				dio_iodone_t end_io, dio_submit_t submit_io,
 	// 				int flags);
 
-	// static inline ssize_t blockdev_direct_IO(struct kiocb *iocb,
+	// static inline ssize_t blockdev_direct_IO(kiocb_s *iocb,
 	// 					inode_s *inode,
-	// 					struct iov_iter *iter,
+	// 					iov_iter_s *iter,
 	// 					get_block_t get_block)
 	// {
 	// 	return __blockdev_direct_IO(iocb, inode, inode->i_sb->s_bdev, iter,
@@ -3217,7 +3214,7 @@
 	// extern int noop_fsync(file_s *, loff_t, loff_t, int);
 	// extern void noop_invalidatepage(page_s *page, unsigned int offset,
 	// 		unsigned int length);
-	// extern ssize_t noop_direct_IO(struct kiocb *iocb, struct iov_iter *iter);
+	// extern ssize_t noop_direct_IO(kiocb_s *iocb, iov_iter_s *iter);
 	// extern int simple_empty(dentry_s *);
 	// extern int simple_write_begin(file_s *file, addr_spc_s *mapping,
 	// 			loff_t pos, unsigned len, unsigned flags,
@@ -3308,7 +3305,7 @@
 	// 	return res;
 	// }
 
-	// static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+	// static inline int kiocb_set_rw_flags(kiocb_s *ki, rwf_t flags)
 	// {
 	// 	int kiocb_flags = 0;
 

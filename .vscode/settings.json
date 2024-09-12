@@ -332,7 +332,8 @@
         "vm_map_api_arch.h": "c",
         "features.h": "c",
         "prctl.h": "c",
-        "myos_sysreboot.h": "c"
+        "myos_sysreboot.h": "c",
+        "uio.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

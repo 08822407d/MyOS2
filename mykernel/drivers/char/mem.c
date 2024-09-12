@@ -67,12 +67,12 @@ static ssize_t write_null(file_s *file,
 	return count;
 }
 
-// static ssize_t read_iter_null(struct kiocb *iocb, struct iov_iter *to)
+// static ssize_t read_iter_null(kiocb_s *iocb, iov_iter_s *to)
 // {
 // 	return 0;
 // }
 
-// static ssize_t write_iter_null(struct kiocb *iocb, struct iov_iter *from)
+// static ssize_t write_iter_null(kiocb_s *iocb, iov_iter_s *from)
 // {
 // 	size_t count = iov_iter_count(from);
 // 	iov_iter_advance(from, count);
