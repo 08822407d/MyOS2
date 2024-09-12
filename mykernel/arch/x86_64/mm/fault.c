@@ -240,6 +240,14 @@ void do_user_addr_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 
 	// perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
 
+	/*
+	 * Read-only permissions can not be expressed in shadow stack PTEs.
+	 * Treat all shadow stack accesses as WRITE faults. This ensures
+	 * that the MM will prepare everything (e.g., break COW) such that
+	 * maybe_mkwrite() can create a proper shadow stack PTE.
+	 */
+	if (err_code & X86_PF_SHSTK)
+		flags |= FAULT_FLAG_WRITE;
 	if (err_code & X86_PF_WRITE)
 		flags |= FAULT_FLAG_WRITE;
 	if (err_code & X86_PF_INSTR)
@@ -261,46 +269,15 @@ void do_user_addr_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 	// 		return;
 	// }
 
-	// /*
-	//  * Kernel-mode access to the user address space should only occur
-	//  * on well-defined single instructions listed in the exception
-	//  * tables.  But, an erroneous kernel fault occurring outside one of
-	//  * those areas which also holds mmap_lock might deadlock attempting
-	//  * to validate the fault against the address space.
-	//  *
-	//  * Only do the expensive exception table search when we might be at
-	//  * risk of a deadlock.  This happens if we
-	//  * 1. Failed to acquire mmap_lock, and
-	//  * 2. The access did not originate in userspace.
-	//  */
-	// if (unlikely(!mmap_read_trylock(mm))) {
-	// 	if (!user_mode(regs) && !search_exception_tables(regs->ip)) {
-	// 		/*
-	// 		 * Fault from code in kernel from
-	// 		 * which we do not expect faults.
-	// 		 */
-	// 		bad_area_nosemaphore(regs, error_code, address);
-	// 		return;
-	// 	}
-// retry:
-	// 	mmap_read_lock(mm);
-	// } else {
-	// 	/*
-	// 	 * The above down_read_trylock() might have succeeded in
-	// 	 * which case we'll have missed the might_sleep() from
-	// 	 * down_read():
-	// 	 */
-	// 	might_sleep();
-	// }
 
-	vm_fault_s vmf = myos_dump_pagetable(address);
+	// vm_fault_s vmf = myos_dump_pagetable(address);
 	vma = simple_find_vma(mm, address);
 	if (unlikely(!vma)) {
 		myos_bad_area(regs, err_code, address);
 		return;
 	}
 	if (likely(vma->vm_start <= address))
-		goto good_area;
+		goto lock_mmap;
 	if (unlikely(!(vma->vm_flags & VM_GROWSDOWN))) {
 		myos_bad_area(regs, err_code, address);
 		return;
@@ -309,12 +286,19 @@ void do_user_addr_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 		myos_bad_area(regs, err_code, address);
 		return;
 	}
+lock_mmap:
 
-	/*
-	 * Ok, we have a good vm_area for this memory access, so
-	 * we can handle it..
-	 */
-good_area:
+retry:
+	// vma = lock_mm_and_find_vma(mm, address, regs);
+	// if (unlikely(!vma)) {
+	// 	bad_area_nosemaphore(regs, error_code, address);
+	// 	return;
+	// }
+
+	// /*
+	//  * Ok, we have a good vm_area for this memory access, so
+	//  * we can handle it..
+	//  */
 	// if (unlikely(access_error(error_code, vma))) {
 	// 	bad_area_access_error(regs, error_code, address, vma);
 	// 	return;
@@ -348,6 +332,10 @@ good_area:
 	// 	return;
 	// }
 
+	// /* The fault is fully completed (including releasing mmap lock) */
+	// if (fault & VM_FAULT_COMPLETED)
+	// 	return;
+
 	// /*
 	//  * If we need to retry the mmap_lock has already been released,
 	//  * and if there is a fatal signal pending there is no guarantee
@@ -359,6 +347,7 @@ good_area:
 	// }
 
 	// mmap_read_unlock(mm);
+// done:
 	// if (likely(!(fault & VM_FAULT_ERROR)))
 	// 	return;
 
@@ -397,6 +386,7 @@ good_area:
 
 static __always_inline void
 handle_page_fault(pt_regs_s *regs, ulong err_code, ulong address) {
+
 	// trace_page_fault_entries(regs, error_code, address);
 
 	// if (kmmio_fault(regs, address))
@@ -422,8 +412,6 @@ handle_page_fault(pt_regs_s *regs, ulong err_code, ulong address) {
 __visible noinstr void
 exc_page_fault(pt_regs_s *regs, ulong error_code)
 {
-	// myos_excep_page_fault(regs);
-
 	ulong address = read_cr2();
 	// irqentry_state_t state;
 
@@ -455,7 +443,7 @@ exc_page_fault(pt_regs_s *regs, ulong error_code)
 
 	// /*
 	//  * Entry handling for valid #PF from kernel mode is slightly
-	//  * different: RCU is already watching and rcu_irq_enter() must not
+	//  * different: RCU is already watching and ct_irq_enter() must not
 	//  * be invoked because a kernel fault on a user space address might
 	//  * sleep.
 	//  *

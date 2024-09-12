@@ -92,6 +92,7 @@ new_sync_read(file_s *filp, char __user *buf,
 	return ret;
 }
 
+
 ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos)
 {
 	kvec_s iov = {
@@ -106,12 +107,7 @@ ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos)
 		return -EINVAL;
 	// if (!(file->f_mode & FMODE_CAN_READ))
 	// 	return -EINVAL;
-	/*
-	 * Also fail if ->read_iter and ->read are both wired up as that
-	 * implies very convoluted semantics.
-	 */
-	// if (unlikely(!file->f_op->read_iter || file->f_op->read))
-	// 	return warn_unsupported(file, "read");
+
 
 	init_sync_kiocb(&kiocb, file);
 	kiocb.ki_pos = pos ? *pos : 0;
@@ -143,7 +139,8 @@ ssize_t kernel_read(file_s *file, void *buf, size_t count, loff_t *pos)
 }
 EXPORT_SYMBOL(kernel_read);
 
-ssize_t vfs_read(file_s *file, char __user *buf, size_t count, loff_t *pos)
+ssize_t vfs_read(file_s *file, char __user *buf,
+		size_t count, loff_t *pos)
 {
 	ssize_t ret;
 
@@ -151,8 +148,8 @@ ssize_t vfs_read(file_s *file, char __user *buf, size_t count, loff_t *pos)
 		return -EBADF;
 	// if (!(file->f_mode & FMODE_CAN_READ))
 	// 	return -EINVAL;
-	// if (unlikely(!access_ok(buf, count)))
-	// 	return -EFAULT;
+	if (unlikely(!access_ok(buf, count)))
+		return -EFAULT;
 
 	ret = rw_verify_area(READ, file, pos, count);
 	if (ret)
@@ -180,7 +177,7 @@ static inline loff_t *file_ppos(file_s *file) {
 	return file->f_mode & FMODE_STREAM ? NULL : &file->f_pos;
 }
 
-ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
+ssize_t ksys_read(uint fd, char __user *buf, size_t count)
 {
 	fd_s f = myos_fdget_pos(fd);
 	ssize_t ret = -EBADF;
@@ -203,10 +200,12 @@ ssize_t ksys_read(unsigned int fd, char __user *buf, size_t count)
 
 
 static ssize_t
-vfs_writev(file_s *file, const iov_s  *vec, ulong vlen, loff_t *pos, rwf_t flags) {
+vfs_writev(file_s *file, const iov_s *vec,
+		ulong vlen, loff_t *pos, rwf_t flags) {
+
 	iov_s iovstack[UIO_FASTIOV];
 	iov_s *iov = iovstack;
-	// iov_iter_s iter;
+	iov_iter_s iter;
 	ssize_t ret;
 
 	// ret = import_iovec(ITER_SOURCE, vec, vlen, ARRAY_SIZE(iovstack), &iov, &iter);
@@ -224,8 +223,8 @@ vfs_writev(file_s *file, const iov_s  *vec, ulong vlen, loff_t *pos, rwf_t flags
 }
 
 static ssize_t
-do_writev(unsigned long fd, const struct iovec __user *vec,
-		unsigned long vlen, rwf_t flags) {
+do_writev(ulong fd, const iov_s __user *vec,
+		ulong vlen, rwf_t flags) {
 	fd_s f = fdget_pos(fd);
 	ssize_t ret = -EBADF;
 
@@ -249,7 +248,8 @@ do_writev(unsigned long fd, const struct iovec __user *vec,
 
 
 
-MYOS_SYSCALL_DEFINE3(writev, unsigned long, fd, const struct iovec __user *, vec, unsigned long, vlen)
+MYOS_SYSCALL_DEFINE3(writev, unsigned long, fd,
+		const iov_s __user *, vec, unsigned long, vlen)
 {
 	return do_writev(fd, vec, vlen, 0);
 }

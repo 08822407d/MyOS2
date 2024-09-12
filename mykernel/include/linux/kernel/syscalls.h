@@ -15,7 +15,7 @@
 	// struct inode;
 	// struct iocb;
 	// struct io_event;
-	// struct iovec;
+	// iov_s;
 	// struct __kernel_old_itimerval;
 	// struct kexec_segment;
 	// struct linux_dirent;
@@ -497,18 +497,18 @@
 		asmlinkage long sys_read(unsigned int fd, char *buf, size_t count);
 		asmlinkage long sys_write(unsigned int fd, const char *buf, size_t count);
 		// asmlinkage long sys_readv(unsigned long fd,
-		// 						const struct iovec __user *vec,
+		// 						const iov_s __user *vec,
 		// 						unsigned long vlen);
 		// asmlinkage long sys_writev(unsigned long fd,
-		// 						const struct iovec __user *vec,
+		// 						const iov_s __user *vec,
 		// 						unsigned long vlen);
 		// asmlinkage long sys_pread64(unsigned int fd, char __user *buf,
 		// 							size_t count, loff_t pos);
 		// asmlinkage long sys_pwrite64(unsigned int fd, const char __user *buf,
 		// 							size_t count, loff_t pos);
-		// asmlinkage long sys_preadv(unsigned long fd, const struct iovec __user *vec,
+		// asmlinkage long sys_preadv(unsigned long fd, const iov_s __user *vec,
 		// 						unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
-		// asmlinkage long sys_pwritev(unsigned long fd, const struct iovec __user *vec,
+		// asmlinkage long sys_pwritev(unsigned long fd, const iov_s __user *vec,
 		// 							unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
 
 		// /* fs/sendfile.c */
@@ -533,7 +533,7 @@
 		// asmlinkage long sys_signalfd4(int ufd, sigset_t __user *user_mask, size_t sizemask, int flags);
 
 		// /* fs/splice.c */
-		// asmlinkage long sys_vmsplice(int fd, const struct iovec __user *iov,
+		// asmlinkage long sys_vmsplice(int fd, const iov_s __user *iov,
 		// 							unsigned long nr_segs, unsigned int flags);
 		// asmlinkage long sys_splice(int fd_in, loff_t __user *off_in,
 		// 						int fd_out, loff_t __user *off_out,
@@ -911,7 +911,7 @@
 		// asmlinkage long sys_mincore(unsigned long start, size_t len,
 		// 							unsigned char __user *vec);
 		// asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
-		// asmlinkage long sys_process_madvise(int pidfd, const struct iovec __user *vec,
+		// asmlinkage long sys_process_madvise(int pidfd, const iov_s __user *vec,
 		// 									size_t vlen, int behavior, unsigned int flags);
 		// asmlinkage long sys_process_mrelease(int pidfd, unsigned int flags);
 		// asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
@@ -976,15 +976,15 @@
 		// asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
 		// 							unsigned int vlen, unsigned flags);
 		// asmlinkage long sys_process_vm_readv(pid_t pid,
-		// 									const struct iovec __user *lvec,
+		// 									const iov_s __user *lvec,
 		// 									unsigned long liovcnt,
-		// 									const struct iovec __user *rvec,
+		// 									const iov_s __user *rvec,
 		// 									unsigned long riovcnt,
 		// 									unsigned long flags);
 		// asmlinkage long sys_process_vm_writev(pid_t pid,
-		// 									const struct iovec __user *lvec,
+		// 									const iov_s __user *lvec,
 		// 									unsigned long liovcnt,
-		// 									const struct iovec __user *rvec,
+		// 									const iov_s __user *rvec,
 		// 									unsigned long riovcnt,
 		// 									unsigned long flags);
 		// asmlinkage long sys_kcmp(pid_t pid1, pid_t pid2, int type,
@@ -1015,10 +1015,10 @@
 		// asmlinkage long sys_copy_file_range(int fd_in, loff_t __user *off_in,
 		// 									int fd_out, loff_t __user *off_out,
 		// 									size_t len, unsigned int flags);
-		// asmlinkage long sys_preadv2(unsigned long fd, const struct iovec __user *vec,
+		// asmlinkage long sys_preadv2(unsigned long fd, const iov_s __user *vec,
 		// 							unsigned long vlen, unsigned long pos_l, unsigned long pos_h,
 		// 							rwf_t flags);
-		// asmlinkage long sys_pwritev2(unsigned long fd, const struct iovec __user *vec,
+		// asmlinkage long sys_pwritev2(unsigned long fd, const iov_s __user *vec,
 		// 							unsigned long vlen, unsigned long pos_l, unsigned long pos_h,
 		// 							rwf_t flags);
 		// asmlinkage long sys_pkey_mprotect(unsigned long start, size_t len,

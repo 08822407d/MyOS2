@@ -40,7 +40,7 @@
 	//  * payload are exactly the same layout.
 	//  *
 	//  * This interface usage is as follows:
-	//  *	struct iovec iov = { buf, len};
+	//  *	iov_s iov = { buf, len};
 	//  *
 	//  *	ret = ptrace(PTRACE_GETREGSET/PTRACE_SETREGSET, pid, NT_XXX_TYPE, &iov);
 	//  *
