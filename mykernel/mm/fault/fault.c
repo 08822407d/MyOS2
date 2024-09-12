@@ -1389,8 +1389,8 @@ handle_pte_fault(vm_fault_s *vmf) {
 		 */
 		// vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm, vmf->pmd,
 		// 				 vmf->address, &vmf->ptl);
-		// if (unlikely(!vmf->pte))
-		// 	return 0;
+		if (unlikely(vmf->pte == NULL))
+			return 0;
 		// vmf->orig_pte = ptep_get_lockless(vmf->pte);
 		vmf->orig_pte = *vmf->pte;
 		vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
@@ -1520,9 +1520,9 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 
 	spin_lock(&mm->page_table_lock);
 	if (!arch_p4d_present(*p4d)) {
-		smp_wmb(); /* See comment in pmd_install() */
+		smp_wmb();	/* See comment in pmd_install() */
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
-	} else	/* Another has populated it */
+	} else			/* Another has populated it */
 		pud_free(new);
 	spin_unlock_no_resched(&mm->page_table_lock);
 	return 0;
@@ -1541,9 +1541,9 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 
 	spin_lock(&mm->page_table_lock);
 	if (!arch_pud_present(*pud)) {
-		smp_wmb(); /* See comment in pmd_install() */
+		smp_wmb();	/* See comment in pmd_install() */
 		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
-	} else {	/* Another has populated it */
+	} else {		/* Another has populated it */
 		pmd_free(new);
 	}
 	spin_unlock_no_resched(&mm->page_table_lock);
@@ -1558,9 +1558,9 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 
 	spin_lock(&mm->page_table_lock);
 	if (!arch_pmd_present(*pmd)) {
-		smp_wmb(); /* See comment in pmd_install() */
+		smp_wmb();	/* See comment in pmd_install() */
 		*pmd = arch_make_pmd(_PAGE_TABLE | __pa(new));
-	} else {	/* Another has populated it */
+	} else {		/* Another has populated it */
 		pte_free(new);
 	}
 	spin_unlock_no_resched(&mm->page_table_lock);
