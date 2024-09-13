@@ -904,8 +904,7 @@
 	addr_spc_s				*f_mapping;
 	// 	errseq_t		f_wb_err;
 	// 	errseq_t		f_sb_err; /* for syncfs */
-	} file_s
-	__attribute__((aligned(4)));	/* lest something weird decides that 2 is OK */
+	}__attribute__((aligned(4))) file_s;	/* lest something weird decides that 2 is OK */
 
 	// typedef struct file_handle {
 	// 	__u32 handle_bytes;
@@ -3025,9 +3024,9 @@
 	// extern int generic_file_rw_checks(file_s *file_in, file_s *file_out);
 	// ssize_t filemap_read(kiocb_s *iocb, iov_iter_s *to,
 	// 		ssize_t already_read);
-	// extern ssize_t generic_file_read_iter(kiocb_s *, iov_iter_s *);
+	extern ssize_t generic_file_read_iter(kiocb_s *, iov_iter_s *);
 	// extern ssize_t __generic_file_write_iter(kiocb_s *, iov_iter_s *);
-	// extern ssize_t generic_file_write_iter(kiocb_s *, iov_iter_s *);
+	extern ssize_t generic_file_write_iter(kiocb_s *, iov_iter_s *);
 	// extern ssize_t generic_file_direct_write(kiocb_s *, iov_iter_s *);
 	// extern ssize_t generic_perform_write(file_s *, iov_iter_s *, loff_t);
 

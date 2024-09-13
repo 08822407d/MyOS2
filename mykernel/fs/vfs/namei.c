@@ -243,7 +243,7 @@ static inline int traverse_mounts(IN OUT path_s *path)
 
 // Linux function proto:
 // static inline int handle_mounts(struct nameidata *nd, struct dentry *dentry,
-// 			  struct path *path, struct inode **inode,
+// 			  struct path *path, inode_s **inode,
 // 			  unsigned int *seqp)
 static inline int handle_mounts(IN nameidata_s *nd,
 		IN dentry_s *dentry, OUT path_s *path)
@@ -289,7 +289,7 @@ void path_put(const path_s *path)
  */
 // Linux function proto:
 // static const char *step_into(struct nameidata *nd, int flags,
-//		     struct dentry *dentry, struct inode *inode, unsigned seq)
+//		     struct dentry *dentry, inode_s *inode, unsigned seq)
 static const char *step_into(IN OUT nameidata_s *nd, IN dentry_s *dentry)
 {
 	path_s path;
@@ -379,7 +379,7 @@ static dentry_s *__lookup_hash(const qstr_s *name,
 
 // Linux function proto:
 // static struct dentry *follow_dotdot(struct nameidata *nd,
-//				 struct inode **inodep, unsigned *seqp)
+//				 inode_s **inodep, unsigned *seqp)
 static dentry_s *follow_dotdot(IN OUT nameidata_s *nd)
 {
 	dentry_s *parent, *old;
@@ -443,7 +443,7 @@ static const char *walk_component(IN nameidata_s *nd)
 
 	// linux call stack :
 	//	static struct dentry *lookup_fast(struct nameidata *nd,
-	//				  struct inode **inode, unsigned *seqp)
+	//				  inode_s **inode, unsigned *seqp)
 	// {
 		dentry = __d_lookup(parent, &nd->last);
 	// }
@@ -1124,7 +1124,7 @@ MYOS_SYSCALL_DEFINE1(rmdir, const char *, pathname)
  */
 int vfs_unlink(inode_s *dir, dentry_s *dentry)
 {
-	struct inode *target = dentry->d_inode;
+	inode_s *target = dentry->d_inode;
 	int error = 0;
 
 	if (!dir->i_op->unlink)

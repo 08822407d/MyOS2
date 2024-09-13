@@ -696,7 +696,7 @@
 //  * with special characters escaped, able to be safely logged. If
 //  * there is an error, the leading character will be "<".
 //  */
-// char *kstrdup_quotable_file(struct file *file, gfp_t gfp)
+// char *kstrdup_quotable_file(file_s *file, gfp_t gfp)
 // {
 // 	char *temp, *pathname;
 

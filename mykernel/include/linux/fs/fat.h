@@ -308,10 +308,10 @@
 	// extern void fat_cache_inval_inode(inode_s *inode);
 	// extern int fat_get_cluster(inode_s *inode, int cluster,
 	// 				int *fclus, int *dclus);
-	// extern int fat_get_mapped_cluster(struct inode *inode, sector_t sector,
+	// extern int fat_get_mapped_cluster(inode_s *inode, sector_t sector,
 	// 				sector_t last_block,
 	// 				unsigned long *mapped_blocks, sector_t *bmap);
-	// extern int fat_bmap(struct inode *inode, sector_t sector, sector_t *phys,
+	// extern int fat_bmap(inode_s *inode, sector_t sector, sector_t *phys,
 	// 			unsigned long *mapped_blocks, int create, bool from_bmap);
 
 	/* fat/dir.c */
@@ -392,7 +392,7 @@
 	// 				unsigned long arg);
 	// extern int fat_setattr(dentry_s *dentry,
 	// 				iattr_s *attr);
-	// extern void fat_truncate_blocks(struct inode *inode, loff_t offset);
+	// extern void fat_truncate_blocks(inode_s *inode, loff_t offset);
 	// extern int fat_getattr(const path_s *path, kstat_s *stat,
 	// 				u32 request_mask, unsigned int flags);
 	// extern int fat_file_fsync(file_s *file, loff_t start, loff_t end,
@@ -434,14 +434,14 @@
 	// 				fat_msg(sb, level, fmt, ## args);	\
 	// 	} while (0)
 	// extern int fat_clusters_flush(struct super_block *sb);
-	// extern int fat_chain_add(struct inode *inode, int new_dclus, int nr_cluster);
+	// extern int fat_chain_add(inode_s *inode, int new_dclus, int nr_cluster);
 	// extern void fat_time_fat2unix(struct msdos_sb_info *sbi, timespec64_s *ts,
 	// 				u16 __time, u16 __date, u8 time_cs);
 	// extern void fat_time_unix2fat(struct msdos_sb_info *sbi, timespec64_s *ts,
 	// 				u16 *time, u16 *date, u8 *time_cs);
-	// extern int fat_truncate_time(struct inode *inode, timespec64_s *now,
+	// extern int fat_truncate_time(inode_s *inode, timespec64_s *now,
 	// 				int flags);
-	// extern int fat_update_time(struct inode *inode, timespec64_s *now,
+	// extern int fat_update_time(inode_s *inode, timespec64_s *now,
 	// 			int flags);
 	// extern int fat_sync_bhs(struct buffer_head **bhs, int nr_bhs);
 

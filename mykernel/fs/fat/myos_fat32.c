@@ -363,6 +363,8 @@ file_ops_s FAT32_file_ops =
 	.llseek			= FAT32_lseek,
 	.ioctl			= FAT32_ioctl,
 
+	.read_iter		= generic_file_read_iter,
+	// .write_iter		= generic_file_write_iter,
 	.mmap			= generic_file_mmap,
 	.iterate_shared	= FAT32_getdents64,
 };

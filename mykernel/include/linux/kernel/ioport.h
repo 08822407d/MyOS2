@@ -347,7 +347,7 @@
 	// 	res->flags |= IORESOURCE_IRQ | IORESOURCE_DISABLED | IORESOURCE_UNSET;
 	// }
 
-	// extern struct address_space *iomem_get_mapping(void);
+	// extern addr_spc_s *iomem_get_mapping(void);
 
 #endif /* __ASSEMBLY__ */
 #endif	/* _LINUX_IOPORT_H */

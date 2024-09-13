@@ -30,6 +30,6 @@
 
 	void cdev_del(cdev_s *);
 
-	// void cd_forget(struct inode *);
+	// void cd_forget(inode_s *);
 
 #endif

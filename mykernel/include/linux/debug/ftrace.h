@@ -663,12 +663,12 @@
 	// extern ftrace_func_t ftrace_trace_function;
 
 	// int ftrace_regex_open(struct ftrace_ops *ops, int flag,
-	// 		  struct inode *inode, struct file *file);
-	// ssize_t ftrace_filter_write(struct file *file, const char __user *ubuf,
+	// 		  inode_s *inode, file_s *file);
+	// ssize_t ftrace_filter_write(file_s *file, const char __user *ubuf,
 	// 				size_t cnt, loff_t *ppos);
-	// ssize_t ftrace_notrace_write(struct file *file, const char __user *ubuf,
+	// ssize_t ftrace_notrace_write(file_s *file, const char __user *ubuf,
 	// 				 size_t cnt, loff_t *ppos);
-	// int ftrace_regex_release(struct inode *inode, struct file *file);
+	// int ftrace_regex_release(inode_s *inode, file_s *file);
 
 	// void __init
 	// ftrace_set_early_filter(struct ftrace_ops *ops, char *buf, int enable);
@@ -889,12 +889,12 @@
 	// #define ftrace_free_filter(ops) do { } while (0)
 	// #define ftrace_ops_set_global_filter(ops) do { } while (0)
 
-	// static inline ssize_t ftrace_filter_write(struct file *file, const char __user *ubuf,
+	// static inline ssize_t ftrace_filter_write(file_s *file, const char __user *ubuf,
 	// 				size_t cnt, loff_t *ppos) { return -ENODEV; }
-	// static inline ssize_t ftrace_notrace_write(struct file *file, const char __user *ubuf,
+	// static inline ssize_t ftrace_notrace_write(file_s *file, const char __user *ubuf,
 	// 				 size_t cnt, loff_t *ppos) { return -ENODEV; }
 	// static inline int
-	// ftrace_regex_release(struct inode *inode, struct file *file) { return -ENODEV; }
+	// ftrace_regex_release(inode_s *inode, file_s *file) { return -ENODEV; }
 
 	// static inline bool is_ftrace_trampoline(unsigned long addr)
 	// {

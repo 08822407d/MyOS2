@@ -24,7 +24,7 @@
  */
 static loff_t blkdev_llseek(file_s *file, loff_t offset, int whence)
 {
-	// struct inode *bd_inode = bdev_file_inode(file);
+	// inode_s *bd_inode = bdev_file_inode(file);
 	// loff_t retval;
 
 	// inode_lock(bd_inode);
@@ -105,7 +105,7 @@ static int blkdev_close(inode_s *inode, file_s *filp)
 // static ssize_t blkdev_write_iter(kiocb_s *iocb, iov_iter_s *from)
 // {
 // 	struct block_device *bdev = iocb->ki_filp->private_data;
-// 	struct inode *bd_inode = bdev->bd_inode;
+// 	inode_s *bd_inode = bdev->bd_inode;
 // 	loff_t size = bdev_nr_bytes(bdev);
 // 	struct blk_plug plug;
 // 	size_t shorted = 0;
@@ -163,7 +163,7 @@ static int blkdev_close(inode_s *inode, file_s *filp)
 // 		goto reexpand; /* skip atime */
 
 // 	if (iocb->ki_flags & IOCB_DIRECT) {
-// 		struct address_space *mapping = iocb->ki_filp->f_mapping;
+// 		addr_spc_s *mapping = iocb->ki_filp->f_mapping;
 
 // 		if (iocb->ki_flags & IOCB_NOWAIT) {
 // 			if (filemap_range_needs_writeback(mapping, pos,
@@ -205,7 +205,7 @@ static int blkdev_close(inode_s *inode, file_s *filp)
 // static long blkdev_fallocate(file_s *file, int mode,
 // 				loff_t start, loff_t len)
 // {
-// 	struct inode *inode = bdev_file_inode(file);
+// 	inode_s *inode = bdev_file_inode(file);
 // 	struct block_device *bdev = I_BDEV(inode);
 // 	loff_t end = start + len - 1;
 // 	loff_t isize;

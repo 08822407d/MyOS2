@@ -12,7 +12,7 @@
 	// struct __aio_sigset;
 	// struct epoll_event;
 	// struct iattr;
-	// struct inode;
+	// inode_s;
 	// struct iocb;
 	// struct io_event;
 	// iov_s;

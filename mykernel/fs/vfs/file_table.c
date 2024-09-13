@@ -35,10 +35,10 @@
 static kmem_cache_s *filp_cachep __read_mostly;
 
 
-// static struct file *__alloc_file(int flags, const struct cred *cred)
+// static file_s *__alloc_file(int flags, const struct cred *cred)
 static file_s *__alloc_file(int flags)
 {
-	struct file *f;
+	file_s *f;
 	int error;
 
 	f = kmem_cache_zalloc(filp_cachep, GFP_KERNEL);

@@ -112,10 +112,10 @@ ssize_t __kernel_read(file_s *file, void *buf, size_t count, loff_t *pos)
 	init_sync_kiocb(&kiocb, file);
 	kiocb.ki_pos = pos ? *pos : 0;
 	iov_iter_kvec(&iter, READ, &iov, 1, iov.iov_len);
-	if (file->f_op->read)
-		ret = file->f_op->read(file, buf, count, pos);
-	else if (file->f_op->read_iter)
+	if (file->f_op->read_iter)
 		ret = file->f_op->read_iter(&kiocb, &iter);
+	else if (file->f_op->read)
+		ret = file->f_op->read(file, buf, count, pos);
 	else
 		ret = -EINVAL;
 	// if (ret > 0) {
@@ -157,10 +157,10 @@ ssize_t vfs_read(file_s *file, char __user *buf,
 	if (count > MAX_RW_COUNT)
 		count =  MAX_RW_COUNT;
 
-	if (file->f_op->read)
-		ret = file->f_op->read(file, buf, count, pos);
-	else if (file->f_op->read_iter)
+	if (file->f_op->read_iter)
 		ret = new_sync_read(file, buf, count, pos);
+	else if (file->f_op->read)
+		ret = file->f_op->read(file, buf, count, pos);
 	else
 		ret = -EINVAL;
 	// if (ret > 0) {

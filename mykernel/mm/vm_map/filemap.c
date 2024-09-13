@@ -126,10 +126,9 @@ vm_fault_t simple_filemap_fault(vm_fault_s *vmf)
 	loff_t pos = index << PAGE_SHIFT;
 	page_s **pgcache_ptr = &mapping->page_array[index];
 	BUG_ON(*pgcache_ptr != NULL);
-	*pgcache_ptr = alloc_page(GFP_USER);
+	*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
 	virt_addr_t vaddr = page_to_virt(*pgcache_ptr);
 
-	memset((void *)vaddr, 0, PAGE_SIZE);
 	file->f_op->read(file, (char *)vaddr, PAGE_SIZE, &pos);
 	vmf->page = *pgcache_ptr;
 
@@ -158,7 +157,7 @@ simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff)
 
 vm_fault_t filemap_page_mkwrite(vm_fault_s *vmf)
 {
-// 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+// 	addr_spc_s *mapping = vmf->vma->vm_file->f_mapping;
 // 	folio_s *folio = page_folio(vmf->page);
 // 	vm_fault_t ret = VM_FAULT_LOCKED;
 
@@ -188,11 +187,166 @@ const vm_ops_s generic_file_vm_ops = {
 	.page_mkwrite		= filemap_page_mkwrite,
 };
 
-/* This is used for a general mmap of a disk file */
 
+/**
+ * filemap_read - Read data from the page cache.
+ * @iocb: The iocb to read.
+ * @iter: Destination for the data.
+ * @already_read: Number of bytes already read by the caller.
+ *
+ * Copies data from the page cache.  If the data is not currently present,
+ * uses the readahead and read_folio address_space operations to fetch it.
+ *
+ * Return: Total number of bytes copied, including those already read by
+ * the caller.  If an error happens before any bytes are copied, returns
+ * a negative error number.
+ */
+ssize_t
+simple_filemap_read(kiocb_s *iocb, iov_iter_s *iter)
+{
+	file_s *filp = iocb->ki_filp;
+	addr_spc_s *mapping = filp->f_mapping;
+	inode_s *inode = mapping->host;
+	void *bufp = iter->kvec->iov_base;
+	loff_t
+		start = iocb->ki_pos,
+		end = start + iter->kvec->iov_len;
+	
+	for (loff_t pgcache_pos = PAGE_ALIGN_DOWN(start); pgcache_pos < end; pgcache_pos += PAGE_SIZE) {
+		loff_t temp_pos = pgcache_pos;
+		virt_addr_t vaddr = 0;
+		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
+		if (*pgcache_ptr == NULL) {
+			*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+			vaddr = page_to_virt(*pgcache_ptr);
+			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
+		}
+		BUG_ON(*pgcache_ptr == NULL);
+		vaddr = page_to_virt(*pgcache_ptr);
+
+		loff_t inpage_start = max(pgcache_pos, start) % PAGE_SIZE;
+		loff_t len = 0;
+		if (pgcache_pos + PAGE_SIZE < end)
+			len = PAGE_SIZE - inpage_start;
+		else
+			len = end % PAGE_SIZE - inpage_start;
+
+		memcpy(bufp, (void *)(vaddr + inpage_start), len);
+		bufp += len;
+	}
+	return bufp - iter->kvec->iov_base;
+}
+EXPORT_SYMBOL_GPL(simple_filemap_read);
+
+/**
+ * generic_file_read_iter - generic filesystem read routine
+ * @iocb:	kernel I/O control block
+ * @iter:	destination for the data read
+ *
+ * This is the "read_iter()" routine for all filesystems
+ * that can use the page cache directly.
+ *
+ * The IOCB_NOWAIT flag in iocb->ki_flags indicates that -EAGAIN shall
+ * be returned when no data can be read without waiting for I/O requests
+ * to complete; it doesn't prevent readahead.
+ *
+ * The IOCB_NOIO flag in iocb->ki_flags indicates that no new I/O
+ * requests shall be made for the read or for readahead.  When no data
+ * can be read, -EAGAIN shall be returned.  When readahead would be
+ * triggered, a partial, possibly empty read shall be returned.
+ *
+ * Return:
+ * * number of bytes copied, even for partial reads
+ * * negative error code (or 0 if IOCB_NOIO) if nothing was read
+ */
+ssize_t
+generic_file_read_iter(kiocb_s *iocb, iov_iter_s *iter)
+{
+	// size_t count = iov_iter_count(iter);
+	size_t count = iter->count;
+	ssize_t retval = 0;
+
+	if (!count)
+		return 0; /* skip atime */
+
+	// if (iocb->ki_flags & IOCB_DIRECT) {
+	// 	file_s *file = iocb->ki_filp;
+	// 	addr_spc_s *mapping = file->f_mapping;
+	// 	inode_s *inode = mapping->host;
+
+	// 	retval = kiocb_write_and_wait(iocb, count);
+	// 	if (retval < 0)
+	// 		return retval;
+	// 	file_accessed(file);
+
+	// 	retval = mapping->a_ops->direct_IO(iocb, iter);
+	// 	if (retval >= 0) {
+	// 		iocb->ki_pos += retval;
+	// 		count -= retval;
+	// 	}
+	// 	if (retval != -EIOCBQUEUED)
+	// 		iov_iter_revert(iter, count - iov_iter_count(iter));
+
+	// 	/*
+	// 	 * Btrfs can have a short DIO read if we encounter
+	// 	 * compressed extents, so if there was an error, or if
+	// 	 * we've already read everything we wanted to, or if
+	// 	 * there was a short read because we hit EOF, go ahead
+	// 	 * and return.  Otherwise fallthrough to buffered io for
+	// 	 * the rest of the read.  Buffered reads will not work for
+	// 	 * DAX files, so don't bother trying.
+	// 	 */
+	// 	if (retval < 0 || !count || IS_DAX(inode))
+	// 		return retval;
+	// 	if (iocb->ki_pos >= i_size_read(inode))
+	// 		return retval;
+	// }
+
+	return simple_filemap_read(iocb, iter);
+}
+EXPORT_SYMBOL(generic_file_read_iter);
+
+
+/**
+ * generic_file_write_iter - write data to a file
+ * @iocb:	IO state structure
+ * @from:	iov_iter with data to write
+ *
+ * This is a wrapper around __generic_file_write_iter() to be used by most
+ * filesystems. It takes care of syncing the file in case of O_SYNC file
+ * and acquires i_rwsem as needed.
+ * Return:
+ * * negative error code if no data has been written at all of
+ *   vfs_fsync_range() failed for a synchronous write
+ * * number of bytes written, even for truncated writes
+ */
+ssize_t generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
+{
+	pr_alert("API not implemented - %s\n", "generic_file_write_iter");
+	while (1);
+	
+
+	// file_s *file = iocb->ki_filp;
+	// inode_s *inode = file->f_mapping->host;
+	// ssize_t ret;
+
+	// inode_lock(inode);
+	// ret = generic_write_checks(iocb, from);
+	// if (ret > 0)
+	// 	ret = __generic_file_write_iter(iocb, from);
+	// inode_unlock(inode);
+
+	// if (ret > 0)
+	// 	ret = generic_write_sync(iocb, ret);
+	// return ret;
+}
+EXPORT_SYMBOL(generic_file_write_iter);
+
+
+/* This is used for a general mmap of a disk file */
 int generic_file_mmap(file_s *file, vma_s *vma)
 {
-	// addr_spc_s *mapping = file->f_mapping;
+	addr_spc_s *mapping = file->f_mapping;
 
 	// if (!mapping->a_ops->readpage)
 	// 	return -ENOEXEC;
@@ -200,3 +354,4 @@ int generic_file_mmap(file_s *file, vma_s *vma)
 	vma->vm_ops = &generic_file_vm_ops;
 	return 0;
 }
+EXPORT_SYMBOL(generic_file_mmap);

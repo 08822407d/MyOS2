@@ -3,7 +3,8 @@
 
 
 	/* to align the pointer to the (next) page boundary */
-	#define PAGE_ALIGN(addr) ALIGN(addr, PAGE_SIZE)
+	#define PAGE_ALIGN_DOWN(addr)	ALIGN_DOWN(addr, PAGE_SIZE)
+	#define PAGE_ALIGN(addr)		ALIGN(addr, PAGE_SIZE)
 
 	/*
 	 * In case of changes, please don't forget to update

@@ -224,7 +224,7 @@ __simple_vma_adjust(vma_s *vma, ulong start, ulong end)
  * the current vma may be removed as part of the merge.
  */
 // static inline bool is_mergeable_vma(struct vm_area_struct *vma,
-// 		struct file *file, unsigned long vm_flags,
+// 		file_s *file, unsigned long vm_flags,
 // 		struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name, bool may_remove_vma)
 static inline bool
@@ -261,7 +261,7 @@ simple_is_mergeable_vma(vma_s *vma, file_s *file, ulong vm_flags) {
  */
 // static bool
 // can_vma_merge_before(struct vm_area_struct *vma, unsigned long vm_flags,
-// 		struct anon_vma *anon_vma, struct file *file,
+// 		struct anon_vma *anon_vma, file_s *file,
 // 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
 static bool
@@ -285,7 +285,7 @@ simple_can_vma_merge_before(vma_s *vma, ulong vm_flags,
  */
 // static bool
 // can_vma_merge_after(struct vm_area_struct *vma, unsigned long vm_flags,
-// 		struct anon_vma *anon_vma, struct file *file,
+// 		struct anon_vma *anon_vma, file_s *file,
 // 		pgoff_t vm_pgoff, struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 		struct anon_vma_name *anon_name)
 static bool
@@ -355,7 +355,7 @@ simple_can_vma_merge_after(vma_s *vma, ulong vm_flags,
 // struct vm_area_struct *vma_merge(struct vma_iterator *vmi, struct mm_struct *mm,
 // 			struct vm_area_struct *prev, unsigned long addr,
 // 			unsigned long end, unsigned long vm_flags,
-// 			struct anon_vma *anon_vma, struct file *file,
+// 			struct anon_vma *anon_vma, file_s *file,
 // 			pgoff_t pgoff, struct mempolicy *policy,
 // 			struct vm_userfaultfd_ctx vm_userfaultfd_ctx,
 // 			struct anon_vma_name *anon_name)

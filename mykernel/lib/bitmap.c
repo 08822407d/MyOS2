@@ -563,7 +563,7 @@ EXPORT_SYMBOL(__bitmap_complement);
 //  * has show entry as below::
 //  *
 //  *   static ssize_t
-//  *   example_bin_attribute_show(struct file *filp, struct kobject *kobj,
+//  *   example_bin_attribute_show(file_s *filp, struct kobject *kobj,
 //  * 		struct bin_attribute *attr, char *buf,
 //  * 		loff_t offset, size_t count)
 //  *   {

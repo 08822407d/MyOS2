@@ -42,10 +42,10 @@
 		// bool	nofault;
 		// bool	data_source;
 		// bool	user_backed;
-		union {
-			size_t	iov_offset;
-			int		last_offset;
-		};
+		// union {
+		// 	size_t	iov_offset;
+		// 	int		last_offset;
+		// };
 		/*
 		 * Hack alert: overlay ubuf_iovec with iovec + count, so
 		 * that the members resolve correctly regardless of the type
@@ -66,7 +66,7 @@
 			struct {
 				union {
 					/* use iter_iov() to get the current vec */
-					const iov_s		*__iov;
+					// const iov_s		*__iov;
 					const kvec_s	*kvec;
 					// const struct bio_vec	*bvec;
 					// struct xarray	*xarray;
@@ -104,7 +104,7 @@
 			// .data_source = direction,
 			.kvec = kvec,
 			// .nr_segs = nr_segs,
-			.iov_offset = 0,
+			// .iov_offset = 0,
 			.count = count,
 		};
 	}

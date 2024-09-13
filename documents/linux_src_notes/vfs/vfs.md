@@ -15,7 +15,7 @@ static long do_sys_openat2(int dfd, const char __user *filename, struct open_how
 				//	{
 					//	在rcu和dcache里查找目标子目录
 					//	DO
-						static struct dentry *lookup_fast(struct nameidata *nd, struct inode **inode, unsigned *seqp);
+						static struct dentry *lookup_fast(struct nameidata *nd, inode_s **inode, unsigned *seqp);
 						//	{
 							//	fs/dcache.c
 							struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name);
@@ -28,7 +28,7 @@ static long do_sys_openat2(int dfd, const char __user *filename, struct open_how
 						//	}
 					// END IF
 					//	进入子目录，设置 nd->path 为子目录
-					static const char *step_into(struct nameidata *nd, int flags, struct dentry *dentry, struct inode *inode, unsigned seq);
+					static const char *step_into(struct nameidata *nd, int flags, struct dentry *dentry, inode_s *inode, unsigned seq);
 				//	}
 			//	}
 		//	}

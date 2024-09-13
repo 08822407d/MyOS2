@@ -72,30 +72,30 @@
 	// extern int shmem_lock(file_s *file, int lock, struct ucounts *ucounts);
 	// #ifdef CONFIG_SHMEM
 	// extern const struct address_space_operations shmem_aops;
-	// static inline bool shmem_mapping(struct address_space *mapping)
+	// static inline bool shmem_mapping(addr_spc_s *mapping)
 	// {
 	// 	return mapping->a_ops == &shmem_aops;
 	// }
 	// #else
-	// static inline bool shmem_mapping(struct address_space *mapping)
+	// static inline bool shmem_mapping(addr_spc_s *mapping)
 	// {
 	// 	return false;
 	// }
 	// #endif /* CONFIG_SHMEM */
-	// extern void shmem_unlock_mapping(struct address_space *mapping);
-	// extern page_s *shmem_read_mapping_page_gfp(struct address_space *mapping,
+	// extern void shmem_unlock_mapping(addr_spc_s *mapping);
+	// extern page_s *shmem_read_mapping_page_gfp(addr_spc_s *mapping,
 	// 					pgoff_t index, gfp_t gfp_mask);
-	// extern void shmem_truncate_range(struct inode *inode, loff_t start, loff_t end);
+	// extern void shmem_truncate_range(inode_s *inode, loff_t start, loff_t end);
 	// int shmem_unuse(unsigned int type);
 
 	// extern bool shmem_is_huge(vma_s *vma,
-	// 			struct inode *inode, pgoff_t index);
+	// 			inode_s *inode, pgoff_t index);
 	// static inline bool shmem_huge_enabled(vma_s *vma)
 	// {
 	// 	return shmem_is_huge(vma, file_inode(vma->vm_file), vma->vm_pgoff);
 	// }
 	// extern unsigned long shmem_swap_usage(vma_s *vma);
-	// extern unsigned long shmem_partial_swap_usage(struct address_space *mapping,
+	// extern unsigned long shmem_partial_swap_usage(addr_spc_s *mapping,
 	// 						pgoff_t start, pgoff_t end);
 
 	// /* Flag allocation requirements to shmem_getpage */
@@ -107,11 +107,11 @@
 	// 	SGP_FALLOC,	/* like SGP_WRITE, but make existing page Uptodate */
 	// };
 
-	// extern int shmem_getpage(struct inode *inode, pgoff_t index,
+	// extern int shmem_getpage(inode_s *inode, pgoff_t index,
 	// 		page_s **pagep, enum sgp_type sgp);
 
 	// static inline page_s *shmem_read_mapping_page(
-	// 				struct address_space *mapping, pgoff_t index)
+	// 				addr_spc_s *mapping, pgoff_t index)
 	// {
 	// 	return shmem_read_mapping_page_gfp(mapping, index,
 	// 					mapping_gfp_mask(mapping));
@@ -133,13 +133,13 @@
 	// * "fallocend" per inode errs on the side of not deleting a reservation when
 	// * in doubt: there are plenty of cases when it preserves unreserved pages.
 	// */
-	// static inline pgoff_t shmem_fallocend(struct inode *inode, pgoff_t eof)
+	// static inline pgoff_t shmem_fallocend(inode_s *inode, pgoff_t eof)
 	// {
 	// 	return max(eof, SHMEM_I(inode)->fallocend);
 	// }
 
-	// extern bool shmem_charge(struct inode *inode, long pages);
-	// extern void shmem_uncharge(struct inode *inode, long pages);
+	// extern bool shmem_charge(inode_s *inode, long pages);
+	// extern void shmem_uncharge(inode_s *inode, long pages);
 
 	// #ifdef CONFIG_USERFAULTFD
 	// #ifdef CONFIG_SHMEM

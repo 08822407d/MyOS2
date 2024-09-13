@@ -41,8 +41,8 @@ open_how_s build_open_how(int flags, umode_t mode)
 }
 
 // Linux function proto:
-// static int do_dentry_open(file_s *f, struct inode *inode,
-//			  int (*open)(struct inode *, file_s *))
+// static int do_dentry_open(file_s *f, inode_s *inode,
+//			  int (*open)(inode_s *, file_s *))
 static int myos_do_dentry_open(file_s * f, inode_s * inode)
 {
 	ulong error = -ENOERR;

@@ -161,10 +161,10 @@
 	// void end_buffer_async_write(struct buffer_head *bh, int uptodate);
 
 	// /* Things to do with buffers at mapping->private_list */
-	// void mark_buffer_dirty_inode(struct buffer_head *bh, struct inode *inode);
-	// int inode_has_buffers(struct inode *);
-	// void invalidate_inode_buffers(struct inode *);
-	// int remove_inode_buffers(struct inode *inode);
+	// void mark_buffer_dirty_inode(struct buffer_head *bh, inode_s *inode);
+	// int inode_has_buffers(inode_s *);
+	// void invalidate_inode_buffers(inode_s *);
+	// int remove_inode_buffers(inode_s *inode);
 	// int sync_mapping_buffers(addr_space_s *mapping);
 	// void clean_bdev_aliases(blk_dev_s *bdev, sector_t block,
 	// 			sector_t len);
@@ -212,7 +212,7 @@
 	// 			unsigned int length);
 	// int block_write_full_page(page_s *page, get_block_t *get_block,
 	// 				struct writeback_control *wbc);
-	// int __block_write_full_page(struct inode *inode, page_s *page,
+	// int __block_write_full_page(inode_s *inode, page_s *page,
 	// 			get_block_t *get_block, struct writeback_control *wbc,
 	// 			bh_end_io_t *handler);
 	// int block_read_full_page(page_s*, get_block_t*);
@@ -233,7 +233,7 @@
 	// int cont_write_begin(file_s *, addr_space_s *, loff_t,
 	// 			unsigned, unsigned, page_s **, void **,
 	// 			get_block_t *, loff_t *);
-	// int generic_cont_expand_simple(struct inode *inode, loff_t size);
+	// int generic_cont_expand_simple(inode_s *inode, loff_t size);
 	// int block_commit_write(page_s *page, unsigned from, unsigned to);
 	// int block_page_mkwrite(vma_s *vma, vm_fault_s *vmf,
 	// 				get_block_t get_block);
@@ -394,9 +394,9 @@
 
 	// static inline void buffer_init(void) {}
 	// static inline int try_to_free_buffers(page_s *page) { return 1; }
-	// static inline int inode_has_buffers(struct inode *inode) { return 0; }
-	// static inline void invalidate_inode_buffers(struct inode *inode) {}
-	// static inline int remove_inode_buffers(struct inode *inode) { return 1; }
+	// static inline int inode_has_buffers(inode_s *inode) { return 0; }
+	// static inline void invalidate_inode_buffers(inode_s *inode) {}
+	// static inline int remove_inode_buffers(inode_s *inode) { return 1; }
 	// static inline int sync_mapping_buffers(addr_space_s *mapping) { return 0; }
 	// static inline void invalidate_bh_lrus_cpu(int cpu) {}
 	// static inline bool has_bh_in_lru(int cpu, void *dummy) { return 0; }
