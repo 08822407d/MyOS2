@@ -191,7 +191,7 @@ const vm_ops_s generic_file_vm_ops = {
 /**
  * filemap_read - Read data from the page cache.
  * @iocb: The iocb to read.
- * @iter: Destination for the data.
+ * @to:	Destination for the data.
  * @already_read: Number of bytes already read by the caller.
  *
  * Copies data from the page cache.  If the data is not currently present,
@@ -308,48 +308,71 @@ EXPORT_SYMBOL(generic_file_read_iter);
 
 
 ssize_t
-generic_perform_write(kiocb_s *iocb, iov_iter_s *i)
+generic_perform_write(kiocb_s *iocb, iov_iter_s *iter)
 {
-	file_s *file = iocb->ki_filp;
-	loff_t pos = iocb->ki_pos;
-	addr_spc_s *mapping = file->f_mapping;
-	const addr_spc_ops_s *a_ops = mapping->a_ops;
-	long status = 0;
-	ssize_t written = 0;
+	file_s *filp = iocb->ki_filp;
+	addr_spc_s *mapping = filp->f_mapping;
+	inode_s *inode = mapping->host;
+	void *bufp = iter->kvec->iov_base;
+	loff_t
+		start = iocb->ki_pos,
+		end = start + iter->kvec->iov_len;
+	
+	for (loff_t pgcache_pos = PAGE_ALIGN_DOWN(start); pgcache_pos < end; pgcache_pos += PAGE_SIZE) {
+		loff_t temp_pos = pgcache_pos;
+		virt_addr_t vaddr = 0;
+		page_s **pgcache_ptr = &(mapping->page_array[pgcache_pos >> PAGE_SHIFT]);
+		if (*pgcache_ptr == NULL) {
+			*pgcache_ptr = alloc_page(GFP_USER | __GFP_ZERO);
+			vaddr = page_to_virt(*pgcache_ptr);
+			filp->f_op->read(filp, (char *)vaddr, PAGE_SIZE, &temp_pos);
+		}
+		BUG_ON(*pgcache_ptr == NULL);
+		vaddr = page_to_virt(*pgcache_ptr);
 
-	pr_alert("API not implemented - %s\n", "generic_file_write_iter");
-	while (1);
+		loff_t inpage_start = max(pgcache_pos, start) % PAGE_SIZE;
+		loff_t len = 0;
+		if (pgcache_pos + PAGE_SIZE < end)
+			len = PAGE_SIZE - inpage_start;
+		else
+			len = end % PAGE_SIZE - inpage_start;
+
+		memcpy((void *)(vaddr + inpage_start), bufp, len);
+		bufp += len;
+	}
+	return bufp - iter->kvec->iov_base;
 }
 EXPORT_SYMBOL(generic_perform_write);
 
 /**
- * __generic_file_write_iter - write data to a file
- * @iocb:	IO state structure (file, offset, etc.)
- * @from:	iov_iter with data to write
+ * generic_file_write_iter - write data to a file
+ * @iocb:	IO state structure
+ * @iter:	iov_iter with data to write
  *
- * This function does all the work needed for actually writing data to a
- * file. It does all basic checks, removes SUID from the file, updates
- * modification times and calls proper subroutines depending on whether we
- * do direct IO or a standard buffered write.
- *
- * It expects i_rwsem to be grabbed unless we work on a block device or similar
- * object which does not need locking at all.
- *
- * This function does *not* take care of syncing data in case of O_SYNC write.
- * A caller has to handle it. This is mainly due to the fact that we want to
- * avoid syncing under i_rwsem.
- *
+ * This is a wrapper around __generic_file_write_iter() to be used by most
+ * filesystems. It takes care of syncing the file in case of O_SYNC file
+ * and acquires i_rwsem as needed.
  * Return:
+ * * negative error code if no data has been written at all of
+ *   vfs_fsync_range() failed for a synchronous write
  * * number of bytes written, even for truncated writes
- * * negative error code if no data has been written at all
  */
-ssize_t
-__generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
+ssize_t generic_file_write_iter(kiocb_s *iocb, iov_iter_s *iter)
 {
-	file_s *file = iocb->ki_filp;
-	addr_spc_s *mapping = file->f_mapping;
-	inode_s *inode = mapping->host;
+	// file_s *file = iocb->ki_filp;
+	// inode_s *inode = file->f_mapping->host;
 	ssize_t ret;
+
+	// inode_lock(inode);
+	// ret = generic_write_checks(iocb, from);
+	// if (ret > 0)
+	// ssize_t
+	// __generic_file_write_iter(kiocb_s *iocb, iov_iter_s *iter)
+	// {
+	// file_s *file = iocb->ki_filp;
+	// addr_spc_s *mapping = file->f_mapping;
+	// inode_s *inode = mapping->host;
+	// ssize_t ret;
 
 	// ret = file_remove_privs(file);
 	// if (ret)
@@ -373,35 +396,8 @@ __generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
 	// 	return direct_write_fallback(iocb, from, ret,
 	// 			generic_perform_write(iocb, from));
 	// }
-
-	return generic_perform_write(iocb, from);
-}
-EXPORT_SYMBOL(__generic_file_write_iter);
-
-
-/**
- * generic_file_write_iter - write data to a file
- * @iocb:	IO state structure
- * @from:	iov_iter with data to write
- *
- * This is a wrapper around __generic_file_write_iter() to be used by most
- * filesystems. It takes care of syncing the file in case of O_SYNC file
- * and acquires i_rwsem as needed.
- * Return:
- * * negative error code if no data has been written at all of
- *   vfs_fsync_range() failed for a synchronous write
- * * number of bytes written, even for truncated writes
- */
-ssize_t generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
-{
-	file_s *file = iocb->ki_filp;
-	inode_s *inode = file->f_mapping->host;
-	ssize_t ret;
-
-	// inode_lock(inode);
-	// ret = generic_write_checks(iocb, from);
-	// if (ret > 0)
-	// 	ret = __generic_file_write_iter(iocb, from);
+		ret = generic_perform_write(iocb, iter);
+	// }
 	// inode_unlock(inode);
 
 	// if (ret > 0)
