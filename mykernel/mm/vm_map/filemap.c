@@ -307,6 +307,78 @@ generic_file_read_iter(kiocb_s *iocb, iov_iter_s *iter)
 EXPORT_SYMBOL(generic_file_read_iter);
 
 
+ssize_t
+generic_perform_write(kiocb_s *iocb, iov_iter_s *i)
+{
+	file_s *file = iocb->ki_filp;
+	loff_t pos = iocb->ki_pos;
+	addr_spc_s *mapping = file->f_mapping;
+	const addr_spc_ops_s *a_ops = mapping->a_ops;
+	long status = 0;
+	ssize_t written = 0;
+
+	pr_alert("API not implemented - %s\n", "generic_file_write_iter");
+	while (1);
+}
+EXPORT_SYMBOL(generic_perform_write);
+
+/**
+ * __generic_file_write_iter - write data to a file
+ * @iocb:	IO state structure (file, offset, etc.)
+ * @from:	iov_iter with data to write
+ *
+ * This function does all the work needed for actually writing data to a
+ * file. It does all basic checks, removes SUID from the file, updates
+ * modification times and calls proper subroutines depending on whether we
+ * do direct IO or a standard buffered write.
+ *
+ * It expects i_rwsem to be grabbed unless we work on a block device or similar
+ * object which does not need locking at all.
+ *
+ * This function does *not* take care of syncing data in case of O_SYNC write.
+ * A caller has to handle it. This is mainly due to the fact that we want to
+ * avoid syncing under i_rwsem.
+ *
+ * Return:
+ * * number of bytes written, even for truncated writes
+ * * negative error code if no data has been written at all
+ */
+ssize_t
+__generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
+{
+	file_s *file = iocb->ki_filp;
+	addr_spc_s *mapping = file->f_mapping;
+	inode_s *inode = mapping->host;
+	ssize_t ret;
+
+	// ret = file_remove_privs(file);
+	// if (ret)
+	// 	return ret;
+
+	// ret = file_update_time(file);
+	// if (ret)
+	// 	return ret;
+
+	// if (iocb->ki_flags & IOCB_DIRECT) {
+	// 	ret = generic_file_direct_write(iocb, from);
+	// 	/*
+	// 	 * If the write stopped short of completing, fall back to
+	// 	 * buffered writes.  Some filesystems do this for writes to
+	// 	 * holes, for example.  For DAX files, a buffered write will
+	// 	 * not succeed (even if it did, DAX does not handle dirty
+	// 	 * page-cache pages correctly).
+	// 	 */
+	// 	if (ret < 0 || !iov_iter_count(from) || IS_DAX(inode))
+	// 		return ret;
+	// 	return direct_write_fallback(iocb, from, ret,
+	// 			generic_perform_write(iocb, from));
+	// }
+
+	return generic_perform_write(iocb, from);
+}
+EXPORT_SYMBOL(__generic_file_write_iter);
+
+
 /**
  * generic_file_write_iter - write data to a file
  * @iocb:	IO state structure
@@ -322,13 +394,9 @@ EXPORT_SYMBOL(generic_file_read_iter);
  */
 ssize_t generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
 {
-	pr_alert("API not implemented - %s\n", "generic_file_write_iter");
-	while (1);
-	
-
-	// file_s *file = iocb->ki_filp;
-	// inode_s *inode = file->f_mapping->host;
-	// ssize_t ret;
+	file_s *file = iocb->ki_filp;
+	inode_s *inode = file->f_mapping->host;
+	ssize_t ret;
 
 	// inode_lock(inode);
 	// ret = generic_write_checks(iocb, from);
@@ -338,7 +406,7 @@ ssize_t generic_file_write_iter(kiocb_s *iocb, iov_iter_s *from)
 
 	// if (ret > 0)
 	// 	ret = generic_write_sync(iocb, ret);
-	// return ret;
+	return ret;
 }
 EXPORT_SYMBOL(generic_file_write_iter);
 
@@ -348,7 +416,7 @@ int generic_file_mmap(file_s *file, vma_s *vma)
 {
 	addr_spc_s *mapping = file->f_mapping;
 
-	// if (!mapping->a_ops->readpage)
+	// if (!mapping->a_ops->read_folio)
 	// 	return -ENOEXEC;
 	// file_accessed(file);
 	vma->vm_ops = &generic_file_vm_ops;

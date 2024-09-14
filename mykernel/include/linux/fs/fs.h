@@ -308,54 +308,43 @@
 	// 		unsigned long, unsigned long);
 
 	typedef struct address_space_operations {
-		// int (*writepage)(page_s *page, struct writeback_control *wbc);
-		int		(*readpage)(file_s *, page_s *);
+		// int		(*writepage)(struct page *page, struct writeback_control *wbc);
+		// int		(*read_folio)(file_s *, struct folio *);
 
 		// /* Write back some dirty pages from this mapping. */
-		// int (*writepages)(addr_spc_s *, struct writeback_control *);
+		// int		(*writepages)(addr_spc_s *, struct writeback_control *);
 
-		// /* Set a page dirty.  Return true if this dirtied it */
-		// int (*set_page_dirty)(page_s *page);
+		// /* Mark a folio dirty.  Return true if this dirtied it */
+		// bool	(*dirty_folio)(addr_spc_s *, struct folio *);
 
-		// /*
-		// * Reads in the requested pages. Unlike ->readpage(), this is
-		// * PURELY used for read-ahead!.
-		// */
-		// int (*readpages)(file_s *filp, addr_spc_s *mapping,
-		// 		list_head_s *pages, unsigned nr_pages);
-		// void (*readahead)(struct readahead_control *);
+		// void	(*readahead)(struct readahead_control *);
 
-		// int (*write_begin)(file_s *, addr_spc_s *mapping,
-		// 			loff_t pos, unsigned len, unsigned flags,
-		// 			page_s **pagep, void **fsdata);
-		// int (*write_end)(file_s *, addr_spc_s *mapping,
-		// 			loff_t pos, unsigned len, unsigned copied,
-		// 			page_s *page, void *fsdata);
+		// int		(*write_begin)(file_s *, addr_spc_s *mapping,
+		// 			loff_t pos, unsigned len, struct page **pagep, void **fsdata);
+		// int		(*write_end)(file_s *, addr_spc_s *mapping,
+		// 			loff_t pos, unsigned len, unsigned copied, struct page *page, void *fsdata);
 
 		// /* Unfortunately this kludge is needed for FIBMAP. Don't use it */
-		// sector_t (*bmap)(addr_spc_s *, sector_t);
-		// void (*invalidatepage) (page_s *, unsigned int, unsigned int);
-		// int (*releasepage) (page_s *, gfp_t);
-		// void (*freepage)(page_s *);
-		// ssize_t (*direct_IO)(kiocb_s *, iov_iter_s *iter);
+		// sector_t	(*bmap)(addr_spc_s *, sector_t);
+		// void	(*invalidate_folio) (struct folio *, size_t offset, size_t len);
+		// bool	(*release_folio)(struct folio *, gfp_t);
+		// void	(*free_folio)(struct folio *folio);
+		// ssize_t	(*direct_IO)(kiocb_s *, iov_iter_s *iter);
 		// /*
-		// * migrate the contents of a page to the specified target. If
-		// * migrate_mode is MIGRATE_ASYNC, it must not block.
-		// */
-		// int (*migratepage) (addr_spc_s *,
-		// 		page_s *, page_s *, enum migrate_mode);
-		// bool (*isolate_page)(page_s *, isolate_mode_t);
-		// void (*putback_page)(page_s *);
-		// int (*launder_page) (page_s *);
-		// int (*is_partially_uptodate) (page_s *, unsigned long,
-		// 				unsigned long);
-		// void (*is_dirty_writeback) (page_s *, bool *, bool *);
-		// int (*error_remove_page)(addr_spc_s *, page_s *);
+		//  * migrate the contents of a folio to the specified target. If
+		//  * migrate_mode is MIGRATE_ASYNC, it must not block.
+		//  */
+		// int		(*migrate_folio)(addr_spc_s *, struct folio *dst,
+		// 			struct folio *src, enum migrate_mode);
+		// int		(*launder_folio)(struct folio *);
+		// bool	(*is_partially_uptodate) (struct folio *, size_t from, size_t count);
+		// void	(*is_dirty_writeback) (struct folio *, bool *dirty, bool *wb);
+		// int		(*error_remove_page)(addr_spc_s *, struct page *);
 
 		// /* swapfile support */
-		// int (*swap_activate)(struct swap_info_struct *sis, file_s *file,
-		// 			sector_t *span);
-		// void (*swap_deactivate)(file_s *file);
+		// int		(*swap_activate)(struct swap_info_struct *sis, file_s *file, sector_t *span);
+		// void	(*swap_deactivate)(file_s *file);
+		// int		(*swap_rw)(kiocb_s *iocb, iov_iter_s *iter);
 	} addr_spc_ops_s;
 
 	// extern const addr_spc_ops_s empty_aops;
@@ -591,10 +580,10 @@
 		// };
 		dev_t				i_rdev;
 		loff_t				i_size;
-		// timespec64_s	i_atime;
-		// timespec64_s	i_mtime;
-		// timespec64_s	i_ctime;
-		// spinlock_t		i_lock;	/* i_blocks, i_bytes, maybe i_size */
+		timespec64_s		i_atime;
+		timespec64_s		i_mtime;
+		timespec64_s		i_ctime;
+		spinlock_t			i_lock;		/* i_blocks, i_bytes, maybe i_size */
 		ushort				i_bytes;
 		// u8				i_blkbits;
 		// u8				i_write_hint;
@@ -3025,10 +3014,12 @@
 	// ssize_t filemap_read(kiocb_s *iocb, iov_iter_s *to,
 	// 		ssize_t already_read);
 	extern ssize_t generic_file_read_iter(kiocb_s *, iov_iter_s *);
-	// extern ssize_t __generic_file_write_iter(kiocb_s *, iov_iter_s *);
+	extern ssize_t __generic_file_write_iter(kiocb_s *, iov_iter_s *);
 	extern ssize_t generic_file_write_iter(kiocb_s *, iov_iter_s *);
-	// extern ssize_t generic_file_direct_write(kiocb_s *, iov_iter_s *);
-	// extern ssize_t generic_perform_write(file_s *, iov_iter_s *, loff_t);
+	extern ssize_t generic_file_direct_write(kiocb_s *, iov_iter_s *);
+	ssize_t generic_perform_write(kiocb_s *, iov_iter_s *);
+	ssize_t direct_write_fallback(kiocb_s *iocb, iov_iter_s *iter,
+			ssize_t direct_written, ssize_t buffered_written);
 
 	// ssize_t vfs_iter_read(file_s *file, iov_iter_s *iter, loff_t *ppos,
 	// 		rwf_t flags);
@@ -3040,12 +3031,14 @@
 	// 				iov_iter_s *iter);
 
 	// /* fs/splice.c */
-	// extern ssize_t generic_file_splice_read(file_s *, loff_t *,
-	// 		struct pipe_inode_info *, size_t, unsigned int);
+	// ssize_t filemap_splice_read(file_s *in, loff_t *ppos,
+	// 				struct pipe_inode_info *pipe,
+	// 				size_t len, unsigned int flags);
+	// ssize_t copy_splice_read(file_s *in, loff_t *ppos,
+	// 			struct pipe_inode_info *pipe,
+	// 			size_t len, unsigned int flags);
 	// extern ssize_t iter_file_splice_write(struct pipe_inode_info *,
 	// 		file_s *, loff_t *, size_t, unsigned int);
-	// extern ssize_t generic_splice_sendpage(struct pipe_inode_info *pipe,
-	// 		file_s *out, loff_t *, size_t len, unsigned int flags);
 	// extern long do_splice_direct(file_s *in, loff_t *ppos, file_s *out,
 	// 		loff_t *opos, size_t len, unsigned int flags);
 
@@ -3496,6 +3489,8 @@
 	// }
 
 
+	long do_fcntl(int fd, uint cmd, ulong arg, file_s *filp);
+	int check_fcntl_cmd(uint cmd);
 	super_block_s *alloc_super(fs_type_s *type, int flags);
 	unsigned long myos_switch_to_root_disk(void);
 

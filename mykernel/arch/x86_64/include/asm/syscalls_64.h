@@ -22,6 +22,9 @@ __SYSCALL(__NR_writev, sys_writev)
 
 __SYSCALL(__NR_sched_yield, sys_sched_yield)
 
+__SYSCALL(__NR_dup, sys_dup)
+__SYSCALL(__NR_dup2, sys_dup2)
+
 __SYSCALL(__NR_getpid, sys_getpid)
 
 __SYSCALL(__NR_fork, sys_fork)

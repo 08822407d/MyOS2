@@ -459,7 +459,7 @@
 	// long blkdev_ioctl(file_s *file, unsigned cmd, unsigned long arg);
 	// long compat_blkdev_ioctl(file_s *file, unsigned cmd, unsigned long arg);
 
-	// extern const struct address_space_operations def_blk_aops;
+	// extern const addr_spc_ops_s def_blk_aops;
 
 	// int disk_register_independent_access_ranges(gendisk_s *disk,
 	// 				struct blk_independent_access_ranges *new_iars);

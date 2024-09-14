@@ -126,10 +126,10 @@ files_struct_s init_files = {
 /*
  * allocate a file descriptor, mark it busy.
  */
-static int alloc_fd(unsigned start, unsigned end, unsigned flags)
+static int alloc_fd(uint start, uint end, uint flags)
 {
 	files_struct_s *files = current->files;
-	unsigned int fd;
+	uint fd;
 	int error;
 
 	spin_lock(&files->file_lock);
@@ -144,13 +144,13 @@ static int alloc_fd(unsigned start, unsigned end, unsigned flags)
 	return fd;
 }
 
-int get_unused_fd_flags(unsigned flags)
+int get_unused_fd_flags(uint flags)
 {
 	return alloc_fd(0, current->files->fd_count, flags);
 }
 EXPORT_SYMBOL(get_unused_fd_flags);
 
-void put_unused_fd(unsigned int fd)
+void put_unused_fd(uint fd)
 {
 	files_struct_s *files = current->files;
 	spin_lock(&files->file_lock);
@@ -181,7 +181,7 @@ EXPORT_SYMBOL(put_unused_fd);
  * as if they had called fput(file).
  */
 
-void fd_install(unsigned int fd, file_s *file)
+void fd_install(uint fd, file_s *file)
 {
 	files_struct_s *files = current->files;
 	file_s ** fps = files->fd_array;
@@ -220,3 +220,22 @@ file_s *fget(uint fd) {
 	return __simple_fget(fd, FMODE_PATH);
 }
 EXPORT_SYMBOL(fget);
+
+
+
+
+
+
+int f_dupfd(uint from, file_s *file, uint flags)
+{
+	ulong nofile = rlimit(RLIMIT_NOFILE);
+	int err;
+	if (from >= nofile)
+		return -EINVAL;
+	err = alloc_fd(from, nofile, flags);
+	if (err >= 0) {
+		get_file(file);
+		fd_install(err, file);
+	}
+	return err;
+}

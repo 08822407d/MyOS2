@@ -191,14 +191,14 @@
 	#		define __ARCH_FLOCK_PAD
 	#	endif
 
-		// struct flock {
-		// 	short	l_type;
-		// 	short	l_whence;
-		// 	__kernel_off_t	l_start;
-		// 	__kernel_off_t	l_len;
-		// 	__kernel_pid_t	l_pid;
-		// 	__ARCH_FLOCK_PAD
-		// };
+		typedef struct flock {
+			short			l_type;
+			short			l_whence;
+			__kernel_off_t	l_start;
+			__kernel_off_t	l_len;
+			__kernel_pid_t	l_pid;
+			__ARCH_FLOCK_PAD
+		} flock_s;
 	#endif
 
 	#ifndef HAVE_ARCH_STRUCT_FLOCK64

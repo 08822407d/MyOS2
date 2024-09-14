@@ -19,13 +19,6 @@
 #include <obsolete/arch_proto.h>
 
 
-#define IF_ALERT_DUMMY_SYSCALL 0
-#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)		\
-		if (show_alert) {									\
-			pr_alert("\t!!! Dummy Syscall --- %s ---\n",	\
-				#syscall_name);								\
-		}
-
 
 
 MYOS_SYSCALL_DEFINE0(no_syscall)
@@ -306,33 +299,6 @@ MYOS_SYSCALL_DEFINE0(sched_yield)
 
 		schedule();
 	// }
-	return 0;
-}
-
-MYOS_SYSCALL_DEFINE3(fcntl, uint, fd, uint, cmd, ulong, arg)
-{	
-	ALERT_DUMMY_SYSCALL(fcntl, IF_ALERT_DUMMY_SYSCALL);
-
-// 	struct fd f = fdget_raw(fd);
-// 	long err = -EBADF;
-
-// 	if (!f.file)
-// 		goto out;
-
-// 	if (unlikely(f.file->f_mode & FMODE_PATH)) {
-// 		if (!check_fcntl_cmd(cmd))
-// 			goto out1;
-// 	}
-
-// 	err = security_file_fcntl(f.file, cmd, arg);
-// 	if (!err)
-// 		err = do_fcntl(fd, cmd, arg, f.file);
-
-// out1:
-//  	fdput(f);
-// out:
-// 	return err;
-
 	return 0;
 }
 

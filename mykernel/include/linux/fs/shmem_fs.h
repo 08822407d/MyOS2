@@ -71,7 +71,7 @@
 			ulong addr, ulong len, ulong pgoff, ulong flags);
 	// extern int shmem_lock(file_s *file, int lock, struct ucounts *ucounts);
 	// #ifdef CONFIG_SHMEM
-	// extern const struct address_space_operations shmem_aops;
+	// extern const addr_spc_ops_s shmem_aops;
 	// static inline bool shmem_mapping(addr_spc_s *mapping)
 	// {
 	// 	return mapping->a_ops == &shmem_aops;

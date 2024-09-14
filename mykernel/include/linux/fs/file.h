@@ -30,14 +30,14 @@
 		file_s			*file;
 		unsigned int	flags;
 	} fd_s;
-	// #define FDPUT_FPUT       1
-	// #define FDPUT_POS_UNLOCK 2
+	#define FDPUT_FPUT			1
+	#define FDPUT_POS_UNLOCK	2
 
-	// static inline void fdput(fd_s fd)
-	// {
-	// 	if (fd.flags & FDPUT_FPUT)
-	// 		fput(fd.file);
-	// }
+	static inline void fdput(fd_s fd)
+	{
+		if (fd.flags & FDPUT_FPUT)
+			fput(fd.file);
+	}
 
 	extern file_s *fget(unsigned int fd);
 	// extern file_s *fget_many(unsigned int fd, unsigned int refs);
@@ -78,18 +78,18 @@
 	fdput_pos(fd_s f) {
 		// if (f.flags & FDPUT_POS_UNLOCK)
 		// 	__f_unlock_pos(f.file);
-		// fdput(f);
+		fdput(f);
 	}
 
-	// extern int f_dupfd(unsigned int from, file_s *file, unsigned flags);
-	// extern int replace_fd(unsigned fd, file_s *file, unsigned flags);
-	// extern void set_close_on_exec(unsigned int fd, int flag);
-	// extern bool get_close_on_exec(unsigned int fd);
-	// extern int __get_unused_fd_flags(unsigned flags, unsigned long nofile);
-	extern int get_unused_fd_flags(unsigned flags);
-	// extern void put_unused_fd(unsigned int fd);
+	extern int f_dupfd(uint from, file_s *file, uint flags);
+	extern int replace_fd(uint fd, file_s *file, uint flags);
+	extern void set_close_on_exec(uint fd, int flag);
+	extern bool get_close_on_exec(uint fd);
+	extern int __get_unused_fd_flags(uint flags, ulong nofile);
+	extern int get_unused_fd_flags(uint flags);
+	extern void put_unused_fd(uint fd);
 
-	extern void fd_install(unsigned int fd, file_s *file);
+	extern void fd_install(uint fd, file_s *file);
 
 	// extern int __receive_fd(file_s *file, int __user *ufd,
 	// 			unsigned int o_flags);
