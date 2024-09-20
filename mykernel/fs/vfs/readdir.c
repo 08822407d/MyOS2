@@ -41,14 +41,10 @@ int iterate_dir(file_s *file, dir_ctxt_s *ctx)
 	int res = -ENOTDIR;
 	if (file->f_op->iterate_shared)
 		shared = true;
-	else if (!file->f_op->iterate)
-		goto out;
 
 	ctx->pos = file->f_pos;
 	if (shared)
 		res = file->f_op->iterate_shared(file, ctx);
-	else
-		res = file->f_op->iterate(file, ctx);
 	file->f_pos = ctx->pos;
 
 out:

@@ -525,7 +525,6 @@
 
 	int myos_tty_open(inode_s * inode, file_s * fp);
 	int myos_tty_close(inode_s * inode,file_s * fp);
-	int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
 	ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position);
 	ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position);
 	void myos_tty_write_color(const char * buf, size_t length,

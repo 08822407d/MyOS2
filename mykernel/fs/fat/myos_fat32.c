@@ -107,12 +107,6 @@ int FAT32_open(inode_s *inode, file_s *file_p)
 	return 1;
 }
 
-int FAT32_close(inode_s *inode, file_s *file_p)
-{
-	file_p->f_pos = 0;
-	return 1;
-}
-
 ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 {
 	FAT32_inode_info_s * finode = filp->f_path.dentry->d_inode->private_idx_info;
@@ -308,9 +302,6 @@ loff_t FAT32_lseek(file_s *filp, loff_t offset, int origin)
 	return pos;
 }
 
-int FAT32_ioctl(inode_s * inode, file_s * filp, unsigned long cmd, unsigned long arg)
-{}
-
 int FAT32_getdents64(file_s *filp, dir_ctxt_s *ctx)
 {
 	if (ctx->pos == -1)
@@ -357,12 +348,9 @@ int FAT32_getdents64(file_s *filp, dir_ctxt_s *ctx)
 file_ops_s FAT32_file_ops = 
 {
 	.open			= FAT32_open,
-	.close			= FAT32_close,
 	.read			= FAT32_read,
 	.write			= FAT32_write,
 	.llseek			= FAT32_lseek,
-	.ioctl			= FAT32_ioctl,
-
 	.read_iter		= generic_file_read_iter,
 	.write_iter		= generic_file_write_iter,
 	.mmap			= generic_file_mmap,

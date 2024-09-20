@@ -29,38 +29,38 @@ int myos_tty_open(inode_s * inode, file_s * fp)
 	return 1;
 }
 
-int myos_tty_close(inode_s * inode,file_s * fp)
-{
-	fp->private_data = NULL;
+// int myos_tty_close(inode_s * inode,file_s * fp)
+// {
+// 	fp->private_data = NULL;
 
-	p_kb->p_head = p_kb->buf;
-	p_kb->p_tail = p_kb->buf;
-	p_kb->count  = 0;
-	memset(p_kb->buf, 0, KB_BUF_SIZE);
+// 	p_kb->p_head = p_kb->buf;
+// 	p_kb->p_tail = p_kb->buf;
+// 	p_kb->count  = 0;
+// 	memset(p_kb->buf, 0, KB_BUF_SIZE);
 
-	return 1;
-}
+// 	return 1;
+// }
 
 #define	KEY_CMD_RESET_BUFFER	0
 
-int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
-{
-	switch(cmd)
-	{
+// int myos_tty_ioctl(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg)
+// {
+// 	switch(cmd)
+// 	{
 
-		case KEY_CMD_RESET_BUFFER:
-			p_kb->p_head = p_kb->buf;
-			p_kb->p_tail = p_kb->buf;
-			p_kb->count  = 0;
-			memset(p_kb->buf,0,KB_BUF_SIZE);
-		break;
+// 		case KEY_CMD_RESET_BUFFER:
+// 			p_kb->p_head = p_kb->buf;
+// 			p_kb->p_tail = p_kb->buf;
+// 			p_kb->count  = 0;
+// 			memset(p_kb->buf,0,KB_BUF_SIZE);
+// 		break;
 
-		default:
-		break;
-	}
+// 		default:
+// 		break;
+// 	}
 
-	return 0;
-}
+// 	return 0;
+// }
 
 ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {

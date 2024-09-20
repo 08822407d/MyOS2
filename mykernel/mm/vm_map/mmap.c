@@ -12,6 +12,7 @@
 #include <linux/kernel/syscalls.h>
 #include <linux/fs/file.h>
 #include <linux/fs/fs.h>
+#include <linux/fs/shmem_fs.h>
 
 
 #include "../mm_types.h"
@@ -405,7 +406,7 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 	}
 
 	if (!merge_prev && !merge_next)
-		return NULL; /* Not mergeable. */
+		return NULL;	/* Not mergeable. */
 
 	if (adjust_target == NULL)
 		adjust_target = curr;
@@ -417,6 +418,50 @@ simple_vma_merge(mm_s *mm, vma_s *prev, ulong addr, ulong end,
 
 
 /*
+ * If a hint addr is less than mmap_min_addr change hint to be as
+ * low as possible but still greater than mmap_min_addr
+ */
+static inline ulong
+round_hint_to_min(ulong hint) {
+	hint &= PAGE_MASK;
+	if (((void *)hint != NULL) &&
+	    (hint < mmap_min_addr))
+		return PAGE_ALIGN(mmap_min_addr);
+	return hint;
+}
+
+static inline u64
+file_mmap_size_max(file_s *file, inode_s *inode) {
+	if (S_ISREG(inode->i_mode))
+		return MAX_LFS_FILESIZE;
+
+	if (S_ISBLK(inode->i_mode))
+		return MAX_LFS_FILESIZE;
+
+	if (S_ISSOCK(inode->i_mode))
+		return MAX_LFS_FILESIZE;
+
+	/* Special "we do even unsigned file positions" case */
+	if (file->f_mode & FMODE_UNSIGNED_OFFSET)
+		return 0;
+
+	/* Yes, random drivers might want more. But I'm tired of buggy drivers */
+	return ULONG_MAX;
+}
+
+static inline bool
+file_mmap_ok(file_s *file, inode_s *inode, ulong pgoff, ulong len) {
+	u64 maxsize = file_mmap_size_max(file, inode);
+
+	if (maxsize && len > maxsize)
+		return false;
+	maxsize -= len;
+	if (pgoff > maxsize >> PAGE_SHIFT)
+		return false;
+	return true;
+}
+
+/*
  * The caller must write-lock current->mm->mmap_lock.
  */
 // 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
@@ -425,7 +470,6 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 {
 	mm_s *mm = current->mm;
 	vm_flags_t vm_flags;
-	int pkey = 0;
 
 	if (len == 0)
 		return -EINVAL;
@@ -438,14 +482,15 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	 */
 	// if ((prot & PROT_READ) && (current->personality & READ_IMPLIES_EXEC))
 	// 	if (!(file && path_noexec(&file->f_path)))
-	// 		prot |= PROT_EXEC;
+	if ((prot & PROT_READ) && !(file && path_noexec(&file->f_path)))
+			prot |= PROT_EXEC;
 
 	/* force arch specific MAP_FIXED handling in get_unmapped_area */
 	if (flags & MAP_FIXED_NOREPLACE)
 		flags |= MAP_FIXED;
 
-	// if (!(flags & MAP_FIXED))
-	// 	addr = round_hint_to_min(addr);
+	if (!(flags & MAP_FIXED))
+		addr = round_hint_to_min(addr);
 
 	/* Careful about overflows.. */
 	len = PAGE_ALIGN(len);
@@ -461,47 +506,35 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 		return -ENOMEM;
 
 	/*
-	 * Obtain the address to map to. we verify (or select) it and ensure
-	 * that it represents a valid section of the address space.
-	 */
-	addr = get_unmapped_area(file, addr, len, pgoff, flags);
-	if (IS_ERR_VALUE(addr))
-		return addr;
-
-	if (flags & MAP_FIXED_NOREPLACE) {
-		if (find_vma_intersection(mm, addr, addr + len))
-			return -EEXIST;
-	}
-
-	// if (prot == PROT_EXEC) {
-	// 	pkey = execute_only_pkey(mm);
-	// 	if (pkey < 0)
-	// 		pkey = 0;
-	// }
-
-	/*
 	 * Do simple checking here so the lower-level routines won't have
 	 * to. we assume access permissions have been handled by the open
 	 * of the memory object, so we don't do any here.
 	 */
-	vm_flags = calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
+	vm_flags = calc_vm_prot_bits(prot, 0) | calc_vm_flag_bits(flags) |
 				mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
 
-	// if (flags & MAP_LOCKED)
-	// 	if (!can_do_mlock())
-	// 		return -EPERM;
+	/*
+	 * Obtain the address to map to. we verify (or select) it and ensure
+	 * that it represents a valid section of the address space.
+	 */
+	addr = __get_unmapped_area(file, addr, len, pgoff, flags);
+	if (IS_ERR_VALUE(addr))
+		return addr;
 
-	// if (mlock_future_check(mm, vm_flags, len))
-	// 	return -EAGAIN;
+	if (flags & MAP_FIXED_NOREPLACE)
+		if (find_vma_intersection(mm, addr, addr + len))
+			return -EEXIST;
 
 	if (file) {
 		inode_s *inode = file_inode(file);
 		ulong flags_mask;
 
-		// if (!file_mmap_ok(file, inode, pgoff, len))
-		// 	return -EOVERFLOW;
+		if (!file_mmap_ok(file, inode, pgoff, len))
+			return -EOVERFLOW;
 
-		// flags_mask = LEGACY_MAP_MASK | file->f_op->mmap_supported_flags;
+		flags_mask = LEGACY_MAP_MASK;
+		// if (file->f_op->fop_flags & FOP_MMAP_SYNC)
+		// 	flags_mask |= MAP_SYNC;
 
 		switch (flags & MAP_TYPE) {
 		case MAP_SHARED:
@@ -564,6 +597,36 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 			pgoff = 0;
 			vm_flags |= VM_SHARED | VM_MAYSHARE;
 			break;
+		case MAP_DROPPABLE:
+			if (VM_DROPPABLE == VM_NONE)
+				return -ENOTSUPP;
+			/*
+			 * A locked or stack area makes no sense to be droppable.
+			 *
+			 * Also, since droppable pages can just go away at any time
+			 * it makes no sense to copy them on fork or dump them.
+			 *
+			 * And don't attempt to combine with hugetlb for now.
+			 */
+			if (flags & (MAP_LOCKED | MAP_HUGETLB))
+				return -EINVAL;
+			if (vm_flags & (VM_GROWSDOWN | VM_GROWSUP))
+				return -EINVAL;
+
+			vm_flags |= VM_DROPPABLE;
+
+			/*
+			 * If the pages can be dropped, then it doesn't make
+			 * sense to reserve them.
+			 */
+			vm_flags |= VM_NORESERVE;
+
+			/*
+			 * Likewise, they're volatile enough that they
+			 * shouldn't survive forks or coredumps.
+			 */
+			vm_flags |= VM_WIPEONFORK | VM_DONTDUMP;
+			fallthrough;
 		case MAP_PRIVATE:
 			/*
 			 * Set pgoff according to addr for anon_vma.
@@ -622,40 +685,41 @@ simple_mmap_region(file_s *file, ulong addr,
 	vma->vm_pgoff = pgoff;
 
 	if (file) {
-		// if (vm_flags & VM_SHARED) {
-		// 	error = mapping_map_writable(file->f_mapping);
-		// 	if (error)
-		// 		goto free_vma;
-		// }
-
 		vma->vm_file = get_file(file);
 		error = call_mmap(file, vma);
 		if (error != -ENOERR)
 			goto unmap_and_free_vma;
 
-		/*
-		 * Can addr have changed??
-		 *
-		 * Answer: Yes, several device drivers can do it in their
-		 *         f_op->mmap method. -DaveM
-		 * Bug: If addr is changed, prev, rb_link, rb_parent should
-		 *      be updated for simple_vma_link()
-		 */
-		WARN_ON_ONCE(addr != vma->vm_start);
-		addr = vma->vm_start;
+		// if (vma_is_shared_maywrite(vma)) {
+		// 	error = mapping_map_writable(file->f_mapping);
+		// 	if (error)
+		// 		goto close_and_free_vma;
+
+		// 	writable_file_mapping = true;
+		// }
 
 		/*
-		 * If vm_flags changed after call_mmap(), we should try merge vma again
-		 * as we may succeed this time.
+		 * Expansion is handled above, merging is handled below.
+		 * Drivers should not alter the address of the VMA.
+		 */
+		error = -EINVAL;
+		if (WARN_ON((addr != vma->vm_start)))
+			goto close_and_free_vma;
+
+		/*
+		 * If vm_flags changed after call_mmap(), we should try merge
+		 * vma again as we may succeed this time.
 		 */
 		if (unlikely(vm_flags != vma->vm_flags && prev != NULL)) {
 			merge = simple_vma_merge(mm, prev, vma->vm_start, vma->vm_end,
 					vma->vm_flags, vma->vm_file, vma->vm_pgoff);
 			if (merge) {
 				/*
-				 * ->mmap() can change vma->vm_file and fput the original file. So
-				 * fput the vma->vm_file here or we would add an extra fput for file
-				 * and cause general protection fault ultimately.
+				 * ->mmap() can change vma->vm_file and fput
+				 * the original file. So fput the vma->vm_file
+				 * here or we would add an extra fput for file
+				 * and cause general protection fault
+				 * ultimately.
 				 */
 				fput(vma->vm_file);
 				vm_area_free(vma);
@@ -668,9 +732,9 @@ simple_mmap_region(file_s *file, ulong addr,
 
 		vm_flags = vma->vm_flags;
 	} else if (vm_flags & VM_SHARED) {
-		// error = shmem_zero_setup(vma);
-		// if (error)
-		// 	goto free_vma;
+		error = shmem_zero_setup(vma);
+		if (error)
+			goto free_vma;
 	} else {
 		vma_set_anonymous(vma);
 	}
@@ -706,6 +770,10 @@ out:
 	// vma_set_page_prot(vma);
 
 	return addr;
+
+close_and_free_vma:
+	if (file && vma->vm_ops && vma->vm_ops->close)
+		vma->vm_ops->close(vma);
 
 unmap_and_free_vma:
 	fput(vma->vm_file);
@@ -871,7 +939,7 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 }
 
 ulong
-get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
+__get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
 {
 	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
 
@@ -909,7 +977,7 @@ get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
 
 	return addr;
 }
-EXPORT_SYMBOL(get_unmapped_area);
+EXPORT_SYMBOL(__get_unmapped_area);
 
 
 /* enforced gap between the expanding stack and other mappings. */
@@ -1131,7 +1199,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 		return -EINVAL;
 	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
 
-	mapped_addr = get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
+	mapped_addr = __get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
 	if (IS_ERR_VALUE(mapped_addr))
 		return mapped_addr;
 

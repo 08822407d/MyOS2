@@ -301,8 +301,6 @@ long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
 blkdev_ops_s ATA_master_ops =
 {
 	// .open		= ATA_disk_open,
-	// .close		= ATA_disk_close,
-	// .ioctl		= ATA_disk_ioctl,
 	.transfer	= ATA_disk_transfer,
 };
 

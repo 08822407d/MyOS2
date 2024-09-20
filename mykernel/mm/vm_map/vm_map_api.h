@@ -57,7 +57,7 @@
 	extern ulong simple_find_vm_unmapped_area_topdown(mm_s * mm, unmapped_vma_info_s *info);
 	ulong simple_get_unmapped_area(file_s *filp, const ulong addr,
 			const ulong len, const ulong pgoff, const ulong flags);
-	extern ulong get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
+	extern ulong __get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
 	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 
 	/* mm/util.c */

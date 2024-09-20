@@ -66,7 +66,7 @@
 	// 						unsigned long flags);
 	// extern file_s *shmem_file_setup_with_mnt(struct vfsmount *mnt,
 	// 		const char *name, loff_t size, unsigned long flags);
-	// extern int shmem_zero_setup(vma_s *);
+	extern int shmem_zero_setup(vma_s *);
 	extern ulong shmem_get_unmapped_area(file_s *,
 			ulong addr, ulong len, ulong pgoff, ulong flags);
 	// extern int shmem_lock(file_s *file, int lock, struct ucounts *ucounts);

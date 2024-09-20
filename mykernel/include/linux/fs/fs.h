@@ -1854,11 +1854,9 @@
 	// #define REMAP_FILE_ADVISORY		(REMAP_FILE_CAN_SHORTEN)
 
 	typedef struct file_operations {
-		int			(*ioctl)(inode_s * inode, file_s* fp, unsigned long cmd, unsigned long arg);
-		int			(*close)(inode_s * inode, file_s * file_p);
-		// size_t		(*readdir)(file_s * filp, void * dirent, filldir_t filler);
-
 		// module_s	*owner;
+		// fop_flags_t fop_flags;
+
 		loff_t		(*llseek) (file_s *file, loff_t pos, int);
 		ssize_t		(*read) (file_s *file, char *buf, size_t size, loff_t *pos);
 		ssize_t		(*write) (file_s *file, const char *buf, size_t size, loff_t *pos);
@@ -1866,13 +1864,11 @@
 		ssize_t		(*write_iter) (kiocb_s *, iov_iter_s *);
 		// int			(*iopoll)(kiocb_s *kiocb, struct io_comp_batch *,
 		// 					unsigned int flags);
-		int			(*iterate) (file_s *, dir_ctxt_s *);
 		int			(*iterate_shared) (file_s *, dir_ctxt_s *);
 		// __poll_t	(*poll) (file_s *, struct poll_table_struct *);
 		// long		(*unlocked_ioctl) (file_s *, unsigned int, unsigned long);
 		// long		(*compat_ioctl) (file_s *, unsigned int, unsigned long);
 		int			(*mmap) (file_s *, vma_s *);
-		// unsigned long	mmap_supported_flags;
 		int			(*open) (inode_s *, file_s *);
 		// int			(*flush) (file_s *, fl_owner_t id);
 		int			(*release) (inode_s *, file_s *);

@@ -94,8 +94,6 @@ static const file_ops_s tty_fops = {
 	.read				= myos_tty_read,
 	.write				= myos_tty_write,
 	.open				= myos_tty_open,
-	.close				= myos_tty_close,
-	.ioctl				= myos_tty_ioctl,
 
 	// .llseek			= no_llseek,
 	// .read_iter		= tty_read,
@@ -115,8 +113,6 @@ static const file_ops_s console_fops = {
 	.read				= myos_tty_read,
 	.write				= myos_tty_write,
 	.open				= myos_tty_open,
-	.close				= myos_tty_close,
-	.ioctl				= myos_tty_ioctl,
 
 	// .llseek			= no_llseek,
 	// .read_iter		= tty_read,

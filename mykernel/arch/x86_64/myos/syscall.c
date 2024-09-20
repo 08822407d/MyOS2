@@ -52,8 +52,8 @@ MYOS_SYSCALL_DEFINE1(close, unsigned int, fd)
 		return -EBADF;
 
 	fp = curr->files->fd_array[fd];
-	if(fp->f_op && fp->f_op->close)
-		fp->f_op->close(fp->f_path.dentry->d_inode, fp);
+	// if(fp->f_op && fp->f_op->close)
+	// 	fp->f_op->close(fp->f_path.dentry->d_inode, fp);
 
 	kfree(fp);
 	curr->files->fd_array[fd] = NULL;

@@ -7,6 +7,7 @@
 #include <linux/sched/signal.h>
 #include <linux/kernel/elf.h>
 #include <linux/kernel/sizes.h>
+#include <linux/kernel/mmap_lock.h>
 
 #include <linux/kernel/uaccess.h>
 
@@ -41,10 +42,10 @@ ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
 	ulong ret;
 	mm_s *mm = current->mm;
 
-	// if (mmap_write_lock_killable(mm))
-	// 	return -EINTR;
+	if (mmap_write_lock_killable(mm))
+		return -EINTR;
 	ret = do_mmap(file, addr, len, prot, flag, pgoff);
-	// mmap_write_unlock(mm);
+	mmap_write_unlock(mm);
 
 	return ret;
 }

@@ -1077,13 +1077,6 @@
 	// extern void ata_host_detach(struct ata_host *host);
 	// extern void ata_host_init(struct ata_host *, struct device *, ata_port_ops_s *);
 	// extern int ata_scsi_detect(struct scsi_host_template *sht);
-	// extern int ata_scsi_ioctl(struct scsi_device *dev, unsigned int cmd,
-	// 			void __user *arg);
-	// #ifdef CONFIG_COMPAT
-	// #define ATA_SCSI_COMPAT_IOCTL .compat_ioctl = ata_scsi_ioctl,
-	// #else
-	// #define ATA_SCSI_COMPAT_IOCTL /* empty */
-	// #endif
 	// extern int ata_scsi_queuecmd(struct Scsi_Host *h, struct scsi_cmnd *cmd);
 	// #if IS_REACHABLE(CONFIG_ATA)
 	// bool ata_scsi_dma_need_drain(struct request *rq);
@@ -1385,7 +1378,6 @@
 	// #define __ATA_BASE_SHT(drv_name)				\
 	// 	.module			= THIS_MODULE,			\
 	// 	.name			= drv_name,			\
-	// 	.ioctl			= ata_scsi_ioctl,		\
 	// 	ATA_SCSI_COMPAT_IOCTL					\
 	// 	.queuecommand		= ata_scsi_queuecmd,		\
 	// 	.dma_need_drain		= ata_scsi_dma_need_drain,	\

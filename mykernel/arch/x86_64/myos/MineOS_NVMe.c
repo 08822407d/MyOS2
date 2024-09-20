@@ -204,12 +204,6 @@ blkbuf_node_s *NVMe_make_request(long cmd, unsigned long blk_idx, long count, un
 // 	return 1;
 // }
 
-// long NVMe_ioctl(long cmd, long arg)
-// {
-// 	blkbuf_node_s *node = NULL;
-// 	return 0;
-// }
-
 long NVMe_transfer(unsigned controller, unsigned disk, long cmd, unsigned long blk_idx, long count, unsigned char *buffer)
 {
 	blkbuf_node_s *node = NULL;
@@ -244,8 +238,6 @@ long NVMe_transfer(unsigned controller, unsigned disk, long cmd, unsigned long b
 blkdev_ops_s NVMe_ops =
 {
 	// .open = NVMe_open,
-	// .close = NVMe_close,
-	// .ioctl = NVMe_ioctl,
 	.transfer = NVMe_transfer,
 };
 

@@ -448,3 +448,31 @@ int __init shmem_init(void)
 
 	return 0;
 }
+
+
+/**
+ * shmem_zero_setup - setup a shared anonymous mapping
+ * @vma: the vma to be mmapped is prepared by do_mmap
+ */
+int shmem_zero_setup(vma_s *vma)
+{
+	file_s *file;
+	loff_t size = vma->vm_end - vma->vm_start;
+
+	// /*
+	//  * Cloning a new file under mmap_lock leads to a lock ordering conflict
+	//  * between XFS directory reading and selinux: since this file is only
+	//  * accessible to the user through its mapping, use S_PRIVATE flag to
+	//  * bypass file security, in the same way as shmem_kernel_file_setup().
+	//  */
+	// file = shmem_kernel_file_setup("dev/zero", size, vma->vm_flags);
+	// if (IS_ERR(file))
+	// 	return PTR_ERR(file);
+
+	// if (vma->vm_file)
+	// 	fput(vma->vm_file);
+	// vma->vm_file = file;
+	// vma->vm_ops = &shmem_anon_vm_ops;
+
+	return 0;
+}
