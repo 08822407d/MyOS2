@@ -1262,12 +1262,15 @@ uncharge_out:
 
 static vm_fault_t
 do_shared_fault(vm_fault_s *vmf) {
-	// vma_s *vma = vmf->vma;
-	// vm_fault_t ret, tmp;
+	pr_alert("API not implemented - 'do_shared_fault'\n");
+	while (1);
+	
+	vma_s *vma = vmf->vma;
+	vm_fault_t ret, tmp;
 
-	// ret = __do_fault(vmf);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
-	// 	return ret;
+	ret = __do_fault(vmf);
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
+		return ret;
 
 	// /*
 	//  * Check if the backing address space wants to know that the page is
@@ -1316,31 +1319,25 @@ do_fault(vm_fault_s *vmf) {
 		pr_alert("VMA has no vm_ops->fault\n");
 		while (1);
 		
-		// /*
-		//  * If we find a migration pmd entry or a none pmd entry, which
-		//  * should never happen, return SIGBUS
-		//  */
-		// if (unlikely(!pmd_present(*vmf->pmd)))
-		// 	ret = VM_FAULT_SIGBUS;
-		// else {
-		// 	vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
-		// 				       vmf->pmd,
-		// 				       vmf->address,
-		// 				       &vmf->ptl);
-		// 	/*
-		// 	 * Make sure this is not a temporary clearing of pte
-		// 	 * by holding ptl and checking again. A R/M/W update
-		// 	 * of pte involves: take ptl, clearing the pte so that
-		// 	 * we don't have concurrent modification by hardware
-		// 	 * followed by an update.
-		// 	 */
-		// 	if (unlikely(pte_none(*vmf->pte)))
-		// 		ret = VM_FAULT_SIGBUS;
-		// 	else
-		// 		ret = VM_FAULT_NOPAGE;
+		// vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
+		// 			vmf->pmd, vmf->address, &vmf->ptl);
+		if (unlikely(!vmf->pte))
+			ret = VM_FAULT_SIGBUS;
+		else {
+			/*
+			 * Make sure this is not a temporary clearing of pte
+			 * by holding ptl and checking again. A R/M/W update
+			 * of pte involves: take ptl, clearing the pte so that
+			 * we don't have concurrent modification by hardware
+			 * followed by an update.
+			 */
+			if (unlikely(arch_pte_none(ptep_get(vmf->pte))))
+				ret = VM_FAULT_SIGBUS;
+			else
+				ret = VM_FAULT_NOPAGE;
 
-		// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-		// }
+			// pte_unmap_unlock(vmf->pte, vmf->ptl);
+		}
 	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
 		ret = do_read_fault(vmf);
 	else if (!(vma->vm_flags & VM_SHARED))

@@ -26,6 +26,7 @@
 #include <linux/fs/file.h>
 #include <linux/kernel/fdtable.h>
 #include <linux/kernel/mm_api.h>
+#include <linux/kernel/mmap_lock.h>
 #include <linux/kernel/fcntl.h>
 #include <linux/fs/binfmts.h>
 #include <linux/fs/fs.h>
@@ -38,14 +39,17 @@
 
 
 static LIST_HDR_S(formats);
+// static DEFINE_RWLOCK(binfmt_lock);
 
-void register_binfmt(linux_bfmt_s * fmt) {
+void register_binfmt(linux_bfmt_s * fmt)
+{
 	// write_lock(&binfmt_lock);
 	list_header_add_to_tail(&formats, &fmt->lh);
 	// write_unlock(&binfmt_lock);
 }
 
-void unregister_binfmt(linux_bfmt_s * fmt) {
+void unregister_binfmt(linux_bfmt_s * fmt)
+{
 	// write_lock(&binfmt_lock);
 	// list_del_init(&fmt->lh);
 	list_header_delete_node(&formats, &fmt->lh);
@@ -60,9 +64,8 @@ bool path_noexec(const path_s *path)
 }
 
 
-static page_s *get_arg_page(linux_bprm_s *bprm,
-		unsigned long pos, int write) {
-
+static page_s
+*get_arg_page(linux_bprm_s *bprm, ulong pos, int write) {
 	page_s *page;
 	vma_s *vma = bprm->vma;
 	mm_s *mm = bprm->mm;
@@ -82,7 +85,7 @@ static page_s *get_arg_page(linux_bprm_s *bprm,
 	// 	}
 	// 	mmap_write_downgrade(mm);
 	// } else
-	// 	mmap_read_lock(mm);
+		mmap_read_lock(mm);
 
 	// /*
 	//  * We are doing an exec().  'current' is the process
@@ -91,10 +94,10 @@ static page_s *get_arg_page(linux_bprm_s *bprm,
 	// ret = get_user_pages_remote(mm, pos, 1,
 	// 		write ? FOLL_WRITE : 0,
 	// 		&page, NULL, NULL);
-	myos_get_user_pages(mm, pos, 1, &page);
-	// mmap_read_unlock(mm);
-	// if (ret <= 0)
-	// 	return NULL;
+	ret = myos_get_user_pages(mm, pos, 1, &page);
+	mmap_read_unlock(mm);
+	if (ret <= 0)
+		return NULL;
 
 	// if (write)
 	// 	acct_arg_size(bprm, vma_pages(vma));
@@ -102,12 +105,13 @@ static page_s *get_arg_page(linux_bprm_s *bprm,
 	return page;
 }
 
-static void put_arg_page(page_s *page) {
+static void
+put_arg_page(page_s *page) {
 	put_page(page);
 }
 
-static int __bprm_mm_init(linux_bprm_s *bprm)
-{
+static int
+__bprm_mm_init(linux_bprm_s *bprm) {
 	int err;
 	vma_s *vma = NULL;
 	mm_s *mm = bprm->mm;
@@ -117,10 +121,10 @@ static int __bprm_mm_init(linux_bprm_s *bprm)
 		return -ENOMEM;
 	vma_set_anonymous(vma);
 
-	// if (mmap_write_lock_killable(mm)) {
-	// 	err = -EINTR;
-	// 	goto err_free;
-	// }
+	if (mmap_write_lock_killable(mm)) {
+		err = -EINTR;
+		goto err_free;
+	}
 
 	/*
 	 * Place the stack at the largest stack address the architecture
@@ -129,8 +133,6 @@ static int __bprm_mm_init(linux_bprm_s *bprm)
 	 * configured yet.
 	 */
 	// BUILD_BUG_ON(VM_STACK_FLAGS & VM_STACK_INCOMPLETE_SETUP);
-	// vma->vm_prev = vma;
-	// vma->vm_next = vma;
 	vma->vm_end = STACK_TOP_MAX;
 	vma->vm_start = vma->vm_end - PAGE_SIZE;
 	vma->vm_flags = VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP;
@@ -141,19 +143,21 @@ static int __bprm_mm_init(linux_bprm_s *bprm)
 		goto err;
 
 	mm->stack_vm = mm->total_vm = 1;
-	// mmap_write_unlock(mm);
+	mmap_write_unlock(mm);
 	bprm->p = vma->vm_end - sizeof(void *);
 	return 0;
 err:
-	// mmap_write_unlock(mm);
+	// ksm_exit(mm);
+err_ksm:
+	mmap_write_unlock(mm);
 err_free:
 	bprm->vma = NULL;
 	vm_area_free(vma);
 	return err;
 }
 
-static bool valid_arg_len(linux_bprm_s *bprm, long len)
-{
+static bool
+valid_arg_len(linux_bprm_s *bprm, long len) {
 	return len <= MAX_ARG_STRLEN;
 }
 
@@ -163,8 +167,8 @@ static bool valid_arg_len(linux_bprm_s *bprm, long len)
  * flags, permissions, and offset, so we use temporary values.  We'll update
  * them later in setup_arg_pages().
  */
-static int bprm_mm_init(linux_bprm_s *bprm)
-{
+static int
+bprm_mm_init(linux_bprm_s *bprm) {
 	int err;
 	mm_s *mm = NULL;
 
@@ -195,8 +199,7 @@ err:
 
 
 static const char __user
-*get_user_arg_ptr(const char __user *const __user *argv, int nr)
-{
+*get_user_arg_ptr(const char __user *const __user *argv, int nr) {
 	const char __user *native;
 	if (get_user(native, argv + nr))
 		return ERR_PTR(-EFAULT);
@@ -207,8 +210,8 @@ static const char __user
 /*
  * count() counts the number of strings in array ARGV.
  */
-static int count(const char *const *argv, int max)
-{
+static int
+count(const char *const *argv, int max) {
 	int i = 0;
 
 	if (argv != NULL) {
@@ -235,8 +238,8 @@ static int count(const char *const *argv, int max)
 	return i;
 }
 
-static int count_strings_kernel(const char *const *argv)
-{
+static int
+count_strings_kernel(const char *const *argv) {
 	int i;
 
 	if (!argv)
@@ -252,9 +255,22 @@ static int count_strings_kernel(const char *const *argv)
 	return i;
 }
 
-static int bprm_stack_limits(linux_bprm_s *bprm)
-{
-	unsigned long limit, ptr_size;
+static inline int
+bprm_set_stack_limit(linux_bprm_s *bprm, ulong limit) {
+	/* Avoid a pathological bprm->p. */
+	if (bprm->p < limit)
+		return -E2BIG;
+	bprm->argmin = bprm->p - limit;
+	return 0;
+}
+static inline bool
+bprm_hit_stack_limit(linux_bprm_s *bprm) {
+	return bprm->p < bprm->argmin;
+}
+
+static int
+bprm_stack_limits(linux_bprm_s *bprm) {
+	ulong limit, ptr_size;
 
 	/*
 	 * Limit to 1/4 of the max stack size or 3/4 of _STK_LIM
@@ -270,7 +286,10 @@ static int bprm_stack_limits(linux_bprm_s *bprm)
 	 * We've historically supported up to 32 pages (ARG_MAX)
 	 * of argument strings even with small stacks
 	 */
-	limit = max_t(unsigned long, limit, ARG_MAX);
+	limit = max_t(ulong, limit, ARG_MAX);
+	/* Reject totally pathological counts. */
+	if (bprm->argc < 0 || bprm->envc < 0)
+		return -E2BIG;
 	/*
 	 * We must account for the size of all the argv and envp pointers to
 	 * the argv and envp strings, since they will also take up space in
@@ -289,8 +308,7 @@ static int bprm_stack_limits(linux_bprm_s *bprm)
 		return -E2BIG;
 	limit -= ptr_size;
 
-	bprm->argmin = bprm->p - limit;
-	return 0;
+	return bprm_set_stack_limit(bprm, limit);
 }
 
 /*
@@ -299,17 +317,16 @@ static int bprm_stack_limits(linux_bprm_s *bprm)
  * ensures the destination page is created and not swapped out.
  */
 static int
-copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
-{
-	// page_s *kmapped_page = NULL;
+copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm) {
+	page_s *kmapped_page = NULL;
 	char *kaddr = NULL;
-	unsigned long kpos = 0;
+	ulong kpos = 0;
 	int ret;
 
 	while (argc-- > 0) {
 		const char __user *str;
 		int len;
-		unsigned long pos;
+		ulong pos;
 
 		ret = -EFAULT;
 		str = get_user_arg_ptr(argv, argc);
@@ -333,7 +350,6 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 
 		while (len > 0) {
 			int offset, bytes_to_copy;
-			bytes_to_copy = len;
 
 			// if (fatal_signal_pending(current)) {
 			// 	ret = -ERESTARTNOHAND;
@@ -341,15 +357,15 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 			// }
 			// cond_resched();
 
-			// offset = pos % PAGE_SIZE;
-			// if (offset == 0)
-			// 	offset = PAGE_SIZE;
+			offset = pos % PAGE_SIZE;
+			if (offset == 0)
+				offset = PAGE_SIZE;
 
-			// bytes_to_copy = offset;
-			// if (bytes_to_copy > len)
-			// 	bytes_to_copy = len;
+			bytes_to_copy = offset;
+			if (bytes_to_copy > len)
+				bytes_to_copy = len;
 
-			// offset -= bytes_to_copy;
+			offset -= bytes_to_copy;
 			pos -= bytes_to_copy;
 			str -= bytes_to_copy;
 			len -= bytes_to_copy;
@@ -363,8 +379,8 @@ copy_strings(int argc, const char *const *argv, linux_bprm_s *bprm)
 					goto out;
 				}
 
-			memcpy_to_page(page, offset_in_page(pos), str, bytes_to_copy);
-			put_arg_page(page);
+				memcpy_to_page(page, offset_in_page(pos), str, bytes_to_copy);
+				put_arg_page(page);
 
 				// if (kmapped_page) {
 				// 	flush_dcache_page(kmapped_page);
@@ -398,7 +414,7 @@ out:
 int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 {
 	int len = strnlen(arg, MAX_ARG_STRLEN) + 1 /* terminating NUL */;
-	unsigned long pos = bprm->p;
+	ulong pos = bprm->p;
 
 	if (len == 0)
 		return -EFAULT;
@@ -412,7 +428,7 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 		return -E2BIG;
 
 	while (len > 0) {
-		unsigned int bytes_to_copy = min_t(unsigned int, len,
+		uint bytes_to_copy = min_t(uint, len,
 				min_not_zero(offset_in_page(pos), PAGE_SIZE));
 		page_s *page;
 
@@ -430,10 +446,12 @@ int copy_string_kernel(const char *arg, linux_bprm_s *bprm)
 
 	return 0;
 }
+EXPORT_SYMBOL(copy_string_kernel);
 
 static int
-copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
-{
+copy_strings_kernel(int argc, const char *const *argv,
+		linux_bprm_s *bprm) {
+
 	while (argc-- > 0) {
 		int ret = copy_string_kernel(argv[argc], bprm);
 		if (ret < 0)
@@ -452,18 +470,18 @@ copy_strings_kernel(int argc, const char *const *argv, linux_bprm_s *bprm)
  * the stack is optionally relocated, and some extra space is added.
  */
 int setup_arg_pages(linux_bprm_s *bprm,
-		unsigned long stack_top, int executable_stack)
+		ulong stack_top, int executable_stack)
 {
-	unsigned long ret;
-	unsigned long stack_shift;
+	ulong ret;
+	ulong stack_shift;
 	mm_s *mm = current->mm;
 	vma_s *vma = bprm->vma;
-	// struct vm_area_struct *prev = NULL;
-	// unsigned long vm_flags;
-	unsigned long stack_base;
-	unsigned long stack_size;
-	unsigned long stack_expand;
-	// unsigned long rlim_stack;
+	vma_s *prev = NULL;
+	ulong vm_flags;
+	ulong stack_base;
+	ulong stack_size;
+	ulong stack_expand;
+	ulong rlim_stack;
 
 	// stack_top = arch_align_stack(stack_top);
 	stack_top = PAGE_ALIGN(stack_top);
@@ -472,42 +490,47 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	//     unlikely(vma->vm_end - vma->vm_start >= stack_top - mmap_min_addr))
 	// 	return -ENOMEM;
 
-	// stack_shift = vma->vm_end - stack_top;
+	stack_shift = vma->vm_end - stack_top;
 
-	// bprm->p -= stack_shift;
+	bprm->p -= stack_shift;
 	mm->arg_start = bprm->p;
 
-	// if (bprm->loader)
-	// 	bprm->loader -= stack_shift;
-	// bprm->exec -= stack_shift;
+	if (bprm->loader)
+		bprm->loader -= stack_shift;
+	bprm->exec -= stack_shift;
 
-	// if (mmap_write_lock_killable(mm))
-	// 	return -EINTR;
+	if (mmap_write_lock_killable(mm))
+		return -EINTR;
 
-	// vm_flags = VM_STACK_FLAGS;
+	vm_flags = VM_STACK_FLAGS;
 
-	// /*
-	//  * Adjust stack execute permissions; explicitly enable for
-	//  * EXSTACK_ENABLE_X, disable for EXSTACK_DISABLE_X and leave alone
-	//  * (arch default) otherwise.
-	//  */
-	// if (unlikely(executable_stack == EXSTACK_ENABLE_X))
-	// 	vm_flags |= VM_EXEC;
-	// else if (executable_stack == EXSTACK_DISABLE_X)
-	// 	vm_flags &= ~VM_EXEC;
-	// vm_flags |= mm->def_flags;
-	// vm_flags |= VM_STACK_INCOMPLETE_SETUP;
+	/*
+	 * Adjust stack execute permissions; explicitly enable for
+	 * EXSTACK_ENABLE_X, disable for EXSTACK_DISABLE_X and leave alone
+	 * (arch default) otherwise.
+	 */
+	if (unlikely(executable_stack == EXSTACK_ENABLE_X))
+		vm_flags |= VM_EXEC;
+	else if (executable_stack == EXSTACK_DISABLE_X)
+		vm_flags &= ~VM_EXEC;
+	vm_flags |= mm->def_flags;
+	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
 
+	// vma_iter_init(&vmi, mm, vma->vm_start);
+
+	// tlb_gather_mmu(&tlb, mm);
 	// ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
 	// 		vm_flags);
+	// tlb_finish_mmu(&tlb);
+
 	// if (ret)
 	// 	goto out_unlock;
 	// BUG_ON(prev != vma);
 
-	// if (unlikely(vm_flags & VM_EXEC)) {
-	// 	pr_warn_once("process '%pD4' started with executable stack\n",
-	// 		     bprm->file);
-	// }
+	if (unlikely(vm_flags & VM_EXEC)) {
+		pr_warn_once("process '%pD4' started with"
+			" executable stack\n", bprm->file);
+	}
 
 	// /* Move stack pages down in memory. */
 	// if (stack_shift) {
@@ -516,42 +539,36 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	// 		goto out_unlock;
 	// }
 
-	/* mprotect_fixup is overkill to remove the temporary stack flags */
-	vma->vm_flags &= ~VM_STACK_INCOMPLETE_SETUP;
+	// /* mprotect_fixup is overkill to remove the temporary stack flags */
+	// vm_flags_clear(vma, VM_STACK_INCOMPLETE_SETUP);
 
 	stack_expand = 131072UL; /* randomly 32*4k (or 2*64k) pages */
 	stack_size = vma->vm_end - vma->vm_start;
-	/*
-	 * Align this down to a page boundary as expand_stack
-	 * will align it up.
-	 */
+	// /*
+	//  * Align this down to a page boundary as expand_stack
+	//  * will align it up.
+	//  */
 	// rlim_stack = bprm->rlim_stack.rlim_cur & PAGE_MASK;
-// #ifdef CONFIG_STACK_GROWSUP
-	// if (stack_size + stack_expand > rlim_stack)
-	// 	stack_base = vma->vm_start + rlim_stack;
-	// else
-	// 	stack_base = vma->vm_end + stack_expand;
-// #else
-	// if (stack_size + stack_expand > rlim_stack)
-	// 	stack_base = vma->vm_end - rlim_stack;
-	// else
-		stack_base = vma->vm_start - stack_expand;
-// #endif
+	// stack_expand = min(rlim_stack, stack_size + stack_expand);
+
+	stack_base = vma->vm_end - stack_expand;
 	current->mm->start_stack = bprm->p;
 	ret = expand_stack(vma, stack_base);
 	if (ret)
 		ret = -EFAULT;
 
 out_unlock:
-// 	mmap_write_unlock(mm);
+	mmap_write_unlock(mm);
 	return ret;
 }
 EXPORT_SYMBOL(setup_arg_pages);
 
-
+/*
+ * On success, caller must call do_close_execat() on the returned
+ * struct file to close it.
+ */
 static file_s
-*do_open_execat(int fd, filename_s *name, int flags)
-{
+*do_open_execat(int fd, filename_s *name, int flags) {
 	file_s *file;
 	int err;
 	open_flags_s open_exec_flags = {
@@ -582,13 +599,6 @@ static file_s
 	// 		 path_noexec(&file->f_path)))
 	// 	goto exit;
 
-	// err = deny_write_access(file);
-	// if (err)
-	// 	goto exit;
-
-	// if (name->name[0] != '\0')
-	// 	fsnotify_open(file);
-
 out:
 	return file;
 
@@ -597,6 +607,16 @@ exit:
 	return ERR_PTR(err);
 }
 
+/**
+ * open_exec - Open a path name for execution
+ *
+ * @name: path name to open with the intent of executing it.
+ *
+ * Returns ERR_PTR on failure or allocated struct file on success.
+ *
+ * As this is a wrapper for the internal do_open_execat(). Also see
+ * do_close_execat().
+ */
 file_s *open_exec(const char *name)
 {
 	filename_s *filename = getname_kernel(name);
@@ -609,14 +629,13 @@ file_s *open_exec(const char *name)
 	return f;
 }
 
-
 /*
  * Maps the mm_struct mm into the current task struct.
  * On success, this function returns with exec_update_lock
  * held for writing.
  */
-static int exec_mmap(mm_s *mm)
-{
+static int
+exec_mmap(mm_s *mm) {
 	task_s *tsk;
 	mm_s *old_mm, *active_mm;
 	int ret;
@@ -625,8 +644,6 @@ static int exec_mmap(mm_s *mm)
 	tsk = current;
 	old_mm = current->mm;
 	// exec_mm_release(tsk, old_mm);
-	// if (old_mm)
-	// 	sync_mm_rss(old_mm);
 
 	// ret = down_write_killable(&tsk->signal->exec_update_lock);
 	// if (ret)
@@ -648,7 +665,7 @@ static int exec_mmap(mm_s *mm)
 	task_lock(tsk);
 	// membarrier_exec_mmap(mm);
 
-	// local_irq_disable();
+	local_irq_disable();
 	active_mm = tsk->active_mm;
 	tsk->active_mm = mm;
 	tsk->mm = mm;
@@ -681,7 +698,7 @@ static int exec_mmap(mm_s *mm)
 }
 
 
-char *get_task_comm(char *buf, size_t buf_size, task_s *tsk)
+char *__get_task_comm(char *buf, size_t buf_size, task_s *tsk)
 {
 	task_lock(tsk);
 	/* Always NUL terminated and zero-padded */
@@ -697,7 +714,7 @@ EXPORT_SYMBOL_GPL(__get_task_comm);
  */
 
 // void __set_task_comm(task_s *tsk, const char *buf, bool exec)
-void set_task_comm(task_s *tsk, const char *buf)
+void __set_task_comm(task_s *tsk, const char *buf)
 {
 	task_lock(tsk);
 	// trace_task_rename(tsk, buf);
@@ -721,6 +738,14 @@ int begin_new_exec(linux_bprm_s * bprm)
 	// retval = bprm_creds_from_file(bprm);
 	// if (retval)
 	// 	return retval;
+
+	// /*
+	//  * This tracepoint marks the point before flushing the old exec where
+	//  * the current task is still unchanged, but errors are fatal (point of
+	//  * no return). The later "sched_process_exec" tracepoint is called after
+	//  * the current task has successfully switched to the new exec.
+	//  */
+	// trace_sched_prepare_exec(current, bprm);
 
 	/*
 	 * Ensure all future errors are fatal.
@@ -769,7 +794,10 @@ int begin_new_exec(linux_bprm_s * bprm)
 	bprm->mm = NULL;
 
 // #ifdef CONFIG_POSIX_TIMERS
-	// exit_itimers(me->signal);
+	// spin_lock_irq(&me->sighand->siglock);
+	// posix_cpu_timers_exit(me);
+	// spin_unlock_irq(&me->sighand->siglock);
+	// exit_itimers(me);
 	// flush_itimer_signals();
 // #endif
 
@@ -780,16 +808,8 @@ int begin_new_exec(linux_bprm_s * bprm)
 	// if (retval)
 	// 	goto out_unlock;
 
-	// /*
-	//  * Ensure that the uaccess routines can actually operate on userspace
-	//  * pointers:
-	//  */
-	// force_uaccess_begin();
-
-	// if (me->flags & PF_KTHREAD)
-	// 	free_kthread_struct(me);
-	// me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC | PF_KTHREAD |
-	// 				PF_NOFREEZE | PF_NO_SETAFFINITY);
+	me->flags &= ~(PF_RANDOMIZE | PF_FORKNOEXEC |
+					PF_NOFREEZE | PF_NO_SETAFFINITY);
 	// flush_thread();
 	// me->personality &= ~bprm->per_clear;
 
@@ -833,7 +853,7 @@ int begin_new_exec(linux_bprm_s * bprm)
 	// 	set_dumpable(current->mm, SUID_DUMP_USER);
 
 	// perf_event_exec();
-	set_task_comm(me, bprm->filename);
+	__set_task_comm(me, bprm->filename);
 
 	// /* An exec changes our domain. We are no longer part of the thread
 	//    group */
@@ -867,22 +887,26 @@ int begin_new_exec(linux_bprm_s * bprm)
 	//  */
 	// security_bprm_committed_creds(bprm);
 
-	// /* Pass the opened binary to the interpreter. */
-	// if (bprm->have_execfd) {
-	// 	retval = get_unused_fd_flags(0);
-	// 	if (retval < 0)
-	// 		goto out_unlock;
-	// 	fd_install(retval, bprm->executable);
-	// 	bprm->executable = NULL;
-	// 	bprm->execfd = retval;
-	// }
+	/* Pass the opened binary to the interpreter. */
+	if (bprm->have_execfd) {
+		retval = get_unused_fd_flags(0);
+		if (retval < 0)
+			goto out_unlock;
+		fd_install(retval, bprm->executable);
+		bprm->executable = NULL;
+		bprm->execfd = retval;
+	}
 	return 0;
 
-// out_unlock:
+out_unlock:
 	// up_write(&me->signal->exec_update_lock);
+	// if (!bprm->cred)
+	// 	mutex_unlock(&me->signal->cred_guard_mutex);
+
 out:
 	return retval;
 }
+EXPORT_SYMBOL(begin_new_exec);
 
 void setup_new_exec(linux_bprm_s * bprm)
 {
@@ -905,8 +929,8 @@ void setup_new_exec(linux_bprm_s * bprm)
 EXPORT_SYMBOL(setup_new_exec);
 
 
-static void free_bprm(linux_bprm_s *bprm)
-{
+static void
+free_bprm(linux_bprm_s *bprm) {
 	if (bprm->mm) {
 		// acct_arg_size(bprm, 0);
 		mmput(bprm->mm);
@@ -920,6 +944,7 @@ static void free_bprm(linux_bprm_s *bprm)
 		// allow_write_access(bprm->file);
 		fput(bprm->file);
 	}
+	// do_close_execat(bprm->file);
 	if (bprm->executable)
 		fput(bprm->executable);
 	/* If a binfmt changed the interp, free it. */
@@ -929,39 +954,59 @@ static void free_bprm(linux_bprm_s *bprm)
 	kfree(bprm);
 }
 
-static linux_bprm_s *alloc_bprm(int fd, filename_s *filename)
-{
+static linux_bprm_s
+*alloc_bprm(int fd, filename_s *filename, int flags) {
 	task_s * curr = current;
 
-	linux_bprm_s *bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
+	linux_bprm_s *bprm;
+	file_s *file;
 	int retval = -ENOMEM;
-	if (!bprm)
-		goto out;
+
+	file = do_open_execat(fd, filename, flags);
+	if (IS_ERR(file))
+		return ERR_CAST(file);
+
+	bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
+	if (bprm == NULL) {
+		// do_close_execat(file);
+		return ERR_PTR(-ENOMEM);
+	}
+
+	bprm->file = file;
 
 	if (fd == AT_FDCWD || filename->name[0] == '/') {
 		bprm->filename = filename->name;
 	} else {
-		// if (filename->name[0] == '\0')
-		// 	bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
-		// else
-		// 	bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
-		// 				  fd, filename->name);
-		if (!bprm->fdpath)
+		if (filename->name[0] == '\0')
+			bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d", fd);
+		else
+			bprm->fdpath = kasprintf(GFP_KERNEL, "/dev/fd/%d/%s",
+						  fd, filename->name);
+		if (bprm->fdpath == NULL)
 			goto out_free;
+
+		// /*
+		//  * Record that a name derived from an O_CLOEXEC fd will be
+		//  * inaccessible after exec.  This allows the code in exec to
+		//  * choose to fail when the executable is not mmaped into the
+		//  * interpreter and an open file descriptor is not passed to
+		//  * the interpreter.  This makes for a better user experience
+		//  * than having the interpreter start and then immediately fail
+		//  * when it finds the executable is inaccessible.
+		//  */
+		// if (get_close_on_exec(fd))
+		// 	bprm->interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;
 
 		bprm->filename = bprm->fdpath;
 	}
 	bprm->interp = bprm->filename;
 
 	retval = bprm_mm_init(bprm);
-	retval = -ENOERR;
-	if (retval)
-		goto out_free;
-	return bprm;
+	if (retval == 0)
+		return bprm;
 
 out_free:
 	free_bprm(bprm);
-out:
 	return ERR_PTR(retval);
 }
 
@@ -972,8 +1017,8 @@ out:
  *
  * This may be called multiple times for binary chains (scripts for example).
  */
-static int prepare_binprm(linux_bprm_s *bprm)
-{
+static int
+prepare_binprm(linux_bprm_s *bprm) {
 	loff_t pos = 0;
 
 	memset(bprm->buf, 0, BINPRM_BUF_SIZE);
@@ -981,12 +1026,15 @@ static int prepare_binprm(linux_bprm_s *bprm)
 }
 
 
-#define printable(c) (((c)=='\t') || ((c)=='\n') || (0x20<=(c) && (c)<=0x7e))
+#define printable(c) (						\
+			((c)=='\t') || ((c)=='\n') ||	\
+				(0x20<=(c) && (c)<=0x7e)	\
+		)
 /*
  * cycle the list of binary formats handler, until one recognizes the image
  */
-static int search_binary_handler(linux_bprm_s *bprm)
-{
+static int
+search_binary_handler(linux_bprm_s *bprm) {
 	mm_s *currmm = current->mm;
 
 	// bool need_retry = IS_ENABLED(CONFIG_MODULES);
@@ -1037,38 +1085,27 @@ static int search_binary_handler(linux_bprm_s *bprm)
  * sys_execve() executes a new program.
  */
 static int
-bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
-{
-	file_s *file;
+bprm_execve(linux_bprm_s *bprm, int fd,
+		filename_s *filename, int flags) {
+
 	int retval;
+	file_s *file;
 	task_s *curr = current;
 
 	// retval = prepare_bprm_creds(bprm);
 	// if (retval)
 	// 	return retval;
 
+	// /*
+	//  * Check for unsafe execution states before exec_binprm(), which
+	//  * will call back into begin_new_exec(), into bprm_creds_from_file(),
+	//  * where setuid-ness is evaluated.
+	//  */
 	// check_unsafe_exec(bprm);
 	curr->in_execve = 1;
-
-	file = do_open_execat(fd, filename, flags);
-	retval = PTR_ERR(file);
-	if (IS_ERR(file))
-		goto out_unmark;
+	// sched_mm_cid_before_execve(current);
 
 	// sched_exec();
-
-	bprm->file = file;
-	/*
-	 * Record that a name derived from an O_CLOEXEC fd will be
-	 * inaccessible after exec.  This allows the code in exec to
-	 * choose to fail when the executable is not mmaped into the
-	 * interpreter and an open file descriptor is not passed to
-	 * the interpreter.  This makes for a better user experience
-	 * than having the interpreter start and then immediately fail
-	 * when it finds the executable is inaccessible.
-	 */
-	// if (bprm->fdpath && get_close_on_exec(fd))
-	// 	bprm->interp_flags |= BINPRM_FLAGS_PATH_INACCESSIBLE;
 
 	// /* Set the unchanging part of bprm->cred */
 	// retval = security_bprm_creds_for_exec(bprm);
@@ -1083,36 +1120,37 @@ bprm_execve(linux_bprm_s *bprm, int fd, filename_s *filename, int flags)
 	if (retval < 0)
 		goto out;
 
+	// sched_mm_cid_after_execve(current);
 	/* execve succeeded */
 	curr->fs->in_exec = 0;
 	curr->in_execve = 0;
 	// rseq_execve(current);
+	// user_events_execve(current);
 	// acct_update_integrals(current);
 	// task_numa_free(current, false);
 	return retval;
 
 out:
-	/*
-	 * If past the point of no return ensure the code never
-	 * returns to the userspace process.  Use an existing fatal
-	 * signal if present otherwise terminate the process with
-	 * SIGSEGV.
-	 */
+	// /*
+	//  * If past the point of no return ensure the code never
+	//  * returns to the userspace process.  Use an existing fatal
+	//  * signal if present otherwise terminate the process with
+	//  * SIGSEGV.
+	//  */
 	// if (bprm->point_of_no_return && !fatal_signal_pending(current))
 	// 	force_fatal_sig(SIGSEGV);
 
-out_unmark:
+	// sched_mm_cid_after_execve(current);
 	current->fs->in_exec = 0;
 	current->in_execve = 0;
 
 	return retval;
 }
 
-// static int do_execveat_common(int fd, struct filename *filename,
-// 		struct user_arg_ptr argv, struct user_arg_ptr envp, int flags)
-static int do_execveat_common(int fd, filename_s *filename,
-	const char *const *argv, const char *const *envp, int flags)
-{
+static int
+do_execveat_common(int fd, filename_s *filename,
+	const char *const *argv, const char *const *envp, int flags) {
+
 	linux_bprm_s *bprm;
 	int retval;
 
@@ -1135,7 +1173,7 @@ static int do_execveat_common(int fd, filename_s *filename,
 	 * further execve() calls fail. */
 	current->flags &= ~PF_NPROC_EXCEEDED;
 
-	bprm = alloc_bprm(fd, filename);
+	bprm = alloc_bprm(fd, filename, flags);
 	if (IS_ERR(bprm)) {
 		retval = PTR_ERR(bprm);
 		goto out_ret;
@@ -1204,11 +1242,15 @@ int kernel_execve(const char *kernel_filename,
 	int fd = AT_FDCWD;
 	int retval;
 
+	/* It is non-sense for kernel threads to call execve */
+	if (WARN_ON_ONCE(current->flags & PF_KTHREAD))
+		return -EINVAL;
+
 	filename = getname_kernel(kernel_filename);
 	if (IS_ERR(filename))
 		return PTR_ERR(filename);
 
-	bprm = alloc_bprm(fd, filename);
+	bprm = alloc_bprm(fd, filename, 0);
 	if (IS_ERR(bprm)) {
 		retval = PTR_ERR(bprm);
 		goto out_ret;
@@ -1254,12 +1296,15 @@ out_ret:
 
 static int
 do_execve(filename_s *filename,
-		const char *const *__argv, const char *const *__envp) {
-	return do_execveat_common(AT_FDCWD, filename, __argv, __envp, 0);
+		const char *const *__argv,
+		const char *const *__envp) {
+	return do_execveat_common(AT_FDCWD,
+			filename, __argv, __envp, 0);
 }
 
 
 MYOS_SYSCALL_DEFINE3(execve, const char *,filename,
-		const char *const __user *, argv, const char *const __user *, envp) {
+		const char *const __user *, argv,
+		const char *const __user *, envp) {
 	return do_execve(getname(filename), argv, envp);
 }

@@ -70,8 +70,7 @@ static linux_bfmt_s elf_format = {
 #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
 static int
-set_brk(unsigned long start, unsigned long end, int prot)
-{
+set_brk(ulong start, ulong end, int prot) {
 	start = ELF_PAGEALIGN(start);
 	end = ELF_PAGEALIGN(end);
 	if (end > start) {
@@ -122,12 +121,11 @@ padzero(ulong elf_bss) {
 #endif
 
 static int
-create_elf_tables(linux_bprm_s *bprm,
-		const elfhdr_t *exec, unsigned long interp_load_addr,
-		unsigned long e_entry, unsigned long phdr_addr)
-{
+create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
+		ulong interp_load_addr, ulong e_entry, ulong phdr_addr) {
+
 	mm_s *mm = current->mm;
-	unsigned long p = bprm->p;
+	ulong p = bprm->p;
 	int argc = bprm->argc;
 	int envc = bprm->envc;
 	elf_addr_t __user *sp = (void *)p;
@@ -317,13 +315,13 @@ create_elf_tables(linux_bprm_s *bprm,
 }
 
 
-static unsigned long
-elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
-		int prot, int type, unsigned long total_size)
-{
-	unsigned long map_addr;
-	unsigned long size = eppnt->p_filesz + ELF_PAGEOFFSET(eppnt->p_vaddr);
-	unsigned long off = eppnt->p_offset - ELF_PAGEOFFSET(eppnt->p_vaddr);
+static ulong
+elf_map(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
+		int prot, int type, ulong total_size) {
+
+	ulong map_addr;
+	ulong size = eppnt->p_filesz + ELF_PAGEOFFSET(eppnt->p_vaddr);
+	ulong off = eppnt->p_offset - ELF_PAGEOFFSET(eppnt->p_vaddr);
 	addr = ELF_PAGESTART(addr);
 	size = ELF_PAGEALIGN(size);
 
@@ -356,9 +354,8 @@ elf_map(file_s *filep, unsigned long addr, const elf_phdr_t *eppnt,
 	return(map_addr);
 }
 
-static unsigned long
-total_mapping_size(const elf_phdr_t *cmds, int nr)
-{
+static ulong
+total_mapping_size(const elf_phdr_t *cmds, int nr) {
 	int i, first_idx = -1, last_idx = -1;
 
 	for (i = 0; i < nr; i++) {
@@ -376,8 +373,7 @@ total_mapping_size(const elf_phdr_t *cmds, int nr)
 }
 
 static int
-elf_read(file_s *file, void *buf, size_t len, loff_t pos)
-{
+elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
 	ssize_t rv;
 
 	rv = kernel_read(file, buf, len, &pos);
@@ -398,12 +394,11 @@ elf_read(file_s *file, void *buf, size_t len, loff_t pos)
  * responsible for freeing the allocated data. Returns an ERR_PTR upon failure.
  */
 static elf_phdr_t
-*load_elf_phdrs(const elfhdr_t *elf_ex, file_s *elf_file)
-{
-	elf_phdr_t		*elf_phdata = NULL;
-	int				retval,
-					err = -1;
-	unsigned int	size;
+*load_elf_phdrs(const elfhdr_t *elf_ex, file_s *elf_file) {
+	elf_phdr_t	*elf_phdata = NULL;
+	int			retval,
+				err = -1;
+	uint		size;
 
 	/*
 	 * If the size of this structure has changed, then punt, since
@@ -443,7 +438,6 @@ out:
 static inline int
 make_prot(u32 p_flags, bool has_interp, bool is_interp) {
 	int prot = 0;
-
 	if (p_flags & PF_R)
 		prot |= PROT_READ;
 	if (p_flags & PF_W)
@@ -456,36 +450,36 @@ make_prot(u32 p_flags, bool has_interp, bool is_interp) {
 }
 
 
-static int load_elf_binary(linux_bprm_s *bprm)
-{
-	file_s			*interpreter = NULL; /* to shut gcc up */
-	unsigned long	load_addr,
-					load_bias = 0,
-					phdr_addr = 0;
-	int				load_addr_set = 0;
-	unsigned long	error;
-	elf_phdr_t		*elf_ppnt,
-					*elf_phdata,
-					*interp_elf_phdata = NULL;
-	elf_phdr_t		*elf_property_phdata = NULL;
-	unsigned long	elf_bss,
-					elf_brk;
-	int				bss_prot = 0;
-	int				retval, i;
-	unsigned long	elf_entry;
-	unsigned long	e_entry;
-	unsigned long	interp_load_addr = 0;
-	unsigned long	start_code,
-					end_code,
-					start_data,
-					end_data;
-	unsigned long	reloc_func_desc __maybe_unused = 0;
-	int				executable_stack = EXSTACK_DEFAULT;
-	elfhdr_t		*elf_ex = (elfhdr_t *)bprm->buf;
-	elfhdr_t		*interp_elf_ex = NULL;
+static int
+load_elf_binary(linux_bprm_s *bprm) {
+	file_s		*interpreter = NULL; /* to shut gcc up */
+	ulong		load_addr,
+				load_bias = 0,
+				phdr_addr = 0;
+	int			load_addr_set = 0;
+	ulong		error;
+	elf_phdr_t	*elf_ppnt,
+				*elf_phdata,
+				*interp_elf_phdata = NULL;
+	elf_phdr_t	*elf_property_phdata = NULL;
+	ulong		elf_bss,
+				elf_brk;
+	int			bss_prot = 0;
+	int			retval, i;
+	ulong		elf_entry;
+	ulong		e_entry;
+	ulong		interp_load_addr = 0;
+	ulong		start_code,
+				end_code,
+				start_data,
+				end_data;
+	ulong		reloc_func_desc __maybe_unused = 0;
+	int			executable_stack = EXSTACK_DEFAULT;
+	elfhdr_t	*elf_ex = (elfhdr_t *)bprm->buf;
+	elfhdr_t	*interp_elf_ex = NULL;
 	// struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
-	mm_s			*mm;
-	pt_regs_s		*regs;
+	mm_s		*mm;
+	pt_regs_s	*regs;
 
 	retval = -ENOEXEC;
 	/* First of all, some simple consistency checks */
@@ -498,8 +492,8 @@ static int load_elf_binary(linux_bprm_s *bprm)
 		goto out;
 	// if (elf_check_fdpic(elf_ex))
 	// 	goto out;
-	// if (!bprm->file->f_op->mmapload_elf_binary)
-	// 	goto out;
+	if (!bprm->file->f_op->mmap)
+		goto out;
 
 	elf_phdata = load_elf_phdrs(elf_ex, bprm->file);
 	if (!elf_phdata)
@@ -570,23 +564,24 @@ out_free_interp:
 		goto out_free_ph;
 	}
 
-	// elf_ppnt = elf_phdata;
-	// for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++)
-	// 	switch (elf_ppnt->p_type) {
-	// 	case PT_GNU_STACK:
-	// 		if (elf_ppnt->p_flags & PF_X)
-	// 			executable_stack = EXSTACK_ENABLE_X;
-	// 		else
-	// 			executable_stack = EXSTACK_DISABLE_X;
-	// 		break;
+	elf_ppnt = elf_phdata;
+	for (i = 0; i < elf_ex->e_phnum; i++, elf_ppnt++) {
+		switch (elf_ppnt->p_type) {
+		case PT_GNU_STACK:
+			if (elf_ppnt->p_flags & PF_X)
+				executable_stack = EXSTACK_ENABLE_X;
+			else
+				executable_stack = EXSTACK_DISABLE_X;
+			break;
 
-	// 	case PT_LOPROC ... PT_HIPROC:
-	// 		retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
-	// 				bprm->file, false, NULL);
-	// 		if (retval)
-	// 			goto out_free_dentry;
-	// 		break;
-	// 	}
+		// case PT_LOPROC ... PT_HIPROC:
+		// 	retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
+		// 				bprm->file, false, &arch_state);
+		// 	if (retval)
+		// 		goto out_free_dentry;
+		// 	break;
+		}
+	}
 
 	/* Some simple consistency checks for the interpreter */
 	if (interpreter) {
@@ -677,15 +672,15 @@ out_free_interp:
 	for(i = 0, elf_ppnt = elf_phdata;
 		i < elf_ex->e_phnum; i++, elf_ppnt++) {
 		int elf_prot, elf_flags;
-		unsigned long k, vaddr;
-		unsigned long total_size = 0;
-		unsigned long alignment;
+		ulong k, vaddr;
+		ulong total_size = 0;
+		ulong alignment;
 
 		if (elf_ppnt->p_type != PT_LOAD)
 			continue;
 
 		if (elf_brk > elf_bss) {
-			unsigned long nbyte;
+			ulong nbyte;
 
 			// /* There was a PT_LOAD segment with p_memsz > p_filesz
 			//    before this one. Map anonymous pages, if needed,
@@ -1015,8 +1010,8 @@ int __init init_elf_binfmt(void)
 	return 0;
 }
 
-static void __exit exit_elf_binfmt(void)
-{
+static void __exit
+exit_elf_binfmt(void) {
 	/* Remove the COFF and ELF loaders. */
 	unregister_binfmt(&elf_format);
 }

@@ -77,7 +77,7 @@ void get_kthread_comm(char *buf, size_t buf_size, task_s *tsk)
 	kthread_s *kthread = to_kthread(tsk);
 
 	if (!kthread || !kthread->full_name) {
-		get_task_comm(buf, buf_size, tsk);
+		__get_task_comm(buf, buf_size, tsk);
 		return;
 	}
 
@@ -329,7 +329,7 @@ int kthreadd(void *unused)
 	task_s *tsk = current;
 
 	/* Setup a clean context for our children to inherit. */
-	// set_task_comm(tsk, "kthreadd");
+	// __set_task_comm(tsk, "kthreadd");
 	// ignore_signals(tsk);
 	// set_cpus_allowed_ptr(tsk, housekeeping_cpumask(HK_FLAG_KTHREAD));
 	// set_mems_allowed(node_states[N_MEMORY]);
