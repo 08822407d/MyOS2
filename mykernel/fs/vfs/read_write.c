@@ -148,8 +148,8 @@ ssize_t vfs_read(file_s *file, char __user *buf,
 		return -EBADF;
 	// if (!(file->f_mode & FMODE_CAN_READ))
 	// 	return -EINVAL;
-	if (unlikely(!access_ok(buf, count)))
-		return -EFAULT;
+	// if (unlikely(!access_ok(buf, count)))
+	// 	return -EFAULT;
 
 	ret = rw_verify_area(READ, file, pos, count);
 	if (ret)

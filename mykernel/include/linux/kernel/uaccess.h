@@ -10,108 +10,98 @@
 
 	#include <asm/uaccess.h>
 
-	// #ifdef CONFIG_SET_FS
 	// /*
-	// * Force the uaccess routines to be wired up for actual userspace access,
-	// * overriding any possible set_fs(KERNEL_DS) still lingering around.  Undone
-	// * using force_uaccess_end below.
-	// */
-	// static inline mm_segment_t force_uaccess_begin(void)
-	// {
-	// 	mm_segment_t fs = get_fs();
-
-	// 	set_fs(USER_DS);
-	// 	return fs;
-	// }
-
-	// static inline void force_uaccess_end(mm_segment_t oldfs)
-	// {
-	// 	set_fs(oldfs);
-	// }
-	// #else /* CONFIG_SET_FS */
-	// typedef struct {
-	// 	/* empty dummy */
-	// } mm_segment_t;
-
-	// #ifndef TASK_SIZE_MAX
-	// #define TASK_SIZE_MAX			TASK_SIZE
+	//  * Architectures that support memory tagging (assigning tags to memory regions,
+	//  * embedding these tags into addresses that point to these memory regions, and
+	//  * checking that the memory and the pointer tags match on memory accesses)
+	//  * redefine this macro to strip tags from pointers.
+	//  *
+	//  * Passing down mm_struct allows to define untagging rules on per-process
+	//  * basis.
+	//  *
+	//  * It's defined as noop for architectures that don't support memory tagging.
+	//  */
+	// #ifndef untagged_addr
+	// #define untagged_addr(addr) (addr)
 	// #endif
 
-	// #define uaccess_kernel()		(false)
-	// #define user_addr_max()			(TASK_SIZE_MAX)
-
-	// static inline mm_segment_t force_uaccess_begin(void)
-	// {
-	// 	return (mm_segment_t) { };
-	// }
-
-	// static inline void force_uaccess_end(mm_segment_t oldfs)
-	// {
-	// }
-	// #endif /* CONFIG_SET_FS */
+	// #ifndef untagged_addr_remote
+	// #define untagged_addr_remote(mm, addr)	({		\
+	// 	mmap_assert_locked(mm);				\
+	// 	untagged_addr(addr);				\
+	// })
+	// #endif
 
 	// /*
-	// * Architectures should provide two primitives (raw_copy_{to,from}_user())
-	// * and get rid of their private instances of copy_{to,from}_user() and
-	// * __copy_{to,from}_user{,_inatomic}().
-	// *
-	// * raw_copy_{to,from}_user(to, from, size) should copy up to size bytes and
-	// * return the amount left to copy.  They should assume that access_ok() has
-	// * already been checked (and succeeded); they should *not* zero-pad anything.
-	// * No KASAN or object size checks either - those belong here.
-	// *
-	// * Both of these functions should attempt to copy size bytes starting at from
-	// * into the area starting at to.  They must not fetch or store anything
-	// * outside of those areas.  Return value must be between 0 (everything
-	// * copied successfully) and size (nothing copied).
-	// *
-	// * If raw_copy_{to,from}_user(to, from, size) returns N, size - N bytes starting
-	// * at to must become equal to the bytes fetched from the corresponding area
-	// * starting at from.  All data past to + size - N must be left unmodified.
-	// *
-	// * If copying succeeds, the return value must be 0.  If some data cannot be
-	// * fetched, it is permitted to copy less than had been fetched; the only
-	// * hard requirement is that not storing anything at all (i.e. returning size)
-	// * should happen only when nothing could be copied.  In other words, you don't
-	// * have to squeeze as much as possible - it is allowed, but not necessary.
-	// *
-	// * For raw_copy_from_user() to always points to kernel memory and no faults
-	// * on store should happen.  Interpretation of from is affected by set_fs().
-	// * For raw_copy_to_user() it's the other way round.
-	// *
-	// * Both can be inlined - it's up to architectures whether it wants to bother
-	// * with that.  They should not be used directly; they are used to implement
-	// * the 6 functions (copy_{to,from}_user(), __copy_{to,from}_user_inatomic())
-	// * that are used instead.  Out of those, __... ones are inlined.  Plain
-	// * copy_{to,from}_user() might or might not be inlined.  If you want them
-	// * inlined, have asm/uaccess.h define INLINE_COPY_{TO,FROM}_USER.
-	// *
-	// * NOTE: only copy_from_user() zero-pads the destination in case of short copy.
-	// * Neither __copy_from_user() nor __copy_from_user_inatomic() zero anything
-	// * at all; their callers absolutely must check the return value.
-	// *
-	// * Biarch ones should also provide raw_copy_in_user() - similar to the above,
-	// * but both source and destination are __user pointers (affected by set_fs()
-	// * as usual) and both source and destination can trigger faults.
-	// */
+	//  * Architectures should provide two primitives (raw_copy_{to,from}_user())
+	//  * and get rid of their private instances of copy_{to,from}_user() and
+	//  * __copy_{to,from}_user{,_inatomic}().
+	//  *
+	//  * raw_copy_{to,from}_user(to, from, size) should copy up to size bytes and
+	//  * return the amount left to copy.  They should assume that access_ok() has
+	//  * already been checked (and succeeded); they should *not* zero-pad anything.
+	//  * No KASAN or object size checks either - those belong here.
+	//  *
+	//  * Both of these functions should attempt to copy size bytes starting at from
+	//  * into the area starting at to.  They must not fetch or store anything
+	//  * outside of those areas.  Return value must be between 0 (everything
+	//  * copied successfully) and size (nothing copied).
+	//  *
+	//  * If raw_copy_{to,from}_user(to, from, size) returns N, size - N bytes starting
+	//  * at to must become equal to the bytes fetched from the corresponding area
+	//  * starting at from.  All data past to + size - N must be left unmodified.
+	//  *
+	//  * If copying succeeds, the return value must be 0.  If some data cannot be
+	//  * fetched, it is permitted to copy less than had been fetched; the only
+	//  * hard requirement is that not storing anything at all (i.e. returning size)
+	//  * should happen only when nothing could be copied.  In other words, you don't
+	//  * have to squeeze as much as possible - it is allowed, but not necessary.
+	//  *
+	//  * For raw_copy_from_user() to always points to kernel memory and no faults
+	//  * on store should happen.  Interpretation of from is affected by set_fs().
+	//  * For raw_copy_to_user() it's the other way round.
+	//  *
+	//  * Both can be inlined - it's up to architectures whether it wants to bother
+	//  * with that.  They should not be used directly; they are used to implement
+	//  * the 6 functions (copy_{to,from}_user(), __copy_{to,from}_user_inatomic())
+	//  * that are used instead.  Out of those, __... ones are inlined.  Plain
+	//  * copy_{to,from}_user() might or might not be inlined.  If you want them
+	//  * inlined, have asm/uaccess.h define INLINE_COPY_{TO,FROM}_USER.
+	//  *
+	//  * NOTE: only copy_from_user() zero-pads the destination in case of short copy.
+	//  * Neither __copy_from_user() nor __copy_from_user_inatomic() zero anything
+	//  * at all; their callers absolutely must check the return value.
+	//  *
+	//  * Biarch ones should also provide raw_copy_in_user() - similar to the above,
+	//  * but both source and destination are __user pointers (affected by set_fs()
+	//  * as usual) and both source and destination can trigger faults.
+	//  */
 
 	// static __always_inline __must_check unsigned long
 	// __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
 	// {
-	// 	instrument_copy_from_user(to, from, n);
+	// 	unsigned long res;
+
+	// 	instrument_copy_from_user_before(to, from, n);
 	// 	check_object_size(to, n, false);
-	// 	return raw_copy_from_user(to, from, n);
+	// 	res = raw_copy_from_user(to, from, n);
+	// 	instrument_copy_from_user_after(to, from, n, res);
+	// 	return res;
 	// }
 
 	// static __always_inline __must_check unsigned long
 	// __copy_from_user(void *to, const void __user *from, unsigned long n)
 	// {
+	// 	unsigned long res;
+
 	// 	might_fault();
+	// 	instrument_copy_from_user_before(to, from, n);
 	// 	if (should_fail_usercopy())
 	// 		return n;
-	// 	instrument_copy_from_user(to, from, n);
 	// 	check_object_size(to, n, false);
-	// 	return raw_copy_from_user(to, from, n);
+	// 	res = raw_copy_from_user(to, from, n);
+	// 	instrument_copy_from_user_after(to, from, n, res);
+	// 	return res;
 	// }
 
 	// /**
@@ -148,28 +138,39 @@
 	// 	return raw_copy_to_user(to, from, n);
 	// }
 
-	// #ifdef INLINE_COPY_FROM_USER
+	// /*
+	//  * Architectures that #define INLINE_COPY_TO_USER use this function
+	//  * directly in the normal copy_to/from_user(), the other ones go
+	//  * through an extern _copy_to/from_user(), which expands the same code
+	//  * here.
+	//  *
+	//  * Rust code always uses the extern definition.
+	//  */
 	// static inline __must_check unsigned long
-	// _copy_from_user(void *to, const void __user *from, unsigned long n)
+	// _inline_copy_from_user(void *to, const void __user *from, unsigned long n)
 	// {
 	// 	unsigned long res = n;
 	// 	might_fault();
 	// 	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
-	// 		instrument_copy_from_user(to, from, n);
+	// 		/*
+	// 		 * Ensure that bad access_ok() speculation will not
+	// 		 * lead to nasty side effects *after* the copy is
+	// 		 * finished:
+	// 		 */
+	// 		barrier_nospec();
+	// 		instrument_copy_from_user_before(to, from, n);
 	// 		res = raw_copy_from_user(to, from, n);
+	// 		instrument_copy_from_user_after(to, from, n, res);
 	// 	}
 	// 	if (unlikely(res))
 	// 		memset(to + (n - res), 0, res);
 	// 	return res;
 	// }
-	// #else
 	// extern __must_check unsigned long
 	// _copy_from_user(void *, const void __user *, unsigned long);
-	// #endif
 
-	// #ifdef INLINE_COPY_TO_USER
 	// static inline __must_check unsigned long
-	// _copy_to_user(void __user *to, const void *from, unsigned long n)
+	// _inline_copy_to_user(void __user *to, const void *from, unsigned long n)
 	// {
 	// 	might_fault();
 	// 	if (should_fail_usercopy())
@@ -180,32 +181,39 @@
 	// 	}
 	// 	return n;
 	// }
-	// #else
 	// extern __must_check unsigned long
 	// _copy_to_user(void __user *, const void *, unsigned long);
-	// #endif
 
 	// static __always_inline unsigned long __must_check
 	// copy_from_user(void *to, const void __user *from, unsigned long n)
 	// {
-	// 	if (likely(check_copy_size(to, n, false)))
-	// 		n = _copy_from_user(to, from, n);
-	// 	return n;
+	// 	if (!check_copy_size(to, n, false))
+	// 		return n;
+	// #ifdef INLINE_COPY_FROM_USER
+	// 	return _inline_copy_from_user(to, from, n);
+	// #else
+	// 	return _copy_from_user(to, from, n);
+	// #endif
 	// }
 
 	// static __always_inline unsigned long __must_check
 	// copy_to_user(void __user *to, const void *from, unsigned long n)
 	// {
-	// 	if (likely(check_copy_size(from, n, true)))
-	// 		n = _copy_to_user(to, from, n);
-	// 	return n;
+	// 	if (!check_copy_size(from, n, true))
+	// 		return n;
+
+	// #ifdef INLINE_COPY_TO_USER
+	// 	return _inline_copy_to_user(to, from, n);
+	// #else
+	// 	return _copy_to_user(to, from, n);
+	// #endif
 	// }
 
 	// #ifndef copy_mc_to_kernel
 	// /*
-	// * Without arch opt-in this generic copy_mc_to_kernel() will not handle
-	// * #MC (or arch equivalent) during source read.
-	// */
+	//  * Without arch opt-in this generic copy_mc_to_kernel() will not handle
+	//  * #MC (or arch equivalent) during source read.
+	//  */
 	// static inline unsigned long __must_check
 	// copy_mc_to_kernel(void *dst, const void *src, size_t cnt)
 	// {
@@ -225,57 +233,79 @@
 	// }
 
 	// /*
-	// * These routines enable/disable the pagefault handler. If disabled, it will
-	// * not take any locks and go straight to the fixup table.
-	// *
-	// * User access methods will not sleep when called from a pagefault_disabled()
-	// * environment.
-	// */
+	//  * These routines enable/disable the pagefault handler. If disabled, it will
+	//  * not take any locks and go straight to the fixup table.
+	//  *
+	//  * User access methods will not sleep when called from a pagefault_disabled()
+	//  * environment.
+	//  */
 	// static inline void pagefault_disable(void)
 	// {
 	// 	pagefault_disabled_inc();
 	// 	/*
-	// 	* make sure to have issued the store before a pagefault
-	// 	* can hit.
-	// 	*/
+	// 	 * make sure to have issued the store before a pagefault
+	// 	 * can hit.
+	// 	 */
 	// 	barrier();
 	// }
 
 	// static inline void pagefault_enable(void)
 	// {
 	// 	/*
-	// 	* make sure to issue those last loads/stores before enabling
-	// 	* the pagefault handler again.
-	// 	*/
+	// 	 * make sure to issue those last loads/stores before enabling
+	// 	 * the pagefault handler again.
+	// 	 */
 	// 	barrier();
 	// 	pagefault_disabled_dec();
 	// }
 
 	// /*
-	// * Is the pagefault handler disabled? If so, user access methods will not sleep.
-	// */
+	//  * Is the pagefault handler disabled? If so, user access methods will not sleep.
+	//  */
 	// static inline bool pagefault_disabled(void)
 	// {
 	// 	return current->pagefault_disabled != 0;
 	// }
 
 	// /*
-	// * The pagefault handler is in general disabled by pagefault_disable() or
-	// * when in irq context (via in_atomic()).
-	// *
-	// * This function should only be used by the fault handlers. Other users should
-	// * stick to pagefault_disabled().
-	// * Please NEVER use preempt_disable() to disable the fault handler. With
-	// * !CONFIG_PREEMPT_COUNT, this is like a NOP. So the handler won't be disabled.
-	// * in_atomic() will report different values based on !CONFIG_PREEMPT_COUNT.
-	// */
+	//  * The pagefault handler is in general disabled by pagefault_disable() or
+	//  * when in irq context (via in_atomic()).
+	//  *
+	//  * This function should only be used by the fault handlers. Other users should
+	//  * stick to pagefault_disabled().
+	//  * Please NEVER use preempt_disable() to disable the fault handler. With
+	//  * !CONFIG_PREEMPT_COUNT, this is like a NOP. So the handler won't be disabled.
+	//  * in_atomic() will report different values based on !CONFIG_PREEMPT_COUNT.
+	//  */
 	// #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
+
+	// #ifndef CONFIG_ARCH_HAS_SUBPAGE_FAULTS
+
+	// /**
+	//  * probe_subpage_writeable: probe the user range for write faults at sub-page
+	//  *			    granularity (e.g. arm64 MTE)
+	//  * @uaddr: start of address range
+	//  * @size: size of address range
+	//  *
+	//  * Returns 0 on success, the number of bytes not probed on fault.
+	//  *
+	//  * It is expected that the caller checked for the write permission of each
+	//  * page in the range either by put_user() or GUP. The architecture port can
+	//  * implement a more efficient get_user() probing if the same sub-page faults
+	//  * are triggered by either a read or a write.
+	//  */
+	// static inline size_t probe_subpage_writeable(char __user *uaddr, size_t size)
+	// {
+	// 	return 0;
+	// }
+
+	// #endif /* CONFIG_ARCH_HAS_SUBPAGE_FAULTS */
 
 	// #ifndef ARCH_HAS_NOCACHE_UACCESS
 
 	// static inline __must_check unsigned long
 	// __copy_from_user_inatomic_nocache(void *to, const void __user *from,
-	// 				unsigned long n)
+	// 				  unsigned long n)
 	// {
 	// 	return __copy_from_user_inatomic(to, from, n);
 	// }
@@ -333,10 +363,14 @@
 	//  */
 	// static __always_inline __must_check int
 	// copy_struct_from_user(void *dst, size_t ksize, const void __user *src,
-	// 			size_t usize)
+	// 		      size_t usize)
 	// {
 	// 	size_t size = min(ksize, usize);
 	// 	size_t rest = max(ksize, usize) - size;
+
+	// 	/* Double check if ksize is larger than a known object size. */
+	// 	if (WARN_ON_ONCE(ksize > __builtin_object_size(dst, 1)))
+	// 		return -E2BIG;
 
 	// 	/* Deal with trailing bytes. */
 	// 	if (usize < ksize) {
@@ -367,6 +401,25 @@
 	// long strncpy_from_user_nofault(char *dst, const void __user *unsafe_addr,
 	// 		long count);
 	// long strnlen_user_nofault(const void __user *unsafe_addr, long count);
+
+	// #ifndef __get_kernel_nofault
+	// #define __get_kernel_nofault(dst, src, type, label)	\
+	// do {							\
+	// 	type __user *p = (type __force __user *)(src);	\
+	// 	type data;					\
+	// 	if (__get_user(data, p))			\
+	// 		goto label;				\
+	// 	*(type *)dst = data;				\
+	// } while (0)
+
+	// #define __put_kernel_nofault(dst, src, type, label)	\
+	// do {							\
+	// 	type __user *p = (type __force __user *)(dst);	\
+	// 	type data = *(type *)src;			\
+	// 	if (__put_user(data, p))			\
+	// 		goto label;				\
+	// } while (0)
+	// #endif
 
 	// /**
 	//  * get_kernel_nofault(): safely attempt to read from a location
@@ -401,11 +454,9 @@
 	// #endif
 
 	// #ifdef CONFIG_HARDENED_USERCOPY
-	// void usercopy_warn(const char *name, const char *detail, bool to_user,
-	// 		unsigned long offset, unsigned long len);
 	// void __noreturn usercopy_abort(const char *name, const char *detail,
-	// 				bool to_user, unsigned long offset,
-	// 				unsigned long len);
+	// 			       bool to_user, unsigned long offset,
+	// 			       unsigned long len);
 	// #endif
 
 #endif		/* __LINUX_UACCESS_H__ */
