@@ -110,6 +110,10 @@ put_arg_page(page_s *page) {
 	put_page(page);
 }
 
+static void
+free_arg_pages(linux_bprm_s *bprm) {
+}
+
 static int
 __bprm_mm_init(linux_bprm_s *bprm) {
 	int err;
@@ -483,11 +487,11 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	ulong stack_expand;
 	ulong rlim_stack;
 
-	// stack_top = arch_align_stack(stack_top);
-	stack_top = PAGE_ALIGN(stack_top);
+	stack_top = arch_align_stack(stack_top);
 
 	// if (unlikely(stack_top < mmap_min_addr) ||
-	//     unlikely(vma->vm_end - vma->vm_start >= stack_top - mmap_min_addr))
+	// 		unlikely(vma->vm_end - vma->vm_start >=
+	// 			stack_top - mmap_min_addr))
 	// 	return -ENOMEM;
 
 	stack_shift = vma->vm_end - stack_top;
@@ -542,7 +546,7 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	// /* mprotect_fixup is overkill to remove the temporary stack flags */
 	// vm_flags_clear(vma, VM_STACK_INCOMPLETE_SETUP);
 
-	stack_expand = 131072UL; /* randomly 32*4k (or 2*64k) pages */
+	stack_expand = 32 * PAGE_SIZE; /* randomly 32*4k (or 2*64k) pages */
 	stack_size = vma->vm_end - vma->vm_start;
 	// /*
 	//  * Align this down to a page boundary as expand_stack
@@ -596,7 +600,7 @@ static file_s
 	//  */
 	// err = -EACCES;
 	// if (WARN_ON_ONCE(!S_ISREG(file_inode(file)->i_mode) ||
-	// 		 path_noexec(&file->f_path)))
+	// 		path_noexec(&file->f_path)))
 	// 	goto exit;
 
 out:
@@ -643,24 +647,24 @@ exec_mmap(mm_s *mm) {
 	/* Notify parent that we're no longer interested in the old VM */
 	tsk = current;
 	old_mm = current->mm;
-	// exec_mm_release(tsk, old_mm);
+	exec_mm_release(tsk, old_mm);
 
 	// ret = down_write_killable(&tsk->signal->exec_update_lock);
 	// if (ret)
 	// 	return ret;
 
-	// if (old_mm) {
-	// 	/*
-	// 	 * If there is a pending fatal signal perhaps a signal
-	// 	 * whose default action is to create a coredump get
-	// 	 * out and die instead of going through with the exec.
-	// 	 */
-	// 	ret = mmap_read_lock_killable(old_mm);
-	// 	if (ret) {
-	// 		up_write(&tsk->signal->exec_update_lock);
-	// 		return ret;
-	// 	}
-	// }
+	if (old_mm) {
+		/*
+		 * If there is a pending fatal signal perhaps a signal
+		 * whose default action is to create a coredump get
+		 * out and die instead of going through with the exec.
+		 */
+		ret = mmap_read_lock_killable(old_mm);
+		// if (ret) {
+		// 	up_write(&tsk->signal->exec_update_lock);
+		// 	return ret;
+		// }
+	}
 
 	task_lock(tsk);
 	// membarrier_exec_mmap(mm);
@@ -681,13 +685,13 @@ exec_mmap(mm_s *mm) {
 	// 	local_irq_enable();
 	activate_mm(active_mm, mm);
 	// if (IS_ENABLED(CONFIG_ARCH_WANT_IRQS_OFF_ACTIVATE_MM))
-	// 	local_irq_enable();
+		local_irq_enable();
 	// tsk->mm->vmacache_seqnum = 0;
 	// vmacache_flush(tsk);
 	task_unlock(tsk);
 	if (old_mm) {
-		// mmap_read_unlock(old_mm);
-		// BUG_ON(active_mm != old_mm);
+		mmap_read_unlock(old_mm);
+		BUG_ON(active_mm != old_mm);
 		// setmax_mm_hiwater_rss(&tsk->signal->maxrss, old_mm);
 		// mm_update_next_owner(old_mm);
 		mmput(old_mm);
@@ -816,20 +820,20 @@ de_thread(task_s *tsk) {
 	// sig->group_exec_task = NULL;
 	// sig->notify_count = 0;
 
-// no_thread_group:
+no_thread_group:
 	// /* we have changed execution domain */
 	// tsk->exit_signal = SIGCHLD;
 
 	// BUG_ON(!thread_group_leader(tsk));
 	return 0;
 
-// killed:
+killed:
 	// /* protects against exit_notify() and __exit_signal() */
 	// read_lock(&tasklist_lock);
 	// sig->group_exec_task = NULL;
 	// sig->notify_count = 0;
 	// read_unlock(&tasklist_lock);
-	// return -EAGAIN;
+	return -EAGAIN;
 }
 
 
@@ -1077,13 +1081,21 @@ void finalize_exec(linux_bprm_s *bprm)
 }
 EXPORT_SYMBOL(finalize_exec);
 
+
+/* Matches do_open_execat() */
+static void
+do_close_execat(file_s *file) {
+	if (file)
+		fput(file);
+}
+
 static void
 free_bprm(linux_bprm_s *bprm) {
 	if (bprm->mm) {
 		// acct_arg_size(bprm, 0);
 		mmput(bprm->mm);
 	}
-	// free_arg_pages(bprm);
+	free_arg_pages(bprm);
 	// if (bprm->cred) {
 	// 	mutex_unlock(&current->signal->cred_guard_mutex);
 	// 	abort_creds(bprm->cred);
@@ -1092,7 +1104,7 @@ free_bprm(linux_bprm_s *bprm) {
 		// allow_write_access(bprm->file);
 		fput(bprm->file);
 	}
-	// do_close_execat(bprm->file);
+	do_close_execat(bprm->file);
 	if (bprm->executable)
 		fput(bprm->executable);
 	/* If a binfmt changed the interp, free it. */
@@ -1116,7 +1128,7 @@ static linux_bprm_s
 
 	bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
 	if (bprm == NULL) {
-		// do_close_execat(file);
+		do_close_execat(file);
 		return ERR_PTR(-ENOMEM);
 	}
 

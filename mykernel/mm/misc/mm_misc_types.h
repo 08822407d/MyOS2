@@ -5,7 +5,7 @@
 
 
 	typedef struct mm_struct {
-		size_t				entry_point;
+		// size_t				entry_point;
 		struct {
 			List_hdr_s		mm_mt;
 			// u64 vmacache_seqnum; /* per-thread vmacache */

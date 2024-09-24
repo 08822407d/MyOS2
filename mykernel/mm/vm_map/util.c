@@ -36,6 +36,55 @@ void __vma_unlink_from_list(mm_s *mm, vma_s *vma)
 }
 
 
+/* MyOS2 doesn't support randomize_stack_top */
+ulong randomize_stack_top(ulong stack_top)
+{
+	// ulong random_variable = 0;
+
+	// if (current->flags & PF_RANDOMIZE) {
+	// 	random_variable = get_random_long();
+	// 	random_variable &= STACK_RND_MASK;
+	// 	random_variable <<= PAGE_SHIFT;
+	// }
+
+	// return PAGE_ALIGN(stack_top) - random_variable;
+
+	return stack_top;
+}
+
+/**
+ * randomize_page - Generate a random, page aligned address
+ * @start:	The smallest acceptable address the caller will take.
+ * @range:	The size of the area, starting at @start, within which the
+ *		random address must fall.
+ *
+ * If @start + @range would overflow, @range is capped.
+ *
+ * NOTE: Historical use of randomize_range, which this replaces, presumed that
+ * @start was already page aligned.  We now align it regardless.
+ *
+ * Return: A page aligned address within [start, start + range).  On error,
+ * @start is returned.
+ */
+ulong randomize_page(ulong start, ulong range)
+{
+	// if (!PAGE_ALIGNED(start)) {
+	// 	range -= PAGE_ALIGN(start) - start;
+	// 	start = PAGE_ALIGN(start);
+	// }
+
+	// if (start > ULONG_MAX - range)
+	// 	range = ULONG_MAX - start;
+
+	// range >>= PAGE_SHIFT;
+
+	// if (range == 0)
+	// 	return start;
+
+	// return start + (get_random_long() % range << PAGE_SHIFT);
+}
+
+
 ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
 		ulong prot, ulong flag, ulong pgoff)
 {

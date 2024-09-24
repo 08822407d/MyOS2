@@ -46,8 +46,9 @@
 
 	// /* These take the mm semaphore themselves */
 	extern int __must_check vm_brk_flags(ulong, ulong, ulong);
-	extern int vm_munmap(ulong, size_t);
-	int __vm_munmap(ulong start, size_t len);
+	// extern int vm_munmap(ulong, size_t);
+	extern int __vm_munmap(ulong start, size_t len);
+	#define vm_munmap __vm_munmap
 	extern ulong __must_check vm_mmap(file_s *,
 			ulong, ulong, ulong, ulong, ulong);
 
@@ -66,6 +67,7 @@
 	extern ulong  __must_check vm_mmap_pgoff(file_s *,
 			ulong, ulong, ulong, ulong, ulong);
 
+	extern ulong randomize_stack_top(ulong stack_top);
 
 	int do_brk_flags(ulong addr, ulong len, ulong flags);
 

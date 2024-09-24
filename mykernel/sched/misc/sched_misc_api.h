@@ -12,6 +12,7 @@
 	extern void fork_init(void);
 	extern void release_task(task_s * p);
 	extern int copy_thread(task_s *p, const kclone_args_s *args);
+	extern ulong arch_align_stack(ulong sp);
 
 	extern void flush_thread(void);
 	extern void exit_thread(task_s *tsk);

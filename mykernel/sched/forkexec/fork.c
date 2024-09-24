@@ -577,62 +577,63 @@ mm_s *get_task_mm(task_s *task)
 // 	return killed;
 // }
 
-// /* Please note the differences between mmput and mm_release.
-//  * mmput is called whenever we stop holding onto a mm_struct,
-//  * error success whatever.
-//  *
-//  * mm_release is called after a mm_struct has been removed
-//  * from the current process.
-//  *
-//  * This difference is important for error handling, when we
-//  * only half set up a mm_struct for a new process and need to restore
-//  * the old one.  Because we mmput the new mm_struct before
-//  * restoring the old one. . .
-//  * Eric Biederman 10 January 1998
-//  */
-// static void mm_release(task_s *tsk, mm_s *mm) {
-// 	uprobe_free_utask(tsk);
+/* Please note the differences between mmput and mm_release.
+ * mmput is called whenever we stop holding onto a mm_struct,
+ * error success whatever.
+ *
+ * mm_release is called after a mm_struct has been removed
+ * from the current process.
+ *
+ * This difference is important for error handling, when we
+ * only half set up a mm_struct for a new process and need to restore
+ * the old one.  Because we mmput the new mm_struct before
+ * restoring the old one. . .
+ * Eric Biederman 10 January 1998
+ */
+static void
+mm_release(task_s *tsk, mm_s *mm) {
+	// uprobe_free_utask(tsk);
 
-// 	/* Get rid of any cached register state */
-// 	deactivate_mm(tsk, mm);
+	// /* Get rid of any cached register state */
+	// deactivate_mm(tsk, mm);
 
-// 	/*
-// 	 * Signal userspace if we're not exiting with a core dump
-// 	 * because we want to leave the value intact for debugging
-// 	 * purposes.
-// 	 */
-// 	if (tsk->clear_child_tid) {
-// 		if (atomic_read(&mm->mm_users) > 1) {
-// 			/*
-// 			 * We don't check the error code - if userspace has
-// 			 * not set up a proper pointer then tough luck.
-// 			 */
-// 			put_user(0, tsk->clear_child_tid);
-// 			do_futex(tsk->clear_child_tid, FUTEX_WAKE,
-// 					1, NULL, NULL, 0, 0);
-// 		}
-// 		tsk->clear_child_tid = NULL;
-// 	}
+	// /*
+	//  * Signal userspace if we're not exiting with a core dump
+	//  * because we want to leave the value intact for debugging
+	//  * purposes.
+	//  */
+	// if (tsk->clear_child_tid) {
+	// 	if (atomic_read(&mm->mm_users) > 1) {
+	// 		/*
+	// 		 * We don't check the error code - if userspace has
+	// 		 * not set up a proper pointer then tough luck.
+	// 		 */
+	// 		put_user(0, tsk->clear_child_tid);
+	// 		do_futex(tsk->clear_child_tid, FUTEX_WAKE,
+	// 				1, NULL, NULL, 0, 0);
+	// 	}
+	// 	tsk->clear_child_tid = NULL;
+	// }
 
-// 	/*
-// 	 * All done, finally we can wake up parent and return this mm to him.
-// 	 * Also kthread_stop() uses this completion for synchronization.
-// 	 */
-// 	if (tsk->vfork_done)
-// 		complete_vfork_done(tsk);
-// }
+	// /*
+	//  * All done, finally we can wake up parent and return this mm to him.
+	//  * Also kthread_stop() uses this completion for synchronization.
+	//  */
+	// if (tsk->vfork_done)
+	// 	complete_vfork_done(tsk);
+}
 
-// void exit_mm_release(task_s *tsk, mm_s *mm)
-// {
-// 	futex_exit_release(tsk);
-// 	mm_release(tsk, mm);
-// }
+void exit_mm_release(task_s *tsk, mm_s *mm)
+{
+	// futex_exit_release(tsk);
+	mm_release(tsk, mm);
+}
 
-// void exec_mm_release(task_s *tsk, mm_s *mm)
-// {
-// 	futex_exec_release(tsk);
-// 	mm_release(tsk, mm);
-// }
+void exec_mm_release(task_s *tsk, mm_s *mm)
+{
+	// futex_exec_release(tsk);
+	mm_release(tsk, mm);
+}
 
 /**
  * dup_mm() - duplicates an existing mm structure

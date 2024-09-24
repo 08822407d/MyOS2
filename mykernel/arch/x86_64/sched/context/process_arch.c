@@ -161,3 +161,13 @@ int copy_thread(task_s *p, const kclone_args_s *args)
 
 	return ret;
 }
+
+
+
+ulong arch_align_stack(ulong sp)
+{
+	// if (!(current->personality & ADDR_NO_RANDOMIZE) &&
+	// 		randomize_va_space)
+	// 	sp -= get_random_u32_below(8192);
+	return sp & ~0xf;
+}

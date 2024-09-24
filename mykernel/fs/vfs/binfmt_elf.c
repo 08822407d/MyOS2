@@ -71,24 +71,6 @@ static linux_bfmt_s elf_format = {
 	// .min_coredump	= ELF_EXEC_PAGESIZE,
 };
 
-static int
-set_brk(ulong start, ulong end, int prot) {
-	start = ELF_PAGEALIGN(start);
-	end = ELF_PAGEALIGN(end);
-	if (end > start) {
-		/*
-		 * Map the last of the bss segment.
-		 * If the header is requesting these pages to be
-		 * executable, honour that (ppc32 needs this).
-		 */
-		int error = vm_brk_flags(start, end - start,
-				prot & PROT_EXEC ? VM_EXEC : 0);
-		if (error)
-			return error;
-	}
-	return 0;
-}
-
 #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
 /* We need to explicitly zero any fractional pages
@@ -110,9 +92,11 @@ padzero(ulong elf_bss) {
 	return 0;
 }
 
-
-#define STACK_ROUND(sp, items) \
+#define STACK_ADD(sp, items)	\
+			((elf_addr_t __user *)(sp) - (items))
+#define STACK_ROUND(sp, items)	\
 			(((unsigned long) (sp - items)) &~ 15UL)
+#define STACK_ALLOC(sp, len) (sp -= len)
 
 #ifndef ELF_BASE_PLATFORM
 /*
@@ -132,26 +116,25 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	int argc = bprm->argc;
 	int envc = bprm->envc;
 	elf_addr_t __user *sp = (void *)p;
-	// elf_addr_t __user *u_platform;
-	// elf_addr_t __user *u_base_platform;
-	// elf_addr_t __user *u_rand_bytes;
-	// const char *k_platform = ELF_PLATFORM;
-	// const char *k_base_platform = ELF_BASE_PLATFORM;
-	// unsigned char k_rand_bytes[16];
+	elf_addr_t __user *u_platform;
+	elf_addr_t __user *u_base_platform;
+	elf_addr_t __user *u_rand_bytes;
+	const char *k_platform = ELF_PLATFORM;
+	const char *k_base_platform = ELF_BASE_PLATFORM;
+	unchar k_rand_bytes[16];
 	int items;
-	// elf_addr_t *elf_info;
-	// elf_addr_t flags = 0;
-	// int ei_index;
+	elf_addr_t *elf_info;
+	elf_addr_t flags = 0;
+	int ei_index;
 	// const struct cred *cred = current_cred();
-	// vma_s *vma;
+	vma_s *vma;
 
 	/*
 	 * In some cases (e.g. Hyper-Threading), we want to avoid L1
 	 * evictions by the processes running on the same package. One
 	 * thing we can do is to shuffle the initial stack for them.
 	 */
-
-	// p = arch_align_stack(p);
+	p = arch_align_stack(p);
 
 	// /*
 	//  * If this architecture has a platform capability string, copy it
@@ -193,11 +176,11 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	// /* Create the ELF interpreter info */
 	// elf_info = (elf_addr_t *)mm->saved_auxv;
 	// /* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
-// #define NEW_AUX_ENT(id, val) \
-// 	do { \
-// 		*elf_info++ = id; \
-// 		*elf_info++ = val; \
-// 	} while (0)
+#define NEW_AUX_ENT(id, val)	\
+		do {					\
+			*elf_info++ = id;	\
+			*elf_info++ = val;	\
+		} while (0)
 
 // #ifdef ARCH_DLINFO
 // 	/* 
@@ -254,17 +237,17 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	items = (argc + 1) + (envc + 1) + 1;
 	bprm->p = STACK_ROUND(sp, items);
 
-	// /* Point sp at the lowest address on the stack */
+	/* Point sp at the lowest address on the stack */
 	sp = (elf_addr_t __user *)bprm->p;
 
 	// /*
 	//  * Grow the stack manually; some architectures have a limit on how
 	//  * far ahead a user-space access may be in order to grow the stack.
 	//  */
-	// if (mmap_read_lock_killable(mm))
+	// if (mmap_write_lock_killable(mm))
 	// 	return -EINTR;
-	// vma = find_extend_vma(mm, bprm->p);
-	// mmap_read_unlock(mm);
+	// vma = find_extend_vma_locked(mm, bprm->p);
+	// mmap_write_unlock(mm);
 	// if (!vma)
 	// 	return -EFAULT;
 
@@ -345,7 +328,7 @@ elf_map(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
 		total_size = ELF_PAGEALIGN(total_size);
 		map_addr = vm_mmap(filep, addr, total_size, prot, type, off);
 		if (!BAD_ADDR(map_addr))
-			__vm_munmap(map_addr+size, total_size-size);
+			vm_munmap(map_addr+size, total_size-size);
 	} else
 		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 
@@ -553,8 +536,7 @@ load_elf_binary(linux_bprm_s *bprm) {
 				*elf_phdata,
 				*interp_elf_phdata = NULL;
 	elf_phdr_t	*elf_property_phdata = NULL;
-	ulong		elf_bss,
-				elf_brk;
+	ulong		elf_brk;
 	int			bss_prot = 0;
 	int			retval, i;
 	ulong		elf_entry;
@@ -683,6 +665,7 @@ out_free_interp:
 		if (memcmp(interp_elf_ex->e_ident, ELFMAG, SELFMAG) != 0)
 			goto out_free_dentry;
 		/* Verify the interpreter has a valid arch */
+		/* x86-64 elf_check_fdpic() defination is empty */
 		// if (!elf_check_arch(interp_elf_ex) ||
 		// 	elf_check_fdpic(interp_elf_ex))
 		if (!elf_check_arch(interp_elf_ex))
@@ -719,12 +702,12 @@ out_free_interp:
 	// if (retval)
 	// 	goto out_free_dentry;
 
-	/* x86-64 arch_check_elf() defination is empty */
 	// /*
 	//  * Allow arch code to reject the ELF at this point, whilst it's
 	//  * still possible to return an error to the code that invoked
 	//  * the exec syscall.
 	//  */
+	/* x86-64 arch_check_elf() defination is empty */
 	// retval = arch_check_elf(elf_ex, !!interpreter,
 	// 			interp_elf_ex, &arch_state);
 	// if (retval)
@@ -748,13 +731,11 @@ out_free_interp:
 
 	/* Do this so that we can load the interpreter, if need be.  We will
 	   change some of these later */
-	// retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
-	// 			 executable_stack);
-	retval = setup_arg_pages(bprm, bprm->p, executable_stack);
+	retval = setup_arg_pages(bprm,
+				randomize_stack_top(STACK_TOP), executable_stack);
 	if (retval < 0)
 		goto out_free_dentry;
 	
-	elf_bss = 0;
 	elf_brk = 0;
 
 	start_code = ~0UL;
@@ -874,20 +855,20 @@ out_free_interp:
 				 * MAP_FIXED_NOREPLACE to make sure the mapping
 				 * doesn't collide with anything.
 				 */
-				// if (alignment > ELF_MIN_ALIGN) {
-				// 	load_bias = elf_load(bprm->file, 0, elf_ppnt,
-				// 			     elf_prot, elf_flags, total_size);
-				// 	if (BAD_ADDR(load_bias)) {
-				// 		retval = IS_ERR_VALUE(load_bias) ?
-				// 			 PTR_ERR((void*)load_bias) : -EINVAL;
-				// 		goto out_free_dentry;
-				// 	}
-				// 	vm_munmap(load_bias, total_size);
-				// 	/* Adjust alignment as requested. */
-				// 	if (alignment)
-				// 		load_bias &= ~(alignment - 1);
-				// 	elf_flags |= MAP_FIXED_NOREPLACE;
-				// } else
+				if (alignment > ELF_MIN_ALIGN) {
+					load_bias = elf_load(bprm->file, 0, elf_ppnt,
+									elf_prot, elf_flags, total_size);
+					if (BAD_ADDR(load_bias)) {
+						retval = IS_ERR_VALUE(load_bias) ?
+									PTR_ERR((void*)load_bias) : -EINVAL;
+						goto out_free_dentry;
+					}
+					vm_munmap(load_bias, total_size);
+					/* Adjust alignment as requested. */
+					if (alignment)
+						load_bias &= ~(alignment - 1);
+					elf_flags |= MAP_FIXED_NOREPLACE;
+				} else
 					load_bias = 0;
 			}
 
@@ -901,8 +882,8 @@ out_free_interp:
 			load_bias = ELF_PAGESTART(load_bias - vaddr);
 		}
 
-		error = elf_map(bprm->file, load_bias + vaddr,
-				elf_ppnt, elf_prot, elf_flags, total_size);
+		error = elf_load(bprm->file, load_bias + vaddr,
+					elf_ppnt, elf_prot, elf_flags, total_size);
 		if (BAD_ADDR(error)) {
 			retval = IS_ERR((void *)error) ?
 				PTR_ERR((void*)error) : -EINVAL;
@@ -924,7 +905,7 @@ out_free_interp:
 		if (elf_ppnt->p_offset <= elf_ex->e_phoff &&
 		    elf_ex->e_phoff < elf_ppnt->p_offset + elf_ppnt->p_filesz) {
 			phdr_addr = elf_ex->e_phoff - elf_ppnt->p_offset +
-				    elf_ppnt->p_vaddr;
+							elf_ppnt->p_vaddr;
 		}
 
 		k = elf_ppnt->p_vaddr;
@@ -948,9 +929,6 @@ out_free_interp:
 
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_filesz;
 
-		if (k > elf_bss)
-			elf_bss = k;
-
 		if ((elf_ppnt->p_flags & PF_X) && end_code < k)
 			end_code = k;
 		if (end_data < k)
@@ -959,8 +937,6 @@ out_free_interp:
 		if (k > elf_brk)
 			elf_brk = k;
 	}
-
-	elf_bss += load_bias;
 
 	e_entry = elf_ex->e_entry + load_bias;
 	phdr_addr += load_bias;
@@ -971,16 +947,6 @@ out_free_interp:
 	end_data += load_bias;
 
 	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
-
-	/* Calling set_brk effectively mmaps the pages that we need
-	 * for the bss and break sections.  We must do this before
-	 * mapping in the interpreter, to make sure it doesn't wind
-	 * up getting placed where the bss needs to go.
-	 */
-	retval = set_brk(elf_bss, elf_brk, bss_prot);
-	if (retval)
-		goto out_free_dentry;
-	padzero(elf_bss);
 
 	if (interpreter) {
 		// elf_entry = load_elf_interp(interp_elf_ex,
@@ -1025,7 +991,7 @@ out_free_interp:
 // #endif /* ARCH_HAS_SETUP_ADDITIONAL_PAGES */
 
 	retval = create_elf_tables(bprm, elf_ex,
-					interp_load_addr, e_entry, phdr_addr);
+				interp_load_addr, e_entry, phdr_addr);
 	if (retval < 0)
 		goto out;
 
@@ -1036,7 +1002,7 @@ out_free_interp:
 	mm->end_data = end_data;
 	mm->start_stack = bprm->p;
 
-	mm->entry_point = e_entry;
+	// mm->entry_point = e_entry;
 
 	// if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
 	// 	/*
@@ -1091,7 +1057,7 @@ out:
 out_free_dentry:
 	kfree(interp_elf_ex);
 	kfree(interp_elf_phdata);
-	// allow_write_access(interpreter);
+out_free_file:
 	if (interpreter)
 		fput(interpreter);
 out_free_ph:
