@@ -6,17 +6,89 @@
 	#include <asm/elf.h>
 	#include <uapi/linux/elf.h>
 
+	#ifndef elf_read_implies_exec
+	/*
+	 * Executables for which elf_read_implies_exec() returns TRUE will
+	 * have the READ_IMPLIES_EXEC personality flag set automatically.
+	 * Override in asm/elf.h as needed.
+	 */
+	#	define elf_read_implies_exec(ex, have_pt_gnu_stack)	0
+	#endif
+	#ifndef SET_PERSONALITY
+	#	define SET_PERSONALITY(ex)				\
+				set_personality(PER_LINUX |		\
+					(current->personality & (~PER_MASK)))
+	#endif
+
+	#ifndef SET_PERSONALITY2
+	#	define SET_PERSONALITY2(ex, state) \
+				SET_PERSONALITY(ex)
+	#endif
+
 	#ifndef START_THREAD
 	#	define START_THREAD(elf_ex, regs, elf_entry, start_stack) \
 					start_thread(regs, elf_entry, start_stack)
 	#endif
-		typedef Elf64_Ehdr	elfhdr_t;
-		typedef Elf64_Phdr	elf_phdr_t;
-		typedef Elf64_Shdr	elf_shdr_t;
-		typedef Elf64_Nhdr	elf_note_t;
-		typedef Elf64_Off	elf_addr_t;
-		typedef Elf64_Half	Elf_Half_t;
-		typedef Elf64_Word	Elf_Word_t;
-	#	define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
+
+	#if defined(ARCH_HAS_SETUP_ADDITIONAL_PAGES) && !defined(ARCH_SETUP_ADDITIONAL_PAGES)
+	#	define ARCH_SETUP_ADDITIONAL_PAGES(bprm, ex, interpreter) \
+				arch_setup_additional_pages(bprm, interpreter)
+	#endif
+
+	#define ELF32_GNU_PROPERTY_ALIGN	4
+	#define ELF64_GNU_PROPERTY_ALIGN	8
+
+	typedef Elf64_Ehdr	elfhdr_t;
+	typedef Elf64_Phdr	elf_phdr_t;
+	typedef Elf64_Shdr	elf_shdr_t;
+	typedef Elf64_Nhdr	elf_note_t;
+	typedef Elf64_Off	elf_addr_t;
+	typedef Elf64_Half	Elf_Half_t;
+	typedef Elf64_Word	Elf_Word_t;
+
+	extern Elf64_Dyn	_DYNAMIC [];
+	#define elfhdr		elf64_hdr
+	#define elf_phdr	elf64_phdr
+	#define elf_shdr	elf64_shdr
+	#define elf_note	elf64_note
+	#define elf_addr_t	Elf64_Off
+	#define Elf_Half	Elf64_Half
+	#define Elf_Word	Elf64_Word
+	#define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
+
+	/*
+	 * NT_GNU_PROPERTY_TYPE_0 header:
+	 * Keep this internal until/unless there is an agreed UAPI definition.
+	 * pr_type values (GNU_PROPERTY_*) are public and defined in the UAPI header.
+	 */
+	struct gnu_property {
+		u32 pr_type;
+		u32 pr_datasz;
+	};
+
+	struct arch_elf_state;
+
+	#ifndef CONFIG_ARCH_USE_GNU_PROPERTY
+		static inline int
+		arch_parse_elf_property(u32 type, const void *data, size_t datasz,
+				bool compat, struct arch_elf_state *arch) {
+			return 0;
+		}
+	#else
+		extern int
+		arch_parse_elf_property(u32 type, const void *data, size_t datasz,
+				bool compat, struct arch_elf_state *arch);
+	#endif
+
+	#ifdef CONFIG_ARCH_HAVE_ELF_PROT
+		int arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
+					bool has_interp, bool is_interp);
+	#else
+		static inline int
+		arch_elf_adjust_prot(int prot, const struct arch_elf_state *state,
+				bool has_interp, bool is_interp) {
+			return prot;
+		}
+	#endif
 
 #endif /* _LINUX_ELF_H */

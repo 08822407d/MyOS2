@@ -17,6 +17,12 @@
 		extern pid_t
 		pid_nr(pid_s *pid);
 
+		extern pid_s
+		*task_pid(task_s *task);
+
+		extern pid_t
+		task_pid_nr(task_s *tsk);
+
 	#endif
 	
 	#if defined(PID_DEFINATION) || !(DEBUG)
@@ -45,6 +51,19 @@
 			if (pid)
 				nr = pid->numbers[0].nr;
 			return nr;
+		}
+
+		PREFIX_STATIC_INLINE
+		pid_s
+		*task_pid(task_s *task) {
+			return task->thread_pid;
+		}
+
+
+		PREFIX_STATIC_INLINE
+		pid_t
+		task_pid_nr(task_s *tsk) {
+			return tsk->pid;
 		}
 
 	#endif /* !DEBUG */

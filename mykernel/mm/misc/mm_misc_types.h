@@ -107,7 +107,7 @@
 			// */
 			// struct mm_rss_stat rss_stat;
 
-			// struct linux_binfmt *binfmt;
+			linux_bfmt_s	*binfmt;
 
 			// /* Architecture-specific MM context */
 			// mm_context_t context;

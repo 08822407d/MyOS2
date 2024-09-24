@@ -129,12 +129,12 @@
 	#define STT_COMMON		5
 	#define STT_TLS			6
 
-	// #define ELF_ST_BIND(x)		((x) >> 4)
-	// #define ELF_ST_TYPE(x)		(((unsigned int)x) & 0xf)
-	// #define ELF32_ST_BIND(x)	ELF_ST_BIND(x)
-	// #define ELF32_ST_TYPE(x)	ELF_ST_TYPE(x)
-	// #define ELF64_ST_BIND(x)	ELF_ST_BIND(x)
-	// #define ELF64_ST_TYPE(x)	ELF_ST_TYPE(x)
+	#define ELF_ST_BIND(x)		((x) >> 4)
+	#define ELF_ST_TYPE(x)		(((unsigned int)x) & 0xf)
+	#define ELF32_ST_BIND(x)	ELF_ST_BIND(x)
+	#define ELF32_ST_TYPE(x)	ELF_ST_TYPE(x)
+	#define ELF64_ST_BIND(x)	ELF_ST_BIND(x)
+	#define ELF64_ST_TYPE(x)	ELF_ST_TYPE(x)
 
 	// typedef struct dynamic
 	// {
@@ -146,15 +146,15 @@
 	// 	} d_un;
 	// } Elf32_Dyn;
 
-	// typedef struct
-	// {
-	// 	Elf64_Sxword	d_tag;	/* entry tag value */
-	// 	union
-	// 	{
-	// 		Elf64_Xword	d_val;
-	// 		Elf64_Addr	d_ptr;
-	// 	} d_un;
-	// } Elf64_Dyn;
+	typedef struct
+	{
+		Elf64_Sxword	d_tag;	/* entry tag value */
+		union
+		{
+			Elf64_Xword	d_val;
+			Elf64_Addr	d_ptr;
+		} d_un;
+	} Elf64_Dyn;
 
 	// /* The following are used with relocations */
 	// #define ELF32_R_SYM(x)	((x) >> 8)
@@ -169,11 +169,11 @@
 	// 	Elf32_Word	r_info;
 	// } Elf32_Rel;
 
-	// typedef struct elf64_rel
-	// {
-	// 	Elf64_Addr	r_offset;	/* Location at which to apply the action */
-	// 	Elf64_Xword	r_info;		/* index and type of relocation */
-	// } Elf64_Rel;
+	typedef struct elf64_rel
+	{
+		Elf64_Addr	r_offset;	/* Location at which to apply the action */
+		Elf64_Xword	r_info;		/* index and type of relocation */
+	} Elf64_Rel;
 
 	// typedef struct elf32_rela
 	// {
@@ -182,12 +182,12 @@
 	// 	Elf32_Sword	r_addend;
 	// } Elf32_Rela;
 
-	// typedef struct elf64_rela
-	// {
-	// 	Elf64_Addr		r_offset;	/* Location at which to apply the action */
-	// 	Elf64_Xword		r_info;		/* index and type of relocation */
-	// 	Elf64_Sxword	r_addend;	/* Constant addend used to compute value */
-	// } Elf64_Rela;
+	typedef struct elf64_rela
+	{
+		Elf64_Addr		r_offset;	/* Location at which to apply the action */
+		Elf64_Xword		r_info;		/* index and type of relocation */
+		Elf64_Sxword	r_addend;	/* Constant addend used to compute value */
+	} Elf64_Rela;
 
 	// typedef struct elf32_sym
 	// {
@@ -199,15 +199,15 @@
 	// 	Elf32_Half st_shndx;
 	// } Elf32_Sym;
 
-	// typedef struct elf64_sym
-	// {
-	// 	Elf64_Word st_name;		/* Symbol name, index in string tbl */
-	// 	unsigned char st_info;	/* Type and binding attributes */
-	// 	unsigned char st_other; /* No defined meaning, 0 */
-	// 	Elf64_Half st_shndx;	/* Associated section index */
-	// 	Elf64_Addr st_value;	/* Value of the symbol */
-	// 	Elf64_Xword st_size;	/* Associated symbol size */
-	// } Elf64_Sym;
+	typedef struct elf64_sym
+	{
+		Elf64_Word		st_name;	/* Symbol name, index in string tbl */
+		unchar			st_info;	/* Type and binding attributes */
+		unchar			st_other;	/* No defined meaning, 0 */
+		Elf64_Half		st_shndx;	/* Associated section index */
+		Elf64_Addr		st_value;	/* Value of the symbol */
+		Elf64_Xword		st_size;	/* Associated symbol size */
+	} Elf64_Sym;
 
 	#define EI_NIDENT 16
 
@@ -375,81 +375,81 @@
 	#define ELFOSABI_NONE	0
 	#define ELFOSABI_LINUX	3
 
-	// #ifndef ELF_OSABI
-	// #	define ELF_OSABI ELFOSABI_NONE
-	// #endif
+	#ifndef ELF_OSABI
+	#	define ELF_OSABI ELFOSABI_NONE
+	#endif
 
-	// /*
-	// * Notes used in ET_CORE. Architectures export some of the arch register sets
-	// * using the corresponding note types via the PTRACE_GETREGSET and
-	// * PTRACE_SETREGSET requests.
-	// * The note name for all these is "LINUX".
-	// */
-	// #define NT_PRSTATUS 1
-	// #define NT_PRFPREG 2
-	// #define NT_PRPSINFO 3
-	// #define NT_TASKSTRUCT 4
-	// #define NT_AUXV 6
-	// /*
-	// * Note to userspace developers: size of NT_SIGINFO note may increase
-	// * in the future to accomodate more fields, don't assume it is fixed!
-	// */
-	// #define NT_SIGINFO			0x53494749
-	// #define NT_FILE				0x46494c45
-	// #define NT_PRXFPREG			0x46e62b7f	/* copied from gdb5.1/include/elf/common.h */
-	// #define NT_PPC_VMX			0x100		/* PowerPC Altivec/VMX registers */
-	// #define NT_PPC_SPE			0x101		/* PowerPC SPE/EVR registers */
-	// #define NT_PPC_VSX			0x102		/* PowerPC VSX registers */
-	// #define NT_PPC_TAR			0x103		/* Target Address Register */
-	// #define NT_PPC_PPR			0x104		/* Program Priority Register */
-	// #define NT_PPC_DSCR			0x105		/* Data Stream Control Register */
-	// #define NT_PPC_EBB			0x106		/* Event Based Branch Registers */
-	// #define NT_PPC_PMU			0x107		/* Performance Monitor Registers */
-	// #define NT_PPC_TM_CGPR		0x108		/* TM checkpointed GPR Registers */
-	// #define NT_PPC_TM_CFPR		0x109		/* TM checkpointed FPR Registers */
-	// #define NT_PPC_TM_CVMX		0x10a		/* TM checkpointed VMX Registers */
-	// #define NT_PPC_TM_CVSX		0x10b		/* TM checkpointed VSX Registers */
-	// #define NT_PPC_TM_SPR		0x10c		/* TM Special Purpose Registers */
-	// #define NT_PPC_TM_CTAR		0x10d		/* TM checkpointed Target Address Register */
-	// #define NT_PPC_TM_CPPR		0x10e		/* TM checkpointed Program Priority Register */
-	// #define NT_PPC_TM_CDSCR		0x10f		/* TM checkpointed Data Stream Control Register */
-	// #define NT_PPC_PKEY			0x110		/* Memory Protection Keys registers */
-	// #define NT_386_TLS			0x200		/* i386 TLS slots (struct user_desc) */
-	// #define NT_386_IOPERM		0x201		/* x86 io permission bitmap (1=deny) */
-	// #define NT_X86_XSTATE		0x202		/* x86 extended state using xsave */
-	// #define NT_S390_HIGH_GPRS	0x300		/* s390 upper register halves */
-	// #define NT_S390_TIMER		0x301		/* s390 timer register */
-	// #define NT_S390_TODCMP		0x302		/* s390 TOD clock comparator register */
-	// #define NT_S390_TODPREG		0x303		/* s390 TOD programmable register */
-	// #define NT_S390_CTRS		0x304		/* s390 control registers */
-	// #define NT_S390_PREFIX		0x305		/* s390 prefix register */
-	// #define NT_S390_LAST_BREAK	0x306		/* s390 breaking event address */
-	// #define NT_S390_SYSTEM_CALL	0x307		/* s390 system call restart data */
-	// #define NT_S390_TDB			0x308		/* s390 transaction diagnostic block */
-	// #define NT_S390_VXRS_LOW	0x309		/* s390 vector registers 0-15 upper half */
-	// #define NT_S390_VXRS_HIGH	0x30a		/* s390 vector registers 16-31 */
-	// #define NT_S390_GS_CB		0x30b		/* s390 guarded storage registers */
-	// #define NT_S390_GS_BC		0x30c		/* s390 guarded storage broadcast control block */
-	// #define NT_S390_RI_CB		0x30d		/* s390 runtime instrumentation */
-	// #define NT_ARM_VFP			0x400		/* ARM VFP/NEON registers */
-	// #define NT_ARM_TLS			0x401		/* ARM TLS register */
-	// #define NT_ARM_HW_BREAK		0x402		/* ARM hardware breakpoint registers */
-	// #define NT_ARM_HW_WATCH		0x403		/* ARM hardware watchpoint registers */
-	// #define NT_ARM_SYSTEM_CALL	0x404		/* ARM system call number */
-	// #define NT_ARM_SVE			0x405		/* ARM Scalable Vector Extension registers */
-	// #define NT_ARM_PAC_MASK		0x406		/* ARM pointer authentication code masks */
-	// #define NT_ARM_PACA_KEYS	0x407		/* ARM pointer authentication address keys */
-	// #define NT_ARM_PACG_KEYS	0x408		/* ARM pointer authentication generic key */
-	// #define NT_ARM_TAGGED_ADDR_CTRL	0x409	/* arm64 tagged address control (prctl()) */
-	// #define NT_ARM_PAC_ENABLED_KEYS	0x40a	/* arm64 ptr auth enabled keys (prctl()) */
-	// #define NT_ARC_V2			0x600		/* ARCv2 accumulator/extra registers */
-	// #define NT_VMCOREDD			0x700		/* Vmcore Device Dump Note */
-	// #define NT_MIPS_DSP			0x800		/* MIPS DSP ASE registers */
-	// #define NT_MIPS_FP_MODE		0x801		/* MIPS floating-point mode */
-	// #define NT_MIPS_MSA			0x802		/* MIPS SIMD registers */
+	/*
+	 * Notes used in ET_CORE. Architectures export some of the arch register sets
+	 * using the corresponding note types via the PTRACE_GETREGSET and
+	 * PTRACE_SETREGSET requests.
+	 * The note name for all these is "LINUX".
+	 */
+	#define NT_PRSTATUS		1
+	#define NT_PRFPREG		2
+	#define NT_PRPSINFO		3
+	#define NT_TASKSTRUCT	4
+	#define NT_AUXV			6
+	/*
+	 * Note to userspace developers: size of NT_SIGINFO note may increase
+	 * in the future to accomodate more fields, don't assume it is fixed!
+	 */
+	#define NT_SIGINFO			0x53494749
+	#define NT_FILE				0x46494c45
+	#define NT_PRXFPREG			0x46e62b7f	/* copied from gdb5.1/include/elf/common.h */
+	#define NT_PPC_VMX			0x100		/* PowerPC Altivec/VMX registers */
+	#define NT_PPC_SPE			0x101		/* PowerPC SPE/EVR registers */
+	#define NT_PPC_VSX			0x102		/* PowerPC VSX registers */
+	#define NT_PPC_TAR			0x103		/* Target Address Register */
+	#define NT_PPC_PPR			0x104		/* Program Priority Register */
+	#define NT_PPC_DSCR			0x105		/* Data Stream Control Register */
+	#define NT_PPC_EBB			0x106		/* Event Based Branch Registers */
+	#define NT_PPC_PMU			0x107		/* Performance Monitor Registers */
+	#define NT_PPC_TM_CGPR		0x108		/* TM checkpointed GPR Registers */
+	#define NT_PPC_TM_CFPR		0x109		/* TM checkpointed FPR Registers */
+	#define NT_PPC_TM_CVMX		0x10a		/* TM checkpointed VMX Registers */
+	#define NT_PPC_TM_CVSX		0x10b		/* TM checkpointed VSX Registers */
+	#define NT_PPC_TM_SPR		0x10c		/* TM Special Purpose Registers */
+	#define NT_PPC_TM_CTAR		0x10d		/* TM checkpointed Target Address Register */
+	#define NT_PPC_TM_CPPR		0x10e		/* TM checkpointed Program Priority Register */
+	#define NT_PPC_TM_CDSCR		0x10f		/* TM checkpointed Data Stream Control Register */
+	#define NT_PPC_PKEY			0x110		/* Memory Protection Keys registers */
+	#define NT_386_TLS			0x200		/* i386 TLS slots (struct user_desc) */
+	#define NT_386_IOPERM		0x201		/* x86 io permission bitmap (1=deny) */
+	#define NT_X86_XSTATE		0x202		/* x86 extended state using xsave */
+	#define NT_S390_HIGH_GPRS	0x300		/* s390 upper register halves */
+	#define NT_S390_TIMER		0x301		/* s390 timer register */
+	#define NT_S390_TODCMP		0x302		/* s390 TOD clock comparator register */
+	#define NT_S390_TODPREG		0x303		/* s390 TOD programmable register */
+	#define NT_S390_CTRS		0x304		/* s390 control registers */
+	#define NT_S390_PREFIX		0x305		/* s390 prefix register */
+	#define NT_S390_LAST_BREAK	0x306		/* s390 breaking event address */
+	#define NT_S390_SYSTEM_CALL	0x307		/* s390 system call restart data */
+	#define NT_S390_TDB			0x308		/* s390 transaction diagnostic block */
+	#define NT_S390_VXRS_LOW	0x309		/* s390 vector registers 0-15 upper half */
+	#define NT_S390_VXRS_HIGH	0x30a		/* s390 vector registers 16-31 */
+	#define NT_S390_GS_CB		0x30b		/* s390 guarded storage registers */
+	#define NT_S390_GS_BC		0x30c		/* s390 guarded storage broadcast control block */
+	#define NT_S390_RI_CB		0x30d		/* s390 runtime instrumentation */
+	#define NT_ARM_VFP			0x400		/* ARM VFP/NEON registers */
+	#define NT_ARM_TLS			0x401		/* ARM TLS register */
+	#define NT_ARM_HW_BREAK		0x402		/* ARM hardware breakpoint registers */
+	#define NT_ARM_HW_WATCH		0x403		/* ARM hardware watchpoint registers */
+	#define NT_ARM_SYSTEM_CALL	0x404		/* ARM system call number */
+	#define NT_ARM_SVE			0x405		/* ARM Scalable Vector Extension registers */
+	#define NT_ARM_PAC_MASK		0x406		/* ARM pointer authentication code masks */
+	#define NT_ARM_PACA_KEYS	0x407		/* ARM pointer authentication address keys */
+	#define NT_ARM_PACG_KEYS	0x408		/* ARM pointer authentication generic key */
+	#define NT_ARM_TAGGED_ADDR_CTRL	0x409	/* arm64 tagged address control (prctl()) */
+	#define NT_ARM_PAC_ENABLED_KEYS	0x40a	/* arm64 ptr auth enabled keys (prctl()) */
+	#define NT_ARC_V2			0x600		/* ARCv2 accumulator/extra registers */
+	#define NT_VMCOREDD			0x700		/* Vmcore Device Dump Note */
+	#define NT_MIPS_DSP			0x800		/* MIPS DSP ASE registers */
+	#define NT_MIPS_FP_MODE		0x801		/* MIPS floating-point mode */
+	#define NT_MIPS_MSA			0x802		/* MIPS SIMD registers */
 
-	// /* Note types with note name "GNU" */
-	// #define NT_GNU_PROPERTY_TYPE_0	5
+	/* Note types with note name "GNU" */
+	#define NT_GNU_PROPERTY_TYPE_0	5
 
 	// /* Note header in a PT_NOTE section */
 	// typedef struct elf32_note
@@ -467,10 +467,10 @@
 		Elf64_Word	n_type;	 /* Content type */
 	} Elf64_Nhdr;
 
-	// /* .note.gnu.property types for EM_AARCH64: */
-	// #define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
+	/* .note.gnu.property types for EM_AARCH64: */
+	#define GNU_PROPERTY_AARCH64_FEATURE_1_AND	0xc0000000
 
-	// /* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
-	// #define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
+	/* Bits for GNU_PROPERTY_AARCH64_FEATURE_1_BTI */
+	#define GNU_PROPERTY_AARCH64_FEATURE_1_BTI	(1U << 0)
 
 #endif /* _UAPI_LINUX_ELF_H */

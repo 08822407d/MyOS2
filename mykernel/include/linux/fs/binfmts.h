@@ -119,7 +119,7 @@
 	// extern int __must_check remove_arg_zero(linux_bprm_s *);
 	extern int begin_new_exec(linux_bprm_s * bprm);
 	extern void setup_new_exec(linux_bprm_s * bprm);
-	// extern void finalize_exec(linux_bprm_s *bprm);
+	extern void finalize_exec(linux_bprm_s *bprm);
 	// extern void would_dump(linux_bprm_s *, file_s *);
 
 	// extern int suid_dumpable;
@@ -135,7 +135,7 @@
 	// 				unsigned long *sp_location);
 	// extern int bprm_change_interp(const char *interp, linux_bprm_s *bprm);
 	// int copy_string_kernel(const char *arg, linux_bprm_s *bprm);
-	// extern void set_binfmt(struct linux_binfmt *new);
+	extern void set_binfmt(linux_bfmt_s *new);
 	// extern ssize_t read_code(file_s *, unsigned long, loff_t, size_t);
 
 	int kernel_execve(const char *filename,

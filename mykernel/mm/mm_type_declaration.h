@@ -7,6 +7,10 @@
 	typedef struct file file_s;
 	struct pt_regs;
 	typedef struct pt_regs pt_regs_s;
+	struct linux_binprm;
+	typedef struct linux_binprm linux_bprm_s;
+	struct linux_binfmt;
+	typedef struct linux_binfmt linux_bfmt_s;
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>

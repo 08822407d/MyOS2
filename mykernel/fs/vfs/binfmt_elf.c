@@ -33,6 +33,10 @@
 #include <linux/kernel/ptrace.h>
 
 
+#ifndef ELF_COMPAT
+#	define ELF_COMPAT	0
+#endif
+
 static int load_elf_binary(linux_bprm_s *bprm);
 
 /*
@@ -67,8 +71,6 @@ static linux_bfmt_s elf_format = {
 	// .min_coredump	= ELF_EXEC_PAGESIZE,
 };
 
-#define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
-
 static int
 set_brk(ulong start, ulong end, int prot) {
 	start = ELF_PAGEALIGN(start);
@@ -84,9 +86,10 @@ set_brk(ulong start, ulong end, int prot) {
 		if (error)
 			return error;
 	}
-	current->mm->start_brk = current->mm->brk = end;
 	return 0;
 }
+
+#define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
 /* We need to explicitly zero any fractional pages
    after the data section (i.e. bss).  This would
@@ -346,12 +349,66 @@ elf_map(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
 	} else
 		map_addr = vm_mmap(filep, addr, size, prot, type, off);
 
-	// if ((type & MAP_FIXED_NOREPLACE) &&
-	//     PTR_ERR((void *)map_addr) == -EEXIST)
-	// 	pr_info("%d (%s): Uhuuh, elf segment at %px requested but the memory is mapped already\n",
-	// 		task_pid_nr(current), current->comm, (void *)addr);
+	if ((type & MAP_FIXED_NOREPLACE) &&
+			PTR_ERR((void *)map_addr) == -EEXIST)
+		pr_info("%d (%s): Uhuuh, elf segment at %px"
+			" requested but the memory is mapped already\n",
+			task_pid_nr(current), current->comm, (void *)addr);
 
 	return(map_addr);
+}
+
+/*
+ * Map "eppnt->p_filesz" bytes from "filep" offset "eppnt->p_offset"
+ * into memory at "addr". Memory from "p_filesz" through "p_memsz"
+ * rounded up to the next page is zeroed.
+ */
+static ulong
+elf_load(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
+		int prot, int type, ulong total_size) {
+
+	ulong zero_start, zero_end;
+	ulong map_addr;
+
+	if (eppnt->p_filesz) {
+		map_addr = elf_map(filep, addr, eppnt, prot, type, total_size);
+		if (BAD_ADDR(map_addr))
+			return map_addr;
+		if (eppnt->p_memsz > eppnt->p_filesz) {
+			zero_start = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
+				eppnt->p_filesz;
+			zero_end = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
+				eppnt->p_memsz;
+
+			/*
+			 * Zero the end of the last mapped page but ignore
+			 * any errors if the segment isn't writable.
+			 */
+			if (padzero(zero_start) && (prot & PROT_WRITE))
+				return -EFAULT;
+		}
+	} else {
+		map_addr = zero_start = ELF_PAGESTART(addr);
+		zero_end = zero_start + ELF_PAGEOFFSET(eppnt->p_vaddr) +
+			eppnt->p_memsz;
+	}
+	if (eppnt->p_memsz > eppnt->p_filesz) {
+		/*
+		 * Map the last of the segment.
+		 * If the header is requesting these pages to be
+		 * executable, honour that (ppc32 needs this).
+		 */
+		int error;
+
+		zero_start = ELF_PAGEALIGN(zero_start);
+		zero_end = ELF_PAGEALIGN(zero_end);
+
+		error = vm_brk_flags(zero_start, zero_end - zero_start,
+				     prot & PROT_EXEC ? VM_EXEC : 0);
+		if (error)
+			map_addr = error;
+	}
+	return map_addr;
 }
 
 static ulong
@@ -383,6 +440,25 @@ elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
 	return 0;
 }
 
+static ulong
+maximum_alignment(elf_phdr_t *cmds, int nr) {
+	ulong alignment = 0;
+	int i;
+
+	for (i = 0; i < nr; i++) {
+		if (cmds[i].p_type == PT_LOAD) {
+			ulong p_align = cmds[i].p_align;
+
+			/* skip non-power of two alignments as invalid */
+			if (!is_power_of_2(p_align))
+				continue;
+			alignment = max(alignment, p_align);
+		}
+	}
+
+	/* ensure we align to at least one page */
+	return ELF_PAGEALIGN(alignment);
+}
 
 /**
  * load_elf_phdrs() - load ELF program headers
@@ -434,6 +510,21 @@ out:
 	return elf_phdata;
 }
 
+/**
+ * struct arch_elf_state - arch-specific ELF loading state
+ *
+ * This structure is used to preserve architecture specific data during
+ * the loading of an ELF file, throughout the checking of architecture
+ * specific ELF headers & through to the point where the ELF load is
+ * known to be proceeding (ie. SET_PERSONALITY).
+ *
+ * This implementation is a dummy for architectures which require no
+ * specific state.
+ */
+typedef struct arch_elf_state {
+} arch_elf_state_s;
+#define INIT_ARCH_ELF_STATE {}
+
 
 static inline int
 make_prot(u32 p_flags, bool has_interp, bool is_interp) {
@@ -456,7 +547,7 @@ load_elf_binary(linux_bprm_s *bprm) {
 	ulong		load_addr,
 				load_bias = 0,
 				phdr_addr = 0;
-	int			load_addr_set = 0;
+	int			first_pt_load = 1;
 	ulong		error;
 	elf_phdr_t	*elf_ppnt,
 				*elf_phdata,
@@ -477,9 +568,9 @@ load_elf_binary(linux_bprm_s *bprm) {
 	int			executable_stack = EXSTACK_DEFAULT;
 	elfhdr_t	*elf_ex = (elfhdr_t *)bprm->buf;
 	elfhdr_t	*interp_elf_ex = NULL;
-	// struct arch_elf_state arch_state = INIT_ARCH_ELF_STATE;
 	mm_s		*mm;
 	pt_regs_s	*regs;
+	arch_elf_state_s	arch_state = INIT_ARCH_ELF_STATE;
 
 	retval = -ENOEXEC;
 	/* First of all, some simple consistency checks */
@@ -490,6 +581,7 @@ load_elf_binary(linux_bprm_s *bprm) {
 		goto out;
 	if (!elf_check_arch(elf_ex))
 		goto out;
+	/* x86-64 elf_check_fdpic() defination is empty */
 	// if (elf_check_fdpic(elf_ex))
 	// 	goto out;
 	if (!bprm->file->f_op->mmap)
@@ -574,64 +666,67 @@ out_free_interp:
 				executable_stack = EXSTACK_DISABLE_X;
 			break;
 
-		// case PT_LOPROC ... PT_HIPROC:
-		// 	retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
-		// 				bprm->file, false, &arch_state);
-		// 	if (retval)
-		// 		goto out_free_dentry;
-		// 	break;
+		case PT_LOPROC ... PT_HIPROC:
+			/* x86-64 arch_elf_pt_proc() defination is empty */
+			// retval = arch_elf_pt_proc(elf_ex, elf_ppnt,
+			// 			bprm->file, false, &arch_state);
+			// if (retval)
+			// 	goto out_free_dentry;
+			break;
 		}
 	}
 
 	/* Some simple consistency checks for the interpreter */
 	if (interpreter) {
-		// retval = -ELIBBAD;
-		// /* Not an ELF interpreter */
-		// if (memcmp(interp_elf_ex->e_ident, ELFMAG, SELFMAG) != 0)
-		// 	goto out_free_dentry;
-		// /* Verify the interpreter has a valid arch */
+		retval = -ELIBBAD;
+		/* Not an ELF interpreter */
+		if (memcmp(interp_elf_ex->e_ident, ELFMAG, SELFMAG) != 0)
+			goto out_free_dentry;
+		/* Verify the interpreter has a valid arch */
 		// if (!elf_check_arch(interp_elf_ex) ||
-		//     elf_check_fdpic(interp_elf_ex))
-		// 	goto out_free_dentry;
+		// 	elf_check_fdpic(interp_elf_ex))
+		if (!elf_check_arch(interp_elf_ex))
+			goto out_free_dentry;
 
-		// /* Load the interpreter program headers */
-		// interp_elf_phdata = load_elf_phdrs(interp_elf_ex,
-		// 				   interpreter);
-		// if (!interp_elf_phdata)
-		// 	goto out_free_dentry;
+		/* Load the interpreter program headers */
+		interp_elf_phdata = load_elf_phdrs(interp_elf_ex,
+						   interpreter);
+		if (!interp_elf_phdata)
+			goto out_free_dentry;
 
-		// /* Pass PT_LOPROC..PT_HIPROC headers to arch code */
-		// elf_property_phdata = NULL;
-		// elf_ppnt = interp_elf_phdata;
-		// for (i = 0; i < interp_elf_ex->e_phnum; i++, elf_ppnt++)
-		// 	switch (elf_ppnt->p_type) {
-		// 	case PT_GNU_PROPERTY:
-		// 		elf_property_phdata = elf_ppnt;
-		// 		break;
+		/* Pass PT_LOPROC..PT_HIPROC headers to arch code */
+		elf_property_phdata = NULL;
+		elf_ppnt = interp_elf_phdata;
+		for (i = 0; i < interp_elf_ex->e_phnum; i++, elf_ppnt++)
+			switch (elf_ppnt->p_type) {
+			case PT_GNU_PROPERTY:
+				elf_property_phdata = elf_ppnt;
+				break;
 
-		// 	case PT_LOPROC ... PT_HIPROC:
-		// 		retval = arch_elf_pt_proc(interp_elf_ex,
-		// 					  elf_ppnt, interpreter,
-		// 					  true, &arch_state);
-		// 		if (retval)
-		// 			goto out_free_dentry;
-		// 		break;
-		// 	}
+			case PT_LOPROC ... PT_HIPROC:
+				/* x86-64 arch_elf_pt_proc() defination is empty */
+				// retval = arch_elf_pt_proc(interp_elf_ex, elf_ppnt,
+				// 			interpreter, true, &arch_state);
+				// if (retval)
+				// 	goto out_free_dentry;
+				break;
+			}
 	}
 
+	/* x86-64 has no elf_arch_state */
 	// retval = parse_elf_properties(interpreter ?: bprm->file,
-	// 		elf_property_phdata);
+	// 				elf_property_phdata, &arch_state);
 	// if (retval)
 	// 	goto out_free_dentry;
 
+	/* x86-64 arch_check_elf() defination is empty */
 	// /*
 	//  * Allow arch code to reject the ELF at this point, whilst it's
 	//  * still possible to return an error to the code that invoked
 	//  * the exec syscall.
 	//  */
-	// retval = arch_check_elf(elf_ex,
-	// 			!!interpreter, interp_elf_ex,
-	// 			&arch_state);
+	// retval = arch_check_elf(elf_ex, !!interpreter,
+	// 			interp_elf_ex, &arch_state);
 	// if (retval)
 	// 	goto out_free_dentry;
 
@@ -679,44 +774,18 @@ out_free_interp:
 		if (elf_ppnt->p_type != PT_LOAD)
 			continue;
 
-		if (elf_brk > elf_bss) {
-			ulong nbyte;
-
-			// /* There was a PT_LOAD segment with p_memsz > p_filesz
-			//    before this one. Map anonymous pages, if needed,
-			//    and clear the area.  */
-			// retval = set_brk(elf_bss + load_bias,
-			// 		 elf_brk + load_bias, bss_prot);
-			// if (retval)
-			// 	goto out_free_dentry;
-			// nbyte = ELF_PAGEOFFSET(elf_bss);
-			// if (nbyte) {
-			// 	nbyte = ELF_MIN_ALIGN - nbyte;
-			// 	if (nbyte > elf_brk - elf_bss)
-			// 		nbyte = elf_brk - elf_bss;
-			// 	if (clear_user((void __user *)elf_bss +
-			// 				load_bias, nbyte)) {
-			// 		/*
-			// 		 * This bss-zeroing can fail if the ELF
-			// 		 * file specifies odd protections. So
-			// 		 * we don't check the return value
-			// 		 */
-			// 	}
-			// }
-		}
-
 		elf_prot = make_prot(elf_ppnt->p_flags, !!interpreter, false);
 
 		elf_flags = MAP_PRIVATE;
 
 		vaddr = elf_ppnt->p_vaddr;
 		/*
-		 * The first time through the loop, load_addr_set is false:
+		 * The first time through the loop, first_pt_load is true:
 		 * layout will be calculated. Once set, use MAP_FIXED since
 		 * we know we've already safely mapped the entire region with
 		 * MAP_FIXED_NOREPLACE in the once-per-binary logic following.
 		 */
-		if (load_addr_set) {
+		if (!first_pt_load) {
 			elf_flags |= MAP_FIXED;
 		} else if (elf_ex->e_type == ET_EXEC) {
 			/*
@@ -731,47 +800,7 @@ out_free_interp:
 			 * Header for ET_DYN binaries to calculate the
 			 * randomization (load_bias) for all the LOAD
 			 * Program Headers.
-			 *
-			 * There are effectively two types of ET_DYN
-			 * binaries: programs (i.e. PIE: ET_DYN with INTERP)
-			 * and loaders (ET_DYN without INTERP, since they
-			 * _are_ the ELF interpreter). The loaders must
-			 * be loaded away from programs since the program
-			 * may otherwise collide with the loader (especially
-			 * for ET_EXEC which does not have a randomized
-			 * position). For example to handle invocations of
-			 * "./ld.so someprog" to test out a new version of
-			 * the loader, the subsequent program that the
-			 * loader loads must avoid the loader itself, so
-			 * they cannot share the same load range. Sufficient
-			 * room for the brk must be allocated with the
-			 * loader as well, since brk must be available with
-			 * the loader.
-			 *
-			 * Therefore, programs are loaded offset from
-			 * ELF_ET_DYN_BASE and loaders are loaded into the
-			 * independently randomized mmap region (0 load_bias
-			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
 			 */
-			if (interpreter) {
-				load_bias = ELF_ET_DYN_BASE;
-				// if (current->flags & PF_RANDOMIZE)
-				// 	load_bias += arch_mmap_rnd();
-				// alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
-				// if (alignment)
-				// 	load_bias &= ~(alignment - 1);
-				elf_flags |= MAP_FIXED_NOREPLACE;
-			} else
-				load_bias = 0;
-
-			/*
-			 * Since load_bias is used for all subsequent loading
-			 * calculations, we must lower it by the first vaddr
-			 * so that the remaining calculations based on the
-			 * ELF vaddrs will be correctly offset. The result
-			 * is then page aligned.
-			 */
-			load_bias = ELF_PAGESTART(load_bias - vaddr);
 
 			/*
 			 * Calculate the entire size of the ELF mapping
@@ -797,6 +826,79 @@ out_free_interp:
 				retval = -EINVAL;
 				goto out_free_dentry;
 			}
+
+			/* Calculate any requested alignment. */
+			alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+
+			/*
+			 * There are effectively two types of ET_DYN
+			 * binaries: programs (i.e. PIE: ET_DYN with PT_INTERP)
+			 * and loaders (ET_DYN without PT_INTERP, since they
+			 * _are_ the ELF interpreter). The loaders must
+			 * be loaded away from programs since the program
+			 * may otherwise collide with the loader (especially
+			 * for ET_EXEC which does not have a randomized
+			 * position). For example to handle invocations of
+			 * "./ld.so someprog" to test out a new version of
+			 * the loader, the subsequent program that the
+			 * loader loads must avoid the loader itself, so
+			 * they cannot share the same load range. Sufficient
+			 * room for the brk must be allocated with the
+			 * loader as well, since brk must be available with
+			 * the loader.
+			 *
+			 * Therefore, programs are loaded offset from
+			 * ELF_ET_DYN_BASE and loaders are loaded into the
+			 * independently randomized mmap region (0 load_bias
+			 * without MAP_FIXED nor MAP_FIXED_NOREPLACE).
+			 */
+			if (interpreter) {
+				load_bias = ELF_ET_DYN_BASE;
+				// if (current->flags & PF_RANDOMIZE)
+				// 	load_bias += arch_mmap_rnd();
+				alignment = maximum_alignment(elf_phdata, elf_ex->e_phnum);
+				if (alignment)
+					load_bias &= ~(alignment - 1);
+				elf_flags |= MAP_FIXED_NOREPLACE;
+			} else {
+				/*
+				 * For ET_DYN without PT_INTERP, we rely on
+				 * the architectures's (potentially ASLR) mmap
+				 * base address (via a load_bias of 0).
+				 *
+				 * When a large alignment is requested, we
+				 * must do the allocation at address "0" right
+				 * now to discover where things will load so
+				 * that we can adjust the resulting alignment.
+				 * In this case (load_bias != 0), we can use
+				 * MAP_FIXED_NOREPLACE to make sure the mapping
+				 * doesn't collide with anything.
+				 */
+				// if (alignment > ELF_MIN_ALIGN) {
+				// 	load_bias = elf_load(bprm->file, 0, elf_ppnt,
+				// 			     elf_prot, elf_flags, total_size);
+				// 	if (BAD_ADDR(load_bias)) {
+				// 		retval = IS_ERR_VALUE(load_bias) ?
+				// 			 PTR_ERR((void*)load_bias) : -EINVAL;
+				// 		goto out_free_dentry;
+				// 	}
+				// 	vm_munmap(load_bias, total_size);
+				// 	/* Adjust alignment as requested. */
+				// 	if (alignment)
+				// 		load_bias &= ~(alignment - 1);
+				// 	elf_flags |= MAP_FIXED_NOREPLACE;
+				// } else
+					load_bias = 0;
+			}
+
+			/*
+			 * Since load_bias is used for all subsequent loading
+			 * calculations, we must lower it by the first vaddr
+			 * so that the remaining calculations based on the
+			 * ELF vaddrs will be correctly offset. The result
+			 * is then page aligned.
+			 */
+			load_bias = ELF_PAGESTART(load_bias - vaddr);
 		}
 
 		error = elf_map(bprm->file, load_bias + vaddr,
@@ -807,26 +909,23 @@ out_free_interp:
 			goto out_free_dentry;
 		}
 
-		if (!load_addr_set) {
-			load_addr_set = 1;
-			load_addr = (elf_ppnt->p_vaddr - elf_ppnt->p_offset);
-			// if (elf_ex->e_type == ET_DYN) {
-			// 	load_bias += error -
-			// 	             ELF_PAGESTART(load_bias + vaddr);
-			// 	load_addr += load_bias;
-			// 	reloc_func_desc = load_bias;
-			// }
+		if (first_pt_load) {
+			first_pt_load = 0;
+			if (elf_ex->e_type == ET_DYN) {
+				load_bias += error - ELF_PAGESTART(load_bias + vaddr);
+				reloc_func_desc = load_bias;
+			}
 		}
 
-		// /*
-		//  * Figure out which segment in the file contains the Program
-		//  * Header table, and map to the associated memory address.
-		//  */
-		// if (elf_ppnt->p_offset <= elf_ex->e_phoff &&
-		//     elf_ex->e_phoff < elf_ppnt->p_offset + elf_ppnt->p_filesz) {
-		// 	phdr_addr = elf_ex->e_phoff - elf_ppnt->p_offset +
-		// 		    elf_ppnt->p_vaddr;
-		// }
+		/*
+		 * Figure out which segment in the file contains the Program
+		 * Header table, and map to the associated memory address.
+		 */
+		if (elf_ppnt->p_offset <= elf_ex->e_phoff &&
+		    elf_ex->e_phoff < elf_ppnt->p_offset + elf_ppnt->p_filesz) {
+			phdr_addr = elf_ex->e_phoff - elf_ppnt->p_offset +
+				    elf_ppnt->p_vaddr;
+		}
 
 		k = elf_ppnt->p_vaddr;
 		if ((elf_ppnt->p_flags & PF_X) && k < start_code)
@@ -840,8 +939,8 @@ out_free_interp:
 		 * <= p_memsz so it is only necessary to check p_memsz.
 		 */
 		if (BAD_ADDR(k) || elf_ppnt->p_filesz > elf_ppnt->p_memsz ||
-			elf_ppnt->p_memsz > TASK_SIZE ||
-			TASK_SIZE - elf_ppnt->p_memsz < k) {
+		    elf_ppnt->p_memsz > TASK_SIZE ||
+		    TASK_SIZE - elf_ppnt->p_memsz < k) {
 			/* set_brk can never work. Avoid overflows. */
 			retval = -EINVAL;
 			goto out_free_dentry;
@@ -851,25 +950,27 @@ out_free_interp:
 
 		if (k > elf_bss)
 			elf_bss = k;
+
 		if ((elf_ppnt->p_flags & PF_X) && end_code < k)
 			end_code = k;
 		if (end_data < k)
 			end_data = k;
 		k = elf_ppnt->p_vaddr + elf_ppnt->p_memsz;
-		if (k > elf_brk) {
-			bss_prot = elf_prot;
+		if (k > elf_brk)
 			elf_brk = k;
-		}
 	}
+
+	elf_bss += load_bias;
 
 	e_entry = elf_ex->e_entry + load_bias;
 	phdr_addr += load_bias;
-	elf_bss += load_bias;
 	elf_brk += load_bias;
 	start_code += load_bias;
 	end_code += load_bias;
 	start_data += load_bias;
 	end_data += load_bias;
+
+	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
 
 	/* Calling set_brk effectively mmaps the pages that we need
 	 * for the bss and break sections.  We must do this before
@@ -879,17 +980,14 @@ out_free_interp:
 	retval = set_brk(elf_bss, elf_brk, bss_prot);
 	if (retval)
 		goto out_free_dentry;
-	if (likely(elf_bss != elf_brk) && unlikely(padzero(elf_bss))) {
-		retval = -EFAULT; /* Nobody gets to see this, but.. */
-		goto out_free_dentry;
-	}
+	padzero(elf_bss);
 
 	if (interpreter) {
 		// elf_entry = load_elf_interp(interp_elf_ex,
 		// 			    interpreter,
 		// 			    load_bias, interp_elf_phdata,
 		// 			    &arch_state);
-		// if (!IS_ERR((void *)elf_entry)) {
+		// if (!IS_ERR_VALUE(elf_entry)) {
 		// 	/*
 		// 	 * load_elf_interp() returns relocation
 		// 	 * adjustment
@@ -898,13 +996,12 @@ out_free_interp:
 		// 	elf_entry += interp_elf_ex->e_entry;
 		// }
 		// if (BAD_ADDR(elf_entry)) {
-		// 	retval = IS_ERR((void *)elf_entry) ?
+		// 	retval = IS_ERR_VALUE(elf_entry) ?
 		// 			(int)elf_entry : -EINVAL;
 		// 	goto out_free_dentry;
 		// }
 		// reloc_func_desc = interp_load_addr;
 
-		// allow_write_access(interpreter);
 		// fput(interpreter);
 
 		// kfree(interp_elf_ex);
@@ -919,7 +1016,7 @@ out_free_interp:
 
 	kfree(elf_phdata);
 
-	// set_binfmt(&elf_format);
+	set_binfmt(&elf_format);
 
 // #ifdef ARCH_HAS_SETUP_ADDITIONAL_PAGES
 	// retval = ARCH_SETUP_ADDITIONAL_PAGES(bprm, elf_ex, !!interpreter);
@@ -938,9 +1035,10 @@ out_free_interp:
 	mm->start_data = start_data;
 	mm->end_data = end_data;
 	mm->start_stack = bprm->p;
+
 	mm->entry_point = e_entry;
 
-	// if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+	// if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
 	// 	/*
 	// 	 * For architectures with ELF randomization, when executing
 	// 	 * a loader directly (i.e. no interpreter listed in ELF
@@ -951,12 +1049,12 @@ out_free_interp:
 	// 	if (IS_ENABLED(CONFIG_ARCH_HAS_ELF_RANDOMIZE) &&
 	// 	    elf_ex->e_type == ET_DYN && !interpreter) {
 	// 		mm->brk = mm->start_brk = ELF_ET_DYN_BASE;
+	// 	} else {
+	// 		/* Otherwise leave a gap between .bss and brk. */
+	// 		mm->brk = mm->start_brk = mm->brk + PAGE_SIZE;
 	// 	}
 
 	// 	mm->brk = mm->start_brk = arch_randomize_brk(mm);
-// #ifdef compat_brk_randomized
-		// current->brk_randomized = 1;
-// #endif
 	// }
 
 	// if (current->personality & MMAP_PAGE_ZERO) {
@@ -983,7 +1081,7 @@ out_free_interp:
 	// ELF_PLAT_INIT(regs, reloc_func_desc);
 // #endif
 
-	// finalize_exec(bprm);
+	finalize_exec(bprm);
 	START_THREAD(elf_ex, regs, elf_entry, bprm->p);
 	retval = 0;
 out:

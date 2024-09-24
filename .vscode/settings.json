@@ -333,7 +333,8 @@
         "features.h": "c",
         "prctl.h": "c",
         "myos_sysreboot.h": "c",
-        "uio.h": "c"
+        "uio.h": "c",
+        "binfmts.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

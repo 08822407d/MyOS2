@@ -23,7 +23,7 @@
 		 * must be the first element of task_struct.
 		 */
 		thread_info_s	thread_info;
-		unsigned int	__state;
+		uint			__state;
 
 	// #ifdef CONFIG_PREEMPT_RT
 		// /* saved state for "spinlock sleepers" */
@@ -39,7 +39,7 @@
 		void			*stack;
 		atomic_t		usage;
 		/* Per task flags (PF_*), defined further below: */
-		unsigned int	flags;
+		uint			flags;
 		// unsigned int ptrace;
 
 		int				on_cpu;
@@ -289,8 +289,8 @@
 		// atomic_t tick_dep_mask;
 	// #endif
 		/* Context switch counts: */
-		unsigned long	nvcsw;
-		unsigned long	nivcsw;
+		ulong			nvcsw;
+		ulong			nivcsw;
 
 		/* Monotonic time in nsecs: */
 		u64				start_time;
@@ -358,7 +358,7 @@
 		// struct nsproxy *nsproxy;
 
 		/* Signal handlers: */
-		signal_s	*signal;
+		signal_s		*signal;
 		// struct sighand_struct __rcu *sighand;
 		// sigset_t blocked;
 		// sigset_t real_blocked;
@@ -755,8 +755,8 @@
 		// */
 		// randomized_struct_fields_end
 
-		// 	/* CPU-specific state of this task: */
-			thread_s	thread;
+		/* CPU-specific state of this task: */
+		thread_s		thread;
 
 		/*
 		 * WARNING: on x86, 'thread_struct' contains a variable-sized

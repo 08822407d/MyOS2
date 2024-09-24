@@ -697,6 +697,141 @@ exec_mmap(mm_s *mm) {
 	return 0;
 }
 
+static int
+de_thread(task_s *tsk) {
+	// struct signal_struct *sig = tsk->signal;
+	// struct sighand_struct *oldsighand = tsk->sighand;
+	// spinlock_t *lock = &oldsighand->siglock;
+
+	// if (thread_group_empty(tsk))
+	// 	goto no_thread_group;
+
+	// /*
+	//  * Kill all other threads in the thread group.
+	//  */
+	// spin_lock_irq(lock);
+	// if ((sig->flags & SIGNAL_GROUP_EXIT) || sig->group_exec_task) {
+	// 	/*
+	// 	 * Another group action in progress, just
+	// 	 * return so that the signal is processed.
+	// 	 */
+	// 	spin_unlock_irq(lock);
+	// 	return -EAGAIN;
+	// }
+
+	// sig->group_exec_task = tsk;
+	// sig->notify_count = zap_other_threads(tsk);
+	// if (!thread_group_leader(tsk))
+	// 	sig->notify_count--;
+
+	// while (sig->notify_count) {
+	// 	__set_current_state(TASK_KILLABLE);
+	// 	spin_unlock_irq(lock);
+	// 	schedule();
+	// 	if (__fatal_signal_pending(tsk))
+	// 		goto killed;
+	// 	spin_lock_irq(lock);
+	// }
+	// spin_unlock_irq(lock);
+
+	// /*
+	//  * At this point all other threads have exited, all we have to
+	//  * do is to wait for the thread group leader to become inactive,
+	//  * and to assume its PID:
+	//  */
+	// if (!thread_group_leader(tsk)) {
+	// 	struct task_struct *leader = tsk->group_leader;
+
+	// 	for (;;) {
+	// 		cgroup_threadgroup_change_begin(tsk);
+	// 		write_lock_irq(&tasklist_lock);
+	// 		/*
+	// 		 * Do this under tasklist_lock to ensure that
+	// 		 * exit_notify() can't miss ->group_exec_task
+	// 		 */
+	// 		sig->notify_count = -1;
+	// 		if (likely(leader->exit_state))
+	// 			break;
+	// 		__set_current_state(TASK_KILLABLE);
+	// 		write_unlock_irq(&tasklist_lock);
+	// 		cgroup_threadgroup_change_end(tsk);
+	// 		schedule();
+	// 		if (__fatal_signal_pending(tsk))
+	// 			goto killed;
+	// 	}
+
+	// 	/*
+	// 	 * The only record we have of the real-time age of a
+	// 	 * process, regardless of execs it's done, is start_time.
+	// 	 * All the past CPU time is accumulated in signal_struct
+	// 	 * from sister threads now dead.  But in this non-leader
+	// 	 * exec, nothing survives from the original leader thread,
+	// 	 * whose birth marks the true age of this process now.
+	// 	 * When we take on its identity by switching to its PID, we
+	// 	 * also take its birthdate (always earlier than our own).
+	// 	 */
+	// 	tsk->start_time = leader->start_time;
+	// 	tsk->start_boottime = leader->start_boottime;
+
+	// 	BUG_ON(!same_thread_group(leader, tsk));
+	// 	/*
+	// 	 * An exec() starts a new thread group with the
+	// 	 * TGID of the previous thread group. Rehash the
+	// 	 * two threads with a switched PID, and release
+	// 	 * the former thread group leader:
+	// 	 */
+
+	// 	/* Become a process group leader with the old leader's pid.
+	// 	 * The old leader becomes a thread of the this thread group.
+	// 	 */
+	// 	exchange_tids(tsk, leader);
+	// 	transfer_pid(leader, tsk, PIDTYPE_TGID);
+	// 	transfer_pid(leader, tsk, PIDTYPE_PGID);
+	// 	transfer_pid(leader, tsk, PIDTYPE_SID);
+
+	// 	list_replace_rcu(&leader->tasks, &tsk->tasks);
+	// 	list_replace_init(&leader->sibling, &tsk->sibling);
+
+	// 	tsk->group_leader = tsk;
+	// 	leader->group_leader = tsk;
+
+	// 	tsk->exit_signal = SIGCHLD;
+	// 	leader->exit_signal = -1;
+
+	// 	BUG_ON(leader->exit_state != EXIT_ZOMBIE);
+	// 	leader->exit_state = EXIT_DEAD;
+	// 	/*
+	// 	 * We are going to release_task()->ptrace_unlink() silently,
+	// 	 * the tracer can sleep in do_wait(). EXIT_DEAD guarantees
+	// 	 * the tracer won't block again waiting for this thread.
+	// 	 */
+	// 	if (unlikely(leader->ptrace))
+	// 		__wake_up_parent(leader, leader->parent);
+	// 	write_unlock_irq(&tasklist_lock);
+	// 	cgroup_threadgroup_change_end(tsk);
+
+	// 	release_task(leader);
+	// }
+
+	// sig->group_exec_task = NULL;
+	// sig->notify_count = 0;
+
+// no_thread_group:
+	// /* we have changed execution domain */
+	// tsk->exit_signal = SIGCHLD;
+
+	// BUG_ON(!thread_group_leader(tsk));
+	return 0;
+
+// killed:
+	// /* protects against exit_notify() and __exit_signal() */
+	// read_lock(&tasklist_lock);
+	// sig->group_exec_task = NULL;
+	// sig->notify_count = 0;
+	// read_unlock(&tasklist_lock);
+	// return -EAGAIN;
+}
+
 
 char *__get_task_comm(char *buf, size_t buf_size, task_s *tsk)
 {
@@ -752,12 +887,12 @@ int begin_new_exec(linux_bprm_s * bprm)
 	 */
 	bprm->point_of_no_return = true;
 
-	// /*
-	//  * Make this the only thread in the thread group.
-	//  */
-	// retval = de_thread(me);
-	// if (retval)
-	// 	goto out;
+	/*
+	 * Make this the only thread in the thread group.
+	 */
+	retval = de_thread(me);
+	if (retval != -ENOERR)
+		goto out;
 
 	// /*
 	//  * Cancel any io_uring activity across execve
@@ -792,6 +927,10 @@ int begin_new_exec(linux_bprm_s * bprm)
 		goto out;
 
 	bprm->mm = NULL;
+
+	// retval = exec_task_namespaces();
+	// if (retval)
+	// 	goto out_unlock;
 
 // #ifdef CONFIG_POSIX_TIMERS
 	// spin_lock_irq(&me->sighand->siglock);
@@ -928,6 +1067,15 @@ void setup_new_exec(linux_bprm_s * bprm)
 }
 EXPORT_SYMBOL(setup_new_exec);
 
+/* Runs immediately before start_thread() takes over. */
+void finalize_exec(linux_bprm_s *bprm)
+{
+	// /* Store any stack rlimit changes before starting thread. */
+	// task_lock(current->group_leader);
+	// current->signal->rlim[RLIMIT_STACK] = bprm->rlim_stack;
+	// task_unlock(current->group_leader);
+}
+EXPORT_SYMBOL(finalize_exec);
 
 static void
 free_bprm(linux_bprm_s *bprm) {
@@ -1301,6 +1449,20 @@ do_execve(filename_s *filename,
 	return do_execveat_common(AT_FDCWD,
 			filename, __argv, __envp, 0);
 }
+
+
+void set_binfmt(linux_bfmt_s *new)
+{
+	mm_s *mm = current->mm;
+
+	// if (mm->binfmt)
+	// 	module_put(mm->binfmt->module);
+
+	mm->binfmt = new;
+	// if (new)
+	// 	__module_get(new->module);
+}
+EXPORT_SYMBOL(set_binfmt);
 
 
 MYOS_SYSCALL_DEFINE3(execve, const char *,filename,
