@@ -8,8 +8,12 @@
 	// #include <linux/kasan-checks.h>
 	#include <linux/lib/string.h>
 	#include <asm/asm.h>
-	// #include <asm/smap.h>
+	#include <asm/smap.h>
 	// #include <asm/extable.h>
+
+	#include <asm/uaccess_64.h>
+
+	#include <uapi/asm-generic/access_ok.h>
 
 	// extern int __get_user_1(void);
 	// extern int __get_user_2(void);
@@ -21,77 +25,77 @@
 	// extern int __get_user_nocheck_8(void);
 	// extern int __get_user_bad(void);
 
-	// #define __uaccess_begin() stac()
-	// #define __uaccess_end()   clac()
-	// #define __uaccess_begin_nospec()	\
-	// ({					\
-	// 	stac();				\
-	// 	barrier_nospec();		\
-	// })
+	#define __uaccess_begin() stac()
+	#define __uaccess_end()   clac()
+	#define __uaccess_begin_nospec()	\
+	({					\
+		stac();				\
+		barrier_nospec();		\
+	})
 
-	// /*
-	//  * This is the smallest unsigned integer type that can fit a value
-	//  * (up to 'long long')
-	//  */
-	// #define __inttype(x) __typeof__(		\
-	// 	__typefits(x,char,			\
-	// 	  __typefits(x,short,			\
-	// 	    __typefits(x,int,			\
-	// 	      __typefits(x,long,0ULL)))))
+	/*
+	 * This is the smallest unsigned integer type that can fit a value
+	 * (up to 'long long')
+	 */
+	#define __inttype(x) __typeof__(		\
+		__typefits(x,char,			\
+		  __typefits(x,short,			\
+		    __typefits(x,int,			\
+		      __typefits(x,long,0ULL)))))
 
-	// #define __typefits(x,type,not) \
-	// 	__builtin_choose_expr(sizeof(x)<=sizeof(type),(unsigned type)0,not)
+	#define __typefits(x,type,not) \
+		__builtin_choose_expr(sizeof(x)<=sizeof(type),(unsigned type)0,not)
 
-	// /*
-	//  * This is used for both get_user() and __get_user() to expand to
-	//  * the proper special function call that has odd calling conventions
-	//  * due to returning both a value and an error, and that depends on
-	//  * the size of the pointer passed in.
-	//  *
-	//  * Careful: we have to cast the result to the type of the pointer
-	//  * for sign reasons.
-	//  *
-	//  * The use of _ASM_DX as the register specifier is a bit of a
-	//  * simplification, as gcc only cares about it as the starting point
-	//  * and not size: for a 64-bit value it will use %ecx:%edx on 32 bits
-	//  * (%ecx being the next register in gcc's x86 register sequence), and
-	//  * %rdx on 64 bits.
-	//  *
-	//  * Clang/LLVM cares about the size of the register, but still wants
-	//  * the base register for something that ends up being a pair.
-	//  */
-	// #define do_get_user_call(fn,x,ptr)					\
-	// ({									\
-	// 	int __ret_gu;							\
-	// 	register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
-	// 	__chk_user_ptr(ptr);						\
-	// 	asm volatile("call __" #fn "_%c[size]"				\
-	// 		     : "=a" (__ret_gu), "=r" (__val_gu),		\
-	// 			ASM_CALL_CONSTRAINT				\
-	// 		     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
-	// 	instrument_get_user(__val_gu);					\
-	// 	(x) = (__force __typeof__(*(ptr))) __val_gu;			\
-	// 	__builtin_expect(__ret_gu, 0);					\
-	// })
+	/*
+	 * This is used for both get_user() and __get_user() to expand to
+	 * the proper special function call that has odd calling conventions
+	 * due to returning both a value and an error, and that depends on
+	 * the size of the pointer passed in.
+	 *
+	 * Careful: we have to cast the result to the type of the pointer
+	 * for sign reasons.
+	 *
+	 * The use of _ASM_DX as the register specifier is a bit of a
+	 * simplification, as gcc only cares about it as the starting point
+	 * and not size: for a 64-bit value it will use %ecx:%edx on 32 bits
+	 * (%ecx being the next register in gcc's x86 register sequence), and
+	 * %rdx on 64 bits.
+	 *
+	 * Clang/LLVM cares about the size of the register, but still wants
+	 * the base register for something that ends up being a pair.
+	 */
+	#define do_get_user_call(fn,x,ptr)					\
+	({									\
+		int __ret_gu;							\
+		register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
+		__chk_user_ptr(ptr);						\
+		asm volatile("call __" #fn "_%c[size]"				\
+			     : "=a" (__ret_gu), "=r" (__val_gu),		\
+				ASM_CALL_CONSTRAINT				\
+			     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
+		instrument_get_user(__val_gu);					\
+		(x) = (__force __typeof__(*(ptr))) __val_gu;			\
+		__builtin_expect(__ret_gu, 0);					\
+	})
 
-	// /**
-	//  * get_user - Get a simple variable from user space.
-	//  * @x:   Variable to store result.
-	//  * @ptr: Source address, in user space.
-	//  *
-	//  * Context: User context only. This function may sleep if pagefaults are
-	//  *          enabled.
-	//  *
-	//  * This macro copies a single simple variable from user space to kernel
-	//  * space.  It supports simple types like char and int, but not larger
-	//  * data types like structures or arrays.
-	//  *
-	//  * @ptr must have pointer-to-simple-variable type, and the result of
-	//  * dereferencing @ptr must be assignable to @x without a cast.
-	//  *
-	//  * Return: zero on success, or -EFAULT on error.
-	//  * On error, the variable @x is set to zero.
-	//  */
+	/**
+	 * get_user - Get a simple variable from user space.
+	 * @x:   Variable to store result.
+	 * @ptr: Source address, in user space.
+	 *
+	 * Context: User context only. This function may sleep if pagefaults are
+	 *          enabled.
+	 *
+	 * This macro copies a single simple variable from user space to kernel
+	 * space.  It supports simple types like char and int, but not larger
+	 * data types like structures or arrays.
+	 *
+	 * @ptr must have pointer-to-simple-variable type, and the result of
+	 * dereferencing @ptr must be assignable to @x without a cast.
+	 *
+	 * Return: zero on success, or -EFAULT on error.
+	 * On error, the variable @x is set to zero.
+	 */
 	// #define get_user(x,ptr) ({ might_fault(); do_get_user_call(get_user,x,ptr); })
 	#define get_user(x, ptr) ({					\
 				(x) = *(__typeof(&(x)))(ptr);	\
@@ -122,20 +126,8 @@
 	// #define __get_user(x,ptr) do_get_user_call(get_user_nocheck,x,ptr)
 
 
-	// #ifdef CONFIG_X86_32
-	// #define __put_user_goto_u64(x, addr, label)			\
-	// 	asm goto("\n"					\
-	// 		     "1:	movl %%eax,0(%1)\n"		\
-	// 		     "2:	movl %%edx,4(%1)\n"		\
-	// 		     _ASM_EXTABLE_UA(1b, %l2)			\
-	// 		     _ASM_EXTABLE_UA(2b, %l2)			\
-	// 		     : : "A" (x), "r" (addr)			\
-	// 		     : : label)
-
-	// #else
-	// #define __put_user_goto_u64(x, ptr, label) \
+	// #define __put_user_goto_u65(x, ptr, label) \
 	// 	__put_user_goto(x, ptr, "q", "er", label)
-	// #endif
 
 	// extern void __put_user_bad(void);
 
@@ -179,24 +171,28 @@
 	// 	__builtin_expect(__ret_pu, 0);					\
 	// })
 
-	// /**
-	//  * put_user - Write a simple value into user space.
-	//  * @x:   Value to copy to user space.
-	//  * @ptr: Destination address, in user space.
-	//  *
-	//  * Context: User context only. This function may sleep if pagefaults are
-	//  *          enabled.
-	//  *
-	//  * This macro copies a single simple value from kernel space to user
-	//  * space.  It supports simple types like char and int, but not larger
-	//  * data types like structures or arrays.
-	//  *
-	//  * @ptr must have pointer-to-simple-variable type, and @x must be assignable
-	//  * to the result of dereferencing @ptr.
-	//  *
-	//  * Return: zero on success, or -EFAULT on error.
-	//  */
+	/**
+	 * put_user - Write a simple value into user space.
+	 * @x:   Value to copy to user space.
+	 * @ptr: Destination address, in user space.
+	 *
+	 * Context: User context only. This function may sleep if pagefaults are
+	 *          enabled.
+	 *
+	 * This macro copies a single simple value from kernel space to user
+	 * space.  It supports simple types like char and int, but not larger
+	 * data types like structures or arrays.
+	 *
+	 * @ptr must have pointer-to-simple-variable type, and @x must be assignable
+	 * to the result of dereferencing @ptr.
+	 *
+	 * Return: zero on success, or -EFAULT on error.
+	 */
 	// #define put_user(x, ptr) ({ might_fault(); do_put_user_call(put_user,x,ptr); })
+	#define put_user(x, ptr) ({					\
+				*(ptr) = (__typeof(*(ptr)))(x);	\
+				-ENOERR;						\
+			})
 
 	// /**
 	//  * __put_user - Write a simple value into user space, with less checking.
@@ -219,10 +215,6 @@
 	//  * Return: zero on success, or -EFAULT on error.
 	//  */
 	// #define __put_user(x, ptr) do_put_user_call(put_user_nocheck,x,ptr)
-	#define put_user(x, ptr) ({					\
-				*(ptr) = (__typeof(*(ptr)))(x);	\
-				-ENOERR;						\
-			})
 
 	// #define __put_user_size(x, ptr, size, label)				\
 	// do {									\
@@ -250,19 +242,8 @@
 
 	// #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 
-	// #ifdef CONFIG_X86_32
-	// #define __get_user_asm_u64(x, ptr, label) do {				\
-	// 	unsigned int __gu_low, __gu_high;				\
-	// 	const unsigned int __user *__gu_ptr;				\
-	// 	__gu_ptr = (const void __user *)(ptr);				\
-	// 	__get_user_asm(__gu_low, __gu_ptr, "l", "=r", label);		\
-	// 	__get_user_asm(__gu_high, __gu_ptr+1, "l", "=r", label);	\
-	// 	(x) = ((unsigned long long)__gu_high << 32) | __gu_low;		\
-	// } while (0)
-	// #else
 	// #define __get_user_asm_u64(x, ptr, label)				\
 	// 	__get_user_asm(x, ptr, "q", "=r", label)
-	// #endif
 
 	// #define __get_user_size(x, ptr, size, label)				\
 	// do {									\
@@ -299,31 +280,8 @@
 
 	// #else // !CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 
-	// #ifdef CONFIG_X86_32
-	// #define __get_user_asm_u64(x, ptr, retval)				\
-	// ({									\
-	// 	__typeof__(ptr) __ptr = (ptr);					\
-	// 	asm volatile("\n"						\
-	// 			"1:	movl %[lowbits],%%eax\n"		\
-	// 			"2:	movl %[highbits],%%edx\n"		\
-	// 			"3:\n"						\
-	// 			_ASM_EXTABLE_TYPE_REG(1b, 3b, EX_TYPE_EFAULT_REG |	\
-	// 					EX_FLAG_CLEAR_AX_DX,		\
-	// 					%[errout])			\
-	// 			_ASM_EXTABLE_TYPE_REG(2b, 3b, EX_TYPE_EFAULT_REG |	\
-	// 					EX_FLAG_CLEAR_AX_DX,		\
-	// 					%[errout])			\
-	// 			: [errout] "=r" (retval),				\
-	// 			[output] "=&A"(x)				\
-	// 			: [lowbits] "m" (__m(__ptr)),			\
-	// 			[highbits] "m" __m(((u32 __user *)(__ptr)) + 1),	\
-	// 			"0" (retval));					\
-	// })
-
-	// #else
 	// #define __get_user_asm_u64(x, ptr, retval) \
 	// 	__get_user_asm(x, ptr, retval, "q")
-	// #endif
 
 	// #define __get_user_size(x, ptr, size, retval)				\
 	// do {									\
@@ -383,26 +341,6 @@
 	// 		*_old = __old;						\
 	// 	likely(success);					})
 
-	// #ifdef CONFIG_X86_32
-	// #define __try_cmpxchg64_user_asm(_ptr, _pold, _new, label)	({	\
-	// 	bool success;							\
-	// 	__typeof__(_ptr) _old = (__typeof__(_ptr))(_pold);		\
-	// 	__typeof__(*(_ptr)) __old = *_old;				\
-	// 	__typeof__(*(_ptr)) __new = (_new);				\
-	// 	asm_goto_output("\n"						\
-	// 			"1: " LOCK_PREFIX "cmpxchg8b %[ptr]\n"		\
-	// 			_ASM_EXTABLE_UA(1b, %l[label])			\
-	// 			: CC_OUT(z) (success),				\
-	// 			"+A" (__old),					\
-	// 			[ptr] "+m" (*_ptr)				\
-	// 			: "b" ((u32)__new),				\
-	// 			"c" ((u32)((u64)__new >> 32))			\
-	// 			: "memory"						\
-	// 			: label);						\
-	// 	if (unlikely(!success))						\
-	// 		*_old = __old;						\
-	// 	likely(success);					})
-	// #endif // CONFIG_X86_32
 	// #else  // !CONFIG_CC_HAS_ASM_GOTO_TIED_OUTPUT
 	// #define __try_cmpxchg_user_asm(itype, ltype, _ptr, _pold, _new, label)	({ \
 	// 	int __err = 0;							\
@@ -428,38 +366,6 @@
 	// 		*_old = __old;						\
 	// 	likely(success);					})
 
-	// #ifdef CONFIG_X86_32
-	// /*
-	// * Unlike the normal CMPXCHG, use output GPR for both success/fail and error.
-	// * There are only six GPRs available and four (EAX, EBX, ECX, and EDX) are
-	// * hardcoded by CMPXCHG8B, leaving only ESI and EDI.  If the compiler uses
-	// * both ESI and EDI for the memory operand, compilation will fail if the error
-	// * is an input+output as there will be no register available for input.
-	// */
-	// #define __try_cmpxchg64_user_asm(_ptr, _pold, _new, label)	({	\
-	// 	int __result;							\
-	// 	__typeof__(_ptr) _old = (__typeof__(_ptr))(_pold);		\
-	// 	__typeof__(*(_ptr)) __old = *_old;				\
-	// 	__typeof__(*(_ptr)) __new = (_new);				\
-	// 	asm volatile("\n"						\
-	// 			"1: " LOCK_PREFIX "cmpxchg8b %[ptr]\n"		\
-	// 			"mov $0, %[result]\n\t"				\
-	// 			"setz %b[result]\n"				\
-	// 			"2:\n"						\
-	// 			_ASM_EXTABLE_TYPE_REG(1b, 2b, EX_TYPE_EFAULT_REG,	\
-	// 					%[result])			\
-	// 			: [result] "=q" (__result),			\
-	// 			"+A" (__old),					\
-	// 			[ptr] "+m" (*_ptr)				\
-	// 			: "b" ((u32)__new),				\
-	// 			"c" ((u32)((u64)__new >> 32))			\
-	// 			: "memory", "cc");					\
-	// 	if (unlikely(__result < 0))					\
-	// 		goto label;						\
-	// 	if (unlikely(!__result))					\
-	// 		*_old = __old;						\
-	// 	likely(__result);					})
-	// #endif // CONFIG_X86_32
 	// #endif // CONFIG_CC_HAS_ASM_GOTO_TIED_OUTPUT
 
 	// /* FIXME: this hack is definitely wrong -AK */
@@ -546,11 +452,6 @@
 	// #endif // CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 
 	// extern void __try_cmpxchg_user_wrong_size(void);
-
-	// #ifndef CONFIG_X86_32
-	// #define __try_cmpxchg64_user_asm(_ptr, _oldp, _nval, _label)		\
-	// 	__try_cmpxchg_user_asm("q", "r", (_ptr), (_oldp), (_nval), _label)
-	// #endif
 
 	// /*
 	// * Force the pointer to u<size> to match the size expected by the asm helper.

@@ -47,15 +47,15 @@
 
 	#	define LOCK_PREFIX	LOCK_PREFIX_HERE	"\n\tlock; "
 
-	// /*
-	// * objtool annotation to ignore the alternatives and only consider the original
-	// * instruction(s).
-	// */
-	// #define ANNOTATE_IGNORE_ALTERNATIVE				\
-	// 	"999:\n\t"						\
-	// 	".pushsection .discard.ignore_alts\n\t"			\
-	// 	".long 999b\n\t"					\
-	// 	".popsection\n\t"
+	/*
+	* objtool annotation to ignore the alternatives and only consider the original
+	* instruction(s).
+	*/
+	#define ANNOTATE_IGNORE_ALTERNATIVE				\
+		"999:\n\t"						\
+		".pushsection .discard.ignore_alts\n\t"			\
+		".long 999b\n\t"					\
+		".popsection\n\t"
 
 	// /*
 	// * The patching flags are part of the upper bits of the @ft_flags parameter when
@@ -147,40 +147,40 @@
 	// }
 	// #endif	/* CONFIG_SMP */
 
-	// #define ALT_CALL_INSTR		"call BUG_func"
+	#define ALT_CALL_INSTR		"call BUG_func"
 
-	// #define alt_slen		"772b-771b"
-	// #define alt_total_slen		"773b-771b"
-	// #define alt_rlen		"775f-774f"
+	#define alt_slen		"772b-771b"
+	#define alt_total_slen		"773b-771b"
+	#define alt_rlen		"775f-774f"
 
-	// #define OLDINSTR(oldinstr)						\
-	// 	"# ALT: oldinstr\n"						\
-	// 	"771:\n\t" oldinstr "\n772:\n"					\
-	// 	"# ALT: padding\n"						\
-	// 	".skip -(((" alt_rlen ")-(" alt_slen ")) > 0) * "		\
-	// 		"((" alt_rlen ")-(" alt_slen ")),0x90\n"		\
-	// 	"773:\n"
+	#define OLDINSTR(oldinstr)						\
+		"# ALT: oldinstr\n"						\
+		"771:\n\t" oldinstr "\n772:\n"					\
+		"# ALT: padding\n"						\
+		".skip -(((" alt_rlen ")-(" alt_slen ")) > 0) * "		\
+			"((" alt_rlen ")-(" alt_slen ")),0x90\n"		\
+		"773:\n"
 
-	// #define ALTINSTR_ENTRY(ft_flags)					      \
-	// 	".pushsection .altinstructions,\"a\"\n"				      \
-	// 	" .long 771b - .\n"				/* label           */ \
-	// 	" .long 774f - .\n"				/* new instruction */ \
-	// 	" .4byte " __stringify(ft_flags) "\n"		/* feature + flags */ \
-	// 	" .byte " alt_total_slen "\n"			/* source len      */ \
-	// 	" .byte " alt_rlen "\n"				/* replacement len */ \
-	// 	".popsection\n"
+	#define ALTINSTR_ENTRY(ft_flags)					      \
+		".pushsection .altinstructions,\"a\"\n"				      \
+		" .long 771b - .\n"				/* label           */ \
+		" .long 774f - .\n"				/* new instruction */ \
+		" .4byte " __stringify(ft_flags) "\n"		/* feature + flags */ \
+		" .byte " alt_total_slen "\n"			/* source len      */ \
+		" .byte " alt_rlen "\n"				/* replacement len */ \
+		".popsection\n"
 
-	// #define ALTINSTR_REPLACEMENT(newinstr)		/* replacement */	\
-	// 	".pushsection .altinstr_replacement, \"ax\"\n"			\
-	// 	"# ALT: replacement\n"						\
-	// 	"774:\n\t" newinstr "\n775:\n"					\
-	// 	".popsection\n"
+	#define ALTINSTR_REPLACEMENT(newinstr)		/* replacement */	\
+		".pushsection .altinstr_replacement, \"ax\"\n"			\
+		"# ALT: replacement\n"						\
+		"774:\n\t" newinstr "\n775:\n"					\
+		".popsection\n"
 
-	// /* alternative assembly primitive: */
-	// #define ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
-	// 	OLDINSTR(oldinstr)						\
-	// 	ALTINSTR_ENTRY(ft_flags)					\
-	// 	ALTINSTR_REPLACEMENT(newinstr)
+	/* alternative assembly primitive: */
+	#define ALTERNATIVE(oldinstr, newinstr, ft_flags)			\
+		OLDINSTR(oldinstr)						\
+		ALTINSTR_ENTRY(ft_flags)					\
+		ALTINSTR_REPLACEMENT(newinstr)
 
 	// #define ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
 	// 	ALTERNATIVE(ALTERNATIVE(oldinstr, newinstr1, ft_flags1), newinstr2, ft_flags2)
@@ -194,20 +194,20 @@
 	// 	ALTERNATIVE(ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2), \
 	// 			newinstr3, ft_flags3)
 
-	// /*
-	// * Alternative instructions for different CPU types or capabilities.
-	// *
-	// * This allows to use optimized instructions even on generic binary
-	// * kernels.
-	// *
-	// * length of oldinstr must be longer or equal the length of newinstr
-	// * It can be padded with nops as needed.
-	// *
-	// * For non barrier like inlines please define new variants
-	// * without volatile and memory clobber.
-	// */
-	// #define alternative(oldinstr, newinstr, ft_flags)			\
-	// 	asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags) : : : "memory")
+	/*
+	* Alternative instructions for different CPU types or capabilities.
+	*
+	* This allows to use optimized instructions even on generic binary
+	* kernels.
+	*
+	* length of oldinstr must be longer or equal the length of newinstr
+	* It can be padded with nops as needed.
+	*
+	* For non barrier like inlines please define new variants
+	* without volatile and memory clobber.
+	*/
+	#define alternative(oldinstr, newinstr, ft_flags)			\
+		asm_inline volatile(ALTERNATIVE(oldinstr, newinstr, ft_flags) : : : "memory")
 
 	// #define alternative_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
 	// 	asm_inline volatile(ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) ::: "memory")

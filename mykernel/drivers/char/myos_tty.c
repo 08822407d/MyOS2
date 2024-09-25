@@ -1,5 +1,6 @@
 #include <linux/kernel/mm_api.h>
 #include <linux/kernel/stddef.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/lib/string.h>
 
 #include <klib/font.h>
@@ -65,6 +66,7 @@ int myos_tty_open(inode_s * inode, file_s * fp)
 ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 {
 	long counter  = 0;
+	ulong cplen;
 	char *tmpbuf = kzalloc(count, GFP_KERNEL);
 	while (counter < count)
 	{
@@ -75,7 +77,7 @@ ssize_t myos_tty_read(file_s *fp, char *buf, size_t count, loff_t *position)
 			counter++;
 		}
 	}
-	copy_to_user(buf, tmpbuf, counter);
+	cplen = copy_to_user(buf, tmpbuf, counter);
 	kfree(tmpbuf);
 
 	return counter;	

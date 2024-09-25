@@ -334,7 +334,10 @@
         "prctl.h": "c",
         "myos_sysreboot.h": "c",
         "uio.h": "c",
-        "binfmts.h": "c"
+        "binfmts.h": "c",
+        "minmax.h": "c",
+        "access_ok.h": "c",
+        "smap.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -34,7 +34,7 @@
 
 
 #ifndef ELF_COMPAT
-#	define ELF_COMPAT	0
+#  define ELF_COMPAT	0
 #endif
 
 static int load_elf_binary(linux_bprm_s *bprm);
@@ -46,17 +46,17 @@ static int load_elf_binary(linux_bprm_s *bprm);
 #ifdef CONFIG_ELF_CORE
 	static int elf_core_dump(struct coredump_params *cprm);
 #else
-#	define elf_core_dump	NULL
+#  define elf_core_dump		NULL
 #endif
 
 // #if ELF_EXEC_PAGESIZE > PAGE_SIZE
 // #	define ELF_MIN_ALIGN	ELF_EXEC_PAGESIZE
 // #else
-#	define ELF_MIN_ALIGN	PAGE_SIZE
+#  define ELF_MIN_ALIGN		PAGE_SIZE
 // #endif
 
 #ifndef ELF_CORE_EFLAGS
-#	define ELF_CORE_EFLAGS	0
+#  define ELF_CORE_EFLAGS	0
 #endif
 
 #define ELF_PAGESTART(_v)	((_v) & ~(unsigned long)(ELF_MIN_ALIGN - 1))
@@ -73,10 +73,11 @@ static linux_bfmt_s elf_format = {
 
 #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
-/* We need to explicitly zero any fractional pages
-   after the data section (i.e. bss).  This would
-   contain the junk from the file that should not
-   be in memory
+/*
+ * We need to explicitly zero any fractional pages
+ * after the data section (i.e. bss).  This would
+ * contain the junk from the file that should not
+ * be in memory
  */
 static int
 padzero(ulong elf_bss) {
@@ -85,9 +86,8 @@ padzero(ulong elf_bss) {
 	nbyte = ELF_PAGEOFFSET(elf_bss);
 	if (nbyte) {
 		nbyte = ELF_MIN_ALIGN - nbyte;
-		// if (clear_user((void __user *) elf_bss, nbyte))
-		// 	return -EFAULT;
-		memset((void *)elf_bss, 0, nbyte);
+		if (clear_user((void __user *) elf_bss, nbyte))
+			return -EFAULT;
 	}
 	return 0;
 }
@@ -104,7 +104,7 @@ padzero(ulong elf_bss) {
  * If the arch defines ELF_BASE_PLATFORM (in asm/elf.h), the value
  * will be copied to the user stack in the same manner as AT_PLATFORM.
  */
-#	define ELF_BASE_PLATFORM	NULL
+#  define ELF_BASE_PLATFORM	NULL
 #endif
 
 static int

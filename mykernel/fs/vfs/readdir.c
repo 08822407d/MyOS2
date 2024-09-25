@@ -92,6 +92,7 @@ static int verify_dirent_name(const char *name, int len)
 static int filldir64(dir_ctxt_s *ctx, const char *name,
 		int namelen, loff_t offset, u64 ino, unsigned int d_type)
 {
+	ulong cplen;
 	linux_dirent64_s *dirent, *prev;
 	getdents_cbk64_s *buf =
 			container_of(ctx, getdents_cbk64_s, ctx);
@@ -113,7 +114,7 @@ static int filldir64(dir_ctxt_s *ctx, const char *name,
 	dirent->d_ino = ino;
 	dirent->d_reclen = reclen;
 	dirent->d_type = d_type;
-	copy_to_user(dirent->d_name, (char *)name, namelen);
+	cplen = copy_to_user(dirent->d_name, (char *)name, namelen);
 	dirent->d_name[namelen] = '\0';
 
 	buf->prev_reclen = reclen;

@@ -13,6 +13,7 @@
 *
 ***************************************************/
 #include <linux/kernel/mm_api.h>
+#include <linux/kernel/uaccess.h>
 #include <linux/fs/fs.h>
 #include <linux/fs/fat.h>
 #include <linux/lib/errno.h>
@@ -116,6 +117,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	unsigned long sector = 0;
 	int i, length = 0;
 	long ret_val = 0;
+	ulong cplen;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
 	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster, GFP_KERNEL);
@@ -145,7 +147,7 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < TASK_SIZE_MAX)
-			copy_to_user(buf, buffer + offset, length);
+			cplen = copy_to_user(buf, buffer + offset, length);
 		else
 			memcpy(buf, buffer + offset, length);
 
@@ -172,6 +174,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 	int i,length = 0;
 	long ret_val = 0;
 	long flags = 0;
+	ulong cplen;
 	int index = *position / fsbi->bytes_per_cluster;
 	long offset = *position % fsbi->bytes_per_cluster;
 	char * buffer = (char *)kmalloc(fsbi->bytes_per_cluster, GFP_KERNEL);
@@ -218,7 +221,7 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 		length = index <= fsbi->bytes_per_cluster - offset ? index : fsbi->bytes_per_cluster - offset;
 
 		if((unsigned long)buf < TASK_SIZE_MAX)
-			copy_from_user(buffer + offset, (void *)buf, length);
+			cplen = copy_from_user(buffer + offset, (void *)buf, length);
 		else
 			memcpy(buffer + offset, buf, length);
 

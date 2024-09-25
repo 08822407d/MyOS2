@@ -100,10 +100,7 @@ typedef struct pt_regs pt_regs_s;
 	void myos_percpu_self_config(size_t cpu_idx);
 
 	/* utils.c */
-	long copy_from_user(void * to, void * from, unsigned long size);
-	long copy_to_user(void * to, void * from, unsigned long size);
 	long strncpy_from_user(void * to, void * from, unsigned long size);
 	long strlen_user(void * src);
-	long myos_strnlen_user(void * src, unsigned long maxlen);
 
 #endif /* _AMD64_PROTO_H_ */

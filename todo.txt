@@ -1,3 +1,6 @@
+2024-9-25
+	移植完整的linux版本uaccess系列API
+
 2024-9-6
 	整理和简化mmap相关函数，准备加入file-mmap和page cache
 
