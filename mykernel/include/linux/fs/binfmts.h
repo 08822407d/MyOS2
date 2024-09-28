@@ -61,16 +61,16 @@
 		char		buf[BINPRM_BUF_SIZE];
 	} linux_bprm_s;
 
-	// #define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT 0
-	// #define BINPRM_FLAGS_ENFORCE_NONDUMP (1 << BINPRM_FLAGS_ENFORCE_NONDUMP_BIT)
+	#define BINPRM_FLAGS_ENFORCE_NONDUMP_BIT	0
+	#define BINPRM_FLAGS_ENFORCE_NONDUMP		(1 << BINPRM_FLAGS_ENFORCE_NONDUMP_BIT)
 
-	// /* filename of the binary will be inaccessible after exec */
-	// #define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT 2
-	// #define BINPRM_FLAGS_PATH_INACCESSIBLE (1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
+	/* filename of the binary will be inaccessible after exec */
+	#define BINPRM_FLAGS_PATH_INACCESSIBLE_BIT	2
+	#define BINPRM_FLAGS_PATH_INACCESSIBLE		(1 << BINPRM_FLAGS_PATH_INACCESSIBLE_BIT)
 
-	// /* preserve argv0 for the interpreter  */
-	// #define BINPRM_FLAGS_PRESERVE_ARGV0_BIT 3
-	// #define BINPRM_FLAGS_PRESERVE_ARGV0 (1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
+	/* preserve argv0 for the interpreter  */
+	#define BINPRM_FLAGS_PRESERVE_ARGV0_BIT		3
+	#define BINPRM_FLAGS_PRESERVE_ARGV0			(1 << BINPRM_FLAGS_PRESERVE_ARGV0_BIT)
 
 	// /* Function parameter for binfmt->coredump */
 	// struct coredump_params {

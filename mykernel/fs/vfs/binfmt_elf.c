@@ -136,35 +136,35 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	 */
 	p = arch_align_stack(p);
 
-	// /*
-	//  * If this architecture has a platform capability string, copy it
-	//  * to userspace.  In some cases (Sparc), this info is impossible
-	//  * for userspace to get any other way, in others (i386) it is
-	//  * merely difficult.
-	//  */
-	// u_platform = NULL;
-	// if (k_platform) {
-	// 	size_t len = strlen(k_platform) + 1;
+	/*
+	 * If this architecture has a platform capability string, copy it
+	 * to userspace.  In some cases (Sparc), this info is impossible
+	 * for userspace to get any other way, in others (i386) it is
+	 * merely difficult.
+	 */
+	u_platform = NULL;
+	if (k_platform) {
+		size_t len = strlen(k_platform) + 1;
 
-	// 	u_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
-	// 	if (copy_to_user(u_platform, k_platform, len))
-	// 		return -EFAULT;
-	// }
+		u_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
+		if (copy_to_user(u_platform, k_platform, len))
+			return -EFAULT;
+	}
 
-	// /*
-	//  * If this architecture has a "base" platform capability
-	//  * string, copy it to userspace.
-	//  */
-	// u_base_platform = NULL;
-	// if (k_base_platform) {
-	// 	size_t len = strlen(k_base_platform) + 1;
+	/*
+	 * If this architecture has a "base" platform capability
+	 * string, copy it to userspace.
+	 */
+	u_base_platform = NULL;
+	if (k_base_platform) {
+		size_t len = strlen(k_base_platform) + 1;
 
-	// 	u_base_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
-	// 	if (copy_to_user(u_base_platform, k_base_platform, len))
-	// 		return -EFAULT;
-	// }
+		u_base_platform = (elf_addr_t __user *)STACK_ALLOC(p, len);
+		if (copy_to_user(u_base_platform, k_base_platform, len))
+			return -EFAULT;
+	}
 
-	// /*
+	/*
 	//  * Generate 16 random bytes for userspace PRNG seeding.
 	//  */
 	// get_random_bytes(k_rand_bytes, sizeof(k_rand_bytes));
@@ -173,66 +173,70 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	// if (copy_to_user(u_rand_bytes, k_rand_bytes, sizeof(k_rand_bytes)))
 	// 	return -EFAULT;
 
-	// /* Create the ELF interpreter info */
-	// elf_info = (elf_addr_t *)mm->saved_auxv;
-	// /* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
+	/* Create the ELF interpreter info */
+	elf_info = (elf_addr_t *)mm->saved_auxv;
+	/* update AT_VECTOR_SIZE_BASE if the number of NEW_AUX_ENT() changes */
 #define NEW_AUX_ENT(id, val)	\
 		do {					\
 			*elf_info++ = id;	\
 			*elf_info++ = val;	\
 		} while (0)
 
-// #ifdef ARCH_DLINFO
-// 	/* 
-// 	 * ARCH_DLINFO must come first so PPC can do its special alignment of
-// 	 * AUXV.
-// 	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
-// 	 * ARCH_DLINFO changes
-// 	 */
-// 	ARCH_DLINFO;
-// #endif
-// 	NEW_AUX_ENT(AT_HWCAP, ELF_HWCAP);
-// 	NEW_AUX_ENT(AT_PAGESZ, ELF_EXEC_PAGESIZE);
-// 	NEW_AUX_ENT(AT_CLKTCK, CLOCKS_PER_SEC);
-// 	NEW_AUX_ENT(AT_PHDR, phdr_addr);
-// 	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
-// 	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
-// 	NEW_AUX_ENT(AT_BASE, interp_load_addr);
-// 	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
-// 		flags |= AT_FLAGS_PRESERVE_ARGV0;
-// 	NEW_AUX_ENT(AT_FLAGS, flags);
-// 	NEW_AUX_ENT(AT_ENTRY, e_entry);
-// 	NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
-// 	NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
-// 	NEW_AUX_ENT(AT_GID, from_kgid_munged(cred->user_ns, cred->gid));
-// 	NEW_AUX_ENT(AT_EGID, from_kgid_munged(cred->user_ns, cred->egid));
-// 	NEW_AUX_ENT(AT_SECURE, bprm->secureexec);
-// 	NEW_AUX_ENT(AT_RANDOM, (elf_addr_t)(unsigned long)u_rand_bytes);
-// #ifdef ELF_HWCAP2
-// 	NEW_AUX_ENT(AT_HWCAP2, ELF_HWCAP2);
-// #endif
-// 	NEW_AUX_ENT(AT_EXECFN, bprm->exec);
-// 	if (k_platform) {
-// 		NEW_AUX_ENT(AT_PLATFORM,
-// 			    (elf_addr_t)(unsigned long)u_platform);
-// 	}
-// 	if (k_base_platform) {
-// 		NEW_AUX_ENT(AT_BASE_PLATFORM,
-// 			    (elf_addr_t)(unsigned long)u_base_platform);
-// 	}
-// 	if (bprm->have_execfd) {
-// 		NEW_AUX_ENT(AT_EXECFD, bprm->execfd);
-// 	}
-// #undef NEW_AUX_ENT
-	// /* AT_NULL is zero; clear the rest too */
-	// memset(elf_info, 0, (char *)mm->saved_auxv +
-	// 		sizeof(mm->saved_auxv) - (char *)elf_info);
+#ifdef ARCH_DLINFO
+	/* 
+	 * ARCH_DLINFO must come first so PPC can do its special alignment of
+	 * AUXV.
+	 * update AT_VECTOR_SIZE_ARCH if the number of NEW_AUX_ENT() in
+	 * ARCH_DLINFO changes
+	 */
+	ARCH_DLINFO;
+#endif
+	// NEW_AUX_ENT(AT_HWCAP, ELF_HWCAP);
+	NEW_AUX_ENT(AT_PAGESZ, ELF_EXEC_PAGESIZE);
+	NEW_AUX_ENT(AT_CLKTCK, CLOCKS_PER_SEC);
+	NEW_AUX_ENT(AT_PHDR, phdr_addr);
+	NEW_AUX_ENT(AT_PHENT, sizeof(struct elf_phdr));
+	NEW_AUX_ENT(AT_PHNUM, exec->e_phnum);
+	NEW_AUX_ENT(AT_BASE, interp_load_addr);
+	if (bprm->interp_flags & BINPRM_FLAGS_PRESERVE_ARGV0)
+		flags |= AT_FLAGS_PRESERVE_ARGV0;
+	NEW_AUX_ENT(AT_FLAGS, flags);
+	NEW_AUX_ENT(AT_ENTRY, e_entry);
+	// NEW_AUX_ENT(AT_UID, from_kuid_munged(cred->user_ns, cred->uid));
+	// NEW_AUX_ENT(AT_EUID, from_kuid_munged(cred->user_ns, cred->euid));
+	// NEW_AUX_ENT(AT_GID, from_kgid_munged(cred->user_ns, cred->gid));
+	// NEW_AUX_ENT(AT_EGID, from_kgid_munged(cred->user_ns, cred->egid));
+	NEW_AUX_ENT(AT_SECURE, bprm->secureexec);
+	NEW_AUX_ENT(AT_RANDOM, (elf_addr_t)(unsigned long)u_rand_bytes);
+#ifdef ELF_HWCAP2
+	NEW_AUX_ENT(AT_HWCAP2, ELF_HWCAP2);
+#endif
+	NEW_AUX_ENT(AT_EXECFN, bprm->exec);
+	if (k_platform) {
+		NEW_AUX_ENT(AT_PLATFORM,
+			    (elf_addr_t)(unsigned long)u_platform);
+	}
+	if (k_base_platform) {
+		NEW_AUX_ENT(AT_BASE_PLATFORM,
+			    (elf_addr_t)(unsigned long)u_base_platform);
+	}
+	if (bprm->have_execfd) {
+		NEW_AUX_ENT(AT_EXECFD, bprm->execfd);
+	}
+#ifdef CONFIG_RSEQ
+	NEW_AUX_ENT(AT_RSEQ_FEATURE_SIZE, offsetof(struct rseq, end));
+	NEW_AUX_ENT(AT_RSEQ_ALIGN, __alignof__(struct rseq));
+#endif
+#undef NEW_AUX_ENT
+	/* AT_NULL is zero; clear the rest too */
+	memset(elf_info, 0, (char *)mm->saved_auxv +
+			sizeof(mm->saved_auxv) - (char *)elf_info);
 
-	// /* And advance past the AT_NULL entry.  */
-	// elf_info += 2;
+	/* And advance past the AT_NULL entry.  */
+	elf_info += 2;
 
-	// ei_index = elf_info - (elf_addr_t *)mm->saved_auxv;
-	// sp = STACK_ADD(p, ei_index);
+	ei_index = elf_info - (elf_addr_t *)mm->saved_auxv;
+	sp = STACK_ADD(p, ei_index);
 
 	items = (argc + 1) + (envc + 1) + 1;
 	bprm->p = STACK_ROUND(sp, items);
@@ -240,16 +244,16 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	/* Point sp at the lowest address on the stack */
 	sp = (elf_addr_t __user *)bprm->p;
 
-	// /*
-	//  * Grow the stack manually; some architectures have a limit on how
-	//  * far ahead a user-space access may be in order to grow the stack.
-	//  */
-	// if (mmap_write_lock_killable(mm))
-	// 	return -EINTR;
+	/*
+	 * Grow the stack manually; some architectures have a limit on how
+	 * far ahead a user-space access may be in order to grow the stack.
+	 */
+	if (mmap_write_lock_killable(mm))
+		return -EINTR;
 	// vma = find_extend_vma_locked(mm, bprm->p);
-	// mmap_write_unlock(mm);
-	// if (!vma)
-	// 	return -EFAULT;
+	mmap_write_unlock(mm);
+	if (!vma)
+		return -EFAULT;
 
 	/* Now, let's put argc (and argv, envp if appropriate) on the stack */
 	if (put_user(argc, sp++))

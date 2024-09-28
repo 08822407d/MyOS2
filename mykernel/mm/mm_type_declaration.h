@@ -15,6 +15,7 @@
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>
 	#include <linux/kernel/lock_ipc_types.h>
+	#include <uapi/linux/auxvec.h>
 	#include <asm/mm_types.h>
 
 	#include "mm_const.h"

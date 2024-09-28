@@ -8,6 +8,7 @@
 	#include "page_alloc/buddy_const.h"
 	#include "page_alloc/page-flags_const.h"
 	#include "vm_map/vm_map_const.h"
+	#include "misc/mm_misc_const.h"
 
 
 	#include "generated/bounds.h"

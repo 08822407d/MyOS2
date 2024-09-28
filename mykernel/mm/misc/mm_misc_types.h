@@ -99,7 +99,7 @@
 			ulong			start_brk, brk, start_stack;
 			ulong			arg_start, arg_end, env_start, env_end;
 
-			// ulong saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
+			ulong			saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
 
 			// /*
 			// * Special counters, in some configurations protected by the

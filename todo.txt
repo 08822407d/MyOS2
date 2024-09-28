@@ -1,3 +1,6 @@
+2024-9-27
+	load_elf_binary()中，设置环境变量和命令行参数的过程升级到AUX_VEC
+
 2024-9-25
 	移植完整的linux版本uaccess系列API
 

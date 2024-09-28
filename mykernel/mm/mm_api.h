@@ -2,6 +2,7 @@
 #define _MM_API_H_
 
 	#include "mm_type_declaration.h"
+	#include <linux/kernel/mmap_lock.h>
 	#include <asm/mm_api.h>
 
 
