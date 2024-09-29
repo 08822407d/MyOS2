@@ -20,7 +20,7 @@ void kjmp_to_doexecve()
 	// const char *initd_name = "/boot/sh";
 
 	const char *const argv[] =
-			{ initd_name , "kernarg_test_1", "kernarg_test_1", NULL };
+			{ initd_name , "kernarg_test_1", "kernarg_test_2", NULL };
 	const char *const envp[] =
 			{ "kernenv_test_1", "kernenv_test_2", "kernenv_test_3", NULL };
 

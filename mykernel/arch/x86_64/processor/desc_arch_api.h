@@ -71,6 +71,7 @@
 	#define savesegment(seg, value) \
 				asm("mov %%" #seg ",%0":"=r" (value) : : "memory")
 
+
 	extern void idt_setup_early_handler(void);
 	extern void idt_setup_apic_and_irq_gates(void);
 	extern void switch_gdt_and_percpu_base(int);

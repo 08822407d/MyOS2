@@ -163,11 +163,10 @@
 	// #define ELF_ET_DYN_BASE (mmap_is_ia32() ? 0x000400000UL : (DEFAULT_MAP_WINDOW / 3 * 2))
 	#define ELF_ET_DYN_BASE		(DEFAULT_MAP_WINDOW / 3 * 2)
 
-	// /* This yields a mask that user programs can use to figure out what
-	// instruction set this CPU supports.  This could be done in user space,
-	// but it's not easy, and we've already done it here.  */
-
-	// #define ELF_HWCAP		(boot_cpu_data.x86_capability[CPUID_1_EDX])
+	/* This yields a mask that user programs can use to figure out what
+	instruction set this CPU supports.  This could be done in user space,
+	but it's not easy, and we've already done it here.  */
+	#define ELF_HWCAP			(boot_cpu_data.x86_capability[CPUID_1_EDX])
 
 	// extern u32 elf_hwcap2;
 

@@ -191,7 +191,7 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	 */
 	ARCH_DLINFO;
 #endif
-	// NEW_AUX_ENT(AT_HWCAP, ELF_HWCAP);
+	NEW_AUX_ENT(AT_HWCAP, ELF_HWCAP);
 	NEW_AUX_ENT(AT_PAGESZ, ELF_EXEC_PAGESIZE);
 	NEW_AUX_ENT(AT_CLKTCK, CLOCKS_PER_SEC);
 	NEW_AUX_ENT(AT_PHDR, phdr_addr);
@@ -207,18 +207,18 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	// NEW_AUX_ENT(AT_GID, from_kgid_munged(cred->user_ns, cred->gid));
 	// NEW_AUX_ENT(AT_EGID, from_kgid_munged(cred->user_ns, cred->egid));
 	NEW_AUX_ENT(AT_SECURE, bprm->secureexec);
-	NEW_AUX_ENT(AT_RANDOM, (elf_addr_t)(unsigned long)u_rand_bytes);
+	// NEW_AUX_ENT(AT_RANDOM, (elf_addr_t)(ulong)u_rand_bytes);
 #ifdef ELF_HWCAP2
 	NEW_AUX_ENT(AT_HWCAP2, ELF_HWCAP2);
 #endif
 	NEW_AUX_ENT(AT_EXECFN, bprm->exec);
 	if (k_platform) {
 		NEW_AUX_ENT(AT_PLATFORM,
-			    (elf_addr_t)(unsigned long)u_platform);
+			    (elf_addr_t)(ulong)u_platform);
 	}
 	if (k_base_platform) {
 		NEW_AUX_ENT(AT_BASE_PLATFORM,
-			    (elf_addr_t)(unsigned long)u_base_platform);
+			    (elf_addr_t)(ulong)u_base_platform);
 	}
 	if (bprm->have_execfd) {
 		NEW_AUX_ENT(AT_EXECFD, bprm->execfd);
@@ -289,17 +289,15 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 		return -EFAULT;
 	mm->env_end = p;
 
-	// /* Put the elf_info on the stack in the right place.  */
-	// if (copy_to_user(sp, mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
-	// 	return -EFAULT;
+	/* Put the elf_info on the stack in the right place.  */
+	if (copy_to_user(sp, mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
+		return -EFAULT;
 
 	// 暂时不支持从解释器启动程序和动态链接，所以在这里把argc和argv直接放到用户栈上，
 	// 传参寄存器规范是sysv-abi
 	pt_regs_s *regs = current_pt_regs();
-	sp -= items;
-	regs->di = (reg_t)*sp;	// argc
-	sp++;
-	regs->si = (reg_t)sp;	// argv
+	regs->di = *(reg_t *)bprm->p;
+	regs->si = (reg_t)(bprm->p + 8);
 
 	return 0;
 }
@@ -626,7 +624,7 @@ load_elf_binary(linux_bprm_s *bprm) {
 		interp_elf_ex = kmalloc(sizeof(*interp_elf_ex), GFP_KERNEL);
 		if (!interp_elf_ex) {
 			retval = -ENOMEM;
-			goto out_free_ph;
+			goto out_free_file;
 		}
 
 		/* Get the exec headers */
@@ -728,7 +726,8 @@ out_free_interp:
 	// if (elf_read_implies_exec(*elf_ex, executable_stack))
 	// 	current->personality |= READ_IMPLIES_EXEC;
 
-	// if (!(current->personality & ADDR_NO_RANDOMIZE) && randomize_va_space)
+	// const int snapshot_randomize_va_space = READ_ONCE(randomize_va_space);
+	// if (!(current->personality & ADDR_NO_RANDOMIZE) && snapshot_randomize_va_space)
 	// 	current->flags |= PF_RANDOMIZE;
 
 	setup_new_exec(bprm);
@@ -889,7 +888,7 @@ out_free_interp:
 		error = elf_load(bprm->file, load_bias + vaddr,
 					elf_ppnt, elf_prot, elf_flags, total_size);
 		if (BAD_ADDR(error)) {
-			retval = IS_ERR((void *)error) ?
+			retval = IS_ERR_VALUE((void *)error) ?
 				PTR_ERR((void*)error) : -EINVAL;
 			goto out_free_dentry;
 		}

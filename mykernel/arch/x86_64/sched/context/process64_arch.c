@@ -197,8 +197,7 @@ loadseg(enum which_selector which, ushort sel) {
 	if (which == FS)
 		loadsegment(fs, sel);
 	else
-		loadsegment(gs, sel);
-		// load_gs_index(sel);
+		load_gs_index(sel);
 }
 
 static __always_inline void
@@ -251,25 +250,52 @@ void x86_gsbase_write_task(task_s *task, ulong gsbase)
 
 static void
 start_thread_common(pt_regs_s *regs, ulong new_ip,
-		ulong new_sp, uint _cs, uint _ss, uint _ds) {
-	// WARN_ON_ONCE(regs != current_pt_regs());
+		ulong new_sp, u16 _cs, u16 _ss, u16 _ds) {
+	WARN_ON_ONCE(regs != current_pt_regs());
 
 	// if (static_cpu_has(X86_BUG_NULL_SEG)) {
 	// 	/* Loading zero below won't clear the base. */
-	// 	loadsegment(fs, __USER_DS);
-	// 	load_gs_index(__USER_DS);
+		loadsegment(fs, __USER_DS);
+		load_gs_index(__USER_DS);
 	// }
 
-	// loadsegment(fs, 0);
+	// reset_thread_features();
+
+	loadsegment(fs, 0);
 	loadsegment(es, _ds);
 	loadsegment(ds, _ds);
-	// load_gs_index(0);
+	load_gs_index(0);
 
 	regs->ip		= new_ip;
 	regs->sp		= new_sp;
 	regs->cs		= _cs;
 	regs->ss		= _ss;
-	regs->flags		= X86_EFLAGS_IF;
+	// /*
+	//  * Allow single-step trap and NMI when starting a new task, thus
+	//  * once the new task enters user space, single-step trap and NMI
+	//  * are both enabled immediately.
+	//  *
+	//  * Entering a new task is logically speaking a return from a
+	//  * system call (exec, fork, clone, etc.). As such, if ptrace
+	//  * enables single stepping a single step exception should be
+	//  * allowed to trigger immediately upon entering user space.
+	//  * This is not optional.
+	//  *
+	//  * NMI should *never* be disabled in user space. As such, this
+	//  * is an optional, opportunistic way to catch errors.
+	//  *
+	//  * Paranoia: High-order 48 bits above the lowest 16 bit SS are
+	//  * discarded by the legacy IRET instruction on all Intel, AMD,
+	//  * and Cyrix/Centaur/VIA CPUs, thus can be set unconditionally,
+	//  * even when FRED is not enabled. But we choose the safer side
+	//  * to use these bits only when FRED is enabled.
+	//  */
+	// if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+	// 	regs->fred_ss.swevent	= true;
+	// 	regs->fred_ss.nmi	= true;
+	// }
+
+	regs->flags		= X86_EFLAGS_IF | X86_EFLAGS_FIXED;
 }
 
 void
@@ -294,14 +320,13 @@ __visible __notrace_funcgraph task_s
 {
 	thread_s *prev = &prev_p->thread;
 	thread_s *next = &next_p->thread;
-	// struct fpu *prev_fpu = &prev->fpu;
 	int cpu = smp_processor_id();
 
 	// WARN_ON_ONCE(IS_ENABLED(CONFIG_DEBUG_ENTRY) &&
 	// 	     this_cpu_read(pcpu_hot.hardirq_stack_inuse));
 
-	// if (!test_thread_flag(TIF_NEED_FPU_LOAD))
-	// 	switch_fpu_prepare(prev_fpu, cpu);
+	// if (!test_tsk_thread_flag(prev_p, TIF_NEED_FPU_LOAD))
+	// 	switch_fpu_prepare(prev_p, cpu);
 
 	/* We must save %fs and %gs before load_TLS() because
 	 * %fs and %gs may be cleared by load_TLS().
@@ -323,27 +348,27 @@ __visible __notrace_funcgraph task_s
 	//  */
 	// arch_end_context_switch(next_p);
 
-	// /* Switch DS and ES.
-	//  *
-	//  * Reading them only returns the selectors, but writing them (if
-	//  * nonzero) loads the full descriptor from the GDT or LDT.  The
-	//  * LDT for next is loaded in switch_mm, and the GDT is loaded
-	//  * above.
-	//  *
-	//  * We therefore need to write new values to the segment
-	//  * registers on every context switch unless both the new and old
-	//  * values are zero.
-	//  *
-	//  * Note that we don't need to do anything for CS and SS, as
-	//  * those are saved and restored as part of pt_regs.
-	//  */
-	// savesegment(es, prev->es);
-	// if (unlikely(next->es | prev->es))
-	// 	loadsegment(es, next->es);
+	/* Switch DS and ES.
+	 *
+	 * Reading them only returns the selectors, but writing them (if
+	 * nonzero) loads the full descriptor from the GDT or LDT.  The
+	 * LDT for next is loaded in switch_mm, and the GDT is loaded
+	 * above.
+	 *
+	 * We therefore need to write new values to the segment
+	 * registers on every context switch unless both the new and old
+	 * values are zero.
+	 *
+	 * Note that we don't need to do anything for CS and SS, as
+	 * those are saved and restored as part of pt_regs.
+	 */
+	savesegment(es, prev->es);
+	if (unlikely(next->es | prev->es))
+		loadsegment(es, next->es);
 
-	// savesegment(ds, prev->ds);
-	// if (unlikely(next->ds | prev->ds))
-	// 	loadsegment(ds, next->ds);
+	savesegment(ds, prev->ds);
+	if (unlikely(next->ds | prev->ds))
+		loadsegment(ds, next->ds);
 
 	x86_fsgsbase_load(prev, next);
 

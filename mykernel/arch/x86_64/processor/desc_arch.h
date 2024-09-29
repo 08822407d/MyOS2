@@ -60,6 +60,9 @@
 		__loadsegment_gs(ushort value);
 
 		extern void
+		load_gs_index(ushort selector);
+
+		extern void
 		init_idt_data(struct idt_data *data,
 				uint n, const void *addr);
 
@@ -229,6 +232,14 @@
 						:	"memory"
 						);
 			local_irq_restore(flags);
+		}
+	
+		PREFIX_STATIC_INLINE
+		void
+		load_gs_index(ushort selector) {
+			native_swapgs();
+			loadsegment(gs, selector);
+			native_swapgs();
 		}
 
 		PREFIX_STATIC_INLINE
