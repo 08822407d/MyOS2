@@ -249,6 +249,7 @@
 	// }
 
 	#define atomic_and arch_atomic_and
+	#define atomic_fetch_and arch_atomic_fetch_and
 
 	// static __always_inline int
 	// atomic_fetch_and(int i, atomic_t *v)
@@ -318,6 +319,7 @@
 	// }
 
 	#define atomic_or arch_atomic_or
+	#define atomic_fetch_or arch_atomic_fetch_or
 
 	// static __always_inline int
 	// atomic_fetch_or(int i, atomic_t *v)
@@ -350,6 +352,7 @@
 	// }
 
 	#define atomic_xor arch_atomic_xor
+	#define atomic_fetch_xor arch_atomic_fetch_xor
 
 	// static __always_inline int
 	// atomic_fetch_xor(int i, atomic_t *v)

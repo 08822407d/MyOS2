@@ -70,6 +70,10 @@
 			XD		: 1;
 	} __attribute__((packed)) arch_pte_T;
 
+	typedef struct pgprot {
+		pgprotval_t pgprot;
+	} pgprot_t;
+
 	typedef union pgd_union {
 		pgdval_t	val;
 		arch_pgd_T	defs;

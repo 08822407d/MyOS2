@@ -151,10 +151,11 @@ simple_munmap_vma_range(mm_s *mm, ulong start, ulong len, vma_s **pprev) {
 
 
 static void
-__vma_link_file(vma_s *vma) {
+vma_link_file(vma_s *vma) {
 	file_s *file = vma->vm_file;
 	if (file) {
 		addr_spc_s *mapping = file->f_mapping;
+		i_mmap_lock_write(mapping);
 
 		// if (vma->vm_flags & VM_SHARED)
 		// 	mapping_allow_writable(mapping);
@@ -162,26 +163,25 @@ __vma_link_file(vma_s *vma) {
 		// flush_dcache_mmap_lock(mapping);
 		// vma_interval_tree_insert(vma, &mapping->i_mmap);
 		// flush_dcache_mmap_unlock(mapping);
+
+		i_mmap_unlock_write(mapping);
 	}
 }
 
 // static int vma_link(struct mm_struct *mm, struct vm_area_struct *vma)
-static void
+static int
 simple_vma_link(mm_s *mm, vma_s *vma, vma_s *prev) {
-	addr_spc_s *mapping = NULL;
+	// VMA_ITERATOR(vmi, mm, 0);
 
-	if (vma->vm_file) {
-		mapping = vma->vm_file->f_mapping;
-		i_mmap_lock_write(mapping);
-	}
+	// vma_iter_config(&vmi, vma->vm_start, vma->vm_end);
+	// if (vma_iter_prealloc(&vmi, vma))
+	// 	return -ENOMEM;
 
 	__vma_link_to_list(mm, vma, prev);
-	__vma_link_file(vma);
-
-	if (mapping)
-		i_mmap_unlock_write(mapping);
+	vma_link_file(vma);
 
 	// validate_mm(mm);
+	return 0;
 }
 
 
@@ -466,10 +466,11 @@ file_mmap_ok(file_s *file, inode_s *inode, ulong pgoff, ulong len) {
  */
 // 代码分析文章 https://blog.csdn.net/gatieme/article/details/51628257
 ulong
-do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgoff)
+do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
+		ulong flags, vm_flags_t vm_flags, ulong pgoff)
 {
 	mm_s *mm = current->mm;
-	vm_flags_t vm_flags;
+	int pkey = 0;
 
 	if (len == 0)
 		return -EINVAL;
@@ -510,14 +511,14 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 	 * to. we assume access permissions have been handled by the open
 	 * of the memory object, so we don't do any here.
 	 */
-	vm_flags = calc_vm_prot_bits(prot, 0) | calc_vm_flag_bits(flags) |
+	vm_flags |= calc_vm_prot_bits(prot, pkey) | calc_vm_flag_bits(flags) |
 				mm->def_flags | VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC;
 
 	/*
 	 * Obtain the address to map to. we verify (or select) it and ensure
 	 * that it represents a valid section of the address space.
 	 */
-	addr = __get_unmapped_area(file, addr, len, pgoff, flags);
+	addr = __get_unmapped_area(file, addr, len, pgoff, flags, vm_flags);
 	if (IS_ERR_VALUE(addr))
 		return addr;
 
@@ -533,8 +534,8 @@ do_mmap(file_s *file, ulong addr, ulong len, ulong prot, ulong flags, ulong pgof
 			return -EOVERFLOW;
 
 		flags_mask = LEGACY_MAP_MASK;
-		// if (file->f_op->fop_flags & FOP_MMAP_SYNC)
-		// 	flags_mask |= MAP_SYNC;
+		if (file->f_op->fop_flags & FOP_MMAP_SYNC)
+			flags_mask |= MAP_SYNC;
 
 		switch (flags & MAP_TYPE) {
 		case MAP_SHARED:
@@ -663,7 +664,8 @@ simple_mmap_region(file_s *file, ulong addr,
 	/*
 	 * Can we just expand an old mapping?
 	 */
-	vma = simple_vma_merge(mm, prev, addr, addr + len, vm_flags, file, pgoff);
+	vma = simple_vma_merge(mm, prev, addr,
+			addr + len, vm_flags, file, pgoff);
 	if (vma != NULL)
 		goto out;
 
@@ -681,7 +683,7 @@ simple_mmap_region(file_s *file, ulong addr,
 	vma->vm_start = addr;
 	vma->vm_end = addr + len;
 	vma->vm_flags = vm_flags;
-	// vma->vm_page_prot = vm_get_page_prot(vm_flags);
+	vma->vm_page_prot = vm_get_page_prot(vm_flags);
 	vma->vm_pgoff = pgoff;
 
 	if (file) {
@@ -742,8 +744,8 @@ simple_mmap_region(file_s *file, ulong addr,
 	simple_vma_link(mm, vma, prev);
 	/* Once vma denies write, undo our temporary denial count */
 unmap_writable:
-	// if (file && (vm_flags & VM_SHARED))
-	// 	mapping_unmap_writable(file->f_mapping);
+	if (file && (vm_flags & VM_SHARED))
+		mapping_unmap_writable(file->f_mapping);
 	file = vma->vm_file;
 out:
 	// vm_stat_account(mm, vm_flags, len >> PAGE_SHIFT);
@@ -939,7 +941,8 @@ simple_get_unmapped_area(file_s *filp, const ulong addr0,
 }
 
 ulong
-__get_unmapped_area(file_s *file, ulong addr, ulong len, ulong pgoff, ulong flags)
+__get_unmapped_area(file_s *file, ulong addr, ulong len,
+		ulong pgoff, ulong flags, vm_flags_t vm_flags)
 {
 	ulong (*get_area)(file_s *, ulong, ulong, ulong, ulong);
 
@@ -1199,7 +1202,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 		return -EINVAL;
 	flags |= VM_DATA_DEFAULT_FLAGS | VM_ACCOUNT | mm->def_flags;
 
-	mapped_addr = __get_unmapped_area(NULL, addr, len, 0, MAP_FIXED);
+	mapped_addr = __get_unmapped_area(NULL, addr, len, 0, MAP_FIXED, 0);
 	if (IS_ERR_VALUE(mapped_addr))
 		return mapped_addr;
 
@@ -1289,11 +1292,15 @@ insert_vm_struct(mm_s *mm, vma_s *vma)
 	 * Similarly in do_mmap and in do_brk_flags.
 	 */
 	if (vma_is_anonymous(vma)) {
-		// BUG_ON(vma->anon_vma);
+		BUG_ON(vma->anon_vma);
 		vma->vm_pgoff = vma->vm_start >> PAGE_SHIFT;
 	}
 
-	simple_vma_link(mm, vma, prev);
+	if (simple_vma_link(mm, vma, prev)) {
+		// if (vma->vm_flags & VM_ACCOUNT)
+		// 	vm_unacct_memory(charged);
+		return -ENOMEM;
+	}
 	return 0;
 }
 

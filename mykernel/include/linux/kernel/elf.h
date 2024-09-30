@@ -38,13 +38,6 @@
 	#define ELF32_GNU_PROPERTY_ALIGN	4
 	#define ELF64_GNU_PROPERTY_ALIGN	8
 
-	typedef Elf64_Ehdr	elfhdr_t;
-	typedef Elf64_Phdr	elf_phdr_t;
-	typedef Elf64_Shdr	elf_shdr_t;
-	typedef Elf64_Nhdr	elf_note_t;
-	typedef Elf64_Off	elf_addr_t;
-	typedef Elf64_Half	Elf_Half_t;
-	typedef Elf64_Word	Elf_Word_t;
 
 	extern Elf64_Dyn	_DYNAMIC [];
 	#define elfhdr		elf64_hdr
@@ -55,6 +48,12 @@
 	#define Elf_Half	Elf64_Half
 	#define Elf_Word	Elf64_Word
 	#define ELF_GNU_PROPERTY_ALIGN	ELF64_GNU_PROPERTY_ALIGN
+
+	typedef struct elfhdr		elfhdr_s;
+	typedef struct elf_phdr		elf_phdr_s;
+	typedef struct elf_shdr		elf_shdr_s;
+	typedef struct elf_note		elf_note_s;
+	
 
 	/*
 	 * NT_GNU_PROPERTY_TYPE_0 header:

@@ -41,7 +41,7 @@
 	extern ulong simple_mmap_region(file_s *file, ulong addr,
 			ulong len, vm_flags_t vm_flags, ulong pgoff);
 	extern ulong do_mmap(file_s *file, ulong addr, ulong len,
-			ulong prot, ulong flags, ulong pgoff);
+			ulong prot, ulong flags, vm_flags_t vm_flags, ulong pgoff);
 	extern int simple_do_vma_munmap(mm_s *, ulong start, ulong end);
 
 	// /* These take the mm semaphore themselves */
@@ -58,7 +58,7 @@
 	extern ulong simple_find_vm_unmapped_area_topdown(mm_s * mm, unmapped_vma_info_s *info);
 	ulong simple_get_unmapped_area(file_s *filp, const ulong addr,
 			const ulong len, const ulong pgoff, const ulong flags);
-	extern ulong __get_unmapped_area(file_s *, ulong, ulong, ulong, ulong);
+	extern ulong __get_unmapped_area(file_s *, ulong, ulong, ulong, ulong, vm_flags_t);
 	extern vma_s * simple_find_vma(mm_s * mm, ulong addr);
 
 	/* mm/util.c */

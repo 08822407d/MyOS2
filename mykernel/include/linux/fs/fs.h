@@ -467,19 +467,19 @@
 	// 	return	!RB_EMPTY_ROOT(&mapping->i_mmap.rb_root);
 	// }
 
-	// /*
-	// * Might pages of this file have been modified in userspace?
-	// * Note that i_mmap_writable counts all VM_SHARED vmas: do_mmap
-	// * marks vma as VM_SHARED if it is shared, and the file was opened for
-	// * writing i.e. vma may be mprotected writable even if now readonly.
-	// *
-	// * If i_mmap_writable is negative, no new writable mappings are allowed. You
-	// * can only deny writable mappings, if none exists right now.
-	// */
-	// static inline int mapping_writably_mapped(addr_spc_s *mapping)
-	// {
-	// 	return atomic_read(&mapping->i_mmap_writable) > 0;
-	// }
+	/*
+	 * Might pages of this file have been modified in userspace?
+	 * Note that i_mmap_writable counts all VM_SHARED vmas: do_mmap
+	 * marks vma as VM_SHARED if it is shared, and the file was opened for
+	 * writing i.e. vma may be mprotected writable even if now readonly.
+	 *
+	 * If i_mmap_writable is negative, no new writable mappings are allowed. You
+	 * can only deny writable mappings, if none exists right now.
+	 */
+	static inline int mapping_writably_mapped(addr_spc_s *mapping)
+	{
+		return atomic_read(&mapping->i_mmap_writable) > 0;
+	}
 
 	// static inline int mapping_map_writable(addr_spc_s *mapping)
 	// {
@@ -487,10 +487,10 @@
 	// 		0 : -EPERM;
 	// }
 
-	// static inline void mapping_unmap_writable(addr_spc_s *mapping)
-	// {
-	// 	atomic_dec(&mapping->i_mmap_writable);
-	// }
+	static inline void mapping_unmap_writable(addr_spc_s *mapping)
+	{
+		atomic_dec(&mapping->i_mmap_writable);
+	}
 
 	// static inline int mapping_deny_writable(addr_spc_s *mapping)
 	// {
@@ -498,10 +498,10 @@
 	// 		0 : -EBUSY;
 	// }
 
-	// static inline void mapping_allow_writable(addr_spc_s *mapping)
-	// {
-	// 	atomic_inc(&mapping->i_mmap_writable);
-	// }
+	static inline void mapping_allow_writable(addr_spc_s *mapping)
+	{
+		atomic_inc(&mapping->i_mmap_writable);
+	}
 
 	// /*
 	// * Use sequence counter to get consistent i_size on 32-bit processors.
@@ -1853,9 +1853,11 @@
 	// */
 	// #define REMAP_FILE_ADVISORY		(REMAP_FILE_CAN_SHORTEN)
 
+	typedef unsigned int __bitwise fop_flags_t;
+
 	typedef struct file_operations {
 		// module_s	*owner;
-		// fop_flags_t fop_flags;
+		fop_flags_t fop_flags;
 
 		loff_t		(*llseek) (file_s *file, loff_t pos, int);
 		ssize_t		(*read) (file_s *file, char *buf, size_t size, loff_t *pos);
@@ -1892,6 +1894,18 @@
 	// 						loff_t len, unsigned int remap_flags);
 	// 	int			(*fadvise)(file_s *, loff_t, loff_t, int);
 	} file_ops_s;
+
+	/* Supports async buffered reads */
+	#define FOP_BUFFER_RASYNC		((__force fop_flags_t)(1 << 0))
+	/* Supports async buffered writes */
+	#define FOP_BUFFER_WASYNC		((__force fop_flags_t)(1 << 1))
+	/* Supports synchronous page faults for mappings */
+	#define FOP_MMAP_SYNC			((__force fop_flags_t)(1 << 2))
+	/* Supports non-exclusive O_DIRECT writes from multiple threads */
+	#define FOP_DIO_PARALLEL_WRITE	((__force fop_flags_t)(1 << 3))
+	/* Contains huge pages */
+	#define FOP_HUGE_PAGES			((__force fop_flags_t)(1 << 4))
+
 
 	typedef struct inode_operations {
 		dentry_s	*(*lookup) (inode_s *, dentry_s *, unsigned int);

@@ -37,7 +37,25 @@
 #  define ELF_COMPAT	0
 #endif
 
+#ifndef user_long_t
+#  define user_long_t long
+#endif
+#ifndef user_siginfo_t
+#  define user_siginfo_t siginfo_t
+#endif
+
+/* That's for binfmt_elf_fdpic to deal with */
+#ifndef elf_check_fdpic
+#  define elf_check_fdpic(ex)	false
+#endif
+
 static int load_elf_binary(linux_bprm_s *bprm);
+
+// #ifdef CONFIG_USELIB
+	static int load_elf_library(file_s *);
+// #else
+// #  define load_elf_library	NULL
+// #endif
 
 /*
  * If we don't support core dumping, then supply a NULL so we
@@ -66,23 +84,21 @@ static int load_elf_binary(linux_bprm_s *bprm);
 static linux_bfmt_s elf_format = {
 	// .module			= THIS_MODULE,
 	.load_binary	= load_elf_binary,
-	// .load_shlib		= load_elf_library,
+	.load_shlib		= load_elf_library,
 	// .core_dump		= elf_core_dump,
-	// .min_coredump	= ELF_EXEC_PAGESIZE,
+	.min_coredump	= ELF_EXEC_PAGESIZE,
 };
 
 #define BAD_ADDR(x) (unlikely((unsigned long)(x) >= TASK_SIZE))
 
 /*
- * We need to explicitly zero any fractional pages
- * after the data section (i.e. bss).  This would
- * contain the junk from the file that should not
- * be in memory
+ * We need to explicitly zero any trailing portion of the page that follows
+ * p_filesz when it ends before the page ends (e.g. bss), otherwise this
+ * memory will contain the junk from the file that should not be present.
  */
 static int
 padzero(ulong elf_bss) {
 	ulong nbyte;
-
 	nbyte = ELF_PAGEOFFSET(elf_bss);
 	if (nbyte) {
 		nbyte = ELF_MIN_ALIGN - nbyte;
@@ -108,7 +124,7 @@ padzero(ulong elf_bss) {
 #endif
 
 static int
-create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
+create_elf_tables(linux_bprm_s *bprm, const elfhdr_s *exec,
 		ulong interp_load_addr, ulong e_entry, ulong phdr_addr) {
 
 	mm_s *mm = current->mm;
@@ -292,19 +308,16 @@ create_elf_tables(linux_bprm_s *bprm, const elfhdr_t *exec,
 	/* Put the elf_info on the stack in the right place.  */
 	if (copy_to_user(sp, mm->saved_auxv, ei_index * sizeof(elf_addr_t)))
 		return -EFAULT;
-
-	// 暂时不支持从解释器启动程序和动态链接，所以在这里把argc和argv直接放到用户栈上，
-	// 传参寄存器规范是sysv-abi
-	pt_regs_s *regs = current_pt_regs();
-	regs->di = *(reg_t *)bprm->p;
-	regs->si = (reg_t)(bprm->p + 8);
-
 	return 0;
 }
 
-
+/*
+ * Map "eppnt->p_filesz" bytes from "filep" offset "eppnt->p_offset"
+ * into memory at "addr". (Note that p_filesz is rounded up to the
+ * next page, so any extra bytes from the file must be wiped.)
+ */
 static ulong
-elf_map(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
+elf_map(file_s *filep, ulong addr, const elf_phdr_s *eppnt,
 		int prot, int type, ulong total_size) {
 
 	ulong map_addr;
@@ -349,7 +362,7 @@ elf_map(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
  * rounded up to the next page is zeroed.
  */
 static ulong
-elf_load(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
+elf_load(file_s *filep, ulong addr, const elf_phdr_s *eppnt,
 		int prot, int type, ulong total_size) {
 
 	ulong zero_start, zero_end;
@@ -360,10 +373,10 @@ elf_load(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
 		if (BAD_ADDR(map_addr))
 			return map_addr;
 		if (eppnt->p_memsz > eppnt->p_filesz) {
-			zero_start = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
-				eppnt->p_filesz;
-			zero_end = map_addr + ELF_PAGEOFFSET(eppnt->p_vaddr) +
-				eppnt->p_memsz;
+			zero_start = map_addr + eppnt->p_filesz +
+							ELF_PAGEOFFSET(eppnt->p_vaddr);
+			zero_end = map_addr + eppnt->p_memsz +
+							ELF_PAGEOFFSET(eppnt->p_vaddr);
 
 			/*
 			 * Zero the end of the last mapped page but ignore
@@ -389,7 +402,7 @@ elf_load(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
 		zero_end = ELF_PAGEALIGN(zero_end);
 
 		error = vm_brk_flags(zero_start, zero_end - zero_start,
-				     prot & PROT_EXEC ? VM_EXEC : 0);
+						prot & PROT_EXEC ? VM_EXEC : 0);
 		if (error)
 			map_addr = error;
 	}
@@ -397,27 +410,24 @@ elf_load(file_s *filep, ulong addr, const elf_phdr_t *eppnt,
 }
 
 static ulong
-total_mapping_size(const elf_phdr_t *cmds, int nr) {
-	int i, first_idx = -1, last_idx = -1;
+total_mapping_size(const elf_phdr_s *phdr, int nr) {
+	elf_addr_t min_addr = -1;
+	elf_addr_t max_addr = 0;
+	bool pt_load = false;
 
-	for (i = 0; i < nr; i++) {
-		if (cmds[i].p_type == PT_LOAD) {
-			last_idx = i;
-			if (first_idx == -1)
-				first_idx = i;
+	for (int i = 0; i < nr; i++) {
+		if (phdr[i].p_type == PT_LOAD) {
+			min_addr = min(min_addr, ELF_PAGESTART(phdr[i].p_vaddr));
+			max_addr = max(max_addr, phdr[i].p_vaddr + phdr[i].p_memsz);
+			pt_load = true;
 		}
 	}
-	if (first_idx == -1)
-		return 0;
-
-	return cmds[last_idx].p_vaddr + cmds[last_idx].p_memsz -
-				ELF_PAGESTART(cmds[first_idx].p_vaddr);
+	return pt_load ? (max_addr - min_addr) : 0;
 }
 
 static int
 elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
 	ssize_t rv;
-
 	rv = kernel_read(file, buf, len, &pos);
 	if (unlikely(rv != len)) {
 		return (rv < 0) ? rv : -EIO;
@@ -426,7 +436,7 @@ elf_read(file_s *file, void *buf, size_t len, loff_t pos) {
 }
 
 static ulong
-maximum_alignment(elf_phdr_t *cmds, int nr) {
+maximum_alignment(elf_phdr_s *cmds, int nr) {
 	ulong alignment = 0;
 	int i;
 
@@ -452,25 +462,24 @@ maximum_alignment(elf_phdr_t *cmds, int nr) {
  *
  * Loads ELF program headers from the binary file elf_file, which has the ELF
  * header pointed to by elf_ex, into a newly allocated array. The caller is
- * responsible for freeing the allocated data. Returns an ERR_PTR upon failure.
+ * responsible for freeing the allocated data. Returns NULL upon failure.
  */
-static elf_phdr_t
-*load_elf_phdrs(const elfhdr_t *elf_ex, file_s *elf_file) {
-	elf_phdr_t	*elf_phdata = NULL;
-	int			retval,
-				err = -1;
-	uint		size;
+static elf_phdr_s
+*load_elf_phdrs(const elfhdr_s *elf_ex, file_s *elf_file) {
+	elf_phdr_s *elf_phdata = NULL;
+	int retval = -1;
+	uint size;
 
 	/*
 	 * If the size of this structure has changed, then punt, since
 	 * we will be doing the wrong thing.
 	 */
-	if (elf_ex->e_phentsize != sizeof(elf_phdr_t))
+	if (elf_ex->e_phentsize != sizeof(elf_phdr_s))
 		goto out;
 
 	/* Sanity check the number of program headers... */
 	/* ...and their total size. */
-	size = sizeof(elf_phdr_t) * elf_ex->e_phnum;
+	size = sizeof(elf_phdr_s) * elf_ex->e_phnum;
 	if (size == 0 || size > 65536 || size > ELF_MIN_ALIGN)
 		goto out;
 
@@ -480,20 +489,15 @@ static elf_phdr_t
 
 	/* Read in the program headers */
 	retval = elf_read(elf_file, elf_phdata, size, elf_ex->e_phoff);
-	if (retval < 0) {
-		err = retval;
-		goto out;
-	}
 
-	/* Success! */
-	err = 0;
 out:
-	if (err) {
+	if (retval) {
 		kfree(elf_phdata);
 		elf_phdata = NULL;
 	}
 	return elf_phdata;
 }
+
 
 /**
  * struct arch_elf_state - arch-specific ELF loading state
@@ -512,7 +516,9 @@ typedef struct arch_elf_state {
 
 
 static inline int
-make_prot(u32 p_flags, bool has_interp, bool is_interp) {
+make_prot(u32 p_flags, arch_elf_state_s *arch_state,
+		bool has_interp, bool is_interp) {
+
 	int prot = 0;
 	if (p_flags & PF_R)
 		prot |= PROT_READ;
@@ -521,8 +527,86 @@ make_prot(u32 p_flags, bool has_interp, bool is_interp) {
 	if (p_flags & PF_X)
 		prot |= PROT_EXEC;
 
-	// return arch_elf_adjust_prot(prot, arch_state, has_interp, is_interp);
-	return prot;
+	return arch_elf_adjust_prot(prot,
+			arch_state, has_interp, is_interp);
+}
+
+/* This is much more generalized than the library routine read function,
+   so we keep this separate.  Technically the library read function
+   is only provided so that we can read a.out libraries that have
+   an ELF header */
+
+static ulong
+load_elf_interp(elfhdr_s *interp_elf_ex, file_s *interpreter, ulong no_base,
+		elf_phdr_s *interp_elf_phdata, arch_elf_state_s *arch_state) {
+	elf_phdr_s *eppnt;
+	ulong load_addr = 0;
+	int load_addr_set = 0;
+	ulong error = ~0UL;
+	ulong total_size;
+	int i;
+
+	/* First of all, some simple consistency checks */
+	if (interp_elf_ex->e_type != ET_EXEC &&
+			interp_elf_ex->e_type != ET_DYN)
+		goto out;
+	if (!elf_check_arch(interp_elf_ex) ||
+			elf_check_fdpic(interp_elf_ex))
+		goto out;
+	if (!interpreter->f_op->mmap)
+		goto out;
+
+	total_size = total_mapping_size(interp_elf_phdata,
+						interp_elf_ex->e_phnum);
+	if (!total_size) {
+		error = -EINVAL;
+		goto out;
+	}
+
+	eppnt = interp_elf_phdata;
+	for (i = 0; i < interp_elf_ex->e_phnum; i++, eppnt++) {
+		if (eppnt->p_type == PT_LOAD) {
+			int elf_type = MAP_PRIVATE;
+			int elf_prot = make_prot(eppnt->p_flags,
+								arch_state, true, true);
+			ulong vaddr = 0;
+			ulong k, map_addr;
+
+			vaddr = eppnt->p_vaddr;
+			if (interp_elf_ex->e_type == ET_EXEC || load_addr_set)
+				elf_type |= MAP_FIXED;
+			else if (no_base && interp_elf_ex->e_type == ET_DYN)
+				load_addr = -vaddr;
+
+			map_addr = elf_load(interpreter, load_addr + vaddr,
+							eppnt, elf_prot, elf_type, total_size);
+			total_size = 0;
+			error = map_addr;
+			if (BAD_ADDR(map_addr))
+				goto out;
+
+			if (!load_addr_set && interp_elf_ex->e_type == ET_DYN) {
+				load_addr = map_addr - ELF_PAGESTART(vaddr);
+				load_addr_set = 1;
+			}
+
+			/*
+			 * Check to see if the section's size will overflow the
+			 * allowed task size. Note that p_filesz must always be
+			 * <= p_memsize so it's only necessary to check p_memsz.
+			 */
+			k = load_addr + eppnt->p_vaddr;
+			if (BAD_ADDR(k) || eppnt->p_filesz > eppnt->p_memsz ||
+					eppnt->p_memsz > TASK_SIZE || TASK_SIZE - eppnt->p_memsz < k) {
+				error = -ENOMEM;
+				goto out;
+			}
+		}
+	}
+
+	error = load_addr;
+out:
+	return error;
 }
 
 
@@ -534,10 +618,10 @@ load_elf_binary(linux_bprm_s *bprm) {
 				phdr_addr = 0;
 	int			first_pt_load = 1;
 	ulong		error;
-	elf_phdr_t	*elf_ppnt,
+	elf_phdr_s	*elf_ppnt,
 				*elf_phdata,
 				*interp_elf_phdata = NULL;
-	elf_phdr_t	*elf_property_phdata = NULL;
+	elf_phdr_s	*elf_property_phdata = NULL;
 	ulong		elf_brk;
 	int			bss_prot = 0;
 	int			retval, i;
@@ -550,8 +634,8 @@ load_elf_binary(linux_bprm_s *bprm) {
 				end_data;
 	ulong		reloc_func_desc __maybe_unused = 0;
 	int			executable_stack = EXSTACK_DEFAULT;
-	elfhdr_t	*elf_ex = (elfhdr_t *)bprm->buf;
-	elfhdr_t	*interp_elf_ex = NULL;
+	elfhdr_s	*elf_ex = (elfhdr_s *)bprm->buf;
+	elfhdr_s	*interp_elf_ex = NULL;
 	mm_s		*mm;
 	pt_regs_s	*regs;
 	arch_elf_state_s	arch_state = INIT_ARCH_ELF_STATE;
@@ -565,9 +649,8 @@ load_elf_binary(linux_bprm_s *bprm) {
 		goto out;
 	if (!elf_check_arch(elf_ex))
 		goto out;
-	/* x86-64 elf_check_fdpic() defination is empty */
-	// if (elf_check_fdpic(elf_ex))
-	// 	goto out;
+	if (elf_check_fdpic(elf_ex))
+		goto out;
 	if (!bprm->file->f_op->mmap)
 		goto out;
 
@@ -667,10 +750,8 @@ out_free_interp:
 		if (memcmp(interp_elf_ex->e_ident, ELFMAG, SELFMAG) != 0)
 			goto out_free_dentry;
 		/* Verify the interpreter has a valid arch */
-		/* x86-64 elf_check_fdpic() defination is empty */
-		// if (!elf_check_arch(interp_elf_ex) ||
-		// 	elf_check_fdpic(interp_elf_ex))
-		if (!elf_check_arch(interp_elf_ex))
+		if (!elf_check_arch(interp_elf_ex) ||
+			elf_check_fdpic(interp_elf_ex))
 			goto out_free_dentry;
 
 		/* Load the interpreter program headers */
@@ -758,7 +839,8 @@ out_free_interp:
 		if (elf_ppnt->p_type != PT_LOAD)
 			continue;
 
-		elf_prot = make_prot(elf_ppnt->p_flags, !!interpreter, false);
+		elf_prot = make_prot(elf_ppnt->p_flags, &arch_state,
+						!!interpreter, false);
 
 		elf_flags = MAP_PRIVATE;
 
@@ -952,29 +1034,27 @@ out_free_interp:
 	current->mm->start_brk = current->mm->brk = ELF_PAGEALIGN(elf_brk);
 
 	if (interpreter) {
-		// elf_entry = load_elf_interp(interp_elf_ex,
-		// 			    interpreter,
-		// 			    load_bias, interp_elf_phdata,
-		// 			    &arch_state);
-		// if (!IS_ERR_VALUE(elf_entry)) {
-		// 	/*
-		// 	 * load_elf_interp() returns relocation
-		// 	 * adjustment
-		// 	 */
-		// 	interp_load_addr = elf_entry;
-		// 	elf_entry += interp_elf_ex->e_entry;
-		// }
-		// if (BAD_ADDR(elf_entry)) {
-		// 	retval = IS_ERR_VALUE(elf_entry) ?
-		// 			(int)elf_entry : -EINVAL;
-		// 	goto out_free_dentry;
-		// }
-		// reloc_func_desc = interp_load_addr;
+		elf_entry = load_elf_interp(interp_elf_ex, interpreter,
+						load_bias, interp_elf_phdata, &arch_state);
+		if (!IS_ERR_VALUE(elf_entry)) {
+			/*
+			 * load_elf_interp() returns relocation
+			 * adjustment
+			 */
+			interp_load_addr = elf_entry;
+			elf_entry += interp_elf_ex->e_entry;
+		}
+		if (BAD_ADDR(elf_entry)) {
+			retval = IS_ERR_VALUE(elf_entry) ?
+					(int)elf_entry : -EINVAL;
+			goto out_free_dentry;
+		}
+		reloc_func_desc = interp_load_addr;
 
-		// fput(interpreter);
+		fput(interpreter);
 
-		// kfree(interp_elf_ex);
-		// kfree(interp_elf_phdata);
+		kfree(interp_elf_ex);
+		kfree(interp_elf_phdata);
 	} else {
 		elf_entry = e_entry;
 		if (BAD_ADDR(elf_entry)) {
@@ -1004,8 +1084,6 @@ out_free_interp:
 	mm->start_data = start_data;
 	mm->end_data = end_data;
 	mm->start_stack = bprm->p;
-
-	// mm->entry_point = e_entry;
 
 	// if ((current->flags & PF_RANDOMIZE) && (snapshot_randomize_va_space > 1)) {
 	// 	/*
@@ -1066,6 +1144,71 @@ out_free_file:
 out_free_ph:
 	kfree(elf_phdata);
 	goto out;
+}
+
+/* This is really simpleminded and specialized - we are loading an
+   a.out library that is given an ELF header. */
+static int
+load_elf_library(file_s *file) {
+	elf_phdr_s *elf_phdata;
+	elf_phdr_s *eppnt;
+	int retval, error, i, j;
+	elfhdr_s elf_ex;
+
+	error = -ENOEXEC;
+	retval = elf_read(file, &elf_ex, sizeof(elf_ex), 0);
+	if (retval < 0)
+		goto out;
+
+	if (memcmp(elf_ex.e_ident, ELFMAG, SELFMAG) != 0)
+		goto out;
+
+	/* First of all, some simple consistency checks */
+	if (elf_ex.e_type != ET_EXEC || elf_ex.e_phnum > 2 ||
+			!elf_check_arch(&elf_ex) || !file->f_op->mmap)
+		goto out;
+	if (elf_check_fdpic(&elf_ex))
+		goto out;
+
+	/* Now read in all of the header information */
+
+	j = sizeof(struct elf_phdr) * elf_ex.e_phnum;
+	/* j < ELF_MIN_ALIGN because elf_ex.e_phnum <= 2 */
+
+	error = -ENOMEM;
+	elf_phdata = kmalloc(j, GFP_KERNEL);
+	if (!elf_phdata)
+		goto out;
+
+	eppnt = elf_phdata;
+	error = -ENOEXEC;
+	retval = elf_read(file, eppnt, j, elf_ex.e_phoff);
+	if (retval < 0)
+		goto out_free_ph;
+
+	for (j = 0, i = 0; i<elf_ex.e_phnum; i++)
+		if ((eppnt + i)->p_type == PT_LOAD)
+			j++;
+	if (j != 1)
+		goto out_free_ph;
+
+	while (eppnt->p_type != PT_LOAD)
+		eppnt++;
+
+	/* Now use mmap to map the library into memory. */
+	error = elf_load(file, ELF_PAGESTART(eppnt->p_vaddr),
+				eppnt, PROT_READ | PROT_WRITE | PROT_EXEC,
+				MAP_FIXED_NOREPLACE | MAP_PRIVATE, 0);
+
+	if (error != ELF_PAGESTART(eppnt->p_vaddr))
+		goto out_free_ph;
+
+	error = 0;
+
+out_free_ph:
+	kfree(elf_phdata);
+out:
+	return error;
 }
 
 

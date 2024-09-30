@@ -13,41 +13,41 @@
 	typedef struct vm_area_struct {
 		/* The first cache line has the info for VMA tree walking. */
 
-		ulong			vm_start;	/* Our start address within vm_mm. */
-		ulong			vm_end;		/* The first byte after our end address
-									   within vm_mm. */
+		union {
+			struct {
+				/* VMA covers [vm_start; vm_end) addresses within mm */
+				ulong	vm_start;
+				ulong	vm_end;
+			};
+	// #ifdef CONFIG_PER_VMA_LOCK
+	// 		struct rcu_head vm_rcu;	/* Used for deferred freeing. */
+	// #endif
+		};
 
 		mm_s			*vm_mm;		/* The address space we belong to. */
+		pgprot_t		vm_page_prot;
 
 		/*
-		 * Access permissions of this VMA.
-		 * See vmf_insert_mixed_prot() for discussion.
+		 * Flags, see mm.h.
+		 * To modify use vm_flags_{init|reset|set|clear|mod} functions.
 		 */
-		// pgprot_t vm_page_prot;
-		ulong			vm_flags;	/* Flags, see mm.h. */
-
-		/*
-		 * For areas with an address space and backing store,
-		 * linkage into the address_space->i_mmap interval tree.
-		 *
-		 * For private anonymous mappings, a pointer to a null terminated string
-		 * containing the name given to the vma, or NULL if unnamed.
-		 */
-
-		// union
-		// {
-		// 	struct
-		// 	{
-		// 		struct rb_node rb;
-		// 		unsigned long rb_subtree_last;
-		// 	} shared;
-		List_s			list;
-		// 	/*
-		// 	* Serialized by mmap_sem. Never use directly because it is
-		// 	* valid only when vm_file is NULL. Use anon_vma_name instead.
-		// 	*/
-		// 	struct anon_vma_name *anon_name;
+		// union {
+		// 	const vm_flags_t		vm_flags;
+		// 	vm_flags_t __private	__vm_flags;
 		// };
+		vm_flags_t		vm_flags;
+
+
+		// /*
+		//  * For areas with an address space and backing store,
+		//  * linkage into the address_space->i_mmap interval tree.
+		//  *
+		//  */
+		// struct {
+		// 	struct rb_node rb;
+		// 	unsigned long rb_subtree_last;
+		// } shared;
+		List_s			list;
 
 		/*
 		 * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
@@ -55,23 +55,37 @@
 		 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
 		 * or brk vma (with NULL file) can only be in an anon_vma list.
 		 */
-		// List_s			anon_vma_chain; /* Serialized by mmap_lock &
-		// 								* page_table_lock */
-		// anon_vma_s		*anon_vma;		 /* Serialized by page_table_lock */
+		List_s			anon_vma_chain;		/* Serialized by mmap_lock &
+											 * page_table_lock */
+		anon_vma_s		*anon_vma;			/* Serialized by page_table_lock */
 
 		/* Function pointers to deal with this struct. */
 		const vm_ops_s	*vm_ops;
 
 		/* Information about our backing store: */
-		ulong			vm_pgoff;	/* Offset (within vm_file) in PAGE_SIZE units */
-		file_s			*vm_file;	/* File we map to (can be NULL). */
-		// void *vm_private_data;	/* was vm_pte (shared mem) */
+		ulong			vm_pgoff;			/* Offset (within vm_file) in PAGE_SIZE units */
+		file_s			*vm_file;			/* File we map to (can be NULL). */
+		void			*vm_private_data;	/* was vm_pte (shared mem) */
 
+	// #ifdef CONFIG_ANON_VMA_NAME
+	// 	/*
+	// 	 * For private and shared anonymous mappings, a pointer to a null
+	// 	 * terminated string containing the name given to the vma, or NULL if
+	// 	 * unnamed. Serialized by mmap_lock. Use anon_vma_name to access.
+	// 	 */
+	// 	struct anon_vma_name *anon_name;
+	// #endif
 	// #ifdef CONFIG_SWAP
 	// 	atomic_long_t swap_readahead_info;
 	// #endif
+	// #ifndef CONFIG_MMU
+	// 	struct vm_region *vm_region;	/* NOMMU mapping region */
+	// #endif
 	// #ifdef CONFIG_NUMA
-	// 	struct mempolicy *vm_policy; /* NUMA policy for the VMA */
+	// 	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
+	// #endif
+	// #ifdef CONFIG_NUMA_BALANCING
+	// 	struct vma_numab_state *numab_state;	/* NUMA Balancing state */
 	// #endif
 	// 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
 	} vma_s;
@@ -181,24 +195,27 @@
 		 */
 		atomic_t	refcount;
 
-		/*
-		 * Count of child anon_vmas and VMAs which points to this anon_vma.
-		 *
-		 * This counter is used for making decision about reusing anon_vma
-		 * instead of forking new one. See comments in function anon_vma_clone.
-		 */
-		uint		degree;
+		// /*
+		//  * Count of child anon_vmas. Equals to the count of all anon_vmas that
+		//  * have ->parent pointing to this one, including itself.
+		//  *
+		//  * This counter is used for making decision about reusing anon_vma
+		//  * instead of forking new one. See comments in function anon_vma_clone.
+		//  */
+		// ulong		num_children;
+		// /* Count of VMAs whose ->anon_vma pointer points to this object. */
+		// ulong		num_active_vmas;
 
 		anon_vma_s	*parent;	/* Parent of this anon_vma */
 
 		// /*
-		// * NOTE: the LSB of the rb_root.rb_node is set by
-		// * mm_take_all_locks() _after_ taking the above lock. So the
-		// * rb_root must only be read/written after taking the above lock
-		// * to be sure to see a valid next pointer. The LSB bit itself
-		// * is serialized by a system wide lock only visible to
-		// * mm_take_all_locks() (mm_all_locks_mutex).
-		// */
+		//  * NOTE: the LSB of the rb_root.rb_node is set by
+		//  * mm_take_all_locks() _after_ taking the above lock. So the
+		//  * rb_root must only be read/written after taking the above lock
+		//  * to be sure to see a valid next pointer. The LSB bit itself
+		//  * is serialized by a system wide lock only visible to
+		//  * mm_take_all_locks() (mm_all_locks_mutex).
+		//  */
 
 		// /* Interval tree of private "related" vmas */
 		// struct rb_root_cached rb_root;
@@ -220,9 +237,9 @@
 	typedef struct anon_vma_chain {
 		vma_s		*vma;
 		anon_vma_s	*anon_vma;
-		List_hdr_s	same_vma; 	  /* locked by mmap_lock & page_table_lock */
-		// struct rb_node rb;			/* locked by anon_vma->rwsem */
-		// unsigned long rb_subtree_last;
+		List_hdr_s	same_vma;		/* locked by mmap_lock & page_table_lock */
+		// struct rb_node	rb;			/* locked by anon_vma->rwsem */
+		// ulong			rb_subtree_last;
 	// #ifdef CONFIG_DEBUG_VM_RB
 	// 	unsigned long cached_vma_start, cached_vma_last;
 	// #endif
@@ -236,6 +253,7 @@
 		ulong	high_limit;
 		ulong	align_mask;
 		ulong	align_offset;
+		ulong	start_gap;
 	} unmapped_vma_info_s;
 
 #endif /* _LINUX_VM_MAP_TYPES_H_ */

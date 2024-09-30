@@ -11,4 +11,6 @@
 	ulong arch_get_unmapped_area_topdown(file_s *filp, const ulong addr0,
 			const ulong len, const ulong pgoff, const ulong flags);
 
+	pgprot_t vm_get_page_prot(ulong vm_flags);
+
 #endif /* _ASM_X86_VM_MAP_API_H_ */

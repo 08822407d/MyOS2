@@ -93,7 +93,7 @@ ulong vm_mmap_pgoff(file_s *file, ulong addr, ulong len,
 
 	if (mmap_write_lock_killable(mm))
 		return -EINTR;
-	ret = do_mmap(file, addr, len, prot, flag, pgoff);
+	ret = do_mmap(file, addr, len, prot, flag, 0, pgoff);
 	mmap_write_unlock(mm);
 
 	return ret;
