@@ -337,7 +337,12 @@
         "binfmts.h": "c",
         "minmax.h": "c",
         "access_ok.h": "c",
-        "smap.h": "c"
+        "smap.h": "c",
+        "rwsem_api.h": "c",
+        "rwsem_macro.h": "c",
+        "rwsem.h": "c",
+        "semaphore.h": "c",
+        "semaphore_const.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

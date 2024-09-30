@@ -185,7 +185,7 @@
 	 */
 	typedef struct anon_vma {
 		anon_vma_s	*root;		/* Root of this anon_vma tree */
-		// struct rw_semaphore rwsem;	/* W: modification, R: walking the list */
+		// rwsem_t rwsem;	/* W: modification, R: walking the list */
 		/*
 		 * The refcount is taken on an anon_vma when there is no
 		 * guarantee that the vma of page tables will exist for

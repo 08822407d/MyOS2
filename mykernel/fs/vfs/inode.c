@@ -169,6 +169,23 @@ static inode_s *alloc_inode(super_block_s *sb)
 	return inode;
 }
 
+
+static void __address_space_init_once(addr_spc_s *mapping)
+{
+	// xa_init_flags(&mapping->i_pages, XA_FLAGS_LOCK_IRQ | XA_FLAGS_ACCOUNT);
+	init_rwsem(&mapping->i_mmap_rwsem);
+	// INIT_LIST_HEAD(&mapping->i_private_list);
+	// spin_lock_init(&mapping->i_private_lock);
+	// mapping->i_mmap = RB_ROOT_CACHED;
+}
+
+void address_space_init_once(addr_spc_s *mapping)
+{
+	memset(mapping, 0, sizeof(*mapping));
+	__address_space_init_once(mapping);
+}
+EXPORT_SYMBOL(address_space_init_once);
+
 /*
  * These are initializations that only need to be done
  * once, because the fields are idempotent across use
@@ -183,7 +200,7 @@ void inode_init_once(inode_s *inode)
 	// INIT_LIST_HEAD(&inode->i_io_list);
 	// INIT_LIST_HEAD(&inode->i_wb_list);
 	// INIT_LIST_HEAD(&inode->i_lru);
-	// __address_space_init_once(&inode->i_data);
+	__address_space_init_once(&inode->i_data);
 	// i_size_ordered_init(inode);
 }
 

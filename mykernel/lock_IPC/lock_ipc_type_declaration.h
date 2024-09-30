@@ -2,11 +2,16 @@
 #define _LOCK_IPC_TYPE_DECLARATIONS_H_
 
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/lib_types.h>
 	#include <asm/lock_ipc_types.h>
 
 
 	/* atomic */
 	typedef atomic64_t atomic_long_t;
+
+	/* semaphore */
+	struct rw_semaphore;
+	typedef struct rw_semaphore rwsem_t;
 
 	/* spinlock */
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */

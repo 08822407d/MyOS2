@@ -387,7 +387,7 @@
 		inode_s				*host;
 		page_s				**page_array;
 		// xarray_s			i_pages;
-		// rw_semaphore_s		invalidate_lock;
+		// rwsem_t		invalidate_lock;
 		gfp_t				gfp_mask;
 		atomic_t			i_mmap_writable;
 	// #ifdef CONFIG_READ_ONLY_THP_FOR_FS
@@ -395,7 +395,7 @@
 		// atomic_t			nr_thps;
 	// #endif
 		// rb_root_cached_s	i_mmap;
-		// rw_semaphore_s		i_mmap_rwsem;
+		rwsem_t				i_mmap_rwsem;
 		ulong				nrpages;
 		pgoff_t				writeback_index;
 		const addr_spc_ops_s	*a_ops;
@@ -429,10 +429,10 @@
 		// down_write(&mapping->i_mmap_rwsem);
 	}
 
-	// static inline int i_mmap_trylock_write(addr_spc_s *mapping)
-	// {
-	// 	return down_write_trylock(&mapping->i_mmap_rwsem);
-	// }
+	static inline int i_mmap_trylock_write(addr_spc_s *mapping)
+	{
+		// return down_write_trylock(&mapping->i_mmap_rwsem);
+	}
 
 	static inline void i_mmap_unlock_write(addr_spc_s *mapping)
 	{
@@ -481,22 +481,22 @@
 		return atomic_read(&mapping->i_mmap_writable) > 0;
 	}
 
-	// static inline int mapping_map_writable(addr_spc_s *mapping)
-	// {
-	// 	return atomic_inc_unless_negative(&mapping->i_mmap_writable) ?
-	// 		0 : -EPERM;
-	// }
+	static inline int mapping_map_writable(addr_spc_s *mapping)
+	{
+		return atomic_inc_unless_negative(&mapping->i_mmap_writable) ?
+			0 : -EPERM;
+	}
 
 	static inline void mapping_unmap_writable(addr_spc_s *mapping)
 	{
 		atomic_dec(&mapping->i_mmap_writable);
 	}
 
-	// static inline int mapping_deny_writable(addr_spc_s *mapping)
-	// {
-	// 	return atomic_dec_unless_positive(&mapping->i_mmap_writable) ?
-	// 		0 : -EBUSY;
-	// }
+	static inline int mapping_deny_writable(addr_spc_s *mapping)
+	{
+		return atomic_dec_unless_positive(&mapping->i_mmap_writable) ?
+			0 : -EBUSY;
+	}
 
 	static inline void mapping_allow_writable(addr_spc_s *mapping)
 	{
@@ -595,7 +595,7 @@
 
 		/* Misc */
 		// unsigned long	i_state;
-		// rw_semaphore_s	i_rwsem;
+		// rwsem_t	i_rwsem;
 
 		// unsigned long	dirtied_when;	/* jiffies of first dirtying */
 		// unsigned long	dirtied_time_when;
@@ -1346,7 +1346,7 @@
 		unsigned long		s_iflags;	/* internal SB_I_* flags */
 		unsigned long		s_magic;
 		dentry_s			*s_root;
-		// rw_semaphore_s		s_umount;
+		// rwsem_t		s_umount;
 		int					s_count;
 		// atomic_t			s_active;
 	// #ifdef CONFIG_SECURITY

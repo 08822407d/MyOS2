@@ -157,7 +157,7 @@
 	// #endif
 
 	// /* Lock for read/write access to pci device and bus lists */
-	// extern struct rw_semaphore pci_bus_sem;
+	// extern rwsem_t pci_bus_sem;
 	// extern struct mutex pci_slot_mutex;
 
 	// extern raw_spinlock_t pci_lock;

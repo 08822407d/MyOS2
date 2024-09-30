@@ -126,7 +126,7 @@
 		loff_t	i_pos;				/* on-disk position of directory entry or 0 */
 		// struct hlist_node i_fat_hash;	/* hash by i_location */
 		// struct hlist_node i_dir_hash;	/* hash by i_logstart */
-		// struct rw_semaphore truncate_lock; /* protect bmap against truncate */
+		// rwsem_t truncate_lock; /* protect bmap against truncate */
 		inode_s vfs_inode;
 	} msdos_inode_info_s;
 

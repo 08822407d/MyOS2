@@ -5,6 +5,6 @@
 	#include "spinlock/spinlock_types_arch.h"
 
 
-	#include <linux/kernel/lock_ipc_types.h>
+	// #include <linux/kernel/lock_ipc_types.h>
 
 #endif /* _ASM_X86_LOCK_IPC_TYPES_H_ */

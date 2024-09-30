@@ -16,8 +16,23 @@
 
 		extern void
 		vma_set_anonymous(vma_s *vma);
+
 		extern bool
 		vma_is_anonymous(vma_s *vma);
+		extern bool
+		vma_is_initial_heap(const vma_s *vma);
+		extern bool
+		vma_is_initial_stack(const vma_s *vma);
+		extern bool
+		vma_is_temporary_stack(vma_s *vma);
+		extern bool
+		vma_is_foreign(vma_s *vma);
+		extern bool
+		vma_is_accessible(vma_s *vma);
+		extern bool
+		is_shared_maywrite(vm_flags_t vm_flags);
+		extern bool
+		vma_is_shared_maywrite(vma_s *vma);
 
 		extern vma_s
 		*simple_find_vma(mm_s *mm, ulong addr);
@@ -83,6 +98,79 @@
 		bool
 		vma_is_anonymous(vma_s *vma) {
 			return !vma->vm_ops;
+		}
+
+		/*
+		 * Indicate if the VMA is a heap for the given task; for
+		 * /proc/PID/maps that is the heap of the main task.
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_initial_heap(const vma_s *vma) {
+			return vma->vm_start < vma->vm_mm->brk &&
+						vma->vm_end > vma->vm_mm->start_brk;
+		}
+
+		/*
+		 * Indicate if the VMA is a stack for the given task; for
+		 * /proc/PID/maps that is the stack of the main task.
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_initial_stack(const vma_s *vma) {
+			/*
+			 * We make no effort to guess what a given thread considers to be
+			 * its "stack".  It's not even well-defined for programs written
+			 * languages like Go.
+			 */
+			return vma->vm_start <= vma->vm_mm->start_stack &&
+						vma->vm_end >= vma->vm_mm->start_stack;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_temporary_stack(vma_s *vma) {
+			int maybe_stack = vma->vm_flags & (VM_GROWSDOWN | VM_GROWSUP);
+
+			if (!maybe_stack)
+				return false;
+
+			if ((vma->vm_flags & VM_STACK_INCOMPLETE_SETUP) ==
+						VM_STACK_INCOMPLETE_SETUP)
+				return true;
+
+			return false;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_foreign(vma_s *vma) {
+			if (!current->mm)
+				return true;
+
+			if (current->mm != vma->vm_mm)
+				return true;
+
+			return false;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_accessible(vma_s *vma) {
+			return vma->vm_flags & VM_ACCESS_FLAGS;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		is_shared_maywrite(vm_flags_t vm_flags) {
+			return (vm_flags & (VM_SHARED | VM_MAYWRITE)) ==
+						(VM_SHARED | VM_MAYWRITE);
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		vma_is_shared_maywrite(vma_s *vma) {
+			return is_shared_maywrite(vma->vm_flags);
 		}
 
 		/**

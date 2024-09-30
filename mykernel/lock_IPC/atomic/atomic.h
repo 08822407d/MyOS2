@@ -16,7 +16,79 @@
  */
 #ifndef _LINUX_ATOMIC_H_
 #define _LINUX_ATOMIC_H_
+ 
+	#include <linux/compiler/myos_debug_option.h>
+
+	#include "../lock_ipc_types.h"
+	#include "../lock_ipc_api.h"
+
+
+	#ifdef DEBUG
+
+		extern bool
+		atomic_inc_unless_negative(atomic_t *v);
+
+		extern bool
+		atomic_dec_unless_positive(atomic_t *v);
+
+	#endif
 
 	#include "atomic_macro.h"
+
+	#if defined(ATOMIC_DEFINATION) || !(DEBUG)
+
+		/**
+		 * atomic_inc_unless_negative() - atomic increment unless negative with full ordering
+		 * @v: pointer to atomic_t
+		 *
+		 * If (@v >= 0), atomically updates @v to (@v + 1) with full ordering.
+		 * Otherwise, @v is not modified and relaxed ordering is provided.
+		 *
+		 * Safe to use in noinstr code; prefer atomic_inc_unless_negative() elsewhere.
+		 *
+		 * Return: @true if @v was updated, @false otherwise.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		bool
+		atomic_inc_unless_negative(atomic_t *v) {
+		#if defined(arch_atomic_inc_unless_negative)
+			return arch_atomic_inc_unless_negative(v);
+		#else
+			int c = atomic_read(v);
+			do {
+				if (unlikely(c < 0))
+					return false;
+			} while (!atomic_try_cmpxchg(v, &c, c + 1));
+			return true;
+		#endif
+		}
+
+		/**
+		 * atomic_dec_unless_positive() - atomic decrement unless positive with full ordering
+		 * @v: pointer to atomic_t
+		 *
+		 * If (@v <= 0), atomically updates @v to (@v - 1) with full ordering.
+		 * Otherwise, @v is not modified and relaxed ordering is provided.
+		 *
+		 * Safe to use in noinstr code; prefer atomic_dec_unless_positive() elsewhere.
+		 *
+		 * Return: @true if @v was updated, @false otherwise.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		bool
+		atomic_dec_unless_positive(atomic_t *v) {
+		#if defined(arch_atomic_dec_unless_positive)
+			return arch_atomic_dec_unless_positive(v);
+		#else
+			int c = atomic_read(v);
+			do {
+				if (unlikely(c > 0))
+					return false;
+			} while (!atomic_try_cmpxchg(v, &c, c - 1));
+			return true;
+		#endif
+		}
+
+	#endif /* !DEBUG */
 
 #endif /* _LINUX_ATOMIC_H_ */

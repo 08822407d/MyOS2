@@ -1,0 +1,6 @@
+#ifndef _LINUX_SEMAPHORE_MACRO_H_
+#define _LINUX_SEMAPHORE_MACRO_H_
+
+
+
+#endif /* _LINUX_SEMAPHORE_MACRO_H_ */

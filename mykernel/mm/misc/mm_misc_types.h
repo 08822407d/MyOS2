@@ -67,7 +67,7 @@
 			// * mmap_lock, which can easily push the 2 fields into one
 			// * cacheline.
 			// */
-			// struct rw_semaphore mmap_lock;
+			// rwsem_t mmap_lock;
 
 			// List_s mmlist; /* List of maybe swapped mm's.	These
 			// 						* are globally strung together off

@@ -193,8 +193,8 @@ dup_mmap(mm_s *mm, mm_s *oldmm)
 
 			get_file(file);
 			i_mmap_lock_write(mapping);
-			// if (tmp->vm_flags & VM_SHARED)
-			// 	mapping_allow_writable(mapping);
+			if (tmp->vm_flags & VM_SHARED)
+				mapping_allow_writable(mapping);
 			// flush_dcache_mmap_lock(mapping);
 			// /* insert tmp into the share list, just after mpnt */
 			// vma_interval_tree_insert_after(tmp, mpnt,

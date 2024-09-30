@@ -157,8 +157,8 @@ vma_link_file(vma_s *vma) {
 		addr_spc_s *mapping = file->f_mapping;
 		i_mmap_lock_write(mapping);
 
-		// if (vma->vm_flags & VM_SHARED)
-		// 	mapping_allow_writable(mapping);
+		if (vma->vm_flags & VM_SHARED)
+			mapping_allow_writable(mapping);
 
 		// flush_dcache_mmap_lock(mapping);
 		// vma_interval_tree_insert(vma, &mapping->i_mmap);
@@ -655,6 +655,7 @@ simple_mmap_region(file_s *file, ulong addr,
 {
 	mm_s *mm = current->mm;
 	vma_s *vma, *prev, *merge;
+	bool writable_file_mapping = false;
 	int error;
 
 	/* Clear old maps, set up prev */
@@ -692,13 +693,13 @@ simple_mmap_region(file_s *file, ulong addr,
 		if (error != -ENOERR)
 			goto unmap_and_free_vma;
 
-		// if (vma_is_shared_maywrite(vma)) {
-		// 	error = mapping_map_writable(file->f_mapping);
-		// 	if (error)
-		// 		goto close_and_free_vma;
+		if (vma_is_shared_maywrite(vma)) {
+			error = mapping_map_writable(file->f_mapping);
+			if (error)
+				goto close_and_free_vma;
 
-		// 	writable_file_mapping = true;
-		// }
+			writable_file_mapping = true;
+		}
 
 		/*
 		 * Expansion is handled above, merging is handled below.
@@ -783,8 +784,8 @@ unmap_and_free_vma:
 
 	/* Undo any partial mapping done by a device driver. */
 	simple_unmap_region(mm, vma, prev, vma->vm_start, vma->vm_end);
-	// if (vm_flags & VM_SHARED)
-	// 	mapping_unmap_writable(file->f_mapping);
+	if (vm_flags & VM_SHARED)
+		mapping_unmap_writable(file->f_mapping);
 free_vma:
 	vm_area_free(vma);
 unacct_error:

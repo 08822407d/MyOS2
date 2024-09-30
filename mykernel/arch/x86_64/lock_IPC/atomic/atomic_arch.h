@@ -26,7 +26,7 @@
 		arch_atomic_sub(int i, atomic_t *v);
 
 		extern bool
-		arch_atomic_sub_and_test(int i, atomic_t *v);
+		arch_atomic_sub_test_zero(int i, atomic_t *v);
 		
 		extern void
 		arch_atomic_inc(atomic_t *v);
@@ -38,13 +38,13 @@
 		arch_atomic_dec(atomic_t *v);
 
 		extern bool
-		arch_atomic_dec_and_test(atomic_t *v);
+		arch_atomic_inc_test_zero(atomic_t *v);
 
 		extern bool
-		arch_atomic_inc_and_test(atomic_t *v);
+		arch_atomic_dec_test_zero(atomic_t *v);
 
 		extern bool
-		arch_atomic_add_negative(int i, atomic_t *v);
+		arch_atomic_add_test_negative(int i, atomic_t *v);
 
 		extern int
 		arch_atomic_add_return(int i, atomic_t *v);
@@ -157,7 +157,7 @@
 		}
 
 		/**
-		 * arch_atomic_sub_and_test - subtract value from variable and test result
+		 * arch_atomic_sub_test_zero - subtract value from variable and test result
 		 * @i: integer value to subtract
 		 * @v: pointer of type atomic_t
 		 *
@@ -167,7 +167,7 @@
 		 */
 		PREFIX_STATIC_AWLWAYS_INLINE
 		bool
-		arch_atomic_sub_and_test(int i, atomic_t *v) {
+		arch_atomic_sub_test_zero(int i, atomic_t *v) {
 			// return GEN_BINARY_RMWcc(LOCK_PREFIX "subl", v->counter, e, "er", i);
 			bool c;
 			asm volatile(LOCK_PREFIX
@@ -215,30 +215,7 @@
 		}
 
 		/**
-		 * arch_atomic_dec_and_test - decrement and test
-		 * @v: pointer of type atomic_t
-		 *
-		 * Atomically decrements @v by 1 and
-		 * returns true if the result is 0, or false for all other
-		 * cases.
-		 */
-		PREFIX_STATIC_AWLWAYS_INLINE
-		bool
-		arch_atomic_dec_and_test(atomic_t *v) {
-			// return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
-			bool c;
-			asm volatile(LOCK_PREFIX
-							"decl	%0				\n\t"
-						:	"+m"(v->counter) ,
-							"=@cc" "e"(c)
-						:
-						:	"memory"
-						);
-			return c;
-		}
-
-		/**
-		 * arch_atomic_inc_and_test - increment and test
+		 * arch_atomic_inc_test_zero - increment and test
 		 * @v: pointer of type atomic_t
 		 *
 		 * Atomically increments @v by 1
@@ -247,7 +224,7 @@
 		 */
 		PREFIX_STATIC_AWLWAYS_INLINE
 		bool
-		arch_atomic_inc_and_test(atomic_t *v) {
+		arch_atomic_inc_test_zero(atomic_t *v) {
 			// return GEN_UNARY_RMWcc(LOCK_PREFIX "incl", v->counter, e);
 			bool c;
 			asm volatile(LOCK_PREFIX
@@ -261,7 +238,30 @@
 		}
 
 		/**
-		 * arch_atomic_add_negative - add and test if negative
+		 * arch_atomic_dec_test_zero - decrement and test
+		 * @v: pointer of type atomic_t
+		 *
+		 * Atomically decrements @v by 1 and
+		 * returns true if the result is 0, or false for all other
+		 * cases.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		bool
+		arch_atomic_dec_test_zero(atomic_t *v) {
+			// return GEN_UNARY_RMWcc(LOCK_PREFIX "decl", v->counter, e);
+			bool c;
+			asm volatile(LOCK_PREFIX
+							"decl	%0				\n\t"
+						:	"+m"(v->counter) ,
+							"=@cc" "e"(c)
+						:
+						:	"memory"
+						);
+			return c;
+		}
+
+		/**
+		 * arch_atomic_add_test_negative - add and test if negative
 		 * @i: integer value to add
 		 * @v: pointer of type atomic_t
 		 *
@@ -271,7 +271,7 @@
 		 */
 		PREFIX_STATIC_AWLWAYS_INLINE
 		bool
-		arch_atomic_add_negative(int i, atomic_t *v) {
+		arch_atomic_add_test_negative(int i, atomic_t *v) {
 			// return GEN_BINARY_RMWcc(LOCK_PREFIX "addl", v->counter, s, "er", i);
 			bool c;
 			asm volatile(LOCK_PREFIX
@@ -398,6 +398,11 @@
 		}
 
 	#endif
+
+	#define arch_atomic_sub_amd_test	arch_atomic_sub_test_zero
+	#define arch_atomic_inc_and_test	arch_atomic_inc_test_zero
+	#define arch_atomic_dec_and_test	arch_atomic_dec_test_zero
+	#define arch_atomic_add_negative	arch_atomic_add_test_negative
 
 	#define arch_atomic_fetch_and	arch_atomic_fetch_and
 	#define arch_atomic_fetch_or	arch_atomic_fetch_or

@@ -206,7 +206,7 @@
 	// 	struct mutex atomic_write_lock;
 	// 	struct mutex legacy_mutex;
 	// 	struct mutex throttle_mutex;
-	// 	struct rw_semaphore termios_rwsem;
+	// 	rwsem_t termios_rwsem;
 	// 	struct mutex winsize_mutex;
 	// 	struct ktermios termios, termios_locked;
 	// 	char name[64];
