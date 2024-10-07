@@ -69,6 +69,12 @@
 		ptep_get(pte_t *ptep);
 		extern pmd_t
 		pmdp_get(pmd_t *pmdp);
+		extern pud_t
+		pudp_get(pud_t *pudp);
+		extern p4d_t
+		p4dp_get(p4d_t *p4dp);
+		extern pgd_t
+		pgdp_get(pgd_t *pgdp);
 
 		extern int
 		is_zero_pfn(ulong pfn);
@@ -117,25 +123,28 @@
 		PREFIX_STATIC_INLINE
 		pte_t
 		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address) {
-			return (arch_pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
+			return (pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
 						NULL : pte_ent_ptr(pmd, address);
 		}
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		pte_index(ulong address) {
 			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
 		}
 		PREFIX_STATIC_INLINE
 		pte_t
 		*pte_ent_ptr(pmd_t *pmdp, ulong address) {
-			return arch_pmd_pgtable(*pmdp) + pte_index(address);
+			if (pmd_none_or_clear_bad(pmdp))
+				return NULL;
+			else
+				return pmd_pgtable(*pmdp) + pte_index(address);
 		}
 
 
 		PREFIX_STATIC_INLINE
 		pmd_t
 		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address) {
-			return (arch_pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
+			return (pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
 						NULL: pmd_ent_ptr(pud, address);
 		}
 		PREFIX_STATIC_INLINE
@@ -146,15 +155,18 @@
 		/* Find an entry in the second-level page table.. */
 		PREFIX_STATIC_INLINE
 		pmd_t
-		*pmd_ent_ptr(pud_t *pud, ulong address) {
-			return arch_pud_pgtable(*pud) + pmd_index(address);
+		*pmd_ent_ptr(pud_t *pudp, ulong address) {
+			if (pud_none_or_clear_bad(pudp))
+				return NULL;
+			else
+				return pud_pgtable(*pudp) + pmd_index(address);
 		}
 		PREFIX_STATIC_INLINE
 		int
 		pmd_none_or_clear_bad(pmd_t *pmd) {
-			if (arch_pmd_none(*pmd))
+			if (pmd_none(*pmd))
 				return 1;
-			if (arch_pmd_bad(*pmd)) {
+			if (pmd_bad(*pmd)) {
 				pmd_clear(pmd);
 				return 1;
 			}
@@ -165,7 +177,7 @@
 		PREFIX_STATIC_INLINE
 		pud_t
 		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address) {
-			return (arch_p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
+			return (p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
 						NULL : pud_ent_ptr(p4d, address);
 		}
 		PREFIX_STATIC_INLINE
@@ -176,14 +188,17 @@
 		PREFIX_STATIC_INLINE
 		pud_t
 		*pud_ent_ptr(p4d_t *p4dp, ulong address) {
-			return arch_p4d_pgtable(*p4dp) + pud_index(address);
+			if (p4d_none_or_clear_bad(p4dp))
+				return NULL;
+			else
+				return p4d_pgtable(*p4dp) + pud_index(address);
 		}
 		PREFIX_STATIC_INLINE
 		int
 		pud_none_or_clear_bad(pud_t *pud) {
-			if (arch_pud_none(*pud))
+			if (pud_none(*pud))
 				return 1;
-			if (arch_pud_bad(*pud)) {
+			if (pud_bad(*pud)) {
 				pud_clear(pud);
 				return 1;
 			}
@@ -199,9 +214,9 @@
 		PREFIX_STATIC_INLINE
 		int
 		p4d_none_or_clear_bad(p4d_t *p4d) {
-			if (arch_p4d_none(*p4d))
+			if (p4d_none(*p4d))
 				return 1;
-			if (arch_p4d_bad(*p4d)) {
+			if (p4d_bad(*p4d)) {
 				p4d_clear(p4d);
 				return 1;
 			}
@@ -242,6 +257,21 @@
 		pmd_t
 		pmdp_get(pmd_t *pmdp) {
 			return READ_ONCE(*pmdp);
+		}
+		PREFIX_STATIC_INLINE
+		pud_t
+		pudp_get(pud_t *pudp) {
+			return READ_ONCE(*pudp);
+		}
+		PREFIX_STATIC_INLINE
+		p4d_t
+		p4dp_get(p4d_t *p4dp) {
+			return READ_ONCE(*p4dp);
+		}
+		PREFIX_STATIC_INLINE
+		pgd_t
+		pgdp_get(pgd_t *pgdp) {
+			return READ_ONCE(*pgdp);
 		}
 
 

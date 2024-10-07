@@ -53,4 +53,9 @@
 			})
 	// #define pmd_addr_end pmd_ent_bound_end
 
+
+
+	#define ptep_get_lockless		ptep_get
+	#define pmdp_get_lockless		pmdp_get
+
 #endif /* _LINUX_PGTABLE_MACRO_H_ */

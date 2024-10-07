@@ -34,16 +34,16 @@ vm_fault_s myos_dump_pagetable(ulong address)
 	pgd_t *pgd = base + pgd_index(address);
 	
 	vmf.p4d = p4d_ent_ptr(pgd, address);
-	if (arch_p4d_none(*vmf.p4d))
+	if (p4d_none(*vmf.p4d))
 		goto finish;
 	vmf.pud = pud_ent_ptr(vmf.p4d, address);
-	if (arch_pud_none(*vmf.pud))
+	if (pud_none(*vmf.pud))
 		goto finish;
 	vmf.pmd = pmd_ent_ptr(vmf.pud, address);
-	if (arch_pmd_none(*vmf.pmd))
+	if (pmd_none(*vmf.pmd))
 		goto finish;
 	vmf.pte = pte_ent_ptr(vmf.pmd, address);
-	if (arch_pte_none(*vmf.pte))
+	if (pte_none(*vmf.pte))
 		goto finish;
 	virt_addr_t pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte->val);
 	vmf.page = (virt_to_page(pg_vaddr));

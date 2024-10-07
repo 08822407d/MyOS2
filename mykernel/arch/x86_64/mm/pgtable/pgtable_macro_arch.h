@@ -13,6 +13,7 @@
 	static inline int pgd_none(pgd_t pgd)		{ return 0; }
 	static inline int pgd_bad(pgd_t pgd)		{ return 0; }
 	static inline int pgd_present(pgd_t pgd)	{ return 1; }
+	#define pgd_pgtable			p4d_pgtable
 
 
 	extern pgd_t init_top_pgt[];
@@ -44,11 +45,33 @@
 	#define __pmd(x)			arch_make_pmd(x)
 	#define __pte(x)			arch_make_pte(x)
 
+
+	#define pte_writable(ptep)	pte_write(ptep)
+
 	/*
 	 * Currently stuck as a macro due to indirect forward reference to
 	 * linux/mmzone.h's __section_mem_map_addr() definition:
 	 */
 	#define p4d_page(p4d)		pfn_to_page(p4d_pfn(p4d))
+
+
+	#define p4d_present			arch_p4d_present
+	#define pud_present			arch_pud_present
+	#define pmd_present			arch_pmd_present
+	#define pte_present			arch_pte_present
+
+	#define p4d_none			arch_p4d_none
+	#define pud_none			arch_pud_none
+	#define pmd_none			arch_pmd_none
+	#define pte_none			arch_pte_none
+
+	#define p4d_bad				arch_p4d_bad
+	#define pud_bad				arch_pud_bad
+	#define pmd_bad				arch_pmd_bad
+
+	#define p4d_pgtable			arch_p4d_pgtable
+	#define pud_pgtable			arch_pud_pgtable
+	#define pmd_pgtable			arch_pmd_pgtable
 
 
 	/*

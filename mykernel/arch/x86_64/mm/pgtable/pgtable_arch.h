@@ -16,7 +16,6 @@
 
 		extern int
 		pte_write(pte_t pte);
-		#define pte_writable(ptep)	pte_write(ptep)
 
 		extern pte_t
 		pte_set_flags(pte_t pte, pteval_t set);
@@ -39,9 +38,9 @@
 		pte_mkwrite(pte_t pte);
 
 		extern int
-		arch_pte_none(pte_t pte);
-		extern int
 		pte_same(pte_t a, pte_t b);
+		extern int
+		arch_pte_none(pte_t pte);
 		extern int
 		arch_pte_present(pte_t a);
 
@@ -230,16 +229,14 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		arch_pte_none(pte_t pte) {
-			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
-		}
-
-		PREFIX_STATIC_INLINE
-		int
 		pte_same(pte_t a, pte_t b) {
 			return a.val == b.val;
 		}
-
+		PREFIX_STATIC_INLINE
+		int
+		arch_pte_none(pte_t pte) {
+			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
+		}
 		PREFIX_STATIC_INLINE
 		int
 		arch_pte_present(pte_t a) {
@@ -276,9 +273,6 @@
 						arch_pmd_pfn_mask(pmd));
 		}
 
-		// static inline int arch_pmd_bad(pmd_t pmd) {
-		// 	return (arch_pmd_flags(pmd) & ~_PAGE_USER) != _KERNPG_TABLE;
-		// }
 		PREFIX_STATIC_INLINE
 		int
 		arch_pmd_bad(pmd_t pmd) {

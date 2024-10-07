@@ -77,7 +77,7 @@ vmf_pte_changed(struct vm_fault *vmf) {
 	if (vmf->flags & FAULT_FLAG_ORIG_PTE_VALID)
 		return !pte_same(ptep_get(vmf->pte), vmf->orig_pte);
 
-	return !arch_pte_none(ptep_get(vmf->pte));
+	return !pte_none(ptep_get(vmf->pte));
 }
 
 /*
@@ -317,10 +317,10 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
 	src_pte_ptr = pte_ent_ptr(src_pmde_ptr, addr);
 
 	do {
-		if (arch_pte_none(*src_pte_ptr)) {
+		if (pte_none(*src_pte_ptr)) {
 			continue;
 		}
-		if (unlikely(!arch_pte_present(*src_pte_ptr))) {
+		if (unlikely(!pte_present(*src_pte_ptr))) {
 			// ret = copy_nonpresent_pte(dst_mm, src_mm,
 			// 			  dst_pte_ptr, src_pte_ptr,
 			// 			  dst_vma, src_vma,
@@ -1331,7 +1331,7 @@ do_fault(vm_fault_s *vmf) {
 			 * we don't have concurrent modification by hardware
 			 * followed by an update.
 			 */
-			if (unlikely(arch_pte_none(ptep_get(vmf->pte))))
+			if (unlikely(pte_none(ptep_get(vmf->pte))))
 				ret = VM_FAULT_SIGBUS;
 			else
 				ret = VM_FAULT_NOPAGE;
@@ -1368,7 +1368,7 @@ static vm_fault_t
 handle_pte_fault(vm_fault_s *vmf) {
 	pte_t entry;
 
-	if (unlikely(arch_pmd_none(*vmf->pmd))) {
+	if (unlikely(pmd_none(*vmf->pmd))) {
 		/*
 		 * Leave __pte_alloc() until later: because vm_ops->fault may
 		 * want to allocate huge page, and if we expose page table
@@ -1388,18 +1388,18 @@ handle_pte_fault(vm_fault_s *vmf) {
 		// 				 vmf->address, &vmf->ptl);
 		if (unlikely(vmf->pte == NULL))
 			return 0;
-		// vmf->orig_pte = ptep_get_lockless(vmf->pte);
-		vmf->orig_pte = *vmf->pte;
+		vmf->orig_pte = ptep_get_lockless(vmf->pte);
 		vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
 
-		// if (pte_none(vmf->orig_pte)) {
-		// 	pte_unmap(vmf->pte);
-		// 	vmf->pte = NULL;
-		// }
+		if (pte_none(vmf->orig_pte)) {
+			// pte_unmap(vmf->pte);
+			vmf->pte = NULL;
+		}
 	}
 
 	// static vm_fault_t do_pte_missing(struct vm_fault *vmf)
-	if (arch_pte_none(*vmf->pte)) {
+	if (vmf->pte == NULL) {
+		vmf->pte = pte_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
 		if (vma_is_anonymous(vmf->vma))
 			return do_anonymous_page(vmf);
 		else
@@ -1490,7 +1490,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 		goto fail;
 	}
 	vmf.pte = pte_alloc(mm, vmf.pmd, address);
-	if (!vmf.pmd)
+	if (!vmf.pte)
 	{
 		ret = VM_FAULT_OOM;
 		goto fail;
@@ -1516,7 +1516,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 		return -ENOMEM;
 
 	spin_lock(&mm->page_table_lock);
-	if (!arch_p4d_present(*p4d)) {
+	if (!p4d_present(*p4d)) {
 		smp_wmb();	/* See comment in pmd_install() */
 		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
 	} else			/* Another has populated it */
@@ -1537,7 +1537,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 		return -ENOMEM;
 
 	spin_lock(&mm->page_table_lock);
-	if (!arch_pud_present(*pud)) {
+	if (!pud_present(*pud)) {
 		smp_wmb();	/* See comment in pmd_install() */
 		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
@@ -1554,7 +1554,7 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 		return -ENOMEM;
 
 	spin_lock(&mm->page_table_lock);
-	if (!arch_pmd_present(*pmd)) {
+	if (!pmd_present(*pmd)) {
 		smp_wmb();	/* See comment in pmd_install() */
 		*pmd = arch_make_pmd(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
@@ -1613,19 +1613,19 @@ page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr)
 
 	pgd = pgd_ent_ptr(mm, addr);
 	p4d = p4d_ent_ptr(pgd, addr);
-	if (arch_p4d_none(*p4d)) {
+	if (p4d_none(*p4d)) {
 		goto fail;
 	}
 	pud = pud_ent_ptr(p4d, addr);
-	if (arch_pud_none(*pud)) {
+	if (pud_none(*pud)) {
 		goto fail;
 	}
 	pmd = pmd_ent_ptr(pud, addr);
-	if (arch_pmd_none(*pmd)) {
+	if (pmd_none(*pmd)) {
 		goto fail;
 	}
 	pte = pte_ent_ptr(pmd, addr);
-	if (arch_pte_none(*pte)) {
+	if (pte_none(*pte)) {
 		goto fail;
 	}
 
