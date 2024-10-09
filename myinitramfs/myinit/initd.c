@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <sched.h>
 #include <sys/types.h>
+#include <sys/mman.h>
 
 typedef unsigned long ulong;
 
@@ -44,8 +45,10 @@ int main(int argc, const char *argv[])
 			{ "userenv_test_1", "userenv_test_2", "userenv_test_3", NULL };
 
 
-	ulong gsbase = rdgsbase();
+	// ulong gsbase = rdgsbase();
 	// printf("gsbase in user space: %p\n", (void *)gsbase);
+	char *mmap_share_test =
+			mmap(0, 4096, PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
 
 	int rv = fork();
 	

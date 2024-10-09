@@ -469,7 +469,8 @@ ulong
 do_mmap(file_s *file, ulong addr, ulong len, ulong prot,
 		ulong flags, vm_flags_t vm_flags, ulong pgoff)
 {
-	mm_s *mm = current->mm;
+	task_s *curr = current;
+	mm_s *mm = curr->mm;
 	int pkey = 0;
 
 	if (len == 0)
