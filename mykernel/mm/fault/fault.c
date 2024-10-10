@@ -265,19 +265,20 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	mm_s *src_mm = src_vma->vm_mm;
 	ulong vm_flags = src_vma->vm_flags;
 	pte_t pte = *src_pte_ptr;
-	page_s *page;
 
-	page = vm_normal_page(src_vma, addr, pte);
-	if (page) {
-		// int retval;
+	// page_s *page;
 
-		// retval = copy_present_page(dst_vma, src_vma,
-		// 			dst_pte_ptr, src_pte_ptr, addr, pte, page);
-		// if (retval <= 0)
-		// 	return retval;
+	// page = vm_normal_page(src_vma, addr, pte);
+	// if (page) {
+	// 	int retval;
 
-		get_page(page);
-	}
+	// 	retval = copy_present_page(dst_vma, src_vma,
+	// 				dst_pte_ptr, src_pte_ptr, addr, pte, page);
+	// 	if (retval <= 0)
+	// 		return retval;
+
+	// 	get_page(page);
+	// }
 
 	/*
 	 * If it's a COW mapping, write protect it both

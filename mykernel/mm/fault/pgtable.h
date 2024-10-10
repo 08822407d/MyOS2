@@ -104,6 +104,7 @@
 		PREFIX_STATIC_INLINE
 		bool
 		is_cow_mapping(vm_flags_t flags) {
+			// must VM_MAYWRITE and not VM_SHARED
 			return (flags & (VM_SHARED | VM_MAYWRITE)) == VM_MAYWRITE;
 		}
 

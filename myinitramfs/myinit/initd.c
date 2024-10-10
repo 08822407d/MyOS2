@@ -82,22 +82,21 @@ void test_FSGbase()
 void test_SharedAnon()
 {
 	size_t alloc_size = 512;
-	unsigned long *mmap_share_test =
-			mmap(0, alloc_size, PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
-	memset((void *)mmap_share_test, 0, alloc_size * sizeof(*mmap_share_test));
+	ulong *mmap_share_test =
+			mmap(0, alloc_size, PROT_WRITE,
+				MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+	memset((void *)mmap_share_test, 0,
+		alloc_size * sizeof(*mmap_share_test));
 	mmap_share_test[0] = 0;
 
 	int rv = fork();
 	
-	if (rv == 0)
-	{
+	if (rv == 0) {
 		while (1) {
 			mmap_share_test[0]++;
 		}
-	}
-	else
-	{
-		unsigned long last_read = 0;
+	} else {
+		ulong last_read = 0;
 		while (1) {
 			if (mmap_share_test[0] != last_read)
 				last_read = mmap_share_test[0];
