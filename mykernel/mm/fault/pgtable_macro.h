@@ -53,6 +53,12 @@
 	// #define pmd_addr_end pmd_ent_bound_end
 
 
+	#define pgd_offset_pgd	pgd_ent_ptr
+	#define p4d_offset		p4d_ent_ptr
+	#define pud_offset		pud_ent_ptr
+	#define pmd_offset		pmd_ent_ptr
+	#define pte_offset		pte_ent_ptr
+
 
 	#define ptep_get_lockless		ptep_get
 	#define pmdp_get_lockless		pmdp_get

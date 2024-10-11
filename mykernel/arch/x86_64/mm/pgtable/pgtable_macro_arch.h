@@ -27,18 +27,18 @@
 	#define set_pgd					set_pgd_ent
 
 
-	#define pgd_clear(pgdp)		set_pgd((pgdp), arch_make_pgd_ent(0))
-	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d_ent(0))
-	#define pud_clear(pudp)		set_pud((pudp), arch_make_pud_ent(0))
-	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmd_ent(0))
+	#define pgd_clear(pgdp)		set_pgd((pgdp), arch_make_pgde(0))
+	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4de(0))
+	#define pud_clear(pudp)		set_pud((pudp), arch_make_pude(0))
+	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmde(0))
 	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))
 
 
 
-	#define __pgd(x)			arch_make_pgd_ent(x)
-	#define __p4d(x)			arch_make_p4d_ent(x)
-	#define __pud(x)			arch_make_pud_ent(x)
-	#define __pmd(x)			arch_make_pmd_ent(x)
+	#define __pgd(x)			arch_make_pgde(x)
+	#define __p4d(x)			arch_make_p4de(x)
+	#define __pud(x)			arch_make_pude(x)
+	#define __pmd(x)			arch_make_pmde(x)
 	#define __pte(x)			arch_make_pte(x)
 
 
@@ -74,6 +74,12 @@
 	#define p4d_page_vaddr		p4de_pointed_page_vaddr
 	#define pud_page_vaddr		pude_pointed_page_vaddr
 	#define pmd_page_vaddr		pmde_pointed_page_vaddr
+
+
+	#define pgd_val				arch_pgde_val
+	#define p4d_val				arch_p4de_val
+	#define pud_val				arch_pude_val
+	#define pmd_val				arch_pmde_val
 
 
 	#define pte_ERROR(e)	pr_err(						\

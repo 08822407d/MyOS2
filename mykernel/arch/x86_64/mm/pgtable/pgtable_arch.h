@@ -99,47 +99,45 @@
 
 
 		extern pgd_t
-		arch_make_pgd_ent(pgdval_t val);
+		arch_make_pgde(pgdval_t val);
 		extern pgdval_t 
-		arch_pgd_val(pgd_t pgd);
-		extern pgdval_t
-		arch_pgd_flags(pgd_t pgd);
+		arch_pgde_val(pgd_t pgd);
 
 		extern p4d_t
-		arch_make_p4d_ent(pgdval_t val);
+		arch_make_p4de(pgdval_t val);
 		extern p4dval_t
-		arch_p4d_val(p4d_t p4d);
+		arch_p4de_val(p4d_t p4d);
 
 		extern pud_t
-		arch_make_pud_ent(pmdval_t val);
+		arch_make_pude(pmdval_t val);
 		extern pudval_t
-		arch_pud_val(pud_t pud);
+		arch_pude_val(pud_t pud);
 
 		extern pmd_t
-		arch_make_pmd_ent(pmdval_t val);
+		arch_make_pmde(pmdval_t val);
 		extern pmdval_t
-		arch_pmd_val(pmd_t pmd);
+		arch_pmde_val(pmd_t pmd);
 
 		extern p4dval_t
 		arch_p4d_pfn_mask(p4d_t p4d);
 		extern p4dval_t
-		P4D_FLAG_MASK(p4d_t p4d);
+		P4DE_FLAG_MASK(p4d_t p4d);
 		extern p4dval_t
-		arch_p4d_flags(p4d_t p4d);
+		arch_p4de_flags(p4d_t p4d);
 
 		extern pudval_t
 		arch_pud_pfn_mask(pud_t pud);
 		extern pudval_t
-		PUD_FLAG_MASK(pud_t pud);
+		PUDE_FLAG_MASK(pud_t pud);
 		extern pudval_t
-		arch_pud_flags(pud_t pud);
+		arch_pude_flags(pud_t pud);
 
 		extern pmdval_t 
 		arch_pmd_pfn_mask(pmd_t pmd);
 		extern pmdval_t
-		PMD_FLAG_MASK(pmd_t pmd);
+		PMDE_FLAG_MASK(pmd_t pmd);
 		extern pmdval_t
-		arch_pmd_flags(pmd_t pmd);
+		arch_pmde_flags(pmd_t pmd);
 
 		extern pte_t
 		arch_make_pte(pteval_t val);
@@ -266,7 +264,7 @@
 		// PREFIX_STATIC_INLINE
 		// ulong
 		// pgde_pointed_page_vaddr(pgd_t pgd) {
-		// 	return (ulong)__va(arch_pgd_val(pgd) &
+		// 	return (ulong)__va(arch_pgde_val(pgd) &
 		// 				arch_pgd_pfn_mask(pgd));
 		// }
 
@@ -274,24 +272,24 @@
 		PREFIX_STATIC_INLINE
 		int
 		p4de_is_none(p4d_t p4d_ent) {
-			return (arch_p4d_val(p4d_ent) &
+			return (arch_p4de_val(p4d_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
 		p4de_is_bad(p4d_t p4d_ent) {
-			return (arch_p4d_flags(p4d_ent) &
+			return (arch_p4de_flags(p4d_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
 		p4de_is_present(p4d_t p4d_ent) {
-			return arch_p4d_flags(p4d_ent) & _PAGE_PRESENT;
+			return arch_p4de_flags(p4d_ent) & _PAGE_PRESENT;
 		}
 		PREFIX_STATIC_INLINE
 		ulong
 		p4de_pointed_page_vaddr(p4d_t p4d_ent) {
-			return (ulong)__va(arch_p4d_val(p4d_ent) &
+			return (ulong)__va(arch_p4de_val(p4d_ent) &
 						arch_p4d_pfn_mask(p4d_ent));
 		}
 
@@ -299,25 +297,25 @@
 		PREFIX_STATIC_INLINE
 		int
 		pude_is_none(pud_t pud_ent) {
-			return (arch_pud_val(pud_ent) &
+			return (arch_pude_val(pud_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
 		pude_is_bad(pud_t pud_ent) {
-			return (arch_pud_flags(pud_ent) &
+			return (arch_pude_flags(pud_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
 		pude_is_present(pud_t pud_ent) {
-			return arch_pud_flags(pud_ent) &
+			return arch_pude_flags(pud_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
 		PREFIX_STATIC_INLINE
 		ulong
 		pude_pointed_page_vaddr(pud_t pud_ent) {
-			return (ulong)__va(arch_pud_val(pud_ent) &
+			return (ulong)__va(arch_pude_val(pud_ent) &
 						arch_pud_pfn_mask(pud_ent));
 		}
 
@@ -329,13 +327,13 @@
 			 * Only check low word on 32-bit platforms,
 			 * since it might be out of sync with upper half.
 			 */
-			return (arch_pmd_val(pmd_ent) &
+			return (arch_pmde_val(pmd_ent) &
 						~_PAGE_KNL_ERRATUM_MASK) == 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
 		pmde_is_bad(pmd_t pmd_ent) {
-			return (arch_pmd_flags(pmd_ent) &
+			return (arch_pmde_flags(pmd_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
@@ -347,13 +345,13 @@
 			 * bit (but the _PAGE_PSE flag will remain set at all
 			 * times while the _PAGE_PRESENT bit is clear).
 			 */
-			return arch_pmd_flags(pmd_ent) &
+			return arch_pmde_flags(pmd_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
 		PREFIX_STATIC_INLINE
 		ulong
 		pmde_pointed_page_vaddr(pmd_t pmd_ent) {
-			return (ulong)__va(arch_pmd_val(pmd_ent) &
+			return (ulong)__va(arch_pmde_val(pmd_ent) &
 						arch_pmd_pfn_mask(pmd_ent));
 		}
 
@@ -399,50 +397,45 @@
 
 		PREFIX_STATIC_INLINE
 		pgd_t
-		arch_make_pgd_ent(pgdval_t val) {
+		arch_make_pgde(pgdval_t val) {
 			return (pgd_t) { .val = val & PGD_ALLOWED_BITS };
 		}
 		PREFIX_STATIC_INLINE
 		pgdval_t 
-		arch_pgd_val(pgd_t pgd) {
+		arch_pgde_val(pgd_t pgd) {
 			return pgd.val & PGD_ALLOWED_BITS;
-		}
-		PREFIX_STATIC_INLINE
-		pgdval_t
-		arch_pgd_flags(pgd_t pgd) {
-			return arch_pgd_val(pgd) & PTE_FLAGS_MASK;
 		}
 
 		PREFIX_STATIC_INLINE
 		p4d_t
-		arch_make_p4d_ent(p4dval_t val) {
-			return (p4d_t) { arch_make_pgd_ent((pgdval_t)val) };
+		arch_make_p4de(p4dval_t val) {
+			return (p4d_t) { arch_make_pgde((pgdval_t)val) };
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
-		arch_p4d_val(p4d_t p4d) {
-			return (p4dval_t)arch_pgd_val(p4d.pgd);
+		arch_p4de_val(p4d_t p4d) {
+			return (p4dval_t)arch_pgde_val(p4d.pgd);
 		}
 
 		PREFIX_STATIC_INLINE
 		pud_t
-		arch_make_pud_ent(pmdval_t val) {
+		arch_make_pude(pmdval_t val) {
 			return (pud_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
 		pudval_t
-		arch_pud_val(pud_t pud) {
+		arch_pude_val(pud_t pud) {
 			return pud.val;
 		}
 
 		PREFIX_STATIC_INLINE
 		pmd_t
-		arch_make_pmd_ent(pmdval_t val) {
+		arch_make_pmde(pmdval_t val) {
 			return (pmd_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
 		pmdval_t
-		arch_pmd_val(pmd_t pmd) {
+		arch_pmde_val(pmd_t pmd) {
 			return pmd.val;
 		}
 
@@ -454,51 +447,51 @@
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
-		P4D_FLAG_MASK(p4d_t p4d) {
-			return ~arch_p4d_pfn_mask(p4d);
+		P4DE_FLAG_MASK(p4d_t p4d_ent) {
+			return ~arch_p4d_pfn_mask(p4d_ent);
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
-		arch_p4d_flags(p4d_t p4d) {
-			return arch_p4d_val(p4d) & P4D_FLAG_MASK(p4d);
+		arch_p4de_flags(p4d_t p4d_ent) {
+			return arch_p4de_val(p4d_ent) & P4DE_FLAG_MASK(p4d_ent);
 		}
 
 		PREFIX_STATIC_INLINE
 		pudval_t
 		arch_pud_pfn_mask(pud_t pud) {
-			// if (arch_pud_val(pud) & _PAGE_PSE)
+			// if (arch_pude_val(pud) & _PAGE_PSE)
 			// 	return PHYSICAL_PUD_PAGE_MASK;
 			// else
 				return PTE_PFN_MASK;
 		}
 		PREFIX_STATIC_INLINE
 		pudval_t
-		PUD_FLAG_MASK(pud_t pud) {
-			return ~arch_pud_pfn_mask(pud);
+		PUDE_FLAG_MASK(pud_t pud_ent) {
+			return ~arch_pud_pfn_mask(pud_ent);
 		}
 		PREFIX_STATIC_INLINE
 		pudval_t
-		arch_pud_flags(pud_t pud) {
-			return arch_pud_val(pud) & PUD_FLAG_MASK(pud);
+		arch_pude_flags(pud_t pud_ent) {
+			return arch_pude_val(pud_ent) & PUDE_FLAG_MASK(pud_ent);
 		}
 
 		PREFIX_STATIC_INLINE
 		pmdval_t 
 		arch_pmd_pfn_mask(pmd_t pmd) {
-			// if (arch_pmd_val(pmd) & _PAGE_PSE)
+			// if (arch_pmde_val(pmd) & _PAGE_PSE)
 			// 	return PHYSICAL_PMD_PAGE_MASK;
 			// else
 				return PTE_PFN_MASK;
 		}
 		PREFIX_STATIC_INLINE
 		pmdval_t
-		PMD_FLAG_MASK(pmd_t pmd) {
-			return ~arch_pmd_pfn_mask(pmd);
+		PMDE_FLAG_MASK(pmd_t pmd_ent) {
+			return ~arch_pmd_pfn_mask(pmd_ent);
 		}	
 		PREFIX_STATIC_INLINE
 		pmdval_t
-		arch_pmd_flags(pmd_t pmd) {
-			return arch_pmd_val(pmd) & PMD_FLAG_MASK(pmd);
+		arch_pmde_flags(pmd_t pmd_ent) {
+			return arch_pmde_val(pmd_ent) & PMDE_FLAG_MASK(pmd_ent);
 		}
 
 		PREFIX_STATIC_INLINE
@@ -657,22 +650,22 @@
 
 	// static inline int pmd_dirty(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_DIRTY;
+	// 	return arch_pmde_flags(pmd) & _PAGE_DIRTY;
 	// }
 
 	// static inline int pmd_young(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_ACCESSED;
+	// 	return arch_pmde_flags(pmd) & _PAGE_ACCESSED;
 	// }
 
 	// static inline int pud_dirty(pud_t pud)
 	// {
-	// 	return arch_pud_flags(pud) & _PAGE_DIRTY;
+	// 	return arch_pude_flags(pud) & _PAGE_DIRTY;
 	// }
 
 	// static inline int pud_young(pud_t pud)
 	// {
-	// 	return arch_pud_flags(pud) & _PAGE_ACCESSED;
+	// 	return arch_pude_flags(pud) & _PAGE_ACCESSED;
 	// }
 
 
@@ -704,26 +697,26 @@
 
 	// static inline unsigned long pmd_pfn(pmd_t pmd)
 	// {
-	// 	phys_addr_t pfn = arch_pmd_val(pmd);
+	// 	phys_addr_t pfn = arch_pmde_val(pmd);
 	// 	pfn ^= protnone_mask(pfn);
 	// 	return (pfn & arch_pmd_pfn_mask(pmd)) >> PAGE_SHIFT;
 	// }
 
 	// static inline unsigned long pud_pfn(pud_t pud)
 	// {
-	// 	phys_addr_t pfn = arch_pud_val(pud);
+	// 	phys_addr_t pfn = arch_pude_val(pud);
 	// 	pfn ^= protnone_mask(pfn);
 	// 	return (pfn & arch_pud_pfn_mask(pud)) >> PAGE_SHIFT;
 	// }
 
 	// static inline unsigned long p4d_pfn(p4d_t p4d)
 	// {
-	// 	return (arch_p4d_val(p4d) & arch_p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
+	// 	return (arch_p4de_val(p4d) & arch_p4d_pfn_mask(p4d)) >> PAGE_SHIFT;
 	// }
 
 	// static inline unsigned long pgd_pfn(pgd_t pgd)
 	// {
-	// 	return (arch_pgd_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
+	// 	return (arch_pgde_val(pgd) & PTE_PFN_MASK) >> PAGE_SHIFT;
 	// }
 
 	// #define p4d_leaf	p4d_large
@@ -738,20 +731,20 @@
 	// #define pmd_leaf	pmd_large
 	// static inline int pmd_large(pmd_t pte)
 	// {
-	// 	return arch_pmd_flags(pte) & _PAGE_PSE;
+	// 	return arch_pmde_flags(pte) & _PAGE_PSE;
 	// }
 
 	// #ifdef CONFIG_TRANSPARENT_HUGEPAGE
 	// /* NOTE: when predicate huge page, consider also pmd_devmap, or use pmd_large */
 	// static inline int pmd_trans_huge(pmd_t pmd)
 	// {
-	// 	return (arch_pmd_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+	// 	return (arch_pmde_val(pmd) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 	// }
 
 	// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 	// static inline int pud_trans_huge(pud_t pud)
 	// {
-	// 	return (arch_pud_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
+	// 	return (arch_pude_val(pud) & (_PAGE_PSE|_PAGE_DEVMAP)) == _PAGE_PSE;
 	// }
 	// #endif
 
@@ -764,13 +757,13 @@
 	// #ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
 	// static inline int pmd_devmap(pmd_t pmd)
 	// {
-	// 	return !!(arch_pmd_val(pmd) & _PAGE_DEVMAP);
+	// 	return !!(arch_pmde_val(pmd) & _PAGE_DEVMAP);
 	// }
 
 	// #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
 	// static inline int pud_devmap(pud_t pud)
 	// {
-	// 	return !!(arch_pud_val(pud) & _PAGE_DEVMAP);
+	// 	return !!(arch_pude_val(pud) & _PAGE_DEVMAP);
 	// }
 	// #else
 	// static inline int pud_devmap(pud_t pud)
@@ -852,7 +845,7 @@
 	// #ifdef CONFIG_HAVE_ARCH_USERFAULTFD_WP
 	// static inline int pmd_uffd_wp(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_UFFD_WP;
+	// 	return arch_pmde_flags(pmd) & _PAGE_UFFD_WP;
 	// }
 
 	// static inline pmd_t pmd_mkuffd_wp(pmd_t pmd)
@@ -968,12 +961,12 @@
 
 	// static inline int pmd_soft_dirty(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_SOFT_DIRTY;
+	// 	return arch_pmde_flags(pmd) & _PAGE_SOFT_DIRTY;
 	// }
 
 	// static inline int pud_soft_dirty(pud_t pud)
 	// {
-	// 	return arch_pud_flags(pud) & _PAGE_SOFT_DIRTY;
+	// 	return arch_pude_flags(pud) & _PAGE_SOFT_DIRTY;
 	// }
 
 	// static inline pte_t pte_mksoft_dirty(pte_t pte)
@@ -1011,7 +1004,7 @@
 	// static inline pmd_t pmd_mkinvalid(pmd_t pmd)
 	// {
 	// 	return pfn_pmd(pmd_pfn(pmd),
-	// 			__pgprot(arch_pmd_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
+	// 			__pgprot(arch_pmde_flags(pmd) & ~(_PAGE_PRESENT|_PAGE_PROTNONE)));
 	// }
 
 	// static inline u64 flip_protnone_guard(u64 oldval, u64 val, u64 mask);
@@ -1032,7 +1025,7 @@
 
 	// static inline pmd_t pmd_modify(pmd_t pmd, pgprot_t newprot)
 	// {
-	// 	pmdval_t val = arch_pmd_val(pmd), oldval = val;
+	// 	pmdval_t val = arch_pmde_val(pmd), oldval = val;
 
 	// 	val &= _HPAGE_CHG_MASK;
 	// 	val |= check_pgprot(newprot) & ~_HPAGE_CHG_MASK;
@@ -1053,9 +1046,9 @@
 	// }
 
 	// #define pte_pgprot(x) __pgprot(arch_pte_flags(x))
-	// #define pmd_pgprot(x) __pgprot(arch_pmd_flags(x))
-	// #define pud_pgprot(x) __pgprot(arch_pud_flags(x))
-	// #define p4d_pgprot(x) __pgprot(arch_p4d_flags(x))
+	// #define pmd_pgprot(x) __pgprot(arch_pmde_flags(x))
+	// #define pud_pgprot(x) __pgprot(arch_pude_flags(x))
+	// #define p4d_pgprot(x) __pgprot(arch_p4de_flags(x))
 
 	// #define canon_pgprot(p) __pgprot(massage_pgprot(p))
 
@@ -1138,7 +1131,7 @@
 
 	// static inline int pmd_protnone(pmd_t pmd)
 	// {
-	// 	return (arch_pmd_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
+	// 	return (arch_pmde_flags(pmd) & (_PAGE_PROTNONE | _PAGE_PRESENT))
 	// 		== _PAGE_PROTNONE;
 	// }
 	// #endif /* CONFIG_NUMA_BALANCING */
@@ -1169,7 +1162,7 @@
 	// #define pud_leaf	pud_large
 	// static inline int pud_large(pud_t pud)
 	// {
-	// 	return (arch_pud_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
+	// 	return (arch_pude_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
 	// 		(_PAGE_PSE | _PAGE_PRESENT);
 	// }
 
@@ -1309,7 +1302,7 @@
 	// #define pmd_write pmd_write
 	// static inline int pmd_write(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_RW;
+	// 	return arch_pmde_flags(pmd) & _PAGE_RW;
 	// }
 
 	// #define __HAVE_ARCH_PMDP_HUGE_GET_AND_CLEAR
@@ -1344,7 +1337,7 @@
 	// #define pud_write pud_write
 	// static inline int pud_write(pud_t pud)
 	// {
-	// 	return arch_pud_flags(pud) & _PAGE_RW;
+	// 	return arch_pude_flags(pud) & _PAGE_RW;
 	// }
 
 	// #ifndef pmdp_establish
@@ -1449,7 +1442,7 @@
 
 	// static inline int pmd_swp_soft_dirty(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
+	// 	return arch_pmde_flags(pmd) & _PAGE_SWP_SOFT_DIRTY;
 	// }
 
 	// static inline pmd_t pmd_swp_clear_soft_dirty(pmd_t pmd)
@@ -1482,7 +1475,7 @@
 
 	// static inline int pmd_swp_uffd_wp(pmd_t pmd)
 	// {
-	// 	return arch_pmd_flags(pmd) & _PAGE_SWP_UFFD_WP;
+	// 	return arch_pmde_flags(pmd) & _PAGE_SWP_UFFD_WP;
 	// }
 
 	// static inline pmd_t pmd_swp_clear_uffd_wp(pmd_t pmd)
@@ -1540,13 +1533,13 @@
 	// #define pmd_access_permitted pmd_access_permitted
 	// static inline bool pmd_access_permitted(pmd_t pmd, bool write)
 	// {
-	// 	return __pte_access_permitted(arch_pmd_val(pmd), write);
+	// 	return __pte_access_permitted(arch_pmde_val(pmd), write);
 	// }
 
 	// #define pud_access_permitted pud_access_permitted
 	// static inline bool pud_access_permitted(pud_t pud, bool write)
 	// {
-	// 	return __pte_access_permitted(arch_pud_val(pud), write);
+	// 	return __pte_access_permitted(arch_pude_val(pud), write);
 	// }
 
 	// #define __HAVE_ARCH_PFN_MODIFY_ALLOWED 1

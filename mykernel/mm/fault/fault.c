@@ -769,6 +769,7 @@ copy:
 }
 
 
+
 /*
  * We enter with non-exclusive mmap_lock (to exclude vma changes,
  * but allow concurrent faults), and pte mapped but not yet locked.
@@ -1267,6 +1268,14 @@ do_fault(vm_fault_s *vmf) {
 	return ret;
 }
 
+static vm_fault_t
+do_pte_missing(vm_fault_s *vmf) {
+	vmf->pte = pte_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
+	if (vma_is_anonymous(vmf->vma))
+		return do_anonymous_page(vmf);
+	else
+		return do_fault(vmf);
+}
 
 /*
  * These routines also need to handle stuff like marking pages dirty
@@ -1303,27 +1312,21 @@ handle_pte_fault(vm_fault_s *vmf) {
 		 * mode; but shmem or file collapse to THP could still morph
 		 * it into a huge pmd: just retry later if so.
 		 */
-		// vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm, vmf->pmd,
-		// 				 vmf->address, &vmf->ptl);
+		vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm,
+						vmf->pmd, vmf->address, &vmf->ptl);
 		if (unlikely(vmf->pte == NULL))
 			return 0;
 		vmf->orig_pte = ptep_get_lockless(vmf->pte);
 		vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
 
 		if (pte_none(vmf->orig_pte)) {
-			// pte_unmap(vmf->pte);
+			pte_unmap(vmf->pte);
 			vmf->pte = NULL;
 		}
 	}
 
-	// static vm_fault_t do_pte_missing(struct vm_fault *vmf)
-	if (vmf->pte == NULL) {
-		vmf->pte = pte_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
-		if (vma_is_anonymous(vmf->vma))
-			return do_anonymous_page(vmf);
-		else
-			return do_fault(vmf);
-	}
+	if (vmf->pte == NULL)
+		return do_pte_missing(vmf);
 
 	// if (!pte_present(vmf->orig_pte))
 	// 	return do_swap_page(vmf);
@@ -1437,7 +1440,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!p4d_present(*p4d)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*p4d = arch_make_p4d_ent(_PAGE_TABLE | __pa(new));
+		*p4d = arch_make_p4de(_PAGE_TABLE | __pa(new));
 	} else			/* Another has populated it */
 		pud_free(new);
 	spin_unlock_no_resched(&mm->page_table_lock);
@@ -1458,7 +1461,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!pud_present(*pud)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pud = arch_make_pud_ent(_PAGE_TABLE | __pa(new));
+		*pud = arch_make_pude(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pmd_free(new);
 	}
@@ -1475,7 +1478,7 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!pmd_present(*pmd)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pmd = arch_make_pmd_ent(_PAGE_TABLE | __pa(new));
+		*pmd = arch_make_pmde(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pte_free(new);
 	}

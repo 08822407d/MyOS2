@@ -23,4 +23,12 @@
 	extern int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end);
 	extern vm_fault_s myos_dump_pagetable(ulong address);
 
+
+	extern pte_t *__pte_offset_map(pmd_t *pmd,
+			ulong addr, pmd_t *pmdvalp);
+	extern pte_t *pte_offset_map_nolock(mm_s *mm,
+			pmd_t *pmdp, ulong addr, spinlock_t **ptlp);
+	extern pte_t *__pte_offset_map_lock(mm_s *mm,
+			pmd_t *pmdp, ulong addr, spinlock_t **ptlp);
+
 #endif /* _MEM_FAULT_API_H_ */

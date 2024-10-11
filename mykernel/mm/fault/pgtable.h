@@ -26,7 +26,6 @@
 		pgd_none_or_clear_bad(pgd_t *pgd);
 		extern pgd_t
 		*pgd_ent_ptr(mm_s *mmp, ulong address);
-		#define pgd_offset_pgd pgd_ent_ptr
 
 
 		extern p4d_t
@@ -35,7 +34,6 @@
 		p4d_none_or_clear_bad(p4d_t *p4d);
 		extern p4d_t
 		*p4d_ent_ptr(pgd_t *pgdp, ulong address);
-		#define p4d_offset p4d_ent_ptr
 		extern p4d_t
 		*p4d_alloc(mm_s *mm, pgd_t *pgd, ulong address);
 
@@ -48,7 +46,6 @@
 		pud_none_or_clear_bad(pud_t *pud);
 		extern pud_t
 		*pud_ent_ptr(p4d_t *p4dp, ulong address);
-		#define pud_offset pud_ent_ptr
 		extern pud_t
 		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
 
@@ -61,7 +58,6 @@
 		pmd_none_or_clear_bad(pmd_t *pmd);
 		extern pmd_t
 		*pmd_ent_ptr(pud_t *pud, ulong address);
-		#define pmd_offset pmd_ent_ptr
 		extern pmd_t
 		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
 
@@ -72,9 +68,14 @@
 		pte_index(ulong address);
 		extern pte_t
 		*pte_ent_ptr(pmd_t *pmdp, ulong address);
-		#define pte_offset pte_ent_ptr
 		extern pte_t
 		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
+		extern pte_t
+		*pte_offset_kernel(pmd_t *pmd, ulong address);
+		extern pte_t
+		*__pte_map(pmd_t *pmdp, ulong address);
+		extern void
+		pte_unmap(pte_t *ptep);
 
 
 
@@ -196,7 +197,7 @@
 			if (p4d_none_or_clear_bad(p4dp))
 				return NULL;
 			else
-				return (pud_t *)p4de_pointed_page_vaddr(*p4dp) +
+				return (pud_t *)p4d_page_vaddr(*p4dp) +
 							pud_index(address);
 		}
 		PREFIX_STATIC_INLINE
@@ -235,7 +236,7 @@
 			if (pud_none_or_clear_bad(pudp))
 				return NULL;
 			else
-				return (pmd_t *)pude_pointed_page_vaddr(*pudp) +
+				return (pmd_t *)pud_page_vaddr(*pudp) +
 							pmd_index(address);
 		}
 		PREFIX_STATIC_INLINE
@@ -273,7 +274,7 @@
 			if (pmd_none_or_clear_bad(pmdp))
 				return NULL;
 			else
-				return (pte_t *)pmde_pointed_page_vaddr(*pmdp) +
+				return (pte_t *)pmd_page_vaddr(*pmdp) +
 							pte_index(address);
 		}
 		PREFIX_STATIC_INLINE
@@ -282,7 +283,21 @@
 			return (pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
 						NULL : pte_ent_ptr(pmd, address);
 		}
-
+		PREFIX_STATIC_INLINE
+		pte_t
+		*pte_offset_kernel(pmd_t *pmdp, ulong address) {
+			return (pte_t *)pmd_page_vaddr(*pmdp) + pte_index(address);
+		}
+		PREFIX_STATIC_INLINE
+		pte_t
+		*__pte_map(pmd_t *pmdp, ulong address) {
+			return pte_offset_kernel(pmdp, address);
+		}
+		PREFIX_STATIC_INLINE
+		void
+		pte_unmap(pte_t *ptep) {
+			// rcu_read_unlock();
+		}
 
 
 		PREFIX_STATIC_INLINE
