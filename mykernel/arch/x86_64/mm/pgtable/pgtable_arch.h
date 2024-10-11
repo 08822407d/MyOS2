@@ -38,42 +38,54 @@
 		pte_mkwrite(pte_t pte);
 
 
+
 		extern int
-		pte_same(pte_t a, pte_t b);
+		pgde_is_none(pgd_t pgd_ent);
+		extern int
+		pgde_is_bad(pgd_t pgd_ent);
+		extern int
+		pgde_is_present(pgd_t pgd_ent);
+		extern ulong
+		pgde_pointed_page_vaddr(pgd_t pgd_ent);
+
+
+		extern int
+		p4de_is_none(p4d_t p4d_ent);
+		extern int
+		p4de_is_bad(p4d_t p4d_ent);
+		extern int
+		p4de_is_present(p4d_t p4d_ent);
+		extern ulong
+		p4de_pointed_page_vaddr(p4d_t p4d_ent);
+
+
+		extern int
+		pude_is_none(pud_t pud_ent);
+		extern int
+		pude_is_bad(pud_t pud_ent);
+		extern int
+		pude_is_present(pud_t pud_ent);
+		extern ulong
+		pude_pointed_page_vaddr(pud_t pud_ent);
+
+
+		extern int
+		pmde_is_none(pmd_t pmd_ent);
+		extern int
+		pmde_is_bad(pmd_t pmd_ent);
+		extern int
+		pmde_is_present(pmd_t pmd_ent);
+		extern ulong
+		pmde_pointed_page_vaddr(pmd_t pud_ent);
+
+
 		extern int
 		pte_is_none(pte_t pte);
 		extern int
 		pte_is_present(pte_t a);
 
-
 		extern int
-		pmd_ent_is_present(pmd_t pmd_ent);
-		extern int
-		pmd_ent_is_none(pmd_t pmd_ent);
-		extern int
-		pmd_ent_is_bad(pmd_t pmd_ent);
-		extern pte_t
-		*pmd_page_vaddr(pmd_t pmd);
-
-
-		extern int
-		pud_ent_is_none(pud_t pud_ent);
-		extern int
-		pud_ent_is_present(pud_t pud_ent);
-		extern int
-		pud_ent_is_bad(pud_t pud_ent);
-		extern pmd_t
-		*pud_page_vaddr(pud_t pud);
-
-
-		extern int
-		p4d_ent_is_none(p4d_t p4d_ent);
-		extern int
-		p4d_ent_is_present(p4d_t p4d_ent);
-		extern int
-		p4d_ent_is_bad(p4d_t p4d_ent);
-		extern pud_t
-		*p4d_page_vaddr(p4d_t p4d);
+		pte_same(pte_t a, pte_t b);
 
 
 		extern void
@@ -229,11 +241,123 @@
 			return pte_set_flags(pte, _PAGE_RW);
 		}
 
+
+
+		/*
+		 * The "pgd_xxx()" functions here are trivial for a folded two-level
+		 * setup: the p4d is never bad, and a p4d always exists (as it's folded
+		 * into the pgd entry)
+		 */
 		PREFIX_STATIC_INLINE
 		int
-		pte_same(pte_t a, pte_t b) {
-			return a.val == b.val;
+		pgde_is_none(pgd_t pgd_ent) {
+			return 0;
 		}
+		PREFIX_STATIC_INLINE
+		int
+		pgde_is_bad(pgd_t pgd_ent) {
+			return 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pgde_is_present(pgd_t pgd_ent) {
+			return 1;
+		}
+		// PREFIX_STATIC_INLINE
+		// ulong
+		// pgde_pointed_page_vaddr(pgd_t pgd) {
+		// 	return (ulong)__va(arch_pgd_val(pgd) &
+		// 				arch_pgd_pfn_mask(pgd));
+		// }
+
+
+		PREFIX_STATIC_INLINE
+		int
+		p4de_is_none(p4d_t p4d_ent) {
+			return (arch_p4d_val(p4d_ent) &
+						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		p4de_is_bad(p4d_t p4d_ent) {
+			return (arch_p4d_flags(p4d_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		p4de_is_present(p4d_t p4d_ent) {
+			return arch_p4d_flags(p4d_ent) & _PAGE_PRESENT;
+		}
+		PREFIX_STATIC_INLINE
+		ulong
+		p4de_pointed_page_vaddr(p4d_t p4d_ent) {
+			return (ulong)__va(arch_p4d_val(p4d_ent) &
+						arch_p4d_pfn_mask(p4d_ent));
+		}
+
+
+		PREFIX_STATIC_INLINE
+		int
+		pude_is_none(pud_t pud_ent) {
+			return (arch_pud_val(pud_ent) &
+						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pude_is_bad(pud_t pud_ent) {
+			return (arch_pud_flags(pud_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pude_is_present(pud_t pud_ent) {
+			return arch_pud_flags(pud_ent) &
+						(_PAGE_PRESENT | _PAGE_PSE);
+		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pude_pointed_page_vaddr(pud_t pud_ent) {
+			return (ulong)__va(arch_pud_val(pud_ent) &
+						arch_pud_pfn_mask(pud_ent));
+		}
+
+
+		PREFIX_STATIC_INLINE
+		int
+		pmde_is_none(pmd_t pmd_ent) {
+			/*
+			 * Only check low word on 32-bit platforms,
+			 * since it might be out of sync with upper half.
+			 */
+			return (arch_pmd_val(pmd_ent) &
+						~_PAGE_KNL_ERRATUM_MASK) == 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pmde_is_bad(pmd_t pmd_ent) {
+			return (arch_pmd_flags(pmd_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pmde_is_present(pmd_t pmd_ent) {
+			/*
+			 * Checking for _PAGE_PSE is needed too because
+			 * split_huge_page will temporarily clear the present
+			 * bit (but the _PAGE_PSE flag will remain set at all
+			 * times while the _PAGE_PRESENT bit is clear).
+			 */
+			return arch_pmd_flags(pmd_ent) &
+						(_PAGE_PRESENT | _PAGE_PSE);
+		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pmde_pointed_page_vaddr(pmd_t pmd_ent) {
+			return (ulong)__va(arch_pmd_val(pmd_ent) &
+						arch_pmd_pfn_mask(pmd_ent));
+		}
+
+
 		PREFIX_STATIC_INLINE
 		int
 		pte_is_none(pte_t pte) {
@@ -246,91 +370,10 @@
 						(_PAGE_PRESENT | _PAGE_PROTNONE);
 		}
 
-
 		PREFIX_STATIC_INLINE
 		int
-		pmd_ent_is_present(pmd_t pmd_ent) {
-			/*
-			 * Checking for _PAGE_PSE is needed too because
-			 * split_huge_page will temporarily clear the present
-			 * bit (but the _PAGE_PSE flag will remain set at all
-			 * times while the _PAGE_PRESENT bit is clear).
-			 */
-			return arch_pmd_flags(pmd_ent) &
-						(_PAGE_PRESENT | _PAGE_PSE);
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pmd_ent_is_none(pmd_t pmd_ent) {
-			/*
-			 * Only check low word on 32-bit platforms,
-			 * since it might be out of sync with upper half.
-			 */
-			return (arch_pmd_val(pmd_ent) &
-						~_PAGE_KNL_ERRATUM_MASK) == 0;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pmd_ent_is_bad(pmd_t pmd_ent) {
-			return (arch_pmd_flags(pmd_ent) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
-		PREFIX_STATIC_INLINE
-		pte_t
-		*pmd_page_vaddr(pmd_t pmd) {
-			return (pte_t *)__va(arch_pmd_val(pmd) &
-						arch_pmd_pfn_mask(pmd));
-		}
-
-
-		PREFIX_STATIC_INLINE
-		int
-		pud_ent_is_none(pud_t pud_ent) {
-			return (arch_pud_val(pud_ent) &
-						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pud_ent_is_present(pud_t pud_ent) {
-			return arch_pud_flags(pud_ent) &
-						(_PAGE_PRESENT | _PAGE_PSE);
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pud_ent_is_bad(pud_t pud_ent) {
-			return (arch_pud_flags(pud_ent) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
-		PREFIX_STATIC_INLINE
-		pmd_t
-		*pud_page_vaddr(pud_t pud) {
-			return (pmd_t *)__va(arch_pud_val(pud) &
-						arch_pud_pfn_mask(pud));
-		}
-
-
-		PREFIX_STATIC_INLINE
-		int
-		p4d_ent_is_none(p4d_t p4d_ent) {
-			return (arch_p4d_val(p4d_ent) &
-						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		p4d_ent_is_present(p4d_t p4d_ent) {
-			return arch_p4d_flags(p4d_ent) & _PAGE_PRESENT;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		p4d_ent_is_bad(p4d_t p4d_ent) {
-			return (arch_p4d_flags(p4d_ent) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
-		PREFIX_STATIC_INLINE
-		pud_t
-		*p4d_page_vaddr(p4d_t p4d) {
-			return (pud_t *)__va(arch_p4d_val(p4d) &
-						arch_p4d_pfn_mask(p4d));
+		pte_same(pte_t a, pte_t b) {
+			return a.val == b.val;
 		}
 
 

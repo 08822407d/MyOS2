@@ -2,19 +2,9 @@
 #ifndef _ASM_X86_PGTABLE_MACRO_H_
 #define _ASM_X86_PGTABLE_MACRO_H_
 
+
 	#define KERNEL_PGD_BOUNDARY		pgd_index(PAGE_OFFSET)
 	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
-
-	/*
-	 * The "pgd_xxx()" functions here are trivial for a folded two-level
-	 * setup: the p4d is never bad, and a p4d always exists (as it's folded
-	 * into the pgd entry)
-	 */
-	static inline int pgd_none(pgd_t pgd)		{ return 0; }
-	static inline int pgd_bad(pgd_t pgd)		{ return 0; }
-	static inline int pgd_present(pgd_t pgd)	{ return 1; }
-	#define pgd_pgtable			p4d_page_vaddr
-
 
 	extern pgd_t init_top_pgt[];
 	#define swapper_pg_dir init_top_pgt
@@ -27,8 +17,9 @@
 	#define set_pmd_ent(pmdp, pmd)	WRITE_ONCE(*(pmdp), (pmd))
 	#define set_pmd					set_pmd_ent
 
-	#define set_pte(ptep, pte)		WRITE_ONCE(*(ptep), (pte))	/*
+	#define set_pte(ptep, pte)		WRITE_ONCE(*(ptep), (pte))
 
+	/*
 	 * (p4ds are folded into pgds so this doesn't get actually called,
 	 * but the define is needed for a generic inline function.)
 	 */
@@ -36,11 +27,12 @@
 	#define set_pgd					set_pgd_ent
 
 
-	#define pgd_clear(pgdp)
+	#define pgd_clear(pgdp)		set_pgd((pgdp), arch_make_pgd_ent(0))
 	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4d_ent(0))
 	#define pud_clear(pudp)		set_pud((pudp), arch_make_pud_ent(0))
 	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmd_ent(0))
 	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))
+
 
 
 	#define __pgd(x)			arch_make_pgd_ent(x)
@@ -63,17 +55,47 @@
 	#define p4d_page(p4d)		pfn_to_page(p4d_pfn(p4d))
 
 
-	#define p4d_present			p4d_ent_is_present
-	#define pud_present			pud_ent_is_present
-	#define pmd_present			pmd_ent_is_present
+	#define pgd_none			pgde_is_none
+	#define p4d_none			p4de_is_none
+	#define pud_none			pude_is_none
+	#define pmd_none			pmde_is_none
 
-	#define p4d_none			p4d_ent_is_none
-	#define pud_none			pud_ent_is_none
-	#define pmd_none			pmd_ent_is_none
+	#define pgd_bad				pgde_is_bad
+	#define p4d_bad				p4de_is_bad
+	#define pud_bad				pude_is_bad
+	#define pmd_bad				pmde_is_bad
 
-	#define p4d_bad				p4d_ent_is_bad
-	#define pud_bad				pud_ent_is_bad
-	#define pmd_bad				pmd_ent_is_bad
+	#define pgd_present			pgde_is_present
+	#define p4d_present			p4de_is_present
+	#define pud_present			pude_is_present
+	#define pmd_present			pmde_is_present
+
+	#define pgd_page_vaddr		pgde_pointed_page_vaddr
+	#define p4d_page_vaddr		p4de_pointed_page_vaddr
+	#define pud_page_vaddr		pude_pointed_page_vaddr
+	#define pmd_page_vaddr		pmde_pointed_page_vaddr
+
+
+	#define pte_ERROR(e)	pr_err(						\
+				"%s:%d: bad pte %p(%016lx)\n",			\
+				__FILE__, __LINE__, &(e), pte_val(e)	\
+			)
+	#define pmd_ERROR(e)	pr_err(						\
+				"%s:%d: bad pmd %p(%016lx)\n",			\
+				__FILE__, __LINE__, &(e), pmd_val(e)	\
+			)
+	#define pud_ERROR(e)	pr_err(						\
+				"%s:%d: bad pud %p(%016lx)\n",			\
+				__FILE__, __LINE__, &(e), pud_val(e)	\
+			)
+	#define p4d_ERROR(e)	pr_err(						\
+				"%s:%d: bad p4d %p(%016lx)\n",			\
+				__FILE__, __LINE__, &(e), p4d_val(e)	\
+			)
+	#define pgd_ERROR(e)	pr_err(						\
+				"%s:%d: bad pgd %p(%016lx)\n",			\
+				__FILE__, __LINE__, &(e), pgd_val(e)	\
+			)
 
 
 	/*
@@ -82,5 +104,6 @@
 	 */
 	extern ulong empty_zero_page[PAGE_SIZE / sizeof(ulong)] __visible;
 	#define ZERO_PAGE(vaddr) ((void)(vaddr),virt_to_page(empty_zero_page))
+
 
 #endif /* _ASM_X86_PGTABLE_MACRO_H_ */
