@@ -11,7 +11,7 @@
 
 	#ifdef DEBUG
 
-		extern unsigned long
+		extern ulong
 		pte_pfn(pte_t pte);
 
 		extern int
@@ -37,43 +37,47 @@
 		extern pte_t
 		pte_mkwrite(pte_t pte);
 
+
 		extern int
 		pte_same(pte_t a, pte_t b);
 		extern int
-		arch_pte_none(pte_t pte);
+		pte_is_none(pte_t pte);
 		extern int
-		arch_pte_present(pte_t a);
+		pte_is_present(pte_t a);
+
 
 		extern int
-		arch_pmd_present(pmd_t pmd);
+		pmd_ent_is_present(pmd_t pmd_ent);
 		extern int
-		arch_pmd_none(pmd_t pmd);
+		pmd_ent_is_none(pmd_t pmd_ent);
+		extern int
+		pmd_ent_is_bad(pmd_t pmd_ent);
 		extern pte_t
-		*arch_pmd_pgtable(pmd_t pmd);
-		extern int
-		arch_pmd_bad(pmd_t pmd);
+		*pmd_page_vaddr(pmd_t pmd);
+
 
 		extern int
-		arch_pud_none(pud_t pud);
+		pud_ent_is_none(pud_t pud_ent);
 		extern int
-		arch_pud_present(pud_t pud);
+		pud_ent_is_present(pud_t pud_ent);
+		extern int
+		pud_ent_is_bad(pud_t pud_ent);
 		extern pmd_t
-		*arch_pud_pgtable(pud_t pud);
-		extern int
-		arch_pud_bad(pud_t pud);
+		*pud_page_vaddr(pud_t pud);
+
 
 		extern int
-		arch_p4d_none(p4d_t p4d);
+		p4d_ent_is_none(p4d_t p4d_ent);
 		extern int
-		arch_p4d_present(p4d_t p4d);
+		p4d_ent_is_present(p4d_t p4d_ent);
+		extern int
+		p4d_ent_is_bad(p4d_t p4d_ent);
 		extern pud_t
-		*arch_p4d_pgtable(p4d_t p4d);
-		extern int
-		arch_p4d_bad(p4d_t p4d);
+		*p4d_page_vaddr(p4d_t p4d);
+
 
 		extern void
-		set_pte_at(mm_s *mm, unsigned long addr,
-				pte_t *ptep, pte_t pte);
+		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte);
 
 		extern void
 		arch_ptep_set_wrprotect(pte_t *ptep);
@@ -83,24 +87,24 @@
 
 
 		extern pgd_t
-		arch_make_pgd(pgdval_t val);
+		arch_make_pgd_ent(pgdval_t val);
 		extern pgdval_t 
 		arch_pgd_val(pgd_t pgd);
 		extern pgdval_t
 		arch_pgd_flags(pgd_t pgd);
 
 		extern p4d_t
-		arch_make_p4d(pgdval_t val);
+		arch_make_p4d_ent(pgdval_t val);
 		extern p4dval_t
 		arch_p4d_val(p4d_t p4d);
 
 		extern pud_t
-		arch_make_pud(pmdval_t val);
+		arch_make_pud_ent(pmdval_t val);
 		extern pudval_t
 		arch_pud_val(pud_t pud);
 
 		extern pmd_t
-		arch_make_pmd(pmdval_t val);
+		arch_make_pmd_ent(pmdval_t val);
 		extern pmdval_t
 		arch_pmd_val(pmd_t pmd);
 
@@ -157,7 +161,7 @@
 	#if defined(ARCH_PGTABLE_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		pte_pfn(pte_t pte) {
 			phys_addr_t pfn = arch_pte_val(pte);
 			// pfn ^= protnone_mask(pfn);
@@ -214,13 +218,11 @@
 			return pte_set_flags(pte,
 						_PAGE_DIRTY | _PAGE_SOFT_DIRTY);
 		}
-
 		PREFIX_STATIC_INLINE
 		pte_t
 		pte_mkyoung(pte_t pte) {
 			return pte_set_flags(pte, _PAGE_ACCESSED);
 		}
-
 		PREFIX_STATIC_INLINE
 		pte_t
 		pte_mkwrite(pte_t pte) {
@@ -234,111 +236,107 @@
 		}
 		PREFIX_STATIC_INLINE
 		int
-		arch_pte_none(pte_t pte) {
+		pte_is_none(pte_t pte) {
 			return !(pte.val & ~(_PAGE_KNL_ERRATUM_MASK));
 		}
 		PREFIX_STATIC_INLINE
 		int
-		arch_pte_present(pte_t a) {
-			return arch_pte_flags(a) &
+		pte_is_present(pte_t pte) {
+			return arch_pte_flags(pte) &
 						(_PAGE_PRESENT | _PAGE_PROTNONE);
 		}
 
+
 		PREFIX_STATIC_INLINE
 		int
-		arch_pmd_present(pmd_t pmd) {
+		pmd_ent_is_present(pmd_t pmd_ent) {
 			/*
 			 * Checking for _PAGE_PSE is needed too because
-			 * split_huge_page will temporarily clear the present bit (but
-			 * the _PAGE_PSE flag will remain set at all times while the
-			 * _PAGE_PRESENT bit is clear).
+			 * split_huge_page will temporarily clear the present
+			 * bit (but the _PAGE_PSE flag will remain set at all
+			 * times while the _PAGE_PRESENT bit is clear).
 			 */
-			return arch_pmd_flags(pmd) &
+			return arch_pmd_flags(pmd_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
-
 		PREFIX_STATIC_INLINE
 		int
-		arch_pmd_none(pmd_t pmd) {
-			/* Only check low word on 32-bit platforms, since it might be
-			out of sync with upper half. */
-			return (arch_pmd_val(pmd) &
+		pmd_ent_is_none(pmd_t pmd_ent) {
+			/*
+			 * Only check low word on 32-bit platforms,
+			 * since it might be out of sync with upper half.
+			 */
+			return (arch_pmd_val(pmd_ent) &
 						~_PAGE_KNL_ERRATUM_MASK) == 0;
 		}
-
+		PREFIX_STATIC_INLINE
+		int
+		pmd_ent_is_bad(pmd_t pmd_ent) {
+			return (arch_pmd_flags(pmd_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 		PREFIX_STATIC_INLINE
 		pte_t
-		*arch_pmd_pgtable(pmd_t pmd) {
+		*pmd_page_vaddr(pmd_t pmd) {
 			return (pte_t *)__va(arch_pmd_val(pmd) &
 						arch_pmd_pfn_mask(pmd));
 		}
 
-		PREFIX_STATIC_INLINE
-		int
-		arch_pmd_bad(pmd_t pmd) {
-			return (arch_pmd_flags(pmd) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
 
 		PREFIX_STATIC_INLINE
 		int
-		arch_pud_none(pud_t pud) {
-			return (arch_pud_val(pud) &
+		pud_ent_is_none(pud_t pud_ent) {
+			return (arch_pud_val(pud_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
-
 		PREFIX_STATIC_INLINE
 		int
-		arch_pud_present(pud_t pud) {
-			return arch_pud_flags(pud) &
+		pud_ent_is_present(pud_t pud_ent) {
+			return arch_pud_flags(pud_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
-
+		PREFIX_STATIC_INLINE
+		int
+		pud_ent_is_bad(pud_t pud_ent) {
+			return (arch_pud_flags(pud_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 		PREFIX_STATIC_INLINE
 		pmd_t
-		*arch_pud_pgtable(pud_t pud) {
+		*pud_page_vaddr(pud_t pud) {
 			return (pmd_t *)__va(arch_pud_val(pud) &
 						arch_pud_pfn_mask(pud));
 		}
 
-		PREFIX_STATIC_INLINE
-		int
-		arch_pud_bad(pud_t pud) {
-			return (arch_pud_flags(pud) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
 
 		PREFIX_STATIC_INLINE
 		int
-		arch_p4d_none(p4d_t p4d) {
-			return (arch_p4d_val(p4d) &
+		p4d_ent_is_none(p4d_t p4d_ent) {
+			return (arch_p4d_val(p4d_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
-
 		PREFIX_STATIC_INLINE
 		int
-		arch_p4d_present(p4d_t p4d) {
-			return arch_p4d_flags(p4d) & _PAGE_PRESENT;
+		p4d_ent_is_present(p4d_t p4d_ent) {
+			return arch_p4d_flags(p4d_ent) & _PAGE_PRESENT;
 		}
-
+		PREFIX_STATIC_INLINE
+		int
+		p4d_ent_is_bad(p4d_t p4d_ent) {
+			return (arch_p4d_flags(p4d_ent) &
+						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
+		}
 		PREFIX_STATIC_INLINE
 		pud_t
-		*arch_p4d_pgtable(p4d_t p4d) {
+		*p4d_page_vaddr(p4d_t p4d) {
 			return (pud_t *)__va(arch_p4d_val(p4d) &
 						arch_p4d_pfn_mask(p4d));
 		}
 
-		PREFIX_STATIC_INLINE
-		int
-		arch_p4d_bad(p4d_t p4d) {
-			return (arch_p4d_flags(p4d) &
-						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
-		}
 
 		PREFIX_STATIC_INLINE
 		void
-		set_pte_at(mm_s *mm, unsigned long addr,
-				pte_t *ptep, pte_t pte) {
+		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte) {
 			// page_table_check_pte_set(mm, addr, ptep, pte);
 			set_pte(ptep, pte);
 		}
@@ -346,7 +344,7 @@
 		PREFIX_STATIC_INLINE
 		void
 		arch_ptep_set_wrprotect(pte_t *ptep) {
-			clear_bit(_PAGE_BIT_RW, (unsigned long *)&ptep->val);
+			clear_bit(_PAGE_BIT_RW, (ulong *)&ptep->val);
 		}
 
 		// PREFIX_STATIC_INLINE
@@ -358,7 +356,7 @@
 
 		PREFIX_STATIC_INLINE
 		pgd_t
-		arch_make_pgd(pgdval_t val) {
+		arch_make_pgd_ent(pgdval_t val) {
 			return (pgd_t) { .val = val & PGD_ALLOWED_BITS };
 		}
 		PREFIX_STATIC_INLINE
@@ -374,8 +372,8 @@
 
 		PREFIX_STATIC_INLINE
 		p4d_t
-		arch_make_p4d(p4dval_t val) {
-			return (p4d_t) { arch_make_pgd((pgdval_t)val) };
+		arch_make_p4d_ent(p4dval_t val) {
+			return (p4d_t) { arch_make_pgd_ent((pgdval_t)val) };
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
@@ -385,7 +383,7 @@
 
 		PREFIX_STATIC_INLINE
 		pud_t
-		arch_make_pud(pmdval_t val) {
+		arch_make_pud_ent(pmdval_t val) {
 			return (pud_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
@@ -396,7 +394,7 @@
 
 		PREFIX_STATIC_INLINE
 		pmd_t
-		arch_make_pmd(pmdval_t val) {
+		arch_make_pmd_ent(pmdval_t val) {
 			return (pmd_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
@@ -601,7 +599,7 @@
 	// #endif	/* CONFIG_PARAVIRT_XXL */
 
 	// /*
-	// * The following only work if arch_pte_present() is true.
+	// * The following only work if pte_is_present() is true.
 	// * Undefined behaviour if not..
 	// */
 	// static inline int pte_dirty(pte_t pte)

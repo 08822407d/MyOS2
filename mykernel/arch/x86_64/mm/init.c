@@ -38,13 +38,13 @@ void __init early_alloc_pgt_buf(void)
 	// fill pml4 entries
 	for (int pgt_idx = 0; pgt_idx < pudbuf_pgcount; pgt_idx++)
 		init_top_pgt[pgt_idx + PGD_KERNEL_START] =
-				arch_make_pgd(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * PTRS_PER_PUD));
+				arch_make_pgd_ent(_PAGE_TABLE | __pa(init_pud_buf + pgt_idx * PTRS_PER_PUD));
 	// fill pdpt entries
 	for (int pud_idx = 0; pud_idx < pmdbuf_pgcount; pud_idx++)
-		init_pud_buf[pud_idx] = arch_make_pud(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * PTRS_PER_PMD));
+		init_pud_buf[pud_idx] = arch_make_pud_ent(_PAGE_TABLE | __pa(init_pmd_buf + pud_idx * PTRS_PER_PMD));
 	// fill pdt entries
 	for (int pmd_idx = 0; pmd_idx < ptebuf_pgcount; pmd_idx++)
-		init_pmd_buf[pmd_idx] = arch_make_pmd(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * PTRS_PER_PTE));
+		init_pmd_buf[pmd_idx] = arch_make_pmd_ent(_PAGE_TABLE | __pa(init_pte_buf + pmd_idx * PTRS_PER_PTE));
 
 #if defined(MAP_LOWHALF)
 	memcpy(init_top_pgt, init_top_pgt + PGD_KERNEL_START, PAGE_SIZE / 2);

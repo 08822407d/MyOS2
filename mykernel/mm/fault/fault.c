@@ -177,82 +177,6 @@ out:
 }
 
 
-/*
- * Copy a present and normal page if necessary.
- *
- * NOTE! The usual case is that this doesn't need to do
- * anything, and can just return a positive value. That
- * will let the caller know that it can just increase
- * the page refcount and re-use the pte the traditional
- * way.
- *
- * But _if_ we need to copy it because it needs to be
- * pinned in the parent (and the child should get its own
- * copy rather than just a reference to the same page),
- * we'll do that here and return zero to let the caller
- * know we're done.
- *
- * And if we need a pre-allocated page but don't yet have
- * one, return a negative error to let the preallocation
- * code know so that it can do so outside the page table
- * lock.
- */
-static inline int
-copy_present_page(vma_s *dst_vma, vma_s *src_vma, pte_t *dst_pte_ptr,
-		pte_t *src_pte_ptr, ulong addr, pte_t pte, page_s *page) {
-	page_s *new_page;
-
-	/*
-	 * What we want to do is to check whether this page may
-	 * have been pinned by the parent process.  If so,
-	 * instead of wrprotect the pte on both sides, we copy
-	 * the page immediately so that we'll always guarantee
-	 * the pinned page won't be randomly replaced in the
-	 * future.
-	 *
-	 * The page pinning checks are just "has this mm ever
-	 * seen pinning", along with the (inexact) check of
-	 * the page count. That might give false positives for
-	 * for pinning, but it will work correctly.
-	 */
-	// if (likely(!page_needs_cow_for_dma(src_vma, page)))
-	// 	return 1;
-	// static inline bool
-	// page_needs_cow_for_dma(vma_s *vma, page_s *page)
-	// {
-		if (!is_cow_mapping(src_vma->vm_flags))
-			return 1;
-
-		if (!test_bit(MMF_HAS_PINNED, &src_vma->vm_mm->flags))
-			return 1;
-
-	// 	return page_maybe_dma_pinned(page);
-	// }
-
-	// new_page = *prealloc;
-	// if (!new_page)
-	// 	return -EAGAIN;
-
-	// /*
-	//  * We have a prealloc page, all good!  Take it
-	//  * over and copy the page & arm it.
-	//  */
-	// *prealloc = NULL;
-	// copy_user_highpage(new_page, page, addr, src_vma);
-	// __SetPageUptodate(new_page);
-	// page_add_new_anon_rmap(new_page, dst_vma, addr, false);
-	// lru_cache_add_inactive_or_unevictable(new_page, dst_vma);
-	// rss[mm_counter(new_page)]++;
-
-	// /* All done, just insert the new page copy in the child */
-	// pte = mk_pte(new_page, dst_vma->vm_page_prot);
-	// pte = maybe_mkwrite(pte_mkdirty(pte), dst_vma);
-	// if (userfaultfd_pte_wp(dst_vma, *src_pte_ptr))
-	// 	/* Uffd-wp needs to be delivered to dest pte as well */
-	// 	pte = pte_wrprotect(pte_mkuffd_wp(pte));
-	// set_pte_at(dst_vma->vm_mm, addr, dst_pte_ptr, pte);
-	return 0;
-}
 
 /*
  * Copy one pte.  Returns 0 if succeeded, or -EAGAIN if one preallocated page
@@ -265,20 +189,6 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	mm_s *src_mm = src_vma->vm_mm;
 	ulong vm_flags = src_vma->vm_flags;
 	pte_t pte = *src_pte_ptr;
-
-	// page_s *page;
-
-	// page = vm_normal_page(src_vma, addr, pte);
-	// if (page) {
-	// 	int retval;
-
-	// 	retval = copy_present_page(dst_vma, src_vma,
-	// 				dst_pte_ptr, src_pte_ptr, addr, pte, page);
-	// 	if (retval <= 0)
-	// 		return retval;
-
-	// 	get_page(page);
-	// }
 
 	/*
 	 * If it's a COW mapping, write protect it both
@@ -1340,12 +1250,20 @@ do_fault(vm_fault_s *vmf) {
 			// pte_unmap_unlock(vmf->pte, vmf->ptl);
 		}
 	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
+		// Reading or Executing cause fault
 		ret = do_read_fault(vmf);
 	else if (!(vma->vm_flags & VM_SHARED))
+		// Writing cause fault, but address is not VM_SHARED
 		ret = do_cow_fault(vmf);
 	else
+		// Writing cause fault, and address is VM_SHARED
 		ret = do_shared_fault(vmf);
 
+	// /* preallocated pagetable is unused: free it */
+	// if (vmf->prealloc_pte) {
+	// 	pte_free(vm_mm, vmf->prealloc_pte);
+	// 	vmf->prealloc_pte = NULL;
+	// }
 	return ret;
 }
 
@@ -1519,7 +1437,7 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!p4d_present(*p4d)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*p4d = arch_make_p4d(_PAGE_TABLE | __pa(new));
+		*p4d = arch_make_p4d_ent(_PAGE_TABLE | __pa(new));
 	} else			/* Another has populated it */
 		pud_free(new);
 	spin_unlock_no_resched(&mm->page_table_lock);
@@ -1540,7 +1458,7 @@ int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!pud_present(*pud)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pud = arch_make_pud(_PAGE_TABLE | __pa(new));
+		*pud = arch_make_pud_ent(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pmd_free(new);
 	}
@@ -1557,7 +1475,7 @@ int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
 	spin_lock(&mm->page_table_lock);
 	if (!pmd_present(*pmd)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pmd = arch_make_pmd(_PAGE_TABLE | __pa(new));
+		*pmd = arch_make_pmd_ent(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pte_free(new);
 	}

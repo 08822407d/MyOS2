@@ -10,7 +10,7 @@ function make_install_initranfs() {
 	sudo mount /dev/dm-0 /mnt -o uid=$USER,gid=$USER
 	rm /mnt/boot/init
 	rm /mnt/boot/sh
-	cmake $1/myinitramfs $2 -DARCH=$3 -DCMAKE_INSTALL_PREFIX=/mnt && make && make install
+	cmake $1/myinitramfs $2 -DLINK_TYPE=$3 -DCMAKE_INSTALL_PREFIX=/mnt && make && make install
 	sync
 	sudo umount /mnt
 

@@ -17,26 +17,31 @@
 		is_cow_mapping(vm_flags_t flags);
 
 
-		extern pte_t
-		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
-		extern ulong
-		pte_index(ulong address);
-		extern pte_t
-		*pte_ent_ptr(pmd_t *pmdp, ulong address);
-		#define pte_offset pte_ent_ptr
 
-
-		extern pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
+		extern pgd_t
+		pgdp_get(pgd_t *pgdp);
 		extern ulong
-		pmd_index(ulong address);
-		extern pmd_t
-		*pmd_ent_ptr(pud_t *pud, ulong address);
-		#define pmd_offset pmd_ent_ptr
+		pgd_index(ulong address);
+		extern pgd_t
+		*pgd_ent_ptr(mm_s *mmp, ulong address);
+		#define pgd_offset_pgd pgd_ent_ptr
 		extern int
-		pmd_none_or_clear_bad(pmd_t *pmd);
+		pgd_none_or_clear_bad(pgd_t *pgd);
 
 
+		extern p4d_t
+		p4dp_get(p4d_t *p4dp);
+		extern p4d_t
+		*p4d_alloc(mm_s *mm, pgd_t *pgd, ulong address);
+		extern p4d_t
+		*p4d_ent_ptr(pgd_t *pgdp, ulong address);
+		#define p4d_offset p4d_ent_ptr
+		extern int
+		p4d_none_or_clear_bad(p4d_t *p4d);
+
+
+		extern pud_t
+		pudp_get(pud_t *pudp);
 		extern pud_t
 		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
 		extern ulong
@@ -48,33 +53,30 @@
 		pud_none_or_clear_bad(pud_t *pud);
 
 
-		extern p4d_t
-		*p4d_ent_ptr(pgd_t *pgdp, ulong address);
-		#define p4d_offset p4d_ent_ptr
-		extern int
-		p4d_none_or_clear_bad(p4d_t *p4d);
-
-
+		extern pmd_t
+		pmdp_get(pmd_t *pmdp);
+		extern pmd_t
+		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
 		extern ulong
-		pgd_index(ulong address);
-		extern pgd_t
-		*pgd_ent_ptr(mm_s *mmp, ulong address);
-		#define pgd_offset_pgd pgd_ent_ptr
+		pmd_index(ulong address);
+		extern pmd_t
+		*pmd_ent_ptr(pud_t *pud, ulong address);
+		#define pmd_offset pmd_ent_ptr
 		extern int
-		pgd_none_or_clear_bad(pgd_t *pgd);
-
+		pmd_none_or_clear_bad(pmd_t *pmd);
 
 
 		extern pte_t
 		ptep_get(pte_t *ptep);
-		extern pmd_t
-		pmdp_get(pmd_t *pmdp);
-		extern pud_t
-		pudp_get(pud_t *pudp);
-		extern p4d_t
-		p4dp_get(p4d_t *p4dp);
-		extern pgd_t
-		pgdp_get(pgd_t *pgdp);
+		extern pte_t
+		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
+		extern ulong
+		pte_index(ulong address);
+		extern pte_t
+		*pte_ent_ptr(pmd_t *pmdp, ulong address);
+		#define pte_offset pte_ent_ptr
+
+
 
 		extern int
 		is_zero_pfn(ulong pfn);
@@ -109,122 +111,12 @@
 		}
 
 
-		/*
-		 * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
-		 *
-		 * The pXx_index() functions return the index of the entry in the page
-		 * table page which would control the given virtual address
-		 *
-		 * As these functions may be used by the same code for different levels of
-		 * the page table folding, they are always available, regardless of
-		 * CONFIG_PGTABLE_LEVELS value. For the folded levels they simply return 0
-		 * because in such cases PTRS_PER_PxD equals 1.
-		 */
 
 		PREFIX_STATIC_INLINE
-		pte_t
-		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address) {
-			return (pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
-						NULL : pte_ent_ptr(pmd, address);
+		pgd_t
+		pgdp_get(pgd_t *pgdp) {
+			return READ_ONCE(*pgdp);
 		}
-		PREFIX_STATIC_INLINE
-		ulong
-		pte_index(ulong address) {
-			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
-		}
-		PREFIX_STATIC_INLINE
-		pte_t
-		*pte_ent_ptr(pmd_t *pmdp, ulong address) {
-			if (pmd_none_or_clear_bad(pmdp))
-				return NULL;
-			else
-				return pmd_pgtable(*pmdp) + pte_index(address);
-		}
-
-
-		PREFIX_STATIC_INLINE
-		pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address) {
-			return (pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
-						NULL: pmd_ent_ptr(pud, address);
-		}
-		PREFIX_STATIC_INLINE
-		ulong
-		pmd_index(ulong address) {
-			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
-		}
-		/* Find an entry in the second-level page table.. */
-		PREFIX_STATIC_INLINE
-		pmd_t
-		*pmd_ent_ptr(pud_t *pudp, ulong address) {
-			if (pud_none_or_clear_bad(pudp))
-				return NULL;
-			else
-				return pud_pgtable(*pudp) + pmd_index(address);
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pmd_none_or_clear_bad(pmd_t *pmd) {
-			if (pmd_none(*pmd))
-				return 1;
-			if (pmd_bad(*pmd)) {
-				pmd_clear(pmd);
-				return 1;
-			}
-			return 0;
-		}
-
-
-		PREFIX_STATIC_INLINE
-		pud_t
-		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address) {
-			return (p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
-						NULL : pud_ent_ptr(p4d, address);
-		}
-		PREFIX_STATIC_INLINE
-		ulong
-		pud_index(ulong address) {
-			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
-		}
-		PREFIX_STATIC_INLINE
-		pud_t
-		*pud_ent_ptr(p4d_t *p4dp, ulong address) {
-			if (p4d_none_or_clear_bad(p4dp))
-				return NULL;
-			else
-				return p4d_pgtable(*p4dp) + pud_index(address);
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pud_none_or_clear_bad(pud_t *pud) {
-			if (pud_none(*pud))
-				return 1;
-			if (pud_bad(*pud)) {
-				pud_clear(pud);
-				return 1;
-			}
-			return 0;
-		}
-
-
-		PREFIX_STATIC_INLINE
-		p4d_t
-		*p4d_ent_ptr(pgd_t *pgdp, ulong address) {
-			return ((p4d_t *)pgdp);
-		};
-		PREFIX_STATIC_INLINE
-		int
-		p4d_none_or_clear_bad(p4d_t *p4d) {
-			if (p4d_none(*p4d))
-				return 1;
-			if (p4d_bad(*p4d)) {
-				p4d_clear(p4d);
-				return 1;
-			}
-			return 0;
-		}
-
-
 		/* Must be a compile-time constant, so implement it as a macro */
 		PREFIX_STATIC_INLINE
 		ulong
@@ -250,30 +142,145 @@
 
 
 		PREFIX_STATIC_INLINE
-		pte_t
-		ptep_get(pte_t *ptep) {
-			return READ_ONCE(*ptep);
+		p4d_t
+		p4dp_get(p4d_t *p4dp) {
+			return READ_ONCE(*p4dp);
 		}
 		PREFIX_STATIC_INLINE
-		pmd_t
-		pmdp_get(pmd_t *pmdp) {
-			return READ_ONCE(*pmdp);
+		p4d_t
+		*p4d_alloc(mm_s *mm, pgd_t *pgdp, ulong address) {
+			return ((p4d_t *)pgdp);
 		}
+		PREFIX_STATIC_INLINE
+		p4d_t
+		*p4d_ent_ptr(pgd_t *pgdp, ulong address) {
+			return ((p4d_t *)pgdp);
+		};
+		PREFIX_STATIC_INLINE
+		int
+		p4d_none_or_clear_bad(p4d_t *p4d) {
+			if (p4d_none(*p4d))
+				return 1;
+			if (p4d_bad(*p4d)) {
+				p4d_clear(p4d);
+				return 1;
+			}
+			return 0;
+		}
+
+
 		PREFIX_STATIC_INLINE
 		pud_t
 		pudp_get(pud_t *pudp) {
 			return READ_ONCE(*pudp);
 		}
 		PREFIX_STATIC_INLINE
-		p4d_t
-		p4dp_get(p4d_t *p4dp) {
-			return READ_ONCE(*p4dp);
+		pud_t
+		*pud_alloc(mm_s *mm, p4d_t *p4d, ulong address) {
+			return (p4d_none(*p4d)) && __myos_pud_alloc(mm, p4d, address) ?
+						NULL : pud_ent_ptr(p4d, address);
 		}
 		PREFIX_STATIC_INLINE
-		pgd_t
-		pgdp_get(pgd_t *pgdp) {
-			return READ_ONCE(*pgdp);
+		ulong
+		pud_index(ulong address) {
+			return (address >> PUD_SHIFT) & (PTRS_PER_PUD - 1);
 		}
+		PREFIX_STATIC_INLINE
+		pud_t
+		*pud_ent_ptr(p4d_t *p4dp, ulong address) {
+			if (p4d_none_or_clear_bad(p4dp))
+				return NULL;
+			else
+				return p4d_page_vaddr(*p4dp) + pud_index(address);
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pud_none_or_clear_bad(pud_t *pud) {
+			if (pud_none(*pud))
+				return 1;
+			if (pud_bad(*pud)) {
+				pud_clear(pud);
+				return 1;
+			}
+			return 0;
+		}
+
+
+		PREFIX_STATIC_INLINE
+		pmd_t
+		pmdp_get(pmd_t *pmdp) {
+			return READ_ONCE(*pmdp);
+		}
+		PREFIX_STATIC_INLINE
+		pmd_t
+		*pmd_alloc(mm_s *mm, pud_t *pud, ulong address) {
+			return (pud_none(*pud)) && __myos_pmd_alloc(mm, pud, address)?
+						NULL: pmd_ent_ptr(pud, address);
+		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pmd_index(ulong address) {
+			return (address >> PMD_SHIFT) & (PTRS_PER_PMD - 1);
+		}
+		/* Find an entry in the second-level page table.. */
+		PREFIX_STATIC_INLINE
+		pmd_t
+		*pmd_ent_ptr(pud_t *pudp, ulong address) {
+			if (pud_none_or_clear_bad(pudp))
+				return NULL;
+			else
+				return pud_page_vaddr(*pudp) + pmd_index(address);
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pmd_none_or_clear_bad(pmd_t *pmd) {
+			if (pmd_none(*pmd))
+				return 1;
+			if (pmd_bad(*pmd)) {
+				pmd_clear(pmd);
+				return 1;
+			}
+			return 0;
+		}
+
+
+		/*
+		 * A page table page can be thought of an array like this: pXd_t[PTRS_PER_PxD]
+		 *
+		 * The pXx_index() functions return the index of the entry in the page
+		 * table page which would control the given virtual address
+		 *
+		 * As these functions may be used by the same code for different levels of
+		 * the page table folding, they are always available, regardless of
+		 * CONFIG_PGTABLE_LEVELS value. For the folded levels they simply return 0
+		 * because in such cases PTRS_PER_PxD equals 1.
+		 */
+		PREFIX_STATIC_INLINE
+		pte_t
+		ptep_get(pte_t *ptep) {
+			return READ_ONCE(*ptep);
+		}
+		PREFIX_STATIC_INLINE
+		pte_t
+		*pte_alloc(mm_s *mm, pmd_t *pmd, ulong address) {
+			return (pmd_none(*pmd)) && __myos_pte_alloc(mm, pmd, address) ?
+						NULL : pte_ent_ptr(pmd, address);
+		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pte_index(ulong address) {
+			return (address >> PAGE_SHIFT) & (PTRS_PER_PTE - 1);
+		}
+		PREFIX_STATIC_INLINE
+		pte_t
+		*pte_ent_ptr(pmd_t *pmdp, ulong address) {
+			if (pmd_none_or_clear_bad(pmdp))
+				return NULL;
+			else
+				return pmd_page_vaddr(*pmdp) + pte_index(address);
+		}
+
+
 
 
 		PREFIX_STATIC_INLINE

@@ -1,7 +1,6 @@
 #ifndef _LINUX_PGTABLE_MACRO_H_
 #define _LINUX_PGTABLE_MACRO_H_
 
-	#define p4d_alloc(mm, pgd, addr)	p4d_ent_ptr(pgd, addr)
 
 	/*
 	 * When walking page tables, get the address of the next boundary,

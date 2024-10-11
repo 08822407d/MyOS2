@@ -31,7 +31,7 @@
 	#define _PAGE_BIT_DEVMAP			_PAGE_BIT_SOFTW4
 
 	/* If _PAGE_BIT_PRESENT is clear, we use these: */
-	/* - if the user mapped it with PROT_NONE; arch_pte_present gives true */
+	/* - if the user mapped it with PROT_NONE; pte_is_present gives true */
 	#define _PAGE_BIT_PROTNONE		    _PAGE_BIT_GLOBAL
 
 	#define _PAGE_PRESENT				(_AT(pteval_t, 1) << _PAGE_BIT_PRESENT)

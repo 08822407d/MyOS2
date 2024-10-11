@@ -6,20 +6,11 @@ project(MyOS2_Initramfs ASM C)
 set(PROMPT "======>>>")
 set(PROMPT_END "<<<======")
 
-#===============================================================================================#
-#                                   global options                                              #
-#===============================================================================================#
-if (${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86_64")
-	set(ARCH x86_64)
-elseif(${CMAKE_SYSTEM_PROCESSOR} STREQUAL "arm64")
-	set(ARCH aarch64)
-endif()
-
 
 #===============================================================================================#
 #                                   compile options                                             #
 #===============================================================================================#
-if (${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 	set(RELEASE_FLAG "-DDEBUG")
 	message("${PROMPT} DEBUG ${PROMPT_END}")
 elseif ()
@@ -34,11 +25,15 @@ set(CMAKE_ASM_FLAGS "${CMAKE_ASM_FLAGS} ${RELEASE_FLAG} \
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${RELEASE_FLAG} \
 	-m64 \
-	-static \
 	-ggdb \
 ")
 
-set(CMAKE_EXE_LINKER_FLAGS "-Wl,--build-id=none,--gc-sections")
+if (${LINK_TYPE} STREQUAL "static")
+	set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
+endif()
+
+
+# set(CMAKE_EXE_LINKER_FLAGS "-Wl,--disable-new-dtags")
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}) # Force generate binaries to ${CMAKE_BINARY_DIR}
 
