@@ -108,7 +108,7 @@ pte_t
  * kmapped if necessary (when CONFIG_HIGHPTE), and locked against concurrent
  * modification by software, with a pointer to that spinlock in ptlp (in some
  * configs mm->page_table_lock, in SPLIT_PTLOCK configs a spinlock in table's
- * struct page).  pte_unmap_unlock(pte, ptl) to unlock and unmap afterwards.
+ * page_s).  pte_unmap_unlock(pte, ptl) to unlock and unmap afterwards.
  *
  * But it is unsuccessful, returning NULL with *ptlp unchanged, if there is no
  * page table at *pmd: if, for example, the page table has just been removed,

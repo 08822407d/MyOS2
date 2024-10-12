@@ -27,7 +27,7 @@
 	/*
 	 * Flags checked when a page is prepped for return by the page allocator.
 	 * Pages being prepped should not have these flags set.  If they are set,
-	 * there has been a kernel bug or struct page corruption.
+	 * there has been a kernel bug or page_s corruption.
 	 *
 	 * __PG_HWPOISON is exceptional because it needs to be kept beyond page's
 	 * alloc-free cycle to prevent from reusing the page.

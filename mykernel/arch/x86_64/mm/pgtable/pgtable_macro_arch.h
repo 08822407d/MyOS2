@@ -52,7 +52,24 @@
 	 * Currently stuck as a macro due to indirect forward reference to
 	 * linux/mmzone.h's __section_mem_map_addr() definition:
 	 */
-	#define p4d_page(p4d)		pfn_to_page(p4d_pfn(p4d))
+	#define pgd_page(pgd)		pfn_to_page(pgde_pfn(pgd))
+	/*
+	 * Currently stuck as a macro due to indirect forward reference to
+	 * linux/mmzone.h's __section_mem_map_addr() definition:
+	 */
+	#define p4d_page(p4d)		pfn_to_page(p4de_pfn(p4d))
+	/*
+	 * Currently stuck as a macro due to indirect forward reference to
+	 * linux/mmzone.h's __section_mem_map_addr() definition:
+	 */
+	#define pud_page(pud)		pfn_to_page(pude_pfn(pud))
+	/*
+	 * Currently stuck as a macro due to indirect forward reference to
+	 * linux/mmzone.h's __section_mem_map_addr() definition:
+	 */
+	#define pmd_page(pmd)		pfn_to_page(pmde_pfn(pmd))
+
+	#define pte_page(pte)		pfn_to_page(pte_pfn(pte))
 
 
 	#define pgd_none			pgde_is_none

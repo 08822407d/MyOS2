@@ -79,6 +79,18 @@
 
 
 
+		extern void
+		ptlock_cache_init(void);
+		extern bool
+		ptlock_alloc(ptdesc_s *ptdesc);
+		extern void
+		ptlock_free(ptdesc_s *ptdesc);
+		extern spinlock_t
+		*ptlock_ptr(ptdesc_s *ptdesc);
+		extern spinlock_t
+		*pte_lockptr(mm_s *mm, pmd_t *pmd);
+
+
 		extern int
 		is_zero_pfn(ulong pfn);
 		extern ulong
@@ -297,6 +309,30 @@
 		void
 		pte_unmap(pte_t *ptep) {
 			// rcu_read_unlock();
+		}
+
+
+
+		PREFIX_STATIC_INLINE
+		void
+		ptlock_cache_init(void) {}
+		PREFIX_STATIC_INLINE
+		bool
+		ptlock_alloc(ptdesc_s *ptdesc) {
+			return true;
+		}
+		PREFIX_STATIC_INLINE
+		void
+		ptlock_free(ptdesc_s *ptdesc) {}
+		PREFIX_STATIC_INLINE
+		spinlock_t
+		*ptlock_ptr(ptdesc_s *ptdesc) {
+			return &ptdesc->ptl;
+		}
+		PREFIX_STATIC_INLINE
+		spinlock_t
+		*pte_lockptr(mm_s *mm, pmd_t *pmd) {
+			return ptlock_ptr(page_ptdesc(pmd_page(*pmd)));
 		}
 
 

@@ -118,7 +118,6 @@
 	// 		spinlock_t ioctx_lock;
 	// 		struct kioctx_table __rcu *ioctx_table;
 	// #endif
-	// #ifdef CONFIG_MEMCG
 			// /*
 			//  * "owner" points to a task that is regarded as the canonical
 			//  * user/owner of this mm. All of the following must be true in
@@ -130,8 +129,7 @@
 			//  * new_owner->alloc_lock is held
 			//  */
 			// task_s __rcu	*owner;
-	// #endif
-	// 		struct user_namespace *user_ns;
+			// struct user_namespace *user_ns;
 
 			/* store ref to file /proc/<pid>/exe symlink points to */
 			file_s __rcu	*exe_file;

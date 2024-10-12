@@ -63,4 +63,9 @@ void setup_initial_init_mm(void *start_code,
 	INIT_LIST_HEADER_S(&init_mm.mm_mt);
 	__vma_link_to_list(&init_mm, &init_vma, NULL);
 	init_mm.map_count	= 1;
+
+	if (SPINLOCK_SIZE > BITS_PER_LONG/8) {
+		pr_warn("Spinlock too long.");
+		while (1);
+	}
 }

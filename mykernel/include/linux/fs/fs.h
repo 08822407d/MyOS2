@@ -308,7 +308,7 @@
 	// 		unsigned long, unsigned long);
 
 	typedef struct address_space_operations {
-		// int		(*writepage)(struct page *page, struct writeback_control *wbc);
+		// int		(*writepage)(page_s *page, struct writeback_control *wbc);
 		// int		(*read_folio)(file_s *, struct folio *);
 
 		// /* Write back some dirty pages from this mapping. */
@@ -320,9 +320,9 @@
 		// void	(*readahead)(struct readahead_control *);
 
 		// int		(*write_begin)(file_s *, addr_spc_s *mapping,
-		// 			loff_t pos, unsigned len, struct page **pagep, void **fsdata);
+		// 			loff_t pos, unsigned len, page_s **pagep, void **fsdata);
 		// int		(*write_end)(file_s *, addr_spc_s *mapping,
-		// 			loff_t pos, unsigned len, unsigned copied, struct page *page, void *fsdata);
+		// 			loff_t pos, unsigned len, unsigned copied, page_s *page, void *fsdata);
 
 		// /* Unfortunately this kludge is needed for FIBMAP. Don't use it */
 		// sector_t	(*bmap)(addr_spc_s *, sector_t);
@@ -339,7 +339,7 @@
 		// int		(*launder_folio)(struct folio *);
 		// bool	(*is_partially_uptodate) (struct folio *, size_t from, size_t count);
 		// void	(*is_dirty_writeback) (struct folio *, bool *dirty, bool *wb);
-		// int		(*error_remove_page)(addr_spc_s *, struct page *);
+		// int		(*error_remove_page)(addr_spc_s *, page_s *);
 
 		// /* swapfile support */
 		// int		(*swap_activate)(struct swap_info_struct *sis, file_s *file, sector_t *span);

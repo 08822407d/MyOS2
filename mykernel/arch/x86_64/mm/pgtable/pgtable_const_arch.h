@@ -233,12 +233,8 @@
 
 	// #define SHARED_KERNEL_PMD 0
 
-	/*
-	 * PGDIR_SHIFT determines what a top-level page table entry can map
-	 */
-	#define PGDIR_SHIFT			39
-	#define PTRS_PER_PGD		512
-	#define MAX_PTRS_PER_P4D	1
+	#define P4D_SHIFT			39
+	#define PTRS_PER_P4D		512
 	/*
 	 * 3rd level page
 	 */
@@ -253,12 +249,21 @@
 	/*
 	 * entries per page directory level
 	 */
+	#define PTE_SHIFT			12
 	#define PTRS_PER_PTE		512
+	/*
+	 * PGDIR_SHIFT determines what a top-level page table entry can map
+	 */
+	#define PGDIR_SHIFT			P4D_SHIFT
+	#define PTRS_PER_PGD		PTRS_PER_P4D
+
 
 	#define PMD_SIZE			(_AC(1, UL) << PMD_SHIFT)
 	#define PMD_MASK			(~(PMD_SIZE - 1))
 	#define PUD_SIZE			(_AC(1, UL) << PUD_SHIFT)
 	#define PUD_MASK			(~(PUD_SIZE - 1))
+	#define P4D_SIZE			(_AC(1, UL) << P4D_SHIFT)
+	#define P4D_MASK			(~(P4D_SIZE - 1))
 	#define PGDIR_SIZE			(_AC(1, UL) << PGDIR_SHIFT)
 	#define PGDIR_MASK			(~(PGDIR_SIZE - 1))
 
@@ -334,10 +339,6 @@
 	#	define PTE_FLAGS_MASK	(~PTE_PFN_MASK)
 
 	#define PGD_ALLOWED_BITS	(~0ULL)
-	#define P4D_SHIFT			PGDIR_SHIFT
-	#define PTRS_PER_P4D		1
-	#define P4D_SIZE			(1UL << P4D_SHIFT)
-	#define P4D_MASK			(~(P4D_SIZE-1))
 
 	/*
 	 * Instead of one PGD, we acquire two PGDs.  Being order-1, it is

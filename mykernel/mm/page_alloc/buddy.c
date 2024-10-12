@@ -439,7 +439,7 @@ __free_pages_ok(page_s *page, uint order) {
 /*
  * This is the 'heart' of the zoned buddy allocator.
  */
-// struct page *__alloc_pages(gfp_t gfp, unsigned int order,
+// page_s *__alloc_pages(gfp_t gfp, unsigned int order,
 // 		int preferred_nid, nodemask_t *nodemask)
 page_s *__myos_alloc_pages(gfp_t gfp, uint order)
 {
@@ -507,7 +507,7 @@ page_s *__myos_alloc_pages(gfp_t gfp, uint order)
  * spinlock, but not in NMI context or while holding a raw spinlock.
  */
 // Linux function proto :
-// void __free_pages(struct page *page, unsigned int order)
+// void __free_pages(page_s *page, unsigned int order)
 void __free_pages(page_s *page, uint order) {
 	/* get PageHead before we drop reference */
 	// int head = PageHead(page);
@@ -547,7 +547,7 @@ ulong get_zeroed_page(gfp_t gfp_mask) {
 void __init
 memblock_free_pages(page_s *page, ulong pfn, uint order)
 {
-// void __free_pages_core(struct page *page, unsigned int order)
+// void __free_pages_core(page_s *page, unsigned int order)
 // {
 	uint nr_pages = 1 << order;
 	page_s *p = page;

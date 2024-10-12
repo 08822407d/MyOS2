@@ -43,7 +43,6 @@
 	// 	typedef struct {
 	// 		unsigned long pgd;
 	// 	} pgd_t;
-		typedef struct page *pgtable_t;
 
 	// #	define pte_val(x)		((x).pte)
 	// #	define pmd_val(x)		((&x)->pmd[0])

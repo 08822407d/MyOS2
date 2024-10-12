@@ -35,16 +35,14 @@
 		uint				__unused;
 
 		atomic_t			__page_refcount;
-	#ifdef CONFIG_MEMCG
 		ulong				memcg_data;
-	#endif
 	} slab_s;
 
 
 	/* A table of kmalloc cache names and sizes */
 	typedef struct kmalloc_info_struct {
-		const char	*name;
-		uint		size;
+		const char		*name;
+		uint			size;
 	} kmalloc_info_s;
 
 	/*
@@ -121,11 +119,11 @@
 	typedef struct kmem_cache {
 		// kmem_cache_cpu_s	__percpu *cpu_slab;
 		/* Used for retrieving partial slabs, etc. */
-		slab_flags_t	flags;
-		ulong			min_partial;
-		uint			size;			/* The size of an object including metadata */
-		uint			object_size;	/* The size of an object without metadata */
-		uint			offset;			/* Free pointer offset */
+		slab_flags_t		flags;
+		ulong				min_partial;
+		uint				size;			/* The size of an object including metadata */
+		uint				object_size;	/* The size of an object without metadata */
+		uint				offset;			/* Free pointer offset */
 		// /* Number of per cpu partial objects to keep around */
 		// uint			cpu_partial;
 		// /* Number of per cpu partial slabs to keep around */
@@ -133,12 +131,12 @@
 		kmem_cache_order_obj_s	oo;
 
 		// /* Allocation and freeing of slabs */
-		gfp_t			allocflags;		/* gfp flags to use on each alloc */
-		int				refcount;		/* Refcount for slab cache destroy */
-		uint			inuse;			/* Offset to metadata */
-		uint			align;			/* Alignment */
-		const char		*name;			/* Name (only for display!) */
-		List_s			list;			/* List of slab caches */
+		gfp_t				allocflags;		/* gfp flags to use on each alloc */
+		int					refcount;		/* Refcount for slab cache destroy */
+		uint				inuse;			/* Offset to metadata */
+		uint				align;			/* Alignment */
+		const char			*name;			/* Name (only for display!) */
+		List_s				list;			/* List of slab caches */
 		// kobj_s			kobj;			/* For sysfs */
 
 		// kmem_cache_node_s	*node[MAX_NUMNODES];

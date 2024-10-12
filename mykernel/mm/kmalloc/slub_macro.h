@@ -27,10 +27,9 @@
 	 */
 	// #define slab_to_folio(slab)		((folio_s *)(slab))
 	// #define slab_folio(slab)		slab_to_folio(slab)
-	#define slab_folio(s)	(							\
-				_Generic((s),							\
-					const slab_s *:	(const folio_s *)s,	\
-					slab_s *:		(folio_s *)s)		\
+	#define slab_folio(s)		(_Generic((s),				\
+				const slab_s *:		(const folio_s *)s,		\
+				slab_s *:			(folio_s *)s)			\
 			)
 
 	/**

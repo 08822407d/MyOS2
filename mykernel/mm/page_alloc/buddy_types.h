@@ -44,8 +44,8 @@
 
 	typedef struct page {
 		union {	// 为了方便debug，增加了按位定义的union
-			ulong			flags;		/* Atomic flags, some possibly */
-			pgflag_defs_s	flag_defs;	/* updated asynchronously */
+			ulong				flags;		/* Atomic flags, some possibly */
+			pgflag_defs_s		flag_defs;	/* updated asynchronously */
 		};
 		/*
 		 * Five words (20/40 bytes) are available in this union.
@@ -75,7 +75,10 @@
 				};
 				/* See page-flags.h for PAGE_MAPPING_FLAGS */
 				addr_spc_s		*mapping;
-				pgoff_t			index; /* Our offset within mapping. */
+				union {
+					pgoff_t		index;	/* Our offset within mapping. */
+					ulong		share;	/* share count for fsdax */
+				};
 				/**
 				 * @private: Mapping-private opaque data.
 				 * Usually used for buffer_heads if PagePrivate.
@@ -132,23 +135,39 @@
 			// struct rcu_head rcu_head;
 		};
 
-		union { /* This union is 4 bytes in size. */
+		union {		/* This union is 4 bytes in size. */
 			/*
-			 * If the page can be mapped to userspace, encodes the number
-			 * of times this page is referenced by a page table.
+			 * For head pages of typed folios, the value stored here
+			 * allows for determining what this page is used for. The
+			 * tail pages of typed folios will not store a type
+			 * (page_type == _mapcount == -1).
+			 *
+			 * See page-flags.h for a list of page types which are currently
+			 * stored here.
+			 *
+			 * Owners of typed folios may reuse the lower 16 bit of the
+			 * head page page_type field after setting the page type,
+			 * but must reset these 16 bit to -1 before clearing the
+			 * page type.
 			 */
-			atomic_t	_mapcount;
+			uint				page_type;
+
 			/*
-			 * If the page is neither PageSlab nor mappable to userspace,
-			 * the value stored here may help determine what this page
-			 * is used for.  See page-flags.h for a list of page types
-			 * which are currently stored here.
+			 * For pages that are part of non-typed folios for which mappings
+			 * are tracked via the RMAP, encodes the number of times this page
+			 * is directly referenced by a page table.
+			 *
+			 * Note that the mapcount is always initialized to -1, so that
+			 * transitions both from it and to it can be tracked, using
+			 * atomic_inc_and_test() and atomic_add_negative(-1).
 			 */
-			uint		page_type;
+			atomic_t			_mapcount;
 		};
 
 		/* Usage count. *DO NOT USE DIRECTLY*. See page_ref.h */
-		atomic_t		_refcount;
+		atomic_t				_refcount;
+
+		ulong					memcg_data;
 
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
@@ -196,9 +215,9 @@
 		union {
 			struct {
 		/* public: */
-				ulong	flags;
+				ulong			flags;
 				union {
-					List_s	lru;
+					List_s		lru;
 		/* private: avoid cluttering the output */
 					struct {
 						void	*__filler;
@@ -208,33 +227,31 @@
 					};
 		/* public: */
 				};
-				addr_spc_s	*mapping;
-				pgoff_t		index;
+				addr_spc_s		*mapping;
+				pgoff_t			index;
 				union {
-					void	*private;
+					void		*private;
 				};
-				atomic_t	_mapcount;
-				atomic_t	_refcount;
-	#ifdef CONFIG_MEMCG
-				ulong		memcg_data;
-	#endif
+				atomic_t		_mapcount;
+				atomic_t		_refcount;
+				ulong			memcg_data;
 		/* private: the union with page_s is transitional */
 			};
 			page_s	page;
 		};
 		union {
 			struct {
-				ulong	_flags_1;
-				ulong	_head_1;
-				ulong	_folio_avail;
+				ulong			_flags_1;
+				ulong			_head_1;
+				ulong			_folio_avail;
 		/* public: */
-				atomic_t	_entire_mapcount;
-				atomic_t	_nr_pages_mapped;
-				atomic_t	_pincount;
-				uint		_folio_nr_pages;
+				atomic_t		_entire_mapcount;
+				atomic_t		_nr_pages_mapped;
+				atomic_t		_pincount;
+				uint			_folio_nr_pages;
 		/* private: the union with page_s is transitional */
 			};
-			page_s	__page_1;
+			page_s				__page_1;
 		};
 		// union {
 		// 	struct {
@@ -257,5 +274,53 @@
 		// 	page_s	__page_2;
 		// };
 	} folio_s;
+
+	/**
+	 * ptdesc_s -    Memory descriptor for page tables.
+	 * @__page_flags:     Same as page flags. Powerpc only.
+	 * @pt_rcu_head:      For freeing page table pages.
+	 * @pt_list:          List of used page tables. Used for s390 and x86.
+	 * @_pt_pad_1:        Padding that aliases with page's compound head.
+	 * @pmd_huge_pte:     Protected by ptdesc->ptl, used for THPs.
+	 * @__page_mapping:   Aliases with page->mapping. Unused for page tables.
+	 * @pt_index:         Used for s390 gmap.
+	 * @pt_mm:            Used for x86 pgds.
+	 * @pt_frag_refcount: For fragmented page table tracking. Powerpc only.
+	 * @_pt_pad_2:        Padding to ensure proper alignment.
+	 * @ptl:              Lock for the page table.
+	 * @__page_type:      Same as page->page_type. Unused for page tables.
+	 * @__page_refcount:  Same as page refcount.
+	 * @pt_memcg_data:    Memcg data. Tracked for page tables here.
+	 *
+	 * This struct overlays page_s for now. Do not modify without a good
+	 * understanding of the issues.
+	 */
+	typedef struct ptdesc {
+		ulong				__page_flags;
+
+		union {
+			// struct rcu_head pt_rcu_head;
+			List_s			pt_list;
+			struct {
+				ulong		_pt_pad_1;
+				pgtable_t	pmd_huge_pte;
+			};
+		};
+		ulong				__page_mapping;
+
+		union {
+			pgoff_t			pt_index;
+			mm_s			*pt_mm;
+			atomic_t		pt_frag_refcount;
+		};
+
+		union {
+			ulong			_pt_pad_2;
+			spinlock_t		ptl;
+		};
+		uint				__page_type;
+		atomic_t			__page_refcount;
+		ulong				pt_memcg_data;
+	} ptdesc_s;
 
 #endif /* _PAGE_ALLOC_TYPES_H_ */

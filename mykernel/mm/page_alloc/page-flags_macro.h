@@ -20,10 +20,9 @@
 	 * a reference on the folio.
 	 * Return: The folio which contains this page.
 	 */
-	#define page_folio(p)	(											\
-				_Generic((p),											\
-					const page_s *:	(const folio_s *)_compound_head(p), \
-					page_s *:		(folio_s *)_compound_head(p))		\
+	#define page_folio(p)		(_Generic((p),							\
+				const page_s *:		(const folio_s *)_compound_head(p), \
+				page_s *:			(folio_s *)_compound_head(p))		\
 			)
 
 	/**

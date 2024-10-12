@@ -12,6 +12,7 @@
 	struct linux_binfmt;
 	typedef struct linux_binfmt linux_bfmt_s;
 
+
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>
 	#include <linux/kernel/lock_ipc_types.h>
@@ -65,6 +66,10 @@
 	typedef struct folio folio_s;
 	struct pgflag_defs;
 	typedef struct pgflag_defs pgflag_defs_s;
+	struct ptdesc;
+	typedef struct ptdesc ptdesc_s;
+
+	typedef page_s *pgtable_t;
 	
 	/* vm_map */
 	struct vm_area_struct;
@@ -77,5 +82,6 @@
 	typedef struct anon_vma_chain anon_vma_chain_s;
 	struct vm_unmapped_area_info;
 	typedef struct vm_unmapped_area_info unmapped_vma_info_s;
+
 
 #endif /* _MM_TYPE_DECLARATION_H_ */
