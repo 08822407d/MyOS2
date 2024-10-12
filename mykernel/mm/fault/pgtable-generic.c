@@ -150,12 +150,12 @@ again:
 	ptep = __pte_offset_map(pmdp, addr, &pmdval);
 	if (unlikely(!ptep))
 		return ptep;
-	// ptl = pte_lockptr(mm, &pmdval);
+	ptl = pte_lockptr(mm, &pmdval);
 	// spin_lock(ptl);
-	// if (likely(pmd_same(pmdval, pmdp_get_lockless(pmd)))) {
-	// 	*ptlp = ptl;
-	// 	return pte;
-	// }
+	if (likely(pmd_same(pmdval, pmdp_get_lockless(pmdp)))) {
+		*ptlp = ptl;
+		return ptep;
+	}
 	// pte_unmap_unlock(pte, ptl);
-	// goto again;
+	goto again;
 }

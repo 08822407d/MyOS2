@@ -18,22 +18,19 @@
 	/*
 	 * These are used to make use of C type-checking..
 	 */
+	typedef ulong pgprotval_t;
 	typedef ulong pteval_t;
 	typedef ulong pmdval_t;
 	typedef ulong pudval_t;
 	typedef ulong p4dval_t;
-	typedef ulong pgdval_t;
-	typedef ulong pgprotval_t;
-	struct arch_pgd;
-	typedef struct arch_pgd arch_pgd_T;
+	struct arch_p4d;
+	typedef struct arch_p4d arch_p4d_T;
 	struct arch_pud;
 	typedef struct arch_pud arch_pud_T;
 	struct arch_pmd;
 	typedef struct arch_pmd arch_pmd_T;
 	struct arch_pte;
 	typedef struct arch_pte arch_pte_T;
-	union pgd_union;
-	typedef union pgd_union pgd_t;
 	union p4d_union;
 	typedef union p4d_union p4d_t;
 	union pud_union;
@@ -42,6 +39,9 @@
 	typedef union pmd_union pmd_t;
 	union pte_union;
 	typedef union pte_union pte_t;
+
+	typedef p4dval_t pgdval_t;
+	typedef p4d_t pgd_t;
 
 
 	#include <linux/kernel/mm_type_declaration.h>

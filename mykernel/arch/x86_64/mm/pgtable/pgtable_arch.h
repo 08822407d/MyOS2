@@ -14,6 +14,12 @@
 		extern int
 		pte_write(pte_t pte);
 
+		extern void
+		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte);
+
+		extern void
+		arch_ptep_set_wrprotect(pte_t *ptep);
+
 		extern pte_t
 		pte_set_flags(pte_t pte, pteval_t set);
 		extern pte_t
@@ -35,16 +41,16 @@
 		pte_mkwrite(pte_t pte);
 
 
-
 		extern int
 		pgde_is_none(pgd_t pgd_ent);
 		extern int
 		pgde_is_bad(pgd_t pgd_ent);
 		extern int
 		pgde_is_present(pgd_t pgd_ent);
+		extern int
+		pgde_same(pgd_t a, pgd_t b);
 		extern ulong
 		pgde_pointed_page_vaddr(pgd_t pgd_ent);
-
 
 		extern int
 		p4de_is_none(p4d_t p4d_ent);
@@ -52,9 +58,10 @@
 		p4de_is_bad(p4d_t p4d_ent);
 		extern int
 		p4de_is_present(p4d_t p4d_ent);
+		extern int
+		p4de_same(p4d_t a, p4d_t b);
 		extern ulong
 		p4de_pointed_page_vaddr(p4d_t p4d_ent);
-
 
 		extern int
 		pude_is_none(pud_t pud_ent);
@@ -62,9 +69,10 @@
 		pude_is_bad(pud_t pud_ent);
 		extern int
 		pude_is_present(pud_t pud_ent);
+		extern int
+		pude_same(pud_t a, pud_t b);
 		extern ulong
 		pude_pointed_page_vaddr(pud_t pud_ent);
-
 
 		extern int
 		pmde_is_none(pmd_t pmd_ent);
@@ -72,33 +80,18 @@
 		pmde_is_bad(pmd_t pmd_ent);
 		extern int
 		pmde_is_present(pmd_t pmd_ent);
+		extern int
+		pmde_same(pmd_t a, pmd_t b);
 		extern ulong
 		pmde_pointed_page_vaddr(pmd_t pud_ent);
-
 
 		extern int
 		pte_is_none(pte_t pte);
 		extern int
 		pte_is_present(pte_t a);
-
 		extern int
 		pte_same(pte_t a, pte_t b);
 
-
-		extern void
-		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte);
-
-		extern void
-		arch_ptep_set_wrprotect(pte_t *ptep);
-
-		// extern pgprot_t
-		// pgprot_nx(pgprot_t prot);
-
-
-		extern pgd_t
-		arch_make_pgde(pgdval_t val);
-		extern pgdval_t 
-		arch_pgde_val(pgd_t pgd);
 
 		extern p4d_t
 		arch_make_p4de(pgdval_t val);
@@ -193,6 +186,19 @@
 		}
 
 		PREFIX_STATIC_INLINE
+		void
+		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte) {
+			// page_table_check_pte_set(mm, addr, ptep, pte);
+			set_pte(ptep, pte);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		arch_ptep_set_wrprotect(pte_t *ptep) {
+			clear_bit(_PAGE_BIT_RW, (ulong *)&ptep->val);
+		}
+
+		PREFIX_STATIC_INLINE
 		pte_t
 		pte_set_flags(pte_t pte, pteval_t set) {
 			pteval_t v = arch_pte_val(pte);
@@ -269,12 +275,6 @@
 		pgde_is_present(pgd_t pgd_ent) {
 			return 1;
 		}
-		// PREFIX_STATIC_INLINE
-		// ulong
-		// pgde_pointed_page_vaddr(pgd_t pgd) {
-		// 	return (ulong)__va(arch_pgde_val(pgd) &
-		// 				arch_pgd_pfn_mask(pgd));
-		// }
 
 
 		PREFIX_STATIC_INLINE
@@ -293,6 +293,11 @@
 		int
 		p4de_is_present(p4d_t p4d_ent) {
 			return arch_p4de_flags(p4d_ent) & _PAGE_PRESENT;
+		}
+		PREFIX_STATIC_INLINE
+		int
+		p4de_same(p4d_t a, p4d_t b) {
+			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
 		ulong
@@ -319,6 +324,11 @@
 		pude_is_present(pud_t pud_ent) {
 			return arch_pude_flags(pud_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
+		}
+		PREFIX_STATIC_INLINE
+		int
+		pude_same(pud_t a, pud_t b) {
+			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
 		ulong
@@ -357,6 +367,11 @@
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
 		PREFIX_STATIC_INLINE
+		int
+		pmde_same(pmd_t a, pmd_t b) {
+			return a.val == b.val;
+		}
+		PREFIX_STATIC_INLINE
 		ulong
 		pmde_pointed_page_vaddr(pmd_t pmd_ent) {
 			return (ulong)__va(arch_pmde_val(pmd_ent) &
@@ -375,26 +390,12 @@
 			return arch_pte_flags(pte) &
 						(_PAGE_PRESENT | _PAGE_PROTNONE);
 		}
-
 		PREFIX_STATIC_INLINE
 		int
 		pte_same(pte_t a, pte_t b) {
 			return a.val == b.val;
 		}
 
-
-		PREFIX_STATIC_INLINE
-		void
-		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte) {
-			// page_table_check_pte_set(mm, addr, ptep, pte);
-			set_pte(ptep, pte);
-		}
-
-		PREFIX_STATIC_INLINE
-		void
-		arch_ptep_set_wrprotect(pte_t *ptep) {
-			clear_bit(_PAGE_BIT_RW, (ulong *)&ptep->val);
-		}
 
 		// PREFIX_STATIC_INLINE
 		// pgprot_t
@@ -404,25 +405,14 @@
 
 
 		PREFIX_STATIC_INLINE
-		pgd_t
-		arch_make_pgde(pgdval_t val) {
-			return (pgd_t) { .val = val & PGD_ALLOWED_BITS };
-		}
-		PREFIX_STATIC_INLINE
-		pgdval_t 
-		arch_pgde_val(pgd_t pgd) {
-			return pgd.val & PGD_ALLOWED_BITS;
-		}
-
-		PREFIX_STATIC_INLINE
 		p4d_t
 		arch_make_p4de(p4dval_t val) {
-			return (p4d_t) { arch_make_pgde((pgdval_t)val) };
+			return (p4d_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
 		arch_p4de_val(p4d_t p4d) {
-			return (p4dval_t)arch_pgde_val(p4d.pgd);
+			return p4d.val;
 		}
 
 		PREFIX_STATIC_INLINE

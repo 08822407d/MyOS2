@@ -5,7 +5,7 @@
 	#include "../mm_type_declaration_arch.h"
 
 
-	typedef struct arch_pgd {
+	typedef struct arch_p4d {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -17,7 +17,7 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} __attribute__((packed)) arch_pgd_T;
+	} __attribute__((packed)) arch_p4d_T;
 
 	typedef struct arch_pud {
 		unsigned long
@@ -74,14 +74,9 @@
 		pgprotval_t pgprot;
 	} pgprot_t;
 
-	typedef union pgd_union {
-		pgdval_t	val;
-		arch_pgd_T	defs;
-	} pgd_t;
-
 	typedef union p4d_union {
-		pgd_t		pgd;
-		arch_pgd_T	defs;
+		p4dval_t	val;
+		arch_p4d_T	defs;
 	} p4d_t;
 
 	typedef union pud_union {
