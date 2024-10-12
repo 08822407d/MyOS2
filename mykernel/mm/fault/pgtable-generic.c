@@ -90,8 +90,8 @@ pte_t
 	pte_t *ptep;
 
 	ptep = __pte_offset_map(pmdp, addr, &pmdval);
-	// if (likely(ptep))
-	// 	*ptlp = pte_lockptr(mm, &pmdval);
+	if (likely(ptep))
+		*ptlp = pte_lockptr(mm, &pmdval);
 	return ptep;
 }
 
@@ -151,11 +151,11 @@ again:
 	if (unlikely(!ptep))
 		return ptep;
 	ptl = pte_lockptr(mm, &pmdval);
-	// spin_lock(ptl);
+	spin_lock(ptl);
 	if (likely(pmd_same(pmdval, pmdp_get_lockless(pmdp)))) {
 		*ptlp = ptl;
 		return ptep;
 	}
-	// pte_unmap_unlock(pte, ptl);
+	pte_unmap_unlock(ptep, ptl);
 	goto again;
 }

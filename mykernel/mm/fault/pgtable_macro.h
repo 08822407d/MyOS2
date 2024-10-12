@@ -2,6 +2,15 @@
 #define _LINUX_PGTABLE_MACRO_H_
 
 
+	#define KERNEL_PGD_BOUNDARY		pgd_index(PAGE_OFFSET)
+	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
+
+
+	#define pte_unmap_unlock(pte, ptl)	do {	\
+				spin_unlock(ptl);				\
+				pte_unmap(pte);					\
+			} while (0)
+
 	/*
 	 * When walking page tables, get the address of the next boundary,
 	 * or the end address of the range if that comes earlier.  Although no
@@ -17,7 +26,6 @@
 					((addr) + PGDIR_SIZE) & PGDIR_MASK;				\
 				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 			})
-	// #define pgd_addr_end pgd_ent_bound_end
 
 	/*
 	 * Return the bound's end address of the p4d entry which
@@ -28,7 +36,6 @@
 					((addr) + P4D_SIZE) & P4D_MASK;					\
 				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 			})
-	// #define p4d_addr_end p4d_ent_bound_end
 
 	/*
 	 * Return the bound's end address of the pud entry which
@@ -39,7 +46,6 @@
 					((addr) + PUD_SIZE) & PUD_MASK;					\
 				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 			})
-	// #define pud_addr_end pud_ent_bound_end
 
 	/*
 	 * Return the bound's end address of the pmd entry which
@@ -50,17 +56,26 @@
 					((addr) + PMD_SIZE) & PMD_MASK;					\
 				(__boundary - 1 < (end) - 1)? __boundary: (end);	\
 			})
-	// #define pmd_addr_end pmd_ent_bound_end
+
+	#define pgd_addr_end	pgd_ent_bound_end
+	#define p4d_addr_end	p4d_ent_bound_end
+	#define pud_addr_end	pud_ent_bound_end
+	#define pmd_addr_end	pmd_ent_bound_end
 
 
-	#define pgd_offset_pgd	pgd_ent_ptr
-	#define p4d_offset		p4d_ent_ptr
-	#define pud_offset		pud_ent_ptr
-	#define pmd_offset		pmd_ent_ptr
-	#define pte_offset		pte_ent_ptr
+	#define pgd_offset		pgd_ent_ptr_in_mm
+	#define p4d_offset		p4de_ptr_in_pgd
+	#define pud_offset		pude_ptr_in_p4d
+	#define pmd_offset		pmde_ptr_in_pud
+	#define pte_offset		pte_ptr_in_pmd
+
+	#define pgd_index				p4de_index_in_pgd
+	#define pgdp_get				p4dp_get_p4de
+	#define pgd_none_or_clear_bad	p4de_none_or_clear_bad
 
 
-	#define ptep_get_lockless		ptep_get
-	#define pmdp_get_lockless		pmdp_get
+	#define pte_offset_kernel		pte_ptr_in_pmd
+	#define ptep_get_lockless		ptep_get_pte
+	#define pmdp_get_lockless		pmdp_get_pmde
 
 #endif /* _LINUX_PGTABLE_MACRO_H_ */

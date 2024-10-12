@@ -41,16 +41,6 @@
 		pte_mkwrite(pte_t pte);
 
 
-		extern int
-		pgde_is_none(pgd_t pgd_ent);
-		extern int
-		pgde_is_bad(pgd_t pgd_ent);
-		extern int
-		pgde_is_present(pgd_t pgd_ent);
-		extern int
-		pgde_same(pgd_t a, pgd_t b);
-		extern ulong
-		pgde_pointed_page_vaddr(pgd_t pgd_ent);
 
 		extern int
 		p4de_is_none(p4d_t p4d_ent);
@@ -93,50 +83,70 @@
 		pte_same(pte_t a, pte_t b);
 
 
+
 		extern p4d_t
 		arch_make_p4de(pgdval_t val);
 		extern p4dval_t
 		arch_p4de_val(p4d_t p4d);
-
-		extern pud_t
-		arch_make_pude(pmdval_t val);
-		extern pudval_t
-		arch_pude_val(pud_t pud);
-
-		extern pmd_t
-		arch_make_pmde(pmdval_t val);
-		extern pmdval_t
-		arch_pmde_val(pmd_t pmd);
-
 		extern p4dval_t
 		arch_p4de_pfn_mask(p4d_t p4d);
 		extern p4dval_t
 		P4DE_FLAG_MASK(p4d_t p4d);
 		extern p4dval_t
 		arch_p4de_flags(p4d_t p4d);
+		extern ulong
+		p4de_pfn(p4d_t p4d_ent);
+		extern p4d_t
+		pfn_p4de(ulong page_nr, pgprot_t pgprot);
 
+		extern pud_t
+		arch_make_pude(pmdval_t val);
+		extern pudval_t
+		arch_pude_val(pud_t pud);
 		extern pudval_t
 		arch_pude_pfn_mask(pud_t pud);
 		extern pudval_t
 		PUDE_FLAG_MASK(pud_t pud);
 		extern pudval_t
 		arch_pude_flags(pud_t pud);
+		extern ulong
+		pude_pfn(pud_t pud_ent);
+		extern pud_t
+		pfn_pude(ulong page_nr, pgprot_t pgprot);
 
+		extern pmd_t
+		arch_make_pmde(pmdval_t val);
+		extern pmdval_t
+		arch_pmde_val(pmd_t pmd);
 		extern pmdval_t 
 		arch_pmde_pfn_mask(pmd_t pmd);
 		extern pmdval_t
 		PMDE_FLAG_MASK(pmd_t pmd);
 		extern pmdval_t
 		arch_pmde_flags(pmd_t pmd);
+		extern ulong
+		pmde_pfn(pmd_t pmd_ent);
+		extern pmd_t
+		pfn_pmde(ulong page_nr, pgprot_t pgprot);
 
 		extern pte_t
 		arch_make_pte(pteval_t val);
 		extern pteval_t
 		arch_pte_val(pte_t pte);
+		extern pteval_t 
+		arch_pte_pfn_mask(pte_t pte);
+		extern pteval_t
+		PTE_FLAG_MASK(pte_t pte);
 		extern pteval_t
 		arch_pte_flags(pte_t pte);
 		extern phys_addr_t
 		arch_pte_addr(pte_t pte);
+		extern ulong
+		pte_pfn(pte_t pte);
+		extern pte_t
+		pfn_pte(ulong page_nr, pgprot_t pgprot);
+
+
 
 		extern bool
 		__pte_needs_invert(u64 val);
@@ -146,32 +156,6 @@
 		massage_pgprot(pgprot_t pgprot);
 		extern pgprotval_t
 		check_pgprot(pgprot_t pgprot);
-
-
-		extern ulong
-		pgde_pfn(pgd_t pgd_ent);
-		extern pgd_t
-		pfn_pgde(ulong page_nr, pgprot_t pgprot);
-
-		extern ulong
-		p4de_pfn(p4d_t p4d_ent);
-		extern p4d_t
-		pfn_p4de(ulong page_nr, pgprot_t pgprot);
-
-		extern ulong
-		pude_pfn(pud_t pud_ent);
-		extern pud_t
-		pfn_pude(ulong page_nr, pgprot_t pgprot);
-
-		extern ulong
-		pmde_pfn(pmd_t pmd_ent);
-		extern pmd_t
-		pfn_pmde(ulong page_nr, pgprot_t pgprot);
-
-		extern ulong
-		pte_pfn(pte_t pte);
-		extern pte_t
-		pfn_pte(ulong page_nr, pgprot_t pgprot);
 
 	#endif
 
@@ -253,28 +237,6 @@
 			return pte_set_flags(pte, _PAGE_RW);
 		}
 
-
-
-		/*
-		 * The "pgd_xxx()" functions here are trivial for a folded two-level
-		 * setup: the p4d is never bad, and a p4d always exists (as it's folded
-		 * into the pgd entry)
-		 */
-		PREFIX_STATIC_INLINE
-		int
-		pgde_is_none(pgd_t pgd_ent) {
-			return 0;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pgde_is_bad(pgd_t pgd_ent) {
-			return 0;
-		}
-		PREFIX_STATIC_INLINE
-		int
-		pgde_is_present(pgd_t pgd_ent) {
-			return 1;
-		}
 
 
 		PREFIX_STATIC_INLINE
@@ -411,35 +373,12 @@
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
-		arch_p4de_val(p4d_t p4d) {
-			return p4d.val;
+		arch_p4de_val(p4d_t p4d_ent) {
+			return p4d_ent.val;
 		}
-
-		PREFIX_STATIC_INLINE
-		pud_t
-		arch_make_pude(pmdval_t val) {
-			return (pud_t) { .val = val };
-		}
-		PREFIX_STATIC_INLINE
-		pudval_t
-		arch_pude_val(pud_t pud) {
-			return pud.val;
-		}
-
-		PREFIX_STATIC_INLINE
-		pmd_t
-		arch_make_pmde(pmdval_t val) {
-			return (pmd_t) { .val = val };
-		}
-		PREFIX_STATIC_INLINE
-		pmdval_t
-		arch_pmde_val(pmd_t pmd) {
-			return pmd.val;
-		}
-
 		PREFIX_STATIC_INLINE
 		p4dval_t
-		arch_p4de_pfn_mask(p4d_t p4d) {
+		arch_p4de_pfn_mask(p4d_t p4d_ent) {
 			/* No 512 GiB huge pages yet */
 			return PTE_PFN_MASK;
 		}
@@ -453,14 +392,37 @@
 		arch_p4de_flags(p4d_t p4d_ent) {
 			return arch_p4de_val(p4d_ent) & P4DE_FLAG_MASK(p4d_ent);
 		}
+		PREFIX_STATIC_INLINE
+		ulong
+		p4de_pfn(p4d_t p4d_ent) {
+			phys_addr_t pfn = arch_p4de_val(p4d_ent);
+			pfn ^= protnone_mask(pfn);
+			return (pfn & arch_p4de_pfn_mask(p4d_ent)) >> PAGE_SHIFT;
+		}
+		PREFIX_STATIC_INLINE
+		p4d_t
+		pfn_p4de(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PHYSICAL_P4D_PAGE_MASK;
+			return __p4d(pfn | check_pgprot(pgprot));
+		}
 
+
+		PREFIX_STATIC_INLINE
+		pud_t
+		arch_make_pude(pmdval_t val) {
+			return (pud_t) { .val = val };
+		}
+		PREFIX_STATIC_INLINE
+		pudval_t
+		arch_pude_val(pud_t pud_ent) {
+			return pud_ent.val;
+		}
 		PREFIX_STATIC_INLINE
 		pudval_t
 		arch_pude_pfn_mask(pud_t pud_ent) {
-			// if (arch_pude_val(pud_ent) & _PAGE_PSE)
-			// 	return PHYSICAL_PUD_PAGE_MASK;
-			// else
-				return PTE_PFN_MASK;
+			return PTE_PFN_MASK;
 		}
 		PREFIX_STATIC_INLINE
 		pudval_t
@@ -472,14 +434,37 @@
 		arch_pude_flags(pud_t pud_ent) {
 			return arch_pude_val(pud_ent) & PUDE_FLAG_MASK(pud_ent);
 		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pude_pfn(pud_t pud_ent) {
+			phys_addr_t pfn = arch_pude_val(pud_ent);
+			pfn ^= protnone_mask(pfn);
+			return (pfn & arch_pude_pfn_mask(pud_ent)) >> PAGE_SHIFT;
+		}
+		PREFIX_STATIC_INLINE
+		pud_t
+		pfn_pude(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PHYSICAL_PUD_PAGE_MASK;
+			return __pud(pfn | check_pgprot(pgprot));
+		}
 
+
+		PREFIX_STATIC_INLINE
+		pmd_t
+		arch_make_pmde(pmdval_t val) {
+			return (pmd_t) { .val = val };
+		}
+		PREFIX_STATIC_INLINE
+		pmdval_t
+		arch_pmde_val(pmd_t pmd_ent) {
+			return pmd_ent.val;
+		}
 		PREFIX_STATIC_INLINE
 		pmdval_t 
 		arch_pmde_pfn_mask(pmd_t pmd_ent) {
-			// if (arch_pmde_val(pmd_ent) & _PAGE_PSE)
-			// 	return PHYSICAL_PMD_PAGE_MASK;
-			// else
-				return PTE_PFN_MASK;
+			return PTE_PFN_MASK;
 		}
 		PREFIX_STATIC_INLINE
 		pmdval_t
@@ -491,6 +476,22 @@
 		arch_pmde_flags(pmd_t pmd_ent) {
 			return arch_pmde_val(pmd_ent) & PMDE_FLAG_MASK(pmd_ent);
 		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pmde_pfn(pmd_t pmd_ent) {
+			phys_addr_t pfn = arch_pmde_val(pmd_ent);
+			pfn ^= protnone_mask(pfn);
+			return (pfn & arch_pmde_pfn_mask(pmd_ent)) >> PAGE_SHIFT;
+		}
+		PREFIX_STATIC_INLINE
+		pmd_t
+		pfn_pmde(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PHYSICAL_PMD_PAGE_MASK;
+			return __pmd(pfn | check_pgprot(pgprot));
+		}
+
 
 		PREFIX_STATIC_INLINE
 		pte_t
@@ -505,10 +506,7 @@
 		PREFIX_STATIC_INLINE
 		pteval_t 
 		arch_pte_pfn_mask(pte_t pte) {
-			// if (arch_pte_val(pte) & _PAGE_PSE)
-			// 	return PHYSICAL_PTE_PAGE_MASK;
-			// else
-				return PTE_PFN_MASK;
+			return PTE_PFN_MASK;
 		}
 		PREFIX_STATIC_INLINE
 		pteval_t
@@ -518,13 +516,29 @@
 		PREFIX_STATIC_INLINE
 		pteval_t
 		arch_pte_flags(pte_t pte) {
-			return arch_pte_val(pte) & PTE_FLAGS_MASK;
+			return arch_pte_val(pte) & PTE_FLAG_MASK(pte);
 		}
 		PREFIX_STATIC_INLINE
 		phys_addr_t
 		arch_pte_addr(pte_t pte) {
-			return arch_pte_val(pte) & ~PTE_FLAGS_MASK;
+			return arch_pte_val(pte) & ~PTE_FLAG_MASK(pte);
 		}
+		PREFIX_STATIC_INLINE
+		ulong
+		pte_pfn(pte_t pte) {
+			phys_addr_t pfn = arch_pte_val(pte);
+			pfn ^= protnone_mask(pfn);
+			return (pfn & arch_pte_pfn_mask(pte)) >> PAGE_SHIFT;
+		}
+		PREFIX_STATIC_INLINE
+		pte_t
+		pfn_pte(ulong page_nr, pgprot_t pgprot) {
+			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
+			pfn ^= protnone_mask(pgprot_val(pgprot));
+			pfn &= PTE_PFN_MASK;
+			return __pte(pfn | check_pgprot(pgprot));
+		}
+
 
 
 		/*
@@ -580,88 +594,6 @@
 		// #endif
 
 			return massaged_val;
-		}
-
-
-
-		PREFIX_STATIC_INLINE
-		ulong
-		pgde_pfn(pgd_t pgd_ent) {
-			phys_addr_t pfn = arch_pgde_val(pgd_ent);
-			// pfn ^= protnone_mask(pfn);
-			return (pfn & PTE_PFN_MASK) >> PAGE_SHIFT;
-		}
-		PREFIX_STATIC_INLINE
-		pgd_t
-		pfn_pgde(ulong page_nr, pgprot_t pgprot) {
-			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-			pfn ^= protnone_mask(pgprot_val(pgprot));
-			pfn &= PHYSICAL_PGDIR_PAGE_MASK;
-			return __pgd(pfn | check_pgprot(pgprot));
-		}
-
-		PREFIX_STATIC_INLINE
-		ulong
-		p4de_pfn(p4d_t p4d_ent) {
-			phys_addr_t pfn = arch_p4de_val(p4d_ent);
-			// pfn ^= protnone_mask(pfn);
-			return (pfn & arch_p4de_pfn_mask(p4d_ent)) >> PAGE_SHIFT;
-		}
-		PREFIX_STATIC_INLINE
-		p4d_t
-		pfn_p4de(ulong page_nr, pgprot_t pgprot) {
-			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-			pfn ^= protnone_mask(pgprot_val(pgprot));
-			pfn &= PHYSICAL_P4D_PAGE_MASK;
-			return __p4d(pfn | check_pgprot(pgprot));
-		}
-
-		PREFIX_STATIC_INLINE
-		ulong
-		pude_pfn(pud_t pud_ent) {
-			phys_addr_t pfn = arch_pude_val(pud_ent);
-			// pfn ^= protnone_mask(pfn);
-			return (pfn & arch_pude_pfn_mask(pud_ent)) >> PAGE_SHIFT;
-		}
-		PREFIX_STATIC_INLINE
-		pud_t
-		pfn_pude(ulong page_nr, pgprot_t pgprot) {
-			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-			pfn ^= protnone_mask(pgprot_val(pgprot));
-			pfn &= PHYSICAL_PUD_PAGE_MASK;
-			return __pud(pfn | check_pgprot(pgprot));
-		}
-
-		PREFIX_STATIC_INLINE
-		ulong
-		pmde_pfn(pmd_t pmd_ent) {
-			phys_addr_t pfn = arch_pmde_val(pmd_ent);
-			// pfn ^= protnone_mask(pfn);
-			return (pfn & arch_pmde_pfn_mask(pmd_ent)) >> PAGE_SHIFT;
-		}
-		PREFIX_STATIC_INLINE
-		pmd_t
-		pfn_pmde(ulong page_nr, pgprot_t pgprot) {
-			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-			pfn ^= protnone_mask(pgprot_val(pgprot));
-			pfn &= PHYSICAL_PMD_PAGE_MASK;
-			return __pmd(pfn | check_pgprot(pgprot));
-		}
-
-		PREFIX_STATIC_INLINE
-		ulong
-		pte_pfn(pte_t pte) {
-			phys_addr_t pfn = arch_pte_val(pte);
-			// pfn ^= protnone_mask(pfn);
-			return (pfn & arch_pte_pfn_mask(pte)) >> PAGE_SHIFT;
-		}
-		PREFIX_STATIC_INLINE
-		pte_t
-		pfn_pte(ulong page_nr, pgprot_t pgprot) {
-			phys_addr_t pfn = (phys_addr_t)page_nr << PAGE_SHIFT;
-			pfn ^= protnone_mask(pgprot_val(pgprot));
-			pfn &= PTE_PFN_MASK;
-			return __pte(pfn | check_pgprot(pgprot));
 		}
 
 	#endif
@@ -1195,7 +1127,7 @@
 	// }
 
 
-	// static inline unsigned long p4d_index(unsigned long address)
+	// static inline unsigned long p4de_index_in_pgd(unsigned long address)
 	// {
 	// 	return (address >> P4D_SHIFT) & (PTRS_PER_P4D - 1);
 	// }

@@ -3,13 +3,6 @@
 #define _ASM_X86_PGTABLE_MACRO_H_
 
 
-	#define KERNEL_PGD_BOUNDARY		pgd_index(PAGE_OFFSET)
-	#define KERNEL_PGD_PTRS			(PTRS_PER_PGD - KERNEL_PGD_BOUNDARY)
-
-	extern pgd_t init_top_pgt[];
-	#define swapper_pg_dir init_top_pgt
-
-
 	#define set_p4d_ent(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
 	#define set_p4d					set_p4d_ent
 	#define set_pud_ent(pudp, pud)	WRITE_ONCE(*(pudp), (pud))
@@ -18,10 +11,15 @@
 	#define set_pmd					set_pmd_ent
 	#define set_pte(ptep, pte)		WRITE_ONCE(*(ptep), (pte))
 
-	#define p4d_clear(p4dp)		set_p4d((p4dp), arch_make_p4de(0))
-	#define pud_clear(pudp)		set_pud((pudp), arch_make_pude(0))
-	#define pmd_clear(pmdp)		set_pmd((pmdp), arch_make_pmde(0))
-	#define pte_clear(ptep)		set_pte((ptep), arch_make_pte(0))
+	#define p4d_ent_clear(p4dp)		set_p4d((p4dp), arch_make_p4de(0))
+	#define pud_ent_clear(pudp)		set_pud((pudp), arch_make_pude(0))
+	#define pmd_ent_clear(pmdp)		set_pmd((pmdp), arch_make_pmde(0))
+	#define pte_ent_clear(ptep)		set_pte((ptep), arch_make_pte(0))
+
+	#define p4d_clear			p4d_ent_clear
+	#define pud_clear			pud_ent_clear
+	#define pmd_clear			pmd_ent_clear
+	#define pte_clear			pte_ent_clear
 
 	#define __p4d(x)			arch_make_p4de(x)
 	#define __pud(x)			arch_make_pude(x)
@@ -49,7 +47,6 @@
 	#define pmd_page(pmd)		pfn_to_page(pmde_pfn(pmd))
 
 	#define pte_page(pte)		pfn_to_page(pte_pfn(pte))
-
 
 
 	#define p4d_none			p4de_is_none
@@ -83,9 +80,9 @@
 	#define pgd_clear			p4d_clear
 	#define __pgd(x)			__p4d(x)
 	#define pgd_page(pgd)		p4d_page(p4d)
-	#define pgd_none			pgde_is_none
-	#define pgd_bad				pgde_is_bad
-	#define pgd_present			pgde_is_present
+	#define pgd_none			p4d_none
+	#define pgd_bad				p4d_bad
+	#define pgd_present			p4d_present
 	#define pgd_same			p4d_same
 	#define pgd_page_vaddr		p4d_page_vaddr
 	#define pgd_val				p4d_val

@@ -3,6 +3,9 @@
 
 	#include "pgtable.h"
 
+	extern pgd_t init_top_pgt[];
+	#define swapper_pg_dir init_top_pgt
+
 
 	page_s *vm_normal_page(vma_s *vma, ulong addr, pte_t pte);
 
@@ -13,9 +16,9 @@
 	extern vm_fault_t myos_handle_mm_fault(vma_s *vma,
             pt_regs_s *regs, ulong address, uint flags);
 
-	int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
-	int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
-	int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
+	int __pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
+	int __pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
+	int __pte_alloc(mm_s *mm, pmd_t *pmd, ulong address);
 
 	extern pte_t *myos_creat_one_page_mapping(mm_s *mm,
 			virt_addr_t addr, page_s *page);

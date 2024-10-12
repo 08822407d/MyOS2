@@ -75,9 +75,9 @@ early_initcall(init_zero_pfn);
 static bool
 vmf_pte_changed(struct vm_fault *vmf) {
 	if (vmf->flags & FAULT_FLAG_ORIG_PTE_VALID)
-		return !pte_same(ptep_get(vmf->pte), vmf->orig_pte);
+		return !pte_same(ptep_get_pte(vmf->pte), vmf->orig_pte);
 
-	return !pte_none(ptep_get(vmf->pte));
+	return !pte_none(ptep_get_pte(vmf->pte));
 }
 
 /*
@@ -222,10 +222,10 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
 	// spinlock_t *src_ptl, *dst_ptl;
 	int ret = 0;
 
-	dst_pte_ptr = pte_alloc(dst_mm, dst_pmde_ptr, addr);
+	dst_pte_ptr = ptd_alloc(dst_mm, dst_pmde_ptr, addr);
 	if (!dst_pte_ptr)
 		return -ENOMEM;
-	src_pte_ptr = pte_ent_ptr(src_pmde_ptr, addr);
+	src_pte_ptr = pte_ptr_in_pmd(src_pmde_ptr, addr);
 
 	do {
 		if (pte_none(*src_pte_ptr)) {
@@ -276,11 +276,11 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pude_ptr,
 	dst_pmde_ptr = pmd_alloc(dst_mm, dst_pude_ptr, addr);
 	if (!dst_pmde_ptr)
 		return -ENOMEM;
-	src_pmde_ptr = pmd_ent_ptr(src_pude_ptr, addr);
+	src_pmde_ptr = pmde_ptr_in_pud(src_pude_ptr, addr);
 
 	do {
 		next = pmd_ent_bound_end(addr, end);
-		if (pmd_none_or_clear_bad(src_pmde_ptr))
+		if (pmde_none_or_clear_bad(src_pmde_ptr))
 			continue;
 		if (copy_pte_range(dst_vma, src_vma,
 				dst_pmde_ptr, src_pmde_ptr, addr, next))
@@ -302,11 +302,11 @@ copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4de_ptr,
 	dst_pude_ptr = pud_alloc(dst_mm, dst_p4de_ptr, addr);
 	if (!dst_pude_ptr)
 		return -ENOMEM;
-	src_pude_ptr = pud_ent_ptr(src_p4de_ptr, addr);
+	src_pude_ptr = pude_ptr_in_p4d(src_p4de_ptr, addr);
 
 	do {
 		next = pud_ent_bound_end(addr, end);
-		if (pud_none_or_clear_bad(src_pude_ptr))
+		if (pude_none_or_clear_bad(src_pude_ptr))
 			continue;
 		if (copy_pmd_range(dst_vma, src_vma,
 				dst_pude_ptr, src_pude_ptr, addr, next))
@@ -331,11 +331,11 @@ copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgde_ptr,
 	dst_p4de_ptr = p4d_alloc(dst_mm, dst_pgde_ptr, addr);
 	if (!dst_p4de_ptr)
 		return -ENOMEM;
-	src_p4de_ptr = p4d_ent_ptr(src_pgde_ptr, addr);
+	src_p4de_ptr = p4de_ptr_in_pgd(src_pgde_ptr, addr);
 
 	do {
 		next = p4d_ent_bound_end(addr, end);
-		if (p4d_none_or_clear_bad(src_p4de_ptr))
+		if (p4de_none_or_clear_bad(src_p4de_ptr))
 			continue;
 		if (copy_pud_range(dst_vma, src_vma,
 				dst_p4de_ptr, src_p4de_ptr, addr, next))
@@ -371,8 +371,8 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	//  */
 	// bool is_cow = is_cow_mapping(src_vma->vm_flags);
 
-	dst_pgde_ptr = pgd_ent_ptr(dst_mm, addr);
-	src_pgde_ptr = pgd_ent_ptr(src_mm, addr);
+	dst_pgde_ptr = pgd_ent_ptr_in_mm(dst_mm, addr);
+	src_pgde_ptr = pgd_ent_ptr_in_mm(src_mm, addr);
 
 	do {
 		next = pgd_ent_bound_end(addr, end);
@@ -787,7 +787,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 		return VM_FAULT_SIGBUS;
 
 	// /*
-	//  * Use pte_alloc() instead of pte_alloc_map().  We can't run
+	//  * Use ptd_alloc() instead of pte_alloc_map().  We can't run
 	//  * pte_offset_map() on pmds where a huge pmd might be created
 	//  * from a different thread.
 	//  *
@@ -796,7 +796,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 	//  *
 	//  * Here we only have mmap_read_lock(mm).
 	//  */
-	// if (pte_alloc(vma->vm_mm, vmf->pmd))
+	// if (ptd_alloc(vma->vm_mm, vmf->pmd))
 	// 	return VM_FAULT_OOM;
 	while (vmf->pte == NULL);
 
@@ -1011,7 +1011,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 
 	// 	if (vmf->prealloc_pte)
 	// 		pmd_install(vma->vm_mm, vmf->pmd, &vmf->prealloc_pte);
-	// 	else if (unlikely(pte_alloc(vma->vm_mm, vmf->pmd)))
+	// 	else if (unlikely(ptd_alloc(vma->vm_mm, vmf->pmd)))
 	// 		return VM_FAULT_OOM;
 	// }
 
@@ -1068,7 +1068,7 @@ static vm_fault_t
 do_fault_around(vm_fault_s *vmf) {
 	// pgoff_t nr_pages = READ_ONCE(fault_around_pages);
 	pgoff_t nr_pages = 1;
-	pgoff_t pte_off = pte_index(vmf->address);
+	pgoff_t pte_off = pte_index_in_pmd(vmf->address);
 	/* The page offset of vmf->address within the VMA. */
 	pgoff_t vma_off = vmf->pgoff - vmf->vma->vm_pgoff;
 	pgoff_t from_pte, to_pte;
@@ -1243,7 +1243,7 @@ do_fault(vm_fault_s *vmf) {
 			 * we don't have concurrent modification by hardware
 			 * followed by an update.
 			 */
-			if (unlikely(pte_none(ptep_get(vmf->pte))))
+			if (unlikely(pte_none(ptep_get_pte(vmf->pte))))
 				ret = VM_FAULT_SIGBUS;
 			else
 				ret = VM_FAULT_NOPAGE;
@@ -1270,7 +1270,8 @@ do_fault(vm_fault_s *vmf) {
 
 static vm_fault_t
 do_pte_missing(vm_fault_s *vmf) {
-	vmf->pte = pte_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
+	vmf->pte = ptd_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
+
 	if (vma_is_anonymous(vmf->vma))
 		return do_anonymous_page(vmf);
 	else
@@ -1341,6 +1342,7 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// 	goto unlock;
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
+		vmf->page = vm_normal_page(vmf->vma, vmf->address, *(vmf->pte));
 		if (!pte_writable(*vmf->pte))
 			return do_wp_page(vmf);
 		entry = pte_mkdirty(entry);
@@ -1391,7 +1393,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	};
 	uint dirty = flags & FAULT_FLAG_WRITE;
 	mm_s *mm = vma->vm_mm;
-	pgd_t *pgd = pgd_ent_ptr(mm, address);
+	pgd_t *pgd = pgd_ent_ptr_in_mm(mm, address);
 
 	vmf.p4d = p4d_alloc(mm, pgd, address);
 	if (!vmf.p4d)
@@ -1411,7 +1413,7 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 		ret = VM_FAULT_OOM;
 		goto fail;
 	}
-	vmf.pte = pte_alloc(mm, vmf.pmd, address);
+	vmf.pte = ptd_alloc(mm, vmf.pmd, address);
 	if (!vmf.pte)
 	{
 		ret = VM_FAULT_OOM;
@@ -1419,7 +1421,6 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	}
 	barrier();
 
-	vmf.page = vm_normal_page(vma, vmf.address, *(vmf.pte));
 	ret = handle_pte_fault(&vmf);
 fail:
 	return ret;
@@ -1430,20 +1431,22 @@ fail:
  * Allocate page upper directory.
  * We've already handled the fast-path in-line.
  */
-// int __pud_alloc(mm_s *mm, p4d_t *p4d, unsigned long address)
-int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
+int __pud_alloc(mm_s *mm, p4d_t *p4de_ptr, ulong address)
 {
+	spinlock_t *ptl;
 	pud_t *new = pud_alloc_one(mm);
 	if (!new)
 		return -ENOMEM;
 
-	spin_lock(&mm->page_table_lock);
-	if (!p4d_present(*p4d)) {
+	ptl = p4d_lock(mm, p4de_ptr);
+	// spin_lock(&mm->page_table_lock);
+	if (!p4d_present(*p4de_ptr)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*p4d = arch_make_p4de(_PAGE_TABLE | __pa(new));
+		*p4de_ptr = arch_make_p4de(_PAGE_TABLE | __pa(new));
 	} else			/* Another has populated it */
 		pud_free(new);
-	spin_unlock_no_resched(&mm->page_table_lock);
+	// spin_unlock_no_resched(&mm->page_table_lock);
+	spin_unlock_no_resched(ptl);
 	return 0;
 }
 
@@ -1451,38 +1454,40 @@ int __myos_pud_alloc(mm_s *mm, p4d_t *p4d, ulong address)
  * Allocate page middle directory.
  * We've already handled the fast-path in-line.
  */
-// int __pmd_alloc(mm_s *mm, pud_t *pud, unsigned long address)
-int __myos_pmd_alloc(mm_s *mm, pud_t *pud, ulong address)
+int __pmd_alloc(mm_s *mm, pud_t *pude_ptr, ulong address)
 {
+	spinlock_t *ptl;
 	pmd_t *new = pmd_alloc_one(mm);
 	if (!new)
 		return -ENOMEM;
 
-	spin_lock(&mm->page_table_lock);
-	if (!pud_present(*pud)) {
+	ptl = pud_lock(mm, pude_ptr);
+	if (!pud_present(*pude_ptr)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pud = arch_make_pude(_PAGE_TABLE | __pa(new));
+		*pude_ptr = arch_make_pude(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pmd_free(new);
 	}
-	spin_unlock_no_resched(&mm->page_table_lock);
+	spin_unlock_no_resched(ptl);
 	return 0;
 }
 
-int __myos_pte_alloc(mm_s *mm, pmd_t *pmd, ulong address)
+
+int __pte_alloc(mm_s *mm, pmd_t *pmde_ptr, ulong address)
 {
+	spinlock_t *ptl;
 	pte_t *new = pte_alloc_one(mm);
 	if (!new)
 		return -ENOMEM;
 
-	spin_lock(&mm->page_table_lock);
-	if (!pmd_present(*pmd)) {
+	ptl = pmd_lock(mm, pmde_ptr);
+	if (!pmd_present(*pmde_ptr)) {
 		smp_wmb();	/* See comment in pmd_install() */
-		*pmd = arch_make_pmde(_PAGE_TABLE | __pa(new));
+		*pmde_ptr = arch_make_pmde(_PAGE_TABLE | __pa(new));
 	} else {		/* Another has populated it */
 		pte_free(new);
 	}
-	spin_unlock_no_resched(&mm->page_table_lock);
+	spin_unlock_no_resched(ptl);
 	return 0;
 }
 
@@ -1495,7 +1500,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	pmd_t *pmd;
 	pte_t *pte;
 
-	pgd = pgd_ent_ptr(mm, addr);
+	pgd = pgd_ent_ptr_in_mm(mm, addr);
 	p4d = p4d_alloc(mm, pgd, addr);
 	if (!p4d) {
 		goto fail;
@@ -1508,7 +1513,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	if (!pmd) {
 		goto fail;
 	}
-	pte = pte_alloc(mm, pmd, addr);
+	pte = ptd_alloc(mm, pmd, addr);
 	if (!pmd) {
 		goto fail;
 	}
@@ -1533,20 +1538,20 @@ page_s *myos_get_one_page_from_mapping(mm_s *mm, virt_addr_t addr)
 	pmd_t *pmd;
 	pte_t *pte;
 
-	pgd = pgd_ent_ptr(mm, addr);
-	p4d = p4d_ent_ptr(pgd, addr);
+	pgd = pgd_ent_ptr_in_mm(mm, addr);
+	p4d = p4de_ptr_in_pgd(pgd, addr);
 	if (p4d_none(*p4d)) {
 		goto fail;
 	}
-	pud = pud_ent_ptr(p4d, addr);
+	pud = pude_ptr_in_p4d(p4d, addr);
 	if (pud_none(*pud)) {
 		goto fail;
 	}
-	pmd = pmd_ent_ptr(pud, addr);
+	pmd = pmde_ptr_in_pud(pud, addr);
 	if (pmd_none(*pmd)) {
 		goto fail;
 	}
-	pte = pte_ent_ptr(pmd, addr);
+	pte = pte_ptr_in_pmd(pmd, addr);
 	if (pte_none(*pte)) {
 		goto fail;
 	}
@@ -1571,7 +1576,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 
 	do
 	{
-		pgd = pgd_ent_ptr(mm, addr);
+		pgd = pgd_ent_ptr_in_mm(mm, addr);
 		p4d = p4d_alloc(mm, pgd, addr);
 		if (!p4d) {
 			ret = VM_FAULT_OOM;
@@ -1587,7 +1592,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 			ret = VM_FAULT_OOM;
 			goto fail;
 		}
-		pte = pte_alloc(mm, pmd, addr);
+		pte = ptd_alloc(mm, pmd, addr);
 		if (!pmd) {
 			ret = VM_FAULT_OOM;
 			goto fail;
