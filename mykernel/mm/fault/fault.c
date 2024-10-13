@@ -713,7 +713,7 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	// 	     mm_tlb_flush_pending(vmf->vma->vm_mm)))
 	// 	flush_tlb_page(vmf->vma, vmf->address);
 
-	// vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
+	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
 	// if (!vmf->page) {
 	// 	/*
 	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
@@ -1270,8 +1270,6 @@ do_fault(vm_fault_s *vmf) {
 
 static vm_fault_t
 do_pte_missing(vm_fault_s *vmf) {
-	vmf->pte = ptd_alloc(vmf->vma->vm_mm, vmf->pmd, vmf->address);
-
 	if (vma_is_anonymous(vmf->vma))
 		return do_anonymous_page(vmf);
 	else
@@ -1297,36 +1295,24 @@ static vm_fault_t
 handle_pte_fault(vm_fault_s *vmf) {
 	pte_t entry;
 
-	if (unlikely(pmd_none(*vmf->pmd))) {
-		/*
-		 * Leave __pte_alloc() until later: because vm_ops->fault may
-		 * want to allocate huge page, and if we expose page table
-		 * for an instant, it will be difficult to retract from
-		 * concurrent faults and from rmap lookups.
-		 */
-		vmf->pte = NULL;
-		vmf->flags &= ~FAULT_FLAG_ORIG_PTE_VALID;
-	} else {
-		/*
-		 * A regular pmd is established and it can't morph into a huge
-		 * pmd by anon khugepaged, since that takes mmap_lock in write
-		 * mode; but shmem or file collapse to THP could still morph
-		 * it into a huge pmd: just retry later if so.
-		 */
-		vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm,
-						vmf->pmd, vmf->address, &vmf->ptl);
-		if (unlikely(vmf->pte == NULL))
-			return 0;
-		vmf->orig_pte = ptep_get_lockless(vmf->pte);
-		vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
 
-		if (pte_none(vmf->orig_pte)) {
-			pte_unmap(vmf->pte);
-			vmf->pte = NULL;
-		}
+	/*
+	 * In MyOS2 case, the PMD will be sure exist,
+	 * so we skip the check procedure which done in linux
+	 */
+	if (pmd_none(*vmf->pmd)) {
+		pr_err("Current PMD is empty.");
+		while (1);
 	}
 
-	if (vmf->pte == NULL)
+	vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm,
+					vmf->pmd, vmf->address, &vmf->ptl);
+	if (unlikely(vmf->pte == NULL))
+		return 0;
+	vmf->orig_pte = ptep_get_lockless(vmf->pte);
+	vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
+
+	if (pte_none(vmf->orig_pte))
 		return do_pte_missing(vmf);
 
 	// if (!pte_present(vmf->orig_pte))
@@ -1342,7 +1328,6 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// 	goto unlock;
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
-		vmf->page = vm_normal_page(vmf->vma, vmf->address, *(vmf->pte));
 		if (!pte_writable(*vmf->pte))
 			return do_wp_page(vmf);
 		entry = pte_mkdirty(entry);
@@ -1380,7 +1365,7 @@ unlock:
 vm_fault_t myos_handle_mm_fault(vma_s *vma,
 		pt_regs_s *regs, ulong address, uint flags)
 {
-	vm_fault_t ret;
+	vm_fault_t ret = VM_FAULT_OOM;
 	__set_current_state(TASK_RUNNING);
 
 	vm_fault_s vmf = {
@@ -1396,27 +1381,24 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	pgd_t *pgd = pgd_ent_ptr_in_mm(mm, address);
 
 	vmf.p4d = p4d_alloc(mm, pgd, address);
-	if (!vmf.p4d)
-	{
-		ret = VM_FAULT_OOM;
+	if (!vmf.p4d) {
 		goto fail;
 	}
 	vmf.pud = pud_alloc(mm, vmf.p4d, address);
-	if (!vmf.pud)
-	{
-		ret = VM_FAULT_OOM;
+	if (!vmf.pud) {
 		goto fail;
 	}
 	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
-	if (!vmf.pmd)
-	{
-		ret = VM_FAULT_OOM;
+	if (!vmf.pmd) {
 		goto fail;
 	}
-	vmf.pte = ptd_alloc(mm, vmf.pmd, address);
-	if (!vmf.pte)
-	{
-		ret = VM_FAULT_OOM;
+
+	/*
+	 * Since We need lock the page dir after,
+	 * so here use __ptd_alloc() but not ptd_alloc()
+	 * to save time by skipping some procedure
+	 */
+	if (__ptd_alloc(mm, vmf.pmd, address)) {
 		goto fail;
 	}
 	barrier();
@@ -1439,13 +1421,11 @@ int __pud_alloc(mm_s *mm, p4d_t *p4de_ptr, ulong address)
 		return -ENOMEM;
 
 	ptl = p4d_lock(mm, p4de_ptr);
-	// spin_lock(&mm->page_table_lock);
 	if (!p4d_present(*p4de_ptr)) {
 		smp_wmb();	/* See comment in pmd_install() */
 		*p4de_ptr = arch_make_p4de(_PAGE_TABLE | __pa(new));
 	} else			/* Another has populated it */
 		pud_free(new);
-	// spin_unlock_no_resched(&mm->page_table_lock);
 	spin_unlock_no_resched(ptl);
 	return 0;
 }
@@ -1473,7 +1453,7 @@ int __pmd_alloc(mm_s *mm, pud_t *pude_ptr, ulong address)
 }
 
 
-int __pte_alloc(mm_s *mm, pmd_t *pmde_ptr, ulong address)
+int __ptd_alloc(mm_s *mm, pmd_t *pmde_ptr, ulong address)
 {
 	spinlock_t *ptl;
 	pte_t *new = pte_alloc_one(mm);

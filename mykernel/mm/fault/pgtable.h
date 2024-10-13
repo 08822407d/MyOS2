@@ -279,7 +279,7 @@
 		PREFIX_STATIC_INLINE
 		pte_t
 		*ptd_alloc(mm_s *mm, pmd_t *pmd, ulong address) {
-			return (pmd_none(*pmd)) && __pte_alloc(mm, pmd, address) ?
+			return (pmd_none(*pmd)) && __ptd_alloc(mm, pmd, address) ?
 						NULL : pte_ptr_in_pmd(pmd, address);
 		}
 
