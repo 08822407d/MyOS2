@@ -132,16 +132,10 @@ MYOS_SYSCALL_DEFINE1(exit, int, error_code)
 	do_exit(error_code);
 }
 
-extern int myos_exit_mm(task_s * new_tsk);
-MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
-		int, options, void *, rusage)
-{
 
-}
-
-/*==============================================================================================*
- *									user memory manage											*
- *==============================================================================================*/
+/*======================================================================================*
+ *									user memory manage									*
+ *======================================================================================*/
 MYOS_SYSCALL_DEFINE1(brk, unsigned long, brk)
 {
 	ulong newbrk, oldbrk, origbrk;
@@ -231,23 +225,9 @@ out:
 }
 
 
-/*==============================================================================================*
- *									get task infomation											*
- *==============================================================================================*/
-/**
- *  sys_rt_sigprocmask - change the list of currently blocked signals
- *  @how: whether to add, remove, or set signals
- *  @nset: stores pending signals
- *  @oset: previous value of signal mask if non-null
- *  @sigsetsize: size of sigset_t type
- */
-MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
-{
-	ALERT_DUMMY_SYSCALL(rt_sigprocmask, IF_ALERT_DUMMY_SYSCALL);
-
-	return 0;
-}
-
+/*======================================================================================*
+ *									get task infomation									*
+ *======================================================================================*/
 MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, arg)
 {
 	ALERT_DUMMY_SYSCALL(ioctl, IF_ALERT_DUMMY_SYSCALL);
@@ -303,11 +283,67 @@ MYOS_SYSCALL_DEFINE0(sched_yield)
 }
 
 
+/*======================================================================================*
+ *									special functions									*
+ *======================================================================================*/
+MYOS_SYSCALL_DEFINE2(reboot, unsigned int, cmd, void *, arg)
+{
+	color_printk(GREEN,BLACK,"sys_reboot\n");
+	switch(cmd)
+	{
+		case SYSTEM_REBOOT:
+			outb(0xFE, 0x64);
+			break;
+
+		case SYSTEM_POWEROFF:
+			color_printk(RED,BLACK, "sys_reboot cmd SYSTEM_POWEROFF\n");
+			break;
+
+		default:
+			color_printk(RED,BLACK, "sys_reboot cmd ERROR!\n");
+			break;
+	}
+	return 0;
+}
+
+
+
+/*======================================================================================*
+ *									temp dummy syscall									*
+ *======================================================================================*/
+MYOS_SYSCALL_DEFINE3(mprotect, ulong, start, size_t, len, ulong, prot)
+{
+	ALERT_DUMMY_SYSCALL(mprotect, IF_ALERT_DUMMY_SYSCALL);
+
+	return 0;
+}
+
+/**
+ *  sys_rt_sigprocmask - change the list of currently blocked signals
+ *  @how: whether to add, remove, or set signals
+ *  @nset: stores pending signals
+ *  @oset: previous value of signal mask if non-null
+ *  @sigsetsize: size of sigset_t type
+ */
+MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
+{
+	ALERT_DUMMY_SYSCALL(rt_sigprocmask, IF_ALERT_DUMMY_SYSCALL);
+
+	return 0;
+}
+
+
 MYOS_SYSCALL_DEFINE0(getpid)
 {
 	// return current->pid;
 	pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
 	return pid_vnr(pid_struct);
+}
+
+MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
+		int, options, void *, rusage)
+{
+
 }
 
 MYOS_SYSCALL_DEFINE0(getppid)
@@ -380,26 +416,3 @@ MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 // 	return 0;
 // }
 
-
-/*==============================================================================================*
- *									special functions											*
- *==============================================================================================*/
-MYOS_SYSCALL_DEFINE2(reboot, unsigned int, cmd, void *, arg)
-{
-	color_printk(GREEN,BLACK,"sys_reboot\n");
-	switch(cmd)
-	{
-		case SYSTEM_REBOOT:
-			outb(0xFE, 0x64);
-			break;
-
-		case SYSTEM_POWEROFF:
-			color_printk(RED,BLACK, "sys_reboot cmd SYSTEM_POWEROFF\n");
-			break;
-
-		default:
-			color_printk(RED,BLACK, "sys_reboot cmd ERROR!\n");
-			break;
-	}
-	return 0;
-}
