@@ -153,15 +153,15 @@ __myos_kernel_physical_mapping_init(
 		unsigned long kv_addr =
 			(unsigned long)phys_to_virt(pg_addr);
 
-		pgd_t *pgdp = pgd_ent_ptr_in_mm(&init_mm, kv_addr);
+		pgd_t *pgdp = pgd_offset(&init_mm, kv_addr);
 		while (pgdp == 0);
-		p4d_t *p4dp = p4de_ptr_in_pgd(pgdp, kv_addr);
+		p4d_t *p4dp = p4d_offset(pgdp, kv_addr);
 		while (p4dp == 0);
-		pud_t *pudp = pude_ptr_in_p4d(p4dp, kv_addr);
+		pud_t *pudp = pud_offset(p4dp, kv_addr);
 		while (pudp == 0);
-		pmd_t *pmdp = pmde_ptr_in_pud(pudp, kv_addr);
+		pmd_t *pmdp = pmd_offset(pudp, kv_addr);
 		while (pmdp == 0);
-		pte_t *ptep = pte_ptr_in_pmd(pmdp, kv_addr);
+		pte_t *ptep = pte_offset(pmdp, kv_addr);
 		*ptep = arch_make_pte(prot | _PAGE_PAT | pg_addr);
 
 		pg_addr += PAGE_SIZE;

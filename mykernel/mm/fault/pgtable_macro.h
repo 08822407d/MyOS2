@@ -63,19 +63,37 @@
 	#define pmd_addr_end	pmd_ent_bound_end
 
 
+	#define p4dp_get		p4d_entp_get_ent
+	#define pudp_get		pud_entp_get_ent
+	#define pmdp_get		pmd_entp_get_ent
+	#define ptep_get		pgtbl_entp_get_ent
+
+	#define p4d_index		ent_index_in_p4d
+	#define pud_index		ent_index_in_pud
+	#define pmd_index		ent_index_in_pmd
+	#define pte_index		ent_index_in_pgtbl
+
 	#define pgd_offset		pgd_ent_ptr_in_mm
-	#define p4d_offset		p4de_ptr_in_pgd
-	#define pud_offset		pude_ptr_in_p4d
-	#define pmd_offset		pmde_ptr_in_pud
-	#define pte_offset		pte_ptr_in_pmd
+	#define p4d_offset		p4d_entp_from_vaddr_and_pgd_entp
+	#define pud_offset		pud_entp_from_vaddr_and_p4d_entp
+	#define pmd_offset		pmd_entp_from_vaddr_and_pud_entp
+	#define pte_offset		pgtbl_entp_from_vaddr_and_pmd_entp
 
-	#define pgd_index				p4de_index_in_pgd
-	#define pgdp_get				p4dp_get_p4de
-	#define pgd_none_or_clear_bad	p4de_none_or_clear_bad
+	#define p4d_populate	fill_pud_to_p4d_ent
+	#define pud_populate	fill_pmd_to_pud_ent
+	#define pmd_populate	fill_pgtbl_to_pmd_ent
+
+	#define p4d_populate_safe	fill_pud_to_p4d_ent_safe
+	#define pud_populate_safe	fill_pmd_to_pud_ent_safe
+	#define pmd_populate_safe	fill_pgtbl_to_pmd_ent_safe
+
+	#define pgd_index				ent_index_in_p4d
+	#define pgdp_get				p4d_entp_get_ent
+	#define pgd_none_or_clear_bad	p4d_ent_none_or_clear_bad
 
 
-	#define pte_offset_kernel		pte_ptr_in_pmd
-	#define ptep_get_lockless		ptep_get_pte
-	#define pmdp_get_lockless		pmdp_get_pmde
+	#define pte_offset_kernel		pgtbl_entp_from_vaddr_and_pmd_entp
+	#define ptep_get_lockless		pgtbl_entp_get_ent
+	#define pmdp_get_lockless		pmd_entp_get_ent
 
 #endif /* _LINUX_PGTABLE_MACRO_H_ */

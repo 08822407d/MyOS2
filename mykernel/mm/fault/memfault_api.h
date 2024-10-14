@@ -16,9 +16,10 @@
 	extern vm_fault_t myos_handle_mm_fault(vma_s *vma,
             pt_regs_s *regs, ulong address, uint flags);
 
-	int __pud_alloc(mm_s *mm, p4d_t *p4d, ulong address);
-	int __pmd_alloc(mm_s *mm, pud_t *pud, ulong address);
-	int __ptd_alloc(mm_s *mm, pmd_t *pmd, ulong address);
+	int __pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong address);
+	int __pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong address);
+	int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp, ulong address);
+	#define __pte_alloc __pgtbl_alloc
 
 	extern pte_t *myos_creat_one_page_mapping(mm_s *mm,
 			virt_addr_t addr, page_s *page);

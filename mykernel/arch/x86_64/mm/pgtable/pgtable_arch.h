@@ -43,35 +43,35 @@
 
 
 		extern int
-		p4de_is_none(p4d_t p4d_ent);
+		p4d_ent_is_none(p4d_t p4d_ent);
 		extern int
-		p4de_is_bad(p4d_t p4d_ent);
+		p4d_ent_is_bad(p4d_t p4d_ent);
 		extern int
-		p4de_is_present(p4d_t p4d_ent);
+		p4d_ent_is_present(p4d_t p4d_ent);
 		extern int
-		p4de_same(p4d_t a, p4d_t b);
+		p4d_ents_same(p4d_t a, p4d_t b);
 		extern ulong
 		p4de_pointed_page_vaddr(p4d_t p4d_ent);
 
 		extern int
-		pude_is_none(pud_t pud_ent);
+		pud_ent_is_none(pud_t pud_ent);
 		extern int
-		pude_is_bad(pud_t pud_ent);
+		pud_ent_is_bad(pud_t pud_ent);
 		extern int
-		pude_is_present(pud_t pud_ent);
+		pud_ent_is_present(pud_t pud_ent);
 		extern int
-		pude_same(pud_t a, pud_t b);
+		pud_ents_same(pud_t a, pud_t b);
 		extern ulong
 		pude_pointed_page_vaddr(pud_t pud_ent);
 
 		extern int
-		pmde_is_none(pmd_t pmd_ent);
+		pmd_ent_is_none(pmd_t pmd_ent);
 		extern int
-		pmde_is_bad(pmd_t pmd_ent);
+		pmd_ent_is_bad(pmd_t pmd_ent);
 		extern int
-		pmde_is_present(pmd_t pmd_ent);
+		pmd_ent_is_present(pmd_t pmd_ent);
 		extern int
-		pmde_same(pmd_t a, pmd_t b);
+		pmd_ents_same(pmd_t a, pmd_t b);
 		extern ulong
 		pmde_pointed_page_vaddr(pmd_t pud_ent);
 
@@ -86,14 +86,18 @@
 
 		extern p4d_t
 		arch_make_p4de(pgdval_t val);
+		extern void
+		set_p4d_ent(p4d_t *p4de_ptr, p4d_t p4d_ent);
+		extern void
+		set_p4d_ent_safe(p4d_t *p4de_ptr, p4d_t p4d_ent);
 		extern p4dval_t
-		arch_p4de_val(p4d_t p4d);
+		arch_p4de_val(p4d_t p4d_ent);
 		extern p4dval_t
-		arch_p4de_pfn_mask(p4d_t p4d);
+		arch_p4de_pfn_mask(p4d_t p4d_ent);
 		extern p4dval_t
-		P4DE_FLAG_MASK(p4d_t p4d);
+		P4DE_FLAG_MASK(p4d_t p4d_ent);
 		extern p4dval_t
-		arch_p4de_flags(p4d_t p4d);
+		arch_p4de_flags(p4d_t p4d_ent);
 		extern ulong
 		p4de_pfn(p4d_t p4d_ent);
 		extern p4d_t
@@ -101,6 +105,10 @@
 
 		extern pud_t
 		arch_make_pude(pmdval_t val);
+		extern void
+		set_pud_ent(pud_t *pude_ptr, pud_t pud_ent);
+		extern void
+		set_pud_ent_safe(pud_t *pude_ptr, pud_t pud_ent);
 		extern pudval_t
 		arch_pude_val(pud_t pud);
 		extern pudval_t
@@ -116,6 +124,10 @@
 
 		extern pmd_t
 		arch_make_pmde(pmdval_t val);
+		extern void
+		set_pmd_ent(pmd_t *pmde_ptr, pmd_t pmd_ent);
+		extern void
+		set_pmd_ent_safe(pmd_t *pmde_ptr, pmd_t pmd_ent);
 		extern pmdval_t
 		arch_pmde_val(pmd_t pmd);
 		extern pmdval_t 
@@ -131,6 +143,10 @@
 
 		extern pte_t
 		arch_make_pte(pteval_t val);
+		extern void
+		set_pte(pte_t *pte_ptr, pte_t pte);
+		extern void
+		set_pte_safe(pte_t *pte_ptr, pte_t pte);
 		extern pteval_t
 		arch_pte_val(pte_t pte);
 		extern pteval_t 
@@ -241,24 +257,24 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		p4de_is_none(p4d_t p4d_ent) {
+		p4d_ent_is_none(p4d_t p4d_ent) {
 			return (arch_p4de_val(p4d_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		p4de_is_bad(p4d_t p4d_ent) {
+		p4d_ent_is_bad(p4d_t p4d_ent) {
 			return (arch_p4de_flags(p4d_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		p4de_is_present(p4d_t p4d_ent) {
+		p4d_ent_is_present(p4d_t p4d_ent) {
 			return arch_p4de_flags(p4d_ent) & _PAGE_PRESENT;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		p4de_same(p4d_t a, p4d_t b) {
+		p4d_ents_same(p4d_t a, p4d_t b) {
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
@@ -271,25 +287,25 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		pude_is_none(pud_t pud_ent) {
+		pud_ent_is_none(pud_t pud_ent) {
 			return (arch_pude_val(pud_ent) &
 						~(_PAGE_KNL_ERRATUM_MASK)) == 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pude_is_bad(pud_t pud_ent) {
+		pud_ent_is_bad(pud_t pud_ent) {
 			return (arch_pude_flags(pud_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pude_is_present(pud_t pud_ent) {
+		pud_ent_is_present(pud_t pud_ent) {
 			return arch_pude_flags(pud_ent) &
 						(_PAGE_PRESENT | _PAGE_PSE);
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pude_same(pud_t a, pud_t b) {
+		pud_ents_same(pud_t a, pud_t b) {
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
@@ -302,7 +318,7 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		pmde_is_none(pmd_t pmd_ent) {
+		pmd_ent_is_none(pmd_t pmd_ent) {
 			/*
 			 * Only check low word on 32-bit platforms,
 			 * since it might be out of sync with upper half.
@@ -312,13 +328,13 @@
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pmde_is_bad(pmd_t pmd_ent) {
+		pmd_ent_is_bad(pmd_t pmd_ent) {
 			return (arch_pmde_flags(pmd_ent) &
 						~(_KERNPG_TABLE | _PAGE_USER)) != 0;
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pmde_is_present(pmd_t pmd_ent) {
+		pmd_ent_is_present(pmd_t pmd_ent) {
 			/*
 			 * Checking for _PAGE_PSE is needed too because
 			 * split_huge_page will temporarily clear the present
@@ -330,7 +346,7 @@
 		}
 		PREFIX_STATIC_INLINE
 		int
-		pmde_same(pmd_t a, pmd_t b) {
+		pmd_ents_same(pmd_t a, pmd_t b) {
 			return a.val == b.val;
 		}
 		PREFIX_STATIC_INLINE
@@ -370,6 +386,18 @@
 		p4d_t
 		arch_make_p4de(p4dval_t val) {
 			return (p4d_t) { .val = val };
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_p4d_ent(p4d_t *p4de_ptr, p4d_t p4d_ent) {
+			WRITE_ONCE(*(p4de_ptr), (p4d_ent));
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_p4d_ent_safe(p4d_t *p4de_ptr, p4d_t p4d_ent) {
+			WARN_ON_ONCE(p4d_present(*p4de_ptr) &&
+					!p4d_same(*p4de_ptr, p4d_ent));
+			set_p4d(p4de_ptr, p4d_ent);
 		}
 		PREFIX_STATIC_INLINE
 		p4dval_t
@@ -415,6 +443,18 @@
 			return (pud_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
+		void
+		set_pud_ent(pud_t *pude_ptr, pud_t pud_ent) {
+			WRITE_ONCE(*(pude_ptr), (pud_ent));
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pud_ent_safe(pud_t *pude_ptr, pud_t pud_ent) {
+			WARN_ON_ONCE(pud_present(*pude_ptr) &&
+					!pud_same(*pude_ptr, pud_ent));
+			set_pud(pude_ptr, pud_ent);
+		}
+		PREFIX_STATIC_INLINE
 		pudval_t
 		arch_pude_val(pud_t pud_ent) {
 			return pud_ent.val;
@@ -457,6 +497,18 @@
 			return (pmd_t) { .val = val };
 		}
 		PREFIX_STATIC_INLINE
+		void
+		set_pmd_ent(pmd_t *pmde_ptr, pmd_t pmd_ent) {
+			WRITE_ONCE(*(pmde_ptr), (pmd_ent));
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pmd_ent_safe(pmd_t *pmde_ptr, pmd_t pmd_ent) {
+			WARN_ON_ONCE(pmd_present(*pmde_ptr) &&
+					!pmd_same(*pmde_ptr, pmd_ent));
+			set_pmd(pmde_ptr, pmd_ent);
+		}
+		PREFIX_STATIC_INLINE
 		pmdval_t
 		arch_pmde_val(pmd_t pmd_ent) {
 			return pmd_ent.val;
@@ -497,6 +549,18 @@
 		pte_t
 		arch_make_pte(pteval_t val) {
 			return (pte_t) { .val = val };
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pte(pte_t *pte_ptr, pte_t pte) {
+			WRITE_ONCE(*(pte_ptr), (pte));
+		}
+		PREFIX_STATIC_INLINE
+		void
+		set_pte_safe(pte_t *pte_ptr, pte_t pte) {
+			WARN_ON_ONCE(pte_present(*pte_ptr) &&
+					!pte_same(*pte_ptr, pte));\
+			set_pte(pte_ptr, pte);
 		}
 		PREFIX_STATIC_INLINE
 		pteval_t
@@ -1124,12 +1188,6 @@
 	// {
 	// 	return (arch_pude_val(pud) & (_PAGE_PSE | _PAGE_PRESENT)) ==
 	// 		(_PAGE_PSE | _PAGE_PRESENT);
-	// }
-
-
-	// static inline unsigned long p4de_index_in_pgd(unsigned long address)
-	// {
-	// 	return (address >> P4D_SHIFT) & (PTRS_PER_P4D - 1);
 	// }
 
 	// extern int direct_gbpages;

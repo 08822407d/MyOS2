@@ -3,13 +3,13 @@
 #define _ASM_X86_PGTABLE_MACRO_H_
 
 
-	#define set_p4d_ent(p4dp, p4d)	WRITE_ONCE(*(p4dp), (p4d))
 	#define set_p4d					set_p4d_ent
-	#define set_pud_ent(pudp, pud)	WRITE_ONCE(*(pudp), (pud))
 	#define set_pud					set_pud_ent
-	#define set_pmd_ent(pmdp, pmd)	WRITE_ONCE(*(pmdp), (pmd))
 	#define set_pmd					set_pmd_ent
-	#define set_pte(ptep, pte)		WRITE_ONCE(*(ptep), (pte))
+
+	#define set_p4d_safe			set_p4d_ent_safe
+	#define set_pud_safe			set_pud_ent_safe
+	#define set_pmd_safe			set_pmd_ent_safe
 
 	#define p4d_ent_clear(p4dp)		set_p4d((p4dp), arch_make_p4de(0))
 	#define pud_ent_clear(pudp)		set_pud((pudp), arch_make_pude(0))
@@ -49,21 +49,21 @@
 	#define pte_page(pte)		pfn_to_page(pte_pfn(pte))
 
 
-	#define p4d_none			p4de_is_none
-	#define pud_none			pude_is_none
-	#define pmd_none			pmde_is_none
+	#define p4d_none			p4d_ent_is_none
+	#define pud_none			pud_ent_is_none
+	#define pmd_none			pmd_ent_is_none
 
-	#define p4d_bad				p4de_is_bad
-	#define pud_bad				pude_is_bad
-	#define pmd_bad				pmde_is_bad
+	#define p4d_bad				p4d_ent_is_bad
+	#define pud_bad				pud_ent_is_bad
+	#define pmd_bad				pmd_ent_is_bad
 
-	#define p4d_present			p4de_is_present
-	#define pud_present			pude_is_present
-	#define pmd_present			pmde_is_present
+	#define p4d_present			p4d_ent_is_present
+	#define pud_present			pud_ent_is_present
+	#define pmd_present			pmd_ent_is_present
 
-	#define p4d_same			p4de_same
-	#define pud_same			pude_same
-	#define pmd_same			pmde_same
+	#define p4d_same			p4d_ents_same
+	#define pud_same			pud_ents_same
+	#define pmd_same			pmd_ents_same
 
 	#define p4d_page_vaddr		p4de_pointed_page_vaddr
 	#define pud_page_vaddr		pude_pointed_page_vaddr
