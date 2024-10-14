@@ -17,7 +17,6 @@
 		is_cow_mapping(vm_flags_t flags);
 
 
-
 		extern pgd_t
 		*pgd_ent_ptr_in_mm(mm_s *mmp, ulong address);
 
@@ -30,8 +29,6 @@
 		ent_index_in_p4d(ulong address);
 		extern p4d_t
 		*p4d_entp_from_vaddr_and_pgd_entp(pgd_t *pgd_entp, ulong address);
-		extern p4d_t
-		*p4d_alloc(mm_s *mm, pgd_t *pgd_entp, ulong address);
 		extern void
 		fill_pud_to_p4d_ent(mm_s *mm, p4d_t *p4d_entp, pud_t *pud_p);
 		extern void
@@ -46,8 +43,6 @@
 		ent_index_in_pud(ulong address);
 		extern pud_t
 		*pud_entp_from_vaddr_and_p4d_entp(p4d_t *p4d_entp, ulong address);
-		extern pud_t
-		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong address);
 		extern void
 		fill_pmd_to_pud_ent(mm_s *mm, pud_t *pud_entp, pmd_t *pmd_p);
 		extern void
@@ -55,15 +50,13 @@
 
 
 		extern int
-		pmde_none_or_clear_bad(pmd_t *pmd_entp);
+		pmd_ent_none_or_clear_bad(pmd_t *pmd_entp);
 		extern pmd_t
 		pmd_entp_get_ent(pmd_t *pmd_entp);
 		extern ulong
 		ent_index_in_pmd(ulong address);
 		extern pmd_t
 		*pmd_entp_from_vaddr_and_pud_entp(pud_t *pud, ulong address);
-		extern pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong address);
 		extern void
 		fill_pgtbl_to_pmd_ent(mm_s *mm, pmd_t *pmd_entp, pte_t *pgtbl_p);
 		extern void
@@ -76,18 +69,11 @@
 		ent_index_in_pgtbl(ulong address);
 		extern pte_t
 		*pgtbl_entp_from_vaddr_and_pmd_entp(pmd_t *pmd_entp, ulong address);
-		extern int
-		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp);
-		extern pte_t
-		*pgtble_alloc_map(mm_s *mm, pmd_t *pmd_entp, ulong vaddr);
-		extern pte_t *pgtble_alloc_map_lock(mm_s *mm,
-				pmd_t *pmd_entp, ulong vaddr, spinlock_t **ptlp);
 
 		extern pte_t
 		*__pte_map(pmd_t *pmd_entp, ulong address);
 		extern void
 		pte_unmap(pte_t *pte_p);
-
 
 
 		extern void
@@ -203,11 +189,6 @@
 			return ((p4d_t *)pgd_entp);
 		};
 		PREFIX_STATIC_INLINE
-		p4d_t
-		*p4d_alloc(mm_s *mm, pgd_t *pgd_entp, ulong vaddr) {
-			return ((p4d_t *)pgd_entp);
-		}
-		PREFIX_STATIC_INLINE
 		void
 		fill_pud_to_p4d_ent(mm_s *mm, p4d_t *p4d_entp, pud_t *pud_p) {
 			// paravirt_alloc_pud(mm, __pa(pud_p) >> PAGE_SHIFT);
@@ -249,12 +230,6 @@
 						ent_index_in_pud(vaddr);
 		}
 		PREFIX_STATIC_INLINE
-		pud_t
-		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong vaddr) {
-			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp) ?
-						NULL : pud_entp_from_vaddr_and_p4d_entp(p4d_entp, vaddr);
-		}
-		PREFIX_STATIC_INLINE
 		void
 		fill_pmd_to_pud_ent(mm_s *mm, pud_t *pud_entp, pmd_t *pmd_p) {
 			// paravirt_alloc_pmd(mm, __pa(pmd_p) >> PAGE_SHIFT);
@@ -270,7 +245,7 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		pmde_none_or_clear_bad(pmd_t *pmd_entp) {
+		pmd_ent_none_or_clear_bad(pmd_t *pmd_entp) {
 			if (pmd_ent_is_none(*pmd_entp))
 				return 1;
 			if (pmd_ent_is_bad(*pmd_entp)) {
@@ -295,12 +270,6 @@
 		*pmd_entp_from_vaddr_and_pud_entp(pud_t *pud_entp, ulong vaddr) {
 			return (pmd_t *)pude_pointed_page_vaddr(*pud_entp) +
 						ent_index_in_pmd(vaddr);
-		}
-		PREFIX_STATIC_INLINE
-		pmd_t
-		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong vaddr) {
-			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp)?
-						NULL: pmd_entp_from_vaddr_and_pud_entp(pud_entp, vaddr);
 		}
 		PREFIX_STATIC_INLINE
 		void
@@ -343,24 +312,7 @@
 			return (pte_t *)pmd_page_vaddr(*pmd_entp) +
 						ent_index_in_pgtbl(vaddr);
 		}
-		PREFIX_STATIC_INLINE
-		int
-		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp) {
-			return (unlikely(pmd_none(*(pmd_entp))) && __pte_alloc(mm, pmd_entp));
-		}
-		PREFIX_STATIC_INLINE
-		pte_t
-		*pgtble_alloc_map(mm_s *mm, pmd_t *pmd_entp, ulong vaddr) {
-			return (pgtble_alloc(mm, pmd_entp) ?
-						NULL : pgtbl_entp_from_vaddr_and_pmd_entp(pmd_entp, vaddr));
-		}
-		PREFIX_STATIC_INLINE
-		pte_t
-		*pgtble_alloc_map_lock(mm_s *mm, pmd_t *pmd_entp,
-				ulong vaddr, spinlock_t **ptlp) {
-			return (pgtble_alloc(mm, pmd_entp) ?
-						NULL : pte_offset_map_lock(mm, pmd_entp, vaddr, ptlp));
-		}
+
 
 		PREFIX_STATIC_INLINE
 		pte_t

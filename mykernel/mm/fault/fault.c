@@ -194,7 +194,7 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 	 * If it's a COW mapping, write protect it both
 	 * in the parent and the child
 	 */
-	if (is_cow_mapping(vm_flags) && pte_writable(pte)) {
+	if (is_cow_mapping(vm_flags) && pte_write(pte)) {
 		arch_ptep_set_wrprotect(src_pte_ptr);
 		pte = pte_wrprotect(pte);
 	}
@@ -281,7 +281,7 @@ copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pude_ptr,
 
 	do {
 		next = pmd_ent_bound_end(addr, end);
-		if (pmde_none_or_clear_bad(src_pmde_ptr))
+		if (pmd_ent_none_or_clear_bad(src_pmde_ptr))
 			continue;
 		if (copy_pte_range(dst_vma, src_vma,
 				dst_pmde_ptr, src_pmde_ptr, addr, next))
@@ -779,6 +779,7 @@ copy:
 static vm_fault_t
 do_anonymous_page(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
+	vma->vm_page_prot = __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT);
 	folio_s *folio;
 	vm_fault_t ret = 0;
 	pte_t entry;
@@ -787,63 +788,42 @@ do_anonymous_page(vm_fault_s *vmf) {
 	if (vma->vm_flags & VM_SHARED)
 		return VM_FAULT_SIGBUS;
 
-	// /*
-	//  * Use pte_alloc() instead of pte_alloc_map().  We can't run
-	//  * pte_offset_map() on pmds where a huge pmd might be created
-	//  * from a different thread.
-	//  *
-	//  * pte_alloc_map() is safe to use under mmap_write_lock(mm) or when
-	//  * parallel threads are excluded by other means.
-	//  *
-	//  * Here we only have mmap_read_lock(mm).
-	//  */
-	// if (pte_alloc(vma->vm_mm, vmf->pmd))
-	// 	return VM_FAULT_OOM;
-	while (vmf->pte_ptr == NULL);
-
-	// /* See comment in handle_pte_fault() */
-	// if (unlikely(pmd_trans_unstable(vmf->pmd)))
-	// 	return 0;
+	/*
+	 * Use pte_alloc() instead of pte_alloc_map(), so that OOM can
+	 * be distinguished from a transient failure of pte_offset_map().
+	 */
+	if (pte_alloc(vma->vm_mm, vmf->pmd_entp))
+		return VM_FAULT_OOM;
 
 	/* Use the zero-page for reads */
-	// if (!(vmf->flags & FAULT_FLAG_WRITE) &&
-	// 		!mm_forbids_zeropage(vma->vm_mm)) {
 	if (!(vmf->flags & FAULT_FLAG_WRITE)) {
-		// entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
-		// 				vma->vm_page_prot));
-		entry = pfn_pte(my_zero_pfn(vmf->address), __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
+					vma->vm_page_prot));
 
-		// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
-		// 		vmf->address, &vmf->ptl);
-		*vmf->pte_ptr = entry;
-		if (!vmf->pte_ptr)
-			goto unlock;
-		if (vmf_pte_changed(vmf)) {
-			// update_mmu_tlb(vma, vmf->address, vmf->pte);
-			goto unlock;
-		}
+		// if (vmf_pte_changed(vmf)) {
+		// 	update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
+		// 	goto unlock;
+		// }
 		// ret = check_stable_address_space(vma->vm_mm);
 		// if (ret)
 		// 	goto unlock;
-		// /* Deliver the page fault to userland, check inside PT lock */
-		// if (userfaultfd_missing(vma)) {
-		// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-		// 	return handle_userfault(vmf, VM_UFFD_MISSING);
-		// }
-		// goto setpte;
+		goto setpte;
 	}
 
 	// /* Allocate our own private page. */
-	// if (unlikely(anon_vma_prepare(vma)))
-	// 	goto oom;
-	// folio = vma_alloc_zeroed_movable_folio(vma, vmf->address);
+	// ret = vmf_anon_prepare(vmf);
+	// if (ret)
+	// 	return ret;
+	/* Returns NULL on OOM or ERR_PTR(-EAGAIN) if we must retry the fault */
+	// folio = alloc_anon_folio(vmf);
 	folio = page_folio(alloc_page(GFP_USER | __GFP_ZERO));
+	if (IS_ERR(folio))
+		return 0;
 	if (!folio)
 		goto oom;
 
-	// if (mem_cgroup_charge(folio, vma->vm_mm, GFP_KERNEL))
-	// 	goto oom_free_page;
-	// folio_throttle_swaprate(folio, GFP_KERNEL);
+	// nr_pages = folio_nr_pages(folio);
+	// addr = ALIGN_DOWN(vmf->address, nr_pages * PAGE_SIZE);
 
 	// /*
 	//  * The memory barrier inside __folio_mark_uptodate makes sure that
@@ -852,33 +832,21 @@ do_anonymous_page(vm_fault_s *vmf) {
 	//  */
 	// __folio_mark_uptodate(folio);
 
-	// entry = mk_pte(page, vma->vm_page_prot);
-	entry = mk_pte(&folio->page, __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
+	entry = mk_pte(&folio->page, vma->vm_page_prot);
 	if (vma->vm_flags & VM_WRITE)
 		entry = pte_mkwrite(pte_mkdirty(entry));
 
-	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
-	// 		vmf->pmd, vmf->address, &vmf->ptl);
-	*vmf->pte_ptr = entry;
-	if (!vmf->pte_ptr)
-		goto release;
-	if (vmf_pte_changed(vmf)) {
-		// update_mmu_tlb(vma, vmf->address, vmf->pte);
-		goto release;
-	}
+	// if (vmf_pte_changed(vmf)) {
+	// 	update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
+	// 	goto release;
+	// }
 
 	// ret = check_stable_address_space(vma->vm_mm);
 	// if (ret)
 	// 	goto release;
 
-	// /* Deliver the page fault to userland, check inside PT lock */
-	// if (userfaultfd_missing(vma)) {
-	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// 	folio_put(folio);
-	// 	return handle_userfault(vmf, VM_UFFD_MISSING);
-	// }
-
-	// inc_mm_counter(vma->vm_mm, MM_ANONPAGES);
+	// folio_ref_add(folio, nr_pages - 1);
+	// add_mm_counter(vma->vm_mm, MM_ANONPAGES, nr_pages);
 	// folio_add_new_anon_rmap(folio, vma, vmf->address);
 	// folio_add_lru_vma(folio, vma);
 setpte:
@@ -897,6 +865,7 @@ release:
 	goto unlock;
 oom_free_page:
 	folio_put(folio);
+	goto unlock;
 oom:
 	return VM_FAULT_OOM;
 }
@@ -1232,25 +1201,22 @@ do_fault(vm_fault_s *vmf) {
 		pr_alert("VMA has no vm_ops->fault\n");
 		while (1);
 		
-		// vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
-		// 			vmf->pmd, vmf->address, &vmf->ptl);
-		if (unlikely(!vmf->pte_ptr))
+		// Since we have set alloc or find the pte, 
+		// and set vmf->pte_ptr pointing to it,
+		// So here skip the check work done in linux
+		/*
+		 * Make sure this is not a temporary clearing of pte
+		 * by holding ptl and checking again. A R/M/W update
+		 * of pte involves: take ptl, clearing the pte so that
+		 * we don't have concurrent modification by hardware
+		 * followed by an update.
+		 */
+		if (unlikely(pte_none(ptep_get(vmf->pte_ptr))))
 			ret = VM_FAULT_SIGBUS;
-		else {
-			/*
-			 * Make sure this is not a temporary clearing of pte
-			 * by holding ptl and checking again. A R/M/W update
-			 * of pte involves: take ptl, clearing the pte so that
-			 * we don't have concurrent modification by hardware
-			 * followed by an update.
-			 */
-			if (unlikely(pte_none(ptep_get(vmf->pte_ptr))))
-				ret = VM_FAULT_SIGBUS;
-			else
-				ret = VM_FAULT_NOPAGE;
+		else
+			ret = VM_FAULT_NOPAGE;
 
-			// pte_unmap_unlock(vmf->pte, vmf->ptl);
-		}
+		pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
 	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
 		// Reading or Executing cause fault
 		ret = do_read_fault(vmf);
@@ -1307,19 +1273,21 @@ handle_pte_fault(vm_fault_s *vmf) {
 
 	// spin_lock(vmf->ptl);
 	entry = vmf->orig_pte;
-	// if (unlikely(!pte_same(*vmf->pte, entry))) {
-	// 	update_mmu_tlb(vmf->vma, vmf->address, vmf->pte);
-	// 	goto unlock;
-	// }
+	if (unlikely(!pte_same(ptep_get(vmf->pte_ptr), entry))) {
+		update_mmu_tlb(vmf->vma, vmf->address, vmf->pte_ptr);
+		goto unlock;
+	}
 	if (vmf->flags & FAULT_FLAG_WRITE) {
-		if (!pte_writable(*vmf->pte_ptr))
+		if (!pte_write(*vmf->pte_ptr))
 			return do_wp_page(vmf);
-		entry = pte_mkdirty(entry);
+		else if (likely(vmf->flags & FAULT_FLAG_WRITE))
+			entry = pte_mkdirty(entry);
 	}
 	entry = pte_mkyoung(entry);
 	// if (ptep_set_access_flags(vmf->vma, vmf->address, vmf->pte, entry,
 	// 			vmf->flags & FAULT_FLAG_WRITE)) {
-	// 	update_mmu_cache(vmf->vma, vmf->address, vmf->pte);
+	// 	update_mmu_cache_range(vmf, vmf->vma, vmf->address,
+	// 			vmf->pte, 1);
 	// } else {
 	// 	/* Skip spurious TLB flush for retried page fault */
 	// 	if (vmf->flags & FAULT_FLAG_TRIED)
@@ -1331,7 +1299,8 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// 	 * with threads.
 	// 	 */
 	// 	if (vmf->flags & FAULT_FLAG_WRITE)
-	// 		flush_tlb_fix_spurious_fault(vmf->vma, vmf->address);
+	// 		flush_tlb_fix_spurious_fault(vmf->vma, vmf->address,
+	// 					     vmf->pte);
 	// }
 unlock:
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
@@ -1347,7 +1316,7 @@ unlock:
 // vm_fault_t handle_mm_fault(vma_s *vma, unsigned long address,
 // 		unsigned int flags, pt_regs_s *regs)
 vm_fault_t myos_handle_mm_fault(vma_s *vma,
-		pt_regs_s *regs, ulong address, uint flags)
+		ulong address, uint flags)
 {
 	vm_fault_t ret = VM_FAULT_OOM;
 	__set_current_state(TASK_RUNNING);
@@ -1404,70 +1373,8 @@ fail:
 }
 
 
-/*
- * Allocate page upper directory.
- * We've already handled the fast-path in-line.
- */
-int __pud_alloc(mm_s *mm, p4d_t *p4d_entp)
-{
-	spinlock_t *ptl;
-	pud_t *new = pud_alloc_one(mm);
-	if (!new)
-		return -ENOMEM;
-
-	ptl = p4d_lock(mm, p4d_entp);
-	if (!p4d_present(*p4d_entp)) {
-		mm_inc_nr_puds(mm);
-		smp_wmb();	/* See comment in pmd_install() */
-		p4d_populate(mm, p4d_entp, new);
-	} else			/* Another has populated it */
-		pud_free(new);
-	spin_unlock_no_resched(ptl);
-	return 0;
-}
-
-/*
- * Allocate page middle directory.
- * We've already handled the fast-path in-line.
- */
-int __pmd_alloc(mm_s *mm, pud_t *pud_entp)
-{
-	spinlock_t *ptl;
-	pmd_t *new = pmd_alloc_one(mm);
-	if (!new)
-		return -ENOMEM;
-
-	ptl = pud_lock(mm, pud_entp);
-	if (!pud_present(*pud_entp)) {
-		mm_inc_nr_pmds(mm);
-		smp_wmb();	/* See comment in pmd_install() */
-		pud_populate(mm, pud_entp, new);
-	} else {		/* Another has populated it */
-		pmd_free(new);
-	}
-	spin_unlock_no_resched(ptl);
-	return 0;
-}
 
 
-int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp)
-{
-	spinlock_t *ptl;
-	pte_t *new = pte_alloc_one(mm);
-	if (!new)
-		return -ENOMEM;
-
-	ptl = pmd_lock(mm, pmd_entp);
-	if (!pmd_present(*pmd_entp)) {
-		mm_inc_nr_ptes(mm);
-		smp_wmb();	/* See comment in pmd_install() */
-		pmd_populate(mm, pmd_entp, new);
-	} else {		/* Another has populated it */
-		pte_free(new);
-	}
-	spin_unlock_no_resched(ptl);
-	return 0;
-}
 
 pte_t *myos_creat_one_page_mapping(mm_s *mm,
 		virt_addr_t addr, page_s *page)

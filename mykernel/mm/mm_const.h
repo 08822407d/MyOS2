@@ -3,6 +3,7 @@
 
 	#include "early/memblock_const.h"
 	#include "fault/fault_const.h"
+	#include "fault/pgalloc_const.h"
 	#include "kmalloc/slub_const.h"
 	#include "page_alloc/mmzone_const.h"
 	#include "page_alloc/buddy_const.h"

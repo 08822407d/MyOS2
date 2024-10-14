@@ -12,7 +12,7 @@
 	#ifdef DEBUG
 
 		extern int
-		pte_write(pte_t pte);
+		pte_writable(pte_t pte);
 
 		extern void
 		set_pte_at(mm_s *mm, ulong addr, pte_t *ptep, pte_t pte);
@@ -181,7 +181,7 @@
 
 		PREFIX_STATIC_INLINE
 		int
-		pte_write(pte_t pte) {
+		pte_writable(pte_t pte) {
 			return arch_pte_flags(pte) & _PAGE_RW;
 		}
 
@@ -854,10 +854,10 @@
 	// 	return pte_clear_flags(pte, _PAGE_GLOBAL);
 	// }
 
-	// static inline pte_t pte_mkspecial(pte_t pte)
-	// {
-	// 	return pte_set_flags(pte, _PAGE_SPECIAL);
-	// }
+	static inline pte_t pte_mkspecial(pte_t pte)
+	{
+		return pte_set_flags(pte, _PAGE_SPECIAL);
+	}
 
 	// static inline pte_t pte_mkdevmap(pte_t pte)
 	// {

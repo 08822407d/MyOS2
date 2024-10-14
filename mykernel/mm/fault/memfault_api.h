@@ -2,6 +2,7 @@
 #define _MEM_FAULT_API_H_
 
 	#include "pgtable.h"
+	#include "pgalloc.h"
 
 	extern pgd_t init_top_pgt[];
 	#define swapper_pg_dir init_top_pgt
@@ -14,7 +15,7 @@
 	vm_fault_t finish_fault(vm_fault_s *vmf);
 
 	extern vm_fault_t myos_handle_mm_fault(vma_s *vma,
-            pt_regs_s *regs, ulong address, uint flags);
+            ulong address, uint flags);
 
 	int __pud_alloc(mm_s *mm, p4d_t *p4d_entp);
 	int __pmd_alloc(mm_s *mm, pud_t *pud_entp);
@@ -36,5 +37,6 @@
 			pmd_t *pmdp, ulong addr, spinlock_t **ptlp);
 	extern pte_t *pte_offset_map_lock(mm_s *mm,
 			pmd_t *pmdp, ulong addr, spinlock_t **ptlp);
+
 
 #endif /* _MEM_FAULT_API_H_ */

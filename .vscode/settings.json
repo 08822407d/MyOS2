@@ -345,7 +345,9 @@
         "semaphore_const.h": "c",
         "pgtable_macro.h": "c",
         "pgtable_macro_arch.h": "c",
-        "auxvec.h": "c"
+        "auxvec.h": "c",
+        "pgalloc_macro.h": "c",
+        "mm_misc_const.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

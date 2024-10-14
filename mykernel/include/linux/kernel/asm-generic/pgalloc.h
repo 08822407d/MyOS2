@@ -4,9 +4,6 @@
 
 	#include <linux/kernel/mm.h>		/* for page_s */
 
-	#define GFP_PGTABLE_KERNEL	(GFP_KERNEL | __GFP_ZERO)
-	#define GFP_PGTABLE_USER	(GFP_PGTABLE_KERNEL | __GFP_ACCOUNT)
-
 	// /**
 	//  * __pte_alloc_one_kernel - allocate a page for PTE-level kernel page table
 	//  * @mm: the mm_struct of the current context
@@ -87,22 +84,6 @@
 	// 	return __pte_alloc_one(mm, GFP_PGTABLE_USER);
 	// }
 	// #endif
-
-	// /*
-	// * Should really implement gc for free page table pages. This could be
-	// * done with a reference count in page_s.
-	// */
-
-	// /**
-	//  * pte_free - free PTE-level user page table page
-	//  * @mm: the mm_struct of the current context
-	//  * @pte_page: the `page_s` representing the page table
-	//  */
-	// static inline void pte_free(mm_s *mm, page_s *pte_page) {
-	// 	pgtable_pte_page_dtor(pte_page);
-	// 	free_page((unsigned long)pte_page);
-	// }
-
 
 
 	// #ifndef __HAVE_ARCH_PMD_ALLOC_ONE
@@ -197,36 +178,5 @@
 	// 		free_page((unsigned long)pgd);
 	// 	}
 	// #endif
-
-
-	static inline void *__myos_pgtable_alloc_one(mm_s *mm) {
-		page_s *page;
-		gfp_t gfp = GFP_PGTABLE_USER;
-		if (mm == &init_mm)
-			gfp = GFP_PGTABLE_KERNEL;
-
-		page = alloc_page(gfp);
-		if (!page)
-			return NULL;
-
-		memset((void *)page_to_virt(page), 0, PAGE_SIZE);
-		__SetPageTable(page);
-		return (void *)page_to_virt(page);
-	}
-
-	static inline void __myos_pgtable_free(void *address) {
-		page_s *page = virt_to_page(address);
-		__SetPageTable(page);
-		__free_pages(page, 0);
-	}	
-
-
-	#define pte_alloc_one(mmp)	(pte_t *)__myos_pgtable_alloc_one(mmp)
-	#define pmd_alloc_one(mmp)	(pmd_t *)__myos_pgtable_alloc_one(mmp)
-	#define pud_alloc_one(mmp)	(pud_t *)__myos_pgtable_alloc_one(mmp)
-
-	#define pte_free(ptep) __myos_pgtable_free((void *)(ptep))
-	#define pmd_free(pmdp) __myos_pgtable_free((void *)(pmdp))
-	#define pud_free(pudp) __myos_pgtable_free((void *)(pudp))
 
 #endif /* __ASM_GENERIC_PGALLOC_H */

@@ -318,7 +318,8 @@ retry:
 	 * FAULT_FLAG_USER|FAULT_FLAG_KILLABLE are both set in flags.
 	 */
 	// fault = handle_mm_fault(vma, address, flags, regs);
-	fault = myos_handle_mm_fault(vma, regs, address, flags);
+	fault = myos_handle_mm_fault(vma, address, flags);
+	while (fault != ENOERR);
 
 	// if (fault_signal_pending(fault, regs)) {
 	// 	/*

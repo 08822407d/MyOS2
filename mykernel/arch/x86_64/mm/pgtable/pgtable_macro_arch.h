@@ -26,7 +26,7 @@
 	#define __pmd(x)			arch_make_pmde(x)
 	#define __pte(x)			arch_make_pte(x)
 
-	#define pte_writable(ptep)	pte_write(ptep)
+	#define pte_write(ptep)		pte_writable(ptep)
 	#define pte_present			pte_is_present
 	#define pte_none			pte_is_none
 
