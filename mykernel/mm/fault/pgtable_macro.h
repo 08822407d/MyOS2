@@ -92,6 +92,9 @@
 	#define pgd_none_or_clear_bad	p4d_ent_none_or_clear_bad
 
 
+	#define pte_alloc				pgtble_alloc
+	#define pte_alloc_map			pgtble_alloc_map
+	#define pte_alloc_map_lock		pgtble_alloc_map_lock
 	#define pte_offset_kernel		pgtbl_entp_from_vaddr_and_pmd_entp
 	#define ptep_get_lockless		pgtbl_entp_get_ent
 	#define pmdp_get_lockless		pmd_entp_get_ent

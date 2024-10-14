@@ -76,8 +76,12 @@
 		ent_index_in_pgtbl(ulong address);
 		extern pte_t
 		*pgtbl_entp_from_vaddr_and_pmd_entp(pmd_t *pmd_entp, ulong address);
+		extern int
+		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp);
 		extern pte_t
-		*ptd_alloc(mm_s *mm, pmd_t *pmd_entp, ulong address);
+		*pgtble_alloc_map(mm_s *mm, pmd_t *pmd_entp, ulong vaddr);
+		extern pte_t *pgtble_alloc_map_lock(mm_s *mm,
+				pmd_t *pmd_entp, ulong vaddr, spinlock_t **ptlp);
 
 		extern pte_t
 		*__pte_map(pmd_t *pmd_entp, ulong address);
@@ -247,7 +251,7 @@
 		PREFIX_STATIC_INLINE
 		pud_t
 		*pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong vaddr) {
-			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp, vaddr) ?
+			return (p4d_ent_is_none(*p4d_entp)) && __pud_alloc(mm, p4d_entp) ?
 						NULL : pud_entp_from_vaddr_and_p4d_entp(p4d_entp, vaddr);
 		}
 		PREFIX_STATIC_INLINE
@@ -295,7 +299,7 @@
 		PREFIX_STATIC_INLINE
 		pmd_t
 		*pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong vaddr) {
-			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp, vaddr)?
+			return (pud_ent_is_none(*pud_entp)) && __pmd_alloc(mm, pud_entp)?
 						NULL: pmd_entp_from_vaddr_and_pud_entp(pud_entp, vaddr);
 		}
 		PREFIX_STATIC_INLINE
@@ -340,10 +344,22 @@
 						ent_index_in_pgtbl(vaddr);
 		}
 		PREFIX_STATIC_INLINE
+		int
+		pgtble_alloc(mm_s *mm, pmd_t *pmd_entp) {
+			return (unlikely(pmd_none(*(pmd_entp))) && __pte_alloc(mm, pmd_entp));
+		}
+		PREFIX_STATIC_INLINE
 		pte_t
-		*ptd_alloc(mm_s *mm, pmd_t *pmd_entp, ulong vaddr) {
-			return (pmd_none(*pmd_entp)) && __pte_alloc(mm, pmd_entp, vaddr) ?
-						NULL : pgtbl_entp_from_vaddr_and_pmd_entp(pmd_entp, vaddr);
+		*pgtble_alloc_map(mm_s *mm, pmd_t *pmd_entp, ulong vaddr) {
+			return (pgtble_alloc(mm, pmd_entp) ?
+						NULL : pgtbl_entp_from_vaddr_and_pmd_entp(pmd_entp, vaddr));
+		}
+		PREFIX_STATIC_INLINE
+		pte_t
+		*pgtble_alloc_map_lock(mm_s *mm, pmd_t *pmd_entp,
+				ulong vaddr, spinlock_t **ptlp) {
+			return (pgtble_alloc(mm, pmd_entp) ?
+						NULL : pte_offset_map_lock(mm, pmd_entp, vaddr, ptlp));
 		}
 
 		PREFIX_STATIC_INLINE

@@ -33,19 +33,19 @@ vm_fault_s myos_dump_pagetable(ulong address)
 	pgd_t *base = (pgd_t *)__va(read_cr3_pa());
 	pgd_t *pgd = base + pgd_index(address);
 	
-	vmf.p4d = p4d_offset(pgd, address);
-	if (p4d_none(*vmf.p4d))
+	vmf.p4d_entp = p4d_offset(pgd, address);
+	if (p4d_none(*vmf.p4d_entp))
 		goto finish;
-	vmf.pud = pud_offset(vmf.p4d, address);
-	if (pud_none(*vmf.pud))
+	vmf.pud_entp = pud_offset(vmf.p4d_entp, address);
+	if (pud_none(*vmf.pud_entp))
 		goto finish;
-	vmf.pmd = pmd_offset(vmf.pud, address);
-	if (pmd_none(*vmf.pmd))
+	vmf.pmd_entp = pmd_offset(vmf.pud_entp, address);
+	if (pmd_none(*vmf.pmd_entp))
 		goto finish;
-	vmf.pte = pte_offset(vmf.pmd, address);
-	if (pte_none(*vmf.pte))
+	vmf.pte_ptr = pte_offset(vmf.pmd_entp, address);
+	if (pte_none(*vmf.pte_ptr))
 		goto finish;
-	virt_addr_t pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte->val);
+	virt_addr_t pg_vaddr = phys_to_virt(PTE_PFN_MASK & vmf.pte_ptr->val);
 	vmf.page = (virt_to_page(pg_vaddr));
 	
 finish:

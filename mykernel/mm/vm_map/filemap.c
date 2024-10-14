@@ -146,7 +146,7 @@ simple_filemap_map_page(vm_fault_s *vmf, pgoff_t pgoff)
 
 	page = mapping->page_array[pgoff];
 	if (page != NULL) {
-		*vmf->pte = mk_pte(page,
+		*vmf->pte_ptr = mk_pte(page,
 			__pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT));
 		return 0;
 	}

@@ -159,3 +159,12 @@ again:
 	pte_unmap_unlock(ptep, ptl);
 	goto again;
 }
+
+pte_t
+*pte_offset_map_lock(mm_s *mm, pmd_t *pmd_entp,
+		ulong addr, spinlock_t **ptlp)
+{
+	pte_t *pte;
+	__cond_lock(*ptlp, pte = __pte_offset_map_lock(mm, pmd_entp, addr, ptlp));
+	return pte;
+}

@@ -75,9 +75,9 @@ early_initcall(init_zero_pfn);
 static bool
 vmf_pte_changed(struct vm_fault *vmf) {
 	if (vmf->flags & FAULT_FLAG_ORIG_PTE_VALID)
-		return !pte_same(ptep_get(vmf->pte), vmf->orig_pte);
+		return !pte_same(ptep_get(vmf->pte_ptr), vmf->orig_pte);
 
-	return !pte_none(ptep_get(vmf->pte));
+	return !pte_none(ptep_get(vmf->pte_ptr));
 }
 
 /*
@@ -222,7 +222,8 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
 	spinlock_t *src_ptl, *dst_ptl;
 	int ret = 0;
 
-	dst_pte_ptr = ptd_alloc(dst_mm, dst_pmde_ptr, addr);
+	// dst_pte_ptr = pte_alloc_map_lock(dst_mm, dst_pmde_ptr, addr, &dst_ptl);
+	dst_pte_ptr = pte_alloc_map(dst_mm, dst_pmde_ptr, addr);
 	if (!dst_pte_ptr)
 		return -ENOMEM;
 	src_pte_ptr = pte_offset_map_nolock(src_mm, src_pmde_ptr, addr, &src_ptl);;
@@ -576,7 +577,7 @@ wp_page_copy(vm_fault_s *vmf) {
 	 * Re-check the pte - we dropped the lock
 	 */
 	// vmf->pte = pte_offset_map_lock(mm, vmf->pmd, vmf->address, &vmf->ptl);
-	if (likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	if (likely(pte_same(*vmf->pte_ptr, vmf->orig_pte))) {
 		// if (old_page) {
 		// 	if (!PageAnon(old_page)) {
 		// 		dec_mm_counter_fast(mm,
@@ -609,7 +610,7 @@ wp_page_copy(vm_fault_s *vmf) {
 		//  * new page to be mapped directly into the secondary page table.
 		//  */
 		// set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
-		set_pte_at(mm, vmf->address, vmf->pte, entry);
+		set_pte_at(mm, vmf->address, vmf->pte_ptr, entry);
 		// update_mmu_cache(vma, vmf->address, vmf->pte);
 		// if (old_page) {
 		// 	/*
@@ -713,7 +714,7 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	// 	     mm_tlb_flush_pending(vmf->vma->vm_mm)))
 	// 	flush_tlb_page(vmf->vma, vmf->address);
 
-	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte);
+	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte_ptr);
 	// if (!vmf->page) {
 	// 	/*
 	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
@@ -787,7 +788,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 		return VM_FAULT_SIGBUS;
 
 	// /*
-	//  * Use ptd_alloc() instead of pte_alloc_map().  We can't run
+	//  * Use pte_alloc() instead of pte_alloc_map().  We can't run
 	//  * pte_offset_map() on pmds where a huge pmd might be created
 	//  * from a different thread.
 	//  *
@@ -796,9 +797,9 @@ do_anonymous_page(vm_fault_s *vmf) {
 	//  *
 	//  * Here we only have mmap_read_lock(mm).
 	//  */
-	// if (ptd_alloc(vma->vm_mm, vmf->pmd))
+	// if (pte_alloc(vma->vm_mm, vmf->pmd))
 	// 	return VM_FAULT_OOM;
-	while (vmf->pte == NULL);
+	while (vmf->pte_ptr == NULL);
 
 	// /* See comment in handle_pte_fault() */
 	// if (unlikely(pmd_trans_unstable(vmf->pmd)))
@@ -814,8 +815,8 @@ do_anonymous_page(vm_fault_s *vmf) {
 
 		// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 		// 		vmf->address, &vmf->ptl);
-		*vmf->pte = entry;
-		if (!vmf->pte)
+		*vmf->pte_ptr = entry;
+		if (!vmf->pte_ptr)
 			goto unlock;
 		if (vmf_pte_changed(vmf)) {
 			// update_mmu_tlb(vma, vmf->address, vmf->pte);
@@ -858,8 +859,8 @@ do_anonymous_page(vm_fault_s *vmf) {
 
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
 	// 		vmf->pmd, vmf->address, &vmf->ptl);
-	*vmf->pte = entry;
-	if (!vmf->pte)
+	*vmf->pte_ptr = entry;
+	if (!vmf->pte_ptr)
 		goto release;
 	if (vmf_pte_changed(vmf)) {
 		// update_mmu_tlb(vma, vmf->address, vmf->pte);
@@ -883,7 +884,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 setpte:
 	// if (uffd_wp)
 	// 	entry = pte_mkuffd_wp(entry);
-	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+	set_pte_at(vma->vm_mm, vmf->address, vmf->pte_ptr, entry);
 
 	// /* No need to invalidate - it was non-present before */
 	// update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
@@ -1011,7 +1012,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 
 	// 	if (vmf->prealloc_pte)
 	// 		pmd_install(vma->vm_mm, vmf->pmd, &vmf->prealloc_pte);
-	// 	else if (unlikely(ptd_alloc(vma->vm_mm, vmf->pmd)))
+	// 	else if (unlikely(pte_alloc(vma->vm_mm, vmf->pmd)))
 	// 		return VM_FAULT_OOM;
 	// }
 
@@ -1024,7 +1025,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
 	// 			      vmf->address, &vmf->ptl);
-	*vmf->pte = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
+	*vmf->pte_ptr = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
 	ret = 0;
 	// /* Re-check under ptl */
 	// if (likely(!vmf_pte_changed(vmf))) {
@@ -1233,7 +1234,7 @@ do_fault(vm_fault_s *vmf) {
 		
 		// vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm,
 		// 			vmf->pmd, vmf->address, &vmf->ptl);
-		if (unlikely(!vmf->pte))
+		if (unlikely(!vmf->pte_ptr))
 			ret = VM_FAULT_SIGBUS;
 		else {
 			/*
@@ -1243,7 +1244,7 @@ do_fault(vm_fault_s *vmf) {
 			 * we don't have concurrent modification by hardware
 			 * followed by an update.
 			 */
-			if (unlikely(pte_none(ptep_get(vmf->pte))))
+			if (unlikely(pte_none(ptep_get(vmf->pte_ptr))))
 				ret = VM_FAULT_SIGBUS;
 			else
 				ret = VM_FAULT_NOPAGE;
@@ -1295,23 +1296,6 @@ static vm_fault_t
 handle_pte_fault(vm_fault_s *vmf) {
 	pte_t entry;
 
-
-	/*
-	 * In MyOS2 case, the PMD will be sure exist,
-	 * so we skip the check procedure which done in linux
-	 */
-	if (pmd_none(*vmf->pmd)) {
-		pr_err("Current PMD is empty.");
-		while (1);
-	}
-
-	vmf->pte = pte_offset_map_nolock(vmf->vma->vm_mm,
-					vmf->pmd, vmf->address, &vmf->ptl);
-	if (unlikely(vmf->pte == NULL))
-		return 0;
-	vmf->orig_pte = ptep_get_lockless(vmf->pte);
-	vmf->flags |= FAULT_FLAG_ORIG_PTE_VALID;
-
 	if (pte_none(vmf->orig_pte))
 		return do_pte_missing(vmf);
 
@@ -1328,7 +1312,7 @@ handle_pte_fault(vm_fault_s *vmf) {
 	// 	goto unlock;
 	// }
 	if (vmf->flags & FAULT_FLAG_WRITE) {
-		if (!pte_writable(*vmf->pte))
+		if (!pte_writable(*vmf->pte_ptr))
 			return do_wp_page(vmf);
 		entry = pte_mkdirty(entry);
 	}
@@ -1380,28 +1364,39 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 	mm_s *mm = vma->vm_mm;
 	pgd_t *pgd = pgd_offset(mm, address);
 
-	vmf.p4d = p4d_alloc(mm, pgd, address);
-	if (!vmf.p4d) {
+	vmf.p4d_entp = p4d_alloc(mm, pgd, address);
+	if (!vmf.p4d_entp) {
 		goto fail;
 	}
-	vmf.pud = pud_alloc(mm, vmf.p4d, address);
-	if (!vmf.pud) {
+	vmf.pud_entp = pud_alloc(mm, vmf.p4d_entp, address);
+	if (!vmf.pud_entp) {
 		goto fail;
 	}
-	vmf.pmd = pmd_alloc(mm, vmf.pud, address);
-	if (!vmf.pmd) {
+	vmf.pmd_entp = pmd_alloc(mm, vmf.pud_entp, address);
+	if (!vmf.pmd_entp) {
 		goto fail;
 	}
-
-	/*
-	 * Since We need lock the page dir after,
-	 * so here use __pte_alloc() but not ptd_alloc()
-	 * to save time by skipping some procedure
-	 */
-	if (__pte_alloc(mm, vmf.pmd, address)) {
+	if (pte_alloc(mm, vmf.pmd_entp)) {
 		goto fail;
 	}
 	barrier();
+
+
+	/*
+	 * In MyOS2 case, the PMD will be sure exist,
+	 * so we skip the check procedure which done in linux
+	 */
+	if (pmd_none(*(vmf.pmd_entp))) {
+		pr_err("Current PMD is empty.");
+		while (1);
+	}
+	vmf.pte_ptr = pte_offset_map_nolock(vmf.vma->vm_mm,
+					vmf.pmd_entp, vmf.address, &(vmf.ptl));
+	if (unlikely(vmf.pte_ptr == NULL))
+		return 0;
+	vmf.orig_pte = ptep_get_lockless(vmf.pte_ptr);
+	vmf.flags |= FAULT_FLAG_ORIG_PTE_VALID;
+
 
 	ret = handle_pte_fault(&vmf);
 fail:
@@ -1413,7 +1408,7 @@ fail:
  * Allocate page upper directory.
  * We've already handled the fast-path in-line.
  */
-int __pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong address)
+int __pud_alloc(mm_s *mm, p4d_t *p4d_entp)
 {
 	spinlock_t *ptl;
 	pud_t *new = pud_alloc_one(mm);
@@ -1435,7 +1430,7 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d_entp, ulong address)
  * Allocate page middle directory.
  * We've already handled the fast-path in-line.
  */
-int __pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong address)
+int __pmd_alloc(mm_s *mm, pud_t *pud_entp)
 {
 	spinlock_t *ptl;
 	pmd_t *new = pmd_alloc_one(mm);
@@ -1455,7 +1450,7 @@ int __pmd_alloc(mm_s *mm, pud_t *pud_entp, ulong address)
 }
 
 
-int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp, ulong vaddr)
+int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp)
 {
 	spinlock_t *ptl;
 	pte_t *new = pte_alloc_one(mm);
@@ -1496,7 +1491,7 @@ pte_t *myos_creat_one_page_mapping(mm_s *mm,
 	if (!pmd) {
 		goto fail;
 	}
-	pte = ptd_alloc(mm, pmd, addr);
+	pte = pte_alloc_map(mm, pmd, addr);
 	if (!pmd) {
 		goto fail;
 	}
@@ -1575,7 +1570,7 @@ int myos_map_range(mm_s *mm, virt_addr_t start, virt_addr_t end)
 			ret = VM_FAULT_OOM;
 			goto fail;
 		}
-		pte = ptd_alloc(mm, pmd, addr);
+		pte = pte_alloc_map(mm, pmd, addr);
 		if (!pmd) {
 			ret = VM_FAULT_OOM;
 			goto fail;
