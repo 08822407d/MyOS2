@@ -878,55 +878,36 @@ oom:
 static vm_fault_t
 __do_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
+	folio_s *folio;
 	vm_fault_t ret;
 
-	// /*
-	//  * Preallocate pte before we take page_lock because this might lead to
-	//  * deadlocks for memcg reclaim which waits for pages under writeback:
-	//  *				lock_page(A)
-	//  *				SetPageWriteback(A)
-	//  *				unlock_page(A)
-	//  * lock_page(B)
-	//  *				lock_page(B)
-	//  * pte_alloc_one
-	//  *   shrink_page_list
-	//  *     wait_on_page_writeback(A)
-	//  *				SetPageWriteback(B)
-	//  *				unlock_page(B)
-	//  *				# flush A, B to clear the writeback
-	//  */
-	// if (pmd_none(*vmf->pmd) && !vmf->prealloc_pte) {
-	// 	vmf->prealloc_pte = pte_alloc_one(vma->vm_mm);
-	// 	if (!vmf->prealloc_pte)
-	// 		return VM_FAULT_OOM;
-	// }
+	/*
+	 * Preallocate pte before we take page_lock because this might lead to
+	 * deadlocks for memcg reclaim which waits for pages under writeback:
+	 *				lock_page(A)
+	 *				SetPageWriteback(A)
+	 *				unlock_page(A)
+	 * lock_page(B)
+	 *				lock_page(B)
+	 * pte_alloc_one
+	 *   shrink_page_list
+	 *     wait_on_page_writeback(A)
+	 *				SetPageWriteback(B)
+	 *				unlock_page(B)
+	 *				# flush A, B to clear the writeback
+	 */
+	while (pmd_none(*vmf->pmd_entp));
+
 
 	ret = vma->vm_ops->fault(vmf);
-	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY |
-			    VM_FAULT_DONE_COW)))
+	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
+			VM_FAULT_RETRY | VM_FAULT_DONE_COW)))
 		return ret;
 
-	// if (unlikely(PageHWPoison(vmf->page))) {
-	// 	page_s *page = vmf->page;
-	// 	vm_fault_t poisonret = VM_FAULT_HWPOISON;
-	// 	if (ret & VM_FAULT_LOCKED) {
-	// 		if (page_mapped(page))
-	// 			unmap_mapping_pages(page_mapping(page),
-	// 					    page->index, 1, false);
-	// 		/* Retry if a clean page was removed from the cache. */
-	// 		if (invalidate_inode_page(page))
-	// 			poisonret = VM_FAULT_NOPAGE;
-	// 		unlock_page(page);
-	// 	}
-	// 	put_page(page);
-	// 	vmf->page = NULL;
-	// 	return poisonret;
-	// }
-
 	// if (unlikely(!(ret & VM_FAULT_LOCKED)))
-	// 	lock_page(vmf->page);
+	// 	folio_lock(folio);
 	// else
-	// 	VM_BUG_ON_PAGE(!PageLocked(vmf->page), vmf->page);
+	// 	VM_BUG_ON_PAGE(!folio_test_locked(folio), vmf->page);
 
 	return ret;
 }
@@ -1052,11 +1033,7 @@ do_fault_around(vm_fault_s *vmf) {
 	to_pte = min3(from_pte + nr_pages, (pgoff_t)PTRS_PER_PTE,
 				pte_off + vma_pages(vmf->vma) - vma_off) - 1;
 
-	// if (pmd_none(*vmf->pmd)) {
-	// 	vmf->prealloc_pte = pte_alloc_one(vmf->vma->vm_mm);
-	// 	if (!vmf->prealloc_pte)
-	// 		return VM_FAULT_OOM;
-	// }
+	while (pmd_none(*vmf->pmd_entp));
 
 	// rcu_read_lock();
 	// ret = vmf->vma->vm_ops->map_pages(vmf,
@@ -1085,10 +1062,9 @@ do_read_fault(vm_fault_s *vmf) {
 			return ret;
 	// }
 
-	// if (vmf->flags & FAULT_FLAG_VMA_LOCK) {
-	// 	vma_end_read(vmf->vma);
-	// 	return VM_FAULT_RETRY;
-	// }
+	// ret = vmf_can_call_fault(vmf);
+	// if (ret)
+	// 	return ret;
 
 	ret = __do_fault(vmf);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
@@ -1105,22 +1081,22 @@ do_read_fault(vm_fault_s *vmf) {
 static vm_fault_t
 do_cow_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
+	folio_s *folio;
 	vm_fault_t ret;
 
-	// if (unlikely(anon_vma_prepare(vma)))
-	// 	return VM_FAULT_OOM;
+	// ret = vmf_can_call_fault(vmf);
+	// if (!ret)
+	// 	ret = vmf_anon_prepare(vmf);
+	// if (ret)
+	// 	return ret;
 
-	// vmf->cow_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma, vmf->address);
+	// folio = folio_prealloc(vma->vm_mm, vma, vmf->address, false);
+	// if (!folio)
+	// 	return VM_FAULT_OOM;
+	// vmf->cow_page = &folio->page;
 	vmf->cow_page = alloc_page(GFP_USER);
 	if (!vmf->cow_page)
 		return VM_FAULT_OOM;
-
-	// if (mem_cgroup_charge(page_folio(vmf->cow_page), vma->vm_mm,
-	// 			GFP_KERNEL)) {
-	// 	put_page(vmf->cow_page);
-	// 	return VM_FAULT_OOM;
-	// }
-	// cgroup_throttle_swaprate(vmf->cow_page, GFP_KERNEL);
 
 	ret = __do_fault(vmf);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
@@ -1129,7 +1105,7 @@ do_cow_fault(vm_fault_s *vmf) {
 		return ret;
 
 	copy_user_highpage(vmf->cow_page, vmf->page, vmf->address, vma);
-	// __SetPageUptodate(vmf->cow_page);
+	// __folio_mark_uptodate(folio);
 
 	ret |= finish_fault(vmf);
 	// unlock_page(vmf->page);
@@ -1138,6 +1114,7 @@ do_cow_fault(vm_fault_s *vmf) {
 		goto uncharge_out;
 	return ret;
 uncharge_out:
+	// folio_put(folio);
 	put_page(vmf->cow_page);
 	return ret;
 }
@@ -1148,36 +1125,39 @@ do_shared_fault(vm_fault_s *vmf) {
 	while (1);
 	
 	vma_s *vma = vmf->vma;
+	folio_s *folio;
 	vm_fault_t ret, tmp;
 
 	ret = __do_fault(vmf);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 		return ret;
 
+	// folio = page_folio(vmf->page);
+
 	// /*
 	//  * Check if the backing address space wants to know that the page is
 	//  * about to become writable
 	//  */
 	// if (vma->vm_ops->page_mkwrite) {
-	// 	unlock_page(vmf->page);
-	// 	tmp = do_page_mkwrite(vmf);
+	// 	folio_unlock(folio);
+	// 	tmp = do_page_mkwrite(vmf, folio);
 	// 	if (unlikely(!tmp ||
 	// 			(tmp & (VM_FAULT_ERROR | VM_FAULT_NOPAGE)))) {
-	// 		put_page(vmf->page);
+	// 		folio_put(folio);
 	// 		return tmp;
 	// 	}
 	// }
 
-	// ret |= finish_fault(vmf);
+	ret |= finish_fault(vmf);
 	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
 	// 				VM_FAULT_RETRY))) {
-	// 	unlock_page(vmf->page);
-	// 	put_page(vmf->page);
+	// 	folio_unlock(folio);
+	// 	folio_put(folio);
 	// 	return ret;
 	// }
 
 	// ret |= fault_dirty_shared_page(vmf);
-	// return ret;
+	return ret;
 }
 
 /*
@@ -1371,8 +1351,6 @@ vm_fault_t myos_handle_mm_fault(vma_s *vma,
 fail:
 	return ret;
 }
-
-
 
 
 
