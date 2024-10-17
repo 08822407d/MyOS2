@@ -779,7 +779,6 @@ copy:
 static vm_fault_t
 do_anonymous_page(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
-	vma->vm_page_prot = __pg(_PAGE_PRESENT | _PAGE_USER | _PAGE_PAT);
 	folio_s *folio;
 	vm_fault_t ret = 0;
 	pte_t entry;
@@ -861,9 +860,6 @@ unlock:
 	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
 	return ret;
 release:
-	folio_put(folio);
-	goto unlock;
-oom_free_page:
 	folio_put(folio);
 	goto unlock;
 oom:

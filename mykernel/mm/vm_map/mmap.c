@@ -1234,7 +1234,7 @@ do_brk_flags(ulong addr, ulong len, ulong flags)
 	vma->vm_end = addr + len;
 	vma->vm_pgoff = pgoff;
 	vma->vm_flags = flags;
-	// vma->vm_page_prot = vm_get_page_prot(flags);
+	vma->vm_page_prot = vm_get_page_prot(flags);
 	simple_vma_link(mm, vma, prev);
 out:
 	// perf_event_mmap(vma);

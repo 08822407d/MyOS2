@@ -15,6 +15,19 @@
 		vma_init(vma_s *vma, mm_s *mm);
 
 		extern void
+		vm_flags_init(vma_s *vma, vm_flags_t flags);
+		extern void
+		vm_flags_reset(vma_s *vma, vm_flags_t flags);
+		extern void
+		vm_flags_reset_once(vma_s *vma, vm_flags_t flags);
+		extern void
+		vm_flags_set(vma_s *vma, vm_flags_t flags);
+		extern void
+		vm_flags_clear(vma_s *vma, vm_flags_t flags);
+		extern void
+		vm_flags_mod(vma_s *vma, vm_flags_t set, vm_flags_t clear);
+
+		extern void
 		vma_set_anonymous(vma_s *vma);
 
 		extern bool
@@ -86,6 +99,62 @@
 			// INIT_LIST_HEAD(&vma->anon_vma_chain);
 			vma->vm_mm = mm;
 			vma->vm_ops = &dummy_vm_ops;
+		}
+
+		/* Use when VMA is not part of the VMA tree and needs no locking */
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_init(vma_s *vma, vm_flags_t flags) {
+			// ACCESS_PRIVATE(vma, __vm_flags) = flags;
+			ACCESS_PRIVATE(vma, vm_flags) = flags;
+		}
+
+		/*
+		 * Use when VMA is part of the VMA tree and modifications need coordination
+		 * Note: vm_flags_reset and vm_flags_reset_once do not lock the vma and
+		 * it should be locked explicitly beforehand.
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_reset(vma_s *vma, vm_flags_t flags) {
+			// vma_assert_write_locked(vma);
+			vm_flags_init(vma, flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_reset_once(vma_s *vma, vm_flags_t flags) {
+			// vma_assert_write_locked(vma);
+			// WRITE_ONCE(ACCESS_PRIVATE(vma, __vm_flags), flags);
+			WRITE_ONCE(ACCESS_PRIVATE(vma, vm_flags), flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_set(vma_s *vma, vm_flags_t flags) {
+			// vma_start_write(vma);
+			// ACCESS_PRIVATE(vma, __vm_flags) |= flags;
+			ACCESS_PRIVATE(vma, vm_flags) |= flags;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_clear(vma_s *vma, vm_flags_t flags) {
+			// vma_start_write(vma);
+			// ACCESS_PRIVATE(vma, __vm_flags) &= ~flags;
+			ACCESS_PRIVATE(vma, vm_flags) &= ~flags;
+		}
+
+		/*
+		 * Use only when the order of set/clear operations is unimportant, otherwise
+		 * use vm_flags_{set|clear} explicitly.
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		vm_flags_mod(vma_s *vma, vm_flags_t set, vm_flags_t clear) {
+			// vma_start_write(vma);
+			// __vm_flags_mod(vma, set, clear);
+			vm_flags_init(vma, (vma->vm_flags | set) & ~clear);
 		}
 
 		PREFIX_STATIC_INLINE

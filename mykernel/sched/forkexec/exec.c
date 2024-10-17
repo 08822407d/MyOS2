@@ -71,29 +71,11 @@ static page_s
 	mm_s *mm = bprm->mm;
 	int ret;
 
-	// /*
-	//  * Avoid relying on expanding the stack down in GUP (which
-	//  * does not work for STACK_GROWSUP anyway), and just do it
-	//  * by hand ahead of time.
-	//  */
-	// if (write && pos < vma->vm_start) {
-	// 	mmap_write_lock(mm);
-	// 	ret = expand_downwards(vma, pos);
-	// 	if (unlikely(ret < 0)) {
-	// 		mmap_write_unlock(mm);
-	// 		return NULL;
-	// 	}
-	// 	mmap_write_downgrade(mm);
-	// } else
-		mmap_read_lock(mm);
-
-	// /*
-	//  * We are doing an exec().  'current' is the process
-	//  * doing the exec and 'mm' is the new process's mm.
-	//  */
-	// ret = get_user_pages_remote(mm, pos, 1,
-	// 		write ? FOLL_WRITE : 0,
-	// 		&page, NULL, NULL);
+	mmap_read_lock(mm);
+	/*
+	 * We are doing an exec().  'current' is the process
+	 * doing the exec and 'mm' is the new process's mm.
+	 */
 	ret = myos_get_user_pages(mm, pos, 1, &page);
 	mmap_read_unlock(mm);
 	if (ret <= 0)
@@ -140,7 +122,7 @@ __bprm_mm_init(linux_bprm_s *bprm) {
 	vma->vm_end = STACK_TOP_MAX;
 	vma->vm_start = vma->vm_end - PAGE_SIZE;
 	vma->vm_flags = VM_SOFTDIRTY | VM_STACK_FLAGS | VM_STACK_INCOMPLETE_SETUP;
-	// vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
 
 	err = insert_vm_struct(mm, vma);
 	if (err)
@@ -220,7 +202,6 @@ count(const char *const *argv, int max) {
 
 	if (argv != NULL) {
 		for (;;) {
-			// const char *p = *(argv + i);
 			const char __user *p =
 					get_user_arg_ptr(argv, i);
 
@@ -520,7 +501,6 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	vm_flags |= mm->def_flags;
 	vm_flags |= VM_STACK_INCOMPLETE_SETUP;
 
-	// vma_iter_init(&vmi, mm, vma->vm_start);
 
 	// tlb_gather_mmu(&tlb, mm);
 	// ret = mprotect_fixup(vma, &prev, vma->vm_start, vma->vm_end,
@@ -543,8 +523,8 @@ int setup_arg_pages(linux_bprm_s *bprm,
 	// 		goto out_unlock;
 	// }
 
-	// /* mprotect_fixup is overkill to remove the temporary stack flags */
-	// vm_flags_clear(vma, VM_STACK_INCOMPLETE_SETUP);
+	/* mprotect_fixup is overkill to remove the temporary stack flags */
+	vm_flags_clear(vma, VM_STACK_INCOMPLETE_SETUP);
 
 	stack_expand = 32 * PAGE_SIZE; /* randomly 32*4k (or 2*64k) pages */
 	stack_size = vma->vm_end - vma->vm_start;
