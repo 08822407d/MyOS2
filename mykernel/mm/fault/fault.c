@@ -213,44 +213,53 @@ copy_present_pte(vma_s *dst_vma, vma_s *src_vma,
 
 
 static int
-copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
-		pmd_t *src_pmde_ptr, ulong addr, ulong end) {
+copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_entp,
+		pmd_t *src_pmd_entp, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pte_t *src_pte_ptr, *dst_pte_ptr;
+	// pte_t *orig_src_pte_ptr, *orig_dst_pte_ptr;
 	spinlock_t *src_ptl, *dst_ptl;
 	int ret = 0;
 
-	// dst_pte_ptr = pte_alloc_map_lock(dst_mm, dst_pmde_ptr, addr, &dst_ptl);
-	dst_pte_ptr = pte_alloc_map(dst_mm, dst_pmde_ptr, addr);
-	if (!dst_pte_ptr)
+	dst_pte_ptr = pte_alloc_map_lock(dst_mm, dst_pmd_entp, addr, &dst_ptl);
+	if (!dst_pte_ptr) {
+		// pte_unmap_unlock(dst_pte_ptr, dst_ptl);
+		spin_unlock_no_resched(dst_ptl);
+		/* ret == 0 */
 		return -ENOMEM;
-	src_pte_ptr = pte_offset_map_nolock(src_mm, src_pmde_ptr, addr, &src_ptl);;
+	}
+	// src_pte_ptr = pte_offset_map_nolock(src_mm, src_pmd_entp, addr, &src_ptl);;
+	src_pte_ptr = pte_offset_map_lock(src_mm, src_pmd_entp, addr, &src_ptl);;
+	// orig_src_pte_ptr = src_pte_ptr;
+	// orig_dst_pte_ptr = dst_pte_ptr;
 
 	do {
 		if (pte_none(*src_pte_ptr)) {
 			continue;
 		}
-		if (unlikely(!pte_present(*src_pte_ptr))) {
-			// ret = copy_nonpresent_pte(dst_mm, src_mm,
-			// 			  dst_pte_ptr, src_pte_ptr,
-			// 			  dst_vma, src_vma,
-			// 			  addr, rss);
-			// if (ret == -EIO) {
-			// 	entry = pte_to_swp_entry(*src_pte_ptr);
-			// 	break;
-			// } else if (ret == -EBUSY) {
-			// 	break;
-			// } else if (!ret) {
-			// 	continue;
-			// }
-			// /*
-			//  * Device exclusive entry restored, continue by copying
-			//  * the now present pte.
-			//  */
-			// WARN_ON_ONCE(ret != -ENOENT);
-		}
+		// swap currently not supported.
+		while (unlikely(!pte_present(*src_pte_ptr)));
+		// if (unlikely(!pte_present(*src_pte_ptr))) {
+		// 	ret = copy_nonpresent_pte(dst_mm, src_mm,
+		// 				  dst_pte_ptr, src_pte_ptr,
+		// 				  dst_vma, src_vma,
+		// 				  addr, rss);
+		// 	if (ret == -EIO) {
+		// 		entry = pte_to_swp_entry(*src_pte_ptr);
+		// 		break;
+		// 	} else if (ret == -EBUSY) {
+		// 		break;
+		// 	} else if (!ret) {
+		// 		continue;
+		// 	}
+		// 	/*
+		// 	 * Device exclusive entry restored, continue by copying
+		// 	 * the now present pte.
+		// 	 */
+		// 	WARN_ON_ONCE(ret != -ENOENT);
+		// }
 		/* copy_present_pte() will clear `*prealloc' if consumed */
 		ret = copy_present_pte(dst_vma, src_vma,
 				dst_pte_ptr, src_pte_ptr, addr);
@@ -262,86 +271,96 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmde_ptr,
 			break;
 	} while (dst_pte_ptr++, src_pte_ptr++, addr += PAGE_SIZE, addr != end);
 
+	// pte_unmap_unlock(orig_src_pte_ptr, src_ptl);
+	spin_unlock_no_resched(src_ptl);
+	// pte_unmap_unlock(orig_dst_pte_ptr, dst_ptl);
+	spin_unlock_no_resched(dst_ptl);
+	// cond_resched();
+
 	return 0;
 }
 
 static inline int
-copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pude_ptr,
-		pud_t *src_pude_ptr, ulong addr, ulong end) {
+copy_pmd_range(vma_s *dst_vma, vma_s *src_vma, pud_t *dst_pud_entp,
+		pud_t *src_pud_entp, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pmd_t *src_pmde_ptr, *dst_pmde_ptr;
+	pmd_t *src_pmd_entp, *dst_pmd_entp;
 	ulong next;
 
-	dst_pmde_ptr = pmd_alloc(dst_mm, dst_pude_ptr, addr);
-	if (!dst_pmde_ptr)
+	dst_pmd_entp = pmd_alloc(dst_mm, dst_pud_entp, addr);
+	if (!dst_pmd_entp)
 		return -ENOMEM;
-	src_pmde_ptr = pmd_offset(src_pude_ptr, addr);
+	src_pmd_entp = pmd_offset(src_pud_entp, addr);
 
 	do {
-		next = pmd_ent_bound_end(addr, end);
-		if (pmd_ent_none_or_clear_bad(src_pmde_ptr))
+		next = pmd_addr_end(addr, end);
+		// MyOS2 doesn't support huge-page and swap,
+		// So here skip corresponding check and handling
+		if (pmd_ent_none_or_clear_bad(src_pmd_entp))
 			continue;
 		if (copy_pte_range(dst_vma, src_vma,
-				dst_pmde_ptr, src_pmde_ptr, addr, next))
+				dst_pmd_entp, src_pmd_entp, addr, next))
 			return -ENOMEM;
-	} while (dst_pmde_ptr++, src_pmde_ptr++, addr = next, addr != end);
+	} while (dst_pmd_entp++, src_pmd_entp++, addr = next, addr != end);
 
 	return 0;
 }
 
 static inline int
-copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4de_ptr,
-		p4d_t *src_p4de_ptr, ulong addr, ulong end) {
+copy_pud_range(vma_s *dst_vma, vma_s *src_vma, p4d_t *dst_p4d_entp,
+		p4d_t *src_p4d_entp, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pud_t *src_pude_ptr, *dst_pude_ptr;
+	pud_t *src_pud_entp, *dst_pud_entp;
 	ulong next;
 
-	dst_pude_ptr = pud_alloc(dst_mm, dst_p4de_ptr, addr);
-	if (!dst_pude_ptr)
+	dst_pud_entp = pud_alloc(dst_mm, dst_p4d_entp, addr);
+	if (!dst_pud_entp)
 		return -ENOMEM;
-	src_pude_ptr = pud_offset(src_p4de_ptr, addr);
+	src_pud_entp = pud_offset(src_p4d_entp, addr);
 
 	do {
-		next = pud_ent_bound_end(addr, end);
-		if (pud_ent_none_or_clear_bad(src_pude_ptr))
+		next = pud_addr_end(addr, end);
+		// MyOS2 doesn't support huge-page and swap,
+		// So here skip corresponding check and handling
+		if (pud_ent_none_or_clear_bad(src_pud_entp))
 			continue;
 		if (copy_pmd_range(dst_vma, src_vma,
-				dst_pude_ptr, src_pude_ptr, addr, next))
+				dst_pud_entp, src_pud_entp, addr, next))
 			return -ENOMEM;
-	} while (dst_pude_ptr++, src_pude_ptr++, addr = next, addr != end);
+	} while (dst_pud_entp++, src_pud_entp++, addr = next, addr != end);
 
 	return 0;
 }
 
-// 在启用四级映射时，实际上本子函数没做任何有意义的工作，
+// 在启用四级映射时，实际上该子函数没做任何有意义的工作，
 // 遍历的p4d实际上完全等于上一级的pgd
 // 四级映射下p4d页必有效，所以可以不检查p4d_ent的有效性
 static inline int
-copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgde_ptr,
-		pgd_t *src_pgde_ptr, ulong addr, ulong end) {
+copy_p4d_range(vma_s *dst_vma, vma_s *src_vma, pgd_t *dst_pgd_entp,
+		pgd_t *src_pgd_entp, ulong addr, ulong end) {
 
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	p4d_t *src_p4de_ptr, *dst_p4de_ptr;
+	p4d_t *src_p4d_entp, *dst_p4d_entp;
 	ulong next;
 
-	dst_p4de_ptr = p4d_alloc(dst_mm, dst_pgde_ptr, addr);
-	if (!dst_p4de_ptr)
+	dst_p4d_entp = p4d_alloc(dst_mm, dst_pgd_entp, addr);
+	if (!dst_p4d_entp)
 		return -ENOMEM;
-	src_p4de_ptr = p4d_offset(src_pgde_ptr, addr);
+	src_p4d_entp = p4d_offset(src_pgd_entp, addr);
 
 	do {
-		next = p4d_ent_bound_end(addr, end);
-		if (p4d_ent_none_or_clear_bad(src_p4de_ptr))
+		next = p4d_addr_end(addr, end);
+		if (p4d_ent_none_or_clear_bad(src_p4d_entp))
 			continue;
 		if (copy_pud_range(dst_vma, src_vma,
-				dst_p4de_ptr, src_p4de_ptr, addr, next))
+				dst_p4d_entp, src_p4d_entp, addr, next))
 			return -ENOMEM;
-	} while (dst_p4de_ptr++, src_p4de_ptr++, addr = next, addr != end);
+	} while (dst_p4d_entp++, src_p4d_entp++, addr = next, addr != end);
 
 	return 0;
 }
@@ -354,37 +373,22 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 	ulong end = src_vma->vm_end;
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
-	pgd_t *src_pgde_ptr, *dst_pgde_ptr;
+	pgd_t *src_pgd_entp, *dst_pgd_entp;
 	int ret = ENOERR;
 
-	/*
-	 * Don't copy ptes where a page fault will fill them correctly.
-	 * Fork becomes much lighter when there are big shared or private
-	 * readonly mappings. The tradeoff is that copy_page_range is more
-	 * efficient than faulting.
-	 */
-
-	// /*
-	//  * We need to invalidate the secondary MMU mappings only when
-	//  * there could be a permission downgrade on the ptes of the
-	//  * parent mm. And a permission downgrade will only happen if
-	//  * is_cow_mapping() returns true.
-	//  */
-	// bool is_cow = is_cow_mapping(src_vma->vm_flags);
-
-	dst_pgde_ptr = pgd_offset(dst_mm, addr);
-	src_pgde_ptr = pgd_offset(src_mm, addr);
+	dst_pgd_entp = pgd_offset(dst_mm, addr);
+	src_pgd_entp = pgd_offset(src_mm, addr);
 
 	do {
-		next = pgd_ent_bound_end(addr, end);
-		if (pgd_none_or_clear_bad(src_pgde_ptr))
+		next = pgd_addr_end(addr, end);
+		if (pgd_none_or_clear_bad(src_pgd_entp))
 			continue;
 		if (copy_p4d_range(dst_vma, src_vma,
-				dst_pgde_ptr, src_pgde_ptr, addr, next)) {
+				dst_pgd_entp, src_pgd_entp, addr, next)) {
 			ret = -ENOMEM;
 			break;
 		}
-	} while (dst_pgde_ptr++, src_pgde_ptr++, addr = next, addr != end);
+	} while (dst_pgd_entp++, src_pgd_entp++, addr = next, addr != end);
 
 	return ret;
 }
@@ -700,22 +704,18 @@ oom:
 static vm_fault_t
 do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	vma_s *vma = vmf->vma;
-
-	// if (userfaultfd_pte_wp(vma, *vmf->pte)) {
-	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// 	return handle_userfault(vmf, VM_UFFD_WP);
-	// }
-
-	// /*
-	//  * Userfaultfd write-protect can defer flushes. Ensure the TLB
-	//  * is flushed in this case before copying.
-	//  */
-	// if (unlikely(userfaultfd_wp(vmf->vma) &&
-	// 	     mm_tlb_flush_pending(vmf->vma->vm_mm)))
-	// 	flush_tlb_page(vmf->vma, vmf->address);
+	folio_s *folio = NULL;
+	pte_t pte;
 
 	vmf->page = vm_normal_page(vma, vmf->address, *vmf->pte_ptr);
-	// if (!vmf->page) {
+	if (vmf->page)
+		folio = page_folio(vmf->page);
+
+	// /*
+	//  * Shared mapping: we are guaranteed to have VM_WRITE and
+	//  * FAULT_FLAG_WRITE set at this point.
+	//  */
+	// if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
 	// 	/*
 	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
 	// 	 * VM_PFNMAP VMA.
@@ -723,47 +723,34 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	// 	 * We should not cow pages in a shared writeable mapping.
 	// 	 * Just mark the pages writable and/or call ops->pfn_mkwrite.
 	// 	 */
-	// 	if ((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
-	// 			     (VM_WRITE|VM_SHARED))
+	// 	if (!vmf->page)
 	// 		return wp_pfn_shared(vmf);
-
-	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// 	return wp_page_copy(vmf);
+	// 	return wp_page_shared(vmf, folio);
 	// }
 
 	// /*
-	//  * Take out anonymous pages first, anonymous shared vmas are
-	//  * not dirty accountable.
+	//  * Private mapping: create an exclusive anonymous page copy if reuse
+	//  * is impossible. We might miss VM_WRITE for FOLL_FORCE handling.
+	//  *
+	//  * If we encounter a page that is marked exclusive, we must reuse
+	//  * the page without further checks.
 	//  */
-	// if (PageAnon(vmf->page)) {
-	// 	page_s *page = vmf->page;
-
-	// 	/* PageKsm() doesn't necessarily raise the page refcount */
-	// 	if (PageKsm(page) || page_count(page) != 1)
-	// 		goto copy;
-	// 	if (!trylock_page(page))
-	// 		goto copy;
-	// 	if (PageKsm(page) || page_mapcount(page) != 1 || page_count(page) != 1) {
-	// 		unlock_page(page);
-	// 		goto copy;
+	// if (folio && folio_test_anon(folio) &&
+	//     (PageAnonExclusive(vmf->page) || wp_can_reuse_anon_folio(folio, vma))) {
+	// 	if (!PageAnonExclusive(vmf->page))
+	// 		SetPageAnonExclusive(vmf->page);
+	// 	if (unlikely(unshare)) {
+	// 		pte_unmap_unlock(vmf->pte, vmf->ptl);
+	// 		return 0;
 	// 	}
-	// 	/*
-	// 	 * Ok, we've got the only map reference, and the only
-	// 	 * page count reference, and the page is locked,
-	// 	 * it's dark out, and we're wearing sunglasses. Hit it.
-	// 	 */
-	// 	unlock_page(page);
-	// 	wp_page_reuse(vmf);
-	// 	return VM_FAULT_WRITE;
-	// } else if (unlikely((vma->vm_flags & (VM_WRITE|VM_SHARED)) ==
-	// 				(VM_WRITE|VM_SHARED))) {
-	// 	return wp_page_shared(vmf);
+	// 	wp_page_reuse(vmf, folio);
+	// 	return 0;
 	// }
-copy:
-	/*
-	 * Ok, we need to copy. Oh, well..
-	 */
-	get_page(vmf->page);
+	// /*
+	//  * Ok, we need to copy. Oh, well..
+	//  */
+	if (folio)
+		folio_get(folio);
 
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
 	return wp_page_copy(vmf);
@@ -849,8 +836,6 @@ do_anonymous_page(vm_fault_s *vmf) {
 	// folio_add_new_anon_rmap(folio, vma, vmf->address);
 	// folio_add_lru_vma(folio, vma);
 setpte:
-	// if (uffd_wp)
-	// 	entry = pte_mkuffd_wp(entry);
 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte_ptr, entry);
 
 	// /* No need to invalidate - it was non-present before */
@@ -899,6 +884,8 @@ __do_fault(vm_fault_s *vmf) {
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
 			VM_FAULT_RETRY | VM_FAULT_DONE_COW)))
 		return ret;
+	
+	// We skip page-poisoned check
 
 	// if (unlikely(!(ret & VM_FAULT_LOCKED)))
 	// 	folio_lock(folio);
@@ -928,16 +915,17 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 {
 	vma_s *vma = vmf->vma;
 	page_s *page;
+	folio_s *folio;
 	vm_fault_t ret;
-	ulong page_addr = 0;
+	bool is_cow = (vmf->flags & FAULT_FLAG_WRITE) &&
+					!(vma->vm_flags & VM_SHARED);
+	pte_t entry;
 
 	/* Did we COW the page? */
-	if ((vmf->flags & FAULT_FLAG_WRITE) && !(vma->vm_flags & VM_SHARED))
+	if (is_cow)
 		page = vmf->cow_page;
 	else
 		page = vmf->page;
-
-	page_addr = page_to_phys(page);
 
 	// /*
 	//  * check even for read faults because we might have lost our CoWed
@@ -949,43 +937,67 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	// 		return ret;
 	// }
 
-	// if (pmd_none(*vmf->pmd)) {
-	// 	if (PageTransCompound(page)) {
-	// 		ret = do_set_pmd(vmf, page);
-	// 		if (ret != VM_FAULT_FALLBACK)
-	// 			return ret;
-	// 	}
+	// vmf->pmd must exist and correct, skip check
+	// prealloc_pte not supported, skip check
 
-	// 	if (vmf->prealloc_pte)
-	// 		pmd_install(vma->vm_mm, vmf->pmd, &vmf->prealloc_pte);
-	// 	else if (unlikely(pte_alloc(vma->vm_mm, vmf->pmd)))
-	// 		return VM_FAULT_OOM;
-	// }
+	// folio = page_folio(page);
+	// nr_pages = folio_nr_pages(folio);
 
 	// /*
-	//  * See comment in handle_pte_fault() for how this scenario happens, we
-	//  * need to return NOPAGE so that we drop this page.
+	//  * Using per-page fault to maintain the uffd semantics, and same
+	//  * approach also applies to non-anonymous-shmem faults to avoid
+	//  * inflating the RSS of the process.
 	//  */
-	// if (pmd_devmap_trans_unstable(vmf->pmd))
-	// 	return VM_FAULT_NOPAGE;
+	// if (!vma_is_anon_shmem(vma) || unlikely(userfaultfd_armed(vma))) {
+	// 	nr_pages = 1;
+	// } else if (nr_pages > 1) {
+	// 	pgoff_t idx = folio_page_idx(folio, page);
+	// 	/* The page offset of vmf->address within the VMA. */
+	// 	pgoff_t vma_off = vmf->pgoff - vmf->vma->vm_pgoff;
+	// 	/* The index of the entry in the pagetable for fault page. */
+	// 	pgoff_t pte_off = pte_index(vmf->address);
 
-	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
-	// 			      vmf->address, &vmf->ptl);
-	*vmf->pte_ptr = arch_make_pte(pgprot_val(PAGE_SHARED_EXEC) | _PAGE_PAT | page_addr);
-	ret = 0;
-	// /* Re-check under ptl */
-	// if (likely(!vmf_pte_changed(vmf))) {
-	// 	do_set_pte(vmf, page, vmf->address);
-
-	// 	/* no need to invalidate: a not-present page won't be cached */
-	// 	update_mmu_cache(vma, vmf->address, vmf->pte);
-
-	// 	ret = 0;
-	// } else {
-	// 	update_mmu_tlb(vma, vmf->address, vmf->pte);
-	// 	ret = VM_FAULT_NOPAGE;
+	// 	/*
+	// 	 * Fallback to per-page fault in case the folio size in page
+	// 	 * cache beyond the VMA limits and PMD pagetable limits.
+	// 	 */
+	// 	if (unlikely(vma_off < idx ||
+	// 		    vma_off + (nr_pages - idx) > vma_pages(vma) ||
+	// 		    pte_off < idx ||
+	// 		    pte_off + (nr_pages - idx)  > PTRS_PER_PTE)) {
+	// 		nr_pages = 1;
+	// 	} else {
+	// 		/* Now we can set mappings for the whole large folio. */
+	// 		addr = vmf->address - idx * PAGE_SIZE;
+	// 		page = &folio->page;
+	// 	}
 	// }
 
+	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
+	// 				vmf->pmd, vmf->address, &vmf->ptl);
+	// if (!vmf->pte)
+	// 	return VM_FAULT_NOPAGE;
+
+	// /* Re-check under ptl */
+	// if (nr_pages == 1 && unlikely(vmf_pte_changed(vmf))) {
+	// 	update_mmu_tlb(vma, addr, vmf->pte);
+	// 	ret = VM_FAULT_NOPAGE;
+	// 	goto unlock;
+	// } else if (nr_pages > 1 && !pte_range_none(vmf->pte, nr_pages)) {
+	// 	update_mmu_tlb_range(vma, addr, vmf->pte, nr_pages);
+	// 	ret = VM_FAULT_NOPAGE;
+	// 	goto unlock;
+	// }
+
+	// folio_ref_add(folio, nr_pages - 1);
+	// set_pte_range(vmf, folio, page, nr_pages, addr);
+	entry = mk_pte(page, vma->vm_page_prot);
+	set_pte(vmf->pte_ptr, entry);
+	// type = is_cow ? MM_ANONPAGES : mm_counter_file(folio);
+	// add_mm_counter(vma->vm_mm, type, nr_pages);
+	ret = 0;
+
+unlock:
 	// pte_unmap_unlock(vmf->pte, vmf->ptl);
 	return ret;
 }
@@ -1058,10 +1070,6 @@ do_read_fault(vm_fault_s *vmf) {
 			return ret;
 	// }
 
-	// ret = vmf_can_call_fault(vmf);
-	// if (ret)
-	// 	return ret;
-
 	ret = __do_fault(vmf);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 		return ret;
@@ -1079,12 +1087,6 @@ do_cow_fault(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	folio_s *folio;
 	vm_fault_t ret;
-
-	// ret = vmf_can_call_fault(vmf);
-	// if (!ret)
-	// 	ret = vmf_anon_prepare(vmf);
-	// if (ret)
-	// 	return ret;
 
 	// folio = folio_prealloc(vma->vm_mm, vma, vmf->address, false);
 	// if (!folio)
@@ -1128,7 +1130,7 @@ do_shared_fault(vm_fault_s *vmf) {
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))
 		return ret;
 
-	// folio = page_folio(vmf->page);
+	folio = page_folio(vmf->page);
 
 	// /*
 	//  * Check if the backing address space wants to know that the page is
@@ -1192,7 +1194,7 @@ do_fault(vm_fault_s *vmf) {
 		else
 			ret = VM_FAULT_NOPAGE;
 
-		pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
+		// pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
 	} else if (!(vmf->flags & FAULT_FLAG_WRITE))
 		// Reading or Executing cause fault
 		ret = do_read_fault(vmf);
@@ -1203,11 +1205,7 @@ do_fault(vm_fault_s *vmf) {
 		// Writing cause fault, and address is VM_SHARED
 		ret = do_shared_fault(vmf);
 
-	// /* preallocated pagetable is unused: free it */
-	// if (vmf->prealloc_pte) {
-	// 	pte_free(vm_mm, vmf->prealloc_pte);
-	// 	vmf->prealloc_pte = NULL;
-	// }
+	// prealloc_pte not supported, skip check
 	return ret;
 }
 
