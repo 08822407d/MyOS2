@@ -200,6 +200,11 @@ static inline folio_s
 	return folio_alloc(GFP_HIGHUSER_MOVABLE, 0);
 }
 
+static folio_s
+*alloc_anon_folio(vm_fault_s *vmf) {
+	vma_s *vma = vmf->vma;
+	return folio_prealloc(vma->vm_mm, vma, vmf->address, true);
+}
 
 /*
  * Copy one pte.  Returns 0 if succeeded, or -EAGAIN if one preallocated page
@@ -422,54 +427,48 @@ __wp_page_copy_user(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	int ret;
 	// void *kaddr;
 	// void __user *uaddr;
-	// bool locked = false;
 	vma_s *vma = vmf->vma;
 	mm_s *mm = vma->vm_mm;
 	ulong addr = vmf->address;
 
 	if (likely(src)) {
 		copy_user_highpage(dst, src, addr, vma);
-		// copy_user_page((void *)page_to_virt(dst),
-		// 		(void *)page_to_virt(src), addr, dst);
-
-		// loff_t offset;
-		// if ((offset = myosDBG_compare_page(dst, src)) != PAGE_SIZE)
-		// 	pr_alert("COW copied page content changed at offset: %#08Lx.\n", offset);
-
 		return -ENOERR;
 	}
 
 	// /*
 	//  * If the source page was a PFN mapping, we don't have
-	//  * a "page_s" for it. We do a best-effort copy by
+	//  * a "struct page" for it. We do a best-effort copy by
 	//  * just copying from the original user address. If that
 	//  * fails, we just zero-fill it. Live with it.
 	//  */
-	// kaddr = kmap_atomic(dst);
+	// kaddr = kmap_local_page(dst);
+	// pagefault_disable();
 	// uaddr = (void __user *)(addr & PAGE_MASK);
 
 	// /*
 	//  * On architectures with software "accessed" bits, we would
 	//  * take a double page fault, so mark it accessed here.
 	//  */
-	// if (arch_faults_on_old_pte() && !pte_young(vmf->orig_pte)) {
+	// vmf->pte = NULL;
+	// if (!arch_has_hw_pte_young() && !pte_young(vmf->orig_pte)) {
 	// 	pte_t entry;
 
 	// 	vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-	// 	locked = true;
-	// 	if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	// 	if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte))) {
 	// 		/*
 	// 		 * Other thread has already handled the fault
 	// 		 * and update local tlb only
 	// 		 */
-	// 		update_mmu_tlb(vma, addr, vmf->pte);
-	// 		ret = false;
+	// 		if (vmf->pte)
+	// 			update_mmu_tlb(vma, addr, vmf->pte);
+	// 		ret = -EAGAIN;
 	// 		goto pte_unlock;
 	// 	}
 
 	// 	entry = pte_mkyoung(vmf->orig_pte);
 	// 	if (ptep_set_access_flags(vma, addr, vmf->pte, entry, 0))
-	// 		update_mmu_cache(vma, addr, vmf->pte);
+	// 		update_mmu_cache_range(vmf, vma, addr, vmf->pte, 1);
 	// }
 
 	// /*
@@ -479,16 +478,16 @@ __wp_page_copy_user(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	//  * zeroes.
 	//  */
 	// if (__copy_from_user_inatomic(kaddr, uaddr, PAGE_SIZE)) {
-	// 	if (locked)
+	// 	if (vmf->pte)
 	// 		goto warn;
 
 	// 	/* Re-validate under PTL if the page is still mapped */
 	// 	vmf->pte = pte_offset_map_lock(mm, vmf->pmd, addr, &vmf->ptl);
-	// 	locked = true;
-	// 	if (!likely(pte_same(*vmf->pte, vmf->orig_pte))) {
+	// 	if (unlikely(!vmf->pte || !pte_same(ptep_get(vmf->pte), vmf->orig_pte))) {
 	// 		/* The PTE changed under us, update local tlb */
-	// 		update_mmu_tlb(vma, addr, vmf->pte);
-	// 		ret = false;
+	// 		if (vmf->pte)
+	// 			update_mmu_tlb(vma, addr, vmf->pte);
+	// 		ret = -EAGAIN;
 	// 		goto pte_unlock;
 	// 	}
 
@@ -501,18 +500,19 @@ __wp_page_copy_user(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	// 		 * Give a warn in case there can be some obscure
 	// 		 * use-case
 	// 		 */
-// warn:
+warn:
 	// 		WARN_ON_ONCE(1);
 	// 		clear_page(kaddr);
 	// 	}
 	// }
 
-	ret = -ENOMEM;
+	ret = 0;
 
 pte_unlock:
-	// if (locked)
+	// if (vmf->pte)
 	// 	pte_unmap_unlock(vmf->pte, vmf->ptl);
-	// kunmap_atomic(kaddr);
+	// pagefault_enable();
+	// kunmap_local(kaddr);
 	// flush_dcache_page(dst);
 
 	return ret;
@@ -635,7 +635,7 @@ wp_page_copy(vm_fault_s *vmf) {
 		// ptep_clear_flush(vma, vmf->address, vmf->pte);
 		// folio_add_new_anon_rmap(new_folio, vma, vmf->address, RMAP_EXCLUSIVE);
 		// folio_add_lru_vma(new_folio, vma);
-		// BUG_ON(unshare && pte_write(entry));
+		BUG_ON(unshare && pte_write(entry));
 		set_pte_at(mm, vmf->address, vmf->pte_ptr, entry);
 		// update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
 		// if (old_folio) {
@@ -722,22 +722,25 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	if (vmf->page)
 		folio = page_folio(vmf->page);
 
-	// /*
-	//  * Shared mapping: we are guaranteed to have VM_WRITE and
-	//  * FAULT_FLAG_WRITE set at this point.
-	//  */
-	// if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
-	// 	/*
-	// 	 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
-	// 	 * VM_PFNMAP VMA.
-	// 	 *
-	// 	 * We should not cow pages in a shared writeable mapping.
-	// 	 * Just mark the pages writable and/or call ops->pfn_mkwrite.
-	// 	 */
-	// 	if (!vmf->page)
-	// 		return wp_pfn_shared(vmf);
-	// 	return wp_page_shared(vmf, folio);
-	// }
+	/*
+	 * Shared mapping: we are guaranteed to have VM_WRITE and
+	 * FAULT_FLAG_WRITE set at this point.
+	 */
+	if (vma->vm_flags & (VM_SHARED | VM_MAYSHARE)) {
+		// catch this case, handler temporarily not implemented
+		while (1);
+		
+		/*
+		 * VM_MIXEDMAP !pfn_valid() case, or VM_SOFTDIRTY clear on a
+		 * VM_PFNMAP VMA.
+		 *
+		 * We should not cow pages in a shared writeable mapping.
+		 * Just mark the pages writable and/or call ops->pfn_mkwrite.
+		 */
+		// if (!vmf->page)
+		// 	return wp_pfn_shared(vmf);
+		// return wp_page_shared(vmf, folio);
+	}
 
 	// /*
 	//  * Private mapping: create an exclusive anonymous page copy if reuse
@@ -757,9 +760,9 @@ do_wp_page(vm_fault_s *vmf) __releases(vmf->ptl) {
 	// 	wp_page_reuse(vmf, folio);
 	// 	return 0;
 	// }
-	// /*
-	//  * Ok, we need to copy. Oh, well..
-	//  */
+	/*
+	 * Ok, we need to copy. Oh, well..
+	 */
 	if (folio)
 		folio_get(folio);
 
@@ -779,6 +782,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 	vma_s *vma = vmf->vma;
 	folio_s *folio;
 	vm_fault_t ret = 0;
+	// int nr_pages = 1;
 	pte_t entry;
 
 	/* File mapping without ->vm_ops ? */
@@ -797,6 +801,10 @@ do_anonymous_page(vm_fault_s *vmf) {
 		entry = pte_mkspecial(pfn_pte(my_zero_pfn(vmf->address),
 					vma->vm_page_prot));
 
+		// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd,
+		// 		vmf->address, &vmf->ptl);
+		if (!vmf->pte_ptr)
+			goto unlock;
 		// if (vmf_pte_changed(vmf)) {
 		// 	update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
 		// 	goto unlock;
@@ -812,8 +820,7 @@ do_anonymous_page(vm_fault_s *vmf) {
 	// if (ret)
 	// 	return ret;
 	/* Returns NULL on OOM or ERR_PTR(-EAGAIN) if we must retry the fault */
-	// folio = alloc_anon_folio(vmf);
-	folio = page_folio(alloc_page(GFP_USER | __GFP_ZERO));
+	folio = alloc_anon_folio(vmf);
 	if (IS_ERR(folio))
 		return 0;
 	if (!folio)
@@ -833,6 +840,9 @@ do_anonymous_page(vm_fault_s *vmf) {
 	if (vma->vm_flags & VM_WRITE)
 		entry = pte_mkwrite(pte_mkdirty(entry));
 
+	// vmf->pte = pte_offset_map_lock(vma->vm_mm, vmf->pmd, addr, &vmf->ptl);
+	if (!vmf->pte_ptr)
+		goto release;
 	// if (vmf_pte_changed(vmf)) {
 	// 	update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
 	// 	goto release;
@@ -898,6 +908,7 @@ __do_fault(vm_fault_s *vmf) {
 	
 	// We skip page-poisoned check
 
+	folio = page_folio(vmf->page);
 	// if (unlikely(!(ret & VM_FAULT_LOCKED)))
 	// 	folio_lock(folio);
 	// else
@@ -930,6 +941,7 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	vm_fault_t ret;
 	bool is_cow = (vmf->flags & FAULT_FLAG_WRITE) &&
 					!(vma->vm_flags & VM_SHARED);
+	int type, nr_pages;
 	pte_t entry;
 
 	/* Did we COW the page? */
@@ -951,8 +963,8 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 	// vmf->pmd must exist and correct, skip check
 	// prealloc_pte not supported, skip check
 
-	// folio = page_folio(page);
-	// nr_pages = folio_nr_pages(folio);
+	folio = page_folio(page);
+	nr_pages = folio_nr_pages(folio);
 
 	// /*
 	//  * Using per-page fault to maintain the uffd semantics, and same
@@ -986,8 +998,8 @@ vm_fault_t finish_fault(vm_fault_s *vmf)
 
 	// vmf->pte = pte_offset_map_lock(vma->vm_mm,
 	// 				vmf->pmd, vmf->address, &vmf->ptl);
-	// if (!vmf->pte)
-	// 	return VM_FAULT_NOPAGE;
+	if (!vmf->pte_ptr)
+		return VM_FAULT_NOPAGE;
 
 	// /* Re-check under ptl */
 	// if (nr_pages == 1 && unlikely(vmf_pte_changed(vmf))) {
@@ -1120,8 +1132,8 @@ do_cow_fault(vm_fault_s *vmf) {
 		goto uncharge_out;
 	return ret;
 uncharge_out:
-	// folio_put(folio);
-	put_page(vmf->cow_page);
+	folio_put(folio);
+	// put_page(vmf->cow_page);
 	return ret;
 }
 
@@ -1155,12 +1167,12 @@ do_shared_fault(vm_fault_s *vmf) {
 	// }
 
 	ret |= finish_fault(vmf);
-	// if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE |
-	// 				VM_FAULT_RETRY))) {
-	// 	folio_unlock(folio);
-	// 	folio_put(folio);
-	// 	return ret;
-	// }
+	if (unlikely(ret & (VM_FAULT_ERROR |
+				VM_FAULT_NOPAGE | VM_FAULT_RETRY))) {
+		// folio_unlock(folio);
+		folio_put(folio);
+		return ret;
+	}
 
 	// ret |= fault_dirty_shared_page(vmf);
 	return ret;

@@ -40,20 +40,31 @@
 		get_page(page_s *page);
 		extern void
 		put_page(page_s *page);
-
-		extern void
-		set_page_count(page_s *page, int v);
-		extern void
-		init_page_count(page_s *page);
-
-		extern bool
-		page_is_guard(page_s *page);
 		
 		extern void
 		clear_page_pfmemalloc(page_s *page);
 
 		extern pgoff_t
 		linear_page_index(vma_s *vma, ulong address);
+
+		extern bool
+		page_is_guard(page_s *page);
+
+		extern void
+		set_page_count(page_s *page, int v);
+		extern void
+		init_page_count(page_s *page);
+
+		extern long
+		folio_nr_pages(folio_s *folio);
+		extern ulong
+		compound_nr(page_s *page);	
+		extern folio_s
+		*folio_next(folio_s *folio);
+		extern uint
+		folio_shift(folio_s *folio);
+		extern size_t
+		folio_size(folio_s *folio);
 
 		extern zone_s
 		*myos_page_zone(const page_s * page);
@@ -227,6 +238,84 @@
 		init_page_count(page_s *page) {
 			set_page_count(page, 1);
 		}
+
+		/**
+		 * folio_nr_pages - The number of pages in the folio.
+		 * @folio: The folio.
+		 *
+		 * Return: A positive power of two.
+		 */
+		PREFIX_STATIC_INLINE
+		long
+		folio_nr_pages(folio_s *folio) {
+			if (!folio_test_large(folio))
+				return 1;
+			return folio->_folio_nr_pages;
+		}
+		/*
+		 * compound_nr() returns the number of pages in this potentially compound
+		 * page.  compound_nr() can be called on a tail page, and is defined to
+		 * return 1 in that case.
+		 */
+		PREFIX_STATIC_INLINE
+		ulong
+		compound_nr(page_s *page) {
+			folio_s *folio = (folio_s *)page;
+
+			if (!test_bit(PG_head, &folio->flags))
+				return 1;
+			return folio->_folio_nr_pages;
+		}
+		/**
+		 * folio_next - Move to the next physical folio.
+		 * @folio: The folio we're currently operating on.
+		 *
+		 * If you have physically contiguous memory which may span more than
+		 * one folio (eg a &struct bio_vec), use this function to move from one
+		 * folio to the next.  Do not use it if the memory is only virtually
+		 * contiguous as the folios are almost certainly not adjacent to each
+		 * other.  This is the folio equivalent to writing ``page++``.
+		 *
+		 * Context: We assume that the folios are refcounted and/or locked at a
+		 * higher level and do not adjust the reference counts.
+		 * Return: The next struct folio.
+		 */
+		PREFIX_STATIC_INLINE
+		folio_s
+		*folio_next(folio_s *folio) {
+			return (folio_s *)folio_page(folio, folio_nr_pages(folio));
+		}
+		/**
+		 * folio_shift - The size of the memory described by this folio.
+		 * @folio: The folio.
+		 *
+		 * A folio represents a number of bytes which is a power-of-two in size.
+		 * This function tells you which power-of-two the folio is.  See also
+		 * folio_size() and folio_order().
+		 *
+		 * Context: The caller should have a reference on the folio to prevent
+		 * it from being split.  It is not necessary for the folio to be locked.
+		 * Return: The base-2 logarithm of the size of this folio.
+		 */
+		PREFIX_STATIC_INLINE
+		uint
+		folio_shift(folio_s *folio) {
+			return PAGE_SHIFT + folio_order(folio);
+		}
+		/**
+		 * folio_size - The number of bytes in a folio.
+		 * @folio: The folio.
+		 *
+		 * Context: The caller should have a reference on the folio to prevent
+		 * it from being split.  It is not necessary for the folio to be locked.
+		 * Return: The number of bytes in this folio.
+		 */
+		PREFIX_STATIC_INLINE
+		size_t
+		folio_size(folio_s *folio) {
+			return PAGE_SIZE << folio_order(folio);
+		}
+
 
 		PREFIX_STATIC_INLINE
 		zone_s
