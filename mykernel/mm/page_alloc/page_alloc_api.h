@@ -26,6 +26,7 @@
 
 
 	page_s *alloc_pages(gfp_t gfp, uint order);
+	folio_s *folio_alloc_noprof(gfp_t gfp, uint order);
 
 	page_s *__myos_alloc_pages(gfp_t gfp, uint order);
 

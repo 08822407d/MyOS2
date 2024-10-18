@@ -23,4 +23,6 @@
 
 	#define alloc_page(gfp_mask)	alloc_pages(gfp_mask, 0)
 
+	#define folio_alloc				folio_alloc_noprof
+
 #endif /* _LINUX_HIGHMEM_MACRO_H_ */

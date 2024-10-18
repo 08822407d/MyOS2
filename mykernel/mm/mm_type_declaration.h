@@ -68,6 +68,8 @@
 	typedef struct pgflag_defs pgflag_defs_s;
 	struct ptdesc;
 	typedef struct ptdesc ptdesc_s;
+	struct mempolicy;
+	typedef struct mempolicy mpol_s;
 
 	typedef page_s *pgtable_t;
 	

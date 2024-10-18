@@ -176,6 +176,29 @@ out:
 	return pfn_to_page(pfn);
 }
 
+static inline folio_s
+*folio_prealloc(mm_s *src_mm, vma_s *vma, ulong addr, bool need_zero) {
+	// struct folio *new_folio;
+
+	// if (need_zero)
+	// 	new_folio = vma_alloc_zeroed_movable_folio(vma, addr);
+	// else
+	// 	new_folio = vma_alloc_folio(GFP_HIGHUSER_MOVABLE, 0, vma,
+	// 				    addr, false);
+
+	// if (!new_folio)
+	// 	return NULL;
+
+	// if (mem_cgroup_charge(new_folio, src_mm, GFP_KERNEL)) {
+	// 	folio_put(new_folio);
+	// 	return NULL;
+	// }
+	// folio_throttle_swaprate(new_folio, GFP_KERNEL);
+
+	// return new_folio;
+
+	return folio_alloc(GFP_HIGHUSER_MOVABLE, 0);
+}
 
 
 /*
@@ -394,9 +417,9 @@ copy_page_range(vma_s *dst_vma, vma_s *src_vma)
 }
 
 
-static inline bool
-cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
-	bool ret;
+static inline int
+__wp_page_copy_user(page_s *dst, page_s *src, vm_fault_s *vmf) {
+	int ret;
 	// void *kaddr;
 	// void __user *uaddr;
 	// bool locked = false;
@@ -413,7 +436,7 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 		// if ((offset = myosDBG_compare_page(dst, src)) != PAGE_SIZE)
 		// 	pr_alert("COW copied page content changed at offset: %#08Lx.\n", offset);
 
-		return true;
+		return -ENOERR;
 	}
 
 	// /*
@@ -484,7 +507,7 @@ cow_user_page(page_s *dst, page_s *src, vm_fault_s *vmf) {
 	// 	}
 	// }
 
-	ret = true;
+	ret = -ENOMEM;
 
 pte_unlock:
 	// if (locked)
@@ -529,74 +552,78 @@ __get_fault_gfp_mask(vma_s *vma) {
  */
 static vm_fault_t
 wp_page_copy(vm_fault_s *vmf) {
+	const bool unshare = vmf->flags & FAULT_FLAG_UNSHARE;
 	vma_s *vma = vmf->vma;
 	mm_s *mm = vma->vm_mm;
-	page_s *old_page = vmf->page;
-	page_s *new_page = NULL;
+	folio_s *old_folio = NULL;
+	folio_s *new_folio = NULL;
 	pte_t entry;
 	int page_copied = 0;
 	// struct mmu_notifier_range range;
+	vm_fault_t ret;
+	bool pfn_is_zero;
 
-	// if (unlikely(anon_vma_prepare(vma)))
-	// 	goto oom;
+	if (vmf->page)
+		old_folio = page_folio(vmf->page);
+	// ret = vmf_anon_prepare(vmf);
+	// if (unlikely(ret))
+	// 	goto out;
 
-	// if (is_zero_pfn(pte_pfn(vmf->orig_pte))) {
-	// 	new_page = alloc_zeroed_user_highpage_movable(vma,
-	// 						      vmf->address);
-	// 	if (!new_page)
-	// 		goto oom;
-	// } else {
-	// 	new_page = alloc_page_vma(GFP_HIGHUSER_MOVABLE, vma,
-	// 			vmf->address);
-		new_page = alloc_page(GFP_HIGHUSER_MOVABLE);
-		if (!new_page)
-			goto oom;
+	pfn_is_zero = is_zero_pfn(pte_pfn(vmf->orig_pte));
+	new_folio = folio_prealloc(mm, vma, vmf->address, pfn_is_zero);
+	if (!new_folio)
+		goto oom;
 
-		if (!cow_user_page(new_page, old_page, vmf)) {
+	if (!pfn_is_zero) {
+		int err = __wp_page_copy_user(&new_folio->page, vmf->page, vmf);
+		if (err) {
 			/*
 			 * COW failed, if the fault was solved by other,
 			 * it's fine. If not, userspace would re-fault on
 			 * the same address and we will handle the fault
 			 * from the second attempt.
 			 */
-			put_page(new_page);
-			if (old_page)
-				put_page(old_page);
-			return 0;
+			folio_put(new_folio);
+			if (old_folio)
+				folio_put(old_folio);
+
+			return err == -EHWPOISON ? VM_FAULT_HWPOISON : 0;
 		}
-	// }
+	}
 
-	// if (mem_cgroup_charge(page_folio(new_page), mm, GFP_KERNEL))
-	// 	goto oom_free_new;
-	// cgroup_throttle_swaprate(new_page, GFP_KERNEL);
+	// __folio_mark_uptodate(new_folio);
 
-	// __SetPageUptodate(new_page);
-
-	// mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, vma, mm,
+	// mmu_notifier_range_init(&range, MMU_NOTIFY_CLEAR, 0, mm,
 	// 			vmf->address & PAGE_MASK,
 	// 			(vmf->address & PAGE_MASK) + PAGE_SIZE);
 	// mmu_notifier_invalidate_range_start(&range);
 
-	/*
-	 * Re-check the pte - we dropped the lock
-	 */
+	// /*
+	//  * Re-check the pte - we dropped the lock
+	//  */
 	// vmf->pte = pte_offset_map_lock(mm, vmf->pmd, vmf->address, &vmf->ptl);
-	if (likely(pte_same(*vmf->pte_ptr, vmf->orig_pte))) {
-		// if (old_page) {
-		// 	if (!PageAnon(old_page)) {
-		// 		dec_mm_counter_fast(mm,
-		// 				mm_counter_file(old_page));
-		// 		inc_mm_counter_fast(mm, MM_ANONPAGES);
+	if (likely(vmf->pte_ptr != NULL &&
+			pte_same(ptep_get(vmf->pte_ptr), vmf->orig_pte))) {
+		// if (old_folio) {
+		// 	if (!folio_test_anon(old_folio)) {
+		// 		dec_mm_counter(mm, mm_counter_file(old_folio));
+		// 		inc_mm_counter(mm, MM_ANONPAGES);
 		// 	}
 		// } else {
-		// 	inc_mm_counter_fast(mm, MM_ANONPAGES);
+		// 	ksm_might_unmap_zero_page(mm, vmf->orig_pte);
+		// 	inc_mm_counter(mm, MM_ANONPAGES);
 		// }
 		// flush_cache_page(vma, vmf->address, pte_pfn(vmf->orig_pte));
-		// entry = mk_pte(new_page, vma->vm_page_prot);
-		entry = arch_make_pte(page_to_phys(new_page) |
-					_PAGE_ACCESSED |  _PAGE_PRESENT | _PAGE_USER);
+		entry = mk_pte(&new_folio->page, vma->vm_page_prot);
 		// entry = pte_sw_mkyoung(entry);
-		entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+		if (unlikely(unshare)) {
+			// if (pte_soft_dirty(vmf->orig_pte))
+			// 	entry = pte_mksoft_dirty(entry);
+			// if (pte_uffd_wp(vmf->orig_pte))
+			// 	entry = pte_mkuffd_wp(entry);
+		} else {
+			entry = maybe_mkwrite(pte_mkdirty(entry), vma);
+		}
 
 		// /*
 		//  * Clear the pte entry and flush it first, before updating the
@@ -605,18 +632,13 @@ wp_page_copy(vm_fault_s *vmf) {
 		//  * that left a window where the new PTE could be loaded into
 		//  * some TLBs while the old PTE remains in others.
 		//  */
-		// ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
-		// page_add_new_anon_rmap(new_page, vma, vmf->address, false);
-		// lru_cache_add_inactive_or_unevictable(new_page, vma);
-		// /*
-		//  * We call the notify macro here because, when using secondary
-		//  * mmu page tables (such as kvm shadow page tables), we want the
-		//  * new page to be mapped directly into the secondary page table.
-		//  */
-		// set_pte_at_notify(mm, vmf->address, vmf->pte, entry);
+		// ptep_clear_flush(vma, vmf->address, vmf->pte);
+		// folio_add_new_anon_rmap(new_folio, vma, vmf->address, RMAP_EXCLUSIVE);
+		// folio_add_lru_vma(new_folio, vma);
+		// BUG_ON(unshare && pte_write(entry));
 		set_pte_at(mm, vmf->address, vmf->pte_ptr, entry);
-		// update_mmu_cache(vma, vmf->address, vmf->pte);
-		// if (old_page) {
+		// update_mmu_cache_range(vmf, vma, vmf->address, vmf->pte, 1);
+		// if (old_folio) {
 		// 	/*
 		// 	 * Only after switching the pte to the new page may
 		// 	 * we remove the mapcount here. Otherwise another
@@ -627,10 +649,10 @@ wp_page_copy(vm_fault_s *vmf) {
 		// 	 * threads.
 		// 	 *
 		// 	 * The critical issue is to order this
-		// 	 * page_remove_rmap with the ptp_clear_flush above.
-		// 	 * Those stores are ordered by (if nothing else,)
+		// 	 * folio_remove_rmap_pte() with the ptp_clear_flush
+		// 	 * above. Those stores are ordered by (if nothing else,)
 		// 	 * the barrier present in the atomic_add_negative
-		// 	 * in page_remove_rmap.
+		// 	 * in folio_remove_rmap_pte();
 		// 	 *
 		// 	 * Then the TLB flush in ptep_clear_flush ensures that
 		// 	 * no process can access the old page before the
@@ -639,46 +661,35 @@ wp_page_copy(vm_fault_s *vmf) {
 		// 	 * mapcount is visible. So transitively, TLBs to
 		// 	 * old page will be flushed before it can be reused.
 		// 	 */
-		// 	page_remove_rmap(old_page, false);
+		// 	folio_remove_rmap_pte(old_folio, vmf->page, vma);
 		// }
 
 		/* Free the old page.. */
-		new_page = old_page;
+		new_folio = old_folio;
 		page_copied = 1;
+		// pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
 	} else {
-		// update_mmu_tlb(vma, vmf->address, vmf->pte);
+		update_mmu_tlb(vma, vmf->address, vmf->pte_ptr);
+		// pte_unmap_unlock(vmf->pte_ptr, vmf->ptl);
 	}
 
-	if (new_page)
-		put_page(new_page);
+	// mmu_notifier_invalidate_range_end(&range);
 
-	// pte_unmap_unlock(vmf->pte, vmf->ptl);
-	/*
-	 * No need to double call mmu_notifier->invalidate_range() callback as
-	 * the above ptep_clear_flush_notify() did already call it.
-	 */
-	// mmu_notifier_invalidate_range_only_end(&range);
-	if (old_page) {
-		// /*
-		//  * Don't let another task, with possibly unlocked vma,
-		//  * keep the mlocked page.
-		//  */
-		// if (page_copied && (vma->vm_flags & VM_LOCKED)) {
-		// 	lock_page(old_page);	/* LRU manipulation */
-		// 	if (PageMlocked(old_page))
-		// 		munlock_vma_page(old_page);
-		// 	unlock_page(old_page);
-		// }
+	if (new_folio)
+		folio_put(new_folio);
+	if (old_folio) {
 		// if (page_copied)
-		// 	free_swap_cache(old_page);
-		put_page(old_page);
+		// 	free_swap_cache(old_folio);
+		folio_put(old_folio);
 	}
+
 	return 0;
-oom_free_new:
-	put_page(new_page);
 oom:
-	if (old_page)
-		put_page(old_page);
+	ret = VM_FAULT_OOM;
+out:
+	if (old_folio)
+		folio_put(old_folio);
+
 	return VM_FAULT_OOM;
 }
 
@@ -1088,13 +1099,10 @@ do_cow_fault(vm_fault_s *vmf) {
 	folio_s *folio;
 	vm_fault_t ret;
 
-	// folio = folio_prealloc(vma->vm_mm, vma, vmf->address, false);
-	// if (!folio)
-	// 	return VM_FAULT_OOM;
-	// vmf->cow_page = &folio->page;
-	vmf->cow_page = alloc_page(GFP_USER);
-	if (!vmf->cow_page)
+	folio = folio_prealloc(vma->vm_mm, vma, vmf->address, false);
+	if (!folio)
 		return VM_FAULT_OOM;
+	vmf->cow_page = &folio->page;
 
 	ret = __do_fault(vmf);
 	if (unlikely(ret & (VM_FAULT_ERROR | VM_FAULT_NOPAGE | VM_FAULT_RETRY)))

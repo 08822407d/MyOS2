@@ -109,3 +109,9 @@ page_s *alloc_pages(gfp_t gfp, uint order)
 
 	return page;
 }
+
+
+folio_s *folio_alloc_noprof(gfp_t gfp, uint order)
+{
+	return page_folio(alloc_page(GFP_HIGHUSER_MOVABLE));
+}
