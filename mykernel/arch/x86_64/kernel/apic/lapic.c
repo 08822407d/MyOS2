@@ -187,6 +187,8 @@ static bool x2apic_hw_locked(void)
 	u64 ia32_cap;
 	u64 msr;
 
+	// x86_arch_cap_msr = x86_read_arch_cap_msr();
+	// if (x86_arch_cap_msr & ARCH_CAP_XAPIC_DISABLE) {
 	if (boot_cpu_data.x86_capa_bits.ARCH_CAPABILITIES_MSR) {
 		rdmsrl(MSR_IA32_XAPIC_DISABLE_STATUS, &msr);
 		return (msr & LEGACY_XAPIC_DISABLED);
@@ -198,6 +200,7 @@ static void __x2apic_disable(void)
 {
 	u64 msr;
 
+	// if (!boot_cpu_has(X86_FEATURE_APIC))
 	if (!boot_cpu_data.x86_capa_bits.APIC_On_Chip)
 		return;
 

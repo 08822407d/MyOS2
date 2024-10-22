@@ -19,24 +19,26 @@
 
 	#ifdef DEBUG
 
-		extern unsigned long
+		extern ulong
 		read_cr0(void);
+		void
+		write_cr0(ulong val);
 
-		extern unsigned long
+		extern ulong
 		read_cr2(void);
 		extern void
-		write_cr2(unsigned long val);
+		write_cr2(ulong val);
 
-		extern unsigned long
+		extern ulong
 		__read_cr3(void);
 		extern void
-		write_cr3(unsigned long val);
-		extern unsigned long
+		write_cr3(ulong val);
+		extern ulong
 		read_cr3_pa(void);
 		extern void
 		load_cr3(pgd_t *pgdir);
 		
-		extern unsigned long
+		extern ulong
 		read_cr4(void);
 
 		extern void
@@ -48,9 +50,9 @@
 	
 		// static inline unsigned long native_read_cr0(void) {
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		read_cr0(void) {
-			unsigned long val;
+			ulong val;
 			asm volatile(	"mov	%%cr0,	%0		\n\t"
 						:	"=r"(val)
 						:	__FORCE_ORDER
@@ -58,11 +60,35 @@
 			return val;
 		}
 
+		// void native_write_cr0(unsigned long val)
+		PREFIX_STATIC_INLINE
+		void
+		write_cr0(ulong val) {
+			ulong bits_missing = 0;
+
+		set_register:
+			asm volatile(	"mov	%0,		%%cr0	\n\t"
+						:	"+r" (val)
+						:
+						:	"memory"
+						);
+
+			// if (static_branch_likely(&cr_pinning)) {
+			// 	if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+			// 		bits_missing = X86_CR0_WP;
+			// 		val |= bits_missing;
+			// 		goto set_register;
+			// 	}
+			// 	/* Warn after we've set the missing bits. */
+			// 	WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
+			// }
+		}
+
 		// static __always_inline unsigned long native_read_cr2(void) {
 		PREFIX_STATIC_AWLWAYS_INLINE
-		unsigned long
+		ulong
 		read_cr2(void) {
-			unsigned long val;
+			ulong val;
 			asm volatile(	"mov	%%cr2,	%0		\n\t"
 						:	"=r"(val)
 						:	__FORCE_ORDER
@@ -73,7 +99,7 @@
 		// static __always_inline void native_write_cr2(unsigned long val) {
 		PREFIX_STATIC_AWLWAYS_INLINE
 		void
-		write_cr2(unsigned long val) {
+		write_cr2(ulong val) {
 			asm volatile(	"mov	%0,		%%cr2	\n\t"
 						:
 						:	"r"(val)
@@ -83,9 +109,9 @@
 
 		// static inline unsigned long __native_read_cr3(void) {
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		__read_cr3(void) {
-			unsigned long val;
+			ulong val;
 			asm volatile(	"mov	%%cr3,	%0		\n\t"
 						:	"=r"(val)
 						:	__FORCE_ORDER
@@ -96,7 +122,7 @@
 		// static inline void native_write_cr3(unsigned long val) {
 		PREFIX_STATIC_INLINE
 		void
-		write_cr3(unsigned long val) {
+		write_cr3(ulong val) {
 			asm volatile(	"mov	%0,		%%cr3	\n\t"
 						:
 						:	"r"(val)
@@ -109,7 +135,7 @@
 		 */
 		// static inline unsigned long native_read_cr3_pa(void)
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		read_cr3_pa(void) {
 			return __read_cr3() & CR3_ADDR_MASK;
 		}
@@ -122,9 +148,9 @@
 
 		// static inline unsigned long native_read_cr4(void) {
 		PREFIX_STATIC_INLINE
-		unsigned long
+		ulong
 		read_cr4(void) {
-			unsigned long val;
+			ulong val;
 			/* CR4 always exists on x86_64. */
 			asm volatile(	"mov	%%cr4,	%0		\n\t"
 						:	"=r"(val)

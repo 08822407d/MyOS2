@@ -12,6 +12,7 @@
 
 #include <asm/apic.h>
 #include <asm/cpu.h>
+#include <asm/fpu.h>
 #include <asm/proto.h>
 
 
@@ -612,4 +613,83 @@ void cpu_init(void)
 	// 	uv_cpu_init();
 
 	load_direct_gdt(cpu);
+}
+
+
+
+void __init arch_cpu_finalize_init(void)
+{
+	// struct cpuinfo_x86 *c = this_cpu_ptr(&cpu_info);
+
+	// identify_boot_cpu();
+
+	// select_idle_routine();
+
+	// /*
+	//  * identify_boot_cpu() initialized SMT support information, let the
+	//  * core code know.
+	//  */
+	// cpu_smt_set_num_threads(__max_threads_per_core, __max_threads_per_core);
+
+	// if (!IS_ENABLED(CONFIG_SMP)) {
+	// 	pr_info("CPU: ");
+	// 	print_cpu_info(&boot_cpu_data);
+	// }
+
+	// cpu_select_mitigations();
+
+	// arch_smt_update();
+
+	// if (IS_ENABLED(CONFIG_X86_32)) {
+	// 	/*
+	// 	 * Check whether this is a real i386 which is not longer
+	// 	 * supported and fixup the utsname.
+	// 	 */
+	// 	if (boot_cpu_data.x86 < 4)
+	// 		panic("Kernel requires i486+ for 'invlpg' and other features");
+
+	// 	init_utsname()->machine[1] =
+	// 		'0' + (boot_cpu_data.x86 > 6 ? 6 : boot_cpu_data.x86);
+	// }
+
+	/*
+	 * Must be before alternatives because it might set or clear
+	 * feature bits.
+	 */
+	fpu__init_system();
+	// fpu__init_cpu();
+
+	// /*
+	//  * Ensure that access to the per CPU representation has the initial
+	//  * boot CPU configuration.
+	//  */
+	// *c = boot_cpu_data;
+	// c->initialized = true;
+
+	// alternative_instructions();
+
+	// if (IS_ENABLED(CONFIG_X86_64)) {
+	// 	/*
+	// 	 * Make sure the first 2MB area is not mapped by huge pages
+	// 	 * There are typically fixed size MTRRs in there and overlapping
+	// 	 * MTRRs into large pages causes slow downs.
+	// 	 *
+	// 	 * Right now we don't do that with gbpages because there seems
+	// 	 * very little benefit for that case.
+	// 	 */
+	// 	if (!direct_gbpages)
+	// 		set_memory_4k((unsigned long)__va(0), 1);
+	// } else {
+	// 	fpu__init_check_bugs();
+	// }
+
+	// /*
+	//  * This needs to be called before any devices perform DMA
+	//  * operations that might use the SWIOTLB bounce buffers. It will
+	//  * mark the bounce buffers as decrypted so that their usage will
+	//  * not cause "plain-text" data to be decrypted when accessed. It
+	//  * must be called after late_time_init() so that Hyper-V x86/x64
+	//  * hypercalls work when the SWIOTLB bounce buffers are decrypted.
+	//  */
+	// mem_encrypt_init();
 }

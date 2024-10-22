@@ -20,5 +20,6 @@
 	extern void cpu_init(void);
 	extern void trap_init(void);
 	void cpu_startup_entry(void);
+	void arch_cpu_finalize_init(void);
 
 #endif /* _LINUX_CPU_H_ */

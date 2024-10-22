@@ -169,6 +169,8 @@ asmlinkage void __init start_kernel(void)
 	if (late_time_init)
 		late_time_init();
 
+	arch_cpu_finalize_init();
+
 	myos_devices_init();
 
 	proc_caches_init();

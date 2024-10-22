@@ -121,7 +121,7 @@
 	// 			: AUDIT_ARCH_X86_64;
 	// }
 
-	void do_syscall_64(pt_regs_s *regs, int nr);
+	bool do_syscall_64(pt_regs_s *regs, int nr);
 	// void do_int80_syscall_32(pt_regs_s *regs);
 	// long do_fast_syscall_32(pt_regs_s *regs);
 
