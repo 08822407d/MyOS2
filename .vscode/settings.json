@@ -349,7 +349,8 @@
         "pgalloc_macro.h": "c",
         "mm_misc_const.h": "c",
         "buddy.h": "c",
-        "buddy_macro.h": "c"
+        "buddy_macro.h": "c",
+        "unistd_64.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

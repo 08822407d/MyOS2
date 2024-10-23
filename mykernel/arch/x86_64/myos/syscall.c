@@ -33,106 +33,6 @@ MYOS_SYSCALL_DEFINE1(myos_putstring, char *, string)
 	return 0;
 }
 
-/*==============================================================================================*
- *										file operations											*
- *==============================================================================================*/
-MYOS_SYSCALL_DEFINE3(open, const char *, filename,
-		int, flags, umode_t, mode)
-{
-	return do_sys_open(0, filename, flags, mode);
-}
-
-MYOS_SYSCALL_DEFINE1(close, unsigned int, fd)
-{
-	task_s * curr = current;
-
-	file_s * fp = NULL;
-
-	if(fd < 0 || fd >= curr->files->fd_count)
-		return -EBADF;
-
-	fp = curr->files->fd_array[fd];
-	// if(fp->f_op && fp->f_op->close)
-	// 	fp->f_op->close(fp->f_path.dentry->d_inode, fp);
-
-	kfree(fp);
-	curr->files->fd_array[fd] = NULL;
-
-	// int retval = close_fd(fd);
-
-	// /* can't restart close syscall because file table entry was cleared */
-	// if (unlikely(retval == -ERESTARTSYS ||
-	// 	     retval == -ERESTARTNOINTR ||
-	// 	     retval == -ERESTARTNOHAND ||
-	// 	     retval == -ERESTART_RESTARTBLOCK))
-	// 	retval = -EINTR;
-
-	return 0;
-}
-
-MYOS_SYSCALL_DEFINE3(read, unsigned int, fd,
-		char *,buf, size_t, count) {
-	return ksys_read(fd, buf, count);
-}
-
-MYOS_SYSCALL_DEFINE3(write, unsigned int, fd,
-		const char *, buf, size_t, count)
-{
-	task_s * curr = current;
-	file_s * fp = NULL;
-	ulong ret = 0;
-
-	if(fd < 0 || fd >= curr->files->fd_count)
-		return -EBADF;
-	if(count < 0)
-		return -EINVAL;
-
-	fp = curr->files->fd_array[fd];
-	if(fp->f_op && fp->f_op->write)
-		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
-	return ret;
-}
-
-MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,
-		off_t, offset, unsigned int, whence)
-{
-	task_s * curr = current;
-	file_s * fp = NULL;
-	ulong ret = 0;
-
-	if(fd < 0 || fd >= curr->files->fd_count)
-		return -EBADF;
-	if(whence < 0 || whence >= SEEK_MAX)
-		return -EINVAL;
-
-	fp = current->files->fd_array[fd];
-	if(fp->f_op && fp->f_op->llseek)
-		ret = fp->f_op->llseek(fp, offset, whence);
-	return ret;
-}
-
-MYOS_SYSCALL_DEFINE0(fork)
-{
-	barrier();
-	ulong counter = 0;
-	for (long i = 0; i < 0x1000; i++)
-		for (long j = 0; j < 0x1000; j++)
-			counter++;
-	barrier();
-
-	kclone_args_s args = {
-		// .flags = CLONE_FILES,
-		.exit_signal = SIGCHLD,
-	};
-	return kernel_clone(&args);
-}
-
-MYOS_SYSCALL_DEFINE1(exit, int, error_code)
-{
-	do_exit(error_code);
-}
-
-
 /*======================================================================================*
  *									user memory manage									*
  *======================================================================================*/
@@ -253,35 +153,6 @@ MYOS_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd, unsigned long, 
 	return 0;
 }
 
-/**
- * sys_sched_yield - yield the current processor to other threads.
- *
- * This function yields the current CPU to other tasks. If there are no
- * other threads running on this CPU then this function will return.
- *
- * Return: 0.
- */
-MYOS_SYSCALL_DEFINE0(sched_yield)
-{
-	// do_sched_yield();
-	// {
-		// struct rq_flags rf;
-		// struct rq *rq;
-
-		// rq = this_rq_lock_irq(&rf);
-
-		// schedstat_inc(rq->yld_count);
-		// current->sched_class->yield_task(rq);
-
-		preempt_disable();
-		// rq_unlock_irq(rq, &rf);
-		sched_preempt_enable_no_resched();
-
-		schedule();
-	// }
-	return 0;
-}
-
 
 /*======================================================================================*
  *									special functions									*
@@ -331,55 +202,6 @@ MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t
 
 	return 0;
 }
-
-
-MYOS_SYSCALL_DEFINE0(getpid)
-{
-	// return current->pid;
-	pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
-	return pid_vnr(pid_struct);
-}
-
-MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
-		int, options, void *, rusage)
-{
-
-}
-
-MYOS_SYSCALL_DEFINE0(getppid)
-{
-	// return current->parent->pid;
-	pid_s *pid_struct = get_task_pid(current->parent, PIDTYPE_PID);
-	return pid_vnr(pid_struct);
-}
-
-// MYOS_SYSCALL_DEFINE0(getuid)
-// {
-// 	pr_alert("\t!!! Dummy Syscall --- getuid ---\n");
-
-// 	return 1000;
-// }
-
-// MYOS_SYSCALL_DEFINE0(geteuid)
-// {
-// 	pr_alert("\t!!! Dummy Syscall --- geteuid ---\n");
-
-// 	return 1000;
-// }
-
-// MYOS_SYSCALL_DEFINE0(getgid)
-// {
-// 	pr_alert("\t!!! Dummy Syscall --- getgid ---\n");
-
-// 	return 1000;
-// }
-
-// MYOS_SYSCALL_DEFINE0(getegid)
-// {
-// 	pr_alert("\t!!! Dummy Syscall --- getegid ---\n");
-
-// 	return 1000;
-// }
 
 MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 {

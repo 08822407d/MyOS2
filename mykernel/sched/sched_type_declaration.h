@@ -21,13 +21,13 @@
 	#include "sched_const.h"
 
 
-    /* task misc */
+	/* task misc */
 	struct fs_struct;
 	typedef struct fs_struct taskfs_s;
 	struct kernel_clone_args;
 	typedef struct kernel_clone_args kclone_args_s;
 
-    /* runqueueu */
+	/* runqueueu */
 	struct cfs_rq;
 	typedef struct cfs_rq cfs_rq_s;
 	struct rt_rq;
@@ -41,7 +41,7 @@
 	struct rq_flags;
 	typedef struct rq_flags rq_flags_s;
 
-    /* scheduler */
+	/* scheduler */
 	struct sched_entity;
 	typedef struct sched_entity sched_entity_s;
 	struct sched_rt_entity;
@@ -49,7 +49,7 @@
 	struct sched_class;
 	typedef struct sched_class sched_class_s;
 
-    /* task */
+	/* task */
 	struct upid;
 	typedef struct upid upid_s;
 	struct pid;
