@@ -61,7 +61,8 @@ void myos_init_per_cpu_var(void)
 	spin_lock_init(&this_idle_thread->alloc_lock);
 	INIT_LIST_S(&this_idle_thread->rt.run_list);
 	INIT_LIST_S(&this_idle_thread->sibling);
-	INIT_LIST_S(&this_idle_thread->pid_links);
+	init_task_pid_links(this_idle_thread);
+	// INIT_LIST_S(&this_idle_thread->pid_links);
 	INIT_LIST_HEADER_S(&this_idle_thread->children);
 	this_idle_thread->parent		= this_idle_thread;
 	this_idle_thread->__state		= TASK_RUNNING;

@@ -350,7 +350,9 @@
         "mm_misc_const.h": "c",
         "buddy.h": "c",
         "buddy_macro.h": "c",
-        "unistd_64.h": "c"
+        "unistd_64.h": "c",
+        "signal_types.h": "c",
+        "signal_type_declaration.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

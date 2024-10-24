@@ -242,8 +242,8 @@ pid_s *alloc_pid(pid_t *set_tid, size_t set_tid_size)
 	// get_pid_ns(ns);
 	atomic_set(&pid->count, 1);
 	// spin_lock_init(&pid->lock);
-	// for (type = 0; type < PIDTYPE_MAX; ++type)
-	// 	INIT_HLIST_HEAD(&pid->tasks[type]);
+	for (type = 0; type < PIDTYPE_MAX; ++type)
+		INIT_LIST_HEADER_S(&pid->tasks[type]);
 
 	// init_waitqueue_head(&pid->wait_pidfd);
 	// INIT_HLIST_HEAD(&pid->inodes);
@@ -283,12 +283,10 @@ out_free:
 }
 
 static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
-	// return (type == PIDTYPE_PID) ?
-	// 	&task->thread_pid : &task->signal->pids[type];
 	if (type == PIDTYPE_PID)
 		return &task->thread_pid;
 	else
-		return NULL;
+		return &task->signal->pids[type];
 }
 
 /*
@@ -297,20 +295,26 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
 	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-	list_header_add_to_tail(&pid_list_hdr, &task->pid_links);
+	// list_header_add_to_tail(&pid->tasks[type], &task->pid_links[type]);
+
+	list_header_add_to_tail(&pid_list_hdr, &task->pid_links[type]);
 }
 
 
 void detach_pid(task_s *task, enum pid_type type) {
 	// __change_pid(task, type, NULL);
-	list_header_delete_node(&pid_list_hdr, &task->pid_links);
+
+	list_header_delete_node(&pid_list_hdr, &task->pid_links[type]);
+	// list_header_delete_node(&pid->tasks[type], &task->pid_links[type]);
 }
 
 
 task_s *myos_find_task_by_pid(pid_t nr) {
 	task_s *tsk;
 
-	list_header_for_each_container(tsk, &pid_list_hdr, pid_links) {
+	list_header_for_each_container(tsk,
+			&pid_list_hdr, pid_links[PIDTYPE_PID]) {
+
 		if (tsk->pid == nr) return tsk;
 	}
 	return NULL;
@@ -342,8 +346,8 @@ EXPORT_SYMBOL_GPL(pid_vnr);
  *==============================================================================================*/
 #include <klib/utils.h>
 
-bitmap_t		pid_bm[PID_MAX_DEFAULT / sizeof(bitmap_t)];
-unsigned long	curr_pid;
+bitmap_t	pid_bm[PID_MAX_DEFAULT / sizeof(bitmap_t)];
+ulong		curr_pid;
 
 void myos_init_pid_allocator()
 {
@@ -353,10 +357,10 @@ void myos_init_pid_allocator()
 	curr_pid = 1;
 }
 
-unsigned long myos_idr_alloc()
+ulong myos_idr_alloc()
 {
 	spin_lock(&pidmap_lock);
-	unsigned long newpid = bm_get_freebit_idx(
+	ulong newpid = bm_get_freebit_idx(
 			pid_bm, curr_pid, PID_MAX_DEFAULT);
 	if (newpid >= PID_MAX_DEFAULT || newpid < curr_pid)
 	{

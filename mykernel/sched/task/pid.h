@@ -14,6 +14,9 @@
 		extern pid_s
 		*get_pid(pid_s *pid);
 
+		extern bool
+		is_child_reaper(pid_s *pid);
+
 		extern pid_t
 		pid_nr(pid_s *pid);
 
@@ -32,6 +35,18 @@
 		*get_pid(pid_s *pid) {
 			if (pid) atomic_inc(&pid->count);
 			return pid;
+		}
+
+		/*
+		 * is_child_reaper returns true if the pid is the init process
+		 * of the current namespace. As this one could be checked before
+		 * pid_ns->child_reaper is assigned in copy_process, we check
+		 * with the pid number.
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		is_child_reaper(pid_s *pid) {
+			return pid->numbers[pid->level].nr == 1;
 		}
 
 		/*

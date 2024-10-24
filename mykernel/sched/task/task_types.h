@@ -257,9 +257,7 @@
 
 		/* PID/PID hash table linkage. */
 		pid_s			*thread_pid;
-		// struct hlist_node pid_links[PIDTYPE_MAX];
-		List_s			pid_links;
-		// List_s thread_group;
+		List_s			pid_links[PIDTYPE_MAX];
 		// List_s thread_node;
 
 		completion_s	*vfork_done;

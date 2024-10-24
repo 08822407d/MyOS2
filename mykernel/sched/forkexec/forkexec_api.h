@@ -47,6 +47,8 @@
 	int kthreadd(void *unused);
 	extern task_s *kthreadd_task;
 
+	void init_task_pid_links(task_s *task);
+
 	extern void mm_cache_init(void);
 	extern void proc_caches_init(void);
 

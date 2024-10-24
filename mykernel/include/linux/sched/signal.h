@@ -152,8 +152,8 @@
 		/* Empty if CONFIG_POSIX_TIMERS=n */
 		// struct posix_cputimers posix_cputimers;
 
-		// /* PID/PID hash table linkage. */
-		// pid_s *pids[PIDTYPE_MAX];
+		/* PID/PID hash table linkage. */
+		pid_s		*pids[PIDTYPE_MAX];
 
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
@@ -203,7 +203,7 @@
 		 * protect this instead of the siglock, because they really
 		 * have no need to disable irqs.
 		 */
-		rlimit_s rlim[RLIM_NLIMITS];
+		rlimit_s	rlim[RLIM_NLIMITS];
 
 	// #ifdef CONFIG_BSD_PROCESS_ACCT
 		// struct pacct_struct pacct;	/* per-process accounting information */

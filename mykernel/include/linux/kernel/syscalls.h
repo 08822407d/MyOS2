@@ -708,7 +708,7 @@
 
 		// /* kernel/signal.c */
 		// asmlinkage long sys_restart_syscall(void);
-		// asmlinkage long sys_kill(pid_t pid, int sig);
+		asmlinkage long sys_kill(pid_t pid, int sig);
 		// asmlinkage long sys_tkill(pid_t pid, int sig);
 		// asmlinkage long sys_tgkill(pid_t tgid, pid_t pid, int sig);
 		// asmlinkage long sys_sigaltstack(const struct sigaltstack __user *uss,

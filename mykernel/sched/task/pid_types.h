@@ -55,10 +55,10 @@
 
 	typedef struct pid {
 		atomic_t		count;
-		unsigned int	level;
+		uint			level;
 		spinlock_t		lock;
-		// /* lists of tasks that use this pid */
-		// struct hlist_head tasks[PIDTYPE_MAX];
+		/* lists of tasks that use this pid */
+		List_hdr_s		tasks[PIDTYPE_MAX];
 		// struct hlist_head inodes;
 		// /* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
