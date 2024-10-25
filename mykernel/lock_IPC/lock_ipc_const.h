@@ -6,5 +6,6 @@
 	#include "semaphore/semaphore_const.h"
 	#include "semaphore/rwsem_const.h"
 	#include "lockdep/lockdep_const.h"
+	#include "signal/signal_const.h"
 
 #endif /* _LOCK_IPC_CONST_H_ */

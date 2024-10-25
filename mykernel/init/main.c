@@ -31,7 +31,6 @@
 #include <uapi/linux/unistd.h>
 #include <linux/device/driver.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/signal.h>
 #include <linux/debug/ftrace.h>
 #include <linux/kernel/ptrace.h>
 #include <linux/block/blkdev.h>

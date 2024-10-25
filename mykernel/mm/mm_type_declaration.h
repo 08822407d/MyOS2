@@ -13,13 +13,11 @@
 	typedef struct linux_binfmt linux_bfmt_s;
 
 
+	#include <asm/mm_types.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>
-	#include <linux/kernel/lock_ipc_types.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
 	#include <uapi/linux/auxvec.h>
-	#include <asm/mm_types.h>
-
-	#include "mm_const.h"
 
 
 	/* memblock */

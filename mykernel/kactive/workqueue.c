@@ -29,7 +29,6 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/sched.h>
 #include <linux/init/init.h>
-#include <linux/kernel/signal.h>
 #include <linux/kernel/completion.h>
 #include <linux/kernel/workqueue.h>
 #include <linux/kernel/cpu.h>

@@ -352,7 +352,9 @@
         "buddy_macro.h": "c",
         "unistd_64.h": "c",
         "signal_types.h": "c",
-        "signal_type_declaration.h": "c"
+        "signal_type_declaration.h": "c",
+        "lock_ipc_const.h": "c",
+        "debug.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

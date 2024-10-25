@@ -7,5 +7,6 @@
 	#include "semaphore/semaphore_types.h"
 	#include "semaphore/rwsem_types.h"
 	#include "lockdep/lockdep_types.h"
+	#include "signal/signal_types.h"
 
 #endif /* _LOCK_IPC_TYPES_H_ */

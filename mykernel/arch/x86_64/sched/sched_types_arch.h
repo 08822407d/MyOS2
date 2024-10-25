@@ -6,6 +6,4 @@
 	#include "context/switch_to_types_arch.h"
 	#include "context/thread_info_types_arch.h"
 
-	// #include <linux/kernel/mm_types.h>
-
 #endif /* _ASM_X86_SCHED_TYPES_H_ */

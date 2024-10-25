@@ -2,6 +2,7 @@
 #define _MM_MISC_TYPES_H_
 
 	#include "../mm_type_declaration.h"
+	#include "../mm_const.h"
 
 
 	typedef struct mm_struct {

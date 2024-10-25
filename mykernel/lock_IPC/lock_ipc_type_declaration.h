@@ -1,9 +1,10 @@
 #ifndef _LOCK_IPC_TYPE_DECLARATIONS_H_
 #define _LOCK_IPC_TYPE_DECLARATIONS_H_
 
+	#include <asm/lock_ipc_types.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>
-	#include <asm/lock_ipc_types.h>
+	// #include <linux/kernel/sched_type_declaration.h>
 
 
 	/* atomic */
@@ -16,5 +17,15 @@
 	/* spinlock */
 	/* Non PREEMPT_RT kernels map spinlock to raw_spinlock */
 	typedef arch_spinlock_t spinlock_t;
+
+	/* signal */
+	union sigval;
+	typedef union sigval sigval_t;
+	union __sifields;
+	typedef union __sifields __sifields_u;
+	struct kernel_siginfo;
+	typedef struct kernel_siginfo kernel_siginfo_t;
+	struct signal_struct;
+	typedef struct signal_struct signal_s;
 
 #endif /* _LOCK_IPC_TYPE_DECLARATIONS_H_ */

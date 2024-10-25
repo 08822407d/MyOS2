@@ -2,10 +2,9 @@
 #ifndef _LINUX_SCHED_SIGNAL_H
 #define _LINUX_SCHED_SIGNAL_H
 
-	#include <linux/kernel/signal.h>
 	#include <linux/kernel/sched.h>
-	#include <linux/kernel/mm.h>
-	#include <asm/ptrace.h>
+	// #include <linux/kernel/mm.h>
+	// #include <asm/ptrace.h>
 
 	// /*
 	// * Types defining task->signal and task->sighand and APIs using them:

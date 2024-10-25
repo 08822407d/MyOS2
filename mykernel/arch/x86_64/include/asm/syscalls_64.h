@@ -33,7 +33,7 @@ __SYSCALL(__NR_fork, sys_fork)
 __SYSCALL(__NR_execve, sys_execve)
 __SYSCALL(__NR_exit, sys_exit)
 __SYSCALL(__NR_wait4, sys_wait4)
-__SYSCALL(__NR_kill, sys_kill)
+// __SYSCALL(__NR_kill, sys_kill)
 
 __SYSCALL(__NR_fcntl, sys_fcntl)
 

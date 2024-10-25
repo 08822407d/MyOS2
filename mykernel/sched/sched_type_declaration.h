@@ -1,6 +1,7 @@
 #ifndef _SCHED_TYPE_DECLARATION_H_
 #define _SCHED_TYPE_DECLARATION_H_
 
+
 	/* task_struct member predeclarations (sorted alphabetically): */
 	struct signal_struct;
 	typedef struct signal_struct signal_s;
@@ -11,14 +12,12 @@
 
 	#include <asm/sched_types.h>
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/lock_ipc_types.h>
 	#include <linux/kernel/lib_types.h>
-	#include <linux/kernel/mm_types.h>
+	#include <linux/kernel/mm_type_declaration.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
 	#include <linux/kernel/swait.h>
 	#include <linux/kernel/completion.h>
 	#include <linux/kernel/resource.h>
-
-	#include "sched_const.h"
 
 
 	/* task misc */

@@ -2,7 +2,6 @@
 #define _SIGNAL_CONSTS_H_
 
 
-
 	/*
 	 * How these fields are to be accessed.
 	 */
