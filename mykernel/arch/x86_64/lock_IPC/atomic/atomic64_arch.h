@@ -3,7 +3,6 @@
 #define _ASM_X86_ATOMIC64_64_H_
 
 	#include <linux/compiler/myos_debug_option.h>
-	#include <asm/alternative.h>
 	#include <insns/cmpxchg_api.h>
 
 	#include "../lock_ipc_types_arch.h"

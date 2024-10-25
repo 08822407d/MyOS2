@@ -193,7 +193,7 @@
 	struct myos_rq {
 		// MyOS2 variables
 		List_hdr_s		running_lhdr;
-		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
+		ulong			last_jiffies;	// abs jiffies when curr-task loaded
 	};
 
 	/*
@@ -225,7 +225,7 @@
 	// 	atomic_t		nohz_flags;
 	// #endif /* CONFIG_NO_HZ_COMMON */
 
-		unsigned int	ttwu_pending;
+		uint			ttwu_pending;
 		u64				nr_switches;
 
 	// #ifdef CONFIG_UCLAMP_TASK
@@ -252,20 +252,20 @@
 		 * one CPU and if it got migrated afterwards it may decrease
 		 * it on another CPU. Always updated under the runqueue lock:
 		 */
-		unsigned int	nr_uninterruptible;
+		uint			nr_uninterruptible;
 
 		task_s __rcu	*curr;
 		task_s			*idle;
 		task_s			*stop;
-		unsigned long	next_balance;
+		ulong			next_balance;
 		mm_s			*prev_mm;
 
-		unsigned int	clock_update_flags;
+		uint			clock_update_flags;
 		u64				clock;
 		/* Ensure that all clocks are in the same cache line */
 		u64				clock_task;
 		u64				clock_pelt;
-		unsigned long	lost_idle_time;
+		ulong			lost_idle_time;
 		u64				clock_pelt_idle;
 		u64				clock_idle;
 
@@ -382,7 +382,7 @@
 	};
 
 	struct rq_flags {
-		unsigned long flags;
+		ulong		flags;
 		// struct pin_cookie cookie;
 	// #ifdef CONFIG_SCHED_DEBUG
 		// /*

@@ -4,7 +4,8 @@
 
 	#include <linux/kernel/lib.h>
 	#include <linux/kernel/stddef.h>
-	#include <linux/kernel/lock_ipc_types.h>
+	// #include <linux/kernel/lock_ipc_types.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
 	// #include <linux/wait.h>
 	#include <asm/current.h>
 
@@ -39,7 +40,7 @@
 	 */
 
 	typedef struct swait_queue_head {
-		arch_spinlock_t	lock;
+		spinlock_t		lock;
 		List_hdr_s		task_list_hdr;
 	} swqueue_hdr_s;
 

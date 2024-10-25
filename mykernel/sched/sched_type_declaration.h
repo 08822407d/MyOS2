@@ -3,8 +3,6 @@
 
 
 	/* task_struct member predeclarations (sorted alphabetically): */
-	struct signal_struct;
-	typedef struct signal_struct signal_s;
 	struct rlimit;
 	typedef struct rlimit rlimit_s;
 	struct files_struct;

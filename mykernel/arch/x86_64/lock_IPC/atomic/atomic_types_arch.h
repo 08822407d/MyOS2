@@ -5,11 +5,11 @@
 
 
 	struct atomic {
-		int counter;
+		int		counter;
 	};
 
 	struct atomic64 {
-		s64 counter;
+		s64		counter;
 	};
 
 #endif /* _ATOMIC_TYPES_H_ */

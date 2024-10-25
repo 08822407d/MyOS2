@@ -3,10 +3,10 @@
 #define _LINUX_PTRACE_H
 
 	#include <linux/compiler/compiler.h>		/* For unlikely.  */
-	#include <linux/kernel/sched.h>		/* For task_s.  */
+	#include <linux/kernel/sched_type_declaration.h>	/* For task_s.  */
 	#include <linux/sched/signal.h>		/* For send_sig(), same_thread_group(), etc. */
-	#include <linux/kernel/err.h>			/* for IS_ERR_VALUE */
-	#include <linux/debug/bug.h>			/* For BUG_ON.  */
+	// #include <linux/kernel/err.h>			/* for IS_ERR_VALUE */
+	// #include <linux/debug/bug.h>			/* For BUG_ON.  */
 	// #include <linux/pid_namespace.h>	/* For task_active_pid_ns.  */
 	#include <uapi/linux/ptrace.h>
 	// #include <linux/seccomp.h>
