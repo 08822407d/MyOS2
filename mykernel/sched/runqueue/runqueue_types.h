@@ -6,7 +6,7 @@
 
 
 	/* CFS-related fields in a runqueue */
-	typedef struct cfs_rq {
+	struct cfs_rq {
 		// struct load_weight	load;
 		// unsigned int		nr_running;
 		// unsigned int		h_nr_running;      /* SCHED_{NORMAL,BATCH,IDLE} */
@@ -89,7 +89,7 @@
 		// struct list_head	throttled_csd_list;
 	// #endif /* CONFIG_CFS_BANDWIDTH */
 	// #endif /* CONFIG_FAIR_GROUP_SCHED */
-	} cfs_rq_s;
+	};
 
 	// static inline int rt_bandwidth_enabled(void)
 	// {
@@ -102,7 +102,7 @@
 	// #endif
 
 	/* Real-Time classes' related field in a runqueue: */
-	typedef struct rt_rq {
+	struct rt_rq {
 	// 	struct rt_prio_array	active;
 	// 	unsigned int		rt_nr_running;
 	// 	unsigned int		rr_nr_running;
@@ -129,7 +129,7 @@
 	// 	rq_s		*rq;
 	// 	struct task_group	*tg;
 	// #endif
-	} rt_rq_s;
+	};
 
 	// static inline bool rt_rq_is_runnable(struct rt_rq *rt_rq)
 	// {
@@ -137,7 +137,7 @@
 	// }
 
 	/* Deadline class' related fields in a runqueue */
-	typedef struct dl_rq {
+	struct dl_rq {
 		// /* runqueue is an rbtree, ordered by deadline */
 		// struct rb_root_cached	root;
 
@@ -188,13 +188,13 @@
 		//  * by the GRUB algorithm.
 		//  */
 		// u64			bw_ratio;
-	} dl_rq_s;
+	};
 
-	typedef struct myos_rq {
+	struct myos_rq {
 		// MyOS2 variables
 		List_hdr_s		running_lhdr;
 		unsigned long	last_jiffies;	// abs jiffies when curr-task loaded
-	} myos_rq_s;
+	};
 
 	/*
 	 * This is the main, per-CPU runqueue data structure.
@@ -203,7 +203,7 @@
 	 * (such as the load balancing or the thread migration code), lock
 	 * acquire operations must be ordered by ascending &runqueue.
 	 */
-	typedef struct runqueue {
+	struct runqueue {
 		/* runqueue lock: */
 		spinlock_t		__lock;
 
@@ -379,9 +379,9 @@
 		// call_single_data_t	cfsb_csd;
 		// struct list_head	cfsb_csd_list;
 	// #endif
-	} rq_s;
+	};
 
-	typedef struct rq_flags {
+	struct rq_flags {
 		unsigned long flags;
 		// struct pin_cookie cookie;
 	// #ifdef CONFIG_SCHED_DEBUG
@@ -392,6 +392,6 @@
 		//  */
 		// unsigned int clock_update_flags;
 	// #endif
-	} rq_flags_s;
+	};
 
 #endif /* _LINUX_RUNQUEUE_TYPES_H_ */

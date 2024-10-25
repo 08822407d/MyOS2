@@ -59,18 +59,18 @@
 	 *
 	 * (We pack it because there can be thousands of them on large systems.)
 	 */
-	typedef struct e820_entry {
+	struct e820_entry {
 		u64			addr;
 		u64			size;
 		enum e820_type	type;
-	} e820_entry_s;
+	};
 
 	/*
 	 * The whole array of E820 entries:
 	 */
-	typedef struct e820_table {
+	struct e820_table {
 		__u32			nr_entries;
 		e820_entry_s	entries[E820_MAX_ENTRIES];
-	} e820_table_s;
+	};
 
 #endif /* _ASM_E820_TYPES_H */

@@ -5,7 +5,7 @@
 	#include "../sched_type_declaration.h"
 
 
-	typedef struct kernel_clone_args {
+	struct kernel_clone_args {
 		u64				flags;
 		int __user		*pidfd;
 		int __user		*child_tid;
@@ -28,6 +28,6 @@
 		void			*fn_arg;
 		// struct cgroup *cgrp;
 		// struct css_set *cset;
-	} kclone_args_s;
+	};
 
 #endif /* _LINUX_SCHED_MISC_TYPES_H_ */

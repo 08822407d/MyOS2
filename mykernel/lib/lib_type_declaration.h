@@ -9,9 +9,13 @@
     /* double_list.c */
 	struct list_head;
 	typedef struct list_head List_s;
+    struct list_hdr;
+    typedef struct list_hdr List_hdr_s;
 
     /* hash_list.c */
     struct hlist_node;
     typedef struct hlist_node hlist_s;
+    struct hlist_head;
+    typedef struct hlist_head hlist_hdr_s;
 
 #endif /* _LIB_TYPE_DECLARATION_H_ */

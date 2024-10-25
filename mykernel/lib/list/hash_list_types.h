@@ -5,12 +5,12 @@
 	#include "../lib_type_declaration.h"
 
 
-	typedef struct hlist_head {
+	struct hlist_head {
 		hlist_s *first;
-	} hlist_hdr_s;
+	};
 
-	typedef struct hlist_node {
+	struct hlist_node {
 		hlist_s *next, **pprev;
-	} hlist_s;
+	};
 
 #endif /* _LINUX_HASH_LIST_TYPES_H_ */

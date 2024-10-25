@@ -1,10 +1,17 @@
 #ifndef _LOCK_IPC_TYPE_DECLARATIONS_H_
 #define _LOCK_IPC_TYPE_DECLARATIONS_H_
 
+	struct pid;
+	typedef struct pid pid_s;
+
+
 	#include <asm/lock_ipc_types.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/lib_types.h>
 	// #include <linux/kernel/sched_type_declaration.h>
+
+	#include <linux/kernel/resource.h>
+	#include <linux/kernel/sched_const.h>
 
 
 	/* atomic */

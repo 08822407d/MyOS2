@@ -2,6 +2,15 @@
 #ifndef _LINUX_TASK_CONST_H_
 #define _LINUX_TASK_CONST_H_
 
+
+	/*
+	 * Define the task command name length as enum, then it can be visible to
+	 * BPF programs.
+	 */
+	enum {
+		TASK_COMM_LEN = 32,
+	};
+
 	/*
 	 * Task state bitmask. NOTE! These bits are also
 	 * encoded in fs/proc/array.c: get_task_state().

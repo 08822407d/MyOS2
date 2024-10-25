@@ -16,11 +16,11 @@
 	 * - this struct should fit entirely inside of one cache line
 	 * - this struct shares the supervisor stack pages
 	 */
-	typedef struct thread_info {
+	struct thread_info {
 		ulong	flags;		/* low level flags */
 		ulong	syscall_work;	/* SYSCALL_WORK_ flags */
 		u32		status;		/* thread synchronous flags */
 		u32		cpu;		/* current CPU */
-	} thread_info_s;
+	};
 
 #endif /* _ASM_X86_THREAD_INFO_TYPES_H_ */

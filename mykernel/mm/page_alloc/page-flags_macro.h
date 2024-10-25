@@ -2,9 +2,9 @@
 /*
  * Macros for manipulating and testing page->flags
  */
-
 #ifndef _LINUX_PAGE_FLAGS_MACRO_H_
 #define _LINUX_PAGE_FLAGS_MACRO_H_
+
 
 	#define compound_head(page)		((typeof(page))_compound_head(page))
 	/**

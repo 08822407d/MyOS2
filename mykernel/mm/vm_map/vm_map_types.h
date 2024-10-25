@@ -10,7 +10,7 @@
 	 * space that has a special rule for the page-fault handlers (ie a shared
 	 * library, the executable area etc).
 	 */
-	typedef struct vm_area_struct {
+	struct vm_area_struct {
 		/* The first cache line has the info for VMA tree walking. */
 
 		union {
@@ -88,14 +88,14 @@
 	// 	struct vma_numab_state *numab_state;	/* NUMA Balancing state */
 	// #endif
 	// 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
-	} vma_s;
+	};
 
 	/*
 	 * These are the virtual MM functions - opening of an area, closing and
 	 * unmapping it (needed to keep files on disk up-to-date etc), pointer
 	 * to the functions called when a no-page or a wp-page exception occurs.
 	 */
-	typedef struct vm_operations_struct {
+	struct vm_operations_struct {
 		void		(*open)(vma_s * area);
 		/**
 		 * @close: Called when the VMA is being removed from the MM.
@@ -167,7 +167,7 @@
 		//  * (using pte_page()) would not find the correct page.
 		//  */
 		// page_s *(*find_special_page)(vma_s *vma, unsigned long addr);
-	} vm_ops_s;
+	};
 
 	/*
 	 * The anon_vma heads a list of private "related" vmas, to scan if
@@ -183,7 +183,7 @@
 	 * the anon_vma object itself: we're guaranteed no page can be
 	 * pointing to this anon_vma once its vma list is empty.
 	 */
-	typedef struct anon_vma {
+	struct anon_vma {
 		anon_vma_s	*root;		/* Root of this anon_vma tree */
 		// rwsem_t rwsem;	/* W: modification, R: walking the list */
 		/*
@@ -219,7 +219,7 @@
 
 		// /* Interval tree of private "related" vmas */
 		// struct rb_root_cached rb_root;
-	} anon_vma_s;
+	};
 
 	/*
 	 * The copy-on-write semantics of fork mean that an anon_vma
@@ -234,7 +234,7 @@
 	 * The "rb" field indexes on an interval tree the anon_vma_chains
 	 * which link all the VMAs associated with this anon_vma.
 	 */
-	typedef struct anon_vma_chain {
+	struct anon_vma_chain {
 		vma_s		*vma;
 		anon_vma_s	*anon_vma;
 		List_hdr_s	same_vma;		/* locked by mmap_lock & page_table_lock */
@@ -243,9 +243,9 @@
 	// #ifdef CONFIG_DEBUG_VM_RB
 	// 	unsigned long cached_vma_start, cached_vma_last;
 	// #endif
-	} anon_vma_chain_s;
+	};
 
-	typedef struct vm_unmapped_area_info {
+	struct vm_unmapped_area_info {
 	#define VM_UNMAPPED_AREA_TOPDOWN 1
 		ulong	flags;
 		ulong	length;
@@ -254,6 +254,6 @@
 		ulong	align_mask;
 		ulong	align_offset;
 		ulong	start_gap;
-	} unmapped_vma_info_s;
+	};
 
 #endif /* _LINUX_VM_MAP_TYPES_H_ */

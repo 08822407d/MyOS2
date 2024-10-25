@@ -16,7 +16,7 @@
 	 * reduce the chance that they will share the same cacheline causing
 	 * cacheline bouncing problem.
 	 */
-	typedef struct rw_semaphore {
+	struct rw_semaphore {
 		atomic_long_t	count;
 		/*
 		 * Write owner or one of the read owners as well flags regarding
@@ -26,6 +26,6 @@
 		atomic_long_t	owner;
 		spinlock_t		wait_lock;
 		List_s			wait_list;
-	} rwsem_t;
+	};
 
 #endif /* __LINUX_READWRITE_SEMAPHORE_TYPES_H_ */

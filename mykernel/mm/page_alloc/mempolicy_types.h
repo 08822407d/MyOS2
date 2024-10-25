@@ -28,7 +28,7 @@
 	 * to the new storage.  The reference count of the new object is initialized
 	 * to 1, representing the caller of mpol_dup().
 	 */
-	typedef struct mempolicy {
+	struct mempolicy {
 		atomic_t	refcnt;
 		ushort		mode; 			/* See MPOL_* above */
 		ushort		flags;			/* See set_mempolicy() MPOL_F_* above */
@@ -39,6 +39,6 @@
 		// 	nodemask_t	cpuset_mems_allowed;	/* relative to these nodes */
 		// 	nodemask_t	user_nodemask;			/* nodemask passed by user */
 		// } w;
-	} mpol_s;
+	};
 
 #endif /* _MEMPOLICY_TYPES_H_ */

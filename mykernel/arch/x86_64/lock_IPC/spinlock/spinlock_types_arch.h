@@ -5,7 +5,7 @@
 	#include "../lock_ipc_type_declaration_arch.h"
 
 
-	typedef struct tspinlock {
+	struct tspinlock {
 		union {
 			atomic64_t	val;
 
@@ -14,7 +14,7 @@
 				u32		tail;
 			};
 		};
-	} arch_spinlock_t;
+	};
 
 	/*
 	 * Initializier

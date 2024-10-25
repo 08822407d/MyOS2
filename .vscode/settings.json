@@ -354,7 +354,8 @@
         "signal_types.h": "c",
         "signal_type_declaration.h": "c",
         "lock_ipc_const.h": "c",
-        "debug.h": "c"
+        "debug.h": "c",
+        "lib_type_declaration.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

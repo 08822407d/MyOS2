@@ -42,7 +42,7 @@
 	#define _struct_page_alignment __aligned(2 * sizeof(ulong))
 
 
-	typedef struct page {
+	struct page {
 		union {	// 为了方便debug，增加了按位定义的union
 			ulong				flags;		/* Atomic flags, some possibly */
 			pgflag_defs_s		flag_defs;	/* updated asynchronously */
@@ -172,7 +172,7 @@
 	// #ifdef LAST_CPUPID_NOT_IN_PAGE_FLAGS
 	// 	int _last_cpupid;
 	// #endif
-	} page_s _struct_page_alignment;
+	} _struct_page_alignment;
 
 	/**
 	 * folio_s - Represents a contiguous set of bytes.
@@ -210,7 +210,7 @@
 	 * at an arbitrary page offset, but its kernel virtual address is aligned
 	 * to its size.
 	 */
-	typedef struct folio {
+	struct folio {
 		/* private: don't document the anon union */
 		union {
 			struct {
@@ -273,7 +273,7 @@
 		// 	};
 		// 	page_s	__page_2;
 		// };
-	} folio_s;
+	};
 
 	/**
 	 * ptdesc_s -    Memory descriptor for page tables.
@@ -295,7 +295,7 @@
 	 * This struct overlays page_s for now. Do not modify without a good
 	 * understanding of the issues.
 	 */
-	typedef struct ptdesc {
+	struct ptdesc {
 		ulong				__page_flags;
 
 		union {
@@ -321,6 +321,6 @@
 		uint				__page_type;
 		atomic_t			__page_refcount;
 		ulong				pt_memcg_data;
-	} ptdesc_s;
+	};
 
 #endif /* _PAGE_ALLOC_TYPES_H_ */

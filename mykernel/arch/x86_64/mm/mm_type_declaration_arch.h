@@ -40,6 +40,8 @@
 	union pte_union;
 	typedef union pte_union pte_t;
 
+	struct pgprot; 
+	typedef struct pgprot pgprot_t; 
 	typedef p4dval_t pgdval_t;
 	typedef p4d_t pgd_t;
 

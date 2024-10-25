@@ -5,14 +5,6 @@
 	#include "../sched_type_declaration.h"
 
 
-	enum pid_type {
-		PIDTYPE_PID,
-		PIDTYPE_TGID,
-		PIDTYPE_PGID,
-		PIDTYPE_SID,
-		PIDTYPE_MAX,
-	};
-
 	/*
 	 * What is pid_s?
 	 *
@@ -48,22 +40,22 @@
 	 * seen in particular namespace. Later the pid_s is found with
 	 * find_pid_ns() using the int nr and struct pid_namespace *ns.
 	 */
-	typedef struct upid {
+	struct upid {
 		int nr;
 		// struct pid_namespace *ns;
-	} upid_s;
+	};
 
-	typedef struct pid {
+	struct pid {
 		atomic_t		count;
 		uint			level;
 		spinlock_t		lock;
 		/* lists of tasks that use this pid */
 		List_hdr_s		tasks[PIDTYPE_MAX];
-		// struct hlist_head inodes;
+		List_hdr_s		inodes;
 		// /* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
 		// struct rcu_head rcu;
 		upid_s			numbers[1];
-	} pid_s;
+	};
 
 #endif /* _LINUX_PID_TYPES_H_ */

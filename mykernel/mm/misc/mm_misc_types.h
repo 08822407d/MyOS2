@@ -5,7 +5,7 @@
 	#include "../mm_const.h"
 
 
-	typedef struct mm_struct {
+	struct mm_struct {
 		// size_t				entry_point;
 		struct {
 			List_hdr_s		mm_mt;
@@ -183,6 +183,6 @@
 	// 	* is dynamically sized based on nr_cpu_ids.
 	// 	*/
 	// 	unsigned long cpu_bitmap[];
-	} mm_s;
+	};
 
 #endif /* _MM_MISC_TYPES_H_ */

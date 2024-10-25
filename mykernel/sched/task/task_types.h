@@ -9,15 +9,7 @@
 	#include <processor/processor_types_arch.h>
 
 
-	/*
-	 * Define the task command name length as enum, then it can be visible to
-	 * BPF programs.
-	 */
-	enum {
-		TASK_COMM_LEN = 32,
-	};
-
-	typedef struct task_struct {
+	struct task_struct {
 		/*
 		 * For reasons of header soup (see current_thread_info()), this
 		 * must be the first element of task_struct.
@@ -762,6 +754,6 @@
 		 *
 		 * Do not put anything below here!
 		 */
-	} task_s;
+	};
 
 #endif /* _LINUX_TASK_TYPES_H_ */

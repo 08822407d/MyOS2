@@ -5,5 +5,6 @@
 	#include "scheduler/preempt_const.h"
 	#include "scheduler/scheduler_const.h"
 	#include "task/task_const.h"
+	#include "task/pid_const.h"
 
 #endif /* _SCHED_CONSTS_H_ */

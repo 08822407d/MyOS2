@@ -6,6 +6,7 @@
 #ifndef _ASM_E820_CONST_H_
 #define _ASM_E820_CONST_H_
 
+
 	/*
 	 * Various well-known legacy memory ranges in physical memory:
 	 */

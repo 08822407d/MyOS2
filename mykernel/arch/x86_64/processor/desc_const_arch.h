@@ -5,6 +5,7 @@
 #ifndef _ASM_X86_DESC_CONST_H_
 #define _ASM_X86_DESC_CONST_H_
 
+
 	/* Boot IDT definitions */
 	#define	BOOT_IDT_ENTRIES		32
 

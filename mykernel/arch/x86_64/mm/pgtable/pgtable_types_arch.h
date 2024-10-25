@@ -5,7 +5,7 @@
 	#include "../mm_type_declaration_arch.h"
 
 
-	typedef struct arch_p4d {
+	struct arch_p4d {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -17,9 +17,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} __attribute__((packed)) arch_p4d_T;
+	} __attribute__((packed));
 
-	typedef struct arch_pud {
+	struct arch_pud {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -34,9 +34,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} __attribute__((packed)) arch_pud_T;
+	} __attribute__((packed));
 
-	typedef struct arch_pmd {
+	struct arch_pmd {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -51,9 +51,9 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} __attribute__((packed)) arch_pmd_T;
+	} __attribute__((packed));
 
-	typedef struct arch_pte {
+	struct arch_pte {
 		unsigned long
 			P		: 1,
 			RW		: 1,
@@ -68,31 +68,31 @@
 			PHYADDR	: 36,
 					: 15,
 			XD		: 1;
-	} __attribute__((packed)) arch_pte_T;
+	} __attribute__((packed));
 
-	typedef struct pgprot {
+	struct pgprot {
 		pgprotval_t pgprot;
-	} pgprot_t;
+	};
 
-	typedef union p4d_union {
+	union p4d_union {
 		p4dval_t	val;
 		arch_p4d_T	defs;
-	} p4d_t;
+	};
 
-	typedef union pud_union {
+	union pud_union {
 		pudval_t	val;
 		arch_pud_T	defs;
-	} pud_t;
+	};
 
-	typedef union pmd_union {
+	union pmd_union {
 		pmdval_t	val;
 		arch_pmd_T	defs;
-	} pmd_t;
+	};
 
-	typedef union pte_union {
+	union pte_union {
 		pteval_t	val;
 		arch_pte_T	defs;
-	} pte_t;
+	};
 
 	enum pg_level {
 		PG_LEVEL_NONE,

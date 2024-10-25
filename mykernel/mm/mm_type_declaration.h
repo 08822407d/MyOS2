@@ -44,6 +44,8 @@
 	typedef struct slab slab_s;
 	struct kmalloc_info_struct;
 	typedef struct kmalloc_info_struct kmalloc_info_s;
+	struct kmem_cache_node;
+	typedef struct kmem_cache_node kmem_cache_node_s;
 	struct kmem_cache_order_objects;
 	typedef struct kmem_cache_order_objects kmem_cache_order_obj_s;
 	struct kmem_cache;

@@ -5,7 +5,7 @@
 	#include "../sched_type_declaration.h"
 
 
-	typedef struct sched_entity {
+	struct sched_entity {
 		// /* For load-balancing: */
 		// struct load_weight load;
 		// struct rb_node run_node;
@@ -37,9 +37,9 @@
 		 * collide with read-mostly values above.
 		 */
 		// struct sched_avg avg;
-	} sched_entity_s;
+	};
 
-	typedef struct sched_rt_entity {
+	struct sched_rt_entity {
 		List_s		run_list;
 		// unsigned long timeout;
 		// unsigned long watchdog_stamp;
@@ -55,10 +55,10 @@
 		// /* rq "owned" by this entity/group: */
 		// struct rt_rq *my_q;
 	// #endif
-	} sched_rt_entity_s;
+	};
 
 
-	typedef struct sched_class {
+	struct sched_class {
 	// #ifdef CONFIG_UCLAMP_TASK
 		// int uclamp_enabled;
 	// #endif
@@ -113,6 +113,6 @@
 	// #ifdef CONFIG_SCHED_CORE
 		// int		(*task_is_throttled) (task_s *p, int cpu);
 	// #endif
-	} sched_class_s;
+	};
 
 #endif /* _LINUX_SCHEDULER_TYPES_H_ */

@@ -2,6 +2,7 @@
 #ifndef _LINUX_SCHEDULER_CONST_H_
 #define _LINUX_SCHEDULER_CONST_H_
 
+
 	/* Wake flags. The first three directly map to some SD flag value */
 	#define WF_EXEC			0x02 /* Wakeup after exec; maps to SD_BALANCE_EXEC */
 	#define WF_FORK			0x04 /* Wakeup after fork; maps to SD_BALANCE_FORK */
