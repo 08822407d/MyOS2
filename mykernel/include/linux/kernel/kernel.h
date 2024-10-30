@@ -27,7 +27,7 @@
 	// #include <linux/typecheck.h>
 	#include <linux/debug/panic.h>
 	#include <linux/debug/printk.h>
-	// #include <linux/build_bug.h>
+	#include <linux/debug/build_bug.h>
 	// #include <linux/static_call_types.h>
 	// #include <linux/instruction_pointer.h>
 	// #include <asm/byteorder.h>

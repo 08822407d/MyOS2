@@ -4,7 +4,7 @@
 
 	// #include <asm/bug.h>
 	#include <linux/compiler/compiler.h>
-	// #include <linux/build_bug.h>
+	#include <linux/debug/build_bug.h>
 
 	// enum bug_trap_type {
 	// 	BUG_TRAP_TYPE_NONE = 0,

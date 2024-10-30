@@ -52,7 +52,7 @@
 		/* lists of tasks that use this pid */
 		List_hdr_s		tasks[PIDTYPE_MAX];
 		List_hdr_s		inodes;
-		// /* wait queue for pidfd notifications */
+		/* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
 		// struct rcu_head rcu;
 		upid_s			numbers[1];
@@ -61,7 +61,6 @@
 	struct pid_namespace {
 		// struct idr idr;
 		// struct rcu_head rcu;
-		List_s			rcu;
 		uint			pid_allocated;
 		task_s			*child_reaper;
 		kmem_cache_s	*pid_cachep;

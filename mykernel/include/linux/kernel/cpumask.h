@@ -15,8 +15,9 @@
 	// #include <linux/gfp_types.h>
 	#include <linux/kernel/numa.h>
 
-	extern unsigned nr_cpu_ids;
+	extern uint nr_cpu_ids;
 	#define for_each_possible_cpu(cpu) \
 				for (int cpu = 0; cpu < nr_cpu_ids; cpu++)
+	#define num_possible_cpus()	nr_cpu_ids
 
 #endif /* __LINUX_CPUMASK_H */

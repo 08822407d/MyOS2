@@ -373,21 +373,20 @@ EXPORT_SYMBOL_GPL(pid_vnr);
 
 void __init pid_idr_init(void)
 {
-	// /* Verify no one has done anything silly: */
-	// BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
+	/* Verify no one has done anything silly: */
+	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
 
-	// /* bump default and minimum pid_max based on number of cpus */
-	// pid_max = min(pid_max_max, max_t(int, pid_max,
-	// 			PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
-	// pid_max_min = max_t(int, pid_max_min,
-	// 			PIDS_PER_CPU_MIN * num_possible_cpus());
-	// pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
+	/* bump default and minimum pid_max based on number of cpus */
+	pid_max = min(pid_max_max, max_t(int, pid_max,
+				PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
+	pid_max_min = max_t(int, pid_max_min,
+				PIDS_PER_CPU_MIN * num_possible_cpus());
+	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
 
 	// idr_init(&init_pid_ns.idr);
 
 	init_pid_ns.pid_cachep = kmem_cache_create("pid",
-			sizeof(pid_s) + sizeof(init_struct_pid.numbers) * 1,
-			__alignof__(pid_s),
+			struct_size_t(pid_s, numbers, 1), __alignof__(pid_s),
 			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
 }
 

@@ -18,7 +18,7 @@
 	//  * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
 	//  */
 	// #if !defined(__ASSEMBLY__)
-	// #include <linux/build_bug.h>
+	#include <linux/debug/build_bug.h>
 	// #define GENMASK_INPUT_CHECK(h, l) \
 	// 	(BUILD_BUG_ON_ZERO(__builtin_choose_expr( \
 	// 		__is_constexpr((l) > (h)), (l) > (h), 0)))
