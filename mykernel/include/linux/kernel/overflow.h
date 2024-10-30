@@ -31,8 +31,10 @@
 	 * credit to Christian Biere.
 	 */
 	#define __type_half_max(type)	((type)1 << (8*sizeof(type) - 1 - is_signed_type(type)))
-	#define type_max(T)				((T)((__type_half_max(T) - 1) + __type_half_max(T)))
-	#define type_min(T)				((T)((T)-type_max(T)-(T)1))
+	#define __type_max(T)			((T)((__type_half_max(T) - 1) + __type_half_max(T)))
+	#define type_max(t)				__type_max(typeof(t))
+	#define __type_min(T)			((T)((T)-type_max(T)-(T)1))
+	#define type_min(t)				__type_min(typeof(t))
 
 	/*
 	 * Avoids triggering -Wtype-limits compilation warning,
@@ -67,6 +69,36 @@
 				__must_check_overflow(__builtin_add_overflow(a, b, d))
 
 	/**
+	 * wrapping_add() - Intentionally perform a wrapping addition
+	 * @type: type for result of calculation
+	 * @a: first addend
+	 * @b: second addend
+	 *
+	 * Return the potentially wrapped-around addition without
+	 * tripping any wrap-around sanitizers that may be enabled.
+	 */
+	#define wrapping_add(type, a, b)	({				\
+				type __val;								\
+				__builtin_add_overflow(a, b, &__val);	\
+				__val;									\
+			})
+
+	/**
+	 * wrapping_assign_add() - Intentionally perform a wrapping increment assignment
+	 * @var: variable to be incremented
+	 * @offset: amount to add
+	 *
+	 * Increments @var by @offset with wrap-around. Returns the resulting
+	 * value of @var. Will not trip any wrap-around sanitizers.
+	 *
+	 * Returns the new value of @var.
+	 */
+	#define wrapping_assign_add(var, offset)	({					\
+				typeof(var) *__ptr = &(var);						\
+				*__ptr = wrapping_add(typeof(var), *__ptr, offset);	\
+			})
+
+	/**
 	 * check_sub_overflow() - Calculate subtraction with overflow checking
 	 * @a: minuend; value to subtract from
 	 * @b: subtrahend; value to subtract from @a
@@ -80,6 +112,38 @@
 	 */
 	#define check_sub_overflow(a, b, d)	\
 				__must_check_overflow(__builtin_sub_overflow(a, b, d))
+
+	// /**
+	//  * wrapping_sub() - Intentionally perform a wrapping subtraction
+	//  * @type: type for result of calculation
+	//  * @a: minuend; value to subtract from
+	//  * @b: subtrahend; value to subtract from @a
+	//  *
+	//  * Return the potentially wrapped-around subtraction without
+	//  * tripping any wrap-around sanitizers that may be enabled.
+	//  */
+	// #define wrapping_sub(type, a, b)				\
+	// 	({							\
+	// 		type __val;					\
+	// 		__builtin_sub_overflow(a, b, &__val);		\
+	// 		__val;						\
+	// 	})
+
+	// /**
+	//  * wrapping_assign_sub() - Intentionally perform a wrapping decrement assign
+	//  * @var: variable to be decremented
+	//  * @offset: amount to subtract
+	//  *
+	//  * Decrements @var by @offset with wrap-around. Returns the resulting
+	//  * value of @var. Will not trip any wrap-around sanitizers.
+	//  *
+	//  * Returns the new value of @var.
+	//  */
+	// #define wrapping_assign_sub(var, offset)				\
+	// 	({								\
+	// 		typeof(var) *__ptr = &(var);				\
+	// 		*__ptr = wrapping_sub(typeof(var), *__ptr, offset);	\
+	// 	})
 
 	/**
 	 * check_mul_overflow() - Calculate multiplication with overflow checking

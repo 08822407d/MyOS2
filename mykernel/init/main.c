@@ -170,6 +170,9 @@ asmlinkage void __init start_kernel(void)
 
 	arch_cpu_finalize_init();
 
+	pid_idr_init();
+
+
 	myos_devices_init();
 
 	proc_caches_init();

@@ -41,8 +41,8 @@
 	 * find_pid_ns() using the int nr and struct pid_namespace *ns.
 	 */
 	struct upid {
-		int nr;
-		// struct pid_namespace *ns;
+		int			nr;
+		pid_ns_s	*ns;
 	};
 
 	struct pid {
@@ -57,5 +57,26 @@
 		// struct rcu_head rcu;
 		upid_s			numbers[1];
 	};
+
+	struct pid_namespace {
+		// struct idr idr;
+		// struct rcu_head rcu;
+		List_s			rcu;
+		uint			pid_allocated;
+		task_s			*child_reaper;
+		kmem_cache_s	*pid_cachep;
+		uint			level;
+		pid_ns_s		*parent;
+	// #ifdef CONFIG_BSD_PROCESS_ACCT
+	// 	struct fs_pin *bacct;
+	// #endif
+		// struct user_namespace *user_ns;
+		// struct ucounts *ucounts;
+		int				reboot;	/* group exit code if this pidns was rebooted */
+		// struct ns_common ns;
+	// #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+	// 	int memfd_noexec_scope;
+	// #endif
+	} __randomize_layout;
 
 #endif /* _LINUX_PID_TYPES_H_ */

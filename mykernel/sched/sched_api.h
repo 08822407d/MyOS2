@@ -10,6 +10,7 @@
 	#include "runqueue/runqueue_api.h"
 	#include "scheduler/scheduler_api.h"
 	#include "task/task_api.h"
+	#include "task/pid_api.h"
 
 
 	#include <linux/kernel/lock_ipc_api.h>

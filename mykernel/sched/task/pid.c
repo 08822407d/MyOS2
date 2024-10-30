@@ -39,28 +39,57 @@
 
 #include <generated/conf.h>
 
+
+
 pid_s init_struct_pid = {
 	.count		= ATOMIC_INIT(1),
-	// .tasks		= {
-	// 	{ .first = NULL },
-	// 	{ .first = NULL },
-	// 	{ .first = NULL },
-	// },
+	.tasks		= {
+		LIST_HEADER_INIT(init_struct_pid.tasks[0]),
+		LIST_HEADER_INIT(init_struct_pid.tasks[1]),
+		LIST_HEADER_INIT(init_struct_pid.tasks[2]),
+	},
 	.level		= 0,
 	.numbers	= {
 		{
 			.nr		= 0,
-			// .ns		= &init_pid_ns,
+			.ns		= &init_pid_ns,
 		},
 	}
 };
 
-int pid_max = PID_MAX_DEFAULT;
 
-#define RESERVED_PIDS		300
+int pid_max			= PID_MAX_DEFAULT;
 
-int pid_max_min = RESERVED_PIDS + 1;
-int pid_max_max = PID_MAX_LIMIT;
+int pid_max_min		= RESERVED_PIDS + 1;
+int pid_max_max		= PID_MAX_LIMIT;
+/*
+ * Pseudo filesystems start inode numbering after one. We use Reserved
+ * PIDs as a natural offset.
+ */
+static u64 pidfs_ino	= RESERVED_PIDS;
+
+/*
+ * PID-map pages start out as NULL, they get allocated upon
+ * first use and are never deallocated. This way a low pid_max
+ * value does not cause lots of bitmaps to be allocated, but
+ * the scheme scales to up to 4 million PIDs, runtime.
+ */
+pid_ns_s init_pid_ns = {
+	// .ns.count		= REFCOUNT_INIT(2),
+	// .idr			= IDR_INIT(init_pid_ns.idr),
+	.pid_allocated	= PIDNS_ADDING,
+	.level			= 0,
+	// .child_reaper	= &init_task,
+	// .user_ns		= &init_user_ns,
+	// .ns.inum		= PROC_PID_INIT_INO,
+// #ifdef CONFIG_PID_NS
+// 	.ns.ops			= &pidns_operations,
+// #endif
+// #if defined(CONFIG_SYSCTL) && defined(CONFIG_MEMFD_CREATE)
+// 	.memfd_noexec_scope		= MEMFD_NOEXEC_SCOPE_EXEC,
+// #endif
+};
+EXPORT_SYMBOL_GPL(init_pid_ns);
 
 /*
  * Note: disable interrupts while the pidmap_lock is held as an
@@ -339,6 +368,28 @@ pid_t pid_vnr(pid_s *pid)
 	return pid_nr(pid);
 }
 EXPORT_SYMBOL_GPL(pid_vnr);
+
+
+
+void __init pid_idr_init(void)
+{
+	// /* Verify no one has done anything silly: */
+	// BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
+
+	// /* bump default and minimum pid_max based on number of cpus */
+	// pid_max = min(pid_max_max, max_t(int, pid_max,
+	// 			PIDS_PER_CPU_DEFAULT * num_possible_cpus()));
+	// pid_max_min = max_t(int, pid_max_min,
+	// 			PIDS_PER_CPU_MIN * num_possible_cpus());
+	// pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
+
+	// idr_init(&init_pid_ns.idr);
+
+	init_pid_ns.pid_cachep = kmem_cache_create("pid",
+			sizeof(pid_s) + sizeof(init_struct_pid.numbers) * 1,
+			__alignof__(pid_s),
+			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+}
 
 
 /*==============================================================================================*

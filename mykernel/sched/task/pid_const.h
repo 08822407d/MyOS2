@@ -11,4 +11,8 @@
 		PIDTYPE_MAX,
 	};
 
+
+	#define RESERVED_PIDS		300
+	#define PIDNS_ADDING		(1U << 31)
+
 #endif /* _LINUX_PID_CONST_H_ */

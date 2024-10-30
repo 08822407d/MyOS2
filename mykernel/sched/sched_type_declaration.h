@@ -51,6 +51,8 @@
 	typedef struct upid upid_s;
 	struct pid;
 	typedef struct pid pid_s;
+	struct pid_namespace;
+	typedef struct pid_namespace pid_ns_s;
 	struct task_struct;
 	typedef struct task_struct task_s;
 
