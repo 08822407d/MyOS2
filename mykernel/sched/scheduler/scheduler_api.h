@@ -19,8 +19,14 @@
 
 	extern void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
 
-
-
 	extern void preempt_schedule(void);
+
+
+	/*
+	 * Scheduler init related prototypes:
+	 */
+
+	extern void sched_init(void);
+	extern void sched_init_smp(void);
 
 #endif /* _LINUX_SCHEDULER_API_H_ */

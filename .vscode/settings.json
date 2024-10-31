@@ -356,7 +356,8 @@
         "lock_ipc_const.h": "c",
         "debug.h": "c",
         "lib_type_declaration.h": "c",
-        "cmpxchg_api.h": "c"
+        "cmpxchg_api.h": "c",
+        "myos_ide.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -148,6 +148,14 @@ asmlinkage void __init start_kernel(void)
 	trap_init();
 	mm_core_init();
 
+	/*
+	 * Set up the scheduler prior starting any interrupts (such as the
+	 * timer interrupt). Full topology setup happens at smp_init()
+	 * time - but meanwhile we still have a functioning scheduler.
+	 */
+	sched_init();
+
+
 	init_IRQ();
 	timekeeping_init();
 	time_init();

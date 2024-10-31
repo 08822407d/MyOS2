@@ -11,7 +11,8 @@ char init_stack[THREAD_SIZE] __page_aligned_data;
 
 __visible DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot);
 
-__visible DEFINE_PER_CPU(task_s, idle_threads);
+__visible DEFINE_PER_CPU(task_s, idles);
+__visible DEFINE_PER_CPU(task_s *, idle_threads);
 
 __visible DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
 
@@ -56,7 +57,7 @@ void myos_init_per_cpu_var(void)
 {
 	myos_init_pid_allocator();
 
-	task_s *this_idle_thread		= &per_cpu(idle_threads, 0);
+	task_s *this_idle_thread		= &per_cpu(idles, 0);
 	memset(this_idle_thread, 0, sizeof(task_s));
 	spin_lock_init(&this_idle_thread->alloc_lock);
 	INIT_LIST_S(&this_idle_thread->rt.run_list);
