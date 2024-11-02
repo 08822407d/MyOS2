@@ -24,13 +24,6 @@ unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 };
 
 
-int *debug_preempt_count_0;
-
-void myos_debug_percpu_vars(void)
-{
-	debug_preempt_count_0 = &(this_cpu_ptr(&pcpu_hot)->preempt_count);
-}
-
 void __init setup_per_cpu_areas(void)
 {
 	unsigned int cpu;
@@ -79,7 +72,8 @@ void __init setup_per_cpu_areas(void)
 	// /* alrighty, percpu areas up and running */
 	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
 	for_each_possible_cpu(cpu) {
-		per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+		per_cpu_offset(cpu) = pcpu_unit_offsets[cpu];
 		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
 		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
 		// setup_percpu_segment(cpu);
@@ -116,10 +110,6 @@ void __init setup_per_cpu_areas(void)
 		 */
 		if (cpu == 0)
 		{
-			// 为了简化percpu变量声明代码文件，这里用代码动态初始化
-			extern void myos_init_per_cpu_var(void);
-			myos_init_per_cpu_var();
-			
 			/**
 			 * switch_gdt_and_percpu_base - Switch to direct GDT and runtime per CPU base
 			 * @cpu:	The CPU number for which this is invoked
@@ -179,7 +169,4 @@ void __init setup_per_cpu_areas(void)
 	//  * this call?
 	//  */
 	// sync_initial_page_table();
-
-
-	myos_debug_percpu_vars();
 }

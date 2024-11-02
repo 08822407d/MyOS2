@@ -63,6 +63,14 @@ SECTIONS
 	.data ALIGN(_Page_Size) : AT(ADDR(.data) - _k_offset)
 	{
 		_sdata = .;
+		. = ALIGN(((1 << 12) << 3));
+		__start_init_stack = .;
+		init_thread_union = .;
+		init_stack = .; 
+		KEEP(*(.data..init_task))
+		KEEP(*(.data..init_thread_info))
+		. = __start_init_stack + ((1 << 12) << 3);
+		__end_init_stack = .;
 		*(.data)
 		*(.data.rel*)
 		*(.data..page_aligned*)

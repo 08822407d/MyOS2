@@ -373,6 +373,10 @@ EXPORT_SYMBOL_GPL(pid_vnr);
 
 void __init pid_idr_init(void)
 {
+	void myos_init_pid_allocator(void);
+	myos_init_pid_allocator();
+
+
 	/* Verify no one has done anything silly: */
 	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
 

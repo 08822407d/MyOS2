@@ -72,8 +72,9 @@ unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] = {
 task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.thread_info		= INIT_THREAD_INFO(init_task),
 	// .stack_refcount		= REFCOUNT_INIT(1),
-	.__state			= 0,
-	// .stack				= init_stack,
+	// .__state			= 0,
+	.__state			= TASK_RUNNING,
+	.stack				= init_stack,
 	// .usage				= REFCOUNT_INIT(2),
 	.flags				= PF_KTHREAD,
 	// .prio				= MAX_PRIO - 20,
@@ -97,6 +98,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.rt		= {
 		.run_list			= LIST_HEAD_INIT(init_task.rt.run_list),
 		// .time_slice			= RR_TIMESLICE,
+		.time_slice			= 2,
 	},
 	// .tasks				= LIST_HEAD_INIT(init_task.tasks),
 	// .pushable_tasks			= PLIST_NODE_INIT(init_task.pushable_tasks, MAX_PRIO),
@@ -135,7 +137,13 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.thread_pid			= &init_struct_pid,
 	// .thread_node		= LIST_HEAD_INIT(init_signals.thread_head),
 // #ifdef CONFIG_AUDIT
-// 	.loginuid			= INVALID_UID,
+//f
+// #ifdef CONFIG_TASKS_TRACE_RCU
+// 	.trc_reader_nesting		= 0,
+// 	.trc_reader_special.s	= 0,
+// 	.trc_holdout_list		= LIST_HEAD_INIT(init_task.trc_holdout_list),
+// 	.trc_blkd_node			= LIST_HEAD_INIT(init_task.trc_blkd_node),
+// #end 	.loginuid			= INVALID_UID,
 // 	.sessionid			= AUDIT_SID_UNSET,
 // #endif
 // #ifdef CONFIG_PERF_EVENTS
@@ -211,6 +219,13 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 // #ifdef CONFIG_SECCOMP_FILTER
 // 	.seccomp			= { .filter_count = ATOMIC_INIT(0) },
 // #endif
+
+
+
+/* MyOS2 initiate members */
+	.se					= {
+		.vruntime			= -1,
+	},
 };
 EXPORT_SYMBOL(init_task);
 

@@ -1338,6 +1338,81 @@ EXPORT_SYMBOL(preempt_schedule);
 
 
 
+/**
+ * init_idle - set up an idle thread for a given CPU
+ * @idle: task in question
+ * @cpu: CPU the idle task belongs to
+ *
+ * NOTE: this function does not set the idle thread's NEED_RESCHED
+ * flag, to make booting more robust.
+ */
+void __init init_idle(task_s *idle, int cpu)
+{
+	// struct affinity_context ac = (struct affinity_context) {
+	// 	.new_mask  = cpumask_of(cpu),
+	// 	.flags     = 0,
+	// };
+	rq_s *rq = cpu_rq(cpu);
+	ulong flags;
+
+	// __sched_fork(0, idle);
+
+	// raw_spin_lock_irqsave(&idle->pi_lock, flags);
+	// raw_spin_rq_lock(rq);
+
+	// idle->__state = TASK_RUNNING;
+	// idle->se.exec_start = sched_clock();
+	// /*
+	//  * PF_KTHREAD should already be set at this point; regardless, make it
+	//  * look like a proper per-CPU kthread.
+	//  */
+	// idle->flags |= PF_KTHREAD | PF_NO_SETAFFINITY;
+	// kthread_set_per_cpu(idle, cpu);
+
+	/*
+	//  * It's possible that init_idle() gets called multiple times on a task,
+	//  * in that case do_set_cpus_allowed() will not do the right thing.
+	//  *
+	//  * And since this is boot we can forgo the serialization.
+	//  */
+	// set_cpus_allowed_common(idle, &ac);
+	// /*
+	//  * We're having a chicken and egg problem, even though we are
+	//  * holding rq->lock, the CPU isn't yet set to this CPU so the
+	//  * lockdep check in task_group() will fail.
+	//  *
+	//  * Similar case to sched_fork(). / Alternatively we could
+	//  * use task_rq_lock() here and obtain the other rq->lock.
+	//  *
+	//  * Silence PROVE_RCU
+	//  */
+	// rcu_read_lock();
+	// __set_task_cpu(idle, cpu);
+	// rcu_read_unlock();
+
+	rq->idle = idle;
+	// rcu_assign_pointer(rq->curr, idle);
+	idle->on_rq = TASK_ON_RQ_QUEUED;
+	idle->on_cpu = 1;
+	// raw_spin_rq_unlock(rq);
+	// raw_spin_unlock_irqrestore(&idle->pi_lock, flags);
+
+	// /* Set the preempt count _outside_ the spinlocks! */
+	// init_idle_preempt_count(idle, cpu);
+
+	// /*
+	//  * The idle tasks have their own, simple scheduling class:
+	//  */
+	// idle->sched_class = &idle_sched_class;
+	// ftrace_graph_init_idle_task(idle, cpu);
+	// vtime_init_idle(idle, cpu);
+	// sprintf(idle->comm, "%s/%d", INIT_TASK_COMM, cpu);
+
+
+	/* MyOS2 initiations */
+	rq->curr = idle;
+	INIT_LIST_HEADER_S(&rq->myos.running_lhdr);
+}
 
 
 void __init sched_init(void)
@@ -1500,13 +1575,13 @@ void __init sched_init(void)
 // 	 */
 // 	WARN_ON(!set_kthread_struct(current));
 
-// 	/*
-// 	 * Make us the idle thread. Technically, schedule() should not be
-// 	 * called from this thread, however somewhere below it might be,
-// 	 * but because we are the idle thread, we just pick up running again
-// 	 * when this runqueue becomes "idle".
-// 	 */
-// 	init_idle(current, smp_processor_id());
+	/*
+	 * Make us the idle thread. Technically, schedule() should not be
+	 * called from this thread, however somewhere below it might be,
+	 * but because we are the idle thread, we just pick up running again
+	 * when this runqueue becomes "idle".
+	 */
+	init_idle(current, smp_processor_id());
 
 // 	calc_load_update = jiffies + LOAD_FREQ;
 

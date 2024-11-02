@@ -49,13 +49,13 @@ void set_init_taskfs()
 {
 	task_s * curr = current;
 	// set cwd and root-dir of task1
-	taskfs_s * taskfs_p = curr->fs;
+	taskfs_s *taskfs_p = curr->fs;
 	taskfs_p->pwd.dentry = 
 	taskfs_p->root.dentry = myos_root_sb->s_root;
 	taskfs_p->pwd.mnt = 
 	taskfs_p->root.mnt = &myos_root_mnt.mnt;
 
-	memcpy(per_cpu(idles, 0).fs, taskfs_p, sizeof(taskfs_s));
+	*curr->fs = *taskfs_p;
 }
 
 

@@ -541,8 +541,14 @@ void simple_pcpu_setup_first_chunk()
 
 	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_cpu_ids * 8, 8);
 	pcpu_base_addr = 0;
-	// 不为bsp的percpu变量重新申请空间，直接使用初始声明的
-	for (int i = 0; i < nr_cpu_ids; i++)
+
+
+	// bsp的percpu变量空间就使用原始定义的percpu段，但是因为这些原始定义的
+	// 符号地址已经在链接脚本中重定位到从0开始，所以这里要把他们加载后的虚拟地址
+	// 填写到__per_cpu_load[0]中
+	((ulong *)pcpu_unit_offsets)[0] = (ulong)&__per_cpu_load;
+	// 下面是为其他ap申请percpu变量空间
+	for (int i = 1; i < nr_cpu_ids; i++)
 		((ulong *)pcpu_unit_offsets)[i] =
 			(ulong)myos_memblock_alloc_DMA32(pcpuarea_size, PAGE_SIZE);
 }

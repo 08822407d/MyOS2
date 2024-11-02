@@ -742,7 +742,6 @@ out:
 
 
 void init_task_pid_links(task_s *task) {
-	// INIT_LIST_S(&task->pid_links);
 	enum pid_type type;
 	for (type = PIDTYPE_PID; type < PIDTYPE_MAX; ++type)
 		INIT_LIST_S(&task->pid_links[type]);

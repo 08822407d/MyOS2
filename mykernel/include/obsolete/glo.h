@@ -6,7 +6,6 @@
 
 	extern unsigned long volatile	jiffies;
 
-	extern task_s		idles;
 	extern task_s		*idle_threads;
 	extern unsigned		nr_cpu_ids;
 
