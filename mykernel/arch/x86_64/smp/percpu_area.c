@@ -8,15 +8,15 @@
 #include <obsolete/glo.h>
 
 
-__visible DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {
+DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {
 	.current_task	= &init_task,
 	.preempt_count	= INIT_PREEMPT_COUNT,
 	.top_of_stack	= TOP_OF_INIT_STACK,
 };
 
-__visible DEFINE_PER_CPU(task_s *, idle_threads);
+DEFINE_PER_CPU(task_s *, idle_threads);
 
-__visible DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
+DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
 
 /*
  * per-CPU TSS segments. Threads are completely 'soft' on Linux,
@@ -25,15 +25,15 @@ __visible DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
  * section. Since TSS's are completely CPU-local, we want them
  * on exact cacheline boundaries, to eliminate cacheline ping-pong.
  */
-__visible DEFINE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw)  = {
+DEFINE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw)  = {
 	.x86_tss = {
-		// /*
-		//  * .sp0 is only used when entering ring 0 from a lower
-		//  * privilege level.  Since the init task never runs anything
-		//  * but ring 0 code, there is no need for a valid value here.
-		//  * Poison it.
-		//  */
-		// .sp0				= (1UL << (BITS_PER_LONG-1)) + 1,
+		/*
+		 * .sp0 is only used when entering ring 0 from a lower
+		 * privilege level.  Since the init task never runs anything
+		 * but ring 0 code, there is no need for a valid value here.
+		 * Poison it.
+		 */
+		.sp0				= (1UL << (BITS_PER_LONG-1)) + 1,
 		.io_bitmap_base		= IO_BITMAP_OFFSET_INVALID,
 	 },
 };

@@ -19,6 +19,7 @@
 #include <linux/kernel/fdtable.h>
 #include <linux/kernel/mm_api.h>
 #include <linux/kernel/ptrace.h>
+#include <linux/kernel/nsproxy.h>
 
 
 #include <asm/signal.h>
@@ -1045,7 +1046,7 @@ static __latent_entropy task_s
 	// stackleak_task_init(p);
 
 	if (pid_struct != &init_struct_pid) {
-		pid_struct = alloc_pid(args->set_tid, args->set_tid_size);
+		pid_struct = alloc_pid(p->nsproxy->pid_ns_for_children,args->set_tid, args->set_tid_size);
 		if (IS_ERR(pid_struct)) {
 			retval = PTR_ERR(pid_struct);
 			goto bad_fork_cleanup_thread;

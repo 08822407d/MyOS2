@@ -79,7 +79,7 @@ pid_ns_s init_pid_ns = {
 	// .idr			= IDR_INIT(init_pid_ns.idr),
 	.pid_allocated	= PIDNS_ADDING,
 	.level			= 0,
-	// .child_reaper	= &init_task,
+	.child_reaper	= &init_task,
 	// .user_ns		= &init_user_ns,
 	// .ns.inum		= PROC_PID_INIT_INO,
 // #ifdef CONFIG_PID_NS
@@ -165,119 +165,116 @@ void free_pid(pid_s *pid)
 	// }
 }
 
-// pid_s *alloc_pid(struct pid_namespace *ns,
-// 		pid_t *set_tid, size_t set_tid_size)
-pid_s *alloc_pid(pid_t *set_tid, size_t set_tid_size)
+pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 {
 	pid_s *pid;
 	enum pid_type type;
 	int i, nr;
-	// struct pid_namespace *tmp;
-	// struct upid *upid;
+	pid_ns_s *tmp;
+	upid_s *upid;
 	int retval = -ENOMEM;
 
-	// /*
-	//  * set_tid_size contains the size of the set_tid array. Starting at
-	//  * the most nested currently active PID namespace it tells alloc_pid()
-	//  * which PID to set for a process in that most nested PID namespace
-	//  * up to set_tid_size PID namespaces. It does not have to set the PID
-	//  * for a process in all nested PID namespaces but set_tid_size must
-	//  * never be greater than the current ns->level + 1.
-	//  */
-	// if (set_tid_size > ns->level + 1)
-	// 	return ERR_PTR(-EINVAL);
+	/*
+	 * set_tid_size contains the size of the set_tid array. Starting at
+	 * the most nested currently active PID namespace it tells alloc_pid()
+	 * which PID to set for a process in that most nested PID namespace
+	 * up to set_tid_size PID namespaces. It does not have to set the PID
+	 * for a process in all nested PID namespaces but set_tid_size must
+	 * never be greater than the current ns->level + 1.
+	 */
+	if (set_tid_size > ns->level + 1)
+		return ERR_PTR(-EINVAL);
 
-	// pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
-	pid = kzalloc(sizeof(*pid), GFP_KERNEL);
+	pid = kmem_cache_alloc(ns->pid_cachep, GFP_KERNEL);
 	if (!pid)
 		return ERR_PTR(retval);
 
-	// tmp = ns;
-	// pid->level = ns->level;
+	tmp = ns;
+	pid->level = ns->level;
 
-	// for (i = ns->level; i >= 0; i--) {
-	// 	int tid = 0;
+	for (i = ns->level; i >= 0; i--) {
+		int tid = 0;
 
-	// 	if (set_tid_size) {
-	// 		tid = set_tid[ns->level - i];
+		if (set_tid_size) {
+			tid = set_tid[ns->level - i];
 
-	// 		retval = -EINVAL;
-	// 		if (tid < 1 || tid >= pid_max)
-	// 			goto out_free;
-	// 		/*
-	// 		 * Also fail if a PID != 1 is requested and
-	// 		 * no PID 1 exists.
-	// 		 */
-	// 		if (tid != 1 && !tmp->child_reaper)
-	// 			goto out_free;
-	// 		retval = -EPERM;
-	// 		if (!checkpoint_restore_ns_capable(tmp->user_ns))
-	// 			goto out_free;
-	// 		set_tid_size--;
-	// 	}
+			retval = -EINVAL;
+			if (tid < 1 || tid >= pid_max)
+				goto out_free;
+			/*
+			 * Also fail if a PID != 1 is requested and
+			 * no PID 1 exists.
+			 */
+			if (tid != 1 && !tmp->child_reaper)
+				goto out_free;
+			retval = -EPERM;
+			// if (!checkpoint_restore_ns_capable(tmp->user_ns))
+			// 	goto out_free;
+			set_tid_size--;
+		}
 
-	// 	idr_preload(GFP_KERNEL);
-	// 	spin_lock_irq(&pidmap_lock);
+		// idr_preload(GFP_KERNEL);
+		spin_lock_irq(&pidmap_lock);
 
-	// 	if (tid) {
-	// 		nr = idr_alloc(&tmp->idr, NULL, tid,
-	// 				   tid + 1, GFP_ATOMIC);
+		// if (tid) {
+		// 	nr = idr_alloc(&tmp->idr, NULL, tid,
+		// 			   tid + 1, GFP_ATOMIC);
 			nr = myos_idr_alloc();
-	// 		/*
-	// 		 * If ENOSPC is returned it means that the PID is
-	// 		 * alreay in use. Return EEXIST in that case.
-	// 		 */
-	// 		if (nr == -ENOSPC)
-	// 			nr = -EEXIST;
-	// 	} else {
-	// 		int pid_min = 1;
-	// 		/*
-	// 		 * init really needs pid 1, but after reaching the
-	// 		 * maximum wrap back to RESERVED_PIDS
-	// 		 */
-	// 		if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-	// 			pid_min = RESERVED_PIDS;
+		// 	/*
+		// 	 * If ENOSPC is returned it means that the PID is
+		// 	 * alreay in use. Return EEXIST in that case.
+		// 	 */
+		// 	if (nr == -ENOSPC)
+		// 		nr = -EEXIST;
+		// } else {
+		// 	int pid_min = 1;
+		// 	/*
+		// 	 * init really needs pid 1, but after reaching the
+		// 	 * maximum wrap back to RESERVED_PIDS
+		// 	 */
+		// 	if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+		// 		pid_min = RESERVED_PIDS;
 
-	// 		/*
-	// 		 * Store a null pointer so find_pid_ns does not find
-	// 		 * a partially initialized PID (see below).
-	// 		 */
-	// 		nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-	// 					  pid_max, GFP_ATOMIC);
-	// 	}
-	// 	spin_unlock_irq(&pidmap_lock);
-	// 	idr_preload_end();
+		// 	/*
+		// 	 * Store a null pointer so find_pid_ns does not find
+		// 	 * a partially initialized PID (see below).
+		// 	 */
+		// 	nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
+		// 				  pid_max, GFP_ATOMIC);
+		// }
+		spin_unlock_irq(&pidmap_lock);
+		// idr_preload_end();
 
-	// 	if (nr < 0) {
-	// 		retval = (nr == -ENOSPC) ? -EAGAIN : nr;
-	// 		goto out_free;
-	// 	}
+		if (nr < 0) {
+			retval = (nr == -ENOSPC) ? -EAGAIN : nr;
+			goto out_free;
+		}
 
 		pid->numbers[i].nr = nr;
-	// 	pid->numbers[i].ns = tmp;
-	// 	tmp = tmp->parent;
-	// }
+		pid->numbers[i].ns = tmp;
+		tmp = tmp->parent;
+	}
 
-	// /*
-	//  * ENOMEM is not the most obvious choice especially for the case
-	//  * where the child subreaper has already exited and the pid
-	//  * namespace denies the creation of any new processes. But ENOMEM
-	//  * is what we have exposed to userspace for a long time and it is
-	//  * documented behavior for pid namespaces. So we can't easily
-	//  * change it even if there were an error code better suited.
-	//  */
-	// retval = -ENOMEM;
+	/*
+	 * ENOMEM is not the most obvious choice especially for the case
+	 * where the child subreaper has already exited and the pid
+	 * namespace denies the creation of any new processes. But ENOMEM
+	 * is what we have exposed to userspace for a long time and it is
+	 * documented behavior for pid namespaces. So we can't easily
+	 * change it even if there were an error code better suited.
+	 */
+	retval = -ENOMEM;
 
 	// get_pid_ns(ns);
 	atomic_set(&pid->count, 1);
-	// spin_lock_init(&pid->lock);
+	spin_lock_init(&pid->lock);
 	for (type = 0; type < PIDTYPE_MAX; ++type)
 		INIT_LIST_HEADER_S(&pid->tasks[type]);
 
 	// init_waitqueue_head(&pid->wait_pidfd);
 	// INIT_HLIST_HEAD(&pid->inodes);
 
-	// upid = pid->numbers + ns->level;
+	upid = pid->numbers + ns->level;
 	// spin_lock_irq(&pidmap_lock);
 	// if (!(ns->pid_allocated & PIDNS_ADDING))
 	// 	goto out_unlock;
@@ -307,8 +304,8 @@ out_free:
 
 	// spin_unlock_irq(&pidmap_lock);
 
-	// kmem_cache_free(ns->pid_cachep, pid);
-	// return ERR_PTR(retval);
+	kmem_cache_free(ns->pid_cachep, pid);
+	return ERR_PTR(retval);
 }
 
 static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
@@ -413,7 +410,6 @@ void myos_init_pid_allocator()
 
 ulong myos_idr_alloc()
 {
-	spin_lock(&pidmap_lock);
 	ulong newpid = bm_get_freebit_idx(
 			pid_bm, curr_pid, PID_MAX_DEFAULT);
 	if (newpid >= PID_MAX_DEFAULT || newpid < curr_pid)
@@ -427,7 +423,6 @@ ulong myos_idr_alloc()
 	}
 	curr_pid = newpid;
 	bm_set_bit(pid_bm, newpid);
-	spin_unlock(&pidmap_lock);
 
 	return curr_pid;
 }

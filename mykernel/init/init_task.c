@@ -22,6 +22,7 @@
 
 #define INIT_TASK_COMM "swapper"
 
+extern nsproxy_s init_nsproxy;
 
 
 static signal_s init_signals = {
@@ -123,7 +124,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 #endif
 	.signal				= &init_signals,
 	// .sighand			= &init_sighand,
-	// .nsproxy			= &init_nsproxy,
+	.nsproxy			= &init_nsproxy,
 	// .pending			= {
 	// 	.list				= LIST_HEAD_INIT(init_task.pending.list),
 	// 	.signal				= {{0}}

@@ -19,7 +19,7 @@
 	extern void attach_pid(task_s *task, enum pid_type);
 	extern void detach_pid(task_s *task, enum pid_type);
 
-	extern pid_s *alloc_pid(pid_t *set_tid, size_t set_tid_size);
+	extern pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size);
 	extern void free_pid(pid_s *pid);
 
 	// pid_t pid_nr_ns(pid_s *pid, struct pid_namespace *ns);

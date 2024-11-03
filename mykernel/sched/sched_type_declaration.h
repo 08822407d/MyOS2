@@ -7,6 +7,8 @@
 	typedef struct rlimit rlimit_s;
 	struct files_struct;
 	typedef struct files_struct files_struct_s;
+	struct nsproxy;
+	typedef struct nsproxy nsproxy_s;
 
 	#include <asm/sched_types.h>
 	#include <linux/kernel/types.h>

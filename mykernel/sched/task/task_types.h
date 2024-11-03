@@ -344,8 +344,8 @@
 		// struct io_uring_task *io_uring;
 	// #endif
 
-		// /* Namespaces: */
-		// struct nsproxy *nsproxy;
+		/* Namespaces: */
+		nsproxy_s		*nsproxy;
 
 		/* Signal handlers: */
 		signal_s		*signal;

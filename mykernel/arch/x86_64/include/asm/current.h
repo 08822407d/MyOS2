@@ -28,6 +28,7 @@
 			u8	pad[64];
 		};
 	} pcpu_hot_s;
+	static_assert(sizeof(pcpu_hot_s) == 64);
 
 	static __always_inline task_s *get_current(void) {
 		return *this_cpu_ptr(&pcpu_hot.current_task);
