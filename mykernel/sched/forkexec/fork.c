@@ -826,6 +826,7 @@ static __latent_entropy task_s
 	task_s *p, *curr = current;
 	file_s *pidfile = NULL;
 	u64 clone_flags = args->flags;
+	nsproxy_s *nsp = current->nsproxy;
 
 	/*
 	 * Don't allow sharing the root directory with processes in a different
@@ -862,15 +863,15 @@ static __latent_entropy task_s
 				(current->signal->flags & SIGNAL_UNKILLABLE))
 		return ERR_PTR(-EINVAL);
 
-	// /*
-	//  * If the new process will be in a different pid or user namespace
-	//  * do not allow it to share a thread group with the forking task.
-	//  */
-	// if (clone_flags & CLONE_THREAD) {
-	// 	if ((clone_flags & (CLONE_NEWUSER | CLONE_NEWPID)) ||
-	// 		(task_active_pid_ns(current) != nsp->pid_ns_for_children))
-	// 		return ERR_PTR(-EINVAL);
-	// }
+	/*
+	 * If the new process will be in a different pid or user namespace
+	 * do not allow it to share a thread group with the forking task.
+	 */
+	if (clone_flags & CLONE_THREAD) {
+		if ((clone_flags & (CLONE_NEWUSER | CLONE_NEWPID)) ||
+			(task_active_pid_ns(current) != nsp->pid_ns_for_children))
+			return ERR_PTR(-EINVAL);
+	}
 
 	// /*
 	//  * If the new process will be in a different time namespace
@@ -913,14 +914,19 @@ static __latent_entropy task_s
 	p = dup_task_struct(current, node);
 	if (!p)
 		goto fork_out;
-	// if (args->io_thread) {
+	p->flags &= ~PF_KTHREAD;
+	if (args->kthread)
+		p->flags |= PF_KTHREAD;
+	// if (args->user_worker) {
 	// 	/*
-	// 	 * Mark us an IO worker, and block any signal that isn't
+	// 	 * Mark us a user worker, and block any signal that isn't
 	// 	 * fatal or STOP
 	// 	 */
-	// 	p->flags |= PF_IO_WORKER;
+	// 	p->flags |= PF_USER_WORKER;
 	// 	siginitsetinv(&p->blocked, sigmask(SIGKILL)|sigmask(SIGSTOP));
 	// }
+	// if (args->io_thread)
+	// 	p->flags |= PF_IO_WORKER;
 
 	if (args->name)
 		strscpy_pad(p->comm, args->name, sizeof(p->comm));
@@ -1083,9 +1089,9 @@ static __latent_entropy task_s
 	retval = copy_mm(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_signal;
-	// retval = copy_namespaces(clone_flags, p);
-	// if (retval)
-	// 	goto bad_fork_cleanup_mm;
+	retval = copy_namespaces(clone_flags, p);
+	if (retval)
+		goto bad_fork_cleanup_mm;
 	// retval = copy_io(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_namespaces;

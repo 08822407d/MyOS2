@@ -104,7 +104,7 @@
 	//  *
 	//  */
 
-	// int copy_namespaces(unsigned long flags, struct task_struct *tsk);
+	int copy_namespaces(ulong flags, task_s *tsk);
 	// void exit_task_namespaces(struct task_struct *tsk);
 	// void switch_task_namespaces(struct task_struct *tsk, struct nsproxy *new);
 	// int exec_task_namespaces(void);

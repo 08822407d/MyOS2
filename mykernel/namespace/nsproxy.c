@@ -23,3 +23,49 @@ struct nsproxy init_nsproxy = {
 // 	.time_ns_for_children	= &init_time_ns,
 // #endif
 };
+
+
+
+
+/*
+ * called from clone.  This now handles copy for nsproxy and all
+ * namespaces therein.
+ */
+int copy_namespaces(ulong flags, task_s *tsk)
+{
+	nsproxy_s *old_ns = tsk->nsproxy;
+	// struct user_namespace *user_ns = task_cred_xxx(tsk, user_ns);
+	nsproxy_s *new_ns;
+
+	// if (likely(!(flags & (CLONE_NEWNS | CLONE_NEWUTS | CLONE_NEWIPC |
+	// 			CLONE_NEWPID | CLONE_NEWNET |
+	// 			CLONE_NEWCGROUP | CLONE_NEWTIME)))) {
+	// 	if ((flags & CLONE_VM) ||
+	// 	    likely(old_ns->time_ns_for_children == old_ns->time_ns)) {
+	// 		get_nsproxy(old_ns);
+	// 		return 0;
+	// 	}
+	// } else if (!ns_capable(user_ns, CAP_SYS_ADMIN))
+	// 	return -EPERM;
+
+	/*
+	 * CLONE_NEWIPC must detach from the undolist: after switching
+	 * to a new ipc namespace, the semaphore arrays from the old
+	 * namespace are unreachable.  In clone parlance, CLONE_SYSVSEM
+	 * means share undolist with parent, so we must forbid using
+	 * it along with CLONE_NEWIPC.
+	 */
+	if ((flags & (CLONE_NEWIPC | CLONE_SYSVSEM)) ==
+			(CLONE_NEWIPC | CLONE_SYSVSEM))
+		return -EINVAL;
+
+	// new_ns = create_new_namespaces(flags, tsk, user_ns, tsk->fs);
+	// if (IS_ERR(new_ns))
+	// 	return  PTR_ERR(new_ns);
+
+	// if ((flags & CLONE_VM) == 0)
+	// 	timens_on_fork(new_ns, tsk);
+
+	// tsk->nsproxy = new_ns;
+	return 0;
+}
