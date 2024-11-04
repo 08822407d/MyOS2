@@ -14,6 +14,9 @@
 		extern pid_s
 		*get_pid(pid_s *pid);
 
+		extern pid_ns_s
+		*ns_of_pid(pid_s *pid);
+
 		extern bool
 		is_child_reaper(pid_s *pid);
 
@@ -26,6 +29,9 @@
 		extern pid_t
 		task_pid_nr(task_s *tsk);
 
+		extern pid_t
+		task_tgid_vnr(task_s *tsk);
+
 	#endif
 	
 	#if defined(PID_DEFINATION) || !(DEBUG)
@@ -35,6 +41,25 @@
 		*get_pid(pid_s *pid) {
 			if (pid) atomic_inc(&pid->count);
 			return pid;
+		}
+
+		/*
+		 * ns_of_pid() returns the pid namespace in which the specified pid was
+		 * allocated.
+		 *
+		 * NOTE:
+		 * 	ns_of_pid() is expected to be called for a process (task) that has
+		 * 	an attached 'struct pid' (see attach_pid(), detach_pid()) i.e @pid
+		 * 	is expected to be non-NULL. If @pid is NULL, caller should handle
+		 * 	the resulting NULL pid-ns.
+		 */
+		PREFIX_STATIC_INLINE
+		pid_ns_s
+		*ns_of_pid(pid_s *pid) {
+			pid_ns_s *ns = NULL;
+			if (pid)
+				ns = pid->numbers[pid->level].ns;
+			return ns;
 		}
 
 		/*
@@ -79,6 +104,12 @@
 		pid_t
 		task_pid_nr(task_s *tsk) {
 			return tsk->pid;
+		}
+
+		PREFIX_STATIC_INLINE
+		pid_t
+		task_tgid_vnr(task_s *tsk) {
+			return __task_pid_nr_ns(tsk, PIDTYPE_TGID, NULL);
 		}
 
 	#endif /* !DEBUG */

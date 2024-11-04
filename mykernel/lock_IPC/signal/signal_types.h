@@ -153,7 +153,7 @@
 
 		/* thread group stop support, overloads group_exit_code too */
 		// int			group_stop_count;
-		// unsigned int		flags; /* see SIGNAL_* flags below */
+		uint		flags; /* see SIGNAL_* flags below */
 
 		// struct core_state *core_state; /* coredumping support */
 

@@ -41,10 +41,12 @@ int normal_boot(int argc, const char *argv[])
 	int rv = fork();
 	
 	if (rv == 0) {
+		pid_t pid = getpid();
 		// printf("child task, %d\n", rv);
 		execve(prog_name, args, envs);
 	}
 	else {
+		pid_t pid = getpid();
 		// printf("parent task, %d\n", rv);
 		while (1) {
 			sched_yield();

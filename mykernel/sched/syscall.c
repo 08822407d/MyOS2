@@ -46,9 +46,9 @@ MYOS_SYSCALL_DEFINE0(sched_yield)
 // #define __NR_getpid			39
 MYOS_SYSCALL_DEFINE0(getpid)
 {
-	// return current->pid;
-	pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
-	return pid_vnr(pid_struct);
+	return task_tgid_vnr(current);
+	// pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
+	// return pid_vnr(pid_struct);
 }
 
 // #define __NR_fork			57
@@ -118,8 +118,15 @@ MYOS_SYSCALL_DEFINE4(wait4, pid_t, pid, int *, start_addr,
 // #define __NR_getppid		110
 MYOS_SYSCALL_DEFINE0(getppid)
 {
-	// return current->parent->pid;
-	pid_s *pid_struct = get_task_pid(current->parent, PIDTYPE_PID);
-	return pid_vnr(pid_struct);
+	int pid;
+
+	// rcu_read_lock();
+	pid = task_tgid_vnr(current->real_parent);
+	// rcu_read_unlock();
+
+	return pid;
+
+	// pid_s *pid_struct = get_task_pid(current->parent, PIDTYPE_PID);
+	// return pid_vnr(pid_struct);
 }
 

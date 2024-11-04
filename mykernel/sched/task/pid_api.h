@@ -22,6 +22,19 @@
 	extern pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size);
 	extern void free_pid(pid_s *pid);
 
+	/*
+	 * the helpers to get the task's different pids as they are seen
+	 * from various namespaces
+	 *
+	 * task_xid_nr()     : global id, i.e. the id seen from the init namespace;
+	 * task_xid_vnr()    : virtual id, i.e. the id seen from the pid namespace of
+	 *                     current.
+	 * task_xid_nr_ns()  : id seen from the ns specified;
+	 *
+	 * see also pid_nr() etc in include/linux/pid.h
+	 */
+	pid_t __task_pid_nr_ns(task_s *task, enum pid_type type, pid_ns_s *ns);
+
 	// pid_t pid_nr_ns(pid_s *pid, struct pid_namespace *ns);
 	pid_t pid_vnr(pid_s *pid);
 

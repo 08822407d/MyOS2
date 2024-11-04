@@ -36,4 +36,22 @@
 	#define PIDS_PER_CPU_DEFAULT	1024
 	#define PIDS_PER_CPU_MIN		8
 
+
+	/*
+	 * Bits in flags field of signal_struct.
+	 */
+	#define SIGNAL_STOP_STOPPED		0x00000001 /* job control stop in effect */
+	#define SIGNAL_STOP_CONTINUED	0x00000002 /* SIGCONT since WCONTINUED reap */
+	#define SIGNAL_GROUP_EXIT		0x00000004 /* group exit in progress */
+	/*
+	 * Pending notifications to parent.
+	 */
+	#define SIGNAL_CLD_STOPPED		0x00000010
+	#define SIGNAL_CLD_CONTINUED	0x00000020
+	#define SIGNAL_CLD_MASK			(SIGNAL_CLD_STOPPED|SIGNAL_CLD_CONTINUED)
+
+	#define SIGNAL_UNKILLABLE		0x00000040 /* for init: ignore fatal signals */
+
+	#define SIGNAL_STOP_MASK 		(SIGNAL_CLD_MASK | SIGNAL_STOP_STOPPED | \
+										SIGNAL_STOP_CONTINUED)
 #endif /* _LINUX_PID_CONST_H_ */

@@ -76,23 +76,6 @@
 	// 	struct completion startup;
 	// };
 
-	// /*
-	// * Bits in flags field of signal_struct.
-	// */
-	// #define SIGNAL_STOP_STOPPED	0x00000001 /* job control stop in effect */
-	// #define SIGNAL_STOP_CONTINUED	0x00000002 /* SIGCONT since WCONTINUED reap */
-	// #define SIGNAL_GROUP_EXIT	0x00000004 /* group exit in progress */
-	// /*
-	// * Pending notifications to parent.
-	// */
-	// #define SIGNAL_CLD_STOPPED	0x00000010
-	// #define SIGNAL_CLD_CONTINUED	0x00000020
-	// #define SIGNAL_CLD_MASK		(SIGNAL_CLD_STOPPED|SIGNAL_CLD_CONTINUED)
-
-	// #define SIGNAL_UNKILLABLE	0x00000040 /* for init: ignore fatal signals */
-
-	// #define SIGNAL_STOP_MASK (SIGNAL_CLD_MASK | SIGNAL_STOP_STOPPED | \
-	// 			SIGNAL_STOP_CONTINUED)
 
 	// static inline void signal_set_stop_flags(struct signal_struct *sig,
 	// 					unsigned int flags)
@@ -464,25 +447,25 @@
 	// 	return pid;
 	// }
 
-	// static inline pid_s *task_tgid(task_s *task)
-	// {
-	// 	return task->signal->pids[PIDTYPE_TGID];
-	// }
+	static inline pid_s *task_tgid(task_s *task)
+	{
+		return task->signal->pids[PIDTYPE_TGID];
+	}
 
-	// /*
-	// * Without tasklist or RCU lock it is not safe to dereference
-	// * the result of task_pgrp/task_session even if task == current,
-	// * we can race with another thread doing sys_setsid/sys_setpgid.
-	// */
-	// static inline pid_s *task_pgrp(task_s *task)
-	// {
-	// 	return task->signal->pids[PIDTYPE_PGID];
-	// }
+	/*
+	* Without tasklist or RCU lock it is not safe to dereference
+	* the result of task_pgrp/task_session even if task == current,
+	* we can race with another thread doing sys_setsid/sys_setpgid.
+	*/
+	static inline pid_s *task_pgrp(task_s *task)
+	{
+		return task->signal->pids[PIDTYPE_PGID];
+	}
 
-	// static inline pid_s *task_session(task_s *task)
-	// {
-	// 	return task->signal->pids[PIDTYPE_SID];
-	// }
+	static inline pid_s *task_session(task_s *task)
+	{
+		return task->signal->pids[PIDTYPE_SID];
+	}
 
 	// static inline int get_nr_threads(task_s *task)
 	// {

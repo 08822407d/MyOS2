@@ -334,17 +334,47 @@ void detach_pid(task_s *task, enum pid_type type) {
 	// list_header_delete_node(&pid->tasks[type], &task->pid_links[type]);
 }
 
-
-task_s *myos_find_task_by_pid(pid_t nr) {
-	task_s *tsk;
-
-	list_header_for_each_container(tsk,
-			&pid_list_hdr, pid_links[PIDTYPE_PID]) {
-
-		if (tsk->pid == nr) return tsk;
-	}
-	return NULL;
+pid_ns_s *task_active_pid_ns(task_s *tsk)
+{
+	return ns_of_pid(task_pid(tsk));
 }
+EXPORT_SYMBOL_GPL(task_active_pid_ns);
+
+pid_t pid_nr_ns(pid_s *pid, pid_ns_s *ns)
+{
+	upid_s *upid;
+	pid_t nr = 0;
+
+	if (pid && ns->level <= pid->level) {
+		upid = &pid->numbers[ns->level];
+		if (upid->ns == ns)
+			nr = upid->nr;
+	}
+	return nr;
+}
+EXPORT_SYMBOL_GPL(pid_nr_ns);
+
+pid_t pid_vnr(pid_s *pid)
+{
+	return pid_nr_ns(pid, task_active_pid_ns(current));
+}
+EXPORT_SYMBOL_GPL(pid_vnr);
+
+pid_t __task_pid_nr_ns(task_s *task,
+		enum pid_type type, pid_ns_s *ns)
+{
+	pid_t nr = 0;
+
+	// rcu_read_lock();
+	if (!ns)
+		ns = task_active_pid_ns(current);
+	// nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
+	nr = pid_nr_ns(*task_pid_ptr(task, type), ns);
+	// rcu_read_unlock();
+
+	return nr;
+}
+EXPORT_SYMBOL(__task_pid_nr_ns);
 
 
 pid_s *get_task_pid(task_s *task, enum pid_type type)
@@ -359,12 +389,18 @@ pid_s *get_task_pid(task_s *task, enum pid_type type)
 EXPORT_SYMBOL_GPL(get_task_pid);
 
 
-pid_t pid_vnr(pid_s *pid)
-{
-	// return pid_nr_ns(pid, task_active_pid_ns(current));
-	return pid_nr(pid);
+
+task_s *myos_find_task_by_pid(pid_t nr) {
+	task_s *tsk;
+
+	list_header_for_each_container(tsk,
+			&pid_list_hdr, pid_links[PIDTYPE_PID]) {
+
+		if (tsk->pid == nr) return tsk;
+	}
+	return NULL;
 }
-EXPORT_SYMBOL_GPL(pid_vnr);
+
 
 
 

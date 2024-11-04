@@ -741,6 +741,56 @@ out:
 	return error;
 }
 
+static int copy_signal(ulong clone_flags, task_s *tsk) {
+	signal_s *sig;
+
+	if (clone_flags & CLONE_THREAD)
+		return 0;
+
+	sig = kmem_cache_zalloc(signal_cachep, GFP_KERNEL);
+	tsk->signal = sig;
+	if (!sig)
+		return -ENOMEM;
+
+	// sig->nr_threads = 1;
+	// sig->quick_threads = 1;
+	// atomic_set(&sig->live, 1);
+	// refcount_set(&sig->sigcnt, 1);
+
+	// /* list_add(thread_node, thread_head) without INIT_LIST_HEAD() */
+	// sig->thread_head = (struct list_head)LIST_HEAD_INIT(tsk->thread_node);
+	// tsk->thread_node = (struct list_head)LIST_HEAD_INIT(sig->thread_head);
+
+	// init_waitqueue_head(&sig->wait_chldexit);
+	// sig->curr_target = tsk;
+	// init_sigpending(&sig->shared_pending);
+	// INIT_HLIST_HEAD(&sig->multiprocess);
+	// seqlock_init(&sig->stats_lock);
+	// prev_cputime_init(&sig->prev_cputime);
+
+// #ifdef CONFIG_POSIX_TIMERS
+// 	INIT_LIST_HEAD(&sig->posix_timers);
+// 	hrtimer_init(&sig->real_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+// 	sig->real_timer.function = it_real_fn;
+// #endif
+
+	// task_lock(current->group_leader);
+	memcpy(sig->rlim, current->signal->rlim, sizeof sig->rlim);
+	// task_unlock(current->group_leader);
+
+	// posix_cpu_timers_init_group(sig);
+
+	// tty_audit_fork(sig);
+	// sched_autogroup_fork(sig);
+
+	// sig->oom_score_adj = current->signal->oom_score_adj;
+	// sig->oom_score_adj_min = current->signal->oom_score_adj_min;
+
+	// mutex_init(&sig->cred_guard_mutex);
+	// init_rwsem(&sig->exec_update_lock);
+
+	return 0;
+}
 
 void init_task_pid_links(task_s *task) {
 	enum pid_type type;
@@ -752,8 +802,8 @@ static inline void
 init_task_pid(task_s *task, enum pid_type type, pid_s *pid_struct) {
 	if (type == PIDTYPE_PID)
 		task->thread_pid = pid_struct;
-	// else
-	// 	task->signal->pids[type] = pid_struct;
+	else
+		task->signal->pids[type] = pid_struct;
 }
 
 
@@ -802,15 +852,15 @@ static __latent_entropy task_s
 	if ((clone_flags & CLONE_SIGHAND) && !(clone_flags & CLONE_VM))
 		return ERR_PTR(-EINVAL);
 
-	// /*
-	//  * Siblings of global init remain as zombies on exit since they are
-	//  * not reaped by their parent (swapper). To solve this and to avoid
-	//  * multi-rooted process trees, prevent global and container-inits
-	//  * from creating siblings.
-	//  */
-	// if ((clone_flags & CLONE_PARENT) &&
-	// 			current->signal->flags & SIGNAL_UNKILLABLE)
-	// 	return ERR_PTR(-EINVAL);
+	/*
+	 * Siblings of global init remain as zombies on exit since they are
+	 * not reaped by their parent (swapper). To solve this and to avoid
+	 * multi-rooted process trees, prevent global and container-inits
+	 * from creating siblings.
+	 */
+	if ((clone_flags & CLONE_PARENT) &&
+				(current->signal->flags & SIGNAL_UNKILLABLE))
+		return ERR_PTR(-EINVAL);
 
 	// /*
 	//  * If the new process will be in a different pid or user namespace
@@ -1027,9 +1077,9 @@ static __latent_entropy task_s
 	// retval = copy_sighand(clone_flags, p);
 	// if (retval)
 	// 	goto bad_fork_cleanup_fs;
-	// retval = copy_signal(clone_flags, p);
-	// if (retval)
-	// 	goto bad_fork_cleanup_sighand;
+	retval = copy_signal(clone_flags, p);
+	if (retval)
+		goto bad_fork_cleanup_sighand;
 	retval = copy_mm(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_signal;
@@ -1182,16 +1232,12 @@ static __latent_entropy task_s
 
 	// spin_lock(&current->sighand->siglock);
 
-	// /*
-	//  * Copy seccomp details explicitly here, in case they were changed
-	//  * before holding sighand lock.
-	//  */
-	// copy_seccomp(p);
+	// rv_task_fork(p);
 
 	// rseq_fork(p, clone_flags);
 
 	// /* Don't start children in a dying pid namespace */
-	// if (unlikely(!(ns_of_pid(pid_struct)->pid_allocated & PIDNS_ADDING))) {
+	// if (unlikely(!(ns_of_pid(pid)->pid_allocated & PIDNS_ADDING))) {
 	// 	retval = -ENOMEM;
 	// 	goto bad_fork_cancel_cgroup;
 	// }
@@ -1202,15 +1248,23 @@ static __latent_entropy task_s
 	// 	goto bad_fork_cancel_cgroup;
 	// }
 
+	// /* No more failure paths after this point. */
+
+	// /*
+	//  * Copy seccomp details explicitly here, in case they were changed
+	//  * before holding sighand lock.
+	//  */
+	// copy_seccomp(p);
+
 	init_task_pid_links(p);
 	if (likely(p->pid)) {
 		ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
 		init_task_pid(p, PIDTYPE_PID, pid_struct);
 		if (thread_group_leader(p)) {
-			// init_task_pid(p, PIDTYPE_TGID, pid_struct);
-			// init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
-			// init_task_pid(p, PIDTYPE_SID, task_session(current));
+			init_task_pid(p, PIDTYPE_TGID, pid_struct);
+			init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
+			init_task_pid(p, PIDTYPE_SID, task_session(current));
 
 			// if (is_child_reaper(pid_struct)) {
 			// 	ns_of_pid(pid_struct)->child_reaper = p;
@@ -1541,10 +1595,9 @@ void __init proc_caches_init(void)
 	// 		sizeof(struct sighand_struct), 1,
 	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
 	// 		SLAB_ACCOUNT, sighand_ctor);
-	// signal_cachep = kmem_cache_create("signal_cache",
-	// 		sizeof(struct signal_struct), 1,
-	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
-	// 		NULL);
+	signal_cachep = kmem_cache_create("signal_cache",
+					sizeof(signal_s), 1,
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
 	files_cachep = kmem_cache_create("files_cache",
 					sizeof(files_struct_s), 0,
 					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
