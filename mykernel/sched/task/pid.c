@@ -308,6 +308,19 @@ out_free:
 	return ERR_PTR(retval);
 }
 
+pid_s *find_pid_ns(int nr, pid_ns_s *ns)
+{
+	// return idr_find(&ns->idr, nr);
+	return NULL;
+}
+EXPORT_SYMBOL_GPL(find_pid_ns);
+
+pid_s *find_vpid(int nr)
+{
+	return find_pid_ns(nr, task_active_pid_ns(current));
+}
+EXPORT_SYMBOL_GPL(find_vpid);
+
 static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
 	if (type == PIDTYPE_PID)
 		return &task->thread_pid;
@@ -333,6 +346,33 @@ void detach_pid(task_s *task, enum pid_type type) {
 	list_header_delete_node(&pid_list_hdr, &task->pid_links[type]);
 	// list_header_delete_node(&pid->tasks[type], &task->pid_links[type]);
 }
+
+
+task_s *pid_task(pid_s *pid, enum pid_type type)
+{
+	task_s *result = NULL;
+	if (pid) {
+		// struct hlist_node *first;
+		// first = rcu_dereference_check(hlist_first_rcu(&pid->tasks[type]),
+		// 			      lockdep_tasklist_lock_is_held());
+		// if (first)
+		// 	result = hlist_entry(first, task_s, pid_links[(type)]);
+	}
+	return result;
+}
+EXPORT_SYMBOL(pid_task);
+
+/*
+ * Must be called under rcu_read_lock().
+ */
+task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns)
+{
+	// RCU_LOCKDEP_WARN(!rcu_read_lock_held(),
+	// 		 "find_task_by_pid_ns() needs rcu_read_lock() protection");
+	return pid_task(find_pid_ns(nr, ns), PIDTYPE_PID);
+}
+
+
 
 pid_ns_s *task_active_pid_ns(task_s *tsk)
 {

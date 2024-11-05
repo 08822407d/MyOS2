@@ -23,6 +23,20 @@
 	extern void free_pid(pid_s *pid);
 
 	/*
+	 * find a task by one of its numerical ids
+	 *
+	 * find_task_by_pid_ns():
+	 *      finds a task by its pid in the specified namespace
+	 * find_task_by_vpid():
+	 *      finds a task by its virtual pid
+	 *
+	 * see also find_vpid() etc in include/linux/pid.h
+	 */
+
+	extern task_s *find_task_by_vpid(pid_t nr);
+	extern task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns);
+
+	/*
 	 * the helpers to get the task's different pids as they are seen
 	 * from various namespaces
 	 *
@@ -35,7 +49,7 @@
 	 */
 	pid_t __task_pid_nr_ns(task_s *task, enum pid_type type, pid_ns_s *ns);
 
-	// pid_t pid_nr_ns(pid_s *pid, struct pid_namespace *ns);
+	pid_t pid_nr_ns(pid_s *pid, pid_ns_s *ns);
 	pid_t pid_vnr(pid_s *pid);
 
 
