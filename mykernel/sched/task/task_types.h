@@ -129,7 +129,7 @@
 
 		// struct sched_info sched_info;
 
-		// List_s			tasks;	// 全局task_s链表的节点
+		List_s			tasks;	// 全局task_s链表的节点
 		// struct plist_node pushable_tasks;
 		// struct rb_node pushable_dl_tasks;
 
@@ -214,7 +214,7 @@
 	// 	struct restart_block restart_block;
 
 		pid_t			pid;
-		// pid_t			tgid;
+		pid_t			tgid;
 
 	// #ifdef CONFIG_STACKPROTECTOR
 		// /* Canary value for the -fstack-protector GCC feature: */
@@ -236,7 +236,7 @@
 		 */
 		List_hdr_s		children;
 		List_s			sibling;
-		// task_s *group_leader;
+		// task_s			*group_leader;
 
 		// /*
 		// * 'ptraced' is the list of tasks this task is using ptrace() on.

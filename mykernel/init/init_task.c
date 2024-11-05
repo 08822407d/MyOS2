@@ -101,7 +101,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 		// .time_slice			= RR_TIMESLICE,
 		.time_slice			= 2,
 	},
-	// .tasks				= LIST_HEAD_INIT(init_task.tasks),
+	.tasks					= LIST_INIT(init_task.tasks),
 	// .pushable_tasks			= PLIST_NODE_INIT(init_task.pushable_tasks, MAX_PRIO),
 #ifdef CONFIG_CGROUP_SCHED
 	.sched_task_group = &root_task_group,

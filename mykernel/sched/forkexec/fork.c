@@ -24,7 +24,6 @@
 
 #include <asm/signal.h>
 
-task_s *sh_task = NULL;
 
 /*
  * Minimum number of threads to boot the kernel
@@ -36,10 +35,12 @@ task_s *sh_task = NULL;
  */
 #define MAX_THREADS FUTEX_TID_MASK
 
+LIST_HDR_S(all_task_lhdr);
+
 /*
  * Protected counters by write_lock_irq(&tasklist_lock)
  */
-unsigned long total_forks;	/* Handle normal Linux uptimes. */
+ulong total_forks;	/* Handle normal Linux uptimes. */
 int nr_threads;			/* The idle threads do not count.. */
 
 static int max_threads;		/* tunable limit on nr_threads */
@@ -278,6 +279,7 @@ static task_s *dup_task_struct(task_s *orig, int node)
 		return NULL;
 
 	// err = arch_dup_task_struct(tsk, orig);
+	INIT_LIST_S(&tsk->tasks);
 	// int __weak arch_dup_task_struct(task_s *dst, task_s *src)
 	// {
 		*tsk = *orig;
@@ -1161,10 +1163,10 @@ static __latent_entropy task_s
 	p->pid = pid_nr(pid_struct);
 	if (clone_flags & CLONE_THREAD) {
 		// p->group_leader = current->group_leader;
-		// p->tgid = current->tgid;
+		p->tgid = current->tgid;
 	} else {
 		// p->group_leader = p;
-		// p->tgid = p->pid;
+		p->tgid = p->pid;
 	}
 
 	// p->nr_dirtied = 0;
@@ -1263,7 +1265,7 @@ static __latent_entropy task_s
 	// copy_seccomp(p);
 
 	init_task_pid_links(p);
-	if (likely(p->pid)) {
+	if (likely(p->pid != 0)) {
 		ptrace_init_task(p, (clone_flags & CLONE_PTRACE) || trace);
 
 		init_task_pid(p, PIDTYPE_PID, pid_struct);
@@ -1272,10 +1274,10 @@ static __latent_entropy task_s
 			init_task_pid(p, PIDTYPE_PGID, task_pgrp(current));
 			init_task_pid(p, PIDTYPE_SID, task_session(current));
 
-			// if (is_child_reaper(pid_struct)) {
-			// 	ns_of_pid(pid_struct)->child_reaper = p;
-			// 	p->signal->flags |= SIGNAL_UNKILLABLE;
-			// }
+			if (is_child_reaper(pid_struct)) {
+				ns_of_pid(pid_struct)->child_reaper = p;
+				p->signal->flags |= SIGNAL_UNKILLABLE;
+			}
 			// p->signal->shared_pending.signal = delayed.signal;
 			// p->signal->tty = tty_kref_get(current->signal->tty);
 			// /*
@@ -1287,9 +1289,10 @@ static __latent_entropy task_s
 			// 				 p->real_parent->signal->is_child_subreaper;
 			list_header_add_to_tail(&p->real_parent->children, &p->sibling);
 			// list_add_tail_rcu(&p->tasks, &init_task.tasks);
-			// attach_pid(p, PIDTYPE_TGID);
-			// attach_pid(p, PIDTYPE_PGID);
-			// attach_pid(p, PIDTYPE_SID);
+			list_header_add_to_tail(&all_task_lhdr, &p->tasks);
+			attach_pid(p, PIDTYPE_TGID);
+			attach_pid(p, PIDTYPE_PGID);
+			attach_pid(p, PIDTYPE_SID);
 			// __this_cpu_inc(process_counts);
 		} else {
 			// current->signal->nr_threads++;
@@ -1302,7 +1305,7 @@ static __latent_entropy task_s
 			// 		  &p->signal->thread_head);
 		}
 		attach_pid(p, PIDTYPE_PID);
-		// nr_threads++;
+		nr_threads++;
 	}
 	total_forks++;
 	// hlist_del_init(&delayed.node);
@@ -1468,10 +1471,6 @@ pid_t kernel_clone(kclone_args_s *args)
 	// }
 
 	wake_up_new_task(p);
-	if (args->fn == NULL) {
-		// pr_info("User Fork Parent: %#018Lx, Child: %#018Lx\n", (ulonglong)current, (ulonglong)p);
-		sh_task = p;
-	}
 
 	// /* forking complete and child started to run, tell ptracer */
 	// if (unlikely(trace))
@@ -1618,6 +1617,8 @@ void __init proc_caches_init(void)
 
 	// mmap_init();
 	// nsproxy_cache_init();
+
+	list_header_add_to_tail(&all_task_lhdr, &init_task.tasks);
 }
 
 

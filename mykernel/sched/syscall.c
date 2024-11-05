@@ -47,8 +47,6 @@ MYOS_SYSCALL_DEFINE0(sched_yield)
 MYOS_SYSCALL_DEFINE0(getpid)
 {
 	return task_tgid_vnr(current);
-	// pid_s *pid_struct = get_task_pid(current, PIDTYPE_PID);
-	// return pid_vnr(pid_struct);
 }
 
 // #define __NR_fork			57
@@ -125,8 +123,5 @@ MYOS_SYSCALL_DEFINE0(getppid)
 	// rcu_read_unlock();
 
 	return pid;
-
-	// pid_s *pid_struct = get_task_pid(current->parent, PIDTYPE_PID);
-	// return pid_vnr(pid_struct);
 }
 

@@ -1160,10 +1160,6 @@ __schedule(unsigned int sched_mode) {
 
 		// trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next, prev_state);
 
-		// extern task_s *sh_task;
-		// if (next == sh_task) {
-		// 	pr_info("Task Sh Scheduled On\n");
-		// }
 		/* Also unlocks the rq: */
 		rq = context_switch(rq, prev, next, &rf);
 	} else {
