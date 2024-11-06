@@ -30,7 +30,7 @@
 	 * nsproxy is copied.
 	 */
 	struct nsproxy {
-		// refcount_t count;
+		refcount_t	count;
 		// struct uts_namespace	*uts_ns;
 		// struct ipc_namespace	*ipc_ns;
 		// struct mnt_namespace	*mnt_ns;
@@ -111,7 +111,7 @@
 	// void free_nsproxy(struct nsproxy *ns);
 	// int unshare_nsproxy_namespaces(unsigned long, struct nsproxy **,
 	// 	struct cred *, struct fs_struct *);
-	// int __init nsproxy_cache_init(void);
+	int __init nsproxy_cache_init(void);
 
 	// static inline void put_nsproxy(struct nsproxy *ns)
 	// {

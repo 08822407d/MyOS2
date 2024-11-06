@@ -145,6 +145,7 @@ int tty_class_init(void)
 	// tty_class->devnode = tty_devnode;
 	return 0;
 }
+postcore_initcall(tty_class_init);
 
 
 static cdev_s tty_cdev, console_cdev;

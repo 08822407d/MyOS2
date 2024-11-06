@@ -1624,8 +1624,8 @@ void __init proc_caches_init(void)
 				SLAB_PANIC|SLAB_ACCOUNT,
 				NULL);
 
-	// mmap_init();
-	// nsproxy_cache_init();
+	mmap_init();
+	nsproxy_cache_init();
 
 	list_header_add_to_tail(&all_task_lhdr, &init_task.tasks);
 }

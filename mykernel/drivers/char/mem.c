@@ -205,3 +205,4 @@ int chr_dev_init(void)
 
 	return tty_init();
 }
+fs_initcall(chr_dev_init);

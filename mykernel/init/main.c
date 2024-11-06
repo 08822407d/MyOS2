@@ -201,6 +201,7 @@ asmlinkage void __init start_kernel(void)
 void pci_arch_init(void);
 void myos_scan_pci_devices(void);
 void register_diskfs(void);
+void pid_namespaces_init(void);
 int tty_class_init(void);
 int chr_dev_init(void);
 int init_elf_binfmt(void);
@@ -210,6 +211,8 @@ do_initcalls(void) {
 	// myos_scan_pci_devices();
 
 	register_diskfs();
+
+	pid_namespaces_init();
 
 	tty_class_init();
 

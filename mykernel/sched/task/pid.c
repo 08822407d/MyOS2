@@ -121,7 +121,7 @@ void put_pid(pid_s *pid)
 	ns = pid->numbers[pid->level].ns;
 	if (atomic_dec_and_test(&pid->count)) {
 		kmem_cache_free(ns->pid_cachep, pid);
-		// put_pid_ns(ns);
+		put_pid_ns(ns);
 	}
 }
 EXPORT_SYMBOL_GPL(put_pid);
@@ -260,7 +260,7 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 	 */
 	retval = -ENOMEM;
 
-	// get_pid_ns(ns);
+	get_pid_ns(ns);
 	atomic_set(&pid->count, 1);
 	spin_lock_init(&pid->lock);
 	for (type = 0; type < PIDTYPE_MAX; ++type)
@@ -284,7 +284,7 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 
 out_unlock:
 	spin_unlock_irq(&pidmap_lock);
-	// put_pid_ns(ns);
+	put_pid_ns(ns);
 
 out_free:
 	spin_lock_irq(&pidmap_lock);

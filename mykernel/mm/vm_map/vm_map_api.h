@@ -71,4 +71,9 @@
 
 	int do_brk_flags(ulong addr, ulong len, ulong flags);
 
+
+
+
+	extern void __init mmap_init(void);
+
 #endif /* _VM_MAP_API_H_ */

@@ -4,6 +4,10 @@
 
 	#include "task.h"
 	#include "pid.h"
+	#include "pid_namespace.h"
+
+	#include <linux/kernel/user_namespace.h>
+
 
 
 	extern pid_s	init_struct_pid;
@@ -56,5 +60,13 @@
 	extern pid_ns_s *task_active_pid_ns(task_s *tsk);
 	void pidhash_init(void);
 	void pid_idr_init(void);
+
+
+
+	/* pid_namespace.c */
+	extern pid_ns_s *copy_pid_ns(ulong flags,
+			user_ns_s *user_ns, pid_ns_s *old_ns);
+
+	extern void put_pid_ns(pid_ns_s *ns);
 
 #endif /* _LINUX_PID_API_H_ */

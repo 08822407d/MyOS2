@@ -34,4 +34,8 @@
 	struct signal_struct;
 	typedef struct signal_struct signal_s;
 
+	/* refcoount.c */
+	struct refcount_struct;
+	typedef struct refcount_struct refcount_t;
+
 #endif /* _LOCK_IPC_TYPE_DECLARATIONS_H_ */

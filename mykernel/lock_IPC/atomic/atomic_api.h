@@ -5,6 +5,7 @@
 
 	#include "atomic.h"
 	#include "atomic-long.h"
+	#include "refcount.h"
 
 	// /*
 	//  * Relaxed variants of xchg, cmpxchg and some atomic operations.

@@ -1218,6 +1218,7 @@ int __init init_elf_binfmt(void)
 	register_binfmt(&elf_format);
 	return 0;
 }
+core_initcall(init_elf_binfmt);
 
 static void __exit
 exit_elf_binfmt(void) {

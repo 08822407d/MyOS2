@@ -1344,3 +1344,14 @@ MYOS_SYSCALL_DEFINE2(munmap, unsigned long, addr, size_t, len)
 	// addr = untagged_addr(addr);
 	return __vm_munmap(addr, len);
 }
+
+/*
+ * initialise the percpu counter for VM
+ */
+void __init mmap_init(void)
+{
+	int ret;
+
+	// ret = percpu_counter_init(&vm_committed_as, 0, GFP_KERNEL);
+	// VM_BUG_ON(ret);
+}
