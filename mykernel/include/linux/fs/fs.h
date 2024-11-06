@@ -888,7 +888,7 @@
 
 	// #ifdef CONFIG_EPOLL
 	// 	/* Used by fs/eventpoll.c to link all the hooks to this file */
-	// 	struct hlist_head	*f_ep;
+	// 	HList_hdr_s	*f_ep;
 	// #endif /* #ifdef CONFIG_EPOLL */
 	addr_spc_s				*f_mapping;
 	// 	errseq_t		f_wb_err;

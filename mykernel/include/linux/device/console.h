@@ -234,7 +234,7 @@
 	// extern void console_list_lock(void) __acquires(console_mutex);
 	// extern void console_list_unlock(void) __releases(console_mutex);
 
-	// extern struct hlist_head console_list;
+	// extern HList_hdr_s console_list;
 
 	// /**
 	//  * console_srcu_read_flags - Locklessly read the console flags

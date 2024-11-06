@@ -14,8 +14,8 @@
 
     /* hash_list.c */
     struct hlist_node;
-    typedef struct hlist_node hlist_s;
+    typedef struct hlist_node HList_s;
     struct hlist_head;
-    typedef struct hlist_head hlist_hdr_s;
+    typedef struct hlist_head HList_hdr_s;
 
 #endif /* _LIB_TYPE_DECLARATION_H_ */

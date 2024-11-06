@@ -47,7 +47,7 @@
 	// };
 
 	// struct pci_cap_saved_state {
-	// 	struct hlist_node		next;
+	// 	HList_s		next;
 	// 	struct pci_cap_saved_data	cap;
 	// };
 

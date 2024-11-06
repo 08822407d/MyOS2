@@ -300,7 +300,7 @@ inode_s *new_inode(super_block_s *sb)
  */
 inode_s *ilookup(super_block_s *sb, unsigned long ino)
 {
-	// struct hlist_head *head = inode_hashtable + hash(sb, ino);
+	// HList_hdr_s *head = inode_hashtable + hash(sb, ino);
 	inode_s *inode;
 again:
 	// spin_lock(&inode_hash_lock);
@@ -364,7 +364,7 @@ void __init inode_init(void)
 
 	// inode_hashtable =
 	// 	alloc_large_system_hash("Inode-cache",
-	// 				sizeof(struct hlist_head),
+	// 				sizeof(HList_hdr_s),
 	// 				ihash_entries,
 	// 				14,
 	// 				HASH_ZERO,

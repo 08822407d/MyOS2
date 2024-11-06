@@ -62,7 +62,7 @@
 
 	// struct multiprocess_signals {
 	// 	sigset_t signal;
-	// 	struct hlist_node node;
+	// 	HList_s node;
 	// };
 
 	// struct core_thread {

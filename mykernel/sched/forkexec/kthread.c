@@ -13,7 +13,7 @@
 
 
 static DEFINE_SPINLOCK(kthread_create_lock);
-static LIST_HDR_S(kthread_create_list);
+static DECLARE_LIST_HDR_S(kthread_create_list);
 task_s *kthreadd_task;
 
 typedef struct kthread_create_info {

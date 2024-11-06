@@ -27,7 +27,7 @@ typedef struct XHCI_Spec_Params
 static task_s *thread;
 static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
-LIST_HDR_S(XHCIreq_lhdr);
+DECLARE_LIST_HDR_S(XHCIreq_lhdr);
 
 u16 RingSegMinSize = 16;
 u16 RingSegMaxSize = SZ_64K / sizeof(XHCI_TRB_s);

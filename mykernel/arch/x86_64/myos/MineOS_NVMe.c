@@ -32,7 +32,7 @@
 static task_s *thread;
 static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
-LIST_HDR_S(NVMEreq_lhdr);
+DECLARE_LIST_HDR_S(NVMEreq_lhdr);
 
 
 u64 NVMe_BAR0_base = 0;

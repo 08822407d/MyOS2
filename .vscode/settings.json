@@ -357,7 +357,10 @@
         "debug.h": "c",
         "lib_type_declaration.h": "c",
         "cmpxchg_api.h": "c",
-        "myos_ide.h": "c"
+        "myos_ide.h": "c",
+        "idr_list.h": "c",
+        "lib_api.h": "c",
+        "hash_list_macro.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

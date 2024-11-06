@@ -6,11 +6,12 @@
 
 
 	struct hlist_head {
-		hlist_s *first;
+		HList_s		*first;
 	};
 
 	struct hlist_node {
-		hlist_s *next, **pprev;
+		HList_s		*next;
+		HList_s		**pprev;
 	};
 
 #endif /* _LINUX_HASH_LIST_TYPES_H_ */

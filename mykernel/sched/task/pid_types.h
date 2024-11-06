@@ -50,8 +50,8 @@
 		uint			level;
 		spinlock_t		lock;
 		/* lists of tasks that use this pid */
-		List_hdr_s		tasks[PIDTYPE_MAX];
-		List_hdr_s		inodes;
+		HList_hdr_s		tasks[PIDTYPE_MAX];
+		HList_hdr_s		inodes;
 		/* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
 		// struct rcu_head rcu;

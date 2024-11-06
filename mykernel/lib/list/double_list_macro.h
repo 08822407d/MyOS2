@@ -2,15 +2,18 @@
 #ifndef _LINUX_DOUBLE_LIST_MACROS_H_
 #define _LINUX_DOUBLE_LIST_MACROS_H_
 
-	#define LIST_INIT(name) { &(name), &(name) }
+	#define LIST_INIT(name)	{	\
+				&(name),		\
+				&(name),		\
+			}
 	#define LIST_HEADER_INIT(name) {				\
 				.anchor	= LIST_INIT(name.anchor),	\
 				.count	= 0,						\
 			}
 
-	#define LIST_S(name) \
+	#define DECLARE_LIST_S(name) \
 				List_s name = LIST_INIT(name)
-	#define LIST_HDR_S(name) \
+	#define DECLARE_LIST_HDR_S(name) \
 				List_hdr_s name = LIST_HEADER_INIT(name)
 
 	/**
@@ -325,7 +328,7 @@
 
 	// MyOS defined protos
 	#define LIST_HEAD_INIT(name)	LIST_INIT(name)
-	#define LIST_HEAD(name)			LIST_S(name)
+	#define LIST_HEAD(name)			DECLARE_LIST_S(name)
 
 
 	#define list_headr_first_container(ptr, type, member) \

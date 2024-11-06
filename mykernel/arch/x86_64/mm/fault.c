@@ -23,7 +23,7 @@
 
 
 DEFINE_SPINLOCK(pgd_lock);
-LIST_HDR_S(pgd_list_hdr);
+DECLARE_LIST_HDR_S(pgd_list_hdr);
 
 
 vm_fault_s myos_dump_pagetable(ulong address)

@@ -88,7 +88,7 @@
 
 	// #ifdef CONFIG_PREEMPT_NOTIFIERS
 		// /* List of struct preempt_notifier: */
-		// struct hlist_head preempt_notifiers;
+		// HList_hdr_s preempt_notifiers;
 	// #endif
 
 	// #ifdef CONFIG_BLK_DEV_IO_TRACE
@@ -249,7 +249,7 @@
 
 		/* PID/PID hash table linkage. */
 		pid_s			*thread_pid;
-		List_s			pid_links[PIDTYPE_MAX];
+		HList_s			pid_links[PIDTYPE_MAX];
 		// List_s thread_node;
 
 		completion_s	*vfork_done;

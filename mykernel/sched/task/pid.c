@@ -44,9 +44,12 @@
 pid_s init_struct_pid = {
 	.count		= ATOMIC_INIT(1),
 	.tasks		= {
-		LIST_HEADER_INIT(init_struct_pid.tasks[0]),
-		LIST_HEADER_INIT(init_struct_pid.tasks[1]),
-		LIST_HEADER_INIT(init_struct_pid.tasks[2]),
+		// LIST_HEADER_INIT(init_struct_pid.tasks[0]),
+		// LIST_HEADER_INIT(init_struct_pid.tasks[1]),
+		// LIST_HEADER_INIT(init_struct_pid.tasks[2]),
+		{ .first = NULL },
+		{ .first = NULL },
+		{ .first = NULL },
 	},
 	.level		= 0,
 	.numbers	= {
@@ -108,7 +111,7 @@ EXPORT_SYMBOL_GPL(init_pid_ns);
 static  __cacheline_aligned_in_smp DEFINE_SPINLOCK(pidmap_lock);
 
 
-LIST_HDR_S(pid_list_hdr);
+HLIST_HEAD(pid_list_hdr);
 
 
 void put_pid(pid_s *pid)
@@ -269,10 +272,10 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 	atomic_set(&pid->count, 1);
 	spin_lock_init(&pid->lock);
 	for (type = 0; type < PIDTYPE_MAX; ++type)
-		INIT_LIST_HEADER_S(&pid->tasks[type]);
+		INIT_HLIST_HEAD(&pid->tasks[type]);
 
 	// init_waitqueue_head(&pid->wait_pidfd);
-	// INIT_HLIST_HEAD(&pid->inodes);
+	INIT_HLIST_HEAD(&pid->inodes);
 
 	upid = pid->numbers + ns->level;
 	// spin_lock_irq(&pidmap_lock);
@@ -334,17 +337,15 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
 	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-	// list_header_add_to_tail(&pid->tasks[type], &task->pid_links[type]);
 
-	list_header_add_to_tail(&pid_list_hdr, &task->pid_links[type]);
+	hlist_add_head(&task->pid_links[type], &pid_list_hdr);
 }
 
 
 void detach_pid(task_s *task, enum pid_type type) {
 	// __change_pid(task, type, NULL);
 
-	list_header_delete_node(&pid_list_hdr, &task->pid_links[type]);
-	// list_header_delete_node(&pid->tasks[type], &task->pid_links[type]);
+	hlist_del_init(&task->pid_links[type]);
 }
 
 
@@ -352,11 +353,12 @@ task_s *pid_task(pid_s *pid, enum pid_type type)
 {
 	task_s *result = NULL;
 	if (pid) {
-		// struct hlist_node *first;
+		HList_s *first;
 		// first = rcu_dereference_check(hlist_first_rcu(&pid->tasks[type]),
 		// 			      lockdep_tasklist_lock_is_held());
-		// if (first)
-		// 	result = hlist_entry(first, task_s, pid_links[(type)]);
+		first = &pid->tasks[type].first;
+		if (first)
+			result = hlist_entry(first, task_s, pid_links[(type)]);
 	}
 	return result;
 }
@@ -433,7 +435,7 @@ EXPORT_SYMBOL_GPL(get_task_pid);
 task_s *myos_find_task_by_pid(pid_t nr) {
 	task_s *tsk;
 
-	list_header_for_each_container(tsk,
+	hlist_for_each_entry(tsk,
 			&pid_list_hdr, pid_links[PIDTYPE_PID]) {
 
 		if (tsk->pid == nr) return tsk;

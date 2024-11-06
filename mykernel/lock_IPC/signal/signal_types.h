@@ -143,7 +143,7 @@
 		// struct sigpending	shared_pending;
 
 		/* For collecting multiprocess signals during fork */
-		// struct hlist_head	multiprocess;
+		// HList_hdr_s	multiprocess;
 
 		/* thread group exit support */
 		// int			group_exit_code;

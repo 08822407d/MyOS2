@@ -38,7 +38,7 @@
 #include <linux/fs/internal.h>
 
 
-static LIST_HDR_S(formats);
+static DECLARE_LIST_HDR_S(formats);
 // static DEFINE_RWLOCK(binfmt_lock);
 
 void register_binfmt(linux_bfmt_s * fmt)

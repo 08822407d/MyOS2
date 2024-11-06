@@ -25,7 +25,7 @@ typedef struct IDE_Spec_Params
 static task_s *thread;
 static DEFINE_SPINLOCK(req_lock);
 static blkbuf_node_s *req_in_using;
-LIST_HDR_S(IDEreq_lhdr);
+DECLARE_LIST_HDR_S(IDEreq_lhdr);
 
 /*==============================================================================================*
  *																								*

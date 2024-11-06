@@ -399,7 +399,7 @@
 	// #endif /* CONFIG_FUNCTION_TRACER */
 
 	// struct ftrace_func_entry {
-	// 	struct hlist_node hlist;
+	// 	HList_s hlist;
 	// 	unsigned long ip;
 	// 	unsigned long direct; /* for direct lookup only */
 	// };

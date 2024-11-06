@@ -96,10 +96,10 @@
 		// struct ratelimit_state ratelimit;
 
 		// spinlock_t inode_hash_lock;
-		// struct hlist_head inode_hashtable[FAT_HASH_SIZE];
+		// HList_hdr_s inode_hashtable[FAT_HASH_SIZE];
 
 		// spinlock_t dir_hash_lock;
-		// struct hlist_head dir_hashtable[FAT_HASH_SIZE];
+		// HList_hdr_s dir_hashtable[FAT_HASH_SIZE];
 
 		unsigned int dirty;           /* fs state before mount */
 		// struct rcu_head rcu;
@@ -124,8 +124,8 @@
 		int		i_logstart;			/* logical first cluster */
 		int		i_attrs;			/* unused attribute bits */
 		loff_t	i_pos;				/* on-disk position of directory entry or 0 */
-		// struct hlist_node i_fat_hash;	/* hash by i_location */
-		// struct hlist_node i_dir_hash;	/* hash by i_logstart */
+		// HList_s i_fat_hash;	/* hash by i_location */
+		// HList_s i_dir_hash;	/* hash by i_logstart */
 		// rwsem_t truncate_lock; /* protect bmap against truncate */
 		inode_s vfs_inode;
 	} msdos_inode_info_s;

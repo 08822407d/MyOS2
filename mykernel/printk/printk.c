@@ -76,7 +76,7 @@ int oops_in_progress;
  * driver system.
  */
 // static DEFINE_SEMAPHORE(console_sem);
-LIST_HDR_S(console_list_hdr);
+DECLARE_LIST_HDR_S(console_list_hdr);
 
 /*
  * This is used for debugging the mess that is the VT code by
