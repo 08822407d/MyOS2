@@ -14,6 +14,9 @@
 		extern pid_s
 		*get_pid(pid_s *pid);
 
+		extern bool
+		pid_has_task(pid_s *pid, enum pid_type type);
+
 		extern pid_ns_s
 		*ns_of_pid(pid_s *pid);
 
@@ -41,6 +44,12 @@
 		*get_pid(pid_s *pid) {
 			if (pid) atomic_inc(&pid->count);
 			return pid;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		pid_has_task(pid_s *pid, enum pid_type type) {
+			return !hlist_empty(&pid->tasks[type]);
 		}
 
 		/*

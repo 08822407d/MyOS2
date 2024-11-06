@@ -99,10 +99,9 @@ static void do_idle(void)
 // void cpu_startup_entry(enum cpuhp_state state)
 void cpu_startup_entry()
 {	
+	current->flags |= PF_IDLE;
 	// arch_cpu_idle_prepare();
 	// cpuhp_online_idle(state);
-
-	// preempt_enable();
 	while (1)
 		do_idle();
 }

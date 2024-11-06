@@ -37,7 +37,7 @@ calculate_alignment(slab_flags_t flags, uint align, uint size) {
 
 static kmem_cache_s
 *create_cache(const char *name, uint object_size,
-		uint align, slab_flags_t flags) {
+		uint align, slab_flags_t flags, void (*ctor)(void *)) {
 
 	kmem_cache_s *s = kmem_cache_zalloc(kmem_cache, GFP_KERNEL);
 	if (s == NULL)
@@ -46,6 +46,7 @@ static kmem_cache_s
 	s->name = name;
 	s->size = s->object_size = object_size;
 	s->align = align;
+	s->ctor = ctor;
 
 	int err = __kmem_cache_create(s, flags);
 	if (err) {
@@ -87,8 +88,8 @@ out:
  * Return: a pointer to the cache on success, NULL on failure.
  */
 kmem_cache_s *
-kmem_cache_create(const char *name, uint size,
-		uint align, slab_flags_t flags) {
+kmem_cache_create(const char *name, uint size, uint align,
+		slab_flags_t flags, void (*ctor)(void *)) {
 
 	// mutex_lock(&slab_mutex);
 	/*
@@ -99,7 +100,8 @@ kmem_cache_create(const char *name, uint size,
 	 */
 	flags &= CACHE_CREATE_MASK;
 	kmem_cache_s *s = create_cache(name, size,
-			calculate_alignment(flags, align, size), flags);
+			calculate_alignment(flags, align, size),
+			flags, ctor);
 	// mutex_unlock(&slab_mutex);
 
 	if (IS_ERR(s)) {

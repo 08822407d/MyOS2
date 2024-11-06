@@ -18,4 +18,8 @@
     struct hlist_head;
     typedef struct hlist_head HList_hdr_s;
 
+    /* idr.c */
+	struct idr;
+	typedef struct idr idr_s;
+
 #endif /* _LIB_TYPE_DECLARATION_H_ */

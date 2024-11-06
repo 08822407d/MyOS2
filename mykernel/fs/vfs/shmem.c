@@ -362,7 +362,8 @@ static void shmem_init_inodecache(void)
 	shmem_inode_cachep =
 			kmem_cache_create("shmem_inode_cache",
 				sizeof(shmem_inode_info_s), 0,
-				SLAB_PANIC|SLAB_ACCOUNT);
+				SLAB_PANIC|SLAB_ACCOUNT,
+				shmem_init_inode);
 }
 
 static const file_ops_s shmem_file_operations = {

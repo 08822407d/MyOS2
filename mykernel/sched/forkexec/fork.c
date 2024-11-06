@@ -1335,10 +1335,10 @@ bad_fork_cancel_cgroup:
 	// write_unlock_irq(&tasklist_lock);
 	// cgroup_cancel_fork(p, args);
 bad_fork_put_pidfd:
-	// if (clone_flags & CLONE_PIDFD) {
-	// 	fput(pidfile);
-	// 	put_unused_fd(pidfd);
-	// }
+	if (clone_flags & CLONE_PIDFD) {
+		fput(pidfile);
+		put_unused_fd(pidfd);
+	}
 bad_fork_free_pid:
 	if (pid_struct != &init_struct_pid)
 		free_pid(pid_struct);
@@ -1591,7 +1591,8 @@ void __init mm_cache_init(void)
 
 	mm_cachep = kmem_cache_create("mm_struct",
 					mm_size, L1_CACHE_BYTES,
-					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+					NULL);
 }
 
 void __init proc_caches_init(void)
@@ -1600,20 +1601,28 @@ void __init proc_caches_init(void)
 	// 		sizeof(struct sighand_struct), 1,
 	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
 	// 		SLAB_ACCOUNT, sighand_ctor);
-	signal_cachep = kmem_cache_create("signal_cache",
-					sizeof(signal_s), 1,
-					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
-	files_cachep = kmem_cache_create("files_cache",
-					sizeof(files_struct_s), 0,
-					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
-	fs_cachep = kmem_cache_create("fs_cache",
-					sizeof(taskfs_s), 0,
-					SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT);
+	signal_cachep =
+			kmem_cache_create("signal_cache",
+				sizeof(signal_s), 1,
+				SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+				NULL);
+	files_cachep =
+			kmem_cache_create("files_cache",
+				sizeof(files_struct_s), 0,
+				SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+				NULL);
+	fs_cachep =
+			kmem_cache_create("fs_cache",
+				sizeof(taskfs_s), 0,
+				SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_ACCOUNT,
+				NULL);
 
 	// vm_area_cachep = KMEM_CACHE(vma_s, SLAB_PANIC|SLAB_ACCOUNT);
-	vm_area_cachep = kmem_cache_create("vm_area_struct",
-						sizeof(vma_s), __alignof__(vma_s),
-						SLAB_PANIC|SLAB_ACCOUNT);
+	vm_area_cachep =
+			kmem_cache_create("vm_area_struct",
+				sizeof(vma_s), __alignof__(vma_s),
+				SLAB_PANIC|SLAB_ACCOUNT,
+				NULL);
 
 	// mmap_init();
 	// nsproxy_cache_init();

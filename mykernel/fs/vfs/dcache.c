@@ -388,7 +388,8 @@ static void __init dcache_init(void) {
 	dentry_cache = kmem_cache_create("dentry",
 					sizeof(dentry_s), __alignof__(dentry_s),
 					SLAB_RECLAIM_ACCOUNT | SLAB_PANIC |
-						SLAB_MEM_SPREAD | SLAB_ACCOUNT);
+						SLAB_MEM_SPREAD | SLAB_ACCOUNT,
+					NULL);
 
 	// /* Hash may have been set up in dcache_init_early */
 	// if (!hashdist)
@@ -411,7 +412,7 @@ static void __init dcache_init(void) {
 void vfs_caches_init(void)
 {
 	names_cachep = kmem_cache_create("names_cache", PATH_MAX, 0,
-					SLAB_HWCACHE_ALIGN|SLAB_PANIC);
+					SLAB_HWCACHE_ALIGN|SLAB_PANIC, NULL);
 
 	dcache_init();
 	inode_init();

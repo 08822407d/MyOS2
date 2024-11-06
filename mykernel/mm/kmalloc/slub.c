@@ -70,6 +70,19 @@ set_freepointer(kmem_cache_s *s, void *this_obj, void *next_obj) {
 /********************************************************************
  *						slub alloc functions
  *******************************************************************/
+static void
+*setup_object(kmem_cache_s *s, void *object) {
+	// setup_object_debug(s, object);
+	// object = kasan_init_slab_obj(s, object);
+	if (unlikely(s->ctor)) {
+		// kasan_unpoison_new_object(s, object);
+		s->ctor(object);
+		// kasan_poison_new_object(s, object);
+	}
+	return object;
+}
+
+
 static inline gfp_t
 prepare_alloc_flags(kmem_cache_s *s, gfp_t flags) {
 	flags &= (GFP_RECLAIM_MASK | GFP_CONSTRAINT_MASK) & gfp_allowed_mask;
@@ -122,7 +135,8 @@ static inline slab_s
 	start = (void *)page_to_virt(&((folio_s *)slab)->page);
 	slab->freelist = start;
 	for (idx = 0, p = start; idx < slab->objects - 1; idx++) {
-		next = p + s->size;
+		next = p + s->size;		// next_freelist_entry()
+		next = setup_object(s, next);
 		set_freepointer(s, p, next);
 		p = next;
 	}

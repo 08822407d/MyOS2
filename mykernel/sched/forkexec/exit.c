@@ -19,7 +19,7 @@ static void exit_notify(task_s *tsk, int group_dead)
 		List_s * child_lp = list_header_remove_head(&tsk->children);
 		while (child_lp == 0);
 
-		task_s *task_initd = myos_find_task_by_pid(1);
+		task_s *task_initd = find_task_by_pid_ns(1, PIDTYPE_PID);
 		list_header_add_to_tail(&task_initd->children, child_lp);
 	}
 

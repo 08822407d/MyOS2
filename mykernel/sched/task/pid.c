@@ -44,9 +44,6 @@
 pid_s init_struct_pid = {
 	.count		= ATOMIC_INIT(1),
 	.tasks		= {
-		// LIST_HEADER_INIT(init_struct_pid.tasks[0]),
-		// LIST_HEADER_INIT(init_struct_pid.tasks[1]),
-		// LIST_HEADER_INIT(init_struct_pid.tasks[2]),
 		{ .first = NULL },
 		{ .first = NULL },
 		{ .first = NULL },
@@ -79,7 +76,7 @@ static u64 pidfs_ino	= RESERVED_PIDS;
  */
 pid_ns_s init_pid_ns = {
 	// .ns.count		= REFCOUNT_INIT(2),
-	// .idr			= IDR_INIT(init_pid_ns.idr),
+	.idr			= IDR_INIT(init_pid_ns.idr),
 	.pid_allocated	= PIDNS_ADDING,
 	.level			= 0,
 	.child_reaper	= &init_task,
@@ -116,15 +113,14 @@ HLIST_HEAD(pid_list_hdr);
 
 void put_pid(pid_s *pid)
 {
-	// struct pid_namespace *ns;
+	pid_ns_s *ns;
 
 	if (!pid)
 		return;
 
-	// ns = pid->numbers[pid->level].ns;
+	ns = pid->numbers[pid->level].ns;
 	if (atomic_dec_and_test(&pid->count)) {
-		// kmem_cache_free(ns->pid_cachep, pid);
-		kfree(pid);
+		kmem_cache_free(ns->pid_cachep, pid);
 		// put_pid_ns(ns);
 	}
 }
@@ -132,40 +128,37 @@ EXPORT_SYMBOL_GPL(put_pid);
 
 void free_pid(pid_s *pid)
 {
-	// /* We can be called with write_lock_irq(&tasklist_lock) held */
-	// int i;
-	// unsigned long flags;
+	/* We can be called with write_lock_irq(&tasklist_lock) held */
+	int i;
+	ulong flags;
 
-	// spin_lock_irqsave(&pidmap_lock, flags);
-	// for (i = 0; i <= pid->level; i++) {
-	// 	struct upid *upid = pid->numbers + i;
-	// 	struct pid_namespace *ns = upid->ns;
-	// 	switch (--ns->pid_allocated) {
-	// 	case 2:
-	// 	case 1:
-	// 		/* When all that is left in the pid namespace
-	// 		 * is the reaper wake up the reaper.  The reaper
-	// 		 * may be sleeping in zap_pid_ns_processes().
-	// 		 */
-	// 		wake_up_process(ns->child_reaper);
-	// 		break;
-	// 	case PIDNS_ADDING:
-	// 		/* Handle a fork failure of the first process */
-	// 		WARN_ON(ns->child_reaper);
-	// 		ns->pid_allocated = 0;
-	// 		break;
-	// 	}
+	spin_lock_irqsave(&pidmap_lock, flags);
+	for (i = 0; i <= pid->level; i++) {
+		upid_s *upid = pid->numbers + i;
+		pid_ns_s *ns = upid->ns;
+		switch (--ns->pid_allocated) {
+		case 2:
+		case 1:
+			/* When all that is left in the pid namespace
+			 * is the reaper wake up the reaper.  The reaper
+			 * may be sleeping in zap_pid_ns_processes().
+			 */
+			// wake_up_process(ns->child_reaper);
+			break;
+		case PIDNS_ADDING:
+			/* Handle a fork failure of the first process */
+			WARN_ON(ns->child_reaper);
+			ns->pid_allocated = 0;
+			break;
+		}
 
-	// 	idr_remove(&ns->idr, upid->nr);
-	// }
-	// spin_unlock_irqrestore(&pidmap_lock, flags);
+		idr_remove(&ns->idr, upid->nr);
+	}
+	spin_unlock_irqrestore(&pidmap_lock, flags);
 
 	// call_rcu(&pid->rcu, delayed_put_pid);
-	// static void delayed_put_pid(struct rcu_head *rhp)
-	// {
-	// 	struct pid *pid = container_of(rhp, struct pid, rcu);
-		put_pid(pid);
-	// }
+
+	put_pid(pid);
 }
 
 pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
@@ -219,32 +212,31 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 		// idr_preload(GFP_KERNEL);
 		spin_lock_irq(&pidmap_lock);
 
-		// if (tid) {
-		// 	nr = idr_alloc(&tmp->idr, NULL, tid,
-		// 			   tid + 1, GFP_ATOMIC);
-			nr = myos_idr_alloc();
-		// 	/*
-		// 	 * If ENOSPC is returned it means that the PID is
-		// 	 * alreay in use. Return EEXIST in that case.
-		// 	 */
-		// 	if (nr == -ENOSPC)
-		// 		nr = -EEXIST;
-		// } else {
-		// 	int pid_min = 1;
-		// 	/*
-		// 	 * init really needs pid 1, but after reaching the
-		// 	 * maximum wrap back to RESERVED_PIDS
-		// 	 */
-		// 	if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
-		// 		pid_min = RESERVED_PIDS;
+		if (tid) {
+			nr = idr_alloc(&tmp->idr, NULL,
+					tid, tid + 1, GFP_ATOMIC);
+			/*
+			 * If ENOSPC is returned it means that the PID is
+			 * alreay in use. Return EEXIST in that case.
+			 */
+			if (nr == -ENOSPC)
+				nr = -EEXIST;
+		} else {
+			int pid_min = 1;
+			/*
+			 * init really needs pid 1, but after reaching the
+			 * maximum wrap back to RESERVED_PIDS
+			 */
+			if (idr_get_cursor(&tmp->idr) > RESERVED_PIDS)
+				pid_min = RESERVED_PIDS;
 
-		// 	/*
-		// 	 * Store a null pointer so find_pid_ns does not find
-		// 	 * a partially initialized PID (see below).
-		// 	 */
-		// 	nr = idr_alloc_cyclic(&tmp->idr, NULL, pid_min,
-		// 				  pid_max, GFP_ATOMIC);
-		// }
+			/*
+			 * Store a null pointer so find_pid_ns does not find
+			 * a partially initialized PID (see below).
+			 */
+			nr = idr_alloc_cyclic(&tmp->idr, NULL,
+					pid_min, pid_max, GFP_ATOMIC);
+		}
 		spin_unlock_irq(&pidmap_lock);
 		// idr_preload_end();
 
@@ -278,48 +270,46 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 	INIT_HLIST_HEAD(&pid->inodes);
 
 	upid = pid->numbers + ns->level;
-	// spin_lock_irq(&pidmap_lock);
-	// if (!(ns->pid_allocated & PIDNS_ADDING))
-	// 	goto out_unlock;
-	// for ( ; upid >= pid->numbers; --upid) {
-	// 	/* Make the PID visible to find_pid_ns. */
-	// 	idr_replace(&upid->ns->idr, pid, upid->nr);
-	// 	upid->ns->pid_allocated++;
-	// }
-	// spin_unlock_irq(&pidmap_lock);
+	spin_lock_irq(&pidmap_lock);
+	if (!(ns->pid_allocated & PIDNS_ADDING))
+		goto out_unlock;
+	for ( ; upid >= pid->numbers; --upid) {
+		/* Make the PID visible to find_pid_ns. */
+		idr_replace(&upid->ns->idr, pid, upid->nr);
+		upid->ns->pid_allocated++;
+	}
+	spin_unlock_irq(&pidmap_lock);
 
 	return pid;
 
 out_unlock:
-	// spin_unlock_irq(&pidmap_lock);
+	spin_unlock_irq(&pidmap_lock);
 	// put_pid_ns(ns);
 
 out_free:
-	// spin_lock_irq(&pidmap_lock);
-	// while (++i <= ns->level) {
-	// 	upid = pid->numbers + i;
-	// 	idr_remove(&upid->ns->idr, upid->nr);
-	// }
+	spin_lock_irq(&pidmap_lock);
+	while (++i <= ns->level) {
+		upid = pid->numbers + i;
+		idr_remove(&upid->ns->idr, upid->nr);
+	}
 
-	// /* On failure to allocate the first pid, reset the state */
-	// if (ns->pid_allocated == PIDNS_ADDING)
-	// 	idr_set_cursor(&ns->idr, 0);
+	/* On failure to allocate the first pid, reset the state */
+	if (ns->pid_allocated == PIDNS_ADDING)
+		idr_set_cursor(&ns->idr, 0);
 
 	// spin_unlock_irq(&pidmap_lock);
+	spin_unlock_no_resched(&pidmap_lock);
 
 	kmem_cache_free(ns->pid_cachep, pid);
 	return ERR_PTR(retval);
 }
 
-pid_s *find_pid_ns(int nr, pid_ns_s *ns)
-{
-	// return idr_find(&ns->idr, nr);
-	return NULL;
+pid_s *find_pid_ns(int nr, pid_ns_s *ns) {
+	return idr_find(&ns->idr, nr);
 }
 EXPORT_SYMBOL_GPL(find_pid_ns);
 
-pid_s *find_vpid(int nr)
-{
+pid_s *find_vpid(int nr) {
 	return find_pid_ns(nr, task_active_pid_ns(current));
 }
 EXPORT_SYMBOL_GPL(find_vpid);
@@ -336,16 +326,34 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
  */
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
-	// hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
-
-	hlist_add_head(&task->pid_links[type], &pid_list_hdr);
+	hlist_add_head(&task->pid_links[type], &pid->tasks[type]);
 }
 
+static void
+__change_pid(task_s *task, enum pid_type type, pid_s *new) {
+	pid_s **pid_ptr = task_pid_ptr(task, type);
+	pid_s *pid;
+	int tmp;
 
-void detach_pid(task_s *task, enum pid_type type) {
-	// __change_pid(task, type, NULL);
+	pid = *pid_ptr;
 
 	hlist_del_init(&task->pid_links[type]);
+	*pid_ptr = new;
+
+	if (type == PIDTYPE_PID) {
+		WARN_ON_ONCE(pid_has_task(pid, PIDTYPE_PID));
+		// wake_up_all(&pid->wait_pidfd);
+	}
+
+	for (tmp = PIDTYPE_MAX; --tmp >= 0; )
+		if (pid_has_task(pid, tmp))
+			return;
+
+	free_pid(pid);
+}
+
+void detach_pid(task_s *task, enum pid_type type) {
+	__change_pid(task, type, NULL);
 }
 
 
@@ -356,7 +364,7 @@ task_s *pid_task(pid_s *pid, enum pid_type type)
 		HList_s *first;
 		// first = rcu_dereference_check(hlist_first_rcu(&pid->tasks[type]),
 		// 			      lockdep_tasklist_lock_is_held());
-		first = &pid->tasks[type].first;
+		first = pid->tasks[type].first;
 		if (first)
 			result = hlist_entry(first, task_s, pid_links[(type)]);
 	}
@@ -432,26 +440,8 @@ EXPORT_SYMBOL_GPL(get_task_pid);
 
 
 
-task_s *myos_find_task_by_pid(pid_t nr) {
-	task_s *tsk;
-
-	hlist_for_each_entry(tsk,
-			&pid_list_hdr, pid_links[PIDTYPE_PID]) {
-
-		if (tsk->pid == nr) return tsk;
-	}
-	return NULL;
-}
-
-
-
-
 void __init pid_idr_init(void)
 {
-	void myos_init_pid_allocator(void);
-	myos_init_pid_allocator();
-
-
 	/* Verify no one has done anything silly: */
 	BUILD_BUG_ON(PID_MAX_LIMIT >= PIDNS_ADDING);
 
@@ -462,45 +452,23 @@ void __init pid_idr_init(void)
 				PIDS_PER_CPU_MIN * num_possible_cpus());
 	pr_info("pid_max: default: %u minimum: %u\n", pid_max, pid_max_min);
 
-	// idr_init(&init_pid_ns.idr);
+	idr_init(&init_pid_ns.idr);
 
-	init_pid_ns.pid_cachep = kmem_cache_create("pid",
-			struct_size_t(pid_s, numbers, 1), __alignof__(pid_s),
-			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT);
+	init_pid_ns.pid_cachep =
+			kmem_cache_create("pid",
+			struct_size_t(pid_s, numbers, 1),
+			__alignof__(pid_s),
+			SLAB_HWCACHE_ALIGN | SLAB_PANIC | SLAB_ACCOUNT,
+			NULL);
+	
+
+	/* MyOS2 init_pid_ns initiate simple-idr by hand */
+	idr_s *init_pid_ns_idr = &init_pid_ns.idr;
+	init_pid_ns_idr->idr_rt[0] = &init_struct_pid;
+	init_pid_ns_idr->idr_next++;
 }
 
 
 /*==============================================================================================*
  *																								*
  *==============================================================================================*/
-#include <klib/utils.h>
-
-bitmap_t	pid_bm[PID_MAX_DEFAULT / sizeof(bitmap_t)];
-ulong		curr_pid;
-
-void myos_init_pid_allocator()
-{
-	// init pid bitmap
-	memset(&pid_bm, 0, sizeof(pid_bm));
-	bm_set_bit(pid_bm, 0);
-	curr_pid = 1;
-}
-
-ulong myos_idr_alloc()
-{
-	ulong newpid = bm_get_freebit_idx(
-			pid_bm, curr_pid, PID_MAX_DEFAULT);
-	if (newpid >= PID_MAX_DEFAULT || newpid < curr_pid)
-	{
-		newpid = bm_get_freebit_idx(pid_bm, 0, curr_pid);
-		if (newpid >= curr_pid || newpid == 0)
-		{
-			// pid bitmap used out
-			while (1);
-		}
-	}
-	curr_pid = newpid;
-	bm_set_bit(pid_bm, newpid);
-
-	return curr_pid;
-}

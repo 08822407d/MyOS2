@@ -59,7 +59,7 @@
 	};
 
 	struct pid_namespace {
-		// struct idr idr;
+		idr_s			idr;
 		// struct rcu_head rcu;
 		uint			pid_allocated;
 		task_s			*child_reaper;

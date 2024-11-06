@@ -90,6 +90,12 @@ static int bd_init_fs_context(fs_ctxt_s *fc) {
 	return 0;
 }
 
+static void
+init_once(void *data) {
+	// struct bdev_inode *ei = data;
+	// inode_init_once(&ei->vfs_inode);
+}
+
 static fs_type_s bd_type = {
 	.name				= "bdev",
 	.init_fs_context	= bd_init_fs_context,
@@ -106,7 +112,8 @@ void bdev_cache_init(void)
 
 	bdev_cachep = kmem_cache_create("bdev_cache", sizeof(bdev_inode_s),
 					0, (SLAB_HWCACHE_ALIGN|SLAB_RECLAIM_ACCOUNT|
-						SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC));
+						SLAB_MEM_SPREAD|SLAB_ACCOUNT|SLAB_PANIC),
+						init_once);
 	err = register_filesystem(&bd_type);
 	if (err)
 		color_printk(RED, BLACK, "Cannot register bdev pseudo-fs");

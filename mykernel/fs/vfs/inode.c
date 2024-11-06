@@ -356,7 +356,8 @@ void __init inode_init(void)
 	inode_cachep = kmem_cache_create("inode_cache",
 					sizeof(inode_s), 0,
 					(SLAB_RECLAIM_ACCOUNT | SLAB_PANIC |
-						SLAB_MEM_SPREAD | SLAB_ACCOUNT));
+						SLAB_MEM_SPREAD | SLAB_ACCOUNT),
+					NULL);
 
 	// /* Hash may have been set up in inode_init_early */
 	// if (!hashdist)
