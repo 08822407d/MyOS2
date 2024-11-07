@@ -12,7 +12,7 @@
 
 	#include <asm/sched_types.h>
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/lib_types.h>
+	#include <linux/kernel/lib_type_declaration.h>
 	#include <linux/kernel/mm_type_declaration.h>
 	#include <linux/kernel/lock_ipc_type_declaration.h>
 	#include <linux/kernel/swait.h>

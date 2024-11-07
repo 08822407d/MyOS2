@@ -363,7 +363,10 @@
         "hash_list_macro.h": "c",
         "idr_macro.h": "c",
         "pid_namespace_const.h": "c",
-        "refcount.h": "c"
+        "refcount.h": "c",
+        "double_list_const.h": "c",
+        "rcu_list_macro.h": "c",
+        "lib_const.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

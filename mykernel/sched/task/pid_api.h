@@ -9,6 +9,8 @@
 	#include <linux/kernel/user_namespace.h>
 
 
+	#define task_active_pid_ns(tsk)	ns_of_pid(task_pid(tsk))
+
 
 	extern pid_s	init_struct_pid;
 	extern pid_ns_s	init_pid_ns;
@@ -57,7 +59,7 @@
 	pid_t pid_vnr(pid_s *pid);
 
 
-	extern pid_ns_s *task_active_pid_ns(task_s *tsk);
+	// extern pid_ns_s *task_active_pid_ns(task_s *tsk);
 	void pidhash_init(void);
 	void pid_idr_init(void);
 

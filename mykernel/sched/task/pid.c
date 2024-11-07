@@ -49,8 +49,7 @@ pid_s init_struct_pid = {
 		{ .first = NULL },
 	},
 	.level		= 0,
-	.numbers	= {
-		{
+	.numbers	= { {
 			.nr		= 0,
 			.ns		= &init_pid_ns,
 		},
@@ -108,8 +107,6 @@ EXPORT_SYMBOL_GPL(init_pid_ns);
 static  __cacheline_aligned_in_smp DEFINE_SPINLOCK(pidmap_lock);
 
 
-HLIST_HEAD(pid_list_hdr);
-
 
 void put_pid(pid_s *pid)
 {
@@ -143,7 +140,7 @@ void free_pid(pid_s *pid)
 			 * is the reaper wake up the reaper.  The reaper
 			 * may be sleeping in zap_pid_ns_processes().
 			 */
-			// wake_up_process(ns->child_reaper);
+			wake_up_process(ns->child_reaper);
 			break;
 		case PIDNS_ADDING:
 			/* Handle a fork failure of the first process */
@@ -267,12 +264,14 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 		INIT_HLIST_HEAD(&pid->tasks[type]);
 
 	// init_waitqueue_head(&pid->wait_pidfd);
-	INIT_HLIST_HEAD(&pid->inodes);
+	// INIT_HLIST_HEAD(&pid->inodes);
 
 	upid = pid->numbers + ns->level;
 	spin_lock_irq(&pidmap_lock);
 	if (!(ns->pid_allocated & PIDNS_ADDING))
 		goto out_unlock;
+	// pid->stashed = NULL;
+	pid->ino = ++pidfs_ino;
 	for ( ; upid >= pid->numbers; --upid) {
 		/* Make the PID visible to find_pid_ns. */
 		idr_replace(&upid->ns->idr, pid, upid->nr);
@@ -326,7 +325,7 @@ static pid_s **task_pid_ptr(task_s *task, enum pid_type type) {
  */
 void attach_pid(task_s *task, enum pid_type type) {
 	pid_s *pid = *task_pid_ptr(task, type);
-	hlist_add_head(&task->pid_links[type], &pid->tasks[type]);
+	hlist_add_head_rcu(&task->pid_links[type], &pid->tasks[type]);
 }
 
 static void
@@ -356,6 +355,12 @@ void detach_pid(task_s *task, enum pid_type type) {
 	__change_pid(task, type, NULL);
 }
 
+void change_pid(task_s *task, enum pid_type type, pid_s *pid)
+{
+	__change_pid(task, type, pid);
+	attach_pid(task, type);
+}
+
 
 task_s *pid_task(pid_s *pid, enum pid_type type)
 {
@@ -364,7 +369,7 @@ task_s *pid_task(pid_s *pid, enum pid_type type)
 		HList_s *first;
 		// first = rcu_dereference_check(hlist_first_rcu(&pid->tasks[type]),
 		// 			      lockdep_tasklist_lock_is_held());
-		first = pid->tasks[type].first;
+		first = hlist_first_rcu(&pid->tasks[type]);
 		if (first)
 			result = hlist_entry(first, task_s, pid_links[(type)]);
 	}
@@ -382,13 +387,63 @@ task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns)
 	return pid_task(find_pid_ns(nr, ns), PIDTYPE_PID);
 }
 
-
-
-pid_ns_s *task_active_pid_ns(task_s *tsk)
+task_s *find_task_by_vpid(pid_t vnr)
 {
-	return ns_of_pid(task_pid(tsk));
+	return find_task_by_pid_ns(vnr, task_active_pid_ns(current));
 }
-EXPORT_SYMBOL_GPL(task_active_pid_ns);
+
+task_s *find_get_task_by_vpid(pid_t nr)
+{
+	task_s *task;
+
+	// rcu_read_lock();
+	task = find_task_by_vpid(nr);
+	// if (task)
+	// 	get_task_struct(task);
+	// rcu_read_unlock();
+
+	return task;
+}
+
+pid_s *get_task_pid(task_s *task, enum pid_type type)
+{
+	pid_s *pid;
+	// rcu_read_lock();
+	pid = get_pid(rcu_dereference(*task_pid_ptr(task, type)));
+	// rcu_read_unlock();
+	return pid;
+}
+EXPORT_SYMBOL_GPL(get_task_pid);
+
+task_s *get_pid_task(pid_s *pid, enum pid_type type)
+{
+	task_s *result;
+	// rcu_read_lock();
+	result = pid_task(pid, type);
+	// if (result)
+	// 	get_task_struct(result);
+	// rcu_read_unlock();
+	return result;
+}
+EXPORT_SYMBOL_GPL(get_pid_task);
+
+pid_s *find_get_pid(pid_t nr)
+{
+	pid_s *pid;
+
+	// rcu_read_lock();
+	pid = get_pid(find_vpid(nr));
+	// rcu_read_unlock();
+
+	return pid;
+}
+EXPORT_SYMBOL_GPL(find_get_pid);
+
+// pid_ns_s *task_active_pid_ns(task_s *tsk)
+// {
+// 	return ns_of_pid(task_pid(tsk));
+// }
+// EXPORT_SYMBOL_GPL(task_active_pid_ns);
 
 pid_t pid_nr_ns(pid_s *pid, pid_ns_s *ns)
 {
@@ -418,8 +473,7 @@ pid_t __task_pid_nr_ns(task_s *task,
 	// rcu_read_lock();
 	if (!ns)
 		ns = task_active_pid_ns(current);
-	// nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
-	nr = pid_nr_ns(*task_pid_ptr(task, type), ns);
+	nr = pid_nr_ns(rcu_dereference(*task_pid_ptr(task, type)), ns);
 	// rcu_read_unlock();
 
 	return nr;
@@ -427,16 +481,6 @@ pid_t __task_pid_nr_ns(task_s *task,
 EXPORT_SYMBOL(__task_pid_nr_ns);
 
 
-pid_s *get_task_pid(task_s *task, enum pid_type type)
-{
-	pid_s *pid;
-	// rcu_read_lock();
-	// pid = get_pid(rcu_dereference(*task_pid_ptr(task, type)));
-	pid = get_pid(*task_pid_ptr(task, type));
-	// rcu_read_unlock();
-	return pid;
-}
-EXPORT_SYMBOL_GPL(get_task_pid);
 
 
 
@@ -467,8 +511,3 @@ void __init pid_idr_init(void)
 	init_pid_ns_idr->idr_rt[0] = &init_struct_pid;
 	init_pid_ns_idr->idr_next++;
 }
-
-
-/*==============================================================================================*
- *																								*
- *==============================================================================================*/

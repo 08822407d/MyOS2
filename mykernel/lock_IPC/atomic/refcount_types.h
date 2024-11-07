@@ -12,8 +12,9 @@
 	 * there. This avoids wrapping the counter and causing 'spurious'
 	 * use-after-free bugs.
 	 */
-	typedef struct refcount_struct {
+	struct refcount_struct {
 		atomic_t refs;
-	} refcount_t;
+	};
+	typedef struct refcount_struct refcount_t;
 
 #endif /* _LINUX_REFCOUNT_TYPES_H */

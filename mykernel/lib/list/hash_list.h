@@ -142,8 +142,8 @@
 		void
 		hlist_del(HList_s *n) {
 			__hlist_del(n);
-			// n->next = LIST_POISON1;
-			// n->pprev = LIST_POISON2;
+			n->next = LIST_POISON1;
+			n->pprev = LIST_POISON2;
 		}
 
 		/**

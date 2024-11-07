@@ -172,7 +172,7 @@
 			List_s	*prev = entry->prev,
 					*next = entry->next;
 			while ((next == NULL) || (prev == NULL) ||
-					// (next == LIST_POISON1) || (prev == LIST_POISON2) ||
+					(next == LIST_POISON1) || (prev == LIST_POISON2) ||
 					(prev->next != entry) || (next->prev != entry));
 
 			return true;
@@ -268,8 +268,8 @@
 		void
 		list_del(List_s *entry) {
 			__list_del_entry(entry);
-			// entry->next = LIST_POISON1;
-			// entry->prev = LIST_POISON2;
+			entry->next = LIST_POISON1;
+			entry->prev = LIST_POISON2;
 		}
 		/**
 		 * list_del_init - deletes entry from list and reinitialize it.

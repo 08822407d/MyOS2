@@ -111,13 +111,13 @@ void put_pid_ns(pid_ns_s *ns)
 {
 	pid_ns_s *parent;
 
-	// while (ns != &init_pid_ns) {
-	// 	parent = ns->parent;
-	// 	if (!refcount_dec_and_test(&ns->ns.count))
-	// 		break;
-	// 	destroy_pid_namespace(ns);
-	// 	ns = parent;
-	// }
+	while (ns != &init_pid_ns) {
+		// parent = ns->parent;
+		// if (!refcount_dec_and_test(&ns->ns.count))
+		// 	break;
+		// destroy_pid_namespace(ns);
+		// ns = parent;
+	}
 }
 EXPORT_SYMBOL_GPL(put_pid_ns);
 

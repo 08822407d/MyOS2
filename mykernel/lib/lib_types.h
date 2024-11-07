@@ -5,6 +5,7 @@
 
 	#include "list/double_list_types.h"
 	#include "list/hash_list_types.h"
+	#include "list/rcu_list_types.h"
 	#include "idr/idr_types.h"
 
 #endif /* _LIB_TYPES_H_ */

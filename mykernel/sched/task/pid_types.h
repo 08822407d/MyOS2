@@ -49,13 +49,15 @@
 		atomic_t		count;
 		uint			level;
 		spinlock_t		lock;
+		// dentry_s		*stashed;
+		u64				ino;
 		/* lists of tasks that use this pid */
 		HList_hdr_s		tasks[PIDTYPE_MAX];
-		HList_hdr_s		inodes;
+		// HList_hdr_s		inodes;
 		/* wait queue for pidfd notifications */
 		// wait_queue_head_t wait_pidfd;
 		// struct rcu_head rcu;
-		upid_s			numbers[1];
+		upid_s			numbers[];
 	};
 
 	struct pid_namespace {
