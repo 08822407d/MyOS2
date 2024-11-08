@@ -16,6 +16,7 @@
 #include <linux/kernel/sched_types.h>
 #include <linux/kernel/mm_types.h>
 #include <linux/fs/fs.h>
+#include <uapi/asm-generic/resource.h>
 
 #include <linux/kernel/uaccess.h>
 
@@ -26,15 +27,16 @@ extern nsproxy_s init_nsproxy;
 
 
 static signal_s init_signals = {
-	// .nr_threads			= 1,
+	.nr_threads			= 1,
 	// .thread_head		= LIST_HEAD_INIT(init_task.thread_node),
 	// .wait_chldexit  	= __WAIT_QUEUE_HEAD_INITIALIZER(init_signals.wait_chldexit),
-	// .shared_pending 	= {
-	// 	.list				= LIST_HEAD_INIT(init_signals.shared_pending.list),
-	// 	.signal				=  {{0}}
-	// },
+	.shared_pending 	= {
+		.list				=
+				LIST_HEADER_INIT(init_signals.shared_pending.list),
+		.signal				=  {{0}}
+	},
 	// .multiprocess		= HLIST_HEAD_INIT,
-	// .rlim				= INIT_RLIMITS,
+	.rlim				= INIT_RLIMITS,
 	// .cred_guard_mutex	= __MUTEX_INITIALIZER(init_signals.cred_guard_mutex),
 	// .exec_update_lock	= __RWSEM_INITIALIZER(init_signals.exec_update_lock),
 // #ifdef CONFIG_POSIX_TIMERS
@@ -79,16 +81,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	// .usage				= REFCOUNT_INIT(2),
 	.flags				= PF_KTHREAD,
 	// .prio				= MAX_PRIO - 20,
-	// .static_prio		= MAX_PRIO - 20,
-	// .normal_prio		= MAX_PRIO - 20,
-	// .policy				= SCHED_NORMAL,
-	// .cpus_ptr			= &init_task.cpus_mask,
-	// .user_cpus_ptr		= NULL,
-	// .cpus_mask			= CPU_MASK_ALL,
-	// .max_allowed_capacity	= SCHED_CAPACITY_SCALE,
-	// .nr_cpus_allowed	= NR_CPUS,
-	.mm					= NULL,
-	.active_mm			= &init_mm,
+	// .static_prio		= MAXinit_sigpending_mm,
 	// .faults_disabled_mapping	= NULL,
 	// .restart_block		= {
 	// 	.fn					= do_no_restart_syscall,
@@ -125,10 +118,10 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.signal				= &init_signals,
 	// .sighand			= &init_sighand,
 	.nsproxy			= &init_nsproxy,
-	// .pending			= {
-	// 	.list				= LIST_HEAD_INIT(init_task.pending.list),
-	// 	.signal				= {{0}}
-	// },
+	.pending			= {
+		.list				= LIST_HEADER_INIT(init_task.pending.list),
+		.signal				= {{0}}
+	},
 	// .blocked			= {{0}},
 	.alloc_lock			= __SPIN_LOCK_UNLOCKED(init_task.alloc_lock),
 	// .journal_info		= NULL,

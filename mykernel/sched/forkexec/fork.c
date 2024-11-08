@@ -743,7 +743,8 @@ out:
 	return error;
 }
 
-static int copy_signal(ulong clone_flags, task_s *tsk) {
+static int
+copy_signal(ulong clone_flags, task_s *tsk) {
 	signal_s *sig;
 
 	if (clone_flags & CLONE_THREAD)
@@ -754,18 +755,18 @@ static int copy_signal(ulong clone_flags, task_s *tsk) {
 	if (!sig)
 		return -ENOMEM;
 
-	// sig->nr_threads = 1;
+	sig->nr_threads = 1;
 	// sig->quick_threads = 1;
 	// atomic_set(&sig->live, 1);
-	// refcount_set(&sig->sigcnt, 1);
+	refcount_set(&sig->sigcnt, 1);
 
 	// /* list_add(thread_node, thread_head) without INIT_LIST_HEAD() */
 	// sig->thread_head = (struct list_head)LIST_HEAD_INIT(tsk->thread_node);
 	// tsk->thread_node = (struct list_head)LIST_HEAD_INIT(sig->thread_head);
 
 	// init_waitqueue_head(&sig->wait_chldexit);
-	// sig->curr_target = tsk;
-	// init_sigpending(&sig->shared_pending);
+	sig->curr_target = tsk;
+	init_sigpending(&sig->shared_pending);
 	// INIT_HLIST_HEAD(&sig->multiprocess);
 	// seqlock_init(&sig->stats_lock);
 	// prev_cputime_init(&sig->prev_cputime);
@@ -978,7 +979,7 @@ static __latent_entropy task_s
 	p->vfork_done = NULL;
 	spin_lock_init(&p->alloc_lock);
 
-	// init_sigpending(&p->pending);
+	init_sigpending(&p->pending);
 
 	p->utime = p->stime = p->gtime = 0;
 // #ifdef CONFIG_ARCH_HAS_SCALED_CPUTIME

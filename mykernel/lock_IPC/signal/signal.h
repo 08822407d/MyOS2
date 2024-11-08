@@ -31,6 +31,31 @@
 		extern bool
 		same_thread_group(task_s *p1, task_s *p2);
 
+
+		extern void
+		sigemptyset(sigset_t *set);
+
+		extern void
+		sigfillset(sigset_t *set);
+
+		extern void
+		sigaddsetmask(sigset_t *set, ulong mask);
+
+		extern void
+		sigdelsetmask(sigset_t *set, ulong mask);
+
+		extern int
+		sigtestsetmask(sigset_t *set, ulong mask);
+
+		extern void
+		siginitset(sigset_t *set, ulong mask);
+
+		extern void
+		siginitsetinv(sigset_t *set, ulong mask);
+
+		extern void
+		init_sigpending(sigpending_s *sig);
+
 	#endif
 
 	#include "signal_macro.h"
@@ -87,6 +112,90 @@
 		bool
 		same_thread_group(task_s *p1, task_s *p2) {
 			return p1->signal == p2->signal;
+		}
+
+
+		PREFIX_STATIC_INLINE
+		void
+		sigemptyset(sigset_t *set) {
+			switch (_NSIG_WORDS) {
+			default:
+				memset(set, 0, sizeof(sigset_t));
+				break;
+			case 2: set->sig[1] = 0;
+				fallthrough;
+			case 1:	set->sig[0] = 0;
+				break;
+			}
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		sigfillset(sigset_t *set) {
+			switch (_NSIG_WORDS) {
+			default:
+				memset(set, -1, sizeof(sigset_t));
+				break;
+			case 2: set->sig[1] = -1;
+				fallthrough;
+			case 1:	set->sig[0] = -1;
+				break;
+			}
+		}
+
+		/* Some extensions for manipulating the low 32 signals in particular.  */
+
+		PREFIX_STATIC_INLINE
+		void
+		sigaddsetmask(sigset_t *set, ulong mask) {
+			set->sig[0] |= mask;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		sigdelsetmask(sigset_t *set, ulong mask) {
+			set->sig[0] &= ~mask;
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		sigtestsetmask(sigset_t *set, ulong mask) {
+			return (set->sig[0] & mask) != 0;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		siginitset(sigset_t *set, ulong mask) {
+			set->sig[0] = mask;
+			switch (_NSIG_WORDS) {
+			default:
+				memset(&set->sig[1], 0, sizeof(long)*(_NSIG_WORDS-1));
+				break;
+			case 2: set->sig[1] = 0;
+				break;
+			case 1: ;
+			}
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		siginitsetinv(sigset_t *set, ulong mask) {
+			set->sig[0] = ~mask;
+			switch (_NSIG_WORDS) {
+			default:
+				memset(&set->sig[1], -1, sizeof(long)*(_NSIG_WORDS-1));
+				break;
+			case 2: set->sig[1] = -1;
+				break;
+			case 1: ;
+			}
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		init_sigpending(sigpending_s *sig) {
+			// sigemptyset(&sig->signal);
+			INIT_LIST_HEADER_S(&sig->list);
 		}
 
 	#endif /* !DEBUG */

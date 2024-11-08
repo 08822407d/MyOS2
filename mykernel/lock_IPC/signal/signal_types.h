@@ -135,7 +135,7 @@
 	};
 
 	struct sigpending {
-		List_s		list;
+		List_hdr_s	list;
 		sigset_t	signal;
 	};
 
@@ -182,7 +182,7 @@
 		// wait_queue_head_t	wait_chldexit;	/* for wait4() */
 
 		/* current thread group signal load-balancing target: */
-		// task_s	*curr_target;
+		task_s			*curr_target;
 
 		/* shared signal handling: */
 		sigpending_s	shared_pending;
