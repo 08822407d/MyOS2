@@ -9,4 +9,6 @@
 	int kill_something_info(int sig,
 			kernel_siginfo_t *info, pid_t pid);
 
+	void signals_init(void);
+
 #endif /* _SIGNAL_API_H_ */

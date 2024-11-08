@@ -183,6 +183,7 @@ asmlinkage void __init start_kernel(void)
 
 	proc_caches_init();
 	vfs_caches_init();
+	signals_init();
 
 	check_bugs();
 

@@ -9,6 +9,8 @@
 	typedef struct files_struct files_struct_s;
 	struct nsproxy;
 	typedef struct nsproxy nsproxy_s;
+	struct sigpending;
+	typedef struct sigpending sigpending_s;
 
 	#include <asm/sched_types.h>
 	#include <linux/kernel/types.h>

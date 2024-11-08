@@ -397,7 +397,7 @@
 
 	#endif
 
-	#define arch_atomic_sub_amd_test	arch_atomic_sub_test_zero
+	#define arch_atomic_sub_and_test	arch_atomic_sub_test_zero
 	#define arch_atomic_inc_and_test	arch_atomic_inc_test_zero
 	#define arch_atomic_dec_and_test	arch_atomic_dec_test_zero
 	#define arch_atomic_add_negative	arch_atomic_add_test_negative

@@ -7,6 +7,7 @@
 	#include "../scheduler/scheduler_types.h"
 
 	#include <processor/processor_types_arch.h>
+	#include <lock_IPC/signal/signal_types.h>
 
 
 	struct task_struct {
@@ -354,7 +355,7 @@
 		// sigset_t real_blocked;
 		// /* Restored if set_restore_sigmask() was used: */
 		// sigset_t saved_sigmask;
-		// struct sigpending pending;
+		sigpending_s	pending;
 		// unsigned long sas_ss_sp;
 		// size_t sas_ss_size;
 		// unsigned int sas_ss_flags;

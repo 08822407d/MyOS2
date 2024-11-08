@@ -3,6 +3,9 @@
 
 	#include "../lock_ipc_type_declaration.h"
 
+	#include <uapi/asm-generic/signal.h>
+	#include "../atomic/refcount_types.h"
+
 
 	/*
 	 * The default "si_band" type is "long", as specified by POSIX.
@@ -120,6 +123,48 @@
 		__sifields_u	_sifields;
 	};
 
+	/*
+	 * Real Time signals may be queued.
+	 */
+
+	struct sigqueue {
+		List_s				list;
+		int					flags;
+		kernel_siginfo_t	info;
+		// struct ucounts		*ucounts;
+	};
+
+	struct sigpending {
+		List_s		list;
+		sigset_t	signal;
+	};
+
+	// struct sigaction {
+	// #ifndef __ARCH_HAS_IRIX_SIGACTION
+	// 	__sighandler_t	sa_handler;
+	// 	unsigned long	sa_flags;
+	// #else
+	// 	unsigned int	sa_flags;
+	// 	__sighandler_t	sa_handler;
+	// #endif
+	// #ifdef __ARCH_HAS_SA_RESTORER
+	// 	__sigrestore_t sa_restorer;
+	// #endif
+	// 	sigset_t	sa_mask;	/* mask last for extensibility */
+	// };
+
+	// struct k_sigaction {
+	// 	struct sigaction sa;
+	// #ifdef __ARCH_HAS_KA_RESTORER
+	// 	__sigrestore_t ka_restorer;
+	// #endif
+	// };
+
+	struct ksignal {
+		// struct k_sigaction ka;
+		kernel_siginfo_t	info;
+		int					sig;
+	};
 
 	/*
 	 * NOTE! "signal_struct" does not have its own
@@ -129,9 +174,9 @@
 	 * the locking of signal_struct.
 	 */
 	struct signal_struct {
-		// refcount_t		sigcnt;
+		refcount_t		sigcnt;
 		// atomic_t		live;
-		// int			nr_threads;
+		int				nr_threads;
 		// struct list_head	thread_head;
 
 		// wait_queue_head_t	wait_chldexit;	/* for wait4() */
@@ -140,7 +185,7 @@
 		// task_s	*curr_target;
 
 		/* shared signal handling: */
-		// struct sigpending	shared_pending;
+		sigpending_s	shared_pending;
 
 		/* For collecting multiprocess signals during fork */
 		// HList_hdr_s	multiprocess;
@@ -153,7 +198,7 @@
 
 		/* thread group stop support, overloads group_exit_code too */
 		// int			group_stop_count;
-		uint		flags; /* see SIGNAL_* flags below */
+		uint			flags; /* see SIGNAL_* flags below */
 
 		// struct core_state *core_state; /* coredumping support */
 
@@ -197,7 +242,7 @@
 		// struct posix_cputimers posix_cputimers;
 
 		/* PID/PID hash table linkage. */
-		pid_s		*pids[PIDTYPE_MAX];
+		pid_s			*pids[PIDTYPE_MAX];
 
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
@@ -247,7 +292,7 @@
 		 * protect this instead of the siglock, because they really
 		 * have no need to disable irqs.
 		 */
-		rlimit_s	rlim[RLIM_NLIMITS];
+		rlimit_s		rlim[RLIM_NLIMITS];
 
 	// #ifdef CONFIG_BSD_PROCESS_ACCT
 		// struct pacct_struct pacct;	/* per-process accounting information */

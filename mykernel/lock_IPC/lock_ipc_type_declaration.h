@@ -33,6 +33,12 @@
 	typedef union __sifields __sifields_u;
 	struct kernel_siginfo;
 	typedef struct kernel_siginfo kernel_siginfo_t;
+	struct sigqueue;
+	typedef struct sigqueue sigqueue_s;
+	struct sigpending;
+	typedef struct sigpending sigpending_s;
+	struct ksignal;
+	typedef struct ksignal ksignal_s;
 	struct signal_struct;
 	typedef struct signal_struct signal_s;
 

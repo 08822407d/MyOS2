@@ -4,6 +4,7 @@
 
 	#include "../sched_type_declaration.h"
 
+	#include <lock_IPC/atomic/refcount_types.h>
 
 	/*
 	 * What is pid_s?
@@ -46,7 +47,7 @@
 	};
 
 	struct pid {
-		atomic_t		count;
+		refcount_t		count;
 		uint			level;
 		spinlock_t		lock;
 		// dentry_s		*stashed;

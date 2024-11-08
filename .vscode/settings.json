@@ -368,7 +368,8 @@
         "rcu_list_macro.h": "c",
         "lib_const.h": "c",
         "signal_macro.h": "c",
-        "pid_api.h": "c"
+        "pid_api.h": "c",
+        "refcount_types.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

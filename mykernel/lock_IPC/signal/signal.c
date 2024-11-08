@@ -2,13 +2,67 @@
 #include "signal.h"
 
 #include <linux/kernel/sched_api.h>
+#include <linux/kernel/mm_api.h>
+
+
+/*
+ * SLAB caches for signal bits.
+ */
+static kmem_cache_s *sigqueue_cachep;
+
+
+/*
+ * allocate a new signal queue record
+ * - this may be called without locks if and only if t == current, otherwise an
+ *   appropriate lock must be held to stop the target task from exiting
+ */
+static sigqueue_s *
+__sigqueue_alloc(int sig, task_s *t, gfp_t gfp_flags,
+		int override_rlimit, const uint sigqueue_flags) {
+
+	sigqueue_s *q = NULL;
+	// struct ucounts *ucounts;
+	long sigpending;
+
+	// /*
+	//  * Protect access to @t credentials. This can go away when all
+	//  * callers hold rcu read lock.
+	//  *
+	//  * NOTE! A pending signal will hold on to the user refcount,
+	//  * and we get/put the refcount only when the sigpending count
+	//  * changes from/to zero.
+	//  */
+	// rcu_read_lock();
+	// ucounts = task_ucounts(t);
+	// sigpending = inc_rlimit_get_ucounts(ucounts, UCOUNT_RLIMIT_SIGPENDING);
+	// rcu_read_unlock();
+	// if (!sigpending)
+	// 	return NULL;
+
+	// if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
+		q = kmem_cache_alloc(sigqueue_cachep, gfp_flags);
+	// } else {
+	// 	print_dropped_signal(sig);
+	// }
+
+	if (unlikely(q == NULL)) {
+		// dec_rlimit_put_ucounts(ucounts, UCOUNT_RLIMIT_SIGPENDING);
+	} else {
+		INIT_LIST_HEAD(&q->list);
+		q->flags = sigqueue_flags;
+		// q->ucounts = ucounts;
+	}
+	return q;
+}
+
 
 
 static int
 __send_signal_locked(int sig, kernel_siginfo_t *info,
 		task_s *t, enum pid_type type, bool force) {
-	// struct sigpending *pending;
-	// struct sigqueue *q;
+
+	sigpending_s *pending;
+	sigqueue_s *q;
 	int override_rlimit;
 	int ret = 0, result;
 
@@ -18,22 +72,22 @@ __send_signal_locked(int sig, kernel_siginfo_t *info,
 	// if (!prepare_signal(sig, t, force))
 	// 	goto ret;
 
-	// pending = (type != PIDTYPE_PID) ? &t->signal->shared_pending : &t->pending;
-	// /*
-	//  * Short-circuit ignored signals and support queuing
-	//  * exactly one non-rt signal, so that we can get more
-	//  * detailed information about the cause of the signal.
-	//  */
+	pending = (type != PIDTYPE_PID) ? &t->signal->shared_pending : &t->pending;
+	/*
+	 * Short-circuit ignored signals and support queuing
+	 * exactly one non-rt signal, so that we can get more
+	 * detailed information about the cause of the signal.
+	 */
 	// result = TRACE_SIGNAL_ALREADY_PENDING;
 	// if (legacy_queue(pending, sig))
 	// 	goto ret;
 
 	// result = TRACE_SIGNAL_DELIVERED;
-	// /*
-	//  * Skip useless siginfo allocation for SIGKILL and kernel threads.
-	//  */
-	// if ((sig == SIGKILL) || (t->flags & PF_KTHREAD))
-	// 	goto out_set;
+	/*
+	 * Skip useless siginfo allocation for SIGKILL and kernel threads.
+	 */
+	if ((sig == SIGKILL) || (t->flags & PF_KTHREAD))
+		goto out_set;
 
 	// /*
 	//  * Real-time signals must be queued if sent by sigqueue, or
@@ -49,7 +103,7 @@ __send_signal_locked(int sig, kernel_siginfo_t *info,
 	// else
 	// 	override_rlimit = 0;
 
-	// q = __sigqueue_alloc(sig, t, GFP_ATOMIC, override_rlimit, 0);
+	q = __sigqueue_alloc(sig, t, GFP_ATOMIC, override_rlimit, 0);
 
 	// if (q) {
 	// 	list_add_tail(&q->list, &pending->list);
@@ -97,26 +151,26 @@ __send_signal_locked(int sig, kernel_siginfo_t *info,
 	// 	result = TRACE_SIGNAL_LOSE_INFO;
 	// }
 
-// out_set:
+out_set:
 	// signalfd_notify(t, sig);
 	// sigaddset(&pending->signal, sig);
 
-	// /* Let multiprocess signals appear after on-going forks */
-	// if (type > PIDTYPE_TGID) {
-	// 	struct multiprocess_signals *delayed;
-	// 	hlist_for_each_entry(delayed, &t->signal->multiprocess, node) {
-	// 		sigset_t *signal = &delayed->signal;
-	// 		/* Can't queue both a stop and a continue signal */
-	// 		if (sig == SIGCONT)
-	// 			sigdelsetmask(signal, SIG_KERNEL_STOP_MASK);
-	// 		else if (sig_kernel_stop(sig))
-	// 			sigdelset(signal, SIGCONT);
-	// 		sigaddset(signal, sig);
-	// 	}
-	// }
+	/* Let multiprocess signals appear after on-going forks */
+	if (type > PIDTYPE_TGID) {
+		// struct multiprocess_signals *delayed;
+		// hlist_for_each_entry(delayed, &t->signal->multiprocess, node) {
+		// 	sigset_t *signal = &delayed->signal;
+		// 	/* Can't queue both a stop and a continue signal */
+		// 	if (sig == SIGCONT)
+		// 		sigdelsetmask(signal, SIG_KERNEL_STOP_MASK);
+		// 	else if (sig_kernel_stop(sig))
+		// 		sigdelset(signal, SIGCONT);
+		// 	sigaddset(signal, sig);
+		// }
+	}
 
 	// complete_signal(sig, t, type);
-// ret:
+ret:
 	// trace_signal_generate(sig, info, t, type != PIDTYPE_PID, result);
 	return ret;
 }
@@ -338,4 +392,14 @@ void prepare_kill_siginfo(int sig,
 	info->si_code = (type == PIDTYPE_PID) ? SI_TKILL : SI_USER;
 	info->si_pid = task_tgid_vnr(current);
 	// info->si_uid = from_kuid_munged(current_user_ns(), current_uid());
+}
+
+
+
+
+
+void __init signals_init(void)
+{
+	// siginfo_buildtime_checks();
+	sigqueue_cachep = KMEM_CACHE(sigqueue, SLAB_PANIC | SLAB_ACCOUNT);
 }

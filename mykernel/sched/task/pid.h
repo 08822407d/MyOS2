@@ -50,7 +50,7 @@
 		PREFIX_STATIC_INLINE
 		pid_s
 		*get_pid(pid_s *pid) {
-			if (pid) atomic_inc(&pid->count);
+			if (pid) refcount_inc(&pid->count);
 			return pid;
 		}
 
