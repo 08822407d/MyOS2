@@ -14,4 +14,13 @@
 	#define need_resched()	\
 				test_tsk_need_resched(current)
 
+	// #define tasklist_empty() \
+	// 		list_empty(&init_task.tasks)
+
+	// #define next_task(p) \
+	// 		list_entry_rcu((p)->tasks.next, task_s, tasks)
+
+	// #define for_each_process(p) \
+	// 		for (p = (&init_task) ; p != &init_task ; p = next_task(p))
+
 #endif /* _LINUX_TASK_API_H_ */

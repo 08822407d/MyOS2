@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sched.h>
 #include <sys/types.h>
 #include <sys/mman.h>
@@ -48,6 +49,7 @@ int normal_boot(int argc, const char *argv[])
 	else {
 		pid_t pid = getpid();
 		// printf("parent task, %d\n", rv);
+		kill(pid, SIGKILL);
 		while (1) {
 			sched_yield();
 		}

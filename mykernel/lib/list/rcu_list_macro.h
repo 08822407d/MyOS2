@@ -105,8 +105,10 @@
 	 * This primitive may safely run concurrently with the _rcu list-mutation
 	 * primitives such as list_add_rcu() as long as it's guarded by rcu_read_lock().
 	 */
+	// #define list_entry_rcu(ptr, type, member)	\
+	// 			container_of(READ_ONCE(ptr), type, member)
 	#define list_entry_rcu(ptr, type, member)	\
-				container_of(READ_ONCE(ptr), type, member)
+				container_of(ptr, type, member)
 
 	/*
 	 * Where are list_empty_rcu() and list_first_entry_rcu()?

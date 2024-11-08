@@ -6,7 +6,9 @@
 
 
 	#include <asm/lock_ipc_types.h>
+	// #include <asm/lock_ipc_type_declaration.h>
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/sched_type_declaration.h>
 	#include <linux/kernel/lib_types.h>
 
 	#include <linux/kernel/resource.h>
@@ -14,7 +16,7 @@
 
 
 	/* atomic */
-	// typedef atomic64_t atomic_long_t;
+	typedef atomic64_t atomic_long_t;
 
 	/* semaphore */
 	struct rw_semaphore;

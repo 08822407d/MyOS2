@@ -33,10 +33,18 @@
 		task_pid_nr(task_s *tsk);
 
 		extern pid_t
+		task_pid_nr_ns(task_s *tsk, pid_ns_s *ns);
+
+		extern pid_t
+		task_pid_vnr(task_s *tsk);
+
+		extern pid_t
 		task_tgid_vnr(task_s *tsk);
 
 	#endif
 	
+	#include "pid_macro.h"
+
 	#if defined(PID_DEFINATION) || !(DEBUG)
 
 		PREFIX_STATIC_INLINE
@@ -113,6 +121,18 @@
 		pid_t
 		task_pid_nr(task_s *tsk) {
 			return tsk->pid;
+		}
+
+		PREFIX_STATIC_INLINE
+		pid_t
+		task_pid_nr_ns(task_s *tsk, pid_ns_s *ns) {
+			return __task_pid_nr_ns(tsk, PIDTYPE_PID, ns);
+		}
+
+		PREFIX_STATIC_INLINE
+		pid_t
+		task_pid_vnr(task_s *tsk) {
+			return __task_pid_nr_ns(tsk, PIDTYPE_PID, NULL);
 		}
 
 		PREFIX_STATIC_INLINE

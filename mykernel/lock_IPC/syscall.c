@@ -9,21 +9,21 @@
 // #include <asm/syscalls_64.h>
 
 
-// // #define __NR_kill			62
-// /**
-//  *  sys_kill - send a signal to a process
-//  *  @pid: the PID of the process
-//  *  @sig: signal to be sent
-//  */
-// MYOS_SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
-// {
-// 	ALERT_DUMMY_SYSCALL(kill, IF_ALERT_DUMMY_SYSCALL);
+// #define __NR_kill			62
+/**
+ *  sys_kill - send a signal to a process
+ *  @pid: the PID of the process
+ *  @sig: signal to be sent
+ */
+MYOS_SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
+{
+	ALERT_DUMMY_SYSCALL(kill, IF_ALERT_DUMMY_SYSCALL);
 
-// 	kernel_siginfo_t info;
+	kernel_siginfo_t info;
 
-// 	prepare_kill_siginfo(sig, &info, PIDTYPE_TGID);
+	prepare_kill_siginfo(sig, &info, PIDTYPE_TGID);
 
-// 	// return kill_something_info(sig, &info, pid);
+	return kill_something_info(sig, &info, pid);
 
-//     return 0;
-// }
+    return 0;
+}

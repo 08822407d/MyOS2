@@ -436,51 +436,6 @@
 	// typedef int (*proc_visitor)(task_s *p, void *data);
 	// void walk_process_tree(task_s *top, proc_visitor, void *);
 
-	// static inline
-	// pid_s *task_pid_type(task_s *task, enum pid_type type)
-	// {
-	// 	pid_s *pid;
-	// 	if (type == PIDTYPE_PID)
-	// 		pid = task_pid(task);
-	// 	else
-	// 		pid = task->signal->pids[type];
-	// 	return pid;
-	// }
-
-	static inline pid_s *task_tgid(task_s *task)
-	{
-		return task->signal->pids[PIDTYPE_TGID];
-	}
-
-	/*
-	* Without tasklist or RCU lock it is not safe to dereference
-	* the result of task_pgrp/task_session even if task == current,
-	* we can race with another thread doing sys_setsid/sys_setpgid.
-	*/
-	static inline pid_s *task_pgrp(task_s *task)
-	{
-		return task->signal->pids[PIDTYPE_PGID];
-	}
-
-	static inline pid_s *task_session(task_s *task)
-	{
-		return task->signal->pids[PIDTYPE_SID];
-	}
-
-	// static inline int get_nr_threads(task_s *task)
-	// {
-	// 	return task->signal->nr_threads;
-	// }
-
-	static inline bool thread_group_leader(task_s *p) {
-		return p->exit_signal >= 0;
-	}
-
-	// static inline
-	// bool same_thread_group(task_s *p1, task_s *p2)
-	// {
-	// 	return p1->signal == p2->signal;
-	// }
 
 	// static inline task_s *next_thread(const task_s *p)
 	// {

@@ -17,7 +17,9 @@
 
 
 	extern void put_pid(pid_s *pid);
-	extern pid_s *get_task_pid(task_s *task, enum pid_type type);
+
+	extern pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size);
+	extern void free_pid(pid_s *pid);
 
 	/*
 	 * these helpers must be called with the tasklist_lock write-held.
@@ -25,9 +27,9 @@
 	extern void attach_pid(task_s *task, enum pid_type);
 	extern void detach_pid(task_s *task, enum pid_type);
 
-	extern pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size);
-	extern void free_pid(pid_s *pid);
+	extern task_s *pid_task(pid_s *pid, enum pid_type type);
 
+	extern task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns);
 	/*
 	 * find a task by one of its numerical ids
 	 *
@@ -38,9 +40,7 @@
 	 *
 	 * see also find_vpid() etc in include/linux/pid.h
 	 */
-
 	extern task_s *find_task_by_vpid(pid_t nr);
-	extern task_s *find_task_by_pid_ns(pid_t nr, pid_ns_s *ns);
 
 	/*
 	 * the helpers to get the task's different pids as they are seen
@@ -55,6 +55,11 @@
 	 */
 	pid_t __task_pid_nr_ns(task_s *task, enum pid_type type, pid_ns_s *ns);
 
+	extern pid_s *get_task_pid(task_s *task, enum pid_type type);
+	extern task_s *get_pid_task(pid_s *pid, enum pid_type type);
+	extern pid_s *find_get_pid(pid_t nr);
+
+	pid_s *find_vpid(int nr);
 	pid_t pid_nr_ns(pid_s *pid, pid_ns_s *ns);
 	pid_t pid_vnr(pid_s *pid);
 

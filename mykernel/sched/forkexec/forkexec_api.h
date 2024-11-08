@@ -5,6 +5,8 @@
 	#include "forkexec.h"
 
 
+	extern List_hdr_s all_task_lhdr;
+
 	__printf(4, 5)
 	task_s *kthread_create_on_node(int (*threadfn)(void *data),
 			void *data, int node, const char namefmt[], ...);
