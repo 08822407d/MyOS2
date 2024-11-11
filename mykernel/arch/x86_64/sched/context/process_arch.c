@@ -4,6 +4,7 @@
 // #include "../sched_api_arch.h"
 #include <linux/kernel/sched.h>
 #include <linux/kernel/ptrace.h>
+#include <linux/kernel/entry-common.h>
 
 #include <uapi/asm/prctl.h>
 #include <asm/proto.h>
@@ -75,7 +76,7 @@ ret_from_fork(task_s *prev, pt_regs_s *regs,
 		regs->ax = 0;
 	}
 
-	// syscall_exit_to_user_mode(regs);
+	syscall_exit_to_user_mode(regs);
 }
 
 int copy_thread(task_s *p, const kclone_args_s *args)

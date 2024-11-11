@@ -1,3 +1,7 @@
+#define SCHEDULER_DEFINATION
+#include "scheduler.h"
+
+
 // SPDX-License-Identifier: GPL-2.0-only
 /*
  *  kernel/sched/core.c
@@ -85,6 +89,29 @@ void set_task_cpu(task_s *p, unsigned int new_cpu)
 		list_header_add_to_head(&target_rq->myos.running_lhdr, &p->rt.run_list);
 }
 
+
+/***
+ * kick_process - kick a running thread to enter/exit the kernel
+ * @p: the to-be-kicked thread
+ *
+ * Cause a process which is running on another CPU to enter
+ * kernel-mode, without any delay. (to get signals handled.)
+ *
+ * NOTE: this function doesn't have to take the runqueue lock,
+ * because all it wants to ensure is that the remote task enters
+ * the kernel. If the IPI races and the task has been migrated
+ * to another CPU then no harm is done and the purpose has been
+ * achieved as well.
+ */
+void kick_process(task_s *p)
+{
+	// guard(preempt)();
+	int cpu = task_cpu(p);
+
+	// if ((cpu != smp_processor_id()) && task_curr(p))
+	// 	smp_send_reschedule(cpu);
+}
+EXPORT_SYMBOL_GPL(kick_process);
 
 /*
  * The caller (fork, wakeup) owns p->pi_lock, ->cpus_ptr is stable.
@@ -469,7 +496,7 @@ int wake_up_process(task_s *p)
 }
 EXPORT_SYMBOL(wake_up_process);
 
-int wake_up_state(task_s *p, unsigned int state)
+int wake_up_state(task_s *p, uint state)
 {
 	return try_to_wake_up(p, state, 0);
 }

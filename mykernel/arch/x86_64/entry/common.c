@@ -8,6 +8,7 @@
  */
 
 #include <linux/compiler/compiler.h>
+#include <linux/kernel/entry-common.h>
 #include <asm/syscall.h>
 #include <asm/unistd.h>
 #include <asm/processor.h>
@@ -45,7 +46,7 @@ __visible noinstr bool do_syscall_64(pt_regs_s *regs, int nr)
 	}
 
 	// instrumentation_end();
-	// syscall_exit_to_user_mode(regs);
+	syscall_exit_to_user_mode(regs);
 
 	/*
 	 * Check that the register state is valid for using SYSRET to exit

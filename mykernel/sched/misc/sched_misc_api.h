@@ -31,7 +31,8 @@
 	 */
 	// #include <asm/current.h>
 	// #define current_thread_info() ((struct thread_info *)current)
-	#define current_thread_info() (&(current->thread_info))
+	#define current_thread_info()	(&(current->thread_info))
+	#define task_thread_info(task)	(&(task)->thread_info)
 
 
 	extern files_struct_s init_files;

@@ -282,9 +282,8 @@ SYM_CODE_START(ret_from_fork_asm)
 2:
 swapgs_restore_regs_and_return_to_usermode:
 	// UNWIND_HINT_REGS
-	// movq	%rsp, %rdi
-	// call	syscall_exit_to_user_mode	/* returns with IRQs disabled */
-	// jmp	swapgs_restore_regs_and_return_to_usermode
+	// movq		%rsp,		%rdi
+	// call		syscall_exit_to_user_mode	/* returns with IRQs disabled */
 	jmp			syscall_return_via_sysret
 
 1:

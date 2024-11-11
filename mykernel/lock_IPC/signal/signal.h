@@ -10,6 +10,13 @@
 
 	#ifdef DEBUG
 
+		extern void
+		copy_siginfo(kernel_siginfo_t *to,
+				const kernel_siginfo_t *from);
+
+		extern void
+		clear_siginfo(kernel_siginfo_t *info);
+
 		extern pid_s
 		*task_pid_type(task_s *task, enum pid_type type);
 
@@ -31,6 +38,15 @@
 		extern bool
 		same_thread_group(task_s *p1, task_s *p2);
 
+
+		extern void
+		sigaddset(sigset_t *set, int _sig);
+
+		extern void
+		sigdelset(sigset_t *set, int _sig);
+
+		extern int
+		sigismember(sigset_t *set, int _sig);
 
 		extern void
 		sigemptyset(sigset_t *set);
@@ -61,6 +77,19 @@
 	#include "signal_macro.h"
 	
 	#if defined(SIGNAL_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void
+		copy_siginfo(kernel_siginfo_t *to,
+				const kernel_siginfo_t *from) {
+			memcpy(to, from, sizeof(*to));
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		clear_siginfo(kernel_siginfo_t *info) {
+			memset(info, 0, sizeof(*info));
+		}
 
 		PREFIX_STATIC_INLINE
 		pid_s
@@ -114,6 +143,38 @@
 			return p1->signal == p2->signal;
 		}
 
+
+		/* We don't use <linux/bitops.h> for these because there is no need to
+		   be atomic.  */
+		PREFIX_STATIC_INLINE
+		void
+		sigaddset(sigset_t *set, int _sig) {
+			ulong sig = _sig - 1;
+			if (_NSIG_WORDS == 1)
+				set->sig[0] |= 1UL << sig;
+			else
+				set->sig[sig / _NSIG_BPW] |= 1UL << (sig % _NSIG_BPW);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		sigdelset(sigset_t *set, int _sig) {
+			ulong sig = _sig - 1;
+			if (_NSIG_WORDS == 1)
+				set->sig[0] &= ~(1UL << sig);
+			else
+				set->sig[sig / _NSIG_BPW] &= ~(1UL << (sig % _NSIG_BPW));
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		sigismember(sigset_t *set, int _sig) {
+			ulong sig = _sig - 1;
+			if (_NSIG_WORDS == 1)
+				return 1 & (set->sig[0] >> sig);
+			else
+				return 1 & (set->sig[sig / _NSIG_BPW] >> (sig % _NSIG_BPW));
+		}
 
 		PREFIX_STATIC_INLINE
 		void

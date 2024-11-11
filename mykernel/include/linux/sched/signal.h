@@ -231,14 +231,6 @@
 
 	// extern void signal_wake_up_state(task_s *t, unsigned int state);
 
-	// static inline void signal_wake_up(task_s *t, bool resume)
-	// {
-	// 	signal_wake_up_state(t, resume ? TASK_WAKEKILL : 0);
-	// }
-	// static inline void ptrace_signal_wake_up(task_s *t, bool resume)
-	// {
-	// 	signal_wake_up_state(t, resume ? __TASK_TRACED : 0);
-	// }
 
 	// void task_join_group_stop(task_s *task);
 
@@ -347,9 +339,6 @@
 	// 	return kill_pid(cad_pid, sig, priv);
 	// }
 
-	// /* These can be the second arg to send_sig_info/send_group_sig_info.  */
-	// #define SEND_SIG_NOINFO ((struct kernel_siginfo *) 0)
-	// #define SEND_SIG_PRIV	((struct kernel_siginfo *) 1)
 
 	// static inline int __on_sig_stack(unsigned long sp)
 	// {

@@ -50,6 +50,7 @@ int normal_boot(int argc, const char *argv[])
 	else {
 		pid_t pid = getpid();
 		// pid_t ppid = getppid();
+		// kill(pid, SIGKILL);
 		// printf("parent task, %d\n", rv);
 		while (1) {
 			sched_yield();

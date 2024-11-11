@@ -5,5 +5,6 @@
 
     #include "atomic/atomic_api_arch.h"
     #include "spinlock/spinlock_api_arch.h"
+    #include "signal/signal_api_arch.h"
 
 #endif /* _ASM_X86_LOCK_IPC_H_ */

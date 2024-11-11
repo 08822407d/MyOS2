@@ -11,6 +11,8 @@
 
 	#ifdef DEBUG
 
+		extern uint
+		task_cpu(const task_s *p);
 
 	#endif
 
@@ -18,6 +20,11 @@
 	
 	#if defined(SCHEDULER_DEFINATION) || !(DEBUG)
 
+		PREFIX_STATIC_INLINE
+		uint
+		task_cpu(const task_s *p) {
+			return READ_ONCE(task_thread_info(p)->cpu);
+		}
 
 	#endif /* !DEBUG */
 

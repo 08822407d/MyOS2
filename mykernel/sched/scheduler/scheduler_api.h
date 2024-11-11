@@ -11,6 +11,11 @@
 	extern sched_class_s __sched_class_lowest[];
 
 
+	extern void kick_process(task_s *p);
+
+	int wake_up_process(task_s *p);
+	int wake_up_state(task_s *p, uint state);
+
 	extern void schedule_idle(void);
 	extern long schedule_timeout(long timeout);
 	asmlinkage void schedule(void);

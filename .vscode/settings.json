@@ -369,7 +369,9 @@
         "lib_const.h": "c",
         "signal_macro.h": "c",
         "pid_api.h": "c",
-        "refcount_types.h": "c"
+        "refcount_types.h": "c",
+        "entry-common.h": "c",
+        "spinlock_api_arch.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -12,6 +12,35 @@ static kmem_cache_s *sigqueue_cachep;
 
 
 /*
+ * Tell a process that it has a new active signal..
+ *
+ * NOTE! we rely on the previous spin_lock to
+ * lock interrupts for us! We can only be called with
+ * "siglock" held, and the local interrupt must
+ * have been disabled when that got acquired!
+ *
+ * No need to set need_resched since signal event passing
+ * goes through ->blocked
+ */
+void signal_wake_up_state(task_s *t, unsigned int state)
+{
+	// lockdep_assert_held(&t->sighand->siglock);
+
+	set_tsk_thread_flag(t, TIF_SIGPENDING);
+
+	/*
+	 * TASK_WAKEKILL also means wake it up in the stopped/traced/killable
+	 * case. We don't check t->state here because there is a race with it
+	 * executing another processor and just now entering stopped state.
+	 * By using wake_up_state, we ensure the process will wake up and
+	 * handle its death signal.
+	 */
+	if (!wake_up_state(t, state | TASK_INTERRUPTIBLE))
+		kick_process(t);
+}
+
+
+/*
  * allocate a new signal queue record
  * - this may be called without locks if and only if t == current, otherwise an
  *   appropriate lock must be held to stop the target task from exiting
@@ -55,6 +84,79 @@ __sigqueue_alloc(int sig, task_s *t, gfp_t gfp_flags,
 	return q;
 }
 
+static void
+complete_signal(int sig, task_s *p, enum pid_type type) {
+	signal_s *signal = p->signal;
+	task_s *t;
+
+	// /*
+	//  * Now find a thread we can wake up to take the signal off the queue.
+	//  *
+	//  * Try the suggested task first (may or may not be the main thread).
+	//  */
+	// if (wants_signal(sig, p))
+	// 	t = p;
+	// else if ((type == PIDTYPE_PID) || thread_group_empty(p))
+	// 	/*
+	// 	 * There is just one thread and it does not need to be woken.
+	// 	 * It will dequeue unblocked signals before it runs again.
+	// 	 */
+	// 	return;
+	// else {
+	// 	/*
+	// 	 * Otherwise try to find a suitable thread.
+	// 	 */
+	// 	t = signal->curr_target;
+	// 	while (!wants_signal(sig, t)) {
+	// 		t = next_thread(t);
+	// 		if (t == signal->curr_target)
+	// 			/*
+	// 			 * No thread needs to be woken.
+	// 			 * Any eligible threads will see
+	// 			 * the signal in the queue soon.
+	// 			 */
+	// 			return;
+	// 	}
+	// 	signal->curr_target = t;
+	// }
+
+	// /*
+	//  * Found a killable thread.  If the signal will be fatal,
+	//  * then start taking the whole group down immediately.
+	//  */
+	// if (sig_fatal(p, sig) &&
+	// 		(signal->core_state || !(signal->flags & SIGNAL_GROUP_EXIT)) &&
+	// 		!sigismember(&t->real_blocked, sig) &&
+	// 		(sig == SIGKILL || !p->ptrace)) {
+	// 	/*
+	// 	 * This signal will be fatal to the whole group.
+	// 	 */
+	// 	if (!sig_kernel_coredump(sig)) {
+	// 		/*
+	// 		 * Start a group exit and wake everybody up.
+	// 		 * This way we don't have other threads
+	// 		 * running and doing things after a slower
+	// 		 * thread has the fatal signal pending.
+	// 		 */
+	// 		signal->flags = SIGNAL_GROUP_EXIT;
+	// 		signal->group_exit_code = sig;
+	// 		signal->group_stop_count = 0;
+	// 		__for_each_thread(signal, t) {
+	// 			task_clear_jobctl_pending(t, JOBCTL_PENDING_MASK);
+	// 			sigaddset(&t->pending.signal, SIGKILL);
+	// 			signal_wake_up(t, 1);
+	// 		}
+	// 		return;
+	// 	}
+	// }
+
+	/*
+	 * The signal is already in the shared-pending queue.
+	 * Tell the chosen thread to wake up and dequeue it.
+	 */
+	signal_wake_up(t, sig == SIGKILL);
+	return;
+}
 
 
 static int
@@ -105,36 +207,39 @@ __send_signal_locked(int sig, kernel_siginfo_t *info,
 
 	q = __sigqueue_alloc(sig, t, GFP_ATOMIC, override_rlimit, 0);
 
-	// if (q) {
-	// 	list_add_tail(&q->list, &pending->list);
-	// 	switch ((unsigned long) info) {
-	// 	case (unsigned long) SEND_SIG_NOINFO:
-	// 		clear_siginfo(&q->info);
-	// 		q->info.si_signo = sig;
-	// 		q->info.si_errno = 0;
-	// 		q->info.si_code = SI_USER;
-	// 		q->info.si_pid = task_tgid_nr_ns(current,
-	// 						task_active_pid_ns(t));
-	// 		rcu_read_lock();
-	// 		q->info.si_uid =
-	// 			from_kuid_munged(task_cred_xxx(t, user_ns),
-	// 					 current_uid());
-	// 		rcu_read_unlock();
-	// 		break;
-	// 	case (unsigned long) SEND_SIG_PRIV:
-	// 		clear_siginfo(&q->info);
-	// 		q->info.si_signo = sig;
-	// 		q->info.si_errno = 0;
-	// 		q->info.si_code = SI_KERNEL;
-	// 		q->info.si_pid = 0;
-	// 		q->info.si_uid = 0;
-	// 		break;
-	// 	default:
-	// 		copy_siginfo(&q->info, info);
-	// 		break;
-	// 	}
+	if (q) {
+		// list_add_tail(&q->list, &pending->list);
+		list_header_add_to_tail(&pending->list, &q->list);
+		switch ((ulong) info) {
+		case (ulong) SEND_SIG_NOINFO:
+			clear_siginfo(&q->info);
+			q->info.si_signo	= sig;
+			q->info.si_errno	= 0;
+			q->info.si_code		= SI_USER;
+			// q->info.si_pid		= task_tgid_nr_ns(current,
+			// 						task_active_pid_ns(t));
+			q->info.si_pid		= __task_pid_nr_ns(current,
+					PIDTYPE_TGID, task_active_pid_ns(t));
+			// rcu_read_lock();
+			// q->info.si_uid		=
+			// 		from_kuid_munged(task_cred_xxx(t, user_ns),
+			// 			current_uid());
+			// rcu_read_unlock();
+			break;
+		case (ulong) SEND_SIG_PRIV:
+			clear_siginfo(&q->info);
+			q->info.si_signo	= sig;
+			q->info.si_errno	= 0;
+			q->info.si_code		= SI_KERNEL;
+			q->info.si_pid		= 0;
+			q->info.si_uid		= 0;
+			break;
+		default:
+			copy_siginfo(&q->info, info);
+			break;
+		}
 	// } else if (!is_si_special(info) &&
-	// 	   sig >= SIGRTMIN && info->si_code != SI_USER) {
+	// 		sig >= SIGRTMIN && info->si_code != SI_USER) {
 	// 	/*
 	// 	 * Queue overflow, abort.  We may abort if the
 	// 	 * signal was rt and sent by user using something
@@ -149,11 +254,11 @@ __send_signal_locked(int sig, kernel_siginfo_t *info,
 	// 	 * send the signal, but the *info bits are lost.
 	// 	 */
 	// 	result = TRACE_SIGNAL_LOSE_INFO;
-	// }
+	}
 
 out_set:
 	// signalfd_notify(t, sig);
-	// sigaddset(&pending->signal, sig);
+	sigaddset(&pending->signal, sig);
 
 	/* Let multiprocess signals appear after on-going forks */
 	if (type > PIDTYPE_TGID) {
@@ -199,8 +304,8 @@ ret:
 // 	return ret;
 // }
 
-int send_signal_locked(int sig, struct kernel_siginfo *info,
-		       struct task_struct *t, enum pid_type type)
+int send_signal_locked(int sig, kernel_siginfo_t *info,
+		task_s *t, enum pid_type type)
 {
 	/* Should SIGKILL or SIGSTOP be received by a pid namespace init? */
 	bool force = false;
@@ -235,20 +340,6 @@ int send_signal_locked(int sig, struct kernel_siginfo *info,
 	return __send_signal_locked(sig, info, t, type, force);
 }
 
-int do_send_sig_info(int sig, kernel_siginfo_t *info,
-		task_s *p, enum pid_type type)
-{
-	ulong flags;
-	int ret = -ESRCH;
-
-	// if (lock_task_sighand(p, &flags)) {
-		ret = send_signal_locked(sig, info, p, type);
-	// 	unlock_task_sighand(p, &flags);
-	// }
-
-	return ret;
-}
-
 
 
 
@@ -265,8 +356,13 @@ int group_send_sig_info(int sig, kernel_siginfo_t *info,
 	// ret = check_kill_permission(sig, info, p);
 	// rcu_read_unlock();
 
-	// if (!ret && sig)
-		ret = do_send_sig_info(sig, info, p, type);
+	// if (!ret && sig) {
+		// ret = do_send_sig_info(sig, info, p, type);
+		// if (lock_task_sighand(p, &flags)) {
+			ret = send_signal_locked(sig, info, p, type);
+		// 	unlock_task_sighand(p, &flags);
+		// }
+	// }
 
 	return ret;
 }
@@ -296,34 +392,39 @@ int group_send_sig_info(int sig, kernel_siginfo_t *info,
 // 	return ret;
 // }
 
-static int
-kill_pid_info_type(int sig, kernel_siginfo_t *info,
-		pid_s *pid, enum pid_type type) {
 
+static int
+kill_proc_info(int sig, kernel_siginfo_t *info, pid_t pid) {
+	// int error;
+	// rcu_read_lock();
+	// error = kill_pid_info_type(sig, info, find_vpid(pid), PIDTYPE_TGID);
+
+// static int
+// kill_pid_info_type(int sig, kernel_siginfo_t *info,
+// 		pid_s *pid, enum pid_type type) {
+
+	enum pid_type type = PIDTYPE_TGID;
 	int error = -ESRCH;
 	task_s *p;
 
 	for (;;) {
 		// rcu_read_lock();
-		p = pid_task(pid, PIDTYPE_PID);
+		// p = pid_task(pid, PIDTYPE_PID);
+		p = pid_task(find_vpid(pid), PIDTYPE_PID);
 		if (p)
 			error = group_send_sig_info(sig, info, p, type);
 		// rcu_read_unlock();
 		if (likely(!p || error != -ESRCH))
-			return error;
+			// return error;
+			break;
 		/*
 		 * The task was unhashed in between, try again.  If it
 		 * is dead, pid_task() will return NULL, if we race with
 		 * de_thread() it will find the new leader.
 		 */
 	}
-}
+// }
 
-static int
-kill_proc_info(int sig, kernel_siginfo_t *info, pid_t pid) {
-	int error;
-	// rcu_read_lock();
-	error = kill_pid_info_type(sig, info, find_vpid(pid), PIDTYPE_TGID);
 	// rcu_read_unlock();
 	return error;
 }
@@ -385,8 +486,7 @@ int kill_something_info(int sig,
 void prepare_kill_siginfo(int sig,
         kernel_siginfo_t *info, enum pid_type type)
 {
-	// clear_siginfo(info);
-    memset(info, 0, sizeof(*info));
+	clear_siginfo(info);
 	info->si_signo = sig;
 	info->si_errno = 0;
 	info->si_code = (type == PIDTYPE_PID) ? SI_TKILL : SI_USER;
