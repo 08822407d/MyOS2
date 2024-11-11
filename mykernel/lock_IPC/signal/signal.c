@@ -495,6 +495,71 @@ void prepare_kill_siginfo(int sig,
 }
 
 
+int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
+{
+	task_s *p = current, *t;
+	k_sigaction_s *k;
+	sigset_t mask;
+
+	// if (!valid_signal(sig) || sig < 1 || (act && sig_kernel_only(sig)))
+	if (!valid_signal(sig) || sig < 1)
+		return -EINVAL;
+
+	k = &p->sighand->action[sig-1];
+
+	spin_lock_irq(&p->sighand->siglock);
+	if (k->sa.sa_flags & SA_IMMUTABLE) {
+		spin_unlock_irq(&p->sighand->siglock);
+		return -EINVAL;
+	}
+	if (oact)
+		*oact = *k;
+
+	/*
+	 * Make sure that we never accidentally claim to support SA_UNSUPPORTED,
+	 * e.g. by having an architecture use the bit in their uapi.
+	 */
+	BUILD_BUG_ON(UAPI_SA_FLAGS & SA_UNSUPPORTED);
+
+	/*
+	 * Clear unknown flag bits in order to allow userspace to detect missing
+	 * support for flag bits and to allow the kernel to use non-uapi bits
+	 * internally.
+	 */
+	if (act)
+		act->sa.sa_flags &= UAPI_SA_FLAGS;
+	if (oact)
+		oact->sa.sa_flags &= UAPI_SA_FLAGS;
+
+	// sigaction_compat_abi(act, oact);
+
+	if (act) {
+		sigdelsetmask(&act->sa.sa_mask,
+				sigmask(SIGKILL) | sigmask(SIGSTOP));
+		*k = *act;
+		/*
+		 * POSIX 3.3.1.3:
+		 *  "Setting a signal action to SIG_IGN for a signal that is
+		 *   pending shall cause the pending signal to be discarded,
+		 *   whether or not it is blocked."
+		 *
+		 *  "Setting a signal action to SIG_DFL for a signal that is
+		 *   pending and whose default action is to ignore the signal
+		 *   (for example, SIGCHLD), shall cause the pending signal to
+		 *   be discarded, whether or not it is blocked"
+		 */
+		if (sig_handler_ignored(sig_handler(p, sig), sig)) {
+			sigemptyset(&mask);
+			sigaddset(&mask, sig);
+			// flush_sigqueue_mask(&mask, &p->signal->shared_pending);
+			// for_each_thread(p, t)
+			// 	flush_sigqueue_mask(&mask, &t->pending);
+		}
+	}
+
+	spin_unlock_irq(&p->sighand->siglock);
+	return 0;
+}
 
 
 

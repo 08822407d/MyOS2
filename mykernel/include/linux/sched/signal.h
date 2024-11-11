@@ -6,16 +6,6 @@
 	// #include <linux/kernel/mm.h>
 	// #include <asm/ptrace.h>
 
-	// /*
-	// * Types defining task->signal and task->sighand and APIs using them:
-	// */
-
-	// struct sighand_struct {
-	// 	spinlock_t		siglock;
-	// 	refcount_t		count;
-	// 	wait_queue_head_t	signalfd_wqh;
-	// 	struct k_sigaction	action[_NSIG];
-	// };
 
 	// /*
 	// * Per-process accounting stats:
@@ -388,7 +378,7 @@
 	// 	return sp;
 	// }
 
-	// extern void __cleanup_sighand(struct sighand_struct *);
+	extern void __cleanup_sighand(sighand_s *);
 	// extern void flush_itimer_signals(void);
 
 	// #define tasklist_empty() \

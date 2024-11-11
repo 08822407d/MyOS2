@@ -55,12 +55,12 @@ static signal_s init_signals = {
 	// INIT_PREV_CPUTIME(init_signals)
 };
 
-// static struct sighand_struct init_sighand = {
-// 	.count		= REFCOUNT_INIT(1),
-// 	.action		= { { { .sa_handler = SIG_DFL, } }, },
-// 	.siglock	= __SPIN_LOCK_UNLOCKED(init_sighand.siglock),
-// 	.signalfd_wqh	= __WAIT_QUEUE_HEAD_INITIALIZER(init_sighand.signalfd_wqh),
-// };
+static sighand_s init_sighand = {
+	.count			= REFCOUNT_INIT(1),
+	.action			= { { { .sa_handler = SIG_DFL, } }, },
+	.siglock		= __SPIN_LOCK_UNLOCKED(init_sighand.siglock),
+	// .signalfd_wqh	= __WAIT_QUEUE_HEAD_INITIALIZER(init_sighand.signalfd_wqh),
+};
 
 #ifdef CONFIG_SHADOW_CALL_STACK
 unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] = {
@@ -116,7 +116,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.io_uring			= NULL,
 #endif
 	.signal				= &init_signals,
-	// .sighand			= &init_sighand,
+	.sighand			= &init_sighand,
 	.nsproxy			= &init_nsproxy,
 	.pending			= {
 		.list				= LIST_HEADER_INIT(init_task.pending.list),

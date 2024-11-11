@@ -6,13 +6,14 @@
 
 
 	#include <asm/lock_ipc_types.h>
-	// #include <asm/lock_ipc_type_declaration.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/sched_type_declaration.h>
 	#include <linux/kernel/lib_types.h>
 
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/sched_const.h>
+
+	#include <asm/signal.h>
 
 
 	/* atomic */
@@ -37,10 +38,16 @@
 	typedef struct sigqueue sigqueue_s;
 	struct sigpending;
 	typedef struct sigpending sigpending_s;
+	struct sigaction;
+	typedef struct sigaction sigaction_s;
+	struct k_sigaction;
+	typedef struct k_sigaction k_sigaction_s;
 	struct ksignal;
 	typedef struct ksignal ksignal_s;
 	struct signal_struct;
 	typedef struct signal_struct signal_s;
+	struct sighand_struct;
+	typedef struct sighand_struct sighand_s;
 
 	/* refcoount.c */
 	struct refcount_struct;

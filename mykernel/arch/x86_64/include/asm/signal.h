@@ -67,7 +67,7 @@
 	#define MINSIGSTKSZ		2048
 	#define SIGSTKSZ		8192
 
-	// #include <asm-generic/signal-defs.h>
+	#include <uapi/asm-generic/signal-defs.h>
 
 	#ifndef __ASSEMBLY__
 

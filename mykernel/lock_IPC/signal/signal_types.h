@@ -3,7 +3,6 @@
 
 	#include "../lock_ipc_type_declaration.h"
 
-	#include <uapi/asm-generic/signal.h>
 	#include "../atomic/refcount_types.h"
 
 
@@ -139,26 +138,26 @@
 		sigset_t	signal;
 	};
 
-	// struct sigaction {
-	// #ifndef __ARCH_HAS_IRIX_SIGACTION
-	// 	__sighandler_t	sa_handler;
-	// 	unsigned long	sa_flags;
-	// #else
-	// 	unsigned int	sa_flags;
-	// 	__sighandler_t	sa_handler;
-	// #endif
-	// #ifdef __ARCH_HAS_SA_RESTORER
-	// 	__sigrestore_t sa_restorer;
-	// #endif
-	// 	sigset_t	sa_mask;	/* mask last for extensibility */
-	// };
+	struct sigaction {
+	#ifndef __ARCH_HAS_IRIX_SIGACTION
+		__sighandler_t	sa_handler;
+		ulong			sa_flags;
+	#else
+		uint			sa_flags;
+		__sighandler_t	sa_handler;
+	#endif
+	#ifdef __ARCH_HAS_SA_RESTORER
+		__sigrestore_t	sa_restorer;
+	#endif
+		sigset_t		sa_mask;	/* mask last for extensibility */
+	};
 
-	// struct k_sigaction {
-	// 	struct sigaction sa;
-	// #ifdef __ARCH_HAS_KA_RESTORER
-	// 	__sigrestore_t ka_restorer;
-	// #endif
-	// };
+	struct k_sigaction {
+		sigaction_s		sa;
+	#ifdef __ARCH_HAS_KA_RESTORER
+		__sigrestore_t	ka_restorer;
+	#endif
+	};
 
 	struct ksignal {
 		// struct k_sigaction ka;
@@ -327,6 +326,18 @@
 		// 					* and may have inconsistent
 		// 					* permissions.
 		// 					*/
+	};
+
+
+	/*
+	* Types defining task->signal and task->sighand and APIs using them:
+	*/
+
+	struct sighand_struct {
+		spinlock_t		siglock;
+		refcount_t		count;
+		// wait_queue_head_t	signalfd_wqh;
+		k_sigaction_s	action[_NSIG];
 	};
 
 #endif /* _SIGNAL_TYPES_H_ */

@@ -72,11 +72,29 @@
 		extern void
 		init_sigpending(sigpending_s *sig);
 
+		extern int
+		valid_signal(ulong sig);
+
 	#endif
 
 	#include "signal_macro.h"
 	
 	#if defined(SIGNAL_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		void __user
+		*sig_handler(task_s *t, int sig) {
+			return t->sighand->action[sig - 1].sa.sa_handler;
+		}
+
+		PREFIX_STATIC_INLINE
+		bool
+		sig_handler_ignored(void __user *handler, int sig) {
+			/* Is it explicitly or implicitly ignored? */
+			return handler == SIG_IGN ||
+				(handler == SIG_DFL && sig_kernel_ignore(sig));
+		}
+
 
 		PREFIX_STATIC_INLINE
 		void
@@ -257,6 +275,14 @@
 		init_sigpending(sigpending_s *sig) {
 			// sigemptyset(&sig->signal);
 			INIT_LIST_HEADER_S(&sig->list);
+		}
+
+
+		/* Test if 'sig' is valid signal. Use this instead of testing _NSIG directly */
+		PREFIX_STATIC_INLINE
+		int
+		valid_signal(ulong sig) {
+			return sig <= _NSIG ? 1 : 0;
 		}
 
 	#endif /* !DEBUG */

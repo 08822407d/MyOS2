@@ -371,7 +371,10 @@
         "pid_api.h": "c",
         "refcount_types.h": "c",
         "entry-common.h": "c",
-        "spinlock_api_arch.h": "c"
+        "spinlock_api_arch.h": "c",
+        "signal-defs.h": "c",
+        "signal_api_arch.h": "c",
+        "signal_types_arch.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

@@ -12,9 +12,8 @@ __SYSCALL(__NR_lseek, sys_lseek)
 __SYSCALL(__NR_mmap, sys_mmap)
 __SYSCALL(__NR_mprotect, sys_mprotect)
 __SYSCALL(__NR_munmap, sys_munmap)
-
 __SYSCALL(__NR_brk, sys_brk)
-
+__SYSCALL(__NR_rt_sigaction, sys_rt_sigaction)
 __SYSCALL(__NR_rt_sigprocmask, sys_rt_sigprocmask)
 
 __SYSCALL(__NR_ioctl, sys_ioctl)

@@ -36,10 +36,19 @@
 		task_pid_nr_ns(task_s *tsk, pid_ns_s *ns);
 
 		extern pid_t
+		task_tgid_nr(task_s *tsk);
+
+		extern int
+		pid_alive(const task_s *p);
+
+		extern pid_t
 		task_pid_vnr(task_s *tsk);
 
 		extern pid_t
 		task_tgid_vnr(task_s *tsk);
+
+		extern int
+		is_global_init(task_s *tsk);
 
 	#endif
 	
@@ -137,8 +146,47 @@
 
 		PREFIX_STATIC_INLINE
 		pid_t
+		task_tgid_nr(task_s *tsk) {
+			return tsk->tgid;
+		}
+
+		/**
+		 * pid_alive - check that a task structure is not stale
+		 * @p: Task structure to be checked.
+		 *
+		 * Test if a process is not yet dead (at most zombie state)
+		 * If pid_alive fails, then pointers within the task structure
+		 * can be stale and must not be dereferenced.
+		 *
+		 * Return: 1 if the process is alive. 0 otherwise.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		pid_alive(const task_s *p) {
+			return p->thread_pid != NULL;
+		}
+
+
+		PREFIX_STATIC_INLINE
+		pid_t
 		task_tgid_vnr(task_s *tsk) {
 			return __task_pid_nr_ns(tsk, PIDTYPE_TGID, NULL);
+		}
+
+                           
+		/**
+		 * is_global_init - check if a task structure is init. Since init
+		 * is free to have sub-threads we need to check tgid.
+		 * @tsk: Task structure to be checked.
+		 *
+		 * Check if a task structure is the first user space task the kernel created.
+		 *
+		 * Return: 1 if the task structure is init. 0 otherwise.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		is_global_init(task_s *tsk) {
+			return task_tgid_nr(tsk) == 1;
 		}
 
 	#endif /* !DEBUG */

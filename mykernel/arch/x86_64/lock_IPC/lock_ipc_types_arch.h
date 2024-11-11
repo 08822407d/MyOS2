@@ -5,5 +5,6 @@
 
 	#include "atomic/atomic_types_arch.h"
 	#include "spinlock/spinlock_types_arch.h"
+	#include "signal/signal_types_arch.h"
 
 #endif /* _ASM_X86_LOCK_IPC_TYPES_H_ */

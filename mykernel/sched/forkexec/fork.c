@@ -63,17 +63,19 @@ kmem_cache_s *vm_area_cachep;
 /* SLAB cache for mm_struct structures (tsk->mm) */
 static kmem_cache_s *mm_cachep;
 
-static inline task_s *alloc_task_struct_node(int node) {
+static inline task_s
+*alloc_task_struct_node(int node) {
 	return kzalloc(sizeof(task_s), GFP_KERNEL);
 }
 
-static inline void free_task_struct(task_s *tsk) {
+static inline void
+free_task_struct(task_s *tsk) {
 	kfree(tsk);
 }
 
 
-static int alloc_thread_stack_node(task_s *tsk, int node)
-{
+static int
+alloc_thread_stack_node(task_s *tsk, int node) {
 	vma_s *vm;
 	void *stack;
 	int i;
@@ -743,6 +745,45 @@ out:
 	return error;
 }
 
+
+static int
+copy_sighand(ulong clone_flags, task_s *tsk) {
+	sighand_s *sig;
+
+	if (clone_flags & CLONE_SIGHAND) {
+		refcount_inc(&current->sighand->count);
+		return 0;
+	}
+	sig = kmem_cache_alloc(sighand_cachep, GFP_KERNEL);
+	// RCU_INIT_POINTER(tsk->sighand, sig);
+	if (!sig)
+		return -ENOMEM;
+
+	refcount_set(&sig->count, 1);
+	spin_lock_irq(&current->sighand->siglock);
+	memcpy(sig->action, current->sighand->action, sizeof(sig->action));
+	spin_unlock_irq(&current->sighand->siglock);
+
+	// /* Reset all signal handler not set to SIG_IGN to SIG_DFL. */
+	// if (clone_flags & CLONE_CLEAR_SIGHAND)
+	// 	flush_signal_handlers(tsk, 0);
+
+	return 0;
+}
+
+void __cleanup_sighand(sighand_s *sighand)
+{
+	if (refcount_dec_and_test(&sighand->count)) {
+		// signalfd_cleanup(sighand);
+		/*
+		 * sighand_cachep is SLAB_TYPESAFE_BY_RCU so we can free it
+		 * without an RCU grace period, see __lock_task_sighand().
+		 */
+		kmem_cache_free(sighand_cachep, sighand);
+	}
+}
+
+
 static int
 copy_signal(ulong clone_flags, task_s *tsk) {
 	signal_s *sig;
@@ -1083,9 +1124,9 @@ static __latent_entropy task_s
 	retval = copy_fs(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_files;
-	// retval = copy_sighand(clone_flags, p);
-	// if (retval)
-	// 	goto bad_fork_cleanup_fs;
+	retval = copy_sighand(clone_flags, p);
+	if (retval)
+		goto bad_fork_cleanup_fs;
 	retval = copy_signal(clone_flags, p);
 	if (retval)
 		goto bad_fork_cleanup_sighand;
@@ -1332,7 +1373,7 @@ static __latent_entropy task_s
 
 bad_fork_cancel_cgroup:
 	// sched_core_free(p);
-	// spin_unlock(&current->sighand->siglock);
+	spin_unlock(&current->sighand->siglock);
 	// write_unlock_irq(&tasklist_lock);
 	// cgroup_cancel_fork(p, args);
 bad_fork_put_pidfd:
@@ -1359,7 +1400,7 @@ bad_fork_cleanup_signal:
 	// if (!(clone_flags & CLONE_THREAD))
 	// 	free_signal_struct(p->signal);
 bad_fork_cleanup_sighand:
-	// __cleanup_sighand(p->sighand);
+	__cleanup_sighand(p->sighand);
 bad_fork_cleanup_fs:
 	exit_fs(p); /* blocking */
 bad_fork_cleanup_files:
@@ -1384,9 +1425,9 @@ bad_fork_free:
 	put_task_stack(p);
 	delayed_free_task(p);
 fork_out:
-	// spin_lock_irq(&current->sighand->siglock);
+	spin_lock_irq(&current->sighand->siglock);
 	// hlist_del_init(&delayed.node);
-	// spin_unlock_irq(&current->sighand->siglock);
+	spin_unlock_irq(&current->sighand->siglock);
 	return ERR_PTR(retval);
 }
 
@@ -1578,6 +1619,13 @@ int unshare_files(void)
 
 
 
+static void
+sighand_ctor(void *data) {
+	sighand_s *sighand = data;
+	spin_lock_init(&sighand->siglock);
+	// init_waitqueue_head(&sighand->signalfd_wqh);
+}
+
 void __init mm_cache_init(void)
 {
 	unsigned int mm_size;
@@ -1598,10 +1646,11 @@ void __init mm_cache_init(void)
 
 void __init proc_caches_init(void)
 {
-	// sighand_cachep = kmem_cache_create("sighand_cache",
-	// 		sizeof(struct sighand_struct), 1,
-	// 		SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
-	// 		SLAB_ACCOUNT, sighand_ctor);
+	sighand_cachep =
+			kmem_cache_create("sighand_cache",
+				sizeof(sighand_s), 1,
+				SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_TYPESAFE_BY_RCU|
+				SLAB_ACCOUNT, sighand_ctor);
 	signal_cachep =
 			kmem_cache_create("signal_cache",
 				sizeof(signal_s), 1,

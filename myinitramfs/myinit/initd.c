@@ -30,9 +30,13 @@ typedef unsigned long ulong;
 // 	return fsbase;
 // }
 
+void sigaction_SIGKILL_test(int val);
+
 
 int normal_boot(int argc, const char *argv[])
 {
+	signal(SIGKILL, sigaction_SIGKILL_test);
+
 	char prog_name[] = "/boot/sh";
 	char *const args[] =
 			{ prog_name , "userarg_test_1", "userarg_test_2", NULL };
@@ -126,4 +130,10 @@ int main(int argc, const char *argv[])
 	// test_SharedAnon();
 
 	return normal_boot(argc, argv);
+}
+
+
+void sigaction_SIGKILL_test(int val)
+{
+	printf("Captured SIGKILL! Test value: %d\n", val);
 }
