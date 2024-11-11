@@ -356,9 +356,9 @@
 		// /* Restored if set_restore_sigmask() was used: */
 		// sigset_t saved_sigmask;
 		sigpending_s	pending;
-		// unsigned long sas_ss_sp;
-		// size_t sas_ss_size;
-		// unsigned int sas_ss_flags;
+		ulong			sas_ss_sp;
+		size_t			sas_ss_size;
+		uint			sas_ss_flags;
 
 		// struct callback_head *task_works;
 

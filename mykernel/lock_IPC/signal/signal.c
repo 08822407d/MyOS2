@@ -280,8 +280,8 @@ ret:
 	return ret;
 }
 
-// static inline bool has_si_pid_and_uid(struct kernel_siginfo *info)
-// {
+// static inline bool
+// has_si_pid_and_uid(kernel_siginfo_t *info) {
 // 	bool ret = false;
 // 	switch (siginfo_layout(info->si_signo, info->si_code)) {
 // 	case SIL_KILL:
@@ -318,7 +318,7 @@ int send_signal_locked(int sig, kernel_siginfo_t *info,
 	// 	force = true;
 	// } else if (has_si_pid_and_uid(info)) {
 	// 	/* SIGKILL and SIGSTOP is special or has ids */
-	// 	struct user_namespace *t_user_ns;
+	// 	user_ns_s *t_user_ns;
 
 	// 	rcu_read_lock();
 	// 	t_user_ns = task_cred_xxx(t, user_ns);
@@ -402,14 +402,12 @@ kill_proc_info(int sig, kernel_siginfo_t *info, pid_t pid) {
 // static int
 // kill_pid_info_type(int sig, kernel_siginfo_t *info,
 // 		pid_s *pid, enum pid_type type) {
-
 	enum pid_type type = PIDTYPE_TGID;
 	int error = -ESRCH;
 	task_s *p;
 
 	for (;;) {
 		// rcu_read_lock();
-		// p = pid_task(pid, PIDTYPE_PID);
 		p = pid_task(find_vpid(pid), PIDTYPE_PID);
 		if (p)
 			error = group_send_sig_info(sig, info, p, type);
@@ -501,8 +499,7 @@ int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 	k_sigaction_s *k;
 	sigset_t mask;
 
-	// if (!valid_signal(sig) || sig < 1 || (act && sig_kernel_only(sig)))
-	if (!valid_signal(sig) || sig < 1)
+	if (!valid_signal(sig) || sig < 1 || (act && sig_kernel_only(sig)))
 		return -EINVAL;
 
 	k = &p->sighand->action[sig-1];

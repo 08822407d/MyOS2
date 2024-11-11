@@ -329,55 +329,6 @@
 	// 	return kill_pid(cad_pid, sig, priv);
 	// }
 
-
-	// static inline int __on_sig_stack(unsigned long sp)
-	// {
-	// 	return sp > current->sas_ss_sp &&
-	// 		sp - current->sas_ss_sp <= current->sas_ss_size;
-	// }
-
-	// /*
-	// * True if we are on the alternate signal stack.
-	// */
-	// static inline int on_sig_stack(unsigned long sp)
-	// {
-	// 	/*
-	// 	* If the signal stack is SS_AUTODISARM then, by construction, we
-	// 	* can't be on the signal stack unless user code deliberately set
-	// 	* SS_AUTODISARM when we were already on it.
-	// 	*
-	// 	* This improves reliability: if user state gets corrupted such that
-	// 	* the stack pointer points very close to the end of the signal stack,
-	// 	* then this check will enable the signal to be handled anyway.
-	// 	*/
-	// 	if (current->sas_ss_flags & SS_AUTODISARM)
-	// 		return 0;
-
-	// 	return __on_sig_stack(sp);
-	// }
-
-	// static inline int sas_ss_flags(unsigned long sp)
-	// {
-	// 	if (!current->sas_ss_size)
-	// 		return SS_DISABLE;
-
-	// 	return on_sig_stack(sp) ? SS_ONSTACK : 0;
-	// }
-
-	// static inline void sas_ss_reset(task_s *p)
-	// {
-	// 	p->sas_ss_sp = 0;
-	// 	p->sas_ss_size = 0;
-	// 	p->sas_ss_flags = SS_DISABLE;
-	// }
-
-	// static inline unsigned long sigsp(unsigned long sp, struct ksignal *ksig)
-	// {
-	// 	if (unlikely((ksig->ka.sa.sa_flags & SA_ONSTACK)) && ! sas_ss_flags(sp))
-	// 		return current->sas_ss_sp + current->sas_ss_size;
-	// 	return sp;
-	// }
-
 	extern void __cleanup_sighand(sighand_s *);
 	// extern void flush_itimer_signals(void);
 

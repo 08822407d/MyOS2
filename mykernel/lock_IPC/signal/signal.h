@@ -7,6 +7,8 @@
 	#include "../lock_ipc_types.h"
 	#include "../lock_ipc_api.h"
 
+	#include <uapi/linux/signal.h>
+
 
 	#ifdef DEBUG
 
@@ -74,6 +76,21 @@
 
 		extern int
 		valid_signal(ulong sig);
+
+		extern int
+		__on_sig_stack(ulong sp);
+
+		extern int
+		on_sig_stack(ulong sp);
+
+		extern int
+		sas_ss_flags(ulong sp);
+
+		extern void
+		sas_ss_reset(task_s *p);
+
+		extern ulong
+		sigsp(ulong sp, ksignal_s *ksig);
 
 	#endif
 
@@ -283,6 +300,63 @@
 		int
 		valid_signal(ulong sig) {
 			return sig <= _NSIG ? 1 : 0;
+		}
+
+
+
+
+		PREFIX_STATIC_INLINE
+		int
+		__on_sig_stack(ulong sp) {
+			return (sp > current->sas_ss_sp) &&
+					(sp - current->sas_ss_sp <=
+						current->sas_ss_size);
+		}
+
+		/*
+		 * True if we are on the alternate signal stack.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		on_sig_stack(ulong sp) {
+			/*
+			 * If the signal stack is SS_AUTODISARM then, by construction, we
+			 * can't be on the signal stack unless user code deliberately set
+			 * SS_AUTODISARM when we were already on it.
+			 *
+			 * This improves reliability: if user state gets corrupted such that
+			 * the stack pointer points very close to the end of the signal stack,
+			 * then this check will enable the signal to be handled anyway.
+			 */
+			if (current->sas_ss_flags & SS_AUTODISARM)
+				return 0;
+
+			return __on_sig_stack(sp);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		sas_ss_flags(ulong sp) {
+			if (!current->sas_ss_size)
+				return SS_DISABLE;
+
+			return on_sig_stack(sp) ? SS_ONSTACK : 0;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		sas_ss_reset(task_s *p) {
+			p->sas_ss_sp = 0;
+			p->sas_ss_size = 0;
+			p->sas_ss_flags = SS_DISABLE;
+		}
+
+		PREFIX_STATIC_INLINE
+		ulong
+		sigsp(ulong sp, ksignal_s *ksig) {
+			if (unlikely((ksig->ka.sa.sa_flags & SA_ONSTACK)) && ! sas_ss_flags(sp))
+				return current->sas_ss_sp + current->sas_ss_size;
+			return sp;
 		}
 
 	#endif /* !DEBUG */

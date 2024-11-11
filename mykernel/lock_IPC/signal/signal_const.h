@@ -2,6 +2,21 @@
 #define _SIGNAL_CONSTS_H_
 
 
+	enum siginfo_layout {
+		SIL_KILL,
+		SIL_TIMER,
+		SIL_POLL,
+		SIL_FAULT,
+		SIL_FAULT_TRAPNO,
+		SIL_FAULT_MCEERR,
+		SIL_FAULT_BNDERR,
+		SIL_FAULT_PKUERR,
+		SIL_FAULT_PERF_EVENT,
+		SIL_CHLD,
+		SIL_RT,
+		SIL_SYS,
+	};
+
 	/*
 	 * How these fields are to be accessed.
 	 */

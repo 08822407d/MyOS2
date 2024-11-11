@@ -160,7 +160,7 @@
 	};
 
 	struct ksignal {
-		// struct k_sigaction ka;
+		k_sigaction_s		ka;
 		kernel_siginfo_t	info;
 		int					sig;
 	};

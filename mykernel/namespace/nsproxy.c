@@ -27,9 +27,7 @@ nsproxy_s init_nsproxy = {
 
 static inline
 nsproxy_s *create_nsproxy(void) {
-	nsproxy_s *nsproxy;
-
-	nsproxy = kmem_cache_alloc(nsproxy_cachep, GFP_KERNEL);
+	nsproxy_s *nsproxy = kmem_cache_alloc(nsproxy_cachep, GFP_KERNEL);
 	if (nsproxy)
 		refcount_set(&nsproxy->count, 1);
 	return nsproxy;
@@ -42,8 +40,8 @@ nsproxy_s *create_nsproxy(void) {
  */
 static nsproxy_s
 *create_new_namespaces(ulong flags, task_s*tsk,
-	user_ns_s *user_ns, taskfs_s *new_fs)
-{
+	user_ns_s *user_ns, taskfs_s *new_fs) {
+
 	nsproxy_s *new_nsp;
 	int err;
 
