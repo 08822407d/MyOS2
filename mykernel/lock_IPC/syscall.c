@@ -10,6 +10,44 @@
 // #include <asm/syscalls_64.h>
 
 
+// #define __NR_rt_sigprocmask	14
+/**
+ *  sys_rt_sigprocmask - change the list of currently blocked signals
+ *  @how: whether to add, remove, or set signals
+ *  @nset: stores pending signals
+ *  @oset: previous value of signal mask if non-null
+ *  @sigsetsize: size of sigset_t type
+ */
+MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
+{
+	sigset_t old_set, new_set;
+	int error;
+
+	/* XXX: Don't preclude handling different sized sigset_t's.  */
+	if (sigsetsize != sizeof(sigset_t))
+		return -EINVAL;
+
+	// old_set = current->blocked;
+
+	// if (nset) {
+	// 	if (copy_from_user(&new_set, nset, sizeof(sigset_t)))
+	// 		return -EFAULT;
+	// 	sigdelsetmask(&new_set, sigmask(SIGKILL)|sigmask(SIGSTOP));
+
+	// 	error = sigprocmask(how, &new_set, NULL);
+	// 	if (error)
+	// 		return error;
+	// }
+
+	if (oset) {
+		if (copy_to_user(oset, &old_set, sizeof(sigset_t)))
+			return -EFAULT;
+	}
+
+	return 0;
+}
+
+
 // #define __NR_kill			62
 /**
  *  sys_kill - send a signal to a process

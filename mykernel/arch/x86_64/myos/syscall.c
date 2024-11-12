@@ -189,20 +189,6 @@ MYOS_SYSCALL_DEFINE3(mprotect, ulong, start, size_t, len, ulong, prot)
 	return 0;
 }
 
-/**
- *  sys_rt_sigprocmask - change the list of currently blocked signals
- *  @how: whether to add, remove, or set signals
- *  @nset: stores pending signals
- *  @oset: previous value of signal mask if non-null
- *  @sigsetsize: size of sigset_t type
- */
-MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t __user *, oset, size_t, sigsetsize)
-{
-	ALERT_DUMMY_SYSCALL(rt_sigprocmask, IF_ALERT_DUMMY_SYSCALL);
-
-	return 0;
-}
-
 MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 {
 	long ret;

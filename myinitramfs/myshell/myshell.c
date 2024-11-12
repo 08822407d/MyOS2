@@ -381,5 +381,5 @@ int reboot_command(int argc, char **argv)
 void signal_test()
 {
 	pid_t pid = getppid();
-	kill(pid, SIGKILL);
+	kill(pid, SIGTERM);
 }

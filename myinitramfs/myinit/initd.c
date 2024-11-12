@@ -35,7 +35,7 @@ void sigaction_SIGKILL_test(int val);
 
 int normal_boot(int argc, const char *argv[])
 {
-	signal(SIGKILL, sigaction_SIGKILL_test);
+	signal(SIGTERM, sigaction_SIGKILL_test);
 
 	char prog_name[] = "/boot/sh";
 	char *const args[] =
@@ -135,5 +135,5 @@ int main(int argc, const char *argv[])
 
 void sigaction_SIGKILL_test(int val)
 {
-	printf("Captured SIGKILL! Test value: %d\n", val);
+	printf("Captured SIGTERM! Test value: %d\n", val);
 }
