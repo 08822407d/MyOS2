@@ -351,7 +351,7 @@
 		/* Signal handlers: */
 		signal_s		*signal;
 		sighand_s __rcu	*sighand;
-		// sigset_t blocked;
+		sigset_t		blocked;
 		// sigset_t real_blocked;
 		// /* Restored if set_restore_sigmask() was used: */
 		// sigset_t saved_sigmask;

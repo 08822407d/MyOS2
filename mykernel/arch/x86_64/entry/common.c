@@ -38,7 +38,7 @@ __visible noinstr bool do_syscall_64(pt_regs_s *regs, int nr)
 	// 	regs->ax = __x64_sys_ni_syscall(regs);
 	// }
 
-	unsigned int unr = nr;
+	uint unr = nr;
 	if (unr < __NR_syscalls) {
 		// unr = array_index_nospec(unr, NR_syscalls);
 		regs->ax = x64_sys_call(regs, unr);

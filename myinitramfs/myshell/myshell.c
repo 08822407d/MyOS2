@@ -6,10 +6,11 @@
 #include <errno.h>
 #include <unistd.h>
 #include <dirent.h>
-#include <signal.h>
 #include <sys/stat.h>
 
 #include "externs.h"
+#include "tests.h"
+
 
 	#define PATH_MAX        4096	/* # chars in a path name including nul */
 	#define SZ_1K			1024
@@ -61,7 +62,6 @@ char current_dir[PATH_MAX];
 int read_line(char *buf);
 int parse_command(char * buf,int * argc,char ***argv);
 void run_cmd(int index, int argc, char **argv);
-void signal_test(void);
 
 int main(int argc, const char *argv[])
 {
@@ -76,7 +76,7 @@ int main(int argc, const char *argv[])
 	char buf[SZ_4K];
 	int index = -1;
 
-	signal_test();
+	test_all();
 
 	while (1)
 	{
@@ -375,11 +375,4 @@ int reboot_command(int argc, char **argv)
 {
 	reboot(SYSTEM_REBOOT);
 	return 1;
-}
-
-
-void signal_test()
-{
-	pid_t pid = getppid();
-	kill(pid, SIGTERM);
 }

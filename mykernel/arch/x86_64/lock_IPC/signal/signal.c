@@ -1,4 +1,5 @@
-#include "../lock_ipc_api_arch.h"
+#include <linux/kernel/sched.h>
+#include <linux/kernel/lock_ipc.h>
 
 
 /*
@@ -8,13 +9,14 @@
  */
 void arch_do_signal_or_restart(pt_regs_s *regs)
 {
-	// struct ksignal ksig;
+	task_s *curr = current;
+	ksignal_s ksig;
 
-	// if (get_signal(&ksig)) {
-	// 	/* Whee! Actually deliver the signal.  */
-	// 	handle_signal(&ksig, regs);
-	// 	return;
-	// }
+	if (get_signal(&ksig)) {
+		/* Whee! Actually deliver the signal.  */
+		// handle_signal(&ksig, regs);
+		return;
+	}
 
 	// /* Did we come from a system call? */
 	// if (syscall_get_nr(current, regs) != -1) {

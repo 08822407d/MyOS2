@@ -3,6 +3,9 @@
 
 	#include "signal.h"
 
+
+	bool get_signal(ksignal_s *ksig);
+
 	void prepare_kill_siginfo(int sig,
 			kernel_siginfo_t *info, enum pid_type type);
 

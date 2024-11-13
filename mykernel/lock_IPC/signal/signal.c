@@ -11,34 +11,6 @@
 static kmem_cache_s *sigqueue_cachep;
 
 
-/*
- * Tell a process that it has a new active signal..
- *
- * NOTE! we rely on the previous spin_lock to
- * lock interrupts for us! We can only be called with
- * "siglock" held, and the local interrupt must
- * have been disabled when that got acquired!
- *
- * No need to set need_resched since signal event passing
- * goes through ->blocked
- */
-void signal_wake_up_state(task_s *t, unsigned int state)
-{
-	// lockdep_assert_held(&t->sighand->siglock);
-
-	set_tsk_thread_flag(t, TIF_SIGPENDING);
-
-	/*
-	 * TASK_WAKEKILL also means wake it up in the stopped/traced/killable
-	 * case. We don't check t->state here because there is a race with it
-	 * executing another processor and just now entering stopped state.
-	 * By using wake_up_state, we ensure the process will wake up and
-	 * handle its death signal.
-	 */
-	if (!wake_up_state(t, state | TASK_INTERRUPTIBLE))
-		kick_process(t);
-}
-
 
 /*
  * allocate a new signal queue record
@@ -83,6 +55,286 @@ __sigqueue_alloc(int sig, task_s *t, gfp_t gfp_flags,
 	}
 	return q;
 }
+
+static void
+__sigqueue_free(sigqueue_s *q) {
+	if (q->flags & SIGQUEUE_PREALLOC)
+		return;
+	// if (q->ucounts) {
+	// 	dec_rlimit_put_ucounts(q->ucounts, UCOUNT_RLIMIT_SIGPENDING);
+	// 	q->ucounts = NULL;
+	// }
+	kmem_cache_free(sigqueue_cachep, q);
+}
+
+
+/* Given the mask, find the first available signal that should be serviced. */
+#define SYNCHRONOUS_MASK \
+		(sigmask(SIGSEGV) | sigmask(SIGBUS) | sigmask(SIGILL) | \
+			sigmask(SIGTRAP) | sigmask(SIGFPE) | sigmask(SIGSYS))
+
+int next_signal(sigpending_s *pending, sigset_t *mask)
+{
+	ulong i, *s, *m, x;
+	int sig = 0;
+
+	s = pending->signal.sig;
+	m = mask->sig;
+
+	/*
+	 * Handle the first word specially: it contains the
+	 * synchronous signals that need to be dequeued first.
+	 */
+	x = *s &~ *m;
+	if (x) {
+		if (x & SYNCHRONOUS_MASK)
+			x &= SYNCHRONOUS_MASK;
+		sig = ffz(~x) + 1;
+		return sig;
+	}
+
+	switch (_NSIG_WORDS) {
+	default:
+		for (i = 1; i < _NSIG_WORDS; ++i) {
+			x = *++s &~ *++m;
+			if (!x)
+				continue;
+			sig = ffz(~x) + i*_NSIG_BPW + 1;
+			break;
+		}
+		break;
+
+	case 2:
+		x = s[1] &~ m[1];
+		if (!x)
+			break;
+		sig = ffz(~x) + _NSIG_BPW + 1;
+		break;
+
+	case 1:
+		/* Nothing to do */
+		break;
+	}
+
+	return sig;
+}
+
+static void
+collect_signal(int sig, sigpending_s *list,
+		kernel_siginfo_t *info, bool *resched_timer) {
+
+	sigqueue_s *q, *first = NULL;
+
+	/*
+	 * Collect the siginfo appropriate to this signal.  Check if
+	 * there is another siginfo for the same signal.
+	*/
+	// list_for_each_entry(q, &list->list, list) {
+	list_header_for_each_container(q, &list->list, list) {
+		if (q->info.si_signo == sig) {
+			if (first)
+				goto still_pending;
+			first = q;
+		}
+	}
+
+	sigdelset(&list->signal, sig);
+
+	if (first) {
+still_pending:
+		list_del_init(&first->list);
+		copy_siginfo(info, &first->info);
+
+		*resched_timer =
+			(first->flags & SIGQUEUE_PREALLOC) &&
+			(info->si_code == SI_TIMER) &&
+			(info->si_sys_private);
+
+		__sigqueue_free(first);
+	} else {
+		/*
+		 * Ok, it wasn't in the queue.  This must be
+		 * a fast-pathed signal or we must have been
+		 * out of queue space.  So zero out the info.
+		 */
+		clear_siginfo(info);
+		info->si_signo = sig;
+		info->si_errno = 0;
+		info->si_code = SI_USER;
+		info->si_pid = 0;
+		info->si_uid = 0;
+	}
+}
+
+static int
+__dequeue_signal(sigpending_s *pending, sigset_t *mask,
+		kernel_siginfo_t *info, bool *resched_timer) {
+
+	int sig = next_signal(pending, mask);
+
+	if (sig)
+		collect_signal(sig, pending, info, resched_timer);
+	return sig;
+}
+
+/*
+ * Dequeue a signal and return the element to the caller, which is
+ * expected to free it.
+ *
+ * All callers have to hold the siglock.
+ */
+int dequeue_signal(task_s *tsk, sigset_t *mask,
+		kernel_siginfo_t *info, enum pid_type *type)
+{
+	bool resched_timer = false;
+	int signr;
+
+	/* We only dequeue private signals from ourselves, we don't let
+	 * signalfd steal them
+	 */
+	*type = PIDTYPE_PID;
+	signr = __dequeue_signal(&tsk->pending, mask, info, &resched_timer);
+	if (!signr) {
+		*type = PIDTYPE_TGID;
+		signr = __dequeue_signal(&tsk->signal->shared_pending,
+					 mask, info, &resched_timer);
+// #ifdef CONFIG_POSIX_TIMERS
+// 		/*
+// 		 * itimer signal ?
+// 		 *
+// 		 * itimers are process shared and we restart periodic
+// 		 * itimers in the signal delivery path to prevent DoS
+// 		 * attacks in the high resolution timer case. This is
+// 		 * compliant with the old way of self-restarting
+// 		 * itimers, as the SIGALRM is a legacy signal and only
+// 		 * queued once. Changing the restart behaviour to
+// 		 * restart the timer in the signal dequeue path is
+// 		 * reducing the timer noise on heavy loaded !highres
+// 		 * systems too.
+// 		 */
+// 		if (unlikely(signr == SIGALRM)) {
+// 			struct hrtimer *tmr = &tsk->signal->real_timer;
+
+// 			if (!hrtimer_is_queued(tmr) &&
+// 			    tsk->signal->it_real_incr != 0) {
+// 				hrtimer_forward(tmr, tmr->base->get_time(),
+// 						tsk->signal->it_real_incr);
+// 				hrtimer_restart(tmr);
+// 			}
+// 		}
+// #endif
+	}
+
+// 	recalc_sigpending();
+// 	if (!signr)
+// 		return 0;
+
+// 	if (unlikely(sig_kernel_stop(signr))) {
+// 		/*
+// 		 * Set a marker that we have dequeued a stop signal.  Our
+// 		 * caller might release the siglock and then the pending
+// 		 * stop signal it is about to process is no longer in the
+// 		 * pending bitmasks, but must still be cleared by a SIGCONT
+// 		 * (and overruled by a SIGKILL).  So those cases clear this
+// 		 * shared flag after we've set it.  Note that this flag may
+// 		 * remain set after the signal we return is ignored or
+// 		 * handled.  That doesn't matter because its only purpose
+// 		 * is to alert stop-signal processing code when another
+// 		 * processor has come along and cleared the flag.
+// 		 */
+// 		current->jobctl |= JOBCTL_STOP_DEQUEUED;
+// 	}
+// #ifdef CONFIG_POSIX_TIMERS
+// 	if (resched_timer) {
+// 		/*
+// 		 * Release the siglock to ensure proper locking order
+// 		 * of timer locks outside of siglocks.  Note, we leave
+// 		 * irqs disabled here, since the posix-timers code is
+// 		 * about to disable them again anyway.
+// 		 */
+// 		spin_unlock(&tsk->sighand->siglock);
+// 		posixtimer_rearm(info);
+// 		spin_lock(&tsk->sighand->siglock);
+
+// 		/* Don't expose the si_sys_private value to userspace */
+// 		info->si_sys_private = 0;
+// 	}
+// #endif
+	return signr;
+}
+EXPORT_SYMBOL_GPL(dequeue_signal);
+
+static int
+dequeue_synchronous_signal(kernel_siginfo_t *info) {
+	task_s *tsk = current;
+	sigpending_s *pending = &tsk->pending;
+	sigqueue_s *q, *sync = NULL;
+
+	/*
+	 * Might a synchronous signal be in the queue?
+	 */
+	if (!((pending->signal.sig[0] & ~tsk->blocked.sig[0]) & SYNCHRONOUS_MASK))
+		return 0;
+
+	/*
+	 * Return the first synchronous signal in the queue.
+	 */
+	// list_for_each_entry(q, &pending->list, list) {
+	list_header_for_each_container(q, &pending->list, list) {
+		/* Synchronous signals have a positive si_code */
+		if ((q->info.si_code > SI_USER) &&
+				(sigmask(q->info.si_signo) & SYNCHRONOUS_MASK)) {
+			sync = q;
+			goto next;
+		}
+	}
+	return 0;
+next:
+	// /*
+	//  * Check if there is another siginfo for the same signal.
+	//  */
+	// list_for_each_entry_continue(q, &pending->list, list) {
+	// 	if (q->info.si_signo == sync->info.si_signo)
+	// 		goto still_pending;
+	// }
+
+	// sigdelset(&pending->signal, sync->info.si_signo);
+	// recalc_sigpending();
+still_pending:
+	// list_del_init(&sync->list);
+	// copy_siginfo(info, &sync->info);
+	__sigqueue_free(sync);
+	return info->si_signo;
+}
+
+/*
+ * Tell a process that it has a new active signal..
+ *
+ * NOTE! we rely on the previous spin_lock to
+ * lock interrupts for us! We can only be called with
+ * "siglock" held, and the local interrupt must
+ * have been disabled when that got acquired!
+ *
+ * No need to set need_resched since signal event passing
+ * goes through ->blocked
+ */
+void signal_wake_up_state(task_s *t, unsigned int state)
+{
+	// lockdep_assert_held(&t->sighand->siglock);
+
+	set_tsk_thread_flag(t, TIF_SIGPENDING);
+
+	/*
+	 * TASK_WAKEKILL also means wake it up in the stopped/traced/killable
+	 * case. We don't check t->state here because there is a race with it
+	 * executing another processor and just now entering stopped state.
+	 * By using wake_up_state, we ensure the process will wake up and
+	 * handle its death signal.
+	 */
+	if (!wake_up_state(t, state | TASK_INTERRUPTIBLE))
+		kick_process(t);
+}
+
 
 static void
 complete_signal(int sig, task_s *p, enum pid_type type) {
@@ -476,6 +728,257 @@ int kill_something_info(int sig,
 	// // read_unlock(&tasklist_lock);
 
 	return ret;
+}
+
+
+bool get_signal(ksignal_s *ksig)
+{
+	task_s *curr = current;
+	sighand_s *sighand = curr->sighand;
+	signal_s *signal = curr->signal;
+	int signr = 0;
+
+	// clear_notify_signal();
+	// if (unlikely(task_work_pending(current)))
+	// 	task_work_run();
+
+	// if (!task_sigpending(current))
+	// 	return false;
+
+	// if (unlikely(uprobe_deny_signal()))
+	// 	return false;
+
+	// /*
+	//  * Do this once, we can't return to user-mode if freezing() == T.
+	//  * do_signal_stop() and ptrace_stop() do freezable_schedule() and
+	//  * thus do not need another check after return.
+	//  */
+	// try_to_freeze();
+
+relock:
+	spin_lock_irq(&sighand->siglock);
+
+	// /*
+	//  * Every stopped thread goes here after wakeup. Check to see if
+	//  * we should notify the parent, prepare_signal(SIGCONT) encodes
+	//  * the CLD_ si_code into SIGNAL_CLD_MASK bits.
+	//  */
+	// if (unlikely(signal->flags & SIGNAL_CLD_MASK)) {
+	// 	int why;
+
+	// 	if (signal->flags & SIGNAL_CLD_CONTINUED)
+	// 		why = CLD_CONTINUED;
+	// 	else
+	// 		why = CLD_STOPPED;
+
+	// 	signal->flags &= ~SIGNAL_CLD_MASK;
+
+	// 	spin_unlock_irq(&sighand->siglock);
+
+	// 	/*
+	// 	 * Notify the parent that we're continuing.  This event is
+	// 	 * always per-process and doesn't make whole lot of sense
+	// 	 * for ptracers, who shouldn't consume the state via
+	// 	 * wait(2) either, but, for backward compatibility, notify
+	// 	 * the ptracer of the group leader too unless it's gonna be
+	// 	 * a duplicate.
+	// 	 */
+	// 	read_lock(&tasklist_lock);
+	// 	do_notify_parent_cldstop(current, false, why);
+
+	// 	if (ptrace_reparented(current->group_leader))
+	// 		do_notify_parent_cldstop(current->group_leader,
+	// 					true, why);
+	// 	read_unlock(&tasklist_lock);
+
+	// 	goto relock;
+	// }
+
+	for (;;) {
+		k_sigaction_s *ka;
+		enum pid_type type;
+
+		// /* Has this task already been marked for death? */
+		// if ((signal->flags & SIGNAL_GROUP_EXIT) ||
+		//      signal->group_exec_task) {
+		// 	signr = SIGKILL;
+		// 	sigdelset(&current->pending.signal, SIGKILL);
+		// 	trace_signal_deliver(SIGKILL, SEND_SIG_NOINFO,
+		// 			     &sighand->action[SIGKILL-1]);
+		// 	recalc_sigpending();
+		// 	/*
+		// 	 * implies do_group_exit() or return to PF_USER_WORKER,
+		// 	 * no need to initialize ksig->info/etc.
+		// 	 */
+		// 	goto fatal;
+		// }
+
+		// if (unlikely(current->jobctl & JOBCTL_STOP_PENDING) &&
+		//     do_signal_stop(0))
+		// 	goto relock;
+
+		// if (unlikely(current->jobctl &
+		// 	     (JOBCTL_TRAP_MASK | JOBCTL_TRAP_FREEZE))) {
+		// 	if (current->jobctl & JOBCTL_TRAP_MASK) {
+		// 		do_jobctl_trap();
+		// 		spin_unlock_irq(&sighand->siglock);
+		// 	} else if (current->jobctl & JOBCTL_TRAP_FREEZE)
+		// 		do_freezer_trap();
+
+		// 	goto relock;
+		// }
+
+		// /*
+		//  * If the task is leaving the frozen state, let's update
+		//  * cgroup counters and reset the frozen bit.
+		//  */
+		// if (unlikely(cgroup_task_frozen(current))) {
+		// 	spin_unlock_irq(&sighand->siglock);
+		// 	cgroup_leave_frozen(false);
+		// 	goto relock;
+		// }
+
+		/*
+		 * Signals generated by the execution of an instruction
+		 * need to be delivered before any other pending signals
+		 * so that the instruction pointer in the signal stack
+		 * frame points to the faulting instruction.
+		 */
+		type = PIDTYPE_PID;
+		signr = dequeue_synchronous_signal(&ksig->info);
+		if (signr == 0)
+			signr = dequeue_signal(curr, &curr->blocked,
+							&ksig->info, &type);
+
+		if (!signr)
+			break; /* will return 0 */
+
+		// if (unlikely(current->ptrace) && (signr != SIGKILL) &&
+		//     !(sighand->action[signr -1].sa.sa_flags & SA_IMMUTABLE)) {
+		// 	signr = ptrace_signal(signr, &ksig->info, type);
+		// 	if (!signr)
+		// 		continue;
+		// }
+
+		ka = &sighand->action[signr-1];
+
+		// /* Trace actually delivered signals. */
+		// trace_signal_deliver(signr, &ksig->info, ka);
+
+		if (ka->sa.sa_handler == SIG_IGN) /* Do nothing.  */
+			continue;
+		if (ka->sa.sa_handler != SIG_DFL) {
+			/* Run the handler.  */
+			ksig->ka = *ka;
+
+			if (ka->sa.sa_flags & SA_ONESHOT)
+				ka->sa.sa_handler = SIG_DFL;
+
+			break; /* will return non-zero "signr" value */
+		}
+
+		/*
+		 * Now we are doing the default action for this signal.
+		 */
+		if (sig_kernel_ignore(signr)) /* Default is nothing. */
+			continue;
+
+		/*
+		 * Global init gets no signals it doesn't want.
+		 * Container-init gets no signals it doesn't want from same
+		 * container.
+		 *
+		 * Note that if global/container-init sees a sig_kernel_only()
+		 * signal here, the signal must have been generated internally
+		 * or must have come from an ancestor namespace. In either
+		 * case, the signal cannot be dropped.
+		 */
+		if (unlikely(signal->flags & SIGNAL_UNKILLABLE) &&
+				!sig_kernel_only(signr))
+			continue;
+
+		// if (sig_kernel_stop(signr)) {
+		// 	/*
+		// 	 * The default action is to stop all threads in
+		// 	 * the thread group.  The job control signals
+		// 	 * do nothing in an orphaned pgrp, but SIGSTOP
+		// 	 * always works.  Note that siglock needs to be
+		// 	 * dropped during the call to is_orphaned_pgrp()
+		// 	 * because of lock ordering with tasklist_lock.
+		// 	 * This allows an intervening SIGCONT to be posted.
+		// 	 * We need to check for that and bail out if necessary.
+		// 	 */
+		// 	if (signr != SIGSTOP) {
+		// 		spin_unlock_irq(&sighand->siglock);
+
+		// 		/* signals can be posted during this window */
+
+		// 		if (is_current_pgrp_orphaned())
+		// 			goto relock;
+
+		// 		spin_lock_irq(&sighand->siglock);
+		// 	}
+
+		// 	if (likely(do_signal_stop(signr))) {
+		// 		/* It released the siglock.  */
+		// 		goto relock;
+		// 	}
+
+		// 	/*
+		// 	 * We didn't actually stop, due to a race
+		// 	 * with SIGCONT or something like that.
+		// 	 */
+		// 	continue;
+		// }
+
+	fatal:
+		// spin_unlock_irq(&sighand->siglock);
+		// if (unlikely(cgroup_task_frozen(current)))
+		// 	cgroup_leave_frozen(true);
+
+		/*
+		 * Anything else is fatal, maybe with a core dump.
+		 */
+		current->flags |= PF_SIGNALED;
+
+		// if (sig_kernel_coredump(signr)) {
+		// 	if (print_fatal_signals)
+		// 		print_fatal_signal(signr);
+		// 	proc_coredump_connector(current);
+		// 	/*
+		// 	 * If it was able to dump core, this kills all
+		// 	 * other threads in the group and synchronizes with
+		// 	 * their demise.  If we lost the race with another
+		// 	 * thread getting here, it set group_exit_code
+		// 	 * first and our do_group_exit call below will use
+		// 	 * that value and ignore the one we pass it.
+		// 	 */
+		// 	do_coredump(&ksig->info);
+		// }
+
+		// /*
+		//  * PF_USER_WORKER threads will catch and exit on fatal signals
+		//  * themselves. They have cleanup that must be performed, so we
+		//  * cannot call do_exit() on their behalf. Note that ksig won't
+		//  * be properly initialized, PF_USER_WORKER's shouldn't use it.
+		//  */
+		// if (current->flags & PF_USER_WORKER)
+		// 	goto out;
+
+		// /*
+		//  * Death signals, no core dump.
+		//  */
+		// do_group_exit(signr);
+		// /* NOTREACHED */
+	}
+	spin_unlock_irq(&sighand->siglock);
+
+	ksig->sig = signr;
+
+	// if (signr && !(ksig->ka.sa.sa_flags & SA_EXPOSE_TAGBITS))
+	// 	hide_si_addr_tag_bits(ksig);
+out:
+	return signr > 0;
 }
 
 

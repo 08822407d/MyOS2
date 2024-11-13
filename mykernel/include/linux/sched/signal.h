@@ -77,8 +77,8 @@
 	// extern void flush_signals(task_s *);
 	// extern void ignore_signals(task_s *);
 	// extern void flush_signal_handlers(task_s *, int force_default);
-	// extern int dequeue_signal(task_s *task, sigset_t *mask,
-	// 			kernel_siginfo_t *info, enum pid_type *type);
+	extern int dequeue_signal(task_s *task, sigset_t *mask,
+			kernel_siginfo_t *info, enum pid_type *type);
 
 	// static inline int kernel_dequeue_signal(void)
 	// {

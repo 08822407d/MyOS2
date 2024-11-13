@@ -80,6 +80,8 @@
 	#define __ILL_BNDMOD			11	/* bundle-update (modification) in progress */
 	#define NSIGILL					11
 
+	/* flags values. */
+	#define SIGQUEUE_PREALLOC		1
 
 	/* Used to kill the race between sigaction and forced signals */
 	#define SA_IMMUTABLE			0x00800000
