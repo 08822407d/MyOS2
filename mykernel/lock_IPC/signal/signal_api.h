@@ -12,6 +12,10 @@
 	int kill_something_info(int sig,
 			kernel_siginfo_t *info, pid_t pid);
 
+	void __set_current_blocked(const sigset_t *newset);
+	void set_current_blocked(sigset_t *newset);
+	int sigprocmask(int how, sigset_t *set, sigset_t *oldset);
+
 	int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact);
 
 	void signals_init(void);

@@ -23,6 +23,31 @@
 		extern void
 		task_unlock(task_s *p);
 
+		extern ulong
+		task_rlimit(const task_s *task, uint limit);
+		extern ulong
+		task_rlimit_max(const task_s *task, uint limit);
+		extern ulong
+		rlimit(uint limit);
+		extern ulong
+		rlimit_max(uint limit);
+
+
+		extern void
+		set_ti_thread_flag(thread_info_s *ti, int flag);
+		extern void
+		clear_ti_thread_flag(thread_info_s *ti, int flag);
+		extern void
+		update_ti_thread_flag(thread_info_s *ti, int flag, bool value);
+		extern int
+		test_and_set_ti_thread_flag(thread_info_s *ti, int flag);
+		extern int
+		test_and_clear_ti_thread_flag(thread_info_s *ti, int flag);
+		extern int
+		test_ti_thread_flag(thread_info_s *ti, int flag);
+		extern ulong
+		read_ti_thread_flags(thread_info_s *ti);
+
 	#endif
 
 	#include "task_macro.h"
@@ -72,6 +97,86 @@
 		void
 		task_unlock(task_s *p) {
 			spin_unlock(&p->alloc_lock);
+		}
+
+
+		PREFIX_STATIC_INLINE
+		ulong
+		task_rlimit(const task_s *task, uint limit) {
+			return READ_ONCE(task->signal->rlim[limit].rlim_cur);
+		}
+
+		PREFIX_STATIC_INLINE
+		ulong
+		task_rlimit_max(const task_s *task, uint limit) {
+			return READ_ONCE(task->signal->rlim[limit].rlim_max);
+		}
+
+		PREFIX_STATIC_INLINE
+		ulong
+		rlimit(uint limit) {
+			return task_rlimit(current, limit);
+		}
+
+		PREFIX_STATIC_INLINE
+		ulong
+		rlimit_max(uint limit) {
+			return task_rlimit_max(current, limit);
+		}
+
+
+
+		/*
+		 * flag set/clear/test wrappers
+		 * - pass TIF_xxxx constants to these functions
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		set_ti_thread_flag(thread_info_s *ti, int flag) {
+			set_bit(flag, (ulong *)&ti->flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		clear_ti_thread_flag(thread_info_s *ti, int flag) {
+			clear_bit(flag, (ulong *)&ti->flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		update_ti_thread_flag(thread_info_s *ti, int flag, bool value) {
+			if (value)
+				set_ti_thread_flag(ti, flag);
+			else
+				clear_ti_thread_flag(ti, flag);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		test_and_set_ti_thread_flag(thread_info_s *ti, int flag) {
+			return test_and_set_bit(flag, (ulong *)&ti->flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		test_and_clear_ti_thread_flag(thread_info_s *ti, int flag) {
+			return test_and_clear_bit(flag, (ulong *)&ti->flags);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		test_ti_thread_flag(thread_info_s *ti, int flag) {
+			return test_bit(flag, (ulong *)&ti->flags);
+		}
+
+		/*
+		 * This may be used in noinstr code, and needs to be __always_inline to prevent
+		 * inadvertent instrumentation.
+		 */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		ulong
+		read_ti_thread_flags(thread_info_s *ti) {
+			return READ_ONCE(ti->flags);
 		}
 
 	#endif

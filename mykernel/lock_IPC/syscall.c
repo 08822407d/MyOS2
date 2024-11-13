@@ -34,9 +34,9 @@ MYOS_SYSCALL_DEFINE4(rt_sigprocmask, int, how, sigset_t __user *, nset, sigset_t
 			return -EFAULT;
 		sigdelsetmask(&new_set, sigmask(SIGKILL)|sigmask(SIGSTOP));
 
-		// error = sigprocmask(how, &new_set, NULL);
-		// if (error)
-		// 	return error;
+		error = sigprocmask(how, &new_set, NULL);
+		if (error)
+			return error;
 	}
 
 	if (oset) {

@@ -40,11 +40,11 @@ __sigqueue_alloc(int sig, task_s *t, gfp_t gfp_flags,
 	// if (!sigpending)
 	// 	return NULL;
 
-	// if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
+	if (override_rlimit || likely(sigpending <= task_rlimit(t, RLIMIT_SIGPENDING))) {
 		q = kmem_cache_alloc(sigqueue_cachep, gfp_flags);
-	// } else {
-	// 	print_dropped_signal(sig);
-	// }
+	} else {
+		// print_dropped_signal(sig);
+	}
 
 	if (unlikely(q == NULL)) {
 		// dec_rlimit_put_ucounts(ucounts, UCOUNT_RLIMIT_SIGPENDING);
@@ -67,6 +67,47 @@ __sigqueue_free(sigqueue_s *q) {
 	kmem_cache_free(sigqueue_cachep, q);
 }
 
+/*
+ * Re-calculate pending state from the set of locally pending
+ * signals, globally pending signals, and blocked signals.
+ */
+static inline bool has_pending_signals(sigset_t *signal, sigset_t *blocked)
+{
+	unsigned long ready;
+	long i;
+
+	switch (_NSIG_WORDS) {
+	default:
+		for (i = _NSIG_WORDS, ready = 0; --i >= 0 ;)
+			ready |= signal->sig[i] &~ blocked->sig[i];
+		break;
+
+	case 4: ready  = signal->sig[3] &~ blocked->sig[3];
+		ready |= signal->sig[2] &~ blocked->sig[2];
+		ready |= signal->sig[1] &~ blocked->sig[1];
+		ready |= signal->sig[0] &~ blocked->sig[0];
+		break;
+
+	case 2: ready  = signal->sig[1] &~ blocked->sig[1];
+		ready |= signal->sig[0] &~ blocked->sig[0];
+		break;
+
+	case 1: ready  = signal->sig[0] &~ blocked->sig[0];
+	}
+	return ready !=	0;
+}
+
+
+void calculate_sigpending(void)
+{
+	/* Have any signals or users of TIF_SIGPENDING been delayed
+	 * until after fork?
+	 */
+	spin_lock_irq(&current->sighand->siglock);
+	set_tsk_thread_flag(current, TIF_SIGPENDING);
+	// recalc_sigpending();
+	spin_unlock_irq(&current->sighand->siglock);
+}
 
 /* Given the mask, find the first available signal that should be serviced. */
 #define SYNCHRONOUS_MASK \
@@ -128,11 +169,11 @@ collect_signal(int sig, sigpending_s *list,
 	/*
 	 * Collect the siginfo appropriate to this signal.  Check if
 	 * there is another siginfo for the same signal.
-	*/
+	 */
 	// list_for_each_entry(q, &list->list, list) {
 	list_header_for_each_container(q, &list->list, list) {
 		if (q->info.si_signo == sig) {
-			if (first)
+			if (first != NULL)
 				goto still_pending;
 			first = q;
 		}
@@ -142,13 +183,14 @@ collect_signal(int sig, sigpending_s *list,
 
 	if (first) {
 still_pending:
-		list_del_init(&first->list);
+		// list_del_init(&first->list);
+		list_header_delete_node(&list->list, &first->list);
 		copy_siginfo(info, &first->info);
 
-		*resched_timer =
-			(first->flags & SIGQUEUE_PREALLOC) &&
-			(info->si_code == SI_TIMER) &&
-			(info->si_sys_private);
+		// *resched_timer =
+		// 	(first->flags & SIGQUEUE_PREALLOC) &&
+		// 	(info->si_code == SI_TIMER) &&
+		// 	(info->si_sys_private);
 
 		__sigqueue_free(first);
 	} else {
@@ -171,7 +213,6 @@ __dequeue_signal(sigpending_s *pending, sigset_t *mask,
 		kernel_siginfo_t *info, bool *resched_timer) {
 
 	int sig = next_signal(pending, mask);
-
 	if (sig)
 		collect_signal(sig, pending, info, resched_timer);
 	return sig;
@@ -290,19 +331,21 @@ dequeue_synchronous_signal(kernel_siginfo_t *info) {
 	}
 	return 0;
 next:
-	// /*
-	//  * Check if there is another siginfo for the same signal.
-	//  */
+	/*
+	 * Check if there is another siginfo for the same signal.
+	 */
 	// list_for_each_entry_continue(q, &pending->list, list) {
-	// 	if (q->info.si_signo == sync->info.si_signo)
-	// 		goto still_pending;
-	// }
+	list_header_for_each_container(q, &pending->list, list) {
+		if (q->info.si_signo == sync->info.si_signo)
+			goto still_pending;
+	}
 
-	// sigdelset(&pending->signal, sync->info.si_signo);
+	sigdelset(&pending->signal, sync->info.si_signo);
 	// recalc_sigpending();
 still_pending:
 	// list_del_init(&sync->list);
-	// copy_siginfo(info, &sync->info);
+	list_header_delete_node(&pending->list, &sync->list);
+	copy_siginfo(info, &sync->info);
 	__sigqueue_free(sync);
 	return info->si_signo;
 }
@@ -996,6 +1039,85 @@ void prepare_kill_siginfo(int sig,
 }
 
 
+static void
+__set_task_blocked(task_s *tsk, const sigset_t *newset) {
+	if (task_sigpending(tsk) && !thread_group_empty(tsk)) {
+		sigset_t newblocked;
+		/* A set of now blocked but previously unblocked signals. */
+		sigandnsets(&newblocked, newset, &current->blocked);
+		// retarget_shared_pending(tsk, &newblocked);
+	}
+	tsk->blocked = *newset;
+	// recalc_sigpending();
+}
+
+void __set_current_blocked(const sigset_t *newset)
+{
+	task_s *tsk = current;
+
+	/*
+	 * In case the signal mask hasn't changed, there is nothing we need
+	 * to do. The current->blocked shouldn't be modified by other task.
+	 */
+	if (sigequalsets(&tsk->blocked, newset))
+		return;
+
+	spin_lock_irq(&tsk->sighand->siglock);
+	__set_task_blocked(tsk, newset);
+	spin_unlock_irq(&tsk->sighand->siglock);
+}
+
+/**
+ * set_current_blocked - change current->blocked mask
+ * @newset: new mask
+ *
+ * It is wrong to change ->blocked directly, this helper should be used
+ * to ensure the process can't miss a shared signal we are going to block.
+ */
+void set_current_blocked(sigset_t *newset)
+{
+	sigdelsetmask(newset, sigmask(SIGKILL) | sigmask(SIGSTOP));
+	__set_current_blocked(newset);
+}
+
+/*
+ * This is also useful for kernel threads that want to temporarily
+ * (or permanently) block certain signals.
+ *
+ * NOTE! Unlike the user-mode sys_sigprocmask(), the kernel
+ * interface happily blocks "unblockable" signals like SIGKILL
+ * and friends.
+ */
+int sigprocmask(int how, sigset_t *set, sigset_t *oldset)
+{
+	task_s *tsk = current;
+	sigset_t newset;
+
+	/* Lockless, only current can change ->blocked, never from irq */
+	if (oldset)
+		*oldset = tsk->blocked;
+
+	switch (how) {
+	case SIG_BLOCK:
+		sigorsets(&newset, &tsk->blocked, set);
+		break;
+	case SIG_UNBLOCK:
+		sigandnsets(&newset, &tsk->blocked, set);
+		break;
+	case SIG_SETMASK:
+		newset = *set;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	__set_current_blocked(&newset);
+	return 0;
+}
+EXPORT_SYMBOL(sigprocmask);
+
+
+
 int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 {
 	task_s *p = current, *t;
@@ -1060,6 +1182,7 @@ int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 	spin_unlock_irq(&p->sighand->siglock);
 	return 0;
 }
+
 
 
 

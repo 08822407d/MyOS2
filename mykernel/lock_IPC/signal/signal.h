@@ -31,43 +31,45 @@
 		extern pid_s
 		*task_session(task_s *task);
 
-		// extern int
-		// get_nr_threads(task_s *task);
-
+		extern int
+		get_nr_threads(task_s *task);
 		extern bool
 		thread_group_leader(task_s *p);
-
 		extern bool
 		same_thread_group(task_s *p1, task_s *p2);
+		extern task_s
+		*__next_thread(task_s *p);
+		extern task_s
+		*next_thread(task_s *p);
+		extern int
+		thread_group_empty(task_s *p);
 
 
 		extern void
 		sigaddset(sigset_t *set, int _sig);
-
 		extern void
 		sigdelset(sigset_t *set, int _sig);
 
 		extern int
 		sigismember(sigset_t *set, int _sig);
+		extern int
+		sigisemptyset(sigset_t *set);
+		extern int
+		sigequalsets(const sigset_t *set1, const sigset_t *set2);
 
 		extern void
 		sigemptyset(sigset_t *set);
-
 		extern void
 		sigfillset(sigset_t *set);
-
 		extern void
 		sigaddsetmask(sigset_t *set, ulong mask);
-
 		extern void
 		sigdelsetmask(sigset_t *set, ulong mask);
 
 		extern int
 		sigtestsetmask(sigset_t *set, ulong mask);
-
 		extern void
 		siginitset(sigset_t *set, ulong mask);
-
 		extern void
 		siginitsetinv(sigset_t *set, ulong mask);
 
@@ -79,18 +81,29 @@
 
 		extern int
 		__on_sig_stack(ulong sp);
-
 		extern int
 		on_sig_stack(ulong sp);
 
 		extern int
 		sas_ss_flags(ulong sp);
-
 		extern void
 		sas_ss_reset(task_s *p);
-
 		extern ulong
 		sigsp(ulong sp, ksignal_s *ksig);
+
+
+		extern int
+		restart_syscall(void);
+		extern int
+		task_sigpending(task_s *p);
+		extern int
+		signal_pending(task_s *p);
+		extern int
+		__fatal_signal_pending(task_s *p);
+		extern int
+		fatal_signal_pending(task_s *p);
+		extern int
+		signal_pending_state(uint state, task_s *p);
 
 	#endif
 
@@ -160,11 +173,11 @@
 			return task->signal->pids[PIDTYPE_SID];
 		}
 
-		// PREFIX_STATIC_INLINE
-		// int
-		// get_nr_threads(task_s *task) {
-		// 	return task->signal->nr_threads;
-		// }
+		PREFIX_STATIC_INLINE
+		int
+		get_nr_threads(task_s *task) {
+			return task->signal->nr_threads;
+		}
 
 		PREFIX_STATIC_INLINE
 		bool
@@ -177,6 +190,34 @@
 		same_thread_group(task_s *p1, task_s *p2) {
 			return p1->signal == p2->signal;
 		}
+
+		/*
+		 * returns NULL if p is the last thread in the thread group
+		 */
+		PREFIX_STATIC_INLINE
+		task_s
+		*__next_thread(task_s *p) {
+			// return list_next_or_null_rcu(&p->signal->thread_head,
+			// 				&p->thread_node,
+			// 				struct task_struct,
+			// 				thread_node);
+		}
+
+		PREFIX_STATIC_INLINE
+		task_s
+		*next_thread(task_s *p) {
+			// return __next_thread(p) ?: p->group_leader;
+			return NULL;
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		thread_group_empty(task_s *p) {
+			// return thread_group_leader(p) &&
+			// 	list_is_last(&p->thread_node, &p->signal->thread_head);
+			return 0;
+		}
+
 
 
 		/* We don't use <linux/bitops.h> for these because there is no need to
@@ -212,6 +253,42 @@
 		}
 
 		PREFIX_STATIC_INLINE
+		int
+		sigisemptyset(sigset_t *set) {
+			switch (_NSIG_WORDS) {
+				case 4:
+					return (set->sig[3] | set->sig[2] |
+							set->sig[1] | set->sig[0]) == 0;
+				case 2:
+					return (set->sig[1] | set->sig[0]) == 0;
+				case 1:
+					return set->sig[0] == 0;
+				default:
+					BUILD_BUG();
+					return 0;
+			}
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		sigequalsets(const sigset_t *set1, const sigset_t *set2) {
+			switch (_NSIG_WORDS) {
+				case 4:
+					return	(set1->sig[3] == set2->sig[3]) &&
+							(set1->sig[2] == set2->sig[2]) &&
+							(set1->sig[1] == set2->sig[1]) &&
+							(set1->sig[0] == set2->sig[0]);
+				case 2:
+					return	(set1->sig[1] == set2->sig[1]) &&
+							(set1->sig[0] == set2->sig[0]);
+				case 1:
+					return	set1->sig[0] == set2->sig[0];
+			}
+			return 0;
+		}
+
+
+		PREFIX_STATIC_INLINE
 		void
 		sigemptyset(sigset_t *set) {
 			switch (_NSIG_WORDS) {
@@ -240,7 +317,6 @@
 		}
 
 		/* Some extensions for manipulating the low 32 signals in particular.  */
-
 		PREFIX_STATIC_INLINE
 		void
 		sigaddsetmask(sigset_t *set, ulong mask) {
@@ -359,6 +435,78 @@
 			return sp;
 		}
 
+
+
+		PREFIX_STATIC_INLINE
+		int
+		restart_syscall(void) {
+			set_tsk_thread_flag(current, TIF_SIGPENDING);
+			return -ERESTARTNOINTR;
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		task_sigpending(task_s *p) {
+			return unlikely(test_tsk_thread_flag(p,TIF_SIGPENDING));
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		signal_pending(task_s *p) {
+			/*
+			* TIF_NOTIFY_SIGNAL isn't really a signal, but it requires the same
+			* behavior in terms of ensuring that we break out of wait loops
+			* so that notify signal callbacks can be processed.
+			*/
+			if (unlikely(test_tsk_thread_flag(p, TIF_NOTIFY_SIGNAL)))
+				return 1;
+			return task_sigpending(p);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		__fatal_signal_pending(task_s *p) {
+			return unlikely(sigismember(&p->pending.signal, SIGKILL));
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		fatal_signal_pending(task_s *p) {
+			return task_sigpending(p) && __fatal_signal_pending(p);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		signal_pending_state(uint state, task_s *p) {
+			if (!(state & (TASK_INTERRUPTIBLE | TASK_WAKEKILL)))
+				return 0;
+			if (!signal_pending(p))
+				return 0;
+
+			return (state & TASK_INTERRUPTIBLE) || __fatal_signal_pending(p);
+		}
+
 	#endif /* !DEBUG */
+
+
+	#define _sig_or(x,y)	((x) | (y))
+			_SIG_SET_BINOP(sigorsets, _sig_or)
+
+	#define _sig_and(x,y)	((x) & (y))
+			_SIG_SET_BINOP(sigandsets, _sig_and)
+
+	#define _sig_andn(x,y)	((x) & ~(y))
+			_SIG_SET_BINOP(sigandnsets, _sig_andn)
+
+	#undef _SIG_SET_BINOP
+	#undef _sig_or
+	#undef _sig_and
+	#undef _sig_andn
+
+	#define _sig_not(x)	(~(x))
+			_SIG_SET_OP(signotset, _sig_not)
+
+	#undef _SIG_SET_OP
+	#undef _sig_not
 
 #endif /* _LINUX_SIGNAL_H_ */

@@ -152,48 +152,7 @@
 	// extern int send_sigqueue(struct sigqueue *, pid_s *, enum pid_type);
 	// extern int do_sigaction(int, struct k_sigaction *, struct k_sigaction *);
 
-	// static inline int restart_syscall(void)
-	// {
-	// 	set_tsk_thread_flag(current, TIF_SIGPENDING);
-	// 	return -ERESTARTNOINTR;
-	// }
 
-	// static inline int task_sigpending(task_s *p)
-	// {
-	// 	return unlikely(test_tsk_thread_flag(p,TIF_SIGPENDING));
-	// }
-
-	// static inline int signal_pending(task_s *p)
-	// {
-	// 	/*
-	// 	* TIF_NOTIFY_SIGNAL isn't really a signal, but it requires the same
-	// 	* behavior in terms of ensuring that we break out of wait loops
-	// 	* so that notify signal callbacks can be processed.
-	// 	*/
-	// 	if (unlikely(test_tsk_thread_flag(p, TIF_NOTIFY_SIGNAL)))
-	// 		return 1;
-	// 	return task_sigpending(p);
-	// }
-
-	// static inline int __fatal_signal_pending(task_s *p)
-	// {
-	// 	return unlikely(sigismember(&p->pending.signal, SIGKILL));
-	// }
-
-	// static inline int fatal_signal_pending(task_s *p)
-	// {
-	// 	return task_sigpending(p) && __fatal_signal_pending(p);
-	// }
-
-	// static inline int signal_pending_state(unsigned int state, task_s *p)
-	// {
-	// 	if (!(state & (TASK_INTERRUPTIBLE | TASK_WAKEKILL)))
-	// 		return 0;
-	// 	if (!signal_pending(p))
-	// 		return 0;
-
-	// 	return (state & TASK_INTERRUPTIBLE) || __fatal_signal_pending(p);
-	// }
 
 	// /*
 	// * This should only be used in fault handlers to decide whether we
@@ -216,8 +175,8 @@
 	// * callers must hold sighand->siglock.
 	// */
 	// extern void recalc_sigpending_and_wake(task_s *t);
-	// extern void recalc_sigpending(void);
-	// extern void calculate_sigpending(void);
+	extern void recalc_sigpending(void);
+	extern void calculate_sigpending(void);
 
 	// extern void signal_wake_up_state(task_s *t, unsigned int state);
 
@@ -407,13 +366,5 @@
 	// #else
 	// static inline void lockdep_assert_task_sighand_held(task_s *task) { }
 	// #endif
-
-	static inline unsigned long rlimit(unsigned int limit) {
-		return READ_ONCE(current->signal->rlim[limit].rlim_cur);
-	}
-
-	static inline unsigned long rlimit_max(unsigned int limit) {
-		return READ_ONCE(current->signal->rlim[limit].rlim_max);
-	}
 
 #endif /* _LINUX_SCHED_SIGNAL_H */
