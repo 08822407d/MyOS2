@@ -38,15 +38,15 @@
 	// extern const sys_call_ptr_t ia32_sys_call_table[];
 	// extern const sys_call_ptr_t x32_sys_call_table[];
 
-	// /*
-	// * Only the low 32 bits of orig_ax are meaningful, so we return int.
-	// * This importantly ignores the high bits on 64-bit, so comparisons
-	// * sign-extend the low 32 bits.
-	// */
-	// static inline int syscall_get_nr(task_s *task, pt_regs_s *regs)
-	// {
-	// 	return regs->orig_ax;
-	// }
+	/*
+	* Only the low 32 bits of orig_ax are meaningful, so we return int.
+	* This importantly ignores the high bits on 64-bit, so comparisons
+	* sign-extend the low 32 bits.
+	*/
+	static inline int
+	syscall_get_nr(task_s *task, pt_regs_s *regs) {
+		return regs->orig_ax;
+	}
 
 	// static inline void syscall_rollback(task_s *task,
 	// 									pt_regs_s *regs)
@@ -54,24 +54,23 @@
 	// 	regs->ax = regs->orig_ax;
 	// }
 
-	// static inline long syscall_get_error(task_s *task,
-	// 									pt_regs_s *regs)
-	// {
-	// 	unsigned long error = regs->ax;
-	// #ifdef CONFIG_IA32_EMULATION
-	// 	/*
-	// 	* TS_COMPAT is set for 32-bit syscall entries and then
-	// 	* remains set until we return to user mode.
-	// 	*/
-	// 	if (task->thread_info.status & (TS_COMPAT | TS_I386_REGS_POKED))
-	// 		/*
-	// 		* Sign-extend the value so (int)-EFOO becomes (long)-EFOO
-	// 		* and will match correctly in comparisons.
-	// 		*/
-	// 		error = (long)(int)error;
-	// #endif
-	// 	return IS_ERR_VALUE(error) ? error : 0;
-	// }
+	static inline long
+	syscall_get_error(task_s *task, pt_regs_s *regs) {
+		unsigned long error = regs->ax;
+	#ifdef CONFIG_IA32_EMULATION
+		/*
+		* TS_COMPAT is set for 32-bit syscall entries and then
+		* remains set until we return to user mode.
+		*/
+		if (task->thread_info.status & (TS_COMPAT | TS_I386_REGS_POKED))
+			/*
+			* Sign-extend the value so (int)-EFOO becomes (long)-EFOO
+			* and will match correctly in comparisons.
+			*/
+			error = (long)(int)error;
+	#endif
+		return IS_ERR_VALUE(error) ? error : 0;
+	}
 
 	// static inline long syscall_get_return_value(task_s *task,
 	// 											pt_regs_s *regs)

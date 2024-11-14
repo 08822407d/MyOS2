@@ -178,7 +178,7 @@
 	extern void recalc_sigpending(void);
 	extern void calculate_sigpending(void);
 
-	// extern void signal_wake_up_state(task_s *t, unsigned int state);
+	extern void signal_wake_up_state(task_s *t, uint state);
 
 
 	// void task_join_group_stop(task_s *task);

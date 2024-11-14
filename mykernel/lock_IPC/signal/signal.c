@@ -23,7 +23,7 @@ __sigqueue_alloc(int sig, task_s *t, gfp_t gfp_flags,
 
 	sigqueue_s *q = NULL;
 	// struct ucounts *ucounts;
-	long sigpending;
+	long sigpending = 0;
 
 	// /*
 	//  * Protect access to @t credentials. This can go away when all
@@ -161,7 +161,7 @@ int next_signal(sigpending_s *pending, sigset_t *mask)
 }
 
 static void
-collect_signal(int sig, sigpending_s *list,
+collect_signal(int sig, sigpending_s *pending,
 		kernel_siginfo_t *info, bool *resched_timer) {
 
 	sigqueue_s *q, *first = NULL;
@@ -171,7 +171,7 @@ collect_signal(int sig, sigpending_s *list,
 	 * there is another siginfo for the same signal.
 	 */
 	// list_for_each_entry(q, &list->list, list) {
-	list_header_for_each_container(q, &list->list, list) {
+	list_header_for_each_container(q, &pending->list, list) {
 		if (q->info.si_signo == sig) {
 			if (first != NULL)
 				goto still_pending;
@@ -179,12 +179,11 @@ collect_signal(int sig, sigpending_s *list,
 		}
 	}
 
-	sigdelset(&list->signal, sig);
+	sigdelset(&pending->signal, sig);
 
 	if (first) {
 still_pending:
-		// list_del_init(&first->list);
-		list_header_delete_node(&list->list, &first->list);
+		list_header_delete_node(&pending->list, &first->list);
 		copy_siginfo(info, &first->info);
 
 		// *resched_timer =
@@ -213,7 +212,7 @@ __dequeue_signal(sigpending_s *pending, sigset_t *mask,
 		kernel_siginfo_t *info, bool *resched_timer) {
 
 	int sig = next_signal(pending, mask);
-	if (sig)
+	if (sig != 0)
 		collect_signal(sig, pending, info, resched_timer);
 	return sig;
 }
@@ -376,6 +375,31 @@ void signal_wake_up_state(task_s *t, unsigned int state)
 	 */
 	if (!wake_up_state(t, state | TASK_INTERRUPTIBLE))
 		kick_process(t);
+}
+
+/*
+ * Remove signals in mask from the pending set and queue.
+ * Returns 1 if any signals were found.
+ *
+ * All callers must be holding the siglock.
+ */
+static void
+flush_sigqueue_mask(sigset_t *mask, sigpending_s *pending) {
+	sigqueue_s *q, *n;
+	sigset_t m;
+
+	sigandsets(&m, mask, &pending->signal);
+	if (sigisemptyset(&m))
+		return;
+
+	sigandnsets(&pending->signal, &pending->signal, mask);
+	// list_for_each_entry_safe(q, n, &s->list, list) {
+	list_header_for_each_container_safe(q, n, &pending->list, list) {
+		if (sigismember(mask, q->info.si_signo)) {
+			list_header_delete_node(&pending->list, &q->list);
+			__sigqueue_free(q);
+		}
+	}
 }
 
 
@@ -1173,7 +1197,7 @@ int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 		if (sig_handler_ignored(sig_handler(p, sig), sig)) {
 			sigemptyset(&mask);
 			sigaddset(&mask, sig);
-			// flush_sigqueue_mask(&mask, &p->signal->shared_pending);
+			flush_sigqueue_mask(&mask, &p->signal->shared_pending);
 			// for_each_thread(p, t)
 			// 	flush_sigqueue_mask(&mask, &t->pending);
 		}
