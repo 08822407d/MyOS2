@@ -105,6 +105,26 @@
 		extern int
 		signal_pending_state(uint state, task_s *p);
 
+
+		extern void
+		set_restore_sigmask(void);
+		extern void
+		clear_tsk_restore_sigmask(task_s *task);
+		extern void
+		clear_restore_sigmask(void);
+		extern bool
+		test_restore_sigmask(void);
+		extern bool
+		test_tsk_restore_sigmask(task_s *task);
+		extern bool
+		test_and_clear_restore_sigmask(void);
+		extern void
+		restore_saved_sigmask(void);
+		extern void
+		restore_saved_sigmask_unless(bool interrupted);
+		extern sigset_t
+		*sigmask_to_save(void);
+
 	#endif
 
 	#include "signal_macro.h"
@@ -199,7 +219,7 @@
 		*__next_thread(task_s *p) {
 			// return list_next_or_null_rcu(&p->signal->thread_head,
 			// 				&p->thread_node,
-			// 				struct task_struct,
+			// 				task_s,
 			// 				thread_node);
 		}
 
@@ -484,6 +504,68 @@
 				return 0;
 
 			return (state & TASK_INTERRUPTIBLE) || __fatal_signal_pending(p);
+		}
+
+
+
+		/* Higher-quality implementation, used if TIF_RESTORE_SIGMASK doesn't exist. */
+		PREFIX_STATIC_INLINE
+		void
+		set_restore_sigmask(void) {
+			current->restore_sigmask = true;
+		}
+		PREFIX_STATIC_INLINE
+		void
+		clear_tsk_restore_sigmask(task_s *task) {
+			task->restore_sigmask = false;
+		}
+		PREFIX_STATIC_INLINE
+		void
+		clear_restore_sigmask(void) {
+			current->restore_sigmask = false;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		test_restore_sigmask(void) {
+			return current->restore_sigmask;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		test_tsk_restore_sigmask(task_s *task) {
+			return task->restore_sigmask;
+		}
+		PREFIX_STATIC_INLINE
+		bool
+		test_and_clear_restore_sigmask(void) {
+			if (!current->restore_sigmask)
+				return false;
+			current->restore_sigmask = false;
+			return true;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		restore_saved_sigmask(void) {
+			if (test_and_clear_restore_sigmask())
+				__set_current_blocked(&current->saved_sigmask);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		restore_saved_sigmask_unless(bool interrupted) {
+			if (interrupted)
+				WARN_ON(!signal_pending(current));
+			else
+				restore_saved_sigmask();
+		}
+
+		PREFIX_STATIC_INLINE
+		sigset_t
+		*sigmask_to_save(void) {
+			sigset_t *res = &current->blocked;
+			if (unlikely(test_restore_sigmask()))
+				res = &current->saved_sigmask;
+			return res;
 		}
 
 	#endif /* !DEBUG */

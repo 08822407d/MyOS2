@@ -16,6 +16,8 @@
 	void set_current_blocked(sigset_t *newset);
 	int sigprocmask(int how, sigset_t *set, sigset_t *oldset);
 
+	int copy_siginfo_to_user(siginfo_t *to, const kernel_siginfo_t *from);
+
 	int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact);
 
 	void signals_init(void);

@@ -25,58 +25,57 @@
 	// extern int __get_user_nocheck_8(void);
 	// extern int __get_user_bad(void);
 
-	#define __uaccess_begin() stac()
-	#define __uaccess_end()   clac()
-	#define __uaccess_begin_nospec()	\
-	({					\
-		stac();				\
-		barrier_nospec();		\
-	})
+	#define __uaccess_begin()		stac()
+	#define __uaccess_end()  		clac()
+	#define __uaccess_begin_nospec()	({	\
+				stac();						\
+				barrier_nospec();			\
+			})
 
 	/*
 	 * This is the smallest unsigned integer type that can fit a value
 	 * (up to 'long long')
 	 */
 	#define __inttype(x) __typeof__(		\
-		__typefits(x,char,			\
-		  __typefits(x,short,			\
-		    __typefits(x,int,			\
-		      __typefits(x,long,0ULL)))))
+			__typefits(x,char,			\
+				__typefits(x,short,			\
+					__typefits(x,int,			\
+					__typefits(x,long,0ULL)))))
 
 	#define __typefits(x,type,not) \
-		__builtin_choose_expr(sizeof(x)<=sizeof(type),(unsigned type)0,not)
+			__builtin_choose_expr(sizeof(x)<=sizeof(type),(unsigned type)0,not)
 
-	/*
-	 * This is used for both get_user() and __get_user() to expand to
-	 * the proper special function call that has odd calling conventions
-	 * due to returning both a value and an error, and that depends on
-	 * the size of the pointer passed in.
-	 *
-	 * Careful: we have to cast the result to the type of the pointer
-	 * for sign reasons.
-	 *
-	 * The use of _ASM_DX as the register specifier is a bit of a
-	 * simplification, as gcc only cares about it as the starting point
-	 * and not size: for a 64-bit value it will use %ecx:%edx on 32 bits
-	 * (%ecx being the next register in gcc's x86 register sequence), and
-	 * %rdx on 64 bits.
-	 *
-	 * Clang/LLVM cares about the size of the register, but still wants
-	 * the base register for something that ends up being a pair.
-	 */
-	#define do_get_user_call(fn,x,ptr)					\
-	({									\
-		int __ret_gu;							\
-		register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
-		__chk_user_ptr(ptr);						\
-		asm volatile("call __" #fn "_%c[size]"				\
-			     : "=a" (__ret_gu), "=r" (__val_gu),		\
-				ASM_CALL_CONSTRAINT				\
-			     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
-		instrument_get_user(__val_gu);					\
-		(x) = (__force __typeof__(*(ptr))) __val_gu;			\
-		__builtin_expect(__ret_gu, 0);					\
-	})
+	// /*
+	//  * This is used for both get_user() and __get_user() to expand to
+	//  * the proper special function call that has odd calling conventions
+	//  * due to returning both a value and an error, and that depends on
+	//  * the size of the pointer passed in.
+	//  *
+	//  * Careful: we have to cast the result to the type of the pointer
+	//  * for sign reasons.
+	//  *
+	//  * The use of _ASM_DX as the register specifier is a bit of a
+	//  * simplification, as gcc only cares about it as the starting point
+	//  * and not size: for a 64-bit value it will use %ecx:%edx on 32 bits
+	//  * (%ecx being the next register in gcc's x86 register sequence), and
+	//  * %rdx on 64 bits.
+	//  *
+	//  * Clang/LLVM cares about the size of the register, but still wants
+	//  * the base register for something that ends up being a pair.
+	//  */
+	// #define do_get_user_call(fn,x,ptr)					\
+	// ({									\
+	// 	int __ret_gu;							\
+	// 	register __inttype(*(ptr)) __val_gu asm("%"_ASM_DX);		\
+	// 	__chk_user_ptr(ptr);						\
+	// 	asm volatile("call __" #fn "_%c[size]"				\
+	// 		     : "=a" (__ret_gu), "=r" (__val_gu),		\
+	// 			ASM_CALL_CONSTRAINT				\
+	// 		     : "0" (ptr), [size] "i" (sizeof(*(ptr))));		\
+	// 	instrument_get_user(__val_gu);					\
+	// 	(x) = (__force __typeof__(*(ptr))) __val_gu;			\
+	// 	__builtin_expect(__ret_gu, 0);					\
+	// })
 
 	/**
 	 * get_user - Get a simple variable from user space.
@@ -126,7 +125,7 @@
 	// #define __get_user(x,ptr) do_get_user_call(get_user_nocheck,x,ptr)
 
 
-	// #define __put_user_goto_u65(x, ptr, label) \
+	// #define __put_user_goto_u64(x, ptr, label) \
 	// 	__put_user_goto(x, ptr, "q", "er", label)
 
 	// extern void __put_user_bad(void);
@@ -431,7 +430,7 @@
 	// #define user_access_restore(x)	smap_restore(x)
 
 	// #define unsafe_put_user(x, ptr, label)	\
-	// 	__put_user_size((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
+	// 		__put_user_size((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
 
 	// #ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
 	// #define unsafe_get_user(x, ptr, err_label)					\
@@ -533,6 +532,13 @@
 	// #define __put_kernel_nofault(dst, src, type, err_label)			\
 	// 	__put_user_size(*((type *)(src)), (__force type __user *)(dst),	\
 	// 			sizeof(type), err_label)
+
+
+
+	/* MyOS2 simplified implementation */
+	#define unsafe_put_user(x, ptr, label)		\
+			if (put_user(x, ptr) != -ENOERR)	\
+				goto label;
 
 #endif /* _ASM_X86_UACCESS_H */
 

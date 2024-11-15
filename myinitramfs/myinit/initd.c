@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <sched.h>
+#include <signal.h>
 
 
 int normal_boot(int argc, const char *argv[]);

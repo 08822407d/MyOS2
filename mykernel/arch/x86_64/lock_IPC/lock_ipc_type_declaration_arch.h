@@ -25,6 +25,8 @@
 	typedef struct sigcontext_64 sigctx_64_s;
 	struct rt_sigframe;
 	typedef struct rt_sigframe rt_sigframe_s;
+	struct sigaltstack;
+	typedef struct sigaltstack stack_t;
 
 	/*
 	 * Create the real 'struct sigcontext' type:

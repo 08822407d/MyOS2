@@ -11,12 +11,12 @@
 	// 	for (p = &init_task ; (p = next_task(p)) != &init_task ; )
 
 	/* These can be the second arg to send_sig_info/send_group_sig_info.  */
-	#define SEND_SIG_NOINFO	((kernel_siginfo_t *) 0)
-	#define SEND_SIG_PRIV	((kernel_siginfo_t *) 1)
+	#define SEND_SIG_NOINFO		((kernel_siginfo_t *) 0)
+	#define SEND_SIG_PRIV		((kernel_siginfo_t *) 1)
 
-	// #define SI_EXPANSION_SIZE (sizeof(struct siginfo) - sizeof(struct kernel_siginfo))
+	#define SI_EXPANSION_SIZE	(sizeof(siginfo_t) - sizeof(kernel_siginfo_t))
 
-	#define sigmask(sig)	(1UL << ((sig) - 1))
+	#define sigmask(sig)		(1UL << ((sig) - 1))
 
 	/*
 	 * In POSIX a signal is sent either to a specific thread (Linux task)

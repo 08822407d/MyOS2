@@ -3,6 +3,7 @@
 
 #include <linux/kernel/sched_api.h>
 #include <linux/kernel/mm_api.h>
+#include <linux/kernel/uaccess.h>
 
 
 /*
@@ -1046,6 +1047,24 @@ relock:
 	// 	hide_si_addr_tag_bits(ksig);
 out:
 	return signr > 0;
+}
+
+
+
+
+static inline char __user
+*si_expansion(const siginfo_t __user *info) {
+	return ((char __user *)info) + sizeof(kernel_siginfo_t);
+}
+
+int copy_siginfo_to_user(siginfo_t __user *to, const kernel_siginfo_t *from)
+{
+	char __user *expansion = si_expansion(to);
+	if (copy_to_user(to, from , sizeof(kernel_siginfo_t)))
+		return -EFAULT;
+	if (clear_user(expansion, SI_EXPANSION_SIZE))
+		return -EFAULT;
+	return 0;
 }
 
 

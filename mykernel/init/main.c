@@ -212,9 +212,6 @@ do_initcalls(void) {
 	// pci_arch_init();
 	// myos_scan_pci_devices();
 
-	/* MyOS initcall */
-	register_diskfs();
-
 	/* early_initcall (fn, early) */
 	init_sigframe_size();
 
@@ -229,6 +226,9 @@ do_initcalls(void) {
 
 	/* device_initcall (fn, 6) */
 	pid_namespaces_init();
+
+	/* MyOS initcall */
+	register_diskfs();
 }
 
 /*

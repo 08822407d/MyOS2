@@ -1,6 +1,7 @@
 #include "tests.h"
 
 
+// task: sh
 void test_all()
 {
 	signal(SIGTERM, sigaction_SIGKILL_test);
@@ -9,17 +10,13 @@ void test_all()
 	if (rv == 0) {
 		pid_t pid = getpid();
 		signal_test();
-	} else {
-		pid_t pid = getpid();
-		while (1)
-			sched_yield();
 	}
 }
 
 void signal_test()
 {
-	pid_t pid = getppid();
-	kill(pid, SIGTERM);
+	pid_t ppid = getppid();
+	kill(ppid, SIGTERM);
 }
 
 void sigaction_SIGKILL_test(int val)

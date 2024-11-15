@@ -183,10 +183,10 @@
 	// 	unsigned sched_remote_wakeup : 1;
 
 		/* Bit to tell LSMs we're in execve(): */
-		unsigned		in_execve : 1;
-		unsigned		in_iowait : 1;
+		unsigned	in_execve			: 1;
+		unsigned	in_iowait			: 1;
 	// #ifndef TIF_RESTORE_SIGMASK
-	// 	unsigned restore_sigmask : 1;
+		unsigned	restore_sigmask		: 1;
 	// #endif
 	// #ifdef CONFIG_COMPAT_BRK
 	// 	unsigned brk_randomized : 1;
@@ -352,9 +352,9 @@
 		signal_s		*signal;
 		sighand_s __rcu	*sighand;
 		sigset_t		blocked;
-		// sigset_t real_blocked;
-		// /* Restored if set_restore_sigmask() was used: */
-		// sigset_t saved_sigmask;
+		sigset_t		real_blocked;
+		/* Restored if set_restore_sigmask() was used: */
+		sigset_t		saved_sigmask;
 		sigpending_s	pending;
 		ulong			sas_ss_sp;
 		size_t			sas_ss_size;

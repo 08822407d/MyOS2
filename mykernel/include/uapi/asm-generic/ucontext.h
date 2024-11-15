@@ -5,7 +5,7 @@
 	struct ucontext {
 		ulong			uc_flags;
 		ucontext_s		*uc_link;
-		// stack_t				uc_stack;
+		stack_t			uc_stack;
 		sigctx_s		uc_mcontext;
 		sigset_t		uc_sigmask;	/* mask last for extensibility */
 	};

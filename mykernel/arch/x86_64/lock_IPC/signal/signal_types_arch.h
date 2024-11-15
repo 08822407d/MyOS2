@@ -47,12 +47,19 @@
 		__u64				reserved1[8];
 	};
 
+	typedef struct sigaltstack {
+		void __user		*ss_sp;
+		int				ss_flags;
+		size_t			ss_size;
+	} stack_t;
+
+	#include <uapi/asm-generic/siginfo.h>
 	#include <uapi/asm-generic/ucontext.h>
 
 	struct rt_sigframe {
 		char __user		*pretcode;
 		ucontext_s		uc;
-		// struct siginfo info;
+		siginfo_t		info;
 		/* fp state follows here */
 	};
 
