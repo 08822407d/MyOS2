@@ -762,7 +762,7 @@ copy_sighand(ulong clone_flags, task_s *tsk) {
 	refcount_set(&sig->count, 1);
 	spin_lock_irq(&current->sighand->siglock);
 	memcpy(sig->action, current->sighand->action, sizeof(sig->action));
-	spin_unlock_irq(&current->sighand->siglock);
+	spin_unlock_irq_no_resched(&current->sighand->siglock);
 
 	// /* Reset all signal handler not set to SIG_IGN to SIG_DFL. */
 	// if (clone_flags & CLONE_CLEAR_SIGHAND)
@@ -1427,7 +1427,7 @@ bad_fork_free:
 fork_out:
 	spin_lock_irq(&current->sighand->siglock);
 	// hlist_del_init(&delayed.node);
-	spin_unlock_irq(&current->sighand->siglock);
+	spin_unlock_irq_no_resched(&current->sighand->siglock);
 	return ERR_PTR(retval);
 }
 
