@@ -15,6 +15,7 @@ __SYSCALL(__NR_munmap, sys_munmap)
 __SYSCALL(__NR_brk, sys_brk)
 __SYSCALL(__NR_rt_sigaction, sys_rt_sigaction)
 __SYSCALL(__NR_rt_sigprocmask, sys_rt_sigprocmask)
+__SYSCALL(__NR_rt_sigreturn, sys_rt_sigreturn)
 
 __SYSCALL(__NR_ioctl, sys_ioctl)
 

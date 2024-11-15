@@ -206,20 +206,29 @@ void pid_namespaces_init(void);
 int tty_class_init(void);
 int chr_dev_init(void);
 int init_elf_binfmt(void);
+int init_sigframe_size(void);
 static void
 do_initcalls(void) {
 	// pci_arch_init();
 	// myos_scan_pci_devices();
 
+	/* MyOS initcall */
 	register_diskfs();
 
-	pid_namespaces_init();
+	/* early_initcall (fn, early) */
+	init_sigframe_size();
 
+	/* core_initcall (fn, 1) */
+	init_elf_binfmt();
+
+	/* postcore_initcall (fn, 2) */
 	tty_class_init();
 
+	/* fs_initcall (fn, 5) */
 	chr_dev_init();
 
-	init_elf_binfmt();
+	/* device_initcall (fn, 6) */
+	pid_namespaces_init();
 }
 
 /*

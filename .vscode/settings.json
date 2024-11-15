@@ -375,7 +375,8 @@
         "signal-defs.h": "c",
         "signal_api_arch.h": "c",
         "signal_types_arch.h": "c",
-        "tests.h": "c"
+        "tests.h": "c",
+        "ucontext.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

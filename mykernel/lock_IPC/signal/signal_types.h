@@ -146,9 +146,7 @@
 		uint			sa_flags;
 		__sighandler_t	sa_handler;
 	#endif
-	#ifdef __ARCH_HAS_SA_RESTORER
 		__sigrestore_t	sa_restorer;
-	#endif
 		sigset_t		sa_mask;	/* mask last for extensibility */
 	};
 
