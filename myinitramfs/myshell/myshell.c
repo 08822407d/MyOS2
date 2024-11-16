@@ -76,7 +76,7 @@ int main(int argc, const char *argv[])
 	char buf[SZ_4K];
 	int index = -1;
 
-	test_all();
+	// test_all();
 
 	while (1)
 	{
@@ -141,6 +141,7 @@ void run_cmd(int index, int argc, char **argv)
 
 int find_cmd(char *cmd)
 {
+	// printf("parsing command: %s ... ", cmd);
 	int i = 0;
 	for(i = 0;i<sizeof(shell_internal_cmd)/sizeof(builtincmd_s);i++)
 		if(!strcmp(cmd,shell_internal_cmd[i].name))

@@ -54,12 +54,12 @@ void init_keyboard()
 	entry.dst.physical.phy_dest = 0;
 	entry.dst.physical.reserved2 = 0;
 
-	// wait_KB_write();
-	// outb(KBCMD_WRITE_CMD, PORT_KB_CMD);
-	// wait_KB_write();
-	// outb(KB_INIT_MODE, PORT_KB_DATA);
+	wait_KB_write();
+	outb(KBCMD_WRITE_CMD, PORT_KB_CMD);
+	wait_KB_write();
+	outb(KB_INIT_MODE, PORT_KB_DATA);
 
-	for(i = 0;i<100;i++)
+	for(i = 0;i<1000;i++)
 		nop();
 	
 	shift_l = 0;
@@ -113,7 +113,7 @@ void keyboard_handler(unsigned long param, pt_regs_s * regs)
 	*p_kb->p_head = x;
 	p_kb->p_head ++;	
 	p_kb->count++;
-	spin_unlock_no_resched(&kbdbuf_lock);
+	spin_unlock(&kbdbuf_lock);
 
 	complete(&getcode_done);
 }
@@ -137,7 +137,7 @@ unsigned char kbd_get_scancode()
 	*p_kb->p_tail = 0;
 	p_kb->p_tail++;
 	p_kb->count--;
-	spin_unlock_irq_no_resched(&kbdbuf_lock);
+	spin_unlock_irq(&kbdbuf_lock);
 
 	return ret;
 }
