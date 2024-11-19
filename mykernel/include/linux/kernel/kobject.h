@@ -19,7 +19,7 @@
 	#include <linux/kernel/lib.h>
 	#include <linux/compiler/compiler.h>
 	#include <linux/kernel/lock_ipc_types.h>
-	#include <linux/kernel/workqueue.h>
+	#include <linux/kernel/kactive_api.h>
 	#include <linux/kernel/uidgid.h>
 
 

@@ -1,5 +1,5 @@
-#ifndef _LINUX_SIGNAL_MACRO_H_
-#define _LINUX_SIGNAL_MACRO_H_
+#ifndef _SIGNAL_MACRO_H_
+#define _SIGNAL_MACRO_H_
 
 	// #define tasklist_empty() \
 	// 	list_empty(&init_task.tasks)
@@ -204,4 +204,4 @@
 			signal_wake_up_state(t, resume ? __TASK_TRACED : 0)
 
 
-#endif /* _LINUX_SIGNAL_MACRO_H_ */
+#endif /* _SIGNAL_MACRO_H_ */

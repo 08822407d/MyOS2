@@ -39,7 +39,7 @@
 // #include <linux/interrupt.h>
 #include <linux/kernel/completion.h>
 // #include <linux/suspend.h>
-#include <linux/kernel/workqueue.h>
+#include <linux/kernel/kactive_api.h>
 // #include <linux/scatterlist.h>
 #include <linux/kernel/log2.h>
 #include <linux/kernel/mm_api.h>

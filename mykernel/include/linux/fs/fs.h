@@ -16,7 +16,7 @@
 	#include <linux/kernel/lock_ipc_types.h>
 	#include <linux/kernel/fcntl.h>
 	#include <linux/kernel/uidgid.h>
-	#include <linux/kernel/workqueue.h>
+	#include <linux/kernel/kactive_api.h>
 	#include <linux/kernel/uuid.h>
 	#include <linux/kernel/stddef.h>
 	#include <linux/kernel/mount.h>

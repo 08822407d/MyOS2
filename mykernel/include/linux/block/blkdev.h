@@ -4,7 +4,7 @@
 
 	#include <linux/kernel/sched.h>
 	#include <linux/kernel/minmax.h>
-	#include <linux/kernel/workqueue.h>
+	#include <linux/kernel/kactive_api.h>
 	#include <linux/block/genhd.h>
 	#include <linux/kernel/lib.h>
 

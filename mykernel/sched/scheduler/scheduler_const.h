@@ -3,6 +3,10 @@
 #define _LINUX_SCHEDULER_CONST_H_
 
 
+	#define MAX_NICE		19
+	#define MIN_NICE		-20
+	#define NICE_WIDTH		(MAX_NICE - MIN_NICE + 1)
+
 	/* Wake flags. The first three directly map to some SD flag value */
 	#define WF_EXEC			0x02 /* Wakeup after exec; maps to SD_BALANCE_EXEC */
 	#define WF_FORK			0x04 /* Wakeup after fork; maps to SD_BALANCE_FORK */
