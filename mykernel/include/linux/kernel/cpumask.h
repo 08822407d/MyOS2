@@ -16,8 +16,14 @@
 	#include <linux/kernel/numa.h>
 
 	extern uint nr_cpu_ids;
-	#define for_each_possible_cpu(cpu) \
+	#define for_each_cpu(cpu) \
 				for (int cpu = 0; cpu < nr_cpu_ids; cpu++)
+
+	#define for_each_possible_cpu(cpu)	for_each_cpu((cpu))
+	#define for_each_online_cpu(cpu)	for_each_cpu((cpu))
+	#define for_each_enabled_cpu(cpu)	for_each_cpu((cpu))
+	#define for_each_present_cpu(cpu)	for_each_cpu((cpu))
+
 	#define num_possible_cpus()	nr_cpu_ids
 
 #endif /* __LINUX_CPUMASK_H */

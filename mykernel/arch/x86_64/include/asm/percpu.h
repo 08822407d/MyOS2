@@ -39,6 +39,8 @@
 		#endif
 	// }
 
+	#define PER_CPU_SHARED_ALIGNED_SECTION	""
+
 	//<linux/smp/percpu-defs.h>
 	/*
 	 * Base implementations of per-CPU variable declarations and definitions, where
@@ -62,6 +64,84 @@
 
 	#define DEFINE_PER_CPU_SECTION(type, name, sec)		\
 				__PCPU_ATTRS(sec) __typeof__(type) name
+
+
+	/*
+	 * Variant on the per-CPU variable declaration/definition theme used for
+	 * ordinary per-CPU variables.
+	 */
+	#define DECLARE_PER_CPU(type, name)					\
+				DECLARE_PER_CPU_SECTION(type, name, "")
+
+	#define DEFINE_PER_CPU(type, name)					\
+				DEFINE_PER_CPU_SECTION(type, name, "")
+
+	/*
+	 * Declaration/definition used for per-CPU variables that must come first in
+	 * the set of variables.
+	 */
+	#define DECLARE_PER_CPU_FIRST(type, name)	\
+				DECLARE_PER_CPU_SECTION(type,	\
+					name, PER_CPU_FIRST_SECTION)
+
+	#define DEFINE_PER_CPU_FIRST(type, name)	\
+				DEFINE_PER_CPU_SECTION(type,	\
+					name, PER_CPU_FIRST_SECTION)
+
+	/*
+	 * Declaration/definition used for per-CPU variables that must be cacheline
+	 * aligned under SMP conditions so that, whilst a particular instance of the
+	 * data corresponds to a particular CPU, inefficiencies due to direct access by
+	 * other CPUs are reduced by preventing the data from unnecessarily spanning
+	 * cachelines.
+	 *
+	 * An example of this would be statistical data, where each CPU's set of data
+	 * is updated by that CPU alone, but the data from across all CPUs is collated
+	 * by a CPU processing a read from a proc file.
+	 */
+	#define DECLARE_PER_CPU_SHARED_ALIGNED(type, name)	\
+				DECLARE_PER_CPU_SECTION(type, name,		\
+					PER_CPU_SHARED_ALIGNED_SECTION)		\
+				____cacheline_aligned_in_smp
+
+	#define DEFINE_PER_CPU_SHARED_ALIGNED(type, name)	\
+				DEFINE_PER_CPU_SECTION(type, name,		\
+					PER_CPU_SHARED_ALIGNED_SECTION)		\
+				____cacheline_aligned_in_smp
+
+	#define DECLARE_PER_CPU_ALIGNED(type, name)			\
+				DECLARE_PER_CPU_SECTION(type, name,		\
+					PER_CPU_ALIGNED_SECTION)			\
+				____cacheline_aligned
+
+	#define DEFINE_PER_CPU_ALIGNED(type, name)			\
+				DEFINE_PER_CPU_SECTION(type, name,		\
+					PER_CPU_ALIGNED_SECTION)			\
+				____cacheline_aligned
+
+	/*
+	 * Declaration/definition used for per-CPU variables that must be page aligned.
+	 */
+	#define DECLARE_PER_CPU_PAGE_ALIGNED(type, name)	\
+				DECLARE_PER_CPU_SECTION(type, name,		\
+					"..page_aligned")					\
+				__aligned(PAGE_SIZE)
+
+	#define DEFINE_PER_CPU_PAGE_ALIGNED(type, name)		\
+				DEFINE_PER_CPU_SECTION(type, name,		\
+					"..page_aligned")					\
+				__aligned(PAGE_SIZE)
+
+	/*
+	 * Declaration/definition used for per-CPU variables that must be read mostly.
+	 */
+	#define DECLARE_PER_CPU_READ_MOSTLY(type, name)		\
+				DECLARE_PER_CPU_SECTION(type, name,		\
+					"..read_mostly")
+
+	#define DEFINE_PER_CPU_READ_MOSTLY(type, name)		\
+				DEFINE_PER_CPU_SECTION(type, name,		\
+					"..read_mostly")
 
 	/*
 	 * Variant on the per-CPU variable declaration/definition theme used for

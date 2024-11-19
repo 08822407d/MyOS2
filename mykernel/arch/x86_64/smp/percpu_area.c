@@ -2,6 +2,7 @@
 
 
 #include <linux/kernel/sched.h>
+#include <linux/kernel/kactive.h>
 #include <linux/kernel/lib.h>
 #include <asm/insns.h>
 
@@ -64,3 +65,16 @@ DEFINE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page) = { .gdt = {
 	[GDT_ENTRY_DEFAULT_USER_CS]		= GDT_ENTRY_INIT(0xa0fb, 0, 0xfffff),
 #endif
 }};
+
+
+// /* to raise softirq for the BH worker pools on other CPUs */
+// DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_work
+// 		[NR_STD_WORKER_POOLS], bh_pool_irq_works);
+
+// /* the BH worker pools */
+// DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
+// 		[NR_STD_WORKER_POOLS], bh_worker_pools);
+
+/* the per-cpu worker pools */
+DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
+		[NR_STD_WORKER_POOLS], cpu_worker_pools);

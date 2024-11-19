@@ -153,6 +153,13 @@ asmlinkage void __init start_kernel(void)
 	 */
 	sched_init();
 
+	/*
+	 * Allow workqueue creation and work item queueing/cancelling
+	 * early.  Work item execution depends on kthreads and starts after
+	 * workqueue_init().
+	 */
+	workqueue_init_early();
+
 
 	init_IRQ();
 	timekeeping_init();

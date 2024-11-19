@@ -91,4 +91,11 @@
 				NULL										\
 			)
 
+
+	#define kmalloc_node(_size, _flags, _node)	\
+				kmalloc(_size, _flags)
+
+	#define kzalloc_node(_size, _flags, _node)	\
+				kmalloc_node(_size, (_flags)|__GFP_ZERO, _node)
+
 #endif /* _LINUX_SLUB_MACRO_H_ */

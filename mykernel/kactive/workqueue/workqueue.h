@@ -12,7 +12,7 @@
 
 	#endif
 
-	#include "workqueue.h"
+	#include "workqueue_macro.h"
 
 	#if defined(WORKQUEUE_DEFINATION) || !(DEBUG)
 

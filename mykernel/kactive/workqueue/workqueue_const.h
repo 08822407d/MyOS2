@@ -8,7 +8,7 @@
 #include <linux/kernel/threads.h>
 
 
-	enum {
+	enum worker_pool_flags {
 		/*
 		 * worker_pool flags
 		 *
@@ -24,52 +24,68 @@
 		 * Note that DISASSOCIATED should be flipped only while holding
 		 * wq_pool_attach_mutex to avoid changing binding state while
 		 * worker_attach_to_pool() is in progress.
+		 *
+		 * As there can only be one concurrent BH execution context per CPU, a
+		 * BH pool is per-CPU and always DISASSOCIATED.
 		 */
-		POOL_MANAGER_ACTIVE			= 1 << 0,	/* being managed */
-		POOL_DISASSOCIATED			= 1 << 2,	/* cpu can't serve workers */
+		POOL_BH					= 1 << 0,		/* is a BH pool */
+		POOL_MANAGER_ACTIVE		= 1 << 1,		/* being managed */
+		POOL_DISASSOCIATED		= 1 << 2,		/* cpu can't serve workers */
+		POOL_BH_DRAINING		= 1 << 3,		/* draining after CPU offline */
+	};
 
+	enum worker_flags {
 		/* worker flags */
-		WORKER_DIE					= 1 << 1,	/* die die die */
-		WORKER_IDLE					= 1 << 2,	/* is idle */
-		WORKER_PREP					= 1 << 3,	/* preparing to run works */
-		WORKER_CPU_INTENSIVE		= 1 << 6,	/* cpu intensive */
-		WORKER_UNBOUND				= 1 << 7,	/* worker is unbound */
-		WORKER_REBOUND				= 1 << 8,	/* worker was rebound */
+		WORKER_DIE				= 1 << 1,		/* die die die */
+		WORKER_IDLE				= 1 << 2,		/* is idle */
+		WORKER_PREP				= 1 << 3,		/* preparing to run works */
+		WORKER_CPU_INTENSIVE	= 1 << 6,		/* cpu intensive */
+		WORKER_UNBOUND			= 1 << 7,		/* worker is unbound */
+		WORKER_REBOUND			= 1 << 8,		/* worker was rebound */
 
-		WORKER_NOT_RUNNING			= WORKER_PREP | WORKER_CPU_INTENSIVE |
-										WORKER_UNBOUND | WORKER_REBOUND,
+		WORKER_NOT_RUNNING		= WORKER_PREP | WORKER_CPU_INTENSIVE |
+									WORKER_UNBOUND | WORKER_REBOUND,
+	};
 
-		NR_STD_WORKER_POOLS			= 2,		/* # standard pools per cpu */
+	enum work_cancel_flags {
+		WORK_CANCEL_DELAYED		= 1 << 0,		/* canceling a delayed_work */
+		WORK_CANCEL_DISABLE		= 1 << 1,		/* canceling to disable */
+	};
 
-		UNBOUND_POOL_HASH_ORDER		= 6,		/* hashed by pool->attrs */
-		BUSY_WORKER_HASH_ORDER		= 6,		/* 64 pointers */
+	enum wq_internal_consts {
+		NR_STD_WORKER_POOLS		= 2,			/* # standard pools per cpu */
 
-		MAX_IDLE_WORKERS_RATIO		= 4,		/* 1/4 of busy can be idle */
-		IDLE_WORKER_TIMEOUT			= 300 * HZ,	/* keep idle ones for 5 mins */
+		UNBOUND_POOL_HASH_ORDER	= 6,			/* hashed by pool->attrs */
+		BUSY_WORKER_HASH_ORDER	= 6,			/* 64 pointers */
 
-		MAYDAY_INITIAL_TIMEOUT		= HZ / 100 >= 2 ? HZ / 100 : 2,
+		MAX_IDLE_WORKERS_RATIO	= 4,			/* 1/4 of busy can be idle */
+		IDLE_WORKER_TIMEOUT		= 300 * HZ,		/* keep idle ones for 5 mins */
+
+		MAYDAY_INITIAL_TIMEOUT  = HZ / 100 >= 2 ? HZ / 100 : 2,
 												/* call for help after 10ms
 												   (min two ticks) */
-		MAYDAY_INTERVAL				= HZ / 10,	/* and then every 100ms */
-		CREATE_COOLDOWN				= HZ,		/* time to breath after fail */
+		MAYDAY_INTERVAL			= HZ / 10,		/* and then every 100ms */
+		CREATE_COOLDOWN			= HZ,			/* time to breath after fail */
 
 		/*
 		 * Rescue workers are used only on emergencies and shared by
 		 * all cpus.  Give MIN_NICE.
 		 */
-		RESCUER_NICE_LEVEL			= MIN_NICE,
-		HIGHPRI_NICE_LEVEL			= MIN_NICE,
+		RESCUER_NICE_LEVEL		= MIN_NICE,
+		HIGHPRI_NICE_LEVEL		= MIN_NICE,
 
-		WQ_NAME_LEN					= 24,
+		WQ_NAME_LEN				= 32,
+		WORKER_ID_LEN			= 10 + WQ_NAME_LEN,		/* "kworker/R-" + WQ_NAME_LEN */
 	};
 
+
 	enum work_bits {
-		WORK_STRUCT_PENDING_BIT		= 0,	/* work item is pending execution */
-		WORK_STRUCT_INACTIVE_BIT,			/* work item is inactive */
-		WORK_STRUCT_PWQ_BIT,				/* data points to pwq */
-		WORK_STRUCT_LINKED_BIT,				/* next work is linked to this one */
+		WORK_STRUCT_PENDING_BIT		= 0,		/* work item is pending execution */
+		WORK_STRUCT_INACTIVE_BIT,				/* work item is inactive */
+		WORK_STRUCT_PWQ_BIT,					/* data points to pwq */
+		WORK_STRUCT_LINKED_BIT,					/* next work is linked to this one */
 	#ifdef CONFIG_DEBUG_OBJECTS_WORK
-		WORK_STRUCT_STATIC_BIT,				/* static initializer (debugobjects) */
+		WORK_STRUCT_STATIC_BIT,					/* static initializer (debugobjects) */
 	#endif
 		WORK_STRUCT_FLAG_BITS,
 
@@ -118,11 +134,11 @@
 		WORK_STRUCT_INACTIVE	= 1 << WORK_STRUCT_INACTIVE_BIT,
 		WORK_STRUCT_PWQ			= 1 << WORK_STRUCT_PWQ_BIT,
 		WORK_STRUCT_LINKED		= 1 << WORK_STRUCT_LINKED_BIT,
-	#ifdef CONFIG_DEBUG_OBJECTS_WORK
-		WORK_STRUCT_STATIC		= 1 << WORK_STRUCT_STATIC_BIT,
-	#else
+	// #ifdef CONFIG_DEBUG_OBJECTS_WORK
+	// 	WORK_STRUCT_STATIC		= 1 << WORK_STRUCT_STATIC_BIT,
+	// #else
 		WORK_STRUCT_STATIC		= 0,
-	#endif
+	// #endif
 	};
 
 	enum wq_misc_consts {
@@ -215,6 +231,23 @@
 		 * workqueue_struct->min_active definition.
 		 */
 		WQ_DFL_MIN_ACTIVE		= 8,
+	};
+
+	/*
+	 * Per-pool_workqueue statistics. These can be monitored using
+	 * tools/workqueue/wq_monitor.py.
+	 */
+	enum pool_workqueue_stats {
+		PWQ_STAT_STARTED,			/* work items started execution */
+		PWQ_STAT_COMPLETED,			/* work items completed execution */
+		PWQ_STAT_CPU_TIME,			/* total CPU time consumed */
+		PWQ_STAT_CPU_INTENSIVE,		/* wq_cpu_intensive_thresh_us violations */
+		PWQ_STAT_CM_WAKEUP,			/* concurrency-management worker wakeups */
+		PWQ_STAT_REPATRIATED,		/* unbound workers brought back into scope */
+		PWQ_STAT_MAYDAY,			/* maydays to rescuer */
+		PWQ_STAT_RESCUED,			/* linked work items executed by rescuer */
+
+		PWQ_NR_STATS,
 	};
 
 
