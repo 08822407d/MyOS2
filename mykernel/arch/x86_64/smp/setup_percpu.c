@@ -1,7 +1,7 @@
 // source: linux-6.4.9
 
 // SPDX-License-Identifier: GPL-2.0
-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+// #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
 
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/export.h>
@@ -18,6 +18,7 @@
 
 #include <asm-generic/sections.h>
 
+DEFINE_PER_CPU_READ_MOSTLY(ulong, this_cpu_off) = BOOT_PERCPU_OFFSET;
 
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
@@ -26,12 +27,12 @@ unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 
 void __init setup_per_cpu_areas(void)
 {
-	unsigned int cpu;
-	unsigned long delta;
+	uint cpu;
+	ulong delta;
 	int rc;
 
 	// pr_info("NR_CPUS:%d nr_cpumask_bits:%d nr_cpu_ids:%u nr_node_ids:%u\n",
-	// 	NR_CPUS, nr_cpumask_bits, nr_cpu_ids, nr_node_ids);
+	// 		NR_CPUS, nr_cpumask_bits, nr_cpu_ids, nr_node_ids);
 
 	// /*
 	//  * Allocate percpu area.  Embedding allocator is our favorite;
@@ -69,21 +70,20 @@ void __init setup_per_cpu_areas(void)
 	// 	panic("cannot initialize percpu area (err=%d)", rc);
 
 	simple_pcpu_setup_first_chunk();
-	// /* alrighty, percpu areas up and running */
-	delta = (unsigned long)pcpu_base_addr - (unsigned long)__per_cpu_start;
+	/* alrighty, percpu areas up and running */
+	delta = (ulong)pcpu_base_addr - (ulong)__per_cpu_start;
 	for_each_possible_cpu(cpu) {
-		// per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
-		per_cpu_offset(cpu) = pcpu_unit_offsets[cpu];
-		// per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
+		per_cpu_offset(cpu) = delta + pcpu_unit_offsets[cpu];
+		per_cpu(this_cpu_off, cpu) = per_cpu_offset(cpu);
 		per_cpu(pcpu_hot.cpu_number, cpu) = cpu;
-		// setup_percpu_segment(cpu);
-		// /*
-		//  * Copy data used in early init routines from the
-		//  * initial arrays to the per cpu data areas.  These
-		//  * arrays then become expendable and the *_early_ptr's
-		//  * are zeroed indicating that the static arrays are
-		//  * gone.
-		//  */
+
+		/*
+		 * Copy data used in early init routines from the
+		 * initial arrays to the per cpu data areas.  These
+		 * arrays then become expendable and the *_early_ptr's
+		 * are zeroed indicating that the static arrays are
+		 * gone.
+		 */
 		// per_cpu(x86_cpu_to_apicid, cpu) =
 		// 	early_per_cpu_map(x86_cpu_to_apicid, cpu);
 		// per_cpu(x86_bios_cpu_apicid, cpu) =

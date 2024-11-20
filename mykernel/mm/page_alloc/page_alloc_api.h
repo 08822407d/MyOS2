@@ -20,6 +20,9 @@
 	 */
 	extern gfp_t gfp_allowed_mask;
 
+	extern uint nr_node_ids;
+	extern uint nr_online_nodes;
+
 
 	extern void zone_sizes_init(void);
 

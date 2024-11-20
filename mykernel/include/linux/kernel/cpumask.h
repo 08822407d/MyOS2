@@ -24,6 +24,7 @@
 	#define for_each_enabled_cpu(cpu)	for_each_cpu((cpu))
 	#define for_each_present_cpu(cpu)	for_each_cpu((cpu))
 
-	#define num_possible_cpus()	nr_cpu_ids
+	#define num_possible_cpus()		nr_cpu_ids
+	#define nr_cpumask_bits			nr_cpu_ids
 
 #endif /* __LINUX_CPUMASK_H */

@@ -174,35 +174,58 @@
 					"..page_aligned")					\
 				__aligned(PAGE_SIZE)
 
+
+
+
+	extern unsigned long rdgsbase(void);
+	#define raw_cpu_read_long(pcp)	((ulong)rdgsbase())
+
+	#define arch_raw_cpu_ptr(_ptr)	({							\
+				ulong tcp_ptr__ =								\
+						raw_cpu_read_long(this_cpu_off);		\
+				tcp_ptr__ += (__force ulong)(_ptr);				\
+				(typeof(*(_ptr)) __kernel __force *)tcp_ptr__;	\
+			})
+
 	/*
 	 * Accessors and operations.
 	 */
+
+	/*
+	 * __verify_pcpu_ptr() verifies @ptr is a percpu pointer without evaluating
+	 * @ptr and is invoked once before a percpu area is accessed by all
+	 * accessors and operations.  This is performed in the generic part of
+	 * percpu and arch overrides don't need to worry about it; however, if an
+	 * arch wants to implement an arch-specific percpu accessor or operation,
+	 * it may use __verify_pcpu_ptr() to verify the parameters.
+	 *
+	 * + 0 is required in order to convert the pointer type from a
+	 * potential array type to a pointer to a single item of the array.
+	 */
+	#define __verify_pcpu_ptr(ptr)
 
 	/*
 	 * Add an offset to a pointer but keep the pointer as-is.  Use RELOC_HIDE()
 	 * to prevent the compiler from making incorrect assumptions about the
 	 * pointer value.  The weird cast keeps both GCC and sparse happy.
 	 */
-	#define SHIFT_PERCPU_PTR(__p, __offset)	RELOC_HIDE(					\
+	#define SHIFT_PERCPU_PTR(__p, __offset)								\
+			RELOC_HIDE(													\
 				(typeof(*(__p)) __kernel __force *)(__p), (__offset)	\
 			)
 
 	#define per_cpu_ptr(ptr, cpu)	({		\
+				__verify_pcpu_ptr(ptr);		\
 				SHIFT_PERCPU_PTR((ptr),		\
 					per_cpu_offset((cpu)));	\
 			})
 
-	extern virt_addr_t calc_pcpu_var_addr(void *proto_addr);
-	#define this_cpu_ptr(ptr)	(					\
-				(typeof(*(ptr)) __kernel __force *)	\
-					calc_pcpu_var_addr(ptr)			\
-			)
+	#define this_cpu_ptr(ptr)	arch_raw_cpu_ptr(ptr)
 	#define per_cpu(var, cpu)	(*per_cpu_ptr(&(var), cpu))
 
 
 	#include <asm-generic/sections.h>
-	// #define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
-	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_start)
+	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
 
 	#endif /* !__ASSEMBLY__ */
 

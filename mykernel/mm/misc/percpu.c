@@ -534,21 +534,19 @@ const ulong *pcpu_unit_offsets __ro_after_init;	/* cpu -> unit offset */
 // 	/* we're done */
 // 	pcpu_base_addr = base_addr;
 // }
+
 void simple_pcpu_setup_first_chunk()
 {
+	const size_t static_size = __per_cpu_end - __per_cpu_start;
 	ulong pcpuarea_size = (ulong)__per_cpu_end - (ulong)__per_cpu_start;
-	pcpuarea_size = ALIGN(pcpuarea_size, PAGE_SIZE);
+	pcpu_base_addr = myos_memblock_alloc_DMA32(nr_cpu_ids * static_size, PAGE_SIZE);
+	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_cpu_ids * sizeof(void *), 8);
 
-	pcpu_unit_offsets = myos_memblock_alloc_normal(nr_cpu_ids * 8, 8);
-	pcpu_base_addr = 0;
-
-
-	// bsp的percpu变量空间就使用原始定义的percpu段，但是因为这些原始定义的
-	// 符号地址已经在链接脚本中重定位到从0开始，所以这里要把他们加载后的虚拟地址
-	// 填写到__per_cpu_load[0]中
-	((ulong *)pcpu_unit_offsets)[0] = (ulong)&__per_cpu_load;
 	// 下面是为其他ap申请percpu变量空间
-	for (int i = 1; i < nr_cpu_ids; i++)
-		((ulong *)pcpu_unit_offsets)[i] =
-			(ulong)myos_memblock_alloc_DMA32(pcpuarea_size, PAGE_SIZE);
+	for (int i = 0; i < nr_cpu_ids; i++)
+		((ulong *)pcpu_unit_offsets)[i] = i * static_size;
+	
+	// 复制“模板”percpu段到运行时cpu0的percpu段
+	// 主要是将静态初始化的一些percpu变量的值复制过来
+	memcpy(pcpu_base_addr, &__per_cpu_load, static_size);
 }
