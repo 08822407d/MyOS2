@@ -28,7 +28,7 @@ unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
 void __init setup_per_cpu_areas(void)
 {
 	uint cpu;
-	ulong delta;
+	ulong delta = 0;
 	int rc;
 
 	// pr_info("NR_CPUS:%d nr_cpumask_bits:%d nr_cpu_ids:%u nr_node_ids:%u\n",

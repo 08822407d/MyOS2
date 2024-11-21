@@ -11,6 +11,8 @@
 	#include "percpu_chunk.h"
 
 
+	extern size_t chunk_size;
+
 	extern void *pcpu_base_addr;
 	extern const unsigned long *pcpu_unit_offsets;
 
