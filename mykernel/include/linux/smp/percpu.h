@@ -2,12 +2,14 @@
 #ifndef __LINUX_PERCPU_H
 #define __LINUX_PERCPU_H
 
-	// #include <linux/mmdebug.h>
 	#include <linux/smp/smp.h>
 	#include <linux/kernel/cpumask.h>
 	#include <linux/init/init.h>
 
 	#include <asm/percpu.h>
+
+	#include "percpu_chunk.h"
+
 
 	extern void *pcpu_base_addr;
 	extern const unsigned long *pcpu_unit_offsets;

@@ -379,7 +379,8 @@
         "ucontext.h": "c",
         "siginfo.h": "c",
         "kactive_const.h": "c",
-        "kactive_type_declaration.h": "c"
+        "kactive_type_declaration.h": "c",
+        "percpu_chunk.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }
