@@ -172,8 +172,8 @@ static pcpu_chunk_s
 // 		int alloc_bits, size_t align, bool pop_only)
 static int
 simple_pcpu_find_block_fit(pcpu_chunk_s *chunk, int size, size_t align) {
-	int alloc_offset = ALIGN((size_t)chunk->free_offset, align);
-	int need_size = alloc_offset + size;
+	int alloc_offset = ALIGN(chunk->free_offset, align);
+	int need_size = alloc_offset + size - chunk->free_offset;
 	if (chunk->free_bytes < need_size)
 		return -ENOMEM;
 	else
@@ -207,7 +207,7 @@ simple_pcpu_alloc_area(pcpu_chunk_s *chunk, int size, int start)
 	while (start < chunk->free_offset);
 	
 	chunk->free_offset = start + size;
-	chunk->free_bytes -= start + size;
+	chunk->free_bytes -= size;
 	return start;
 }
 
@@ -228,7 +228,7 @@ simple_pcpu_alloc_area(pcpu_chunk_s *chunk, int size, int start)
  */
 // void __percpu *pcpu_alloc_noprof(size_t size,
 // 		size_t align, bool reserved, gfp_t gfp)
-void __percpu *pcpu_alloc_noprof(size_t size,
+void __percpu *simple_pcpu_alloc_noprof(size_t size,
 		size_t align, bool reserved, gfp_t gfp)
 {
 	gfp_t pcpu_gfp;
@@ -290,6 +290,7 @@ area_found:
 	// 	memset((void *)pcpu_chunk_addr(chunk, cpu, 0) + off, 0, size);
 
 	// ptr = __addr_to_pcpu_ptr(chunk->base_addr + off);
+	ptr = chunk->base_addr + off;
 	// kmemleak_alloc_percpu(ptr, size, gfp);
 
 	// trace_percpu_alloc_percpu(_RET_IP_, reserved, is_atomic, size, align,

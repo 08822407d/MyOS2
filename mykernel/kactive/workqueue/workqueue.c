@@ -195,9 +195,9 @@ alloc_and_link_pwqs(workqueue_s *wq) {
 
 	// lockdep_assert_held(&wq_pool_mutex);
 
-	// wq->cpu_pwq = alloc_percpu(struct pool_workqueue *);
-	// if (!wq->cpu_pwq)
-	// 	goto enomem;
+	wq->cpu_pwq = alloc_percpu(pool_workqueue_s *);
+	if (!wq->cpu_pwq)
+		goto enomem;
 
 	if (!(wq->flags & WQ_UNBOUND)) {
 		worker_pool_s __percpu *pools;
@@ -211,13 +211,14 @@ alloc_and_link_pwqs(workqueue_s *wq) {
 			pool_workqueue_s **pwq_p;
 			worker_pool_s *pool;
 
-			// pool = &(per_cpu_ptr(pools, cpu)[highpri]);
-			// pwq_p = per_cpu_ptr(wq->cpu_pwq, cpu);
+			pool = &(per_cpu_ptr(pools, cpu)[highpri]);
+			pwq_p = per_cpu_ptr(wq->cpu_pwq, cpu);
 
 			// *pwq_p = kmem_cache_alloc_node(pwq_cache, GFP_KERNEL,
 			// 			       pool->node);
-			// if (!*pwq_p)
-			// 	goto enomem;
+			*pwq_p = kmem_cache_alloc(pwq_cache, GFP_KERNEL);
+			if (!*pwq_p)
+				goto enomem;
 
 			// init_pwq(*pwq_p, wq, pool);
 
@@ -235,8 +236,8 @@ alloc_and_link_pwqs(workqueue_s *wq) {
 	// 	/* there should only be single pwq for ordering guarantee */
 	// 	dfl_pwq = rcu_access_pointer(wq->dfl_pwq);
 	// 	WARN(!ret && (wq->pwqs.next != &dfl_pwq->pwqs_node ||
-	// 		      wq->pwqs.prev != &dfl_pwq->pwqs_node),
-	// 	     "ordering guarantee broken for workqueue %s\n", wq->name);
+	// 			wq->pwqs.prev != &dfl_pwq->pwqs_node),
+	// 			"ordering guarantee broken for workqueue %s\n", wq->name);
 	// } else {
 	// 	ret = apply_workqueue_attrs_locked(wq, unbound_std_wq_attrs[highpri]);
 	// }
@@ -244,16 +245,16 @@ alloc_and_link_pwqs(workqueue_s *wq) {
 	return ret;
 
 enomem:
-	// if (wq->cpu_pwq) {
-	// 	for_each_possible_cpu(cpu) {
-	// 		struct pool_workqueue *pwq = *per_cpu_ptr(wq->cpu_pwq, cpu);
+	if (wq->cpu_pwq) {
+		for_each_possible_cpu(cpu) {
+			pool_workqueue_s *pwq = *per_cpu_ptr(wq->cpu_pwq, cpu);
 
-	// 		if (pwq)
-	// 			kmem_cache_free(pwq_cache, pwq);
-	// 	}
-	// 	free_percpu(wq->cpu_pwq);
-	// 	wq->cpu_pwq = NULL;
-	// }
+			if (pwq)
+				kmem_cache_free(pwq_cache, pwq);
+		}
+		// free_percpu(wq->cpu_pwq);
+		// wq->cpu_pwq = NULL;
+	}
 	return -ENOMEM;
 }
 
