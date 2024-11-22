@@ -75,11 +75,11 @@ EXPORT_SYMBOL(system_wq);
 // workqueue_s *system_bh_highpri_wq;
 // EXPORT_SYMBOL_GPL(system_bh_highpri_wq);
 
+static int worker_thread(void *__worker);
 
 
 
-// static struct worker *alloc_worker(int node)
-static worker_s *alloc_worker() {
+static worker_s *alloc_worker(int node) {
 	worker_s *worker;
 
 	worker = kzalloc_node(sizeof(*worker), GFP_KERNEL, 0);
@@ -88,9 +88,44 @@ static worker_s *alloc_worker() {
 		// INIT_LIST_HEAD(&worker->scheduled);
 		INIT_LIST_HEAD(&worker->node);
 		/* on creation a worker is in !idle && prep state */
-		// worker->flags = WORKER_PREP;
+		worker->flags = WORKER_PREP;
 	}
 	return worker;
+}
+
+/**
+ * worker_attach_to_pool() - attach a worker to a pool
+ * @worker: worker to be attached
+ * @pool: the target pool
+ *
+ * Attach @worker to @pool.  Once attached, the %WORKER_UNBOUND flag and
+ * cpu-binding of @worker are kept coordinated with the pool across
+ * cpu-[un]hotplugs.
+ */
+static void
+worker_attach_to_pool(worker_s *worker, worker_pool_s *pool) {
+	// mutex_lock(&wq_pool_attach_mutex);
+
+	/*
+	 * The wq_pool_attach_mutex ensures %POOL_DISASSOCIATED remains stable
+	 * across this function. See the comments above the flag definition for
+	 * details. BH workers are, while per-CPU, always DISASSOCIATED.
+	 */
+	if (pool->flags & POOL_DISASSOCIATED) {
+		worker->flags |= WORKER_UNBOUND;
+	} else {
+		WARN_ON_ONCE(pool->flags & POOL_BH);
+		// kthread_set_per_cpu(worker->task, pool->cpu);
+	}
+
+	// if (worker->rescue_wq)
+	// 	set_cpus_allowed_ptr(worker->task, pool_allowed_cpus(pool));
+
+	// list_add_tail(&worker->node, &pool->workers);
+	list_header_add_to_tail(&pool->workers, &worker->node);
+	worker->pool = pool;
+
+	// mutex_unlock(&wq_pool_attach_mutex);
 }
 
 
@@ -119,8 +154,7 @@ static worker_s
 	// 	return NULL;
 	// }
 
-	// worker = alloc_worker(pool->node);
-	worker = alloc_worker();
+	worker = alloc_worker(pool->node);
 	if (!worker) {
 		pr_err_once("workqueue: Failed to allocate a worker\n");
 		goto fail;
@@ -132,8 +166,8 @@ static worker_s
 		char id_buf[WORKER_ID_LEN];
 
 		// format_worker_id(id_buf, sizeof(id_buf), worker, pool);
-		// worker->task = kthread_create_on_node(worker_thread, worker,
-		// 				      pool->node, "%s", id_buf);
+		// worker->task = kthread_create_on_node(worker_thread,
+		// 					worker, pool->node, "%s", id_buf);
 		// if (IS_ERR(worker->task)) {
 		// 	if (PTR_ERR(worker->task) == -EINTR) {
 		// 		pr_err("workqueue: Interrupted when creating a worker thread \"%s\"\n",
@@ -149,24 +183,26 @@ static worker_s
 		// kthread_bind_mask(worker->task, pool_allowed_cpus(pool));
 	}
 
-	// /* successful, attach the worker to the pool */
-	// worker_attach_to_pool(worker, pool);
+	/* successful, attach the worker to the pool */
+	worker_attach_to_pool(worker, pool);
 
-	// /* start the newly created worker */
+	/* start the newly created worker */
 	// raw_spin_lock_irq(&pool->lock);
+	spin_lock_irq(&pool->lock);
 
 	// worker->pool->nr_workers++;
 	// worker_enter_idle(worker);
 
-	// /*
-	//  * @worker is waiting on a completion in kthread() and will trigger hung
-	//  * check if not woken up soon. As kick_pool() is noop if @pool is empty,
-	//  * wake it up explicitly.
-	//  */
-	// if (worker->task)
-	// 	wake_up_process(worker->task);
+	/*
+	 * @worker is waiting on a completion in kthread() and will trigger hung
+	 * check if not woken up soon. As kick_pool() is noop if @pool is empty,
+	 * wake it up explicitly.
+	 */
+	if (worker->task)
+		wake_up_process(worker->task);
 
 	// raw_spin_unlock_irq(&pool->lock);
+	spin_unlock_irq_no_resched(&pool->lock);
 
 	return worker;
 
@@ -176,6 +212,131 @@ fail:
 	return NULL;
 }
 
+/**
+ * worker_thread - the worker thread function
+ * @__worker: self
+ *
+ * The worker thread function.  All workers belong to a worker_pool -
+ * either a per-cpu one or dynamic unbound one.  These workers process all
+ * work items regardless of their specific target workqueue.  The only
+ * exception is work items which belong to workqueues with a rescuer which
+ * will be explained in rescuer_thread().
+ *
+ * Return: 0
+ */
+static int
+worker_thread(void *__worker) {
+	worker_s *worker = __worker;
+	worker_pool_s *pool = worker->pool;
+
+	/* tell the scheduler that this is a workqueue worker */
+	// set_pf_worker(true);
+woke_up:
+	spin_lock_irq(&pool->lock);
+
+	/* am I supposed to die? */
+	if (unlikely(worker->flags & WORKER_DIE)) {
+		// raw_spin_unlock_irq(&pool->lock);
+		spin_unlock_irq_no_resched(&pool->lock);
+		// set_pf_worker(false);
+		/*
+		 * The worker is dead and PF_WQ_WORKER is cleared, worker->pool
+		 * shouldn't be accessed, reset it to NULL in case otherwise.
+		 */
+		worker->pool = NULL;
+		// ida_free(&pool->worker_ida, worker->id);
+		return 0;
+	}
+
+	// worker_leave_idle(worker);
+recheck:
+	// /* no more worker necessary? */
+	// if (!need_more_worker(pool))
+	// 	goto sleep;
+
+	// /* do we need to manage? */
+	// if (unlikely(!may_start_working(pool)) && manage_workers(worker))
+	// 	goto recheck;
+
+	// /*
+	//  * ->scheduled list can only be filled while a worker is
+	//  * preparing to process a work or actually processing it.
+	//  * Make sure nobody diddled with it while I was sleeping.
+	//  */
+	// WARN_ON_ONCE(!list_empty(&worker->scheduled));
+
+	// /*
+	//  * Finish PREP stage.  We're guaranteed to have at least one idle
+	//  * worker or that someone else has already assumed the manager
+	//  * role.  This is where @worker starts participating in concurrency
+	//  * management if applicable and concurrency management is restored
+	//  * after being rebound.  See rebind_workers() for details.
+	//  */
+	// worker_clr_flags(worker, WORKER_PREP | WORKER_REBOUND);
+
+	// do {
+	// 	struct work_struct *work =
+	// 		list_first_entry(&pool->worklist,
+	// 				 struct work_struct, entry);
+
+	// 	if (assign_work(work, worker, NULL))
+	// 		process_scheduled_works(worker);
+	// } while (keep_working(pool));
+
+	// worker_set_flags(worker, WORKER_PREP);
+sleep:
+	// /*
+	//  * pool->lock is held and there's no work to process and no need to
+	//  * manage, sleep.  Workers are woken up only while holding
+	//  * pool->lock or from local cpu, so setting the current state
+	//  * before releasing pool->lock is enough to prevent losing any
+	//  * event.
+	//  */
+	// worker_enter_idle(worker);
+	__set_current_state(TASK_IDLE);
+	// raw_spin_unlock_irq(&pool->lock);
+	spin_unlock_irq_no_resched(&pool->lock);
+	schedule();
+	goto woke_up;
+}
+
+
+
+
+/* initialize newly allocated @pwq which is associated with @wq and @pool */
+static void
+init_pwq(pool_workqueue_s *pwq, workqueue_s *wq, worker_pool_s *pool) {
+	BUG_ON((ulong)pwq & ~WORK_STRUCT_PWQ_MASK);
+	memset(pwq, 0, sizeof(*pwq));
+
+	pwq->pool = pool;
+	pwq->wq = wq;
+	// pwq->flush_color = -1;
+	// pwq->refcnt = 1;
+	// INIT_LIST_HEAD(&pwq->inactive_works);
+	// INIT_LIST_HEAD(&pwq->pending_node);
+	// INIT_LIST_HEAD(&pwq->pwqs_node);
+	// INIT_LIST_HEAD(&pwq->mayday_node);
+	// kthread_init_work(&pwq->release_work, pwq_release_workfn);
+}
+
+/* sync @pwq with the current state of its associated wq and link it */
+static void
+link_pwq(pool_workqueue_s *pwq) {
+	workqueue_s *wq = pwq->wq;
+
+	// lockdep_assert_held(&wq->mutex);
+
+	// /* may be called multiple times, ignore if already linked */
+	// if (!list_empty(&pwq->pwqs_node))
+	// 	return;
+
+	// /* set the matching work_color */
+	// pwq->work_color = wq->work_color;
+
+	// /* link in @pwq */
+	// list_add_tail_rcu(&pwq->pwqs_node, &wq->pwqs);
+}
 
 
 static int
@@ -220,10 +381,10 @@ alloc_and_link_pwqs(workqueue_s *wq) {
 			if (!*pwq_p)
 				goto enomem;
 
-			// init_pwq(*pwq_p, wq, pool);
+			init_pwq(*pwq_p, wq, pool);
 
 			// mutex_lock(&wq->mutex);
-			// link_pwq(*pwq_p);
+			link_pwq(*pwq_p);
 			// mutex_unlock(&wq->mutex);
 		}
 		return 0;
@@ -253,7 +414,7 @@ enomem:
 				kmem_cache_free(pwq_cache, pwq);
 		}
 		// free_percpu(wq->cpu_pwq);
-		// wq->cpu_pwq = NULL;
+		wq->cpu_pwq = NULL;
 	}
 	return -ENOMEM;
 }
@@ -400,7 +561,7 @@ init_worker_pool(worker_pool_s *pool) {
 	spin_lock_init(&pool->lock);
 	pool->id = -1;
 	pool->cpu = -1;
-	// pool->node = NUMA_NO_NODE;
+	pool->node = NUMA_NO_NODE;
 	pool->flags |= POOL_DISASSOCIATED;
 	// pool->watchdog_ts = jiffies;
 	INIT_LIST_HEADER_S(&pool->worklist);
@@ -586,16 +747,17 @@ void __init workqueue_init(void)
 
 	// mutex_lock(&wq_pool_mutex);
 
-	// /*
-	//  * Per-cpu pools created earlier could be missing node hint. Fix them
-	//  * up. Also, create a rescuer for workqueues that requested it.
-	//  */
-	// for_each_possible_cpu(cpu) {
-	// 	for_each_bh_worker_pool(pool, cpu)
-	// 		pool->node = cpu_to_node(cpu);
-	// 	for_each_cpu_worker_pool(pool, cpu)
-	// 		pool->node = cpu_to_node(cpu);
-	// }
+	/*
+	 * Per-cpu pools created earlier could be missing node hint. Fix them
+	 * up. Also, create a rescuer for workqueues that requested it.
+	 */
+	for_each_possible_cpu(cpu) {
+		// for_each_bh_worker_pool(pool, cpu)
+		// 	pool->node = cpu_to_node(cpu);
+		for_each_cpu_worker_pool(pool, cpu)
+			// pool->node = cpu_to_node(cpu);
+			pool->node = 0;
+	}
 
 	// list_for_each_entry(wq, &workqueues, list) {
 	// 	WARN(init_rescuer(wq),

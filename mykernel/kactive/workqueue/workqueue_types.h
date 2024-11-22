@@ -107,7 +107,7 @@
 	struct worker_pool {
 		spinlock_t		lock;			/* the pool lock */
 		int				cpu;			/* I: the associated cpu */
-		// int				node;			/* I: the associated node ID */
+		int				node;			/* I: the associated node ID */
 		int				id;				/* I: pool ID */
 		uint			flags;			/* L: flags */
 
