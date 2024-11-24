@@ -48,7 +48,7 @@
 
 		// ulong				last_active;	/* K: last active timestamp */
 		uint				flags;			/* L: flags */
-		// int					id;				/* I: worker id */
+		int					id;				/* I: worker id */
 
 		// /*
 		//  * Opaque string set with work_set_desc().  Printed out with task
@@ -188,7 +188,7 @@
 		// int				nr_active;	/* L: nr of active works */
 		// struct list_head	inactive_works;	/* L: inactive works */
 		// struct list_head	pending_node;	/* LN: node on wq_node_nr_active->pending_pwqs */
-		// struct list_head	pwqs_node;	/* WR: node on wq->pwqs */
+		List_s			pwqs_node;	/* WR: node on wq->pwqs */
 		// struct list_head	mayday_node;	/* MD: node on wq->maydays */
 
 		// u64				stats[PWQ_NR_STATS];
