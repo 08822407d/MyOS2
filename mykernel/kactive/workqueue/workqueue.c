@@ -95,7 +95,7 @@ static worker_s *alloc_worker(int node) {
 	worker = kzalloc_node(sizeof(*worker), GFP_KERNEL, 0);
 	if (worker) {
 		INIT_LIST_HEAD(&worker->entry);
-		// INIT_LIST_HEAD(&worker->scheduled);
+		INIT_LIST_HEADER_S(&worker->scheduled);
 		INIT_LIST_HEAD(&worker->node);
 		/* on creation a worker is in !idle && prep state */
 		worker->flags = WORKER_PREP;
@@ -139,6 +139,112 @@ worker_attach_to_pool(worker_s *worker, worker_pool_s *pool) {
 }
 
 
+/**
+ * move_linked_works - move linked works to a list
+ * @work: start of series of works to be scheduled
+ * @head: target list to append @work to
+ * @nextp: out parameter for nested worklist walking
+ *
+ * Schedule linked works starting from @work to @head. Work series to be
+ * scheduled starts at @work and includes any consecutive work with
+ * WORK_STRUCT_LINKED set in its predecessor. See assign_work() for details on
+ * @nextp.
+ *
+ * CONTEXT:
+ * raw_spin_lock_irq(pool->lock).
+ */
+static void
+move_linked_works(work_s*work, List_s *head, work_s**nextp) {
+	work_s*n;
+
+	// /*
+	//  * Linked worklist will always end before the end of the list,
+	//  * use NULL for list head.
+	//  */
+	// list_for_each_entry_safe_from(work, n, NULL, entry) {
+	// 	list_move_tail(&work->entry, head);
+	// 	if (!(*work_data_bits(work) & WORK_STRUCT_LINKED))
+	// 		break;
+	// }
+
+	// /*
+	//  * If we're already inside safe list traversal and have moved
+	//  * multiple works to the scheduled queue, the next position
+	//  * needs to be updated.
+	//  */
+	// if (nextp)
+	// 	*nextp = n;
+}
+
+
+/**
+ * assign_work - assign a work item and its linked work items to a worker
+ * @work: work to assign
+ * @worker: worker to assign to
+ * @nextp: out parameter for nested worklist walking
+ *
+ * Assign @work and its linked work items to @worker. If @work is already being
+ * executed by another worker in the same pool, it'll be punted there.
+ *
+ * If @nextp is not NULL, it's updated to point to the next work of the last
+ * scheduled work. This allows assign_work() to be nested inside
+ * list_for_each_entry_safe().
+ *
+ * Returns %true if @work was successfully assigned to @worker. %false if @work
+ * was punted to another worker already executing it.
+ */
+static bool
+assign_work(work_s*work, worker_s *worker, work_s**nextp) {
+	worker_pool_s *pool = worker->pool;
+	worker_s *collision;
+
+	// lockdep_assert_held(&pool->lock);
+
+	/*
+	 * A single work shouldn't be executed concurrently by multiple workers.
+	 * __queue_work() ensures that @work doesn't jump to a different pool
+	 * while still running in the previous pool. Here, we should ensure that
+	 * @work is not executed concurrently by multiple workers from the same
+	 * pool. Check whether anyone is already processing the work. If so,
+	 * defer the work to the currently executing one.
+	 */
+	// collision = find_worker_executing_work(pool, work);
+	// if (unlikely(collision)) {
+	// 	move_linked_works(work, &collision->scheduled, nextp);
+	// 	return false;
+	// }
+
+	move_linked_works(work, &worker->scheduled, nextp);
+	return true;
+}
+
+
+/**
+ * process_scheduled_works - process scheduled works
+ * @worker: self
+ *
+ * Process all scheduled works.  Please note that the scheduled list
+ * may change while processing a work, so this function repeatedly
+ * fetches a work from the top and executes it.
+ *
+ * CONTEXT:
+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
+ * multiple times.
+ */
+static void
+process_scheduled_works(worker_s *worker) {
+	work_s *work;
+	bool first = true;
+
+	while ((work = list_headr_first_container(
+			&worker->scheduled, work_s, entry))) {
+		// if (first) {
+		// 	worker->pool->watchdog_ts = jiffies;
+		// 	first = false;
+		// }
+		// process_one_work(worker, work);
+	}
+}
 
 /**
  * worker_thread - the worker thread function
@@ -162,21 +268,21 @@ worker_thread(void *__worker) {
 woke_up:
 	spin_lock_irq(&pool->lock);
 
-	/* am I supposed to die? */
-	if (unlikely(worker->flags & WORKER_DIE)) {
-		// raw_spin_unlock_irq(&pool->lock);
-		spin_unlock_irq_no_resched(&pool->lock);
-		// set_pf_worker(false);
-		/*
-		 * The worker is dead and PF_WQ_WORKER is cleared, worker->pool
-		 * shouldn't be accessed, reset it to NULL in case otherwise.
-		 */
-		worker->pool = NULL;
-		// ida_free(&pool->worker_ida, worker->id);
-		return 0;
-	}
+	// /* am I supposed to die? */
+	// if (unlikely(worker->flags & WORKER_DIE)) {
+	// 	// raw_spin_unlock_irq(&pool->lock);
+	// 	spin_unlock_irq_no_resched(&pool->lock);
+	// 	// set_pf_worker(false);
+	// 	/*
+	// 	 * The worker is dead and PF_WQ_WORKER is cleared, worker->pool
+	// 	 * shouldn't be accessed, reset it to NULL in case otherwise.
+	// 	 */
+	// 	worker->pool = NULL;
+	// 	// ida_free(&pool->worker_ida, worker->id);
+	// 	return 0;
+	// }
 
-	// worker_leave_idle(worker);
+	worker_leave_idle(worker);
 recheck:
 	// /* no more worker necessary? */
 	// if (!need_more_worker(pool))
@@ -186,12 +292,12 @@ recheck:
 	// if (unlikely(!may_start_working(pool)) && manage_workers(worker))
 	// 	goto recheck;
 
-	// /*
-	//  * ->scheduled list can only be filled while a worker is
-	//  * preparing to process a work or actually processing it.
-	//  * Make sure nobody diddled with it while I was sleeping.
-	//  */
-	// WARN_ON_ONCE(!list_empty(&worker->scheduled));
+	/*
+	 * ->scheduled list can only be filled while a worker is
+	 * preparing to process a work or actually processing it.
+	 * Make sure nobody diddled with it while I was sleeping.
+	 */
+	WARN_ON_ONCE(!list_header_is_empty(&worker->scheduled));
 
 	// /*
 	//  * Finish PREP stage.  We're guaranteed to have at least one idle
@@ -202,25 +308,24 @@ recheck:
 	//  */
 	// worker_clr_flags(worker, WORKER_PREP | WORKER_REBOUND);
 
-	// do {
-	// 	struct work_struct *work =
-	// 		list_first_entry(&pool->worklist,
-	// 				 struct work_struct, entry);
+	do {
+		work_s *work = list_headr_first_container(
+						&pool->worklist, work_s, entry);
 
-	// 	if (assign_work(work, worker, NULL))
-	// 		process_scheduled_works(worker);
-	// } while (keep_working(pool));
+		if (assign_work(work, worker, NULL))
+			process_scheduled_works(worker);
+	} while (keep_working(pool));
 
 	// worker_set_flags(worker, WORKER_PREP);
 sleep:
-	// /*
-	//  * pool->lock is held and there's no work to process and no need to
-	//  * manage, sleep.  Workers are woken up only while holding
-	//  * pool->lock or from local cpu, so setting the current state
-	//  * before releasing pool->lock is enough to prevent losing any
-	//  * event.
-	//  */
-	// worker_enter_idle(worker);
+	/*
+	 * pool->lock is held and there's no work to process and no need to
+	 * manage, sleep.  Workers are woken up only while holding
+	 * pool->lock or from local cpu, so setting the current state
+	 * before releasing pool->lock is enough to prevent losing any
+	 * event.
+	 */
+	worker_enter_idle(worker);
 	__set_current_state(TASK_IDLE);
 	// raw_spin_unlock_irq(&pool->lock);
 	spin_unlock_irq_no_resched(&pool->lock);

@@ -38,7 +38,7 @@
 		// /* used by the scheduler to determine a worker's last known identity */
 		// work_func_t		last_func;	/* K: last work's fn */
 
-		// struct list_head	scheduled;	/* L: scheduled works */
+		List_hdr_s			scheduled;		/* L: scheduled works */
 
 		task_s				*task;			/* I: worker task */
 		worker_pool_s		*pool;			/* A: the associated pool */
@@ -114,17 +114,17 @@
 		// ulong			watchdog_ts;	/* L: watchdog timestamp */
 		// bool			cpu_stall;		/* WD: stalled cpu bound pool */
 
-		/*
-		 * The counter is incremented in a process context on the associated CPU
-		 * w/ preemption disabled, and decremented or reset in the same context
-		 * but w/ pool->lock held. The readers grab pool->lock and are
-		 * guaranteed to see if the counter reached zero.
-		 */
-		int				nr_running;
+		// /*
+		//  * The counter is incremented in a process context on the associated CPU
+		//  * w/ preemption disabled, and decremented or reset in the same context
+		//  * but w/ pool->lock held. The readers grab pool->lock and are
+		//  * guaranteed to see if the counter reached zero.
+		//  */
+		// int				nr_running;
 
 		List_hdr_s		worklist;	/* L: list of pending works */
 
-		// int				nr_workers;	/* L: total number of workers */
+		int				nr_workers;	/* L: total number of workers */
 		// int				nr_idle;	/* L: currently idle workers */
 
 		List_hdr_s		idle_list;	/* L: list of idle workers */
