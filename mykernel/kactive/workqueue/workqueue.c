@@ -89,6 +89,76 @@ static int simple_worker_thread(void *__worker);
 
 
 
+// static void __queue_work(int cpu, struct workqueue_struct *wq,
+// 		struct work_struct *work)
+static void
+__simple_queue_work(int cpu, workqueue_s *wq, work_s*work) {
+	pool_workqueue_s *pwq;
+	worker_pool_s *last_pool, *pool;
+	uint work_flags;
+	uint req_cpu = cpu;
+
+retry:
+	/* pwq which will be used unless @work is executing elsewhere */
+	if (req_cpu == WORK_CPU_UNBOUND) {
+		// if (wq->flags & WQ_UNBOUND)
+		// 	cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+		// else
+			cpu = raw_smp_processor_id();
+	}
+
+	pwq = *per_cpu_ptr(wq->cpu_pwq, cpu);
+	pool = pwq->pool;
+
+	spin_lock(&pool->lock);
+
+	// if (WARN_ON(!list_empty(&work->entry)))
+	// 	goto out;
+
+	list_header_add_to_tail(&pool->worklist, &work->entry);
+	// 	kick_pool(pool);
+
+	spin_unlock_no_resched(&pool->lock);
+	// rcu_read_unlock();
+}
+
+
+
+/**
+ * queue_work_on - queue work on specific cpu
+ * @cpu: CPU number to execute work on
+ * @wq: workqueue to use
+ * @work: work to queue
+ *
+ * We queue the work to a specific CPU, the caller must ensure it
+ * can't go away.  Callers that fail to ensure that the specified
+ * CPU cannot go away will execute on a randomly chosen CPU.
+ * But note well that callers specifying a CPU that never has been
+ * online will get a splat.
+ *
+ * Return: %false if @work was already on a queue, %true otherwise.
+ */
+bool queue_work_on(int cpu, workqueue_s*wq, work_s*work)
+{
+	bool ret = false;
+	ulong irq_flags;
+
+	local_irq_save(irq_flags);
+
+	// if (!test_and_set_bit(WORK_STRUCT_PENDING_BIT, work_data_bits(work)) &&
+	// 		!clear_pending_if_disabled(work)) {
+		__simple_queue_work(cpu, wq, work);
+		ret = true;
+	// }
+
+	local_irq_restore(irq_flags);
+	return ret;
+}
+EXPORT_SYMBOL(queue_work_on);
+
+
+
+
 static worker_s *alloc_worker(int node) {
 	worker_s *worker;
 
@@ -320,7 +390,6 @@ __acquires(&pool->lock)
 	// if (worker->task)
 	// 	cond_resched();
 
-	// raw_spin_lock_irq(&pool->lock);
 	spin_lock_irq(&pool->lock);
 
 	/*
@@ -584,6 +653,7 @@ init_cpu_worker_pool(worker_pool_s *pool, int cpu, int nice) {
 	// pool->attrs->nice = nice;
 	// pool->attrs->affn_strict = true;
 	// pool->node = cpu_to_node(cpu);
+	pool->node = 0;
 
 	// /* alloc pool ID */
 	// mutex_lock(&wq_pool_mutex);

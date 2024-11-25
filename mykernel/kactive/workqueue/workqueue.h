@@ -45,6 +45,11 @@
 		extern void
 		worker_leave_idle(worker_s *worker);
 
+
+
+		extern bool
+		queue_work(workqueue_s*wq, work_s*work);
+
 	#endif
 
 	#include "workqueue_macro.h"
@@ -234,6 +239,37 @@
 				return;
 			// worker_clr_flags(worker, WORKER_IDLE);
 			list_header_delete_node(&pool->idle_list, &worker->entry);
+		}
+
+
+
+		/**
+		 * queue_work - queue work on a workqueue
+		 * @wq: workqueue to use
+		 * @work: work to queue
+		 *
+		 * Returns %false if @work was already on a queue, %true otherwise.
+		 *
+		 * We queue the work to the CPU on which it was submitted, but if the CPU dies
+		 * it can be processed by another CPU.
+		 *
+		 * Memory-ordering properties:  If it returns %true, guarantees that all stores
+		 * preceding the call to queue_work() in the program order will be visible from
+		 * the CPU which will execute @work by the time such work executes, e.g.,
+		 *
+		 * { x is initially 0 }
+		 *
+		 *   CPU0				CPU1
+		 *
+		 *   WRITE_ONCE(x, 1);			[ @work is being executed ]
+		 *   r0 = queue_work(wq, work);		  r1 = READ_ONCE(x);
+		 *
+		 * Forbids: r0 == true && r1 == 0
+		 */
+		PREFIX_STATIC_INLINE
+		bool
+		queue_work(workqueue_s*wq, work_s*work) {
+			return queue_work_on(WORK_CPU_UNBOUND, wq, work);
 		}
 
 	#endif /* !DEBUG */
