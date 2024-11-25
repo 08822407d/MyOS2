@@ -9,6 +9,12 @@
 
 	#ifdef DEBUG
 
+		extern pool_workqueue_s
+		*work_struct_pwq(ulong data);
+
+		extern pool_workqueue_s
+		*get_work_pwq(work_s *work);
+
 		extern bool
 		need_more_worker(worker_pool_s *pool);
 
@@ -44,6 +50,23 @@
 	#include "workqueue_macro.h"
 
 	#if defined(WORKQUEUE_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_INLINE
+		pool_workqueue_s
+		*work_struct_pwq(ulong data) {
+			return (pool_workqueue_s *)(data & WORK_STRUCT_PWQ_MASK);
+		}
+
+		PREFIX_STATIC_INLINE
+		pool_workqueue_s
+		*get_work_pwq(work_s *work) {
+			ulong data = atomic_long_read(&work->data);
+			if (data & WORK_STRUCT_PWQ)
+				return work_struct_pwq(data);
+			else
+				return NULL;
+		}
+
 
 		/*
 		 * Policy functions.  These define the policies on how the global worker

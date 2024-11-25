@@ -50,11 +50,11 @@
 		uint				flags;			/* L: flags */
 		int					id;				/* I: worker id */
 
-		// /*
-		//  * Opaque string set with work_set_desc().  Printed out with task
-		//  * dump for debugging - WARN, BUG, panic or sysrq.
-		//  */
-		// char				desc[WORKER_DESC_LEN];
+		/*
+		 * Opaque string set with work_set_desc().  Printed out with task
+		 * dump for debugging - WARN, BUG, panic or sysrq.
+		 */
+		char				desc[WORKER_DESC_LEN];
 
 		// /* used only by rescuers to point to the target workqueue */
 		// workqueue_s			*rescue_wq;		/* I: the workqueue to rescue */

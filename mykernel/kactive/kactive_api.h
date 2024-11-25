@@ -7,5 +7,6 @@
 
     #include "workqueue/workqueue_api.h"
 
+    #include <linux/kernel/lock_ipc_api.h>
 
 #endif /* _KERNEL_ACTIVE_API_H_ */
