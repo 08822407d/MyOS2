@@ -5,6 +5,7 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
 
 # myos tmp machine specific C make flags
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} \
+	-Wl,--no-check-sections
 ")
 
 add_subdirectory(kernel)

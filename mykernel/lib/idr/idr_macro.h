@@ -4,8 +4,9 @@
 
 
 	#define IDR_INIT_BASE(name, base) {			\
-		.idr_base = (base),						\
-		.idr_next = 0,							\
+		.idr_base	= (base),					\
+		.idr_next	= 0,						\
+		.initiated	= false,					\
 	}
 
 	/**
@@ -24,5 +25,12 @@
 	 * initialisation required.  It contains no IDs.
 	 */
 	#define DEFINE_IDR(name)	idr_s name = IDR_INIT(name)
+
+
+	#define IDA_INIT(name)	{					\
+		.initiated	= false,					\
+	}
+	#define DEFINE_IDA(name)	ida_s name = IDA_INIT(name)
+
 
 #endif /* _LINUX_IDR_MACROS_H_ */

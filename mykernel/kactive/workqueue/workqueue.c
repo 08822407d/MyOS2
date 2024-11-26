@@ -39,7 +39,7 @@ static kmem_cache_s *pwq_cache;
 static DECLARE_LIST_HDR_S(workqueues);	/* PR: list of all workqueues */
 static bool workqueue_freezing;			/* PL: have wqs started freezing? */
 
-// static DEFINE_IDR(worker_pool_idr);	/* PR: idr of all pools */
+static DEFINE_IDR(worker_pool_idr);		/* PR: idr of all pools */
 
 // /* PL: hash of all unbound pools keyed by pool->attrs */
 // static DEFINE_HASHTABLE(unbound_pool_hash, UNBOUND_POOL_HASH_ORDER);
@@ -79,6 +79,26 @@ EXPORT_SYMBOL_GPL(system_bh_wq);
 static int simple_worker_thread(void *__worker);
 
 
+
+/**
+ * worker_pool_assign_id - allocate ID and assign it to @pool
+ * @pool: the pool pointer of interest
+ *
+ * Returns 0 if ID in [0, WORK_OFFQ_POOL_NONE) is allocated and assigned
+ * successfully, -errno on failure.
+ */
+static int
+worker_pool_assign_id(worker_pool_s *pool) {
+	// lockdep_assert_held(&wq_pool_mutex);
+
+	int ret = idr_alloc(&worker_pool_idr, pool,
+				0, WORK_OFFQ_POOL_NONE, GFP_KERNEL);
+	if (ret >= 0) {
+		pool->id = ret;
+		return 0;
+	}
+	return ret;
+}
 
 // static void __queue_work(int cpu, struct workqueue_struct *wq,
 // 		struct work_struct *work)
@@ -191,7 +211,6 @@ worker_attach_to_pool(worker_s *worker, worker_pool_s *pool) {
 	// if (worker->rescue_wq)
 	// 	set_cpus_allowed_ptr(worker->task, pool_allowed_cpus(pool));
 
-	// list_add_tail(&worker->node, &pool->workers);
 	list_header_add_to_tail(&pool->workers, &worker->node);
 	worker->pool = pool;
 
@@ -249,34 +268,18 @@ __acquires(&pool->lock)
 	pool_workqueue_s *pwq = get_work_pwq(work);
 	worker_pool_s *pool = worker->pool;
 	ulong work_data;
-	// int lockdep_start_depth, rcu_start_depth;
-	// bool bh_draining = pool->flags & POOL_BH_DRAINING;
-// #ifdef CONFIG_LOCKDEP
-// 	/*
-// 	 * It is permissible to free the struct work_struct from
-// 	 * inside the function that is called from it, this we need to
-// 	 * take into account for lockdep too.  To avoid bogus "held
-// 	 * lock freed" warnings as well as problems when looking into
-// 	 * work->lockdep_map, make a copy and use that here.
-// 	 */
-// 	struct lockdep_map lockdep_map;
 
-// 	lockdep_copy_map(&lockdep_map, &work->lockdep_map);
-// #endif
 	/* ensure we're on the correct CPU */
 	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
 			raw_smp_processor_id() != pool->cpu);
 
 	/* claim and dequeue */
-	// debug_work_deactivate(work);
-	// hash_add(pool->busy_hash, &worker->hentry, (unsigned long)work);
 	worker->current_work = work;
 	worker->current_func = work->func;
 	worker->current_pwq = pwq;
 	// if (worker->task)
 	// 	worker->current_at = worker->task->se.sum_exec_runtime;
 	// work_data = *work_data_bits(work);
-	// worker->current_color = get_work_color(work_data);
 
 	/*
 	 * Record wq name for cmdline and debug reporting, may get
@@ -284,7 +287,6 @@ __acquires(&pool->lock)
 	 */
 	strscpy(worker->desc, pwq->wq->name, WORKER_DESC_LEN);
 
-	// list_del_init(&work->entry);
 	list_header_delete_node(&worker->scheduled, &work->entry);
 
 	/*
@@ -313,7 +315,6 @@ __acquires(&pool->lock)
 	// set_work_pool_and_clear_pending(work, pool->id, pool_offq_flags(pool));
 
 	// pwq->stats[PWQ_STAT_STARTED]++;
-	// raw_spin_unlock_irq(&pool->lock);
 	spin_unlock_no_resched(&pool->lock);
 
 	// rcu_start_depth = rcu_preempt_depth();
@@ -393,11 +394,9 @@ __acquires(&pool->lock)
 	// worker->last_func = worker->current_func;
 
 	/* we're done with it, release */
-	// hash_del(&worker->hentry);
 	worker->current_work = NULL;
 	worker->current_func = NULL;
 	worker->current_pwq = NULL;
-	// worker->current_color = INT_MAX;
 
 	// /* must be the last step, see the function comment */
 	// pwq_dec_nr_in_flight(pwq, work_data);
@@ -499,11 +498,11 @@ format_worker_id(char *buf, size_t size,
 	if (pool) {
 		if (pool->cpu >= 0)
 			return scnprintf(buf, size, "kworker/%d:%d%s",
-						pool->cpu, worker->id,
-						pool->attrs->nice < 0  ? "H" : "");
+					pool->cpu, worker->id,
+					pool->attrs->nice < 0  ? "H" : "");
 		else
 			return scnprintf(buf, size, "kworker/u%d:%d",
-						pool->id, worker->id);
+					pool->id, worker->id);
 	} else {
 		return scnprintf(buf, size, "kworker/dying");
 	}
@@ -524,15 +523,15 @@ format_worker_id(char *buf, size_t size,
 static worker_s
 *create_worker(worker_pool_s *pool) {
 	worker_s *worker;
-	// int id;
+	int id;
 
-	// /* ID is needed to determine kthread name */
-	// id = ida_alloc(&pool->worker_ida, GFP_KERNEL);
-	// if (id < 0) {
-	// 	pr_err_once("workqueue: Failed to allocate a worker ID: %pe\n",
-	// 		    ERR_PTR(id));
-	// 	return NULL;
-	// }
+	/* ID is needed to determine kthread name */
+	id = ida_alloc(&pool->worker_ida, GFP_KERNEL);
+	if (id < 0) {
+		pr_err_once("workqueue: Failed to allocate a worker ID: %pe\n",
+			    ERR_PTR(id));
+		return NULL;
+	}
 
 	worker = alloc_worker(pool->node);
 	if (!worker) {
@@ -540,7 +539,7 @@ static worker_s
 		goto fail;
 	}
 
-	// worker->id = id;
+	worker->id = id;
 
 	if (!(pool->flags & POOL_BH)) {
 		char id_buf[WORKER_ID_LEN];
@@ -584,7 +583,7 @@ static worker_s
 	return worker;
 
 fail:
-	// ida_free(&pool->worker_ida, id);
+	ida_free(&pool->worker_ida, id);
 	kfree(worker);
 	return NULL;
 }
@@ -619,7 +618,7 @@ init_worker_pool(worker_pool_s *pool) {
 
 	INIT_LIST_HEADER_S(&pool->workers);
 
-	// ida_init(&pool->worker_ida);
+	ida_init(&pool->worker_ida);
 	// INIT_HLIST_NODE(&pool->hash_node);
 	// pool->refcnt = 1;
 
@@ -772,9 +771,9 @@ init_cpu_worker_pool(worker_pool_s *pool, int cpu, int nice) {
 	// pool->attrs->affn_strict = true;
 	pool->node = 0;
 
-	// /* alloc pool ID */
+	/* alloc pool ID */
 	// mutex_lock(&wq_pool_mutex);
-	// BUG_ON(worker_pool_assign_id(pool));
+	BUG_ON(worker_pool_assign_id(pool));
 	// mutex_unlock(&wq_pool_mutex);
 }
 
@@ -794,6 +793,7 @@ void __init workqueue_init_early(void)
 	int i, cpu;
 
 	pwq_cache = KMEM_CACHE(pool_workqueue, SLAB_PANIC);
+	idr_init(&worker_pool_idr);
 
 	/* initialize BH and CPU pools */
 	for_each_possible_cpu(cpu) {
@@ -853,16 +853,16 @@ void __init workqueue_init(void)
 
 	// mutex_lock(&wq_pool_mutex);
 
-	/*
-	 * Per-cpu pools created earlier could be missing node hint. Fix them
-	 * up. Also, create a rescuer for workqueues that requested it.
-	 */
-	for_each_possible_cpu(cpu) {
-		for_each_bh_worker_pool(pool, cpu)
-			pool->node = 0;
-		for_each_cpu_worker_pool(pool, cpu)
-			pool->node = 0;
-	}
+	// /*
+	//  * Per-cpu pools created earlier could be missing node hint. Fix them
+	//  * up. Also, create a rescuer for workqueues that requested it.
+	//  */
+	// for_each_possible_cpu(cpu) {
+	// 	for_each_bh_worker_pool(pool, cpu)
+	// 		pool->node = 0;
+	// 	for_each_cpu_worker_pool(pool, cpu)
+	// 		pool->node = 0;
+	// }
 
 	// list_for_each_entry(wq, &workqueues, list) {
 	// 	WARN(init_rescuer(wq),

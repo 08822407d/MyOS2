@@ -382,7 +382,8 @@
         "kactive_type_declaration.h": "c",
         "percpu_chunk.h": "c",
         "kactive_api.h": "c",
-        "runqueue_macro.h": "c"
+        "runqueue_macro.h": "c",
+        "rcu_list_api.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

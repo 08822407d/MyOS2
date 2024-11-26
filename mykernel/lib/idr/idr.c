@@ -52,10 +52,10 @@ int idr_alloc_u32(idr_s *idr, void *ptr,
 
 	for (int slot_idx = id; slot_idx < MYOS_IDR_BUF_SIZE; slot_idx++)
 	{
-		void *tmp_slot = idr->idr_rt[slot_idx];
-		if (tmp_slot == NULL)
+		void **tmp_slot = &idr->idr_rt[slot_idx];
+		if (*tmp_slot == NULL)
 		{
-			ptr = tmp_slot;
+			*tmp_slot = ptr;
 			*nextid = slot_idx;
 			return 0;
 		}
@@ -323,3 +323,107 @@ void *idr_replace(idr_s *idr, void *ptr, ulong id)
 	return entry;
 }
 EXPORT_SYMBOL(idr_replace);
+
+
+
+
+/**
+ * DOC: IDA description
+ *
+ * The IDA is an ID allocator which does not provide the ability to
+ * associate an ID with a pointer.  As such, it only needs to store one
+ * bit per ID, and so is more space efficient than an IDR.  To use an IDA,
+ * define it using DEFINE_IDA() (or embed a &struct ida in a data structure,
+ * then initialise it using ida_init()).  To allocate a new ID, call
+ * ida_alloc(), ida_alloc_min(), ida_alloc_max() or ida_alloc_range().
+ * To free an ID, call ida_free().
+ *
+ * ida_destroy() can be used to dispose of an IDA without needing to
+ * free the individual IDs in it.  You can use ida_is_empty() to find
+ * out whether the IDA has any IDs currently allocated.
+ *
+ * The IDA handles its own locking.  It is safe to call any of the IDA
+ * functions without synchronisation in your code.
+ *
+ * IDs are currently limited to the range [0-INT_MAX].  If this is an awkward
+ * limitation, it should be quite straightforward to raise the maximum.
+ */
+
+/*
+ * Developer's notes:
+ *
+ * The IDA uses the functionality provided by the XArray to store bitmaps in
+ * each entry.  The XA_FREE_MARK is only cleared when all bits in the bitmap
+ * have been set.
+ *
+ * I considered telling the XArray that each slot is an order-10 node
+ * and indexing by bit number, but the XArray can't allow a single multi-index
+ * entry in the head, which would significantly increase memory consumption
+ * for the IDA.  So instead we divide the index by the number of bits in the
+ * leaf bitmap before doing a radix tree lookup.
+ *
+ * As an optimisation, if there are only a few low bits set in any given
+ * leaf, instead of allocating a 128-byte bitmap, we store the bits
+ * as a value entry.  Value entries never have the XA_FREE_MARK cleared
+ * because we can always convert them into a bitmap entry.
+ *
+ * It would be possible to optimise further; once we've run out of a
+ * single 128-byte bitmap, we currently switch to a 576-byte node, put
+ * the 128-byte bitmap in the first entry and then start allocating extra
+ * 128-byte entries.  We could instead use the 512 bytes of the node's
+ * data as a bitmap before moving to that scheme.  I do not believe this
+ * is a worthwhile optimisation; Rasmus Villemoes surveyed the current
+ * users of the IDA and almost none of them use more than 1024 entries.
+ * Those that do use more than the 8192 IDs that the 512 bytes would
+ * provide.
+ *
+ * The IDA always uses a lock to alloc/free.  If we add a 'test_bit'
+ * equivalent, it will still need locking.  Going to RCU lookup would require
+ * using RCU to free bitmaps, and that's not trivial without embedding an
+ * RCU head in the bitmap, which adds a 2-pointer overhead to each 128-byte
+ * bitmap, which is excessive.
+ */
+
+/**
+ * ida_alloc_range() - Allocate an unused ID.
+ * @ida: IDA handle.
+ * @min: Lowest ID to allocate.
+ * @max: Highest ID to allocate.
+ * @gfp: Memory allocation flags.
+ *
+ * Allocate an ID between @min and @max, inclusive.  The allocated ID will
+ * not exceed %INT_MAX, even if @max is larger.
+ *
+ * Context: Any context. It is safe to call this function without
+ * locking in your code.
+ * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+ * or %-ENOSPC if there are no free IDs.
+ */
+int ida_alloc_range(ida_s *ida, uint min, uint max, gfp_t gfp)
+{
+	for (uint slot_idx = min; slot_idx < IDA_BITMAP_LONGS; slot_idx++)
+	{
+		ulong slot = ida->bitmap[slot_idx];
+		if (slot != ~1ULL)
+		for (uint bit_idx = 0; bit_idx < sizeof(long); bit_idx++)
+			if ((slot & (1 << bit_idx)) == 0)
+				return slot_idx * sizeof(long) + bit_idx;
+	}
+
+	return -1;
+}
+EXPORT_SYMBOL(ida_alloc_range);
+
+/**
+ * ida_free() - Release an allocated ID.
+ * @ida: IDA handle.
+ * @id: Previously allocated ID.
+ *
+ * Context: Any context. It is safe to call this function without
+ * locking in your code.
+ */
+void ida_free(ida_s *ida, uint id)
+{
+	ida->bitmap[id / sizeof(long)] &= (1 << (id % sizeof(long)));
+}
+EXPORT_SYMBOL(ida_free);

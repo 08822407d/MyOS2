@@ -21,5 +21,7 @@
     /* idr.c */
 	struct idr;
 	typedef struct idr idr_s;
+    struct ida;
+    typedef struct ida ida_s;
 
 #endif /* _LIB_TYPE_DECLARATION_H_ */

@@ -13,19 +13,27 @@
 
 		extern void
 		idr_init_base(idr_s *idr, int base);
-
 		extern void
 		idr_init(idr_s *idr);
-
 		extern uint
 		idr_get_cursor(const idr_s *idr);
-
 		extern void
 		idr_set_cursor(idr_s *idr, uint val);
+
+		extern int
+		ida_alloc(ida_s *ida, gfp_t gfp);
+		extern int
+		ida_alloc_min(ida_s *ida, uint min, gfp_t gfp);
+		extern int
+		ida_alloc_max(ida_s *ida, uint max, gfp_t gfp);
+		extern void
+		ida_init(ida_s *ida);
 
 	#endif
 
 	#include "idr_macro.h"
+
+	extern void *kzalloc(size_t size, gfp_t flags);
 	
 	#if defined(IDR_DEFINATION) || !(DEBUG)
 
@@ -41,9 +49,11 @@
 		void
 		idr_init_base(idr_s *idr, int base) {
 			// INIT_RADIX_TREE(&idr->idr_rt, IDR_RT_MARKER);
-			memset(idr->idr_rt, 0, sizeof(idr->idr_rt));
+			idr->idr_rt = kzalloc(sizeof(void *) * MYOS_IDR_BUF_SIZE, GFP_KERNEL);
 			idr->idr_base = base;
 			idr->idr_next = 0;
+
+			idr->initiated = true;
 		}
 
 		/**
@@ -85,6 +95,71 @@
 		void
 		idr_set_cursor(idr_s *idr, uint val) {
 			WRITE_ONCE(idr->idr_next, val);
+		}
+
+
+		/**
+		 * ida_alloc() - Allocate an unused ID.
+		 * @ida: IDA handle.
+		 * @gfp: Memory allocation flags.
+		 *
+		 * Allocate an ID between 0 and %INT_MAX, inclusive.
+		 *
+		 * Context: Any context. It is safe to call this function without
+		 * locking in your code.
+		 * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+		 * or %-ENOSPC if there are no free IDs.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		ida_alloc(ida_s *ida, gfp_t gfp) {
+			return ida_alloc_range(ida, 0, ~0, gfp);
+		}
+
+		/**
+		 * ida_alloc_min() - Allocate an unused ID.
+		 * @ida: IDA handle.
+		 * @min: Lowest ID to allocate.
+		 * @gfp: Memory allocation flags.
+		 *
+		 * Allocate an ID between @min and %INT_MAX, inclusive.
+		 *
+		 * Context: Any context. It is safe to call this function without
+		 * locking in your code.
+		 * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+		 * or %-ENOSPC if there are no free IDs.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		ida_alloc_min(ida_s *ida, uint min, gfp_t gfp) {
+			return ida_alloc_range(ida, min, ~0, gfp);
+		}
+
+		/**
+		 * ida_alloc_max() - Allocate an unused ID.
+		 * @ida: IDA handle.
+		 * @max: Highest ID to allocate.
+		 * @gfp: Memory allocation flags.
+		 *
+		 * Allocate an ID between 0 and @max, inclusive.
+		 *
+		 * Context: Any context. It is safe to call this function without
+		 * locking in your code.
+		 * Return: The allocated ID, or %-ENOMEM if memory could not be allocated,
+		 * or %-ENOSPC if there are no free IDs.
+		 */
+		PREFIX_STATIC_INLINE
+		int
+		ida_alloc_max(ida_s *ida, uint max, gfp_t gfp) {
+			return ida_alloc_range(ida, 0, max, gfp);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		ida_init(ida_s *ida) {
+			ida->bitmap = kzalloc(IDA_BITMAP_LONGS * sizeof(long), GFP_KERNEL);
+
+			ida->initiated = true;
 		}
 
 	#endif

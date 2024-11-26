@@ -2,8 +2,6 @@
 #define _MMFAULT_CONST_H_
 
 
-	#include "../mm_type_declaration.h"
-
 	/**
 	 * enum vm_fault_reason - Page fault handlers return a bitmask of
 	 * these values to tell the core VM what happened when handling the
@@ -30,20 +28,20 @@
 	 *
 	 */
 	enum vm_fault_reason {
-		VM_FAULT_OOM			= (__force vm_fault_t)0x000001,
-		VM_FAULT_SIGBUS			= (__force vm_fault_t)0x000002,
-		VM_FAULT_MAJOR			= (__force vm_fault_t)0x000004,
-		VM_FAULT_HWPOISON		= (__force vm_fault_t)0x000010,
-		VM_FAULT_HWPOISON_LARGE	= (__force vm_fault_t)0x000020,
-		VM_FAULT_SIGSEGV		= (__force vm_fault_t)0x000040,
-		VM_FAULT_NOPAGE			= (__force vm_fault_t)0x000100,
-		VM_FAULT_LOCKED			= (__force vm_fault_t)0x000200,
-		VM_FAULT_RETRY			= (__force vm_fault_t)0x000400,
-		VM_FAULT_FALLBACK		= (__force vm_fault_t)0x000800,
-		VM_FAULT_DONE_COW		= (__force vm_fault_t)0x001000,
-		VM_FAULT_NEEDDSYNC		= (__force vm_fault_t)0x002000,
-		VM_FAULT_COMPLETED		= (__force vm_fault_t)0x004000,
-		VM_FAULT_HINDEX_MASK	= (__force vm_fault_t)0x0f0000,
+		VM_FAULT_OOM			= 0x000001,
+		VM_FAULT_SIGBUS			= 0x000002,
+		VM_FAULT_MAJOR			= 0x000004,
+		VM_FAULT_HWPOISON		= 0x000010,
+		VM_FAULT_HWPOISON_LARGE	= 0x000020,
+		VM_FAULT_SIGSEGV		= 0x000040,
+		VM_FAULT_NOPAGE			= 0x000100,
+		VM_FAULT_LOCKED			= 0x000200,
+		VM_FAULT_RETRY			= 0x000400,
+		VM_FAULT_FALLBACK		= 0x000800,
+		VM_FAULT_DONE_COW		= 0x001000,
+		VM_FAULT_NEEDDSYNC		= 0x002000,
+		VM_FAULT_COMPLETED		= 0x004000,
+		VM_FAULT_HINDEX_MASK	= 0x0f0000,
 	};
 
 

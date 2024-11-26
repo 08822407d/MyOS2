@@ -211,7 +211,7 @@
 		// struct worker		*manager;	/* L: purely informational */
 		List_hdr_s		workers;	/* A: attached workers */
 
-		// struct ida		worker_ida;	/* worker IDs for task name */
+		ida_s			worker_ida;	/* worker IDs for task name */
 
 		wq_attrs_s		*attrs;		/* I: worker attributes */
 		// struct hlist_node	hash_node;	/* PL: unbound_pool_hash node */

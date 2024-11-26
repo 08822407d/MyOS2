@@ -17,8 +17,8 @@ _APboot_base = .
 	mov		$_APboot_tmp_Stack_top,	%esp
 	mov		$_APboot_base,			%esi
 	// change the seg register to zero
-	jmp		$0,			$reform_address
-reform_address:
+// 	jmp		$0,			$reform_address
+// reform_address:
 	mov		%cs,		%ax
 	mov		%ax,		%ds
 	mov		%ax,		%es

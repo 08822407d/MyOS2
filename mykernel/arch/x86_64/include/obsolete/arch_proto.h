@@ -95,7 +95,6 @@ typedef struct pt_regs pt_regs_s;
 	void myos_init_percpu_intr(void);
 
 	/* smp.c */
-	void myos_early_init_smp(void);
 	void myos_startup_smp(void);
 	void myos_percpu_self_config(size_t cpu_idx);
 
