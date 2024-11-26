@@ -60,6 +60,77 @@
 		// workqueue_s			*rescue_wq;		/* I: the workqueue to rescue */
 	};
 
+
+	/**
+	 * struct workqueue_attrs - A struct for workqueue attributes.
+	 *
+	 * This can be used to change attributes of an unbound workqueue.
+	 */
+	struct workqueue_attrs {
+		/**
+		 * @nice: nice level
+		 */
+		int nice;
+
+		// /**
+		//  * @cpumask: allowed CPUs
+		//  *
+		//  * Work items in this workqueue are affine to these CPUs and not allowed
+		//  * to execute on other CPUs. A pool serving a workqueue must have the
+		//  * same @cpumask.
+		//  */
+		// cpumask_var_t cpumask;
+
+		// /**
+		//  * @__pod_cpumask: internal attribute used to create per-pod pools
+		//  *
+		//  * Internal use only.
+		//  *
+		//  * Per-pod unbound worker pools are used to improve locality. Always a
+		//  * subset of ->cpumask. A workqueue can be associated with multiple
+		//  * worker pools with disjoint @__pod_cpumask's. Whether the enforcement
+		//  * of a pool's @__pod_cpumask is strict depends on @affn_strict.
+		//  */
+		// cpumask_var_t __pod_cpumask;
+
+		// /**
+		//  * @affn_strict: affinity scope is strict
+		//  *
+		//  * If clear, workqueue will make a best-effort attempt at starting the
+		//  * worker inside @__pod_cpumask but the scheduler is free to migrate it
+		//  * outside.
+		//  *
+		//  * If set, workers are only allowed to run inside @__pod_cpumask.
+		//  */
+		// bool affn_strict;
+
+		// /*
+		//  * Below fields aren't properties of a worker_pool. They only modify how
+		//  * :c:func:`apply_workqueue_attrs` select pools and thus don't
+		//  * participate in pool hash calculations or equality comparisons.
+		//  *
+		//  * If @affn_strict is set, @cpumask isn't a property of a worker_pool
+		//  * either.
+		//  */
+
+		// /**
+		//  * @affn_scope: unbound CPU affinity scope
+		//  *
+		//  * CPU pods are used to improve execution locality of unbound work
+		//  * items. There are multiple pod types, one for each wq_affn_scope, and
+		//  * every CPU in the system belongs to one pod in every pod type. CPUs
+		//  * that belong to the same pod share the worker pool. For example,
+		//  * selecting %WQ_AFFN_NUMA makes the workqueue use a separate worker
+		//  * pool for each NUMA node.
+		//  */
+		// enum wq_affn_scope affn_scope;
+
+		// /**
+		//  * @ordered: work items must be executed one by one in queueing order
+		//  */
+		// bool ordered;
+	};
+
 	/*
 	 * Structure fields follow one of the following exclusion rules.
 	 *
@@ -142,7 +213,7 @@
 
 		// struct ida		worker_ida;	/* worker IDs for task name */
 
-		// struct workqueue_attrs	*attrs;		/* I: worker attributes */
+		wq_attrs_s		*attrs;		/* I: worker attributes */
 		// struct hlist_node	hash_node;	/* PL: unbound_pool_hash node */
 		// int			refcnt;		/* PL: refcnt for unbound pools */
 

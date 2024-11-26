@@ -52,10 +52,10 @@
 		int				wake_cpu;
 		int				on_rq;
 
-		// int prio;
-		// int static_prio;
-		// int normal_prio;
-		// unsigned int rt_priority;
+		int				prio;
+		int				static_prio;
+		int				normal_prio;
+		uint			rt_priority;
 
 		sched_entity_s		se;
 		sched_rt_entity_s	rt;

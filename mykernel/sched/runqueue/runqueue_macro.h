@@ -72,10 +72,23 @@
 	#define set_special_state(val) __set_current_state(val)
 
 
-	#define cpu_rq(cpu)		(&per_cpu(runqueues, (cpu)))
-	#define this_rq()		this_cpu_ptr(&runqueues)
-	// #define task_rq(p)		cpu_rq(task_cpu(p))
+	#define cpu_rq(cpu)			(&per_cpu(runqueues, (cpu)))
+	#define this_rq()			this_cpu_ptr(&runqueues)
+	// #define task_rq(p)			cpu_rq(task_cpu(p))
 	#define cpu_curr(cpu)		(cpu_rq(cpu)->curr)
-	// #define raw_rq()		raw_cpu_ptr(&runqueues)
+	// #define raw_rq()			raw_cpu_ptr(&runqueues)
+
+
+
+
+	/* <linux/sched/prio.h> */
+
+	/*
+	 * Convert user-nice values [ -20 ... 0 ... 19 ]
+	 * to static priority [ MAX_RT_PRIO..MAX_PRIO-1 ],
+	 * and back.
+	 */
+	#define NICE_TO_PRIO(nice)	((nice) + DEFAULT_PRIO)
+	#define PRIO_TO_NICE(prio)	((prio) - DEFAULT_PRIO)
 
 #endif /* _LINUX_RUNQUEUE_MACRO_H_ */

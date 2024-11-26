@@ -8,10 +8,10 @@
 	//  */
 	// #define work_data_bits(work) ((unsigned long *)(&(work)->data))
 
-	// #define for_each_bh_worker_pool(pool, cpu)										\
-	// 		for ((pool) = &per_cpu(bh_worker_pools, cpu)[0];						\
-	// 				(pool) < &per_cpu(bh_worker_pools, cpu)[NR_STD_WORKER_POOLS];	\
-	// 				(pool)++)
+	#define for_each_bh_worker_pool(pool, cpu)										\
+			for ((pool) = &per_cpu(bh_worker_pools, cpu)[0];						\
+					(pool) < &per_cpu(bh_worker_pools, cpu)[NR_STD_WORKER_POOLS];	\
+					(pool)++)
 
 	#define for_each_cpu_worker_pool(pool, cpu)					\
 			for ((pool) = &per_cpu(cpu_worker_pools, cpu)[0];	\

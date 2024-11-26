@@ -67,13 +67,10 @@ DEFINE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page) = { .gdt = {
 }};
 
 
-// /* to raise softirq for the BH worker pools on other CPUs */
-// DEFINE_PER_CPU_SHARED_ALIGNED(struct irq_work
-// 		[NR_STD_WORKER_POOLS], bh_pool_irq_works);
 
-// /* the BH worker pools */
-// DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
-// 		[NR_STD_WORKER_POOLS], bh_worker_pools);
+/* the BH worker pools */
+DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
+		[NR_STD_WORKER_POOLS], bh_worker_pools);
 
 /* the per-cpu worker pools */
 DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s

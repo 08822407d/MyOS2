@@ -4,7 +4,7 @@
 	#include "workqueue.h"
 
 
-	// extern worker_pool_s bh_worker_pools[NR_STD_WORKER_POOLS];
+	extern worker_pool_s bh_worker_pools[NR_STD_WORKER_POOLS];
 	extern worker_pool_s cpu_worker_pools[NR_STD_WORKER_POOLS];
 
 

@@ -12,6 +12,8 @@
     typedef void (*work_func_t)(work_s *work);
 	struct worker;
 	typedef struct worker worker_s;
+	struct workqueue_attrs;
+	typedef struct workqueue_attrs wq_attrs_s;
 	struct worker_pool;
 	typedef struct worker_pool worker_pool_s;
 	struct pool_workqueue;

@@ -7,6 +7,8 @@
 	#include "runqueue.h"
 
 
+	extern void set_user_nice(task_s *p, long nice);
+
 	extern void update_rq_clock(rq_s *rq);
 
 #endif /* _LINUX_RUNQUEUE_API_H_ */

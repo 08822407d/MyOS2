@@ -32,15 +32,6 @@
 
 
 
-// MyOS2 simplified declarations and definations
-workqueue_s __system_wq = {
-	.pwqs	= LIST_HEADER_INIT(__system_wq.pwqs),
-	.list	= LIST_INIT(__system_wq.list),
-	.name	= "events",
-};
-
-DEFINE_PER_CPU(pool_workqueue_s, __pwq_system_wq);
-
 
 static kmem_cache_s *pwq_cache;
 
@@ -66,7 +57,7 @@ static bool workqueue_freezing;			/* PL: have wqs started freezing? */
 //  */
 // static struct kthread_worker *pwq_release_worker __ro_after_init;
 
-workqueue_s *system_wq __ro_after_init = &__system_wq;
+workqueue_s *system_wq __ro_after_init;
 EXPORT_SYMBOL(system_wq);
 // workqueue_s *system_highpri_wq __ro_after_init;
 // EXPORT_SYMBOL_GPL(system_highpri_wq);
@@ -80,8 +71,8 @@ EXPORT_SYMBOL(system_wq);
 // EXPORT_SYMBOL_GPL(system_power_efficient_wq);
 // workqueue_s *system_freezable_power_efficient_wq __ro_after_init;
 // EXPORT_SYMBOL_GPL(system_freezable_power_efficient_wq);
-// workqueue_s *system_bh_wq;
-// EXPORT_SYMBOL_GPL(system_bh_wq);
+workqueue_s *system_bh_wq;
+EXPORT_SYMBOL_GPL(system_bh_wq);
 // workqueue_s *system_bh_highpri_wq;
 // EXPORT_SYMBOL_GPL(system_bh_highpri_wq);
 
@@ -94,13 +85,11 @@ static int simple_worker_thread(void *__worker);
 static void
 __simple_queue_work(int cpu, workqueue_s *wq, work_s*work) {
 	pool_workqueue_s *pwq;
-	worker_pool_s *last_pool, *pool;
-	uint work_flags;
-	uint req_cpu = cpu;
+	worker_pool_s *pool;
 
 retry:
 	/* pwq which will be used unless @work is executing elsewhere */
-	if (req_cpu == WORK_CPU_UNBOUND) {
+	if (cpu == WORK_CPU_UNBOUND) {
 		// if (wq->flags & WQ_UNBOUND)
 		// 	cpu = wq_select_unbound_cpu(raw_smp_processor_id());
 		// else
@@ -112,12 +101,13 @@ retry:
 
 	spin_lock(&pool->lock);
 
-	// if (WARN_ON(!list_empty(&work->entry)))
-	// 	goto out;
+	if (WARN_ON(!list_empty(&work->entry)))
+		goto out;
 
 	list_header_add_to_tail(&pool->worklist, &work->entry);
 	// 	kick_pool(pool);
 
+out:
 	spin_unlock_no_resched(&pool->lock);
 	// rcu_read_unlock();
 }
@@ -506,17 +496,17 @@ static int
 format_worker_id(char *buf, size_t size,
 		worker_s *worker, worker_pool_s *pool) {
 
-	// if (pool) {
-	// 	if (pool->cpu >= 0)
-	// 		return scnprintf(buf, size, "kworker/%d:%d%s",
-	// 					pool->cpu, worker->id,
-	// 					pool->attrs->nice < 0  ? "H" : "");
-	// 	else
-	// 		return scnprintf(buf, size, "kworker/u%d:%d",
-	// 					pool->id, worker->id);
-	// } else {
+	if (pool) {
+		if (pool->cpu >= 0)
+			return scnprintf(buf, size, "kworker/%d:%d%s",
+						pool->cpu, worker->id,
+						pool->attrs->nice < 0  ? "H" : "");
+		else
+			return scnprintf(buf, size, "kworker/u%d:%d",
+						pool->id, worker->id);
+	} else {
 		return scnprintf(buf, size, "kworker/dying");
-	// }
+	}
 }
 
 /**
@@ -569,7 +559,7 @@ static worker_s
 			goto fail;
 		}
 
-		// set_user_nice(worker->task, pool->attrs->nice);
+		set_user_nice(worker->task, pool->attrs->nice);
 		// kthread_bind_mask(worker->task, pool_allowed_cpus(pool));
 	}
 
@@ -635,13 +625,141 @@ init_worker_pool(worker_pool_s *pool) {
 
 	// /* shouldn't fail above this point */
 	// pool->attrs = alloc_workqueue_attrs();
-	// if (!pool->attrs)
-	// 	return -ENOMEM;
+	pool->attrs = kzalloc(sizeof(*(pool->attrs)), GFP_KERNEL);
+	if (!pool->attrs)
+		return -ENOMEM;
 
 	// wqattrs_clear_for_pool(pool->attrs);
 
 	return 0;
 }
+
+
+
+static int
+simple_alloc_and_link_pwqs(workqueue_s *wq) {
+	bool highpri = wq->flags & WQ_HIGHPRI;
+	int cpu, ret;
+
+	wq->cpu_pwq = alloc_percpu(pool_workqueue_s *);
+	if (!wq->cpu_pwq)
+		goto enomem;
+
+	if (!(wq->flags & WQ_UNBOUND)) {
+		worker_pool_s __percpu *pools;
+		if (wq->flags & WQ_BH)
+			pools = bh_worker_pools;
+		else
+			pools = cpu_worker_pools;
+
+		for_each_possible_cpu(cpu) {
+			pool_workqueue_s **pwq_p;
+			pool_workqueue_s *pwq;
+			worker_pool_s *pool;
+
+			pool = &(per_cpu_ptr(pools, cpu)[highpri]);
+			pwq_p = per_cpu_ptr(wq->cpu_pwq, cpu);
+
+			*pwq_p = kmem_cache_alloc(pwq_cache, GFP_KERNEL);
+			if (!*pwq_p)
+				goto enomem;
+
+			pwq = *pwq_p;
+			pwq->pool = pool;
+			pwq->wq = wq;
+
+			// mutex_lock(&wq->mutex);
+			list_header_add_to_tail(&wq->pwqs, &pwq->pwqs_node);
+			// mutex_unlock(&wq->mutex);
+		}
+		return 0;
+	}
+
+	return ret;
+enomem:
+	if (wq->cpu_pwq) {
+		for_each_possible_cpu(cpu) {
+			pool_workqueue_s *pwq = *per_cpu_ptr(wq->cpu_pwq, cpu);
+			if (pwq)
+				kmem_cache_free(pwq_cache, pwq);
+		}
+		// free_percpu(wq->cpu_pwq);
+		wq->cpu_pwq = NULL;
+	}
+	return -ENOMEM;
+}
+
+__printf(1, 4)
+workqueue_s
+*simple_alloc_workqueue(const char *fmt, uint flags, int max_active, ...)
+{
+	va_list args;
+	workqueue_s *wq;
+	size_t wq_size;
+	int name_len;
+
+	if (flags & WQ_BH) {
+		if (WARN_ON_ONCE(flags & ~__WQ_BH_ALLOWS))
+			return NULL;
+		if (WARN_ON_ONCE(max_active))
+			return NULL;
+	}
+
+	/* allocate wq and format name */
+	// if (flags & WQ_UNBOUND)
+	// 	wq_size = struct_size(wq, node_nr_active, nr_node_ids + 1);
+	// else
+		wq_size = sizeof(*wq);
+
+	wq = kzalloc(wq_size, GFP_KERNEL);
+	if (!wq)
+		return NULL;
+
+	va_start(args, max_active);
+	name_len = vsnprintf(wq->name, sizeof(wq->name), fmt, args);
+	va_end(args);
+
+	if (name_len >= WQ_NAME_LEN)
+		pr_warn_once("workqueue: name exceeds WQ_NAME_LEN."
+				" Truncating to: %s\n", wq->name);
+
+	/* init wq */
+	wq->flags = flags;
+	INIT_LIST_HEADER_S(&wq->pwqs);
+	INIT_LIST_HEAD(&wq->list);
+
+	// if (flags & WQ_UNBOUND) {
+	// 	if (alloc_node_nr_active(wq->node_nr_active) < 0)
+	// 		goto err_unreg_lockdep;
+	// }
+
+	// /*
+	//  * wq_pool_mutex protects the workqueues list, allocations of PWQs,
+	//  * and the global freeze state.
+	//  */
+	// apply_wqattrs_lock();
+
+	// if (alloc_and_link_pwqs(wq) < 0)
+	// 	goto err_unlock_free_node_nr_active;
+	simple_alloc_and_link_pwqs(wq);
+
+	// mutex_lock(&wq->mutex);
+	// wq_adjust_max_active(wq);
+	// mutex_unlock(&wq->mutex);
+
+	list_header_add_to_tail(&workqueues, &wq->list);
+
+	// if (wq_online && init_rescuer(wq) < 0)
+	// 	goto err_unlock_destroy;
+
+	// apply_wqattrs_unlock();
+
+	// if ((wq->flags & WQ_SYSFS) && workqueue_sysfs_register(wq))
+	// 	goto err_destroy;
+
+	return wq;
+}
+EXPORT_SYMBOL_GPL(alloc_workqueue);
 
 
 static void __init
@@ -650,9 +768,8 @@ init_cpu_worker_pool(worker_pool_s *pool, int cpu, int nice) {
 	pool->cpu = cpu;
 	// cpumask_copy(pool->attrs->cpumask, cpumask_of(cpu));
 	// cpumask_copy(pool->attrs->__pod_cpumask, cpumask_of(cpu));
-	// pool->attrs->nice = nice;
+	pool->attrs->nice = nice;
 	// pool->attrs->affn_strict = true;
-	// pool->node = cpu_to_node(cpu);
 	pool->node = 0;
 
 	// /* alloc pool ID */
@@ -676,61 +793,37 @@ void __init workqueue_init_early(void)
 	int std_nice[NR_STD_WORKER_POOLS] = { 0, HIGHPRI_NICE_LEVEL };
 	int i, cpu;
 
-	BUILD_BUG_ON(__alignof__(pool_workqueue_s) < __alignof__(long long));
-
 	pwq_cache = KMEM_CACHE(pool_workqueue, SLAB_PANIC);
 
 	/* initialize BH and CPU pools */
 	for_each_possible_cpu(cpu) {
 		worker_pool_s *pool;
 
-		// i = 0;
-		// for_each_bh_worker_pool(pool, cpu) {
-		// 	init_cpu_worker_pool(pool, cpu, std_nice[i]);
-		// 	pool->flags |= POOL_BH;
-		// 	// init_irq_work(bh_pool_irq_work(pool), irq_work_fns[i]);
-		// 	i++;
-		// }
+		i = 0;
+		for_each_bh_worker_pool(pool, cpu) {
+			init_cpu_worker_pool(pool, cpu, std_nice[i]);
+			pool->flags |= POOL_BH;
+			// init_irq_work(bh_pool_irq_work(pool), irq_work_fns[i]);
+			i++;
+		}
 
 		i = 0;
-		for_each_cpu_worker_pool(pool, cpu)
-			init_cpu_worker_pool(pool, cpu, std_nice[i++]);
+		for_each_cpu_worker_pool(pool, cpu) {
+			init_cpu_worker_pool(pool, cpu, std_nice[i]);
+			i++;
+		}
 	}
 
-	// /* create default unbound and ordered wq attrs */
-	// for (i = 0; i < NR_STD_WORKER_POOLS; i++) {
-	// 	// struct workqueue_attrs *attrs;
-
-	// 	// BUG_ON(!(attrs = alloc_workqueue_attrs()));
-	// 	// attrs->nice = std_nice[i];
-	// 	// unbound_std_wq_attrs[i] = attrs;
-
-	// 	// /*
-	// 	//  * An ordered wq should have only one pwq as ordering is
-	// 	//  * guaranteed by max_active which is enforced by pwqs.
-	// 	//  */
-	// 	// BUG_ON(!(attrs = alloc_workqueue_attrs()));
-	// 	// attrs->nice = std_nice[i];
-	// 	// attrs->ordered = true;
-	// 	// ordered_wq_attrs[i] = attrs;
-	// }
-
-	// system_wq =
-	// 		alloc_workqueue("events", 0, 0);
+	system_wq =
+			simple_alloc_workqueue("events", 0, 0);
 	// system_highpri_wq =
 	// 		alloc_workqueue("events_highpri", WQ_HIGHPRI, 0);
 	// system_long_wq =
-	// 		alloc_workqueue("events_long", 0, 0);
-	// system_unbound_wq =
-	// 		alloc_workqueue("events_unbound", WQ_UNBOUND, WQ_MAX_ACTIVE);
-	// system_freezable_wq =
-	// 		alloc_workqueue("events_freezable", WQ_FREEZABLE, 0);
-	// system_power_efficient_wq =
-	// 		alloc_workqueue("events_power_efficient", WQ_POWER_EFFICIENT, 0);
+	// 		alloc_workalloc_workqueuequeue("events_power_efficient", WQ_POWER_EFFICIENT, 0);
 	// system_freezable_power_efficient_wq =
 	// 		alloc_workqueue("events_freezable_pwr_efficient", WQ_FREEZABLE | WQ_POWER_EFFICIENT, 0);
-	// system_bh_wq =
-	// 		alloc_workqueue("events_bh", WQ_BH, 0);
+	system_bh_wq =
+			simple_alloc_workqueue("events_bh", WQ_BH, 0);
 	// system_bh_highpri_wq =
 	// 		alloc_workqueue("events_bh_highpri", WQ_BH | WQ_HIGHPRI, 0);
 	// BUG_ON(
@@ -740,9 +833,6 @@ void __init workqueue_init_early(void)
 	// 	!system_freezable_power_efficient_wq ||
 	// 	!system_bh_wq || !system_bh_highpri_wq
 	// );
-
-	extern void simple_alloc_init_workqueue(void);
-	simple_alloc_init_workqueue();
 }
 
 
@@ -768,8 +858,8 @@ void __init workqueue_init(void)
 	 * up. Also, create a rescuer for workqueues that requested it.
 	 */
 	for_each_possible_cpu(cpu) {
-		// for_each_bh_worker_pool(pool, cpu)
-		// 	pool->node = cpu_to_node(cpu);
+		for_each_bh_worker_pool(pool, cpu)
+			pool->node = 0;
 		for_each_cpu_worker_pool(pool, cpu)
 			pool->node = 0;
 	}
@@ -782,15 +872,15 @@ void __init workqueue_init(void)
 
 	// mutex_unlock(&wq_pool_mutex);
 
-	// /*
-	//  * Create the initial workers. A BH pool has one pseudo worker that
-	//  * represents the shared BH execution context and thus doesn't get
-	//  * affected by hotplug events. Create the BH pseudo workers for all
-	//  * possible CPUs here.
-	//  */
-	// for_each_possible_cpu(cpu)
-	// 	for_each_bh_worker_pool(pool, cpu)
-	// 		BUG_ON(!create_worker(pool));
+	/*
+	 * Create the initial workers. A BH pool has one pseudo worker that
+	 * represents the shared BH execution context and thus doesn't get
+	 * affected by hotplug events. Create the BH pseudo workers for all
+	 * possible CPUs here.
+	 */
+	for_each_possible_cpu(cpu)
+		for_each_bh_worker_pool(pool, cpu)
+			BUG_ON(!create_worker(pool));
 
 	for_each_online_cpu(cpu) {
 		for_each_cpu_worker_pool(pool, cpu) {
@@ -804,33 +894,4 @@ void __init workqueue_init(void)
 
 	// wq_online = true;
 	// wq_watchdog_init();
-}
-
-
-void simple_alloc_init_workqueue()
-{
-	workqueue_s *wq = system_wq;
-	wq->cpu_pwq = alloc_percpu(pool_workqueue_s *);
-
-	worker_pool_s __percpu *pools = cpu_worker_pools;
-	for_each_possible_cpu(cpu) {
-		pool_workqueue_s **pwq_p;
-		pool_workqueue_s *pwq;
-		worker_pool_s *pool;
-
-		pool = &(per_cpu_ptr(pools, cpu)[0]);
-		pwq_p = per_cpu_ptr(wq->cpu_pwq, cpu);
-		*pwq_p = &per_cpu(__pwq_system_wq, cpu);
-		pwq = *pwq_p;
-
-		memset(pwq, 0, sizeof(*pwq));
-		pwq->pool = pool;
-		pwq->wq = wq;
-
-		// mutex_lock(&wq->mutex);
-		list_header_add_to_tail(&wq->pwqs, &pwq->pwqs_node);
-		// mutex_unlock(&wq->mutex);
-	}
-
-	list_header_add_to_tail(&workqueues, &wq->list);
 }
