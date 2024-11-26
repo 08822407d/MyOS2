@@ -185,13 +185,13 @@
 		// ulong			watchdog_ts;	/* L: watchdog timestamp */
 		// bool			cpu_stall;		/* WD: stalled cpu bound pool */
 
-		// /*
-		//  * The counter is incremented in a process context on the associated CPU
-		//  * w/ preemption disabled, and decremented or reset in the same context
-		//  * but w/ pool->lock held. The readers grab pool->lock and are
-		//  * guaranteed to see if the counter reached zero.
-		//  */
-		// int				nr_running;
+		/*
+		 * The counter is incremented in a process context on the associated CPU
+		 * w/ preemption disabled, and decremented or reset in the same context
+		 * but w/ pool->lock held. The readers grab pool->lock and are
+		 * guaranteed to see if the counter reached zero.
+		 */
+		int				nr_running;
 
 		List_hdr_s		worklist;	/* L: list of pending works */
 

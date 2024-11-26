@@ -247,6 +247,96 @@ simple_assign_work(work_s*work, worker_s *worker) {
 }
 
 /**
+ * maybe_create_worker - create a new worker if necessary
+ * @pool: pool to create a new worker for
+ *
+ * Create a new worker for @pool if necessary.  @pool is guaranteed to
+ * have at least one idle worker on return from this function.  If
+ * creating a new worker takes longer than MAYDAY_INTERVAL, mayday is
+ * sent to all rescuers with works scheduled on @pool to resolve
+ * possible allocation deadlock.
+ *
+ * On return, need_to_create_worker() is guaranteed to be %false and
+ * may_start_working() %true.
+ *
+ * LOCKING:
+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
+ * multiple times.  Does GFP_KERNEL allocations.  Called only from
+ * manager.
+ */
+static void
+maybe_create_worker(worker_pool_s *pool)
+__releases(&pool->lock)
+__acquires(&pool->lock)
+{
+// restart:
+// 	raw_spin_unlock_irq(&pool->lock);
+
+// 	/* if we don't make progress in MAYDAY_INITIAL_TIMEOUT, call for help */
+// 	mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INITIAL_TIMEOUT);
+
+// 	while (true) {
+// 		if (create_worker(pool) || !need_to_create_worker(pool))
+// 			break;
+
+// 		schedule_timeout_interruptible(CREATE_COOLDOWN);
+
+// 		if (!need_to_create_worker(pool))
+// 			break;
+// 	}
+
+// 	del_timer_sync(&pool->mayday_timer);
+// 	raw_spin_lock_irq(&pool->lock);
+// 	/*
+// 	 * This is necessary even after a new worker was just successfully
+// 	 * created as @pool->lock was dropped and the new worker might have
+// 	 * already become busy.
+// 	 */
+// 	if (need_to_create_worker(pool))
+// 		goto restart;
+}
+
+/**
+ * manage_workers - manage worker pool
+ * @worker: self
+ *
+ * Assume the manager role and manage the worker pool @worker belongs
+ * to.  At any given time, there can be only zero or one manager per
+ * pool.  The exclusion is handled automatically by this function.
+ *
+ * The caller can safely start processing works on false return.  On
+ * true return, it's guaranteed that need_to_create_worker() is false
+ * and may_start_working() is true.
+ *
+ * CONTEXT:
+ * raw_spin_lock_irq(pool->lock) which may be released and regrabbed
+ * multiple times.  Does GFP_KERNEL allocations.
+ *
+ * Return:
+ * %false if the pool doesn't need management and the caller can safely
+ * start processing works, %true if management function was performed and
+ * the conditions that the caller verified before calling the function may
+ * no longer be true.
+ */
+static bool
+manage_workers(worker_s *worker) {
+	worker_pool_s *pool = worker->pool;
+
+	// if (pool->flags & POOL_MANAGER_ACTIVE)
+	// 	return false;
+
+	// pool->flags |= POOL_MANAGER_ACTIVE;
+	// pool->manager = worker;
+
+	// maybe_create_worker(pool);
+
+	// pool->manager = NULL;
+	// pool->flags &= ~POOL_MANAGER_ACTIVE;
+	// rcuwait_wake_up(&manager_wait);
+	return true;
+}
+
+/**
  * process_one_work - process single work
  * @worker: self
  * @work: work to process
@@ -441,6 +531,7 @@ process_scheduled_works(worker_s *worker) {
  *
  * Return: 0
  */
+// static int worker_thread(void *__worker)
 static int
 simple_worker_thread(void *__worker) {
 	worker_s *worker = __worker;
@@ -452,6 +543,15 @@ woke_up:
 	spin_lock_irq(&pool->lock);
 
 	worker_leave_idle(worker);
+recheck:
+	/* no more worker necessary? */
+	if (!need_more_worker(pool))
+		goto sleep;
+
+	/* do we need to manage? */
+	if (unlikely(!may_start_working(pool)) && manage_workers(worker))
+		goto recheck;
+
 	/*
 	 * ->scheduled list can only be filled while a worker is
 	 * preparing to process a work or actually processing it.

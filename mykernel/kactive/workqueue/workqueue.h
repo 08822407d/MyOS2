@@ -90,30 +90,31 @@
 		PREFIX_STATIC_INLINE
 		bool
 		need_more_worker(worker_pool_s *pool) {
-			// return !list_empty(&pool->worklist) && !pool->nr_running;
-			return !list_header_is_empty(&pool->worklist);
+			return !list_header_is_empty(&pool->worklist)
+						&& pool->nr_running == 0;
 		}
 
 		/* Can I start working?  Called from busy but !running workers. */
 		PREFIX_STATIC_INLINE
 		bool
 		may_start_working(worker_pool_s *pool) {
-			// return pool->nr_idle;
+			return pool->idle_list.count != 0;
 		}
 
 		/* Do I need to keep working?  Called from currently running workers. */
 		PREFIX_STATIC_INLINE
 		bool
 		keep_working(worker_pool_s *pool) {
-			// return !list_empty(&pool->worklist) && (pool->nr_running <= 1);
-			return !list_header_is_empty(&pool->worklist);
+			return !list_header_is_empty(&pool->worklist)
+						&& (pool->nr_running <= 1);
 		}
 
 		/* Do we need a new worker?  Called from manager. */
 		PREFIX_STATIC_INLINE
 		bool
 		need_to_create_worker(worker_pool_s *pool) {
-			return need_more_worker(pool) && !may_start_working(pool);
+			return need_more_worker(pool) &&
+					!may_start_working(pool);
 		}
 
 		/* Do we have too many workers and should some go away? */
@@ -121,10 +122,12 @@
 		bool
 		too_many_workers(worker_pool_s *pool) {
 			bool managing = pool->flags & POOL_MANAGER_ACTIVE;
-			// int nr_idle = pool->nr_idle + managing; /* manager is considered idle */
-			// int nr_busy = pool->nr_workers - nr_idle;
+			/* manager is considered idle */
+			int nr_idle = pool->idle_list.count + managing;
+			int nr_busy = pool->nr_workers - nr_idle;
 
-			// return nr_idle > 2 && (nr_idle - 2) * MAX_IDLE_WORKERS_RATIO >= nr_busy;
+			return nr_idle > 2 && (nr_idle - 2) *
+					MAX_IDLE_WORKERS_RATIO >= nr_busy;
 		}
 
 		/**
@@ -141,11 +144,11 @@
 
 			// lockdep_assert_held(&pool->lock);
 
-			// /* If transitioning into NOT_RUNNING, adjust nr_running. */
-			// if ((flags & WORKER_NOT_RUNNING) &&
-			// 		!(worker->flags & WORKER_NOT_RUNNING)) {
-			// 	pool->nr_running--;
-			// }
+			/* If transitioning into NOT_RUNNING, adjust nr_running. */
+			if ((flags & WORKER_NOT_RUNNING) &&
+					!(worker->flags & WORKER_NOT_RUNNING)) {
+				pool->nr_running--;
+			}
 
 			worker->flags |= flags;
 		}
@@ -167,14 +170,14 @@
 
 			worker->flags &= ~flags;
 
-			// /*
-			//  * If transitioning out of NOT_RUNNING, increment nr_running.  Note
-			//  * that the nested NOT_RUNNING is not a noop.  NOT_RUNNING is mask
-			//  * of multiple flags, not a single flag.
-			//  */
-			// if ((flags & WORKER_NOT_RUNNING) && (oflags & WORKER_NOT_RUNNING))
-			// 	if (!(worker->flags & WORKER_NOT_RUNNING))
-			// 		pool->nr_running++;
+			/*
+			 * If transitioning out of NOT_RUNNING, increment nr_running.  Note
+			 * that the nested NOT_RUNNING is not a noop.  NOT_RUNNING is mask
+			 * of multiple flags, not a single flag.
+			 */
+			if ((flags & WORKER_NOT_RUNNING) && (oflags & WORKER_NOT_RUNNING))
+				if (!(worker->flags & WORKER_NOT_RUNNING))
+					pool->nr_running++;
 		}
 
 		/* Return the first idle worker.  Called with pool->lock held. */
@@ -208,7 +211,6 @@
 
 			/* can't use worker_set_flags(), also called from create_worker() */
 			worker->flags |= WORKER_IDLE;
-			// pool->nr_idle++;
 			// worker->last_active = jiffies;
 
 			/* idle_list is LIFO */
@@ -217,8 +219,9 @@
 			// if (too_many_workers(pool) && !timer_pending(&pool->idle_timer))
 			// 	mod_timer(&pool->idle_timer, jiffies + IDLE_WORKER_TIMEOUT);
 
-			// /* Sanity check nr_running. */
-			// WARN_ON_ONCE(pool->nr_workers == pool->nr_idle && pool->nr_running);
+			/* Sanity check nr_running. */
+			WARN_ON_ONCE(pool->nr_workers ==
+				pool->idle_list.count && pool->nr_running);
 		}
 
 		/**
@@ -237,7 +240,7 @@
 
 			if (WARN_ON_ONCE(!(worker->flags & WORKER_IDLE)))
 				return;
-			// worker_clr_flags(worker, WORKER_IDLE);
+			worker_clr_flags(worker, WORKER_IDLE);
 			list_header_delete_node(&pool->idle_list, &worker->entry);
 		}
 
