@@ -208,7 +208,7 @@
 		// DECLARE_HASHTABLE(busy_hash, BUSY_WORKER_HASH_ORDER);
 		// 					/* L: hash of busy workers */
 
-		// struct worker		*manager;	/* L: purely informational */
+		worker_s		*manager;	/* L: purely informational */
 		List_hdr_s		workers;	/* A: attached workers */
 
 		ida_s			worker_ida;	/* worker IDs for task name */

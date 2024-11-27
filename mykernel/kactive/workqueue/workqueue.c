@@ -77,6 +77,8 @@ EXPORT_SYMBOL_GPL(system_bh_wq);
 // EXPORT_SYMBOL_GPL(system_bh_highpri_wq);
 
 static int simple_worker_thread(void *__worker);
+static worker_s *create_worker(worker_pool_s *pool);
+static bool kick_pool(worker_pool_s *pool);
 
 
 
@@ -125,7 +127,7 @@ retry:
 		goto out;
 
 	list_header_add_to_tail(&pool->worklist, &work->entry);
-	// 	kick_pool(pool);
+	kick_pool(pool);
 
 out:
 	spin_unlock_no_resched(&pool->lock);
@@ -247,6 +249,63 @@ simple_assign_work(work_s*work, worker_s *worker) {
 }
 
 /**
+ * kick_pool - wake up an idle worker if necessary
+ * @pool: pool to kick
+ *
+ * @pool may have pending work items. Wake up worker if necessary. Returns
+ * whether a worker was woken up.
+ */
+static bool
+kick_pool(worker_pool_s *pool) {
+	worker_s *worker = first_idle_worker(pool);
+	task_s *p;
+
+	// lockdep_assert_held(&pool->lock);
+
+	if (!need_more_worker(pool) || !worker)
+		return false;
+
+	if (pool->flags & POOL_BH) {
+		// kick_bh_pool(pool);
+		while (1);
+		return true;
+	}
+
+	p = worker->task;
+
+	// /*
+	//  * Idle @worker is about to execute @work and waking up provides an
+	//  * opportunity to migrate @worker at a lower cost by setting the task's
+	//  * wake_cpu field. Let's see if we want to move @worker to improve
+	//  * execution locality.
+	//  *
+	//  * We're waking the worker that went idle the latest and there's some
+	//  * chance that @worker is marked idle but hasn't gone off CPU yet. If
+	//  * so, setting the wake_cpu won't do anything. As this is a best-effort
+	//  * optimization and the race window is narrow, let's leave as-is for
+	//  * now. If this becomes pronounced, we can skip over workers which are
+	//  * still on cpu when picking an idle worker.
+	//  *
+	//  * If @pool has non-strict affinity, @worker might have ended up outside
+	//  * its affinity scope. Repatriate.
+	//  */
+	// if (!pool->attrs->affn_strict &&
+	//     !cpumask_test_cpu(p->wake_cpu, pool->attrs->__pod_cpumask)) {
+	// 	work_s *work = list_first_entry(
+	// 			&pool->worklist, work_s, entry);
+	// 	int wake_cpu = cpumask_any_and_distribute(pool->attrs->__pod_cpumask,
+	// 						  cpu_online_mask);
+	// 	if (wake_cpu < nr_cpu_ids) {
+	// 		p->wake_cpu = wake_cpu;
+	// 		get_work_pwq(work)->stats[PWQ_STAT_REPATRIATED]++;
+	// 	}
+	// }
+	wake_up_process(p);
+	return true;
+}
+
+
+/**
  * maybe_create_worker - create a new worker if necessary
  * @pool: pool to create a new worker for
  *
@@ -269,31 +328,30 @@ maybe_create_worker(worker_pool_s *pool)
 __releases(&pool->lock)
 __acquires(&pool->lock)
 {
-// restart:
-// 	raw_spin_unlock_irq(&pool->lock);
+	do {
+		spin_unlock_irq_no_resched(&pool->lock);
 
-// 	/* if we don't make progress in MAYDAY_INITIAL_TIMEOUT, call for help */
-// 	mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INITIAL_TIMEOUT);
+		// /* if we don't make progress in MAYDAY_INITIAL_TIMEOUT, call for help */
+		// mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INITIAL_TIMEOUT);
 
-// 	while (true) {
-// 		if (create_worker(pool) || !need_to_create_worker(pool))
-// 			break;
+		while (true) {
+			if (create_worker(pool) || !need_to_create_worker(pool))
+				break;
 
-// 		schedule_timeout_interruptible(CREATE_COOLDOWN);
+			// schedule_timeout_interruptible(CREATE_COOLDOWN);
 
-// 		if (!need_to_create_worker(pool))
-// 			break;
-// 	}
+			if (!need_to_create_worker(pool))
+				break;
+		}
 
-// 	del_timer_sync(&pool->mayday_timer);
-// 	raw_spin_lock_irq(&pool->lock);
-// 	/*
-// 	 * This is necessary even after a new worker was just successfully
-// 	 * created as @pool->lock was dropped and the new worker might have
-// 	 * already become busy.
-// 	 */
-// 	if (need_to_create_worker(pool))
-// 		goto restart;
+		// del_timer_sync(&pool->mayday_timer);
+		spin_lock_irq(&pool->lock);
+		/*
+		 * This is necessary even after a new worker was just successfully
+		 * created as @pool->lock was dropped and the new worker might have
+		 * already become busy.
+		 */
+	} while (need_to_create_worker(pool));
 }
 
 /**
@@ -322,16 +380,16 @@ static bool
 manage_workers(worker_s *worker) {
 	worker_pool_s *pool = worker->pool;
 
-	// if (pool->flags & POOL_MANAGER_ACTIVE)
-	// 	return false;
+	if (pool->flags & POOL_MANAGER_ACTIVE)
+		return false;
 
-	// pool->flags |= POOL_MANAGER_ACTIVE;
-	// pool->manager = worker;
+	pool->flags |= POOL_MANAGER_ACTIVE;
+	pool->manager = worker;
 
-	// maybe_create_worker(pool);
+	maybe_create_worker(pool);
 
-	// pool->manager = NULL;
-	// pool->flags &= ~POOL_MANAGER_ACTIVE;
+	pool->manager = NULL;
+	pool->flags &= ~POOL_MANAGER_ACTIVE;
 	// rcuwait_wake_up(&manager_wait);
 	return true;
 }
@@ -388,13 +446,13 @@ __acquires(&pool->lock)
 	if (unlikely(pwq->wq->flags & WQ_CPU_INTENSIVE))
 		worker_set_flags(worker, WORKER_CPU_INTENSIVE);
 
-	// /*
-	//  * Kick @pool if necessary. It's always noop for per-cpu worker pools
-	//  * since nr_running would always be >= 1 at this point. This is used to
-	//  * chain execution of the pending work items for WORKER_NOT_RUNNING
-	//  * workers such as the UNBOUND and CPU_INTENSIVE ones.
-	//  */
-	// kick_pool(pool);
+	/*
+	 * Kick @pool if necessary. It's always noop for per-cpu worker pools
+	 * since nr_running would always be >= 1 at this point. This is used to
+	 * chain execution of the pending work items for WORKER_NOT_RUNNING
+	 * workers such as the UNBOUND and CPU_INTENSIVE ones.
+	 */
+	kick_pool(pool);
 
 	// /*
 	//  * Record the last pool and clear PENDING which should be the last
