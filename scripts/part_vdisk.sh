@@ -12,6 +12,11 @@ PART_PARAM_IDE=(
 )
 
 MYOS_VMDK_NVME0="/home/cheyh/vmware/myos2test/myos2test_nvme0-flat.vmdk"
+PART_PARAM_VMDK_NVME=(
+	"1, 0, +2G, ef00, \"UEFI BOOT\" , vfat"
+	"2, 0, +2G, 8300, \"ROOT\"      , ext4"
+	"3, 0, +2G, ef00, \"FAT32 TEST\", vfat"
+)
 PART_PARAM_NVME=(
 	"1, 0, +2G, ef00, \"UEFI BOOT\" , vfat"
 	"2, 0, +8G, 8300, \"ROOT\"      , ext2"
@@ -80,6 +85,7 @@ function do_part() {
 	unmap_vmdk_partitions $LOOPDEV
 }
 
-# format_vdisk
-do_part $MYOS_VMDK_IDE0 "${PART_PARAM_IDE[@]}"
-do_part $MYOS_VMDK_NVME0 "${PART_PARAM_NVME[@]}"
+# # format_vdisk
+# do_part $MYOS_VMDK_IDE0 "${PART_PARAM_IDE[@]}"
+# do_part $MYOS_VMDK_NVME0 "${PART_PARAM_NVME[@]}"
+do_part $MYOS_VMDK_NVME0 "${PART_PARAM_VMDK_NVME[@]}"
