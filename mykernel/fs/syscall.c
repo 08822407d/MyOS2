@@ -17,19 +17,21 @@ MYOS_SYSCALL_DEFINE3(read, unsigned int, fd,
 MYOS_SYSCALL_DEFINE3(write, unsigned int, fd,
 		const char *, buf, size_t, count)
 {
-	task_s * curr = current;
-	file_s * fp = NULL;
-	ulong ret = 0;
+	// task_s * curr = current;
+	// file_s * fp = NULL;
+	// ulong ret = 0;
 
-	if(fd < 0 || fd >= curr->files->fd_count)
-		return -EBADF;
-	if(count < 0)
-		return -EINVAL;
+	// if(fd < 0 || fd >= curr->files->fd_count)
+	// 	return -EBADF;
+	// if(count < 0)
+	// 	return -EINVAL;
 
-	fp = curr->files->fd_array[fd];
-	if(fp->f_op && fp->f_op->write)
-		ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
-	return ret;
+	// fp = curr->files->fd_array[fd];
+	// if(fp->f_op && fp->f_op->write)
+	// 	ret = fp->f_op->write(fp, buf, count, &fp->f_pos);
+	// return ret;
+
+	return ksys_write(fd, buf, count);
 }
 
 // #define __NR_open			2
@@ -86,6 +88,14 @@ MYOS_SYSCALL_DEFINE3(lseek, unsigned int, fd,
 	if(fp->f_op && fp->f_op->llseek)
 		ret = fp->f_op->llseek(fp, offset, whence);
 	return ret;
+}
+
+
+// #define __NR_writev			20
+MYOS_SYSCALL_DEFINE3(writev, unsigned long, fd,
+		const iov_s __user *, vec, unsigned long, vlen)
+{
+	return do_writev(fd, vec, vlen, 0);
 }
 
 

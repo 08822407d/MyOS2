@@ -2912,6 +2912,8 @@
 	// extern ssize_t __kernel_write(file_s *, const void *, size_t, loff_t *);
 	extern file_s * open_exec(const char *);
 	
+	ssize_t do_writev(ulong fd, const iov_s __user *vec, ulong vlen, rwf_t flags);
+
 	// /* fs/dcache.c -- generic fs support functions */
 	// extern bool is_subdir(dentry_s *, dentry_s *);
 	// extern bool path_is_under(const path_s *, const path_s *);

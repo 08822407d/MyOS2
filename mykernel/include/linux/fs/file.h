@@ -27,8 +27,8 @@
 	}
 
 	typedef struct fd {
-		file_s			*file;
-		unsigned int	flags;
+		file_s		*file;
+		uint		flags;
 	} fd_s;
 	#define FDPUT_FPUT			1
 	#define FDPUT_POS_UNLOCK	2

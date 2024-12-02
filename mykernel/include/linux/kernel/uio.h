@@ -37,15 +37,15 @@
 	} iov_iter_state_s;
 
 	typedef struct iov_iter {
-		// u8		iter_type;
+		u8		iter_type;
 		// bool	copy_mc;
 		// bool	nofault;
 		// bool	data_source;
 		// bool	user_backed;
-		// union {
-		// 	size_t	iov_offset;
-		// 	int		last_offset;
-		// };
+		union {
+			size_t	iov_offset;
+			int		last_offset;
+		};
 		/*
 		 * Hack alert: overlay ubuf_iovec with iovec + count, so
 		 * that the members resolve correctly regardless of the type
@@ -69,43 +69,55 @@
 					// const iov_s		*__iov;
 					const kvec_s	*kvec;
 					// const struct bio_vec	*bvec;
+					// const struct folio_queue *folioq;
 					// struct xarray	*xarray;
 					void __user		*ubuf;
 				};
 				size_t	count;
 			};
 		};
-		// union {
-		// 	ulong	nr_segs;
-		// 	loff_t	xarray_start;
-		// };
+		union {
+			ulong	nr_segs;
+			// u8		folioq_slot;
+			// loff_t	xarray_start;
+		};
 	} iov_iter_s;
 
-	static inline void iov_iter_ubuf(iov_iter_s *i,
-			uint direction, void __user *buf, size_t count) {
+
+	static inline size_t
+	iov_iter_count(const iov_iter_s *i) {
+		return i->count;
+	}
+
+	static inline void
+	iov_iter_ubuf(iov_iter_s *i, uint direction,
+			void __user *buf, size_t count) {
+
 		// WARN_ON(direction & ~(READ | WRITE));
 		*i = (iov_iter_s) {
-			// .iter_type = ITER_UBUF,
-			// .copy_mc = false,
-			// .user_backed = true,
-			// .data_source = direction,
-			.ubuf = buf,
-			.count = count,
-			// .nr_segs = 1,
+			.iter_type		= ITER_UBUF,
+			// .copy_mc		= false,
+			// .user_backed	= true,
+			// .data_source	= direction,
+			.ubuf			= buf,
+			.count			= count,
+			.nr_segs		= 1,
 		};
 	}
 
-	static inline void iov_iter_kvec(iov_iter_s *i, uint direction,
+	static inline void
+	iov_iter_kvec(iov_iter_s *i, uint direction,
 			const kvec_s *kvec, ulong nr_segs, size_t count) {
+
 		// WARN_ON(direction & ~(READ | WRITE));
 		*i = (iov_iter_s){
-			// .iter_type = ITER_KVEC,
-			// .copy_mc = false,
-			// .data_source = direction,
-			.kvec = kvec,
-			// .nr_segs = nr_segs,
-			// .iov_offset = 0,
-			.count = count,
+			.iter_type		= ITER_KVEC,
+			// .copy_mc		= false,
+			// .data_source	= direction,
+			.kvec			= kvec,
+			.nr_segs		= nr_segs,
+			.iov_offset		= 0,
+			.count			= count,
 		};
 	}
 

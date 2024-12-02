@@ -235,7 +235,6 @@ void myos_tty_write_color_at(const char *buf, size_t length,
 
 ssize_t myos_tty_write(file_s * filp, const char *buf, size_t length, loff_t *position)
 {
-	long ret_val = 0;
 	myos_tty_write_color(buf, length, GREEN, BLACK);
-	return ret_val;
+	return length;
 }
