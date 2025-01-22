@@ -7,8 +7,6 @@
 
 	#include <asm/insns.h>
 
-	#include <linux/kernel/time64.h>
-
 
 	#ifndef RTC_PORT
 	#	define RTC_PORT(x)			(0x70 + (x))

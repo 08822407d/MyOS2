@@ -30,8 +30,6 @@
 #include "timekeeping_internal.h"
 
 
-#include <linux/kernel/timekeeping.h>
-
 
 #define TK_CLEAR_NTP		(1 << 0)
 #define TK_MIRROR			(1 << 1)

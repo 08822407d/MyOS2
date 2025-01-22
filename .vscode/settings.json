@@ -387,7 +387,12 @@
         "time_types.h": "c",
         "futex.h": "c",
         "rwsem_const.h": "c",
-        "futex_macro.h": "c"
+        "futex_macro.h": "c",
+        "time_const.h": "c",
+        "clocksource_const.h": "c",
+        "clocksource_types.h": "c",
+        "timekeeping_const.h": "c",
+        "timekeeping.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

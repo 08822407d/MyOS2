@@ -1,0 +1,6 @@
+#ifndef _TIME_TYPE_DECLARATION_H_
+#define _TIME_TYPE_DECLARATION_H_
+
+
+
+#endif /* _TIME_TYPE_DECLARATION_H_ */

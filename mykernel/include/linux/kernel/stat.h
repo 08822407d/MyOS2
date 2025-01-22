@@ -4,6 +4,7 @@
 
 	#include <uapi/asm-generic/stat.h>
 	#include <uapi/linux/stat.h>
+	#include <linux/kernel/time.h>
 
 	#define S_IRWXUGO	(S_IRWXU|S_IRWXG|S_IRWXO)
 	#define S_IALLUGO	(S_ISUID|S_ISGID|S_ISVTX|S_IRWXUGO)
@@ -15,7 +16,6 @@
 	#define UTIME_OMIT	((1l << 30) - 2l)
 
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/time64.h>
 	#include <linux/kernel/uidgid.h>
 
 	typedef struct kstat {

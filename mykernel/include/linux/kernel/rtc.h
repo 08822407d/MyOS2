@@ -20,7 +20,6 @@
 
 
 	#include <linux/kernel/kernel.h>
-	#include <linux/kernel/time64.h>
 	#include <linux/lib/errno.h>
 
 	extern int rtc_month_days(unsigned int month, unsigned int year);

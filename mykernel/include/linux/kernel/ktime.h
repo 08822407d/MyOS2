@@ -229,6 +229,4 @@
 	// 	return ms * NSEC_PER_MSEC;
 	// }
 
-	# include <linux/kernel/timekeeping.h>
-
 #endif
