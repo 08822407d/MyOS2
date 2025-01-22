@@ -383,7 +383,11 @@
         "percpu_chunk.h": "c",
         "kactive_api.h": "c",
         "runqueue_macro.h": "c",
-        "rcu_list_api.h": "c"
+        "rcu_list_api.h": "c",
+        "time_types.h": "c",
+        "futex.h": "c",
+        "rwsem_const.h": "c",
+        "futex_macro.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

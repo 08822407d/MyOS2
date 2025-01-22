@@ -10,6 +10,40 @@
 // #include <asm/syscalls_64.h>
 
 
+
+// #define __NR_rt_sigaction	13
+/**
+ *  sys_rt_sigaction - alter an action taken by a process
+ *  @sig: signal to be sent
+ *  @act: new sigaction
+ *  @oact: used to save the previous sigaction
+ *  @sigsetsize: size of sigset_t type
+ */
+MYOS_SYSCALL_DEFINE4(rt_sigaction,
+		int, sig, const sigaction_s __user *, act,
+		sigaction_s __user *, oact, size_t, sigsetsize)
+{
+	k_sigaction_s new_sa, old_sa;
+	int ret;
+
+	/* XXX: Don't preclude handling different sized sigset_t's.  */
+	if (sigsetsize != sizeof(sigset_t))
+		return -EINVAL;
+
+	if (act && copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa)))
+		return -EFAULT;
+
+	ret = do_sigaction(sig, act ? &new_sa : NULL, oact ? &old_sa : NULL);
+	if (ret)
+		return ret;
+
+	if (oact && copy_to_user(oact, &old_sa.sa, sizeof(old_sa.sa)))
+		return -EFAULT;
+
+	return 0;
+}
+
+
 // #define __NR_rt_sigprocmask	14
 /**
  *  sys_rt_sigprocmask - change the list of currently blocked signals
@@ -66,33 +100,30 @@ MYOS_SYSCALL_DEFINE2(kill, pid_t, pid, int, sig)
 }
 
 
-/**
- *  sys_rt_sigaction - alter an action taken by a process
- *  @sig: signal to be sent
- *  @act: new sigaction
- *  @oact: used to save the previous sigaction
- *  @sigsetsize: size of sigset_t type
- */
-MYOS_SYSCALL_DEFINE4(rt_sigaction,
-		int, sig, const sigaction_s __user *, act,
-		sigaction_s __user *, oact, size_t, sigsetsize)
+// #define __NR_futex				202
+MYOS_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op,
+		u32, val, const __kernel_timespec_s __user *, utime,
+		u32 __user *, uaddr2, u32, val3)
 {
-	k_sigaction_s new_sa, old_sa;
-	int ret;
+	ALERT_DUMMY_SYSCALL(futex, IF_ALERT_DUMMY_SYSCALL);
 
-	/* XXX: Don't preclude handling different sized sigset_t's.  */
-	if (sigsetsize != sizeof(sigset_t))
-		return -EINVAL;
+	int ret, cmd = op & FUTEX_CMD_MASK;
+	ktime_t t, *tp = NULL;
+	timespec64_s ts;
 
-	if (act && copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa)))
-		return -EFAULT;
+	if (utime && futex_cmd_has_timeout(cmd)) {
+		pr_err("Unsupported feature: Futex Timeout\n");
+		while (1);
+		
+		// if (unlikely(should_fail_futex(!(op & FUTEX_PRIVATE_FLAG))))
+		// 	return -EFAULT;
+		// if (get_timespec64(&ts, utime))
+		// 	return -EFAULT;
+		// ret = futex_init_timeout(cmd, op, &ts, &t);
+		// if (ret)
+		// 	return ret;
+		tp = &t;
+	}
 
-	ret = do_sigaction(sig, act ? &new_sa : NULL, oact ? &old_sa : NULL);
-	if (ret)
-		return ret;
-
-	if (oact && copy_to_user(oact, &old_sa.sa, sizeof(old_sa.sa)))
-		return -EFAULT;
-
-	return 0;
+	return do_futex(uaddr, op, val, tp, uaddr2, (ulong)utime, val3);
 }

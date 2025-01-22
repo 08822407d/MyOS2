@@ -23,10 +23,10 @@
 				m(t4, regs->r10)
 	#define __X86_64_MAP5(m, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5)			\
 				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),				\
-				m(t4, regs->r10), m(t4, regs->r8)
+				m(t4, regs->r10), m(t5, regs->r8)
 	#define __X86_64_MAP6(m, t1, a1, t2, a2, t3, a3, t4, a4, t5, a5, t6, a6)	\
 				m(t1, regs->di), m(t2, regs->si), m(t3, regs->dx),				\
-				m(t4, regs->r10), m(t4, regs->r8), m(t4, regs->r9)
+				m(t4, regs->r10), m(t5, regs->r8), m(t6, regs->r9)
 	#define __ARCH_MAP(n, ...)	__X86_64_MAP##n(__VA_ARGS__)
 
 

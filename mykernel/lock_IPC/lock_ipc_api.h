@@ -13,6 +13,7 @@
 	#include "semaphore/rwsem_api.h"
 	#include "lockdep/lockdep_api.h"
 	#include "signal/signal_api.h"
+	#include "futex/futex_api.h"
 
 
 	#include <linux/kernel/irqflags.h>

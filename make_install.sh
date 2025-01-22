@@ -3,8 +3,8 @@
 PROJ_ROOT=$(pwd)
 DEBUG_FLAG=-DCMAKE_BUILD_TYPE=Debug
 TARGET_ARCH=x86_64
-LINK_TYPE=static
-# LINK_TYPE=dynamic
+# LINK_TYPE=static
+LINK_TYPE=dynamic
 
 # source ./scripts/prebuild_generate.sh
 source ./scripts/make_install_kernel.sh

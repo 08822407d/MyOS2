@@ -7,5 +7,6 @@
 	#include "semaphore/rwsem_const.h"
 	#include "lockdep/lockdep_const.h"
 	#include "signal/signal_const.h"
+	#include "futex/futex_const.h"
 
 #endif /* _LOCK_IPC_CONST_H_ */

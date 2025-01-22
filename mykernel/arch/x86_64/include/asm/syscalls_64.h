@@ -60,6 +60,8 @@ __SYSCALL(__NR_reboot, sys_reboot)
 // __SYSCALL(__NR_init_module, sys_init_module)
 // __SYSCALL(__NR_delete_module, sys_delete_module)
 
+__SYSCALL(__NR_futex, sys_futex)
+
 __SYSCALL(__NR_getdents64, sys_getdents64)
 
 __SYSCALL(__NR_set_tid_address, sys_set_tid_address)

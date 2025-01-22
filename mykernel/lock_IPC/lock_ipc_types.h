@@ -9,5 +9,6 @@
 	#include "semaphore/rwsem_types.h"
 	#include "lockdep/lockdep_types.h"
 	#include "signal/signal_types.h"
+	#include "futex/futex_types.h"
 
 #endif /* _LOCK_IPC_TYPES_H_ */

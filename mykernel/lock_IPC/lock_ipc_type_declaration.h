@@ -13,6 +13,9 @@
 	#include <linux/kernel/resource.h>
 	#include <linux/kernel/sched_const.h>
 
+	#include <uapi/linux/time.h>
+	#include <uapi/linux/futex.h>
+
 	#include <asm/signal.h>
 
 
