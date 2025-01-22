@@ -15,6 +15,7 @@
 	extern void mmdrop(mm_s *mm);
 	extern int set_mm_exe_file(mm_s *mm, file_s *new_exe_file);
 	extern void __iomem *myos_ioremap(size_t paddr_start, ulong size);
+	extern void iounmap(volatile void __iomem *addr);
 
 	/*
 	 * Using memblock node mappings, an architecture may initialise its

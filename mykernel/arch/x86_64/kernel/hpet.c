@@ -22,20 +22,20 @@ enum hpet_mode {
 
 typedef struct hpet_channel {
 	// struct clock_event_device	evt;
-	unsigned int		num;
-	unsigned int		cpu;
-	unsigned int		irq;
-	unsigned int		in_use;
-	enum hpet_mode		mode;
-	unsigned int		boot_cfg;
-	char				name[10];
+	uint			num;
+	uint			cpu;
+	uint			irq;
+	uint			in_use;
+	enum hpet_mode	mode;
+	uint			boot_cfg;
+	char			name[10];
 } hpet_channel_s;
 
 typedef struct hpet_base {
-	unsigned int		nr_channels;
-	unsigned int		nr_clockevents;
-	unsigned int		boot_cfg;
-	hpet_channel_s		*channels;
+	uint			nr_channels;
+	uint			nr_clockevents;
+	uint			boot_cfg;
+	hpet_channel_s	*channels;
 } hpet_base_s;
 
 #define HPET_MASK				CLOCKSOURCE_MASK(32)
@@ -46,19 +46,19 @@ typedef struct hpet_base {
 /*
  * HPET address is set in acpi/boot.c, when an ACPI entry exists
  */
-unsigned long			hpet_address;
+ulong					hpet_address;
 
 static void __iomem		*hpet_virt_address;
 static hpet_base_s		hpet_base;
 
-static unsigned long	hpet_freq;
+static ulong			hpet_freq;
 
 
-inline unsigned int hpet_readl(unsigned int a) {
+inline uint hpet_readl(uint a) {
 	return readl(hpet_virt_address + a);
 }
 
-static inline void hpet_writel(unsigned int d, unsigned int a) {
+static inline void hpet_writel(uint d, uint a) {
 	writel(d, hpet_virt_address + a);
 }	
 
@@ -69,9 +69,51 @@ static inline void hpet_set_mapping(void) {
 }
 
 static inline void hpet_clear_mapping(void) {
-	// iounmap(hpet_virt_address);
-	// hpet_virt_address = NULL;
+	iounmap(hpet_virt_address);
+	hpet_virt_address = NULL;
 }
+
+static void _hpet_print_config(const char *function, int line)
+{
+	u32 i, id, period, cfg, status, channels, l, h;
+
+	pr_info("%s(%d):\n", function, line);
+
+	id = hpet_readl(HPET_ID);
+	period = hpet_readl(HPET_PERIOD);
+	pr_info("ID: 0x%x, PERIOD: 0x%x\n", id, period);
+
+	cfg = hpet_readl(HPET_CFG);
+	status = hpet_readl(HPET_STATUS);
+	pr_info("CFG: 0x%x, STATUS: 0x%x\n", cfg, status);
+
+	l = hpet_readl(HPET_COUNTER);
+	h = hpet_readl(HPET_COUNTER+4);
+	pr_info("COUNTER_l: 0x%x, COUNTER_h: 0x%x\n", l, h);
+
+	channels = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
+
+	for (i = 0; i < channels; i++) {
+		l = hpet_readl(HPET_Tn_CFG(i));
+		h = hpet_readl(HPET_Tn_CFG(i)+4);
+		pr_info("T%d: CFG_l: 0x%x, CFG_h: 0x%x\n", i, l, h);
+
+		l = hpet_readl(HPET_Tn_CMP(i));
+		h = hpet_readl(HPET_Tn_CMP(i)+4);
+		pr_info("T%d: CMP_l: 0x%x, CMP_h: 0x%x\n", i, l, h);
+
+		l = hpet_readl(HPET_Tn_ROUTE(i));
+		h = hpet_readl(HPET_Tn_ROUTE(i)+4);
+		pr_info("T%d ROUTE_l: 0x%x, ROUTE_h: 0x%x\n", i, l, h);
+	}
+}
+
+#define hpet_print_config()								\
+		do {											\
+			/* if (hpet_verbose) */							\
+				_hpet_print_config(__func__, __LINE__);	\
+		} while (0)
+
 
 
 /* Common HPET functions */
@@ -91,7 +133,7 @@ static void hpet_reset_counter(void)
 
 static void hpet_start_counter(void)
 {
-	unsigned int cfg = hpet_readl(HPET_CFG);
+	uint cfg = hpet_readl(HPET_CFG);
 
 	cfg |= HPET_CFG_ENABLE;
 	hpet_writel(cfg, HPET_CFG);
@@ -107,7 +149,7 @@ static void hpet_restart_counter(void)
 
 static void hpet_enable_legacy_int(void)
 {
-	unsigned int cfg = hpet_readl(HPET_CFG);
+	uint cfg = hpet_readl(HPET_CFG);
 
 	cfg |= HPET_CFG_LEGACY;
 	hpet_writel(cfg, HPET_CFG);
@@ -146,17 +188,17 @@ static void hpet_enable_legacy_int(void)
 // }
 static int myos_hpet_clkevt_set_state_periodic(void)
 {
-	unsigned int channel = 0;
+	uint channel = 0;
 	u32 mult = 429496730;
 	u32 shift = 32;
-	unsigned int cfg, cmp, now;
+	uint cfg, cmp, now;
 	uint64_t delta;
 
 	hpet_stop_counter();
 	delta = ((uint64_t)(NSEC_PER_SEC / HZ)) * mult;
 	delta >>= shift;
 	now = hpet_readl(HPET_COUNTER);
-	cmp = now + (unsigned int)delta;
+	cmp = now + (uint)delta;
 	cfg = hpet_readl(HPET_Tn_CFG(channel));
 	// cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL | HPET_TN_32BIT;
 	cfg |= HPET_TN_ENABLE | HPET_TN_PERIODIC | HPET_TN_SETVAL;
@@ -170,9 +212,8 @@ static int myos_hpet_clkevt_set_state_periodic(void)
 	 * (See AMD-8111 HyperTransport I/O Hub Data Sheet,
 	 * Publication # 24674)
 	 */
-	hpet_writel((unsigned int)delta, HPET_Tn_CMP(channel));
+	hpet_writel((uint)delta, HPET_Tn_CMP(channel));
 	hpet_start_counter();
-	// hpet_print_config();
 
 	return 0;
 }
@@ -275,6 +316,59 @@ static clocksrc_s clocksource_hpet = {
 	// .resume		= hpet_resume_counter,
 };
 
+/*
+ * AMD SB700 based systems with spread spectrum enabled use a SMM based
+ * HPET emulation to provide proper frequency setting.
+ *
+ * On such systems the SMM code is initialized with the first HPET register
+ * access and takes some time to complete. During this time the config
+ * register reads 0xffffffff. We check for max 1000 loops whether the
+ * config register reads a non-0xffffffff value to make sure that the
+ * HPET is up and running before we proceed any further.
+ *
+ * A counting loop is safe, as the HPET access takes thousands of CPU cycles.
+ *
+ * On non-SB700 based machines this check is only done once and has no
+ * side effects.
+ */
+static bool __init hpet_cfg_working(void)
+{
+	int i;
+
+	for (i = 0; i < 1000; i++) {
+		if (hpet_readl(HPET_CFG) != 0xFFFFFFFF)
+			return true;
+	}
+
+	pr_warn("Config register invalid. Disabling HPET\n");
+	return false;
+}
+
+static bool __init hpet_counting(void)
+{
+	u64 start, now, t1;
+
+	hpet_restart_counter();
+
+	t1 = hpet_readl(HPET_COUNTER);
+	start = rdtsc();
+
+	/*
+	 * We don't know the TSC frequency yet, but waiting for
+	 * 200000 TSC cycles is safe:
+	 * 4 GHz == 50us
+	 * 1 GHz == 200us
+	 */
+	do {
+		if (t1 != hpet_readl(HPET_COUNTER))
+			return true;
+		now = rdtsc();
+	} while ((now - start) < 200000UL);
+
+	pr_warn("Counter not counting. HPET disabled\n");
+	return false;
+}
+
 
 
 extern void myos_HPET_init(void);
@@ -284,7 +378,7 @@ extern void myos_HPET_init(void);
 int __init hpet_enable(void)
 {
 	u32 hpet_period, cfg, id, irq;
-	unsigned int i, channels;
+	uint i, channels;
 	hpet_channel_s *hc;
 	u64 freq;
 
@@ -316,6 +410,7 @@ int __init hpet_enable(void)
 	 * information and the number of channels
 	 */
 	id = hpet_readl(HPET_ID);
+	// hpet_print_config();
 
 	/* This is the HPET channel number which is zero based */
 	channels = ((id & HPET_ID_NUMBER) >> HPET_ID_NUMBER_SHIFT) + 1;
@@ -327,10 +422,9 @@ int __init hpet_enable(void)
 	// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC) && channels < 2)
 	// 	goto out_nohpet;
 
-	// hc = kcalloc(channels, sizeof(*hc), GFP_KERNEL);
-	hc = kzalloc(channels * sizeof(hpet_channel_s), GFP_KERNEL);
+	hc = kcalloc(channels, sizeof(*hc), GFP_KERNEL);
 	if (!hc) {
-		// pr_warn("Disabling HPET.\n");
+		pr_warn("Disabling HPET.\n");
 		goto out_nohpet;
 	}
 	hpet_base.channels = hc;
@@ -341,9 +435,8 @@ int __init hpet_enable(void)
 	hpet_base.boot_cfg = cfg;
 	cfg &= ~(HPET_CFG_ENABLE | HPET_CFG_LEGACY);
 	hpet_writel(cfg, HPET_CFG);
-	while (cfg != 0);
-	// if (cfg)
-	// 	pr_warn("Global config: Unknown bits %#x\n", cfg);
+	if (cfg)
+		pr_warn("Global config: Unknown bits %#x\n", cfg);
 
 	/* Read, store and sanitize the per channel configuration */
 	for (i = 0; i < channels; i++, hc++) {
@@ -360,18 +453,18 @@ int __init hpet_enable(void)
 		cfg &= ~(HPET_TN_PERIODIC | HPET_TN_PERIODIC_CAP
 			 | HPET_TN_64BIT_CAP | HPET_TN_32BIT | HPET_TN_ROUTE
 			 | HPET_TN_FSB | HPET_TN_FSB_CAP);
-		while (cfg != 0);
-		// if (cfg)
-		// 	pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
+		if (cfg)
+			pr_warn("Channel #%u config: Unknown bits %#x\n", i, cfg);
 	}
+	// hpet_print_config();
 
-	// /*
-	//  * Validate that the counter is counting. This needs to be done
-	//  * after sanitizing the config registers to properly deal with
-	//  * force enabled HPETs.
-	//  */
-	// if (!hpet_counting())
-	// 	goto out_nohpet;
+	/*
+	 * Validate that the counter is counting. This needs to be done
+	 * after sanitizing the config registers to properly deal with
+	 * force enabled HPETs.
+	 */
+	if (!hpet_counting())
+		goto out_nohpet;
 
 	// if (tsc_clocksource_watchdog_disabled())
 	// 	clocksource_hpet.flags |= CLOCK_SOURCE_MUST_VERIFY;
@@ -392,7 +485,7 @@ out_nohpet:
 	kfree(hpet_base.channels);
 	hpet_base.channels = NULL;
 	hpet_base.nr_channels = 0;
-	// hpet_clear_mapping();
+	hpet_clear_mapping();
 	hpet_address = 0;
 	return 0;
 }

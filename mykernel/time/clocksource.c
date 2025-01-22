@@ -240,7 +240,7 @@ void __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq)
  */
 int __clocksource_register_scale(clocksrc_s *cs, u32 scale, u32 freq)
 {
-	unsigned long flags;
+	ulong flags;
 
 	// clocksource_arch_init(cs);
 

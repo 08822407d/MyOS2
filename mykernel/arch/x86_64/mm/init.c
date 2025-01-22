@@ -181,7 +181,10 @@ void __iomem
 	return (void *)__myos_kernel_physical_mapping_init(paddr_start,
 				PFN_PHYS(PFN_UP(paddr_start + size)), __PAGE_KERNEL_NOCACHE);
 }
+void iounmap(volatile void __iomem *addr)
+{
 
+}
 
 void __init mem_init(void)
 {
