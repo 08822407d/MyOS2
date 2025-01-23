@@ -3,6 +3,8 @@
 #ifndef _KERNEL_ACTIVE_CONST_H_
 #define _KERNEL_ACTIVE_CONST_H_
 
+	#include <linux/kernel/asm-generic/param.h>
+
     #include "workqueue/workqueue_const.h"
 
 #endif /* _KERNEL_ACTIVE_CONST_H_ */

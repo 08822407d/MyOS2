@@ -21,7 +21,6 @@
  *              Designed by David S. Miller, Alexey Kuznetsov and Ingo Molnar
  */
 
-#include <linux/kernel/jiffies.h>
 #include <linux/sched/debug.h>
 #include <linux/kernel/sched_api.h>
 

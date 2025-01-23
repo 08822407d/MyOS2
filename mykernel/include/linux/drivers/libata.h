@@ -11,7 +11,6 @@
 #define __LINUX_LIBATA_H__
 
 	#include <linux/kernel/delay.h>
-	#include <linux/kernel/jiffies.h>
 	// #include <linux/interrupt.h>
 	// #include <linux/dma-mapping.h>
 	// #include <linux/scatterlist.h>

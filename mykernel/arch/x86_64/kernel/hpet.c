@@ -8,7 +8,6 @@
 #include <asm/time.h>
 
 #include <linux/kernel/mm.h>
-#include <linux/kernel/jiffies.h>
 
 // #undef  pr_fmt
 // #define pr_fmt(fmt) "hpet: " fmt
@@ -493,7 +492,6 @@ out_nohpet:
 
 
 #include <linux/device/tty.h>
-#include <linux/kernel/jiffies.h>
 
 #include <asm/apicdef.h>
 

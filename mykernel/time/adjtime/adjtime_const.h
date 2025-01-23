@@ -2,7 +2,6 @@
 #ifndef _LINUX_ADJTIME_CONST_H_
 #define _LINUX_ADJTIME_CONST_H_
 
-#include <linux/kernel/jiffies.h>
 
 	#define ADJ_ADJTIME				0x8000	/* switch between adjtime/adjtimex modes */
 	#define ADJ_OFFSET_SINGLESHOT	0x0001	/* old-fashioned adjtime */

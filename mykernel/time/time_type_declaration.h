@@ -2,6 +2,7 @@
 #define _TIME_TYPE_DECLARATION_H_
 
 	#include <linux/kernel/types.h>
+	#include <linux/kernel/cache.h>
 
 	typedef s64	ktime_t;
 	typedef __s64 time64_t;

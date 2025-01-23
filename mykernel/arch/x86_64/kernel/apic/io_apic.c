@@ -36,7 +36,6 @@
 // #include <linux/device/pci.h>
 // #include <linux/compiler/compiler.h>
 // #include <linux/kernel/export.h>
-// #include <linux/kernel/jiffies.h>	/* time_after() */
 
 // #include <asm/insns.h>
 // #include <asm/smp.h>

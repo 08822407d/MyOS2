@@ -22,7 +22,6 @@
 #include <linux/device/tty.h>
 #include <linux/device/console.h>
 #include <linux/init/init.h>
-#include <linux/kernel/jiffies.h>
 #include <linux/kernel/nmi.h>
 #include <linux/kernel/delay.h>
 #include <linux/smp/smp.h>

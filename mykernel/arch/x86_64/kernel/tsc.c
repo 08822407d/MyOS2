@@ -29,7 +29,6 @@
 // #include <asm/uv/uv.h>
 
 
-#include <linux/kernel/jiffies.h>
 
 unsigned int __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
 
