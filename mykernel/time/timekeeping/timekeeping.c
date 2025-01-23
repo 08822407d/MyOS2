@@ -33,13 +33,15 @@ int __read_mostly timekeeping_suspended;
 static void
 tk_set_xtime(timekeeper_s *tk, const timespec64_s *ts) {
 	tk->xtime_sec = ts->tv_sec;
-	tk->tkr_mono.xtime_nsec = (u64)ts->tv_nsec << tk->tkr_mono.shift;
+	tk->tkr_mono.xtime_nsec =
+		(u64)ts->tv_nsec << tk->tkr_mono.shift;
 }
 
 static void
 tk_xtime_add(timekeeper_s *tk, const timespec64_s *ts) {
 	tk->xtime_sec += ts->tv_sec;
-	tk->tkr_mono.xtime_nsec += (u64)ts->tv_nsec << tk->tkr_mono.shift;
+	tk->tkr_mono.xtime_nsec +=
+		(u64)ts->tv_nsec << tk->tkr_mono.shift;
 	tk_normalize_xtime(tk);
 }
 
@@ -90,6 +92,36 @@ timekeeping_update(timekeeper_s *tk, uint action) {
 	// 	memcpy(&shadow_timekeeper, &tk_core.timekeeper,
 	// 	       sizeof(tk_core.timekeeper));
 }
+
+
+/**
+ * ktime_get_real_ts64 - Returns the time of day in a timespec64.
+ * @ts:		pointer to the timespec to be set
+ *
+ * Returns the time of day in a timespec64 (WARN if suspended).
+ */
+void ktime_get_real_ts64(timespec64_s *ts)
+{
+	timekeeper_s *tk = &tk_core.timekeeper;
+	uint seq;
+	u64 nsecs;
+
+	// WARN_ON(timekeeping_suspended);
+
+	// do {
+	// 	seq = read_seqcount_begin(&tk_core.seq);
+
+		ts->tv_sec = tk->xtime_sec;
+		nsecs = timekeeping_get_ns(&tk->tkr_mono);
+
+	// } while (read_seqcount_retry(&tk_core.seq, seq));
+
+	ts->tv_nsec = 0;
+	timespec64_add_ns(ts, nsecs);
+}
+EXPORT_SYMBOL(ktime_get_real_ts64);
+
+
 
 
 /**
@@ -166,6 +198,51 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	// tk->skip_second_overflow = 0;
 }
 
+/* Timekeeper helper functions. */
+static noinline u64
+delta_to_ns_safe(const tk_readbase_s *tkr, u64 delta) {
+	return mul_u64_u32_add_u64_shr(delta,
+			tkr->mult, tkr->xtime_nsec, tkr->shift);
+}
+
+static inline u64
+timekeeping_cycles_to_ns(const tk_readbase_s *tkr, u64 cycles) {
+	/* Calculate the delta since the last update_wall_time() */
+	u64 mask = tkr->mask, delta = (cycles - tkr->cycle_last) & mask;
+
+	/*
+	 * This detects both negative motion and the case where the delta
+	 * overflows the multiplication with tkr->mult.
+	 */
+	if (unlikely(delta > tkr->clock->max_cycles)) {
+		/*
+		 * Handle clocksource inconsistency between CPUs to prevent
+		 * time from going backwards by checking for the MSB of the
+		 * mask being set in the delta.
+		 */
+		if (delta & ~(mask >> 1))
+			return tkr->xtime_nsec >> tkr->shift;
+
+		return delta_to_ns_safe(tkr, delta);
+	}
+
+	return ((delta * tkr->mult) + tkr->xtime_nsec) >> tkr->shift;
+}
+
+static __always_inline u64
+__timekeeping_get_ns(const tk_readbase_s *tkr) {
+	return timekeeping_cycles_to_ns(tkr, tk_clock_read(tkr));
+}
+
+u64 timekeeping_get_ns(const tk_readbase_s *tkr)
+{
+	// if (IS_ENABLED(CONFIG_DEBUG_TIMEKEEPING))
+	// 	return timekeeping_debug_get_ns(tkr);
+
+	return __timekeeping_get_ns(tkr);
+}
+
+
 
 /*
  * timekeeping_init - Initializes the clocksource and common timekeeping values
@@ -195,7 +272,6 @@ void __init timekeeping_init(void)
 }
 
 
-extern u64 jiffies_64;
 /*
  * Must hold jiffies_lock
  */

@@ -47,6 +47,8 @@ __SYSCALL(__NR_creat, sys_creat)
 // __SYSCALL(__NR_link, sys_link)
 __SYSCALL(__NR_unlink, sys_unlink)
 
+__SYSCALL(__NR_gettimeofday, sys_gettimeofday)
+
 // __SYSCALL(__NR_getuid, sys_getuid)
 // __SYSCALL(__NR_getgid, sys_getuid)
 // __SYSCALL(__NR_geteuid, sys_geteuid)
@@ -65,6 +67,8 @@ __SYSCALL(__NR_futex, sys_futex)
 __SYSCALL(__NR_getdents64, sys_getdents64)
 
 __SYSCALL(__NR_set_tid_address, sys_set_tid_address)
+
+__SYSCALL(__NR_clock_gettime, sys_clock_gettime)
 
 // __SYSCALL(__NR_set_robust_list, sys_set_robust_list)
 

@@ -65,6 +65,8 @@ void run_cmd(int index, int argc, char **argv);
 
 int main(int argc, const char *argv[])
 {
+	test_PrintDateTime();
+
 	printf("This is MyShell v0.01.\n");
 	printf("You are login as root.\n");
 

@@ -4,4 +4,6 @@
 
 	#include "timer.h"
 
+	const k_clock_s *clockid_to_kclock(const clockid_t id);
+
 #endif /* _LINUX_TIMER_API_H_ */

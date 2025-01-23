@@ -28,4 +28,8 @@
 	struct timekeeper;
 	typedef struct timekeeper timekeeper_s;
 
+	/* timer */
+	struct k_clock;
+	typedef struct k_clock k_clock_s;
+
 #endif /* _TIME_TYPE_DECLARATION_H_ */

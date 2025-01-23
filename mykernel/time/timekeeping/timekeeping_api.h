@@ -8,11 +8,13 @@
 
 
 	void timekeeping_init(void);
+	u64 timekeeping_get_ns(const tk_readbase_s *tkr);
 
 	extern void do_timer(ulong ticks);
 
 	extern void read_persistent_clock64(timespec64_s *ts);
 
+	extern void ktime_get_real_ts64(timespec64_s *ts);
 
 
 	/*
