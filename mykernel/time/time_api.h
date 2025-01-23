@@ -7,4 +7,8 @@
 	#include "timekeeping/timekeeping_api.h"
 	#include "misc/time_misc_api.h"
 
+
+	#include <linux/kernel/math.h>
+	#include <linux/kernel/math64.h>
+
 #endif /* _TIME_API_H_ */

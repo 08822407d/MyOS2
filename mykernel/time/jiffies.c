@@ -4,7 +4,6 @@
  *
  * Copyright (C) 2004, 2005 IBM, John Stultz (johnstul@us.ibm.com)
  */
-#include <linux/kernel/clocksource.h>
 #include <linux/kernel/jiffies.h>
 // #include <linux/module.h>
 #include <linux/init/init.h>

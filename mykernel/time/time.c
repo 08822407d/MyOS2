@@ -28,7 +28,6 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/timex.h>
 // #include <linux/capability.h>
-#include <linux/kernel/timekeeper_internal.h>
 #include <linux/lib/errno.h>
 #include <linux/kernel/syscalls.h>
 // #include <linux/security.h>

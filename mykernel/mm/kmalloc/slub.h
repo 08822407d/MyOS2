@@ -196,9 +196,10 @@
 		}
 
 
-		static inline void
+		PREFIX_STATIC_INLINE
+		void
 		slab_post_alloc_hook(kmem_cache_s *s, gfp_t flags, void **obj_p) {
-			unsigned int zero_size = s->object_size;
+			uint zero_size = s->object_size;
 			// bool kasan_init = init;
 			// size_t i;
 

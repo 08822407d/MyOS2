@@ -392,7 +392,10 @@
         "clocksource_const.h": "c",
         "clocksource_types.h": "c",
         "timekeeping_const.h": "c",
-        "timekeeping.h": "c"
+        "timekeeping.h": "c",
+        "time_type_declaration.h": "c",
+        "clocksource_macro.h": "c",
+        "math.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

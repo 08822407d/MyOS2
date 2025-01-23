@@ -12,9 +12,9 @@
 
 #include <linux/kernel/export.h>
 #include <linux/kernel/rtc.h>
-
-
 #include <linux/kernel/time.h>
+#include <linux/kernel/math64.h>
+
 
 static const unsigned char rtc_days_in_month[] = {
 	31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31

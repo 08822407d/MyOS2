@@ -10,7 +10,6 @@
 // #include <linux/acpi_pmtmr.h>
 // #include <linux/cpufreq.h>
 #include <linux/kernel/delay.h>
-#include <linux/kernel/clocksource.h>
 #include <linux/smp/percpu.h>
 #include <linux/kernel/timex.h>
 // #include <linux/static_key.h>
