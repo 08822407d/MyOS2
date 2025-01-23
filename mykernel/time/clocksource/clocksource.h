@@ -38,6 +38,9 @@
 		extern void
 		__clocksource_update_freq_khz(clocksrc_s *cs, u32 khz);
 
+		extern void
+		clocksource_update_max_deferment(clocksrc_s *cs);
+
 	#endif
 
 	#include "clocksource_macro.h"
@@ -142,6 +145,19 @@
 		void
 		__clocksource_update_freq_khz(clocksrc_s *cs, u32 khz) {
 			__clocksource_update_freq_scale(cs, 1000, khz);
+		}
+
+		/**
+		 * clocksource_update_max_deferment - Updates the clocksource max_idle_ns & max_cycles
+		 * @cs:         Pointer to clocksource to be updated
+		 *
+		 */
+		PREFIX_STATIC_INLINE
+		void
+		clocksource_update_max_deferment(clocksrc_s *cs) {
+			cs->max_idle_ns =
+				clocks_calc_max_nsecs(cs->mult, cs->shift,
+						cs->maxadj, cs->mask, &cs->max_cycles);
 		}
 
 	#endif

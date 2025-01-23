@@ -25,7 +25,8 @@
  * reduce the conversion accuracy by choosing smaller mult and shift
  * factors.
  */
-void clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
+void clocks_calc_mult_shift(u32 *mult, u32 *shift,
+		u32 from, u32 to, u32 maxsec)
 {
 	u64 tmp;
 	u32 sft, sftacc= 32;
@@ -61,8 +62,8 @@ void clocks_calc_mult_shift(u32 *mult, u32 *shift, u32 from, u32 to, u32 maxsec)
  * @cs:         Pointer to clocksource
  *
  */
-static u32 clocksource_max_adjustment(clocksrc_s *cs)
-{
+static u32
+clocksource_max_adjustment(clocksrc_s *cs) {
 	u64 ret;
 	/*
 	 * We won't try to correct for more than 11% adjustments (110,000 ppm),
@@ -87,7 +88,8 @@ static u32 clocksource_max_adjustment(clocksrc_s *cs)
  * delayed timers or bad hardware, which might result in time intervals that
  * are larger than what the math used can handle without overflows.
  */
-u64 clocks_calc_max_nsecs(u32 mult, u32 shift, u32 maxadj, u64 mask, u64 *max_cyc)
+u64 clocks_calc_max_nsecs(u32 mult, u32 shift,
+		u32 maxadj, u64 mask, u64 *max_cyc)
 {
 	u64 max_nsecs, max_cycles;
 
@@ -117,16 +119,6 @@ u64 clocks_calc_max_nsecs(u32 mult, u32 shift, u32 maxadj, u64 mask, u64 *max_cy
 	return max_nsecs;
 }
 
-/**
- * clocksource_update_max_deferment - Updates the clocksource max_idle_ns & max_cycles
- * @cs:         Pointer to clocksource to be updated
- *
- */
-static inline void
-clocksource_update_max_deferment(struct clocksource *cs) {
-	cs->max_idle_ns = clocks_calc_max_nsecs(cs->mult, cs->shift,
-						cs->maxadj, cs->mask, &cs->max_cycles);
-}
 
 /**
  * __clocksource_update_freq_scale - Used update clocksource with new freq

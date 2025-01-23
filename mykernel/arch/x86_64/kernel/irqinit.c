@@ -1,7 +1,6 @@
 // // SPDX-License-Identifier: GPL-2.0
 #include <linux/lib/errno.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/timex.h>
 #include <linux/kernel/bitops.h>
 
 #include <asm/timer.h>

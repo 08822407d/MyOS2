@@ -1,6 +1,28 @@
 #ifndef _TIME_MISC_CONST_H_
 #define _TIME_MISC_CONST_H_
 
+
+	/* Since jiffies uses a simple TICK_NSEC multiplier
+	 * conversion, the .shift value could be zero. However
+	 * this would make NTP adjustments impossible as they are
+	 * in units of 1/2^.shift. Thus we use JIFFIES_SHIFT to
+	 * shift both the nominator and denominator the same
+	 * amount, and give ntp adjustments in units of 1/2^8
+	 *
+	 * The value 8 is somewhat carefully chosen, as anything
+	 * larger can result in overflows. TICK_NSEC grows as HZ
+	 * shrinks, so values greater than 8 overflow 32bits when
+	 * HZ=100.
+	 */
+	#if HZ < 34
+	#  define JIFFIES_SHIFT		6
+	#elif HZ < 67
+	#  define JIFFIES_SHIFT		7
+	#else
+	#  define JIFFIES_SHIFT		8
+	#endif
+
+
 	/* Parameters used to convert the timespec values: */
 	#define MSEC_PER_SEC			1000L
 	#define USEC_PER_MSEC			1000L
@@ -13,6 +35,7 @@
 
 	/* Parameters used to convert the timespec values: */
 	#define PSEC_PER_NSEC			1000L
+
 
 	/* Located here for timespec[64]_valid_strict */
 	#define TIME64_MAX				((s64)~((u64)1 << 63))

@@ -8,7 +8,6 @@
 	#include <linux/kernel/minmax.h>
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/time.h>
-	#include <linux/kernel/timex.h>
 	// #include <vdso/jiffies.h>
 	// #include <asm/param.h>			/* for HZ */
 	// #include <generated/timeconst.h>

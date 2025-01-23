@@ -14,7 +14,6 @@
 
 #include <linux/kernel/export.h>
 #include <linux/kernel/sched.h>
-#include <linux/kernel/timex.h>
 #include <linux/kernel/delay.h>
 
 #include <asm/delay.h>

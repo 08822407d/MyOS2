@@ -1,8 +1,7 @@
 #ifndef _WORKQUEUE_CONSTS_H_
 #define _WORKQUEUE_CONSTS_H_
 
-
-#include <asm-generic/param.h>
+#include <linux/kernel/jiffies.h>
 #include <asm-generic/bitsperlong.h>
 #include <linux/kernel/sched_const.h>
 #include <linux/kernel/threads.h>

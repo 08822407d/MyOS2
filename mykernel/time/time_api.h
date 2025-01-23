@@ -3,9 +3,11 @@
 
 	#include "sched_type_declaration.h"
 
+	#include "misc/time_misc_api.h"
 	#include "clocksource/clocksource_api.h"
 	#include "timekeeping/timekeeping_api.h"
-	#include "misc/time_misc_api.h"
+	#include "adjtime/adjtime_api.h"
+	#include "timer/timer_api.h"
 
 
 	#include <linux/kernel/math.h>

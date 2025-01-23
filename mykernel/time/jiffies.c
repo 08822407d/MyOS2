@@ -8,8 +8,6 @@
 // #include <linux/module.h>
 #include <linux/init/init.h>
 
-// #include "timekeeping.h"
-#include "tick-internal.h"
 
 
 static u64 jiffies_read(clocksrc_s *cs)

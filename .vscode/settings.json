@@ -395,7 +395,14 @@
         "timekeeping.h": "c",
         "time_type_declaration.h": "c",
         "clocksource_macro.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "time_misc_types.h": "c",
+        "timekeeping_types.h": "c",
+        "time_api.h": "c",
+        "time_misc_api.h": "c",
+        "timekeeping_api.h": "c",
+        "time_misc_const.h": "c",
+        "bitsperlong.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

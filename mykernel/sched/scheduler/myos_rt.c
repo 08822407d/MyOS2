@@ -1,7 +1,7 @@
 #include "../sched_api.h"
 
-extern ulong jiffies;
 
+unsigned long volatile jiffies = 0;
 static task_s *pick_next_task_myos(rq_s *rq)
 {
 	myos_rq_s	*myos_rq = &rq->myos;

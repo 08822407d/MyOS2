@@ -3,8 +3,10 @@
 
 	#include "time_type_declaration.h"
 
+	#include "misc/time_misc_types.h"
 	#include "clocksource/clocksource_types.h"
 	#include "timekeeping/timekeeping_types.h"
-	#include "misc/time_misc_types.h"
+	#include "adjtime/adjtime_types.h"
+	#include "timer/timer_types.h"
 
 #endif /* _TIME_TYPES_H_ */

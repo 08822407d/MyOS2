@@ -36,7 +36,6 @@
 		u64				base_real;
 	};
 
-	#include "../misc/time_misc_types.h"
 	/**
 	 * struct timekeeper - Structure holding internal timekeeping values.
 	 * @tkr_mono:		The readout base structure for CLOCK_MONOTONIC
@@ -55,14 +54,14 @@
 	 * @monotonic_to_boot:	CLOCK_MONOTONIC to CLOCK_BOOTTIME offset
 	 * @cycle_interval:	Number of clock cycles in one NTP interval
 	 * @xtime_interval:	Number of clock shifted nano seconds in one NTP
-	 *			interval.
-	 * @xtime_remainder:	Shifted nano seconds left over when rounding
-	 *			@cycle_interval
+	 *						interval.
+	 * @xtime_remainder:Shifted nano seconds left over when rounding
+	 *						@cycle_interval
 	 * @raw_interval:	Shifted raw nano seconds accumulated per NTP interval.
 	 * @ntp_error:		Difference between accumulated time and NTP time in ntp
-	 *			shifted nano seconds.
-	 * @ntp_error_shift:	Shift conversion between clock shifted nano seconds and
-	 *			ntp shifted nano seconds.
+	 *						shifted nano seconds.
+	 * @ntp_error_shift:Shift conversion between clock shifted nano seconds and
+	 *							ntp shifted nano seconds.
 	 * @last_warning:	Warning ratelimiter (DEBUG_TIMEKEEPING)
 	 * @underflow_seen:	Underflow warning flag (DEBUG_TIMEKEEPING)
 	 * @overflow_seen:	Overflow warning flag (DEBUG_TIMEKEEPING)

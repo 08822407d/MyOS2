@@ -1,3 +1,6 @@
+#define TIMER_DEFINATION
+#include "timer.h"
+
 // SPDX-License-Identifier: GPL-2.0
 /*
  *  Kernel internal timers
@@ -18,26 +21,10 @@
  *              Designed by David S. Miller, Alexey Kuznetsov and Ingo Molnar
  */
 
-#include <linux/kernel/export.h>
-#include <linux/kernel/time.h>
 #include <linux/kernel/jiffies.h>
-#include <linux/kernel/cpu.h>
-#include <linux/kernel/syscalls.h>
-#include <linux/kernel/delay.h>
-#include <linux/kernel/uaccess.h>
-#include <linux/sched/signal.h>
 #include <linux/sched/debug.h>
-#include <linux/smp/percpu.h>
-#include <linux/init/init.h>
-#include <linux/kernel/mm.h>
+#include <linux/kernel/sched_api.h>
 
-#include <asm/unistd.h>
-#include <asm/insns.h>
-
-// #include "tick-internal.h"
-
-// #define CREATE_TRACE_POINTS
-// #include <trace/events/timer.h>
 
 __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
 
@@ -168,7 +155,7 @@ __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
 long __sched schedule_timeout(long timeout)
 {
 	// struct process_timer timer;
-	unsigned long expire;
+	ulong expire;
 
 	switch (timeout)
 	{
