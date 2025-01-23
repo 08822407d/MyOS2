@@ -1,5 +1,6 @@
 add_subdirectory(misc)
 add_subdirectory(clocksource)
 add_subdirectory(timekeeping)
+add_subdirectory(systick)
 add_subdirectory(adjtime)
 add_subdirectory(timer)

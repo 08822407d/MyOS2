@@ -4,6 +4,7 @@
 	#include "misc/time_misc_const.h"
 	#include "clocksource/clocksource_const.h"
 	#include "timekeeping/timekeeping_const.h"
+	#include "systick/systick_const.h"
 	#include "adjtime/adjtime_const.h"
 	#include "timer/timer_const.h"
 

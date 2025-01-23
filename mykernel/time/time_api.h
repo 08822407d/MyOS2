@@ -6,6 +6,7 @@
 	#include "misc/time_misc_api.h"
 	#include "clocksource/clocksource_api.h"
 	#include "timekeeping/timekeeping_api.h"
+	#include "systick/systick_api.h"
 	#include "adjtime/adjtime_api.h"
 	#include "timer/timer_api.h"
 

@@ -402,7 +402,8 @@
         "time_misc_api.h": "c",
         "timekeeping_api.h": "c",
         "time_misc_const.h": "c",
-        "bitsperlong.h": "c"
+        "bitsperlong.h": "c",
+        "clocksource_api.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }
