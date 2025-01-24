@@ -46,7 +46,7 @@
 		List_s				node;			/* A: anchored at pool->workers */
 											/* A: runs through worker->node */
 
-		// ulong				last_active;	/* K: last active timestamp */
+		ulong				last_active;	/* K: last active timestamp */
 		uint				flags;			/* L: flags */
 		int					id;				/* I: worker id */
 

@@ -3,6 +3,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <linux/kernel/cache.h>
+	#include <uapi/linux/time.h>
 
 	typedef s64	ktime_t;
 	typedef __s64 time64_t;

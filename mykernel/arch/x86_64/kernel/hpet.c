@@ -492,6 +492,7 @@ out_nohpet:
 
 
 #include <linux/device/tty.h>
+#include <linux/kernel/time_api.h>
 
 #include <asm/apicdef.h>
 

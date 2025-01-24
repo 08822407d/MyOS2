@@ -8,12 +8,13 @@ _k_offset		= _k_virt_start - _k_phys_start;
 _k_phys_edata	= _edata - _k_offset;
 _k_phys_loadend	= __bss_start - _k_offset;
 _k_phys_ebss	= __bss_stop - _k_offset;
-
 _APboot_phys_start		= 0xE000;
 _PCPU_BASE		= 0x0;
-
 _Page_Size		= 0x1000;
 
+
+jiffies = jiffies_64;
+const_pcpu_hot = pcpu_hot;
 /* PHDRS {
  text PT_LOAD FLAGS(5);
  data PT_LOAD FLAGS(6);

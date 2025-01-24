@@ -14,6 +14,7 @@
 	#include "timekeeping/timekeeping_api.h"
 	#include "systick/systick_api.h"
 	#include "adjtime/adjtime_api.h"
+	#include "ktime/ktime_api.h"
 	#include "timer/timer_api.h"
 
 #endif /* _TIME_API_H_ */

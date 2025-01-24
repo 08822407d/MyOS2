@@ -8,6 +8,7 @@
 	#include "timekeeping/timekeeping_types.h"
 	#include "systick/systick_types.h"
 	#include "adjtime/adjtime_types.h"
+	#include "ktime/ktime_types.h"
 	#include "timer/timer_types.h"
 
 #endif /* _TIME_TYPES_H_ */

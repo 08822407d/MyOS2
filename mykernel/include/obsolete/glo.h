@@ -4,7 +4,6 @@
 #include <linux/kernel/sched_types.h>
 #include <obsolete/ktypes.h>
 
-	extern unsigned long volatile	jiffies;
 
 	extern task_s		*idle_threads;
 	extern unsigned		nr_cpu_ids;

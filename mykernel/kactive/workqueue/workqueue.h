@@ -211,7 +211,7 @@
 
 			/* can't use worker_set_flags(), also called from create_worker() */
 			worker->flags |= WORKER_IDLE;
-			// worker->last_active = jiffies;
+			worker->last_active = jiffies;
 
 			/* idle_list is LIFO */
 			list_header_add_to_tail(&pool->idle_list, &worker->entry);

@@ -3,11 +3,94 @@
 #include <linux/kernel/kernel.h>
 
 
+// clock_getres() implements
+// static int
+// posix_get_hrtimer_res(clockid_t which_clock, timespec64_s *tp) {
+// 	tp->tv_sec = 0;
+// 	tp->tv_nsec = hrtimer_resolution;
+// 	return 0;
+// }
+// static int
+// posix_get_coarse_res(const clockid_t which_clock, timespec64_s *tp) {
+// 	*tp = ktime_to_timespec64(KTIME_LOW_RES);
+// 	return 0;
+// }
+
+
+// clock_set() implements
+// static int
+// posix_clock_realtime_set(const clockid_t which_clock, const timespec64_s *tp) {
+// 	return do_sys_settimeofday64(tp, NULL);
+// }
+
+
+// clock_get_timespec() implements
+static int
+posix_get_realtime_timespec(clockid_t which_clock, timespec64_s *tp) {
+	ktime_get_real_ts64(tp);
+	return 0;
+}
+// static int
+// posix_get_monotonic_timespec(clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_ts64(tp);
+// 	timens_add_monotonic(tp);
+// 	return 0;
+// }
+// static int
+// posix_get_monotonic_raw(clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_raw_ts64(tp);
+// 	timens_add_monotonic(tp);
+// 	return 0;
+// }
+// static int
+// posix_get_realtime_coarse(clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_coarse_real_ts64(tp);
+// 	return 0;
+// }
+// static int
+// posix_get_monotonic_coarse(clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_coarse_ts64(tp);
+// 	timens_add_monotonic(tp);
+// 	return 0;
+// }
+// static int
+// posix_get_tai_timespec(clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_clocktai_ts64(tp);
+// 	return 0;
+// }
+// static int
+// posix_get_boottime_timespec(const clockid_t which_clock, timespec64_s *tp) {
+// 	ktime_get_boottime_ts64(tp);
+// 	timens_add_boottime(tp);
+// 	return 0;
+// }
+
+
+// clock_get_ktime() implements
+// static ktime_t
+// posix_get_realtime_ktime(clockid_t which_clock) {
+// 	return ktime_get_real();
+// }
+// static ktime_t
+// posix_get_monotonic_ktime(clockid_t which_clock) {
+// 	return ktime_get();
+// }
+// static ktime_t
+// posix_get_tai_ktime(clockid_t which_clock) {
+// 	return ktime_get_clocktai();
+// }
+// static ktime_t
+// posix_get_boottime_ktime(const clockid_t which_clock) {
+// 	return ktime_get_boottime();
+// }
+
+
+
 static const k_clock_s clock_realtime = {
 	// .clock_getres			= posix_get_hrtimer_res,
-	// .clock_get_timespec		= posix_get_realtime_timespec,
-	// .clock_get_ktime		= posix_get_realtime_ktime,
 	// .clock_set				= posix_clock_realtime_set,
+	.clock_get_timespec		= posix_get_realtime_timespec,
+	// .clock_get_ktime		= posix_get_realtime_ktime,
 	// .clock_adj				= posix_clock_realtime_adj,
 	// .nsleep					= common_nsleep,
 	// .timer_create			= common_timer_create,
@@ -56,8 +139,8 @@ static const k_clock_s clock_monotonic_coarse = {
 
 static const k_clock_s clock_tai = {
 	// .clock_getres			= posix_get_hrtimer_res,
-	// .clock_get_ktime		= posix_get_tai_ktime,
 	// .clock_get_timespec		= posix_get_tai_timespec,
+	// .clock_get_ktime		= posix_get_tai_ktime,
 	// .nsleep					= common_nsleep,
 	// .timer_create			= common_timer_create,
 	// .timer_set				= common_timer_set,
@@ -73,8 +156,8 @@ static const k_clock_s clock_tai = {
 
 static const k_clock_s clock_boottime = {
 	// .clock_getres			= posix_get_hrtimer_res,
-	// .clock_get_ktime		= posix_get_boottime_ktime,
 	// .clock_get_timespec		= posix_get_boottime_timespec,
+	// .clock_get_ktime		= posix_get_boottime_ktime,
 	// .nsleep					= common_nsleep_timens,
 	// .timer_create			= common_timer_create,
 	// .timer_set				= common_timer_set,
@@ -106,12 +189,12 @@ const k_clock_s
 *clockid_to_kclock(const clockid_t id) {
 	clockid_t idx = id;
 
-	// if (id < 0) {
-	// 	return (id & CLOCKFD_MASK) == CLOCKFD ?
-	// 		&clock_posix_dynamic : &clock_posix_cpu;
-	// }
-	pr_err("Dynamic timer currently Not supported.\n");
-	while (1);
+	if (id < 0) {
+		pr_err("Dynamic timer currently Not supported.\n");
+		while (1);
+		// return (id & CLOCKFD_MASK) == CLOCKFD ?
+		// 	&clock_posix_dynamic : &clock_posix_cpu;
+	}
 
 	if (id >= ARRAY_SIZE(posix_clocks))
 		return NULL;

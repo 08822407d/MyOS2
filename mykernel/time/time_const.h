@@ -8,6 +8,7 @@
 	#include "timekeeping/timekeeping_const.h"
 	#include "systick/systick_const.h"
 	#include "adjtime/adjtime_const.h"
+	#include "ktime/ktime_const.h"
 	#include "timer/timer_const.h"
 
 #endif /* _TIME_CONSTS_H_ */

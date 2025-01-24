@@ -13,8 +13,8 @@
 		/* Returns the clock value in the current time namespace. */
 		int	(*clock_get_timespec)(const clockid_t which_clock,
 				timespec64_s *tp);
-		// /* Returns the clock value in the root time namespace. */
-		// ktime_t	(*clock_get_ktime)(const clockid_t which_clock);
+		/* Returns the clock value in the root time namespace. */
+		ktime_t	(*clock_get_ktime)(const clockid_t which_clock);
 		// int	(*clock_adj)(const clockid_t which_clock, struct __kernel_timex *tx);
 		// int	(*timer_create)(struct k_itimer *timer);
 		// int	(*nsleep)(const clockid_t which_clock, int flags,

@@ -5,8 +5,8 @@
 
 
 
-static u64 jiffies_read(clocksrc_s *cs)
-{
+static u64
+jiffies_read(clocksrc_s *cs) {
 	return (u64) jiffies;
 }
 

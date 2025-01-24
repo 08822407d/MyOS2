@@ -185,7 +185,7 @@ long __sched schedule_timeout(long timeout)
 		}
 	}
 
-	// expire = timeout + jiffies;
+	expire = timeout + jiffies;
 
 	// timer.task = current;
 	// timer_setup_on_stack(&timer.timer, process_timeout, 0);
@@ -196,7 +196,7 @@ long __sched schedule_timeout(long timeout)
 	// /* Remove the timer from the object tracker */
 	// destroy_timer_on_stack(&timer.timer);
 
-	// timeout = expire - jiffies;
+	timeout = expire - jiffies;
 
  out:
 	return timeout < 0 ? 0 : timeout;

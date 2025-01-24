@@ -1,6 +1,8 @@
 #define TIME_MISC_DEFINATION
 #include "time_misc.h"
 
+#include <linux/lib/errno.h>
+#include <linux/kernel/uaccess.h>
 
 
 /*
@@ -69,3 +71,57 @@ timespec64_s ns_to_timespec64(s64 nsec)
 
 	return ts;
 }
+
+
+
+/**
+ * get_timespec64 - get user's time value into kernel space
+ * @ts: destination &struct timespec64
+ * @uts: user's time value as &struct __kernel_timespec
+ *
+ * Handles compat or 32-bit modes.
+ *
+ * Return: %0 on success or negative errno on error
+ */
+int get_timespec64(timespec64_s *ts,
+		const __kernel_timespec_s __user *uts)
+{
+	__kernel_timespec_s kts;
+	int ret;
+
+	ret = copy_from_user(&kts, uts, sizeof(kts));
+	if (ret)
+		return -EFAULT;
+
+	ts->tv_sec = kts.tv_sec;
+
+	// /* Zero out the padding in compat mode */
+	// if (in_compat_syscall())
+	// 	kts.tv_nsec &= 0xFFFFFFFFUL;
+
+	/* In 32-bit mode, this drops the padding */
+	ts->tv_nsec = kts.tv_nsec;
+
+	return 0;
+}
+EXPORT_SYMBOL_GPL(get_timespec64);
+
+/**
+ * put_timespec64 - convert timespec64 value to __kernel_timespec format and
+ * 		    copy the latter to userspace
+ * @ts: input &struct timespec64
+ * @uts: user's &struct __kernel_timespec
+ *
+ * Return: %0 on success or negative errno on error
+ */
+int put_timespec64(const timespec64_s *ts,
+		__kernel_timespec_s __user *uts)
+{
+	__kernel_timespec_s kts = {
+		.tv_sec = ts->tv_sec,
+		.tv_nsec = ts->tv_nsec
+	};
+
+	return copy_to_user(uts, &kts, sizeof(kts)) ? -EFAULT : 0;
+}
+EXPORT_SYMBOL_GPL(put_timespec64);

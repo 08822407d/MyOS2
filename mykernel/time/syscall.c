@@ -30,11 +30,12 @@ MYOS_SYSCALL_DEFINE2(gettimeofday,
 
 
 // #define __NR_clock_gettime		228
-MYOS_SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
+MYOS_SYSCALL_DEFINE2(clock_gettime,
+		const clockid_t, which_clock,
 		__kernel_timespec_s __user *, tp)
 {
 	const k_clock_s *kc = clockid_to_kclock(which_clock);
-	struct timespec64 kernel_tp;
+	timespec64_s kernel_tp;
 	int error;
 
 	if (!kc)
@@ -42,8 +43,8 @@ MYOS_SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock,
 
 	error = kc->clock_get_timespec(which_clock, &kernel_tp);
 
-	// if (!error && put_timespec64(&kernel_tp, tp))
-		// error = -EFAULT;
+	if (!error && put_timespec64(&kernel_tp, tp))
+		error = -EFAULT;
 
 	return error;
 }

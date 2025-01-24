@@ -406,7 +406,8 @@
         "clocksource_api.h": "c",
         "kactive_types.h": "c",
         "systick.h": "c",
-        "systick_macro.h": "c"
+        "systick_macro.h": "c",
+        "time_misc.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

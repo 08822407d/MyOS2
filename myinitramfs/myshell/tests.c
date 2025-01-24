@@ -112,16 +112,16 @@ int test_PrintDateTime() {
 		return 1;
 	}
 
-	printf("Raw timeval: %ld, %ld\n", tv.tv_sec, tv.tv_usec);
+	// printf("Raw timeval: %ld, %ld\n", tv.tv_sec, tv.tv_usec);
 
-	// // 将秒数转换为本地时间
-	// tm_info = localtime(&tv.tv_sec);
+	// 将秒数转换为本地时间
+	tm_info = localtime(&tv.tv_sec);
 
-	// // 格式化时间为字符串
-	// strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tm_info);
+	// 格式化时间为字符串
+	strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", tm_info);
 
-	// // 打印日期和微秒
-	// printf("当前日期和时间: %s.%06ld\n", buffer, tv.tv_usec);
+	// 打印日期和微秒
+	printf("DateTime Now: %s.%06ld\n", buffer, tv.tv_usec);
 
 	return 0;
 }

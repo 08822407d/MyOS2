@@ -26,4 +26,10 @@
 	extern timespec64_s
 	timespec64_add_safe(const timespec64_s lhs, const timespec64_s rhs);
 
+
+	extern int
+	get_timespec64(timespec64_s *ts, const __kernel_timespec_s __user *uts);
+	extern int
+	put_timespec64(const timespec64_s *ts, __kernel_timespec_s __user *uts);
+
 #endif /* _TIME_MISC_API_H_ */

@@ -63,36 +63,6 @@ tk_set_wall_to_mono(timekeeper_s *tk, timespec64_s wtm) {
 }
 
 
-/* must hold timekeeper_lock */
-static void
-timekeeping_update(timekeeper_s *tk, uint action) {
-	// if (action & TK_CLEAR_NTP) {
-	// 	tk->ntp_error = 0;
-	// 	ntp_clear();
-	// }
-
-	// tk_update_leap_state(tk);
-	// tk_update_ktime_data(tk);
-
-	// update_vsyscall(tk);
-	// update_pvclock_gtod(tk, action & TK_CLOCK_WAS_SET);
-
-	// tk->tkr_mono.base_real = tk->tkr_mono.base + tk->offs_real;
-	// update_fast_timekeeper(&tk->tkr_mono, &tk_fast_mono);
-	// update_fast_timekeeper(&tk->tkr_raw,  &tk_fast_raw);
-
-	// if (action & TK_CLOCK_WAS_SET)
-	// 	tk->clock_was_set_seq++;
-	// /*
-	//  * The mirroring of the data to the shadow-timekeeper needs
-	//  * to happen last here to ensure we don't over-write the
-	//  * timekeeper structure on the next update with stale data
-	//  */
-	// if (action & TK_MIRROR)
-	// 	memcpy(&shadow_timekeeper, &tk_core.timekeeper,
-	// 	       sizeof(tk_core.timekeeper));
-}
-
 
 /**
  * ktime_get_real_ts64 - Returns the time of day in a timespec64.
@@ -268,7 +238,7 @@ void __init timekeeping_init(void)
 
 	tk_set_wall_to_mono(tk, wall_to_mono);
 
-	timekeeping_update(tk, TK_MIRROR | TK_CLOCK_WAS_SET);
+	// timekeeping_update(tk, TK_MIRROR | TK_CLOCK_WAS_SET);
 }
 
 
