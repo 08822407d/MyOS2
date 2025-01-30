@@ -258,8 +258,8 @@
 		// /* CLONE_CHILD_SETTID: */
 		// int __user *set_child_tid;
 
-		// /* CLONE_CHILD_CLEARTID: */
-		// int __user *clear_child_tid;
+		/* CLONE_CHILD_CLEARTID: */
+		int __user *clear_child_tid;
 
 		/* PF_KTHREAD | PF_IO_WORKER */
 		void			*worker_private;

@@ -202,12 +202,9 @@ MYOS_SYSCALL_DEFINE2(arch_prctl, int, option, unsigned long, arg2)
 
 MYOS_SYSCALL_DEFINE1(set_tid_address, int *, tidptr)
 {
-	ALERT_DUMMY_SYSCALL(set_tid_address, IF_ALERT_DUMMY_SYSCALL);
+	current->clear_child_tid = tidptr;
 
-	// current->clear_child_tid = tidptr;
-
-	// return task_pid_vnr(current);
-	return 0;
+	return task_pid_vnr(current);
 }
 
 // MYOS_SYSCALL_DEFINE2(set_robust_list, void *, head, size_t, len)

@@ -1389,7 +1389,7 @@
 	#define MYOS_SYSCALL_DEFINE6(name, ...)	__MYOS_SYSCALL_DEFINEx(6, _##name, __VA_ARGS__)
 
 
-	#define IF_ALERT_DUMMY_SYSCALL 0
+	#define IF_ALERT_DUMMY_SYSCALL 1
 	#define ALERT_DUMMY_SYSCALL(syscall_name, show_alert)		\
 			if (show_alert) {									\
 				pr_alert("\t!!! Dummy Syscall --- %s ---\n",	\

@@ -106,6 +106,8 @@ MYOS_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op,
 		u32 __user *, uaddr2, u32, val3)
 {
 	ALERT_DUMMY_SYSCALL(futex, IF_ALERT_DUMMY_SYSCALL);
+	while (1);
+	
 
 	int ret, cmd = op & FUTEX_CMD_MASK;
 	ktime_t t, *tp = NULL;
@@ -117,11 +119,11 @@ MYOS_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op,
 		
 		// if (unlikely(should_fail_futex(!(op & FUTEX_PRIVATE_FLAG))))
 		// 	return -EFAULT;
-		// if (get_timespec64(&ts, utime))
-		// 	return -EFAULT;
-		// ret = futex_init_timeout(cmd, op, &ts, &t);
-		// if (ret)
-		// 	return ret;
+		if (get_timespec64(&ts, utime))
+			return -EFAULT;
+		ret = futex_init_timeout(cmd, op, &ts, &t);
+		if (ret)
+			return ret;
 		tp = &t;
 	}
 

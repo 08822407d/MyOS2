@@ -16,6 +16,9 @@
 		extern bool
 		futex_cmd_has_timeout(u32 cmd);
 
+		extern int
+		futex_init_timeout(u32 cmd, u32 op, timespec64_s *ts, ktime_t *t);
+
 	#endif
 
 	#include "futex_macro.h"
@@ -49,6 +52,20 @@
 				return true;
 			}
 			return false;
+		}
+
+		PREFIX_STATIC_AWLWAYS_INLINE
+		int
+		futex_init_timeout(u32 cmd, u32 op, timespec64_s *ts, ktime_t *t) {
+			if (!timespec64_valid(ts))
+				return -EINVAL;
+
+			*t = timespec64_to_ktime(*ts);
+			// if (cmd == FUTEX_WAIT)
+			// 	*t = ktime_add_safe(ktime_get(), *t);
+			// else if (cmd != FUTEX_LOCK_PI && !(op & FUTEX_CLOCK_REALTIME))
+			// 	*t = timens_ktime_to_host(CLOCK_MONOTONIC, *t);
+			return 0;
 		}
 
 	#endif /* !DEBUG */

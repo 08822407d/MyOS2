@@ -50,7 +50,7 @@
 	
 	
 	
-	#define TASK_threadsp 528
+	#define TASK_threadsp 536
 	
 	
 	#define PTREGS_SIZE 176
