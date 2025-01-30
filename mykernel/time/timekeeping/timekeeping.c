@@ -92,6 +92,25 @@ void ktime_get_real_ts64(timespec64_s *ts)
 EXPORT_SYMBOL(ktime_get_real_ts64);
 
 
+ktime_t ktime_get(void)
+{
+	timekeeper_s *tk = &tk_core.timekeeper;
+	uint seq;
+	ktime_t base;
+	u64 nsecs;
+
+	WARN_ON(timekeeping_suspended);
+
+	// do {
+		// seq = read_seqcount_begin(&tk_core.seq);
+		base = tk->tkr_mono.base;
+		// nsecs = timekeeping_get_ns(&tk->tkr_mono);
+	// } while (read_seqcount_retry(&tk_core.seq, seq));
+
+	return ktime_add_ns(base, nsecs);
+}
+EXPORT_SYMBOL_GPL(ktime_get);
+
 
 
 /**

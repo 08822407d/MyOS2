@@ -105,10 +105,6 @@ MYOS_SYSCALL_DEFINE6(futex, u32 __user *, uaddr, int, op,
 		u32, val, const __kernel_timespec_s __user *, utime,
 		u32 __user *, uaddr2, u32, val3)
 {
-	ALERT_DUMMY_SYSCALL(futex, IF_ALERT_DUMMY_SYSCALL);
-	while (1);
-	
-
 	int ret, cmd = op & FUTEX_CMD_MASK;
 	ktime_t t, *tp = NULL;
 	timespec64_s ts;

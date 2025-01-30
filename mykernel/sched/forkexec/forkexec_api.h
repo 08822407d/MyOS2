@@ -54,7 +54,9 @@
 	extern void mm_cache_init(void);
 	extern void proc_caches_init(void);
 
+	/* exit */
 	extern void exit_mm_release(task_s *tsk, mm_s *mm);
 	extern void exec_mm_release(task_s *tsk, mm_s *mm);
+	void __noreturn do_group_exit(int exit_code);
 
 #endif /* _LINUX_FORK_EXEC_API_H_ */

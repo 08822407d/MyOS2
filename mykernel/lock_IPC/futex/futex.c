@@ -6,6 +6,8 @@
 long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
 		u32 __user *uaddr2, u32 val2, u32 val3)
 {
+	while (1);
+
 	uint flags = futex_to_flags(op);
 	int cmd = op & FUTEX_CMD_MASK;
 

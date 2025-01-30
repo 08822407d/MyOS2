@@ -125,3 +125,18 @@ MYOS_SYSCALL_DEFINE0(getppid)
 	return pid;
 }
 
+
+// #define __NR_exit_group			231
+/*
+ * this kills every thread in the thread group. Note that any externally
+ * wait4()-ing process will get the correct exit code - even if this
+ * thread is not the thread group leader.
+ */
+MYOS_SYSCALL_DEFINE1(exit_group, int, error_code)
+{
+	ALERT_DUMMY_SYSCALL(exit_group, IF_ALERT_DUMMY_SYSCALL);
+
+	do_group_exit((error_code & 0xff) << 8);
+	/* NOTREACHED */
+	return 0;
+}

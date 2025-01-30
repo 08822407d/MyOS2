@@ -16,6 +16,8 @@
 
 	extern void ktime_get_real_ts64(timespec64_s *ts);
 
+	extern ktime_t ktime_get(void);
+
 
 	/*
 	 * timekeeping debug functions

@@ -61,10 +61,11 @@
 				return -EINVAL;
 
 			*t = timespec64_to_ktime(*ts);
-			// if (cmd == FUTEX_WAIT)
-			// 	*t = ktime_add_safe(ktime_get(), *t);
-			// else if (cmd != FUTEX_LOCK_PI && !(op & FUTEX_CLOCK_REALTIME))
-			// 	*t = timens_ktime_to_host(CLOCK_MONOTONIC, *t);
+			if (cmd == FUTEX_WAIT)
+				*t = ktime_add_safe(ktime_get(), *t);
+			else if (cmd != FUTEX_LOCK_PI && !(op & FUTEX_CLOCK_REALTIME))
+				// *t = timens_ktime_to_host(CLOCK_MONOTONIC, *t);
+				while (1);	// timens currently not supported
 			return 0;
 		}
 

@@ -186,3 +186,36 @@ void __noreturn do_exit(long code)
 }
 
 
+/*
+ * Take down every thread in the group.  This is called by fatal signals
+ * as well as by sys_exit_group (below).
+ */
+void __noreturn
+do_group_exit(int exit_code)
+{
+	signal_s *sig = current->signal;
+
+	// if (sig->flags & SIGNAL_GROUP_EXIT)
+	// 	exit_code = sig->group_exit_code;
+	// else if (sig->group_exec_task)
+	// 	exit_code = 0;
+	// else {
+	// 	sighand_s *const sighand = current->sighand;
+
+	// 	spin_lock_irq(&sighand->siglock);
+	// 	if (sig->flags & SIGNAL_GROUP_EXIT)
+	// 		/* Another thread got here before we took the lock.  */
+	// 		exit_code = sig->group_exit_code;
+	// 	else if (sig->group_exec_task)
+	// 		exit_code = 0;
+	// 	else {
+	// 		sig->group_exit_code = exit_code;
+	// 		sig->flags = SIGNAL_GROUP_EXIT;
+	// 		zap_other_threads(current);
+	// 	}
+	// 	spin_unlock_irq(&sighand->siglock);
+	// }
+
+	do_exit(exit_code);
+	/* NOTREACHED */
+}

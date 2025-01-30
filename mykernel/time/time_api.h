@@ -5,6 +5,7 @@
 	#include <linux/kernel/math64.h>
 	#include <linux/kernel/minmax.h>
 	#include <linux/kernel/bits.h>
+	#include <linux/debug/bug.h>
 
 
 	#include "time_type_declaration.h"
