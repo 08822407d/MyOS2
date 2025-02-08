@@ -18,9 +18,11 @@
 	 */
 	#define timer_setup(timer, callback, flags)		\
 				simple_init_timer_key((timer), (callback), (flags))
-
 	#define timer_setup_on_stack(timer, callback, flags)	\
 				simple_init_timer_key((timer), (callback), (flags))
+	
+	
+	#define del_timer_sync	timer_delete_sync
 
 	static inline void destroy_timer_on_stack(timer_list_s *timer) { }
 

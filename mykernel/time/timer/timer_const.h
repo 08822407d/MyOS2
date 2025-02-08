@@ -74,4 +74,9 @@
 				TIMER_PINNED | TIMER_IRQSAFE		\
 			)
 
+
+	#define MOD_TIMER_PENDING_ONLY	0x01
+	#define MOD_TIMER_REDUCE		0x02
+	#define MOD_TIMER_NOTPENDING	0x04
+
 #endif /* _LINUX_TIMER_CONST_H_ */

@@ -133,6 +133,440 @@ process_timeout(timer_list_s *t) {
  */
 
 
+static inline int
+__mod_timer(timer_list_s *timer, ulong expires, uint options) {
+	ulong clk = 0, flags, bucket_expiry;
+	timer_base_s *base, *new_base;
+	uint idx = UINT_MAX;
+	int ret = 0;
+
+// 	debug_assert_init(timer);
+
+// 	/*
+// 	 * This is a common optimization triggered by the networking code - if
+// 	 * the timer is re-modified to have the same timeout or ends up in the
+// 	 * same array bucket then just return:
+// 	 */
+// 	if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
+// 		/*
+// 		 * The downside of this optimization is that it can result in
+// 		 * larger granularity than you would get from adding a new
+// 		 * timer with this expiry.
+// 		 */
+// 		long diff = timer->expires - expires;
+
+// 		if (!diff)
+// 			return 1;
+// 		if (options & MOD_TIMER_REDUCE && diff <= 0)
+// 			return 1;
+
+// 		/*
+// 		 * We lock timer base and calculate the bucket index right
+// 		 * here. If the timer ends up in the same bucket, then we
+// 		 * just update the expiry time and avoid the whole
+// 		 * dequeue/enqueue dance.
+// 		 */
+// 		base = lock_timer_base(timer, &flags);
+// 		/*
+// 		 * Has @timer been shutdown? This needs to be evaluated
+// 		 * while holding base lock to prevent a race against the
+// 		 * shutdown code.
+// 		 */
+// 		if (!timer->function)
+// 			goto out_unlock;
+
+// 		forward_timer_base(base);
+
+// 		if (timer_pending(timer) && (options & MOD_TIMER_REDUCE) &&
+// 		    time_before_eq(timer->expires, expires)) {
+// 			ret = 1;
+// 			goto out_unlock;
+// 		}
+
+// 		clk = base->clk;
+// 		idx = calc_wheel_index(expires, clk, &bucket_expiry);
+
+// 		/*
+// 		 * Retrieve and compare the array index of the pending
+// 		 * timer. If it matches set the expiry to the new value so a
+// 		 * subsequent call will exit in the expires check above.
+// 		 */
+// 		if (idx == timer_get_idx(timer)) {
+// 			if (!(options & MOD_TIMER_REDUCE))
+// 				timer->expires = expires;
+// 			else if (time_after(timer->expires, expires))
+// 				timer->expires = expires;
+// 			ret = 1;
+// 			goto out_unlock;
+// 		}
+// 	} else {
+// 		base = lock_timer_base(timer, &flags);
+// 		/*
+// 		 * Has @timer been shutdown? This needs to be evaluated
+// 		 * while holding base lock to prevent a race against the
+// 		 * shutdown code.
+// 		 */
+// 		if (!timer->function)
+// 			goto out_unlock;
+
+// 		forward_timer_base(base);
+// 	}
+
+// 	ret = detach_if_pending(timer, base, false);
+// 	if (!ret && (options & MOD_TIMER_PENDING_ONLY))
+// 		goto out_unlock;
+
+// 	new_base = get_timer_this_cpu_base(timer->flags);
+
+// 	if (base != new_base) {
+// 		/*
+// 		 * We are trying to schedule the timer on the new base.
+// 		 * However we can't change timer's base while it is running,
+// 		 * otherwise timer_delete_sync() can't detect that the timer's
+// 		 * handler yet has not finished. This also guarantees that the
+// 		 * timer is serialized wrt itself.
+// 		 */
+// 		if (likely(base->running_timer != timer)) {
+// 			/* See the comment in lock_timer_base() */
+// 			timer->flags |= TIMER_MIGRATING;
+
+// 			raw_spin_unlock(&base->lock);
+// 			base = new_base;
+// 			raw_spin_lock(&base->lock);
+// 			WRITE_ONCE(timer->flags,
+// 				   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
+// 			forward_timer_base(base);
+// 		}
+// 	}
+
+// 	debug_timer_activate(timer);
+
+// 	timer->expires = expires;
+// 	/*
+// 	 * If 'idx' was calculated above and the base time did not advance
+// 	 * between calculating 'idx' and possibly switching the base, only
+// 	 * enqueue_timer() is required. Otherwise we need to (re)calculate
+// 	 * the wheel index via internal_add_timer().
+// 	 */
+// 	if (idx != UINT_MAX && clk == base->clk)
+// 		enqueue_timer(base, timer, idx, bucket_expiry);
+// 	else
+// 		internal_add_timer(base, timer);
+
+// out_unlock:
+// 	raw_spin_unlock_irqrestore(&base->lock, flags);
+
+	return ret;
+}
+
+/**
+ * mod_timer_pending - Modify a pending timer's timeout
+ * @timer:	The pending timer to be modified
+ * @expires:	New absolute timeout in jiffies
+ *
+ * mod_timer_pending() is the same for pending timers as mod_timer(), but
+ * will not activate inactive timers.
+ *
+ * If @timer->function == NULL then the start operation is silently
+ * discarded.
+ *
+ * Return:
+ * * %0 - The timer was inactive and not modified or was in
+ *	  shutdown state and the operation was discarded
+ * * %1 - The timer was active and requeued to expire at @expires
+ */
+int mod_timer_pending(timer_list_s *timer, ulong expires)
+{
+	return __mod_timer(timer, expires, MOD_TIMER_PENDING_ONLY);
+}
+EXPORT_SYMBOL(mod_timer_pending);
+
+/**
+ * mod_timer - Modify a timer's timeout
+ * @timer:	The timer to be modified
+ * @expires:	New absolute timeout in jiffies
+ *
+ * mod_timer(timer, expires) is equivalent to:
+ *
+ *     del_timer(timer); timer->expires = expires; add_timer(timer);
+ *
+ * mod_timer() is more efficient than the above open coded sequence. In
+ * case that the timer is inactive, the del_timer() part is a NOP. The
+ * timer is in any case activated with the new expiry time @expires.
+ *
+ * Note that if there are multiple unserialized concurrent users of the
+ * same timer, then mod_timer() is the only safe way to modify the timeout,
+ * since add_timer() cannot modify an already running timer.
+ *
+ * If @timer->function == NULL then the start operation is silently
+ * discarded. In this case the return value is 0 and meaningless.
+ *
+ * Return:
+ * * %0 - The timer was inactive and started or was in shutdown
+ *	  state and the operation was discarded
+ * * %1 - The timer was active and requeued to expire at @expires or
+ *	  the timer was active and not modified because @expires did
+ *	  not change the effective expiry time
+ */
+int mod_timer(timer_list_s *timer, ulong expires)
+{
+	return __mod_timer(timer, expires, 0);
+}
+EXPORT_SYMBOL(mod_timer);
+
+/**
+ * timer_reduce - Modify a timer's timeout if it would reduce the timeout
+ * @timer:	The timer to be modified
+ * @expires:	New absolute timeout in jiffies
+ *
+ * timer_reduce() is very similar to mod_timer(), except that it will only
+ * modify an enqueued timer if that would reduce the expiration time. If
+ * @timer is not enqueued it starts the timer.
+ *
+ * If @timer->function == NULL then the start operation is silently
+ * discarded.
+ *
+ * Return:
+ * * %0 - The timer was inactive and started or was in shutdown
+ *	  state and the operation was discarded
+ * * %1 - The timer was active and requeued to expire at @expires or
+ *	  the timer was active and not modified because @expires
+ *	  did not change the effective expiry time such that the
+ *	  timer would expire earlier than already scheduled
+ */
+int timer_reduce(timer_list_s *timer, ulong expires)
+{
+	return __mod_timer(timer, expires, MOD_TIMER_REDUCE);
+}
+EXPORT_SYMBOL(timer_reduce);
+
+/**
+ * add_timer - Start a timer
+ * @timer:	The timer to be started
+ *
+ * Start @timer to expire at @timer->expires in the future. @timer->expires
+ * is the absolute expiry time measured in 'jiffies'. When the timer expires
+ * timer->function(timer) will be invoked from soft interrupt context.
+ *
+ * The @timer->expires and @timer->function fields must be set prior
+ * to calling this function.
+ *
+ * If @timer->function == NULL then the start operation is silently
+ * discarded.
+ *
+ * If @timer->expires is already in the past @timer will be queued to
+ * expire at the next timer tick.
+ *
+ * This can only operate on an inactive timer. Attempts to invoke this on
+ * an active timer are rejected with a warning.
+ */
+void add_timer(timer_list_s *timer)
+{
+	if (WARN_ON_ONCE(timer_pending(timer)))
+		return;
+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
+}
+EXPORT_SYMBOL(add_timer);
+
+/**
+ * add_timer_local() - Start a timer on the local CPU
+ * @timer:	The timer to be started
+ *
+ * Same as add_timer() except that the timer flag TIMER_PINNED is set.
+ *
+ * See add_timer() for further details.
+ */
+void add_timer_local(timer_list_s *timer)
+{
+	if (WARN_ON_ONCE(timer_pending(timer)))
+		return;
+	timer->flags |= TIMER_PINNED;
+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
+}
+EXPORT_SYMBOL(add_timer_local);
+
+/**
+ * add_timer_global() - Start a timer without TIMER_PINNED flag set
+ * @timer:	The timer to be started
+ *
+ * Same as add_timer() except that the timer flag TIMER_PINNED is unset.
+ *
+ * See add_timer() for further details.
+ */
+void add_timer_global(timer_list_s *timer)
+{
+	if (WARN_ON_ONCE(timer_pending(timer)))
+		return;
+	timer->flags &= ~TIMER_PINNED;
+	__mod_timer(timer, timer->expires, MOD_TIMER_NOTPENDING);
+}
+EXPORT_SYMBOL(add_timer_global);
+
+
+
+/**
+ * __try_to_del_timer_sync - Internal function: Try to deactivate a timer
+ * @timer:	Timer to deactivate
+ * @shutdown:	If true, this indicates that the timer is about to be
+ *		shutdown permanently.
+ *
+ * If @shutdown is true then @timer->function is set to NULL under the
+ * timer base lock which prevents further rearming of the timer. Any
+ * attempt to rearm @timer after this function returns will be silently
+ * ignored.
+ *
+ * This function cannot guarantee that the timer cannot be rearmed
+ * right after dropping the base lock if @shutdown is false. That
+ * needs to be prevented by the calling code if necessary.
+ *
+ * Return:
+ * * %0  - The timer was not pending
+ * * %1  - The timer was pending and deactivated
+ * * %-1 - The timer callback function is running on a different CPU
+ */
+static int
+__try_to_del_timer_sync(timer_list_s *timer, bool shutdown) {
+	timer_base_s *base;
+	ulong flags;
+	int ret = -1;
+
+	// debug_assert_init(timer);
+
+	// base = lock_timer_base(timer, &flags);
+
+	// if (base->running_timer != timer)
+	// 	ret = detach_if_pending(timer, base, true);
+	// if (shutdown)
+	// 	timer->function = NULL;
+
+	// raw_spin_unlock_irqrestore(&base->lock, flags);
+
+	return ret;
+}
+
+/**
+ * try_to_del_timer_sync - Try to deactivate a timer
+ * @timer:	Timer to deactivate
+ *
+ * This function tries to deactivate a timer. On success the timer is not
+ * queued and the timer callback function is not running on any CPU.
+ *
+ * This function does not guarantee that the timer cannot be rearmed right
+ * after dropping the base lock. That needs to be prevented by the calling
+ * code if necessary.
+ *
+ * Return:
+ * * %0  - The timer was not pending
+ * * %1  - The timer was pending and deactivated
+ * * %-1 - The timer callback function is running on a different CPU
+ */
+int try_to_del_timer_sync(timer_list_s *timer)
+{
+	return __try_to_del_timer_sync(timer, false);
+}
+EXPORT_SYMBOL(try_to_del_timer_sync);
+
+/**
+ * __timer_delete_sync - Internal function: Deactivate a timer and wait
+ *			 for the handler to finish.
+ * @timer:	The timer to be deactivated
+ * @shutdown:	If true, @timer->function will be set to NULL under the
+ *		timer base lock which prevents rearming of @timer
+ *
+ * If @shutdown is not set the timer can be rearmed later. If the timer can
+ * be rearmed concurrently, i.e. after dropping the base lock then the
+ * return value is meaningless.
+ *
+ * If @shutdown is set then @timer->function is set to NULL under timer
+ * base lock which prevents rearming of the timer. Any attempt to rearm
+ * a shutdown timer is silently ignored.
+ *
+ * If the timer should be reused after shutdown it has to be initialized
+ * again.
+ *
+ * Return:
+ * * %0	- The timer was not pending
+ * * %1	- The timer was pending and deactivated
+ */
+static int
+__timer_delete_sync(timer_list_s *timer, bool shutdown) {
+	int ret;
+
+	// /*
+	//  * don't use it in hardirq context, because it
+	//  * could lead to deadlock.
+	//  */
+	// WARN_ON(in_hardirq() && !(timer->flags & TIMER_IRQSAFE));
+
+	// /*
+	//  * Must be able to sleep on PREEMPT_RT because of the slowpath in
+	//  * del_timer_wait_running().
+	//  */
+	// if (IS_ENABLED(CONFIG_PREEMPT_RT) && !(timer->flags & TIMER_IRQSAFE))
+	// 	lockdep_assert_preemption_enabled();
+
+	// do {
+	// 	ret = __try_to_del_timer_sync(timer, shutdown);
+
+	// 	if (unlikely(ret < 0)) {
+	// 		del_timer_wait_running(timer);
+	// 		cpu_relax();
+	// 	}
+	// } while (ret < 0);
+
+	return ret;
+}
+
+/**
+ * timer_delete_sync - Deactivate a timer and wait for the handler to finish.
+ * @timer:	The timer to be deactivated
+ *
+ * Synchronization rules: Callers must prevent restarting of the timer,
+ * otherwise this function is meaningless. It must not be called from
+ * interrupt contexts unless the timer is an irqsafe one. The caller must
+ * not hold locks which would prevent completion of the timer's callback
+ * function. The timer's handler must not call add_timer_on(). Upon exit
+ * the timer is not queued and the handler is not running on any CPU.
+ *
+ * For !irqsafe timers, the caller must not hold locks that are held in
+ * interrupt context. Even if the lock has nothing to do with the timer in
+ * question.  Here's why::
+ *
+ *    CPU0                             CPU1
+ *    ----                             ----
+ *                                     <SOFTIRQ>
+ *                                       call_timer_fn();
+ *                                       base->running_timer = mytimer;
+ *    spin_lock_irq(somelock);
+ *                                     <IRQ>
+ *                                        spin_lock(somelock);
+ *    timer_delete_sync(mytimer);
+ *    while (base->running_timer == mytimer);
+ *
+ * Now timer_delete_sync() will never return and never release somelock.
+ * The interrupt on the other CPU is waiting to grab somelock but it has
+ * interrupted the softirq that CPU0 is waiting to finish.
+ *
+ * This function cannot guarantee that the timer is not rearmed again by
+ * some concurrent or preempting code, right after it dropped the base
+ * lock. If there is the possibility of a concurrent rearm then the return
+ * value of the function is meaningless.
+ *
+ * If such a guarantee is needed, e.g. for teardown situations then use
+ * timer_shutdown_sync() instead.
+ *
+ * Return:
+ * * %0	- The timer was not pending
+ * * %1	- The timer was pending and deactivated
+ */
+int timer_delete_sync(timer_list_s *timer)
+{
+	return __timer_delete_sync(timer, false);
+}
+EXPORT_SYMBOL(timer_delete_sync);
+
+
+
 /**
  * init_timer_key - initialize a timer
  * @timer: the timer to be initialized
@@ -231,12 +665,10 @@ long __sched schedule_timeout(long timeout)
 	timer_setup_on_stack(&timer.timer, process_timeout, 0);
 	// __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
 	// schedule();
-	// del_singleshot_timer_sync(&timer.timer);
+	del_timer_sync(&timer.timer);
 
 	/* Remove the timer from the object tracker */
 	destroy_timer_on_stack(&timer.timer);
-
-	timeout = expire - jiffies;
 
  out:
 	return timeout < 0 ? 0 : timeout;

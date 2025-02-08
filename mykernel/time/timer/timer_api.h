@@ -14,5 +14,7 @@
 	/* hrtimer */
 	ktime_t ktime_add_safe(const ktime_t lhs, const ktime_t rhs);
 	
+	int try_to_del_timer_sync(timer_list_s *timer);
+	int timer_delete_sync(timer_list_s *timer);
 
 #endif /* _LINUX_TIMER_API_H_ */
