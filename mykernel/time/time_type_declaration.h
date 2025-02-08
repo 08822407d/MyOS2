@@ -30,6 +30,10 @@
 	typedef struct timekeeper timekeeper_s;
 
 	/* timer */
+	struct timer_base;
+	typedef struct timer_base timer_base_s;
+	struct timer_list;
+	typedef struct timer_list timer_list_s;
 	struct k_clock;
 	typedef struct k_clock k_clock_s;
 

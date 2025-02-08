@@ -19,6 +19,7 @@
  
 	#include <linux/compiler/myos_debug_option.h>
 
+	#include "../lock_ipc_const.h"
 	#include "../lock_ipc_types.h"
 	#include "../lock_ipc_api.h"
 

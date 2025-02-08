@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
-#ifndef _LINUX_REFCOUNT_TYPES_H
-#define _LINUX_REFCOUNT_TYPES_H
+#ifndef _LINUX_REFCOUNT_TYPES_H_
+#define _LINUX_REFCOUNT_TYPES_H_
 
 	#include "../lock_ipc_type_declaration.h"
 
@@ -15,6 +15,5 @@
 	struct refcount_struct {
 		atomic_t refs;
 	};
-	typedef struct refcount_struct refcount_t;
 
-#endif /* _LINUX_REFCOUNT_TYPES_H */
+#endif /* _LINUX_REFCOUNT_TYPES_H_ */

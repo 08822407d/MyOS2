@@ -6,6 +6,7 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 	#include <asm/processor.h>
+	#include <processor/processor_arch_api.h>
 
 	#include "x86msr.h"
 

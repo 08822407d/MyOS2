@@ -3,9 +3,7 @@
 #  error "Please do not build this file directly, build asm-offsets.c instead"
 #endif
 
-#include <linux/kernel/ptrace.h>
-
-// #include <asm/ia32.h>
+#include <asm/ptrace.h>
 
 // #if defined(CONFIG_KVM_GUEST)
 // #include <asm/kvm_para.h>

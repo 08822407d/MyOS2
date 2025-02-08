@@ -7,7 +7,6 @@
 	#include "preempt_const_arch.h"
 
 	#include <linux/kernel/cache.h>
-	// #include <asm/rmwcc.h>
 	#include <asm/insns.h>
 	#include <asm/processor.h>
 

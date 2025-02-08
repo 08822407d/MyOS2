@@ -6,7 +6,7 @@
 	#include "desc_arch.h"
 
 	extern struct desc_ptr idt_descr;
-	extern unsigned long system_vectors[];
+	extern ulong system_vectors[];
 
 
 	#define load_tr(tr)			asm volatile("ltr %0"::"m" (tr))
@@ -25,21 +25,21 @@
 				(((limit) & _AC(0x0000ffff,ULL)))				\
 			)
 
-	#  define GDT_ENTRY_INIT(flags, base, limit)	{		\
-					.limit0		= (u16) (limit),			\
-					.limit1		= ((limit) >> 16) & 0x0F,	\
-					.base0		= (u16) (base),				\
-					.base1		= ((base) >> 16) & 0xFF,	\
-					.base2		= ((base) >> 24) & 0xFF,	\
-					.type		= (flags & 0x0f),			\
-					.s			= (flags >> 4) & 0x01,		\
-					.dpl		= (flags >> 5) & 0x03,		\
-					.p			= (flags >> 7) & 0x01,		\
-					.avl		= (flags >> 12) & 0x01,		\
-					.l			= (flags >> 13) & 0x01,		\
-					.d			= (flags >> 14) & 0x01,		\
-					.g			= (flags >> 15) & 0x01,		\
-				}
+	#define GDT_ENTRY_INIT(flags, base, limit)	{		\
+				.limit0		= (u16) (limit),			\
+				.limit1		= ((limit) >> 16) & 0x0F,	\
+				.base0		= (u16) (base),				\
+				.base1		= ((base) >> 16) & 0xFF,	\
+				.base2		= ((base) >> 24) & 0xFF,	\
+				.type		= (flags & 0x0f),			\
+				.s			= (flags >> 4) & 0x01,		\
+				.dpl		= (flags >> 5) & 0x03,		\
+				.p			= (flags >> 7) & 0x01,		\
+				.avl		= (flags >> 12) & 0x01,		\
+				.l			= (flags >> 13) & 0x01,		\
+				.d			= (flags >> 14) & 0x01,		\
+				.g			= (flags >> 15) & 0x01,		\
+			}
 
 	/*
 	 * Load a segment. Fall back on loading the zero segment if something goes

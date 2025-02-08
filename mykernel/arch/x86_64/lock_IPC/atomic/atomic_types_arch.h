@@ -1,5 +1,5 @@
-#ifndef _ATOMIC_TYPES_H_
-#define _ATOMIC_TYPES_H_
+#ifndef _ASM_X86_ATOMIC_TYPES_H_
+#define _ASM_X86_ATOMIC_TYPES_H_
 
 	#include "../lock_ipc_type_declaration_arch.h"
 
@@ -12,4 +12,4 @@
 		s64		counter;
 	};
 
-#endif /* _ATOMIC_TYPES_H_ */
+#endif /* _ASM_X86_ATOMIC_TYPES_H_ */

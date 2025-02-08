@@ -408,7 +408,12 @@
         "systick.h": "c",
         "systick_macro.h": "c",
         "time_misc.h": "c",
-        "ktime_macro.h": "c"
+        "ktime_macro.h": "c",
+        "spinlock_smp_macro_arch.h": "c",
+        "asm.h": "c",
+        "refcount_macro.h": "c",
+        "pid_const.h": "c",
+        "processor_type_declaration_arch.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

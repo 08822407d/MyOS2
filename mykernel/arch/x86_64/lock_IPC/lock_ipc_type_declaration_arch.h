@@ -6,6 +6,7 @@
 
 	#include <linux/kernel/types.h>
 	#include <uapi/asm-generic/signal.h>
+	#include <uapi/asm-generic/siginfo.h>
 
 
 	/* arch atomic */
@@ -23,10 +24,10 @@
 	/* arch signal */
 	struct sigcontext_64;
 	typedef struct sigcontext_64 sigctx_64_s;
-	struct rt_sigframe;
-	typedef struct rt_sigframe rt_sigframe_s;
 	struct sigaltstack;
 	typedef struct sigaltstack stack_t;
+	struct rt_sigframe;
+	typedef struct rt_sigframe rt_sigframe_s;
 
 	/*
 	 * Create the real 'struct sigcontext' type:
@@ -38,5 +39,6 @@
 	#  define sigcontext	sigcontext_64
 	#  define sigctx_s		sigctx_64_s
 	#endif
+
 
 #endif /* _ASM_X86_LOCK_IPC_TYPE_DECLARATIONS_H_ */

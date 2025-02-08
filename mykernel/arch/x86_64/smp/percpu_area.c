@@ -4,6 +4,7 @@
 #include <linux/kernel/sched.h>
 #include <linux/kernel/kactive.h>
 #include <linux/kernel/lib.h>
+#include <linux/kernel/time.h>
 #include <asm/insns.h>
 
 #include <obsolete/glo.h>
@@ -16,6 +17,8 @@ DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {
 };
 
 DEFINE_PER_CPU(task_s *, idle_threads);
+
+DEFINE_PER_CPU(timer_base_s, timer_bases[NR_BASES]);
 
 DEFINE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
 

@@ -1,11 +1,10 @@
 #include <linux/kernel/kbuild.h>
-// #include <linux/kernel/ptrace.h>
-#include <sched/task/task_types.h>
-#include <asm/processor.h>
 #include <asm-generic/sections.h>
 
-# include "asm-offsets_64.c"
+#include <linux/kernel/sched_types.h>
 
+
+# include "asm-offsets_64.c"
 
 static void __used common(void)
 {

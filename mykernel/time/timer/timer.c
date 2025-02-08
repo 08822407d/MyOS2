@@ -25,7 +25,24 @@
 #include <linux/kernel/sched_api.h>
 
 
+/*
+ * Since schedule_timeout()'s timer is defined on the stack, it must store
+ * the target task on the stack as well.
+ */
+typedef struct process_timer {
+	timer_list_s	timer;
+	task_s			*task;
+} proc_timer_s;
+
+
 __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
+
+
+static void
+process_timeout(timer_list_s *t) {
+	proc_timer_s *timeout = from_timer(timeout, t, timer);
+	wake_up_process(timeout->task);
+}
 
 /*
  * The timer wheel has LVL_DEPTH array levels. Each level provides an array of
@@ -116,6 +133,29 @@ __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
  */
 
 
+/**
+ * init_timer_key - initialize a timer
+ * @timer: the timer to be initialized
+ * @func: timer callback function
+ * @flags: timer flags
+ * @name: name of the timer
+ * @key: lockdep class key of the fake lock used for tracking timer
+ *       sync lock dependencies
+ *
+ * init_timer_key() must be done to a timer prior to calling *any* of the
+ * other timer functions.
+ */
+void simple_init_timer_key(timer_list_s *timer,
+		void (*func)(timer_list_s *), uint flags)
+{
+	timer->entry.pprev = NULL;
+	timer->function = func;
+	if (WARN_ON_ONCE(flags & ~TIMER_INIT_FLAGS))
+		flags &= TIMER_INIT_FLAGS;
+	timer->flags = flags | raw_smp_processor_id();
+	// lockdep_init_map(&timer->lockdep_map, name, key, 0);
+}
+
 
 
 
@@ -153,7 +193,7 @@ __visible u64 jiffies_64 __cacheline_aligned_in_smp = INITIAL_JIFFIES;
  */
 long __sched schedule_timeout(long timeout)
 {
-	// struct process_timer timer;
+	proc_timer_s timer;
 	ulong expire;
 
 	switch (timeout)
@@ -187,14 +227,14 @@ long __sched schedule_timeout(long timeout)
 
 	expire = timeout + jiffies;
 
-	// timer.task = current;
-	// timer_setup_on_stack(&timer.timer, process_timeout, 0);
+	timer.task = current;
+	timer_setup_on_stack(&timer.timer, process_timeout, 0);
 	// __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
 	// schedule();
 	// del_singleshot_timer_sync(&timer.timer);
 
-	// /* Remove the timer from the object tracker */
-	// destroy_timer_on_stack(&timer.timer);
+	/* Remove the timer from the object tracker */
+	destroy_timer_on_stack(&timer.timer);
 
 	timeout = expire - jiffies;
 

@@ -8,6 +8,7 @@
 	#include <asm/mm_const.h>
 
 	#include "processor_const_arch.h"
+	#include "processor_type_declaration_arch.h"
 
 
 	/*
@@ -16,7 +17,7 @@
 	 *  before touching them. [mj]
 	 */
 
-	typedef struct cpuinfo_x86 {
+	struct cpuinfo_x86 {
 		__u8	x86_family;		/* CPU family */
 		__u8	x86_vendor;		/* CPU vendor */
 		__u8	x86_model;
@@ -83,11 +84,11 @@
 		/* Address space bits used by the cache internally */
 		u8		x86_cache_bits;
 		uint	initialized : 1;
-	} cpuinfo_x86_s;
+	};
 
-	typedef struct cpuid_regs {
+	struct cpuid_regs {
 		u32 eax, ebx, ecx, edx;
-	} cpuid_regs_s;
+	};
 
 	enum cpuid_regs_idx {
 		CPUID_EAX = 0,
@@ -101,34 +102,33 @@
 	 * on modern x86 CPUs the TSS also holds information important to 64-bit mode,
 	 * unrelated to the task-switch mechanism:
 	 */
-	typedef struct x86_hw_tss {
-		u32 reserved1;
-		u64 sp0;
-		u64 sp1;
+	struct x86_hw_tss {
+		u32		reserved1;
+		u64		sp0;
+		u64		sp1;
 
 		/*
 		 * Since Linux does not use ring 2, the 'sp2' slot is unused by
 		 * hardware.  entry_SYSCALL_64 uses it as scratch space to stash
 		 * the user RSP value.
 		 */
-		u64 sp2;
+		u64		sp2;
 
-		u64 reserved2;
-		u64 ist[7];
-		u32 reserved3;
-		u32 reserved4;
-		u16 reserved5;
-		u16 io_bitmap_base;
+		u64		reserved2;
+		u64		ist[7];
+		u32		reserved3;
+		u32		reserved4;
+		u16		reserved5;
+		u16		io_bitmap_base;
 
-	} __attribute__((packed)) x86_hw_tss_s;
+	} __attribute__((packed));
 
 	/*
 	 * All IO bitmap related data stored in the TSS:
 	 */
-	typedef struct x86_io_bitmap
-	{
+	struct x86_io_bitmap {
 		/* The sequence number of the last active bitmap. */
-		u64 prev_sequence;
+		u64		prev_sequence;
 
 		/*
 		 * Store the dirty size of the last io bitmap offender. The next
@@ -137,7 +137,7 @@
 		 * outside of the TSS limit. So for sane tasks there is no need to
 		 * actually touch the io_bitmap at all.
 		 */
-		unsigned int prev_max;
+		uint	prev_max;
 
 		/*
 		 * The extra 1 is there because the CPU will access an
@@ -145,14 +145,14 @@
 		 * bitmap. The extra byte must be all 1 bits, and must
 		 * be within the limit.
 		 */
-		unsigned long bitmap[IO_BITMAP_LONGS + 1];
+		ulong	bitmap[IO_BITMAP_LONGS + 1];
 
 		/*
 		 * Special I/O bitmap to emulate IOPL(3). All bytes zero,
 		 * except the additional byte at the end.
 		 */
-		unsigned long mapall[IO_BITMAP_LONGS + 1];
-	} x86_io_bitmap_s;
+		ulong	mapall[IO_BITMAP_LONGS + 1];
+	};
 
 	struct tss_struct {
 		/*
@@ -160,12 +160,12 @@
 		 * at risk of violating the SDM's advice and potentially triggering
 		 * errata.
 		 */
-		x86_hw_tss_s x86_tss;
+		x86_hw_tss_s	x86_tss;
 
-		x86_io_bitmap_s io_bitmap;
+		x86_io_bitmap_s	io_bitmap;
 	} __aligned(PAGE_SIZE);
 
-	typedef struct fixed_percpu_data {
+	struct fixed_percpu_data {
 		/*
 		 * GCC hardcodes the stack canary as %gs:40.  Since the
 		 * irq_stack is the object at %gs:0, we reserve the bottom
@@ -176,16 +176,16 @@
 		 */
 		char	gs_base[40];
 		ulong	stack_canary;
-	} fixed_pcpudata_s;
+	};
 
-	typedef struct thread_struct {
+	struct thread_struct {
 		/* Cached TLS descriptors: */
 		// desc_s tls_array[GDT_ENTRY_TLS_ENTRIES];
 		reg_t			sp;
-		unsigned short	es;
-		unsigned short	ds;
-		unsigned short	fsindex;
-		unsigned short	gsindex;
+		ushort			es;
+		ushort			ds;
+		ushort			fsindex;
+		ushort			gsindex;
 
 		reg_t			fsbase;
 		reg_t			gsbase;
@@ -198,8 +198,8 @@
 		// unsigned long ptrace_dr7;
 		/* Fault info: */
 		reg_t			cr2;
-		unsigned long	trap_nr;
-		unsigned long	error_code;
+		ulong			trap_nr;
+		ulong			error_code;
 
 		// /* IO permissions: */
 		// struct io_bitmap *io_bitmap;
@@ -229,6 +229,6 @@
 		 * WARNING: 'fpu' is dynamically-sized.  It *MUST* be at
 		 * the end.
 		 */
-	} thread_s;
+	};
 
 #endif /* _ASM_X86_PROCESSOR_CONST_H_ */

@@ -40,10 +40,10 @@
 	// 	__kernel_long_t	ru_nivcsw;	/* involuntary " */
 	// };
 
-	typedef struct rlimit {
+	struct rlimit {
 		__kernel_ulong_t	rlim_cur;
 		__kernel_ulong_t	rlim_max;
-	} rlimit_s;
+	};
 
 	#define RLIM64_INFINITY		(~0ULL)
 

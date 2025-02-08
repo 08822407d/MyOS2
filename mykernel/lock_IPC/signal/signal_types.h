@@ -3,8 +3,6 @@
 
 	#include "../lock_ipc_type_declaration.h"
 
-	#include "../atomic/refcount_types.h"
-
 
 	/*
 	 * The default "si_band" type is "long", as specified by POSIX.
@@ -25,10 +23,10 @@
 
 
 	struct kernel_siginfo {
-		int				si_signo;
-		int				si_errno;
-		int				si_code;
-		__sifields_u	_sifields;
+		int					si_signo;
+		int					si_errno;
+		int					si_code;
+		union __sifields	_sifields;
 	};
 
 	/*
@@ -36,9 +34,9 @@
 	 */
 
 	struct sigqueue {
-		List_s				list;
-		int					flags;
-		kernel_siginfo_t	info;
+		List_s					list;
+		int						flags;
+		struct kernel_siginfo	info;
 		// struct ucounts		*ucounts;
 	};
 
@@ -60,16 +58,16 @@
 	};
 
 	struct k_sigaction {
-		sigaction_s		sa;
+		struct sigaction	sa;
 	#ifdef __ARCH_HAS_KA_RESTORER
-		__sigrestore_t	ka_restorer;
+		__sigrestore_t		ka_restorer;
 	#endif
 	};
 
 	struct ksignal {
-		k_sigaction_s		ka;
-		kernel_siginfo_t	info;
-		int					sig;
+		struct k_sigaction		ka;
+		struct kernel_siginfo	info;
+		int						sig;
 	};
 
 	/*
@@ -80,18 +78,18 @@
 	 * the locking of signal_struct.
 	 */
 	struct signal_struct {
-		refcount_t		sigcnt;
+		struct refcount_struct	sigcnt;
 		// atomic_t		live;
-		int				nr_threads;
+		int					nr_threads;
 		// struct list_head	thread_head;
 
 		// wait_queue_head_t	wait_chldexit;	/* for wait4() */
 
 		/* current thread group signal load-balancing target: */
-		task_s			*curr_target;
+		task_s				*curr_target;
 
 		/* shared signal handling: */
-		sigpending_s	shared_pending;
+		sigpending_s		shared_pending;
 
 		/* For collecting multiprocess signals during fork */
 		// HList_hdr_s	multiprocess;
@@ -104,7 +102,7 @@
 
 		/* thread group stop support, overloads group_exit_code too */
 		// int			group_stop_count;
-		uint			flags; /* see SIGNAL_* flags below */
+		uint				flags; /* see SIGNAL_* flags below */
 
 		// struct core_state *core_state; /* coredumping support */
 
@@ -148,7 +146,7 @@
 		// struct posix_cputimers posix_cputimers;
 
 		/* PID/PID hash table linkage. */
-		pid_s			*pids[PIDTYPE_MAX];
+		struct pid			*pids[PIDTYPE_MAX];
 
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
@@ -198,7 +196,7 @@
 		 * protect this instead of the siglock, because they really
 		 * have no need to disable irqs.
 		 */
-		rlimit_s		rlim[RLIM_NLIMITS];
+		struct rlimit		rlim[RLIM_NLIMITS];
 
 	// #ifdef CONFIG_BSD_PROCESS_ACCT
 		// struct pacct_struct pacct;	/* per-process accounting information */
@@ -239,12 +237,11 @@
 	/*
 	* Types defining task->signal and task->sighand and APIs using them:
 	*/
-
 	struct sighand_struct {
-		spinlock_t		siglock;
-		refcount_t		count;
+		spinlock_t				siglock;
+		struct refcount_struct	count;
 		// wait_queue_head_t	signalfd_wqh;
-		k_sigaction_s	action[_NSIG];
+		struct k_sigaction		action[_NSIG];
 	};
 
 #endif /* _SIGNAL_TYPES_H_ */

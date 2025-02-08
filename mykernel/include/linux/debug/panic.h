@@ -8,6 +8,8 @@
 
 	struct pt_regs;
 	typedef struct pt_regs pt_regs_s;
+	struct atomic;
+	typedef struct atomic atomic_t;
 
 	extern long (*panic_blink)(int state);
 	__printf(1, 2)

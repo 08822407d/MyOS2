@@ -2,7 +2,6 @@
 #ifndef _ARCH_X86_PROCESSOR_H_
 #define _ARCH_X86_PROCESSOR_H_
 
-	#include <processor/processor_arch_api.h>
 	#include <processor/desc_arch_api.h>
 
 	#define INIT_THREAD {							\

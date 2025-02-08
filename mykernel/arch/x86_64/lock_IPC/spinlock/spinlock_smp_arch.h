@@ -4,6 +4,7 @@
 
 	#include <linux/compiler/myos_debug_option.h>
 
+	#include "../lock_ipc_cosnt_arch.h"
 	#include "../lock_ipc_types_arch.h"
 	#include "../lock_ipc_api_arch.h"
 

@@ -16,12 +16,4 @@
 		};
 	};
 
-	/*
-	 * Initializier
-	 */
-	#define	__ARCH_SPIN_LOCK_UNLOCKED	{	\
-				.head = 0U,					\
-				.tail = 0U,					\
-			}
-
 #endif /* _ASM_X86_SPINLOCK_TYPES_H_ */

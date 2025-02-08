@@ -4,4 +4,4 @@
 #define _ASM_X86_LOCK_IPC_CONST_H_
 
 
-#endif /* _ASM_X86_LOCK_IPC_H_ */
+#endif /* _ASM_X86_LOCK_IPC_CONST_H_ */
