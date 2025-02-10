@@ -6,8 +6,8 @@
 
 
 	struct list_head {
-		List_s *	next;
-		List_s *	prev;
+		List_s		*next;
+		List_s		*prev;
 	};
 
 	struct list_hdr {

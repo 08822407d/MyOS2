@@ -1,6 +1,7 @@
 #define CLOCKSOURCE_DEFINATION
 #include "clocksource.h"
 
+#include <linux/kernel/limits.h>
 
 /**
  * clocks_calc_mult_shift - calculate mult/shift factors for scaled math of clocks

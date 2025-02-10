@@ -1,1 +1,3 @@
 add_subdirectory(workqueue)
+add_subdirectory(completion)
+add_subdirectory(swait)

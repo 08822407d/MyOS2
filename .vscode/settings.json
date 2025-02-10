@@ -417,7 +417,11 @@
         "workqueue_types.h": "c",
         "completion_types.h": "c",
         "kactive.h": "c",
-        "completion_macro.h": "c"
+        "completion_macro.h": "c",
+        "swait_types.h": "c",
+        "completion_const.h": "c",
+        "swait_const.h": "c",
+        "workqueue_api.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

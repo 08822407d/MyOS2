@@ -1,3 +1,6 @@
+#define SWAIT_DEFINATION
+#include "swait.h"
+
 // SPDX-License-Identifier: GPL-2.0
 /*
  * <linux/swait.h> (simple wait queues ) implementation:

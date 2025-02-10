@@ -4,6 +4,12 @@
 	#include <linux/kernel/types.h>
 
 
+	/* swait */
+	struct swait_queue_head;
+	typedef struct swait_queue_head swqueue_hdr_s;
+	struct swait_queue;
+	typedef struct swait_queue swqueue_s;
+
 	/* completion */
 	struct completion;
 	typedef struct completion completion_s;
@@ -26,6 +32,5 @@
 
 	#include <linux/kernel/lib_type_declaration.h>
 	#include <linux/kernel/lock_ipc_type_declaration.h>
-	#include <linux/kernel/swait.h>
 
 #endif /* _KERNEL_ACTIVE_TYPE_DECLARATIONS_H_ */

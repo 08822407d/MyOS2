@@ -34,9 +34,9 @@
 	 */
 
 	struct sigqueue {
-		List_s					list;
-		int						flags;
-		struct kernel_siginfo	info;
+		List_s				list;
+		int					flags;
+		kernel_siginfo_t	info;
 		// struct ucounts		*ucounts;
 	};
 
@@ -58,16 +58,16 @@
 	};
 
 	struct k_sigaction {
-		struct sigaction	sa;
+		sigaction_s		sa;
 	#ifdef __ARCH_HAS_KA_RESTORER
-		__sigrestore_t		ka_restorer;
+		__sigrestore_t	ka_restorer;
 	#endif
 	};
 
 	struct ksignal {
-		struct k_sigaction		ka;
-		struct kernel_siginfo	info;
-		int						sig;
+		k_sigaction_s		ka;
+		kernel_siginfo_t	info;
+		int					sig;
 	};
 
 	/*
@@ -78,18 +78,18 @@
 	 * the locking of signal_struct.
 	 */
 	struct signal_struct {
-		struct refcount_struct	sigcnt;
+		refcount_t		sigcnt;
 		// atomic_t		live;
-		int					nr_threads;
+		int				nr_threads;
 		// struct list_head	thread_head;
 
 		// wait_queue_head_t	wait_chldexit;	/* for wait4() */
 
 		/* current thread group signal load-balancing target: */
-		task_s				*curr_target;
+		task_s			*curr_target;
 
 		/* shared signal handling: */
-		sigpending_s		shared_pending;
+		sigpending_s	shared_pending;
 
 		/* For collecting multiprocess signals during fork */
 		// HList_hdr_s	multiprocess;
@@ -102,7 +102,7 @@
 
 		/* thread group stop support, overloads group_exit_code too */
 		// int			group_stop_count;
-		uint				flags; /* see SIGNAL_* flags below */
+		uint			flags; /* see SIGNAL_* flags below */
 
 		// struct core_state *core_state; /* coredumping support */
 
@@ -146,7 +146,7 @@
 		// struct posix_cputimers posix_cputimers;
 
 		/* PID/PID hash table linkage. */
-		struct pid			*pids[PIDTYPE_MAX];
+		pid_s			*pids[PIDTYPE_MAX];
 
 	// #ifdef CONFIG_NO_HZ_FULL
 		// atomic_t tick_dep_mask;
@@ -196,7 +196,7 @@
 		 * protect this instead of the siglock, because they really
 		 * have no need to disable irqs.
 		 */
-		struct rlimit		rlim[RLIM_NLIMITS];
+		rlimit_s		rlim[RLIM_NLIMITS];
 
 	// #ifdef CONFIG_BSD_PROCESS_ACCT
 		// struct pacct_struct pacct;	/* per-process accounting information */
@@ -238,10 +238,10 @@
 	* Types defining task->signal and task->sighand and APIs using them:
 	*/
 	struct sighand_struct {
-		spinlock_t				siglock;
-		struct refcount_struct	count;
+		spinlock_t		siglock;
+		refcount_t		count;
 		// wait_queue_head_t	signalfd_wqh;
-		struct k_sigaction		action[_NSIG];
+		k_sigaction_s	action[_NSIG];
 	};
 
 #endif /* _SIGNAL_TYPES_H_ */

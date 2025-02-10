@@ -5,8 +5,9 @@
 
 	#include "kactive_type_declaration.h"
 
-    #include "workqueue/workqueue_api.h"
+    #include "swait/swait_api.h"
     #include "completion/completion_api.h"
+    #include "workqueue/workqueue_api.h"
 
     #include <linux/kernel/lock_ipc_api.h>
 

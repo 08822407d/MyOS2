@@ -36,18 +36,6 @@
 		} __attribute__((packed)) desc_s;
 
 
-		enum {
-			GATE_INTERRUPT	= 0xE,
-			GATE_TRAP		= 0xF,
-			GATE_CALL		= 0xC,
-			GATE_TASK		= 0x5,
-		};
-
-		enum {
-			DESC_TSS	= 0x9,
-			DESC_LDT	= 0x2,
-			DESCTYPE_S	= 0x10,	/* !system */
-		};
 
 		// Intel Manual Volume 3 Chapter 8: Task Management
 		/* LDT or TSS descriptor in the GDT. */

@@ -35,7 +35,7 @@
 	typedef struct k_clock k_clock_s;
 
 
-	#include <linux/kernel/lib_types.h>
+	#include <linux/kernel/lib_type_declaration.h>
 	#include <linux/kernel/lock_ipc_type_declaration.h>
 
 #endif /* _TIME_TYPE_DECLARATION_H_ */

@@ -5,7 +5,7 @@
 	#include "../mm_type_declaration.h"
 
 	struct pgflag_defs {
-		unsigned long
+		ulong
 			PG_locked		:1,
 			PG_writeback	:1,
 			PG_referenced	:1,

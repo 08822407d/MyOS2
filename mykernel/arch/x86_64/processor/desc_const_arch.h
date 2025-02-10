@@ -7,6 +7,24 @@
 
 #include <asm/mm_const.h>
 
+	#ifndef __ASSEMBLY__
+
+		enum {
+			GATE_INTERRUPT	= 0xE,
+			GATE_TRAP		= 0xF,
+			GATE_CALL		= 0xC,
+			GATE_TASK		= 0x5,
+		};
+
+		enum {
+			DESC_TSS	= 0x9,
+			DESC_LDT	= 0x2,
+			DESCTYPE_S	= 0x10,	/* !system */
+		};
+	
+	#endif /* !__ASSEMBLY__ */
+
+
 	/* Boot IDT definitions */
 	#define	BOOT_IDT_ENTRIES		32
 
@@ -65,12 +83,12 @@
 	/* User mode is privilege level 3: */
 	#define USER_RPL				0x3
 
-	// /* Bit 2 is Table Indicator (TI): selects between LDT or GDT */
-	// #define SEGMENT_TI_MASK					0x4
-	// /* LDT segment has TI set ... */
-	// #define SEGMENT_LDT						0x4
-	// /* ... GDT has it cleared */
-	// #define SEGMENT_GDT						0x0
+	/* Bit 2 is Table Indicator (TI): selects between LDT or GDT */
+	#define SEGMENT_TI_MASK			0x4
+	/* LDT segment has TI set ... */
+	#define SEGMENT_LDT				0x4
+	/* ... GDT has it cleared */
+	#define SEGMENT_GDT				0x0
 
 	#define GDT_ENTRY_INVALID_SEG	0
 
@@ -84,9 +102,9 @@
 	#  define GDT_ENTRY_DEFAULT_USER_CS_DUP		5
 	#  define GDT_ENTRY_DEFAULT_USER_DS_DUP		6
 	#else
-	# define GDT_ENTRY_KERNEL32_CS				1
-	# define GDT_ENTRY_KERNEL_CS				2
-	# define GDT_ENTRY_KERNEL_DS				3
+	#  define GDT_ENTRY_KERNEL32_CS				1
+	#  define GDT_ENTRY_KERNEL_CS				2
+	#  define GDT_ENTRY_KERNEL_DS				3
 	/*
 	 * We cannot use the same code segment descriptor for user and kernel mode,
 	 * not even in long flat mode, because of different DPL.
@@ -122,12 +140,12 @@
 	#define GDT_ENTRIES				16
 
 	#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-	#  define __KERNEL_CS		(GDT_ENTRY_KERNEL_CS * 8)
-	#  define __KERNEL_DS		(GDT_ENTRY_KERNEL_DS * 8)
-	#  define __USER_DS			(GDT_ENTRY_DEFAULT_USER_DS * 8 + 3)
-	#  define __USER_CS			(GDT_ENTRY_DEFAULT_USER_CS * 8 + 3)
-	#  define __USER_CS_DUP		(GDT_ENTRY_DEFAULT_USER_CS_DUP * 8 + 3)
-	#  define __USER_DS_DUP		(GDT_ENTRY_DEFAULT_USER_DS_DUP * 8 + 3)
+	#  define __KERNEL_CS			(GDT_ENTRY_KERNEL_CS * 8)
+	#  define __KERNEL_DS			(GDT_ENTRY_KERNEL_DS * 8)
+	#  define __USER_DS				(GDT_ENTRY_DEFAULT_USER_DS * 8 + 3)
+	#  define __USER_CS				(GDT_ENTRY_DEFAULT_USER_CS * 8 + 3)
+	#  define __USER_CS_DUP			(GDT_ENTRY_DEFAULT_USER_CS_DUP * 8 + 3)
+	#  define __USER_DS_DUP			(GDT_ENTRY_DEFAULT_USER_DS_DUP * 8 + 3)
 	#else
 	/*
 	 * Segment selector values corresponding to the above entries:
@@ -135,22 +153,21 @@
 	 * Note, selectors also need to have a correct RPL,
 	 * expressed with the +3 value for user-space selectors:
 	 */
-	#  define __KERNEL32_CS		(GDT_ENTRY_KERNEL32_CS * 8)
-	#  define __KERNEL_CS		(GDT_ENTRY_KERNEL_CS * 8)
-	#  define __KERNEL_DS		(GDT_ENTRY_KERNEL_DS * 8)
-	#  define __USER32_CS		(GDT_ENTRY_DEFAULT_USER32_CS * 8 + 3)
-	#  define __USER_DS			(GDT_ENTRY_DEFAULT_USER_DS * 8 + 3)
-	#  define __USER32_DS		__USER_DS
-	#  define __USER_CS			(GDT_ENTRY_DEFAULT_USER_CS * 8 + 3)
-	#  define __CPUNODE_SEG		(GDT_ENTRY_CPUNODE * 8 + 3)
+	#  define __KERNEL32_CS			(GDT_ENTRY_KERNEL32_CS * 8)
+	#  define __KERNEL_CS			(GDT_ENTRY_KERNEL_CS * 8)
+	#  define __KERNEL_DS			(GDT_ENTRY_KERNEL_DS * 8)
+	#  define __USER32_CS			(GDT_ENTRY_DEFAULT_USER32_CS * 8 + 3)
+	#  define __USER_DS				(GDT_ENTRY_DEFAULT_USER_DS * 8 + 3)
+	#  define __USER32_DS			__USER_DS
+	#  define __USER_CS				(GDT_ENTRY_DEFAULT_USER_CS * 8 + 3)
+	#  define __CPUNODE_SEG			(GDT_ENTRY_CPUNODE * 8 + 3)
 	#endif
-	#define __TSS_SEG			(GDT_ENTRY_TSS * 8)
+	#define __TSS_SEG				(GDT_ENTRY_TSS * 8)
 
 	#define IDT_ENTRIES				256
 	#define NUM_EXCEPTION_VECTORS	32
 
 	/* Bitmask of exception vectors which push an error code on the stack: */
-	#define EXCEPTION_ERRCODE_MASK		0x20027d00
 	// /*
 	//  * According to Intel Manual Volume 3 - June 2023
 	//  * CHAPTER 6 : NTERRUPT AND EXCEPTION HANDLING - 6.15
@@ -165,6 +182,7 @@
 	// 			(1 << X86_TRAP_AC)	|	\
 	// 			(1 << X86_TRAP_CP)	|	\
 	// 		)
+	#define EXCEPTION_ERRCODE_MASK	0x20027d00
 
 	#define GDT_SIZE				(GDT_ENTRIES * 8)
 	#define GDT_ENTRY_TLS_ENTRIES	3

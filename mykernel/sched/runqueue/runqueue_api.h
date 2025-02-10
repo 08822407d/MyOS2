@@ -3,7 +3,6 @@
 #define _LINUX_RUNQUEUE_API_H_
 
 	#include <linux/kernel/linkage.h>
-	#include <linux/kernel/swait.h>
 	#include "runqueue.h"
 
 

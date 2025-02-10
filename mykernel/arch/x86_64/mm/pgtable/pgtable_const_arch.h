@@ -2,6 +2,19 @@
 #ifndef _ASM_X86_PGTABLE_CONST_H_
 #define _ASM_X86_PGTABLE_CONST_H_
 
+	#ifndef __ASSEMBLY__
+
+		enum pg_level {
+			PG_LEVEL_NONE,
+			PG_LEVEL_4K,
+			PG_LEVEL_2M,
+			PG_LEVEL_1G,
+			PG_LEVEL_512G,
+			PG_LEVEL_NUM
+		};
+
+	#endif /* !__ASSEMBLY__ */
+
 
 	#define _PAGE_BIT_PRESENT			0	/* is present */
 	#define _PAGE_BIT_RW				1	/* writeable */

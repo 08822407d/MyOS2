@@ -6,21 +6,63 @@
 #ifndef _ASM_E820_CONST_H_
 #define _ASM_E820_CONST_H_
 
+	#ifndef __ASSEMBLY__
+
+		/*
+		 * These are the E820 types known to the kernel:
+		 */
+		enum e820_type {
+			E820_TYPE_RAM		= 1,
+			E820_TYPE_RESERVED	= 2,
+			E820_TYPE_ACPI		= 3,
+			E820_TYPE_NVS		= 4,
+			E820_TYPE_UNUSABLE	= 5,
+			E820_TYPE_PMEM		= 7,
+
+			/*
+			 * This is a non-standardized way to represent ADR or
+			 * NVDIMM regions that persist over a reboot.
+			 *
+			 * The kernel will ignore their special capabilities
+			 * unless the CONFIG_X86_PMEM_LEGACY=y option is set.
+			 *
+			 * ( Note that older platforms also used 6 for the same
+			 *   type of memory, but newer versions switched to 12 as
+			 *   6 was assigned differently. Some time they will learn... )
+			 */
+			E820_TYPE_PRAM		= 12,
+
+			/*
+			 * Special-purpose memory is indicated to the system via the
+			 * EFI_MEMORY_SP attribute. Define an e820 translation of this
+			 * memory type for the purpose of reserving this range and
+			 * marking it with the IORES_DESC_SOFT_RESERVED designation.
+			 */
+			E820_TYPE_SOFT_RESERVED	= 0xefffffff,
+
+			/*
+			 * Reserved RAM used by the kernel itself if
+			 * CONFIG_INTEL_TXT=y is enabled, memory of this type
+			 * will be included in the S3 integrity calculation
+			 * and so should not include any memory that the BIOS
+			 * might alter over the S3 transition:
+			 */
+			E820_TYPE_RESERVED_KERN	= 128,
+		};
+	
+	#endif /* !__ASSEMBLY__ */
+
 
 	/*
 	 * Various well-known legacy memory ranges in physical memory:
 	 */
 	#define ISA_START_ADDRESS	0x000a0000
 	#define ISA_END_ADDRESS		0x00100000
-
 	#define BIOS_BEGIN			0x000a0000
 	#define BIOS_END			0x00100000
-
 	#define HIGH_MEMORY			0x00100000
-
 	#define BIOS_ROM_BASE		0xffe00000
 	#define BIOS_ROM_END		0xffffffff
-
 
 	/*
 	 * The legacy E820 BIOS limits us to 128 (E820_MAX_ENTRIES_ZEROPAGE) nodes
