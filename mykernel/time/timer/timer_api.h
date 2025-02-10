@@ -5,6 +5,10 @@
 	#include "timer.h"
 	#include "hrtimer.h"
 
+
+	extern timer_base_s timer_bases[NR_BASES];
+
+
 	const k_clock_s *clockid_to_kclock(const clockid_t id);
 
 	/* timer */

@@ -48,6 +48,11 @@
 		extern unsigned int
 		cpuid_edx(unsigned int op);
 
+		extern void
+		rep_nop(void);
+		extern void
+		cpu_relax(void);
+
 	#endif
 
 	#if defined(ARCH_PROCESSOR_DEFINATION) || !(DEBUG)
@@ -202,6 +207,23 @@
 			unsigned int eax, ebx, ecx, edx;
 			cpuid(op, &eax, &ebx, &ecx, &edx);
 			return edx;
+		}
+
+
+		/* REP NOP (PAUSE) is a good thing to insert into busy-wait loops. */
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		rep_nop(void) {
+			asm volatile(	"rep; nop"
+						:
+						:
+						:	"memory");
+		}
+
+		PREFIX_STATIC_AWLWAYS_INLINE
+		void
+		cpu_relax(void) {
+			rep_nop();
 		}
 
 	#endif

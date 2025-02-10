@@ -421,7 +421,8 @@
         "swait_types.h": "c",
         "completion_const.h": "c",
         "swait_const.h": "c",
-        "workqueue_api.h": "c"
+        "workqueue_api.h": "c",
+        "hrtimer.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

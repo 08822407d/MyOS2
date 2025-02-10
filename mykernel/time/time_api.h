@@ -7,6 +7,8 @@
 	#include <linux/kernel/bits.h>
 	#include <linux/debug/bug.h>
 	#include <linux/kernel/lib_api.h>
+	#include <linux/kernel/typecheck.h>
+	#include <asm/percpu.h>
 
 
 	#include "time_type_declaration.h"

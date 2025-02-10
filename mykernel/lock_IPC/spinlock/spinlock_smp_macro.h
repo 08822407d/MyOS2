@@ -190,4 +190,7 @@
 	#define spin_unlock_irq_no_resched(lock)	\
 				raw_spin_unlock_irq_no_resched(lock)
 
+	#define spin_unlock_irqrestore_no_resched(lock, flags)	\
+				raw_spin_unlock_irqrestore_no_resched(lock, &flags)
+
 #endif /* _LINUX_SPINLOCK_SMP_MACRO_H_ */

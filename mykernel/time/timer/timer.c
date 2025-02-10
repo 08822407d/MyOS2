@@ -44,93 +44,84 @@ process_timeout(timer_list_s *t) {
 	wake_up_process(timeout->task);
 }
 
+static int
+calc_wheel_index(ulong expires,
+		ulong clk, ulong *bucket_expiry) {
+
+	ulong delta = expires - clk;
+	uint idx;
+
+	if (delta < LVL_START(1)) {
+		idx = calc_index(expires, 0, bucket_expiry);
+	} else if (delta < LVL_START(2)) {
+		idx = calc_index(expires, 1, bucket_expiry);
+	} else if (delta < LVL_START(3)) {
+		idx = calc_index(expires, 2, bucket_expiry);
+	} else if (delta < LVL_START(4)) {
+		idx = calc_index(expires, 3, bucket_expiry);
+	} else if (delta < LVL_START(5)) {
+		idx = calc_index(expires, 4, bucket_expiry);
+	} else if (delta < LVL_START(6)) {
+		idx = calc_index(expires, 5, bucket_expiry);
+	} else if (delta < LVL_START(7)) {
+		idx = calc_index(expires, 6, bucket_expiry);
+	} else if (LVL_DEPTH > 8 && delta < LVL_START(8)) {
+		idx = calc_index(expires, 7, bucket_expiry);
+	} else if ((long) delta < 0) {
+		idx = clk & LVL_MASK;
+		*bucket_expiry = clk;
+	} else {
+		/*
+		 * Force expire obscene large timeouts to expire at the
+		 * capacity limit of the wheel.
+		 */
+		if (delta >= WHEEL_TIMEOUT_CUTOFF)
+			expires = clk + WHEEL_TIMEOUT_MAX;
+
+		idx = calc_index(expires, LVL_DEPTH - 1, bucket_expiry);
+	}
+	return idx;
+}
+
+
 /*
- * The timer wheel has LVL_DEPTH array levels. Each level provides an array of
- * LVL_SIZE buckets. Each level is driven by its own clock and therefor each
- * level has a different granularity.
+ * We are using hashed locking: Holding per_cpu(timer_bases[x]).lock means
+ * that all timers which are tied to this base are locked, and the base itself
+ * is locked too.
  *
- * The level granularity is:		LVL_CLK_DIV ^ lvl
- * The level clock frequency is:	HZ / (LVL_CLK_DIV ^ level)
+ * So __run_timers/migrate_timers can safely modify all timers which could
+ * be found in the base->vectors array.
  *
- * The array level of a newly armed timer depends on the relative expiry
- * time. The farther the expiry time is away the higher the array level and
- * therefor the granularity becomes.
- *
- * Contrary to the original timer wheel implementation, which aims for 'exact'
- * expiry of the timers, this implementation removes the need for recascading
- * the timers into the lower array levels. The previous 'classic' timer wheel
- * implementation of the kernel already violated the 'exact' expiry by adding
- * slack to the expiry time to provide batched expiration. The granularity
- * levels provide implicit batching.
- *
- * This is an optimization of the original timer wheel implementation for the
- * majority of the timer wheel use cases: timeouts. The vast majority of
- * timeout timers (networking, disk I/O ...) are canceled before expiry. If
- * the timeout expires it indicates that normal operation is disturbed, so it
- * does not matter much whether the timeout comes with a slight delay.
- *
- * The only exception to this are networking timers with a small expiry
- * time. They rely on the granularity. Those fit into the first wheel level,
- * which has HZ granularity.
- *
- * We don't have cascading anymore. timers with a expiry time above the
- * capacity of the last wheel level are force expired at the maximum timeout
- * value of the last wheel level. From data sampling we know that the maximum
- * value observed is 5 days (network connection tracking), so this should not
- * be an issue.
- *
- * The currently chosen array constants values are a good compromise between
- * array size and granularity.
- *
- * This results in the following granularity and range levels:
- *
- * HZ 1000 steps
- * Level Offset  Granularity            Range
- *  0      0         1 ms                0 ms -         63 ms
- *  1     64         8 ms               64 ms -        511 ms
- *  2    128        64 ms              512 ms -       4095 ms (512ms - ~4s)
- *  3    192       512 ms             4096 ms -      32767 ms (~4s - ~32s)
- *  4    256      4096 ms (~4s)      32768 ms -     262143 ms (~32s - ~4m)
- *  5    320     32768 ms (~32s)    262144 ms -    2097151 ms (~4m - ~34m)
- *  6    384    262144 ms (~4m)    2097152 ms -   16777215 ms (~34m - ~4h)
- *  7    448   2097152 ms (~34m)  16777216 ms -  134217727 ms (~4h - ~1d)
- *  8    512  16777216 ms (~4h)  134217728 ms - 1073741822 ms (~1d - ~12d)
- *
- * HZ  300
- * Level Offset  Granularity            Range
- *  0	   0         3 ms                0 ms -        210 ms
- *  1	  64        26 ms              213 ms -       1703 ms (213ms - ~1s)
- *  2	 128       213 ms             1706 ms -      13650 ms (~1s - ~13s)
- *  3	 192      1706 ms (~1s)      13653 ms -     109223 ms (~13s - ~1m)
- *  4	 256     13653 ms (~13s)    109226 ms -     873810 ms (~1m - ~14m)
- *  5	 320    109226 ms (~1m)     873813 ms -    6990503 ms (~14m - ~1h)
- *  6	 384    873813 ms (~14m)   6990506 ms -   55924050 ms (~1h - ~15h)
- *  7	 448   6990506 ms (~1h)   55924053 ms -  447392423 ms (~15h - ~5d)
- *  8    512  55924053 ms (~15h) 447392426 ms - 3579139406 ms (~5d - ~41d)
- *
- * HZ  250
- * Level Offset  Granularity            Range
- *  0	   0         4 ms                0 ms -        255 ms
- *  1	  64        32 ms              256 ms -       2047 ms (256ms - ~2s)
- *  2	 128       256 ms             2048 ms -      16383 ms (~2s - ~16s)
- *  3	 192      2048 ms (~2s)      16384 ms -     131071 ms (~16s - ~2m)
- *  4	 256     16384 ms (~16s)    131072 ms -    1048575 ms (~2m - ~17m)
- *  5	 320    131072 ms (~2m)    1048576 ms -    8388607 ms (~17m - ~2h)
- *  6	 384   1048576 ms (~17m)   8388608 ms -   67108863 ms (~2h - ~18h)
- *  7	 448   8388608 ms (~2h)   67108864 ms -  536870911 ms (~18h - ~6d)
- *  8    512  67108864 ms (~18h) 536870912 ms - 4294967288 ms (~6d - ~49d)
- *
- * HZ  100
- * Level Offset  Granularity            Range
- *  0	   0         10 ms               0 ms -        630 ms
- *  1	  64         80 ms             640 ms -       5110 ms (640ms - ~5s)
- *  2	 128        640 ms            5120 ms -      40950 ms (~5s - ~40s)
- *  3	 192       5120 ms (~5s)     40960 ms -     327670 ms (~40s - ~5m)
- *  4	 256      40960 ms (~40s)   327680 ms -    2621430 ms (~5m - ~43m)
- *  5	 320     327680 ms (~5m)   2621440 ms -   20971510 ms (~43m - ~5h)
- *  6	 384    2621440 ms (~43m) 20971520 ms -  167772150 ms (~5h - ~1d)
- *  7	 448   20971520 ms (~5h) 167772160 ms - 1342177270 ms (~1d - ~15d)
+ * When a timer is migrating then the TIMER_MIGRATING flag is set and we need
+ * to wait until the migration is done.
  */
+static timer_base_s
+*lock_timer_base(timer_list_s *timer, ulong *flags)
+	__acquires(timer->base->lock)
+{
+	for (;;) {
+		timer_base_s *base;
+		u32 tf;
+
+		/*
+		 * We need to use READ_ONCE() here, otherwise the compiler
+		 * might re-read @tf between the check for TIMER_MIGRATING
+		 * and spin_lock().
+		 */
+		tf = READ_ONCE(timer->flags);
+
+		if (!(tf & TIMER_MIGRATING)) {
+			base = get_timer_base(tf);
+			// raw_spin_lock_irqsave(&base->lock, *flags);
+			spin_lock_irqsave(&base->lock, *flags);
+			if (timer->flags == tf)
+				return base;
+			// raw_spin_unlock_irqrestore(&base->lock, *flags);
+			spin_unlock_irqrestore_no_resched(&base->lock, *flags);
+		}
+		cpu_relax();
+	}
+}
 
 
 static inline int
@@ -140,121 +131,121 @@ __mod_timer(timer_list_s *timer, ulong expires, uint options) {
 	uint idx = UINT_MAX;
 	int ret = 0;
 
-// 	debug_assert_init(timer);
+	// debug_assert_init(timer);
 
-// 	/*
-// 	 * This is a common optimization triggered by the networking code - if
-// 	 * the timer is re-modified to have the same timeout or ends up in the
-// 	 * same array bucket then just return:
-// 	 */
-// 	if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
-// 		/*
-// 		 * The downside of this optimization is that it can result in
-// 		 * larger granularity than you would get from adding a new
-// 		 * timer with this expiry.
-// 		 */
-// 		long diff = timer->expires - expires;
+	/*
+	 * This is a common optimization triggered by the networking code - if
+	 * the timer is re-modified to have the same timeout or ends up in the
+	 * same array bucket then just return:
+	 */
+	if (!(options & MOD_TIMER_NOTPENDING) && timer_pending(timer)) {
+		/*
+		 * The downside of this optimization is that it can result in
+		 * larger granularity than you would get from adding a new
+		 * timer with this expiry.
+		 */
+		long diff = timer->expires - expires;
 
-// 		if (!diff)
-// 			return 1;
-// 		if (options & MOD_TIMER_REDUCE && diff <= 0)
-// 			return 1;
+		if (!diff)
+			return 1;
+		if (options & MOD_TIMER_REDUCE && diff <= 0)
+			return 1;
 
-// 		/*
-// 		 * We lock timer base and calculate the bucket index right
-// 		 * here. If the timer ends up in the same bucket, then we
-// 		 * just update the expiry time and avoid the whole
-// 		 * dequeue/enqueue dance.
-// 		 */
-// 		base = lock_timer_base(timer, &flags);
-// 		/*
-// 		 * Has @timer been shutdown? This needs to be evaluated
-// 		 * while holding base lock to prevent a race against the
-// 		 * shutdown code.
-// 		 */
-// 		if (!timer->function)
-// 			goto out_unlock;
+		/*
+		 * We lock timer base and calculate the bucket index right
+		 * here. If the timer ends up in the same bucket, then we
+		 * just update the expiry time and avoid the whole
+		 * dequeue/enqueue dance.
+		 */
+		base = lock_timer_base(timer, &flags);
+		/*
+		 * Has @timer been shutdown? This needs to be evaluated
+		 * while holding base lock to prevent a race against the
+		 * shutdown code.
+		 */
+		if (!timer->function)
+			goto out_unlock;
 
-// 		forward_timer_base(base);
+		forward_timer_base(base);
 
-// 		if (timer_pending(timer) && (options & MOD_TIMER_REDUCE) &&
-// 		    time_before_eq(timer->expires, expires)) {
-// 			ret = 1;
-// 			goto out_unlock;
-// 		}
+		if (timer_pending(timer) && (options & MOD_TIMER_REDUCE) &&
+				time_before_eq(timer->expires, expires)) {
+			ret = 1;
+			goto out_unlock;
+		}
 
-// 		clk = base->clk;
-// 		idx = calc_wheel_index(expires, clk, &bucket_expiry);
+		clk = base->clk;
+		idx = calc_wheel_index(expires, clk, &bucket_expiry);
 
-// 		/*
-// 		 * Retrieve and compare the array index of the pending
-// 		 * timer. If it matches set the expiry to the new value so a
-// 		 * subsequent call will exit in the expires check above.
-// 		 */
-// 		if (idx == timer_get_idx(timer)) {
-// 			if (!(options & MOD_TIMER_REDUCE))
-// 				timer->expires = expires;
-// 			else if (time_after(timer->expires, expires))
-// 				timer->expires = expires;
-// 			ret = 1;
-// 			goto out_unlock;
-// 		}
-// 	} else {
-// 		base = lock_timer_base(timer, &flags);
-// 		/*
-// 		 * Has @timer been shutdown? This needs to be evaluated
-// 		 * while holding base lock to prevent a race against the
-// 		 * shutdown code.
-// 		 */
-// 		if (!timer->function)
-// 			goto out_unlock;
+		/*
+		 * Retrieve and compare the array index of the pending
+		 * timer. If it matches set the expiry to the new value so a
+		 * subsequent call will exit in the expires check above.
+		 */
+		if (idx == timer_get_idx(timer)) {
+			if (!(options & MOD_TIMER_REDUCE))
+				timer->expires = expires;
+			else if (time_after(timer->expires, expires))
+				timer->expires = expires;
+			ret = 1;
+			goto out_unlock;
+		}
+	} else {
+		base = lock_timer_base(timer, &flags);
+		/*
+		 * Has @timer been shutdown? This needs to be evaluated
+		 * while holding base lock to prevent a race against the
+		 * shutdown code.
+		 */
+		if (!timer->function)
+			goto out_unlock;
 
-// 		forward_timer_base(base);
-// 	}
+		forward_timer_base(base);
+	}
 
-// 	ret = detach_if_pending(timer, base, false);
-// 	if (!ret && (options & MOD_TIMER_PENDING_ONLY))
-// 		goto out_unlock;
+	// ret = detach_if_pending(timer, base, false);
+	// if (!ret && (options & MOD_TIMER_PENDING_ONLY))
+	// 	goto out_unlock;
 
-// 	new_base = get_timer_this_cpu_base(timer->flags);
+	// new_base = get_timer_this_cpu_base(timer->flags);
 
-// 	if (base != new_base) {
-// 		/*
-// 		 * We are trying to schedule the timer on the new base.
-// 		 * However we can't change timer's base while it is running,
-// 		 * otherwise timer_delete_sync() can't detect that the timer's
-// 		 * handler yet has not finished. This also guarantees that the
-// 		 * timer is serialized wrt itself.
-// 		 */
-// 		if (likely(base->running_timer != timer)) {
-// 			/* See the comment in lock_timer_base() */
-// 			timer->flags |= TIMER_MIGRATING;
+	// if (base != new_base) {
+	// 	/*
+	// 	 * We are trying to schedule the timer on the new base.
+	// 	 * However we can't change timer's base while it is running,
+	// 	 * otherwise timer_delete_sync() can't detect that the timer's
+	// 	 * handler yet has not finished. This also guarantees that the
+	// 	 * timer is serialized wrt itself.
+	// 	 */
+	// 	if (likely(base->running_timer != timer)) {
+	// 		/* See the comment in lock_timer_base() */
+	// 		timer->flags |= TIMER_MIGRATING;
 
-// 			raw_spin_unlock(&base->lock);
-// 			base = new_base;
-// 			raw_spin_lock(&base->lock);
-// 			WRITE_ONCE(timer->flags,
-// 				   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
-// 			forward_timer_base(base);
-// 		}
-// 	}
+	// 		raw_spin_unlock(&base->lock);
+	// 		base = new_base;
+	// 		raw_spin_lock(&base->lock);
+	// 		WRITE_ONCE(timer->flags,
+	// 			   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
+	// 		forward_timer_base(base);
+	// 	}
+	// }
 
-// 	debug_timer_activate(timer);
+	// debug_timer_activate(timer);
 
-// 	timer->expires = expires;
-// 	/*
-// 	 * If 'idx' was calculated above and the base time did not advance
-// 	 * between calculating 'idx' and possibly switching the base, only
-// 	 * enqueue_timer() is required. Otherwise we need to (re)calculate
-// 	 * the wheel index via internal_add_timer().
-// 	 */
-// 	if (idx != UINT_MAX && clk == base->clk)
-// 		enqueue_timer(base, timer, idx, bucket_expiry);
-// 	else
-// 		internal_add_timer(base, timer);
+	// timer->expires = expires;
+	// /*
+	//  * If 'idx' was calculated above and the base time did not advance
+	//  * between calculating 'idx' and possibly switching the base, only
+	//  * enqueue_timer() is required. Otherwise we need to (re)calculate
+	//  * the wheel index via internal_add_timer().
+	//  */
+	// if (idx != UINT_MAX && clk == base->clk)
+	// 	enqueue_timer(base, timer, idx, bucket_expiry);
+	// else
+	// 	internal_add_timer(base, timer);
 
-// out_unlock:
-// 	raw_spin_unlock_irqrestore(&base->lock, flags);
+out_unlock:
+	// raw_spin_unlock_irqrestore(&base->lock, flags);
 
 	return ret;
 }
