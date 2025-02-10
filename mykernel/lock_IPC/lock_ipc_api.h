@@ -18,5 +18,6 @@
 
 	#include <linux/kernel/irqflags.h>
 	#include <linux/kernel/sched_api.h>
+	#include <linux/sched/debug.h>
 
 #endif /* _LOCK_IPC_API_H_ */

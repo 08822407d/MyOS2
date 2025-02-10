@@ -38,7 +38,7 @@
 	// struct sched_param;
 	// struct sched_attr;
 	// struct sel_arg_struct;
-	// struct semaphore;
+	// sema_t;
 	// struct sembuf;
 	// struct shmid_ds;
 	// struct sockaddr;

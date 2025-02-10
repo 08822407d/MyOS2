@@ -16,6 +16,8 @@
 	typedef atomic64_t atomic_long_t;
 
 	/* semaphore */
+	struct semaphore;
+	typedef struct semaphore sema_t;
 	struct rw_semaphore;
 	typedef struct rw_semaphore rwsem_t;
 

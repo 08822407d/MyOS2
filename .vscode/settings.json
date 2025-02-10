@@ -422,7 +422,8 @@
         "completion_const.h": "c",
         "swait_const.h": "c",
         "workqueue_api.h": "c",
-        "hrtimer.h": "c"
+        "hrtimer.h": "c",
+        "semaphore_macro.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }
