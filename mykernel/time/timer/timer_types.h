@@ -51,7 +51,7 @@
 	 *			which are enqueued into a specific bucket.
 	 */
 	struct timer_base {
-		// spinlock_t		lock;
+		spinlock_t		lock;
 		timer_list_s	*running_timer;
 	// #ifdef CONFIG_PREEMPT_RT
 	// 	spinlock_t		expiry_lock;

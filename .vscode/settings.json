@@ -413,7 +413,11 @@
         "asm.h": "c",
         "refcount_macro.h": "c",
         "pid_const.h": "c",
-        "processor_type_declaration_arch.h": "c"
+        "processor_type_declaration_arch.h": "c",
+        "workqueue_types.h": "c",
+        "completion_types.h": "c",
+        "kactive.h": "c",
+        "completion_macro.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

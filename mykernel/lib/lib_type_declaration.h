@@ -3,8 +3,6 @@
 
 	#include <linux/kernel/types.h>
 
-    #include "lib_const.h"
-
 
     /* double_list.c */
 	struct list_head;

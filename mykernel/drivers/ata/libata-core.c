@@ -37,7 +37,6 @@
 // #include <linux/timer.h>
 #include <linux/kernel/time.h>
 // #include <linux/interrupt.h>
-#include <linux/kernel/completion.h>
 // #include <linux/suspend.h>
 #include <linux/kernel/kactive_api.h>
 // #include <linux/scatterlist.h>

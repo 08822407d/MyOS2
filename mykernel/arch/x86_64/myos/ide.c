@@ -2,7 +2,6 @@
 #include <linux/kernel/sched_api.h>
 #include <linux/kernel/mm_api.h>
 #include <linux/kernel/kdev_t.h>
-#include <linux/kernel/completion.h>
 #include <linux/device/tty.h>
 #include <linux/lib/string.h>
 #include <uapi/linux/major.h>

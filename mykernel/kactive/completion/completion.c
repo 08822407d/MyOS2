@@ -1,3 +1,7 @@
+#define COMPLETION_DEFINATION
+#include "completion.h"
+
+
 // SPDX-License-Identifier: GPL-2.0
 /*
  * Generic wait-for-completion handler;
@@ -12,7 +16,6 @@
  * Waiting for completion is a typically sync point, but not an exclusion point.
  */
 #include <linux/kernel/sched.h>
-#include <linux/kernel/completion.h>
 
 /**
  * complete: - signals a single thread waiting on this completion
@@ -36,43 +39,6 @@ void complete(completion_s *x)
 	raw_spin_unlock_irqrestore(&x->wait.lock, &flags);
 }
 
-
-static inline long
-do_wait_for_common(completion_s *x,
-		long (*action)(long), long timeout, int state) {
-	if (!x->done) {
-		DECLARE_SWAITQUEUE(wait);
-
-		do {
-			// if (signal_pending_state(state, current)) {
-			// 	timeout = -ERESTARTSYS;
-			// 	break;
-			// }
-			__prepare_to_swait(&x->wait, &wait);
-			__set_current_state(state);
-			raw_spin_unlock_irq(&x->wait.lock);
-			timeout = action(timeout);
-			raw_spin_lock_irq(&x->wait.lock);
-		} while (!x->done && timeout);
-		__finish_swait(&x->wait, &wait);
-		if (!x->done)
-			return timeout;
-	}
-	if (x->done != UINT_MAX)
-		x->done--;
-	return timeout ?: 1;
-}
-
-static inline long
-wait_for_common(completion_s*x, long timeout, int state) {
-	// might_sleep();
-
-	raw_spin_lock_irq(&x->wait.lock);
-	timeout = do_wait_for_common(x, schedule_timeout, timeout, state);
-	raw_spin_unlock_irq(&x->wait.lock);
-
-	return timeout;
-}
 
 /**
  * wait_for_completion: - waits for completion of a task

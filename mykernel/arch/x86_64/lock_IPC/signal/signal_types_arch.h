@@ -53,6 +53,9 @@
 		size_t			ss_size;
 	};
 
+	// Here is a cycle reference
+	struct ucontext;
+	typedef struct ucontext ucontext_s;
 	#include <uapi/asm-generic/ucontext.h>
 	struct rt_sigframe {
 		char __user		*pretcode;

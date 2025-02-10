@@ -1,5 +1,4 @@
 #include <linux/kernel/lib.h>
-#include <linux/kernel/completion.h>
 
 struct blkbuf_node;
 typedef struct blkbuf_node blkbuf_node_s;

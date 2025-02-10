@@ -1,7 +1,6 @@
 #include <linux/kernel/kernel.h>
 #include <linux/kernel/mm_api.h>
 #include <linux/kernel/stddef.h>
-#include <linux/kernel/completion.h>
 #include <linux/lib/string.h>
 #include <linux/device/tty.h>
 #include <asm/insns.h>

@@ -4,8 +4,10 @@
 
 	#include <linux/kernel/lib.h>
 	#include <linux/kernel/stddef.h>
-	#include <linux/kernel/lock_ipc_types.h>
-	#include <asm/current.h>
+	// #include <linux/kernel/lock_ipc_types.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
+	#include <linux/kernel/sched_type_declaration.h>
+	// #include <asm/current.h>
 
 	/*
 	 * Simple waitqueues are semantically very different to regular wait queues

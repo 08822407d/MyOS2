@@ -1,21 +1,15 @@
 #ifndef _LOCK_IPC_TYPE_DECLARATIONS_H_
 #define _LOCK_IPC_TYPE_DECLARATIONS_H_
 
-
+	#include <linux/kernel/types.h>
+	#include <uapi/asm-generic/resource.h>
 	#include <uapi/asm-generic/signal-defs.h>
 	#include <uapi/asm-generic/siginfo.h>
 	#include <uapi/linux/resource.h>
 	#include <uapi/linux/time.h>
 	#include <uapi/linux/futex.h>
 
-	#include <linux/kernel/sched_const.h>
 	#include <asm/lock_ipc_types.h>
-	#include <linux/kernel/types.h>
-	#include <linux/kernel/sched_type_declaration.h>
-	#include <linux/kernel/lib_types.h>
-	#include <linux/kernel/resource.h>
-
-	#include <asm/signal.h>
 
 
 	/* atomic */
@@ -52,5 +46,11 @@
 	/* refcoount.c */
 	struct refcount_struct;
 	typedef struct refcount_struct refcount_t;
+
+
+	#include <linux/kernel/sched_const.h>
+	#include <linux/kernel/sched_type_declaration.h>
+	#include <linux/kernel/time_type_declaration.h>
+	#include <linux/kernel/lib_type_declaration.h>
 
 #endif /* _LOCK_IPC_TYPE_DECLARATIONS_H_ */

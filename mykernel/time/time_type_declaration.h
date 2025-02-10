@@ -5,13 +5,10 @@
 	#include <linux/kernel/cache.h>
 	#include <uapi/linux/time.h>
 
+
 	typedef s64	ktime_t;
 	typedef __s64 time64_t;
 	typedef __u64 timeu64_t;
-
-
-	#include <linux/kernel/lib_types.h>
-
 
 	/* time misc */
 	struct timespec64;
@@ -36,5 +33,9 @@
 	typedef struct timer_list timer_list_s;
 	struct k_clock;
 	typedef struct k_clock k_clock_s;
+
+
+	#include <linux/kernel/lib_types.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
 
 #endif /* _TIME_TYPE_DECLARATION_H_ */

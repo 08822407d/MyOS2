@@ -8,6 +8,7 @@
  * etc.).
  */
 #include "../sched_api.h"
+#include <linux/kernel/kactive.h>
 
 #include <asm/signal.h>
 

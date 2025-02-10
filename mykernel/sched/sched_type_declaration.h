@@ -1,6 +1,11 @@
 #ifndef _SCHED_TYPE_DECLARATION_H_
 #define _SCHED_TYPE_DECLARATION_H_
 
+	#include <linux/kernel/types.h>
+	#include <linux/kernel/resource.h>
+
+	#include <asm/sched_types.h>
+
 
 	/* task_struct member predeclarations (sorted alphabetically): */
 	struct rlimit;
@@ -11,15 +16,6 @@
 	typedef struct nsproxy nsproxy_s;
 	struct sigpending;
 	typedef struct sigpending sigpending_s;
-
-	#include <asm/sched_types.h>
-	#include <linux/kernel/types.h>
-	#include <linux/kernel/lib_type_declaration.h>
-	#include <linux/kernel/mm_type_declaration.h>
-	#include <linux/kernel/lock_ipc_type_declaration.h>
-	#include <linux/kernel/swait.h>
-	#include <linux/kernel/completion.h>
-	#include <linux/kernel/resource.h>
 
 
 	/* task misc */
@@ -59,5 +55,11 @@
 	typedef struct pid_namespace pid_ns_s;
 	struct task_struct;
 	typedef struct task_struct task_s;
+
+
+	#include <linux/kernel/lib_type_declaration.h>
+	#include <linux/kernel/lock_ipc_type_declaration.h>
+	#include <linux/kernel/mm_type_declaration.h>
+	#include <linux/kernel/kactive_type_declaration.h>
 
 #endif /* _SCHED_TYPE_DECLARATION_H_ */

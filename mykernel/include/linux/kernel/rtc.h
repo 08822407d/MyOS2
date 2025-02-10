@@ -14,13 +14,10 @@
 
 
 	#include <linux/kernel/types.h>
-	// #include <linux/interrupt.h>
-	// #include <linux/nvmem-provider.h>
-	#include <uapi/linux/rtc.h>
-
-
 	#include <linux/kernel/kernel.h>
 	#include <linux/lib/errno.h>
+	#include <linux/kernel/time_type_declaration.h>
+	#include <uapi/linux/rtc.h>
 
 	extern int rtc_month_days(unsigned int month, unsigned int year);
 	extern int rtc_year_days(unsigned int day, unsigned int month, unsigned int year);

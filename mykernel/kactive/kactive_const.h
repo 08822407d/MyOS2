@@ -6,5 +6,6 @@
 	#include <linux/kernel/asm-generic/param.h>
 
     #include "workqueue/workqueue_const.h"
+    #include "completion/completion_const.h"
 
 #endif /* _KERNEL_ACTIVE_CONST_H_ */

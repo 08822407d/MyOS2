@@ -2,6 +2,7 @@
 #include <asm-generic/sections.h>
 
 #include <linux/kernel/sched_types.h>
+#include <asm/current.h>
 
 
 # include "asm-offsets_64.c"

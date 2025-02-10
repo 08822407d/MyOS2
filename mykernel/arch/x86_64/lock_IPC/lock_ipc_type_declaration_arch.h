@@ -1,9 +1,6 @@
 #ifndef _ASM_X86_LOCK_IPC_TYPE_DECLARATIONS_H_
 #define _ASM_X86_LOCK_IPC_TYPE_DECLARATIONS_H_
 
-	struct ucontext;
-	typedef struct ucontext ucontext_s;
-
 	#include <linux/kernel/types.h>
 	#include <uapi/asm-generic/signal.h>
 	#include <uapi/asm-generic/siginfo.h>
@@ -39,6 +36,5 @@
 	#  define sigcontext	sigcontext_64
 	#  define sigctx_s		sigctx_64_s
 	#endif
-
 
 #endif /* _ASM_X86_LOCK_IPC_TYPE_DECLARATIONS_H_ */

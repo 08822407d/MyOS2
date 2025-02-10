@@ -2,8 +2,6 @@
 #define _ASM_X86_MM_TYPE_DECLARATION_H_
 
 	#include <linux/kernel/types.h>
-	#include <linux/kernel/mm_type_declaration.h>
-	#include <linux/kernel/sched_type_declaration.h>
 
 
 	/* earlymem arch */
@@ -42,5 +40,9 @@
 	typedef struct pgprot pgprot_t; 
 	typedef p4dval_t pgdval_t;
 	typedef p4d_t pgd_t;
+
+
+	#include <linux/kernel/mm_type_declaration.h>
+	#include <linux/kernel/sched_type_declaration.h>
 
 #endif /* _ASM_X86_MM_TYPE_DECLARATION_H_ */

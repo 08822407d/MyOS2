@@ -44,7 +44,6 @@
 	// }
 
 	void kthread_exit(long result) __noreturn;
-	#include <linux/kernel/completion.h>
 	void kthread_complete_and_exit(completion_s *, long) __noreturn;
 	int kthreadd(void *unused);
 	extern task_s *kthreadd_task;

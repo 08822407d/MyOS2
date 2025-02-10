@@ -1,6 +1,8 @@
 #ifndef _WORKQUEUE_API_H_
 #define _WORKQUEUE_API_H_
 
+	#include <linux/init/init.h>
+
 	#include "workqueue.h"
 
 
