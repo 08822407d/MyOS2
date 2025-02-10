@@ -84,6 +84,92 @@ calc_wheel_index(ulong expires,
 }
 
 
+static void
+trigger_dyntick_cpu(timer_base_s *base, timer_list_s *timer) {
+	// /*
+	//  * Deferrable timers do not prevent the CPU from entering dynticks and
+	//  * are not taken into account on the idle/nohz_full path. An IPI when a
+	//  * new deferrable timer is enqueued will wake up the remote CPU but
+	//  * nothing will be done with the deferrable timer base. Therefore skip
+	//  * the remote IPI for deferrable timers completely.
+	//  */
+	// if (!is_timers_nohz_active() || timer->flags & TIMER_DEFERRABLE)
+	// 	return;
+
+	// /*
+	//  * We might have to IPI the remote CPU if the base is idle and the
+	//  * timer is pinned. If it is a non pinned timer, it is only queued
+	//  * on the remote CPU, when timer was running during queueing. Then
+	//  * everything is handled by remote CPU anyway. If the other CPU is
+	//  * on the way to idle then it can't set base->is_idle as we hold
+	//  * the base lock:
+	//  */
+	// if (base->is_idle) {
+	// 	WARN_ON_ONCE(!(timer->flags & TIMER_PINNED ||
+	// 		    tick_nohz_full_cpu(base->cpu)));
+	// 	wake_up_nohz_cpu(base->cpu);
+	// }
+}
+
+/*
+ * Enqueue the timer into the hash bucket, mark it pending in
+ * the bitmap, store the index in the timer flags then wake up
+ * the target CPU if needed.
+ */
+static void
+enqueue_timer(timer_base_s *base, timer_list_s *timer,
+		uint idx, ulong bucket_expiry) {
+
+	hlist_add_head(&timer->entry, base->vectors + idx);
+	// __set_bit(idx, base->pending_map);
+	timer_set_idx(timer, idx);
+
+	// trace_timer_start(timer, bucket_expiry);
+
+	/*
+	 * Check whether this is the new first expiring timer. The
+	 * effective expiry time of the timer is required here
+	 * (bucket_expiry) instead of timer->expires.
+	 */
+	if (time_before(bucket_expiry, base->next_expiry)) {
+		/*
+		 * Set the next expiry time and kick the CPU so it
+		 * can reevaluate the wheel:
+		 */
+		WRITE_ONCE(base->next_expiry, bucket_expiry);
+		base->timers_pending = true;
+		base->next_expiry_recalc = false;
+		trigger_dyntick_cpu(base, timer);
+	}
+}
+
+static void
+internal_add_timer(timer_base_s *base, timer_list_s *timer) {
+	ulong bucket_expiry;
+	uint idx = calc_wheel_index(timer->expires,
+					base->clk, &bucket_expiry);
+	enqueue_timer(base, timer, idx, bucket_expiry);
+}
+
+
+static int
+detach_if_pending(timer_list_s *timer,
+		timer_base_s *base, bool clear_pending) {
+
+	uint idx = timer_get_idx(timer);
+
+	if (!timer_pending(timer))
+		return 0;
+
+	if (hlist_is_singular_node(&timer->entry, base->vectors + idx)) {
+		// __clear_bit(idx, base->pending_map);
+		base->next_expiry_recalc = true;
+	}
+
+	detach_timer(timer, clear_pending);
+	return 1;
+}
+
 /*
  * We are using hashed locking: Holding per_cpu(timer_bases[x]).lock means
  * that all timers which are tied to this base are locked, and the base itself
@@ -203,49 +289,52 @@ __mod_timer(timer_list_s *timer, ulong expires, uint options) {
 		forward_timer_base(base);
 	}
 
-	// ret = detach_if_pending(timer, base, false);
-	// if (!ret && (options & MOD_TIMER_PENDING_ONLY))
-	// 	goto out_unlock;
+	ret = detach_if_pending(timer, base, false);
+	if (!ret && (options & MOD_TIMER_PENDING_ONLY))
+		goto out_unlock;
 
-	// new_base = get_timer_this_cpu_base(timer->flags);
+	new_base = get_timer_this_cpu_base(timer->flags);
 
-	// if (base != new_base) {
-	// 	/*
-	// 	 * We are trying to schedule the timer on the new base.
-	// 	 * However we can't change timer's base while it is running,
-	// 	 * otherwise timer_delete_sync() can't detect that the timer's
-	// 	 * handler yet has not finished. This also guarantees that the
-	// 	 * timer is serialized wrt itself.
-	// 	 */
-	// 	if (likely(base->running_timer != timer)) {
-	// 		/* See the comment in lock_timer_base() */
-	// 		timer->flags |= TIMER_MIGRATING;
+	if (base != new_base) {
+		/*
+		 * We are trying to schedule the timer on the new base.
+		 * However we can't change timer's base while it is running,
+		 * otherwise timer_delete_sync() can't detect that the timer's
+		 * handler yet has not finished. This also guarantees that the
+		 * timer is serialized wrt itself.
+		 */
+		if (likely(base->running_timer != timer)) {
+			/* See the comment in lock_timer_base() */
+			timer->flags |= TIMER_MIGRATING;
 
-	// 		raw_spin_unlock(&base->lock);
-	// 		base = new_base;
-	// 		raw_spin_lock(&base->lock);
-	// 		WRITE_ONCE(timer->flags,
-	// 			   (timer->flags & ~TIMER_BASEMASK) | base->cpu);
-	// 		forward_timer_base(base);
-	// 	}
-	// }
+			// raw_spin_unlock(&base->lock);
+			spin_unlock_no_resched(&base->lock);
+			base = new_base;
+			// raw_spin_lock(&base->lock);
+			spin_lock(&base->lock);
+			WRITE_ONCE(timer->flags,
+				(timer->flags & ~TIMER_BASEMASK) | base->cpu);
+			forward_timer_base(base);
+		}
+	}
 
 	// debug_timer_activate(timer);
 
-	// timer->expires = expires;
-	// /*
-	//  * If 'idx' was calculated above and the base time did not advance
-	//  * between calculating 'idx' and possibly switching the base, only
-	//  * enqueue_timer() is required. Otherwise we need to (re)calculate
-	//  * the wheel index via internal_add_timer().
-	//  */
-	// if (idx != UINT_MAX && clk == base->clk)
-	// 	enqueue_timer(base, timer, idx, bucket_expiry);
-	// else
-	// 	internal_add_timer(base, timer);
+	timer->expires = expires;
+	/*
+	 * If 'idx' was calculated above and the base time did not advance
+	 * between calculating 'idx' and possibly switching the base, only
+	 * enqueue_timer() is required. Otherwise we need to (re)calculate
+	 * the wheel index via internal_add_timer().
+	 */
+	if (idx != UINT_MAX && clk == base->clk)
+		enqueue_timer(base, timer, idx, bucket_expiry);
+	else
+		internal_add_timer(base, timer);
 
 out_unlock:
 	// raw_spin_unlock_irqrestore(&base->lock, flags);
+	spin_unlock_irqrestore(&base->lock, flags);
 
 	return ret;
 }
@@ -423,14 +512,15 @@ __try_to_del_timer_sync(timer_list_s *timer, bool shutdown) {
 
 	// debug_assert_init(timer);
 
-	// base = lock_timer_base(timer, &flags);
+	base = lock_timer_base(timer, &flags);
 
-	// if (base->running_timer != timer)
-	// 	ret = detach_if_pending(timer, base, true);
-	// if (shutdown)
-	// 	timer->function = NULL;
+	if (base->running_timer != timer)
+		ret = detach_if_pending(timer, base, true);
+	if (shutdown)
+		timer->function = NULL;
 
 	// raw_spin_unlock_irqrestore(&base->lock, flags);
+	spin_unlock_irqrestore(&base->lock, flags);
 
 	return ret;
 }
@@ -489,21 +579,14 @@ __timer_delete_sync(timer_list_s *timer, bool shutdown) {
 	//  */
 	// WARN_ON(in_hardirq() && !(timer->flags & TIMER_IRQSAFE));
 
-	// /*
-	//  * Must be able to sleep on PREEMPT_RT because of the slowpath in
-	//  * del_timer_wait_running().
-	//  */
-	// if (IS_ENABLED(CONFIG_PREEMPT_RT) && !(timer->flags & TIMER_IRQSAFE))
-	// 	lockdep_assert_preemption_enabled();
+	do {
+		ret = __try_to_del_timer_sync(timer, shutdown);
 
-	// do {
-	// 	ret = __try_to_del_timer_sync(timer, shutdown);
-
-	// 	if (unlikely(ret < 0)) {
-	// 		del_timer_wait_running(timer);
-	// 		cpu_relax();
-	// 	}
-	// } while (ret < 0);
+		if (unlikely(ret < 0)) {
+			// del_timer_wait_running(timer);
+			cpu_relax();
+		}
+	} while (ret < 0);
 
 	return ret;
 }
@@ -654,7 +737,7 @@ long __sched schedule_timeout(long timeout)
 
 	timer.task = current;
 	timer_setup_on_stack(&timer.timer, process_timeout, 0);
-	// __mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
+	__mod_timer(&timer.timer, expire, MOD_TIMER_NOTPENDING);
 	// schedule();
 	del_timer_sync(&timer.timer);
 

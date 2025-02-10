@@ -263,7 +263,7 @@
 		PREFIX_STATIC_INLINE
 		bool
 		hlist_is_singular_node(HList_s *n, HList_hdr_s *h) {
-			return !n->next && n->pprev == &h->first;
+			return (n->next == NULL) && (n->pprev == &h->first);
 		}
 
 		/**

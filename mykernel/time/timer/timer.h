@@ -14,6 +14,9 @@
 		extern int
 		timer_pending(const timer_list_s * timer);
 
+		extern void
+		detach_timer(timer_list_s *timer, bool clear_pending);
+
 		extern uint
 		timer_get_idx(timer_list_s *timer);
 
@@ -58,6 +61,20 @@
 		int
 		timer_pending(const timer_list_s * timer) {
 			return !hlist_unhashed_lockless(&timer->entry);
+		}
+
+
+		PREFIX_STATIC_INLINE
+		void
+		detach_timer(timer_list_s *timer, bool clear_pending) {
+			HList_s *entry = &timer->entry;
+
+			// debug_deactivate(timer);
+
+			__hlist_del(entry);
+			if (clear_pending)
+				entry->pprev = NULL;
+			entry->next = LIST_POISON2;
 		}
 
 

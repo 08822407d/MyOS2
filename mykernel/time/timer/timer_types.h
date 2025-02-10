@@ -64,7 +64,7 @@
 		bool			is_idle;
 		bool			timers_pending;
 		// DECLARE_BITMAP(pending_map, WHEEL_SIZE);
-		// HList_s			vectors[WHEEL_SIZE];
+		HList_hdr_s		vectors[WHEEL_SIZE];
 	} ____cacheline_aligned;
 
 	struct timer_list {
