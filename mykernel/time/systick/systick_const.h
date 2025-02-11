@@ -82,4 +82,100 @@
 	 */
 	#define MAX_JIFFY_OFFSET ((LONG_MAX >> 1)-1)
 
+	/*
+	 * We want to do realistic conversions of time so we need to use the same
+	 * values the update wall clock code uses as the jiffies size.  This value
+	 * is: TICK_NSEC (which is defined in timex.h).  This
+	 * is a constant and is in nanoseconds.  We will use scaled math
+	 * with a set of scales defined here as SEC_JIFFIE_SC,  USEC_JIFFIE_SC and
+	 * NSEC_JIFFIE_SC.  Note that these defines contain nothing but
+	 * constants and so are computed at compile time.  SHIFT_HZ (computed in
+	 * timex.h) adjusts the scaling for different HZ values.
+
+	 * Scaled math???  What is that?
+	 *
+	 * Scaled math is a way to do integer math on values that would,
+	 * otherwise, either overflow, underflow, or cause undesired div
+	 * instructions to appear in the execution path.  In short, we "scale"
+	 * up the operands so they take more bits (more precision, less
+	 * underflow), do the desired operation and then "scale" the result back
+	 * by the same amount.  If we do the scaling by shifting we avoid the
+	 * costly mpy and the dastardly div instructions.
+
+	 * Suppose, for example, we want to convert from seconds to jiffies
+	 * where jiffies is defined in nanoseconds as NSEC_PER_JIFFIE.  The
+	 * simple math is: jiff = (sec * NSEC_PER_SEC) / NSEC_PER_JIFFIE; We
+	 * observe that (NSEC_PER_SEC / NSEC_PER_JIFFIE) is a constant which we
+	 * might calculate at compile time, however, the result will only have
+	 * about 3-4 bits of precision (less for smaller values of HZ).
+	 *
+	 * So, we scale as follows:
+	 * jiff = (sec) * (NSEC_PER_SEC / NSEC_PER_JIFFIE);
+	 * jiff = ((sec) * ((NSEC_PER_SEC * SCALE)/ NSEC_PER_JIFFIE)) / SCALE;
+	 * Then we make SCALE a power of two so:
+	 * jiff = ((sec) * ((NSEC_PER_SEC << SCALE)/ NSEC_PER_JIFFIE)) >> SCALE;
+	 * Now we define:
+	 * #define SEC_CONV = ((NSEC_PER_SEC << SCALE)/ NSEC_PER_JIFFIE))
+	 * jiff = (sec * SEC_CONV) >> SCALE;
+	 *
+	 * Often the math we use will expand beyond 32-bits so we tell C how to
+	 * do this and pass the 64-bit result of the mpy through the ">> SCALE"
+	 * which should take the result back to 32-bits.  We want this expansion
+	 * to capture as much precision as possible.  At the same time we don't
+	 * want to overflow so we pick the SCALE to avoid this.  In this file,
+	 * that means using a different scale for each range of HZ values (as
+	 * defined in timex.h).
+	 *
+	 * For those who want to know, gcc will give a 64-bit result from a "*"
+	 * operator if the result is a long long AND at least one of the
+	 * operands is cast to long long (usually just prior to the "*" so as
+	 * not to confuse it into thinking it really has a 64-bit operand,
+	 * which, buy the way, it can do, but it takes more code and at least 2
+	 * mpys).
+
+	 * We also need to be aware that one second in nanoseconds is only a
+	 * couple of bits away from overflowing a 32-bit word, so we MUST use
+	 * 64-bits to get the full range time in nanoseconds.
+
+	 */
+
+	/*
+	 * Here are the scales we will use.  One for seconds, nanoseconds and
+	 * microseconds.
+	 *
+	 * Within the limits of cpp we do a rough cut at the SEC_JIFFIE_SC and
+	 * check if the sign bit is set.  If not, we bump the shift count by 1.
+	 * (Gets an extra bit of precision where we can use it.)
+	 * We know it is set for HZ = 1024 and HZ = 100 not for 1000.
+	 * Haven't tested others.
+
+	 * Limits of cpp (for #if expressions) only long (no long long), but
+	 * then we only need the most signicant bit.
+	 */
+
+	#define SEC_JIFFIE_SC		(31 - SHIFT_HZ)
+	#if !((((NSEC_PER_SEC << 2) / TICK_NSEC) << (SEC_JIFFIE_SC - 2)) & 0x80000000)
+	#  undef SEC_JIFFIE_SC
+	#  define SEC_JIFFIE_SC		(32 - SHIFT_HZ)
+	#endif
+	#define NSEC_JIFFIE_SC		(SEC_JIFFIE_SC + 29)
+	#define SEC_CONVERSION		(								\
+				(ulong)((((u64)NSEC_PER_SEC << SEC_JIFFIE_SC) + \
+					TICK_NSEC -1) / (u64)TICK_NSEC)				\
+			)
+
+	#define NSEC_CONVERSION		(						\
+				(ulong)((((u64)1 << NSEC_JIFFIE_SC) +	\
+					TICK_NSEC -1) / (u64)TICK_NSEC)		\
+			)
+	/*
+	 * The maximum jiffy value is (MAX_INT >> 1).  Here we translate that
+	 * into seconds.  The 64-bit case will overflow if we are not careful,
+	 * so use the messy SH_DIV macro to do it.  Still all constants.
+	 */
+
+	#define MAX_SEC_IN_JIFFIES									\
+				(SH_DIV((MAX_JIFFY_OFFSET >> SEC_JIFFIE_SC) *	\
+					TICK_NSEC, NSEC_PER_SEC, 1) - 1)
+
 #endif /* _LINUX_SYSTICK_CONST_H_ */

@@ -4,6 +4,12 @@
 	#include "time_misc.h"
 
 
+	extern ulong __msecs_to_jiffies(const uint m);
+	extern ulong __usecs_to_jiffies(const uint u);
+	extern ulong timespec64_to_jiffies(const timespec64_s *value);
+	extern uint jiffies_to_msecs(const ulong j);
+	extern uint jiffies_to_usecs(const ulong j);
+	extern void jiffies_to_timespec64(const ulong jiffies, timespec64_s *value);
 	extern time64_t
 	mktime64(const uint year, const uint mon, const uint day,
 			const uint hour, const uint min, const uint sec);

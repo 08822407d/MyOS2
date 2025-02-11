@@ -21,4 +21,13 @@
 	int try_to_del_timer_sync(timer_list_s *timer);
 	int timer_delete_sync(timer_list_s *timer);
 
+	long schedule_timeout(long timeout);
+	long schedule_timeout_interruptible(long timeout);
+	long schedule_timeout_killable(long timeout);
+	long schedule_timeout_uninterruptible(long timeout);
+	long schedule_timeout_idle(long timeout);
+
+	void msleep(uint msecs);
+	ulong msleep_interruptible(uint msecs);
+
 #endif /* _LINUX_TIMER_API_H_ */
