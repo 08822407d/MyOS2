@@ -2,7 +2,7 @@
 #include <linux/kernel/time_api.h>
 
 
-static task_s *pick_next_task_myos(rq_s *rq)
+static task_s *pick_next_task_myos(rq_s *rq, task_s *prev)
 {
 	myos_rq_s	*myos_rq = &rq->myos;
 	task_s		*retval, *curr_task;

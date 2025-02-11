@@ -16,6 +16,8 @@
 	int wake_up_process(task_s *p);
 	int wake_up_state(task_s *p, uint state);
 
+	void __schedule(int sched_mode);
+
 	extern void schedule_idle(void);
 	extern long schedule_timeout(long timeout);
 	asmlinkage void schedule(void);

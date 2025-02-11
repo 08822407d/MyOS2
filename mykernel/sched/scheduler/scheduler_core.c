@@ -29,6 +29,97 @@ void update_rq_clock(rq_s *rq)
 
 
 
+void enqueue_task(rq_s *rq, task_s *p, int flags)
+{
+	// if (!(flags & ENQUEUE_NOCLOCK))
+	// 	update_rq_clock(rq);
+
+	// p->sched_class->enqueue_task(rq, p, flags);
+	// /*
+	//  * Must be after ->enqueue_task() because ENQUEUE_DELAYED can clear
+	//  * ->sched_delayed.
+	//  */
+	// uclamp_rq_inc(rq, p);
+
+	// if (!(flags & ENQUEUE_RESTORE)) {
+	// 	sched_info_enqueue(rq, p);
+	// 	psi_enqueue(p, flags & ENQUEUE_MIGRATED);
+	// }
+
+	// if (sched_core_enabled(rq))
+	// 	sched_core_enqueue(rq, p);
+}
+
+/*
+ * Must only return false when DEQUEUE_SLEEP.
+ */
+inline bool
+dequeue_task(rq_s *rq, task_s *p, int flags) {
+	// if (sched_core_enabled(rq))
+	// 	sched_core_dequeue(rq, p, flags);
+
+	// if (!(flags & DEQUEUE_NOCLOCK))
+	// 	update_rq_clock(rq);
+
+	// if (!(flags & DEQUEUE_SAVE)) {
+	// 	sched_info_dequeue(rq, p);
+	// 	psi_dequeue(p, !(flags & DEQUEUE_SLEEP));
+	// }
+
+	// /*
+	//  * Must be before ->dequeue_task() because ->dequeue_task() can 'fail'
+	//  * and mark the task ->sched_delayed.
+	//  */
+	// uclamp_rq_dec(rq, p);
+	// return p->sched_class->dequeue_task(rq, p, flags);
+}
+
+void activate_task(rq_s *rq, task_s *p, int flags)
+{
+	// if (task_on_rq_migrating(p))
+	// 	flags |= ENQUEUE_MIGRATED;
+	// if (flags & ENQUEUE_MIGRATED)
+	// 	sched_mm_cid_migrate_to(rq, p);
+
+	enqueue_task(rq, p, flags);
+
+	// WRITE_ONCE(p->on_rq, TASK_ON_RQ_QUEUED);
+	// ASSERT_EXCLUSIVE_WRITER(p->on_rq);
+}
+
+void deactivate_task(rq_s *rq, task_s *p, int flags)
+{
+	// SCHED_WARN_ON(flags & DEQUEUE_SLEEP);
+
+	// WRITE_ONCE(p->on_rq, TASK_ON_RQ_MIGRATING);
+	// ASSERT_EXCLUSIVE_WRITER(p->on_rq);
+
+	// /*
+	//  * Code explicitly relies on TASK_ON_RQ_MIGRATING begin set *before*
+	//  * dequeue_task() and cleared *after* enqueue_task().
+	//  */
+	dequeue_task(rq, p, flags);
+}
+
+static void
+block_task(rq_s *rq, task_s *p, int flags) {
+	if (dequeue_task(rq, p, DEQUEUE_SLEEP | flags))
+		__block_task(rq, p);
+}
+
+/**
+ * task_curr - is this task currently executing on a CPU?
+ * @p: the task in question.
+ *
+ * Return: 1 if the task is currently executing. 0 otherwise.
+ */
+inline int
+task_curr(const task_s *p) {
+	return cpu_curr(task_cpu(p)) == p;
+}
+
+
+
 void set_task_cpu(task_s *p, unsigned int new_cpu)
 {
 // #ifdef CONFIG_SCHED_DEBUG
@@ -708,7 +799,7 @@ static rq_s *
 finish_task_switch(task_s *prev) __releases(rq->lock) {
 	rq_s *rq = this_rq();
 	mm_s *mm = rq->prev_mm;
-	unsigned int prev_state;
+	uint prev_state;
 
 	// /*
 	//  * The previous task will have left us with a preempt_count of 2
@@ -818,6 +909,7 @@ schedule_tail(task_s *prev) __releases(rq->lock)
 static __always_inline rq_s *
 context_switch(rq_s *rq, task_s *prev,
 		task_s *next, struct rq_flags *rf) {
+
 	prepare_task_switch(rq, prev, next);
 
 	/*
@@ -949,9 +1041,8 @@ schedule_debug(task_s *prev, bool preempt) {
 	// schedstat_inc(this_rq()->sched_count);
 }
 
-static void put_prev_task_balance(rq_s *rq,
-		task_s *prev, struct rq_flags *rf)
-{
+static void
+put_prev_task_balance(rq_s *rq, task_s *prev, struct rq_flags *rf) {
 	// const sched_class_s *class;
 	// /*
 	//  * We must do the balancing pass before put_prev_task(), such
@@ -978,6 +1069,11 @@ __pick_next_task(rq_s *rq, task_s *prev, struct rq_flags *rf)
 	const sched_class_s *class;
 	task_s *p;
 
+	// rq->dl_server = NULL;
+
+	// if (scx_enabled())
+	// 	goto restart;
+
 	// /*
 	//  * Optimization: we know that if all tasks are in the fair class we can
 	//  * call that function directly, but only if the @prev task wasn't of a
@@ -993,8 +1089,8 @@ __pick_next_task(rq_s *rq, task_s *prev, struct rq_flags *rf)
 
 	// 	/* Assume the next prioritized class is idle_sched_class */
 	// 	if (!p) {
-	// 		put_prev_task(rq, prev);
-	// 		p = pick_next_task_idle(rq);
+	// 		p = pick_task_idle(rq);
+	// 		put_prev_set_next_task(rq, prev, p);
 	// 	}
 
 	// 	return p;
@@ -1004,9 +1100,21 @@ restart:
 	// put_prev_task_balance(rq, prev, rf);
 
 	for_each_class(class) {
-		p = class->pick_next_task(rq);
-		if (p)
-			return p;
+		// p = class->pick_next_task(rq, prev);
+		// if (p)
+		// 	return p;
+
+		// if (class->pick_next_task) {
+			p = class->pick_next_task(rq, prev);
+			if (p)
+				return p;
+		// } else {
+		// 	p = class->pick_task(rq);
+		// 	if (p) {
+		// 		put_prev_set_next_task(rq, prev, p);
+		// 		return p;
+		// 	}
+		// }
 	}
 
 	BUG(); /* The idle class should always have a runnable task. */
@@ -1014,24 +1122,6 @@ restart:
 
 
 #define pick_next_task	__pick_next_task
-
-/*
- * Constants for the sched_mode argument of __schedule().
- *
- * The mode argument allows RT enabled kernels to differentiate a
- * preemption from blocking on an 'sleeping' spin/rwlock. Note that
- * SM_MASK_PREEMPT for !RT has all bits set, which allows the compiler to
- * optimize the AND operation out and just check for zero.
- */
-#define SM_NONE				0x0
-#define SM_PREEMPT			0x1
-#define SM_RTLOCK_WAIT		0x2
-
-#ifndef CONFIG_PREEMPT_RT
-#	define SM_MASK_PREEMPT	(~0U)
-#else
-#	define SM_MASK_PREEMPT	SM_PREEMPT
-#endif
 
 /*
  * __schedule() is the main scheduler function.
@@ -1072,11 +1162,17 @@ restart:
  *
  * WARNING: must be called with preemption disabled!
  */
-static void __sched notrace
-__schedule(unsigned int sched_mode) {
+void __sched notrace
+__schedule(int sched_mode) {
 	task_s *prev, *next;
-	unsigned long *switch_count;
-	unsigned long prev_state;
+	/*
+	 * On PREEMPT_RT kernel, SM_RTLOCK_WAIT is noted
+	 * as a preemption by schedule_debug() and RCU.
+	 */
+	bool preempt = sched_mode > SM_NONE;
+	bool block = false;
+	ulong *switch_count;
+	ulong prev_state;
 	struct rq_flags rf;
 	rq_s *rq;
 	int cpu;
@@ -1085,13 +1181,13 @@ __schedule(unsigned int sched_mode) {
 	rq = cpu_rq(cpu);
 	prev = rq->curr;
 
-	schedule_debug(prev, !!sched_mode);
+	schedule_debug(prev, sched_mode);
 
 	// if (sched_feat(HRTICK) || sched_feat(HRTICK_DL))
 	// 	hrtick_clear(rq);
 
 	local_irq_disable();
-	// rcu_note_context_switch(!!sched_mode);
+	// rcu_note_context_switch(sched_mode);
 
 	/*
 	 * Make sure that signal_pending_state()->signal_pending() below
@@ -1106,58 +1202,72 @@ __schedule(unsigned int sched_mode) {
 	 *     if (signal_pending_state())	    if (p->state & @state)
 	 *
 	 * Also, the membarrier system call requires a full memory barrier
-	 * after coming from user-space, before storing to rq->curr.
+	 * after coming from user-space, before storing to rq->curr; this
+	 * barrier matches a full barrier in the proximity of the membarrier
+	 * system call exit.
 	 */
 	// rq_lock(rq, &rf);
 	// smp_mb__after_spinlock();
 
-	// /* Promote REQ to ACT */
-	// rq->clock_update_flags <<= 1;
+	/* Promote REQ to ACT */
+	rq->clock_update_flags <<= 1;
 	update_rq_clock(rq);
+	rq->clock_update_flags = RQCF_UPDATED;
 
 	switch_count = &prev->nivcsw;
+
+	/* Task state changes only considers SM_PREEMPT as preemption */
+	preempt = sched_mode == SM_PREEMPT;
 
 	/*
 	 * We must load prev->state once (task_struct::state is volatile), such
 	 * that we form a control dependency vs deactivate_task() below.
 	 */
-	// prev_state = READ_ONCE(prev->__state);
-	// if (!(sched_mode & SM_MASK_PREEMPT) && prev_state) {
-	// 	if (signal_pending_state(prev_state, prev)) {
-	// 		WRITE_ONCE(prev->__state, TASK_RUNNING);
-	// 	} else {
-	// 		prev->sched_contributes_to_load =
-	// 			(prev_state & TASK_UNINTERRUPTIBLE) &&
-	// 			!(prev_state & TASK_NOLOAD) &&
-	// 			!(prev_state & TASK_FROZEN);
+	prev_state = READ_ONCE(prev->__state);
+	if (sched_mode == SM_IDLE) {
+		// /* SCX must consult the BPF scheduler to tell if rq is empty */
+		// if (!rq->nr_running && !scx_enabled()) {
+		// 	next = prev;
+		// 	goto picked;
+		// }
+	} else if (!preempt && prev_state) {
+		if (signal_pending_state(prev_state, prev)) {
+			WRITE_ONCE(prev->__state, TASK_RUNNING);
+		} else {
+			int flags = DEQUEUE_NOCLOCK;
 
-	// 		if (prev->sched_contributes_to_load)
-	// 			rq->nr_uninterruptible++;
+			prev->sched_contributes_to_load =
+				(prev_state & TASK_UNINTERRUPTIBLE) &&
+				!(prev_state & TASK_NOLOAD) &&
+				!(prev_state & TASK_FROZEN);
 
-	// 		/*
-	// 		 * __schedule()			ttwu()
-	// 		 *   prev_state = prev->state;    if (p->on_rq && ...)
-	// 		 *   if (prev_state)		    goto out;
-	// 		 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
-	// 		 *				  p->state = TASK_WAKING
-	// 		 *
-	// 		 * Where __schedule() and ttwu() have matching control dependencies.
-	// 		 *
-	// 		 * After this, schedule() must not care about p->state any more.
-	// 		 */
-	// 		deactivate_task(rq, prev, DEQUEUE_SLEEP | DEQUEUE_NOCLOCK);
+			if (unlikely(is_special_task_state(prev_state)))
+				flags |= DEQUEUE_SPECIAL;
 
-	// 		if (prev->in_iowait) {
-	// 			atomic_inc(&rq->nr_iowait);
-	// 			delayacct_blkio_start();
-	// 		}
-	// 	}
-	// 	switch_count = &prev->nvcsw;
-	// }
+			/*
+			 * __schedule()			ttwu()
+			 *   prev_state = prev->state;    if (p->on_rq && ...)
+			 *   if (prev_state)		    goto out;
+			 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
+			 *				  p->state = TASK_WAKING
+			 *
+			 * Where __schedule() and ttwu() have matching control dependencies.
+			 *
+			 * After this, schedule() must not care about p->state any more.
+			 */
+			block_task(rq, prev, flags);
+			block = true;
+		}
+		switch_count = &prev->nvcsw;
+	}
 
 	next = pick_next_task(rq, prev, &rf);
+picked:
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
+#ifdef CONFIG_SCHED_DEBUG
+	rq->last_seen_need_resched_ns = 0;
+#endif
 
 	if (likely(prev != next)) {
 		rq->nr_switches++;
@@ -1173,25 +1283,32 @@ __schedule(unsigned int sched_mode) {
 		 *
 		 * Here are the schemes providing that barrier on the
 		 * various architectures:
-		 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC.
-		 *   switch_mm() rely on membarrier_arch_switch_mm() on PowerPC.
+		 * - mm ? switch_mm() : mmdrop() for x86, s390, sparc, PowerPC,
+		 *   RISC-V.  switch_mm() relies on membarrier_arch_switch_mm()
+		 *   on PowerPC and on RISC-V.
 		 * - finish_lock_switch() for weakly-ordered
 		 *   architectures where spin_unlock is a full barrier,
 		 * - switch_to() for arm64 (weakly-ordered, spin_unlock
 		 *   is a RELEASE barrier),
+		 *
+		 * The barrier matches a full barrier in the proximity of
+		 * the membarrier system call entry.
+		 *
+		 * On RISC-V, this barrier pairing is also needed for the
+		 * SYNC_CORE command when switching between processes, cf.
+		 * the inline comments in membarrier_arch_switch_mm().
 		 */
 		++*switch_count;
 
 		// migrate_disable_switch(rq, prev);
-		// psi_sched_switch(prev, next, !task_on_rq_queued(prev));
+		// psi_account_irqtime(rq, prev, next);
+		// psi_sched_switch(prev, next, block);
 
-		// trace_sched_switch(sched_mode & SM_MASK_PREEMPT, prev, next, prev_state);
+		// trace_sched_switch(preempt, prev, next, prev_state);
 
 		/* Also unlocks the rq: */
 		rq = context_switch(rq, prev, next, &rf);
 	} else {
-		// rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
-
 		// rq_unpin_lock(rq, &rf);
 		// __balance_callbacks(rq);
 		// raw_spin_rq_unlock_irq(rq);
@@ -1212,67 +1329,38 @@ void __noreturn do_task_dead(void)
 	BUG();
 
 	/* Avoid "noreturn function does return" - but don't continue if BUG() is a NOP: */
-	// for (;;)
-	// 	cpu_relax();
-	while (1);
+	for (;;)
+		cpu_relax();
 }
 
-static inline void sched_submit_work(task_s *tsk)
-{
-	// unsigned int task_flags;
-
-	// if (task_is_running(tsk))
-	// 	return;
-
-	// task_flags = tsk->flags;
-	// /*
-	//  * If a worker goes to sleep, notify and ask workqueue whether it
-	//  * wants to wake up a task to maintain concurrency.
-	//  */
-	// if (task_flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
-	// 	if (task_flags & PF_WQ_WORKER)
-	// 		wq_worker_sleeping(tsk);
-	// 	else
-	// 		io_wq_worker_sleeping(tsk);
-	// }
-
-	// /*
-	//  * spinlock and rwlock must not flush block requests.  This will
-	//  * deadlock if the callback attempts to acquire a lock which is
-	//  * already acquired.
-	//  */
-	// SCHED_WARN_ON(current->__state & TASK_RTLOCK_WAIT);
-
-	// /*
-	//  * If we are going to sleep and we have plugged IO queued,
-	//  * make sure to submit it to avoid deadlocks.
-	//  */
-	// blk_flush_plug(tsk->plug, true);
-}
-
-static void sched_update_worker(task_s *tsk)
-{
-	// if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER)) {
+static void
+sched_update_worker(task_s *tsk) {
+	// if (tsk->flags & (PF_WQ_WORKER | PF_IO_WORKER | PF_BLOCK_TS)) {
+	// 	if (tsk->flags & PF_BLOCK_TS)
+	// 		blk_plug_invalidate_ts(tsk);
 	// 	if (tsk->flags & PF_WQ_WORKER)
 	// 		wq_worker_running(tsk);
-	// 	else
+	// 	else if (tsk->flags & PF_IO_WORKER)
 	// 		io_wq_worker_running(tsk);
 	// }
 }
 
-asmlinkage __visible void __sched schedule(void)
+asmlinkage __visible void __sched
+schedule(void)
 {
 	task_s *tsk = current;
 
-	sched_submit_work(tsk);
-	do {
-		preempt_disable();
-		__schedule(SM_NONE);
-		sched_preempt_enable_no_resched();
-	} while (need_resched());
+#ifdef CONFIG_RT_MUTEXES
+	lockdep_assert(!tsk->sched_rt_mutex);
+#endif
+
+	if (!task_is_running(tsk))
+		sched_submit_work(tsk);
+	__schedule_loop(SM_NONE);
 	sched_update_worker(tsk);
 }
 EXPORT_SYMBOL(schedule);
+
 
 /*
  * synchronize_rcu_tasks() makes sure that no task is stuck in preempted
@@ -1334,10 +1422,10 @@ preempt_schedule_common(void)
 		// preempt_latency_stop(1);
 		preempt_enable_no_resched_notrace();
 
-		// /*
-		//  * Check again in case we missed a preemption opportunity
-		//  * between schedule and now.
-		//  */
+		/*
+		 * Check again in case we missed a preemption opportunity
+		 * between schedule and now.
+		 */
 	} while (need_resched());
 }
 
@@ -1358,6 +1446,86 @@ preempt_schedule(void)
 }
 // NOKPROBE_SYMBOL(preempt_schedule);
 EXPORT_SYMBOL(preempt_schedule);
+
+/**
+ * preempt_schedule_notrace - preempt_schedule called by tracing
+ *
+ * The tracing infrastructure uses preempt_enable_notrace to prevent
+ * recursion and tracing preempt enabling caused by the tracing
+ * infrastructure itself. But as tracing can happen in areas coming
+ * from userspace or just about to enter userspace, a preempt enable
+ * can occur before user_exit() is called. This will cause the scheduler
+ * to be called when the system is still in usermode.
+ *
+ * To prevent this, the preempt_enable_notrace will use this function
+ * instead of preempt_schedule() to exit user context if needed before
+ * calling the scheduler.
+ */
+asmlinkage __visible void __sched notrace
+preempt_schedule_notrace(void)
+{
+	// enum ctx_state prev_ctx;
+
+	if (likely(!preemptible()))
+		return;
+
+	do {
+		/*
+		 * Because the function tracer can trace preempt_count_sub()
+		 * and it also uses preempt_enable/disable_notrace(), if
+		 * NEED_RESCHED is set, the preempt_enable_notrace() called
+		 * by the function tracer will call this function again and
+		 * cause infinite recursion.
+		 *
+		 * Preemption must be disabled here before the function
+		 * tracer can trace. Break up preempt_disable() into two
+		 * calls. One to disable preemption without fear of being
+		 * traced. The other to still record the preemption latency,
+		 * which can also be traced by the function tracer.
+		 */
+		preempt_disable_notrace();
+		// preempt_latency_start(1);
+		/*
+		 * Needs preempt disabled in case user_exit() is traced
+		 * and the tracer calls preempt_enable_notrace() causing
+		 * an infinite recursion.
+		 */
+		// prev_ctx = exception_enter();
+		__schedule(SM_PREEMPT);
+		// exception_exit(prev_ctx);
+
+		// preempt_latency_stop(1);
+		preempt_enable_no_resched_notrace();
+	} while (need_resched());
+}
+EXPORT_SYMBOL_GPL(preempt_schedule_notrace);
+
+/*
+ * This is the entry point to schedule() from kernel preemption
+ * off of IRQ context.
+ * Note, that this is called and return with IRQs disabled. This will
+ * protect us against recursive calling from IRQ contexts.
+ */
+asmlinkage __visible void __sched
+preempt_schedule_irq(void)
+{
+	// enum ctx_state prev_state;
+
+	/* Catch callers which need to be fixed */
+	BUG_ON(preempt_count() || !irqs_disabled());
+
+	// prev_state = exception_enter();
+
+	do {
+		preempt_disable();
+		local_irq_enable();
+		__schedule(SM_PREEMPT);
+		local_irq_disable();
+		sched_preempt_enable_no_resched();
+	} while (need_resched());
+
+	// exception_exit(prev_state);
+}
 
 
 

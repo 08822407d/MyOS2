@@ -154,39 +154,39 @@
 		// /* Used for emulating ABI behavior of previous Linux versions: */
 		// unsigned int personality;
 
-		// /* Scheduler bits, serialized by scheduler locks: */
-		// unsigned sched_reset_on_fork : 1;
-		// unsigned sched_contributes_to_load : 1;
-		// unsigned sched_migrated : 1;
-	// #ifdef CONFIG_PSI
-	// 	unsigned sched_psi_wake_requeue : 1;
-	// #endif
+		/* Scheduler bits, serialized by scheduler locks: */
+		uint			sched_reset_on_fork			: 1;
+		uint			sched_contributes_to_load	: 1;
+		uint			sched_migrated				: 1;
+	#ifdef CONFIG_PSI
+		uint			sched_psi_wake_requeue		: 1;
+	#endif
 
-	// 	/* Force alignment to the next boundary: */
-	// 	unsigned : 0;
+		/* Force alignment to the next boundary: */
+		uint										: 0;
 
-	// 	/* Unserialized, strictly 'current' */
+		/* Unserialized, strictly 'current' */
 
-	// 	/*
-	// 	* This field must not be in the scheduler word above due to wakelist
-	// 	* queueing no longer being serialized by p->on_cpu. However:
-	// 	*
-	// 	* p->XXX = X;			ttwu()
-	// 	* schedule()			  if (p->on_rq && ..) // false
-	// 	*   smp_mb__after_spinlock();	  if (smp_load_acquire(&p->on_cpu) && //true
-	// 	*   deactivate_task()		      ttwu_queue_wakelist())
-	// 	*     p->on_rq = 0;			p->sched_remote_wakeup = Y;
-	// 	*
-	// 	* guarantees all stores of 'current' are visible before
-	// 	* ->sched_remote_wakeup gets used, so it can be in this word.
-	// 	*/
-	// 	unsigned sched_remote_wakeup : 1;
+		/*
+		 * This field must not be in the scheduler word above due to wakelist
+		 * queueing no longer being serialized by p->on_cpu. However:
+		 *
+		 * p->XXX = X;			ttwu()
+		 * schedule()			  if (p->on_rq && ..) // false
+		 *   smp_mb__after_spinlock();	  if (smp_load_acquire(&p->on_cpu) && //true
+		 *   deactivate_task()		      ttwu_queue_wakelist())
+		 *     p->on_rq = 0;			p->sched_remote_wakeup = Y;
+		 *
+		 * guarantees all stores of 'current' are visible before
+		 * ->sched_remote_wakeup gets used, so it can be in this word.
+		 */
+		uint			sched_remote_wakeup			: 1;
 
 		/* Bit to tell LSMs we're in execve(): */
-		unsigned	in_execve			: 1;
-		unsigned	in_iowait			: 1;
+		uint			in_execve					: 1;
+		uint			in_iowait					: 1;
 	// #ifndef TIF_RESTORE_SIGMASK
-		unsigned	restore_sigmask		: 1;
+		uint			restore_sigmask				: 1;
 	// #endif
 	// #ifdef CONFIG_COMPAT_BRK
 	// 	unsigned brk_randomized : 1;

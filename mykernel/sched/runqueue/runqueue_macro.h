@@ -2,11 +2,24 @@
 #ifndef _LINUX_RUNQUEUE_MACRO_H_
 #define _LINUX_RUNQUEUE_MACRO_H_
 
+	#define task_is_running(task)		(						\
+				READ_ONCE((task)->__state) == TASK_RUNNING		\
+			)
+	#define task_is_traced(task)		(						\
+				(READ_ONCE(task->jobctl) & JOBCTL_TRACED) != 0	\
+			)
+	#define task_is_stopped(task)		(						\
+				(READ_ONCE(task->jobctl) & JOBCTL_STOPPED) != 0	\
+			)
+	#define task_is_stopped_or_traced(task)	(					\
+				(READ_ONCE(task->jobctl) &						\
+					(JOBCTL_STOPPED | JOBCTL_TRACED)) != 0		\
+			)
 	/*
 	 * Special states are those that do not use the normal wait-loop pattern. See
 	 * the comment with set_special_state().
 	 */
-	#define is_special_task_state(state) (					\
+	#define is_special_task_state(state)	(				\
 				(state) & (__TASK_STOPPED | __TASK_TRACED |	\
 				TASK_PARKED | TASK_DEAD)					\
 			)

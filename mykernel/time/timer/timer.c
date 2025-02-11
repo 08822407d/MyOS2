@@ -482,6 +482,67 @@ void add_timer_global(timer_list_s *timer)
 }
 EXPORT_SYMBOL(add_timer_global);
 
+/**
+ * add_timer_on - Start a timer on a particular CPU
+ * @timer:	The timer to be started
+ * @cpu:	The CPU to start it on
+ *
+ * Same as add_timer() except that it starts the timer on the given CPU and
+ * the TIMER_PINNED flag is set. When timer shouldn't be a pinned timer in
+ * the next round, add_timer_global() should be used instead as it unsets
+ * the TIMER_PINNED flag.
+ *
+ * See add_timer() for further details.
+ */
+void add_timer_on(timer_list_s *timer, int cpu)
+{
+	timer_base_s *new_base, *base;
+	ulong flags;
+
+	// debug_assert_init(timer);
+
+	if (WARN_ON_ONCE(timer_pending(timer)))
+		return;
+
+	/* Make sure timer flags have TIMER_PINNED flag set */
+	timer->flags |= TIMER_PINNED;
+
+	new_base = get_timer_cpu_base(timer->flags, cpu);
+
+	/*
+	 * If @timer was on a different CPU, it should be migrated with the
+	 * old base locked to prevent other operations proceeding with the
+	 * wrong base locked.  See lock_timer_base().
+	 */
+	base = lock_timer_base(timer, &flags);
+	/*
+	 * Has @timer been shutdown? This needs to be evaluated while
+	 * holding base lock to prevent a race against the shutdown code.
+	 */
+	if (!timer->function)
+		goto out_unlock;
+
+	if (base != new_base) {
+		timer->flags |= TIMER_MIGRATING;
+
+		// raw_spin_unlock(&base->lock);
+		spin_unlock_no_resched(&base->lock);
+		base = new_base;
+		// raw_spin_lock(&base->lock);
+		spin_lock(&base->lock);
+		WRITE_ONCE(timer->flags,
+			   (timer->flags & ~TIMER_BASEMASK) | cpu);
+	}
+	forward_timer_base(base);
+
+	// debug_timer_activate(timer);
+	internal_add_timer(base, timer);
+out_unlock:
+	// raw_spin_unlock_irqrestore(&base->lock, flags);
+	spin_unlock_irqrestore_no_resched(&base->lock, flags);
+}
+EXPORT_SYMBOL_GPL(add_timer_on);
+
 
 
 /**

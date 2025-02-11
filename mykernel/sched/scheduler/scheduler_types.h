@@ -70,7 +70,7 @@
 
 		// void	(*check_preempt_curr) (rq_s *rq, task_s *p, int flags);
 
-		task_s	*(*pick_next_task) (rq_s *rq);
+		task_s	*(*pick_next_task) (rq_s *rq, task_s *prev);
 
 		// void	(*put_prev_task) (rq_s *rq, task_s *p);
 		// void	(*set_next_task) (rq_s *rq, task_s *p, bool first);
