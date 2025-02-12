@@ -957,17 +957,14 @@ context_switch(rq_s *rq, task_s *prev,
 			prev->active_mm = NULL;
 		}
 	}
-#if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next));
-#endif
+// #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
+// 	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next));
+// #endif
 
 	// /* switch_mm_cid() requires the memory barriers above. */
 	// switch_mm_cid(rq, prev, next);
 
-	// rq->clock_update_flags &= ~(RQCF_ACT_SKIP|RQCF_REQ_SKIP);
-
 	// prepare_lock_switch(rq, next, rf);
-	rq->curr = next;
 
 	/* Here we just switch the register state and the stack. */
 	switch_to(prev, next, prev);
@@ -1224,50 +1221,50 @@ __schedule(int sched_mode) {
 	 * that we form a control dependency vs deactivate_task() below.
 	 */
 	prev_state = READ_ONCE(prev->__state);
-	if (sched_mode == SM_IDLE) {
-		// /* SCX must consult the BPF scheduler to tell if rq is empty */
-		// if (!rq->nr_running && !scx_enabled()) {
-		// 	next = prev;
-		// 	goto picked;
-		// }
-	} else if (!preempt && prev_state) {
-		if (signal_pending_state(prev_state, prev)) {
-			WRITE_ONCE(prev->__state, TASK_RUNNING);
-		} else {
-			int flags = DEQUEUE_NOCLOCK;
+	// if (sched_mode == SM_IDLE) {
+	// 	// /* SCX must consult the BPF scheduler to tell if rq is empty */
+	// 	// if (!rq->nr_running && !scx_enabled()) {
+	// 	// 	next = prev;
+	// 	// 	goto picked;
+	// 	// }
+	// } else if (!preempt && prev_state) {
+	// 	if (signal_pending_state(prev_state, prev)) {
+	// 		WRITE_ONCE(prev->__state, TASK_RUNNING);
+	// 	} else {
+	// 		int flags = DEQUEUE_NOCLOCK;
 
-			prev->sched_contributes_to_load =
-				(prev_state & TASK_UNINTERRUPTIBLE) &&
-				!(prev_state & TASK_NOLOAD) &&
-				!(prev_state & TASK_FROZEN);
+	// 		prev->sched_contributes_to_load =
+	// 			(prev_state & TASK_UNINTERRUPTIBLE) &&
+	// 			!(prev_state & TASK_NOLOAD) &&
+	// 			!(prev_state & TASK_FROZEN);
 
-			if (unlikely(is_special_task_state(prev_state)))
-				flags |= DEQUEUE_SPECIAL;
+	// 		if (unlikely(is_special_task_state(prev_state)))
+	// 			flags |= DEQUEUE_SPECIAL;
 
-			/*
-			 * __schedule()			ttwu()
-			 *   prev_state = prev->state;    if (p->on_rq && ...)
-			 *   if (prev_state)		    goto out;
-			 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
-			 *				  p->state = TASK_WAKING
-			 *
-			 * Where __schedule() and ttwu() have matching control dependencies.
-			 *
-			 * After this, schedule() must not care about p->state any more.
-			 */
-			block_task(rq, prev, flags);
-			block = true;
-		}
-		switch_count = &prev->nvcsw;
-	}
+	// 		/*
+	// 		 * __schedule()			ttwu()
+	// 		 *   prev_state = prev->state;    if (p->on_rq && ...)
+	// 		 *   if (prev_state)		    goto out;
+	// 		 *     p->on_rq = 0;		  smp_acquire__after_ctrl_dep();
+	// 		 *				  p->state = TASK_WAKING
+	// 		 *
+	// 		 * Where __schedule() and ttwu() have matching control dependencies.
+	// 		 *
+	// 		 * After this, schedule() must not care about p->state any more.
+	// 		 */
+	// 		block_task(rq, prev, flags);
+	// 		block = true;
+	// 	}
+	// 	switch_count = &prev->nvcsw;
+	// }
 
 	next = pick_next_task(rq, prev, &rf);
 picked:
 	clear_tsk_need_resched(prev);
 	clear_preempt_need_resched();
-#ifdef CONFIG_SCHED_DEBUG
-	rq->last_seen_need_resched_ns = 0;
-#endif
+// #ifdef CONFIG_SCHED_DEBUG
+// 	rq->last_seen_need_resched_ns = 0;
+// #endif
 
 	if (likely(prev != next)) {
 		rq->nr_switches++;
@@ -1275,7 +1272,7 @@ picked:
 		 * RCU users of rcu_dereference(rq->curr) may not see
 		 * changes to task_struct made by pick_next_task().
 		 */
-		// RCU_INIT_POINTER(rq->curr, next);
+		RCU_INIT_POINTER(rq->curr, next);
 		/*
 		 * The membarrier system call requires each architecture
 		 * to have a full memory barrier after updating
@@ -1350,9 +1347,9 @@ schedule(void)
 {
 	task_s *tsk = current;
 
-#ifdef CONFIG_RT_MUTEXES
-	lockdep_assert(!tsk->sched_rt_mutex);
-#endif
+// #ifdef CONFIG_RT_MUTEXES
+// 	lockdep_assert(!tsk->sched_rt_mutex);
+// #endif
 
 	if (!task_is_running(tsk))
 		sched_submit_work(tsk);
