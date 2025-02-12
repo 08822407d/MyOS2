@@ -70,6 +70,9 @@ __SYSCALL(__NR_set_tid_address, sys_set_tid_address)
 
 __SYSCALL(__NR_clock_gettime, sys_clock_gettime)
 
+__SYSCALL(__NR_exit_group, sys_exit_group)
+
+
 // __SYSCALL(__NR_set_robust_list, sys_set_robust_list)
 
 // __SYSCALL(__NR_rseq, sys_rseq)
