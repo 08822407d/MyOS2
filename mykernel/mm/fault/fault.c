@@ -247,21 +247,20 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_entp,
 	mm_s *dst_mm = dst_vma->vm_mm;
 	mm_s *src_mm = src_vma->vm_mm;
 	pte_t *src_pte_ptr, *dst_pte_ptr;
-	// pte_t *orig_src_pte_ptr, *orig_dst_pte_ptr;
+	pte_t *orig_src_pte_ptr, *orig_dst_pte_ptr;
 	spinlock_t *src_ptl, *dst_ptl;
 	int ret = 0;
 
 	dst_pte_ptr = pte_alloc_map_lock(dst_mm, dst_pmd_entp, addr, &dst_ptl);
 	if (!dst_pte_ptr) {
-		// pte_unmap_unlock(dst_pte_ptr, dst_ptl);
-		spin_unlock_no_resched(dst_ptl);
+		pte_unmap_unlock(dst_pte_ptr, dst_ptl);
 		/* ret == 0 */
 		return -ENOMEM;
 	}
 	// src_pte_ptr = pte_offset_map_nolock(src_mm, src_pmd_entp, addr, &src_ptl);;
 	src_pte_ptr = pte_offset_map_lock(src_mm, src_pmd_entp, addr, &src_ptl);;
-	// orig_src_pte_ptr = src_pte_ptr;
-	// orig_dst_pte_ptr = dst_pte_ptr;
+	orig_src_pte_ptr = src_pte_ptr;
+	orig_dst_pte_ptr = dst_pte_ptr;
 
 	do {
 		if (pte_none(*src_pte_ptr)) {
@@ -299,10 +298,8 @@ copy_pte_range(vma_s *dst_vma, vma_s *src_vma, pmd_t *dst_pmd_entp,
 			break;
 	} while (dst_pte_ptr++, src_pte_ptr++, addr += PAGE_SIZE, addr != end);
 
-	// pte_unmap_unlock(orig_src_pte_ptr, src_ptl);
-	spin_unlock_no_resched(src_ptl);
-	// pte_unmap_unlock(orig_dst_pte_ptr, dst_ptl);
-	spin_unlock_no_resched(dst_ptl);
+	pte_unmap_unlock(orig_src_pte_ptr, src_ptl);
+	pte_unmap_unlock(orig_dst_pte_ptr, dst_ptl);
 	// cond_resched();
 
 	return 0;

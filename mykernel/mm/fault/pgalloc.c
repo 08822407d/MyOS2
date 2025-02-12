@@ -21,7 +21,7 @@ int __pud_alloc(mm_s *mm, p4d_t *p4d_entp)
 		smp_wmb();	/* See comment in pmd_install() */
 		p4d_populate(mm, p4d_entp, new);
 	}
-	spin_unlock_no_resched(ptl);
+	spin_unlock(ptl);
 	return 0;
 }
 
@@ -43,7 +43,7 @@ int __pmd_alloc(mm_s *mm, pud_t *pud_entp)
 		smp_wmb();	/* See comment in pmd_install() */
 		pud_populate(mm, pud_entp, new);
 	}
-	spin_unlock_no_resched(ptl);
+	spin_unlock(ptl);
 	return 0;
 }
 
@@ -61,6 +61,6 @@ int __pgtbl_alloc(mm_s *mm, pmd_t *pmd_entp)
 		smp_wmb();	/* See comment in pmd_install() */
 		pmd_populate(mm, pmd_entp, new);
 	}
-	spin_unlock_no_resched(ptl);
+	spin_unlock(ptl);
 	return 0;
 }

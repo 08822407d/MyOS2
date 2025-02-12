@@ -11,8 +11,8 @@ static task_s *pick_next_task_myos(rq_s *rq, task_s *prev)
 
 	ulong used_jiffies = jiffies - myos_rq->last_jiffies;
 
-	// if running time out, make the need_schedule flag of current task
-	if ((curr_task == rq->idle ||
+	if ((need_resched() ||
+		curr_task == rq->idle ||
 		used_jiffies >= rt->time_slice ||
 		curr_task->__state != TASK_RUNNING) &&
 		myos_rq->running_lhdr.count > 0)
@@ -53,11 +53,13 @@ static task_s *pick_next_task_myos(rq_s *rq, task_s *prev)
 		retval = container_of(next_rt, task_s, rt);
 		myos_rq->last_jiffies = jiffies;
 	}
+	rq->curr = retval;
 	return retval;
 }
 
 static void yield_task_fair_myos(rq_s *rq)
 {
+	resched_curr(rq);
 }
 
 DEFINE_SCHED_CLASS(myos_rt) = {

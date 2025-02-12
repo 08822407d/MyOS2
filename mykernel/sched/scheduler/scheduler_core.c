@@ -739,13 +739,13 @@ void resched_curr(rq_s *rq)
 	if (test_tsk_need_resched(curr))
 		return;
 
-	// cpu = cpu_of(rq);
+	cpu = cpu_of(rq);
 
-	// if (cpu == smp_processor_id()) {
-	// 	set_tsk_need_resched(curr);
-	// 	set_preempt_need_resched();
-	// 	return;
-	// }
+	if (cpu == smp_processor_id()) {
+		set_tsk_need_resched(curr);
+		set_preempt_need_resched();
+		return;
+	}
 
 	// if (set_nr_and_not_polling(curr))
 	// 	smp_send_reschedule(cpu);
@@ -1521,17 +1521,17 @@ void __init sched_init(void)
 // 	autogroup_init(&init_task);
 // #endif /* CONFIG_CGROUP_SCHED */
 
-// 	for_each_possible_cpu(i) {
-// 		struct rq *rq;
+	for_each_possible_cpu(i) {
+		rq_s *rq;
 
-// 		rq = cpu_rq(i);
-// 		raw_spin_lock_init(&rq->__lock);
-// 		rq->nr_running = 0;
-// 		rq->calc_load_active = 0;
-// 		rq->calc_load_update = jiffies + LOAD_FREQ;
-// 		init_cfs_rq(&rq->cfs);
-// 		init_rt_rq(&rq->rt);
-// 		init_dl_rq(&rq->dl);
+		rq = cpu_rq(i);
+		// raw_spin_lock_init(&rq->__lock);
+		// rq->nr_running = 0;
+		// rq->calc_load_active = 0;
+		// rq->calc_load_update = jiffies + LOAD_FREQ;
+		// init_cfs_rq(&rq->cfs);
+		// init_rt_rq(&rq->rt);
+		// init_dl_rq(&rq->dl);
 // #ifdef CONFIG_FAIR_GROUP_SCHED
 // 		INIT_LIST_HEAD(&rq->leaf_cfs_rq_list);
 // 		rq->tmp_alone_branch = &rq->leaf_cfs_rq_list;
@@ -1557,26 +1557,26 @@ void __init sched_init(void)
 // 		init_tg_cfs_entry(&root_task_group, &rq->cfs, NULL, i, NULL);
 // #endif /* CONFIG_FAIR_GROUP_SCHED */
 
-// 		rq->rt.rt_runtime = def_rt_bandwidth.rt_runtime;
+		// rq->rt.rt_runtime = def_rt_bandwidth.rt_runtime;
 // #ifdef CONFIG_RT_GROUP_SCHED
 // 		init_tg_rt_entry(&root_task_group, &rq->rt, NULL, i, NULL);
 // #endif
-// 		rq->sd = NULL;
-// 		rq->rd = NULL;
-// 		rq->cpu_capacity = SCHED_CAPACITY_SCALE;
-// 		rq->balance_callback = &balance_push_callback;
-// 		rq->active_balance = 0;
-// 		rq->next_balance = jiffies;
-// 		rq->push_cpu = 0;
-// 		rq->cpu = i;
-// 		rq->online = 0;
-// 		rq->idle_stamp = 0;
-// 		rq->avg_idle = 2*sysctl_sched_migration_cost;
-// 		rq->max_idle_balance_cost = sysctl_sched_migration_cost;
+		// rq->sd = NULL;
+		// rq->rd = NULL;
+		// rq->cpu_capacity = SCHED_CAPACITY_SCALE;
+		// rq->balance_callback = &balance_push_callback;
+		// rq->active_balance = 0;
+		// rq->next_balance = jiffies;
+		// rq->push_cpu = 0;
+		rq->cpu = i;
+		rq->online = 0;
+		// rq->idle_stamp = 0;
+		// rq->avg_idle = 2*sysctl_sched_migration_cost;
+		// rq->max_idle_balance_cost = sysctl_sched_migration_cost;
 
-// 		INIT_LIST_HEAD(&rq->cfs_tasks);
+		// INIT_LIST_HEAD(&rq->cfs_tasks);
 
-// 		rq_attach_root(rq, &def_root_domain);
+		// rq_attach_root(rq, &def_root_domain);
 // #ifdef CONFIG_NO_HZ_COMMON
 // 		rq->last_blocked_load_update_tick = jiffies;
 // 		atomic_set(&rq->nohz_flags, 0);
@@ -1586,8 +1586,8 @@ void __init sched_init(void)
 // #ifdef CONFIG_HOTPLUG_CPU
 // 		rcuwait_init(&rq->hotplug_wait);
 // #endif
-// 		hrtick_rq_init(rq);
-// 		atomic_set(&rq->nr_iowait, 0);
+		// hrtick_rq_init(rq);
+		// atomic_set(&rq->nr_iowait, 0);
 
 // #ifdef CONFIG_SCHED_CORE
 // 		rq->core = rq;
@@ -1600,8 +1600,8 @@ void __init sched_init(void)
 
 // 		rq->core_cookie = 0UL;
 // #endif
-// 		zalloc_cpumask_var_node(&rq->scratch_mask, GFP_KERNEL, cpu_to_node(i));
-// 	}
+		// zalloc_cpumask_var_node(&rq->scratch_mask, GFP_KERNEL, cpu_to_node(i));
+	}
 
 // 	set_load_weight(&init_task, false);
 

@@ -130,7 +130,7 @@ retry:
 	kick_pool(pool);
 
 out:
-	spin_unlock_no_resched(&pool->lock);
+	spin_unlock(&pool->lock);
 	// rcu_read_unlock();
 }
 
@@ -329,7 +329,7 @@ __releases(&pool->lock)
 __acquires(&pool->lock)
 {
 	do {
-		spin_unlock_irq_no_resched(&pool->lock);
+		spin_unlock_irq(&pool->lock);
 
 		// /* if we don't make progress in MAYDAY_INITIAL_TIMEOUT, call for help */
 		// mod_timer(&pool->mayday_timer, jiffies + MAYDAY_INITIAL_TIMEOUT);
@@ -463,7 +463,7 @@ __acquires(&pool->lock)
 	// set_work_pool_and_clear_pending(work, pool->id, pool_offq_flags(pool));
 
 	// pwq->stats[PWQ_STAT_STARTED]++;
-	spin_unlock_no_resched(&pool->lock);
+	spin_unlock_irq(&pool->lock);
 
 	// rcu_start_depth = rcu_preempt_depth();
 	// lockdep_start_depth = lockdep_depth(current);
@@ -644,7 +644,7 @@ sleep:
 	 */
 	worker_enter_idle(worker);
 	__set_current_state(TASK_IDLE);
-	spin_unlock_irq_no_resched(&pool->lock);
+	spin_unlock_irq(&pool->lock);
 	schedule();
 	goto woke_up;
 }
@@ -736,7 +736,7 @@ static worker_s
 	 */
 	if (worker->task)
 		wake_up_process(worker->task);
-	spin_unlock_irq_no_resched(&pool->lock);
+	spin_unlock_irq(&pool->lock);
 
 	return worker;
 

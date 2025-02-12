@@ -53,10 +53,8 @@
 				if (unlikely(timeout <= 0))
 					goto timed_out;
 				__set_current_state(state);
-				// raw_spin_unlock_irq(&sem->lock);
-				spin_unlock_irq_no_resched(&sem->lock);
+				spin_unlock_irq(&sem->lock);
 				timeout = schedule_timeout(timeout);
-				// raw_spin_lock_irq(&sem->lock);
 				spin_lock_irq(&sem->lock);
 				if (waiter.up)
 					return 0;

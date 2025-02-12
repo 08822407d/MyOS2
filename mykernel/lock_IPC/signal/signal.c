@@ -107,7 +107,7 @@ void calculate_sigpending(void)
 	spin_lock_irq(&current->sighand->siglock);
 	set_tsk_thread_flag(current, TIF_SIGPENDING);
 	// recalc_sigpending();
-	spin_unlock_irq_no_resched(&current->sighand->siglock);
+	spin_unlock_irq(&current->sighand->siglock);
 }
 
 /* Given the mask, find the first available signal that should be serviced. */
@@ -1039,7 +1039,7 @@ relock:
 		// do_group_exit(signr);
 		// /* NOTREACHED */
 	}
-	spin_unlock_irq_no_resched(&sighand->siglock);
+	spin_unlock_irq(&sighand->siglock);
 
 	ksig->sig = signr;
 
@@ -1107,7 +1107,7 @@ void __set_current_blocked(const sigset_t *newset)
 
 	spin_lock_irq(&tsk->sighand->siglock);
 	__set_task_blocked(tsk, newset);
-	spin_unlock_irq_no_resched(&tsk->sighand->siglock);
+	spin_unlock_irq(&tsk->sighand->siglock);
 }
 
 /**
@@ -1174,7 +1174,7 @@ int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 
 	spin_lock_irq(&p->sighand->siglock);
 	if (k->sa.sa_flags & SA_IMMUTABLE) {
-		spin_unlock_irq_no_resched(&p->sighand->siglock);
+		spin_unlock_irq(&p->sighand->siglock);
 		return -EINVAL;
 	}
 	if (oact)
@@ -1222,7 +1222,7 @@ int do_sigaction(int sig, k_sigaction_s *act, k_sigaction_s *oact)
 		}
 	}
 
-	spin_unlock_irq_no_resched(&p->sighand->siglock);
+	spin_unlock_irq(&p->sighand->siglock);
 	return 0;
 }
 

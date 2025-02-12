@@ -234,7 +234,7 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 			nr = idr_alloc_cyclic(&tmp->idr, NULL,
 					pid_min, pid_max, GFP_ATOMIC);
 		}
-		spin_unlock_irq_no_resched(&pidmap_lock);
+		spin_unlock_irq(&pidmap_lock);
 		// idr_preload_end();
 
 		if (nr < 0) {
@@ -277,12 +277,12 @@ pid_s *alloc_pid(pid_ns_s *ns, pid_t *set_tid, size_t set_tid_size)
 		idr_replace(&upid->ns->idr, pid, upid->nr);
 		upid->ns->pid_allocated++;
 	}
-	spin_unlock_irq_no_resched(&pidmap_lock);
+	spin_unlock_irq(&pidmap_lock);
 
 	return pid;
 
 out_unlock:
-	spin_unlock_irq_no_resched(&pidmap_lock);
+	spin_unlock_irq(&pidmap_lock);
 	put_pid_ns(ns);
 
 out_free:
@@ -296,8 +296,7 @@ out_free:
 	if (ns->pid_allocated == PIDNS_ADDING)
 		idr_set_cursor(&ns->idr, 0);
 
-	// spin_unlock_irq(&pidmap_lock);
-	spin_unlock_no_resched(&pidmap_lock);
+	spin_unlock_irq(&pidmap_lock);
 
 	kmem_cache_free(ns->pid_cachep, pid);
 	return ERR_PTR(retval);

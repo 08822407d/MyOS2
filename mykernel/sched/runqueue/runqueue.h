@@ -20,6 +20,12 @@
 		extern int
 		task_nice(const task_s *p);
 
+		extern int
+		cpu_of(rq_s *rq);
+
+		extern rq_s
+		*this_rq_lock_irq(rq_flags_s *rf);
+
 	#endif
 
 	#include "runqueue_macro.h"
@@ -54,6 +60,25 @@
 		int
 		task_nice(const task_s *p) {
 			return PRIO_TO_NICE((p)->static_prio);
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		cpu_of(rq_s *rq) {
+			return rq->cpu;
+		}
+
+		PREFIX_STATIC_INLINE
+		rq_s *this_rq_lock_irq(rq_flags_s *rf)
+			__acquires(rq->lock) {
+
+			rq_s *rq;
+
+			local_irq_disable();
+			rq = this_rq();
+			// rq_lock(rq, rf);
+
+			return rq;
 		}
 
 	#endif /* !DEBUG */

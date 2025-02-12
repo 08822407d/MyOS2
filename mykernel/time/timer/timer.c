@@ -203,7 +203,7 @@ static timer_base_s
 			if (timer->flags == tf)
 				return base;
 			// raw_spin_unlock_irqrestore(&base->lock, *flags);
-			spin_unlock_irqrestore_no_resched(&base->lock, *flags);
+			spin_unlock_irqrestore(&base->lock, *flags);
 		}
 		cpu_relax();
 	}
@@ -307,10 +307,8 @@ __mod_timer(timer_list_s *timer, ulong expires, uint options) {
 			/* See the comment in lock_timer_base() */
 			timer->flags |= TIMER_MIGRATING;
 
-			// raw_spin_unlock(&base->lock);
-			spin_unlock_no_resched(&base->lock);
+			spin_unlock(&base->lock);
 			base = new_base;
-			// raw_spin_lock(&base->lock);
 			spin_lock(&base->lock);
 			WRITE_ONCE(timer->flags,
 				(timer->flags & ~TIMER_BASEMASK) | base->cpu);
@@ -525,10 +523,8 @@ void add_timer_on(timer_list_s *timer, int cpu)
 	if (base != new_base) {
 		timer->flags |= TIMER_MIGRATING;
 
-		// raw_spin_unlock(&base->lock);
-		spin_unlock_no_resched(&base->lock);
+		spin_unlock(&base->lock);
 		base = new_base;
-		// raw_spin_lock(&base->lock);
 		spin_lock(&base->lock);
 		WRITE_ONCE(timer->flags,
 			   (timer->flags & ~TIMER_BASEMASK) | cpu);
@@ -539,7 +535,7 @@ void add_timer_on(timer_list_s *timer, int cpu)
 	internal_add_timer(base, timer);
 out_unlock:
 	// raw_spin_unlock_irqrestore(&base->lock, flags);
-	spin_unlock_irqrestore_no_resched(&base->lock, flags);
+	spin_unlock_irqrestore(&base->lock, flags);
 }
 EXPORT_SYMBOL_GPL(add_timer_on);
 

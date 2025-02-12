@@ -31,7 +31,7 @@ void __sched down(sema_t *sem)
 	else
 		__down(sem);
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 }
 EXPORT_SYMBOL(down);
 
@@ -57,7 +57,7 @@ int __sched down_interruptible(sema_t *sem)
 	else
 		result = __down_interruptible(sem);
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 
 	return result;
 }
@@ -86,7 +86,7 @@ int __sched down_killable(sema_t *sem)
 	else
 		result = __down_killable(sem);
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 
 	return result;
 }
@@ -116,7 +116,7 @@ int __sched down_trylock(sema_t *sem)
 	if (likely(count >= 0))
 		sem->count = count;
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 
 	return (count < 0);
 }
@@ -145,7 +145,7 @@ int __sched down_timeout(sema_t *sem, long timeout)
 	else
 		result = __down_timeout(sem, timeout);
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 
 	return result;
 }
@@ -169,7 +169,7 @@ void __sched up(sema_t *sem)
 	else
 		__up(sem);
 	// raw_spin_unlock_irqrestore(&sem->lock, flags);
-	spin_unlock_irqrestore_no_resched(&sem->lock, flags);
+	spin_unlock_irqrestore(&sem->lock, flags);
 }
 EXPORT_SYMBOL(up);
 

@@ -21,14 +21,12 @@
  */
 MYOS_SYSCALL_DEFINE0(sched_yield)
 {
-	ALERT_DUMMY_SYSCALL(sched_yield, IF_ALERT_DUMMY_SYSCALL);
-
 	// do_sched_yield();
 	// {
 		rq_flags_s rf;
 		rq_s *rq;
 
-		// rq = this_rq_lock_irq(&rf);
+		rq = this_rq_lock_irq(&rf);
 
 		// schedstat_inc(rq->yld_count);
 		current->sched_class->yield_task(rq);

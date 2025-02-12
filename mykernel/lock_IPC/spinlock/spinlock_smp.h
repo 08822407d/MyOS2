@@ -36,15 +36,6 @@
 		// int
 		// raw_spin_trylock_bh(arch_spinlock_t *lock);
 
-		extern void
-		raw_spin_unlock_no_resched(arch_spinlock_t *lock);
-
-		extern void
-		raw_spin_unlock_irqrestore_no_resched(arch_spinlock_t *lock, ulong *flags);
-
-		extern void
-		raw_spin_unlock_irq_no_resched(arch_spinlock_t *lock);
-
 	#endif
 
 	#include "spinlock_smp_macro.h"
@@ -145,32 +136,6 @@
 		// 	__local_bh_enable_ip(_RET_IP_, SOFTIRQ_LOCK_OFFSET);
 		// 	return 0;
 		// }
-
-		PREFIX_STATIC_INLINE
-		void
-		raw_spin_unlock_no_resched(arch_spinlock_t *lock) {
-			arch_spin_unlock(lock);
-			preempt_enable_no_resched();
-		}
-
-		// static inline void __raw_spin_unlock_irqrestore(
-		// 		raw_spinlock_t *lock, unsigned long flags)
-		PREFIX_STATIC_INLINE
-		void
-		raw_spin_unlock_irqrestore_no_resched(arch_spinlock_t *lock, ulong *flags) {
-			arch_spin_unlock(lock);
-			local_irq_restore(*flags);
-			preempt_enable_no_resched();
-		}
-
-		// static inline void __raw_spin_unlock_irq(raw_spinlock_t *lock) {
-		PREFIX_STATIC_INLINE
-		void
-		raw_spin_unlock_irq_no_resched(arch_spinlock_t *lock) {
-			arch_spin_unlock(lock);
-			local_irq_enable();
-			preempt_enable_no_resched();
-		}
 
 	#endif /* !DEBUG */
 
