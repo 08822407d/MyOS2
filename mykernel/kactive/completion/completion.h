@@ -48,15 +48,15 @@
 				DECLARE_SWAITQUEUE(wait);
 
 				do {
-					// if (signal_pending_state(state, current)) {
-					// 	timeout = -ERESTARTSYS;
-					// 	break;
-					// }
+					if (signal_pending_state(state, current)) {
+						timeout = -ERESTARTSYS;
+						break;
+					}
 					__prepare_to_swait(&x->wait, &wait);
 					__set_current_state(state);
-					raw_spin_unlock_irq(&x->wait.lock);
+					spin_unlock_irq(&x->wait.lock);
 					timeout = action(timeout);
-					raw_spin_lock_irq(&x->wait.lock);
+					spin_lock_irq(&x->wait.lock);
 				} while (!x->done && timeout);
 				__finish_swait(&x->wait, &wait);
 				if (!x->done)
@@ -72,9 +72,9 @@
 		wait_for_common(completion_s*x, long timeout, int state) {
 			// might_sleep();
 
-			raw_spin_lock_irq(&x->wait.lock);
+			spin_lock_irq(&x->wait.lock);
 			timeout = do_wait_for_common(x, schedule_timeout, timeout, state);
-			raw_spin_unlock_irq(&x->wait.lock);
+			spin_unlock_irq(&x->wait.lock);
 
 			return timeout;
 		}

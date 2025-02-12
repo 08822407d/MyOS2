@@ -4,7 +4,7 @@
 	#include "swait.h"
 
 	extern void __init_swait_queue_head(swqueue_hdr_s *q);
-	extern void swake_up_locked(swqueue_hdr_s *q);
+	extern void swake_up_locked(swqueue_hdr_s *q, int wake_flags);
 	extern void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait);
 	void __prepare_to_swait(swqueue_hdr_s *q, swqueue_s *wait);
 

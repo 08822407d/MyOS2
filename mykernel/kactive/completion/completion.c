@@ -32,11 +32,11 @@
 void complete(completion_s *x)
 {
 	ulong flags;
-	raw_spin_lock_irqsave(&x->wait.lock, &flags);
+	spin_lock_irqsave(&x->wait.lock, flags);
 	if (x->done != UINT_MAX)
 		x->done++;
-	swake_up_locked(&x->wait);
-	raw_spin_unlock_irqrestore(&x->wait.lock, &flags);
+	swake_up_locked(&x->wait, 0);
+	spin_unlock_irqrestore(&x->wait.lock, flags);
 }
 
 

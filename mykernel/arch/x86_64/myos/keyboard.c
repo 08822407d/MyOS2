@@ -19,8 +19,12 @@ DECLARE_COMPLETION(getcode_done);
 DEFINE_SPINLOCK(kbdbuf_lock);
 DECLARE_SWAIT_QUEUE_HEAD(kbd_swq_hdr);
 
-kbd_inbuf_s * p_kb = NULL;
+kbd_inbuf_s *p_kb = NULL;
+kbd_inbuf_s *keycharbuf = NULL;
 static int shift_l,shift_r,ctrl_l,ctrl_r,alt_l,alt_r;
+
+task_s *keycode_parser_threadd;
+int keycode_parser(void *param);
 
 /*==============================================================================================*
  *																								*
@@ -43,6 +47,11 @@ void init_keyboard()
 	p_kb->p_head = p_kb->buf;
 	p_kb->p_tail = p_kb->buf;
 	p_kb->count  = 0;
+
+	keycharbuf = (kbd_inbuf_s *)kzalloc(sizeof(kbd_inbuf_s), GFP_KERNEL);
+	keycharbuf->p_head = keycharbuf->buf;
+	keycharbuf->p_tail = keycharbuf->buf;
+	keycharbuf->count  = 0;
 
 	entry.vector = KEYBOARD_IRQ;
 	entry.deliver_mode = APIC_DELIVERY_MODE_FIXED;
@@ -69,8 +78,12 @@ void init_keyboard()
 	alt_r   = 0;
 
 	register_irq(KEYBOARD_IRQ , &entry , "PS/2 keyboard",
-				 (unsigned long)p_kb, &keyboard_int_controller,
+				 (ulong)p_kb, &keyboard_int_controller,
 				 &keyboard_handler);
+
+	// keycode_parser_threadd =
+	// 	kthread_create_on_node(keycode_parser,
+	// 		NULL, 0, "keycode_parserd");
 }
 
 void keyboard_exit()
@@ -99,7 +112,7 @@ void keycode_debug(unsigned char code)
 	myos_tty_write_color_at(buf, strlen(buf), BLACK, GREEN, xpos, ypos);
 }
 
-void keyboard_handler(unsigned long param, pt_regs_s * regs)
+void keyboard_handler(ulong param, pt_regs_s * regs)
 {
 	unsigned char x;
 	x = inb(0x60);
@@ -115,6 +128,16 @@ void keyboard_handler(unsigned long param, pt_regs_s * regs)
 	spin_unlock(&kbdbuf_lock);
 
 	complete(&getcode_done);
+}
+
+int keycode_parser(void *param)
+{
+	char key;
+	while (1)
+	{
+		key = kbd_parse_scancode();
+		myos_tty_write_color_at(&key, 1, BLACK, GREEN, 0, 32);
+	}
 }
 
 /*==============================================================================================*
@@ -279,8 +302,6 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x0d*/	'=',		'+',
 /*0x0e*/	'\b',		'\b',	// BACKSPACE	
 /*0x0f*/	'\t',		'\t',	// TAB
-// /*0x0e*/	0,			0,		// BACKSPACE	
-// /*0x0f*/	0,			0,		// TAB
 
 /*0x10*/	'q',		'Q',
 /*0x11*/	'w',		'W',
@@ -295,7 +316,6 @@ unsigned char keycode_map_normal[NR_SCAN_CODES * MAP_COLS] = //
 /*0x1a*/	'[',		'{',
 /*0x1b*/	']',		'}',
 /*0x1c*/	'\n',		'\n',	// ENTER
-// /*0x1c*/	0,			0,		// ENTER
 /*0x1d*/	0x1d,		0x1d,	// CTRL Left
 /*0x1e*/	'a',		'A',
 /*0x1f*/	's',		'S',

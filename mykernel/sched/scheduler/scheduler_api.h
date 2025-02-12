@@ -25,6 +25,7 @@
 
 	rq_s *finish_task_switch(task_s *prev) __releases(rq->lock);
 
+	int try_to_wake_up(task_s *p, uint state, int wake_flags);
 	int wake_up_process(task_s *p);
 	int wake_up_state(task_s *p, uint state);
 

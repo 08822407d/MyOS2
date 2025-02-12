@@ -20,15 +20,14 @@ void __init_swait_queue_head(swqueue_hdr_s *q)
  * If for some reason it would return 0, that means the previously waiting
  * task is already running, so it will observe condition true (or has already).
  */
-void swake_up_locked(swqueue_hdr_s *q) {
+void swake_up_locked(swqueue_hdr_s *q, int wake_flags)
+{
 	swqueue_s *curr;
-
-	if (q->task_list_hdr.count == 0)
+	if (list_header_is_empty(&q->task_list_hdr))
 		return;
-
-	List_s *lp = list_header_remove_tail(&q->task_list_hdr);
-	curr = container_of(lp, swqueue_s, task_list);
-	wake_up_process(curr->task);
+	curr = list_headr_first_container(&q->task_list_hdr, typeof(*curr), task_list);
+	try_to_wake_up(curr->task, TASK_NORMAL, wake_flags);
+	list_del_init(&curr->task_list);
 }
 
 /*
@@ -39,8 +38,8 @@ void swake_up_locked(swqueue_hdr_s *q) {
  * hard interrupt context and interrupt disabled regions.
  */
 void swake_up_all_locked(swqueue_hdr_s *q) {
-	while (&q->task_list_hdr.count != 0)
-		swake_up_locked(q);
+	while (!list_header_is_empty(&q->task_list_hdr))
+		swake_up_locked(q, 0);
 }
 
 
@@ -56,14 +55,12 @@ void __finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
 		list_header_delete_node(&q->task_list_hdr, &wait->task_list);
 }
 
-// void finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
-// 	unsigned long flags;
-
-// 	__set_current_state(TASK_RUNNING);
-
-// 	// if (!list_is_empty_entry_careful(&wait->task_list)) {
-// 	// 	flags = raw_spin_lock_irqsave(&q->lock);
-// 	// 	list_del_init(&wait->task_list);
-// 	// 	raw_spin_unlock_irqrestore(&q->lock, flags);
-// 	// }
-// }
+void finish_swait(swqueue_hdr_s *q, swqueue_s *wait) {
+	ulong flags;
+	__set_current_state(TASK_RUNNING);
+	if (!list_is_empty_entry_careful(&wait->task_list)) {
+		spin_lock_irqsave(&q->lock, flags);
+		list_del_init(&wait->task_list);
+		spin_unlock_irqrestore(&q->lock, flags);
+	}
+}

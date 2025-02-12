@@ -325,8 +325,8 @@ EXPORT_SYMBOL_GPL(kick_process);
  * Return: %true if @p->state changes (an actual wakeup was done),
  *	   %false otherwise.
  */
-static int
-try_to_wake_up(task_s *p, uint state, int wake_flags) {
+int try_to_wake_up(task_s *p, uint state, int wake_flags)
+{
 	ulong flags;
 	int cpu = 0, success = 0;
 
