@@ -73,7 +73,6 @@ unsigned long init_shadow_call_stack[SCS_SIZE / sizeof(long)] = {
 task_s init_task __aligned(L1_CACHE_BYTES) = {
 	.thread_info		= INIT_THREAD_INFO(init_task),
 	// .stack_refcount		= REFCOUNT_INIT(1),
-	// .__state			= 0,
 	.__state			= TASK_RUNNING,
 	.stack				= init_stack,
 	.usage				= REFCOUNT_INIT(2),
@@ -98,8 +97,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	},
 	.rt		= {
 		.run_list			= LIST_HEAD_INIT(init_task.rt.run_list),
-		// .time_slice			= RR_TIMESLICE,
-		.time_slice			= 2,
+		.time_slice			= RR_TIMESLICE,
 	},
 	.tasks					= LIST_INIT(init_task.tasks),
 	// .pushable_tasks			= PLIST_NODE_INIT(init_task.pushable_tasks, MAX_PRIO),
