@@ -65,8 +65,8 @@
 
 		void	(*enqueue_task) (rq_s *rq, task_s *p, int flags);
 		void	(*dequeue_task) (rq_s *rq, task_s *p, int flags);
-		// void	(*yield_task) (rq_s *rq);
-		// bool	(*yield_to_task) (rq_s *rq, task_s *p);
+		void	(*yield_task) (rq_s *rq);
+		bool	(*yield_to_task) (rq_s *rq, task_s *p);
 
 		// void	(*check_preempt_curr) (rq_s *rq, task_s *p, int flags);
 

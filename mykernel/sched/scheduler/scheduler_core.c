@@ -120,7 +120,7 @@ task_curr(const task_s *p) {
 
 
 
-void set_task_cpu(task_s *p, unsigned int new_cpu)
+void set_task_cpu(task_s *p, uint new_cpu)
 {
 // #ifdef CONFIG_SCHED_DEBUG
 	// unsigned int state = READ_ONCE(p->__state);
@@ -203,33 +203,6 @@ void kick_process(task_s *p)
 	// 	smp_send_reschedule(cpu);
 }
 EXPORT_SYMBOL_GPL(kick_process);
-
-/*
- * The caller (fork, wakeup) owns p->pi_lock, ->cpus_ptr is stable.
- */
-static inline int select_task_rq(task_s *p, int cpu, int wake_flags) {
-	// lockdep_assert_held(&p->pi_lock);
-
-	// if (p->nr_cpus_allowed > 1 && !is_migration_disabled(p))
-	// 	cpu = p->sched_class->select_task_rq(p, cpu, wake_flags);
-	// else
-	// 	cpu = cpumask_any(p->cpus_ptr);
-
-	// /*
-	//  * In order not to call set_task_cpu() on a blocking task we need
-	//  * to rely on ttwu() to place the task on a valid ->cpus_ptr
-	//  * CPU.
-	//  *
-	//  * Since this is common to all placement strategies, this lives here.
-	//  *
-	//  * [ this allows ->select_task() to simply return task_cpu(p) and
-	//  *   not worry about this generic constraint ]
-	//  */
-	// if (unlikely(!is_cpu_allowed(p, cpu)))
-	// 	cpu = select_fallback_rq(task_cpu(p), p);
-
-	return cpu;
-}
 
 
 /*
@@ -353,9 +326,8 @@ static inline int select_task_rq(task_s *p, int cpu, int wake_flags) {
  *	   %false otherwise.
  */
 static int
-try_to_wake_up(task_s *p, unsigned int state, int wake_flags)
-{
-	unsigned long flags;
+try_to_wake_up(task_s *p, uint state, int wake_flags) {
+	ulong flags;
 	int cpu = 0, success = 0;
 
 	preempt_disable();
@@ -598,8 +570,8 @@ int wake_up_state(task_s *p, uint state)
  *
  * __sched_fork() is basic setup used by init_idle() too:
  */
-static void __sched_fork(unsigned long clone_flags, task_s *p)
-{
+static void
+__sched_fork(ulong clone_flags, task_s *p) {
 	// p->on_rq			= 0;
 
 	// p->se.on_rq			= 0;
@@ -644,7 +616,7 @@ static void __sched_fork(unsigned long clone_flags, task_s *p)
 /*
  * fork()/clone()-time setup:
  */
-int sched_fork(unsigned long clone_flags, task_s *p)
+int sched_fork(ulong clone_flags, task_s *p)
 {
 	__sched_fork(clone_flags, p);
 	/*
@@ -750,31 +722,48 @@ void wake_up_new_task(task_s *p)
 }
 
 
-
-/**
- * prepare_task_switch - prepare to switch tasks
- * @rq: the runqueue preparing to switch
- * @prev: the current task that is being switched out
- * @next: the task we are going to switch to.
+/*
+ * resched_curr - mark rq's current task 'to be rescheduled now'.
  *
- * This is called with the rq lock held and interrupts off. It must
- * be paired with a subsequent finish_task_switch after the context
- * switch.
- *
- * prepare_task_switch sets up locking and calls architecture specific
- * hooks.
+ * On UP this means the setting of the need_resched flag, on SMP it
+ * might also involve a cross-CPU call to trigger the scheduler on
+ * the target CPU.
  */
-static inline void
-prepare_task_switch(rq_s *rq, task_s *prev, task_s *next) {
-	// kcov_prepare_switch(prev);
-	// sched_info_switch(rq, prev, next);
-	// perf_event_task_sched_out(prev, next);
-	// rseq_preempt(prev);
-	// fire_sched_out_preempt_notifiers(prev, next);
-	// kmap_local_sched_out();
-	// prepare_task(next);
-	// prepare_arch_switch(next);
+void resched_curr(rq_s *rq)
+{
+	task_s *curr = rq->curr;
+	int cpu;
+
+	// lockdep_assert_rq_held(rq);
+
+	if (test_tsk_need_resched(curr))
+		return;
+
+	// cpu = cpu_of(rq);
+
+	// if (cpu == smp_processor_id()) {
+	// 	set_tsk_need_resched(curr);
+	// 	set_preempt_need_resched();
+	// 	return;
+	// }
+
+	// if (set_nr_and_not_polling(curr))
+	// 	smp_send_reschedule(cpu);
+	// else
+	// 	trace_sched_wake_idle_without_ipi(cpu);
 }
+
+void resched_cpu(int cpu)
+{
+	rq_s *rq = cpu_rq(cpu);
+	ulong flags;
+
+	// raw_spin_rq_lock_irqsave(rq, flags);
+	// if (cpu_online(cpu) || cpu == smp_processor_id())
+	// 	resched_curr(rq);
+	// raw_spin_rq_unlock_irqrestore(rq, flags);
+}
+
 
 /**
  * finish_task_switch - clean up after a task-switch
@@ -795,8 +784,7 @@ prepare_task_switch(rq_s *rq, task_s *prev, task_s *next) {
  * past. prev == current is still correct but we need to recalculate this_rq
  * because prev may have moved to another CPU.
  */
-static rq_s *
-finish_task_switch(task_s *prev) __releases(rq->lock) {
+rq_s *finish_task_switch(task_s *prev) __releases(rq->lock) {
 	rq_s *rq = this_rq();
 	mm_s *mm = rq->prev_mm;
 	uint prev_state;
@@ -903,83 +891,12 @@ schedule_tail(task_s *prev) __releases(rq->lock)
 	// calculate_sigpending();
 }
 
-/*
- * context_switch - switch to the new MM and the new thread's register state.
- */
-static __always_inline rq_s *
-context_switch(rq_s *rq, task_s *prev,
-		task_s *next, struct rq_flags *rf) {
-
-	prepare_task_switch(rq, prev, next);
-
-	/*
-	 * For paravirt, this is coupled with an exit in switch_to to
-	 * combine the page table reload and the switch backend into
-	 * one hypercall.
-	 */
-	// arch_start_context_switch(prev);
-
-	/*
-	 * kernel -> kernel   lazy + transfer active
-	 *   user -> kernel   lazy + mmgrab_lazy_tlb() active
-	 *
-	 * kernel ->   user   switch + mmdrop_lazy_tlb() active
-	 *   user ->   user   switch
-	 *
-	 * switch_mm_cid() needs to be updated if the barriers provided
-	 * by context_switch() are modified.
-	 */
-	if (!next->mm) {								// to kernel
-		// enter_lazy_tlb(prev->active_mm, next);
-
-		next->active_mm = prev->active_mm;
-		if (prev->mm)								// from user
-			// mmgrab_lazy_tlb(prev->active_mm);
-			mmget(prev->active_mm);
-		else
-			prev->active_mm = NULL;
-	} else {										// to user
-		// membarrier_switch_mm(rq, prev->active_mm, next->mm);
-		/*
-		 * sys_membarrier() requires an smp_mb() between setting
-		 * rq->curr / membarrier_switch_mm() and returning to userspace.
-		 *
-		 * The below provides this either through switch_mm(), or in
-		 * case 'prev->active_mm == next->mm' through
-		 * finish_task_switch()'s mmdrop().
-		 */
-		switch_mm_irqs_off(prev->active_mm, next->mm, next);
-		// lru_gen_use_mm(next->mm);
-
-		if (!prev->mm) {							// from kernel
-			/* will mmdrop_lazy_tlb() in finish_task_switch(). */
-			rq->prev_mm = prev->active_mm;
-			prev->active_mm = NULL;
-		}
-	}
-// #if defined(CONFIG_INTEL_X64_GDT_LAYOUT)
-// 	wrmsrl(MSR_IA32_SYSENTER_ESP, task_top_of_stack(next));
-// #endif
-
-	// /* switch_mm_cid() requires the memory barriers above. */
-	// switch_mm_cid(rq, prev, next);
-
-	// prepare_lock_switch(rq, next, rf);
-
-	/* Here we just switch the register state and the stack. */
-	switch_to(prev, next, prev);
-	barrier();
-
-	return finish_task_switch(prev);
-}
-
-
 
 /*
  * Print scheduling while atomic bug:
  */
-static noinline void __schedule_bug(task_s *prev)
-{
+static noinline void
+__schedule_bug(task_s *prev) {
 	// /* Save this before calling printk(), since that will clobber it */
 	// unsigned long preempt_disable_ip = get_preempt_disable_ip(current);
 
@@ -1007,8 +924,7 @@ static noinline void __schedule_bug(task_s *prev)
 /*
  * Various schedule()-time debugging checks and statistics:
  */
-inline void
-schedule_debug(task_s *prev, bool preempt) {
+inline void schedule_debug(task_s *prev, bool preempt) {
 // #ifdef CONFIG_SCHED_STACK_END_CHECK
 // 	if (task_stack_end_corrupted(prev))
 // 		panic("corrupted stack end detected inside scheduler\n");
@@ -1056,67 +972,6 @@ put_prev_task_balance(rq_s *rq, task_s *prev, struct rq_flags *rf) {
 
 	// put_prev_task(rq, prev);
 }
-
-/*
- * Pick up the highest-prio task:
- */
-static inline task_s *
-__pick_next_task(rq_s *rq, task_s *prev, struct rq_flags *rf)
-{
-	const sched_class_s *class;
-	task_s *p;
-
-	// rq->dl_server = NULL;
-
-	// if (scx_enabled())
-	// 	goto restart;
-
-	// /*
-	//  * Optimization: we know that if all tasks are in the fair class we can
-	//  * call that function directly, but only if the @prev task wasn't of a
-	//  * higher scheduling class, because otherwise those lose the
-	//  * opportunity to pull in more work from other CPUs.
-	//  */
-	// if (likely(!sched_class_above(prev->sched_class, &fair_sched_class) &&
-	// 	   rq->nr_running == rq->cfs.h_nr_running)) {
-
-	// 	p = pick_next_task_fair(rq, prev, rf);
-	// 	if (unlikely(p == RETRY_TASK))
-	// 		goto restart;
-
-	// 	/* Assume the next prioritized class is idle_sched_class */
-	// 	if (!p) {
-	// 		p = pick_task_idle(rq);
-	// 		put_prev_set_next_task(rq, prev, p);
-	// 	}
-
-	// 	return p;
-	// }
-
-restart:
-	// put_prev_task_balance(rq, prev, rf);
-
-	for_each_class(class) {
-		// p = class->pick_next_task(rq, prev);
-		// if (p)
-		// 	return p;
-
-		// if (class->pick_next_task) {
-			p = class->pick_next_task(rq, prev);
-			if (p)
-				return p;
-		// } else {
-		// 	p = class->pick_task(rq);
-		// 	if (p) {
-		// 		put_prev_set_next_task(rq, prev, p);
-		// 		return p;
-		// 	}
-		// }
-	}
-
-	BUG(); /* The idle class should always have a runnable task. */
-}
-
 
 #define pick_next_task	__pick_next_task
 
@@ -1588,13 +1443,14 @@ void __init init_idle(task_s *idle, int cpu)
 	// /* Set the preempt count _outside_ the spinlocks! */
 	// init_idle_preempt_count(idle, cpu);
 
-	// /*
-	//  * The idle tasks have their own, simple scheduling class:
-	//  */
+	/*
+	 * The idle tasks have their own, simple scheduling class:
+	 */
 	// idle->sched_class = &idle_sched_class;
+	idle->sched_class = &myos_rt_sched_class;
 	// ftrace_graph_init_idle_task(idle, cpu);
 	// vtime_init_idle(idle, cpu);
-	// sprintf(idle->comm, "%s/%d", INIT_TASK_COMM, cpu);
+	sprintf(idle->comm, "%s/%d", INIT_TASK_COMM, cpu);
 
 
 	/* MyOS2 initiations */

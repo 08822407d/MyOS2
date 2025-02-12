@@ -30,7 +30,7 @@
 		// randomized_struct_fields_start
 
 		void			*stack;
-		atomic_t		usage;
+		refcount_t		usage;
 		/* Per task flags (PF_*), defined further below: */
 		uint			flags;
 		// unsigned int ptrace;
@@ -60,7 +60,7 @@
 		sched_entity_s		se;
 		sched_rt_entity_s	rt;
 		// struct sched_dl_entity dl;
-		// const sched_class_s *sched_class;
+		const sched_class_s *sched_class;
 
 	// #ifdef CONFIG_SCHED_CORE
 		// struct rb_node core_node;

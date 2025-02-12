@@ -25,13 +25,13 @@ MYOS_SYSCALL_DEFINE0(sched_yield)
 
 	// do_sched_yield();
 	// {
-		// struct rq_flags rf;
-		// struct rq *rq;
+		rq_flags_s rf;
+		rq_s *rq;
 
 		// rq = this_rq_lock_irq(&rf);
 
 		// schedstat_inc(rq->yld_count);
-		// current->sched_class->yield_task(rq);
+		current->sched_class->yield_task(rq);
 
 		preempt_disable();
 		// rq_unlock_irq(rq, &rf);

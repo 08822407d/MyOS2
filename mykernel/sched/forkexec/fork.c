@@ -330,7 +330,7 @@ static task_s *dup_task_struct(task_s *orig, int node)
 	 */
 	// refcount_set(&tsk->rcu_users, 2);
 	/* One for the rcu users */
-	atomic_set(&tsk->usage, 1);
+	refcount_set(&tsk->usage, 1);
 // #ifdef CONFIG_BLK_DEV_IO_TRACE
 	// tsk->btrace_seq = 0;
 // #endif

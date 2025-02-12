@@ -21,8 +21,6 @@
 #include <linux/kernel/uaccess.h>
 
 
-#define INIT_TASK_COMM "swapper"
-
 extern nsproxy_s init_nsproxy;
 
 
@@ -78,7 +76,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	// .__state			= 0,
 	.__state			= TASK_RUNNING,
 	.stack				= init_stack,
-	// .usage				= REFCOUNT_INIT(2),
+	.usage				= REFCOUNT_INIT(2),
 	.flags				= PF_KTHREAD,
 	.prio				= MAX_PRIO - 20,
 	.static_prio		= MAX_PRIO - 20,
@@ -131,7 +129,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 		.list				= LIST_HEADER_INIT(init_task.pending.list),
 		.signal				= {{0}}
 	},
-	// .blocked			= {{0}},
+	.blocked			= {{0}},
 	.alloc_lock			= __SPIN_LOCK_UNLOCKED(init_task.alloc_lock),
 	// .journal_info		= NULL,
 	// INIT_CPU_TIMERS(init_task)

@@ -12,16 +12,20 @@
 	 *
 	 * Also enforce alignment on the instance, not the type, to guarantee layout.
 	 */
-	#define DEFINE_SCHED_CLASS(name) \
-	const sched_class_s name##_sched_class \
-		__aligned(__alignof__(sched_class_s)) \
-			__section(".data.sched_class")
+	#define DEFINE_SCHED_CLASS(name)					\
+			const sched_class_s name##_sched_class		\
+				__aligned(__alignof__(sched_class_s))	\
+					__section(".data.sched_class")
 
-	#define for_class_range(class, _from, _to) \
-		for (class = (_from); class < (_to); class++)
+	#define for_class_range(class, _from, _to)			\
+			for (										\
+				class = (_from); class < (_to); class++	\
+			)
 
-	#define for_each_class(class) \
-		for_class_range(class, __sched_class_highest, __sched_class_lowest)
+	#define for_each_class(class)			\
+			for_class_range(class,			\
+				__sched_class_highest,		\
+					__sched_class_lowest)
 
 	#define sched_class_above(_a, _b)	((_a) < (_b))
 

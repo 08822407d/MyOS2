@@ -2,6 +2,7 @@
 #ifndef _LINUX_SCHEDULER_CONST_H_
 #define _LINUX_SCHEDULER_CONST_H_
 
+	#define INIT_TASK_COMM	"swapper"
 
 	/*
 	 * Constants for the sched_mode argument of __schedule().

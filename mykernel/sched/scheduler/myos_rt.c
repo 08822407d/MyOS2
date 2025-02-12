@@ -56,6 +56,11 @@ static task_s *pick_next_task_myos(rq_s *rq, task_s *prev)
 	return retval;
 }
 
+static void yield_task_fair_myos(rq_s *rq)
+{
+}
+
 DEFINE_SCHED_CLASS(myos_rt) = {
-	.pick_next_task = pick_next_task_myos,
+	.yield_task			= yield_task_fair_myos,
+	.pick_next_task		= pick_next_task_myos,
 };
