@@ -423,7 +423,8 @@
         "swait_const.h": "c",
         "workqueue_api.h": "c",
         "hrtimer.h": "c",
-        "semaphore_macro.h": "c"
+        "semaphore_macro.h": "c",
+        "softirq_macro.h": "c"
     },
     "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
 }

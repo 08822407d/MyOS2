@@ -185,17 +185,20 @@ static void hpet_enable_legacy_int(void)
 
 // 	return 0;
 // }
-static int myos_hpet_clkevt_set_state_periodic(void)
+static int myos_hpet_clkevt_set_state_periodic(clocksrc_s *clksrc)
 {
 	uint channel = 0;
-	u32 mult = 429496730;
-	u32 shift = 32;
+	// u32 mult = 429496730;
+	// u32 shift = 32;
+	u32 mult = clksrc->mult;
+	u32 shift = clksrc->shift;
+
 	uint cfg, cmp, now;
 	uint64_t delta;
 
 	hpet_stop_counter();
 	delta = ((uint64_t)(NSEC_PER_SEC / HZ)) * mult;
-	delta >>= shift;
+	delta >>= shift + 7;
 	now = hpet_readl(HPET_COUNTER);
 	cmp = now + (uint)delta;
 	cfg = hpet_readl(HPET_Tn_CFG(channel));
@@ -251,8 +254,7 @@ static union hpet_lock hpet __cacheline_aligned = {
 	{ .lock = __ARCH_SPIN_LOCK_UNLOCKED, },
 };
 
-static u64 read_hpet(clocksrc_s *cs)
-{
+static u64 read_hpet(clocksrc_s *cs) {
 	// unsigned long flags;
 	// union hpet_lock old, new;
 
@@ -264,46 +266,46 @@ static u64 read_hpet(clocksrc_s *cs)
 	// if (in_nmi())
 		return (u64)hpet_readl(HPET_COUNTER);
 
-// 	/*
-// 	 * Read the current state of the lock and HPET value atomically.
-// 	 */
-// 	old.lockval = READ_ONCE(hpet.lockval);
+	// /*
+	//  * Read the current state of the lock and HPET value atomically.
+	//  */
+	// old.lockval = READ_ONCE(hpet.lockval);
 
-// 	if (arch_spin_is_locked(&old.lock))
-// 		goto contended;
+	// if (arch_spin_is_locked(&old.lock))
+	// 	goto contended;
 
-// 	local_irq_save(flags);
-// 	if (arch_spin_trylock(&hpet.lock)) {
-// 		new.value = hpet_readl(HPET_COUNTER);
-// 		/*
-// 		 * Use WRITE_ONCE() to prevent store tearing.
-// 		 */
-// 		WRITE_ONCE(hpet.value, new.value);
-// 		arch_spin_unlock(&hpet.lock);
-// 		local_irq_restore(flags);
-// 		return (u64)new.value;
-// 	}
-// 	local_irq_restore(flags);
+	// local_irq_save(flags);
+	// if (arch_spin_trylock(&hpet.lock)) {
+	// 	new.value = hpet_readl(HPET_COUNTER);
+	// 	/*
+	// 	 * Use WRITE_ONCE() to prevent store tearing.
+	// 	 */
+	// 	WRITE_ONCE(hpet.value, new.value);
+	// 	arch_spin_unlock(&hpet.lock);
+	// 	local_irq_restore(flags);
+	// 	return (u64)new.value;
+	// }
+	// local_irq_restore(flags);
 
 // contended:
-// 	/*
-// 	 * Contended case
-// 	 * --------------
-// 	 * Wait until the HPET value change or the lock is free to indicate
-// 	 * its value is up-to-date.
-// 	 *
-// 	 * It is possible that old.value has already contained the latest
-// 	 * HPET value while the lock holder was in the process of releasing
-// 	 * the lock. Checking for lock state change will enable us to return
-// 	 * the value immediately instead of waiting for the next HPET reader
-// 	 * to come along.
-// 	 */
-// 	do {
-// 		cpu_relax();
-// 		new.lockval = READ_ONCE(hpet.lockval);
-// 	} while ((new.value == old.value) && arch_spin_is_locked(&new.lock));
+	// /*
+	//  * Contended case
+	//  * --------------
+	//  * Wait until the HPET value change or the lock is free to indicate
+	//  * its value is up-to-date.
+	//  *
+	//  * It is possible that old.value has already contained the latest
+	//  * HPET value while the lock holder was in the process of releasing
+	//  * the lock. Checking for lock state change will enable us to return
+	//  * the value immediately instead of waiting for the next HPET reader
+	//  * to come along.
+	//  */
+	// do {
+	// 	cpu_relax();
+	// 	new.lockval = READ_ONCE(hpet.lockval);
+	// } while ((new.value == old.value) && arch_spin_is_locked(&new.lock));
 
-// 	return (u64)new.value;
+	// return (u64)new.value;
 }
 
 static clocksrc_s clocksource_hpet = {
@@ -388,9 +390,9 @@ int __init hpet_enable(void)
 	if (!hpet_virt_address)
 		return 0;
 
-	// /* Validate that the config register is working */
-	// if (!hpet_cfg_working())
-	// 	goto out_nohpet;
+	/* Validate that the config register is working */
+	if (!hpet_cfg_working())
+		goto out_nohpet;
 
 	/*
 	 * Read the period and check for a sane value:
@@ -471,7 +473,7 @@ int __init hpet_enable(void)
 
 	if (id & HPET_ID_LEGSUP) {
 		// hpet_legacy_clockevent_register(&hpet_base.channels[0]);
-		myos_hpet_clkevt_set_state_periodic();
+		myos_hpet_clkevt_set_state_periodic(&clocksource_hpet);
 		myos_HPET_init();
 		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
 		// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
@@ -518,14 +520,10 @@ void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 	jiffies++;
 	do_timer(1);
 
-	// timer_s * tmr = timer_lhdr.anchor.next->owner_p;
-	// if(tmr->expire_jiffies <= jiffies)
-	// 	set_softirq_status(HPET_TIMER0_IRQ);
-
 	char buf[20];
 	memset(buf, 0 , sizeof(buf));
 	snprintf(buf, sizeof(buf), "(HPET: %08ld)   ", jiffies);
-	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 48, 0);
+	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 36, 0);
 }
 	
 void myos_HPET_init()

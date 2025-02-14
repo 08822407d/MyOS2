@@ -228,7 +228,7 @@ void myos_init_bsp_intr()
 
 void myos_init_percpu_intr()
 {
-	// LVT_timer_init();
+	LVT_timer_init();
 }
 
 // __attribute__ ((interrupt)) __attribute__ ((target("general-regs-only")))

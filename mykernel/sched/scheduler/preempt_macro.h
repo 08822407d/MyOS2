@@ -4,25 +4,78 @@
 
 
 	/*
+	 * These macro definitions avoid redundant invocations of preempt_count()
+	 * because such invocations would result in redundant loads given that
+	 * preempt_count() is commonly implemented with READ_ONCE().
+	 */
+
+	#define nmi_count()	(						\
+				preempt_count() & NMI_MASK		\
+			)
+	#define hardirq_count()	(					\
+				preempt_count() & HARDIRQ_MASK	\
+			)
+	#define softirq_count()	(					\
+				preempt_count() & SOFTIRQ_MASK	\
+			)
+	#define irq_count()	(							\
+				preempt_count() & (NMI_MASK |		\
+					HARDIRQ_MASK | SOFTIRQ_MASK)	\
+			)
+
+	/*
+	 * Macros to retrieve the current execution context:
+	 *
+	 * in_nmi()		- We're in NMI context
+	 * in_hardirq()		- We're in hard IRQ context
+	 * in_serving_softirq()	- We're in softirq context
+	 * in_task()		- We're in task context
+	 */
+	#define in_nmi()				(nmi_count())
+	#define in_hardirq()			(hardirq_count())
+	#define in_serving_softirq()	(softirq_count() & SOFTIRQ_OFFSET)
+
+	#define in_task()	(							\
+				!(preempt_count() & (NMI_MASK |		\
+					HARDIRQ_MASK | SOFTIRQ_OFFSET))	\
+			)
+
+	/*
+	 * The following macros are deprecated and should not be used in new code:
+	 * in_irq()       - Obsolete version of in_hardirq()
+	 * in_softirq()   - We have BH disabled, or are processing softirqs
+	 * in_interrupt() - We're in NMI,IRQ,SoftIRQ context or have BH disabled
+	 */
+	#define in_irq()				(hardirq_count())
+	#define in_softirq()			(softirq_count())
+	#define in_interrupt()			(irq_count())
+
+
+
+	/*
 	 * Are we running in atomic context?  WARNING: this macro cannot
 	 * always detect atomic context; in particular, it cannot know about
 	 * held spinlocks in non-preemptible kernels.  Thus it should not be
 	 * used in the general case to determine whether sleeping is possible.
 	 * Do not use in_atomic() in driver code.
 	 */
-	#define in_atomic()		(preempt_count() != 0)
+	#define in_atomic()	(				\
+				preempt_count() != 0	\
+			)
 
 	/*
 	 * Check whether we were atomic before we did preempt_disable():
 	 * (used by the scheduler)
 	 */
-	#define in_atomic_preempt_off()	(preempt_count() != PREEMPT_DISABLE_OFFSET)
+	#define in_atomic_preempt_off()	(						\
+				preempt_count() != PREEMPT_DISABLE_OFFSET	\
+			)
 
 	extern void preempt_count_add(int val);
 	extern void preempt_count_sub(int val);
-	#define preempt_count_dec_and_test() ({	\
-				preempt_count_sub(1);		\
-				should_resched(0);			\
+	#define preempt_count_dec_and_test() ({		\
+				preempt_count_sub(1);			\
+				should_resched(0);				\
 			})
 
 	#define preempt_count_inc()		preempt_count_add(1)

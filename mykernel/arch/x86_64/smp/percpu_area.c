@@ -78,3 +78,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
 /* the per-cpu worker pools */
 DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
 		[NR_STD_WORKER_POOLS], cpu_worker_pools);
+
+
+
+DEFINE_PER_CPU(task_s *, ksoftirqd);

@@ -113,9 +113,9 @@ retry:
 	/* pwq which will be used unless @work is executing elsewhere */
 	if (cpu == WORK_CPU_UNBOUND) {
 		// if (wq->flags & WQ_UNBOUND)
-		// 	cpu = wq_select_unbound_cpu(raw_smp_processor_id());
+		// 	cpu = wq_select_unbound_cpu(smp_processor_id());
 		// else
-			cpu = raw_smp_processor_id();
+			cpu = smp_processor_id();
 	}
 
 	pwq = *per_cpu_ptr(wq->cpu_pwq, cpu);
@@ -419,7 +419,7 @@ __acquires(&pool->lock)
 
 	/* ensure we're on the correct CPU */
 	WARN_ON_ONCE(!(pool->flags & POOL_DISASSOCIATED) &&
-			raw_smp_processor_id() != pool->cpu);
+			smp_processor_id() != pool->cpu);
 
 	/* claim and dequeue */
 	worker->current_work = work;

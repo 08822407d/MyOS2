@@ -23,4 +23,4 @@
 				__init_swait_queue_head((q));	\
 			} while (0)
 
-#endif /* _COMPLETION_MACRO_H_ */
+#endif /* _SWAIT_MACRO_H_ */

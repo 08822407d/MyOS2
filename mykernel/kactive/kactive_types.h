@@ -6,5 +6,6 @@
 	#include "swait/swait_types.h"
 	#include "completion/completion_types.h"
 	#include "workqueue/workqueue_types.h"
+	#include "softirq/softirq_types.h"
 
 #endif /* _KERNEL_ACTIVE_TYPES_H_ */

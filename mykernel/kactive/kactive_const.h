@@ -8,5 +8,6 @@
     #include "swait/swait_const.h"
     #include "completion/completion_const.h"
     #include "workqueue/workqueue_const.h"
+    #include "softirq/softirq_const.h"
 
 #endif /* _KERNEL_ACTIVE_CONST_H_ */

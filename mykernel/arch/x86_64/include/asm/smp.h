@@ -7,6 +7,21 @@
 
 	#	include <asm/current.h>
 
+
+		#define __this_cpu_read(pcp)	\
+					(*this_cpu_ptr(&(pcp)))
+		#define __this_cpu_write(pcp, val)	\
+					(*this_cpu_ptr(&(pcp)) = (val))
+		#define __this_cpu_add(pcp, val)	\
+					(*this_cpu_ptr(&(pcp)) += (val))
+		#define __this_cpu_sub(pcp, val)	\
+					(*this_cpu_ptr(&(pcp)) -= (val))
+		#define __this_cpu_and(pcp, val)	\
+					(*this_cpu_ptr(&(pcp)) &= (val))
+		#define __this_cpu_or(pcp, val)	\
+					(*this_cpu_ptr(&(pcp)) |= (val))
+
+
 		// extern int smp_num_siblings;
 		// extern unsigned int num_processors;
 
@@ -150,8 +165,7 @@
 		 * from the initial startup.
 		 */
 		// #define raw_smp_processor_id()  this_cpu_read(pcpu_hot.cpu_number)
-		#define raw_smp_processor_id()  (this_cpu_ptr(&pcpu_hot)->cpu_number)
-		// #define __smp_processor_id() __this_cpu_read(pcpu_hot.cpu_number)
+		// #define raw_smp_processor_id()  (*this_cpu_ptr(&pcpu_hot.cpu_number))
 
 		// # define safe_smp_processor_id()	smp_processor_id()
 

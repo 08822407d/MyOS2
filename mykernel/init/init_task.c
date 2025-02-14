@@ -92,9 +92,9 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	// .restart_block	= {
 	// 	.fn = do_no_restart_syscall,
 	// },
-	.se					= {
-		// .group_node 		= LIST_HEAD_INIT(init_task.se.group_node),
-	},
+	// .se					= {
+	// 	.group_node 		= LIST_HEAD_INIT(init_task.se.group_node),
+	// },
 	.rt		= {
 		.run_list			= LIST_HEAD_INIT(init_task.rt.run_list),
 		.time_slice			= RR_TIMESLICE,

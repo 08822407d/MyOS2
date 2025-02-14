@@ -16,14 +16,14 @@
 	typedef struct pcpu_hot {
 		union {
 			struct {
-				task_s			*current_task;
-				int				preempt_count;
-				int				cpu_number;
-				u64				call_depth;
-				unsigned long	top_of_stack;
-				void			*hardirq_stack_ptr;
-				u16				softirq_pending;
-				bool			hardirq_stack_inuse;
+				task_s		*current_task;
+				int			preempt_count;
+				int			cpu_number;
+				u64			call_depth;
+				ulong		top_of_stack;
+				void		*hardirq_stack_ptr;
+				u16			softirq_pending;
+				bool		hardirq_stack_inuse;
 			};
 			u8	pad[64];
 		};

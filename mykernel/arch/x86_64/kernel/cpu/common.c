@@ -545,7 +545,7 @@ void syscall_init(void)
 void cpu_init_exception_handling(void)
 {
 	// struct tss_struct *tss = this_cpu_ptr(&cpu_tss_rw);
-	int cpu = raw_smp_processor_id();
+	int cpu = smp_processor_id();
 
 	// /* paranoid_entry() gets the CPU number from the GDT */
 	// setup_getcpu(cpu);
@@ -574,7 +574,7 @@ void cpu_init_exception_handling(void)
 void cpu_init(void)
 {
 	task_s *curr = current;
-	int cpu = raw_smp_processor_id();
+	int cpu = smp_processor_id();
 
 	// ucode_cpu_init(cpu);
 

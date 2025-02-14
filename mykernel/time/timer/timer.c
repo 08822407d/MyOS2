@@ -717,7 +717,7 @@ void simple_init_timer_key(timer_list_s *timer,
 	timer->function = func;
 	if (WARN_ON_ONCE(flags & ~TIMER_INIT_FLAGS))
 		flags &= TIMER_INIT_FLAGS;
-	timer->flags = flags | raw_smp_processor_id();
+	timer->flags = flags | smp_processor_id();
 	// lockdep_init_map(&timer->lockdep_map, name, key, 0);
 }
 

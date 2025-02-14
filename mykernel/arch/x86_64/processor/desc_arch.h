@@ -199,7 +199,7 @@
 		PREFIX_STATIC_INLINE
 		void
 		load_TR_desc(void) {
-			int cpu = raw_smp_processor_id();
+			int cpu = smp_processor_id();
 			load_direct_gdt(cpu);
 			asm volatile(	"ltr	%w0		\t\n"
 						:

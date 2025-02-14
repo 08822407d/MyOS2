@@ -8,6 +8,7 @@
     #include "swait/swait_api.h"
     #include "completion/completion_api.h"
     #include "workqueue/workqueue_api.h"
+    #include "softirq/softirq_api.h"
 
     #include <linux/kernel/lock_ipc_api.h>
 

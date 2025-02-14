@@ -160,6 +160,7 @@ asmlinkage void __init start_kernel(void)
 
 
 	init_IRQ();
+	softirq_init();
 	timekeeping_init();
 	time_init();
 

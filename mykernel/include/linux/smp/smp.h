@@ -222,7 +222,8 @@
 	// # define smp_processor_id() debug_smp_processor_id()
 	// #else
 	// # define smp_processor_id() __smp_processor_id()
-	# define smp_processor_id() raw_smp_processor_id()
+	// # define smp_processor_id() raw_smp_processor_id()
+	#define smp_processor_id()	__this_cpu_read(pcpu_hot.cpu_number)
 	// #endif
 
 	// #define get_cpu()		({ preempt_disable(); __smp_processor_id(); })
