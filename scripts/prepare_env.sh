@@ -6,27 +6,27 @@ NVME_0="$HOME/vmware/myos2test/myos2test_nvme0-flat.vmdk"
 
 source ./scripts/map_vdisk.sh
 
-# OPTS=$(getopt -o d:: -l "" -- "$@")
-# eval set -- "$OPTS"
-# while true ; do
-#     case "$1" in
-#         -d)
-# 			UNSET_ENV=1
-#             shift ;;
-#         --)
-#             shift
-#             break ;;
-#         *)
-#             break ;;
-#     esac
-# done
+OPTS=$(getopt -o d:: -l "" -- "$@")
+eval set -- "$OPTS"
+while true ; do
+    case "$1" in
+        -d)
+			UNSET_ENV=1
+            shift ;;
+        --)
+            shift
+            break ;;
+        *)
+            break ;;
+    esac
+done
 
-# echo "remainders: $@"
+echo "remainders: $@"
 
-# if [ $UNSET_ENV -eq 1 ]; then
-	map_vmdk_partitions $IDE_0_1
+if [ $UNSET_ENV -eq 1 ]; then
+	# unmap_vmdk_partitions $IDE_0_1
+	unmap_vmdk_partitions $NVME_0
+else
+	# map_vmdk_partitions $IDE_0_1
 	map_vmdk_partitions $NVME_0
-# else
-# 	unmap_vmdk_partitions $IDE_0_1
-# 	unmap_vmdk_partitions $NVME_0
-# fi
+fi

@@ -424,7 +424,9 @@
         "workqueue_api.h": "c",
         "hrtimer.h": "c",
         "semaphore_macro.h": "c",
-        "softirq_macro.h": "c"
+        "softirq_macro.h": "c",
+        "algorithm": "c"
     },
-    "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel"
+    "cmake.sourceDirectory": "/home/cheyh/projs/MyOS2/mykernel",
+    "idf.pythonInstallPath": "/usr/bin/python3"
 }

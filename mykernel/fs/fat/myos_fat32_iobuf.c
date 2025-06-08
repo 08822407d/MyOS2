@@ -74,7 +74,7 @@ const msdos_dirent_s *FAT32_iobuf_readent(FAT32_iobuf_s *iobuf, loff_t off)
 		if (buf == NULL)
 			return ERR_PTR(-ENOMEM);
 
-		ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+		ROOTBLK_TRANSFER(CMD_READ,
 				FAT32_clus_to_blknr(iobuf->fsbi, iobuf->clusters[0]),
 				iobuf->fsbi->sector_per_cluster, buf);
 		iobuf->buffers[bufidx] = buf;
@@ -97,7 +97,7 @@ int FAT32_iobuf_write(FAT32_iobuf_s *iobuf, loff_t off,
 		if (buf == NULL)
 			return -ENOMEM;
 
-		ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
+		ROOTBLK_TRANSFER(CMD_READ,
 				FAT32_clus_to_blknr(iobuf->fsbi, iobuf->clusters[0]),
 				iobuf->fsbi->sector_per_cluster, buf);
 		iobuf->buffers[bufidx] = buf;
@@ -246,7 +246,7 @@ void FAT32_iobuf_release(FAT32_iobuf_s *iobuf)
 			if (bufp != NULL)
 			{
 				if (flags == FAT32_IOBUF_DIRTY)
-					ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
+					ROOTBLK_TRANSFER(CMD_WRITE,
 						FAT32_clus_to_blknr(iobuf->fsbi, cluster),
 						iobuf->bufsize / iobuf->fsbi->bytes_per_sector, bufp);
 				kfree(iobuf->buffers[i]);

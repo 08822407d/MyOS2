@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 # VMW_BOOT="$HOME/vmware/myos2test/myos2test.vmx"
-VMW_BOOT="$HOME/vmware/myos2test/myos2test_dbg.vmx"
+# VMW_BOOT="$HOME/vmware/myos2test/myos2test_dbg.vmx"
+VMW_BOOT="$HOME/vmware/myos2test/myos2test_nvme0-flat.vmdk"
 
 vmware -x -q $VMW_BOOT

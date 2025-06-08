@@ -70,17 +70,15 @@ void register_diskfs(void)
 	// init_vfat_fs();
 }
 
-long ATA_disk_transfer(unsigned controller, unsigned disk, long cmd,
-		unsigned long blk_idx, long count, unsigned char * buffer);
-unsigned long myos_switch_to_root_disk()
+
+ulong myos_switch_to_root_disk()
 {
 	// int test = init_flags.vfs;
 	// init_flags.vfs = 0;
 	// load the boot sector
-	boot_sec = (MBR_s *)kzalloc(sizeof(MBR_s), GFP_KERNEL);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			0, 1, (unsigned char *)boot_sec);
-
+	boot_sec = (MBR_s *)kzalloc(SZ_4K, GFP_KERNEL);
+	memset(boot_sec, 0, SZ_4K);
+	ROOTBLK_TRANSFER(CMD_READ, 0, SECT_PER_PG, (unchar *)boot_sec);
 	// check partition type, only support GPT
 	if (boot_sec->DPTE[0].type != 0xee &&
 		boot_sec->DPTE[0].type != 0xef)
@@ -88,32 +86,31 @@ unsigned long myos_switch_to_root_disk()
 		color_printk(RED, BLACK, "Read MBR failed!\n");
 		while (1);
 	}
+
 	// load the gpt_hdr
-	gpt_hdr = (GPT_H_s *)boot_sec;
-	memset(gpt_hdr, 0, sizeof(MBR_s));
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-					1, 1, (unsigned char *)gpt_hdr);
+	gpt_hdr = (GPT_H_s *)(boot_sec + 1);
 	// load all the gpt_entries
 	u32 gptent_nr = gpt_hdr->NumberOfPartitionEntries;
 	gpt_pes = (GPT_PE_s *)kzalloc(gptent_nr * sizeof(GPT_PE_s), GFP_KERNEL);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			gpt_hdr->PartitionEntryLBA, gptent_nr / 4, (unsigned char *)gpt_pes);
-	// load all the gpt_entries
+	void *gpt_pes_buf = kzalloc(5 * SZ_4K, GFP_KERNEL);
+	// read first 40 sectors(512B) of the disk
+	ROOTBLK_TRANSFER(CMD_READ, 0, 5 * SECT_PER_PG, gpt_pes_buf);
+	memcpy(gpt_pes, gpt_pes_buf + 2 * SZ_512, gptent_nr * sizeof(GPT_PE_s));
+	kfree(gpt_pes_buf);
 
 	GPT_PE_s *gpt_pe = NULL;
 	for (int i = 0; gpt_pes[i].PartitionTypeGUID[0] != 0; i++)
 	{
 		gpt_pe = &gpt_pes[i];
-		uint64_t * puid_p = gpt_pe->PartitionTypeGUID;
+		uint64_t *puid_p = gpt_pe->PartitionTypeGUID;
 		switch (*puid_p)
 		{
 		case EFIBOOT_PART_GUID_LOW:
 			if (*(puid_p + 1) == EFIBOOT_PART_GUID_HIGH)
 			{
 				// mount partitions
-				FAT32_BS_s * fat32_sb = (FAT32_BS_s *)kmalloc(sizeof(FAT32_BS_s), GFP_KERNEL);
-				ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-						gpt_pes[i].StartingLBA, 1, (unsigned char *)fat32_sb);
+				FAT32_BS_s *fat32_sb = (FAT32_BS_s *)kmalloc(SZ_4K, GFP_KERNEL);
+				ROOTBLK_TRANSFER(CMD_READ, gpt_pes[i].StartingLBA, SECT_PER_PG, (unchar *)fat32_sb);
 				if (i == BOOT_FS_IDX)
 					myos_root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
 			}
@@ -136,12 +133,9 @@ unsigned long myos_switch_to_root_disk()
 
 	int err = init_mount("devtmpfs", "/dev", "devtmpfs", MS_SILENT);
 
-	// id_def_s	id_def;
-	// ATA_disk_transfer(MASTER, MASTER, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
-	// ATA_disk_transfer(MASTER, SLAVE, ATA_INFO_CMD, 0, 0, (unsigned char *)&id_def);
-	unsigned char *buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-	NVMe_ops.transfer(0, 0, 0x02, 0, 1, buf);
-	NVMe_ops.transfer(0, 0, 0x02, 0, 2, buf);
+	// unchar *buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
+	// NVMe_ops.transfer(0, 0, 0x02, 0, 1, buf);
+	// NVMe_ops.transfer(0, 0, 0x02, 0, 2, buf);
 }
 
 super_block_s * mount_fs(char * name, GPT_PE_s * DPTE, void * buf)

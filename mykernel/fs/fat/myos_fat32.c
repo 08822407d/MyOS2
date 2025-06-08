@@ -36,8 +36,9 @@ u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry)
 {
 	uint32_t buf[128];
 	memset(buf, 0, 512);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			fsbi->FAT1_firstsector + (fat_entry >> 7), 1, (unsigned char *)buf);
+	ROOTBLK_TRANSFER(CMD_READ,
+		fsbi->FAT1_firstsector + (fat_entry >> 7),
+		1, (unchar *)buf);
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
 
@@ -65,16 +66,17 @@ u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 {
 	int i, j;
 	int fat_entry;
-	unsigned long sector_per_fat = fsbi->sector_per_FAT;
-	unsigned int buf[128];
+	ulong sector_per_fat = fsbi->sector_per_FAT;
+	uint buf[128];
 
 //	fsbi->fat_fsinfo->FSI_Free_Count & fsbi->fat_fsinfo->FSI_Nxt_Free not exactly,so unuse
 
 	for(i = 0; i < sector_per_fat; i++)
 	{
 		memset(buf, 0, 512);
-		ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-				fsbi->FAT1_firstsector + i, 1, (unsigned char *)buf);
+		ROOTBLK_TRANSFER(CMD_READ,
+			fsbi->FAT1_firstsector + i,
+			1, (unchar *)buf);
 
 		for(j = 0; j < 128; j++)
 		{
@@ -91,14 +93,15 @@ uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value)
 	int i;
 
 	memset(buf,0,512);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			fsbi->FAT1_firstsector + (fat_entry >> 7), 1, (unsigned char *)buf);
+	ROOTBLK_TRANSFER(CMD_READ,
+		fsbi->FAT1_firstsector + (fat_entry >> 7),
+		1, (unchar *)buf);
 	buf[fat_entry & 0x7f] = (buf[fat_entry & 0x7f] & 0xf0000000) | (value & 0x0fffffff);
 
 	for(i = 0; i < fsbi->NumFATs; i++)
-		ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
-				fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
-				1, (unsigned char *)buf);
+		ROOTBLK_TRANSFER(CMD_WRITE,
+			fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
+			1, (unchar *)buf);
 	return 1;	
 }
 
@@ -113,8 +116,8 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	FAT32_inode_info_s * finode = filp->f_path.dentry->d_inode->private_idx_info;
 	FAT32_SBinfo_s * fsbi = filp->f_path.dentry->d_inode->i_sb->private_sb_info;
 
-	unsigned long cluster = finode->first_cluster;
-	unsigned long sector = 0;
+	ulong cluster = finode->first_cluster;
+	ulong sector = 0;
 	int i, length = 0;
 	long ret_val = 0;
 	ulong cplen;
@@ -136,8 +139,8 @@ ssize_t FAT32_read(file_s *filp, char *buf, size_t count, loff_t *position)
 	{
 		memset(buffer, 0, fsbi->bytes_per_cluster);
 		sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-		if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
-					fsbi->sector_per_cluster, (unsigned char *)buffer))
+		if(ROOTBLK_TRANSFER(CMD_READ, sector,
+				fsbi->sector_per_cluster, (unchar *)buffer))
 		{
 			color_printk(RED, BLACK, "FAT32 FS(read) read disk ERROR!!!!!!!!!!\n");
 			ret_val = -EIO;
@@ -209,8 +212,8 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 		{
 			memset(buffer, 0, fsbi->bytes_per_cluster);
 			sector = fsbi->Data_firstsector + (cluster - 2) * fsbi->sector_per_cluster;
-			if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD, sector,
-						fsbi->sector_per_cluster, (unsigned char *)buffer))
+			if(ROOTBLK_TRANSFER(CMD_READ, sector,
+					fsbi->sector_per_cluster, (unchar *)buffer))
 			{
 				color_printk(RED, BLACK, "FAT32 FS(write) read disk ERROR!!!!!!!!!!\n");
 				ret_val = -EIO;
@@ -225,8 +228,8 @@ ssize_t FAT32_write(file_s *filp, const char *buf, size_t count, loff_t *positio
 		else
 			memcpy(buffer + offset, buf, length);
 
-		if(ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD, sector,
-					fsbi->sector_per_cluster, (unsigned char *)buffer))
+		if(ROOTBLK_TRANSFER(CMD_WRITE, sector,
+				fsbi->sector_per_cluster, (unchar *)buffer))
 		{
 			color_printk(RED, BLACK, "FAT32 FS(write) write disk ERROR!!!!!!!!!!\n");
 			ret_val = -EIO;
@@ -393,8 +396,8 @@ int fat32_write_inode(inode_s * inode)
 
 	sector = fsbi->Data_firstsector + (finode->dentry_location - 2) * fsbi->sector_per_cluster;
 	buf = kzalloc(fsbi->bytes_per_cluster, GFP_KERNEL);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			sector, fsbi->sector_per_cluster, (unsigned char *)buf);
+	ROOTBLK_TRANSFER(CMD_READ, sector,
+		fsbi->sector_per_cluster, (unchar *)buf);
 	fdentry = buf+finode->dentry_position;
 
 	////alert fat32 dentry data
@@ -402,8 +405,8 @@ int fat32_write_inode(inode_s * inode)
 	fdentry->start = finode->first_cluster & 0xffff;
 	fdentry->starthi = (fdentry->starthi & 0xf000) | (finode->first_cluster >> 16);
 
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_WRITE_CMD,
-			sector, fsbi->sector_per_cluster, (unsigned char *)buf);
+	ROOTBLK_TRANSFER(CMD_WRITE, sector,
+		fsbi->sector_per_cluster, (unchar *)buf);
 	kfree(buf);
 }
 
@@ -447,9 +450,13 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	fsbi->bootsector_bk_infat = fbs->BPB_BkBootSec;	
 	
 	//fat32 fsinfo sector
+	void *fsinfo_buf = kzalloc(SZ_4K, GFP_KERNEL);
+	ROOTBLK_TRANSFER(CMD_READ,
+		DPTE->StartingLBA + fbs->BPB_FSInfo,
+		SECT_PER_PG, fsinfo_buf);
 	fsbi->fat_fsinfo = kzalloc(sizeof(FAT32_FSinfo_s), GFP_KERNEL);
-	ATA_master_ops.transfer(MASTER, SLAVE, ATA_READ_CMD,
-			DPTE->StartingLBA + fbs->BPB_FSInfo, 1, (unsigned char *)fsbi->fat_fsinfo);
+	memcpy(fsbi->fat_fsinfo, fsinfo_buf, sizeof(FAT32_FSinfo_s));
+	kfree(fsinfo_buf);
 	
 	//directory entry
 	sbp->s_root = kzalloc(sizeof(dentry_s), GFP_KERNEL);

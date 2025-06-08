@@ -42,13 +42,13 @@ typedef struct GPT_Header
 
 typedef struct GPT_Partition_Entry
 {
-	u64	PartitionTypeGUID[2];
-	u64	UniquePartitionGUID[2];
+	u64		PartitionTypeGUID[2];
+	u64		UniquePartitionGUID[2];
 
-	u64	StartingLBA;
-	u64	EndingLBA;
-	u64	Attributes;
-	u16	PartitionName[36];
+	u64		StartingLBA;
+	u64		EndingLBA;
+	u64		Attributes;
+	char	PartitionName[72];
 } GPT_PE_s;
 
 #endif /* _GPT_H_ */

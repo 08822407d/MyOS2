@@ -10,6 +10,7 @@
 #include <linux/kernel/mm.h>
 #include <linux/kernel/sched_const.h>
 #include <linux/kernel/sched_api.h>
+#include <linux/kernel/delay.h>
 
 #include "MineOS_NVMe.h"
 #include "MineOS_PCI.h"
@@ -39,6 +40,8 @@ u64 NVMe_BAR0_base = 0;
 
 struct NVMe_Controller_Registers * NVMe_CTRL_REG = NULL;
 struct NVMe_Identify_Controller_Data_Structure * NVMeID = NULL;
+nvme_id_ns_s *NVMeID_NS_1 = NULL;
+int bootdisk_LBAsize = 512;	// default block size
 
 NVMe_SQ_Ent_s *ADMIN_Submission_Queue = NULL;
 NVMe_CQ_Ent_s *ADMIN_Completion_Queue = NULL;
@@ -220,7 +223,8 @@ long NVMe_transfer(unsigned controller, unsigned disk, long cmd, unsigned long b
 
 		wake_up_process(thread);
 		wait_for_completion(&done);
-
+		
+		// mdelay(1);	// wait for NVMe controller to process the request
 		if (node->DevSpecParams != NULL)
 			kfree(node->DevSpecParams);
 		if (node != NULL)
@@ -571,9 +575,9 @@ void NVMe_IOqueue_init()
 	{
 		.CID			= 0x5A5A,
 		.NSID			= 0,
-		.OPC			= 0x06,		////Identify command
-		.PRP_SGL_Entry1	= (unsigned long)virt_to_phys((virt_addr_t)NVMeID),
-		.Dword10		= 0x01,		////CNTID=0,CNS=1
+		.OPC			= ADMIN_CMD_IDENTIFY,		////Identify command
+		.PRP_SGL_Entry1	= (ulong)virt_to_phys((virt_addr_t)NVMeID),
+		.Dword10		= 0x01,						////CNTID=0,CNS=1
 	};
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify);
 	NVMe_wait_new_ACQ(curr_AsqEnt);
@@ -588,6 +592,18 @@ void NVMe_IOqueue_init()
 	// 	NVMe_wait_new_ACQ(curr_AsqEnt);
 	// }
 	
+	NVMeID_NS_1 = (nvme_id_ns_s *)kzalloc(PAGE_SIZE, GFP_KERNEL);
+	NVMe_SQ_Ent_s ASQ_Identify_NS1 = {
+		.CID				= 0x5A5A,
+		.NSID				= 1,					// 请求的命名空间 ID = 1
+		.OPC				= ADMIN_CMD_IDENTIFY,
+		.PRP_SGL_Entry1		= (ulong)virt_to_phys((virt_addr_t)NVMeID_NS_1),
+		.Dword10			= 0x0,					// CNS=0 (Identify Namespace)，CNTID=0
+	};
+	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify_NS1);
+	NVMe_wait_new_ACQ(curr_AsqEnt);
+	bootdisk_LBAsize = 2 << NVMeID_NS_1->lbaf[(NVMeID_NS_1->flbas & 0x0F)].ds;
+
 
 	IO_Completion_Queue = (NVMe_CQ_Ent_s *)kzalloc(PAGE_SIZE, 0);
 	IO_Submission_Queue = (NVMe_SQ_Ent_s *)kzalloc(PAGE_SIZE, 0);

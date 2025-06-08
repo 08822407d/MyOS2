@@ -290,7 +290,7 @@ extern void do_name(void);
 	init_XHCIrqd();
 
 	scan_PCI_devices();
-	myos_ata_probe();
+	// myos_ata_probe();
 	// scan_XHCI_devices();
 
 	NVMe_IOqueue_init();
@@ -300,8 +300,8 @@ extern void do_name(void);
 	myos_switch_to_root_disk();
 	// color_printk(GREEN, BLACK, "VFS initiated.\n");
 
-	void *large_test = kmalloc(0x4000, GFP_KERNEL);
-	kfree(large_test);
+	// void *large_test = kmalloc(0x4000, GFP_KERNEL);
+	// kfree(large_test);
 
 	kjmp_to_doexecve();
 
