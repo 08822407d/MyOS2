@@ -603,6 +603,7 @@ void NVMe_IOqueue_init()
 	curr_AsqEnt = NVMe_submit_ASQ(&ASQ_Identify_NS1);
 	NVMe_wait_new_ACQ(curr_AsqEnt);
 	bootdisk_LBAsize = 2 << NVMeID_NS_1->lbaf[(NVMeID_NS_1->flbas & 0x0F)].ds;
+	__mb();
 
 
 	IO_Completion_Queue = (NVMe_CQ_Ent_s *)kzalloc(PAGE_SIZE, 0);

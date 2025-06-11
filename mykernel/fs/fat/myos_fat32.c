@@ -34,11 +34,11 @@ bool FAT32_ent_empty(const msdos_dirent_s *de)
 
 u32 FAT32_read_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry)
 {
-	uint32_t buf[128];
-	memset(buf, 0, 512);
+	uint32_t buf[PAGE_SIZE / sizeof(uint32_t)];
+	memset(buf, 0, PAGE_SIZE);
 	ROOTBLK_TRANSFER(CMD_READ,
 		fsbi->FAT1_firstsector + (fat_entry >> 7),
-		1, (unchar *)buf);
+		SECT_PER_PG, (unchar *)buf);
 	return buf[fat_entry & 0x7f] & 0x0fffffff;
 }
 
@@ -67,7 +67,7 @@ u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 	int i, j;
 	int fat_entry;
 	ulong sector_per_fat = fsbi->sector_per_FAT;
-	uint buf[128];
+	uint32_t buf[PAGE_SIZE / sizeof(uint32_t)];
 
 //	fsbi->fat_fsinfo->FSI_Free_Count & fsbi->fat_fsinfo->FSI_Nxt_Free not exactly,so unuse
 
@@ -76,7 +76,7 @@ u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 		memset(buf, 0, 512);
 		ROOTBLK_TRANSFER(CMD_READ,
 			fsbi->FAT1_firstsector + i,
-			1, (unchar *)buf);
+			SECT_PER_PG, (unchar *)buf);
 
 		for(j = 0; j < 128; j++)
 		{
@@ -89,19 +89,19 @@ u32 FAT32_find_available_cluster(FAT32_SBinfo_s * fsbi)
 
 uint64_t FAT32_write_FAT_Entry(FAT32_SBinfo_s * fsbi, u32 fat_entry, u32 value)
 {
-	uint32_t buf[128];
+	uint32_t buf[PAGE_SIZE / sizeof(uint32_t)];
 	int i;
 
 	memset(buf,0,512);
 	ROOTBLK_TRANSFER(CMD_READ,
 		fsbi->FAT1_firstsector + (fat_entry >> 7),
-		1, (unchar *)buf);
+		SECT_PER_PG, (unchar *)buf);
 	buf[fat_entry & 0x7f] = (buf[fat_entry & 0x7f] & 0xf0000000) | (value & 0x0fffffff);
 
 	for(i = 0; i < fsbi->NumFATs; i++)
 		ROOTBLK_TRANSFER(CMD_WRITE,
 			fsbi->FAT1_firstsector + fsbi->sector_per_FAT * i + (fat_entry >> 7),
-			1, (unchar *)buf);
+			SECT_PER_PG, (unchar *)buf);
 	return 1;	
 }
 
@@ -450,7 +450,7 @@ super_block_s * read_fat32_superblock(GPT_PE_s * DPTE, void * buf)
 	fsbi->bootsector_bk_infat = fbs->BPB_BkBootSec;	
 	
 	//fat32 fsinfo sector
-	void *fsinfo_buf = kzalloc(SZ_4K, GFP_KERNEL);
+	void *fsinfo_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
 	ROOTBLK_TRANSFER(CMD_READ,
 		DPTE->StartingLBA + fbs->BPB_FSInfo,
 		SECT_PER_PG, fsinfo_buf);

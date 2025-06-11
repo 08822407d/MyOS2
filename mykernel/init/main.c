@@ -290,9 +290,9 @@ extern void do_name(void);
 	init_XHCIrqd();
 
 	scan_PCI_devices();
-	// myos_ata_probe();
 	// scan_XHCI_devices();
 
+	myos_ata_probe();
 	NVMe_IOqueue_init();
 	// USB_Keyborad_init();
 

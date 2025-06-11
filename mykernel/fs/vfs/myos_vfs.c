@@ -8,6 +8,7 @@
 #include <linux/lib/string.h>
 #include <linux/init/init.h>
 #include <linux/drivers/myos_ide.h>
+#include <linux/kernel/delay.h>
 
 
 #include <obsolete/printk.h>
@@ -76,10 +77,20 @@ ulong myos_switch_to_root_disk()
 	// int test = init_flags.vfs;
 	// init_flags.vfs = 0;
 	// load the boot sector
-	boot_sec = (MBR_s *)kzalloc(SZ_4K, GFP_KERNEL);
-	memset(boot_sec, 0, SZ_4K);
+	boot_sec = (MBR_s *)kzalloc(PAGE_SIZE, GFP_KERNEL);
+	// // check partition type, only support GPT
+	// for (int retries = 0; ; retries++) {
+	// 	ROOTBLK_TRANSFER(CMD_READ, 0, SECT_PER_PG, (unchar *)boot_sec);
+	// 	if (boot_sec->DPTE[0].type == 0xee ||
+	// 		boot_sec->DPTE[0].type == 0xef)
+	// 		break;
+		
+	// 	if (retries > 10) {
+	// 		color_printk(RED, BLACK, "Read MBR failed!\n");
+	// 		while (1);
+	// 	}
+	// }
 	ROOTBLK_TRANSFER(CMD_READ, 0, SECT_PER_PG, (unchar *)boot_sec);
-	// check partition type, only support GPT
 	if (boot_sec->DPTE[0].type != 0xee &&
 		boot_sec->DPTE[0].type != 0xef)
 	{
@@ -92,10 +103,10 @@ ulong myos_switch_to_root_disk()
 	// load all the gpt_entries
 	u32 gptent_nr = gpt_hdr->NumberOfPartitionEntries;
 	gpt_pes = (GPT_PE_s *)kzalloc(gptent_nr * sizeof(GPT_PE_s), GFP_KERNEL);
-	void *gpt_pes_buf = kzalloc(5 * SZ_4K, GFP_KERNEL);
+	void *gpt_pes_buf = kzalloc(5 * PAGE_SIZE, GFP_KERNEL);
 	// read first 40 sectors(512B) of the disk
 	ROOTBLK_TRANSFER(CMD_READ, 0, 5 * SECT_PER_PG, gpt_pes_buf);
-	memcpy(gpt_pes, gpt_pes_buf + 2 * SZ_512, gptent_nr * sizeof(GPT_PE_s));
+	memcpy(gpt_pes, gpt_pes_buf + 2 * SECTOR_SIZE, gptent_nr * sizeof(GPT_PE_s));
 	kfree(gpt_pes_buf);
 
 	GPT_PE_s *gpt_pe = NULL;
@@ -109,7 +120,7 @@ ulong myos_switch_to_root_disk()
 			if (*(puid_p + 1) == EFIBOOT_PART_GUID_HIGH)
 			{
 				// mount partitions
-				FAT32_BS_s *fat32_sb = (FAT32_BS_s *)kmalloc(SZ_4K, GFP_KERNEL);
+				FAT32_BS_s *fat32_sb = (FAT32_BS_s *)kmalloc(PAGE_SIZE, GFP_KERNEL);
 				ROOTBLK_TRANSFER(CMD_READ, gpt_pes[i].StartingLBA, SECT_PER_PG, (unchar *)fat32_sb);
 				if (i == BOOT_FS_IDX)
 					myos_root_sb = mount_fs("FAT32", gpt_pe, fat32_sb);
