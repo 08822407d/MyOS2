@@ -24,6 +24,7 @@
 
 
 	/* video.c */
+	void clearFB();
 	void myos_init_video(void);
 
 	/* softirq.c */

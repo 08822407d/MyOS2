@@ -183,6 +183,13 @@ int tty_init(void)
 extern framebuffer_s	framebuffer;
 extern position_t Pos;
 
+
+void clearFB()
+{
+	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
+	__mb();
+}
+
 void myos_init_video()
 {	
 	Pos.FB_addr = (unsigned int *)framebuffer.FB_virbase;
@@ -197,7 +204,6 @@ void myos_init_video()
 
 	spin_lock_init(&Pos.lock);
 	// clean screen
-	memset((void *)framebuffer.FB_virbase, 0, framebuffer.FB_size);
 
 	char linebuf[4096] = {0};
 	int i;
@@ -207,6 +213,7 @@ void myos_init_video()
 	color_printk(BLACK, GREEN, "\n");
 
 	pr_info("MyOS Templete Console Initiated.\n");
+	
 }
 
 // map VBE frame_buffer, this part should not be

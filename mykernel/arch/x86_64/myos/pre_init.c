@@ -36,6 +36,8 @@ static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)
 	framebuffer.X_Resolution = common->framebuffer_width;
 	framebuffer.Y_Resolution = common->framebuffer_height;
 	framebuffer.PixperScanline = common->framebuffer_pitch / (common->framebuffer_bpp / 8);
+
+	clearFB();
 }
 
 void myos_early_init_system(void)

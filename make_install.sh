@@ -5,11 +5,13 @@ DEBUG_FLAG=-DCMAKE_BUILD_TYPE=Debug
 TARGET_ARCH=x86_64
 LINK_TYPE=static
 # LINK_TYPE=dynamic
+PHY_DISK="/dev/disk/by-id/nvme-SAMSUNG_MZAL4256HBJD-00BL2_S67PNF1T701398-part1"
 
 # source ./scripts/prebuild_generate.sh
 source ./scripts/make_install_kernel.sh
 source ./scripts/make_install_initranfs.sh
 source ./scripts/make_install_bootloader.sh
+source ./scripts/phys_nvme_install.sh
 
 if [ ! -d "./build" ]; then
 	mkdir ./build
@@ -22,3 +24,4 @@ rm -rf ./build/*
 make_install_kernel $PROJ_ROOT $DEBUG_FLAG $TARGET_ARCH
 make_install_initranfs $PROJ_ROOT $DEBUG_FLAG $LINK_TYPE
 make_install_bootloader $PROJ_ROOT $TARGET_ARCH
+install_to_physdisk $PHY_DISK
