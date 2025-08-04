@@ -145,7 +145,7 @@ asmlinkage void __init start_kernel(void)
 	trap_init();
 	mm_core_init();
 
-	while (1) { arch_halt(); }
+	// while (1) { arch_halt(); }
 
 	/*
 	 * Set up the scheduler prior starting any interrupts (such as the

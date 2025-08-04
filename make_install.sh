@@ -24,4 +24,4 @@ rm -rf ./build/*
 make_install_kernel $PROJ_ROOT $DEBUG_FLAG $TARGET_ARCH
 make_install_initranfs $PROJ_ROOT $DEBUG_FLAG $LINK_TYPE
 make_install_bootloader $PROJ_ROOT $TARGET_ARCH
-install_to_physdisk $PHY_DISK
+# install_to_physdisk $PHY_DISK
