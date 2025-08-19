@@ -72,9 +72,9 @@
 		u64				mask;
 		u32				mult;
 		u32				shift;
-		u64				max_idle_ns;
+		// u64				max_idle_ns;
 		u32				maxadj;
-		u32				uncertainty_margin;
+		// u32				uncertainty_margin;
 	// #ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
 	// 	struct arch_clocksource_data archdata;
 	// #endif
@@ -84,14 +84,14 @@
 		int				rating;
 		// enum clocksource_ids	id;
 		// enum vdso_clock_mode	vdso_clock_mode;
-		ulong			flags;
+		// ulong			flags;
 
 		int				(*enable)(clocksrc_s *cs);
 		void			(*disable)(clocksrc_s *cs);
-		void			(*suspend)(clocksrc_s *cs);
-		void			(*resume)(clocksrc_s *cs);
-		void			(*mark_unstable)(clocksrc_s *cs);
-		void			(*tick_stable)(clocksrc_s *cs);
+		// void			(*suspend)(clocksrc_s *cs);
+		// void			(*resume)(clocksrc_s *cs);
+		// void			(*mark_unstable)(clocksrc_s *cs);
+		// void			(*tick_stable)(clocksrc_s *cs);
 
 		// /* private: */
 	// #ifdef CONFIG_CLOCKSOURCE_WATCHDOG

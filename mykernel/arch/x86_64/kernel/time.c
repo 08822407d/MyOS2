@@ -23,6 +23,10 @@
 #include <asm/timer.h>
 #include <asm/hpet.h>
 #include <asm/time.h>
+#include <asm/tsc.h>
+
+
+
 
 
 
@@ -54,7 +58,7 @@ static __init void x86_late_time_init(void)
 	//  * delivering IRQs.
 	//  */
 	// x86_init.irqs.intr_mode_init();
-	// tsc_init();
+	tsc_init();
 
 	// if (static_cpu_has(X86_FEATURE_WAITPKG))
 	// 	use_tpause_delay();

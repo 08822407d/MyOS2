@@ -53,6 +53,23 @@ static hpet_base_s		hpet_base;
 static ulong			hpet_freq;
 
 
+static u64 read_hpet(clocksrc_s *cs);
+
+
+static clocksrc_s clocksource_hpet = {
+	.name		= "hpet",
+	.rating		= 250,
+	.read		= read_hpet,
+	.mask		= HPET_MASK,
+	// .flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+	// .resume		= hpet_resume_counter,
+	.list		= LIST_HEAD_INIT(clocksource_hpet.list),
+};
+
+clocksrc_s * __init __weak clocksource_default_clock(void) {
+	return &clocksource_hpet;
+}
+
 inline uint hpet_readl(uint a) {
 	return readl(hpet_virt_address + a);
 }
@@ -254,6 +271,7 @@ static union hpet_lock hpet __cacheline_aligned = {
 	{ .lock = __ARCH_SPIN_LOCK_UNLOCKED, },
 };
 
+
 static u64 read_hpet(clocksrc_s *cs) {
 	// unsigned long flags;
 	// union hpet_lock old, new;
@@ -308,14 +326,6 @@ static u64 read_hpet(clocksrc_s *cs) {
 	// return (u64)new.value;
 }
 
-static clocksrc_s clocksource_hpet = {
-	.name		= "hpet",
-	.rating		= 250,
-	.read		= read_hpet,
-	.mask		= HPET_MASK,
-	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
-	// .resume		= hpet_resume_counter,
-};
 
 /*
  * AMD SB700 based systems with spread spectrum enabled use a SMM based
@@ -369,7 +379,6 @@ static bool __init hpet_counting(void)
 	pr_warn("Counter not counting. HPET disabled\n");
 	return false;
 }
-
 
 
 extern void myos_HPET_init(void);

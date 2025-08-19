@@ -3,6 +3,10 @@
 
 #include <linux/kernel/limits.h>
 
+
+static DECLARE_LIST_HDR_S(clocksource_list);
+
+
 /**
  * clocks_calc_mult_shift - calculate mult/shift factors for scaled math of clocks
  * @mult:	pointer to mult variable
@@ -201,10 +205,28 @@ void __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq)
 	// 	"timekeeping: Clocksource %s might overflow on 11%% adjustment\n",
 	// 	cs->name);
 
-	clocksource_update_max_deferment(cs);
+	// clocksource_update_max_deferment(cs);
 
 	// pr_info("%s: mask: 0x%llx max_cycles: 0x%llx, max_idle_ns: %lld ns\n",
 	// 	cs->name, cs->mask, cs->max_cycles, cs->max_idle_ns);
+}
+
+/*
+ * Enqueue the clocksource sorted by rating
+ */
+static void
+clocksource_enqueue(clocksrc_s *cs) {
+	List_s *entry = &clocksource_list.anchor;
+	clocksrc_s *tmp;
+
+	list_header_for_each_container(tmp, &clocksource_list, list) {
+		/* Keep track of the place, where to insert */
+		if (tmp->rating < cs->rating)
+			break;
+		entry = &tmp->list;
+	}
+	list_add(&cs->list, entry);
+	clocksource_list.count++;
 }
 
 /**
@@ -240,7 +262,7 @@ int __clocksource_register_scale(clocksrc_s *cs, u32 scale, u32 freq)
 	// mutex_lock(&clocksource_mutex);
 
 	// clocksource_watchdog_lock(&flags);
-	// clocksource_enqueue(cs);
+	clocksource_enqueue(cs);
 	// clocksource_enqueue_watchdog(cs);
 	// clocksource_watchdog_unlock(&flags);
 

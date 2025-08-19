@@ -213,6 +213,7 @@ void get_cpu_cap(cpuinfo_x86_s *c)
 
 		c->x86_capability[CPUID_8000_0007_EBX] = ebx;
 		c->x86_power = edx;
+		c->x86_capability[CPUID_8000_0007_EDX] = edx;
 	}
 
 	if (c->extended_cpuid_level >= 0x80000008) {

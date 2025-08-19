@@ -26,6 +26,13 @@
 		CPUID_8000_0007_EBX,
 		CPUID_7_EDX,
 		CPUID_8000_001F_EAX,
+		// "kvm_only_cpuid_leafs" in linux
+		// CPUID_12_EAX,
+		// CPUID_7_1_EDX,
+		CPUID_8000_0007_EDX,
+		// CPUID_8000_0022_EAX,
+		// CPUID_7_2_EDX,
+		// CPUID_24_0_EBX,
 	};
 
 	/*
@@ -350,6 +357,15 @@
 
 		// CPUID_8000_001F_EAX
 		__u32 CPUID_8000_001F_EAX;
+
+		// "kvm_only_cpuid_leafs" in linux
+		// CPUID_8000_0007_EDX
+		struct {
+			__u32						: 8;
+			bool
+				Invariant_TSC			: 1;
+			__u32						: 23;
+		}  __attribute__((packed));
 	};
 
 

@@ -7,8 +7,10 @@
 
 	// extern struct system_counterval_t convert_art_ns_to_tsc(u64 art_ns);
 
-	extern void tsc_early_init(void);
-	// extern void tsc_init(void);
+	// extern void tsc_early_init(void);
+	extern void simple_tsc_early_init(void);
+	#define tsc_early_init simple_tsc_early_init
+	extern void tsc_init(void);
 	// extern unsigned long calibrate_delay_is_known(void);
 	// extern void mark_tsc_unstable(char *reason);
 	// extern int unsynchronized_tsc(void);

@@ -213,7 +213,7 @@ void __init setup_arch(char **cmdline_p)
 	// bss_resource.end = __pa(__bss_stop)-1;
 
 
-	tsc_early_init();
+	// tsc_early_init();
 
 	/*
 	 * partially used pages are not usable - thus
