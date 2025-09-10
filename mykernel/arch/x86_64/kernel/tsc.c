@@ -252,6 +252,6 @@ void __init tsc_init(void)
 	// detect_art();
 
 
-	if (boot_cpu_data.x86_capa_bits.Invariant_TSC)
-		clocksource_register_khz(&clocksource_tsc, tsc_khz);
+	// if (boot_cpu_data.x86_capa_bits.Invariant_TSC)
+	// 	clocksource_register_khz(&clocksource_tsc, tsc_khz);
 }

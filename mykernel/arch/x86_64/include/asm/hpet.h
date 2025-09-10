@@ -3,6 +3,7 @@
 #define _ASM_X86_HPET_H
 
 	// #include <linux/msi.h>
+	#include <linux/kernel/time.h>
 
 	// #ifdef CONFIG_HPET_TIMER
 
@@ -69,7 +70,8 @@
 	// extern bool hpet_force_user;
 	// extern bool hpet_msi_disable;
 	// extern int is_hpet_enabled(void);
-	extern int hpet_enable(void);
+	// extern int hpet_enable(void);
+	extern int hpet_enable(clocksrc_s *cs);
 	// extern void hpet_disable(void);
 	// extern unsigned int hpet_readl(unsigned int a);
 	// extern void force_hpet_resume(void);

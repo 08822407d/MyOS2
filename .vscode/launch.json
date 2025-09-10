@@ -8,7 +8,7 @@
       "name": "MyOS2 debug",
       "type": "cppdbg",
       "request": "launch",
-      "preLaunchTask": "startup vmw",                   // 开始debug前要执行的任务，名称对应task.json中的"label"
+      // "preLaunchTask": "startup vmw",                   // 开始debug前要执行的任务，名称对应task.json中的"label"
       "program": "${workspaceRoot}/build/kernel",       // 内核的调试文件
       "miDebuggerServerAddress": "localhost:8864",      //　远程端口
       "stopAtEntry": false,                             // 默认将名称为main的函数当作入口

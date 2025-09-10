@@ -63,12 +63,10 @@ static clocksrc_s clocksource_hpet = {
 	.mask		= HPET_MASK,
 	// .flags		= CLOCK_SOURCE_IS_CONTINUOUS,
 	// .resume		= hpet_resume_counter,
+	.enable		= hpet_enable,
 	.list		= LIST_HEAD_INIT(clocksource_hpet.list),
 };
 
-clocksrc_s * __init __weak clocksource_default_clock(void) {
-	return &clocksource_hpet;
-}
 
 inline uint hpet_readl(uint a) {
 	return readl(hpet_virt_address + a);
@@ -381,11 +379,11 @@ static bool __init hpet_counting(void)
 }
 
 
-extern void myos_HPET_init(void);
 /**
  * hpet_enable - Try to setup the HPET timer. Returns 1 on success.
  */
-int __init hpet_enable(void)
+// int __init hpet_enable(void)
+int __init hpet_enable(clocksrc_s *cs)
 {
 	u32 hpet_period, cfg, id, irq;
 	uint i, channels;
@@ -483,6 +481,7 @@ int __init hpet_enable(void)
 	if (id & HPET_ID_LEGSUP) {
 		// hpet_legacy_clockevent_register(&hpet_base.channels[0]);
 		myos_hpet_clkevt_set_state_periodic(&clocksource_hpet);
+extern void myos_HPET_init(void);
 		myos_HPET_init();
 		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
 		// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
@@ -524,15 +523,19 @@ hw_int_controller_s HPET_int_controller =
 };
 
 extern void do_timer(unsigned long ticks);
+bool DEBUG_show_jiffies = false;
 void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 {
 	jiffies++;
 	do_timer(1);
 
-	char buf[20];
-	memset(buf, 0 , sizeof(buf));
-	snprintf(buf, sizeof(buf), "(HPET: %08ld)   ", jiffies);
-	myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 36, 0);
+	// if (DEBUG_show_jiffies)
+	// {
+		char buf[20];
+		memset(buf, 0 , sizeof(buf));
+		snprintf(buf, sizeof(buf), "(HPET: %08ld)   ", jiffies);
+		myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 36, 0);
+	// }
 }
 	
 void myos_HPET_init()

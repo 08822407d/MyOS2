@@ -23,24 +23,6 @@
 		extern s64
 		clocksource_cyc2ns(u64 cycles, u32 mult, u32 shift);
 
-		extern int
-		__clocksource_register(clocksrc_s *cs);
-
-		extern int
-		clocksource_register_hz(clocksrc_s *cs, u32 hz);
-
-		extern int
-		clocksource_register_khz(clocksrc_s *cs, u32 khz);
-
-		extern void
-		__clocksource_update_freq_hz(clocksrc_s *cs, u32 hz);
-
-		extern void
-		__clocksource_update_freq_khz(clocksrc_s *cs, u32 khz);
-
-		// extern void
-		// clocksource_update_max_deferment(clocksrc_s *cs);
-
 	#endif
 
 	#include "clocksource_macro.h"
@@ -112,53 +94,6 @@
 		clocksource_cyc2ns(u64 cycles, u32 mult, u32 shift) {
 			return ((u64) cycles * mult) >> shift;
 		}
-
-		/*
-		 * Don't call this unless you are a default clocksource
-		 * (AKA: jiffies) and absolutely have to.
-		 */
-		PREFIX_STATIC_INLINE
-		int
-		__clocksource_register(clocksrc_s *cs) {
-			return __clocksource_register_scale(cs, 1, 0);
-		}
-
-		PREFIX_STATIC_INLINE
-		int
-		clocksource_register_hz(clocksrc_s *cs, u32 hz) {
-			return __clocksource_register_scale(cs, 1, hz);
-		}
-
-		PREFIX_STATIC_INLINE
-		int
-		clocksource_register_khz(clocksrc_s *cs, u32 khz) {
-			return __clocksource_register_scale(cs, 1000, khz);
-		}
-
-		PREFIX_STATIC_INLINE
-		void
-		__clocksource_update_freq_hz(clocksrc_s *cs, u32 hz) {
-			__clocksource_update_freq_scale(cs, 1, hz);
-		}
-
-		PREFIX_STATIC_INLINE
-		void
-		__clocksource_update_freq_khz(clocksrc_s *cs, u32 khz) {
-			__clocksource_update_freq_scale(cs, 1000, khz);
-		}
-
-		// /**
-		//  * clocksource_update_max_deferment - Updates the clocksource max_idle_ns & max_cycles
-		//  * @cs:         Pointer to clocksource to be updated
-		//  *
-		//  */
-		// PREFIX_STATIC_INLINE
-		// void
-		// clocksource_update_max_deferment(clocksrc_s *cs) {
-		// 	cs->max_idle_ns =
-		// 		clocks_calc_max_nsecs(cs->mult, cs->shift,
-		// 				cs->maxadj, cs->mask, &cs->max_cycles);
-		// }
 
 	#endif
 

@@ -33,7 +33,7 @@
 /* Default timer init function */
 void __init hpet_time_init(void)
 {
-	if (!hpet_enable()) {
+	if (!hpet_enable(NULL)) {
 		// if (!pit_timer_init())
 			return;
 	}

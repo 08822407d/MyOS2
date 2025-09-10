@@ -33,3 +33,7 @@ static clocksrc_s clocksource_jiffies = {
 static u64 jiffies_read(clocksrc_s *cs) {
 	return (u64) jiffies;
 }
+
+clocksrc_s * __init __weak clocksource_default_clock(void) {
+	return &clocksource_jiffies;
+}
