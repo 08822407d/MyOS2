@@ -24,9 +24,9 @@ done
 echo "remainders: $@"
 
 if [ $UNSET_ENV -eq 1 ]; then
-	# unmap_vmdk_partitions $IDE_0_1
-	unmap_vmdk_partitions $NVME_0
+	unmap_vmdk_partitions $IDE_0_1
+	# unmap_vmdk_partitions $NVME_0
 else
-	# map_vmdk_partitions $IDE_0_1
-	map_vmdk_partitions $NVME_0
+	map_vmdk_partitions $IDE_0_1
+	# map_vmdk_partitions $NVME_0
 fi

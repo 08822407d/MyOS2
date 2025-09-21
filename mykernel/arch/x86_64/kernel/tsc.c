@@ -157,56 +157,6 @@ noinstr u64 native_sched_clock(void)
 }
 
 
-void __init simple_tsc_early_init(void)
-{
-	// if (!boot_cpu_has(X86_FEATURE_TSC))
-	// 	return;
-	// /* Don't change UV TSC multi-chassis synchronization */
-	// if (is_early_uv_system())
-	// 	return;
-	// if (!determine_cpu_tsc_frequencies(true))
-	// 	return;
-	// tsc_enable_sched_clock();
-
-// unsigned long native_calibrate_tsc(void)
-// {
-	uint eax_denominator, ebx_numerator, ecx_hz, edx;
-	uint crystal_khz;
-
-	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
-	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
-	cpuid(0x15, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
-	if (ebx_numerator == 0 || eax_denominator == 0) {
-		uint eax_base_mhz, ebx, ecx, edx;
-
-		cpuid(0x16, &eax_base_mhz, &ebx, &ecx, &edx);
-		crystal_khz = eax_base_mhz * 1000 *
-			eax_denominator / ebx_numerator;
-	}
-
-// 	return crystal_khz * ebx_numerator / eax_denominator;
-// }
-
-// unsigned long cpu_khz_from_msr(void)
-// {
-	u32 lo, hi, ratio, freq, tscref;
-	// const struct freq_desc *freq_desc;
-	// const struct x86_cpu_id *id;
-	// const struct muldiv *md;
-	ulong res;
-	int index;
-
-	rdmsr(MSR_PLATFORM_INFO, &lo, &hi);
-	ratio = (lo >> 8) & 0xff;
-
-	/* Get FSB FREQ ID */
-	rdmsr(MSR_FSB_FREQ, &lo, &hi);
-	// index = lo & freq_desc->mask;
-	index = lo & 0x07; // In Linux, this "freq_desc->mask" seems always to be 0x07
-	// md = &freq_desc->muldiv[index];
-// }
-}
-
 void __init tsc_init(void)
 {
 	// if (!cpu_feature_enabled(X86_FEATURE_TSC)) {

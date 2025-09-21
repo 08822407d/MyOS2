@@ -11,8 +11,6 @@
 #include "arch_proto.h"
 #include "myos_irq_vectors.h"
 
-#define ROOTBLK_NVME 1
-
 
 	extern myos_irq_desc_s	irq_descriptors[NR_VECTORS];
 
@@ -58,8 +56,8 @@
 				ATA_master_ops.transfer(MASTER, SLAVE, cmd, blk_idx, count, buffer)
 	#define CMD_READ		ATA_READ_CMD
 	#define CMD_WRITE		ATA_WRITE_CMD
+	#define SECT_PER_PG		8
 	// #define SECTOR_SIZE		SZ_512
 #endif
-
 
 #endif /* _AMD64_PC_DEVICE_H_ */

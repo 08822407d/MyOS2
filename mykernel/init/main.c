@@ -295,6 +295,8 @@ extern void do_name(void);
 	scan_PCI_devices();
 	// scan_XHCI_devices();
 
+extern bool DEBUG_show_jiffies;
+	DEBUG_show_jiffies = true;
 	myos_ata_probe();
 	NVMe_IOqueue_init();
 	// USB_Keyborad_init();

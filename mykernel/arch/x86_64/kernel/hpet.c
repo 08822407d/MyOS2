@@ -529,13 +529,13 @@ void HPET_handler(unsigned long parameter, pt_regs_s * regs)
 	jiffies++;
 	do_timer(1);
 
-	// if (DEBUG_show_jiffies)
-	// {
+	if (DEBUG_show_jiffies)
+	{
 		char buf[20];
 		memset(buf, 0 , sizeof(buf));
 		snprintf(buf, sizeof(buf), "(HPET: %08ld)   ", jiffies);
 		myos_tty_write_color_at(buf, sizeof(buf), BLACK, GREEN, 36, 0);
-	// }
+	}
 }
 	
 void myos_HPET_init()
