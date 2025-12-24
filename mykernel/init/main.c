@@ -57,10 +57,6 @@ static int kernel_init(void *);
 extern void init_IRQ(void);
 
 
-extern void time_init(void);
-/* Default late time init is NULL. archs can override this later. */
-void (*__initdata late_time_init)(void);
-
 
 /*
  * This should be approx 2 Bo*oMips to start (note initial shift), and will
@@ -165,12 +161,7 @@ asmlinkage void __init start_kernel(void)
 	init_IRQ();
 	softirq_init();
 	timekeeping_init();
-	time_init();
-
-	// enable bsp's apic
-	myos_init_bsp_intr();
-
-	// myos_startup_smp();
+	// time_init(); /* cancel this meaningless function call, directly call late_time_init */
 
 
 	/*
@@ -180,7 +171,7 @@ asmlinkage void __init start_kernel(void)
 	 */
 	console_init();
 
-	if (late_time_init)
+	// if (late_time_init)
 		late_time_init();
 
 	arch_cpu_finalize_init();
@@ -213,6 +204,7 @@ void myos_scan_pci_devices(void);
 void register_diskfs(void);
 void pid_namespaces_init(void);
 int tty_class_init(void);
+int clocksource_done_booting(void);
 int chr_dev_init(void);
 int init_elf_binfmt(void);
 int init_sigframe_size(void);
@@ -231,6 +223,7 @@ do_initcalls(void) {
 	tty_class_init();
 
 	/* fs_initcall (fn, 5) */
+	clocksource_done_booting();
 	chr_dev_init();
 
 	/* device_initcall (fn, 6) */

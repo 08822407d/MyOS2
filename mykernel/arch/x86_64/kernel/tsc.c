@@ -58,10 +58,10 @@ static clocksrc_s clocksource_tsc = {
 	.rating				= 300,
 	.read				= read_tsc,
 	.mask				= CLOCKSOURCE_MASK(64),
-	// .flags				= CLOCK_SOURCE_IS_CONTINUOUS |
-	// 						CLOCK_SOURCE_VALID_FOR_HRES |
-	// 						CLOCK_SOURCE_MUST_VERIFY |
-	// 						CLOCK_SOURCE_VERIFY_PERCPU,
+	.flags				= CLOCK_SOURCE_IS_CONTINUOUS |
+							CLOCK_SOURCE_VALID_FOR_HRES |
+							CLOCK_SOURCE_MUST_VERIFY |
+							CLOCK_SOURCE_VERIFY_PERCPU,
 	// .id					= CSID_X86_TSC,
 	// .vdso_clock_mode	= VDSO_CLOCKMODE_TSC,
 	// .enable				= tsc_cs_enable,
@@ -201,7 +201,10 @@ void __init tsc_init(void)
 	// clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
 	// detect_art();
 
-
 	// if (boot_cpu_data.x86_capa_bits.Invariant_TSC)
 	// 	clocksource_register_khz(&clocksource_tsc, tsc_khz);
+
+
+	// Now MyOS2 running on vmware can't init TSC
+	clocksource_mark_unstable(&clocksource_tsc);
 }

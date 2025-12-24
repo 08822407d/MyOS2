@@ -84,7 +84,7 @@
 		int				rating;
 		// enum clocksource_ids	id;
 		// enum vdso_clock_mode	vdso_clock_mode;
-		// ulong			flags;
+		ulong			flags;
 
 		int				(*enable)(clocksrc_s *cs);
 		void			(*disable)(clocksrc_s *cs);

@@ -10,5 +10,10 @@
 				__clocksource_register_scale(cs, 1, hz);
 	#define clocksource_register_khz(cs, khz) \
 				__clocksource_register_scale(cs, 1000, khz)
+	
+	#define clocksource_select()	\
+				__clocksource_select(false)
+	#define clocksource_select_fallback()	\
+				__clocksource_select(true)
 
 #endif /* _LINUX_CLOCKSOURCE_API_H_ */

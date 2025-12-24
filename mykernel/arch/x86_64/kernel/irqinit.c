@@ -11,6 +11,10 @@
 #include <asm/irq.h>
 #include <asm/apic.h>
 
+
+#include <obsolete/arch_proto.h>
+
+
 /*
  * ISA PIC or low IO-APIC triggered (INTA-cycle or APIC) interrupts:
  * (these are usually mapped to vectors 0x30-0x3f)
@@ -73,5 +77,8 @@ void __init init_IRQ(void)
 		// 		pr_err("%s: request_irq() failed\n", "cascade");
 		// }
 	// }
+
+	// enable bsp's apic
+	myos_init_bsp_intr();
 }
 

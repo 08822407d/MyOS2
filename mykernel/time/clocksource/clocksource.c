@@ -4,6 +4,20 @@
 #include <linux/kernel/limits.h>
 
 
+/*[Clocksource internal variables]---------
+ * curr_clocksource:
+ *	currently selected clocksource.
+ * suspend_clocksource:
+ *	used to calculate the suspend time.
+ * clocksource_list:
+ *	linked list with the registered clocksources
+ * clocksource_mutex:
+ *	protects manipulations to curr_clocksource and the clocksource_list
+ * override_name:
+ *	Name of the user-specified clocksource.
+ */
+static clocksrc_s *curr_clocksource;
+static clocksrc_s *suspend_clocksource;
 static DECLARE_LIST_HDR_S(clocksource_list);
 
 
@@ -59,6 +73,49 @@ void clocks_calc_mult_shift(u32 *mult, u32 *shift,
 	}
 	*mult = tmp;
 	*shift = sft;
+}
+
+
+static void
+__clocksource_unstable(clocksrc_s *cs) {
+	cs->flags &= ~(CLOCK_SOURCE_VALID_FOR_HRES | CLOCK_SOURCE_WATCHDOG);
+	cs->flags |= CLOCK_SOURCE_UNSTABLE;
+
+	/*
+	 * If the clocksource is registered clocksource_watchdog_kthread() will
+	 * re-rate and re-select.
+	 */
+	if (list_empty(&cs->list)) {
+		cs->rating = 0;
+		return;
+	}
+
+	// if (cs->mark_unstable)
+	// 	cs->mark_unstable(cs);
+
+	// /* kick clocksource_watchdog_kthread() */
+	// if (finished_booting)
+	// 	schedule_work(&watchdog_work);
+}
+
+/**
+ * clocksource_mark_unstable - mark clocksource unstable via watchdog
+ * @cs:		clocksource to be marked unstable
+ *
+ * This function is called by the x86 TSC code to mark clocksources as unstable;
+ * it defers demotion and re-selection to a kthread.
+ */
+void clocksource_mark_unstable(clocksrc_s *cs)
+{
+	ulong flags;
+
+	// spin_lock_irqsave(&watchdog_lock, flags);
+	if (!(cs->flags & CLOCK_SOURCE_UNSTABLE)) {
+		// if (!list_empty(&cs->list) && list_empty(&cs->wd_list))
+		// 	list_add(&cs->wd_list, &watchdog_list);
+		__clocksource_unstable(cs);
+	}
+	// spin_unlock_irqrestore(&watchdog_lock, flags);
 }
 
 
@@ -210,6 +267,104 @@ void __clocksource_update_freq_scale(clocksrc_s *cs, u32 scale, u32 freq)
 	// pr_info("%s: mask: 0x%llx max_cycles: 0x%llx, max_idle_ns: %lld ns\n",
 	// 	cs->name, cs->mask, cs->max_cycles, cs->max_idle_ns);
 }
+
+
+static clocksrc_s
+*clocksource_find_best(bool oneshot, bool skipcur) {
+	clocksrc_s *cs;
+
+	// if (!finished_booting || list_empty(&clocksource_list))
+	if (list_header_is_empty(&clocksource_list))
+		return NULL;
+
+	/*
+	 * We pick the clocksource with the highest rating. If oneshot
+	 * mode is active, we pick the highres valid clocksource with
+	 * the best rating.
+	 */
+	list_header_for_each_container(cs, &clocksource_list, list) {
+		if (skipcur && cs == curr_clocksource)
+			continue;
+		if (oneshot && !(cs->flags & CLOCK_SOURCE_VALID_FOR_HRES))
+			continue;
+		return cs;
+	}
+	return NULL;
+}
+
+static void
+__clocksource_select(bool skipcur) {
+	// bool oneshot = tick_oneshot_mode_active();
+	bool oneshot = false;
+	clocksrc_s *best, *cs;
+
+	/* Find the best suitable clocksource */
+	best = clocksource_find_best(oneshot, skipcur);
+	if (!best)
+		return;
+
+	// if (!strlen(override_name))
+	// 	goto found;
+
+	/* Check for the override clocksource. */
+	list_header_for_each_container(cs, &clocksource_list, list) {
+		if (skipcur && cs == curr_clocksource)
+			continue;
+		// if (strcmp(cs->name, override_name) != 0)
+		// 	continue;
+		/*
+		 * Check to make sure we don't switch to a non-highres
+		 * capable clocksource if the tick code is in oneshot
+		 * mode (highres or nohz)
+		 */
+		if (!(cs->flags & CLOCK_SOURCE_VALID_FOR_HRES) && oneshot) {
+			/* Override clocksource cannot be used. */
+			if (cs->flags & CLOCK_SOURCE_UNSTABLE) {
+				pr_warn("Override clocksource %s is unstable and not HRT compatible - cannot switch while in HRT/NOHZ mode\n",
+					cs->name);
+				// override_name[0] = 0;
+			} else {
+				/*
+				 * The override cannot be currently verified.
+				 * Deferring to let the watchdog check.
+				 */
+				pr_info("Override clocksource %s is not currently HRT compatible - deferring\n",
+					cs->name);
+			}
+		} else
+			/* Override clocksource can be used. */
+			best = cs;
+		break;
+	}
+
+// found:
+	// if (curr_clocksource != best && !timekeeping_notify(best)) {
+	// 	pr_info("Switched to clocksource %s\n", best->name);
+	// 	curr_clocksource = best;
+	// }
+}
+
+/*
+ * clocksource_done_booting - Called near the end of core bootup
+ *
+ * Hack to avoid lots of clocksource churn at boot time.
+ * We use fs_initcall because we want this to start before
+ * device_initcall but after subsys_initcall.
+ */
+int __init
+clocksource_done_booting(void) {
+	// mutex_lock(&clocksource_mutex);
+	curr_clocksource = clocksource_default_clock();
+	// finished_booting = 1;
+	// /*
+	//  * Run the watchdog first to eliminate unstable clock sources
+	//  */
+	// __clocksource_watchdog_kthread();
+	clocksource_select();
+	// mutex_unlock(&clocksource_mutex);
+	return 0;
+}
+fs_initcall(clocksource_done_booting);
 
 /*
  * Enqueue the clocksource sorted by rating

@@ -12,7 +12,7 @@
 	// extern void clocksource_suspend(void);
 	// extern void clocksource_resume(void);
 	extern clocksrc_s * __init clocksource_default_clock(void);
-	// extern void clocksource_mark_unstable(clocksrc_s *cs);
+	extern void clocksource_mark_unstable(clocksrc_s *cs);
 	// extern void
 	// clocksource_start_suspend_timing(clocksrc_s *cs, u64 start_cycles);
 	// extern u64 clocksource_stop_suspend_timing(clocksrc_s *cs, u64 now);

@@ -61,7 +61,7 @@ static clocksrc_s clocksource_hpet = {
 	.rating		= 250,
 	.read		= read_hpet,
 	.mask		= HPET_MASK,
-	// .flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
 	// .resume		= hpet_resume_counter,
 	.enable		= hpet_enable,
 	.list		= LIST_HEAD_INIT(clocksource_hpet.list),
@@ -481,8 +481,6 @@ int __init hpet_enable(clocksrc_s *cs)
 	if (id & HPET_ID_LEGSUP) {
 		// hpet_legacy_clockevent_register(&hpet_base.channels[0]);
 		myos_hpet_clkevt_set_state_periodic(&clocksource_hpet);
-extern void myos_HPET_init(void);
-		myos_HPET_init();
 		hpet_base.channels[0].mode = HPET_MODE_LEGACY;
 		// if (IS_ENABLED(CONFIG_HPET_EMULATE_RTC))
 		// 	hpet_base.channels[1].mode = HPET_MODE_LEGACY;
@@ -553,6 +551,4 @@ void myos_HPET_init()
 
 	register_irq(HPET_TIMER0_IRQ, &entry , "HPET0",
 			0, &HPET_int_controller, &HPET_handler);
-	
-	u32 accuracy = *(u32 *)(hpet_virt_address + 4);
 }

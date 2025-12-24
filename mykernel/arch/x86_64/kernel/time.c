@@ -27,21 +27,22 @@
 
 
 
-
-
-
 /* Default timer init function */
 void __init hpet_time_init(void)
 {
-	if (!hpet_enable(NULL)) {
-		// if (!pit_timer_init())
-			return;
-	}
+	// if (!hpet_enable(NULL)) {
+	// 	if (!pit_timer_init())
+	// 		return;
+	// }
+	hpet_enable(NULL);
 
 	// setup_default_timer_irq();
+extern void myos_HPET_init(void);
+		myos_HPET_init();
 }
 
-static __init void x86_late_time_init(void)
+// static __init void x86_late_time_init(void)
+void late_time_init(void)
 {
 	// /*
 	//  * Before PIT/HPET init, select the interrupt mode. This is required
@@ -49,9 +50,8 @@ static __init void x86_late_time_init(void)
 	//  */
 	// x86_init.irqs.intr_mode_select();
 
-	// /* Setup the legacy timers */
-	// x86_init.timers.timer_init();
-	hpet_time_init();
+	/* Setup the legacy timers */
+	hpet_time_init(); /* == x86_init.timers.timer_init() */
 
 	// /*
 	//  * After PIT/HPET timers init, set up the final interrupt mode for
@@ -62,13 +62,4 @@ static __init void x86_late_time_init(void)
 
 	// if (static_cpu_has(X86_FEATURE_WAITPKG))
 	// 	use_tpause_delay();
-}
-
-/*
- * Initialize TSC and delay the periodic timer init to
- * late x86_late_time_init() so ioremap works.
- */
-void __init time_init(void)
-{
-	late_time_init = x86_late_time_init;
 }

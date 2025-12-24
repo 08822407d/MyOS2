@@ -267,5 +267,4 @@ void __init timekeeping_init(void)
 void do_timer(ulong ticks)
 {
 	jiffies_64 += ticks;
-	// calc_global_load();
 }
