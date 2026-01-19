@@ -130,15 +130,15 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	u64 tmp, ntpinterval;
 	clocksrc_s *old_clock;
 
-	++tk->cs_was_changed_seq;
+	// ++tk->cs_was_changed_seq;
 	old_clock = tk->tkr_mono.clock;
 	tk->tkr_mono.clock = clock;
 	tk->tkr_mono.mask = clock->mask;
 	tk->tkr_mono.cycle_last = tk_clock_read(&tk->tkr_mono);
 
-	tk->tkr_raw.clock = clock;
-	tk->tkr_raw.mask = clock->mask;
-	tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
+	// tk->tkr_raw.clock = clock;
+	// tk->tkr_raw.mask = clock->mask;
+	// tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
 
 	/* Do the ns -> cycle conversion first, using original mult */
 	tmp = NTP_INTERVAL_LENGTH;
@@ -149,28 +149,28 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	if (tmp == 0)
 		tmp = 1;
 
-	interval = (u64) tmp;
-	tk->cycle_interval = interval;
+	// interval = (u64) tmp;
+	// tk->cycle_interval = interval;
 
-	/* Go back from cycles -> shifted ns */
-	tk->xtime_interval = interval * clock->mult;
-	tk->xtime_remainder = ntpinterval - tk->xtime_interval;
-	tk->raw_interval = interval * clock->mult;
+	// /* Go back from cycles -> shifted ns */
+	// tk->xtime_interval = interval * clock->mult;
+	// tk->xtime_remainder = ntpinterval - tk->xtime_interval;
+	// tk->raw_interval = interval * clock->mult;
 
 	 /* if changing clocks, convert xtime_nsec shift units */
 	if (old_clock) {
 		int shift_change = clock->shift - old_clock->shift;
 		if (shift_change < 0) {
 			tk->tkr_mono.xtime_nsec >>= -shift_change;
-			tk->tkr_raw.xtime_nsec >>= -shift_change;
+			// tk->tkr_raw.xtime_nsec >>= -shift_change;
 		} else {
 			tk->tkr_mono.xtime_nsec <<= shift_change;
-			tk->tkr_raw.xtime_nsec <<= shift_change;
+			// tk->tkr_raw.xtime_nsec <<= shift_change;
 		}
 	}
 
 	tk->tkr_mono.shift = clock->shift;
-	tk->tkr_raw.shift = clock->shift;
+	// tk->tkr_raw.shift = clock->shift;
 
 	// tk->ntp_error = 0;
 	// tk->ntp_error_shift = NTP_SCALE_SHIFT - clock->shift;
@@ -182,7 +182,7 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	 * to counteract clock drifting.
 	 */
 	tk->tkr_mono.mult = clock->mult;
-	tk->tkr_raw.mult = clock->mult;
+	// tk->tkr_raw.mult = clock->mult;
 	// tk->ntp_err_mult = 0;
 	// tk->skip_second_overflow = 0;
 }
@@ -253,7 +253,7 @@ void __init timekeeping_init(void)
 	tk_setup_internals(tk, clock);
 
 	tk_set_xtime(tk, &wall_time);
-	tk->raw_sec = 0;
+	// tk->raw_sec = 0;
 
 	tk_set_wall_to_mono(tk, wall_to_mono);
 
