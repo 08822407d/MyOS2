@@ -8,4 +8,7 @@
 	#include "time_types.h"
 	#include "time_api.h"
 
+	#include <asm/time.h>
+	#include <asm/timer.h>
+
 #endif /* _LINUX_TIME_H_ */

@@ -17,4 +17,8 @@
 	typedef struct runqueue rq_s;
 	DECLARE_PER_CPU_CACHE_ALIGNED(rq_s, runqueues);
 
+	struct cyc2ns;
+	typedef struct cyc2ns cyc2ns_s;
+	DECLARE_PER_CPU(cyc2ns_s, cyc2ns);
+
 #endif /* _ASM_X86_PERCPU_AREA_H */

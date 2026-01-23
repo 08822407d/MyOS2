@@ -6,6 +6,7 @@
 #include <linux/kernel/lib.h>
 #include <linux/kernel/time.h>
 #include <asm/insns.h>
+#include <asm/timer.h>
 
 #include <obsolete/glo.h>
 
@@ -82,3 +83,6 @@ DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
 
 
 DEFINE_PER_CPU(task_s *, ksoftirqd);
+
+
+DEFINE_PER_CPU(cyc2ns_s, cyc2ns);

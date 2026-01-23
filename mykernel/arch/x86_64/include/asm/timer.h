@@ -32,6 +32,10 @@
 		u32 cyc2ns_shift;
 		u64 cyc2ns_offset;
 	}; /* 16 bytes */
+	struct cyc2ns {
+		struct cyc2ns_data data;
+		// seqcount_latch_t   seq;		/* 32 + 4    = 36 */
+	}; /* fits one cacheline */
 
 	extern void cyc2ns_read_begin(struct cyc2ns_data *);
 	extern void cyc2ns_read_end(void);

@@ -34,6 +34,9 @@ unsigned int __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
 
 unsigned int __read_mostly tsc_khz;
 
+#ifndef DUMMY_TSC_KHZ
+#  define DUMMY_TSC (3LL * 1000LL * 1000LL)	/* 3 GHz */
+#endif // !DUMMY_TSC_KHZ
 #define KHZ	1000
 
 /*
@@ -71,6 +74,39 @@ static clocksrc_s clocksource_tsc = {
 	.list				= LIST_HEAD_INIT(clocksource_tsc.list),
 };
 
+
+
+// __always_inline void
+// __cyc2ns_read(struct cyc2ns_data *data) {
+// 	int seq, idx;
+
+// 	do {
+// 		seq = this_cpu_read(cyc2ns.seq.seqcount.sequence);
+// 		idx = seq & 1;
+
+// 		data->cyc2ns_offset = this_cpu_read(cyc2ns.data[idx].cyc2ns_offset);
+// 		data->cyc2ns_mul    = this_cpu_read(cyc2ns.data[idx].cyc2ns_mul);
+// 		data->cyc2ns_shift  = this_cpu_read(cyc2ns.data[idx].cyc2ns_shift);
+
+// 	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.seqcount.sequence)));
+// }
+
+__always_inline void
+cyc2ns_read_begin(struct cyc2ns_data *data) {
+	// preempt_disable_notrace();
+	// __cyc2ns_read(data);
+
+	cyc2ns_s *c = this_cpu_ptr(&cyc2ns);
+
+	data->cyc2ns_offset = READ_ONCE(c->data.cyc2ns_offset);
+	data->cyc2ns_mul    = READ_ONCE(c->data.cyc2ns_mul);
+	data->cyc2ns_shift  = READ_ONCE(c->data.cyc2ns_shift);
+}
+
+__always_inline void
+cyc2ns_read_end(void) {
+	// preempt_enable_notrace();
+}
 
 static u64 read_tsc(clocksrc_s *cs) {
 	// u64 ret = (u64)rdtsc_ordered();
@@ -116,18 +152,17 @@ static u64 read_tsc(clocksrc_s *cs) {
  *                      -johnstul@us.ibm.com "math is hard, lets go shopping!"
  */
 
-static __always_inline unsigned long long cycles_2_ns(unsigned long long cyc) {
-	// struct cyc2ns_data data;
-	// unsigned long long ns;
+static __always_inline unsigned long long
+cycles_2_ns(unsigned long long cyc) {
+	struct cyc2ns_data data;
+	ulonglong ns;
 
-	// cyc2ns_read_begin(&data);
+	cyc2ns_read_begin(&data);
+	ns = data.cyc2ns_offset;
+	ns += mul_u64_u32_shr(cyc, data.cyc2ns_mul, data.cyc2ns_shift);
+	cyc2ns_read_end();
 
-	// ns = data.cyc2ns_offset;
-	// ns += mul_u64_u32_shr(cyc, data.cyc2ns_mul, data.cyc2ns_shift);
-
-	// cyc2ns_read_end();
-
-	// return ns;
+	return ns;
 }
 
 
@@ -156,6 +191,36 @@ noinstr u64 native_sched_clock(void)
 	return (jiffies_64 - INITIAL_JIFFIES) * (1000000000 / HZ);
 }
 
+
+static void __init
+tsc_enable_sched_clock(void) {
+	// loops_per_jiffy = get_loops_per_jiffy();
+	// use_tsc_delay();
+
+	// /* Sanitize TSC ADJUST before cyc2ns gets initialized */
+	// tsc_store_and_check_tsc_adjust(true);
+	// cyc2ns_init_boot_cpu();
+	// static_branch_enable(&__use_tsc);
+
+	// cyc2ns_s *c = this_cpu_ptr(&cyc2ns) + (ssize_t)&__per_cpu_load;
+	cyc2ns_s *c = (void*)&cyc2ns + (ssize_t)&__per_cpu_load;
+	clocks_calc_mult_shift(
+		&c->data.cyc2ns_mul, &c->data.cyc2ns_shift,
+		DUMMY_TSC, NSEC_PER_MSEC, 0);
+	__use_tsc = true;
+}
+
+void __init tsc_early_init(void)
+{
+	// if (!boot_cpu_has(X86_FEATURE_TSC))
+	// 	return;
+	// /* Don't change UV TSC multi-chassis synchronization */
+	// if (is_early_uv_system())
+	// 	return;
+	// if (!determine_cpu_tsc_frequencies(true))
+	// 	return;
+	tsc_enable_sched_clock();
+}
 
 void __init tsc_init(void)
 {
