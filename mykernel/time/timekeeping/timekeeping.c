@@ -47,12 +47,12 @@ tk_xtime_add(timekeeper_s *tk, const timespec64_s *ts) {
 
 static void
 tk_set_wall_to_mono(timekeeper_s *tk, timespec64_s wtm) {
-	// timespec64_s tmp;
+	timespec64_s tmp;
 
-	// /*
-	//  * Verify consistency of: offset_real = -wall_to_monotonic
-	//  * before modifying anything
-	//  */
+	/*
+	 * Verify consistency of: offset_real = -wall_to_monotonic
+	 * before modifying anything
+	 */
 	// set_normalized_timespec64(&tmp, -tk->wall_to_monotonic.tv_sec,
 	// 				-tk->wall_to_monotonic.tv_nsec);
 	// WARN_ON_ONCE(tk->offs_real != timespec64_to_ktime(tmp));
@@ -104,7 +104,7 @@ ktime_t ktime_get(void)
 	// do {
 		// seq = read_seqcount_begin(&tk_core.seq);
 		base = tk->tkr_mono.base;
-		// nsecs = timekeeping_get_ns(&tk->tkr_mono);
+		nsecs = timekeeping_get_ns(&tk->tkr_mono);
 	// } while (read_seqcount_retry(&tk_core.seq, seq));
 
 	return ktime_add_ns(base, nsecs);
@@ -136,18 +136,18 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	tk->tkr_mono.mask = clock->mask;
 	tk->tkr_mono.cycle_last = tk_clock_read(&tk->tkr_mono);
 
-	// tk->tkr_raw.clock = clock;
-	// tk->tkr_raw.mask = clock->mask;
-	// tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
+	tk->tkr_raw.clock = clock;
+	tk->tkr_raw.mask = clock->mask;
+	tk->tkr_raw.cycle_last = tk->tkr_mono.cycle_last;
 
-	/* Do the ns -> cycle conversion first, using original mult */
-	tmp = NTP_INTERVAL_LENGTH;
-	tmp <<= clock->shift;
-	ntpinterval = tmp;
-	tmp += clock->mult/2;
-	do_div(tmp, clock->mult);
-	if (tmp == 0)
-		tmp = 1;
+	// /* Do the ns -> cycle conversion first, using original mult */
+	// tmp = NTP_INTERVAL_LENGTH;
+	// tmp <<= clock->shift;
+	// ntpinterval = tmp;
+	// tmp += clock->mult/2;
+	// do_div(tmp, clock->mult);
+	// if (tmp == 0)
+	// 	tmp = 1;
 
 	// interval = (u64) tmp;
 	// tk->cycle_interval = interval;
@@ -162,15 +162,15 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 		int shift_change = clock->shift - old_clock->shift;
 		if (shift_change < 0) {
 			tk->tkr_mono.xtime_nsec >>= -shift_change;
-			// tk->tkr_raw.xtime_nsec >>= -shift_change;
+			tk->tkr_raw.xtime_nsec >>= -shift_change;
 		} else {
 			tk->tkr_mono.xtime_nsec <<= shift_change;
-			// tk->tkr_raw.xtime_nsec <<= shift_change;
+			tk->tkr_raw.xtime_nsec <<= shift_change;
 		}
 	}
 
 	tk->tkr_mono.shift = clock->shift;
-	// tk->tkr_raw.shift = clock->shift;
+	tk->tkr_raw.shift = clock->shift;
 
 	// tk->ntp_error = 0;
 	// tk->ntp_error_shift = NTP_SCALE_SHIFT - clock->shift;
@@ -182,7 +182,7 @@ tk_setup_internals(timekeeper_s *tk, clocksrc_s *clock) {
 	 * to counteract clock drifting.
 	 */
 	tk->tkr_mono.mult = clock->mult;
-	// tk->tkr_raw.mult = clock->mult;
+	tk->tkr_raw.mult = clock->mult;
 	// tk->ntp_err_mult = 0;
 	// tk->skip_second_overflow = 0;
 }
@@ -194,7 +194,7 @@ delta_to_ns_safe(const tk_readbase_s *tkr, u64 delta) {
 			tkr->mult, tkr->xtime_nsec, tkr->shift);
 }
 
-static inline u64
+PREFIX_STATIC_INLINE u64
 timekeeping_cycles_to_ns(const tk_readbase_s *tkr, u64 cycles) {
 	/* Calculate the delta since the last update_wall_time() */
 	u64 mask = tkr->mask, delta = (cycles - tkr->cycle_last) & mask;
@@ -218,17 +218,14 @@ timekeeping_cycles_to_ns(const tk_readbase_s *tkr, u64 cycles) {
 	return ((delta * tkr->mult) + tkr->xtime_nsec) >> tkr->shift;
 }
 
-static __always_inline u64
-__timekeeping_get_ns(const tk_readbase_s *tkr) {
-	return timekeeping_cycles_to_ns(tkr, tk_clock_read(tkr));
-}
 
 u64 timekeeping_get_ns(const tk_readbase_s *tkr)
 {
 	// if (IS_ENABLED(CONFIG_DEBUG_TIMEKEEPING))
 	// 	return timekeeping_debug_get_ns(tkr);
 
-	return __timekeeping_get_ns(tkr);
+	// return __timekeeping_get_ns(tkr);
+	return timekeeping_cycles_to_ns(tkr, tk_clock_read(tkr));
 }
 
 
@@ -236,16 +233,22 @@ u64 timekeeping_get_ns(const tk_readbase_s *tkr)
 /*
  * timekeeping_init - Initializes the clocksource and common timekeeping values
  */
-void __init timekeeping_init(void)
-{
+void __init
+timekeeping_init(void) {
 	timespec64_s wall_time, boot_offset, wall_to_mono;
 	timekeeper_s *tk = &tk_core.timekeeper;
 	clocksrc_s *clock;
-	unsigned long flags;
+	ulong flags;
 
+	// 从RTC读墙钟时间
 	read_persistent_clock64(&wall_time);
 	boot_offset = ns_to_timespec64(local_clock());
 
+	/*
+	 * We want set wall_to_mono, so the following is true:
+	 * wall time + wall_to_mono = boot time
+	 */
+	wall_to_mono = timespec64_sub(boot_offset, wall_time);
 
 	clock = clocksource_default_clock();
 	if (clock->enable)
@@ -253,7 +256,7 @@ void __init timekeeping_init(void)
 	tk_setup_internals(tk, clock);
 
 	tk_set_xtime(tk, &wall_time);
-	// tk->raw_sec = 0;
+	tk->raw_sec = 0;
 
 	tk_set_wall_to_mono(tk, wall_to_mono);
 

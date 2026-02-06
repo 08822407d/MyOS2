@@ -85,4 +85,10 @@ DEFINE_PER_CPU_SHARED_ALIGNED(worker_pool_s
 DEFINE_PER_CPU(task_s *, ksoftirqd);
 
 
-DEFINE_PER_CPU(cyc2ns_s, cyc2ns);
+DEFINE_PER_CPU(cyc2ns_s, cyc2ns) = {
+	.data = {
+		.cyc2ns_mul		= 1431655765,
+		.cyc2ns_shift	= 32,
+		.cyc2ns_offset	= 0,
+	},
+};

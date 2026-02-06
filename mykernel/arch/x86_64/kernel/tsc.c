@@ -29,6 +29,9 @@
 // #include <asm/uv/uv.h>
 
 
+#define cyc2ns_read_begin	simple_cyc2ns_read_begin
+#define read_tsc			simple_read_tsc
+
 
 unsigned int __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
 
@@ -75,57 +78,23 @@ static clocksrc_s clocksource_tsc = {
 };
 
 
-
-// __always_inline void
-// __cyc2ns_read(struct cyc2ns_data *data) {
-// 	int seq, idx;
-
-// 	do {
-// 		seq = this_cpu_read(cyc2ns.seq.seqcount.sequence);
-// 		idx = seq & 1;
-
-// 		data->cyc2ns_offset = this_cpu_read(cyc2ns.data[idx].cyc2ns_offset);
-// 		data->cyc2ns_mul    = this_cpu_read(cyc2ns.data[idx].cyc2ns_mul);
-// 		data->cyc2ns_shift  = this_cpu_read(cyc2ns.data[idx].cyc2ns_shift);
-
-// 	} while (unlikely(seq != this_cpu_read(cyc2ns.seq.seqcount.sequence)));
-// }
-
-__always_inline void
-cyc2ns_read_begin(struct cyc2ns_data *data) {
+PREFIX_STATIC_AWLWAYS_INLINE void
+simple_cyc2ns_read_begin(struct cyc2ns_data *data) {
 	// preempt_disable_notrace();
-	// __cyc2ns_read(data);
-
 	cyc2ns_s *c = this_cpu_ptr(&cyc2ns);
-
 	data->cyc2ns_offset = READ_ONCE(c->data.cyc2ns_offset);
 	data->cyc2ns_mul    = READ_ONCE(c->data.cyc2ns_mul);
 	data->cyc2ns_shift  = READ_ONCE(c->data.cyc2ns_shift);
 }
 
-__always_inline void
+PREFIX_STATIC_AWLWAYS_INLINE void
 cyc2ns_read_end(void) {
 	// preempt_enable_notrace();
 }
 
-static u64 read_tsc(clocksrc_s *cs) {
-	// u64 ret = (u64)rdtsc_ordered();
-	u64 ret = (u64)rdtsc();
-	// u64 last = pvclock_gtod_data.clock.cycle_last;
-
-	// if (likely(ret >= last))
-		return ret;
-
-	// /*
-	//  * GCC likes to generate cmov here, but this branch is extremely
-	//  * predictable (it's just a function of time and the likely is
-	//  * very likely) and there's a data dependence, so force GCC
-	//  * to generate a branch instead.  I don't barrier() because
-	//  * we don't actually need a barrier, and if this function
-	//  * ever gets inlined it will generate worse code.
-	//  */
-	// asm volatile ("");
-	// return last;
+static u64
+simple_read_tsc(clocksrc_s *cs) {
+	return (u64)rdtsc();
 }
 
 /*
@@ -152,8 +121,8 @@ static u64 read_tsc(clocksrc_s *cs) {
  *                      -johnstul@us.ibm.com "math is hard, lets go shopping!"
  */
 
-static __always_inline unsigned long long
-cycles_2_ns(unsigned long long cyc) {
+PREFIX_STATIC_AWLWAYS_INLINE ulonglong
+cycles_2_ns(ulonglong cyc) {
 	struct cyc2ns_data data;
 	ulonglong ns;
 
@@ -169,11 +138,10 @@ cycles_2_ns(unsigned long long cyc) {
 /*
  * Scheduler clock - returns current time in nanosec units.
  */
-noinstr u64 native_sched_clock(void)
-{
+noinstr u64
+native_sched_clock(void) {
 	if (__use_tsc) {
 		u64 tsc_now = rdtsc();
-
 		/* return the value in ns */
 		return cycles_2_ns(tsc_now);
 	}
@@ -186,32 +154,14 @@ noinstr u64 native_sched_clock(void)
 	 *   very important for it to be as fast as the platform
 	 *   can achieve it. )
 	 */
-
 	/* No locking but a rare wrong value is not a big deal: */
 	return (jiffies_64 - INITIAL_JIFFIES) * (1000000000 / HZ);
 }
 
 
-static void __init
-tsc_enable_sched_clock(void) {
-	// loops_per_jiffy = get_loops_per_jiffy();
-	// use_tsc_delay();
 
-	// /* Sanitize TSC ADJUST before cyc2ns gets initialized */
-	// tsc_store_and_check_tsc_adjust(true);
-	// cyc2ns_init_boot_cpu();
-	// static_branch_enable(&__use_tsc);
-
-	// cyc2ns_s *c = this_cpu_ptr(&cyc2ns) + (ssize_t)&__per_cpu_load;
-	cyc2ns_s *c = (void*)&cyc2ns + (ssize_t)&__per_cpu_load;
-	clocks_calc_mult_shift(
-		&c->data.cyc2ns_mul, &c->data.cyc2ns_shift,
-		DUMMY_TSC, NSEC_PER_MSEC, 0);
-	__use_tsc = true;
-}
-
-void __init tsc_early_init(void)
-{
+void __init
+tsc_early_init(void) {
 	// if (!boot_cpu_has(X86_FEATURE_TSC))
 	// 	return;
 	// /* Don't change UV TSC multi-chassis synchronization */
@@ -219,11 +169,14 @@ void __init tsc_early_init(void)
 	// 	return;
 	// if (!determine_cpu_tsc_frequencies(true))
 	// 	return;
-	tsc_enable_sched_clock();
+	// 在虚拟机中运行时，无法正确获取TSC频率，使用一个假的3GHz值
+	// 因为早期还没设置好percpu area, cyc2ns的percpu静态初始化时直接赋值
+	// tsc_enable_sched_clock();
+	__use_tsc = true;
 }
 
-void __init tsc_init(void)
-{
+void __init
+tsc_init(void) {
 	// if (!cpu_feature_enabled(X86_FEATURE_TSC)) {
 	// 	setup_clear_cpu_cap(X86_FEATURE_TSC_DEADLINE_TIMER);
 	// 	return;

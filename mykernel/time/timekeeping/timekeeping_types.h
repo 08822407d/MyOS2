@@ -33,7 +33,7 @@
 		u32				shift;
 		u64				xtime_nsec;
 		ktime_t			base;
-		// u64				base_real;
+		u64				base_real;
 	};
 
 	/**
@@ -85,19 +85,19 @@
 	 */
 	struct timekeeper {
 		tk_readbase_s	tkr_mono;
-		// tk_readbase_s	tkr_raw;
+		tk_readbase_s	tkr_raw;
 		u64				xtime_sec;
 		ulong			ktime_sec;
 		timespec64_s	wall_to_monotonic;
-		ktime_t			offs_real;
+		// ktime_t			offs_real;
 		// ktime_t			offs_boot;
 		// ktime_t			offs_tai;
 		// s32				tai_offset;
 		// uint			clock_was_set_seq;
 		// u8				cs_was_changed_seq;
 		// ktime_t			next_leap_ktime;
-		// u64				raw_sec;
-		timespec64_s	monotonic_to_boot;
+		u64				raw_sec;
+		// timespec64_s	monotonic_to_boot;
 
 		// /* The following members are for timekeeping internal use */
 		// u64				cycle_interval;

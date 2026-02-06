@@ -17,6 +17,7 @@
 #include <asm/bugs.h>
 #include <asm/cpu.h>
 #include <asm/io_apic.h>
+#include <asm/hypervisor.h>
 
 #include <asm/sections.h>
 #include <asm/tsc.h>
@@ -212,6 +213,13 @@ void __init setup_arch(char **cmdline_p)
 	// bss_resource.start = __pa(__bss_start);
 	// bss_resource.end = __pa(__bss_stop)-1;
 
+	/*
+	 * VMware detection requires dmi to be available, so this
+	 * needs to be done after dmi_setup(), for the boot CPU.
+	 * For some guest types (Xen PV, SEV-SNP, TDX) it is required to be
+	 * called before cache_bp_init() for setting up MTRR state.
+	 */
+	init_hypervisor_platform();
 
 	tsc_early_init();
 

@@ -182,8 +182,8 @@
 		ALTINSTR_ENTRY(ft_flags)					\
 		ALTINSTR_REPLACEMENT(newinstr)
 
-	// #define ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
-	// 	ALTERNATIVE(ALTERNATIVE(oldinstr, newinstr1, ft_flags1), newinstr2, ft_flags2)
+	#define ALTERNATIVE_2(oldinstr, newinstr1, ft_flags1, newinstr2, ft_flags2) \
+		ALTERNATIVE(ALTERNATIVE(oldinstr, newinstr1, ft_flags1), newinstr2, ft_flags2)
 
 	// /* If @feature is set, patch in @newinstr_yes, otherwise @newinstr_no. */
 	// #define ALTERNATIVE_TERNARY(oldinstr, ft_flags, newinstr_yes, newinstr_no) \

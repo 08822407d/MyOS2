@@ -13,8 +13,8 @@
 	#ifdef DEBUG
 
 		extern void
-		native_cpuid(unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx);
+		native_cpuid(uint *eax, uint *ebx,
+				uint *ecx, uint *edx);
 		#define __cpuid	native_cpuid
 
 		extern ulong
@@ -27,26 +27,31 @@
 		// current_top_of_stack(void);
 
 		extern void
-		load_sp0(unsigned long sp0);
+		load_sp0(ulong sp0);
 
 		extern void
-		cpuid(unsigned int op,
-				unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx);
+		cpuid(uint op,
+				uint *eax, uint *ebx,
+				uint *ecx, uint *edx);
 
 		extern void
-		cpuid_count(unsigned int op, int count,
-				unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx);
+		cpuid_count(uint op, int count,
+				uint *eax, uint *ebx,
+				uint *ecx, uint *edx);
 
-		extern unsigned int
-		cpuid_eax(unsigned int op);
-		extern unsigned int
-		cpuid_ebx(unsigned int op);
-		extern unsigned int
-		cpuid_ecx(unsigned int op);
-		extern unsigned int
-		cpuid_edx(unsigned int op);
+		extern uint
+		cpuid_eax(uint op);
+		extern uint
+		cpuid_ebx(uint op);
+		extern uint
+		cpuid_ecx(uint op);
+		extern uint
+		cpuid_edx(uint op);
+		extern void
+		__cpuid_read(uint leaf, uint subleaf, u32 *regs);
+		extern void
+		__cpuid_read_reg(uint leaf, uint subleaf,
+				enum cpuid_regs_idx regidx, u32 *reg);
 
 		extern void
 		rep_nop(void);
@@ -54,6 +59,8 @@
 		cpu_relax(void);
 
 	#endif
+
+	#include "processor_macro_arch.h"
 
 	#if defined(ARCH_PROCESSOR_DEFINATION) || !(DEBUG)
 	
@@ -89,8 +96,8 @@
 
 		PREFIX_STATIC_INLINE
 		void
-		native_cpuid(unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx) {
+		native_cpuid(uint *eax, uint *ebx,
+				uint *ecx, uint *edx) {
 			/* ecx is often an input as well as an output. */
 			asm volatile(	"cpuid"
 						:	"=a" (*eax),	"=b" (*ebx),
@@ -142,7 +149,7 @@
 
 		PREFIX_STATIC_INLINE
 		void
-		load_sp0(unsigned long sp0) {
+		load_sp0(ulong sp0) {
 			// native_load_sp0(unsigned long sp0) {
 				this_cpu_ptr(&cpu_tss_rw)->x86_tss.sp0 = sp0;
 			// }
@@ -155,9 +162,9 @@
 		 */
 		PREFIX_STATIC_INLINE
 		void
-		cpuid(unsigned int op,
-				unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx) {
+		cpuid(uint op,
+				uint *eax, uint *ebx,
+				uint *ecx, uint *edx) {
 			*eax = op;
 			*ecx = 0;
 			__cpuid(eax, ebx, ecx, edx);
@@ -166,9 +173,9 @@
 		/* Some CPUID calls want 'count' to be placed in ecx */
 		PREFIX_STATIC_INLINE
 		void
-		cpuid_count(unsigned int op, int count,
-				unsigned int *eax, unsigned int *ebx,
-				unsigned int *ecx, unsigned int *edx) {
+		cpuid_count(uint op, int count,
+				uint *eax, uint *ebx,
+				uint *ecx, uint *edx) {
 			*eax = op;
 			*ecx = count;
 			__cpuid(eax, ebx, ecx, edx);
@@ -178,35 +185,52 @@
 		 * CPUID functions returning a single datum
 		 */
 		PREFIX_STATIC_INLINE
-		unsigned int
-		cpuid_eax(unsigned int op) {
-			unsigned int eax, ebx, ecx, edx;
+		uint
+		cpuid_eax(uint op) {
+			uint eax, ebx, ecx, edx;
 			cpuid(op, &eax, &ebx, &ecx, &edx);
 			return eax;
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned int
-		cpuid_ebx(unsigned int op) {
-			unsigned int eax, ebx, ecx, edx;
+		uint
+		cpuid_ebx(uint op) {
+			uint eax, ebx, ecx, edx;
 			cpuid(op, &eax, &ebx, &ecx, &edx);
 			return ebx;
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned int
-		cpuid_ecx(unsigned int op) {
-			unsigned int eax, ebx, ecx, edx;
+		uint
+		cpuid_ecx(uint op) {
+			uint eax, ebx, ecx, edx;
 			cpuid(op, &eax, &ebx, &ecx, &edx);
 			return ecx;
 		}
 
 		PREFIX_STATIC_INLINE
-		unsigned int
-		cpuid_edx(unsigned int op) {
-			unsigned int eax, ebx, ecx, edx;
+		uint
+		cpuid_edx(uint op) {
+			uint eax, ebx, ecx, edx;
 			cpuid(op, &eax, &ebx, &ecx, &edx);
 			return edx;
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		__cpuid_read(uint leaf, uint subleaf, u32 *regs) {
+			regs[CPUID_EAX] = leaf;
+			regs[CPUID_ECX] = subleaf;
+			__cpuid(regs + CPUID_EAX, regs + CPUID_EBX, regs + CPUID_ECX, regs + CPUID_EDX);
+		}
+
+		PREFIX_STATIC_INLINE
+		void
+		__cpuid_read_reg(uint leaf, uint subleaf,
+				enum cpuid_regs_idx regidx, u32 *reg) {
+			u32 regs[4];
+			__cpuid_read(leaf, subleaf, regs);
+			*reg = regs[regidx];
 		}
 
 
@@ -217,7 +241,8 @@
 			asm volatile(	"rep; nop"
 						:
 						:
-						:	"memory");
+						:	"memory"
+						);
 		}
 
 		PREFIX_STATIC_AWLWAYS_INLINE
