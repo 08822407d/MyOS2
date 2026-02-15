@@ -2,7 +2,7 @@
 #include <linux/device/pci.h>
 #include <linux/init/init.h>
 #include <asm/pci_x86.h>
-// #include <asm/x86_init.h>
+#include <asm/x86_init.h>
 // #include <asm/irqdomain.h>
 
 /* arch_initcall has too random ordering, so call the initializers

@@ -1,62 +1,87 @@
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
-  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "MyOS2 debug",
+      "name": "MyOS2 debug (VMware)",
       "type": "cppdbg",
       "request": "launch",
-      "preLaunchTask": "startup vmw",                   // 开始debug前要执行的任务，名称对应task.json中的"label"
-      "program": "${workspaceRoot}/build/kernel",       // 内核的调试文件
-      "miDebuggerServerAddress": "localhost:8864",      //　远程端口
-      "stopAtEntry": false,                             // 默认将名称为main的函数当作入口
+      "preLaunchTask": "startup vmw",
+      "program": "${workspaceRoot}/build/kernel",
+      "miDebuggerServerAddress": "localhost:8864",
+      "stopAtEntry": false,
       "cwd": "${workspaceRoot}",
       "externalConsole": false,
       "MIMode": "gdb",
-      "miDebuggerPath": "/usr/bin/gdb",                 // 调试器路径
+      "miDebuggerPath": "/usr/bin/gdb",
       "miDebuggerArgs": "",
       "targetArchitecture": "x64",
       "setupCommands": [
-        // 设置目标架构
-        {
-          "text": "set arch i386:x86-64:intel",
-          "ignoreFailures": false
-        },
-        // 设置gdb的pwd
-        {
-          "text": "dir .",
-          "ignoreFailures": false
-        },
-        // 加入其他程序的调试符号文件
-        // {
-        //   "text": "add-symbol-file ${workspaceRoot}/build/initd",
-        //   "ignoreFailures": false
-        // },
-        {
-          "text": "add-symbol-file ${workspaceRoot}/build/sh",
-          "ignoreFailures": false
-        },
-        // 设置信任路径，执行带文件操作的gdb命令时，免去gdb询问文件路径安全性
-        {
-          "text": "add-auto-load-safe-path ./",
-          "ignoreFailures": false
-        },
-        // // 设置gdb console的美化显示，vscode的debug console无效，可能是有bug
-        // {
-        //   "text": "-enable-pretty-printing",
-        //   "ignoreFailures": true
-        // },
+        { "text": "set arch i386:x86-64:intel", "ignoreFailures": false },
+        { "text": "dir .", "ignoreFailures": false },
+        { "text": "add-symbol-file ${workspaceRoot}/build/sh", "ignoreFailures": false },
+        { "text": "add-auto-load-safe-path ./", "ignoreFailures": false }
       ]
     },
+
     {
-      "type": "bashdb",
+      "name": "MyOS2 (QEMU no-KVM/TCG one-click)",
+      "type": "cppdbg",
       "request": "launch",
-      "name": "Bash-Debug (select script from list of sh files)",
+
+      "preLaunchTask": "startup qemu (myos2 tcg)",
+      "postDebugTask": "kill qemu (myos2 tcg)",
+
+      "program": "${workspaceFolder}/build/kernel",
       "cwd": "${workspaceFolder}",
-      "program": "${command:SelectScriptName}",
-      "args": ["asus"]
+
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerArgs": "-q -n -iex \"set pagination off\" -iex \"set confirm off\" -iex \"set auto-load safe-path /\"",
+
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "targetArchitecture": "x64",
+
+      "customLaunchSetupCommands": [
+        { "text": "set arch i386:x86-64:intel" },
+        { "text": "dir ." },
+        { "text": "file ${workspaceFolder}/build/kernel" },
+        { "text": "target remote localhost:8864" }
+      ],
+
+      "launchCompleteCommand": "exec-continue"
     },
+
+    {
+      "name": "MyOS2 (QEMU+KVM one-click)",
+      "type": "cppdbg",
+      "request": "launch",
+
+      "preLaunchTask": "startup qemu (myos2 kvm)",
+      "postDebugTask": "kill qemu (myos2 kvm)",
+
+      "program": "${workspaceFolder}/build/kernel",
+      "cwd": "${workspaceFolder}",
+
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerArgs": "-q -n -iex \"set pagination off\" -iex \"set confirm off\" -iex \"set auto-load safe-path /\"",
+
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "targetArchitecture": "x64",
+
+      "customLaunchSetupCommands": [
+        { "text": "set arch i386:x86-64:intel" },
+        { "text": "dir ." },
+        { "text": "file ${workspaceFolder}/build/kernel" },
+        { "text": "target remote localhost:8864" },
+
+        { "text": "hbreak start_kernel" }
+      ],
+
+      "launchCompleteCommand": "exec-continue"
+    },
+
   ]
 }

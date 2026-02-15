@@ -81,6 +81,7 @@
 		u64				max_cycles;
 		const char		*name;
 		List_s			list;
+		u32				freq_khz;
 		int				rating;
 		// enum clocksource_ids	id;
 		// enum vdso_clock_mode	vdso_clock_mode;

@@ -6,7 +6,7 @@
 	// #include <asm/mpspec.h>
 	#include <asm/apicdef.h>
 	#include <asm/irq_vectors.h>
-	// #include <asm/x86_init.h>
+	#include <asm/x86_init.h>
 	// /*
 	//  * Intel IO-APIC support for SMP and UP systems.
 	//  *

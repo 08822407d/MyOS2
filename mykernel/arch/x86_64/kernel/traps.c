@@ -22,7 +22,7 @@
 #include <asm/cpu.h>
 
 
-// #include <asm/x86_init.h>
+#include <asm/x86_init.h>
 
 
 void __init trap_init(void)

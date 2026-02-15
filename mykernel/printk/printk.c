@@ -98,17 +98,17 @@ static DEFINE_SPINLOCK(logbuf_lock);
  * The indices into log_buf are not constrained to log_buf_len - they
  * must be masked before subscripting
  */
-static unsigned log_start;	/* Index into log_buf: next char to be read by syslog() */
-static unsigned con_start;	/* Index into log_buf: next char to be sent to consoles */
-static unsigned log_end;	/* Index into log_buf: most-recently-written-char + 1 */
+static uint log_start;	/* Index into log_buf: next char to be read by syslog() */
+static uint con_start;	/* Index into log_buf: next char to be sent to consoles */
+static uint log_end;	/* Index into log_buf: most-recently-written-char + 1 */
 
 
 
-static char		__log_buf[__LOG_BUF_LEN];
-static char		*log_buf = __log_buf;
-static int		log_buf_len = __LOG_BUF_LEN;
-static unsigned	logged_chars; /* Number of chars produced since last read+clear operation */
-static int		saved_console_loglevel = -1;
+static char	__log_buf[__LOG_BUF_LEN];
+static char	*log_buf = __log_buf;
+static int	log_buf_len = __LOG_BUF_LEN;
+static uint	logged_chars; /* Number of chars produced since last read+clear operation */
+static int	saved_console_loglevel = -1;
 
 #define LOG_BUF_MASK	(log_buf_len-1)
 #define LOG_BUF(idx)	(log_buf[(idx) & LOG_BUF_MASK])
@@ -136,8 +136,8 @@ static void __call_console_drivers(unsigned start, unsigned end)
 /*
  * Write out chars from start to end - 1 inclusive
  */
-static void _call_console_drivers(unsigned start,
-		unsigned end, int msg_log_level)
+static void _call_console_drivers(uint start,
+		uint end, int msg_log_level)
 {
 	// if ((msg_log_level < console_loglevel || ignore_loglevel) &&
 	// 		console_drivers && start != end) {
@@ -166,7 +166,7 @@ static void _call_console_drivers(unsigned start,
  * and returned. If no valid header is found, 0 is returned and the passed
  * variables are not touched.
  */
-static size_t log_prefix(const char *p, unsigned int *level, char *special)
+static size_t log_prefix(const char *p, uint *level, char *special)
 {
 	unsigned int lev = 0;
 	char sp = '\0';
@@ -224,7 +224,7 @@ static size_t log_prefix(const char *p, unsigned int *level, char *special)
  */
 static void call_console_drivers(unsigned start, unsigned end)
 {
-	unsigned cur_index, start_print;
+	uint cur_index, start_print;
 	static int msg_level = -1;
 
 	BUG_ON(((int)(start - end)) > 0);
@@ -310,7 +310,7 @@ asmlinkage int printk(const char *fmt, ...)
 
 
 /* cpu currently holding logbuf_lock */
-static volatile unsigned int printk_cpu = UINT_MAX;
+static volatile uint printk_cpu = UINT_MAX;
 
 /*
  * Can we actually use the console at this time on this cpu?
@@ -382,7 +382,7 @@ asmlinkage int vprintk(const char *fmt, va_list args)
 {
 	int printed_len = 0;
 	int current_log_level = default_message_loglevel;
-	unsigned long flags;
+	ulong flags;
 	int this_cpu;
 	char *p;
 	size_t plen;
@@ -539,9 +539,9 @@ out_restore_irqs:
  */
 void console_unlock(void)
 {
-	unsigned long flags;
-	unsigned _con_start, _log_end;
-	unsigned wake_klogd = 0;
+	ulong flags;
+	uint _con_start, _log_end;
+	uint wake_klogd = 0;
 
 	// if (console_suspended) {
 	// 	up(&console_sem);
@@ -601,7 +601,7 @@ EXPORT_SYMBOL(console_unlock);
 void register_console(console_s *newcon)
 {
 	int i;
-	unsigned long flags;
+	ulong flags;
 	console_s *bcon = NULL;
 
 	if (list_header_contains(&console_list_hdr, &newcon->node))

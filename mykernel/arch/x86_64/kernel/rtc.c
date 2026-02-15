@@ -8,7 +8,7 @@
 // #include <linux/pnp.h>
 
 // #include <asm/vsyscall.h>
-// #include <asm/x86_init.h>
+#include <asm/x86_init.h>
 #include <asm/time.h>
 // #include <asm/intel-mid.h>
 #include <asm/setup.h>

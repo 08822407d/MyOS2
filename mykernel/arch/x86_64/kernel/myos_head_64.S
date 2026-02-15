@@ -66,22 +66,62 @@ multiboot_header_end:
  *==============================================================================================*/
 .balign 8
 SYM_CODE_START(code_64_start)
+	/*
+	 * Save the multiboot information structure address and magic
+	 */
 	movq	%rax,		mbi_magic(%rip)
 	movq	%rbx,		mbi_base(%rip)
-	movq	$0,			%rdx
-	movq	%rdx,		%ds
-	movq	%rdx,		%es
-	movq	%rdx,		%fs
-	movq	%rdx,		%gs
+	/*
+	 * At this point the CPU runs in 64bit mode CS.L = 1 CS.D = 0,
+	 * and someone has loaded an identity mapped page table
+	 * for us.  These identity mapped page tables map all of the
+	 * kernel pages and possibly all of memory.
+	 *
+	 * %RSI holds the physical address of the boot_params structure
+	 * provided by the bootloader. Preserve it in %R15 so C function calls
+	 * will not clobber it.
+	 *
+	 * We come here either directly from a 64bit bootloader, or from
+	 * arch/x86/boot/compressed/head_64.S.
+	 *
+	 * We only come here initially at boot nothing else comes here.
+	 *
+	 * Since we may be loaded at an address different from what we were
+	 * compiled to run at we first fixup the physical addresses in our page
+	 * tables and then reload them.
+	 */
+	movq	%rsi,		%r15
 
-	movq	$tmp_kstack_top,	%rdx
-	movq	%rdx,		%rsp
-	// set page map
-	callq	creat_higher_half_pagemap
+	/* Set up the stack for verify_cpu() */
+	leaq	tmp_kstack_top(%rip), %rsp
 
 	movq	%cr4,		%rax
 	bts		$16,		%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
+
+	/*
+	 * We don't really need to load %fs or %gs, but load them anyway
+	 * to kill any stale realmode selectors.  This allows execution
+	 * under VT hardware.
+	 */
+	xorl	%eax,		%eax
+	movl	%eax,		%fs
+	movl	%eax,		%gs
+	/*
+	 * 把 GSBASE 设为链接脚本导出的 __per_cpu_load
+	 * 这里假设：当前页表已经把 __per_cpu_load 的“虚拟地址”映射有效
+	 */
+	/* RAX = 64-bit absolute address of __per_cpu_load */
+	movabsq	$__per_cpu_load,	%rax
+	/* write MSR_GS_BASE = RAX */
+	movl	$MSR_GS_BASE,		%ecx
+	movq	%rax,		%rdx
+	movl	%eax,		%eax	/* EAX = low 32 (可省略，写明意图) */
+	shrq	$32,		%rdx	/* EDX = high 32 */
+	wrmsr
+
+	// set page map
+	callq	creat_higher_half_pagemap
 
 	/* Check if nx is implemented */
 	movl	$0x80000001,%eax
@@ -124,14 +164,16 @@ hang:
 // higher 256 ones(to creat tmp higher half page mapping)
 creat_higher_half_pagemap:
 	cld
-	movq	%cr3,		%rsi
-	movq	%cr3,		%rdi
+	movq	%cr3,		%rax		// 保存原始 CR3（含 flag/pcid）
+	movq	%rax,		%rsi
+	andq	$-4096,		%rsi		// 关键：只取页表基址（清低12位）
+
+	movq	%rsi,		%rdi
 	addq	$2048,		%rdi
 	movq	$256,		%rcx
-	rep
-	movsq
-	movq	%cr3,		%rax
-	movq	%rax,		%cr3
+	rep movsq
+
+	movq    %rax,		%cr3		// 仍然写回原始 CR3（别把 flag/pcid 丢了）
 	ret
 
 

@@ -22,16 +22,16 @@
  */
 
 // #include <linux/dmi.h>
-// #include <linux/init.h>
-// #include <linux/export.h>
+#include <linux/init/init.h>
+#include <linux/kernel/export.h>
 // #include <linux/clocksource.h>
 // #include <linux/cpu.h>
 // #include <linux/efi.h>
 // #include <linux/reboot.h>
 // #include <linux/static_call.h>
 // #include <asm/div64.h>
-// #include <asm/x86_init.h>
-// #include <asm/hypervisor.h>
+#include <asm/x86_init.h>
+#include <asm/hypervisor.h>
 #include <asm/timer.h>
 #include <asm/apic.h>
 #include <asm/vmware.h>
@@ -55,15 +55,145 @@ static ulong vmware_tsc_khz		__ro_after_init;
 static u8 vmware_hypercall_mode	__ro_after_init;
 
 
-static inline int
-__vmware_platform(void) {
-	u32 eax, ebx, ecx;
+// PREFIX_STATIC_INLINE int
+// __vmware_platform(void) {
+// 	u32 eax, ebx, ecx;
 
-	eax = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &ebx, &ecx);
-	return eax != UINT_MAX && ebx == VMWARE_HYPERVISOR_MAGIC;
+// 	eax = vmware_hypercall3(VMWARE_CMD_GETVERSION, 0, &ebx, &ecx);
+// 	return eax != UINT_MAX && ebx == VMWARE_HYPERVISOR_MAGIC;
+// }
+
+static ulong
+vmware_get_tsc_khz(void) {
+	return vmware_tsc_khz;
 }
 
 
+// #ifdef CONFIG_PARAVIRT
+
+// 	static struct cyc2ns_data vmware_cyc2ns __ro_after_init;
+// 	static bool vmw_sched_clock __initdata = true;
+// 	// static DEFINE_PER_CPU_DECRYPTED(struct vmware_steal_time, vmw_steal_time) __aligned(64);
+// 	// static bool has_steal_clock;
+// 	// static bool steal_acc __initdata = true; /* steal time accounting */
+
+// 	static noinstr u64
+// 	vmware_sched_clock(void) {
+// 		unsigned long long ns;
+
+// 		ns =
+// 			mul_u64_u32_shr(rdtsc(),
+// 				vmware_cyc2ns.cyc2ns_mul,
+// 				vmware_cyc2ns.cyc2ns_shift
+// 			);
+// 		ns -= vmware_cyc2ns.cyc2ns_offset;
+// 		return ns;
+// 	}
+
+// 	static void __init
+// 	vmware_cyc2ns_setup(void) {
+// 		struct cyc2ns_data *d = &vmware_cyc2ns;
+// 		ulonglong tsc_now = rdtsc();
+
+// 		clocks_calc_mult_shift(
+// 			&d->cyc2ns_mul,
+// 			&d->cyc2ns_shift,
+// 			vmware_tsc_khz,
+// 			NSEC_PER_MSEC, 0
+// 		);
+// 		d->cyc2ns_offset =
+// 			mul_u64_u32_shr(tsc_now,
+// 				d->cyc2ns_mul,
+// 				d->cyc2ns_shift
+// 			);
+
+// 		pr_info("using clock offset of %llu ns\n", d->cyc2ns_offset);
+// 	}
+
+
+// 	static void __init
+// 	vmware_paravirt_ops_setup(void) {
+// 		pv_info.name = "VMware hypervisor";
+// 		pv_ops.cpu.io_delay = paravirt_nop;
+
+// 		if (vmware_tsc_khz == 0)
+// 			return;
+
+// 		vmware_cyc2ns_setup();
+
+// 		if (vmw_sched_clock)
+// 			paravirt_set_sched_clock(vmware_sched_clock);
+
+// 		if (vmware_is_stealclock_available()) {
+// 			has_steal_clock = true;
+// 			static_call_update(pv_steal_clock, vmware_steal_clock);
+
+// 			/* We use reboot notifier only to disable steal clock */
+// 			register_reboot_notifier(&vmware_pv_reboot_nb);
+
+// 	#ifdef CONFIG_SMP
+// 			smp_ops.smp_prepare_boot_cpu =
+// 				vmware_smp_prepare_boot_cpu;
+// 			if (cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+// 							"x86/vmware:online",
+// 							vmware_cpu_online,
+// 							vmware_cpu_down_prepare) < 0)
+// 				pr_err("vmware_guest: Failed to install cpu hotplug callbacks\n");
+// 	#else
+// 			vmware_guest_cpu_init();
+// 	#endif
+// 		}
+// 	}
+// #else
+// #  define vmware_paravirt_ops_setup() do {} while (0)
+// #endif
+
+
+static void __init
+vmware_platform_setup(void) {
+	u32 eax, ebx, ecx;
+	u64 lpj, tsc_khz;
+
+	eax = vmware_hypercall3(VMWARE_CMD_GETHZ, UINT_MAX, &ebx, &ecx);
+
+	if (ebx != UINT_MAX) {
+		lpj = tsc_khz = eax | (((u64)ebx) << 32);
+		do_div(tsc_khz, 1000);
+		WARN_ON(tsc_khz >> 32);
+		pr_info("TSC freq read from hypervisor : %lu.%03lu MHz\n",
+			(ulong) tsc_khz / 1000,
+			(ulong) tsc_khz % 1000);
+
+		// if (!preset_lpj) {
+		// 	do_div(lpj, HZ);
+		// 	preset_lpj = lpj;
+		// }
+
+		vmware_tsc_khz = tsc_khz;
+		x86_platform.calibrate_tsc = vmware_get_tsc_khz;
+		x86_platform.calibrate_cpu = vmware_get_tsc_khz;
+
+#ifdef CONFIG_X86_LOCAL_APIC
+		/* Skip lapic calibration since we know the bus frequency. */
+		lapic_timer_period = ecx / HZ;
+		pr_info("Host bus clock speed read from hypervisor : %u Hz\n",
+			ecx);
+#endif
+	} else {
+		pr_warn("Failed to get TSC freq from the hypervisor\n");
+	}
+
+	// if (cc_platform_has(CC_ATTR_GUEST_SEV_SNP) && !efi_enabled(EFI_BOOT))
+	// 	x86_init.mpparse.find_mptable = mpparse_find_mptable;
+
+	// vmware_paravirt_ops_setup();
+
+#ifdef CONFIG_X86_IO_APIC
+	no_timer_check = 1;
+#endif
+
+// 	vmware_set_capabilities();
+}
 
 static u8 __init
 vmware_select_hypercall(void) {
@@ -119,8 +249,16 @@ vmware_legacy_x2apic_available(void) {
 }
 
 
-void __init simple_init_hypervisor_platform(void)
-{
-	// -> detect_hypervisor_vendor() ->
-	vmware_platform();
-}
+
+
+const __initconst hypervisor_x86_s x86_hyper_vmware = {
+	.name						= "VMware",
+	.detect						= vmware_platform,
+	.type						= X86_HYPER_VMWARE,
+	.init.init_platform			= vmware_platform_setup,
+	.init.x2apic_available		= vmware_legacy_x2apic_available,
+// #ifdef CONFIG_AMD_MEM_ENCRYPT
+// 	.runtime.sev_es_hcall_prepare	= vmware_sev_es_hcall_prepare,
+// 	.runtime.sev_es_hcall_finish	= vmware_sev_es_hcall_finish,
+// #endif
+};

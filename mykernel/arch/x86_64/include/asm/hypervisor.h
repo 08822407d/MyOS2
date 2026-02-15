@@ -35,39 +35,39 @@ enum x86_hypervisor_type {
 #ifdef CONFIG_HYPERVISOR_GUEST
 
 // #include <asm/kvm_para.h>
-// #include <asm/x86_init.h>
+#include <asm/x86_init.h>
 // #include <asm/xen/hypervisor.h>
 
-// struct hypervisor_x86 {
-// 	/* Hypervisor name */
-// 	const char	*name;
+typedef struct hypervisor_x86 {
+	/* Hypervisor name */
+	const char	*name;
 
-// 	/* Detection routine */
-// 	uint32_t	(*detect)(void);
+	/* Detection routine */
+	uint32_t	(*detect)(void);
 
-// 	/* Hypervisor type */
-// 	enum x86_hypervisor_type type;
+	/* Hypervisor type */
+	enum x86_hypervisor_type type;
 
-// 	/* init time callbacks */
-// 	struct x86_hyper_init init;
+	/* init time callbacks */
+	struct x86_hyper_init init;
 
-// 	/* runtime callbacks */
-// 	struct x86_hyper_runtime runtime;
+	// /* runtime callbacks */
+	// struct x86_hyper_runtime runtime;
 
-// 	/* ignore nopv parameter */
-// 	bool ignore_nopv;
-// };
+	/* ignore nopv parameter */
+	bool ignore_nopv;
+} hypervisor_x86_s;
 
-// extern const struct hypervisor_x86 x86_hyper_vmware;
-// extern const struct hypervisor_x86 x86_hyper_ms_hyperv;
-// extern const struct hypervisor_x86 x86_hyper_xen_pv;
-// extern const struct hypervisor_x86 x86_hyper_kvm;
-// extern const struct hypervisor_x86 x86_hyper_jailhouse;
-// extern const struct hypervisor_x86 x86_hyper_acrn;
-// extern struct hypervisor_x86 x86_hyper_xen_hvm;
+extern const struct hypervisor_x86 x86_hyper_vmware;
+extern const struct hypervisor_x86 x86_hyper_ms_hyperv;
+extern const struct hypervisor_x86 x86_hyper_xen_pv;
+extern const struct hypervisor_x86 x86_hyper_kvm;
+extern const struct hypervisor_x86 x86_hyper_jailhouse;
+extern const struct hypervisor_x86 x86_hyper_acrn;
+extern struct hypervisor_x86 x86_hyper_xen_hvm;
 
-// extern bool nopv;
-// extern enum x86_hypervisor_type x86_hyper_type;
+extern bool nopv;
+extern enum x86_hypervisor_type x86_hyper_type;
 extern void init_hypervisor_platform(void);
 extern void simple_init_hypervisor_platform(void);
 #define init_hypervisor_platform	simple_init_hypervisor_platform

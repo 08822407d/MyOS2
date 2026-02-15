@@ -18,7 +18,7 @@
 #include <linux/kernel/export.h>
 
 // #include <asm/vsyscall.h>
-// #include <asm/x86_init.h>
+#include <asm/x86_init.h>
 // #include <asm/i8259.h>
 #include <asm/timer.h>
 #include <asm/hpet.h>

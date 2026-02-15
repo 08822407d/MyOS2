@@ -1,30 +1,109 @@
 {
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-  // for the documentation about the tasks.json format
   "version": "2.0.0",
   "tasks": [
     {
       "label": "startup vmw",
       "type": "shell",
-      "isBackground": true,   // 后台执行，使launch.json不用等待本task.json执行完毕
-      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test_dbg.vmx", // 启动VMware的命令
-      "problemMatcher": [     // 自动接收task.json的输出信息和错误信息，确保后台执行顺利
+      "isBackground": true,
+      "command": "vmware -x -q $HOME/vmware/myos2test/myos2test_dbg.vmx",
+      "problemMatcher": [
         {
           "pattern": [
-            {
-              "regexp": ".",
-              "file": 1,
-              "location": 2,
-              "message": 3
-            }
+            { "regexp": ".", "file": 1, "location": 2, "message": 3 }
           ],
           "background": {
             "activeOnStart": true,
             "beginsPattern": ".",
-            "endsPattern": ".",
+            "endsPattern": "."
           }
         }
       ]
+    },
+
+    {
+      "label": "startup qemu (myos2 kvm)",
+      "type": "shell",
+      "isBackground": true,
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/run-qemu-gdb-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "USE_KVM": "1",
+          "GDB_PORT": "8864",
+          "PIDFILE": "${workspaceFolder}/.qemu-myos2-kvm.pid",
+
+          "OVMF_DIR": "${workspaceFolder}/myloader",
+          "OVMF_VARS_OUT": "${workspaceFolder}/.vscode-kdbg/ovmf-vars-myos2-kvm.fd",
+
+          "DISPLAY": "${env:DISPLAY}",
+          "DISPLAY_OPTS": "-display gtk"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": [
+        {
+          "severity": "info",
+          "pattern": [
+            { "regexp": "^(qemu\\.task):(\\d+):\\s+(.*)$", "file": 1, "line": 2, "message": 3 }
+          ],
+          "background": { "activeOnStart": true, "beginsPattern": ".", "endsPattern": "READY" }
+        }
+      ]
+    },
+    {
+      "label": "kill qemu (myos2 kvm)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/kill-qemu-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": { "PIDFILE": "${workspaceFolder}/.qemu-myos2-kvm.pid" }
+      },
+      "problemMatcher": []
+    },
+
+    {
+      "label": "startup qemu (myos2 tcg)",
+      "type": "shell",
+      "isBackground": true,
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/run-qemu-gdb-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "USE_KVM": "0",
+          "GDB_PORT": "8864",
+          "PIDFILE": "${workspaceFolder}/.qemu-myos2-tcg.pid",
+
+          "OVMF_DIR": "${workspaceFolder}/myloader",
+          "OVMF_VARS_OUT": "${workspaceFolder}/.vscode-kdbg/ovmf-vars-myos2-tcg.fd",
+
+          "DISPLAY": "${env:DISPLAY}",
+          "DISPLAY_OPTS": "-display gtk"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": [
+        {
+          "severity": "info",
+          "pattern": [
+            { "regexp": "^(qemu\\.task):(\\d+):\\s+(.*)$", "file": 1, "line": 2, "message": 3 }
+          ],
+          "background": { "activeOnStart": true, "beginsPattern": ".", "endsPattern": "READY" }
+        }
+      ]
+    },
+    {
+      "label": "kill qemu (myos2 tcg)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/kill-qemu-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": { "PIDFILE": "${workspaceFolder}/.qemu-myos2-tcg.pid" }
+      },
+      "problemMatcher": []
     }
   ]
 }
