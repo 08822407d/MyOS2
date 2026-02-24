@@ -331,7 +331,7 @@
 	// #define EFI_VA_START		(-4 * (_AC(1, UL) << 30))
 	// #define EFI_VA_END			(-68 * (_AC(1, UL) << 30))
 
-	// #define EARLY_DYNAMIC_PAGE_TABLES	64
+	#define EARLY_DYNAMIC_PAGE_TABLES	64
 
 	#define PGD_KERNEL_START	((PAGE_SIZE / 2) / sizeof(pgd_t))
 
@@ -359,5 +359,40 @@
 	 * in a pointer to swap between the two 4k halves.
 	 */
 	#define PGD_ALLOCATION_ORDER 0
+
+
+	/*
+	  * In spite of the name, KERNEL_IMAGE_SIZE is a limit on the maximum virtual
+	  * address for the kernel image, rather than the limit on the size itself.
+	  * This can be at most 1 GiB, due to the fixmap living in the next 1 GiB (see
+	  * level2_kernel_pgt in arch/x86/kernel/head_64.S).
+	  *
+	  * On KASLR use 1 GiB by default, leaving 1 GiB for modules once the
+	  * page tables are fully set up.
+	  *
+	  * If KASLR is disabled we can shrink it to 0.5 GiB and increase the size
+	  * of the modules area to 1.5 GiB.
+	  */
+	#ifdef CONFIG_RANDOMIZE_BASE
+	#  define KERNEL_IMAGE_SIZE	(1024 * 1024 * 1024)
+	#else
+	#  define KERNEL_IMAGE_SIZE	(512 * 1024 * 1024)
+	#endif
+
+
+	#define L4_PAGE_OFFSET l4_index(__PAGE_OFFSET_BASE_L4)
+	#define L4_START_KERNEL l4_index(__START_KERNEL_map)
+
+	#define L3_START_KERNEL pud_index(__START_KERNEL_map)
+
+	#define SYM_DATA_START_PAGE_ALIGNED(name)			\
+				SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
+
+	#define PMDS(START, PERM, COUNT)							\
+				i = 0 ;											\
+				.rept (COUNT) ;									\
+				.quad	(START) + (i << PMD_SHIFT) + (PERM) ;	\
+				i = i + 1 ;										\
+				.endr
 
 #endif /* _ASM_X86_PGTABLE_CONST_H_ */

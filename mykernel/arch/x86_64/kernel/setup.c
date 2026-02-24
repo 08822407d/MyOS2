@@ -32,15 +32,15 @@
  * The direct mapping only covers E820_TYPE_RAM regions, so the ranges and gaps are
  * represented by pfn_mapped[].
  */
-unsigned long max_low_pfn_mapped;
-unsigned long max_pfn_mapped;
+ulong max_low_pfn_mapped;
+ulong max_pfn_mapped;
 
 // #ifdef CONFIG_DMI
 // RESERVE_BRK(dmi_alloc, 65536);
 // #endif
 
-unsigned long _brk_start = (unsigned long)__brk_base;
-unsigned long _brk_end   = (unsigned long)__brk_base;
+ulong _brk_start = (ulong)__brk_base;
+ulong _brk_end   = (ulong)__brk_base;
 
 // struct boot_params boot_params;
 
@@ -114,57 +114,43 @@ static void __init reserve_brk(void)
 }
 
 
-void myos_init_early_memory_allocator()
-{
-	// 将一些保留内存段在memblock里标记为已使用,比如bios,kernel等已占用空间
-	// static void __init early_reserve_memory(void)
-	// {
-		/*
-		* Reserve the memory occupied by the kernel between _text and
-		* __end_of_kernel_reserve symbols. Any kernel sections after the
-		* __end_of_kernel_reserve symbol must be explicitly reserved with a
-		* separate simple_mmblk_reserve() or they will be discarded.
-		*/
-		// simple_mmblk_reserve(__pa_symbol(_text),
-		// 		 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
-		simple_mmblk_reserve((phys_addr_t)&_k_phys_start,
-						(phys_addr_t)&_end - (phys_addr_t)&_k_virt_start);
 
-		/*
-		* The first 4Kb of memory is a BIOS owned area, but generally it is
-		* not listed as such in the E820 table.
-		*
-		* Reserve the first 64K of memory since some BIOSes are known to
-		* corrupt low memory. After the real mode trampoline is allocated the
-		* rest of the memory below 640k is reserved.
-		*
-		* In addition, make sure page 0 is always reserved because on
-		* systems with L1TF its contents can be leaked to user processes.
-		*/
-		simple_mmblk_reserve(0, SZ_64K);
-
-		// early_reserve_initrd();
-
-		// memblock_x86_reserve_range_setup_data();
-
-		// reserve_ibft_region();
-		// void __init reserve_bios_regions(void)
-		// {
-			phys_addr_t bios_start = 0x9F000;
-			simple_mmblk_reserve(bios_start, SZ_1M - bios_start);
-		// }
-		// trim_snb_memory();
-	// }
+// 将一些保留内存段在memblock里标记为已使用,比如bios,kernel等已占用空间
+static void __init
+early_reserve_memory(void) {
+	/*
+	 * Reserve the memory occupied by the kernel between _text and
+	 * __end_of_kernel_reserve symbols. Any kernel sections after the
+	 * __end_of_kernel_reserve symbol must be explicitly reserved with a
+	 * separate simple_mmblk_reserve() or they will be discarded.
+	 */
+	// simple_mmblk_reserve(__pa_symbol(_text),
+	// 		 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
 
 	/*
-	 * Need to conclude brk, before e820__memblock_setup()
-	 * it could use memblock_find_in_range, could overlap with
-	 * brk area.
+	 * The first 4Kb of memory is a BIOS owned area, but generally it is
+	 * not listed as such in the E820 table.
+	 *
+	 * Reserve the first 64K of memory since some BIOSes are known to
+	 * corrupt low memory. After the real mode trampoline is allocated the
+	 * rest of the memory below 640k is reserved.
+	 *
+	 * In addition, make sure page 0 is always reserved because on
+	 * systems with L1TF its contents can be leaked to user processes.
 	 */
-	reserve_brk();
+	simple_mmblk_reserve(0, SZ_64K);
 
-	// 用e820获取的内存分布初始化memblock分配器
-	e820__memblock_setup();
+	// early_reserve_initrd();
+
+	// memblock_x86_reserve_range_setup_data();
+
+	// reserve_ibft_region();
+	// void __init reserve_bios_regions(void)
+	// {
+		phys_addr_t bios_start = 0x9F000;
+		simple_mmblk_reserve(bios_start, SZ_1M - bios_start);
+	// }
+	// trim_snb_memory();
 }
 
 /*
@@ -199,6 +185,8 @@ void __init setup_arch(char **cmdline_p)
 	 * xen_memory_setup() on Xen dom0 which relies on the fact that those
 	 * early reservations have happened already.
 	 */
+	early_reserve_memory();
+
 	// 将固件生成的e820分布提取存储到内核结构中
 	e820__memory_setup();
 
@@ -240,7 +228,15 @@ void __init setup_arch(char **cmdline_p)
 	// 为内核页映射预留内存空间并构建映射树
 	early_alloc_pgt_buf();
 
-	myos_init_early_memory_allocator();
+	/*
+	 * Need to conclude brk, before e820__memblock_setup()
+	 * it could use memblock_find_in_range, could overlap with
+	 * brk area.
+	 */
+	reserve_brk();
+
+	// 用e820获取的内存分布初始化memblock分配器
+	e820__memblock_setup();
 	// 现在可以使用memblock分配内存了
 
 	// 初始化x86架构物理页映射

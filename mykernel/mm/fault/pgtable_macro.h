@@ -97,6 +97,8 @@
 	#define pmdp_get_lockless		pmd_entp_get_ent
 
 
+	#define l4_index(x)		(((x) >> 39) & 511)
+
 	#ifndef update_mmu_tlb
 		static inline void
 		update_mmu_tlb(vma_s *vma, ulong address, pte_t *ptep) {}

@@ -42,10 +42,12 @@ static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)
 
 void myos_early_init_system(void)
 {
-	u64 *virt_mbi_magic_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_magic);
-	u64 *virt_mbi_base_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_base);
+	// u64 *virt_mbi_magic_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_magic);
+	// u64 *virt_mbi_base_ptr = (u64 *)phys_to_virt((phys_addr_t)&mbi_base);
 
-	parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
+	// parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
+
+	parse_tag(mbi_magic, mbi_base);
 
 	// while (1);
 }

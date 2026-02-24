@@ -36,7 +36,7 @@
 
 	// #define HUGE_MAX_HSTATE			2
 
-	#define PAGE_OFFSET				((unsigned long)__PAGE_OFFSET)
+	#define PAGE_OFFSET				((ulong)__PAGE_OFFSET)
 
 	// #define VM_DATA_DEFAULT_FLAGS	VM_DATA_FLAGS_TSK_EXEC
 

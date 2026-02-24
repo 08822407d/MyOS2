@@ -663,7 +663,7 @@
 	#endif
 
 
-	// extern pgd_t early_top_pgt[PTRS_PER_PGD];
+	extern pgd_t early_top_pgt[PTRS_PER_PGD];
 	// bool __init __early_make_pgtable(unsigned long address, pmdval_t pmd);
 
 	// void ptdump_walk_pgd_level(struct seq_file *m, mm_s *mm);

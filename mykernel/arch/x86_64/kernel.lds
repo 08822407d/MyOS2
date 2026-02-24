@@ -1,17 +1,18 @@
 OUTPUT_FORMAT("elf64-x86-64", "elf64-x86-64", "elf64-x86-64")
 OUTPUT_ARCH(i386:x86-64)
-ENTRY(code_64_start)
+/* ENTRY(code_64_start) */
+ENTRY(phys_startup_64)
 
-_k_phys_start	= 0x1000000;
-_k_virt_start	= 0xffff800001000000;
-_k_offset		= _k_virt_start - _k_phys_start;
-_k_phys_edata	= _edata - _k_offset;
-_k_phys_loadend	= __bss_start - _k_offset;
-_k_phys_ebss	= __bss_stop - _k_offset;
-_APboot_phys_start		= 0xE000;
-_PCPU_BASE		= 0x0;
-_Page_Size		= 0x1000;
+_k_phys_start		= 0x1000000;
+_k_offset			= 0xffff800000000000;
+_APboot_phys_start	= 0xE000;
+_PCPU_BASE			= 0x0;
+_Page_Size			= 0x1000;
+_Page2M_Size		= 0x200000;
 
+/* __START_KERNEL_map	= _k_offset; */
+__START_KERNEL_map	= 0xffffffff80000000;
+DMA_END				= 0x1000000;
 
 jiffies = jiffies_64;
 const_pcpu_hot = pcpu_hot;
@@ -25,43 +26,24 @@ const_pcpu_hot = pcpu_hot;
 } */
 SECTIONS
 {
-	/* the head of kernel running in low-half mem */
-	. = _k_phys_start;
-	.head.text :
-	{
-		*(.unpaged.text);
-	}
-	.head.data ALIGN(_Page_Size) :
-	{
-		*(.unpaged.data);
-	}
-
-	/* AP boot from real-mode, related code and data will be copied to */
-	/* start 1MB of memory, so the symbols need relocated */
-	apb_start_viraddr = ALIGN(_Page_Size);
-	.APboot.text _APboot_phys_start : AT(apb_start_viraddr)
-	{
-		_APboot_text = apb_start_viraddr - _APboot_phys_start;
-		KEEP(*(.AP_boot.text));
-		_APboot_etext = . + apb_start_viraddr - _APboot_phys_start;
-	} . = apb_start_viraddr + SIZEOF(.APboot.text);
-
-
-	/* here is the kernel in high-half meme */
-	. += _k_offset;
-	.text ALIGN(_Page_Size) : AT(ADDR(.text) - _k_offset)
+	. += (__START_KERNEL_map + ((DMA_END + (_Page2M_Size - 1)) & ~(_Page2M_Size - 1)));
+	phys_startup_64 = ABSOLUTE(startup_64 - __START_KERNEL_map);
+	.text ALIGN(_Page_Size) : AT(ADDR(.text) - __START_KERNEL_map)
 	{
 		_text = .;
+		_stext = .;
+		KEEP(*(.head.text.startup))
+		KEEP(*(.head.text))
 		*(.text*)
-		_etext = .;
 	}
-	.rodata ALIGN(_Page_Size) : AT(ADDR(.rodata) - _k_offset)
+	_etext = .;
+	.rodata ALIGN(_Page_Size) : AT(ADDR(.rodata) - __START_KERNEL_map)
 	{
 		__start_rodata = .;
 		*(.rodata*)
 		__end_rodata = .;
 	}
-	.data ALIGN(_Page_Size) : AT(ADDR(.data) - _k_offset)
+	.data ALIGN(_Page_Size) : AT(ADDR(.data) - __START_KERNEL_map)
 	{
 		_sdata = .;
 		. = ALIGN(((1 << 12) << 3));
@@ -77,7 +59,7 @@ SECTIONS
 		*(.data..page_aligned*)
 		_edata = .;
 	}
-	.data.sched_class ALIGN(8) : AT(ADDR(.data.sched_class) - _k_offset)
+	.data.sched_class ALIGN(8) : AT(ADDR(.data.sched_class) - __START_KERNEL_map)
 	{
 		__sched_class_highest = .;
 		KEEP(*(.data.sched_class))
@@ -85,7 +67,7 @@ SECTIONS
 	}
 	. = ALIGN(_Page_Size);
 	__per_cpu_load = .;
-	.data..percpu _PCPU_BASE : AT(__per_cpu_load - _k_offset)
+	.data..percpu _PCPU_BASE : AT(__per_cpu_load - __START_KERNEL_map)
 	{
 		__per_cpu_start = .;
 		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
@@ -97,14 +79,14 @@ SECTIONS
 	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
 		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
 	. = ALIGN(_Page_Size);
-	.init.text : AT(ADDR(.init.text) - _k_offset)
+	.init.text : AT(ADDR(.init.text) - __START_KERNEL_map)
 	{
 		_sinittext = .;
 		*(.init.text .init.text.*)
 		*(.text.startup) _einittext = .;
 	/* } :init */
 	}
-	.init.data : AT(ADDR(.init.data) - _k_offset)
+	.init.data : AT(ADDR(.init.data) - __START_KERNEL_map)
 	{
 		*(.init.data init.data.*) . = ALIGN(8);
 		/* KEEP(*(SORT(___kentry+*))) *(.init.data init.data.*) . = ALIGN(8);
@@ -173,19 +155,19 @@ SECTIONS
 		KEEP(*(.init.ramfs)) . = ALIGN(8);
 		KEEP(*(.init.ramfs.info)) */
 	}
-	.bss ALIGN(_Page_Size) : AT(ADDR(.bss) - _k_offset)
+	.bss ALIGN(_Page_Size) : AT(ADDR(.bss) - __START_KERNEL_map)
 	{
 		__bss_start = .;
 		*(.bss* COMMON)
 		__bss_stop = .;
 	}
-	.brk ALIGN(_Page_Size) : AT(ADDR(.brk) - _k_offset)
+	.brk ALIGN(_Page_Size) : AT(ADDR(.brk) - __START_KERNEL_map)
 	{
 		__brk_base = .;
 		*(.brk*)
 		__brk_limit = .;
 	}
-	.eh_frame ALIGN(_Page_Size) : AT(ADDR(.eh_frame) - _k_offset)
+	.eh_frame ALIGN(_Page_Size) : AT(ADDR(.eh_frame) - __START_KERNEL_map)
 	{
 		_eh_frame = .;
 		*(.eh_frame)
@@ -195,3 +177,8 @@ SECTIONS
 	. = ALIGN((_Page_Size));
 	_end = .;
 }
+
+. = ASSERT((_end - 0xffffffff80000000 <= (1024 * 1024 * 1024)),
+    "kernel image bigger than KERNEL_IMAGE_SIZE");
+init_per_cpu__gdt_page = ABSOLUTE(gdt_page) + __per_cpu_load;
+init_per_cpu__fixed_percpu_data = ABSOLUTE(0) + __per_cpu_load;

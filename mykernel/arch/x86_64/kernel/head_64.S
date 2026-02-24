@@ -25,9 +25,8 @@
 #define SYM_DATA_START_PAGE_ALIGNED(name)			\
 	SYM_START(name, SYM_L_GLOBAL, .balign PAGE_SIZE)
 
-.section .unpaged.text, "ax"
-.code64
-
+	__STARTUP
+	.code64
 SYM_CODE_START_NOALIGN(startup_64)
 	cli
 	jmp		code_64_start
@@ -50,7 +49,7 @@ multiboot_header:
 	.long	-(MULTIBOOT2_HEADER_MAGIC + GRUB_MULTIBOOT_ARCHITECTURE_I386 + \
 			(multiboot_header_end - multiboot_header))
 //===========================================
-#include "grub2_head_tags.S"
+// #include "grub2_head_tags.S"
 //===========================================
 	.align	8
 multiboot_header_tag_end_begin:
@@ -93,41 +92,70 @@ SYM_CODE_START(code_64_start)
 	movq	%rsi,		%r15
 
 	/* Set up the stack for verify_cpu() */
-	leaq	tmp_kstack_top(%rip), %rsp
+	leaq	tmp_kstack_top(%rip),	%rsp
 
 	movq	%cr4,		%rax
 	bts		$16,		%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
+
+	/* Setup GSBASE to allow stack canary access for C code */
+	movl	$MSR_GS_BASE,			%ecx
+	leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
+	movl	%edx,		%eax
+	shrq	$32,		%rdx
+	wrmsr
+
+	/*
+	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
+	 * the kernel and retrieve the modifier (SME encryption mask if SME
+	 * is active) to be added to the initial pgdir entry that will be
+	 * programmed into CR3.
+	 */
+	leaq	_text(%rip),%rdi
+	movq	%r15,		%rsi
+	call	__startup_64
+
+	/* Form the CR3 value being sure to include the CR3 modifier */
+	leaq	early_top_pgt(%rip),	%rcx
+	addq	%rcx,		%rax
+
+	/*
+	 * Switch to early_top_pgt which still has the identity mappings
+	 * present.
+	 */
+	movq	%rax,		%cr3
+
+	/* Branch to the common startup code at its kernel virtual address */
+	// ANNOTATE_RETPOLINE_SAFE
+	jmp		*0f(%rip)
+SYM_CODE_END(code_64_start)
+
+	__INITRODATA
+0:	.quad	common_startup_64
+
+	.text
+SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
+
+	/* set up data segments */
+	xorl	%eax,		%eax
+	movl	%eax,		%ds
+	movl	%eax,		%ss
+	movl	%eax,		%es
 
 	/*
 	 * We don't really need to load %fs or %gs, but load them anyway
 	 * to kill any stale realmode selectors.  This allows execution
 	 * under VT hardware.
 	 */
-	xorl	%eax,		%eax
 	movl	%eax,		%fs
 	movl	%eax,		%gs
-	/*
-	 * 把 GSBASE 设为链接脚本导出的 __per_cpu_load
-	 * 这里假设：当前页表已经把 __per_cpu_load 的“虚拟地址”映射有效
-	 */
-	/* RAX = 64-bit absolute address of __per_cpu_load */
-	movabsq	$__per_cpu_load,	%rax
-	/* write MSR_GS_BASE = RAX */
-	movl	$MSR_GS_BASE,		%ecx
-	movq	%rax,		%rdx
-	movl	%eax,		%eax	/* EAX = low 32 (可省略，写明意图) */
-	shrq	$32,		%rdx	/* EDX = high 32 */
-	wrmsr
-
-	// set page map
-	callq	creat_higher_half_pagemap
 
 	/* Check if nx is implemented */
 	movl	$0x80000001,%eax
 	cpuid
 	movl	%edx,		%edi
-enable_SCE:
+
+// enable_SCE:
 	/* Setup EFER (Extended Feature Enable Register) */
 	movl	$MSR_EFER,	%ecx
 	rdmsr
@@ -148,42 +176,6 @@ enable_SCE:
 	/* Make changes effective */
 	movq	%rax,		%cr0
 
-skip_set_pde:
-	// reset cs:rip at same time jump to higher half
-	movq	%cs,		%rax
-	pushq	%rax
-	movabsq	$higher_half_entry,	%rax
-	pushq	%rax
-	lretq
-
-hang:
-	jmp		hang
-
-// if boot from UEFI, all physical page all ready mapped
-// to lower half, here duplicate lower 256 PML4 entries to
-// higher 256 ones(to creat tmp higher half page mapping)
-creat_higher_half_pagemap:
-	cld
-	movq	%cr3,		%rax		// 保存原始 CR3（含 flag/pcid）
-	movq	%rax,		%rsi
-	andq	$-4096,		%rsi		// 关键：只取页表基址（清低12位）
-
-	movq	%rsi,		%rdi
-	addq	$2048,		%rdi
-	movq	$256,		%rcx
-	rep movsq
-
-	movq    %rax,		%cr3		// 仍然写回原始 CR3（别把 flag/pcid 丢了）
-	ret
-
-
-/*==============================================================================================*
- *									higher half text section							 		*
- *==============================================================================================*/
-.section .init.text, "ax"
-.code64
-.balign 8
-SYM_CODE_START(higher_half_entry)
 	movabsq	$init_stack,	%rbx
 	addq	$THREAD_SIZE,	%rbx
 	movq	%rbx,		%rsp
@@ -201,7 +193,73 @@ SYM_CODE_START(higher_half_entry)
 /*==============================================================================================*
  *											data section								 		*
  *==============================================================================================*/
-.section .unpaged.data
+/*
+ * Each PGD needs to be 8k long and 8k aligned.  We do not
+ * ever go out to userspace with these, so we do not
+ * strictly *need* the second page, but this allows us to
+ * have a single set_pgd() implementation that does not
+ * need to worry about whether it has 4k or 8k to work
+ * with.
+ *
+ * This ensures PGDs are 8k long:
+ */
+#define SYM_DATA_START_PTI_ALIGNED(name) \
+			SYM_DATA_START_PAGE_ALIGNED(name)
+
+	__INITDATA
+	.balign 4
+
+SYM_DATA_START_PTI_ALIGNED(early_top_pgt)
+	.fill	511,8,0
+	.quad	level3_kernel_pgt - __START_KERNEL_map + _PAGE_TABLE_NOENC
+SYM_DATA_END(early_top_pgt)
+
+SYM_DATA_START_PAGE_ALIGNED(early_dynamic_pgts)
+	.fill	512*EARLY_DYNAMIC_PAGE_TABLES,8,0
+SYM_DATA_END(early_dynamic_pgts)
+
+	.data
+
+SYM_DATA_START_PAGE_ALIGNED(level3_kernel_pgt)
+	.fill	510,8,0
+	/* (2^48-(2*1024*1024*1024)-((2^39)*511))/(2^30) = 510 */
+	.quad	level2_kernel_pgt - __START_KERNEL_map + _KERNPG_TABLE_NOENC
+	// .quad	level2_fixmap_pgt - __START_KERNEL_map + _PAGE_TABLE_NOENC
+	.fill	1,8,0 // 暂时不映射 fixmap 区，等以后需要了再说
+SYM_DATA_END(level3_kernel_pgt)
+
+SYM_DATA_START_PAGE_ALIGNED(level2_kernel_pgt)
+	/*
+	 * Kernel high mapping.
+	 *
+	 * The kernel code+data+bss must be located below KERNEL_IMAGE_SIZE in
+	 * virtual address space, which is 1 GiB if RANDOMIZE_BASE is enabled,
+	 * 512 MiB otherwise.
+	 *
+	 * (NOTE: after that starts the module area, see MODULES_VADDR.)
+	 *
+	 * This table is eventually used by the kernel during normal runtime.
+	 * Care must be taken to clear out undesired bits later, like _PAGE_RW
+	 * or _PAGE_GLOBAL in some cases.
+	 */
+	PMDS(0, __PAGE_KERNEL_LARGE_EXEC, KERNEL_IMAGE_SIZE/PMD_SIZE)
+SYM_DATA_END(level2_kernel_pgt)
+
+SYM_DATA_START_PAGE_ALIGNED(level2_fixmap_pgt)
+	.fill	512,8,0
+	// .fill	(512 - 4 - FIXMAP_PMD_NUM),8,0
+	// pgtno = 0
+	// .rept (FIXMAP_PMD_NUM)
+	// .quad level1_fixmap_pgt + (pgtno << PAGE_SHIFT) - __START_KERNEL_map \
+	// 	+ _PAGE_TABLE_NOENC;
+	// pgtno = pgtno + 1
+	// .endr
+	// /* 6 MB reserved space + a 2MB hole */
+	// .fill	4,8,0
+SYM_DATA_END(level2_fixmap_pgt)
+
+
+	__INITDATA
 //=======temp stack
 .align 8
 tmp_kstack_start:
@@ -214,6 +272,11 @@ SYM_CODE_START(mbi_magic)
 SYM_CODE_START(mbi_base)
 	.quad	0x0
 
+	.data
+	.align 16
+/* This must match the first entry in level2_kernel_pgt */
+SYM_DATA(phys_base, .quad 0x0)
+EXPORT_SYMBOL(phys_base)
 
 	__PAGE_ALIGNED_BSS
 SYM_DATA_START_PAGE_ALIGNED(empty_zero_page)

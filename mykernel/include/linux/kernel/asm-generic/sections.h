@@ -211,6 +211,5 @@
 
 	// MYOS symbols
 	extern char _k_phys_start;
-	extern char _k_virt_start;
 
 #endif /* _ASM_GENERIC_SECTIONS_H_ */

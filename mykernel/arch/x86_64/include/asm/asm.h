@@ -85,12 +85,21 @@
 
 	#ifndef __ASSEMBLY__
 	#  ifndef __pic__
-	    static __always_inline __pure void
-		*rip_rel_ptr(void *p) {
-	    	asm("leaq %c1(%%rip), %0" : "=r"(p) : "i"(p));
-	    	return p;
-	    }
-	#    define RIP_REL_REF(var)	(*(typeof(&(var)))rip_rel_ptr(&(var)))
+	#    ifdef DEBUG
+	#      define RIP_REL_PTR(var) ({									\
+						typeof(&(var)) __p;								\
+						asm("leaq %a1, %0" : "=r"(__p) : "i"(&(var)));	\
+						__p;											\
+					})
+	#      define RIP_REL_REF(var)	(*RIP_REL_PTR(var))
+	#    else
+			static __always_inline __pure void
+			*rip_rel_ptr(void *p) {
+				asm("leaq %c1(%%rip), %0" : "=r"(p) : "i"(p));
+				return p;
+			}
+	#      define RIP_REL_REF(var)	(*(typeof(&(var)))rip_rel_ptr(&(var)))
+	#    endif
 	#  else
 	#    define RIP_REL_REF(var)	(var)
 	#  endif

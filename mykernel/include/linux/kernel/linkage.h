@@ -198,12 +198,12 @@
 	// 	SYM_ENTRY(name, linkage, SYM_A_ALIGN)
 	// #endif
 
-	// /* SYM_INNER_LABEL -- only for labels in the middle of code */
-	// #ifndef SYM_INNER_LABEL
-	// #define SYM_INNER_LABEL(name, linkage) \
-	// 	.type name SYM_T_NONE ASM_NL       \
-	// 	SYM_ENTRY(name, linkage, SYM_A_NONE)
-	// #endif
+	/* SYM_INNER_LABEL -- only for labels in the middle of code */
+	#ifndef SYM_INNER_LABEL
+	#define SYM_INNER_LABEL(name, linkage) \
+		.type name SYM_T_NONE ASM_NL       \
+		SYM_ENTRY(name, linkage, SYM_A_NONE)
+	#endif
 
 	// /*
 	// * SYM_FUNC_START_LOCAL_ALIAS -- use where there are two local names for one
