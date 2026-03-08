@@ -52,6 +52,8 @@
 #include <obsolete/device.h>
 
 
+Initiate_State_s init_state = {0};
+
 static int kernel_init(void *);
 
 extern void init_IRQ(void);

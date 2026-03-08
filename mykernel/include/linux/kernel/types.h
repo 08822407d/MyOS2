@@ -223,6 +223,19 @@
 		typedef int		(*cmp_r_func_t)(const void *a, const void *b, const void *priv);
 		typedef int		(*cmp_func_t)(const void *a, const void *b);
 
+
+
+	#  ifdef DEBUG
+		struct Initiate_State {
+			ulong
+				early_kernel_memmap		: 1,		// 在early_top_pgt中为内核低半段地址建立内存映射
+				boot_params_stored		: 1;		// 将boot loader传入的boot_params或multiboot_MBI复制到内核".data"段中定义的存储区域
+		} __attribute__((packed));
+		typedef struct Initiate_State Initiate_State_s;
+
+		extern Initiate_State_s init_state;
+	#  endif
+
 	#endif /*  __ASSEMBLY__ */
 
 #endif /* _LINUX_TYPES_H */

@@ -65,8 +65,8 @@ void __init early_alloc_pgt_buf(void)
  */
 static void __init myos_memory_map()
 {
-	unsigned long start_pfn, end_pfn;
-	unsigned long mapped_ram_size = 0;
+	ulong start_pfn, end_pfn;
+	ulong mapped_ram_size = 0;
 	u64 start, end;
 	int i;
 
@@ -92,7 +92,7 @@ extern void __init init_io_apic_mappings(void);
 
 void __init init_mem_mapping(void)
 {
-	unsigned long end;
+	ulong end;
 
 	// pti_check_boottime_disable();
 	// probe_page_size_mask();

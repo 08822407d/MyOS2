@@ -75,6 +75,8 @@
 
 	#endif
 
+	#define native_load_gdt load_gdt
+
 	#if defined(ARCH_DESC_DEFINATION) || !(DEBUG)
 	
 		/* Provide the original GDT */

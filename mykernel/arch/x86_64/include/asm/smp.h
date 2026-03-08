@@ -189,7 +189,7 @@
 		// #define nmi_selftest() do { } while (0)
 		// #endif
 
-		// extern unsigned int smpboot_control;
+		extern uint smpboot_control;
 
 	#endif /* !__ASSEMBLY__ */
 

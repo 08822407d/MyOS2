@@ -11,8 +11,7 @@
 #include <uefi/bootloader.h>
 
 extern uint64_t	boot_from_grub2;
-extern u64 mbi_magic;
-extern u64 mbi_base;
+
 
 unsigned			nr_cpu_ids;
 mbi_mmap_ent_s		*ram_map;
@@ -37,7 +36,8 @@ static void get_framebuffer_info(mbi_framebuffer_s *framebuffer_info)
 	framebuffer.Y_Resolution = common->framebuffer_height;
 	framebuffer.PixperScanline = common->framebuffer_pitch / (common->framebuffer_bpp / 8);
 
-	clearFB();
+	// myos_ioremap(framebuffer.FB_phybase, framebuffer.FB_size);
+	// clearFB();
 }
 
 void myos_early_init_system(void)
@@ -47,7 +47,7 @@ void myos_early_init_system(void)
 
 	// parse_tag(*(unsigned long *)virt_mbi_magic_ptr, *(unsigned long *)virt_mbi_base_ptr);
 
-	parse_tag(mbi_magic, mbi_base);
+	parse_tag(mbi_magic, (ulong)&multiboot_MBI);
 
 	// while (1);
 }
@@ -91,7 +91,7 @@ parse_tag (unsigned long magic, unsigned long addr)
 			break;
 		case MULTIBOOT_TAG_TYPE_MMAP:
 			mbi_mmap_s *mbi_mmap = (mbi_mmap_s *)tag;
-			ram_map = (mbi_mmap_ent_s *)phys_to_virt((phys_addr_t)mbi_mmap->entries);
+			ram_map = (mbi_mmap_ent_s *)mbi_mmap->entries;
 			break;
 		case MULTIBOOT_TAG_TYPE_VBE:
 			mbi_vbe_s *mbi_mbi_mmap_svbe = (mbi_vbe_s *)tag;

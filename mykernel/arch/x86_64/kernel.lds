@@ -46,6 +46,7 @@ SECTIONS
 	.data ALIGN(_Page_Size) : AT(ADDR(.data) - __START_KERNEL_map)
 	{
 		_sdata = .;
+
 		. = ALIGN(((1 << 12) << 3));
 		__start_init_stack = .;
 		init_thread_union = .;
@@ -54,6 +55,9 @@ SECTIONS
 		KEEP(*(.data..init_thread_info))
 		. = __start_init_stack + ((1 << 12) << 3);
 		__end_init_stack = .;
+		/* equivalent to task_pt_regs(&init_task) */
+		__top_init_kernel_stack = __end_init_stack - 176 /* PTREGS_SIZE */;
+
 		*(.data)
 		*(.data.rel*)
 		*(.data..page_aligned*)
@@ -161,6 +165,7 @@ SECTIONS
 		*(.bss* COMMON)
 		__bss_stop = .;
 	}
+	__end_of_kernel_reserve = .;
 	.brk ALIGN(_Page_Size) : AT(ADDR(.brk) - __START_KERNEL_map)
 	{
 		__brk_base = .;

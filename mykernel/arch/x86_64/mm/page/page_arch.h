@@ -11,6 +11,12 @@
 
 	#ifdef DEBUG
 
+		extern ulong
+		__phys_addr_nodebug(ulong x);
+
+		extern int
+		phys_addr_valid(resource_size_t addr);
+
 		extern void
 		clear_user_page(void *page, ulong vaddr, page_s *pg);
 
@@ -22,6 +28,27 @@
 	#include "page_macro_arch.h"
 	
 	#if defined(ARCH_PAGE_DEFINATION) || !(DEBUG)
+
+		PREFIX_STATIC_AWLWAYS_INLINE
+		ulong
+		__phys_addr_nodebug(ulong x) {
+			ulong y = x - __START_KERNEL_map;
+
+			/* use the carry flag to determine if x was < __START_KERNEL_map */
+			x = y + ((x > y) ? phys_base : (__START_KERNEL_map - PAGE_OFFSET));
+
+			return x;
+		}
+
+		PREFIX_STATIC_INLINE
+		int
+		phys_addr_valid(resource_size_t addr) {
+		#ifdef CONFIG_PHYS_ADDR_T_64BIT
+			return !(addr >> boot_cpu_data.x86_phys_bits);
+		#else
+			return 1;
+		#endif
+		}
 
 		PREFIX_STATIC_INLINE
 		void

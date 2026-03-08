@@ -28,6 +28,11 @@
 
 #include <asm/mm.h>
 
+
+#include <uefi/multiboot2.h>
+#include <uefi/bootloader.h>
+
+
 /*
  * Manage page tables very early on.
  */
@@ -110,36 +115,19 @@ __startup_64(ulong physaddr, struct boot_params *bp) {
 		pmd[idx % PTRS_PER_PMD] = pmd_entry + i * PMD_SIZE;
 	}
 
-	/*
-	 * Fixup the kernel text+data virtual addresses. Note that
-	 * we might write invalid pmds, when the kernel is relocated
-	 * cleanup_highmap() fixes this up along with the mappings
-	 * beyond _end.
-	 *
-	 * Only the region occupied by the kernel image has so far
-	 * been checked against the table of usable memory regions
-	 * provided by the firmware, so invalidate pages outside that
-	 * region. A page table entry that maps to a reserved area of
-	 * memory would allow processor speculation into that area,
-	 * and on some hardware (particularly the UV platform) even
-	 * speculative access to some reserved areas is caught as an
-	 * error, causing the BIOS to halt the system.
-	 */
 
-	pmd = &RIP_REL_REF(level2_kernel_pgt)->val;
+	// copy boot_params or multiboot_MBI to a safe place for later use
+	if (RIP_REL_REF(mbi_magic) == MULTIBOOT2_BOOTLOADER_MAGIC) {
+		u64 mbi_phys = RIP_REL_REF(mbi_base);
+		memcpy(&RIP_REL_REF(multiboot_MBI), (void *)mbi_phys, sizeof(RIP_REL_REF(multiboot_MBI)));
+	} else {
+		memcpy(&RIP_REL_REF(boot_params), bp, sizeof(RIP_REL_REF(boot_params)));
+	}
 
-	// /* invalidate pages before the kernel image */
-	// for (i = 0; i < pmd_index((ulong)_text); i++)
-	// 	pmd[i] &= ~_PAGE_PRESENT;
-
-	// /* fixup pages that are part of the kernel image */
-	// for (; i <= pmd_index((ulong)_end); i++)
-	// 	if (pmd[i] & _PAGE_PRESENT)
-	// 		pmd[i] += load_delta;
-
-	// /* invalidate pages after the kernel image */
-	// for (; i < PTRS_PER_PMD; i++)
-	// 	pmd[i] &= ~_PAGE_PRESENT;
+#ifdef DEBUG
+	init_state.early_kernel_memmap = 1;
+	init_state.boot_params_stored = 1;
+#endif
 
 	return 0;
 }
@@ -183,4 +171,33 @@ x86_64_start_kernel(char * real_mode_data)
 		/* version is always not zero if it is copied */
 		start_kernel();
 	// }
+}
+
+
+
+
+/*
+ * Setup boot CPU state needed before kernel switches to virtual addresses.
+ */
+void __head startup_64_setup_gdt_idt(void)
+{
+	struct desc_ptr startup_gdt_descr = {
+		// .address = (ulong)&RIP_REL_REF(*gdt),
+		.address = (ulong)&RIP_REL_REF(*(desc_s *)(__force ulong)init_per_cpu_var(gdt_page.gdt)),
+		.size    = GDT_SIZE - 1,
+	};
+
+	/* Load GDT */
+	native_load_gdt(&startup_gdt_descr);
+
+	/* New GDT is live - reload data segment registers */
+	asm volatile(	"movl	%%eax,	%%ds	\n"
+		    		"movl	%%eax,	%%ss	\n"
+		    		"movl	%%eax,	%%es	\n"
+				:	
+				:	"a"(__KERNEL_DS)
+				:	"memory"
+				);
+
+	// startup_64_load_idt(handler);
 }

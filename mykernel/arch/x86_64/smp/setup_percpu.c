@@ -21,7 +21,8 @@
 DEFINE_PER_CPU_READ_MOSTLY(ulong, this_cpu_off) = BOOT_PERCPU_OFFSET;
 
 unsigned long __per_cpu_offset[NR_CPUS] __ro_after_init = {
-	[0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
+	// [0 ... NR_CPUS-1] = BOOT_PERCPU_OFFSET,
+	[0 ... NR_CPUS-1] = 0,
 };
 
 

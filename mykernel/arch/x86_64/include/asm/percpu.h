@@ -7,9 +7,9 @@
 
 	#ifdef __ASSEMBLY__
 
-	#	define __percpu_seg		gs
-	#	define PER_CPU_VAR(var)			%__percpu_seg:var
-	#	define INIT_PER_CPU_VAR(var)	init_per_cpu__##var
+	#  define __percpu_seg			gs
+	#  define PER_CPU_VAR(var)		%__percpu_seg:var
+	#  define INIT_PER_CPU_VAR(var)	init_per_cpu__##var
 
 	#else /* ...!ASSEMBLY */
 
@@ -38,6 +38,20 @@
 		#	define PER_CPU_BASE_SECTION ".data..percpu"
 		#endif
 	// }
+
+	/*
+	 * Initialized pointers to per-CPU variables needed for the boot
+	 * processor need to use these macros to get the proper address
+	 * offset from __per_cpu_load on SMP.
+	 *
+	 * There also must be an entry in vmlinux_64.lds.S
+	 */
+	#define DECLARE_INIT_PER_CPU(var) \
+				extern typeof(var) init_per_cpu_var(var)
+
+	#define init_per_cpu_var(var)  init_per_cpu__##var
+
+
 
 	#define PER_CPU_SHARED_ALIGNED_SECTION	""
 
@@ -153,6 +167,19 @@
 	#define DEFINE_PER_CPU(type, name)	\
 				DEFINE_PER_CPU_SECTION(type, name, "")
 
+	/*
+	 * Declaration/definition used for per-CPU variables that are frequently
+	 * accessed and should be in a single cacheline.
+	 *
+	 * For use only by architecture and core code.  Only use scalar or pointer
+	 * types to maximize density.
+	 */
+	#define DECLARE_PER_CPU_CACHE_HOT(type, name)				\
+				DECLARE_PER_CPU_SECTION(type, name, "..hot.." #name)
+
+	#define DEFINE_PER_CPU_CACHE_HOT(type, name)				\
+				DEFINE_PER_CPU_SECTION(type, name, "..hot.." #name)
+
 	#define DECLARE_PER_CPU_CACHE_ALIGNED(type, name)	\
 				DECLARE_PER_CPU_SECTION(type, name, "")	\
 				____cacheline_aligned
@@ -228,5 +255,11 @@
 	#define BOOT_PERCPU_OFFSET ((unsigned long)__per_cpu_load)
 
 	#endif /* !__ASSEMBLY__ */
+
+	/* Control bits for startup_64 */
+	#define STARTUP_READ_APICID		0x80000000
+
+	/* Top 8 bits are reserved for control */
+	#define STARTUP_PARALLEL_MASK	0xFF000000
 
 #endif /* _ASM_X86_PERCPU_H */

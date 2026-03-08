@@ -3,12 +3,15 @@
 
 	#include <asm/percpu.h>
 
+	DECLARE_PER_CPU_CACHE_HOT(task_s*, current_task);
+
 	struct pcpu_hot;
 	typedef struct pcpu_hot pcpu_hot_s;
 	DECLARE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot);
 
 	struct gdt_page;
 	DECLARE_PER_CPU_PAGE_ALIGNED(struct gdt_page, gdt_page);
+	DECLARE_INIT_PER_CPU(gdt_page);
 
 	struct tss_struct;
 	DECLARE_PER_CPU_PAGE_ALIGNED(struct tss_struct, cpu_tss_rw);

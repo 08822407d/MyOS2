@@ -23,6 +23,15 @@
 
 	#ifndef __ASSEMBLY__
 
+	#ifdef CONFIG_DEBUG_VIRTUAL
+		extern ulong __phys_addr(ulong);
+		extern ulong __phys_addr_symbol(ulong);
+	#else
+	#  define __phys_addr(x)		__phys_addr_nodebug(x)
+	#  define __phys_addr_symbol(x) \
+				((ulong)(x) - __START_KERNEL_map + phys_base)
+	#endif
+
 	#include <linux/lib/string.h>
 
 	#	define clear_page(page)		memset((page), 0, PAGE_SIZE)

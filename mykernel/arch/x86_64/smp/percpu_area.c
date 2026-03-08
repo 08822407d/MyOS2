@@ -11,6 +11,7 @@
 #include <obsolete/glo.h>
 
 
+DEFINE_PER_CPU_CACHE_HOT(task_s *, current_task) = &init_task;
 DEFINE_PER_CPU_CACHE_ALIGNED(pcpu_hot_s, pcpu_hot) = {
 	.current_task	= &init_task,
 	.preempt_count	= INIT_PREEMPT_COUNT,

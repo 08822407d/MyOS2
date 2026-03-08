@@ -42,7 +42,8 @@ ulong max_pfn_mapped;
 ulong _brk_start = (ulong)__brk_base;
 ulong _brk_end   = (ulong)__brk_base;
 
-// struct boot_params boot_params;
+struct boot_params boot_params __section(".data");
+char multiboot_MBI[32 * PAGE_SIZE] __section(".data") __aligned(PAGE_SIZE);
 
 // /*
 //  * These are the four main kernel memory regions, we put them into
@@ -124,8 +125,8 @@ early_reserve_memory(void) {
 	 * __end_of_kernel_reserve symbol must be explicitly reserved with a
 	 * separate simple_mmblk_reserve() or they will be discarded.
 	 */
-	// simple_mmblk_reserve(__pa_symbol(_text),
-	// 		 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
+	simple_mmblk_reserve(__pa_symbol(_text),
+		(ulong)__end_of_kernel_reserve - (ulong)_text);
 
 	/*
 	 * The first 4Kb of memory is a BIOS owned area, but generally it is

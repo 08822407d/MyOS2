@@ -11,6 +11,7 @@
 
 
 #include <linux/kernel/linkage.h>
+#include <generated/asm-offsets.h>
 #include <linux/init/init.h>
 #include <asm/cache.h>
 #include <asm/percpu.h>
@@ -18,6 +19,7 @@
 #include <mm/mm_const_arch.h>
 
 #include <processor/processor_const_arch.h>
+#include <processor/desc_const_arch.h>
 
 #include <uefi/multiboot2.h>
 #define GRUB_MULTIBOOT_ARCHITECTURE_I386 MULTIBOOT_ARCHITECTURE_I386
@@ -98,12 +100,23 @@ SYM_CODE_START(code_64_start)
 	bts		$16,		%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
 
-	/* Setup GSBASE to allow stack canary access for C code */
-	movl	$MSR_GS_BASE,			%ecx
-	leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
-	movl	%edx,		%eax
-	shrq	$32,		%rdx
-	wrmsr
+	// 在MyOS2中早期代码暂时用不到percpu变量,所以这里不进行gsbase早期初始化
+	// /* Setup GSBASE to allow stack canary access for C code */
+	// movl	$MSR_GS_BASE,			%ecx
+	// leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
+	// movl	%edx,		%eax
+	// shrq	$32,		%rdx
+	// wrmsr
+
+	call	startup_64_setup_gdt_idt
+
+	/* Now switch to __KERNEL_CS so IRET works reliably */
+	pushq	$__KERNEL_CS
+	leaq	.Lon_kernel_cs(%rip),	%rax
+	pushq	%rax
+	lretq
+
+.Lon_kernel_cs:
 
 	/*
 	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
@@ -134,7 +147,62 @@ SYM_CODE_END(code_64_start)
 0:	.quad	common_startup_64
 
 	.text
+SYM_CODE_START(secondary_startup_64)
+	/*
+	 * The secondary_startup_64_no_verify entry point is only used by
+	 * SEV-ES guests. In those guests the call to verify_cpu() would cause
+	 * #VC exceptions which can not be handled at this stage of secondary
+	 * CPU bringup.
+	 *
+	 * All non SEV-ES systems, especially Intel systems, need to execute
+	 * verify_cpu() above to make sure NX is enabled.
+	 */
 SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
+	/*
+	 * For parallel boot, the APIC ID is read from the APIC, and then
+	 * used to look up the CPU number.  For booting a single CPU, the
+	 * CPU number is encoded in smpboot_control.
+	 *
+	 * Bit 31	STARTUP_READ_APICID (Read APICID from APIC)
+	 * Bit 0-23	CPU# if STARTUP_xx flags are not set
+	 */
+	movl	smpboot_control(%rip),		%ecx
+	testl	$STARTUP_READ_APICID,		%ecx
+	jnz	.Lread_apicid
+	/*
+	 * No control bit set, single CPU bringup. CPU number is provided
+	 * in bit 0-23. This is also the boot CPU case (CPU number 0).
+	 */
+	andl	$(~STARTUP_PARALLEL_MASK),	%ecx
+	jmp		.Lsetup_cpu
+.Lread_apicid:
+	jmp		.
+
+.Lsetup_cpu:
+	/* Get the per cpu offset for the given CPU# which is in ECX */
+	movq	__per_cpu_offset(,%rcx,8),	%rdx
+
+	/*
+	 * Setup a boot time stack - Any secondary CPU will have lost its stack
+	 * by now because the cr3-switch above unmaps the real-mode stack.
+	 *
+	 * RDX contains the per-cpu offset
+	 */
+	movq	current_task(%rdx),			%rax
+	movq	TASK_threadsp(%rax),		%rsp
+
+	// /*
+	//  * We must switch to a new descriptor in kernel space for the GDT
+	//  * because soon the kernel won't have access anymore to the userspace
+	//  * addresses where we're currently running on. We have to do that here
+	//  * because in 32bit we couldn't load a 64bit linear address.
+	//  */
+	// subq	$16,		%rsp
+	// movw	$(GDT_SIZE-1),	(%rsp)
+	// leaq	gdt_page(%rdx),	%rax
+	// movq	%rax,		2(%rsp)
+	// lgdt	(%rsp)
+	// addq	$16,		%rsp
 
 	/* set up data segments */
 	xorl	%eax,		%eax
@@ -149,6 +217,21 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
 	 */
 	movl	%eax,		%fs
 	movl	%eax,		%gs
+
+	/* Set up %gs.
+	 *
+	 * The base of %gs always points to fixed_percpu_data. If the
+	 * stack protector canary is enabled, it is located at %gs:40.
+	 * Note that, on SMP, the boot cpu uses init data section until
+	 * the per cpu areas are set up.
+	 */
+	movl	$MSR_GS_BASE,	%ecx
+// #ifndef CONFIG_SMP
+	leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
+// #endif
+	movl	%edx,		%eax
+	shrq	$32,		%rdx
+	wrmsr
 
 	/* Check if nx is implemented */
 	movl	$0x80000001,%eax
@@ -180,15 +263,83 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
 	addq	$THREAD_SIZE,	%rbx
 	movq	%rbx,		%rsp
 
+	/* zero EFLAGS after setting rsp */
 	pushq	$0
 	popfq
-	pushq	$0
 
-	// here init single core ia32-e environment
-	callq	x86_64_start_kernel
+	/* Pass the boot_params pointer as first argument */
+	movq	%r15,		%rdi
 
-	jmp		.
+.Ljump_to_C_code:
+	xorl	%ebp,		%ebp	# clear frame pointer
+	callq	*initial_code(%rip)
+	ud2
+SYM_CODE_END(secondary_startup_64)
 
+	/* Both SMP bootup and ACPI suspend change these variables */
+	__REFDATA
+	.balign	8
+SYM_DATA(initial_code,	.quad x86_64_start_kernel)
+
+// SYM_DATA(trampoline_lock, .quad 0);
+	__FINITDATA
+
+// 	__INIT
+// SYM_CODE_START(early_idt_handler_array)
+// 	i = 0
+// 	.rept NUM_EXCEPTION_VECTORS
+// 	.if ((EXCEPTION_ERRCODE_MASK >> i) & 1) == 0
+// 		UNWIND_HINT_IRET_REGS
+// 		ENDBR
+// 		pushq $0	# Dummy error code, to make stack frame uniform
+// 	.else
+// 		UNWIND_HINT_IRET_REGS offset=8
+// 		ENDBR
+// 	.endif
+// 	pushq $i		# 72(%rsp) Vector number
+// 	jmp early_idt_handler_common
+// 	UNWIND_HINT_IRET_REGS
+// 	i = i + 1
+// 	.fill early_idt_handler_array + i*EARLY_IDT_HANDLER_SIZE - ., 1, 0xcc
+// 	.endr
+// SYM_CODE_END(early_idt_handler_array)
+// 	ANNOTATE_NOENDBR // early_idt_handler_array[NUM_EXCEPTION_VECTORS]
+
+// SYM_CODE_START_LOCAL(early_idt_handler_common)
+// 	UNWIND_HINT_IRET_REGS offset=16
+// 	/*
+// 	 * The stack is the hardware frame, an error code or zero, and the
+// 	 * vector number.
+// 	 */
+// 	cld
+
+// 	incl	early_recursion_flag(%rip)
+
+// 	/* The vector number is currently in the pt_regs->di slot. */
+// 	pushq	%rsi				/* pt_regs->si */
+// 	movq	8(%rsp),	%rsi	/* RSI = vector number */
+// 	movq	%rdi,		8(%rsp)	/* pt_regs->di = RDI */
+// 	pushq	%rdx				/* pt_regs->dx */
+// 	pushq	%rcx				/* pt_regs->cx */
+// 	pushq	%rax				/* pt_regs->ax */
+// 	pushq	%r8					/* pt_regs->r8 */
+// 	pushq	%r9					/* pt_regs->r9 */
+// 	pushq	%r10				/* pt_regs->r10 */
+// 	pushq	%r11				/* pt_regs->r11 */
+// 	pushq	%rbx				/* pt_regs->bx */
+// 	pushq	%rbp				/* pt_regs->bp */
+// 	pushq	%r12				/* pt_regs->r12 */
+// 	pushq	%r13				/* pt_regs->r13 */
+// 	pushq	%r14				/* pt_regs->r14 */
+// 	pushq	%r15				/* pt_regs->r15 */
+// 	// UNWIND_HINT_REGS
+
+// 	movq	%rsp,%rdi		/* RDI = pt_regs; RSI is already trapnr */
+// 	call	do_early_exception
+
+// 	decl	early_recursion_flag(%rip)
+// 	jmp		restore_regs_and_return_to_kernel
+// SYM_CODE_END(early_idt_handler_common)
 
 /*==============================================================================================*
  *											data section								 		*
@@ -267,12 +418,16 @@ tmp_kstack_start:
 SYM_CODE_START(tmp_kstack_top)
 
 .balign 8
-SYM_CODE_START(mbi_magic)
+SYM_DATA(mbi_magic)
 	.quad	0x0
-SYM_CODE_START(mbi_base)
+SYM_DATA(mbi_base)
 	.quad	0x0
 
 	.data
+	.align 16
+
+SYM_DATA(smpboot_control,		.long 0)
+
 	.align 16
 /* This must match the first entry in level2_kernel_pgt */
 SYM_DATA(phys_base, .quad 0x0)

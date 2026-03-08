@@ -114,7 +114,7 @@ task_s init_task __aligned(L1_CACHE_BYTES) = {
 	// RCU_POINTER_INITIALIZER(real_cred, &init_cred),
 	// RCU_POINTER_INITIALIZER(cred, &init_cred),
 	.comm				= INIT_TASK_COMM,
-	// .thread				= INIT_THREAD,
+	.thread				= INIT_THREAD,
 	.fs					= &init_fs,
 	.files				= &init_files,
 #ifdef CONFIG_IO_URING

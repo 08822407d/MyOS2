@@ -43,6 +43,7 @@
 		// extern void reserve_standard_io_resources(void);
 		// extern void i386_reserve_resources(void);
 		extern ulong __startup_64(ulong physaddr, struct boot_params *bp);
+		extern void startup_64_setup_gdt_idt(void);
 		// extern unsigned long __startup_secondary_64(void);
 		// extern void startup_64_setup_env(unsigned long physbase);
 		// extern void early_setup_idt(void);
@@ -65,11 +66,15 @@
 			// #include <asm/espfix.h>
 			#include <linux/kernel/kernel.h>
 
-			// /*
-			// * This is set up by the setup-routine at boot-time
-			// */
-			// extern struct boot_params boot_params;
-			// extern char _text[];
+			/*
+			* This is set up by the setup-routine at boot-time
+			*/
+			extern struct boot_params boot_params;
+			extern char _text[];
+			// for the case boot from multiboot2 specified bootloader
+			extern char multiboot_MBI[32 * PAGE_SIZE];
+			extern u64 mbi_magic;
+			extern u64 mbi_base;
 
 			// static inline bool kaslr_enabled(void)
 			// {
