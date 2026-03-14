@@ -41,15 +41,20 @@ static uint __initdata next_early_pgt;
 pmdval_t early_pmd_flags = __PAGE_KERNEL_LARGE & ~(_PAGE_GLOBAL | _PAGE_NX);
 
 
-/* Code in __startup_64() can be relocated during execution, but the compiler
- * doesn't have to generate PC-relative relocations when accessing globals from
- * that function. Clang actually does not generate them, which leads to
- * boot-time crashes. To work around this problem, every global pointer must
- * be accessed using RIP_REL_REF().
+/*
+ * This code is compiled using PIC codegen because it will execute from the
+ * early 1:1 mapping of memory, which deviates from the mapping expected by the
+ * linker. Due to this deviation, taking the address of a global variable will
+ * produce an ambiguous result when using the plain & operator.  Instead,
+ * rip_rel_ptr() must be used, which will return the RIP-relative address in
+ * the 1:1 mapping of memory. Kernel virtual addresses can be determined by
+ * subtracting p2v_offset from the RIP-relative address.
  */
 ulong __head
-__startup_64(ulong physaddr, struct boot_params *bp) {
-	pmd_t (*early_pgts)[PTRS_PER_PMD] = RIP_REL_REF(early_dynamic_pgts);
+__startup_64(ulong p2v_offset, struct boot_params *bp) {
+	pmd_t (*early_pgts)[PTRS_PER_PMD] = rip_rel_ptr(&early_dynamic_pgts[0]);
+	ulong physaddr = (ulong)rip_rel_ptr(&_text);
+	ulong va_text, va_end;
 	ulong pgtable_flags;
 	ulong load_delta;
 	pgdval_t *pgd;
@@ -66,23 +71,25 @@ __startup_64(ulong physaddr, struct boot_params *bp) {
 	 * Compute the delta between the address I am compiled to run at
 	 * and the address I am actually running at.
 	 */
-	load_delta = physaddr - (ulong)(_text - __START_KERNEL_map);
-	RIP_REL_REF(phys_base) = load_delta;
+	phys_base = load_delta = __START_KERNEL_map + p2v_offset;
 
 	/* Is the address not 2M aligned? */
 	if (load_delta & ~PMD_MASK)
 		for (;;); // 在MyOS2中假定 load_delta == 0
 
+	va_text = physaddr - p2v_offset;
+	va_end  = (ulong)rip_rel_ptr(&_end) - p2v_offset;
+
 	/* Fixup the physical addresses in the page table */
 
-	pgd = &RIP_REL_REF(early_top_pgt)->val;
-	// pgd[pgd_index(__START_KERNEL_map)] += load_delta;
+	pgd = &rip_rel_ptr(&early_top_pgt[0])->val;
+	pgd[pgd_index(__START_KERNEL_map)] += load_delta;
 
-	// RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 2].val += load_delta;
-	// RIP_REL_REF(level3_kernel_pgt)[PTRS_PER_PUD - 1].val += load_delta;
+	level3_kernel_pgt[PTRS_PER_PUD - 2].val += load_delta;
+	level3_kernel_pgt[PTRS_PER_PUD - 1].val += load_delta;
 
 	// for (i = FIXMAP_PMD_TOP; i > FIXMAP_PMD_TOP - FIXMAP_PMD_NUM; i--)
-	// 	RIP_REL_REF(level2_fixmap_pgt)[i].pmd += load_delta;
+	// 	level2_fixmap_pgt[i].pmd += load_delta;
 
 	/*
 	 * Set up the identity mapping for the switchover.  These
@@ -93,10 +100,11 @@ __startup_64(ulong physaddr, struct boot_params *bp) {
 
 	pud = &early_pgts[0]->val;
 	pmd = &early_pgts[1]->val;
-	RIP_REL_REF(next_early_pgt) = 2;
+	next_early_pgt = 2;
 
 	pgtable_flags = _KERNPG_TABLE_NOENC;
 
+	// if (!la57)
 	i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
 	pgd[i + 0] = (pgdval_t)pud + pgtable_flags;
 	pgd[i + 1] = (pgdval_t)pud + pgtable_flags;
@@ -107,7 +115,6 @@ __startup_64(ulong physaddr, struct boot_params *bp) {
 
 	pmd_entry = __PAGE_KERNEL_LARGE_EXEC & ~_PAGE_GLOBAL;
 	/* Filter out unsupported __PAGE_KERNEL_* bits: */
-	pmd_entry &= RIP_REL_REF(__supported_pte_mask);
 	pmd_entry +=  physaddr;
 
 	for (i = 0; i < DIV_ROUND_UP(_end - _text, PMD_SIZE); i++) {
@@ -117,16 +124,20 @@ __startup_64(ulong physaddr, struct boot_params *bp) {
 
 
 	// copy boot_params or multiboot_MBI to a safe place for later use
-	if (RIP_REL_REF(mbi_magic) == MULTIBOOT2_BOOTLOADER_MAGIC) {
-		u64 mbi_phys = RIP_REL_REF(mbi_base);
-		memcpy(&RIP_REL_REF(multiboot_MBI), (void *)mbi_phys, sizeof(RIP_REL_REF(multiboot_MBI)));
+	u64 *mbi_base_p = rip_rel_ptr(&mbi_base);
+	void *mbi_dst = rip_rel_ptr(&multiboot_MBI);
+	void *bp_dst = rip_rel_ptr(&boot_params);
+
+	if (*rip_rel_ptr(&mbi_magic) == MULTIBOOT2_BOOTLOADER_MAGIC) {
+		memcpy(mbi_dst, (const void *)(*mbi_base_p), sizeof(multiboot_MBI));
 	} else {
-		memcpy(&RIP_REL_REF(boot_params), bp, sizeof(RIP_REL_REF(boot_params)));
+		memcpy(bp_dst, (const void *)bp, sizeof(boot_params));
 	}
 
+
 #ifdef DEBUG
-	init_state.early_kernel_memmap = 1;
-	init_state.boot_params_stored = 1;
+	rip_rel_ptr(&init_state)->early_kernel_memmap = 1;
+	rip_rel_ptr(&init_state)->boot_params_stored = 1;
 #endif
 
 	return 0;
@@ -146,22 +157,18 @@ x86_64_start_kernel(char * real_mode_data)
 {
 	clear_bss();
 
-	// /*
-	//  * This needs to happen *before* kasan_early_init() because latter maps stuff
-	//  * into that page.
-	//  */
-	// clear_page(init_top_pgt);
-	memset(init_top_pgt, 0, PAGE_SIZE);
-
+	/*
+	 * This needs to happen *before* kasan_early_init() because latter maps stuff
+	 * into that page.
+	 */
+	clear_page(init_top_pgt);
 
 	idt_setup_early_handler();
 
 
 	extern void myos_early_init_system(void);
-	extern void myos_early_init_smp(void);
 
 	myos_early_init_system();
-	// myos_early_init_smp();
 
 	/* set init_top_pgt kernel high mapping*/
 	init_top_pgt[511] = early_top_pgt[511];
@@ -182,8 +189,7 @@ x86_64_start_kernel(char * real_mode_data)
 void __head startup_64_setup_gdt_idt(void)
 {
 	struct desc_ptr startup_gdt_descr = {
-		// .address = (ulong)&RIP_REL_REF(*gdt),
-		.address = (ulong)&RIP_REL_REF(*(desc_s *)(__force ulong)init_per_cpu_var(gdt_page.gdt)),
+		.address = (ulong)(rip_rel_ptr(&gdt_page)->gdt),
 		.size    = GDT_SIZE - 1,
 	};
 

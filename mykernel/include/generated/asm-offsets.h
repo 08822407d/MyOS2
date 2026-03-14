@@ -58,6 +58,5 @@
 	#define TSS_sp1 12
 	#define TSS_sp2 20
 	#define X86_top_of_stack 24
-	#define X86_current_task 0
 
 #endif

@@ -31,8 +31,7 @@
 	.code64
 SYM_CODE_START_NOALIGN(startup_64)
 	cli
-	jmp		code_64_start
-SYM_CODE_END(startup_64)
+	jmp		.code_64_start
 
 /*==============================================================================================*
  *										multiboot2 header                           			*
@@ -66,7 +65,7 @@ multiboot_header_end:
  *											long mode code                              		*
  *==============================================================================================*/
 .balign 8
-SYM_CODE_START(code_64_start)
+.code_64_start:
 	/*
 	 * Save the multiboot information structure address and magic
 	 */
@@ -97,16 +96,18 @@ SYM_CODE_START(code_64_start)
 	leaq	tmp_kstack_top(%rip),	%rsp
 
 	movq	%cr4,		%rax
-	bts		$16,		%rax	// enable fsgsbase instuctions
+	bts		$X86_CR4_FSGSBASE_BIT,	%rax	// enable fsgsbase instuctions
 	movq	%rax,		%cr4
 
-	// 在MyOS2中早期代码暂时用不到percpu变量,所以这里不进行gsbase早期初始化
-	// /* Setup GSBASE to allow stack canary access for C code */
-	// movl	$MSR_GS_BASE,			%ecx
-	// leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
-	// movl	%edx,		%eax
-	// shrq	$32,		%rdx
-	// wrmsr
+	/*
+	 * Set up GSBASE.
+	 * Note that on SMP the boot CPU uses the init data section until
+	 * the per-CPU areas are set up.
+	 */
+	movl	$MSR_GS_BASE,	%ecx
+	xorl	%eax,		%eax
+	xorl	%edx,		%edx
+	wrmsr
 
 	call	startup_64_setup_gdt_idt
 
@@ -119,12 +120,17 @@ SYM_CODE_START(code_64_start)
 .Lon_kernel_cs:
 
 	/*
+	 * Derive the kernel's physical-to-virtual offset from the physical and
+	 * virtual addresses of common_startup_64().
+	 */
+	leaq	common_startup_64(%rip),	%rdi
+	subq	.Lcommon_startup_64(%rip),	%rdi
+	/*
 	 * Perform pagetable fixups. Additionally, if SME is active, encrypt
 	 * the kernel and retrieve the modifier (SME encryption mask if SME
 	 * is active) to be added to the initial pgdir entry that will be
 	 * programmed into CR3.
 	 */
-	leaq	_text(%rip),%rdi
 	movq	%r15,		%rsi
 	call	__startup_64
 
@@ -140,11 +146,11 @@ SYM_CODE_START(code_64_start)
 
 	/* Branch to the common startup code at its kernel virtual address */
 	// ANNOTATE_RETPOLINE_SAFE
-	jmp		*0f(%rip)
-SYM_CODE_END(code_64_start)
+	jmp		*.Lcommon_startup_64(%rip)
+SYM_CODE_END(startup_64)
 
 	__INITRODATA
-0:	.quad	common_startup_64
+SYM_DATA_LOCAL(.Lcommon_startup_64, .quad common_startup_64)
 
 	.text
 SYM_CODE_START(secondary_startup_64)
@@ -191,18 +197,19 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
 	movq	current_task(%rdx),			%rax
 	movq	TASK_threadsp(%rax),		%rsp
 
-	// /*
-	//  * We must switch to a new descriptor in kernel space for the GDT
-	//  * because soon the kernel won't have access anymore to the userspace
-	//  * addresses where we're currently running on. We have to do that here
-	//  * because in 32bit we couldn't load a 64bit linear address.
-	//  */
-	// subq	$16,		%rsp
-	// movw	$(GDT_SIZE-1),	(%rsp)
-	// leaq	gdt_page(%rdx),	%rax
-	// movq	%rax,		2(%rsp)
-	// lgdt	(%rsp)
-	// addq	$16,		%rsp
+.Lsetup_gdt:
+	/*
+	 * We must switch to a new descriptor in kernel space for the GDT
+	 * because soon the kernel won't have access anymore to the userspace
+	 * addresses where we're currently running on. We have to do that here
+	 * because in 32bit we couldn't load a 64bit linear address.
+	 */
+	subq	$16,		%rsp
+	movw	$(GDT_SIZE-1),	(%rsp)
+	leaq	gdt_page(%rdx),	%rax
+	movq	%rax,		2(%rsp)
+	lgdt	(%rsp)
+	addq	$16,		%rsp
 
 	/* set up data segments */
 	xorl	%eax,		%eax
@@ -218,17 +225,12 @@ SYM_INNER_LABEL(common_startup_64, SYM_L_LOCAL)
 	movl	%eax,		%fs
 	movl	%eax,		%gs
 
-	/* Set up %gs.
-	 *
-	 * The base of %gs always points to fixed_percpu_data. If the
-	 * stack protector canary is enabled, it is located at %gs:40.
+	/*
+	 * Set up GSBASE.
 	 * Note that, on SMP, the boot cpu uses init data section until
 	 * the per cpu areas are set up.
 	 */
 	movl	$MSR_GS_BASE,	%ecx
-// #ifndef CONFIG_SMP
-	leaq	INIT_PER_CPU_VAR(fixed_percpu_data)(%rip),	%rdx
-// #endif
 	movl	%edx,		%eax
 	shrq	$32,		%rdx
 	wrmsr

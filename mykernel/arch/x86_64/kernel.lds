@@ -71,18 +71,19 @@ SECTIONS
 	}
 	. = ALIGN(_Page_Size);
 	__per_cpu_load = .;
-	.data..percpu _PCPU_BASE : AT(__per_cpu_load - __START_KERNEL_map)
+	.data..percpu : AT(__per_cpu_load - __START_KERNEL_map)
 	{
 		__per_cpu_start = .;
-		*(.data..percpu..page_aligned) . = ALIGN((1 << 6));
-		*(.data..percpu..read_mostly) . = ALIGN((1 << 6));
-		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN(_Page_Size);
+		. = ALIGN((1 << 12));
+		*(.data..percpu..page_aligned) . = ALIGN((1 << (6)));
+		__per_cpu_hot_start = .;
+		*(SORT_BY_ALIGNMENT(.data..percpu..hot.*)) __per_cpu_hot_end = .;
+		. = ALIGN((1 << (6)));
+		*(.data..percpu..read_mostly) . = ALIGN((1 << (6)));
+		*(.data..percpu) *(.data..percpu..shared_aligned) . = ALIGN((1 << 12));
+		*(.data..percpu..decrypted) . = ALIGN((1 << 12));
 		__per_cpu_end = .;
-	/* } :percpu . = __per_cpu_load + SIZEOF(.data..percpu); */
-	} . = __per_cpu_load + SIZEOF(.data..percpu);
-	ASSERT(SIZEOF(.data..percpu) < 0x1000000,
-		"per-CPU data too large - increase CONFIG_PHYSICAL_START")
-	. = ALIGN(_Page_Size);
+	}
 	.init.text : AT(ADDR(.init.text) - __START_KERNEL_map)
 	{
 		_sinittext = .;

@@ -12,6 +12,9 @@
 #endif
 
 pgd_t	init_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE);
+// pgd_t	init_top_pgt[ENT_PER_TABLE]__aligned(PAGE_SIZE) = {
+// 	[ 0 ... ENT_PER_TABLE-1 ] = { .val = 0xAA55 },
+// };
 
 /*
  * For dynamically allocated mm_structs, there is a dynamically sized cpumask
