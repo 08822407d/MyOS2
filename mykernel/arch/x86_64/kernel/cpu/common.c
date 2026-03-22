@@ -36,7 +36,7 @@ void load_direct_gdt(int cpu)
 
 static void get_model_name(cpuinfo_x86_s *c)
 {
-	unsigned int *v;
+	uint *v;
 	char *p, *q, *s;
 
 	if (c->extended_cpuid_level < 0x80000004)
@@ -67,7 +67,7 @@ static void get_model_name(cpuinfo_x86_s *c)
 
 void detect_num_cpu_cores(cpuinfo_x86_s *c)
 {
-	unsigned int eax, ebx, ecx, edx;
+	uint eax, ebx, ecx, edx;
 
 	c->x86_max_cores = 1;
 	if (c->cpuid_level < 4)
@@ -80,7 +80,7 @@ void detect_num_cpu_cores(cpuinfo_x86_s *c)
 
 void cpu_detect_cache_sizes(cpuinfo_x86_s *c)
 {
-	unsigned int n, dummy, ebx, ecx, edx, l2size;
+	uint n, dummy, ebx, ecx, edx, l2size;
 
 	n = c->extended_cpuid_level;
 
@@ -119,6 +119,32 @@ static const cpu_dev_s *cpu_devs[X86_VENDOR_NUM] = {};
 __u32 cpu_caps_cleared[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 __u32 cpu_caps_set[NCAPINTS + NBUGINTS] __aligned(sizeof(unsigned long));
 
+
+// void get_cpu_vendor(cpuinfo_x86_s *c)
+// {
+// 	char *v = c->x86_vendor_id;
+// 	int i;
+
+// 	for (i = 0; i < X86_VENDOR_NUM; i++) {
+// 		if (!cpu_devs[i])
+// 			break;
+
+// 		if (!strcmp(v, cpu_devs[i]->c_ident[0]) ||
+// 		    (cpu_devs[i]->c_ident[1] &&
+// 		     !strcmp(v, cpu_devs[i]->c_ident[1]))) {
+
+// 			this_cpu = cpu_devs[i];
+// 			c->x86_vendor = this_cpu->c_x86_vendor;
+// 			return;
+// 		}
+// 	}
+
+// 	pr_err_once("CPU: vendor_id '%s' unknown, using generic init.\n" \
+// 				"CPU: Your system may be unstable.\n", v);
+
+// 	c->x86_vendor = X86_VENDOR_UNKNOWN;
+// 	this_cpu = &default_cpu;
+// }
 
 void cpu_detect(cpuinfo_x86_s *c)
 {
@@ -488,12 +514,6 @@ void identify_secondary_cpu(cpuinfo_x86_s *c)
 	// tsx_ap_init();
 }
 
-
-// EXPORT_PER_CPU_SYMBOL(pcpu_hot);
-
-// DEFINE_PER_CPU_FIRST(struct fixed_percpu_data,
-// 		     fixed_percpu_data) __aligned(PAGE_SIZE) __visible;
-// EXPORT_PER_CPU_SYMBOL_GPL(fixed_percpu_data);
 
 static void wrmsrl_cstar(unsigned long val) {
 	/*

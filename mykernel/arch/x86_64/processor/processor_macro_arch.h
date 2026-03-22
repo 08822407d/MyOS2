@@ -22,4 +22,8 @@
 				__cpuid_read_reg(leaf, 0, regidx, (u32 *)(reg));		\
 			}
 
+	#define for_each_possible_cpuid_base_hypervisor(function) \
+				for (function = 0x40000000; function < 0x40010000; function += 0x100)
+
+
 #endif /* _ASM_X86_PROCESSOR_MACRO_H_ */	

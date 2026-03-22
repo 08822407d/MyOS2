@@ -52,7 +52,7 @@ typedef struct hypervisor_x86 {
 	struct x86_hyper_init init;
 
 	// /* runtime callbacks */
-	// struct x86_hyper_runtime runtime;
+	struct x86_hyper_runtime runtime;
 
 	/* ignore nopv parameter */
 	bool ignore_nopv;

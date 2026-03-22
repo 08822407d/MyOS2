@@ -24,7 +24,7 @@
     },
 
     {
-      "name": "MyOS2 (QEMU no-KVM/TCG one-click)",
+      "name": "MyOS2 (QEMU TCG soft-breakpoint)",
       "type": "cppdbg",
       "request": "launch",
 
@@ -53,7 +53,38 @@
     },
 
     {
-      "name": "MyOS2 (QEMU+KVM one-click)",
+      "name": "MyOS2 (QEMU+KVM -cpu host minimal)",
+      "type": "cppdbg",
+      "request": "launch",
+
+      "preLaunchTask": "startup qemu (myos2 host)",
+      "postDebugTask": "kill qemu (myos2 host)",
+
+      "program": "${workspaceFolder}/build/kernel",
+      "cwd": "${workspaceFolder}",
+
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb",
+      "miDebuggerArgs": "-q -n -iex \"set pagination off\" -iex \"set confirm off\" -iex \"set auto-load safe-path /\"",
+
+      "stopAtEntry": false,
+      "externalConsole": false,
+      "targetArchitecture": "x64",
+
+      "customLaunchSetupCommands": [
+        { "text": "set arch i386:x86-64:intel" },
+        { "text": "dir ." },
+        { "text": "file ${workspaceFolder}/build/kernel" },
+        { "text": "target remote localhost:8864" },
+
+        { "text": "hbreak start_kernel" }
+      ],
+
+      "launchCompleteCommand": "exec-continue"
+    },
+
+    {
+      "name": "MyOS2 (QEMU+KVM generic)",
       "type": "cppdbg",
       "request": "launch",
 
@@ -81,7 +112,7 @@
       ],
 
       "launchCompleteCommand": "exec-continue"
-    },
+    }
 
   ]
 }

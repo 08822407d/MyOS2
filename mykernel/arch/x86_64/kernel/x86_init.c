@@ -145,8 +145,8 @@ struct x86_init_ops x86_init __initdata = {
 // static bool is_private_mmio_noop(u64 addr) {return false; }
 
 struct x86_platform_ops x86_platform __ro_after_init = {
-	// .calibrate_cpu			= native_calibrate_cpu_early,
-	// .calibrate_tsc			= native_calibrate_tsc,
+	.calibrate_cpu			= native_calibrate_cpu_early,
+	.calibrate_tsc			= native_calibrate_tsc,
 	// .get_wallclock			= mach_get_cmos_time,
 	// .set_wallclock			= mach_set_cmos_time,
 	// .iommu_shutdown			= iommu_shutdown_noop,

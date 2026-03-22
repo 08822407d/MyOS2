@@ -57,8 +57,7 @@ bool __initdata nopv;
 
 
 PREFIX_STATIC_INLINE const hypervisor_x86_s * __init
-detect_hypervisor_vendor(void)
-{
+detect_hypervisor_vendor(void) {
 	const hypervisor_x86_s *h = NULL, * const *p;
 	uint32_t pri, max_pri = 0;
 
@@ -82,7 +81,7 @@ detect_hypervisor_vendor(void)
 
 
 static void __init
-copy_array(const void *src, void *target, unsigned int size) {
+copy_array(const void *src, void *target, uint size) {
 	uint i, n = size / sizeof(void *);
 	const void * const *from = (const void * const *)src;
 	const void **to = (const void **)target;
@@ -102,7 +101,7 @@ void __init simple_init_hypervisor_platform(void)
 		return;
 
 	copy_array(&h->init, &x86_init.hyper, sizeof(h->init));
-	// copy_array(&h->runtime, &x86_platform.hyper, sizeof(h->runtime));
+	copy_array(&h->runtime, &x86_platform.hyper, sizeof(h->runtime));
 
 	x86_hyper_type = h->type;
 	x86_init.hyper.init_platform();

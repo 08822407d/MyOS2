@@ -221,5 +221,14 @@
 	 */
 	#define __TASK_UNMAPPED_BASE(task_size)	(PAGE_ALIGN(task_size / 3))
 	#define TASK_UNMAPPED_BASE				__TASK_UNMAPPED_BASE(TASK_SIZE_LOW)
+
+
+	#define CPUID_LEAF_MWAIT	0x05
+	#define CPUID_LEAF_DCA		0x09
+	#define CPUID_LEAF_XSTATE	0x0d
+	#define CPUID_LEAF_TSC		0x15
+	#define CPUID_LEAF_FREQ		0x16
+	#define CPUID_LEAF_TILE		0x1d
+
 	
 #endif /* _ASM_X86_PROCESSOR_TYPES_H_ */

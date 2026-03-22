@@ -261,30 +261,30 @@ struct x86_init_ops {
 // 	struct x86_legacy_devices devices;
 // };
 
-// /**
-//  * struct x86_hyper_runtime - x86 hypervisor specific runtime callbacks
-//  *
-//  * @pin_vcpu:			pin current vcpu to specified physical
-//  *				cpu (run rarely)
-//  * @sev_es_hcall_prepare:	Load additional hypervisor-specific
-//  *				state into the GHCB when doing a VMMCALL under
-//  *				SEV-ES. Called from the #VC exception handler.
-//  * @sev_es_hcall_finish:	Copies state from the GHCB back into the
-//  *				processor (or pt_regs). Also runs checks on the
-//  *				state returned from the hypervisor after a
-//  *				VMMCALL under SEV-ES.  Needs to return 'false'
-//  *				if the checks fail.  Called from the #VC
-//  *				exception handler.
-//  * @is_private_mmio:		For CoCo VMs, must map MMIO address as private.
-//  *				Used when device is emulated by a paravisor
-//  *				layer in the VM context.
-//  */
-// struct x86_hyper_runtime {
-// 	void (*pin_vcpu)(int cpu);
-// 	void (*sev_es_hcall_prepare)(struct ghcb *ghcb, struct pt_regs *regs);
-// 	bool (*sev_es_hcall_finish)(struct ghcb *ghcb, struct pt_regs *regs);
-// 	bool (*is_private_mmio)(u64 addr);
-// };
+/**
+ * struct x86_hyper_runtime - x86 hypervisor specific runtime callbacks
+ *
+ * @pin_vcpu:			pin current vcpu to specified physical
+ *				cpu (run rarely)
+ * @sev_es_hcall_prepare:	Load additional hypervisor-specific
+ *				state into the GHCB when doing a VMMCALL under
+ *				SEV-ES. Called from the #VC exception handler.
+ * @sev_es_hcall_finish:	Copies state from the GHCB back into the
+ *				processor (or pt_regs). Also runs checks on the
+ *				state returned from the hypervisor after a
+ *				VMMCALL under SEV-ES.  Needs to return 'false'
+ *				if the checks fail.  Called from the #VC
+ *				exception handler.
+ * @is_private_mmio:		For CoCo VMs, must map MMIO address as private.
+ *				Used when device is emulated by a paravisor
+ *				layer in the VM context.
+ */
+struct x86_hyper_runtime {
+	void (*pin_vcpu)(int cpu);
+	// void (*sev_es_hcall_prepare)(struct ghcb *ghcb, pt_regs_s *regs);
+	// bool (*sev_es_hcall_finish)(struct ghcb *ghcb, pt_regs_s *regs);
+	bool (*is_private_mmio)(u64 addr);
+};
 
 /**
  * struct x86_platform_ops - platform specific runtime functions
@@ -325,7 +325,7 @@ struct x86_platform_ops {
 	void (*set_legacy_features)(void);
 	void (*realmode_reserve)(void);
 	void (*realmode_init)(void);
-	// struct x86_hyper_runtime hyper;
+	struct x86_hyper_runtime hyper;
 	// struct x86_guest guest;
 };
 

@@ -106,6 +106,25 @@ void __init init_mem_mapping(void)
 	// /* Init the trampoline, possibly with KASLR memory offset */
 	// init_trampoline();
 
+	/*
+	 * If the allocation is in bottom-up direction, we setup direct mapping
+	 * in bottom-up, otherwise we setup direct mapping in top-down.
+	 */
+	if (memblock_bottom_up()) {
+		ulong kernel_end = __pa_symbol(_end);
+
+		/*
+		 * we need two separate calls here. This is because we want to
+		 * allocate page tables above the kernel. So we first map
+		 * [kernel_end, end) to make memory above the kernel be mapped
+		 * as soon as possible. And then use page tables allocated above
+		 * the kernel to map [ISA_END_ADDRESS, kernel_end).
+		 */
+		// memory_map_bottom_up(kernel_end, end);
+		// memory_map_bottom_up(ISA_END_ADDRESS, kernel_end);
+	} else {
+		// memory_map_top_down(ISA_END_ADDRESS, end);
+	}
 	myos_memory_map();
 
 	if (max_pfn > max_low_pfn) {

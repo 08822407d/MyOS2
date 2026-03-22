@@ -16,14 +16,11 @@ DMA_END				= 0x1000000;
 
 jiffies = jiffies_64;
 const_pcpu_hot = pcpu_hot;
-/* PHDRS {
- text PT_LOAD FLAGS(5);
- data PT_LOAD FLAGS(6);
- percpu PT_LOAD FLAGS(6);
- init PT_LOAD FLAGS(7);
- APboot PT_LOAD FLAGS(8);
- note PT_NOTE FLAGS(0);
-} */
+PHDRS {
+	text PT_LOAD FLAGS(5);
+	data PT_LOAD FLAGS(6);
+	/* note PT_NOTE FLAGS(0); */
+}
 SECTIONS
 {
 	. += (__START_KERNEL_map + ((DMA_END + (_Page2M_Size - 1)) & ~(_Page2M_Size - 1)));
@@ -35,7 +32,7 @@ SECTIONS
 		KEEP(*(.head.text.startup))
 		KEEP(*(.head.text))
 		*(.text*)
-	}
+	} : text = 0xcccccccc
 	_etext = .;
 	.rodata ALIGN(_Page_Size) : AT(ADDR(.rodata) - __START_KERNEL_map)
 	{
@@ -62,7 +59,7 @@ SECTIONS
 		*(.data.rel*)
 		*(.data..page_aligned*)
 		_edata = .;
-	}
+	} : data
 	.data.sched_class ALIGN(8) : AT(ADDR(.data.sched_class) - __START_KERNEL_map)
 	{
 		__sched_class_highest = .;
@@ -84,6 +81,7 @@ SECTIONS
 		*(.data..percpu..decrypted) . = ALIGN((1 << 12));
 		__per_cpu_end = .;
 	}
+	ASSERT(__per_cpu_hot_end - __per_cpu_hot_start <= 64, "percpu cache hot data too large")
 	.init.text : AT(ADDR(.init.text) - __START_KERNEL_map)
 	{
 		_sinittext = .;
@@ -170,6 +168,7 @@ SECTIONS
 	.brk ALIGN(_Page_Size) : AT(ADDR(.brk) - __START_KERNEL_map)
 	{
 		__brk_base = .;
+		. += 64 * 1024;
 		*(.brk*)
 		__brk_limit = .;
 	}
@@ -186,5 +185,3 @@ SECTIONS
 
 . = ASSERT((_end - 0xffffffff80000000 <= (1024 * 1024 * 1024)),
     "kernel image bigger than KERNEL_IMAGE_SIZE");
-init_per_cpu__gdt_page = ABSOLUTE(gdt_page) + __per_cpu_load;
-init_per_cpu__fixed_percpu_data = ABSOLUTE(0) + __per_cpu_load;

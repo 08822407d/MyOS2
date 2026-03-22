@@ -93,7 +93,7 @@ multiboot_header_end:
 	movq	%rsi,		%r15
 
 	/* Set up the stack for verify_cpu() */
-	leaq	tmp_kstack_top(%rip),	%rsp
+	leaq	__top_init_kernel_stack(%rip),	%rsp
 
 	movq	%cr4,		%rax
 	bts		$X86_CR4_FSGSBASE_BIT,	%rax	// enable fsgsbase instuctions
@@ -377,8 +377,7 @@ SYM_DATA_START_PAGE_ALIGNED(level3_kernel_pgt)
 	.fill	510,8,0
 	/* (2^48-(2*1024*1024*1024)-((2^39)*511))/(2^30) = 510 */
 	.quad	level2_kernel_pgt - __START_KERNEL_map + _KERNPG_TABLE_NOENC
-	// .quad	level2_fixmap_pgt - __START_KERNEL_map + _PAGE_TABLE_NOENC
-	.fill	1,8,0 // 暂时不映射 fixmap 区，等以后需要了再说
+	.quad	level2_fixmap_pgt - __START_KERNEL_map + _PAGE_TABLE_NOENC
 SYM_DATA_END(level3_kernel_pgt)
 
 SYM_DATA_START_PAGE_ALIGNED(level2_kernel_pgt)
@@ -417,7 +416,7 @@ SYM_DATA_END(level2_fixmap_pgt)
 .align 8
 tmp_kstack_start:
 	.fill	128,8,0
-SYM_CODE_START(tmp_kstack_top)
+SYM_CODE_START(__top_init_kernel_stack)
 
 .balign 8
 SYM_DATA(mbi_magic)

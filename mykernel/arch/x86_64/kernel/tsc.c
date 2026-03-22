@@ -38,7 +38,7 @@ uint __read_mostly cpu_khz;	/* TSC clocks / usec, not used here */
 uint __read_mostly tsc_khz;
 
 #ifndef DUMMY_TSC_KHZ
-#  define DUMMY_TSC (3LL * 1000LL * 1000LL)	/* 3 GHz */
+#  define DUMMY_TSC_KHZ (3LL * 1000LL * 1000LL)	/* 3 GHz */
 #endif // !DUMMY_TSC_KHZ
 #define KHZ	1000
 
@@ -237,6 +237,134 @@ native_sched_clock(void) {
 	return (jiffies_64 - INITIAL_JIFFIES) * (1000000000 / HZ);
 }
 
+
+
+/**
+ * native_calibrate_tsc - determine TSC frequency
+ * Determine TSC frequency via CPUID, else return 0.
+ */
+ulong native_calibrate_tsc(void) {
+	uint eax_denominator, ebx_numerator, ecx_hz, edx;
+	uint crystal_khz;
+
+	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+		return 0;
+
+	if (boot_cpu_data.cpuid_level < CPUID_LEAF_TSC)
+		return 0;
+
+	eax_denominator = ebx_numerator = ecx_hz = edx = 0;
+
+	/* CPUID 15H TSC/Crystal ratio, plus optionally Crystal Hz */
+	cpuid(CPUID_LEAF_TSC, &eax_denominator, &ebx_numerator, &ecx_hz, &edx);
+
+	if (ebx_numerator == 0 || eax_denominator == 0)
+		return 0;
+
+	crystal_khz = ecx_hz / 1000;
+
+	// /*
+	//  * Denverton SoCs don't report crystal clock, and also don't support
+	//  * CPUID_LEAF_FREQ for the calculation below, so hardcode the 25MHz
+	//  * crystal clock.
+	//  */
+	// if (crystal_khz == 0 &&
+	// 		boot_cpu_data.x86_vfm == INTEL_ATOM_GOLDMONT_D)
+	// 	crystal_khz = 25000;
+
+	// /*
+	//  * TSC frequency reported directly by CPUID is a "hardware reported"
+	//  * frequency and is the most accurate one so far we have. This
+	//  * is considered a known frequency.
+	//  */
+	// if (crystal_khz != 0)
+	// 	setup_force_cpu_cap(X86_FEATURE_TSC_KNOWN_FREQ);
+
+	/*
+	 * Some Intel SoCs like Skylake and Kabylake don't report the crystal
+	 * clock, but we can easily calculate it to a high degree of accuracy
+	 * by considering the crystal ratio and the CPU speed.
+	 */
+	if (crystal_khz == 0 && boot_cpu_data.cpuid_level >= CPUID_LEAF_FREQ) {
+		unsigned int eax_base_mhz, ebx, ecx, edx;
+
+		cpuid(CPUID_LEAF_FREQ, &eax_base_mhz, &ebx, &ecx, &edx);
+		crystal_khz = eax_base_mhz * 1000 *
+			eax_denominator / ebx_numerator;
+	}
+
+	if (crystal_khz == 0)
+		return 0;
+
+	// /*
+	//  * For Atom SoCs TSC is the only reliable clocksource.
+	//  * Mark TSC reliable so no watchdog on it.
+	//  */
+	// if (boot_cpu_data.x86_vfm == INTEL_ATOM_GOLDMONT)
+	// 	setup_force_cpu_cap(X86_FEATURE_TSC_RELIABLE);
+
+#ifdef CONFIG_X86_LOCAL_APIC
+	/*
+	 * The local APIC appears to be fed by the core crystal clock
+	 * (which sounds entirely sensible). We can set the global
+	 * lapic_timer_period here to avoid having to calibrate the APIC
+	 * timer later.
+	 */
+	lapic_timer_period = crystal_khz * 1000 / HZ;
+#endif
+
+	return crystal_khz * ebx_numerator / eax_denominator;
+}
+
+static ulong
+cpu_khz_from_cpuid(void) {
+	uint eax_base_mhz, ebx_max_mhz, ecx_bus_mhz, edx;
+
+	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL)
+		return 0;
+
+	if (boot_cpu_data.cpuid_level < CPUID_LEAF_FREQ)
+		return 0;
+
+	eax_base_mhz = ebx_max_mhz = ecx_bus_mhz = edx = 0;
+
+	// cpuid(CPUID_LEAF_FREQ, &eax_base_mhz, &ebx_max_mhz, &ecx_bus_mhz, &edx);
+	cpuid(CPUID_LEAF_TSC, &eax_base_mhz, &ebx_max_mhz, &ecx_bus_mhz, &edx);
+
+	return eax_base_mhz * 1000;
+}
+
+/**
+ * native_calibrate_cpu_early - can calibrate the cpu early in boot
+ */
+ulong native_calibrate_cpu_early(void) {
+	ulong flags, fast_calibrate = cpu_khz_from_cpuid();
+
+	// if (!fast_calibrate)
+	// 	fast_calibrate = cpu_khz_from_msr();
+	// if (!fast_calibrate) {
+	// 	local_irq_save(flags);
+	// 	fast_calibrate = quick_pit_calibrate();
+	// 	local_irq_restore(flags);
+	// }
+	if (!fast_calibrate)
+		fast_calibrate = DUMMY_TSC_KHZ;
+
+	return fast_calibrate;
+}
+
+/**
+ * native_calibrate_cpu - calibrate the cpu
+ */
+static ulong
+native_calibrate_cpu(void) {
+	ulong tsc_freq = native_calibrate_cpu_early();
+
+	// if (!tsc_freq)
+	// 	tsc_freq = pit_hpet_ptimer_calibrate_cpu();
+
+	return tsc_freq;
+}
 
 
 

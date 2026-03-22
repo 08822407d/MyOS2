@@ -21,6 +21,50 @@
     },
 
     {
+      "label": "startup qemu (myos2 host)",
+      "type": "shell",
+      "isBackground": true,
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/run-qemu-gdb-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {
+          "USE_KVM": "1",
+          "CPU_OPTS": "host",
+          "GDB_PORT": "8864",
+          "PIDFILE": "${workspaceFolder}/.qemu-myos2-host.pid",
+
+          "OVMF_DIR": "${workspaceFolder}/myloader",
+          "OVMF_VARS_OUT": "${workspaceFolder}/.vscode-kdbg/ovmf-vars-myos2-host.fd",
+
+          "DISPLAY": "${env:DISPLAY}",
+          "DISPLAY_OPTS": "-display gtk"
+        }
+      },
+      "presentation": { "reveal": "always", "panel": "dedicated", "clear": true },
+      "problemMatcher": [
+        {
+          "severity": "info",
+          "pattern": [
+            { "regexp": "^(qemu\\.task):(\\d+):\\s+(.*)$", "file": 1, "line": 2, "message": 3 }
+          ],
+          "background": { "activeOnStart": true, "beginsPattern": ".", "endsPattern": "READY" }
+        }
+      ]
+    },
+    {
+      "label": "kill qemu (myos2 host)",
+      "type": "shell",
+      "command": "bash",
+      "args": ["${workspaceFolder}/.vscode-kdbg/kill-qemu-myos2.sh"],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": { "PIDFILE": "${workspaceFolder}/.qemu-myos2-host.pid" }
+      },
+      "problemMatcher": []
+    },
+
+    {
       "label": "startup qemu (myos2 kvm)",
       "type": "shell",
       "isBackground": true,
@@ -30,6 +74,7 @@
         "cwd": "${workspaceFolder}",
         "env": {
           "USE_KVM": "1",
+          "CPU_OPTS": "host,+invtsc,kvm=on",
           "GDB_PORT": "8864",
           "PIDFILE": "${workspaceFolder}/.qemu-myos2-kvm.pid",
 
@@ -73,6 +118,7 @@
         "cwd": "${workspaceFolder}",
         "env": {
           "USE_KVM": "0",
+          "CPU_OPTS": "max",
           "GDB_PORT": "8864",
           "PIDFILE": "${workspaceFolder}/.qemu-myos2-tcg.pid",
 

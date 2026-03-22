@@ -58,6 +58,9 @@
 		extern void
 		cpu_relax(void);
 
+		extern u32
+		cpuid_base_hypervisor(const char *sig, u32 leaves);
+
 	#endif
 
 	#include "processor_macro_arch.h"
@@ -110,7 +113,7 @@
 		PREFIX_STATIC_INLINE
 		ulong
 		cpu_kernelmode_gs_base(int cpu) {
-			// return (ulong)per_cpu(fixed_percpu_data.gs_base, cpu);
+			return per_cpu_offset(cpu);
 		}
 
 		// static inline void arch_thread_struct_whitelist(unsigned long *offset,
@@ -249,6 +252,27 @@
 		void
 		cpu_relax(void) {
 			rep_nop();
+		}
+
+		PREFIX_STATIC_INLINE
+		u32
+		cpuid_base_hypervisor(const char *sig, u32 leaves) {
+			u32 base, eax, signature[3];
+
+			for_each_possible_cpuid_base_hypervisor(base) {
+				cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
+
+				/*
+				 * This must not compile to "call memcmp" because it's called
+				 * from PVH early boot code before instrumentation is set up
+				 * and memcmp() itself may be instrumented.
+				 */
+				if (!__builtin_memcmp(sig, signature, 12) &&
+					(leaves == 0 || ((eax - base) >= leaves)))
+					return base;
+			}
+
+			return 0;
 		}
 
 	#endif
